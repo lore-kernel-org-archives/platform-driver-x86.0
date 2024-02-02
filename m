@@ -1,128 +1,155 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E650D604C1;
-	Fri,  2 Feb 2024 08:51:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CB777F24;
+	Fri,  2 Feb 2024 09:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706863874; cv=none; b=hxOOagSH9RAwi933Wq5dQ282JH91OhMs9qyzEvKuFbx85x5w2ERBw7pyS4tvMr4nepqUNOtRwC4VxznVPZHOsy5Ql2RH/EArzjiSX0Pr48gw2UJSb0ZDuW6T3VFpj5jFSvHlbJHDC0HVRZy5XXTsEhEN1eUu3Q0JIxkDs5s0q5M=
+	t=1706866798; cv=none; b=NOUWNXvS0/kXm5f4fmwhPxwgpPJj1Cg4yuqCiXjZqhLtkGh+LmcB3LveLMhliNojOMhikOpyvsGJBpbVCrbgQkHzqDEhZSYCbfB4HC5WUQLSqOOMlmEkWAwo36n0sDFGvQOmgvXg9jHsDjr+ioycO3FN/XN+RcveDXYoC2Kes3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706863874; c=relaxed/simple;
-	bh=rPghlH4fKzDrgFUA2AU5udG4v87gHBMz2GHmtLMD1sY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uMnnW1XJ4FAnZkgHCCu7AmxtXch9Hww6k3kX97zrbXZnjBqJdyYPFgqI2aI4bpNEa4Juji/F3MJY5EK+kb+49oZ4chZWhYgHCGGHJT/I6oWM0VdSsWbX4QyOKEQNmfeQkvIFhBBkLIamfNTDzMmhfjm8OBVvU7gGUtXHjvCsc/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=GcEW7nTo; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1706866798; c=relaxed/simple;
+	bh=oNm9Qw7hwiq6aJIott3Cohv2DrbIJbpdeI2rTKx8nhQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SN3vBdrdXTWCJVOxDrSX/9ZgWcfST9x5Pa94d886CpImLs40pMMUhhXkeAHpAKJe/7cpcQuWqSTzdPAg8NOvW4A2JK+kucMVtB6EzCQig6QbnGKhl+9qABo2/mCNEjDspbDMXYentMfpppjLhnl2BlcAEek9pPbUFTxEazymvCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=YcGIdsch; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="GcEW7nTo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=zgcj+wX/L6IDdldqgziNCDsIyAb6c+kW8GcYNwM7sts=; b=GcEW7nToPq2txWV+ViSERXcFwc
-	rIIQ4n6+rou3/R+i4yGctXiLFzZv29zF/60F+jjXeE+KHkkI+HTQgFIorTtxr6i5Za45zbgiGpucj
-	p8gdiQ/Qz6wt/2SM4aIkw4zlWDE+fNPHZ2ovt3wAkQpvzQJanqF0SAHiMGwRu0K61OLmBUFMvdnzG
-	4NT4zFRK50O0q8jV7zYb1G+Dvhf+oOw/OamJj2xAG9XEZD52Lj7vD6df8J9yUZUZ/ULdzDWo6Nirg
-	26NrmJqI7PQdR8VJ1T9wQDKxln+BeKE210XOxjyZftyAu6H1aS4itKKLrMYDKPb1xVrgslxsJGmE1
-	J7sImYnQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:49854)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rVpFx-0005e9-2k;
-	Fri, 02 Feb 2024 08:50:41 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rVpFq-0008Bx-Er; Fri, 02 Feb 2024 08:50:34 +0000
-Date: Fri, 2 Feb 2024 08:50:34 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mark Gross <markgross@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	"David S . Miller" <davem@davemloft.net>,
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="YcGIdsch"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1706866794; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=peR8A4izAqgzsimxR/4ieXlIWtvCe7qrSUa+LFRRffU=;
+	b=YcGIdschgRCM3PRajhnA5CwMhce1rXTi44w+vkk4EqXYOKrWCXadPvkHhlRgnGIDFSPqjIxRkrktIkmvdKUu2uvkVLmUKl2hqrn+PZ+aSamm8MyDg2ucJDn914ppPcHLw4qH5734cP8jIcqvY5lhb598FE10vTtcc2K4M9hvUhQ=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0W.wc6kr_1706866791;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W.wc6kr_1706866791)
+          by smtp.aliyun-inc.com;
+          Fri, 02 Feb 2024 17:39:52 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: virtualization@lists.linux.dev
+Cc: Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Vadim Pasternak <vadimp@nvidia.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Cornelia Huck <cohuck@redhat.com>,
+	Halil Pasic <pasic@linux.ibm.com>,
+	Eric Farman <farman@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
 	Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
 	Jesper Dangaard Brouer <hawk@kernel.org>,
 	John Fastabend <john.fastabend@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Simon Horman <simon.horman@corigine.com>,
-	Serge Semin <fancer.lancer@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
-	Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
-	Lai Peter Jun Ann <jun.ann.lai@intel.com>,
-	Abdul Rahim Faizal <faizal.abdul.rahim@intel.com>
-Subject: Re: [PATCH net-next v4 06/11] net: stmmac: resetup XPCS according to
- the new interface mode
-Message-ID: <Zbys2orOUikYxeOm@shell.armlinux.org.uk>
-References: <20240129130253.1400707-1-yong.liang.choong@linux.intel.com>
- <20240129130253.1400707-7-yong.liang.choong@linux.intel.com>
- <ZbjNn+C/VHegH2t7@shell.armlinux.org.uk>
- <9e23671e-788c-4191-bdb4-94915ff7da5a@linux.intel.com>
- <ZbtYaXkNf2ZF1prE@shell.armlinux.org.uk>
- <2ad1f55c-f361-4439-9174-6af1bb429d55@linux.intel.com>
+	Benjamin Berg <benjamin.berg@intel.com>,
+	linux-um@lists.infradead.org,
+	netdev@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	kvm@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH vhost v1 00/19] virtio: drivers maintain dma info for premapped vq
+Date: Fri,  2 Feb 2024 17:39:32 +0800
+Message-Id: <20240202093951.120283-1-xuanzhuo@linux.alibaba.com>
+X-Mailer: git-send-email 2.32.0.3.g01195cf9f
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2ad1f55c-f361-4439-9174-6af1bb429d55@linux.intel.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-Git-Hash: 4c7bacd05cb8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 02, 2024 at 11:00:58AM +0800, Choong Yong Liang wrote:
-> 
-> 
-> On 1/2/2024 4:38 pm, Russell King (Oracle) wrote:
-> > Note the "This must not modify any state." statement. By reinitialising
-> > the PCS in this method, you are violating that statement.
-> > 
-> > This requirement is because this method will be called by
-> > phylink_validate_mac_and_pcs() at various times, potentially for each
-> > and every interface that stmmac supports, which will lead to you
-> > reinitialising the PCS, killing the link, each time we ask the MAC for
-> > a PCS, whether we are going to make use of it in that mode or not.
-> > 
-> > You can not do this. Sorry. Hard NAK for this approach.
-> > 
-> Thank you for taking the time to review, got your concerns, and I'll address
-> the following concerns before submitting a new patch series:
-> 
-> 1. Remove allow_switch_interface and have the PHY driver fill in
-> phydev->possible_interfaces.
+As discussed:
+http://lore.kernel.org/all/CACGkMEvq0No8QGC46U4mGsMtuD44fD_cfLcPaVmJ3rHYqRZxYg@mail.gmail.com
 
-Yes please.
+If the virtio is premapped mode, the driver should manage the dma info by self.
+So the virtio core should not store the dma info.
+So we can release the memory used to store the dma info.
 
-> 2. Rework on the PCS to have similar implementation with the following patch
-> "net: macb: use .mac_select_pcs() interface"
-> (https://lore.kernel.org/netdev/E1n568J-002SZX-Gr@rmk-PC.armlinux.org.uk/T/).
+But if the desc_extra has not dma info, we face a new question,
+it is hard to get the dma info of the desc with indirect flag.
+For split mode, that is easy from desc, but for the packed mode,
+it is hard to get the dma info from the desc. And for hardening
+the dma unmap is saft, we should store the dma info of indirect
+descs.
 
-mac_select_pcs() is about returning to phylink the PCS that the MAC
-needs to use for the specified interface mode, or NULL if no PCS is
-required, nothing more, nothing less.
+So I introduce the "structure the indirect desc table" to
+allocate space to store dma info with the desc table.
 
-Plase do not copy that mac_select_pcs() implementation - changing the
-"ops" underneath phylink is no longer permitted.
+On the other side, we mix the descs with indirect flag
+with other descs together to share the unmap api. That
+is complex. I found if we we distinguish the descs with
+VRING_DESC_F_INDIRECT before unmap, thing will be clearer.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Because of the dma array is allocated in the find_vqs(),
+so I introduce a new parameter to find_vqs().
+
+Please review.
+
+Thanks
+
+v1:
+    1. rename transport_vq_config to vq_transport_config
+    2. virtio-net set dma meta number to (ring-size + 1)(MAX_SKB_FRGAS +2)
+    3. introduce virtqueue_dma_map_sg_attrs
+    4. separate vring_create_virtqueue to an independent commit
+
+Xuan Zhuo (19):
+  virtio_ring: introduce vring_need_unmap_buffer
+  virtio_ring: packed: remove double check of the unmap ops
+  virtio_ring: packed: structure the indirect desc table
+  virtio_ring: split: remove double check of the unmap ops
+  virtio_ring: split: structure the indirect desc table
+  virtio_ring: no store dma info when unmap is not needed
+  virtio: find_vqs: pass struct instead of multi parameters
+  virtio: vring_create_virtqueue: pass struct instead of multi
+    parameters
+  virtio: vring_new_virtqueue(): pass struct instead of multi parameters
+  virtio_ring: reuse the parameter struct of find_vqs()
+  virtio: find_vqs: add new parameter premapped
+  virtio_ring: export premapped to driver by struct virtqueue
+  virtio_net: set premapped mode by find_vqs()
+  virtio_ring: remove api of setting vq premapped
+  virtio_ring: introduce dma map api for page
+  virtio_ring: introduce virtqueue_dma_map_sg_attrs
+  virtio_net: unify the code for recycling the xmit ptr
+  virtio_net: rename free_old_xmit_skbs to free_old_xmit
+  virtio_net: sq support premapped mode
+
+ arch/um/drivers/virtio_uml.c             |  31 +-
+ drivers/net/virtio_net.c                 | 291 +++++++---
+ drivers/platform/mellanox/mlxbf-tmfifo.c |  24 +-
+ drivers/remoteproc/remoteproc_virtio.c   |  31 +-
+ drivers/s390/virtio/virtio_ccw.c         |  33 +-
+ drivers/virtio/virtio_mmio.c             |  30 +-
+ drivers/virtio/virtio_pci_common.c       |  59 +-
+ drivers/virtio/virtio_pci_common.h       |   9 +-
+ drivers/virtio/virtio_pci_legacy.c       |  16 +-
+ drivers/virtio/virtio_pci_modern.c       |  24 +-
+ drivers/virtio/virtio_ring.c             | 698 ++++++++++++-----------
+ drivers/virtio/virtio_vdpa.c             |  45 +-
+ include/linux/virtio.h                   |  13 +-
+ include/linux/virtio_config.h            |  48 +-
+ include/linux/virtio_ring.h              |  82 +--
+ tools/virtio/virtio_test.c               |   4 +-
+ tools/virtio/vringh_test.c               |  28 +-
+ 17 files changed, 848 insertions(+), 618 deletions(-)
+
+--
+2.32.0.3.g01195cf9f
+
