@@ -1,63 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6BE6AAB;
-	Fri,  2 Feb 2024 01:42:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F340C2CD;
+	Fri,  2 Feb 2024 02:40:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706838173; cv=none; b=EhnUHUwcGo3ThG88gTS7q5lF3xgLevmFlwUOWG8tps1K2Q42EAbeYmscRecEEY5de6vjGVG0I1W6tvlzw9oH5eUoIJO46oJHxWPxsPHdeAkVT+WYlOi8htZ2d4I56gUMmys+0BR26IyGOu62oFIpiap1aLGc7//Nk3pZxoHslAg=
+	t=1706841631; cv=none; b=fMqKAPuYWCSV6nzU21Ckt+rCrug55pNJvosOVvsw3RXl+wCDTio1Rr/DPP7nE25Cq7Efq47D/o8aXLtZCezzBvkNF1AC18VRKrrxykAisO37z9SqcRXetyqTBE6XwZVdJkd7pRA6CkKBp85Hhtlrnlf5LM+H89cMG7Pt9gN5y3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706838173; c=relaxed/simple;
-	bh=xknzaMag2fCqoNkrvN7IIBRCKRuhmXWZUa22lppRh8w=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KPA2BSG5xNii6gaojjQXw/oa0eOm0RIrh1TVShd+rxkbSiDzsURXRrN49SBbKjUWPy49Y1XhAU1zPO6MSxmOo4lOqoueum5n7qsSVCqPInT77aayNkYOT0ZwfRfADosPo35drtv9Z81yDo/4TPJK2qvkxLaJ6y0ra0XzA1nZTT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fP8eCE0K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706841631; c=relaxed/simple;
+	bh=IIW7zY26kn4sAgb4s5AHDa6fmJAMG2UJn1ZMIaqET5Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eadDLfhB4e7XHEh19Dzli65D0eVaTIcnmXp5djTa8i71lb8mAWxl8/YP/4HfswBIHCsu/mbuSgjyShSffDS/Mfc/N3m8z+6y9I2RLftUpGAqsc04pqcsm4zdiIxSJYo+4reTCmdMsuKRB+LU+hJtaK/DT3w2WSWXR4J2hdfvb0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=dheUGUbY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fP8eCE0K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D34D4C433C7;
-	Fri,  2 Feb 2024 01:42:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706838173;
-	bh=xknzaMag2fCqoNkrvN7IIBRCKRuhmXWZUa22lppRh8w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fP8eCE0KOmsWSUtVp2DEVsfAkBCmpGQni85nCkRU56qov54y+lKxDuFbX7MijgbXO
-	 W2esKeSse4JScex9hMR6HC0TxQkgTjN6HKkNSvVIICJ570ggv5JLEKpo9e7qnfVp8f
-	 200UMHfG7rW0uvrVLKPtFMLcQTKGGkN0jDESneHKr7yB6jgKckPCgyA3H9keinVn08
-	 /TOm47Zvf+WWcZzuZCKIuhXmnL9Hfzg/ghOgPyCfyN+rfHFURXDUZ+VUKgxbUORF6d
-	 kOqNk6QcLY+8CJJarZbCuCh3U2Bt924gu0+9uGXCTYU7dEC8YmcDlN3EqNSw7RuVbO
-	 pQD9jUebKHgNA==
-Date: Thu, 1 Feb 2024 17:42:49 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: "David E. Box" <david.e.box@linux.intel.com>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- netdev@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 0/8] Intel On Demand: Add netlink interface for SPDM
- attestation
-Message-ID: <20240201174249.5d55324c@kernel.org>
-In-Reply-To: <ea0ae8ac-41bc-4aaa-87b6-af31002e6ce0@linux.intel.com>
-References: <20240201010747.471141-1-david.e.box@linux.intel.com>
-	<ea0ae8ac-41bc-4aaa-87b6-af31002e6ce0@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="dheUGUbY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEEADC43390;
+	Fri,  2 Feb 2024 02:40:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1706841631;
+	bh=IIW7zY26kn4sAgb4s5AHDa6fmJAMG2UJn1ZMIaqET5Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dheUGUbYGJyGAMTYC+91FiGTvpC0heWgBTPpSnE4o6bEANBlG7Np0ezFoLMdDApID
+	 yDrqfmNPCVxJvOVxrq100aeQmG/X+F3s58VOqTSlV82Dd7b4oe06saC1iSgeK/dGVb
+	 UAHvaQxQAo76KWugJQWOxa34HBzWuULMWGC3PO+w=
+Date: Thu, 1 Feb 2024 18:40:30 -0800
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Hegde, Suma" <Suma.Hegde@amd.com>, naveenkrishna.chatradhi@amd.com,
+	LKML <linux-kernel@vger.kernel.org>,
+	Carlos Bilbao <carlos.bilbao@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86/amd/hsmp: switch to use device_add_groups()
+Message-ID: <2024020138-monologue-claim-41d4@gregkh>
+References: <2024012822-exalted-fidgeting-f180@gregkh>
+ <0d110d2a-da0c-017a-0e5a-fc6bef7b066a@linux.intel.com>
+ <e73426f6-6d50-4ed7-8613-1ec42fa3f991@amd.com>
+ <2024020144-duplicity-nuptials-1cd7@gregkh>
+ <f48ebcb1-8f87-efee-08ed-844775c995aa@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f48ebcb1-8f87-efee-08ed-844775c995aa@linux.intel.com>
 
-On Thu, 1 Feb 2024 08:53:37 -0800 Kuppuswamy Sathyanarayanan wrote:
-> On 1/31/24 5:07 PM, David E. Box wrote:
-> > This patch series primarily adds support for a new netlink ABI in the
-> > Intel On Demand driver for performing attestation of the hardware state.  
+On Thu, Feb 01, 2024 at 04:34:30PM +0200, Ilpo Järvinen wrote:
+> On Thu, 1 Feb 2024, Greg Kroah-Hartman wrote:
 > 
-> Try to add some info about why you need new netlink ABI?
+> > On Thu, Feb 01, 2024 at 06:50:33PM +0530, Hegde, Suma wrote:
+> > > On 1/29/2024 6:16 PM, Ilpo Järvinen wrote:
+> > > > Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+> > > > 
+> > > > 
+> > > > + Cc Suma Hegde.
+> > > > 
+> > > > On Sun, 28 Jan 2024, Greg Kroah-Hartman wrote:
+> > > > 
+> > > > > The use of devm_*() functions works properly for when the device
+> > > > > structure itself is dynamic, but the hsmp driver is attempting to have a
+> > > > > local, static, struct device and then calls devm_() functions attaching
+> > > > > memory to the device that will never be freed.
+> > > > > 
+> > > > > The logic of having a static struct device is almost never a wise
+> > > > > choice, but for now, just remove the use of devm_device_add_groups() in
+> > > > > this driver as it obviously is not needed.
+> > > 
+> > > Hi Greg,
+> > > 
+> > > Could you please hold on merging this patch for a week? I will push a patch
+> > > for converting platform specific structure's memory allocation from static
+> > > to a dynamic
+> > > 
+> > > allocation.
+> > 
+> > Push it where?  Ususally we do "first patch wins" type stuff, why not
+> > just do your work on top of mine?
+> > 
+> > Also, when you do make the needed changes, please remove the explicit
+> > call to create sysfs groups and use the default groups pointer instead,
+> > that will make things much simpler and avoid races in the code.
+> 
+> Hi Greg,
+> 
+> Well, if you really want to "win" :-), please provide an updated version 
+> which considers the changes already made in the for-next branch (the 
+> current one won't apply).
 
-Since netdev is copied it'd also be useful to give us a high level
-intro into what pieces are involved. Assume we have heard about
-SPDM/attestation in context of NIC FW but have little understanding of
-x86 platform stuff. 
+It applies just fine to the latest linux-next tree, version
+-next-20240201, what tree/branch are you referring to here?
 
-grep -i sdsi Documentation doesn't say much, the first Google result
-for Intel On Demand reads like marketing fluff :(
+thanks,
+
+greg k-h
