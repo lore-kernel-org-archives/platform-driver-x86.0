@@ -1,147 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F75317BAC
-	for <platform-driver-x86@vger.kernel.org>; Fri,  2 Feb 2024 07:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E650D604C1;
+	Fri,  2 Feb 2024 08:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706860190; cv=none; b=BBQVlmYvM4bpoDdGPB4HE2FAhGfLhBBTp+GIf3QRUa8UJXJjyC9Nm+wPTItVEJu7ZeUxRgjlImBcBH4z4sWgX97WIM1RenpdpryQeDdlcaxXLfhUeDE5dnOTIXKLoWatmb+1AflP5Xe+8E30AahuYaBdtVjSY/A9G67PM6jYyz4=
+	t=1706863874; cv=none; b=hxOOagSH9RAwi933Wq5dQ282JH91OhMs9qyzEvKuFbx85x5w2ERBw7pyS4tvMr4nepqUNOtRwC4VxznVPZHOsy5Ql2RH/EArzjiSX0Pr48gw2UJSb0ZDuW6T3VFpj5jFSvHlbJHDC0HVRZy5XXTsEhEN1eUu3Q0JIxkDs5s0q5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706860190; c=relaxed/simple;
-	bh=Rosjw/fWeROwK1eHPmgkBfxRsS3OHEYIAC+fl12Rqyo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T0px3y34uA5eIEHE8MO0mTaaBnu1LSQObzKjJ2kkd9BzMi/Eg5Ymxd8MQ2rfwGk8R9LYMAP1MoJRFTncUq401V9Kb6kABin4GaGovjRu/0ivPOkBLvS5ialrmPOsYMDjcEIdGoWttAnjY1uCFw9TbYCTe+qYuq7MZlB/VxRa4z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Nx5wUTdO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706863874; c=relaxed/simple;
+	bh=rPghlH4fKzDrgFUA2AU5udG4v87gHBMz2GHmtLMD1sY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uMnnW1XJ4FAnZkgHCCu7AmxtXch9Hww6k3kX97zrbXZnjBqJdyYPFgqI2aI4bpNEa4Juji/F3MJY5EK+kb+49oZ4chZWhYgHCGGHJT/I6oWM0VdSsWbX4QyOKEQNmfeQkvIFhBBkLIamfNTDzMmhfjm8OBVvU7gGUtXHjvCsc/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=GcEW7nTo; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nx5wUTdO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706860186;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E2y0v+j5Jdi4S0j/7TIDS4/wQS3UjlRfpUREHEJdYNg=;
-	b=Nx5wUTdOKkgnZ8AfEXbUCACNoInY6sA+6Jz7sCbhFPxfoUYLtEgFihZsiLDObN+tOqqm0i
-	yrRVaFc7NRM6m18Q7RpIQlHVTvMqvI5Euj7U7QJ3unr8Un5DzyBROJbg7mC/ZQPmOmBy3t
-	jiX/jJWFLsETRONsIgyzvh9tr2ynxqg=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-393-XJ1ROBGtOdCvYY_RiI8m9w-1; Fri, 02 Feb 2024 02:49:43 -0500
-X-MC-Unique: XJ1ROBGtOdCvYY_RiI8m9w-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a26f2da3c7bso108512366b.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Feb 2024 23:49:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706860183; x=1707464983;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E2y0v+j5Jdi4S0j/7TIDS4/wQS3UjlRfpUREHEJdYNg=;
-        b=airXehafIPG/QxFu/QXBPiNNSurYmvnfsFa08YhVvTRfIadT4DatSWscX6wqp0JvTp
-         ymdYCyfwszVGy3WMzTzWQgTLEtuoodrKSeEqJamTi2Wxtn/Cr+xf25a/jLbrNxzA7GDf
-         GGvzGNYoVO0vrpHFKXAIxr2/bNhT3a4iqJruOEFcseSy/iET1BZz/pDWPB7k1yci0jpZ
-         NBrAAsZ6LQ/ggkS+KADk48qSxLyTeeqqPu67Rc6wIlWDtcILpVEoClQSkS3aBzJelzLH
-         V6+WOaZzkkKVR+VsNcJtUaOy1u4pXk3LsPmlzqTYXcmzSJLiEc5px4wPDofc06gZaa0Z
-         el4g==
-X-Gm-Message-State: AOJu0YyKgEz8tNp5FpkUD+dMo8NbUIhc09ktRyWaBzsdKpoHNvpd8Qd6
-	BEo4RqfOZqOXpy8sLDGcgE0f1GndGWf4SiUQqRHzhoMdv81zz10+Yn4o0cpPwNfpRg1pJSaW74B
-	5g+S26+F/i/SPJH1Nrp6fBfd4VWjLvqjQhvqRWoK4E2lUADpBcb1b8UFdnmbEfwvoHWcnLro=
-X-Received: by 2002:a17:906:80cd:b0:a36:c327:e60d with SMTP id a13-20020a17090680cd00b00a36c327e60dmr862105ejx.48.1706860182763;
-        Thu, 01 Feb 2024 23:49:42 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEjHnGJIlgrFXDqYi0ZgjzbriJnGOniMRwC25RLoaRxDd4REYDUT00BMXe1znbrb+VqNKNE4Q==
-X-Received: by 2002:a17:906:80cd:b0:a36:c327:e60d with SMTP id a13-20020a17090680cd00b00a36c327e60dmr862097ejx.48.1706860182430;
-        Thu, 01 Feb 2024 23:49:42 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVPkyNmTst3UetfCrPr+kbRZff0uSPLuK9Vj/NrzeAxSlLczVI9+bY97Wx6mXcL+7s+Du0GVnLhjRjZ2q+djdSou/hNId6EBT4WRK8+N5X9q6r7NbPLkkHdwPlU3fTL7XINhDFS84DkWdCdWt8g+gX0Gj6qtnoD3jRs9jKHF2Kih8jQ2/oxvhMJ//D7xHc7mqE8E5T4Zse2tiQJcTSVFUwA26cvSaWJXzA1rA==
-Received: from [192.168.43.127] ([109.36.129.188])
-        by smtp.gmail.com with ESMTPSA id r26-20020a170906365a00b00a2bf9b00508sm602212ejb.141.2024.02.01.23.49.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Feb 2024 23:49:42 -0800 (PST)
-Message-ID: <07010c54-2e44-463b-9a9b-95697fd30ffd@redhat.com>
-Date: Fri, 2 Feb 2024 08:49:39 +0100
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="GcEW7nTo"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=zgcj+wX/L6IDdldqgziNCDsIyAb6c+kW8GcYNwM7sts=; b=GcEW7nToPq2txWV+ViSERXcFwc
+	rIIQ4n6+rou3/R+i4yGctXiLFzZv29zF/60F+jjXeE+KHkkI+HTQgFIorTtxr6i5Za45zbgiGpucj
+	p8gdiQ/Qz6wt/2SM4aIkw4zlWDE+fNPHZ2ovt3wAkQpvzQJanqF0SAHiMGwRu0K61OLmBUFMvdnzG
+	4NT4zFRK50O0q8jV7zYb1G+Dvhf+oOw/OamJj2xAG9XEZD52Lj7vD6df8J9yUZUZ/ULdzDWo6Nirg
+	26NrmJqI7PQdR8VJ1T9wQDKxln+BeKE210XOxjyZftyAu6H1aS4itKKLrMYDKPb1xVrgslxsJGmE1
+	J7sImYnQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:49854)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rVpFx-0005e9-2k;
+	Fri, 02 Feb 2024 08:50:41 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rVpFq-0008Bx-Er; Fri, 02 Feb 2024 08:50:34 +0000
+Date: Fri, 2 Feb 2024 08:50:34 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	David E Box <david.e.box@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Mark Gross <markgross@kernel.org>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <Jose.Abreu@synopsys.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Andrew Halaney <ahalaney@redhat.com>,
+	Simon Horman <simon.horman@corigine.com>,
+	Serge Semin <fancer.lancer@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	bpf@vger.kernel.org, Voon Wei Feng <weifeng.voon@intel.com>,
+	Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
+	Lai Peter Jun Ann <jun.ann.lai@intel.com>,
+	Abdul Rahim Faizal <faizal.abdul.rahim@intel.com>
+Subject: Re: [PATCH net-next v4 06/11] net: stmmac: resetup XPCS according to
+ the new interface mode
+Message-ID: <Zbys2orOUikYxeOm@shell.armlinux.org.uk>
+References: <20240129130253.1400707-1-yong.liang.choong@linux.intel.com>
+ <20240129130253.1400707-7-yong.liang.choong@linux.intel.com>
+ <ZbjNn+C/VHegH2t7@shell.armlinux.org.uk>
+ <9e23671e-788c-4191-bdb4-94915ff7da5a@linux.intel.com>
+ <ZbtYaXkNf2ZF1prE@shell.armlinux.org.uk>
+ <2ad1f55c-f361-4439-9174-6af1bb429d55@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86/amd/hsmp: switch to use
- device_add_groups()
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- naveenkrishna.chatradhi@amd.com
-Cc: linux-kernel@vger.kernel.org, Carlos Bilbao <carlos.bilbao@amd.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org
-References: <2024020145-junior-outnumber-3e76@gregkh>
-Content-Language: en-US
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <2024020145-junior-outnumber-3e76@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2ad1f55c-f361-4439-9174-6af1bb429d55@linux.intel.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Hi Greg,
-
-On 2/2/24 03:44, Greg Kroah-Hartman wrote:
-> The use of devm_*() functions works properly for when the device
-> structure itself is dynamic, but the hsmp driver is attempting to have a
-> local, static, struct device and then calls devm_() functions attaching
-> memory to the device that will never be freed.
-
-As I mentioned in my reply to v1, this is not correct.
-
-There is a global data struct, but that holds a struct device
-pointer, not the device struct.
-
-The device itself is created with platform_device_alloc() +
-platform_device_add() from module-init and it is removed
-on module-exit by calling platform_device_unregister()
-
-So AFAICT this should keep using the devm_ variant to properly
-cleanup the sysfs attributes.
-
-But what this really needs is to be converted to using
-amd_hsmp_driver.driver.dev_groups rather then manually
-calling devm_device_add_groups() I have already asked
-Suma Hegde (AMD) to take a look at this.
-
-Regards,
-
-Hans
-
-
-
-
-
+On Fri, Feb 02, 2024 at 11:00:58AM +0800, Choong Yong Liang wrote:
 > 
-> The logic of having a static struct device is almost never a wise
-> choice, but for now, just remove the use of devm_device_add_groups() in
-> this driver as it obviously is not needed.
 > 
-> Cc: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-> Cc: Carlos Bilbao <carlos.bilbao@amd.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
-> Cc: platform-driver-x86@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
-> v2: rebased against platform/for-next
+> On 1/2/2024 4:38 pm, Russell King (Oracle) wrote:
+> > Note the "This must not modify any state." statement. By reinitialising
+> > the PCS in this method, you are violating that statement.
+> > 
+> > This requirement is because this method will be called by
+> > phylink_validate_mac_and_pcs() at various times, potentially for each
+> > and every interface that stmmac supports, which will lead to you
+> > reinitialising the PCS, killing the link, each time we ask the MAC for
+> > a PCS, whether we are going to make use of it in that mode or not.
+> > 
+> > You can not do this. Sorry. Hard NAK for this approach.
+> > 
+> Thank you for taking the time to review, got your concerns, and I'll address
+> the following concerns before submitting a new patch series:
 > 
->  drivers/platform/x86/amd/hsmp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
-> index 1927be901108..d84ea66eecc6 100644
-> --- a/drivers/platform/x86/amd/hsmp.c
-> +++ b/drivers/platform/x86/amd/hsmp.c
-> @@ -693,7 +693,7 @@ static int hsmp_create_non_acpi_sysfs_if(struct device *dev)
->  		hsmp_create_attr_list(attr_grp, dev, i);
->  	}
->  
-> -	return devm_device_add_groups(dev, hsmp_attr_grps);
-> +	return device_add_groups(dev, hsmp_attr_grps);
->  }
->  
->  static int hsmp_create_acpi_sysfs_if(struct device *dev)
+> 1. Remove allow_switch_interface and have the PHY driver fill in
+> phydev->possible_interfaces.
 
+Yes please.
+
+> 2. Rework on the PCS to have similar implementation with the following patch
+> "net: macb: use .mac_select_pcs() interface"
+> (https://lore.kernel.org/netdev/E1n568J-002SZX-Gr@rmk-PC.armlinux.org.uk/T/).
+
+mac_select_pcs() is about returning to phylink the PCS that the MAC
+needs to use for the specified interface mode, or NULL if no PCS is
+required, nothing more, nothing less.
+
+Plase do not copy that mac_select_pcs() implementation - changing the
+"ops" underneath phylink is no longer permitted.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
