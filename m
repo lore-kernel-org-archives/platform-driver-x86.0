@@ -1,125 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-40136.proton.ch (mail-40136.proton.ch [185.70.40.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AAD615099E;
-	Fri,  2 Feb 2024 18:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C3C62B
+	for <platform-driver-x86@vger.kernel.org>; Sat,  3 Feb 2024 00:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706899312; cv=none; b=nbPBCbnPRJhRMib5vDd002a3fyWyOYzAorlJwqegR1Dz7Ei5tQWlGWqyTL4f0YFUhqav1fnygpKBMSyPftxmZOI42TOV76A9VimbG2IEyMAxGmpYMpmWVofU8E66VFEjJU2KCcIAxgjgFIB9gTEGnlTUERx6I9m70I8q9yTg7p4=
+	t=1706919509; cv=none; b=e/x3HfSaes1oKAJkK55X+THvuJ5BtD1bpqu0dQ4dEI16vFs7KcTRwlmTgujEZFNlz0mDfOTqaTqt+yT7MBTpbMArz5pla8zzN8K10oa5o6h7bYoEybCRuRqGbEdBWPpcCSm/cR1krhxMSU5yQnwc87NS/rF78CSSuCZMDrHtmd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706899312; c=relaxed/simple;
-	bh=M9wBgqupwhTELvQhqkNKpCNfjRPsU9wC61rYfxM9bHc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=brsoUWKHourGq7ewA/CukeYuCvqS7y7G7x4UphNZ00FYKvVV4UDdo24cgXjuA7Vqa+smLYZpyPWrFKzr/WxxwthAbzsRSnILR1+90YtM9q16lXCSkxNMXiyfE+QHdm9C2YzjMObW1/hSlLNcYKk9pmHNyt2DZAokLWy3cHAOqjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n+91RmjV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706919509; c=relaxed/simple;
+	bh=mqxplJHyussdBw3oUYPnNHFPjyBO9Gnif+4tCHH2tlM=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tymRmTtApAXFtZ36UNOndpCxdFf4ZK+TxxB5gCD5Zzqa+de9akK3ENAGeIUxTqtF8OG6uDCra286ExhpIUM0RM8H605JwlhdFKyy+8Z12LThFO4Zm9fmGueT5lXm3SG2rZOYxr8I48M94Wq4QmfJ7gZvByzPpDuWfoMXq5+D3mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bluemarch.art; spf=pass smtp.mailfrom=bluemarch.art; dkim=pass (2048-bit key) header.d=bluemarch.art header.i=@bluemarch.art header.b=DK+b11JL; arc=none smtp.client-ip=185.70.40.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bluemarch.art
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bluemarch.art
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n+91RmjV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12E13C433F1;
-	Fri,  2 Feb 2024 18:41:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706899312;
-	bh=M9wBgqupwhTELvQhqkNKpCNfjRPsU9wC61rYfxM9bHc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n+91RmjV6PQ+gnGmU0M9udXO/VnSWIlq8gJ7innImnsqobAya8JO/LceCSHiyD2nI
-	 YdQ0WFHkvw4dkqbreB9l8zYkr97aYr5+B9GkXGJNOYloBvE6KF9V0UuDi1icLSoKYb
-	 MIdPpSjxUgAWrwqgUnRCx0G+F+Ao1wPVuaBXbh18kKE7ZR0lamtxT1d9GkO0MQgaAS
-	 25epEUCgkmFpoznEqRIJ8z3UlnpyO/vDX0pQF1LiNPMANTxmd6kooF4Kw9n9V8qejZ
-	 W/YMmEs2AOmKYYqqOIPJj4i4pvlRi+qeaLc2H11fAqgHxyUfzwoTgK7lzuL65GI2Tr
-	 itmO+DFX/FCdQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Phoenix Chen <asbeltogf@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Sasha Levin <sashal@kernel.org>,
-	ilpo.jarvinen@linux.intel.com,
-	linux-input@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 11/11] platform/x86: touchscreen_dmi: Add info for the TECLAST X16 Plus tablet
-Date: Fri,  2 Feb 2024 13:41:25 -0500
-Message-ID: <20240202184130.541736-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240202184130.541736-1-sashal@kernel.org>
-References: <20240202184130.541736-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=bluemarch.art header.i=@bluemarch.art header.b="DK+b11JL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bluemarch.art;
+	s=protonmail; t=1706919496; x=1707178696;
+	bh=aDFKjB8QJjhd8Vsyx9c1H7TbrDmkFDkzPMpMRo2YCH8=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=DK+b11JLY0nZgMIO8So9hk1h+Hx/xXNi/2xel91Yyh3utcEWSShXYdl5eSNc8zkCL
+	 Ngg5StbuYAM5Znq0GhkNTZEDXLjlBOE73RGjr4EgseDgqErVNWL6B1cVHKfIxHtaRP
+	 jXnBVqY3PnrK98ljfHoKc7OoCjOS6zrC+eISHOYjQHCRK4SN+Offt+FiZmEcPKGTVE
+	 SH/2wMs6eiCVsTDubiME9GOBhkvh/npXll7mHC1yYTDG6R+4/p5fiQZ9qEpFOl1avs
+	 xU94anz0abnldQPQ4nSe2wI4BSppsV7qi2I2Zi8JarQxAp6MsF9SoLgVk7KrkEDg49
+	 66ZlzKg6FN+Og==
+Date: Sat, 03 Feb 2024 00:17:58 +0000
+To: Armin Wolf <W_Armin@gmx.de>
+From: Szilard Fabian <szfabian@bluemarch.art>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, jwoithe@just42.net, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [RFC PATCH v2] platform/x86/fujitsu-laptop: Add battery charge control support
+Message-ID: <Zb2GMCSIz1MuWpQZ@N>
+In-Reply-To: <fabf391c-933c-4a7b-a23c-d361ad3d7cc0@gmx.de>
+References: <20240129163502.161409-2-szfabian@bluemarch.art> <20240129175714.164326-2-szfabian@bluemarch.art> <fabf391c-933c-4a7b-a23c-d361ad3d7cc0@gmx.de>
+Feedback-ID: 87830438:user:proton
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.148
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Phoenix Chen <asbeltogf@gmail.com>
+Hello,
 
-[ Upstream commit 1abdf288b0ef5606f76b6e191fa6df05330e3d7e ]
+On Tue, Jan 30, 2024 at 03:02:09AM +0100, Armin Wolf wrote:
+> Am 29.01.24 um 19:00 schrieb Szilard Fabian:
+> > +
+> > +=09return sprintf(buf, "%d\n", status);
+> > +}
+> > +
+> > +static DEVICE_ATTR_RW(charge_control_end_threshold);
+> > +
+> > +/* ACPI battery hook */
+> > +
+> > +static int fujitsu_battery_add(struct power_supply *battery,
+> > +=09=09=09       struct acpi_battery_hook *hook)
+> > +{
+> > +=09/* Check if there is an existing FUJ02E3 ACPI device. */
+> > +=09if (fext =3D=3D NULL)
+> > +=09=09return -ENODEV;
+>=20
+> Can you put the struct acpi_battery_hook into the struct fujitsu_laptop
+> and then use container_of() to retrieve the ACPI device from there?
+> The dell-wmi-ddv driver does something similar.
+>=20
+> This would guarantee that the battery hook always accesses the correct AC=
+PI device
+> and you could drop this check.
+>=20
+> > +
+> > +=09/*
+> > +=09 * Check if the S006 0x21 method exists by trying to get the curren=
+t
+> > +=09 * battery charge limit.
+> > +=09 */
+> > +=09int s006_cc_return;
+> > +=09s006_cc_return =3D call_fext_func(fext, FUNC_S006_METHOD,
+> > +=09=09=09=09=09CHARGE_CONTROL_RW, 0x21, 0x0);
+> > +=09if (s006_cc_return =3D=3D UNSUPPORTED_CMD)
+> > +=09=09return -ENODEV;
+>=20
+> Maybe this check should be done once during probe?
+What about the following scenario?
+- Put a bool into the struct fujitsu_laptop to store information about the
+  machine's charge control ability.
+- The S006 0x21 method check with `battery_hook_register` gets moved into
+  an 'init function'. In that 'init function' the bool gets set accordingly=
+.
+- `battery_hook_unregister` gets moved into an 'exit function', where the
+  bool gets read and when it's false nothing happens.
+- `fext` check gets removed from `fujitsu_battery_add` because it's
+  redundant (more about that later).
+- The 'init function' gets called in `acpi_fujitsu_laptop_add` and the 'exi=
+t
+  function' gets called in `acpi_fujitsu_laptop_remove`.
 
-Add touch screen info for TECLAST X16 Plus tablet.
+With that scenario the code could be a little bit clearer in my opinion.
+And it is possible to drop the `fext` check because if the FUJ02E3 ACPI
+device exists `fext` gets set in the `acpi_fujitsu_laptop_add` function wit=
+h
+an error check.
+(And the `fujitsu_battery_add` `fext` check was already redundant because
+`battery_hook_register` got called in `acpi_fujitsu_laptop_add`. `fext`
+gets set in the same function, and there is an error check already.)
 
-Signed-off-by: Phoenix Chen <asbeltogf@gmail.com>
-Link: https://lore.kernel.org/r/20240126095308.5042-1-asbeltogf@gmail.com
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/touchscreen_dmi.c | 35 ++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+Thanks,
+Szilard
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index f129e29b295d..397283893f39 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -916,6 +916,32 @@ static const struct ts_dmi_data teclast_tbook11_data = {
- 	.properties	= teclast_tbook11_props,
- };
- 
-+static const struct property_entry teclast_x16_plus_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-min-x", 8),
-+	PROPERTY_ENTRY_U32("touchscreen-min-y", 14),
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1916),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1264),
-+	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl3692-teclast-x16-plus.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
-+	{ }
-+};
-+
-+static const struct ts_dmi_data teclast_x16_plus_data = {
-+	.embedded_fw = {
-+		.name	= "silead/gsl3692-teclast-x16-plus.fw",
-+		.prefix = { 0xf0, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 },
-+		.length	= 43560,
-+		.sha256	= { 0x9d, 0xb0, 0x3d, 0xf1, 0x00, 0x3c, 0xb5, 0x25,
-+			    0x62, 0x8a, 0xa0, 0x93, 0x4b, 0xe0, 0x4e, 0x75,
-+			    0xd1, 0x27, 0xb1, 0x65, 0x3c, 0xba, 0xa5, 0x0f,
-+			    0xcd, 0xb4, 0xbe, 0x00, 0xbb, 0xf6, 0x43, 0x29 },
-+	},
-+	.acpi_name	= "MSSL1680:00",
-+	.properties	= teclast_x16_plus_props,
-+};
-+
- static const struct property_entry teclast_x3_plus_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
-@@ -1552,6 +1578,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_SKU, "E5A6_A1"),
- 		},
- 	},
-+	{
-+		/* Teclast X16 Plus */
-+		.driver_data = (void *)&teclast_x16_plus_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TECLAST"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Default string"),
-+			DMI_MATCH(DMI_PRODUCT_SKU, "D3A5_A1"),
-+		},
-+	},
- 	{
- 		/* Teclast X3 Plus */
- 		.driver_data = (void *)&teclast_x3_plus_data,
--- 
-2.43.0
 
