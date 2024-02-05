@@ -1,59 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00ED1225D2;
-	Sun,  4 Feb 2024 14:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05319171B0;
+	Mon,  5 Feb 2024 10:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707058332; cv=none; b=fGdIdt378Uh6YyQNn/vz+wcJ7ImEfvZRe4iJAFIVPXUCx+j+wRHWJKVK50Sj6eT2K158Npo4cMEXYR9T8OmdrBuZTyamLQWo8aKhvpzACWDTXpEwCu+qEM9/len6c6XIdEkE0TItxOvL0YcsTQ4mNY3N0XlfTENJ0Ps4uHnV8Vg=
+	t=1707128860; cv=none; b=jZqCaEDeFZ7nFPv2flVYv27uPmegsYqux00loSkf0mfixW8apkv8wO7VtLehum6h/8KveaqL3ZCAmenn6lTVqd43oGtECiTub5ORAD+WO6C69IVZ8POt6NcFHYciMGV3qqbUIiUS7r8ilODw7fU9gbEvXN6xlzkNe2t5A1Ox738=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707058332; c=relaxed/simple;
-	bh=BtmloRZUgXVfHb0x5/aVljflOg83lmGIiy2KAPL2EAg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=agNQlaCKF9xkl6g/5UQn21cAcfM/K14UbQJE0MvnuCS8Mw/cqkYGcYO+Rdhs+OhR9pG+Oa4C8rodphY1sCzmvIZniunPqktHx3fkGaqqI4//laFzauK0jc7MOWw4DaW+aVoVG8666HV+NQRddx1GIgRQAXS9JzF/+gIhXpwoLv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=subHmU2D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707128860; c=relaxed/simple;
+	bh=VAS2Lu0xN6uR6DVUY/x61U7rqCFObsbM4IPQJXIRAOI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=o3qsJupePjBT5NrNNFai5B5q52k83gcEod593h8N8/2GD8yotTCn1OFYrMMwXaEYS5umptrr3YtxFFUtQokmtVSZZMoBfC7Ae1MIV9LgeUPBSMsp0QvHBy/erFiNPcMn0XqCnlI8j3n1Vqx1QIfpFDhLI3/t70aOPpMnctqfW1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D5kmz8qL; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="subHmU2D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53CC3C433C7;
-	Sun,  4 Feb 2024 14:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707058331;
-	bh=BtmloRZUgXVfHb0x5/aVljflOg83lmGIiy2KAPL2EAg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=subHmU2DMReqtZf5MNFj4eVctJunencxiS+O2b44+0Yy13YO44XRsbU8536SmbvAY
-	 Lnyqrqxgxj+7OQE1uBejvotYa+YvBEHLZb+ka3U1D/9+OMwdRt3vq7SIfwpzZgx7/D
-	 4hf8hrpzuD5tfH2m6NNQy4zu5FCS5mAO9a3Zc3ak=
-Date: Sun, 4 Feb 2024 06:52:10 -0800
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] platform: x86: struct bus_type cleanup
-Message-ID: <2024020401-dictate-recant-0d2e@gregkh>
-References: <20240204-bus_cleanup-platform-drivers-x86-v1-0-1f0839b385c6@marliere.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D5kmz8qL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707128858; x=1738664858;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=VAS2Lu0xN6uR6DVUY/x61U7rqCFObsbM4IPQJXIRAOI=;
+  b=D5kmz8qLJi8hKNJJ+AmcT1hNRqKooRZRP12ebc1YKmoctOVTCAzlwqdw
+   1fZN2OKk34wV92eichLQMtEAl3u7kx/0y8oKkVuqlqOcGgJw7ZFrSomyE
+   Fn0A141fP/LTcHnuoyBcYJ6/pwSoYGAEC0HQD7cuqh0gG05h5J2Tw2ikt
+   BcIaJFO4ePTnyLMYcdyF3B/hHg9yrV3U0Lnx37knqYopLrV8x/EbE1LY+
+   6NfzAEwLRtGffGODDs5QMV7PDfNMO7wf0QcCE9KGuEaUcbQlp8FlOXO0s
+   QOr31/dsDghveGXD/DnrguGQCuh8RRbaRn8/wu07ajz2d4SCMlBt26wJ6
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="3452950"
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="3452950"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 02:27:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="5424972"
+Received: from papaga-mobl.ger.corp.intel.com (HELO localhost) ([10.246.35.237])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 02:27:34 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 5 Feb 2024 12:27:24 +0200 (EET)
+To: Hans de Goede <hdegoede@redhat.com>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+cc: naveenkrishna.chatradhi@amd.com, LKML <linux-kernel@vger.kernel.org>, 
+    Carlos Bilbao <carlos.bilbao@amd.com>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86/amd/hsmp: switch to use
+ device_add_groups()
+In-Reply-To: <06e92b87-4d48-4519-b1db-6d7605bf3962@redhat.com>
+Message-ID: <e8605fd7-1ffc-00ff-ec3b-e125085d4e92@linux.intel.com>
+References: <2024020145-junior-outnumber-3e76@gregkh> <07010c54-2e44-463b-9a9b-95697fd30ffd@redhat.com> <2024020243-blinks-pantomime-c51e@gregkh> <06e92b87-4d48-4519-b1db-6d7605bf3962@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240204-bus_cleanup-platform-drivers-x86-v1-0-1f0839b385c6@marliere.net>
+Content-Type: text/plain; charset=US-ASCII
 
-On Sun, Feb 04, 2024 at 11:40:15AM -0300, Ricardo B. Marliere wrote:
-> This series is part of an effort to cleanup the users of the driver
-> core, as can be seen in many recent patches authored by Greg across the
-> tree (e.g. [1]). Specifically, this series is part of the task of
-> splitting one of his TODOs [2].
+On Fri, 2 Feb 2024, Hans de Goede wrote:
+> On 2/2/24 16:32, Greg Kroah-Hartman wrote:
+> > On Fri, Feb 02, 2024 at 08:49:39AM +0100, Hans de Goede wrote:
+> >> Hi Greg,
+> >>
+> >> On 2/2/24 03:44, Greg Kroah-Hartman wrote:
+> >>> The use of devm_*() functions works properly for when the device
+> >>> structure itself is dynamic, but the hsmp driver is attempting to have a
+> >>> local, static, struct device and then calls devm_() functions attaching
+> >>> memory to the device that will never be freed.
+> >>
+> >> As I mentioned in my reply to v1, this is not correct.
+> >>
+> >> There is a global data struct, but that holds a struct device
+> >> pointer, not the device struct.
+> > 
+> > Ooops, I misread that:
+> > 	static struct hsmp_plat_device plat_dev;
+> > was not the actual device struct anymore.
+> > 
+> >> The device itself is created with platform_device_alloc() +
+> >> platform_device_add() from module-init and it is removed
+> >> on module-exit by calling platform_device_unregister()
+> > 
+> > Ok, much better.
+> > 
+> >> So AFAICT this should keep using the devm_ variant to properly
+> >> cleanup the sysfs attributes.
+> > 
+> > This devm_ variant is odd, and should never have been created as the
+> > sysfs core always cleans up the sysfs attributes when a device is
+> > removed, there is no need for it (i.e. they do the same thing.)
+> > 
+> > That's why I want to get rid of it, it's pointless :)
+> > 
+> >> But what this really needs is to be converted to using
+> >> amd_hsmp_driver.driver.dev_groups rather then manually
+> >> calling devm_device_add_groups() I have already asked
+> >> Suma Hegde (AMD) to take a look at this.
+> > 
+> > The initial issue I saw with this is that these attributes are being
+> > created dynamically, so using dev_groups can be a bit harder.  The code
+> > paths here are twisty and not obvious as it seems to want to support
+> > devices of multiple types in the same codebase at the same time.
+> > 
+> > But yes, using dev_groups is ideal, and if that happens, I'm happy.
+> > It's just that there are now only 2 in-kernel users of
+> > devm_device_add_groups() and I have a patch series to get rid of the
+> > other one, and so this would be the last, hence my attention to this.
+> > 
+> > Again, moving from devm_device_add_groups() to device_add_groups() is a
+> > no-op from a functional standpoint, so this should be fine.
 > 
-> ---
-> [1]: https://lore.kernel.org/lkml/?q=f%3Agregkh%40linuxfoundation.org+s%3A%22make%22+and+s%3A%22const%22
-> [2]: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=bus_cleanup&id=26105f537f0c60eacfeb430abd2e05d7ddcdd8aa
+> Ok, I was not aware that the core automatically cleans up
+> all the attributes anyways.
 > 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+> In that case this fine with me and I agree with merging this
+> so that you can entirely remove the  devm_ variant:
 > 
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Greg,
+
+Does this same stuff apply to devm_device_add_group() which was added 
+along the ACPI changes?
+
+And the changelog is quite misleading as is, it should be changed to 
+match the real motivation.
+
+-- 
+ i.
+
