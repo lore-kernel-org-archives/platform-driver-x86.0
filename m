@@ -1,183 +1,154 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7940C12E1D5;
-	Tue,  6 Feb 2024 09:01:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D805612D145
+	for <platform-driver-x86@vger.kernel.org>; Tue,  6 Feb 2024 09:04:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707210083; cv=none; b=cnudVqr6I/M1IQU1J9CHK67dEWdotbHHteTQ3s9pEA5ojmXJQWlF/vScwwRSHh8fFmmjAFBrRBgRsTaFEzfSk+KVnJh6X7TemL6Lh7StT1tCJG4VC+h59MNI78YnxSLzK+xP+yn6ZAeryiHZM2HIpNhsLOPFK8tNL16D2DQvMSE=
+	t=1707210258; cv=none; b=lehcht/N5eL7ZApvK6DZlWPgkND5z1JZPxwWQo1L5F1D6csmS0iXTrEtBkaCndbuGKvcWDBhDwDkexsav3eB+h+vm7uYCaRGncMUwV26GZ8VY7CY8weM+kvedmmJBsbsxNpjogjAI6A8zk24MKZNuHkWksf1AaKdUqmhJiETdqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707210083; c=relaxed/simple;
-	bh=2SDrB5JaxZL2HWqNxRD4Yrm8ISnPJv7zByBg6OlxiLw=;
+	s=arc-20240116; t=1707210258; c=relaxed/simple;
+	bh=s9pnt3XkheiUEfGVB3CN0cH5z2Y69cNZz5uG+wOvxyo=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=t9uYNBj0BzOUMrCBEBgrIOBNUezuzfoYROsZpW6NOxb+Y/NTuk2qADByOBc+mvRK+r+ViUF5cn7JeHyJPEMQ2NQj7uSxG4Ht2Mxa+Dsn3LvkF4KPVhbY8e5gJYdZWonr5VORM3XPSHbbRaFajfHiYnpZ4Vwmmj5VPe9urPMr/0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hFk7mKE0; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version:Content-Type; b=SIRk4mLPdOismbZoFNvoxFzVQ0lBSDocrxonVFNUuQDjo2FlN+B4voo+G12vsIE4L+uFFCSNGWbgX2ZeBuIC8wgP6tZVb8eoXgd2RnDdy7sYBv+Ex0h3G7jWiF59BDTG6uoV3Q0q1rCLTQh9/gVRMM9wL0e7RB0Uw0HgUhNcmrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C316BIO2; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hFk7mKE0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C316BIO2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707210082; x=1738746082;
+  t=1707210257; x=1738746257;
   h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=2SDrB5JaxZL2HWqNxRD4Yrm8ISnPJv7zByBg6OlxiLw=;
-  b=hFk7mKE0vML25hqsIJEG0rR0Z7wp21/S6g/M/MLwf/GP8rdKGu2hinU3
-   ifIjet8QHKTgy08cEjMAieDGKnAFarVOzRY6sWCyIuFV+EISWbACFds2+
-   EkuvEgyCACWq+x/iJ7a3ffCTwHN4xGLZjtbcLFa+6KAk2Dc4zjVJMPWmc
-   gINT82UIcBNOpzLKUrEiB+247OtWJogEbOK3CEUF4zVZg6+q+DWLRn12y
-   BDEkPBqC4MTxPm4INWMEZywPoU9ZeMBs8PIWxUtnLCJSgMaxfZI3b2lL+
-   MIIqIa3XpiKm+6Ek1dLicF/fuYNj8s+q2yr/oMk5/qWLqe3vjRYcJjcHW
+   references:mime-version;
+  bh=s9pnt3XkheiUEfGVB3CN0cH5z2Y69cNZz5uG+wOvxyo=;
+  b=C316BIO2mvif18AQsgChxVsE+AAb5hU7GNG+PYGOQhxhGSNzP6uhFlWX
+   JDeRRYrOidNSW/QQTrklQvUT3Ma+I3NJd4M559FTp2dumte9eykNcRpif
+   g+fhqyKx+iug8ovrPmfZoRtIkZiSe7rqKh/qvguc78s6uPaa932K7WnHm
+   HGkr5XXL68HTMNe9AJ5wStp/abCAMKtvpfFEzhJNGHmn8SYQ3AxlflMzw
+   FwF0PsgILxhvFomMTy0m0yPFOi/j+pUOBiKqiLQ4VOgRQDoPO0bS09Hy6
+   wzKZ3w7IZu7FIUuZfG3EmEr1grh0+w2mawu4wn3IlfuFfr5EnMs33VuAp
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="11289535"
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="11290269"
 X-IronPort-AV: E=Sophos;i="6.05,246,1701158400"; 
-   d="scan'208";a="11289535"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 01:01:21 -0800
+   d="scan'208";a="11290269"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 01:04:17 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="909569782"
 X-IronPort-AV: E=Sophos;i="6.05,246,1701158400"; 
-   d="scan'208";a="966340"
+   d="scan'208";a="909569782"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.36.139])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 01:01:17 -0800
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 01:04:13 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 6 Feb 2024 11:01:13 +0200 (EET)
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc: Hans de Goede <hdegoede@redhat.com>, naveenkrishna.chatradhi@amd.com, 
-    LKML <linux-kernel@vger.kernel.org>, Carlos Bilbao <carlos.bilbao@amd.com>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86/amd/hsmp: switch to use
- device_add_groups()
-In-Reply-To: <2024020540-siesta-palm-03cd@gregkh>
-Message-ID: <3522e43e-a54c-0ac1-e4b8-beea9b7e0bd0@linux.intel.com>
-References: <2024020145-junior-outnumber-3e76@gregkh> <07010c54-2e44-463b-9a9b-95697fd30ffd@redhat.com> <2024020243-blinks-pantomime-c51e@gregkh> <06e92b87-4d48-4519-b1db-6d7605bf3962@redhat.com> <e8605fd7-1ffc-00ff-ec3b-e125085d4e92@linux.intel.com>
- <2024020540-siesta-palm-03cd@gregkh>
+Date: Tue, 6 Feb 2024 11:04:09 +0200 (EET)
+To: "Hegde, Suma" <Suma.Hegde@amd.com>
+cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+    Naveen Krishna Chatradhi <nchatrad@amd.com>
+Subject: Re: [PATCH v5 10/11] platform/x86/amd/hsmp: Change devm_kzalloc()
+ to devm_kcalloc()
+In-Reply-To: <4b97ff14-dbd7-4c07-9bf6-5f17cd5c93eb@amd.com>
+Message-ID: <1600919a-6475-1b68-0b7c-49f80913fda8@linux.intel.com>
+References: <20240106022532.1746932-1-suma.hegde@amd.com> <20240106022532.1746932-10-suma.hegde@amd.com> <8b896046-2058-805d-1998-7ae6d51edd01@linux.intel.com> <0c930967-ce51-edf9-c8c4-5e00d8ff7047@linux.intel.com> <6a60fd66-64df-491e-8879-3333c8f119d5@amd.com>
+ <576a14c5-e0ad-e6d8-fc7a-0e0121f16c37@linux.intel.com> <4b97ff14-dbd7-4c07-9bf6-5f17cd5c93eb@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1903269187-1707209279=:1141"
-Content-ID: <21a85ceb-6a8f-fc9f-b2e0-de572ce81811@linux.intel.com>
+Content-Type: multipart/mixed; boundary="8323328-1302712386-1707210249=:1141"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1903269187-1707209279=:1141
-Content-Type: text/plain; CHARSET=ISO-8859-15
+--8323328-1302712386-1707210249=:1141
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <a1d6fb3c-5406-0c11-1250-74927851f899@linux.intel.com>
 
-On Mon, 5 Feb 2024, Greg Kroah-Hartman wrote:
+On Tue, 6 Feb 2024, Hegde, Suma wrote:
 
-> On Mon, Feb 05, 2024 at 12:27:24PM +0200, Ilpo J=E4rvinen wrote:
-> > On Fri, 2 Feb 2024, Hans de Goede wrote:
-> > > On 2/2/24 16:32, Greg Kroah-Hartman wrote:
-> > > > On Fri, Feb 02, 2024 at 08:49:39AM +0100, Hans de Goede wrote:
-> > > >> Hi Greg,
-> > > >>
-> > > >> On 2/2/24 03:44, Greg Kroah-Hartman wrote:
-> > > >>> The use of devm_*() functions works properly for when the device
-> > > >>> structure itself is dynamic, but the hsmp driver is attempting to=
- have a
-> > > >>> local, static, struct device and then calls devm_() functions att=
-aching
-> > > >>> memory to the device that will never be freed.
-> > > >>
-> > > >> As I mentioned in my reply to v1, this is not correct.
-> > > >>
-> > > >> There is a global data struct, but that holds a struct device
-> > > >> pointer, not the device struct.
-> > > >=20
-> > > > Ooops, I misread that:
-> > > > =09static struct hsmp_plat_device plat_dev;
-> > > > was not the actual device struct anymore.
-> > > >=20
-> > > >> The device itself is created with platform_device_alloc() +
-> > > >> platform_device_add() from module-init and it is removed
-> > > >> on module-exit by calling platform_device_unregister()
-> > > >=20
-> > > > Ok, much better.
-> > > >=20
-> > > >> So AFAICT this should keep using the devm_ variant to properly
-> > > >> cleanup the sysfs attributes.
-> > > >=20
-> > > > This devm_ variant is odd, and should never have been created as th=
-e
-> > > > sysfs core always cleans up the sysfs attributes when a device is
-> > > > removed, there is no need for it (i.e. they do the same thing.)
-> > > >=20
-> > > > That's why I want to get rid of it, it's pointless :)
-> > > >=20
-> > > >> But what this really needs is to be converted to using
-> > > >> amd_hsmp_driver.driver.dev_groups rather then manually
-> > > >> calling devm_device_add_groups() I have already asked
-> > > >> Suma Hegde (AMD) to take a look at this.
-> > > >=20
-> > > > The initial issue I saw with this is that these attributes are bein=
-g
-> > > > created dynamically, so using dev_groups can be a bit harder.  The =
-code
-> > > > paths here are twisty and not obvious as it seems to want to suppor=
-t
-> > > > devices of multiple types in the same codebase at the same time.
-> > > >=20
-> > > > But yes, using dev_groups is ideal, and if that happens, I'm happy.
-> > > > It's just that there are now only 2 in-kernel users of
-> > > > devm_device_add_groups() and I have a patch series to get rid of th=
-e
-> > > > other one, and so this would be the last, hence my attention to thi=
-s.
-> > > >=20
-> > > > Again, moving from devm_device_add_groups() to device_add_groups() =
-is a
-> > > > no-op from a functional standpoint, so this should be fine.
-> > >=20
-> > > Ok, I was not aware that the core automatically cleans up
-> > > all the attributes anyways.
-> > >=20
-> > > In that case this fine with me and I agree with merging this
-> > > so that you can entirely remove the  devm_ variant:
-> > >=20
-> > > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>=20
+> On 1/31/2024 4:02 PM, Ilpo J=C3=A4rvinen wrote:
+> > Caution: This message originated from an External Source. Use proper ca=
+ution
+> > when opening attachments, clicking links, or responding.
 > >=20
-> > Greg,
 > >=20
-> > Does this same stuff apply to devm_device_add_group() which was added=
-=20
-> > along the ACPI changes?
+> > On Mon, 29 Jan 2024, Hegde, Suma wrote:
+> >=20
+> > > On 1/29/2024 6:14 PM, Ilpo J=C3=A4rvinen wrote:
+> > > > Caution: This message originated from an External Source. Use prope=
+r
+> > > > caution
+> > > > when opening attachments, clicking links, or responding.
+> > > >=20
+> > > >=20
+> > > > On Thu, 25 Jan 2024, Ilpo J=C3=A4rvinen wrote:
+> > > >=20
+> > > > > On Sat, 6 Jan 2024, Suma Hegde wrote:
+> > > > >=20
+> > > > > > Use the standard array allocation variant of devm memory alloca=
+tion
+> > > > > > APIs.
+> > > > > >=20
+> > > > > > Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+> > > > > > Signed-off-by: Naveen Krishna Chatradhi <nchatrad@amd.com>
+> > > > > I decided to apply all but this patch 10/11 into review-ilpo. I f=
+ixed
+> > > > > the
+> > > > > parenthesis issue I mentioned in one of the patches while applyin=
+g.
+> > > > >=20
+> > > > > Please check the comment I made against this patch and respin thi=
+s
+> > > > > one.
+> > > > >=20
+> > > > > I also noticed while applying one other extra parenthesis case in
+> > > > > patch 5
+> > > > > but since it was not added, I didn't go to tweak it now myself, b=
+ut
+> > > > > just
+> > > > > you know.
+> > > > Hi Suma,
+> > > >=20
+> > > > There are number of issues and warnings due to these patches includ=
+ing
+> > > > one build failure due to lack of ACPI in the config (I think), can =
+you
+> > > > please take a look at them.
+> > > Hi Ilpo,
+> > >=20
+> > > I have pushed patch with fixes for smatch error and warnings.
+> > >=20
+> > > For the CONFIG_ACPI=3Dn build failure, I have added "depends on ACPI"=
+ for
+> > > hsmp
+> > > driver and pushed patch for that.
+> > Hi,
+> >=20
+> > I've folded your fixes into the relevant patches now.
+> >=20
+> > > But we support NON-ACPI probing also, there may be x86 platforms with=
+ ACPI
+> > > disabled, is there a previous reference of how this can be handled
+> > >=20
+> > > without making it dependent on ACPI in Kconfig?
+> > Given you have quite much code that relates to ACPI case, perhaps
+> > creating hsmp-acpi.c wouldn't be a bad idea so you can make that file
+> > depend on ACPI without polluting the hsmp.c code with #ifdefs.
 >=20
-> Probably, I haven't looked at that yet.
->
-> > And the changelog is quite misleading as is, it should be changed to=20
-> > match the real motivation.
->=20
-> "Motivation" isn't always needed in a changelog text, I was trying to
-> describe why this specific instance was not needed, not the overall
-> pointlessness of the function :)
->=20
-> I got the text wrong about this being a static variable (but one is
-> still in there, so it's confusing.)
+> Thanks Ilpo for the suggestion. I will address Han's and Greg's comments =
+and
+> later will work on splitting the ACPI code into separate file.
 
-Yes, I mainly meant the not-dynamic part is no longer true so I don't want=
-=20
-to apply it as is and you likely want to extend the patch to include the=20
-newly introduced devm_device_add_group() call conversion.
+Okay, thanks.
 
-> I'll be glad to reword this if needed to just say "This function is
-> pointless, does nothing, and is about to be removed from the kernel so
-> stop using it", or something along those lines...
-
-Given that it wasn't obvious to either me nor Hans, it would have been=20
-useful to mention it. The current wording had a different undertone so
-after the driver got changed it looked as if the patch become obsolete.
-=2E..But that turned out was not the case because of motivation outside of
-the one given in the commit message, so yes, if we look this from a
-reviewer perspective, it would be useful information to tell the function=
-=20
-is pointless and does nothing useful on top of the other function.
+Mario also raised concerns besides those from Hans and Greg so could you=20
+also take a look at them as well.
 
 
 --=20
  i.
---8323328-1903269187-1707209279=:1141--
+
+--8323328-1302712386-1707210249=:1141--
