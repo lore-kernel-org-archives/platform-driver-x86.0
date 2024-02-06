@@ -1,85 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADCBA83CC8;
-	Tue,  6 Feb 2024 10:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8E812E1FF;
+	Tue,  6 Feb 2024 10:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707214495; cv=none; b=goBzKDhkdcRx/M3WN+dhe+aXv9h5byNeSecN7xravbRp7n4Fk0lR2+9C/dF23jod4o6BwExhCDfTmkbDOWH8o+PBGvZw8zVFitFD60bSjjKcEsvljlnioaNSflxV26kaR//QWVj04BSgBb10XaI8Amx2l80u5BKKtUV1n3b5O9A=
+	t=1707214653; cv=none; b=izTueArmWkbkSs1PriPOIQXbNdcfX7R603mmxi4muacpfMdq59imdo8rPZW3zsCmz8zG46P85V0F9gLibEsCK6oFfBuCG4rUcupP2a/8LQswBu6bdIf/7K0uWzqs1Cyyvh7Al7prtr/2MnOOw2DuxNOfdnVZvC4H81eN2aPyNnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707214495; c=relaxed/simple;
-	bh=kxANQZooDhmBh6B4YpxkoO6gfLK9laRcMJ62kX5uYSU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=cEnC2Z0dB7FE4JICBtUohzYweex7cRYiJgVHjvqVn5odQ1+UHK4yYU0NLhMK5ndkB5Ar59bqIxE0h0LZKsirHuWN8r+fGUeSoHe/Ibx2WWBSDzq/gt87ob1gkKHbv2YHAUEg9Mcia/z01KYw5VIhKgKPQ5QWZJRZU8C9Nv2/NlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RfEaQ1Lt; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1707214653; c=relaxed/simple;
+	bh=oFoZrkj5hSrIBFV+8cbsdJVafz0I/YimdsJSybYVGUU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Pp8KoKaG6zJhO8MrwN/93MUfuYTViEI8Q3xa5QOpPT0r5kQhR2QK/5pLqa5rjf7SraUGIPooTcOoEbV7L5g5PSI164cfGlgbIm7wg7mMBJahgJ1P+NN6BuNGQ5lpzGgyHe+CQZ3sYdTb4l4Vv3cvepea0KpUEA/O4Q7b9E9JF4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=arNQsvqK; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RfEaQ1Lt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="arNQsvqK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707214493; x=1738750493;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=kxANQZooDhmBh6B4YpxkoO6gfLK9laRcMJ62kX5uYSU=;
-  b=RfEaQ1Lt2G7tpbtB/IG8ag9pXZInSGIFTz5IZRi3/R/tx4Z/02UnVMQw
-   71GylRcoy/Yin1eKU0GCXSF8yAYRVeUAgExLNxSD8hg+sT5NmoExMhC4d
-   sAlKCUsE/V2FQbfsYKUZ4lki+x31byTsn/xmU4JL3wmHKEHlaFN0ejzLy
-   jUxPNcokTtP0boJ/2VxuFhL+wKkn84w4uD1yoMnx6BqX6nq8fzD6iNh4e
-   7VMzCewgr3ctdcLQKIN2rx8cYrxHiTdhKhL9st40tnJirI1Mk31+G5EeB
-   mjlhKr7BNwjIQtlz5SHoMDmGyOuE10jR13PaOSFkqtLrjyK7wUc5t+XSh
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="597776"
+  t=1707214652; x=1738750652;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=oFoZrkj5hSrIBFV+8cbsdJVafz0I/YimdsJSybYVGUU=;
+  b=arNQsvqKFtxvVlGwurx9mvshXf4lynhj1u+LpJHsdQIQte900VQhzFiS
+   0gdxqJlRAne5eFpFZS77VP6j+uonyFBawMHDe8+TUEmbps8hq9GdzZ6uR
+   pLHGydRort8XimIwGWKts4z5WKnPCFMPuJvcaLR1xhLrrTdtr4fwBA1tJ
+   rseS/IVV+4v7gVSFS42VlXR58pNgu0fhy2zTn9hHdjiiea2Jqj4Ij45Fu
+   97YoWjfNSiOBNEREpvEcG/y0nQyEdkz1lYKv6jscgfzJXcLswCNAZs/x9
+   Qd3nzXjH8P9SJPzdKyyOHSik1K0kTRPC2RSojDXSwJqd9d+LAeQNpyKQy
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="18233866"
 X-IronPort-AV: E=Sophos;i="6.05,246,1701158400"; 
-   d="scan'208";a="597776"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 02:14:53 -0800
+   d="scan'208";a="18233866"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 02:17:30 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="933418973"
 X-IronPort-AV: E=Sophos;i="6.05,246,1701158400"; 
-   d="scan'208";a="933418973"
+   d="scan'208";a="976750"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.36.139])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 02:14:51 -0800
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 02:17:24 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-In-Reply-To: <20240204-bus_cleanup-platform-drivers-x86-v1-0-1f0839b385c6@marliere.net>
-References: <20240204-bus_cleanup-platform-drivers-x86-v1-0-1f0839b385c6@marliere.net>
-Subject: Re: [PATCH 0/2] platform: x86: struct bus_type cleanup
-Message-Id: <170721448591.2255.4876189619847737176.b4-ty@linux.intel.com>
-Date: Tue, 06 Feb 2024 12:14:45 +0200
+Date: Tue, 6 Feb 2024 12:17:21 +0200 (EET)
+To: Maximilian Luz <luzmaximilian@gmail.com>, Ivor Wanders <ivor@iwanders.net>
+cc: Guenter Roeck <linux@roeck-us.net>, Hans de Goede <hdegoede@redhat.com>, 
+    Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
+    Mark Gross <markgross@kernel.org>, linux-hwmon@vger.kernel.org, 
+    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] platform/surface: aggregator_registry: add entry
+ for fan speed
+In-Reply-To: <6659d49c-4a70-1a92-2a76-ce7144fed50c@linux.intel.com>
+Message-ID: <f79f050d-708d-a9c3-fb6d-b06e046603c3@linux.intel.com>
+References: <20240131005856.10180-1-ivor@iwanders.net> <20240131005856.10180-3-ivor@iwanders.net> <7e392c1e-2cb2-43e4-804e-227551ed2dd7@roeck-us.net> <8552a795-9ce4-417a-bc71-593571a6b363@gmail.com> <6659d49c-4a70-1a92-2a76-ce7144fed50c@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
+Content-Type: multipart/mixed; boundary="8323328-2118278718-1707214641=:1141"
 
-On Sun, 04 Feb 2024 11:40:15 -0300, Ricardo B. Marliere wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> This series is part of an effort to cleanup the users of the driver
-> core, as can be seen in many recent patches authored by Greg across the
-> tree (e.g. [1]). Specifically, this series is part of the task of
-> splitting one of his TODOs [2].
-> 
+--8323328-2118278718-1707214641=:1141
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
+On Thu, 1 Feb 2024, Ilpo J=E4rvinen wrote:
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
-local branch there, which might take a while.
+> On Wed, 31 Jan 2024, Maximilian Luz wrote:
+>=20
+> > Am 1/31/2024 um 2:24 PM schrieb Guenter Roeck:
+> > > On Tue, Jan 30, 2024 at 07:58:56PM -0500, Ivor Wanders wrote:
+> > > > Add an entry for the fan speed function.
+> > > > Add this new entry to the Surface Pro 9 group.
+> > > >=20
+> > > > Signed-off-by: Ivor Wanders <ivor@iwanders.net>
+> > > > Link: https://github.com/linux-surface/kernel/pull/144
+> > > > Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+> > >=20
+> > > I wasn't sure if the Reviewed-by: tag means that I should apply the p=
+atch
+> > > through the hwmon subsystem. If so, please let me know. For now I'll
+> > > assume that it will be applied through a platform tree.
+> >=20
+> > I think it would make more sense for it to go through pdx86 (as usual
+> > for platform/surface). That would avoid any potential merge conflicts
+> > if we get more changes to the surface_aggregator_registry later on.
+> >=20
+> > Hans, Ilpo, could you please take this?
+> >=20
+> > Also I just noticed that Ilpo wasn't CCd, I assume because of an older
+> > MAINTAINERS list. Ivor, please add him for any next submissions to
+> > platform/surface.
+>=20
+> Okay, thanks for letting me know (I assumed the opposite). I'll take it=
+=20
+> through pdx86.
 
-The list of commits applied:
-[1/2] platform: x86: wmi: make wmi_bus_type const
-      commit: 10fdfd13a35994ac1dcc3003d4046cb1955e66a8
-[2/2] platform: x86: ibm_rtl: make rtl_subsys const
-      commit: 41b43c75121208a9e4e84fd148f918bddb3f5d1f
+Patch 2/2 applied to review-ilpo.
 
---
+--=20
  i.
 
+--8323328-2118278718-1707214641=:1141--
