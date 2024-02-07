@@ -1,257 +1,84 @@
-Received: from mail-4323.proton.ch (mail-4323.proton.ch [185.70.43.23])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43563F9DA
-	for <platform-driver-x86@vger.kernel.org>; Wed,  7 Feb 2024 02:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A555825573
+	for <platform-driver-x86@vger.kernel.org>; Wed,  7 Feb 2024 06:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707273156; cv=none; b=Fzx40xoJuOnNeinFqQMHecxnp0t7Jw8ZtbihXTELPgT/VCFypXqp/GTCxpRMhfvHbqMrW+2p6PdMf1T+EFNIhXGqMneXkNneq1KKlobm4gxAvPhEduQEG+Vx68f/CrmYCXAo0hccCLILIOzzle41nq10IxMTxny6iVW5Nb8ea+U=
+	t=1707286255; cv=none; b=I3g4pCm27pKIHypkq1K/UgV5tM5leaNRedQQMCBI26nR50EKnsZERuvKBYqfges3DlOcUPtVz+Vrkz63SS2GfMHWzVmrpls22/gqVclUNc+qsmCougM4yLy6AB/Q749RnVsUopTH18m/dF4tTqXAGWpY/dzSbxOY9EUon7fge7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707273156; c=relaxed/simple;
-	bh=eQevGGFfOKK76esWgVcR2HYNk+G4v2RPjlX7E272UoU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sbr32xhahCwkqIy7pgJmiRa6t6gu0zGxL6eFPepG5lr8RFCE7MG+HXQntPS49NayCcoFfoVMb80wfM/KKuAFDxuNeG5AcQK+Cl8A/2iZ4sxhbtTlNWqaCgWszBu+tUVoiLE/7JAf5OU8ib+1wdj+gHUBXgYuaVhkd8DGj/FkweE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bluemarch.art; spf=pass smtp.mailfrom=bluemarch.art; dkim=pass (2048-bit key) header.d=bluemarch.art header.i=@bluemarch.art header.b=izFm5+dc; arc=none smtp.client-ip=185.70.43.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bluemarch.art
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bluemarch.art
+	s=arc-20240116; t=1707286255; c=relaxed/simple;
+	bh=L35QMpEsdoDCMyjRk0YIWhnb7h4Fbiw8wggB3TGNW0I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hY/PJz1T3jX0PCpkWac2HmFAyPLX/pkz/RjpzZacaHBiKaSwQ+rtNTCI10UUAbvLdyGGEld+1iku3VuhkcCtJZzsMA5SObNeMtLdnXAVYaXrcc8CykqWDAQORl4ciwkSFZHFN1j545pukv/6EUrNZs/Ph72ZEml0zjpeR5tI564=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fnRU6vIO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bluemarch.art header.i=@bluemarch.art header.b="izFm5+dc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bluemarch.art;
-	s=protonmail; t=1707273150; x=1707532350;
-	bh=RRMxXWKiNumTivPl5zD0nktyidYv+ZyY47zXaJ9WRng=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=izFm5+dctBPeBrKstTm1tQEKGYVyUykUa4MqVoIgBrkiZClB1zBzRwwIsjbWAAoAP
-	 mhCkkeU1WqAKTSuBhFt3w+vt2U9ldmM9G5xLSDBLUvXSQKa8CBTHU3LobGmHKny+eS
-	 Y75dsfQC8Ggjaq1h5ecPDj+JZYG5NUwkGj7dLnNtakeOpVy0UYDCV8iBopgJhEv6Y3
-	 1ReLceywm4Y26XbubW+vrhkDAtKG4owDTsoQhrnm66xACVNNJSuO1m3l1IhAEzUfiP
-	 29zwwnE0rSxCpoIaj4Y03i0xIteZnVG5SqhcXJcgXFOwG4gnZAIX9IOGs5trDTBzcK
-	 DlV/Qt9W0cNfA==
-Date: Wed, 07 Feb 2024 02:32:15 +0000
-To: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jwoithe@just42.net, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, W_Armin@gmx.de
-From: Szilard Fabian <szfabian@bluemarch.art>
-Cc: Szilard Fabian <szfabian@bluemarch.art>
-Subject: [RFC PATCH v3] platform/x86/fujitsu-laptop: Add battery charge control support
-Message-ID: <20240207023031.56805-2-szfabian@bluemarch.art>
-In-Reply-To: <20240129175714.164326-2-szfabian@bluemarch.art>
-References: <20240129163502.161409-2-szfabian@bluemarch.art> <20240129175714.164326-2-szfabian@bluemarch.art>
-Feedback-ID: 87830438:user:proton
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fnRU6vIO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707286252;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=nQ115fx9zHrutsWrwrQXur/1A7qSlZzNjkAaOamyOZA=;
+	b=fnRU6vIOkNAdT7zUep+beFMQ4i0KjRU8vc3UrNUyWhjUjNRXXYdUaNvtF/qfe2FVud2G0e
+	QWr+bgUp/tfk3wg0sCtnXh3PtSZUndTUFeVwFui3dnDGeM7asXMUQEcOZqZSt+6BWtWvj9
+	5KX5n3HBpiYJ9hsyzBWaagS0kIMvBho=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-202-OSQKT60zNpaxyv92lEr_4Q-1; Wed, 07 Feb 2024 01:10:48 -0500
+X-MC-Unique: OSQKT60zNpaxyv92lEr_4Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CADDC811E81;
+	Wed,  7 Feb 2024 06:10:47 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.64.240.8])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id DB86C1C0652C;
+	Wed,  7 Feb 2024 06:10:44 +0000 (UTC)
+From: Kate Hsuan <hpa@redhat.com>
+To: Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	linux-leds@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	=?UTF-8?q?Andr=C3=A9=20Apitzsch?= <git@apitzsch.eu>
+Cc: Kate Hsuan <hpa@redhat.com>
+Subject: [PATCH 0/2] KTD2026 indicator LED for X86 Xiaomi Pad2
+Date: Wed,  7 Feb 2024 14:10:04 +0800
+Message-ID: <20240207061006.407066-1-hpa@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-This patch adds battery charge control support on Fujitsu notebooks
-via the S006 method of the FUJ02E3 ACPI device. With this method it's
-possible to set charge_control_end_threshold between 50 and 100%.
+This patch added the support for Xiaomi Pad2 indicator LED. This work
+included two parts.
+1. Added the KTD2026 swnode description to describe the LED controller.
+2. Migrated the original driver to fwnode to support x86 platform.
 
-Tested on Lifebook E5411 and Lifebook U728. Sadly I can't test this
-patch on a dual battery one, but I didn't find any clue about
-independent battery charge control on dual battery Fujitsu notebooks
-either. And by that I mean checking the DSDT table of various Lifebook
-notebooks and reverse engineering FUJ02E3.dll.
+Moreover, the LED trigger is set to bq27520-0-charging for Xiaomi Pad2
+so the LED will be turned on when charging.
 
-Signed-off-by: Szilard Fabian <szfabian@bluemarch.art>
----
-v3:
-* added additional error handling
-* removed if statement with device_create_file(), just returning that
-  function instead
-* added bool charge_control_supported into struct fujitsu_laptop
-* added a 'charge_control_add' and 'charge_control_remove' function to be
-  called from acpi_fujitsu_laptop_add() and acpi_fujitsu_laptop_remove()
-* moved FUJ02E3 S006 probing logic from the ACPI battery hooks to the new
-  'charge_control_*' functions
+Kate Hsuan (2):
+  platform: x86-android-tablets: other: Add swnode for Xiaomi pad2
+    indicator LED
+  leds: rgb: leds-ktd202x: Get device properties through fwnode to
+    support ACPI
 
-v2:
-Forgot to sign-off the original commit. Fixed, sorry for the
-inconvenience.
----
- drivers/platform/x86/fujitsu-laptop.c | 125 ++++++++++++++++++++++++++
- 1 file changed, 125 insertions(+)
+ drivers/leds/rgb/Kconfig                      |  1 -
+ drivers/leds/rgb/leds-ktd202x.c               | 68 ++++++++++-----
+ .../platform/x86/x86-android-tablets/other.c  | 85 +++++++++++++++++++
+ .../x86/x86-android-tablets/shared-psy-info.h |  2 +
+ 4 files changed, 132 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/f=
-ujitsu-laptop.c
-index 085e044e888e..2fcbc10a0d9d 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -49,6 +49,8 @@
- #include <linux/kfifo.h>
- #include <linux/leds.h>
- #include <linux/platform_device.h>
-+#include <linux/power_supply.h>
-+#include <acpi/battery.h>
- #include <acpi/video.h>
-=20
- #define FUJITSU_DRIVER_VERSION=09=09"0.6.0"
-@@ -97,6 +99,10 @@
- #define BACKLIGHT_OFF=09=09=09(BIT(0) | BIT(1))
- #define BACKLIGHT_ON=09=09=090
-=20
-+/* FUNC interface - battery control interface */
-+#define FUNC_S006_METHOD=09=090x1006
-+#define CHARGE_CONTROL_RW=09=090x21
-+
- /* Scancodes read from the GIRB register */
- #define KEY1_CODE=09=09=090x410
- #define KEY2_CODE=09=09=090x411
-@@ -132,6 +138,7 @@ struct fujitsu_laptop {
- =09spinlock_t fifo_lock;
- =09int flags_supported;
- =09int flags_state;
-+=09bool charge_control_supported;
- };
-=20
- static struct acpi_device *fext;
-@@ -164,6 +171,118 @@ static int call_fext_func(struct acpi_device *device,
- =09return value;
- }
-=20
-+/* Battery charge control code */
-+
-+static ssize_t charge_control_end_threshold_store(struct device *dev,
-+=09=09=09=09struct device_attribute *attr,
-+=09=09=09=09const char *buf, size_t count)
-+{
-+=09int value, ret;
-+
-+=09ret =3D kstrtouint(buf, 10, &value);
-+=09if (ret)
-+=09=09return ret;
-+
-+=09if (value < 50 || value > 100)
-+=09=09return -EINVAL;
-+
-+=09int cc_end_value, s006_cc_return;
-+
-+=09cc_end_value =3D value * 0x100 + 0x20;
-+=09s006_cc_return =3D call_fext_func(fext, FUNC_S006_METHOD,
-+=09=09=09=09=09CHARGE_CONTROL_RW, cc_end_value, 0x0);
-+
-+=09if (s006_cc_return < 0)
-+=09=09return s006_cc_return;
-+
-+=09/*
-+=09 * The S006 0x21 method returns 0x00 in case the provided value
-+=09 * is invalid.
-+=09 */
-+=09if (s006_cc_return =3D=3D 0x00)
-+=09=09return -EINVAL;
-+
-+=09return count;
-+}
-+
-+static ssize_t charge_control_end_threshold_show(struct device *dev,
-+=09=09=09=09struct device_attribute *attr,
-+=09=09=09=09char *buf)
-+{
-+=09int status;
-+=09status =3D call_fext_func(fext, FUNC_S006_METHOD,
-+=09=09=09=09CHARGE_CONTROL_RW, 0x21, 0x0);
-+
-+=09if (status < 0)
-+=09=09return status;
-+
-+=09return sprintf(buf, "%d\n", status);
-+}
-+
-+static DEVICE_ATTR_RW(charge_control_end_threshold);
-+
-+/* ACPI battery hook */
-+
-+static int fujitsu_battery_add_hook(struct power_supply *battery,
-+=09=09=09       struct acpi_battery_hook *hook)
-+{
-+=09return device_create_file(&battery->dev,
-+=09=09=09=09  &dev_attr_charge_control_end_threshold);
-+}
-+
-+static int fujitsu_battery_remove_hook(struct power_supply *battery,
-+=09=09=09=09  struct acpi_battery_hook *hook)
-+{
-+=09device_remove_file(&battery->dev,
-+=09=09=09   &dev_attr_charge_control_end_threshold);
-+
-+=09return 0;
-+}
-+
-+static struct acpi_battery_hook battery_hook =3D {
-+=09.add_battery =3D fujitsu_battery_add_hook,
-+=09.remove_battery =3D fujitsu_battery_remove_hook,
-+=09.name =3D "Fujitsu Battery Extension",
-+};
-+
-+/*
-+ * These functions are intended to be called from acpi_fujitsu_laptop_add =
-and
-+ * acpi_fujitsu_laptop_remove.
-+ */
-+
-+static int fujitsu_battery_charge_control_add(struct acpi_device *device)
-+{
-+=09struct fujitsu_laptop *priv =3D acpi_driver_data(device);
-+=09priv->charge_control_supported =3D false;
-+
-+=09/*
-+=09 * Check if the S006 0x21 method exists by trying to get the current
-+=09 * battery charge limit.
-+=09 */
-+=09int s006_cc_return;
-+=09s006_cc_return =3D call_fext_func(fext, FUNC_S006_METHOD,
-+=09=09=09=09=09CHARGE_CONTROL_RW, 0x21, 0x0);
-+
-+=09if (s006_cc_return < 0)
-+=09=09return s006_cc_return;
-+
-+=09if (s006_cc_return =3D=3D UNSUPPORTED_CMD)
-+=09=09return -ENODEV;
-+
-+=09priv->charge_control_supported =3D true;
-+=09battery_hook_register(&battery_hook);
-+
-+=09return 0;
-+}
-+
-+static void fujitsu_battery_charge_control_remove(struct acpi_device *devi=
-ce)
-+{
-+=09struct fujitsu_laptop *priv =3D acpi_driver_data(device);
-+
-+=09if (priv->charge_control_supported)
-+=09=09battery_hook_unregister(&battery_hook);
-+}
-+
- /* Hardware access for LCD brightness control */
-=20
- static int set_lcd_level(struct acpi_device *device, int level)
-@@ -839,6 +958,10 @@ static int acpi_fujitsu_laptop_add(struct acpi_device =
-*device)
- =09if (ret)
- =09=09goto err_free_fifo;
-=20
-+=09ret =3D fujitsu_battery_charge_control_add(device);
-+=09if (ret < 0)
-+=09=09pr_warn("Unable to register battery charge control: %d\n", ret);
-+
- =09return 0;
-=20
- err_free_fifo:
-@@ -851,6 +974,8 @@ static void acpi_fujitsu_laptop_remove(struct acpi_devi=
-ce *device)
- {
- =09struct fujitsu_laptop *priv =3D acpi_driver_data(device);
-=20
-+=09fujitsu_battery_charge_control_remove(device);
-+
- =09fujitsu_laptop_platform_remove(device);
-=20
- =09kfifo_free(&priv->fifo);
---=20
+-- 
 2.43.0
-
 
