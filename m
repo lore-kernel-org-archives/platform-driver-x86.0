@@ -1,147 +1,336 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from smtprelay03.ispgateway.de (smtprelay03.ispgateway.de [80.67.18.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E06F126F01;
-	Wed,  7 Feb 2024 20:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0279F127B50;
+	Wed,  7 Feb 2024 21:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.67.18.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707337225; cv=none; b=YHAoZ4+kenQGZLQppLXuI9fTRF82uXVDoQ9PsjzS1tnzrYAlSSnU+IyTdngQC5gBEtefnWEgIXGsayVnWC0J1colicDGvgjNbSPi4DbmnmzPZ0WecBZR6/AvyrxoT2Yajj6TqMxkjhfc3Naa8+OiVHxGQqx52l6+bDBocOHLXcU=
+	t=1707340669; cv=none; b=YVQUAhtPm5gH6XA33S92qwd5CiNDyiHR2fxNcdwlrALV7ngyCpGPyAPWHOVJEMkQiVQki7L3U394gGZYllR7vTE+sLxXu18Nw2k1QPjzCnZqNTVh0XQQIc5kujIhcjvNlpXbMohkXihTeZqjw2nrsGHWZTtOGqfURXMw4Wmbti8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707337225; c=relaxed/simple;
-	bh=Y20V3UzkaqA6wx/OLf/e4o3IW92eIo5mtjOtCYkhvhc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GLGabYfPYODpRuLJMHk3PFoT+VAIAnRlmhIiOZri96bHMuJuUq7PHzbKQtj4b7j+e/M3cAAIt8aPmNTJqwCeicakbstpdGT+Q9Y/YQGwQWlCxaFJ+1sN4o6LBi+KW/9nqJtVjEKg74NsgmpQslJe6/3xhnuH3O6pTpfcbDMfVaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=qCwrbggk; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="qCwrbggk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1707337215; x=1707942015; i=w_armin@gmx.de;
-	bh=Y20V3UzkaqA6wx/OLf/e4o3IW92eIo5mtjOtCYkhvhc=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=qCwrbggk2YaiVuLiD/45AxLNkorhXfpC9zoSqP8otrLlYGp7Y6glF8jNnsV5mAxr
-	 CRKnX9QVmLen1HVs28a39fwRLmx6qTQnbPx/dipWdvb3iqZhnuiPK0f8Ym09KHrfK
-	 THiNrgT0Lk7HnQ/BoLgFTlKSZYUgXn/6Tr7bfRkFhyuTDNKoH2XccIIP2q1XdH/eq
-	 oVydlJ1JNTL50eKLYGIGUkQfLUkrwIqrZOsnr229wneTepykQ6Tnij/+VOxYPY5oZ
-	 w1kLvcyNsqYazDScIQ9N5lepiZq9xcUHlK30sKFWXQoODheIXdEP3izCbkwJqZUax
-	 SpqzKHzpsj0Sac43Xg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1M2f5T-1raIAi0gYh-004AJG; Wed, 07 Feb 2024 21:20:15 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: wmi: Make input buffer madatory when evaulating methods
-Date: Wed,  7 Feb 2024 21:20:12 +0100
-Message-Id: <20240207202012.3506-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1707340669; c=relaxed/simple;
+	bh=7Z7QiMjRCTd48g4Pt3cMz3pYjp0C4WAHvzgb+5qhWLE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=epjsr3P4DEfs0hn6n3O2s/XLv5DiibThYLwShaW7SHmdcefjtUIv2vCkaj8n6DGJ8ZqKpGN1qL2e7gA6ziE+e6rkqKcrXCIUqZDHGQ94ZBGtFj9pMZ7uRpkMxXW7PRg87STk1Xg3dnJ3IXoZKpuzOUqconDFmC8gGXymAE02hpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu; spf=pass smtp.mailfrom=apitzsch.eu; arc=none smtp.client-ip=80.67.18.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apitzsch.eu
+Received: from [92.206.191.17] (helo=note-book.lan)
+	by smtprelay03.ispgateway.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <git@apitzsch.eu>)
+	id 1rXp4r-000000006xC-0Lf1;
+	Wed, 07 Feb 2024 22:03:29 +0100
+Message-ID: <b1cffa5999204fd27693bad8c9f0d815172d28aa.camel@apitzsch.eu>
+Subject: Re: [PATCH 2/2] leds: rgb: leds-ktd202x: Get device properties
+ through fwnode to support ACPI
+From: =?ISO-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
+To: Kate Hsuan <hpa@redhat.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+ linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, Hans de
+ Goede <hdegoede@redhat.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 07 Feb 2024 22:03:27 +0100
+In-Reply-To: <20240207061006.407066-3-hpa@redhat.com>
+References: <20240207061006.407066-1-hpa@redhat.com>
+	 <20240207061006.407066-3-hpa@redhat.com>
+Autocrypt: addr=git@apitzsch.eu; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:3aVsqHOvhZZkL6tEUxNKYoS/mZgb807r4CifOkC1PmJXBmfOLIF
- uSuD2lAxXWIZPGhsXpt05mD7PY3lHxm3bui7IZsT1uzl2AWOfsV29G+plMBaGBg6YaEJHtF
- fhsT3O5awtDDOHmymg4da15+1RqLBl/zW9+ebQQqHI5BkWbDUIJQtR8OnImvxxX1Qda5sKD
- c8IkMiq0zVQ2vSb927mvQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:GB9CGCrhmE0=;DXg19GSNS+0KObxmVvH1qe6KNi0
- w1YRx2K0dQMj2Eqn8ohC+8TTRuNxg6625L/HlejmZWqPW8OH/4e0hoT/cEPkrhfKkTXaRrTiR
- GfRB1lOkQxjYdMv2zV2rUsCRkNRlrhjYT7H+2lcJZJZsgQWRuczQGMq9PlWUTpWIsCLy4v4Bj
- xjGbCwWdsZ5IKLQa3EaoEA9Ca4/G/JBdXtI8oj1ZBAKkSryF/OGostwr2JSCga6JOdLzgB5wV
- FEYYaotfAKAp8EG4glBuY9/UfWSrupvhiIVH2dqJ22zP5+pOo8Zy4nt0Cnj7TcglGn7HJZ4KF
- v2hkE980fRdUkxZKQJnmeX+jP6WfKLuWYYIS3HJtrK4BEhwyodbQBDUSMIqeX5Zinxc0dKu+w
- KyL2MfmAq36L+fAkl2flzQjzsU2JG7Bp0h44WGtYgRJve+Otm5ad0p2cuzDBKqHEr5fouNrZP
- ifpJ6whl7NDHkdzvfxm41q75WmK4GWEJ6SFPm+5x+08Ao8ZBE9qBnqCDeO+qS1Rh3caeXsVDI
- LywdfHERYfq6+SFk4KOYfoF15dyyTwkcd0nL40WRLizBsZe1CpGAZaNqo492Slsj4zWpr474V
- kwTX6ePzj5e2jfxkRhyLcSFypykko57Vv7QwriEqxs9NoffaMomaBqOq77n7CiuR7Z2s5Nhh3
- jWq9tU02z0ZgS/L651+wF0tVrVYEGtjD0ThVOdQ0rlqmdJ6DV90kYAkZY2H1HYo5hDYyyeAnu
- dDOen5/6ioapTjhpxn2Vy11qH4leBzSCpCPdce7bfvBqrYUmU8uKnHIM84ILPsbS9xvM2FeGT
- e4YQN5gBnJTKc1la06+/I2ReLuvQbOOo6BdmQfc/H2VoQ=
+X-Df-Sender: YW5kcmVAYXBpdHpzY2guZXU=
 
-The ACPI-WMI specification declares that a WMxx control method takes
-3 arguments: instance, method id and argument buffer. This is also
-the case even when the underlying WMI method does not have any
-input arguments.
+Hi,
 
-So if a WMI driver evaluates a WMI method without passing an input
-buffer, ACPICA will log a warning complaining that the third argument
-is missing.
+Am Mittwoch, dem 07.02.2024 um 14:10 +0800 schrieb Kate Hsuan:
+> This LED controller also installed on a Xiaomi pad2 and it is an x86
+> platform. The original driver is based on the device tree and can't
+> be used for this ACPI based system. This patch migrated the driver to
+> use fwnode to access the properties. Moreover, the fwnode API
+> supports device tree so this work would affect the original
+would -> won't ?
 
-Prevent this by checking that a input buffer was passed, and return
-an error if this was not the case.
-
-Tested on a Asus PRIME B650-Plus.
-
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/wmi.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 63906fdd0abf..f9e23d491dd9 100644
-=2D-- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -296,7 +296,7 @@ EXPORT_SYMBOL_GPL(wmidev_instance_count);
-  * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417=
-f2f49ba
-  * @instance: Instance index
-  * @method_id: Method ID to call
-- * @in: Buffer containing input for the method call
-+ * @in: Mandatory buffer containing input for the method call
-  * @out: Empty buffer to return the method results
-  *
-  * Call an ACPI-WMI method, the caller must free @out.
-@@ -326,7 +326,7 @@ EXPORT_SYMBOL_GPL(wmi_evaluate_method);
-  * @wdev: A wmi bus device from a driver
-  * @instance: Instance index
-  * @method_id: Method ID to call
-- * @in: Buffer containing input for the method call
-+ * @in: Mandatory buffer containing input for the method call
-  * @out: Empty buffer to return the method results
-  *
-  * Call an ACPI-WMI method, the caller must free @out.
-@@ -347,26 +347,25 @@ acpi_status wmidev_evaluate_method(struct wmi_device=
- *wdev, u8 instance, u32 met
- 	block =3D &wblock->gblock;
- 	handle =3D wblock->acpi_device->handle;
-
-+	if (!in)
-+		return AE_BAD_DATA;
-+
- 	if (!(block->flags & ACPI_WMI_METHOD))
- 		return AE_BAD_DATA;
-
- 	if (block->instance_count <=3D instance)
- 		return AE_BAD_PARAMETER;
-
--	input.count =3D 2;
-+	input.count =3D 3;
- 	input.pointer =3D params;
-+
- 	params[0].type =3D ACPI_TYPE_INTEGER;
- 	params[0].integer.value =3D instance;
- 	params[1].type =3D ACPI_TYPE_INTEGER;
- 	params[1].integer.value =3D method_id;
+> implementations.
+>=20
+> Signed-off-by: Kate Hsuan <hpa@redhat.com>
+> ---
+> =C2=A0drivers/leds/rgb/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+|=C2=A0 1 -
+> =C2=A0drivers/leds/rgb/leds-ktd202x.c | 68 ++++++++++++++++++++++--------=
 -
--	if (in) {
--		input.count =3D 3;
--
--		params[2].type =3D get_param_acpi_type(wblock);
--		params[2].buffer.length =3D in->length;
--		params[2].buffer.pointer =3D in->pointer;
--	}
-+	params[2].type =3D get_param_acpi_type(wblock);
-+	params[2].buffer.length =3D in->length;
-+	params[2].buffer.pointer =3D in->pointer;
+> --
+> =C2=A02 files changed, 45 insertions(+), 24 deletions(-)
+>=20
+> diff --git a/drivers/leds/rgb/Kconfig b/drivers/leds/rgb/Kconfig
+> index a6a21f564673..f245dbd9a163 100644
+> --- a/drivers/leds/rgb/Kconfig
+> +++ b/drivers/leds/rgb/Kconfig
+> @@ -17,7 +17,6 @@ config LEDS_GROUP_MULTICOLOR
+> =C2=A0config LEDS_KTD202X
+> =C2=A0	tristate "LED support for KTD202x Chips"
+> =C2=A0	depends on I2C
+> -	depends on OF
+> =C2=A0	select REGMAP_I2C
+> =C2=A0	help
+> =C2=A0	=C2=A0 This option enables support for the Kinetic
+> KTD2026/KTD2027
+> diff --git a/drivers/leds/rgb/leds-ktd202x.c b/drivers/leds/rgb/leds-
+> ktd202x.c
+> index 514965795a10..a1aef62e3db5 100644
+> --- a/drivers/leds/rgb/leds-ktd202x.c
+> +++ b/drivers/leds/rgb/leds-ktd202x.c
+> @@ -112,6 +112,8 @@ static int ktd202x_chip_disable(struct ktd202x
+> *chip)
+> =C2=A0
+> =C2=A0	regmap_write(chip->regmap, KTD202X_REG_RESET_CONTROL,
+> KTD202X_ENABLE_CTRL_SLEEP);
+> =C2=A0
+> +	usleep_range(500, 600);
+Why have you added the sleep?
 
- 	get_acpi_method_name(wblock, 'M', method);
+> +
+> =C2=A0	ret =3D regulator_bulk_disable(ARRAY_SIZE(chip->regulators),
+> chip->regulators);
+> =C2=A0	if (ret) {
+> =C2=A0		dev_err(chip->dev, "Failed to disable regulators:
+> %d\n", ret);
+> @@ -381,16 +383,18 @@ static int ktd202x_blink_mc_set(struct
+> led_classdev *cdev,
+> =C2=A0				 mc->num_colors);
+> =C2=A0}
+> =C2=A0
+> -static int ktd202x_setup_led_rgb(struct ktd202x *chip, struct
+> device_node *np,
+> +static int ktd202x_setup_led_rgb(struct ktd202x *chip, struct
+> fwnode_handle *np,
+> =C2=A0				 struct ktd202x_led *led, struct
+> led_init_data *init_data)
+> =C2=A0{
+> =C2=A0	struct led_classdev *cdev;
+> -	struct device_node *child;
+> +	struct fwnode_handle *child;
+Nit, swap the above lines for reverse Christmas tree.
 
-=2D-
-2.39.2
+> =C2=A0	struct mc_subled *info;
+> -	int num_channels;
+> +	int num_channels =3D 0;
+> =C2=A0	int i =3D 0;
+> =C2=A0
+> -	num_channels =3D of_get_available_child_count(np);
+> +	fwnode_for_each_available_child_node(np, child) {
+> +		num_channels++;
+> +	}
+> =C2=A0	if (!num_channels || num_channels > chip->num_leds)
+> =C2=A0		return -EINVAL;
+> =C2=A0
+> @@ -398,22 +402,22 @@ static int ktd202x_setup_led_rgb(struct ktd202x
+> *chip, struct device_node *np,
+> =C2=A0	if (!info)
+> =C2=A0		return -ENOMEM;
+> =C2=A0
+> -	for_each_available_child_of_node(np, child) {
+> +	fwnode_for_each_available_child_node(np, child) {
+> =C2=A0		u32 mono_color;
+> =C2=A0		u32 reg;
+> =C2=A0		int ret;
+> =C2=A0
+> -		ret =3D of_property_read_u32(child, "reg", &reg);
+> +		ret =3D fwnode_property_read_u32(child, "reg", &reg);
+> =C2=A0		if (ret !=3D 0 || reg >=3D chip->num_leds) {
+> =C2=A0			dev_err(chip->dev, "invalid 'reg' of
+> %pOFn\n", child);
+> -			of_node_put(child);
+> +			fwnode_handle_put(child);
+> =C2=A0			return -EINVAL;
+> =C2=A0		}
+> =C2=A0
+> -		ret =3D of_property_read_u32(child, "color",
+> &mono_color);
+> +		ret =3D fwnode_property_read_u32(child, "color",
+> &mono_color);
+> =C2=A0		if (ret < 0 && ret !=3D -EINVAL) {
+> =C2=A0			dev_err(chip->dev, "failed to parse 'color'
+> of %pOF\n", child);
+> -			of_node_put(child);
+> +			fwnode_handle_put(child);
+> =C2=A0			return ret;
+> =C2=A0		}
+> =C2=A0
+> @@ -433,14 +437,14 @@ static int ktd202x_setup_led_rgb(struct ktd202x
+> *chip, struct device_node *np,
+> =C2=A0	return devm_led_classdev_multicolor_register_ext(chip->dev,
+> &led->mcdev, init_data);
+> =C2=A0}
+> =C2=A0
+> -static int ktd202x_setup_led_single(struct ktd202x *chip, struct
+> device_node *np,
+> +static int ktd202x_setup_led_single(struct ktd202x *chip, struct
+> fwnode_handle *np,
+> =C2=A0				=C2=A0=C2=A0=C2=A0 struct ktd202x_led *led, struct
+> led_init_data *init_data)
+> =C2=A0{
+> =C2=A0	struct led_classdev *cdev;
+> =C2=A0	u32 reg;
+> =C2=A0	int ret;
+> =C2=A0
+> -	ret =3D of_property_read_u32(np, "reg", &reg);
+> +	ret =3D fwnode_property_read_u32(np, "reg", &reg);
+> =C2=A0	if (ret !=3D 0 || reg >=3D chip->num_leds) {
+> =C2=A0		dev_err(chip->dev, "invalid 'reg' of %pOFn\n", np);
+> =C2=A0		return -EINVAL;
+> @@ -454,7 +458,7 @@ static int ktd202x_setup_led_single(struct
+> ktd202x *chip, struct device_node *np
+> =C2=A0	return devm_led_classdev_register_ext(chip->dev, &led->cdev,
+> init_data);
+> =C2=A0}
+> =C2=A0
+> -static int ktd202x_add_led(struct ktd202x *chip, struct device_node
+> *np, unsigned int index)
+> +static int ktd202x_add_led(struct ktd202x *chip, struct
+> fwnode_handle *np, unsigned int index)
+> =C2=A0{
+> =C2=A0	struct ktd202x_led *led =3D &chip->leds[index];
+> =C2=A0	struct led_init_data init_data =3D {};
+> @@ -463,14 +467,14 @@ static int ktd202x_add_led(struct ktd202x
+> *chip, struct device_node *np, unsigne
+> =C2=A0	int ret;
+> =C2=A0
+> =C2=A0	/* Color property is optional in single color case */
+> -	ret =3D of_property_read_u32(np, "color", &color);
+> +	ret =3D fwnode_property_read_u32(np, "color", &color);
+> =C2=A0	if (ret < 0 && ret !=3D -EINVAL) {
+> =C2=A0		dev_err(chip->dev, "failed to parse 'color' of
+> %pOF\n", np);
+> =C2=A0		return ret;
+> =C2=A0	}
+> =C2=A0
+> =C2=A0	led->chip =3D chip;
+> -	init_data.fwnode =3D of_fwnode_handle(np);
+> +	init_data.fwnode =3D np;
+> =C2=A0
+> =C2=A0	if (color =3D=3D LED_COLOR_ID_RGB) {
+> =C2=A0		cdev =3D &led->mcdev.led_cdev;
+> @@ -492,26 +496,30 @@ static int ktd202x_add_led(struct ktd202x
+> *chip, struct device_node *np, unsigne
+> =C2=A0
+> =C2=A0static int ktd202x_probe_dt(struct ktd202x *chip)
+> =C2=A0{
+> -	struct device_node *np =3D dev_of_node(chip->dev), *child;
+> -	int count;
+> +	struct device *dev =3D chip->dev;
+> +	struct fwnode_handle *np, *child;
+Nit, swap the above lines.
+
+> +	int count =3D 0;
+Un-needed init.
+
+> =C2=A0	int i =3D 0;
+> =C2=A0
+> -	chip->num_leds =3D (int)(unsigned
+> long)of_device_get_match_data(chip->dev);
+> +	count =3D device_get_child_node_count(dev);
+> =C2=A0
+> -	count =3D of_get_available_child_count(np);
+> =C2=A0	if (!count || count > chip->num_leds)
+> =C2=A0		return -EINVAL;
+> =C2=A0
+> +	np =3D dev_fwnode(chip->dev);
+> +	if (!np)
+> +		return -ENODEV;
+> +
+> =C2=A0	regmap_write(chip->regmap, KTD202X_REG_RESET_CONTROL,
+> KTD202X_RSTR_RESET);
+> =C2=A0
+> =C2=A0	/* Allow the device to execute the complete reset */
+> =C2=A0	usleep_range(200, 300);
+> =C2=A0
+> -	for_each_available_child_of_node(np, child) {
+> +	fwnode_for_each_available_child_node(np, child) {
+> =C2=A0		int ret =3D ktd202x_add_led(chip, child, i);
+> =C2=A0
+> =C2=A0		if (ret) {
+> -			of_node_put(child);
+> +			fwnode_handle_put(child);
+> =C2=A0			return ret;
+> =C2=A0		}
+> =C2=A0		i++;
+> @@ -533,7 +541,7 @@ static int ktd202x_probe(struct i2c_client
+> *client)
+> =C2=A0{
+> =C2=A0	struct device *dev =3D &client->dev;
+> =C2=A0	struct ktd202x *chip;
+> -	int count;
+> +	int count =3D 0;
+Un-needed init.
+
+> =C2=A0	int ret;
+> =C2=A0
+> =C2=A0	count =3D device_get_child_node_count(dev);
+> @@ -568,6 +576,8 @@ static int ktd202x_probe(struct i2c_client
+> *client)
+> =C2=A0		return ret;
+> =C2=A0	}
+> =C2=A0
+> +	chip->num_leds =3D (int) (unsigned
+> long)i2c_get_match_data(client);
+> +
+> =C2=A0	ret =3D ktd202x_probe_dt(chip);
+> =C2=A0	if (ret < 0) {
+> =C2=A0		regulator_bulk_disable(ARRAY_SIZE(chip->regulators),
+> chip->regulators);
+> @@ -602,21 +612,33 @@ static void ktd202x_shutdown(struct i2c_client
+> *client)
+> =C2=A0	regmap_write(chip->regmap, KTD202X_REG_RESET_CONTROL,
+> KTD202X_RSTR_RESET);
+> =C2=A0}
+> =C2=A0
+> +static const struct i2c_device_id ktd202x_id[] =3D {
+> +	{"ktd2026", KTD2026_NUM_LEDS},
+> +	{"ktd2027", KTD2027_NUM_LEDS},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(i2c, ktd202x_id);
+> +
+> +#ifndef CONFIG_ACPI
+> =C2=A0static const struct of_device_id ktd202x_match_table[] =3D {
+> =C2=A0	{ .compatible =3D "kinetic,ktd2026", .data =3D (void
+> *)KTD2026_NUM_LEDS },
+> =C2=A0	{ .compatible =3D "kinetic,ktd2027", .data =3D (void
+> *)KTD2027_NUM_LEDS },
+> =C2=A0	{},
+> =C2=A0};
+> =C2=A0MODULE_DEVICE_TABLE(of, ktd202x_match_table);
+> +#endif
+> =C2=A0
+> =C2=A0static struct i2c_driver ktd202x_driver =3D {
+> =C2=A0	.driver =3D {
+> -		.name =3D "leds-ktd202x",
+> -		.of_match_table =3D ktd202x_match_table,
+> +		.name	=3D "leds-ktd202x",
+Why was the space after "name" replaced by tab?
+
+> +#ifndef CONFIG_ACPI
+> +		.of_match_table =3D ktd20xx_match_table,
+Typo: ktd20xx_match_table -> ktd202x_match_table
+
+Andr=C3=A9
+
+> +#endif
+> =C2=A0	},
+> =C2=A0	.probe =3D ktd202x_probe,
+> =C2=A0	.remove =3D ktd202x_remove,
+> =C2=A0	.shutdown =3D ktd202x_shutdown,
+> +	.id_table =3D ktd202x_id,
+> =C2=A0};
+> =C2=A0module_i2c_driver(ktd202x_driver);
+> =C2=A0
 
