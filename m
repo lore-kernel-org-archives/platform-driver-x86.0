@@ -1,291 +1,307 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9DA1CFAB
-	for <platform-driver-x86@vger.kernel.org>; Wed,  7 Feb 2024 06:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E728208D3
+	for <platform-driver-x86@vger.kernel.org>; Wed,  7 Feb 2024 08:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707286271; cv=none; b=FkIrxXeh2EZ7MaB4xzi8aQCjW0UEHOd22N2Mp6tkGBZXqWZ1qKVHpE/XJwovmQR0WeRcijwevZ1AXRJxqI1OYIOOvv6v+xg9hEpP4Cgsn7JgxjDBYYI+4Q6zo1SNJNR59h1eWnMompdMMmgwA7Ni+P1+FlNm8w89vjmBBc7oyzE=
+	t=1707296249; cv=none; b=M+C+mqlYc1X2m4BgcQJMAfpybg+AV57o8N5DPWRcDqFPgbhOrqCyoYBGLMGTPtTP35JA2tBCrLfqBWr0fDc036WL4f/L9oIsNuTGdFUn8v6Ija6DGruZ9y2nZUDOhIOhNSpB1o2uPrq715IedTpcpaCkxeOWzd6TllISXNNICiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707286271; c=relaxed/simple;
-	bh=or6yDI2eFVz9vc38jffh1makIY7z4hDb2Eh0WltVGus=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B6HIhi2atgpCvgtOn5N6VC/ngluAw689zWGniJd0F3x+At0lyyAVrjhQDmqyJ2d4YaxWsW57p1LT7AieXI9N40pYWuGeDJho/1yhQbinZZb1wSijSzGDlLGf5B3zp5zoMvvC326nytgrV3nkAsi4Q9WFnJ2GQJp7iWUMwxcq1NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JT5VYb04; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1707296249; c=relaxed/simple;
+	bh=4wXlzz84B6FC7HC+Lda4uBOYGfK9pMEasjsIidtYf78=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ZFHNGT3IBRGFKt2F/T8bDTsY9Eh0ii4lh9aJrHgLGsOAMjbUgQ6vG9zW4RGS2I66muJxXXuAJ4kDaoEDi+wpLZLKW+lldy+Z4VAbnplMxPqFQix37jxmBpWOmkLONDPhyOsHsuX8MfTDvfLCZSe72p9/uGQ/tzBL/4ak2pCQLPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GSII9uWm; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JT5VYb04"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GSII9uWm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707286267;
+	s=mimecast20190719; t=1707296246;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ta7vsgnKpKK9jWD6gKvlb0rNeOg4qU6YrWRgVsGKuAI=;
-	b=JT5VYb04HE/WABLS+8sBSO8Xcov2s340iwj0n33o6fR6Th7e42JZKOTbi7iEpXVlho4qYQ
-	XMQpX5mcbt4sWy1Ehc9gJ1t7ONxXS4OubkNvIJb8c/vX/JISeZuKQ2pcERP7qmdepuFYTZ
-	5FpbzxJpkAVEcYm7ukKfPmaqCfXCWGE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=wiwpei1G8h+mpDueqWLqXPDFDncgbOjsuv5z/xBaejM=;
+	b=GSII9uWmornRST/IM5Ewg8n54i3NcpUu4gBn2lilgtCcl8qZQozm7CH98KYgx8Xasc0jCw
+	ZcdJAZojuWJ7h4iPj3+mdcFKqQjZYI9Zr3aSyjbfZqmhgDFLAJhBTQOsSAzxDjSs8yyXXs
+	HWtI264Vk/YTE+0TT7bnoa3vPU2dCAA=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-460-NBAtpEv1OkqhxhliDK-bFA-1; Wed, 07 Feb 2024 01:11:02 -0500
-X-MC-Unique: NBAtpEv1OkqhxhliDK-bFA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3C968848C02;
-	Wed,  7 Feb 2024 06:11:02 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.64.240.8])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id F39F51C066A9;
-	Wed,  7 Feb 2024 06:10:59 +0000 (UTC)
-From: Kate Hsuan <hpa@redhat.com>
-To: Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>,
-	linux-leds@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	=?UTF-8?q?Andr=C3=A9=20Apitzsch?= <git@apitzsch.eu>
-Cc: Kate Hsuan <hpa@redhat.com>
-Subject: [PATCH 2/2] leds: rgb: leds-ktd202x: Get device properties through fwnode to support ACPI
-Date: Wed,  7 Feb 2024 14:10:06 +0800
-Message-ID: <20240207061006.407066-3-hpa@redhat.com>
-In-Reply-To: <20240207061006.407066-1-hpa@redhat.com>
-References: <20240207061006.407066-1-hpa@redhat.com>
+ us-mta-623-PoW0RNMRNDuNq51hLXHjSg-1; Wed, 07 Feb 2024 03:57:24 -0500
+X-MC-Unique: PoW0RNMRNDuNq51hLXHjSg-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a2fba67ec20so26182566b.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 07 Feb 2024 00:57:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707296243; x=1707901043;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wiwpei1G8h+mpDueqWLqXPDFDncgbOjsuv5z/xBaejM=;
+        b=SnsxYkEzGosuQ93AergHjtWGkUFzBDuOxG4qzD2fHwmXbnsHGDLZTtlT6lzvBxoSWn
+         eIBEEc6PQ8PQkVwQB0VfpNPRS6M70TjwkyhjcuYncyblZTckI2fXmP27fE5uu6O+kfRq
+         tSKAjX/LjhflP13PGMPp+0DdfDaNrrs2wJnYYBZ7BeRgagk1CL0aja+K7FG8VrrzVlSt
+         BIC5cHMkxLkX3Y0gaQwbgbEK4iSNnKmB73A2PDr94U/Ku3GaJZ8M4I2+qYmWxupGGiMs
+         jkD+NeD0DPMK4r98xNTOupd1dN9OcRm+o2qDCv52a5BXGaEpvDYlmn5NH/DcfUJ1H29G
+         zd+A==
+X-Gm-Message-State: AOJu0YyVsIk39TcADxf8guYy/KNC0OeLOYr4c2KcijvGMWcffFPbxXIn
+	dDF3+WD2QTI52YWNccLRtWfvRL2zxjeea39RISoO3uiGYMBYFwamGoHShiP5ANup4cwN/pXw2AO
+	3jSeHCHhZzq8tFMrDEAvu/vXDDlVglC2Lg1mFis55TUJ8umdOoM0pnJ4Nr5RZnqPn/Vp8r2A=
+X-Received: by 2002:a17:906:6d4e:b0:a31:805b:4172 with SMTP id a14-20020a1709066d4e00b00a31805b4172mr3399519ejt.9.1707296243349;
+        Wed, 07 Feb 2024 00:57:23 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEq82/qCnDbbkmQg922cnEy9yeXE3oQKLxjqFlfCfYdA7KqZaG0cSQYV6EBM1ll+1INlzctXA==
+X-Received: by 2002:a17:906:6d4e:b0:a31:805b:4172 with SMTP id a14-20020a1709066d4e00b00a31805b4172mr3399501ejt.9.1707296242975;
+        Wed, 07 Feb 2024 00:57:22 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUFZ90n8v3luptaJcewiQA/CEWoImgXrIqpduXLcOLpNn6HjxAou5Jrq8lM10x1m94lLn6tKxdSpBB5iowiqvzizRCzgQv0D/iy5gq7+x37wxIe1HG7OgEcqOwkZrzcGcWpsgaLfhJxO+F04CCGd2VV4szPgAl7cw55iLW2wG6iNyCVIPpSDlp8ojNlx2G2N7uE7QHX0DAd6U0N3syngQn1zhWRqrVeSJr+6E9RIWwJYg4HIC4gdSxliOVrKu16ZCCnA2Nq
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id vh8-20020a170907d38800b00a36c5b01ef3sm509430ejc.225.2024.02.07.00.57.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 Feb 2024 00:57:22 -0800 (PST)
+Message-ID: <e305a170-362d-48bb-a742-f4c8f010b2c7@redhat.com>
+Date: Wed, 7 Feb 2024 09:57:21 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3] platform/x86/fujitsu-laptop: Add battery charge
+ control support
+To: Szilard Fabian <szfabian@bluemarch.art>, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, jwoithe@just42.net,
+ ilpo.jarvinen@linux.intel.com, W_Armin@gmx.de,
+ Jelle van der Waa <jelle@vdwaa.nl>
+References: <20240129163502.161409-2-szfabian@bluemarch.art>
+ <20240129175714.164326-2-szfabian@bluemarch.art>
+ <20240207023031.56805-2-szfabian@bluemarch.art>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240207023031.56805-2-szfabian@bluemarch.art>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This LED controller also installed on a Xiaomi pad2 and it is an x86
-platform. The original driver is based on the device tree and can't be
-used for this ACPI based system. This patch migrated the driver to
-use fwnode to access the properties. Moreover, the fwnode API
-supports device tree so this work would affect the original
-implementations.
+Hi Szilard,
 
-Signed-off-by: Kate Hsuan <hpa@redhat.com>
----
- drivers/leds/rgb/Kconfig        |  1 -
- drivers/leds/rgb/leds-ktd202x.c | 68 ++++++++++++++++++++++-----------
- 2 files changed, 45 insertions(+), 24 deletions(-)
++Cc Jelle van der Waa who has been working on userspace (upower + GNOME)
+support for these thresholds.
 
-diff --git a/drivers/leds/rgb/Kconfig b/drivers/leds/rgb/Kconfig
-index a6a21f564673..f245dbd9a163 100644
---- a/drivers/leds/rgb/Kconfig
-+++ b/drivers/leds/rgb/Kconfig
-@@ -17,7 +17,6 @@ config LEDS_GROUP_MULTICOLOR
- config LEDS_KTD202X
- 	tristate "LED support for KTD202x Chips"
- 	depends on I2C
--	depends on OF
- 	select REGMAP_I2C
- 	help
- 	  This option enables support for the Kinetic KTD2026/KTD2027
-diff --git a/drivers/leds/rgb/leds-ktd202x.c b/drivers/leds/rgb/leds-ktd202x.c
-index 514965795a10..a1aef62e3db5 100644
---- a/drivers/leds/rgb/leds-ktd202x.c
-+++ b/drivers/leds/rgb/leds-ktd202x.c
-@@ -112,6 +112,8 @@ static int ktd202x_chip_disable(struct ktd202x *chip)
- 
- 	regmap_write(chip->regmap, KTD202X_REG_RESET_CONTROL, KTD202X_ENABLE_CTRL_SLEEP);
- 
-+	usleep_range(500, 600);
-+
- 	ret = regulator_bulk_disable(ARRAY_SIZE(chip->regulators), chip->regulators);
- 	if (ret) {
- 		dev_err(chip->dev, "Failed to disable regulators: %d\n", ret);
-@@ -381,16 +383,18 @@ static int ktd202x_blink_mc_set(struct led_classdev *cdev,
- 				 mc->num_colors);
- }
- 
--static int ktd202x_setup_led_rgb(struct ktd202x *chip, struct device_node *np,
-+static int ktd202x_setup_led_rgb(struct ktd202x *chip, struct fwnode_handle *np,
- 				 struct ktd202x_led *led, struct led_init_data *init_data)
- {
- 	struct led_classdev *cdev;
--	struct device_node *child;
-+	struct fwnode_handle *child;
- 	struct mc_subled *info;
--	int num_channels;
-+	int num_channels = 0;
- 	int i = 0;
- 
--	num_channels = of_get_available_child_count(np);
-+	fwnode_for_each_available_child_node(np, child) {
-+		num_channels++;
-+	}
- 	if (!num_channels || num_channels > chip->num_leds)
- 		return -EINVAL;
- 
-@@ -398,22 +402,22 @@ static int ktd202x_setup_led_rgb(struct ktd202x *chip, struct device_node *np,
- 	if (!info)
- 		return -ENOMEM;
- 
--	for_each_available_child_of_node(np, child) {
-+	fwnode_for_each_available_child_node(np, child) {
- 		u32 mono_color;
- 		u32 reg;
- 		int ret;
- 
--		ret = of_property_read_u32(child, "reg", &reg);
-+		ret = fwnode_property_read_u32(child, "reg", &reg);
- 		if (ret != 0 || reg >= chip->num_leds) {
- 			dev_err(chip->dev, "invalid 'reg' of %pOFn\n", child);
--			of_node_put(child);
-+			fwnode_handle_put(child);
- 			return -EINVAL;
- 		}
- 
--		ret = of_property_read_u32(child, "color", &mono_color);
-+		ret = fwnode_property_read_u32(child, "color", &mono_color);
- 		if (ret < 0 && ret != -EINVAL) {
- 			dev_err(chip->dev, "failed to parse 'color' of %pOF\n", child);
--			of_node_put(child);
-+			fwnode_handle_put(child);
- 			return ret;
- 		}
- 
-@@ -433,14 +437,14 @@ static int ktd202x_setup_led_rgb(struct ktd202x *chip, struct device_node *np,
- 	return devm_led_classdev_multicolor_register_ext(chip->dev, &led->mcdev, init_data);
- }
- 
--static int ktd202x_setup_led_single(struct ktd202x *chip, struct device_node *np,
-+static int ktd202x_setup_led_single(struct ktd202x *chip, struct fwnode_handle *np,
- 				    struct ktd202x_led *led, struct led_init_data *init_data)
- {
- 	struct led_classdev *cdev;
- 	u32 reg;
- 	int ret;
- 
--	ret = of_property_read_u32(np, "reg", &reg);
-+	ret = fwnode_property_read_u32(np, "reg", &reg);
- 	if (ret != 0 || reg >= chip->num_leds) {
- 		dev_err(chip->dev, "invalid 'reg' of %pOFn\n", np);
- 		return -EINVAL;
-@@ -454,7 +458,7 @@ static int ktd202x_setup_led_single(struct ktd202x *chip, struct device_node *np
- 	return devm_led_classdev_register_ext(chip->dev, &led->cdev, init_data);
- }
- 
--static int ktd202x_add_led(struct ktd202x *chip, struct device_node *np, unsigned int index)
-+static int ktd202x_add_led(struct ktd202x *chip, struct fwnode_handle *np, unsigned int index)
- {
- 	struct ktd202x_led *led = &chip->leds[index];
- 	struct led_init_data init_data = {};
-@@ -463,14 +467,14 @@ static int ktd202x_add_led(struct ktd202x *chip, struct device_node *np, unsigne
- 	int ret;
- 
- 	/* Color property is optional in single color case */
--	ret = of_property_read_u32(np, "color", &color);
-+	ret = fwnode_property_read_u32(np, "color", &color);
- 	if (ret < 0 && ret != -EINVAL) {
- 		dev_err(chip->dev, "failed to parse 'color' of %pOF\n", np);
- 		return ret;
- 	}
- 
- 	led->chip = chip;
--	init_data.fwnode = of_fwnode_handle(np);
-+	init_data.fwnode = np;
- 
- 	if (color == LED_COLOR_ID_RGB) {
- 		cdev = &led->mcdev.led_cdev;
-@@ -492,26 +496,30 @@ static int ktd202x_add_led(struct ktd202x *chip, struct device_node *np, unsigne
- 
- static int ktd202x_probe_dt(struct ktd202x *chip)
- {
--	struct device_node *np = dev_of_node(chip->dev), *child;
--	int count;
-+	struct device *dev = chip->dev;
-+	struct fwnode_handle *np, *child;
-+	int count = 0;
- 	int i = 0;
- 
--	chip->num_leds = (int)(unsigned long)of_device_get_match_data(chip->dev);
-+	count = device_get_child_node_count(dev);
- 
--	count = of_get_available_child_count(np);
- 	if (!count || count > chip->num_leds)
- 		return -EINVAL;
- 
-+	np = dev_fwnode(chip->dev);
-+	if (!np)
-+		return -ENODEV;
-+
- 	regmap_write(chip->regmap, KTD202X_REG_RESET_CONTROL, KTD202X_RSTR_RESET);
- 
- 	/* Allow the device to execute the complete reset */
- 	usleep_range(200, 300);
- 
--	for_each_available_child_of_node(np, child) {
-+	fwnode_for_each_available_child_node(np, child) {
- 		int ret = ktd202x_add_led(chip, child, i);
- 
- 		if (ret) {
--			of_node_put(child);
-+			fwnode_handle_put(child);
- 			return ret;
- 		}
- 		i++;
-@@ -533,7 +541,7 @@ static int ktd202x_probe(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
- 	struct ktd202x *chip;
--	int count;
-+	int count = 0;
- 	int ret;
- 
- 	count = device_get_child_node_count(dev);
-@@ -568,6 +576,8 @@ static int ktd202x_probe(struct i2c_client *client)
- 		return ret;
- 	}
- 
-+	chip->num_leds = (int) (unsigned long)i2c_get_match_data(client);
-+
- 	ret = ktd202x_probe_dt(chip);
- 	if (ret < 0) {
- 		regulator_bulk_disable(ARRAY_SIZE(chip->regulators), chip->regulators);
-@@ -602,21 +612,33 @@ static void ktd202x_shutdown(struct i2c_client *client)
- 	regmap_write(chip->regmap, KTD202X_REG_RESET_CONTROL, KTD202X_RSTR_RESET);
- }
- 
-+static const struct i2c_device_id ktd202x_id[] = {
-+	{"ktd2026", KTD2026_NUM_LEDS},
-+	{"ktd2027", KTD2027_NUM_LEDS},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(i2c, ktd202x_id);
-+
-+#ifndef CONFIG_ACPI
- static const struct of_device_id ktd202x_match_table[] = {
- 	{ .compatible = "kinetic,ktd2026", .data = (void *)KTD2026_NUM_LEDS },
- 	{ .compatible = "kinetic,ktd2027", .data = (void *)KTD2027_NUM_LEDS },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, ktd202x_match_table);
-+#endif
- 
- static struct i2c_driver ktd202x_driver = {
- 	.driver = {
--		.name = "leds-ktd202x",
--		.of_match_table = ktd202x_match_table,
-+		.name	= "leds-ktd202x",
-+#ifndef CONFIG_ACPI
-+		.of_match_table = ktd20xx_match_table,
-+#endif
- 	},
- 	.probe = ktd202x_probe,
- 	.remove = ktd202x_remove,
- 	.shutdown = ktd202x_shutdown,
-+	.id_table = ktd202x_id,
- };
- module_i2c_driver(ktd202x_driver);
- 
--- 
-2.43.0
+On 2/7/24 03:32, Szilard Fabian wrote:
+> This patch adds battery charge control support on Fujitsu notebooks
+> via the S006 method of the FUJ02E3 ACPI device. With this method it's
+> possible to set charge_control_end_threshold between 50 and 100%.
+> 
+> Tested on Lifebook E5411 and Lifebook U728. Sadly I can't test this
+> patch on a dual battery one, but I didn't find any clue about
+> independent battery charge control on dual battery Fujitsu notebooks
+> either. And by that I mean checking the DSDT table of various Lifebook
+> notebooks and reverse engineering FUJ02E3.dll.
+> 
+> Signed-off-by: Szilard Fabian <szfabian@bluemarch.art>
+
+Thank you for your patch. Do you happen to know if there also
+is a noticeable fixed start threshold which is like say always 5%
+lower then then end threshold ?
+
+Note I'm *not* asking you to also add a start threshold attribute
+at this time. But we (Jelle and me mostly atm) are thinking about
+a way to export the start threshold offset in cases like this
+to userspace.
+
+Regards,
+
+Hans
+
+
+
+> ---
+> v3:
+> * added additional error handling
+> * removed if statement with device_create_file(), just returning that
+>   function instead
+> * added bool charge_control_supported into struct fujitsu_laptop
+> * added a 'charge_control_add' and 'charge_control_remove' function to be
+>   called from acpi_fujitsu_laptop_add() and acpi_fujitsu_laptop_remove()
+> * moved FUJ02E3 S006 probing logic from the ACPI battery hooks to the new
+>   'charge_control_*' functions
+> 
+> v2:
+> Forgot to sign-off the original commit. Fixed, sorry for the
+> inconvenience.
+> ---
+>  drivers/platform/x86/fujitsu-laptop.c | 125 ++++++++++++++++++++++++++
+>  1 file changed, 125 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index 085e044e888e..2fcbc10a0d9d 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -49,6 +49,8 @@
+>  #include <linux/kfifo.h>
+>  #include <linux/leds.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/power_supply.h>
+> +#include <acpi/battery.h>
+>  #include <acpi/video.h>
+>  
+>  #define FUJITSU_DRIVER_VERSION		"0.6.0"
+> @@ -97,6 +99,10 @@
+>  #define BACKLIGHT_OFF			(BIT(0) | BIT(1))
+>  #define BACKLIGHT_ON			0
+>  
+> +/* FUNC interface - battery control interface */
+> +#define FUNC_S006_METHOD		0x1006
+> +#define CHARGE_CONTROL_RW		0x21
+> +
+>  /* Scancodes read from the GIRB register */
+>  #define KEY1_CODE			0x410
+>  #define KEY2_CODE			0x411
+> @@ -132,6 +138,7 @@ struct fujitsu_laptop {
+>  	spinlock_t fifo_lock;
+>  	int flags_supported;
+>  	int flags_state;
+> +	bool charge_control_supported;
+>  };
+>  
+>  static struct acpi_device *fext;
+> @@ -164,6 +171,118 @@ static int call_fext_func(struct acpi_device *device,
+>  	return value;
+>  }
+>  
+> +/* Battery charge control code */
+> +
+> +static ssize_t charge_control_end_threshold_store(struct device *dev,
+> +				struct device_attribute *attr,
+> +				const char *buf, size_t count)
+> +{
+> +	int value, ret;
+> +
+> +	ret = kstrtouint(buf, 10, &value);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (value < 50 || value > 100)
+> +		return -EINVAL;
+> +
+> +	int cc_end_value, s006_cc_return;
+> +
+> +	cc_end_value = value * 0x100 + 0x20;
+> +	s006_cc_return = call_fext_func(fext, FUNC_S006_METHOD,
+> +					CHARGE_CONTROL_RW, cc_end_value, 0x0);
+> +
+> +	if (s006_cc_return < 0)
+> +		return s006_cc_return;
+> +
+> +	/*
+> +	 * The S006 0x21 method returns 0x00 in case the provided value
+> +	 * is invalid.
+> +	 */
+> +	if (s006_cc_return == 0x00)
+> +		return -EINVAL;
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t charge_control_end_threshold_show(struct device *dev,
+> +				struct device_attribute *attr,
+> +				char *buf)
+> +{
+> +	int status;
+> +	status = call_fext_func(fext, FUNC_S006_METHOD,
+> +				CHARGE_CONTROL_RW, 0x21, 0x0);
+> +
+> +	if (status < 0)
+> +		return status;
+> +
+> +	return sprintf(buf, "%d\n", status);
+> +}
+> +
+> +static DEVICE_ATTR_RW(charge_control_end_threshold);
+> +
+> +/* ACPI battery hook */
+> +
+> +static int fujitsu_battery_add_hook(struct power_supply *battery,
+> +			       struct acpi_battery_hook *hook)
+> +{
+> +	return device_create_file(&battery->dev,
+> +				  &dev_attr_charge_control_end_threshold);
+> +}
+> +
+> +static int fujitsu_battery_remove_hook(struct power_supply *battery,
+> +				  struct acpi_battery_hook *hook)
+> +{
+> +	device_remove_file(&battery->dev,
+> +			   &dev_attr_charge_control_end_threshold);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct acpi_battery_hook battery_hook = {
+> +	.add_battery = fujitsu_battery_add_hook,
+> +	.remove_battery = fujitsu_battery_remove_hook,
+> +	.name = "Fujitsu Battery Extension",
+> +};
+> +
+> +/*
+> + * These functions are intended to be called from acpi_fujitsu_laptop_add and
+> + * acpi_fujitsu_laptop_remove.
+> + */
+> +
+> +static int fujitsu_battery_charge_control_add(struct acpi_device *device)
+> +{
+> +	struct fujitsu_laptop *priv = acpi_driver_data(device);
+> +	priv->charge_control_supported = false;
+> +
+> +	/*
+> +	 * Check if the S006 0x21 method exists by trying to get the current
+> +	 * battery charge limit.
+> +	 */
+> +	int s006_cc_return;
+> +	s006_cc_return = call_fext_func(fext, FUNC_S006_METHOD,
+> +					CHARGE_CONTROL_RW, 0x21, 0x0);
+> +
+> +	if (s006_cc_return < 0)
+> +		return s006_cc_return;
+> +
+> +	if (s006_cc_return == UNSUPPORTED_CMD)
+> +		return -ENODEV;
+> +
+> +	priv->charge_control_supported = true;
+> +	battery_hook_register(&battery_hook);
+> +
+> +	return 0;
+> +}
+> +
+> +static void fujitsu_battery_charge_control_remove(struct acpi_device *device)
+> +{
+> +	struct fujitsu_laptop *priv = acpi_driver_data(device);
+> +
+> +	if (priv->charge_control_supported)
+> +		battery_hook_unregister(&battery_hook);
+> +}
+> +
+>  /* Hardware access for LCD brightness control */
+>  
+>  static int set_lcd_level(struct acpi_device *device, int level)
+> @@ -839,6 +958,10 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
+>  	if (ret)
+>  		goto err_free_fifo;
+>  
+> +	ret = fujitsu_battery_charge_control_add(device);
+> +	if (ret < 0)
+> +		pr_warn("Unable to register battery charge control: %d\n", ret);
+> +
+>  	return 0;
+>  
+>  err_free_fifo:
+> @@ -851,6 +974,8 @@ static void acpi_fujitsu_laptop_remove(struct acpi_device *device)
+>  {
+>  	struct fujitsu_laptop *priv = acpi_driver_data(device);
+>  
+> +	fujitsu_battery_charge_control_remove(device);
+> +
+>  	fujitsu_laptop_platform_remove(device);
+>  
+>  	kfifo_free(&priv->fifo);
 
