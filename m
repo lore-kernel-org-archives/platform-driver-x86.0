@@ -1,126 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C3B7995D;
-	Thu,  8 Feb 2024 14:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC481768F7;
+	Thu,  8 Feb 2024 15:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707403986; cv=none; b=Rt3k6gH85cE/y6vJSOkrCBG/IlWMqyCIXFBYhOraI5CFKQBaKmeLW85NaE0aXVOXxR95NBMzweZjf8SZQjmMwEyXFruhdkc5+b+rXIYRfZrwQVIBMqdEypyZ2eLysamuHW57KpsH47ZtG+MBio/9ofdtgBGYICXmtgRYm7YE6nI=
+	t=1707405091; cv=none; b=eIM5yU9XJd2fG5AusnDPDe4qSPJzpYbNBtcH/1tNWizKIe86t+5qZEmKtgh9G/qLrprNvUqyq/RWgb0fxdYcsU54GNHpHBPIkR5BjSYl+nteoMx/s9DAmWUUTnHTBvBevRMnVgZbaJIPsasua7X3DoQTVXWVIlKWS3mhYgUpwYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707403986; c=relaxed/simple;
-	bh=2fMEyyKJRcrOmxoY0/lT0uNbd0529gjTYxA9DzWBnnw=;
+	s=arc-20240116; t=1707405091; c=relaxed/simple;
+	bh=/E29gLn3iCL7gPLUbNGH1GmxyWYk0YmDRNTGoiudIu4=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=InXFqw/t02dYdUHlLT+srKW0n5gjuy7JhOEXFmQ9OKbCMGSpkpaHvn/wwwF+CFsOfCduQT+VPGuRShXvBS4LTgQkNB2w6Q0SYyT0U33UZ0Ga/3+OXMkvc6RSFnbO4Ci51kW16GYWEABgU6H8muRPxkQwXcI9xVxkpaQVoKu0zOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iFR1XY0B; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version:Content-Type; b=QgvreXVBg69lYLzjevS0TLx5sksHk2AVG7piG6P1VRbZOrh39xqEHeErQUBznSe0XWhlhPwCNnkTbkjrb50R/TPds+rFLM+Cd7g46SPkFdbODXxswpc393vBHZ9ZFgyM2cbrSlfs6xU0UYFy1I6JROvjpmusMERjKYxFLL8Kq6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LlrB3k5z; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iFR1XY0B"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LlrB3k5z"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707403984; x=1738939984;
+  t=1707405090; x=1738941090;
   h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=2fMEyyKJRcrOmxoY0/lT0uNbd0529gjTYxA9DzWBnnw=;
-  b=iFR1XY0B+Eq/7fD9cCpZKiF77GFcyuk86U24dYPmdDo2wDANnyi91H+z
-   0b83Kp2QBK/RMCq/HYON4xIamSm7yl63ouvkXX+va7NOVTyRlmex707Tu
-   6/J74y6MhcjCfF+Sc4zLxwaVw2O6Ndx9fSWBCuPzVz7umo5qmBaZD1bry
-   T6mDjl8XZQmJYkrXPj58aeiUVaPm9wSwLelquq5E+1LD+e1WeUrUXtkja
-   ZKxJiRxzsS+7+0czn9I3Nciaqu8MSuGpyIelibjCYcji827vmrNEaSv78
-   h9zaO30tjXzUl+eci+boCVb99iQPDPcXrB6NbJ3HbzSmrAW8/U/DgCJf8
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1098741"
+   references:mime-version:content-id;
+  bh=/E29gLn3iCL7gPLUbNGH1GmxyWYk0YmDRNTGoiudIu4=;
+  b=LlrB3k5zgLQaggfW0Zi4V3qM9r9BV6ihoMlho5fyE+xASxbImOpkhr64
+   l3fQFsLUf9D+quJEhneaGbgseZn8VhasUo6exF+Ahhrw5nFVMZz9fpxmC
+   Btub7rr7c469TfCaDAogbUSHvowhKRo02S1IWYXuQQKDvbEVTzvJvLMVz
+   Kml74S1BOjvkpA/qRCdloGTUjRUCYPMEJRdfqURmkKSXwBMqGLhU0SAll
+   81NLIW8gSdsMJc6wEh4xeh1eU9o84CC8Ggdd0S8Ai+FDtc7cXWifyKTZm
+   2M1AFYBouWGRsqmN3aCfoJck0IDBRamoUewDjdUQu0JjWv5gSiOqQbcAC
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="12602963"
 X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="1098741"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 06:53:03 -0800
+   d="scan'208";a="12602963"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 07:11:29 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="6285544"
+   d="scan'208";a="1670115"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.52.95])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 06:53:01 -0800
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 07:11:26 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 8 Feb 2024 16:52:58 +0200 (EET)
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: Netdev <netdev@vger.kernel.org>, 
-    sathyanarayanan.kuppuswamy@linux.intel.com, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 8/8] tools: intel_sdsi: Add current meter support
-In-Reply-To: <20240201010747.471141-9-david.e.box@linux.intel.com>
-Message-ID: <ffdd7e28-9ed1-9380-7666-a7b108d84949@linux.intel.com>
-References: <20240201010747.471141-1-david.e.box@linux.intel.com> <20240201010747.471141-9-david.e.box@linux.intel.com>
+Date: Thu, 8 Feb 2024 17:11:23 +0200 (EET)
+To: Vishnu Sankar <vishnuocv@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, vsankar@lenovo.com, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>
+Subject: Re: [PATCH] Fix to correct wrong temp reporting on some ThinkPads
+In-Reply-To: <CABxCQKvtgwxS_DU2U-LNrPiqHF4+y2YPkMgP4-nS6U3ccp8M7w@mail.gmail.com>
+Message-ID: <2f280707-7250-4bb2-460c-5f8a02208179@linux.intel.com>
+References: <20240131180757.35044-1-vishnuocv@gmail.com> <901e1fb0-1e42-7bf7-113d-3d0bbb62f4da@linux.intel.com> <CABxCQKvtgwxS_DU2U-LNrPiqHF4+y2YPkMgP4-nS6U3ccp8M7w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; BOUNDARY="8323328-1463870039-1707404934=:1104"
+Content-ID: <e13be5e2-d46e-5ad3-9d82-daa5f42af0a7@linux.intel.com>
 
-On Wed, 31 Jan 2024, David E. Box wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> Add support to read the 'meter_current' file. The display is the same as
-> the 'meter_certificate', but will show the current snapshot of the
-> counters.
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  tools/arch/x86/intel_sdsi/intel_sdsi.c | 48 +++++++++++++++++---------
->  1 file changed, 31 insertions(+), 17 deletions(-)
-> 
-> diff --git a/tools/arch/x86/intel_sdsi/intel_sdsi.c b/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> index a8fb6d17405f..c9b3e457885d 100644
-> --- a/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> +++ b/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> @@ -182,6 +182,7 @@ struct sdsi_dev {
->  enum command {
->  	CMD_SOCKET_INFO,
->  	CMD_METER_CERT,
-> +	CMD_METER_CURRENT_CERT,
->  	CMD_STATE_CERT,
->  	CMD_PROV_AKC,
->  	CMD_PROV_CAP,
-> @@ -329,7 +330,7 @@ static void get_feature(uint32_t encoding, char *feature)
->  	feature[0] = name[3];
->  }
->  
-> -static int sdsi_meter_cert_show(struct sdsi_dev *s)
-> +static int sdsi_meter_cert_show(struct sdsi_dev *s, bool show_current)
->  {
->  	char buf[METER_CERT_MAX_SIZE] = {0};
->  	struct bundle_encoding_counter *bec;
-> @@ -360,7 +361,11 @@ static int sdsi_meter_cert_show(struct sdsi_dev *s)
->  		return ret;
->  	}
->  
-> -	cert_ptr = fopen("meter_certificate", "r");
-> +	if (!show_current)
-> +		cert_ptr = fopen("meter_certificate", "r");
-> +	else
-> +		cert_ptr = fopen("meter_current", "r");
+--8323328-1463870039-1707404934=:1104
+Content-Type: text/plain; CHARSET=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <70fd06fb-ff27-7c79-0c7b-d07f2c055c0d@linux.intel.com>
 
-Please calculate the filename only once:
+On Thu, 8 Feb 2024, Vishnu Sankar wrote:
 
-	cert_fname = show_current ? "meter_current" : "meter_certificate";
-	cert_ptr = fopen(cert_fname, "r");
+> Thanks a lot for the review.
+> And sorry for the delay in response.
 
-> +
->  	if (!cert_ptr) {
->  		perror("Could not open 'meter_certificate' file");
+Small improvements to my earlier version below now that I reread it.
 
-This line still has 'meter_certificate' so you need to convert it to 
-fprintf() + strerror().
+> On Tue, Feb 6, 2024 at 8:03=E2=80=AFPM Ilpo J=C3=A4rvinen <ilpo.jarvinen@=
+linux.intel.com> wrote:
+>=20
+> > @@ -6174,6 +6191,21 @@ static int thermal_get_sensor(int idx, s32 *valu=
+e)
+=2E..
+>       A code reader would be served much better if this convoluted logic =
+is
+>       simplied to:
+>=20
+>       =C2=A0 =C2=A0 =C2=A0 =C2=A0 case TPACPI_THERMAL_TPEC_12:
+>       =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (idx >=
+=3D 12)
+>       =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 return -EINVAL;
+>=20
+>       =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (idx <=
+=3D 7)
 
->  		return -1;
-> @@ -368,7 +373,8 @@ static int sdsi_meter_cert_show(struct sdsi_dev *s)
->  
->  	size = fread(buf, 1, sizeof(buf), cert_ptr);
->  	if (!size) {
-> -		fprintf(stderr, "Could not read 'meter_certificate' file\n");
-> +		fprintf(stderr, "Could not read '%s' file\n",
-> +			show_current ? "meter_current" : "meter_certificate");
+if (idx < 8) =09<- to match idx - 8
 
-Use the local variable from above.
+>       =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 ec_offset =3D TP_EC_THERMAL_TMP0_NS + idx;
+>       =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 else
+>       =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 ec_offset =3D TP_EC_THERMAL_TMP8_NS + (idx - 8);
+>=20
+>       =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!acpi_e=
+c_read(ec_offset, &tmp))
+>       =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 return -EIO;
+>=20
+>       =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 *value =3D =
+tmp * 1000;
 
--- 
+1000 should likely be something from linux/units.h.
+
+
+--=20
  i.
+--8323328-1463870039-1707404934=:1104--
