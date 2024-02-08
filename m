@@ -1,106 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14F26BFC0
-	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Feb 2024 09:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F116776418;
+	Thu,  8 Feb 2024 13:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707383495; cv=none; b=t0j+kzx2F4mEai7h4l/IuHsiCpz0xigl/+gRZkDjU8yi2nAmUGxLAMvqFHss0eC1iaWi4Fa5eu8j8hHqk2wXwilbI9bpq+Kizbo6nli9JK+dLsjr8POnWL+GxFZ/RzHASBUDkno94cbARDweCewWEq5bBTET1F+9l+/ZTBV2jgM=
+	t=1707399489; cv=none; b=QsggaMKfDdGoT6H+Cn8ERwqHK3UQ7lgOil7ILm2zEMWvH0nm/IEjv2r3jd5edBDh11qUHmbttkAIpfmp8DN9p6bhaj3/oGkL51vLX1BnrmvNgZcHFJCEVSEkFO10L97kPUaPb3vB4jUbnr7JU0+z89/MC+TiTydAdY7yj1IA3Kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707383495; c=relaxed/simple;
-	bh=Urc6EHEV1trg40jncFnSWzA6C6SNuCgkQqkElyHPFDc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aywVNa0StIixAFxca6UP8596BYNMFp1C/oX025PMdMghEsjLM008PPPURA2NLpiefA7HGvFsjoPPa7+UdQZ9s3Fmzg46syIsYJPqd4xkyz9XHCiPd0tLt8Kp5rQaGG8gBZ+OCgh/iYV1DPT1oFvqrwcRMPVpUWRCEl3iWH7jg7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gm0R7rIS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1707399489; c=relaxed/simple;
+	bh=jw39fEdEP2aNbkYoy9T3GNQq4OS2fFirdRfXrG9yQG4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=kmZAF7jPLguWafGyus9Dd5OrPO11Pns06b9AhJOSfsRniNcDX53LB0u6I1Zu8Sbk0fWMNZCkFS91MJ68ju7XK45l3NKz3XkDVyb0HsfNiTCKishMncl5i3Nv3kFhJtK6ELlrzLmWMQROYVmwACfWNKHatx5qor6kR0zIEldsPiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ro5S3DMY; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gm0R7rIS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707383492;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ODP2WukdSN69Dkq02zl0rD7xO+0dL+boJwASghdWLqQ=;
-	b=gm0R7rISWF1T5jnwHuwy6o7sFI9YvPOPHaEFDV8QK3YqJIEwutwsLSIeopGiQ3K0uq6VIx
-	vMsnTpHzitg4v+fH1CeeMhLE6sD1fTNfBASwrqkVsV41muZiJwvxC/i84LNAmsvaQfHsCS
-	Rv3Rc5pCQFSeilBbxNJ/5dzlOSVheDs=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-668-LlDZUGzCN5Sb335O0-cavg-1; Thu, 08 Feb 2024 04:11:30 -0500
-X-MC-Unique: LlDZUGzCN5Sb335O0-cavg-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a383b9555d3so65366866b.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Feb 2024 01:11:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707383489; x=1707988289;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ODP2WukdSN69Dkq02zl0rD7xO+0dL+boJwASghdWLqQ=;
-        b=rP8JopcFtq0rorKsKscWAkUcRmO3DLKwUwgfftLzltw3qWNxVuKTEe72O4jmdtcj4d
-         /G0PlOxn5ljeBiY2Hg03wsVd7QtKdMSi4ojxhYeIdFt4AeTJE3QfTmw+h/+cZPlIMCcY
-         e9ItGLcKCJpGxI4qsqGLWJewnjuOlUKsIe+4YxMFmJdXZxu6sWRze4Au665Cw0ESyv6s
-         XlHHECd52oYfk82RS4iRN0nzAr5Xyo45YEcUdlJNqA7h4Z+S/Jl4kSZX2B446rBIiNyB
-         smV7fcxGEeBR7nzb5uY7U+8EYvdhvGfUY4hVnn9rmKPBtjVD0yLQIercxZdqwWq/5PVL
-         mtmQ==
-X-Gm-Message-State: AOJu0Yx3S/wZfHgBe2ErkYcgPAyDGMqJN6kGABp9ZDYbFtJsEqx36Cep
-	m1UZaIsSdjdkZg5hBzeRM9Jhr1tLNHlDH2hjZChtiDXTAUIjGR4ANSI2Bf7EaRKGOggPo5LRSGK
-	3GdiuzBZs25WJ3ESN/Ssm6Q044EcaYkBM4ak4mVfmxEgLWbbzna/a5bFG4Gl7We7WIBrvgHw=
-X-Received: by 2002:a17:906:646:b0:a35:e7a1:66ec with SMTP id t6-20020a170906064600b00a35e7a166ecmr6291428ejb.44.1707383489680;
-        Thu, 08 Feb 2024 01:11:29 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGANjlv/Nug4PDqjzwTVjakLLFl/mzccGZyPhaDWJgBSzN0D7dtpnESyXcxKezhDz77kL+epg==
-X-Received: by 2002:a17:906:646:b0:a35:e7a1:66ec with SMTP id t6-20020a170906064600b00a35e7a166ecmr6291406ejb.44.1707383489319;
-        Thu, 08 Feb 2024 01:11:29 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXkdRl1vJKg/b3td1NZr+chxeIyNwN7pTQt2rngSxHGoyMvttmXgtCzALoEA/eMUgPP7oxkgXqwdGK3XK6owIp7bPB0qTyD/dV9koGrIpQSS3l8bdUZSbRvw6CfzbJhBgYTP7FgFgBEyq6gPIgv03AU4Cghbn0M6HfPvlO5fQvwFTP/jedww8ys41FolFAEAYtBWs1AN+qpQfD8JKqQsm+lcpg8zsXS
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id tj7-20020a170907c24700b00a38a2fa2d4bsm910651ejc.45.2024.02.08.01.11.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Feb 2024 01:11:28 -0800 (PST)
-Message-ID: <b42366a6-3586-48e9-a162-a3a03fe204a0@redhat.com>
-Date: Thu, 8 Feb 2024 10:11:27 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ro5S3DMY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707399488; x=1738935488;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=jw39fEdEP2aNbkYoy9T3GNQq4OS2fFirdRfXrG9yQG4=;
+  b=Ro5S3DMYSb/NgjuenzbZKRWXpQJma8940oV4TxX0gnYj2KrX1K/0Kp70
+   l1ZxYhNAygrIJ2wOYhibLR5bzE3hnFICjFyZFDSrHYIM4YTRh6Uggkm81
+   vQ86Gcgc49UR+I0KbsfRrFdT9u72TxQTkxGXUV2cVBw4LANA8m1+7eVbq
+   71dJ7WotiFeRL6uQzk2VTw2c8cGzOZRd8RT9gzRS39LXBHDxokblWWacq
+   Dphhl1EnPBbWgy+Up8LvQRU4JLuLG4brnH5Mi0+f3GDSgtG1AfAK3CxlW
+   NRWLCypiVYvM0Ua3Cddxc1tO1jjxxPtAFyi7lkPA1sr0xM4Wg9EKmumW4
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="26660912"
+X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
+   d="scan'208";a="26660912"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 05:38:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
+   d="scan'208";a="1889294"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.52.95])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 05:38:05 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 8 Feb 2024 15:38:01 +0200 (EET)
+To: "David E. Box" <david.e.box@linux.intel.com>
+cc: Netdev <netdev@vger.kernel.org>, 
+    sathyanarayanan.kuppuswamy@linux.intel.com, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 2/8] platform/x86/intel/sdsi: Combine read and write
+ mailbox flows
+In-Reply-To: <20240201010747.471141-3-david.e.box@linux.intel.com>
+Message-ID: <bc0fbe53-3eeb-26cb-ba91-c5fc238cb1b8@linux.intel.com>
+References: <20240201010747.471141-1-david.e.box@linux.intel.com> <20240201010747.471141-3-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3] platform/x86/fujitsu-laptop: Add battery charge
- control support
-To: Szilard Fabian <szfabian@bluemarch.art>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- jwoithe@just42.net, ilpo.jarvinen@linux.intel.com, W_Armin@gmx.de,
- Jelle van der Waa <jelle@vdwaa.nl>
-References: <20240129163502.161409-2-szfabian@bluemarch.art>
- <20240129175714.164326-2-szfabian@bluemarch.art>
- <20240207023031.56805-2-szfabian@bluemarch.art>
- <e305a170-362d-48bb-a742-f4c8f010b2c7@redhat.com> <ZcQ0qGEuHOSoLC8R@N>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <ZcQ0qGEuHOSoLC8R@N>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Szilard,
+On Wed, 31 Jan 2024, David E. Box wrote:
 
-On 2/8/24 02:56, Szilard Fabian wrote:
-> Hi,
+> The current mailbox commands are either read-only or write-only and the
+> flow is different for each. New commands will need to send and receive
+> data. In preparation for these commands, create a common polling function
+> to handle sending data and receiving in the same transaction.
 > 
-> On Wed, Feb 07, 2024 at 09:57:21AM +0100, Hans de Goede wrote:
->> Thank you for your patch. Do you happen to know if there also
->> is a noticeable fixed start threshold which is like say always 5%
->> lower then then end threshold ?
-> There is a start threshold, it's always 11% lower than the end threshold.
-> I don't know yet if it's a fixed value or if there is a way to set it to a
-> different value.
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/sdsi.c | 79 +++++++++++++++++--------------
+>  1 file changed, 44 insertions(+), 35 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
+> index a70c071de6e2..05a35f2f85b6 100644
+> --- a/drivers/platform/x86/intel/sdsi.c
+> +++ b/drivers/platform/x86/intel/sdsi.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/iopoll.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/overflow.h>
+>  #include <linux/pci.h>
+>  #include <linux/slab.h>
+>  #include <linux/sysfs.h>
+> @@ -156,8 +157,8 @@ static int sdsi_status_to_errno(u32 status)
+>  	}
+>  }
+>  
+> -static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
+> -			      size_t *data_size)
+> +static int sdsi_mbox_poll(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
+> +			  size_t *data_size)
+>  {
+>  	struct device *dev = priv->dev;
+>  	u32 total, loop, eom, status, message_size;
+> @@ -166,18 +167,10 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
+>  
+>  	lockdep_assert_held(&priv->mb_lock);
+>  
+> -	/* Format and send the read command */
+> -	control = FIELD_PREP(CTRL_EOM, 1) |
+> -		  FIELD_PREP(CTRL_SOM, 1) |
+> -		  FIELD_PREP(CTRL_RUN_BUSY, 1) |
+> -		  FIELD_PREP(CTRL_PACKET_SIZE, info->size);
+> -	writeq(control, priv->control_addr);
+> -
+>  	/* For reads, data sizes that are larger than the mailbox size are read in packets. */
+>  	total = 0;
+>  	loop = 0;
+>  	do {
+> -		void *buf = info->buffer + (SDSI_SIZE_MAILBOX * loop);
+>  		u32 packet_size;
+>  
+>  		/* Poll on ready bit */
+> @@ -195,6 +188,11 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
+>  		if (ret)
+>  			break;
+>  
+> +		if (!packet_size) {
+> +			sdsi_complete_transaction(priv);
+> +			break;
+> +		}
+> +
+>  		/* Only the last packet can be less than the mailbox size. */
+>  		if (!eom && packet_size != SDSI_SIZE_MAILBOX) {
+>  			dev_err(dev, "Invalid packet size\n");
+> @@ -208,9 +206,13 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
+>  			break;
+>  		}
+>  
+> -		sdsi_memcpy64_fromio(buf, priv->mbox_addr, round_up(packet_size, SDSI_SIZE_CMD));
+> +		if (packet_size && info->buffer) {
 
-Thanks that is useful to know. We can add this to the driver once we have
-come up with a way to export these kind of fixed start offsets to userspace.
+Why you check for packet_size here if you break earlier for !packet_size?
 
-Regards,
+> +			void *buf = info->buffer + array_size(SDSI_SIZE_MAILBOX, loop);
+>  
+> -		total += packet_size;
+> +			sdsi_memcpy64_fromio(buf, priv->mbox_addr,
+> +					     round_up(packet_size, SDSI_SIZE_CMD));
+> +			total += packet_size;
+> +		}
+>  
+>  		sdsi_complete_transaction(priv);
+>  	} while (!eom && ++loop < MBOX_MAX_PACKETS);
+> @@ -230,16 +232,33 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
+>  		dev_warn(dev, "Read count %u differs from expected count %u\n",
+>  			 total, message_size);
+>  
+> -	*data_size = total;
+> +	if (data_size)
+> +		*data_size = total;
+>  
+>  	return 0;
+>  }
 
-Hans
 
+-- 
+ i.
 
