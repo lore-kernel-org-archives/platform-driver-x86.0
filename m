@@ -1,46 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A801D525;
-	Thu,  8 Feb 2024 02:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14F26BFC0
+	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Feb 2024 09:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707360122; cv=none; b=M6DyiLkOuvoQl2WW2APJb4ZbuG4mOZ5BEWP2c6OVe0xReV6Z09d0PhIo4adGoUoutPEuLVVLxAU3aComrGFaxiNC0AyNKYrBd9Rl+d4RPWUI0qnOstMZBlbrtgGlJz07aZ3pPHEDI58aULIM9ixUGcmTomkA5C/wYB8OZoGqV0I=
+	t=1707383495; cv=none; b=t0j+kzx2F4mEai7h4l/IuHsiCpz0xigl/+gRZkDjU8yi2nAmUGxLAMvqFHss0eC1iaWi4Fa5eu8j8hHqk2wXwilbI9bpq+Kizbo6nli9JK+dLsjr8POnWL+GxFZ/RzHASBUDkno94cbARDweCewWEq5bBTET1F+9l+/ZTBV2jgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707360122; c=relaxed/simple;
-	bh=HnZVKRgWjaJGnqnfgwePaLGo0wMeQdaMpS2Wqgm09sM=;
+	s=arc-20240116; t=1707383495; c=relaxed/simple;
+	bh=Urc6EHEV1trg40jncFnSWzA6C6SNuCgkQqkElyHPFDc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JFMY2wAvktR1PRcofeiYoAPpXxb9JkYGCgbSSzNuwIQR+BU2dEbcvGQBjZwl9ajoizkBiCZaMWoHAIx1dyjvTZDwJXeY8rN/HIQjaFtlHVx/nnGde3dVeUeM6d3yWOPhLV/jzHoiDwczpccxuPoeeC83u+mNYDUm0zroSoBeSto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iz9FvQbI; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=aywVNa0StIixAFxca6UP8596BYNMFp1C/oX025PMdMghEsjLM008PPPURA2NLpiefA7HGvFsjoPPa7+UdQZ9s3Fmzg46syIsYJPqd4xkyz9XHCiPd0tLt8Kp5rQaGG8gBZ+OCgh/iYV1DPT1oFvqrwcRMPVpUWRCEl3iWH7jg7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gm0R7rIS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iz9FvQbI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707360121; x=1738896121;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=HnZVKRgWjaJGnqnfgwePaLGo0wMeQdaMpS2Wqgm09sM=;
-  b=iz9FvQbIvO1v+Z4jvNbhj7/jLg6SA9AOUloAhsv1P7MuoDc7a5Ud8lv1
-   z9FpwKjxyxqb+b15QNnZiTgtYANFfDlfeQgjGmCVJIAvUKbwKOXZhJ9dk
-   XZNRHtFrwPhKyAV1iil2/m4BcRU0x7Wqx/lLUjCt9JAquOK547LLtXQI5
-   AcNdjcAdHjEO7Bb/sPDtNeYZJM6jv9mvXQGLFpW4/irs4M6meTLggRRh1
-   YNACwsVbvXUAiwo8voHJD4Y2ep5uAPdHbB6fFT0M47MwuMWYPCVKh5Lwz
-   qxS3YLVy4+5p+ynXBQgyFAy079Qjz+VKr0YMjANYA8NSSy9VwMGk9wxDT
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="12487390"
-X-IronPort-AV: E=Sophos;i="6.05,252,1701158400"; 
-   d="scan'208";a="12487390"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 18:42:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,252,1701158400"; 
-   d="scan'208";a="6178279"
-Received: from srussjr-mobl1.amr.corp.intel.com (HELO [10.209.91.249]) ([10.209.91.249])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 18:42:00 -0800
-Message-ID: <6360f90f-1aca-4355-aa19-661c2925dd24@linux.intel.com>
-Date: Wed, 7 Feb 2024 18:41:59 -0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gm0R7rIS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707383492;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ODP2WukdSN69Dkq02zl0rD7xO+0dL+boJwASghdWLqQ=;
+	b=gm0R7rISWF1T5jnwHuwy6o7sFI9YvPOPHaEFDV8QK3YqJIEwutwsLSIeopGiQ3K0uq6VIx
+	vMsnTpHzitg4v+fH1CeeMhLE6sD1fTNfBASwrqkVsV41muZiJwvxC/i84LNAmsvaQfHsCS
+	Rv3Rc5pCQFSeilBbxNJ/5dzlOSVheDs=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-668-LlDZUGzCN5Sb335O0-cavg-1; Thu, 08 Feb 2024 04:11:30 -0500
+X-MC-Unique: LlDZUGzCN5Sb335O0-cavg-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a383b9555d3so65366866b.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Feb 2024 01:11:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707383489; x=1707988289;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ODP2WukdSN69Dkq02zl0rD7xO+0dL+boJwASghdWLqQ=;
+        b=rP8JopcFtq0rorKsKscWAkUcRmO3DLKwUwgfftLzltw3qWNxVuKTEe72O4jmdtcj4d
+         /G0PlOxn5ljeBiY2Hg03wsVd7QtKdMSi4ojxhYeIdFt4AeTJE3QfTmw+h/+cZPlIMCcY
+         e9ItGLcKCJpGxI4qsqGLWJewnjuOlUKsIe+4YxMFmJdXZxu6sWRze4Au665Cw0ESyv6s
+         XlHHECd52oYfk82RS4iRN0nzAr5Xyo45YEcUdlJNqA7h4Z+S/Jl4kSZX2B446rBIiNyB
+         smV7fcxGEeBR7nzb5uY7U+8EYvdhvGfUY4hVnn9rmKPBtjVD0yLQIercxZdqwWq/5PVL
+         mtmQ==
+X-Gm-Message-State: AOJu0Yx3S/wZfHgBe2ErkYcgPAyDGMqJN6kGABp9ZDYbFtJsEqx36Cep
+	m1UZaIsSdjdkZg5hBzeRM9Jhr1tLNHlDH2hjZChtiDXTAUIjGR4ANSI2Bf7EaRKGOggPo5LRSGK
+	3GdiuzBZs25WJ3ESN/Ssm6Q044EcaYkBM4ak4mVfmxEgLWbbzna/a5bFG4Gl7We7WIBrvgHw=
+X-Received: by 2002:a17:906:646:b0:a35:e7a1:66ec with SMTP id t6-20020a170906064600b00a35e7a166ecmr6291428ejb.44.1707383489680;
+        Thu, 08 Feb 2024 01:11:29 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGANjlv/Nug4PDqjzwTVjakLLFl/mzccGZyPhaDWJgBSzN0D7dtpnESyXcxKezhDz77kL+epg==
+X-Received: by 2002:a17:906:646:b0:a35:e7a1:66ec with SMTP id t6-20020a170906064600b00a35e7a166ecmr6291406ejb.44.1707383489319;
+        Thu, 08 Feb 2024 01:11:29 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXkdRl1vJKg/b3td1NZr+chxeIyNwN7pTQt2rngSxHGoyMvttmXgtCzALoEA/eMUgPP7oxkgXqwdGK3XK6owIp7bPB0qTyD/dV9koGrIpQSS3l8bdUZSbRvw6CfzbJhBgYTP7FgFgBEyq6gPIgv03AU4Cghbn0M6HfPvlO5fQvwFTP/jedww8ys41FolFAEAYtBWs1AN+qpQfD8JKqQsm+lcpg8zsXS
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id tj7-20020a170907c24700b00a38a2fa2d4bsm910651ejc.45.2024.02.08.01.11.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Feb 2024 01:11:28 -0800 (PST)
+Message-ID: <b42366a6-3586-48e9-a162-a3a03fe204a0@redhat.com>
+Date: Thu, 8 Feb 2024 10:11:27 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -48,114 +67,40 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: wmi: Make input buffer madatory when
- evaulating methods
-Content-Language: en-US
-To: Armin Wolf <W_Armin@gmx.de>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240207202012.3506-1-W_Armin@gmx.de>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240207202012.3506-1-W_Armin@gmx.de>
+Subject: Re: [RFC PATCH v3] platform/x86/fujitsu-laptop: Add battery charge
+ control support
+To: Szilard Fabian <szfabian@bluemarch.art>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ jwoithe@just42.net, ilpo.jarvinen@linux.intel.com, W_Armin@gmx.de,
+ Jelle van der Waa <jelle@vdwaa.nl>
+References: <20240129163502.161409-2-szfabian@bluemarch.art>
+ <20240129175714.164326-2-szfabian@bluemarch.art>
+ <20240207023031.56805-2-szfabian@bluemarch.art>
+ <e305a170-362d-48bb-a742-f4c8f010b2c7@redhat.com> <ZcQ0qGEuHOSoLC8R@N>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <ZcQ0qGEuHOSoLC8R@N>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+Hi Szilard,
 
-On 2/7/24 12:20 PM, Armin Wolf wrote:
-> The ACPI-WMI specification declares that a WMxx control method takes
-> 3 arguments: instance, method id and argument buffer. This is also
-> the case even when the underlying WMI method does not have any
-> input arguments.
+On 2/8/24 02:56, Szilard Fabian wrote:
+> Hi,
+> 
+> On Wed, Feb 07, 2024 at 09:57:21AM +0100, Hans de Goede wrote:
+>> Thank you for your patch. Do you happen to know if there also
+>> is a noticeable fixed start threshold which is like say always 5%
+>> lower then then end threshold ?
+> There is a start threshold, it's always 11% lower than the end threshold.
+> I don't know yet if it's a fixed value or if there is a way to set it to a
+> different value.
 
-It would be better if you include specification version and section
-title for reference.
+Thanks that is useful to know. We can add this to the driver once we have
+come up with a way to export these kind of fixed start offsets to userspace.
 
->
-> So if a WMI driver evaluates a WMI method without passing an input
-> buffer, ACPICA will log a warning complaining that the third argument
-> is missing.
+Regards,
 
-I assume it is a compile warning. Can you copy the warning message?
+Hans
 
->
-> Prevent this by checking that a input buffer was passed, and return
-> an error if this was not the case.
->
-> Tested on a Asus PRIME B650-Plus.
->
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
-
-
-With above fixed,
-
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
->  drivers/platform/x86/wmi.c | 21 ++++++++++-----------
->  1 file changed, 10 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index 63906fdd0abf..f9e23d491dd9 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -296,7 +296,7 @@ EXPORT_SYMBOL_GPL(wmidev_instance_count);
->   * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
->   * @instance: Instance index
->   * @method_id: Method ID to call
-> - * @in: Buffer containing input for the method call
-> + * @in: Mandatory buffer containing input for the method call
->   * @out: Empty buffer to return the method results
->   *
->   * Call an ACPI-WMI method, the caller must free @out.
-> @@ -326,7 +326,7 @@ EXPORT_SYMBOL_GPL(wmi_evaluate_method);
->   * @wdev: A wmi bus device from a driver
->   * @instance: Instance index
->   * @method_id: Method ID to call
-> - * @in: Buffer containing input for the method call
-> + * @in: Mandatory buffer containing input for the method call
->   * @out: Empty buffer to return the method results
->   *
->   * Call an ACPI-WMI method, the caller must free @out.
-> @@ -347,26 +347,25 @@ acpi_status wmidev_evaluate_method(struct wmi_device *wdev, u8 instance, u32 met
->  	block = &wblock->gblock;
->  	handle = wblock->acpi_device->handle;
->
-> +	if (!in)
-> +		return AE_BAD_DATA;
-> +
->  	if (!(block->flags & ACPI_WMI_METHOD))
->  		return AE_BAD_DATA;
->
->  	if (block->instance_count <= instance)
->  		return AE_BAD_PARAMETER;
->
-> -	input.count = 2;
-> +	input.count = 3;
->  	input.pointer = params;
-> +
->  	params[0].type = ACPI_TYPE_INTEGER;
->  	params[0].integer.value = instance;
->  	params[1].type = ACPI_TYPE_INTEGER;
->  	params[1].integer.value = method_id;
-> -
-> -	if (in) {
-> -		input.count = 3;
-> -
-> -		params[2].type = get_param_acpi_type(wblock);
-> -		params[2].buffer.length = in->length;
-> -		params[2].buffer.pointer = in->pointer;
-> -	}
-> +	params[2].type = get_param_acpi_type(wblock);
-> +	params[2].buffer.length = in->length;
-> +	params[2].buffer.pointer = in->pointer;
->
->  	get_acpi_method_name(wblock, 'M', method);
->
-> --
-> 2.39.2
->
->
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
 
