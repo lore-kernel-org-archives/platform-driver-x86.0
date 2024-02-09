@@ -1,55 +1,55 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A56374CC;
-	Fri,  9 Feb 2024 15:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9734C2E3F9;
+	Fri,  9 Feb 2024 15:08:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707490808; cv=none; b=f3LTZaAHtIkPdPlvmQVnBzIsf316QTi95uypFMp0DBnjdb65T4KY96nQ12p5v3ZhdvruOXZK2eRC7o6z6TU4wKU3eWuvQ0j+o0WscdIUliK0pS7ZZSNPsJvDVQe/GtSmcUS+aBTukUShmcnI+PxemkKD8gcIfssE3ZLfRpxSPcg=
+	t=1707491309; cv=none; b=a9WedBYxK14w11VU2pphpKgWu6pGnNvrrqSWNmHXWcYpacpKWG36s8uZ2CT7EpL+13g5ZYNZ/d+3zHCird3ni6qnE53CRhU1Aal4VOEdO9hNkH5koYqif/d3rBYhI16qJa2bkXds+ubmA646CIxAl3w+cB7C9VT4Jx32JJOFY0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707490808; c=relaxed/simple;
-	bh=TKruBJIwFASA/sqJRVaYjjQ7bhehm8QNQf9+1Z6gp7w=;
+	s=arc-20240116; t=1707491309; c=relaxed/simple;
+	bh=V6+AuvQ1+rkbReYjLH11hrXtd4MOrnvsLrprkOOCzZo=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=gLF1/Nvc7HXITYgCoxwiNzx0mZOFW54xsAuglgW+bvqarevS72jXA/LB7dm+UeRzQYi2XEp6jup227cHOC+iaik4jjQKna41nckofD8Avmiauag/VbAmQzTVP2Lm+z68iBkEd5c2yo0FZQlkFu5LuJFrGAiQcxBa1Dm3JxJ3BXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Emqn5i7E; arc=none smtp.client-ip=192.198.163.15
+	 MIME-Version:Content-Type; b=RPi/N8zYZ0S2ocKPHywrzGc32wDwj0Zhd5TTLMLFwhXGmzBfOL3ZeIEfurfQAcrh9yVxhhqaJSibELGxj6LG8eDDtTOixHPUK20ZZfo6nF2Atxjl7fEa88MBZJ5mw4JWGmcErIhy4qUh8zQ6YSbyWEtwulqs/NSBFiRjprI+7so=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iQz4OuUE; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Emqn5i7E"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iQz4OuUE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707490807; x=1739026807;
+  t=1707491308; x=1739027308;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=TKruBJIwFASA/sqJRVaYjjQ7bhehm8QNQf9+1Z6gp7w=;
-  b=Emqn5i7EojHuTvdwdB/Add9+Llx5nFqK2mlyJhWZi3rVcuX7RegdTftf
-   WI6IM/YP49y3l8Ehln3AOZBq9p9DV/2DzSKFI9itZHXKkpJnj8/aqx/Tg
-   dKu9d8ZeV8dse6U4gZgXsx7dfZUYu/1oT69vjJoAyB7vGw6zFry+n/fSY
-   2nCsbSZWK269aDth7/GETsxKscrNxailK6rgOHiA+PE1JiUxKQdaY7OXi
-   48wv9rIKTh82HMpZEEMw2Oot6BNQWtDGk+EefqFNFx7U9agRD18LxSUWn
-   LUdYH4NIXoL7hrjhaT4QEUqhQM7etB/q7vSR2JxYG/jBSHr2znbwVpGVy
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10979"; a="1574488"
+  bh=V6+AuvQ1+rkbReYjLH11hrXtd4MOrnvsLrprkOOCzZo=;
+  b=iQz4OuUEZvC/pS3G5NW4GMV4Sa1Bc6BAW4wNH7J+k5Pj1XnTAMZRKX+0
+   ng8artmOKR+51VHvUa9gDhGIn8w+Nafu4r34e/vNo9vaE7OyhIcyumrn0
+   yjVb/4di1Ve+Pucx2sGsyS2/6xLTowJ4hjaX/P/rq+9sqOsfHbKW59aPo
+   s77c8GtYXAXnmafJGCEDVwt+n09MarMjcfFu9sAz+/zpHPvzD4N6EcNIu
+   E/PObrh5/mJx2I78UmfYeTy/RLG8WAAQL2xvNeo6E8crOUNCgmhIWiXM9
+   Pbuu3S09Ua001HDOiTvbc7uIZr3HGstEQ8MDeHJxzWWoMOLMsWnaOVOB2
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10979"; a="1595708"
 X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
-   d="scan'208";a="1574488"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 07:00:06 -0800
+   d="scan'208";a="1595708"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 07:08:27 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
-   d="scan'208";a="1991493"
+   d="scan'208";a="1956572"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.33.226])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 07:00:04 -0800
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 07:08:24 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 9 Feb 2024 16:59:59 +0200 (EET)
+Date: Fri, 9 Feb 2024 17:08:20 +0200 (EET)
 To: Shravan Kumar Ramani <shravankr@nvidia.com>
 cc: Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
     David Thompson <davthompson@nvidia.com>, 
     platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/4] platform/mellanox: mlxbf-pmc: Replace uintN_t
- with kernel-style types
-In-Reply-To: <73cd5e838695f8e20b022a523dcade108685350b.1707466888.git.shravankr@nvidia.com>
-Message-ID: <6905cf50-3314-2b3c-9bbf-eeb8000f0b54@linux.intel.com>
-References: <cover.1707466888.git.shravankr@nvidia.com> <73cd5e838695f8e20b022a523dcade108685350b.1707466888.git.shravankr@nvidia.com>
+Subject: Re: [PATCH v2 2/4] platform/mellanox: mlxbf-pmc: Fix signed/unsigned
+ mix-up
+In-Reply-To: <366b8fc6f5d77c01f9e0e2ad25627df583729017.1707466888.git.shravankr@nvidia.com>
+Message-ID: <54ff990c-00a8-1854-02c6-e22b088fa3e7@linux.intel.com>
+References: <cover.1707466888.git.shravankr@nvidia.com> <366b8fc6f5d77c01f9e0e2ad25627df583729017.1707466888.git.shravankr@nvidia.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -60,58 +60,63 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Fri, 9 Feb 2024, Shravan Kumar Ramani wrote:
 
-Hi,
-
-You need to provice commit description here too. The shortlog on subject 
-line is not enough.
-
 > Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
 > ---
->  drivers/platform/mellanox/mlxbf-pmc.c | 121 +++++++++++++-------------
->  1 file changed, 59 insertions(+), 62 deletions(-)
+>  drivers/platform/mellanox/mlxbf-pmc.c | 110 ++++++++++++++------------
+>  1 file changed, 58 insertions(+), 52 deletions(-)
 > 
 > diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
-> index b1995ac268d7..71d919832e2a 100644
+> index 71d919832e2a..e3f1ae772e43 100644
 > --- a/drivers/platform/mellanox/mlxbf-pmc.c
 > +++ b/drivers/platform/mellanox/mlxbf-pmc.c
-> @@ -149,17 +149,17 @@ struct mlxbf_pmc_block_info {
+> @@ -99,8 +99,8 @@
 >   */
->  struct mlxbf_pmc_context {
->  	struct platform_device *pdev;
-> -	uint32_t total_blocks;
-> -	uint32_t tile_count;
-> -	uint8_t llt_enable;
-> -	uint8_t mss_enable;
-> -	uint32_t group_num;
-> +	u32 total_blocks;
-> +	u32 tile_count;
-> +	u8 llt_enable;
-> +	u8 mss_enable;
-> +	u32 group_num;
->  	struct device *hwmon_dev;
->  	const char *block_name[MLXBF_PMC_MAX_BLOCKS];
->  	struct mlxbf_pmc_block_info block[MLXBF_PMC_MAX_BLOCKS];
->  	const struct attribute_group *groups[MLXBF_PMC_MAX_BLOCKS];
->  	bool svc_sreg_support;
-> -	uint32_t sreg_tbl_perf;
-> +	u32 sreg_tbl_perf;
->  	unsigned int event_set;
+>  struct mlxbf_pmc_attribute {
+>  	struct device_attribute dev_attr;
+> -	int index;
+> -	int nr;
+> +	unsigned int index;
+> +	unsigned int nr;
 >  };
 >  
-> @@ -865,8 +865,8 @@ static struct mlxbf_pmc_context *pmc;
->  static const char *mlxbf_pmc_svc_uuid_str = "89c036b4-e7d7-11e6-8797-001aca00bfc4";
+>  /**
+> @@ -121,7 +121,7 @@ struct mlxbf_pmc_block_info {
+>  	void __iomem *mmio_base;
+>  	size_t blk_size;
+>  	size_t counters;
+> -	int type;
+> +	unsigned int type;
+>  	struct mlxbf_pmc_attribute *attr_counter;
+>  	struct mlxbf_pmc_attribute *attr_event;
+>  	struct mlxbf_pmc_attribute attr_event_list;
+> @@ -169,7 +169,7 @@ struct mlxbf_pmc_context {
+>   * @evt_name: Name of the event
+>   */
+>  struct mlxbf_pmc_events {
+> -	int evt_num;
+> +	u32 evt_num;
+>  	char *evt_name;
+>  };
 >  
->  /* Calls an SMC to access a performance register */
-> -static int mlxbf_pmc_secure_read(void __iomem *addr, uint32_t command,
-> -				 uint64_t *result)
-> +static int mlxbf_pmc_secure_read(void __iomem *addr, u32 command,
-> +				 u64 *result)
+> @@ -959,7 +959,7 @@ static int mlxbf_pmc_write(void __iomem *addr, int command, u64 value)
+>  }
+>  
+>  /* Check if the register offset is within the mapped region for the block */
+> -static bool mlxbf_pmc_valid_range(int blk_num, u32 offset)
+> +static bool mlxbf_pmc_valid_range(unsigned int blk_num, u32 offset)
+>  {
+>  	if ((offset >= 0) && !(offset % MLXBF_PMC_REG_SIZE) &&
+>  	    (offset + MLXBF_PMC_REG_SIZE <= pmc->block[blk_num].blk_size))
+> @@ -970,7 +970,7 @@ static bool mlxbf_pmc_valid_range(int blk_num, u32 offset)
+>  
+>  /* Get the event list corresponding to a certain block */
+>  static const struct mlxbf_pmc_events *mlxbf_pmc_event_list(const char *blk,
+> -							   int *size)
+> +							   unsigned int *size)
 
-Please remove unnecessary newlines too such as this one from the function 
-arguments.
-
-Other than those two things, this one looked fine. Thanks for doing this.
-
+Usually size_t is the type that is preferred for sizes of memory blocks 
+(including this case where it's array size that is just memory block 
+size divided by another).
 
 -- 
  i.
