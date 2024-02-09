@@ -1,183 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39954C618;
-	Thu,  8 Feb 2024 21:52:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6D6364;
+	Fri,  9 Feb 2024 00:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707429180; cv=none; b=GKQvSTQWE0iBO5sbGzNkaMs99gOcnaZV4N69wE8vijbaBgYLFIjcRs814wr2fZcN8L5EWFqI+5W0RJS3qB4ZTl5ryt3XPUUqjISyq6sqLdzIrr1AtSShdRd+7S8G7+HTsNvUf6DbexR+S7h3RNqKxZIHyYIh8JSc3HPL/ssULeg=
+	t=1707437743; cv=none; b=ePk94tYU8G0Cj+LdD+SfU0EWm/0PtEQpnpcxmKBn+MMfxDLs92vG+iUw7bhWXWzjUCT/lpIuXpPqQmojWQ6JGx4mzTIDd6x/hHF1+5jQka1GpfdeK3XJvdplknUhbn/mb3He+Raeno106MHtiWisO8VPdRAZxRcOHTmUkAaJ/s8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707429180; c=relaxed/simple;
-	bh=8QAG6Cro55Jx09o5dkxYkDEqva+UxRXkLO1iDXdFo4E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZsZiZvn8mwnYbpe7SK7Rxs1264iPFWctS2FEvCgx1QMsaZ/jzaTMJ11TO8Tl9JMNAjupjzlNn5C9KEJonTWAPoj9hKjrxAjFocI1hS9DimRQvkqpMKRFGOd+tqqr4MqZI0LHPPvT3y5ezXTWfMWn31kVkp7nOeoiK/GAUlErY1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=loMuMepI; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707437743; c=relaxed/simple;
+	bh=titIt4CCbtZUUe3Y7OhLRHUvv2FiGFT9GfkeXAoPx+M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SqgJtHC+XMpXb2UuWhGn+tHAIGZyDJma5adW76en0dyajQreHr6ZEY7foHxjkn3BZDoQm5InDu7pwWcVHMd1gKp/Yc9AZXGf9xtgX/wXKP5tem8PRtDLYT6iENV3T1WuGd8TDRzVqmRiULtk4AvrlSFO3U1KGbmKnY6mTsl8Gr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DsLJOiln; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="loMuMepI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707429179; x=1738965179;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8QAG6Cro55Jx09o5dkxYkDEqva+UxRXkLO1iDXdFo4E=;
-  b=loMuMepIm4AeedvYTNBnJKXvN8XfFA7xY8szT2hweg5LKdDkHKO5Mmur
-   ZjT57FnYA7ZkEqeEPDU1lpxLGTx5OVMuqrm7i+dLV9zuclaLVQ5QyKwHa
-   xx3V1LucyAzKKfioRX+0TaLcQ4iHlE8EvLPlXOS0jla1PAA+DwdhHnG3W
-   Y5jHT0pjaBgQb2Sg8BSVN+fQ+W2AdT4dG3pFnbGxzgNYi1rD2MnCc7rxD
-   FNZSt09w3PwUKP4uD7tOFteqxC/MP9hVLyLK+exn/PCTrroobJF7BbrLu
-   LZdub05J4iBosWSOj2o9rY+qRCm1qc52VYq7nCZsyT06NarNQw4Y+XtbT
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1623333"
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="1623333"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 13:52:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="6389144"
-Received: from millermi-mobl1.amr.corp.intel.com (HELO [10.255.229.182]) ([10.255.229.182])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 13:52:57 -0800
-Message-ID: <273bac88-db72-4282-861d-e9886d32ca7f@linux.intel.com>
-Date: Thu, 8 Feb 2024 13:52:56 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DsLJOiln"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-290fb65531eso316086a91.2;
+        Thu, 08 Feb 2024 16:15:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707437742; x=1708042542; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6I8E7dlbCyWRIqFRdrdMKsIVLgbabkuiMYmBMR3beWM=;
+        b=DsLJOilnjvUqulcbAXT4wSmyMSphjrTPlsOQyLM5PoHpdYu7BW1pegqwe2h3EhxNmf
+         joH6sr2WztLvuPFNXrynXpZ3p03mqluEs6dOdGY7pD+O/Uu+liooRMHNLfhSFKS5Blir
+         JwLtvRcpnMVhxNoOk/UlD6cnjxMCucPbN/dapAYcn12JhcVvFviMV35B3BlQVsYFyjYN
+         PkwSOvc77I8xAtV75kKAmCZHgKUm370O/mwaR0QbEWH88xgl+5RaHTO+dWXTiS7CtcQt
+         88eTqlpHiNIXDXYf1gg3SEFDR72C+8FjaKB/obPGDfRxPCg5tG/0Qwvb72BkIR2tzBAb
+         ak2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707437742; x=1708042542;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6I8E7dlbCyWRIqFRdrdMKsIVLgbabkuiMYmBMR3beWM=;
+        b=bGa5RiJNIXY0i4BnkV+/szS2lKxMx/xa5mv4zjSUwDEhoMHlmvbzl5estzCzVWPtTe
+         6Rl5H32enPVNPHl249uTCmkyFjfACBwTKEVQ72SyNX6v5wg1+0iHAYCTZgUwdB7pBTtr
+         7Z04603x/+O2Ep//W0zWUMorurh9w29E3IUjQ7lbZdqj+Xt95WUPLXo/6UUEJO/c7lhs
+         9TOsA3QyEX5AAlPD4Wf6fidANWsiPTJhkfrytcjHY0SMWxUTrVvo998YDr+QqCAxj4pL
+         HRmjArfMpmQfrF1iDcmeleKX4dKEG7YqoAAMkg6X+w3KP7Qyl5fAsJpwj8wToJckqcFG
+         N69g==
+X-Gm-Message-State: AOJu0YxkEZkjzmKYZeeZcEwcPJpDtE93lVhLW2LYqsM52CTwY750a6V+
+	SbyyOH1vpMOXyosYdFxdQGyDYEDTE602ZujHzlcGEvtqREAYX/rZ/CPAog62BeGffSzhaIbQLnM
+	PDCLi+fu+ErfEn5xia8QIQJ/6rBk=
+X-Google-Smtp-Source: AGHT+IFOY68uCe5Z/o2YBXMA2IqJLAfdcoQyOxtJlD7klugUXQbLIjKj8r7gwL8n3RgQqSwdBYIOWh57OpHVqyF2Dmc=
+X-Received: by 2002:a17:90a:db02:b0:295:f024:60d4 with SMTP id
+ g2-20020a17090adb0200b00295f02460d4mr13306pjv.4.1707437741682; Thu, 08 Feb
+ 2024 16:15:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/8] platform/x86/intel/sdsi: Add header file
-Content-Language: en-US
-To: "David E. Box" <david.e.box@linux.intel.com>, netdev@vger.kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20240201010747.471141-1-david.e.box@linux.intel.com>
- <20240201010747.471141-4-david.e.box@linux.intel.com>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240201010747.471141-4-david.e.box@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240131180757.35044-1-vishnuocv@gmail.com> <901e1fb0-1e42-7bf7-113d-3d0bbb62f4da@linux.intel.com>
+ <CABxCQKvtgwxS_DU2U-LNrPiqHF4+y2YPkMgP4-nS6U3ccp8M7w@mail.gmail.com> <2f280707-7250-4bb2-460c-5f8a02208179@linux.intel.com>
+In-Reply-To: <2f280707-7250-4bb2-460c-5f8a02208179@linux.intel.com>
+From: Vishnu Sankar <vishnuocv@gmail.com>
+Date: Fri, 9 Feb 2024 09:15:04 +0900
+Message-ID: <CABxCQKthnVk4GOMu5M8Q8PbioO72AaiHSfbu-SB2KjuOz4ZU5A@mail.gmail.com>
+Subject: Re: [PATCH] Fix to correct wrong temp reporting on some ThinkPads
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, vsankar@lenovo.com, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 1/31/24 5:07 PM, David E. Box wrote:
-> In preparation for new source files, move common structures to a new
-> header flie.
-
-Add some detail about why you adding new source files.
-
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Fri, Feb 9, 2024 at 12:11=E2=80=AFAM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
 >
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  MAINTAINERS                       |  1 +
->  drivers/platform/x86/intel/sdsi.c | 23 +----------------------
->  drivers/platform/x86/intel/sdsi.h | 31 +++++++++++++++++++++++++++++++
->  3 files changed, 33 insertions(+), 22 deletions(-)
->  create mode 100644 drivers/platform/x86/intel/sdsi.h
+> On Thu, 8 Feb 2024, Vishnu Sankar wrote:
 >
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8d1052fa6a69..09ef8497e48a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11042,6 +11042,7 @@ INTEL SDSI DRIVER
->  M:	David E. Box <david.e.box@linux.intel.com>
->  S:	Supported
->  F:	drivers/platform/x86/intel/sdsi.c
-> +F:	drivers/platform/x86/intel/sdsi.h
->  F:	tools/arch/x86/intel_sdsi/
->  F:	tools/testing/selftests/drivers/sdsi/
->  
-> diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
-> index 05a35f2f85b6..d48bb648f0b2 100644
-> --- a/drivers/platform/x86/intel/sdsi.c
-> +++ b/drivers/platform/x86/intel/sdsi.c
-> @@ -22,24 +22,16 @@
->  #include <linux/types.h>
->  #include <linux/uaccess.h>
->  
-> +#include "sdsi.h"
->  #include "vsec.h"
->  
->  #define ACCESS_TYPE_BARID		2
->  #define ACCESS_TYPE_LOCAL		3
->  
->  #define SDSI_MIN_SIZE_DWORDS		276
-> -#define SDSI_SIZE_MAILBOX		1024
->  #define SDSI_SIZE_REGS			80
->  #define SDSI_SIZE_CMD			sizeof(u64)
->  
-> -/*
-> - * Write messages are currently up to the size of the mailbox
-> - * while read messages are up to 4 times the size of the
-> - * mailbox, sent in packets
-> - */
-> -#define SDSI_SIZE_WRITE_MSG		SDSI_SIZE_MAILBOX
-> -#define SDSI_SIZE_READ_MSG		(SDSI_SIZE_MAILBOX * 4)
-> -
->  #define SDSI_ENABLED_FEATURES_OFFSET	16
->  #define SDSI_FEATURE_SDSI		BIT(3)
->  #define SDSI_FEATURE_METERING		BIT(26)
-> @@ -103,19 +95,6 @@ struct disc_table {
->  	u32	offset;
->  };
->  
-> -struct sdsi_priv {
-> -	struct mutex		mb_lock;	/* Mailbox access lock */
-> -	struct device		*dev;
-> -	void __iomem		*control_addr;
-> -	void __iomem		*mbox_addr;
-> -	void __iomem		*regs_addr;
-> -	int			control_size;
-> -	int			maibox_size;
-> -	int			registers_size;
-> -	u32			guid;
-> -	u32			features;
-> -};
-> -
->  /* SDSi mailbox operations must be performed using 64bit mov instructions */
->  static __always_inline void
->  sdsi_memcpy64_toio(u64 __iomem *to, const u64 *from, size_t count_bytes)
-> diff --git a/drivers/platform/x86/intel/sdsi.h b/drivers/platform/x86/intel/sdsi.h
-> new file mode 100644
-> index 000000000000..d0d7450c7b2b
-> --- /dev/null
-> +++ b/drivers/platform/x86/intel/sdsi.h
-> @@ -0,0 +1,31 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __PDx86_SDSI_H_
-> +#define __PDx86_SDSI_H_
-> +#include <linux/mutex.h>
-> +#include <linux/types.h>
-> +
-> +#define SDSI_SIZE_MAILBOX		1024
-> +
-> +/*
-> + * Write messages are currently up to the size of the mailbox
-> + * while read messages are up to 4 times the size of the
-> + * mailbox, sent in packets
-> + */
-> +#define SDSI_SIZE_WRITE_MSG		SDSI_SIZE_MAILBOX
-> +#define SDSI_SIZE_READ_MSG		(SDSI_SIZE_MAILBOX * 4)
-> +
-> +struct device;
-> +
-> +struct sdsi_priv {
-> +	struct mutex			mb_lock;	/* Mailbox access lock */
-> +	struct device			*dev;
-> +	void __iomem			*control_addr;
-> +	void __iomem			*mbox_addr;
-> +	void __iomem			*regs_addr;
-> +	int				control_size;
-> +	int				maibox_size;
-> +	int				registers_size;
-> +	u32				guid;
-> +	u32				features;
-> +};
-> +#endif
+> > Thanks a lot for the review.
+> > And sorry for the delay in response.
+>
+> Small improvements to my earlier version below now that I reread it.
+>
+> > On Tue, Feb 6, 2024 at 8:03=E2=80=AFPM Ilpo J=C3=A4rvinen <ilpo.jarvine=
+n@linux.intel.com> wrote:
+> >
+> > > @@ -6174,6 +6191,21 @@ static int thermal_get_sensor(int idx, s32 *va=
+lue)
+> ...
+> >       A code reader would be served much better if this convoluted logi=
+c is
+> >       simplied to:
+> >
+> >               case TPACPI_THERMAL_TPEC_12:
+> >                       if (idx >=3D 12)
+> >                               return -EINVAL;
+> >
+> >                       if (idx <=3D 7)
+>
+> if (idx < 8)    <- to match idx - 8
+Acked
+>
+> >                               ec_offset =3D TP_EC_THERMAL_TMP0_NS + idx=
+;
+> >                       else
+> >                               ec_offset =3D TP_EC_THERMAL_TMP8_NS + (id=
+x - 8);
+> >
+> >                       if (!acpi_ec_read(ec_offset, &tmp))
+> >                               return -EIO;
+> >
+> >                       *value =3D tmp * 1000;
+>
+> 1000 should likely be something from linux/units.h.
+Got it.
+Will use KILO.
+>
+>
+> --
+>  i.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
 
+
+--=20
+
+Regards,
+
+      Vishnu Sankar
+     +817015150407 (Japan)
