@@ -1,115 +1,90 @@
-Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270957603C;
-	Fri,  9 Feb 2024 16:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A10628371
+	for <platform-driver-x86@vger.kernel.org>; Sat, 10 Feb 2024 11:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707495799; cv=none; b=C6Pos/iVNgDI0rnDw0opsCr2kk7Q6TxtbpDDyZwCun4KUumFEXRStrp09yErXL6IPBEQhyohz7n5Hk5O6rMzpoLYDQj5UPbqqZHc4t9D7TPE0g1EXVdAUwb5S0iCWsUuwhf7hwFmuwZx/FqQ2hrKrOyai+rX1aMKwigwpVOiKKw=
+	t=1707562918; cv=none; b=K+lrQXybWim6jpVApwzA1qNSHW4Hm+bfQ5/xmnpSAk3cCi53KDlVYaFV5+2ouqmCFOYY3N2pZTN7BxybtcsX0XIChgVyIbaP/WK55vgngmi8n+tFSFcDdyQ6qEZZmCJzp6XYME00AoPnGiSyq6skK+P7Spc6MSzPpqrn+9ULs+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707495799; c=relaxed/simple;
-	bh=JcQ+HhzP9r+8LKGlm3MF4H2MaJwjf5OWYGl7P9bXR0I=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=YxszYRuLEHBMN/afLbl/ioAgt6Tg9L4GpM/DxMPXXZ3be4wxQ40m54+i/bWXIHF4/VtZLrK/fRoBzqNHcinpWULSvNFG81RukvudDUxtYlWxJUb7YII0Xui/diuZ/XEuXqJwqV+rh6Jqyu9LnyexlWWaPKW7PNf9s0XslwekWtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=FQ5e5Bmg; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CXXvjQY5; arc=none smtp.client-ip=64.147.123.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1707562918; c=relaxed/simple;
+	bh=XrQshJyZhevqIIBoX1hkhKevh99+1JwVuiZJEnQJQb4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aLG2BYXCdMtIa/4piVCln6sd/PjEH2uXUe5iU8xjziEBcFVG1tzPTMiy3EnFuD1rckTAUdOlVFvb6MOJqWjZvuznjILONej2fC+DXTCrBAdtNQxMlUsRrPwcwHSojDaIVZs1B1QWnQck3ExIfKS5znAJ5fbkaOwcsC9wpvVA70o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hQpSNW9R; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="FQ5e5Bmg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CXXvjQY5"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.west.internal (Postfix) with ESMTP id 04CBF3200392;
-	Fri,  9 Feb 2024 11:23:15 -0500 (EST)
-Received: from imap52 ([10.202.2.102])
-  by compute3.internal (MEProxy); Fri, 09 Feb 2024 11:23:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1707495795;
-	 x=1707582195; bh=JcQ+HhzP9r+8LKGlm3MF4H2MaJwjf5OWYGl7P9bXR0I=; b=
-	FQ5e5BmgFeFTrrXxvPbnun9BDKQVlt1gIU2jvNvrUcNHvfsLxpBvUNTyE4jUE0kN
-	toRfNZYymzM7J+q6M1Wfwwe6rkgdWf1aOaoITanULehgbDZzvi/NO5Dm9QTnQ6Mg
-	ozNuX0m9h3H9sg6R52jmveQgPyXSaHtrT7o1ahS3xkcmxygeoQku2TchggT/OktI
-	pPgcEDCbm1j0FLKJjV1hn9/tkNbJ+VhyB/Ki8U0/oEgNpR4q6xAVQWc7ncnQOV25
-	DC9YRU/Co6hRriLqI2cp7NUfxcx4xSpcxwpJ+VHMwgrGH2GGr17E4pqblVVfDIjx
-	jwBn5fsJBWfW4YAYL7JqRA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1707495795; x=
-	1707582195; bh=JcQ+HhzP9r+8LKGlm3MF4H2MaJwjf5OWYGl7P9bXR0I=; b=C
-	XXvjQY5hY/G0xCNlm55tmae7ai7e5fQDrno8NunupphipNqAuBZiysl6lHwFur4b
-	wGntfr28cBxnvSDrjsYq2GS1mO6m9iOxqUz5l9VRPwYx8nMRtRAuF2Bm4lswhxl3
-	qS77L3eIKUTEliKEiLjZUi6h6ElbpYOY1rbgipLhTNSDMqETv+IZxB6Mxsv5p5ic
-	0J4fu9n8W1J/XZKvvTG5lC4rgKwt9smoe8nn56BTHzox7ZprA0P9xuChJzEnKyDn
-	dP06TDGzl935iLthSuaYwIoyE135jwrMtvZVVTtCCemKdlWTm7BtyATNKPzLy78D
-	20/iG2P6sk3peYtlC0NGg==
-X-ME-Sender: <xms:c1HGZYZPoRQgZb_EUKOXLuFSkGhPtXZR1IGSyuuZHMr_o31EyDBTgg>
-    <xme:c1HGZTZcn4EqUumfq4rRmEUvXSkimiq82-dNqUO05tQE5oMMGSJj56WhAxsS-FQTK
-    lyMf2EBkO8aAlh2o4Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrtdeigdekiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedfofgr
-    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
-    drtggrqeenucggtffrrghtthgvrhhnpefhfeegudeftefgteelgfekgfdvjeelleevgffh
-    jeffhfdtiedtjeefkedvuefgkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
-X-ME-Proxy: <xmx:c1HGZS8f2yrjd3l0sVfawoNpzhwMbJPXpnKBhOhuXyb1lD0x0L5ovA>
-    <xmx:c1HGZSrth-NGi03SssdlQ66fZ93H5dXi3xC3m21k_9yeYlzvV45JDA>
-    <xmx:c1HGZTp770qVLstzLYo8561s5-gD0fan48BlpddpobSpDlWUGp52WQ>
-    <xmx:c1HGZcCzOzknIjbSPLd9BBu0qFDUG5nLrVbf2QNLH54kg96xRt84lQ>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 3C429C6009B; Fri,  9 Feb 2024 11:23:15 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hQpSNW9R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707562915;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ggA4wns++3y1E2sNvVB+GtYCUkC1NkQ1J8dGS4KPaYk=;
+	b=hQpSNW9RIqtwYs/YVGKg2PFgytvJ794i14MyguVbe9hhPWEjvjiiVa+AgPVAB3V3K9fvnt
+	EIPvw3BGO+hr+DgUg5fnSGVef9UM/5fC6+GK3ZUh/OJymPXbsVY7M8RuqAFDyqWt0Y+VM/
+	yhrslOvabS7HJPq5d3SCOOfzZ23lJeQ=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-518-XU_Xzw0GPPOWrHyitwOZzQ-1; Sat,
+ 10 Feb 2024 06:01:51 -0500
+X-MC-Unique: XU_Xzw0GPPOWrHyitwOZzQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B1D501C05EB8;
+	Sat, 10 Feb 2024 11:01:50 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.79])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 0EC8F40C9444;
+	Sat, 10 Feb 2024 11:01:49 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: intel: int0002_vgpio: Pass IRQF_ONESHOT to request_irq()
+Date: Sat, 10 Feb 2024 12:01:49 +0100
+Message-ID: <20240210110149.12803-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <c4e6d61d-d836-4a79-a89d-141f92f6b41e@app.fastmail.com>
-In-Reply-To: <dfb993c6-0e10-bc70-e8e9-a88651863a27@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20240209152359.528919-1-mpearson-lenovo@squebb.ca>
- <dfb993c6-0e10-bc70-e8e9-a88651863a27@linux.intel.com>
-Date: Fri, 09 Feb 2024 11:23:18 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: think-lmi: Fix password opcode ordering for
- workstations
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-Thanks Ilpo
+Since commit 7a36b901a6eb ("ACPI: OSL: Use a threaded interrupt handler
+for SCI") the ACPI OSL code passes IRQF_ONESHOT when requesting the SCI.
 
-On Fri, Feb 9, 2024, at 10:34 AM, Ilpo J=C3=A4rvinen wrote:
-> On Fri, 9 Feb 2024, Mark Pearson wrote:
->
->> The Lenovo workstations require the password opcode to be run before
->> the attribute value is changed (if Admin password is enabled).
->>=20
->> Tested on some Thinkpads to confirm they are OK with this order too.
->>=20
->> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->
-> Would a Fixes tag be appropriate here?
+Since the INT0002 GPIO is typically shared with the ACPI SCI the INT0002
+driver must pass the same flags.
 
-Hmmm - good point, though it has been "wrong" since it was originally im=
-plemented (where we tested on Thinkpads).
+This fixes the INT0002 driver failing to probe due to following error +
+as well as removing the backtrace that follows this error:
 
-I guess I could use the commit ID from when I originally implemented opc=
-odes?
-Fixes: 640a5fa ("platform/x86: think-lmi: Opcode support")
+"genirq: Flags mismatch irq 9. 00000084 (INT0002) vs. 00002080 (acpi)"
 
-Do you want me to push a new version with this?
+Fixes: 7a36b901a6eb ("ACPI: OSL: Use a threaded interrupt handler for SCI")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/intel/int0002_vgpio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks
-Mark
+diff --git a/drivers/platform/x86/intel/int0002_vgpio.c b/drivers/platform/x86/intel/int0002_vgpio.c
+index b6708bab7c53..527d8fbc7cc1 100644
+--- a/drivers/platform/x86/intel/int0002_vgpio.c
++++ b/drivers/platform/x86/intel/int0002_vgpio.c
+@@ -196,7 +196,7 @@ static int int0002_probe(struct platform_device *pdev)
+ 	 * IRQs into gpiolib.
+ 	 */
+ 	ret = devm_request_irq(dev, irq, int0002_irq,
+-			       IRQF_SHARED, "INT0002", chip);
++			       IRQF_ONESHOT | IRQF_SHARED, "INT0002", chip);
+ 	if (ret) {
+ 		dev_err(dev, "Error requesting IRQ %d: %d\n", irq, ret);
+ 		return ret;
+-- 
+2.43.0
+
