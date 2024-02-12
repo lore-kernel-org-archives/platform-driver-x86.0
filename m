@@ -1,93 +1,127 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1652EAF9
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Feb 2024 12:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A703F9D5;
+	Mon, 12 Feb 2024 17:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707741448; cv=none; b=sZh31XDIx6la8YVmDVJJd5rGvYLH7DEQ5lJVfTex0iC9QaB8amD0IRi2qxr0iULZinKo0Ns3j+N4OaiH+opJiuocecsyKIXla8Du2PvKhzhHVzoZazh47M7twtbKqcM2J5uoZ8w5ndZt3hdYfwulAH/4uWj7Fyc0a+7aAdkkEqU=
+	t=1707759234; cv=none; b=Met4r5Zj2tPnQZ15pt9BXNqBgAEFHxQgWf5SyJ4OL+JTlHswC0qca9oytYPKvIk+PF9BMpKFXzPYijq/xDTfUzZ6ZduzN1yDxW111dvNcyt23lJAYNnkRmyoceBlp/7QQ0DXzacGR5+aTI+1/4thRBDN3S1fZ5agr3BTjwBmIKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707741448; c=relaxed/simple;
-	bh=bpa8kiXRc2MxkLQ6Zz+8Rr85P1nx2kcG3QT3ibu3yVs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=asXEGbNz9jmpyk7OIp4bEQ7FI1dHehKwy9d9c/ukFm0EuNCBMI8mhKDpXvXbqZo5nRvqEBWmBeN0qtMCoWrVrV5kUGL8v/KRahuCnJSMnmHjvRjFQwr8YudJoQjtCkjhE9Hitj9Pml3DgteD1LZLfEI3Ya/FggLmpiM62+Eyzb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fYrcqGT8; arc=none smtp.client-ip=209.85.218.41
+	s=arc-20240116; t=1707759234; c=relaxed/simple;
+	bh=hEhdVQpRKnswqbNspAVD0fMVZ7h9rWmoFPnD7QNOB8U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GXxtiHBOkbhS4tfqag+cwcU6Z7c0BsGSJbBbaRcYwuEtQIxrO48geCydZ8gmuu8EwIwz27YkjeAWufAVFUB10UfeK/ayO6SA/vFiRImNGVg26/LQ7HBYbmQPly3osIr2V9w7+mSVtUMITsRzZ7cP89emv03/83YfzrMbHkWITxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DguiPWSz; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fYrcqGT8"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a26fa294e56so424177266b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Feb 2024 04:37:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DguiPWSz"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d73066880eso32036085ad.3;
+        Mon, 12 Feb 2024 09:33:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707741445; x=1708346245; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bpa8kiXRc2MxkLQ6Zz+8Rr85P1nx2kcG3QT3ibu3yVs=;
-        b=fYrcqGT8YGTbmXnbho7RzA181PofyjXrSMIOWUkiVbD08QorwtAkV2/N9wpUxUxUvX
-         pgOV/XNiOypBm4pLUWYQBKmbD5XBqcAQHeFXx3f1faADn5oaiQ2ypglLoYqAGTIQlUC7
-         pgSegWmVpx2zht67mCRQA+IuTiSFv+lGEJ4s3FbuLkJ1wvqBth2C13vXNAzRUC3DYOIW
-         mIpX86w7D/uDuEyn3ec85SqUbJWqUEIJR05P43N5sfVbzwvyxLikST+Yg3zlKpk9+ZfO
-         +SVoCpGXq9CU2qbcuLy4WbSgU3A0AsoKjlZOQQ28cTt/kaM6YpHhGNrU0BOHRNA851J5
-         KVeQ==
+        d=gmail.com; s=20230601; t=1707759233; x=1708364033; darn=vger.kernel.org;
+        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1VQyb7QOuBElKWvlJ78MD8OwjRNNlm7Ekb3Ty82ccyk=;
+        b=DguiPWSzyWBkMiNy41DYFrErvrQFtqV7OGvKw5I59SY8MOR+RNl9QEhaTl1jRGQP7p
+         +20npy6aIaIQts6UHVm5qPOoRqBeW3FIWs7uZhtTAu16HUh7ZfnoFgDqcqJOyiS2FsD4
+         8gnu3hiPoHu957Z+bias8gLPO+FLnHhAcAzLrL5nN0t+ieefJPCGT4Mu4p1WBpBSII3r
+         if85x8Ko60A5S596DqdknMgFUefZfHZMKNehm8wRwtOaiToFURTMltjCavvZcDqWYJbz
+         GYk0oK5fDaFLMb0269nHcReCVF0sn1QFlwhWX62fh6tZc4u7SIMiSebl3aae5dxebqNk
+         wmWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707741445; x=1708346245;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bpa8kiXRc2MxkLQ6Zz+8Rr85P1nx2kcG3QT3ibu3yVs=;
-        b=u8mbL19mqV9MtPKLT4y2zNQlo7wVUcf3m1gyZteMPYLG6D4Tk/+phk5WpOVfQ0cskM
-         0ikbt6iQfZGrgcCQggAfVIblQMU6+BJBqv6HKU5jxQIX1lE3DoB3pVUJ4Ad+snhILMyu
-         R4uwBIOkNyCQzWQeRNdWFKAMb9dBGpBEscyj5bauYwEapCrwZcQ2RFZmAeP9JsscC2c1
-         CNroOCDEZmi9EbmSdGDdwj3O6XL/aULJIqIULjJ/22YgvyXMeDwP2pzfc+ulsmTrSRJt
-         6cRrItJ/tgz5eLcV5Xxkdvk19k5O2bepSjie2s/9lijvYSYO1o6z1NPxy9bOkX36RLmm
-         KS7w==
-X-Forwarded-Encrypted: i=1; AJvYcCWdnrXdfmV9canxy/zjkYtCwqQxek/RyHXE/TV0ih6leeBeSuulblRL5kL7TYOl3tVxZ4I2Ll4Io4y4QFtkSam51gU/uNas827Lro0lhfY90QKz6A==
-X-Gm-Message-State: AOJu0Yww/sKf3Ls63H5YZO76dr2N23h0DTtdVqwlgRKuuGZopmWV8lBf
-	R6C+6M19c2z6H43XbmMb3em5wIvKEduxvIvx1aluQ2SbeR6gC24/EmlW83fK9m9WlQYUHwES4Mu
-	sbkdSqBFgPW0Z0WtxIPe6kfQsUgo=
-X-Google-Smtp-Source: AGHT+IF4fqI5rnl3bkGsTFS+sOzFDk9Vqr8pVhFwjEc3TMlOKCeZK/s0ZPrNbPAdJbnvaLM7l8KE/G/6/sTVfFscqbs=
-X-Received: by 2002:a17:906:46d2:b0:a3c:bf99:123c with SMTP id
- k18-20020a17090646d200b00a3cbf99123cmr1149166ejs.23.1707741444874; Mon, 12
- Feb 2024 04:37:24 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707759233; x=1708364033;
+        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1VQyb7QOuBElKWvlJ78MD8OwjRNNlm7Ekb3Ty82ccyk=;
+        b=l/nbfW0AAUrBjwE58R8t5FxKT6Ex8ZkTuqz2P9H73nE4TuHuAqNjVlqtIjg8ZiBjaw
+         dUTVVwVCNE7pfaBjul2R5YqFX9L1Bc1l2jyQES+Y+wZKnsnpS7ELYw3u3ftPI1Oaa/NO
+         Z8CCM40vpLGpLlEzOPqsHIfTXMNK3aYZA04mC+mfiOiEp7CbGj0pWw71/4idjOhe3BB6
+         xdAH2GVpFZvZM3lqSx4PqrVxw0SX/vDQXqiwSg1orFV1pGqGUkMFC3WPCZCQ0l1kqd7i
+         DVbthXmPA2FwIKqTMnM0bNwW5BWnd7F6YzPLHL564Sg/w6Ed0ErXr+Dnd8ssvOjQ1Nfw
+         CqKQ==
+X-Gm-Message-State: AOJu0Yyc+D6qh8pFajmiWTA1ouEnBeXmTdnALUxiofTdDj/vjpxPN8Jj
+	HTKB5vqjUs0h3yUeEAUNlJ7Ovhp6uGVBV3fgpaNQx166xNJ6VDhsbGWy3npuWtrBQw==
+X-Google-Smtp-Source: AGHT+IFfzBPorjhY/GpWOQsdfj15+4yxn2bBd3zh5q8L4r/4wQqa5UNzy7jSp0spx+C3Lx4aGr5IhQ==
+X-Received: by 2002:a17:902:748c:b0:1d9:d300:a69d with SMTP id h12-20020a170902748c00b001d9d300a69dmr7540997pll.11.1707759232689;
+        Mon, 12 Feb 2024 09:33:52 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUsyxPgq9dZ3YStFxukkoo+Uvzk8Zz0PIlLMz4zZDixgDn3SJHonw/aC/sZg2jKnf8ys2BCRH9S9yt9hEVE7c+G41QpF2y5X+N5Ldj2fj08UxjjRtVv5jPqmSq7HNxhnmh2E2euPikn4r78yJxlMJILOPzx7hSTF8S3mY7LOwmVMTKqlKEeGPxe4UIphUyPxGheBZg9GgkFEcfIND0uhe/LMOV/fdkijUZTU6MGSjzhIWuWFpIPMK6UHRPZZB/yyjx2vc4kExT/ni0MVlNfM3kz/MJBWRp00AWQXKPb1M9f1WvqdQ7LfHmXG+oqtLJGmku5VQ7v6fUx+wOjYXoOxlWjpYHUDc9smdDACNxsWfBPfQ==
+Received: from nobara-ally-pc.localnet (076-167-168-058.res.spectrum.com. [76.167.168.58])
+        by smtp.gmail.com with ESMTPSA id u11-20020a170902b28b00b001d94e6a7685sm594713plr.234.2024.02.12.09.33.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Feb 2024 09:33:52 -0800 (PST)
+From: Jonathan LoBue <jlobue10@gmail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Hans De Goede <hdegoede@redhat.com>,
+ Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Platform Driver <platform-driver-x86@vger.kernel.org>,
+ Jonathan Cameron <jic23@kernel.org>, jagathjog1996@gmail.com,
+ luke@ljones.dev, benato.denis96@gmail.com, linux-iio@vger.kernel.org,
+ lkml@antheas.dev, derekjohn.clark@gmail.com
+Subject: Re: [PATCH 2/2] iio: imu: bmi323: Add and enable ACPI Match Table
+Date: Mon, 12 Feb 2024 09:33:50 -0800
+Message-ID: <7011170.lOV4Wx5bFT@nobara-ally-pc>
+In-Reply-To:
+ <CAHp75VfcK35RnPEzBkt4D56WLRFtWHita4e9ZqcLzpqUbw+PcQ@mail.gmail.com>
+References:
+ <5769241.DvuYhMxLoT@nobara-ally-pc> <13845892.uLZWGnKmhe@nobara-ally-pc>
+ <CAHp75VfcK35RnPEzBkt4D56WLRFtWHita4e9ZqcLzpqUbw+PcQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240212120608.30469-1-hdegoede@redhat.com>
-In-Reply-To: <20240212120608.30469-1-hdegoede@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 12 Feb 2024 14:36:48 +0200
-Message-ID: <CAHp75Vf8S4Za_Ye+OvMM8dDQUHaYMLSRwypj2dKHu4F87og_-g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] platform/x86: touchscreen_dmi: Allow partial (prefix)
- matches for ACPI names
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="nextPart5891226.31r3eYUQgx";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-On Mon, Feb 12, 2024 at 2:06=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
- wrote:
->
-> On some devices the ACPI name of the touchscreen is e.g. either
-> MSSL1680:00 or MSSL1680:01 depending on the BIOS version.
->
-> This happens for example on the "Chuwi Hi8 Air" tablet where the initial
-> commit's ts_data uses "MSSL1680:00" but the tablets from the github issue
-> and linux-hardware.org probe linked below both use "MSSL1680:01".
->
-> Replace the strcmp() match on ts_data->acpi_name with a strstarts()
-> check to allow using a partial match on just the ACPI HID of "MSSL1680"
-> and change the ts_data->acpi_name for the "Chuwi Hi8 Air" accordingly
-> to fix the touchscreen not working on models where it is "MSSL1680:01".
+--nextPart5891226.31r3eYUQgx
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
+From: Jonathan LoBue <jlobue10@gmail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 12 Feb 2024 09:33:50 -0800
+Message-ID: <7011170.lOV4Wx5bFT@nobara-ally-pc>
+MIME-Version: 1.0
 
-This is a good example to show why we shouldn't rely on device
-instances and be stuck with HID. Ideally I would prefer to see the
-acpi_dev_get_first_match_dev() / for_each_acpi_dev_match().
+On Monday, February 12, 2024 1:50:14 AM PST Andy Shevchenko wrote:
+> 
+> Yes, that's why this portion is called "DMI quirk". And it does not
+> belong to the driver as such. In some cases we may have it inside the
+> driver, but here, I believe, and Hans can correct me, we may avoid
+> polluting the driver with a quirk.
 
---=20
-With Best Regards,
-Andy Shevchenko
+After discussing with some devs who have worked on gyro software,
+I have decided to abandon this "DMI quirk" approach in favor of fixing the
+bmc150 chip id check to properly abandon the driver loading when
+appropriate. This should be a far better approach and work for all
+affected devices. I will need to re-write (and test) the first portion
+of this 2 part patch in this manner before I re-submit. Thanks.
+
+Best Regards,
+Jon LoBue
+
+
+
+
+--nextPart5891226.31r3eYUQgx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEgd5eGdGJaPFBoUcS4obKiQwb1x0FAmXKVn4ACgkQ4obKiQwb
+1x0o3wf+PFDcMORCpFOu18n0faop7dEOogTGGZpbzVzJzg3DOs5VSGySxXYeaVBY
+LIZzOnpG/Js/75guFA6O33lYSfkkHFLv0m6cr0kM87dEM+qabQuhYzgFOFLz5C96
+xlcX3Z8i8G41pclWmsDk3za3/Wr3JGo15UQPfpbDn/pvLYbFjvui8c027AA3fM1S
+rcvgo1IUHwqwunjalhZf7KHxJvG8T7NP/0eHsiMgI8lQjQLdw0fyYegQPUl2lzS2
+XgdDwtamvLWoNdP5eF5WhnP6PyQS/KU8OJ0cjJELGON1dEM86wfH5egcYb2DTGH5
+/YXuIt7uv51lEoGl0AzLiRKoLhKRTg==
+=z1Km
+-----END PGP SIGNATURE-----
+
+--nextPart5891226.31r3eYUQgx--
+
+
+
