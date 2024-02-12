@@ -1,227 +1,126 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6DA5D8E4;
-	Sun, 11 Feb 2024 20:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BC77462;
+	Mon, 12 Feb 2024 07:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707684699; cv=none; b=Cq8nSoCb7LXsrbih5pvrbE8KLgpE0BVXuXYVs6sIjvxf6HxX9634g5HknZUjh9DtDmqNuKDohRXaJSEHYvtkID2lGipCf4Cj1hrCQ+THiorHiu2/1XBK2rBqSM9wnOUrZ230TmlyndMkRo7E7SmQilhsH4b51vsEGAMc/AdUWTQ=
+	t=1707722507; cv=none; b=fN8I+WHvm2JmyWDYJphimljinJkkLdxWngHglpjopIoG+A+mVvW67aEuuKNcc/BEtYZUGluv6D6RJD7vb3ll3rdjKmAPHpZsPSl+Vc5wdz4LXN9EaI0H5e1bQWPlhYQ8algAuIZwDSikw+9Fd9zPT5X1BxuWTDAFG4ejnYaGZK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707684699; c=relaxed/simple;
-	bh=CIElKw+z06Pdsu4fkYlY/n6HWaZ+cbA2k98ips1ekVM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YxBxmEoVXfSF1Cm1JAK3AEUbgAK4B70x76dr5N/JZ+bWXPiahjEURqtSrFtZCSr4/OrYYpLcT+MmOMDtlowoI06+patx+bRVzsm6z2vRCQNPhg6tycJppjwH5cSTNcPwmigljHUkoHz5dNhcsKFN0itaEViBSd6nxnHxEcJ+rSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fV5/4WTL; arc=none smtp.client-ip=209.85.218.42
+	s=arc-20240116; t=1707722507; c=relaxed/simple;
+	bh=cn9DAENmMFWrHx/ZVLiD7XfNJl44DYG+Sh/8ZzxHtaQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FK2qrxNTM8iCV4I1wcGwzvSF98AYLMkb1xUD89d6mWx4w5Ox7b6iA7gdq7hGfpGxFq4Ho9BEHofMvlwRtoYtQ/52U5GXFi5OFA2Z9rM7INIpp/ou+g9i1uYgTySAqQ0VVrDtKgH66c6UiM/bCu8i2XWckiuo3pLEVFm++4OUiCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S/dDG5av; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fV5/4WTL"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a3566c0309fso299719166b.1;
-        Sun, 11 Feb 2024 12:51:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/dDG5av"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6da4a923b1bso2165123b3a.2;
+        Sun, 11 Feb 2024 23:21:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707684696; x=1708289496; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/vfTY4s1kp8rGWonG5tuUYS2FDi1EQ7SmfmNR8zlibc=;
-        b=fV5/4WTLsuKlnur2gVTUzJYShe+AlEX5yTnwsczhBU/PGVVEWoGt/aFEfUfeVTxyBq
-         tK3c0aWBvcK9gDIy+z8flMXPF6Yjq9iORwivYMdETttCvuDQFR/IVDsP0wN0K624VIPo
-         gm+hijrjaje7R6AI1wopYxLRRoE0R4VAvq1ipS1W9H3eSkdD9sbXq/5wL5CAM4Y9GV+W
-         CQ8j27jclaF5y0TmKoPOF0ong+CZAss+V2wlfuSspUOwxHznFh30+/YWWOo3ElMtts/0
-         QP1lFTwdAb33kVKb54scNVTnHaHLViK/0bWx8mqVcVHQk/xpW09Alezd5aSPDpxdQWj6
-         DsjQ==
+        d=gmail.com; s=20230601; t=1707722505; x=1708327305; darn=vger.kernel.org;
+        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cn9DAENmMFWrHx/ZVLiD7XfNJl44DYG+Sh/8ZzxHtaQ=;
+        b=S/dDG5avSPI4NdQXpA36wALMooJ5uGWjkd4JPSghF71CTkMS8xWUg21tD92745zjJJ
+         aiva5RJHLikw+6n1YzX2rZT+yxnZGM0fJMq8BeJKKs8FiqVYWNdEj3k2Hb0Kiyvn3fZV
+         ro5wMrT/owfK9scQ8mGP7xtrF97L4DhBskbfX9xgMCmeIR9dmgesVOC8IW99i88ZvRVV
+         BFdiv+qKVhUK1bRAFa3/x5s4L4JfCbzdTvn3cPeuBIDideiSe8H53hiv59/edzxHJlZp
+         ddIVUjL5/X79dzXBDf+mhQ/I3BQFONLwn3oiRSQxRNrJCCIkkdZPQaWRl+gRwawxW8QB
+         M5XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707684696; x=1708289496;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/vfTY4s1kp8rGWonG5tuUYS2FDi1EQ7SmfmNR8zlibc=;
-        b=VIu5n/bSJpn3YBmsFgosAwGlXrBN/j78UFd2U2lNUz/HpIV6Df2ubXc8V931i1K75c
-         4JFMa21Ecynb555zF8DzlE2LY+pyMYQdfaS3sGKX7Nan2lJ0Npk7j2HbiuoZMcSJizoe
-         oOc++wlxZ9qEUUXbugFhvGGi5GUz2NjGHCxjO/e5nqAqY2YgopJZrgdnjKE0gtR9JZrZ
-         WAiuu7tq5uf61HAhklcRmfJq5ms3vsh06hL7Th47kiTsEtya1hOyn0Pfo67dIoaK39IL
-         GhE3oLJbGUB1Ufh5NapEG7F2MfK0Kh0DzKyb8/l+OGNb89YQFczHTzvt5mAPjZvsv5B9
-         aQ1A==
-X-Gm-Message-State: AOJu0Yy6yl9MECwm39n3fLRfYrEiM9akHxxRkkhIYmVNZT2xg9NQNM9T
-	0rW2VW5YHV/P3nBiTyQ4fGmLfPkqxL4sI+ArJCfWTBykuf85rodYUb//FtVl1/ol4UIU5yBwns1
-	3jvv2hAndcifNfqpy+Oiu4Ehoh9g=
-X-Google-Smtp-Source: AGHT+IF9myHOjHSTslwV9fgXhbqRAJXJKwyk+8mOot5o7L7h3n+3WZY6nrXr175Zc+08NFftlwK+2V17gENXZIaTNbk=
-X-Received: by 2002:a17:906:6606:b0:a35:d634:ed71 with SMTP id
- b6-20020a170906660600b00a35d634ed71mr3421555ejp.23.1707684695829; Sun, 11 Feb
- 2024 12:51:35 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707722505; x=1708327305;
+        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cn9DAENmMFWrHx/ZVLiD7XfNJl44DYG+Sh/8ZzxHtaQ=;
+        b=P0pky9vTCk2MQlMBOeznGeJgvdY+1FD65tAPj/fcsRT42/xKYaI5tbzOuZ5W+9aIps
+         o/ImtUVDyQ2xZYRaL85furiPB+SFlEHZBMtEapvptB7/rsZyoxyexypPgIpprBrUoHXy
+         T70ubH2P+L5adeA4VmWoXooO5Im5DO8OC6FFUqgVEtQYX4pNlL94n9k4DY8un/0ZKBWV
+         I3V7Tjqx+C3VNAO9cdc+vDZahe9V+hHsIr7/2+HMWJDpGn+77ImvJe6DfoThHhDzZYvX
+         1eoQ+/SsIA03+WDxsF1dxj9E8Ewr9h3v1vR2y96KrBltDtynIik1tFrsfNNtwV0P0eim
+         rD7Q==
+X-Gm-Message-State: AOJu0YyZr5nf2KFMXG/GhxY/UPMcf6meRH+Rhb1GEZNXDgur1LWDSK/s
+	G/rcyFToBoWLlIu4dbCSxWrfUvj1AcGT34TLeuYnso+NRz4Tk/ioJ6AFFmkHFY3UZA==
+X-Google-Smtp-Source: AGHT+IG0Q+Oyc22ZhT+CaPXMkXz+FvGtCZ4AAgpomudEKOuQxsl4kQz/QeilPZnk+478LWZr0CAKiQ==
+X-Received: by 2002:a05:6a00:2387:b0:6e0:6bc7:15ec with SMTP id f7-20020a056a00238700b006e06bc715ecmr5648266pfc.30.1707722505097;
+        Sun, 11 Feb 2024 23:21:45 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUwmkVSa+wOJd64GplydI6kEQ9X5mdrEz4P4c6z13ms2WyaDOHHTR/RRyftVBMeNnxk3YgnmRlYqYSDn59VBmxENu4JThCIrr+HfHZYYVpvvm0tXLItNdvDr8LREpp/ODpN4zQl5I0RLuaaUXfo0prMfce/atUQdvevp2tN4FwJm3Ixjrqcrwr9Hcxf4xWmiCo4beyRAkIkyWKKn3Xtd2bH1otTqJAA6n304aNHCbdjJOyNueOrp5yYa/Vf4X4FE1O8+33yIuV5ttIcE/TFKcZNbrt2a3M6PPvN45gm25oAv/8BOSarfdBgAWa0drJoGszo9sNEdFHgMsbDObFFK+H+8jdUkiDcr5/OB2vhLK8OXeZEZnXvLqFWmQ==
+Received: from nobara-ally-pc.localnet (076-167-168-058.res.spectrum.com. [76.167.168.58])
+        by smtp.gmail.com with ESMTPSA id c14-20020a056a00008e00b006e0d21dba81sm2139431pfj.191.2024.02.11.23.21.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 Feb 2024 23:21:44 -0800 (PST)
+From: Jonathan LoBue <jlobue10@gmail.com>
+To: Hans De Goede <hdegoede@redhat.com>,
+ Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Platform Driver <platform-driver-x86@vger.kernel.org>,
+ Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, jagathjog1996@gmail.com,
+ luke@ljones.dev, benato.denis96@gmail.com, linux-iio@vger.kernel.org,
+ lkml@antheas.dev, derekjohn.clark@gmail.com
+Subject: Re: [PATCH 1/2] iio: accel: bmc150: ASUS ROG ALLY Abort Loading
+Date: Sun, 11 Feb 2024 23:21:43 -0800
+Message-ID: <5292442.31r3eYUQgx@nobara-ally-pc>
+In-Reply-To:
+ <CAHp75Ve71Lb4PsGLGY5b_LNVn+Dk8z0Ags9rrWptSp8ot-UpRg@mail.gmail.com>
+References:
+ <5769241.DvuYhMxLoT@nobara-ally-pc> <12437546.O9o76ZdvQC@nobara-ally-pc>
+ <CAHp75Ve71Lb4PsGLGY5b_LNVn+Dk8z0Ags9rrWptSp8ot-UpRg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240211195307.158956-1-hdegoede@redhat.com>
-In-Reply-To: <20240211195307.158956-1-hdegoede@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sun, 11 Feb 2024 22:50:59 +0200
-Message-ID: <CAHp75VdSWwntsEh5xBz3jzXGi_QRuaRhcSs1-MwG3QYHW=wMtQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: Add new MeeGoPad ANX7428 Type-C Cross
- Switch driver
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="nextPart4941070.LvFx2qVVIh";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-On Sun, Feb 11, 2024 at 9:53=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
- wrote:
->
-> Some MeeGoPad top-set boxes have an ANX7428 Type-C Switch for USB3.1 Gen =
-1
-> and DisplayPort over Type-C alternate mode support.
->
-> The ANX7428 has a microcontroller which takes care of the PD negotiation
-> and automatically sets the builtin Crosspoint Switch to send the right
-> signal to the 4 highspeed pairs of the Type-C connector. It also takes
-> care of HPD and AUX channel routing for DP alternate mode.
->
-> IOW the ANX7428 operates fully autonomous and to the x5-Z8350 SoC
-> things look like there simple is a USB-3 Type-A connector and a
-> separate DipslayPort connector. Except that the BIOS does not
+--nextPart4941070.LvFx2qVVIh
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
+From: Jonathan LoBue <jlobue10@gmail.com>
+Date: Sun, 11 Feb 2024 23:21:43 -0800
+Message-ID: <5292442.31r3eYUQgx@nobara-ally-pc>
+MIME-Version: 1.0
 
-DisplayPort
+On Sunday, February 11, 2024 9:04:56 AM PST Andy Shevchenko wrote:
+> Something went wrong, please use `git send-email ...` to send patches.
 
-> power on the ANX7428 at boot (meh).
->
-> Add a driver to power on the ANX7428. This driver is added under
-> drivers/platform/x86 rather then under drivers/usb/typec for 2 reasons:
+Will do once I can test the suggested updated table method.
 
-than
+> Please, make this as the proper table (see many examples in
+> drivers/platform/x86/ folder on how to do that).
 
-> 1. This driver is specificly written to work with how the ANX7428 is
+This DMI board match and aborting of loading the driver is hopefully
+a temporary portion of this patch. The ideal fix is that BOSCH informs
+ASUS and other system builders of the proper and unique BOSCXXXX
+identifier so that BIOSes can be updated with those and this portion
+of the patch can be removed. As it stands now, this is the "band-aid"
+workaround of having conflicting (same) IDs for different chips.
 
-specifically
+Best Regards,
+Jon LoBue
 
-> described in the ACPI tables of the MeeGoPad x86 (Cherry Trail) devices.
->
-> 2. This driver only powers on the ANX7428 and does not do anything wrt
-> its Type-C functionality. It should be possible to tell the controller
-> which data- and/or power-role to negotiate and to swap the role(s) after
-> negotiation but the MeeGoPad top-set boxes always draw their power from
-> a separate power-connector and they only support USB host-mode. So this
-> functionality is unnecessary and due to lack of documenation this
 
-documentation
 
-> is tricky to support.
+--nextPart4941070.LvFx2qVVIh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-...
+-----BEGIN PGP SIGNATURE-----
 
-> +/*
-> + * meegopad_anx7428.c - Driver to power on the Analogix ANX7428
+iQEzBAABCAAdFiEEgd5eGdGJaPFBoUcS4obKiQwb1x0FAmXJxwcACgkQ4obKiQwb
+1x3S1gf9ExwSVYKZgIK2MhleZSthMgdvX51EMS3Cv6273xmRRRlTl4mINSZlwJCL
+iheScZXIyLSMoKAJDVvjLemSv/uRfx3ipetbXci4JQUFZByDnV5jQtSExAggmEgv
+so2VRZR+gFulO0ZzN4IRQTPSCfirtxSQwq7mzPF2FOX424QmPj7y3gw10g6fIkXy
+grqKoUDfocm/1jLTwYDunJWuqeYqYC6hyNFwu9BuhSGYYl91fZP414nB6F3d40MG
+GDjtysoCY6wkpxbY+HfoHJoyntIQr+KPk7nQlUpDxQ/diaBYoG68yn/9M71hOpRq
+zr3LAmHo2ydMQmDYSXhbmxu3fVB51w==
+=hkxT
+-----END PGP SIGNATURE-----
 
-Keeping a filename inside the file is a burden in case the file gets
-renamed in the future.
+--nextPart4941070.LvFx2qVVIh--
 
-> + * USB Type-C crosspoint switch on MeeGoPad top-set boxes.
-> + *
-> + * The MeeGoPad T8 and T9 are Cherry Trail top-set boxes which
-> + * use an ANX7428 to provide a Type-C port with USB3.1 Gen 1 and
-> + * DisplayPort over Type-C alternate mode support.
-> + *
-> + * The ANX7428 has a microcontroller which takes care of the PD
-> + * negotiation and automatically sets the builtin Crosspoint Switch
-> + * to send the right signal to the 4 highspeed pairs of the Type-C
-> + * connector. It also takes care of HPD and AUX channel routing for
-> + * DP alternate mode.
-> + *
-> + * IOW the ANX7428 operates fully autonomous and to the x5-Z8350 SoC
-> + * things look like there simple is a USB-3 Type-A connector and a
-> + * separate DipslayPort connector. Except that the BIOS does not
 
-DisplayPort
 
-> + * power on the ANX7428 at boot. This driver takes care of powering
-> + * on the ANX7428.
-> + *
-> + * It should be possible to tell the micro-controller which data- and/or
-> + * power-role to negotiate and to swap the role(s) after negotiation
-> + * but the MeeGoPad top-set boxes always draw their power from a separat=
-e
-> + * power-connector and they only support USB host-mode. So this function=
-ality
-> + * is unnecessary and due to lack of documenation this is tricky to supp=
-ort.
-
-documentation
-
-> + * For a more complete ANX7428 driver see drivers/usb/misc/anx7418/ of
-> + * the LineageOS kernel for the LG G5 (International) aka the LG H850:
-> + * https://github.com/LineageOS/android_kernel_lge_msm8996/
-> + *
-> + * (C) Copyright 2024 Hans de Goede <hansg@kernel.org>
-> + */
-> +
-> +#include <linux/acpi.h>
-
-+ bits.h
-
-> +#include <linux/delay.h>
-> +#include <linux/dmi.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-
-...
-
-> +#define VENDOR_ID_L                    0x00
-> +#define VENDOR_ID_H                    0x01
-> +#define DEVICE_ID_L                    0x02
-> +#define DEVICE_ID_H                    0x03
-
-You use word (16-bit) access, why do we need to know these?
-Just define them without suffixes (and if you want add a comment that
-they are 16-bit LE).
-
-...
-
-> +       usleep_range(10000, 15000);
-
-fsleep() ?
-
-...
-
-> +       /* Wait for the OCM (On Chip Microcontroller) to start */
-> +       for (i =3D 0; i < max_tries; i++) {
-> +               usleep_range(5000, 10000);
-> +
-> +               ret =3D i2c_smbus_read_byte_data(client, TX_STATUS);
-> +               if (ret < 0)
-> +                       dev_err_probe(dev, ret, "reading status register\=
-n");
-> +               else if (ret & OCM_STARTUP)
-> +                       break;
-> +       }
-> +       if (i =3D=3D max_tries)
-> +               return dev_err_probe(dev, -EIO,
-> +                                    "On Chip Microcontroller did not sta=
-rt, status: 0x%02x\n",
-> +                                    ret);
-
-Why not use read_poll_timeout() / readx_poll_timeout() (whichever suits bet=
-ter)?
-
-...
-
-> +static struct i2c_driver anx7428_driver =3D {
-> +       .driver =3D {
-> +               .name =3D KBUILD_MODNAME,
-
-Strictly speaking this is an ABI and we don't want it to be changed in
-case of filename change. Personally I _always_ prefer it be open
-coded.
-
-> +               .acpi_match_table =3D anx7428_acpi_match,
-> +       },
-> +       .probe =3D anx7428_probe,
-> +};
-
---=20
-With Best Regards,
-Andy Shevchenko
