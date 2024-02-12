@@ -1,127 +1,156 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A703F9D5;
-	Mon, 12 Feb 2024 17:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28CB40BED;
+	Mon, 12 Feb 2024 18:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707759234; cv=none; b=Met4r5Zj2tPnQZ15pt9BXNqBgAEFHxQgWf5SyJ4OL+JTlHswC0qca9oytYPKvIk+PF9BMpKFXzPYijq/xDTfUzZ6ZduzN1yDxW111dvNcyt23lJAYNnkRmyoceBlp/7QQ0DXzacGR5+aTI+1/4thRBDN3S1fZ5agr3BTjwBmIKo=
+	t=1707763835; cv=none; b=oV6nT+x+f3bauhtrA/+l5JCNKybQwcM9bQSpllWpQLzwOkLf1D5M4DO7qnjV47WcQTlk8vhTqis34KM0YsfYcm4DvTuVXudfsag5a1mNhzrhDeOpxzA5VMlFJ3FKw0huOIbjSLZtkgsBcKAE3tjeW0tZHLmao1jRx8bcnkwgzj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707759234; c=relaxed/simple;
-	bh=hEhdVQpRKnswqbNspAVD0fMVZ7h9rWmoFPnD7QNOB8U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GXxtiHBOkbhS4tfqag+cwcU6Z7c0BsGSJbBbaRcYwuEtQIxrO48geCydZ8gmuu8EwIwz27YkjeAWufAVFUB10UfeK/ayO6SA/vFiRImNGVg26/LQ7HBYbmQPly3osIr2V9w7+mSVtUMITsRzZ7cP89emv03/83YfzrMbHkWITxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DguiPWSz; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707763835; c=relaxed/simple;
+	bh=OaBvBiTGUiwCLcN4iX8qbX37EqEth2DdHe8eZKM6cz8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=npSHWsxp/A+jovMn0sJotAdmL1NiR4PXvw3li7kbOVvbmAdKN2ZgxWlwbOlQYYYdQ4n6zB4YFI6VUtAuZoJz3GVe26UeMsq1O5+s0gL/+Fh4/zfsIfDviD85kR8k/BFHupQo40btG+nOTo0LHe4bQxb1OKzUChEr6fqKxGj6aRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=g4LAiLuL; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DguiPWSz"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d73066880eso32036085ad.3;
-        Mon, 12 Feb 2024 09:33:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707759233; x=1708364033; darn=vger.kernel.org;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1VQyb7QOuBElKWvlJ78MD8OwjRNNlm7Ekb3Ty82ccyk=;
-        b=DguiPWSzyWBkMiNy41DYFrErvrQFtqV7OGvKw5I59SY8MOR+RNl9QEhaTl1jRGQP7p
-         +20npy6aIaIQts6UHVm5qPOoRqBeW3FIWs7uZhtTAu16HUh7ZfnoFgDqcqJOyiS2FsD4
-         8gnu3hiPoHu957Z+bias8gLPO+FLnHhAcAzLrL5nN0t+ieefJPCGT4Mu4p1WBpBSII3r
-         if85x8Ko60A5S596DqdknMgFUefZfHZMKNehm8wRwtOaiToFURTMltjCavvZcDqWYJbz
-         GYk0oK5fDaFLMb0269nHcReCVF0sn1QFlwhWX62fh6tZc4u7SIMiSebl3aae5dxebqNk
-         wmWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707759233; x=1708364033;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1VQyb7QOuBElKWvlJ78MD8OwjRNNlm7Ekb3Ty82ccyk=;
-        b=l/nbfW0AAUrBjwE58R8t5FxKT6Ex8ZkTuqz2P9H73nE4TuHuAqNjVlqtIjg8ZiBjaw
-         dUTVVwVCNE7pfaBjul2R5YqFX9L1Bc1l2jyQES+Y+wZKnsnpS7ELYw3u3ftPI1Oaa/NO
-         Z8CCM40vpLGpLlEzOPqsHIfTXMNK3aYZA04mC+mfiOiEp7CbGj0pWw71/4idjOhe3BB6
-         xdAH2GVpFZvZM3lqSx4PqrVxw0SX/vDQXqiwSg1orFV1pGqGUkMFC3WPCZCQ0l1kqd7i
-         DVbthXmPA2FwIKqTMnM0bNwW5BWnd7F6YzPLHL564Sg/w6Ed0ErXr+Dnd8ssvOjQ1Nfw
-         CqKQ==
-X-Gm-Message-State: AOJu0Yyc+D6qh8pFajmiWTA1ouEnBeXmTdnALUxiofTdDj/vjpxPN8Jj
-	HTKB5vqjUs0h3yUeEAUNlJ7Ovhp6uGVBV3fgpaNQx166xNJ6VDhsbGWy3npuWtrBQw==
-X-Google-Smtp-Source: AGHT+IFfzBPorjhY/GpWOQsdfj15+4yxn2bBd3zh5q8L4r/4wQqa5UNzy7jSp0spx+C3Lx4aGr5IhQ==
-X-Received: by 2002:a17:902:748c:b0:1d9:d300:a69d with SMTP id h12-20020a170902748c00b001d9d300a69dmr7540997pll.11.1707759232689;
-        Mon, 12 Feb 2024 09:33:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUsyxPgq9dZ3YStFxukkoo+Uvzk8Zz0PIlLMz4zZDixgDn3SJHonw/aC/sZg2jKnf8ys2BCRH9S9yt9hEVE7c+G41QpF2y5X+N5Ldj2fj08UxjjRtVv5jPqmSq7HNxhnmh2E2euPikn4r78yJxlMJILOPzx7hSTF8S3mY7LOwmVMTKqlKEeGPxe4UIphUyPxGheBZg9GgkFEcfIND0uhe/LMOV/fdkijUZTU6MGSjzhIWuWFpIPMK6UHRPZZB/yyjx2vc4kExT/ni0MVlNfM3kz/MJBWRp00AWQXKPb1M9f1WvqdQ7LfHmXG+oqtLJGmku5VQ7v6fUx+wOjYXoOxlWjpYHUDc9smdDACNxsWfBPfQ==
-Received: from nobara-ally-pc.localnet (076-167-168-058.res.spectrum.com. [76.167.168.58])
-        by smtp.gmail.com with ESMTPSA id u11-20020a170902b28b00b001d94e6a7685sm594713plr.234.2024.02.12.09.33.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 09:33:52 -0800 (PST)
-From: Jonathan LoBue <jlobue10@gmail.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Hans De Goede <hdegoede@redhat.com>,
- Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Platform Driver <platform-driver-x86@vger.kernel.org>,
- Jonathan Cameron <jic23@kernel.org>, jagathjog1996@gmail.com,
- luke@ljones.dev, benato.denis96@gmail.com, linux-iio@vger.kernel.org,
- lkml@antheas.dev, derekjohn.clark@gmail.com
-Subject: Re: [PATCH 2/2] iio: imu: bmi323: Add and enable ACPI Match Table
-Date: Mon, 12 Feb 2024 09:33:50 -0800
-Message-ID: <7011170.lOV4Wx5bFT@nobara-ally-pc>
-In-Reply-To:
- <CAHp75VfcK35RnPEzBkt4D56WLRFtWHita4e9ZqcLzpqUbw+PcQ@mail.gmail.com>
-References:
- <5769241.DvuYhMxLoT@nobara-ally-pc> <13845892.uLZWGnKmhe@nobara-ally-pc>
- <CAHp75VfcK35RnPEzBkt4D56WLRFtWHita4e9ZqcLzpqUbw+PcQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="g4LAiLuL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1707763823; x=1708368623; i=w_armin@gmx.de;
+	bh=OaBvBiTGUiwCLcN4iX8qbX37EqEth2DdHe8eZKM6cz8=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=g4LAiLuLBDH6uWyyDFZ3rG3IROL/AER7xFJfapfPEM+CTatqxcTdlcjswHC69EHJ
+	 5hZrRJBXH34o20MxHgWvNxToAbtbH6343GvHBOD3olTHRlyE4Df/ka2gNgdYtZwvF
+	 sC17gWMUopfLq0yYSev1r6G350758vqjBZZDelyA15q461H8NV56MQbMkHGVB1O4L
+	 PdSOx5/5vtz1mMrk2f6CANrdrjRlQ0dZbZXlaicD9zZ4LXzGdQSPohJ9AXso7Zahf
+	 CoILx6XRsdVfv1RTBj/ubwKcPqHJWa5pU4340KPu45UA2SNjgQHBETkQG098GTNEB
+	 1EqI44tZfgWD8yDqaQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MowKc-1rC4Wn1rrS-00qTgy; Mon, 12 Feb 2024 19:50:23 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: sathyanarayanan.kuppuswamy@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] platform/x86: wmi: Make input buffer madatory when evaulating methods
+Date: Mon, 12 Feb 2024 19:50:16 +0100
+Message-Id: <20240212185016.5494-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart5891226.31r3eYUQgx";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:O8IROVyt86Fl1e27xS7q23A9N/P5obLbpJxwBLTdsAk+RTWY+uu
+ vlenLHJNVfpSiPDsPPVvMAZWa0hanQ1MFhTWSQtuJaUfR6MWLAkLVE98KadxYa/giB9KJ2i
+ XdlzQtV1N7JcmzaXRT1id1Nk3//TT0q/Soi/rdxNJcAhP6wiL9XKwn10IMBgUkBaQ2qv1HN
+ vsvmotU5lPtrq1Jr1toJQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:TZE+uP34Amc=;PUo8oRdN3+QqLhxqNiCHyiVhK1k
+ /bhA5QLOcZngE2fZMAxmmaPOrXMwNyxMTV/qnUFFXIO9xXCXPxegJJIoEjdmRvbCloe4t+cvf
+ owHHNLhfu8nAa36RROAdwNrm37APuyKdRgw5MrNw6uxmOrEeDwlVLVinqz630r1KCZcY8NLtz
+ aedNXHHelyuox3zF8he3Ro3z3vqE93OIhJiT66HKmqkTkk8xa1t66hc/ZmUXJL9NqTVSsOxwL
+ uZ0kZfQ2D7oZeqkZGPeqNmNMZ+nziUStX4mjVM12ZLMQvoehN9IxQyfh4mh/YsRE6poeEnZw9
+ 16C8+9pc7536PBfiprpqsjUSE2DvJWPRji6zFvbhIIXtcH6c8cO8z3uy5SVYHHNmm4j1hpyTS
+ zzmCN9NZS/nMC66N+GnREDETkoYjHSspE9SXccU7sY/9MjKOmRvEps37CezKxMljh0rEduWfM
+ x1Y1mJkc0EPKnlN4wkiJC34BwMZ+oeus6pO1tq2HCo/X0fhQkTBy4Hnf6O5JnZGEvTSrleNip
+ 7GIq/hKmyUBd/JppcZLc1zxLpoHidpiKBVw+JJxlDO+o1TI+hicg7Tx7fRzjoKXbkN5pGh7kv
+ ZfktqNhbXDBBhQe4LmLTaldZpuvLQZg2MPuKl6ECKbagxuzHg0nuVusLd3bTJGHu5ZZtAaU34
+ eMwq9BMwOmmcTMlFEb1FRqMnS8UM/EuqE6qw33FoKPgGWPa8WDum9rRhock13nU2yp/am52Cm
+ de9elkiE3xFLFcRgO2/z2bbuCy/bRa6cAoodaS0tfoXDjG8PRNyhLU2bhCuT6Nfkiuq+nFoc1
+ k8S0sOlTgL6fhZ95JmNuSVTOAirGyvO9fbp4mrjveChO0=
 
---nextPart5891226.31r3eYUQgx
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Jonathan LoBue <jlobue10@gmail.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 12 Feb 2024 09:33:50 -0800
-Message-ID: <7011170.lOV4Wx5bFT@nobara-ally-pc>
-MIME-Version: 1.0
+The ACPI-WMI specification declares in the section "ACPI Control Method
+Naming Conventions and Functionality for Windows 2000 Instrumentation"
+that a WMxx control method takes 3 arguments: instance, method id and
+argument buffer.
+This is also the case even when the underlying WMI method does not
+have any input arguments.
 
-On Monday, February 12, 2024 1:50:14 AM PST Andy Shevchenko wrote:
-> 
-> Yes, that's why this portion is called "DMI quirk". And it does not
-> belong to the driver as such. In some cases we may have it inside the
-> driver, but here, I believe, and Hans can correct me, we may avoid
-> polluting the driver with a quirk.
+So if a WMI driver evaluates a WMI method without passing an input
+buffer, ACPICA will log a warning complaining that the third argument
+is missing.
 
-After discussing with some devs who have worked on gyro software,
-I have decided to abandon this "DMI quirk" approach in favor of fixing the
-bmc150 chip id check to properly abandon the driver loading when
-appropriate. This should be a far better approach and work for all
-affected devices. I will need to re-write (and test) the first portion
-of this 2 part patch in this manner before I re-submit. Thanks.
+Prevent this by checking that a input buffer was passed, and return
+an error if this was not the case.
 
-Best Regards,
-Jon LoBue
+Tested on a Asus PRIME B650-Plus.
 
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.=
+intel.com>
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+Changes since v1:
+- add section reference
+- add Reviewed-by
+=2D--
+ drivers/platform/x86/wmi.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 63906fdd0abf..f9e23d491dd9 100644
+=2D-- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -296,7 +296,7 @@ EXPORT_SYMBOL_GPL(wmidev_instance_count);
+  * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417=
+f2f49ba
+  * @instance: Instance index
+  * @method_id: Method ID to call
+- * @in: Buffer containing input for the method call
++ * @in: Mandatory buffer containing input for the method call
+  * @out: Empty buffer to return the method results
+  *
+  * Call an ACPI-WMI method, the caller must free @out.
+@@ -326,7 +326,7 @@ EXPORT_SYMBOL_GPL(wmi_evaluate_method);
+  * @wdev: A wmi bus device from a driver
+  * @instance: Instance index
+  * @method_id: Method ID to call
+- * @in: Buffer containing input for the method call
++ * @in: Mandatory buffer containing input for the method call
+  * @out: Empty buffer to return the method results
+  *
+  * Call an ACPI-WMI method, the caller must free @out.
+@@ -347,26 +347,25 @@ acpi_status wmidev_evaluate_method(struct wmi_device=
+ *wdev, u8 instance, u32 met
+ 	block =3D &wblock->gblock;
+ 	handle =3D wblock->acpi_device->handle;
 
++	if (!in)
++		return AE_BAD_DATA;
++
+ 	if (!(block->flags & ACPI_WMI_METHOD))
+ 		return AE_BAD_DATA;
 
---nextPart5891226.31r3eYUQgx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+ 	if (block->instance_count <=3D instance)
+ 		return AE_BAD_PARAMETER;
 
------BEGIN PGP SIGNATURE-----
+-	input.count =3D 2;
++	input.count =3D 3;
+ 	input.pointer =3D params;
++
+ 	params[0].type =3D ACPI_TYPE_INTEGER;
+ 	params[0].integer.value =3D instance;
+ 	params[1].type =3D ACPI_TYPE_INTEGER;
+ 	params[1].integer.value =3D method_id;
+-
+-	if (in) {
+-		input.count =3D 3;
+-
+-		params[2].type =3D get_param_acpi_type(wblock);
+-		params[2].buffer.length =3D in->length;
+-		params[2].buffer.pointer =3D in->pointer;
+-	}
++	params[2].type =3D get_param_acpi_type(wblock);
++	params[2].buffer.length =3D in->length;
++	params[2].buffer.pointer =3D in->pointer;
 
-iQEzBAABCAAdFiEEgd5eGdGJaPFBoUcS4obKiQwb1x0FAmXKVn4ACgkQ4obKiQwb
-1x0o3wf+PFDcMORCpFOu18n0faop7dEOogTGGZpbzVzJzg3DOs5VSGySxXYeaVBY
-LIZzOnpG/Js/75guFA6O33lYSfkkHFLv0m6cr0kM87dEM+qabQuhYzgFOFLz5C96
-xlcX3Z8i8G41pclWmsDk3za3/Wr3JGo15UQPfpbDn/pvLYbFjvui8c027AA3fM1S
-rcvgo1IUHwqwunjalhZf7KHxJvG8T7NP/0eHsiMgI8lQjQLdw0fyYegQPUl2lzS2
-XgdDwtamvLWoNdP5eF5WhnP6PyQS/KU8OJ0cjJELGON1dEM86wfH5egcYb2DTGH5
-/YXuIt7uv51lEoGl0AzLiRKoLhKRTg==
-=z1Km
------END PGP SIGNATURE-----
+ 	get_acpi_method_name(wblock, 'M', method);
 
---nextPart5891226.31r3eYUQgx--
-
-
+=2D-
+2.39.2
 
