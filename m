@@ -1,156 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9DED3A8E6
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Feb 2024 12:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78CCD39AFD
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Feb 2024 12:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707739578; cv=none; b=M7bhPb/aqvlCgao+0L+UqALliMBb1fJ/+S1AvGXb6Z3slNOV35vaNolPOjL5z0i1Ai9sFI9bDqHDpjNe9r6VI1/8fmsuO4zkY/ny7SFIeQ7GDK5jtzrH1PCyddpBBPuH7EzufXlyjdliw+8QapZcXVE9VRMlLYgpoJY0/ogZn/4=
+	t=1707739780; cv=none; b=NkEaU47nhwSqR7hPEwm67yAzkZXC3NfIkg2f3AZQY438AybRBQE9d6zIJ1yAsUmHi+PWbBaBL7xPv4OSVmyjHLE19LebN8Zz/P6qW7f7clX0ZEAGjUWUSViLVUPL1vTMK5PNIPqr1fK4lIw69YJfEVQPRbYmmjeOFTBdXIUh0m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707739578; c=relaxed/simple;
-	bh=JPMfAhLQtXamR2eYwkeKus44on3KhNDZgIwfWHoQnA8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jo5szFstzjwri3sXPpD7sPKgctSpBeQab9Y7Kl4SDZr1jqBsys/tm931GQZNbyBVqkMoh6RApPUfmar9pzyeoj7Epv0MZDt9iF8LkFQQpcfwu21sPI8/5mAkjnom8OVvbLwQaMyZ0rfsjs3yXgcR8owC1kqzsSbJjJhAKp15x64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V246k5nr; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1707739780; c=relaxed/simple;
+	bh=CRP+6sd1mZiVAx4elecYTdX3jm8WXINfXnannUd6wic=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A4ctC7awjOrXbRJ4AXNeVvHy5IriW2Fg61IHQyRvwnyK57ui9OWYFyQqBC4mFJhBevVcV/AQRL7zZ6GwZaUaronfNGfU+mOi/wLiYpz2/Z7XK8KTLcQIabx0ixY2ljzU+zFYW32fWMPlq1ndikUEasl1hpVczfVDhenYLGjppO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B93OrIIR; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V246k5nr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B93OrIIR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707739575;
+	s=mimecast20190719; t=1707739777;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jQ5hzbVLwAjoyLMlmYgy12hOG+Md+J1TqW/TpvUnVMM=;
-	b=V246k5nrpng9fGQ8r3BP28VRKmUdSLHE1+2ioCyb8YwU/NEvJDzNaMwGIQCi1PlH7rwdya
-	cVxUQULQZay4+WF/4+SGuxNWAR5V1/X59XkHdNLR0cVTby9Pdln6TBp9gAgZMfgSJmKdOd
-	2+luwaIkzz9vmkXayJYJ7X3tLFrZ/Ao=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-453-NhsyUd63M7SIkOZXfgfxkw-1; Mon,
- 12 Feb 2024 07:06:11 -0500
-X-MC-Unique: NhsyUd63M7SIkOZXfgfxkw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7B7B23811F49;
-	Mon, 12 Feb 2024 12:06:11 +0000 (UTC)
-Received: from x1.localdomain.com (unknown [10.39.194.82])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id A5E544015472;
-	Mon, 12 Feb 2024 12:06:10 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH 2/2] platform/x86: touchscreen_dmi: Consolidate Goodix upside-down touchscreen data
-Date: Mon, 12 Feb 2024 13:06:08 +0100
-Message-ID: <20240212120608.30469-2-hdegoede@redhat.com>
-In-Reply-To: <20240212120608.30469-1-hdegoede@redhat.com>
-References: <20240212120608.30469-1-hdegoede@redhat.com>
+	bh=t7/Sm+1LqFoTBqev4MGAcIxpEvauc0U68qkgFOVjGMs=;
+	b=B93OrIIRJNPbd/yQ+enAO4HRIf2XS3adwQVm6bg79oxucYSuteIj6T5mig1qPhTMPo4HxO
+	tDGj7GMQrGomTNRxIIrwj6EkT571K89TCnCP7XzZl17ZuColduo1neshI4cU81c1Q4jdFq
+	o4bbai8GYv/BZt95yFk5vAPvquQmSHE=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-38-oJGKy6sGN3K-DVUiBC6HIg-1; Mon, 12 Feb 2024 07:09:35 -0500
+X-MC-Unique: oJGKy6sGN3K-DVUiBC6HIg-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-559555e38b0so2885331a12.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Feb 2024 04:09:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707739774; x=1708344574;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=t7/Sm+1LqFoTBqev4MGAcIxpEvauc0U68qkgFOVjGMs=;
+        b=BrJnIJZLlIW0dwt9wDqsmAo81A/MtA2mOJ58vRsECuMZIIiViK+48jL102obiGyWTe
+         5zcibMyD1TpfvQNAbkM6OIp1vA7TENirnQ58kah0oWSCtIj9S0ZAie8fQTkdow+9NeEb
+         NR67MY61GBPetqdLGTEyhuxqGZw83Mnn4Es7R/zlX/dlxLbTr0F/t27px40bQPTZ/QjV
+         H5kw5jJ1PvoJs+lQNGuyAzDR5nMF+Gn6oQ6ylFm9DX7Aw0riBisLBKgXh/NmQbcnO1ov
+         Ji/AUqwAa2hI2FdS9D+/zmc35OMSxfe1N5bFDrROf+ay/4u7ChnhUAAI/USUIuOs2CIg
+         2s4Q==
+X-Gm-Message-State: AOJu0Yxfj8MDdZeFLbG7pjsCiWG76MluF/aEwkOaCLvfbRgdcqLgahD3
+	Qt/wboOoJId24F9pO1IMTC1y/dOV25U/bU43/z72ZkLsgUma88+TYLVOo+5+ANi0X6WWpL3k4ZY
+	dgf1LigUuL9QC34I8gh3NfU40k8iCBcROToBSwCyxewxVsG7DXNHJq2lIJqnaB6vbFWK8gOo=
+X-Received: by 2002:aa7:d68e:0:b0:55f:d9d1:6de1 with SMTP id d14-20020aa7d68e000000b0055fd9d16de1mr3858112edr.16.1707739774739;
+        Mon, 12 Feb 2024 04:09:34 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH1siHMV0G/qrnmfAMEAeMWYUI7nsUwbQlvJWYm3As9tK1w4ZXvL55VKkPgQKXoS1GdrMg8bQ==
+X-Received: by 2002:aa7:d68e:0:b0:55f:d9d1:6de1 with SMTP id d14-20020aa7d68e000000b0055fd9d16de1mr3858098edr.16.1707739774467;
+        Mon, 12 Feb 2024 04:09:34 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXpMhuyW9qHepSm7XZbwBkhCSrfxrPtUDsli2xngBLLSjDqc5N9ILr6oWWvWUT1Sspq7Fwt0b28G5U/DVnNoW4=
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id ck5-20020a0564021c0500b00561a727f1bfsm1188327edb.29.2024.02.12.04.09.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Feb 2024 04:09:33 -0800 (PST)
+Message-ID: <c5039e32-cc35-4181-ac0c-e438e24cdf95@redhat.com>
+Date: Mon, 12 Feb 2024 13:09:33 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] platform/x86: touchscreen_dmi: Allow partial (prefix)
+ matches for ACPI names
+Content-Language: en-US
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Andy Shevchenko <andy@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org
+References: <20240212120608.30469-1-hdegoede@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240212120608.30469-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Now that prefix matches for ACPI names are supported, the ts_dmi_data
-structs for "GDIX1001:00" and "GDIX1001:01" can be consolidated into
-a single match matching on "GDIX1001".
+Hi,
 
-For consistency also change gdix1002_00_upside_down_data to match.
+On 2/12/24 13:06, Hans de Goede wrote:
+> On some devices the ACPI name of the touchscreen is e.g. either
+> MSSL1680:00 or MSSL1680:01 depending on the BIOS version.
+> 
+> This happens for example on the "Chuwi Hi8 Air" tablet where the initial
+> commit's ts_data uses "MSSL1680:00" but the tablets from the github issue
+> and linux-hardware.org probe linked below both use "MSSL1680:01".
+> 
+> Replace the strcmp() match on ts_data->acpi_name with a strstarts()
+> check to allow using a partial match on just the ACPI HID of "MSSL1680"
+> and change the ts_data->acpi_name for the "Chuwi Hi8 Air" accordingly
+> to fix the touchscreen not working on models where it is "MSSL1680:01".
+> 
+> Note this drops the length check for I2C_NAME_SIZE. This never was
+> necessary since the ACPI names used are never more then 11 chars and
+> I2C_NAME_SIZE is 20 so the replaced strncmp() would always stop long
+> before reaching I2C_NAME_SIZE.
+> 
+> Link: https://linux-hardware.org/?computer=AC4301C0542A
+> Closes: https://github.com/onitake/gsl-firmware/issues/91
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/touchscreen_dmi.c | 25 ++++++++++---------------
- 1 file changed, 10 insertions(+), 15 deletions(-)
+Note I plan to merge this into fixes sometime this week or next week.
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 969477c83e56..975cf24ae359 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -415,18 +415,13 @@ static const struct property_entry gdix1001_upside_down_props[] = {
- 	{ }
- };
- 
--static const struct ts_dmi_data gdix1001_00_upside_down_data = {
--	.acpi_name	= "GDIX1001:00",
-+static const struct ts_dmi_data gdix1001_upside_down_data = {
-+	.acpi_name	= "GDIX1001",
- 	.properties	= gdix1001_upside_down_props,
- };
- 
--static const struct ts_dmi_data gdix1001_01_upside_down_data = {
--	.acpi_name	= "GDIX1001:01",
--	.properties	= gdix1001_upside_down_props,
--};
--
--static const struct ts_dmi_data gdix1002_00_upside_down_data = {
--	.acpi_name	= "GDIX1002:00",
-+static const struct ts_dmi_data gdix1002_upside_down_data = {
-+	.acpi_name	= "GDIX1002",
- 	.properties	= gdix1001_upside_down_props,
- };
- 
-@@ -1412,7 +1407,7 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 	},
- 	{
- 		/* Juno Tablet */
--		.driver_data = (void *)&gdix1002_00_upside_down_data,
-+		.driver_data = (void *)&gdix1002_upside_down_data,
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Default string"),
- 			/* Both product- and board-name being "Default string" is somewhat rare */
-@@ -1658,7 +1653,7 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 	},
- 	{
- 		/* Teclast X89 (Android version / BIOS) */
--		.driver_data = (void *)&gdix1001_00_upside_down_data,
-+		.driver_data = (void *)&gdix1001_upside_down_data,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "WISKY"),
- 			DMI_MATCH(DMI_BOARD_NAME, "3G062i"),
-@@ -1666,7 +1661,7 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 	},
- 	{
- 		/* Teclast X89 (Windows version / BIOS) */
--		.driver_data = (void *)&gdix1001_01_upside_down_data,
-+		.driver_data = (void *)&gdix1001_upside_down_data,
- 		.matches = {
- 			/* tPAD is too generic, also match on bios date */
- 			DMI_MATCH(DMI_BOARD_VENDOR, "TECLAST"),
-@@ -1684,7 +1679,7 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 	},
- 	{
- 		/* Teclast X98 Pro */
--		.driver_data = (void *)&gdix1001_00_upside_down_data,
-+		.driver_data = (void *)&gdix1001_upside_down_data,
- 		.matches = {
- 			/*
- 			 * Only match BIOS date, because the manufacturers
-@@ -1788,7 +1783,7 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 	},
- 	{
- 		/* "WinBook TW100" */
--		.driver_data = (void *)&gdix1001_00_upside_down_data,
-+		.driver_data = (void *)&gdix1001_upside_down_data,
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "WinBook"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "TW100")
-@@ -1796,7 +1791,7 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 	},
- 	{
- 		/* WinBook TW700 */
--		.driver_data = (void *)&gdix1001_00_upside_down_data,
-+		.driver_data = (void *)&gdix1001_upside_down_data,
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "WinBook"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "TW700")
--- 
-2.43.0
+I'll also merge the follow-up patch into fixes since it is trivial
+and that avoids the need to backmerge fixes into for-next.
+
+Regards,
+
+Hans
+
+
+
+
+> ---
+>  drivers/platform/x86/touchscreen_dmi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index 7aee5e9ff2b8..969477c83e56 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -81,7 +81,7 @@ static const struct property_entry chuwi_hi8_air_props[] = {
+>  };
+>  
+>  static const struct ts_dmi_data chuwi_hi8_air_data = {
+> -	.acpi_name	= "MSSL1680:00",
+> +	.acpi_name	= "MSSL1680",
+>  	.properties	= chuwi_hi8_air_props,
+>  };
+>  
+> @@ -1821,7 +1821,7 @@ static void ts_dmi_add_props(struct i2c_client *client)
+>  	int error;
+>  
+>  	if (has_acpi_companion(dev) &&
+> -	    !strncmp(ts_data->acpi_name, client->name, I2C_NAME_SIZE)) {
+> +	    strstarts(client->name, ts_data->acpi_name)) {
+>  		error = device_create_managed_software_node(dev, ts_data->properties, NULL);
+>  		if (error)
+>  			dev_err(dev, "failed to add properties: %d\n", error);
 
