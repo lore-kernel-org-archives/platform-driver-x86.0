@@ -1,91 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C535836B17;
-	Tue, 13 Feb 2024 11:38:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3B4374C1;
+	Tue, 13 Feb 2024 11:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707824336; cv=none; b=frjGok3Zf0Jqmjquxq/sbLbDlOQESgkpj2oF43oARdl36mwU+Qe4VmhlFcEuGPaSxdUOK2I8juOSYG/qLHoRxNJKmvH43WKT8C7rLqg26XpbLABRrzdtSRJ38Pxov2eOC5eUX35gLxU5G37Lm3Qq0EP3Y/Ebi+5KeNaGgU4uR1Q=
+	t=1707824460; cv=none; b=J/1mL4DLLT0uaA8M2zsZ2AduM6rMGwSVr1kDH05Xa6hxlTD2AjEeGf2vAX/nRWdJqs1UPJ+gfb8s5hdttGkm4aehontu04YJtsDXHIbNKaP61Qt5yExVaUcHe+4+fVRKxLfETjO5NFHFBEJtskG+afr4zbFMNRTSpUV4wYgabjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707824336; c=relaxed/simple;
-	bh=5T1R2LaZ7/5RcBfjH8QnKHLDGAacAb4MmSubbGT5Mv0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tTMoh7NlFPgwl32MBuEWT6x+fe1bQ7IzSUyWnaOZOG6G7HaC8ZzvrsKWBE+vRxdIvYNx7A06DWXZS3esYsE+RgM5kYbpkLK/ZGX5e1PQIP8av504+FIJj/+0vUqP7IQKa8NKIdFTU/jrH9+esol7PZkD/7aD4eN0KIr60lZVeaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UmlKSDDD; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1707824460; c=relaxed/simple;
+	bh=cAEOJQ0iVAmTq4TMQkM/F2qB7/WnkhIygmoxAcjPA3Y=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=i/ERbz3Sp0y9fh5w7qIT4fMzaKXxslNVcz71k8EQuhOjWp/rmS5iJvOVszWz/OhxTAH2zpACFcu/kTDmddypaRVnJGxNyX9dyRAa3L/l6I/UsszBJzEFmbPVHqxoEM2VUNPwflSdFbPezh+zQNxPnLRcznqpYJ5d51YJmRoZTU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EVhoF9a/; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UmlKSDDD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EVhoF9a/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707824334; x=1739360334;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=5T1R2LaZ7/5RcBfjH8QnKHLDGAacAb4MmSubbGT5Mv0=;
-  b=UmlKSDDDbKInSd3V6t9USBBnMkmAsOIYm4q0jHZgLiowaa9NrRVxodI9
-   lPTd0SAvwdTwJuNkgmJzvF6JjhcYJ9BTBO0jnOM4GsVXuwZ/p/VxJ1IE0
-   QxoZDEv5uejLVB/nU+0Ol8QbAVkbihoNhlu9W+X9bWhohf1eUeK4SyEGO
-   xlLFc2voCGVk3XH18iB/WuqHSd7vPX2VNkAzEe/IjBLXa3NcF3Zp6aGGp
-   LgEJyNmm47b06MmuOPpGMsE8GI+2gOgl2kTvYOTqDq7wHkU+sLyNFS42f
-   2WueYbXfZCT00GvXpZ2DBkRqGD6zXyrqitVEVAuTxdYD16ad4zfTCubHR
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="5658718"
+  t=1707824459; x=1739360459;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=cAEOJQ0iVAmTq4TMQkM/F2qB7/WnkhIygmoxAcjPA3Y=;
+  b=EVhoF9a/lab6/iL//mGKibBfz+e55ifClqX2pFCBgg+zALaVP848x/YN
+   0EHbC2wX6IWcNjLaarWvAggA7at6SasU3l2gQfWx/Oaykpt9+S1bpbDBx
+   OWYRYC+LlqA/F5tyMT4ADDl+NzICYM9DZct46epbK1sANB9gW0cOfxj/x
+   2V+N5vDLFOJoEBUyxTNbLeu6pI29Q54Vj1UKdZi3Kh1My68/SP/f6OZXi
+   +MJGwvBsIgEqoDTm0nuGPMtvy+/nLiMs8zTjN3PJCcsRKPurQWCaj55LA
+   mRLg3fuJ3Vg5h0jtnwSm/uZGCJMM91S7muLxAcly5wSDq3lCDjlFAAHUb
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="1948832"
 X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
-   d="scan'208";a="5658718"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 03:38:54 -0800
+   d="scan'208";a="1948832"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 03:40:59 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
-   d="scan'208";a="3218807"
+   d="scan'208";a="40330058"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.32.103])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 03:38:52 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 03:40:57 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 13 Feb 2024 13:38:47 +0200 (EET)
-To: Shravan Kumar Ramani <shravankr@nvidia.com>
-cc: Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
-    David Thompson <davthompson@nvidia.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/4] platform/mellanox: mlxbf-pmc: Add support for
- 64-bit counters and cycle count
-In-Reply-To: <ce1140840b09df3fe2b85e3f87089f2e0d0877d0.1707808180.git.shravankr@nvidia.com>
-Message-ID: <c256234b-b928-23b7-d57b-464d5bfb3703@linux.intel.com>
-References: <cover.1707808180.git.shravankr@nvidia.com> <ce1140840b09df3fe2b85e3f87089f2e0d0877d0.1707808180.git.shravankr@nvidia.com>
+To: hdegoede@redhat.com, Armin Wolf <W_Armin@gmx.de>
+Cc: sathyanarayanan.kuppuswamy@linux.intel.com, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240212185016.5494-1-W_Armin@gmx.de>
+References: <20240212185016.5494-1-W_Armin@gmx.de>
+Subject: Re: [PATCH v2] platform/x86: wmi: Make input buffer madatory when
+ evaulating methods
+Message-Id: <170782445006.2452.5996713889135628313.b4-ty@linux.intel.com>
+Date: Tue, 13 Feb 2024 13:40:50 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.3
 
-Hi,
+On Mon, 12 Feb 2024 19:50:16 +0100, Armin Wolf wrote:
 
-I've applied to first two type cleanup patches to review-ilpo.
-
-I considered taking patch 3 and 4 already too but I'd like to see the 
-sysfs documentation for the added sysfs files first.
-
-On Tue, 13 Feb 2024, Shravan Kumar Ramani wrote:
-
-> Add support for programming any counter to monitor the cycle count.
-> Since counting of cycles using 32-bit ocunters would result in frequent
-
-ocunters -> counters
-
-> wraparounds, add the ability to combine 2 adjacent 32-bit counters to
-> form 1 64-bit counter.
-> Both these features are supported by BlueField-3 PMC hardware, hence
-
-Please try to avoid paragraphs like this. Either make it a truly flowing 
-paragraph or insert a newline in between the paragraphs.
-
-> the required bit-fields are exposed by the driver via sysfs to allow
-> the user to configure as needed.
+> The ACPI-WMI specification declares in the section "ACPI Control Method
+> Naming Conventions and Functionality for Windows 2000 Instrumentation"
+> that a WMxx control method takes 3 arguments: instance, method id and
+> argument buffer.
+> This is also the case even when the underlying WMI method does not
+> have any input arguments.
 > 
-> Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
-> Reviewed-by: David Thompson <davthompson@nvidia.com>
-> Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
+> [...]
 
--- 
+
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/1] platform/x86: wmi: Make input buffer madatory when evaulating methods
+      commit: 5b559e8ab01c8d7a92478f8143ba844161292203
+
+--
  i.
 
