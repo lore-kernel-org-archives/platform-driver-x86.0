@@ -1,162 +1,95 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ganymed.uberspace.de (ganymed.uberspace.de [185.26.156.242])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24AD2919;
-	Tue, 13 Feb 2024 16:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999BA6280B
+	for <platform-driver-x86@vger.kernel.org>; Tue, 13 Feb 2024 22:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.242
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707841859; cv=none; b=LdKvbjekcHWu9STR/NUyovlCBS980sj34fJH4kWHvh25ElksTQ8nSvXykA3utydvicskqi8PD6Hhh3xiq14L6IHBVhtEILMgjCYKhGr/pDPdULDp/62mPzXZW+pRuEzkNhGm0A/bjjDnLAapHqf0/XQopPIZWEG+h+MXU3oRfGM=
+	t=1707864153; cv=none; b=VXcjpuMffizrjG2F9zk6Rdw6KLumIvU56N9qZOeSCnHgRtCcSjJREjdJJ2JjM/aJJD2erBTuVe/Y5t9o6bPNS87cHFqen1iGOVYhcL8s1SDwnhHX9wvu+HjsCybeuHG6TtPMVUGMf+W/Sx0XfE6MVbi7p4xpFDASGvMmJwdb80E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707841859; c=relaxed/simple;
-	bh=pbhl7o06F3KTdEXAEDM/E3x0i8cJOTf/7tGEm8pmAxM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DaLzd1erqqR4weVpQPPUnGEmysTPsQf64iSEqJQOrgtFXblbjqzpfkov821nyggu/OaZnnRrCf5lY6venwlrpOf6ic2oZvRms/rLkI33MgMarCmH5KLxoN8v0p5pey2ghmBdS/FuEMUQqR3Z4wdKQPy7eMMNRnHae7Gm1S3Fk4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uIcIWYLI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kWY+0Hse; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QqUGbMwE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=CB4v+WoG; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1707864153; c=relaxed/simple;
+	bh=elcd4TcDBr3qpgWDWtdDgTpj1evYS2cvT4Xz7wbMVVI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=CAlHxTGkdOJXESym2vlWbSqScu0/jr1cdBvWWdxE5/u8IMPSadRs2WaysqsJoH/idQqiRnkIpIJdyQDKk/g3iIien7D4wan8DP0Q/DR0B6egBJ4ItE5A9CU8yHkLzlvy4hSyCnS42SgMyjmjkr9KPZsRjwIymfYfc9HtXwlWJZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=a-kobel.de; spf=pass smtp.mailfrom=a-kobel.de; dkim=fail (0-bit key) header.d=a-kobel.de header.i=@a-kobel.de header.b=Y2ww5W8h reason="key not found in DNS"; arc=none smtp.client-ip=185.26.156.242
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=a-kobel.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a-kobel.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uIcIWYLI";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kWY+0Hse";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QqUGbMwE";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="CB4v+WoG"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id ED9D01FCEE;
-	Tue, 13 Feb 2024 16:30:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707841856; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rh0WxZGNI+843mgcC/hg4m0gdTkh1X753D3mIWPc/T0=;
-	b=uIcIWYLIxt1HSVZMzrKH3J718SpoxUkGptoIOidcIswBpUWSLvqsqbwoHgA2a+MhG0gNCL
-	Wc0it7dUHWvkd65MPigcU3hlq9fFfQyjJEMDeGPlWUZ+KK8QQHRn18g1YCTG2l5rPtZ7C0
-	F7AQ8+knys5ZEvUq4Ac4y0nPH7BuVI0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707841856;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rh0WxZGNI+843mgcC/hg4m0gdTkh1X753D3mIWPc/T0=;
-	b=kWY+0HsedNUZbDVyu6uhbAqulFcybaWCrt8IYNiuHV9k+22P3cy63h79iHuJnb1BiRnCff
-	ew0LIlA6e5+u1SBA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707841855; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rh0WxZGNI+843mgcC/hg4m0gdTkh1X753D3mIWPc/T0=;
-	b=QqUGbMwEjiPpN7eYvfAE6ZG1wZcJJVVjRSHlnC5hDbLmgY809hZH6HT/84X4oqcntAlDqc
-	WCFc8Mfi7pVoPxkmNo2zP16p3SpGXNdjfFW4ySPPgU3EhFqEI7beC3LFBahplR2Ovjc77N
-	dVls44s5d4n2rCDa0WYl/o33RGQZcrk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707841855;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rh0WxZGNI+843mgcC/hg4m0gdTkh1X753D3mIWPc/T0=;
-	b=CB4v+WoGzcv8d9cMvW6dhwB9pwFL2p6Xw+cX1PS06FrfqIryC7dKl3cZybKDucV0pvVUK0
-	o5m0LcHyxvBpTQBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3AC79136F5;
-	Tue, 13 Feb 2024 16:30:54 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id E1KYBz6Zy2UpUwAAD6G6ig
-	(envelope-from <jdelvare@suse.de>); Tue, 13 Feb 2024 16:30:54 +0000
-Date: Tue, 13 Feb 2024 17:30:50 +0100
-From: Jean Delvare <jdelvare@suse.de>
-To: Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Ilpo =?UTF-8?B?SsOkcnZpbmVu?=
- <ilpo.jarvinen@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, Paul
- Menzel <pmenzel@molgen.mpg.de>, Andi Shyti <andi.shyti@kernel.org>,
- eric.piel@tremplin-utc.net, Marius Hoch <mail@mariushoch.de>,
- Dell.Client.Kernel@dell.com, Kai Heng Feng <kai.heng.feng@canonical.com>,
- platform-driver-x86@vger.kernel.org, Wolfram Sang <wsa@kernel.org>,
- linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] platform/x86: dell-smo8800: Move instantiation
- of lis3lv02d i2c_client from i2c-i801 to dell-smo8800
-Message-ID: <20240213173050.0cf4a58f@endymion.delvare>
-In-Reply-To: <20240107171055.ac7jtwhu2kbalaou@pali>
-References: <20240106160935.45487-1-hdegoede@redhat.com>
-	<20240106160935.45487-3-hdegoede@redhat.com>
-	<20240107171055.ac7jtwhu2kbalaou@pali>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-suse-linux-gnu)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=a-kobel.de header.i=@a-kobel.de header.b="Y2ww5W8h"
+Received: (qmail 25836 invoked by uid 989); 13 Feb 2024 22:35:47 -0000
+Authentication-Results: ganymed.uberspace.de;
+	auth=pass (plain)
+Received: from unknown (HELO unkown) (::1)
+	by ganymed.uberspace.de (Haraka/3.0.1) with ESMTPSA; Tue, 13 Feb 2024 23:35:47 +0100
+Message-ID: <295984ce-bd4b-49bd-adc5-ffe7c898d7f0@a-kobel.de>
+Date: Tue, 13 Feb 2024 23:35:46 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Alexander Kobel <a-kobel@a-kobel.de>
+Subject: platform/x86: intel-vbtn: 14c200b7ca46 breaks suspend on Thinkpad X1
+ Tablet Gen2
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -1.45
-X-Spamd-Result: default: False [-1.45 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 HAS_ORG_HEADER(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_TWELVE(0.00)[13];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.15)[68.96%]
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Bar: --
+X-Rspamd-Report: BAYES_HAM(-2.172315) XM_UA_NO_VERSION(0.01) MIME_GOOD(-0.1)
+X-Rspamd-Score: -2.262315
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=a-kobel.de; s=uberspace;
+	h=from;
+	bh=elcd4TcDBr3qpgWDWtdDgTpj1evYS2cvT4Xz7wbMVVI=;
+	b=Y2ww5W8hnYHo7PuyRw/1IChiDUjQMbXtq5CJNRMPAa7VjQwoqDPdFIm/PEJ2a+aWzDGmUnw7zl
+	1UVBJRwA65ILwAGK0QPrb7tOpGvgFIaUBOkqXr3IbDT8XewogdYqOJqZ94dfX6uh/7sEa0+shh8V
+	XMcufFL52J2nY5hO7IBXbmoX9i+8HAvbwejwoOs7RMHYRWh0HaVnbgAcauR95N21hR5/55jQON7p
+	jAjanM2Mm/q//pEkUInTxULTdBuNv3wDijURlTiow4BoPAy3YefLTucBtxbNe1Vkk1bMLlzZzJRW
+	2NziS3n+NMXaiyfY1yYyl/b52ZhjYYXupjY6gZ+KYl2vxFqeS9BYkEyuiKYspw4E5iVR/a4LJ+aD
+	+WfZws7Wlj0QXaBhGlSB8/PWh62q4CqXxMGHoT4rVHx1ZU315Px2PSphSQcE9XwlMUQ3h6ofqWze
+	LfhfLnbadJsxtF76d6pOdaVR5k49sCa3pQWxnEo8UVevxddd2cAlYNIowRUTOUfhx33+hp0yLSGk
+	2coi/nQccMmnI0IIpFOt9YcGkUXAXmzfbYfA4sBr6TsybA1UG5UPCdbLT+CMAo2LLbD72c2sulos
+	cxV8VFgjTk4xjICqQ4Mck5Nxfvcgs+HwE0wHPqzUl/UYGF1lDcV0Bhp1I5mOqsJV8yhLKYma/Cgp
+	A=
 
-Hi Pali, Hans,
+Hi Hans, all,
 
-On Sun, 7 Jan 2024 18:10:55 +0100, Pali Roh=C3=A1r wrote:
-> On Saturday 06 January 2024 17:09:29 Hans de Goede wrote:
-> > It is not necessary to handle the Dell specific instantiation of
-> > i2c_client-s for SMO8xxx ACPI devices without an ACPI I2cResource
-> > inside the generic i801 I2C adapter driver.
-> >=20
-> > The kernel already instantiates platform_device-s for these ACPI devices
-> > and the drivers/platform/x86/dell/dell-smo8800.c driver binds to these
-> > platform drivers.
-> >=20
-> > Move the i2c_client instantiation from the generic i2c-i801 driver to
-> > the Dell specific dell-smo8800 driver.
-> >=20
-> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > ---
-> > Changes in v2:
-> > - Use a pci_device_id table to check for IDF (non main) i2c-i801 SMBuss=
-es
-> > - Add a comment documenting the IDF PCI device ids
-> > ---
-> >  drivers/i2c/busses/i2c-i801.c            | 126 +----------------------
-> >  drivers/platform/x86/dell/dell-smo8800.c | 121 +++++++++++++++++++++-
-> >  2 files changed, 123 insertions(+), 124 deletions(-) =20
->=20
-> I'm looking at this change again and I'm not not sure if it is a good
-> direction to do this movement. (...)
+after upgrading to 6.7.1 or 6.6.13 (LTS), my Thinkpad X1 Tablet doesn't suspend anymore. Or, rather, it suspends, but wakes again immediately. This happens regardless of whether the keyboard is attached or not, with all ACPI wakeup triggers disabled according to /proc/acpi/wakeup.
+I could identify the following commit as the culprit:
 
-Same feeling here. Having to lookup the parent i2c bus, which may or
-may not be present yet, doesn't feel good.
+	14c200b7ca46b9a9f4af9e81d258a58274320b6f
+	platform/x86: intel-vbtn: Fix missing tablet-mode-switch events
 
-I wouldn't object if everybody was happy with the move and moving the
-code was solving an actual issue, but that doesn't seem to be the case.
+First, it's a suspiciously related patch going into both kernel versions.
+Second, unloading intel-vbtn resolves the problem; machine suspends as usual.
+Third, I tried modifying the patch. Commenting out the newly introduced
 
---=20
-Jean Delvare
-SUSE L3 Support
+	/* Some devices need this to report further events */
+	acpi_evaluate_object(handle, "VBDL", NULL, NULL);
+
+resolves the problem on my machine.
+
+I understand that the change was in for a reason, but the deeper meaning of that statement eludes me; is it possible that my model is quirky for that one?
+
+FWIW:
+- SW_TABLET_MODE is properly updated about half a second after I attach/detach/fold the keyboard during suspend with that statement commented out (but attaching/detaching/folding all wake the device, unless I also `echo Y > /sys/module/acpi/parameters/ec_no_wakeup` - but then I can't wake the tablet at all anymore).
+- Folding the keyboard to the back of the device disables the keyboard.
+  With that statement in (as in 6.7.1 upstream), SW_TABLET_MODE is set to 1 (correct), but reverts to 0 again after about a second (incorrect); the keyboard remains disabled.
+  Without the statement, SW_TABLET_MODE remains on 1 until I flip back the keyboard to normal (expected behavior).
+
+
+On a side note, I initially thought that detect_tablet_mode() in resume() is the culprit. intel_vbtn_pm_resume() is also included in the thaw callback (and I usually use hybrid suspend) and, after the patch, augmented with the detect_tablet_mode() routine.
+If I understand correctly the description in [1], thaw is not really resume-/restore-like except perhaps for the corner case of failed hibernation image creation. Turns out it doesn't seem to cause the harm, but still: is intel_vbtn_pm_resume() on thaw really intended? The description says it's used to undo the changes made by the preceding freeze (including prepare), but this rather seems to match intel_vbtn_pm_complete()'s definition than intel_vbtn_pm_resume()'s... 
+
+[1] https://www.kernel.org/doc/html/v4.12/driver-api/pm/types.html
+
+
+Of course, I stand available for any debugging or further investigations; happy to do some work myself if someone can guide me through.
+
+
+Cheers,
+Alex
