@@ -1,54 +1,54 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3B4374C1;
-	Tue, 13 Feb 2024 11:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD4838380;
+	Tue, 13 Feb 2024 12:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707824460; cv=none; b=J/1mL4DLLT0uaA8M2zsZ2AduM6rMGwSVr1kDH05Xa6hxlTD2AjEeGf2vAX/nRWdJqs1UPJ+gfb8s5hdttGkm4aehontu04YJtsDXHIbNKaP61Qt5yExVaUcHe+4+fVRKxLfETjO5NFHFBEJtskG+afr4zbFMNRTSpUV4wYgabjQ=
+	t=1707825718; cv=none; b=SKPQqujR3hN/P/tMrQnDqESUEpO0diSCuHRzu21VPGPdQPHwm9yOSrJEhshSJGrQdOAH4pY2nTLKABiv3oYutBngo8/bsBKyVTbqSYN86MzwyMysLGWWVKRnfv3WyP5hyyYQudeCUYn1nWwEH6EG5Hns7hHa9CJ946DxEfVed+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707824460; c=relaxed/simple;
-	bh=cAEOJQ0iVAmTq4TMQkM/F2qB7/WnkhIygmoxAcjPA3Y=;
+	s=arc-20240116; t=1707825718; c=relaxed/simple;
+	bh=cNukAC2lj8Vitoz014bWjpa4UuuRTFxJ/G1TZ9IGHeU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=i/ERbz3Sp0y9fh5w7qIT4fMzaKXxslNVcz71k8EQuhOjWp/rmS5iJvOVszWz/OhxTAH2zpACFcu/kTDmddypaRVnJGxNyX9dyRAa3L/l6I/UsszBJzEFmbPVHqxoEM2VUNPwflSdFbPezh+zQNxPnLRcznqpYJ5d51YJmRoZTU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EVhoF9a/; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version:Content-Type; b=HtuWrWj4pIzv/beL/jEcJpBHGsn3uPASxjywrFVpky7/Vd8k8N7lnxzD0EkVIgRJgCLt9ZvM47eKE/dj2qNMxwXeik5rgUTAnkJffg3NCRTHKeBM1YrpmlBToVLprKHRFHjTY6+E66RMmj8tcy2y8GkgexUvljC1BbQN2aAIS10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RwjyCxY2; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EVhoF9a/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RwjyCxY2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707824459; x=1739360459;
+  t=1707825717; x=1739361717;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=cAEOJQ0iVAmTq4TMQkM/F2qB7/WnkhIygmoxAcjPA3Y=;
-  b=EVhoF9a/lab6/iL//mGKibBfz+e55ifClqX2pFCBgg+zALaVP848x/YN
-   0EHbC2wX6IWcNjLaarWvAggA7at6SasU3l2gQfWx/Oaykpt9+S1bpbDBx
-   OWYRYC+LlqA/F5tyMT4ADDl+NzICYM9DZct46epbK1sANB9gW0cOfxj/x
-   2V+N5vDLFOJoEBUyxTNbLeu6pI29Q54Vj1UKdZi3Kh1My68/SP/f6OZXi
-   +MJGwvBsIgEqoDTm0nuGPMtvy+/nLiMs8zTjN3PJCcsRKPurQWCaj55LA
-   mRLg3fuJ3Vg5h0jtnwSm/uZGCJMM91S7muLxAcly5wSDq3lCDjlFAAHUb
+  bh=cNukAC2lj8Vitoz014bWjpa4UuuRTFxJ/G1TZ9IGHeU=;
+  b=RwjyCxY2aNuXVYP9b/nyor3K7MxKfoIMgiNdf/r71oJ9i2YxcjnhoZOW
+   g6BWA0eMEJ2dABwp/Llkt/xAshPmBprusptuoNWo957gv8ZtkEAkGKjfC
+   mpDd6kKo69k36b08kUYakmMIlL+e6bK6/ScIqfBLHFa8rU5Y5YX6brzih
+   RDs9+e7x7R8jt3i9z66DMcdPiL9uUM+8WxCtZChVGUGFqbHsy1Ou2hI03
+   ChE3TT3x7cf7n5x/5u0Zhkdj8PdNSY/qCQguo3iHn4xE6IRolLGMzxs8A
+   TX8qD5h8XtKJNCBYCWHDe1krMakxtnj+0PNz4b6MWzjZLUdn43JE9wPuU
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="1948832"
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="1682360"
 X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
-   d="scan'208";a="1948832"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 03:40:59 -0800
+   d="scan'208";a="1682360"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 04:01:56 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
-   d="scan'208";a="40330058"
+   d="scan'208";a="7508828"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.32.103])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 03:40:57 -0800
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 04:01:54 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hdegoede@redhat.com, Armin Wolf <W_Armin@gmx.de>
-Cc: sathyanarayanan.kuppuswamy@linux.intel.com, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240212185016.5494-1-W_Armin@gmx.de>
-References: <20240212185016.5494-1-W_Armin@gmx.de>
-Subject: Re: [PATCH v2] platform/x86: wmi: Make input buffer madatory when
- evaulating methods
-Message-Id: <170782445006.2452.5996713889135628313.b4-ty@linux.intel.com>
-Date: Tue, 13 Feb 2024 13:40:50 +0200
+To: Ike Panhc <ike.pan@canonical.com>, Hans de Goede <hdegoede@redhat.com>, 
+ Gergo Koteles <soyer@irl.hu>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <0cdbc0e6eb65e160384ae0ed152e7de3ded1d9d5.1707604991.git.soyer@irl.hu>
+References: <0cdbc0e6eb65e160384ae0ed152e7de3ded1d9d5.1707604991.git.soyer@irl.hu>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: support Fn+R
+ dual-function key
+Message-Id: <170782570805.2763.12736496055327560798.b4-ty@linux.intel.com>
+Date: Tue, 13 Feb 2024 14:01:48 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -59,16 +59,12 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.12.3
 
-On Mon, 12 Feb 2024 19:50:16 +0100, Armin Wolf wrote:
+On Sat, 10 Feb 2024 23:51:57 +0100, Gergo Koteles wrote:
 
-> The ACPI-WMI specification declares in the section "ACPI Control Method
-> Naming Conventions and Functionality for Windows 2000 Instrumentation"
-> that a WMxx control method takes 3 arguments: instance, method id and
-> argument buffer.
-> This is also the case even when the underlying WMI method does not
-> have any input arguments.
+> According to the manual, Fn+R adjusts the display refresh rate.
+> Map Fn+R to KEY_DISPLAYTOGGLE.
 > 
-> [...]
+> 
 
 
 Thank you for your contribution, it has been applied to my local
@@ -77,8 +73,8 @@ platform-drivers-x86/review-ilpo branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: wmi: Make input buffer madatory when evaulating methods
-      commit: 5b559e8ab01c8d7a92478f8143ba844161292203
+[1/1] platform/x86: ideapad-laptop: support Fn+R dual-function key
+      commit: c5211eacf3326538fbf31b612e5ea546ca8a3425
 
 --
  i.
