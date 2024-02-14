@@ -1,246 +1,287 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB6E101E3
-	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Feb 2024 09:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4158E17C61;
+	Wed, 14 Feb 2024 10:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707904447; cv=none; b=gr6JaEwLH6NRbdqUF6McPE/KEZSIq7SPe61dE60nMRHc5axn0ekVLkoZN8v0zlEnMd8ULDTMDKAsi6gf3Pdkw6C9iOhXbhVNS7pojbxfdGE7nN2vMuh5nNCu5MFZa/0IBQSwLLV5Qz+0grft9xs4pkgRTUqSbcn1MRae4ADy7sY=
+	t=1707905654; cv=none; b=COelZoisXrT10aLDYdlNL/qNibyiTG/y1d81DyUh4fc07VJ74xmD4Lhw+KD6scf6zhapVQn1MSWkDs+PO5+c3wih37F114ihFznzv9U7qGWjaqzajYq7WAimjnAma0LbPskZD5ZlD3h0ciVpKpQtGQCj4TUqrcQ1mREvqklirjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707904447; c=relaxed/simple;
-	bh=gzmpzVfqggGNfr+S+rO98BpLG4fSThwCnRBApLleERQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nEFxavHpoqhtdiw3ObwKhkX0V16Fsi8YrgJROcXvfbxyiigSQ0KW5jTqHDzxJLm6L9LztEX4SsOFP+F+l63s1gwX7+pZ+7l96+MtvPzpfkl4GGnYAyF0MD2n9QLl61fzqLtyZpFBlFCaRy4kXmo99lt4UIMqUjQ5Ercl34z9SW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1raBex-00051u-Iz; Wed, 14 Feb 2024 10:34:31 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1raBeu-000fCu-A1; Wed, 14 Feb 2024 10:34:28 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1raBeu-004Y4J-0h;
-	Wed, 14 Feb 2024 10:34:28 +0100
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-pwm@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org,
-	kernel@pengutronix.de,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v6 067/164] pwm: lpss-*: Make use of devm_pwmchip_alloc() function
-Date: Wed, 14 Feb 2024 10:31:54 +0100
-Message-ID:  <b567ab5dd992e361eb884fa6c2cac11be9c7dde3.1707900770.git.u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
-References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
+	s=arc-20240116; t=1707905654; c=relaxed/simple;
+	bh=AkK8H6K5JsX3fPqhL9edm6tVElqq/qDa1tKSAyvAosE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=A6OAutU9YeZpMivsqy7Ry0XdtEMN2HY2h+m96K4Z50sbhMm9Go1cmKn8YrdJN3cva2ePalL/TKawPffziDmsJ9GMRH99UBPUz52N8GBWkUzsa0NyAMpZbYCikCJy41zsDuhNg/SBAn8eCDbwA4R9ytnGnVG6LPTecISo2McG5N8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bzgcSofK; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bzgcSofK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707905653; x=1739441653;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=AkK8H6K5JsX3fPqhL9edm6tVElqq/qDa1tKSAyvAosE=;
+  b=bzgcSofKfFXTLNKt4qPj6jmTSejwwcYNt4tdGCPpNYQBgLeOgGPzdveY
+   I1VQP61T7u0MzBIpM+3MDhA8zGQXySNOKj28u27L57VOXuDpZOlppaEHw
+   TEPUfJqCFHMa3iletJQZ24Ctuqtgypjp8to3WeCk1nhelzBN035fYSwKk
+   cYdeXHP8HsoDpD+1ICpma0foBrWMplcT9urMt8Ndj6lhOXU4FYhk81Zi5
+   M/G/MPDSy7EQnZdkdGUupvFo3Zm4wJlXl3VTbo7Ad+qRX05HFuVEFZ8B7
+   wCsrpvewYN//9ZYFADgCLusw/JEUmr7QW52LHwdO5ERckSvlbcm66E5+z
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="13335602"
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="13335602"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:14:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="3432586"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.33.229])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:14:09 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 14 Feb 2024 11:52:24 +0200 (EET)
+To: Vishnu Sankar <vishnuocv@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, vsankar@lenovo.com
+Subject: Re: [PATCH 1/2] platform/x86: thinkpad_acpi: Simplify thermal mode
+ checking
+In-Reply-To: <20240214052959.8550-1-vishnuocv@gmail.com>
+Message-ID: <c49e4415-7cd5-e1ba-e6c6-5086730b9866@linux.intel.com>
+References: <20240214052959.8550-1-vishnuocv@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6419; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=gzmpzVfqggGNfr+S+rO98BpLG4fSThwCnRBApLleERQ=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlzIiXO9vU/I4HWIXQf+QzW7hOkySXBCdgMGIf0 yD3H1Jv9kyJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZcyIlwAKCRCPgPtYfRL+ Ts0gCACYjl5guzFar8+s8qCX3/Xz+rU4xcwf2EJDvE32M8AlfM9BBb3rqDAiauEL+Xvg4tL2gaG uU2w3ZzvZsv7kKRMNe5SZPWn9zMCNBRy8F2NHUgFo1Py4mcc8pTnr510z7eL6WprvzOXISbhG5k Culmc9SVC5g4NDrAeNdKZJjiei/BDFY/Z2e5qvSwy87PVl0ELy3xLl8Vq2hBaHWwRTlxKoJlwH3 +/tZirlCe+nF+OvL4tq5AKuUw7jeXD1Q0PDOlnbeYW8qIP/4kNg5TbK6AZrgC0I2nYolmrVnpxC P3u1mHm5xuUEuMXcQ9tBjsORvIbpbRgtFEhCG2abF+8WYPr1
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
+Content-Type: multipart/mixed; boundary="8323328-900362618-1707904344=:1008"
 
-This prepares the pwm-lpc drivers to further changes of the pwm core
-outlined in the commit introducing devm_pwmchip_alloc(). There is no
-intended semantical change and the driver should behave as before.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pinctrl/intel/pinctrl-intel.c      |  6 +++---
- drivers/pwm/pwm-lpss-pci.c                 |  8 ++++----
- drivers/pwm/pwm-lpss-platform.c            |  8 ++++----
- drivers/pwm/pwm-lpss.c                     | 20 ++++++++++----------
- drivers/pwm/pwm-lpss.h                     |  1 -
- include/linux/platform_data/x86/pwm-lpss.h |  4 ++--
- 6 files changed, 23 insertions(+), 24 deletions(-)
+--8323328-900362618-1707904344=:1008
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index d6f29e6faab7..89bd7ce6711a 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -1492,7 +1492,7 @@ static int intel_pinctrl_probe_pwm(struct intel_pinctrl *pctrl,
- 		.base_unit_bits = 22,
- 		.bypass = true,
- 	};
--	struct pwm_lpss_chip *pwm;
-+	struct pwm_chip *chip;
- 
- 	if (!(community->features & PINCTRL_FEATURE_PWM))
- 		return 0;
-@@ -1500,8 +1500,8 @@ static int intel_pinctrl_probe_pwm(struct intel_pinctrl *pctrl,
- 	if (!IS_REACHABLE(CONFIG_PWM_LPSS))
- 		return 0;
- 
--	pwm = devm_pwm_lpss_probe(pctrl->dev, community->regs + PWMC, &info);
--	return PTR_ERR_OR_ZERO(pwm);
-+	chip = devm_pwm_lpss_probe(pctrl->dev, community->regs + PWMC, &info);
-+	return PTR_ERR_OR_ZERO(chip);
- }
- 
- int intel_pinctrl_probe(struct platform_device *pdev,
-diff --git a/drivers/pwm/pwm-lpss-pci.c b/drivers/pwm/pwm-lpss-pci.c
-index 34acfe99b74f..25045c229520 100644
---- a/drivers/pwm/pwm-lpss-pci.c
-+++ b/drivers/pwm/pwm-lpss-pci.c
-@@ -18,7 +18,7 @@ static int pwm_lpss_probe_pci(struct pci_dev *pdev,
- 			      const struct pci_device_id *id)
- {
- 	const struct pwm_lpss_boardinfo *info;
--	struct pwm_lpss_chip *lpwm;
-+	struct pwm_chip *chip;
- 	int err;
- 
- 	err = pcim_enable_device(pdev);
-@@ -30,9 +30,9 @@ static int pwm_lpss_probe_pci(struct pci_dev *pdev,
- 		return err;
- 
- 	info = (struct pwm_lpss_boardinfo *)id->driver_data;
--	lpwm = devm_pwm_lpss_probe(&pdev->dev, pcim_iomap_table(pdev)[0], info);
--	if (IS_ERR(lpwm))
--		return PTR_ERR(lpwm);
-+	chip = devm_pwm_lpss_probe(&pdev->dev, pcim_iomap_table(pdev)[0], info);
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
- 
- 	pm_runtime_put(&pdev->dev);
- 	pm_runtime_allow(&pdev->dev);
-diff --git a/drivers/pwm/pwm-lpss-platform.c b/drivers/pwm/pwm-lpss-platform.c
-index 5f6ee300e342..dbc9f5b17bdc 100644
---- a/drivers/pwm/pwm-lpss-platform.c
-+++ b/drivers/pwm/pwm-lpss-platform.c
-@@ -20,7 +20,7 @@
- static int pwm_lpss_probe_platform(struct platform_device *pdev)
- {
- 	const struct pwm_lpss_boardinfo *info;
--	struct pwm_lpss_chip *lpwm;
-+	struct pwm_chip *chip;
- 	void __iomem *base;
- 
- 	info = device_get_match_data(&pdev->dev);
-@@ -31,9 +31,9 @@ static int pwm_lpss_probe_platform(struct platform_device *pdev)
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
--	lpwm = devm_pwm_lpss_probe(&pdev->dev, base, info);
--	if (IS_ERR(lpwm))
--		return PTR_ERR(lpwm);
-+	chip = devm_pwm_lpss_probe(&pdev->dev, base, info);
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
- 
- 	/*
- 	 * On Cherry Trail devices the GFX0._PS0 AML checks if the controller
-diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
-index 394c768f5a5f..b79fd3405e15 100644
---- a/drivers/pwm/pwm-lpss.c
-+++ b/drivers/pwm/pwm-lpss.c
-@@ -68,7 +68,7 @@ EXPORT_SYMBOL_GPL(pwm_lpss_tng_info);
- 
- static inline struct pwm_lpss_chip *to_lpwm(struct pwm_chip *chip)
- {
--	return container_of(chip, struct pwm_lpss_chip, chip);
-+	return pwmchip_get_drvdata(chip);
- }
- 
- static inline u32 pwm_lpss_read(const struct pwm_device *pwm)
-@@ -245,9 +245,10 @@ static const struct pwm_ops pwm_lpss_ops = {
- 	.get_state = pwm_lpss_get_state,
- };
- 
--struct pwm_lpss_chip *devm_pwm_lpss_probe(struct device *dev, void __iomem *base,
-+struct pwm_chip *devm_pwm_lpss_probe(struct device *dev, void __iomem *base,
- 					  const struct pwm_lpss_boardinfo *info)
- {
-+	struct pwm_chip *chip;
- 	struct pwm_lpss_chip *lpwm;
- 	unsigned long c;
- 	int i, ret;
-@@ -256,9 +257,10 @@ struct pwm_lpss_chip *devm_pwm_lpss_probe(struct device *dev, void __iomem *base
- 	if (WARN_ON(info->npwm > LPSS_MAX_PWMS))
- 		return ERR_PTR(-ENODEV);
- 
--	lpwm = devm_kzalloc(dev, sizeof(*lpwm), GFP_KERNEL);
--	if (!lpwm)
-+	chip = devm_pwmchip_alloc(dev, info->npwm, sizeof(*lpwm));
-+	if (!chip)
- 		return ERR_PTR(-ENOMEM);
-+	lpwm = to_lpwm(chip);
- 
- 	lpwm->regs = base;
- 	lpwm->info = info;
-@@ -267,23 +269,21 @@ struct pwm_lpss_chip *devm_pwm_lpss_probe(struct device *dev, void __iomem *base
- 	if (!c)
- 		return ERR_PTR(-EINVAL);
- 
--	lpwm->chip.dev = dev;
--	lpwm->chip.ops = &pwm_lpss_ops;
--	lpwm->chip.npwm = info->npwm;
-+	chip->ops = &pwm_lpss_ops;
- 
--	ret = devm_pwmchip_add(dev, &lpwm->chip);
-+	ret = devm_pwmchip_add(dev, chip);
- 	if (ret) {
- 		dev_err(dev, "failed to add PWM chip: %d\n", ret);
- 		return ERR_PTR(ret);
- 	}
- 
- 	for (i = 0; i < lpwm->info->npwm; i++) {
--		ctrl = pwm_lpss_read(&lpwm->chip.pwms[i]);
-+		ctrl = pwm_lpss_read(&chip->pwms[i]);
- 		if (ctrl & PWM_ENABLE)
- 			pm_runtime_get(dev);
- 	}
- 
--	return lpwm;
-+	return chip;
- }
- EXPORT_SYMBOL_GPL(devm_pwm_lpss_probe);
- 
-diff --git a/drivers/pwm/pwm-lpss.h b/drivers/pwm/pwm-lpss.h
-index bf841250385f..b5267ab5193b 100644
---- a/drivers/pwm/pwm-lpss.h
-+++ b/drivers/pwm/pwm-lpss.h
-@@ -18,7 +18,6 @@
- #define LPSS_MAX_PWMS			4
- 
- struct pwm_lpss_chip {
--	struct pwm_chip chip;
- 	void __iomem *regs;
- 	const struct pwm_lpss_boardinfo *info;
- };
-diff --git a/include/linux/platform_data/x86/pwm-lpss.h b/include/linux/platform_data/x86/pwm-lpss.h
-index c852fe24fe2a..752c06b47cc8 100644
---- a/include/linux/platform_data/x86/pwm-lpss.h
-+++ b/include/linux/platform_data/x86/pwm-lpss.h
-@@ -27,7 +27,7 @@ struct pwm_lpss_boardinfo {
- 	bool other_devices_aml_touches_pwm_regs;
- };
- 
--struct pwm_lpss_chip *devm_pwm_lpss_probe(struct device *dev, void __iomem *base,
--					  const struct pwm_lpss_boardinfo *info);
-+struct pwm_chip *devm_pwm_lpss_probe(struct device *dev, void __iomem *base,
-+				     const struct pwm_lpss_boardinfo *info);
- 
- #endif	/* __PLATFORM_DATA_X86_PWM_LPSS_H */
--- 
-2.43.0
+On Wed, 14 Feb 2024, Vishnu Sankar wrote:
 
+Thanks for doing this, it's major improvement to readability already as=20
+is, and even more of after the second patch!!
+
+> Add a thermal_read_mode_check helper function to make the code
+
+thermal_read_mode_check()
+
+remove "function" as it's obvious.
+
+> simpler during init.
+> This helps particularly when the new TPEC_12 mode is added in
+> the next patch.
+
+Flow the paragraph normally without the premature line break.
+=20
+> Suggested-by: Ilpo Jarvinen <ilpo.jarvinen@intel.com>
+
+This is not my email address, please use
+
+Suggested-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 136 +++++++++++++--------------
+>  1 file changed, 66 insertions(+), 70 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/=
+thinkpad_acpi.c
+> index c4895e9bc714..2428c8bd0fa2 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -6147,6 +6147,71 @@ struct ibm_thermal_sensors_struct {
+>  static enum thermal_access_mode thermal_read_mode;
+>  static bool thermal_use_labels;
+> =20
+> +/* Function to check thermal read mode */
+> +static enum thermal_access_mode thermal_read_mode_check(void)
+> +{
+> +=09u8 t, ta1, ta2, ver =3D 0;
+> +=09int i;
+> +
+> +=09if (thinkpad_id.ec_model) {
+> +=09=09/*
+> +=09=09 * Direct EC access mode: sensors at registers
+> +=09=09 * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
+
+Remove the double space, one is enough in kernel comments.
+
+> +=09=09 * non-implemented, thermal sensors return 0x80 when
+> +=09=09 * not available
+
+Add the missing . please.
+
+Perhaps add a empty line here to make this two paragraphs.
+
+> +=09=09 * The above rule is unfortunately flawed. This has been seen with
+> +=09=09 * 0xC2 (power supply ID) causing thermal control problems.
+> +=09=09 * The EC version can be determined by offset 0xEF and at least fo=
+r
+> +=09=09 * version 3 the Lenovo firmware team confirmed that registers 0xC=
+0-0xC7
+> +=09=09 * are not thermal registers.
+> +=09=09 */
+
+While the patch touches this, this entire comment should be reflowed=20
+properly for 80 columns.
+
+> +=09=09if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
+> +=09=09=09pr_warn("Thinkpad ACPI EC unable to access EC version\n");
+> +
+> +=09=09ta1 =3D ta2 =3D 0;
+> +=09=09for (i =3D 0; i < 8; i++) {
+> +=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP0 + i, &t)) {
+> +=09=09=09=09ta1 |=3D t;
+> +=09=09=09} else {
+> +=09=09=09=09ta1 =3D 0;
+> +=09=09=09=09break;
+> +=09=09=09}
+> +=09=09=09if (ver < 3) {
+> +=09=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
+> +=09=09=09=09=09ta2 |=3D t;
+> +=09=09=09=09} else {
+> +=09=09=09=09=09ta1 =3D 0;
+> +=09=09=09=09=09break;
+> +=09=09=09=09}
+> +=09=09=09}
+> +=09=09}
+> +
+> +=09=09if (ta1 =3D=3D 0) {
+> +=09=09=09pr_err("ThinkPad ACPI EC access misbehaving, disabling thermal =
+sensors access\n");
+> +=09=09=09return TPACPI_THERMAL_NONE;
+> +=09=09}
+> +
+> +=09=09if (ver >=3D 3) {
+> +=09=09=09thermal_use_labels =3D true;
+> +=09=09=09return TPACPI_THERMAL_TPEC_8;
+> +=09=09}
+> +
+> +=09=09return (ta2 !=3D 0) ? TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC=
+_8;
+> +=09}
+> +
+> +=09if (acpi_evalf(ec_handle, NULL, "TMP7", "qv")) {
+> +=09=09if (tpacpi_is_ibm() &&
+> +=09=09    acpi_evalf(ec_handle, NULL, "UPDT", "qv"))
+
+Single line and keep the braces please (I know it will go >80 chars but no=
+=20
+important info is lost).
+
+> +=09=09=09/* 600e/x, 770e, 770x */
+> +=09=09=09return TPACPI_THERMAL_ACPI_UPDT;
+> +=09=09/* IBM/LENOVO DSDT EC.TMPx access, max 8 sensors */
+> +=09=09return TPACPI_THERMAL_ACPI_TMP07;
+> +=09}
+> +
+> +=09/* temperatures not supported on 570, G4x, R30, R31, R32 */
+> +=09return TPACPI_THERMAL_NONE;
+> +}
+> +
+>  /* idx is zero-based */
+>  static int thermal_get_sensor(int idx, s32 *value)
+>  {
+> @@ -6375,78 +6440,9 @@ static const struct attribute_group temp_label_att=
+r_group =3D {
+> =20
+>  static int __init thermal_init(struct ibm_init_struct *iibm)
+>  {
+> -=09u8 t, ta1, ta2, ver =3D 0;
+> -=09int i;
+> -=09int acpi_tmp7;
+> -
+>  =09vdbg_printk(TPACPI_DBG_INIT, "initializing thermal subdriver\n");
+> =20
+> -=09acpi_tmp7 =3D acpi_evalf(ec_handle, NULL, "TMP7", "qv");
+> -
+> -=09if (thinkpad_id.ec_model) {
+> -=09=09/*
+> -=09=09 * Direct EC access mode: sensors at registers
+> -=09=09 * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
+> -=09=09 * non-implemented, thermal sensors return 0x80 when
+> -=09=09 * not available
+> -=09=09 * The above rule is unfortunately flawed. This has been seen with
+> -=09=09 * 0xC2 (power supply ID) causing thermal control problems.
+> -=09=09 * The EC version can be determined by offset 0xEF and at least fo=
+r
+> -=09=09 * version 3 the Lenovo firmware team confirmed that registers 0xC=
+0-0xC7
+> -=09=09 * are not thermal registers.
+> -=09=09 */
+> -=09=09if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
+> -=09=09=09pr_warn("Thinkpad ACPI EC unable to access EC version\n");
+> -
+> -=09=09ta1 =3D ta2 =3D 0;
+> -=09=09for (i =3D 0; i < 8; i++) {
+> -=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP0 + i, &t)) {
+> -=09=09=09=09ta1 |=3D t;
+> -=09=09=09} else {
+> -=09=09=09=09ta1 =3D 0;
+> -=09=09=09=09break;
+> -=09=09=09}
+> -=09=09=09if (ver < 3) {
+> -=09=09=09=09if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
+> -=09=09=09=09=09ta2 |=3D t;
+> -=09=09=09=09} else {
+> -=09=09=09=09=09ta1 =3D 0;
+> -=09=09=09=09=09break;
+> -=09=09=09=09}
+> -=09=09=09}
+> -=09=09}
+> -=09=09if (ta1 =3D=3D 0) {
+> -=09=09=09/* This is sheer paranoia, but we handle it anyway */
+> -=09=09=09if (acpi_tmp7) {
+> -=09=09=09=09pr_err("ThinkPad ACPI EC access misbehaving, falling back to=
+ ACPI TMPx access mode\n");
+> -=09=09=09=09thermal_read_mode =3D TPACPI_THERMAL_ACPI_TMP07;
+
+Eh, where did this go in the new helper?
+
+--=20
+ i.
+
+> -=09=09=09} else {
+> -=09=09=09=09pr_err("ThinkPad ACPI EC access misbehaving, disabling therm=
+al sensors access\n");
+> -=09=09=09=09thermal_read_mode =3D TPACPI_THERMAL_NONE;
+> -=09=09=09}
+> -=09=09} else {
+> -=09=09=09if (ver >=3D 3) {
+> -=09=09=09=09thermal_read_mode =3D TPACPI_THERMAL_TPEC_8;
+> -=09=09=09=09thermal_use_labels =3D true;
+> -=09=09=09} else {
+> -=09=09=09=09thermal_read_mode =3D
+> -=09=09=09=09=09(ta2 !=3D 0) ?
+> -=09=09=09=09=09TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC_8;
+> -=09=09=09}
+> -=09=09}
+> -=09} else if (acpi_tmp7) {
+> -=09=09if (tpacpi_is_ibm() &&
+> -=09=09    acpi_evalf(ec_handle, NULL, "UPDT", "qv")) {
+> -=09=09=09/* 600e/x, 770e, 770x */
+> -=09=09=09thermal_read_mode =3D TPACPI_THERMAL_ACPI_UPDT;
+> -=09=09} else {
+> -=09=09=09/* IBM/LENOVO DSDT EC.TMPx access, max 8 sensors */
+> -=09=09=09thermal_read_mode =3D TPACPI_THERMAL_ACPI_TMP07;
+> -=09=09}
+> -=09} else {
+> -=09=09/* temperatures not supported on 570, G4x, R30, R31, R32 */
+> -=09=09thermal_read_mode =3D TPACPI_THERMAL_NONE;
+> -=09}
+> +=09thermal_read_mode =3D thermal_read_mode_check();
+> =20
+>  =09vdbg_printk(TPACPI_DBG_INIT, "thermal is %s, mode %d\n",
+>  =09=09str_supported(thermal_read_mode !=3D TPACPI_THERMAL_NONE),
+>=20
+
+--8323328-900362618-1707904344=:1008--
