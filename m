@@ -1,325 +1,331 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B7E24B33;
-	Wed, 14 Feb 2024 23:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53FF413DB90;
+	Wed, 14 Feb 2024 23:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707952411; cv=none; b=NYfJabZ3RdJbAVLSXKC0IPmOUiRauT1ygXXx5uwbtm5ktFrPP4qwflgJifPRQT2faVx03FfhPOY37/lqu1/UMN4jv73ibIt1KVz1QsUO9Cm1P4xZs5BkyEe+4P4mJrdmjj0PLQilwMs8JG7iM4ocIruRXzSBJ3TUvXnapxIkLd4=
+	t=1707952774; cv=none; b=WqGgKbd+hlVM7uZ7SgRLHpM603agwE5yd34aOnzinJYKVJ7b/KP3cMorFg6eTeO33i+KBB3uj9DPzm8Glj/GVGSCoMZJDfyoVOAL0cLEFjjDAO0nb/wa5Q0Wa0ZqU1BY/TM4JIrdpbJzC5iefmtMcp+HCV5C6ubeIsuXUdOcAxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707952411; c=relaxed/simple;
-	bh=Z1/yl5RJ77QqCCp71GxnprkzPjJyVEnw3bnTqBlUQMY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IhjrkkQSvwiV5VJT8pnI/F3PDXpoPGUjkLBULkeWVuIdsjIBQZXnBBmyjrVQU+fNOwn3GBwbnaf57WdpkSi38TO3hSCmpxuupymtwVm4uWWI8K5OzFi4SLuEc4170eptWuEgYfsnkUz9UCXSWi+FNpF8ofophs1/imkTTlUFwAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hCw1MKmv; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1707952774; c=relaxed/simple;
+	bh=miSMayeRVuM7L/9Qg5Y58BUzCMyECi8HqVmi/jTfK0g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gaWeqs6kDKtXoVVwTIC4tr7hzLe1xgeiAXHsDIsmYsv4jwegi6j1CX/5WtRVx1lKP+/EjY89ItDOsJ9F1zKfEdBJ1h92ghLHwJNe6MfVDmpuyVFDm1ZoVAgUPTq+HIYs6iP9UcN/CKbYEezKV3BO37fR/VeY2/fNvqR6jc4+1EI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=igzNy4bW; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hCw1MKmv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707952410; x=1739488410;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Z1/yl5RJ77QqCCp71GxnprkzPjJyVEnw3bnTqBlUQMY=;
-  b=hCw1MKmvNqiDO7/1L/9VPDy6alVhEDrY7mK+AXV5JxG95XwyGYLqL7OH
-   l+z2TcQ8uPpgkrVAfwJhJCRt4zsYf6GdUm4qIncp7dGbl8gY6+99hz6mH
-   SvoSkIYlr3LXkPQgWdt9lHaRKq0TEEGnKrGnZ1Ju65oIDtQmclNgCq8Ug
-   iCYzktPoSYuEkLKXIdpTEqDgcT48Bn5nLHdZHAQXszir1t9XakAUkJK12
-   voQQ6jjM2iIOtBU7tNlMkfv4yMmyxdC/i6Zgu84ZcqegOPbbqOuUNjBMR
-   eL4bBtrpJfTHCnlfc/0xFG6WubCVSnuy0oZNaCZC/iRrE15q1oEd8mYfw
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="13422004"
-X-IronPort-AV: E=Sophos;i="6.06,160,1705392000"; 
-   d="scan'208";a="13422004"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 15:13:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="826369893"
-X-IronPort-AV: E=Sophos;i="6.06,160,1705392000"; 
-   d="scan'208";a="826369893"
-Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
-  by orsmga001.jf.intel.com with SMTP; 14 Feb 2024 15:13:23 -0800
-Received: by stinkbox (sSMTP sendmail emulation); Thu, 15 Feb 2024 01:13:22 +0200
-Date: Thu, 15 Feb 2024 01:13:22 +0200
-From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-	amd-gfx@lists.freedesktop.org,
-	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-	linux-fbdev@vger.kernel.org, nouveau@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org,
-	linux-renesas-soc@vger.kernel.org,
-	"open list:ACPI" <linux-acpi@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Melissa Wen <mwen@igalia.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>
-Subject: Re: [PATCH v6 3/5] drm: Add support to get EDID from ACPI
-Message-ID: <Zc1JEg5mC0ww_BeU@intel.com>
-References: <20240214215756.6530-1-mario.limonciello@amd.com>
- <20240214215756.6530-4-mario.limonciello@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="igzNy4bW"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5d8b70b39efso276388a12.0;
+        Wed, 14 Feb 2024 15:19:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707952771; x=1708557571; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EfYCw4MdLIRHFv5AKbCeEG6HvalV9dnyMbsDHMZepoU=;
+        b=igzNy4bW38ecSwELXehay2I2mO2Nyww2k+RkMVqqimnBiVGjV3SrQ9UF9CNp7qK/X9
+         A297XD+fqmsy2+7kUhE9MsHWThD6mhc0pQmrZAqYxtOO45DL0tUdivZ8QeThGykSIgc+
+         KNXinSXSNMnx80K/3DLLuhcLVwgv2q/7DGh6CvpHGPjtFTf5cFOpRSUg6hg/y+9/A4zK
+         qPlXu7EU/BAhAKd8m7l5HDrqFLbgn+tt2/Q6sSzJ/7veshAgr2sFOHoIB8sG23yC/1Kw
+         TF2kFv/d0zqwcxdKhocDEiDJEbGMh4tyHajt4R6sUljhaxVWHAGQP2jig25K7CBxhTXf
+         jxLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707952771; x=1708557571;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EfYCw4MdLIRHFv5AKbCeEG6HvalV9dnyMbsDHMZepoU=;
+        b=SX1x96eEcJ7+beYrB+rMIhES9FO92jO1YMXSipWKdwcz72gTIqPYcDgPUnFa2lYwd2
+         45k745o3GlJI36F8Yxss2EmvJkB2cTWvrZdEBexq2xkRAh/njvC8xZCtpuvw9hKEJr+c
+         gduyYVn9tPew4biGWjUcdTevadkzS706n3u1zIwg4sS77QetZvuyAG5vFxM9MkI9AI6f
+         gMunfXb1BdnwzT9uRJbtceNydXuyZi+fwRwh06/EfIhJyoL5o1qkFpjlRNQqvgimYOao
+         sN5u7JHfTbayyWUo9BFOIRS0SKPRU2p+vsiHyHpHDfVq00XFMoVEkwaKcqUU09/I/oWL
+         wlvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUD9NAPHdChLu8Q1D2nmrd8sHewPGhlBMjdqHBoMb+cuzmH2MelHQCs2lkKX780rfls1mlk7Huy7W2W3m7puDi07RI2tYr2fGUAqzRlWDNuQI+p45NTmGv7s2Z34OK6xosYE/oVrmm+KjeNVh5B3go9Dg==
+X-Gm-Message-State: AOJu0YzUvo5DznJFLyZKIujNLd2465A3jP1BUF637YIU4MwXpR5rHxTj
+	gw7OZZftO3Haq7B9/7R09xhoSzqvib6naDb+v8eBFWMU9o3/pN0yuj9pRthLMcznoIbxUUHGYfH
+	rRir/vPraiMrsa7k6Dlu10KqOFOs=
+X-Google-Smtp-Source: AGHT+IGZeRZTQGRLi2M8lGNB5Q3QpoJwDOPYrK78i8JUxy3FU8AlMDwDwhPrlt59R7whsFT3sKCKxpjmtbzdHEzuIwM=
+X-Received: by 2002:a05:6a21:2d0c:b0:19e:aaba:a7cb with SMTP id
+ tw12-20020a056a212d0c00b0019eaabaa7cbmr344220pzb.39.1707952771342; Wed, 14
+ Feb 2024 15:19:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240214215756.6530-4-mario.limonciello@amd.com>
-X-Patchwork-Hint: comment
+References: <20240214052959.8550-1-vishnuocv@gmail.com> <c49e4415-7cd5-e1ba-e6c6-5086730b9866@linux.intel.com>
+In-Reply-To: <c49e4415-7cd5-e1ba-e6c6-5086730b9866@linux.intel.com>
+From: Vishnu Sankar <vishnuocv@gmail.com>
+Date: Thu, 15 Feb 2024 08:18:51 +0900
+Message-ID: <CABxCQKvJScRKDJ+bStMF-jd6=iVnbCUPO3RFA8CFYMvXE+uE3g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] platform/x86: thinkpad_acpi: Simplify thermal mode checking
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
+	vsankar@lenovo.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 14, 2024 at 03:57:54PM -0600, Mario Limonciello wrote:
-> Some manufacturers have intentionally put an EDID that differs from
-> the EDID on the internal panel on laptops.  Drivers that prefer to
-> fetch this EDID can set a bit on the drm_connector to indicate that
-> the DRM EDID helpers should try to fetch it and it is preferred if
-> it's present.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/gpu/drm/Kconfig     |   1 +
->  drivers/gpu/drm/drm_edid.c  | 109 +++++++++++++++++++++++++++++++++---
->  include/drm/drm_connector.h |   6 ++
->  include/drm/drm_edid.h      |   1 +
->  4 files changed, 109 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-> index 872edb47bb53..3db89e6af01d 100644
-> --- a/drivers/gpu/drm/Kconfig
-> +++ b/drivers/gpu/drm/Kconfig
-> @@ -8,6 +8,7 @@
->  menuconfig DRM
->  	tristate "Direct Rendering Manager (XFree86 4.1.0 and higher DRI support)"
->  	depends on (AGP || AGP=n) && !EMULATED_CMPXCHG && HAS_DMA
-> +	depends on (ACPI_VIDEO || ACPI_VIDEO=n)
->  	select DRM_PANEL_ORIENTATION_QUIRKS
->  	select DRM_KMS_HELPER if DRM_FBDEV_EMULATION
->  	select FB_CORE if DRM_FBDEV_EMULATION
-> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-> index 923c4423151c..cdc30c6d05d5 100644
-> --- a/drivers/gpu/drm/drm_edid.c
-> +++ b/drivers/gpu/drm/drm_edid.c
-> @@ -28,6 +28,7 @@
->   * DEALINGS IN THE SOFTWARE.
->   */
->  
-> +#include <acpi/video.h>
->  #include <linux/bitfield.h>
->  #include <linux/cec.h>
->  #include <linux/hdmi.h>
-> @@ -2188,6 +2189,58 @@ drm_do_probe_ddc_edid(void *data, u8 *buf, unsigned int block, size_t len)
->  	return ret == xfers ? 0 : -1;
->  }
->  
-> +/**
-> + * drm_do_probe_acpi_edid() - get EDID information via ACPI _DDC
-> + * @data: struct drm_connector
-> + * @buf: EDID data buffer to be filled
-> + * @block: 128 byte EDID block to start fetching from
-> + * @len: EDID data buffer length to fetch
-> + *
-> + * Try to fetch EDID information by calling acpi_video_get_edid() function.
-> + *
-> + * Return: 0 on success or error code on failure.
-> + */
-> +static int
-> +drm_do_probe_acpi_edid(void *data, u8 *buf, unsigned int block, size_t len)
-> +{
-> +	struct drm_connector *connector = data;
-> +	struct drm_device *ddev = connector->dev;
-> +	struct acpi_device *acpidev = ACPI_COMPANION(ddev->dev);
-> +	unsigned char start = block * EDID_LENGTH;
-> +	void *edid;
-> +	int r;
-> +
-> +	if (!acpidev)
-> +		return -ENODEV;
-> +
-> +	switch (connector->connector_type) {
-> +	case DRM_MODE_CONNECTOR_LVDS:
-> +	case DRM_MODE_CONNECTOR_eDP:
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
+Ilpo,
+Thanks a lot for the review.
 
-We could have other types of connectors that want this too.
-I don't see any real benefit in having this check tbh. Drivers
-should simply notset the flag on connectors where it won't work,
-and only the driver can really know that.
+On Wed, Feb 14, 2024 at 7:14=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Wed, 14 Feb 2024, Vishnu Sankar wrote:
+>
+> Thanks for doing this, it's major improvement to readability already as
+> is, and even more of after the second patch!!
+>
+> > Add a thermal_read_mode_check helper function to make the code
+>
+> thermal_read_mode_check()
+>
+> remove "function" as it's obvious.
+Acked
+>
+> > simpler during init.
+> > This helps particularly when the new TPEC_12 mode is added in
+> > the next patch.
+>
+> Flow the paragraph normally without the premature line break.
+Acked.
+>
+> > Suggested-by: Ilpo Jarvinen <ilpo.jarvinen@intel.com>
+>
+> This is not my email address, please use
+>
+> Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+Sorry for this.
+Will correct email address.
+>
+> > Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+> > ---
+> >  drivers/platform/x86/thinkpad_acpi.c | 136 +++++++++++++--------------
+> >  1 file changed, 66 insertions(+), 70 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x8=
+6/thinkpad_acpi.c
+> > index c4895e9bc714..2428c8bd0fa2 100644
+> > --- a/drivers/platform/x86/thinkpad_acpi.c
+> > +++ b/drivers/platform/x86/thinkpad_acpi.c
+> > @@ -6147,6 +6147,71 @@ struct ibm_thermal_sensors_struct {
+> >  static enum thermal_access_mode thermal_read_mode;
+> >  static bool thermal_use_labels;
+> >
+> > +/* Function to check thermal read mode */
+> > +static enum thermal_access_mode thermal_read_mode_check(void)
+> > +{
+> > +     u8 t, ta1, ta2, ver =3D 0;
+> > +     int i;
+> > +
+> > +     if (thinkpad_id.ec_model) {
+> > +             /*
+> > +              * Direct EC access mode: sensors at registers
+> > +              * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
+>
+> Remove the double space, one is enough in kernel comments.
+Acked
+>
+> > +              * non-implemented, thermal sensors return 0x80 when
+> > +              * not available
+>
+> Add the missing . please.
+>
+> Perhaps add a empty line here to make this two paragraphs.
+Acked
+>
+> > +              * The above rule is unfortunately flawed. This has been =
+seen with
+> > +              * 0xC2 (power supply ID) causing thermal control problem=
+s.
+> > +              * The EC version can be determined by offset 0xEF and at=
+ least for
+> > +              * version 3 the Lenovo firmware team confirmed that regi=
+sters 0xC0-0xC7
+> > +              * are not thermal registers.
+> > +              */
+>
+> While the patch touches this, this entire comment should be reflowed
+> properly for 80 columns.
+Will try re-writing the comments block for 80 columns.
+>
+> > +             if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
+> > +                     pr_warn("Thinkpad ACPI EC unable to access EC ver=
+sion\n");
+> > +
+> > +             ta1 =3D ta2 =3D 0;
+> > +             for (i =3D 0; i < 8; i++) {
+> > +                     if (acpi_ec_read(TP_EC_THERMAL_TMP0 + i, &t)) {
+> > +                             ta1 |=3D t;
+> > +                     } else {
+> > +                             ta1 =3D 0;
+> > +                             break;
+> > +                     }
+> > +                     if (ver < 3) {
+> > +                             if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, =
+&t)) {
+> > +                                     ta2 |=3D t;
+> > +                             } else {
+> > +                                     ta1 =3D 0;
+> > +                                     break;
+> > +                             }
+> > +                     }
+> > +             }
+> > +
+> > +             if (ta1 =3D=3D 0) {
+> > +                     pr_err("ThinkPad ACPI EC access misbehaving, disa=
+bling thermal sensors access\n");
+> > +                     return TPACPI_THERMAL_NONE;
+> > +             }
+> > +
+> > +             if (ver >=3D 3) {
+> > +                     thermal_use_labels =3D true;
+> > +                     return TPACPI_THERMAL_TPEC_8;
+> > +             }
+> > +
+> > +             return (ta2 !=3D 0) ? TPACPI_THERMAL_TPEC_16 : TPACPI_THE=
+RMAL_TPEC_8;
+> > +     }
+> > +
+> > +     if (acpi_evalf(ec_handle, NULL, "TMP7", "qv")) {
+> > +             if (tpacpi_is_ibm() &&
+> > +                 acpi_evalf(ec_handle, NULL, "UPDT", "qv"))
+>
+> Single line and keep the braces please (I know it will go >80 chars but n=
+o
+> important info is lost).
+Acked.
+Will change this.
+>
+> > +                     /* 600e/x, 770e, 770x */
+> > +                     return TPACPI_THERMAL_ACPI_UPDT;
+> > +             /* IBM/LENOVO DSDT EC.TMPx access, max 8 sensors */
+> > +             return TPACPI_THERMAL_ACPI_TMP07;
+> > +     }
+> > +
+> > +     /* temperatures not supported on 570, G4x, R30, R31, R32 */
+> > +     return TPACPI_THERMAL_NONE;
+> > +}
+> > +
+> >  /* idx is zero-based */
+> >  static int thermal_get_sensor(int idx, s32 *value)
+> >  {
+> > @@ -6375,78 +6440,9 @@ static const struct attribute_group temp_label_a=
+ttr_group =3D {
+> >
+> >  static int __init thermal_init(struct ibm_init_struct *iibm)
+> >  {
+> > -     u8 t, ta1, ta2, ver =3D 0;
+> > -     int i;
+> > -     int acpi_tmp7;
+> > -
+> >       vdbg_printk(TPACPI_DBG_INIT, "initializing thermal subdriver\n");
+> >
+> > -     acpi_tmp7 =3D acpi_evalf(ec_handle, NULL, "TMP7", "qv");
+> > -
+> > -     if (thinkpad_id.ec_model) {
+> > -             /*
+> > -              * Direct EC access mode: sensors at registers
+> > -              * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
+> > -              * non-implemented, thermal sensors return 0x80 when
+> > -              * not available
+> > -              * The above rule is unfortunately flawed. This has been =
+seen with
+> > -              * 0xC2 (power supply ID) causing thermal control problem=
+s.
+> > -              * The EC version can be determined by offset 0xEF and at=
+ least for
+> > -              * version 3 the Lenovo firmware team confirmed that regi=
+sters 0xC0-0xC7
+> > -              * are not thermal registers.
+> > -              */
+> > -             if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
+> > -                     pr_warn("Thinkpad ACPI EC unable to access EC ver=
+sion\n");
+> > -
+> > -             ta1 =3D ta2 =3D 0;
+> > -             for (i =3D 0; i < 8; i++) {
+> > -                     if (acpi_ec_read(TP_EC_THERMAL_TMP0 + i, &t)) {
+> > -                             ta1 |=3D t;
+> > -                     } else {
+> > -                             ta1 =3D 0;
+> > -                             break;
+> > -                     }
+> > -                     if (ver < 3) {
+> > -                             if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, =
+&t)) {
+> > -                                     ta2 |=3D t;
+> > -                             } else {
+> > -                                     ta1 =3D 0;
+> > -                                     break;
+> > -                             }
+> > -                     }
+> > -             }
+> > -             if (ta1 =3D=3D 0) {
+> > -                     /* This is sheer paranoia, but we handle it anywa=
+y */
+> > -                     if (acpi_tmp7) {
+> > -                             pr_err("ThinkPad ACPI EC access misbehavi=
+ng, falling back to ACPI TMPx access mode\n");
+> > -                             thermal_read_mode =3D TPACPI_THERMAL_ACPI=
+_TMP07;
+>
+> Eh, where did this go in the new helper?
+Sorry.
+This will be added in V2.
+>
+> --
+>  i.
+>
+> > -                     } else {
+> > -                             pr_err("ThinkPad ACPI EC access misbehavi=
+ng, disabling thermal sensors access\n");
+> > -                             thermal_read_mode =3D TPACPI_THERMAL_NONE=
+;
+> > -                     }
+> > -             } else {
+> > -                     if (ver >=3D 3) {
+> > -                             thermal_read_mode =3D TPACPI_THERMAL_TPEC=
+_8;
+> > -                             thermal_use_labels =3D true;
+> > -                     } else {
+> > -                             thermal_read_mode =3D
+> > -                                     (ta2 !=3D 0) ?
+> > -                                     TPACPI_THERMAL_TPEC_16 : TPACPI_T=
+HERMAL_TPEC_8;
+> > -                     }
+> > -             }
+> > -     } else if (acpi_tmp7) {
+> > -             if (tpacpi_is_ibm() &&
+> > -                 acpi_evalf(ec_handle, NULL, "UPDT", "qv")) {
+> > -                     /* 600e/x, 770e, 770x */
+> > -                     thermal_read_mode =3D TPACPI_THERMAL_ACPI_UPDT;
+> > -             } else {
+> > -                     /* IBM/LENOVO DSDT EC.TMPx access, max 8 sensors =
+*/
+> > -                     thermal_read_mode =3D TPACPI_THERMAL_ACPI_TMP07;
+> > -             }
+> > -     } else {
+> > -             /* temperatures not supported on 570, G4x, R30, R31, R32 =
+*/
+> > -             thermal_read_mode =3D TPACPI_THERMAL_NONE;
+> > -     }
+> > +     thermal_read_mode =3D thermal_read_mode_check();
+> >
+> >       vdbg_printk(TPACPI_DBG_INIT, "thermal is %s, mode %d\n",
+> >               str_supported(thermal_read_mode !=3D TPACPI_THERMAL_NONE)=
+,
+> >
 
-> +	/* fetch the entire edid from BIOS */
-> +	r = acpi_video_get_edid(acpidev, ACPI_VIDEO_DISPLAY_LCD, -1, &edid);
-> +	if (r < 0) {
-> +		DRM_DEBUG_KMS("Failed to get EDID from ACPI: %d\n", r);
-> +		return r;
-> +	}
-> +	if (len > r || start > r || start + len > r) {
-> +		r = -EINVAL;
-> +		goto cleanup;
-> +	}
-> +
-> +	memcpy(buf, edid + start, len);
-> +	r = 0;
-> +
-> +cleanup:
-> +	kfree(edid);
-> +
-> +	return r;
-> +}
-> +
->  static void connector_bad_edid(struct drm_connector *connector,
->  			       const struct edid *edid, int num_blocks)
->  {
-> @@ -2621,7 +2674,8 @@ EXPORT_SYMBOL(drm_probe_ddc);
->   * @connector: connector we're probing
->   * @adapter: I2C adapter to use for DDC
->   *
-> - * Poke the given I2C channel to grab EDID data if possible.  If found,
-> + * If the connector allows it, try to fetch EDID data using ACPI. If not found
-> + * poke the given I2C channel to grab EDID data if possible.  If found,
->   * attach it to the connector.
->   *
->   * Return: Pointer to valid EDID or NULL if we couldn't find any.
-> @@ -2629,20 +2683,50 @@ EXPORT_SYMBOL(drm_probe_ddc);
->  struct edid *drm_get_edid(struct drm_connector *connector,
->  			  struct i2c_adapter *adapter)
->  {
-> -	struct edid *edid;
-> +	struct edid *edid = NULL;
->  
->  	if (connector->force == DRM_FORCE_OFF)
->  		return NULL;
->  
-> -	if (connector->force == DRM_FORCE_UNSPECIFIED && !drm_probe_ddc(adapter))
-> -		return NULL;
-> +	if (connector->acpi_edid_allowed)
-> +		edid = _drm_do_get_edid(connector, drm_do_probe_acpi_edid, connector, NULL);
-> +
-> +	if (!edid) {
-> +		if (connector->force == DRM_FORCE_UNSPECIFIED && !drm_probe_ddc(adapter))
-> +			return NULL;
-> +		edid = _drm_do_get_edid(connector, drm_do_probe_ddc_edid, adapter, NULL);
-> +	}
->  
-> -	edid = _drm_do_get_edid(connector, drm_do_probe_ddc_edid, adapter, NULL);
->  	drm_connector_update_edid_property(connector, edid);
->  	return edid;
->  }
->  EXPORT_SYMBOL(drm_get_edid);
->  
-> +/**
-> + * drm_edid_read_acpi - get EDID data, if available
-> + * @connector: connector we're probing
-> + *
-> + * Use the BIOS to attempt to grab EDID data if possible.
-> + *
-> + * The returned pointer must be freed using drm_edid_free().
-> + *
-> + * Return: Pointer to valid EDID or NULL if we couldn't find any.
-> + */
-> +const struct drm_edid *drm_edid_read_acpi(struct drm_connector *connector)
-> +{
-> +	const struct drm_edid *drm_edid;
-> +
-> +	if (connector->force == DRM_FORCE_OFF)
-> +		return NULL;
-> +
-> +	drm_edid = drm_edid_read_custom(connector, drm_do_probe_acpi_edid, connector);
-> +
-> +	/* Note: Do *not* call connector updates here. */
-> +
-> +	return drm_edid;
-> +}
-> +EXPORT_SYMBOL(drm_edid_read_acpi);
-> +
->  /**
->   * drm_edid_read_custom - Read EDID data using given EDID block read function
->   * @connector: Connector to use
-> @@ -2727,10 +2811,11 @@ const struct drm_edid *drm_edid_read_ddc(struct drm_connector *connector,
->  EXPORT_SYMBOL(drm_edid_read_ddc);
->  
->  /**
-> - * drm_edid_read - Read EDID data using connector's I2C adapter
-> + * drm_edid_read - Read EDID data using BIOS or connector's I2C adapter
->   * @connector: Connector to use
->   *
-> - * Read EDID using the connector's I2C adapter.
-> + * Read EDID from BIOS if allowed by connector or by using the connector's
-> + * I2C adapter.
->   *
->   * The EDID may be overridden using debugfs override_edid or firmware EDID
->   * (drm_edid_load_firmware() and drm.edid_firmware parameter), in this priority
-> @@ -2742,10 +2827,18 @@ EXPORT_SYMBOL(drm_edid_read_ddc);
->   */
->  const struct drm_edid *drm_edid_read(struct drm_connector *connector)
->  {
-> +	const struct drm_edid *drm_edid = NULL;
-> +
->  	if (drm_WARN_ON(connector->dev, !connector->ddc))
->  		return NULL;
->  
-> -	return drm_edid_read_ddc(connector, connector->ddc);
-> +	if (connector->acpi_edid_allowed)
 
-That should probably be called 'prefer_acpi_edid' or something
-since it's the first choice when the flag is set.
 
-But I'm not so sure there's any real benefit in having this
-flag at all. You anyway have to modify the driver to use this,
-so why not just have the driver do the call directly instead of
-adding this extra detour via the flag?
+--=20
 
-> +		drm_edid = drm_edid_read_acpi(connector);
-> +
-> +	if (!drm_edid)
-> +		drm_edid = drm_edid_read_ddc(connector, connector->ddc);
-> +
-> +	return drm_edid;
->  }
->  EXPORT_SYMBOL(drm_edid_read);
->  
-> diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-> index fe88d7fc6b8f..74ed47f37a69 100644
-> --- a/include/drm/drm_connector.h
-> +++ b/include/drm/drm_connector.h
-> @@ -1886,6 +1886,12 @@ struct drm_connector {
->  
->  	/** @hdr_sink_metadata: HDR Metadata Information read from sink */
->  	struct hdr_sink_metadata hdr_sink_metadata;
-> +
-> +	/**
-> +	 * @acpi_edid_allowed: Get the EDID from the BIOS, if available.
-> +	 * This is only applicable to eDP and LVDS displays.
-> +	 */
-> +	bool acpi_edid_allowed;
+Regards,
 
-Aren't there other bools/small stuff in there for tighter packing?
-
->  };
->  
->  #define obj_to_connector(x) container_of(x, struct drm_connector, base)
-> diff --git a/include/drm/drm_edid.h b/include/drm/drm_edid.h
-> index 7923bc00dc7a..1c1ee927de9c 100644
-> --- a/include/drm/drm_edid.h
-> +++ b/include/drm/drm_edid.h
-> @@ -459,5 +459,6 @@ bool drm_edid_is_digital(const struct drm_edid *drm_edid);
->  
->  const u8 *drm_find_edid_extension(const struct drm_edid *drm_edid,
->  				  int ext_id, int *ext_index);
-> +const struct drm_edid *drm_edid_read_acpi(struct drm_connector *connector);
->  
->  #endif /* __DRM_EDID_H__ */
-> -- 
-> 2.34.1
-
--- 
-Ville Syrjälä
-Intel
+      Vishnu Sankar
+     +817015150407 (Japan)
