@@ -1,46 +1,46 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4158E17C61;
-	Wed, 14 Feb 2024 10:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB428171C1;
+	Wed, 14 Feb 2024 10:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707905654; cv=none; b=COelZoisXrT10aLDYdlNL/qNibyiTG/y1d81DyUh4fc07VJ74xmD4Lhw+KD6scf6zhapVQn1MSWkDs+PO5+c3wih37F114ihFznzv9U7qGWjaqzajYq7WAimjnAma0LbPskZD5ZlD3h0ciVpKpQtGQCj4TUqrcQ1mREvqklirjk=
+	t=1707906115; cv=none; b=XPgacamYKolUR5CtA0brTeE+WJWrvhALBYxFWPlWb0LgmEWUvspYFLGMHJxbZlfOND8fIjrBo5jTF3See1Ky0XVxMYIETiuzxyGHxJha3SmoJ0kcAFDmA0lrG4U9ebC9KRr9XGtm4KilTev2KmUxSTGWjFYeAULM8j8DL4bon18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707905654; c=relaxed/simple;
-	bh=AkK8H6K5JsX3fPqhL9edm6tVElqq/qDa1tKSAyvAosE=;
+	s=arc-20240116; t=1707906115; c=relaxed/simple;
+	bh=U0LCMLBdsb/HGPUgFB6ys8ddfeTbC73CP7gQKzf0Y3w=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=A6OAutU9YeZpMivsqy7Ry0XdtEMN2HY2h+m96K4Z50sbhMm9Go1cmKn8YrdJN3cva2ePalL/TKawPffziDmsJ9GMRH99UBPUz52N8GBWkUzsa0NyAMpZbYCikCJy41zsDuhNg/SBAn8eCDbwA4R9ytnGnVG6LPTecISo2McG5N8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bzgcSofK; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version:Content-Type; b=PJHpyyz8TnNIjN696vrNZG3Jng2bMDqDVUhQc4lKAZ9AKWyAreGceDzhVcxGx+bb0q+s5LvJEIushYggK/941DPBKFJnoYt3DDTt1/b5XBjeOLelnrdlHIJTKLRquaGF8oDY+kPuknycRTvTZP5Kh7GET4ZH2iJKCbrwcKlid80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U7Jd4Qxk; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bzgcSofK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U7Jd4Qxk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707905653; x=1739441653;
+  t=1707906113; x=1739442113;
   h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=AkK8H6K5JsX3fPqhL9edm6tVElqq/qDa1tKSAyvAosE=;
-  b=bzgcSofKfFXTLNKt4qPj6jmTSejwwcYNt4tdGCPpNYQBgLeOgGPzdveY
-   I1VQP61T7u0MzBIpM+3MDhA8zGQXySNOKj28u27L57VOXuDpZOlppaEHw
-   TEPUfJqCFHMa3iletJQZ24Ctuqtgypjp8to3WeCk1nhelzBN035fYSwKk
-   cYdeXHP8HsoDpD+1ICpma0foBrWMplcT9urMt8Ndj6lhOXU4FYhk81Zi5
-   M/G/MPDSy7EQnZdkdGUupvFo3Zm4wJlXl3VTbo7Ad+qRX05HFuVEFZ8B7
-   wCsrpvewYN//9ZYFADgCLusw/JEUmr7QW52LHwdO5ERckSvlbcm66E5+z
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="13335602"
+   references:mime-version:content-id;
+  bh=U0LCMLBdsb/HGPUgFB6ys8ddfeTbC73CP7gQKzf0Y3w=;
+  b=U7Jd4QxkD2O5NGYvMZpYbPO6n+EW8xn8/XLX0fJSbPS1NBa/CXgXd6uo
+   wFjNpVPyOunuKlHF9sdzLpsXWAlrvoF8kV0BJcy0wtVOk2Tp7V5BcywxJ
+   27FPHGq/sEYZCl2BAtFOXZfH6UcV2qxvqkXT30LEbxnmYMvGJwF0h2tlB
+   vOQrf+Hsc2VH9DEinp7zQaZtQsF8BfMJeSI7YmAakVRi3l/F8PfWV9Jf/
+   ug+qb+/ZqZ1FwmiKNNp/b6EaK79cYdsQnJ6eibzJ3rJhish/1IufyVHr/
+   xNJDlEoCjGMH+p/mbNVDG+zwdN+g9WIg/OiruuweBogxs6DW+LCHvi4tc
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="5719373"
 X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="13335602"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:14:12 -0800
+   d="scan'208";a="5719373"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:21:52 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
-   d="scan'208";a="3432586"
+   d="scan'208";a="7808923"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.33.229])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:14:09 -0800
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:21:50 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 14 Feb 2024 11:52:24 +0200 (EET)
+Date: Wed, 14 Feb 2024 12:16:02 +0200 (EET)
 To: Vishnu Sankar <vishnuocv@gmail.com>
 cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
     LKML <linux-kernel@vger.kernel.org>, 
@@ -48,7 +48,7 @@ cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
 Subject: Re: [PATCH 1/2] platform/x86: thinkpad_acpi: Simplify thermal mode
  checking
 In-Reply-To: <20240214052959.8550-1-vishnuocv@gmail.com>
-Message-ID: <c49e4415-7cd5-e1ba-e6c6-5086730b9866@linux.intel.com>
+Message-ID: <05276532-52eb-3b7d-4578-c596bc1d79c4@linux.intel.com>
 References: <20240214052959.8550-1-vishnuocv@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -56,18 +56,20 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-900362618-1707904344=:1008"
+Content-Type: multipart/mixed; BOUNDARY="8323328-1973336468-1707905081=:7959"
+Content-ID: <6fa90c8f-3c00-25e4-8f33-2768e20495e7@linux.intel.com>
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-900362618-1707904344=:1008
-Content-Type: text/plain; charset=ISO-8859-15
+--8323328-1973336468-1707905081=:7959
+Content-Type: text/plain; CHARSET=ISO-8859-15
 Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <802be201-439b-532b-2b2b-6a298600f2f6@linux.intel.com>
 
 On Wed, 14 Feb 2024, Vishnu Sankar wrote:
 
-Thanks for doing this, it's major improvement to readability already as=20
+Thanks for doing this, it's major improvement to readability already as
 is, and even more of after the second patch!!
 
 > Add a thermal_read_mode_check helper function to make the code
@@ -81,7 +83,7 @@ remove "function" as it's obvious.
 > the next patch.
 
 Flow the paragraph normally without the premature line break.
-=20
+
 > Suggested-by: Ilpo Jarvinen <ilpo.jarvinen@intel.com>
 
 This is not my email address, please use
@@ -113,14 +115,16 @@ thinkpad_acpi.c
 > +=09=09 * Direct EC access mode: sensors at registers
 > +=09=09 * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
 
-Remove the double space, one is enough in kernel comments.
+While this comment is touches, lets make minor improvements to it.
+
+Remove the double space, they are not needed in kernel comments.
 
 > +=09=09 * non-implemented, thermal sensors return 0x80 when
 > +=09=09 * not available
 
-Add the missing . please.
+Please add the missing .
 
-Perhaps add a empty line here to make this two paragraphs.
+Perhaps add an empty line here to break the comment into two paragraphs?
 
 > +=09=09 * The above rule is unfortunately flawed. This has been seen with
 > +=09=09 * 0xC2 (power supply ID) causing thermal control problems.
@@ -129,11 +133,10 @@ r
 > +=09=09 * version 3 the Lenovo firmware team confirmed that registers 0xC=
 0-0xC7
 > +=09=09 * are not thermal registers.
+
+Please reflow the entire comment to 80 chars.
+
 > +=09=09 */
-
-While the patch touches this, this entire comment should be reflowed=20
-properly for 80 columns.
-
 > +=09=09if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
 > +=09=09=09pr_warn("Thinkpad ACPI EC unable to access EC version\n");
 > +
@@ -174,9 +177,8 @@ _8;
 > +=09=09if (tpacpi_is_ibm() &&
 > +=09=09    acpi_evalf(ec_handle, NULL, "UPDT", "qv"))
 
-Single line and keep the braces please (I know it will go >80 chars but no=
-=20
-important info is lost).
+Put this to single line and retain the braces please (I know it will be=20
+>80 char but nothing important is lost).
 
 > +=09=09=09/* 600e/x, 770e, 770x */
 > +=09=09=09return TPACPI_THERMAL_ACPI_UPDT;
@@ -283,5 +285,4 @@ al sensors access\n");
 >  =09vdbg_printk(TPACPI_DBG_INIT, "thermal is %s, mode %d\n",
 >  =09=09str_supported(thermal_read_mode !=3D TPACPI_THERMAL_NONE),
 >=20
-
---8323328-900362618-1707904344=:1008--
+--8323328-1973336468-1707905081=:7959--
