@@ -1,203 +1,482 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2077.outbound.protection.outlook.com [40.107.92.77])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA2F12E44
-	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Feb 2024 09:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707902908; cv=fail; b=Z78m3yc9yAVQGF1FJxePRORGXzS+Xpw9P9QLEMJ6UEzlbxC4mN7xOoa7CCVT6N0Qr8CjHhSzQXMh3qkDGA/15sqmVgT8QyK2y9HPPoJPqzg2fOs7e4y/A9PNSaaOQrPLUnfX3KUkSRhY23MWN5nkpIefifrTv81lJTk0dXL3XeM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707902908; c=relaxed/simple;
-	bh=Y2+XgcEbM/Z4LZzKcYKJAJ1KQeJe1SiQZGn+rw7QtA4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pCmeyWZUnkHXlBsqrnxxG/vudGOvQnmMTWIVy8kacvrZM+5fnPTjF2G4J1+vFUq7i00Sz4d+elL/DIAJvGxutcGi0ZLvaHGdm8NKs7AMYhUU7yZnyzZUbEnh7jPyXokN3cMx6ZbOmA8oXGpcC7hgGpw7BJJG2D0nu7eLcMHRJYE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jR8t+pX9; arc=fail smtp.client-ip=40.107.92.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jR8t+pX9"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WHCMVz2uV1zOeO7rwWiAK0HEDezEJU93BztpKC6HSj2y/7zvJC03Uqx7ItsOvU0MtE7I6ciW8ylq2WEGqwVrhmVkLhCDCvs8E6smiFChskzh+8ovhBnmfxyMB7RBwYZUX480X3N1h1YS+/kH1sv166Hb+jdjIJseDZ7wMUOIVrzYblYQ5rjDBbsBQuQf9RROfWSlezEwjEOxNFeQxQvYLoZOpTH4dluXN6qfKEtXfBZn2MhhnYrIiZHm582WChQy5JtnldzoH5Js+x5yufV271pcUwYvOZLaoOB8A+ytGyJ7NoL3h/VnIFyB30dUNGoKdLxW0TT7SBBy7C9OioTVeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=abDyrMlizmvgtxtq0eXKCWVWVvR8nQ01bJksnrPQPV8=;
- b=Z6eU+WY8eWuR3w8SwtIss7np+Eh1iMnV8EbHaEXeviCZxgzQ9jGnQq8U4VlF8ZAY5QE8qWwS41jreQjNcDMZaEfg1OJsby6u5pUrT07FstmZ+aVojA7NYp9+JD5ficEvIbGuAnxTnlG7MqVaqGV0zryXelB2f/zWz5Wv8Yorihbm6SEh7W1olGJH4ZcVfC4vIS4XEflwZwFQFsOAGLqnD55pNVX+JnRuEuLVplFVAPEZIvdFTuoMZ1rJtanC0WiEQvqfkKaBO+5wIhOAtrLC7vM8Yzzj9/zQoUKNwNFY6CC/ZwK/RwkFFeeaq5FHjWKOdIsPoIITkGtZdmhLKEFfyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=abDyrMlizmvgtxtq0eXKCWVWVvR8nQ01bJksnrPQPV8=;
- b=jR8t+pX9E4TSA+PBPh1ve1Besut5+pzrzYPocZTmJfRhc1LxbpD3lL4efM24E7nmsBhWUt4Lb5meaSsTREhXeUoKEkwpHGA93SOYPxY6bkM7F0n2fypll3ZppHeVhs7FdQ+glIC8S0bAg7f0/h1723WNZG1TqqdukoCrVdi7a7U=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
- by MN2PR12MB4504.namprd12.prod.outlook.com (2603:10b6:208:24f::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.26; Wed, 14 Feb
- 2024 09:28:19 +0000
-Received: from BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::c17f:8a14:844e:2500]) by BL1PR12MB5176.namprd12.prod.outlook.com
- ([fe80::c17f:8a14:844e:2500%5]) with mapi id 15.20.7292.022; Wed, 14 Feb 2024
- 09:28:19 +0000
-Message-ID: <a51c26ae-ceaa-4492-a3f0-e15b83dacd3d@amd.com>
-Date: Wed, 14 Feb 2024 14:58:12 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] platform/x86/amd/pmf: remove smart_pc_status enum
-To: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
- mario.limonciello@amd.com
-References: <20240213073651.404220-1-Shyam-sundar.S-k@amd.com>
-Content-Language: en-US
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-In-Reply-To: <20240213073651.404220-1-Shyam-sundar.S-k@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0215.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:ea::8) To BL1PR12MB5176.namprd12.prod.outlook.com
- (2603:10b6:208:311::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF44171BC
+	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Feb 2024 09:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707904404; cv=none; b=XjSsZiYWz+Ed3YkuN4qx/iUvoj5BtZVYTLHrT0Xveu2as1AWKns3eNDcH3iZNH2am2J/4lBbBzs/FEwwuyC87OUB6VqMfAH8rPxgSoT36tKETWL9+79DTF+mS9t7bEILyeSasxiZXc+bpXhWnWDbWUv4b7/kb2/lIBJeLQfkpKU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707904404; c=relaxed/simple;
+	bh=CNGsevl9ChWzSniQBjaArvHLd39E05H62NLiz3DIWx8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DFOvd7uLurmocBCI0KrNBS5izLdqXRnRjry7PNssEbB/W+P3qGGUxhaCZxjwxFcZYSkf+k0Fy1YLlXvA7hY/y/TuR11Sd4EBZnbuFvayRXoNdMsrXHzIDE05NIeR7eWoAFlm4DmgH0duR7rHLagscnAkvSHacmsMf1F3hkU6Nzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raBeq-0004Mq-MG; Wed, 14 Feb 2024 10:34:24 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raBej-000f6N-Rr; Wed, 14 Feb 2024 10:34:17 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raBej-004XzU-27;
+	Wed, 14 Feb 2024 10:34:17 +0100
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: linux-pwm@vger.kernel.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	James Clark <james.clark@arm.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mark Brown <broonie@kernel.org>,
+	Hector Martin <marcan@marcan.st>,
+	Sven Peter <sven@svenpeter.dev>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Alexander Shiyan <shc_work@mail.ru>,
+	Benson Leung <bleung@chromium.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	=?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Michael Walle <mwalle@kernel.org>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Hammer Hsieh <hammerh0314@gmail.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+	Sean Anderson <sean.anderson@seco.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Robert Foss <rfoss@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	Anjelique Melendez <quic_amelende@quicinc.com>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Kees Cook <keescook@chromium.org>,
+	Rob Herring <robh@kernel.org>,
+	Johan Hovold <johan@kernel.org>,
+	Alex Elder <elder@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: kernel@pengutronix.de,
+	linux-doc@vger.kernel.org,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	linux-rpi-kernel@lists.infradead.org,
+	Guenter Roeck <groeck@chromium.org>,
+	chrome-platform@lists.linux.dev,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	linux-mips@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	linux-amlogic@lists.infradead.org,
+	linux-riscv@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	linux-samsung-soc@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-sunxi@lists.linux.dev,
+	linux-tegra@vger.kernel.org,
+	Douglas Anderson <dianders@chromium.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	dri-devel@lists.freedesktop.org,
+	linux-leds@vger.kernel.org,
+	greybus-dev@lists.linaro.org,
+	linux-staging@lists.linux.dev,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v6 000/164] pwm: Improve lifetime tracking for pwm_chips
+Date: Wed, 14 Feb 2024 10:30:47 +0100
+Message-ID: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|MN2PR12MB4504:EE_
-X-MS-Office365-Filtering-Correlation-Id: a4c27e92-77c5-4d2a-39d1-08dc2d3f478e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	czNKy9HaE5R/yf9j9Fd9IaQVxn2fh9gA3+8QxD1mPeAZoZa8zhbjiKPMaQVthx3zpmm2dEPloBSSAVj3CJH2aV2Zxy6NVsJDxlsZUe5Uub5CkH1gG78n0+YYq9YGNxtaLB2ggvTxCzIDudciE7xTyUR0SPI9KP/u50HqDNlvJ7BY2O4Quq1EJq7UUZ2WEvBNtcvciyaUpAQOshiA+y18eCGr9xuOGjk0tGyNtzBNmV+RavNET/IrVSPclpyVDq7seSPbbW48XoYVxjptboC1X5kTieJYZGU8Rfu0y+7xBZvJkhIFsDMJQZm6vHOTFkjE/nOi/XWfooygPu9/uQfCPLN4fQp5nOahjwvNahZwLoA23bxfNItHLqGFHG5pB6VvKLfRgZmaJWTY1E42QiGeBeztNfKCu7zscXW32FrmVwalYBeaJeFedS/iP0NJa0E143QEFrubkI757wVnc9R+fhqHgomX7bPAE4PxhJ4OXnzTMUfBNRwdo5DoQcyZ+T8bcVAQTk8WOwxuYAsR0iKTNZrow+KK7uB3oeKWUdrZU/59VHJvw6G2jXCGmIxk5kOI
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(39860400002)(396003)(366004)(136003)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(5660300002)(8936002)(8676002)(4326008)(66946007)(66556008)(66476007)(2906002)(83380400001)(26005)(36756003)(38100700002)(31696002)(86362001)(6666004)(316002)(2616005)(41300700001)(6512007)(6506007)(6486002)(53546011)(478600001)(31686004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SmNxVkZFNjVHa0FlNmY3bjRDYmsyTzBueDFLcHF0U2lSRm96T2hSUU9RVTky?=
- =?utf-8?B?eG1oYnRMN3FWc3BEUWlIeFQwZTYrZkhSVG1oOHJFSHNyUXR3c0s2bUNrZEY3?=
- =?utf-8?B?cWhMT2hSNXhFdURUNU52Q215VXFQOFp1K2k1VHNSZXVSV2dQVGNxZnJMVk9i?=
- =?utf-8?B?bHdPSGpiTnRzcFBNUXpQOUxGUzVFbTVtSnkzakRoeFFYdTNFUDdpa3RJdU83?=
- =?utf-8?B?TFdMT0VpMHoxQVJmMkR5QUYzQzZ4WlpoUk9ablpPaVoxWXNCNzFudWdzdGhr?=
- =?utf-8?B?TUpEeHQ3VEQrUFZPU0dMRThNeUVjYXJYNzdiT0lpaENtSGwzem5zWGY3M0hR?=
- =?utf-8?B?WGN2eXhibStRb2VjM3VSeUlrWEFsVGNHOUdZcVppcG0wODkwSlNDbktKdVNS?=
- =?utf-8?B?K0xHa21ibDk4QVV3RS9jOWc5bFBsWHZKQ0NQZzZ2VDNrMzY4Z2Q2aVlGTVdN?=
- =?utf-8?B?THVNdk12TjZHMnJCaU1JT1dPSGl5Rmlnb2RpeW0zNVpnNWIxMnVzTkh6ZzNQ?=
- =?utf-8?B?YU9QdVgvVzVUWFg5QjhwNWNxL25PdERuTWFvdUIyQ3IyM2htTDgyQ1IyTzE2?=
- =?utf-8?B?eVhtQldmS2pWeHcwMEs2MC9kTkV1U0FoMGY3MGdGM0lJYkV5OE5mZ1NLZ2Rt?=
- =?utf-8?B?cTJ2TTI5OGlqTGlUZVNLd1Q2bG05anhscjdNcEwxZG9qVjlVSGFIRFV3YmxY?=
- =?utf-8?B?ZmhtVTQyUGFXdUxWYlBHTVdlZlRYTWxNU3prZEVXMXROS2liZzNsNHFuK3kv?=
- =?utf-8?B?YzAyZHFiSVNKVDFRYlpLZ00wUjRmT2ZXbWw3OWRCNzFEUGJjWVNKMWFEUDVS?=
- =?utf-8?B?ZzVyVXJVY2FuMVlyM2N6YkFYbmlHRHl3NTZYMVNWVks3N0ZnMDdiVzAxazh3?=
- =?utf-8?B?VnFJZzFNVHh0TmRyMHRwbWwwV2hma1hRMHJORTQydmt3SDR2d0dqR1VXOWc4?=
- =?utf-8?B?WGN0djZsSW8wRE9vWVNNaEFJUlM0WGpOaHZlZ2pLeGpRTG5Xb01qNDF2MXdz?=
- =?utf-8?B?Wm8rSDI0OHA1bWExcXdBOHFPV0xMdmgyQ0JldlllcEQyVW0yVHVPcnVwaURs?=
- =?utf-8?B?RnpJRkZhWHNTa0htQzl1KzYyMU5BRzZETmxHZWRZZXM2WnZDQ3I5MHByUXVp?=
- =?utf-8?B?QmJTcUNEZDgzYktwL0xQVkltblkva3NMWExKRUNReFlIdjRKOXh4QmVIT3VB?=
- =?utf-8?B?b2pxSHhvV2I2bEdKUlVSRk9BTk1TTXFaZ0JEeStrWXdFQUUwc2dOcytZd0Vy?=
- =?utf-8?B?YytJSWc0UERmSWNUVHlVbGp2b2pyZEVHSFErSEk1ZjNCakNzV1YyMHFlc1dp?=
- =?utf-8?B?cUxMdWVJTW40eWVhNXNzZk9HaHpxVVBkVDg4N1JLeVlua000dHBUMExHbVNm?=
- =?utf-8?B?Vm9VOFN1aldSMmFRWEFPZ0gvS2RDbkcyTzVLTmFSS3RsTTFDTXUvb0Y0TFR6?=
- =?utf-8?B?TGdmWVpBa0VJR01sOGdaWEpkOXR1YzdZdmpIbkE4R3J0VjBsTW1EWU54SXEr?=
- =?utf-8?B?YVd1T1hsQitvT1VDbThvSDlkNjR3UU1Pb2hrUkt2S3ljYWdnRU9ENnBLeEhq?=
- =?utf-8?B?V1B1Ymc2azgxZGZxTmREdjV3ZHhwbW5pT1laSWtmank3UThHRk4zM3E2OEg1?=
- =?utf-8?B?WTJmejF3SG04alZMQ3pHdWpsNnlFa0pTQkRwZmlQYlVtd1FOcC9lbHE5QWhB?=
- =?utf-8?B?Rk9meWpLUkhOZHBwd01lR2kzbHlTdEQvUHlJcUd0TlkzMGRsalZVUlRySVls?=
- =?utf-8?B?M2JpbEJYdnJmV3FWaXpmaExKSVdaYldRMURoVU91TGxYWmlIYzdKUVJtam9o?=
- =?utf-8?B?bW5RWUlxWmxaSVNGcVhZQWo0WldsRUdVQVlkQ0xtaHN6T0w0NW5UUUJXYjVT?=
- =?utf-8?B?aVpacHlSMUQ1YVVEWUZ2TnBlNXA3eENIQkEzeWtvKzFqRTczdS9XZmpKZEpW?=
- =?utf-8?B?ZDVDMzVKeDM4TTF0d2pmV0hseW80TEUwU3Zzd2VyTTlocUdQQWY1QmcwUDAx?=
- =?utf-8?B?TktNYkMxaG9VT3U5aVBzZmlaZzd6OE0wNW1WQ0g1aUdiak8wZ3BwTDExUlpV?=
- =?utf-8?B?ZzZPQWc3d1ZieUk3MFdXWTZncUpOTmJRZUxPNWtkSVRJeGUrdy9PTS9Ld25T?=
- =?utf-8?Q?KiyD6m4VMi7AeFE86Gz8pLm7j?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4c27e92-77c5-4d2a-39d1-08dc2d3f478e
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2024 09:28:18.9857
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 14L3R5pZ3xgbzbLKHgTtDsMQDUymeaJsCkcNR1FqzX+QYwsIzG/l8hE/YdALrOYmu9VrbAnrbBlTsfaYQ/7sBg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4504
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=18154; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=CNGsevl9ChWzSniQBjaArvHLd39E05H62NLiz3DIWx8=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlzIhKJRx+A4qhMZUwqGztxruImTZ3uBdvqjamF FBPi1WKtnWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZcyISgAKCRCPgPtYfRL+ TtlEB/0c/mjNEQL/08ZIteWRqppCG3//b5DlLDDtir/+ZOvPpIS2Bneq0yyKtwxVhnGfqLvcmKE vd7H2ucRljiA4C+JGLWtGhG0FC7e4QZVz7YhgUyerZIrr2zlx/GbWDZcJhFbMsqwc/tAKwTXoib IohkAa+CaOcYrsexxoNcZmTMFpHSySI2vH7MTmGmw0Vu+05nvPZvpA795ukWgC5jRaTsMunS4uE vEbhrf/xiYxq40U8/MdZkeOvNOVcGmEkXOmlgwc6+XIvzBnWQMgcP7ruq2ByKqWoqpPyA6MKqjY irweyasxqBWPP2d3ruiBIJFSin314rvzQC6yVjE9jFnOxdLo
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+Hello,
 
-On 2/13/2024 13:06, Shyam Sundar S K wrote:
-> Improve code readability by removing smart_pc_status enum, as the same
-> can be done with a simple true/false check; Update the code checks
-> accordingly.
-> 
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
-> v1->v2:
-> - remove enum smart_pc_status and adjust the code handling
+this is v6 of the series introducing better lifetime tracking for
+pwmchips that addresses (for now theoretic) lifetime issues of pwm
+chips. Addressing these is a necessary precondition to introduce chardev
+support for PWMs.
 
-Please drop this patch for your review list. I tested this on a wrong
-environment and seems like some more code handling is required before
-we remove the enum.
+Locking got more complicated due to non-sleeping chips, so I dropped
+the character device patch because it got still more incomplete now.
+Also I'm not yet entirely sure about patches #162 and #163 and I expect
+them to change before they can go in. My plan for the next merge window
+is to get the patches in up to #160. After that the addition of chardev
+support (including correct locking) can continue without having to touch
+the lowlevel driver. So the idea of this series is to get the driver
+adaptions out of the way as this requires some cross-tree coordination.
 
-I will send out a new version soon.
+The patches that touch files outside of drivers/pwm include:
 
-Thanks,
-Shyam
+ - gpio: mvebu: Make use of devm_pwmchip_alloc() function
+   It already has an Ack by Linus Walleij.
 
-> 
->  drivers/platform/x86/amd/pmf/core.c   | 2 +-
->  drivers/platform/x86/amd/pmf/pmf.h    | 5 -----
->  drivers/platform/x86/amd/pmf/tee-if.c | 4 ++--
->  3 files changed, 3 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-> index feaa09f5b35a..ff0d61a56484 100644
-> --- a/drivers/platform/x86/amd/pmf/core.c
-> +++ b/drivers/platform/x86/amd/pmf/core.c
-> @@ -351,7 +351,7 @@ static void amd_pmf_deinit_features(struct amd_pmf_dev *dev)
->  		amd_pmf_deinit_sps(dev);
->  	}
->  
-> -	if (!dev->smart_pc_enabled) {
-> +	if (dev->smart_pc_enabled) {
->  		amd_pmf_deinit_smart_pc(dev);
->  	} else if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
->  		amd_pmf_deinit_auto_mode(dev);
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index 16999c5b334f..66cae1cca73c 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -441,11 +441,6 @@ struct apmf_dyn_slider_output {
->  	struct apmf_cnqf_power_set ps[APMF_CNQF_MAX];
->  } __packed;
->  
-> -enum smart_pc_status {
-> -	PMF_SMART_PC_ENABLED,
-> -	PMF_SMART_PC_DISABLED,
-> -};
-> -
->  /* Smart PC - TA internals */
->  enum system_state {
->  	SYSTEM_STATE_S0i3,
-> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-> index f8c0177afb0d..8b7e3f87702e 100644
-> --- a/drivers/platform/x86/amd/pmf/tee-if.c
-> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
-> @@ -260,7 +260,7 @@ static int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev)
->  	res = amd_pmf_invoke_cmd_init(dev);
->  	if (res == TA_PMF_TYPE_SUCCESS) {
->  		/* Now its safe to announce that smart pc is enabled */
-> -		dev->smart_pc_enabled = PMF_SMART_PC_ENABLED;
-> +		dev->smart_pc_enabled = true;
->  		/*
->  		 * Start collecting the data from TA FW after a small delay
->  		 * or else, we might end up getting stale values.
-> @@ -268,7 +268,7 @@ static int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev)
->  		schedule_delayed_work(&dev->pb_work, msecs_to_jiffies(pb_actions_ms * 3));
->  	} else {
->  		dev_err(dev->dev, "ta invoke cmd init failed err: %x\n", res);
-> -		dev->smart_pc_enabled = PMF_SMART_PC_DISABLED;
-> +		dev->smart_pc_enabled = false;
->  		return res;
->  	}
->  
+ - drm/bridge: ti-sn65dsi86: Make use of pwmchip_parent() accessor
+ - drm/bridge: ti-sn65dsi86: Make use of devm_pwmchip_alloc() function
+   The 2nd already has an Ack by Douglas Anderson which I tend to assume
+   good enough to merge this via my pwm tree, too. An Ack for the first
+   patch would be nice.
+
+ - leds: qcom-lpg: Make use of devm_pwmchip_alloc() function
+   Already has an Ack by Lee Jones.
+
+ - staging: greybus: pwm: Change prototype of helpers to prepare further changes
+ - staging: greybus: pwm: Make use of pwmchip_parent() accessor
+ - staging: greybus: pwm: Rely on pwm framework to pass a valid hwpwm
+ - staging: greybus: pwm: Drop unused gb_connection_set_data()
+ - staging: greybus: pwm: Rework how the number of PWM lines is determined
+ - staging: greybus: pwm: Make use of devm_pwmchip_alloc() function
+   The greybus patches already got an Ack by Greg Kroah-Hartman in an
+   earlier series, but I dropped it as the patches changed considerably.
+
+For the patches that already have an Ack by the respective maintainers
+I'll assume this is good enough to merge the patches via the pwm tree.
+Please object if you don't agree.  For the others an Ack with that
+semantic would be nice. If you want to merge via your tree, that would
+need some coordination. The adaptions depend on patches #1 - #3, so this
+would involve an immutable branch or waiting until these patches reached
+your tree via the mainline tree. The series rebases fine on today's
+next, so at least for now there are no conflicts that git cannot resolve
+automatically.
+
+The biggest changes compared to v5 are:
+
+ - Make pwmchip_parent's parameter const
+ - Use pwmchip_parent also in drivers/pwm/sysfs.c and drivers/pwm/core.c
+ - Several bug fixes in the conversions I found during the rework
+ - Provide a non-devm pwmchip_alloc() function earlier (for the greybus
+   pwm driver)
+ - Increase alignment of driver private data to ARCH_DMA_MINALIGN bytes
+ - Split several patches to make the easier reviewable
+
+The series is available via git at
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm-lifetime-tracking
+
+if you want to give it a test. I'll keep this branch updated for the
+feedback I get here.
+
+Best regards
+Uwe
+
+Uwe Kleine-König (164):
+  pwm: Provide an inline function to get the parent device of a given
+    chip
+  pwm: Provide wrappers for storing and getting driver private data
+  pwm: Provide pwmchip_alloc() function and a devm variant of it
+  pwm: ab8500: Make use of pwmchip_parent() accessor
+  pwm: ab8500: Introduce a local pwm_chip variable in .probe()
+  pwm: ab8500: Make use of devm_pwmchip_alloc() function
+  pwm: apple: Make use of devm_pwmchip_alloc() function
+  pwm: atmel: Change prototype of a helper to prepare further changes
+  pwm: atmel: Make use of pwmchip_parent() accessor
+  pwm: atmel: Make use of devm_pwmchip_alloc() function
+  pwm: atmel-hlcdc: Prepare removing pwm_chip from driver data
+  pwm: atmel-hlcdc: Make use of devm_pwmchip_alloc() function
+  pwm: atmel-tcb: Make use of pwmchip_parent() accessor
+  pwm: atmel-tcb: Prepare removing pwm_chip from driver data
+  pwm: atmel-tcb: Make use of devm_pwmchip_alloc() function
+  pwm: bcm2835: Make use of devm_pwmchip_alloc() function
+  pwm: bcm-iproc: Make use of devm_pwmchip_alloc() function
+  pwm: bcm-kona: Make use of pwmchip_parent() accessor
+  pwm: bcm-kona: Make use of devm_pwmchip_alloc() function
+  pwm: berlin: Prepare removing pwm_chip from driver data
+  pwm: berlin: Make use of devm_pwmchip_alloc() function
+  pwm: brcmstb: Make use of devm_pwmchip_alloc() function
+  pwm: clk: Prepare removing pwm_chip from driver data
+  pwm: clk: Make use of devm_pwmchip_alloc() function
+  pwm: clps711x: Make use of devm_pwmchip_alloc() function
+  pwm: crc: Simplify code to determine the pwmchip's parent device
+  pwm: crc: Make use of pwmchip_parent() accessor
+  pwm: crc: Make use of devm_pwmchip_alloc() function
+  pwm: cros-ec: Change prototype of helpers to prepare further changes
+  pwm: cros-ec: Make use of pwmchip_parent() accessor
+  pwm: cros-ec: Make use of devm_pwmchip_alloc() function
+  pwm: dwc: Prepare removing pwm_chip from driver data
+  pwm: dwc: Make use of devm_pwmchip_alloc() function
+  pwm: dwc-core: Make use of pwmchip_parent() accessor
+  pwm: ep93xx: Make use of pwmchip_parent() accessor
+  pwm: ep93xx: Make use of devm_pwmchip_alloc() function
+  pwm: fsl-ftm: Change prototype of a helper to prepare further changes
+  pwm: fsl-ftm: Make use of pwmchip_parent() accessor
+  pwm: fsl-ftm: Prepare removing pwm_chip from driver data
+  pwm: fsl-ftm: Make use of devm_pwmchip_alloc() function
+  pwm: hibvt: Consistently name driver data hi_pwm_chip
+  pwm: hibvt: Make use of devm_pwmchip_alloc() function
+  pwm: img: Drop write-only variable from driver private data
+  pwm: img: Make use of pwmchip_parent() accessor
+  pwm: img: Prepare removing pwm_chip from driver data
+  pwm: img: Make use of devm_pwmchip_alloc() function
+  pwm: imx1: Make use of devm_pwmchip_alloc() function
+  pwm: imx27: Make use of pwmchip_parent() accessor
+  pwm: imx27: Make use of devm_pwmchip_alloc() function
+  pwm: imx-tpm: Make use of devm_pwmchip_alloc() function
+  pwm: intel-lgm: Make use of devm_pwmchip_alloc() function
+  pwm: iqs620a: Create a wrapper for converting a pwm_chip to driver
+    data
+  pwm: iqs620a: Prepare removing pwm_chip from driver data
+  pwm: iqs620a: Make use of devm_pwmchip_alloc() function
+  pwm: jz4740: Change prototype of a helper to prepare further changes
+  pwm: jz4740: Make use of pwmchip_parent() accessor
+  pwm: jz4740: Make use of devm_pwmchip_alloc() function
+  pwm: keembay: Make use of devm_pwmchip_alloc() function
+  pwm: lp3943: Make use of devm_pwmchip_alloc() function
+  pwm: lpc18xx-sct: Drop hardly used member from driver private data
+  pwm: lpc18xx-sct: Make use of pwmchip_parent() accessor
+  pwm: lpc18xx-sct: Prepare removing pwm_chip from driver data
+  pwm: lpc18xx-sct: Make use of devm_pwmchip_alloc() function
+  pwm: lpc32xx: Make use of devm_pwmchip_alloc() function
+  pwm: lpss: Make use of pwmchip_parent() accessor
+  pwm: lpss: Don't set driver data
+  pwm: lpss-*: Make use of devm_pwmchip_alloc() function
+  pwm: mediatek: Make use of pwmchip_parent() accessor
+  pwm: mediatek: Make use of devm_pwmchip_alloc() function
+  pwm: meson: Change prototype of a few helpers to prepare further
+    changes
+  pwm: meson: Make use of pwmchip_parent() accessor
+  pwm: meson: Make use of devm_pwmchip_alloc() function
+  pwm: microchip-core: Make use of devm_pwmchip_alloc() function
+  pwm: mtk-disp: Make use of pwmchip_parent() accessor
+  pwm: mtk-disp: Make use of devm_pwmchip_alloc() function
+  pwm: mxs: Make use of devm_pwmchip_alloc() function
+  pwm: ntxec: Make use of devm_pwmchip_alloc() function
+  pwm: omap-dmtimer: Make use of pwmchip_parent() accessor
+  pwm: omap-dmtimer: Prepare removing pwm_chip from driver data
+  pwm: omap-dmtimer: Make use of devm_pwmchip_alloc() function
+  pwm: pca9685: Prepare removing pwm_chip from driver data
+  pwm: pca9685: Make use of pwmchip_parent() accessor
+  pwm: pca9685: Make use of devm_pwmchip_alloc() function
+  pwm: pxa: Make use of devm_pwmchip_alloc() function
+  pwm: raspberrypi-poe: Make use of pwmchip_parent() accessor
+  pwm: raspberrypi-poe: Make use of devm_pwmchip_alloc() function
+  pwm: rcar: Make use of pwmchip_parent() accessor
+  pwm: rcar: Prepare removing pwm_chip from driver data
+  pwm: rcar: Make use of devm_pwmchip_alloc() function
+  pwm: renesas-tpu: Make use of devm_pwmchip_alloc() function
+  pwm: rochchip: Prepare removing pwm_chip from driver data
+  pwm: rockchip: Make use of devm_pwmchip_alloc() function
+  pwm: rz-mtu3: Make use of pwmchip_parent() accessor
+  pwm: rz-mtu3: Prepare removing pwm_chip from driver data
+  pwm: rz-mtu3: Make use of devm_pwmchip_alloc() function
+  pwm: samsung: Simplify code to determine the pwmchip's parent device
+  pwm: samsung: Change prototype of helpers to prepare further changes
+  pwm: samsung: Make use of pwmchip_parent() accessor
+  pwm: samsung: Simplify by using devm functions in probe
+  pwm: samsung: Simplify using dev_err_probe()
+  pwm: samsung: Make use of devm_pwmchip_alloc() function
+  pwm: sifive: Simplify code to determine the pwmchip's parent device
+  pwm: sifive: Prepare removing pwm_chip from driver data
+  pwm: sifive: Make use of pwmchip_parent() accessor
+  pwm: sifive: Make use of devm_pwmchip_alloc() function
+  pwm: sl28cpld: Make use of devm_pwmchip_alloc() function
+  pwm: spear: Make use of devm_pwmchip_alloc() function
+  pwm: sprd: Rework how the available channels are counted
+  pwm: sprd: Drop duplicated tracking of the parent device
+  pwm: sprd: Make use of devm_pwmchip_alloc() function
+  pwm: sti: Prepare removing pwm_chip from driver data
+  pwm: sti: Make use of devm_pwmchip_alloc() function
+  pwm: stm32: Simplify code to determine the pwmchip's parent device
+  pwm: stm32: Change prototype of a helper to prepare further changes
+  pwm: stm32: Prepare removing pwm_chip from driver data
+  pwm: stm32: Change prototype of helper that detects npwm to prepare
+    further changes
+  pwm: stm32: Make use of devm_pwmchip_alloc() function
+  pwm: stm32-lp: Simplify code to determine the pwmchip's parent device
+  pwm: stm32-lp: Prepare removing pwm_chip from driver data
+  pwm: stm32-lp: Make use of pwmchip_parent() accessor
+  pwm: stm32-lp: Make use of devm_pwmchip_alloc() function
+  pwm: stmpe: Make use of pwmchip_parent() accessor
+  pwm: stmpe: Make use of devm_pwmchip_alloc() function
+  pwm: sun4i: Make use of pwmchip_parent() accessor
+  pwm: sun4i: Prepare removing pwm_chip from driver data
+  pwm: sun4i: Consistently name driver data sun4ichip
+  pwm: sun4i: Make use of devm_pwmchip_alloc() function
+  pwm: sunplus: Make use of devm_pwmchip_alloc() function
+  pwm: tegra: Drop duplicated tracking of the parent device
+  pwm: tegra: Prepare removing pwm_chip from driver data
+  pwm: tegra: Make use of devm_pwmchip_alloc() function
+  pwm: tiecap: Simplify code to determine the pwmchip's parent device
+  pwm: tiecap: Change prototype of helpers to prepare further changes
+  pwm: tiecap: Make use of pwmchip_parent() accessor
+  pwm: tiecap: Make use of devm_pwmchip_alloc() function
+  pwm: tiehrpwm: Simplify code to determine the pwmchip's parent device
+  pwm: tiehrpwm: Change prototype of helpers to prepare further changes
+  pwm: tiehrpwm: Make use of pwmchip_parent() accessor
+  pwm: tiehrpwm: Make use of devm_pwmchip_alloc() function
+  pwm: twl: Make use of pwmchip_parent() accessor
+  pwm: twl: Make use of devm_pwmchip_alloc() function
+  pwm: twl-led: Make use of pwmchip_parent() accessor
+  pwm: twl-led: Make use of devm_pwmchip_alloc() function
+  pwm: visconti: Make use of devm_pwmchip_alloc() function
+  pwm: vt8500: Change prototype of a helper to prepare further changes
+  pwm: vt8500: Introduce a local pwm_chip variable in .probe()
+  pwm: vt8500: Make use of pwmchip_parent() accessor
+  pwm: vt8500: Make use of devm_pwmchip_alloc() function
+  pwm: xilinx: Prepare removing pwm_chip from driver data
+  pwm: xilinx: Make use of devm_pwmchip_alloc() function
+  gpio: mvebu: Make use of devm_pwmchip_alloc() function
+  drm/bridge: ti-sn65dsi86: Make use of pwmchip_parent() accessor
+  drm/bridge: ti-sn65dsi86: Make use of devm_pwmchip_alloc() function
+  leds: qcom-lpg: Make use of devm_pwmchip_alloc() function
+  staging: greybus: pwm: Change prototype of helpers to prepare further
+    changes
+  staging: greybus: pwm: Make use of pwmchip_parent() accessor
+  staging: greybus: pwm: Rely on pwm framework to pass a valid hwpwm
+  staging: greybus: pwm: Drop unused gb_connection_set_data()
+  staging: greybus: pwm: Rework how the number of PWM lines is
+    determined
+  staging: greybus: pwm: Make use of devm_pwmchip_alloc() function
+  pwm: Ensure that pwm_chips are allocated using pwmchip_alloc()
+  pwm: Ensure a struct pwm has the same lifetime as its pwm_chip
+  pwm: Ensure the memory backing a PWM chip isn't freed while used
+  pwm: Make pwmchip_[sg]et_drvdata() a wrapper around dev_set_drvdata()
+
+ .../driver-api/driver-model/devres.rst        |   1 +
+ Documentation/driver-api/pwm.rst              |  11 +-
+ drivers/gpio/gpio-mvebu.c                     |  18 +-
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c         |  31 +--
+ drivers/leds/rgb/leds-qcom-lpg.c              |  16 +-
+ drivers/pinctrl/intel/pinctrl-intel.c         |   6 +-
+ drivers/pwm/Kconfig                           |   4 -
+ drivers/pwm/Makefile                          |   3 +-
+ drivers/pwm/core.c                            | 184 +++++++++++++-----
+ drivers/pwm/pwm-ab8500.c                      |  36 ++--
+ drivers/pwm/pwm-apple.c                       |  18 +-
+ drivers/pwm/pwm-atmel-hlcdc.c                 |  37 ++--
+ drivers/pwm/pwm-atmel-tcb.c                   |  32 +--
+ drivers/pwm/pwm-atmel.c                       |  34 ++--
+ drivers/pwm/pwm-bcm-iproc.c                   |  19 +-
+ drivers/pwm/pwm-bcm-kona.c                    |  23 ++-
+ drivers/pwm/pwm-bcm2835.c                     |  19 +-
+ drivers/pwm/pwm-berlin.c                      |  29 +--
+ drivers/pwm/pwm-brcmstb.c                     |  17 +-
+ drivers/pwm/pwm-clk.c                         |  27 +--
+ drivers/pwm/pwm-clps711x.c                    |  17 +-
+ drivers/pwm/pwm-crc.c                         |  22 +--
+ drivers/pwm/pwm-cros-ec.c                     |  58 +++---
+ drivers/pwm/pwm-dwc-core.c                    |  26 +--
+ drivers/pwm/pwm-dwc.c                         |  17 +-
+ drivers/pwm/pwm-dwc.h                         |   9 +-
+ drivers/pwm/pwm-ep93xx.c                      |  21 +-
+ drivers/pwm/pwm-fsl-ftm.c                     |  49 ++---
+ drivers/pwm/pwm-hibvt.c                       |  70 ++++---
+ drivers/pwm/pwm-img.c                         |  60 +++---
+ drivers/pwm/pwm-imx-tpm.c                     |  34 ++--
+ drivers/pwm/pwm-imx1.c                        |  20 +-
+ drivers/pwm/pwm-imx27.c                       |  26 +--
+ drivers/pwm/pwm-intel-lgm.c                   |  17 +-
+ drivers/pwm/pwm-iqs620a.c                     |  30 +--
+ drivers/pwm/pwm-jz4740.c                      |  36 ++--
+ drivers/pwm/pwm-keembay.c                     |  17 +-
+ drivers/pwm/pwm-lp3943.c                      |  17 +-
+ drivers/pwm/pwm-lpc18xx-sct.c                 |  34 ++--
+ drivers/pwm/pwm-lpc32xx.c                     |  21 +-
+ drivers/pwm/pwm-lpss-pci.c                    |  10 +-
+ drivers/pwm/pwm-lpss-platform.c               |  10 +-
+ drivers/pwm/pwm-lpss.c                        |  34 ++--
+ drivers/pwm/pwm-lpss.h                        |   1 -
+ drivers/pwm/pwm-mediatek.c                    |  29 +--
+ drivers/pwm/pwm-meson.c                       |  57 +++---
+ drivers/pwm/pwm-microchip-core.c              |  17 +-
+ drivers/pwm/pwm-mtk-disp.c                    |  25 ++-
+ drivers/pwm/pwm-mxs.c                         |  32 +--
+ drivers/pwm/pwm-ntxec.c                       |  14 +-
+ drivers/pwm/pwm-omap-dmtimer.c                |  47 +++--
+ drivers/pwm/pwm-pca9685.c                     | 161 +++++++--------
+ drivers/pwm/pwm-pxa.c                         |  21 +-
+ drivers/pwm/pwm-raspberrypi-poe.c             |  20 +-
+ drivers/pwm/pwm-rcar.c                        |  27 ++-
+ drivers/pwm/pwm-renesas-tpu.c                 |  20 +-
+ drivers/pwm/pwm-rockchip.c                    |  24 +--
+ drivers/pwm/pwm-rz-mtu3.c                     |  60 +++---
+ drivers/pwm/pwm-samsung.c                     |  94 ++++-----
+ drivers/pwm/pwm-sifive.c                      |  30 +--
+ drivers/pwm/pwm-sl28cpld.c                    |  13 +-
+ drivers/pwm/pwm-spear.c                       |  18 +-
+ drivers/pwm/pwm-sprd.c                        |  58 +++---
+ drivers/pwm/pwm-sti.c                         |  61 +++---
+ drivers/pwm/pwm-stm32-lp.c                    |  31 ++-
+ drivers/pwm/pwm-stm32.c                       |  56 +++---
+ drivers/pwm/pwm-stmpe.c                       |  58 +++---
+ drivers/pwm/pwm-sun4i.c                       | 100 +++++-----
+ drivers/pwm/pwm-sunplus.c                     |  17 +-
+ drivers/pwm/pwm-tegra.c                       |  50 ++---
+ drivers/pwm/pwm-tiecap.c                      |  55 +++---
+ drivers/pwm/pwm-tiehrpwm.c                    |  72 +++----
+ drivers/pwm/pwm-twl-led.c                     |  55 +++---
+ drivers/pwm/pwm-twl.c                         |  50 +++--
+ drivers/pwm/pwm-visconti.c                    |  17 +-
+ drivers/pwm/pwm-vt8500.c                      |  43 ++--
+ drivers/pwm/pwm-xilinx.c                      |  34 ++--
+ drivers/pwm/sysfs.c                           |  45 +----
+ drivers/staging/greybus/pwm.c                 | 133 ++++++-------
+ include/linux/platform_data/x86/pwm-lpss.h    |   4 +-
+ include/linux/pwm.h                           |  56 ++++--
+ 81 files changed, 1502 insertions(+), 1423 deletions(-)
+
+
+base-commit: ab105bfee27776dd946f8003d1e895fbf7674a3f
+-- 
+2.43.0
+
