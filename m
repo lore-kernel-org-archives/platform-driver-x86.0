@@ -1,105 +1,154 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2084.outbound.protection.outlook.com [40.107.93.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B0160EE5
-	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Feb 2024 17:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707930271; cv=none; b=X70mmnvEmqch9Ij6GJBXs89bkGIH4CDl3B1u2kf+Xu4/5f316ry8/6BiDTjb572EnPRqQcYcAe8A+I8yOFRrujNGNgSHKcBBXRP7+ys0uluNRke+i2aBLqVlO1/AIIGkzEZAvoLAb0L8eZswInFu41ia8OKWjtOU0qpgupeE2bw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707930271; c=relaxed/simple;
-	bh=wCX+HSUsgVhoSVER6tbzhPegan6QMTSr09rwLcmEo6g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VPxEHyXze7mwvTT7DJxB7kiuHavnDWd3RWYpGJRFyqMa0EIkpSYHaT09t38S2BQ97vq5ld964v/P/KZSIkGz3octBpb35qQ+49epUUNSAk7v7ltqnmwd89iJ7QK4pPL2J8URpRAilVF3iQhfxvobBpIcUhOUScGkRCsxlN1nSGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1raIgG-0004d4-9q; Wed, 14 Feb 2024 18:04:20 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1raIgE-000j6s-PC; Wed, 14 Feb 2024 18:04:18 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1raIgE-004rCh-2C;
-	Wed, 14 Feb 2024 18:04:18 +0100
-Date: Wed, 14 Feb 2024 18:04:18 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
-	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, kernel@pengutronix.de, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v6 067/164] pwm: lpss-*: Make use of devm_pwmchip_alloc()
- function
-Message-ID: <56rydkozta2nl3jsxaitcno5gdygrvvkjhmbtji7vh7pf2vqpk@7znvz5qwtkvu>
-References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
- <b567ab5dd992e361eb884fa6c2cac11be9c7dde3.1707900770.git.u.kleine-koenig@pengutronix.de>
- <Zcy2GbkjX7N6buB9@smile.fi.intel.com>
- <asyro4yemnlljhyjxk7dxzzo3nlhqxq7hg5vk7lirx6gtknqsh@4jd42jhr6bkp>
- <CAHp75VffQUet_ZiE4-e-DzjzxMoNM8L=0WQiommi=hc1Hr9sxg@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1303813DB88;
+	Wed, 14 Feb 2024 21:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707947911; cv=fail; b=dGj991jgtXPgd+sMeg6qU4wXIO8cT3oTL6cwXo5GIYcJHe/Vk2nqqSv5VCisvg6F0RuywPkF3MAt/51+uMZp77SFtKhd7LikAzKHNEfnnUL9UnnrDGgCFM1UvLeWIqHk+nomj6AbrDR/qnJpD3w7ps+AOhaTB5aGDrImcDwYl54=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707947911; c=relaxed/simple;
+	bh=AmvfXaG1bBkcxyppUfDsMfpxCE0HNOi/O89YjBKTzNc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YPpEaQt2YBfFFjsRWeCf+7IDsrTiptPBD9BvF/HLydogoBhrASyaDyUYI1Mk3o1hkhhksWHM9B8zzTb42DeMrJTS2HjrqQa+s1+v0kExWeGOx76/g732wtJo3GgJATSOsKfNy4xQLkdvqHbjt26H8Ye/f/eEzOj+lS0HJk8W/yE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=m5YUhAvp; arc=fail smtp.client-ip=40.107.93.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="m5YUhAvp"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Vxr66pRLJeieSgqxFjVs4NN330sXRuzS9iiOwnMjkParg763oTEogTtp8aKfMBQpQCkR6h/9FnLRvG/Ao3UZLeo4k+B4Hs7k37R4zUaJ58wZCkKjk8uQrTaccuw5W0OLIlJ78XyJZvodjxBJx6bYShe1CvwKxo5n8GOAYvCTmNbcamWH22YCtx60+LzYE+UZ1CXO/RtAoivt9RzVuwUX5y/A9AWX9zreA2+DVl94w6XlCPGU1EOzTg7dwncf4o2ActcljH8lJLZh/O7bZUQRUUcTS92xOAe1uus+1M9zj3G9VIIWzFVhyxYXOp3VMg4zhwmhtSBkNWXcYZobOuum6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2qqdtiNgAqw0BO6nbf/U2/XD22JRWHwjPHFynBAaKHo=;
+ b=K9BtPOftv3qpKt0knAhgpoKUHU1lJO09yaWfE1Iy2B+2ryKPxh6nXOE2RxQgdpYNuHvfyEqjn7yQ+N7de6I1BNfsznNYlrFBH0Ebzy0ZiwfAbFDhev/Nj0PXKwp+xLlSOE4eUARmXR8lUQF53aZ8l28MmsOjmky5Gs8FJl+G6O0MqQ8789SJDZg5oFBjq+hFcLSX8vzQoYP2LSsbycV/zm1X1GzqxMX8olr12IDRj0CCVYvlPG55wO6Xbu0UuIOiI9Q7sBAybg8uLVU8rFtBYADoaJA62fT9rzSkr2bYSiOdek+aWokLZ4ZCX/63eZbZ7w97pl6nNv7GP4m8b2EmxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=ffwll.ch smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2qqdtiNgAqw0BO6nbf/U2/XD22JRWHwjPHFynBAaKHo=;
+ b=m5YUhAvp5IsxSQXmHPMQLQEGpSi0wuVML9zsO2y2A9nPOOAwBNzYU1KtnLKlQ/zxdpxcVvd4QzSjOBJK0WRJPoluTcmhRTD/q4Ms0o3saq0Jgux7nr9KSGiO7UvkxvbyIUiSSOB5S+JBNVjqIzftSY6fpuTfNXxSP6jWNm6U1Ew=
+Received: from BL0PR1501CA0004.namprd15.prod.outlook.com
+ (2603:10b6:207:17::17) by MW4PR12MB8612.namprd12.prod.outlook.com
+ (2603:10b6:303:1ec::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.25; Wed, 14 Feb
+ 2024 21:58:27 +0000
+Received: from MN1PEPF0000ECD9.namprd02.prod.outlook.com
+ (2603:10b6:207:17:cafe::df) by BL0PR1501CA0004.outlook.office365.com
+ (2603:10b6:207:17::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.41 via Frontend
+ Transport; Wed, 14 Feb 2024 21:58:27 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MN1PEPF0000ECD9.mail.protection.outlook.com (10.167.242.138) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Wed, 14 Feb 2024 21:58:26 +0000
+Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 14 Feb
+ 2024 15:58:25 -0600
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: Daniel Vetter <daniel@ffwll.ch>, Jani Nikula
+	<jani.nikula@linux.intel.com>, Alex Deucher <alexander.deucher@amd.com>,
+	"Hans de Goede" <hdegoede@redhat.com>, "open list:DRM DRIVERS"
+	<dri-devel@lists.freedesktop.org>
+CC: <amd-gfx@lists.freedesktop.org>, "open list:USB SUBSYSTEM"
+	<linux-usb@vger.kernel.org>, <linux-fbdev@vger.kernel.org>,
+	<nouveau@lists.freedesktop.org>, <intel-gfx@lists.freedesktop.org>,
+	<platform-driver-x86@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
+	<linux-renesas-soc@vger.kernel.org>, "open list:ACPI"
+	<linux-acpi@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+	Melissa Wen <mwen@igalia.com>, Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v6 0/5] Add support for getting EDID over ACPI to DRM
+Date: Wed, 14 Feb 2024 15:57:51 -0600
+Message-ID: <20240214215756.6530-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="m5g6gkqfw7vsyz6v"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VffQUet_ZiE4-e-DzjzxMoNM8L=0WQiommi=hc1Hr9sxg@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECD9:EE_|MW4PR12MB8612:EE_
+X-MS-Office365-Filtering-Correlation-Id: d3b2eb89-dbc3-4b06-2218-08dc2da8128f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	eom7XwadlHEUd1nPgW4D5bqUip9Obx2DPHKyPiuHbnKwzsRorK4GwE5+R60EuJfk6Llzk/okwTUmlRhMNvDox5VSkBsTDjXmJk3bko8FBoffWmVkFoB+SGMf4kNUYwrRlzgMOSlfEuXSK3GLfP3Y60pTy0t3b4he9gpCfYZ4CqNiX1+bNFH50/fSsp4rm3PLVbUUTiNP3R1iVCnrog7hkB4dkeUN02H27CXwHAdjKOCnvN52Tu6hMAZjlsB+wWATJ0scBn2Xg8bPUz7ycgLgYFY7MEIt/3gZsucW2D8lkP8NUg+0fwDRvc/1HOxJFfoPwB5eSVpJVVxjNTTcjfoZHOss7ylftGTJv5x9nG+hHPbqtkZy7Y1uUfRw4gdg4rFQ97vnifo1sMpZojO9pAYVM3smMKyufoTGnVNkWVFBR0WOiptLatAhlXfBZKJ17dWzPzC4UQ7/EeLQfqAzc6YvtoaoWoT95MiP/jFxFqI4CQTvyyTfwRNd+qsZG9Lobvm6g5EGpwGOdLIDTq/Lb0s1Of/RDcT/eQlcmJSK6qXuYnqTEXSCsk+N5Gm/bYJ9YQcvRuBWJQU6pmbHmb9ADjG17wZkY42wyl/QhNTRelRAd3vbTpYwGSgOBeC8tQr5DaV16oMcAyyvS+PK/nDvV/G8LwDKx+f3Blk1Wg5O7q+zsiY=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(39860400002)(376002)(136003)(346002)(230922051799003)(1800799012)(64100799003)(451199024)(36860700004)(82310400011)(186009)(46966006)(40470700004)(6666004)(86362001)(41300700001)(36756003)(7696005)(83380400001)(4326008)(70206006)(8936002)(70586007)(8676002)(54906003)(1076003)(110136005)(2616005)(316002)(16526019)(2906002)(26005)(44832011)(7416002)(336012)(478600001)(426003)(5660300002)(82740400003)(81166007)(356005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2024 21:58:26.8424
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3b2eb89-dbc3-4b06-2218-08dc2da8128f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MN1PEPF0000ECD9.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB8612
 
+This series adds the ability to fetch the EDID through ACPI for laptop
+panels. Drivers need to opt into the behavior.
 
---m5g6gkqfw7vsyz6v
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In this series it's enabled by default for all eDP or LVDS panels with
+AMDGPU and certain panels for Nouveau.
 
-On Wed, Feb 14, 2024 at 06:09:47PM +0200, Andy Shevchenko wrote:
-> On Wed, Feb 14, 2024 at 6:01=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Wed, Feb 14, 2024 at 02:46:17PM +0200, Andy Shevchenko wrote:
->=20
-> > (i.e. I didn't add your Reviewed-by tag because I didn't capitalize
-> > pwm).
->=20
-> Are you expecting me to bikeshed?! :-)
-> Please, add it there.
+Mario Limonciello (5):
+  drm: Stop using `select ACPI_VIDEO` in all drivers
+  drm: Stop using `select BACKLIGHT_CLASS_DEVICE`
+  drm: Add support to get EDID from ACPI
+  drm/amd: Fetch the EDID from _DDC if available for eDP
+  drm/nouveau: Use drm_edid_read_acpi() helper
 
-No, not expecting it, but taking the possibility into account :-)
-And I prefer being told that I'm over-cautious and should add it over
-being told to have made a wrong assumption and should drop it.
+ drivers/gpu/drm/Kconfig                       |   1 +
+ drivers/gpu/drm/amd/amdgpu/Kconfig            |   9 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu.h           |   1 +
+ .../gpu/drm/amd/amdgpu/amdgpu_connectors.c    |   3 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c       |   8 ++
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |   4 +-
+ .../amd/display/amdgpu_dm/amdgpu_dm_helpers.c |   2 +
+ drivers/gpu/drm/bridge/Kconfig                |   2 +-
+ drivers/gpu/drm/drm_edid.c                    | 109 ++++++++++++++++--
+ drivers/gpu/drm/fsl-dcu/Kconfig               |   2 +-
+ drivers/gpu/drm/gma500/Kconfig                |   7 +-
+ drivers/gpu/drm/gud/Kconfig                   |   2 +-
+ drivers/gpu/drm/i915/Kconfig                  |   9 +-
+ drivers/gpu/drm/nouveau/Kconfig               |   9 +-
+ drivers/gpu/drm/nouveau/nouveau_acpi.c        |  27 -----
+ drivers/gpu/drm/nouveau/nouveau_acpi.h        |   2 -
+ drivers/gpu/drm/nouveau/nouveau_connector.c   |  35 +++---
+ drivers/gpu/drm/radeon/Kconfig                |   9 +-
+ drivers/gpu/drm/renesas/shmobile/Kconfig      |   2 +-
+ drivers/gpu/drm/solomon/Kconfig               |   2 +-
+ drivers/gpu/drm/tilcdc/Kconfig                |   2 +-
+ drivers/gpu/drm/tiny/Kconfig                  |  14 +--
+ drivers/gpu/drm/xe/Kconfig                    |   8 +-
+ drivers/platform/loongarch/Kconfig            |   2 +-
+ drivers/platform/x86/Kconfig                  |   4 +-
+ drivers/staging/olpc_dcon/Kconfig             |   2 +-
+ drivers/usb/misc/Kconfig                      |   2 +-
+ drivers/video/fbdev/core/Kconfig              |   2 +-
+ include/drm/drm_connector.h                   |   6 +
+ include/drm/drm_edid.h                        |   1 +
+ 30 files changed, 165 insertions(+), 123 deletions(-)
 
-Best regards
-Uwe
+-- 
+2.34.1
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---m5g6gkqfw7vsyz6v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXM8pEACgkQj4D7WH0S
-/k6HXgf/eIC0sD9rIJkIlPWCyb3ThKDg2BNS036wLhgnQPeBRwvDj6P/S5LtqurR
-W8RJavLSaWeYeUQHlc5P4iipGJ8TFyTfAWhi/jjuXXkE/CqImbR0njw836ctuA2j
-n2/p4p2Ag9fOD1I2N5xPFnytICRay2P6uWt65LLLPfdR8TW+jxPUZVXgXTUM0fA1
-fA/DEFQU5fBbINQvIVQcxd3HwOlDd2uDt220FcAlesKS8xj8YaJ7xzv/AIP0ja0+
-kbVrGB6Pq1JmQsis4OwWqCHhvI/dOzkJz9BCILtnnm4V5+f8aifEpIOGXkK6md8U
-cEhTHR0OaRbWVQm1aGZIZxerQ+GkUw==
-=WKaD
------END PGP SIGNATURE-----
-
---m5g6gkqfw7vsyz6v--
