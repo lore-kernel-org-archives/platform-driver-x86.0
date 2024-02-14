@@ -1,108 +1,244 @@
-Received: from ganymed.uberspace.de (ganymed.uberspace.de [185.26.156.242])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B92562810
-	for <platform-driver-x86@vger.kernel.org>; Tue, 13 Feb 2024 23:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.242
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0A811183;
+	Wed, 14 Feb 2024 05:30:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707868158; cv=none; b=ft1AtKhPhX68TAZGCwl7TQl2+dAdJecu7XvfKZbjQzTcGqAObi/EgFnSX8GU8eIzzs5kPEYdjx8EHB51cNtwnuZOltQk6OczIu7DnLmMFs2nFrz47UjUh0pJREoArlz4MYz3rRUghVEiVUdn4wHhPGhzLgvFiNv2E/e+hKIk+7A=
+	t=1707888645; cv=none; b=iphRUd73/7m/2wr7m8nlOKu5jo3KjI93JIZ7Y0jpqmrwHx2JUpbFW2WDfesJHhFC8pHyZkOttrIwk0zw9NnYIh83n1spQVJXvAsYJZhr+Dfil7HJsWeJIo5WA5dfG0XLwMSSlSY3DjYvCDbSReHXaMQT0Kx381NzqISGpPqr6cM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707868158; c=relaxed/simple;
-	bh=K6qmSw/olMZIPUUWCDdxnt2hrXt4WqbeyUuSw2Lmx58=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=EpPmCh4JHKad7zce4KJ0kG4sgfwaAcdBrm6Ft4CFNk0VFdIgEGYkAJSylXgwXGF+6qGvGDxXPTjiPuQW1GjgW0P6f97GNc3DFEumVC5YKeFdLdl9dGsfaZH0rm1TFdSh+Xcqek5+9WYTCDh5D8bCZ8/beuVzVPre6RK/1ncKFmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=a-kobel.de; spf=pass smtp.mailfrom=a-kobel.de; dkim=fail (0-bit key) header.d=a-kobel.de header.i=@a-kobel.de header.b=MKoIjxRE reason="key not found in DNS"; arc=none smtp.client-ip=185.26.156.242
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=a-kobel.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a-kobel.de
+	s=arc-20240116; t=1707888645; c=relaxed/simple;
+	bh=Dpo6g6sxK3vAauBoF3mHDOYKnH0CVdQFwl2a9oAlRUI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RGl+z62INSQ9cnByZEFIu0VlASNcsNXN0Fspd6PRxJtIudBawAYQipqt5A4ARvXS0J091notYr7W8UJjpG62IkXMW+BpvYednyswtbdKO4c0GwUckXsG/KGyKxFYCnfbzoV8EgWoHhhI9bVOP0i0zOz3Glm3rdRKrnXR17fra2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OOi8IsD0; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=a-kobel.de header.i=@a-kobel.de header.b="MKoIjxRE"
-Received: (qmail 16220 invoked by uid 989); 13 Feb 2024 23:49:11 -0000
-Authentication-Results: ganymed.uberspace.de;
-	auth=pass (plain)
-Received: from unknown (HELO unkown) (::1)
-	by ganymed.uberspace.de (Haraka/3.0.1) with ESMTPSA; Wed, 14 Feb 2024 00:49:11 +0100
-Message-ID: <9dfc79ce-faea-4c55-a3cd-17bb8d8efa54@a-kobel.de>
-Date: Wed, 14 Feb 2024 00:49:11 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OOi8IsD0"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d73066880eso46650105ad.3;
+        Tue, 13 Feb 2024 21:30:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707888643; x=1708493443; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=c/sbBk2n6W8ORZ7uhudihLLqVzHuUrsjy8h+SricNyE=;
+        b=OOi8IsD0OZuAUn/KY4NoADB25luspoF+oblrtWDyiQ8ew5HEqH6V6k0v3GxTx9zjrr
+         YhAn4kyzx9GTzNPV3sWRm4h8FMBfN0ajKCP6p8jaV51jrKq4SZdOrq8J52898xIQiybe
+         gIOAUzNLU1iUHTJSLE+RwDvDnZBiuPtV9yVC/H1b3kTVUv/vByp0lMbbWHxT5yCC7UZw
+         4bxflHE9XWnBnpJnHc4aLdrsd1AenNtb6yGXFRk/fG/F7Zrz387mBDeYvFLpwB0yx2Q8
+         wyOD4HMOx2CsbHOt16MTa7swQEoXmTRJQPM8GKqXhtdaYiscPwYtqk6TBwa9R0i9Ke5i
+         tSWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707888643; x=1708493443;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c/sbBk2n6W8ORZ7uhudihLLqVzHuUrsjy8h+SricNyE=;
+        b=AMhBnr8ddIvGdzunOKj7osjRKM3x+k/vV1whrSjYhL5HlJLHZXE8AxtFO15WR6h6Ow
+         zS3BtcaLeJpzSuE9vUbg7GCyDrHWpPXAeoLg0krR/Ms92VpcjJYNwgoRXgHV1412AdDh
+         21Uf1vUglDe+plEdHf2lOdI7q+MdOa+ss73zqD12Oj8UnvZxAWl0zHDHDt10sm+HY57x
+         RouKy7WSKoxceLtVEvYqIIJwPx+O08kU4Zfq92Zyh0Vdy2lA9eUROYhvWRp50SnFadQM
+         pkKUYhQ3eJWPmCiRvyuihxGT8jX+GP/HobKmSF2TnRES51OINhhJPaP9vgHFyWzC5oZL
+         praA==
+X-Forwarded-Encrypted: i=1; AJvYcCXQq/owylw5S170OrqKadsOXNPNZQS9fre+Srw6ldavZqAvRKXbPFmpNOmW8LSTf9U8YW95VlMQ+H2WDiRgCm0x0QzhOo96aDFrs4Hv
+X-Gm-Message-State: AOJu0YxNvHgeSgt0TPV28eviehedZ8jAAihliHni3s9m47Ud9BqUv0+p
+	qOZ38TCdGLtk8oaemPQ+TeVH2P3X5AHxo5JWlaSL9/Iudg+NAkwo
+X-Google-Smtp-Source: AGHT+IHSnJIoVPAnEUWf/FE05TMfN7Yvs/5N9ZhglJgInjg61rfGyt9zj8S4UjW5dD5MC4gt0U8tDQ==
+X-Received: by 2002:a17:903:183:b0:1d8:ee41:de89 with SMTP id z3-20020a170903018300b001d8ee41de89mr1954970plg.69.1707888642529;
+        Tue, 13 Feb 2024 21:30:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVVvyB7fcy9Fhfykt0RRukcrKwI7zTE91Tt8Tmoicvt5ndF7ZDWLDNv4seZGzgyPeHrU9RKCaXX6wAgVJ+B6phrDlfhr2HSbvdbYZ0gc3G2B8RiGXFNzn5DDNVG2jlC5Lm4EiKD33Pf8C2+v4S95K8xXFzJTRysLwUKZkSm1GKhs7eP5HZ7NqpCSkGAfzGQgJDdXf7qM4IoTZO7yX1Ck3ToIWbmUxf3TMel4NCrTdM3KsjmnJjilO3ceQFSUpJfkVxGfeXT05CmPQ==
+Received: from ares2-ThinkPad-L13-Yoga-Gen-2.. ([2400:2410:b9a0:8400:93ae:f463:289c:d6c5])
+        by smtp.googlemail.com with ESMTPSA id ll5-20020a170903090500b001da186aa72csm2921904plb.17.2024.02.13.21.30.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 21:30:42 -0800 (PST)
+From: Vishnu Sankar <vishnuocv@gmail.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mpearson-lenovo@squebb.ca,
+	vsankar@lenovo.com,
+	Vishnu Sankar <vishnuocv@gmail.com>,
+	Ilpo Jarvinen <ilpo.jarvinen@intel.com>
+Subject: [PATCH 1/2] platform/x86: thinkpad_acpi: Simplify thermal mode checking
+Date: Wed, 14 Feb 2024 14:29:58 +0900
+Message-Id: <20240214052959.8550-1-vishnuocv@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Alexander Kobel <a-kobel@a-kobel.de>
-Subject: Re: platform/x86: intel-vbtn: 14c200b7ca46 breaks suspend on Thinkpad
- X1 Tablet Gen2
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>
-References: <295984ce-bd4b-49bd-adc5-ffe7c898d7f0@a-kobel.de>
-Content-Language: en-US
-In-Reply-To: <295984ce-bd4b-49bd-adc5-ffe7c898d7f0@a-kobel.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Bar: --
-X-Rspamd-Report: BAYES_HAM(-2.379904) XM_UA_NO_VERSION(0.01) MIME_GOOD(-0.1)
-X-Rspamd-Score: -2.469904
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=a-kobel.de; s=uberspace;
-	h=from;
-	bh=K6qmSw/olMZIPUUWCDdxnt2hrXt4WqbeyUuSw2Lmx58=;
-	b=MKoIjxREtyiNq0KIDsbyZ5eqZ3BVjmzuTDBsTao7LclkyeiQUdO/xt+uwbQ2si44byfT661FrH
-	VzIQKjnCOMoh+tsOzbDBv1SlfdQRzOR8TUHY5S61pNKdEakqGvUqJm9hDNMD5bX70amlHf8LHKKq
-	wHwVEelrrl2snd6sFN6Gkt8AvHwIBOMVAgnyjeG1RmC+2gQ3ni4uyyokZXdfUXSsvdkNeOPhWC0z
-	GeDKpPkVDBxHp8elgqQelygwQ8s3HHxp1gLbwWxXl2/5U0+YwyB/Bv5ifXBBJD2gZ4mk0NpldD0F
-	ex9dqaTBG+DRWtjiShk+CI4T7rWW3DfbyFTxzUfT1AwRNarPxbV6mPrCBIkyVCj2TDgEHm/oCq4G
-	cT8/RZQv6ygGp5oZseFHoVx5xXBtmlJmJyCWMPtW/9nFIWi2kPhOmD2koCKwPDz7vdTIPNMqKomt
-	DGz4JNOUUkdZ+YXRogVZ6X4eWeGcZCzWncFs6NNf3xfKTMoa9YxvhJMbkLCUUiN0R/4iVCENG/zV
-	qLDq1lV/n4UP2mUf5BXIaTPAb0m/IAWD5D3emyw5cAL4c6DYaVmJlsXgiQILX21CcSaSwxfYFPKv
-	Pwcv/72goFhW/2/1cxliZpUL78sAkKlSCSHCudp5lwGUPQ5EWuEYIdmPaitCkZwxw/d7RTWLCqlw
-	E=
+Content-Transfer-Encoding: 8bit
 
-P.S.: I completely failed to find any explanation/definition of "VBDL" or "VGBS".  If someone could point me to that, I might be able to experiment more on my own.
+Add a thermal_read_mode_check helper function to make the code
+simpler during init.
+This helps particularly when the new TPEC_12 mode is added in
+the next patch.
 
-If I understand correctly, the purpose of acpi_evaluate_object(handle, "VBDL", NULL, NULL) is to evaluate the SW_TABLET_MODE state and to perform some kind of reset for devices that don't update the state otherwise after resume.  Calling detect_table_mode() instead seems to satisfy at least the first purpose, and remedies the problem for me - but I guess that's not a full solution?
+Suggested-by: Ilpo Jarvinen <ilpo.jarvinen@intel.com>
+Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 136 +++++++++++++--------------
+ 1 file changed, 66 insertions(+), 70 deletions(-)
 
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index c4895e9bc714..2428c8bd0fa2 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -6147,6 +6147,71 @@ struct ibm_thermal_sensors_struct {
+ static enum thermal_access_mode thermal_read_mode;
+ static bool thermal_use_labels;
+ 
++/* Function to check thermal read mode */
++static enum thermal_access_mode thermal_read_mode_check(void)
++{
++	u8 t, ta1, ta2, ver = 0;
++	int i;
++
++	if (thinkpad_id.ec_model) {
++		/*
++		 * Direct EC access mode: sensors at registers
++		 * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
++		 * non-implemented, thermal sensors return 0x80 when
++		 * not available
++		 * The above rule is unfortunately flawed. This has been seen with
++		 * 0xC2 (power supply ID) causing thermal control problems.
++		 * The EC version can be determined by offset 0xEF and at least for
++		 * version 3 the Lenovo firmware team confirmed that registers 0xC0-0xC7
++		 * are not thermal registers.
++		 */
++		if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
++			pr_warn("Thinkpad ACPI EC unable to access EC version\n");
++
++		ta1 = ta2 = 0;
++		for (i = 0; i < 8; i++) {
++			if (acpi_ec_read(TP_EC_THERMAL_TMP0 + i, &t)) {
++				ta1 |= t;
++			} else {
++				ta1 = 0;
++				break;
++			}
++			if (ver < 3) {
++				if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
++					ta2 |= t;
++				} else {
++					ta1 = 0;
++					break;
++				}
++			}
++		}
++
++		if (ta1 == 0) {
++			pr_err("ThinkPad ACPI EC access misbehaving, disabling thermal sensors access\n");
++			return TPACPI_THERMAL_NONE;
++		}
++
++		if (ver >= 3) {
++			thermal_use_labels = true;
++			return TPACPI_THERMAL_TPEC_8;
++		}
++
++		return (ta2 != 0) ? TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC_8;
++	}
++
++	if (acpi_evalf(ec_handle, NULL, "TMP7", "qv")) {
++		if (tpacpi_is_ibm() &&
++		    acpi_evalf(ec_handle, NULL, "UPDT", "qv"))
++			/* 600e/x, 770e, 770x */
++			return TPACPI_THERMAL_ACPI_UPDT;
++		/* IBM/LENOVO DSDT EC.TMPx access, max 8 sensors */
++		return TPACPI_THERMAL_ACPI_TMP07;
++	}
++
++	/* temperatures not supported on 570, G4x, R30, R31, R32 */
++	return TPACPI_THERMAL_NONE;
++}
++
+ /* idx is zero-based */
+ static int thermal_get_sensor(int idx, s32 *value)
+ {
+@@ -6375,78 +6440,9 @@ static const struct attribute_group temp_label_attr_group = {
+ 
+ static int __init thermal_init(struct ibm_init_struct *iibm)
+ {
+-	u8 t, ta1, ta2, ver = 0;
+-	int i;
+-	int acpi_tmp7;
+-
+ 	vdbg_printk(TPACPI_DBG_INIT, "initializing thermal subdriver\n");
+ 
+-	acpi_tmp7 = acpi_evalf(ec_handle, NULL, "TMP7", "qv");
+-
+-	if (thinkpad_id.ec_model) {
+-		/*
+-		 * Direct EC access mode: sensors at registers
+-		 * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
+-		 * non-implemented, thermal sensors return 0x80 when
+-		 * not available
+-		 * The above rule is unfortunately flawed. This has been seen with
+-		 * 0xC2 (power supply ID) causing thermal control problems.
+-		 * The EC version can be determined by offset 0xEF and at least for
+-		 * version 3 the Lenovo firmware team confirmed that registers 0xC0-0xC7
+-		 * are not thermal registers.
+-		 */
+-		if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
+-			pr_warn("Thinkpad ACPI EC unable to access EC version\n");
+-
+-		ta1 = ta2 = 0;
+-		for (i = 0; i < 8; i++) {
+-			if (acpi_ec_read(TP_EC_THERMAL_TMP0 + i, &t)) {
+-				ta1 |= t;
+-			} else {
+-				ta1 = 0;
+-				break;
+-			}
+-			if (ver < 3) {
+-				if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
+-					ta2 |= t;
+-				} else {
+-					ta1 = 0;
+-					break;
+-				}
+-			}
+-		}
+-		if (ta1 == 0) {
+-			/* This is sheer paranoia, but we handle it anyway */
+-			if (acpi_tmp7) {
+-				pr_err("ThinkPad ACPI EC access misbehaving, falling back to ACPI TMPx access mode\n");
+-				thermal_read_mode = TPACPI_THERMAL_ACPI_TMP07;
+-			} else {
+-				pr_err("ThinkPad ACPI EC access misbehaving, disabling thermal sensors access\n");
+-				thermal_read_mode = TPACPI_THERMAL_NONE;
+-			}
+-		} else {
+-			if (ver >= 3) {
+-				thermal_read_mode = TPACPI_THERMAL_TPEC_8;
+-				thermal_use_labels = true;
+-			} else {
+-				thermal_read_mode =
+-					(ta2 != 0) ?
+-					TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC_8;
+-			}
+-		}
+-	} else if (acpi_tmp7) {
+-		if (tpacpi_is_ibm() &&
+-		    acpi_evalf(ec_handle, NULL, "UPDT", "qv")) {
+-			/* 600e/x, 770e, 770x */
+-			thermal_read_mode = TPACPI_THERMAL_ACPI_UPDT;
+-		} else {
+-			/* IBM/LENOVO DSDT EC.TMPx access, max 8 sensors */
+-			thermal_read_mode = TPACPI_THERMAL_ACPI_TMP07;
+-		}
+-	} else {
+-		/* temperatures not supported on 570, G4x, R30, R31, R32 */
+-		thermal_read_mode = TPACPI_THERMAL_NONE;
+-	}
++	thermal_read_mode = thermal_read_mode_check();
+ 
+ 	vdbg_printk(TPACPI_DBG_INIT, "thermal is %s, mode %d\n",
+ 		str_supported(thermal_read_mode != TPACPI_THERMAL_NONE),
+-- 
+2.34.1
 
-Cheers,
-Alex
-
-
-On 13/02/2024 23.35, Alexander Kobel wrote:
-> Hi Hans, all,
-> 
-> after upgrading to 6.7.1 or 6.6.13 (LTS), my Thinkpad X1 Tablet doesn't suspend anymore. Or, rather, it suspends, but wakes again immediately. This happens regardless of whether the keyboard is attached or not, with all ACPI wakeup triggers disabled according to /proc/acpi/wakeup.
-> I could identify the following commit as the culprit:
-> 
-> 	14c200b7ca46b9a9f4af9e81d258a58274320b6f
-> 	platform/x86: intel-vbtn: Fix missing tablet-mode-switch events
-> 
-> First, it's a suspiciously related patch going into both kernel versions.
-> Second, unloading intel-vbtn resolves the problem; machine suspends as usual.
-> Third, I tried modifying the patch. Commenting out the newly introduced
-> 
-> 	/* Some devices need this to report further events */
-> 	acpi_evaluate_object(handle, "VBDL", NULL, NULL);
-> 
-> resolves the problem on my machine.
-> 
-> I understand that the change was in for a reason, but the deeper meaning of that statement eludes me; is it possible that my model is quirky for that one?
-> 
-> FWIW:
-> - SW_TABLET_MODE is properly updated about half a second after I attach/detach/fold the keyboard during suspend with that statement commented out (but attaching/detaching/folding all wake the device, unless I also `echo Y > /sys/module/acpi/parameters/ec_no_wakeup` - but then I can't wake the tablet at all anymore).
-> - Folding the keyboard to the back of the device disables the keyboard.
->   With that statement in (as in 6.7.1 upstream), SW_TABLET_MODE is set to 1 (correct), but reverts to 0 again after about a second (incorrect); the keyboard remains disabled.
->   Without the statement, SW_TABLET_MODE remains on 1 until I flip back the keyboard to normal (expected behavior).
-> 
-> 
-> On a side note, I initially thought that detect_tablet_mode() in resume() is the culprit. intel_vbtn_pm_resume() is also included in the thaw callback (and I usually use hybrid suspend) and, after the patch, augmented with the detect_tablet_mode() routine.
-> If I understand correctly the description in [1], thaw is not really resume-/restore-like except perhaps for the corner case of failed hibernation image creation. Turns out it doesn't seem to cause the harm, but still: is intel_vbtn_pm_resume() on thaw really intended? The description says it's used to undo the changes made by the preceding freeze (including prepare), but this rather seems to match intel_vbtn_pm_complete()'s definition than intel_vbtn_pm_resume()'s... 
-> 
-> [1] https://www.kernel.org/doc/html/v4.12/driver-api/pm/types.html
-> 
-> 
-> Of course, I stand available for any debugging or further investigations; happy to do some work myself if someone can guide me through.
-> 
-> 
-> Cheers,
-> Alex
