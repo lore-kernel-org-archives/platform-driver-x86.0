@@ -1,204 +1,308 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC195132467;
-	Thu, 15 Feb 2024 13:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF51313173E;
+	Thu, 15 Feb 2024 14:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708005097; cv=none; b=VtuYk+6sz3c1Vg5iR6nnU+zS45VQBOqWaToy4iXiyO6Y25fLbzOAMShcTs0lRRnFh9L6LO7RYqKjCKTLgsMrtlPn66V/mdOITewWkyeV1PYG6lo5JQCwejm4OWil6Lb0Xxu/T2aygVmJYCoUN8Izm3q0XX/15zuOVCaWychAVYM=
+	t=1708006185; cv=none; b=BMz3RDxz4EfnvxTi53GK7KlPL2V/Z7QrYG/3QtGzS3mG7EZZYXAlLPGtl8OJl6hbAPMrp24UftvmSsBP/h8mpOCCz8WoPpuThbYB/y3F2mue+BLGllTVQsVxuCemrE4OXlICUcynVKqEKLp7utY78d5tur0R1TwaCcx1bBHuRV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708005097; c=relaxed/simple;
-	bh=RzDVzAMbt/0O8rLENBgNMOIiu2ews2E1U5PQyx+Ji0k=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=duthAThQ7ST3q+IY+RI12/l/pID7L0Nmhb/kMpJj1MT6zmByzVq7B5SDMxItlbgOcnxPCuti79DYQfuELHiISOzmgiKhs7y/wXpy7QpK36g0g8faMeSDsaTLkhxhBB5wvP2OHOcegKXZUBQke9WW5qKyMLtN8/I9b3PlSb4JNs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RGJ3CP/j; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708006185; c=relaxed/simple;
+	bh=ZK2umLioglf89yU9tmbEroOx64HCpi4rqovNuj54BBE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=CmqRDzPIFbwifO+rgo+UakyqwOtqvyh6QiOQUighFknjLV+IJrRksrmE0qDK7VftTa2Hch2/DDhsqrAvrFOczCRL3kOwEYHYcTpveBo+uo7OaQK7dByzF4Kg33vtNdS0x0wkozjigdsFIAqlXOTUQazuG2r9S3L5+xKrckWlc3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fYYFyqNY; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RGJ3CP/j"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4121954d4c0so3306275e9.0;
-        Thu, 15 Feb 2024 05:51:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708005094; x=1708609894; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5t9mkBRSLuX6Whm+p+USkACVg0A1ZTFUPoQmMKDP/ks=;
-        b=RGJ3CP/ji8NihQLfupeAHxS66Q+QtNvy5PxhM0MX8ofwzKLRJ4l80YaI8VMzKOg5GP
-         yeV1NGk3aArey0SyQXCgwlhmrqAv0hfLYTCOTVNrDZEJbAwDzzPEbMIxlHFgEN/eIyA4
-         JOJHqs0eN5WIlUKrz4GYDIMhkRVHSzCOwoWPnt3UjIsE1SQwaAQHlXaIEzya8btY9RhB
-         wuZqzdmqbecDlvHn+CqurKcYmfpaAGDjBRIVrY16/qHeb+kbb6zeKQ/hblN/AJ84C8Xr
-         fh7a8ThSa6yPtEeAoxs6X0DLuESPX9UGFtD3KV4adDjf56EbJ3GYqp7CF7c/qMURYLis
-         C+4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708005094; x=1708609894;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5t9mkBRSLuX6Whm+p+USkACVg0A1ZTFUPoQmMKDP/ks=;
-        b=STzCClyhCCVnz8///Rm3CjUFmeNucHivQqgorFpEp20Jocw/x7NJ4wlLWmxHdkv5PV
-         crC+0FBafKGrbwB5jQ7VzAU+2WdHrLwRJhSyheqGAJvPUibYM64ER9guIQc6f+kKRLi3
-         WP4KExTIsuWrOcypRsidUtg9lZ29inrt9OTZ/oSQiXjNmhAQbz8TEL0g0gEhc1yLNmmU
-         lN4idUYRYl/FTGyrU4I194b1hgmuKVSEULUf0HAVzAY9pRWYPNVEhPOin8muKiYR775F
-         mGnd2+htdzUJ8/qCkNRDn+GovbhbbLLwLKdgjjVbW1fwNuf6coAfEjimWqhOrm30tcDP
-         XNTw==
-X-Forwarded-Encrypted: i=1; AJvYcCXmn5akH/NV/CbhvBGsR8nz7GQhjKNHju9HZgD8xo9MMEeRkwU8BqIz6HaHI8fb7ImsdP/pZ1qkG6wi1HuPNE4OWQrcTEbiEf20gTUTZv90TYYxxF/CffJYF7bCwpo9MuOAshlfMt2hXHXel4CMicUdhF35azYFBFitxt2dAt8mMN7YExbUdxiIW3Ov8DM2fUy5jxant0Dganp0yfTRydanq/M4xXotFwew6BapbvieN4w/168YdOWJul2TcuVHV6v9aB67pgERkpdO+MfzrlHvIKJ67T6zgfYBawbO4KRYRyCunvFq9Vs7w9i2kAQZmcwZQZU4620SE48THXmksUs+mtNRmAmrIs/hkfhxoprlHDxBILx50EAWELuRHZ4=
-X-Gm-Message-State: AOJu0Yzk2lHiFiO0I+VmZqZcdn1U8ickzALl9D9GO5DGMmNIjodxFatO
-	qJnbKMnlCoLDtwUgfeUb9zYMJU49BbV/4rw2oBK8kBvdAzeDwV5o
-X-Google-Smtp-Source: AGHT+IH7k9jN1LEPjklm49kSSJGmdKPhxpWNQecPQqPdKhvRMqEI/U195h3M4bWUY8DUrcLpEFVYaQ==
-X-Received: by 2002:a05:600c:3503:b0:412:7d0:d83 with SMTP id h3-20020a05600c350300b0041207d00d83mr1601111wmq.16.1708005093670;
-        Thu, 15 Feb 2024 05:51:33 -0800 (PST)
-Received: from ?IPv6:2001:a61:3456:4e01:6ae:b55a:bd1d:57fc? ([2001:a61:3456:4e01:6ae:b55a:bd1d:57fc])
-        by smtp.gmail.com with ESMTPSA id i7-20020a05600c290700b00410add3af79sm5061337wmd.23.2024.02.15.05.51.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Feb 2024 05:51:33 -0800 (PST)
-Message-ID: <63b248efcbd62a121610cbf37ea0339bd87c99e7.camel@gmail.com>
-Subject: Re: [PATCH v6 003/164] pwm: Provide pwmchip_alloc() function and a
- devm variant of it
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Michael Walle
- <mwalle@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- linux-doc@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Paul
- Walmsley <paul.walmsley@sifive.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Paul Cercueil <paul@crapouillou.net>, 
- linux-tegra@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>, 
- Thierry Reding <thierry.reding@gmail.com>, James Clark
- <james.clark@arm.com>, Pavel Machek <pavel@ucw.cz>,  Broadcom internal
- kernel review list <bcm-kernel-feedback-list@broadcom.com>, Guenter Roeck
- <groeck@chromium.org>,  chrome-platform@lists.linux.dev, Nobuhiro Iwamatsu
- <nobuhiro1.iwamatsu@toshiba.co.jp>, Fabio Estevam <festevam@gmail.com>, 
- linux-riscv@lists.infradead.org, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
- Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh@kernel.org>, Samuel
- Holland <samuel@sholland.org>,  linux-samsung-soc@vger.kernel.org, Bjorn
- Andersson <quic_bjorande@quicinc.com>,  Florian Fainelli
- <florian.fainelli@broadcom.com>, Jonathan Corbet <corbet@lwn.net>, Sean
- Anderson <sean.anderson@seco.com>, Benson Leung <bleung@chromium.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>, Jernej
- Skrabec <jernej.skrabec@gmail.com>,  Jonathan Hunter
- <jonathanh@nvidia.com>, Hammer Hsieh <hammerh0314@gmail.com>,
- linux-rockchip@lists.infradead.org,  Chen-Yu Tsai <wens@csie.org>, Michal
- Simek <michal.simek@amd.com>, NXP Linux Team <linux-imx@nxp.com>,
- linux-leds@vger.kernel.org, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, Alim Akhtar <alim.akhtar@samsung.com>,
- linux-mips@vger.kernel.org,  linux-sunxi@lists.linux.dev,
- platform-driver-x86@vger.kernel.org,  linux-pwm@vger.kernel.org, Kees Cook
- <keescook@chromium.org>, Sven Peter <sven@svenpeter.dev>, Martin
- Blumenstingl <martin.blumenstingl@googlemail.com>,  Ray Jui
- <rjui@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Jonathan
- =?ISO-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>, Vladimir Zapolskiy
- <vz@mleia.com>, Hans de Goede <hdegoede@redhat.com>, Mark Brown
- <broonie@kernel.org>,  linux-mediatek@lists.infradead.org,
- linux-rpi-kernel@lists.infradead.org,  Baolin Wang
- <baolin.wang@linux.alibaba.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- linux-amlogic@lists.infradead.org, Orson Zhai <orsonzhai@gmail.com>, Mika
- Westerberg <mika.westerberg@linux.intel.com>,  kernel@pengutronix.de,
- linux-arm-kernel@lists.infradead.org, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Neil Armstrong
- <neil.armstrong@linaro.org>,  Alexander Shiyan <shc_work@mail.ru>, Scott
- Branden <sbranden@broadcom.com>,  linux-gpio@vger.kernel.org, Daire
- McNamara <daire.mcnamara@microchip.com>,  Chunyan Zhang
- <zhang.lyra@gmail.com>, Hector Martin <marcan@marcan.st>, 
- linux-stm32@st-md-mailman.stormreply.com, Claudiu Beznea
- <claudiu.beznea@tuxon.dev>, Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>,  Fabrice Gasnier
- <fabrice.gasnier@foss.st.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- asahi@lists.linux.dev,  Maxime Coquelin <mcoquelin.stm32@gmail.com>, Kevin
- Hilman <khilman@baylibre.com>, Shawn Guo <shawnguo@kernel.org>,  Anjelique
- Melendez <quic_amelende@quicinc.com>
-Date: Thu, 15 Feb 2024 14:51:31 +0100
-In-Reply-To: <ws4ybgtvfxqz53vk3i67suipzyqpy5y5fqeee5uf3ua6ow222n@i4ktjuorq3nl>
-References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
-	 <9577d6053a5a52536057dc8654ff567181c2da82.1707900770.git.u.kleine-koenig@pengutronix.de>
-	 <Zcy21tsntcK80hef@smile.fi.intel.com>
-	 <ws4ybgtvfxqz53vk3i67suipzyqpy5y5fqeee5uf3ua6ow222n@i4ktjuorq3nl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fYYFyqNY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708006182; x=1739542182;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=ZK2umLioglf89yU9tmbEroOx64HCpi4rqovNuj54BBE=;
+  b=fYYFyqNYcy/dvE2wayy0FXaAqRDDp2oPB4s+4Jy0QBEtZlF5k6DeiHcO
+   ZoGuxNQwpUh7ZzuIOdCJxBQufDUfLDn1gwF9i+zb0ai0DwbNfHG2Jhw2p
+   3f4GbRLefy6WSq/48WWNxj7lqsrlS+gIvxeX/NAVjkKTbCcFyLAXgjVS8
+   f/LfgHozhyB7mCiVlbZF9L2Ah8xkMcNnxFwvCYZuawuE+kV+yRufnWtF9
+   N2DGQZHsWXrQ57lX3K1N9pG7um/IIi6v6aGfTUSrSlIHPN+fEtNe22IUe
+   RMLtXazBkdp4S6XaYeVMQX6eKB/oqOhx8s52Jd/fAYdww2u9sxgOMbXa7
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="2218642"
+X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
+   d="scan'208";a="2218642"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 06:09:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
+   d="scan'208";a="8175597"
+Received: from kraszkow-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.44.13])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 06:09:36 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Mario Limonciello <mario.limonciello@amd.com>, Daniel Vetter
+ <daniel@ffwll.ch>, Alex Deucher <alexander.deucher@amd.com>, Hans de Goede
+ <hdegoede@redhat.com>, "open list:DRM DRIVERS"
+ <dri-devel@lists.freedesktop.org>
+Cc: amd-gfx@lists.freedesktop.org, "open list:USB SUBSYSTEM"
+ <linux-usb@vger.kernel.org>, linux-fbdev@vger.kernel.org,
+ nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org,
+ linux-renesas-soc@vger.kernel.org, "open list:ACPI"
+ <linux-acpi@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ Melissa Wen <mwen@igalia.com>, Mark Pearson <mpearson-lenovo@squebb.ca>,
+ Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v6 3/5] drm: Add support to get EDID from ACPI
+In-Reply-To: <20240214215756.6530-4-mario.limonciello@amd.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240214215756.6530-1-mario.limonciello@amd.com>
+ <20240214215756.6530-4-mario.limonciello@amd.com>
+Date: Thu, 15 Feb 2024 16:09:33 +0200
+Message-ID: <87a5o16cpu.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
 
-On Thu, 2024-02-15 at 13:01 +0100, Uwe Kleine-K=C3=B6nig wrote:
-> On Wed, Feb 14, 2024 at 02:49:26PM +0200, Andy Shevchenko wrote:
-> > On Wed, Feb 14, 2024 at 10:30:50AM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > > This function allocates a struct pwm_chip and driver data. Compared t=
-o
-> > > the status quo the split into pwm_chip and driver data is new, otherw=
-ise
-> > > it doesn't change anything relevant (yet).
-> > >=20
-> > > The intention is that after all drivers are switched to use this
-> > > allocation function, its possible to add a struct device to struct
-> > > pwm_chip to properly track the latter's lifetime without touching all
-> > > drivers again. Proper lifetime tracking is a necessary precondition t=
-o
-> > > introduce character device support for PWMs (that implements atomic
-> > > setting and doesn't suffer from the sysfs overhead of the /sys/class/=
-pwm
-> > > userspace support).
-> > >=20
-> > > The new function pwmchip_priv() (obviously?) only works for chips
-> > > allocated with pwmchip_alloc().
-> >=20
-> > ...
-> >=20
-> > > +#define PWMCHIP_ALIGN ARCH_DMA_MINALIGN
-> > > +
-> > > +static void *pwmchip_priv(struct pwm_chip *chip)
-> > > +{
-> > > +	return (void *)chip + ALIGN(sizeof(*chip), PWMCHIP_ALIGN);
-> > > +}
-> >=20
-> > Why not use dma_get_cache_alignment() ?
->=20
-> Hmm, that function returns 1 if ARCH_HAS_DMA_MINALIGN isn't defined. The
-> idea of using ARCH_DMA_MINALIGN was to ensure that the priv data has the
-> same minimal alignment as kmalloc(). Took my inspriration from
-> https://lore.kernel.org/r/20240209-counter-align-fix-v2-1-5777ea0a2722@an=
-alog.com
-> . The implementation of dma_get_cache_alignment suggests that not all
-> archs provide ARCH_DMA_MINALIGN? Also there is ARCH_KMALLOC_MINALIGN.
-> Hmm, don't know yet what to do here.
+On Wed, 14 Feb 2024, Mario Limonciello <mario.limonciello@amd.com> wrote:
+> Some manufacturers have intentionally put an EDID that differs from
+> the EDID on the internal panel on laptops.  Drivers that prefer to
+> fetch this EDID can set a bit on the drm_connector to indicate that
+> the DRM EDID helpers should try to fetch it and it is preferred if
+> it's present.
 
-Here it goes my 2 cents... AFAIK, ARCH_DMA_MINALIGN gives you the same alig=
-nment
-guarantees than devm_kmalloc() for instance. In some archs it will effectiv=
-ely be the
-same as ARCH_KMALLOC_MINALIGN. Now, I think it only matters if the owners o=
-f private
-data intend to have a DMA safe buffer in their structs. If that is the case=
-, we need
-to ensure a proper alignment for that structure. In IIO for example, the co=
-nstruct is
-like this:
+I just replied to a previous version of the patch [1]. Looks like all
+the comments there still hold.
 
-https://elixir.bootlin.com/linux/latest/source/drivers/iio/dac/ltc2688.c#L9=
-6
+BR,
+Jani.
 
-The buffers should come last in the struct so they are alone in the line. I=
-n IIO,
-Jonathan has a strict policy for this. Like, even if you just want to trans=
-fer 2/4
-bytes via spi, we need to make the buffer safe (apparently there are some c=
-ontrollers
-only doing DMA - even for small transfers).
 
-I would say that if unsure, go with ARCH_DMA_MINALIGN. You just might waste=
- some
-space in some archs. OTOH, if you think DMA is not really a thing for pwm c=
-hips, you
-might go ARCH_KMALLOC_MINALIGN. And since you already have your own PWMCHIP=
-_ALIGN, it
-should be easy to change the requirements down the road (if needed).
+[1] https://lore.kernel.org/r/87eddd6d41.fsf@intel.com
 
-That said, I'm not familiar with dma_get_cache_alignment().
 
-- Nuno S=C3=A1
+>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/gpu/drm/Kconfig     |   1 +
+>  drivers/gpu/drm/drm_edid.c  | 109 +++++++++++++++++++++++++++++++++---
+>  include/drm/drm_connector.h |   6 ++
+>  include/drm/drm_edid.h      |   1 +
+>  4 files changed, 109 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+> index 872edb47bb53..3db89e6af01d 100644
+> --- a/drivers/gpu/drm/Kconfig
+> +++ b/drivers/gpu/drm/Kconfig
+> @@ -8,6 +8,7 @@
+>  menuconfig DRM
+>  	tristate "Direct Rendering Manager (XFree86 4.1.0 and higher DRI support)"
+>  	depends on (AGP || AGP=n) && !EMULATED_CMPXCHG && HAS_DMA
+> +	depends on (ACPI_VIDEO || ACPI_VIDEO=n)
+>  	select DRM_PANEL_ORIENTATION_QUIRKS
+>  	select DRM_KMS_HELPER if DRM_FBDEV_EMULATION
+>  	select FB_CORE if DRM_FBDEV_EMULATION
+> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+> index 923c4423151c..cdc30c6d05d5 100644
+> --- a/drivers/gpu/drm/drm_edid.c
+> +++ b/drivers/gpu/drm/drm_edid.c
+> @@ -28,6 +28,7 @@
+>   * DEALINGS IN THE SOFTWARE.
+>   */
+>  
+> +#include <acpi/video.h>
+>  #include <linux/bitfield.h>
+>  #include <linux/cec.h>
+>  #include <linux/hdmi.h>
+> @@ -2188,6 +2189,58 @@ drm_do_probe_ddc_edid(void *data, u8 *buf, unsigned int block, size_t len)
+>  	return ret == xfers ? 0 : -1;
+>  }
+>  
+> +/**
+> + * drm_do_probe_acpi_edid() - get EDID information via ACPI _DDC
+> + * @data: struct drm_connector
+> + * @buf: EDID data buffer to be filled
+> + * @block: 128 byte EDID block to start fetching from
+> + * @len: EDID data buffer length to fetch
+> + *
+> + * Try to fetch EDID information by calling acpi_video_get_edid() function.
+> + *
+> + * Return: 0 on success or error code on failure.
+> + */
+> +static int
+> +drm_do_probe_acpi_edid(void *data, u8 *buf, unsigned int block, size_t len)
+> +{
+> +	struct drm_connector *connector = data;
+> +	struct drm_device *ddev = connector->dev;
+> +	struct acpi_device *acpidev = ACPI_COMPANION(ddev->dev);
+> +	unsigned char start = block * EDID_LENGTH;
+> +	void *edid;
+> +	int r;
+> +
+> +	if (!acpidev)
+> +		return -ENODEV;
+> +
+> +	switch (connector->connector_type) {
+> +	case DRM_MODE_CONNECTOR_LVDS:
+> +	case DRM_MODE_CONNECTOR_eDP:
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* fetch the entire edid from BIOS */
+> +	r = acpi_video_get_edid(acpidev, ACPI_VIDEO_DISPLAY_LCD, -1, &edid);
+> +	if (r < 0) {
+> +		DRM_DEBUG_KMS("Failed to get EDID from ACPI: %d\n", r);
+> +		return r;
+> +	}
+> +	if (len > r || start > r || start + len > r) {
+> +		r = -EINVAL;
+> +		goto cleanup;
+> +	}
+> +
+> +	memcpy(buf, edid + start, len);
+> +	r = 0;
+> +
+> +cleanup:
+> +	kfree(edid);
+> +
+> +	return r;
+> +}
+> +
+>  static void connector_bad_edid(struct drm_connector *connector,
+>  			       const struct edid *edid, int num_blocks)
+>  {
+> @@ -2621,7 +2674,8 @@ EXPORT_SYMBOL(drm_probe_ddc);
+>   * @connector: connector we're probing
+>   * @adapter: I2C adapter to use for DDC
+>   *
+> - * Poke the given I2C channel to grab EDID data if possible.  If found,
+> + * If the connector allows it, try to fetch EDID data using ACPI. If not found
+> + * poke the given I2C channel to grab EDID data if possible.  If found,
+>   * attach it to the connector.
+>   *
+>   * Return: Pointer to valid EDID or NULL if we couldn't find any.
+> @@ -2629,20 +2683,50 @@ EXPORT_SYMBOL(drm_probe_ddc);
+>  struct edid *drm_get_edid(struct drm_connector *connector,
+>  			  struct i2c_adapter *adapter)
+>  {
+> -	struct edid *edid;
+> +	struct edid *edid = NULL;
+>  
+>  	if (connector->force == DRM_FORCE_OFF)
+>  		return NULL;
+>  
+> -	if (connector->force == DRM_FORCE_UNSPECIFIED && !drm_probe_ddc(adapter))
+> -		return NULL;
+> +	if (connector->acpi_edid_allowed)
+> +		edid = _drm_do_get_edid(connector, drm_do_probe_acpi_edid, connector, NULL);
+> +
+> +	if (!edid) {
+> +		if (connector->force == DRM_FORCE_UNSPECIFIED && !drm_probe_ddc(adapter))
+> +			return NULL;
+> +		edid = _drm_do_get_edid(connector, drm_do_probe_ddc_edid, adapter, NULL);
+> +	}
+>  
+> -	edid = _drm_do_get_edid(connector, drm_do_probe_ddc_edid, adapter, NULL);
+>  	drm_connector_update_edid_property(connector, edid);
+>  	return edid;
+>  }
+>  EXPORT_SYMBOL(drm_get_edid);
+>  
+> +/**
+> + * drm_edid_read_acpi - get EDID data, if available
+> + * @connector: connector we're probing
+> + *
+> + * Use the BIOS to attempt to grab EDID data if possible.
+> + *
+> + * The returned pointer must be freed using drm_edid_free().
+> + *
+> + * Return: Pointer to valid EDID or NULL if we couldn't find any.
+> + */
+> +const struct drm_edid *drm_edid_read_acpi(struct drm_connector *connector)
+> +{
+> +	const struct drm_edid *drm_edid;
+> +
+> +	if (connector->force == DRM_FORCE_OFF)
+> +		return NULL;
+> +
+> +	drm_edid = drm_edid_read_custom(connector, drm_do_probe_acpi_edid, connector);
+> +
+> +	/* Note: Do *not* call connector updates here. */
+> +
+> +	return drm_edid;
+> +}
+> +EXPORT_SYMBOL(drm_edid_read_acpi);
+> +
+>  /**
+>   * drm_edid_read_custom - Read EDID data using given EDID block read function
+>   * @connector: Connector to use
+> @@ -2727,10 +2811,11 @@ const struct drm_edid *drm_edid_read_ddc(struct drm_connector *connector,
+>  EXPORT_SYMBOL(drm_edid_read_ddc);
+>  
+>  /**
+> - * drm_edid_read - Read EDID data using connector's I2C adapter
+> + * drm_edid_read - Read EDID data using BIOS or connector's I2C adapter
+>   * @connector: Connector to use
+>   *
+> - * Read EDID using the connector's I2C adapter.
+> + * Read EDID from BIOS if allowed by connector or by using the connector's
+> + * I2C adapter.
+>   *
+>   * The EDID may be overridden using debugfs override_edid or firmware EDID
+>   * (drm_edid_load_firmware() and drm.edid_firmware parameter), in this priority
+> @@ -2742,10 +2827,18 @@ EXPORT_SYMBOL(drm_edid_read_ddc);
+>   */
+>  const struct drm_edid *drm_edid_read(struct drm_connector *connector)
+>  {
+> +	const struct drm_edid *drm_edid = NULL;
+> +
+>  	if (drm_WARN_ON(connector->dev, !connector->ddc))
+>  		return NULL;
+>  
+> -	return drm_edid_read_ddc(connector, connector->ddc);
+> +	if (connector->acpi_edid_allowed)
+> +		drm_edid = drm_edid_read_acpi(connector);
+> +
+> +	if (!drm_edid)
+> +		drm_edid = drm_edid_read_ddc(connector, connector->ddc);
+> +
+> +	return drm_edid;
+>  }
+>  EXPORT_SYMBOL(drm_edid_read);
+>  
+> diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+> index fe88d7fc6b8f..74ed47f37a69 100644
+> --- a/include/drm/drm_connector.h
+> +++ b/include/drm/drm_connector.h
+> @@ -1886,6 +1886,12 @@ struct drm_connector {
+>  
+>  	/** @hdr_sink_metadata: HDR Metadata Information read from sink */
+>  	struct hdr_sink_metadata hdr_sink_metadata;
+> +
+> +	/**
+> +	 * @acpi_edid_allowed: Get the EDID from the BIOS, if available.
+> +	 * This is only applicable to eDP and LVDS displays.
+> +	 */
+> +	bool acpi_edid_allowed;
+>  };
+>  
+>  #define obj_to_connector(x) container_of(x, struct drm_connector, base)
+> diff --git a/include/drm/drm_edid.h b/include/drm/drm_edid.h
+> index 7923bc00dc7a..1c1ee927de9c 100644
+> --- a/include/drm/drm_edid.h
+> +++ b/include/drm/drm_edid.h
+> @@ -459,5 +459,6 @@ bool drm_edid_is_digital(const struct drm_edid *drm_edid);
+>  
+>  const u8 *drm_find_edid_extension(const struct drm_edid *drm_edid,
+>  				  int ext_id, int *ext_index);
+> +const struct drm_edid *drm_edid_read_acpi(struct drm_connector *connector);
+>  
+>  #endif /* __DRM_EDID_H__ */
 
+-- 
+Jani Nikula, Intel
