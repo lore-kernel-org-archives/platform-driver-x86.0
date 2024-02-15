@@ -1,242 +1,204 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E0D130E5F;
-	Thu, 15 Feb 2024 13:42:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC195132467;
+	Thu, 15 Feb 2024 13:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708004561; cv=none; b=cdvCiTFwElJtYc/UpnsdbKEl4100b2IR65tjeYcGxYsAaqFF1kGVBmlrnpEv1TWixn70uB9GoShzZjrrz6qbDUo3tKnKGDTCjt0/UB6gSQ7OZ/ii56GRHjoccPCI6rMQ0GOjzWwVEjL/iuY3YSOb+eYmK4PYJMqocNzGKDNs1eU=
+	t=1708005097; cv=none; b=VtuYk+6sz3c1Vg5iR6nnU+zS45VQBOqWaToy4iXiyO6Y25fLbzOAMShcTs0lRRnFh9L6LO7RYqKjCKTLgsMrtlPn66V/mdOITewWkyeV1PYG6lo5JQCwejm4OWil6Lb0Xxu/T2aygVmJYCoUN8Izm3q0XX/15zuOVCaWychAVYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708004561; c=relaxed/simple;
-	bh=E8OlhBexmyPJ4iQH4AQ1pm64iW/pOvcs4dk0on3bIvI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G1eKn/CPVWXGIx6nKGYUPpIAFLEVuxk95fhOELEVv5fYs4tRlzhpxR+WSE8A8QP3EbqtsJyCjaPyNpxqr1taG6O6J2ntdK1OxrCT0k60D1NodPR1ZgF1/FklLogIn/y4InyuW6EtvWYESCHXQmDFjt4MEeC6Ba8la0CnJN6x1CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CndQH9xd; arc=none smtp.client-ip=209.85.214.178
+	s=arc-20240116; t=1708005097; c=relaxed/simple;
+	bh=RzDVzAMbt/0O8rLENBgNMOIiu2ews2E1U5PQyx+Ji0k=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=duthAThQ7ST3q+IY+RI12/l/pID7L0Nmhb/kMpJj1MT6zmByzVq7B5SDMxItlbgOcnxPCuti79DYQfuELHiISOzmgiKhs7y/wXpy7QpK36g0g8faMeSDsaTLkhxhBB5wvP2OHOcegKXZUBQke9WW5qKyMLtN8/I9b3PlSb4JNs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RGJ3CP/j; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CndQH9xd"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d8aadc624dso7090295ad.0;
-        Thu, 15 Feb 2024 05:42:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RGJ3CP/j"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4121954d4c0so3306275e9.0;
+        Thu, 15 Feb 2024 05:51:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708004559; x=1708609359; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PjLhIY/3/EVVCHaVWEMNbXR920ZLh6dypPeIlZRhOdw=;
-        b=CndQH9xdxH91uNBDqRF37eSyguG2+ePuhVoiINH+c5bLCFbRiBFv8BmQPDRUmPDiz5
-         b3bRtCtNfkPmcQ1DPgD+eCZgyqi28U1T68Dz/MokU4TgNglE2SRF8o9lDek2ua4OMDBN
-         BB9dIjWOEuBwVXezos9uPbJdseUXZJvYvbWIaVHe0gaTiLluhLEFTOdUSbRdlRY2PZQK
-         YhB/DN8B+D5d5L+tfeJ0VwgMcZf8vNfegaWxTNccTGa0ovfbKAsmWf+838KQA3eGBFnf
-         XM7ZtxXa4sR+m0KjNlwD3IOs8UVN334rrt8fpNkLJAPXBSor7boOryHrn3CrsZl+qxor
-         Cb0g==
+        d=gmail.com; s=20230601; t=1708005094; x=1708609894; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5t9mkBRSLuX6Whm+p+USkACVg0A1ZTFUPoQmMKDP/ks=;
+        b=RGJ3CP/ji8NihQLfupeAHxS66Q+QtNvy5PxhM0MX8ofwzKLRJ4l80YaI8VMzKOg5GP
+         yeV1NGk3aArey0SyQXCgwlhmrqAv0hfLYTCOTVNrDZEJbAwDzzPEbMIxlHFgEN/eIyA4
+         JOJHqs0eN5WIlUKrz4GYDIMhkRVHSzCOwoWPnt3UjIsE1SQwaAQHlXaIEzya8btY9RhB
+         wuZqzdmqbecDlvHn+CqurKcYmfpaAGDjBRIVrY16/qHeb+kbb6zeKQ/hblN/AJ84C8Xr
+         fh7a8ThSa6yPtEeAoxs6X0DLuESPX9UGFtD3KV4adDjf56EbJ3GYqp7CF7c/qMURYLis
+         C+4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708004559; x=1708609359;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PjLhIY/3/EVVCHaVWEMNbXR920ZLh6dypPeIlZRhOdw=;
-        b=LKQUOKpWeNFwzPO3LP82YbkefvofPBLDGH+MfYhoonOs7znbVHgCPiHBnF9fGuC4JI
-         2Yb5BZhGu9MkEsO1AI3ahGmgXtDYR9N7i1GjupXVP8GE9Fu48PyQKZJzAV1CEsDJX3+J
-         tGC5Ayszog+lawVTLAz1aDol6WR2gAG3NJ2Vn7kN82byfyJYjRDIYVuwg6Asjc8JL1IJ
-         7FOFjZPFMiI4vYVuK8QSSDzwhqrpSl7IASA1KjrvbmhF0+DK+n+xNE+ac65dXf5ZiBoT
-         ReN1WET6aFgHqAvwkmc2lhbeKpV3rjLMEHM0zUBipxJfnlKzP6PhdO36OEBaA/749hcZ
-         GD7g==
-X-Forwarded-Encrypted: i=1; AJvYcCXeOipImi7u4VzCSPtTKncUI/zi1d0EIr81YnWTnlm314vSTv0R0+HOhF7tR9yA21r9C+po4Rq0kF1DVQhHpPUUjgyiyPijERXk4Z7r
-X-Gm-Message-State: AOJu0Yy99tYrhcfmuYzISOGZhTdKM1cQfZ4iRkpAAyVj/23KL7kC07Fz
-	ryW6wrePsSZsmaQMSsYufiNDDguNa6Q46vE/0Zrsrv086bCmES0T
-X-Google-Smtp-Source: AGHT+IHUvPh4DP3oO/lFlaFHkiVjxcHXwb3tTZ1lLT0mQIR2iq5ZfMoacXMmyHwyvOmQadaQU6vevA==
-X-Received: by 2002:a17:903:987:b0:1d7:35ba:6a39 with SMTP id mb7-20020a170903098700b001d735ba6a39mr2441388plb.69.1708004559225;
-        Thu, 15 Feb 2024 05:42:39 -0800 (PST)
-Received: from ares2-ThinkPad-L13-Yoga-Gen-2.. ([2400:2410:b9a0:8400:51:a250:48bc:afe2])
-        by smtp.googlemail.com with ESMTPSA id mo14-20020a1709030a8e00b001d8e4de7a44sm1262431plb.127.2024.02.15.05.42.36
+        d=1e100.net; s=20230601; t=1708005094; x=1708609894;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5t9mkBRSLuX6Whm+p+USkACVg0A1ZTFUPoQmMKDP/ks=;
+        b=STzCClyhCCVnz8///Rm3CjUFmeNucHivQqgorFpEp20Jocw/x7NJ4wlLWmxHdkv5PV
+         crC+0FBafKGrbwB5jQ7VzAU+2WdHrLwRJhSyheqGAJvPUibYM64ER9guIQc6f+kKRLi3
+         WP4KExTIsuWrOcypRsidUtg9lZ29inrt9OTZ/oSQiXjNmhAQbz8TEL0g0gEhc1yLNmmU
+         lN4idUYRYl/FTGyrU4I194b1hgmuKVSEULUf0HAVzAY9pRWYPNVEhPOin8muKiYR775F
+         mGnd2+htdzUJ8/qCkNRDn+GovbhbbLLwLKdgjjVbW1fwNuf6coAfEjimWqhOrm30tcDP
+         XNTw==
+X-Forwarded-Encrypted: i=1; AJvYcCXmn5akH/NV/CbhvBGsR8nz7GQhjKNHju9HZgD8xo9MMEeRkwU8BqIz6HaHI8fb7ImsdP/pZ1qkG6wi1HuPNE4OWQrcTEbiEf20gTUTZv90TYYxxF/CffJYF7bCwpo9MuOAshlfMt2hXHXel4CMicUdhF35azYFBFitxt2dAt8mMN7YExbUdxiIW3Ov8DM2fUy5jxant0Dganp0yfTRydanq/M4xXotFwew6BapbvieN4w/168YdOWJul2TcuVHV6v9aB67pgERkpdO+MfzrlHvIKJ67T6zgfYBawbO4KRYRyCunvFq9Vs7w9i2kAQZmcwZQZU4620SE48THXmksUs+mtNRmAmrIs/hkfhxoprlHDxBILx50EAWELuRHZ4=
+X-Gm-Message-State: AOJu0Yzk2lHiFiO0I+VmZqZcdn1U8ickzALl9D9GO5DGMmNIjodxFatO
+	qJnbKMnlCoLDtwUgfeUb9zYMJU49BbV/4rw2oBK8kBvdAzeDwV5o
+X-Google-Smtp-Source: AGHT+IH7k9jN1LEPjklm49kSSJGmdKPhxpWNQecPQqPdKhvRMqEI/U195h3M4bWUY8DUrcLpEFVYaQ==
+X-Received: by 2002:a05:600c:3503:b0:412:7d0:d83 with SMTP id h3-20020a05600c350300b0041207d00d83mr1601111wmq.16.1708005093670;
+        Thu, 15 Feb 2024 05:51:33 -0800 (PST)
+Received: from ?IPv6:2001:a61:3456:4e01:6ae:b55a:bd1d:57fc? ([2001:a61:3456:4e01:6ae:b55a:bd1d:57fc])
+        by smtp.gmail.com with ESMTPSA id i7-20020a05600c290700b00410add3af79sm5061337wmd.23.2024.02.15.05.51.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Feb 2024 05:42:38 -0800 (PST)
-From: Vishnu Sankar <vishnuocv@gmail.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mpearson-lenovo@squebb.ca,
-	vsankar@lenovo.com,
-	Vishnu Sankar <vishnuocv@gmail.com>
-Subject: [PATCH v2 2/2] platform/x86: thinkpad_acpi: Fix to correct wrong temp reporting on some ThinkPads
-Date: Thu, 15 Feb 2024 22:41:02 +0900
-Message-Id: <20240215134102.25118-2-vishnuocv@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240215134102.25118-1-vishnuocv@gmail.com>
-References: <20240215134102.25118-1-vishnuocv@gmail.com>
+        Thu, 15 Feb 2024 05:51:33 -0800 (PST)
+Message-ID: <63b248efcbd62a121610cbf37ea0339bd87c99e7.camel@gmail.com>
+Subject: Re: [PATCH v6 003/164] pwm: Provide pwmchip_alloc() function and a
+ devm variant of it
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Michael Walle
+ <mwalle@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ linux-doc@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Nicolas Ferre
+ <nicolas.ferre@microchip.com>, Paul Cercueil <paul@crapouillou.net>, 
+ linux-tegra@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>, 
+ Thierry Reding <thierry.reding@gmail.com>, James Clark
+ <james.clark@arm.com>, Pavel Machek <pavel@ucw.cz>,  Broadcom internal
+ kernel review list <bcm-kernel-feedback-list@broadcom.com>, Guenter Roeck
+ <groeck@chromium.org>,  chrome-platform@lists.linux.dev, Nobuhiro Iwamatsu
+ <nobuhiro1.iwamatsu@toshiba.co.jp>, Fabio Estevam <festevam@gmail.com>, 
+ linux-riscv@lists.infradead.org, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+ Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh@kernel.org>, Samuel
+ Holland <samuel@sholland.org>,  linux-samsung-soc@vger.kernel.org, Bjorn
+ Andersson <quic_bjorande@quicinc.com>,  Florian Fainelli
+ <florian.fainelli@broadcom.com>, Jonathan Corbet <corbet@lwn.net>, Sean
+ Anderson <sean.anderson@seco.com>, Benson Leung <bleung@chromium.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>, Jernej
+ Skrabec <jernej.skrabec@gmail.com>,  Jonathan Hunter
+ <jonathanh@nvidia.com>, Hammer Hsieh <hammerh0314@gmail.com>,
+ linux-rockchip@lists.infradead.org,  Chen-Yu Tsai <wens@csie.org>, Michal
+ Simek <michal.simek@amd.com>, NXP Linux Team <linux-imx@nxp.com>,
+ linux-leds@vger.kernel.org, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, Alim Akhtar <alim.akhtar@samsung.com>,
+ linux-mips@vger.kernel.org,  linux-sunxi@lists.linux.dev,
+ platform-driver-x86@vger.kernel.org,  linux-pwm@vger.kernel.org, Kees Cook
+ <keescook@chromium.org>, Sven Peter <sven@svenpeter.dev>, Martin
+ Blumenstingl <martin.blumenstingl@googlemail.com>,  Ray Jui
+ <rjui@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Jonathan
+ =?ISO-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>, Vladimir Zapolskiy
+ <vz@mleia.com>, Hans de Goede <hdegoede@redhat.com>, Mark Brown
+ <broonie@kernel.org>,  linux-mediatek@lists.infradead.org,
+ linux-rpi-kernel@lists.infradead.org,  Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+ linux-amlogic@lists.infradead.org, Orson Zhai <orsonzhai@gmail.com>, Mika
+ Westerberg <mika.westerberg@linux.intel.com>,  kernel@pengutronix.de,
+ linux-arm-kernel@lists.infradead.org, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>,  Alexander Shiyan <shc_work@mail.ru>, Scott
+ Branden <sbranden@broadcom.com>,  linux-gpio@vger.kernel.org, Daire
+ McNamara <daire.mcnamara@microchip.com>,  Chunyan Zhang
+ <zhang.lyra@gmail.com>, Hector Martin <marcan@marcan.st>, 
+ linux-stm32@st-md-mailman.stormreply.com, Claudiu Beznea
+ <claudiu.beznea@tuxon.dev>, Krzysztof Kozlowski
+ <krzysztof.kozlowski@linaro.org>,  Fabrice Gasnier
+ <fabrice.gasnier@foss.st.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ asahi@lists.linux.dev,  Maxime Coquelin <mcoquelin.stm32@gmail.com>, Kevin
+ Hilman <khilman@baylibre.com>, Shawn Guo <shawnguo@kernel.org>,  Anjelique
+ Melendez <quic_amelende@quicinc.com>
+Date: Thu, 15 Feb 2024 14:51:31 +0100
+In-Reply-To: <ws4ybgtvfxqz53vk3i67suipzyqpy5y5fqeee5uf3ua6ow222n@i4ktjuorq3nl>
+References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
+	 <9577d6053a5a52536057dc8654ff567181c2da82.1707900770.git.u.kleine-koenig@pengutronix.de>
+	 <Zcy21tsntcK80hef@smile.fi.intel.com>
+	 <ws4ybgtvfxqz53vk3i67suipzyqpy5y5fqeee5uf3ua6ow222n@i4ktjuorq3nl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Added non-standard thermal register's support for some ThinkPads.
+On Thu, 2024-02-15 at 13:01 +0100, Uwe Kleine-K=C3=B6nig wrote:
+> On Wed, Feb 14, 2024 at 02:49:26PM +0200, Andy Shevchenko wrote:
+> > On Wed, Feb 14, 2024 at 10:30:50AM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> > > This function allocates a struct pwm_chip and driver data. Compared t=
+o
+> > > the status quo the split into pwm_chip and driver data is new, otherw=
+ise
+> > > it doesn't change anything relevant (yet).
+> > >=20
+> > > The intention is that after all drivers are switched to use this
+> > > allocation function, its possible to add a struct device to struct
+> > > pwm_chip to properly track the latter's lifetime without touching all
+> > > drivers again. Proper lifetime tracking is a necessary precondition t=
+o
+> > > introduce character device support for PWMs (that implements atomic
+> > > setting and doesn't suffer from the sysfs overhead of the /sys/class/=
+pwm
+> > > userspace support).
+> > >=20
+> > > The new function pwmchip_priv() (obviously?) only works for chips
+> > > allocated with pwmchip_alloc().
+> >=20
+> > ...
+> >=20
+> > > +#define PWMCHIP_ALIGN ARCH_DMA_MINALIGN
+> > > +
+> > > +static void *pwmchip_priv(struct pwm_chip *chip)
+> > > +{
+> > > +	return (void *)chip + ALIGN(sizeof(*chip), PWMCHIP_ALIGN);
+> > > +}
+> >=20
+> > Why not use dma_get_cache_alignment() ?
+>=20
+> Hmm, that function returns 1 if ARCH_HAS_DMA_MINALIGN isn't defined. The
+> idea of using ARCH_DMA_MINALIGN was to ensure that the priv data has the
+> same minimal alignment as kmalloc(). Took my inspriration from
+> https://lore.kernel.org/r/20240209-counter-align-fix-v2-1-5777ea0a2722@an=
+alog.com
+> . The implementation of dma_get_cache_alignment suggests that not all
+> archs provide ARCH_DMA_MINALIGN? Also there is ARCH_KMALLOC_MINALIGN.
+> Hmm, don't know yet what to do here.
 
-Some of the Thinkpads use a non-standard ECFW which has different
-thermal register addresses. This is a fix to correct the wrong temperature
-reporting on those systems.
+Here it goes my 2 cents... AFAIK, ARCH_DMA_MINALIGN gives you the same alig=
+nment
+guarantees than devm_kmalloc() for instance. In some archs it will effectiv=
+ely be the
+same as ARCH_KMALLOC_MINALIGN. Now, I think it only matters if the owners o=
+f private
+data intend to have a DMA safe buffer in their structs. If that is the case=
+, we need
+to ensure a proper alignment for that structure. In IIO for example, the co=
+nstruct is
+like this:
 
-Tested on Lenovo ThinkPad L13 Yoga Gen2.
+https://elixir.bootlin.com/linux/latest/source/drivers/iio/dac/ltc2688.c#L9=
+6
 
-Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
----
--Improvements as requested.
--Improved the readability in case TPACPI_THERMAL_TPEC_12.
--idx < 8 from idx idx <=7 to match idx = 8.
--KILO used from linux/units.h instead of 1000.
-Changes in v2
--MILLIDEGREE_PER_DEGREE used from linux/units.h instead of KILO.
--Updated comments for better readability.
----
- drivers/platform/x86/thinkpad_acpi.c | 74 +++++++++++++++++++++++++---
- 1 file changed, 68 insertions(+), 6 deletions(-)
+The buffers should come last in the struct so they are alone in the line. I=
+n IIO,
+Jonathan has a strict policy for this. Like, even if you just want to trans=
+fer 2/4
+bytes via spi, we need to make the buffer safe (apparently there are some c=
+ontrollers
+only doing DMA - even for small transfers).
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 81df8fe59912..02cd873bd3f6 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -69,6 +69,7 @@
- #include <linux/sysfs.h>
- #include <linux/types.h>
- #include <linux/uaccess.h>
-+#include <linux/units.h>
- #include <linux/workqueue.h>
- 
- #include <acpi/battery.h>
-@@ -6126,12 +6127,15 @@ enum thermal_access_mode {
- 	TPACPI_THERMAL_ACPI_TMP07,	/* Use ACPI TMP0-7 */
- 	TPACPI_THERMAL_ACPI_UPDT,	/* Use ACPI TMP0-7 with UPDT */
- 	TPACPI_THERMAL_TPEC_8,		/* Use ACPI EC regs, 8 sensors */
-+	TPACPI_THERMAL_TPEC_12,		/* Use ACPI EC regs, 12 sensors */
- 	TPACPI_THERMAL_TPEC_16,		/* Use ACPI EC regs, 16 sensors */
- };
- 
- enum { /* TPACPI_THERMAL_TPEC_* */
- 	TP_EC_THERMAL_TMP0 = 0x78,	/* ACPI EC regs TMP 0..7 */
- 	TP_EC_THERMAL_TMP8 = 0xC0,	/* ACPI EC regs TMP 8..15 */
-+	TP_EC_THERMAL_TMP0_NS = 0xA8,	/* ACPI EC Non-Standard regs TMP 0..7 */
-+	TP_EC_THERMAL_TMP8_NS = 0xB8,	/* ACPI EC Non-standard regs TMP 8..11 */
- 	TP_EC_FUNCREV      = 0xEF,      /* ACPI EC Functional revision */
- 	TP_EC_THERMAL_TMP_NA = -128,	/* ACPI EC sensor not available */
- 
-@@ -6144,8 +6148,22 @@ struct ibm_thermal_sensors_struct {
- 	s32 temp[TPACPI_MAX_THERMAL_SENSORS];
- };
- 
-+static const struct tpacpi_quirk thermal_quirk_table[] __initconst = {
-+	/* Non-standard address for thermal registers on some ThinkPads */
-+	TPACPI_Q_LNV3('R', '1', 'F', true),	/* L13 Yoga Gen 2 */
-+	TPACPI_Q_LNV3('N', '2', 'U', true),	/* X13 Yoga Gen 2*/
-+	TPACPI_Q_LNV3('R', '0', 'R', true),	/* L380 */
-+	TPACPI_Q_LNV3('R', '1', '5', true),	/* L13 Yoga Gen 1*/
-+	TPACPI_Q_LNV3('R', '1', '0', true),	/* L390 */
-+	TPACPI_Q_LNV3('N', '2', 'L', true),	/* X13 Yoga Gen 1*/
-+	TPACPI_Q_LNV3('R', '0', 'T', true),	/* 11e Gen5 GL*/
-+	TPACPI_Q_LNV3('R', '1', 'D', true),	/* 11e Gen5 GL-R*/
-+	TPACPI_Q_LNV3('R', '0', 'V', true),	/* 11e Gen5 KL-Y*/
-+};
-+
- static enum thermal_access_mode thermal_read_mode;
- static bool thermal_use_labels;
-+static bool thermal_with_ns_address;	/* Non-standard thermal reg address */
- 
- /* Function to check thermal read mode */
- static enum thermal_access_mode thermal_read_mode_check(void)
-@@ -6170,6 +6188,16 @@ static enum thermal_access_mode thermal_read_mode_check(void)
- 		if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
- 			pr_warn("Thinkpad ACPI EC unable to access EC version\n");
- 
-+		/* Quirks to check non-standard EC */
-+		thermal_with_ns_address = tpacpi_check_quirks(thermal_quirk_table,
-+							ARRAY_SIZE(thermal_quirk_table));
-+
-+		/* Support for Thinkpads with non-standard address */
-+		if (thermal_with_ns_address) {
-+			pr_info("ECFW with non-standard thermal registers found\n");
-+			return TPACPI_THERMAL_TPEC_12;
-+		}
-+
- 		ta1 = ta2 = 0;
- 		for (i = 0; i < 8; i++) {
- 			if (acpi_ec_read(TP_EC_THERMAL_TMP0 + i, &t)) {
-@@ -6245,6 +6273,20 @@ static int thermal_get_sensor(int idx, s32 *value)
- 		}
- 		break;
- 
-+	/* The Non-standard EC uses 12 Thermal areas */
-+	case TPACPI_THERMAL_TPEC_12:
-+		if (idx >= 12)
-+			return -EINVAL;
-+
-+		t = idx < 8 ? TP_EC_THERMAL_TMP0_NS + idx :
-+				TP_EC_THERMAL_TMP8_NS + (idx - 8);
-+
-+		if (!acpi_ec_read(t, &tmp))
-+			return -EIO;
-+
-+		*value = tmp * MILLIDEGREE_PER_DEGREE;
-+		return 0;
-+
- 	case TPACPI_THERMAL_ACPI_UPDT:
- 		if (idx <= 7) {
- 			snprintf(tmpi, sizeof(tmpi), "TMP%c", '0' + idx);
-@@ -6290,6 +6332,8 @@ static int thermal_get_sensors(struct ibm_thermal_sensors_struct *s)
- 
- 	if (thermal_read_mode == TPACPI_THERMAL_TPEC_16)
- 		n = 16;
-+	else if (thermal_read_mode == TPACPI_THERMAL_TPEC_12)
-+		n = 12;
- 
- 	for (i = 0 ; i < n; i++) {
- 		res = thermal_get_sensor(i, &s->temp[i]);
-@@ -6388,18 +6432,36 @@ static struct attribute *thermal_temp_input_attr[] = {
- 	NULL
- };
- 
-+#define to_dev_attr(_attr) container_of(_attr, struct device_attribute, attr)
-+
- static umode_t thermal_attr_is_visible(struct kobject *kobj,
- 				       struct attribute *attr, int n)
- {
--	if (thermal_read_mode == TPACPI_THERMAL_NONE)
-+	struct device_attribute *dev_attr = to_dev_attr(attr);
-+	struct sensor_device_attribute *sensor_attr =
-+					to_sensor_dev_attr(dev_attr);
-+
-+	int idx = sensor_attr->index;
-+
-+	switch (thermal_read_mode) {
-+	case TPACPI_THERMAL_NONE:
- 		return 0;
- 
--	if (attr == THERMAL_ATTRS(8) || attr == THERMAL_ATTRS(9) ||
--	    attr == THERMAL_ATTRS(10) || attr == THERMAL_ATTRS(11) ||
--	    attr == THERMAL_ATTRS(12) || attr == THERMAL_ATTRS(13) ||
--	    attr == THERMAL_ATTRS(14) || attr == THERMAL_ATTRS(15)) {
--		if (thermal_read_mode != TPACPI_THERMAL_TPEC_16)
-+	case TPACPI_THERMAL_ACPI_TMP07:
-+	case TPACPI_THERMAL_ACPI_UPDT:
-+	case TPACPI_THERMAL_TPEC_8:
-+		if (idx >= 8)
- 			return 0;
-+		break;
-+
-+	case TPACPI_THERMAL_TPEC_12:
-+		if (idx >= 12)
-+			return 0;
-+		break;
-+
-+	default:
-+		break;
-+
- 	}
- 
- 	return attr->mode;
--- 
-2.34.1
+I would say that if unsure, go with ARCH_DMA_MINALIGN. You just might waste=
+ some
+space in some archs. OTOH, if you think DMA is not really a thing for pwm c=
+hips, you
+might go ARCH_KMALLOC_MINALIGN. And since you already have your own PWMCHIP=
+_ALIGN, it
+should be easy to change the requirements down the road (if needed).
+
+That said, I'm not familiar with dma_get_cache_alignment().
+
+- Nuno S=C3=A1
 
