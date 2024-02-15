@@ -1,261 +1,130 @@
-Received: from mail-4317.proton.ch (mail-4317.proton.ch [185.70.43.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48FD13475C
-	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Feb 2024 20:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FCC13B295;
+	Thu, 15 Feb 2024 20:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708029125; cv=none; b=QfjfsrtphglpT1Krw4Crrpihhg7UCBYH1jQnbI5avDpXzqdXvJEi0fh4SEaap1+wTQquFpiENWHVdaPFw4BKLNN9FOBgpzQxEC+zF3IvWg5NB12s1S9Morr42H3NqZGuJmXhMOaIHAd0d+/bo3e/XSVR/sHnPkXPJmclN7utRqQ=
+	t=1708030086; cv=none; b=uDV5ZV9SX7vb9rxORKtEqJXK9YNCv66/S+OwDUQ7XgGjce+xH/1fCAiMJmYd1OxaFMsQ61hL6/mmkXRQrPa5bTahXueZWe3u6v+I6TXWviqRZPPAmaVmeNZ6fHgkS5uV1jKKd2GEpfwiz3BiR4krvcnKTIuxreFVDPzlJwugWxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708029125; c=relaxed/simple;
-	bh=alYX9l5ihaVBaKIi+9pQiYMRCaQnGW959MWcxLzpRUo=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DdhKZuHjq7tqF+2Rgt53qt9SpO4NVUPVD9fSHU1CVQxK4FZT1r8xuBZ5kLFmvtvCSVa0Id2VxcQ0dnEUDxczXQVXuc41CvaVZgcNYFz9qMmRFu45rjWFQht7GIaojN4PoKVKInmKYYrn5xpf1ksC6E8wzQ9tDNzGDIEXOiGRVG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bluemarch.art; spf=pass smtp.mailfrom=bluemarch.art; dkim=pass (2048-bit key) header.d=bluemarch.art header.i=@bluemarch.art header.b=mYE5qO/Y; arc=none smtp.client-ip=185.70.43.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bluemarch.art
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bluemarch.art
+	s=arc-20240116; t=1708030086; c=relaxed/simple;
+	bh=2HCXSQsU9UnX7lXFl7AHSAP6YihKzbTu9UWh/36f/Bc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UDNcz7Lr+eg+gJNe8ZXcsifNcDck9w0R/wcY+/AF47pAqyhxy/5uM/8uXv+UbW1f0Xn3Pnnpg0oFQK1KxfYBpTvh7Ap+vL72dueaZJMFcg5Ulwfl+1FiJ5NyDEy5DKMOhH2vlTOdZlpCfm0Afn8Vv2xKEtmUO2SR8TRWYb+ZNhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LfaaT220; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bluemarch.art header.i=@bluemarch.art header.b="mYE5qO/Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bluemarch.art;
-	s=protonmail; t=1708029121; x=1708288321;
-	bh=9g+lp3rZeGt27Gj1YiW60NvlnC1RHxMjnZp9mYyOWa0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=mYE5qO/YQk4s9tOFJeoUJQgOMYz64cVGRIce+Nc6c8lx1/5IehYdkpWbeif7vQQKD
-	 XVQQYr1vyKwP4ebssVhHZ0dUiWd7rSrW2dRE9Dc9dsEWKPCBrSu8QcyGK2Ir135/FS
-	 aea8FER+/1EA1mHDATGTaoFM+nvGsp/1QhI7C277y6YpJUHbt8ezBn0e+Fq3w7ZiWc
-	 BkxpSglsXrcF9J/+ICRaBuS6Rfjc/6ZW6wNGLyntujiBrQtOytDAnaLWAVyHU85j5z
-	 fXMNO4EjmKbkGKctPoZUyDdU39cyRQttETYKJj42dv8oGgosofT/46wro472u0q6ou
-	 9v0d3xrBoSEEA==
-Date: Thu, 15 Feb 2024 20:31:43 +0000
-To: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jwoithe@just42.net, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, W_Armin@gmx.de
-From: Szilard Fabian <szfabian@bluemarch.art>
-Cc: Szilard Fabian <szfabian@bluemarch.art>
-Subject: [PATCH v4] platform/x86/fujitsu-laptop: Add battery charge control support
-Message-ID: <20240215203012.228758-2-szfabian@bluemarch.art>
-In-Reply-To: <20240207023031.56805-2-szfabian@bluemarch.art>
-References: <20240129163502.161409-2-szfabian@bluemarch.art> <20240129175714.164326-2-szfabian@bluemarch.art> <20240207023031.56805-2-szfabian@bluemarch.art>
-Feedback-ID: 87830438:user:proton
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LfaaT220"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708030083; x=1739566083;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2HCXSQsU9UnX7lXFl7AHSAP6YihKzbTu9UWh/36f/Bc=;
+  b=LfaaT220aNVsyzZE1C0tHNXnf9MpVixHEQqQ530gbDIse83eR+GtA6p+
+   /ZBGeAdvnyAMxJ2ktpO9Vu0PZGoJ29MEwTzZP2bh4sX4dFUYSUkt9Jk9/
+   jir4JDQHrlDOIOpzu1sYCIj4ADh8fr+TWBwOvCvpSS/lDkULTMJYDSSDP
+   D7GTzdUx09rdeUftVXbQU82l1EGPPFdFKEoVARpBXTxvs2vaFGztDzngp
+   AUGUDyaIpz4qmd+uTlkCmsZWzVQ8ZCpddviG9Ozfr80ZoR4V1vn1S/8KH
+   W8UdyQ4cbDPQSi2cRFAE0jbFztAadOHeDq2rdMseqp62ljI921KD1zar1
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="2278658"
+X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
+   d="scan'208";a="2278658"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 12:48:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
+   d="scan'208";a="3810566"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by fmviesa008.fm.intel.com with ESMTP; 15 Feb 2024 12:47:58 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1raieB-0000lE-28;
+	Thu, 15 Feb 2024 20:47:55 +0000
+Date: Fri, 16 Feb 2024 04:47:21 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mario Limonciello <mario.limonciello@amd.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>
+Cc: oe-kbuild-all@lists.linux.dev, amd-gfx@lists.freedesktop.org,
+	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+	linux-fbdev@vger.kernel.org, nouveau@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org,
+	linux-renesas-soc@vger.kernel.org,
+	"open list:ACPI" <linux-acpi@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Melissa Wen <mwen@igalia.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v6 1/5] drm: Stop using `select ACPI_VIDEO` in all drivers
+Message-ID: <202402160446.YAlmYBPI-lkp@intel.com>
+References: <20240214215756.6530-2-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240214215756.6530-2-mario.limonciello@amd.com>
 
-This patch adds battery charge control support on Fujitsu notebooks
-via the S006 method of the FUJ02E3 ACPI device. With this method it's
-possible to set charge_control_end_threshold between 50 and 100%.
+Hi Mario,
 
-Tested on Lifebook E5411 and Lifebook U728. Sadly I can't test this
-patch on a dual battery one, but I didn't find any clue about
-independent battery charge control on dual battery Fujitsu notebooks
-either. And by that I mean checking the DSDT table of various Lifebook
-notebooks and reverse engineering FUJ02E3.dll.
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Szilard Fabian <szfabian@bluemarch.art>
----
-v4:
-* formatting fixes
-* replaced sprintf() with sysfs_emit()
+[auto build test ERROR on drm-misc/drm-misc-next]
+[also build test ERROR on drm-intel/for-linux-next-fixes drm-tip/drm-tip linus/master v6.8-rc4 next-20240215]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-v3:
-* added additional error handling
-* removed if statement with device_create_file(), just returning that
-  function instead
-* added bool charge_control_supported into struct fujitsu_laptop
-* added a 'charge_control_add' and 'charge_control_remove' function to be
-  called from acpi_fujitsu_laptop_add() and acpi_fujitsu_laptop_remove()
-* moved FUJ02E3 S006 probing logic from the ACPI battery hooks to the new
-  'charge_control_*' functions
+url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/drm-Stop-using-select-ACPI_VIDEO-in-all-drivers/20240215-055936
+base:   git://anongit.freedesktop.org/drm/drm-misc drm-misc-next
+patch link:    https://lore.kernel.org/r/20240214215756.6530-2-mario.limonciello%40amd.com
+patch subject: [PATCH v6 1/5] drm: Stop using `select ACPI_VIDEO` in all drivers
+config: openrisc-randconfig-r064-20240215 (https://download.01.org/0day-ci/archive/20240216/202402160446.YAlmYBPI-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240216/202402160446.YAlmYBPI-lkp@intel.com/reproduce)
 
-v2:
-Forgot to sign-off the original commit. Fixed, sorry for the
-inconvenience.
----
- drivers/platform/x86/fujitsu-laptop.c | 125 ++++++++++++++++++++++++++
- 1 file changed, 125 insertions(+)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402160446.YAlmYBPI-lkp@intel.com/
 
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/f=
-ujitsu-laptop.c
-index 085e044e888e..69f9730bb14a 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -49,6 +49,8 @@
- #include <linux/kfifo.h>
- #include <linux/leds.h>
- #include <linux/platform_device.h>
-+#include <linux/power_supply.h>
-+#include <acpi/battery.h>
- #include <acpi/video.h>
-=20
- #define FUJITSU_DRIVER_VERSION=09=09"0.6.0"
-@@ -97,6 +99,10 @@
- #define BACKLIGHT_OFF=09=09=09(BIT(0) | BIT(1))
- #define BACKLIGHT_ON=09=09=090
-=20
-+/* FUNC interface - battery control interface */
-+#define FUNC_S006_METHOD=09=090x1006
-+#define CHARGE_CONTROL_RW=09=090x21
-+
- /* Scancodes read from the GIRB register */
- #define KEY1_CODE=09=09=090x410
- #define KEY2_CODE=09=09=090x411
-@@ -132,6 +138,7 @@ struct fujitsu_laptop {
- =09spinlock_t fifo_lock;
- =09int flags_supported;
- =09int flags_state;
-+=09bool charge_control_supported;
- };
-=20
- static struct acpi_device *fext;
-@@ -164,6 +171,118 @@ static int call_fext_func(struct acpi_device *device,
- =09return value;
- }
-=20
-+/* Battery charge control code */
-+static ssize_t charge_control_end_threshold_store(struct device *dev,
-+=09=09=09=09struct device_attribute *attr,
-+=09=09=09=09const char *buf, size_t count)
-+{
-+=09int value, ret;
-+
-+=09ret =3D kstrtouint(buf, 10, &value);
-+=09if (ret)
-+=09=09return ret;
-+
-+=09if (value < 50 || value > 100)
-+=09=09return -EINVAL;
-+
-+=09int cc_end_value, s006_cc_return;
-+
-+=09cc_end_value =3D value * 0x100 + 0x20;
-+=09s006_cc_return =3D call_fext_func(fext, FUNC_S006_METHOD,
-+=09=09=09=09=09CHARGE_CONTROL_RW, cc_end_value, 0x0);
-+
-+=09if (s006_cc_return < 0)
-+=09=09return s006_cc_return;
-+
-+=09/*
-+=09 * The S006 0x21 method returns 0x00 in case the provided value
-+=09 * is invalid.
-+=09 */
-+=09if (s006_cc_return =3D=3D 0x00)
-+=09=09return -EINVAL;
-+
-+=09return count;
-+}
-+
-+static ssize_t charge_control_end_threshold_show(struct device *dev,
-+=09=09=09=09struct device_attribute *attr,
-+=09=09=09=09char *buf)
-+{
-+=09int status;
-+
-+=09status =3D call_fext_func(fext, FUNC_S006_METHOD,
-+=09=09=09=09CHARGE_CONTROL_RW, 0x21, 0x0);
-+
-+=09if (status < 0)
-+=09=09return status;
-+
-+=09return sysfs_emit(buf, "%d\n", status);
-+}
-+
-+static DEVICE_ATTR_RW(charge_control_end_threshold);
-+
-+/* ACPI battery hook */
-+static int fujitsu_battery_add_hook(struct power_supply *battery,
-+=09=09=09       struct acpi_battery_hook *hook)
-+{
-+=09return device_create_file(&battery->dev,
-+=09=09=09=09  &dev_attr_charge_control_end_threshold);
-+}
-+
-+static int fujitsu_battery_remove_hook(struct power_supply *battery,
-+=09=09=09=09  struct acpi_battery_hook *hook)
-+{
-+=09device_remove_file(&battery->dev,
-+=09=09=09   &dev_attr_charge_control_end_threshold);
-+
-+=09return 0;
-+}
-+
-+static struct acpi_battery_hook battery_hook =3D {
-+=09.add_battery =3D fujitsu_battery_add_hook,
-+=09.remove_battery =3D fujitsu_battery_remove_hook,
-+=09.name =3D "Fujitsu Battery Extension",
-+};
-+
-+/*
-+ * These functions are intended to be called from acpi_fujitsu_laptop_add =
-and
-+ * acpi_fujitsu_laptop_remove.
-+ */
-+static int fujitsu_battery_charge_control_add(struct acpi_device *device)
-+{
-+=09struct fujitsu_laptop *priv =3D acpi_driver_data(device);
-+
-+=09priv->charge_control_supported =3D false;
-+
-+=09/*
-+=09 * Check if the S006 0x21 method exists by trying to get the current
-+=09 * battery charge limit.
-+=09 */
-+=09int s006_cc_return;
-+
-+=09s006_cc_return =3D call_fext_func(fext, FUNC_S006_METHOD,
-+=09=09=09=09=09CHARGE_CONTROL_RW, 0x21, 0x0);
-+
-+=09if (s006_cc_return < 0)
-+=09=09return s006_cc_return;
-+
-+=09if (s006_cc_return =3D=3D UNSUPPORTED_CMD)
-+=09=09return -ENODEV;
-+
-+=09priv->charge_control_supported =3D true;
-+=09battery_hook_register(&battery_hook);
-+
-+=09return 0;
-+}
-+
-+static void fujitsu_battery_charge_control_remove(struct acpi_device *devi=
-ce)
-+{
-+=09struct fujitsu_laptop *priv =3D acpi_driver_data(device);
-+
-+=09if (priv->charge_control_supported)
-+=09=09battery_hook_unregister(&battery_hook);
-+}
-+
- /* Hardware access for LCD brightness control */
-=20
- static int set_lcd_level(struct acpi_device *device, int level)
-@@ -839,6 +958,10 @@ static int acpi_fujitsu_laptop_add(struct acpi_device =
-*device)
- =09if (ret)
- =09=09goto err_free_fifo;
-=20
-+=09ret =3D fujitsu_battery_charge_control_add(device);
-+=09if (ret < 0)
-+=09=09pr_warn("Unable to register battery charge control: %d\n", ret);
-+
- =09return 0;
-=20
- err_free_fifo:
-@@ -851,6 +974,8 @@ static void acpi_fujitsu_laptop_remove(struct acpi_devi=
-ce *device)
- {
- =09struct fujitsu_laptop *priv =3D acpi_driver_data(device);
-=20
-+=09fujitsu_battery_charge_control_remove(device);
-+
- =09fujitsu_laptop_platform_remove(device);
-=20
- =09kfifo_free(&priv->fifo);
---=20
-2.43.1
+All errors (new ones prefixed by >>):
 
+   or1k-linux-ld: drivers/video/fbdev/nvidia/nv_backlight.o: in function `nvidia_bl_init':
+>> nv_backlight.c:(.text+0x26c): undefined reference to `backlight_device_register'
+>> nv_backlight.c:(.text+0x26c): relocation truncated to fit: R_OR1K_INSN_REL_26 against undefined symbol `backlight_device_register'
+   or1k-linux-ld: drivers/video/fbdev/nvidia/nv_backlight.o: in function `nvidia_bl_exit':
+>> nv_backlight.c:(.text+0x32c): undefined reference to `backlight_device_unregister'
+>> nv_backlight.c:(.text+0x32c): relocation truncated to fit: R_OR1K_INSN_REL_26 against undefined symbol `backlight_device_unregister'
+   or1k-linux-ld: drivers/video/fbdev/aty/aty128fb.o: in function `aty128_remove':
+>> aty128fb.c:(.text+0x14c): undefined reference to `backlight_device_unregister'
+>> aty128fb.c:(.text+0x14c): relocation truncated to fit: R_OR1K_INSN_REL_26 against undefined symbol `backlight_device_unregister'
+   or1k-linux-ld: drivers/video/fbdev/aty/aty128fb.o: in function `aty128_init':
+>> aty128fb.c:(.text.unlikely+0x5bc): undefined reference to `backlight_device_register'
+>> aty128fb.c:(.text.unlikely+0x5bc): relocation truncated to fit: R_OR1K_INSN_REL_26 against undefined symbol `backlight_device_register'
+   or1k-linux-ld: drivers/auxdisplay/ht16k33.o: in function `ht16k33_fbdev_probe':
+>> ht16k33.c:(.text+0x17f4): undefined reference to `devm_backlight_device_register'
+>> ht16k33.c:(.text+0x17f4): relocation truncated to fit: R_OR1K_INSN_REL_26 against undefined symbol `devm_backlight_device_register'
 
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for FB_BACKLIGHT
+   Depends on [n]: HAS_IOMEM [=y] && FB [=y] && BACKLIGHT_CLASS_DEVICE [=n]
+   Selected by [y]:
+   - HT16K33 [=y] && AUXDISPLAY [=y] && FB [=y] && I2C [=y] && INPUT [=y]
+   - FB_ATMEL [=y] && FB [=y] && OF [=y] && HAVE_CLK [=y] && HAS_IOMEM [=y] && (HAVE_FB_ATMEL [=n] || COMPILE_TEST [=y])
+   - FB_NVIDIA [=y] && HAS_IOMEM [=y] && FB [=y] && PCI [=y] && FB_NVIDIA_BACKLIGHT [=y]
+   - FB_ATY128 [=y] && HAS_IOMEM [=y] && FB [=y] && PCI [=y] && FB_ATY128_BACKLIGHT [=y]
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
