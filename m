@@ -1,281 +1,180 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C08E12CD88;
-	Thu, 15 Feb 2024 11:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7379912AAE4
+	for <platform-driver-x86@vger.kernel.org>; Thu, 15 Feb 2024 11:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707996852; cv=none; b=qiuJ23CmqdLlxIHTKJu0rUGwKF+nXbVQTaZtOyohkV49QjIzGI5uvLXiOktoDaOtOz++Zi7hiEsVHKrKYkLPuavStGXIU5UzOGJ6vYmbMW6OEzEid7r/jjCdpxfslgcl7wD87XPmg0ex7IoOmTdE4k6VXqUM8obyw9cvtayF9oM=
+	t=1707997723; cv=none; b=KSIx2yOo5iHMQ0HFz0g1PMSoLFOjS4m2gkgqUbq5PFyytiOa+r49L0pLS2jBjH8Bt2pQTG7ZMPiOuJhJunU5ftvnPn4GdLWIuWmICYoF3ogjFF9jEV/owxtimrquijT+Mk9ZhnWAJG6Ron36TBwbRWQVxBoJWTcR+zzK7alpkA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707996852; c=relaxed/simple;
-	bh=oDLnpZDyktj3+YJL+eHMZybGsI1GlhiKMdzy3r+RNw0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Y+wFHbEOlbuWdC1RpVgZAn7PqwU79KohbsDr4jDpa/fTtwkeHwfnE16h081FbMnyo8yWp3T48sSBOpRmvWKagz7QaNl8HszIwreOX/ovYaxBEKZHsWuhSn6ptigKbuaS+1HXkpfgDz+YdEk49n/sH+///fTrAJ7MN4EPh2umUFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BEc7Tm+u; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BEc7Tm+u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707996851; x=1739532851;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=oDLnpZDyktj3+YJL+eHMZybGsI1GlhiKMdzy3r+RNw0=;
-  b=BEc7Tm+uYwzl9scr9q0ssroZOfJltL/oIilDzQs3STx4HA9udSplsDz9
-   trGFi60T4BhqzxoPQn+a3CeWqs1U8Xt4j16GQzusfVOR6nC53csSG/XWa
-   Jr17tZLQpf4Z2zccrsTD8oL2rvD0AEo5iqimBnI+2dbEkdbHxJInpkHTF
-   RN8wglMEIAJzgF3lm/CMXLFWdwhGj7PsogzgTWvZs7sp+jzuMby+OYviP
-   UtkuadrhiOXuPgAJ4zOHs1RSsCrGVl5A0/KUbU64uibmywuADkMeF6vRX
-   y8BdiyYI9xPIAslBwhSdM1m7CG/ysbzX7t3fjHBGI2Wi+U1wx2mFL5lVq
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="13177902"
-X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="13177902"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 03:34:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="826403606"
-X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="826403606"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.32.150])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 03:34:06 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 15 Feb 2024 13:34:00 +0200 (EET)
-To: Szilard Fabian <szfabian@bluemarch.art>
-cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-    jwoithe@just42.net, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
-    W_Armin@gmx.de
-Subject: Re: [RFC PATCH v3] platform/x86/fujitsu-laptop: Add battery charge
- control support
-In-Reply-To: <20240207023031.56805-2-szfabian@bluemarch.art>
-Message-ID: <43960922-d6bb-e5f6-2156-f1b35142244a@linux.intel.com>
-References: <20240129163502.161409-2-szfabian@bluemarch.art> <20240129175714.164326-2-szfabian@bluemarch.art> <20240207023031.56805-2-szfabian@bluemarch.art>
+	s=arc-20240116; t=1707997723; c=relaxed/simple;
+	bh=8IGtjDC8lwX138mc9T3n6QxlYh/K434+nFH09sU4g/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u6iFIBqhR4rub0t9RBoPS+5rsvVOMXYrqUYZ+0oWcQlE3hMRUkVZ9ojefXSggkYOCcvrAK63xbpkpeCBi8e4vh1ywBWXERt1aIgNK1yAlu1Snt1qYakYjHHIYkFduN/8TKNWRXGZ+ndjWb7+Qq2c5oMhk/UrnIezQdHdJZNcHFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raaCf-0007ES-Uk; Thu, 15 Feb 2024 12:46:57 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raaCW-000sHg-HB; Thu, 15 Feb 2024 12:46:48 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raaCW-005KD7-12;
+	Thu, 15 Feb 2024 12:46:48 +0100
+Date: Thu, 15 Feb 2024 12:46:48 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: linux-pwm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, James Clark <james.clark@arm.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mark Brown <broonie@kernel.org>, 
+	Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Alexander Shiyan <shc_work@mail.ru>, Benson Leung <bleung@chromium.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Paul Cercueil <paul@crapouillou.net>, 
+	Vladimir Zapolskiy <vz@mleia.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Hans de Goede <hdegoede@redhat.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Conor Dooley <conor.dooley@microchip.com>, 
+	Daire McNamara <daire.mcnamara@microchip.com>, Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+	Heiko Stuebner <heiko@sntech.de>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Michael Walle <mwalle@kernel.org>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Hammer Hsieh <hammerh0314@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>, 
+	Sean Anderson <sean.anderson@seco.com>, Michal Simek <michal.simek@amd.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Robert Foss <rfoss@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Pavel Machek <pavel@ucw.cz>, 
+	Lee Jones <lee@kernel.org>, Anjelique Melendez <quic_amelende@quicinc.com>, 
+	Bjorn Andersson <quic_bjorande@quicinc.com>, Kees Cook <keescook@chromium.org>, Rob Herring <robh@kernel.org>, 
+	Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Douglas Anderson <dianders@chromium.org>, linux-doc@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Guenter Roeck <groeck@chromium.org>, linux-riscv@lists.infradead.org, 
+	Fabio Estevam <festevam@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Jerome Brunet <jbrunet@baylibre.com>, 
+	chrome-platform@lists.linux.dev, linux-samsung-soc@vger.kernel.org, linux-staging@lists.linux.dev, 
+	linux-rockchip@lists.infradead.org, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, NXP Linux Team <linux-imx@nxp.com>, linux-leds@vger.kernel.org, 
+	linux-sunxi@lists.linux.dev, Jonas Karlman <jonas@kwiboo.se>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-amlogic@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, greybus-dev@lists.linaro.org, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-mips@vger.kernel.org, asahi@lists.linux.dev, 
+	kernel@pengutronix.de, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v6 000/164] pwm: Improve lifetime tracking for pwm_chips
+Message-ID: <frrn4vofjuskb67rxrgnwqrsqioonglp7nidoueumgw2hemhxq@6hrsnivgobuw>
+References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="t4o747itgdnx5oup"
+Content-Disposition: inline
+In-Reply-To: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 
-On Wed, 7 Feb 2024, Szilard Fabian wrote:
 
-> This patch adds battery charge control support on Fujitsu notebooks
-> via the S006 method of the FUJ02E3 ACPI device. With this method it's
-> possible to set charge_control_end_threshold between 50 and 100%.
-> 
-> Tested on Lifebook E5411 and Lifebook U728. Sadly I can't test this
-> patch on a dual battery one, but I didn't find any clue about
-> independent battery charge control on dual battery Fujitsu notebooks
-> either. And by that I mean checking the DSDT table of various Lifebook
-> notebooks and reverse engineering FUJ02E3.dll.
-> 
-> Signed-off-by: Szilard Fabian <szfabian@bluemarch.art>
-> ---
-> v3:
-> * added additional error handling
-> * removed if statement with device_create_file(), just returning that
->   function instead
-> * added bool charge_control_supported into struct fujitsu_laptop
-> * added a 'charge_control_add' and 'charge_control_remove' function to be
->   called from acpi_fujitsu_laptop_add() and acpi_fujitsu_laptop_remove()
-> * moved FUJ02E3 S006 probing logic from the ACPI battery hooks to the new
->   'charge_control_*' functions
-> 
-> v2:
-> Forgot to sign-off the original commit. Fixed, sorry for the
-> inconvenience.
-> ---
->  drivers/platform/x86/fujitsu-laptop.c | 125 ++++++++++++++++++++++++++
->  1 file changed, 125 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index 085e044e888e..2fcbc10a0d9d 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -49,6 +49,8 @@
->  #include <linux/kfifo.h>
->  #include <linux/leds.h>
->  #include <linux/platform_device.h>
-> +#include <linux/power_supply.h>
-> +#include <acpi/battery.h>
->  #include <acpi/video.h>
->  
->  #define FUJITSU_DRIVER_VERSION		"0.6.0"
-> @@ -97,6 +99,10 @@
->  #define BACKLIGHT_OFF			(BIT(0) | BIT(1))
->  #define BACKLIGHT_ON			0
->  
-> +/* FUNC interface - battery control interface */
-> +#define FUNC_S006_METHOD		0x1006
-> +#define CHARGE_CONTROL_RW		0x21
-> +
->  /* Scancodes read from the GIRB register */
->  #define KEY1_CODE			0x410
->  #define KEY2_CODE			0x411
-> @@ -132,6 +138,7 @@ struct fujitsu_laptop {
->  	spinlock_t fifo_lock;
->  	int flags_supported;
->  	int flags_state;
-> +	bool charge_control_supported;
->  };
->  
->  static struct acpi_device *fext;
-> @@ -164,6 +171,118 @@ static int call_fext_func(struct acpi_device *device,
->  	return value;
->  }
->  
-> +/* Battery charge control code */
-> +
+--t4o747itgdnx5oup
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please remove these empty lines between the comment and function (not 
-just this but the others too).
+Hello,
 
-> +static ssize_t charge_control_end_threshold_store(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t count)
-> +{
-> +	int value, ret;
-> +
-> +	ret = kstrtouint(buf, 10, &value);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (value < 50 || value > 100)
-> +		return -EINVAL;
-> +
-> +	int cc_end_value, s006_cc_return;
-> +
-> +	cc_end_value = value * 0x100 + 0x20;
-> +	s006_cc_return = call_fext_func(fext, FUNC_S006_METHOD,
-> +					CHARGE_CONTROL_RW, cc_end_value, 0x0);
-> +
-> +	if (s006_cc_return < 0)
-> +		return s006_cc_return;
-> +
-> +	/*
-> +	 * The S006 0x21 method returns 0x00 in case the provided value
-> +	 * is invalid.
-> +	 */
-> +	if (s006_cc_return == 0x00)
-> +		return -EINVAL;
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t charge_control_end_threshold_show(struct device *dev,
-> +				struct device_attribute *attr,
-> +				char *buf)
-> +{
-> +	int status;
-> +	status = call_fext_func(fext, FUNC_S006_METHOD,
-> +				CHARGE_CONTROL_RW, 0x21, 0x0);
+On Wed, Feb 14, 2024 at 10:30:47AM +0100, Uwe Kleine-K=F6nig wrote:
+> this is v6 of the series introducing better lifetime tracking for
+> pwmchips that addresses (for now theoretic) lifetime issues of pwm
+> chips. Addressing these is a necessary precondition to introduce chardev
+> support for PWMs.
+>=20
+> Locking got more complicated due to non-sleeping chips, so I dropped
+> the character device patch because it got still more incomplete now.
+> Also I'm not yet entirely sure about patches #162 and #163 and I expect
+> them to change before they can go in. My plan for the next merge window
+> is to get the patches in up to #160. After that the addition of chardev
+> support (including correct locking) can continue without having to touch
+> the lowlevel driver. So the idea of this series is to get the driver
+> adaptions out of the way as this requires some cross-tree coordination.
+>=20
+> The patches that touch files outside of drivers/pwm include:
+>=20
+>  - gpio: mvebu: Make use of devm_pwmchip_alloc() function
+>    It already has an Ack by Linus Walleij.
+>=20
+>  - drm/bridge: ti-sn65dsi86: Make use of pwmchip_parent() accessor
+>  - drm/bridge: ti-sn65dsi86: Make use of devm_pwmchip_alloc() function
+>    The 2nd already has an Ack by Douglas Anderson which I tend to assume
+>    good enough to merge this via my pwm tree, too. An Ack for the first
+>    patch would be nice.
+>=20
+>  - leds: qcom-lpg: Make use of devm_pwmchip_alloc() function
+>    Already has an Ack by Lee Jones.
+>=20
+>  - staging: greybus: pwm: Change prototype of helpers to prepare further =
+changes
+>  - staging: greybus: pwm: Make use of pwmchip_parent() accessor
+>  - staging: greybus: pwm: Rely on pwm framework to pass a valid hwpwm
+>  - staging: greybus: pwm: Drop unused gb_connection_set_data()
+>  - staging: greybus: pwm: Rework how the number of PWM lines is determined
+>  - staging: greybus: pwm: Make use of devm_pwmchip_alloc() function
+>    The greybus patches already got an Ack by Greg Kroah-Hartman in an
+>    earlier series, but I dropped it as the patches changed considerably.
 
-Add empty line after declaration.
+After getting the needed acks, I pushed out this series in
 
-> +
-> +	if (status < 0)
-> +		return status;
-> +
-> +	return sprintf(buf, "%d\n", status);
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
+next
 
-sysfs_emit()
+up to patch #161.
 
-> +}
-> +
-> +static DEVICE_ATTR_RW(charge_control_end_threshold);
-> +
-> +/* ACPI battery hook */
-> +
-> +static int fujitsu_battery_add_hook(struct power_supply *battery,
-> +			       struct acpi_battery_hook *hook)
-> +{
-> +	return device_create_file(&battery->dev,
-> +				  &dev_attr_charge_control_end_threshold);
-> +}
-> +
-> +static int fujitsu_battery_remove_hook(struct power_supply *battery,
-> +				  struct acpi_battery_hook *hook)
-> +{
-> +	device_remove_file(&battery->dev,
-> +			   &dev_attr_charge_control_end_threshold);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct acpi_battery_hook battery_hook = {
-> +	.add_battery = fujitsu_battery_add_hook,
-> +	.remove_battery = fujitsu_battery_remove_hook,
-> +	.name = "Fujitsu Battery Extension",
-> +};
-> +
-> +/*
-> + * These functions are intended to be called from acpi_fujitsu_laptop_add and
-> + * acpi_fujitsu_laptop_remove.
-> + */
-> +
-> +static int fujitsu_battery_charge_control_add(struct acpi_device *device)
-> +{
-> +	struct fujitsu_laptop *priv = acpi_driver_data(device);
-> +	priv->charge_control_supported = false;
+(But don't let you stop looking at the changes, reviews are still
+welcome.)
 
-Add a newline between these too as well.
+Best regards
+Uwe
 
-> +	/*
-> +	 * Check if the S006 0x21 method exists by trying to get the current
-> +	 * battery charge limit.
-> +	 */
-> +	int s006_cc_return;
-> +	s006_cc_return = call_fext_func(fext, FUNC_S006_METHOD,
-> +					CHARGE_CONTROL_RW, 0x21, 0x0);
-> +
-> +	if (s006_cc_return < 0)
-> +		return s006_cc_return;
-> +
-> +	if (s006_cc_return == UNSUPPORTED_CMD)
-> +		return -ENODEV;
-> +
-> +	priv->charge_control_supported = true;
-> +	battery_hook_register(&battery_hook);
-> +
-> +	return 0;
-> +}
-> +
-> +static void fujitsu_battery_charge_control_remove(struct acpi_device *device)
-> +{
-> +	struct fujitsu_laptop *priv = acpi_driver_data(device);
-> +
-> +	if (priv->charge_control_supported)
-> +		battery_hook_unregister(&battery_hook);
-> +}
-> +
->  /* Hardware access for LCD brightness control */
->  
->  static int set_lcd_level(struct acpi_device *device, int level)
-> @@ -839,6 +958,10 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
->  	if (ret)
->  		goto err_free_fifo;
->  
-> +	ret = fujitsu_battery_charge_control_add(device);
-> +	if (ret < 0)
-> +		pr_warn("Unable to register battery charge control: %d\n", ret);
-> +
->  	return 0;
->  
->  err_free_fifo:
-> @@ -851,6 +974,8 @@ static void acpi_fujitsu_laptop_remove(struct acpi_device *device)
->  {
->  	struct fujitsu_laptop *priv = acpi_driver_data(device);
->  
-> +	fujitsu_battery_charge_control_remove(device);
-> +
->  	fujitsu_laptop_platform_remove(device);
->  
->  	kfifo_free(&priv->fifo);
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-Why is this posted as RFC?
+--t4o747itgdnx5oup
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
- i.
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXN+acACgkQj4D7WH0S
+/k6nrwf9Huw1P/RTRggrOHnHFRGpBXi+TWvCPbsOC65CPiHeI7iVxtq/vUtQ4A6L
+CNA0O2W96568TwCEnxxCI6Be+7t8/H/Xb+oTs0yb6hblYkDhxYrXz+wAtoCTWOM8
+MI6xhfufB/JvOhgeX0iVMIx/TOc7gDY0wnFCS7bE15PPxMTjb1yF9Uo3az97CIld
+AF8InyaA81p8dcTlhmHzMa59LEFqoPzmNoySKqTIII7UuHmQRXOqV1RuEmKxN9Ho
+yRvisZgaqoinb8K7tXdw6G8HErBcN1aHM4OQBkZWI0ufVRNzQ8gT1sfoaRlsilOv
+yc/xo9Wl8bLPEKrjcpb9Hv/C+LgzyQ==
+=hkRd
+-----END PGP SIGNATURE-----
+
+--t4o747itgdnx5oup--
