@@ -1,141 +1,174 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3599413472B;
-	Wed, 14 Feb 2024 23:22:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266841870;
+	Thu, 15 Feb 2024 03:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707952974; cv=none; b=XwOeCbqzhLb9c/F4R3cMZO/Qp7Zp6nIbyeZwQNaTEMOZzkr15qHTUeZT+eL9xmnyaOrMF2pnqtaVUHIu2lxAEbs9pNk99etkZOzEwH52qT163dgy6QgfFayYdHcPVpYAjDbp6+FrRi5OSuElEBqYpjoWweGOYd20axrfDMG0DhE=
+	t=1707966450; cv=none; b=nrbplWpLAeS3oB0zZYsGE07Qk4l9BdeKazPjeaGqadsn3zilxZgN3ci35wtoxJnJLKfzcYpPAcjFzvIOZEbZCm+DErN26x9FnaaX9zyizNdPCAD4wxyh/0IZRDuLRiyxPUSQxbt996Qu3elL7Y4cFgIiF2Tv6QkZ8zOJojfAO3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707952974; c=relaxed/simple;
-	bh=3EQISA5BWKfjM0TIHlpP5btzvK3B1+UPqI77iwEpkJQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YCJHZI8sMXra0W1qigyDA81lfDRK99BJjIhrrHxZ15ozd1YL91zr1qoVZs4v+LyB+6iUH9RyGtMyBwKU3bVBBOXdzl2KgZFH+hTdiDrQ3xzfHwhcgDBPPxngtN+wt40yr6GkEJPmFLMhzPZJxCT4nxAIbhCE68C0M3KeR8l4jLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QWm3GjoV; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707966450; c=relaxed/simple;
+	bh=qwwasO+1xBKjEezC6aXWqJJmEG8jQepQBuZ9KNK5I8Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RKehzgzwOshpO00cl4Ct58VMa6Tt20Ge51ZfXi1gahESQaQyYp74+GCIskN/W3ck7f6LwI7LQCygDW/0oOyuRQsB+iJbll/mnNL7+azK9YvulOgs02SLeqaus+IxMogySsDEGY+Hy34mn98ymw0b4WeH2kj347obGCKkT/E54bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=heb5Zclc; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QWm3GjoV"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5dbcfa0eb5dso271629a12.3;
-        Wed, 14 Feb 2024 15:22:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707952972; x=1708557772; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tWY3HMGT42kRA4mnl0XJ+CvSiYyESAW/yGq2N3G+inI=;
-        b=QWm3GjoVICtC5j8mPP4dQz0oGqQQvWKtup7cHtkQFL9f49NJtzgYFCQlEEUWZr6H5N
-         hJhYyDLb5eQqb4VQnZlRpy0SnA195XKFAr3KHGUZaCqq2pgjR+CC7HxbGEO986CG6GaB
-         6G1JwtqvTf+QmoBdsm99Ux0ncE23dxj+B8VrKDxmFWzMOKGxdAFuwEyzyeiPPMm9DXc2
-         5E3F++JBOTW09+G7wsap/2GJXfc1y5b/H/LPnxwcIxBhoW4mQPNc3umM6hvAafMEx/hZ
-         7/Gecf5thrOCNss50ff2ViC5xgZddov7ubf4EPXBI/CUpERL4ZCVU4FC88B9QLVjBV7/
-         qsrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707952972; x=1708557772;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tWY3HMGT42kRA4mnl0XJ+CvSiYyESAW/yGq2N3G+inI=;
-        b=HzqP491vlWRg3373f4kTQn4SaocEJZaKlHtvpq3pAoKN4mx0yDxZlUlgfjHGXcN8D0
-         Actc9wPHzg1kMIirkhfqIVv+Oc1yBhWsEXEjBCAeE9R+4lUTdDEkrM4cGGyL40nEhuTc
-         EXHqNkjRePGXZxNc8sSn9UOCiR6bvRIFQgUU29T+qTrI3FkJxhMum2LHrqsl9ccmEOBH
-         CYJIqsA6DhEgUCgqT0xmuYRoFIdauEGdU1uESAuUBEV1KeszGuzi6jx9AzZRklYNOR9p
-         jjElmCuroei1lxe2/07Pfaj9pr5nKciW5v2PFamyr0+Gw1MLyYiXoMEuppdUBigxSURv
-         WHIg==
-X-Forwarded-Encrypted: i=1; AJvYcCWoRCo8f6PeJEUpfbyRfNoeMQX10Peodzr2K4EYmc2kWAcMG5byGBOBFWDEYgcAU7xWGjbJL2NPo5ANwmRj+rMlJ/DyrdK8cyWHonIx+LuyaoXt0r9S9fQZ8kB7dEr5EgU4gLuGvM6gFzKItlikxH4C/w==
-X-Gm-Message-State: AOJu0Yz9ntfZSsHr//M8cTYeRPPt9O2erCbYLa5iCLOBGjZSzNEJxXDC
-	5nYenwJAyfcnIh1TAICPl6MS5Z+IpqlMB0yK+FOs3PTfdfj6rOnqdc8PAbuErkVq9din+YU1Xcp
-	tquplAtQTJHJRChar14wyPUPr1XU=
-X-Google-Smtp-Source: AGHT+IG7heeIkiLqqDHkQmGM67TUlop3OpYhIX4M6gsvIW7nfJ3isFBoGMca+QVZ7YMu3uhsyPCQ47xP4oNldYFP3bk=
-X-Received: by 2002:a05:6a20:d046:b0:19c:ac7f:c3e4 with SMTP id
- hv6-20020a056a20d04600b0019cac7fc3e4mr247735pzb.42.1707952972287; Wed, 14 Feb
- 2024 15:22:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="heb5Zclc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707966450; x=1739502450;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=qwwasO+1xBKjEezC6aXWqJJmEG8jQepQBuZ9KNK5I8Y=;
+  b=heb5ZclcVvK5Havye35ORgU/HuR1tlGUYPHV9B7NPewpumBoEIBGWKRf
+   Yus6w3PNaTnWaXlrUOod08VjgnDaoA93ig4cGaoOv5Z/c7JcY2JNguwC7
+   kjRB2DXhlngi/7H9F8eu1ABKkFVgiQE9jkH1zkr83s5do2GnpXS0C+7lw
+   kF0/XzfKM/Z0nU+P8pUGJNWbSGYdCuBZAJj2dGPNcYRuYUzh/pwa/BL4O
+   A5NCjC+c1JAdfDmqxJim1nAaE9MEB3Tx0NK2n9dacQjCeCSoFY8QpQDqu
+   n5jDDJxusdaLTBfrqjR/3ot+5Gx9reUO5VsP3Dfj2jL3krr20cUypzvtM
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="19461201"
+X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
+   d="scan'208";a="19461201"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 19:07:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
+   d="scan'208";a="3385643"
+Received: from yongliang-ubuntu20-ilbpg12.png.intel.com ([10.88.229.33])
+  by fmviesa009.fm.intel.com with ESMTP; 14 Feb 2024 19:07:21 -0800
+From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+To: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	David E Box <david.e.box@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Mark Gross <markgross@kernel.org>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <Jose.Abreu@synopsys.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Andrew Halaney <ahalaney@redhat.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	bpf@vger.kernel.org,
+	Voon Wei Feng <weifeng.voon@intel.com>,
+	Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
+	Lai Peter Jun Ann <jun.ann.lai@intel.com>,
+	Abdul Rahim Faizal <faizal.abdul.rahim@intel.com>
+Subject: [PATCH net-next v5 0/9] Enable SGMII and 2500BASEX interface mode switching for Intel platforms
+Date: Thu, 15 Feb 2024 11:04:50 +0800
+Message-Id: <20240215030500.3067426-1-yong.liang.choong@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214052959.8550-1-vishnuocv@gmail.com> <20240214052959.8550-2-vishnuocv@gmail.com>
- <97fb005c-92bc-790b-80b0-75149a799b4b@linux.intel.com>
-In-Reply-To: <97fb005c-92bc-790b-80b0-75149a799b4b@linux.intel.com>
-From: Vishnu Sankar <vishnuocv@gmail.com>
-Date: Thu, 15 Feb 2024 08:22:13 +0900
-Message-ID: <CABxCQKs98pTbJF+EyP4HdEd+JOTvGdfkRgvYGLNOHoc0DX0A3Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] platform/x86: thinkpad_acpi: Fix to correct wrong
- temp reporting on some ThinkPads
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	vsankar@lenovo.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Ilpo,
-Thanks for the review.
+From: root <root@YongLiang-Ubuntu20-iLBPG12.png.intel.com>
 
-On Wed, Feb 14, 2024 at 7:23=E2=80=AFPM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Wed, 14 Feb 2024, Vishnu Sankar wrote:
->
-> > Added non-standard thermal register support for some ThinkPads.
-> >
-> > Some of the Thinkpads use a non-standard ECFW which uses different
-> > thermal register addresses.
-> > This is a fix to correct the wrong temperature reporting on
-> > those systems.
-> >
-> > Tested on Lenovo ThinkPad L13 Yoga Gen2
-> >
-> > Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> > Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
-> > ---
-> > -Improvements as requested.
-> > -Improved the readability in case TPACPI_THERMAL_TPEC_12.
-> > -idx < 8 from idx idx <=3D7 to match idx =3D 8
-> > -KILO used from linux/units.h instead of 1000.
->
-> >  static enum thermal_access_mode thermal_read_mode;
-> >  static bool thermal_use_labels;
-> > +static bool thermal_with_ns_address; /*Non-standard thermal reg addres=
-s*/
->
-> Comment is missing spaces.
-Acked.
->
-> > @@ -6239,6 +6267,20 @@ static int thermal_get_sensor(int idx, s32 *valu=
-e)
-> >               }
-> >               break;
-> >
-> > +     /* The Non-standard EC uses 12 Thermal areas */
-> > +     case TPACPI_THERMAL_TPEC_12:
-> > +             if (idx >=3D 12)
-> > +                     return -EINVAL;
-> > +
-> > +             t =3D idx < 8 ? TP_EC_THERMAL_TMP0_NS + idx :
-> > +                             TP_EC_THERMAL_TMP8_NS + (idx - 8);
-> > +
-> > +             if (!acpi_ec_read(t, &tmp))
-> > +                     return -EIO;
-> > +
-> > +             *value =3D tmp * KILO;
->
-> Hmm, MILLI would be much more approriate here? But if this relates to
-> degrees, there is MILLIDEGREE_PER_DEGREE?
-Will Change to MILLIDEGREE_PER_DEGREE from KILO
->
-> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
->
-> --
->  i.
+During the interface mode change, the 'phylink_major_config' function
+will be triggered in phylink. The modification of the following functions
+will be triggered to support the switching between SGMII and 2500BASEX
+interfaces mode for the Intel platform.
 
+- mac_get_pcs_neg_mode: A new function that selects the PCS negotiation
+  mode according to the interface mode.
+- xpcs_do_config: Re-initiate clause 37 auto-negotiation for SGMII interface
+  mode to perform auto-negotiation.
+- mac_finish: Configures the SerDes according to the interface mode.
 
+With the above changes, the code will work as follows during the
+interface mode change. The PCS and PCS negotiation mode will be selected
+for PCS configuration according to the interface mode. Then, the MAC
+driver will perform SerDes configuration on the 'mac_finish' based on the
+interface mode. During the SerDes configuration, the selected interface
+mode will identify TSN lane registers from FIA and then send IPC commands
+to the Power Management Controller (PMC) through the PMC driver/API.
+PMC will act as a proxy to program the PLL registers.
 
---=20
+Change log:
+v1 -> v2: 
+ - Add static to pmc_lpm_modes declaration
+ - Add cur_link_an_mode to the kernel doc
+ - Combine 2 commits i.e. "stmmac: intel: Separate driver_data of ADL-N
+ from TGL" and "net: stmmac: Add 1G/2.5G auto-negotiation
+ support for ADL-N" into 1 commit.
 
-Regards,
+v2 -> v3:
+ - Create `pmc_ipc.c` file for `intel_pmc_ipc()` function and 
+ allocate the file in `arch/x86/platform/intel/` directory.
+ - Update phylink's AN mode during phy interface change and 
+ not exposing phylink's AN mode into phylib.
+ 
+ v3 -> v4:
+ - Introduce `allow_switch_interface` flag to have all ethtool 
+ link modes that are supported and advertised will be published.
+ - Introduce `mac_get_pcs_neg_mode` function that selects the PCS 
+ negotiation mode according to the interface mode.
+ - Remove pcs-xpcs.c changes and handle pcs during `mac_select_pcs`
+ function
+ - Configure SerDes base on the interface on `mac_finish` function.
+ 
+ v4 -> v5:
+ - remove 'allow_switch_interface' related patches.
+ - remove 'mac_select_pcs' related patches.
+ - add a soft reset according to XPCS datasheet for re-initiate Clause 37
+ auto-negotiation when switching to SGMII interface mode.
 
-      Vishnu Sankar
-     +817015150407 (Japan)
+Choong Yong Liang (7):
+  net: phylink: provide mac_get_pcs_neg_mode() function
+  net: phylink: add phylink_pcs_neg_mode() declaration into phylink.h
+  net: stmmac: select PCS negotiation mode according to the interface
+    mode
+  net: pcs: xpcs: re-initiate clause 37 Auto-negotiation
+  net: stmmac: configure SerDes on mac_finish
+  stmmac: intel: interface switching support for EHL platform
+  stmmac: intel: interface switching support for ADL-N platform
+
+David E. Box (1):
+  arch: x86: Add IPC mailbox accessor function and add SoC register
+    access
+
+Tan, Tee Min (1):
+  stmmac: intel: configure SerDes according to the interface mode
+
+ MAINTAINERS                                   |   2 +
+ arch/x86/Kconfig                              |   9 +
+ arch/x86/platform/intel/Makefile              |   1 +
+ arch/x86/platform/intel/pmc_ipc.c             |  75 ++++++
+ drivers/net/ethernet/stmicro/stmmac/Kconfig   |   2 +
+ .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 233 ++++++++++++++++--
+ .../net/ethernet/stmicro/stmmac/dwmac-intel.h |  81 ++++++
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |  30 +++
+ drivers/net/pcs/pcs-xpcs.c                    |  62 ++++-
+ drivers/net/phy/phylink.c                     |  21 +-
+ include/linux/phylink.h                       |   8 +
+ .../linux/platform_data/x86/intel_pmc_ipc.h   |  34 +++
+ include/linux/stmmac.h                        |   5 +
+ 13 files changed, 538 insertions(+), 25 deletions(-)
+ create mode 100644 arch/x86/platform/intel/pmc_ipc.c
+ create mode 100644 include/linux/platform_data/x86/intel_pmc_ipc.h
+
+-- 
+2.34.1
+
