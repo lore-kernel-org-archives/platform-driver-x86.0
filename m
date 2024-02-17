@@ -1,148 +1,95 @@
-Received: from mail.orlives.de (mail.orlives.de [148.251.55.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE647D41F;
-	Sat, 17 Feb 2024 17:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.55.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7165A7E11C
+	for <platform-driver-x86@vger.kernel.org>; Sat, 17 Feb 2024 18:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708192704; cv=none; b=SbtcFnwrdyCsvNUa/ke0vz2/rLss/Xm6bM5UDm/KUjbNzeGuTpKZzlQ54N7dRBvwqkpaylNB3TAQsh5WmvqpC3npz1rXfFc9SPV0LpBmVY2SIhudWitP0/NeOzPnPGLTIddcVC6clylDCYPYTgpic656FRK4MhknGITooLTLZ/k=
+	t=1708193429; cv=none; b=Jr7fE+VWvDUAPMgG6e80rHOV8iLO2lnW7T9rSpFC89eVU39BRU6fvtZs47eSarpRkIuITr9B5KQ+90o4qUkHwVJWCc9HCbuOcCo0qR1+7N+9b444bRTs9ueNvV+HcB3XSiqkkHnjy68ubW7DGKvChoe15HEKaXlChuSznidRLi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708192704; c=relaxed/simple;
-	bh=vOcL7fvdPQymRt5haVMB/0ti/PnZsWOVFGIxq1G7unw=;
-	h=Message-ID:Date:Mime-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NDnLZ6my83Ih1kt8Qy0Eiq7xbSBpet22yjCGYC4md7Y8VHFc6zKAvgyL6xJ0QJl+A/ZUHmvpSorXuhiPaePQINm7WWFfP8nfLJa4xCdGHVIj7lpHeBIw2zD/MMUaCBqdxBfeHyBmKxCJHxiL0tzlYklTGgKMo6jowCYJcMgKhaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orlives.de; spf=pass smtp.mailfrom=orlives.de; dkim=pass (4096-bit key) header.d=orlives.de header.i=@orlives.de header.b=Zi9v1Lrj; arc=none smtp.client-ip=148.251.55.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orlives.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orlives.de
+	s=arc-20240116; t=1708193429; c=relaxed/simple;
+	bh=MVgcwj9+YCeiErqsFrP+i//ouhYhA++XViLnsv9PqkI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hpaS9hHOoG30E4j9Z5CbW67CR0BzO00o1tfFQeFBh+7bQqF9PKzmSE71os07yfPF9CTqJBOyPgID2xYx+QE2ceBrSUVfqHrhJvEIdy4sQ3bOArcobNvAoGnBls1S0ZqtjtEe3Bw+bsg2GVL/oc9+TgNTNyTNk7cT3WpShy2fzPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U7L7oVVW; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=orlives.de header.i=@orlives.de header.b="Zi9v1Lrj"
-Received: from mail.orlives.de (localhost [127.0.0.1])
-	by mail.orlives.de (Postfix) with ESMTPSA id DD361A008B;
-	Sat, 17 Feb 2024 18:58:17 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=orlives.de; s=dkim1;
-	t=1708192698;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=vOcL7fvdPQymRt5haVMB/0ti/PnZsWOVFGIxq1G7unw=;
-	b=Zi9v1LrjuCu0I5ldzpaaj5KG+j25bvhbhZ0kqMQ7V6CZIN9JYhXH/F/veM2RfBNSLXWS67
-	RLixy0644yWwKQZeeWATYwLai5HXII8+U59hXr4yoj58j8JSYjyVAYHDszzKic0rnv5dE0
-	udk2PGLq/8AzeF5NuqJVQVfjRl/HmcOjmEaWy8AOPILt0IHxTOM5ars29JdMzgvyAh6yTB
-	T4o1K6b+vn6N7WtglXivmRScxW65/crOPGLruMXvvTuq4CaqIzAOhHzUq1wEWGVP9YHQuw
-	GzZ7tlbS3OhqDYvS5s7JZza6/aDJ4erOWVZHa9SVDZgPJWmfblA/2SfSxFjLmLMoFLCrur
-	RjAauR5WW2kMtna5CojrmEa7jsv/LmIJBo5guPIJQtDqdjgZVdJZpJpGfs1j8cCLmkZ31O
-	nKCK9u4iK8sk7PW1Hy4XKiPDNaw9DkcwsOqmrtR3BU7Fo7uYTjNDMm5qTc0TJNj1GQN2W2
-	9uX05eHStzzDObyVTlTW1qP/sqlQH+qraJvsAs9q4R0RFD4wawBTHl2/XZUNp4DeE/oDEt
-	tDGkjwPtQNXbziAn9OfOqT+jIsC+MmDur0e6+WmoN7qr1ikiudlWpWUdhuK4p8aVMbxy/2
-	E0N+bakK6FN/kAxBLuVfHivPgJhIL8H1JF6u+utwJiSgQ2ZakJDKs=
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=t.schmittlauch@orlives.de smtp.mailfrom=t.schmittlauch@orlives.de
-Message-ID: <da6fbbdc-5f6b-4bfe-816d-03477bf489a8@localhost>
-Date: Sat, 17 Feb 2024 18:58:15 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U7L7oVVW"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a2d7e2e7fe0so577500166b.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 17 Feb 2024 10:10:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708193426; x=1708798226; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MVgcwj9+YCeiErqsFrP+i//ouhYhA++XViLnsv9PqkI=;
+        b=U7L7oVVWTuXX5UYIBrbPE9GYPk8+m3xlCnjTJs5WZ/iZt16mX3gPJ3tHBl9E377TXb
+         BDy7fG64p9gNpFTHxmGYp39MJRTUUGEWbhLjeRsqyenXVXvVa6x6/n3pOWZ1S0sIiL5y
+         yTZ1D9aFak8OfIFua7j1T56HwB0uMylprq2NZs2nXvdDlflBWh8OF6lYxuZb6pMjTn5j
+         Kfb2I2geuQwExbvo5xKuc555VZ/81VpV+Op3I5sG3sDJVGW3oTqak/P1jsf+CxIxAU/h
+         U9sDjv2A5VyJ431JgyHaR5M9voi/WS5ZPvOypDZNHuN1sdVKEg5svocm5dBp43Dx0zdh
+         60TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708193426; x=1708798226;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MVgcwj9+YCeiErqsFrP+i//ouhYhA++XViLnsv9PqkI=;
+        b=N/oF1KlDt958IRGfAPEH8atDHRyCZ1GJN1df7LxbOnrbM02ZWlKmfpFkZjOQKzTn1p
+         otoYyj4FREhrzSa77yPP4AW5FCbKJK9GhEkwcRgVE6SbxznfcKQVWNMHm1uanACgcDMc
+         yqej+tY2/1/eIjryd0TWUqRKlQZyEjqYbAYOxjt0hVqvRQzsY+s7/sEzffbcnsnWRprH
+         DwCnrt2Q2zHv33N52vW/rZoUHy+t/lSfL4VIHcPuFRz2yn3FuHOGQkpj3nsKfEYbcsVm
+         ND1L0a+Yr/G/IZKsCI8xnNAYM1IVBGvsbx3U4m7Lu5MyW1eavdvFpynqCTk73XQP6rNd
+         e/dA==
+X-Forwarded-Encrypted: i=1; AJvYcCVV1OHwnjTZXqZAB/ki00yRybpbM1WXCUv5bqtgduURhFiW+4718cKK1NRKerO4hgFhf7Z8dir6J/Zie9ZHAkQdpkYxh806hXSjou2HwTaA6XO4QA==
+X-Gm-Message-State: AOJu0Yxek8uUZgzfIFdvfTeO/nB7WOsjE1iZuURhY+gJbqhKU+Bm+wRJ
+	F0Rys1KfXIBYxqmm42Hfh0i0L2s87XtD6uguPjfQvs/2msT8Kv/NfY1F/FZNUZh1lrE2NuNwgoY
+	OpaBwzUkVvj+7Cx3bZyzhTbZRCZVylznMN08=
+X-Google-Smtp-Source: AGHT+IE8isgJIQzsTo2GHw/jXbG8wQ8dhN0cJPL0YmRWG3HDJLDc1jTTQJyDXYQDagkP7ZG4z1HxtwC/mFrBDARYz7I=
+X-Received: by 2002:a17:906:b106:b0:a3d:dddd:5aee with SMTP id
+ u6-20020a170906b10600b00a3ddddd5aeemr3943996ejy.25.1708193425547; Sat, 17 Feb
+ 2024 10:10:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: Re: [PATCH] platform/x86/amd/pmf: Fix a suspend hang on Framework 13
-To: Mario Limonciello <mario.limonciello@amd.com>, Shyam-sundar.S-k@amd.com,
- hdegoede@redhat.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20240217005216.113408-1-mario.limonciello@amd.com>
-Content-Language: en-US
-From: Trolli Schmittlauch <t.schmittlauch@orlives.de>
-Autocrypt: addr=t.schmittlauch@orlives.de; keydata=
- xsBNBF4y2DoBCADCzwZ+V1tJOR2JK20uAVPkAOC5PdIe/UYCVZsYIbh8aIz0HsiqWeTCj3J8
- nZEVKKm6fQRtyMILZeWNHQ98ck+1tmr4a6UQ4UDl+Xb1VuhU4frZI/d75olkn2JNwYcJJcdn
- MJ4WUZ8BWhmia+8ng+7nJ1yOw1ad0uS8dL+w+m+eimFr7HjIXUV/Y5I8NGhkROFDu72byMn1
- OTaq4HFfgilYsDGu8AWUtn+ZBXmCDIYbvXANjDcyuGTTnS/vgyFx66rHOgZKqTafuSAC1k61
- dAYvLlo06yb4S4VNwkW17ho9L6sgqfY5rFd+zQYnXdau7AK7TLAFywHgafHU20Ffv6PbABEB
- AAHNGzx0LnNjaG1pdHRsYXVjaEBvcmxpdmVzLmRlPsLAiQQQAQgAMwIZAQUCXjLYQAIbAwQL
- CQgHBhUICQoLAgMWAgEWIQSJFhEikPObK3+nglaeUEWy+uvFawAKCRCeUEWy+uvFa6UPCACt
- EeMFD8HIbP6vIfs0dQdYw7SyG/Ws/ZEhi61+HfBeltem2LMbcY3B1UNGWWt1px1oFq0sCd12
- j8JhjTPyFoQv+vRDEygMk/OrXfnn32dl9Ttubgz68ktxjv6xQ2q+TGHStUCe9Q1opGqjWqV0
- bqFV9nbpX5DX3urG4eDqjUrvUMasp3/RBBC6dSzRcutbmnFEUhbnQcG2JhxkUqJxErJO7Rs7
- dw5wR+43zipZznrtP/W8nCmL7E8VYn3KWFSb4jSmMyYneqBrhSZMB/BfiOMrWnnMpPChRLyR
- GLqZoyhWDPZyAbKyjlVQVS3d9BtLn5PzNaYRAl9Gad8h+o/WWHGXzsBNBF4y2DoBCACmbQWs
- /CCONpIwsHxKt4fEfbW1XhQFoKPmGF2Xonas6kN3Oh8XXFekkXfnRQJX+fOuv7DbaUsmkPzd
- TB2YtfidZJ6xIYPzSgSMsA945dEOY5yYfeNCH1pQYcq1xfM7bHGSwaNervx0wnK/g7yBgp6E
- 1stOwqoR9M3KgmQJPuaSISSfUH5NKcx38S6w+56I3//f1jyCRG5vkQzHsdioBWkAOfagQmcv
- 6fMhDYCoxlTooxlj1/5mSkspCS7fDkVcZn48t+sPfQAywpUDrWBZhp1vrDHfl+wUvCSXPYEz
- 9dkT9NmLz24H20tLV+btVgMsPXSlnM34lNjABg2x7isCoCZ9ABEBAAHCwHYEGAEIACAFAl4y
- 2EACGwwWIQSJFhEikPObK3+nglaeUEWy+uvFawAKCRCeUEWy+uvFayO5CACDYH46Tay5BSwn
- FK3EwAYSpXIFzhQet7os7InGRS8/2yuqzsunRDbMy11rTGmXXA1LuTizqsgebQbALpkuHEpi
- gX9b20RfsfuZYbdbtLzzVDuOVuGP3+CSJrB1Z+nGeF1+L4m5n7VDPX0MyWKwhlWY9hVmNQ2+
- lMt+fb6+330M9cXCz6H2/k7b2BTEM9xZPytt2ICT8I9rX5+8tuHDrstr13P40QOR0Exh5EHw
- LA00FYsr0e+ijzxRP9EC3AA9Gt/518IRS7FGvszu4qWWRT33P2cABoVUPpsybrhvuApgpf5y
- DLO17h0Vxwoq2qqCO/RqIw+o8Lj89xOl4VkPpXe4
-In-Reply-To: <20240217005216.113408-1-mario.limonciello@amd.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------nrK90jMcqGrp1cq5oWYcW3x7"
+MIME-Version: 1.0
+References: <20240216201721.239791-1-hdegoede@redhat.com> <20240216201721.239791-3-hdegoede@redhat.com>
+ <Zc_Sf73kfss-c2TD@smile.fi.intel.com> <774d159d-0822-4205-b214-95ffab03a988@redhat.com>
+In-Reply-To: <774d159d-0822-4205-b214-95ffab03a988@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sat, 17 Feb 2024 20:09:48 +0200
+Message-ID: <CAHp75Vf96z1HGWK9_tY=USAvJ-aJxAFv2cTjCAd3tkxe-ndd1g@mail.gmail.com>
+Subject: Re: [PATCH 2/4] platform/x86: Add new get_serdev_controller() helper
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	platform-driver-x86@vger.kernel.org, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------nrK90jMcqGrp1cq5oWYcW3x7
-Content-Type: multipart/mixed; boundary="------------5beBBwWG9elzcY3CUanl8u0g";
- protected-headers="v1"
-From: Trolli Schmittlauch <t.schmittlauch@orlives.de>
-To: Mario Limonciello <mario.limonciello@amd.com>, Shyam-sundar.S-k@amd.com,
- hdegoede@redhat.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Message-ID: <da6fbbdc-5f6b-4bfe-816d-03477bf489a8@localhost>
-Subject: Re: [PATCH] platform/x86/amd/pmf: Fix a suspend hang on Framework 13
-References: <20240217005216.113408-1-mario.limonciello@amd.com>
-In-Reply-To: <20240217005216.113408-1-mario.limonciello@amd.com>
+On Sat, Feb 17, 2024 at 12:36=E2=80=AFAM Hans de Goede <hdegoede@redhat.com=
+> wrote:
+> On 2/16/24 22:24, Andy Shevchenko wrote:
+> > On Fri, Feb 16, 2024 at 09:17:19PM +0100, Hans de Goede wrote:
 
---------------5beBBwWG9elzcY3CUanl8u0g
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+...
 
-QXMgdGhlIHJlcG9ydGVyIG9mIHRoYXQgaXNzdWUsIEkgY29uZmlybSB0aGF0IHRoaXMgZml4
-ZXMgc3VzcGVuZCBhbmQgcmVzdW1lIGZvciBtZSBhcyB3ZWxsLiBJJ3ZlIGFwcGxpZWQgdGhl
-IHBhdGNoIG9uIHRvcCBvZiA2LjgtcmM0Lg0KVGhhbmtzIGZvciBnZXR0aW5nIHRvIHRoZSBi
-b3R0b20gb2YgaXQgc28gcXVpY2tseS4NCg0KT24gMTcuMDIuMjQgMDE6NTIsIE1hcmlvIExp
-bW9uY2llbGxvIHdyb3RlOg0KPiBUaGUgYnVmZmVyIGlzIGNsZWFyZWQgaW4gdGhlIHN1c3Bl
-bmQgaGFuZGxlciBidXQgdXNlZCBpbg0KPiB0aGUgZGVsYXllZCB3b3JrIGZvciBhbWRfcG1m
-X2dldF9tZXRyaWNzKCkuDQo+IA0KPiBTdG9wIGNsZWFyaW5nIGl0IHRvIGZpeCB0aGUgaGFu
-Zy4NCj4gDQo+IFJlcG9ydGVkLWJ5OiBUcm9sbGkgU2NobWl0dGxhdWNoIDx0LnNjaG1pdHRs
-YXVjaEBvcmxpdmVzLmRlPg0KPiBDbG9zZXM6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3Jl
-Z3Jlc3Npb25zL2VkMjIyNmZmLTI1N2ItNGNmZC1hZmQ2LWJmM2JlOTc4NTQ3NEBsb2NhbGhv
-c3QvDQo+IENsb3NlczogaHR0cHM6Ly9jb21tdW5pdHkuZnJhbWUud29yay90L2tlcm5lbC02
-LTgtcmMtc3lzdGVtLWZyZWV6ZXMtYWZ0ZXItcmVzdW1pbmctZnJvbS1zdXNwZW5kLXJlcHJv
-ZHVjZXJzLXdhbnRlZC80NTM4MQ0KPiBGaXhlczogMmIzYTdmMDZjYWFmICgicGxhdGZvcm0v
-eDg2L2FtZC9wbWY6IENoYW5nZSByZXR1cm4gdHlwZSBvZiBhbWRfcG1mX3NldF9kcmFtX2Fk
-ZHIoKSIpDQo+IFNpZ25lZC1vZmYtYnk6IE1hcmlvIExpbW9uY2llbGxvIDxtYXJpby5saW1v
-bmNpZWxsb0BhbWQuY29tPg0KPiAtLS0NCj4gICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9hbWQv
-cG1mL2NvcmUuYyB8IDIgLS0NCj4gICAxIGZpbGUgY2hhbmdlZCwgMiBkZWxldGlvbnMoLSkN
-Cj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9hbWQvcG1mL2NvcmUu
-YyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FtZC9wbWYvY29yZS5jDQo+IGluZGV4IDg1MzE1
-ODkzMzUxMC4uNGY3MzRlMDQ5ZjRhIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3Jt
-L3g4Ni9hbWQvcG1mL2NvcmUuYw0KPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9hbWQv
-cG1mL2NvcmUuYw0KPiBAQCAtMjk5LDggKzI5OSw2IEBAIHN0YXRpYyBpbnQgYW1kX3BtZl9z
-dXNwZW5kX2hhbmRsZXIoc3RydWN0IGRldmljZSAqZGV2KQ0KPiAgIAlpZiAocGRldi0+c21h
-cnRfcGNfZW5hYmxlZCkNCj4gICAJCWNhbmNlbF9kZWxheWVkX3dvcmtfc3luYygmcGRldi0+
-cGJfd29yayk7DQo+ICAgDQo+IC0Ja2ZyZWUocGRldi0+YnVmKTsNCj4gLQ0KPiAgIAlyZXR1
-cm4gMDsNCj4gICB9DQo+ICAgDQo=
+> > The above doesn't explain why the new code is h-file.
+>
+> It is in a h file because as metioned: "another driver is in the works"
+> which will also need this.
 
---------------5beBBwWG9elzcY3CUanl8u0g--
+Implied, but quite unclear. Can you rephrase?
 
---------------nrK90jMcqGrp1cq5oWYcW3x7
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+> And the code is large/complicated enough that I don't want to copy
+> and paste it. Yet small enough that it would be silly to put it
+> in its own .ko file.
 
------BEGIN PGP SIGNATURE-----
+We have even smaller code in the separate module. So I don't consider
+this as a strong argument.
 
-wsB5BAABCAAjFiEEiRYRIpDzmyt/p4JWnlBFsvrrxWsFAmXQ87gFAwAAAAAACgkQnlBFsvrrxWs8
-twf+LJKLE6LplCdx0AkuwmvBT5w8HGpp6uHhV4z0V58pk2gBmd9COeotYyRYSy1JeLlH2wzklXVj
-UTGqRAGtKl+LBwdPFV7pDdXad7rNAPWIpLiVkbM6uP+PyyzDU7OpuL9Od/fI37UFrphJSV+g16IW
-0N05PumqlRBydD6GoKzHkvujA6YXqhkE4ZH/cVeqe0dPUQzZAm9mnJLYzq08UQ54p9yKG66HfXVv
-sXKXypZLF4wFd1bnXShvSGuGClRqyTL1EGDn5axrctkPqsiB77Xr90amgX9x2Rtatb60MM3IKjkn
-fAovSO955msFgIpOQQPUifYLc9L9XceF4u8J4XnJjQ==
-=NO6F
------END PGP SIGNATURE-----
-
---------------nrK90jMcqGrp1cq5oWYcW3x7--
+--=20
+With Best Regards,
+Andy Shevchenko
