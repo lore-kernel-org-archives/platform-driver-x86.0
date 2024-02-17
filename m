@@ -1,263 +1,119 @@
-Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2085.outbound.protection.outlook.com [40.107.94.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E6320EE;
-	Sun, 18 Feb 2024 04:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.101.241.2
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708231916; cv=none; b=NMkPo4auC/9UI4qVEkzhVwFpyZoLhXioiykkomUIYBw3+WlriV7pbu8qwyPuNK0VP6+CtPj1w5xxCPJug6pNiI0IGpgFfCWGrLxD9qjWG1h7iLOfa7L4/CRxWz8Vtdd9b7NvWthWPbmD/KgyXU80hX3S61z1R3rpQFOX9KziDrs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708231916; c=relaxed/simple;
-	bh=Z16kMsP35BLE5Omc2MfOAuduo4bWxHN3lTQGEXpPoZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HQJxbA73vdC8YK5SOjKjgX5Z+4eqeXBEmLJ2xjR/XSWu+agyq9vfWW5DDuSHCxbI5lgSKNN7O+Z7J5Hbgut5xWKjWb8p3A64a0xWtMWCP0OnNBgkhfDnCaZ3E/Dv2S1YNKDpeQEGDbfP4hFyy+tjyHBgaBCcAMuLEJbenl357aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net; spf=pass smtp.mailfrom=just42.net; arc=none smtp.client-ip=150.101.241.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=just42.net
-Received: from marvin.atrad.com.au (marvin.atrad.com.au [192.168.0.2])
-	by server.atrad.com.au (8.18.1/8.18.1) with ESMTPS id 41I4lL9S003394
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Sun, 18 Feb 2024 15:17:23 +1030
-Date: Sun, 18 Feb 2024 15:17:21 +1030
-From: Jonathan Woithe <jwoithe@just42.net>
-To: Szilard Fabian <szfabian@bluemarch.art>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, W_Armin@gmx.de
-Subject: Re: [PATCH v4] platform/x86/fujitsu-laptop: Add battery charge
- control support
-Message-ID: <ZdGL2XvVnrRbbaGP@marvin.atrad.com.au>
-References: <20240129163502.161409-2-szfabian@bluemarch.art>
- <20240129175714.164326-2-szfabian@bluemarch.art>
- <20240207023031.56805-2-szfabian@bluemarch.art>
- <20240215203012.228758-2-szfabian@bluemarch.art>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519215394;
+	Sun, 18 Feb 2024 06:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708237627; cv=fail; b=pNyR7N6a6I4wgZqGncZjMk9DAjlbzDNAzzKLwnzm+uF5sRb51UXFbyfYWSD+gv5SwslNhUXn2/dtfTEoBUooOiGvSZATdyR42yST52KAfChFAcyelZYSw8MvlrqgtmzJwRCP9Y//Nk6vB4pJ0AOgIUm/2DJ58FAqaFaVX0badtc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708237627; c=relaxed/simple;
+	bh=rzQnxdRe91xgi1qd14VaVZBsBMyfeoc0gIP1/2UMeqs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n327cdXLAHv33PMWMSEDD2cO0N0Kfmx6FlnoJAIIWuvbGa8ciI9ilwySeESYM4aa1cynTidtlj1M1B/N0yPAt479EVY34iGWRuJ8O208EwsSp8jQnR5Kqc2bSFHTtPCHR8+XMZCKP0c46vgzgkwdZfpzOYJVO3Jgm2A2nlYq6aw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2s0ie98v; arc=fail smtp.client-ip=40.107.94.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2s0ie98v"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mtOanqcmhxydz2HMUrBxE+hdfkpeNoPfvgEysg3C53OyHsx6reYfMr6C6Qc24uW9+nYHR/ZZ5lm3KQFAZiHNvVNeTgvYHdR0oXTIJm/lfqwA64mf1US4DfsG1QysTYGjXkiuLErikegLAMKLS0acipgbIA1S9EXnqycHttBRcHAv8qs0LFwGuy60h+QDFwvt1zI+gI8YU3Oxl3DnZNal8FIOkoweR3NXhsZFFBmUlgvh6VNWLdV4Yo8RlEoR43KE6Och9X11wJye4PBHGcTjq/5RgA6k66ufJzk46D2jt5XpcldsiuKx4EvoFoSgRxNMaHfQC92tmXhi5owFp5krtg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NWnAJvu9w9md7Xmz3I9F9/pQzitMXGCKTyeLf00SEvA=;
+ b=bruOnp5tixUu7Jz8YU5FMjAuGEWR4wYTOL4jY5RUi01MUeAdikxaRoEfPy38c+yU5FsxlXMP2Jp8BYcr94Hjfb03/xOj/FrWRyjTnFriE/+YNoabJcU/5AllJbaL5h1tclS5KH7p+1egNPsvYqhhivyoZcU6N7RJXPLEMzhkNlFwbEXG6WKOyNAOL6KFd7Q56DgNC/W0IuvP09b/o2xz6z8Zm1GcZneGm8fDIZALFE87vN3kXxqMOR+EptRoX0JN2MNq7Z3symQ3aPrPHb1493nB+QXPFMICRJdvrW7iL9eFvQNUisc7rQHI9BnTZQwpE3oi9N0JczKMp4kHXZX9hA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NWnAJvu9w9md7Xmz3I9F9/pQzitMXGCKTyeLf00SEvA=;
+ b=2s0ie98v4/9k0iKOwZZroz7ZowFW3SXaWb4j3JZelVu258RnRu/8bjqlCNt5xwegnqTDIxOWI7DBOALN9lBIt29uEuPYnm+p2d0FthRITJ758GIQ/JReHV3enuUCfP94xrqnOxqlEqNyPzqTR1tes9YzoQ+lvYxWuH0HyfZu5Z8=
+Received: from CH5P222CA0006.NAMP222.PROD.OUTLOOK.COM (2603:10b6:610:1ee::27)
+ by DM4PR12MB8449.namprd12.prod.outlook.com (2603:10b6:8:17f::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.15; Sun, 18 Feb
+ 2024 06:27:01 +0000
+Received: from CH1PEPF0000A34C.namprd04.prod.outlook.com
+ (2603:10b6:610:1ee:cafe::b9) by CH5P222CA0006.outlook.office365.com
+ (2603:10b6:610:1ee::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.37 via Frontend
+ Transport; Sun, 18 Feb 2024 06:27:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH1PEPF0000A34C.mail.protection.outlook.com (10.167.244.6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Sun, 18 Feb 2024 06:27:01 +0000
+Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Sun, 18 Feb
+ 2024 00:27:00 -0600
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: <Shyam-sundar.S-k@amd.com>, <hdegoede@redhat.com>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>, "Mario
+ Limonciello" <mario.limonciello@amd.com>
+Subject: [PATCH 0/2] AMD PMF Smart PC error handling cleanups
+Date: Fri, 16 Feb 2024 19:22:03 -0600
+Message-ID: <20240217012205.113614-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240215203012.228758-2-szfabian@bluemarch.art>
-X-MIMEDefang-action: accept
-X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000A34C:EE_|DM4PR12MB8449:EE_
+X-MS-Office365-Filtering-Correlation-Id: f031bd74-c42e-4168-6d9c-08dc304a9db9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	+r2b1AXo6tQUtaQ7kw2p6BduQbhNzWh9noHvAOvGKFVlNLqtRtOcKBkXanXPaQoktlg+r5BbF7jTsNjDzvHlMid+IktUhBye+uPiHOs4UOaAoT2/lwSlEMD/MnTnyWAzrO7WoE69e0jGZ2ju4slvBenESyYEk/9azyp2qvU0KI72LFMhJQCTKOjZzLEKvVLfjt2uvWIpV5gl/cc37JK5JrDxAgpEK40pMODod1vjC0tmFCN9l62L3UO3rfuVbSfne7g3X+xm/jMPehqo3p5sH2R8m1hfxrIQCXFBeC13QlxYUJKt1kMolk5sxTzXina7CkMviPKGRz7OT7RVfsJKL4gcv7YYm1UYpH2kD/n1xoAb5VyZA70l2ZLoCIkpafQefVsTIQYu/+dlOblAUMaNsigGEkq1tecFRV8gWgHl9xSTx/GJFFjGPBcqrKQDfTjoDhoSXMKI+Huiv7130ilq9IrSTQXZHiFZIQ+0cSjZjXyZBRVkE/L6vYrZNBcZPRPAMJMsFZA0ddmKr/s/EhVTz/wV2JZet78DXGCt07uPjfJq0WRMuD9EbONvP2ZVrGV3RW3lB1Vq4f3d82wAqLCdPIAF2QP3J+ofyN49q9dlp6sdjraBr5g01zHAlIYjKLUCaYh6OrDTWLnF7NMZvTMqNzYQ5pqYNay7iQ3a13zbiSA=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(346002)(396003)(376002)(136003)(230922051799003)(1800799012)(451199024)(82310400011)(186009)(64100799003)(36860700004)(40470700004)(46966006)(86362001)(82740400003)(356005)(36756003)(81166007)(336012)(1076003)(7696005)(478600001)(316002)(26005)(54906003)(83380400001)(2616005)(41300700001)(110136005)(16526019)(426003)(70586007)(2906002)(4326008)(8676002)(4744005)(70206006)(8936002)(44832011)(5660300002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2024 06:27:01.1031
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f031bd74-c42e-4168-6d9c-08dc304a9db9
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000A34C.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8449
 
-On Thu, Feb 15, 2024 at 08:31:43PM +0000, Szilard Fabian wrote:
-> This patch adds battery charge control support on Fujitsu notebooks
-> via the S006 method of the FUJ02E3 ACPI device. With this method it's
-> possible to set charge_control_end_threshold between 50 and 100%.
-> 
-> Tested on Lifebook E5411 and Lifebook U728. Sadly I can't test this
-> patch on a dual battery one, but I didn't find any clue about
-> independent battery charge control on dual battery Fujitsu notebooks
-> either. And by that I mean checking the DSDT table of various Lifebook
-> notebooks and reverse engineering FUJ02E3.dll.
-> 
-> Signed-off-by: Szilard Fabian <szfabian@bluemarch.art>
+While debugging the suspend issue for amd-pmf the initial bisect result
+pointed at red herrings of cleanup flow problems for
+amd_pmf_init_smart_pc().  The actual issue wasn't in this code, but still
+a lot of memory is allocated and not immediately released if any of the
+error branches are taken.
 
-For various reasons it's going to take me more time than I had hoped to be
-in a position to test this patch on the Fujitsu S7020.  However, the idea
-behind the patch is good and it appears to have the necessary tests in place
-to cope with models such as the S7020 which don't include the battery charge
-control support.  I would therefore be happy to see this patch (or a
-subsequent revision) go into the kernel.
+This series cleans that up so that every step is cleaned up. I believe
+this actually fixes driver bugs that "could" occur if a BIOS advertisd
+Smart PC as well as ITS auto or CNQF but didn't include a policy in the
+BIOS.
 
-Acked-by: Jonathan Woithe <jwoithe@just42.net>
+Mario Limonciello (2):
+  platform/x86/amd/pmf: Add debugging message for missing policy data
+  platform/x86/amd/pmf: Fixup error handling for amd_pmf_init_smart_pc()
 
-> ---
-> v4:
-> * formatting fixes
-> * replaced sprintf() with sysfs_emit()
-> 
-> v3:
-> * added additional error handling
-> * removed if statement with device_create_file(), just returning that
->   function instead
-> * added bool charge_control_supported into struct fujitsu_laptop
-> * added a 'charge_control_add' and 'charge_control_remove' function to be
->   called from acpi_fujitsu_laptop_add() and acpi_fujitsu_laptop_remove()
-> * moved FUJ02E3 S006 probing logic from the ACPI battery hooks to the new
->   'charge_control_*' functions
-> 
-> v2:
-> Forgot to sign-off the original commit. Fixed, sorry for the
-> inconvenience.
-> ---
->  drivers/platform/x86/fujitsu-laptop.c | 125 ++++++++++++++++++++++++++
->  1 file changed, 125 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index 085e044e888e..69f9730bb14a 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -49,6 +49,8 @@
->  #include <linux/kfifo.h>
->  #include <linux/leds.h>
->  #include <linux/platform_device.h>
-> +#include <linux/power_supply.h>
-> +#include <acpi/battery.h>
->  #include <acpi/video.h>
->  
->  #define FUJITSU_DRIVER_VERSION		"0.6.0"
-> @@ -97,6 +99,10 @@
->  #define BACKLIGHT_OFF			(BIT(0) | BIT(1))
->  #define BACKLIGHT_ON			0
->  
-> +/* FUNC interface - battery control interface */
-> +#define FUNC_S006_METHOD		0x1006
-> +#define CHARGE_CONTROL_RW		0x21
-> +
->  /* Scancodes read from the GIRB register */
->  #define KEY1_CODE			0x410
->  #define KEY2_CODE			0x411
-> @@ -132,6 +138,7 @@ struct fujitsu_laptop {
->  	spinlock_t fifo_lock;
->  	int flags_supported;
->  	int flags_state;
-> +	bool charge_control_supported;
->  };
->  
->  static struct acpi_device *fext;
-> @@ -164,6 +171,118 @@ static int call_fext_func(struct acpi_device *device,
->  	return value;
->  }
->  
-> +/* Battery charge control code */
-> +static ssize_t charge_control_end_threshold_store(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t count)
-> +{
-> +	int value, ret;
-> +
-> +	ret = kstrtouint(buf, 10, &value);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (value < 50 || value > 100)
-> +		return -EINVAL;
-> +
-> +	int cc_end_value, s006_cc_return;
-> +
-> +	cc_end_value = value * 0x100 + 0x20;
-> +	s006_cc_return = call_fext_func(fext, FUNC_S006_METHOD,
-> +					CHARGE_CONTROL_RW, cc_end_value, 0x0);
-> +
-> +	if (s006_cc_return < 0)
-> +		return s006_cc_return;
-> +
-> +	/*
-> +	 * The S006 0x21 method returns 0x00 in case the provided value
-> +	 * is invalid.
-> +	 */
-> +	if (s006_cc_return == 0x00)
-> +		return -EINVAL;
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t charge_control_end_threshold_show(struct device *dev,
-> +				struct device_attribute *attr,
-> +				char *buf)
-> +{
-> +	int status;
-> +
-> +	status = call_fext_func(fext, FUNC_S006_METHOD,
-> +				CHARGE_CONTROL_RW, 0x21, 0x0);
-> +
-> +	if (status < 0)
-> +		return status;
-> +
-> +	return sysfs_emit(buf, "%d\n", status);
-> +}
-> +
-> +static DEVICE_ATTR_RW(charge_control_end_threshold);
-> +
-> +/* ACPI battery hook */
-> +static int fujitsu_battery_add_hook(struct power_supply *battery,
-> +			       struct acpi_battery_hook *hook)
-> +{
-> +	return device_create_file(&battery->dev,
-> +				  &dev_attr_charge_control_end_threshold);
-> +}
-> +
-> +static int fujitsu_battery_remove_hook(struct power_supply *battery,
-> +				  struct acpi_battery_hook *hook)
-> +{
-> +	device_remove_file(&battery->dev,
-> +			   &dev_attr_charge_control_end_threshold);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct acpi_battery_hook battery_hook = {
-> +	.add_battery = fujitsu_battery_add_hook,
-> +	.remove_battery = fujitsu_battery_remove_hook,
-> +	.name = "Fujitsu Battery Extension",
-> +};
-> +
-> +/*
-> + * These functions are intended to be called from acpi_fujitsu_laptop_add and
-> + * acpi_fujitsu_laptop_remove.
-> + */
-> +static int fujitsu_battery_charge_control_add(struct acpi_device *device)
-> +{
-> +	struct fujitsu_laptop *priv = acpi_driver_data(device);
-> +
-> +	priv->charge_control_supported = false;
-> +
-> +	/*
-> +	 * Check if the S006 0x21 method exists by trying to get the current
-> +	 * battery charge limit.
-> +	 */
-> +	int s006_cc_return;
-> +
-> +	s006_cc_return = call_fext_func(fext, FUNC_S006_METHOD,
-> +					CHARGE_CONTROL_RW, 0x21, 0x0);
-> +
-> +	if (s006_cc_return < 0)
-> +		return s006_cc_return;
-> +
-> +	if (s006_cc_return == UNSUPPORTED_CMD)
-> +		return -ENODEV;
-> +
-> +	priv->charge_control_supported = true;
-> +	battery_hook_register(&battery_hook);
-> +
-> +	return 0;
-> +}
-> +
-> +static void fujitsu_battery_charge_control_remove(struct acpi_device *device)
-> +{
-> +	struct fujitsu_laptop *priv = acpi_driver_data(device);
-> +
-> +	if (priv->charge_control_supported)
-> +		battery_hook_unregister(&battery_hook);
-> +}
-> +
->  /* Hardware access for LCD brightness control */
->  
->  static int set_lcd_level(struct acpi_device *device, int level)
-> @@ -839,6 +958,10 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
->  	if (ret)
->  		goto err_free_fifo;
->  
-> +	ret = fujitsu_battery_charge_control_add(device);
-> +	if (ret < 0)
-> +		pr_warn("Unable to register battery charge control: %d\n", ret);
-> +
->  	return 0;
->  
->  err_free_fifo:
-> @@ -851,6 +974,8 @@ static void acpi_fujitsu_laptop_remove(struct acpi_device *device)
->  {
->  	struct fujitsu_laptop *priv = acpi_driver_data(device);
->  
-> +	fujitsu_battery_charge_control_remove(device);
-> +
->  	fujitsu_laptop_platform_remove(device);
->  
->  	kfifo_free(&priv->fifo);
-> -- 
-> 2.43.1
-> 
-> 
+ drivers/platform/x86/amd/pmf/tee-if.c | 71 ++++++++++++++++++---------
+ 1 file changed, 47 insertions(+), 24 deletions(-)
+
+-- 
+2.34.1
+
