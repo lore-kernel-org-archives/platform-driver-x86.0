@@ -1,87 +1,148 @@
-Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2043.outbound.protection.outlook.com [40.107.243.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70235220;
-	Mon, 19 Feb 2024 02:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708310390; cv=none; b=UsDiOQurzemlbkBKr7RQCfFhvQ5ZMjnpYhB/Z/s1y5UY7qNfXEs7GFfzz2U3zd9PETFSK52VBpctlUlgWphydawXh+4GIcJhnxaj6GbilKT9eDtndXTPRYuPW0G04COqg/T6PVQBZ19aQ5SzU4rIiH/YHKRXf5uAi4EZuFjqCM8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708310390; c=relaxed/simple;
-	bh=9+xo2zaRwmyqIG/KcG72WcTIbFb/AQNcCcaqkzX/i3A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qaJhB5alvBuKoXaX41T+4zSnib8bc8nAY+eGLQCMFEAn9lnMquqINyWgK/gNNvg1hGJH9AA6A5m35ZT6Y1xx2VwtcW0M4gEQywAWzUSAP/E33PKmAigGeW7vpWZ1bZ6hOhUZv6akzyxBsH0o+3nhHTTCCd/WHVoCoPve9Y7GmdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=OtRgshy8; arc=none smtp.client-ip=185.125.188.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A00533CC;
+	Mon, 19 Feb 2024 03:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708315086; cv=fail; b=o1bJSJBXXVQyn3cbWLgSW4K91c8Gje6fiQiPfNHxhLwM/zx23YceF4iiSWyqn2Mb/jiTSrIMCY979K9mF27vNYOTgJcOFmfW8orUGIoN0XEhZeINn2HeFsRhkfYlG5ye8yfsKjBr4/MEX3Le/rMx3dj9XgVzQezkXMvbOyMZxuo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708315086; c=relaxed/simple;
+	bh=QP3Z7PV42JzXmj/C5mIltR+wanmWc+N2o5vsQe6Phg4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZDoB3WiBxL+HVgx4P38eA7eVfIVVP4I5AyucTBWVvTzyl3gsqXNdvQFTFX+UOXprzIA3rIJrXjAoM+g9AgufU4KKR6bYzlMkjQJhO7dgd1MGu+L6k2AusbBy+I6/VkHSd16cmwz1hzmcBhwee5vGKVBhJUr8lXEIBbLmZCbnNWE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=p3x7XCU8; arc=fail smtp.client-ip=40.107.243.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="OtRgshy8"
-Received: from [10.172.69.54] (1.general.ikepanhc.us.vpn [10.172.69.54])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 9BB9A40ECB;
-	Mon, 19 Feb 2024 02:39:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1708310385;
-	bh=k/b69OpV3ks4THLHdlq+Zzsdc+UxJzsw9Pq1QvTtppc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=OtRgshy8bvsiIskAGifZ5LyuCJbK263xRfDe2VvjXDuV/UZn7fG280f/j8GQpLDAS
-	 PzyfLKBbsPD9s/Ndcid/rlQKjlYDvG6lBRF/c2DN+wItIpxAgIeWxpOo5MaGB0GX2G
-	 fiDWEqNB1m/UqIZQJJR3tbiBbh00Sb7RRQ9juYBM83e4RyRjg9THqTTegCyBWoPQXe
-	 1kFkQy+mKf3jp+f2BKsZhMH0wogkEc0uNBzXnc+lpvQ4s8gwDATdEwbf1hRXY8au2R
-	 OIHtx+50TfUNCKYjZAev35R0PMQ780AAJDcN9LBctJHpWys+IWRX+6NiWTnqiqZITo
-	 ZSIx5gkwNBcog==
-Message-ID: <3b6a7bba-47a5-469c-aac1-5574ad78dadf@canonical.com>
-Date: Mon, 19 Feb 2024 10:39:38 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="p3x7XCU8"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ps7L4uLbddblsfcvXRu3a2KlhcQ4bcE0N7A6Kbvu6pDPG8gvPBHfnViJfoJLNBNBjgrB+lft94xXndgsb9luL571Cx2yLgKiqkSWv6vxNXJ1aU2HvVnRUAFR5tXkfc2sBn7K3FGasa8ClGRxX+Pte1IjFK/MkFllcxxT351ctxf6+WTeJTDSoeeqyFLTOA+r66CvnzD+guDDP64cIaIasDhzrj8jjPabzEesGw/XwZLHKhEG+fczElyhqlFR7muu38/hzzk3jDHlpsKUEY9og0psY/8CSnTrFB4tLKQ+kcKwNHFzeOU9RTqLg55vKoT+tfeSUxb/fMOcW2JPID6oMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SOgmnhU8M2bjZ43Lrv0A9ll0gwRP8pNgM5MomfQMQ3M=;
+ b=ej+5FdEVC41SEL2uSxAPqPF3kTUlX8nGKZm5608efwTHxw9qvOhH2A87JH9dJrs/bMt7kMo7HIicbZRRuGl847EHzCFgoFh1cPZRwkTvusnDsv5TWA11s2t9mphH19LMvhrYzdduo6vrbzWiFceboe7RvLtXDOSaWC0+GoOz3Kb2oGG8QQSGw5T93yBH+UJaqo5lywak0f5xeq4NCdlU/cDlPEu4xdD0f7WO+lTYzlCQstUrJGINvoA/2U0W+VwTlP2Hko5/UmDAQN0IONibWNEnf1j8gz7hPoGSbfSuqBt6xxWh7kRiGtxjxdFjGxK4sGnHct9y2oXmJ1smz2zakA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SOgmnhU8M2bjZ43Lrv0A9ll0gwRP8pNgM5MomfQMQ3M=;
+ b=p3x7XCU8cLsRJEYRX0yCUQWawkr0U8PBn2rq0pBWcb+48t8tEP6bkDMFRuy+YfGN3HPKOTThbPmOt9vV2oEBs7ZLWJj7I9nxU5EJb6+R5BkH8sf9oKZW0fJC+NjVh/j9HUcOEBrprBcC875YxbaB5fyy1ikqH91wLH220up9ElM=
+Received: from CH5PR05CA0023.namprd05.prod.outlook.com (2603:10b6:610:1f0::25)
+ by CH0PR12MB5027.namprd12.prod.outlook.com (2603:10b6:610:e2::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.19; Mon, 19 Feb
+ 2024 03:58:02 +0000
+Received: from DS2PEPF00003442.namprd04.prod.outlook.com
+ (2603:10b6:610:1f0:cafe::c5) by CH5PR05CA0023.outlook.office365.com
+ (2603:10b6:610:1f0::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.15 via Frontend
+ Transport; Mon, 19 Feb 2024 03:58:02 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS2PEPF00003442.mail.protection.outlook.com (10.167.17.69) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Mon, 19 Feb 2024 03:58:02 +0000
+Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Sun, 18 Feb
+ 2024 21:58:01 -0600
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: Hans de Goede <hdegoede@redhat.com>, Mark Pearson
+	<mpearson-lenovo@squebb.ca>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH] platform/x86: thinkpad_acpi: Only update profile if successfully converted
+Date: Fri, 16 Feb 2024 20:23:11 -0600
+Message-ID: <20240217022311.113879-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: support Fn+R dual-function
- key
-To: Gergo Koteles <soyer@irl.hu>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <0cdbc0e6eb65e160384ae0ed152e7de3ded1d9d5.1707604991.git.soyer@irl.hu>
-Content-Language: en-US
-From: Ike Panhc <ike.pan@canonical.com>
-In-Reply-To: <0cdbc0e6eb65e160384ae0ed152e7de3ded1d9d5.1707604991.git.soyer@irl.hu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS2PEPF00003442:EE_|CH0PR12MB5027:EE_
+X-MS-Office365-Filtering-Correlation-Id: 46322f33-1c63-4f1f-551a-08dc30fef863
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	kqU/JZaRgY8uHASU04FPIZEbl6vsFO1ftoXCFrdwLh9GsUFSIAL9ZkkaXpR2xx5fLInlOddMHDvzgbUk5Imix9zEftEQ6uqn0a8pj6heFuYFRMNum3XSZeujB5uvEbOq1aGHqPseFXf1Ml6xUj9FWSn6G2PXVDm+dm0woKnsvjFCKLnmK4Lf9KmfqwrHoYKSm/x7/vlJ7qfaqnIifSzeXXpxFiN8JOH7K/iO/UHeOzRy6ev0+anmabdO7RzZZS8mSR78QEl+uls2gSBs0ZIIVAJuVz6VOBq2nMh/RULyjvLgXdgXafZyqbMKTXdYUzTrcV/rxjW1rsRXfhddICupgvRYe9kUsNUHdjs7V/Y8z0IaSdqv5zuM5Eu5bRKrmhA58jjqGsJQ4XfkD87UdNbLXZbwc1nii263PDMUXtN188sibnoxodp2+ll0y2uCV6I2rgi5ntSzxKPITSq65u7vfpitSZ4qnFN9qbmEr0o3l/PV+7KSO6KKbC5p1kI9cDJOc4FR9MiMgIj/DwdBQHv94Pg0P3MbL6VmrpyackqquFlfRKJdvlSiUQJMQeNiH6uf5nePjE494WgOdpKam0ALfxaqttZXSBrCiakVkQm+z2Rn1k2ZKzx6OlpP61zOR60XPlbY4s1LeQ4LM1E+6DMx/5QQnKv6KQs7YHqAegzJCqE=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(346002)(136003)(376002)(39860400002)(230922051799003)(230273577357003)(186009)(82310400011)(64100799003)(36860700004)(1800799012)(451199024)(40470700004)(46966006)(15650500001)(2906002)(44832011)(5660300002)(426003)(26005)(16526019)(336012)(1076003)(8676002)(8936002)(70206006)(70586007)(316002)(4326008)(41300700001)(2616005)(83380400001)(86362001)(7696005)(478600001)(6666004)(54906003)(110136005)(81166007)(36756003)(82740400003)(356005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2024 03:58:02.6072
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 46322f33-1c63-4f1f-551a-08dc30fef863
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS2PEPF00003442.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5027
 
-On 2/11/24 06:51, Gergo Koteles wrote:
-> According to the manual, Fn+R adjusts the display refresh rate.
-> Map Fn+R to KEY_DISPLAYTOGGLE.
-> 
-> Signed-off-by: Gergo Koteles <soyer@irl.hu>
-> ---
->  drivers/platform/x86/ideapad-laptop.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index 88eefccb6ed2..4c130957f80d 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -1091,6 +1091,8 @@ static const struct key_entry ideapad_keymap[] = {
->  	{ KE_KEY,	0x07 | IDEAPAD_WMI_KEY, { KEY_HELP } },
->  	{ KE_KEY,	0x0e | IDEAPAD_WMI_KEY, { KEY_PICKUP_PHONE } },
->  	{ KE_KEY,	0x0f | IDEAPAD_WMI_KEY, { KEY_HANGUP_PHONE } },
-> +	/* Refresh Rate Toggle (Fn+R) */
-> +	{ KE_KEY,	0x10 | IDEAPAD_WMI_KEY, { KEY_DISPLAYTOGGLE } },
->  	/* Dark mode toggle */
->  	{ KE_KEY,	0x13 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
->  	/* Sound profile switch */
+Randomly a Lenovo Z13 will trigger a kernel warning traceback from this
+condition:
 
-Acked-by: Ike Panhc <ike.pan@canonical.com>
+```
+if (WARN_ON((profile < 0) || (profile >= ARRAY_SIZE(profile_names))))
+```
 
-BTW on which ideapad we need this patch?
+This happens because thinkpad-acpi always assumes that
+convert_dytc_to_profile() successfully updated the profile. On the
+contrary a condition can occur that when dytc_profile_refresh() is called
+the profile doesn't get updated as there is a -EOPNOTSUPP branch.
 
-Thanks.
+Catch this situation and avoid updating the profile. Also log this into
+dynamic debugging in case any other modes should be added in the future.
 
---
-Ike
+Fixes: c3bfcd4c6762 ("platform/x86: thinkpad_acpi: Add platform profile support")
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+BTW - This isn't new.  I've been seeing this a long time, but I just finally
+got annoyed enough by it to find the code that triggered the sequence.
+
+ drivers/platform/x86/thinkpad_acpi.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index c4895e9bc714..5ecd9d33250d 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -10308,6 +10308,7 @@ static int convert_dytc_to_profile(int funcmode, int dytcmode,
+ 		return 0;
+ 	default:
+ 		/* Unknown function */
++		pr_debug("unknown function 0x%x\n", funcmode);
+ 		return -EOPNOTSUPP;
+ 	}
+ 	return 0;
+@@ -10493,8 +10494,8 @@ static void dytc_profile_refresh(void)
+ 		return;
+ 
+ 	perfmode = (output >> DYTC_GET_MODE_BIT) & 0xF;
+-	convert_dytc_to_profile(funcmode, perfmode, &profile);
+-	if (profile != dytc_current_profile) {
++	err = convert_dytc_to_profile(funcmode, perfmode, &profile);
++	if (!err && profile != dytc_current_profile) {
+ 		dytc_current_profile = profile;
+ 		platform_profile_notify();
+ 	}
+-- 
+2.34.1
+
