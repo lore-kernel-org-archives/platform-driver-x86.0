@@ -1,64 +1,56 @@
 Received: from mail.orlives.de (mail.orlives.de [148.251.55.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4346D1B4
-	for <platform-driver-x86@vger.kernel.org>; Sat, 17 Feb 2024 16:57:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE647D41F;
+	Sat, 17 Feb 2024 17:58:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.55.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708189047; cv=none; b=fbqY+5NEPHnrefzRYsunIkBZQjjiCMw+xGLegnReke86KiYEJ7B5UBN24/RDa+D3dj7qKeGlZDLTU8XjB/QIAfi6HgaxtP9X1pmj6uY3WOH51uPOeBrDBIjytdx1KQN0OqR8aewKpKhYTgam0PAHj2nla/SSqhpZtdW+DsrXHXM=
+	t=1708192704; cv=none; b=SbtcFnwrdyCsvNUa/ke0vz2/rLss/Xm6bM5UDm/KUjbNzeGuTpKZzlQ54N7dRBvwqkpaylNB3TAQsh5WmvqpC3npz1rXfFc9SPV0LpBmVY2SIhudWitP0/NeOzPnPGLTIddcVC6clylDCYPYTgpic656FRK4MhknGITooLTLZ/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708189047; c=relaxed/simple;
-	bh=SWUXCZdtP4SXnvy53az9StlPLHzqtRP+AQA+h8DhxZ0=;
+	s=arc-20240116; t=1708192704; c=relaxed/simple;
+	bh=vOcL7fvdPQymRt5haVMB/0ti/PnZsWOVFGIxq1G7unw=;
 	h=Message-ID:Date:Mime-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ot3AdUG8vlMC0iHXdXSYsb8/mFjKpkMxADdRG1IHvbxOQxj0KopAlAzlZIbTQrSM4n05a5neWEC7CizP8n5xzWXwIAGQgTAyLOdXeGX8aNnHpVo4labQMgLK1HfHpLiHyNgWv18p94n/8UjpcGr6yvJUaq20KBnVZwe4VFtDQIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orlives.de; spf=pass smtp.mailfrom=orlives.de; dkim=pass (4096-bit key) header.d=orlives.de header.i=@orlives.de header.b=jgrKo3KE; arc=none smtp.client-ip=148.251.55.246
+	 In-Reply-To:Content-Type; b=NDnLZ6my83Ih1kt8Qy0Eiq7xbSBpet22yjCGYC4md7Y8VHFc6zKAvgyL6xJ0QJl+A/ZUHmvpSorXuhiPaePQINm7WWFfP8nfLJa4xCdGHVIj7lpHeBIw2zD/MMUaCBqdxBfeHyBmKxCJHxiL0tzlYklTGgKMo6jowCYJcMgKhaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orlives.de; spf=pass smtp.mailfrom=orlives.de; dkim=pass (4096-bit key) header.d=orlives.de header.i=@orlives.de header.b=Zi9v1Lrj; arc=none smtp.client-ip=148.251.55.246
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orlives.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orlives.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=orlives.de header.i=@orlives.de header.b="jgrKo3KE"
+	dkim=pass (4096-bit key) header.d=orlives.de header.i=@orlives.de header.b="Zi9v1Lrj"
 Received: from mail.orlives.de (localhost [127.0.0.1])
-	by mail.orlives.de (Postfix) with ESMTPSA id 0FC9FA008B;
-	Sat, 17 Feb 2024 17:57:16 +0100 (CET)
+	by mail.orlives.de (Postfix) with ESMTPSA id DD361A008B;
+	Sat, 17 Feb 2024 18:58:17 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=orlives.de; s=dkim1;
-	t=1708189036;
+	t=1708192698;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=SWUXCZdtP4SXnvy53az9StlPLHzqtRP+AQA+h8DhxZ0=;
-	b=jgrKo3KEDbP2e9fVHvILj4DE5ZEhl4GaNPt/mcVqk3Wf71aET82vKLUQp5yXqgAF9nP9Rs
-	4KWK8i9te+1/q/8q1iACq3VNbudN+l3Lf7U/391F54tE/YfuHpJSU8w6xIVyPhi+SU2ECU
-	pWrhY94OXcA5EcE4NrtKIREWtpuC0uXtTT4Y58zyLXGAbPGwyRLvj51HiK0nP2edYUcaKy
-	FDA/jNi7xHWdBO9yH9vXmP6C7CbWhT+c7mNvlc1SoLn+tDIg/FtaSfhHk4Ruch+yjBU9xb
-	OA2Y0OtUdbRBs+zFeHR7tHkDkeLm0lf3xcWbJSm4mx8BnwbRASHasUFLanQUaDusBImDUW
-	tZvDbhGXlPfNMQh7WyIXcam+WED5E11S4fXnuUKzWmeCyyppHuJE7rGyZFqryKIMlmSOke
-	kU96esWNj2hd/Z63HlfdSP34RI+9LYBYdRv6irUmF7SySiabMCl4R7VGbnaCg1Uk1Isicb
-	p7S+sLzgVdaAH68Pt7K44uIxiulSsaPDApEdg8Z94WQ2jHYN4tAetlG9Z75q7Ywk9cRSqC
-	IKxhtm8R4MRY3BnPVoOaj0KIOzqB3ZRzVQJVd8WGC1qF961hH6NAKFkGbDP5qhN074OnJF
-	q+VXiMW9WoftVrT30T2eOxz/QoiPr98ixS81PIqYf53LYhxvw7VSc=
+	bh=vOcL7fvdPQymRt5haVMB/0ti/PnZsWOVFGIxq1G7unw=;
+	b=Zi9v1LrjuCu0I5ldzpaaj5KG+j25bvhbhZ0kqMQ7V6CZIN9JYhXH/F/veM2RfBNSLXWS67
+	RLixy0644yWwKQZeeWATYwLai5HXII8+U59hXr4yoj58j8JSYjyVAYHDszzKic0rnv5dE0
+	udk2PGLq/8AzeF5NuqJVQVfjRl/HmcOjmEaWy8AOPILt0IHxTOM5ars29JdMzgvyAh6yTB
+	T4o1K6b+vn6N7WtglXivmRScxW65/crOPGLruMXvvTuq4CaqIzAOhHzUq1wEWGVP9YHQuw
+	GzZ7tlbS3OhqDYvS5s7JZza6/aDJ4erOWVZHa9SVDZgPJWmfblA/2SfSxFjLmLMoFLCrur
+	RjAauR5WW2kMtna5CojrmEa7jsv/LmIJBo5guPIJQtDqdjgZVdJZpJpGfs1j8cCLmkZ31O
+	nKCK9u4iK8sk7PW1Hy4XKiPDNaw9DkcwsOqmrtR3BU7Fo7uYTjNDMm5qTc0TJNj1GQN2W2
+	9uX05eHStzzDObyVTlTW1qP/sqlQH+qraJvsAs9q4R0RFD4wawBTHl2/XZUNp4DeE/oDEt
+	tDGkjwPtQNXbziAn9OfOqT+jIsC+MmDur0e6+WmoN7qr1ikiudlWpWUdhuK4p8aVMbxy/2
+	E0N+bakK6FN/kAxBLuVfHivPgJhIL8H1JF6u+utwJiSgQ2ZakJDKs=
 Authentication-Results: ORIGINATING;
 	auth=pass smtp.auth=t.schmittlauch@orlives.de smtp.mailfrom=t.schmittlauch@orlives.de
-Message-ID: <afd722b5-c48c-4ab7-b63b-7ce933e689c9@localhost>
-Date: Sat, 17 Feb 2024 17:57:12 +0100
+Message-ID: <da6fbbdc-5f6b-4bfe-816d-03477bf489a8@localhost>
+Date: Sat, 17 Feb 2024 18:58:15 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Subject: Re: 6.8-rc: system freezes after resuming from suspend
-To: Hans de Goede <hdegoede@redhat.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
- platform-driver-x86@vger.kernel.org
-References: <ed2226ff-257b-4cfd-afd6-bf3be9785474@localhost>
- <df1d5d57-1058-43f4-8aca-f91e7ad92dd4@leemhuis.info>
- <0d3bdb0f-63a7-4c48-b4d4-157b7b7c1689@amd.com>
- <92c8d543-bdf1-434e-8d92-23eeb513b35e@localhost>
- <0a103f43-0340-4c01-8a26-ecdfc186915a@amd.com>
- <d20ee821-c0e8-43c3-944c-125bf4064a16@localhost>
- <687a566b-95cf-4fa6-bc8e-7ef0b0475a3f@leemhuis.info>
- <859c089d-2c3e-4cb9-ad60-baf3e168d6bd@redhat.com>
+Subject: Re: [PATCH] platform/x86/amd/pmf: Fix a suspend hang on Framework 13
+To: Mario Limonciello <mario.limonciello@amd.com>, Shyam-sundar.S-k@amd.com,
+ hdegoede@redhat.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20240217005216.113408-1-mario.limonciello@amd.com>
 Content-Language: en-US
 From: Trolli Schmittlauch <t.schmittlauch@orlives.de>
 Autocrypt: addr=t.schmittlauch@orlives.de; keydata=
@@ -85,58 +77,72 @@ Autocrypt: addr=t.schmittlauch@orlives.de; keydata=
  lMt+fb6+330M9cXCz6H2/k7b2BTEM9xZPytt2ICT8I9rX5+8tuHDrstr13P40QOR0Exh5EHw
  LA00FYsr0e+ijzxRP9EC3AA9Gt/518IRS7FGvszu4qWWRT33P2cABoVUPpsybrhvuApgpf5y
  DLO17h0Vxwoq2qqCO/RqIw+o8Lj89xOl4VkPpXe4
-In-Reply-To: <859c089d-2c3e-4cb9-ad60-baf3e168d6bd@redhat.com>
+In-Reply-To: <20240217005216.113408-1-mario.limonciello@amd.com>
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="------------lJcLkhQKuz0qtr92lT27PdHL"
+ boundary="------------nrK90jMcqGrp1cq5oWYcW3x7"
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------lJcLkhQKuz0qtr92lT27PdHL
-Content-Type: multipart/mixed; boundary="------------92hS9SyoBAFMuz6UwBYL5MT0";
+--------------nrK90jMcqGrp1cq5oWYcW3x7
+Content-Type: multipart/mixed; boundary="------------5beBBwWG9elzcY3CUanl8u0g";
  protected-headers="v1"
 From: Trolli Schmittlauch <t.schmittlauch@orlives.de>
-To: Hans de Goede <hdegoede@redhat.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
- platform-driver-x86@vger.kernel.org
-Message-ID: <afd722b5-c48c-4ab7-b63b-7ce933e689c9@localhost>
-Subject: Re: 6.8-rc: system freezes after resuming from suspend
-References: <ed2226ff-257b-4cfd-afd6-bf3be9785474@localhost>
- <df1d5d57-1058-43f4-8aca-f91e7ad92dd4@leemhuis.info>
- <0d3bdb0f-63a7-4c48-b4d4-157b7b7c1689@amd.com>
- <92c8d543-bdf1-434e-8d92-23eeb513b35e@localhost>
- <0a103f43-0340-4c01-8a26-ecdfc186915a@amd.com>
- <d20ee821-c0e8-43c3-944c-125bf4064a16@localhost>
- <687a566b-95cf-4fa6-bc8e-7ef0b0475a3f@leemhuis.info>
- <859c089d-2c3e-4cb9-ad60-baf3e168d6bd@redhat.com>
-In-Reply-To: <859c089d-2c3e-4cb9-ad60-baf3e168d6bd@redhat.com>
+To: Mario Limonciello <mario.limonciello@amd.com>, Shyam-sundar.S-k@amd.com,
+ hdegoede@redhat.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Message-ID: <da6fbbdc-5f6b-4bfe-816d-03477bf489a8@localhost>
+Subject: Re: [PATCH] platform/x86/amd/pmf: Fix a suspend hang on Framework 13
+References: <20240217005216.113408-1-mario.limonciello@amd.com>
+In-Reply-To: <20240217005216.113408-1-mario.limonciello@amd.com>
 
---------------92hS9SyoBAFMuz6UwBYL5MT0
+--------------5beBBwWG9elzcY3CUanl8u0g
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: base64
 
-SGkgSGFucywNCg0KPiBDYW4geW91IGJ1aWxkIGEgNi44LWM0IHdpdGggdGhvc2UgMiBpbmNs
-dWRlZCBhbmQgc2VlIGlmIHRoYXQgZml4ZXMgdGhpbmdzID8NCg0KVW5mb3J0dW5hdGVseSwg
-Ym90aCBvZiB0aGVzZSBkbyBub3QgZml4IHRoZSBpc3N1ZS4gVGhlIHN5c3RlbSBzdGlsbCBm
-cmVlemVzIGF0IHRoZSAybmQgc3VzcGVuZC4NCg0KQmVzdA0Kc2NobWl0dGxhdWNoDQo=
+QXMgdGhlIHJlcG9ydGVyIG9mIHRoYXQgaXNzdWUsIEkgY29uZmlybSB0aGF0IHRoaXMgZml4
+ZXMgc3VzcGVuZCBhbmQgcmVzdW1lIGZvciBtZSBhcyB3ZWxsLiBJJ3ZlIGFwcGxpZWQgdGhl
+IHBhdGNoIG9uIHRvcCBvZiA2LjgtcmM0Lg0KVGhhbmtzIGZvciBnZXR0aW5nIHRvIHRoZSBi
+b3R0b20gb2YgaXQgc28gcXVpY2tseS4NCg0KT24gMTcuMDIuMjQgMDE6NTIsIE1hcmlvIExp
+bW9uY2llbGxvIHdyb3RlOg0KPiBUaGUgYnVmZmVyIGlzIGNsZWFyZWQgaW4gdGhlIHN1c3Bl
+bmQgaGFuZGxlciBidXQgdXNlZCBpbg0KPiB0aGUgZGVsYXllZCB3b3JrIGZvciBhbWRfcG1m
+X2dldF9tZXRyaWNzKCkuDQo+IA0KPiBTdG9wIGNsZWFyaW5nIGl0IHRvIGZpeCB0aGUgaGFu
+Zy4NCj4gDQo+IFJlcG9ydGVkLWJ5OiBUcm9sbGkgU2NobWl0dGxhdWNoIDx0LnNjaG1pdHRs
+YXVjaEBvcmxpdmVzLmRlPg0KPiBDbG9zZXM6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3Jl
+Z3Jlc3Npb25zL2VkMjIyNmZmLTI1N2ItNGNmZC1hZmQ2LWJmM2JlOTc4NTQ3NEBsb2NhbGhv
+c3QvDQo+IENsb3NlczogaHR0cHM6Ly9jb21tdW5pdHkuZnJhbWUud29yay90L2tlcm5lbC02
+LTgtcmMtc3lzdGVtLWZyZWV6ZXMtYWZ0ZXItcmVzdW1pbmctZnJvbS1zdXNwZW5kLXJlcHJv
+ZHVjZXJzLXdhbnRlZC80NTM4MQ0KPiBGaXhlczogMmIzYTdmMDZjYWFmICgicGxhdGZvcm0v
+eDg2L2FtZC9wbWY6IENoYW5nZSByZXR1cm4gdHlwZSBvZiBhbWRfcG1mX3NldF9kcmFtX2Fk
+ZHIoKSIpDQo+IFNpZ25lZC1vZmYtYnk6IE1hcmlvIExpbW9uY2llbGxvIDxtYXJpby5saW1v
+bmNpZWxsb0BhbWQuY29tPg0KPiAtLS0NCj4gICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9hbWQv
+cG1mL2NvcmUuYyB8IDIgLS0NCj4gICAxIGZpbGUgY2hhbmdlZCwgMiBkZWxldGlvbnMoLSkN
+Cj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9hbWQvcG1mL2NvcmUu
+YyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2FtZC9wbWYvY29yZS5jDQo+IGluZGV4IDg1MzE1
+ODkzMzUxMC4uNGY3MzRlMDQ5ZjRhIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3Jt
+L3g4Ni9hbWQvcG1mL2NvcmUuYw0KPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9hbWQv
+cG1mL2NvcmUuYw0KPiBAQCAtMjk5LDggKzI5OSw2IEBAIHN0YXRpYyBpbnQgYW1kX3BtZl9z
+dXNwZW5kX2hhbmRsZXIoc3RydWN0IGRldmljZSAqZGV2KQ0KPiAgIAlpZiAocGRldi0+c21h
+cnRfcGNfZW5hYmxlZCkNCj4gICAJCWNhbmNlbF9kZWxheWVkX3dvcmtfc3luYygmcGRldi0+
+cGJfd29yayk7DQo+ICAgDQo+IC0Ja2ZyZWUocGRldi0+YnVmKTsNCj4gLQ0KPiAgIAlyZXR1
+cm4gMDsNCj4gICB9DQo+ICAgDQo=
 
---------------92hS9SyoBAFMuz6UwBYL5MT0--
+--------------5beBBwWG9elzcY3CUanl8u0g--
 
---------------lJcLkhQKuz0qtr92lT27PdHL
+--------------nrK90jMcqGrp1cq5oWYcW3x7
 Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-wsB5BAABCAAjFiEEiRYRIpDzmyt/p4JWnlBFsvrrxWsFAmXQ5WkFAwAAAAAACgkQnlBFsvrrxWuF
-4Qf/bHk5Crxc20XeK2vJ4H84d/u/a73eCQuD35KeaG6IhYXqbfh5puZfr29Cx+r0NygPRrbLH9AO
-VhPKA2Hxv0cNHgPUZKgsmEuN5qJ7NaLZU6iLVUiCfc0Ee4I9sHtbGkPZrpfDx8O/cZ7oLn6Gg6DK
-phH5SJIETJwyCtxYmjtb+4NuWc86m6QpCkZZ2CkbMDvsM3UGIFOwuryCygokillDIfeUi6Meot33
-WFKnNE3UA1WTw9+nOYxA2OVVu4vd6KY1xd3mzIsH2LnuASXSKUxpSQd9tExDn0NWo6tJ3rHKwrwF
-858iZCFvrx5Oiki0v8f1FjT7qYVlEcxLy2dufkA3kw==
-=TfEA
+wsB5BAABCAAjFiEEiRYRIpDzmyt/p4JWnlBFsvrrxWsFAmXQ87gFAwAAAAAACgkQnlBFsvrrxWs8
+twf+LJKLE6LplCdx0AkuwmvBT5w8HGpp6uHhV4z0V58pk2gBmd9COeotYyRYSy1JeLlH2wzklXVj
+UTGqRAGtKl+LBwdPFV7pDdXad7rNAPWIpLiVkbM6uP+PyyzDU7OpuL9Od/fI37UFrphJSV+g16IW
+0N05PumqlRBydD6GoKzHkvujA6YXqhkE4ZH/cVeqe0dPUQzZAm9mnJLYzq08UQ54p9yKG66HfXVv
+sXKXypZLF4wFd1bnXShvSGuGClRqyTL1EGDn5axrctkPqsiB77Xr90amgX9x2Rtatb60MM3IKjkn
+fAovSO955msFgIpOQQPUifYLc9L9XceF4u8J4XnJjQ==
+=NO6F
 -----END PGP SIGNATURE-----
 
---------------lJcLkhQKuz0qtr92lT27PdHL--
+--------------nrK90jMcqGrp1cq5oWYcW3x7--
