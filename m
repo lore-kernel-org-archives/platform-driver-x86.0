@@ -1,210 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2089.outbound.protection.outlook.com [40.107.94.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450311EB38
-	for <platform-driver-x86@vger.kernel.org>; Sat, 17 Feb 2024 10:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708166009; cv=none; b=h/kgEktTQsuRIaLQgK2deVsSl772tsZ3DBeYUGdQHgpQeHQa1BKBQM3vCah0cjgQCqyMAX76sAccIQGDJfHuctGkFkEjXuNOUSgaWG+5Y18UK6QCZORHGrwwjTY4h9dAV3TqgDCvjZnwUXnCFZ80VZOmauFECjeeLHtTs7Yy0Tg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708166009; c=relaxed/simple;
-	bh=BAwzhRsDCszvGkCZpbQAxpfMlN2n3GfPPVFq0MCB2Fk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NEcZHhgUZmBEOedBZk993+zBVILoZVbhQMjfKjw4bK/L+3zGwRxrar38CJBhBFcSn3uDK69p7L7GBeVfTtJhEn+EwUXoH/511GaBIpSYiE0CuX1KgXya6eioBK2eBIWFXnEr+bUGl0p9Qcr2qr1aV7TbPHU0qU6oy+qLkNfytGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gNrVxlrs; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584957D3F1;
+	Sat, 17 Feb 2024 16:52:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708188768; cv=fail; b=ewpB588JrEzgZhUL93mkFZVbJD9z1CtpTrzFZmXtM7UwOWgZXi3mdyrg5R5vXnTRor+BLJHmgc1bDTFL/jSNwFetXLPn/+knD4KPIuGud5bJRwkYSXFhOBxaNBWRyDOe1pyb+AjdnNtjeHPuhS5jWo0+wkSQJpTbK6qzUZygscE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708188768; c=relaxed/simple;
+	bh=FEMSSVq+9HJUayCtCi7TSXQpeecIvo9nR+7fbknpdTw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YUYnQ7DwhFag0eauKAzRbYszL6mk2QS+vhJVop2mvIxxFRU3j+q2kM4sG8LofFaFfCJXmsh0M34+X5sQk93KUKJWhOPbaNAE1MnNWSzx79b+iZuVtX3syH60VFoHYN0FS8BIs8mREHUvNsSyr5UMdq3Z58pnycxOXbl8R0UmF/A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2iM66rRM; arc=fail smtp.client-ip=40.107.94.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gNrVxlrs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708166006;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SOPLsffXfXpiI5OFL9Rz24HEghEnIzQEHLm/BPE3AJ8=;
-	b=gNrVxlrstWyqfbkcMhTRoO2fjm0VOx8vMmBsOUuzjcxYA69aV4oNISe4ND4JCJlupHfpyI
-	w0KrZ11Ho3Xu3KLvfOzZGtXgmw3oWe0j8uTOsloWeYiiRUK9w4aPB6/ma/0ywFBDc/ZW7a
-	BL1sHoi9A0Sj3ZuD3JohRvYNb7VigmI=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-684-aam0LRd6PAy75-hNyDuVyA-1; Sat, 17 Feb 2024 05:33:24 -0500
-X-MC-Unique: aam0LRd6PAy75-hNyDuVyA-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a3d114fe9b6so61210166b.3
-        for <platform-driver-x86@vger.kernel.org>; Sat, 17 Feb 2024 02:33:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708166003; x=1708770803;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SOPLsffXfXpiI5OFL9Rz24HEghEnIzQEHLm/BPE3AJ8=;
-        b=RRm0DROu0Zl0iSXZgY+Rthx1/qv5Bkjq3/JQfH9Ia/Ogs4jw2LxiJGfST/Hm8m7EMY
-         hgTUN/mhLhtJEp/3KlQCPoAYMdoggMtJXZHpocK5C4BTk3Apb/+ZN+SJm0yY2dJJ2puN
-         ZobvmfPEgsAnBrx5hvUNGFRdMktQiN7nCslnGAohlPCcoTHKNApQGjrSi71an1aaQmSY
-         QtBvvS4UkjQp4vVEsrEgzkmXkadclNi3DlKtgUglpmTrKNgZyL/xO52pYEwHPZ/REbyC
-         v4CF/AWrmBi9sD1F+cwWTh9FFIiNP5feM7/bEjpWtlGwm35WRGXJOgIOhV1SK/49jQ34
-         Mosg==
-X-Forwarded-Encrypted: i=1; AJvYcCXwWLw6aaEecHgXrsXdWIBACKuaBycHHUJD81zE46hFyoLWwK4wmkUBuCrpfz+qmWc+u5H/gw/QzdEdyjvStRiL9wBsKbjKSm7EDggWN49bt9iDzA==
-X-Gm-Message-State: AOJu0YzQ0AOjWS3qkxwOtLkHiR8WJozazJSl+rZ3bH/mK7mt+//x+yGh
-	FnetnYnjYjRc1kWe38P6kFmv54h4qeGQQCGr0aUWByhGcch7L2qATecDUFl1lok0H07fcj//Qok
-	I8bApxpmEJfosbUdxMZdZhEJyt7vDnI8Dt7Dcixc7+n+YNoqFjvGHKLGI/h1rB0LHeu22R/k=
-X-Received: by 2002:a17:906:c198:b0:a3e:34e8:626f with SMTP id g24-20020a170906c19800b00a3e34e8626fmr473212ejz.66.1708166003480;
-        Sat, 17 Feb 2024 02:33:23 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHONzQ4K+GjU2Z5J175Qz7NyRRB4awOxiXjVKAtjliHoLdxNrn+46pvSb8HNB6gPfi69ZapgA==
-X-Received: by 2002:a17:906:c198:b0:a3e:34e8:626f with SMTP id g24-20020a170906c19800b00a3e34e8626fmr473199ejz.66.1708166003069;
-        Sat, 17 Feb 2024 02:33:23 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id ch22-20020a170906c2d600b00a3d943558b8sm854287ejb.134.2024.02.17.02.33.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 Feb 2024 02:33:22 -0800 (PST)
-Message-ID: <3e5b47ce-29a9-43a3-92bc-599a9a716fbb@redhat.com>
-Date: Sat, 17 Feb 2024 11:33:21 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2iM66rRM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L4Ksh2sy2cM5W/vrIzXjfw+31pWpMpV99QTeSctAKNiz4m3XqxuWOKleXePyxfqGDH7SGicYL5MV53VmEq0iID7qv199ULi5uiCw4YRE9YY7F2X0nhgEoz/lcJ8BzrTxTlX1U/e/PLl00zP1O87jH80v6uQryhWr9ulhcfEivmoo9JDgWGxnTZl7FdVA/Jwfx7DHMUnTF1OlOL/A7z3cjDNpjvY4JwjUKVGn5+a2OrzGn1xQe0NychlgCWej0Jk15Ope/zSloBonKN3qY+NGUG2sHnbxyZ/fGwKPPtQhx5bwLlGdo/JnT7WUR6aQn6YPvy/KtlfTDbqfIz5C13OqCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aMpROuTEsSoXq0N/X1DjTRvcJIggV7EIRXNI9AwYzhk=;
+ b=Ql6qOu/21rW6HDg57dVrfVgCnW1zHowj4v/ruH0XEz7jdhZjZoEoXu4wmoGF6t8gMTSMGxPVUjqVRAyMWYyh1aOYohxRhNUx4C8qr8EWh7qTfTQZ/LMZJdCkHcHo2rO64+Aed6ZmyN3uKQsb0yS0P4nOd9FuL8Jyv4HRuSoqWy89CJ97H9dieLSBM5JfoiPDyqBtuHeNZlP9vxUgpwjIUgy5crBaSsUCdanoRDc24/HVWYLIqwY5RICV2gnY+0pxGGhQhbsdWPSmC8YlovHju/6u2TKNHQLJFazYT+3MlyS3JZjf0GWg6vhKDDZF0UhxvzJBqmdmFTMei9NNLMoKkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aMpROuTEsSoXq0N/X1DjTRvcJIggV7EIRXNI9AwYzhk=;
+ b=2iM66rRMigRL1y9zaBYNrpbrhAu3LxN1wFDbEMrKNWfpaIg9rF5Y0EIuoh6lc6CqixbfHhwNqqsyQUTjK9drQZmS9NrSGNf2sQguyHfz+yIVrzPEhkN1UIUVEgnUchrHOQ0OgBdQWdZeQWvO3q/0BFbUku6JotK0f/DIjbnuVPk=
+Received: from CH0PR04CA0115.namprd04.prod.outlook.com (2603:10b6:610:75::30)
+ by SJ0PR12MB6941.namprd12.prod.outlook.com (2603:10b6:a03:448::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.14; Sat, 17 Feb
+ 2024 16:52:42 +0000
+Received: from CH3PEPF0000000A.namprd04.prod.outlook.com
+ (2603:10b6:610:75:cafe::b) by CH0PR04CA0115.outlook.office365.com
+ (2603:10b6:610:75::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.39 via Frontend
+ Transport; Sat, 17 Feb 2024 16:52:41 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH3PEPF0000000A.mail.protection.outlook.com (10.167.244.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Sat, 17 Feb 2024 16:52:41 +0000
+Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Sat, 17 Feb
+ 2024 10:52:40 -0600
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: <Shyam-sundar.S-k@amd.com>, <hdegoede@redhat.com>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>, "Mario
+ Limonciello" <mario.limonciello@amd.com>, Trolli Schmittlauch
+	<t.schmittlauch@orlives.de>
+Subject: [PATCH] platform/x86/amd/pmf: Fix a suspend hang on Framework 13
+Date: Fri, 16 Feb 2024 18:52:16 -0600
+Message-ID: <20240217005216.113408-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/6] platform/x86: dell-smo8800: Move instantiation of
- lis3lv02d i2c_client from i2c-i801 to dell-smo8800
-Content-Language: en-US, nl
-To: Jean Delvare <jdelvare@suse.de>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
- <pali@kernel.org>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>,
- Andi Shyti <andi.shyti@kernel.org>, eric.piel@tremplin-utc.net,
- Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com,
- Kai Heng Feng <kai.heng.feng@canonical.com>,
- platform-driver-x86@vger.kernel.org, Wolfram Sang <wsa@kernel.org>,
- linux-i2c@vger.kernel.org
-References: <20240106160935.45487-1-hdegoede@redhat.com>
- <20240106160935.45487-3-hdegoede@redhat.com>
- <20240107171055.ac7jtwhu2kbalaou@pali>
- <20240213173050.0cf4a58f@endymion.delvare>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240213173050.0cf4a58f@endymion.delvare>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PEPF0000000A:EE_|SJ0PR12MB6941:EE_
+X-MS-Office365-Filtering-Correlation-Id: 909d0ddb-d595-4591-d51b-08dc2fd8db3f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	ffawztEB82Xwx4Kb9d4rUhj7OTHjHUTY5r2SfINroHblG3S/2TAf1DF1J9C3JAZSs6Ut0ms6ELzyoA5CA25+wxqQU5Lh4KR00DiukI8t74zVifdUsIwFr3sfqOnYm3Bn64OZRUcp1RURKb2gpNpWPP1tnR2Gg+KsY7nzQaFj7ux649e+JEEHks4XHvCkVI0ks9KqJgfLtyIp417bB3hA4gAcqSslGcm1mCHk1pYYyS4KjACI7r2qX0Jw8Ek9v6aj828qi/oqXr+D7sG5Zd8pTTqGbEM/FYOqnTIPLf4ysbrr1D0RWKhbPynzczALsigKN/wsy0w3EdJFyurLLkRKXK4tds1pXAwxtRqGn6sC086IND0YGh3JAg4oVbeFJvoXqYV6cZucHC1Ap9ryxKrci9yoMoDAs7opQdjZ43BdNRov7D96qzD44gfOa/CwcRrG179ANrrE/oimvmpLtJx+JJWxiXytm+N5HDbHzp802HUMxWyoDssu1fCGUU+azBhmABU02P8DeBsqpOZg+/p+PqA1aH5aSQnyud5TNLyxG5oh5F1b7gc5j813LTgdQOAyFUuge3TuXjvZRbTOFT2njNA6Go591anBilPnYhGnRKexpToqsxljPgOI883xieBjOb5fawiXwMspTMncoFR1zA==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(376002)(136003)(346002)(396003)(230922051799003)(36860700004)(186009)(82310400011)(64100799003)(451199024)(1800799012)(46966006)(40470700004)(478600001)(966005)(41300700001)(8676002)(5660300002)(8936002)(4326008)(2906002)(15650500001)(44832011)(7696005)(316002)(6666004)(54906003)(110136005)(70206006)(70586007)(81166007)(2616005)(36756003)(336012)(83380400001)(426003)(356005)(86362001)(16526019)(82740400003)(26005)(1076003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2024 16:52:41.6977
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 909d0ddb-d595-4591-d51b-08dc2fd8db3f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH3PEPF0000000A.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6941
 
-Hi Jean,
+The buffer is cleared in the suspend handler but used in
+the delayed work for amd_pmf_get_metrics().
 
-On 2/13/24 17:30, Jean Delvare wrote:
-> Hi Pali, Hans,
-> 
-> On Sun, 7 Jan 2024 18:10:55 +0100, Pali Rohár wrote:
->> On Saturday 06 January 2024 17:09:29 Hans de Goede wrote:
->>> It is not necessary to handle the Dell specific instantiation of
->>> i2c_client-s for SMO8xxx ACPI devices without an ACPI I2cResource
->>> inside the generic i801 I2C adapter driver.
->>>
->>> The kernel already instantiates platform_device-s for these ACPI devices
->>> and the drivers/platform/x86/dell/dell-smo8800.c driver binds to these
->>> platform drivers.
->>>
->>> Move the i2c_client instantiation from the generic i2c-i801 driver to
->>> the Dell specific dell-smo8800 driver.
->>>
->>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>> ---
->>> Changes in v2:
->>> - Use a pci_device_id table to check for IDF (non main) i2c-i801 SMBusses
->>> - Add a comment documenting the IDF PCI device ids
->>> ---
->>>  drivers/i2c/busses/i2c-i801.c            | 126 +----------------------
->>>  drivers/platform/x86/dell/dell-smo8800.c | 121 +++++++++++++++++++++-
->>>  2 files changed, 123 insertions(+), 124 deletions(-)  
->>
->> I'm looking at this change again and I'm not not sure if it is a good
->> direction to do this movement. (...)
-> 
-> Same feeling here. Having to lookup the parent i2c bus, which may or
-> may not be present yet, doesn't feel good.
-> 
-> I wouldn't object if everybody was happy with the move and moving the
-> code was solving an actual issue, but that doesn't seem to be the case.
+Stop clearing it to fix the hang.
 
-I thought you would actually like getting this somewhat clunky code
-which basically works around the hw not being properly described in
-the ACPI tables out of the generic i2c-i801 code.
+Reported-by: Trolli Schmittlauch <t.schmittlauch@orlives.de>
+Closes: https://lore.kernel.org/regressions/ed2226ff-257b-4cfd-afd6-bf3be9785474@localhost/
+Closes: https://community.frame.work/t/kernel-6-8-rc-system-freezes-after-resuming-from-suspend-reproducers-wanted/45381
+Fixes: 2b3a7f06caaf ("platform/x86/amd/pmf: Change return type of amd_pmf_set_dram_addr()")
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ drivers/platform/x86/amd/pmf/core.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-I didn't get around to answer's Pali's concerns yet, so let me
-start by addressing those since you indicate that you share Pali's
-concerns:
-
-Pali wrote:
-> Now after looking at this change again I see there a problem. If i2c-801
-> driver initialize i2c-801 device after this smo8800 is called then
-> accelerometer i2c device would not happen.
-
-That is a good point (which Jean also points out). But this can simply
-be fixed by making the dell-smo8800's probe() method return -EPROBE_DEFER
-if the i2c-i801 i2c-bus is not present yet (all designs using the
-dell-smo8800 driver will have an i2c-bus so waiting for this to show
-up should not cause regressions).
-
-If we can agree to move forward this series I'll fix this.
-
-Pali wrote:
-> Also it has same problem if PCI i801 device is reloaded or reset.
-
-The i801 device is not hotplugable, so normally this will never
-happen. If the user manually unbinds + rebinds the i2c-i801 driver
-them the i2c_client for the smo88xx device will indeed get removed
-and not re-added. But this will normally never happen and if
-a user is manually poking things then the user can also unbind +
-rebind the dell-mso8800 driver after the i2c-i801 rebind.
-So I don't really see this as an issue.
-
-With those remarks addressed let me try to explain why I think
-that moving this to the dell-smo8800 code is a good idea:
-
-1. It is a SMO88xx ACPI device specific kludge and as such IMHO
-thus belongs in the driver for the SMO88xx ACPI platform_device.
-
-The i2c-i801 driver gets loaded on every x86 system and it is
-undesirable to have this extra code and the DMI table in RAM
-on all those other systems.
-
-2. Further changes in this series, like adding support for
-probing for the i2c address of the lis3lv02d device on models
-not yet in the DMI table, will add a bunch of more code specific
-to SMO88xx ACPI devices. Making the problem of having SMO88xx
-specific code in the generic i2c-i801 driver even bigger.
-The current amount of SMO88xx specific code in the
-generic i2c-i801 driver might be considered acceptable but I'm
-afraid that the amount of code after this series will not be
-acceptable.
-
-3. Some of the changes in this series are harder to implement inside
-the i2c-i801 code, like optionally instantiating an i2c_client for
-the IIO st_accel driver (*) so that the accelerometer gets presented
-to userspace as a standard IIO device like all modern accelerometer
-drivers do.
-
-This requires setting i2c_client.irq and that IRQ comes from
-the SMO88xx ACPI device. So this would require the i2c-i801 code
-to lookup the ACPI device and get the IRQ from there. Where as
-in the SMO88xx ACPI platform_device driver the IRQ is readily
-available.
-
-TL;DR: IMHO all this SMO88xx quirk/glue handling belongs in
-the SMO88xx specific dell-smo8800 driver rather then in
-the generic i2c-i801 code.
-
-Regards,
-
-Hans
-
-
-*) Instead of an i2c_client for the somewhat weird (but still
-default for backward compat) drivers/misc/lis3lv02d/lis3lv02d.c
-driver
-
-
-
-
-
-
+diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+index 853158933510..4f734e049f4a 100644
+--- a/drivers/platform/x86/amd/pmf/core.c
++++ b/drivers/platform/x86/amd/pmf/core.c
+@@ -299,8 +299,6 @@ static int amd_pmf_suspend_handler(struct device *dev)
+ 	if (pdev->smart_pc_enabled)
+ 		cancel_delayed_work_sync(&pdev->pb_work);
+ 
+-	kfree(pdev->buf);
+-
+ 	return 0;
+ }
+ 
+-- 
+2.34.1
 
