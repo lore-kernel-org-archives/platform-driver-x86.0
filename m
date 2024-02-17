@@ -1,208 +1,210 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DDB1D526;
-	Sat, 17 Feb 2024 09:52:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450311EB38
+	for <platform-driver-x86@vger.kernel.org>; Sat, 17 Feb 2024 10:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708163530; cv=none; b=V1XWA28hOUiaacMwT+grgwfv1oo+EffcFPcPYKEvFdrL2j6Rbd74Gh12XwKMAHdZODmi7VlcDr+p5fSU/7DAOlZoUcgjpJ9b0pOEyUvwtXWAKfB92RMWxKm/xpiajq3qqXYnZNagQuUgMKF5tKdB7k4LHQawpdc46JhZoepCnUM=
+	t=1708166009; cv=none; b=h/kgEktTQsuRIaLQgK2deVsSl772tsZ3DBeYUGdQHgpQeHQa1BKBQM3vCah0cjgQCqyMAX76sAccIQGDJfHuctGkFkEjXuNOUSgaWG+5Y18UK6QCZORHGrwwjTY4h9dAV3TqgDCvjZnwUXnCFZ80VZOmauFECjeeLHtTs7Yy0Tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708163530; c=relaxed/simple;
-	bh=1YL0IucvWTkie2pHwoVyF1SG1FtwSaiJi2Wu2eQoHms=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C4aPFcjs53HuuhjL3kQLkJvt3GV24JC8dF46BzcBr2CZzKNqzFPpAbM+vpQ/+v0C07JsQvPWnAtzijgETSy3VV23TubzU6jq4JlHCfYVReDySKst3dtqdNRJ7pMmm8RKpEpYgnP1M31dIwOuq9xGZ8byXnZUHm7GjSIWxVtpXz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MPqEP7JZ; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708166009; c=relaxed/simple;
+	bh=BAwzhRsDCszvGkCZpbQAxpfMlN2n3GfPPVFq0MCB2Fk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NEcZHhgUZmBEOedBZk993+zBVILoZVbhQMjfKjw4bK/L+3zGwRxrar38CJBhBFcSn3uDK69p7L7GBeVfTtJhEn+EwUXoH/511GaBIpSYiE0CuX1KgXya6eioBK2eBIWFXnEr+bUGl0p9Qcr2qr1aV7TbPHU0qU6oy+qLkNfytGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gNrVxlrs; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MPqEP7JZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708163525; x=1739699525;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1YL0IucvWTkie2pHwoVyF1SG1FtwSaiJi2Wu2eQoHms=;
-  b=MPqEP7JZKqLBPfEpQEFRu+zTS0YkM+FttaQhOpkeeAeCRlIGFIb8okIV
-   1WpRyQjYZIB0O1DILTidK2BF5f5biyoTsTh4sxVX8/F3/QO8lHXjw23g3
-   3l8VRFZN8/tMLJZOodBzsb6KT5CKpCU4MFdpWYSiRyIVe4ytcBggqcIaw
-   mvRy37Ce1W7vXYeBrSkPXu833ghuZnbkj3FHHU53v4vPeP4uNhrikO9Hy
-   Skbor7LSlWXgLdSiL6XoZrY5aU8uLXa362UQ3BVWfIEztXmG1Na1tNtdM
-   ntmfzvhP+ljmb9sux8j9yVAFmh0w7HwjGgly2TgyhmjecWrT0N0RE9Tk1
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="12844065"
-X-IronPort-AV: E=Sophos;i="6.06,166,1705392000"; 
-   d="scan'208";a="12844065"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2024 01:52:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="935978120"
-X-IronPort-AV: E=Sophos;i="6.06,166,1705392000"; 
-   d="scan'208";a="935978120"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 17 Feb 2024 01:51:58 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rbHMS-00021M-0B;
-	Sat, 17 Feb 2024 09:51:56 +0000
-Date: Sat, 17 Feb 2024 17:51:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mario Limonciello <mario.limonciello@amd.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, amd-gfx@lists.freedesktop.org,
-	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-	linux-fbdev@vger.kernel.org, nouveau@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org,
-	linux-renesas-soc@vger.kernel.org,
-	"open list:ACPI" <linux-acpi@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Melissa Wen <mwen@igalia.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v6 1/5] drm: Stop using `select ACPI_VIDEO` in all drivers
-Message-ID: <202402171727.maolcPXi-lkp@intel.com>
-References: <20240214215756.6530-2-mario.limonciello@amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gNrVxlrs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708166006;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SOPLsffXfXpiI5OFL9Rz24HEghEnIzQEHLm/BPE3AJ8=;
+	b=gNrVxlrstWyqfbkcMhTRoO2fjm0VOx8vMmBsOUuzjcxYA69aV4oNISe4ND4JCJlupHfpyI
+	w0KrZ11Ho3Xu3KLvfOzZGtXgmw3oWe0j8uTOsloWeYiiRUK9w4aPB6/ma/0ywFBDc/ZW7a
+	BL1sHoi9A0Sj3ZuD3JohRvYNb7VigmI=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-684-aam0LRd6PAy75-hNyDuVyA-1; Sat, 17 Feb 2024 05:33:24 -0500
+X-MC-Unique: aam0LRd6PAy75-hNyDuVyA-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a3d114fe9b6so61210166b.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 17 Feb 2024 02:33:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708166003; x=1708770803;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SOPLsffXfXpiI5OFL9Rz24HEghEnIzQEHLm/BPE3AJ8=;
+        b=RRm0DROu0Zl0iSXZgY+Rthx1/qv5Bkjq3/JQfH9Ia/Ogs4jw2LxiJGfST/Hm8m7EMY
+         hgTUN/mhLhtJEp/3KlQCPoAYMdoggMtJXZHpocK5C4BTk3Apb/+ZN+SJm0yY2dJJ2puN
+         ZobvmfPEgsAnBrx5hvUNGFRdMktQiN7nCslnGAohlPCcoTHKNApQGjrSi71an1aaQmSY
+         QtBvvS4UkjQp4vVEsrEgzkmXkadclNi3DlKtgUglpmTrKNgZyL/xO52pYEwHPZ/REbyC
+         v4CF/AWrmBi9sD1F+cwWTh9FFIiNP5feM7/bEjpWtlGwm35WRGXJOgIOhV1SK/49jQ34
+         Mosg==
+X-Forwarded-Encrypted: i=1; AJvYcCXwWLw6aaEecHgXrsXdWIBACKuaBycHHUJD81zE46hFyoLWwK4wmkUBuCrpfz+qmWc+u5H/gw/QzdEdyjvStRiL9wBsKbjKSm7EDggWN49bt9iDzA==
+X-Gm-Message-State: AOJu0YzQ0AOjWS3qkxwOtLkHiR8WJozazJSl+rZ3bH/mK7mt+//x+yGh
+	FnetnYnjYjRc1kWe38P6kFmv54h4qeGQQCGr0aUWByhGcch7L2qATecDUFl1lok0H07fcj//Qok
+	I8bApxpmEJfosbUdxMZdZhEJyt7vDnI8Dt7Dcixc7+n+YNoqFjvGHKLGI/h1rB0LHeu22R/k=
+X-Received: by 2002:a17:906:c198:b0:a3e:34e8:626f with SMTP id g24-20020a170906c19800b00a3e34e8626fmr473212ejz.66.1708166003480;
+        Sat, 17 Feb 2024 02:33:23 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHONzQ4K+GjU2Z5J175Qz7NyRRB4awOxiXjVKAtjliHoLdxNrn+46pvSb8HNB6gPfi69ZapgA==
+X-Received: by 2002:a17:906:c198:b0:a3e:34e8:626f with SMTP id g24-20020a170906c19800b00a3e34e8626fmr473199ejz.66.1708166003069;
+        Sat, 17 Feb 2024 02:33:23 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id ch22-20020a170906c2d600b00a3d943558b8sm854287ejb.134.2024.02.17.02.33.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 17 Feb 2024 02:33:22 -0800 (PST)
+Message-ID: <3e5b47ce-29a9-43a3-92bc-599a9a716fbb@redhat.com>
+Date: Sat, 17 Feb 2024 11:33:21 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240214215756.6530-2-mario.limonciello@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/6] platform/x86: dell-smo8800: Move instantiation of
+ lis3lv02d i2c_client from i2c-i801 to dell-smo8800
+Content-Language: en-US, nl
+To: Jean Delvare <jdelvare@suse.de>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
+ <pali@kernel.org>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Andy Shevchenko <andy@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>,
+ Andi Shyti <andi.shyti@kernel.org>, eric.piel@tremplin-utc.net,
+ Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com,
+ Kai Heng Feng <kai.heng.feng@canonical.com>,
+ platform-driver-x86@vger.kernel.org, Wolfram Sang <wsa@kernel.org>,
+ linux-i2c@vger.kernel.org
+References: <20240106160935.45487-1-hdegoede@redhat.com>
+ <20240106160935.45487-3-hdegoede@redhat.com>
+ <20240107171055.ac7jtwhu2kbalaou@pali>
+ <20240213173050.0cf4a58f@endymion.delvare>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240213173050.0cf4a58f@endymion.delvare>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Mario,
+Hi Jean,
 
-kernel test robot noticed the following build warnings:
+On 2/13/24 17:30, Jean Delvare wrote:
+> Hi Pali, Hans,
+> 
+> On Sun, 7 Jan 2024 18:10:55 +0100, Pali Rohár wrote:
+>> On Saturday 06 January 2024 17:09:29 Hans de Goede wrote:
+>>> It is not necessary to handle the Dell specific instantiation of
+>>> i2c_client-s for SMO8xxx ACPI devices without an ACPI I2cResource
+>>> inside the generic i801 I2C adapter driver.
+>>>
+>>> The kernel already instantiates platform_device-s for these ACPI devices
+>>> and the drivers/platform/x86/dell/dell-smo8800.c driver binds to these
+>>> platform drivers.
+>>>
+>>> Move the i2c_client instantiation from the generic i2c-i801 driver to
+>>> the Dell specific dell-smo8800 driver.
+>>>
+>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>> ---
+>>> Changes in v2:
+>>> - Use a pci_device_id table to check for IDF (non main) i2c-i801 SMBusses
+>>> - Add a comment documenting the IDF PCI device ids
+>>> ---
+>>>  drivers/i2c/busses/i2c-i801.c            | 126 +----------------------
+>>>  drivers/platform/x86/dell/dell-smo8800.c | 121 +++++++++++++++++++++-
+>>>  2 files changed, 123 insertions(+), 124 deletions(-)  
+>>
+>> I'm looking at this change again and I'm not not sure if it is a good
+>> direction to do this movement. (...)
+> 
+> Same feeling here. Having to lookup the parent i2c bus, which may or
+> may not be present yet, doesn't feel good.
+> 
+> I wouldn't object if everybody was happy with the move and moving the
+> code was solving an actual issue, but that doesn't seem to be the case.
 
-[auto build test WARNING on drm-misc/drm-misc-next]
-[also build test WARNING on drm-intel/for-linux-next-fixes drm-tip/drm-tip linus/master v6.8-rc4 next-20240216]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I thought you would actually like getting this somewhat clunky code
+which basically works around the hw not being properly described in
+the ACPI tables out of the generic i2c-i801 code.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/drm-Stop-using-select-ACPI_VIDEO-in-all-drivers/20240215-055936
-base:   git://anongit.freedesktop.org/drm/drm-misc drm-misc-next
-patch link:    https://lore.kernel.org/r/20240214215756.6530-2-mario.limonciello%40amd.com
-patch subject: [PATCH v6 1/5] drm: Stop using `select ACPI_VIDEO` in all drivers
-config: alpha-kismet-CONFIG_FB_BACKLIGHT-CONFIG_HT16K33-0-0 (https://download.01.org/0day-ci/archive/20240217/202402171727.maolcPXi-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20240217/202402171727.maolcPXi-lkp@intel.com/reproduce)
+I didn't get around to answer's Pali's concerns yet, so let me
+start by addressing those since you indicate that you share Pali's
+concerns:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402171727.maolcPXi-lkp@intel.com/
+Pali wrote:
+> Now after looking at this change again I see there a problem. If i2c-801
+> driver initialize i2c-801 device after this smo8800 is called then
+> accelerometer i2c device would not happen.
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for FB_BACKLIGHT when selected by HT16K33
-   .config:210:warning: symbol value 'n' invalid for INPUT_MOUSEDEV_SCREEN_Y
-   .config:243:warning: symbol value 'n' invalid for SATA_MOBILE_LPM_POLICY
-   .config:338:warning: symbol value 'n' invalid for PSTORE_BLK_MAX_REASON
-   .config:435:warning: symbol value 'n' invalid for KFENCE_SAMPLE_INTERVAL
-   .config:437:warning: symbol value 'n' invalid for AIC79XX_DEBUG_MASK
-   .config:521:warning: symbol value 'n' invalid for USB_GADGET_STORAGE_NUM_BUFFERS
-   .config:618:warning: symbol value 'n' invalid for DRM_XE_JOB_TIMEOUT_MIN
-   .config:632:warning: symbol value 'n' invalid for CRYPTO_DEV_QCE_SW_MAX_LEN
-   .config:739:warning: symbol value 'n' invalid for PANEL_LCD_CHARSET
-   .config:759:warning: symbol value 'n' invalid for SERIAL_ALTERA_UART_BAUDRATE
-   .config:771:warning: symbol value 'n' invalid for SCSI_MESH_RESET_DELAY_MS
-   .config:796:warning: symbol value 'n' invalid for SND_AC97_POWER_SAVE_DEFAULT
-   .config:834:warning: symbol value 'n' invalid for MAGIC_SYSRQ_DEFAULT_ENABLE
-   .config:851:warning: symbol value 'n' invalid for DRM_I915_MAX_REQUEST_BUSYWAIT
-   .config:890:warning: symbol value 'n' invalid for SND_AT73C213_TARGET_BITRATE
-   .config:892:warning: symbol value 'n' invalid for AIC79XX_CMDS_PER_DEVICE
-   .config:907:warning: symbol value 'n' invalid for DRM_XE_PREEMPT_TIMEOUT_MIN
-   .config:913:warning: symbol value 'n' invalid for NET_EMATCH_STACK
-   .config:915:warning: symbol value 'n' invalid for VMCP_CMA_SIZE
-   .config:973:warning: symbol value 'n' invalid for PANEL_LCD_PIN_SDA
-   .config:1006:warning: symbol value 'n' invalid for PANEL_LCD_PIN_E
-   .config:1142:warning: symbol value 'n' invalid for RCU_CPU_STALL_TIMEOUT
-   .config:1170:warning: symbol value 'n' invalid for MTDRAM_ERASE_SIZE
-   .config:1431:warning: symbol value 'n' invalid for LEGACY_PTY_COUNT
-   .config:1581:warning: symbol value 'n' invalid for WATCHDOG_OPEN_TIMEOUT
-   .config:1588:warning: symbol value 'n' invalid for AIC7XXX_RESET_DELAY_MS
-   .config:1752:warning: symbol value 'n' invalid for IBM_EMAC_POLL_WEIGHT
-   .config:1867:warning: symbol value 'n' invalid for DRM_I915_STOP_TIMEOUT
-   .config:2098:warning: symbol value 'n' invalid for AIC79XX_RESET_DELAY_MS
-   .config:2129:warning: symbol value 'n' invalid for SND_HDA_PREALLOC_SIZE
-   .config:2176:warning: symbol value 'n' invalid for RCU_FANOUT_LEAF
-   .config:2186:warning: symbol value 'n' invalid for KCOV_IRQ_AREA_SIZE
-   .config:2307:warning: symbol value 'n' invalid for DRM_XE_TIMESLICE_MAX
-   .config:2321:warning: symbol value 'n' invalid for PANEL_LCD_BWIDTH
-   .config:2386:warning: symbol value 'n' invalid for XEN_MEMORY_HOTPLUG_LIMIT
-   .config:2439:warning: symbol value 'n' invalid for VERBOSE_MCHECK_ON
-   .config:2559:warning: symbol value 'n' invalid for PANEL_PARPORT
-   .config:2645:warning: symbol value 'n' invalid for NOUVEAU_DEBUG_DEFAULT
-   .config:2744:warning: symbol value 'n' invalid for MTD_REDBOOT_DIRECTORY_BLOCK
-   .config:2803:warning: symbol value 'n' invalid for SND_SOC_SOF_DEBUG_IPC_FLOOD_TEST_NUM
-   .config:2831:warning: symbol value 'n' invalid for KCSAN_REPORT_ONCE_IN_MS
-   .config:2928:warning: symbol value 'n' invalid for KCSAN_UDELAY_INTERRUPT
-   .config:2952:warning: symbol value 'n' invalid for PANEL_LCD_PIN_BL
-   .config:2969:warning: symbol value 'n' invalid for DEBUG_OBJECTS_ENABLE_DEFAULT
-   .config:2977:warning: symbol value 'n' invalid for INITRAMFS_ROOT_GID
-   .config:3081:warning: symbol value 'n' invalid for ATM_FORE200E_TX_RETRY
-   .config:3120:warning: symbol value 'n' invalid for FB_OMAP2_DSS_MIN_FCK_PER_PCK
-   .config:3186:warning: symbol value 'n' invalid for PSTORE_BLK_CONSOLE_SIZE
-   .config:3335:warning: symbol value 'n' invalid for BOOKE_WDT_DEFAULT_TIMEOUT
-   .config:3389:warning: symbol value 'n' invalid for KCSAN_UDELAY_TASK
-   .config:3453:warning: symbol value 'n' invalid for MMC_BLOCK_MINORS
-   .config:3499:warning: symbol value 'n' invalid for SCSI_NCR53C8XX_SYNC
-   .config:3620:warning: symbol value 'n' invalid for UCLAMP_BUCKETS_COUNT
-   .config:3726:warning: symbol value 'n' invalid for SERIAL_MCF_BAUDRATE
-   .config:3794:warning: symbol value 'n' invalid for DE2104X_DSL
-   .config:3806:warning: symbol value 'n' invalid for BLK_DEV_RAM_COUNT
-   .config:3811:warning: symbol value 'n' invalid for FTRACE_RECORD_RECURSION_SIZE
-   .config:3980:warning: symbol value 'n' invalid for STACK_MAX_DEFAULT_SIZE_MB
-   .config:4203:warning: symbol value 'n' invalid for USBIP_VHCI_HC_PORTS
-   .config:4204:warning: symbol value 'n' invalid for INPUT_MOUSEDEV_SCREEN_X
-   .config:4317:warning: symbol value 'n' invalid for RIONET_RX_SIZE
-   .config:4529:warning: symbol value 'n' invalid for RADIO_TYPHOON_PORT
-   .config:4624:warning: symbol value 'n' invalid for IBM_EMAC_TXB
-   .config:4651:warning: symbol value 'n' invalid for SERIAL_TXX9_NR_UARTS
-   .config:5012:warning: symbol value 'n' invalid for ARCH_MMAP_RND_BITS
-   .config:5033:warning: symbol value 'n' invalid for PANEL_LCD_PIN_RW
-   .config:5093:warning: symbol value 'n' invalid for DRM_I915_FENCE_TIMEOUT
-   .config:5115:warning: symbol value 'n' invalid for TTY_PRINTK_LEVEL
-   .config:5272:warning: symbol value 'n' invalid for MIPS_EJTAG_FDC_KGDB_CHAN
-   .config:5367:warning: symbol value 'n' invalid for KDB_DEFAULT_ENABLE
-   .config:5384:warning: symbol value 'n' invalid for SERIAL_ALTERA_UART_MAXPORTS
-   .config:5517:warning: symbol value 'n' invalid for PPC_EARLY_DEBUG_EHV_BC_HANDLE
-   .config:5619:warning: symbol value 'n' invalid for SND_MAX_CARDS
-   .config:5648:warning: symbol value 'n' invalid for PANEL_LCD_HWIDTH
-   .config:5678:warning: symbol value 'n' invalid for LOCKDEP_CHAINS_BITS
-   .config:5766:warning: symbol value 'n' invalid for DRM_I915_HEARTBEAT_INTERVAL
-   .config:5772:warning: symbol value 'n' invalid for KCSAN_SKIP_WATCH
-   .config:5780:warning: symbol value 'n' invalid for RCU_BOOST_DELAY
-   .config:5796:warning: symbol value 'n' invalid for PSTORE_BLK_KMSG_SIZE
-   .config:5897:warning: symbol value 'n' invalid for CRYPTO_DEV_FSL_CAAM_INTC_TIME_THLD
-   .config:6089:warning: symbol value 'n' invalid for ARCH_MMAP_RND_COMPAT_BITS
-   .config:6238:warning: symbol value 'n' invalid for DRM_XE_PREEMPT_TIMEOUT_MAX
-   .config:6254:warning: symbol value 'n' invalid for RADIO_TRUST_PORT
-   .config:6321:warning: symbol value 'n' invalid for SERIAL_SH_SCI_NR_UARTS
-   .config:6627:warning: symbol value 'n' invalid for CMA_SIZE_PERCENTAGE
-   .config:6743:warning: symbol value 'n' invalid for SCSI_SYM53C8XX_MAX_TAGS
-   .config:6771:warning: symbol value 'n' invalid for DRM_XE_TIMESLICE_MIN
-   .config:6873:warning: symbol value 'n' invalid for SCSI_NCR53C8XX_MAX_TAGS
-   .config:6875:warning: symbol value 'n' invalid for DVB_MAX_ADAPTERS
-   .config:6886:warning: symbol value 'n' invalid for RIONET_TX_SIZE
-   .config:6892:warning: symbol value 'n' invalid for SCSI_SYM53C8XX_DMA_ADDRESSING_MODE
-   .config:7206:warning: symbol value 'n' invalid for OMAP2_DSS_MIN_FCK_PER_PCK
-   .config:7237:warning: symbol value 'n' invalid for ZSMALLOC_CHAIN_SIZE
-   .config:7239:warning: symbol value 'n' invalid for SERIAL_ARC_NR_PORTS
-   .config:7258:warning: symbol value 'n' invalid for IBM_EMAC_RXB
-   .config:7412:warning: symbol value 'n' invalid for SCSI_MPT3SAS_MAX_SGE
-   .config:7466:warning: symbol value 'n' invalid for LOCKDEP_BITS
-   .config:7543:warning: symbol value 'n' invalid for PSTORE_DEFAULT_KMSG_BYTES
-   .config:7588:warning: symbol value 'n' invalid for RCU_FANOUT
-   .config:7637:warning: symbol value 'n' invalid for PANEL_LCD
+That is a good point (which Jean also points out). But this can simply
+be fixed by making the dell-smo8800's probe() method return -EPROBE_DEFER
+if the i2c-i801 i2c-bus is not present yet (all designs using the
+dell-smo8800 driver will have an i2c-bus so waiting for this to show
+up should not cause regressions).
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+If we can agree to move forward this series I'll fix this.
+
+Pali wrote:
+> Also it has same problem if PCI i801 device is reloaded or reset.
+
+The i801 device is not hotplugable, so normally this will never
+happen. If the user manually unbinds + rebinds the i2c-i801 driver
+them the i2c_client for the smo88xx device will indeed get removed
+and not re-added. But this will normally never happen and if
+a user is manually poking things then the user can also unbind +
+rebind the dell-mso8800 driver after the i2c-i801 rebind.
+So I don't really see this as an issue.
+
+With those remarks addressed let me try to explain why I think
+that moving this to the dell-smo8800 code is a good idea:
+
+1. It is a SMO88xx ACPI device specific kludge and as such IMHO
+thus belongs in the driver for the SMO88xx ACPI platform_device.
+
+The i2c-i801 driver gets loaded on every x86 system and it is
+undesirable to have this extra code and the DMI table in RAM
+on all those other systems.
+
+2. Further changes in this series, like adding support for
+probing for the i2c address of the lis3lv02d device on models
+not yet in the DMI table, will add a bunch of more code specific
+to SMO88xx ACPI devices. Making the problem of having SMO88xx
+specific code in the generic i2c-i801 driver even bigger.
+The current amount of SMO88xx specific code in the
+generic i2c-i801 driver might be considered acceptable but I'm
+afraid that the amount of code after this series will not be
+acceptable.
+
+3. Some of the changes in this series are harder to implement inside
+the i2c-i801 code, like optionally instantiating an i2c_client for
+the IIO st_accel driver (*) so that the accelerometer gets presented
+to userspace as a standard IIO device like all modern accelerometer
+drivers do.
+
+This requires setting i2c_client.irq and that IRQ comes from
+the SMO88xx ACPI device. So this would require the i2c-i801 code
+to lookup the ACPI device and get the IRQ from there. Where as
+in the SMO88xx ACPI platform_device driver the IRQ is readily
+available.
+
+TL;DR: IMHO all this SMO88xx quirk/glue handling belongs in
+the SMO88xx specific dell-smo8800 driver rather then in
+the generic i2c-i801 code.
+
+Regards,
+
+Hans
+
+
+*) Instead of an i2c_client for the somewhat weird (but still
+default for backward compat) drivers/misc/lis3lv02d/lis3lv02d.c
+driver
+
+
+
+
+
+
+
