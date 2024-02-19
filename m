@@ -1,159 +1,102 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8885E2D610
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Feb 2024 12:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B0B29408;
+	Mon, 19 Feb 2024 12:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708346943; cv=none; b=gogoLBhPXIjICgGm1xaAsowPnQ8DMz0gQLdxgGny4jrfL+JgsLEZO8RuXNQo7trHj8ryOB/iCpqnK17cN3dXeKA9nvgzO4oIj7HxavHSgoQ7U6+bJeBuVaRAp6HvLMZoJccl1rhUPJm64tGinA09J6454ayBFPQmg+RQUqG03As=
+	t=1708347120; cv=none; b=OWNTF0Knvx7d32b/FrTN6Jtq2BknMYME8xTVs9TG7XVSm1nrOKphoZaWJw0xhGTgSMGSzBCkBBtigqbaTT4CBpM4Eeya8UThkfAmgpz/f3wFW+qPZseNHnQnSeeMZs9166ZVBLCDpHkKYlyNiWdtut/c2SFS8obRzWL+eWx2qrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708346943; c=relaxed/simple;
-	bh=GGDirSYTTvOddcQLTlfmsHXI7gj8foGcyiO1hSj/A2A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y4DJXWn2fZifgv0O0rBWKsFLMri5+HwcGk7P0n1YQJASHkkS/zai5sx8Ew1+mNLVkFNq4w7KqXWC7tQJye1oGWwZIGPUF61zX4/3a8uwI3l3rrsr3KLgE5QZAkhONeKSdUAn+7dU7x54o4TsLhK/7vE7COxBiDTAJHrszTL8A6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HjQe/OeP; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708347120; c=relaxed/simple;
+	bh=x2tSeZqCvSLh48WjR/1aaEIXZ1DQ5VUPkspUWEFkPOw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=a1X4NC7LZYsjFVDOQGbNi3b+ZrWQKuAzdt4/dXVbyEYH9jkWuwgrL5yFsE05dN4WoLVBtWg7rf3Mz0g7tff/nCXXrIRYbufYDNYx5BOT/o5fRXVc7gjH92m6ppQcP+wm3WVbmScJ4TeCjizb2Nxk8DHu5Fnz2x88VYNtsme7kgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i7c1+v65; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HjQe/OeP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708346940;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2HO9D1tZA+2bQNY3mPYeOq80/FGHcl8CEUxhPw4igjw=;
-	b=HjQe/OePJoPgN4P0mV6caYmclLRVsSx1g5BgSLWvUPQRGFtfY07npi0doDqh7Cg3taA+Rh
-	vMwNWEE7m01MjAMJw+z/XZl3DX6tJcRHCCXhqcQE11wZLGX+iTRMi/GM1VJp0+9XHjjeiJ
-	kGgxFodbucAGa7oJ4amorzdgPLakMrk=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-563-0tNlKTrTMsCALSFE-6As1w-1; Mon, 19 Feb 2024 07:48:58 -0500
-X-MC-Unique: 0tNlKTrTMsCALSFE-6As1w-1
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-68f5fc425ffso13758466d6.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Feb 2024 04:48:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708346938; x=1708951738;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2HO9D1tZA+2bQNY3mPYeOq80/FGHcl8CEUxhPw4igjw=;
-        b=FMCU98M+zFXBFTbWz+4OubfX1sQ8hWDQODrkvKd4EOZPDH+6hIvxrvuZ0Boe6+Suky
-         Dt8xwPtfnYBVUitAtmFppFfqkuEMhOREb00mvBWMeyd8GpP/tqRKIkkdvzP3HwHi3pU1
-         JxjuRWm+596T+Bb6wClg0DRJFKi4pkGqGbTarUMIy6gNVvUFX8dWyHIlHwY2l1mLaQ45
-         hfLCQ97ufQgA9Zg0xHtTcJLyBjc2m/4gxAdYFQ6yKrq7Zdd9+ZuT3+eusI1TLJ1aWyvo
-         ygMBJE7Ww73DhpqrQ2z9LZDXcFZEdfMIcDjWQkbTpDwwgHj3+elxyVh+iVo7NYcxzQZf
-         Em4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWRy0rCmM2h+hHH0/E5OmJdYIwyRtGMZdztpDFR0ePEPLG2lGT0NY6YIPNUZhNWv/z3ZLBQwQ7iNC2XVdmnUVH1BZHVa+lj34GRZO0RRS9jnQcdXA==
-X-Gm-Message-State: AOJu0Yw8G8OVRhjScWlpxljX2qIL92gwe3PZJ6FLwLS7BC/9NCJ4cAzD
-	8e71uUFdCqeVcUx+/ebGiCk3j6T6+jmDEJKmwm87DeJIoneuTyWitGem2P0wxXDSXttmot8P0hI
-	/Dngd7ToZOUQYo9SgWnZ/W7zwwDywGFh2waBt+tHxMOqc4QaS56IGYubZGKOO8/UMCLOujkc=
-X-Received: by 2002:a0c:e1d1:0:b0:68f:6279:eb2c with SMTP id v17-20020a0ce1d1000000b0068f6279eb2cmr4376087qvl.63.1708346938508;
-        Mon, 19 Feb 2024 04:48:58 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHLXHmzQSvVTysExPFTX+wfn7k/R98wUjuT6EV9Smz1WJ6iodnJKhiJEqNvUqDT3j5/FMypQw==
-X-Received: by 2002:a0c:e1d1:0:b0:68f:6279:eb2c with SMTP id v17-20020a0ce1d1000000b0068f6279eb2cmr4376079qvl.63.1708346938269;
-        Mon, 19 Feb 2024 04:48:58 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id d11-20020a05621416cb00b0068d11cf887bsm3185712qvz.55.2024.02.19.04.48.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Feb 2024 04:48:58 -0800 (PST)
-Message-ID: <4781fdcf-8a7b-48fa-aa4d-6e7bb7d56eda@redhat.com>
-Date: Mon, 19 Feb 2024 13:48:55 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i7c1+v65"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708347118; x=1739883118;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=x2tSeZqCvSLh48WjR/1aaEIXZ1DQ5VUPkspUWEFkPOw=;
+  b=i7c1+v65C8C7H+GB6fU52O7MYTOKs9pSrXj1lOJdmI/NTF6qkyi66O9s
+   sJaYfo0laSD+C2V2bqojbP2xoYZmyP7pCBX8rmPrT/CcleFISWUw2FKT9
+   iM9tEUuZpyp1QxqRY8LJuds2jeqz17sSsDEoZgMQQhLofgML5SBMwUtug
+   B/qklmAIGGS5BFHDxn/vXu6JyJCbIQ2wz7lHudT2DiAlC9c1putsIvssK
+   YQhUoCZkpikjK6nDbBVy27SrIUV1wRsJ2WqhMRqUKNxtHkaRhEcuIlm8E
+   9/4OEXkEIG1iNLVfqHEVHeIDr5mNx7EP6YvFU9hTuhuO9f1Qj/FVqw1J7
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="13822552"
+X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
+   d="scan'208";a="13822552"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 04:51:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
+   d="scan'208";a="4387476"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.18])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 04:51:56 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 19 Feb 2024 14:51:48 +0200 (EET)
+To: Gergo Koteles <soyer@irl.hu>, Hans de Goede <hdegoede@redhat.com>
+cc: Ike Panhc <ike.pan@canonical.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: support Fn+R dual-function
+ key
+In-Reply-To: <531e85d73c1926161eb15f8900ea77aade394b6f.camel@irl.hu>
+Message-ID: <29ed8a8e-09f5-ec43-11bd-7ddd12ce08f8@linux.intel.com>
+References: <0cdbc0e6eb65e160384ae0ed152e7de3ded1d9d5.1707604991.git.soyer@irl.hu>  <3b6a7bba-47a5-469c-aac1-5574ad78dadf@canonical.com> <531e85d73c1926161eb15f8900ea77aade394b6f.camel@irl.hu>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86/amd/hsmp: Remove NULL dereferencing code
-Content-Language: en-US
-To: Suma Hegde <suma.hegde@amd.com>, platform-driver-x86@vger.kernel.org
-Cc: ilpo.jarvinen@linux.intel.com, kernel test robot <lkp@intel.com>,
- Dan Carpenter <dan.carpenter@linaro.org>,
- Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-References: <20240130073415.3391685-1-suma.hegde@amd.com>
- <20240130073415.3391685-2-suma.hegde@amd.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240130073415.3391685-2-suma.hegde@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Suma,
+On Mon, 19 Feb 2024, Gergo Koteles wrote:
+> On Mon, 2024-02-19 at 10:39 +0800, Ike Panhc wrote:
+> > On 2/11/24 06:51, Gergo Koteles wrote:
+> > > According to the manual, Fn+R adjusts the display refresh rate.
+> > > Map Fn+R to KEY_DISPLAYTOGGLE.
+> > > 
+> > > Signed-off-by: Gergo Koteles <soyer@irl.hu>
 
-On 1/30/24 08:34, Suma Hegde wrote:
-> Do not log using dev_err() in case of !sock, which causes null pointer
-> dereferencing.
+> > > +++ b/drivers/platform/x86/ideapad-laptop.c
+> > > @@ -1091,6 +1091,8 @@ static const struct key_entry ideapad_keymap[] = {
+> > >  	{ KE_KEY,	0x07 | IDEAPAD_WMI_KEY, { KEY_HELP } },
+> > >  	{ KE_KEY,	0x0e | IDEAPAD_WMI_KEY, { KEY_PICKUP_PHONE } },
+> > >  	{ KE_KEY,	0x0f | IDEAPAD_WMI_KEY, { KEY_HANGUP_PHONE } },
+> > > +	/* Refresh Rate Toggle (Fn+R) */
+> > > +	{ KE_KEY,	0x10 | IDEAPAD_WMI_KEY, { KEY_DISPLAYTOGGLE } },
+> > >  	/* Dark mode toggle */
+> > >  	{ KE_KEY,	0x13 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
+> > >  	/* Sound profile switch */
+> > 
+> > Acked-by: Ike Panhc <ike.pan@canonical.com>
+> > 
+> > BTW on which ideapad we need this patch?
+> > 
 > 
-> Also remove unnecessary check "boot_cpu_data.x86_model >= 0x00", which is
-> always true because its an unsigned type.
+> Oh, I somehow missed that. I found it on a Yoga 7 14ARB7.
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202401292056.qkUFS09Y-lkp@intel.com/
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/r/202401291311.gzMCj6SP-lkp@intel.com/
+> Newer Yogas and Legions with 60Hz/90Hz displays have this refresh rate
+> toggle feature.
 > 
-> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
-> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-> ---
-> Changes since v1:
-> Correct the email id for Naveen Krishna Chatradhi.
+> I'm wondering if this would be worth a new KEY_REFRESH_RATE_TOGGLE
+> event code? 
 > 
->  drivers/platform/x86/amd/hsmp.c | 11 ++++-------
->  1 file changed, 4 insertions(+), 7 deletions(-)
+> KEY_DISPLAYTOGGLE is used to toggle the LCD on/off in other drivers.
 > 
-> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
-> index 1baddf403920..1927be901108 100644
-> --- a/drivers/platform/x86/amd/hsmp.c
-> +++ b/drivers/platform/x86/amd/hsmp.c
-> @@ -566,17 +566,15 @@ static ssize_t hsmp_metric_tbl_read(struct file *filp, struct kobject *kobj,
->  	struct hsmp_message msg = { 0 };
->  	int ret;
->  
-> +	if (!sock)
-> +		return -EINVAL;
-> +
->  	/* Do not support lseek(), reads entire metric table */
->  	if (count < bin_attr->size) {
->  		dev_err(sock->dev, "Wrong buffer size\n");
->  		return -EINVAL;
->  	}
->  
-> -	if (!sock) {
-> -		dev_err(sock->dev, "Failed to read attribute private data\n");
-> -		return -EINVAL;
-> -	}
-> -
->  	msg.msg_id	= HSMP_GET_METRIC_TABLE;
->  	msg.sock_ind	= sock->sock_ind;
-> 
+> What do you think?
 
-sock gets initialized like this:
+At least to me it felt like an abuse of KEY_DISPLAYTOGGLE because it's 
+obviously different. But since there was existing, similar use for it 
+already, I didn't push back on it but took your patch.
 
-        struct hsmp_socket *sock = bin_attr->private;
-
-and bin_attr->private is setup before registering the file
-and thus it will never be NULL.
-
-So the correct fix would be to simply drop the check
-rather then to move it.
-
-> @@ -739,8 +737,7 @@ static int hsmp_cache_proto_ver(u16 sock_ind)
->  
->  static inline bool is_f1a_m0h(void)
->  {
-> -	if (boot_cpu_data.x86 == 0x1A &&
-> -	    (boot_cpu_data.x86_model >= 0x00 && boot_cpu_data.x86_model <= 0x0F))
-> +	if (boot_cpu_data.x86 == 0x1A && boot_cpu_data.x86_model <= 0x0F)
->  		return true;
->  
->  	return false;
-
-This bit looks fine but this really belongs in a separate patch
-as it has nothing to do with "Remove NULL dereferencing code"
-
-Regards,
-
-Hans
+-- 
+ i.
 
