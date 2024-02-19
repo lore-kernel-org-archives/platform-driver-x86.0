@@ -1,196 +1,91 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265A52E64F;
-	Mon, 19 Feb 2024 11:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1E72C1AE;
+	Mon, 19 Feb 2024 12:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708343984; cv=none; b=qMz+Zuml6D6gEIXtqUvcYwA3QIq5UOJG/YMU5ZuMpJ1g+F0OxJaTjRjnBNuNuQ1vwRcbx9uFoxdTfEyYrwXyTpOkxAoW2mHKl4Ik45lXdheCeFh8rQFN8Od1Lgt2HvJAWEcoXmptoiguxWauaAMgwdEPPhdAHMybp//ZBPAeHg0=
+	t=1708344418; cv=none; b=YwYYNR4VZ/Fxh4IaR9NvKtpa3dSDQ5WZlODTuvpt0roSGBmUpd/UJGSAJiFqFhhE6vPWMpM2BhneHQidqLBFUX3TCpuwWWlwF3Z73rZqDHKbxt9eHTh4Ts8rxd8WtKReYj7lSa6vtlGeLg/c8puQgDNWqeOBvJ2oteRYj61K8oY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708343984; c=relaxed/simple;
-	bh=jNbs6mh9NRNmcMy+geYDC/0FJuXGdyoG3yuMN5TBvyE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=d1AaW/w0V35xyWLWcBtsMOoXiIqCA7kSQ2B7b+Zm5sHyWoYdz3YWc7mBLO/K22w0vSdQNcAQLPJWPPMRNoVnRfiP/WJ3giQ4lEvkCSBEMsbSheCnOMzW7g2vHccXWhu4MBVj/yczJ5SEASA3CoDPr5C3eKD/wV6pmIySq0jGvNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=I4mq0iXe; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1708344418; c=relaxed/simple;
+	bh=pDZK7NPfB1MTel/LL2NIFxKTCuRuSZodULRbT2pMx4E=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=kX7+HYgARSR+Fi6EciDdN+5/Y+9z7vMAanhxza+BrmycndiKKfC3kGKqXLsbiaq/1Y0UeZV/Fs08O8ecbBsAxssOVDweSGZskjCy0TJKot7KFi3CuIf1b9HmC2YLjH7ZwMjkZtivKD70ed96rYUrKT8emKMZJCIU2Tu7e5Cgwt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CF94/7WZ; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="I4mq0iXe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1708343973; x=1708948773; i=w_armin@gmx.de;
-	bh=jNbs6mh9NRNmcMy+geYDC/0FJuXGdyoG3yuMN5TBvyE=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=I4mq0iXeFesQug4BYeka52DUBNP8YLI8wT2M2IDy8gtqTUhvc67lC7oOKd04Yqs/
-	 XMxxUN3zGfXHQuvBr6gMSoTQkZcgB508c8VPiRk4JAzGnyDfnu0Lx90TiF8HxIPBI
-	 LnIGolY0b0HOEf0o80hkBQ9aPiw40WmgIYMnydVNsxvpa4QEUxsDb4/2uIC/W0zyp
-	 ANBj8Wb2WvZlkMskAPHq49bdf5FWE69J14yPdzvR1JS8PEJS7/rvjPmKuFhNaxkFk
-	 uW+F9fdEgz52haLW3W7uohoZVE4/hSeV+QVqZRGk14BlHzyRafckeAZs8Cgl3ChZ6
-	 nI+VPfEfCo/D3Y/dVA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MS3il-1rUaKc07kh-00TR3q; Mon, 19 Feb 2024 12:59:33 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: corentin.chary@gmail.com,
-	luke@ljones.dev
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] Revert "platform/x86: asus-wmi: Support WMI event queue"
-Date: Mon, 19 Feb 2024 12:59:19 +0100
-Message-Id: <20240219115919.16526-6-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240219115919.16526-1-W_Armin@gmx.de>
-References: <20240219115919.16526-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CF94/7WZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708344417; x=1739880417;
+  h=from:to:in-reply-to:references:subject:message-id:date:
+   mime-version:content-transfer-encoding;
+  bh=pDZK7NPfB1MTel/LL2NIFxKTCuRuSZodULRbT2pMx4E=;
+  b=CF94/7WZQ1adw61QsZdmsExf326Tfiv/8Ln41Wg4BpU23dmUN9orw24u
+   cc5Gf/Ud6vAAsvP2Fpw8Pvy1+C0ssRIDeMqPVlI1F3ZK5FecpNYA3BkAJ
+   KWuvTwLc7dIXSozbRE0H/XAaPUriKb8KM2d09G3blSVX5ZMMF1ilcwXAs
+   wLdDAe78j/VRGEM6bmt8htko4sckGbrFw+hvD2qVdhu38BskKZDdQ7XV0
+   i41kFp20Du73V6Q55onLRjKiBZVHx56XTgo5PWV+n2/b/BroeDI9z+nDB
+   7/PsxKiJQ2sWFLDz7Z6TvJKsn5trDCTtyhATEqnTS6vId7Be4QYphUMdF
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="13127979"
+X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
+   d="scan'208";a="13127979"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 04:06:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
+   d="scan'208";a="4474117"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.18])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 04:06:52 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ jwoithe@just42.net, hdegoede@redhat.com, W_Armin@gmx.de, 
+ Szilard Fabian <szfabian@bluemarch.art>
+In-Reply-To: <20240215203012.228758-2-szfabian@bluemarch.art>
+References: <20240129163502.161409-2-szfabian@bluemarch.art>
+ <20240129175714.164326-2-szfabian@bluemarch.art>
+ <20240207023031.56805-2-szfabian@bluemarch.art>
+ <20240215203012.228758-2-szfabian@bluemarch.art>
+Subject: Re: [PATCH v4] platform/x86/fujitsu-laptop: Add battery charge
+ control support
+Message-Id: <170834440647.4050.13047961348645894978.b4-ty@linux.intel.com>
+Date: Mon, 19 Feb 2024 14:06:46 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ZJ35nPdHK8By7gcfdclwJO+Zz2VmNR2oBXLTl1BfboyzseFu4eM
- 9j0u4g9AnK4alZu5BgzD1/RrSyATmuST0UgaMyYSg44fH80oZRxZx+l2Ejej8RujZIsDSQt
- 3YScrQCg2HB/DrYN5fOQJ0A45lpjER+tb13KsNf8H7CSTBrswl333dGGPVLIgP15EKZ/vHA
- XvC4TfXpBMqlYS5Vs6UAw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Q79NRxKhYPU=;eELxmKwKpi3aicwQv7bWuu442fg
- 5ivSD5qpdpakCi748gekkHyOzAnbt4cgowvdS2dxunpxFNLiDTd5iJyvYKQYzAEb546c+YrR0
- pC2u4ztK81cPvnfeCJm9rWvQfbxheVhN/Ue5L4Cs4i5q9ET2UpVeUC42A/42yHoVjJqAe7bpp
- tiRzZyrwU+qdDmQ00MtPCkYwjLPia+p+frjkOzxVNfz81JqbS1ROIKBDj80rSFPxTIlEkwUtc
- UbX9PIi4py/ZqPETtvx/U9PLVd110ASe03cLKSZEwRaeYM7q9uyLHsQLA0JrfUGdJH2UodVfo
- vv4Sq7Hc4JlT+8nHZdEZ5crfMfKP9asoHYLQhmIFqJzDeSgeXbIBZRJRNGm4OYgqZNFtZwqhA
- 40Q9c9qhiIx6RTVlCIuxoHdujJCV3W0m5lttOaKPUiR7K4AqftlhGMFLnmacP8fgcIZKzz08S
- Pcs/FMqSae/o7LefEeghybqlwOTh5WYdvr5zzn1gp9oLrR0+QE6pebZakBueYZn7Cj48XvROn
- E6Icbyh41zh+SA0+iYjtpgacOKdZWGp2mFfUCE6ObbW4HxfUqOk2IbXSrI5BCtHYk32NcbkjK
- qL6zYJS9dqByjqcCC25CxlDknPS8fovTg3swtsNBzJE2SUyIkZpFPu+2nfpzj+/SV2wVdZvD5
- bC9f6wgt3hjC4tOuGeHlH5d1r9eLb1drxSEjb8jGouZBT4RYyrtKCdE/j5GLjdrZXqgsEDAa0
- d8KQmrPFF219Sd4Jqpl9j3fVqoyrSRQn9HElySRbS4mD3bP7qm1FwoaxCkpPEVLzFlDfTbmmq
- FGl8z4CeBY7eURaysQcEH9s6AJC02RXsJLxHNzEHdjeks=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.3
 
-This reverts commit 1a373d15e283937b51eaf5debf4fc31474c31436.
+On Thu, 15 Feb 2024 20:31:43 +0000, Szilard Fabian wrote:
 
-The WMI core now takes care of draining the event queue if asus-wmi
-is not loaded, so the hacky event queue handling code is not needed
-anymore.
+> This patch adds battery charge control support on Fujitsu notebooks
+> via the S006 method of the FUJ02E3 ACPI device. With this method it's
+> possible to set charge_control_end_threshold between 50 and 100%.
+> 
+> Tested on Lifebook E5411 and Lifebook U728. Sadly I can't test this
+> patch on a dual battery one, but I didn't find any clue about
+> independent battery charge control on dual battery Fujitsu notebooks
+> either. And by that I mean checking the DSDT table of various Lifebook
+> notebooks and reverse engineering FUJ02E3.dll.
+> 
+> [...]
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/asus-wmi.c | 71 +++------------------------------
- 1 file changed, 5 insertions(+), 66 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-w=
-mi.c
-index 21dee425ea6f..2865af89e95c 100644
-=2D-- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -101,13 +101,6 @@ module_param(fnlock_default, bool, 0444);
- #define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI	0x9c31
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
 
- #define ASUS_ACPI_UID_ASUSWMI		"ASUSWMI"
--#define ASUS_ACPI_UID_ATK		"ATK"
--
--#define WMI_EVENT_QUEUE_SIZE		0x10
--#define WMI_EVENT_QUEUE_END		0x1
--#define WMI_EVENT_MASK			0xFFFF
--/* The WMI hotkey event value is always the same. */
--#define WMI_EVENT_VALUE_ATK		0xFF
+The list of commits applied:
+[1/1] platform/x86/fujitsu-laptop: Add battery charge control support
+      commit: 9b716ef48c90446b8d6d86726c6c3f0141e53091
 
- #define WMI_EVENT_MASK			0xFFFF
-
-@@ -219,7 +212,6 @@ struct asus_wmi {
- 	int dsts_id;
- 	int spec;
- 	int sfun;
--	bool wmi_event_queue;
-
- 	struct input_dev *inputdev;
- 	struct backlight_device *backlight_device;
-@@ -4019,50 +4011,14 @@ static void asus_wmi_handle_event_code(int code, s=
-truct asus_wmi *asus)
- static void asus_wmi_notify(u32 value, void *context)
- {
- 	struct asus_wmi *asus =3D context;
--	int code;
--	int i;
--
--	for (i =3D 0; i < WMI_EVENT_QUEUE_SIZE + 1; i++) {
--		code =3D asus_wmi_get_event_code(value);
--		if (code < 0) {
--			pr_warn("Failed to get notify code: %d\n", code);
--			return;
--		}
--
--		if (code =3D=3D WMI_EVENT_QUEUE_END || code =3D=3D WMI_EVENT_MASK)
--			return;
--
--		asus_wmi_handle_event_code(code, asus);
--
--		/*
--		 * Double check that queue is present:
--		 * ATK (with queue) uses 0xff, ASUSWMI (without) 0xd2.
--		 */
--		if (!asus->wmi_event_queue || value !=3D WMI_EVENT_VALUE_ATK)
--			return;
--	}
-+	int code =3D asus_wmi_get_event_code(value);
-
--	pr_warn("Failed to process event queue, last code: 0x%x\n", code);
--}
--
--static int asus_wmi_notify_queue_flush(struct asus_wmi *asus)
--{
--	int code;
--	int i;
--
--	for (i =3D 0; i < WMI_EVENT_QUEUE_SIZE + 1; i++) {
--		code =3D asus_wmi_get_event_code(WMI_EVENT_VALUE_ATK);
--		if (code < 0) {
--			pr_warn("Failed to get event during flush: %d\n", code);
--			return code;
--		}
--
--		if (code =3D=3D WMI_EVENT_QUEUE_END || code =3D=3D WMI_EVENT_MASK)
--			return 0;
-+	if (code < 0) {
-+		pr_warn("Failed to get notify code: %d\n", code);
-+		return;
- 	}
-
--	pr_warn("Failed to flush event queue\n");
--	return -EIO;
-+	asus_wmi_handle_event_code(code, asus);
- }
-
- /* Sysfs ****************************************************************=
-******/
-@@ -4302,23 +4258,6 @@ static int asus_wmi_platform_init(struct asus_wmi *=
-asus)
- 		asus->dsts_id =3D ASUS_WMI_METHODID_DSTS;
- 	}
-
--	/*
--	 * Some devices can have multiple event codes stored in a queue before
--	 * the module load if it was unloaded intermittently after calling
--	 * the INIT method (enables event handling). The WMI notify handler is
--	 * expected to retrieve all event codes until a retrieved code equals
--	 * queue end marker (One or Ones). Old codes are flushed from the queue
--	 * upon module load. Not enabling this when it should be has minimal
--	 * visible impact so fall back if anything goes wrong.
--	 */
--	wmi_uid =3D wmi_get_acpi_device_uid(asus->driver->event_guid);
--	if (wmi_uid && !strcmp(wmi_uid, ASUS_ACPI_UID_ATK)) {
--		dev_info(dev, "Detected ATK, enable event queue\n");
--
--		if (!asus_wmi_notify_queue_flush(asus))
--			asus->wmi_event_queue =3D true;
--	}
--
- 	/* CWAP allow to define the behavior of the Fn+F2 key,
- 	 * this method doesn't seems to be present on Eee PCs */
- 	if (asus->driver->quirks->wapf >=3D 0)
-=2D-
-2.39.2
+--
+ i.
 
