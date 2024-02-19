@@ -1,186 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188B42E645
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Feb 2024 12:30:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1DE32E410;
+	Mon, 19 Feb 2024 12:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708345856; cv=none; b=SySg19oQALTfSecsgOWVJGNOOvRlRFVUGPxt8lAXBeFi/I1Is0dpcOfTTqfmkQZhUwd3MBn0dUm/jbMIDEEDECvTfNSW5Rp+EAVInKOxSFug0jTXbu+TYG5QR02mR9ACURUAdaN1Bh3YquBcIMdqvMozu+5nIEsmJsTK4bqaLIw=
+	t=1708346238; cv=none; b=BCMedfzuqFZM2MGP9jXhCGyzLQyU67VlibbrCfGGUgQkbeUVgum0WlcnETNmiV9Y+bHsWF6ZC/Br+dMqm3vTXCO5BJdcn7lqcu8AaW0h2TrKWqgd3+k0Wt8J6bb6KL7AdViHDvaIW1s+R/8THO/DUSTKSODMEiTMqGB4KCb/k4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708345856; c=relaxed/simple;
-	bh=IDTbPb8asY+ferm6mqqlqxZXxYiD0ZNqwygEqzr2sdE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ccgAsRx9FN4V09dHehkBGVjrkeqQ/GADukJWjo0GiBiFi2134ldFwnPHZD8wgBeFdLkffW7NRRZkzTiwpol8XFb2uAyfaS4HenoYwIY/u0+M6K1aOapBaFrC9w8SjwdV9+c0AKhM/CjwGJyb6cJ3k5Wo2xXe1Bpax+bhk0pJw7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ilIRkIoq; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ilIRkIoq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708345852;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YdH2Ze9iNCElmUDBvOdq9sHylN6X8PQU7Qi39Aqlfp4=;
-	b=ilIRkIoqdcUBcRbyR5V4f0XeaqFU+oO00mKBMSpHDX5YwL8pYlxp6lZuEuImQfXzBIBq2o
-	RDfO+nMLUDGkVzHvh5QLaKujUJJyD+gWAcu2tcBlr3pvsQMmA0+vUkla2jPXqfL+3PPDSQ
-	UPIHSagZD2yJpeZ9cbuQHv+pRVc3i0s=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-517--LjxpaSCPGuYOAvivmzH_g-1; Mon, 19 Feb 2024 07:30:51 -0500
-X-MC-Unique: -LjxpaSCPGuYOAvivmzH_g-1
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-512acebbafaso1065089e87.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Feb 2024 04:30:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708345849; x=1708950649;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YdH2Ze9iNCElmUDBvOdq9sHylN6X8PQU7Qi39Aqlfp4=;
-        b=VFw0GIJ9h8Njqb+Z1bDfWqijJa1yuMOmNTz7s53gkG4E8pSvnlpZSPqEl44CVSzgjf
-         5k8+7ZGx7SpCb/Qr8B+FTbNGjrHkG8T05WhfYOxXSl4Gxf3wzjnervQ/sn2h293GF+SJ
-         D0ywKL3ATigl55YmJxgoRdhX1K8LwonUpp7Z7poMWGKZzjCclVezYB06U1gqafEI/u/V
-         x1ChNHWS6kIy0d22s87Uqu0Uy7ZAJUvZ4HGAnRKWupyTChgN7UnX1y4aBT/nZniSpsSr
-         TyDNeVpqv8IRthc5ERes1tZRb3zWN/+ZCGtNWV0nEyQ2gwb7ERAGsBvurDzWbCQ1dypj
-         DjGg==
-X-Gm-Message-State: AOJu0YylVjmh6AaiuDyMUqvnRSftZ/B6MDV/e5dIsbSu9zdPW7NiR5B1
-	NU4KdSEcMHW4NxhvcoCmKrKU6b8HBhklzJOYrgGRg4UC6q4BSomdUCNe6mbM4Nn9TA2g4I87s4p
-	u2W7I+WhY64e0x9Ie+8K2eZgoqHGEY5TLwQlLpxDC3PunrxOdYk7tiqnaJ7KVQEIXw16fJuc=
-X-Received: by 2002:a05:6512:3d8d:b0:512:be44:656f with SMTP id k13-20020a0565123d8d00b00512be44656fmr658764lfv.63.1708345849715;
-        Mon, 19 Feb 2024 04:30:49 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGnnYbm6CLP6LhauYdapFeonPxhMoFGBFXGCUGyg/sBLf9e2Cahk8+3t+Luhosaa0CjPe3rqw==
-X-Received: by 2002:a05:6512:3d8d:b0:512:be44:656f with SMTP id k13-20020a0565123d8d00b00512be44656fmr658747lfv.63.1708345849370;
-        Mon, 19 Feb 2024 04:30:49 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id th7-20020a1709078e0700b00a3e059c5c5fsm2895602ejc.188.2024.02.19.04.30.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Feb 2024 04:30:49 -0800 (PST)
-Message-ID: <bd84948c-6e05-492c-8a77-7c31c5631edb@redhat.com>
-Date: Mon, 19 Feb 2024 13:30:48 +0100
+	s=arc-20240116; t=1708346238; c=relaxed/simple;
+	bh=/J65+q+QomSfZ3wGcuHtMpFRfCHCYMuMStDpL3y0AZc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gP5IUeCMi6KBw/4WhFJVnpR52gvvG2yEL9+fR3L6f4SQloUOsmzowUYDzpVA5jVFf6aeeYkkNTdfwvjos2Fv725m7rxLWXQygLcmUcWH/y9/uCU6gGlYoiDN7fXE/GtzR+r0JW+G1pvJUBV5jx92j6oy0jcaipkR6L8yU+9+X30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from [192.168.2.4] (51b68f08.dsl.pool.telekom.hu [::ffff:81.182.143.8])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 0000000000073B80.0000000065D34A46.001CFF03; Mon, 19 Feb 2024 13:32:06 +0100
+Message-ID: <531e85d73c1926161eb15f8900ea77aade394b6f.camel@irl.hu>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: support Fn+R
+ dual-function key
+From: Gergo Koteles <soyer@irl.hu>
+To: Ike Panhc <ike.pan@canonical.com>,
+  Hans de Goede <hdegoede@redhat.com>,
+  Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 19 Feb 2024 13:32:05 +0100
+In-Reply-To: <3b6a7bba-47a5-469c-aac1-5574ad78dadf@canonical.com>
+References: 
+	<0cdbc0e6eb65e160384ae0ed152e7de3ded1d9d5.1707604991.git.soyer@irl.hu>
+	 <3b6a7bba-47a5-469c-aac1-5574ad78dadf@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] platform/x86/amd/pmf: remove smart_pc_status enum
-Content-Language: en-US
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
- mario.limonciello@amd.com
-References: <20240216064112.962582-1-Shyam-sundar.S-k@amd.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240216064112.962582-1-Shyam-sundar.S-k@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi,
+Hi Ike,
 
-On 2/16/24 07:41, Shyam Sundar S K wrote:
-> Improve code readability by removing smart_pc_status enum, as the same
-> can be done with a simple true/false check; Update the code checks
-> accordingly.
-> 
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+On Mon, 2024-02-19 at 10:39 +0800, Ike Panhc wrote:
+> On 2/11/24 06:51, Gergo Koteles wrote:
+> > According to the manual, Fn+R adjusts the display refresh rate.
+> > Map Fn+R to KEY_DISPLAYTOGGLE.
+> >=20
+> > Signed-off-by: Gergo Koteles <soyer@irl.hu>
+> > ---
+> >  drivers/platform/x86/ideapad-laptop.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >=20
+> > diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x=
+86/ideapad-laptop.c
+> > index 88eefccb6ed2..4c130957f80d 100644
+> > --- a/drivers/platform/x86/ideapad-laptop.c
+> > +++ b/drivers/platform/x86/ideapad-laptop.c
+> > @@ -1091,6 +1091,8 @@ static const struct key_entry ideapad_keymap[] =
+=3D {
+> >  	{ KE_KEY,	0x07 | IDEAPAD_WMI_KEY, { KEY_HELP } },
+> >  	{ KE_KEY,	0x0e | IDEAPAD_WMI_KEY, { KEY_PICKUP_PHONE } },
+> >  	{ KE_KEY,	0x0f | IDEAPAD_WMI_KEY, { KEY_HANGUP_PHONE } },
+> > +	/* Refresh Rate Toggle (Fn+R) */
+> > +	{ KE_KEY,	0x10 | IDEAPAD_WMI_KEY, { KEY_DISPLAYTOGGLE } },
+> >  	/* Dark mode toggle */
+> >  	{ KE_KEY,	0x13 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
+> >  	/* Sound profile switch */
+>=20
+> Acked-by: Ike Panhc <ike.pan@canonical.com>
+>=20
+> BTW on which ideapad we need this patch?
+>=20
 
-Thank you for your patch-series, I've applied this series
-to my review-hans  branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Oh, I somehow missed that. I found it on a Yoga 7 14ARB7.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+Newer Yogas and Legions with 60Hz/90Hz displays have this refresh rate
+toggle feature.
 
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
+I'm wondering if this would be worth a new KEY_REFRESH_RATE_TOGGLE
+event code?=20
 
-Regards,
+KEY_DISPLAYTOGGLE is used to toggle the LCD on/off in other drivers.
 
-Hans
+What do you think?
 
+Thanks,
+Gergo
 
-
-
-> ---
-> v2->v3:
-> - handle missing case for amd_pmf_init_smart_pc() after removing enum
-> 
-> v1->v2:
-> - remove enum smart_pc_status and adjust the code handling
-> 
->  drivers/platform/x86/amd/pmf/core.c   | 11 ++++++++---
->  drivers/platform/x86/amd/pmf/pmf.h    |  5 -----
->  drivers/platform/x86/amd/pmf/tee-if.c |  4 ++--
->  3 files changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-> index feaa09f5b35a..1d6dbd246d65 100644
-> --- a/drivers/platform/x86/amd/pmf/core.c
-> +++ b/drivers/platform/x86/amd/pmf/core.c
-> @@ -330,9 +330,14 @@ static void amd_pmf_init_features(struct amd_pmf_dev *dev)
->  		dev_dbg(dev->dev, "SPS enabled and Platform Profiles registered\n");
->  	}
->  
-> -	if (!amd_pmf_init_smart_pc(dev)) {
-> +	amd_pmf_init_smart_pc(dev);
-> +	if (dev->smart_pc_enabled) {
->  		dev_dbg(dev->dev, "Smart PC Solution Enabled\n");
-> -	} else if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
-> +		/* If Smart PC is enabled, no need to check for other features */
-> +		return;
-> +	}
-> +
-> +	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
->  		amd_pmf_init_auto_mode(dev);
->  		dev_dbg(dev->dev, "Auto Mode Init done\n");
->  	} else if (is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_AC) ||
-> @@ -351,7 +356,7 @@ static void amd_pmf_deinit_features(struct amd_pmf_dev *dev)
->  		amd_pmf_deinit_sps(dev);
->  	}
->  
-> -	if (!dev->smart_pc_enabled) {
-> +	if (dev->smart_pc_enabled) {
->  		amd_pmf_deinit_smart_pc(dev);
->  	} else if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
->  		amd_pmf_deinit_auto_mode(dev);
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index 16999c5b334f..66cae1cca73c 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -441,11 +441,6 @@ struct apmf_dyn_slider_output {
->  	struct apmf_cnqf_power_set ps[APMF_CNQF_MAX];
->  } __packed;
->  
-> -enum smart_pc_status {
-> -	PMF_SMART_PC_ENABLED,
-> -	PMF_SMART_PC_DISABLED,
-> -};
-> -
->  /* Smart PC - TA internals */
->  enum system_state {
->  	SYSTEM_STATE_S0i3,
-> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-> index f8c0177afb0d..8b7e3f87702e 100644
-> --- a/drivers/platform/x86/amd/pmf/tee-if.c
-> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
-> @@ -260,7 +260,7 @@ static int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev)
->  	res = amd_pmf_invoke_cmd_init(dev);
->  	if (res == TA_PMF_TYPE_SUCCESS) {
->  		/* Now its safe to announce that smart pc is enabled */
-> -		dev->smart_pc_enabled = PMF_SMART_PC_ENABLED;
-> +		dev->smart_pc_enabled = true;
->  		/*
->  		 * Start collecting the data from TA FW after a small delay
->  		 * or else, we might end up getting stale values.
-> @@ -268,7 +268,7 @@ static int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev)
->  		schedule_delayed_work(&dev->pb_work, msecs_to_jiffies(pb_actions_ms * 3));
->  	} else {
->  		dev_err(dev->dev, "ta invoke cmd init failed err: %x\n", res);
-> -		dev->smart_pc_enabled = PMF_SMART_PC_DISABLED;
-> +		dev->smart_pc_enabled = false;
->  		return res;
->  	}
->  
+> Thanks.
+>=20
+> --
+> Ike
 
