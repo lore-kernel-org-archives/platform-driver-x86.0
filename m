@@ -1,64 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4757B33CD4
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Feb 2024 12:56:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8EE33CC4
+	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Feb 2024 12:59:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708347393; cv=none; b=qeN72zhyicA8VZof8CiadjzqIc/CWaYgfVdilZs/gXYm53CwooKjNUi9ykYd3Vidf9ceMMYUcRtKpWpVSHOHj0c20YwLMHyNjH+incrYy+A15W4HTsy6bS9vk+t7WJMnCTFUQ1WtW3hshz8Q7uvr7ZcsQ6tCjmtob9kyepZI26Q=
+	t=1708347588; cv=none; b=i3OEu86smoTExpuUi8AFVUKiKlcOhsGcroKrVz/VpVGJDTuRLgZf3qaAvxUxlGJoyjnZ5a/VIzK9kkeWBwCXxBpPa33u15uojC/unl2HGvswnEhtK53pLvKxYg5xkIyX2IYDPJfCX2P52P49SIEOdbYOqWLZGBw9IiWpCqT3d4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708347393; c=relaxed/simple;
-	bh=tXciXTnzI0WBYuYcYl+Mfk/2akjit8SB45KAKre+59k=;
+	s=arc-20240116; t=1708347588; c=relaxed/simple;
+	bh=3Fi65QIGXfdHgZ04kFVl3weeoPhyvqfKbrI6gyowmVo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=shlIVgx44Htog/VNworCcZbO9IPNLkR+vBKY5waLuvv5CKCPV0qeaDCmZ3zP078iOtR5/9bF1Ef/EFhd40TliJB+qVpMg+JPu1fedv55vKyU88xdG0KDmV6WbDlc3C0V7aHy+DjTwSW/zMThyvhtFdir2IvwIpbr+yhCvKQ9UN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UMAIdOGX; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=B2BlDuYWqWEiHQ9CHWhWXBgot2fSjtffnUVSxKLmJ3PWaYR+UR3pqa1FufsParLC/hkFUhfVys5LYiol7doaoud877U72xQQdrGRiJr0mAnO4NdWPv1mzdRfABlVCXu7+eNBX+uYcTiFyNVMm8TGhtpV+K8HgXbGM39lbOwMilE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UpPC2RyS; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UMAIdOGX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UpPC2RyS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708347391;
+	s=mimecast20190719; t=1708347586;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Fi85J7cNtF2hnvLt9MhW0sBhoZ2oZZ7roepbFsf0Fkw=;
-	b=UMAIdOGXzeq/mA6/RLWbJaw1FXGT05lS4rbfE0q0i6qeyb82sn31MkUo3VTaPz+mDsAwSP
-	rOicoVcJvjYj0zb+2KtUsSGQk+lROBZm6SamTTlatF1QuJ8pbbiGAkr0ZLYa+a/O7thugC
-	UhzutUvEBc2OpK2lmdy5b7sJ6RtZMcU=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=nMxKeQCC51WbQZLbi5a685VF0mibFkff8D67rJw7soU=;
+	b=UpPC2RySwdQtHBpFs58kkNvzz+EDP1k97tfaOaKRyfEQXjd059wC2Elf6xcq4g3uhBZgJP
+	74YY27x0SE1xcRKnOM1vU6uh/ilPpHh+kAhqYMAjuN7qIui4bEHpgvGZTuesTzrQbGqsDR
+	52q3/CVoyHUfzUsvm9jNR8ydkhZQEns=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-507-8DYM2tcYP6affx6_qCVTFA-1; Mon, 19 Feb 2024 07:56:29 -0500
-X-MC-Unique: 8DYM2tcYP6affx6_qCVTFA-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5642bbddd01so523142a12.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Feb 2024 04:56:29 -0800 (PST)
+ us-mta-317-uNbVGuJZNXeaLSlXxUsX4Q-1; Mon, 19 Feb 2024 07:59:44 -0500
+X-MC-Unique: uNbVGuJZNXeaLSlXxUsX4Q-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a2bffe437b5so363449866b.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Feb 2024 04:59:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708347389; x=1708952189;
+        d=1e100.net; s=20230601; t=1708347583; x=1708952383;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fi85J7cNtF2hnvLt9MhW0sBhoZ2oZZ7roepbFsf0Fkw=;
-        b=iT6RU/bjmjlwHt9Lg0SlsAyvpKTZ32dybljWRh8ejWFa32Odsz02wmxk7rLY/m5SZm
-         YFS3jxQQKxZ2EvUrdqBCY7GwRvLxp5ucn5VPxmmkPDKCUsEh1O1F8mtFlwv6fVbHPaz3
-         IyNf040YeeFlYx/fQPXDFqOkgR6loWg3SSrqR/dsTT4ZZp8EQd3vPleW4nF6ItnQiPf1
-         NLvS6isIWcSK+ejVtY5fQjFDq0pvk5ipBBpFuk7p/vho2RdvtV+sRsWhW6qZ1LScJosu
-         CbbLzEeoQN1U/VKY3JACJpw/SpfNnL2PkgLd7hqHYIMHIXkWyc3O44aNSd/gcWHu1zv9
-         6+Zw==
-X-Gm-Message-State: AOJu0YyUhFz3Oe2hXDQJYaGlUIbW+lcuLWcbakZ16Uwm911wwhjfvBCk
-	EN2liq7Cln/HinR2kLPUBreIR2vA6BjlVy0BmtHXgnrkDRWoLk53iu0+UFVb1oG1wvQgFDJE0e0
-	ULUwicgFZ6nWq4N4hthNe371ZOPL6xu+OEM4KUo+GarKnYXOr0EbsjBN14bw3TuqR3fWNOYs=
-X-Received: by 2002:a05:6402:3788:b0:563:ccd1:26c0 with SMTP id et8-20020a056402378800b00563ccd126c0mr8171954edb.8.1708347388896;
-        Mon, 19 Feb 2024 04:56:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE+MVN2syDIWOe2FngB3b16L83fgJ+fflH9UzHroMpLNKXN0V7dQIAj5/MRnEBHa4w3lVT60w==
-X-Received: by 2002:a05:6402:3788:b0:563:ccd1:26c0 with SMTP id et8-20020a056402378800b00563ccd126c0mr8171936edb.8.1708347388548;
-        Mon, 19 Feb 2024 04:56:28 -0800 (PST)
+        bh=nMxKeQCC51WbQZLbi5a685VF0mibFkff8D67rJw7soU=;
+        b=EO6dLs517Q8dgeoc2dYvmr+0GEUP6Cng9KxMWR7JMWBkDa4UfVtLsy8kb4xo5sqL5n
+         SJZT9H9+UjSd/lBoTQY840T9k95212ML8+nVCiTS9IlTtksnzse48hCQZ0NC9lEXLUL7
+         7/AcwkC3ZHpvw9OH1FTXsHq+5JYkrr8/cDnKmtSoQ8gDZXXQ9fJKQbUlGM9t/ww+T/Ww
+         sZNdWipo51yXpviuRsZ/uq8k5pfec6EdFvuJ9ibepZn5M/MM1qHv4javwpfCrl3TA/8X
+         rddJ0p8w3nHf6LLjWKAA1cn/PglHM6vnXkiGheQ11Rvwz+Cc4CaBH3MMBqDeYDps9KqK
+         /q2A==
+X-Gm-Message-State: AOJu0YwwkQumeR5TB7GZg7m/TfLRloYhfeHfEPPVbZT1K4ZVo6InFVoz
+	/Qg19oDL6sKqctG+yjadRLT4mdOxgkEtO29Fj4FV5+oZCl9TBQk/X+EQzieq6ApTAI0RvIOCjOA
+	cEINGTaE1DHwvhb0r9uxOwJMLytu/Xf8Dn9gjIAH1n9CFB6ibjQxqEpVHKjcZMvqVjNQAGRdYyq
+	lyVlU=
+X-Received: by 2002:a17:906:718d:b0:a3e:7cd8:3db7 with SMTP id h13-20020a170906718d00b00a3e7cd83db7mr2495946ejk.68.1708347583642;
+        Mon, 19 Feb 2024 04:59:43 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF0lzjx1aAmMTv/0aa0dQdKzvgpfGRNniCzHwLJhmH2u8A2FduKGrk8NWgLHabH3q9tu/SZwA==
+X-Received: by 2002:a17:906:718d:b0:a3e:7cd8:3db7 with SMTP id h13-20020a170906718d00b00a3e7cd83db7mr2495929ejk.68.1708347583325;
+        Mon, 19 Feb 2024 04:59:43 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id cs1-20020a0564020c4100b005617cebd051sm2684619edb.78.2024.02.19.04.56.27
+        by smtp.gmail.com with ESMTPSA id a19-20020a1709064a5300b00a3e2b0799e0sm2404226ejv.4.2024.02.19.04.59.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Feb 2024 04:56:28 -0800 (PST)
-Message-ID: <753c02c9-267f-4b2d-b032-74dc9a03e751@redhat.com>
-Date: Mon, 19 Feb 2024 13:56:27 +0100
+        Mon, 19 Feb 2024 04:59:43 -0800 (PST)
+Message-ID: <f0f64e2d-5e6f-4a3b-b57d-e617142eb08c@redhat.com>
+Date: Mon, 19 Feb 2024 13:59:42 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,67 +67,84 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: intel-vbtn: Stop calling "VBDL" from
- notify_handler
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Only update profile if
+ successfully converted
 Content-Language: en-US
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org, Alexander Kobel
- <a-kobel@a-kobel.de>, regressions@lists.linux.dev,
- Arnold Gozum <arngozum@gmail.com>
-References: <20240216203300.245826-1-hdegoede@redhat.com>
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240217022311.113879-1-mario.limonciello@amd.com>
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240216203300.245826-1-hdegoede@redhat.com>
+In-Reply-To: <20240217022311.113879-1-mario.limonciello@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On 2/16/24 21:33, Hans de Goede wrote:
-> Commit 14c200b7ca46 ("platform/x86: intel-vbtn: Fix missing
-> tablet-mode-switch events") causes 2 issues on the ThinkPad X1 Tablet Gen2:
+On 2/17/24 03:23, Mario Limonciello wrote:
+> Randomly a Lenovo Z13 will trigger a kernel warning traceback from this
+> condition:
 > 
-> 1. The ThinkPad will wake up immediately from suspend
-> 2. When put in tablet mode SW_TABLET_MODE reverts to 0 after about 1 second
+> ```
+> if (WARN_ON((profile < 0) || (profile >= ARRAY_SIZE(profile_names))))
+> ```
 > 
-> Both these issues are caused by the "VBDL" ACPI method call added
-> at the end of the notify_handler.
+> This happens because thinkpad-acpi always assumes that
+> convert_dytc_to_profile() successfully updated the profile. On the
+> contrary a condition can occur that when dytc_profile_refresh() is called
+> the profile doesn't get updated as there is a -EOPNOTSUPP branch.
 > 
-> And it never became entirely clear if this call is even necessary to fix
-> the issue of missing tablet-mode-switch events on the Dell Inspiron 7352.
+> Catch this situation and avoid updating the profile. Also log this into
+> dynamic debugging in case any other modes should be added in the future.
 > 
-> Drop the "VBDL" ACPI method call again to fix the 2 issues this is
-> causing on the ThinkPad X1 Tablet Gen2.
-> 
-> Fixes: 14c200b7ca46 ("platform/x86: intel-vbtn: Fix missing tablet-mode-switch events")
-> Reported-by: Alexander Kobel <a-kobel@a-kobel.de>
-> Closes: https://lore.kernel.org/platform-driver-x86/295984ce-bd4b-49bd-adc5-ffe7c898d7f0@a-kobel.de/
-> Cc: regressions@lists.linux.dev
-> Cc: Arnold Gozum <arngozum@gmail.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Fixes: c3bfcd4c6762 ("platform/x86: thinkpad_acpi: Add platform profile support")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-I've added this to my review-hans (soon to be fixes) branch now.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
 
 Regards,
 
 Hans
 
+
+
+
 > ---
->  drivers/platform/x86/intel/vbtn.c | 3 ---
->  1 file changed, 3 deletions(-)
+> BTW - This isn't new.  I've been seeing this a long time, but I just finally
+> got annoyed enough by it to find the code that triggered the sequence.
 > 
-> diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
-> index 210b0a81b7ec..084c355c86f5 100644
-> --- a/drivers/platform/x86/intel/vbtn.c
-> +++ b/drivers/platform/x86/intel/vbtn.c
-> @@ -200,9 +200,6 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
->  	autorelease = val && (!ke_rel || ke_rel->type == KE_IGNORE);
+>  drivers/platform/x86/thinkpad_acpi.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index c4895e9bc714..5ecd9d33250d 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -10308,6 +10308,7 @@ static int convert_dytc_to_profile(int funcmode, int dytcmode,
+>  		return 0;
+>  	default:
+>  		/* Unknown function */
+> +		pr_debug("unknown function 0x%x\n", funcmode);
+>  		return -EOPNOTSUPP;
+>  	}
+>  	return 0;
+> @@ -10493,8 +10494,8 @@ static void dytc_profile_refresh(void)
+>  		return;
 >  
->  	sparse_keymap_report_event(input_dev, event, val, autorelease);
-> -
-> -	/* Some devices need this to report further events */
-> -	acpi_evaluate_object(handle, "VBDL", NULL, NULL);
->  }
->  
->  /*
+>  	perfmode = (output >> DYTC_GET_MODE_BIT) & 0xF;
+> -	convert_dytc_to_profile(funcmode, perfmode, &profile);
+> -	if (profile != dytc_current_profile) {
+> +	err = convert_dytc_to_profile(funcmode, perfmode, &profile);
+> +	if (!err && profile != dytc_current_profile) {
+>  		dytc_current_profile = profile;
+>  		platform_profile_notify();
+>  	}
 
