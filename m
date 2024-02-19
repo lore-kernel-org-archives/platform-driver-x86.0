@@ -1,93 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3312D05C;
-	Mon, 19 Feb 2024 12:07:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188B42E645
+	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Feb 2024 12:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708344431; cv=none; b=P6+O9XbbzEC3Ifx2DCtuaO3pPYrSEKq4Rd97pi6g8RsspGH6IKnIe5/opqu0AfPMCUwv246FBH12WJ9jIJLiBhVCk4RqpWzwiCmnP2bXcg4zQZyDHFxOXraee6d4nzSv3cUKF6X76aSnJrVe4scI75/WDLWLH7zjLK2QL9JhbxE=
+	t=1708345856; cv=none; b=SySg19oQALTfSecsgOWVJGNOOvRlRFVUGPxt8lAXBeFi/I1Is0dpcOfTTqfmkQZhUwd3MBn0dUm/jbMIDEEDECvTfNSW5Rp+EAVInKOxSFug0jTXbu+TYG5QR02mR9ACURUAdaN1Bh3YquBcIMdqvMozu+5nIEsmJsTK4bqaLIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708344431; c=relaxed/simple;
-	bh=KnF0phDN3/5uXsJqv2PiwDoKfpY1Mw293W4t6oICmxQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=TRZKLkWE5mjLbgt5HyAzf+fhqwKjjDv5cfGsPqzsuc3FFueCZRsVSGupBJ35GCt0LbX0uDuiLmbU6fJmLfcg31LhgA3HrXHeVJSDMkcYfj8pzEKC5xHVY25IMC9qmvTrzI9R9C7zJ/JkEYj480FIoxxQNhSgiZ2F+I38P9deNZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j9ZoDp/k; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708345856; c=relaxed/simple;
+	bh=IDTbPb8asY+ferm6mqqlqxZXxYiD0ZNqwygEqzr2sdE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ccgAsRx9FN4V09dHehkBGVjrkeqQ/GADukJWjo0GiBiFi2134ldFwnPHZD8wgBeFdLkffW7NRRZkzTiwpol8XFb2uAyfaS4HenoYwIY/u0+M6K1aOapBaFrC9w8SjwdV9+c0AKhM/CjwGJyb6cJ3k5Wo2xXe1Bpax+bhk0pJw7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ilIRkIoq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j9ZoDp/k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708344429; x=1739880429;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=KnF0phDN3/5uXsJqv2PiwDoKfpY1Mw293W4t6oICmxQ=;
-  b=j9ZoDp/kWHoBYVYCTGfylRVO9HgZm/Ydt48makHwOk2NwvMTlqL2IfEZ
-   hwQZ4ENN9shOa4Qam6agFCMhnNgCTptVJAq0KG7cCkb1PL5/i3AAvhYHv
-   iHt4aw4/R8Sy16v7/WGIHK7vAG2sEokaJQiL1tCwRW++ZTvd9nxxcDEsI
-   IwN7eM3flacSbzsnBiJQo1TQ1GO9jw8ATbnKDJeOSbFU3LOKBSt2wOpOh
-   tD4pq7vKddfELekYPTxI3MIUeHBt1L4QWPgDVMjAYNORf0B+fAfZ45Nxi
-   eTKTLFhENAUEldYbiLcHovinGazeRMNU32vfMQBXWcDuEWde3mYsBtBnK
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="13128023"
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="13128023"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 04:07:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="4474137"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.18])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 04:07:04 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: corentin.chary@gmail.com, luke@ljones.dev, Armin Wolf <W_Armin@gmx.de>
-Cc: hdegoede@redhat.com, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240219115919.16526-1-W_Armin@gmx.de>
-References: <20240219115919.16526-1-W_Armin@gmx.de>
-Subject: Re: [PATCH v2 0/5] platform/x86: wmi: Fixes for event data
- handling
-Message-Id: <170834441476.4050.13616916099862661423.b4-ty@linux.intel.com>
-Date: Mon, 19 Feb 2024 14:06:54 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ilIRkIoq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708345852;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YdH2Ze9iNCElmUDBvOdq9sHylN6X8PQU7Qi39Aqlfp4=;
+	b=ilIRkIoqdcUBcRbyR5V4f0XeaqFU+oO00mKBMSpHDX5YwL8pYlxp6lZuEuImQfXzBIBq2o
+	RDfO+nMLUDGkVzHvh5QLaKujUJJyD+gWAcu2tcBlr3pvsQMmA0+vUkla2jPXqfL+3PPDSQ
+	UPIHSagZD2yJpeZ9cbuQHv+pRVc3i0s=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-517--LjxpaSCPGuYOAvivmzH_g-1; Mon, 19 Feb 2024 07:30:51 -0500
+X-MC-Unique: -LjxpaSCPGuYOAvivmzH_g-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-512acebbafaso1065089e87.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Feb 2024 04:30:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708345849; x=1708950649;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YdH2Ze9iNCElmUDBvOdq9sHylN6X8PQU7Qi39Aqlfp4=;
+        b=VFw0GIJ9h8Njqb+Z1bDfWqijJa1yuMOmNTz7s53gkG4E8pSvnlpZSPqEl44CVSzgjf
+         5k8+7ZGx7SpCb/Qr8B+FTbNGjrHkG8T05WhfYOxXSl4Gxf3wzjnervQ/sn2h293GF+SJ
+         D0ywKL3ATigl55YmJxgoRdhX1K8LwonUpp7Z7poMWGKZzjCclVezYB06U1gqafEI/u/V
+         x1ChNHWS6kIy0d22s87Uqu0Uy7ZAJUvZ4HGAnRKWupyTChgN7UnX1y4aBT/nZniSpsSr
+         TyDNeVpqv8IRthc5ERes1tZRb3zWN/+ZCGtNWV0nEyQ2gwb7ERAGsBvurDzWbCQ1dypj
+         DjGg==
+X-Gm-Message-State: AOJu0YylVjmh6AaiuDyMUqvnRSftZ/B6MDV/e5dIsbSu9zdPW7NiR5B1
+	NU4KdSEcMHW4NxhvcoCmKrKU6b8HBhklzJOYrgGRg4UC6q4BSomdUCNe6mbM4Nn9TA2g4I87s4p
+	u2W7I+WhY64e0x9Ie+8K2eZgoqHGEY5TLwQlLpxDC3PunrxOdYk7tiqnaJ7KVQEIXw16fJuc=
+X-Received: by 2002:a05:6512:3d8d:b0:512:be44:656f with SMTP id k13-20020a0565123d8d00b00512be44656fmr658764lfv.63.1708345849715;
+        Mon, 19 Feb 2024 04:30:49 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGnnYbm6CLP6LhauYdapFeonPxhMoFGBFXGCUGyg/sBLf9e2Cahk8+3t+Luhosaa0CjPe3rqw==
+X-Received: by 2002:a05:6512:3d8d:b0:512:be44:656f with SMTP id k13-20020a0565123d8d00b00512be44656fmr658747lfv.63.1708345849370;
+        Mon, 19 Feb 2024 04:30:49 -0800 (PST)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id th7-20020a1709078e0700b00a3e059c5c5fsm2895602ejc.188.2024.02.19.04.30.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Feb 2024 04:30:49 -0800 (PST)
+Message-ID: <bd84948c-6e05-492c-8a77-7c31c5631edb@redhat.com>
+Date: Mon, 19 Feb 2024 13:30:48 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] platform/x86/amd/pmf: remove smart_pc_status enum
+Content-Language: en-US
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com,
+ mario.limonciello@amd.com
+References: <20240216064112.962582-1-Shyam-sundar.S-k@amd.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240216064112.962582-1-Shyam-sundar.S-k@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
 
-On Mon, 19 Feb 2024 12:59:14 +0100, Armin Wolf wrote:
+Hi,
 
-> This patch series contains fixes for the handling of WMI event data
-> when receiving WMI events.
+On 2/16/24 07:41, Shyam Sundar S K wrote:
+> Improve code readability by removing smart_pc_status enum, as the same
+> can be done with a simple true/false check; Update the code checks
+> accordingly.
 > 
-> The first patch aims to prevent WMI event drivers depending on WMI
-> event data support from binding to a WMI device which does not
-> support the retrieval of additional WMI event data.
-> 
-> [...]
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 
+Thank you for your patch-series, I've applied this series
+to my review-hans  branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
+Note it will show up in my review-hans branch once I've pushed my
 local branch there, which might take a while.
 
-The list of commits applied:
-[1/5] platform/x86: wmi: Prevent incompatible event driver from probing
-      commit: b448bcb4cf02b27946f9bd6c4ded17e2209bf271
-[2/5] platform/x86: wmi: Check if event data is not NULL
-      commit: b5003c979eb4128c7ca81ed144491e85232979b6
-[3/5] platform/x86: wmi: Always evaluate _WED when receiving an event
-      commit: 2b30ea09e77d701f0b0b02243bdcf8aa408e4214
-[4/5] platform/x86: wmi: Update documentation regarding _WED
-      commit: c865db581c295085fbfc1b6802f87c38ad92e4ca
-[5/5] Revert "platform/x86: asus-wmi: Support WMI event queue"
-      commit: b27bb403e136b12cafeff4467d495bbc8c9b7441
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
 
---
- i.
+Regards,
+
+Hans
+
+
+
+
+> ---
+> v2->v3:
+> - handle missing case for amd_pmf_init_smart_pc() after removing enum
+> 
+> v1->v2:
+> - remove enum smart_pc_status and adjust the code handling
+> 
+>  drivers/platform/x86/amd/pmf/core.c   | 11 ++++++++---
+>  drivers/platform/x86/amd/pmf/pmf.h    |  5 -----
+>  drivers/platform/x86/amd/pmf/tee-if.c |  4 ++--
+>  3 files changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index feaa09f5b35a..1d6dbd246d65 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -330,9 +330,14 @@ static void amd_pmf_init_features(struct amd_pmf_dev *dev)
+>  		dev_dbg(dev->dev, "SPS enabled and Platform Profiles registered\n");
+>  	}
+>  
+> -	if (!amd_pmf_init_smart_pc(dev)) {
+> +	amd_pmf_init_smart_pc(dev);
+> +	if (dev->smart_pc_enabled) {
+>  		dev_dbg(dev->dev, "Smart PC Solution Enabled\n");
+> -	} else if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
+> +		/* If Smart PC is enabled, no need to check for other features */
+> +		return;
+> +	}
+> +
+> +	if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
+>  		amd_pmf_init_auto_mode(dev);
+>  		dev_dbg(dev->dev, "Auto Mode Init done\n");
+>  	} else if (is_apmf_func_supported(dev, APMF_FUNC_DYN_SLIDER_AC) ||
+> @@ -351,7 +356,7 @@ static void amd_pmf_deinit_features(struct amd_pmf_dev *dev)
+>  		amd_pmf_deinit_sps(dev);
+>  	}
+>  
+> -	if (!dev->smart_pc_enabled) {
+> +	if (dev->smart_pc_enabled) {
+>  		amd_pmf_deinit_smart_pc(dev);
+>  	} else if (is_apmf_func_supported(dev, APMF_FUNC_AUTO_MODE)) {
+>  		amd_pmf_deinit_auto_mode(dev);
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+> index 16999c5b334f..66cae1cca73c 100644
+> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> @@ -441,11 +441,6 @@ struct apmf_dyn_slider_output {
+>  	struct apmf_cnqf_power_set ps[APMF_CNQF_MAX];
+>  } __packed;
+>  
+> -enum smart_pc_status {
+> -	PMF_SMART_PC_ENABLED,
+> -	PMF_SMART_PC_DISABLED,
+> -};
+> -
+>  /* Smart PC - TA internals */
+>  enum system_state {
+>  	SYSTEM_STATE_S0i3,
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> index f8c0177afb0d..8b7e3f87702e 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -260,7 +260,7 @@ static int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev)
+>  	res = amd_pmf_invoke_cmd_init(dev);
+>  	if (res == TA_PMF_TYPE_SUCCESS) {
+>  		/* Now its safe to announce that smart pc is enabled */
+> -		dev->smart_pc_enabled = PMF_SMART_PC_ENABLED;
+> +		dev->smart_pc_enabled = true;
+>  		/*
+>  		 * Start collecting the data from TA FW after a small delay
+>  		 * or else, we might end up getting stale values.
+> @@ -268,7 +268,7 @@ static int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev)
+>  		schedule_delayed_work(&dev->pb_work, msecs_to_jiffies(pb_actions_ms * 3));
+>  	} else {
+>  		dev_err(dev->dev, "ta invoke cmd init failed err: %x\n", res);
+> -		dev->smart_pc_enabled = PMF_SMART_PC_DISABLED;
+> +		dev->smart_pc_enabled = false;
+>  		return res;
+>  	}
+>  
 
