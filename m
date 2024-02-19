@@ -1,163 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2FF2E85B;
-	Mon, 19 Feb 2024 11:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57EE2561A;
+	Mon, 19 Feb 2024 11:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708343586; cv=none; b=e/ZWjlSn3KrlN/yh17q/ZCSLnlXoOZ5pF4sMQrmy0x/5Qm3yEdEIKEvqqO6dzyliTc/yk9+A3JUDfyIeshCqi322WxAmIGjI1R6h5Pmdguzy26CczRDWl4zZjkw21KKas2y9K9KPSa5SBcsFZfiDMV7q6b7BXQ2NKbPDVmEy9LA=
+	t=1708343835; cv=none; b=AXkU69WCMG3JGl2iF7XKDz4JmvPFjHAEdmZoC6gAPj2u/jcv5uZymb8DM6fjrNBTSPlbvyueILpDmVFeIvO3jANh3LYZqBOzde5WtnCXXMUBESuSafiOLogeB0xx0eOC8dPz5j5p/gTWDcIsPQP5QUU3kxQM9ui7nu2yImoZfKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708343586; c=relaxed/simple;
-	bh=aZdyduIIiyW+F/5i+mZdjMfs4VR1027rRZFus95sCjo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f6odLC5KqdDvRhKFSg0ek5pXiLuT9pc8YnBfkohgs2OSTE7p5Cn/DTVdw2ljDxM2RADSMd0/Mf3vzOj3gYecmWL6GzFgi2YBgPK3RnmBoR6KLjT4qv7nxQA3Ov4XGzvWkE6Ry5X8tK5F7ZNT5kFtG1IsqGpgM1WTwMjifXEpmX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="19950598"
+	s=arc-20240116; t=1708343835; c=relaxed/simple;
+	bh=tpEZvY4JNPf3zA/5+c+vBc9IYvKrcWuT2LwwwYik6zA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=XI5F9wmd2PpQk6NuVvAk50VlZpPuHB4vn4ZVTO+GD6cFupWiO3XrI2Gx3QpS/9lkSbeCJGI/GltGQz6zW/zdIcKkuw038kNirhyNfwODVVSmXaN3IP0zA9zVNGU6HbwiukNTzlcPOdHKXpYR1hfC5sAtGIZnk10JJ60p0zyb64A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nCk+6lzP; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nCk+6lzP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708343834; x=1739879834;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=tpEZvY4JNPf3zA/5+c+vBc9IYvKrcWuT2LwwwYik6zA=;
+  b=nCk+6lzPdj0a8NULbSi84dMxbTDb3sOJGialrv2RWdtpMiG60eNzFih1
+   FEyB2lMX0jSGtN9QHmG/+qBSN/DqG4QhH8eNKg3VD6e80dtVWk9edznnF
+   dXDJZbyPqSG7zR5frQ2DYBoN8kvhNYjUSH1ekgVaXTzf2hMFEt6vpdXCX
+   6cYDFtRbdFiXqLIi2XEbLnWCjBI/DaUnJDGsJnM33Y05X0E4G9MmQpYaC
+   jNdGtXslzDYfIasDm+zWj2dmQK3HfBSnrKcE3DX8wuzbcGA5ERN2fMtRz
+   KZ2L6gbjT0esPLYv5UBEVfXyKlENZIkPzcNu88W43DZmn8EMSd7ieeVci
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="6196084"
 X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="19950598"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 03:53:04 -0800
+   d="scan'208";a="6196084"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 03:57:13 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="912862325"
 X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="912862325"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 03:53:00 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1rc2Cf-00000005oOd-1f3p;
-	Mon, 19 Feb 2024 13:52:57 +0200
-Date: Mon, 19 Feb 2024 13:52:57 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Jean Delvare <jdelvare@suse.de>,
-	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Andi Shyti <andi.shyti@kernel.org>, eric.piel@tremplin-utc.net,
-	Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com,
-	Kai Heng Feng <kai.heng.feng@canonical.com>,
-	platform-driver-x86@vger.kernel.org, Wolfram Sang <wsa@kernel.org>,
-	linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] platform/x86: dell-smo8800: Move instantiation of
- lis3lv02d i2c_client from i2c-i801 to dell-smo8800
-Message-ID: <ZdNBGSJ28AcdpC7f@smile.fi.intel.com>
-References: <20240106160935.45487-1-hdegoede@redhat.com>
- <20240106160935.45487-3-hdegoede@redhat.com>
- <20240107171055.ac7jtwhu2kbalaou@pali>
- <20240213173050.0cf4a58f@endymion.delvare>
- <3e5b47ce-29a9-43a3-92bc-599a9a716fbb@redhat.com>
+   d="scan'208";a="41967148"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.18])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 03:57:09 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 19 Feb 2024 13:57:01 +0200 (EET)
+To: Armin Wolf <W_Armin@gmx.de>
+cc: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+    corentin.chary@gmail.com, luke@ljones.dev, 
+    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/5] platform/x86: wmi: Check if event data is not NULL
+In-Reply-To: <80bc19ce-7111-4a5d-b875-2712bdf2bb72@gmx.de>
+Message-ID: <1fb172ff-b085-185e-90ea-1cd131f42b84@linux.intel.com>
+References: <20240214070433.2677-1-W_Armin@gmx.de> <20240214070433.2677-3-W_Armin@gmx.de> <e03b600e-6ad2-1dd1-c4af-56ebfce51f12@linux.intel.com> <80bc19ce-7111-4a5d-b875-2712bdf2bb72@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3e5b47ce-29a9-43a3-92bc-599a9a716fbb@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: multipart/mixed; boundary="8323328-1334979965-1708343821=:1174"
 
-On Sat, Feb 17, 2024 at 11:33:21AM +0100, Hans de Goede wrote:
-> On 2/13/24 17:30, Jean Delvare wrote:
-> > On Sun, 7 Jan 2024 18:10:55 +0100, Pali Rohár wrote:
-> >> On Saturday 06 January 2024 17:09:29 Hans de Goede wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-FWIW, I agree with Hans on the location of the HW quirks.
-If there is a possible way to make the actual driver cleaner
-and collect quirks somewhere else, I'm full support for that.
+--8323328-1334979965-1708343821=:1174
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-> >> I'm looking at this change again and I'm not not sure if it is a good
-> >> direction to do this movement. (...)
-> > 
-> > Same feeling here. Having to lookup the parent i2c bus, which may or
-> > may not be present yet, doesn't feel good.
-> > 
-> > I wouldn't object if everybody was happy with the move and moving the
-> > code was solving an actual issue, but that doesn't seem to be the case.
-> 
-> I thought you would actually like getting this somewhat clunky code
-> which basically works around the hw not being properly described in
-> the ACPI tables out of the generic i2c-i801 code.
-> 
-> I didn't get around to answer's Pali's concerns yet, so let me
-> start by addressing those since you indicate that you share Pali's
-> concerns:
-> 
-> Pali wrote:
-> > Now after looking at this change again I see there a problem. If i2c-801
-> > driver initialize i2c-801 device after this smo8800 is called then
-> > accelerometer i2c device would not happen.
-> 
-> That is a good point (which Jean also points out). But this can simply
-> be fixed by making the dell-smo8800's probe() method return -EPROBE_DEFER
-> if the i2c-i801 i2c-bus is not present yet (all designs using the
-> dell-smo8800 driver will have an i2c-bus so waiting for this to show
-> up should not cause regressions).
-> 
-> If we can agree to move forward this series I'll fix this.
-> 
-> Pali wrote:
-> > Also it has same problem if PCI i801 device is reloaded or reset.
-> 
-> The i801 device is not hotplugable, so normally this will never
-> happen. If the user manually unbinds + rebinds the i2c-i801 driver
-> them the i2c_client for the smo88xx device will indeed get removed
-> and not re-added. But this will normally never happen and if
-> a user is manually poking things then the user can also unbind +
-> rebind the dell-mso8800 driver after the i2c-i801 rebind.
-> So I don't really see this as an issue.
-> 
-> With those remarks addressed let me try to explain why I think
-> that moving this to the dell-smo8800 code is a good idea:
-> 
-> 1. It is a SMO88xx ACPI device specific kludge and as such IMHO
-> thus belongs in the driver for the SMO88xx ACPI platform_device.
-> 
-> The i2c-i801 driver gets loaded on every x86 system and it is
-> undesirable to have this extra code and the DMI table in RAM
-> on all those other systems.
-> 
-> 2. Further changes in this series, like adding support for
-> probing for the i2c address of the lis3lv02d device on models
-> not yet in the DMI table, will add a bunch of more code specific
-> to SMO88xx ACPI devices. Making the problem of having SMO88xx
-> specific code in the generic i2c-i801 driver even bigger.
-> The current amount of SMO88xx specific code in the
-> generic i2c-i801 driver might be considered acceptable but I'm
-> afraid that the amount of code after this series will not be
-> acceptable.
-> 
-> 3. Some of the changes in this series are harder to implement inside
-> the i2c-i801 code, like optionally instantiating an i2c_client for
-> the IIO st_accel driver (*) so that the accelerometer gets presented
-> to userspace as a standard IIO device like all modern accelerometer
-> drivers do.
-> 
-> This requires setting i2c_client.irq and that IRQ comes from
-> the SMO88xx ACPI device. So this would require the i2c-i801 code
-> to lookup the ACPI device and get the IRQ from there. Where as
-> in the SMO88xx ACPI platform_device driver the IRQ is readily
-> available.
-> 
-> TL;DR: IMHO all this SMO88xx quirk/glue handling belongs in
-> the SMO88xx specific dell-smo8800 driver rather then in
-> the generic i2c-i801 code.
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> *) Instead of an i2c_client for the somewhat weird (but still
-> default for backward compat) drivers/misc/lis3lv02d/lis3lv02d.c
-> driver
+On Thu, 15 Feb 2024, Armin Wolf wrote:
 
--- 
-With Best Regards,
-Andy Shevchenko
+> Am 15.02.24 um 13:31 schrieb Ilpo J=C3=A4rvinen:
+>=20
+> > On Wed, 14 Feb 2024, Armin Wolf wrote:
+> >=20
+> > > WMI event drivers which do not have no_notify_data set expect
+> > > that each WMI event contains valid data. Evaluating _WED however
+> > > might return no data, which can cause issues with such drivers.
+> > >=20
+> > > Fix this by validating that evaluating _WED did return data.
+> > >=20
+> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> > > ---
+> > >   drivers/platform/x86/wmi.c | 11 +++++++++--
+> > >   1 file changed, 9 insertions(+), 2 deletions(-)
+> > >=20
+> > > diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> > > index 34d8f55afaad..8a916887c546 100644
+> > > --- a/drivers/platform/x86/wmi.c
+> > > +++ b/drivers/platform/x86/wmi.c
+> > > @@ -1211,6 +1211,7 @@ static void wmi_notify_driver(struct wmi_block
+> > > *wblock)
+> > >   {
+> > >   =09struct wmi_driver *driver =3D drv_to_wdrv(wblock->dev.dev.driver=
+);
+> > >   =09struct acpi_buffer data =3D { ACPI_ALLOCATE_BUFFER, NULL };
+> > > +=09union acpi_object *obj =3D NULL;
+> > >   =09acpi_status status;
+> > >=20
+> > >   =09if (!driver->no_notify_data) {
+> > > @@ -1219,12 +1220,18 @@ static void wmi_notify_driver(struct wmi_bloc=
+k
+> > > *wblock)
+> > >   =09=09=09dev_warn(&wblock->dev.dev, "Failed to get event
+> > > data\n");
+> > >   =09=09=09return;
+> > >   =09=09}
+> > > +
+> > > +=09=09obj =3D data.pointer;
+> > > +=09=09if (!obj) {
+> > > +=09=09=09dev_warn(&wblock->dev.dev, "Event contains not event
+> > > data\n");
+> > > +=09=09=09return;
+> > > +=09=09}
+> > >   =09}
+> > >=20
+> > >   =09if (driver->notify)
+> > > -=09=09driver->notify(&wblock->dev, data.pointer);
+> > > +=09=09driver->notify(&wblock->dev, obj);
+> > >=20
+> > > -=09kfree(data.pointer);
+> > > +=09kfree(obj);
+> > Hi Armin,
+> >=20
+> > While looking into this patch, I failed to connect the mention of
+> > no_notify_data in the commit message with the code change that does
+> > nothing differently based no_notify_data being set or not, AFAICT.
+> >=20
+> > It could be just that you need to explain things better in the commit
+> > message, I'm not sure.
+>=20
+> Here the _WED ACPI control method is only evaluated if driver->no_notify_=
+data
+> is not set.
+> So the returned ACPI object should only be validated in this case, as we =
+pass
+> NULL otherwise.
 
+Yes, I'm sorry, it seems fine. For some reason I was very confused while=20
+reviewing even if no_notify_data was mentioned right in the previous=20
+context (maybe Iused some older version of the code while trying to figure=
+=20
+things out, I dunno).
 
+--=20
+ i.
+
+--8323328-1334979965-1708343821=:1174--
