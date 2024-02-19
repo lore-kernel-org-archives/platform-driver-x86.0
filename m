@@ -1,146 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57EE2561A;
-	Mon, 19 Feb 2024 11:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC392C848;
+	Mon, 19 Feb 2024 11:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708343835; cv=none; b=AXkU69WCMG3JGl2iF7XKDz4JmvPFjHAEdmZoC6gAPj2u/jcv5uZymb8DM6fjrNBTSPlbvyueILpDmVFeIvO3jANh3LYZqBOzde5WtnCXXMUBESuSafiOLogeB0xx0eOC8dPz5j5p/gTWDcIsPQP5QUU3kxQM9ui7nu2yImoZfKc=
+	t=1708343978; cv=none; b=LU99K9NaRmU8LAdrfAba9rRFp1c5f/2pxnFfU1qKoBZaz4EVSN09kspLR9CbZaMxIByloUxB2LBmSjixe/ovMAeNzBKTYPc+y+s8fMxZrp88dARBA8Gl+TcNoJezC9WJSvCb0CgxCbXDWe08PeYhZpTZodiBH6mbxbgjwC189fI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708343835; c=relaxed/simple;
-	bh=tpEZvY4JNPf3zA/5+c+vBc9IYvKrcWuT2LwwwYik6zA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=XI5F9wmd2PpQk6NuVvAk50VlZpPuHB4vn4ZVTO+GD6cFupWiO3XrI2Gx3QpS/9lkSbeCJGI/GltGQz6zW/zdIcKkuw038kNirhyNfwODVVSmXaN3IP0zA9zVNGU6HbwiukNTzlcPOdHKXpYR1hfC5sAtGIZnk10JJ60p0zyb64A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nCk+6lzP; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708343978; c=relaxed/simple;
+	bh=DARuHR30dnAqAr1NDeLu/YfYZj02SN8k2C8kOfQs7Jg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CdVg/cSXJIXClaoOqSBEDH7LDqregBrQarNQPRS6SNKdSquhZO+lI87ldCPBnD4LUYyyqHP7EaABrcD3KUz55Db6CMvMJas9gvCeU5aHZ6WaCM/gbhlfCGGYMhpRrjAjpWB9X0Vb+1Ax4giTfPgdlGA6eKQ6+Q3vna9dIzXJt3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=XpaeoWD0; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nCk+6lzP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708343834; x=1739879834;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=tpEZvY4JNPf3zA/5+c+vBc9IYvKrcWuT2LwwwYik6zA=;
-  b=nCk+6lzPdj0a8NULbSi84dMxbTDb3sOJGialrv2RWdtpMiG60eNzFih1
-   FEyB2lMX0jSGtN9QHmG/+qBSN/DqG4QhH8eNKg3VD6e80dtVWk9edznnF
-   dXDJZbyPqSG7zR5frQ2DYBoN8kvhNYjUSH1ekgVaXTzf2hMFEt6vpdXCX
-   6cYDFtRbdFiXqLIi2XEbLnWCjBI/DaUnJDGsJnM33Y05X0E4G9MmQpYaC
-   jNdGtXslzDYfIasDm+zWj2dmQK3HfBSnrKcE3DX8wuzbcGA5ERN2fMtRz
-   KZ2L6gbjT0esPLYv5UBEVfXyKlENZIkPzcNu88W43DZmn8EMSd7ieeVci
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="6196084"
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="6196084"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 03:57:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="41967148"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.18])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 03:57:09 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 19 Feb 2024 13:57:01 +0200 (EET)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-    corentin.chary@gmail.com, luke@ljones.dev, 
-    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/5] platform/x86: wmi: Check if event data is not NULL
-In-Reply-To: <80bc19ce-7111-4a5d-b875-2712bdf2bb72@gmx.de>
-Message-ID: <1fb172ff-b085-185e-90ea-1cd131f42b84@linux.intel.com>
-References: <20240214070433.2677-1-W_Armin@gmx.de> <20240214070433.2677-3-W_Armin@gmx.de> <e03b600e-6ad2-1dd1-c4af-56ebfce51f12@linux.intel.com> <80bc19ce-7111-4a5d-b875-2712bdf2bb72@gmx.de>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="XpaeoWD0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1708343962; x=1708948762; i=w_armin@gmx.de;
+	bh=DARuHR30dnAqAr1NDeLu/YfYZj02SN8k2C8kOfQs7Jg=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=XpaeoWD0+dKs9vTq+cvmN2nn154rdGgam28fF1n5pUrdbvfzxjSxIB2N2HldffEL
+	 7nyKDC2hUKQclBkiowuvK+/ZVUCaN2WEPueRNX+ITDduLGpvXhBAMFxARpu/fXiEA
+	 RjmwsUKNuSbKc2pOPNlcf/qD6NksSO0H1QWZ2IcwN99R5xNxbEbWT9RwcFzlaMG3e
+	 MVcdQGuAULdiR7vHWUWXKXGAalVY5jRdnaDZB7cEl4NJGRDZfuLexIRuXDY++zkrL
+	 0vkMBJxWW9DC/jiJD6yNXt4O69lSzLdDH/QKyApoXtHkmOlimw5Ix6hcfseIapyTS
+	 P3cH6OqjiWrv1ASPAQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MSc1L-1rV8ZX1V85-00SwsG; Mon, 19 Feb 2024 12:59:22 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: corentin.chary@gmail.com,
+	luke@ljones.dev
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] platform/x86: wmi: Fixes for event data handling
+Date: Mon, 19 Feb 2024 12:59:14 +0100
+Message-Id: <20240219115919.16526-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1334979965-1708343821=:1174"
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:7dEMHjd/3RyOyA2GLAf5fKIWuEmtu692sKRqSosRzMvXUovT4U7
+ JTLjIkTedoIx8vHzj6RdtzBXyiew7DSI1azCam+QAUul2n+4WuaweK18+fvObI1tteDANoW
+ CuDjayHB2Ull1pqSIxwlRTa811YocmAmJLgnvkTyoosahJR65C8khdaHMElNLcwV6q9/+Zv
+ BXQtIug55zrbNq0Np4i7g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:CMu4Py6JY/E=;ouDpr4nVK4OfHvZD7q7ixZr/TuU
+ BcyFI7O5yXNIyixdpIiP9Zr5/NdSBqqdcEsgaTmhk2eKWn63orY+OEMcxZUnflSaaFDoj9PPj
+ uHpZWr85+ofseoLlPjwwBYZ1sM/4u92Eo9kfX8K+R4jvnRj7cMpXNrQGFuwUlcF1rehie6z2r
+ vM5v3Rva4WA5O+uN4rbrFv/Q1CFruEtoUUV/+oHEBa9rsGYJ1kGHh2GKE47ggv9YB3KVlndFC
+ vwdoVyG6DqBCrREuL8mFMLjxs255O961/ifMMxHNI1CrmCqWcRO3K0VFMEQHqYz0UK3+FIb/O
+ HUZT9EzlDeAWWdh7GYiuYnVXdlBCjZ6keDiAyomaKdFaj5U3cP3hQ6PfIlc1Aal6WbanMJ2IQ
+ 0hq3VvNb9LED3+jII3ylNCJBZpPZWI26yzXeUSMnxeONL9AugHD7YZd0K/XaFuKQKVojrBaBF
+ 7z9zD4Xo0Tw0Inl41Z9M4Ikt1jhRar1qBgco5E6EAesuufo1q/r3Y1B0sTMWRchrJALI391nq
+ I56KgD90SdbtbuX3q1CWQqiFqNOaN7rD/tMbY0DuJDLS3U3nwPiI0QtLUP2GNJu+B2tENdO8H
+ MaDdCbHiZSfkuxHf0DSZELiFZmcM4xEiOR3T6yl9ZbKh8xDLafUafvNAywsn4wqv1iuKE0FoD
+ sSgF7az01MS92qCckYGQDF6e2XF0XHsrUWsb5HqorSMF7xoVt2h8IqA2FDd5JVWftII+Fr7g9
+ gTWVls8tefX1ocmRA/6kJ1Jq265iA8dD8+1++8BYjLw3fEeMmE3XHajJ6qnAkggFKDlU6sgum
+ Lb+oNfpExBAg3wxFIF8pNcekqmMHh7nCFe3yLr1wECmhM=
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+This patch series contains fixes for the handling of WMI event data
+when receiving WMI events.
 
---8323328-1334979965-1708343821=:1174
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+The first patch aims to prevent WMI event drivers depending on WMI
+event data support from binding to a WMI device which does not
+support the retrieval of additional WMI event data.
 
-On Thu, 15 Feb 2024, Armin Wolf wrote:
+The second patch makes sure that the WMI core not only checks that
+evaluating the ACPI control method used for retrieving additional
+event data (_WED) succeeded, but that it also returned any data.
 
-> Am 15.02.24 um 13:31 schrieb Ilpo J=C3=A4rvinen:
->=20
-> > On Wed, 14 Feb 2024, Armin Wolf wrote:
-> >=20
-> > > WMI event drivers which do not have no_notify_data set expect
-> > > that each WMI event contains valid data. Evaluating _WED however
-> > > might return no data, which can cause issues with such drivers.
-> > >=20
-> > > Fix this by validating that evaluating _WED did return data.
-> > >=20
-> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> > > ---
-> > >   drivers/platform/x86/wmi.c | 11 +++++++++--
-> > >   1 file changed, 9 insertions(+), 2 deletions(-)
-> > >=20
-> > > diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> > > index 34d8f55afaad..8a916887c546 100644
-> > > --- a/drivers/platform/x86/wmi.c
-> > > +++ b/drivers/platform/x86/wmi.c
-> > > @@ -1211,6 +1211,7 @@ static void wmi_notify_driver(struct wmi_block
-> > > *wblock)
-> > >   {
-> > >   =09struct wmi_driver *driver =3D drv_to_wdrv(wblock->dev.dev.driver=
-);
-> > >   =09struct acpi_buffer data =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> > > +=09union acpi_object *obj =3D NULL;
-> > >   =09acpi_status status;
-> > >=20
-> > >   =09if (!driver->no_notify_data) {
-> > > @@ -1219,12 +1220,18 @@ static void wmi_notify_driver(struct wmi_bloc=
-k
-> > > *wblock)
-> > >   =09=09=09dev_warn(&wblock->dev.dev, "Failed to get event
-> > > data\n");
-> > >   =09=09=09return;
-> > >   =09=09}
-> > > +
-> > > +=09=09obj =3D data.pointer;
-> > > +=09=09if (!obj) {
-> > > +=09=09=09dev_warn(&wblock->dev.dev, "Event contains not event
-> > > data\n");
-> > > +=09=09=09return;
-> > > +=09=09}
-> > >   =09}
-> > >=20
-> > >   =09if (driver->notify)
-> > > -=09=09driver->notify(&wblock->dev, data.pointer);
-> > > +=09=09driver->notify(&wblock->dev, obj);
-> > >=20
-> > > -=09kfree(data.pointer);
-> > > +=09kfree(obj);
-> > Hi Armin,
-> >=20
-> > While looking into this patch, I failed to connect the mention of
-> > no_notify_data in the commit message with the code change that does
-> > nothing differently based no_notify_data being set or not, AFAICT.
-> >=20
-> > It could be just that you need to explain things better in the commit
-> > message, I'm not sure.
->=20
-> Here the _WED ACPI control method is only evaluated if driver->no_notify_=
-data
-> is not set.
-> So the returned ACPI object should only be validated in this case, as we =
-pass
-> NULL otherwise.
+The third patch fixes an compatibility issue with the ACPI firmware
+of some ASUS notebooks. This issue was "fixed" inside asus-wmi by
+manually retrieving event data items, sidestepping the WMI core.
 
-Yes, I'm sorry, it seems fine. For some reason I was very confused while=20
-reviewing even if no_notify_data was mentioned right in the previous=20
-context (maybe Iused some older version of the code while trying to figure=
-=20
-things out, I dunno).
+The last patch reverts this hacky fixup, as the underlying issue is
+now handled inside the WMI core itself.
 
---=20
- i.
+All patches where tested on a Dell Inspiron 3505 and a ASUS Prime
+B650-Plus motherboard. However the last patch should be tested on an
+actual ASUS notebook which is affected by the workaround.
 
---8323328-1334979965-1708343821=:1174--
+Changes since v1:
+- Drivers are not "he"
+
+Armin Wolf (5):
+  platform/x86: wmi: Prevent incompatible event driver from probing
+  platform/x86: wmi: Check if event data is not NULL
+  platform/x86: wmi: Always evaluate _WED when receiving an event
+  platform/x86: wmi: Update documentation regarding _WED
+  Revert "platform/x86: asus-wmi: Support WMI event queue"
+
+ Documentation/wmi/acpi-interface.rst |  5 +-
+ drivers/platform/x86/asus-wmi.c      | 71 ++------------------------
+ drivers/platform/x86/wmi.c           | 74 +++++++++++++++++++++++-----
+ include/linux/wmi.h                  |  2 +-
+ 4 files changed, 71 insertions(+), 81 deletions(-)
+
+=2D-
+2.39.2
+
