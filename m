@@ -1,123 +1,116 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E21257313;
-	Tue, 20 Feb 2024 08:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3454F5F475;
+	Tue, 20 Feb 2024 09:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708416292; cv=none; b=PL0NT56nWlrKGdFqrLv1UqAkNloK44mkwsd5u+8lyWkK2ihuhlWWsR6NFQSrTKDjcisIoVlaw+zs4ehMXp3MNf20RuX7s920nbOqApm2rTzNFH2fhFTefSQ2LHczXbBaUI8zOs2NDzZ5yCxHhVa+Nu7usZIHn7ngwYbpZw4uObk=
+	t=1708420794; cv=none; b=EzybEhdXoqUuag1ICc8B17nM2A4+aaBnQ3PQi5QkvjnetYZjzGjotMlrTBZ2P87QiH/oSdQrENNdE/Q4YRwoDx0s2bqun+fbsMN88t1nXzOSDdKwBkPFzsWyREY1+k9wSCk9s0kArGafINVAMQJSWL2R5cqwIzoiWT+UMfwX0f4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708416292; c=relaxed/simple;
-	bh=EU/STwkCla0jaqhFKG2DqIl0BD9+VkpPzOpi0k8lpe0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mzZMCtIgZCUqryp7+ySh9OTGUMsZ5mXvdJqT3Rmu1/VTVxSL8WMr8p/w1JwUNVx+OZaHRjTI64jGmPc89muUWuDQRnU+breH4cCd3FGIhN9IDPlfo20tcfP3UThIb8LNjRYmzddykCQ3G2xS6KiM3Pmk3uzfoyodzsBlXnygJk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NI7I8Lk2; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708420794; c=relaxed/simple;
+	bh=d8WOTCkwaJsZ5K1w3UM9/CSindAuhapffgUY4/QPevk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Cu9dmZtNIaD7yf2aYF6G09KI9bSObFNvX+vswPKQxJQC3kcH/h1NoIHC0s4q52ZMheyLP9IC9C+8DWrDdrHvJuR/jHiq/z38KLM3tYu7Y24LwhHFtY7Wv4xHdol2iXVc4bckY48SbrIKmY3/pjCwfGBcUypA01VBn7rpQwqycuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A6DDn2AL; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NI7I8Lk2"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e4670921a4so1067399b3a.0;
-        Tue, 20 Feb 2024 00:04:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708416290; x=1709021090; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VObNkuiUIEXOfaYY5k7L6fIMBdRV1v/yAwcJqKRM/zg=;
-        b=NI7I8Lk2x44MdOhZ7WUp5YRadr2Sdv5k+NBBawGe8qkjlMhS39LSqz0Fjm2yoZl0rB
-         BQKhPN1GnDUUlkgWrP+hL0O9GmYqeU/6jzQhIZ+8q+cuPbIVyq4eaK8wxzlpb+Neif4Y
-         zWFtg0g1dSvU64+NpEMS6+iuLadjERd50uDD6GyQXr5OqnxMCvaHjRtVT2HC+8x6utPN
-         HIEKQijZnWQqwsaLLORNmtfk5SYKQRCkrwyJP2ESCV19CM11iSXJXLDHGHm5GmP0SZdZ
-         wTEer9jTfgBsi6HnUGtatZu7waibeEUNaIbmPmXPHGzuErfinBW3EQ2u8+7v7t5bzGDO
-         s5lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708416290; x=1709021090;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VObNkuiUIEXOfaYY5k7L6fIMBdRV1v/yAwcJqKRM/zg=;
-        b=Tq5rtZCx9hH3gfghR6t2tH+L7MvL3EDTbby+48OYiXkjOjXsdp4vpJW2BPysxQ8kPh
-         v9foyCtWicr3GMk3Mu1tfhhYVSA3mp5ajSRCqSpfUODUq9t3Ybk0sMe9IXrrxJqfJfcq
-         ENziQw2sg0GDQMfn6IQE3LPDq9VqzIq0QROgBpVLxUe3MebGgFYfK+wHZ7JwCBIEOH7R
-         WfAXWmCZ+XSMYzchbwkKez9A4LfiUIStkhvxepflmkaNggUiBKLe5hHM5rDe0UOhkJae
-         eI0qxv5ZwsVqESdf1T6o1xlIdSYaaFDwnEGKCzbVy0KGOhkyxJ6iOmQU7VokGFXfkmdM
-         scnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUG97ucGe3TqQCk2bllpKx0iFTMVcpYonBVcSwInRTKzksEQ4a7Fh2fOcI3qL3qicxB6vq7JD03Z11al7qyB6H1NCr7cOZ8JUTYwg2ax1c1PTbtoNsvHPgUV4q6GP7djERqacKkCowTtjoihW+JQp8L8Q==
-X-Gm-Message-State: AOJu0YxQdVHyKfI0NylMnapeQkdY3lQp0z7CcgKmBs5cSQZNwSWeaInl
-	DGtznXrPGvi1tn1BFt80dVF6DNmLx0LoPDchye3vdqesgi+ZWRup
-X-Google-Smtp-Source: AGHT+IHo7lfrKaNqjaNnz9v9jwM3hnu2FUBW9Fg5Frzjib/JCeZp93YoYBYQ66s9Eb191Je+349Mjw==
-X-Received: by 2002:a05:6a00:987:b0:6e3:79ba:6eed with SMTP id u7-20020a056a00098700b006e379ba6eedmr11038526pfg.13.1708416289774;
-        Tue, 20 Feb 2024 00:04:49 -0800 (PST)
-Received: from localhost.localdomain ([110.46.146.116])
-        by smtp.gmail.com with ESMTPSA id s12-20020aa7828c000000b006e0651ec05csm6165860pfm.43.2024.02.20.00.04.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 00:04:49 -0800 (PST)
-From: SungHwan Jung <onenowy@gmail.com>
-To: "Lee, Chun-Yi" <jlee@suse.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: SungHwan Jung <onenowy@gmail.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: acer-wmi: Add predator_v4 module parameter
-Date: Tue, 20 Feb 2024 17:04:16 +0900
-Message-ID: <20240220080416.6395-1-onenowy@gmail.com>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A6DDn2AL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708420793; x=1739956793;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=d8WOTCkwaJsZ5K1w3UM9/CSindAuhapffgUY4/QPevk=;
+  b=A6DDn2ALVzEVFqUlQ167YI2JNNJke1ddFqkG6zUDR0m9GBw4/8OokGXe
+   1ybDUgfpYmbHBG2qbh1szmvZ2LJ94PpL/lGmLQD4CxvEIYe7i/I6+/dIq
+   iYBOY4gltp43PVERT6w29UzaChp6SjMDyBkdZR+XwyLJ9frdFlm+eFg34
+   bXkuTcvsHglsI2I5PsODW+dpE1K1VV2NjKKX+T3UIW1rLBmN0GcA8Vn3G
+   LQyI7BN2blNovm1iyCSOJtZFlB++05RTomkQWaeWRcLAsE5ZyskAKGnqG
+   +AiN+i6FWM3ZQI/LyN0wAYuihYuNoLZ8lVxnCoy0GX13RAjAxdgaCvlDs
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="2640277"
+X-IronPort-AV: E=Sophos;i="6.06,172,1705392000"; 
+   d="scan'208";a="2640277"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 01:19:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="913041935"
+X-IronPort-AV: E=Sophos;i="6.06,172,1705392000"; 
+   d="scan'208";a="913041935"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.94.249.21])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 01:19:50 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 20 Feb 2024 11:19:44 +0200 (EET)
+To: Armin Wolf <W_Armin@gmx.de>
+cc: corentin.chary@gmail.com, luke@ljones.dev, 
+    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/5] platform/x86: wmi: Check if event data is not
+ NULL
+In-Reply-To: <dcb7c031-b920-4774-a1a9-fed8813390d0@gmx.de>
+Message-ID: <954e9d5e-4800-aba9-4678-44584baaea05@linux.intel.com>
+References: <20240219115919.16526-1-W_Armin@gmx.de> <20240219115919.16526-3-W_Armin@gmx.de> <dcb7c031-b920-4774-a1a9-fed8813390d0@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-This parameter allows predator laptop users to test and use features
-(mode button, platform profile, fan speed monitoring) without
-adding model names to acer_quirks and compiling kernel.
+On Tue, 20 Feb 2024, Armin Wolf wrote:
 
-Signed-off-by: SungHwan Jung <onenowy@gmail.com>
----
- drivers/platform/x86/acer-wmi.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+> Am 19.02.24 um 12:59 schrieb Armin Wolf:
+> 
+> > WMI event drivers which do not have no_notify_data set expect
+> > that each WMI event contains valid data. Evaluating _WED however
+> > might return no data, which can cause issues with such drivers.
+> > 
+> > Fix this by validating that evaluating _WED did return data.
+> > 
+> > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> > ---
+> >   drivers/platform/x86/wmi.c | 11 +++++++++--
+> >   1 file changed, 9 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> > index 8fb90b726f50..d0fe8153f803 100644
+> > --- a/drivers/platform/x86/wmi.c
+> > +++ b/drivers/platform/x86/wmi.c
+> > @@ -1210,6 +1210,7 @@ static void wmi_notify_driver(struct wmi_block
+> > *wblock)
+> >   {
+> >   	struct wmi_driver *driver = drv_to_wdrv(wblock->dev.dev.driver);
+> >   	struct acpi_buffer data = { ACPI_ALLOCATE_BUFFER, NULL };
+> > +	union acpi_object *obj = NULL;
+> >   	acpi_status status;
+> > 
+> >   	if (!driver->no_notify_data) {
+> > @@ -1218,12 +1219,18 @@ static void wmi_notify_driver(struct wmi_block
+> > *wblock)
+> >   			dev_warn(&wblock->dev.dev, "Failed to get event
+> > data\n");
+> >   			return;
+> >   		}
+> > +
+> > +		obj = data.pointer;
+> > +		if (!obj) {
+> > +			dev_warn(&wblock->dev.dev, "Event contains not event
+> > data\n");
+> 
+> I just noticed that this should have been "Event contains no event data\n".
+> Should i send
+> another patch?
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 88b826e88ebd..bee8c547374f 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -276,6 +276,7 @@ static bool has_type_aa;
- static u16 commun_func_bitmap;
- static u8 commun_fn_key_number;
- static bool cycle_gaming_thermal_profile = true;
-+static bool predator_v4;
- 
- module_param(mailled, int, 0444);
- module_param(brightness, int, 0444);
-@@ -284,6 +285,7 @@ module_param(force_series, int, 0444);
- module_param(force_caps, int, 0444);
- module_param(ec_raw_mode, bool, 0444);
- module_param(cycle_gaming_thermal_profile, bool, 0644);
-+module_param(predator_v4, bool, 0444);
- MODULE_PARM_DESC(mailled, "Set initial state of Mail LED");
- MODULE_PARM_DESC(brightness, "Set initial LCD backlight brightness");
- MODULE_PARM_DESC(threeg, "Set initial state of 3G hardware");
-@@ -292,6 +294,8 @@ MODULE_PARM_DESC(force_caps, "Force the capability bitmask to this value");
- MODULE_PARM_DESC(ec_raw_mode, "Enable EC raw mode");
- MODULE_PARM_DESC(cycle_gaming_thermal_profile,
- 	"Set thermal mode key in cycle mode. Disabling it sets the mode key in turbo toggle mode");
-+MODULE_PARM_DESC(predator_v4,
-+	"Enable features for predator laptops that use predator sense v4");
- 
- struct acer_data {
- 	int mailled;
-@@ -725,7 +729,9 @@ enum acer_predator_v4_thermal_profile_wmi {
- /* Find which quirks are needed for a particular vendor/ model pair */
- static void __init find_quirks(void)
- {
--	if (!force_series) {
-+	if (predator_v4) {
-+		quirks = &quirk_acer_predator_v4;
-+	} else if (!force_series) {
- 		dmi_check_system(acer_quirks);
- 		dmi_check_system(non_acer_quirks);
- 	} else if (force_series == 2490) {
+Hi Armin,
+
+As I was doing some history manipulation anyway as is, I tweaked it 
+directly in the history. While doing the conflict resolution because of 
+that small change I realized the wording got corrected in the latter patch 
+anyway so it was quite harmless but it's now correct in both commits in 
+review-ilpo branch.
+
 -- 
-2.43.2
+ i.
 
