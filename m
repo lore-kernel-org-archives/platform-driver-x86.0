@@ -1,111 +1,102 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2FE456B9C;
-	Tue, 20 Feb 2024 05:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BAB535C6;
+	Tue, 20 Feb 2024 05:52:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708407935; cv=none; b=lXop87aWgSfs4LDCCFwi76BUN/F27/CUv9z/ev9dGGq2/yE6cR4JKUuXczyPSnyFpRN5dw7Jm1y2VwFoR6h4NjSbEUdNWKy5w/nzapW7f29wFvo6Mr4XQUR44ndGOLnjAOrNeebWg1FA0NmjpVheDiPAFAP5yUCutdYQWzJb5Xk=
+	t=1708408363; cv=none; b=uCeUbbnJWJU5tcn34KiTDCpq/UOQYp/4Lo/Y8+qCdH9AlyhVaWLlUGlqSdiG8Jfi0KbXo+R3644eyfTqH6dEG8X7wkPicb6Xc7KKPWIsrw6K5ZffY0cxmYGt7i3xivL7aZkEENPmgbl3gFssoafMrFr4DmlCOr6PI3DufkQJnVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708407935; c=relaxed/simple;
-	bh=EOUDer5qk9/zoxzi1igP61wAaiJrJ+Ygu/OKnKKEOVI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WDL446HPRX3NHbwAOvphh8SvlnEr56WKJwcDvyqMtI2WprlZsAcbR/KEsRXPuDkgR/FgoegQbl2Vd3QEIVN/kBT8UMI45eGztNGwcxcH4Z1qmKWsdyG3T4JAAEf3Y7yQeFP5GkPRHFUk4N86rHfjpWCUOJn2i35BM6I7f0KuQQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=TrwHiWqO; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1708408363; c=relaxed/simple;
+	bh=sf6cHFogLC3iWJUeEjZ1tPh41/rXPEDXAcBw4W0tigE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nTaAgdUIUlD/yLVyoJdfTXciqrnUOu46O9xdWtexCLNLCD6wj99xdr3TzAXtp9HESA3mlLL/0hrMQOPCruitMpBScdEASTSehKjsJ13K8tMuS5ZsEVJkYH30BwpVWwc1WnNwFinSJXuROs5VIyQ9AOu03B2QkQ0iXeBxk7j3XZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jnPYsscA; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="TrwHiWqO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1708407920; x=1709012720; i=w_armin@gmx.de;
-	bh=EOUDer5qk9/zoxzi1igP61wAaiJrJ+Ygu/OKnKKEOVI=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=TrwHiWqOqX2cpbBaE+ZAsxJrN/YGkjBLqcGVYKuAn+x13lFKmt/E7v74QpyGFX++
-	 x+4iASOJnblW/nWYXSrLKrLHEGuXGlEq3f/r8tRikhUCTndXE4ufWO05Mtj9pHd/5
-	 v5dlHWfCDK1aZyNiCf9NICFi8E2cOng0nLI7cZvqnnB5Cp8grLDfAS2oKhGcJiyv5
-	 VhEFxxwIdJTKRgyqyJcxXWjsJcsPuXicf4nFGgbbIheleOvcMLUJpEVYU0TblJRWy
-	 N9wyLTzxVUzvj0JxsUtvKcbtky2CFy473MuqZL0dKC79+S2XYBngPFoziD9i5Eqlx
-	 dNjnoVohUcI/c9cPFQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MOREi-1rHzpu2uMw-00Putm; Tue, 20 Feb 2024 06:45:20 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: Shyam-sundar.S-k@amd.com,
-	mika.westerberg@linux.intel.com
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jnPYsscA"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d73066880eso48797385ad.3;
+        Mon, 19 Feb 2024 21:52:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708408361; x=1709013161; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=M+eLh40wqn/+mK2E6bNVySX3D/F3rcpuKtT1oXgjrJc=;
+        b=jnPYsscAlMMOM5RkAOgs+eEQBQrWqL/uPhQSvG0OgXJA1fqtQNraGn8HLKlFhn2YNl
+         zD/77pZsjf9dB+jeumzgSudTK7CY340XJmQVSpGgsPokDaWcmXclg2rtst8QOhMqalBu
+         ePp/exiW9wg/0QDmXZpGv/1kUscI1OF1SaZSFteNdZliRQWO2BTSKrRSBZY5bNrdANcK
+         kmts4GnwC3H7nm/VdqkGjrE47w7GNbgS9jd9dJ+QDOFH1uq0txSNCjCqMqbOJ86feOYh
+         PBSugtE7LawSn4iBmFYDA1ikTwkTlv+J+fEHkIwg4L7TOcmG6gBV0tqL5luuwkuMne6C
+         n3ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708408361; x=1709013161;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=M+eLh40wqn/+mK2E6bNVySX3D/F3rcpuKtT1oXgjrJc=;
+        b=iD5zBL2YDgvhPxcDEkyGK+A9lbXJa3QAIAnT1M/CatNjAETnZup/7024nR91mPPDVJ
+         2idASWmZOlCibp3gF+crVOG0LE3msCTnvfEbAIYFim9/YqMiod3xtM4HmOPLfsE4fqKx
+         BIfA0n53M4qCngYpA/yiLYncEwItPEy9steaqzcL3eQu0iIQh82mf6Nd7+OsUXozqB9k
+         5e/AW7V//NeyqTLvwfLGm+CSIC9wlq/uu8PXbfRvnI6XSyv48+PS/EfIYN2/5JADeV6V
+         LP9XmBCeFxS5nHd9sH+7PQLlSFOg/fultVhhigE7x9WplzGYIECISQUsnK3zIVvfHTXV
+         SKsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2hrbFsc6ykRjwTsqj7C9ckTP7zxV9nmWJ4S6g/c1A0EEajnRUEVnqcwf16HVw7PInqCs5g2foX2dqTrbpFiMxC4RS3MBltm6WMYwGUr1608IuvxgEHNY98ejC2sO4NS0JCACmLULdYvneIA4zPINY4Q==
+X-Gm-Message-State: AOJu0YzyOgUP+Xr8xBNwBw2S7QBOKYVKtNCl/OzMeHzYFAP/rHMXaL4y
+	EbFolU5sjCTALPwq5Ev2IiZvpqQGi4ZbC/nXTAUtiXwDUvFdf5K4
+X-Google-Smtp-Source: AGHT+IFcxjVomKnuPCfORbFriPLght8Su35SJ1dGpgiKYxDSobtRy+5zXqQv67WgT1eaYRFtnX+E9A==
+X-Received: by 2002:a17:902:eb8f:b0:1db:b36c:715f with SMTP id q15-20020a170902eb8f00b001dbb36c715fmr14133321plg.24.1708408360855;
+        Mon, 19 Feb 2024 21:52:40 -0800 (PST)
+Received: from localhost.localdomain ([110.46.146.116])
+        by smtp.gmail.com with ESMTPSA id c6-20020a170902c1c600b001d717e644e2sm5306488plc.247.2024.02.19.21.52.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Feb 2024 21:52:40 -0800 (PST)
+From: SungHwan Jung <onenowy@gmail.com>
+To: "Lee, Chun-Yi" <jlee@suse.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: SungHwan Jung <onenowy@gmail.com>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] platform/x86/amd/pmf: Do not use readl() for policy buffer access
-Date: Tue, 20 Feb 2024 06:45:12 +0100
-Message-Id: <20240220054513.2832-2-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240220054513.2832-1-W_Armin@gmx.de>
-References: <20240220054513.2832-1-W_Armin@gmx.de>
+Subject: [PATCH] platform/x86: acer-wmi: Add support for Acer PH16-71
+Date: Tue, 20 Feb 2024 14:52:31 +0900
+Message-ID: <20240220055231.6451-1-onenowy@gmail.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:SyimU/oU4LVCuHbt58JTQgUNmqeE86uN4FHY9gZeuyC1388IYJf
- F42AV8S3/ztnTnQ3LUomiqNKoGgY30JN4zSZTvq3yvUmKmPARltjba8fJ4s2FDwLjneDnqW
- IkVb/J51EOBlsKE1Jv3BUpQghL08Zrj93S8bb32yrNWQwoo5QGF9OCQzN4yD+u/y2W0iJ50
- 6zZtNfUwIg++lWY9RYQjw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:9mDdGKpSQWw=;FZUCS8i+sySI+qn939HZXC7F9jt
- XQZ/HXICIrSQYIQpfT4EounJf+Sa/W3Ql0bp4L+s7vUiuSAgmT0Lpt2dHFsulOul3bohA6uln
- t+WPZOLoSTFR8Lu/cJgikCh+OWF2G7K2HFy71sRhYJ/Fb9dC/tBV7DZp7iVGykkqfyPRDHxvK
- 2/YWQ/GAMOB1Sx/K9VwGklT+3qyMDJtsxbH3uNX3O+KyxWrnClh7rhymditKgnnIsGYQBxNER
- +LuibJqnhiJQy9z4pgR2/ODmSEZYkJYNXEaccIe3Q7yN0Daz3YxdyUuCZWLNh9ZBwSQ+wACf4
- OSCK9RvJiVmOuDgZdCHd2+gu/1z4kPxP4j1O5+GxUheS4vi1U1kPsB9LE5WgvNypCpE/9QB7S
- K4zvYBwB+LKNNjGaVBHsqNFblgv3OFSBRnRrh3RT8kuK2RXbJbSoGH9xztnws/t3s5r4mut7P
- OrdZQ8jRqCYAH39i6BlT4/5Z+D/MvuBSJkw1V3SiS08SweyEchMbvtubPSM34Cu+uozYE5Apq
- fi9ivaW1ewcueyJ9zv7t/YZnlLnQYjpGY3lisfSYXDfjfJcGT3EQUuZp6ljbYrQqceGIz42BF
- NxUZEVD6pyBjgAQfDdLz/VUzDEH4RBUXSqPTsiwAJUs+IuDFSI9f6r6AyugZLJuNLfsTnJwEO
- Hv36fnd8Ahkt80VPylRCgMue67f16SKLaDfDOyW3DYmX8SfB59731gqBilvNoYA4LuweHxi46
- usNrzRDrTCIva8wSsMk0V/sQ7f+UUl4pNA5jYalmDAc4hHuQAQ4DNN8aUMc7X7I4s4Op48FHg
- 1WFAd+ip1tVR2m4fD/xcnqx9Y4xk7/U0sglXU7+k9F0SY=
+Content-Transfer-Encoding: 8bit
 
-The policy buffer is allocated using normal memory allocation
-functions, so readl() should not be used on it.
-Use get_unaligned_le32() instead.
+Add Acer Predator PH16-71 to Acer_quirks with predator_v4
+to support mode button and fan speed sensor.
 
-Compile-tested only.
+Signed-off-by: SungHwan Jung <onenowy@gmail.com>
+---
+ drivers/platform/x86/acer-wmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/amd/pmf/tee-if.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/=
-amd/pmf/tee-if.c
-index 16973bebf55f..3220b6580270 100644
-=2D-- a/drivers/platform/x86/amd/pmf/tee-if.c
-+++ b/drivers/platform/x86/amd/pmf/tee-if.c
-@@ -11,6 +11,7 @@
- #include <linux/debugfs.h>
- #include <linux/tee_drv.h>
- #include <linux/uuid.h>
-+#include <asm/unaligned.h>
- #include "pmf.h"
-
- #define MAX_TEE_PARAM	4
-@@ -249,8 +250,8 @@ static int amd_pmf_start_policy_engine(struct amd_pmf_=
-dev *dev)
- 	u32 cookie, length;
- 	int res;
-
--	cookie =3D readl(dev->policy_buf + POLICY_COOKIE_OFFSET);
--	length =3D readl(dev->policy_buf + POLICY_COOKIE_LEN);
-+	cookie =3D get_unaligned_le32(dev->policy_buf + POLICY_COOKIE_OFFSET);
-+	length =3D get_unaligned_le32(dev->policy_buf + POLICY_COOKIE_LEN);
-
- 	if (cookie !=3D POLICY_SIGN_COOKIE || !length)
- 		return -EINVAL;
-=2D-
-2.39.2
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 88b826e88ebd..771b0ce34c8f 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -584,6 +584,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
+ 		},
+ 		.driver_data = &quirk_acer_predator_v4,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "Acer Predator PH16-71",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Predator PH16-71"),
++		},
++		.driver_data = &quirk_acer_predator_v4,
++	},
+ 	{
+ 		.callback = set_force_caps,
+ 		.ident = "Acer Aspire Switch 10E SW3-016",
+-- 
+2.43.2
 
