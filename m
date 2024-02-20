@@ -1,64 +1,62 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2074.outbound.protection.outlook.com [40.107.223.74])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2072.outbound.protection.outlook.com [40.107.243.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922CD6773B
-	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Feb 2024 11:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5F567A05
+	for <platform-driver-x86@vger.kernel.org>; Tue, 20 Feb 2024 11:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.72
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708429654; cv=fail; b=R9MnzE9fKf7k6MQ4HWnfMZbowUWyHig1I9ejrQzWA6e/GHX8njYA3yDUvXL7NW/gfdpmqcMRRw9hjsd7bVrfoJ+muMYdPqS/1Di7pPcDVotpomaGU3yK0/KR2HVVy4/T2ybZOXlNuI8jSrlphxaDe5O9V8ZqLiq9zBCm0b4gm6E=
+	t=1708430055; cv=fail; b=p1YCK4X8TwwKxkMycQsJtNSS5Hk5/TInAGdDnFclY14d7m+Mk95293frEH7MEFrX/AajVLtux7aFhS882cXS/liFDAgBIHJ1HtdM8B88RMu/WgUIEw1vpEopfQuDAvFr8tMyLC/wyC7LY+axqilkcoBap4E9RHHQanZuwjaukCA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708429654; c=relaxed/simple;
-	bh=m23/5Mj550EulzCYIpcLgeplBMpyCr/SEA3w0nHrlUQ=;
+	s=arc-20240116; t=1708430055; c=relaxed/simple;
+	bh=+g/iU4J+gaCDqPl+/hqOFCQK7Av1g6/nyworpLx4zhc=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=KWLb3YDgJLsLha+JCPwwS3UdZufG/Vo62r7nxkWXLAA+qk9oX1q8qtT8d1oqacRLB8H4H8zbbele2tqki/HyX7pZz/6OeDa+BoRZa2BbsvkKlnTl49trwYsEdYdLC6C0GehOtyVgkHxXEuUT2O/DEkfPMrprrs7vv2QN/Hul3P0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Y1ue5fqO; arc=fail smtp.client-ip=40.107.223.74
+	 Content-Type:MIME-Version; b=QYVhIiCYN/naxjkCztat4FxNYd9+JEaGQp9YIbU1fBF1jDJ99JJWMku0rrsKBjJiplTm+KNTLGrJWVvDSaXPtF3Oo9rncnpSHYXNtzDnN7jmJXxsO4sCWME3iXU+qqH5l63ep4gexq1NfvK+/u8nep8I5/Hf9ruzl6dWAI9k1HE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=GvpsfPv+; arc=fail smtp.client-ip=40.107.243.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Y1ue5fqO"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GvpsfPv+"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XgqOpsqe+ceOI4hnGcIS15oVygepG55Nay2cTPQKGllbyey46pyL+4uR6htQRlVY3joKedY+VmXP7xwYq1cR4TbpOIWqvzwbn976NUjBHwCnVe2Fr+W+6lBAq0Fe+T/C9jFLzIaWrdEJ/PEo+Nm0n+thcOb+rApAOG/kSx+xx/GAI7bsTcuJCm52YlJ7+u0Uaymn1RhYxeHdKJCt5tVjetNjllE+5kZL5MPRrPmHUGuPeXSpGWBMa0jGtyQS8VSYdh04VWKEshY3/VeECIUYQU483BjjBaS02TpgubqyVwl5hEoJoCcGCIX4xeiCfnDuFLQd4IzUMUOUwDmG3M457Q==
+ b=ak4cANJVPJZ4acKG4yroHnVHCPl0fgKeaHXLtf2DZ2PBS7YsrVQsai2GWfmdYFkgaf1O2XvIFEmAtrOmcXE1ExoJXmQWLTX5Gddha86Pgw5YnD6TC9K4/aRC2yeiS7PiFog/XConZ7BTdmUbqhbDcZYbIIOXGPq5vqdkCXZfaNzclJTbnY5xixQxvMWT/LSUDA8YC5vFQZ6xTWZxR+Yag9PY50Fkpjd0LTR7wbtZgH/C/GJcYfIqpROYcGqO2aaZ6Pz3odyYWhPyjMyZMwvDI7a6QIdO99H/ZHzajNrfV5VV2SQO7fb+/bROpRcOOoYlH5ETqNV4X4deY++0L06Ong==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Zl1xKHRUiJfjVPHy/T7qSYvAoBsKsYWFeQ1BVFrlzQw=;
- b=iuG8pnLpLLoOsim48cDa4iIiF0GRte/MVkH5GW388qHgBFpb1KU8dCzlLZLaTeRCR6u1I1a20aR4pzEToEOU2Wa76kohFkArGtM9IbSHPWBpu4tdGNM/RAnoOUQNzFCNlIWRuMxBv8EqgeFJqfsjlAlLl8lA38JiCSOpqYmfrpG6ZGD0MhvFpgpHOWsDjaghTkLYWq2KVcHEC/poXObrVLWpVcqKi0sn3YsEzXfSEa6K63swDqu3qWpt76kyJPWZxyYiYSVyFC4aqKdc06Ulm/ostrYET3NCWRINisyGlxJDQqg39VqUstW8TKzhpXNNnptx6qLuAKz2fGF+PSLBRA==
+ bh=DAHF8pUH9ErEcbdysUfYX2VfZ8s2Grli71LPtpx3bBg=;
+ b=KQCGM0421YnCIftG0HMKSU0by3GhtaEBfsrBbkJ8K2O4gywtwCsqTl+ns2hLtN+i6rskeA/+jFjTgVjp+GxKxXM2k8erjDxzkGVg0gaFgTjf77N3N5KZWCOJQ5+k+TUz17QcITPCA8AISdCcdv6//n5fzjzfMPMAifbkb63+UOfGiiV3rVu4R0KlzSN/WQYzT3mCVf7FbrHfJ3UjZh8JvgX5ZvvUcqn0BzvBpHvvukufvhAnvlZI17fz4p+x4CLitAjolVw9C3wZQ/B17KdQqAw1r1pvaPdbxgaTg3SZli32Ik1T777alhDtKv5wjQEL5oz7+Yu5pkSYrZAczCZgaQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zl1xKHRUiJfjVPHy/T7qSYvAoBsKsYWFeQ1BVFrlzQw=;
- b=Y1ue5fqOwjMGXkb/RX4FscXjtzdJtTIA3eCwBpLoHLipww8sFe9QGRvsXNys5VwOGZKex9GTKH4iGWTbV2cFBW3rHUlP61Q7nBXjRRhcS4ux2/9eRUFH5TNCUtUKOPU3uNr+9VEZIIbo1CZcxEQFpYV4Jl5IuyTjSwP2mu190CY=
+ bh=DAHF8pUH9ErEcbdysUfYX2VfZ8s2Grli71LPtpx3bBg=;
+ b=GvpsfPv+AcIaQ8qcpQcUWAawkj6yc13svUXKpabOMrLZn9soTFOhmyzQM+woF+6M9djkRt8ZgxDt1L6og6R7hQyobkzf0nzNcveOCDeTxZmd42G50MJlNVfdoX3w6quGGzyujK8PzHcoUc7t5zp0YhRE8JLFpKHCp+ugDZM8vRg=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from LV2PR12MB5966.namprd12.prod.outlook.com (2603:10b6:408:171::21)
- by LV2PR12MB5967.namprd12.prod.outlook.com (2603:10b6:408:170::14) with
+ by DM4PR12MB6375.namprd12.prod.outlook.com (2603:10b6:8:a2::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.19; Tue, 20 Feb
- 2024 11:47:29 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.20; Tue, 20 Feb
+ 2024 11:54:11 +0000
 Received: from LV2PR12MB5966.namprd12.prod.outlook.com
  ([fe80::f84f:ef3e:cbb1:9c6c]) by LV2PR12MB5966.namprd12.prod.outlook.com
  ([fe80::f84f:ef3e:cbb1:9c6c%4]) with mapi id 15.20.7316.018; Tue, 20 Feb 2024
- 11:47:29 +0000
-Message-ID: <5f83e11d-130e-4f80-8663-344e6104f8e5@amd.com>
-Date: Tue, 20 Feb 2024 17:17:22 +0530
+ 11:54:10 +0000
+Message-ID: <64d36beb-0123-4f00-b1e2-692f1f54064d@amd.com>
+Date: Tue, 20 Feb 2024 17:24:04 +0530
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86/amd/hsmp: Remove NULL dereferencing code
+Subject: Re: [PATCH v2] platform/x86/amd/hsmp: Add CONFIG_ACPI dependency
+Content-Language: en-US
 To: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org
 Cc: ilpo.jarvinen@linux.intel.com, kernel test robot <lkp@intel.com>,
- Dan Carpenter <dan.carpenter@linaro.org>,
  Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
 References: <20240130073415.3391685-1-suma.hegde@amd.com>
- <20240130073415.3391685-2-suma.hegde@amd.com>
- <4781fdcf-8a7b-48fa-aa4d-6e7bb7d56eda@redhat.com>
-Content-Language: en-US
+ <297e679c-a05e-4d02-bde4-53697ff9f4a7@redhat.com>
 From: "Hegde, Suma" <Suma.Hegde@amd.com>
-In-Reply-To: <4781fdcf-8a7b-48fa-aa4d-6e7bb7d56eda@redhat.com>
+In-Reply-To: <297e679c-a05e-4d02-bde4-53697ff9f4a7@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BMXP287CA0020.INDP287.PROD.OUTLOOK.COM
- (2603:1096:b00:2c::28) To LV2PR12MB5966.namprd12.prod.outlook.com
+X-ClientProxiedBy: PN2PR01CA0142.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:6::27) To LV2PR12MB5966.namprd12.prod.outlook.com
  (2603:10b6:408:171::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -67,154 +65,118 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5966:EE_|LV2PR12MB5967:EE_
-X-MS-Office365-Filtering-Correlation-Id: bb000e5d-c1af-4996-ce18-08dc3209b794
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5966:EE_|DM4PR12MB6375:EE_
+X-MS-Office365-Filtering-Correlation-Id: acf1731b-e952-4f83-71ed-08dc320aa69d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	FJ+ip14b4254Qp/6gVPF6NLuhT0RPLlJCO9lVm4XiZFTW8/tRFpqBpq4ydHymD5z91648jsafX1fmhgYFHQ6a60pnp/r5r79CP918QQpV1m4XKGM213pcC8/+UriEG3yRAMtIp7abpAj7DQAn9GD2FENftzfY4fmuKXfIU64jBLGYqFRc83K9UN10eoUAsTSolYm1ZNgXiJkUU6B8ZRYYEwqoi+YXcO9xEWJ3XitVxqkoZPsZM/cuxAJNv4Soe5G3XL2i6TpGzz1H7YWjthAdryvKYRLnbdboJgX40Amz5pIuiPqkVWnGSlnE+6u1qJFpHD8+xstDrhohka20Lb1dOGhd0yJCmnRV4IGsaNVJYnnzox+ZSWHAT0nNVd0hb5Cn4Ee69PuoYm1XK/TN6Zlz4D95gzU0Y1NiEEuO1q/OmIlvoKGFPZ7Jxo3PGDO/L69i+pSeRv73t0HHr02J1LTvyEagwUFUlZNkA9wA7BzbIgmcU+zQ0v62hYfeSyHl9o8oRG7emRrnVmHaVf2H2ZCXA5qffz1im1M46QVS7vuBgtjlYzaS36w1VIm5WUQr21s
+	GwfuqkYozrUPYv6QPha2SPdcGv7bQzoDJy1RkMAvZ3Ms7Mfq44AvpgZO6bg9vwWT6JzPcz1jYGH7N4QeJWq3dzCDYShDtrpvJX5u2bl8LxYnuH/sedBm0Mt9YKEfO7BUG0XKhtdRERWGquwupFM0BknYiNT8QxU7ZiiEvEmt/hvirO+wT2lK1wky/75VvHLE/Hm6SqRLtE6kNShNVX5LojFA/C3yD4EY9o7PQDFSn5yCHhmhZSE2Cq+4NfPR9p6Hst60+rtec0niit+/OY85SfzjXT/DBRgcNCUkxS2W2OeJy1wufF8dJf1PqhSvaQRHOCsJD/JltyU+HsbQ5JK93+EV3gm4uXkHXzUhuNOaFjS7mv50g/FBClc6YqRCPg5d8qvsB2CqhEWsquzzZMi3Xa2Zr14WxIw9jb37B1hJEhCTjI9LyrpDrPT/HHp48fttzOLKfRRpC3/3vt3N2SsDjQy366pWZm57sI+tRtmGCBN1fZ5tPerlaTFjgvpA7wMf0VjP8VL6mryXs+p19d/G5G9bIMZO4cP3Bk2NZqeiLFgb/5ecXptYVK0bGOd5XmKD
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5966.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(230273577357003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?U2Q4aHd3QWxvTG0vRDRpTjlrS2xwRklCVkNwbkJiZEgweVN1cjFzdDRYY1o5?=
- =?utf-8?B?eThOZGhsVGZNeGUzRHhibzhrS2VUaEQvc2hkT09qZlgybk96bmlHRG9BT1R1?=
- =?utf-8?B?MUcrVndhVmJJT3IzZGRERlpCUUNBbmNkcGdnM1FMYVJuSEFtK1dVdSs3UTdx?=
- =?utf-8?B?eW52YUpWcmpPRitEM2pSbjN0bVJKSko0U012eHM5WGJEcnh4dFdqTmZnQTRa?=
- =?utf-8?B?dnZTK0xzOVBQODNjNTRML3ZVZU9oNjJwcjMyZUhtVkVPdUlON3M2TEg5OCtU?=
- =?utf-8?B?QWlJMndUM3VhSjJKcnE2WUgzKzNKN21qUEQ2REZ3S3ZUYU9ndHRwdU43eFpw?=
- =?utf-8?B?S0FGQzNmUlh5ZHJrdmp2VnVxNkh1bWtmNlF1cEx5NS9MRkxRQjlITHdNM29s?=
- =?utf-8?B?bHZXL2tRcURvcWJoNXBFZnA3SzRLQ00rWjRwa0EvK1lrWStpSVFtREtrVlpk?=
- =?utf-8?B?TUQ2VkxhZm5pZjBCWDVHOXVLN3JDK29CWFhyUldORTVjN2NuS04xckhnN2dt?=
- =?utf-8?B?a2ZXU3lISm0yU1FIMHVkS2NFMHlGdDZQbFQvakw5Z0lWVkNxS0NlaC9hQ00z?=
- =?utf-8?B?S2R1R0EvMktvVDZjZXRRK01ySWY3UGREeDlNaWNSc1I1YVhMM01Zbk5renNV?=
- =?utf-8?B?UHpvZk9iVjVuTHVVdWRrR2srUm9QRjFmMTJxVnlLVnRkVnUwRC9DckIrYWhx?=
- =?utf-8?B?QVVOQ0tKRVpFVUw0Rmp2bE51SVdPZlo5YVNZS1RBaG5iNkRFV0JEbzhRMHcw?=
- =?utf-8?B?ekdGNWpNeHZVOXJnMFR0NzlMMzdoVVJid2QvNkdnaE5qS2IyTkM3TnVxL0Ji?=
- =?utf-8?B?L3Vkc0RtUUpnU25FMG1oOUpFTG9LQnBtOGNGelllRDhLaXZkeGhpZTRLUVlw?=
- =?utf-8?B?aG9rbUdNdmZiQkhrdVZORUkrd1JVSklpVCtJbElMTzdoejdpOWFZNGYrSTFG?=
- =?utf-8?B?OHNoeFJTUWxXOXRPaGdMdmlMcWVXTko0bTREOTJzRm1Hamx2QndmTlhXdzVm?=
- =?utf-8?B?WndRRDlNUE9LSG9HckxROHRFNmV6bDhwMlBjYVpCeU8zYVVOTW9ZcWlWdVZi?=
- =?utf-8?B?NWdVekRmaVZ6YlYyR28zZTRwelFIZUtmeUVLZlg5Sk4zaGZWdlBIblNhN015?=
- =?utf-8?B?UFZHWkpTV1AwN3hpSUtkZVBLZTJkcmlMYXoxZ2dZRXllUVBVYkpQSFVhSDR2?=
- =?utf-8?B?a01aOTlxb0pwWHhSb1dVNGwwbytPaDRReEw3dS82UVNOU012UXRuRk1SOHIz?=
- =?utf-8?B?ZVY1dEU2MU9HVmU1bHg3KzhlSklHcWJSVFg4QjlvNGQvTHBoM0oxYlJzUFpS?=
- =?utf-8?B?bXVwZE5CdVl4WlhJcFN6U1l2UFVnVFlJSGdzUDBuZnVMZnF6TjlBcUpWamcv?=
- =?utf-8?B?OVY5SUpFcWxucWY1L29oMW5IdGRkMWpVQkJ2MVoxTStMUDA1S2ZLZ1psL3V6?=
- =?utf-8?B?WkRoZXZVOEtBazNPRDhicGVXMTdDcmwyVUNhdFgvY1hmWnBZOVhhKzJXNm5y?=
- =?utf-8?B?RlVZempMQXA3aUNudXVoZzZETFgrOWx4VFdwSnEyS0FuSnY4d3JEQjJvc3BV?=
- =?utf-8?B?OEdkOHZVNU1EM0FBRi85RmJzS0ZvSklZUnlDSnRoSFI1cnlmRFlNaGZPYmRs?=
- =?utf-8?B?dHBZOGt3dXNSTjhIRi9aMzZwbzliL3BOSlVDY2djOCthRXd2bFZYM1BSYzRV?=
- =?utf-8?B?ckJqMzVKOW92TEx2cmpDK3NPL201N2RQYURPTFdwQVh2VC83RzRwbHEvWmNp?=
- =?utf-8?B?cm42VWcvT253VjhZQWphY0VFOFc5cjhaOWdzeXMyOXpldDFySXphQ0M2VjBV?=
- =?utf-8?B?cTY2cjYvbEYvVDYxcXFlQzU2RzNSaFVnaUg5N1dVcXhpamZwM0pzZUZsdnVv?=
- =?utf-8?B?TzJiZmRWWVl1cjdBcTBCU1FIeGh6bVhpdCs4NGxYR1FmTnZQL08yak9tSzdP?=
- =?utf-8?B?YlNIcitkbC9KSWRaalJqYTRXYi8zSzJjTy9xWk5OWU5JaC9Ha3IwbHpuT2VJ?=
- =?utf-8?B?cDJSS1ZwTG1ReDZlNWRvZTBWTnNJVHU4bkpEeXVCczdIL3QxYTJ6bzFNejly?=
- =?utf-8?B?Q2UxRzlHNGE0WXN0SldOcytERnVzUnpDb3I5bmNCK3dEWHRmNG4za01ycGk4?=
- =?utf-8?Q?vAlWsMuJQwriPpmuNgLKvAeD0?=
+	=?utf-8?B?R1VhTHNubmdHMUEyMGVDOS82YmlpMVlJdVJHeitCNVdRNzBFL3JjN3NVa0RR?=
+ =?utf-8?B?dEpEU3h5N3VrZ2VsZVlOUkN1bUp0b2JBa2Yxd2FTRVl3NkxSNnBxTGxwSk1i?=
+ =?utf-8?B?cVgweHlYbks2YlhMU1JLZERZaEJNR0VNdlo1MDhEalZpSFVhZTRvbk5OQXlM?=
+ =?utf-8?B?RVZMR2JZMXVCTlZNbElaM1NUcnRXYkh4Y1ZKekYzODRCVi9OMTlPWjJFQ1I1?=
+ =?utf-8?B?T3pzak9tTmpyblJXRExsZVlJTitnRjVac1hRam9NakJWaCtXMHVLUXIwRnNa?=
+ =?utf-8?B?Z2dWRW5PYjdBVmp4VDhLUjAyd1c2WGpGNmtpVlhWNTFtV3VOYThXSmhOaFpD?=
+ =?utf-8?B?b1pGbk1kWmFyVm5PQVI4YTdvY1VFLytjUHRUYi9KSEtyZWt2cnV2SFdwUEhI?=
+ =?utf-8?B?OVdnSHk5cmdNbnJ2M01iUXhoVjBFZTdwb2pKRU9LV2JrWW9xblhWOStKeHhX?=
+ =?utf-8?B?UHJzTEJIYW4vUEtzQzA4d1lGdXl1NnRJSlNtSTEyS2taTDdCYkFlcWxmdEdF?=
+ =?utf-8?B?dHE2QzM0dlJDanhiOWdHMXU0aVRaT2pja1B5dFAyblI1MkJsZFVzMFV5OE5X?=
+ =?utf-8?B?bjlId3hSdlZVQ2J3aytNbzdXQTY1K2xpbjhpdTFPbEJBQmt5S0lETWRNOUVs?=
+ =?utf-8?B?SXE4bXBWNzVCTSs3SUVtVW9VcHIwWlIyNVhoK2piNUM5c1dzV0dJd3JqczNj?=
+ =?utf-8?B?Mkw0RWVMZUdSSmNtaEw5R25pZysyV2Z1NEoyaUJFNU5ENWxLSllJNU9OYVJW?=
+ =?utf-8?B?MmJFaWRGeUoxWWZORDdIdSs2Ri9XcnJ2c2Q4MXdjWXRGMklWRTFoTGR4cG1B?=
+ =?utf-8?B?NE5KMFZkR2ZPM2VhSGN5UVJWMWRPMHR3bUpZSkFLWmM2dHIrcGFndmxaTWNO?=
+ =?utf-8?B?SllmZ2h5dkhFVmcycGZjMmh2akMzNkJhcWhndGs2ZVcrTERlVFpaZGVxYkJU?=
+ =?utf-8?B?UnM1NDBIQ3BqMU9KVWF1TEFRZ0lsQ28zU2ZJVXV6cjhoeDFIMmhJMVNWYnlm?=
+ =?utf-8?B?UFRzUmlBcnpycGJObTROYVlsU2Q2a0dvN1ByNlVPSThNeHJKRit3TDN6TVJu?=
+ =?utf-8?B?VkYremxCMWU5MTlmOVFsajhXZjJ0bUROamMwUGdXVDl0OUlqWjVuZ240R2hY?=
+ =?utf-8?B?Y1l6WktmNGpEem1iQmhQL3V3azFibThyU1Y1Yk9sWWt6YzVwTjJmczR5cDRt?=
+ =?utf-8?B?U281d1VsNnJCMStraFdhN1c4S0MrcXZpRDRrQXVXZEN4YjN3Z3FvNTh1a29u?=
+ =?utf-8?B?RUZKemhKSmZ3QVFsenlqMHFSbzJ5ZkNBVk9wcTc3bTd1S2tFQUVNY0lJSzRB?=
+ =?utf-8?B?ZXQ3VGR5d0hUdXp2ejQ5L1h2aFlKNWx0YXdrQUxKRFkyTUhLR3RtcDJjZXRQ?=
+ =?utf-8?B?RWpEaFVYZi9kOVdJdVNTY0g2bXhEK0lSZlFTSzlaZzIvS2psTENRTDFZRVlY?=
+ =?utf-8?B?RG9nbG41SzFnRTlvUXdJMmdVQXd2aDRYdHNOcDhLTWtwV0krcmZKWE5rVHl3?=
+ =?utf-8?B?SldaTmhqZ091OXU3Nnc4RVN0eDIvbzdwQ0JvdjdjUFBNUGxLUWU0YVQzMll3?=
+ =?utf-8?B?QkRuZVhVdEpBWGdJd05EcFVPaXZ3VWN4d3NqRXZVbkJGRnJ3c0ZBVElLVFEz?=
+ =?utf-8?B?cjBDMU1UaVptRE9iSGc1cTVZaXdlQThJTTczVVhhUEJBdE9iRlZ2cmFaMjlo?=
+ =?utf-8?B?UUFrU1pkYkZzREtoRXhYeHRhb01tNzRENzVoL3NkTFlMSnVIdmJtVjQrNDlF?=
+ =?utf-8?B?WmVlYzhMT0dUNGhIZWQ1Tm5TdXVlQ2JKK284SUxyclBDczFORzg1NWtOUTNR?=
+ =?utf-8?B?MkJqbUZ4ZlBkcWlhK0VESjdINkpwM3ZuU21uMkZYRnl3NjJabzUydWNuUHFH?=
+ =?utf-8?B?TnZaYUdJY1BFTlg3ZGwxRUtKWnFrUk12cHZxcGZYcmNYN0s2S2R5Ykt6bnBU?=
+ =?utf-8?B?d0xyU2FnUHdTcVJubGlZYzVZUnVlZkpwMVd3c3RkMitZMC92czJFZzRHbUJ6?=
+ =?utf-8?B?TWQ2bVJPNzBRV0F2NVpQSEc2VHBnS1BwbnZ1Uk9uTzVEemY5K2RtRDE4NW1h?=
+ =?utf-8?B?aE9kd2ZHa2pmNUV5QmQvamZKY3pQWjlLUytnNVRYVjFvMnNxcHllOCtWTnM0?=
+ =?utf-8?Q?II5FLg+zGfYS4zIEwC3vZI+QK?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb000e5d-c1af-4996-ce18-08dc3209b794
+X-MS-Exchange-CrossTenant-Network-Message-Id: acf1731b-e952-4f83-71ed-08dc320aa69d
 X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5966.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 11:47:29.8670
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 11:54:10.9051
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: E1a6V1Ng3++arpRmyiqIWBTHJ+mwDNSc7HPAO/LCGo3t1fqaH8N0YERl7h7JBfQRRQFQHWc7zTcDKFv+6/rAQA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5967
+X-MS-Exchange-CrossTenant-UserPrincipalName: Knes3sFZkUdH6Zc3ELM2tx0XLqmPqGThEtJfgXBh8UnxZYx21O/936OFFWXcOIHjCqYV8MucTsfSrachk24s+Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6375
 
 Hi Hans,
 
-On 2/19/2024 6:18 PM, Hans de Goede wrote:
+On 2/19/2024 6:15 PM, Hans de Goede wrote:
 > Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
 >
 >
-> Hi Suma,
+> Hi,
 >
 > On 1/30/24 08:34, Suma Hegde wrote:
->> Do not log using dev_err() in case of !sock, which causes null pointer
->> dereferencing.
->>
->> Also remove unnecessary check "boot_cpu_data.x86_model >= 0x00", which is
->> always true because its an unsigned type.
+>> HSMP interface is only supported on x86 based AMD EPYC line of
+>> processors. Driver uses ACPI APIs, so make it dependent on CONFIG_ACPI.
 >>
 >> Reported-by: kernel test robot <lkp@intel.com>
->> Closes: https://lore.kernel.org/oe-kbuild-all/202401292056.qkUFS09Y-lkp@intel.com/
->> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
->> Closes: https://lore.kernel.org/r/202401291311.gzMCj6SP-lkp@intel.com/
->>
+>> Closes: https://lore.kernel.org/oe-kbuild-all/202401281437.aus91srb-lkp@intel.com/
 >> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
 >> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
->> ---
->> Changes since v1:
->> Correct the email id for Naveen Krishna Chatradhi.
->>
->>   drivers/platform/x86/amd/hsmp.c | 11 ++++-------
->>   1 file changed, 4 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
->> index 1baddf403920..1927be901108 100644
->> --- a/drivers/platform/x86/amd/hsmp.c
->> +++ b/drivers/platform/x86/amd/hsmp.c
->> @@ -566,17 +566,15 @@ static ssize_t hsmp_metric_tbl_read(struct file *filp, struct kobject *kobj,
->>        struct hsmp_message msg = { 0 };
->>        int ret;
->>
->> +     if (!sock)
->> +             return -EINVAL;
->> +
->>        /* Do not support lseek(), reads entire metric table */
->>        if (count < bin_attr->size) {
->>                dev_err(sock->dev, "Wrong buffer size\n");
->>                return -EINVAL;
->>        }
->>
->> -     if (!sock) {
->> -             dev_err(sock->dev, "Failed to read attribute private data\n");
->> -             return -EINVAL;
->> -     }
->> -
->>        msg.msg_id      = HSMP_GET_METRIC_TABLE;
->>        msg.sock_ind    = sock->sock_ind;
->>
-> sock gets initialized like this:
+> Thank you for your patch, I've applied this patch to my review-hans
+> branch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 >
->          struct hsmp_socket *sock = bin_attr->private;
+> Note it will show up in my review-hans branch once I've pushed my
+> local branch there, which might take a while.
 >
-> and bin_attr->private is setup before registering the file
-> and thus it will never be NULL.
+> I will include this patch in my next fixes pull-req to Linus
+> for the current kernel development cycle.
 >
-> So the correct fix would be to simply drop the check
-> rather then to move it.
-Thank you for your review comment, I will send a patch to address this 
-change.
->> @@ -739,8 +737,7 @@ static int hsmp_cache_proto_ver(u16 sock_ind)
->>
->>   static inline bool is_f1a_m0h(void)
->>   {
->> -     if (boot_cpu_data.x86 == 0x1A &&
->> -         (boot_cpu_data.x86_model >= 0x00 && boot_cpu_data.x86_model <= 0x0F))
->> +     if (boot_cpu_data.x86 == 0x1A && boot_cpu_data.x86_model <= 0x0F)
->>                return true;
->>
->>        return false;
-> This bit looks fine but this really belongs in a separate patch
-> as it has nothing to do with "Remove NULL dereferencing code"
-
-Ilpo has already merged it into relevant patch(platform/x86/amd/hsmp: 
-Non-ACPI support for AMD F1A_M00~0Fh) and the change is available in 
-review-ilpo branch.
-
 > Regards,
 >
 > Hans
 
-
-Thanks and Regards,
-
-Suma
+This change was merged by Ilpo in review-ilpo branch into commit: 
+platform/x86/amd/hsmp: Add support for ACPI based probing.
 
 >
+>
+>> ---
+>> Changes since v1:
+>> Correct the email id for Naveen Krishna Chatradhi and change it as
+>> Reviewed-by.
+>>
+>>   drivers/platform/x86/amd/Kconfig | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+>> index 54753213cc61..f88682d36447 100644
+>> --- a/drivers/platform/x86/amd/Kconfig
+>> +++ b/drivers/platform/x86/amd/Kconfig
+>> @@ -8,7 +8,7 @@ source "drivers/platform/x86/amd/pmc/Kconfig"
+>>
+>>   config AMD_HSMP
+>>        tristate "AMD HSMP Driver"
+>> -     depends on AMD_NB && X86_64
+>> +     depends on AMD_NB && X86_64 && ACPI
+>>        help
+>>          The driver provides a way for user space tools to monitor and manage
+>>          system management functionality on EPYC server CPUs from AMD.
