@@ -1,108 +1,131 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3060C566A;
-	Wed, 21 Feb 2024 02:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5233A23C9;
+	Wed, 21 Feb 2024 03:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708481094; cv=none; b=VDY3JThvtujuGnnnhjDZKoebxQt907BsZZisx6U1NKYdL4/LFT7OMTyYO3npp1KwaggbgwcnhzPQCDV0SSUqgLp8VWF1sEkiD/ZwhF0C/uZNJ1vhJs5PUFenMzLzo15V/DMlQy/ZEMbd+jsP6lEefEAajyaS5/27MN3YbvDMzbE=
+	t=1708485701; cv=none; b=npTWN85PGJJ3eQYyJsZeBXPLq0wlRj1SPf1ZRKYwR20o9WBFjjptdRadJqYZcqxPIdLDmGMIgpLmKOusvL49FCktld+Ypz7sdyRf8/mjar9TccirhcNQ/nO+HWs38yp+sG1oUo641GshGJfoVT1GAVmC8whJoqGt2OQ8TC2HNto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708481094; c=relaxed/simple;
-	bh=ORbxc1aLPAjWIc3vkR5GtdqUtX005SNYWEsxv9OAOk8=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=I2WwqGHMgkKBchRCY5FkxBw66RzZcOvvW/W3M0WOgz/17siDBvNFQbc2xYMdGuxoFxCw7O37+QufNbYFw9WFiiechoEIDYLdn/l2LlO66Njero0F/k1oSszpSFkICQ5e0abrynF9DX0qAXKvvlJgKhitUlhcYBelBHDT5tT0jgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=sbiMOEKn; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1708485701; c=relaxed/simple;
+	bh=2MBUqFLjaJBHziRjULDNPWqkvMpoalF4kCD87la9pzc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AXOuvq00g4NeL6hW/9N2dfFdG+aTBX5gjnysBGr4t0cbz7sWvP5vG+vziiqvoabMpFVjOn7DwiojUEmaqQ5WJsutosnZeEXN29Vd5dUTSvyAwfj334PSr+H9PGQRBWOxSS124rDmp85iwscXhbrcXGO44R+qIufcO7WUqxxEXxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=kO4ElkYI; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="sbiMOEKn"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1708481089; h=Message-ID:Subject:Date:From:To;
-	bh=ORbxc1aLPAjWIc3vkR5GtdqUtX005SNYWEsxv9OAOk8=;
-	b=sbiMOEKn8YsHac7GFd2HpFkPp/HOfaG+QEE9BieQi/hhLVUhFJ7rmqrhU424MQvVrn0mxTjDTdk4MpsxcIzPFtU3cw3u/0GLit+rcLWYL1xhJZxH6osDXJHKl/q45G0sOC1B2Yb8vcCsOxJNeZQnoQCUxEIBetRhstw6k8N7NoE=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R921e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0W0yFyS._1708481086;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W0yFyS._1708481086)
-          by smtp.aliyun-inc.com;
-          Wed, 21 Feb 2024 10:04:47 +0800
-Message-ID: <1708481025.1893313-1-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH vhost 07/17] virtio: find_vqs: pass struct instead of multi parameters
-Date: Wed, 21 Feb 2024 10:03:45 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: Halil Pasic <pasic@linux.ibm.com>
-Cc: Jason Wang <jasowang@redhat.com>,
- virtualization@lists.linux.dev,
- Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- "Michael S. Tsirkin" <mst@redhat.com>,
- "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Vadim Pasternak <vadimp@nvidia.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Cornelia Huck <cohuck@redhat.com>,
- Eric Farman <farman@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- Benjamin Berg <benjamin.berg@intel.com>,
- Yang Li <yang.lee@linux.alibaba.com>,
- linux-um@lists.infradead.org,
- netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org,
- linux-remoteproc@vger.kernel.org,
- linux-s390@vger.kernel.org,
- kvm@vger.kernel.org,
- bpf@vger.kernel.org,
- Halil Pasic <pasic@linux.ibm.com>
-References: <20240130114224.86536-1-xuanzhuo@linux.alibaba.com>
- <20240130114224.86536-8-xuanzhuo@linux.alibaba.com>
- <CACGkMEvb4N8kthr4qWXrLOh9v422OYhrYU6hQejusw-e5EacPw@mail.gmail.com>
- <1706756442.5524123-1-xuanzhuo@linux.alibaba.com>
- <20240220151815.5c867cce.pasic@linux.ibm.com>
-In-Reply-To: <20240220151815.5c867cce.pasic@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="kO4ElkYI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1708485687; x=1709090487; i=w_armin@gmx.de;
+	bh=2MBUqFLjaJBHziRjULDNPWqkvMpoalF4kCD87la9pzc=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=kO4ElkYI16QRrobe7NlodMFSItw7p9ZnHFsOpcnL9bLM8QBAB8lwkwziRxgS3yqm
+	 P9rETrog2n5TyqWuRqlD90JzvlQ/efJLZlUU0uidGI5XZgkewrdeS4DN0Gr/1i4R3
+	 niLsbH8YKZ+QIT80ljLUKu1zv4H01ym9ArgmjTAVYjCMRp4JAf/qv+JzJptLq6gnI
+	 NhVRBN6bfxLU9Hr4903nIMrRcNTPsctkb6/MilGjf+L4z68n0RDLws9ESROtwl/ZY
+	 mLQt/y4X+DDe5quIphNBX3aRrHlfVmsqvzwaR2+AVjVoHAxYwXa2FerC0o1Lj3AAI
+	 YSdIAfQCq2KSDDZuGQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N8GMq-1qqHna4Aam-014B4w; Wed, 21
+ Feb 2024 04:21:27 +0100
+Message-ID: <1dbec6ed-8af0-4433-8b6c-98759a21a287@gmx.de>
+Date: Wed, 21 Feb 2024 04:21:25 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/5] platform/x86: wmi: Check if event data is not NULL
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: corentin.chary@gmail.com, luke@ljones.dev,
+ Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20240219115919.16526-1-W_Armin@gmx.de>
+ <20240219115919.16526-3-W_Armin@gmx.de>
+ <dcb7c031-b920-4774-a1a9-fed8813390d0@gmx.de>
+ <954e9d5e-4800-aba9-4678-44584baaea05@linux.intel.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <954e9d5e-4800-aba9-4678-44584baaea05@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:pJDCiNtGjIZwYIgOeoyL83s0oMW36IbrNO9hEJiY+VDzZYn3oVj
+ +1b6SszpMcKzVDfmUguA92vIqvnzHJV9CawGrfDPRbFL0DMB4xqzkhoIEr4en19kme7MCR9
+ Otw4RUFpgeRr66aJx7sknJ8s87mRHbRCktbJINvFVvE8crqS3aQYk2LIBMccJblThbLdL7c
+ CtuhnpvtSCr6rnBAqOujg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:X9jwYBuaVkc=;jCA/AOe8oxAmOXB+hlSBIjF6A0P
+ Wl4y/NU+onHc/XKSSUTPzGe7ecAOVtivRrbUORkwa9yaWWT7+clUNIu48mgvuKpFRlC1W+8Ns
+ GOmrUhy40DEIY+gLvHE8gl3eSsRyBbUI9OfqLbrL0s0+Kf+rV9Po6uEROy38fT6TzLFF8iRb+
+ W/DmHMOqta02P97TGmjEob8epAEZ1RSJl9WM5XT30yndtYQQAo0v1yGmUp/uXCPsDLamOv4Tn
+ 8JtNjsEFUeWiJM9KXIIOTBC8mQbempkCtEdyEa0+V0tUe6th7sYRE4mZzK3jdG22eSSgsf5X/
+ 9/Lzs2IT1lHz7u3jPhdMjllxEqazfqqioIIJR/C+M+BOoN9H3JMH19eja1cKtW6eFwgARp5Wd
+ ZZ06IMYFldHdI/5GsQCApSolU9JvyP+x7Uat2soNotkYDbu2c6W47bpizzwB1n1IBavjdsOMJ
+ mWgVxn9oFxuQH5XdW5ZMEIdV2q4lInGtTgI5byJDf6HOPT/5GY8FOgdKpQs4KheR2oApqUVRL
+ ZtXjIrxtEqbrN1nlw6WgvjW/1tdRipEAIXT2Q/B3v6lz8fqNxHVJ7K7cgqmZ31WX8QOJeCkqN
+ hZOrp+uoRmci9rzVhvJjOb9uK5SWQHXirF7sR902riasvB1WK1tACE5MX866nYn2gr+QHRgwQ
+ /akGilZSCkY3ZcQxMdKBQcfHeL11Fv6k4mkmAO5N3EXd43GKs5gb9nRDK9/eV4b2o7Ua69sr/
+ CV+1i6LfpQzftw5thDaC0tcPScHMycbE3QPVzeK6XokLU5hFbEyEucrEZEBhpuhfFHEadfaLk
+ rGZuFFXIPaaBxhTXIXIV9Drlw8FeYe+fuSFivRVytFRNc=
 
-On Tue, 20 Feb 2024 15:18:15 +0100, Halil Pasic <pasic@linux.ibm.com> wrote:
-> On Thu, 1 Feb 2024 11:00:42 +0800
-> Xuan Zhuo <xuanzhuo@linux.alibaba.com> wrote:
+Am 20.02.24 um 10:19 schrieb Ilpo J=C3=A4rvinen:
+
+> On Tue, 20 Feb 2024, Armin Wolf wrote:
 >
-> > > > And squish the parameters from transport to a structure.
-> > >
-> > > The patch did more than what is described here, it also switch to use
-> > > a structure for vring_create_virtqueue() etc.
-> > >
-> > > Is it better to split?
-> >
-> > Sure.
+>> Am 19.02.24 um 12:59 schrieb Armin Wolf:
+>>
+>>> WMI event drivers which do not have no_notify_data set expect
+>>> that each WMI event contains valid data. Evaluating _WED however
+>>> might return no data, which can cause issues with such drivers.
+>>>
+>>> Fix this by validating that evaluating _WED did return data.
+>>>
+>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>>> ---
+>>>    drivers/platform/x86/wmi.c | 11 +++++++++--
+>>>    1 file changed, 9 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+>>> index 8fb90b726f50..d0fe8153f803 100644
+>>> --- a/drivers/platform/x86/wmi.c
+>>> +++ b/drivers/platform/x86/wmi.c
+>>> @@ -1210,6 +1210,7 @@ static void wmi_notify_driver(struct wmi_block
+>>> *wblock)
+>>>    {
+>>>    	struct wmi_driver *driver =3D drv_to_wdrv(wblock->dev.dev.driver);
+>>>    	struct acpi_buffer data =3D { ACPI_ALLOCATE_BUFFER, NULL };
+>>> +	union acpi_object *obj =3D NULL;
+>>>    	acpi_status status;
+>>>
+>>>    	if (!driver->no_notify_data) {
+>>> @@ -1218,12 +1219,18 @@ static void wmi_notify_driver(struct wmi_block
+>>> *wblock)
+>>>    			dev_warn(&wblock->dev.dev, "Failed to get event
+>>> data\n");
+>>>    			return;
+>>>    		}
+>>> +
+>>> +		obj =3D data.pointer;
+>>> +		if (!obj) {
+>>> +			dev_warn(&wblock->dev.dev, "Event contains not event
+>>> data\n");
+>> I just noticed that this should have been "Event contains no event data=
+\n".
+>> Should i send
+>> another patch?
+> Hi Armin,
 >
-> I understand there will be a v2. From virtio-ccw perspective I have
-> no objections.
-
-The next version is v1.
-
-That is posted.
-
-http://lore.kernel.org/all/20240202093951.120283-8-xuanzhuo@linux.alibaba.com
-http://lore.kernel.org/all/20240202093951.120283-9-xuanzhuo@linux.alibaba.com
-
-Thanks.
-
-
+> As I was doing some history manipulation anyway as is, I tweaked it
+> directly in the history. While doing the conflict resolution because of
+> that small change I realized the wording got corrected in the latter pat=
+ch
+> anyway so it was quite harmless but it's now correct in both commits in
+> review-ilpo branch.
 >
-> Regards,
-> Halil
+Thank you!
+
