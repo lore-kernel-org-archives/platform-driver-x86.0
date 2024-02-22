@@ -1,61 +1,64 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9122B9BF;
-	Thu, 22 Feb 2024 10:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08B1135A6F
+	for <platform-driver-x86@vger.kernel.org>; Thu, 22 Feb 2024 13:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708597975; cv=none; b=Uu+7C9OOu5SrElmp/QN9hPk/dkLkyQUHaPL8tiVWBkwipq8OmPvYa+QJqPp6JueVilzi0km8jY98esRWGcw6QwtIisR//4NLMWuuxHZMUeU2iRojAEaQRYQfvNOSuYdxuDjU/djLIl4UgZvvpcXKo3VLbGFl8FLuoQ52hE8SoOY=
+	t=1708609972; cv=none; b=eylZFwzCPNjTgSW7qE+iPFWI8GqwvZgPZotIxPKIN24vnEXJOu96Ng7vxywk12DOE6+6vYZGO2TiHaeeyRfuph1kSNTpC7ITJ3yE6/aswjKdvXqbSiKTYiXMVSLz49Km+zqkljBpjc1YX9xfac1tnARx+aMb4Y91qiIbWkxPj3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708597975; c=relaxed/simple;
-	bh=6L0afqIOsmwpEHFS9IsaO2CnmQyujeOKiZrRiHM4MPo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AhViI4a1naM3ioSKtXJQqg1RpeJoWgBp6QHTGxyPIsy/EQLqWN2RbLsMfhnBBKZOCQZALK0zPSul9fJiLtziof6/Yf0dGMxvTxdVPuklFZOCWEG7NTZISkuDGtkods05KHfk5CCfoWyCRuckjMM99cjYaXyZRwaZ7Y5TFsJ7Gbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LV1GeIOZ; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708609972; c=relaxed/simple;
+	bh=ldvCiK/V4BDWF+2sdQWwisT/oGzl+qxNF14gWToQctw=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=Smp9dLlzxDtSHflZGGF07pPwUXSZ18pgQxiO90Lvhx73nJLW0G7CBM2yuLPN+ExKeUiBRqF8Z9+ZwHuCPc6A30Vi6HmMhH+ldorwgdnPHXz0vhAzx+ZlL/6RCPnb3xWYzDx7VBEpn/Vl2VJUjJybiB6D5nHV47xuSgLutbTzzL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OFxoS9a6; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LV1GeIOZ"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1dbf1fe91fcso37516075ad.3;
-        Thu, 22 Feb 2024 02:32:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708597973; x=1709202773; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=gvUtjoEiMbaMjjQsWm/PxDiJhcRxG9+5kSB7pyn9Zc8=;
-        b=LV1GeIOZd7xJyRhUBhE7TvJkpWAauomLSG0LO+IR6NTSVPNhu5S3a4giexOPVQnQHV
-         fu/aY/oFKmuTrkif0vk/B5Tkqf+EbfK3hm3KTWjxg9t1beTNPFrk6/aFd8r5FeOHzCIQ
-         IlmL+hEc3tkXSJegg/Vcsw/2a4vQruEv8yCT3fxop2RknrlG1mMWxWTn3p+ZVPldEUBJ
-         kGhaS69P5qYEPXxZa1erqyG3F3B/Lc3u9qo2G4tCtcD2NDagYHSYn2on7MdHbdFvgiAu
-         jCt9dacaoqLR6XqW8gpwsx2HW4QeXk9y8i942ZKYfG2IQR7DqAmbBzdxF6EeJEAA0bbH
-         +fNA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OFxoS9a6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708609969;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=a2iYz0S7YtfHc/kfUkSN1Rclgg5kbRE8AFUFm3AJCy0=;
+	b=OFxoS9a6JUsP9i+1iv2l+YgrObUz1VYrR1bCwovp0dBkKzXB24aRGQtZaC9WD8O965BD1i
+	LE5mQI8pR1FsdMhCTe+8RQa2tYpnds2Kwgcg+apmjA22e9WcIsBxegAYU8FBtki9iwTRSo
+	kgy0CYL6X2m8LkeKvIsrZdogNP6ZPPE=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-539-GSI_1ul4OHaNq4uMOnHMbA-1; Thu, 22 Feb 2024 08:52:48 -0500
+X-MC-Unique: GSI_1ul4OHaNq4uMOnHMbA-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a357c92f241so327013766b.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Feb 2024 05:52:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708597973; x=1709202773;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gvUtjoEiMbaMjjQsWm/PxDiJhcRxG9+5kSB7pyn9Zc8=;
-        b=Cn4f9NI7JxJnNSPbOio7o7AyX5de64Z/BlAHl4tb2FJ8pnxKuZGRd3mT+a2QH2tRGJ
-         hdzIhpltMn836dovCqnXR4zMNFt9lUv6hPTaNBWs5OSGunGVMnyByVzMvdmgr3wB11vC
-         kBuq360K8veio/x9fp+y6Bt6CL/sMP5ePpHdvayv9UqAX5PH73u+vZy1UtmI6CSs+By7
-         /zNXtVASNiIC1S3VImSzfMCTuf69I2wNMOUKqe4AZy+pGV8bQq+xmz/IZ9zQpiI5TdQi
-         TbQK4/ob/EEHite5ihsrYX7CstZWuWwF/fnCqs5C7ISjOhjrVckUF1ZM3wnpn70R3kjM
-         /2Xg==
-X-Forwarded-Encrypted: i=1; AJvYcCUrv12XVII5acmesYyChhx9AKQG97ocF0EJzyQ9MKxKF4oLyFsPcTQshdSppdiOimnW3a+KwUCJmGlFTKN6BgkHJ5sks0jLIDv/Xbyelcl7wdc9zKQkig5MtEMjPahjgEXNTz8bzAXPAlZ1yIckQ+v73liv3Fh32GNAC0ZMmCI+Bf780Ymb4dL/Yj2FJQgN
-X-Gm-Message-State: AOJu0YyzK6BNtQahHW3hUAYYpGimhPwzMlOMn0xBB61acnKgH4sXb+7q
-	Iidh+r8qagnaFGAvxZWH3/ayfiG8gf2paXlIFRSeZfKfqSu1+zp1
-X-Google-Smtp-Source: AGHT+IFfzeiLNUj8xP10DdkfaSpfVphdprpMnrJr9Uks7lYKIkXF4DVORQBMa/Z4V2+0sKnP1Jn3jg==
-X-Received: by 2002:a17:902:dac9:b0:1dc:1557:1359 with SMTP id q9-20020a170902dac900b001dc15571359mr9278576plx.55.1708597972817;
-        Thu, 22 Feb 2024 02:32:52 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id jg13-20020a17090326cd00b001c407fac227sm9600662plb.41.2024.02.22.02.32.51
+        d=1e100.net; s=20230601; t=1708609967; x=1709214767;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=a2iYz0S7YtfHc/kfUkSN1Rclgg5kbRE8AFUFm3AJCy0=;
+        b=RhE+GMEUDahreXqwjEiagymNkamN+ADWJsHYyAxwO4kNpiD1LOLlbYRcqEJz+Xy+Oh
+         xrmgmxtFDjZY6/8ipbTKxRjPGDH8hY5+yONWVYtm62fO3z/Ek9XGyODeufCgYOpc3hNB
+         mS+N7IZkhTKTHhYBJ2IH+6JzFUoFnAWsl30JBXCgCK5sR2/9iSgKSjIRCsYtXE+Ndqa8
+         Wt2Q+r5v7JgfuybZ9JLHU+yUEitPaAQfTRDNHAhMWtU21IQOYRHoPLH4NkKA+pInmWHP
+         B3pMWUQ8/+OZejo7LgPTLGBzyX/BMe0j1qNVfHLsB9IFiGMHotZibkP25HMjBOSzTDSr
+         ffPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV04TxkVctY+6vXjQQLvrCu1+CZba/xIScYZkD66iNd3X1/ocLlxzb3PEmgSXJSlV0nrmu8nwtL6UHDLZajv1blBdVgv+AUF1E3yqyqZ32lJnELqQ==
+X-Gm-Message-State: AOJu0Yy9vF2Hmd7GzPLz3VTcGgpzezGokDmMvIA6okAiPGhnE+vU8eMF
+	Nl44+9eGpHKQ2cH2dlopsHzCYNFvY95pN92qHCxPaFrmZRpp926acfwzaEG8RhHdSe2uJb8dNT3
+	M1c+Nm1h0KE4bhpUQFTBtOI6+6ofjqGLLh/MOscxg6og6Pc1qCJoqb7Co9Rl0KYaXK34xMurW9O
+	uPL+c=
+X-Received: by 2002:a17:906:27d1:b0:a3e:5ae8:5777 with SMTP id k17-20020a17090627d100b00a3e5ae85777mr9079878ejc.44.1708609967058;
+        Thu, 22 Feb 2024 05:52:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEhWrsFmLDSwlexAS/8lXO8oaBnpo3FVCIYop3rqTGFjz+tKlt1K+lWdcQPYKDh+oklP7MHmg==
+X-Received: by 2002:a17:906:27d1:b0:a3e:5ae8:5777 with SMTP id k17-20020a17090627d100b00a3e5ae85777mr9079868ejc.44.1708609966714;
+        Thu, 22 Feb 2024 05:52:46 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id mj8-20020a170906af8800b00a3ee9305b02sm2847619ejb.20.2024.02.22.05.52.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Feb 2024 02:32:52 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <cb11ea75-089d-45df-b658-67f0769d7b1a@roeck-us.net>
-Date: Thu, 22 Feb 2024 02:32:50 -0800
+        Thu, 22 Feb 2024 05:52:46 -0800 (PST)
+Message-ID: <2b496ce8-4711-48cd-b1da-d70522bc0580@redhat.com>
+Date: Thu, 22 Feb 2024 14:52:46 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,76 +66,138 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Add wmi driver support for Casper Excalibur laptops.
-Content-Language: en-US
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- =?UTF-8?Q?Mustafa_Ek=C5=9Fi?= <mustafa.eskieksi@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
- platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
- jdelvare@suse.com, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>
-References: <20240221221549.640515-1-mustafa.eskieksi@gmail.com>
- <2716dc6e-d091-f61c-7f77-a87215adfe19@linux.intel.com>
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <2716dc6e-d091-f61c-7f77-a87215adfe19@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [GIT PULL] platform-drivers-x86 for 6.8-3
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ platform-driver-x86@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2/22/24 01:48, Ilpo Järvinen wrote:
-> Hi,
-> 
-> Added LED subsys people, please include them in future versions
-> automatically.
-> 
+Hi Linus,
 
-A MAINTAINERS entry such as
+Here is the second round of fixes for platform-drivers-x86 for 6.8.
 
-K:      (devm_)?led_(classdev|trigger)_(un)?register(|_ext|_simple)
+Highlights:
+ -  Regression fixes:
+    -  Fix INT0002 vGPIO events no longer working after 6.8 ACPI SCI changes
+    -  AMD-PMF: Fix laptops (e.g. Framework 13 AMD) hanging on suspend
+    -  x86-android-tablets: Fix touchscreen no longer working on Lenovo Yogabook
+    -  x86-android-tablets: Fix serdev instantiation regression
+    -  intel-vbtn: Fix ThinkPad X1 Tablet Gen2 no longer suspending
+ -  Bug fixes
+    -  think-lmi: Fix changing BIOS settings on Lenovo workstations
+    -  touchscreen_dmi: Fix Hi8 Air touchscreen data sometimes missing
+    -  AMD-PMF: Fix Smart PC support not working after suspend/resume
+ -  Other misc. small fixes
 
-might be useful if subsystem maintainers want to be informed
-if the subsystem is used outside its normal locations.
+Regards,
 
-Guenter
+Hans
+
+
+The following changes since commit 1abdf288b0ef5606f76b6e191fa6df05330e3d7e:
+
+  platform/x86: touchscreen_dmi: Add info for the TECLAST X16 Plus tablet (2024-01-26 20:21:47 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.8-3
+
+for you to fetch changes up to 427c70dec738318b7f71e1b9d829ff0e9771d493:
+
+  platform/x86: thinkpad_acpi: Only update profile if successfully converted (2024-02-20 14:35:36 +0100)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.8-3
+
+Highlights:
+ -  Regression fixes:
+    -  Fix INT0002 vGPIO events no longer working after 6.8 ACPI SCI changes
+    -  AMD-PMF: Fix laptops (e.g. Framework 13 AMD) hanging on suspend
+    -  x86-android-tablets: Fix touchscreen no longer working on Lenovo Yogabook
+    -  x86-android-tablets: Fix serdev instantiation regression
+    -  intel-vbtn: Fix ThinkPad X1 Tablet Gen2 no longer suspending
+ -  Bug fixes
+    -  think-lmi: Fix changing BIOS settings on Lenovo workstations
+    -  touchscreen_dmi: Fix Hi8 Air touchscreen data sometimes missing
+    -  AMD-PMF: Fix Smart PC support not working after suspend/resume
+ -  Other misc. small fixes
+
+The following is an automated git shortlog grouped by driver:
+
+Add new get_serdev_controller() helper:
+ -  Add new get_serdev_controller() helper
+
+intel:
+ -  int0002_vgpio: Pass IRQF_ONESHOT to request_irq()
+
+intel-vbtn:
+ -  Stop calling "VBDL" from notify_handler
+
+platform/x86/amd/pmf:
+ -  Fix a potential race with policy binary sideload
+ -  Fixup error handling for amd_pmf_init_smart_pc()
+ -  Add debugging message for missing policy data
+ -  Fix a suspend hang on Framework 13
+ -  Fix TEE enact command failure after suspend and resume
+ -  Remove smart_pc_status enum
+
+think-lmi:
+ -  Fix password opcode ordering for workstations
+
+thinkpad_acpi:
+ -  Only update profile if successfully converted
+
+touchscreen_dmi:
+ -  Consolidate Goodix upside-down touchscreen data
+ -  Allow partial (prefix) matches for ACPI names
+
+x86-android-tablets:
+ -  Fix acer_b1_750_goodix_gpios name
+ -  Fix serdev instantiation no longer working
+ -  Fix keyboard touchscreen on Lenovo Yogabook1 X90
+
+----------------------------------------------------------------
+Hans de Goede (8):
+      platform/x86: intel: int0002_vgpio: Pass IRQF_ONESHOT to request_irq()
+      platform/x86: touchscreen_dmi: Allow partial (prefix) matches for ACPI names
+      platform/x86: touchscreen_dmi: Consolidate Goodix upside-down touchscreen data
+      platform/x86: x86-android-tablets: Fix keyboard touchscreen on Lenovo Yogabook1 X90
+      platform/x86: Add new get_serdev_controller() helper
+      platform/x86: x86-android-tablets: Fix serdev instantiation no longer working
+      platform/x86: x86-android-tablets: Fix acer_b1_750_goodix_gpios name
+      platform/x86: intel-vbtn: Stop calling "VBDL" from notify_handler
+
+Mario Limonciello (5):
+      platform/x86/amd/pmf: Fix a suspend hang on Framework 13
+      platform/x86/amd/pmf: Add debugging message for missing policy data
+      platform/x86/amd/pmf: Fixup error handling for amd_pmf_init_smart_pc()
+      platform/x86/amd/pmf: Fix a potential race with policy binary sideload
+      platform/x86: thinkpad_acpi: Only update profile if successfully converted
+
+Mark Pearson (1):
+      platform/x86: think-lmi: Fix password opcode ordering for workstations
+
+Shyam Sundar S K (2):
+      platform/x86/amd/pmf: Remove smart_pc_status enum
+      platform/x86/amd/pmf: Fix TEE enact command failure after suspend and resume
+
+ drivers/platform/x86/amd/pmf/core.c                | 17 +++--
+ drivers/platform/x86/amd/pmf/pmf.h                 |  5 --
+ drivers/platform/x86/amd/pmf/tee-if.c              | 76 ++++++++++++--------
+ drivers/platform/x86/intel/int0002_vgpio.c         |  2 +-
+ drivers/platform/x86/intel/vbtn.c                  |  3 -
+ drivers/platform/x86/serdev_helpers.h              | 80 ++++++++++++++++++++++
+ drivers/platform/x86/think-lmi.c                   | 20 +++---
+ drivers/platform/x86/thinkpad_acpi.c               |  5 +-
+ drivers/platform/x86/touchscreen_dmi.c             | 29 ++++----
+ drivers/platform/x86/x86-android-tablets/core.c    | 38 ++++------
+ drivers/platform/x86/x86-android-tablets/lenovo.c  |  1 +
+ drivers/platform/x86/x86-android-tablets/other.c   |  4 +-
+ .../x86/x86-android-tablets/x86-android-tablets.h  |  1 +
+ 13 files changed, 183 insertions(+), 98 deletions(-)
+ create mode 100644 drivers/platform/x86/serdev_helpers.h
 
