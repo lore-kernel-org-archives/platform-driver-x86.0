@@ -1,61 +1,47 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AD03B2AD;
-	Wed, 21 Feb 2024 22:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8D310F9;
+	Thu, 22 Feb 2024 02:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708556112; cv=none; b=TI9XtIHPdVtTCB7mVsNI/n3XlyK2gsskLHj5HCTCaMIePztRkIKdPNGajq+Ozh1u+ZHH7OQUjbeOm3poQNEovOgSp1ZkehPV7fp8IYfXNOeiTwk/jAro+JKeLrl/o/Jcp+orD4dxHiIrx+Lp0K6bGYoXaYdpcoG6dOIfgE1U47g=
+	t=1708569693; cv=none; b=IOfYQiR3rLH7eMPsYYfPMeK91e9b5Px4kQ5Hvep7kY+uMtE5t/Ml6rKmYZtqr31ofupxzP0cP6sIlDFN5bY1zISwaEHgQf7ZmoPgQEHAEIUdtUQ411HhnnYdidZ11uJzVTCYABIL/QC33Q1UvIqXPB1Vb4eAX5LurkaLqDu0D2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708556112; c=relaxed/simple;
-	bh=WBhScTVcWgTF5n7+GZjUT+MuddAiwE1gR7nX3o2GBmU=;
+	s=arc-20240116; t=1708569693; c=relaxed/simple;
+	bh=IWBWxBYJmFyQVnGRv38FFSekIZLP2aPDTIxxaVSPYBE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qeg0EVBeXC98EGQdltWhU778ZTMKyJXxhcOFz3lf3wUAJVmZE7jNG8fz/5TPsLzC1cIMd1jHV+z+mH76hPt1mPNjdaWa3N2kAznHIVa0s2xCIn6ZRcdvm1u/6Nnwrop9KQsVIdXL7JQGDZJ3tQV+Lt/gvb3FT716ugJYW5HZz3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A3Y88hpO; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=mcUcR1Pmm8ef8n/qWV47Cs+7op0NWzhNvziN8jSgcA7U9A54u7mWM9HGIYfwzfJ/1WYxM6KInB0iHW/MHi67jVfsB4fb+y1kxI7xLkStYkMKhUM76bg2ZDTBFU4YUrg19zxtYBBnBWILxaS+unscxXdpoD8oz8IMhvYjLZQE8mY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WH5+Bwx0; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A3Y88hpO"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2997c5fe6abso883820a91.1;
-        Wed, 21 Feb 2024 14:55:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708556109; x=1709160909; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=7rwmodBfxYiy17gUU45H7KHIT1wScHcDfBe/9mMA44k=;
-        b=A3Y88hpOJzxP6QqWgJEg4hpa4xmeQqXzqsCBbsz4s3mGtCxsVuhL+YB8IihOvcTHlz
-         Vtx1WYXe+UFmy2Q+lZqUQ4T2ynpcxy3GxNw85qFaFWN3vFbjKXrdBQGNOEhdzN3OP48U
-         YYIY16EuyY066G1xFe4YvVHx2Gcjfwa+fmquJ0SLwQQpR2ouO43hgBWyk0DMXZJK3zoR
-         pQtxOHZK4S/teEBeHJ19LxPvBiEunsynDoJJrl9soHNc6WWdLjV41akrkxaCEtUa1B1a
-         wy2fCPgBfARMuvSalj9+31mowJjysnxnBNVQ3pI1RzLVKpiLan62Du+BJobW2tUWYTgd
-         y6Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708556109; x=1709160909;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7rwmodBfxYiy17gUU45H7KHIT1wScHcDfBe/9mMA44k=;
-        b=AEA3+54p7DC4rG3NKyd5Ka34otdfTp3yzRnR2ieWwprrw9zU1bRUptp85nJP/CYezs
-         RM/AXyGRU3KVgDIDp5J8mhC6Q8ZjjFLWC1kwZkNYZ/WVzx6u8oqAWAgWFVoOCFhonAQH
-         7SZQqXyRwEZjC8tLprbwt79Ci083ZiwEgvuhKefoOPwLhycwrs+vrpONoPlXwaVF6nwC
-         8b5u0iW+Pyvmtfxc0SDB/tcsefyP2NxbDeT+5ZXCf0Jk1wsxYKgiGHMKBFEL3AxAnrem
-         psPIVNAh8knxpxkMXuf5gHoijPraoBDhmtkjlNUHefA5hVKwH4X2QBfWI1jU+ZTUYRRC
-         Hl3w==
-X-Forwarded-Encrypted: i=1; AJvYcCXPpa3AnLZ/Wkez/ZmRWxol7pis8RsxvIGBlHhPcyM6UPXOfJMKBowWuHdIT2E5UALSRUKL98eZQZFSAmbtBV2QdaxXZRXPniUuxH/sB57AT3RM/MLV5PC0Z5Q32YE+tXoW1jJ2qfBjX9xvRcc2iLymQYyruXGW0UB+lIS3wmMfXzQioSlea0gJd0jPZFyg
-X-Gm-Message-State: AOJu0Yz1Pkl+VXabvLjnHczitVhrJJ+ZT8A6qmQ9Qfp8qg3GNtOwayMP
-	tQEUg/hvrvsJ2Ii+8IKzuUGtYYxGaIC9vEAhsacmlb1IlTh9DMdT
-X-Google-Smtp-Source: AGHT+IG3SLb2WGBg3Rr+szKxu6dFc8v5xn3HjWturR4i2E0POc/UdzX64khru8ftoYfDovHc8Kg5wg==
-X-Received: by 2002:a17:90b:4f83:b0:29a:20cf:2f5a with SMTP id qe3-20020a17090b4f8300b0029a20cf2f5amr2649387pjb.26.1708556108745;
-        Wed, 21 Feb 2024 14:55:08 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id sx15-20020a17090b2ccf00b00296f3401cabsm2400141pjb.41.2024.02.21.14.55.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Feb 2024 14:55:07 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <042951f1-200f-4d89-b968-ea68c52ea607@roeck-us.net>
-Date: Wed, 21 Feb 2024 14:55:06 -0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WH5+Bwx0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708569691; x=1740105691;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=IWBWxBYJmFyQVnGRv38FFSekIZLP2aPDTIxxaVSPYBE=;
+  b=WH5+Bwx0iP66SM/BRqa13OzJSK8IjUpPpHXSAqf0tTv4rfekiHi6nFu2
+   F2jq2JdqVN4LerBLxj6eSf9f5rlzgPhSxJDyUBqBzzzlmF0S9fYpWxHqK
+   HxZlayL5G2XxHXM3u9mh5/9DvYIk/Hjg6U+YsOqmQUQMvJgDvslr/Tjaz
+   My5os0LT+zBkKH0vwFnDv2x9Do4b20VqAK9UOGWrqrwa4qsU3JZRQPg+8
+   RPdJ2wT+jKFighTO9q4rJ1WrQy8j9gWsmE2JDe/WkOH7tAJco9kFSTgiP
+   8vxTEScCWBhTGjBbJKd0gJddBFYU8fTbHJyZuWNsJRTBc916mkmCfkO6a
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="13329326"
+X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
+   d="scan'208";a="13329326"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 18:41:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="827453680"
+X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
+   d="scan'208";a="827453680"
+Received: from mstewart-mobl.amr.corp.intel.com (HELO [10.209.73.168]) ([10.209.73.168])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 18:41:30 -0800
+Message-ID: <2826ee8d-9cc9-4f24-a797-48f704f0ea84@linux.intel.com>
+Date: Wed, 21 Feb 2024 18:41:29 -0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -69,97 +55,63 @@ To: =?UTF-8?Q?Mustafa_Ek=C5=9Fi?= <mustafa.eskieksi@gmail.com>,
  hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
  linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
  linux-hwmon@vger.kernel.org
-Cc: jdelvare@suse.com
+Cc: jdelvare@suse.com, linux@roeck-us.net
 References: <20240221221549.640515-1-mustafa.eskieksi@gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 In-Reply-To: <20240221221549.640515-1-mustafa.eskieksi@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 2/21/24 14:15, Mustafa Ekşi wrote:
+
+On 2/21/24 2:15 PM, Mustafa Ekşi wrote:
 > Signed-off-by: Mustafa Ekşi <mustafa.eskieksi@gmail.com>
 > ---
->   MAINTAINERS                       |   6 +
->   drivers/platform/x86/Kconfig      |  14 ++
->   drivers/platform/x86/Makefile     |   1 +
->   drivers/platform/x86/casper-wmi.c | 344 ++++++++++++++++++++++++++++++
->   4 files changed, 365 insertions(+)
->   create mode 100644 drivers/platform/x86/casper-wmi.c
-> 
+
+Please add some commit log about the driver. Like what it supports,
+who uses it , etc.
+
+>  MAINTAINERS                       |   6 +
+>  drivers/platform/x86/Kconfig      |  14 ++
+>  drivers/platform/x86/Makefile     |   1 +
+>  drivers/platform/x86/casper-wmi.c | 344 ++++++++++++++++++++++++++++++
+>  4 files changed, 365 insertions(+)
+>  create mode 100644 drivers/platform/x86/casper-wmi.c
+>
 > diff --git a/MAINTAINERS b/MAINTAINERS
 > index 9ed4d386853..d0142a75d2c 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
 > @@ -4723,6 +4723,12 @@ S:	Maintained
->   W:	https://wireless.wiki.kernel.org/en/users/Drivers/carl9170
->   F:	drivers/net/wireless/ath/carl9170/
->   
+>  W:	https://wireless.wiki.kernel.org/en/users/Drivers/carl9170
+>  F:	drivers/net/wireless/ath/carl9170/
+>  
 > +CASPER EXCALIBUR WMI DRIVER
 > +M:	Mustafa Ekşi <mustafa.eskieksi@gmail.com>
 > +L:	platform-driver-x86@vger.kernel.org
 > +S:	Maintained
 > +F:	drivers/platform/x86/casper-wmi.c
 > +
->   CAVIUM I2C DRIVER
->   M:	Robert Richter <rric@kernel.org>
->   S:	Odd Fixes
+>  CAVIUM I2C DRIVER
+>  M:	Robert Richter <rric@kernel.org>
+>  S:	Odd Fixes
 > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
 > index bdd302274b9..ebef9c9dfb6 100644
 > --- a/drivers/platform/x86/Kconfig
 > +++ b/drivers/platform/x86/Kconfig
 > @@ -1127,6 +1127,20 @@ config SEL3350_PLATFORM
->   	  To compile this driver as a module, choose M here: the module
->   	  will be called sel3350-platform.
->   
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called sel3350-platform.
+>  
 > +config CASPER_WMI
 > +	tristate "Casper Excalibur Laptop WMI driver"
 > +	depends on ACPI_WMI
 > +	depends on HWMON
 > +	select NEW_LEDS
 > +	select LEDS_CLASS
+
+In commit log, add some info about why you are selecting the NEW_LEDS
+and LEDS_CLASS.
+
 > +	help
 > +	  Say Y here if you want to support WMI-based fan speed reporting,
 > +	  power management and keyboard backlight support on Casper Excalibur
@@ -168,21 +120,21 @@ On 2/21/24 14:15, Mustafa Ekşi wrote:
 > +	  To compile this driver as a module, choose M here: the module will
 > +	  be called casper-wmi.
 > +
->   endif # X86_PLATFORM_DEVICES
->   
->   config P2SB
+>  endif # X86_PLATFORM_DEVICES
+>  
+>  config P2SB
 > diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
 > index 1de432e8861..4b527dd44ad 100644
 > --- a/drivers/platform/x86/Makefile
 > +++ b/drivers/platform/x86/Makefile
 > @@ -14,6 +14,7 @@ obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
->   obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+= nvidia-wmi-ec-backlight.o
->   obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
->   obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
+>  obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+= nvidia-wmi-ec-backlight.o
+>  obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
+>  obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
 > +obj-$(CONFIG_CASPER_WMI)		+= casper-wmi.o
->   
->   # Acer
->   obj-$(CONFIG_ACERHDF)		+= acerhdf.o
+>  
+>  # Acer
+>  obj-$(CONFIG_ACERHDF)		+= acerhdf.o
 > diff --git a/drivers/platform/x86/casper-wmi.c b/drivers/platform/x86/casper-wmi.c
 > new file mode 100644
 > index 00000000000..aae08202b19
@@ -262,35 +214,22 @@ On 2/21/24 14:15, Mustafa Ekşi wrote:
 > +	int ret;
 > +
 > +	ret = kstrtou64(buf, 16, &tmp);
-
-What exatly is the point of u64 and kstrtou64() ?
-
 > +
+above empty line is not needed
 > +	if (ret)
 > +		return ret;
 > +
 > +	u8 led_id = (tmp >> (8 * 4))&0xFF;
-
-This will result in interesting LED IDs based on u64 input. To me it looks
-very much like a poor random number generator. Does this follow wome kind
-of LED subsystem API ?
-
+Why not 32 ?
 > +
 > +	ret =
 > +	    casper_set(to_wmi_device(dev->parent), CASPER_SET_LED, led_id,
 > +		       (u32) tmp
 > +	    );
-
-Odd line breaks. Does this pass checkpatch ?
-
+Since it returns acpi_status, I would define a new variable to test it.
 > +	if (ACPI_FAILURE(ret)) {
 > +		dev_err(dev, "casper-wmi ACPI status: %d\n", ret);
 > +		return ret;
-
-The function return code is supposed to be a Linux error code.
-As for the functions below, I would reject this patch due to its
-logging noise.
-
 > +	}
 > +	if (led_id != CASPER_CORNER_LEDS) {
 > +		casper_last_color = (u32) tmp;
@@ -329,6 +268,9 @@ logging noise.
 > +{
 > +	return (casper_last_color&0x0F000000)>>24;
 > +}
+
+I recommend adding defines for all magic numbers you have used.
+
 > +
 > +static struct led_classdev casper_kbd_led = {
 > +	.name = "casper::kbd_backlight",
@@ -356,14 +298,7 @@ logging noise.
 > +	if (ACPI_FAILURE(ret)) {
 > +		dev_err(&wdev->dev,
 > +			"Could not query acpi status: %u", ret);
-
-This code generates _way_ too much logging noise for my liking.
-
 > +		return ret;
-
-Is there any value in having this function return acpi error
-codes instead of Linux error codes ?
-
 > +	}
 > +
 > +	union acpi_object *obj = wmidev_block_query(wdev, 0);
@@ -415,12 +350,6 @@ codes instead of Linux error codes ?
 > +
 > +		if (ACPI_FAILURE(ret))
 > +			return ret;
-
-This function is expected to return a Linux error code, not an acpi error code.
-
-Also, if CASPER_GET_HARDWAREINFO is not always available, the attributes
-needing it should not be created in the first place.
-
 > +
 > +		if (channel == 0) { // CPU fan
 > +			u32 cpu_fanspeed = out.a4;
@@ -433,36 +362,16 @@ needing it should not be created in the first place.
 > +
 > +			gpu_fanspeed <<= 8;
 > +			gpu_fanspeed += out.a5 >> 8;
-
-I don't know what this is supposed to be doing, but it will return
-odd values. For example, if out.a5 is 0xabcd, the returned value
-will be 0xabcdab. That seems to be unlikely I suspect this is supposed
-to be
-			*val = ((out.a5 & 0xff) << 8) | ((out.a5 >> 8) & 0xff);
-but I am not even sure about that because a5 is u32 and the above would suggest
-a 16-bit unsigned short in big endian format. Please check return values
-and implement any necessary endiannes conversion correctly.
-
 > +			*val = (long) gpu_fanspeed;
-
-FWIW, those type casts are unnecessary.
-
 > +		}
 > +		return 0;
 > +	case hwmon_pwm:
 > +		casper_query(to_wmi_device(dev->parent), CASPER_POWERPLAN,
 > +			     &out);
-
-Why no error check here ?
-
 > +		if (channel == 0)
 > +			*val = (long)out.a2;
 > +		else
 > +			return -EOPNOTSUPP;
-
-The coonditional and else case is unnecessary since only
-a single pwm channel is declared.
-
 > +		return 0;
 > +	default:
 > +		return -EOPNOTSUPP;
@@ -504,23 +413,13 @@ a single pwm channel is declared.
 > +	case hwmon_pwm:
 > +		if (channel != 0)
 > +			return -EOPNOTSUPP;
-
-This is unnecessary. Only a single pwm channel is declared,
-so channel will never be != 0.
-
 > +		ret =
 > +		    casper_set(to_wmi_device(dev->parent), CASPER_POWERPLAN,
 > +			       val, 0);
 > +
-The first line split is unnecessary.
-
 > +		if (ACPI_FAILURE(ret)) {
 > +			dev_err(dev, "Couldn't set power plan, acpi_status: %d",
 > +				ret);
-
-Drivers should not generate such logging noise, even more so after user input.
-Also, the valid range (0..255) should be checked before trying to set it.
-
 > +			return -EINVAL;
 > +		}
 > +		return 0;
@@ -557,9 +456,6 @@ Also, the valid range (0..255) should be checked before trying to set it.
 > +	if (!wmi_has_guid(CASPER_WMI_GUID))
 > +		return -ENODEV;
 > +
-How would the device ever be instantiated with a different GUID,
-making this check necessary ?
-
 > +	hwmon_dev =
 > +	    devm_hwmon_device_register_with_info(&wdev->dev, "casper_wmi", wdev,
 > +						 &casper_wmi_hwmon_chip_info,
@@ -571,12 +467,6 @@ making this check necessary ?
 > +		return -ENODEV;
 > +
 > +	return PTR_ERR_OR_ZERO(hwmon_dev);
-
-This would leave the LED device registered if instantiating the hwmon device
-failed. However, the probe function would return an error, meaning the driver
-core will believe that instantiation failed. Is that intentional ? I am quite
-sure that this would result in interesting crashes.
-
 > +	}
 > +
 > +static void casper_wmi_remove(struct wmi_device *wdev)
@@ -601,4 +491,8 @@ sure that this would result in interesting crashes.
 > +module_wmi_driver(casper_wmi_driver);
 > +
 > +MODULE_DEVICE_TABLE(wmi, casper_wmi_id_table);
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
