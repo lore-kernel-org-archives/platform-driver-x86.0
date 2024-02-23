@@ -1,114 +1,95 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from box.trvn.ru (unknown [194.87.146.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C2B29AF;
-	Fri, 23 Feb 2024 15:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827214A3D;
+	Fri, 23 Feb 2024 15:34:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.87.146.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708700684; cv=none; b=hSiLhTcLL7ckatWIB+gSYq4idV+WoqQoRr4OdTQSeP8rvb5ZOppMlWE2jSN4QHvkshiTK1S11mr4AbQvbRUoSAQ7TR+NWkieo0qVLSdVqJ4UhxWf0rp5Jx5H3vrADiWV0W9gNtLJVYTPvuvFCEbKTYVuaLkqbtZdGsOtX9YYWVE=
+	t=1708702484; cv=none; b=tmTTw2da6IM0n0IcsmagIAG0cK7BR6h+UTMMm7+qC0nGcpnxTCUxfHKLXbXbpdmWNzpTTE1P+krNBnL2bsAvQMdxLlAtsYNk9zGTYl6ynAuq0rnq/OqrPiXHFwZVk6s4D1R/lwgrjULEes5jl+RXXWw/RBqWbs9Z/WFK18kf+W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708700684; c=relaxed/simple;
-	bh=5x6pYf9qLTpW8AR7rB7BIZ/ftWmhCe5nScEqQHk3wMQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R0nlfI9McLxMuFSXlZxCKHMkFFgjLxFP09lDQEQ0E8Z3hW1lYmBfAjy4wuxzgCuYP+Kz1tsz2ezmGbH62JppLtQmWEg61u8WO2s6YpdIqcpogwow+UjXBPci7pU4OurmJLTkHhEduoFiD30QWEttwyxsdJwrTv60DnVBMGJCjdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=VyJmqqsg; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1708702484; c=relaxed/simple;
+	bh=0SNtXViAi/uuzITK6f3+yak148HxUT/1hggSYF8AK6Y=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=SmmfxeQ9jWjmDSuk33Sm9WTsdLK2WZB+pJ68pPZ3C9Ho1FR1XH1vohWb+b2nCy9r+CMcVX0IWgyrE9YDWiVkCWep7I2CfsOFjgp9Ar+LyT71F2kx1SZwvkCNL4cl3HPQ7NyzILZkS8W/enWDIiyr12y+o2wozFeHOVkELBsU0pU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=qq6TzNBG; arc=none smtp.client-ip=194.87.146.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="VyJmqqsg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1708700676;
-	bh=5x6pYf9qLTpW8AR7rB7BIZ/ftWmhCe5nScEqQHk3wMQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VyJmqqsgpm5U9Y5HtXtI531KmUgmHHitp9i69QI4A+zH5d52EXsfvN55wwYd1KTvP
-	 5SL2CNKtxJ29VXhp+eRVRNcg1/MrKgpLyuAnPxl7KRtEvZc+y8lBvVxQT8LYJLF/FR
-	 IRnVg9ZGUjzW5p9qC/0LoFwwm58SkAtvIrtZjEFgJ+GQXjqhdMiB1xjSND/T/a9OiH
-	 FD0ihu5q66PVpVWD1Fe6rVdSRSU9Se9SwOtuGxtF9A7Wn/gEcyDhXB8vig62Z5ErTY
-	 9DS/5EMBwG18wOc0EqHvYkQSoxMutq4GruMj63dhD8Pe1nKj3e05JIgP4qmyGE0UyU
-	 /EvO+Rx6WTX+w==
-Received: from mercury (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="qq6TzNBG"
+Received: from authenticated-user (box.trvn.ru [194.87.146.52])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
 	(No client certificate requested)
-	(Authenticated sender: sre)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 94627378000E;
-	Fri, 23 Feb 2024 15:04:36 +0000 (UTC)
-Received: by mercury (Postfix, from userid 1000)
-	id 352031060C95; Fri, 23 Feb 2024 16:04:36 +0100 (CET)
-Date: Fri, 23 Feb 2024 16:04:36 +0100
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Nikita Travkin <nikita@trvn.ru>
-Cc: Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	cros-qcom-dts-watchers@chromium.org, Andy Gross <agross@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] power: supply: Add Acer Aspire 1 embedded
- controller driver
-Message-ID: <xelebhoitnwguhewahw26xopl5btjo5ezznjjaeb2zfyy2bpcr@7pmclezshwck>
-References: <20240220-aspire1-ec-v3-0-02cb139a4931@trvn.ru>
- <20240220-aspire1-ec-v3-2-02cb139a4931@trvn.ru>
- <qoidm5wujjbeoc2hlraky26wuwmuaxi2atyl6ehovhvffdbfeh@g5gunqdei45m>
- <7c429d2110dbac68d0c82c8fb8bfb742@trvn.ru>
+	by box.trvn.ru (Postfix) with ESMTPSA id 9694A40164;
+	Fri, 23 Feb 2024 20:34:30 +0500 (+05)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
+	t=1708702471; bh=0SNtXViAi/uuzITK6f3+yak148HxUT/1hggSYF8AK6Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qq6TzNBGn05giGvmcRQt3AaAYb/F/pzsMBFrc0khdePz1ghzyF/iRXUEmoaELmULx
+	 kGf29xKC7wG0D4ZNvipJkyYDbp7hnSCsq/2MHRw8ko6B4+ndA0lGGw2ylRvH3tKsZt
+	 qdrTV6ECrpuN7f0V2xSsBgWoNyLUJQeJikTicP3lSiGIaIXp7QhUDaimK4uKjAE3eC
+	 rcSnmEdBRh0QskL1PWIAyqEcZXukZp378sMEb7T5RFPDvw+44WEGLPaWS4j66IfprM
+	 R5oBdwi2MET5cZCR+LtLhHxzrZxVDPWBeGtgereyi5DxsLAzQqEMUMP32E8hJP71Yd
+	 CaU1bnWbVbJkA==
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zxpcrmzfdpf2u4kj"
-Content-Disposition: inline
-In-Reply-To: <7c429d2110dbac68d0c82c8fb8bfb742@trvn.ru>
+Date: Fri, 23 Feb 2024 20:34:29 +0500
+From: Nikita Travkin <nikita@trvn.ru>
+To: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org, Andy Gross
+ <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio
+ <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] power: supply: Add Acer Aspire 1 embedded
+ controller driver
+In-Reply-To: <xelebhoitnwguhewahw26xopl5btjo5ezznjjaeb2zfyy2bpcr@7pmclezshwck>
+References: <20240220-aspire1-ec-v3-0-02cb139a4931@trvn.ru>
+ <20240220-aspire1-ec-v3-2-02cb139a4931@trvn.ru>
+ <qoidm5wujjbeoc2hlraky26wuwmuaxi2atyl6ehovhvffdbfeh@g5gunqdei45m>
+ <7c429d2110dbac68d0c82c8fb8bfb742@trvn.ru>
+ <xelebhoitnwguhewahw26xopl5btjo5ezznjjaeb2zfyy2bpcr@7pmclezshwck>
+Message-ID: <6e3fb1080c54cfc38dc3c3e79e32a53d@trvn.ru>
+X-Sender: nikita@trvn.ru
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Sebastian Reichel писал(а) 23.02.2024 20:04:
+> Hi,
+> 
+> On Fri, Feb 23, 2024 at 07:32:17PM +0500, Nikita Travkin wrote:
+>> >> + This driver provides battery and AC status support for the mentioned
+>> >
+>> > I did not see any AC status bits?
+>>
+>> I was referring to whatever ACPI spec calls "AC Adapter" but I guess
+>> I should have used the word "charger" instead... Will reword this.
+> 
+> But you only register a power-supply device for the battery and not
+> for the AC adapter/charger. When you write "and AC status support" I
+> would have expected something similar to this (that's from ACPI AC
+> adapter driver):
+> 
+> $ cat /sys/class/power_supply/AC/uevent
+> POWER_SUPPLY_NAME=AC
+> POWER_SUPPLY_TYPE=Mains
+> POWER_SUPPLY_ONLINE=1
+> 
 
---zxpcrmzfdpf2u4kj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ah, I see... Yeah looking at it one more time, I mistakenly assumed the
+acpi ac code uses the same data fields as the battery but seems like it
+reads the single online flag from a different place. I don't think there
+is really a point on implementing that field since we can still easily
+track the battery charging/discharging status so I will probably omit it
+for now. Will reword the help text to not mention charger/ac adapter.
 
-Hi,
+Thanks for clarifying!
+Nikita
 
-On Fri, Feb 23, 2024 at 07:32:17PM +0500, Nikita Travkin wrote:
-> >> + This driver provides battery and AC status support for the mentioned
-> >=20
-> > I did not see any AC status bits?
->=20
-> I was referring to whatever ACPI spec calls "AC Adapter" but I guess
-> I should have used the word "charger" instead... Will reword this.
-
-But you only register a power-supply device for the battery and not
-for the AC adapter/charger. When you write "and AC status support" I
-would have expected something similar to this (that's from ACPI AC
-adapter driver):
-
-$ cat /sys/class/power_supply/AC/uevent
-POWER_SUPPLY_NAME=3DAC
-POWER_SUPPLY_TYPE=3DMains
-POWER_SUPPLY_ONLINE=3D1
-
--- Sebastian
-
---zxpcrmzfdpf2u4kj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmXYs+8ACgkQ2O7X88g7
-+pp0pQ/+I8r1MIK+6d+62Nhgu1dizPhWY5c5s1DPh3CbJHrAhUlfgaTisBQBldsz
-WkzDoOnYEG1lLDSlhsi+0/JbfufNry+gewlCbZ+WR8xPi/R7Zczp94TVvnVixD3e
-TJeyAlv4adPN1FJs7YIVnZE8e77xb8VeCTUq0vLXWlFi0hLt4lHyAdZk9ZihokTO
-EvKw/1rdVPn1Ztu5EIRZkPfHJvnOlnahTqcV/CEb5Q1W6vq+A4TS8cY1GkJXGGBc
-FTDbMPeaYn/VWxIyqKCgatcd1ypqP5mWhm7JdARSe1vMQw2InVyoNjMmG5I1HxBT
-ndudYQhftgOiDpeh8QcdfxFOhT5Yp9/rAO/DKm68URKBh3mbb0EZvIk46afZPIls
-+DfLtw5FeWNnU5Q0Ak8JY6mFEyqOMLR5IpSUAuHxY4STLsKBDStHBVwYZn0+C4D2
-QmNj9IgWAq51SJVKHWOB1afsPP1JPIyDJsHF8jCubdoAOlywd/HyxPlHXpFqxQsA
-JxvFM/mGHseeE/Q05UNMApNxdn/+wao1bXF2h1JSpW3VOwOSRdLqFJ4I7HzlGpD9
-9uxdqBb/3wRTLsZKIRchIQtbG6j88meODLU7kq4+Yn+UlEVLktfxHFztK5aPfoLy
-ngO2wlTKZs6wUAJuGJJidndXx21+4SJloIOhaLRHO2tmhEG6c1U=
-=X9fX
------END PGP SIGNATURE-----
-
---zxpcrmzfdpf2u4kj--
+> -- Sebastian
