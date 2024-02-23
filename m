@@ -1,113 +1,136 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A738012880E;
-	Fri, 23 Feb 2024 16:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9C91119B;
+	Fri, 23 Feb 2024 22:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708706359; cv=none; b=CZF5h5jSHR4YJC5YDqrICiRXIRww6PKjvfNtvNLODN0NjTfRICUbOS7we148/Fi5iVY3hUauEdjB9LVN7HZ58jrz6LgC0usFLGuG2S/9PcQgvJSgKERMYPC14C+QZwvvO2toDc5BjLI7+jjbyhpsG5idlo81Fg1dvuumLCHMGGg=
+	t=1708727560; cv=none; b=hPKTGyp9TTFIlorEqLeq4lHOJ5RvYGWezT5ICmEyFMCU2zS5ZS/FybDQ/390fwDaZdf+Fg1WHUKIBvcaFhpTIX7yjgHFK9wxlz02epxXfNuMibG6LWiH7Z9PuoJ9Tbi2JxTbh4KbgiV3YhY2Xag/eBYMuWoa/L5OqsRcB/5LyQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708706359; c=relaxed/simple;
-	bh=sB+n4etd/gtVhOjMb5MrARpzVq6Ad9vcYeHKS2dl2jE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TN0jIjS/Le1Kn0nGz+iGTclQdMreltVdtP8slh2pbgqyNADryfVgbgD+jaS+ptZohsEtT5aEpBPcnfnTaXdhoEC6INwhsjZnP5Efbhge/xt7XfzfyRun+0CgTA6549bUyjN54QnoWiNVghuPjMfTKohgBnAcfNrWI76ntxkRYao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=tPjW3FS2; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1708727560; c=relaxed/simple;
+	bh=PSs1k4yhOaJo0FhDXl1IC/61LVXaUjlUC3glDlqHR+s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fO0i7LcyLgV2PN8k2kNf4G+io1RPmdLHzF9IQ04Xf4avyN9+QBeeFErwQIGmPER7ymxqGw0jIhKNKwYLczls4FHS8lLrIeYYHldIDDpTwGnDsuTfF/ykp1n6ur4A+slfNXuSIVZNewnS19oNZkHtA31iBJmC8M6pHSnOMKnURUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KDiQaAq1; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="tPjW3FS2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1708706346; x=1709311146; i=w_armin@gmx.de;
-	bh=sB+n4etd/gtVhOjMb5MrARpzVq6Ad9vcYeHKS2dl2jE=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=tPjW3FS2Wcx0FFaNwOzqZaUlciLQ8HKYlR40JUHn7ffwlWRmrqMUnhN+M3rqLRwY
-	 LjnDJ/E7pjN073KYIA/QxjKrxmemB2sre9FzMjg8AsnntsAaGeKwDyITtikr5EfzJ
-	 tIM2ltHVw+frZ9dRHBR6NjkJEafcCNxJgrrUqOj9A8eqnl+luTRV2Ns2ITmtjJuza
-	 1r0ZgfPzmpeVj3Gcah9+tltPplw2wJlfAMM6m+5IgqASUx1eUv7RRnylNM4U6O+V0
-	 xjkhXMmsLAKTKRCOg4RihBLnSx7s04xP1dOLN0Ng+fqpe64UcKaMOEd71zFcCdJCQ
-	 YhEnVV61ZLYXE95Mfg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MiJVG-1r1UXU00RC-00fSdt; Fri, 23 Feb 2024 17:39:06 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: Shyam-sundar.S-k@amd.com,
-	mika.westerberg@linux.intel.com
-Cc: sathyanarayanan.kuppuswamy@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] platform/x86/amd/pmf: Do not use readl() for policy buffer access
-Date: Fri, 23 Feb 2024 17:39:00 +0100
-Message-Id: <20240223163901.13504-2-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240223163901.13504-1-W_Armin@gmx.de>
-References: <20240223163901.13504-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KDiQaAq1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1708727554;
+	bh=PSs1k4yhOaJo0FhDXl1IC/61LVXaUjlUC3glDlqHR+s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KDiQaAq1lyRcjhTQW47KCHDEbmn5dw4W0sqCeown0uhw6TzmHSV93fpjvZU7swVkI
+	 +KXHOAjYoD/aE5QDrVnCfbI2k1hOSE7EDK9EM59hbVqhXqYj0345NiO/75as3pQJdr
+	 zGONe1b+drG4lF1T8vkB/mewsMfc8XJmd0VKY1POhpnut9rDJ/qF5uGj96+k5eBxFY
+	 G4Bu1fgzzbHkFsPjhWljBjV+hgUPexoljU9qGO9YTfzrHmjqq33JMir2C46wM/em+E
+	 X+6cxY3dC5gCPfR8z5zl72ZmyVpfxeTZTNUGUJPVxKHVMLZ741ADY3cO42YAMTllGK
+	 ADnx4v9lvELjA==
+Received: from mercury (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sre)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id CB97C3780627;
+	Fri, 23 Feb 2024 22:32:34 +0000 (UTC)
+Received: by mercury (Postfix, from userid 1000)
+	id 4818D1060C95; Fri, 23 Feb 2024 23:32:34 +0100 (CET)
+Date: Fri, 23 Feb 2024 23:32:34 +0100
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Nikita Travkin <nikita@trvn.ru>
+Cc: Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	cros-qcom-dts-watchers@chromium.org, Andy Gross <agross@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] power: supply: Add Acer Aspire 1 embedded
+ controller driver
+Message-ID: <wr4awfmyip3fe5y4xpv6xajigsvc4qftawonkolrtsamr3pumb@aio2ishg3o7c>
+References: <20240220-aspire1-ec-v3-0-02cb139a4931@trvn.ru>
+ <20240220-aspire1-ec-v3-2-02cb139a4931@trvn.ru>
+ <qoidm5wujjbeoc2hlraky26wuwmuaxi2atyl6ehovhvffdbfeh@g5gunqdei45m>
+ <7c429d2110dbac68d0c82c8fb8bfb742@trvn.ru>
+ <xelebhoitnwguhewahw26xopl5btjo5ezznjjaeb2zfyy2bpcr@7pmclezshwck>
+ <6e3fb1080c54cfc38dc3c3e79e32a53d@trvn.ru>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="x3dnrs6dj67zatrw"
+Content-Disposition: inline
+In-Reply-To: <6e3fb1080c54cfc38dc3c3e79e32a53d@trvn.ru>
+
+
+--x3dnrs6dj67zatrw
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:xJrTW73+XmPgXT0JmOHX3IY9eRW5w4Hf+pwHGtsT1qCACiR8frN
- gTPS+G+Ay6bbBk3+zTVHcg1MOaS3Ns6RNlUb/ZJV4onO1PXadopumSXTDueKSMNo4Yiun1S
- Vmzq1jqKjnxjCk+3UrdI4A04HvEpsibH/dJY4GiFdCwwlhxUnb+z2bSlymEbsJQZqMoD4Xd
- IjulV72aNEjn8Z6RrmqQw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:MzZBuO2b4+E=;mfb/AwrUHrNDFLCyDSqO9D2HeKk
- OkAkJEtvZjiRdsq86qFYfJIIgjMXG8rx3zuQ5KNISyIngYtgG1m2KPV1jdeMrMxrBmNFHDg99
- DhAbXCI7EnW8t4uc3erciDda0hY0J891f7mWFzRODgJUatqC6s0CoMt+/vOlqQLnQxSHoDgKh
- cgcos0fy4JdS/ysooV7gSONuLTvDJ6rvm4RMTKitKLgzsPINDrHytVsT2K3oy5Is+yGBlchiw
- lkDQwIMFUbt++Hu4bgyr1eowr6/FI6FUjja8CS6PYjs7Trh3jaTNZ7EV5IfV4mEHlGEGY5hCe
- AK/thW8PEUIpgdR05hmFejvPhd/mrWy4SkD2evwJvUe5+Uglnjzp+HeKht1B0MjsNB6eaUcz6
- Huo91B6WHoQ8OVoez8ldTkusElZ3kNrbH/XSzbRLv4W5AcOpV/7QmGvckKt/5PzX3hyo2FI4t
- DFcm+xDBI7F1VO10Z2lpe5pRN1/++JubrnYqj6BfN6Tm+JCSogK5ZrmUOmMwwFDLADhcdYQ+F
- x+najwzwNqQHv9wgKKNA0hsX7oGbPL2tBlnYFsqhW6cgtrZe8pcwbxeJZnJx2oDWX6GCHvGvc
- YYBmNRoP0qqieuLqz0u1VmJqtC2nFMWY0bJXQn3+setmcI+CN+eJ6r+wyJkAmjBR482suxXG1
- k7Vxfus1HiIbMMo8n3qJU3fBhn4JjowcCPVP3zjOas8B/MqDxXtwNEmOU9Pl2Y9D7p5tKeQus
- uWViZwi+7vQiIo/uOcPIrYwzI/SSBP8KjBaZoxvmmhJzANF7ISNy3947jLAOM1F5qrSltm93G
- sG30GtBUKZ2z6jVL9/XpNAhyO4rz1eLKsIlVrQq+4EuxU=
 
-The policy buffer is allocated using normal memory allocation
-functions, so readl() should not be used on it.
+Hi,
 
-Use get_unaligned_le32() instead.
+On Fri, Feb 23, 2024 at 08:34:29PM +0500, Nikita Travkin wrote:
+> Sebastian Reichel =D0=BF=D0=B8=D1=81=D0=B0=D0=BB(=D0=B0) 23.02.2024 20:04:
+> > On Fri, Feb 23, 2024 at 07:32:17PM +0500, Nikita Travkin wrote:
+> >> >> + This driver provides battery and AC status support for the mentio=
+ned
+> >> > I did not see any AC status bits?
+> >>
+> >> I was referring to whatever ACPI spec calls "AC Adapter" but I guess
+> >> I should have used the word "charger" instead... Will reword this.
+> >=20
+> > But you only register a power-supply device for the battery and not
+> > for the AC adapter/charger. When you write "and AC status support" I
+> > would have expected something similar to this (that's from ACPI AC
+> > adapter driver):
+> >=20
+> > $ cat /sys/class/power_supply/AC/uevent
+> > POWER_SUPPLY_NAME=3DAC
+> > POWER_SUPPLY_TYPE=3DMains
+> > POWER_SUPPLY_ONLINE=3D1
+>=20
+> Ah, I see... Yeah looking at it one more time, I mistakenly assumed the
+> acpi ac code uses the same data fields as the battery but seems like it
+> reads the single online flag from a different place. I don't think there
+> is really a point on implementing that field since we can still easily
+> track the battery charging/discharging status so I will probably omit it
+> for now. Will reword the help text to not mention charger/ac adapter.
 
-Compile-tested only.
+If you have the information easily available, it's a good plan to
+expose it.
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/amd/pmf/tee-if.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Without a charger reporting online status at least the kernel's
+power_supply_is_system_supplied() will return false (which is e.g.
+used by AMD GPU driver to select power profile).
 
-diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/=
-amd/pmf/tee-if.c
-index 16973bebf55f..3220b6580270 100644
-=2D-- a/drivers/platform/x86/amd/pmf/tee-if.c
-+++ b/drivers/platform/x86/amd/pmf/tee-if.c
-@@ -11,6 +11,7 @@
- #include <linux/debugfs.h>
- #include <linux/tee_drv.h>
- #include <linux/uuid.h>
-+#include <asm/unaligned.h>
- #include "pmf.h"
+Generic userspace (i.e. upower) probably behaves similar, since
+battery status is not the same as AC connceted. A system might
+not charge the battery but still run from AC itself.
 
- #define MAX_TEE_PARAM	4
-@@ -249,8 +250,8 @@ static int amd_pmf_start_policy_engine(struct amd_pmf_=
-dev *dev)
- 	u32 cookie, length;
- 	int res;
+-- Sebastian
 
--	cookie =3D readl(dev->policy_buf + POLICY_COOKIE_OFFSET);
--	length =3D readl(dev->policy_buf + POLICY_COOKIE_LEN);
-+	cookie =3D get_unaligned_le32(dev->policy_buf + POLICY_COOKIE_OFFSET);
-+	length =3D get_unaligned_le32(dev->policy_buf + POLICY_COOKIE_LEN);
+--x3dnrs6dj67zatrw
+Content-Type: application/pgp-signature; name="signature.asc"
 
- 	if (cookie !=3D POLICY_SIGN_COOKIE || !length)
- 		return -EINVAL;
-=2D-
-2.39.2
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmXZHPcACgkQ2O7X88g7
++ppExA/6Ay7wM3uN5mNgDtWxq1XLrsykjXSgSsYKJzByjQuageupwDlF6Rx6lKXQ
+X8UjL4r8YlEaGyce2L8uYaoH9KN0ge45v/CiEKZo2PJyCBpQGW8rbO1rNlZampi+
+y2jSurRj8aUrbgToM0Q2tiZQWU3CLJzu0TsFZ0/7sfgEzaEzFurQ0k3nvTNYARLN
+ayqnP6NIDb18AFwToW5jdoe8c+MweBK4XhjNNZeiFAsnCe4LgKSjr0aHdeGwJh1F
+AGffLuHnc/TSWecDaKQG8NaZV9KIjzYHZwULTWFQwvIaFnMSNFJLyaZX91NGV4Sc
+R7HZVdSm/3Q60PvKQ9ZkseRbLSHHRJQTvj8akX5sLfD4L7CMe19tPqcaDB50jIUi
+VJdqCrq9lZLJVfbJDKVysLHfTNHBrm948FxOdFgd/chETFCDODrRJZ+W96+rb7uC
+m/CoGtow7mSP1Tm183JktlamMk7c+D2qj2xF6mfRJMIT1816qA7hfZNB6YQyky++
+pw8kRos46RCCOrhRInZqJGy5DBz3JDZqqMWJFDQYdxQaZM0m7J2PST/auCUhK14v
+Uo8bjWdbR7BBFLB5FXAGONH/bdihhnD8er1H5LIDzPmxv8ASQxC924BEozSya/4J
+aEox1XhdHHsQpCByVX7kL2afGt574rkvnyOwT9WLf8RA2KCjROg=
+=gazE
+-----END PGP SIGNATURE-----
+
+--x3dnrs6dj67zatrw--
