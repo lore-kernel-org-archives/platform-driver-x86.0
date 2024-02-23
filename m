@@ -1,602 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8691642A;
-	Fri, 23 Feb 2024 10:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C425979CC;
+	Fri, 23 Feb 2024 14:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.87.146.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708683314; cv=none; b=Y8th7J6gtx3IdB3wKYbi0izhL8sKYQRkY1WnEBylPL+0+U4u28UzPhle1JtpLRD1acJOA6rd9niyZFsTkXSsQNwcnCfuUUgKTfqyPbL1M1JhMX/AQyZg6SUVZ1ZaC085LPxtpE7YVpa3g8XfKLuAy38PgjA8WjPZwVIkmpbVuOc=
+	t=1708698745; cv=none; b=BL8Q1xZ7xL7ZLPxqxfOsPxjYnfSajlWBzzkMakRgF2fwCHVw48bHaFab0hM+FVnY+mZvCZetEYFyansbW2UNl62CH4ECO57ctBED4Xfo+S6UupaxgVy71BXLbh7nANQlojJgB5NDA9mTokmSYJIoDqrWXOUxEGivwJjwuwYSWfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708683314; c=relaxed/simple;
-	bh=73kX+/NEuk1iaZrhUXLJKKoGJQXFowHJqhm7iiG20xc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=iiZynykjabsjzirlMlAmErUv0leZrOli82Btcyi1npNditzPQfJ3SuOMZSCsj20A2ABRY6MAkQiop7sTLwfoJ8HUqnPwdlk+RS8FvUTET5thmcwsFyLWZgs3sQezL4S4/MOtPmHlh2nQRn/OzHqZGqskRp7bzh2rE6oBPJXJ4/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=blOER3Xm; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708698745; c=relaxed/simple;
+	bh=jiMJsyiTNHv8UOOvPguE/ydpC4lYJNHBv7Q8fPcd5vw=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=grlL2NpDAx7gUApnQp4Z8lyVpIqKuRPBd0yy0a7/sXRaBnMgousxv/YUvDsyC0uWrEM+u+Y+lCi+oPJRBnLPEhIT0y8klK8VTMlJlyD5jpsGxEXGZOK+9f2cAtW/R4nNqeoYnCN0CRoB/EK6uDK/7koUQ2TfdlQ3lfu4uk5GN5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=q1JvnxXT; arc=none smtp.client-ip=194.87.146.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="blOER3Xm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708683312; x=1740219312;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=73kX+/NEuk1iaZrhUXLJKKoGJQXFowHJqhm7iiG20xc=;
-  b=blOER3Xm3gK4C8JeXnJJl4Uh3nPzonaF6yOY3Q3+gk1pCtqEOS/bT8EH
-   mW33mbj7ALvgCJYRkbyP0xSnaqp7XeOGq+V0k7xHEDMGGP4o/J2qghL7F
-   yvtfHYUh7+zvpzgjoKceMWwTB729WwVTANJ3figH+1H56tGJFrRSOIMIf
-   8jwsBQfgxxv8i4+glJcJ8n2MhRDnaoFcWPIJov35k0yWEPAvEyggCrkkb
-   SSDM4mdwlWFkPLMsyiatHPaf0wW/M3NHROxCKGnYTFcPHvs1ZTBBjGoaD
-   ht0ak+CY5578s4DXUCuoCWBYRWbXhX0Fs6i22JjC9ZB+FjOEiceTPjk77
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="20528324"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="20528324"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 02:15:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="5748215"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.49.107])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 02:15:08 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 23 Feb 2024 12:14:55 +0200 (EET)
-To: =?ISO-8859-2?Q?Mustafa_Ek=BAi?= <mustafa.eskieksi@gmail.com>
-cc: Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-    jdelvare@suse.com, linux@roeck-us.net, pavel@ucw.cz, lee@kernel.org
-Subject: Re: [PATCH v2] platform/x86: Add wmi driver for Casper Excalibur
- laptops. Odd line breaks was because I have used scripts/Lindent without
- checking, I'm sorry for that. And for my weird rgb led API: This kind of
- design was also used in drivers/platform/x86/dell/alienware-wmi.c:239, but
- mine differs as it doesn't create different attributes for different leds.
- That is because driver doesn't know how many leds there are, to know how
- many leds there are it should check processor information (whether it's 10th
- gen or 11th). I don't think include/linux/mod_devicetable.h supports that.
- If there is a way to differentiate cpus, please let me know. And even if it
- knew how many leds there are, having different attributes can be cumbersome
- because there's no way of reading leds. And also user can change led state
- without notifying os (with some hotkey). But I'm open to further discussion.
- And thanks for all of your careful reviewing. It helped me to learn more.
-In-Reply-To: <20240222214815.245280-1-mustafa.eskieksi@gmail.com>
-Message-ID: <7863fff5-4de5-4e7a-09b4-fe05ca7765d5@linux.intel.com>
-References: <20240222214815.245280-1-mustafa.eskieksi@gmail.com>
+	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="q1JvnxXT"
+Received: from authenticated-user (box.trvn.ru [194.87.146.52])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(No client certificate requested)
+	by box.trvn.ru (Postfix) with ESMTPSA id 81FE0408D8;
+	Fri, 23 Feb 2024 19:32:19 +0500 (+05)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
+	t=1708698739; bh=jiMJsyiTNHv8UOOvPguE/ydpC4lYJNHBv7Q8fPcd5vw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=q1JvnxXTtJ3QhyO00A/qk6Ygn5aeMNvly1UmdUKktB4H7OxrI9esp/pwqHM0iUxVa
+	 /jkGL1o67J8wqqZuSQCZIGBEyH8ZgXGJgG0QjEEl8vb/IXysGhsi8sPP4ndwY3sYgO
+	 g8Fwjt4BsNE6RmUxRE4pMeGWG0DWhLbJr2OWd24I1EXIPVG6oEUb8OLb+/JB3BTwJs
+	 SiqSgVQ8yoU/3nTJKUiEUievYmOo/14iXdbTa+riOvjxI9iS2BVhDinNK21Ba0ehnR
+	 V+oO8zZNuCra5R+b9DxSwauCA8GNRqaj2ArPhMDiyVX1d0J/sOOAiDm2QmkKzoiV0D
+	 R8Ia+QYER9I5Q==
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1887983801-1708682173=:1148"
-Content-ID: <6e06b268-d3c5-3914-3d9c-1332eaf88164@linux.intel.com>
+Date: Fri, 23 Feb 2024 19:32:17 +0500
+From: Nikita Travkin <nikita@trvn.ru>
+To: Sebastian Reichel <sebastian.reichel@collabora.com>, Hans de Goede
+ <hdegoede@redhat.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ cros-qcom-dts-watchers@chromium.org, Andy Gross <agross@kernel.org>, Bjorn
+ Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] power: supply: Add Acer Aspire 1 embedded
+ controller driver
+In-Reply-To: <qoidm5wujjbeoc2hlraky26wuwmuaxi2atyl6ehovhvffdbfeh@g5gunqdei45m>
+References: <20240220-aspire1-ec-v3-0-02cb139a4931@trvn.ru>
+ <20240220-aspire1-ec-v3-2-02cb139a4931@trvn.ru>
+ <qoidm5wujjbeoc2hlraky26wuwmuaxi2atyl6ehovhvffdbfeh@g5gunqdei45m>
+Message-ID: <7c429d2110dbac68d0c82c8fb8bfb742@trvn.ru>
+X-Sender: nikita@trvn.ru
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Sebastian Reichel писал(а) 22.02.2024 04:41:
+> Hi,
+> 
+> On Tue, Feb 20, 2024 at 04:57:13PM +0500, Nikita Travkin wrote:
+>> Acer Aspire 1 is a Snapdragon 7c based laptop. It uses an embedded
+>> controller to control the charging and battery management, as well as to
+>> perform a set of misc functions.
+>>
+>> Unfortunately, while all this functionality is implemented in ACPI, it's
+>> currently not possible to use ACPI to boot Linux on such Qualcomm
+>> devices. To allow Linux to still support the features provided by EC,
+>> this driver reimplments the relevant ACPI parts. This allows us to boot
+>> the laptop with Device Tree and retain all the features.
+>>
+>> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
+>> ---
+>>  drivers/power/supply/Kconfig           |  14 +
+>>  drivers/power/supply/Makefile          |   1 +
+>>  drivers/power/supply/acer-aspire1-ec.c | 453 +++++++++++++++++++++++++++++++++
+> 
+> I think this belongs into drivers/platform, as it handles all bits of
+> the EC.
+> 
 
---8323328-1887983801-1708682173=:1148
-Content-Type: text/plain; CHARSET=ISO-8859-2
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <02356207-00da-6cd5-aa06-8e3d8b1f42f9@linux.intel.com>
+Hm, I initially submitted it to power/supply following the c630 driver,
+but I think you're right... Though I'm not sure where in platform/ I'd
+put this driver... (+CC Hans)
 
-On Fri, 23 Feb 2024, Mustafa Ek=BAi wrote:
+Seems like most of the things live in platform/x86 but there is no i.e.
+platform/arm64...
 
-> Adding wmi driver for Casper Excalibur Laptops:
-> This driver implements a ledclass_dev device for keyboard backlight
-> and hwmon driver to read fan speed and (also write) pwm mode. NEW_LEDS is
-> selected because this driver introduces new leds, and LEDS_CLASS is selec=
-ted
-> because this driver implements a led class device. All of Casper Excalibu=
-r
-> Laptops are supported but fan speeds has a bug for older generations.
->=20
-> Signed-off-by: Mustafa Ek=BAi <mustafa.eskieksi@gmail.com>
-> ---
+Hans, (as a maintainer for most things in platform/) what do you think
+would be the best place to put this (and at least two more I'd expect)
+driver in inside platform/? And can we handle it through the
+platform-driver-x86 list?
 
-v1 -> v2 changelog is missing from here!
+> [...]
+> 
+>>  3 files changed, 468 insertions(+)
+>>
+>> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+>> index 3e31375491d5..e91a3acecb41 100644
+>> --- a/drivers/power/supply/Kconfig
+>> +++ b/drivers/power/supply/Kconfig
+>> @@ -985,4 +985,18 @@ config FUEL_GAUGE_MM8013
+>>  	  the state of charge, temperature, cycle count, actual and design
+>>  	  capacity, etc.
+>>
+>> +config EC_ACER_ASPIRE1
+>> +	tristate "Acer Aspire 1 Emedded Controller driver"
+>> +	depends on I2C
+>> +	depends on DRM
+>> +	help
+>> +	  Say Y here to enable the EC driver for the (Snapdragon-based)
+>> +	  Acer Aspire 1 laptop. The EC handles battery and charging
+>> +	  monitoring as well as some misc functions like the lid sensor
+>> +	  and USB Type-C DP HPD events.
+>> +
+>> +	  This driver provides battery and AC status support for the mentioned
+> 
+> I did not see any AC status bits?
+> 
 
->  MAINTAINERS                       |   6 +
->  drivers/platform/x86/Kconfig      |  14 ++
->  drivers/platform/x86/Makefile     |   1 +
->  drivers/platform/x86/casper-wmi.c | 315 ++++++++++++++++++++++++++++++
->  4 files changed, 336 insertions(+)
->  create mode 100644 drivers/platform/x86/casper-wmi.c
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 9ed4d386853..d0142a75d2c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4723,6 +4723,12 @@ S:=09Maintained
->  W:=09https://wireless.wiki.kernel.org/en/users/Drivers/carl9170
->  F:=09drivers/net/wireless/ath/carl9170/
-> =20
-> +CASPER EXCALIBUR WMI DRIVER
-> +M:=09Mustafa Ek=BAi <mustafa.eskieksi@gmail.com>
-> +L:=09platform-driver-x86@vger.kernel.org
-> +S:=09Maintained
-> +F:=09drivers/platform/x86/casper-wmi.c
-> +
->  CAVIUM I2C DRIVER
->  M:=09Robert Richter <rric@kernel.org>
->  S:=09Odd Fixes
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index bdd302274b9..ebef9c9dfb6 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1127,6 +1127,20 @@ config SEL3350_PLATFORM
->  =09  To compile this driver as a module, choose M here: the module
->  =09  will be called sel3350-platform.
-> =20
-> +config CASPER_WMI
-> +=09tristate "Casper Excalibur Laptop WMI driver"
-> +=09depends on ACPI_WMI
-> +=09depends on HWMON
-> +=09select NEW_LEDS
-> +=09select LEDS_CLASS
-> +=09help
-> +=09  Say Y here if you want to support WMI-based fan speed reporting,
-> +=09  power management and keyboard backlight support on Casper Excalibur
-> +=09  Laptops.
-> +
-> +=09  To compile this driver as a module, choose M here: the module will
-> +=09  be called casper-wmi.
-> +
->  endif # X86_PLATFORM_DEVICES
-> =20
->  config P2SB
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefil=
-e
-> index 1de432e8861..4b527dd44ad 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -14,6 +14,7 @@ obj-$(CONFIG_MXM_WMI)=09=09=09+=3D mxm-wmi.o
->  obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)=09+=3D nvidia-wmi-ec-backlight.o
->  obj-$(CONFIG_XIAOMI_WMI)=09=09+=3D xiaomi-wmi.o
->  obj-$(CONFIG_GIGABYTE_WMI)=09=09+=3D gigabyte-wmi.o
-> +obj-$(CONFIG_CASPER_WMI)=09=09+=3D casper-wmi.o
-> =20
->  # Acer
->  obj-$(CONFIG_ACERHDF)=09=09+=3D acerhdf.o
-> diff --git a/drivers/platform/x86/casper-wmi.c b/drivers/platform/x86/cas=
-per-wmi.c
-> new file mode 100644
-> index 00000000000..012ebda195d
-> --- /dev/null
-> +++ b/drivers/platform/x86/casper-wmi.c
-> @@ -0,0 +1,315 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +#include <linux/bitops.h>
-> +#include <linux/acpi.h>
-> +#include <linux/leds.h>
-> +#include <linux/slab.h>
-> +#include <linux/module.h>
-> +#include <linux/wmi.h>
-> +#include <linux/device.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/types.h>
-> +#include <acpi/acexcep.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/sysfs.h>
-> +
-> +#define CASPER_WMI_GUID "644C5791-B7B0-4123-A90B-E93876E0DAAD"
-> +
-> +#define CASPER_READ 0xfa00
-> +#define CASPER_WRITE 0xfb00
-> +#define CASPER_GET_HARDWAREINFO 0x0200
-> +#define CASPER_SET_LED 0x0100
-> +#define CASPER_POWERPLAN 0x0300
-> +
-> +#define CASPER_KEYBOARD_LED_1 0x03
-> +#define CASPER_KEYBOARD_LED_2 0x04
-> +#define CASPER_KEYBOARD_LED_3 0x05
-> +#define CASPER_ALL_KEYBOARD_LEDS 0x06
-> +#define CASPER_CORNER_LEDS 0x07
-> +
-> +#define CASPER_LED_ID    0xF00000000
-> +#define CASPER_LED_MODE  0x0F0000000
-> +#define CASPER_LED_ALPHA 0x00F000000
+I was referring to whatever ACPI spec calls "AC Adapter" but I guess
+I should have used the word "charger" instead... Will reword this.
 
-GENMASK()
+>> [...]
+> 
+>> +	case POWER_SUPPLY_PROP_PRESENT:
+>> +		val->intval = 1;
+> 
+> You have an unused ASPIRE_EC_FG_FLAG_PRESENT, that looks like it
+> should be used here?
+> 
 
-> +
-> +struct casper_wmi_args {
-> +=09u16 a0, a1;
-> +=09u32 a2, a3, a4, a5, a6, a7, a8;
-> +};
-> +
-> +static u32 casper_last_color;
-> +static u8 casper_last_led;
-> +
-> +static int casper_set(struct wmi_device *wdev, u16 a1, u8 led_id,
-> +=09=09=09      u32 data)
-> +{
-> +=09struct casper_wmi_args wmi_args =3D {
-> +=09=09.a0 =3D CASPER_WRITE,
-> +=09=09.a1 =3D a1,
-> +=09=09.a2 =3D led_id,
-> +=09=09.a3 =3D data
-> +=09};
-> +=09struct acpi_buffer input =3D {
-> +=09=09(acpi_size) sizeof(struct casper_wmi_args),
-> +=09=09&wmi_args
-> +=09};
-> +=09if (ACPI_FAILURE(wmidev_block_set(wdev, 0, &input)))
+Oh, you're right! I think I initially didn't have this property and
+added it like this as a reaction to that upower change that made it
+consider everything not explicitly present as absent.
 
-=09int status;
+I've just checked what is reported after unplugging the battery and
+seems like the flag (as well as everything else) is gone. Will change
+the driver to read the flag.
 
-=09status =3D wmidev_block_set(wdev, 0, &input);
-=09if (ACPI_FAILURE(status))
+Thanks for your review!
+Nikita
 
-> +=09=09return -EINVAL;
-> +=09return 0;
-> +}
-> +
-> +static ssize_t led_control_show(struct device *dev, struct device_attrib=
-ute
-> +=09=09=09=09*attr, char *buf)
-> +{
-> +=09return sysfs_emit("%u%08x\n", buf, casper_last_led,
-> +=09=09       casper_last_color);
-
-I think I mentioned you should put this to one line, why you didn't follow =
-it?
-
-> +}
-> +
-> +/*
-> + * Format wanted from user is a hexadecimal 36-bit integer: most signifi=
-cant
-> + * 4 bits are led_id, next 4 bits are mode and next 4 bits are brightnes=
-s,
-> + * next 24 bits are rgb value. 64 bits
-> + * IMARRGGBB
-> + */
-> +static ssize_t led_control_store(struct device *dev, struct device_attri=
-bute
-> +=09=09=09=09 *attr, const char *buf, size_t count)
-
-Don't split argumetns like this but only at commas.
-
-> +{
-> +=09if (strlen(buf) !=3D 10)
-> +=09=09return -EINVAL;
-> +=09u64 user_input;
-
-Wrong place for declaration.
-
-> +=09/*
-> +=09 * 16-base selected for ease of writing color codes. I chose 64 bit a=
-nd
-> +=09 * kstrtou64 because format I use determined fits into 64 bit.
-> +=09 */
-> +=09int ret =3D kstrtou64(buf, 16, &user_input);
-
-Don't declare varibles in the middle of nowhere even if that is nowadays=20
-not prevented by the compiler UNLESS you're using the cleanup.h which is=20
-the reason why that is allowed at all.
-
-> +=09if (ret)
-> +=09=09return ret;
-> +=09/*
-> +=09 * led_id can't exceed 255 but it can vary among newer versions and
-> +=09 * other models.
-> +=09 */
-> +=09u8 led_id =3D FIELD_GET(CASPER_LED_ID, user_input);
-
-Add #include <linux/bitfield.h>
-
-> +=09ret =3D casper_set(to_wmi_device(dev->parent), CASPER_SET_LED,
-> +=09=09=09led_id, (u32) user_input);
-> +=09if (ret)
-> +=09=09return ret;
-> +=09if (led_id !=3D CASPER_CORNER_LEDS) {
-> +=09=09casper_last_color =3D (u32) user_input;
-> +=09=09casper_last_led =3D led_id;
-> +=09}
-> +=09return count;
-> +}
-
-So codingstylewise you should do this:
-
-static ssize_t led_control_store(struct device *dev, struct device_attribut=
-e *attr,
-=09=09=09=09 const char *buf, size_t count)
-{
-=09struct wdev =3D to_wmi_device(dev->parent);
-=09u64 user_input;
-=09u8 led_id;
-
-=09ret =3D kstrtou64(buf, 16, &user_input);
-=09if (ret)
-=09=09return ret;
-
-=09led_id =3D FIELD_GET(CASPER_LED_ID, user_input);
-=09ret =3D casper_set(wdev, CASPER_SET_LED, led_id, (u32)user_input);
-=09if (ret)
-=09=09return ret;
-
-=09if (led_id ...) {
-=09=09...
-=09}
-
-=09return 0;
-}
-
-However, I still suspect this is wrong way to do RGB leds and the multi_*=
-=20
-sysfs interface is the way you should use.
-
-> +
-> +static DEVICE_ATTR_RW(led_control);
-> +
-> +static struct attribute *casper_kbd_led_attrs[] =3D {
-> +=09&dev_attr_led_control.attr,
-> +=09NULL,
-> +};
-> +
-> +ATTRIBUTE_GROUPS(casper_kbd_led);
-> +
-> +static void set_casper_backlight_brightness(struct led_classdev *led_cde=
-v,
-> +=09=09=09=09=09    enum led_brightness brightness)
-> +{
-> +=09// Setting any of the keyboard leds' brightness sets brightness of al=
-l
-> +=09u32 bright_prep =3D FIELD_PREP(CASPER_LED_ALPHA, brightness);
-> +=09u32 color_no_alpha =3D casper_last_color&~CASPER_LED_ALPHA;
-
-Missing spaces.
-
-> +
-> +=09casper_set(to_wmi_device(led_cdev->dev->parent), CASPER_SET_LED,
-
-Create the wdev local var to avoid need to call to_wmi_device() on this=20
-line like I told you already!
-
-> +=09=09       CASPER_KEYBOARD_LED_1, color_no_alpha | bright_prep
-> +=09);
-> +}
-> +
-> +static enum led_brightness get_casper_backlight_brightness(struct led_cl=
-assdev
-> +=09=09=09=09=09=09=09   *led_cdev)
-> +{
-> +=09return FIELD_GET(CASPER_LED_ALPHA, casper_last_color);
-> +}
-> +
-> +static struct led_classdev casper_kbd_led =3D {
-> +=09.name =3D "casper::kbd_backlight",
-> +=09.brightness =3D 0,
-> +=09.brightness_set =3D set_casper_backlight_brightness,
-> +=09.brightness_get =3D get_casper_backlight_brightness,
-> +=09.max_brightness =3D 2,
-> +=09.groups =3D casper_kbd_led_groups,
-> +};
-> +
-> +static int casper_query(struct wmi_device *wdev, u16 a1,
-> +=09=09=09=09struct casper_wmi_args *out)
-> +{
-> +=09struct casper_wmi_args wmi_args =3D {
-> +=09=09.a0 =3D CASPER_READ,
-> +=09=09.a1 =3D a1
-> +=09};
-> +=09struct acpi_buffer input =3D {
-> +=09=09(acpi_size) sizeof(struct casper_wmi_args),
-> +=09=09&wmi_args
-> +=09};
-> +
-> +=09acpi_status ret =3D wmidev_block_set(wdev, 0, &input);
-
-Put the declaration separately into the declarations block:
-
-=09acpi_status ret;
-
-=09ret =3D wmidev_block_set(wdev, 0, &input);
-
-> +=09if (ACPI_FAILURE(ret))
-> +=09=09return -EIO;
-> +
-> +=09union acpi_object *obj =3D wmidev_block_query(wdev, 0);
-> +=09if (obj->type !=3D ACPI_TYPE_BUFFER) // obj will be int (0x10) on fai=
-lure
-> +=09=09return -EINVAL;
-> +=09if (obj->buffer.length !=3D 32)
-> +=09=09return -EIO;
-> +
-> +=09memcpy(out, obj->buffer.pointer, sizeof(struct casper_wmi_args));
-> +=09kfree(obj);
-> +=09return ret;
-> +}
-> +
-> +static umode_t casper_wmi_hwmon_is_visible(const void *drvdata,
-> +=09=09=09=09=09   enum hwmon_sensor_types type,
-> +=09=09=09=09=09   u32 attr, int channel)
-> +{
-> +=09switch (type) {
-> +=09case hwmon_fan:
-> +=09=09return 0444;
-> +=09case hwmon_pwm:
-> +=09=09return 0644;
-> +=09default:
-> +=09=09return 0;
-> +=09}
-> +=09return 0;
-> +}
-> +
-> +static int casper_wmi_hwmon_read(struct device *dev,
-> +=09=09=09=09 enum hwmon_sensor_types type, u32 attr,
-> +=09=09=09=09 int channel, long *val)
-> +{
-> +=09struct casper_wmi_args out =3D { 0 };
-> +=09struct wmi_device *wdev =3D to_wmi_device(dev->parent);
-> +=09int ret;
-> +
-> +=09switch (type) {
-> +=09case hwmon_fan:
-> +=09=09ret =3D casper_query(wdev, CASPER_GET_HARDWAREINFO, &out);
-> +=09=09/*
-> +=09=09 * a4 and a5 is little endian in older laptops (with 10th gen
-> +=09=09 * cpus or older) and big endian in newer ones. I don't think
-> +=09=09 * dmi has something for cpu information. Also, defining a
-> +=09=09 * dmi_list just for this seems like an overkill. This problem
-> +=09=09 * can be solved in userspace too.
-> +=09=09 */
-> +=09=09if (channel =3D=3D 0) // CPU fan
-> +=09=09=09*val =3D out.a4;
-> +=09=09else if (channel =3D=3D 1) // GPU fan
-
-Instead of comments like this, use defines so you can say:
-=09=09if (channel =3D=3D CASPER_FAN_CPU)
-=09=09=09...
-=09=09if (channel =3D=3D CASPER_FAN_GPU)
-
-> +=09=09=09*val =3D out.a5;
-> +=09=09return 0;
-> +=09case hwmon_pwm:
-> +=09=09ret =3D casper_query(wdev, CASPER_POWERPLAN, &out);
-> +=09=09if (ret) // power plan count varies generations.
-
-I fail to see how the comment relates to if (ret) at all because that=20
-looks like error handling!
-
-> +=09=09=09return ret;
-> +=09=09if (channel =3D=3D 0)
-> +=09=09=09*val =3D out.a2;
-> +=09=09return 0;
-> +=09default:
-> +=09=09return -ENODEV;
-> +=09}
-> +}
-> +
-> +static int casper_wmi_hwmon_read_string(struct device *dev,
-> +=09=09=09=09=09enum hwmon_sensor_types type, u32 attr,
-> +=09=09=09=09=09int channel, const char **str)
-> +{
-> +=09switch (type) {
-> +=09case hwmon_fan:
-> +=09=09switch (channel) {
-> +=09=09case 0:
-> +=09=09=09*str =3D "cpu_fan_speed";
-> +=09=09=09break;
-> +=09=09case 1:
-
-You can use those defines here too I think.
-
-> +=09=09=09*str =3D "gpu_fan_speed";
-> +=09=09=09break;
-> +=09=09default:
-> +=09=09=09return -ENODEV;
-> +=09=09}
-> +=09=09break;
-> +=09default:
-> +=09=09return -ENODEV;
-> +=09}
-
-Do you expect other types? If not, this would be easier to follow:
-
-
-=09if (type !=3D hwmon_fan)
-=09=09return -ENODEV;
-
-=09switch (channel) {
-=09=09...
-
-> +=09return 0;
-> +}
-> +
-> +static int casper_wmi_hwmon_write(struct device *dev,
-> +=09=09=09=09  enum hwmon_sensor_types type, u32 attr,
-> +=09=09=09=09  int channel, long val)
-> +{
-> +=09acpi_status ret;
-> +
-> +=09switch (type) {
-> +=09case hwmon_pwm:
-> +=09=09if (val > 5 || val < 0)
-
-There's in_range() which can be used.
-
-> +=09=09=09return -EINVAL;
-> +=09=09ret =3D casper_set(to_wmi_device(dev->parent),
-> +=09=09=09=09 CASPER_POWERPLAN, val, 0);
-> +=09=09if (ret)
-> +=09=09=09return ret;
-> +=09=09return 0;
-> +=09default:
-> +=09=09return -EOPNOTSUPP;
-> +=09}
-
-Similar structural comment here with if + early return as in the above=20
-function.
-
-> +}
-> +
-> +static const struct hwmon_ops casper_wmi_hwmon_ops =3D {
-> +=09.is_visible =3D &casper_wmi_hwmon_is_visible,
-> +=09.read =3D &casper_wmi_hwmon_read,
-> +=09.read_string =3D &casper_wmi_hwmon_read_string,
-> +=09.write =3D &casper_wmi_hwmon_write
-> +};
-> +
-> +static const struct hwmon_channel_info *const casper_wmi_hwmon_info[] =
-=3D {
-> +=09HWMON_CHANNEL_INFO(fan,
-> +=09=09=09   HWMON_F_INPUT | HWMON_F_LABEL,
-> +=09=09=09   HWMON_F_INPUT | HWMON_F_LABEL),
-> +=09HWMON_CHANNEL_INFO(pwm, HWMON_PWM_MODE),
-> +=09NULL
-> +};
-> +
-> +static const struct hwmon_chip_info casper_wmi_hwmon_chip_info =3D {
-> +=09.ops =3D &casper_wmi_hwmon_ops,
-> +=09.info =3D casper_wmi_hwmon_info,
-> +};
-> +
-> +static int casper_wmi_probe(struct wmi_device *wdev, const void *context=
-)
-> +{
-> +=09struct device *hwmon_dev;
-> +
-> +=09if (ACPI_FAILURE(led_classdev_register(&wdev->dev, &casper_kbd_led)))
-> +=09=09return -ENODEV;
-> +=09hwmon_dev =3D devm_hwmon_device_register_with_info(&wdev->dev,
-> +=09=09=09=09=09=09"casper_wmi", wdev,
-> +=09=09=09=09=09=09&casper_wmi_hwmon_chip_info,
-> +=09=09=09=09=09=09NULL);
-> +=09return PTR_ERR_OR_ZERO(hwmon_dev);
-
-Don't you need to do rollback here for led_classdev_register() if=20
-devm_hwmon_device_register_with_info() fails?
-
-> +}
-> +
-> +static void casper_wmi_remove(struct wmi_device *wdev)
-> +{
-> +=09led_classdev_unregister(&casper_kbd_led);
-> +}
-> +
-> +static const struct wmi_device_id casper_wmi_id_table[] =3D {
-> +=09{ CASPER_WMI_GUID, NULL },
-> +=09{ }
-> +};
-> +
-> +static struct wmi_driver casper_wmi_driver =3D {
-> +=09.driver =3D {
-> +=09=09   .name =3D "casper-wmi",
-> +=09=09    },
-> +=09.id_table =3D casper_wmi_id_table,
-> +=09.probe =3D casper_wmi_probe,
-> +=09.remove =3D &casper_wmi_remove,
-> +};
-> +
-> +module_wmi_driver(casper_wmi_driver);
-> +MODULE_DEVICE_TABLE(wmi, casper_wmi_id_table);
-> +
-> +MODULE_AUTHOR("Mustafa Ek=BAi <mustafa.eskieksi@gmail.com>");
-> +MODULE_DESCRIPTION("Casper Excalibur Laptop WMI driver");
-> +MODULE_LICENSE("GPL");
->=20
-
---=20
- i.
---8323328-1887983801-1708682173=:1148--
+>> [...]
+> 
+> Otherwise the power-supply bits LGTM.
+> 
+> -- Sebastian
