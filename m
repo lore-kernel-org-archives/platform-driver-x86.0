@@ -1,95 +1,100 @@
-Received: from box.trvn.ru (unknown [194.87.146.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827214A3D;
-	Fri, 23 Feb 2024 15:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.87.146.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE88883CC4;
+	Fri, 23 Feb 2024 16:29:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708702484; cv=none; b=tmTTw2da6IM0n0IcsmagIAG0cK7BR6h+UTMMm7+qC0nGcpnxTCUxfHKLXbXbpdmWNzpTTE1P+krNBnL2bsAvQMdxLlAtsYNk9zGTYl6ynAuq0rnq/OqrPiXHFwZVk6s4D1R/lwgrjULEes5jl+RXXWw/RBqWbs9Z/WFK18kf+W4=
+	t=1708705762; cv=none; b=ID5L/xe6ZRFZ95op/CTbe11ZuORPiod5b86BNpsBIhkJLavmTmlGp6MDy295tTTSwoWyrDJedN8YF1JjwHmkF68hc7F6ConUtE9WatiQM6Y3tMSwS3nRB/jM5cUS75awKrpFbbAObT431qP1pnJnStxyhMaF1hHjQ+un54DB95Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708702484; c=relaxed/simple;
-	bh=0SNtXViAi/uuzITK6f3+yak148HxUT/1hggSYF8AK6Y=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=SmmfxeQ9jWjmDSuk33Sm9WTsdLK2WZB+pJ68pPZ3C9Ho1FR1XH1vohWb+b2nCy9r+CMcVX0IWgyrE9YDWiVkCWep7I2CfsOFjgp9Ar+LyT71F2kx1SZwvkCNL4cl3HPQ7NyzILZkS8W/enWDIiyr12y+o2wozFeHOVkELBsU0pU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=qq6TzNBG; arc=none smtp.client-ip=194.87.146.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
+	s=arc-20240116; t=1708705762; c=relaxed/simple;
+	bh=uQcQYf3+Y04XG3bF/6l4sxBLO3EUjwoVOCfO6HW/wv4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LI3P+UtYzq8oi6Hlu1a88W30fwm9GI5omm7xLrbCHWYQ7JIXYkxFofliqtWLu22roxbhSu5ELOWkojVHRwEoApp4yLHwuJnSvwPDV8mMbNptCgWXtXSxxtrzcCULCyfmpNgtE5QSgrkAmQpm1zNJuj3+DY2lQcrqJEUU8zNFf9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=XJIKuRy6; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="qq6TzNBG"
-Received: from authenticated-user (box.trvn.ru [194.87.146.52])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	by box.trvn.ru (Postfix) with ESMTPSA id 9694A40164;
-	Fri, 23 Feb 2024 20:34:30 +0500 (+05)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-	t=1708702471; bh=0SNtXViAi/uuzITK6f3+yak148HxUT/1hggSYF8AK6Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qq6TzNBGn05giGvmcRQt3AaAYb/F/pzsMBFrc0khdePz1ghzyF/iRXUEmoaELmULx
-	 kGf29xKC7wG0D4ZNvipJkyYDbp7hnSCsq/2MHRw8ko6B4+ndA0lGGw2ylRvH3tKsZt
-	 qdrTV6ECrpuN7f0V2xSsBgWoNyLUJQeJikTicP3lSiGIaIXp7QhUDaimK4uKjAE3eC
-	 rcSnmEdBRh0QskL1PWIAyqEcZXukZp378sMEb7T5RFPDvw+44WEGLPaWS4j66IfprM
-	 R5oBdwi2MET5cZCR+LtLhHxzrZxVDPWBeGtgereyi5DxsLAzQqEMUMP32E8hJP71Yd
-	 CaU1bnWbVbJkA==
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="XJIKuRy6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1708705749; x=1709310549; i=w_armin@gmx.de;
+	bh=uQcQYf3+Y04XG3bF/6l4sxBLO3EUjwoVOCfO6HW/wv4=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=XJIKuRy6nBe5Tfwo5DEPUnD5bAAo1w4Stmae3Bp9nJyNkhzLbc6Rsc1rqI5WTZ0o
+	 rwcMelUgDpYjcv74rLTKSVGyu4j6YFf3BajEFz/pv0bHVq4yT9ELVlRrNiRfn9HTr
+	 3Mel752n2ShUlrb3QKFm864D/V0+JAOWch8W5OfpMOL/igaYE+BYRAenG3r+/NFuR
+	 Pwp4PkfVvnX6lBKbT2288y2PSMmtO3XIC9FtuxPprLECbBEoRc6s3RT90No4GycZm
+	 rE1NVCwXqUBlQKHMsqj0jRNMlC3+TBZjcDldAS4181kw16Tetj8ffcxTcmP4FPCKb
+	 6fuC+3aezztTwWzpLw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MeU0k-1r5JWz0LHI-00aYCd; Fri, 23 Feb 2024 17:29:09 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: Dell.Client.Kernel@dell.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: dell-privacy: Remove usage of wmi_has_guid()
+Date: Fri, 23 Feb 2024 17:29:05 +0100
+Message-Id: <20240223162905.12416-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 23 Feb 2024 20:34:29 +0500
-From: Nikita Travkin <nikita@trvn.ru>
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org, Andy Gross
- <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio
- <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] power: supply: Add Acer Aspire 1 embedded
- controller driver
-In-Reply-To: <xelebhoitnwguhewahw26xopl5btjo5ezznjjaeb2zfyy2bpcr@7pmclezshwck>
-References: <20240220-aspire1-ec-v3-0-02cb139a4931@trvn.ru>
- <20240220-aspire1-ec-v3-2-02cb139a4931@trvn.ru>
- <qoidm5wujjbeoc2hlraky26wuwmuaxi2atyl6ehovhvffdbfeh@g5gunqdei45m>
- <7c429d2110dbac68d0c82c8fb8bfb742@trvn.ru>
- <xelebhoitnwguhewahw26xopl5btjo5ezznjjaeb2zfyy2bpcr@7pmclezshwck>
-Message-ID: <6e3fb1080c54cfc38dc3c3e79e32a53d@trvn.ru>
-X-Sender: nikita@trvn.ru
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:W31Q1xxw6jXnVTOqEdojWBofCqyiUiFBhm+rj0sZnzWrPUQrymx
+ z6EGkveFeYfUdywBR1Jxxuxc0oDDEIUC1+5jSbVVDproEW4cWekMY6zlvPpy2aFu+V7QySW
+ EE6v0voljDCnCIIGN17nJcaiRZemLjqLFXb2qUEAI/yQGswCWY9fzc35Dckmm2lOdC6GWag
+ KdsDOfX8FHGO+y3LEftCg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:pltGP1Gs7T8=;D5njLxhepIlSGQ8twTVRINaMKSy
+ Y5N/DAIk7XQn/hTSlV7XF7ij7qw/CngoQWWYM8gyuS4choLdt9OS/QzxUft6ZDRjGo8MDdVHS
+ hfUSC1LY2hrMhzsceoydZmZkjnV3+FGGftSuMkYOWxNUHm4qb/ZjlrPOM/J4RL1M+H7wY87ow
+ 71cSlPIib3egh7J2FcygEOug5YP9DpG9Qqtv4nRogKc7j0SLeGQSMitD90mli/o3SRw+gJJhe
+ UyTVya0uzatwqUx9JapWIjeTz9j/L7uE7h1e5k+Dc6DOIzjjmQBKPYc2h5Nz+q9J9u37J992n
+ +1dFPDEl/pTWOTdZDprnN3RjCKzZpyHYcdcC7JPn2wZYBSt+KACCLOuvMq+5ByNVTXoHYl44k
+ DzwI2wihGewRIo47HO60JTMm7I6FkpOQAzu3pq63BOukHj74smYgWXFOeNp+9vo86+GVW8OYx
+ wh+0pMIqTEgQUPApugutzh0CJEYejfL8ykYSTitmEFQ3BVXYrvysVEK8TrOnwEgqvZI4QUdyC
+ IV1QQ31FU0415iQhEfU13SuDuMAM4vcWk7tGS3zw//UtThtRqY8YqQTrsIDNx9OvWkByWiHnd
+ kUTEI4v8lqpEle59bdkZGlV0j+U8XCrtAwfoYiSjvW3GbF1NuW/Mo1WvVBZB6lf3e8Yx3AKAv
+ sXY8HB7ufu5YpRrAL0aZOo8KQ+aMJJ6QdcJXATKXh1EmLWeL+8Cv4N3hkopUk2hSyCHMXNFvS
+ W7/alJtESS6nuwysqJusW7BrpOxkiBZk3uWEbZziDRt1AchuTm6Ra1TVALxLmbJ4A5saPkl5B
+ s9ztEvzjFIQxz9jszQLV/tQzc0eMlfcTw9HXNJVTWouLU=
 
-Sebastian Reichel писал(а) 23.02.2024 20:04:
-> Hi,
-> 
-> On Fri, Feb 23, 2024 at 07:32:17PM +0500, Nikita Travkin wrote:
->> >> + This driver provides battery and AC status support for the mentioned
->> >
->> > I did not see any AC status bits?
->>
->> I was referring to whatever ACPI spec calls "AC Adapter" but I guess
->> I should have used the word "charger" instead... Will reword this.
-> 
-> But you only register a power-supply device for the battery and not
-> for the AC adapter/charger. When you write "and AC status support" I
-> would have expected something similar to this (that's from ACPI AC
-> adapter driver):
-> 
-> $ cat /sys/class/power_supply/AC/uevent
-> POWER_SUPPLY_NAME=AC
-> POWER_SUPPLY_TYPE=Mains
-> POWER_SUPPLY_ONLINE=1
-> 
+The WMI driver core already takes care that the WMI driver is
+only bound to WMI devices with a matching GUID.
 
-Ah, I see... Yeah looking at it one more time, I mistakenly assumed the
-acpi ac code uses the same data fields as the battery but seems like it
-reads the single online flag from a different place. I don't think there
-is really a point on implementing that field since we can still easily
-track the battery charging/discharging status so I will probably omit it
-for now. Will reword the help text to not mention charger/ac adapter.
+Remove the unnecessary call to wmi_has_guid(), which will always
+be true when the driver probes.
 
-Thanks for clarifying!
-Nikita
+Tested on a Dell Inspiron 3505.
 
-> -- Sebastian
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/dell/dell-wmi-privacy.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/drivers/platform/x86/dell/dell-wmi-privacy.c b/drivers/platfo=
+rm/x86/dell/dell-wmi-privacy.c
+index 4d94603f7785..4b65e1655d42 100644
+=2D-- a/drivers/platform/x86/dell/dell-wmi-privacy.c
++++ b/drivers/platform/x86/dell/dell-wmi-privacy.c
+@@ -297,10 +297,6 @@ static int dell_privacy_wmi_probe(struct wmi_device *=
+wdev, const void *context)
+ 	struct key_entry *keymap;
+ 	int ret, i, j;
+
+-	ret =3D wmi_has_guid(DELL_PRIVACY_GUID);
+-	if (!ret)
+-		pr_debug("Unable to detect available Dell privacy devices!\n");
+-
+ 	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+ 		return -ENOMEM;
+=2D-
+2.39.2
+
