@@ -1,74 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5FD817;
-	Mon, 26 Feb 2024 06:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9261BF3B;
+	Mon, 26 Feb 2024 06:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708929585; cv=none; b=BMeKeSazzT7mEfQszzRva8THtQCuv9HQWVFcc67WWNQ1E6PH2bYSdqBJXVqx7kBksO1SESb82bVeKK63G37yddPVsqLTotAFPXmUNzEsfmayuRUWq/zMsnOGczzHma/AYW4h02qRW10pN3vvZwSBX1OjUb327Uw0A1KuzmuiC9M=
+	t=1708929695; cv=none; b=HPU1tgyQ8der4qNE7tiU5HpV1MRq5sYGB3v7y5Dju3i+l7jPx2dALoAoX8jyVbF1JNPlMROy6rybtVzMRmthvwvd4OnuvPZPTulNr5MdYMv1gWkGGBBmfb5g1ad6emjDWNQD1kTuBlCLIH7OilxFwhULfjYmbFqoY7upDchKaMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708929585; c=relaxed/simple;
-	bh=FsxT/r8VNKmPa+ah0mYBvQGeTSYBzgrBfiuchLPbY68=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EYZRxqkhD+07/ixE/vreBT1YMvnvWgXBSED40DDwsGkg6zl674fEENgL/86TIKh6vqg0/eMecsfEX8Zz8nFmrVD8zfX5pi5zls10kpuBj63lIFo84Xj8Hv94QmMkmyy9uSbzVwZi+17f8dWVfDCQsJlrj1KjvoN0acF/QrENnnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GZYIdcs+; arc=none smtp.client-ip=198.175.65.13
+	s=arc-20240116; t=1708929695; c=relaxed/simple;
+	bh=j40oYN2bGZFA2D+CuG1URy2KNXuvkXaM/JtfuChA0YM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CD2jCAtYwr2mu0Nf2azxjEtxETc/CGzvn0ArXNCnGr/EyBPcu5I0bwmwnfZcqpOxrBGRsOGvEBZWYhumGAXqXNY7v2ovuy7hh4ASLNtpJd2iSed9wJY3kYc83JaYKjcVlKd4v7P6yM3Zf4Xt9qQaHDkrTKKBjDfqkiP5EczxbA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HqthvdpD; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GZYIdcs+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HqthvdpD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708929584; x=1740465584;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FsxT/r8VNKmPa+ah0mYBvQGeTSYBzgrBfiuchLPbY68=;
-  b=GZYIdcs+sziuY8JCO8Ri/Iuve+jLeEaCCkC/eqhDk7JPD0lVaxX2/SiN
-   noWBNYo7q8X7kWLE+2dpBmkPnc9/ejOBUxArE4C2hCZ37NdqFy/ginmlb
-   9XokjoXZRDwF14KKwyOvnIeXNus09Rb6kLGe7ekYMZF2KHJh9JIX9ogOC
-   +NiN73Mkjk/ay4OhbqoWTc3BFni0jZ4UooQT8kgzwgIxA8cR9sccMHYP+
-   wL0k0TidY0OnZh1Qbew891Mn2MZUHOvTnsaF0xQhaEo8DHzfFn+On6Q5M
-   7mg/xIV97TiqBUw2GUuXopMTiO3qV1DpxrTPvK95l1qYfSMOB+Kxs3RIc
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="14327797"
+  t=1708929694; x=1740465694;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=j40oYN2bGZFA2D+CuG1URy2KNXuvkXaM/JtfuChA0YM=;
+  b=HqthvdpD4/TEDSj1jSb2OyRHAg/shpBQHjd9ujOzcYVXUbuqM5Bbewd0
+   VWwALX5HQeaOQW07a1GFqkoqkrOBQrxDx4Ep6A+XTc0mx3N1mm+1cmzId
+   XcjQWysOb5yZD5DFJvNv1qzKosYyVP4nsJL7z/kXGWqVorJrh1bXS7q2B
+   9s7sGL9TMx/WnD2yM2nbwsT5My3VLfAaT+D5LEDKGjO1xWIL/DMnDGGI3
+   daHCeciOYq1fxJfpzV2MC6G8atiyyqpQKBbV2S4qp9ci6aW30GGH7N7EP
+   jjSwIqPlCbWuTknrNijIHOy/V0sZ9y6OgtgINegOBiicHbTPgOIk9bBbT
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="14631258"
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="14327797"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2024 22:39:43 -0800
+   d="scan'208";a="14631258"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2024 22:41:33 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="937029328"
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="937029328"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Feb 2024 22:39:41 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 160181E5; Mon, 26 Feb 2024 08:39:40 +0200 (EET)
-Date: Mon, 26 Feb 2024 08:39:39 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: Shyam-sundar.S-k@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-	hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] platform/x86: intel_scu_ipcutil: Make scu static
-Message-ID: <20240226063939.GV8454@black.fi.intel.com>
-References: <20240223163901.13504-1-W_Armin@gmx.de>
- <20240223163901.13504-3-W_Armin@gmx.de>
+   d="scan'208";a="6916072"
+Received: from gcsargen-mobl1.amr.corp.intel.com (HELO [10.255.228.214]) ([10.255.228.214])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2024 22:41:34 -0800
+Message-ID: <d152f185-d34f-4a06-be85-9bffd10175fc@linux.intel.com>
+Date: Sun, 25 Feb 2024 22:41:33 -0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240223163901.13504-3-W_Armin@gmx.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] platform/x86/amd/pmf: Add missing __iomem
+ attribute to policy_base
+Content-Language: en-US
+To: Armin Wolf <W_Armin@gmx.de>, Shyam-sundar.S-k@amd.com,
+ mika.westerberg@linux.intel.com
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240223163901.13504-1-W_Armin@gmx.de>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240223163901.13504-1-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 23, 2024 at 05:39:01PM +0100, Armin Wolf wrote:
-> The variable is only used internally and has no external users,
-> so it should me made static.
-> 
+
+On 2/23/24 8:38 AM, Armin Wolf wrote:
+> The value of policy_base is the return value of a devm_ioremap call,
+> which returns a __iomem pointer instead of an regular pointer.
+> Add the missing __iomem attribute.
+>
 > Compile-tested only.
-> 
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>
 > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+Looks good to me.
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>  drivers/platform/x86/amd/pmf/pmf.h    | 2 +-
+>  drivers/platform/x86/amd/pmf/tee-if.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+> index 16999c5b334f..bcf777a5659a 100644
+> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> @@ -229,7 +229,7 @@ struct amd_pmf_dev {
+>  	struct delayed_work pb_work;
+>  	struct pmf_action_table *prev_data;
+>  	u64 policy_addr;
+> -	void *policy_base;
+> +	void __iomem *policy_base;
+>  	bool smart_pc_enabled;
+>  };
+>
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> index f8c0177afb0d..16973bebf55f 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -346,7 +346,7 @@ static int amd_pmf_get_bios_buffer(struct amd_pmf_dev *dev)
+>  	if (!dev->policy_base)
+>  		return -ENOMEM;
+>
+> -	memcpy(dev->policy_buf, dev->policy_base, dev->policy_sz);
+> +	memcpy_fromio(dev->policy_buf, dev->policy_base, dev->policy_sz);
+>
+>  	amd_pmf_hex_dump_pb(dev);
+>  	if (pb_side_load)
+> --
+> 2.39.2
+>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
