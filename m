@@ -1,224 +1,355 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 681F71F608
-	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Feb 2024 10:59:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218A71DA20;
+	Mon, 26 Feb 2024 11:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708945155; cv=none; b=gTBizuADZK6Eb3SuoVulDza+vijFruz0Ixzy6UJp3NkRZWVf4AFOPG3Ag6W9fl6iQqjPZemRgeSpoCATx35iCFU9GJn1hnYGqgBNHaAALfLo4zeEJ9YTLhbb4OMWFM+6o4ttTflBPTUp4bxhEEIK9bxLEPqm1m0gg8pfHdg3lA4=
+	t=1708946606; cv=none; b=MInOu+FPcI2aJGOsLjm1BL4NH7EtQSAFnSnWlwdFAMn36pXgmVmNIeHg8Yz+nxLFSlNEdOQVORwtYC3F1+tgS9Lv6HNHb34tS/K7AIzsjf1GhTkQSFI3VO+Afz3S83sqLis/L8n7IeKPDWSPMzxqvRIaZ9nhfpGqhLglMWha5ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708945155; c=relaxed/simple;
-	bh=Hm4zAdQ4GDiOUyZuyai9dxp0y9ODMI0oisWl9PvStsE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lntMXxi7luwpZGkPVUGbaJq/jReSUJK477u2Txzayyzzk5QKS+CGvxP+wqhS2IG/2bvKgfEzHib50d1E4I4MtTCNcUM1dKrF1642Fck0DbkVfAazP42YG9/aPK4yKpTr82UnaaQa4UDtaUr16Us+7EwfYnYRYhJC4HNobuolWV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UyUmWxsZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708946606; c=relaxed/simple;
+	bh=VbHMUnRINqd49h2Fy+oMVyxg3A+Pf6nKzEoB6ETOEy8=;
+	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=ttAS/TBty864P4ARG8Gn7HN6FnVTqdJyNzxiTQeZziA0Q+TQBP922y2EAVj+p71RPhFPG5//fTETqMS10MRIFAnHl+KOmfdXhRg4chZAKl5tFhJO6jEhaPuz1UzgnC4UnJk5yHn91ryTFH00OdySw03xXvyRjDBYAj9c3ugNIx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=tEu3pCul; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UyUmWxsZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708945151;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yLwmtbKMH5gchD1DVzVsDxkSCGg6eb5ZnmDAF0IJ7vw=;
-	b=UyUmWxsZ1Lax64Fv55OsvJWuDeFyIxZ9Jvv8lxzMaTQPiuGqKY2MYPfDvUcvGQuLpsyqxC
-	vEyenTIyQ0eoXIsp0MB81N3jD67qsKI05AdYWk7wXpVLoWdSu5iC82gGLVlX0n27PbtPvN
-	Y9eMH/oeXUKrUeMnxxtjwkAL52ualXs=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-589-CFychVWJNeqNtNpf26bKDQ-1; Mon, 26 Feb 2024 05:59:10 -0500
-X-MC-Unique: CFychVWJNeqNtNpf26bKDQ-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a3fa99aa548so155137266b.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Feb 2024 02:59:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708945149; x=1709549949;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yLwmtbKMH5gchD1DVzVsDxkSCGg6eb5ZnmDAF0IJ7vw=;
-        b=Ahc97AhGelKTx+Fho22I1KFNE9Lr2fDKJOSL4T5F+xtrRZS4FV2zOj3MY2dhHFfnZL
-         cTq+xkLPxJ9QUrQ6tTpjIWqOFXwtrob29nfMo1BKiiEdkd1WpGWJAt3+fIhjc465hp8m
-         bS4SBdk+mZAEZwFrxJe3ifiAZ77/2EhXaxR+1a+lotw01urVp7kfJLl/GxoJWEV2/QO9
-         WNgzI2YjY2pAqEIOsZ+JBCbSvu7gW77gjaMWtIpkCtCaD62A5n/GuJFDG6bjpTuK+PJM
-         aLUWKPy0jJZTr5g9n8zIw9LdbE5DbwISOP6iLi0abicfqASOS+MKpfXuLQ3UmxJRhTZS
-         UzsA==
-X-Forwarded-Encrypted: i=1; AJvYcCWGecTUiLgA6mrbeBIzZzKF8AEzBTJRPsk2Srw1pHPqaoDybcbSvYMK9qkxtrfdS4nvf9AM2dOX0elsFXrsOSEnlDrBYPdbuZHI2PmhWP2/TcsvZQ==
-X-Gm-Message-State: AOJu0Yytz2RXf3kqOcDAKPQUuaUEtpAmzyUwSNkEPHD+Sgv+kHNsNOq9
-	ucE5hEHOO2cw5RTr+8X1CDEXl6QD9+XzxJ7BSahySiOScLkiu74jeroTlWZEhpQYyzIpUa3RyHC
-	4fjkJK2XFXVj8SKqKgbATZGect4xbWGhKiCEvCq0Y9eIqWWJXAetK/Bwxf3P29DHYamh6cyA=
-X-Received: by 2002:a17:906:3397:b0:a3f:d797:e6e2 with SMTP id v23-20020a170906339700b00a3fd797e6e2mr4111291eja.28.1708945149014;
-        Mon, 26 Feb 2024 02:59:09 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGbVwLt4Av7nV0P9ftMnJykmqz01tHlbTHcunaAafulySeFvYABGEE8KC9dLJAXOuFSaKVfLQ==
-X-Received: by 2002:a17:906:3397:b0:a3f:d797:e6e2 with SMTP id v23-20020a170906339700b00a3fd797e6e2mr4111285eja.28.1708945148658;
-        Mon, 26 Feb 2024 02:59:08 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id wb5-20020a170907d50500b00a3e48782f08sm2322285ejc.27.2024.02.26.02.59.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 02:59:08 -0800 (PST)
-Message-ID: <edec3bee-8604-49a9-8e2f-6c21e852ef6c@redhat.com>
-Date: Mon, 26 Feb 2024 11:59:07 +0100
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="tEu3pCul"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708946600; h=Message-ID:Subject:Date:From:To;
+	bh=zVt/9g3Z86Qm2TQExnCYlvSUSDo5URogUSA9lArrC1g=;
+	b=tEu3pCulDLpq/TjbpIbUqx1OJZEnAOZ9RlBqI7bepshqI17a9mLC9HpqRhFHsqy+UvrEgsIbnLEJ8jlsGAAsdDK3wWXvGWzOskVE54h+2Am+wl9bsHR5ncRNtkQeHZRDC/Xu5WmbkQJhK0cpOiH2XImvJG6Srm1hZ4Kefvit1xY=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=35;SR=0;TI=SMTPD_---0W1H3Wyg_1708946597;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W1H3Wyg_1708946597)
+          by smtp.aliyun-inc.com;
+          Mon, 26 Feb 2024 19:23:18 +0800
+Message-ID: <1708946440.799724-1-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH vhost v2 19/19] virtio_net: sq support premapped mode
+Date: Mon, 26 Feb 2024 19:20:40 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: virtualization@lists.linux.dev,
+ Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Jason Wang <jasowang@redhat.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Vadim Pasternak <vadimp@nvidia.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Cornelia Huck <cohuck@redhat.com>,
+ Halil Pasic <pasic@linux.ibm.com>,
+ Eric Farman <farman@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ linux-um@lists.infradead.org,
+ netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org,
+ linux-s390@vger.kernel.org,
+ kvm@vger.kernel.org,
+ bpf@vger.kernel.org, "Christoph Hellwig" <hch@lst.de>
+References: <20240223082726.52915-1-xuanzhuo@linux.alibaba.com>
+ <20240223082726.52915-20-xuanzhuo@linux.alibaba.com>
+ <20240225032330-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20240225032330-mutt-send-email-mst@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] power: supply: Add Acer Aspire 1 embedded
- controller driver
-Content-Language: en-US
-To: Nikita Travkin <nikita@trvn.ru>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org,
- Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20240220-aspire1-ec-v3-0-02cb139a4931@trvn.ru>
- <20240220-aspire1-ec-v3-2-02cb139a4931@trvn.ru>
- <qoidm5wujjbeoc2hlraky26wuwmuaxi2atyl6ehovhvffdbfeh@g5gunqdei45m>
- <7c429d2110dbac68d0c82c8fb8bfb742@trvn.ru>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <7c429d2110dbac68d0c82c8fb8bfb742@trvn.ru>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Hi,
+On Sun, 25 Feb 2024 03:38:48 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> On Fri, Feb 23, 2024 at 04:27:26PM +0800, Xuan Zhuo wrote:
+> > If the xsk is enabling, the xsk tx will share the send queue.
+> > But the xsk requires that the send queue use the premapped mode.
+> > So the send queue must support premapped mode.
+> >
+> > cmd:
+> >     sh samples/pktgen/pktgen_sample01_simple.sh -i eth0 \
+> >         -s 16 -d 10.0.0.128 -m 00:16:3e:2c:c8:2e -n 0 -p 100
+> > CPU:
+> >     Intel(R) Xeon(R) Platinum 8369B CPU @ 2.70GHz
+> >
+> > Machine:
+> >     ecs.g7.2xlarge(Aliyun)
+> >
+> > before:              1600010.00
+> > after(no-premapped): 1599966.00
+> > after(premapped):    1600014.00
+> >
+> > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > ---
+> >  drivers/net/virtio_net.c | 136 +++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 132 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> > index 7715bb7032ec..b83ef6afc4fb 100644
+> > --- a/drivers/net/virtio_net.c
+> > +++ b/drivers/net/virtio_net.c
+> > @@ -146,6 +146,25 @@ struct virtnet_rq_dma {
+> >  	u16 need_sync;
+> >  };
+> >
+> > +struct virtnet_sq_dma {
+> > +	union {
+> > +		struct virtnet_sq_dma *next;
+> > +		void *data;
+> > +	};
+> > +
+> > +	u32 num;
+> > +
+> > +	dma_addr_t addr[MAX_SKB_FRAGS + 2];
+> > +	u32 len[MAX_SKB_FRAGS + 2];
+> > +};
+> > +
+> > +struct virtnet_sq_dma_head {
+> > +	/* record for kfree */
+> > +	void *p;
+> > +
+> > +	struct virtnet_sq_dma *free;
+> > +};
+> > +
+> >  /* Internal representation of a send virtqueue */
+> >  struct send_queue {
+> >  	/* Virtqueue associated with this send _queue */
+> > @@ -165,6 +184,8 @@ struct send_queue {
+> >
+> >  	/* Record whether sq is in reset state. */
+> >  	bool reset;
+> > +
+> > +	struct virtnet_sq_dma_head dmainfo;
+> >  };
+> >
+> >  /* Internal representation of a receive virtqueue */
+> > @@ -368,6 +389,95 @@ static struct xdp_frame *ptr_to_xdp(void *ptr)
+> >  	return (struct xdp_frame *)((unsigned long)ptr & ~VIRTIO_XDP_FLAG);
+> >  }
+> >
+> > +static struct virtnet_sq_dma *virtnet_sq_unmap(struct send_queue *sq, void **data)
+> > +{
+> > +	struct virtnet_sq_dma *d;
+> > +	int i;
+> > +
+> > +	d = *data;
+> > +	*data = d->data;
+> > +
+> > +	for (i = 0; i < d->num; ++i)
+> > +		virtqueue_dma_unmap_page_attrs(sq->vq, d->addr[i], d->len[i],
+> > +					       DMA_TO_DEVICE, 0);
+> > +
+> > +	d->next = sq->dmainfo.free;
+> > +	sq->dmainfo.free = d;
+> > +
+> > +	return d;
+> > +}
+> > +
+> > +static struct virtnet_sq_dma *virtnet_sq_map_sg(struct send_queue *sq,
+> > +						int nents, void *data)
+> > +{
+> > +	struct virtnet_sq_dma *d;
+> > +	struct scatterlist *sg;
+> > +	int i;
+> > +
+> > +	if (!sq->dmainfo.free)
+> > +		return NULL;
+> > +
+> > +	d = sq->dmainfo.free;
+> > +	sq->dmainfo.free = d->next;
+> > +
+> > +	for_each_sg(sq->sg, sg, nents, i) {
+> > +		if (virtqueue_dma_map_sg_attrs(sq->vq, sg, DMA_TO_DEVICE, 0))
+> > +			goto err;
+> > +
+> > +		d->addr[i] = sg->dma_address;
+> > +		d->len[i] = sg->length;
+> > +	}
+> > +
+> > +	d->data = data;
+> > +	d->num = i;
+> > +	return d;
+> > +
+> > +err:
+> > +	d->num = i;
+> > +	virtnet_sq_unmap(sq, (void **)&d);
+> > +	return NULL;
+> > +}
+>
+>
+> Do I see a reimplementation of linux/llist.h here?
+>
+>
+> > +
+> > +static int virtnet_add_outbuf(struct send_queue *sq, u32 num, void *data)
+> > +{
+> > +	int ret;
+> > +
+> > +	if (sq->vq->premapped) {
+> > +		data = virtnet_sq_map_sg(sq, num, data);
+> > +		if (!data)
+> > +			return -ENOMEM;
+> > +	}
+> > +
+> > +	ret = virtqueue_add_outbuf(sq->vq, sq->sg, num, data, GFP_ATOMIC);
+> > +	if (ret && sq->vq->premapped)
+> > +		virtnet_sq_unmap(sq, &data);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int virtnet_sq_init_dma_mate(struct send_queue *sq)
+>
+> Mate? The popular south african drink?
+>
+> > +{
+> > +	struct virtnet_sq_dma *d;
+> > +	int num, i;
+> > +
+> > +	num = virtqueue_get_vring_size(sq->vq);
+> > +
+> > +	sq->dmainfo.free = kcalloc(num, sizeof(*sq->dmainfo.free), GFP_KERNEL);
+> > +	if (!sq->dmainfo.free)
+> > +		return -ENOMEM;
+>
+>
+> This could be quite a bit of memory for a large queue.  And for a bunch
+> of common cases where unmap is a nop (e.g. iommu pt) this does nothing
+> useful at all.  And also, this does nothing useful if PLATFORM_ACCESS is off
+> which is super common.
+>
+> A while ago I proposed:
+> - extend DMA APIs so one can query whether unmap is a nop
 
-+Ilpo (fellow pdx86 maintainer)
+I think such code is ok:
 
-On 2/23/24 15:32, Nikita Travkin wrote:
-> Sebastian Reichel писал(а) 22.02.2024 04:41:
->> Hi,
->>
->> On Tue, Feb 20, 2024 at 04:57:13PM +0500, Nikita Travkin wrote:
->>> Acer Aspire 1 is a Snapdragon 7c based laptop. It uses an embedded
->>> controller to control the charging and battery management, as well as to
->>> perform a set of misc functions.
->>>
->>> Unfortunately, while all this functionality is implemented in ACPI, it's
->>> currently not possible to use ACPI to boot Linux on such Qualcomm
->>> devices. To allow Linux to still support the features provided by EC,
->>> this driver reimplments the relevant ACPI parts. This allows us to boot
->>> the laptop with Device Tree and retain all the features.
->>>
->>> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
->>> ---
->>>  drivers/power/supply/Kconfig           |  14 +
->>>  drivers/power/supply/Makefile          |   1 +
->>>  drivers/power/supply/acer-aspire1-ec.c | 453 +++++++++++++++++++++++++++++++++
->>
->> I think this belongs into drivers/platform, as it handles all bits of
->> the EC.
->>
-> 
-> Hm, I initially submitted it to power/supply following the c630 driver,
-> but I think you're right... Though I'm not sure where in platform/ I'd
-> put this driver... (+CC Hans)
-> 
-> Seems like most of the things live in platform/x86 but there is no i.e.
-> platform/arm64...
-> 
-> Hans, (as a maintainer for most things in platform/) what do you think
-> would be the best place to put this (and at least two more I'd expect)
-> driver in inside platform/? And can we handle it through the
-> platform-driver-x86 list?
+bool dma_is_direct(struct device *dev)
+{
+	if (!dma_map_direct(dev, ops))
+		return false;
 
-I guess that adding a drivers/platform/aarch64 map for this makes
-sense, with some comments in the Makefile and in the Kconfig
-help explaining that this is for PC/laptop style EC drivers,
-which combine multiple logical functions in one, only!
+	if (is_swiotlb_force_bounce(dev))
+		return false;
 
-Assuming that we are only going to use this for such EC drivers,
-using the platform-driver-x86 mailinglist for this makes sense
-since that is where are the people are with knowledge of e.g.
-userspace APIs for various typical EC functionalities.
+	return true;
+}
 
-It might even make sense to also use:
+@Christoph Hellwig
 
-git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git
-
-As git tree for this and send pull-reqs to Linus for this
-together with the other pdx86 for the same reasons.
-
-I would be open to that as long as this is strictly limited to
-EC (like) drivers.
-
-Ilpo, what do you think about this ?
-
-Regards,
-
-Hans
+Thanks.
 
 
-
-
-
-
-
-
-> 
->> [...]
->>
->>>  3 files changed, 468 insertions(+)
->>>
->>> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
->>> index 3e31375491d5..e91a3acecb41 100644
->>> --- a/drivers/power/supply/Kconfig
->>> +++ b/drivers/power/supply/Kconfig
->>> @@ -985,4 +985,18 @@ config FUEL_GAUGE_MM8013
->>>  	  the state of charge, temperature, cycle count, actual and design
->>>  	  capacity, etc.
->>>
->>> +config EC_ACER_ASPIRE1
->>> +	tristate "Acer Aspire 1 Emedded Controller driver"
->>> +	depends on I2C
->>> +	depends on DRM
->>> +	help
->>> +	  Say Y here to enable the EC driver for the (Snapdragon-based)
->>> +	  Acer Aspire 1 laptop. The EC handles battery and charging
->>> +	  monitoring as well as some misc functions like the lid sensor
->>> +	  and USB Type-C DP HPD events.
->>> +
->>> +	  This driver provides battery and AC status support for the mentioned
->>
->> I did not see any AC status bits?
->>
-> 
-> I was referring to whatever ACPI spec calls "AC Adapter" but I guess
-> I should have used the word "charger" instead... Will reword this.
-> 
->>> [...]
->>
->>> +	case POWER_SUPPLY_PROP_PRESENT:
->>> +		val->intval = 1;
->>
->> You have an unused ASPIRE_EC_FG_FLAG_PRESENT, that looks like it
->> should be used here?
->>
-> 
-> Oh, you're right! I think I initially didn't have this property and
-> added it like this as a reaction to that upower change that made it
-> consider everything not explicitly present as absent.
-> 
-> I've just checked what is reported after unplugging the battery and
-> seems like the flag (as well as everything else) is gone. Will change
-> the driver to read the flag.
-> 
-> Thanks for your review!
-> Nikita
-> 
->>> [...]
->>
->> Otherwise the power-supply bits LGTM.
->>
->> -- Sebastian
-> 
-
+>   and whether sync is a nop
+> - virtio wrapper taking into account PLATFORM_ACCESS too
+>
+> then we can save all this work and memory when not needed.
+>
+>
+>
+> > +
+> > +	sq->dmainfo.p = sq->dmainfo.free;
+> > +
+> > +	for (i = 0; i < num; ++i) {
+> > +		d = &sq->dmainfo.free[i];
+> > +		d->next = d + 1;
+> > +	}
+> > +
+> > +	d->next = NULL;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static void __free_old_xmit(struct send_queue *sq, bool in_napi,
+> >  			    struct virtnet_sq_free_stats *stats)
+> >  {
+> > @@ -377,6 +487,9 @@ static void __free_old_xmit(struct send_queue *sq, bool in_napi,
+> >  	while ((ptr = virtqueue_get_buf(sq->vq, &len)) != NULL) {
+> >  		++stats->packets;
+> >
+> > +		if (sq->vq->premapped)
+> > +			virtnet_sq_unmap(sq, &ptr);
+> > +
+> >  		if (!is_xdp_frame(ptr)) {
+> >  			struct sk_buff *skb = ptr;
+> >
+> > @@ -890,8 +1003,7 @@ static int __virtnet_xdp_xmit_one(struct virtnet_info *vi,
+> >  			    skb_frag_size(frag), skb_frag_off(frag));
+> >  	}
+> >
+> > -	err = virtqueue_add_outbuf(sq->vq, sq->sg, nr_frags + 1,
+> > -				   xdp_to_ptr(xdpf), GFP_ATOMIC);
+> > +	err = virtnet_add_outbuf(sq, nr_frags + 1, xdp_to_ptr(xdpf));
+> >  	if (unlikely(err))
+> >  		return -ENOSPC; /* Caller handle free/refcnt */
+> >
+> > @@ -2357,7 +2469,7 @@ static int xmit_skb(struct send_queue *sq, struct sk_buff *skb)
+> >  			return num_sg;
+> >  		num_sg++;
+> >  	}
+> > -	return virtqueue_add_outbuf(sq->vq, sq->sg, num_sg, skb, GFP_ATOMIC);
+> > +	return virtnet_add_outbuf(sq, num_sg, skb);
+> >  }
+> >
+> >  static netdev_tx_t start_xmit(struct sk_buff *skb, struct net_device *dev)
+> > @@ -4166,6 +4278,8 @@ static void virtnet_free_queues(struct virtnet_info *vi)
+> >  	for (i = 0; i < vi->max_queue_pairs; i++) {
+> >  		__netif_napi_del(&vi->rq[i].napi);
+> >  		__netif_napi_del(&vi->sq[i].napi);
+> > +
+> > +		kfree(vi->sq[i].dmainfo.p);
+> >  	}
+> >
+> >  	/* We called __netif_napi_del(),
+> > @@ -4214,6 +4328,15 @@ static void free_receive_page_frags(struct virtnet_info *vi)
+> >
+> >  static void virtnet_sq_free_unused_buf(struct virtqueue *vq, void *buf)
+> >  {
+> > +	struct virtnet_info *vi = vq->vdev->priv;
+> > +	struct send_queue *sq;
+> > +	int i = vq2rxq(vq);
+> > +
+> > +	sq = &vi->sq[i];
+> > +
+> > +	if (sq->vq->premapped)
+> > +		virtnet_sq_unmap(sq, &buf);
+> > +
+> >  	if (!is_xdp_frame(buf))
+> >  		dev_kfree_skb(buf);
+> >  	else
+> > @@ -4327,8 +4450,10 @@ static int virtnet_find_vqs(struct virtnet_info *vi)
+> >  		if (ctx)
+> >  			ctx[rxq2vq(i)] = true;
+> >
+> > -		if (premapped)
+> > +		if (premapped) {
+> >  			premapped[rxq2vq(i)] = true;
+> > +			premapped[txq2vq(i)] = true;
+> > +		}
+> >  	}
+> >
+> >  	cfg.nvqs      = total_vqs;
+> > @@ -4352,6 +4477,9 @@ static int virtnet_find_vqs(struct virtnet_info *vi)
+> >  		vi->rq[i].vq = vqs[rxq2vq(i)];
+> >  		vi->rq[i].min_buf_len = mergeable_min_buf_len(vi, vi->rq[i].vq);
+> >  		vi->sq[i].vq = vqs[txq2vq(i)];
+> > +
+> > +		if (vi->sq[i].vq->premapped)
+> > +			virtnet_sq_init_dma_mate(&vi->sq[i]);
+> >  	}
+> >
+> >  	/* run here: ret == 0. */
+> > --
+> > 2.32.0.3.g01195cf9f
+>
