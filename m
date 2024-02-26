@@ -1,113 +1,307 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9261BF3B;
-	Mon, 26 Feb 2024 06:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDDF1BDC3;
+	Mon, 26 Feb 2024 06:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708929695; cv=none; b=HPU1tgyQ8der4qNE7tiU5HpV1MRq5sYGB3v7y5Dju3i+l7jPx2dALoAoX8jyVbF1JNPlMROy6rybtVzMRmthvwvd4OnuvPZPTulNr5MdYMv1gWkGGBBmfb5g1ad6emjDWNQD1kTuBlCLIH7OilxFwhULfjYmbFqoY7upDchKaMA=
+	t=1708930047; cv=none; b=u30wVM1pRrI7JmSNwLXfkgbd/h7AnevrgOm13T5LoxzEj6SFRSz5OlbpQtIf1jiigPS517SXEHQSBolDiBnb33GifpkOmObANdZQiGZ4DtRa7Eru3MNwyeaqT9hUi66dsUuWEcj7TK9BX8OOZctWLbi9LR+4JeyZuCTiMGVfv5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708929695; c=relaxed/simple;
-	bh=j40oYN2bGZFA2D+CuG1URy2KNXuvkXaM/JtfuChA0YM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CD2jCAtYwr2mu0Nf2azxjEtxETc/CGzvn0ArXNCnGr/EyBPcu5I0bwmwnfZcqpOxrBGRsOGvEBZWYhumGAXqXNY7v2ovuy7hh4ASLNtpJd2iSed9wJY3kYc83JaYKjcVlKd4v7P6yM3Zf4Xt9qQaHDkrTKKBjDfqkiP5EczxbA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HqthvdpD; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708930047; c=relaxed/simple;
+	bh=r+YRIokGyqR9X8s9S5ioq/Xrj7AOa13EKl+Y0GQmDFk=;
+	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=HbUinRLWub6I5w3jRjXsv3tQTy3tYYK9Nn+gJms8FvG5LLZ4YEu5l+NPj1ecohdMxAqIqlUasFPXMup1nLre9mCNUUwEk7IftQe9wO5BN1QV9g+N9yG1VX1bi4iqrwcgWqy+Ij7OIRaEOv5bcx7INPuOmmdeW5FHt6GvNNnOSHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=NiG9q+O3; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HqthvdpD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708929694; x=1740465694;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=j40oYN2bGZFA2D+CuG1URy2KNXuvkXaM/JtfuChA0YM=;
-  b=HqthvdpD4/TEDSj1jSb2OyRHAg/shpBQHjd9ujOzcYVXUbuqM5Bbewd0
-   VWwALX5HQeaOQW07a1GFqkoqkrOBQrxDx4Ep6A+XTc0mx3N1mm+1cmzId
-   XcjQWysOb5yZD5DFJvNv1qzKosYyVP4nsJL7z/kXGWqVorJrh1bXS7q2B
-   9s7sGL9TMx/WnD2yM2nbwsT5My3VLfAaT+D5LEDKGjO1xWIL/DMnDGGI3
-   daHCeciOYq1fxJfpzV2MC6G8atiyyqpQKBbV2S4qp9ci6aW30GGH7N7EP
-   jjSwIqPlCbWuTknrNijIHOy/V0sZ9y6OgtgINegOBiicHbTPgOIk9bBbT
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="14631258"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="14631258"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2024 22:41:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6916072"
-Received: from gcsargen-mobl1.amr.corp.intel.com (HELO [10.255.228.214]) ([10.255.228.214])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2024 22:41:34 -0800
-Message-ID: <d152f185-d34f-4a06-be85-9bffd10175fc@linux.intel.com>
-Date: Sun, 25 Feb 2024 22:41:33 -0800
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="NiG9q+O3"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708930036; h=Message-ID:Subject:Date:From:To;
+	bh=zqZsfZ/qluUEW7qkID/ee5gWeGwmJGn3HGM5FIAvvSM=;
+	b=NiG9q+O39eHStuM8y8B1udACnITePfJKKGw2Ll8ljZALTMgpu0a+NdGnMfL6ZtMDtabKgOfh0aVod/qFUUHoC0StBwLKl7sGvsMOka0ZTtaHq2NdET55fDmavQ/jnQk7EfHcaK5ad16ZIb9pM9H0e7+uv6UPb/xVlSAl7Js4Tbg=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0W1Cedgm_1708930033;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W1Cedgm_1708930033)
+          by smtp.aliyun-inc.com;
+          Mon, 26 Feb 2024 14:47:14 +0800
+Message-ID: <1708927861.8802218-1-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH vhost v2 19/19] virtio_net: sq support premapped mode
+Date: Mon, 26 Feb 2024 14:11:01 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: virtualization@lists.linux.dev,
+ Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Jason Wang <jasowang@redhat.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Vadim Pasternak <vadimp@nvidia.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Cornelia Huck <cohuck@redhat.com>,
+ Halil Pasic <pasic@linux.ibm.com>,
+ Eric Farman <farman@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ linux-um@lists.infradead.org,
+ netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org,
+ linux-s390@vger.kernel.org,
+ kvm@vger.kernel.org,
+ bpf@vger.kernel.org
+References: <20240223082726.52915-1-xuanzhuo@linux.alibaba.com>
+ <20240223082726.52915-20-xuanzhuo@linux.alibaba.com>
+ <20240225032330-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20240225032330-mutt-send-email-mst@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] platform/x86/amd/pmf: Add missing __iomem
- attribute to policy_base
-Content-Language: en-US
-To: Armin Wolf <W_Armin@gmx.de>, Shyam-sundar.S-k@amd.com,
- mika.westerberg@linux.intel.com
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240223163901.13504-1-W_Armin@gmx.de>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240223163901.13504-1-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
+On Sun, 25 Feb 2024 03:38:48 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> On Fri, Feb 23, 2024 at 04:27:26PM +0800, Xuan Zhuo wrote:
+> > If the xsk is enabling, the xsk tx will share the send queue.
+> > But the xsk requires that the send queue use the premapped mode.
+> > So the send queue must support premapped mode.
+> >
+> > cmd:
+> >     sh samples/pktgen/pktgen_sample01_simple.sh -i eth0 \
+> >         -s 16 -d 10.0.0.128 -m 00:16:3e:2c:c8:2e -n 0 -p 100
+> > CPU:
+> >     Intel(R) Xeon(R) Platinum 8369B CPU @ 2.70GHz
+> >
+> > Machine:
+> >     ecs.g7.2xlarge(Aliyun)
+> >
+> > before:              1600010.00
+> > after(no-premapped): 1599966.00
+> > after(premapped):    1600014.00
+> >
+> > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > ---
+> >  drivers/net/virtio_net.c | 136 +++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 132 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> > index 7715bb7032ec..b83ef6afc4fb 100644
+> > --- a/drivers/net/virtio_net.c
+> > +++ b/drivers/net/virtio_net.c
+> > @@ -146,6 +146,25 @@ struct virtnet_rq_dma {
+> >  	u16 need_sync;
+> >  };
+> >
+> > +
 
-On 2/23/24 8:38 AM, Armin Wolf wrote:
-> The value of policy_base is the return value of a devm_ioremap call,
-> which returns a __iomem pointer instead of an regular pointer.
-> Add the missing __iomem attribute.
->
-> Compile-tested only.
->
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
-Looks good to me.
+[...]
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->  drivers/platform/x86/amd/pmf/pmf.h    | 2 +-
->  drivers/platform/x86/amd/pmf/tee-if.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> > +static struct virtnet_sq_dma *virtnet_sq_map_sg(struct send_queue *sq,
+> > +						int nents, void *data)
+> > +{
+> > +	struct virtnet_sq_dma *d;
+> > +	struct scatterlist *sg;
+> > +	int i;
+> > +
+> > +	if (!sq->dmainfo.free)
+> > +		return NULL;
+> > +
+> > +	d = sq->dmainfo.free;
+> > +	sq->dmainfo.free = d->next;
+> > +
+> > +	for_each_sg(sq->sg, sg, nents, i) {
+> > +		if (virtqueue_dma_map_sg_attrs(sq->vq, sg, DMA_TO_DEVICE, 0))
+> > +			goto err;
+> > +
+> > +		d->addr[i] = sg->dma_address;
+> > +		d->len[i] = sg->length;
+> > +	}
+> > +
+> > +	d->data = data;
+> > +	d->num = i;
+> > +	return d;
+> > +
+> > +err:
+> > +	d->num = i;
+> > +	virtnet_sq_unmap(sq, (void **)&d);
+> > +	return NULL;
+> > +}
 >
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index 16999c5b334f..bcf777a5659a 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -229,7 +229,7 @@ struct amd_pmf_dev {
->  	struct delayed_work pb_work;
->  	struct pmf_action_table *prev_data;
->  	u64 policy_addr;
-> -	void *policy_base;
-> +	void __iomem *policy_base;
->  	bool smart_pc_enabled;
->  };
 >
-> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-> index f8c0177afb0d..16973bebf55f 100644
-> --- a/drivers/platform/x86/amd/pmf/tee-if.c
-> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
-> @@ -346,7 +346,7 @@ static int amd_pmf_get_bios_buffer(struct amd_pmf_dev *dev)
->  	if (!dev->policy_base)
->  		return -ENOMEM;
->
-> -	memcpy(dev->policy_buf, dev->policy_base, dev->policy_sz);
-> +	memcpy_fromio(dev->policy_buf, dev->policy_base, dev->policy_sz);
->
->  	amd_pmf_hex_dump_pb(dev);
->  	if (pb_side_load)
-> --
-> 2.39.2
->
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+> Do I see a reimplementation of linux/llist.h here?
 
+YES. This can be done by the APIs of linux/lllist.h.
+
+But now, there is not __llist_del_first() (That will be used by
+virtnet_sq_map_sg()).
+And that is simple and just two places may use the APIs, so I implement it
+directly.
+
+>
+>
+> > +
+> > +static int virtnet_add_outbuf(struct send_queue *sq, u32 num, void *data)
+> > +{
+> > +	int ret;
+> > +
+> > +	if (sq->vq->premapped) {
+> > +		data = virtnet_sq_map_sg(sq, num, data);
+> > +		if (!data)
+> > +			return -ENOMEM;
+> > +	}
+> > +
+> > +	ret = virtqueue_add_outbuf(sq->vq, sq->sg, num, data, GFP_ATOMIC);
+> > +	if (ret && sq->vq->premapped)
+> > +		virtnet_sq_unmap(sq, &data);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int virtnet_sq_init_dma_mate(struct send_queue *sq)
+>
+> Mate? The popular south african drink?
+
+Sorry, should be meta, I mean metadata.
+
+>
+> > +{
+> > +	struct virtnet_sq_dma *d;
+> > +	int num, i;
+> > +
+> > +	num = virtqueue_get_vring_size(sq->vq);
+> > +
+> > +	sq->dmainfo.free = kcalloc(num, sizeof(*sq->dmainfo.free), GFP_KERNEL);
+> > +	if (!sq->dmainfo.free)
+> > +		return -ENOMEM;
+>
+>
+> This could be quite a bit of memory for a large queue.  And for a bunch
+> of common cases where unmap is a nop (e.g. iommu pt) this does nothing
+> useful at all.
+
+Then can we skip the unmap api, so pass a zero to the unmap api?
+
+> And also, this does nothing useful if PLATFORM_ACCESS is off
+> which is super common.
+
+That is ok. That just work when PLATFORM_ACCESS is on.
+
+Thanks.
+
+>
+> A while ago I proposed:
+> - extend DMA APIs so one can query whether unmap is a nop
+>   and whether sync is a nop
+> - virtio wrapper taking into account PLATFORM_ACCESS too
+>
+> then we can save all this work and memory when not needed.
+>
+>
+>
+> > +
+> > +	sq->dmainfo.p = sq->dmainfo.free;
+> > +
+> > +	for (i = 0; i < num; ++i) {
+> > +		d = &sq->dmainfo.free[i];
+> > +		d->next = d + 1;
+> > +	}
+> > +
+> > +	d->next = NULL;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static void __free_old_xmit(struct send_queue *sq, bool in_napi,
+> >  			    struct virtnet_sq_free_stats *stats)
+> >  {
+> > @@ -377,6 +487,9 @@ static void __free_old_xmit(struct send_queue *sq, bool in_napi,
+> >  	while ((ptr = virtqueue_get_buf(sq->vq, &len)) != NULL) {
+> >  		++stats->packets;
+> >
+> > +		if (sq->vq->premapped)
+> > +			virtnet_sq_unmap(sq, &ptr);
+> > +
+> >  		if (!is_xdp_frame(ptr)) {
+> >  			struct sk_buff *skb = ptr;
+> >
+> > @@ -890,8 +1003,7 @@ static int __virtnet_xdp_xmit_one(struct virtnet_info *vi,
+> >  			    skb_frag_size(frag), skb_frag_off(frag));
+> >  	}
+> >
+> > -	err = virtqueue_add_outbuf(sq->vq, sq->sg, nr_frags + 1,
+> > -				   xdp_to_ptr(xdpf), GFP_ATOMIC);
+> > +	err = virtnet_add_outbuf(sq, nr_frags + 1, xdp_to_ptr(xdpf));
+> >  	if (unlikely(err))
+> >  		return -ENOSPC; /* Caller handle free/refcnt */
+> >
+> > @@ -2357,7 +2469,7 @@ static int xmit_skb(struct send_queue *sq, struct sk_buff *skb)
+> >  			return num_sg;
+> >  		num_sg++;
+> >  	}
+> > -	return virtqueue_add_outbuf(sq->vq, sq->sg, num_sg, skb, GFP_ATOMIC);
+> > +	return virtnet_add_outbuf(sq, num_sg, skb);
+> >  }
+> >
+> >  static netdev_tx_t start_xmit(struct sk_buff *skb, struct net_device *dev)
+> > @@ -4166,6 +4278,8 @@ static void virtnet_free_queues(struct virtnet_info *vi)
+> >  	for (i = 0; i < vi->max_queue_pairs; i++) {
+> >  		__netif_napi_del(&vi->rq[i].napi);
+> >  		__netif_napi_del(&vi->sq[i].napi);
+> > +
+> > +		kfree(vi->sq[i].dmainfo.p);
+> >  	}
+> >
+> >  	/* We called __netif_napi_del(),
+> > @@ -4214,6 +4328,15 @@ static void free_receive_page_frags(struct virtnet_info *vi)
+> >
+> >  static void virtnet_sq_free_unused_buf(struct virtqueue *vq, void *buf)
+> >  {
+> > +	struct virtnet_info *vi = vq->vdev->priv;
+> > +	struct send_queue *sq;
+> > +	int i = vq2rxq(vq);
+> > +
+> > +	sq = &vi->sq[i];
+> > +
+> > +	if (sq->vq->premapped)
+> > +		virtnet_sq_unmap(sq, &buf);
+> > +
+> >  	if (!is_xdp_frame(buf))
+> >  		dev_kfree_skb(buf);
+> >  	else
+> > @@ -4327,8 +4450,10 @@ static int virtnet_find_vqs(struct virtnet_info *vi)
+> >  		if (ctx)
+> >  			ctx[rxq2vq(i)] = true;
+> >
+> > -		if (premapped)
+> > +		if (premapped) {
+> >  			premapped[rxq2vq(i)] = true;
+> > +			premapped[txq2vq(i)] = true;
+> > +		}
+> >  	}
+> >
+> >  	cfg.nvqs      = total_vqs;
+> > @@ -4352,6 +4477,9 @@ static int virtnet_find_vqs(struct virtnet_info *vi)
+> >  		vi->rq[i].vq = vqs[rxq2vq(i)];
+> >  		vi->rq[i].min_buf_len = mergeable_min_buf_len(vi, vi->rq[i].vq);
+> >  		vi->sq[i].vq = vqs[txq2vq(i)];
+> > +
+> > +		if (vi->sq[i].vq->premapped)
+> > +			virtnet_sq_init_dma_mate(&vi->sq[i]);
+> >  	}
+> >
+> >  	/* run here: ret == 0. */
+> > --
+> > 2.32.0.3.g01195cf9f
+>
