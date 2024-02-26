@@ -1,149 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F068F12FF98
-	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Feb 2024 16:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A459712C807;
+	Mon, 26 Feb 2024 16:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708966640; cv=none; b=C5JmgfGYRFDa7k82JhvwP/4DKCbxPxk+pKFWluTqCdAQT9GmVp2xAr4aQvK/bpGNWIz/iaRmY2uvyMsruHLtL9kZhxtzrdTUpWG/5vfmJzkaQr4RJM1Y4k1OktyifUFLHq1DyPO/EJI96F3Sl5u5P8PiZOvLmP9Y8qwLwgwEoPY=
+	t=1708966750; cv=none; b=MR2yzSMAN21Co9ZJ/uNZYRnpphtPHGjciO7MnbTtHBMpZfH82HzYU2eD9UPtaXwxbHfCr7rXda0O1iJFoOhnW8ErEuGij9C1/DtcKq8az29nJBi8W1e0jLEBOQNFvUg6U8cf+AMrooFkYpnNFpI3oJeZAaFMJ/T7yT40MmwFb18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708966640; c=relaxed/simple;
-	bh=eacWoILJZ5o5Viqax6eA9ePbWI2MSS3L3kVbV7kHxlw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZI2GF6f15MItjAWiWqHJGwJoU2VsdJF6nzMC8W60ELY+Sy8VBu8XijKRKxit56yqeTztYcWGiKSE4WpEp4ei8wIIVT525kjLz6vk+HWW4EMh2UjOjOgOK1hGeqFUZ1Fqx0zG6OSSWMHWNPrzXSJvK6ZE63Bnt9c1yWNzT5mGDZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KO8t39yh; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708966750; c=relaxed/simple;
+	bh=BLAS03sOMxIrSy3dV5ost75fW5umBREUcI8rl3VAb3A=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=iUXCdLYQ8JgFQy3d/8GpC/6Z8BumUTAmFvEodAiyY1RrI/HEuIRB3UO5i16Tbz//8ZxCvxoJdSxkxrnfxRui29/y512txvtwtooB5D8aGa4EKA2JrLaNsUTnSxMQgTvLeTFQx7C45GFh/az2YPrqwqwpvpoblKUx8LffMcB7bjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R4SNCihX; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KO8t39yh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708966637;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8c+aIKxEaZpezL+jzlJ7u2FhDbslxiLJ7vzY5ObQAVg=;
-	b=KO8t39yhjisGVpC0rb/yLWSQ3G6wD0jd0QYy/gykNupcjK9sbLAMYIBPO2C4YlURkcAF2N
-	Qg5lrnBHTawNTD2re7CcDsm7zllxXqPbqMatKmY1SSXlLRKxoZgPiOnaCnOkRnlfHLK0mY
-	lhK8E1VR93rmXlXs3AERlam2u9JTzx0=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-630-aLxPFy8aOWaruxbV1UnXZg-1; Mon, 26 Feb 2024 11:57:07 -0500
-X-MC-Unique: aLxPFy8aOWaruxbV1UnXZg-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-512fe145c02so1302724e87.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Feb 2024 08:57:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708966623; x=1709571423;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8c+aIKxEaZpezL+jzlJ7u2FhDbslxiLJ7vzY5ObQAVg=;
-        b=pvsrPV1MFwl6U7tkAjcB+j+CObbz5qwrCFCHJu54g8zpomf0i1yQuogGVAdRjSGnNP
-         6N9m1zgO9IpxO+4CdbNXljXs2Q9Gc+Ek+fOCMYc/55p5C4LgWpEm4lqvUx6nnfrgaMvA
-         xT+6tongJBLdpJzFkj75OnLXUvti05x+rXAuFAQfENXPjE4W2rIE3EdzyeJTeoeAG7NR
-         DTprD3KTPXOuZSt2kboEsTFgf3yKB9uDi6/Q6havmhnICHQSmHmBkI7k2kQP0vsEpmco
-         rbx4b00r1B4ymbT0vcjtZkSU5Cr/xqZcJ4E5CRiGPitc1RD8reuahRDDUBsGYgwoRsBu
-         WGiw==
-X-Forwarded-Encrypted: i=1; AJvYcCUcnDCKSmKGxwB07fjLk+5soCgUg16fkLH1DVoTwrLIvDzOfDLxMcakIBej3/fDS74HyvHJh14YeY73UmSSwiUy1SZs8tBBpnysqs8XabS6bCNWig==
-X-Gm-Message-State: AOJu0YxYh+v5Db7IHwowFG7Hfwc240Xx8zZdmrKKlOBZk4CRMKJd8Clp
-	OjREXRiiKlh/1jZ2GjtxI/EqhZiuVwN7OSXuR0s5yv0jsixazvvQxMkFLEI7OdNr++ssX9nGa9y
-	Si/W0C7cC4uaiBqKpS0XuLPf4W0d0BHHPj6uBPoVZJIT8rIza0OIeh5HApGqxXGcgs0yHufo=
-X-Received: by 2002:ac2:4288:0:b0:512:fdb3:7a9e with SMTP id m8-20020ac24288000000b00512fdb37a9emr1819836lfh.31.1708966623618;
-        Mon, 26 Feb 2024 08:57:03 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IErYMtJMKxyV17XeAD60DbKw+SYc8okTK2r7tU7czsIcdBFoyqpwalN4Y46LherjciMy/pCzA==
-X-Received: by 2002:ac2:4288:0:b0:512:fdb3:7a9e with SMTP id m8-20020ac24288000000b00512fdb37a9emr1819819lfh.31.1708966623192;
-        Mon, 26 Feb 2024 08:57:03 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id tb16-20020a1709078b9000b00a42ea030a6esm2534364ejc.82.2024.02.26.08.57.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 08:57:02 -0800 (PST)
-Message-ID: <eea32e56-2ea3-4a11-b1b9-8dd46dac7d72@redhat.com>
-Date: Mon, 26 Feb 2024 17:57:02 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R4SNCihX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708966749; x=1740502749;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=BLAS03sOMxIrSy3dV5ost75fW5umBREUcI8rl3VAb3A=;
+  b=R4SNCihXvVwHSornTPea3RdglxrpsuMUrA2dGwFcYuri3etLggJaLnb3
+   1DJ2gNNmVjjUCKvJr23cCXtWG4fABgFYC1CRGV1mtgVMebe4YPMf65y8i
+   wYYQ5lsJkPwj4oya+BZ12HcC+2+/12vK0uVwNTXgWNSmBwKaitMvF4ois
+   9Mw/cBFPRVRkMXlDdYYYDQ+2XNaTpAboyJrhNY8h7sgIbrGzVIFHiVDkq
+   tZMvO7+WdVyimRo3GeGDhXuCy8HswT0jrvat4hPkFnozHBx5vQ3Et9YOp
+   wxtrs0dwBx7cnxSlApcancypid0/rS7T8I47HbmWcStpIzuPSKhMRGhrx
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3133426"
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="3133426"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 08:59:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="7269610"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.12])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 08:59:05 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 26 Feb 2024 18:59:00 +0200 (EET)
+To: Luiz Capitulino <luizcap@redhat.com>
+cc: shravankr@nvidia.com, davthompson@nvidia.com, ndalvi@redhat.com, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 0/2] platform/mellanox: mlxbf-pmc: Fix module loading
+In-Reply-To: <1608d86a-24e8-403b-b199-ce23f8411cfd@redhat.com>
+Message-ID: <8a05120e-fcdf-f7f2-6b60-22e3ee819d37@linux.intel.com>
+References: <cover.1708635408.git.luizcap@redhat.com> <170895404513.2243.14840310263795846559.b4-ty@linux.intel.com> <def1a153-3cfb-431d-a7d2-a13bb7d65f4f@redhat.com> <29863354-4efe-d199-a9d4-7daf83f6cde9@linux.intel.com>
+ <1608d86a-24e8-403b-b199-ce23f8411cfd@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] platform/mellanox: mlxbf-pmc: Fix module loading
-To: Luiz Capitulino <luizcap@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: shravankr@nvidia.com, davthompson@nvidia.com, ndalvi@redhat.com,
- LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-References: <cover.1708635408.git.luizcap@redhat.com>
- <170895404513.2243.14840310263795846559.b4-ty@linux.intel.com>
- <def1a153-3cfb-431d-a7d2-a13bb7d65f4f@redhat.com>
- <29863354-4efe-d199-a9d4-7daf83f6cde9@linux.intel.com>
- <1608d86a-24e8-403b-b199-ce23f8411cfd@redhat.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <1608d86a-24e8-403b-b199-ce23f8411cfd@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-730537961-1708964317=:1203"
+Content-ID: <4b808e5d-8e8a-3c86-7ca7-e69e8bd41f28@linux.intel.com>
 
-Hi Luiz,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 2/26/24 17:10, Luiz Capitulino wrote:
-> On 2024-02-26 11:04, Ilpo Järvinen wrote:
->> On Mon, 26 Feb 2024, Luiz Capitulino wrote:
->>
->>> On 2024-02-26 08:27, Ilpo Järvinen wrote:
->>>> On Thu, 22 Feb 2024 15:57:28 -0500, Luiz Capitulino wrote:
->>>>
->>>>> The mlxbf-pmc driver fails to load when the firmware reports a new but not
->>>>> yet implemented performance block. I can reproduce this today with a
->>>>> Bluefield-3 card and UEFI version 4.6.0-18-g7d063bb-BId13035, since this
->>>>> reports the new clock_measure performance block.
->>>>>
->>>>> This[1] patch from Shravan implements the clock_measure support and will
->>>>> solve the issue. But this series avoids the situation by ignoring and
->>>>> logging unsupported performance blocks.
->>>>>
->>>>> [...]
->>>>
->>>>
->>>> Thank you for your contribution, it has been applied to my local
->>>> review-ilpo branch. Note it will show up in the public
->>>> platform-drivers-x86/review-ilpo branch only once I've pushed my
->>>> local branch there, which might take a while.
->>>
->>> Thank you Ilpo and thanks Hans for the review.
->>>
->>> The only detail is that we probably want this merged for 6.8 since
->>> the driver doesn't currently load with the configuration mentioned above.
->>
->> Oh, sorry, I missed the mention in the coverletter.
->>
->> So you'd want I drop these from review-ilpo branch as there they end
->> up into for-next branch, and they should go through Hans instead who
->> handles fixes branch for this cycle?
-> 
+--8323328-730537961-1708964317=:1203
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <0b7f7ff4-48f1-66a2-0394-e1037cd78cc7@linux.intel.com>
+
+On Mon, 26 Feb 2024, Luiz Capitulino wrote:
+
+> On 2024-02-26 11:04, Ilpo J=E4rvinen wrote:
+> > On Mon, 26 Feb 2024, Luiz Capitulino wrote:
+> >=20
+> > > On 2024-02-26 08:27, Ilpo J=E4rvinen wrote:
+> > > > On Thu, 22 Feb 2024 15:57:28 -0500, Luiz Capitulino wrote:
+> > > >=20
+> > > > > The mlxbf-pmc driver fails to load when the firmware reports a ne=
+w but
+> > > > > not
+> > > > > yet implemented performance block. I can reproduce this today wit=
+h a
+> > > > > Bluefield-3 card and UEFI version 4.6.0-18-g7d063bb-BId13035, sin=
+ce
+> > > > > this
+> > > > > reports the new clock_measure performance block.
+> > > > >=20
+> > > > > This[1] patch from Shravan implements the clock_measure support a=
+nd
+> > > > > will
+> > > > > solve the issue. But this series avoids the situation by ignoring=
+ and
+> > > > > logging unsupported performance blocks.
+> > > > >=20
+> > > > > [...]
+> > > >=20
+> > > >=20
+> > > > Thank you for your contribution, it has been applied to my local
+> > > > review-ilpo branch. Note it will show up in the public
+> > > > platform-drivers-x86/review-ilpo branch only once I've pushed my
+> > > > local branch there, which might take a while.
+> > >=20
+> > > Thank you Ilpo and thanks Hans for the review.
+> > >=20
+> > > The only detail is that we probably want this merged for 6.8 since
+> > > the driver doesn't currently load with the configuration mentioned ab=
+ove.
+> >=20
+> > Oh, sorry, I missed the mention in the coverletter.
+> >=20
+> > So you'd want I drop these from review-ilpo branch as there they end
+> > up into for-next branch, and they should go through Hans instead who
+> > handles fixes branch for this cycle?
+>=20
 > If that's the path to get this series merged for this cycle then yes,
 > but let's see if Hans agrees (sorry that I didn't know this before
 > posting).
-
-Hmm, new hw enablement typically goes through -next and not to
-the current fixes branch. And AFAICT this is new hw enablement,
-not a regression / bug-fix.
-
-Is there any special reason why this needs to be in 6.8 ?
-
-For RHEL kernels you can cherry-pick patches from -next
-as necessary.
-
+>
 > One additional detail is that this series is on top of linux-next, which
 > has two additional mlxbf-pmc changes:
-> 
-> * https://lore.kernel.org/lkml/39be055af3506ce6f843d11e45d71620f2a96e26.1707808180.git.shravankr@nvidia.com/
-> * https://lore.kernel.org/lkml/d8548c70339a29258a906b2b518e5c48f669795c.1707808180.git.shravankr@nvidia.com/
+>
+> *
+> https://lore.kernel.org/lkml/39be055af3506ce6f843d11e45d71620f2a96e26.170=
+7808180.git.shravankr@nvidia.com/
+> *
+> https://lore.kernel.org/lkml/d8548c70339a29258a906b2b518e5c48f669795c.170=
+7808180.git.shravankr@nvidia.com/
+>=20
+> Maybe those two should be included for 6.8 as well?
 
-Hmm, those are not small patches, any other reason
-why this really should go to -next IMHO.
+Those look a new feature to me so they belong to for-next. So no, they=20
+will not end up into 6.8 (to fixes branch). If the 2 patches in this=20
+series do not apply without some for-next targetting dependencies, you=20
+should rebase on top of fixes branch and send a new version.
 
-Regards,
+About those two patches, please also see my reply. I intentionally only 2=
+=20
+patches of that series because I wanted to see sysfs documentation first=20
+so you should resend those two patches to for-next with sysfs=20
+documentation.
 
-Hans
-
-
+--=20
+ i.
+--8323328-730537961-1708964317=:1203--
