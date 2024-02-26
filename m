@@ -1,468 +1,183 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2058.outbound.protection.outlook.com [40.107.93.58])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2067.outbound.protection.outlook.com [40.107.243.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8EA12E1F5
-	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Feb 2024 15:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C729D12BE87;
+	Mon, 26 Feb 2024 15:15:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.67
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708960411; cv=fail; b=bdRAc3wbeTSIEXUCFPvBuKHtat58dGqZDDeUgUqLurCd+q+nV9fP5VzdbfKOH+qxWetXxZTUazKZwNSMo79dbyDjI29ru9gy0G5GWx0y2UEzSY0sMjEBQ/nGurj8ReqSVonG4UQvrj9GT6dMC+MXGdNpwc7k7LrljqstoHBlIC0=
+	t=1708960521; cv=fail; b=oY8dFgYL35aUZu65Tv7O+TjvaNR+5e86BBGIR4vIWMd7utNAFc1myJZ703fuaBdprtHpW4/xedNwYmclbZfDTYazyqE3IKm+SQX+TCdumti3vFE2tBknj2tylOc93ioRzWqcSr5dA0qLvvodM5d8j9hwJULtPCs+iLBLUYfHMGw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708960411; c=relaxed/simple;
-	bh=jhr+A1pxa7GmJmBJkKKL7aqnK9fE/rCli6HEBOfLAuw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hsLFhWWwObdW9B0TxAc17c9UiFYX4FyQwykAS/3mGIE1OLgjJWkS9jzzUkZPIkBHh7prW7dMmYwLdd/UHjFtTf2TTovuKokyk3mSRS/pCMI9yRGVIh9tN69hBa/YqP4RQByyj22uPsciZpz1NdpNsLj30gsy76cz+jJtBUYLlTo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2KjcDMfK; arc=fail smtp.client-ip=40.107.93.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1708960521; c=relaxed/simple;
+	bh=CfC+lgCqChRcOs0pSs2goI5OUZUYlWOSv7Wqv1JEYlM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=r2/fgEBhziQCE+lDmW8GfbKrufCH/UMaiX0zyqYVN3ewLf/m/328rpe2KfPnZHFIzfulpED+DXrQuYlSXnLkGzu2cFAM6I5sc3RKPNLnuYk6x8KuLCSwvNhq3k4Mmlg819hrgcSRhsfp2mTTySPEMD+tqDPtshpN3OvYmJYKpPE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=K4Wa1ORq; arc=fail smtp.client-ip=40.107.243.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2KjcDMfK"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="K4Wa1ORq"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TymWQopU5pVjUOpnjS3UU70OshjOpayQASCVWQZ+RymAA/ZBU33oIadGM6NhHughpGqbdJl3gA4ycKgnnqMov5qpVXkI+nB0WeagKVBvFWOnCzNBYzupotOpT5mKUq26RsKjmW58TL3iABAktsG4xN51UcAv9BX9ZJmJUYVuujobZiinXXqaiQhPufmNvypCnl9eWqrpDofcTekAVnSOVajP4Gwvd4evn+YCzEN00l5RyBDqhmFsiGY/Tfaa3qO0m3qj0kusSR6YGzBPCa49yPoUjTyTdozW8d4tRdEmyPh1/wJHaowPa8u8zUlci95CcR8Kt8waioyZP6oemx/LYw==
+ b=D77NeW9nwj5AV5ZnvLetT+XrZHcWPuRs+WlFe2RsqwHJGTDZGS+VbITJTqwMAzdwbGbUSs5WGWefzl/rPwz47uPgdEnzjz+eX7tkjYMaRl0030aObEb44w7U/U91dkzWkji+PR5WFGqvrYW7JZ2qj6CtaLoSjm+4Nw9sfxfGbP/Dhafm3g20qzAvFdnlm52xlpGFdiVf2KmngUqVlq1yg+I6k3tiyklrpnV4XcssCn2bDUjVaC0ax7a48m81SAB5kb7T+EhgbiHrEn/3bPPMUg1DVfnOy+Le+y1tZr0ZkGa/NteRUVUNYjoXXiAQQWJ8Zsbr9SZRxbuu368baATOLQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iUqsPTujMBnoOnvg6pU2K4rLpn2fCF0C7Mln+n2w7E4=;
- b=WCrjpT9lNG+NkiNFt4KfguVpMOne2OqkMMGU3ZSI/qZGrqcpuMKPR+0r79EUHjybtJe9ICMorKCXbgtrn1yW21DOI/4gaFDt6/DVafBPJr7XdrM9vqk9aqocUOjK1kdVTc8bjomTpEYOSl1dzlfCQ1xfSzrFr9E1+A0lzRoZ5HpkJP3ikdDELw//ifjcZwi+tsb25p5ldSouk5NokvaZHgl3+Dxm4N9XVtE0xG0vc3XueXXMxTCmIokIfyxbhg3U1+6hM7pq2A6FGABws693r5rQu4yVbn+AF6obbCykK814AqSmAvfGDLttPUp49y7kpSKuKyeHm+EOEm0/ie6+OQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=CfC+lgCqChRcOs0pSs2goI5OUZUYlWOSv7Wqv1JEYlM=;
+ b=QlZdbzBJN5KIfR/CxUMxQSC4NPgnUN5spgLt/2M/cHLWR6bjaMAtbmgzmj7V1ObXvbAv0r01tr3BYpgW8kUWjJ7rN9X5w7FiI2cUsregQH9qMfE+jkUS9aG8az7kGbJHVkdfTBpMmHmJMfVAmY9QLEht+61Kj9Opq2mGj0jzUNyJwmSa/r5YcfxOrJeC8BpTYYj12VbH1JWKbrAx4r0OifSQYeUwo4d9mNO2oHxzj6o/acRCHCdgZbEExX5YDgz1FEu+dRFPefkijj2ESULJPju1SEYVzjTw+MMmrGRukQmfYmVEwXPaJpU5Te5zp1AS1Z6Cfl3xQDZkGkHzVrhpfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iUqsPTujMBnoOnvg6pU2K4rLpn2fCF0C7Mln+n2w7E4=;
- b=2KjcDMfKIhNjId1ukIpkjjHuorK68VufUJi6FYGUa9QswZojB/NDtLR757n3OS9zuL98VuTCCB5VYLMXXyAlEhnZRAMsZJGlO50dltdixqnzK8s7nHA9bSsDuNtrYegSYWLxy9cNFYq1DJHYdOGCWPtkA42dkqQvGtelgqRd21Y=
-Received: from PH8P222CA0017.NAMP222.PROD.OUTLOOK.COM (2603:10b6:510:2d7::27)
- by CH0PR12MB5372.namprd12.prod.outlook.com (2603:10b6:610:d7::10) with
+ bh=CfC+lgCqChRcOs0pSs2goI5OUZUYlWOSv7Wqv1JEYlM=;
+ b=K4Wa1ORqCUcwzYAoA7B2J9SzFcEEZyPH/nACRUJxPkuA1a7BiAdjiBZvF7IOutg05NhWciQh3YS3QjuiLLsU+QZVkvrIDFNsENiP/7jQ0I+mwsPq2insKkPSyzoISLoNYHCb5qpiaBQELvcp21Z6JVsGASgpbY15OExynVYJZ0HA0wdSmDnXnUiMj1kRgZbPdBp3kn/osyKYR9BCv6hQBZbPsMq9RlBnsLBGgJtM9wZGWLy0n+iSHNavkQpzl0TaLqcWnu5S9FSL98EgYVSu3iRioZS9yHUr3feV5aFECpjk5EywgJZQ0QUSSv+wOSF+ST5pVyeVfITt9SHXOTkZJg==
+Received: from BN9PR12MB5381.namprd12.prod.outlook.com (2603:10b6:408:102::24)
+ by SJ0PR12MB6831.namprd12.prod.outlook.com (2603:10b6:a03:47d::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.36; Mon, 26 Feb
- 2024 15:13:26 +0000
-Received: from SA2PEPF000015C8.namprd03.prod.outlook.com
- (2603:10b6:510:2d7:cafe::dd) by PH8P222CA0017.outlook.office365.com
- (2603:10b6:510:2d7::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.49 via Frontend
- Transport; Mon, 26 Feb 2024 15:13:25 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF000015C8.mail.protection.outlook.com (10.167.241.198) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7292.25 via Frontend Transport; Mon, 26 Feb 2024 15:13:25 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 26 Feb
- 2024 09:13:23 -0600
-From: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-To: <Shyam-sundar.S-k@amd.com>, <hdegoede@redhat.com>,
-	<ilpo.jarvinen@linux.intel.com>, <platform-driver-x86@vger.kernel.org>
-CC: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Subject: [PATCH v2] platform/x86/amd/pmc: Add AMD MP2 STB functionality
-Date: Mon, 26 Feb 2024 20:43:09 +0530
-Message-ID: <20240226151309.2147799-1-Basavaraj.Natikar@amd.com>
-X-Mailer: git-send-email 2.25.1
+ 2024 15:15:14 +0000
+Received: from BN9PR12MB5381.namprd12.prod.outlook.com
+ ([fe80::122:c58:8a3:743d]) by BN9PR12MB5381.namprd12.prod.outlook.com
+ ([fe80::122:c58:8a3:743d%4]) with mapi id 15.20.7316.034; Mon, 26 Feb 2024
+ 15:15:14 +0000
+From: Vadim Pasternak <vadimp@nvidia.com>
+To: Daniil Dulov <d.dulov@aladdin.ru>, Hans de Goede <hdegoede@redhat.com>
+CC: Mark Gross <mgross@linux.intel.com>, Andy Shevchenko <andy@infradead.org>,
+	Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "lvc-project@linuxtesting.org"
+	<lvc-project@linuxtesting.org>
+Subject: RE: [PATCH] platform/mellanox: mlxreg-hotplug: Check pointer for NULL
+ before dereferencing it
+Thread-Topic: [PATCH] platform/mellanox: mlxreg-hotplug: Check pointer for
+ NULL before dereferencing it
+Thread-Index: AQHaaMPQt7JNWu3hzka2Jxj0r7zdwrEcuVSA
+Date: Mon, 26 Feb 2024 15:15:14 +0000
+Message-ID:
+ <BN9PR12MB538106C733D231B73FC1C1AAAF5A2@BN9PR12MB5381.namprd12.prod.outlook.com>
+References: <20240226145442.3468-1-d.dulov@aladdin.ru>
+In-Reply-To: <20240226145442.3468-1-d.dulov@aladdin.ru>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR12MB5381:EE_|SJ0PR12MB6831:EE_
+x-ms-office365-filtering-correlation-id: fafb2e27-e3f5-4929-501b-08dc36ddbb9a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ 5dUUYhkN7rrIVxtA/S2V+UAS7TEGrnqb9hV7rpKFeNQ8oUN+pJpWefSRE1bq+5RHJVpU92MSDKCF92ty/K1ePyYMUQ4YUqVJsIzQV8ey6bjPJDN1mkt2g/j1TetBkzu4pJDwGre7XWP32DeCHhHCcXcZKISp/jHNwu/LzjmXIC8ec6rAO6zLPKrRPD9tvtvoKYPZ5X4W+2bBzruko+N1Ln1bc2nvlCGlHk/4ITSPf0thpCzciQcEoYo8kPc1YMMBzG9m9aXIk6Poy4ue96aTCHYravjefjCIsfuSHD73MGiaR4KRTRMUBwkeJEy68aVqWvGJu0CBiFYd0jxbgM0C69+cU8MskeStzbREkUVkl8WqUO+pyfQPf5fnfSNRKm8rBOOX4+i1vgOMRBmHJkSFKhMixV8dNiJ+oJEVIiVAWSmexocAwGTM4Y5Yds/INV2Q38kalInjMDj3sFqJrz8G7+GiFgYTDX8iG3ndOi5XXV88dG4jbz4R8IAnrCfSW2tkvpQLSqsj7GaFjlf8f/LSKvuqjyVOXOSCp/i0USFyruNLyxfHM8bxJSXR0X8qPw88APVPWA0ddUNlxSZ4FoWdhUKW0K010Mfq93c58+C6PXgUeWpwOpdXdYz+BTDnqq+4SffOQqugZN5cl3DaZrNoK3dWaAyHOolbKzmTngT7pp2XvFt38qoXgc8Ri2nDgzTsqdtRmKHJpkf038s0RbmtmkbDK7MTnfdFiYxsy+fnvSw=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5381.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?eDUxSTZCeFVIbDNaR0tiOUJucnZMaGo3T2F6RlpkaFAvWVZnNkFVNEd2Rkti?=
+ =?utf-8?B?YXdWUkhEaTYza0J1UXFoTW9FZCsrdTB4cEVYTlh2ZVVFZXRLL1VyQ2hGSnJp?=
+ =?utf-8?B?VUdSVWRvUFRSUmpZZUxqS003TTFiZmF2eGRJRFBTSSsyN0x4VmRkeUhsUXU5?=
+ =?utf-8?B?dW5yVUFwalQwemh4U0k3Zy9TdlVxMW8yOVV4Qy9JNEhZZWM5Z2pKUUdPRmww?=
+ =?utf-8?B?MVZ2ekRoenc2RzlUS0V3aVNjME9RS2lZZjYrMVRlQXczSFV6aXpkK1RFdUlU?=
+ =?utf-8?B?UTNLdHhFdXB5MFlhSDB6ZTJuUSs4bldIVnFsSnRJYXVxKzRtUWp3a3BSb3Y1?=
+ =?utf-8?B?bGh5SVBGMnpHdXhFdjZUUFZWOEJvUTU1akhRSXZzcE8wZkE2RnduMEFORDFZ?=
+ =?utf-8?B?RWIxdW5nM2hOMEgyZmNRMGtDRzZlVUFVNk5zTzNLLzdieFJ3Z1hoOE9Ud2w1?=
+ =?utf-8?B?SThtaDFvVkY4ZWlFZ0ZHSnc3aHp1eWVMQWtQQWMxRlZqUlh2djNwUnU3bkd3?=
+ =?utf-8?B?WS9LNGUvR2VodnJKNnlOSmJFUGQzc2RQb3JQcUFFK29TQWdoeEVyaEE1RUto?=
+ =?utf-8?B?blZoaDZhM21mY2VocXY4N29Qb0t2RHlPL2tIVmZ5eS95cnRCdDl2L2pyYXVa?=
+ =?utf-8?B?Sm13bHJlUHhjc3c0RTN2MmNPRTFmYXkxeFVGZXl6T1cwenZXWE1UbmNUVk5C?=
+ =?utf-8?B?UHc1S0NPMVBjeW9lSTB6d2F6NElmb1JOTklHUktrallndzliMTZNNVpGUXJx?=
+ =?utf-8?B?SWpOeUFRK05xMFZkR2M4dVpOWkFCSThHV211czE1RDB3SUVNeUREbTlZeU5U?=
+ =?utf-8?B?V1BPemd3MWdxaU5Qa1RwbnNrTUlGNVdhRXQ3a0RDSDFkM2MrSEFsSVRCMzlp?=
+ =?utf-8?B?bi9wTVJ1QTgwUThoVk9Va2ZxNTBKQ0FXTlh1TGlhSCs5MXh3bFgxWXBBZE5V?=
+ =?utf-8?B?VFpjY2pmMytLVzBiWmRJNkE4NnJTU2RHRkluT1FyQmw3NnozTGxkZDRBcTNV?=
+ =?utf-8?B?YWlqVjVFOHNmOVcxeDI1eElSczdvZEoyay9ZVFM4aWpqakJlL2xKUExRL2FW?=
+ =?utf-8?B?d0t5Q3NRbDNFNFh0TFQzSUhmQm4wSU51aUNGTmdtN3p3N0t6ZmJMcndTemp1?=
+ =?utf-8?B?dmRZTFVoMFEyY2srMmJnbmZTeHlXTGJ6QWxjUWtwVDNFQzFmV0lBajNwaHU5?=
+ =?utf-8?B?S2hpaGd2UlFXbmJVS3pEV0E5MlZFNUhTM0NaWkFZeFBaZFNXUFowMGdzUDQ5?=
+ =?utf-8?B?Sm4vS0g2RlBtd2VFdVFma2VtZVBuWmdvMm11a0QyeXZBcWFDUXZJUTErT0R3?=
+ =?utf-8?B?YVFKVENtWXZtQUxIVXM1UXdaUFJoYW1IQ0UrL3RZQytxVHBOV0lRc2FEOHhJ?=
+ =?utf-8?B?ZisxQk5MMG5hRzJFSFgvWk91VnBiaURqZ3J5dTJKYi93VG1yYmw3ODlsajVP?=
+ =?utf-8?B?UDhBQ216cGlsTml3VmZTZ21kVml4eS9iSTBadlNreCtSUFd0QWpFcjN3bHhS?=
+ =?utf-8?B?cGFISlRZQlR3aE9UaXZGbmFlT0NMOTM3dDMwd3BZazdVU0NZY2RVV2ZBSjB2?=
+ =?utf-8?B?QW1ZQW01MmNXRzVteS9udlgwT1FWbWFtSk1xT3lpSDN0NE03Vkw0LytrdkpR?=
+ =?utf-8?B?REEveGpFVW1VZ2NkSElKalNxVDQzbFMyRjIxdFprOFVoYU5ubGh6NnE5Y1Vi?=
+ =?utf-8?B?eGVKNEVvcUFIbFl3NW5ZR0lzekNKMk1Oa3o2NHhIMHFEaGtTWUN0em5lalo3?=
+ =?utf-8?B?QWlIRjZXeFVaM0lHK1ltV254U1lmSUUrTVhWRXVxanJKYUNBbFdaTytaNmVu?=
+ =?utf-8?B?OE1UNTAyN3JVZHdmeVRoS0FFTm03UHUrZlhTaCt1d1dRQ0xEbFA2ZFBET1RF?=
+ =?utf-8?B?V3BRRTRRUy9aZHNqYmpmTVlpcFh3d3Q5bCtjQkhJY05pTXdnU0pkUHJ6MTM3?=
+ =?utf-8?B?Z2NRMjF2NFVGUFU3cm9yTzFPemFtSzBxMmdTQ01JdkgyUExPcW8zVXhibWY0?=
+ =?utf-8?B?eWY1RVVBZ0dVRXk0QVhBZ3A0ZmhyS2M5TlJJV0p5N0k4eVFEVm1uVHNpK01n?=
+ =?utf-8?B?TGhwcUlSa01BRFYvMTUrSFFaWmI3UENRQ1N3ZG1zck9pVEp2bzMwY0V6ZWZH?=
+ =?utf-8?Q?jemZMAooDOB2ewh8LSdJRJojb?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF000015C8:EE_|CH0PR12MB5372:EE_
-X-MS-Office365-Filtering-Correlation-Id: c2e313dd-1f3e-4c7d-df08-08dc36dd7af0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	t1NhiFJ9JvIwfn3zNmhfTvJv42Qc3RAne6E0q/BGOteF7exCvndBpGz3tD7VzyUc4sfAVx1ffpssn1uiMqS2q+2SYxbugutQaXT3z5TRvZnE+yi4Hh8DxdNt0RkpAV1qmCxe7DGoTOGyxjcXLKgHMeeMNVdszwFFFnTN8ZH1zDDdhbVyNwf/opRIrSf3bY7wjEOj0x+oPpGCypcSp6j45Fj6wEIIA8/tgJnEjdn5OvUnG5o9jcOPPRuJGC06kE30KM+Xy96VpwsDYC8HrPUcuu/GTdHlUKYypJYa19AUmIgFnQw2N9Pqxx4ED30Av3knoD9i6yYLnNG2pDybkCmCmEHeoZ6BO7oPtad0n0sJjcaBghtKOYYBMhRPauvHFcaC4iIvT+/5KibSAvYf2DwUe21wlWeoYXTmvRuCe3ne+xKRgzMrxJqFgtqZSgAfsNq4+c+f4wR8v0HUy3Gg1v3wof8EXpzu27IJ53FeZbT8R8G/1X9UcT9W/eVmW7KYUdC3/7XknkTHth3fJE9aMVgo+d06z9AmRsrDmGOCMLixXeqgBow+ts8JnC7/OMpEK7dekEYq2giPCAbcmvhwIluG+TXqnQ3EuDrsEtFzplCH+l/gz0DBckVTwP87cjDA5s20bAjDC/+i3/c+aDfrcXeaDugfO1bTbLnJl7q/kxErgPwNlgUo7cdGCClmp/j5gBgZ6uLzyS5X9rZOO+b3jUqP65b1diEd2ibmwBVpcTT0ugIap15j7PZSMMr3PztHp/Rg
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2024 15:13:25.7421
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5381.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fafb2e27-e3f5-4929-501b-08dc36ddbb9a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Feb 2024 15:15:14.2673
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2e313dd-1f3e-4c7d-df08-08dc36dd7af0
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF000015C8.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5372
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CUrRiJrpHoJT2dm/03DCRw7pqoVEQI9SJAalfZw4wv+nRLTcJvGeFLESoLzOzG4Z8jLuTcjIrd65NtWlgTqdtg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6831
 
-AMD MP2 STB function provides a data buffer used to log debug information
-about the system execution during S2Idle suspend/resume.
-
-A data buffer known as the STB (Smart Trace Buffer) is a circular buffer
-which is a low-level log to assist in debugging by providing insights
-into any potential hangs or stalls that may occur during the S2Idle
-suspend/resume processes.
-
-The current PMC driver retrieves STB data from MP1, but there can be
-scenarios where MP1 might hang or become unresponsive, leading to the
-loss of critical data present in the STB buffer. This defeats the purpose
-of the STB buffer, which was originally meant to help identify system
-failures.
-
-This feature creates stb_read_previous_boot debugfs allows users to
-retrieve the STB log from MP2 specifically from the last occurrence of
-the S2Idle suspend/resume. A userspace daemon can access STB log of last
-S2Idle suspend/resume which can help to troubleshoot potential issues
-related to hangs or stalls during the S2Idle suspend/resume sequence.
-
-Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
----
-Changes in v2:
-	- Used linux/sizes.h instead of defining KB.
-	- Defined timeout containing unit as per USEC_PER_MSEC.
-	- Modified macro of AMD_C2P_MSG and AMD_P2C_MSG.
-	- Changed string stb to STB in log messages.
-	- Defined literals using Macro.
-
- drivers/platform/x86/amd/pmc/Kconfig   |  23 +++
- drivers/platform/x86/amd/pmc/Makefile  |   1 +
- drivers/platform/x86/amd/pmc/mp2_stb.c | 227 +++++++++++++++++++++++++
- drivers/platform/x86/amd/pmc/pmc.c     |   5 +
- drivers/platform/x86/amd/pmc/pmc.h     |  12 ++
- 5 files changed, 268 insertions(+)
- create mode 100644 drivers/platform/x86/amd/pmc/mp2_stb.c
-
-diff --git a/drivers/platform/x86/amd/pmc/Kconfig b/drivers/platform/x86/amd/pmc/Kconfig
-index 883c0a95ac0c..8177486babf9 100644
---- a/drivers/platform/x86/amd/pmc/Kconfig
-+++ b/drivers/platform/x86/amd/pmc/Kconfig
-@@ -18,3 +18,26 @@ config AMD_PMC
- 
- 	  If you choose to compile this driver as a module the module will be
- 	  called amd-pmc.
-+
-+config AMD_MP2_STB
-+	bool "AMD SoC MP2 STB function"
-+	depends on AMD_PMC
-+	help
-+	  AMD MP2 STB function provides a data buffer used to log debug
-+	  information about the system execution during S2Idle suspend/resume.
-+	  A data buffer known as the STB (Smart Trace Buffer) is a circular
-+	  buffer which is a low-level log for the SoC which is used to debug
-+	  any hangs/stalls during S2Idle suspend/resume.
-+
-+	  The current PMC driver retrieves STB data from MP1, but there can be
-+	  scenarios where MP1 might hang or become unresponsive, leading to the
-+	  loss of critical data present in the STB buffer. This defeats the
-+	  purpose of the STB buffer, which was originally meant to help identify
-+	  system failures.
-+
-+	  Creates stb_read_previous_boot debugfs to get STB, a userspace daemon
-+	  can access STB log of last S2Idle suspend/resume which can help to
-+	  debug if hangs/stalls during S2Idle suspend/resume
-+
-+	  Say Y or N here if you have a notebook powered by AMD RYZEN CPU/APU
-+	  and supports MP2 STB.
-diff --git a/drivers/platform/x86/amd/pmc/Makefile b/drivers/platform/x86/amd/pmc/Makefile
-index 4aaa29d351c9..f1d9ab19d24c 100644
---- a/drivers/platform/x86/amd/pmc/Makefile
-+++ b/drivers/platform/x86/amd/pmc/Makefile
-@@ -6,3 +6,4 @@
- 
- amd-pmc-objs := pmc.o pmc-quirks.o
- obj-$(CONFIG_AMD_PMC) += amd-pmc.o
-+amd-pmc-$(CONFIG_AMD_MP2_STB) += mp2_stb.o
-diff --git a/drivers/platform/x86/amd/pmc/mp2_stb.c b/drivers/platform/x86/amd/pmc/mp2_stb.c
-new file mode 100644
-index 000000000000..258de76cddce
---- /dev/null
-+++ b/drivers/platform/x86/amd/pmc/mp2_stb.c
-@@ -0,0 +1,227 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * AMD MP2 STB layer
-+ *
-+ * Copyright (c) 2024, Advanced Micro Devices, Inc.
-+ * All Rights Reserved.
-+ *
-+ * Author: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-+ */
-+
-+#include <linux/debugfs.h>
-+#include <linux/iopoll.h>
-+#include <linux/pci.h>
-+#include <linux/sizes.h>
-+
-+#include "pmc.h"
-+
-+#define VALID_MSG 0xA
-+#define VALID_RESPONSE 2
-+
-+#define AMD_C2P_MSG0 0x10500
-+#define AMD_C2P_MSG1 0x10504
-+#define AMD_P2C_MSG0 0x10680
-+#define AMD_P2C_MSG1 0x10684
-+
-+#define SLEEP_US (0.5 * USEC_PER_MSEC)
-+#define TIMEOUT_US (1600 * USEC_PER_MSEC)
-+
-+#define LEN_2KB_BIT 1
-+#define LEN_16KB_BIT 4
-+
-+static struct amd_mp2_dev *mp2;
-+
-+struct mp2_cmd_base {
-+	union {
-+		u32 ul;
-+		struct {
-+			u32 cmd_id : 4;
-+			u32 intr_disable : 1;
-+			u32 dma_addr : 1;
-+			u32 rsvd : 26;
-+		} cmd;
-+	};
-+};
-+
-+struct mp2_cmd_response {
-+	union {
-+		u32 resp;
-+		struct {
-+			u32 cmd_id : 4;
-+			u32 status : 4;
-+			u32 response : 4;
-+			u32 rsvd2 : 20;
-+		} response;
-+	};
-+};
-+
-+struct mp2_stb_data_valid {
-+	union {
-+		u32 data_valid;
-+		struct {
-+			u32 valid : 16;
-+			u32 length : 16;
-+		} val;
-+	};
-+};
-+
-+static int amd_mp2_wait_response(u8 cmd_id, u32 command_sts)
-+{
-+	struct mp2_cmd_response cmd_resp;
-+
-+	if (!readl_poll_timeout(mp2->mmio + AMD_P2C_MSG0, cmd_resp.resp,
-+				(cmd_resp.response.response == 0x0 &&
-+				 cmd_resp.response.status == command_sts &&
-+				 cmd_resp.response.cmd_id == cmd_id), SLEEP_US, TIMEOUT_US))
-+		return cmd_resp.response.status;
-+
-+	return -ETIMEDOUT;
-+}
-+
-+static void amd_mp2_stb_send_cmd(u8 cmd_id, uint8_t da)
-+{
-+	struct mp2_cmd_base cmd_base;
-+
-+	cmd_base.ul = 0;
-+	cmd_base.cmd.cmd_id = cmd_id;
-+	cmd_base.cmd.intr_disable = 1;
-+	cmd_base.cmd.dma_addr = da;
-+
-+	writeq(mp2->dma_addr, mp2->mmio + AMD_C2P_MSG1);
-+	writel(cmd_base.ul, mp2->mmio + AMD_C2P_MSG0);
-+}
-+
-+static int amd_mp2_stb_region(int len)
-+{
-+	struct device *dev = &mp2->pdev->dev;
-+
-+	len *= SZ_1K;
-+
-+	if (!mp2->stbdata) {
-+		mp2->vslbase = dmam_alloc_coherent(dev, len, &mp2->dma_addr, GFP_KERNEL);
-+		if (!mp2->vslbase)
-+			return -ENOMEM;
-+
-+		mp2->stbdata = devm_kzalloc(dev, len, GFP_KERNEL);
-+		if (!mp2->stbdata)
-+			return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static int amd_mp2_process_cmd(struct file *filp)
-+{
-+	struct mp2_stb_data_valid stb_dv;
-+	int status, rc;
-+
-+	stb_dv.data_valid = readl(mp2->mmio + AMD_P2C_MSG1);
-+
-+	if (stb_dv.val.valid != VALID_MSG) {
-+		dev_err(&mp2->pdev->dev, "Invalid STB data\n");
-+		return -EBADMSG;
-+	}
-+
-+	if (stb_dv.val.length != LEN_2KB_BIT && stb_dv.val.length != LEN_16KB_BIT) {
-+		dev_err(&mp2->pdev->dev, "Unsupported length\n");
-+		return -EMSGSIZE;
-+	}
-+
-+	mp2->stb_len = BIT(stb_dv.val.length);
-+
-+	rc = amd_mp2_stb_region(mp2->stb_len);
-+	if (rc) {
-+		dev_err(&mp2->pdev->dev, "Failed to init STB region, rc %d\n", rc);
-+		return rc;
-+	}
-+
-+	amd_mp2_stb_send_cmd(VALID_MSG, true);
-+	status = amd_mp2_wait_response(VALID_MSG, VALID_RESPONSE);
-+	if (status == VALID_RESPONSE) {
-+		memcpy_fromio(mp2->stbdata, mp2->vslbase, SZ_1K * mp2->stb_len);
-+		filp->private_data = mp2->stbdata;
-+		mp2->is_stb_data = true;
-+	} else {
-+		dev_err(&mp2->pdev->dev, "Failed to start STB dump, status %d\n", status);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+static int amd_mp2_stb_debugfs_open(struct inode *inode, struct file *filp)
-+{
-+	if (!mp2->is_stb_data)
-+		return amd_mp2_process_cmd(filp);
-+
-+	filp->private_data = mp2->stbdata;
-+
-+	return 0;
-+}
-+
-+static ssize_t amd_mp2_stb_debugfs_read(struct file *filp, char __user *buf, size_t size,
-+					loff_t *pos)
-+{
-+	if (!filp->private_data)
-+		return -EINVAL;
-+
-+	return simple_read_from_buffer(buf, size, pos, filp->private_data, SZ_1K * mp2->stb_len);
-+}
-+
-+static const struct file_operations amd_mp2_stb_debugfs_fops = {
-+	.owner = THIS_MODULE,
-+	.open = amd_mp2_stb_debugfs_open,
-+	.read = amd_mp2_stb_debugfs_read,
-+};
-+
-+static void amd_mp2_dbgfs_register(struct amd_pmc_dev *dev)
-+{
-+	if (!dev->dbgfs_dir)
-+		return;
-+
-+	debugfs_create_file("stb_read_previous_boot", 0644, dev->dbgfs_dir, dev,
-+			    &amd_mp2_stb_debugfs_fops);
-+}
-+
-+int amd_mp2_stb_init(struct amd_pmc_dev *dev)
-+{
-+	struct pci_dev *pdev;
-+	int rc;
-+
-+	pdev = pci_get_device(PCI_VENDOR_ID_AMD, 0x172c, NULL);
-+	if (!pdev)
-+		return -ENODEV;
-+
-+	mp2 = devm_kzalloc(dev->dev, sizeof(*mp2), GFP_KERNEL);
-+	if (!mp2)
-+		return -ENOMEM;
-+
-+	mp2->pdev = pdev;
-+
-+	rc = pcim_enable_device(pdev);
-+	if (rc) {
-+		pci_dev_put(pdev);
-+		return rc;
-+	}
-+
-+	rc = pcim_iomap_regions(pdev, BIT(2), "mp2 stb");
-+	if (rc) {
-+		pci_dev_put(pdev);
-+		return rc;
-+	}
-+
-+	/* MP2 MMIO is mapped to BAR2 */
-+	mp2->mmio = pcim_iomap_table(pdev)[2];
-+	pci_set_master(pdev);
-+	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-+	if (rc) {
-+		dev_err(&pdev->dev, "failed to set DMA mask\n");
-+		pci_dev_put(pdev);
-+		return rc;
-+	}
-+
-+	amd_mp2_dbgfs_register(dev);
-+	dev->mp2 = mp2;
-+
-+	return 0;
-+}
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index 108e12fd580f..8baab1c3cca9 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -1106,6 +1106,8 @@ static int amd_pmc_probe(struct platform_device *pdev)
- 	}
- 
- 	amd_pmc_dbgfs_register(dev);
-+	if (IS_ENABLED(CONFIG_AMD_MP2_STB))
-+		amd_mp2_stb_init(dev);
- 	pm_report_max_hw_sleep(U64_MAX);
- 	return 0;
- 
-@@ -1122,6 +1124,9 @@ static void amd_pmc_remove(struct platform_device *pdev)
- 		acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
- 	amd_pmc_dbgfs_unregister(dev);
- 	pci_dev_put(dev->rdev);
-+	if (IS_ENABLED(CONFIG_AMD_MP2_STB))
-+		if (dev->mp2 && dev->mp2->pdev)
-+			pci_dev_put(dev->mp2->pdev);
- 	mutex_destroy(&dev->lock);
- }
- 
-diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
-index 827eef65e133..be0f6b674133 100644
---- a/drivers/platform/x86/amd/pmc/pmc.h
-+++ b/drivers/platform/x86/amd/pmc/pmc.h
-@@ -14,6 +14,16 @@
- #include <linux/types.h>
- #include <linux/mutex.h>
- 
-+struct amd_mp2_dev {
-+	void __iomem *mmio;
-+	void __iomem *vslbase;
-+	void *stbdata;
-+	struct pci_dev *pdev;
-+	dma_addr_t dma_addr;
-+	int stb_len;
-+	bool is_stb_data;
-+};
-+
- struct amd_pmc_dev {
- 	void __iomem *regbase;
- 	void __iomem *smu_virt_addr;
-@@ -38,10 +48,12 @@ struct amd_pmc_dev {
- 	struct dentry *dbgfs_dir;
- 	struct quirk_entry *quirks;
- 	bool disable_8042_wakeup;
-+	struct amd_mp2_dev *mp2;
- };
- 
- void amd_pmc_process_restore_quirks(struct amd_pmc_dev *dev);
- void amd_pmc_quirks_init(struct amd_pmc_dev *dev);
-+int amd_mp2_stb_init(struct amd_pmc_dev *dev);
- 
- /* List of supported CPU ids */
- #define AMD_CPU_ID_RV			0x15D0
--- 
-2.25.1
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGFuaWlsIER1bG92IDxk
+LmR1bG92QGFsYWRkaW4ucnU+DQo+IFNlbnQ6IE1vbmRheSwgMjYgRmVicnVhcnkgMjAyNCAxNjo1
+NQ0KPiBUbzogSGFucyBkZSBHb2VkZSA8aGRlZ29lZGVAcmVkaGF0LmNvbT4NCj4gQ2M6IERhbmlp
+bCBEdWxvdiA8ZC5kdWxvdkBhbGFkZGluLnJ1PjsgTWFyayBHcm9zcw0KPiA8bWdyb3NzQGxpbnV4
+LmludGVsLmNvbT47IEFuZHkgU2hldmNoZW5rbyA8YW5keUBpbmZyYWRlYWQub3JnPjsgRGFycmVu
+DQo+IEhhcnQgPGR2aGFydEBpbmZyYWRlYWQub3JnPjsgVmFkaW0gUGFzdGVybmFrIDx2YWRpbXBA
+bnZpZGlhLmNvbT47DQo+IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBsaW51
+eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsdmMtDQo+IHByb2plY3RAbGludXh0ZXN0aW5nLm9y
+Zw0KPiBTdWJqZWN0OiBbUEFUQ0hdIHBsYXRmb3JtL21lbGxhbm94OiBtbHhyZWctaG90cGx1Zzog
+Q2hlY2sgcG9pbnRlciBmb3IgTlVMTA0KPiBiZWZvcmUgZGVyZWZlcmVuY2luZyBpdA0KPiANCj4g
+bWx4cmVnX2hvdHBsdWdfd29ya19oZWxwZXIoKSBpbXBsaWVzIHRoYXQgaXRlbSBjYW4gYmUgTlVM
+TC4gVGhlcmUgaXMgYQ0KPiBzYW5pdHkgY2hlY2sgdGhhdCBjaGVja3MgaXRlbSBmb3IgTlVMTCBh
+bmQgdGhlbiBkZXJlZmVyZW5jZXMgaXQuDQo+IA0KPiBFdmVuIHRob3VnaCwgdGhlIGNvbW1lbnQg
+YmVmb3JlIHNhbml0eSBjaGVjayBzYXlzIHRoYXQgaXQgY2FuIG9ubHkgaGFwcGVuIGlmDQo+IHNv
+bWUgcGllY2Ugb2YgaGFyZHdhcmUgaXMgYnJva2VuLCBidXQgaW4gdGhpcyBjYXNlIGl0IHdpbGwg
+bGVhZCB0byBOVUxMLXBvaW50ZXINCj4gZGVyZWZlcmVuY2UgYmVmb3JlIHRoZSBmdW5jdGlvbiBp
+cyBldmVuIGNhbGxlZCwgc28gbGV0J3MgY2hlY2sgaXQgYmVmb3JlDQo+IGRlcmVmZXJlbmNpbmcu
+DQo+IA0KPiBGb3VuZCBieSBMaW51eCBWZXJpZmljYXRpb24gQ2VudGVyIChsaW51eHRlc3Rpbmcu
+b3JnKSB3aXRoIFNWQUNFLg0KPiANCj4gRml4ZXM6IGM2YWNhZDY4ZWIyZCAoInBsYXRmb3JtL21l
+bGxhbm94OiBtbHhyZWctaG90cGx1ZzogTW9kaWZ5IHRvIHVzZSBhDQo+IHJlZ21hcCBpbnRlcmZh
+Y2UiKQ0KPiBTaWduZWQtb2ZmLWJ5OiBEYW5paWwgRHVsb3YgPGQuZHVsb3ZAYWxhZGRpbi5ydT4N
+Cj4gLS0tDQo+ICBkcml2ZXJzL3BsYXRmb3JtL21lbGxhbm94L21seHJlZy1ob3RwbHVnLmMgfCAx
+NiArLS0tLS0tLS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDE1
+IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0vbWVsbGFu
+b3gvbWx4cmVnLWhvdHBsdWcuYw0KPiBiL2RyaXZlcnMvcGxhdGZvcm0vbWVsbGFub3gvbWx4cmVn
+LWhvdHBsdWcuYw0KPiBpbmRleCA1YzAyMmIyNThmOTEuLjUyNDEyMWI5ZjA3MCAxMDA2NDQNCj4g
+LS0tIGEvZHJpdmVycy9wbGF0Zm9ybS9tZWxsYW5veC9tbHhyZWctaG90cGx1Zy5jDQo+ICsrKyBi
+L2RyaXZlcnMvcGxhdGZvcm0vbWVsbGFub3gvbWx4cmVnLWhvdHBsdWcuYw0KPiBAQCAtMzQ4LDIw
+ICszNDgsNiBAQCBtbHhyZWdfaG90cGx1Z193b3JrX2hlbHBlcihzdHJ1Y3QNCj4gbWx4cmVnX2hv
+dHBsdWdfcHJpdl9kYXRhICpwcml2LA0KPiAgCXUzMiByZWd2YWwsIGJpdDsNCj4gIAlpbnQgcmV0
+Ow0KPiANCj4gLQkvKg0KPiAtCSAqIFZhbGlkYXRlIGlmIGl0ZW0gcmVsYXRlZCB0byByZWNlaXZl
+ZCBzaWduYWwgdHlwZSBpcyB2YWxpZC4NCj4gLQkgKiBJdCBzaG91bGQgbmV2ZXIgaGFwcGVuLCBl
+eGNlcHRlZCB0aGUgc2l0dWF0aW9uIHdoZW4gc29tZQ0KPiAtCSAqIHBpZWNlIG9mIGhhcmR3YXJl
+IGlzIGJyb2tlbi4gSW4gc3VjaCBzaXR1YXRpb24ganVzdCBwcm9kdWNlDQo+IC0JICogZXJyb3Ig
+bWVzc2FnZSBhbmQgcmV0dXJuLiBDYWxsZXIgbXVzdCBjb250aW51ZSB0byBoYW5kbGUgdGhlDQo+
+IC0JICogc2lnbmFscyBmcm9tIG90aGVyIGRldmljZXMgaWYgYW55Lg0KPiAtCSAqLw0KPiAtCWlm
+ICh1bmxpa2VseSghaXRlbSkpIHsNCj4gLQkJZGV2X2Vycihwcml2LT5kZXYsICJGYWxzZSBzaWdu
+YWw6IGF0IG9mZnNldDptYXNrDQo+IDB4JTAyeDoweCUwMnguXG4iLA0KPiAtCQkJaXRlbS0+cmVn
+LCBpdGVtLT5tYXNrKTsNCj4gLQ0KPiAtCQlyZXR1cm47DQo+IC0JfQ0KDQpJdCB3b3VsZCBiZSBl
+bm91Z2gganVzdCB0byBwcm9kdWNlIGRldl9lcnIocHJpdi0+ZGV2LCAiRmFsc2Ugc2lnbmFsXG4i
+KTsNCkFuZCByZXR1cm4uDQoNCj4gLQ0KPiAgCS8qIE1hc2sgZXZlbnQuICovDQo+ICAJcmV0ID0g
+cmVnbWFwX3dyaXRlKHByaXYtPnJlZ21hcCwgaXRlbS0+cmVnICsNCj4gTUxYUkVHX0hPVFBMVUdf
+TUFTS19PRkYsDQo+ICAJCQkgICAwKTsNCj4gQEAgLTU1Niw3ICs1NDIsNyBAQCBzdGF0aWMgdm9p
+ZCBtbHhyZWdfaG90cGx1Z193b3JrX2hhbmRsZXIoc3RydWN0DQo+IHdvcmtfc3RydWN0ICp3b3Jr
+KQ0KPiANCj4gIAkvKiBIYW5kbGUgdG9wb2xvZ3kgYW5kIGhlYWx0aCBjb25maWd1cmF0aW9uIGNo
+YW5nZXMuICovDQo+ICAJZm9yIChpID0gMDsgaSA8IHBkYXRhLT5jb3VudGVyOyBpKyssIGl0ZW0r
+Kykgew0KPiAtCQlpZiAoYWdncl9hc3NlcnRlZCAmIGl0ZW0tPmFnZ3JfbWFzaykgew0KPiArCQlp
+ZiAoaXRlbSAmJiAoYWdncl9hc3NlcnRlZCAmIGl0ZW0tPmFnZ3JfbWFzaykpIHsNCj4gIAkJCWlm
+IChpdGVtLT5oZWFsdGgpDQo+ICAJCQkJbWx4cmVnX2hvdHBsdWdfaGVhbHRoX3dvcmtfaGVscGVy
+KHByaXYsDQo+IGl0ZW0pOw0KPiAgCQkJZWxzZQ0KPiAtLQ0KPiAyLjI1LjENCg0K
