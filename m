@@ -1,115 +1,102 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CCC13B289;
-	Tue, 27 Feb 2024 14:55:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6220214601A;
+	Tue, 27 Feb 2024 15:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709045726; cv=none; b=iBcXdBR7IfXluP2palF86MLFvjcx3jvdRJMA9ODf1DiVOCgfVN1srcksBkl8DzMzX5iYhgyvYlKQIh/KEt1nhT7qxNFnD02QGVYq55jRnV8wudCIr0jTEXR/BGMqKAb0IarbyoRyynTf9yRePuDOCDjZv4vSq2qGz1tqmSTTleY=
+	t=1709048721; cv=none; b=XL838n2TE2lK78jQGZbLIRn4KjYJuwgo9qXvZ40dPSNvzrj8sdw6VPUJ/TV9pOsi/f5uZTXZieEq+O2xZxLoa/cdQ2+ZGXf4djfUeN0i+8BFfK6V8NJSJ4jsNhtI41qrBgl6taGB1aRK7/vqdSEnfhyqsd3+dbesVHiO91yoRX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709045726; c=relaxed/simple;
-	bh=fBLBJnTXEesUlwnv6flfi7CtneDxF1nsqo3zSFZ/SCs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=D67rGPOroS/7VtcRpTOZOsu1sz7RtHtzSrVlS+IKuWTnu5ferB9KWQ6PIcqLQAzB+YwJHt5VPdphy4vaNk2M55Irug7xC6XwFm7tuVoi4LWO3UoqI2xB/ck88v1ro7617tXsjAeBM10R3yAbTruRzIHhAfUsqANaz9T1uEmOUso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=iV49nW+P; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1709048721; c=relaxed/simple;
+	bh=8hBNTU43wvhAs0bfGYgavDjJs4CnkkSY+xwfEC/5nvw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=XUm5t5x/+UF7IFXZKaFg7BMN5ExxinFXYG1d85GvdhbWFfKCDFrW5Ecq1AI/MaLdc/5qu4OoWFvWs/M1j/iyX0wtfS99QW8yakpvAAglQV6zNB6q/pruyW3cH/Q5AMAVcEf2P6aA1vd1sYkrQ47aqim/XcAvKtqVhxs9gl21erU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xwhl5sOk; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="iV49nW+P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1709045708; x=1709650508; i=w_armin@gmx.de;
-	bh=fBLBJnTXEesUlwnv6flfi7CtneDxF1nsqo3zSFZ/SCs=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=iV49nW+PM1NvK+0/Fb5KnrvKctrOzz088gPi78nErBhSlex1JBHymmG9e4ITqitD
-	 Gj5N7wEWXWhkYHqHqWj3+oGRDRWtZ2p42J2McAosJkiVb9MhRVT1a5MOYW2Y+7iUk
-	 cHm5NzdebPpsrUoW+q7NjgB+VpLy86J/itI8PQsHLdEeSb29XWn6MDBG+LNhRG6TQ
-	 SgpRx3wun2SYkmYuWGItwtt+Hlpdjf3DeCPpaqBMxQpHeCxPR+uDA6RorCR4Hy9bw
-	 X2I/sb7fOOn4JAAwwWT1xrjmgQkq3qppUWjsIbJI2gWsG8fOck7viHc17uiDwe+sj
-	 repCWkx/NSeLGcYWuA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1Mulm5-1qoFTz26Vv-00rqYP; Tue, 27 Feb 2024 15:55:08 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: Shyam-sundar.S-k@amd.com
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] platform/x86/amd/pmf: Fix possible out-of-bound memory accesses
-Date: Tue, 27 Feb 2024 15:55:00 +0100
-Message-Id: <20240227145500.299683-2-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240227145500.299683-1-W_Armin@gmx.de>
-References: <20240227145500.299683-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xwhl5sOk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709048719; x=1740584719;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=8hBNTU43wvhAs0bfGYgavDjJs4CnkkSY+xwfEC/5nvw=;
+  b=Xwhl5sOk2VTEG7qJTkjGNMHd/Oarzp1j+O4i0O2RlHRxRKbLj5cQwP8g
+   gHHlWqgNFYWzFy0DA34hP2xKFH4jlV4h4ibiF0XMWafxR8NTjTZ0UJPMo
+   6L5B+v6TqHYR8qaKoJGEoUECHPeait84mkPV2oFutZ2QEDG8J8bs11Ew1
+   QNgO8b9+VubBGvoJc1g0ei2Jvz6XS+89YN7PAVO3X/xtk8bxSj6RhLi2O
+   Dfy0lTxos2YpO6wjhrTLREqnBxseXhKr5mEp4/qVh/jxr7gqGWvUpf20I
+   QxXQrytiKoFbRuEroUYkrBAfFPgYPo4u2o6lImV1bwkt9DPMveuwMe1OI
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14103877"
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="14103877"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 07:45:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="37899541"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.34.61])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 07:45:16 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 27 Feb 2024 17:45:11 +0200 (EET)
+To: Armin Wolf <W_Armin@gmx.de>, Shyam-sundar.S-k@amd.com
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] platform/x86/amd/pmf: Fix possible out-of-bound
+ memory accesses
+In-Reply-To: <20240227145500.299683-2-W_Armin@gmx.de>
+Message-ID: <2dd63b5b-cf60-9f28-55b3-35eab537dc9b@linux.intel.com>
+References: <20240227145500.299683-1-W_Armin@gmx.de> <20240227145500.299683-2-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:mwB/4+OQxc3beQYvIPV5xzGZIUOShegwwrNBgf2oo3MXenhZKFn
- bLP7TMzPgdsBYdgMbfx/KV+sy/zk32uwTlQjBeZRJIXYhi5A1ym5YXoBbmabvZb5R+iEMhH
- ZpB5nX7NBegF/ok7HNjUd5y5eU8tywxrGPW4gq0k33+ZHTV6bZ6RbHdjHzlj3vgo8gWIi6s
- d9Y/faRB1BIVmDPrv2Zsw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:zQEp+AMOBAE=;RccVHBJEzxHJeOPYwc5sLut92VT
- 4zv4X4Yy9b7mGc4eOoSAwV0vzU+2vlT17wh42WWplCbusylS/AoMQI4gFPMm9r1tlFKpMH4cj
- KoliPSYlRfOzK09yDNcr4BVYgNGAJitXG0jJVNLED5OoWyLBCv8US2bC+QEagXQEGuD2uHJXD
- kEYT2FhIxs/YT0XQ1GG3dwalo7xqbSeEag27UGKYPpSJdnVbyktyloz3VDfVDHZlRRL19/Lzk
- KmrNYiBua4wfQ7NvLYI35MG8Y0AkKxmK0b/aQj258qvq1dzub9DYwNCQODXn0ekUhntJy6FXl
- SII3l6uVYuW042qxHFQ3vBjjlyhCnD46Ch/amn+UBvP1BQF0fNhUH0D27jCBfVTOi02ry/0Oy
- m/wJiw5ZFo6ju6q1ER7YrygVrWhLsZeCzqpc3OUYNV9qjSyOM/ferF598b5UpteIg8L8zOe71
- XmMlADWNMo2x96JmPRAiVl7sTwbCSm0vjzjSRE166YO+cgwhQN4a7wwO8oceBmS4bGUzLY7ZF
- XZS8nyZJ3uShNWldDXzCBJYvJNEUCINCENB0bjx0GI/XLAS4B1OuqUkgbhvk8ev18EULiUyp4
- zEUKdEntPWmYJqsnXb8uNFX8Juamh3KKhQ3/5Dqd1BHkQfBe6LpY147A0n+xZaX0kEcDo6a08
- V1fYHsNUHZwpO623W0TIZMzU127Ur3DcMgGevEQTm23N0WhNloakK7MMnbn6AaeZQDdpRgxP0
- jXEU6rOLuQHSQL8HXXpyislqhz3PtZkmRi8+bjg9hb/TSLQwhOkA9v0vNu5eDJDZ3mjKdyFS3
- n7xWznp81IBYR5mP9/gCMWqg/Rw+VxprF0Z6IfKFaOCnM=
+Content-Type: text/plain; charset=US-ASCII
 
-The length of the policy buffer is not validated before accessing it,
-which means that multiple out-of-bounds memory accesses can occur.
+Hi Shyam & Armin,
 
-This is especially bad since userspace can load policy binaries over
-debugfs.
+Shyam, please take a look at the question below.
 
-Compile-tested only.
+On Tue, 27 Feb 2024, Armin Wolf wrote:
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
-Changes since v1:
-- check if the policy buffer also has enough room for storing the length
-=2D--
- drivers/platform/x86/amd/pmf/tee-if.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> The length of the policy buffer is not validated before accessing it,
+> which means that multiple out-of-bounds memory accesses can occur.
+> 
+> This is especially bad since userspace can load policy binaries over
+> debugfs.
 
-diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/=
-amd/pmf/tee-if.c
-index b3491268b6a0..09e3c620a9c7 100644
-=2D-- a/drivers/platform/x86/amd/pmf/tee-if.c
-+++ b/drivers/platform/x86/amd/pmf/tee-if.c
-@@ -249,12 +249,18 @@ static int amd_pmf_start_policy_engine(struct amd_pm=
-f_dev *dev)
- 	u32 cookie, length;
- 	int res;
+> +	if (dev->policy_sz < POLICY_COOKIE_LEN + sizeof(length))
+> +		return -EINVAL;
+> +
+>  	cookie = *(u32 *)(dev->policy_buf + POLICY_COOKIE_OFFSET);
+>  	length = *(u32 *)(dev->policy_buf + POLICY_COOKIE_LEN);
 
-+	if (dev->policy_sz < POLICY_COOKIE_LEN + sizeof(length))
-+		return -EINVAL;
-+
- 	cookie =3D *(u32 *)(dev->policy_buf + POLICY_COOKIE_OFFSET);
- 	length =3D *(u32 *)(dev->policy_buf + POLICY_COOKIE_LEN);
+This starts to feel like adding a struct for the header(?) would be better
+course of action here as then one could compare against sizeof(*header) 
+and avoid all those casts (IMO, just access the header fields directly 
+w/o the local variables).
 
- 	if (cookie !=3D POLICY_SIGN_COOKIE || !length)
- 		return -EINVAL;
+Shyam, do you think a struct makes sense here? There's some header in 
+this policy, right?
 
-+	if (dev->policy_sz < length + 512)
-+		return -EINVAL;
-+
- 	/* Update the actual length */
- 	dev->policy_sz =3D length + 512;
- 	res =3D amd_pmf_invoke_cmd_init(dev);
-=2D-
-2.39.2
+
+There are more thing to address here...
+
+1) amd_pmf_start_policy_engine() function returns -EINVAL & res that is 
+   TA_PMF_* which inconsistent in type of the return value
+
+2) Once 1) is fixed, the caller shadowing the return code can be fixed as 
+   well:
+        ret = amd_pmf_start_policy_engine(dev);
+        if (ret)
+                return -EINVAL;
+
+
+-- 
+ i.
+
 
