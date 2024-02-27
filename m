@@ -1,122 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8BBF2557E
-	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Feb 2024 18:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55ED24EB43;
+	Tue, 27 Feb 2024 19:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709059668; cv=none; b=CF+ebc7XMKOWNvJHW+BI5AznjK4hiRfKwp5j2lZQ9jdtzUUf46+d2ZgGWJUhwWi3MTPmHRzs02bLA9McGDwSwExMKGvBIcN57+TI1E0d7/QUAX1busj/dm6XAOE+ok+iFNPwl9ly7dH2lDNjPl9RmI7zUS/D3j7Za3eKEaId7O4=
+	t=1709060500; cv=none; b=eUST9RROtQ+OOuD0z6Qr5PJx7JSYZiScyW11yiAa4MqwrHewvIIS5hcZlL+zkzzAMOCdrOb1xD+c2Muc35cWLYUPlVT3e0Fk6F2F2437kJeZEJkZ+nlA/E2s7PHmp7pMVpyp6x1tS7omvEhI48SiJjAe6kthma07bAgVdHnMGnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709059668; c=relaxed/simple;
-	bh=jVW0cNwMu/mfYLdtu5XOyC3FFVCWH7JRj/rTOyTf40U=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=qzq6UjcPG5e1p37wPHBwwt8UJ8C1T5rs5PyudK4P7IsoafJCSFmLj+qL9B88Q0qJcJ4pV/Gsx2pswQPZblvtikNwi7LV9aJVZrI4l8SQCWsyYXCK6epkloXQ8cONwqzKcmtqbdHA657kk9dsSgp3Jw+uf9IrV2BK8H8rhesTj1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EWzZsg9Z; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1709060500; c=relaxed/simple;
+	bh=UN6pem+oLYyRIAcDV+Q1d6G66CsBA01ua732dNvWsiU=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IeXAYzzwVu5F6Gs8zLW0jGNpTBogj7ppmu+GZ/o/VtGyZm93TKXei7kHakSgEN6V5L0+n+0H1ZxDWUYwF4miivlgdc3P+cynAPYO4OkHKCsi14T3fw0nKlAe2uDx+j8c4Zk7o9KTdZvo7mTM/T3rWvBITkd9YbqhDWaqMX6iNV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h4qU3V5Q; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EWzZsg9Z"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h4qU3V5Q"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709059666; x=1740595666;
-  h=message-id:date:mime-version:from:subject:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=jVW0cNwMu/mfYLdtu5XOyC3FFVCWH7JRj/rTOyTf40U=;
-  b=EWzZsg9Z52Pw5JsuIKfeGH9EcWBJRJ0R4fbgPosC1+Cjkgz9+H6rdGvU
-   tZ23h2FbAr1jAe9/xD+Rzb8b7hZOMt/wRSLLCBAxDx8ByOJxUpNmk2BSV
-   dyAZ3kSGxw7yZgKs8D2cL5kDDocB+L9TOwsdfuHCueyfEkpNkHZW8+2/u
-   ElxdPsOp9TQewWfcmRJuUOe36K147/PJxsB1Vw7CPzSQreIG/F/S72HJn
-   Top0Y2RlmDzmWi3VvEMxrkk0iEcW3fy0jjoKEbw84E8k75Ga7SVN2zqel
-   2V917Fi/WkopiAPgJC0Lqoa+S0AumJ11y38Qws5rBfZGujJ6RejkQxzTL
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="6371632"
+  t=1709060498; x=1740596498;
+  h=from:to:subject:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=UN6pem+oLYyRIAcDV+Q1d6G66CsBA01ua732dNvWsiU=;
+  b=h4qU3V5Q4gjliL3G2X1QhUjJcT+BjFySFDUI+8E/s0A71r07/oNsj7GI
+   zLVVw0g7T8SRqHroCNj0I2eUMdtVh0rJS8+5FiWFkp3qiRO5h9x/e4aDq
+   5sXVheqqs+R08DihM2D9L431EDofHLX1vWaD5/rFXfhP3wGxw1Knrw+Gv
+   yfqjK62NfQyYceeQvLOa0irTuU+/07lP3iPhzlMSFDOdHSa2YHLpOiCKW
+   FuGu7grT4dBFsSjMiokNINP5+ohXQ2f0usHPLtvRRdXRF/kU5kF6+6u+i
+   YiPEyzqkz7VKzGrkWy1N11Tq674UKMHyBojT3CqldyKtWd0fJtJYsmu0Q
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14063661"
 X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="6371632"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 10:47:45 -0800
+   d="scan'208";a="14063661"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 11:01:38 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="11809288"
-Received: from dschro4x-mobl.amr.corp.intel.com (HELO [10.212.137.190]) ([10.212.137.190])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 10:47:42 -0800
-Message-ID: <e0398e3c-7ad0-486c-9959-add18a9741ac@linux.intel.com>
-Date: Tue, 27 Feb 2024 10:47:40 -0800
+   d="scan'208";a="7120052"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 11:01:37 -0800
+Received: from debox1-desk4.lan (unknown [10.251.6.149])
+	by linux.intel.com (Postfix) with ESMTP id 1EDFA580DF5;
+	Tue, 27 Feb 2024 11:01:37 -0800 (PST)
+From: "David E. Box" <david.e.box@linux.intel.com>
+To: david.e.box@linux.intel.com,
+	rajvi.jingar@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Subject: [PATCH V2 2/3] platform/x86/intel/pmc/lnl: Remove SSRAM support
+Date: Tue, 27 Feb 2024 11:01:33 -0800
+Message-Id: <20240227190134.1592072-2-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240227190134.1592072-1-david.e.box@linux.intel.com>
+References: <20240227190134.1592072-1-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH 1/7] platform/x86/amd/pmf: Differentiate PMF ACPI versions
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
-References: <20240227125520.3153140-1-Shyam-sundar.S-k@amd.com>
- <20240227125520.3153140-2-Shyam-sundar.S-k@amd.com>
-Content-Language: en-US
-In-Reply-To: <20240227125520.3153140-2-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+A recent PMC firmware change in Lunar Lake caused the pmc_core driver to
+fail to probe. This is due to a change in the GUID for PMC telemetry coming
+from the SSRAM device. Until a final release is ready this value may
+change again. In the meantime, disable the SSRAM support for Lunar Lake so
+the driver can load and provide some basic functionality.
 
-On 2/27/24 4:55 AM, Shyam Sundar S K wrote:
-> For family 1AH, certain PMF features have been enhanced - leading to a
-> newer APMF (AMD PMF) spec (BIOS and PMF driver interface) called v2.
->
-> This information would be fed into the if_version field of the
-> verify_interface method of the APMF call from the BIOS.
->
-> Use this information to store the version number to differentiate
-> between v1 or v2 and also store the information into the PMF private
-> data structure, as this information would be required for further code
-> branching to support the latest silicon.
->
-> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
-Looks good to me.
-
+Fixes: 3748dfdae2a6 ("platform/x86/intel/pmc: Add Lunar Lake M support to intel_pmc_core driver")
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
 
->  drivers/platform/x86/amd/pmf/acpi.c | 6 ++++--
->  drivers/platform/x86/amd/pmf/pmf.h  | 1 +
->  2 files changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-> index f2eb07ef855a..1f287a147c57 100644
-> --- a/drivers/platform/x86/amd/pmf/acpi.c
-> +++ b/drivers/platform/x86/amd/pmf/acpi.c
-> @@ -218,8 +218,10 @@ static int apmf_if_verify_interface(struct amd_pmf_dev *pdev)
->  		return err;
->  
->  	pdev->supported_func = output.supported_functions;
-> -	dev_dbg(pdev->dev, "supported functions:0x%x notifications:0x%x\n",
-> -		output.supported_functions, output.notification_mask);
-> +	dev_dbg(pdev->dev, "supported functions:0x%x notifications:0x%x version:%u\n",
-> +		output.supported_functions, output.notification_mask, output.version);
-> +
-> +	pdev->pmf_if_version = output.version;
->  
->  	return 0;
->  }
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index 66cae1cca73c..e51ac981af73 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -231,6 +231,7 @@ struct amd_pmf_dev {
->  	u64 policy_addr;
->  	void *policy_base;
->  	bool smart_pc_enabled;
-> +	u16 pmf_if_version;
->  };
->  
->  struct apmf_sps_prop_granular {
+V2 - Removed non-imperative language in changelog.
 
+ drivers/platform/x86/intel/pmc/lnl.c | 38 +++-------------------------
+ 1 file changed, 4 insertions(+), 34 deletions(-)
+
+diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/intel/pmc/lnl.c
+index abad17cdd3d7..068d72504683 100644
+--- a/drivers/platform/x86/intel/pmc/lnl.c
++++ b/drivers/platform/x86/intel/pmc/lnl.c
+@@ -13,21 +13,6 @@
+ 
+ #include "core.h"
+ 
+-#define SOCM_LPM_REQ_GUID	0x11594920
+-
+-#define PMC_DEVID_SOCM	0xa87f
+-
+-static const u8 LNL_LPM_REG_INDEX[] = {0, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20};
+-
+-static struct pmc_info lnl_pmc_info_list[] = {
+-	{
+-		.guid	= SOCM_LPM_REQ_GUID,
+-		.devid	= PMC_DEVID_SOCM,
+-		.map	= &lnl_socm_reg_map,
+-	},
+-	{}
+-};
+-
+ const struct pmc_bit_map lnl_ltr_show_map[] = {
+ 	{"SOUTHPORT_A",		CNP_PMC_LTR_SPA},
+ 	{"SOUTHPORT_B",		CNP_PMC_LTR_SPB},
+@@ -490,7 +475,6 @@ const struct pmc_reg_map lnl_socm_reg_map = {
+ 	.lpm_sts = lnl_lpm_maps,
+ 	.lpm_status_offset = MTL_LPM_STATUS_OFFSET,
+ 	.lpm_live_status_offset = MTL_LPM_LIVE_STATUS_OFFSET,
+-	.lpm_reg_index = LNL_LPM_REG_INDEX,
+ };
+ 
+ #define LNL_NPU_PCI_DEV		0x643e
+@@ -517,33 +501,19 @@ static int lnl_resume(struct pmc_dev *pmcdev)
+ int lnl_core_init(struct pmc_dev *pmcdev)
+ {
+ 	int ret;
+-	int func = 2;
+-	bool ssram_init = true;
+ 	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_SOC];
+ 
+ 	lnl_d3_fixup();
+ 
+ 	pmcdev->suspend = cnl_suspend;
+ 	pmcdev->resume = lnl_resume;
+-	pmcdev->regmap_list = lnl_pmc_info_list;
+-	ret = pmc_core_ssram_init(pmcdev, func);
+ 
+-	/* If regbase not assigned, set map and discover using legacy method */
+-	if (ret) {
+-		ssram_init = false;
+-		pmc->map = &lnl_socm_reg_map;
+-		ret = get_primary_reg_base(pmc);
+-		if (ret)
+-			return ret;
+-	}
++	pmc->map = &lnl_socm_reg_map;
++	ret = get_primary_reg_base(pmc);
++	if (ret)
++		return ret;
+ 
+ 	pmc_core_get_low_power_modes(pmcdev);
+ 
+-	if (ssram_init) {
+-		ret = pmc_core_ssram_get_lpm_reqs(pmcdev);
+-		if (ret)
+-			return ret;
+-	}
+-
+ 	return 0;
+ }
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.34.1
 
