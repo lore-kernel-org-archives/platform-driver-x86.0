@@ -1,47 +1,53 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3354213DBB3;
-	Tue, 27 Feb 2024 14:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21AC13A26F;
+	Tue, 27 Feb 2024 14:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709042716; cv=none; b=aaW6X4XaZON5UnnD2wto85PnKa1+f1wXyFPChaXBsHGp57X97gAn6kHs4oNl0pR3QynCvyZZ650wUjUKM/REts64TKUjrdlNUVx9WnXp4rEyHuTxs4IdmuDfcwM3Ebp6BVCg/bFixxtrLUmoC3qwqWH98j32X92CJOgmsTKBgqA=
+	t=1709042989; cv=none; b=UXNFnRzHyIPGsvkF7Xx20UflY/zHK3oarDmtTPnmfnrDGScGA0jr/sg3XK/7CrS2okdMZgHHs/biSoZ0kY4TeiqxQL1wThwkUCM9K/yYRvP0TP+wdeM5maJf5ri4cbxeU5euiLIn0citOiRpNyLYzx4hki+Db/RDzqSgcYDx66A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709042716; c=relaxed/simple;
-	bh=xX2I1MKb6pDRYs2bp7Zf7ZhxShvaggxGHP0EN8JRI64=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=H3zLYLY3F1HxX6derOecVxrSGZ/Zrp5OfdvZVBC452ENBCVYReM7C+Gn3rHmDAHgB7MbxFOzWlB4v4uChLbo3rBQ5W48+HT6pWGLJmT64EcbLusDDuChCqLSrdEgO0nRxwgFqXNodrD6vRjYo16PLjjXbcfLBozLcUaxdy2iqDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Rts4oMyt; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1709042989; c=relaxed/simple;
+	bh=wV6QZR2qT4rRd6CSyxNn9IloQC3bXp4VXdMAoWg5Uq8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=QS2srbsQYX45ILQeHcmX1XkbLUNYjw/fiaQByfd63jI5WWk9rHtXBVoXx1goHSRM74qmkaIPEMOb06ZzCFoQ/kgG49KNVEC/1NTiozqJfiid1KZ3ezydD9nucGNLiAx4rOjVm1z7YckoBdMcZ0ww4Ws4Ei5AJ7e9s8IdQjxbCHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eQrFWlet; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Rts4oMyt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1709042704; x=1709647504; i=w_armin@gmx.de;
-	bh=xX2I1MKb6pDRYs2bp7Zf7ZhxShvaggxGHP0EN8JRI64=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=Rts4oMytgLEJC4i0r9yHabZImMvVlWFY1rY0IqtybjaB3I5hb3RcNDAy+i9N9Ixo
-	 dAstM8OPZDXGxikJjZ8KeR5V0Dtsh3ziaKFKJDHZCDwnU6XjEePhCxVCJiRzvqSIM
-	 f3oMmuILYYM8TOFwiP3UUa96CVKCjivb0hSX83s0ktvvoFzd2z3MRWwxZDNJD1WXo
-	 2YUGP7jYaOdvfoTbLxNgxl2/22PkAfD3t7p3XMgb8aX8Ch27LU/N4OO6WdjrsmTFH
-	 BPVNbqBJVnL/7Vhv6MGNwLB2by65PebVzxtaVDfCAHgLkUhRLlfvYOHg6PLugr+9h
-	 +UgU+nKzrGCKH2XYRw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MNbox-1rGzJD2dBb-00P2SH; Tue, 27 Feb 2024 15:05:04 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: Shyam-sundar.S-k@amd.com
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] platform/x86/amd/pmf: Fix possible out-of-bound memory accesses
-Date: Tue, 27 Feb 2024 15:05:00 +0100
-Message-Id: <20240227140500.98077-2-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eQrFWlet"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709042988; x=1740578988;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=wV6QZR2qT4rRd6CSyxNn9IloQC3bXp4VXdMAoWg5Uq8=;
+  b=eQrFWletTNwsflYvemO5EnBkYkICjTVZ/EO2LaglZyWg+c+WCdMD4yHg
+   yMOjWCuG33NfjOyEVdQPzwBMDJn/Ocd9Q59q04gcjF14zbSwtTKKcoIWN
+   F/qMzJ2OiGbTTcpp+hmnUF/lqMxmOoQ9YxvuRf/I+a6Da9pFH13juHzb/
+   8LKC8AbAQKDQ7p+cPP27G9Y02Gf0bRAClMThpZUeR2fwE1O0gGdWaTD/G
+   OpJeAQAK9AnRdihjrDjzuHX6jcRuuhayp20cHLHybHJhbmf1F2VQXHpOu
+   xeTsysAFC1AaBy4Qq4FJBXfPrlXnIiZqGtxO25gvysh91kWZPrsV0jJrW
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3938482"
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="3938482"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 06:09:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="30226639"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.34.61])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 06:09:45 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 27 Feb 2024 16:09:41 +0200 (EET)
+To: Armin Wolf <W_Armin@gmx.de>
+cc: Shyam-sundar.S-k@amd.com, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] platform/x86/amd/pmf: Do not use readl() for policy
+ buffer access
 In-Reply-To: <20240227140500.98077-1-W_Armin@gmx.de>
+Message-ID: <7867a727-9bdf-2e48-2a90-c1f31b312c9f@linux.intel.com>
 References: <20240227140500.98077-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -49,64 +55,36 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:jTFha4DE5UVuluwTxez9gJWlcTStg4nlPLWHYN5H20dNqMcKDtg
- sgqehJe9I+VoFfMEBHqsOlMuImr4i9GufkMFDRx1Y1tO276Hk/wWVlrOqjt8Sfl9HrlHHvJ
- RWCmJFAYcIfVKouXWFyxqztHIySuEs//kZq3CWrwit3xXMWAFhZwpnb/iLfhqYj62XtNxxW
- oJSLh6S6CW/DM6S7GDt5Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:9tVv3i1dTRo=;TY1sbJ9+jK9Iu4IsjEmYxohd2C2
- Ub/plmOEOZc9Grc8iZBCXWKWwZ11Sd/eE7n4lwiMA4pSGppNvfV2n6UfMMy/CCBC1znh9da5E
- lb/w/GBoZ7RZmRscVWvDIuO6lOpVfxP0rUDXJx5sbfch6ncR0EgkF1mWKECpStA+KK2CK3JUL
- aVuyyffvQ1EdXKdNHD8izBy63HBqEtodh9bLFIJgZuBtztbni9ajpylwqmbX/rN2TGujA0uFJ
- 6JFkrb4c7BAoWwlY5j8NtdjpBkRtNMvVa/yKlr9sD2vo9vOVq/Ze+46NSKpPf6dcyu/0yPNNe
- kUp2Y+RXvlJ2qQazTpTezA5uDQgLBeOGudWq82S4chesRwJGfn631g41GvI/1IWFyo6vco3S+
- gcDlHTPT3HCvpRoDdmssCb2Hgo9D+yVXDeT0RsnLEh2F5yoeSm+aMEc4G3AeaMCOyy5PJBqes
- +WuCfvEWQoVDPwbRleJJ1IQsWUmVWuYSiwXD1Xag5flfT1MSZU9FBqRXybQDjrtJUoZRf5LWy
- wtzKG97ZLFRkH9Zu60rhTPqFC2IaPIC8jSKU7Xh6OqG3wfyiee23Tp/863HYiwKkFMHaiIo7X
- yVTMsdnDyx83DsuLvrHcZ7QrkY4qb7IEuQ3mnmBlyYdyCwqfCikGCoxDgKuO6lJsDJGG2sHwj
- 5L9T7GPUCMeIfiWsO1FbX9EscV6uGvAFfvGOXO0Mc3JGWadiOafUG0uf+YJC5Q4kmkxhPsqaN
- /OzHdHXQ6q12CGXE9ca4YLjHq/sX7gAB+YF8Tl7m6jMM8KFl4pWnkUjihAZ7xbctG0IY2Pzfa
- NK+Qzh/RN8Hfp0wvwxmdrMDkUFRQoSndXKvqJM9c4Lgo0=
+Content-Type: text/plain; charset=US-ASCII
 
-The length of the policy buffer is not validated before accessing it,
-which means that multiple out-of-bounds memory accesses can occur.
+On Tue, 27 Feb 2024, Armin Wolf wrote:
 
-This is especially bad since userspace can load policy binaries over
-debugfs.
+> The policy buffer is allocated using normal memory allocation
+> functions, so readl() should not be used on it.
+> 
+> Compile-tested only.
+> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  drivers/platform/x86/amd/pmf/tee-if.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> index 16973bebf55f..70d09103ab18 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -249,8 +249,8 @@ static int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev)
+>  	u32 cookie, length;
+>  	int res;
+> 
+> -	cookie = readl(dev->policy_buf + POLICY_COOKIE_OFFSET);
+> -	length = readl(dev->policy_buf + POLICY_COOKIE_LEN);
+> +	cookie = dev->policy_buf[POLICY_COOKIE_OFFSET];
+> +	length = dev->policy_buf[POLICY_COOKIE_LEN];
 
-Compile-tested only.
+Hmm, the next question is, is it okay to get just 8 bits instead the full 
+dword (the policy_buf is unsigned char *)?
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/amd/pmf/tee-if.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/=
-amd/pmf/tee-if.c
-index 70d09103ab18..f2f9204b3a11 100644
-=2D-- a/drivers/platform/x86/amd/pmf/tee-if.c
-+++ b/drivers/platform/x86/amd/pmf/tee-if.c
-@@ -249,12 +249,18 @@ static int amd_pmf_start_policy_engine(struct amd_pm=
-f_dev *dev)
- 	u32 cookie, length;
- 	int res;
-
-+	if (dev->policy_sz < POLICY_COOKIE_LEN)
-+		return -EINVAL;
-+
- 	cookie =3D dev->policy_buf[POLICY_COOKIE_OFFSET];
- 	length =3D dev->policy_buf[POLICY_COOKIE_LEN];
-
- 	if (cookie !=3D POLICY_SIGN_COOKIE || !length)
- 		return -EINVAL;
-
-+	if (dev->policy_sz < length + 512)
-+		return -EINVAL;
-+
- 	/* Update the actual length */
- 	dev->policy_sz =3D length + 512;
- 	res =3D amd_pmf_invoke_cmd_init(dev);
-=2D-
-2.39.2
+-- 
+ i.
 
