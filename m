@@ -1,46 +1,46 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2057.outbound.protection.outlook.com [40.107.237.57])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2077.outbound.protection.outlook.com [40.107.220.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D79613329D
-	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Feb 2024 12:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC9C13329D
+	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Feb 2024 12:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.77
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709038567; cv=fail; b=fx1USuMbhG9KSHGSJTiv6yqgzdeSTYEFmQpSzRX26VQRTfRc4WOgowiVFbNVzOpEin1QR9uqAa7wjbDMGRmNshi+weXQpEmMvY8QiJSubhYYeGcLEAhu7gqKG1e6XOHTl6Ln+Yd9AgELSQy765NLE/DSOEO0yEtAQcioRlfI9S4=
+	t=1709038571; cv=fail; b=RhbyMxlkIgNe7fv3AlzWWU4GAhNK2y/kgU8ilzJpYk5B5xXLaU22CzBHcThX3Ey1IPOqzJKrVAXUptbUIMP045WsFF+30AOzAsJafz+NcywZLgL4VajcLmP3Qn1jJVEO08ZCB/WZTZiE+W16ErTgHb3lYWszjGTu6vQr4Zl2Kgc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709038567; c=relaxed/simple;
-	bh=jolHCB9GEn1lRCx/4gsLgIsWobXKUFDv34yi7YbLwzc=;
+	s=arc-20240116; t=1709038571; c=relaxed/simple;
+	bh=Ji8sfLL5r8Vhc5yp+XZmRtoT7Z/iCKPyoALEWrHp3js=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gxiKpSOa7kA/MON/LtZqw/n1xn2jtjfYGtGOwnuqK3xpPeYTlWovF7sFVfuW/aHOK72Kk8HuIcuyI91f08XIAwNL8liRMrkBcGrAi2JXj2jfpxuWAgopPGnNXbAHez2J7UyLD1QUJCQfWFrS1UCQJ5BpiZq0ca/iHHf+3zPw5c4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=p7z2jzwi; arc=fail smtp.client-ip=40.107.237.57
+	 MIME-Version:Content-Type; b=GHqC+9ndI3l4cdEUr5qNwYKOpQX80M0RDnfYz6QDOzKU+KTpRqTMZgzlbpS5RwT3cuEA15YhsFg3hakh2Pby2m0LfsfEPwimHu/nwEiZZSVygQM8//EvV0vwE2bd6fH0J9rz7fQNhVu8LpaKdOBxx8q4Jpz4ZgmRUqj/R7MhNrw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=d5dqhHvm; arc=fail smtp.client-ip=40.107.220.77
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="p7z2jzwi"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="d5dqhHvm"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aF6oMDISfbSGdxtq+UbBz13d1Nh2ib8WwmE21NX1ppcA8EtOr8523w+pdgWcRLlq2MJZPms3NkTnx1x/k3NiKo7LrgzmWrvbhLQpmth4SM0aPI6tRueVQ1tjdTlBogvUXOsCs+J+dUK/aKYTq3+fAYmNk9ggAPVZFklJpG7Uf9LsOtjrWaqEY6siyCMULg+1MiLhyFoiOKU3gGM17Wfdlmef9e/CWOrOLpnfVmJfp2TRkt4n+bQVci9QVZAS+kyFh3swhhmw4atD/ONnz20Q3lmI1RY5XiYmec05qGLiOmjnIx13Chc1p0C7DOFRaKIBF64zb5ZaRlY/LV5wEQCH2g==
+ b=NGwnHGlihN2P3SltVwrjcRaGUk9CZ4ocD4E6sHKiGJf08g7pWTPDsQJ+n2ZY+H3bEpMB3TfMdNquRK2kYgzzVVDqK4XksofUC0MdpVLcHqyL6KiWrbNYaSmpAQK3T98DijVQ2cfFXOhbW00ptGcQFhbhg1ed3BEi8Cta91HiSyJof9MioIegEgcUSBkY5NnuDXeaz+oV07C5UL2wQwB8Vvw8N5QvQx/0v3a7jTbV0CrliGNhzjN6xfncToHlbBR+MMs1rjlzeGGCwqOmQxp2OpcY29C0SO0pgy0N9l9T/9pbiU/6suDzan/yXuPiI6iWrpOHFanItafMMAW/AIEbvQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UynB4HAJRyDS6QflPsYbh08yqJRxbfTe1ZqnwUxzHYk=;
- b=RMCppJw39xFgInRjk4JmkkEE2ot2mQh7/wVzzBfIlPvwv2dcGyKcvtUnR0B4lgZfBFMUP1fsAmqfuN6BzBA72NWb5mtEx8C2qkgZkIGT9DrfOFt2jkok1PkgTd990/6PwN/3aZWrsA+80fz0Kez4CQmkN2O8fXLtqYZhiWobXztd7gyyTz6+yM4fA/BbluNBlfKSe19me8028S/DMh9rpOCTj6egCzchrSQDsfT7FHNmTnm8I4Qsj5xrgbwXGwJ+ikifcbpJE8IDRLr3ErN43G5NZdsCx9v1pVTTAO5a0CuYEEf9VksRr+74Sk2Ynd+nvXEQyHiq/785lrIT8MDzlA==
+ bh=vSlFsK8bBrA2orhZYp6xNH27VT0CObcMz78Z2EEIQj8=;
+ b=gjpU9kkdP0kN/NFRy9leeEypP+IWay7ygZ253YR7gX4d8MUG9dkGnerIwcch08B1usIWLzqvH/0NjB/2Gm6YD0lzB+10VeXTF5QPkOdYgBur9enS+e8pqt2KqGaaePzRQfprIiekO7PuOV2KeHVcTQVHd59Ha/9tCc1tbTWmn6tLBZgkMouZFC5GCmDCzXamfl8Blij13EDH/S4pdp7blcsUTAY8VqMUJscB+ZBjPI9dGLxrG9vQP+GRY0bo2XiNzYdIeQUpcb6I7wA0j7BtWFJEU2EKEU1A2F6TS/i5abe6lL+eTiiBLHnkiOUTvpDJJmlbCIoy1o51XqG6ubF4mA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UynB4HAJRyDS6QflPsYbh08yqJRxbfTe1ZqnwUxzHYk=;
- b=p7z2jzwiWH0rTIpMqWuL45j5GlrqsWbo/IAX+Ua7+SyHHqMx3dKBy4Jq5w5rKeUqJH2waRoqF9PHMlCiiu5+IJ9eXT+kuoDbONdlgz8FdI51qbXygmBpkYL2Yr0IHUFCqjkEjrw6jTHfKwcRHE3s/sQ0yU0jYD5wuhW5cj7z3+A=
-Received: from DM6PR18CA0004.namprd18.prod.outlook.com (2603:10b6:5:15b::17)
- by MN0PR12MB5812.namprd12.prod.outlook.com (2603:10b6:208:378::11) with
+ bh=vSlFsK8bBrA2orhZYp6xNH27VT0CObcMz78Z2EEIQj8=;
+ b=d5dqhHvmKPk+XASXijoZRnkM5eo8zxjFbN5sfNB1y7f4Wc/wuSrc52uQGc/qHUrM3zC5JWFFW14y42WS3haRfx2JjsF2ZiC94ruYfdrePkd+mtpo6Sc7KULPwlCE5rcQbCQQhgUpyCa4gogGTFK5PubjM5h9SffrqajU3/IMfJw=
+Received: from CY5PR04CA0007.namprd04.prod.outlook.com (2603:10b6:930:1e::27)
+ by CY5PR12MB6370.namprd12.prod.outlook.com (2603:10b6:930:20::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.34; Tue, 27 Feb
- 2024 12:56:02 +0000
-Received: from CY4PEPF0000EE3E.namprd03.prod.outlook.com
- (2603:10b6:5:15b:cafe::74) by DM6PR18CA0004.outlook.office365.com
- (2603:10b6:5:15b::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.36; Tue, 27 Feb
+ 2024 12:56:06 +0000
+Received: from CY4PEPF0000EE3F.namprd03.prod.outlook.com
+ (2603:10b6:930:1e:cafe::7e) by CY5PR04CA0007.outlook.office365.com
+ (2603:10b6:930:1e::27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.50 via Frontend
- Transport; Tue, 27 Feb 2024 12:56:01 +0000
+ Transport; Tue, 27 Feb 2024 12:56:06 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,20 +48,20 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EE3E.mail.protection.outlook.com (10.167.242.18) with Microsoft
+ CY4PEPF0000EE3F.mail.protection.outlook.com (10.167.242.19) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7292.25 via Frontend Transport; Tue, 27 Feb 2024 12:56:01 +0000
+ 15.20.7292.25 via Frontend Transport; Tue, 27 Feb 2024 12:56:06 +0000
 Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 27 Feb
- 2024 06:55:59 -0600
+ 2024 06:56:03 -0600
 From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
 CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>, "Shyam
  Sundar S K" <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH 3/7] platform/x86/amd/pmf: Add support to get sbios requests in PMF driver
-Date: Tue, 27 Feb 2024 18:25:16 +0530
-Message-ID: <20240227125520.3153140-4-Shyam-sundar.S-k@amd.com>
+Subject: [PATCH 5/7] platform/x86/amd/pmf: Add support to get APTS index numbers for static slider
+Date: Tue, 27 Feb 2024 18:25:18 +0530
+Message-ID: <20240227125520.3153140-6-Shyam-sundar.S-k@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240227125520.3153140-1-Shyam-sundar.S-k@amd.com>
 References: <20240227125520.3153140-1-Shyam-sundar.S-k@amd.com>
@@ -77,87 +77,190 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE3E:EE_|MN0PR12MB5812:EE_
-X-MS-Office365-Filtering-Correlation-Id: c363ea1f-24fe-4b89-b71f-08dc3793739c
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE3F:EE_|CY5PR12MB6370:EE_
+X-MS-Office365-Filtering-Correlation-Id: a66f540d-3873-4bad-eb99-08dc3793766d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	m3a+iopgsNETPur+MLPCoba2HFPYSoHkwyCOyUq2nQiHGzh0knZgdnC9Y4wBPz/LA/FB/3lnDxjVxM4lqeXx17GO7fNjZE3MAttT9YLEdzrxoOr7lWEfsAz1JQjpJoJuJk9mO75zMFksbByJX0ymnv6ZR2l7wvWRW5Ni+OrpSlTTeDVkjC+ZQqnLEA7jPSxXrLpNcSzqYSk9HcoHjuDuBdErk+hwtrTjbTDgcjJYovzNrV4Uy55fNYCcQDP+cKMMl2ZP/CoWkgwx7Z6z79Pw17S0uGQhuPyNUiRCeWYjx2haTCnoODYsUHuxrP34DP6FJUwAPWZK6I3Ittg2872Iq0l3N4NQ16C3HUGaVy6PZe5J2WbGLtuTRYYdMfk0PkZKXz8oiJ+1xx0msN3WgP+N+Bfmc9ea8ZpaSFNJeMHVSxw7maiRLU2snuRlA9HrjD4jgZSrRTcMF2k0dc84mYihFMmd7Un+62piscSuGEXzZGRhbxstQonOH7zQ6Lfs0GPUPylRf+caD1sW6sgp6jztHZl08RtWbQqXLuPDrs1XB4X7zm3PTyilv2dG2Acs3xb0l2LU3OQkavP1u8qWEEl6LEONfu3uyJaUYwuFk5XFyi6jMTtdXYewYdC0cB0lcZkJ81zfAvVzsDL6oFgUP7w+dvcShezAlackEAmL9tjGXGAVHO/2Jy3ox0pJK+StJ8TJtQV4UmF052qGxl/oci5XJ9AAwpVslA7Wu7pa4aaZlPqw5ViHKFqV1N2Aqx7lgdCy
+	jT8ev0VjbYtfFIOZ2uck5qYiL53O0Li3FxJd0GXX0RavaO3T/gOnuTedjnXvViRLnBTcaSEJQQrOjEBl8fwtoVyBvxQmOmsbZg9rRE+pV/FOwfg8+BYu+qQY/MYs0PKoku8D0Hw1SXvD9lswChTQO79pbhUGot9WwTtIbYJUvXAG/N/dwPEQeEvXiv86SRdUtgRZUSBnoGxxcevUSkcA/Z1UEsq/0qlrfV0Kg4fVrIqJnWxls8qxxXrJaUSH9NiBGfzWUnw1uLhh/Mi435N95u+P8drAtREKWMxRJDy6frma+r5pxVROI93Ob8k3Kv/ghqxuSfUEv4rV6QHp2xdL6ICYN0mDHhyu3GQrjM2RgYbCWJNQMotrHesUTBdmJosExtP2YESugo3ab+lCUIKwFoNosjuHy//fpDUTik/orWcrX41/B8tlnzVeKLdRoujl5kENEiPZEZcB9nZmW6emy4r2TZ8o33bAOqYtQaRz1wcrLRItkhUXO/kNUbG/et7HfwHNCRa4GTyCcxMunPjmelgoacGWXixMn598EME3sKyYcg0lz8fVud2aHwnM3h7avoIS+lxLwZFx7cr93jCtn9UH1aXimv6wdiSITlLFAXCPtJWZDmBMQ81HMPJO7WmqvzDmjUekWzYNlFPpAxR5yH5C7emsEvuX2oh2g4bLl2FPqWwJHnHv6tejtwVDgQsY94KLj8KsW6NgRay9lnTModKRh+qERU3D/QgnoMWTwtFfKZj20rNRvraAskNRIG22
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(36860700004);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2024 12:56:01.8044
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2024 12:56:06.5309
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c363ea1f-24fe-4b89-b71f-08dc3793739c
+X-MS-Exchange-CrossTenant-Network-Message-Id: a66f540d-3873-4bad-eb99-08dc3793766d
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE3E.namprd03.prod.outlook.com
+	CY4PEPF0000EE3F.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5812
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6370
 
-Update the APMF function index 2 for family 1Ah, that gets the
-information of  SBIOS requests (like the pending requests from BIOS,
-custom notifications, updation of power limits etc).
+APMF spec has a newer section called the APTS (AMD Performance and
+Thermal State) information, where each slider/power mode is associated
+with an index number.
+
+Add support to get these indices for the Static Slider.
 
 Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
 Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
 Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 ---
- drivers/platform/x86/amd/pmf/acpi.c |  6 ++++++
- drivers/platform/x86/amd/pmf/pmf.h  | 13 +++++++++++++
- 2 files changed, 19 insertions(+)
+ drivers/platform/x86/amd/pmf/acpi.c | 10 +++++++
+ drivers/platform/x86/amd/pmf/pmf.h  | 24 +++++++++++++++++
+ drivers/platform/x86/amd/pmf/sps.c  | 42 ++++++++++++++++++++++++++++-
+ 3 files changed, 75 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-index 1f287a147c57..1b2a099c0cef 100644
+index 0fc8ad0ac3e9..28df45c058db 100644
 --- a/drivers/platform/x86/amd/pmf/acpi.c
 +++ b/drivers/platform/x86/amd/pmf/acpi.c
-@@ -166,6 +166,12 @@ int apmf_get_auto_mode_def(struct amd_pmf_dev *pdev, struct apmf_auto_mode *data
- 	return apmf_if_call_store_buffer(pdev, APMF_FUNC_AUTO_MODE, data, sizeof(*data));
+@@ -96,6 +96,16 @@ int is_apmf_func_supported(struct amd_pmf_dev *pdev, unsigned long index)
+ 	return !!(pdev->supported_func & BIT(index - 1));
  }
  
-+int apmf_get_sbios_requests_v2(struct amd_pmf_dev *pdev, struct apmf_sbios_req_v2 *req)
++int apmf_get_static_slider_granular_v2(struct amd_pmf_dev *pdev,
++				       struct apmf_static_slider_granular_output_v2 *data)
 +{
-+	return apmf_if_call_store_buffer(pdev, APMF_FUNC_SBIOS_REQUESTS,
-+									req, sizeof(*req));
++	if (!is_apmf_func_supported(pdev, APMF_FUNC_STATIC_SLIDER_GRANULAR))
++		return -EINVAL;
++
++	return apmf_if_call_store_buffer(pdev, APMF_FUNC_STATIC_SLIDER_GRANULAR,
++								data, sizeof(*data));
 +}
 +
- int apmf_get_sbios_requests(struct amd_pmf_dev *pdev, struct apmf_sbios_req *req)
+ int apmf_get_static_slider_granular(struct amd_pmf_dev *pdev,
+ 				    struct apmf_static_slider_granular_output *data)
  {
- 	return apmf_if_call_store_buffer(pdev, APMF_FUNC_SBIOS_REQUESTS,
 diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-index 4364af72a7a3..f11d2a348696 100644
+index 5cad11369697..b27e96aeac23 100644
 --- a/drivers/platform/x86/amd/pmf/pmf.h
 +++ b/drivers/platform/x86/amd/pmf/pmf.h
-@@ -116,6 +116,18 @@ struct apmf_sbios_req {
- 	u8 skin_temp_hs2;
- } __packed;
+@@ -85,6 +85,7 @@
+ #define MAX_OPERATION_PARAMS					4
  
-+struct apmf_sbios_req_v2 {
-+	u16 size;
-+	u32 pending_req;
-+	u8 rsvd;
-+	u32 update_ppt_pmf;
-+	u32 update_ppt_pmf_apu_only;
-+	u32 update_stt_min;
-+	u8 update_stt_apu;
-+	u8 update_stt_hs2;
-+	u32 custom_policy[10];
+ #define PMF_IF_V1		1
++#define PMF_IF_V2		2
+ 
+ struct sbios_hb_event_v2 {
+ 	u16 size;
+@@ -264,6 +265,17 @@ struct amd_pmf_dev {
+ 	u16 pmf_if_version;
+ };
+ 
++struct apmf_sps_prop_granular_v2 {
++	u8 ac_best_perf;
++	u8 ac_balanced;
++	u8 ac_best_pwr_efficiency;
++	u8 ac_energy_saver;
++	u8 dc_best_perf;
++	u8 dc_balanced;
++	u8 dc_best_pwr_efficiency;
++	u8 dc_battery_saver;
 +} __packed;
 +
- struct apmf_fan_idx {
- 	u16 size;
- 	u8 fan_ctl_mode;
-@@ -612,6 +624,7 @@ void amd_pmf_init_auto_mode(struct amd_pmf_dev *dev);
- void amd_pmf_deinit_auto_mode(struct amd_pmf_dev *dev);
- void amd_pmf_trans_automode(struct amd_pmf_dev *dev, int socket_power, ktime_t time_elapsed_ms);
- int apmf_get_sbios_requests(struct amd_pmf_dev *pdev, struct apmf_sbios_req *req);
-+int apmf_get_sbios_requests_v2(struct amd_pmf_dev *pdev, struct apmf_sbios_req_v2 *req);
+ struct apmf_sps_prop_granular {
+ 	u32 fppt;
+ 	u32 sppt;
+@@ -285,6 +297,16 @@ struct amd_pmf_static_slider_granular {
+ 	struct apmf_sps_prop_granular prop[POWER_SOURCE_MAX][POWER_MODE_MAX];
+ };
  
- void amd_pmf_update_2_cql(struct amd_pmf_dev *dev, bool is_cql_event);
- int amd_pmf_reset_amt(struct amd_pmf_dev *dev);
++struct apmf_static_slider_granular_output_v2 {
++	u16 size;
++	struct apmf_sps_prop_granular_v2 sps_idx;
++} __packed;
++
++struct amd_pmf_static_slider_granular_v2 {
++	u16 size;
++	struct apmf_sps_prop_granular_v2 sps_idx;
++};
++
+ struct os_power_slider {
+ 	u16 size;
+ 	u8 slider_event;
+@@ -634,6 +656,8 @@ const char *amd_pmf_source_as_str(unsigned int state);
+ 
+ int apmf_update_fan_idx(struct amd_pmf_dev *pdev, bool manual, u32 idx);
+ int amd_pmf_set_sps_power_limits(struct amd_pmf_dev *pmf);
++int apmf_get_static_slider_granular_v2(struct amd_pmf_dev *dev,
++				       struct apmf_static_slider_granular_output_v2 *data);
+ 
+ /* Auto Mode Layer */
+ int apmf_get_auto_mode_def(struct amd_pmf_dev *pdev, struct apmf_auto_mode *data);
+diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
+index 33e23e25c8b1..dc4c7ccd4c43 100644
+--- a/drivers/platform/x86/amd/pmf/sps.c
++++ b/drivers/platform/x86/amd/pmf/sps.c
+@@ -10,6 +10,7 @@
+ 
+ #include "pmf.h"
+ 
++static struct amd_pmf_static_slider_granular_v2 config_store_v2;
+ static struct amd_pmf_static_slider_granular config_store;
+ 
+ #ifdef CONFIG_AMD_PMF_DEBUG
+@@ -63,10 +64,46 @@ static void amd_pmf_dump_sps_defaults(struct amd_pmf_static_slider_granular *dat
+ 
+ 	pr_debug("Static Slider Data - END\n");
+ }
++
++static void amd_pmf_dump_sps_defaults_v2(struct amd_pmf_static_slider_granular_v2 *data)
++{
++	pr_debug("Static Slider APTS state index data - BEGIN");
++	pr_debug("size: %u\n", data->size);
++	pr_debug("ac_best_perf: %u\n", data->sps_idx.ac_best_perf);
++	pr_debug("ac_balanced: %u\n", data->sps_idx.ac_balanced);
++	pr_debug("ac_best_pwr_efficiency: %u\n", data->sps_idx.ac_best_pwr_efficiency);
++	pr_debug("ac_energy_saver: %u\n", data->sps_idx.ac_energy_saver);
++	pr_debug("dc_best_perf: %u\n", data->sps_idx.dc_best_perf);
++	pr_debug("dc_balanced: %u\n", data->sps_idx.dc_balanced);
++	pr_debug("dc_best_pwr_efficiency: %u\n", data->sps_idx.dc_best_pwr_efficiency);
++	pr_debug("dc_battery_saver: %u\n", data->sps_idx.dc_battery_saver);
++	pr_debug("Static Slider APTS state index data - END\n");
++}
+ #else
+ static void amd_pmf_dump_sps_defaults(struct amd_pmf_static_slider_granular *data) {}
++static void amd_pmf_dump_sps_defaults_v2(struct amd_pmf_static_slider_granular_v2 *data) {}
+ #endif
+ 
++static void amd_pmf_load_defaults_sps_v2(struct amd_pmf_dev *dev)
++{
++	struct apmf_static_slider_granular_output_v2 output;
++
++	memset(&config_store_v2, 0, sizeof(config_store_v2));
++	apmf_get_static_slider_granular_v2(dev, &output);
++
++	config_store_v2.size = output.size;
++	config_store_v2.sps_idx.ac_best_perf = output.sps_idx.ac_best_perf;
++	config_store_v2.sps_idx.ac_balanced = output.sps_idx.ac_balanced;
++	config_store_v2.sps_idx.ac_best_pwr_efficiency = output.sps_idx.ac_best_pwr_efficiency;
++	config_store_v2.sps_idx.ac_energy_saver = output.sps_idx.ac_energy_saver;
++	config_store_v2.sps_idx.dc_best_perf = output.sps_idx.dc_best_perf;
++	config_store_v2.sps_idx.dc_balanced = output.sps_idx.dc_balanced;
++	config_store_v2.sps_idx.dc_best_pwr_efficiency = output.sps_idx.dc_best_pwr_efficiency;
++	config_store_v2.sps_idx.dc_battery_saver = output.sps_idx.dc_battery_saver;
++
++	amd_pmf_dump_sps_defaults_v2(&config_store_v2);
++}
++
+ static void amd_pmf_load_defaults_sps(struct amd_pmf_dev *dev)
+ {
+ 	struct apmf_static_slider_granular_output output;
+@@ -256,7 +293,10 @@ int amd_pmf_init_sps(struct amd_pmf_dev *dev)
+ 	dev->current_profile = PLATFORM_PROFILE_BALANCED;
+ 
+ 	if (is_apmf_func_supported(dev, APMF_FUNC_STATIC_SLIDER_GRANULAR)) {
+-		amd_pmf_load_defaults_sps(dev);
++		if (dev->pmf_if_version == PMF_IF_V2)
++			amd_pmf_load_defaults_sps_v2(dev);
++		else
++			amd_pmf_load_defaults_sps(dev);
+ 
+ 		/* update SPS balanced power mode thermals */
+ 		amd_pmf_set_sps_power_limits(dev);
 -- 
 2.25.1
 
