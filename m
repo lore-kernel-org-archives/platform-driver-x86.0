@@ -1,130 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C81413B2B3
-	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Feb 2024 14:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5411384B7;
+	Tue, 27 Feb 2024 14:55:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709043221; cv=none; b=tXDDxWIZWA4v+A/PspDro03CmlkgNPXdrk/MOda7F6b4dhs3b/2KAhhbfEYj4Zjx2KKL7l28+rsw2tKIMVRUTwDIbZrRW0acPJzEM3oV2B/fVc0PMU0mb0EYs7jv7aODHjkSQykZNmnLHp6Np5MY1cO4ynVcnXETYHeRQqm9Q+A=
+	t=1709045718; cv=none; b=bGeDqkiyvrH59QdkdbdvjXmSDT4+NLPO3NwdUiHfSUqeEJCBkiepNpzgHyooNCckA0N54XdbOHWz/I4QXwktBuHs1kA28NSY4xfAm/Riyrdqk9Yj2qgovDmOUw30H8Md7Tg/3pnA0kjjM61Ic6fBscilbKfg8EVUW9aOascw6PY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709043221; c=relaxed/simple;
-	bh=rFhlhpY+REHVTQOk1QeQBLSHkiio+Teuq19QQwBrk0M=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=AtKh5wHeSNn6sFnha5KtdINuCnbYW3IO5jttyBRzbAMcAMlOWbxGQl4eyyL2K7ucjY/hfqx3+xMVNE9GRBnpoV94ds16NxrhFdqixpHzEASqmNkz7DHcBXbmV3YS4OecFhUMLB4ZG1GmjRxwT3nkgYydIMotTDMqgcBq4jyO0bE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f83VwB7F; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709045718; c=relaxed/simple;
+	bh=MrYA11ydrptEowbuZ9sMuc147woy6xuJ/hcpq4qtb0o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=moDtMIEYJtq697N+ALhclXw9loMd+N9z402RsPg7crggppbjIW+2Wrnq6NHQ4DmQCK9gq60eeq1pLKFQZjGCGmHQrluDBeI92EajJzk4EMfnK26WfVVbwTVnM+64LRAmNy6l/q4UBLllOZ3Sc57vJ2Hz6044VFhSDWNr27393FY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=GROJXJV6; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f83VwB7F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709043221; x=1740579221;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=rFhlhpY+REHVTQOk1QeQBLSHkiio+Teuq19QQwBrk0M=;
-  b=f83VwB7FocR8kQhfCfBPiEVyA8G3LtI5FhqVYSF2MPUrcuyeztyCGbqq
-   aVle5M3ZITe8R2SO6JPy+/VFAJUGvX922T2NZrwT3qVBhey+mM2Ei4Pcn
-   xdGT/lh2lpo1si2i0b0rCp3sWRZaKpTZl0r1SBhd0I8zlQu5sQONQaJzA
-   MX0sgbSErdphJIuPcuLNt2VemSAXDYiQf/k0/vgGVctZSuPHovJyx04mr
-   sdLisneBMg+E7eUvxlD5C8KOVl1S8veVEz1odZxh3uvz5guQc0s1xQLRT
-   695bb4K5x73e/MjuHCTkEvZzieAeadeZRaTuSn7B+66ue+foZdXW13yTe
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14823990"
-X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="14823990"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 06:13:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="44558033"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.34.61])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 06:13:37 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 27 Feb 2024 16:13:33 +0200 (EET)
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    Patil.Reddy@amd.com
-Subject: Re: [PATCH 5/7] platform/x86/amd/pmf: Add support to get APTS index
- numbers for static slider
-In-Reply-To: <20240227125520.3153140-6-Shyam-sundar.S-k@amd.com>
-Message-ID: <91a406cd-bf71-ab86-09ba-97d90f2ae1fd@linux.intel.com>
-References: <20240227125520.3153140-1-Shyam-sundar.S-k@amd.com> <20240227125520.3153140-6-Shyam-sundar.S-k@amd.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="GROJXJV6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1709045706; x=1709650506; i=w_armin@gmx.de;
+	bh=MrYA11ydrptEowbuZ9sMuc147woy6xuJ/hcpq4qtb0o=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=GROJXJV6thfdkh43yYiA7pMg6bBQOIT85UIY2BBvW8PraCp8lSdVh2HkPBenDk/W
+	 /uvBXAk2Ifa3F59oU81IugDQqew4NSWDNheGx1gqXwDilghN9z52Wz1u1DLyO7Nks
+	 2JLS9Wg0xELMgi7KO5HSpdQHpSzGkxluC12HgFhgao3jJHCtRyhN90Nda4nMHd1jy
+	 j/BQ+Aly9EfDuXasZ2tAaJH0N+9F4LNBV15+U52UYNBeH4OyGwhh0tufCb9xTPI5h
+	 YQROsq3dFwBx8zzRhTeNYg1jMNd0lsTG4c1Q0ne/8Vdy2QZtZREsd6GP3goBG0Tn8
+	 trZoKtyNx7aQUL9dgQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MMofc-1rMCzO1mZI-00Inal; Tue, 27 Feb 2024 15:55:06 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: Shyam-sundar.S-k@amd.com
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] platform/x86/amd/pmf: Do not use readl() for policy buffer access
+Date: Tue, 27 Feb 2024 15:54:59 +0100
+Message-Id: <20240227145500.299683-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:8KiUowxFm24zflRHFezo2yJ/cJrOmOMZY/AlS3xfkTVnNy3VTYI
+ +ddf09NQGCU6gAYOyOdu/nk3Kf6bSDjeekjJT8paBINFzSi2kIDQDFy4v7hmdAdm1xkrS10
+ nUr7QTQ4bB11MfW2BpVnXbmBo3fil38YTEamanCLMeV1c/oHvXPx6tzmA3DpCfKiQGXR4/v
+ 73uB/UMRQr0gl4KvkoK8Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:a4bzPwQIcSM=;Eb8EQESCSjhnNAP1ad25UgGA6P6
+ b8CyjvkK1xvlXuGq7oXhYdLvjJ7nS6I39M41B/dYxMWP1hUbOguCBF21UfXqMeBjAv1+P6Mi9
+ BD6sCqAzPaVkviWaj9AEt+lwz2jaKcy4PLm1bDbdjk665kllTTUSc+sOb6qv/+9u4PE3ECl/B
+ rhYeuTb5L9O7P3sc8xyBGYM49S8WPNUsVaD05DuLAcIau/5FIlxsLwaFYLFH0J89b6ClWTb5A
+ +Bv+vWOCcerPMMIv3fRO91jem2Jp9kR/9oVgiRksFQlH5dkEydAww+H5l5c2tB0ba2FcEt1dr
+ KXMSo/I7BKFEZo6OO4Qb0hNR+jDC+zT6ByEB8DANNp37Hc3EhN4qlZ29yJawsA3UGbC1/Gpon
+ yrlYr7cgLM4/gD7ceezsCF/pzgovJx3vjF5J4qNIWKvp3HocBlZaApq54ourw8us1Kz+yPtrL
+ NWMzaXslIXCp7ohAfHz91rS7GQTOb9Lmvw1iK+pr2Hw1zrTN6TLQuHQc6SW7jey56AaByJssk
+ yK9r+uKWMcyqOSZ/BRSIeqVPiMHNnTliXbxITPDGuUaqVWjTKe8fNxPzW9CUmrC8t3aS8TCiI
+ 3wAxrRL8S1goLkwgucNcycDsxFWbXkNf/CtO46890G0mkdjJRTHAzOlSi7jNqR69Qll2tZ3af
+ 5PEUVIXfrEVreyvxUE/ZTiXLAfw6oFJzJQg6nvmM5J5iBv9Vyc6qOaPwFrLmyR6le1vLeow8I
+ ce/mcmRDaMUGguGlzZhhak1BMZuX/0l/n4GkM8Qrc1d7Tro0Xb7EvmLbd9y265o3EZRBdg87N
+ 5GM6JvBI44a+TWTjJ65sB8wVXFT++AsaYCtBMMlif35QU=
 
-On Tue, 27 Feb 2024, Shyam Sundar S K wrote:
+The policy buffer is allocated using normal memory allocation
+functions, so readl() should not be used on it.
 
-> APMF spec has a newer section called the APTS (AMD Performance and
-> Thermal State) information, where each slider/power mode is associated
-> with an index number.
-> 
-> Add support to get these indices for the Static Slider.
-> 
-> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
->  drivers/platform/x86/amd/pmf/acpi.c | 10 +++++++
->  drivers/platform/x86/amd/pmf/pmf.h  | 24 +++++++++++++++++
->  drivers/platform/x86/amd/pmf/sps.c  | 42 ++++++++++++++++++++++++++++-
->  3 files changed, 75 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-> index 0fc8ad0ac3e9..28df45c058db 100644
-> --- a/drivers/platform/x86/amd/pmf/acpi.c
-> +++ b/drivers/platform/x86/amd/pmf/acpi.c
-> @@ -96,6 +96,16 @@ int is_apmf_func_supported(struct amd_pmf_dev *pdev, unsigned long index)
->  	return !!(pdev->supported_func & BIT(index - 1));
->  }
->  
-> +int apmf_get_static_slider_granular_v2(struct amd_pmf_dev *pdev,
-> +				       struct apmf_static_slider_granular_output_v2 *data)
-> +{
-> +	if (!is_apmf_func_supported(pdev, APMF_FUNC_STATIC_SLIDER_GRANULAR))
-> +		return -EINVAL;
-> +
-> +	return apmf_if_call_store_buffer(pdev, APMF_FUNC_STATIC_SLIDER_GRANULAR,
-> +								data, sizeof(*data));
-> +}
-> +
->  int apmf_get_static_slider_granular(struct amd_pmf_dev *pdev,
->  				    struct apmf_static_slider_granular_output *data)
->  {
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index 5cad11369697..b27e96aeac23 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -85,6 +85,7 @@
->  #define MAX_OPERATION_PARAMS					4
->  
->  #define PMF_IF_V1		1
-> +#define PMF_IF_V2		2
->  
->  struct sbios_hb_event_v2 {
->  	u16 size;
-> @@ -264,6 +265,17 @@ struct amd_pmf_dev {
->  	u16 pmf_if_version;
->  };
->  
-> +struct apmf_sps_prop_granular_v2 {
-> +	u8 ac_best_perf;
-> +	u8 ac_balanced;
-> +	u8 ac_best_pwr_efficiency;
-> +	u8 ac_energy_saver;
-> +	u8 dc_best_perf;
-> +	u8 dc_balanced;
-> +	u8 dc_best_pwr_efficiency;
-> +	u8 dc_battery_saver;
+Compile-tested only.
 
-I started to wonder if these could be made into an two element array with 
-4xu8 in each, one for AC and DC because it would simplify some other code 
-in the subsequent patches (and perhaps even in this patch)?
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+Changes since v1:
+- get the full dword instead of only 8 bits
+=2D--
+ drivers/platform/x86/amd/pmf/tee-if.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
--- 
- i.
+diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/=
+amd/pmf/tee-if.c
+index 16973bebf55f..b3491268b6a0 100644
+=2D-- a/drivers/platform/x86/amd/pmf/tee-if.c
++++ b/drivers/platform/x86/amd/pmf/tee-if.c
+@@ -249,8 +249,8 @@ static int amd_pmf_start_policy_engine(struct amd_pmf_=
+dev *dev)
+ 	u32 cookie, length;
+ 	int res;
+
+-	cookie =3D readl(dev->policy_buf + POLICY_COOKIE_OFFSET);
+-	length =3D readl(dev->policy_buf + POLICY_COOKIE_LEN);
++	cookie =3D *(u32 *)(dev->policy_buf + POLICY_COOKIE_OFFSET);
++	length =3D *(u32 *)(dev->policy_buf + POLICY_COOKIE_LEN);
+
+ 	if (cookie !=3D POLICY_SIGN_COOKIE || !length)
+ 		return -EINVAL;
+=2D-
+2.39.2
 
