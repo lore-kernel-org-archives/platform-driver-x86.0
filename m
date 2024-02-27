@@ -1,136 +1,134 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820992F2D;
-	Tue, 27 Feb 2024 13:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA6A145356
+	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Feb 2024 13:48:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709041294; cv=none; b=ayc3L4R1Gj+qUsPsLePjlb1m+Sf+ngrQyvBZmk8D7+UtTL/BYhCzh4RoyxlixFeXFXu1/Th3MQXM9dHNPi8kObCjdVtUF+3lFi3ZSWt/WKwHqGjYh5RSTvWVBJ1blufsAuAFSj6uh/ZzyA+Yv817Qq1s3pCB6KjZtgJcEO/ObiE=
+	t=1709041707; cv=none; b=nxwrptludgapXOvj1Ufm7NTTWMnukVwyJXoTz0h8HvClwEfztmEm1JnV/HZ7PKaSWoEGYDoaqlTR1IcNlB99I26+DS42bp2saSdty0f8LdWp3WegFIPO4c/o+Cj+KfJj3oDBlwCU92sVU4vu3gcUdm8y+DzfgW4HDm1bS/3kHlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709041294; c=relaxed/simple;
-	bh=5u5tAoSnP+fgrFG9HWWLZrfA/Q1EvEkQTUTzPe58IaM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SQ+LH7ZG1bhaO8m8Eo0/FWFVrmT9MspbIueby/LQfSzkHw9pT6WBp/OhTvNAlcLMIXql8g3O+BP3Kwc3v1YRaI5tuXO2Zs6VOVEOB6CEz9SQkiwUiiNeU/iKpf22jg116/B8HWXY3lYDwC1fx2Lshjm4OarGTEFmXu97uSevN04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=bBQMnjYS; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1709041707; c=relaxed/simple;
+	bh=DPCz3M1GH0q0t6l7yrOp+AQYxoWxiRSBmlUzvSOSy0g=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=JO4YGUypYufLDckQAtBGOf5+FsU1na/UCSMQnQzYnhX90sHaULpsCop9OL1qQ81YekQFHDTm0KYbKXv3Jzn5sOGbiYydxG+VV1XsTBTbA8fkmxTXbCfa0h3rIuYZBEDkf1Hn4/uuEIyagDQ+CJaAtQe/bqv51UmpaP8RCPBS9kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VO/DTVUj; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="bBQMnjYS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1709041281; x=1709646081; i=w_armin@gmx.de;
-	bh=5u5tAoSnP+fgrFG9HWWLZrfA/Q1EvEkQTUTzPe58IaM=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=bBQMnjYS9HssAUH49/ieREQwg7MvFi0AlG1ViLFcJvbKjCjfrjyIcjbqf16WaK3n
-	 yRwdR4I9v1gtYRW/zs0pNbRzU1EOIf25ND503yhv1U97D6KXq5Lk3IsY1BMS0CqCp
-	 xDV6n5A8IR0fjCo/Hz+0dOT1MCC4LHSHg7hDW9FC2VIrMZZ2AGbCb5JiE3h+eBAEN
-	 Ks9aT3Mk6ly1nHEfUT0oOR7ndLBLnRHQSDvYCR4HPHk4ESfeu6pyrrX9G1EMBYA4s
-	 tndjxlq2yFHBAFzTIcWkU7+bdpURcIqimVZq7I2rHy3scahlUop04WWWXBx+EtMiB
-	 1OEW3snGOzHxbnN8wg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N8obG-1qrmkR0YQY-015pjB; Tue, 27
- Feb 2024 14:41:21 +0100
-Message-ID: <9cdc844a-ba39-4215-b21e-1e1629edc549@gmx.de>
-Date: Tue, 27 Feb 2024 14:41:19 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VO/DTVUj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709041705; x=1740577705;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=DPCz3M1GH0q0t6l7yrOp+AQYxoWxiRSBmlUzvSOSy0g=;
+  b=VO/DTVUjLb5yFC3NL8pJqOjhP9t5pZYghT7bLc+RzsMY/yJbn/W2ac6h
+   ytzXBvOaSIedAKQsuZaOBFRIoK1xp60oFOPyjiMMXDpj3BJkcAahlVP6D
+   or6dn+Uh1E8vVC2zJrRQuWIpY7S9Y5yWUkVsuzuU6NQZo1xZW9P11w4mT
+   9oklx5C36FUYcGhao+pYb/IeD8Wf5qayNeat9FKiRgHhuZXGFo/I0IpVo
+   f6QJ/8hHsrgP7X9KyVqdy9eMttbzsT1kDzT5t8UPvCKOtYwx85o7da4YS
+   b7wkrv96N07JIoCRgi3Pi1aBDWWF5/xPlcTrqG2uJV3ZoF1w2MDj/Ur3y
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3509424"
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="3509424"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 05:48:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="11669662"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.34.61])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 05:48:13 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 27 Feb 2024 15:48:08 +0200 (EET)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    Patil.Reddy@amd.com
+Subject: Re: [PATCH 5/7] platform/x86/amd/pmf: Add support to get APTS index
+ numbers for static slider
+In-Reply-To: <20240227125520.3153140-6-Shyam-sundar.S-k@amd.com>
+Message-ID: <17d7c1e5-2400-4a4a-93cf-bfbe6fefb209@linux.intel.com>
+References: <20240227125520.3153140-1-Shyam-sundar.S-k@amd.com> <20240227125520.3153140-6-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] platform/x86/amd/pmf: Do not use readl() for
- policy buffer access
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Shyam-sundar.S-k@amd.com,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- sathyanarayanan.kuppuswamy@linux.intel.com,
- Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20240223163901.13504-1-W_Armin@gmx.de>
- <20240223163901.13504-2-W_Armin@gmx.de>
- <e2b81849-3435-3efb-f2da-b74ac7f99a50@linux.intel.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <e2b81849-3435-3efb-f2da-b74ac7f99a50@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:JeUudHQ5pVWclUwEZ92R41Un4vqTi4Zt4ZM4rzRZQt+q/Ov/a0x
- Y5ptzKU5OBaqr3s08JO5zz3d98FS15PUbBNGA0KKYgwC0rbICPePaKik8RXrKmp5pbU6ii6
- qL2aWrfcT7ar2kI+PntWnGknT86kBp/Hd4/E/WqNxmtbqAQCofADl/9VnsNmdGg5Sa2qiwT
- 23a25WLKXVIrmJ2dSOdAw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:jGXMkxGEvM8=;nEpE8Pav61acMaOjKg8A/6YVz9I
- hcJitECHEWEGlY7MYueYYKm9DaIsBMWQfq3/Wnr+Ql3TERk+KI/vQAHcElpWP2uHuhnFVjGZ1
- CSmiMWt2QWjoipA1LCOiki1YIbMtxqP6tw+ZORwNzVCRXfNUh40/E5bK3kR1uzUAi34Lun6FI
- 8hjgpAOs3kJ4ffisIshU2TTRbgpyrnWeYNEYv80tNXr5RWgURCEmeEZD21L4LataEVhb4hqli
- haLkxYcaCMPQYL98eIy4aYIxfQic6ceyDp3xFxMa1pQgolXyGZm8o/7NJ004HJ2FO3/GSM001
- n6ijoJcoi9iJ3CN7iH0t74cQrcvjFU8JvFQ3bm4LUTll22Gvn/2SckJ6vSMZT/CqGMQYMhih0
- ljOsRTu2dfHEX0xfhZvF13sOgq2DPPY6Bo/K8cs2cwR0wfy+C82qB4712GkbGE/n6Hjnhu4BA
- rTguqaeL/rHrk7nIP1dUOR1CVxgAdvjA9InLaMlQrMYs/wwWFCRwSO2HfClZKCIUx+Gkpil9X
- j1EOm4OLI+m7ACIGjvu98ezpidfFcBuu3M8Pb9EDJAJkLdl07sZoPrsZixY0uAgiR9IOHMsdW
- UH55S/F0rA/tLvakWBYK9f2I6nP/zYebRpAQdPYUMR0yhy3nvmALz8QQjxv6wfAtltIdBKfRs
- bMrCo+ihRp5f6mGX6fqSBIBC3/vIELRvEQdUvJ/ALlZgU+YrohRibZhBk8te5IXcnRxgM21DM
- 1vPxtxHRq0Faegn3XqJR1NtG5M0irkB51A2HymwZaQZGiK202mddsv03ZxOc0mV4CeoB9GRFk
- 8aFClDsdXcxWUz4RJ7/sEdybsy0SIxe7cuVpGHcx9kRLs=
+Content-Type: text/plain; charset=US-ASCII
 
-Am 27.02.24 um 13:59 schrieb Ilpo J=C3=A4rvinen:
+On Tue, 27 Feb 2024, Shyam Sundar S K wrote:
 
-> On Fri, 23 Feb 2024, Armin Wolf wrote:
->
->> The policy buffer is allocated using normal memory allocation
->> functions, so readl() should not be used on it.
->>
->> Use get_unaligned_le32() instead.
->>
->> Compile-tested only.
->>
->> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->> ---
->>   drivers/platform/x86/amd/pmf/tee-if.c | 5 +++--
->>   1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x=
-86/amd/pmf/tee-if.c
->> index 16973bebf55f..3220b6580270 100644
->> --- a/drivers/platform/x86/amd/pmf/tee-if.c
->> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
->> @@ -11,6 +11,7 @@
->>   #include <linux/debugfs.h>
->>   #include <linux/tee_drv.h>
->>   #include <linux/uuid.h>
->> +#include <asm/unaligned.h>
->>   #include "pmf.h"
->>
->>   #define MAX_TEE_PARAM	4
->> @@ -249,8 +250,8 @@ static int amd_pmf_start_policy_engine(struct amd_p=
-mf_dev *dev)
->>   	u32 cookie, length;
->>   	int res;
->>
->> -	cookie =3D readl(dev->policy_buf + POLICY_COOKIE_OFFSET);
->> -	length =3D readl(dev->policy_buf + POLICY_COOKIE_LEN);
->> +	cookie =3D get_unaligned_le32(dev->policy_buf + POLICY_COOKIE_OFFSET)=
-;
->> +	length =3D get_unaligned_le32(dev->policy_buf + POLICY_COOKIE_LEN);
-> I don't understand you need _unaligned_ here, the offsets should be dwor=
-d
-> aligned, no?
->
-> #define POLICY_COOKIE_OFFSET      0x10
-> #define POLICY_COOKIE_LEN         0x14
->
-Hi,
+> APMF spec has a newer section called the APTS (AMD Performance and
+> Thermal State) information, where each slider/power mode is associated
+> with an index number.
+> 
+> Add support to get these indices for the Static Slider.
+> 
+> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+>  drivers/platform/x86/amd/pmf/acpi.c | 10 +++++++
+>  drivers/platform/x86/amd/pmf/pmf.h  | 24 +++++++++++++++++
+>  drivers/platform/x86/amd/pmf/sps.c  | 42 ++++++++++++++++++++++++++++-
+>  3 files changed, 75 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
+> index 0fc8ad0ac3e9..28df45c058db 100644
+> --- a/drivers/platform/x86/amd/pmf/acpi.c
+> +++ b/drivers/platform/x86/amd/pmf/acpi.c
+> @@ -96,6 +96,16 @@ int is_apmf_func_supported(struct amd_pmf_dev *pdev, unsigned long index)
+>  	return !!(pdev->supported_func & BIT(index - 1));
+>  }
+>  
+> +int apmf_get_static_slider_granular_v2(struct amd_pmf_dev *pdev,
+> +				       struct apmf_static_slider_granular_output_v2 *data)
+> +{
+> +	if (!is_apmf_func_supported(pdev, APMF_FUNC_STATIC_SLIDER_GRANULAR))
+> +		return -EINVAL;
+> +
+> +	return apmf_if_call_store_buffer(pdev, APMF_FUNC_STATIC_SLIDER_GRANULAR,
+> +								data, sizeof(*data));
 
-you are right about this.
+Wrong aligment. Please go through all the patches to check these.
 
-However i just noticed that the driver does not validate that the policy b=
-uffer is big enough
-before accessing the data.
+> diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
+> index 33e23e25c8b1..dc4c7ccd4c43 100644
+> --- a/drivers/platform/x86/amd/pmf/sps.c
+> +++ b/drivers/platform/x86/amd/pmf/sps.c
+> @@ -10,6 +10,7 @@
+>  
+>  #include "pmf.h"
+>  
+> +static struct amd_pmf_static_slider_granular_v2 config_store_v2;
+>  static struct amd_pmf_static_slider_granular config_store;
+>  
+>  #ifdef CONFIG_AMD_PMF_DEBUG
+> @@ -63,10 +64,46 @@ static void amd_pmf_dump_sps_defaults(struct amd_pmf_static_slider_granular *dat
+>  
+>  	pr_debug("Static Slider Data - END\n");
+>  }
+> +
+> +static void amd_pmf_dump_sps_defaults_v2(struct amd_pmf_static_slider_granular_v2 *data)
+> +{
+> +	pr_debug("Static Slider APTS state index data - BEGIN");
+> +	pr_debug("size: %u\n", data->size);
+> +	pr_debug("ac_best_perf: %u\n", data->sps_idx.ac_best_perf);
+> +	pr_debug("ac_balanced: %u\n", data->sps_idx.ac_balanced);
+> +	pr_debug("ac_best_pwr_efficiency: %u\n", data->sps_idx.ac_best_pwr_efficiency);
+> +	pr_debug("ac_energy_saver: %u\n", data->sps_idx.ac_energy_saver);
+> +	pr_debug("dc_best_perf: %u\n", data->sps_idx.dc_best_perf);
+> +	pr_debug("dc_balanced: %u\n", data->sps_idx.dc_balanced);
+> +	pr_debug("dc_best_pwr_efficiency: %u\n", data->sps_idx.dc_best_pwr_efficiency);
+> +	pr_debug("dc_battery_saver: %u\n", data->sps_idx.dc_battery_saver);
 
-I will prepare a separate patch series to address this.
+I know these are debug only but what is the advantage of having the 
+underscores in them? I think they'd read & match just fine without them 
+(perhaps pwr->power would be better but it's up to you) and ac/dc can then 
+be capitalized.
 
-Thanks,
-Armin Wolf
+
+-- 
+ i.
 
