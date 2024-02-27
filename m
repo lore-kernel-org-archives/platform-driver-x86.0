@@ -1,220 +1,317 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9B412FF86;
-	Mon, 26 Feb 2024 19:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EFE2916;
+	Tue, 27 Feb 2024 01:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708976202; cv=none; b=NYVMvIQsHyIsyqqEYU6vxiPxdLWH/T9w7kuMaBegZP7Q3XJQSU0QbtAS1c/3t1hjLKExdg0TuhbdnCOSFFWG+vc3utXYggBUxwXKLbOnEjgrnhMQolKtakQMuDDC0HWPJVwg5yfx2WqSlosGkO0Jh2aWDv1Ij/LvD641/b4ZDqY=
+	t=1708997809; cv=none; b=d784t9Xs66tpRvfRe6/PzrOpz0CRJzsvlx2RxIB7KbC1djpBG8aarKOMuKlsP0X0lepvIVuhkcUcoZUf9G3eNZDVKYlPMZbRlk3JmZrZozIP8j6s9C2S87xTDp/LQSiH3xoxnqDZb0c++7EXDntSbQODusMf2Hmq+0zFkoaS+H0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708976202; c=relaxed/simple;
-	bh=2MBzDikgSPllH5SSceffq3hf3NNRNBuh2ZebYc9KLFU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OpRgGVqyrLTY9HDM6YQAPR44GCRit72d/IkgIcHSn0KMY3d/ZJ/omfIy2SjpkikR9QmFSPvA3UARm9SQY6uthU81Wiqj3MYH3+QdOcQkw7po0WoMmRJNC17wfNPA3AyyLbziJIEQndEZIGYnCFs2dvxv30Ah0lKb1LfdCh/dDKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Lnx+qlg+; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1708997809; c=relaxed/simple;
+	bh=JgbQ84LLosYkQTgKWeL0jbmQ2QAczryCflXC2Kzrrxg=;
+	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=YemaNuXYbXnSCieze+3xosSE9esVYhIpxAeTO6ArmYNkwWv8PVnfYo6+PUOZFmybyxCyZgKTudqAlg9Ur21f0B16M6PDlSH0lKseqZ/rXr/S1erC60qbiWTKoAZ2XkL5H4mUOEOkE6qqqAXegQoMRgRucTn5gUMHpOUFXbaGySs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ev13AoIf; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Lnx+qlg+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1708976167; x=1709580967; i=w_armin@gmx.de;
-	bh=2MBzDikgSPllH5SSceffq3hf3NNRNBuh2ZebYc9KLFU=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=Lnx+qlg+YSABALUHig+PYcEeS5yWicr2qSYBc+3Dn1SZI4de1bq1R7t+dtY4FiXi
-	 h2E7D4DEErhKnr3jgGCubZkGaAeAV45cORzjk4Nz/XAildW0TfeqobGgQiz3W2reS
-	 h9AFWJrNWkJctOEzL2xU6+CG1rGb5GAuEB1lHLUbp/UgjtkOrMfPMM16fvBALoIva
-	 BFcyNuiyWitMxxJvqIaR94macJd8ru7+vvwtQmn28h4+ewyhdG5Sqnj+V1iHPjbN6
-	 c/4RbsNn8EeHtViGotKVAmy9QiMZ+BW7c73E43W/3AO102VazHR6w0zh1khmSQ1IV
-	 7wVdM1W/I4lVXqW0qQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MQvD5-1rIN602xQl-00NvOl; Mon, 26 Feb 2024 20:36:07 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: jithu.joseph@intel.com,
-	linux@weissschuh.net,
-	pali@kernel.org
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	Dell.Client.Kernel@dell.com,
-	jdelvare@suse.com,
-	linux@roeck-us.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] platform/x86: wmi: Do not instantiate older WMI drivers multiple times
-Date: Mon, 26 Feb 2024 20:35:56 +0100
-Message-Id: <20240226193557.2888-2-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240226193557.2888-1-W_Armin@gmx.de>
-References: <20240226193557.2888-1-W_Armin@gmx.de>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ev13AoIf"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708997803; h=Message-ID:Subject:Date:From:To;
+	bh=ctI/fd/lFbqwu10pNa1KxwlRBClS5pr4qNOcpDAT7KM=;
+	b=ev13AoIfb6+ntaznNDhq0nRQZ1MpyveTd/xqkMBp81NWLcUtdIEj8UEHJ4+UPqpA1IJlxm5i9xhQIf0x+uq4fgagAi6XvHD88OthUej8YVKszzrlyq4UsJxrLuEJERFkWhWq6oNbKShkDkA+fKDFiuJaxR6LXT+fFX7XTA9f3KY=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0W1KvUn4_1708997800;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W1KvUn4_1708997800)
+          by smtp.aliyun-inc.com;
+          Tue, 27 Feb 2024 09:36:41 +0800
+Message-ID: <1708997579.5613105-1-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH vhost v2 19/19] virtio_net: sq support premapped mode
+Date: Tue, 27 Feb 2024 09:32:59 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: virtualization@lists.linux.dev,
+ Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Jason Wang <jasowang@redhat.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Vadim Pasternak <vadimp@nvidia.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Cornelia Huck <cohuck@redhat.com>,
+ Halil Pasic <pasic@linux.ibm.com>,
+ Eric Farman <farman@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ linux-um@lists.infradead.org,
+ netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org,
+ linux-s390@vger.kernel.org,
+ kvm@vger.kernel.org,
+ bpf@vger.kernel.org
+References: <20240223082726.52915-1-xuanzhuo@linux.alibaba.com>
+ <20240223082726.52915-20-xuanzhuo@linux.alibaba.com>
+ <20240225032330-mutt-send-email-mst@kernel.org>
+ <1708939451.7601678-3-xuanzhuo@linux.alibaba.com>
+ <20240226063843-mutt-send-email-mst@kernel.org>
+ <1708947680.4503584-3-xuanzhuo@linux.alibaba.com>
+ <20240226065746-mutt-send-email-mst@kernel.org>
+ <20240226070030-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20240226070030-mutt-send-email-mst@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:zBmwMbmkDKMJpCljEU9J9fD9nRUvemHsPHKma7Mmdk+LWv3OhMh
- Uetj7RE1fu1JkwTWW3hBPPAAZt65KegTN+8EB4xgIfRKjnNFKIgQluhJqquriD+HEYMteUL
- XVGvalSIQr21FmJMMMDqF1z3PfR+y1SPhSFCwVLvUjTRmsxRXJPlYo2aAI+dKYktkiB2A/s
- yfjfV+hptNYouNS0GPp4Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:lr/uKsM/SI8=;6nQ0TV7uXCpGzUwdCn1W69j6ImD
- oNilSyIzNr8wgRotQQ1hLHy+f972uYbv+Pdlwc20HP+d3SWHgs5L9XceAP/fmMmNna0qtzyij
- xNZ3zIa1jRASEAIaegrt9kKb0USGtcirwtiiAJpW49zoSmQRwh50KCZj9z4NA2ck2xLYGtb2p
- /HzbeKNg/BldgLMregyhZY0TTi8V2598LITzRU4cXRUBo+DjoFU5fpHd7m/FjX6XHxFpl3nro
- eco0o+P8VU6tTNYvKXuSr1BRCnHNOzqzCoq5Q3/okiKJ4Q9kDdjmGO+silMZaEj5PkmPsGJjP
- HCAmnpkFClsRzMv0fuC5x/KnF/fXgFzgmacyYlRjUSRZX5KPkpFxlUWwvOwyTaom8x9W243op
- w02qt8C93H/Y8vOmh+1mDDOLRJcdbZjTtE6BlHTHvHMurZklyfzxxpwt7AuOWELOLC4xhS46+
- obCdVyfqVlWGt7T/qzS2O1sBoYoYf9zTtbxE8nwLx9O6dCaRWNmAjPtR1Hbj+ZH7M7mRMmpWB
- B8ksX53kmuDXDBKehrGc1sBS6cATei73WzczQ0icfBxZN/Pmn56EuU2H5x0MG3KOzhuI4ywGh
- JKk30F5kzFbenYU3Abn4UYCXVR5vR+9NPGCiUUtHypdYteiLjwkcwXvxSnBY0hX4H2rgJRReu
- /CO8zRZ0JiIIB2YPz4D6RbKfPhEYU0yRjXKlRYEQq67hfhJ1zY2sALLW2qp9lT6Bshcuemhn3
- ReMasxI3y0Kfw8yua/YFeAU3jPwn90CSobl5GJjq/i8ZZ3Z/j+hv9ciedWjzO+rh3YLhtnJcm
- YkQke4BnqgHGJO+0c4biOzZv/S0cceGMR3+hKfUSrwzLA=
 
-Many older WMI drivers cannot be instantiated multiple times for
-two reasons:
+On Mon, 26 Feb 2024 07:01:11 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> On Mon, Feb 26, 2024 at 07:00:09AM -0500, Michael S. Tsirkin wrote:
+> > On Mon, Feb 26, 2024 at 07:41:20PM +0800, Xuan Zhuo wrote:
+> > > On Mon, 26 Feb 2024 06:39:51 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> > > > On Mon, Feb 26, 2024 at 05:24:11PM +0800, Xuan Zhuo wrote:
+> > > > > On Sun, 25 Feb 2024 03:38:48 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> > > > > > On Fri, Feb 23, 2024 at 04:27:26PM +0800, Xuan Zhuo wrote:
+> > > > > > > If the xsk is enabling, the xsk tx will share the send queue.
+> > > > > > > But the xsk requires that the send queue use the premapped mode.
+> > > > > > > So the send queue must support premapped mode.
+> > > > > > >
+> > > > > > > cmd:
+> > > > > > >     sh samples/pktgen/pktgen_sample01_simple.sh -i eth0 \
+> > > > > > >         -s 16 -d 10.0.0.128 -m 00:16:3e:2c:c8:2e -n 0 -p 100
+> > > > > > > CPU:
+> > > > > > >     Intel(R) Xeon(R) Platinum 8369B CPU @ 2.70GHz
+> > > > > > >
+> > > > > > > Machine:
+> > > > > > >     ecs.g7.2xlarge(Aliyun)
+> > > > > > >
+> > > > > > > before:              1600010.00
+> > > > > > > after(no-premapped): 1599966.00
+> > > > > > > after(premapped):    1600014.00
+> > > > > > >
+> > > > > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > > > > > > ---
+> > > > > > >  drivers/net/virtio_net.c | 136 +++++++++++++++++++++++++++++++++++++--
+> > > > > > >  1 file changed, 132 insertions(+), 4 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> > > > > > > index 7715bb7032ec..b83ef6afc4fb 100644
+> > > > > > > --- a/drivers/net/virtio_net.c
+> > > > > > > +++ b/drivers/net/virtio_net.c
+> > > > > > > @@ -146,6 +146,25 @@ struct virtnet_rq_dma {
+> > > > > > >  	u16 need_sync;
+> > > > > > >  };
+> > > > > > >
+> > > > > > > +struct virtnet_sq_dma {
+> > > > > > > +	union {
+> > > > > > > +		struct virtnet_sq_dma *next;
+> > > > > > > +		void *data;
+> > > > > > > +	};
+> > > > > > > +
+> > > > > > > +	u32 num;
+> > > > > > > +
+> > > > > > > +	dma_addr_t addr[MAX_SKB_FRAGS + 2];
+> > > > > > > +	u32 len[MAX_SKB_FRAGS + 2];
+> > > > > > > +};
+> > > > > > > +
+> > > > > > > +struct virtnet_sq_dma_head {
+> > > > > > > +	/* record for kfree */
+> > > > > > > +	void *p;
+> > > > > > > +
+> > > > > > > +	struct virtnet_sq_dma *free;
+> > > > > > > +};
+> > > > > > > +
+> > > > > > >  /* Internal representation of a send virtqueue */
+> > > > > > >  struct send_queue {
+> > > > > > >  	/* Virtqueue associated with this send _queue */
+> > > > > > > @@ -165,6 +184,8 @@ struct send_queue {
+> > > > > > >
+> > > > > > >  	/* Record whether sq is in reset state. */
+> > > > > > >  	bool reset;
+> > > > > > > +
+> > > > > > > +	struct virtnet_sq_dma_head dmainfo;
+> > > > > > >  };
+> > > > > > >
+> > > > > > >  /* Internal representation of a receive virtqueue */
+> > > > > > > @@ -368,6 +389,95 @@ static struct xdp_frame *ptr_to_xdp(void *ptr)
+> > > > > > >  	return (struct xdp_frame *)((unsigned long)ptr & ~VIRTIO_XDP_FLAG);
+> > > > > > >  }
+> > > > > > >
+> > > > > > > +static struct virtnet_sq_dma *virtnet_sq_unmap(struct send_queue *sq, void **data)
+> > > > > > > +{
+> > > > > > > +	struct virtnet_sq_dma *d;
+> > > > > > > +	int i;
+> > > > > > > +
+> > > > > > > +	d = *data;
+> > > > > > > +	*data = d->data;
+> > > > > > > +
+> > > > > > > +	for (i = 0; i < d->num; ++i)
+> > > > > > > +		virtqueue_dma_unmap_page_attrs(sq->vq, d->addr[i], d->len[i],
+> > > > > > > +					       DMA_TO_DEVICE, 0);
+> > > > > > > +
+> > > > > > > +	d->next = sq->dmainfo.free;
+> > > > > > > +	sq->dmainfo.free = d;
+> > > > > > > +
+> > > > > > > +	return d;
+> > > > > > > +}
+> > > > > > > +
+> > > > > > > +static struct virtnet_sq_dma *virtnet_sq_map_sg(struct send_queue *sq,
+> > > > > > > +						int nents, void *data)
+> > > > > > > +{
+> > > > > > > +	struct virtnet_sq_dma *d;
+> > > > > > > +	struct scatterlist *sg;
+> > > > > > > +	int i;
+> > > > > > > +
+> > > > > > > +	if (!sq->dmainfo.free)
+> > > > > > > +		return NULL;
+> > > > > > > +
+> > > > > > > +	d = sq->dmainfo.free;
+> > > > > > > +	sq->dmainfo.free = d->next;
+> > > > > > > +
+> > > > > > > +	for_each_sg(sq->sg, sg, nents, i) {
+> > > > > > > +		if (virtqueue_dma_map_sg_attrs(sq->vq, sg, DMA_TO_DEVICE, 0))
+> > > > > > > +			goto err;
+> > > > > > > +
+> > > > > > > +		d->addr[i] = sg->dma_address;
+> > > > > > > +		d->len[i] = sg->length;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	d->data = data;
+> > > > > > > +	d->num = i;
+> > > > > > > +	return d;
+> > > > > > > +
+> > > > > > > +err:
+> > > > > > > +	d->num = i;
+> > > > > > > +	virtnet_sq_unmap(sq, (void **)&d);
+> > > > > > > +	return NULL;
+> > > > > > > +}
+> > > > > >
+> > > > > >
+> > > > > > Do I see a reimplementation of linux/llist.h here?
+> > > > > >
+> > > > > >
+> > > > > > > +
+> > > > > > > +static int virtnet_add_outbuf(struct send_queue *sq, u32 num, void *data)
+> > > > > > > +{
+> > > > > > > +	int ret;
+> > > > > > > +
+> > > > > > > +	if (sq->vq->premapped) {
+> > > > > > > +		data = virtnet_sq_map_sg(sq, num, data);
+> > > > > > > +		if (!data)
+> > > > > > > +			return -ENOMEM;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	ret = virtqueue_add_outbuf(sq->vq, sq->sg, num, data, GFP_ATOMIC);
+> > > > > > > +	if (ret && sq->vq->premapped)
+> > > > > > > +		virtnet_sq_unmap(sq, &data);
+> > > > > > > +
+> > > > > > > +	return ret;
+> > > > > > > +}
+> > > > > > > +
+> > > > > > > +static int virtnet_sq_init_dma_mate(struct send_queue *sq)
+> > > > > >
+> > > > > > Mate? The popular south african drink?
+> > > > > >
+> > > > > > > +{
+> > > > > > > +	struct virtnet_sq_dma *d;
+> > > > > > > +	int num, i;
+> > > > > > > +
+> > > > > > > +	num = virtqueue_get_vring_size(sq->vq);
+> > > > > > > +
+> > > > > > > +	sq->dmainfo.free = kcalloc(num, sizeof(*sq->dmainfo.free), GFP_KERNEL);
+> > > > > > > +	if (!sq->dmainfo.free)
+> > > > > > > +		return -ENOMEM;
+> > > > > >
+> > > > > >
+> > > > > > This could be quite a bit of memory for a large queue.  And for a bunch
+> > > > > > of common cases where unmap is a nop (e.g. iommu pt) this does nothing
+> > > > > > useful at all.  And also, this does nothing useful if PLATFORM_ACCESS is off
+> > > > > > which is super common.
+> > > > > >
+> > > > > > A while ago I proposed:
+> > > > > > - extend DMA APIs so one can query whether unmap is a nop
+> > > > >
+> > > > >
+> > > > > We may have trouble for this.
+> > > > >
+> > > > > dma_addr_t dma_map_page_attrs(struct device *dev, struct page *page,
+> > > > > 		size_t offset, size_t size, enum dma_data_direction dir,
+> > > > > 		unsigned long attrs)
+> > > > > {
+> > > > > 	const struct dma_map_ops *ops = get_dma_ops(dev);
+> > > > > 	dma_addr_t addr;
+> > > > >
+> > > > > 	BUG_ON(!valid_dma_direction(dir));
+> > > > >
+> > > > > 	if (WARN_ON_ONCE(!dev->dma_mask))
+> > > > > 		return DMA_MAPPING_ERROR;
+> > > > >
+> > > > > 	if (dma_map_direct(dev, ops) ||
+> > > > > 	    arch_dma_map_page_direct(dev, page_to_phys(page) + offset + size))
+> > > > > 		addr = dma_direct_map_page(dev, page, offset, size, dir, attrs);
+> > > > > 	else
+> > > > > 		addr = ops->map_page(dev, page, offset, size, dir, attrs);
+> > > > > 	kmsan_handle_dma(page, offset, size, dir);
+> > > > > 	debug_dma_map_page(dev, page, offset, size, dir, addr, attrs);
+> > > > >
+> > > > > 	return addr;
+> > > > > }
+> > > > >
+> > > > > arch_dma_map_page_direct will check the dma address.
+> > > > > So we can not judge by the API in advance.
+> > > > >
+> > > > > Thanks.
+> > > >
+> > > > So if dma_map_direct is false we'll still waste some memory.
+> > > > So be it.
+> > >
+> > > arch_dma_map_page_direct default is marco (false), just for powerpc
+> > > it is a function. So I think we can skip it.
+> > >
+> > > If the dma_map_direct is false, I think should save the dma info.
+> > >
+> > > Thanks.
+> >
+> >
+> > Would already be an improvement.
+> > But can we have better names?
+> >
+> > I'd prefer:
+> >
+> > dma_can_skip_unmap
+> > dma_can_skip_sync
+> >
+> > Because we do not know for sure if it's direct unless
+> > we have the page.
+>
+> we might need to add these callbacks to dma ops too, I think
+> with iommu pt that is the case and it is pretty common,
+> right?
 
-- they are using the legacy GUID-based WMI API
-- they are singletons (with global state)
 
-Prevent such WMI drivers from binding to WMI devices with a duplicated
-GUID, as this would mean that the WMI driver will be instantiated at
-least two times (one for the original GUID and one for the duplicated
-GUID).
-WMI drivers which can be instantiated multiple times can signal this
-by setting a flag inside struct wmi_driver.
+I agree.
 
-Tested on a ASUS Prime B650-Plus.
+But this patch set has 19 commits, I hope to do this on a new patchset on the
+top of this.
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/hwmon/dell-smm-hwmon.c                 |  1 +
- drivers/platform/x86/dell/dell-wmi-ddv.c       |  1 +
- drivers/platform/x86/intel/wmi/sbl-fw-update.c |  1 +
- drivers/platform/x86/intel/wmi/thunderbolt.c   |  1 +
- drivers/platform/x86/wmi-bmof.c                |  1 +
- drivers/platform/x86/wmi.c                     | 12 ++++++++++++
- include/linux/wmi.h                            |  2 ++
- 7 files changed, 19 insertions(+)
+If we need to check the iommu pt, I need to study the iommu first.
 
-diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon=
-.c
-index 6d8c0f328b7b..168d669c4eca 100644
-=2D-- a/drivers/hwmon/dell-smm-hwmon.c
-+++ b/drivers/hwmon/dell-smm-hwmon.c
-@@ -1587,6 +1587,7 @@ static struct wmi_driver dell_smm_wmi_driver =3D {
- 	},
- 	.id_table =3D dell_smm_wmi_id_table,
- 	.probe =3D dell_smm_wmi_probe,
-+	.no_singleton =3D true,
- };
+Thanks.
 
- /*
-diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x=
-86/dell/dell-wmi-ddv.c
-index db1e9240dd02..0b2299f7a2de 100644
-=2D-- a/drivers/platform/x86/dell/dell-wmi-ddv.c
-+++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
-@@ -882,6 +882,7 @@ static struct wmi_driver dell_wmi_ddv_driver =3D {
- 	},
- 	.id_table =3D dell_wmi_ddv_id_table,
- 	.probe =3D dell_wmi_ddv_probe,
-+	.no_singleton =3D true,
- };
- module_wmi_driver(dell_wmi_ddv_driver);
 
-diff --git a/drivers/platform/x86/intel/wmi/sbl-fw-update.c b/drivers/plat=
-form/x86/intel/wmi/sbl-fw-update.c
-index 040153ad67c1..75c82c08117f 100644
-=2D-- a/drivers/platform/x86/intel/wmi/sbl-fw-update.c
-+++ b/drivers/platform/x86/intel/wmi/sbl-fw-update.c
-@@ -131,6 +131,7 @@ static struct wmi_driver intel_wmi_sbl_fw_update_drive=
-r =3D {
- 	.probe =3D intel_wmi_sbl_fw_update_probe,
- 	.remove =3D intel_wmi_sbl_fw_update_remove,
- 	.id_table =3D intel_wmi_sbl_id_table,
-+	.no_singleton =3D true,
- };
- module_wmi_driver(intel_wmi_sbl_fw_update_driver);
-
-diff --git a/drivers/platform/x86/intel/wmi/thunderbolt.c b/drivers/platfo=
-rm/x86/intel/wmi/thunderbolt.c
-index e2ad3f46f356..08df560a2c7a 100644
-=2D-- a/drivers/platform/x86/intel/wmi/thunderbolt.c
-+++ b/drivers/platform/x86/intel/wmi/thunderbolt.c
-@@ -63,6 +63,7 @@ static struct wmi_driver intel_wmi_thunderbolt_driver =
-=3D {
- 		.dev_groups =3D tbt_groups,
- 	},
- 	.id_table =3D intel_wmi_thunderbolt_id_table,
-+	.no_singleton =3D true,
- };
-
- module_wmi_driver(intel_wmi_thunderbolt_driver);
-diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/x86/wmi-bm=
-of.c
-index 644d2fd889c0..df6f0ae6e6c7 100644
-=2D-- a/drivers/platform/x86/wmi-bmof.c
-+++ b/drivers/platform/x86/wmi-bmof.c
-@@ -94,6 +94,7 @@ static struct wmi_driver wmi_bmof_driver =3D {
- 	.probe =3D wmi_bmof_probe,
- 	.remove =3D wmi_bmof_remove,
- 	.id_table =3D wmi_bmof_id_table,
-+	.no_singleton =3D true,
- };
-
- module_wmi_driver(wmi_bmof_driver);
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 29dfe52eb802..349deced87e8 100644
-=2D-- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -883,6 +883,18 @@ static int wmi_dev_probe(struct device *dev)
- 	struct wmi_driver *wdriver =3D drv_to_wdrv(dev->driver);
- 	int ret =3D 0;
-
-+	/* Some older WMI drivers will break if instantiated multiple times,
-+	 * so they are blocked from probing WMI devices with a duplicated GUID.
-+	 *
-+	 * New WMI drivers should support being instantiated multiple times.
-+	 */
-+	if (test_bit(WMI_GUID_DUPLICATED, &wblock->flags) && !wdriver->no_single=
-ton) {
-+		dev_warn(dev, "Legacy driver %s cannot be instantiated multiple times\n=
-",
-+			 dev->driver->name);
-+
-+		return -ENODEV;
-+	}
-+
- 	if (wdriver->notify) {
- 		if (test_bit(WMI_NO_EVENT_DATA, &wblock->flags) && !wdriver->no_notify_=
-data)
- 			return -ENODEV;
-diff --git a/include/linux/wmi.h b/include/linux/wmi.h
-index 781958310bfb..63cca3b58d6d 100644
-=2D-- a/include/linux/wmi.h
-+++ b/include/linux/wmi.h
-@@ -49,6 +49,7 @@ u8 wmidev_instance_count(struct wmi_device *wdev);
-  * @driver: Driver model structure
-  * @id_table: List of WMI GUIDs supported by this driver
-  * @no_notify_data: Driver supports WMI events which provide no event dat=
-a
-+ * @no_singleton: Driver can be instantiated multiple times
-  * @probe: Callback for device binding
-  * @remove: Callback for device unbinding
-  * @notify: Callback for receiving WMI events
-@@ -59,6 +60,7 @@ struct wmi_driver {
- 	struct device_driver driver;
- 	const struct wmi_device_id *id_table;
- 	bool no_notify_data;
-+	bool no_singleton;
-
- 	int (*probe)(struct wmi_device *wdev, const void *context);
- 	void (*remove)(struct wmi_device *wdev);
-=2D-
-2.39.2
-
+>
+> > --
+> > MST
+>
