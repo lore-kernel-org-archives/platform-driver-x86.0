@@ -1,46 +1,38 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23CB5E077;
-	Wed, 28 Feb 2024 20:45:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4632573509;
+	Wed, 28 Feb 2024 20:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709153153; cv=none; b=k0XzU6GIE3FMnt0Nx+eXXz5G5aEi4AIgDykfPLh5BKEH1WspGqEkllqIBlC00wQYcIQ9AkLaAgDBDOgCLXy+pkhPlRuCXotYRow2CGS3JYOh2s4+Td0epGoS/W9cRNyc+876YLTBzHh6cWKCPJ5gC9tzMkyTYAhalWDO5vAkIO0=
+	t=1709153330; cv=none; b=IsdCo8vWT9OphyvDMWLgL8G1vDJZXN8YHpRPNqMUlr4ynzhQg4ZMOaOTRlAKbnvDg43Ng2mYp3PHnHnlICaMlhnPGeHOC+VWrf/X5ljMfcR2FWU2J9tyV0AAy4BpfRL4fDy7Qh1tsAMiUynpUH4oEbOlW+NvT44XnpUymZoXbNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709153153; c=relaxed/simple;
-	bh=ctsB0rSbA3ax4bacKm0HE+uMiMqOCS7d8t6u9uRry40=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=pEPbO+IXkWevixZZl8837pVAKjVWR2D5rKD5e4D2yzhkk0kOw3arsS0fD9twsS3CsrkBFwgEY+PGpxfMBl3s4LCFdUWapazScBhIHpr9avX41YrozhDUSZ1/JSpTvZCnet0zCWTqyN/VHgX2m2sR7gOU/Ae+H/3VTw5+58PfK14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ezeM0hl7; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709153330; c=relaxed/simple;
+	bh=xB/Lvc3pAyy3aE4uSGlVi5mHrvCghaImnICZTejHVYw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pSR96rcfW3F5XvZIZZ6R0TuT0ypwpbjxi3B5ui4jrl4INqe6QPnpm1e47XR1l0Q8adl9FjEGti2EnAuexgExLSR/m67vM41egiutVSK3/+iGsCrHJafpZREYHm+n+Du5ZeK1AJI2TeFXt4DMtara+ZTGeO2YKLsEyjaKTRGXtqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=A1km7Vpv; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ezeM0hl7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709153152; x=1740689152;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=ctsB0rSbA3ax4bacKm0HE+uMiMqOCS7d8t6u9uRry40=;
-  b=ezeM0hl7G4n9nWXVD+jboiNqmuKv4bE+zwP1d0h25hLp6MQZEDOcb6qj
-   KlQ47iSZ3KCUxOAtDHEIm3KYx9nxyLyfykNJ0aZldVerwWvTPhFCwsZyq
-   uNCICxJb3ms4CEX4LVsUUOiotcyZR91jPwAfR/rXkof3h/+P0Hwqvlals
-   Eckt/Kkm712pDbTM7E+RbvxKskrwTtY1qWzHL6oFiQEnpliNT/XjGyp/c
-   /3kau+Ewn8ZTP0W/Z7kQPJQsKc1xX0v3oKzF+Q513kuNy6RQYcsi0Tj75
-   Omc/ZNPf7tbvd29LH8pUCIYTy0+chGjnaN9UFZNH9ISav6gp2RhJihGzR
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3451431"
-X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
-   d="scan'208";a="3451431"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 12:45:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
-   d="scan'208";a="7940146"
-Received: from jmadhika-mobl1.amr.corp.intel.com (HELO [10.209.63.161]) ([10.209.63.161])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 12:45:51 -0800
-Message-ID: <b78900e9-729d-4c64-9f3b-79a260322df4@linux.intel.com>
-Date: Wed, 28 Feb 2024 12:45:50 -0800
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="A1km7Vpv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1709153316; x=1709758116; i=w_armin@gmx.de;
+	bh=xB/Lvc3pAyy3aE4uSGlVi5mHrvCghaImnICZTejHVYw=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=A1km7VpvR1RYpB9+WhwCVsuYxvp7u1Qta2kWyER8RKFnhcOaPAu2yOXLYxp4/hE5
+	 lLPqHMa3XODQkPUWCcG+BXgK17XtkA13je+bWjGOgmLYzCqtiRQ/6EbvCevLaNHvb
+	 FafPjVNeUpt7j0UQDI7gLkCxoQz3V7Z83bIIkwD4rJA2BKTEPQkxnlRJ8CJe5yLqS
+	 Oy2LQqlK7F2hApnxsLDWQobYy6tewA4gIukrz7tFEhd4WLlpCnwKgqT0J3Fkr7Hqg
+	 OmxSnmXzrXsmy4ELoiGv1v0UoIE8uVmym/ahLJ9xEfDYYIg7ZAEx4GeoGO2e82N8j
+	 J6a5wzG30a07vpUpug==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mk0NU-1rCirs0w36-00kLYJ; Wed, 28
+ Feb 2024 21:48:36 +0100
+Message-ID: <63ba267a-27db-456e-be32-2efe27fa26e1@gmx.de>
+Date: Wed, 28 Feb 2024 21:48:34 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -48,220 +40,139 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 2/9] platform/x86/intel/sdsi: Combine read and write
- mailbox flows
+Subject: Re: [PATCH v2 2/2] platform/x86/amd/pmf: Fix possible out-of-bound
+ memory accesses
 Content-Language: en-US
-To: "David E. Box" <david.e.box@linux.intel.com>,
- rajvi.jingar@linux.intel.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com
-References: <20240228000016.1685518-1-david.e.box@linux.intel.com>
- <20240228000016.1685518-3-david.e.box@linux.intel.com>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240228000016.1685518-3-david.e.box@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20240227145500.299683-1-W_Armin@gmx.de>
+ <20240227145500.299683-2-W_Armin@gmx.de>
+ <2dd63b5b-cf60-9f28-55b3-35eab537dc9b@linux.intel.com>
+ <0e70681f-85c2-43f9-822a-2e07776c37c9@amd.com>
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <0e70681f-85c2-43f9-822a-2e07776c37c9@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:SyH/nmgU2774H+komsiu5jOrBKM93Q/lDfp/A1JMDlijW0dIDIo
+ qlGTzGn7y8GRGiDajuHEYxJ/8IAyXhgLGTRMKEg0w2Uv5W2xm+2MWSqyQfJURXQOxH7xJrz
+ FpzohwyTTv3a8VzhO2LSYuiWrxyc1dFAWgtdmKz4Ol/8LVZN4JDUV+qRkUGCN8nsHo8b37p
+ tgW1bI2nxusE0TUNTHKgA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:3dRI2+X09JY=;HcDYDkXd0mggqMRwvx12MJ+gSuD
+ wxAdLYrEYvIh+3wvZzfD/rMEJsg8giRmFEma0zrmUbENt6E/ZIrpem6++hOo9s5Yvnxc35EWo
+ 2tkW16cwpOmWHGqum5wrCBcqSaAwpKfou6yVMV+fMOFrcGZ7oMdU9tOH6x0xohQ6wOI5/SarM
+ rsR1HOPHmGzt4It/ooa3XNHSJEo5sj9fnSdTZso/uViJ25FSTcTKGyZCoYpUa4x+UCBSHbmlY
+ 2UkT4xS1YkC7w5Ylz3ytN15z4VvAer2CNktcOCkKCrb9pqi1awjMj2naJXjD1Y4paWK92tZ1I
+ lF+6+9nR9QEI+lqM+N7ZuN+06aaYwTGA7n86Jm5d5Kd/qkrLKP2Ux24fX42bQEoYaIKER20c0
+ trqeorVSGJJ15ziLMZZRGMiCR+fEOFKBZ6bqXrwr0Tjn214M5aldunvOdBraqvas8pv32eY+v
+ FbzP/Z7TPnOzL0u3bRS6YMavIVakTFjKcfqyiu4IZYRs7ljj5JAUNeMGYrQR9GcuPQhAAZdzw
+ 8+U5GS1td1zj7nUrC14UbgphUu9RaZKagBUry6aNNfnYExN8Ocx+JIPKKipedS/1PlXsvJPMQ
+ h7D+wMyBCSrnd2MLn1pvpQ+Z8zMA6gE+Qx6GlVwojYyNwp7ziuJaA2ehHpUGVRXwAtcvl0FDk
+ 7KkrWXOrqxGbyFdDA1mlcZdZgm2RqhiHbFQ0izUs3OG/at7708pHbvd+qmwuxTkdu8bSay3RT
+ fSz9jRTvhpCkqEciKO7cVRknGbbgZCrWCUDloyeYUK3DX9+nmcMwuxehZ3PLY43KluiraGQe4
+ u1HzZOmsJ1xfh9pkSaWWoouPsTx03xzJ09N+BkBMb65/w=
 
+Am 28.02.24 um 12:16 schrieb Shyam Sundar S K:
 
-On 2/27/24 4:00 PM, David E. Box wrote:
-> The current mailbox commands are either read-only or write-only and the
-> flow is different for each. New commands will need to send and receive
-> data. In preparation for these commands, create a common polling function
-> to handle sending data and receiving in the same transaction.
+> Hi Ilpo,
 >
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
+> On 2/27/2024 21:15, Ilpo J=C3=A4rvinen wrote:
+>> Hi Shyam & Armin,
+>>
+>> Shyam, please take a look at the question below.
+>>
+>> On Tue, 27 Feb 2024, Armin Wolf wrote:
+>>
+>>> The length of the policy buffer is not validated before accessing it,
+>>> which means that multiple out-of-bounds memory accesses can occur.
+>>>
+>>> This is especially bad since userspace can load policy binaries over
+>>> debugfs.
+> IMO, this patch is not required, reason being:
+> - the debugfs patch gets created only when CONFIG_AMD_PMF_DEBUG is
+> enabled.
+> - Sideload of policy binaries is only supported with a valid signing
+> key. (think like this can be tested & verified within AMD environment)
+> - Also, in amd_pmf_get_pb_data() there are boundary conditions that
+> are being checked. Is that not sufficient enough?
 
-Looks good to me.
+IMHO, amd_pmf_get_pb_data() only checks if the length of the binary is
+between 0 and the maximum buffer size.
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> V2 - In sdsi_cmd_read() remove unnecessary check for non-zero packet_size
->      in do loop since the loop is exited earlier when packet_size is
->      zero.
+If for example the binary contains only 4 bytes, then there will be an
+out-of-bounds access when trying to read the cookie and length.
+
+Or if the length is bigger than the binary buffer, then the driver just
+updates the buffer length even if the buffer is too small.
+
+I think the driver should catch such cases and return an error.
+
+(Please note that we are talking about the binary buffer, not the internal
+structure of the remaining policy binary itself).
+
+>>> +	if (dev->policy_sz < POLICY_COOKIE_LEN + sizeof(length))
+>>> +		return -EINVAL;
+>>> +
+>>>   	cookie =3D *(u32 *)(dev->policy_buf + POLICY_COOKIE_OFFSET);
+>>>   	length =3D *(u32 *)(dev->policy_buf + POLICY_COOKIE_LEN);
+>> This starts to feel like adding a struct for the header(?) would be bet=
+ter
+>> course of action here as then one could compare against sizeof(*header)
+>> and avoid all those casts (IMO, just access the header fields directly
+>> w/o the local variables).
+> Not sure if I get your question clearly. Can you elaborate a bit more
+> on the struct you are envisioning?
+
+I think he envisions something like this:
+
+struct __packed cookie_header {
+	u32 magic;
+	u32 length;
+};
+
 >
->  drivers/platform/x86/intel/sdsi.c | 79 +++++++++++++++++--------------
->  1 file changed, 44 insertions(+), 35 deletions(-)
+> but IHMO, we actually don't need a struct - as all that we would need
+> is to make sure the signing cookie is part of the policy binary and
+> leave the rest of the error handling to ASP/TEE modules (we can rely
+> on the feedback from those modules).
 >
-> diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
-> index a70c071de6e2..d80c2dc0ce71 100644
-> --- a/drivers/platform/x86/intel/sdsi.c
-> +++ b/drivers/platform/x86/intel/sdsi.c
-> @@ -15,6 +15,7 @@
->  #include <linux/iopoll.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> +#include <linux/overflow.h>
->  #include <linux/pci.h>
->  #include <linux/slab.h>
->  #include <linux/sysfs.h>
-> @@ -156,8 +157,8 @@ static int sdsi_status_to_errno(u32 status)
->  	}
->  }
->  
-> -static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
-> -			      size_t *data_size)
-> +static int sdsi_mbox_poll(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
-> +			  size_t *data_size)
->  {
->  	struct device *dev = priv->dev;
->  	u32 total, loop, eom, status, message_size;
-> @@ -166,18 +167,10 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
->  
->  	lockdep_assert_held(&priv->mb_lock);
->  
-> -	/* Format and send the read command */
-> -	control = FIELD_PREP(CTRL_EOM, 1) |
-> -		  FIELD_PREP(CTRL_SOM, 1) |
-> -		  FIELD_PREP(CTRL_RUN_BUSY, 1) |
-> -		  FIELD_PREP(CTRL_PACKET_SIZE, info->size);
-> -	writeq(control, priv->control_addr);
-> -
->  	/* For reads, data sizes that are larger than the mailbox size are read in packets. */
->  	total = 0;
->  	loop = 0;
->  	do {
-> -		void *buf = info->buffer + (SDSI_SIZE_MAILBOX * loop);
->  		u32 packet_size;
->  
->  		/* Poll on ready bit */
-> @@ -195,6 +188,11 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
->  		if (ret)
->  			break;
->  
-> +		if (!packet_size) {
-> +			sdsi_complete_transaction(priv);
-> +			break;
-> +		}
-> +
->  		/* Only the last packet can be less than the mailbox size. */
->  		if (!eom && packet_size != SDSI_SIZE_MAILBOX) {
->  			dev_err(dev, "Invalid packet size\n");
-> @@ -208,9 +206,13 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
->  			break;
->  		}
->  
-> -		sdsi_memcpy64_fromio(buf, priv->mbox_addr, round_up(packet_size, SDSI_SIZE_CMD));
-> +		if (info->buffer) {
-> +			void *buf = info->buffer + array_size(SDSI_SIZE_MAILBOX, loop);
->  
-> -		total += packet_size;
-> +			sdsi_memcpy64_fromio(buf, priv->mbox_addr,
-> +					     round_up(packet_size, SDSI_SIZE_CMD));
-> +			total += packet_size;
-> +		}
->  
->  		sdsi_complete_transaction(priv);
->  	} while (!eom && ++loop < MBOX_MAX_PACKETS);
-> @@ -230,16 +232,33 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
->  		dev_warn(dev, "Read count %u differs from expected count %u\n",
->  			 total, message_size);
->  
-> -	*data_size = total;
-> +	if (data_size)
-> +		*data_size = total;
->  
->  	return 0;
->  }
->  
-> -static int sdsi_mbox_cmd_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
-> +static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
-> +			      size_t *data_size)
-> +{
-> +	u64 control;
-> +
-> +	lockdep_assert_held(&priv->mb_lock);
-> +
-> +	/* Format and send the read command */
-> +	control = FIELD_PREP(CTRL_EOM, 1) |
-> +		  FIELD_PREP(CTRL_SOM, 1) |
-> +		  FIELD_PREP(CTRL_RUN_BUSY, 1) |
-> +		  FIELD_PREP(CTRL_PACKET_SIZE, info->size);
-> +	writeq(control, priv->control_addr);
-> +
-> +	return sdsi_mbox_poll(priv, info, data_size);
-> +}
-> +
-> +static int sdsi_mbox_cmd_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
-> +			       size_t *data_size)
->  {
->  	u64 control;
-> -	u32 status;
-> -	int ret;
->  
->  	lockdep_assert_held(&priv->mb_lock);
->  
-> @@ -256,20 +275,7 @@ static int sdsi_mbox_cmd_write(struct sdsi_priv *priv, struct sdsi_mbox_info *in
->  		  FIELD_PREP(CTRL_PACKET_SIZE, info->size);
->  	writeq(control, priv->control_addr);
->  
-> -	/* Poll on ready bit */
-> -	ret = readq_poll_timeout(priv->control_addr, control, control & CTRL_READY,
-> -				 MBOX_POLLING_PERIOD_US, MBOX_TIMEOUT_US);
-> -
-> -	if (ret)
-> -		goto release_mbox;
-> -
-> -	status = FIELD_GET(CTRL_STATUS, control);
-> -	ret = sdsi_status_to_errno(status);
-> -
-> -release_mbox:
-> -	sdsi_complete_transaction(priv);
-> -
-> -	return ret;
-> +	return sdsi_mbox_poll(priv, info, data_size);
->  }
->  
->  static int sdsi_mbox_acquire(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
-> @@ -313,7 +319,8 @@ static int sdsi_mbox_acquire(struct sdsi_priv *priv, struct sdsi_mbox_info *info
->  	return ret;
->  }
->  
-> -static int sdsi_mbox_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
-> +static int sdsi_mbox_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
-> +			   size_t *data_size)
->  {
->  	int ret;
->  
-> @@ -323,7 +330,7 @@ static int sdsi_mbox_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
->  	if (ret)
->  		return ret;
->  
-> -	return sdsi_mbox_cmd_write(priv, info);
-> +	return sdsi_mbox_cmd_write(priv, info, data_size);
->  }
->  
->  static int sdsi_mbox_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info, size_t *data_size)
-> @@ -342,7 +349,7 @@ static int sdsi_mbox_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info, s
->  static ssize_t sdsi_provision(struct sdsi_priv *priv, char *buf, size_t count,
->  			      enum sdsi_command command)
->  {
-> -	struct sdsi_mbox_info info;
-> +	struct sdsi_mbox_info info = {};
->  	int ret;
->  
->  	if (count > (SDSI_SIZE_WRITE_MSG - SDSI_SIZE_CMD))
-> @@ -364,7 +371,9 @@ static ssize_t sdsi_provision(struct sdsi_priv *priv, char *buf, size_t count,
->  	ret = mutex_lock_interruptible(&priv->mb_lock);
->  	if (ret)
->  		goto free_payload;
-> -	ret = sdsi_mbox_write(priv, &info);
-> +
-> +	ret = sdsi_mbox_write(priv, &info, NULL);
-> +
->  	mutex_unlock(&priv->mb_lock);
->  
->  free_payload:
-> @@ -408,7 +417,7 @@ static ssize_t
->  certificate_read(u64 command, struct sdsi_priv *priv, char *buf, loff_t off,
->  		 size_t count)
->  {
-> -	struct sdsi_mbox_info info;
-> +	struct sdsi_mbox_info info = {};
->  	size_t size;
->  	int ret;
->  
+>> Shyam, do you think a struct makes sense here? There's some header in
+>> this policy, right?
+> Yes, the policy binary on a whole has multiple sections within it and
+> there are multiple headers (like signing, OEM header, etc).
+>
+> But that might be not real interest to the PMF driver. The only thing
+> the driver has to make sure is that the policy binary going into ASP
+> (AMD Secure Processor) is with in the limits and has a valid signing
+> cookie. So this part is already taken care in the current code.
+>
+>>
+>> There are more thing to address here...
+>>
+>> 1) amd_pmf_start_policy_engine() function returns -EINVAL & res that is
+>>     TA_PMF_* which inconsistent in type of the return value
+>>
+> ah! it has mix of both int and u32 :-)
+>
+> Armin, would you like to amend this in your current series? or else I
+> will submit a change for this in my next series.
+>
+> Thanks,
+> Shyam
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+I can do so, but i will be unable to send a new patch series for the rest =
+of this week.
 
+Thanks,
+Armin Wolf
+
+>> 2) Once 1) is fixed, the caller shadowing the return code can be fixed =
+as
+>>     well:
+>>          ret =3D amd_pmf_start_policy_engine(dev);
+>>          if (ret)
+>>                  return -EINVAL;
+>>
+>>
