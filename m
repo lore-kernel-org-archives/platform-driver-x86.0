@@ -1,46 +1,46 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C7D381CB;
-	Wed, 28 Feb 2024 00:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF22364;
+	Wed, 28 Feb 2024 00:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709078420; cv=none; b=QuBcEpiFD30RnlzT1Y/+XM3Gcw0RA9r/qypnRmnwIn0Tm7rcDkwMcDAwE8s8F6hE1IkD8TNuKnD5Ee8tBF6nc4WGyVOb/JQQacrRH3TpAT74mMBHVT6N6SRmUMylKTMQTqhbRO6HGvOqOMyc2MOQrtKwLCydzWbqP8c4mWR5xag=
+	t=1709078421; cv=none; b=a7LP5QPfAMJGwSArDZH1nl0KOFSq5DZJJd4aSPLBUt6NDvH6xq9JtzDENYEPZA8wI1N1OFi2ctbVfoh4ogXsOzSq0Xe11KZ7cRqzaP8T6hK5/wEOj821i5h8tcNBvc7Sk0c0aY8Hwcovt+ukERcGegVP5R31abxkmfZM4FWRNj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709078420; c=relaxed/simple;
-	bh=kTuJBiH0He/AE/VlrZQG9PWPYUT9ap2kxnqVhwAzT6Q=;
+	s=arc-20240116; t=1709078421; c=relaxed/simple;
+	bh=Cjids9Y5fgG2A+arpd84T9h3UMgARRlLtTbh6HeGD1E=;
 	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Mc3YEn38TDYJ5ACJ1l6HATF+cMnTi+eERJ+R3J92K/LGCoWZUgt7VCUOc7JzEjacxliX5NARoaYKqa6phbu6K9LhXlz3qpG0oMpyHL+e7C5NWiZ7ApRqqKo72FCXng/24POrzfo6ryo0L43TEhD92RIE/7ofZz7eUkt58zQmcew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IDvdmSUR; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version; b=fbkEQWP4A3vjoepFOcYwLuaxVHVojv7JzWP5b2GHhRVGfcvF0GFlrt8gKBYTNYqq2mMTRpQMt2Nf97vAitj1VrcyHEjuuLiLqOfxHCpc2Oft7TRhcdp5/eFeasAJkBD2M3CQyCvcAdg65NXsVH9vdoX+xFC4DII2AmKTAzvUVIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WILPckTW; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IDvdmSUR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WILPckTW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709078418; x=1740614418;
+  t=1709078420; x=1740614420;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=kTuJBiH0He/AE/VlrZQG9PWPYUT9ap2kxnqVhwAzT6Q=;
-  b=IDvdmSUR6kYU4pmPzIpQ9Gf1uab5TOsbW/ZI7gDVahact8+EfyDDokgr
-   xYCMBYhxgQ9EO352jB1riDdxdR1dVThVDlDFdSoI5tqNAOer+ijxKU+Iw
-   cnlzSd2/fWayDHJCClDuFq4+JVaeKKwO14Wz0x/LmxlvWGigROUqt2F/l
-   tY/LWcx0IX6M8MZ097eVa/kxo9RJGpPtwdP0wHuqUjYn7Qf2ik8a2Lbyl
-   7Tr/EUnPYWEj9dcFXx7XvKvXmlEzt+DafWJk/9t6j8sMApH3fURHmKP0h
-   okB+sq+19R/cIuvFS1ATR8ARJEwRciZ/8zC3sphD6m9Aloa9LzpPJX8XR
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="25919833"
+  bh=Cjids9Y5fgG2A+arpd84T9h3UMgARRlLtTbh6HeGD1E=;
+  b=WILPckTWAqOQTDXh4nWq56bwd7ShdkPP7fXKWTvWL+9ASN93Un5i6iJ3
+   ZNqH2qszStxHmYISDEaRBdiVxOvQX7cwQiDWwd8UMHdReGJibT96OO6cf
+   Ezw1GJLCFt8hmaOmxCEZlNzOsKq5Ndjht2uB9AePm0QbHdshduZOVF71s
+   9OEWwLP6Ap9eCqM19mkmF2DdQvLzRWiy14w5ZRikHV26B5vnIypkdXkdm
+   U3+s8hAAKK970RIte1aVYeqdVuwI0e653fX1JZQoszAF+puoAybm3D0OK
+   aiOt40iVmBr6jrfP95LaQL4q5gF0HEPYKq+GlJ20GmVOVPXCCykGz19PH
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14604937"
 X-IronPort-AV: E=Sophos;i="6.06,189,1705392000"; 
-   d="scan'208";a="25919833"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 16:00:18 -0800
+   d="scan'208";a="14604937"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 16:00:17 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,189,1705392000"; 
-   d="scan'208";a="7439162"
+   d="scan'208";a="7176940"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 16:00:17 -0800
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 16:00:17 -0800
 Received: from debox1-desk4.lan (unknown [10.251.6.149])
-	by linux.intel.com (Postfix) with ESMTP id 71BFC580B9A;
+	by linux.intel.com (Postfix) with ESMTP id D44BF580D7F;
 	Tue, 27 Feb 2024 16:00:16 -0800 (PST)
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: david.e.box@linux.intel.com,
@@ -49,9 +49,9 @@ To: david.e.box@linux.intel.com,
 	linux-kernel@vger.kernel.org,
 	hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com
-Subject: [PATCH V2 1/9] platform/x86/intel/sdsi: Set message size during writes
-Date: Tue, 27 Feb 2024 16:00:08 -0800
-Message-Id: <20240228000016.1685518-2-david.e.box@linux.intel.com>
+Subject: [PATCH V2 3/9] platform/x86/intel/sdsi: Add in-band BIOS lock support
+Date: Tue, 27 Feb 2024 16:00:10 -0800
+Message-Id: <20240228000016.1685518-4-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240228000016.1685518-1-david.e.box@linux.intel.com>
 References: <20240228000016.1685518-1-david.e.box@linux.intel.com>
@@ -61,34 +61,59 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-New mailbox commands will support sending multi packet writes and updated
-firmware now requires that the message size be written for all commands
-along with the packet size. Since the driver doesn't perform writes larger
-than the packet size, set the message size to the same value.
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
+As per SDSi in-band interface specification, sec titled "BIOS lock for
+in-band provisioning", when IB_LOCK bit is set in control qword, the
+SDSI agent is only allowed to perform the read flow, but not allowed to
+provision license blob or license key. So add check for it in
+sdsi_provision().
+
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
 
-V2 - no changes
+V2 - Move sdsi_ib_locked() check after overflow check
 
- drivers/platform/x86/intel/sdsi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/intel/sdsi.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
-index 556e7c6dbb05..a70c071de6e2 100644
+index d80c2dc0ce71..bb3eaf5eb382 100644
 --- a/drivers/platform/x86/intel/sdsi.c
 +++ b/drivers/platform/x86/intel/sdsi.c
-@@ -252,6 +252,7 @@ static int sdsi_mbox_cmd_write(struct sdsi_priv *priv, struct sdsi_mbox_info *in
- 		  FIELD_PREP(CTRL_SOM, 1) |
- 		  FIELD_PREP(CTRL_RUN_BUSY, 1) |
- 		  FIELD_PREP(CTRL_READ_WRITE, 1) |
-+		  FIELD_PREP(CTRL_MSG_SIZE, info->size) |
- 		  FIELD_PREP(CTRL_PACKET_SIZE, info->size);
- 	writeq(control, priv->control_addr);
+@@ -67,6 +67,7 @@
+ #define CTRL_OWNER			GENMASK(5, 4)
+ #define CTRL_COMPLETE			BIT(6)
+ #define CTRL_READY			BIT(7)
++#define CTRL_INBAND_LOCK		BIT(32)
+ #define CTRL_STATUS			GENMASK(15, 8)
+ #define CTRL_PACKET_SIZE		GENMASK(31, 16)
+ #define CTRL_MSG_SIZE			GENMASK(63, 48)
+@@ -346,6 +347,11 @@ static int sdsi_mbox_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info, s
+ 	return sdsi_mbox_cmd_read(priv, info, data_size);
+ }
+ 
++static bool sdsi_ib_locked(struct sdsi_priv *priv)
++{
++	return !!FIELD_GET(CTRL_INBAND_LOCK, readq(priv->control_addr));
++}
++
+ static ssize_t sdsi_provision(struct sdsi_priv *priv, char *buf, size_t count,
+ 			      enum sdsi_command command)
+ {
+@@ -355,6 +361,10 @@ static ssize_t sdsi_provision(struct sdsi_priv *priv, char *buf, size_t count,
+ 	if (count > (SDSI_SIZE_WRITE_MSG - SDSI_SIZE_CMD))
+ 		return -EOVERFLOW;
+ 
++	/* Make sure In-band lock is not set */
++	if (sdsi_ib_locked(priv))
++		return -EPERM;
++
+ 	/* Qword aligned message + command qword */
+ 	info.size = round_up(count, SDSI_SIZE_CMD) + SDSI_SIZE_CMD;
  
 -- 
 2.34.1
