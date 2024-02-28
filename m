@@ -1,65 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF0573522
-	for <platform-driver-x86@vger.kernel.org>; Wed, 28 Feb 2024 13:10:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D173914A4D6
+	for <platform-driver-x86@vger.kernel.org>; Wed, 28 Feb 2024 13:23:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709125823; cv=none; b=cV1V5lD5LjG2WuvpnK7g4vwdZykWRLRTLMPixMpF7QoByj/sCef9hMtARdx1LKczIHSI1dy9HlhQe8LWwjP40Bz7d/yhik8h/fHHztck2CYM3iL/AkWwj5P0SJnl5xBmIx5KobBHfGT8mkxeCgyIoDAhfqLS0v/+NKAMgZ9SCJY=
+	t=1709126634; cv=none; b=taeddnKjqg/35UKF+ApN9tTn2C5lQXJla2AgvQk/F9VvHhOngRvDrCrDlbMkLBpMU4axqEwvdgQNuoEZOwnqvPQBicVA547/1y+ba1bZvpkPcZYJ/9hUL1wLSYulsffKQZivMDTQ4vt8vzBWTX/rgiGRv7lI2DORY84v9jZJ/DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709125823; c=relaxed/simple;
-	bh=M4E1rwnTlnzfrruXE8DGxlNzb5PJaOHTEaClwvFTksE=;
+	s=arc-20240116; t=1709126634; c=relaxed/simple;
+	bh=J0pBZVG/kTNtQjh0TGoSqnc1pSpyF2AqAzhFgvJaJbs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U5ZuOFvr8iolf3tjAs3xmBE+CzY2U1nMAYtMABVBBln/AIduah11wX+JNOmZlP8k9kx+168WK5xDFSeh44jg6VYm0M2ci6Sol0Vj+t+eS7ojD9txYJWyyNuspYeBmOJGGZXL77pUxBUHnLcL5t+6BQB8mJbYb4V3icnhs39LsYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ddzywXjS; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=bgUCxGMc23BuYpfurF2YztsLZH58g+oArtOTP95UUNzM/73plOIctoZNSKgEffrI6N6LarhknMnSM/2TEmyhVLb8hJeRq4hpltka/VbAgH06Or6uqIlAgRjzs3cU8Lk/fW4Bb0LyccG1SHNDrzWMVOmCW/bkFHvSaxzeEEt1i44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gVUodj8u; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ddzywXjS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gVUodj8u"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709125820;
+	s=mimecast20190719; t=1709126631;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DexqIOoSO9KFMr8XQf/oDgjK6Z6M/Fq/dKZt8eVix00=;
-	b=ddzywXjSuSSIsx/gHPCba/5TpAMv4Zpq2wfHJiONr8/4QnHFEv1wANyD8nyMnZkKCIYLX5
-	ZOEhOJ2OivgBYysxKCnKLAb9Hblc+CV66wvo3OsPeso42vy6hV0WzrNHBJIXdaUW/HyVJ8
-	FQbrsLYA4tCMVsY+pRXAXz8lk+V3GP0=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=xKq+KbCVvhl5Mkuq8KIf4CJGUk342M8pPpaYXQOAlfk=;
+	b=gVUodj8uoXQVTaLSgyFOE7+sxZ+BXSxkn4t9sGL7lteLl3H95PgaxHfjQ2yMipsxQZt0M4
+	lzl1N3tXSRsGLU/NRetb4qROxViwAM9Zh6SShkHQSnrqC5i1/N5JhWJBnbrcuI4PHdD5rb
+	z1dvg1GwvTIlznWI2Ehd+JZfcUcTPpc=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-403-3M-jbiw6MBmQ-qyvxc-Vdw-1; Wed, 28 Feb 2024 08:10:17 -0500
-X-MC-Unique: 3M-jbiw6MBmQ-qyvxc-Vdw-1
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-513154c153cso1096262e87.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Feb 2024 05:10:17 -0800 (PST)
+ us-mta-647-1IqYABoAM0WJ12b41CN2KQ-1; Wed, 28 Feb 2024 08:23:50 -0500
+X-MC-Unique: 1IqYABoAM0WJ12b41CN2KQ-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a2f71c83b7eso490830666b.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Feb 2024 05:23:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709125816; x=1709730616;
+        d=1e100.net; s=20230601; t=1709126629; x=1709731429;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DexqIOoSO9KFMr8XQf/oDgjK6Z6M/Fq/dKZt8eVix00=;
-        b=lWQrxW2GVWWfk5uggCsWirIOrvqb4Om2EkOcVmSEo0ynXx3NdsrmYw+dOyrzVXcINr
-         F7fjFquL1uXgRD3QHOKNRYdquwpyhhMoKRkYDmt26iXlevxqxyIIsYaZHILlpBNJGkIP
-         iO4cbS4vF7IeotjsSZ3t4JPj4goDrskzvNfpZd8byLY7YMlRARvBBkDVaqaZEaDT6nDi
-         9EWl3PtFBmDclDrRGPMsSd1GLOnrmGercde5qMGzTEIU6bifxy8f687NW1wy4Xe8tcHG
-         ePUidkoIu4JjUg+4YX4bF1f+MRwUaliSmfBPy1yQoz9JiaFXv4/KVhg9TPKJ+a4TL1ZF
-         e4Yw==
-X-Forwarded-Encrypted: i=1; AJvYcCX+s24wk0u42FztSjKyRqrRf1awMLP3dVg9uW/4axZOFh1ehO07wQgfCaucyGQRimLdJ+ccivM2c4rFg94w/NbgC8REZaOmpDsXSWNRrEMzc+WWHQ==
-X-Gm-Message-State: AOJu0Ywgu7JDWPaN+cGHHVQJmHxcgIWvZQO5+u00n260OtKrgVKGe5zn
-	X7H+88GwWad2xniKob2CMl7/QHTh0tTKisntBswWvsCwTnguZFgGl6kdTDIkOb15OAcPK/a6rsX
-	GcNOH2GE9ipMDdWeOqKT4N3WGMIiB3L/HAbQXk1WCGeZbOOlUSJq//8SnDQJaguT0pSMPpY0=
-X-Received: by 2002:a05:6512:282c:b0:512:a371:3b27 with SMTP id cf44-20020a056512282c00b00512a3713b27mr11104261lfb.13.1709125816196;
-        Wed, 28 Feb 2024 05:10:16 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHWG4RNhU5mSzkXO97COQPuG5NqxMD1scCzapw5gUTR2z4HgXun7bjZqZsqL1t6MHT678WVZA==
-X-Received: by 2002:a05:6512:282c:b0:512:a371:3b27 with SMTP id cf44-20020a056512282c00b00512a3713b27mr11104234lfb.13.1709125815792;
-        Wed, 28 Feb 2024 05:10:15 -0800 (PST)
+        bh=xKq+KbCVvhl5Mkuq8KIf4CJGUk342M8pPpaYXQOAlfk=;
+        b=A6d02FxKOzhpiNKC8U8/Oa5zRvCvxJwFjKhk2S3KVfmioMthTx4kxBzSt1enhN2GQ6
+         ChB2E55suNr6MfGl3yR4IYlwLLfjot+6uHqlBRjeewj4XMnngFjkl5u3kcZz6lPCYxt/
+         LfVYJwtjyWrcuWV789R9dhalGytwHI1lmFTebdLl8OVYfwXwbInd9x7dYHaBjyo2CSvK
+         QCorYkNkVOafkmlvdTa+BCYhnrdjNX1pi7P+e1oQj1b6Cd+he+xLiXozix/NVMqA+0gC
+         W//K+D5B8iJ4HfCsjQkOG/WRyLJjZOfobaSn05ooMKMDSf26zlayMG3NthWZZTsz0CvT
+         K9jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWtwn/tABMFRlXWQSWl8smw7cAwTnEhAl6Y46kos1ypyv5RpszHfUZa2C4cpeJl1OMJ6PLyE7ZkxF7n1YqOxytYyd4dWsAgE9I32I8SsdA89aGjtA==
+X-Gm-Message-State: AOJu0YzRtYt0sAw+iXs8pkyj4XR6qQ95sWFXGRW6MAa769R8pD/jtaZn
+	aEbY5spcXYv4ZX29mDmtFsfh02VXfP9zQJVEtrxEHxZua2P0+bb1v8nUw0Ilh5/H7+S9TnuDkDi
+	9HXdzYwl2cDs6PnkSCnZSqgSeOqyGyfJ+SPyIpk72Y18PX4gtaQGr846MS6fA5BYz6+MbO4U=
+X-Received: by 2002:a17:906:5a95:b0:a43:eb29:a293 with SMTP id l21-20020a1709065a9500b00a43eb29a293mr1522625ejq.5.1709126629249;
+        Wed, 28 Feb 2024 05:23:49 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFCxC/SMtA4W6mzulwwMdFiwybWP/9ffS59LzWkV0Sb2HZmnAM5CGQsVznOpvrUUdOBQ+YnWA==
+X-Received: by 2002:a17:906:5a95:b0:a43:eb29:a293 with SMTP id l21-20020a1709065a9500b00a43eb29a293mr1522600ejq.5.1709126628814;
+        Wed, 28 Feb 2024 05:23:48 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id c5-20020a0564021f8500b005653439cadcsm1778400edc.25.2024.02.28.05.10.15
+        by smtp.gmail.com with ESMTPSA id gv18-20020a170906f11200b00a413d1eda4bsm1848568ejb.87.2024.02.28.05.23.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Feb 2024 05:10:15 -0800 (PST)
-Message-ID: <4344926b-40e9-4423-b208-c18263248a82@redhat.com>
-Date: Wed, 28 Feb 2024 14:10:14 +0100
+        Wed, 28 Feb 2024 05:23:48 -0800 (PST)
+Message-ID: <807c658b-358f-47c3-b14a-f1b76e9208c6@redhat.com>
+Date: Wed, 28 Feb 2024 14:23:47 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,182 +67,189 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/6] platform/x86: dell-smo8800: Move instantiation of
- lis3lv02d i2c_client from i2c-i801 to dell-smo8800
+Subject: Re: [PATCH 2/3] platform/x86: wmi: Do not instantiate older WMI
+ drivers multiple times
 Content-Language: en-US, nl
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc: Jean Delvare <jdelvare@suse.de>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>,
- Andi Shyti <andi.shyti@kernel.org>, eric.piel@tremplin-utc.net,
- Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com,
- Kai Heng Feng <kai.heng.feng@canonical.com>,
- platform-driver-x86@vger.kernel.org, Wolfram Sang <wsa@kernel.org>,
- linux-i2c@vger.kernel.org
-References: <20240106160935.45487-1-hdegoede@redhat.com>
- <20240106160935.45487-3-hdegoede@redhat.com>
- <20240107171055.ac7jtwhu2kbalaou@pali>
- <20240213173050.0cf4a58f@endymion.delvare>
- <3e5b47ce-29a9-43a3-92bc-599a9a716fbb@redhat.com>
- <20240227214011.xeys7rtukn6hksdw@pali>
+To: Armin Wolf <W_Armin@gmx.de>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc: jithu.joseph@intel.com, linux@weissschuh.net,
+ ilpo.jarvinen@linux.intel.com, Dell.Client.Kernel@dell.com,
+ jdelvare@suse.com, linux@roeck-us.net, platform-driver-x86@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240226193557.2888-1-W_Armin@gmx.de>
+ <20240226193557.2888-2-W_Armin@gmx.de> <20240227203058.eun4ylvhk4t7uogk@pali>
+ <a8602a4a-39e1-46c3-9fe9-b6896c75fa73@gmx.de>
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240227214011.xeys7rtukn6hksdw@pali>
+In-Reply-To: <a8602a4a-39e1-46c3-9fe9-b6896c75fa73@gmx.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Pali,
+Hi Armin,
 
-On 2/27/24 22:40, Pali Rohár wrote:
-> On Saturday 17 February 2024 11:33:21 Hans de Goede wrote:
->> Hi Jean,
->>
->> On 2/13/24 17:30, Jean Delvare wrote:
->>> Hi Pali, Hans,
+On 2/27/24 23:47, Armin Wolf wrote:
+> Am 27.02.24 um 21:30 schrieb Pali Rohár:
+> 
+>> On Monday 26 February 2024 20:35:56 Armin Wolf wrote:
+>>> Many older WMI drivers cannot be instantiated multiple times for
+>>> two reasons:
 >>>
->>> On Sun, 7 Jan 2024 18:10:55 +0100, Pali Rohár wrote:
->>>> On Saturday 06 January 2024 17:09:29 Hans de Goede wrote:
->>>>> It is not necessary to handle the Dell specific instantiation of
->>>>> i2c_client-s for SMO8xxx ACPI devices without an ACPI I2cResource
->>>>> inside the generic i801 I2C adapter driver.
->>>>>
->>>>> The kernel already instantiates platform_device-s for these ACPI devices
->>>>> and the drivers/platform/x86/dell/dell-smo8800.c driver binds to these
->>>>> platform drivers.
->>>>>
->>>>> Move the i2c_client instantiation from the generic i2c-i801 driver to
->>>>> the Dell specific dell-smo8800 driver.
->>>>>
->>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>>> ---
->>>>> Changes in v2:
->>>>> - Use a pci_device_id table to check for IDF (non main) i2c-i801 SMBusses
->>>>> - Add a comment documenting the IDF PCI device ids
->>>>> ---
->>>>>  drivers/i2c/busses/i2c-i801.c            | 126 +----------------------
->>>>>  drivers/platform/x86/dell/dell-smo8800.c | 121 +++++++++++++++++++++-
->>>>>  2 files changed, 123 insertions(+), 124 deletions(-)  
->>>>
->>>> I'm looking at this change again and I'm not not sure if it is a good
->>>> direction to do this movement. (...)
+>>> - they are using the legacy GUID-based WMI API
+>>> - they are singletons (with global state)
 >>>
->>> Same feeling here. Having to lookup the parent i2c bus, which may or
->>> may not be present yet, doesn't feel good.
->>>
->>> I wouldn't object if everybody was happy with the move and moving the
->>> code was solving an actual issue, but that doesn't seem to be the case.
+>>> Prevent such WMI drivers from binding to WMI devices with a duplicated
+>>> GUID, as this would mean that the WMI driver will be instantiated at
+>>> least two times (one for the original GUID and one for the duplicated
+>>> GUID).
+>>> WMI drivers which can be instantiated multiple times can signal this
+>>> by setting a flag inside struct wmi_driver.
+>> What do you think about opposite direction? Adding ".singleton = true"
+>> into every driver which is not compatible with duplicated initialization
+>> and having the default value that drivers are not singletons.
 >>
->> I thought you would actually like getting this somewhat clunky code
->> which basically works around the hw not being properly described in
->> the ACPI tables out of the generic i2c-i801 code.
->>
->> I didn't get around to answer's Pali's concerns yet, so let me
->> start by addressing those since you indicate that you share Pali's
->> concerns:
->>
->> Pali wrote:
->>> Now after looking at this change again I see there a problem. If i2c-801
->>> driver initialize i2c-801 device after this smo8800 is called then
->>> accelerometer i2c device would not happen.
->>
->> That is a good point (which Jean also points out). But this can simply
->> be fixed by making the dell-smo8800's probe() method return -EPROBE_DEFER
->> if the i2c-i801 i2c-bus is not present yet (all designs using the
->> dell-smo8800 driver will have an i2c-bus so waiting for this to show
->> up should not cause regressions).
+>> But if the direction it to not accept new "legacy" drivers and start get
+>> rid of all "legacy" drivers by rewriting them, then it does not matter
+>> if "no_singleton" or "is_singleton" is used...
 > 
-> Adding EPROBE_DEFER just complicates the dependency and state model.
-> I would really suggest to come up with a simpler solution, not too
-> complicated where it is required to think a lot if is is correct and if
-> all edge-cases are handled.
-
-I'm not sure what you are worried about here. dell-smo8800 is
-a leave driver, nothing inside the kernel depends on it being 
-loaded or not. So there are no -EPROBE_DEFER complexities here,
-yes -EPROBE_DEFER can become a bit hairy with complex dependency
-graphs, but this is a very KISS case.
-
-Are there any specific scenarios you are actually worried about
-in this specific case?
-
->> If we can agree to move forward this series I'll fix this.
->>
->> Pali wrote:
->>> Also it has same problem if PCI i801 device is reloaded or reset.
->>
->> The i801 device is not hotplugable, so normally this will never
->> happen. If the user manually unbinds + rebinds the i2c-i801 driver
->> them the i2c_client for the smo88xx device will indeed get removed
->> and not re-added. But this will normally never happen and if
->> a user is manually poking things then the user can also unbind +
->> rebind the dell-mso8800 driver after the i2c-i801 rebind.
->> So I don't really see this as an issue.
+> Hi,
 > 
-> Well, rmmod & modprobe is not the rare cases. Whatever developers say
-> about rmmod (or modprobe -r or whatever is the way for unloading
-> modules), this is something which is used by a lot of users and would be
-> used. 
-
-Many modules actually have bugs in there remove paths and crash,
-this is really not a common case. Sometimes users use rmmod + modprobe
-surrounding suspend/resume for e.g. a wifi driver to work around
-suspend/resume problems but I have never heard of this being used
-for a driver like i2c-i801.
-
-And again if users are manually meddling with this, the they can
-also rmmod + modprobe dell-smo8800 after re-modprobing i2c-i801.
-
->> With those remarks addressed let me try to explain why I think
->> that moving this to the dell-smo8800 code is a good idea:
->>
->> 1. It is a SMO88xx ACPI device specific kludge and as such IMHO
->> thus belongs in the driver for the SMO88xx ACPI platform_device.
+> i want to make sure that i wont forget any legacy WMI drivers. This way, the
+> older legacy WMI drivers automatically initialize no_singleton with false.
 > 
-> I'm not sure if it belongs to "SMO88xx ACPI platform_device" but for
-> sure I agree with you that it does not belong to i801 code. I would say
-> that it belongs to some SMO8800 glue code -- because it is not the
-> classic ACPI driver too. But I'm not against to have SMO glue code and
-> SMO ACPI driver in one file (maybe it is even better to have it).
+> Also i intent to not accept new legacy WMI drivers.
 
-We are trying to get rid of acpi_driver drivers using only
-platform_driver drivers for the platform_devices created for
-ACPI devices / fwnodes which do not have another physical device.
+Somewhat offtopic question, how do you plan to handle the case where
+there are 2 WMI GUIDs for what really is a single "thing",
+specifically one main WMI GUID for a vendor specific interface
+for say the embedded-controller and a separate GUID for events ?
 
-Also we only want this workaround when the SMO88xx ACPI fwnode
-is missing the I2cSerialBusV2 resource for the i2c_client and
-conveniently the platform_device will only be created for
-ACPI fwnodes without the I2cSerialBusV2 resource for proper
-ACPI fwnodes which have the I2C resource an i2c_client will
-be created instead. So putting the workaround in
-the platform_driver automatically ensures that it only runs
-when the ACPI fwnode is incomplete.
-
-
-> 
->> The i2c-i801 driver gets loaded on every x86 system and it is
->> undesirable to have this extra code and the DMI table in RAM
->> on all those other systems.
-> 
-> I think we can take an assumption that ACPI SMO device does not change
-> it existence or ACPI enabled/disabled state during runtime. So we can
-> scan for ACPI SMO device just once in function stored in __init section
-> called during the kernel/module initialization and cache the result
-> (bool if device was found + its i2c address). After function marked as
-> __init finish its job then together with DMI tables can be discarded
-> from RAM. With this way it does take extra memory on every x86 system.
-> Also we can combine this with an SMO config option, so the whole code
-> "glue" code would not be compiled when SMO driver is not enabled via
-> Kconfig.
-
-This approach does not work because i2c-i801.c registers a PCI driver,
-there is no guarantee that the adapter has already been probed and
-an i2c_adapter has been created before it. A PCI driver's probe()
-function must not be __init and thus any code which it calls also
-must not be __init.
-
-So the majority of the smo88xx handling can not be __init.
+IIRC we have several such cases. I thought we even have a case
+where the main WMI GUID already is bound to using wmi_bus wmi_driver,
+while the event guid is listened to by using wmi_install_notify_handler()
+but I cannot find the code doing this, so I might be mistaken on this.
 
 Regards,
 
 Hans
 
+
+
+>>> Tested on a ASUS Prime B650-Plus.
+>>>
+>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>>> ---
+>>>   drivers/hwmon/dell-smm-hwmon.c                 |  1 +
+>>>   drivers/platform/x86/dell/dell-wmi-ddv.c       |  1 +
+>>>   drivers/platform/x86/intel/wmi/sbl-fw-update.c |  1 +
+>>>   drivers/platform/x86/intel/wmi/thunderbolt.c   |  1 +
+>>>   drivers/platform/x86/wmi-bmof.c                |  1 +
+>>>   drivers/platform/x86/wmi.c                     | 12 ++++++++++++
+>>>   include/linux/wmi.h                            |  2 ++
+>>>   7 files changed, 19 insertions(+)
+>>>
+>>> diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon.c
+>>> index 6d8c0f328b7b..168d669c4eca 100644
+>>> --- a/drivers/hwmon/dell-smm-hwmon.c
+>>> +++ b/drivers/hwmon/dell-smm-hwmon.c
+>>> @@ -1587,6 +1587,7 @@ static struct wmi_driver dell_smm_wmi_driver = {
+>>>       },
+>>>       .id_table = dell_smm_wmi_id_table,
+>>>       .probe = dell_smm_wmi_probe,
+>>> +    .no_singleton = true,
+>>>   };
+>>>
+>>>   /*
+>>> diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x86/dell/dell-wmi-ddv.c
+>>> index db1e9240dd02..0b2299f7a2de 100644
+>>> --- a/drivers/platform/x86/dell/dell-wmi-ddv.c
+>>> +++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
+>>> @@ -882,6 +882,7 @@ static struct wmi_driver dell_wmi_ddv_driver = {
+>>>       },
+>>>       .id_table = dell_wmi_ddv_id_table,
+>>>       .probe = dell_wmi_ddv_probe,
+>>> +    .no_singleton = true,
+>>>   };
+>>>   module_wmi_driver(dell_wmi_ddv_driver);
+>>>
+>>> diff --git a/drivers/platform/x86/intel/wmi/sbl-fw-update.c b/drivers/platform/x86/intel/wmi/sbl-fw-update.c
+>>> index 040153ad67c1..75c82c08117f 100644
+>>> --- a/drivers/platform/x86/intel/wmi/sbl-fw-update.c
+>>> +++ b/drivers/platform/x86/intel/wmi/sbl-fw-update.c
+>>> @@ -131,6 +131,7 @@ static struct wmi_driver intel_wmi_sbl_fw_update_driver = {
+>>>       .probe = intel_wmi_sbl_fw_update_probe,
+>>>       .remove = intel_wmi_sbl_fw_update_remove,
+>>>       .id_table = intel_wmi_sbl_id_table,
+>>> +    .no_singleton = true,
+>>>   };
+>>>   module_wmi_driver(intel_wmi_sbl_fw_update_driver);
+>>>
+>>> diff --git a/drivers/platform/x86/intel/wmi/thunderbolt.c b/drivers/platform/x86/intel/wmi/thunderbolt.c
+>>> index e2ad3f46f356..08df560a2c7a 100644
+>>> --- a/drivers/platform/x86/intel/wmi/thunderbolt.c
+>>> +++ b/drivers/platform/x86/intel/wmi/thunderbolt.c
+>>> @@ -63,6 +63,7 @@ static struct wmi_driver intel_wmi_thunderbolt_driver = {
+>>>           .dev_groups = tbt_groups,
+>>>       },
+>>>       .id_table = intel_wmi_thunderbolt_id_table,
+>>> +    .no_singleton = true,
+>>>   };
+>>>
+>>>   module_wmi_driver(intel_wmi_thunderbolt_driver);
+>>> diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/x86/wmi-bmof.c
+>>> index 644d2fd889c0..df6f0ae6e6c7 100644
+>>> --- a/drivers/platform/x86/wmi-bmof.c
+>>> +++ b/drivers/platform/x86/wmi-bmof.c
+>>> @@ -94,6 +94,7 @@ static struct wmi_driver wmi_bmof_driver = {
+>>>       .probe = wmi_bmof_probe,
+>>>       .remove = wmi_bmof_remove,
+>>>       .id_table = wmi_bmof_id_table,
+>>> +    .no_singleton = true,
+>>>   };
+>>>
+>>>   module_wmi_driver(wmi_bmof_driver);
+>>> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+>>> index 29dfe52eb802..349deced87e8 100644
+>>> --- a/drivers/platform/x86/wmi.c
+>>> +++ b/drivers/platform/x86/wmi.c
+>>> @@ -883,6 +883,18 @@ static int wmi_dev_probe(struct device *dev)
+>>>       struct wmi_driver *wdriver = drv_to_wdrv(dev->driver);
+>>>       int ret = 0;
+>>>
+>>> +    /* Some older WMI drivers will break if instantiated multiple times,
+>>> +     * so they are blocked from probing WMI devices with a duplicated GUID.
+>>> +     *
+>>> +     * New WMI drivers should support being instantiated multiple times.
+>>> +     */
+>>> +    if (test_bit(WMI_GUID_DUPLICATED, &wblock->flags) && !wdriver->no_singleton) {
+>>> +        dev_warn(dev, "Legacy driver %s cannot be instantiated multiple times\n",
+>>> +             dev->driver->name);
+>>> +
+>>> +        return -ENODEV;
+>>> +    }
+>>> +
+>>>       if (wdriver->notify) {
+>>>           if (test_bit(WMI_NO_EVENT_DATA, &wblock->flags) && !wdriver->no_notify_data)
+>>>               return -ENODEV;
+>>> diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+>>> index 781958310bfb..63cca3b58d6d 100644
+>>> --- a/include/linux/wmi.h
+>>> +++ b/include/linux/wmi.h
+>>> @@ -49,6 +49,7 @@ u8 wmidev_instance_count(struct wmi_device *wdev);
+>>>    * @driver: Driver model structure
+>>>    * @id_table: List of WMI GUIDs supported by this driver
+>>>    * @no_notify_data: Driver supports WMI events which provide no event data
+>>> + * @no_singleton: Driver can be instantiated multiple times
+>>>    * @probe: Callback for device binding
+>>>    * @remove: Callback for device unbinding
+>>>    * @notify: Callback for receiving WMI events
+>>> @@ -59,6 +60,7 @@ struct wmi_driver {
+>>>       struct device_driver driver;
+>>>       const struct wmi_device_id *id_table;
+>>>       bool no_notify_data;
+>>> +    bool no_singleton;
+>>>
+>>>       int (*probe)(struct wmi_device *wdev, const void *context);
+>>>       void (*remove)(struct wmi_device *wdev);
+>>> -- 
+>>> 2.39.2
+>>>
+> 
 
