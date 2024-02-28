@@ -1,63 +1,63 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2072.outbound.protection.outlook.com [40.107.223.72])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2074.outbound.protection.outlook.com [40.107.244.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0E412C535
-	for <platform-driver-x86@vger.kernel.org>; Wed, 28 Feb 2024 10:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E97213849A
+	for <platform-driver-x86@vger.kernel.org>; Wed, 28 Feb 2024 10:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.74
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709117206; cv=fail; b=mciPdjq8FBMv9P7kXG7mdb9IJH0HofnTQPVB/kwFjkYbuxM3Ywe1mExTybWfT+urFwbe+skguRZubxUmr7lITsmKwq3s9wZP9V6ESi1T/KOkyEgBCxnUkLFlBLI5WCC7zjOQ5Zg+CvlJP5NPPHBvDV5308dEXMr9+rtfL6zCpo0=
+	t=1709117326; cv=fail; b=E/UrUA7p+zOjvYgpT+u6DwfgFCmQ508D5aWR94VweoZeetlMRg4FjLkAbER74OSSXoBojVrci1wJbK/TmU98DaJc1giQEpDcs4QXx00MM0Q+56lKQl5W8MHpfNkn3BbA2osA61LbR/SJQGO7+FgXaGD7CT1ONQvWkEYfyoqjWcU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709117206; c=relaxed/simple;
-	bh=E2jhyyelIsiGY8cR4Lfvz73tZR17jt/GY9rsxEb+++0=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=UxH/wiT4PJANtR9n+sbTloG1HdR7/VlizJjAIifBiCWsU0rzsqWWiWiLybiLFxwHc3LQ8YW6hTbwtUAtOzf7UKvjfrmuD0UvQG+yd4oAAkg6+9mivPTfjKgiQFHoXBogkfou2Byf2f7vVgKFwlD3hkPiQUVx8VhT2s4RPgswAgg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3ZZMWE80; arc=fail smtp.client-ip=40.107.223.72
+	s=arc-20240116; t=1709117326; c=relaxed/simple;
+	bh=BMs0ZA1RP7zhufpO1iUJ+UM6OGIEKSHhdQ5+c5kY/+o=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=dmHgVNtZnIJeErcErljbtQFil8ALtWtig4WcBjptjaqbx3vGAIPYBEb6j3Zfj30KdxtnH9Xaqa9Tl6vF6F2kLhst1uzPTQiaFVcxuoLT2VSsA9JtViHWkc7+4RuTCPupP8Z0vtnFOgiTpcMbLE/5rerVMds4Cfbs5zHk9v+ahZc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PcTcirYx; arc=fail smtp.client-ip=40.107.244.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3ZZMWE80"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PcTcirYx"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RxBGUO8qKuY17ZLrhHnm/wG8euu3mJ67xxbPNCdeHyIjnRVx2IOGwGxcyZAWB97mvJblSSi/d6auisfoElTrhp93JDgmjpgGO/7JLMzLhsvJNOZlopP4EwqDr88t+l9PIKVz2HPX2tMkVQ+kxuAj2e4BJ1vAVHFoIjqbvPofAgt4N4bzYONwil/nbOjKnZkKX8pJ+x0PNYZYUyZ5j7FlePfONqKm2NGwa97ZXqNj9Zv+YD6h5nS4I3oPEhhFZXQlJyR9W6xfc1kp6JNlIJRCxXsZdsetdMz5njMJN0XP5NVCWscvFa0+oUjqM9F8O1UbwEEMxj7uI0/rYO2V4zpwTw==
+ b=fVEnBmzY61Bn6OZ9YGRxlNfvWXPCuymzDLG3UjuXT/NbtPOXhrhwMVrFvxrNMBqOSRfoVV4uVHrJI3VsHm4F44Ek9IJIMoMgEv1gaItMGHnqWO2raBBeSw4uWQq66fR8EfcRmsqPplA/J1lJBjxkB+/6ThiTgQ934MYyUeKbXlOkEalsRkLY1PfrxSNgQPqYGnRxAwJARPFK/aXUYTldXSXCscb/oDFvDNiFWAt2L61Zeo62y4kB9LR/+pXSmmBVWYZWCpca3D7/69ABBMBJj5VOeBQks0b1vjbHv+Spx1JksYbnKsUe2omprtkJEwWRjNa6gGj7isOCd75syz6mDg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jB19zrKeslkADIvZN31BRK6FtMV7y7XpVuZ4jKJaod0=;
- b=SWP5i47g++pCl0Iy1eQ3Ijlmbn0KVvsgx+dSZ3kcj8uHqxoBm26CHAYfQOtuOWitV3EYEh7IQiUchcJgo3zh7gzeKLLC1ugHiVmAFgYYHWmenIce1gpdCX6n+zVsjnE7TKmKVH6JZ/GDRYnbyraJm18BQ+dYTp/LZiAVXiWeUbSTeGFSHZx/m/LPqbVrb4HnjzJv4p2FV4aGe7Av5XL2eoSlwSWwMHpTHSRTViEpTpiscjgjSSoI93sF3DDBxv3aaBE3F0fj7ujmfUZBRM1INURRpHSEcD1Y2TmYGGZBpJwEA3nfWKPczr7QkSnqaaFrnLmyL/AKXlMeapX00MXjKQ==
+ bh=wwF4fHXQCZY79RKXbB5WS8JoF/vGm3FCHBm7vLdU8o8=;
+ b=UxfzgfeTFbFFuXTvu7piwaIkFu6UGG4ApoNnSKiq44S9m2m6Dj6xvmWAHXKrOVCQH7lum+P19CNvygMy83t6GXSIrAHFtXvVAeoLxJsp5Kyr7mqeHIXY86GTUROVmcwRCKd0ht2Mseud/SfaAZctor5Qh72JDscDGCdKfy/O+WW81ywX4kT1duZTlfq2UIkO7F698tukAo2N69ZJAKVvQ/veos3oH7+l89s8gWPS6GI2LOCQDvB7Nnuez2xRW3GCJUfb7Dr9Vm3GU6HqELj52T+VGGTrCTUGvfz4GtLcfPB5maDJQufjv3sh+JBGeah4Vk158GSdUN09R8/7W8ghmQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jB19zrKeslkADIvZN31BRK6FtMV7y7XpVuZ4jKJaod0=;
- b=3ZZMWE80rLsKAG4nJ31z1CEBrAyDF5MHfPQs8QOZ0TSYMozuZY+x6XXC2aJnh+3LZ/8qAaCpp4VYApK2EyN2YsTpG/WncduQHCCc8fvX2XXqyym30j52OlR20VXUEWDMo3gfHD3iNrnXD4XTbyaVTXRGZwNOLzEDMFK5bpp6kDw=
+ bh=wwF4fHXQCZY79RKXbB5WS8JoF/vGm3FCHBm7vLdU8o8=;
+ b=PcTcirYxkPZW1uvds9ZWefF1exefMn6amIUGbI0pwmuIbktFqTFMJoRlEGghvstkVSIB6o09Q3PXfvVUTspysFBsfQBu21mumZFAmoZDCEWOyI2IgMH3XlVw2jr0blvslSthKDVw1UHKurSBpJ/iC+9QQKSjSkQ8FO78KUEthNQ=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DM4PR12MB5040.namprd12.prod.outlook.com (2603:10b6:5:38b::19)
- by PH8PR12MB7253.namprd12.prod.outlook.com (2603:10b6:510:226::16) with
+ by CH3PR12MB8510.namprd12.prod.outlook.com (2603:10b6:610:15b::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.41; Wed, 28 Feb
- 2024 10:46:40 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.36; Wed, 28 Feb
+ 2024 10:48:41 +0000
 Received: from DM4PR12MB5040.namprd12.prod.outlook.com
  ([fe80::50af:9438:576b:51a1]) by DM4PR12MB5040.namprd12.prod.outlook.com
  ([fe80::50af:9438:576b:51a1%3]) with mapi id 15.20.7316.039; Wed, 28 Feb 2024
- 10:46:40 +0000
-Message-ID: <14589eac-905a-4484-8d71-082bc9b5c212@amd.com>
-Date: Wed, 28 Feb 2024 16:16:31 +0530
+ 10:48:41 +0000
+Message-ID: <a17f71c1-0084-4c64-b765-2f305662dc87@amd.com>
+Date: Wed, 28 Feb 2024 16:18:32 +0530
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2] platform/x86/amd/pmc: Add AMD MP2 STB functionality
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Basavaraj Natikar <Basavaraj.Natikar@amd.com>, Shyam-sundar.S-k@amd.com,
- hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+Content-Language: en-US
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Cc: Shyam-sundar.S-k@amd.com, Hans de Goede <hdegoede@redhat.com>,
  platform-driver-x86@vger.kernel.org
 References: <20240226151309.2147799-1-Basavaraj.Natikar@amd.com>
- <29b9bb82-8eb2-4030-953c-b213e1a5861a@linux.intel.com>
-Content-Language: en-US
+ <2294f1e9-2da3-aa07-dac1-02ffc402a424@linux.intel.com>
 From: Basavaraj Natikar <bnatikar@amd.com>
-In-Reply-To: <29b9bb82-8eb2-4030-953c-b213e1a5861a@linux.intel.com>
+In-Reply-To: <2294f1e9-2da3-aa07-dac1-02ffc402a424@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0032.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:97::22) To DM4PR12MB5040.namprd12.prod.outlook.com
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN2PR01CA0216.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:ea::14) To DM4PR12MB5040.namprd12.prod.outlook.com
  (2603:10b6:5:38b::19)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -66,68 +66,69 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5040:EE_|PH8PR12MB7253:EE_
-X-MS-Office365-Filtering-Correlation-Id: 632d1d98-21ac-4681-4ae8-08dc384a8ba7
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5040:EE_|CH3PR12MB8510:EE_
+X-MS-Office365-Filtering-Correlation-Id: a514959e-6149-4cb4-5ec4-08dc384ad409
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	NjUNZue1YYnnroqKoo9nixtXFyZZekLwfuSltXhqsyFPfZNK2GqrTDzZQjfVNzJPIOnT5+MkBFN/UR/AocrsEdmeSe5kscglYy0bCGXodx7kYnvIv4/ruaMLttjjq8Nmxe76ImCpGDk/DeSK2U4SD+7F2clIvpdOFtGxM8CN2sD2KUQkNGh4sLiYJieMe6JzQQ09WBygX/Yttv0BFV1Sd8dEc2xV7rS79Udhg/9gNtC2lBkixbkh9lBii+t9ckkMcGkbplajCNRrwuh22YcCkkRRFWU0klcByoupjIpzarTpXDsph+1sBzwy+f7yJgXEfCay9nxCKRaymCWfXBv3SbRs7baRb+vgg0G/XQJy1yOh2ASZuJ3wO5mrLY+9hOIISHVg1nyxHed45KRInSGxloaDIebpFNbaKhKCRzt2eXVpy1omhEQjl1raNL9C0wO8vv8ISD3zwZN1vMpyK++Ho9iJ9H0GoSsj9Xr3Aypq6apztaMCFvVLymdRSOmQJ+38gDyl2w4nLLjfbVkWD47AtszcZDZ/ckRjdTQfXgAE44OQ8Ax4pg1csAlnVVy6kwn4TdH/UGvKBj77BuQybYCQrB3g88o/5rngDHkPsoUbEjCV6nw0h3mapc0x11ZrExs/FggJE0VvizcZYwTpJ8Absw==
+	97BtQIPsc8mhqsPik6OiY+FVirtAzq3WHiApLx6rXc3qK2xqmE874/Z8ACr6QTKQyqMBxN9s4sO1E33Gh6zVM4V5JeWWO2apWwqY/VPzNS3RK7R/RSRoLPZL4MhR2kTmnKEbckae0MjEFGBEoNt9jW9+5AW39bftkLhh9EI0zLF1oFViZz/eHnRxnpIRR6DJVYGrTpd7cCc2Xe6l0Y3OrUo/2I28l2zTi/2fQ92T5Fjs1kRYKUeXd3EypxBba0/NiRkpTakf0s2KsiY7XJhwCf2B/WNBestodP2qzum58PDlWuXI8HqYrw0vnTm41qMU4zOZ3G+ABi2HIv1uBxWzoRmQFOHwFdacrjLUJEDF3kE7DH9XJm/bDh6TCjGHahPJXLjN+/CuppyBUMHhKPoq674g1+W6XKHlDWLFBtQulshRp6cgN38Sl0xHGoYnucBt2zIbKUECLtqBB97x+jNXjrkvihhaBaFovN55QDh3ayQZZB6nX819cDrzcm/1LIJg/bbmD/cSL5RZjnsY465loUNhKC8dXQ9XrZRI5Zq0lMdbD49HIC/O59OOGr/US06CH9PudDDQ9m4I8W5BmRxjOMeDv6kHWDXcOxCkYh/pb0stDbazGSOgBgum9kuXXsW0
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5040.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?U1JibGc4WEdhR043S1FPMlR3MlNWWnl5aC9ldzQwSWNBUXFPcVpDODk1K05K?=
- =?utf-8?B?c2tKNS9VL1Fjc0lZSnYrS2JSMjlhWmU5N29OOFlVNnQyL2laM0M5SzJDT0c4?=
- =?utf-8?B?bXN2S0U5TEdINTAzUmlvMEpqOU4yUHBHN3NOWU9VN3FIQ21JbjM1MGpsNVlw?=
- =?utf-8?B?LzlxbzM3WDJkb2NnVDliQ3NLeHUwOTRRV2k2bERsM2ZlNjdMOUR3alVueklr?=
- =?utf-8?B?U2ZwNisrMTNpeEdRR0ltTmhueldzSnEvRWdSUkd1Wlo3Tys2RzliVFFhWVh6?=
- =?utf-8?B?UndCRkovTmcvM0tFRktsMHJsdXNKbTlXSnBzRmtMZnlVMHdSZHBWbjVUdVNW?=
- =?utf-8?B?ZlIyeU5DbldadE5Wa0h0T3ByR2dBcHM0anlDUTdhRytqWFA5eXIxUFY2MU5u?=
- =?utf-8?B?YnBPcHVRUjlMT0NTaUg0cWUwVDFxdTBrV210blJSMDBmcm1oMzlndHMvVTNV?=
- =?utf-8?B?VnVjelFDaU0rUWVucXZJRFFxQzVqZ2tmQ0g4THdtSUROUW9pWkdiMDJFcnNF?=
- =?utf-8?B?UEZwNVM4dzhiYW5MNlgzV3V1SVljZkVsZFBQSTJWaFo3YkE2b1NTTWV2ZHVu?=
- =?utf-8?B?Njgxa2U5dnFiRWNDeXNDQm1uMTd4UUxwaldOTnlJWjgrZFlMYWQ4NWZXd2VU?=
- =?utf-8?B?S0RrU2tCWTduZkU5NHEvTk1Kc0ZKTUZ2ZVlJUkhYL25KUTJmTUY5aXVmZlM5?=
- =?utf-8?B?VWtKdHA0MGdVSGFiOXNpRFRkd2NKeFVjeCszQW1wWkFHQ1Z2S25wL2JLbEtX?=
- =?utf-8?B?U1RFN0ttcWZSRmtQVXBpUkdaL1RZYXhUMFNpcGI1RVNnZFJlOUdsb2JGbHBS?=
- =?utf-8?B?d3FvNFFUUDdoRWFKQ1ZhNlNjOTJkcHJsekF3MkxSbWRWYnVOd2lkZ0ZKV1Nu?=
- =?utf-8?B?RVcwbVg0Nzc2L2MwYnAyeHlYZk1vYTFRUkw1eXdzTUZLdVk0djdSR2RKVXVP?=
- =?utf-8?B?dG5QQTZpMklEZk8xUUw1Z0h0YmM3QUJKbitIMFZpdmYwaDhsWDBPS3RoZmNq?=
- =?utf-8?B?TVpVWU1sQUkwRTBNRWMrMUo4QjNmMEtDbWlidTA1UXFLZlhMYnhUVGVObElO?=
- =?utf-8?B?ZHRIMHk4WHphYnBXMG96MytkdUlORko0cUViYjBYdENmYVdIME04NmxiYWFo?=
- =?utf-8?B?SERNejNjT2wvVWYxalJxMDhDdWhjKzFqVmowcVJyWWY2ZHZSQzFmV1RZaGQw?=
- =?utf-8?B?SG9FT0Vta2ttckI1SW1pbEgwUGFNVmZoMFdVelNBc21LR0ljbUdRamhsUXNl?=
- =?utf-8?B?elVsRVgyUmVHaXYzcmNGRXdZaGh0UDMvbGNGZ3pYVlowUWZyUjZqNEJNd3FH?=
- =?utf-8?B?eVgzNDNIZFlncnQ5eW9zMEFUMUF2clFOVStXZkV3LzBDUURoVHIySUtVRmtk?=
- =?utf-8?B?L1VnZ256NmprbkJEcXJkdmk0TDc2NDlya0Vad3BQR0hhOHdFYmNHTzV3czdn?=
- =?utf-8?B?dlBpVVZUTnQvRGgwclpsR3c1RGVDL0lBWXFPdll3dy9QNFgzeHBnVTZvaTEr?=
- =?utf-8?B?RFFsMndYTEh6N2pZL3krRWxhcjhNRk9vOWhkMElLcjZOQmk5c3lZcUFDSlla?=
- =?utf-8?B?bTZVdmtNcjh6ekpneDVwRk5QeVlZRDR2anhVaWl6QVJ2bmk2SWU0cVM4Z3R6?=
- =?utf-8?B?VzBRWXJFbjcyb1oxSUhUYmFqL3p5Z04vdWQ3ODBxTDNybGQ2US9WZXNrZDc5?=
- =?utf-8?B?NElOZjQwd0xPL25sTHFWUmcxdjFNMGl4THFta0RudU5mNnBJeW5pTGFoc2Rq?=
- =?utf-8?B?K1FBWDZoVVBDNmh0MitwYktUT2R1L1RXQlMvcFBwcU1tWDJKMTBuN0ZoeFA5?=
- =?utf-8?B?M2gzYUhnay8vcFp4dGZFWFZ4MENjY1pMN1c5dzlyc1hkZUlubFUrb2s4NU50?=
- =?utf-8?B?NWFZTDk3dy9ESGFUTUZtWXdrbmFiYUJaZzRlTWJYWnJFNzlNWW5CNk4vTDhH?=
- =?utf-8?B?bzF5UmJaTkoydDU2Y0FDUGdDQy9Qa1liRGdWTGdlYXhRQm5UYktNemdsMkpV?=
- =?utf-8?B?NnF4YTJiTzhaNHJrT0RvY3NZYVZZQ0NGKzRnZldQRTFIbGFJb0sxczh0eTkz?=
- =?utf-8?B?SHl3ZEVDSDl5VTR6KzZ0YlRLNGw4ZjZGT0tVdUdDSkVlZjJVb1FWcVRHOG05?=
- =?utf-8?Q?vNURh6c3CYzQOZw0TRwmDLgLe?=
+	=?utf-8?B?MVpHaVUzTFU3YTlhZURQd2M1MEhRQU1XVXFpYWV1R3FSQlphUDhuaHlJMHZx?=
+ =?utf-8?B?VXN4R0hXUER4d1pHYlNqbWVJOXNwYXQ0elJPRlhtVnVLSkRHMG9MWm56STFE?=
+ =?utf-8?B?YTM0cmhkWVZiMHVSRWJOOFk3WmpjSEdCVjYwWFRJMThQTXR1M0lkTXNTS1pW?=
+ =?utf-8?B?cWhGR25qa0J4b1YvUWhnTC93UXNjRVV1UFA2NkhqNFE4cTVEY0dLWk9tc2lr?=
+ =?utf-8?B?VHdtbUhjdzBiZ2lLT3k5MVlVNEQvYS8zT0RWYVlwa2Y4WklvM0lyV2VDclJE?=
+ =?utf-8?B?WGxEZU1RQUF6VFZzaW9KY0dzb1h1dm9VTWlFTnBIbGhFS2VLODZJL0hPTVlk?=
+ =?utf-8?B?TE9vb2xVTEx4aVdUY3JhZDRvQS91OW1UakMyK1B2NjFUMEd2cnkwYjBML1pi?=
+ =?utf-8?B?dUFoUUFnSG53YnZ2TzE3aGdpbGx1UjNFZ1F6OSt2YlJhVVM0NWZrVDBSU0lo?=
+ =?utf-8?B?cjJuTGpQMGVXRGpJbmFsRzVUUXlGeDFDRmxnVXdNc0tSOXFrcEdmMW1QS1pa?=
+ =?utf-8?B?eEZSeGtqRkRRN0QvcGpiWEcxSEtCcE1QTFBadWh5VFNQa3lKeHJKT2tnTWZx?=
+ =?utf-8?B?SVM3cExwZWZhKy91SEt4SUhpekF2bi84TVI5akZpa1B6NDlFM1hreFY5WFRV?=
+ =?utf-8?B?OEphbXUwNjBZTndHVStDSDQ3QW1DdmY3STUzb0sxZy80SS9zR3FwM3RjY2JK?=
+ =?utf-8?B?WWhUeithU2drR0EvMTJOQUplaFNYWTVSSGF3REFSYTBrWVBuSHBuT3dyUGRM?=
+ =?utf-8?B?N2hlV1dCTzJhUHc1ZHJCbFBELzNTb281dTREV2VaZnBsWllDSklkZzRtM3Nw?=
+ =?utf-8?B?dCtYYmRtMHU3dDg0N2VWSSs1NW5BUmRSM04ra2R5REc4WGtycERZa3ZWT3ZR?=
+ =?utf-8?B?S1NYSGlZaEU3Mm5Lc3N5cm9ocVZWZ1RDT0xXSHlZRXFjakV4bTNnR2Y0T2Jx?=
+ =?utf-8?B?QnpNQjRHY2hNUjZVOUx6dmdGOEZ5MU4wTTEvVVFMR3gwbmM1Y1BWL0dPb1NG?=
+ =?utf-8?B?dkhTaVlLRXBCZHlOZVJSaXE3RzdTWG1KdUNQdEJOdmxtdmFyWFpGZkhJeGRR?=
+ =?utf-8?B?WnlyQXdCM0tya0FkWTZLRW1CU29aQjlTditFaktuVDJLTmUvRTdKL2xoUFhP?=
+ =?utf-8?B?N2VmRlZGV3Nxb0hyMXR3Nkpxb3piN1lKalJDMjh6WmUrK1oyK2Y1RHVvbjgx?=
+ =?utf-8?B?Z3hTcGdFK2l2dUpDNzlpd2lxa0RnOXJveTJDYmVNRVR4UFN2K0VxZUxFV1Vt?=
+ =?utf-8?B?K095QW5YZnBjTUFpTFFZVE1pWXhnd2w3RmxNcWY5YlcvYzZKNnlqcHFWQlhu?=
+ =?utf-8?B?Zm9nTFJYbjRHNDlZdENPUTFrVXFMOXlabnIxY2pwck1uVXZadytWa2ZHbHNz?=
+ =?utf-8?B?bHlIcmNWc3hCYmxNWU5IVUFDdU1salRpYVdURWZOUGM3dFA1SEp6OG91ZE42?=
+ =?utf-8?B?S01XR2J3TVpIUUdFcStzbEQ2V3RNMkt4NktVb2JzeG8xQm1lZGRwSjRsMW9u?=
+ =?utf-8?B?ME04Ry9SWkFleXQ4RnRJdWZBMWlSMGNTZlZSSjZPbXc5c0lCL0dmYXN6UHNX?=
+ =?utf-8?B?TXVjVFN6TTc0SmlkSlhFSEkzU1VpZjA1L0djcjlibHBsM1Q2NGhzZUxDMWxB?=
+ =?utf-8?B?YzZoWWF1dTdUTGliRmlTSHpOc0lQalZZalNFQnNYcUt1NldTdjFVdkdNb0hx?=
+ =?utf-8?B?TjNiZ2g0RmlFZkNTb09yZ2lEV2MrT2ZjUmZkd0FhQW0zTTRWN1BuOXI1THJP?=
+ =?utf-8?B?R3lTd1A5RWlHTGNRaUJhc3NUWEIrOEQzdkxSbGZwSm96aUZCd3QrV0sydGJn?=
+ =?utf-8?B?dkZTZkpSUTRmeGRjSkk2dm9hYmY4TzNyRkJobk4rZFRLWVhMdHVGb2Q3Rit6?=
+ =?utf-8?B?Q0NRV2J1czFER3JuYVZpRlptTk4wK3hEZlVodUVpMVRRQU5yQXhQTG40aGV6?=
+ =?utf-8?B?UHRaajI3Yk1aUDdaWDUzbmpzT2tqSjd6RzZRWGZUQUcvVWx2U1FaQ2hGb29i?=
+ =?utf-8?B?K2NDdkR5NG1vcGZmcXZ4TU9tOWx6SUJ0d05nMHhDVVNGMU1lQi9FWDI2dlZI?=
+ =?utf-8?B?TWhXaEQ4RWlGNE50ZzRhY3VacC8xcjl4eVVIbjNPRXZDd1ZSYkU1ZkxrYWNX?=
+ =?utf-8?Q?kspVwDGcEUxjXrZcZXYH4OMCr?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 632d1d98-21ac-4681-4ae8-08dc384a8ba7
+X-MS-Exchange-CrossTenant-Network-Message-Id: a514959e-6149-4cb4-5ec4-08dc384ad409
 X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5040.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2024 10:46:40.2752
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2024 10:48:41.7062
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IG93pbCL08YHroOGAweew1VEedUQwxr5VXL05I1CcyKL9tcqK3Rgx84p3WZULTG6gbZXsa3jDaSm5hP/m6ZytA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7253
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0OqZ/LJqVlspM/3+CHIfovzqr8q69ywLVUu04+fB+3O3Rgmx3JX7PRgDtbR62brdQU54BeGmVC2Jtji8yOVKSQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8510
 
 
-On 2/26/2024 11:48 PM, Kuppuswamy Sathyanarayanan wrote:
-> On 2/26/24 7:13 AM, Basavaraj Natikar wrote:
+On 2/27/2024 4:18 PM, Ilpo Järvinen wrote:
+> On Mon, 26 Feb 2024, Basavaraj Natikar wrote:
+>
 >> AMD MP2 STB function provides a data buffer used to log debug information
 >> about the system execution during S2Idle suspend/resume.
 >>
@@ -238,10 +239,22 @@ On 2/26/2024 11:48 PM, Kuppuswamy Sathyanarayanan wrote:
 >> +#define AMD_P2C_MSG1 0x10684
 >> +
 >> +#define SLEEP_US (0.5 * USEC_PER_MSEC)
+> Thanks for the update.
+>
+> This needs to be just 500.
+>
 >> +#define TIMEOUT_US (1600 * USEC_PER_MSEC)
->> +
+> Please be more specific in naming what these are. Perhaps
+> MP2_RESP_TIMEOUT_US & MP2_RESP_SLEEP_US ?
+>
+> Add #include <linux/time.h> for USEC_PER_MSEC
+>
 >> +#define LEN_2KB_BIT 1
 >> +#define LEN_16KB_BIT 4
+> These are way too generic names. I expected something like:
+>
+> #define MP2_STB_DATA_LEN_2KB ...
+>
 >> +
 >> +static struct amd_mp2_dev *mp2;
 >> +
@@ -293,6 +306,11 @@ On 2/26/2024 11:48 PM, Kuppuswamy Sathyanarayanan wrote:
 >> +}
 >> +
 >> +static void amd_mp2_stb_send_cmd(u8 cmd_id, uint8_t da)
+> So 'da' is assigned to .dma_addr, why is the parameter only obfuscatingly 
+> as 'da' ?
+
+Yes, I will change it to is_dma_used
+
 >> +{
 >> +	struct mp2_cmd_base cmd_base;
 >> +
@@ -303,9 +321,19 @@ On 2/26/2024 11:48 PM, Kuppuswamy Sathyanarayanan wrote:
 >> +
 >> +	writeq(mp2->dma_addr, mp2->mmio + AMD_C2P_MSG1);
 >> +	writel(cmd_base.ul, mp2->mmio + AMD_C2P_MSG0);
+> Please add the #include for writeq() and writel() like I already told you.
+
+Do you mean to add #include <asm/io.h>?
+
+>
 >> +}
 >> +
 >> +static int amd_mp2_stb_region(int len)
+> size_t or unsigned int?
+
+Sure, I will change it to unsigned int.
+
+>
 >> +{
 >> +	struct device *dev = &mp2->pdev->dev;
 >> +
@@ -316,12 +344,6 @@ On 2/26/2024 11:48 PM, Kuppuswamy Sathyanarayanan wrote:
 >> +		if (!mp2->vslbase)
 >> +			return -ENOMEM;
 >> +
-> I don't see you freeing this memory. Don't you need to free it?
-
-All memory allocated and used are resource-managed. Therefore, in the v3 patch, I will use
-devres_open_group and devres_release_group to free all resources appropriately.
-
->
 >> +		mp2->stbdata = devm_kzalloc(dev, len, GFP_KERNEL);
 >> +		if (!mp2->stbdata)
 >> +			return -ENOMEM;
@@ -358,6 +380,15 @@ devres_open_group and devres_release_group to free all resources appropriately.
 >> +	amd_mp2_stb_send_cmd(VALID_MSG, true);
 >> +	status = amd_mp2_wait_response(VALID_MSG, VALID_RESPONSE);
 >> +	if (status == VALID_RESPONSE) {
+> I'd just use single variable for return values, after all, status and rc 
+> are both ints.
+
+Yes, I will change it accordingly.
+
+Thanks,
+Basavaraj
+
+>
 >> +		memcpy_fromio(mp2->stbdata, mp2->vslbase, SZ_1K * mp2->stb_len);
 >> +		filp->private_data = mp2->stbdata;
 >> +		mp2->is_stb_data = true;
@@ -368,155 +399,5 @@ devres_open_group and devres_release_group to free all resources appropriately.
 >> +
 >> +	return 0;
 >> +}
->> +
->> +static int amd_mp2_stb_debugfs_open(struct inode *inode, struct file *filp)
->> +{
->> +	if (!mp2->is_stb_data)
->> +		return amd_mp2_process_cmd(filp);
->> +
->> +	filp->private_data = mp2->stbdata;
->> +
->> +	return 0;
->> +}
->> +
->> +static ssize_t amd_mp2_stb_debugfs_read(struct file *filp, char __user *buf, size_t size,
->> +					loff_t *pos)
->> +{
->> +	if (!filp->private_data)
->> +		return -EINVAL;
->> +
->> +	return simple_read_from_buffer(buf, size, pos, filp->private_data, SZ_1K * mp2->stb_len);
->> +}
->> +
->> +static const struct file_operations amd_mp2_stb_debugfs_fops = {
->> +	.owner = THIS_MODULE,
->> +	.open = amd_mp2_stb_debugfs_open,
->> +	.read = amd_mp2_stb_debugfs_read,
->> +};
->> +
->> +static void amd_mp2_dbgfs_register(struct amd_pmc_dev *dev)
->> +{
->> +	if (!dev->dbgfs_dir)
->> +		return;
->> +
->> +	debugfs_create_file("stb_read_previous_boot", 0644, dev->dbgfs_dir, dev,
->> +			    &amd_mp2_stb_debugfs_fops);
->> +}
->> +
->> +int amd_mp2_stb_init(struct amd_pmc_dev *dev)
->> +{
->> +	struct pci_dev *pdev;
->> +	int rc;
->> +
->> +	pdev = pci_get_device(PCI_VENDOR_ID_AMD, 0x172c, NULL);
->> +	if (!pdev)
->> +		return -ENODEV;
->> +
->> +	mp2 = devm_kzalloc(dev->dev, sizeof(*mp2), GFP_KERNEL);
->> +	if (!mp2)
-> missing pci_dev_put(pdev) here. I recommend doing it at the end with
-> goto for error paths.
-
-Yes, I will add a new function amd_mp2_stb_deinit which includes
-pci_dev_put to be called in all error paths accordingly
-
->> +		return -ENOMEM;
->> +
->> +	mp2->pdev = pdev;
->> +
->> +	rc = pcim_enable_device(pdev);
->> +	if (rc) {
->> +		pci_dev_put(pdev);
->> +		return rc;
->> +	}
->> +
->> +	rc = pcim_iomap_regions(pdev, BIT(2), "mp2 stb");
->> +	if (rc) {
->> +		pci_dev_put(pdev);
-> Wondering whether you need to disable pci_device?
-
-All memory allocated and used are resource-managed. Therefore, in the v3 patch, I will use
-devres_open_group and devres_release_group to free all resources appropriately.
-
-
-Thanks,
---
-Basavaraj
-
 >
->> +		return rc;
->> +	}
->> +
->> +	/* MP2 MMIO is mapped to BAR2 */
->> +	mp2->mmio = pcim_iomap_table(pdev)[2];
->> +	pci_set_master(pdev);
->> +	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
->> +	if (rc) {
->> +		dev_err(&pdev->dev, "failed to set DMA mask\n");
->> +		pci_dev_put(pdev);
->> +		return rc;
->> +	}
->> +
->> +	amd_mp2_dbgfs_register(dev);
->> +	dev->mp2 = mp2;
->> +
->> +	return 0;
->> +}
->> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
->> index 108e12fd580f..8baab1c3cca9 100644
->> --- a/drivers/platform/x86/amd/pmc/pmc.c
->> +++ b/drivers/platform/x86/amd/pmc/pmc.c
->> @@ -1106,6 +1106,8 @@ static int amd_pmc_probe(struct platform_device *pdev)
->>  	}
->>  
->>  	amd_pmc_dbgfs_register(dev);
->> +	if (IS_ENABLED(CONFIG_AMD_MP2_STB))
->> +		amd_mp2_stb_init(dev);
->>  	pm_report_max_hw_sleep(U64_MAX);
->>  	return 0;
->>  
->> @@ -1122,6 +1124,9 @@ static void amd_pmc_remove(struct platform_device *pdev)
->>  		acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
->>  	amd_pmc_dbgfs_unregister(dev);
->>  	pci_dev_put(dev->rdev);
->> +	if (IS_ENABLED(CONFIG_AMD_MP2_STB))
->> +		if (dev->mp2 && dev->mp2->pdev)
->> +			pci_dev_put(dev->mp2->pdev);
->>  	mutex_destroy(&dev->lock);
->>  }
->>  
->> diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
->> index 827eef65e133..be0f6b674133 100644
->> --- a/drivers/platform/x86/amd/pmc/pmc.h
->> +++ b/drivers/platform/x86/amd/pmc/pmc.h
->> @@ -14,6 +14,16 @@
->>  #include <linux/types.h>
->>  #include <linux/mutex.h>
->>  
->> +struct amd_mp2_dev {
->> +	void __iomem *mmio;
->> +	void __iomem *vslbase;
->> +	void *stbdata;
->> +	struct pci_dev *pdev;
->> +	dma_addr_t dma_addr;
->> +	int stb_len;
->> +	bool is_stb_data;
->> +};
->> +
->>  struct amd_pmc_dev {
->>  	void __iomem *regbase;
->>  	void __iomem *smu_virt_addr;
->> @@ -38,10 +48,12 @@ struct amd_pmc_dev {
->>  	struct dentry *dbgfs_dir;
->>  	struct quirk_entry *quirks;
->>  	bool disable_8042_wakeup;
->> +	struct amd_mp2_dev *mp2;
->>  };
->>  
->>  void amd_pmc_process_restore_quirks(struct amd_pmc_dev *dev);
->>  void amd_pmc_quirks_init(struct amd_pmc_dev *dev);
->> +int amd_mp2_stb_init(struct amd_pmc_dev *dev);
->>  
->>  /* List of supported CPU ids */
->>  #define AMD_CPU_ID_RV			0x15D0
 
