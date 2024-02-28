@@ -1,206 +1,205 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2048.outbound.protection.outlook.com [40.107.237.48])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3895129A88;
-	Wed, 28 Feb 2024 11:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709119034; cv=fail; b=L1S2Pgiz2eHj/Nk7N7Xh7fdI/a04qEd9sK0Sz5jiQCDHTfg/kiCRJfLBLJntKz7EI7KESltxizvhDEXYU6B+WXP9/j6Ft8P5SE1sPYPm3mAbh08JA9fFxxYZBySXT0QUmMbMkQlYgLJO1FBe12CF4/LUC/Gz6SX6SI4Rl2yipJY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709119034; c=relaxed/simple;
-	bh=VKAPd4v7FXUMBhdhoMAn4RE9S19vhNyN5KR0OzYIlqY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=gpYYYnHeS3eNlpZyBgEKC9ZoY9Scagr9UcFfG9NATlGbJlMGFOkMATXSr7r5RX8IC+BK6+j2i4MdEm/9rCIRW3YcPw0wXfEKM30zNH4eWj7Osnv2UcfNEz4smF8yoHOGHlB3d6js1PhzVkPClxy+I/7gwdUYgq2i+BBZAfyRBmQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Qp7JqRSW; arc=fail smtp.client-ip=40.107.237.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48511148FFC
+	for <platform-driver-x86@vger.kernel.org>; Wed, 28 Feb 2024 12:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709124635; cv=none; b=OY2GSudA76Svp+nlwBf5MEYsPgQO0WIbsOrFNb7UidB0+cv4avA+lLCriiExH6qewzjFEgj/pT1Hw+yC5RLweExq4YsMvwYXawpa7Cx/1zMQNTJ/FRLhidOlxIThFS5XvhxpcPTUqVzsvG3pz4HuAX2oNkGVNxsAJQ8XCucnjW8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709124635; c=relaxed/simple;
+	bh=j5ABAlktolX5vRtDzpTE52a1elGXJ19ATUIk5DI5WTg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TJhVUGkdK9UUHpDT1hvMj3YtnkWZD0UPIeQwWXx8+mgy/ett6yz9sa7+mkgDAa0QJ+zKQ/YqcjpwqCadA7WRCXXbJxAZmxtAY+9sHOYHzixzK4MZWhGNbApSkltPrgB1+ULDnydHAkVxSke2VO4zsQrEOqOjbs2Fd55sMMz+jmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AT7JxTTJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Qp7JqRSW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UEUwloCTJiCSzb8l1g5JVlq9SkbSuYcGcXjYqvXgKDed+WiCsARj172AIyWYwojaxpdep3Gef2KWUV4X5gr++7JZikD2SzmumJJOKfXZzt+a/+1Yzckub0Mgdmw4AgCvt2rRusELT2g9WpG5BWLIHxsvPNsIMsZm9fbvXhbQhwKxl9ciUqaEPB+EGa0wv9MZ5qypsmUD6Gn9oBPwVtSvoKd8aquyjp+r94jGfV5VwQkgZXuSERWg5sUJuGRZLoES4Z4EZU6Or1pcHmYmZrB9SRQ93h6A+eQ0Khz+87n+po1mCQ7ptIj66Um9sNO6GFZ8NIp3/ksDbQ92rJuusGJZ1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VsSiuZEEYK3BhTcOQ3JpByJ2Sg2zpbYycVs2xwzZqm0=;
- b=nw6yRa6uSdaAZ19mlpUKIHsF6Xbs6bAk1EW/8HbGQ5BRu7Y5kTgZfhDHy2ycdgXQMjDPfWRbW7jCdl3l8yciXF2gmlyMhUPh+hIIeogtFZ3SdXisKuWaY1ezbjqpxnTELgZYQjlGye99CoqBprETAeIXPIa1HVMJLP8n0Ud01P6JzhvElHr5l3pm/Edwit39KZY6IAdhy2uA4gjiLKosA5eqdpSjWcgMr54PiMIHRN59UfPVpWqH5qUr+B8CCRpAXFe1hjbFlMOq+JNtbu36N09RjjKMvi4hlAnM6bxrNHiMHjSB5vDYgQBaFQK0npcpEJbZWSrhumg6JyGXmQwXyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VsSiuZEEYK3BhTcOQ3JpByJ2Sg2zpbYycVs2xwzZqm0=;
- b=Qp7JqRSWnG4cmyIprxAmSfDNinJ9wZQmfW795+n6MNpL3yTHn5GUL9+EEEZckcsEdGBALtHFtfxmAq9jB92qCYgfFNJhaWhRYuxnQNVHFK3JCdJQR/6PqGutvJZ7oWMWzq9vIO6RsNy4p1Soify8XlutqGlzk+kEYcC+DAphRV0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5184.namprd12.prod.outlook.com (2603:10b6:5:397::18)
- by DM4PR12MB5985.namprd12.prod.outlook.com (2603:10b6:8:68::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.41; Wed, 28 Feb
- 2024 11:17:05 +0000
-Received: from DM4PR12MB5184.namprd12.prod.outlook.com
- ([fe80::f20e:4b70:eef7:e956]) by DM4PR12MB5184.namprd12.prod.outlook.com
- ([fe80::f20e:4b70:eef7:e956%5]) with mapi id 15.20.7316.039; Wed, 28 Feb 2024
- 11:17:05 +0000
-Message-ID: <0e70681f-85c2-43f9-822a-2e07776c37c9@amd.com>
-Date: Wed, 28 Feb 2024 16:46:57 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] platform/x86/amd/pmf: Fix possible out-of-bound
- memory accesses
-Content-Language: en-US
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Armin Wolf <W_Armin@gmx.de>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20240227145500.299683-1-W_Armin@gmx.de>
- <20240227145500.299683-2-W_Armin@gmx.de>
- <2dd63b5b-cf60-9f28-55b3-35eab537dc9b@linux.intel.com>
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-In-Reply-To: <2dd63b5b-cf60-9f28-55b3-35eab537dc9b@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN3PR01CA0088.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:9a::23) To DM4PR12MB5184.namprd12.prod.outlook.com
- (2603:10b6:5:397::18)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AT7JxTTJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709124632;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z2xNRDhIuGHBjq6yEi4gfdXLq6JqoowvrAtd1O30NW0=;
+	b=AT7JxTTJgnWaOjEHzweaaSMpX9ky7AQOxmbx0XIK6wnd773vBZsFHBGTv8ek9mR7DYq6hM
+	sJp4MDoF/xM4ftdVVMaOAtrlWaO62L61IlENrEo+McZc5q80gWdNqgJY7CUz6Tp9ooq94o
+	8B++x1j7j0ig+ZHVuwd2jEuJXEeT3wo=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-101-4J4bu6I0OfWeC5O0Vh2f7A-1; Wed, 28 Feb 2024 07:50:30 -0500
+X-MC-Unique: 4J4bu6I0OfWeC5O0Vh2f7A-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-56451e5801dso2665847a12.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Feb 2024 04:50:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709124629; x=1709729429;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z2xNRDhIuGHBjq6yEi4gfdXLq6JqoowvrAtd1O30NW0=;
+        b=sJYV5zAffRxteqmuRzdjQ8p8NEC5p1gz3blgxnf0TKkIPsoJi2o8dPuR+HrgB/nuTV
+         fFTMyg+P1U4P8FO2fC6B23ZmEV3N3+4eA7nKiBcjEamTFgFMEb39P6S7TuKtQmBxVh2k
+         vZA93ffSmjMBaIaxj+G2UsGaM/bVrPAhkrnHNojOqz4JD2C5+37xaWN4KnCCJ0OfJEAm
+         8mt0VrhxwgN0yRvQPpC5FXLbRAkKXgnCV8TvbpQAtqSAD8gD59qKHXwXh4zYKjQ9qECK
+         xzA3wkslEFtt8NM/ek99387C5eJ+ZGafyq6meefk56bolqpTxa8xl9z3vlOYo5nh+KjP
+         1+uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWsZSod95WNudQOWlNf0dS5i3/W+7J+0jebSa8MtHF45HTbN9/Jzjq1A7aJZz7kUmDtUufRo44sCMypJg5DgVbrxoTKQOgdJCvwn2ELUEa6N4KzMQ==
+X-Gm-Message-State: AOJu0Yw3YsVUQNVITEq6i3DVkldjF54T1Tles/2koLQAE7F1LEFnPAKD
+	1Sy084+LgBLTU05+CGc5TtISEpodTZ/howuacDTo/xrhL5Lj5XBo49W9Wekkfj9NRao6+KFoOmG
+	wVpQRvXtzk86vtSmwhLvO8Pb4cYUX7VDpiYtqAKB2A70lEo4K77hqDRApYr7xSQ8uft3evGs=
+X-Received: by 2002:aa7:d958:0:b0:565:3574:c71e with SMTP id l24-20020aa7d958000000b005653574c71emr8511917eds.28.1709124629582;
+        Wed, 28 Feb 2024 04:50:29 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFWfl4elY2kENiIsJZ+yH38W5Gp3r0+RM/Ci214/isWgfZ4vpt5r9BfDo8e2ijofSkCkM/ubA==
+X-Received: by 2002:aa7:d958:0:b0:565:3574:c71e with SMTP id l24-20020aa7d958000000b005653574c71emr8511909eds.28.1709124629203;
+        Wed, 28 Feb 2024 04:50:29 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id ev27-20020a056402541b00b005667ae231basm270280edb.40.2024.02.28.04.50.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Feb 2024 04:50:28 -0800 (PST)
+Message-ID: <ef071afc-8768-4aab-aaee-4c3c3c317c0e@redhat.com>
+Date: Wed, 28 Feb 2024 13:50:27 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5184:EE_|DM4PR12MB5985:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1358ae6c-0059-4157-c718-08dc384ecb83
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	ZC7nm3VH4GD1rG2bWHG+hzfqoewuZ32y2oCnvzcrc2vXOePGyYyjARvmgN246ACbOEP0S4JtrYUFeaYAfcinrHxV5jZLaDGXYt/h/XlZAagb4B6orSjvx5a/BBCgHn4/qw0WL+46uQM3oQdMJrZhyrNrrlY1Qz42GB4+hFyqJpYGznTNvotU/N3KdgQWCCFEeJ4PT8gKctcw/fe9pqXEPZ/58VMEhsmTGx/ViCyy/8Ad52Ox1t86evTGrpAbRBHt5ISONLV2wSriTcwz6lmUquyziUStUF1K4JWms76BQ+tmAJM+Ye4hPtO9eGm6n5cuwKfcVIfv/fq0Hz//N8N8l/qh3S5Ik3H6i0OZC2J5HyNFlv2iJ2L6Q9LgIEd+Mw/LZw2dMse6JTW5eNfO5vU6O2BhrbgRic8x/FAZ9kfAlViKM7FvqOrd1GYmhkzDF/K0XrQZPsojh/B7+Q6HR9TBta+LA23qQuwEbqRATb+91XaQnH+vcJ8YVrVkjxQ9ZWW2CPgdpfedJVBhvgPUjPT0AH2CgRm4LyTycHPEhAGY4aZu0tzRqrjNcX7L+98uqubcJlSxmbqnGj+bC4o5dnwUG5Vrq/Z5F3sZzJj0dTg+qET5qgE26ml3XXtOZNWZ81is
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5184.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YVgxZTVudmhJeUYyYWFWdEEwdXhQT0V5S3lEcUNXb2N5YSsvUmRIb2Mwa1Ny?=
- =?utf-8?B?OERkREZvQ1VWZ29keEFMczZjbnY2Tk9nVHNSQTBsMlluSVVNdkV6cGllYU5v?=
- =?utf-8?B?VTkvT05lRktwNWg1MndZTlRRN0xuWm5aVUZrNDJEMDE4UXYvTU4wZ0pLOEV3?=
- =?utf-8?B?ZW1zeHFYTTJVOVJxMmN3QUV6ZnNOeURudzNPaHRvWTNsMXB2SlhvTnFMUkM3?=
- =?utf-8?B?bFJVeFhnSzlVMjZNTWNlMFBnY3FhQVJFYUowZkhDQnlnU0RBTVY3UXVXT1JI?=
- =?utf-8?B?R0xEWUx2M3FwVEI2QmtQaVNrMUgveUtwR25lR21mUk00aTNXaWlIb2JzVllK?=
- =?utf-8?B?TTRQbmNpQzlrK3RDM2w5T0ZKY1EycGFOMWNVb3hVK2IwRGUrL2tHL0FnakRs?=
- =?utf-8?B?VWUxYUFHeER1Yi9HK2wrU1dnRi91dWJ0ZHBHUXpJWm5FalQrclVNbmdVWGkx?=
- =?utf-8?B?MUhPcFoxSU5oNllJZXI0bmZQUG1FdzRyQlJROG1seEkwM0paZjcrSG51ZkU2?=
- =?utf-8?B?aVdyR0dWSW9Xd2RtdUhGRlRVd3UxM0NycHVvT2hTeStXaVNVTllpNEtUcGhU?=
- =?utf-8?B?ajdUbVRCa3JuWkREYmFNSHo3eGwvb05wT2xTUGxIZTNnNmN4VGg1clUvS2hB?=
- =?utf-8?B?SjZtWWJuQWFQMzB0b0taN1ZTQXJLOW1XeGprMGk5aDF5VTdqeE44KzZ6cnhG?=
- =?utf-8?B?ZTc3Ylp6OHJEbTNad25hS1FpMDVnM09WQTVFSkgrMmJVbGllek1UcmdJSDgr?=
- =?utf-8?B?ZVVXcVBhTXMxTlFtdHVTK1JiSXFrNTh6aXJuNE1wWGVqZGhWd2VyTHMwNUM1?=
- =?utf-8?B?SGkxTVdhL1RsSS9tbmJQV28yM1hyTm44aTl0N1ZHZVJ0VUo4ZFQ2ZVVBcFZu?=
- =?utf-8?B?UkZXeHVvdjBzOFluM2VNSEpVUERpUG5ETVJUQUdMNER3OEJWdUFYUW5RQmdy?=
- =?utf-8?B?L09EVXowZG9rK3k0ZU9sNjVOTTdFdi9PWU5YQVU3dnZLangxYkxVc0V4aVMy?=
- =?utf-8?B?VU1qQXNDYUtBMkt1RmlrcFZXeVB5WFhtdnpuYUtXcFZ0alZ3R1hYMXIxdTMw?=
- =?utf-8?B?ejQ1ZmluMlgyMW16bnZnTStQd3JOU3V6UmM5QXBoNFF3VDE2M2NNM0FFVkZT?=
- =?utf-8?B?a0ZrTk92alJidHh2SGVkTnd4cndjVVdlTkYxRWtMY1FVeGZPU1FsK1NPWGdu?=
- =?utf-8?B?YTJ1ZGZ0YndEeklrYzFuVWx0ayszWDg4UmVsenFRRGNMa3lEc0hjSGxDQVJr?=
- =?utf-8?B?VnlIMlhGOW8xSlYyYUtwZ2NyVnc3S3VNb0NOQkF4cWxGRWVLc2xXaGlwVjFQ?=
- =?utf-8?B?N3d1SkZuZDhuQlBtTExuZklEalU2MjZ2c0s0aXFFdVgwNUZRUHUwRTk2Z1Fr?=
- =?utf-8?B?YTlYdjQ2cVpTUG5ZZzJUZmo1aHpXZHplWmF0ZzZOMHlmYXExZGhtQlJaUHUv?=
- =?utf-8?B?RjVSbEs2V1laZERFeHVtb3JqRks1Y1QxaVN3cU1HZmhDUlFDMng4NEtVVUs0?=
- =?utf-8?B?bStVZU9CSGRKREJwaXVpbjBha3JZNUIrNG14OEZJeFB5ZnhZYlFwckx1Wmkr?=
- =?utf-8?B?MXRXK3pYYkJXV2czc0liam5OQ1Fac2lBcFV1SzBjQm1wTG56R2VqWUhUNzJM?=
- =?utf-8?B?SmZ1Q3RtMGUvSzdBdm1ndzdLVkhLTWhPS25QQ0RzYUpuZ1FWOXZmamNiVWU4?=
- =?utf-8?B?NmFRNXhJSHBXMVExYlgxN2xhQ00wUGRNdS8vR2Q3S0FsbEVuM3dGdUZxdVpi?=
- =?utf-8?B?QmUzV1BwV292NFQ5Q1h3ZW1uRkJZMHFNSHp3RThnd29QMGxtLzJqUFY4cm83?=
- =?utf-8?B?VmFwQXZYanhiNDkySHdTUS9zTVZ6dlNFQ1NicmRYcmtkZXB5ekt0SVkzcTgr?=
- =?utf-8?B?bFkwTURqdXVUS3J1eFZnSmtvR0JpQmRtRnIxUUNRcGFhN0pmd3V2bXFuV1hG?=
- =?utf-8?B?L3JQeS9oOHhaNjZoQzlHcjkraGhLNllnMkJ1QlhQYm9zaFUvUkhuVlNYTHRK?=
- =?utf-8?B?Vk9QVlE4Z0Y3eEFKcW0zMGZBVy8vVTlQVksranNLKzY4Wk1QZHQzMnRSc0tX?=
- =?utf-8?B?eVp5azNFYVFoa2VoZzA4RkVpYzVpSVRSclRqalk5N0VhdjBWME8zYUkyTkFy?=
- =?utf-8?Q?wfnJ+ev44EXRaANa4ghoNjNyr?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1358ae6c-0059-4157-c718-08dc384ecb83
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5184.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2024 11:17:05.6986
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EFnD2MIByEAkRq8KOluzbI0l7LNn7E/lhhId6Xnex5rkgV614EQImJQzqs5y0BsR8B/Ac2Ai3NtyLeVNw20Mtg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5985
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/6] platform/x86: dell-smo8800: Move instantiation of
+ lis3lv02d i2c_client from i2c-i801 to dell-smo8800
+Content-Language: en-US, nl
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
+ <pali@kernel.org>
+Cc: Andy Shevchenko <andy@kernel.org>, Jean Delvare <jdelvare@suse.de>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Paul Menzel <pmenzel@molgen.mpg.de>, Andi Shyti <andi.shyti@kernel.org>,
+ eric.piel@tremplin-utc.net, Marius Hoch <mail@mariushoch.de>,
+ Dell.Client.Kernel@dell.com, Kai Heng Feng <kai.heng.feng@canonical.com>,
+ platform-driver-x86@vger.kernel.org, Wolfram Sang <wsa@kernel.org>,
+ linux-i2c@vger.kernel.org
+References: <20240106160935.45487-1-hdegoede@redhat.com>
+ <20240106160935.45487-3-hdegoede@redhat.com>
+ <20240107171055.ac7jtwhu2kbalaou@pali>
+ <20240213173050.0cf4a58f@endymion.delvare>
+ <3e5b47ce-29a9-43a3-92bc-599a9a716fbb@redhat.com>
+ <ZdNBGSJ28AcdpC7f@smile.fi.intel.com> <20240227210429.l5o52wuexqqmrpol@pali>
+ <CAHp75VeGaKws35x4u-mrmWP2Rd55T6VcR9OjNfh+PsF_M9GR-g@mail.gmail.com>
+ <20240227215000.gbmn4n2uzd3hyk3b@pali>
+ <CAHp75Ve5S3S0MPuW1v8q3Dx8sbDZH_LCT8a_p7hwojF2aKS8CQ@mail.gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAHp75Ve5S3S0MPuW1v8q3Dx8sbDZH_LCT8a_p7hwojF2aKS8CQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Ilpo,
+Hi,
 
-On 2/27/2024 21:15, Ilpo Järvinen wrote:
-> Hi Shyam & Armin,
+On 2/27/24 23:37, Andy Shevchenko wrote:
+> On Tue, Feb 27, 2024 at 11:50 PM Pali Rohár <pali@kernel.org> wrote:
+>> On Tuesday 27 February 2024 23:19:19 Andy Shevchenko wrote:
+>>> On Tue, Feb 27, 2024 at 11:04 PM Pali Rohár <pali@kernel.org> wrote:
 > 
-> Shyam, please take a look at the question below.
+> ...
 > 
-> On Tue, 27 Feb 2024, Armin Wolf wrote:
-> 
->> The length of the policy buffer is not validated before accessing it,
->> which means that multiple out-of-bounds memory accesses can occur.
+>>> I'm wondering why we need all this. We have notifiers when a device is
+>>> added / removed. We can provide a board_info for the device and attach
+>>> it to the proper adapter, no?
 >>
->> This is especially bad since userspace can load policy binaries over
->> debugfs.
+>> I do not know how flexible are notifiers. Can notifier call our callback
+>> when new "struct i2c_adapter *adapter" was instanced?
+> 
+> You can follow notifications of *an* I2C adapter being added /
+> removed. With that, you can filter which one is that. Based on that
+> you may attach a saved (at __init as you talked about in the reply to
+> Hans) board_info with all necessary information.
+> 
+> Something like this (combined)
+> https://elixir.bootlin.com/linux/latest/source/drivers/ptp/ptp_ocp.c#L4515
+> https://elixir.bootlin.com/linux/latest/source/drivers/input/mouse/psmouse-smbus.c#L194
+
+drivers/platform/x86/touchscreen_dmi.c actually already does something
+like this for i2c-clients. The problem is that this brings probe-ordering
+problems with it. If the i801 driver is loaded before the dell-smo8800
+driver then the notifiers will not trigger since the i2c-adapter has
+already been created (1).
+
+So we would still need a "cold-plug" manual scan in smo8800_probe()
+anyways at which point we might as well just return -EPROBE_DEFER
+when the adapter is not there.
+
+As for Pali's suggestion of having the i2c-i801 code call a symbol
+exported by dell-smo8800 that will cause the dell-smo8800 driver
+to load on all x86 devices with an i2c-i801 controller (pretty
+much all of them). Slowing the boot and eating memory.
+
+So IMHO just doing the scan for the i2c-i801 adapter as already
+done in this version of the patch-set, extended with returning
+-EPROBE_DEFER if it is not found is the best solution.
+
+Yes this means losing the i2c_client for the lis3lv02d device
+if the i2c-i801 driver is manually unbound or rmmod-ed. But that
+requires explicit root user action and putting just the i801
+driver back in place again also requires implicit root action.
+
+IMHO it is acceptable that in this exceptional case, which
+normal users will never hit, a rmmod + modprobe of dell-smo8800
+is required to re-gain the lis3lv02d i2c_client.
+
+Regards,
+
+Hans
+
+
+1) touchscreen_dmi is builtin only because of this and we really
+want to avoid adding more of that. Actually thinking more about this
+it would be nice to modify touchscreen_dmi to use a mix of registering
+the notifier + doing a scan after registering it for matching devices
+which are already present, so that touchscreen_dmi can become a module
+auto-loaded using the DMI info which it already contains.
+
+
+
+
+
+
+
+
+
+
+
+> 
+>>>> With this simple change all dell smo8800 code would be in its subdir
+>>>> drivers/platform/x86/dell/ and i2c-i801.c would get rid of smo code.
+>>>>
+>>>> This approach does not change any functionality, so should be absolutely
+>>>> safe.
+>>>>
+>>>> Future changes will be done only in drivers/platform/x86/dell/ subdir,
+>>>> touching i801 would not be needed at all.
+>>>
+>>> Still these exported functions are not the best solution we can do,
+>>> right? We should be able to decouple them without need for the custom
+>>> APIs.
+>>
+>> Well, what I described here is a simple change which get rid of the one
+>> problem: i2c-i801.c contains SMO88xx related code and changing SMO88xx
+>> logic (like adding a new device id) requires touching unrelated
+>> i2c-i801.c source file.
+> 
+> `get rid of one problem` --> `replace one by another (but maybe less
+> critical, dunno) problem`. The new one is the spread of custom APIs
+> for a single user, which also requires an additional, shared header
+> file and all hell with the Kconfig dependencies.
+> 
+>> I like small changes which can be easily reviewed and address one
+>> problem. Step by step. That is why I proposed it here.
+>>
+>> For decoupling it is needed to get newly instanced adapter (if the
+>> mentioned notifier is able to tell this information) and also it is
+>> needed to check if the adapter is the i801.
+> 
+> Yes.
+> 
 > 
 
-IMO, this patch is not required, reason being:
-- the debugfs patch gets created only when CONFIG_AMD_PMF_DEBUG is
-enabled.
-- Sideload of policy binaries is only supported with a valid signing
-key. (think like this can be tested & verified within AMD environment)
-- Also, in amd_pmf_get_pb_data() there are boundary conditions that
-are being checked. Is that not sufficient enough?
-
->> +	if (dev->policy_sz < POLICY_COOKIE_LEN + sizeof(length))
->> +		return -EINVAL;
->> +
->>  	cookie = *(u32 *)(dev->policy_buf + POLICY_COOKIE_OFFSET);
->>  	length = *(u32 *)(dev->policy_buf + POLICY_COOKIE_LEN);
-> 
-> This starts to feel like adding a struct for the header(?) would be better
-> course of action here as then one could compare against sizeof(*header) 
-> and avoid all those casts (IMO, just access the header fields directly 
-> w/o the local variables).
-Not sure if I get your question clearly. Can you elaborate a bit more
-on the struct you are envisioning?
-
-but IHMO, we actually don't need a struct - as all that we would need
-is to make sure the signing cookie is part of the policy binary and
-leave the rest of the error handling to ASP/TEE modules (we can rely
-on the feedback from those modules).
-
-> 
-> Shyam, do you think a struct makes sense here? There's some header in 
-> this policy, right?
-
-Yes, the policy binary on a whole has multiple sections within it and
-there are multiple headers (like signing, OEM header, etc).
-
-But that might be not real interest to the PMF driver. The only thing
-the driver has to make sure is that the policy binary going into ASP
-(AMD Secure Processor) is with in the limits and has a valid signing
-cookie. So this part is already taken care in the current code.
-
-> 
-> 
-> There are more thing to address here...
-> 
-> 1) amd_pmf_start_policy_engine() function returns -EINVAL & res that is 
->    TA_PMF_* which inconsistent in type of the return value
-> 
-
-ah! it has mix of both int and u32 :-)
-
-Armin, would you like to amend this in your current series? or else I
-will submit a change for this in my next series.
-
-Thanks,
-Shyam
-
-> 2) Once 1) is fixed, the caller shadowing the return code can be fixed as 
->    well:
->         ret = amd_pmf_start_policy_engine(dev);
->         if (ret)
->                 return -EINVAL;
-> 
-> 
