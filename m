@@ -1,46 +1,46 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CDD79ED;
-	Wed, 28 Feb 2024 00:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED0F1400D;
+	Wed, 28 Feb 2024 00:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709078422; cv=none; b=PQkSNA13/uN46Q1CUxPuvPki8t58TWq8c5pquhjSATWCjKFxRn1+Wc9ipvUR9gWb+duIKsDXxLRhi2NjGklMj1kEh42faudjVg4v+Agn7IY5DFSKEAB0w7rYzThrEgHWewrUgwpVFmriYwmPFphFpNGy+ZshjYmr3fNfOspRFsQ=
+	t=1709078422; cv=none; b=rmN/zUD/V6A9X1fX+4zChA8cUwRPwIU8T9NUB6yrQ00+nZzOgYmbHqS1oKwjsP5U3UDOkg2xrTLJZaRLHZIaylAGMkuStm7E/YwZBuG7VK42hzPXboi0sWeJxBhkJjKkxn85aU9opMjbARIUQcRSUourQm90f4rAY6Yp/yBbry8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709078422; c=relaxed/simple;
-	bh=+Z7En2HDO6d1w36dnpCFtmIvi6nCJV8wICBRrJL4X00=;
+	bh=iCjI+PJKNrX2ec8KuwZzO40AKoWqyEUBGXtTR4zNvjQ=;
 	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tg1kJfx10ot3u34FTyO3lHrsDEZEV2KdRLYjmhZaVgQ1Ohq+n0wPqw7gDEdsE5tTV/yHPDxw8MeahW717p9NVq/axQEYHGuIVKKrR8WdsBqtPpBDVmvl3qJLdwFYHw/NVJL3dHls5AloLz3630obkPFdzAduEj4iLERXC2FT820=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WnzX7nR4; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version; b=gV8Gl119IQpSRp+ERNM2VgyyzOz1wvTpi2WfHPWnXdvlgN4/uAB+gtMnz8bzd+4GQmTUJ8AVgmsibY2V6H/fxrdB7Lx3JPmmHzHtV47M+AS7XpzgbMx/rJ29eQDmrn0AdQkzhoPcS2l85a9e++A9hBwxL7Itw/T1B8Gx+jQ3oD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XG6wMJGI; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WnzX7nR4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XG6wMJGI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1709078421; x=1740614421;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=+Z7En2HDO6d1w36dnpCFtmIvi6nCJV8wICBRrJL4X00=;
-  b=WnzX7nR4+nbl8VnWWTRNIvZ4BHSSxR53I/wpeNrT0IZ/4Zq1h7DPE2cL
-   K2tGY/5I/xOSMVAP1C/yKI2Yy81Jih0sqJPIz7M9GTS9PHL7N2NFAIHm2
-   txioPC+7rLf8N7il5ma8Abc2G/lAaZOjOS+ebxwdYlNujT4xMwJgZA+ki
-   LSja9S5ZspMZ3f97D0rZ0MFgjZbh9vWgqBkrIf+BDhytVh3xNq0mBuplk
-   kq6sxgFtK7Emak0am1bagX6UCBvvFGDy5REmjsYoI2OvQByUlDxahvKna
-   7JIIauKckHcKr67Qki688M0gnvycJ23Q2Es7COtjGbpylEzfpZTMqxhkg
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14604939"
+  bh=iCjI+PJKNrX2ec8KuwZzO40AKoWqyEUBGXtTR4zNvjQ=;
+  b=XG6wMJGIvaKwcqOdaipIYQ+pK0l9u9F4GV9JIDUFNVM7W+JmsLIw9Jsk
+   70pOQ9M4Q1K31aETO2uOtcypFX34zslB3Jtvd2hak6+PdAz3sAWRneO2G
+   LWWov3AMBRdPtkZdgcEULtBTN9aqP7m3zw4CagPEfb12lvn2YXHmfODOj
+   iRql1jwA+xnIGNio8S9ch9apnZtoQkhyWGSHvYZyCylWvEvKuLADcS4C6
+   IzlqIw1VbEVPAcr0IufJm9AUD6/Z7zju8fcaIb5xY93okVTvCLe0QjEsD
+   iL66SKjc1ls19Dsa9N6UgpHhhmiXa4T/PfOQN4+rS4ZVnMB9lA4ZigoQi
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="25919838"
 X-IronPort-AV: E=Sophos;i="6.06,189,1705392000"; 
-   d="scan'208";a="14604939"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 16:00:18 -0800
+   d="scan'208";a="25919838"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 16:00:18 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,189,1705392000"; 
-   d="scan'208";a="7176941"
+   d="scan'208";a="7439177"
 Received: from linux.intel.com ([10.54.29.200])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 16:00:18 -0800
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 16:00:18 -0800
 Received: from debox1-desk4.lan (unknown [10.251.6.149])
-	by linux.intel.com (Postfix) with ESMTP id 406A6580B9A;
+	by linux.intel.com (Postfix) with ESMTP id 9B989580B9A;
 	Tue, 27 Feb 2024 16:00:17 -0800 (PST)
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: david.e.box@linux.intel.com,
@@ -49,9 +49,9 @@ To: david.e.box@linux.intel.com,
 	linux-kernel@vger.kernel.org,
 	hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com
-Subject: [PATCH V2 5/9] tools/arch/x86/intel_sdsi: Fix maximum meter bundle length
-Date: Tue, 27 Feb 2024 16:00:12 -0800
-Message-Id: <20240228000016.1685518-6-david.e.box@linux.intel.com>
+Subject: [PATCH V2 7/9] tools/arch/x86/intel_sdsi: Fix meter_certificate decoding
+Date: Tue, 27 Feb 2024 16:00:14 -0800
+Message-Id: <20240228000016.1685518-8-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240228000016.1685518-1-david.e.box@linux.intel.com>
 References: <20240228000016.1685518-1-david.e.box@linux.intel.com>
@@ -63,10 +63,8 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The maximum number of bundles in the meter certificate was set to 8 which
-is much less than the maximum. Instead, since the bundles appear at the end
-of the file, set it based on the remaining file size from the bundle start
-position.
+Fix errors in the calculation of the start position of the counters and in
+the display loop.
 
 Fixes: aad129780bae ("platform/x86/intel/sdsi: Add support for reading the current meter state")
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
@@ -74,40 +72,32 @@ Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 
 V2 - Split of V1 patch 7
 
- tools/arch/x86/intel_sdsi/intel_sdsi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/arch/x86/intel_sdsi/intel_sdsi.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/tools/arch/x86/intel_sdsi/intel_sdsi.c b/tools/arch/x86/intel_sdsi/intel_sdsi.c
-index 2cd92761f171..a02850a710ee 100644
+index def1b9a01738..2acc6be5f5d6 100644
 --- a/tools/arch/x86/intel_sdsi/intel_sdsi.c
 +++ b/tools/arch/x86/intel_sdsi/intel_sdsi.c
-@@ -43,7 +43,6 @@
- #define METER_CERT_MAX_SIZE	4096
- #define STATE_MAX_NUM_LICENSES	16
- #define STATE_MAX_NUM_IN_BUNDLE	(uint32_t)8
--#define METER_MAX_NUM_BUNDLES	8
- 
- #define __round_mask(x, y) ((__typeof__(x))((y) - 1))
- #define round_up(x, y) ((((x) - 1) | __round_mask(x, y)) + 1)
-@@ -167,6 +166,9 @@ struct bundle_encoding_counter {
- 	uint32_t encoding;
- 	uint32_t counter;
- };
-+#define METER_MAX_NUM_BUNDLES							\
-+		((METER_CERT_MAX_SIZE - sizeof(struct meter_certificate)) /	\
-+		 sizeof(struct bundle_encoding_counter))
- 
- struct sdsi_dev {
- 	struct sdsi_regs regs;
-@@ -387,7 +389,7 @@ static int sdsi_meter_cert_show(struct sdsi_dev *s)
- 	}
- 
- 	if (mc->bundle_length > METER_MAX_NUM_BUNDLES * 8)  {
--		fprintf(stderr, "More than %d bundles: %d\n",
-+		fprintf(stderr, "More than %ld bundles: actual %d\n",
- 			METER_MAX_NUM_BUNDLES, mc->bundle_length / 8);
+@@ -403,15 +403,16 @@ static int sdsi_meter_cert_show(struct sdsi_dev *s)
  		return -1;
  	}
+ 
+-	bec = (void *)(mc) + sizeof(mc);
++	bec = (void *)(mc) + sizeof(*mc);
+ 
+ 	printf("Number of Feature Counters:   %d\n", mc->bundle_length / 8);
+-	while (count++ < mc->bundle_length / 8) {
++	while (count < mc->bundle_length / 8) {
+ 		char feature[5];
+ 
+ 		feature[4] = '\0';
+ 		get_feature(bec[count].encoding, feature);
+ 		printf("    %s:          %d\n", feature, bec[count].counter);
++		++count;
+ 	}
+ 
+ 	return 0;
 -- 
 2.34.1
 
