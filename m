@@ -1,198 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF2E79B83;
-	Wed, 28 Feb 2024 18:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67E97443E;
+	Wed, 28 Feb 2024 20:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709143814; cv=none; b=omySp02xDQlJ/25lwNmApFE6ftBs+OieH1tK9ipTzVXG2N5H2fQBJbIeJJzYwCz551vutkmAV8MIGIrPdn7ksLZHUggrisY6DuNgQPJzKNhpku8QbhSMgs3xhV5cBagcPYkHF+3Hm2j6qQBe+fLFZ3cY4/vfJJVPxu/K0FaCTlI=
+	t=1709151582; cv=none; b=i5MfrEbQP7xlav4WCYeNmnp4GHr24pfXWVZosi4fi71YYxOljrQNqNZbRQtHNd5agxT4ZUFZOgNk+uLD/9WZDocoVdN854O2knp4hzh7otvw91F1PF7EhmRy3Otm4vaOPwVnDR1nWzBsHD/Emz9BAiReJoa6qRCAT26sJx7PDtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709143814; c=relaxed/simple;
-	bh=7nVt3hJRNv8Y1TTfxyAmSPl7PgcYwNa0Ckx272J3/3c=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nXZF1Zga70URt3hOfCQKJ3JUUSpn5gz0HrFbXBApsn2TyzaZfAc/z8dMWTs0JDrCRNVLFzQe2mdM8rB6F44wfWPY0aa/nJR59qzZ/Q463/wPPZm4vBu7DNEoCg6daqKENOEee144TEAood2YKffYe9JXL81AptL84RIoJzCc5XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l2tlfq6O; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709151582; c=relaxed/simple;
+	bh=/9L3DBtbXtiqRZ4uR4tPFzGS3wIV0RaN22OwhuvbyNc=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=So2jShHJl9lnMBkKHMhAaO2H+6NVap/BlD7bjzIoGijIfwKUF98wSVjn8T89HZpGDGlhAziDFsXfdyQwXHPtQ9isinBGFCUgWewRs4UZvL+1BDnmjWQ6HyPPDI4o4Osy/3bDZWXqFnWuCMfmwv4hK90PGW2OCt9JCoshOWdnvrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=AEhHW8sJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DHNOCstp; arc=none smtp.client-ip=66.111.4.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l2tlfq6O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709143812; x=1740679812;
-  h=message-id:subject:from:reply-to:to:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=7nVt3hJRNv8Y1TTfxyAmSPl7PgcYwNa0Ckx272J3/3c=;
-  b=l2tlfq6O+FHzYszTPdPEezEBhHhegL+BY6snC1MuEyzNVQ5puLkgBuC9
-   tyESXMHoRaoybFzg6uIkeY+G16bErNxWvSPXEP4ieMkkaIuGwmeTo+BBL
-   DwVZQrjzhS/BxVusyHhmSITjM+A7SWyp3J5iscueGBCJKw8JqWiaWAQSo
-   ZWXOQeDwdqM9HJHl6UU2/nxcw0b4UZt9yPONDbjTRk9sRvIHhJeyTfxyu
-   xH4AGG0iGrzSJizripBvkeHMp+cBTiY+v3DuaoeakIRRCHmglsuxU+u5W
-   FeO6vkY2VmNP/oIg6TuD/N3g28fvCn5okvUZX8PF0rfU3MnjRvd9O/bW6
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="14274255"
-X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
-   d="scan'208";a="14274255"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 10:10:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
-   d="scan'208";a="12230615"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 10:10:11 -0800
-Received: from [10.54.75.156] (debox1-desk1.jf.intel.com [10.54.75.156])
-	by linux.intel.com (Postfix) with ESMTP id 1EB48580B99;
-	Wed, 28 Feb 2024 10:10:11 -0800 (PST)
-Message-ID: <2dba47561b467c483263b65606aa3e79c05c91a3.camel@linux.intel.com>
-Subject: Re: [PATCH V2 2/9] platform/x86/intel/sdsi: Combine read and write
- mailbox flows
-From: "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-  rajvi.jingar@linux.intel.com, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com
-Date: Wed, 28 Feb 2024 10:10:11 -0800
-In-Reply-To: <dd9ab7d1-5c03-404a-90c7-7ccbc0fb5c4c@linux.intel.com>
-References: <20240228000016.1685518-1-david.e.box@linux.intel.com>
-	 <20240228000016.1685518-3-david.e.box@linux.intel.com>
-	 <dd9ab7d1-5c03-404a-90c7-7ccbc0fb5c4c@linux.intel.com>
-Autocrypt: addr=david.e.box@linux.intel.com; prefer-encrypt=mutual;
- keydata=mQENBF2w2YABCACw5TpqmFTR6SgsrNqZE8ro1q2lUgVZda26qIi8GeHmVBmu572RfPydisEpCK246rYM5YY9XAps810ZxgFlLyBqpE/rxB4Dqvh04QePD6fQNui/QCSpyZ6j9F8zl0zutOjfNTIQBkcar28hazL9I8CGnnMko21QDl4pkrq1dgLSgl2r2N1a6LJ2l8lLnQ1NJgPAev4BWo4WAwH2rZ94aukzAlkFizjZXmB/6em+lhinTR9hUeXpTwcaAvmCHmrUMxeOyhx+csO1uAPUjxL7olj2J83dv297RrpjMkDyuUOv8EJlPjvVogJF1QOd5MlkWdj+6vnVDRfO8zUwm2pqg25DABEBAAG0KkRhdmlkIEUuIEJveCA8ZGF2aWQuZS5ib3hAbGludXguaW50ZWwuY29tPokBTgQTAQgAOBYhBBFoZ8DYRC+DyeuV6X7Mry1gl3p/BQJdsNmAAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEH7Mry1gl3p/NusIAK9z1xnXphedgZMGNzifGUs2UUw/xNl91Q9qRaYGyNYATI6E7zBYmynsUL/4yNFnXK8P/I7WMffiLoMqmUvNp9pG6oYYj8ouvbCexS21jgw54I3m61M+wTokieRIO/GettVlCGhz7YHlHtGGqhzzWB3CGPSJMwsouDPvyFFE+28p5d2v9l6rXSb7T297Kh50VX9Ele8QEKngrG+Z/u2lr/bHEhvx24vI8ka22cuTaZvThYMwLTSC4kq9L9WgRv31JBSa1pcbcHLOCoUl0RaQwe6J8w9hN2uxCssHrrfhSA4YjxKNIIp3YH4IpvzuDR3AadYz1klFTnEOxIM7fvQ2iGu5AQ0EXbDZgAEIAPGbL3wvbYUDGMoBSN89GtiC6ybWo28JSiYIN5N9LhDTwfWROenkRvmTESaE5fAM24sh8S0h+F+eQ7j/E/RF3pM31gSovTKw0Pxk7GorK
-	FSa25CWemxSV97zV8fVegGkgfZkBMLUId+AYCD1d2R+tndtgjrHtVq/AeN0N09xv/d3a+Xzc4ib/SQh9mM50ksqiDY70EDe8hgPddYH80jHJtXFVA7Ar1ew24TIBF2rxYZQJGLe+Mt2zAzxOYeQTCW7WumD/ZoyMm7bg46/2rtricKnpaACM7M0r7g+1gUBowFjF4gFqY0tbLVQEB/H5e9We/C2zLG9r5/Lt22dj7I8A6kAEQEAAYkBNgQYAQgAIBYhBBFoZ8DYRC+DyeuV6X7Mry1gl3p/BQJdsNmAAhsMAAoJEH7Mry1gl3p/Z/AH/Re8YwzY5I9ByPM56B3Vkrh8qihZjsF7/WB14Ygl0HFzKSkSMTJ+fvZv19bk3lPIQi5lUBuU5rNruDNowCsnvXr+sFxFyTbXw0AQXIsnX+EkMg/JO+/V/UszZiqZPkvHsQipCFVLod/3G/yig9RUO7A/1efRi0E1iJAa6qHrPqE/kJANbz/x+9wcx1VfFwraFXbdT/P2JeOcW/USW89wzMRmOo+AiBSnTI4xvb1s/TxSfoLZvtoj2MR+2PW1zBALWYUKHOzhfFKs3cMufwIIoQUPVqGVeH+u6Asun6ZpNRxdDONop+uEXHe6q6LzI/NnczqoZQLhM8d1XqokYax/IZ4=
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.2 (3.50.2-1.fc39) 
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="AEhHW8sJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DHNOCstp"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.nyi.internal (Postfix) with ESMTP id A75E15C01B4;
+	Wed, 28 Feb 2024 15:19:38 -0500 (EST)
+Received: from imap52 ([10.202.2.102])
+  by compute3.internal (MEProxy); Wed, 28 Feb 2024 15:19:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1709151578; x=1709237978; bh=SI1WZrdEHb
+	GY7yRHKfhJa7GjrhCFBsUpnVyqS36ad9Y=; b=AEhHW8sJZLY7jmKGeOm+msqebc
+	lYo1RTshosJNRv23KKaivXoSSJELzND7Xe9ZhrmUmFKNOsIay6GSptTou0VtM1To
+	2DfmcbkeyR1fTVF+GU31OE82EoQFTLcyv6H0ZDcikEKKNyAW/S60SYS9GDhkcYUq
+	2M3ZBghSZMxXsRBq0O9J2eMDhuUtKlTvdPykvbk+8RBoLJjsxtj9hTMyMDh13PIG
+	/U4FGXlnpsTVYFWrF6NvED9zm88QF1n7fwr0tcBlvhJMWv30K52lY6dmCUe22Slr
+	hVu5RMxzXd2vQMX4vqEDvcbpE2Jz3FoE/zhVeSeGgRmbm/EJw9P5Ag7uFmfw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1709151578; x=1709237978; bh=SI1WZrdEHbGY7yRHKfhJa7GjrhCF
+	BsUpnVyqS36ad9Y=; b=DHNOCstpxVPTF60f+6+mhdgpeN7IL/YRJw/ln91/BqUL
+	0gnMyo2DQmV3OEqirmDu2ZeRToBfvdAbJNvZ3s7Vo6llaBGhBmnr6m3P+bLp0nM1
+	TScMN1kvVQC0aodz94ehrAEBC1PisqSS32q1q3WXIQrYzf4pEb2zpG5W/lOUsAh5
+	MdiI6YiTMOHjThusY1figxF1TsJ4IwDzOKrgC0AmVKKa/E/yZKBbeiB/R3swMfDn
+	Yrx96V08DdPX8OnzrWSap2BIRuWaUFt6dd1YYDoszWesLlPePJTBXCTlGBTrBd6F
+	enW93WFbwdcAy3RRTpyTke7waRsIfpM9oUWMcLBpQw==
+X-ME-Sender: <xms:WZXfZdnlr0raNfJoGqqGkL2Eho7ESRQXb_DxuUhOyQk-B6NObJxaig>
+    <xme:WZXfZY3vZy-guV9VL-cP73RtZmNywA2ryMI1qUXX-mdi_H89pt3bsN5vd9yok96_S
+    n-14AoBPFM-gqCYyw0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrgeejgddufedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
+    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
+    drtggrqeenucggtffrrghtthgvrhhnpeeiueefjeeiveetuddvkeetfeeltdevffevudeh
+    ffefjedufedvieejgedugeekhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:WZXfZToF1qMiKJY_LeDdcSs3rKNpAeAaUrT99Wpvk3t9r3PCzit4dg>
+    <xmx:WZXfZdnBLW0vaS24DtFT7LGsAWgUDwFZPfLCvlici7VHv4ASU62ZXg>
+    <xmx:WZXfZb1D9LZ7N0M1StnC3HfZbfPB05hywaMpyWqchvxrgMzpFNV6dA>
+    <xmx:WpXfZcz1w7rZzULs2RS2wU9hN_jykhXYmWVaaBQO3fnFDiNK_qKa8A>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 948D2C60097; Wed, 28 Feb 2024 15:19:37 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-182-gaab6630818-fm-20240222.002-gaab66308
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-Id: <fdda6515-3b13-4727-9304-c740c77003ec@app.fastmail.com>
+In-Reply-To: <d6d0806e-5b5d-474c-affa-d43d88785275@redhat.com>
+References: <20240228150149.4799-1-vishnuocv@gmail.com>
+ <d6d0806e-5b5d-474c-affa-d43d88785275@redhat.com>
+Date: Wed, 28 Feb 2024 15:19:50 -0500
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Hans de Goede" <hdegoede@redhat.com>,
+ "Vishnu Sankar" <vishnuocv@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: 
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, "Vishnu Sankar" <vsankar@lenovo.com>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Add more ThinkPads with non-standard
+ reg address for fan
+Content-Type: text/plain
 
-On Tue, 2024-02-27 at 18:38 -0800, Kuppuswamy Sathyanarayanan wrote:
->=20
-> On 2/27/24 4:00 PM, David E. Box wrote:
-> > The current mailbox commands are either read-only or write-only and the
-> > flow is different for each. New commands will need to send and receive
-> > data. In preparation for these commands, create a common polling functi=
-on
-> > to handle sending data and receiving in the same transaction.
-> >=20
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > ---
-> >=20
-> > V2 - In sdsi_cmd_read() remove unnecessary check for non-zero packet_si=
-ze
-> > =C2=A0=C2=A0=C2=A0=C2=A0 in do loop since the loop is exited earlier wh=
-en packet_size is
-> > =C2=A0=C2=A0=C2=A0=C2=A0 zero.
-> >=20
-> > =C2=A0drivers/platform/x86/intel/sdsi.c | 79 +++++++++++++++++---------=
------
-> > =C2=A01 file changed, 44 insertions(+), 35 deletions(-)
-> >=20
-> > diff --git a/drivers/platform/x86/intel/sdsi.c
-> > b/drivers/platform/x86/intel/sdsi.c
-> > index a70c071de6e2..d80c2dc0ce71 100644
-> > --- a/drivers/platform/x86/intel/sdsi.c
-> > +++ b/drivers/platform/x86/intel/sdsi.c
-> > @@ -15,6 +15,7 @@
-> > =C2=A0#include <linux/iopoll.h>
-> > =C2=A0#include <linux/kernel.h>
-> > =C2=A0#include <linux/module.h>
-> > +#include <linux/overflow.h>
-> > =C2=A0#include <linux/pci.h>
-> > =C2=A0#include <linux/slab.h>
-> > =C2=A0#include <linux/sysfs.h>
-> > @@ -156,8 +157,8 @@ static int sdsi_status_to_errno(u32 status)
-> > =C2=A0	}
-> > =C2=A0}
-> > =C2=A0
-> > -static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox=
-_info
-> > *info,
-> > -			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 size_t *data_size)
-> > +static int sdsi_mbox_poll(struct sdsi_priv *priv, struct sdsi_mbox_inf=
-o
-> > *info,
-> > +			=C2=A0 size_t *data_size)
-> > =C2=A0{
-> > =C2=A0	struct device *dev =3D priv->dev;
-> > =C2=A0	u32 total, loop, eom, status, message_size;
-> > @@ -166,18 +167,10 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *p=
-riv,
-> > struct sdsi_mbox_info *inf
-> > =C2=A0
-> > =C2=A0	lockdep_assert_held(&priv->mb_lock);
-> > =C2=A0
-> > -	/* Format and send the read command */
-> > -	control =3D FIELD_PREP(CTRL_EOM, 1) |
-> > -		=C2=A0 FIELD_PREP(CTRL_SOM, 1) |
-> > -		=C2=A0 FIELD_PREP(CTRL_RUN_BUSY, 1) |
-> > -		=C2=A0 FIELD_PREP(CTRL_PACKET_SIZE, info->size);
-> > -	writeq(control, priv->control_addr);
-> > -
-> > =C2=A0	/* For reads, data sizes that are larger than the mailbox size a=
-re
-> > read in packets. */
-> > =C2=A0	total =3D 0;
-> > =C2=A0	loop =3D 0;
-> > =C2=A0	do {
-> > -		void *buf =3D info->buffer + (SDSI_SIZE_MAILBOX * loop);
-> > =C2=A0		u32 packet_size;
-> > =C2=A0
-> > =C2=A0		/* Poll on ready bit */
-> > @@ -195,6 +188,11 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *pr=
-iv,
-> > struct sdsi_mbox_info *inf
-> > =C2=A0		if (ret)
-> > =C2=A0			break;
-> > =C2=A0
-> > +		if (!packet_size) {
-> > +			sdsi_complete_transaction(priv);
-> > +			break;
-> > +		}
-> > +
-> > =C2=A0		/* Only the last packet can be less than the mailbox size.
-> > */
-> > =C2=A0		if (!eom && packet_size !=3D SDSI_SIZE_MAILBOX) {
-> > =C2=A0			dev_err(dev, "Invalid packet size\n");
-> > @@ -208,9 +206,13 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *pr=
-iv,
-> > struct sdsi_mbox_info *inf
-> > =C2=A0			break;
-> > =C2=A0		}
-> > =C2=A0
-> > -		sdsi_memcpy64_fromio(buf, priv->mbox_addr,
-> > round_up(packet_size, SDSI_SIZE_CMD));
-> > +		if (info->buffer) {
-> > +			void *buf =3D info->buffer +
-> > array_size(SDSI_SIZE_MAILBOX, loop);
-> > =C2=A0
-> > -		total +=3D packet_size;
-> > +			sdsi_memcpy64_fromio(buf, priv->mbox_addr,
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0 round_up(packet_size,
-> > SDSI_SIZE_CMD));
-> > +			total +=3D packet_size;
-> > +		}
-> > =C2=A0
-> > =C2=A0		sdsi_complete_transaction(priv);
-> > =C2=A0	} while (!eom && ++loop < MBOX_MAX_PACKETS);
-> > @@ -230,16 +232,33 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *p=
-riv,
-> > struct sdsi_mbox_info *inf
-> > =C2=A0		dev_warn(dev, "Read count %u differs from expected count
-> > %u\n",
-> > =C2=A0			 total, message_size);
-> > =C2=A0
-> > -	*data_size =3D total;
-> > +	if (data_size)
-> > +		*data_size =3D total;
-> > =C2=A0
->=20
-> Is there a chance for it to be NULL with current callers?
+Hi Hans,
 
-Yes. Write only callers set this to NULL.
+On Wed, Feb 28, 2024, at 11:09 AM, Hans de Goede wrote:
+> Hi,
+>
+> On 2/28/24 16:01, Vishnu Sankar wrote:
+>> Add more ThinkPads with non-standard register addresses to read fan values.
+>> 
+>> ThinkPads added are L13 Yoga Gen1, X13 Yoga Gen1, L380, L390, 11e Gen5 GL,
+>> 11e Gen5 GL-R, 11e Gen5 KL-Y.
+>> 
+>> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+>
+> Thanks, I have no objection against this patch:
+>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>
+> But this feels like it will become a game of whack-a-mole.
+>
+> Mark can you reach out to the ThinkPad firmware team and
+> figure out if there is some supported way to automatically detect
+> this ?
+>
+These are all older platforms and we're not expecting to see this on any newer platforms...if it shows up it's because they messed up (there is a spec and they're supposed to follow it).
+Vishnu did review with the FW team which platforms had used this implementation, and we believe the list below to be complete.
 
-David
+Vishnu, please correct me if you've heard otherwise.
+
+As a note, I did review this during an internal review, before Vishnu pushed it, so I'll add:
+
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+
+Mark
