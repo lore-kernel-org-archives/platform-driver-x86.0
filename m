@@ -1,103 +1,149 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49DE15B10F;
-	Wed, 28 Feb 2024 15:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7C915B990;
+	Wed, 28 Feb 2024 15:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.87.146.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709132550; cv=none; b=pnJyQVqCZoWV5xe0lXLwrdSqxbu6m3mVixqjClIezcm8piwJPldWDhOkg31YfubFls4KRxhse0p/y3R+8BabHSCNzz+j8KdpX6aMbdhyfvfY0DbkuupPV+LfA1NwbdQdqRyqYS/BkcZmb9AWxiDakTMTs397S/K6vnF/dXTKc/E=
+	t=1709135374; cv=none; b=UIJWFoa0bEJzRhaaLjlY4sQKykAutPQ6DEKUIvWBdjJD+n3y46lBsFgAVXweH+bLE4BdksY8beRq8lHjHZZz1Jc7IBQ6L0QpeRAycrF8dE6nr1X1/ZJ/yp9xpRT9BIwffbKPTGRb9I8klO+7oqD14esci7s6b8TUhUI/tR8vHjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709132550; c=relaxed/simple;
-	bh=LLoZpEXZrb4qyUzIaxkmCot88D7QEoKCy9xtugExuUA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eWV0swI+nNNLIJ6RW999UBsSNbtB4XMlmowCQsbfZWaJnS79vRr4dZtG1HD7325n2Q0nhDzCb9lricqjt1feOFXZ/lWy2+7RNYCFO71blJTiOUwiPItbHJLe0ex+rKvrr1gJRfKhLb3cd7F6UJeRbu+5PLw/PY795skbzhzwclk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NKZLS+W4; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709135374; c=relaxed/simple;
+	bh=TXDkaVmG4OI79+ODTlB7W6xh7e9pcZZeRG8zXY6AXzw=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=ie+cRsjsouoBCaTcsL9NE4tWHjPWAqNTB/kz1dATcQqxXQt4IBUhNXsl4UdDVuM45MVdyixKpPSgdrFAsBc1uo3QZz7S9nhBiaFeIfxDR3Im5MEyOc7Uwiz3SlnQ76rUFA2bwvplPM52zJpvEPEYwgI/34tyf9JwB3wUimfFFX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=VhUxaeXu; arc=none smtp.client-ip=194.87.146.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKZLS+W4"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e5675f2ca2so410413b3a.0;
-        Wed, 28 Feb 2024 07:02:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709132548; x=1709737348; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3VCmmq+4eba1jx1BqMgmbQQgplh1rf6OaXgPK/1tuIk=;
-        b=NKZLS+W4Ohc3C8PgkUKpiDErLM2YCpo6iZ9BzqSTK5F3z3lsYwiciAQBwiGQL8jN7a
-         R3m/BbGdLHxbWz3hyRfFB60lWFgYlapzgqJyIQD5aSJsLpJqLqWRCVFN19eMTJKce4DZ
-         1NUFM5bwoUIzv4BTGNpIPA7GSexNhkd/nAjENWHdv8OAz9n+S0gEO0m9MPmTc42ptLZB
-         YKHyVbvRzlhNhbBZt7MaAGBl1JXBlLGxywrGDqmqQH6ndq29hJ5MYK1EWuCutdnwwhds
-         hnKLVTbjSBs7AqL/rP1oXOvdFxg2KxA/pqNxMVvZPA8efQB1sErrkBur6MUxVr+5p6IL
-         2YWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709132548; x=1709737348;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3VCmmq+4eba1jx1BqMgmbQQgplh1rf6OaXgPK/1tuIk=;
-        b=A2p2cAr885aNCR0B1Hbt4LxJusoHNgv/bv9mU8j10Qgz6ML+ypsBelIR2i68ThuiAA
-         bto0ql6FzCjEtnz+qC8+2fnbUed+6QgG9Kt/iBN22JWTXAz6f40URj2BX5cqzfao5HrS
-         AFh/nB8upRXzXfM0M/K9XUGJPdz73ryxbWP/G+ABN26n/lNEMM/YS/i8ztP5onX2rXj2
-         DHPm7CRyEplvRYTNwkA7NCZFVRLz2Ojs2LUO+Rs2jNnccIydr8YFDZGg2AFDrPuBwqzG
-         Ic/kKSykNJZyOf/ycyllJHlc7lVqRXQrvWLhVoR3yk9jz+5tBuUusQ+OzJkm9ZiUZaWd
-         KpYg==
-X-Forwarded-Encrypted: i=1; AJvYcCXGPFqjmU6LgRracguEMyAfPbs8oY7immjLB9pmk3dOGgY0DYc+KDbN+55ukowo5AvXjgCGFWvQHjvREcjQHXuNyjmk79axBF47sqjg
-X-Gm-Message-State: AOJu0YxHsJ9XFIfxEhmxBjc2zv428ZPWE242Vtn2eQFCb0FZLuB+shLw
-	hrwAPWTKOgsnd6+hCT49Won+GBJ+gOK1eSUoA4PgI/ite2tPCP6ViTTq+iGvM9w5Dw==
-X-Google-Smtp-Source: AGHT+IHGKFPM11qIWDMaFIJA2bwG1vA4MS+XF5h1c2dKAXwKA32pFTvWuXUxR9dQ1E1iQSXrfA1vng==
-X-Received: by 2002:a05:6a21:1394:b0:1a0:ebbd:9aeb with SMTP id oa20-20020a056a21139400b001a0ebbd9aebmr5964504pzb.5.1709132547845;
-        Wed, 28 Feb 2024 07:02:27 -0800 (PST)
-Received: from ares2-ThinkPad-L13-Yoga-Gen-2.. ([2400:2410:b9a0:8400:d1cb:3c04:cf19:22d9])
-        by smtp.googlemail.com with ESMTPSA id o30-20020a63921e000000b005e49bf50ff9sm263602pgd.0.2024.02.28.07.02.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 07:02:27 -0800 (PST)
-From: Vishnu Sankar <vishnuocv@gmail.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mpearson-lenovo@squebb.ca,
-	vsankar@lenovo.com,
-	Vishnu Sankar <vishnuocv@gmail.com>
-Subject: [PATCH] platform/x86: thinkpad_acpi: Add more ThinkPads with non-standard reg address for fan
-Date: Thu, 29 Feb 2024 00:01:49 +0900
-Message-Id: <20240228150149.4799-1-vishnuocv@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="VhUxaeXu"
+Received: from authenticated-user (box.trvn.ru [194.87.146.52])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(No client certificate requested)
+	by box.trvn.ru (Postfix) with ESMTPSA id 17F9C401B2;
+	Wed, 28 Feb 2024 20:49:20 +0500 (+05)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
+	t=1709135361; bh=TXDkaVmG4OI79+ODTlB7W6xh7e9pcZZeRG8zXY6AXzw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=VhUxaeXulzylqIHcBOnJNwY4jOYMTJXvIftsBCqCYyH6bJYpqGMkNdixEF8ywO1gd
+	 YBXJs4cXAbTUzHbceGHR7lQaNudEBrUJT0i4ObkYrLbtcDxHWusSt3gzfB5Ao2m2w6
+	 SS32hXdQrrBzOIrfcMZV9JvV+7FTIlQIf7RwMg7TAko/xdQzOtcPG0qKy7vJSYSIhB
+	 a7eWrk3WbM+XGAZgA4diXytBhRufxWHFsLFioElwvPQlNH8FOYEXObh3vXfjFNQNJk
+	 b4Qb3rzba0t924LGfS6qCqPm7tceRPbeCial2GrvwJEfqh27O5Qdxw9kzRgzOnUUh3
+	 ipJ4nfXO16Y7w==
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Date: Wed, 28 Feb 2024 20:49:18 +0500
+From: Nikita Travkin <nikita@trvn.ru>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>, =?UTF-8?Q?Ilpo_J?=
+ =?UTF-8?Q?=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ cros-qcom-dts-watchers@chromium.org, Andy Gross <agross@kernel.org>, Bjorn
+ Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] power: supply: Add Acer Aspire 1 embedded
+ controller driver
+In-Reply-To: <edec3bee-8604-49a9-8e2f-6c21e852ef6c@redhat.com>
+References: <20240220-aspire1-ec-v3-0-02cb139a4931@trvn.ru>
+ <20240220-aspire1-ec-v3-2-02cb139a4931@trvn.ru>
+ <qoidm5wujjbeoc2hlraky26wuwmuaxi2atyl6ehovhvffdbfeh@g5gunqdei45m>
+ <7c429d2110dbac68d0c82c8fb8bfb742@trvn.ru>
+ <edec3bee-8604-49a9-8e2f-6c21e852ef6c@redhat.com>
+Message-ID: <c6d3d9841fe5a754e78adaf95522b434@trvn.ru>
+X-Sender: nikita@trvn.ru
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add more ThinkPads with non-standard register addresses to read fan values.
+Hans de Goede писал(а) 26.02.2024 15:59:
+> Hi,
+> 
+> +Ilpo (fellow pdx86 maintainer)
+> 
+> On 2/23/24 15:32, Nikita Travkin wrote:
+>> Sebastian Reichel писал(а) 22.02.2024 04:41:
+>>> Hi,
+>>>
+>>> On Tue, Feb 20, 2024 at 04:57:13PM +0500, Nikita Travkin wrote:
+>>>> Acer Aspire 1 is a Snapdragon 7c based laptop. It uses an embedded
+>>>> controller to control the charging and battery management, as well as to
+>>>> perform a set of misc functions.
+>>>>
+>>>> Unfortunately, while all this functionality is implemented in ACPI, it's
+>>>> currently not possible to use ACPI to boot Linux on such Qualcomm
+>>>> devices. To allow Linux to still support the features provided by EC,
+>>>> this driver reimplments the relevant ACPI parts. This allows us to boot
+>>>> the laptop with Device Tree and retain all the features.
+>>>>
+>>>> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
+>>>> ---
+>>>>  drivers/power/supply/Kconfig           |  14 +
+>>>>  drivers/power/supply/Makefile          |   1 +
+>>>>  drivers/power/supply/acer-aspire1-ec.c | 453 +++++++++++++++++++++++++++++++++
+>>>
+>>> I think this belongs into drivers/platform, as it handles all bits of
+>>> the EC.
+>>>
+>>
+>> Hm, I initially submitted it to power/supply following the c630 driver,
+>> but I think you're right... Though I'm not sure where in platform/ I'd
+>> put this driver... (+CC Hans)
+>>
+>> Seems like most of the things live in platform/x86 but there is no i.e.
+>> platform/arm64...
+>>
+>> Hans, (as a maintainer for most things in platform/) what do you think
+>> would be the best place to put this (and at least two more I'd expect)
+>> driver in inside platform/? And can we handle it through the
+>> platform-driver-x86 list?
+> 
+> I guess that adding a drivers/platform/aarch64 map for this makes
+> sense, with some comments in the Makefile and in the Kconfig
+> help explaining that this is for PC/laptop style EC drivers,
+> which combine multiple logical functions in one, only!
+> 
+> Assuming that we are only going to use this for such EC drivers,
+> using the platform-driver-x86 mailinglist for this makes sense
+> since that is where are the people are with knowledge of e.g.
+> userspace APIs for various typical EC functionalities.
+> 
+> It might even make sense to also use:
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git
+> 
+> As git tree for this and send pull-reqs to Linus for this
+> together with the other pdx86 for the same reasons.
+> 
+> I would be open to that as long as this is strictly limited to
+> EC (like) drivers.
 
-ThinkPads added are L13 Yoga Gen1, X13 Yoga Gen1, L380, L390, 11e Gen5 GL,
-11e Gen5 GL-R, 11e Gen5 KL-Y.
+Yes, I believe the EC are the only "boad-specific" drivers we need for
+the Windows-on-Arm devices as of today. I expect at least two more EC
+drivers to be added later.
 
-Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Then I will re-target this series to platform-driver-x86:
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 5ecd9d33250d..23b2abe44a5a 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -8767,6 +8767,13 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
- 	TPACPI_Q_LNV3('N', '3', '7', TPACPI_FAN_2CTL),  /* T15g (2nd gen) */
- 	TPACPI_Q_LNV3('R', '1', 'F', TPACPI_FAN_NS),	/* L13 Yoga Gen 2 */
- 	TPACPI_Q_LNV3('N', '2', 'U', TPACPI_FAN_NS),	/* X13 Yoga Gen 2*/
-+	TPACPI_Q_LNV3('R', '0', 'R', TPACPI_FAN_NS),	/* L380 */
-+	TPACPI_Q_LNV3('R', '1', '5', TPACPI_FAN_NS),	/* L13 Yoga Gen 1 */
-+	TPACPI_Q_LNV3('R', '1', '0', TPACPI_FAN_NS),	/* L390 */
-+	TPACPI_Q_LNV3('N', '2', 'L', TPACPI_FAN_NS),	/* X13 Yoga Gen 1 */
-+	TPACPI_Q_LNV3('R', '0', 'T', TPACPI_FAN_NS),	/* 11e Gen5 GL */
-+	TPACPI_Q_LNV3('R', '1', 'D', TPACPI_FAN_NS),	/* 11e Gen5 GL-R */
-+	TPACPI_Q_LNV3('R', '0', 'V', TPACPI_FAN_NS),	/* 11e Gen5 KL-Y */
- 	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) */
- };
- 
--- 
-2.34.1
+- Will add a new drivers/platform/aarch64/ dir with a Makefile and Kconfig
+  that would explicitly note it's only for EC-like drivers. Will update
+  the "X86 PLATFORM DRIVERS" entry in MAINTAINERS. (Or should I add a new
+  entry?)
+- Will add this driver there, also updating per the last Sebastian's
+  comments.
+- Will also move the dt binding to a new bindings/platform/ dir.
 
+Thanks!
+Nikita
+
+> 
+> Ilpo, what do you think about this ?
+> 
+> Regards,
+> 
+> Hans
+> 
