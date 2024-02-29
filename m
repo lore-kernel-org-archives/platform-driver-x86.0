@@ -1,240 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F1C7D416;
-	Thu, 29 Feb 2024 12:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F937E0F8
+	for <platform-driver-x86@vger.kernel.org>; Thu, 29 Feb 2024 13:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709211395; cv=none; b=XVQNaF0RtgnqJcreOOdy+BDTJc2Yx/D3Uk/uFfWmfTPKa3g5K/DHvfaK+fopUW15iBfGeh2hI5On5IIXtYLXYTdB0VkoXSYmp0k3AwTpfzZTITh/eYg7qnlHTkXtO4/Yt5thyUw0f7pxer0VZmfo0kHIwqMsCNjMUO2jWXB2tQw=
+	t=1709212304; cv=none; b=MgVnKVXqXIl9ZVvOiBcCmuws427Ny/klDMZaKTWoILpIu500ikzqXhgWY+UKfLMjgQgTe9IQ1U12j4TaZ+m6pNHcAIlLb7czTkN1FQLKEDNjzEy7YB9m+2ORk59LY/XAee5TFHTqbJHsjd4W4j3wfQE4HBH0s75DygF18jfy9Rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709211395; c=relaxed/simple;
-	bh=pgsvPNUAxL+aM5+vr4VnC2UxbIowObaRoVXvXN5548o=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Xbpm0aunLuIaDQakEovoEu4EyfLabb0gBxHFQdnMO8B2LoNLfnSUuIZiPr8r7kgRwdFCTD0GMo8JQRbAsiMNjoWPNlZhHOXKGY+UsJkoiqNVAyyRPIzmyNg6j2gQ4zm3hri13QVGmU3HLycuFtZncgCsnCTF6k7J85j8Xd813po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ElfHR17R; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709212304; c=relaxed/simple;
+	bh=lQEzSztbGwuMcXFF6UoVbrUM+PR6UEuexVzSDmGCcRI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=raooECKl8+nvesxUBUnSAt4Kd1jeUoEhZmnuv15m3bNeZFemCzGWuUCCJswPqTrsbB8QJEsDIdb5QPwB/OczSFcJgG/g2OULt2spQI8trr1OYUdl9jvM383VI73M1OHraIisVvh+XWnGiJU5q6hDYHiKhF+/61S4vmR45FBUnl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DcMO1HHt; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ElfHR17R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709211394; x=1740747394;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=pgsvPNUAxL+aM5+vr4VnC2UxbIowObaRoVXvXN5548o=;
-  b=ElfHR17RW4GRvUyv9lQmAf0EN6ERyF2n9wigKPZhdCz6o8xmgo3ZNB/n
-   kFGAiVEwkiXTtopXtJWC8EJiHI4qmPMkgTp5I+VpkBasRAZIkXHIaoJw/
-   1y3KPG8s4dBqvP/PgCkrxJRS2dlC8bm4KkAaS5XcUc3AIzJCwVEoXv/CL
-   QE+rGjnELre7W5jx1YsJcyRvmI5lIh81ucwPeWiOlefSmkXn1uKmAjR/6
-   bqUx5SNjJeCfEUb4bcIjmhHi0M/ymq7oII16tWx4GMxozlEWK+CJB/wPf
-   p5UVHHC4E9LFTjvlK6TXcszZKw46fX2eBEWZ2yvp/m2P/CR/hul3+UnPx
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="4258242"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="4258242"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 04:56:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="38851967"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.51.250])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 04:56:31 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 29 Feb 2024 14:56:26 +0200 (EET)
-To: Ai Chao <aichao@kylinos.cn>
-cc: Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: add lenovo generic wmi driver
-In-Reply-To: <20240229051621.12341-1-aichao@kylinos.cn>
-Message-ID: <5ec35cea-ae5f-de50-41ce-08276f053a51@linux.intel.com>
-References: <20240229051621.12341-1-aichao@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DcMO1HHt"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-412a9ea61adso6488555e9.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 29 Feb 2024 05:11:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709212301; x=1709817101; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Lg2hnToVZ/EBQAxgZOoEwHDmIEWKGQv1sU1Wb9UKAB0=;
+        b=DcMO1HHtRTX6QJOoTLOMlxgbshExarEF6zmAzlNZGW6Ffw38fZMv4hBvFm2heWxTex
+         ZNz/Y5/703WBmemRR4ODRgRIiXn5ruW+KkqY72++NnNAaLw+ioexydWpGR16diwu0rBH
+         XaDeJdL1cmWr/6uJLudpP5gjbt7OWWI4ufPrbfmMMb67IcJwILxPG08OLsWEL+bS7VQK
+         vg/ZKg7dK12DrmpDLSXEnUuGtJUcePyubOGU4IDsWVe5aqa0cNZF+kadi5A/u3zLGwYy
+         SI6/Hy4AJ/Hxq0Cn1V5v/n0a8GnQ+j4dalvUTtYCYpwF8vtPDlDp4Wb8aMfbMEp9mq02
+         tWDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709212301; x=1709817101;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lg2hnToVZ/EBQAxgZOoEwHDmIEWKGQv1sU1Wb9UKAB0=;
+        b=Loll9pTBMJuDnzxwibQAAAP2UpStm9Pmmh7+tZfTYcEEsCwhIhq0OB5clvOdosAn9R
+         G77E4Cw/oOjFA6SH2gF39YooL4gikIdFkxbfzjwDNQaLSNNq/IeXNDYkGDjc7GqizKiC
+         a5Cr7lIEMwTdZG92ze8YwT4HXNGdIo6sUQPtdwJOvZL/iRS3uAvhpINkPWAb0ld45QIY
+         xWHGV/IUUeyQ94ZVyWWPPfE1FO6rhQlKRB6n5vLq/tNjdmdKR8/geMr5E1HIIPjGpPrO
+         vcS6iNq5F99diEcffOfz4zo5JN5kiVanAyAQa+ozpN9GQNnMFmDUbg1IzTB0G39EZke3
+         Z7tQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW2i1+qiSguPFGeKJ9eo+Guks3Rl44EWV2ME2TU1BSKV0HQV5C8LXnDnsXT//Ao6rSnBezhXn9nvIq3txkiDJ+Sl9HRzANl1sTJiGbQcMWprMuE3w==
+X-Gm-Message-State: AOJu0YxIt98XtXqBw49cW6RG5lxnqFsantnj9MAWRmDCWrMgfBih1vcv
+	8j/ljyr8wnuTNgcCOMSKLhizaEqPmURRbHrImd7Sgnhx/a53VSlJ7mZLSSwNgiM=
+X-Google-Smtp-Source: AGHT+IHo6JyA2wmSz5Sf2SkJPUbSX5WC3VJIKq8+L2nyxU86/uGcghVzDXPtXTd9UjeiMZU/E3gBug==
+X-Received: by 2002:a05:600c:4587:b0:412:bdc1:d0f9 with SMTP id r7-20020a05600c458700b00412bdc1d0f9mr1300832wmo.38.1709212301127;
+        Thu, 29 Feb 2024 05:11:41 -0800 (PST)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id jp21-20020a05600c559500b004126101915esm5165227wmb.4.2024.02.29.05.11.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 05:11:40 -0800 (PST)
+Date: Thu, 29 Feb 2024 16:11:36 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Shravan Kumar Ramani <shravankr@nvidia.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Vadim Pasternak <vadimp@nvidia.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH] platform/mellanox: mlxbf-pmc: fix signedness bugs
+Message-ID: <a4af764e-990b-4ebd-b342-852844374032@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-On Thu, 29 Feb 2024, Ai Chao wrote:
+These need to be signed for the error handling to work.  The
+mlxbf_pmc_get_event_num() function returns int so int type is correct.
 
-> Add lenovo generic wmi driver to support camera button.
-> 
-> Signed-off-by: Ai Chao <aichao@kylinos.cn>
-> ---
->  drivers/platform/x86/Kconfig      |  10 +++
->  drivers/platform/x86/Makefile     |   1 +
->  drivers/platform/x86/lenovo-wmi.c | 121 ++++++++++++++++++++++++++++++
->  3 files changed, 132 insertions(+)
->  create mode 100644 drivers/platform/x86/lenovo-wmi.c
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index bdd302274b9a..fbbb8fb843d7 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1001,6 +1001,16 @@ config INSPUR_PLATFORM_PROFILE
->  	To compile this driver as a module, choose M here: the module
->  	will be called inspur-platform-profile.
->  
-> +config LENOVO_WMI
-> +	tristate "Lenovo Geneirc WMI driver"
-> +	depends on ACPI_WMI
-> +	depends on INPUT
-> +	help
-> +	This driver provides support for Lenovo WMI driver.
-> +
-> +	To compile this driver as a module, choose M here: the module
-> +	will be called lenovo-wmi.
-> +
->  source "drivers/platform/x86/x86-android-tablets/Kconfig"
->  
->  config FW_ATTR_CLASS
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 1de432e8861e..d51086552192 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
->  obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
->  obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
->  obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
-> +obj-$(CONFIG_LENOVO_WMI)	+= lenovo-wmi.o
->  
->  # Intel
->  obj-y				+= intel/
-> diff --git a/drivers/platform/x86/lenovo-wmi.c b/drivers/platform/x86/lenovo-wmi.c
-> new file mode 100644
-> index 000000000000..e8b1c401b53e
-> --- /dev/null
-> +++ b/drivers/platform/x86/lenovo-wmi.c
-> @@ -0,0 +1,121 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + *  Lenovo Generic WMI Driver
-> + *
-> + *  Copyright (C) 2018	      Ai Chao <aichao@kylinos.cn>
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/device.h>
-> +#include <linux/input.h>
-> +#include <linux/module.h>
-> +#include <linux/wmi.h>
-> +
-> +#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
-> +
-> +static u8 camera_mode;
-> +
-> +struct lenovo_wmi_priv {
-> +	struct input_dev *idev;
-> +};
-> +
-> +static ssize_t camerabutton_show(struct device *dev,
-> +				 struct device_attribute *attr, char *buf)
-> +{
-> +	return sprintf(buf, "%u\n", camera_mode);
+Fixes: 1ae9ffd303c2 ("platform/mellanox: mlxbf-pmc: Cleanup signed/unsigned mix-up")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+The code in mlxbf_pmc_valid_range() has a check for negatives but that
+has a signedness bug too.  Fortunately "(u32)-EINVAL + 8" will not
+result in an integer overflow so the offset is treated as invalid.
 
-sysfs_emit()
+ drivers/platform/mellanox/mlxbf-pmc.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-> +}
-> +
-> +DEVICE_ATTR_RO(camerabutton);
-> +
-> +static struct attribute *lenovo_wmi_attrs[] = {
-> +	&dev_attr_camerabutton.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group lenovo_wmi_group = {
-> +	.attrs = lenovo_wmi_attrs,
-> +};
-> +
-> +const struct attribute_group *lenovo_wmi_groups[] = {
-> +	&lenovo_wmi_group,
-> +	NULL,
-> +};
-> +
-> +static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
-> +{
-> +	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-> +
-> +	if (obj->type == ACPI_TYPE_BUFFER) {
-> +		camera_mode = obj->buffer.pointer[0];
-> +		input_report_key(priv->idev, KEY_CAMERA, 1);
-> +		input_sync(priv->idev);
-> +		input_report_key(priv->idev, KEY_CAMERA, 0);
-> +		input_sync(priv->idev);
-> +	} else {
-> +		dev_info(&wdev->dev, "Bad response type %d\n", obj->type);
-> +	}
-> +}
-> +
-> +static int lenovo_wmi_input_setup(struct wmi_device *wdev)
-> +{
-> +	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-> +
-> +	priv->idev = devm_input_allocate_device(&wdev->dev);
-> +	if (!priv->idev)
-> +		return -ENOMEM;
-> +
-> +	priv->idev->name = "Lenovo WMI Camera Button";
-> +	priv->idev->phys = "wmi/input0";
-> +	priv->idev->id.bustype = BUS_HOST;
-> +	priv->idev->dev.parent = &wdev->dev;
-> +	priv->idev->evbit[0] = BIT_MASK(EV_KEY);
-> +	priv->idev->keybit[BIT_WORD(KEY_CAMERA)] = BIT_MASK(KEY_CAMERA);
-> +
-> +	return input_register_device(priv->idev);
-> +}
-> +
-> +static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
-> +{
-> +	struct lenovo_wmi_priv *priv;
-> +	int err;
-> +
-> +	priv = devm_kzalloc(&wdev->dev, sizeof(struct lenovo_wmi_priv),
-> +			    GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	dev_set_drvdata(&wdev->dev, priv);
-> +
-> +	err = lenovo_wmi_input_setup(wdev);
-> +	return err;
-> +}
-> +
-> +static void lenovo_wmi_remove(struct wmi_device *wdev)
-> +{
-> +	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-> +
-> +	input_unregister_device(priv->idev);
-> +}
-> +
-> +static const struct wmi_device_id lenovo_wmi_id_table[] = {
-> +	{ .guid_string = WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
-> +	{  }
-> +};
-> +
-> +static struct wmi_driver lenovo_wmi_driver = {
-> +	.driver = {
-> +		.name = "lenovo-wmi",
-> +		.dev_groups = lenovo_wmi_groups,
-> +	},
-> +	.id_table = lenovo_wmi_id_table,
-> +	.probe = lenovo_wmi_probe,
-> +	.notify = lenovo_wmi_notify,
-> +	.remove = lenovo_wmi_remove,
-> +};
-> +
-> +module_wmi_driver(lenovo_wmi_driver);
-> +
-> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
-> +MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
-> +MODULE_DESCRIPTION("Lenovo Generic WMI Driver");
-> +MODULE_LICENSE("GPL v2");
-
-"GPL" is enough for MODULE_LICENSE, more specific information is given 
-only within the SPDX header.
-
+diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+index 250405bb59a7..bc91423c96b9 100644
+--- a/drivers/platform/mellanox/mlxbf-pmc.c
++++ b/drivers/platform/mellanox/mlxbf-pmc.c
+@@ -1496,8 +1496,9 @@ static ssize_t mlxbf_pmc_counter_show(struct device *dev,
+ {
+ 	struct mlxbf_pmc_attribute *attr_counter = container_of(
+ 		attr, struct mlxbf_pmc_attribute, dev_attr);
+-	unsigned int blk_num, cnt_num, offset;
++	unsigned int blk_num, cnt_num;
+ 	bool is_l3 = false;
++	int offset;
+ 	u64 value;
+ 
+ 	blk_num = attr_counter->nr;
+@@ -1530,9 +1531,10 @@ static ssize_t mlxbf_pmc_counter_store(struct device *dev,
+ {
+ 	struct mlxbf_pmc_attribute *attr_counter = container_of(
+ 		attr, struct mlxbf_pmc_attribute, dev_attr);
+-	unsigned int blk_num, cnt_num, offset, data;
++	unsigned int blk_num, cnt_num, data;
+ 	bool is_l3 = false;
+ 	u64 evt_num;
++	int offset;
+ 	int err;
+ 
+ 	blk_num = attr_counter->nr;
+@@ -1612,8 +1614,9 @@ static ssize_t mlxbf_pmc_event_store(struct device *dev,
+ {
+ 	struct mlxbf_pmc_attribute *attr_event = container_of(
+ 		attr, struct mlxbf_pmc_attribute, dev_attr);
+-	unsigned int blk_num, cnt_num, evt_num;
++	unsigned int blk_num, cnt_num;
+ 	bool is_l3 = false;
++	int evt_num;
+ 	int err;
+ 
+ 	blk_num = attr_event->nr;
 -- 
- i.
+2.43.0
 
