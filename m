@@ -1,46 +1,46 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2040.outbound.protection.outlook.com [40.107.100.40])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2085.outbound.protection.outlook.com [40.107.223.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468767AE54
-	for <platform-driver-x86@vger.kernel.org>; Thu, 29 Feb 2024 11:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BD679DA6
+	for <platform-driver-x86@vger.kernel.org>; Thu, 29 Feb 2024 11:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.85
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709204479; cv=fail; b=VFz0fGHg061QhxCQfLqOJ+EOoxDy8UlaH1WlWxgpBWITIv8I72RpUBvC7rPSncYp5O6Ue+05bJMwU2eGu41HF9NB93IRM9png0GP1A8/T+cZ3I91qqVhqfljEpDsKURm/+30MQztFab7hOfN9jV7QLnOYL4g/7lI57wd6ajTugU=
+	t=1709204488; cv=fail; b=EDiqQpnODmY5DV5Eb9/OqwddKFp45C/TPFBnzMWK+PzE+Gz5/bHOactLSMAy5AiKX/nExRwN0MFBZr9yXglcDyzhdkWIDGvfXJtTdgCWcR/sKs/RfLUGnUTAI7xlbT5B7dZ5UjmKdEoKaGc7NR8E8PthT30NUNhZZSH9ev0TWcw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709204479; c=relaxed/simple;
-	bh=CcjLFYAGsnjTF24Z8aLae+s6YnTYSBKEncipSigZJds=;
+	s=arc-20240116; t=1709204488; c=relaxed/simple;
+	bh=ST7Nwg1iFWCiGD0S7qbCKkhpj80BI/7zOfiiTOgp+Bw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FeNyl49dZlM+FVTRQAHIcZ8retAB2WF9fb8Mc8fYm0k0uSEcmh4Rp1PzH/8Ye4Ucx1n+UDJaQCH1cN52L3Ma6l5inagTXmhEqkZelrjIapAU2IpihQN5BXX0B04iHaJINe/pMfl+dgcYLk7aoAOzbUJqRunsnpBysOXLZcZLDZM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cxSKQf1S; arc=fail smtp.client-ip=40.107.100.40
+	 MIME-Version:Content-Type; b=DZm26CmoiBXeCYeZv0ZCHqi+BiWMWO+Co49ENr9mLfCL6RlxfjRkmQi3Ps0w//eYpuZAkS4LrXv08h65zUHCx2YgOqn5+RYwPE+Q/n5ezUVf3f5n11fGM4nrFPwciwn7yYrq2LQYqouRqn96J4P2cF5vLfoHLfxC9VQvFlmLP6o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=EfDKvTBa; arc=fail smtp.client-ip=40.107.223.85
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cxSKQf1S"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="EfDKvTBa"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ESeNzpZFww5r70St0CuzJsLRjsWP3mPy9530ILLmSwHwyHUhWHoeEM9SFMcoxeqkvrY2lQNUuZ5oYIrQVNmY+vGzPXNzfm6yveeSN3vQCEo8A9W4FsIoWKkezu74yKRtoUtnbVtYPtHoJgumsDhFM1oXXx4xUMRDXjCb6OE9KC4e5GZw4GLUpmUri2GP4OiXNdi7h3VuO+gqSlnD7VP+4HDH4HUAWt76vybW7gqIxf9MouLmQDhWY+6MGKlaCDDo4VJ6L32zOJqkMEoWJcsFvkAIG4tn6gTJv0DFxzal2sdwcDrXvVGvRCthJSa4O3Wjxbg4I6/2WLHU7sT7y8yx5w==
+ b=IXhg2KSBY3cjm/GGOqclS5cuZDEklFZQqV1rpF+KOVgRL+FakaSOPfuf0DNiC3s7QTSR9Xzt9VgKFdY2kCof74Ff5DLocpfT0+H5THw2HDPxRaX74zwvyao3/E8USeeDu02j+1udL6EfZOxYChyVynPEimXxTYFuiLAmGz+Hw+KkuyuTGpZZqIM/KSaM0LI4ED1xKzKK+kMr6JyxAorUhVGIMWp2pDutRS5edf+o91WLbVu5yy5G7fYbz/4uCn1FUwxnGRRALon/YjScjJ1j9+wWAojEbh3c3s3gZ+7xv32gKhFX8z62jpC7ZmRgJvrEcd0vlHluneW8LmeU9CnhHg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MsHqzKrdKy5c1HTQUUE677ojkD29pktUNtetjI3LEC0=;
- b=Tjop6dfx7duDiVSizXRAm6rH02NZoZnQnuL2TSnKyKeJhkHBqenLPR80ITIFB1+KqWhttaky+6jtRIlkPJ89+9CBSpXb67k0YMqY4Es9eioYv5M380ofOTcs/7Q9OqFT1+Qm/Xkv+/zQXu2pBNTUB2ZLJysO47e6OkZMjVbTieucofx3vcaIF9RXTQa60fpKo+44w8QwJpymCENW0Yay7FJP/tnLlN4pK4HOMBDvYlZ8pchNDrcVLFUIY9i3TCJOG4VS8QLarkAgCqfIQ5GBm3dNDiQeTKy7cxp+md18QTr8ICLG6tp/+XyqhoPQ/RimXYdqf9acADDcXTcOnBN9pA==
+ bh=J5SMekNnpez+YXFfCn1xq1+j6uJLxy1QHV+SH0933eA=;
+ b=nmXEZxh+XuMgFmoe3IMauQaNmfwqx5Q8dDdTTbd4AqFHuEJPOfdw6TZBK38KETwtXTA/GYMEs4JnISmsPzhdM4LY4AdpblWUCAATnYnZnhCrXjFa/lvOOSOt5oBts2VBryzPXtkaCVgFP3DcHRiwZoWJplN5uoiwgr4vIY5gJMIszSWjYjv6vcWHmI/IgVgoUBqjmO8no5uNtROC3QUZ7HTT1zRFv+L3g9ys1l/9akVv2hi/qbG1KQBXIL6V7HFejyjF1zZp0pzcalRpHC54Q76sZZFaiu6zwG1+oFmgROOzcteIAIF4eaT5c2DgncZ/CDXTOMV7YmqfCNQQsQX3Xw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MsHqzKrdKy5c1HTQUUE677ojkD29pktUNtetjI3LEC0=;
- b=cxSKQf1SbNSx2FzA4m8voBHXfky2BlJ052SuUjHgxGZ4oOAeHsJoQ+EaQ3+Si42rCDNLTZEko7m4+cE8wP4UE/mifQJMa8AIRM4yQp/tZj6gHV1sGFRG7TNUTgQZPdYnSTDb5RfTjLEeCZxC9cld0o33HtfnbrNiG9CbkLHHOmM=
-Received: from CYXPR02CA0009.namprd02.prod.outlook.com (2603:10b6:930:cf::17)
- by SA1PR12MB8947.namprd12.prod.outlook.com (2603:10b6:806:386::7) with
+ bh=J5SMekNnpez+YXFfCn1xq1+j6uJLxy1QHV+SH0933eA=;
+ b=EfDKvTBaA2huj3c3KCypewMaiczH3B/dst1SoWfAbd9K8JCXwwTyyzToBsoFzoZVu6iDLzeMKWsIY3dU/Zfd90njHQ6ixcVK4Yzc4A2UnktK7QcA9e+OYEgyJdW2NVvsWhpMAXm43oqVZwcHSCHdbOn0hKykoCsgLxYMQEgBXfY=
+Received: from CYXPR02CA0004.namprd02.prod.outlook.com (2603:10b6:930:cf::7)
+ by DM3PR12MB9288.namprd12.prod.outlook.com (2603:10b6:0:4a::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.41; Thu, 29 Feb
- 2024 11:01:15 +0000
+ 2024 11:01:22 +0000
 Received: from CY4PEPF0000E9D5.namprd05.prod.outlook.com
- (2603:10b6:930:cf:cafe::ac) by CYXPR02CA0009.outlook.office365.com
- (2603:10b6:930:cf::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.30 via Frontend
- Transport; Thu, 29 Feb 2024 11:01:14 +0000
+ (2603:10b6:930:cf:cafe::a2) by CYXPR02CA0004.outlook.office365.com
+ (2603:10b6:930:cf::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.32 via Frontend
+ Transport; Thu, 29 Feb 2024 11:01:22 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,18 +50,18 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  CY4PEPF0000E9D5.mail.protection.outlook.com (10.167.241.76) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7292.25 via Frontend Transport; Thu, 29 Feb 2024 11:01:09 +0000
+ 15.20.7292.25 via Frontend Transport; Thu, 29 Feb 2024 11:01:16 +0000
 Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 29 Feb
- 2024 04:59:58 -0600
+ 2024 05:00:00 -0600
 From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
 CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>, "Shyam
  Sundar S K" <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH RESEND v2 3/7] platform/x86/amd/pmf: Add support to get sbios requests in PMF driver
-Date: Thu, 29 Feb 2024 16:28:57 +0530
-Message-ID: <20240229105901.455467-4-Shyam-sundar.S-k@amd.com>
+Subject: [PATCH RESEND v2 4/7] platform/x86/amd/pmf: Add support to notify sbios heart beat event
+Date: Thu, 29 Feb 2024 16:28:58 +0530
+Message-ID: <20240229105901.455467-5-Shyam-sundar.S-k@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240229105901.455467-1-Shyam-sundar.S-k@amd.com>
 References: <20240229105901.455467-1-Shyam-sundar.S-k@amd.com>
@@ -77,86 +77,194 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D5:EE_|SA1PR12MB8947:EE_
-X-MS-Office365-Filtering-Correlation-Id: 231c8995-58a4-482e-9979-08dc3915bf7b
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D5:EE_|DM3PR12MB9288:EE_
+X-MS-Office365-Filtering-Correlation-Id: e5de840f-e2de-4887-007c-08dc3915c432
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	P6BidDd5v0pLknMzTFuwjTtwcct4dlk1Fygtmc3zOm0bBfdWXqDakPXpQWuGifmNILYSy/T6g8LPVyA2AKnmE8vnBfoc1hjihtpHbLhQ6vpDioxOsY7zeZhOarki0OCpYLApJdgmBTPdzhD0bszZVfE5RkOclefXl/rtnxL6NeXY3fkdyKA6+zwhPAB3JB5IMS/pE7DDsJTWyv81X4czlNWTe/eQPYxSihlvvadjA76lx6pppNywknC+ZhoLos02X9ALcju28AgC8RF2OBxC2vS69dxEACqpcXrdxPRnfFBiXeOyzn7Gf6+f3wq9hH13A1RC+pf6M3qEXyCMvaRWOFajTJ1muq9/K2gam3lyPqvwSHyZ9n83uzzgxjNRmMGebpO7VH96T8iAIubgemlLDR4moO9OpQwYnszznlRSVsQJgR7Qek3P5MQzeJElbqDk944unau+ohilqhimV2n9UA9Xr9YBwxdHcX7K/7H7uMLLRKXziQqsQO8b3IqvC6KLCzAj3+mG7TexDG0asDxXGSbQkmcBFmXtptbY9Pmoa82sr/JIrkNsNUPY4bWJ8Z4KCUGqV/iqQT7aolIB9BMqwh1Rch+q4ZDCsyUz0X1FFGskOm/y8A/UGW7yZYInHVYgwVw8VgH5mPzsehSfh7YmKSoEY7HcLnUxhVRIVRc1aKjVCG5TH0/o3A6iHckuSBiaxESpwcb0GTW//NFrZAV9xScL+ywrvb1kMk2Q6Sh7GbxTrowHu4zmTHHj1otYe7wo
+	DsUpAKZu+ml0oO8yiP0HfRims3u1A1l/OQWVJYs+dQqrZftUuotSC6z5UYJ3Q3r8mKlJHRSNrMJmLFI3zu38zguZ6WHZe/dLeNRqgVbYq3GMoyQ0oc02venYnhgRDzq7a0VC4Y120gyc4adzSpQraypZZ3pnGTsyJc3yLEcXQvRp7QWeWWBqYb9W4IywZ/lyJWs5yvyVOr9aa69flDz2RuXKrx2ED4iRmoPLW3E6JaNfmcdSOPTWKImfWCuXjC8r2NWzKaTJF5zB0+qtd89h/ONlB7ohnLNVkb/20uBfmyYi4XO1M2lNPuKJT8ppD7aNyC3JF2V2JAMZWqH/Htpaw1OyAefcefBBsbhkTAO3FL98aMe5i8P03s7CfVQPBjsQLGLx38wSK875SG/QNScQA0IknL2bIVD6XdLyO2woFDDl1HSGyMZR1nMqXIWG+3I5q3450P0Da8lOxhAAdoTolr9F+XcNZes4eactmChJNhNdEIbOewIuew7olF3rC8sDZcMvO8MCQO0ST80VhTCxljWo3bHTcfzVId/BlWb6MLi3/gehaksmJs+8qgDOkzSTf+PsItXOY/ZrCJyOiARiaBQW++HoT4onRleocV1JJxAmYtIVo+009Cqz/XHmafI7SDc6VoUZKTHroihtec+hnbpWnbv3eW+XD94fK0cLcKE+xyZ4cQ4NiaAO6SgsyDa4FVjcztx7ZbXKLJxE64lwd+lFRaJhqbVtcfB7HMI5V2iwJCYoXW4AbcQrHdRlzYzk
 X-Forefront-Antispam-Report:
 	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 11:01:09.4256
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 11:01:16.8475
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 231c8995-58a4-482e-9979-08dc3915bf7b
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5de840f-e2de-4887-007c-08dc3915c432
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	CY4PEPF0000E9D5.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8947
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9288
 
-Update the APMF function index 2 for family 1Ah, that gets the
-information of SBIOS requests (like the pending requests from BIOS,
-custom notifications, updation of power limits etc).
+Add support for newer revision of the heart beat notify events.
+This event is used to notify to the OEM BIOS on driver
+load/unload/suspend/resume scenarios.
+
+If OEM BIOS does not receive the heart beat event from PMF driver, OEM
+BIOS shall conclude that PMF driver is no more active and BIOS will
+update to the legacy system power thermals.
 
 Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
 Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
 Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 ---
- drivers/platform/x86/amd/pmf/acpi.c |  5 +++++
- drivers/platform/x86/amd/pmf/pmf.h  | 13 +++++++++++++
- 2 files changed, 18 insertions(+)
+ drivers/platform/x86/amd/pmf/acpi.c | 41 +++++++++++++++++++++++++++--
+ drivers/platform/x86/amd/pmf/core.c | 10 +++++++
+ drivers/platform/x86/amd/pmf/pmf.h  | 17 ++++++++++++
+ 3 files changed, 66 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-index 1f287a147c57..13af83b187ac 100644
+index 13af83b187ac..f0360eea81e6 100644
 --- a/drivers/platform/x86/amd/pmf/acpi.c
 +++ b/drivers/platform/x86/amd/pmf/acpi.c
-@@ -166,6 +166,11 @@ int apmf_get_auto_mode_def(struct amd_pmf_dev *pdev, struct apmf_auto_mode *data
- 	return apmf_if_call_store_buffer(pdev, APMF_FUNC_AUTO_MODE, data, sizeof(*data));
+@@ -140,6 +140,43 @@ static void apmf_sbios_heartbeat_notify(struct work_struct *work)
+ 	kfree(info);
  }
  
-+int apmf_get_sbios_requests_v2(struct amd_pmf_dev *pdev, struct apmf_sbios_req_v2 *req)
++int amd_pmf_notify_sbios_heartbeat_event_v2(struct amd_pmf_dev *dev, u8 flag)
 +{
-+	return apmf_if_call_store_buffer(pdev, APMF_FUNC_SBIOS_REQUESTS, req, sizeof(*req));
++	struct sbios_hb_event_v2 args = { };
++	struct acpi_buffer params;
++	union acpi_object *info;
++
++	args.size = sizeof(args);
++
++	switch (flag) {
++	case ON_LOAD:
++		args.load = 1;
++		break;
++	case ON_UNLOAD:
++		args.unload = 1;
++		break;
++	case ON_SUSPEND:
++		args.suspend = 1;
++		break;
++	case ON_RESUME:
++		args.resume = 1;
++		break;
++	default:
++		dev_dbg(dev->dev, "Failed to send v2 heartbeat event, flag:0x%x\n", flag);
++		return -EINVAL;
++	}
++
++	params.length = sizeof(args);
++	params.pointer = &args;
++
++	info = apmf_if_call(dev, APMF_FUNC_SBIOS_HEARTBEAT_V2, &params);
++	if (!info)
++		return -EIO;
++
++	kfree(info);
++	return 0;
 +}
 +
- int apmf_get_sbios_requests(struct amd_pmf_dev *pdev, struct apmf_sbios_req *req)
+ int apmf_update_fan_idx(struct amd_pmf_dev *pdev, bool manual, u32 idx)
  {
- 	return apmf_if_call_store_buffer(pdev, APMF_FUNC_SBIOS_REQUESTS,
+ 	union acpi_object *info;
+@@ -327,7 +364,7 @@ void apmf_acpi_deinit(struct amd_pmf_dev *pmf_dev)
+ {
+ 	acpi_handle ahandle = ACPI_HANDLE(pmf_dev->dev);
+ 
+-	if (pmf_dev->hb_interval)
++	if (pmf_dev->hb_interval && pmf_dev->pmf_if_version == PMF_IF_V1)
+ 		cancel_delayed_work_sync(&pmf_dev->heart_beat);
+ 
+ 	if (is_apmf_func_supported(pmf_dev, APMF_FUNC_AUTO_MODE) &&
+@@ -351,7 +388,7 @@ int apmf_acpi_init(struct amd_pmf_dev *pmf_dev)
+ 		goto out;
+ 	}
+ 
+-	if (pmf_dev->hb_interval) {
++	if (pmf_dev->hb_interval && pmf_dev->pmf_if_version == PMF_IF_V1) {
+ 		/* send heartbeats only if the interval is not zero */
+ 		INIT_DELAYED_WORK(&pmf_dev->heart_beat, apmf_sbios_heartbeat_notify);
+ 		schedule_delayed_work(&pmf_dev->heart_beat, 0);
+diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+index 2230bc2b1f59..5e52eb32ab2b 100644
+--- a/drivers/platform/x86/amd/pmf/core.c
++++ b/drivers/platform/x86/amd/pmf/core.c
+@@ -300,6 +300,9 @@ static int amd_pmf_suspend_handler(struct device *dev)
+ 	if (pdev->smart_pc_enabled)
+ 		cancel_delayed_work_sync(&pdev->pb_work);
+ 
++	if (is_apmf_func_supported(pdev, APMF_FUNC_SBIOS_HEARTBEAT_V2))
++		amd_pmf_notify_sbios_heartbeat_event_v2(pdev, ON_SUSPEND);
++
+ 	return 0;
+ }
+ 
+@@ -317,6 +320,9 @@ static int amd_pmf_resume_handler(struct device *dev)
+ 	if (pdev->smart_pc_enabled)
+ 		schedule_delayed_work(&pdev->pb_work, msecs_to_jiffies(2000));
+ 
++	if (is_apmf_func_supported(pdev, APMF_FUNC_SBIOS_HEARTBEAT_V2))
++		amd_pmf_notify_sbios_heartbeat_event_v2(pdev, ON_RESUME);
++
+ 	return 0;
+ }
+ 
+@@ -444,6 +450,8 @@ static int amd_pmf_probe(struct platform_device *pdev)
+ 	amd_pmf_dbgfs_register(dev);
+ 	amd_pmf_init_features(dev);
+ 	apmf_install_handler(dev);
++	if (is_apmf_func_supported(dev, APMF_FUNC_SBIOS_HEARTBEAT_V2))
++		amd_pmf_notify_sbios_heartbeat_event_v2(dev, ON_LOAD);
+ 
+ 	dev_info(dev->dev, "registered PMF device successfully\n");
+ 
+@@ -455,6 +463,8 @@ static void amd_pmf_remove(struct platform_device *pdev)
+ 	struct amd_pmf_dev *dev = platform_get_drvdata(pdev);
+ 
+ 	amd_pmf_deinit_features(dev);
++	if (is_apmf_func_supported(dev, APMF_FUNC_SBIOS_HEARTBEAT_V2))
++		amd_pmf_notify_sbios_heartbeat_event_v2(dev, ON_UNLOAD);
+ 	apmf_acpi_deinit(dev);
+ 	amd_pmf_dbgfs_unregister(dev);
+ 	mutex_destroy(&dev->lock);
 diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-index 4364af72a7a3..f11d2a348696 100644
+index f11d2a348696..5cad11369697 100644
 --- a/drivers/platform/x86/amd/pmf/pmf.h
 +++ b/drivers/platform/x86/amd/pmf/pmf.h
-@@ -116,6 +116,18 @@ struct apmf_sbios_req {
- 	u8 skin_temp_hs2;
- } __packed;
+@@ -30,6 +30,7 @@
+ #define APMF_FUNC_STATIC_SLIDER_GRANULAR       9
+ #define APMF_FUNC_DYN_SLIDER_AC				11
+ #define APMF_FUNC_DYN_SLIDER_DC				12
++#define APMF_FUNC_SBIOS_HEARTBEAT_V2			16
  
-+struct apmf_sbios_req_v2 {
+ /* Message Definitions */
+ #define SET_SPL				0x03 /* SPL: Sustained Power Limit */
+@@ -85,6 +86,21 @@
+ 
+ #define PMF_IF_V1		1
+ 
++struct sbios_hb_event_v2 {
 +	u16 size;
-+	u32 pending_req;
-+	u8 rsvd;
-+	u32 update_ppt_pmf;
-+	u32 update_ppt_pmf_apu_only;
-+	u32 update_stt_min;
-+	u8 update_stt_apu;
-+	u8 update_stt_hs2;
-+	u32 custom_policy[10];
++	u8 load;
++	u8 unload;
++	u8 suspend;
++	u8 resume;
 +} __packed;
 +
- struct apmf_fan_idx {
++enum sbios_hb_v2 {
++	ON_LOAD,
++	ON_UNLOAD,
++	ON_SUSPEND,
++	ON_RESUME,
++};
++
+ /* AMD PMF BIOS interfaces */
+ struct apmf_verify_interface {
  	u16 size;
- 	u8 fan_ctl_mode;
-@@ -612,6 +624,7 @@ void amd_pmf_init_auto_mode(struct amd_pmf_dev *dev);
- void amd_pmf_deinit_auto_mode(struct amd_pmf_dev *dev);
- void amd_pmf_trans_automode(struct amd_pmf_dev *dev, int socket_power, ktime_t time_elapsed_ms);
- int apmf_get_sbios_requests(struct amd_pmf_dev *pdev, struct apmf_sbios_req *req);
-+int apmf_get_sbios_requests_v2(struct amd_pmf_dev *pdev, struct apmf_sbios_req_v2 *req);
+@@ -600,6 +616,7 @@ int amd_pmf_get_power_source(void);
+ int apmf_install_handler(struct amd_pmf_dev *pmf_dev);
+ int apmf_os_power_slider_update(struct amd_pmf_dev *dev, u8 flag);
+ int amd_pmf_set_dram_addr(struct amd_pmf_dev *dev, bool alloc_buffer);
++int amd_pmf_notify_sbios_heartbeat_event_v2(struct amd_pmf_dev *dev, u8 flag);
  
- void amd_pmf_update_2_cql(struct amd_pmf_dev *dev, bool is_cql_event);
- int amd_pmf_reset_amt(struct amd_pmf_dev *dev);
+ /* SPS Layer */
+ int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf);
 -- 
 2.25.1
 
