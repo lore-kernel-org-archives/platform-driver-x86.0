@@ -1,130 +1,93 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80EA88625A;
-	Wed, 28 Feb 2024 21:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DF115B1;
+	Thu, 29 Feb 2024 00:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709156624; cv=none; b=L0+VXR5LMm6jUlliSOYkeLVmQGoa2gCqsGmTvs7egjALRtpvUVToCeQ4Zzv0rxHjFfnkv9abGbkjN7bf28NOiVjQO1W/4SS2IVrp0PduFnFg1L9Lr2wkEaRPYIpXzXBRg56u2u4qwJyl4U199sNBqZA7i8LKqcyzoYLlZ5FAAL4=
+	t=1709166433; cv=none; b=a3tH/2kyoLlFGg9isR/mU2CBSLuEXPqiFcADsH2OceSOqc5TmxsXBxBovybERYu+N1/qa1ookU1cxRmWIXjAsTXB+8w0/+EFuyhYW5H1y6ExS89O+CQUJ2OoqejdceZDmzfFtgPUmvDiWS3963plFVMLr9cPIJ1mc+w9d2M5VK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709156624; c=relaxed/simple;
-	bh=aM7XKGX0np7tp8gG7UR7aonJU+lXyXuJtFBlWXo9ZKw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V0JPfB9MDRwHQSNWp6oku7OssYyiEMJSeyZ5PAulFf0b5WLK3PzPVhckkFaHPeUQgG+pa4T1a84eFnbv4PO3O4AeYd4tM3/j4IyPGDQ07PBdWAxgCD2HLoyuxbALvdWfEU7JVdC1G7+4KezRN233AfmTew1uOHqTfiiJTy65Ocg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jw59jCoB; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709166433; c=relaxed/simple;
+	bh=6dE0XlBWX4tvzDq8lQshCJ55gvJcczOTwWaRKM0Khy0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=R+VSnrfpkAgRncBz3iczpfV+Pq3nu1QC4ehx84JJXa9b3ZS3yxS48gfxCzbQtpe4OoONjj4PujlpdMD9099kjIaziUi6q4ruW4sj/5Pzh5k0ft0Y5/vTe4RlmhTYXr14PQzXHtmJUUWPBbJ4oQPSaIqmrJj3wJSzux6D6UZkRGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CjWpyBL/; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jw59jCoB"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5d3912c9a83so132581a12.3;
-        Wed, 28 Feb 2024 13:43:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709156623; x=1709761423; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4MROf+F57WlYpsW/TTfDlqwVn7p2q2yEa3HrwJ6r+kg=;
-        b=Jw59jCoBap6tUSstSIEBKzbMuTEvTMkNRGNMaNQgdsddzqpdc1cZaBtmrsvng+/fjq
-         XC0LMwiYEwnSP02aqOCZ2qKH1bkvhMY8OLcE/nRTwWRoCuc90UJ/NySsQkjNfD035Wt/
-         S2p4f6AdnKR5lK3Zs7N2m1Pu9oahgo+5QNfs4C+sW6edUsvNTwAu9Zgwx4WBLfNi4hs3
-         BewO+R894UOGvlWI2vpjLJ5scgBKHK3bjFNAbTWco83oddDFshUWlN3ScU+3LSbaNVwx
-         RDACwdSrlThjt7ZMDr0wabrsGZmXkiVaj8SjFbFn8jkl6DTHImRQD2nkSTvRaEfqlIKY
-         E3kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709156623; x=1709761423;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4MROf+F57WlYpsW/TTfDlqwVn7p2q2yEa3HrwJ6r+kg=;
-        b=g/N7AzboIQN1TSGkDWwGvu1EkjpFFp4W8gIA6z8vyiEwf8FjiHnjPTElZZUY88wYgE
-         0pmL8hi8JGm7kJTDM1wRXvuOUYGqsDuweasSqulgI+x6mKyGf7pLheaLQXeyQAPueUMN
-         k06g3dX5c0FqgCZ3Bz1ctaYAW1jVQW0BqUEyik6jfFHaiosiYGg5Kmr1g+RTPP5rL5D3
-         AVxl65a+xMXVCPeN58OGiys7G81g2CWmXvPpY7BVycTYVcgCVe9cxKH6+zTy6LYYjt+Y
-         y22TrDZI1nHY2uYiDOcg6OFKFkVVsF8Kay9tTMn0P3qanFw4H3tHSMtBYIlnD8W+zbcy
-         kpdg==
-X-Forwarded-Encrypted: i=1; AJvYcCXJauhuwY/iV8+iniW3oCfiNQZf8u0NGeiFV3b/EN+ElPTynZZ6kgq2xKgnDYLWDA2hxumiTQ22ivdYDYS8b7eAuM6uzFsnvvUp6oX4sL2AZfkG7/rlHQATCzQ9Xza+zIC4LYAbx1YKXhf2MHS2Eq9OHw==
-X-Gm-Message-State: AOJu0YwcmaFjg154kGfQ9kYk8q6BSYLrG3SEd1FyoNMKMTcr9wWNBXe3
-	bV06dZPW3H0qs/xXCYjx4SpcEPd4patFfrOT/fyInA0x+X5SD5V+Tx5iv5q6a4WTxhI3/Rt/TEL
-	/03bn0SZDE59b+l+IASZGRSTU6kM=
-X-Google-Smtp-Source: AGHT+IHYU/yGXd4MDshpKRx80tk5wSCpTZYb44+puq4sjffOz7w4cXohR+y1Cw54XwuCp12wOXwTWBNYsYnp3p6XwlA=
-X-Received: by 2002:a17:90a:6c03:b0:29a:ee72:1058 with SMTP id
- x3-20020a17090a6c0300b0029aee721058mr417989pjj.35.1709156622437; Wed, 28 Feb
- 2024 13:43:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CjWpyBL/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709166432; x=1740702432;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6dE0XlBWX4tvzDq8lQshCJ55gvJcczOTwWaRKM0Khy0=;
+  b=CjWpyBL/ISc4XLxm1QH7MhR93wbW8/kyDNMzd4JehabyLwGXZyVy+Uhd
+   jJRy/rUIH+YM8m6eYnhWxOyQE7c5Ztt9nUCx4a4u6PMB6gW/Tqta1ISuY
+   IRAN6IxAmFfN8aHJKYXvUYj2W8ZBVayvYoR0B74ix8KsM0OilpdSnxUQ3
+   Hs35EXFmDLbmTpszGuYT8iXgu9Tih7ky0Bn8mAIK7E79g64M1asVKVPBi
+   s7NfR7YLVudUC9ir7qds5L5xIREng4s6TMq7tym8Ad/MWntiASwfg/1Ha
+   LcTE4wJAA6UYb7WC5GdOmP/osU3mvRWpZI1jSkKtPOQDsFMCQjz47UXT2
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="4188786"
+X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
+   d="scan'208";a="4188786"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 16:27:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
+   d="scan'208";a="7666801"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
+  by orviesa009.jf.intel.com with ESMTP; 28 Feb 2024 16:27:11 -0800
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: hdegoede@redhat.com,
+	markgross@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	andriy.shevchenko@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] platform/x86: ISST: Allow reading core-power state on HWP disabled systems
+Date: Wed, 28 Feb 2024 16:26:59 -0800
+Message-Id: <20240229002659.1416623-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240228150149.4799-1-vishnuocv@gmail.com> <d6d0806e-5b5d-474c-affa-d43d88785275@redhat.com>
- <fdda6515-3b13-4727-9304-c740c77003ec@app.fastmail.com>
-In-Reply-To: <fdda6515-3b13-4727-9304-c740c77003ec@app.fastmail.com>
-From: Vishnu Sankar <vishnuocv@gmail.com>
-Date: Thu, 29 Feb 2024 06:43:05 +0900
-Message-ID: <CABxCQKtUFpiap-Zi5ihDD6W=NSd3Jn9RXykFPUz_Nj4WQ_qjWg@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Add more ThinkPads with
- non-standard reg address for fan
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-kernel@vger.kernel.org, 
-	Vishnu Sankar <vsankar@lenovo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Hans and Mark,
+When HWP (Hardware P-states) is disabled, dynamic SST features are
+disabled. But user should still be able to read the current core-power
+state, with legacy P-states. This will allow users to read current
+configuration with static SST enabled from BIOS.
 
-Thanks for the review.
-On Thu, Feb 29, 2024 at 5:19=E2=80=AFAM Mark Pearson <mpearson-lenovo@squeb=
-b.ca> wrote:
->
-> Hi Hans,
->
-> On Wed, Feb 28, 2024, at 11:09 AM, Hans de Goede wrote:
-> > Hi,
-> >
-> > On 2/28/24 16:01, Vishnu Sankar wrote:
-> >> Add more ThinkPads with non-standard register addresses to read fan va=
-lues.
-> >>
-> >> ThinkPads added are L13 Yoga Gen1, X13 Yoga Gen1, L380, L390, 11e Gen5=
- GL,
-> >> 11e Gen5 GL-R, 11e Gen5 KL-Y.
-> >>
-> >> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
-> >
-> > Thanks, I have no objection against this patch:
-> >
-> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> >
-> > But this feels like it will become a game of whack-a-mole.
-> >
-> > Mark can you reach out to the ThinkPad firmware team and
-> > figure out if there is some supported way to automatically detect
-> > this ?
-> >
-> These are all older platforms and we're not expecting to see this on any =
-newer platforms...if it shows up it's because they messed up (there is a sp=
-ec and they're supposed to follow it).
-> Vishnu did review with the FW team which platforms had used this implemen=
-tation, and we believe the list below to be complete.
->
-> Vishnu, please correct me if you've heard otherwise.
-This is confirmed by the FW team.
-The list of systems is complete and no more systems are expected (as of now=
-).
->
-> As a note, I did review this during an internal review, before Vishnu pus=
-hed it, so I'll add:
->
-> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->
-> Mark
+To address this, do not call disable_dynamic_sst_features() when the
+request is for reading the state.
 
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+index 2662fbbddf0c..1d918000d72b 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+@@ -462,10 +462,10 @@ static long isst_if_core_power_state(void __user *argp)
+ 	struct tpmi_per_power_domain_info *power_domain_info;
+ 	struct isst_core_power core_power;
+ 
+-	if (disable_dynamic_sst_features())
++	if (copy_from_user(&core_power, argp, sizeof(core_power)))
+ 		return -EFAULT;
+ 
+-	if (copy_from_user(&core_power, argp, sizeof(core_power)))
++	if (core_power.get_set && disable_dynamic_sst_features())
+ 		return -EFAULT;
+ 
+ 	power_domain_info = get_instance(core_power.socket_id, core_power.power_domain_id);
+-- 
+2.40.1
 
---=20
-
-Regards,
-
-      Vishnu Sankar
-     +817015150407 (Japan)
