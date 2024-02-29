@@ -1,156 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6740B1509B3;
-	Thu, 29 Feb 2024 20:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8230016FF34;
+	Thu, 29 Feb 2024 21:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709240248; cv=none; b=I+d7cSMbriI4bXf3MTALqid4I8FLh+aLm9BzwJALipH4O1kq+1ayqfKJonsrHW9OiHYj2oMbAAfRoJ39a6a+dwlmKDHV+IB8nxk6Z8dmLV0OrUxLOM3Ze0+SIyWC7XH/ilq8BFKAcxVPQbB7cV3g4WaIHo0PHS8WANk3BLm3Pwg=
+	t=1709241508; cv=none; b=O3TyHyEe1Z7NXub+WGiJfvKew0S1DDoQBzF6DkWarmXV0pSHGQKfdZZT09bFED2kecKWtKfIfPPF3Ai3j7ljqpX4HohZ4jklSbNWq6zaM1slE/DAC/to18RN7+C6BDmJ7w+L8U8hGCJYakcWC4gki4C0sUCmLgqNkiBp+vMt+rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709240248; c=relaxed/simple;
-	bh=WVG5iUUffSOSc7mMlDKuyehPwdznGu9f9KNXU8GTaG4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IhQQSaomucDkmHHmFWuKGolcOv3mx/UcIWuDoCNg+EvCSB5mYry1p6T69ycEZmk6/ZaaaPRvdhU9TNDGJB0RwW854zgfS8qQd8G5sdrdR3scNv5lwdC8cyJBVGhm63v9QO8BrCvOhsXQtvxf6tkR2jBCZt9ymjJ8ODoZWj/DDbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uh6nSsGR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709241508; c=relaxed/simple;
+	bh=59iOag6GB72bkNMijk1auQJkojkJz2SZvr7evBnMPuA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o/mXICPnr9lQVTxX1548QiRevU+neoILlocnaswysmLqlHrdqLISHUH4IUj1bVWm5nS+kELqQ+iaaL1/YWRThCjY8paE6vH4iIFQZaysNGPkV7wQynhN2aBa/kt66mf0aTvSrvut+chred5tSLpyUoUOcYQ5wtb8LamhrktPbj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=es7kiwcP; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uh6nSsGR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85B72C433C7;
-	Thu, 29 Feb 2024 20:57:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709240247;
-	bh=WVG5iUUffSOSc7mMlDKuyehPwdznGu9f9KNXU8GTaG4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Uh6nSsGRJZ6HE2NtoEQH7+Wnreac2/OhbnYncCUs2FrlaNihyvg1iSGtjn7YecGpw
-	 LWAYg/rXOZX2OYJJyN5BqELBThTepbIs5rFtHXlymBLy9pM/rvml85Tjt5VEPDYsKE
-	 LbM2WhkJFWm+BBI7NL+FQO1zZVOh+m1hiUbrUY0SU+lvgvV+qF6rOZD+rAKrsiYt3L
-	 EE5ErvD1kjOXxRy1w8lV0hwn6lHipTs3wxMOFGCcZ2PbZ1/52ZqJuSKG/6kjC9nxRB
-	 opDTJG1DXFC8519vgTd8WnynqRFt0X7ZRFKWzLUddGZ89Yj8dflqMUuciue/qKoCtR
-	 TYH23fA9kgFDg==
-Received: by pali.im (Postfix)
-	id 528CB92C; Thu, 29 Feb 2024 21:57:24 +0100 (CET)
-Date: Thu, 29 Feb 2024 21:57:24 +0100
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Jean Delvare <jdelvare@suse.de>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Andi Shyti <andi.shyti@kernel.org>, eric.piel@tremplin-utc.net,
-	Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com,
-	Kai Heng Feng <kai.heng.feng@canonical.com>,
-	platform-driver-x86@vger.kernel.org, Wolfram Sang <wsa@kernel.org>,
-	linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] platform/x86: dell-smo8800: Move instantiation of
- lis3lv02d i2c_client from i2c-i801 to dell-smo8800
-Message-ID: <20240229205724.4izh253onvh4mijd@pali>
-References: <20240106160935.45487-1-hdegoede@redhat.com>
- <20240106160935.45487-3-hdegoede@redhat.com>
- <20240107171055.ac7jtwhu2kbalaou@pali>
- <20240213173050.0cf4a58f@endymion.delvare>
- <3e5b47ce-29a9-43a3-92bc-599a9a716fbb@redhat.com>
- <20240227214011.xeys7rtukn6hksdw@pali>
- <4344926b-40e9-4423-b208-c18263248a82@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="es7kiwcP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709241508; x=1740777508;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=59iOag6GB72bkNMijk1auQJkojkJz2SZvr7evBnMPuA=;
+  b=es7kiwcPWTXsaCbdh3Klix22/HClX3Zf1HqzG6XZ4c4HBxV+tzkTxoD2
+   mQzEl37GtgQ452KzqEbOhMwFTFI8G16wcSuHoQ29WfcuGaML3Za04M/ko
+   DjNXHx4BOB9jG0sLwhA8X+UsKmVWhEYtz53Fu2xmDpHWO5v9OeCf1Mc9h
+   mZ3Duadk0n8aE3KPJ5UWuBnIGRT5g9d9hdiUFNKCF2EKzmhbG3yqSpFEJ
+   CDZ4SZIUqayjunCM8z7X8dtTnssZGWM1lglddFQ1UhpGB/Es8SwJHvySA
+   JgooW6Ucl/8uWrGfS1aIcfJje3w485bhs2dDkh6EvYLGLu02o8GMH2Z9/
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="7572755"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="7572755"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 13:18:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="45509481"
+Received: from gditter-mobl1.amr.corp.intel.com (HELO [10.209.51.74]) ([10.209.51.74])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 13:18:27 -0800
+Message-ID: <0f335f76-1a76-4964-9dd4-0491fe4bcf91@linux.intel.com>
+Date: Thu, 29 Feb 2024 13:18:26 -0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4344926b-40e9-4423-b208-c18263248a82@redhat.com>
-User-Agent: NeoMutt/20180716
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: ISST: Allow reading core-power state on HWP
+ disabled systems
+Content-Language: en-US
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ hdegoede@redhat.com, markgross@kernel.org, ilpo.jarvinen@linux.intel.com,
+ andriy.shevchenko@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240229002659.1416623-1-srinivas.pandruvada@linux.intel.com>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240229002659.1416623-1-srinivas.pandruvada@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wednesday 28 February 2024 14:10:14 Hans de Goede wrote:
-> >>> Now after looking at this change again I see there a problem. If i2c-801
-> >>> driver initialize i2c-801 device after this smo8800 is called then
-> >>> accelerometer i2c device would not happen.
-> >>
-> >> That is a good point (which Jean also points out). But this can simply
-> >> be fixed by making the dell-smo8800's probe() method return -EPROBE_DEFER
-> >> if the i2c-i801 i2c-bus is not present yet (all designs using the
-> >> dell-smo8800 driver will have an i2c-bus so waiting for this to show
-> >> up should not cause regressions).
-> > 
-> > Adding EPROBE_DEFER just complicates the dependency and state model.
-> > I would really suggest to come up with a simpler solution, not too
-> > complicated where it is required to think a lot if is is correct and if
-> > all edge-cases are handled.
-> 
-> I'm not sure what you are worried about here. dell-smo8800 is
-> a leave driver, nothing inside the kernel depends on it being 
-> loaded or not. So there are no -EPROBE_DEFER complexities here,
-> yes -EPROBE_DEFER can become a bit hairy with complex dependency
-> graphs, but this is a very KISS case.
-> 
-> Are there any specific scenarios you are actually worried about
-> in this specific case?
 
--EPROBE_DEFER restarts and schedule probing of the device later. It does
-not inform device manager when it can try do it. So it can try probing
-it many more times until it decide to not try it again. This
-asynchronous design is broken and I do not see reason why to use it in
-another driver, in case we have a cleaner solution how to initialize and
-probe device without -EPROBE_DEFER. This is for sure not a KISS case
-but a case with lot of corner cases... and your proposed patch is just
-an example of it as you forgot about at least one corner case. Current
-solution does not have edge cases... this can be marked as KISS design.
+On 2/28/24 4:26 PM, Srinivas Pandruvada wrote:
+> When HWP (Hardware P-states) is disabled, dynamic SST features are
+> disabled. But user should still be able to read the current core-power
+> state, with legacy P-states. This will allow users to read current
+> configuration with static SST enabled from BIOS.
+>
+> To address this, do not call disable_dynamic_sst_features() when the
+> request is for reading the state.
+>
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
 
-> >> If we can agree to move forward this series I'll fix this.
-> >>
-> >> Pali wrote:
-> >>> Also it has same problem if PCI i801 device is reloaded or reset.
-> >>
-> >> The i801 device is not hotplugable, so normally this will never
-> >> happen. If the user manually unbinds + rebinds the i2c-i801 driver
-> >> them the i2c_client for the smo88xx device will indeed get removed
-> >> and not re-added. But this will normally never happen and if
-> >> a user is manually poking things then the user can also unbind +
-> >> rebind the dell-mso8800 driver after the i2c-i801 rebind.
-> >> So I don't really see this as an issue.
-> > 
-> > Well, rmmod & modprobe is not the rare cases. Whatever developers say
-> > about rmmod (or modprobe -r or whatever is the way for unloading
-> > modules), this is something which is used by a lot of users and would be
-> > used. 
-> 
-> Many modules actually have bugs in there remove paths and crash,
-> this is really not a common case. Sometimes users use rmmod + modprobe
-> surrounding suspend/resume for e.g. a wifi driver to work around
-> suspend/resume problems but I have never heard of this being used
-> for a driver like i2c-i801.
-> 
-> And again if users are manually meddling with this, the they can
-> also rmmod + modprobe dell-smo8800 after re-modprobing i2c-i801.
+Looks good to me.
 
-Argument that other modules have bugs in some code path does not mean to
-introduce bugs also into other modules. I do not take it.
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-> >> The i2c-i801 driver gets loaded on every x86 system and it is
-> >> undesirable to have this extra code and the DMI table in RAM
-> >> on all those other systems.
-> > 
-> > I think we can take an assumption that ACPI SMO device does not change
-> > it existence or ACPI enabled/disabled state during runtime. So we can
-> > scan for ACPI SMO device just once in function stored in __init section
-> > called during the kernel/module initialization and cache the result
-> > (bool if device was found + its i2c address). After function marked as
-> > __init finish its job then together with DMI tables can be discarded
-> > from RAM. With this way it does take extra memory on every x86 system.
-> > Also we can combine this with an SMO config option, so the whole code
-> > "glue" code would not be compiled when SMO driver is not enabled via
-> > Kconfig.
-> 
-> This approach does not work because i2c-i801.c registers a PCI driver,
-> there is no guarantee that the adapter has already been probed and
-> an i2c_adapter has been created before it. A PCI driver's probe()
-> function must not be __init and thus any code which it calls also
-> must not be __init.
-> 
-> So the majority of the smo88xx handling can not be __init.
+>  drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> index 2662fbbddf0c..1d918000d72b 100644
+> --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> @@ -462,10 +462,10 @@ static long isst_if_core_power_state(void __user *argp)
+>  	struct tpmi_per_power_domain_info *power_domain_info;
+>  	struct isst_core_power core_power;
+>  
+> -	if (disable_dynamic_sst_features())
+> +	if (copy_from_user(&core_power, argp, sizeof(core_power)))
+>  		return -EFAULT;
+>  
+> -	if (copy_from_user(&core_power, argp, sizeof(core_power)))
+> +	if (core_power.get_set && disable_dynamic_sst_features())
+>  		return -EFAULT;
+>  
+>  	power_domain_info = get_instance(core_power.socket_id, core_power.power_domain_id);
 
-This argument is wrong. smo88xx has nothing with PCI, has even nothing
-with i2c. The detection is purely ACPI based and this can be called at
-any time after ACPI initialization. Detection does not need PCI. There
-is no reason why it cannot be called in __init section after ACPI is
-done.
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
