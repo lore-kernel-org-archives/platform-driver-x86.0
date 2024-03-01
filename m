@@ -1,59 +1,50 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624F62B9A8
-	for <platform-driver-x86@vger.kernel.org>; Fri,  1 Mar 2024 03:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53BEA69E0A;
+	Fri,  1 Mar 2024 08:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709264224; cv=none; b=GF61wu1yzPzs6iPF/LmD1RbF8SFvDYt6ju8cQyTR7ZneMSNKmjcvKQTyjQOpnOxwfVBa49PMAAz6wwW4nYZh6kZmUc8XoWCCY0H92wIR37ZhbCn3xBYoZFdonAq76J+vWr4r4hEIu1D8YQskJTFM+eDXgzZ+dN4WqnF5nQtHKDo=
+	t=1709281346; cv=none; b=tPAneZkb5ybP0AV9N6+/gKaMzY9igl6au9OLlSFJgPb5O5AquzUIBYlwGpUyTPc0y+1O6cRqS/n5YAZhElike7Cc86pkQLMM5gODqfRtgy6mPW6tQfeAfJmEpqMmjAKwE4TKnAj62XZ1eMYNvbA2jaOK1aJKAF8Muo0vGGx0DEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709264224; c=relaxed/simple;
-	bh=OQ/gIAAy0lPPC1dDgfJF+n2OjNqvLOSh5R9YPYD9eRI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DUO36gKS1zi+SV0C7wwzh4DEMjqp8MbFld46Z2HTE1QFLt0feCbXgPg6j8V5woPC5rnbc8pHxPfcgPy1G9rAY8ioMMOeNks8oWpKcuh8YBcM8C6x/rcREYaG4H/wogjpJf/7HaFjfXRs0X1aFChT0PdzOTyT1cI9nzN4FAo4pmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UPVFDTgy; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UPVFDTgy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709264221;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o3pMzzV+vvHoGHV2CK0BLvwbx5jTZCYICAPaSKaxDNw=;
-	b=UPVFDTgy4cmWUVWiyoawqNI04G0PAudUQoVHnS3aQQRs/F5/ZlmMFGtOToHOLZZ6+5mTBh
-	4qsGlFtWAvUJcMxGdm1kYX/JQ/a8mRrvGf79GeztjExmVza8BxjPLkIlGSs+ADSb9UxqXX
-	ThVSjPmt5Q4Aa+nE6UE0WG9ndRvNdKw=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-607-vgY-1ykmM5yNTL6692LoOA-1; Thu,
- 29 Feb 2024 22:36:58 -0500
-X-MC-Unique: vgY-1ykmM5yNTL6692LoOA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F3AF9280A9B0;
-	Fri,  1 Mar 2024 03:36:57 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.39.192.31])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id DCEDDC185C0;
-	Fri,  1 Mar 2024 03:36:53 +0000 (UTC)
-From: Kate Hsuan <hpa@redhat.com>
-To: Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>,
-	linux-leds@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	=?UTF-8?q?Andr=C3=A9=20Apitzsch?= <git@apitzsch.eu>
-Cc: Kate Hsuan <hpa@redhat.com>
-Subject: [PATCH v3 2/2] leds: rgb: leds-ktd202x: Get device properties through fwnode to support ACPI
-Date: Fri,  1 Mar 2024 11:36:12 +0800
-Message-ID: <20240301033612.11826-3-hpa@redhat.com>
-In-Reply-To: <20240301033612.11826-1-hpa@redhat.com>
-References: <20240301033612.11826-1-hpa@redhat.com>
+	s=arc-20240116; t=1709281346; c=relaxed/simple;
+	bh=h6FtoEcIUz3yIkRmQPdlDZucxbkkGkvHrXaGeCM1nEs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k0dT4sj6uLgn36zIrqiX/bEyA0ogPU8YeEHhXTOW36d3RYfIcDbkK28lzUZUozySwevOkcwLr88lD8ZuXGQYQmATarPAXQO7f9uBEiYAF7ywkO13wgpWf88TVxuKrXdkQ31zkhtCvMz4j8gr//A3MSqm0muYYQmgawS76vNyXEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 05f06a440549480886f5d1928f357437-20240301
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:3aa1627a-5245-4c43-a2b5-b2ef66fe2ba0,IP:10,
+	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
+	TION:release,TS:-30
+X-CID-INFO: VERSION:1.1.37,REQID:3aa1627a-5245-4c43-a2b5-b2ef66fe2ba0,IP:10,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-30
+X-CID-META: VersionHash:6f543d0,CLOUDID:c9637e84-8d4f-477b-89d2-1e3bdbef96d1,B
+	ulkID:2403011616558IO7NRVB,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|44|1
+	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC
+	:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: 05f06a440549480886f5d1928f357437-20240301
+X-User: aichao@kylinos.cn
+Received: from localhost.localdomain [(112.64.161.44)] by mailgw
+	(envelope-from <aichao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1055854772; Fri, 01 Mar 2024 16:16:55 +0800
+From: Ai Chao <aichao@kylinos.cn>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Cc: Ai Chao <aichao@kylinos.cn>
+Subject: [PATCH v3] platform/x86: add lenovo generic wmi driver
+Date: Fri,  1 Mar 2024 16:16:48 +0800
+Message-Id: <20240301081648.265907-1-aichao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,210 +52,173 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-This LED controller also installed on a Xiaomi pad2 and it is a x86
-platform. The original driver is based on device tree and can't be
-used for this ACPI based system. This patch migrated the driver to
-use fwnode to access the properties. Moreover, the fwnode API
-supports device tree so this work won't effect the original
-implementations.
+Add lenovo generic wmi driver to support camera button.
 
-Signed-off-by: Kate Hsuan <hpa@redhat.com>
+Signed-off-by: Ai Chao <aichao@kylinos.cn>
 ---
- drivers/leds/rgb/Kconfig        |  1 -
- drivers/leds/rgb/leds-ktd202x.c | 58 ++++++++++++++++++++++-----------
- 2 files changed, 39 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/leds/rgb/Kconfig b/drivers/leds/rgb/Kconfig
-index a6a21f564673..f245dbd9a163 100644
---- a/drivers/leds/rgb/Kconfig
-+++ b/drivers/leds/rgb/Kconfig
-@@ -17,7 +17,6 @@ config LEDS_GROUP_MULTICOLOR
- config LEDS_KTD202X
- 	tristate "LED support for KTD202x Chips"
- 	depends on I2C
--	depends on OF
- 	select REGMAP_I2C
- 	help
- 	  This option enables support for the Kinetic KTD2026/KTD2027
-diff --git a/drivers/leds/rgb/leds-ktd202x.c b/drivers/leds/rgb/leds-ktd202x.c
-index 514965795a10..8eb79c342fb6 100644
---- a/drivers/leds/rgb/leds-ktd202x.c
-+++ b/drivers/leds/rgb/leds-ktd202x.c
-@@ -381,16 +381,18 @@ static int ktd202x_blink_mc_set(struct led_classdev *cdev,
- 				 mc->num_colors);
- }
+v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
+v3: Remove lenovo_wmi_remove function.
+
+ drivers/platform/x86/Kconfig      |  10 +++
+ drivers/platform/x86/Makefile     |   1 +
+ drivers/platform/x86/lenovo-wmi.c | 113 ++++++++++++++++++++++++++++++
+ 3 files changed, 124 insertions(+)
+ create mode 100644 drivers/platform/x86/lenovo-wmi.c
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index bdd302274b9a..fbbb8fb843d7 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1001,6 +1001,16 @@ config INSPUR_PLATFORM_PROFILE
+ 	To compile this driver as a module, choose M here: the module
+ 	will be called inspur-platform-profile.
  
--static int ktd202x_setup_led_rgb(struct ktd202x *chip, struct device_node *np,
-+static int ktd202x_setup_led_rgb(struct ktd202x *chip, struct fwnode_handle *np,
- 				 struct ktd202x_led *led, struct led_init_data *init_data)
- {
-+	struct fwnode_handle *child;
- 	struct led_classdev *cdev;
--	struct device_node *child;
- 	struct mc_subled *info;
--	int num_channels;
-+	int num_channels = 0;
- 	int i = 0;
- 
--	num_channels = of_get_available_child_count(np);
-+	fwnode_for_each_available_child_node(np, child) {
-+		num_channels++;
-+	}
- 	if (!num_channels || num_channels > chip->num_leds)
- 		return -EINVAL;
- 
-@@ -398,22 +400,22 @@ static int ktd202x_setup_led_rgb(struct ktd202x *chip, struct device_node *np,
- 	if (!info)
- 		return -ENOMEM;
- 
--	for_each_available_child_of_node(np, child) {
-+	fwnode_for_each_available_child_node(np, child) {
- 		u32 mono_color;
- 		u32 reg;
- 		int ret;
- 
--		ret = of_property_read_u32(child, "reg", &reg);
-+		ret = fwnode_property_read_u32(child, "reg", &reg);
- 		if (ret != 0 || reg >= chip->num_leds) {
- 			dev_err(chip->dev, "invalid 'reg' of %pOFn\n", child);
--			of_node_put(child);
-+			fwnode_handle_put(child);
- 			return -EINVAL;
- 		}
- 
--		ret = of_property_read_u32(child, "color", &mono_color);
-+		ret = fwnode_property_read_u32(child, "color", &mono_color);
- 		if (ret < 0 && ret != -EINVAL) {
- 			dev_err(chip->dev, "failed to parse 'color' of %pOF\n", child);
--			of_node_put(child);
-+			fwnode_handle_put(child);
- 			return ret;
- 		}
- 
-@@ -433,14 +435,14 @@ static int ktd202x_setup_led_rgb(struct ktd202x *chip, struct device_node *np,
- 	return devm_led_classdev_multicolor_register_ext(chip->dev, &led->mcdev, init_data);
- }
- 
--static int ktd202x_setup_led_single(struct ktd202x *chip, struct device_node *np,
-+static int ktd202x_setup_led_single(struct ktd202x *chip, struct fwnode_handle *np,
- 				    struct ktd202x_led *led, struct led_init_data *init_data)
- {
- 	struct led_classdev *cdev;
- 	u32 reg;
- 	int ret;
- 
--	ret = of_property_read_u32(np, "reg", &reg);
-+	ret = fwnode_property_read_u32(np, "reg", &reg);
- 	if (ret != 0 || reg >= chip->num_leds) {
- 		dev_err(chip->dev, "invalid 'reg' of %pOFn\n", np);
- 		return -EINVAL;
-@@ -454,7 +456,7 @@ static int ktd202x_setup_led_single(struct ktd202x *chip, struct device_node *np
- 	return devm_led_classdev_register_ext(chip->dev, &led->cdev, init_data);
- }
- 
--static int ktd202x_add_led(struct ktd202x *chip, struct device_node *np, unsigned int index)
-+static int ktd202x_add_led(struct ktd202x *chip, struct fwnode_handle *np, unsigned int index)
- {
- 	struct ktd202x_led *led = &chip->leds[index];
- 	struct led_init_data init_data = {};
-@@ -463,14 +465,14 @@ static int ktd202x_add_led(struct ktd202x *chip, struct device_node *np, unsigne
- 	int ret;
- 
- 	/* Color property is optional in single color case */
--	ret = of_property_read_u32(np, "color", &color);
-+	ret = fwnode_property_read_u32(np, "color", &color);
- 	if (ret < 0 && ret != -EINVAL) {
- 		dev_err(chip->dev, "failed to parse 'color' of %pOF\n", np);
- 		return ret;
- 	}
- 
- 	led->chip = chip;
--	init_data.fwnode = of_fwnode_handle(np);
-+	init_data.fwnode = np;
- 
- 	if (color == LED_COLOR_ID_RGB) {
- 		cdev = &led->mcdev.led_cdev;
-@@ -492,26 +494,30 @@ static int ktd202x_add_led(struct ktd202x *chip, struct device_node *np, unsigne
- 
- static int ktd202x_probe_dt(struct ktd202x *chip)
- {
--	struct device_node *np = dev_of_node(chip->dev), *child;
-+	struct fwnode_handle *child, *np;
-+	struct device *dev = chip->dev;
- 	int count;
- 	int i = 0;
- 
--	chip->num_leds = (int)(unsigned long)of_device_get_match_data(chip->dev);
-+	count = device_get_child_node_count(dev);
- 
--	count = of_get_available_child_count(np);
- 	if (!count || count > chip->num_leds)
- 		return -EINVAL;
- 
-+	np = dev_fwnode(chip->dev);
-+	if (!np)
-+		return -ENODEV;
++config LENOVO_WMI
++	tristate "Lenovo Geneirc WMI driver"
++	depends on ACPI_WMI
++	depends on INPUT
++	help
++	This driver provides support for Lenovo WMI driver.
 +
- 	regmap_write(chip->regmap, KTD202X_REG_RESET_CONTROL, KTD202X_RSTR_RESET);
- 
- 	/* Allow the device to execute the complete reset */
- 	usleep_range(200, 300);
- 
--	for_each_available_child_of_node(np, child) {
-+	fwnode_for_each_available_child_node(np, child) {
- 		int ret = ktd202x_add_led(chip, child, i);
- 
- 		if (ret) {
--			of_node_put(child);
-+			fwnode_handle_put(child);
- 			return ret;
- 		}
- 		i++;
-@@ -568,6 +574,8 @@ static int ktd202x_probe(struct i2c_client *client)
- 		return ret;
- 	}
- 
-+	chip->num_leds = (int) (unsigned long)i2c_get_match_data(client);
++	To compile this driver as a module, choose M here: the module
++	will be called lenovo-wmi.
 +
- 	ret = ktd202x_probe_dt(chip);
- 	if (ret < 0) {
- 		regulator_bulk_disable(ARRAY_SIZE(chip->regulators), chip->regulators);
-@@ -602,21 +610,33 @@ static void ktd202x_shutdown(struct i2c_client *client)
- 	regmap_write(chip->regmap, KTD202X_REG_RESET_CONTROL, KTD202X_RSTR_RESET);
- }
+ source "drivers/platform/x86/x86-android-tablets/Kconfig"
  
-+static const struct i2c_device_id ktd202x_id[] = {
-+	{"ktd2026", KTD2026_NUM_LEDS},
-+	{"ktd2027", KTD2027_NUM_LEDS},
-+	{},
+ config FW_ATTR_CLASS
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 1de432e8861e..d51086552192 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
+ obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+ obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
++obj-$(CONFIG_LENOVO_WMI)	+= lenovo-wmi.o
+ 
+ # Intel
+ obj-y				+= intel/
+diff --git a/drivers/platform/x86/lenovo-wmi.c b/drivers/platform/x86/lenovo-wmi.c
+new file mode 100644
+index 000000000000..96c2ec9e6441
+--- /dev/null
++++ b/drivers/platform/x86/lenovo-wmi.c
+@@ -0,0 +1,113 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *  Lenovo Generic WMI Driver
++ *
++ *  Copyright (C) 2024	      Ai Chao <aichao@kylinos.cn>
++ */
++
++#include <linux/acpi.h>
++#include <linux/device.h>
++#include <linux/input.h>
++#include <linux/module.h>
++#include <linux/wmi.h>
++
++#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
++
++static u8 camera_mode;
++
++struct lenovo_wmi_priv {
++	struct input_dev *idev;
 +};
-+MODULE_DEVICE_TABLE(i2c, ktd202x_id);
 +
-+#ifndef CONFIG_ACPI
- static const struct of_device_id ktd202x_match_table[] = {
- 	{ .compatible = "kinetic,ktd2026", .data = (void *)KTD2026_NUM_LEDS },
- 	{ .compatible = "kinetic,ktd2027", .data = (void *)KTD2027_NUM_LEDS },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, ktd202x_match_table);
-+#endif
- 
- static struct i2c_driver ktd202x_driver = {
- 	.driver = {
- 		.name = "leds-ktd202x",
-+#ifndef CONFIG_ACPI
- 		.of_match_table = ktd202x_match_table,
-+#endif
- 	},
- 	.probe = ktd202x_probe,
- 	.remove = ktd202x_remove,
- 	.shutdown = ktd202x_shutdown,
-+	.id_table = ktd202x_id,
- };
- module_i2c_driver(ktd202x_driver);
- 
++static ssize_t camerabutton_show(struct device *dev,
++				 struct device_attribute *attr, char *buf)
++{
++	return sysfs_emit(buf, "%u\n", camera_mode);
++}
++
++DEVICE_ATTR_RO(camerabutton);
++
++static struct attribute *lenovo_wmi_attrs[] = {
++	&dev_attr_camerabutton.attr,
++	NULL,
++};
++
++static const struct attribute_group lenovo_wmi_group = {
++	.attrs = lenovo_wmi_attrs,
++};
++
++const struct attribute_group *lenovo_wmi_groups[] = {
++	&lenovo_wmi_group,
++	NULL,
++};
++
++static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
++{
++	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
++
++	if (obj->type == ACPI_TYPE_BUFFER) {
++		camera_mode = obj->buffer.pointer[0];
++		input_report_key(priv->idev, KEY_CAMERA, 1);
++		input_sync(priv->idev);
++		input_report_key(priv->idev, KEY_CAMERA, 0);
++		input_sync(priv->idev);
++	} else {
++		dev_dbg(&wdev->dev, "Bad response type %d\n", obj->type);
++	}
++}
++
++static int lenovo_wmi_input_setup(struct wmi_device *wdev)
++{
++	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
++
++	priv->idev = devm_input_allocate_device(&wdev->dev);
++	if (!priv->idev)
++		return -ENOMEM;
++
++	priv->idev->name = "Lenovo WMI Camera Button";
++	priv->idev->phys = "wmi/input0";
++	priv->idev->id.bustype = BUS_HOST;
++	priv->idev->dev.parent = &wdev->dev;
++	priv->idev->evbit[0] = BIT_MASK(EV_KEY);
++	priv->idev->keybit[BIT_WORD(KEY_CAMERA)] = BIT_MASK(KEY_CAMERA);
++
++	return input_register_device(priv->idev);
++}
++
++static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
++{
++	struct lenovo_wmi_priv *priv;
++	int err;
++
++	priv = devm_kzalloc(&wdev->dev, sizeof(struct lenovo_wmi_priv),
++			    GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	dev_set_drvdata(&wdev->dev, priv);
++
++	err = lenovo_wmi_input_setup(wdev);
++	return err;
++}
++
++static const struct wmi_device_id lenovo_wmi_id_table[] = {
++	{ .guid_string = WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
++	{  }
++};
++
++static struct wmi_driver lenovo_wmi_driver = {
++	.driver = {
++		.name = "lenovo-wmi",
++		.dev_groups = lenovo_wmi_groups,
++	},
++	.id_table = lenovo_wmi_id_table,
++	.probe = lenovo_wmi_probe,
++	.notify = lenovo_wmi_notify,
++};
++
++module_wmi_driver(lenovo_wmi_driver);
++
++MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
++MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
++MODULE_DESCRIPTION("Lenovo Generic WMI Driver");
++MODULE_LICENSE("GPL");
 -- 
-2.43.2
+2.25.1
 
