@@ -1,50 +1,55 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC1A3A1D8;
-	Fri,  1 Mar 2024 02:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1AC46421
+	for <platform-driver-x86@vger.kernel.org>; Fri,  1 Mar 2024 03:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709259266; cv=none; b=L3HT/iA6IrvSNHro4O2oJltsRQQJj7ge4iuZ6qjfEOdcAL5lW+fnGrNJEAVmz4F5FwgA8AUZ6akrYxKKhi2VDT6Qr/cSp4bxSLfen569fInioJtOtFN5YYPjoPQlWATg8Gx4wBc4MImaUYpN0l3cgL0KX3IfOFCaSrcKoUbepC4=
+	t=1709264208; cv=none; b=DnzZTmekgTPk5fCbqCXBNA1i2SnjflzFxubtxzKZCSd05t5kDVy9V/UJqZFSKEVvgfMB3ElRmJAsDWlZFEeFgv0hAchRXroX7K3WYRy1hHk3xvit6oTlXwW8hTOzYat2CkfiKrh/wOlRjNdUXPelPzkrX06OpeaAlZPIojfdWes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709259266; c=relaxed/simple;
-	bh=pwtn6drrCTLarjhItrpPDsaQT/sX3CSPpeXmy+SfazA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dKliP7/DSLeiC980e+SX0UDYgVMqHeQbT4uekggLfPojSQWVna6C5jTV8iqJ2AAT/VokXNeE3dTIhgGzPUWoZmVSQowRYZqzxFWBPzoRNP/likevcR2XSId4wCtU09VRf9RQuwQMXeadLt1Ddhh4t5x0V1Z+sH+ujWLdJLEpiM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 7eb3967e552f48198514005549a2b80d-20240301
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:1a160b1c-8999-43c4-916f-d2930842a42c,IP:10,
-	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-10
-X-CID-INFO: VERSION:1.1.37,REQID:1a160b1c-8999-43c4-916f-d2930842a42c,IP:10,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-10
-X-CID-META: VersionHash:6f543d0,CLOUDID:28fae08f-e2c0-40b0-a8fe-7c7e47299109,B
-	ulkID:2403011014152ZTT6R8T,BulkQuantity:0,Recheck:0,SF:19|44|66|38|24|17|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC
-	:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 7eb3967e552f48198514005549a2b80d-20240301
-X-User: aichao@kylinos.cn
-Received: from localhost.localdomain [(112.64.161.44)] by mailgw
-	(envelope-from <aichao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 935004404; Fri, 01 Mar 2024 10:14:14 +0800
-From: Ai Chao <aichao@kylinos.cn>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Cc: Ai Chao <aichao@kylinos.cn>
-Subject: [PATCH v2] platform/x86: add lenovo generic wmi driver
-Date: Fri,  1 Mar 2024 10:14:12 +0800
-Message-Id: <20240301021412.59604-1-aichao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1709264208; c=relaxed/simple;
+	bh=+0HWL37XmaBELqr1Y5osV08VTnMz7DcvLvGP1oceLHQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q16MUfOxfUfp8Qmd1N6FFBR4H9cK1B0vEgEa4T7n7EmSjPYa32rbr2bJ2jkwWXMwc4hvMID91WFMNsglL3kTFxAPYljHn2NxtDxQO41VYEM+eZWUF8bRLkIjGe6glWQiFhcZ1Vk0rnEDYr4U9N6hDTeTAWsdnM6kiIotG/ckFws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tw7RNMi0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tw7RNMi0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709264205;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cujA/aqlYoJlFQNLpUGlHmZhSDTZ/CBl5llEOGsmWQw=;
+	b=Tw7RNMi03ljyVZWBlrVBSFSQFaXHNQ/6Pgtlkn1FzjsTcxCZ30xf3KJde3uAcaTFhIXa1P
+	WB9+3Ovxdwie4ubcxo0WKjSoIaYfHA2HRY6z8G/R3IQ7cbMxAEv/B/r7Kkb/LBj39j9yrI
+	3tZLnFxn6iwukUEiF65peof3KSy8diE=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-570-82et7fLhN4uBI5soMReEDQ-1; Thu, 29 Feb 2024 22:36:44 -0500
+X-MC-Unique: 82et7fLhN4uBI5soMReEDQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 743F389F9EC;
+	Fri,  1 Mar 2024 03:36:43 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.39.192.31])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id E9049C03488;
+	Fri,  1 Mar 2024 03:36:38 +0000 (UTC)
+From: Kate Hsuan <hpa@redhat.com>
+To: Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	linux-leds@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	=?UTF-8?q?Andr=C3=A9=20Apitzsch?= <git@apitzsch.eu>
+Cc: Kate Hsuan <hpa@redhat.com>
+Subject: [PATCH v3 0/2] KTD2026 indicator LED for X86 Xiaomi Pad2
+Date: Fri,  1 Mar 2024 11:36:10 +0800
+Message-ID: <20240301033612.11826-1-hpa@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -52,179 +57,39 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-Add lenovo generic wmi driver to support camera button.
+This patch added the support for Xiaomi Pad2 indicator LED. This work
+included two parts.
+1. Added the KTD2026 swnode description to describe the LED controller.
+2. Migrated the original driver to fwnode to support x86 platform.
 
-Signed-off-by: Ai Chao <aichao@kylinos.cn>
----
-v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
+Moreover, the LED trigger is set to bq27520-0-charging for Xiaomi Pad2
+so the LED will be turned on when charging.
 
- drivers/platform/x86/Kconfig      |  10 +++
- drivers/platform/x86/Makefile     |   1 +
- drivers/platform/x86/lenovo-wmi.c | 121 ++++++++++++++++++++++++++++++
- 3 files changed, 132 insertions(+)
- create mode 100644 drivers/platform/x86/lenovo-wmi.c
+--
+Changes in v3:
+1. Drop the patch "leds-ktd202x: Skip regulator settings for Xiaomi
+   pad2"
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index bdd302274b9a..fbbb8fb843d7 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1001,6 +1001,16 @@ config INSPUR_PLATFORM_PROFILE
- 	To compile this driver as a module, choose M here: the module
- 	will be called inspur-platform-profile.
- 
-+config LENOVO_WMI
-+	tristate "Lenovo Geneirc WMI driver"
-+	depends on ACPI_WMI
-+	depends on INPUT
-+	help
-+	This driver provides support for Lenovo WMI driver.
-+
-+	To compile this driver as a module, choose M here: the module
-+	will be called lenovo-wmi.
-+
- source "drivers/platform/x86/x86-android-tablets/Kconfig"
- 
- config FW_ATTR_CLASS
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 1de432e8861e..d51086552192 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
- obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
- obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
- obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
-+obj-$(CONFIG_LENOVO_WMI)	+= lenovo-wmi.o
- 
- # Intel
- obj-y				+= intel/
-diff --git a/drivers/platform/x86/lenovo-wmi.c b/drivers/platform/x86/lenovo-wmi.c
-new file mode 100644
-index 000000000000..aa7519d64d9b
---- /dev/null
-+++ b/drivers/platform/x86/lenovo-wmi.c
-@@ -0,0 +1,121 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Lenovo Generic WMI Driver
-+ *
-+ *  Copyright (C) 2018	      Ai Chao <aichao@kylinos.cn>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/device.h>
-+#include <linux/input.h>
-+#include <linux/module.h>
-+#include <linux/wmi.h>
-+
-+#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
-+
-+static u8 camera_mode;
-+
-+struct lenovo_wmi_priv {
-+	struct input_dev *idev;
-+};
-+
-+static ssize_t camerabutton_show(struct device *dev,
-+				 struct device_attribute *attr, char *buf)
-+{
-+	return sysfs_emit(buf, "%u\n", camera_mode);
-+}
-+
-+DEVICE_ATTR_RO(camerabutton);
-+
-+static struct attribute *lenovo_wmi_attrs[] = {
-+	&dev_attr_camerabutton.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group lenovo_wmi_group = {
-+	.attrs = lenovo_wmi_attrs,
-+};
-+
-+const struct attribute_group *lenovo_wmi_groups[] = {
-+	&lenovo_wmi_group,
-+	NULL,
-+};
-+
-+static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
-+{
-+	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-+
-+	if (obj->type == ACPI_TYPE_BUFFER) {
-+		camera_mode = obj->buffer.pointer[0];
-+		input_report_key(priv->idev, KEY_CAMERA, 1);
-+		input_sync(priv->idev);
-+		input_report_key(priv->idev, KEY_CAMERA, 0);
-+		input_sync(priv->idev);
-+	} else {
-+		dev_info(&wdev->dev, "Bad response type %d\n", obj->type);
-+	}
-+}
-+
-+static int lenovo_wmi_input_setup(struct wmi_device *wdev)
-+{
-+	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-+
-+	priv->idev = devm_input_allocate_device(&wdev->dev);
-+	if (!priv->idev)
-+		return -ENOMEM;
-+
-+	priv->idev->name = "Lenovo WMI Camera Button";
-+	priv->idev->phys = "wmi/input0";
-+	priv->idev->id.bustype = BUS_HOST;
-+	priv->idev->dev.parent = &wdev->dev;
-+	priv->idev->evbit[0] = BIT_MASK(EV_KEY);
-+	priv->idev->keybit[BIT_WORD(KEY_CAMERA)] = BIT_MASK(KEY_CAMERA);
-+
-+	return input_register_device(priv->idev);
-+}
-+
-+static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct lenovo_wmi_priv *priv;
-+	int err;
-+
-+	priv = devm_kzalloc(&wdev->dev, sizeof(struct lenovo_wmi_priv),
-+			    GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(&wdev->dev, priv);
-+
-+	err = lenovo_wmi_input_setup(wdev);
-+	return err;
-+}
-+
-+static void lenovo_wmi_remove(struct wmi_device *wdev)
-+{
-+	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-+
-+	input_unregister_device(priv->idev);
-+}
-+
-+static const struct wmi_device_id lenovo_wmi_id_table[] = {
-+	{ .guid_string = WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
-+	{  }
-+};
-+
-+static struct wmi_driver lenovo_wmi_driver = {
-+	.driver = {
-+		.name = "lenovo-wmi",
-+		.dev_groups = lenovo_wmi_groups,
-+	},
-+	.id_table = lenovo_wmi_id_table,
-+	.probe = lenovo_wmi_probe,
-+	.notify = lenovo_wmi_notify,
-+	.remove = lenovo_wmi_remove,
-+};
-+
-+module_wmi_driver(lenovo_wmi_driver);
-+
-+MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
-+MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
-+MODULE_DESCRIPTION("Lenovo Generic WMI Driver");
-+MODULE_LICENSE("GPL");
+Changes in v2:
+1. Typo and style fixes.
+2. The patch 0003 skips all the regulator setup for Xiaomi pad2 since
+   KTD2026 on Xiaomi pad2 is already powered by BP25890RTWR. So, the
+   sleep can be removed when removing the module.
+
+Kate Hsuan (2):
+  platform: x86-android-tablets: other: Add swnode for Xiaomi pad2
+    indicator LED
+  leds: rgb: leds-ktd202x: Get device properties through fwnode to
+    support ACPI
+
+ drivers/leds/rgb/Kconfig                      |  1 -
+ drivers/leds/rgb/leds-ktd202x.c               | 58 ++++++++-----
+ .../platform/x86/x86-android-tablets/other.c  | 85 +++++++++++++++++++
+ .../x86/x86-android-tablets/shared-psy-info.h |  2 +
+ 4 files changed, 126 insertions(+), 20 deletions(-)
+
 -- 
-2.25.1
+2.43.2
 
