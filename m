@@ -1,81 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757493D547;
-	Mon,  4 Mar 2024 13:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0F23D578;
+	Mon,  4 Mar 2024 13:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709558575; cv=none; b=QHgZb6DympXSbLHahj/dnsrP8n/zVe/GaOuEF4htjU/lZ5AjMU2w5ygy1pUMbpYnrScu/Jf9lY4CjG7ZTvXBRIjCd+ZGQsHUDicQ1twd6WpX5LqxzAWO8lZ5AaqZl4w1XDimU8IvUn5EjLGZQgZwekhyiBmrcFJH96Kn0lk2XyI=
+	t=1709558714; cv=none; b=t8FSCVgsEigVWgQcq2y3vVZ4pQAvoGVlKsvCYlHcduylbCGqv7ime8mSk418fqsh4QoJ0GPsO2uh8xve0wgbHVhuvMQfcTGa9mYySHSws1ZvMGs8RCbcM/VWhJhdshOSb4ss4ULyp7nx4ko4keaPJTFMADCoWnnfAubwpdBhTnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709558575; c=relaxed/simple;
-	bh=wvqVrTZYUETegQB929WmfG/ja/6JUPIg5ef7y9GtyRE=;
+	s=arc-20240116; t=1709558714; c=relaxed/simple;
+	bh=mE7WbTRPh0y+V6gk6+gRHEpzW2RaqAFTJA9wLdw90Hw=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=JC6OxYSqak4KHcvZ7SXvl++6qLNX3ibFSDOeXKP+Ry7bQhG2Fe+WdXHEr2tvXghpWNrn9gqSQWSgC1IYP6VxMHiBa9EeemMQJSyo/glMyW1Nl+4+lapj1i9JITvGgvis36RunAtnm4laHgMrVYye1IfSIom1LjlyTVHaUIQzmnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DR/vqkTq; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version:Content-Type; b=Uz8mWiLyJdhUfD40jaVKPRJRRgBXTF8BXqApYJJ8XAKuv4kf4U1O74pXSSFcRX0Zh5vqRQ805MQFOBE2LlJLgff07XJt+14QBZgn3Crw/q8JN5afHnrEUbonsysvHrIAkY5FgjhdT+s/7F3TWwTwJ57D/ZIq3nYshXYkiCSdC3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jmmr/ecJ; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DR/vqkTq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jmmr/ecJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709558574; x=1741094574;
+  t=1709558713; x=1741094713;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=wvqVrTZYUETegQB929WmfG/ja/6JUPIg5ef7y9GtyRE=;
-  b=DR/vqkTqYzUop2/LTwXpStpV/fXjKlL1h9K5BpMfuwr4QgfQYnbDRSyM
-   zdGnrmWnYL/nChqfBbD4KSMs8uvG+GHeEJDdpz8eARva2sFMhAMSneRwV
-   7cp3mnHU6hNE486Sel0RKwtFZ16xsL72HbygF46G6K0zBPwwte2rB/3BV
-   4jK5toE2n81Q1y5syJNrQY1ERalFw6PXPOc4quB4l7E+1De8qglegU/bX
-   wPmRI2URsDCmtZ9OT7jxrMAXcnw0oAGt7PDmZQItGRAAiFI25Bwlyo5t3
-   yxCwsSGWbw1e9INf421ZNgQBRiK4PllI3pY+efSRcV+Se+JgUgACj5Hp8
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="15198228"
+  bh=mE7WbTRPh0y+V6gk6+gRHEpzW2RaqAFTJA9wLdw90Hw=;
+  b=Jmmr/ecJ62mbgMHYC9iH+7OGCE7Mu+R1UmvprjwUHYhWdqYsi8zwADLJ
+   sszOwDqoEn0y6BerjCm2vPSGG5giEppEtd5sNZB44LNgc6zhk6xOdB/Gk
+   aKkoHiC8sBMi9QXrizwqSHFvFwnguEBOiioMa/SYDy3tGKa8M6N6KNJy2
+   MytQw/I6s3FbqYJnbPaQr45fx3w+5kHW+tptcHerN2i7F9qoCn7AsyauW
+   bEZcNQZFml9VFtU32RPdlv6dQH9nTvHOAzBfBRCjJjagqhSAMX+UJc3H2
+   apK1XD2OcOPKRqfUfEy5EaqrzQvTWTXpKxh+qM/hWreh3u3X1cBSxILKc
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="26513704"
 X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="15198228"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:22:53 -0800
+   d="scan'208";a="26513704"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:25:12 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="8946080"
+   d="scan'208";a="9369745"
 Received: from ekohn-mobl1.ger.corp.intel.com (HELO localhost) ([10.246.49.145])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:22:50 -0800
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:25:10 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 4 Mar 2024 15:22:47 +0200 (EET)
-To: Dan Carpenter <dan.carpenter@linaro.org>, 
-    Shravan Kumar Ramani <shravankr@nvidia.com>
-cc: Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
+Date: Mon, 4 Mar 2024 15:25:05 +0200 (EET)
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+cc: "David E. Box" <david.e.box@linux.intel.com>, rajvi.jingar@linux.intel.com, 
     platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] platform/mellanox: mlxbf-pmc: fix signedness bugs
-In-Reply-To: <a4af764e-990b-4ebd-b342-852844374032@moroto.mountain>
-Message-ID: <9bdeba5e-0f33-c1d9-4cb4-6fdb42ec2fa9@linux.intel.com>
-References: <a4af764e-990b-4ebd-b342-852844374032@moroto.mountain>
+    Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH V2 2/9] platform/x86/intel/sdsi: Combine read and write
+ mailbox flows
+In-Reply-To: <dd9ab7d1-5c03-404a-90c7-7ccbc0fb5c4c@linux.intel.com>
+Message-ID: <b7b842e8-2609-aa8f-f90a-27a8ee8327cb@linux.intel.com>
+References: <20240228000016.1685518-1-david.e.box@linux.intel.com> <20240228000016.1685518-3-david.e.box@linux.intel.com> <dd9ab7d1-5c03-404a-90c7-7ccbc0fb5c4c@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-1914460003-1709558705=:986"
 
-On Thu, 29 Feb 2024, Dan Carpenter wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> These need to be signed for the error handling to work.  The
-> mlxbf_pmc_get_event_num() function returns int so int type is correct.
-> 
-> Fixes: 1ae9ffd303c2 ("platform/mellanox: mlxbf-pmc: Cleanup signed/unsigned mix-up")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
-> The code in mlxbf_pmc_valid_range() has a check for negatives but that
-> has a signedness bug too.  Fortunately "(u32)-EINVAL + 8" will not
-> result in an integer overflow so the offset is treated as invalid.
+--8323328-1914460003-1709558705=:986
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Hi,
+On Tue, 27 Feb 2024, Kuppuswamy Sathyanarayanan wrote:
+> On 2/27/24 4:00 PM, David E. Box wrote:
+> > The current mailbox commands are either read-only or write-only and the
+> > flow is different for each. New commands will need to send and receive
+> > data. In preparation for these commands, create a common polling functi=
+on
+> > to handle sending data and receiving in the same transaction.
+> >
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > ---
+> >
+> > V2 - In sdsi_cmd_read() remove unnecessary check for non-zero packet_si=
+ze
+> >      in do loop since the loop is exited earlier when packet_size is
+> >      zero.
 
-While this patch itself was fine so I applied it, when reviewing the patch 
-I noticed that some of the kstrtouint() derived values were not properly 
-bound checked (some were fed directly to FIELD_PREP()).
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
--- 
+--=20
  i.
 
+--8323328-1914460003-1709558705=:986--
