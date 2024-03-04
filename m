@@ -1,285 +1,512 @@
-Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2077.outbound.protection.outlook.com [40.107.102.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FD3A59;
-	Mon,  4 Mar 2024 03:19:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.153.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5A01170A
+	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Mar 2024 06:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.77
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709522361; cv=fail; b=QkguKPw8wbRhfiRJcC+4ycXca12ZYCiDrbmA7FtHsRr6A5cR18Bt7LQrX4YxulIiIdM47NytQdbjIKXE/VzLWUNBy/hP9NHerbcyxLFcaZoLK2Hp2qwwQO9ll/aF9ie2u0ovi9DbZrvXcvnIsjgJPsIysfcU7J1RoiB5WWqr6X4=
+	t=1709534533; cv=fail; b=jGJOnhSZQBMkDA5uwwujHIwJp/DldzPUp9BL4w9lRDX6s4dwNFTFnMyutdrRmdZWsBWuZZf1vQIYZ470c+3W9Z05TzDvzekCROkF7F9v5SHg5n+cHsnw/XX+UBO5idQJaqIf6aDC8TdhUNsifA53HveNxdUFHC91I8IFY+5asbg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709522361; c=relaxed/simple;
-	bh=1Yrpt7uLp4/mmwjODyksQb9FmJFTtOM09wO4ZxIjhOg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=J6HNy2GZTHrnATmyXWinx5FDdkt3H2qVH47N/d04cssvsYcajwXhKtl0P6C4hJoLfDHOXCHy+z1ix4Zc38muK1okfu33wl49vraFoSJdPEomdTH9wHDyt47I5WtPTuVQTcDBRUhxFnosrFlWUNjLQLhC6xTlLEUkT+HzJrEVGmg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=OcUsCY8E; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=JHWTgqpp; arc=fail smtp.client-ip=216.71.153.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	s=arc-20240116; t=1709534533; c=relaxed/simple;
+	bh=Hj5VOCyEltod3FG+H/Vahx/57a2OrHy/gysnN0vbswA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=B5pIJhRyEXhp9BULo8dowxq2ne3SPQ7k7DgQdv42wWbvBMbpSoWvk4iM/d2UqVWbw3a/oUNE20B5aBI4ODkcWYvtNV6vgWRAA1w3BDpJAPVpYK1Gynei6ZcuEsV9ApHjJwmLBvJQi9MvZoPTiD5Pu1CN24V3P4h513zWHatPh4g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=h0RPBYh1; arc=fail smtp.client-ip=40.107.102.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="OcUsCY8E";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="JHWTgqpp"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1709522359; x=1741058359;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=1Yrpt7uLp4/mmwjODyksQb9FmJFTtOM09wO4ZxIjhOg=;
-  b=OcUsCY8EBaynaO4C6oIB09EsJ4awLpyQIlMFk5uHiR5PI8aP20Xp4mLz
-   CX+Nb1JENtW/RNwucG7QqJ9KwKKi2zTiuyVjY1D9UbVbc8fWxiNti9lG2
-   aNentw1uVVd4e9xuUokSoffcPm3V4jB7QifayHHWFGfYe13v+0bHz0Vb/
-   Rw9Ri1czIwRBI88NA6XTCYroyxYeXSN9StvpCcwWwSrz50iX8XpRx9urC
-   YoafED7/4v31hwl/dDI26bKnCWtUzc1UVz5ejOlNn1fwuFV9Hwa2kkhA5
-   WN4hntfjgAWtq2jlJitm9dNPPewpYcSHJes1S029HyBMHLA8F00PzSm1g
-   g==;
-X-CSE-ConnectionGUID: XvjBJO0fRgmLnB61QM/DPQ==
-X-CSE-MsgGUID: LY087H+uTkOGHpzYaPfd5w==
-X-IronPort-AV: E=Sophos;i="6.06,203,1705334400"; 
-   d="scan'208";a="11303583"
-Received: from mail-eastusazlp17013024.outbound.protection.outlook.com (HELO BL0PR05CU006.outbound.protection.outlook.com) ([40.93.11.24])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Mar 2024 11:19:11 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="h0RPBYh1"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aTp8A4Jmb8UjJI0OkcgC1/lFBYRuFub9ZYhJhKKJDXGJSDJA+a8rECwNC1dgYqguAxj1PU+dzlWdCXl2IRB4nybgQNmRBaIgvW60edguA1U4jwlF/xdt7Uc6e6TdM2zn/j4u7wtAcEPR11WFTqhrENbbwmxlmwrAhllAZ4G8SgG3jSel/95OnPsUD5Uu9EcbqU7XARNlHEpBYh3Ek/+zHyEe8PGKZHFONTgzR3JL8MBc+Tt0QJuTTZ1SuhKXcPLjSwFd9b4fgrXC3rkBCppRcsocic4qG34DcoO6vmn047et2W0Wn8sZyEn36/zjz0I4p2bQvsjqQjYoZSqc73B36w==
+ b=Qj2AMCDSSOW/2Btah7rW1cJmDOcKxqgDvGc0JThjEDF6F9tC8syiKlZ4orpjx2j+q7kE8Awf9s6In/vh3w6HiRANkyEv0gR/qOv3Q6/L/1BPvGDa/c9t7ShvYY306UgOyNVLGqbFKg1RtPRqm9v5dYjk9jZ3A4B4wqnO+W16tppWCPj9tB7aK3dIhGHLydWRVo3Ujq3eOTh+nOwywAZCAqzealM9HZ46CmV0yyHtTX1fwrv2dIHhNJ7MzqOIsN2cOEx+l2cRW43V+/WhcjGrC1owr36o3k4A0+kCeGEpBuTM2rSc+AxdZrCUPVQKmGa1CT1IZ1A6Lwg+9x8mQv76+w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fKEAI6Ud/zowf16iKCTN9/JsYzQjWQ2VBW7icrCAeww=;
- b=Z/1wN3vz/GwG6s0TaYyhhcjDzp9x/0uN3adOf/i29A0zBobzk9gS9lIS/i1ESJPjMoH9W6A9/xVqLZDje84CYkbjHWXit9TWBfgT/WieF2oUPQAw4Mm5ZqwCHVwHHjy2TogTkRIySaB77aJkYiAa4fS56UCrSAcpv8ZfV0ndvmXBqgYYo3o5KuDRKDPlDMb0VvFW1l+QEtujLARIY5AMzD4lK8MLrkGvksdiJAKwaHbaCF0IcnPnh0FIR2zYmXi9yILmZa0bCAc0bA8CnOMZa+q6Xtg6OEhLDmcJBQs++rDK2cqfX4jtQmEq7tdiQCLNsQb0UHdtX+Li6m11fuP0oQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ bh=5cBxTaReqGJWZuoQw14Ai1RCjvATQ2DDrHrnfS/8lAY=;
+ b=RUHEPaKvtUuxfMG6EliKGOLgZdj242d//7EQPOpzizpmQ9u86ZiP4N4r9YhdUZbch9/fJlDf0TJ6rKkgUnPkWOQtSO1uTfez2zYDRyKobttmeRbtbOUwnsiJUPfwAGqFOGnIQBTBYJfjbbWP8XvdtJ4pJeXncQ3RRayehKb7+eCt1xjNqxbcHPZ1r4jRzOmuBYEiCQ7NyQAIpMnOJLqGgoy8tvwVe5R8857TuUehlovuBVGTK3hqsKaQaHRiwuQUDGDOCiSzuPBBxDAhv6xkH3TcQA6A8A/bk68zBvn7xoPYHy6w2oix/gZlcNzKcXXZCg03Hw4Wy9+0P1OAsbxPpw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fKEAI6Ud/zowf16iKCTN9/JsYzQjWQ2VBW7icrCAeww=;
- b=JHWTgqpp676qbS/jaeHEnRG4S2BzfQDenh+Fd9u3u1op01JFXoRL6PnKMkdZrYWmeBuzsWZOBUXINMKOUYtg2fdqy0PAddPxfHCHXdcOF2WBzc7WIwPnKuTix77Fwa2LByRl5dloZMOK2d1QbJDQi3ZHlCewSoVmlMgT74s/X+o=
-Received: from DM8PR04MB8037.namprd04.prod.outlook.com (2603:10b6:8:f::6) by
- CH2PR04MB7061.namprd04.prod.outlook.com (2603:10b6:610:96::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7339.38; Mon, 4 Mar 2024 03:19:09 +0000
-Received: from DM8PR04MB8037.namprd04.prod.outlook.com
- ([fe80::c9e3:b196:e5ea:909b]) by DM8PR04MB8037.namprd04.prod.outlook.com
- ([fe80::c9e3:b196:e5ea:909b%4]) with mapi id 15.20.7339.035; Mon, 4 Mar 2024
- 03:19:06 +0000
-From: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To: Hans de Goede <hdegoede@redhat.com>
-CC: "platform-driver-x86@vger.kernel.org"
-	<platform-driver-x86@vger.kernel.org>, =?iso-8859-1?Q?Ilpo_J=E4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>, Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>, "danilrybakov249@gmail.com"
-	<danilrybakov249@gmail.com>, Lukas Wunner <lukas@wunner.de>, Klara Modin
-	<klarasmodin@gmail.com>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v2] platform/x86: p2sb: Defer P2SB device scan when P2SB
- device has func 0
-Thread-Topic: [PATCH v2] platform/x86: p2sb: Defer P2SB device scan when P2SB
- device has func 0
-Thread-Index: AQHabEDqvjYLP9d8aESjxeYsLpcDnLEkDfgAgABHMYCAAMeNAIABToyAgACBqIA=
-Date: Mon, 4 Mar 2024 03:19:06 +0000
-Message-ID: <6sbllfapnclmu5sjdtjcs4tyzkkr76ipg3i3rtqyyj7syhtkwd@d2l6zq2co7zt>
-References: <20240302012813.2011111-1-shinichiro.kawasaki@wdc.com>
- <gl7rsalwdwdo4rdes6akcnd7llrz75jjje2hchy5cdvzse6vei@367ddi3u6n2e>
- <a26554d3-bee9-4030-a06c-f886ba2fffb0@redhat.com>
- <r6ezdjqb5hz5jvvaj2beyulr2adwht2sonxw3bhcjdvwduyt66@2hlsmnppfsk2>
- <7935add6-a643-43dd-82a8-b7bcfb94d297@redhat.com>
-In-Reply-To: <7935add6-a643-43dd-82a8-b7bcfb94d297@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wdc.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR04MB8037:EE_|CH2PR04MB7061:EE_
-x-ms-office365-filtering-correlation-id: fc2037dd-51dc-4b3d-7617-08dc3bf9d9ca
-wdcipoutbound: EOP-TRUE
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- 6/QvNUl7FSbK/8uXZWS7QAOh2p+SLvB/6JvpzZcFfmeWqvSl4+s8tQFBjnIWoELc59vyw4OqdKwI/IkGEQ7Vy2VXJ70/CQY3AE7JtX+YSJOgiVsUPxx0nfmtw7oGvpWjaukM77hW+m3C13rhMc3QZCV5bLFXvmn/LBZ+yhRKpON5B1gvgR5MQQxpCUIao0neTGOeHz4mloBtVo0d9Y+FZQsG4tN6a4mWeomTivEza1+fKLOGFSpciidPpjPpRTJ6GUNkDHs85XLdRUDugU6BcCnwKlgWO4mHbV5SKnT6sYGplNUyvaclgqWt/TXt9ph1MtApFQPuHS8qwsW5IooPKnZGQjL/6pUYw3+zyI0Fw7Ig6iPFWL0wH1foM6ICnInLB7h0Oj+MHZy3c6wqrVdqxtOdTHYQ6ZmuJ6rCNJapeNlXzp9tNDOV50fO4rq8Rj6Zr8IGBm2+rC+X8xM0gqRVp3FxSbtVIgtOaGoFeq30hr9OdfmHXC1KB86GUX6XSZUiF8CSdlt4q6OzeBKH4k75XHAiWRPsC+mpcAzYM7koJJSFufdIWZACM4l69+UoNP7iw8ddGa8fcwa2Pug60jLZ4pplERyc2DmW5FHyYOnp/XBCjypLA3T4Yk3aizf8Sb1gmm8L52c7/FtIrAHNzrhhNNNL3kLu3EGDkDEl6YMvZYc=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR04MB8037.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?XJwBhKwYc+xlJq9qV4l/LDwRF3hLF7uvndR97XpUDICpSOmf19XyYj+g2o?=
- =?iso-8859-1?Q?+M6H2bCjJ+kldzw4U/uHqFn5z9aHA4wkrm+1icoPqR3rdyN0N38YHlv24s?=
- =?iso-8859-1?Q?qDKXx8NH6RmU5C6ZeNndmukgU/7bPTCqyF5F6K2T3gek7vjbWTVI+KPpWv?=
- =?iso-8859-1?Q?Kk/OtiyiwhLwhxFPHNm8L6RfQx9TLO+BIVIb3koidfjHme9LV7ZeYnb8v7?=
- =?iso-8859-1?Q?u30uAyinSENvioaAc3NB/Ry1zLuNsDTsHHpMyQ60HxhBHM09q0TSg2JCJe?=
- =?iso-8859-1?Q?J2IoT0KaNSYDdpMSUEJtU4utKQXKcPmFRgaUzqZrdzyC8ogKgmzM+MBiBg?=
- =?iso-8859-1?Q?6UQCI7gTtQmT5SBiIQkhGvCl8gbkJ8FzNYZSP4BnBbUgWpkfUFCOI5XTro?=
- =?iso-8859-1?Q?+4JnWZ1fuN90gsbl95wROduKLh9BrGEhnIUWZ6X9uQmCoFeWxsWXwJXYZv?=
- =?iso-8859-1?Q?/47pM26UWvwdtvhD1g1BJnHOpnfs07P0P0TFeTiO23I9HXcu0tHdCL1jYE?=
- =?iso-8859-1?Q?rLyKpUZd189AAW+S0H6922EicZIXHupDovitFblbcUBZsVV/aGDxDIsZIw?=
- =?iso-8859-1?Q?2pLOXe/dfQhGGhWdhEO7WWNi/KCKynvGyBqUla8qpoRd68QvUo9mTFn2EI?=
- =?iso-8859-1?Q?rqXwskg6BSybpoHuspq2lE5iXVN5eAvzx2TvPcGgVcW6N0yAEcIgMW8po+?=
- =?iso-8859-1?Q?jkN3YeDC0j2QK5sYJUKm41mhL8avwpVcUnnlDOiRMDpiXGdUI1Gpv6x3s4?=
- =?iso-8859-1?Q?fflUZWwNfSe3wPWRjdMik4Nfs8bxgipY+oW1/PDN6Y0EyX6C1R99fRXmno?=
- =?iso-8859-1?Q?AH2zrqRBJN88uTywzLgZCef8pka+7YTKsWKdlfuCPEIpto3qY8cLCjKzfj?=
- =?iso-8859-1?Q?dCVH9n3L6qVdwbDei10TqfTLSYx30daAxB56RLL7v/zLUBsjeKLj1bjGGV?=
- =?iso-8859-1?Q?NeapCSBgQNMuy6+e7BsRnrWD0yckkV37MkiJGn/O9k5lFwVHFKVhpf4geQ?=
- =?iso-8859-1?Q?09I7lhzV4H3u8wtYR/ajuecUFnxtOgyG3SEz6uBzYH9CWZQSYEb8jxImU4?=
- =?iso-8859-1?Q?WcpIUINn6woDUf6HNbSd2V7pyyisUUZXdgXMfQosKv8MxfSMyZlz/5wpSq?=
- =?iso-8859-1?Q?/7g+k/xOSxc1N+3hI+ogG7E6AztJbZtl186rxU2kyhHGdpIlO8Ddaoibbv?=
- =?iso-8859-1?Q?J7bMGG1gYnyQ+aRZ0l15+NU0baFYFv351y7c5NMxW3yYnWdY9b85CT3B0O?=
- =?iso-8859-1?Q?8azfad17e8ipXKfZfHWu01Nu94dvhGFGlfwJNMVHeJ6E6QLtLahq0VUhNo?=
- =?iso-8859-1?Q?+e93j+/9g2gTVOr/fGf8lQ0d7ZlewZlF9yqOl1JyWjJMHXfRd2VkZh+h71?=
- =?iso-8859-1?Q?/Pj+fX5pxp3vHNhNVp1HKxR/ZbgJ5ptyiSqldALLdJlE+imJ8smDJLP0AR?=
- =?iso-8859-1?Q?8Aq4c9wvX3Ox3UzZKYsOHh2b0PN9+lbmzbr9w/MRzCIhNj8u5W8KazBbub?=
- =?iso-8859-1?Q?/ntjaanOzzevcqbXqIOzCIHvcoQlZ0TRHtpYSDfh4brhOQ0lxR6uTWm+a0?=
- =?iso-8859-1?Q?VPxnNcYzhnFVfWWBs1C2acwfobSlNFizP9TibBx8pSgNvErsl4CyZweHzB?=
- =?iso-8859-1?Q?oF8CCBISpjfXfYi4c1cDPKUP3t9GGHVUuLlTJk1Ulc4SaWy0vjNm6sNI6T?=
- =?iso-8859-1?Q?unsKopXxKCGNMrLSmFo=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <0F843DE7765AE146B08A80F797757272@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+ bh=5cBxTaReqGJWZuoQw14Ai1RCjvATQ2DDrHrnfS/8lAY=;
+ b=h0RPBYh1NdI9c1s6x7JHUGobMwBw9Y9wiOz++bpU1Yw+YzRmZFx0wjkPXwFPpv2jikV1A0Vkg+eobuUFFNauofF93bxmTEb8lqgq1W4aCi/BJ+KNuTpkDfUOq5hX4aYTPMblcmHXhm9CRapsPMYTJyq2K4C/boOX75yobP/mLZk=
+Received: from BN9PR03CA0448.namprd03.prod.outlook.com (2603:10b6:408:113::33)
+ by SA3PR12MB7950.namprd12.prod.outlook.com (2603:10b6:806:31c::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.38; Mon, 4 Mar
+ 2024 06:42:06 +0000
+Received: from BN3PEPF0000B073.namprd04.prod.outlook.com
+ (2603:10b6:408:113:cafe::36) by BN9PR03CA0448.outlook.office365.com
+ (2603:10b6:408:113::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.38 via Frontend
+ Transport; Mon, 4 Mar 2024 06:42:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN3PEPF0000B073.mail.protection.outlook.com (10.167.243.118) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7362.11 via Frontend Transport; Mon, 4 Mar 2024 06:42:05 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 4 Mar
+ 2024 00:42:02 -0600
+From: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+To: <Shyam-sundar.S-k@amd.com>, <hdegoede@redhat.com>,
+	<ilpo.jarvinen@linux.intel.com>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>,
+	<platform-driver-x86@vger.kernel.org>
+CC: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Subject: [PATCH v3] platform/x86/amd/pmc: Add AMD MP2 STB functionality
+Date: Mon, 4 Mar 2024 12:11:47 +0530
+Message-ID: <20240304064147.2586158-1-Basavaraj.Natikar@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	X16rFc8K08SxTRxqWAcs4nLjjCZmTfQJPTNs+xl44D+Nx1hwmv5xc75RXWQI4alJ7qQpvaMu+1QtIBREKe0uGErA7ql9Ogqv/RtJl5FC4+GT8JhZjT0RU/bCAE9ufL6vAyXuD3/uvUQjvCfzNnCjh/9XAmhgREGo6VQBm5BPdpwlpIOryyZlx1gwZV4oH7Ete7iEQ9spz2ctZD1/cR+zHHnW8y2oZ+O0T8gZga5BW7KfxGthDTgDhDG2DqYHR3JQ5ynmeNk88DDl/HcVPhrKrRdOxcoZpVlREDPPM4VyzRCwgHdO2943LqPZu+fFB71JU1Kvty5aPrMADjMP93XiVwDMivnmUUVRQaTKBflDCgxgJWBtxDfiAL7lYyrGa3wjK3bhubCEoH8AtOhiMNJmLa0K770DXfd9ioF1UgoiwEfvKNOvYqQEElpl0SW3HArk2gHoQPT5TMs6kV8SgaEIsPaZ5o1d9W3rqqozKmUQc06RW7XPCq/YkfqHqdprHjaesxYRptoWhmLgU1rB5OAvjPVSv+by7bK4xFl8atkgXUqofgaQxbQJ3thyWAncyvaysMkOvHk+h9yiWNFZewk5xQDTCAK0qDPZdAFX5/BnMMYg3PtMF/h3A9WKB0E/IMob
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR04MB8037.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc2037dd-51dc-4b3d-7617-08dc3bf9d9ca
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2024 03:19:06.6119
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B073:EE_|SA3PR12MB7950:EE_
+X-MS-Office365-Filtering-Correlation-Id: e628f325-4418-4c1c-a93c-08dc3c16352c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	lG7iMsA7XiU82a1F8S+18qjE7T/9cuHGeUw5RdakgVaYj1sw7lVgyT42mWTXTUoU3M9v2vfzeXPOrXUfvSY5gHyqxayI5OeOQ4WWEQdAXqoQJtia165sPcj+ZDz9FI/569P1NYATSWmRNYVFpyc2x+S2vgRdwgZcDU7TokN3cCFavxjMFdyzvJ7fn4LmnK5TjTTIUFwISpRFPC0pyKECHd67AYUTTuxv8jqvYbcQjOXkl4ZplZG0D9MDqq1Fe8EgydjQAhXo1ZS7WiEWGDHR8PrfBwb/8rwfdcHJXUiuOEbHQuY7huYTlzHc4xTrPImDPtnEwITnrWbdvluL1KfmWgsaEH+E0gTAZpsjpTnFBrArHQtK15CpyZE8/9QkOyUZ1f65U38kv+IjjUderx1Ca9uQD21R0O2j5WTzE7/jiCtTJUhIwOmBGQyxg9+GQuvclH2dSCMSsoGtw5addKYH0wFuH3VDzet4aF1vyQg10vb3jrt1r9/IljZ+8Ut6kG4Lw9KzL7Y+KbmmIvdYlsfda/T2SbGvjpSiQEgVP2Y/LDtmrTdFcs2KwK6yRPoWB43zVYHhtfHUKkQPOqh3Ybv459XYsNwlknplZWVZdNn5KVJOysDdU+ZZNKNOWWUOcLqvuQCddNAEfXCLvUwzRGBu8fTmZ0MO0xRyEzbvyi6xHWT1BrqYSc2KD7ycJ0sIj64AqDH+Xe4YvC28e2MGBbxadrHcXeI1qV9CaiK8CLPCL7bu/pV8KbQW3VllDHL9RCGB
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(36860700004)(82310400014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 06:42:05.8365
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DFV+quH9yBWaJ5VIEDPi46uqffbY7FFIxLk0SLVONpmvnTVzoshobpyyPDQ3QVFS7366xFgLwYvCphtsiyK26ODRd1JWHEa/mztnF3lJr+I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR04MB7061
+X-MS-Exchange-CrossTenant-Network-Message-Id: e628f325-4418-4c1c-a93c-08dc3c16352c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B073.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7950
 
-On Mar 03, 2024 / 20:35, Hans de Goede wrote:
-> Hi Shinichiro,
->=20
-> On 3/3/24 00:37, Shinichiro Kawasaki wrote:
-> > On Mar 02, 2024 / 12:43, Hans de Goede wrote:
->=20
-> <snip>
->=20
-> >> Can we not simply just skip scanning function 0 all together when
-> >> on Goldmont? I don't think any drivers actually ask for the bar
-> >> of function 0 on Goldmont ?
-> >=20
-> > Hi Hans, thank you for the idea. If we can take this appraoch, the fix =
-patch
-> > will be simpler.
-> >=20
-> >>
-> >> This is likely also why we never had the issue with the old p2sb_bar()
-> >> code, because that never touched function 0.
-> >>
-> >> I think this is actually what you did in one of your first test
-> >> patches in the bugzilla, right ?
-> >=20
-> > To be precise, the first test patch did P2SB scan only for the function=
- 2.
-> > To make sure your idea works, it's the better to test to scan all the f=
-unction
-> > numbers except 0, from 1 to 7.
-> >=20
-> >>
-> >> So maybe audit all the callers of p2sb_bar() and see if any
-> >> caller asks for function 0 on goldmont ?
-> >>
-> >> Let me know if you need help with this audit.
-> >=20
-> > Help for the audit will be appreciated.
-> >=20
-> > With the quick grep for p2sb_bar() [2], there are five p2sb_bar() calle=
-rs:
->=20
-> Ack, I have found the same 5 callers, let go over them one by one:
->=20
-> >  1) edac/pnd2_edac             devfn =3D 0
->=20
-> Hmm, ok so this one binds based on CPU-ids:
->=20
-> static const struct x86_cpu_id pnd2_cpuids[] =3D {
->         X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,       &apl_ops),
->         X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_D,     &dnv_ops),
->         { }
-> };
-> MODULE_DEVICE_TABLE(x86cpu, pnd2_cpuids);
->=20
-> And the 0 passed here will get replaced by PCI_DEVFN(13, 0),
-> so there goes my theory of p2sb() never being called for
-> function 0.
+AMD MP2 STB function provides a data buffer used to log debug information
+about the system execution during S2Idle suspend/resume.
 
-Thank you very much fot the audit. So, it was clarified that the p2sb_bar()
-can be called for function 0 on goldmont.
+A data buffer known as the STB (Smart Trace Buffer) is a circular buffer
+which is a low-level log to assist in debugging by providing insights
+into any potential hangs or stalls that may occur during the S2Idle
+suspend/resume processes.
 
->=20
-> So I have taken a quick look at your latest patch from:
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D218531
->=20
-> I think that skipping the caching at fs_initcall() on goldmont
-> is a good idea.
->=20
-> But you still cache *all* the bars for goldmont on the first
-> p2sb_bar(bus, 0, &res) call .
->=20
-> If we delay caching the bars till there first use, why not
-> just do that for all the bars and also drop p2sb_scan_and_cache()
-> which for non goldmont is equivalent to p2sb_scan_and_cache_devfn()
-> but on goldmont caches all the functions.
->=20
-> Since you now delay caching (on goldmont) to the first p2sb_bar()
-> call I think that you can just drop p2sb_scan_and_cache()
-> altogether and just directly call p2sb_scan_and_cache_devfn()
-> in its place.
->=20
-> This means that on goldmont where both the p2sb devfn
-> PCI_DEVFN(13, 0) and the SPI controller PCI_DEVFN(13, 2)
-> are used we end up going through p2sb_cache_resources()
-> twice, assuming both are actually requested at least once.
-> But with your current patch this will also happen when
-> PCI_DEVFN(13, 2) gets requested first because then
-> p2sb_scan_and_cache() will enter the "not function 0"
-> path and only cache the one resource.
->=20
-> So I think that it would make things more KISS if
-> p2sb_bar() always only caches the requested devfn bar0
-> instead of treating function0 special as it does now.
+The current PMC driver retrieves STB data from MP1, but there can be
+scenarios where MP1 might hang or become unresponsive, leading to the
+loss of critical data present in the STB buffer. This defeats the purpose
+of the STB buffer, which was originally meant to help identify system
+failures.
 
-Thank you again for looking into the patch. I agree that the "function 0" p=
-ath
-in p2sb_scan_and_cache() is not meaningful any more. When I prepare v3 patc=
-h,
-I will modify the patch to call p2sb_scan_and_cache_devfn() in place of
-p2sb_scan_and_cache().
+This feature creates stb_read_previous_boot debugfs allows users to
+retrieve the STB log from MP2 specifically from the last occurrence of
+the S2Idle suspend/resume. A userspace daemon can access STB log of last
+S2Idle suspend/resume which can help to troubleshoot potential issues
+related to hangs or stalls during the S2Idle suspend/resume sequence.
 
->=20
-> Also talking about making things more KISS, how
-> about completely dropping the fs_initcall and
-> simply always delay the caching of a devfn until
-> the first call of p2sb_bar() for that devfn ?
->=20
-> That way fixing the issue will also actually reduce /
-> simplify the code :)
+Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+---
+Changes in v3:
+	- Changed an error path for deinitialization or freeing resources.
+	- Modified the macro and variable to have a more specific name.
+	- Included header files for USEC_PER_MSEC, writeq, and writel.
+	- Switched the data type of the 'len' variable from 'int' to 
+	  'unsigned int'.
+	- Used one variable for return values.
 
-This will simplify the code more, but it has two drawabacks:
+Changes in v2:
+	- Used linux/sizes.h instead of defining KB.
+	- Defined timeout containing unit as per USEC_PER_MSEC.
+	- Modified macro of AMD_C2P_MSG and AMD_P2C_MSG.
+	- Changed string stb to STB in log messages.
+	- Defined literals using Macro.
 
-1) It still leaves the rare deadlock scenario. If the drivers which call
-   p2sb_bar() are not probed during boot, and if they are probed afterwards=
- by
-   sysfs pci bus rescan, pci_rescan_remove_lock causes the deadlock.
+ drivers/platform/x86/amd/pmc/Kconfig   |  23 +++
+ drivers/platform/x86/amd/pmc/Makefile  |   1 +
+ drivers/platform/x86/amd/pmc/mp2_stb.c | 260 +++++++++++++++++++++++++
+ drivers/platform/x86/amd/pmc/pmc.c     |   4 +
+ drivers/platform/x86/amd/pmc/pmc.h     |  14 ++
+ 5 files changed, 302 insertions(+)
+ create mode 100644 drivers/platform/x86/amd/pmc/mp2_stb.c
 
-2) It triggers lockdep splat for pci_rescan_remove_lock at sysfs pci bus re=
-scan,
-   even for devices unrelated to p2sb (This is what I regularly observe dur=
-ing
-   kernel tests for storage sub-system.)
+diff --git a/drivers/platform/x86/amd/pmc/Kconfig b/drivers/platform/x86/amd/pmc/Kconfig
+index 883c0a95ac0c..8177486babf9 100644
+--- a/drivers/platform/x86/amd/pmc/Kconfig
++++ b/drivers/platform/x86/amd/pmc/Kconfig
+@@ -18,3 +18,26 @@ config AMD_PMC
+ 
+ 	  If you choose to compile this driver as a module the module will be
+ 	  called amd-pmc.
++
++config AMD_MP2_STB
++	bool "AMD SoC MP2 STB function"
++	depends on AMD_PMC
++	help
++	  AMD MP2 STB function provides a data buffer used to log debug
++	  information about the system execution during S2Idle suspend/resume.
++	  A data buffer known as the STB (Smart Trace Buffer) is a circular
++	  buffer which is a low-level log for the SoC which is used to debug
++	  any hangs/stalls during S2Idle suspend/resume.
++
++	  The current PMC driver retrieves STB data from MP1, but there can be
++	  scenarios where MP1 might hang or become unresponsive, leading to the
++	  loss of critical data present in the STB buffer. This defeats the
++	  purpose of the STB buffer, which was originally meant to help identify
++	  system failures.
++
++	  Creates stb_read_previous_boot debugfs to get STB, a userspace daemon
++	  can access STB log of last S2Idle suspend/resume which can help to
++	  debug if hangs/stalls during S2Idle suspend/resume
++
++	  Say Y or N here if you have a notebook powered by AMD RYZEN CPU/APU
++	  and supports MP2 STB.
+diff --git a/drivers/platform/x86/amd/pmc/Makefile b/drivers/platform/x86/amd/pmc/Makefile
+index 4aaa29d351c9..f1d9ab19d24c 100644
+--- a/drivers/platform/x86/amd/pmc/Makefile
++++ b/drivers/platform/x86/amd/pmc/Makefile
+@@ -6,3 +6,4 @@
+ 
+ amd-pmc-objs := pmc.o pmc-quirks.o
+ obj-$(CONFIG_AMD_PMC) += amd-pmc.o
++amd-pmc-$(CONFIG_AMD_MP2_STB) += mp2_stb.o
+diff --git a/drivers/platform/x86/amd/pmc/mp2_stb.c b/drivers/platform/x86/amd/pmc/mp2_stb.c
+new file mode 100644
+index 000000000000..4acea31daaaa
+--- /dev/null
++++ b/drivers/platform/x86/amd/pmc/mp2_stb.c
+@@ -0,0 +1,260 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * AMD MP2 STB layer
++ *
++ * Copyright (c) 2024, Advanced Micro Devices, Inc.
++ * All Rights Reserved.
++ *
++ * Author: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
++ */
++
++#include <linux/debugfs.h>
++#include <linux/device.h>
++#include <linux/io.h>
++#include <linux/iopoll.h>
++#include <linux/pci.h>
++#include <linux/sizes.h>
++#include <linux/time.h>
++
++#include "pmc.h"
++
++#define VALID_MSG 0xA
++#define VALID_RESPONSE 2
++
++#define AMD_C2P_MSG0 0x10500
++#define AMD_C2P_MSG1 0x10504
++#define AMD_P2C_MSG0 0x10680
++#define AMD_P2C_MSG1 0x10684
++
++#define MP2_RESP_SLEEP_US 500
++#define MP2_RESP_TIMEOUT_US (1600 * USEC_PER_MSEC)
++
++#define MP2_STB_DATA_LEN_2KB 1
++#define MP2_STB_DATA_LEN_16KB 4
++
++static struct amd_mp2_dev *mp2;
++
++struct mp2_cmd_base {
++	union {
++		u32 ul;
++		struct {
++			u32 cmd_id : 4;
++			u32 intr_disable : 1;
++			u32 is_dma_used : 1;
++			u32 rsvd : 26;
++		} cmd;
++	};
++};
++
++struct mp2_cmd_response {
++	union {
++		u32 resp;
++		struct {
++			u32 cmd_id : 4;
++			u32 status : 4;
++			u32 response : 4;
++			u32 rsvd2 : 20;
++		} response;
++	};
++};
++
++struct mp2_stb_data_valid {
++	union {
++		u32 data_valid;
++		struct {
++			u32 valid : 16;
++			u32 length : 16;
++		} val;
++	};
++};
++
++static int amd_mp2_wait_response(u8 cmd_id, u32 command_sts)
++{
++	struct mp2_cmd_response cmd_resp;
++
++	if (!readl_poll_timeout(mp2->mmio + AMD_P2C_MSG0, cmd_resp.resp,
++				(cmd_resp.response.response == 0x0 &&
++				 cmd_resp.response.status == command_sts &&
++				 cmd_resp.response.cmd_id == cmd_id), MP2_RESP_SLEEP_US,
++				 MP2_RESP_TIMEOUT_US))
++		return cmd_resp.response.status;
++
++	return -ETIMEDOUT;
++}
++
++static void amd_mp2_stb_send_cmd(u8 cmd_id, bool is_dma_used)
++{
++	struct mp2_cmd_base cmd_base;
++
++	cmd_base.ul = 0;
++	cmd_base.cmd.cmd_id = cmd_id;
++	cmd_base.cmd.intr_disable = 1;
++	cmd_base.cmd.is_dma_used = is_dma_used;
++
++	writeq(mp2->dma_addr, mp2->mmio + AMD_C2P_MSG1);
++	writel(cmd_base.ul, mp2->mmio + AMD_C2P_MSG0);
++}
++
++static int amd_mp2_stb_region(unsigned int len)
++{
++	struct device *dev = &mp2->pdev->dev;
++
++	len *= SZ_1K;
++
++	if (!mp2->stbdata) {
++		mp2->vslbase = dmam_alloc_coherent(dev, len, &mp2->dma_addr, GFP_KERNEL);
++		if (!mp2->vslbase)
++			return -ENOMEM;
++
++		mp2->stbdata = devm_kzalloc(dev, len, GFP_KERNEL);
++		if (!mp2->stbdata)
++			return -ENOMEM;
++	}
++
++	return 0;
++}
++
++static int amd_mp2_process_cmd(struct file *filp)
++{
++	struct device *dev = &mp2->pdev->dev;
++	struct mp2_stb_data_valid stb_dv;
++	int status;
++
++	stb_dv.data_valid = readl(mp2->mmio + AMD_P2C_MSG1);
++
++	if (stb_dv.val.valid != VALID_MSG) {
++		dev_err(dev, "Invalid STB data\n");
++		return -EBADMSG;
++	}
++
++	if (stb_dv.val.length != MP2_STB_DATA_LEN_2KB &&
++	    stb_dv.val.length != MP2_STB_DATA_LEN_16KB) {
++		dev_err(dev, "Unsupported length\n");
++		return -EMSGSIZE;
++	}
++
++	mp2->stb_len = BIT(stb_dv.val.length);
++
++	status = amd_mp2_stb_region(mp2->stb_len);
++	if (status) {
++		dev_err(dev, "Failed to init STB region, status %d\n", status);
++		return status;
++	}
++
++	amd_mp2_stb_send_cmd(VALID_MSG, true);
++	status = amd_mp2_wait_response(VALID_MSG, VALID_RESPONSE);
++	if (status == VALID_RESPONSE) {
++		memcpy_fromio(mp2->stbdata, mp2->vslbase, SZ_1K * mp2->stb_len);
++		filp->private_data = mp2->stbdata;
++		mp2->is_stb_data = true;
++	} else {
++		dev_err(dev, "Failed to start STB dump, status %d\n", status);
++		return -EOPNOTSUPP;
++	}
++
++	return 0;
++}
++
++static int amd_mp2_stb_debugfs_open(struct inode *inode, struct file *filp)
++{
++	if (!mp2->is_stb_data)
++		return amd_mp2_process_cmd(filp);
++
++	filp->private_data = mp2->stbdata;
++
++	return 0;
++}
++
++static ssize_t amd_mp2_stb_debugfs_read(struct file *filp, char __user *buf, size_t size,
++					loff_t *pos)
++{
++	if (!filp->private_data)
++		return -EINVAL;
++
++	return simple_read_from_buffer(buf, size, pos, filp->private_data, SZ_1K * mp2->stb_len);
++}
++
++static const struct file_operations amd_mp2_stb_debugfs_fops = {
++	.owner = THIS_MODULE,
++	.open = amd_mp2_stb_debugfs_open,
++	.read = amd_mp2_stb_debugfs_read,
++};
++
++static void amd_mp2_dbgfs_register(struct amd_pmc_dev *dev)
++{
++	if (!dev->dbgfs_dir)
++		return;
++
++	debugfs_create_file("stb_read_previous_boot", 0644, dev->dbgfs_dir, dev,
++			    &amd_mp2_stb_debugfs_fops);
++}
++
++void amd_mp2_stb_deinit(void)
++{
++	struct pci_dev *pdev;
++
++	if (mp2 && mp2->pdev) {
++		pdev = mp2->pdev;
++		pci_dev_put(pdev);
++		if (mp2->devres_gid)
++			devres_release_group(&pdev->dev, mp2->devres_gid);
++		mp2 = NULL;
++	}
++}
++
++void amd_mp2_stb_init(struct amd_pmc_dev *dev)
++{
++	struct pci_dev *pdev;
++	int rc;
++
++	mp2 = devm_kzalloc(dev->dev, sizeof(*mp2), GFP_KERNEL);
++	if (!mp2)
++		goto mp2_error;
++
++	pdev = pci_get_device(PCI_VENDOR_ID_AMD, 0x172c, NULL);
++	if (!pdev)
++		goto mp2_error;
++
++	mp2->pdev = pdev;
++
++	mp2->devres_gid = devres_open_group(&pdev->dev, NULL, GFP_KERNEL);
++	if (!mp2->devres_gid) {
++		dev_err(&pdev->dev, "devres_open_group failed\n");
++		goto mp2_error;
++	}
++
++	rc = pcim_enable_device(pdev);
++	if (rc) {
++		dev_err(&pdev->dev, "pcim_enable_device failed\n");
++		goto mp2_error;
++	}
++
++	rc = pcim_iomap_regions(pdev, BIT(2), "mp2 stb");
++	if (rc) {
++		dev_err(&pdev->dev, "pcim_iomap_regions failed\n");
++		goto mp2_error;
++	}
++
++	/* MP2 MMIO is mapped to BAR2 */
++	mp2->mmio = pcim_iomap_table(pdev)[2];
++	if (!mp2->mmio) {
++		dev_err(&pdev->dev, "pcim_iomap_table failed\n");
++		goto mp2_error;
++	}
++
++	pci_set_master(pdev);
++
++	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
++	if (rc) {
++		dev_err(&pdev->dev, "failed to set DMA mask\n");
++		goto mp2_error;
++	}
++
++	amd_mp2_dbgfs_register(dev);
++	dev->mp2 = mp2;
++
++	return;
++
++mp2_error:
++	amd_mp2_stb_deinit();
++}
+diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+index 108e12fd580f..926257125ac1 100644
+--- a/drivers/platform/x86/amd/pmc/pmc.c
++++ b/drivers/platform/x86/amd/pmc/pmc.c
+@@ -1106,6 +1106,8 @@ static int amd_pmc_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	amd_pmc_dbgfs_register(dev);
++	if (IS_ENABLED(CONFIG_AMD_MP2_STB))
++		amd_mp2_stb_init(dev);
+ 	pm_report_max_hw_sleep(U64_MAX);
+ 	return 0;
+ 
+@@ -1122,6 +1124,8 @@ static void amd_pmc_remove(struct platform_device *pdev)
+ 		acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
+ 	amd_pmc_dbgfs_unregister(dev);
+ 	pci_dev_put(dev->rdev);
++	if (IS_ENABLED(CONFIG_AMD_MP2_STB))
++		amd_mp2_stb_deinit();
+ 	mutex_destroy(&dev->lock);
+ }
+ 
+diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
+index 827eef65e133..a49af1fa0060 100644
+--- a/drivers/platform/x86/amd/pmc/pmc.h
++++ b/drivers/platform/x86/amd/pmc/pmc.h
+@@ -14,6 +14,17 @@
+ #include <linux/types.h>
+ #include <linux/mutex.h>
+ 
++struct amd_mp2_dev {
++	void __iomem *mmio;
++	void __iomem *vslbase;
++	void *stbdata;
++	void *devres_gid;
++	struct pci_dev *pdev;
++	dma_addr_t dma_addr;
++	int stb_len;
++	bool is_stb_data;
++};
++
+ struct amd_pmc_dev {
+ 	void __iomem *regbase;
+ 	void __iomem *smu_virt_addr;
+@@ -38,10 +49,13 @@ struct amd_pmc_dev {
+ 	struct dentry *dbgfs_dir;
+ 	struct quirk_entry *quirks;
+ 	bool disable_8042_wakeup;
++	struct amd_mp2_dev *mp2;
+ };
+ 
+ void amd_pmc_process_restore_quirks(struct amd_pmc_dev *dev);
+ void amd_pmc_quirks_init(struct amd_pmc_dev *dev);
++void amd_mp2_stb_init(struct amd_pmc_dev *dev);
++void amd_mp2_stb_deinit(void);
+ 
+ /* List of supported CPU ids */
+ #define AMD_CPU_ID_RV			0x15D0
+-- 
+2.25.1
 
-I suggest to limit these drawbacks only on goldmont.
-
-On the other hand, it means that the drawbacks will be still left on goldmo=
-nt.
-I would like to follow your call. If you think the "no fs_initcall() and al=
-ways
-delay the caching" is the best, I'm willing to prepare the patch for it.=
