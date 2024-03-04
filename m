@@ -1,85 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E883D0D4
-	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Mar 2024 13:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53FF63E462
+	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Mar 2024 13:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709559526; cv=none; b=AMhJkbtmoWIDSq5SV3R8m2ZIt3FpCurIYpfA2gmRqccS2k3TM+yA8xnm1pRuh6Bjwh65BrES/Vmb2chz+9ilD/2pHF+8oJA4zy+ab1rd0VoM9ruWX/94DpGAvvePbcnfT+NlTJ9kUhhb5PtyIIVVm+/SIwu0cjS4dcIuDDqj7EE=
+	t=1709559845; cv=none; b=DeojlXvEawL1HHxQtXWFBv6saI0jrALFyqkUsueIPk4kvScq2PxOIcMJsO2pg4QjMSsNdspaD9n84HKSIIx1cWaZoB7MQ0pJwaElmDPhwzQ9t+erozzuV4HwQiSVuBvX1vgdWLWaSsWRJ3nCJruBdhQjiRUNjMYb37xfXrvYYcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709559526; c=relaxed/simple;
-	bh=X14uLVXdeRpbAevU4qwPU8I/RJYzMkfYzZ9kMoiXS0I=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=VAw5Bi/2hOK9cJMlmYtd+sdBz0Iy7Xt+M4KC3Ppo+Ws3JkxgKHwzvmAK9JowVnjSb0BRXnjKcg4koi/FIgAAOzmIeqMLwXVZnrZNKf9OPULd3PBVafK8mOX6h9da9pbs8HqmVPUuMYbjTyt5abEsjaTiXJ22r/otvUXG1jpwzNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R2PJxCG0; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709559845; c=relaxed/simple;
+	bh=ktdUYWZ2OEv+ZLLGv/CfmlXwdXaVhybnRKXhOhoRvno=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=onf2J0BptD3U4eXq5wz+MtQHD/s/oXLnZiqgTvyyOqW67aNPRqH0sgWgkiy8v6K6B2VR1nD502uAH+2q+OdBQj/vhLhIetyjLvIyIlGCoBREoiSylieJD6tDTU66T4//+FkNBX5NmcUibrwCxzRcmBbKuejRZjpb+cJy6vuTmkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GIS+Z2Dm; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R2PJxCG0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709559525; x=1741095525;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=X14uLVXdeRpbAevU4qwPU8I/RJYzMkfYzZ9kMoiXS0I=;
-  b=R2PJxCG0aTdXgcz17sMze2ZXOKvfDYSWnpszRheUgWqXnP45oOpD9qMp
-   2rOP1XrFWE6XeW2Zon9T44uNfZvtZW/w7hGEwoxwJ1e8ybjffJiSHQzrp
-   xV+1M5G+PIkqwhSxXQPkXlSwsaAccDYi0oLHgzdWT/bEGf95P27gi3jNY
-   swoT1XSw1hvqaljndT81ex9h0gCp3KK9/19tG3Wfc4Jnd71idDbtOYVOb
-   BHVRuwS/ORL4Q1JlJjqHKWMjVE87J4irQ+qlCnASGVpljy4goBf7PFT+z
-   KHfiE0D/kBAzapBgHj1T3xT02L6pgpVhOVh64tHwxE8FASp6hx8VRxMqL
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="29472456"
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="29472456"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:38:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="9145532"
-Received: from ekohn-mobl1.ger.corp.intel.com (HELO localhost) ([10.246.49.145])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:38:41 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 4 Mar 2024 15:38:37 +0200 (EET)
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    Patil.Reddy@amd.com
-Subject: Re: [PATCH RESEND v2 5/7] platform/x86/amd/pmf: Add support to get
- APTS index numbers for static slider
-In-Reply-To: <20240229105901.455467-6-Shyam-sundar.S-k@amd.com>
-Message-ID: <e685f63d-3e4c-b3d3-45f1-2f67ad6ff331@linux.intel.com>
-References: <20240229105901.455467-1-Shyam-sundar.S-k@amd.com> <20240229105901.455467-6-Shyam-sundar.S-k@amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GIS+Z2Dm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709559842;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=plGAajtE42pngWWzxM225uxzxmsJXDSdv3XUKaR8+SY=;
+	b=GIS+Z2DmjA/tfTASqVy5rS6OoOqRPxDda/xXX1xJmK8csmSq5RZKyw092TB4DgGA1enq6Z
+	bhcEpO8QmkiokJTyWy9vFqNlD2xJXMNqktCSPzTXLtAGOxyaLa6aOx7i8CwmHMHlQYdAZD
+	jTEkuPthvEcx6hP+bOKzJThDVgV0bZA=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-440-lDJnU867MC2l4-bHG6I3bg-1; Mon,
+ 04 Mar 2024 08:43:59 -0500
+X-MC-Unique: lDJnU867MC2l4-bHG6I3bg-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 998C428AC1C3;
+	Mon,  4 Mar 2024 13:43:58 +0000 (UTC)
+Received: from x1.localdomain.com (unknown [10.39.195.86])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id BD091492BE2;
+	Mon,  4 Mar 2024 13:43:56 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	danilrybakov249@gmail.com,
+	Lukas Wunner <lukas@wunner.de>,
+	Klara Modin <klarasmodin@gmail.com>,
+	linux-pci@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [RFC 0/1] platform/x86: p2sb: On Goldmont only cache P2SB and SPI devfn BAR
+Date: Mon,  4 Mar 2024 14:43:54 +0100
+Message-ID: <20240304134356.305375-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-170568694-1709559517=:986"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi All,
 
---8323328-170568694-1709559517=:986
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Here is an alternative approach to fixing the p2sb_bar() caching
+causing problems on an ASUS VivoBook D540NV-GQ065T.
 
-On Thu, 29 Feb 2024, Shyam Sundar S K wrote:
+This is untested, which is why this is marked as RFC. If this works
+I believe that this is a better approach then the approach from:
 
-> APMF spec has a newer section called the APTS (AMD Performance and
-> Thermal State) information, where each slider/power mode is associated
-> with an index number.
->=20
-> Add support to get these indices for the Static Slider.
->=20
-> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
+"[PATCH v3] platform/x86: p2sb: Defer P2SB device scan when P2SB
+device has func 0"
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+Regards,
 
---=20
- i.
+Hans
 
---8323328-170568694-1709559517=:986--
+
+Hans de Goede (1):
+  platform/x86: p2sb: On Goldmont only cache P2SB and SPI devfn BAR
+
+ drivers/platform/x86/p2sb.c | 23 ++++++++---------------
+ 1 file changed, 8 insertions(+), 15 deletions(-)
+
+-- 
+2.44.0
+
