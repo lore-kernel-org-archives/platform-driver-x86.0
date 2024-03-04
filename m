@@ -1,65 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E8F6026A
-	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Mar 2024 16:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51D545FDCB
+	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Mar 2024 16:57:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709571158; cv=none; b=Xfiy+u5dNy5sl+OyWDhxMYyVPI7twWhYtD2Fi1E6BEzx7zlrUR9zr+9+7qPbyRVptITS23pv8cYjHmaf9RZusBvm16rw7/aDOeHl16AgOhVfR/vZ7ojy4ay//BVs9DbJoz/GBwkF7fZ+xU8yhupwtCUn3OUrepzTbmqXJFEyPak=
+	t=1709571457; cv=none; b=OqclhSf0YHVPy+7syxyZ8vVqno4ibG+enY+09xl3hx3Tt5z+yoq60ht/dx5RTfwz36DxvEtahkigmq7dvknS0xR8VvO5u8bi1LUfZR0zNT7biqo5yrY6RE3Ff0ddwEqWwwRakF5kUOP1MtiPetQItTL0PTXZlk8tYU9PsEVWzXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709571158; c=relaxed/simple;
-	bh=6mJJenTAuAPmRv04beNi8wfbIEkU3wKp27DVpqLUeEY=;
+	s=arc-20240116; t=1709571457; c=relaxed/simple;
+	bh=9OxuSXlUAAkHSjgdNxhAWnJy3LIVqOW1+hdGG3ZGS5Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RAhomi5huV0/VfsNPYvKayudDDtnb4iy8RCNVLtZRn9cUg3Lvh2C+Gp4KqanUxtB3M11L/2RHs+ubkEdl0p9mFzfcL4xYJhGBtlv+VJJNqhvjutdQ8ADFtStpOLJDuXjjQwMkNkhLo/UjPvi2Caeo0H/DpI+5wxdeLNXp29iEkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MbdfXgC0; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=d+mPmKSwAGC6lTz2jnJouEDgGC3u0uM3cLh+4gMYkqZfJgbHWEI0MzxQtmQuT2Q2MXKVdrJGutjiCGgPwIbcX1ZFrLFgv7ARQdD2kjlDAIWCFxSXMSC2RsruxC+IuGCdREolTC9ESMW+m7YtkhV+1AFlMZMq5NNWf+YdpAr89tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VrzdF3K5; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MbdfXgC0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VrzdF3K5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709571155;
+	s=mimecast20190719; t=1709571454;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pDZBx6b+sDral9amWV4nmduRo6EA43+ucC/adZNje+4=;
-	b=MbdfXgC0KPOdiYdl+jRP7vg6eHWARNd9Lgvc0i/Apoc2kZ2+U/+QvKCB6UL+8qcTQ883sm
-	mMF6QdOhrRFT9IIn/mREqRtZYHgDCBUAHRgHHYvbrjxi6pXlgW0HyeBr0m8prjFpWN7HS9
-	WgM3lS/nLuRx1QIEaTLfHLmyaMj0gdE=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=AlBk3gVwDcJKKsrS4jsAo8rmbEynrWIssEK39CmSxmA=;
+	b=VrzdF3K5mz6QHtEwPi0GU2feWJJSu/mKsxLyzgGP9pYCZwMtvzfmqcmcsaEiOHWDa9cmi+
+	8TOMf2rNBIirukw6+VNBUZOAZMcCkvjLn5b2AATN5+bR/WTNnZwIXditXMwb9nRfr10Vep
+	KGrTpgptNgAV/0npl8awCTaLStOx8jE=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-12-8-X7DT3CNgWF4sUhk-mf6A-1; Mon, 04 Mar 2024 11:52:34 -0500
-X-MC-Unique: 8-X7DT3CNgWF4sUhk-mf6A-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2d2e4ea0f63so34166731fa.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Mar 2024 08:52:33 -0800 (PST)
+ us-mta-191-FEjd-tx-NgK-Y2HYg-ZuhQ-1; Mon, 04 Mar 2024 11:57:30 -0500
+X-MC-Unique: FEjd-tx-NgK-Y2HYg-ZuhQ-1
+Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-513182f4018so3280182e87.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Mar 2024 08:57:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709570841; x=1710175641;
+        d=1e100.net; s=20230601; t=1709571448; x=1710176248;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pDZBx6b+sDral9amWV4nmduRo6EA43+ucC/adZNje+4=;
-        b=K69ANctZYQVrT9TX7oA7Is87YHB8oG2gNvu9K9RUJ+HzQBQeoM0PS6cwFUD2YBsKV6
-         7NrFYuoDA5VUdYvFiUuuLF1aHtICN1LC5UL9ssFZ/R7XSUU2sWUv5v6TGUG1S4egmC0l
-         jJljlUXBGjpvRoUbFLPC3fhIBelcL8PYCLEvODrFqNEpleneT7YhjpUQ2/4c9+r86JwK
-         XVWXI4ONs/OCrlH1LObH45OdA1hkIcRlTWiyPS6Thrb+3wPFQw/6Iq5o5JPpZ06w6vMj
-         aJFYf6zcJHPnLcK/rKYbCCQ8iK7SZ8kBMGZuUj5qJSseOJts+p9E0tBsp6xreqjto20t
-         mCzA==
-X-Forwarded-Encrypted: i=1; AJvYcCURYu+CtWr75kXabzHPY0NBCj2oYsVfLKHFiR6hGx/HvweH+8wezW9kQtahjyjYG3RhKlYoEBldQE87L3O1EbqPFOfG/S40o3NX14h3lZtkhR4S+g==
-X-Gm-Message-State: AOJu0YzNk/zG7WZe0uUka1h7TVihej27F9IOF5FfPEuJDJgupEoz8tp2
-	Lj6tE5hqCWWSE2s7BtoEMzH+MGZImPa6bbK67rJw9XpH4Wt2tADMTtmTWmgmZrYFHKre6ZrGOZi
-	1lXpdx51/0tUuSKqS1f5j3xJSDtD4Q/9WsfO6LcTDf6XMMdAx6CswqnBogGxAX8lZxnQIJio=
-X-Received: by 2002:a2e:aaa7:0:b0:2d2:a3bc:b7d8 with SMTP id bj39-20020a2eaaa7000000b002d2a3bcb7d8mr6218048ljb.20.1709570841609;
-        Mon, 04 Mar 2024 08:47:21 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGNoe2ubGGjmxx+SlBiuqS124weoi57lX43Hf1non5XGMyOoScFbf3rF8AsIw/FBt3x9QwsMw==
-X-Received: by 2002:a2e:aaa7:0:b0:2d2:a3bc:b7d8 with SMTP id bj39-20020a2eaaa7000000b002d2a3bcb7d8mr6218036ljb.20.1709570841264;
-        Mon, 04 Mar 2024 08:47:21 -0800 (PST)
+        bh=AlBk3gVwDcJKKsrS4jsAo8rmbEynrWIssEK39CmSxmA=;
+        b=PkcrcgxWgRzaZ4rIT5mi0t/7uYU7P9bLfQH1Ws1SaDhJ25/zFKuFf6f5DfoE3TC5xk
+         3MWyQq46pa0vDh3CSUbYIUqM44HwurQ97F0l3CVvurM2/kmgPGV73mLtsPGW34J4VMPI
+         AhTOGX/tPhVs4pxoz0aHsSjQ2UORJwiEUZTCo5iWwZko2+dEm5RBVJdMbuALqOODNl0T
+         /mVmkec3Jp48Qswc863lDZakp14OTJq/GbbeStsQjAiQlTpb1pVOSQiGz4PYSySxoIMD
+         9DfMDv0VEba9pK8qxlDyQ3hLeY63UnQQtzdAR9O7JlA98kRszXI4Zg07OV5/B/m5Ea95
+         PZdA==
+X-Forwarded-Encrypted: i=1; AJvYcCW0AE39wgJComK84hn5uJT5DRJZoc+CfZkga+INwpVI8lIefYRnb7PpGnjKm3qaeVvSOoZ2f0Vyhhwv+AOcIbMqQa7+mEW4vik9oJAPaVUVjFiqKQ==
+X-Gm-Message-State: AOJu0Yww2Nz3SyfhYuHkP+75vL5kak4TKLigx+BzcHtwP/wCxLdWDSIg
+	5lJMqeW6WFfYM3j3u4Yu5Ld60ta/Ned9IoNu3MA+dxascsd0VKoJiq/r5Vw1aKEV69RvX2Sz6iX
+	/SHCHIQbMHhBFxvJTFTdDjQahUxcHOo8n5hEaMqkVZ7Gri4jT/KgebDf8pW16qIGkHfqJkyk=
+X-Received: by 2002:a05:6512:31ce:b0:513:3d35:bef6 with SMTP id j14-20020a05651231ce00b005133d35bef6mr5404870lfe.51.1709571448412;
+        Mon, 04 Mar 2024 08:57:28 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF3gKm69xEtdhrx5ahjwFzQ4tyocLGE2enIJx1LHgL7epBS9Ks4QKBoBonvlnMcFFZnGyHzTA==
+X-Received: by 2002:a05:6512:31ce:b0:513:3d35:bef6 with SMTP id j14-20020a05651231ce00b005133d35bef6mr5404860lfe.51.1709571448060;
+        Mon, 04 Mar 2024 08:57:28 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 2-20020a05651c00c200b002d0acb57c89sm1722974ljr.64.2024.03.04.08.47.20
+        by smtp.gmail.com with ESMTPSA id wr8-20020a170907700800b00a4553c6d52csm1218221ejb.35.2024.03.04.08.57.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 08:47:20 -0800 (PST)
-Message-ID: <be1c9329-1d24-4f49-b200-c8ac551b1fe2@redhat.com>
-Date: Mon, 4 Mar 2024 17:47:19 +0100
+        Mon, 04 Mar 2024 08:57:27 -0800 (PST)
+Message-ID: <c0fb0480-5078-40eb-b1eb-dc5a7859f399@redhat.com>
+Date: Mon, 4 Mar 2024 17:57:26 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,54 +67,39 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 1/1] platform/x86: p2sb: On Goldmont only cache P2SB and SPI
- devfn BAR
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>,
- Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: danilrybakov249@gmail.com, Lukas Wunner <lukas@wunner.de>,
- Klara Modin <klarasmodin@gmail.com>, linux-pci@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20240304134356.305375-1-hdegoede@redhat.com>
- <20240304134356.305375-2-hdegoede@redhat.com>
+Subject: Re: [PATCH] platform/x86/amd/pmf: Fix missing error code in
+ amd_pmf_init_smart_pc()
+To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, dan.carpenter@linaro.org
+References: <20240226144011.2100804-1-harshit.m.mogalapalli@oracle.com>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240304134356.305375-2-hdegoede@redhat.com>
+In-Reply-To: <20240226144011.2100804-1-harshit.m.mogalapalli@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi All,
+Hi,
 
-On 3/4/24 14:43, Hans de Goede wrote:
-> On Goldmont p2sb_bar() only ever gets called for 2 devices, the actual P2SB
-> devfn 13,0 and the SPI controller which is part of the P2SB, devfn 13,2.
+On 2/26/24 15:40, Harshit Mogalapalli wrote:
+> On the error path, assign -ENOMEM to ret when memory allocation of
+> "dev->prev_data" fails.
 > 
-> But the current p2sb code tries to cache BAR0 info for all of
-> devfn 13,0 to 13,7 . This involves calling pci_scan_single_device()
-> for device 13 functions 0-7 and the hw does not seem to like
-> pci_scan_single_device() getting called for some of the other hidden
-> devices. E.g. on an ASUS VivoBook D540NV-GQ065T this leads to continuous
-> ACPI errors leading to high CPU usage.
-> 
-> Fix this by only caching BAR0 info and thus only calling
-> pci_scan_single_device() for the P2SB and the SPI controller.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218531 [1]
-> Fixes: 5913320eb0b3 ("platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Fixes: e70961505808 ("platform/x86/amd/pmf: Fixup error handling for amd_pmf_init_smart_pc()")
+> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
 
-Good news Danil Rybakov has just confirmed in bugzilla
-that simple patch fixes things. So IMHO this is the way
-to move forward to fix this.
+Thank you for your patch/series, I've applied this patch
+(series) to my review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Shin'ichiro, any objections from you against this fix ?
+Note it will show up in the pdx86 review-hans branch once I've
+pushed my local branch there, which might take a while.
 
-Danil, is it ok if I credit you for all your testing by adding:
-
-Reported-by: Danil Rybakov <danilrybakov249@gmail.com>
-Tested-by: Danil Rybakov <danilrybakov249@gmail.com>
-
-to the commit message for the patch while merging it ?
+I will include this patch in my next fixes pull-req to Linus
+for the current kernel development cycle.
 
 Regards,
 
@@ -123,54 +108,26 @@ Hans
 
 
 
-
-
 > ---
->  drivers/platform/x86/p2sb.c | 23 ++++++++---------------
->  1 file changed, 8 insertions(+), 15 deletions(-)
+> This is based on static analysis with smatch, only compile tested
+> ---
+>  drivers/platform/x86/amd/pmf/tee-if.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
-> index 6bd14d0132db..3d66e1d4eb1f 100644
-> --- a/drivers/platform/x86/p2sb.c
-> +++ b/drivers/platform/x86/p2sb.c
-> @@ -20,9 +20,11 @@
->  #define P2SBC_HIDE		BIT(8)
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> index 8527dca9cf56..dcbe8f85e122 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -458,8 +458,10 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+>  	amd_pmf_hex_dump_pb(dev);
 >  
->  #define P2SB_DEVFN_DEFAULT	PCI_DEVFN(31, 1)
-> +#define P2SB_DEVFN_GOLDMONT	PCI_DEVFN(13, 0)
-> +#define SPI_DEVFN_GOLDMONT	PCI_DEVFN(13, 2)
+>  	dev->prev_data = kzalloc(sizeof(*dev->prev_data), GFP_KERNEL);
+> -	if (!dev->prev_data)
+> +	if (!dev->prev_data) {
+> +		ret = -ENOMEM;
+>  		goto error;
+> +	}
 >  
->  static const struct x86_cpu_id p2sb_cpu_ids[] = {
-> -	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,	PCI_DEVFN(13, 0)),
-> +	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT, P2SB_DEVFN_GOLDMONT),
->  	{}
->  };
->  
-> @@ -98,21 +100,12 @@ static void p2sb_scan_and_cache_devfn(struct pci_bus *bus, unsigned int devfn)
->  
->  static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
->  {
-> -	unsigned int slot, fn;
-> +	/* Scan the P2SB device and cache its BAR0 */
-> +	p2sb_scan_and_cache_devfn(bus, devfn);
->  
-> -	if (PCI_FUNC(devfn) == 0) {
-> -		/*
-> -		 * When function number of the P2SB device is zero, scan it and
-> -		 * other function numbers, and if devices are available, cache
-> -		 * their BAR0s.
-> -		 */
-> -		slot = PCI_SLOT(devfn);
-> -		for (fn = 0; fn < NR_P2SB_RES_CACHE; fn++)
-> -			p2sb_scan_and_cache_devfn(bus, PCI_DEVFN(slot, fn));
-> -	} else {
-> -		/* Scan the P2SB device and cache its BAR0 */
-> -		p2sb_scan_and_cache_devfn(bus, devfn);
-> -	}
-> +	/* On Goldmont p2sb_bar() also gets called for the SPI controller */
-> +	if (devfn == P2SB_DEVFN_GOLDMONT)
-> +		p2sb_scan_and_cache_devfn(bus, SPI_DEVFN_GOLDMONT);
->  
->  	if (!p2sb_valid_resource(&p2sb_resources[PCI_FUNC(devfn)].res))
->  		return -ENOENT;
+>  	ret = amd_pmf_start_policy_engine(dev);
+>  	if (ret)
 
