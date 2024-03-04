@@ -1,82 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AADD3F9C7;
-	Mon,  4 Mar 2024 13:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757493D547;
+	Mon,  4 Mar 2024 13:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709558258; cv=none; b=nSeQb6sq0yVK3CNwQjagvOvki7ZBn4bIxnr7KtColy8/fr9I4dR3JyQgZgHidlgYVmif4vTSFJyWxuTjeDuSJcGd6ZTyHT2JK0iQhPKkUdEWMmSDwskstFiv2tAr7zY+ZnRlcS+u9tiyI4Iql+FT2QUv6PHkNQPHcm19M8tPLLc=
+	t=1709558575; cv=none; b=QHgZb6DympXSbLHahj/dnsrP8n/zVe/GaOuEF4htjU/lZ5AjMU2w5ygy1pUMbpYnrScu/Jf9lY4CjG7ZTvXBRIjCd+ZGQsHUDicQ1twd6WpX5LqxzAWO8lZ5AaqZl4w1XDimU8IvUn5EjLGZQgZwekhyiBmrcFJH96Kn0lk2XyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709558258; c=relaxed/simple;
-	bh=OX/K8YyOzC1SThuNTMwMMnK8+cBQVcgmipBIo+ZTROA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=cyU9/MDADKrRTETj3Zx59msY0G9zgKf7paHtFJszuYoo4GRITx2TH98zqL5jqHFKQK7s6u2S/gBEoTltYoBr8/agthlZxtu0A2Nh2uNBmS630sW+RH9bPYCpobPd77MwaFN4C78aggLsGXKNzGR56bcsNeVXLeW2+AP2zTdUbC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jUsPpxYt; arc=none smtp.client-ip=192.198.163.14
+	s=arc-20240116; t=1709558575; c=relaxed/simple;
+	bh=wvqVrTZYUETegQB929WmfG/ja/6JUPIg5ef7y9GtyRE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=JC6OxYSqak4KHcvZ7SXvl++6qLNX3ibFSDOeXKP+Ry7bQhG2Fe+WdXHEr2tvXghpWNrn9gqSQWSgC1IYP6VxMHiBa9EeemMQJSyo/glMyW1Nl+4+lapj1i9JITvGgvis36RunAtnm4laHgMrVYye1IfSIom1LjlyTVHaUIQzmnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DR/vqkTq; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jUsPpxYt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DR/vqkTq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709558256; x=1741094256;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=OX/K8YyOzC1SThuNTMwMMnK8+cBQVcgmipBIo+ZTROA=;
-  b=jUsPpxYt2rxU0MwZYiU32eHmgH5WKW2oSAv7E8DCebA806ev4if9YltW
-   L9gdwKO6x8XttyrSSNKbN9Q2vLAWT2xC2IexjBHxW1EJj07fVJZ4vaIKQ
-   5zva3Y1cb6Tiz5dOcX/bpRlVnYZn/YIUrfsWBbhRggrKHYbIAP95YjlSr
-   CNU5FyNNvbe/RfPENWwPPEAm3BKv9dRDgRQ3FDpyWaXNbzwwAR0htJYy3
-   mbeDwDyMwv+kZXfFKNh+0m6JRI4beXap/tsU40yWxZBN+UEXWAZRi6vLD
-   4pCV01iYcYkEcfMWjnhTHzoxeyrhTfbV1GU0p4tbMZ2GuWYbnGjnrCpe0
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="4213933"
+  t=1709558574; x=1741094574;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=wvqVrTZYUETegQB929WmfG/ja/6JUPIg5ef7y9GtyRE=;
+  b=DR/vqkTqYzUop2/LTwXpStpV/fXjKlL1h9K5BpMfuwr4QgfQYnbDRSyM
+   zdGnrmWnYL/nChqfBbD4KSMs8uvG+GHeEJDdpz8eARva2sFMhAMSneRwV
+   7cp3mnHU6hNE486Sel0RKwtFZ16xsL72HbygF46G6K0zBPwwte2rB/3BV
+   4jK5toE2n81Q1y5syJNrQY1ERalFw6PXPOc4quB4l7E+1De8qglegU/bX
+   wPmRI2URsDCmtZ9OT7jxrMAXcnw0oAGt7PDmZQItGRAAiFI25Bwlyo5t3
+   yxCwsSGWbw1e9INf421ZNgQBRiK4PllI3pY+efSRcV+Se+JgUgACj5Hp8
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="15198228"
 X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="4213933"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:17:35 -0800
+   d="scan'208";a="15198228"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:22:53 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="13656421"
+   d="scan'208";a="8946080"
 Received: from ekohn-mobl1.ger.corp.intel.com (HELO localhost) ([10.246.49.145])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:17:32 -0800
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:22:50 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Shravan Kumar Ramani <shravankr@nvidia.com>, 
- Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, 
- Vadim Pasternak <vadimp@nvidia.com>, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-In-Reply-To: <a4af764e-990b-4ebd-b342-852844374032@moroto.mountain>
-References: <a4af764e-990b-4ebd-b342-852844374032@moroto.mountain>
+Date: Mon, 4 Mar 2024 15:22:47 +0200 (EET)
+To: Dan Carpenter <dan.carpenter@linaro.org>, 
+    Shravan Kumar Ramani <shravankr@nvidia.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    kernel-janitors@vger.kernel.org
 Subject: Re: [PATCH] platform/mellanox: mlxbf-pmc: fix signedness bugs
-Message-Id: <170955824704.5357.5837908391020307060.b4-ty@linux.intel.com>
-Date: Mon, 04 Mar 2024 15:17:27 +0200
+In-Reply-To: <a4af764e-990b-4ebd-b342-852844374032@moroto.mountain>
+Message-ID: <9bdeba5e-0f33-c1d9-4cb4-6fdb42ec2fa9@linux.intel.com>
+References: <a4af764e-990b-4ebd-b342-852844374032@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 29 Feb 2024 16:11:36 +0300, Dan Carpenter wrote:
+On Thu, 29 Feb 2024, Dan Carpenter wrote:
 
 > These need to be signed for the error handling to work.  The
 > mlxbf_pmc_get_event_num() function returns int so int type is correct.
 > 
-> 
+> Fixes: 1ae9ffd303c2 ("platform/mellanox: mlxbf-pmc: Cleanup signed/unsigned mix-up")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+> The code in mlxbf_pmc_valid_range() has a check for negatives but that
+> has a signedness bug too.  Fortunately "(u32)-EINVAL + 8" will not
+> result in an integer overflow so the offset is treated as invalid.
 
+Hi,
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
-local branch there, which might take a while.
+While this patch itself was fine so I applied it, when reviewing the patch 
+I noticed that some of the kstrtouint() derived values were not properly 
+bound checked (some were fed directly to FIELD_PREP()).
 
-The list of commits applied:
-[1/1] platform/mellanox: mlxbf-pmc: fix signedness bugs
-      commit: d22168db08c4c8e6c5e25fa3570f50f0f2ff1ef1
-
---
+-- 
  i.
 
