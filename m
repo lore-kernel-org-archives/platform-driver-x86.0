@@ -1,92 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECC33D982;
-	Mon,  4 Mar 2024 13:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23803D547;
+	Mon,  4 Mar 2024 13:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709558986; cv=none; b=Yd4D68/pkVDWGbCNKGxvAuK2sGYhbp5+Bto3zgwvq4Y7VqU6D7Mej3CVMLO6fwGJhf6R0yzd78jqsADxFvzNGGPBmJLcvnwRz90Re4/LoD0sSFcfWPMotHsaDb69l4mOi+RT5j2uqjPj5OWUuWIm3C43nAO0ZOKKZko9tg/Z/Cs=
+	t=1709559156; cv=none; b=sDZol/Vg+sJhvpD9lCzP1iQCAjqpZ+2U0HE80Z1TNx0ULN7D6sMWViT2liogBfkrXoucDbXoGlQPgtQrPx/KX3ZjxnYlOZOlkKSHshA+Hga2Y8x4yUO3RV/uOGJh7aSqCX64hR+hyUImiwwGpYxiBahhjS0QvCOcVzQUi09hzWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709558986; c=relaxed/simple;
-	bh=DMUoXzNwINYPT6TKigZ3BhexDPsrhQRSpJ0qDR1BC2c=;
+	s=arc-20240116; t=1709559156; c=relaxed/simple;
+	bh=c/KR/E9NfIhGK+pa7H0FWfMiLStdrf4Xzr9vO8PwAtw=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=QETHn5f3hKtyc62ZDg3jtQQhXgxupY329pq3YWNw/zoHrIZVkkVKsDxAxEMXrm7QIk0z3gwv20FtthMK0PMr74XI5bfpflFu50hY8XNSkYFCASKAgA9pxiJ1AOdCUIpQKAzrc1Mt/0p7WT6IfPAvJIYDb9gas+mlp/6I0REDO0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gjI9bCr7; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=dwHzLxy9MPDoxhm6KQ3h9mum8K+uooZnIvzImcZKDBFywLcAHkIzdghxwHt61K/IVvT0zOsQDISsnAfGp2fSoZtwL+ASt8gKTuN6NhkCz13OuhWP42COZGSuHwu1nIsqwBvm46lcszVhcNqSbVIZVcptnwv8prjUfy89xhfKJF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NNR0wkBb; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gjI9bCr7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NNR0wkBb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709558985; x=1741094985;
+  t=1709559154; x=1741095154;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=DMUoXzNwINYPT6TKigZ3BhexDPsrhQRSpJ0qDR1BC2c=;
-  b=gjI9bCr7vhK7Z/saykTcwRxhZXES1ECdGWZd474ewGxfnZOZbT50csnK
-   /P0hFdPMiakqvp6QBbGu0u6ZZINZPPkpmA3PSc758FEKyn5R+eEHcyi9a
-   PoBtCxoX1hqSe8w12JjpCHQ2QvW08Ney+QeM3cs7z4F1aEuzA8PmiBecR
-   VgJvEX2XwghOMz+ZA7wrzZvMRdyV2IB9hpo0233eHH3G2JE+shBTLAY3x
-   Ul3/gEf1Yoqz+7rmq+guWaZ/94BwibqXNZP1C8N+9lgoJCzDzZFOEG4XH
-   969GJv96Mzp21UQS2obyIjb7UBA6dGLPq1fkl3U7IFrTBIvgrEuLHveXw
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="21507963"
+  bh=c/KR/E9NfIhGK+pa7H0FWfMiLStdrf4Xzr9vO8PwAtw=;
+  b=NNR0wkBbNqxL2VOp21MDQ52bPJ0nAlr4/+EnkcG23RAChq80ruqbRJJ5
+   sys+o7sDr1j6IvJYFugTRV0bmFGuMA/pQDCMiJ+NwhML7NYAsVNgkmkjg
+   KhpILRoXDJnuaaNz4DcUN84Y47QpRjmS6GQlG7vfulnzegVkHZO8lnYn8
+   2Uy+mMeQZntrSMjUl1UVgaVgOYeuslTFvWPFucPnumklXxvw2MBzBiiXN
+   mPL19T/JgpmWT0GVIzgwG3JhEJvFHGvR7NY0d+nW3XAEDyLL0+yhXiDK4
+   bYC3q9TiTX1vwTQ9k03PJ4Ekhz87oDu/rENycCFX984wL6PsL6/dQjnG/
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="4215132"
 X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="21507963"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:29:44 -0800
+   d="scan'208";a="4215132"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:32:33 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
-   d="scan'208";a="9174755"
+   d="scan'208";a="13657745"
 Received: from ekohn-mobl1.ger.corp.intel.com (HELO localhost) ([10.246.49.145])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:29:42 -0800
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 05:32:31 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 4 Mar 2024 15:29:39 +0200 (EET)
+Date: Mon, 4 Mar 2024 15:32:26 +0200 (EET)
 To: "David E. Box" <david.e.box@linux.intel.com>
 cc: rajvi.jingar@linux.intel.com, platform-driver-x86@vger.kernel.org, 
     LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH V2 4/9] platform/x86/intel/sdsi: Add attribute to read
- the current meter state
-In-Reply-To: <20240228000016.1685518-5-david.e.box@linux.intel.com>
-Message-ID: <8e9fe5a5-4270-a71d-bb36-4f7d0a1ca049@linux.intel.com>
-References: <20240228000016.1685518-1-david.e.box@linux.intel.com> <20240228000016.1685518-5-david.e.box@linux.intel.com>
+Subject: Re: [PATCH V2 7/9] tools/arch/x86/intel_sdsi: Fix meter_certificate
+ decoding
+In-Reply-To: <20240228000016.1685518-8-david.e.box@linux.intel.com>
+Message-ID: <ee95700a-35ba-9601-3c2e-0e19185ef4c0@linux.intel.com>
+References: <20240228000016.1685518-1-david.e.box@linux.intel.com> <20240228000016.1685518-8-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-917811586-1709558979=:986"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-917811586-1709558979=:986
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
 
 On Tue, 27 Feb 2024, David E. Box wrote:
 
-> The meter_certificate file provides access to metering information that m=
-ay
-> be attested but is only updated every 8 hours. Add new attribute,
-> meter_current, to allow reading an untested snapshot of the current value=
-s.
->=20
+> Fix errors in the calculation of the start position of the counters and in
+> the display loop.
+> 
+> Fixes: aad129780bae ("platform/x86/intel/sdsi: Add support for reading the current meter state")
 > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 > ---
->=20
-> V2 - make control_flags a parameter to be eventually passed to
->      sdsi_mbox_cmd_read(). This removes the need for a lock which had bee=
-n
->      added to protect control_flags when it was a member of the private
->      struct.
+> 
+> V2 - Split of V1 patch 7
+> 
+>  tools/arch/x86/intel_sdsi/intel_sdsi.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/arch/x86/intel_sdsi/intel_sdsi.c b/tools/arch/x86/intel_sdsi/intel_sdsi.c
+> index def1b9a01738..2acc6be5f5d6 100644
+> --- a/tools/arch/x86/intel_sdsi/intel_sdsi.c
+> +++ b/tools/arch/x86/intel_sdsi/intel_sdsi.c
+> @@ -403,15 +403,16 @@ static int sdsi_meter_cert_show(struct sdsi_dev *s)
+>  		return -1;
+>  	}
+>  
+> -	bec = (void *)(mc) + sizeof(mc);
+> +	bec = (void *)(mc) + sizeof(*mc);
+>  
+>  	printf("Number of Feature Counters:   %d\n", mc->bundle_length / 8);
+> -	while (count++ < mc->bundle_length / 8) {
+> +	while (count < mc->bundle_length / 8) {
 
-Yes, thanks. It's more obvious now what's going on w/o all that lock=20
-trickery.
+One more sizeof() case here that wasn't pointed up earlier.
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
---=20
+-- 
  i.
 
---8323328-917811586-1709558979=:986--
