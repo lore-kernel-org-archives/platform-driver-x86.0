@@ -1,203 +1,166 @@
-Received: from esa4.hgst.iphmx.com (esa4.hgst.iphmx.com [216.71.154.42])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498DB12E73;
-	Mon,  4 Mar 2024 07:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.71.154.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4FB0208A2
+	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Mar 2024 09:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709536765; cv=none; b=pLcOLm8Re3SZtXvKGNnK/AhesznMX4tcK2gTM2vSwZKwtIzKDljNI5crG1C/8gBt/hXaJWOuAbmE+SW6sJN+ZxOGfX4wDATsaD/657dh8TeLIkRy9EipLRsjH2626BTl9bPMYyf6qqhRNo65RJHmuKWzMdL+v3OLvCcq0Z9/cZI=
+	t=1709546121; cv=none; b=sqfgfT3WOqLJ8G0gz34/GujK1XsEshzmbMXNy7+dx+ZH9nzzdorFENs4qq3uk6GETs1e+YwgSyoDu60YSRJawK20SAimn1+ZmBcTzpchesb49GHi7pBKWd++gmUPyisSvh3CiP2vGIItm6spNRFkU438KA2x4pD1KwsAZ2xflgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709536765; c=relaxed/simple;
-	bh=27m+tmbU3Vw1hrSNuoUjlN8I76/kIOXS9GCN6Oqhahw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bLtZo5wlM8gjPUSVTnZ0fdoZ27W3YqgD8kraGiK4VjupJodE7nkwNAESID6dcSsL8h+gvVtUzgftKjqA3xT1BYsRQLi3juhQ45nX8JQJTrCaxxV1s2W8thZrUC5cRr0XZwT3Y/qFEbaILGTOZoZaY/aOqh+O/lQ93TRCZ/XaVrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=UxxbeOY0; arc=none smtp.client-ip=216.71.154.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	s=arc-20240116; t=1709546121; c=relaxed/simple;
+	bh=nt7lWRNl9rrRaZF10vIalnwKv7AY1hf7d3GdTlaY8WE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fEkgJjZjuNu1OBeVQ3P24Br+szoEbCJPJiSTCILA8vx/XEeurtnrX8JRo4gdOLgw2H1LBybd5moN/kl6aOaiWlgw9CIggjfNEgtkP+E+SOHknje1WlPFHm2xNc1Fey+lKSGLdJZhTImWIPJ2mqWctMnfX8aeyvjQ+AxuPYb15nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KgNYIvao; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="UxxbeOY0"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1709536763; x=1741072763;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=27m+tmbU3Vw1hrSNuoUjlN8I76/kIOXS9GCN6Oqhahw=;
-  b=UxxbeOY0WyfqOvtUK2e4QmfEUaNeMv5+ML3gYV5MKzMeI0DTahzn0IdE
-   p6e8C3ACQSRF96T/PlUGPxjqfmH4Hs7gXdoHclC3mRkwlmORU4HsRPzpI
-   lOcW4jKjehd8m643Krz9UBzlKnQE0h1q30tMgjV60CW4snIgxWCBUcMQf
-   12Os4i/+QNIeBLmIO0CHYzHIEWH0l9l+SRBFrr0hQfZYWvoBHRU1KksfD
-   Vdy3d7urf6GOrrjEp+v3UN8qlM6YAIzoYnCrcxBKUATcLQ8xPL1fWqZZT
-   E42emrt2YdfH88bOQ0A+9OSN0tyYabozWGbxxBYZcxkxTeFfKLHCywAzt
-   A==;
-X-CSE-ConnectionGUID: 6aQO7IDcR0+NbWIl4yRiSQ==
-X-CSE-MsgGUID: Rk/fly5AQA6suj0ZSEpwew==
-X-IronPort-AV: E=Sophos;i="6.06,203,1705334400"; 
-   d="scan'208";a="10280128"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Mar 2024 15:19:16 +0800
-IronPort-SDR: fST7KfhiIGeVm2eXX3N7FQXv7rpzPpFcYpiefLY0e84pDdS/zagiAhY8YAJar+Aq3uyCE1zvu5
- k7sLa879Syqg==
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Mar 2024 22:22:47 -0800
-IronPort-SDR: Lq+TQ2wMZhm5dP9aUY2gDpJabBsLe0TylHOF151wwdtAfHmjMiN3Z13xBgyHXmyD9w455d9PvY
- q0ufxgjjY8DA==
-WDCIronportException: Internal
-Received: from unknown (HELO shindev.ssa.fujisawa.hgst.com) ([10.149.66.30])
-  by uls-op-cesaip01.wdc.com with ESMTP; 03 Mar 2024 23:19:13 -0800
-From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	danilrybakov249@gmail.com,
-	Lukas Wunner <lukas@wunner.de>,
-	Klara Modin <klarasmodin@gmail.com>,
-	linux-pci@vger.kernel.org,
-	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: [PATCH v3] platform/x86: p2sb: Defer P2SB device scan when P2SB device has func 0
-Date: Mon,  4 Mar 2024 16:19:12 +0900
-Message-ID: <20240304071912.2340622-1-shinichiro.kawasaki@wdc.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KgNYIvao"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709546118;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=es+dRdUM8pF5fSKeM+s1q8Z5S+9uRfhQVEGJ8pCfshU=;
+	b=KgNYIvao9gI99pyKk5L3NkhE6ZMd6a9iFPyVev58GiYYPulIqJ/2cw7ZdKzQFLV9DujQZb
+	kK1p/vMp+vnyOmIBo/MckjkvqSlvxgL+B36HI9ti6+kbdgkh/5r14f4UdDgOxhrANmMJgS
+	0INFx0aB11vAjgY8ezu/vQBcna50I/A=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-117-4clLAD0_NaqY_inpR8FM6Q-1; Mon, 04 Mar 2024 04:55:17 -0500
+X-MC-Unique: 4clLAD0_NaqY_inpR8FM6Q-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5656f696a00so4171253a12.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Mar 2024 01:55:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709546116; x=1710150916;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=es+dRdUM8pF5fSKeM+s1q8Z5S+9uRfhQVEGJ8pCfshU=;
+        b=VBiU9R1MtCYm2MatFM+JcpaNCwXclogyxBvFOWIz2FwinWbaG0mvytkE6foFRGiXMm
+         4YZQgeUwniJaXwXYJVXuUbLp7qxImB3pCCtBS9U2MggSdQ8PIrUmq2dDxD9nUPjcRt9Q
+         BQdYzlQHIQ+aO7lgavgH6XlXAFXVwEAMRQqONDvzdpjfZWmpwYoG7sYZZ1jPAXkBG0FF
+         AGkUTi5zi3hUYUWI+IqaCsTmXsZPqrnCOgqDCDWo3MiS9PbcM0EqxTp4TNSdCb6H2jrN
+         ZrJrPFNl6qv1Yk6Q9O12A/wEzIIoWokDGSVnIENMU6FhMZgX4Dl3ZIGbQyAXiMDc3BkZ
+         rRUQ==
+X-Gm-Message-State: AOJu0YxkSrD/3QV1Pe8Y45rpeXZY753SSPHCemE6KlYAnjW2sbd4fygO
+	d3c2PfHK9qMGGaQguWrb0IX71Nvkcc8dN8pC8iK23P5Si5BxpBhBTMC+fpB5q3oroU3Nj5Rse9A
+	1w1JV1Z5HuU5m7zc5wc3wfuR7CBPqCqebhwj8LTRD+DtO4nz+ET4XLHgD0HWV8BuFmX+JrAo=
+X-Received: by 2002:a17:906:b806:b0:a45:1fe5:10b7 with SMTP id dv6-20020a170906b80600b00a451fe510b7mr2044666ejb.43.1709546116114;
+        Mon, 04 Mar 2024 01:55:16 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFLNjHtMz8OICaqwUPloFXvB7K0QaeOR5hxuWVEHn1S5Ki9FixTg10j50IgxC8aOUTUrSTiMQ==
+X-Received: by 2002:a17:906:b806:b0:a45:1fe5:10b7 with SMTP id dv6-20020a170906b80600b00a451fe510b7mr2044653ejb.43.1709546115818;
+        Mon, 04 Mar 2024 01:55:15 -0800 (PST)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id wk15-20020a170907054f00b00a4519304f8bsm1545831ejb.14.2024.03.04.01.55.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Mar 2024 01:55:15 -0800 (PST)
+Message-ID: <a5dac02b-c16a-45d1-8157-0dae1b034418@redhat.com>
+Date: Mon, 4 Mar 2024 10:55:14 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] platform/x86: p2sb: Defer P2SB device scan when P2SB
+ device has func 0
+To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ "danilrybakov249@gmail.com" <danilrybakov249@gmail.com>,
+ Lukas Wunner <lukas@wunner.de>, Klara Modin <klarasmodin@gmail.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <20240302012813.2011111-1-shinichiro.kawasaki@wdc.com>
+ <gl7rsalwdwdo4rdes6akcnd7llrz75jjje2hchy5cdvzse6vei@367ddi3u6n2e>
+ <a26554d3-bee9-4030-a06c-f886ba2fffb0@redhat.com>
+ <r6ezdjqb5hz5jvvaj2beyulr2adwht2sonxw3bhcjdvwduyt66@2hlsmnppfsk2>
+ <7935add6-a643-43dd-82a8-b7bcfb94d297@redhat.com>
+ <6sbllfapnclmu5sjdtjcs4tyzkkr76ipg3i3rtqyyj7syhtkwd@d2l6zq2co7zt>
+Content-Language: en-US
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <6sbllfapnclmu5sjdtjcs4tyzkkr76ipg3i3rtqyyj7syhtkwd@d2l6zq2co7zt>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The commit 5913320eb0b3 ("platform/x86: p2sb: Allow p2sb_bar() calls
-during PCI device probe") triggered repeated ACPI errors on ASUS
-VivoBook D540NV-GQ065T [1]. The P2SB device on the system has multiple
-functions, and the system requires P2SB device function 2. The commit
-introduced the P2SB device scan for all functions including function 0
-and 2. It was confirmed that the P2SB device scan for function 0 on the
-system triggered the errors.
+Hi,
 
-To avoid the errors, defer the P2SB device scan on the concerned device.
-If the P2SB device has function 0, defer the device scan and do it later
-when p2sb_bar() is called for the first time. At the deferred scan, do
-not scan multiple functions and scan only the requested function to
-avoid the unnecessary scan of function 0.
+On 3/4/24 4:19 AM, Shinichiro Kawasaki wrote:
+> On Mar 03, 2024 / 20:35, Hans de Goede wrote:
+>> Hi Shinichiro,
+>>
+>> On 3/3/24 00:37, Shinichiro Kawasaki wrote:
 
-If sysfs pci bus rescans trigger the first p2sb_bar() call, deadlock
-happens in the deferred P2SB device scan. In most cases, the p2sb_bar()
-calls happen during the system boot process, then there is no chance of
-deadlock.
+<snip>
 
-After this change, the code to scan multiple functions for P2SB devices
-with function 0 in p2sb_scan_and_cache() is no longer required. The
-resource validity check in p2sb_scan_and_cache() is not required either
-since it is done in p2sb_bar() also. Remove p2sb_scan_and_cache() and
-call p2sb_scan_and_cache_devfn() instead.
+>> So I have taken a quick look at your latest patch from:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=218531
+>>
+>> I think that skipping the caching at fs_initcall() on goldmont
+>> is a good idea.
+>>
+>> But you still cache *all* the bars for goldmont on the first
+>> p2sb_bar(bus, 0, &res) call .
+>>
+>> If we delay caching the bars till there first use, why not
+>> just do that for all the bars and also drop p2sb_scan_and_cache()
+>> which for non goldmont is equivalent to p2sb_scan_and_cache_devfn()
+>> but on goldmont caches all the functions.
+>>
+>> Since you now delay caching (on goldmont) to the first p2sb_bar()
+>> call I think that you can just drop p2sb_scan_and_cache()
+>> altogether and just directly call p2sb_scan_and_cache_devfn()
+>> in its place.
+>>
+>> This means that on goldmont where both the p2sb devfn
+>> PCI_DEVFN(13, 0) and the SPI controller PCI_DEVFN(13, 2)
+>> are used we end up going through p2sb_cache_resources()
+>> twice, assuming both are actually requested at least once.
+>> But with your current patch this will also happen when
+>> PCI_DEVFN(13, 2) gets requested first because then
+>> p2sb_scan_and_cache() will enter the "not function 0"
+>> path and only cache the one resource.
+>>
+>> So I think that it would make things more KISS if
+>> p2sb_bar() always only caches the requested devfn bar0
+>> instead of treating function0 special as it does now.
+> 
+> Thank you again for looking into the patch. I agree that the "function 0" path
+> in p2sb_scan_and_cache() is not meaningful any more. When I prepare v3 patch,
+> I will modify the patch to call p2sb_scan_and_cache_devfn() in place of
+> p2sb_scan_and_cache().
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=218531 [1]
-Fixes: 5913320eb0b3 ("platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe")
-Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
----
-Changes from v2:
-* Target only the requested devfn at the deferred scan and cache
-* Removed p2sb_scan_and_cache() and use p2sb_scan_and_cache_devfn() instead
+I've seen you've posted v3, this looks good, thanks.
 
-Changes from v1:
-* Removed unnecessary p2sb_resource_cached()
-* Reflected other review comments
+>> Also talking about making things more KISS, how
+>> about completely dropping the fs_initcall and
+>> simply always delay the caching of a devfn until
+>> the first call of p2sb_bar() for that devfn ?
+>>
+>> That way fixing the issue will also actually reduce /
+>> simplify the code :)
+> 
+> This will simplify the code more, but it has two drawabacks:
+> 
+> 1) It still leaves the rare deadlock scenario. If the drivers which call
+>    p2sb_bar() are not probed during boot, and if they are probed afterwards by
+>    sysfs pci bus rescan, pci_rescan_remove_lock causes the deadlock.
+> 
+> 2) It triggers lockdep splat for pci_rescan_remove_lock at sysfs pci bus rescan,
+>    even for devices unrelated to p2sb (This is what I regularly observe during
+>    kernel tests for storage sub-system.)
+> 
+> I suggest to limit these drawbacks only on goldmont.
 
- drivers/platform/x86/p2sb.c | 47 ++++++++++++++++---------------------
- 1 file changed, 20 insertions(+), 27 deletions(-)
+I was not aware of the lockdep triggering issue. I agree that should be avoided
+when possible. I see you have kept the fs_initcall() for this in v3, good.
 
-diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
-index 6bd14d0132db..c829dbd8f058 100644
---- a/drivers/platform/x86/p2sb.c
-+++ b/drivers/platform/x86/p2sb.c
-@@ -96,30 +96,6 @@ static void p2sb_scan_and_cache_devfn(struct pci_bus *bus, unsigned int devfn)
- 	pci_stop_and_remove_bus_device(pdev);
- }
- 
--static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
--{
--	unsigned int slot, fn;
--
--	if (PCI_FUNC(devfn) == 0) {
--		/*
--		 * When function number of the P2SB device is zero, scan it and
--		 * other function numbers, and if devices are available, cache
--		 * their BAR0s.
--		 */
--		slot = PCI_SLOT(devfn);
--		for (fn = 0; fn < NR_P2SB_RES_CACHE; fn++)
--			p2sb_scan_and_cache_devfn(bus, PCI_DEVFN(slot, fn));
--	} else {
--		/* Scan the P2SB device and cache its BAR0 */
--		p2sb_scan_and_cache_devfn(bus, devfn);
--	}
--
--	if (!p2sb_valid_resource(&p2sb_resources[PCI_FUNC(devfn)].res))
--		return -ENOENT;
--
--	return 0;
--}
--
- static struct pci_bus *p2sb_get_bus(struct pci_bus *bus)
- {
- 	static struct pci_bus *p2sb_bus;
-@@ -133,7 +109,7 @@ static struct pci_bus *p2sb_get_bus(struct pci_bus *bus)
- 	return p2sb_bus;
- }
- 
--static int p2sb_cache_resources(void)
-+static int p2sb_cache_resources(unsigned int devfn_to_cache, bool from_fs_init)
- {
- 	unsigned int devfn_p2sb;
- 	u32 value = P2SBC_HIDE;
-@@ -150,6 +126,18 @@ static int p2sb_cache_resources(void)
- 	if (!bus)
- 		return -ENODEV;
- 
-+	/*
-+	 * On ASUS VivoBook D540NV-GQ065T which has Goldmont CPU family Pentium
-+	 * N4200, P2SB device scan including function 0 at fs_initcall() step
-+	 * causes ACPI errors. To avoid the errors, defer P2SB device scan and
-+	 * cache when P2SB devices has function 0.
-+	 */
-+	if (PCI_FUNC(devfn_p2sb) == 0 && from_fs_init)
-+		return -EBUSY;
-+
-+	if (devfn_to_cache == 0)
-+		devfn_to_cache = devfn_p2sb;
-+
- 	/*
- 	 * When a device with same devfn exists and its device class is not
- 	 * PCI_CLASS_MEMORY_OTHER for P2SB, do not touch it.
-@@ -173,7 +161,7 @@ static int p2sb_cache_resources(void)
- 	if (value & P2SBC_HIDE)
- 		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, 0);
- 
--	ret = p2sb_scan_and_cache(bus, devfn_p2sb);
-+	p2sb_scan_and_cache_devfn(bus, devfn_to_cache);
- 
- 	/* Hide the P2SB device, if it was hidden */
- 	if (value & P2SBC_HIDE)
-@@ -214,6 +202,11 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
- 	}
- 
- 	cache = &p2sb_resources[PCI_FUNC(devfn)];
-+
-+	/* Scan and cache P2SB device if it was deferred at fs_initcall() */
-+	if (!p2sb_valid_resource(&cache->res))
-+		p2sb_cache_resources(devfn, false);
-+
- 	if (cache->bus_dev_id != bus->dev.id)
- 		return -ENODEV;
- 
-@@ -227,7 +220,7 @@ EXPORT_SYMBOL_GPL(p2sb_bar);
- 
- static int __init p2sb_fs_init(void)
- {
--	p2sb_cache_resources();
-+	p2sb_cache_resources(0, true);
- 	return 0;
- }
- 
--- 
-2.43.0
+Regards,
+
+Hans
 
