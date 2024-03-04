@@ -1,133 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51D545FDCB
-	for <platform-driver-x86@vger.kernel.org>; Mon,  4 Mar 2024 16:57:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E8AFBFC;
+	Mon,  4 Mar 2024 20:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709571457; cv=none; b=OqclhSf0YHVPy+7syxyZ8vVqno4ibG+enY+09xl3hx3Tt5z+yoq60ht/dx5RTfwz36DxvEtahkigmq7dvknS0xR8VvO5u8bi1LUfZR0zNT7biqo5yrY6RE3Ff0ddwEqWwwRakF5kUOP1MtiPetQItTL0PTXZlk8tYU9PsEVWzXM=
+	t=1709585426; cv=none; b=NIsRfgnQ2nhS2EVM+kWFRqyNgg6Eln8D/P1ILE8nLH6bFQeUC8wdRthJkQKFIRmeZd+w8KF+Pqah1e5Rxci9g8zhyEi/oiGnK3AzcL8m1zufndv1IHo8sjQDy6OWEWuKwLrBzyTLY7gTJIRD0I2ei8n+Aa/4aNz259S1bHI/GrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709571457; c=relaxed/simple;
-	bh=9OxuSXlUAAkHSjgdNxhAWnJy3LIVqOW1+hdGG3ZGS5Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d+mPmKSwAGC6lTz2jnJouEDgGC3u0uM3cLh+4gMYkqZfJgbHWEI0MzxQtmQuT2Q2MXKVdrJGutjiCGgPwIbcX1ZFrLFgv7ARQdD2kjlDAIWCFxSXMSC2RsruxC+IuGCdREolTC9ESMW+m7YtkhV+1AFlMZMq5NNWf+YdpAr89tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VrzdF3K5; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709585426; c=relaxed/simple;
+	bh=Tzw2KfuLD15TbMFuOFXHHB1XRezhD5nSZGMRaniwCjc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Lv9O9FzTG9h7W+DrbpnPszWDAbTPURWp//7SPQZw4lOdY1JlAlJHxzsaZO6NWWPLnHk1H0HnPnz9CjpdSmLd0RqBhXBdP0P1coItLM8YuYVNx3b6DYW6aWNySjyQf/d0724aCS19dzDLe5brdi/sx1MgIh0bFjiyTl1frFDLVpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=d16SegXg; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VrzdF3K5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709571454;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AlBk3gVwDcJKKsrS4jsAo8rmbEynrWIssEK39CmSxmA=;
-	b=VrzdF3K5mz6QHtEwPi0GU2feWJJSu/mKsxLyzgGP9pYCZwMtvzfmqcmcsaEiOHWDa9cmi+
-	8TOMf2rNBIirukw6+VNBUZOAZMcCkvjLn5b2AATN5+bR/WTNnZwIXditXMwb9nRfr10Vep
-	KGrTpgptNgAV/0npl8awCTaLStOx8jE=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-191-FEjd-tx-NgK-Y2HYg-ZuhQ-1; Mon, 04 Mar 2024 11:57:30 -0500
-X-MC-Unique: FEjd-tx-NgK-Y2HYg-ZuhQ-1
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-513182f4018so3280182e87.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Mar 2024 08:57:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709571448; x=1710176248;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AlBk3gVwDcJKKsrS4jsAo8rmbEynrWIssEK39CmSxmA=;
-        b=PkcrcgxWgRzaZ4rIT5mi0t/7uYU7P9bLfQH1Ws1SaDhJ25/zFKuFf6f5DfoE3TC5xk
-         3MWyQq46pa0vDh3CSUbYIUqM44HwurQ97F0l3CVvurM2/kmgPGV73mLtsPGW34J4VMPI
-         AhTOGX/tPhVs4pxoz0aHsSjQ2UORJwiEUZTCo5iWwZko2+dEm5RBVJdMbuALqOODNl0T
-         /mVmkec3Jp48Qswc863lDZakp14OTJq/GbbeStsQjAiQlTpb1pVOSQiGz4PYSySxoIMD
-         9DfMDv0VEba9pK8qxlDyQ3hLeY63UnQQtzdAR9O7JlA98kRszXI4Zg07OV5/B/m5Ea95
-         PZdA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0AE39wgJComK84hn5uJT5DRJZoc+CfZkga+INwpVI8lIefYRnb7PpGnjKm3qaeVvSOoZ2f0Vyhhwv+AOcIbMqQa7+mEW4vik9oJAPaVUVjFiqKQ==
-X-Gm-Message-State: AOJu0Yww2Nz3SyfhYuHkP+75vL5kak4TKLigx+BzcHtwP/wCxLdWDSIg
-	5lJMqeW6WFfYM3j3u4Yu5Ld60ta/Ned9IoNu3MA+dxascsd0VKoJiq/r5Vw1aKEV69RvX2Sz6iX
-	/SHCHIQbMHhBFxvJTFTdDjQahUxcHOo8n5hEaMqkVZ7Gri4jT/KgebDf8pW16qIGkHfqJkyk=
-X-Received: by 2002:a05:6512:31ce:b0:513:3d35:bef6 with SMTP id j14-20020a05651231ce00b005133d35bef6mr5404870lfe.51.1709571448412;
-        Mon, 04 Mar 2024 08:57:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF3gKm69xEtdhrx5ahjwFzQ4tyocLGE2enIJx1LHgL7epBS9Ks4QKBoBonvlnMcFFZnGyHzTA==
-X-Received: by 2002:a05:6512:31ce:b0:513:3d35:bef6 with SMTP id j14-20020a05651231ce00b005133d35bef6mr5404860lfe.51.1709571448060;
-        Mon, 04 Mar 2024 08:57:28 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id wr8-20020a170907700800b00a4553c6d52csm1218221ejb.35.2024.03.04.08.57.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Mar 2024 08:57:27 -0800 (PST)
-Message-ID: <c0fb0480-5078-40eb-b1eb-dc5a7859f399@redhat.com>
-Date: Mon, 4 Mar 2024 17:57:26 +0100
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="d16SegXg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1709585415; x=1710190215; i=w_armin@gmx.de;
+	bh=Tzw2KfuLD15TbMFuOFXHHB1XRezhD5nSZGMRaniwCjc=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
+	 References;
+	b=d16SegXghKFTumuGkkSJx6f4RV1ky6fMQJybHZCObF8w4bmcMtMckIo0JtmaHa7x
+	 HTunq/yFlXXLk/uuwsodyeXqk4Rink/EUAAqWQombfByYhlEUzQUvrGTNDjnIYCVp
+	 Pe/27mip/vP46stwv8ZXmzeEGQPi9/6ona25taVv9ERcvyc68bPUFs38NqUkhj8Jl
+	 Ayc4OxUotNHQq9ESKVsKzpSzh+0GcugNPlV/sOiOGiQfjqvgIscnVZA4WBkItkOog
+	 yntuB29PubTtjxy1lpRZtdaQEsAcjV9SVHGO6Y4oxpqhajx9HpLLuMR5hqP6NNwe7
+	 NkfiT4o4+J7sOKUOfQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1N3KPq-1qhH3U3Hyk-010Iqs; Mon, 04 Mar 2024 21:50:14 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: Shyam-sundar.S-k@amd.com
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/4] platform/x86/amd/pmf: Fix return value of amd_pmf_start_policy_engine()
+Date: Mon,  4 Mar 2024 21:50:02 +0100
+Message-Id: <20240304205005.10078-2-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240304205005.10078-1-W_Armin@gmx.de>
+References: <20240304205005.10078-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86/amd/pmf: Fix missing error code in
- amd_pmf_init_smart_pc()
-To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, dan.carpenter@linaro.org
-References: <20240226144011.2100804-1-harshit.m.mogalapalli@oracle.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240226144011.2100804-1-harshit.m.mogalapalli@oracle.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:8d9XMYhgFJgs7YKr08lxua9Cl9IWSRTR4jEtoSTH+T2j1YiT0fn
+ PXb0xePM/Ie83TXJfniYWJ2H1Sbw4fmhvXhkKoJD4fhwuOkuM2TLzeu296L69mWOG31zQ/W
+ xPfYXi9QRGn4SxRDRjMpv4jm5tk/fg2iNfuwazscEwp8ubzz5KVATePYs4wMl30TurcJFPV
+ 1B1tG9JmSivVdLpzMXy6A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:U5VYaQ7x7FU=;wYUHjOSSNN8XnWDFnkZLgYocNOw
+ WrzTKLqtU4LOCimTxe+Xe1jPOYob3wTUM/KfPdBVdVbyChPjbwBohFOWJf6zHpMAnogsU8abA
+ 8GUrTalxHX/RNHxhHU9OVrGtpzmcVhgmlH3Egfgebw7w+N8kwyRIbdMxd4PVToBH0vhHBKXP4
+ uw9z/XGx1B9UR39aPUkIGLC/4Ulw7GF1Oj+IwaZnwJbpahVHUgeK7+IdmJvXKsT/OCNEYxtAO
+ gEMN1ah6rziogBQ4a/u/jMXdBeTW7cXIpqZ7zH0gbLDZVYr5ZuMtSwIF1MOovfdjJBiJq8fix
+ PBKSUKF11AkMEVe81K+ju5a1sXArRjSCo2b8obCdYLvGdV9ADgPrRms++0H+AO/Rh8gmMLvvC
+ CqQerq2uWNLRpUAhjvjz1oZnMKLLq7yHroTFa2ozPq05O5o32dlAZsV+erZ2uE48EzVTp3aXI
+ 8RImwlaSx+LgY3iQLY8idOqSjdENGFggSWtttUPxhO3yel2heXcqyQVFtcvoSQm/JVuz3Xg6v
+ woAskANoOqggQITOVaYTRtj9wYm8HWR7hXC7XCZ6ysWfwbUs2CCYDNwTtqjBHmOTv5qqD/79W
+ ZHz+5tQa73wkzm1EntQI8oMCNeEDTl47r+Ep5rdZGCDgxep6bXySaxhUMs7tANgdq1fuuAQoX
+ s/VzihG3mFOwWlSc7NEiF1MMpBQU+9CO1C7T2sZ3G+xjM2AVIEQJEvLrtBiRDxA9CaH5aAA72
+ WAJaHoWWeJYxyZOV0VEkncxIug0XJC/JecYNSYfa81ny8dzWNZOY+NrNf+QgfenEDuyDnjuQS
+ kwkeQQvQb3pQMz7brX33XPb6HaiQOMUavXTRWDgHOiXBg=
 
-Hi,
+amd_pmf_start_policy_engine() returns an negative error code upon
+failure, so the TA_PMF_* error codes cannot be used here.
 
-On 2/26/24 15:40, Harshit Mogalapalli wrote:
-> On the error path, assign -ENOMEM to ret when memory allocation of
-> "dev->prev_data" fails.
-> 
-> Fixes: e70961505808 ("platform/x86/amd/pmf: Fixup error handling for amd_pmf_init_smart_pc()")
-> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Return -EIO instead. Also stop shadowing the return code in
+amd_pmf_get_pb_data().
 
-Thank you for your patch/series, I've applied this patch
-(series) to my review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Compile-tested only.
 
-Note it will show up in the pdx86 review-hans branch once I've
-pushed my local branch there, which might take a while.
+Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+Fixes: 7c45534afa44 ("platform/x86/amd/pmf: Add support for PMF Policy Bin=
+ary")
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/amd/pmf/tee-if.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
+diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/=
+amd/pmf/tee-if.c
+index 16973bebf55f..13dd4462e1e3 100644
+=2D-- a/drivers/platform/x86/amd/pmf/tee-if.c
++++ b/drivers/platform/x86/amd/pmf/tee-if.c
+@@ -269,7 +269,7 @@ static int amd_pmf_start_policy_engine(struct amd_pmf_=
+dev *dev)
+ 	} else {
+ 		dev_err(dev->dev, "ta invoke cmd init failed err: %x\n", res);
+ 		dev->smart_pc_enabled =3D PMF_SMART_PC_DISABLED;
+-		return res;
++		return -EIO;
+ 	}
 
-Regards,
+ 	return 0;
+@@ -309,8 +309,8 @@ static ssize_t amd_pmf_get_pb_data(struct file *filp, =
+const char __user *buf,
 
-Hans
+ 	amd_pmf_hex_dump_pb(dev);
+ 	ret =3D amd_pmf_start_policy_engine(dev);
+-	if (ret)
+-		return -EINVAL;
++	if (ret < 0)
++		return ret;
 
-
-
-
-> ---
-> This is based on static analysis with smatch, only compile tested
-> ---
->  drivers/platform/x86/amd/pmf/tee-if.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-> index 8527dca9cf56..dcbe8f85e122 100644
-> --- a/drivers/platform/x86/amd/pmf/tee-if.c
-> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
-> @@ -458,8 +458,10 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
->  	amd_pmf_hex_dump_pb(dev);
->  
->  	dev->prev_data = kzalloc(sizeof(*dev->prev_data), GFP_KERNEL);
-> -	if (!dev->prev_data)
-> +	if (!dev->prev_data) {
-> +		ret = -ENOMEM;
->  		goto error;
-> +	}
->  
->  	ret = amd_pmf_start_policy_engine(dev);
->  	if (ret)
+ 	return length;
+ }
+=2D-
+2.39.2
 
