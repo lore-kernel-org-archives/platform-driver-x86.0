@@ -1,176 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1CC6FB5;
-	Tue,  5 Mar 2024 04:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A29523C087
+	for <platform-driver-x86@vger.kernel.org>; Tue,  5 Mar 2024 06:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709612466; cv=none; b=pbTlOgCU/hV+GvkBjDnAY8ssQdRQIeNpzBr7zHT1TCU0fFfLm3sh1MQ+bOE5Z1mbrpuoM5Hui9iOQHZLdjNB4gj7ZHISfnnDJkNBHcgWAmI0lFARFnsOuojjOn9ZfnLiObolb8Bz7DWhAOTr4/Vnd8qstfKYuzM6sd3EgtG1cPk=
+	t=1709618894; cv=none; b=M0EgsYsxd8as8d8mU1BkqYn5f90Umjr9HvmFLaamb6HaBdP8SZu8hgAoRHA7KQtJHmdYu2rmO14AaB/CYbM5RDvPwcAwXUTZ/6aJMk/tsH40AW8FRBHED0A0iQ8Lc9VSy1x5YZi4/mmt1R6qA863eT+swi2yBickE9Ex426kKKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709612466; c=relaxed/simple;
-	bh=1WHkQK/Ja5W+APKzZ4IYM8Vsp3euVtIzyGWw7tf7y6A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JqQROgEGxcRVgaiNv4F7+9Sb+szqrp2/qJtgloNWaNcNgSuITLlWWBKnyhZXQBKBmPJfqhGNXwHQZ8NboNOFgK0UttgNTWwR7ZqHjBTQt/HSFzGtZi87oHisXs4IXY8pVeTI/wTB7JSLIZt39jV5k+MfpM54eXjiIeCTp5uZ9bY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FElsCGGa; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709618894; c=relaxed/simple;
+	bh=dM4D7w9DD8d0wbriRkCoArYw4jGDzuzqEoVoQw02gzU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ceeGpTSigGRN5aczfQ+/5Qw5D4HLyypmf/gFcBVePjqkTzArGChIIuacKc4ueOq9yad8J162mEoIK4BqqXWYgnHoGH1UTdkoQzvpQtQm7fCQ6JOFHd6rcVnadrc6XQcv032HO5WZPn+m+3GnmKhUU/TTKzhShUuwSjhwTXZkz7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BW9dlqIR; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FElsCGGa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709612463; x=1741148463;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=1WHkQK/Ja5W+APKzZ4IYM8Vsp3euVtIzyGWw7tf7y6A=;
-  b=FElsCGGa4+8opnGv+3B2XTWr1ARr9LwLFhe8t6sp1K2RQelQNjrnkI+C
-   nwpbbNYgFFNXSQWwTfH9eSyH1vOvKSjiUEmat4swCBeDcSSs8SvxcRezw
-   XNR4DRbptPV97nfN2l/EJzC2Cyfs9ZCMGE+xWTU4AzfpwznE/9iLCqxfl
-   ktT6dKGaKgj61JZYz2do65CqZ2Xk2wDXk1HWaPZN4bhBVxKzekjjqwOxt
-   tpgmkNyQM7A/GPUzGwB7pErEEk6RdKHYUeTpB3wHKK7T7li+u11Bt8Hz8
-   rwxixG/v6bzOk5WHYezhaFUPmH19qNU56yoT4wy+3m5dCySXO5GmoH8K0
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4300750"
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="4300750"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 20:21:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="40216302"
-Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.102.58]) ([10.247.102.58])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 20:20:55 -0800
-Message-ID: <6fbbd36a-20f5-43db-97fc-c8755a82a159@linux.intel.com>
-Date: Tue, 5 Mar 2024 12:20:39 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BW9dlqIR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709618891;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zoFo0I1fzWwGEu4UQgAN2SUdp7pXe6Pyro6e3fwhw64=;
+	b=BW9dlqIRheS6t6PiJ9tgobqHvFQ1NJfUEfw529dRC2ShLxY/qKKZNGy/Le5FOmKNwx5kev
+	Smt97w46zBju96erup/Lq8ullqvvuoxzXMFX7VrbpbC2AIPvsys9a5JsQu/vPtK3dRclRv
+	I1idADwDOFv6pmjpJTgC5dVvAXzut40=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-398-j_zeolAHNmCvh7Nke5SzQQ-1; Tue, 05 Mar 2024 01:08:10 -0500
+X-MC-Unique: j_zeolAHNmCvh7Nke5SzQQ-1
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-299727c3e8bso4323944a91.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Mar 2024 22:08:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709618889; x=1710223689;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zoFo0I1fzWwGEu4UQgAN2SUdp7pXe6Pyro6e3fwhw64=;
+        b=xRmJShOnHpvdTLs3q3hCQFssrP9YwDFXvPw88sbbiERxjkfmgSpTsxgHH1qIVQznFq
+         nLMY4S+F1XqlkvooWBcSIrDirLvHbIg17+WvuAs9SrX1CWuE3TeJpYI2dJQuXvHx4tFh
+         UTNHeQC8l8DK3uEvHY8KuGImbFDf9Wv3TwKvPVdMplbei0IceDg5ND4PJfXbfRGKKgay
+         Ymnebqr5VaxgSefE5GUwLCAT2yBCd82gKxCWIv08sHWnCoDe0YPKRwJK1MJVFDQC3q7X
+         IqVXJUOYzs4bW2c7WmbNlqoL+B2yaa0gQcgNBpLcCfRnA+TEiPlXHQjHIyrU4AOGLwIK
+         PSag==
+X-Forwarded-Encrypted: i=1; AJvYcCVwUQTcDJQoAoRwuhFheNNc4bAsNcJHtLWxOVOM61Y3IwwZLNeJOn8iR7myYLih3UxGzfU3pFtkY14W6a0c85pJy9Q1np5GGZLo90+fXW9O6MYQEw==
+X-Gm-Message-State: AOJu0Yx9xesrdgd3QS7I01krCI7vLMhAvvHef+qvyiCTWX2Z59G+z6Zd
+	xsqEpzoMFiW+WKa8YwHmt0vII8aIAHVc8sH4ISwUruFJZzRWTiWWA61zRlemoH2Cp8DQsT+BZrx
+	zlmNj1z+Xl/TBxdbVuJmRu1Hg44k/KkOahgP1KCIxFpBFPa01/okIQlOJXYSq4eDQu/dT8N1hyD
+	zOW6wsrcDjkUhB1zqdZJzN4z+qw8EEeJT44w9GB6jBrm0LcCC96NKzXQ==
+X-Received: by 2002:a17:90a:fb81:b0:29a:1708:9878 with SMTP id cp1-20020a17090afb8100b0029a17089878mr10204702pjb.38.1709618889025;
+        Mon, 04 Mar 2024 22:08:09 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHd+3bX2cQVrVff7vEVTyByHc1KRVzVm4ben3RVNkqLHuCs0o7H2AoV3FE+2l+eivntYagUvGxVF64lMe0rlf0=
+X-Received: by 2002:a17:90a:fb81:b0:29a:1708:9878 with SMTP id
+ cp1-20020a17090afb8100b0029a17089878mr10204693pjb.38.1709618888724; Mon, 04
+ Mar 2024 22:08:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v5 1/9] net: phylink: provide
- mac_get_pcs_neg_mode() function
-To: "Voon, Weifeng" <weifeng.voon@intel.com>,
- Russell King <linux@armlinux.org.uk>
-Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- David E Box <david.e.box@linux.intel.com>,
- Hans de Goede <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Jose Abreu <Jose.Abreu@synopsys.com>, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Andrew Halaney
- <ahalaney@redhat.com>, Serge Semin <fancer.lancer@gmail.com>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-stm32@st-md-mailman.stormreply.com"
- <linux-stm32@st-md-mailman.stormreply.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
- "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
- "Sit, Michael Wei Hong" <michael.wei.hong.sit@intel.com>,
- "Lai, Peter Jun Ann" <peter.jun.ann.lai@intel.com>,
- "Abdul Rahim, Faizal" <faizal.abdul.rahim@intel.com>
-References: <20240215030500.3067426-1-yong.liang.choong@linux.intel.com>
- <20240215030500.3067426-2-yong.liang.choong@linux.intel.com>
- <Zc47T/qv8Xg2SA21@shell.armlinux.org.uk>
- <PH7PR11MB65210C62342088CF5C484A2888552@PH7PR11MB6521.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-In-Reply-To: <PH7PR11MB65210C62342088CF5C484A2888552@PH7PR11MB6521.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240301033612.11826-1-hpa@redhat.com> <20240301033612.11826-3-hpa@redhat.com>
+ <7dc47181-af26-6d46-d34f-57be0fdc8421@linux.intel.com>
+In-Reply-To: <7dc47181-af26-6d46-d34f-57be0fdc8421@linux.intel.com>
+From: Kate Hsuan <hpa@redhat.com>
+Date: Tue, 5 Mar 2024 14:07:57 +0800
+Message-ID: <CAEth8oGEB8rhEhGu2ws8UnmpmsOV3VFnGtO98cf=1m4h=REh=A@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] leds: rgb: leds-ktd202x: Get device properties
+ through fwnode to support ACPI
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+	=?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Fri, Mar 1, 2024 at 6:59=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Fri, 1 Mar 2024, Kate Hsuan wrote:
+>
+> > This LED controller also installed on a Xiaomi pad2 and it is a x86
+> > platform. The original driver is based on device tree and can't be
+> > used for this ACPI based system. This patch migrated the driver to
+> > use fwnode to access the properties. Moreover, the fwnode API
+> > supports device tree so this work won't effect the original
+> > implementations.
+> >
+> > Signed-off-by: Kate Hsuan <hpa@redhat.com>
+>
+> > @@ -568,6 +574,8 @@ static int ktd202x_probe(struct i2c_client *client)
+> >               return ret;
+> >       }
+> >
+> > +     chip->num_leds =3D (int) (unsigned long)i2c_get_match_data(client=
+);
+>
+> Casting twice.
+>
+
+Thank you for reviewing it.
+I'll fix it and propose the v4 patch.
+
+> --
+>  i.
+>
 
 
+--=20
+BR,
+Kate
 
-On 23/2/2024 2:58 pm, Voon, Weifeng wrote:
->>> For instance, if the interface switches from 2500baseX to SGMII mode,
->>> and the current link mode is MLO_AN_PHY, calling
->> 'phylink_pcs_neg_mode'
->>> would yield PHYLINK_PCS_NEG_OUTBAND. Since the MAC and PCS driver
->>> require PHYLINK_PCS_NEG_INBAND_ENABLED, the
->> 'mac_get_pcs_neg_mode'
->>> function will calculate the mode based on the interface, current link
->>> negotiation mode, and advertising link mode, returning
->>> PHYLINK_PCS_NEG_OUTBAND to enable the PCS to configure the correct
->> settings.
->>
->> This paragraph doesn't make sense - at least to me. It first talks about
->> requiring PHYLINK_PCS_NEG_INBAND_ENABLED when in SGMII mode. On
->> this:
-> 
-> The example given here is a very specific condition and that probably why there are some confusions here. Basically, this patch provides an optional function for MAC driver to change the phy interface on-the-fly without the need of reinitialize the Ethernet driver. As we know that the 2500base-x is messy, in our case the 2500base-x does not support inband. To complete the picture, we are using SGMII c37 to handle speed 10/100/1000. Hence, to enable user to switch link speed from 2500 to 1000/100/10 and vice versa on-the-fly, the phy interface need to be configured to inband SGMII for speed 10/100/1000, and outband 2500base-x for speed 2500. Lastly, the newly introduced "mac_get_pcs_neg_mode"callback function enables MAC driver to reconfigure pcs negotiation mode to inband or outband based on the interface mode, current link negotiation mode, and advertising link mode.
-> 
->>
->> 1) are you sure that the hardware can't be programmed for the SGMII
->> symbol repititions?
->>
-> 
-> No, the HW can be program for SGMII symbol repetitions.
-> 
->> 2) what happens if you're paired with a PHY (e.g. on a SFP module) which
->> uses SGMII but has no capability of providing the inband data?
->> (They do exist.) If your hardware truly does require inband data, it is going to
->> be fundamentally inoperative with these modules.
->>
-> 
-> Above explanation should have already cleared your doubts. Inband or outband capability is configured based on the phy interface.
-> 
->> Next, you then talk about returning PHYLINK_PCS_NEG_OUTBAND for the
->> "correct settings". How does this relate to the first part where you basically
->> describe the problem as SGMII requring inband? Basically the two don't
->> follow.
-> 
-> It should be a typo mistake. SGMII should return PHYLINK_PCS_NEG_INBAND_ENABLED.
-> 
->>
->> How, from a design point of view, because this fundamentally allows drivers
->> to change how the system behaves, it will allow radically different behaviours
->> for the same parameters between different drivers.
->> I am opposed to that - I want to see a situation where we have uniform
->> behaviour for the same configuration, and where hardware doesn't support
->> something, we have some way to indicate that via some form of capabilities.
->>
-> 
-> Hi Russell,
-> If I understand you correctly, MAC driver should not interfere with pcs negotiation mode and it should be standardized in the generic function, e.g., phylink_pcs_neg_mode()?
-> 
->> The issue of whether 2500base-X has inband or not is a long standing issue,
->> and there are arguments (and hardware) that take totally opposing views on
->> this. There is hardware where 2500base-X inband _must_ be used or the link
->> doesn't come up. There is also hardware where 2500base-X inband is not
->> "supported" in documentation but works in practice. There is also hardware
->> where 2500base-X inband doesn't work. The whole thing is a total mess
->> (thanks IEEE 802.3 for not getting on top of this early enough... and what's
->> now stated in 802.3 for 2500base-X is now irrelevant because they were too
->> late to the
->> party.)
->>
-> 
-> Agreed. And I have also seen some of your comments regarding the 2500SGMII and 2500BASEX.
-> 
-Hi Russell,
-
-Did the previous reply clear your doubt?
-
-If we understand you correctly that MAC driver should not interfere with 
-pcs negotiation mode and it should be standardized in the generic function.
-If implement what you suggested earlier that during interface mode change 
-then update the `cur_link_an_mode` but not cfg_link_an_mode: 
-https://patchwork.kernel.org/project/netdevbpf/patch/20230921121946.3025771-4-yong.liang.choong@linux.intel.com/?
-
-Would that be a better solution?
-So that 'phylink_pcs_neg_mode' function still can serve as the generic for 
-all the drivers.
-
-Do you have anything in mind that we can handle better for this patch series?
-or the solution can be aligned with what you are going to implement in the 
-future?
