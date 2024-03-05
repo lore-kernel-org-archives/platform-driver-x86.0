@@ -1,84 +1,233 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37345490D;
-	Tue,  5 Mar 2024 11:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDFA7484;
+	Tue,  5 Mar 2024 12:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709638619; cv=none; b=lcB4Tm73TIs0VJ6fvkQDsBWKqVTdaLS4+cqtxt82U8mLRDbyfPTXgXkL571mkJOOBVsIhNVgKzRJxShDL8mvtBiVVTcWb0LUYtIfjIyoEweS2w3B+Ph5jJOU1uPR/uUQdD9EWvPKX+i0SP4pjAZmU0nnT5cc/c1bhrriOmWdo1g=
+	t=1709640811; cv=none; b=GK5Fyz942/W6HZRqmeXjh7VcmjkExrTKZdHne0wxc9+P29vEzAxYiOOLl8nYDQCmHfio4BfxFZzyP5cTxVQrrfSx/ICLX61YRHioEJzVsn3atF+RntBAsEuJTq/3W0t78UNCOfrIKDjMWpw4bOLpelsAUneCe9Akhoz2IbiGBeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709638619; c=relaxed/simple;
-	bh=POkETsGRbketoDWXsvwDhq3gn8TxqRz5duFUPrt1aNw=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=jc6YVIQKH2JBsgPJa0QDd5uyGuKhgiRdWZ2/RKeIT+aMPS/ZeBe8UX6nupNf3GICcvO71pa65LIRDqJHxQJy+YLnykd/2sjwU6Km5LjBgxr+IK017ephi1l/Su1p/vDiJjMOgvPvrkhFOuaAyeTvv7H3HHxG4kkeWBn5VtZf86E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=wr4Xlb38; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="wr4Xlb38"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1709638609; h=Message-ID:Subject:Date:From:To;
-	bh=JO+6AB9KzJnq15c7g9gV2LhFHu7FmUfPL9YGcXxQKUI=;
-	b=wr4Xlb381T/rtgFhBsqCUkscRn+yOIMMUtsoUz1dUnX27jv9hsfPP+jME37K0KlNdgFokwPiLnYddpnvXUcIOtERcN253hLje+1l9d4a0eBZZBNgIOvR7ATBOIZ292+MKh974HZwZKbIvYD2RhXnP8anq/Vy+v6AFU9D/wc0Toc=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R401e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=24;SR=0;TI=SMTPD_---0W1uAS0I_1709638606;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W1uAS0I_1709638606)
-          by smtp.aliyun-inc.com;
-          Tue, 05 Mar 2024 19:36:47 +0800
-Message-ID: <1709638595.0478082-2-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH vhost 3/4] virtio: vring_new_virtqueue(): pass struct instead of multi parameters
-Date: Tue, 5 Mar 2024 19:36:35 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: virtualization@lists.linux.dev,
- Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- Hans de Goede <hdegoede@redhat.com>,
- Vadim Pasternak <vadimp@nvidia.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Cornelia Huck <cohuck@redhat.com>,
- Halil Pasic <pasic@linux.ibm.com>,
- Eric Farman <farman@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>,
- linux-um@lists.infradead.org,
- platform-driver-x86@vger.kernel.org,
- linux-remoteproc@vger.kernel.org,
- linux-s390@vger.kernel.org,
- kvm@vger.kernel.org
-References: <20240304114719.3710-1-xuanzhuo@linux.alibaba.com>
- <20240304114719.3710-4-xuanzhuo@linux.alibaba.com>
- <0cbf4910-ec0c-4b06-681e-aafae3720455@linux.intel.com>
-In-Reply-To: <0cbf4910-ec0c-4b06-681e-aafae3720455@linux.intel.com>
+	s=arc-20240116; t=1709640811; c=relaxed/simple;
+	bh=975p/LAtss40Fs1TYpzkZDZadS0gywjbOpZMyMCRPlI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WnvcHqzCQwrW2BROu7Al+4okL0XjPi60Q28auL3p1vXvtRADOD7JN3WABSABM64zSIYLombi778HVzQuZm9pVQHDy0am2l/PMBneML52UYR9CUd0It+T/y2NR39iilmLXvnwfTBR1bZdHObE4R9SdIG2ehBHnMrfUq0aYzrFd+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: ed0630d6980c4288b0c809be576385ba-20240305
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:64c0f35d-0956-48f8-a695-6a6fe2a79fd2,IP:10,
+	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
+	TION:release,TS:-30
+X-CID-INFO: VERSION:1.1.37,REQID:64c0f35d-0956-48f8-a695-6a6fe2a79fd2,IP:10,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-30
+X-CID-META: VersionHash:6f543d0,CLOUDID:6f7d88ff-c16b-4159-a099-3b9d0558e447,B
+	ulkID:240305201320VGWXLOSY,BulkQuantity:0,Recheck:0,SF:38|24|17|19|44|66|1
+	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC
+	:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: ed0630d6980c4288b0c809be576385ba-20240305
+X-User: aichao@kylinos.cn
+Received: from localhost.localdomain [(112.64.161.44)] by mailgw
+	(envelope-from <aichao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1069726408; Tue, 05 Mar 2024 20:13:17 +0800
+From: Ai Chao <aichao@kylinos.cn>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Cc: Ai Chao <aichao@kylinos.cn>
+Subject: [PATCH v4] platform/x86: add lenovo generic wmi driver
+Date: Tue,  5 Mar 2024 20:13:15 +0800
+Message-Id: <20240305121315.1744363-1-aichao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 5 Mar 2024 13:27:25 +0200 (EET), =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com> wrote:
-> On Mon, 4 Mar 2024, Xuan Zhuo wrote:
->
-> > Just like find_vqs(), it is time to refactor the
-> > vring_new_virtqueue(). We pass the similar struct to
-> > vring_new_virtqueue.
->
-> Please write a proper commit message here and do not just refer to
-> some other commit to describe what's going on here.
+Add lenovo generic wmi driver to support camera button.
+The Camera button is a GPIO device. This driver receives ACPI notifyi
+ when the button pressed.
 
+Signed-off-by: Ai Chao <aichao@kylinos.cn>
+---
+v4: Remove lenovo_wmi_input_setup, move camera_mode into struct lenovo_wmi_priv.
+v3: Remove lenovo_wmi_remove function.
+v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
 
-YES.
+ drivers/platform/x86/Kconfig             |  12 +++
+ drivers/platform/x86/Makefile            |   1 +
+ drivers/platform/x86/lenovo-wmi-camera.c | 118 +++++++++++++++++++++++
+ 3 files changed, 131 insertions(+)
+ create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
 
-Thanks.
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index bdd302274b9a..079f5aa5910c 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
+ 	To compile this driver as a module, choose M here: the module
+ 	will be called inspur-platform-profile.
+ 
++config LENOVO_WMI_CAMERA
++	tristate "Lenovo WMI Camera Button driver"
++	depends on ACPI_WMI
++	depends on INPUT
++	help
++	  This driver provides support for Lenovo camera button. The Camera
++	  button is a GPIO device. This driver receives ACPI notify when the
++	  button pressed.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called lenovo-wmi-camera.
++
+ source "drivers/platform/x86/x86-android-tablets/Kconfig"
+ 
+ config FW_ATTR_CLASS
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 1de432e8861e..217e94d7c877 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
+ obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+ obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
++obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
+ 
+ # Intel
+ obj-y				+= intel/
+diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform/x86/lenovo-wmi-camera.c
+new file mode 100644
+index 000000000000..77084266829c
+--- /dev/null
++++ b/drivers/platform/x86/lenovo-wmi-camera.c
+@@ -0,0 +1,118 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Lenovo WMI Camera Button Driver
++ *
++ * Author: Ai Chao <aichao@kylinos.cn>
++ * Copyright (C) 2024 KylinSoft Corporation.
++ */
++
++#include <linux/acpi.h>
++#include <linux/device.h>
++#include <linux/input.h>
++#include <linux/module.h>
++#include <linux/wmi.h>
++
++#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
++
++struct lenovo_wmi_priv {
++	struct input_dev *idev;
++	struct device *dev;
++	u8 camera_mode;
++};
++
++enum {
++	CAMERA_BUTTON_PRESSED = 1,
++};
++
++static ssize_t camerabutton_show(struct device *dev,
++				 struct device_attribute *attr, char *buf)
++{
++	struct lenovo_wmi_priv *priv = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%u\n", priv->camera_mode);
++}
++DEVICE_ATTR_RO(camerabutton);
++
++static struct attribute *lenovo_wmi_attrs[] = {
++	&dev_attr_camerabutton.attr,
++	NULL,
++};
++
++static const struct attribute_group lenovo_wmi_group = {
++	.attrs = lenovo_wmi_attrs,
++};
++
++const struct attribute_group *lenovo_wmi_groups[] = {
++	&lenovo_wmi_group,
++	NULL,
++};
++
++static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
++{
++	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
++
++	if (obj->type == ACPI_TYPE_BUFFER &&
++	    obj->buffer.pointer[0] <= CAMERA_BUTTON_PRESSED) {
++		/* Camera mode:
++		 *      0 camera close
++		 *      1 camera open
++		 */
++		priv->camera_mode = obj->buffer.pointer[0];
++
++		input_report_key(priv->idev, KEY_CAMERA, 1);
++		input_sync(priv->idev);
++		input_report_key(priv->idev, KEY_CAMERA, 0);
++		input_sync(priv->idev);
++	} else {
++		dev_dbg(&wdev->dev, "Bad response type %d\n", obj->type);
++	}
++}
++
++static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
++{
++	struct lenovo_wmi_priv *priv;
++
++	priv = devm_kzalloc(&wdev->dev, sizeof(*priv),
++			    GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	dev_set_drvdata(&wdev->dev, priv);
++
++	priv->idev = devm_input_allocate_device(&wdev->dev);
++	if (!priv->idev)
++		return -ENOMEM;
++
++	priv->idev->name = "Lenovo WMI Camera Button";
++	priv->idev->phys = "wmi/input0";
++	priv->idev->id.bustype = BUS_HOST;
++	priv->idev->dev.parent = &wdev->dev;
++	set_bit(EV_KEY, priv->idev->evbit);
++	set_bit(KEY_CAMERA, priv->idev->keybit);
++
++	return input_register_device(priv->idev);
++}
++
++static const struct wmi_device_id lenovo_wmi_id_table[] = {
++	{ .guid_string = WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
++	{  }
++};
++
++static struct wmi_driver lenovo_wmi_driver = {
++	.driver = {
++		.name = "lenovo-wmi-camera",
++		.dev_groups = lenovo_wmi_groups,
++		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
++	},
++	.id_table = lenovo_wmi_id_table,
++	.no_singleton = false,
++	.probe = lenovo_wmi_probe,
++	.notify = lenovo_wmi_notify,
++};
++
++module_wmi_driver(lenovo_wmi_driver);
++
++MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
++MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
++MODULE_DESCRIPTION("Lenovo Generic WMI Driver");
++MODULE_LICENSE("GPL");
+-- 
+2.25.1
 
-
->
-> --
->  i.
->
