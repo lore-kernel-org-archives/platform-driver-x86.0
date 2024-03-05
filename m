@@ -1,76 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C401128801;
-	Tue,  5 Mar 2024 16:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78005D267
+	for <platform-driver-x86@vger.kernel.org>; Tue,  5 Mar 2024 16:57:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709655348; cv=none; b=esrMcFhqdarPntqsSEE5UxWf48ZtuHiCuNNYr09PWfNeNQ9hfC97HMlqI6GbIzxfli9E58gyN+TcTYnn0tuWZz+f3iCA0XX12ixC4tuSTSkmgW7mNfdJvlp0Tv5CE7WAq41aRtlLonZj0H1Ukz9WHJ4xooy+CGbaYzLMlh8umeU=
+	t=1709657836; cv=none; b=BJktDKNpjUXHiESQXPhENxahUVoI1JHHDt2jJoUSQix+UbiP3wN3vOS+FbPBwm3P2n9INsf9pjBslwtLFrcn6fJyQL09Sc/O4kL7BJHDUV+7961l6nouw5ETFkAtAVlSG1TbVlUuZysEWURMoxWhIvn/DBBhuwZrk4WfMpskCJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709655348; c=relaxed/simple;
-	bh=BkPAKryaANKE6/afrAaBMwytR98XnEaGZtgIUqUEb3U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OLu8dYNI6FSBbPcHwK80CRwkRr3Kns2npTpMWVb+AAOK1RD4vHqITnZPrDOsW4KGHZYIUwTf5XCGD+6WBOYyHT9wxxs1avgHNN6oPcz1M5fSVMLDR21QpC2Wtz/hGIjaXEiQtz06NDycRSwgy0Xzufiff8iAsanN7DI4U+HusLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jIqqERIr; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709657836; c=relaxed/simple;
+	bh=0LocczkcY4tRGl1cZQafSRZf8IwYAm95XlkIPp9Tghs=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aZorhSekYxHRf+5gouNELglGm2OXq9kxQ5I6dnz7yI3+MW8Qr9/++STlvWEcff5W4LO8km4xQhvx7fZyCC34NGJTvLv5OoKADJxiUT1LUxS3bFrCJvMZbQXp8wMXfVDQq+v51qSm8ZRLRnXckbpCvax38EAOOfcCXxfLf1FvF+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iLi7GENL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jIqqERIr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709655347; x=1741191347;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=BkPAKryaANKE6/afrAaBMwytR98XnEaGZtgIUqUEb3U=;
-  b=jIqqERIrawFBvfD7u50lkE4iV4IIYWxJfE8TZq3aSXboVoOeakTPrJpV
-   sXDYi7Ai8lAfB/9jVxDjT8yQAUPClgal4FHxBYTSuMH6ZOsHWeYbXlikP
-   KVEUQGBSACTH9ZW2S7v/riSBTfFlZC4J7keihGA9BA+qgGEUsNnqdNhrw
-   C8CTZJ4lUHm8lYOgivrNQZvC2kwrc87pmmQf1WzxQl8t1czrNPgfVjVrU
-   WtYE4NWdPVKv2UQ997rqPJptUTR5RqawkZy11bT+PNDUrhnnAzA2uaWmx
-   BY3g5i0HGDCAuBd++Hdg1FYbIhY6RRC1LyY5Dfaifwx8zGL9S+fMrpEM2
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4078454"
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="4078454"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 08:15:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="937042665"
-X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="937042665"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 05 Mar 2024 08:15:41 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 8184F1A6; Tue,  5 Mar 2024 18:15:40 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Hans de Goede <hdegoede@redhat.com>,
-	Julian Winkler <julian.winkler1@web.de>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v1 0/2] platform/x86: Remove unused intel-mid.h
-Date: Tue,  5 Mar 2024 18:14:57 +0200
-Message-ID: <20240305161539.1364717-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iLi7GENL"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F0B92C433B2
+	for <platform-driver-x86@vger.kernel.org>; Tue,  5 Mar 2024 16:57:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709657836;
+	bh=0LocczkcY4tRGl1cZQafSRZf8IwYAm95XlkIPp9Tghs=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=iLi7GENL7g/hAJIm4BvoXoXIafafUYKFqnEIQSoNsGv3Mzw4cQ9EZ5ZE1dRILf2G7
+	 bJ8w3+fFpETtiLW77mwfK06BpuqxKHYIjEoBjg1/PNVDnpSCPbwwaGoasMxbTjvIoF
+	 Dbkm4kN0nESODF2CZdZew4p9Ds9QY4RFLMzmqssS6W7DLdXi0KwHys7INlnIBCqgi+
+	 eWwZqQQ/yeUkYV3zPko2EZjoGUkYkqR9GdK8AhAZlAYlcsRJgx3igYkY0RLDXReSgy
+	 H94CkUx44/dRs+IE1yOZpWilgeKnC0TodWlGgdH9WQvod4kzA7OcDjKkd+WR3PW7KF
+	 M5igG/HamWAmQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id DF64DC4332E; Tue,  5 Mar 2024 16:57:15 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after a
+ random number of suspend/resume cycles
+Date: Tue, 05 Mar 2024 16:57:15 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: blocking
+X-Bugzilla-Who: aros@gmx.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: blocked
+Message-ID: <bug-218305-215701-qeKXXcHpD9@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
+References: <bug-218305-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-intel-mid.h is not used in the drivers, remove it.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-Andy Shevchenko (2):
-  platform/x86: intel_scu_wdt: Remove unused intel-mid.h
-  platform/x86: intel_scu_pcidrv: Remove unused intel-mid.h
+Artem S. Tashkinov (aros@gmx.com) changed:
 
- drivers/platform/x86/intel_scu_pcidrv.c | 1 -
- drivers/platform/x86/intel_scu_wdt.c    | 1 -
- 2 files changed, 2 deletions(-)
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+             Blocks|                            |218557
 
--- 
-2.43.0.rc1.1.gbec44491f096
 
+Referenced Bugs:
+
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218557
+[Bug 218557] Kernel regression in acpi/ec.c causing some AMD platforms to l=
+imit
+CPU frequency to < 544Mhz
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
