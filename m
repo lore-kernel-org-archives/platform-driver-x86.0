@@ -1,90 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126863FE37
-	for <platform-driver-x86@vger.kernel.org>; Tue,  5 Mar 2024 19:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C051C01;
+	Tue,  5 Mar 2024 19:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709665392; cv=none; b=cJXi/ckL61ZO5zu694iMYb+85u0S/rNSmIXXeRtv6Yy+VMo4MXuewcdMlMeVwsBjCaRVfUEQAbMUEJmxgqGw8V4C1eod2/ZOFH7n+NXHc5clfmwAYbZ0ZNBdOF9ScwrCTeRbubTW/C7ndwyFaQAak/VCfvPnasi6GWSIs/4qnVA=
+	t=1709667445; cv=none; b=jhXHGHBuMEcLPgvfB/SFm+nVmN5cZUfWikTJHk07ezbsAIdWIgEzuUY7j7gJHk4wMqGzx9RvM1OpegXxrDeZqo5zEkoLTw+ug9w0oggozoszeugquWuJ2AQIdCEzDiPFTjkYSyGqHn2QsMDnrF/d0b8uVD7cLTMDe522WEvgggk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709665392; c=relaxed/simple;
-	bh=Kv5r6KunEafTKcq2D8TbtGnORAJGwsenirjiX9hIWmc=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WOD+B/FNnbQIU5bsth+egAKJpiGJcRwVjZSdTCftJ2NTSZAeRPEnNgC7jWxMoqnZDwCvrHSBJcL+uMw+kFME6CAYMpOCL/sqjO3bp3NwD9tbBxQfH16PURRvR1CCbS7RsG4RMmPuRDJBxNZIMajvBYa1/tvgdaG7LZBwaDqPg4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BzKS2txp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709667445; c=relaxed/simple;
+	bh=RKacaIGOQgxF1LtEIPG8UQU9TTZMHa2e7nuPpGI22/w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kNl0RQmD9RrVuAeJGhgS7bf2C/gnfEck4vveH++qlYOffpFIg+w/7vb9V48fRVfXbvo7o4Gy+MnZ0In+FZTiViR1CixvopNiqs44UiVXo+XbpeX9YDHaOM7PlZzotomalZBOa38x4OwCCV+MDcoDbtCwyZi7OzLegjEo6E+HWZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wb2wD18u; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BzKS2txp"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8A867C43390
-	for <platform-driver-x86@vger.kernel.org>; Tue,  5 Mar 2024 19:03:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709665391;
-	bh=Kv5r6KunEafTKcq2D8TbtGnORAJGwsenirjiX9hIWmc=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=BzKS2txpx3fOHncFE+BasdaIvKaP3XclVqNlsitrbTulkIVDfNc8d7qBdODa9ztDZ
-	 g6MliqMazlZjhw0peq3b0AVCJ5KcRIAiZ1Ne2YQDq1mmcA+h5b6o142FWVMALCMMOY
-	 y4DPJXyyyrbld0LQO2v16BhMXfav3FtLSyWiRQ3EU/RQdzlD1py3PCDzbtI4OivLi4
-	 LNTG4xS1XFF5xdh3R8aT7q3TwIk6vlW5sfOTlN/InItJ3STH60LjfYKejeTCcTa/TO
-	 bVZEcAAua4khNE1RSGKorMasxFl/JYvOBEr7tJRrUTYgqTx3wC9q8BTrbG3no0aYcV
-	 11QHhU9nJqFhw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 6B87FC4332E; Tue,  5 Mar 2024 19:03:11 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after a
- random number of suspend/resume cycles
-Date: Tue, 05 Mar 2024 19:03:11 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-Txgr0jMvpF@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wb2wD18u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709667443; x=1741203443;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=RKacaIGOQgxF1LtEIPG8UQU9TTZMHa2e7nuPpGI22/w=;
+  b=Wb2wD18ujEowuY8haY7tQZtmptc8DVDypm0PSLPtVrJgBNEW9YP82kQd
+   KXniZitwLZ2pZhdLaBBolCu3dzQyWMwZrArClnCC67SMhyeqSUOAd9LUS
+   7S+OiEnmmPNdMfqEEoEuINOcw2yzGCzmp+ZzR7QlSoI48vCi8JMoAy8J5
+   GnGKmHp1vIAhjvnyCWjtLtPlaI64jge/AxaJEk5hRINOQNux+EHY7zCqm
+   GUF79ipuekqEw/of0NbVvStatRT6SMMpdgaawq4UQluWbT/6OTYnRF/Ue
+   sYv0i7WGvDK1qfuPzqnSFdT23RBqNuo11M29XQJJgQD8vxan5XYAwKAli
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="4102061"
+X-IronPort-AV: E=Sophos;i="6.06,206,1705392000"; 
+   d="scan'208";a="4102061"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 11:37:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,206,1705392000"; 
+   d="scan'208";a="40367715"
+Received: from msavchak-mobl.amr.corp.intel.com (HELO [10.209.19.134]) ([10.209.19.134])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 11:37:23 -0800
+Message-ID: <c36ebc06-d8bb-4712-9d90-4e458ee495e6@linux.intel.com>
+Date: Tue, 5 Mar 2024 11:37:22 -0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] platform/x86: intel_scu_wdt: Remove unused
+ intel-mid.h
+Content-Language: en-US
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>, Julian Winkler
+ <julian.winkler1@web.de>, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20240305161539.1364717-1-andriy.shevchenko@linux.intel.com>
+ <20240305161539.1364717-2-andriy.shevchenko@linux.intel.com>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240305161539.1364717-2-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
---- Comment #27 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-So I think there are actually two issues in this bug.=20=20
-* The first one was the one that Artem reported which looks like a problem =
-with
-the EC communicating some limits to the APU.  This is Artem's issue.
-* The second one is that there was a bug in amd-pstate that could cause CPPC
-requests to have the wrong values.  This is (nearly) everyone else's issue =
-in
-this bug.
+On 3/5/24 8:14 AM, Andy Shevchenko wrote:
+> intel-mid.h is providing some core parts of the South Complex PM,
+> which are usually are not used by individual drivers. In particular,
+> this driver doesn't use it, so simply remove the unused header.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
 
-The second issue is fixed by
-https://github.com/torvalds/linux/commit/22fb4f041999f5f16ecbda15a2859b4ef4=
-cbf47e
+Looks good to me.
 
-For the first issue, Artem can you update to 6.8-rc7, make sure you've added
-the TEE firmware for the amd-pmf driver from linux-firmware and see if you =
-can
-still reproduce it?
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
---=20
-You may reply to this email to add a comment.
+>  drivers/platform/x86/intel_scu_wdt.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/intel_scu_wdt.c b/drivers/platform/x86/intel_scu_wdt.c
+> index c2479777a1d6..a5031a25632e 100644
+> --- a/drivers/platform/x86/intel_scu_wdt.c
+> +++ b/drivers/platform/x86/intel_scu_wdt.c
+> @@ -13,7 +13,6 @@
+>  
+>  #include <asm/cpu_device_id.h>
+>  #include <asm/intel-family.h>
+> -#include <asm/intel-mid.h>
+>  #include <asm/io_apic.h>
+>  #include <asm/hw_irq.h>
+>  
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
