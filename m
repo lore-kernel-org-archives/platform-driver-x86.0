@@ -1,171 +1,184 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60D82E40B;
-	Tue,  5 Mar 2024 08:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2DC4F211
+	for <platform-driver-x86@vger.kernel.org>; Tue,  5 Mar 2024 09:08:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709628020; cv=none; b=C5Ywsa+zSNHT+dlmopvHnAxNwhtubbm6eVcZKmIJO/AVnjmoJBL26IZ/unCdAp4gq18fxXUrwEo5T/h5DnhwWYTCSdzfzmaeKuFMspK1E+fMbAHtd1H0GnrHbzJB8Emmuk0iR3xwTJszJvBZaZt+Z8q4Md2ICw4BNQwCfTba6SU=
+	t=1709629689; cv=none; b=Fz4Qc8aKQjTBRKhNQ+VCHCxk7GCE8WKM9WEc8y4RS+0/wkJL2rMKzaD0zLyF+A3hfAEb+CihSO4HaEobrq53ZInhrUrh/SUv9Cv81kHgtfHetHrB3lMD7T2DaUoDdV4pNfTbhNfyaHBwZdH85Mjxgbbj6zdMnymvVySte/3I+QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709628020; c=relaxed/simple;
-	bh=TV9uMW9AN+HEzQtHItY4aORbZAa6MUYpmVUfJcyR1OU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EXVxX4yYv4mLgUnNhJvoaOrNnkl/sc4ngyQhu0BjDkmGUlEt17NKq01wKhDY3VNt1nGLpaKWZ19kBsMwm3Qt//P18vCbsIjIyCCiuBfup8+qN6kSJosRQ4fTs6l6Dd4JbdywMQFNT0SkvaH/dxHuPfyAF4nOrMZaSm4BCMswKCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=IlePWdjC; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1709629689; c=relaxed/simple;
+	bh=h455HCdulbwhayh3eDpkrvibMajOVPDkVlKDVe+2pGc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LH0oTAqrob9A/Jy5qLki3jc5T7+H2eOxh6fFmB/lwpbtPQ5SGUTBwxC0XPCq5HatDcGgVzlR97OiobbY3T0gyG/RzXr0+CbmK/BigVNIm6EUY2iVeTadJVrdOC+Jxa+MAbARTxRdMZaP/7S5MRlTZiG3oFJwljvxHlD9WkWTVDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cl0DrYVE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="IlePWdjC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=BWwm6Uaae5hMfLSGg+U9y3Fkv0vle+n+mBpNEyJwlQ0=; b=IlePWdjCNRvMIQ6uRq1hCMLdWV
-	2A9YQhrZnUMDtIV3accm3gxm5aFQfRI6ZmAzXz6p0tLSyVcIYsl1ctxhqflKDb7feRQnhYma8ejUB
-	PJ0wmod4DFOuZHDsynJoijkdqQlY+bs6d5VnjmK4mbCEjQxFT8QvRMRU+5OWLCN8Vz4CeFnK8TyJi
-	GqmruHFAY8/SUjiKFefv5Q91pcF2iP6fSckyKMIuMie7NE5Z+biVD1BvAMVQiJFcmz7hAZ4VxEflY
-	oT8o0wBkZ8RM/flMFtrWqkw5xPcg0Lm/Y9+mXGVLVs5XscqCxzHJmSWJ7ZSA+mA63/ItQ1GxAudxu
-	jlvIKzPQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:53184)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rhQKk-0006rB-1j;
-	Tue, 05 Mar 2024 08:39:34 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rhQKg-0005Ht-Cb; Tue, 05 Mar 2024 08:39:30 +0000
-Date: Tue, 5 Mar 2024 08:39:30 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-Cc: "Voon, Weifeng" <weifeng.voon@intel.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mark Gross <markgross@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"Sit, Michael Wei Hong" <michael.wei.hong.sit@intel.com>,
-	"Lai, Peter Jun Ann" <peter.jun.ann.lai@intel.com>,
-	"Abdul Rahim, Faizal" <faizal.abdul.rahim@intel.com>
-Subject: Re: [PATCH net-next v5 1/9] net: phylink: provide
- mac_get_pcs_neg_mode() function
-Message-ID: <ZebaQpwyHi0ZoPws@shell.armlinux.org.uk>
-References: <20240215030500.3067426-1-yong.liang.choong@linux.intel.com>
- <20240215030500.3067426-2-yong.liang.choong@linux.intel.com>
- <Zc47T/qv8Xg2SA21@shell.armlinux.org.uk>
- <PH7PR11MB65210C62342088CF5C484A2888552@PH7PR11MB6521.namprd11.prod.outlook.com>
- <6fbbd36a-20f5-43db-97fc-c8755a82a159@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cl0DrYVE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709629687;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eacxxgxORnICKYWOMS/sQ3/ShQ0nCl3n/H8AgYX9QXY=;
+	b=cl0DrYVE3annZWpkVMWws1RJktdWEftdEmf64Zai/oA0eqMzu5JEDv6pcxVUTVqajyWvnQ
+	VoV/l0lgGn+mK9pTmzFK2kTfHZsvv9nDosAURCsz2IxsU29T5GoyyR/h7WHVTNZKzI4QaQ
+	spyVChy+sT8q5Ti/aSISPrLOj4vyM68=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-185-T28n1-1lPCOnvMLstSaxRQ-1; Tue, 05 Mar 2024 04:08:05 -0500
+X-MC-Unique: T28n1-1lPCOnvMLstSaxRQ-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a440b057909so326014166b.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 05 Mar 2024 01:08:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709629684; x=1710234484;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eacxxgxORnICKYWOMS/sQ3/ShQ0nCl3n/H8AgYX9QXY=;
+        b=QKpVUGgc+lNUl2kieSsNWKHkfVruNq5ppvsVmu+Ky5qnneYa59ou3XiB0sqbuYIIkp
+         2Prit6/f0DVhh+0d6YvkespMY8/iMJK9dJ6Us3fm8N7eUzlTtEZTGvbq3SYZ3HSaUpEX
+         JxhHO6iS8v+YK701EK2537NBtRZ7SvTVdUt00L7KpXWTGWynn++JcEqeqS+dd1u/HSKn
+         CnZUzRvJSRJLYDbw6PFy/NAOo2M7Z/zMUUvGGmBve2I/Bd8xjzGitZ/dPVmoY8f+46HT
+         nBBj5Td6gwjkijT0yq5knhKNGbIrdeH3/pwysBxEoDH64WpL8BYpu1ilhBoh0QN0Z627
+         1RZg==
+X-Gm-Message-State: AOJu0Ywl833nSq11cGXyLyFvp8ChoT9EQulzTCSj+pmGx7/0MFvtKVit
+	vckOJ7CldW+QSxgvbF5rBxxFwquZG/NU5UymOGQOwltDhLOuAqdW3SSxuE162ZCrG/XISL2WUTg
+	fHMtHYUsqcDycW9t4V3HeMzEBytXvhiu2+aDdgDVNSl5ywISskSltiDxMhytU/0xHOhtVbsk=
+X-Received: by 2002:a17:906:4a10:b0:a43:2c94:9420 with SMTP id w16-20020a1709064a1000b00a432c949420mr8184630eju.60.1709629684117;
+        Tue, 05 Mar 2024 01:08:04 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEtF0rrCgWZbp3f9P+Y1akZetFZZA93pf4sDbU0Tv7kLUmNzeybTEuO1Txnj/aLi1hKRdcCtg==
+X-Received: by 2002:a17:906:4a10:b0:a43:2c94:9420 with SMTP id w16-20020a1709064a1000b00a432c949420mr8184619eju.60.1709629683794;
+        Tue, 05 Mar 2024 01:08:03 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id ld1-20020a170906f94100b00a451e507cfcsm2644192ejb.52.2024.03.05.01.08.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Mar 2024 01:08:03 -0800 (PST)
+Message-ID: <6b8bca7a-feb4-4269-9f00-2cb04d8a6235@redhat.com>
+Date: Tue, 5 Mar 2024 10:08:02 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6fbbd36a-20f5-43db-97fc-c8755a82a159@linux.intel.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] platform/x86: wmi: Support reading/writing 16 bit EC
+ values
+To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240304221732.39272-1-W_Armin@gmx.de>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240304221732.39272-1-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 05, 2024 at 12:20:39PM +0800, Choong Yong Liang wrote:
-> 
-> 
-> On 23/2/2024 2:58 pm, Voon, Weifeng wrote:
-> > > > For instance, if the interface switches from 2500baseX to SGMII mode,
-> > > > and the current link mode is MLO_AN_PHY, calling
-> > > 'phylink_pcs_neg_mode'
-> > > > would yield PHYLINK_PCS_NEG_OUTBAND. Since the MAC and PCS driver
-> > > > require PHYLINK_PCS_NEG_INBAND_ENABLED, the
-> > > 'mac_get_pcs_neg_mode'
-> > > > function will calculate the mode based on the interface, current link
-> > > > negotiation mode, and advertising link mode, returning
-> > > > PHYLINK_PCS_NEG_OUTBAND to enable the PCS to configure the correct
-> > > settings.
-> > > 
-> > > This paragraph doesn't make sense - at least to me. It first talks about
-> > > requiring PHYLINK_PCS_NEG_INBAND_ENABLED when in SGMII mode. On
-> > > this:
-> > 
-> > The example given here is a very specific condition and that probably why there are some confusions here. Basically, this patch provides an optional function for MAC driver to change the phy interface on-the-fly without the need of reinitialize the Ethernet driver. As we know that the 2500base-x is messy, in our case the 2500base-x does not support inband. To complete the picture, we are using SGMII c37 to handle speed 10/100/1000. Hence, to enable user to switch link speed from 2500 to 1000/100/10 and vice versa on-the-fly, the phy interface need to be configured to inband SGMII for speed 10/100/1000, and outband 2500base-x for speed 2500. Lastly, the newly introduced "mac_get_pcs_neg_mode"callback function enables MAC driver to reconfigure pcs negotiation mode to inband or outband based on the interface mode, current link negotiation mode, and advertising link mode.
-> > 
-> > > 
-> > > 1) are you sure that the hardware can't be programmed for the SGMII
-> > > symbol repititions?
-> > > 
-> > 
-> > No, the HW can be program for SGMII symbol repetitions.
-> > 
-> > > 2) what happens if you're paired with a PHY (e.g. on a SFP module) which
-> > > uses SGMII but has no capability of providing the inband data?
-> > > (They do exist.) If your hardware truly does require inband data, it is going to
-> > > be fundamentally inoperative with these modules.
-> > > 
-> > 
-> > Above explanation should have already cleared your doubts. Inband or outband capability is configured based on the phy interface.
-> > 
-> > > Next, you then talk about returning PHYLINK_PCS_NEG_OUTBAND for the
-> > > "correct settings". How does this relate to the first part where you basically
-> > > describe the problem as SGMII requring inband? Basically the two don't
-> > > follow.
-> > 
-> > It should be a typo mistake. SGMII should return PHYLINK_PCS_NEG_INBAND_ENABLED.
-> > 
-> > > 
-> > > How, from a design point of view, because this fundamentally allows drivers
-> > > to change how the system behaves, it will allow radically different behaviours
-> > > for the same parameters between different drivers.
-> > > I am opposed to that - I want to see a situation where we have uniform
-> > > behaviour for the same configuration, and where hardware doesn't support
-> > > something, we have some way to indicate that via some form of capabilities.
-> > > 
-> > 
-> > Hi Russell,
-> > If I understand you correctly, MAC driver should not interfere with pcs negotiation mode and it should be standardized in the generic function, e.g., phylink_pcs_neg_mode()?
-> > 
-> > > The issue of whether 2500base-X has inband or not is a long standing issue,
-> > > and there are arguments (and hardware) that take totally opposing views on
-> > > this. There is hardware where 2500base-X inband _must_ be used or the link
-> > > doesn't come up. There is also hardware where 2500base-X inband is not
-> > > "supported" in documentation but works in practice. There is also hardware
-> > > where 2500base-X inband doesn't work. The whole thing is a total mess
-> > > (thanks IEEE 802.3 for not getting on top of this early enough... and what's
-> > > now stated in 802.3 for 2500base-X is now irrelevant because they were too
-> > > late to the
-> > > party.)
-> > > 
-> > 
-> > Agreed. And I have also seen some of your comments regarding the 2500SGMII and 2500BASEX.
-> > 
-> Hi Russell,
-> 
-> Did the previous reply clear your doubt?
+Hi,
 
-I am working on the problem as and when I can find the time (which is
-not much spare time.) I have some prototype code at the moment.
+On 3/4/24 23:17, Armin Wolf wrote:
+> The ACPI EC address space handler currently only supports
+> reading/writing 8 bit values. Some firmware implementations however
+> want to access for example 16 bit values, which is prefectly legal
+> according to the ACPI spec.
+> 
+> Add support for reading/writing such values.
+> 
+> Tested on a Dell Inspiron 3505 and a Asus Prime B650-Plus.
+> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Thanks, patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+
+> ---
+>  drivers/platform/x86/wmi.c | 44 +++++++++++++++++++++++++++++---------
+>  1 file changed, 34 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index 1920e115da89..900e0e52a5fa 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -1153,6 +1153,32 @@ static int parse_wdg(struct device *wmi_bus_dev, struct platform_device *pdev)
+>  	return 0;
+>  }
+> 
+> +static int ec_read_multiple(u8 address, u8 *buffer, size_t bytes)
+> +{
+> +	int i, ret;
+> +
+> +	for (i = 0; i < bytes; i++) {
+> +		ret = ec_read(address + i, &buffer[i]);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int ec_write_multiple(u8 address, u8 *buffer, size_t bytes)
+> +{
+> +	int i, ret;
+> +
+> +	for (i = 0; i < bytes; i++) {
+> +		ret = ec_write(address + i, buffer[i]);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * WMI can have EmbeddedControl access regions. In which case, we just want to
+>   * hand these off to the EC driver.
+> @@ -1162,27 +1188,25 @@ acpi_wmi_ec_space_handler(u32 function, acpi_physical_address address,
+>  			  u32 bits, u64 *value,
+>  			  void *handler_context, void *region_context)
+>  {
+> -	int result = 0;
+> -	u8 temp = 0;
+> +	int bytes = bits / 8;
+> +	int ret;
+> 
+> -	if ((address > 0xFF) || !value)
+> +	if (address > 0xFF || !value)
+>  		return AE_BAD_PARAMETER;
+> 
+> -	if (function != ACPI_READ && function != ACPI_WRITE)
+> +	if (bytes > sizeof(*value))
+>  		return AE_BAD_PARAMETER;
+> 
+> -	if (bits != 8)
+> +	if (function != ACPI_READ && function != ACPI_WRITE)
+>  		return AE_BAD_PARAMETER;
+> 
+>  	if (function == ACPI_READ) {
+> -		result = ec_read(address, &temp);
+> -		*value = temp;
+> +		ret = ec_read_multiple(address, (u8 *)value, bytes);
+>  	} else {
+> -		temp = 0xff & *value;
+> -		result = ec_write(address, temp);
+> +		ret = ec_write_multiple(address, (u8 *)value, bytes);
+>  	}
+> 
+> -	switch (result) {
+> +	switch (ret) {
+>  	case -EINVAL:
+>  		return AE_BAD_PARAMETER;
+>  	case -ENODEV:
+> --
+> 2.39.2
+> 
+
