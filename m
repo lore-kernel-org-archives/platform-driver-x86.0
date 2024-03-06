@@ -1,92 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BF35FDD2;
-	Wed,  6 Mar 2024 10:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09EBE604A7;
+	Wed,  6 Mar 2024 11:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709722220; cv=none; b=RgTv19VySXoz+cb52Ev1cL3rKmuuc8KhrnkAoGBm6xM4espMMzW4FFT8dEy7LOOOnsEmL+of7CdwkB3Vtw5wL2JRcBGuWJFF+3bBmoz/EXL2ohwyrllhbPJN8xCqxe4w3N07Yp0DzzwhN8pqRRENFkHhBwbH7PgM6rYAngf/p1s=
+	t=1709722886; cv=none; b=G8n6o7p2xbc0rvUc8rB6bGIOda0GltK8GIqsc/+Ogn6oc8T2B8CMiL9pHcEbm4iBTtHqH/4SBIHwcP/g5OsTtMR4BT3EtY/1KzKCYj4ZCEl9ogiOSl5C78zCdkyoCoRrKLGQV2n9unhOvgz+lwf/98QlA6zMUUHLaShfAGHiPec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709722220; c=relaxed/simple;
-	bh=/FQwOjsjlEXsuJlp+9wnACCslIvKGqy6TJS6hVnDSpM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=a7J9ZJaHzuxQ376T9hKQpmd7ALCL1D/tIXJHHpa4lOpE514As12muMQ7gEjdju0QVIfnjfLTk6btXVVV7Wmg2ZitNI2yl7V99pyBR7LTmWrwbVVcvOOIgaRRan8HMc8sgVfNKNZkQRI6ne02nfqpLkemFrFIcSlO5pmERIrVJnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U1gzvKde; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1709722886; c=relaxed/simple;
+	bh=QnEU6jhwX7i1ZB/3pShjxSETQ3xsLNz0r4DdTZhkXTo=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=sYI0gf+o6Oscij8/HCaFDtvpvu5BBoQYp+T38AGNn4E7pEbRIKAg68S9go21xsKbUacMmrv2DVq5pXVxxU37siBgNHmKdWFfZngckjop8/TO0p12qT2dxtdS/8Qi7+gymEsDvWcWAi8YJ3uK59gq4RQT0cLRoK+nYBCiRjFAqQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GJQarYuB; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U1gzvKde"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GJQarYuB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709722218; x=1741258218;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=/FQwOjsjlEXsuJlp+9wnACCslIvKGqy6TJS6hVnDSpM=;
-  b=U1gzvKdeI0onrymFaAShjZAbTUAczFLnHIrpCFJVCtQSpOf7wnOKE1Mq
-   LtVQ8VRYqFCTKBgbhH/T5gQyQ0i93HAwkKlbTo/KD3GK5appwdzvSvge8
-   vN06GMR3z2oThZ86xFED4Sfn2JW0xpjF83qF4YSIOuw+jpET4zcO13ISC
-   bCKvATWFAgtIUOCxXq6AfVRqWBMre5qYMF/5NfDKpYqN5PVM+evJjBFUR
-   L1ioQC9M8xtpl2GGABZoYhe0X0SjveQsAHF6J981jFJuV4PgacR5g/kwp
-   C2+CHIiTTa0/JzbzMXw7n9alir096kUpceAkJVUQiiYutrlgbzzN/OwMv
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="8143242"
+  t=1709722884; x=1741258884;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=QnEU6jhwX7i1ZB/3pShjxSETQ3xsLNz0r4DdTZhkXTo=;
+  b=GJQarYuBT2EZ8Y84EQn/LWtWpuGgMtkh+cA6cW0M2QD/1hzhXkhs4B93
+   pwQYqUtsqs0X9e+Wr2ltTtNZ6DO1Vf/lZtrxPezxnkrZLqmSjNDaro3Ai
+   Wzy1bCFClr/TliLg0xAleI3Fub/uRo28pPdRfzSPom4Htab/p3KP20Khy
+   SNkQgdvtIzjkodZvITttECrmyoR3eIqRE+unAGfYLCKCfR0vy404bge7v
+   hFAnF7UOVT3YRp0D/YxKMawUBgFwkkMnk13lLa2XdUcUkx7FgetMDX/8i
+   EuXPAP8Ok6MOZuMaVnORI9hRdNN/kEq70CYUy+ZWn2yM5VorhdnfYI0c6
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="4445296"
 X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
-   d="scan'208";a="8143242"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 02:50:18 -0800
+   d="scan'208";a="4445296"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 03:01:23 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
-   d="scan'208";a="14394664"
+   d="scan'208";a="9594623"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.146])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 02:50:16 -0800
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 03:01:20 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Shyam-sundar.S-k@amd.com, Armin Wolf <W_Armin@gmx.de>
-Cc: hdegoede@redhat.com, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240304205005.10078-1-W_Armin@gmx.de>
-References: <20240304205005.10078-1-W_Armin@gmx.de>
-Subject: Re: [PATCH v3 0/4] platform/x86/amd/pmf: Fix policy binary
- handling
-Message-Id: <170972220931.2521.8343066824996760779.b4-ty@linux.intel.com>
-Date: Wed, 06 Mar 2024 12:50:09 +0200
+Date: Wed, 6 Mar 2024 13:01:14 +0200 (EET)
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    stable@vger.kernel.org
+Subject: Re: [PATCH] platform/x86/intel/tpmi: Change vsec offset to u64
+In-Reply-To: <20240305194644.2077867-1-srinivas.pandruvada@linux.intel.com>
+Message-ID: <3a97f188-3998-866d-6a23-e0f4559c673d@linux.intel.com>
+References: <20240305194644.2077867-1-srinivas.pandruvada@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, 04 Mar 2024 21:50:01 +0100, Armin Wolf wrote:
+On Tue, 5 Mar 2024, Srinivas Pandruvada wrote:
 
-> This patch series fixes various issues inside the policy binary
-> handling code.
-> The first patch makes sure that a valid error code is returned upon
-> failing to start the policy engine, while the second patch drops the
-> usage of readl() on non-io memory.
-> The last two patches fix a possible out-of-bounds memory access when
-> parsing the policy binary header.
+> The vsec offset can be 64 bit long depending on the PFS start. So change
+> type to u64. Also use 64 bit formatting for seq_printf.
 > 
-> [...]
+> Fixes: 47731fd2865f ("platform/x86/intel: Intel TPMI enumeration driver")
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Cc: <stable@vger.kernel.org> # v6.3+
+> ---
+> This is a forward looking change. There is no platform with this issue.
+> This can go through regular cycle.
 
+I've applied this to review-ilpo.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
-local branch there, which might take a while.
-
-The list of commits applied:
-[1/4] platform/x86/amd/pmf: Fix return value of amd_pmf_start_policy_engine()
-      commit: 98cfcece0ab86c99bc106633d764fb6ad4a35b8e
-[2/4] platform/x86/amd/pmf: Do not use readl() for policy buffer access
-      commit: 379a7c64c4fa33315b504ede86a87188dc88fef4
-[3/4] platform/x86/amd/pmf: Use struct for cookie header
-      commit: a87d92223084f61d37da4952ad68634ea8a7caaf
-[4/4] platform/x86/amd/pmf: Fix possible out-of-bound memory accesses
-      commit: 1e7a14ee259e2ff85be51bf36a7692b20233159a
-
---
+-- 
  i.
 
