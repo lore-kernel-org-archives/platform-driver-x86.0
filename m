@@ -1,89 +1,87 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6374313BAFA
-	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Mar 2024 17:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFFE1361C1
+	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Mar 2024 17:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709747473; cv=none; b=H9DQYWb02rcUjxr1bSS4HhpsTcO4Z9uatNQa+qz+Et5G2jUzlpDtO2zfVnALV7TfMIp1snN9vtrqFpa1o4VkdciNVoncxgX0o4JdpoHhxbpa6D14H3tvfBI62kbz8K80+ueFHian66YPGUMPUOsGnJ1GS2xGFVBW7IOKZh6jVsY=
+	t=1709747733; cv=none; b=Ba7KFPMz4XvnvLtgASbsvDT8J0U2UHyEGFAcheiTLbxKIEA4HU+vfL/7pt5Tgsh43fabULv+ku1MN6lbMM1PXWsIB1HKaVA69g99Eqs3d3FBpXuiVttgMkGi1B/4SNqA3/17WCIZc8/ZYARZ6F43kuudpABehDUdu0BuRCg+IyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709747473; c=relaxed/simple;
-	bh=SbKxO11gsgCf2+YKFzMjaD5jNDGDBgQIEec12VHYgaQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=E89aie1smGq77cbMexXfwu8AVh7HIjG4S3puN61Cl3eGoEl07TQF6SeSzjDp9hMkzo7p/c68Z1e92chB6gIIzzABGuqf5WrHibI2HgWq3lnRk30Fzo85orVo+7WxgPnybZTFzBVM+82p30U+iXEBPnQqZBeIEdUEFSSsjlBfoLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rhvPs-0002E6-EE; Wed, 06 Mar 2024 18:50:56 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rhvPr-004n6Y-3l; Wed, 06 Mar 2024 18:50:55 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rhvPq-000nxq-3D;
-	Wed, 06 Mar 2024 18:50:55 +0100
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: linux-input@vger.kernel.org,
-	kernel@pengutronix.de,
-	Jonathan Cameron <jic23@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	linux-iio@vger.kernel.org,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH 0/3] HID: Convert to platform remove callback returning void
-Date: Wed,  6 Mar 2024 18:50:47 +0100
-Message-ID: <cover.1709747164.git.u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1709747733; c=relaxed/simple;
+	bh=IjNEjCfG0N3r0+pVxZcvErfi/7d4ZXVSNxiJRyxS46k=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gvmGSAc97tSKzwo6zVWr+MwlR5aFDRHSM/rPBEW1p1fQUjotPav/AiNJwdiPBt+XGi95fIh9EH0WpeGmRzAUOuzZS+Xa70FFBI4MYIe6xOk2Zxv683OVQx8r3nl2J22pTLOMbqwAk2RgsvKx9y7y08B89Gv8xA0u3jtkEfEt05s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MAFVWV7Y; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MAFVWV7Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5C688C433F1
+	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Mar 2024 17:55:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709747733;
+	bh=IjNEjCfG0N3r0+pVxZcvErfi/7d4ZXVSNxiJRyxS46k=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=MAFVWV7Y42+pz/9TY0Ub7mcir339bHj5dvWqR3mROlvYBPX8r6+LqtC/PWa9t6sHB
+	 AY2S3QXoW8f6JCTKAGo+3k2TjPBLx/OQuQUZhdnyRodrnZ0vF7F7B/MWI+hICq9era
+	 UDcEUYyh90CLjpj/GRAb5XFbgVjwClEUPEGWYTVfo/3/S6iGth5wbAV6wKuWzPL3Cf
+	 omBnBGJas4FQbw8cNwrTEwRvAZLJi/pmZPCq3Mb3vEiK4alBkJ1NzA+gXAzae23MDR
+	 9E7LVGN9D/x2x2aQI9Ql1J3xhCcRVbKv/Tsa/NO/7/wPZkyytCy8GJzvuCFe2bSdY0
+	 +tGjQ3X9WNkCw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 45A78C4332E; Wed,  6 Mar 2024 17:55:33 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
+ resuming after unplugging the power cord during sleep
+Date: Wed, 06 Mar 2024 17:55:33 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: blocking
+X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218305-215701-KGFiIjqNYt@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
+References: <bug-218305-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1061; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=SbKxO11gsgCf2+YKFzMjaD5jNDGDBgQIEec12VHYgaQ=; b=owEBbAGT/pANAwAKAY+A+1h9Ev5OAcsmYgBl6Kz3lHgUalOU6EkRj8/O9U2IfvVtbGWINY79M jDscycxHSGJATIEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZeis9wAKCRCPgPtYfRL+ TiZUB/UWJuP/AGv7iC03TAOK/k2SWrEQ/CzH+6JVZ2vXT+Ga70bnFJu4nDUF8N26NYv3NQFxiy5 JRkzu2gk9+9M/vIbAvKDM9z883ped3UG7k9bHvdzckhzkSGUGIZB6BDuoNMrCFs974BL93ZU/uR Zg61zwmRQM4Z8rQ14GDLuxyWZ91nS+D/Tld1lIeWA+E4wU196M9CYFq1sdjLw8hMpRCOjhjag+I dWhGP6J1y+9rtCI8xNLWAwQg4lodFXgrpwV/cr+GC0ioh8UIkX48y2A4do61+EC8uOjE+RpE0uN eYH+D6vNlRCRZ9AhAxJsa4NeJEBsRT8555fQ9aaNaIF1Ivk=
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 
-Hello,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-this series converts all platform drivers below drivers/hid to use
-struct platform_driver::remove_new(). See commit 5c5a7680e67b
-("platform: Provide a remove callback that returns no value") for an
-extended explanation and the eventual goal.
+--- Comment #34 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+> If only it doesn't break other systems. That sounds a tad scary to me. So=
+ far
+> I seem to have been the only affected person (not that many people seem t=
+o be
+> using HP business laptops with Linux).
 
-All conversations are trivial, because their .remove() callbacks
-returned zero unconditionally.
+The code would basically look like this:
+* Capture state of power adapter at suspend callback into a private variable
+* If state of power adapter has changed during resume then rewrite all CPU
+coefficients.
 
-There are no interdependencies between these patches, so they could be
-picked up individually. But I'd hope that they get picked up all
-together.
+It should be safe for everyone.  But I need to know that it actually helps =
+your
+problem.
 
-Best regards
-Uwe
+--=20
+You may reply to this email to add a comment.
 
-Uwe Kleine-König (3):
-  HID: google: hammer: Convert to platform remove callback returning void
-  HID: hid-sensor-custom: Convert to platform remove callback returning void
-  HID: surface-hid: kbd: Convert to platform remove callback returning void
-
- drivers/hid/hid-google-hammer.c       | 5 ++---
- drivers/hid/hid-sensor-custom.c       | 8 +++-----
- drivers/hid/surface-hid/surface_kbd.c | 5 ++---
- 3 files changed, 7 insertions(+), 11 deletions(-)
-
-base-commit: 11afac187274a6177a7ac82997f8691c0f469e41
--- 
-2.43.0
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
