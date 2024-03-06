@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0741C02
-	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Mar 2024 16:31:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC085E08B
+	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Mar 2024 17:17:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709742694; cv=none; b=K/KU2Gx6QfLoi52tSG9F/g0hdvPufbHTyffkwH0yGj4AIJKT9UoN6bO7CuFNB+Zyd74GloDYghsQaGp6moUj3PjfPN0F1uaDad6snzwiXQJOb4KeN2fQRkM6KNp2H9R1EGwh1CyfsfwkQ2aQx9iey53LbRoj3udxqbOZGsdfijk=
+	t=1709745423; cv=none; b=An9Y04ACmEWgDIUtfqRF9teUhqxzsCjqmDBv7TlNwIawOkCZCEY7gSeSOOc7gWejFmrnBnSFI3datZO1jmx5vURFJtHmY1qu2PA1kHxqBrrkxOWyNw6M2y2I3Ys+0SAqfpeJZO+N2iL3mFimqs9t4/hg8nUllBi+3dnE5SoX/I0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709742694; c=relaxed/simple;
-	bh=rafvIva/TWmAqp90idfd316S3GzvLOT6s5jdVCxh/Mo=;
+	s=arc-20240116; t=1709745423; c=relaxed/simple;
+	bh=PCDD3OuacFXeHrhwoA9TfaKOQokzMwXeZscQR1Okfh4=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=thpCnEK/C+MiEYlNR5J2V+JIcvUBQi1pCfQAMpuWrry5CsSk5GexTYCOEPKPNCRWReIZlsiXGL3Iqs4HpHmFmWwLieO+hgGSIccPmAA0fihJnhgh+oRw2yAOHInvcDqEt6AeJk5692Oqa8INuPGKehZfE1aiAIlF85HEPpj/Xb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=afJG7g8c; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=aPAD4qSF4I+Ru3RGQNJT17/GeGMv8foDWU9Zw2ulKz7GhSxPa0+nz0fb9IRE+JYug2fa8kVt5qkErMsAadvR72nfj89iHf+Jx2ARVKhAZEeFng26YddAj3CfST4/1SZgjjtBnRWA1ig7PvZ6yR1//sVHGh28QZpeoJ+5IXIDchs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cS8kYZX2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="afJG7g8c"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F2029C43390
-	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Mar 2024 16:31:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cS8kYZX2"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1A7CFC433F1
+	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Mar 2024 17:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709742694;
-	bh=rafvIva/TWmAqp90idfd316S3GzvLOT6s5jdVCxh/Mo=;
+	s=k20201202; t=1709745423;
+	bh=PCDD3OuacFXeHrhwoA9TfaKOQokzMwXeZscQR1Okfh4=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=afJG7g8cgaGStw9wdsGPmh6GLJVR6tNxOKjlbMxrFAALUW35UiiU9+oF/h/Xo2vz8
-	 HX7y7/E+U5M1CoywvCy3ZGgDwQ57yhvdtGXH7L7iYRUM6Y86ZsUenXHS1jJTblhHQh
-	 r4ivTvxyB98nYQAC4w/uA5ThA23m7dGdYiNqq80bYe0SsqZOIIz0gzaRYObP6ehIv1
-	 Hs3bdZ9jEcTsuWomJcnjbYoyqRCY44PEPZoinawkjXx/T5zm8zMrbOM1c/XdSM6U6m
-	 BM4hyn4srkMmGJLTXhppJEkvRW2p5JrgTW/dCRqET6LTM8WEyJf0qJ5CfcXVyctYMr
-	 voZ4IKfw9laOg==
+	b=cS8kYZX2t7cIxynvixzD9e+0uuQA2eSIibllxK6KegF3B0iT9kbNkGY7cOCvHxm9Q
+	 X/BZ9VVrcxBCecZmu4AcImi4L9DCh/85uIsRtaV2KylxCv6epWJ9GsjstN9BxgM8CC
+	 Ik5/BAVbfDi9uAIfe7V+os60dTis3IqPNlW49C71gZLKQanXWjSH9+YnCYKh16jomj
+	 22INbF7h//HH9gG8UWxGFV39p3+/jmXObIcGsZpjlNIxu4W7ka2nFaO4fO2l/aha8O
+	 GTvjX3bMpO9LGPqvPlai09oCe1vpJh4rcaCw2Dg9u0RjFEMv1bq6sHQxuS86UNFJvB
+	 ZMi2Ew1Z/zeLg==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id DCFCEC4332E; Wed,  6 Mar 2024 16:31:33 +0000 (UTC)
+	id F41E4C4332E; Wed,  6 Mar 2024 17:17:02 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after a
- random number of suspend/resume cycles
-Date: Wed, 06 Mar 2024 16:31:33 +0000
+Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
+ resuming after unplugging the power cord during sleep
+Date: Wed, 06 Mar 2024 17:17:02 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Who: aros@gmx.com
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-IZyfTaxDE3@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: short_desc
+Message-ID: <bug-218305-215701-khvhme7Xes@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
 References: <bug-218305-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,28 +64,14 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
---- Comment #30 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-Sorry two more things.
+Artem S. Tashkinov (aros@gmx.com) changed:
 
-First - there are two sets of coefficients (one for AC and for DC).  You can
-see in current_power_limits_show() that it will return the table matching y=
-our
-power mode.
-
-Please capture like this:
-1) Start on DC, capture the file.
-2) Switch to AC, capture the file.
-3) Suspend the machine
-4) Unplug adapter
-5) Resume
-6) Capture the file (while you're on DC)
-7) Switch to AC, capture the file.
-
-This will let us confirm whether or not there is a problem with the table.
-
-Second - after the issue has occurred, does changing the acpi platform prof=
-ile
-from sysfs or powerprofilesctl recover it?
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+            Summary|Ryzen 7 7840HS gets stuck   |Ryzen 7 7840HS gets stuck
+                   |at 544MHz frequency after a |at 544MHz frequency after
+                   |random number of            |resuming after unplugging
+                   |suspend/resume cycles       |the power cord during sleep
 
 --=20
 You may reply to this email to add a comment.
