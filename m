@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC085E08B
-	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Mar 2024 17:17:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6579A5E08B
+	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Mar 2024 17:38:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709745423; cv=none; b=An9Y04ACmEWgDIUtfqRF9teUhqxzsCjqmDBv7TlNwIawOkCZCEY7gSeSOOc7gWejFmrnBnSFI3datZO1jmx5vURFJtHmY1qu2PA1kHxqBrrkxOWyNw6M2y2I3Ys+0SAqfpeJZO+N2iL3mFimqs9t4/hg8nUllBi+3dnE5SoX/I0=
+	t=1709746684; cv=none; b=tYcYHGu/12+nEIipc14SuLukTnTx6zttQJC9KwEO0inPrex25QOyrDte2nOEigu/M+Q/NMXcjI+4XcIoVOilq1+sH41cXA6UqTaYoY2G6YJG6UNb0Ho0Pe3WBM8IM5oGfR75TITNq2U80TXoo1jMv49AfJhTNZdUg7AFgWNi7rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709745423; c=relaxed/simple;
-	bh=PCDD3OuacFXeHrhwoA9TfaKOQokzMwXeZscQR1Okfh4=;
+	s=arc-20240116; t=1709746684; c=relaxed/simple;
+	bh=XoHqOanKeYNDxj7L59G5YQUSg/YBGTNpNYbXOjswVwA=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aPAD4qSF4I+Ru3RGQNJT17/GeGMv8foDWU9Zw2ulKz7GhSxPa0+nz0fb9IRE+JYug2fa8kVt5qkErMsAadvR72nfj89iHf+Jx2ARVKhAZEeFng26YddAj3CfST4/1SZgjjtBnRWA1ig7PvZ6yR1//sVHGh28QZpeoJ+5IXIDchs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cS8kYZX2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=Wd73mV9mVeTQ3Htgi9w423dhf4KR5hnCMcmUeRdWrDtBMZvnnb+JSgI4zUAcgx7uQDAYQMQvGCkC+0szw7EjhLD63m1f+VuAjHa2NCysKsa/K/bDaqR1oftG7rOdIekTxrk99r7T5lZI4z5yNEjsURF7JiucWOvCqQ5yTNT7yN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VFBDl36/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cS8kYZX2"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1A7CFC433F1
-	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Mar 2024 17:17:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VFBDl36/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D1F2CC433F1
+	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Mar 2024 17:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709745423;
-	bh=PCDD3OuacFXeHrhwoA9TfaKOQokzMwXeZscQR1Okfh4=;
+	s=k20201202; t=1709746683;
+	bh=XoHqOanKeYNDxj7L59G5YQUSg/YBGTNpNYbXOjswVwA=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=cS8kYZX2t7cIxynvixzD9e+0uuQA2eSIibllxK6KegF3B0iT9kbNkGY7cOCvHxm9Q
-	 X/BZ9VVrcxBCecZmu4AcImi4L9DCh/85uIsRtaV2KylxCv6epWJ9GsjstN9BxgM8CC
-	 Ik5/BAVbfDi9uAIfe7V+os60dTis3IqPNlW49C71gZLKQanXWjSH9+YnCYKh16jomj
-	 22INbF7h//HH9gG8UWxGFV39p3+/jmXObIcGsZpjlNIxu4W7ka2nFaO4fO2l/aha8O
-	 GTvjX3bMpO9LGPqvPlai09oCe1vpJh4rcaCw2Dg9u0RjFEMv1bq6sHQxuS86UNFJvB
-	 ZMi2Ew1Z/zeLg==
+	b=VFBDl36/0U55tYvxj+wbsex4ECWCaDPyprc1N15pAiv53fFAGDfTyDZD/ojS8JBva
+	 wbDax6dDcFaIo1seBUWdqrbKVJOdP0c3zmvFjc88y74fJlHmgekKGxYgkG+JJUSe8b
+	 syMrAk46U55xvYMgJiW9KC/uW+emYTjZaZ9HwqYVpAGwF/9Q8uGLkId6ZUdrk3Nchc
+	 L0TAcCujtL/97CDff6YkDP0aUCeUPLUsvyZihPjbqg3HdkE/M0NUyKUzuTov+B31WU
+	 bVuxBZ2i7vUSJPviWK9cwTNrJDjKdOqyx+xHRE7jrgO2aJ6mLUawberTdgIzDJpn94
+	 m5wR3dPV503jw==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id F41E4C4332E; Wed,  6 Mar 2024 17:17:02 +0000 (UTC)
+	id B2F70C4332E; Wed,  6 Mar 2024 17:38:03 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
  resuming after unplugging the power cord during sleep
-Date: Wed, 06 Mar 2024 17:17:02 +0000
+Date: Wed, 06 Mar 2024 17:38:03 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,8 +47,8 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: short_desc
-Message-ID: <bug-218305-215701-khvhme7Xes@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218305-215701-WoLGNoOM7Q@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
 References: <bug-218305-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,14 +64,36 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-Artem S. Tashkinov (aros@gmx.com) changed:
+--- Comment #31 from Artem S. Tashkinov (aros@gmx.com) ---
+1)
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-            Summary|Ryzen 7 7840HS gets stuck   |Ryzen 7 7840HS gets stuck
-                   |at 544MHz frequency after a |at 544MHz frequency after
-                   |random number of            |resuming after unplugging
-                   |suspend/resume cycles       |the power cord during sleep
+current_power_limits=20
+spl:51000 fppt:51000 sppt:41000 sppt_apu_only:41001 stt_min:25000 stt[APU]:0
+stt[HS2]: 0
+
+2)
+
+cat current_power_limits=20
+spl:51000 fppt:51000 sppt:41000 sppt_apu_only:41000 stt_min:25000 stt[APU]:0
+stt[HS2]: 0
+
+
+3-4-5) done
+
+6) cat current_power_limits=20
+spl:51000 fppt:51000 sppt:41000 sppt_apu_only:41000 stt_min:25000 stt[APU]:0
+stt[HS2]: 0
+
+
+7) cat current_power_limits=20
+spl:51000 fppt:51000 sppt:41000 sppt_apu_only:41000 stt_min:25000 stt[APU]:0
+stt[HS2]: 0
+
+While we have been discussing this, I've just found out that when this bug
+occurs, all I need to do is to unplug and that fixes everything.
+
+It's actually such a simple workaround, I will leave it up to you whether
+anything needs to be done to address it.
 
 --=20
 You may reply to this email to add a comment.
