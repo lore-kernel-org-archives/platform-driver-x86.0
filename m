@@ -1,216 +1,137 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FAE5FBA7;
-	Wed,  6 Mar 2024 10:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14795F861;
+	Wed,  6 Mar 2024 10:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709719308; cv=none; b=tkrnySmn7ctBo5G9F2jawcjcLQ6GfKDva+tLgJRKF0GD906Q0qeTPf8l097Nv3BoHfv34wwp1ldNPh6Bb/YiXNbN//3zYhIVQKesNfaLjC6XCr55HzY53eGdfv11Mlt58dxq0HHg3NUcuj26Btd8rJeaxF4VJKgBoAmTNR/9l4c=
+	t=1709720378; cv=none; b=ajk9kCrVxeG0Pl3DCOEa2z/62jeiOTPHCa3rCiIzrjH5wS9a/EuWzxPcXOtnDEeRsKdlRek9xCeN2N6HePH+ztjhNPGODRdiF8sspVDtuNhAHaLdljIi7ZM9/Nz1VtqpyRVCOBklQ4xBtagtncwoQu6QZRYUVR/uc/FaH4jRiNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709719308; c=relaxed/simple;
-	bh=WM+U1NS8oiujHfoRe1BzG6H1czoJrvAU5JjQtRFQx58=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=hmBOJ5RgJnREjlOx921ET9N//pqAz0VXOleO1TmIaKVJnxNm7ogEF0x0uMD2WCn5t5+IkCqmLv7ldu+2MkeyGBfEqCiTIUEEsuUQGdI/BY2aC/AcUztVVhAfLIY3DmgiJF12+dLCkIcmktlCsPihxN2eROfekQlUORz4tjQoI8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=jIMZhbvD; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1709720378; c=relaxed/simple;
+	bh=iJyCSdmI3E/9sHsRKQ+LNQH2aEW+pw+M2g+wGJ3g80k=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=WDjked7B+s+MQYyc/HgkbEOqPl9mWUe5YHBuMeTlKSDiZJGLeIEYrhJHjYRdmNXS/O5mcdOQINOKZLyB280HcMv4Kf6eqQeWa/sra5Iq7apjeEYGVMIu8uj/2XLR81qS+3JaBbnVY9nN2BvEZ0hU1vL/NoKwPhxxmSrLnZougTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fd3Y3to5; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="jIMZhbvD"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1709719297; h=Message-ID:Subject:Date:From:To;
-	bh=GOjkAAzqq/27g06Pg1GabXYMzdzKRKWd++BBgioFjQk=;
-	b=jIMZhbvDksxxc6GT9WGQMlgZNgzdTiKp8J/bG96aGwS9xmWjI3inWGA2vCTJ0rQV+6HGL+1rLxZs3OPAEx+QUL1f0BxPA/vaJGjqqicd1JXD3mvXvpMGPpJ2dgv4C2RD437ABODtFeaQYCfOIPgABTvfUbMy9kBXP7aD2KNmJFI=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R711e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0W1x7Wv2_1709719294;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W1x7Wv2_1709719294)
-          by smtp.aliyun-inc.com;
-          Wed, 06 Mar 2024 18:01:35 +0800
-Message-ID: <1709718889.4420547-1-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH vhost v3 00/19] virtio: drivers maintain dma info for premapped vq
-Date: Wed, 6 Mar 2024 17:54:49 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: virtualization@lists.linux.dev,
- Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- Jason Wang <jasowang@redhat.com>,
- "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Vadim Pasternak <vadimp@nvidia.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Cornelia Huck <cohuck@redhat.com>,
- Halil Pasic <pasic@linux.ibm.com>,
- Eric Farman <farman@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- linux-um@lists.infradead.org,
- netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org,
- linux-remoteproc@vger.kernel.org,
- linux-s390@vger.kernel.org,
- kvm@vger.kernel.org,
- bpf@vger.kernel.org
-References: <20240229072044.77388-1-xuanzhuo@linux.alibaba.com>
- <20240229031755-mutt-send-email-mst@kernel.org>
- <1709197357.626784-1-xuanzhuo@linux.alibaba.com>
- <20240229043238-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20240229043238-mutt-send-email-mst@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fd3Y3to5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709720377; x=1741256377;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=iJyCSdmI3E/9sHsRKQ+LNQH2aEW+pw+M2g+wGJ3g80k=;
+  b=fd3Y3to5Hr2lfywO5vbUV2314jvjlaWpCEHe8e4Z6rIQuIJW3rplhWCk
+   t2mnbUq6u8dCP8/sjnJVLp/yvSM1zCu6YJnfjTpAZjzbGVwY9EG/rFwHR
+   aq8oPiRJd76hsIq5uM4hxfTFVEio+I7STFb/ypbIlujKZz1HyYI7mGShD
+   vGr95MggJ684+bSwn8jNB0MG0PbVpx3cslwQh7WN0AC0iNYYYf1NgBTsc
+   +UlPh11LfpddWMwAKjKflBK85cF8jT+mbcDEYVaS5OfipwcOiLpnw3jqG
+   Em9RTBBlBs0sz2mGFYN6GP62gsTzk1KB+b/a9kKksRKPUCsHFTw/yiENa
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="14974856"
+X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
+   d="scan'208";a="14974856"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 02:19:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
+   d="scan'208";a="14368247"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.146])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 02:19:34 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 6 Mar 2024 12:19:30 +0200 (EET)
+To: Armin Wolf <W_Armin@gmx.de>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] platform/x86: wmi: Support reading/writing 16 bit
+ EC values
+In-Reply-To: <20240304221732.39272-1-W_Armin@gmx.de>
+Message-ID: <ffb87c8f-3d6d-c96c-71e9-2abccfe68405@linux.intel.com>
+References: <20240304221732.39272-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 29 Feb 2024 04:34:20 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> On Thu, Feb 29, 2024 at 05:02:37PM +0800, Xuan Zhuo wrote:
-> > On Thu, 29 Feb 2024 03:21:14 -0500, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> > > On Thu, Feb 29, 2024 at 03:20:25PM +0800, Xuan Zhuo wrote:
-> > > > As discussed:
-> > > > http://lore.kernel.org/all/CACGkMEvq0No8QGC46U4mGsMtuD44fD_cfLcPaVmJ3rHYqRZxYg@mail.gmail.com
-> > > >
-> > > > If the virtio is premapped mode, the driver should manage the dma info by self.
-> > > > So the virtio core should not store the dma info.
-> > > > So we can release the memory used to store the dma info.
-> > > >
-> > > > But if the desc_extra has not dma info, we face a new question,
-> > > > it is hard to get the dma info of the desc with indirect flag.
-> > > > For split mode, that is easy from desc, but for the packed mode,
-> > > > it is hard to get the dma info from the desc. And for hardening
-> > > > the dma unmap is saft, we should store the dma info of indirect
-> > > > descs.
-> > > >
-> > > > So I introduce the "structure the indirect desc table" to
-> > > > allocate space to store dma info with the desc table.
-> > > >
-> > > > On the other side, we mix the descs with indirect flag
-> > > > with other descs together to share the unmap api. That
-> > > > is complex. I found if we we distinguish the descs with
-> > > > VRING_DESC_F_INDIRECT before unmap, thing will be clearer.
-> > > >
-> > > > Because of the dma array is allocated in the find_vqs(),
-> > > > so I introduce a new parameter to find_vqs().
-> > > >
-> > > > Note:
-> > > >     this is on the top of
-> > > >         [PATCH vhost v1] virtio: packed: fix unmap leak for indirect desc table
-> > > >         http://lore.kernel.org/all/20240223071833.26095-1-xuanzhuo@linux.alibaba.com
-> > > >
-> > > > Please review.
-> > > >
-> > > > Thanks
-> > > >
-> > > > v3:
-> > > >     1. fix the conflict with the vp_modern_create_avq().
-> > >
-> > > Okay but are you going to address huge memory waste all this is causing for
-> > > - people who never do zero copy
-> > > - systems where dma unmap is a nop
-> > >
-> > > ?
-> > >
-> > > You should address all comments when you post a new version, not just
-> > > what was expedient, or alternatively tag patch as RFC and explain
-> > > in commit log that you plan to do it later.
-> >
-> >
-> > Do you miss this one?
-> > http://lore.kernel.org/all/1708997579.5613105-1-xuanzhuo@linux.alibaba.com
->
->
-> I did. The answer is that no, you don't get to regress memory usage
-> for lots of people then fix it up.
-> So the patchset is big, I guess it will take a couple of cycles to
-> merge gradually.
+On Mon, 4 Mar 2024, Armin Wolf wrote:
 
-Hi @Michael
+> The ACPI EC address space handler currently only supports
+> reading/writing 8 bit values. Some firmware implementations however
+> want to access for example 16 bit values, which is prefectly legal
+> according to the ACPI spec.
+> 
+> Add support for reading/writing such values.
+> 
+> Tested on a Dell Inspiron 3505 and a Asus Prime B650-Plus.
+> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  drivers/platform/x86/wmi.c | 44 +++++++++++++++++++++++++++++---------
+>  1 file changed, 34 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index 1920e115da89..900e0e52a5fa 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -1153,6 +1153,32 @@ static int parse_wdg(struct device *wmi_bus_dev, struct platform_device *pdev)
+>  	return 0;
+>  }
+> 
+> +static int ec_read_multiple(u8 address, u8 *buffer, size_t bytes)
+> +{
+> +	int i, ret;
+> +
+> +	for (i = 0; i < bytes; i++) {
+> +		ret = ec_read(address + i, &buffer[i]);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int ec_write_multiple(u8 address, u8 *buffer, size_t bytes)
+> +{
+> +	int i, ret;
+> +
+> +	for (i = 0; i < bytes; i++) {
+> +		ret = ec_write(address + i, buffer[i]);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * WMI can have EmbeddedControl access regions. In which case, we just want to
+>   * hand these off to the EC driver.
+> @@ -1162,27 +1188,25 @@ acpi_wmi_ec_space_handler(u32 function, acpi_physical_address address,
+>  			  u32 bits, u64 *value,
+>  			  void *handler_context, void *region_context)
+>  {
+> -	int result = 0;
+> -	u8 temp = 0;
+> +	int bytes = bits / 8;
 
-So, how about this patch set?
+I'm a quite hesitant about this. IMO, it should do DIV_ROUND_UP(bits, 
+BITS_PER_BYTE) or return AE_BAD_PARAMETER when bits is not divisable by 8. 
+And if you choose the round up approach, I'm not sure what the write 
+should do with the excess bits.
 
-I do not think they (dma maintainers) will agree the API dma_can_skip_unmap().
+In any case, 8 -> BITS_PER_BYTE.
 
-If you think sq wastes too much memory using pre-mapped dma mode, how about
-we only enable it when xsk is bond?
+> +	int ret;
+> 
+> -	if ((address > 0xFF) || !value)
+> +	if (address > 0xFF || !value)
 
-Could you give me some advice?
+This should takes bytes into account to not overflow the u8 address?
 
-Thanks.
+-- 
+ i.
 
-
->
-> > I asked you. But I didnot recv your answer.
-> >
-> > Thanks.
-> >
-> >
-> > >
-> > > > v2:
-> > > >     1. change the dma item of virtio-net, every item have MAX_SKB_FRAGS + 2
-> > > >         addr + len pairs.
-> > > >     2. introduce virtnet_sq_free_stats for __free_old_xmit
-> > > >
-> > > > v1:
-> > > >     1. rename transport_vq_config to vq_transport_config
-> > > >     2. virtio-net set dma meta number to (ring-size + 1)(MAX_SKB_FRGAS +2)
-> > > >     3. introduce virtqueue_dma_map_sg_attrs
-> > > >     4. separate vring_create_virtqueue to an independent commit
-> > > >
-> > > >
-> > > >
-> > > > Xuan Zhuo (19):
-> > > >   virtio_ring: introduce vring_need_unmap_buffer
-> > > >   virtio_ring: packed: remove double check of the unmap ops
-> > > >   virtio_ring: packed: structure the indirect desc table
-> > > >   virtio_ring: split: remove double check of the unmap ops
-> > > >   virtio_ring: split: structure the indirect desc table
-> > > >   virtio_ring: no store dma info when unmap is not needed
-> > > >   virtio: find_vqs: pass struct instead of multi parameters
-> > > >   virtio: vring_create_virtqueue: pass struct instead of multi
-> > > >     parameters
-> > > >   virtio: vring_new_virtqueue(): pass struct instead of multi parameters
-> > > >   virtio_ring: simplify the parameters of the funcs related to
-> > > >     vring_create/new_virtqueue()
-> > > >   virtio: find_vqs: add new parameter premapped
-> > > >   virtio_ring: export premapped to driver by struct virtqueue
-> > > >   virtio_net: set premapped mode by find_vqs()
-> > > >   virtio_ring: remove api of setting vq premapped
-> > > >   virtio_ring: introduce dma map api for page
-> > > >   virtio_ring: introduce virtqueue_dma_map_sg_attrs
-> > > >   virtio_net: unify the code for recycling the xmit ptr
-> > > >   virtio_net: rename free_old_xmit_skbs to free_old_xmit
-> > > >   virtio_net: sq support premapped mode
-> > > >
-> > > >  arch/um/drivers/virtio_uml.c             |  31 +-
-> > > >  drivers/net/virtio_net.c                 | 283 ++++++---
-> > > >  drivers/platform/mellanox/mlxbf-tmfifo.c |  24 +-
-> > > >  drivers/remoteproc/remoteproc_virtio.c   |  31 +-
-> > > >  drivers/s390/virtio/virtio_ccw.c         |  33 +-
-> > > >  drivers/virtio/virtio_mmio.c             |  30 +-
-> > > >  drivers/virtio/virtio_pci_common.c       |  59 +-
-> > > >  drivers/virtio/virtio_pci_common.h       |   9 +-
-> > > >  drivers/virtio/virtio_pci_legacy.c       |  16 +-
-> > > >  drivers/virtio/virtio_pci_modern.c       |  38 +-
-> > > >  drivers/virtio/virtio_ring.c             | 698 ++++++++++++-----------
-> > > >  drivers/virtio/virtio_vdpa.c             |  45 +-
-> > > >  include/linux/virtio.h                   |  13 +-
-> > > >  include/linux/virtio_config.h            |  48 +-
-> > > >  include/linux/virtio_ring.h              |  82 +--
-> > > >  tools/virtio/virtio_test.c               |   4 +-
-> > > >  tools/virtio/vringh_test.c               |  28 +-
-> > > >  17 files changed, 847 insertions(+), 625 deletions(-)
-> > > >
-> > > > --
-> > > > 2.32.0.3.g01195cf9f
-> > >
->
