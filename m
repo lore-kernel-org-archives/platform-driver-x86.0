@@ -1,88 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-out.aladdin-rd.ru (mail-out.aladdin-rd.ru [91.199.251.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93129130E29;
-	Wed,  6 Mar 2024 13:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A3C1353F2;
+	Wed,  6 Mar 2024 15:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.199.251.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709731949; cv=none; b=MF3AJrXQXNhk4+zCB8qA5QeGYf1MBbKHzTq7MljiYI867iy9LEc3teYcisWIm36BQ2mYjbV1x/xU0cIm8yn5ZpzLAkH7Rpc5tpwkWKMEOaH6iK/ZaFKY/zVzdMTEvyB3oETj7tCYDrV3GyL+vNFwH63krTg8Xxk5QJyQjwfEfT4=
+	t=1709739538; cv=none; b=nMQHxV+TpVcP+6Y5B+OXp/tBaanEasbxAg/XFAuUXYDF9uc7J46qXxZMbAnXEr4rS0NqR/ALot13OOvvSsJGbTfA7DKn/cZ+sh78poj+cWIe2pb1ckzE7prgU+l1Y6PlsgOcHYWmXBLx3NzcLtlZTSCoEVqAq+FE5R2YQWaq3KU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709731949; c=relaxed/simple;
-	bh=aGELYDGD7Ti4XMKL2XgiV5+gB0Fy1G20BwlunO1v0ic=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qZRN0VXYqXJBNqsyT3RCGOtdgRv/si1R4clrvF/TKj41gB92SzACOsot6XrgazfkyBtsR9KtXn3hMxKeZmyfYIVdZHxVeGKS+Ifbv6onYy97cDS934gQUfK3JMtjzGk2FQb1+mtvNQFuNeyV5WsQ40eNPRt5xQ1v4l3NGt0AIUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IR3vlW0k; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IR3vlW0k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709731947; x=1741267947;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=aGELYDGD7Ti4XMKL2XgiV5+gB0Fy1G20BwlunO1v0ic=;
-  b=IR3vlW0kClSGOMG76Bff5iP8lWD5VqDEIEgtO8JgRSYClr1AxG9mL/zu
-   9JfD4dDu4uRGEHZPYbQ8mOjwDGeB/TMgKWCpKyp66GXXB0D4ndq+wvR9l
-   DOraTIe1VdeYTSS73XQdWHT3owy3KblpfmMegYd8UJzOiM7YbOC9+oCVI
-   6eRuSg9d0++Q9BFdmPIMsbcuBUUs7mZXOkF6xh1D/SfxZk1ZyXEYODE/b
-   0QGmDd843Oxy2Fz17AF9PXj2IqcZlSCH/Aw8rRbr1GH5n1MboT9vB1sU/
-   I5dto2HoyFKeVYRV2bRAUWt5ordSswH2TYgameYcv4HoE3F9OphOQ/GJb
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="4524313"
-X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
-   d="scan'208";a="4524313"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 05:32:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="914178509"
-X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
-   d="scan'208";a="914178509"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 05:32:25 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rhrNe-0000000AHCi-3niC;
-	Wed, 06 Mar 2024 15:32:22 +0200
-Date: Wed, 6 Mar 2024 15:32:22 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Julian Winkler <julian.winkler1@web.de>,
-	platform-driver-x86@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v1 2/2] platform/x86: intel_scu_pcidrv: Remove unused
- intel-mid.h
-Message-ID: <ZehwZghx_KHbezBD@smile.fi.intel.com>
-References: <20240305161539.1364717-1-andriy.shevchenko@linux.intel.com>
- <20240305161539.1364717-3-andriy.shevchenko@linux.intel.com>
- <31213f82-196d-8ab0-6c24-a09a2db43388@linux.intel.com>
+	s=arc-20240116; t=1709739538; c=relaxed/simple;
+	bh=mIrYgWybZIzzTmLvKcdEwm229Qxy6TkUJtHepPTkmW0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OF9X1R/1FbwykANr7kxC2r4pK/qDAzRg78+vZ3m9M6r7ogEw3We/ODwgd+vCsfGlZ3jMdA61fXg04yrxCsjT76IATO2n6l9e5eS8EO95h0qnrn4T4/LHZHG1UnwvAHnPOZh3nc8DG3V5DgsUjgTAler3CQzD2CHLbgAdjMxwKSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru; spf=pass smtp.mailfrom=aladdin.ru; arc=none smtp.client-ip=91.199.251.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aladdin.ru
+From: Daniil Dulov <d.dulov@aladdin.ru>
+To: Vadim Pasternak <vadimp@nvidia.com>
+CC: Daniil Dulov <d.dulov@aladdin.ru>, Mark Gross <mgross@linux.intel.com>,
+	Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>,
+	Hans de Goede <hdegoede@redhat.com>, <platform-driver-x86@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
+Subject: [PATCH] platform/mellanox: mlxreg-hotplug: Remove redundant NULL-check
+Date: Wed, 6 Mar 2024 18:38:04 +0300
+Message-ID: <20240306153804.6509-1-d.dulov@aladdin.ru>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <BN9PR12MB53815F52C9033DC526085827AF232@BN9PR12MB5381.namprd12.prod.outlook.com>
+References: <BN9PR12MB53815F52C9033DC526085827AF232@BN9PR12MB5381.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <31213f82-196d-8ab0-6c24-a09a2db43388@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
+X-ClientProxiedBy: EXCH-2016-02.aladdin.ru (192.168.1.102) To
+ EXCH-2016-01.aladdin.ru (192.168.1.101)
 
-On Wed, Mar 06, 2024 at 12:44:03PM +0200, Ilpo Järvinen wrote:
-> On Tue, 5 Mar 2024, Andy Shevchenko wrote:
-> 
-> > intel-mid.h is providing some core parts of the South Complex PM,
-> > which are usually are not used by individual drivers. In particular,
-> 
-> Both applied to review-ilpo. I fixed that double "are" for you while 
-> applying.
+Pointer item is checked fo NULL at mlxreg_hotplug_work_helper() and then
+it is dereferenced to produce dev_err().
+This pointer is also dereferenced before calling this function and should
+never be NULL except some piece of hardware is broken as it is said in
+the comment before the check. So, this check can be safely removed.
 
-Thank you!
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
+Fixes: c6acad68eb2d ("platform/mellanox: mlxreg-hotplug: Modify to use a regmap interface")
+Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
+---
+ drivers/platform/mellanox/mlxreg-hotplug.c | 14 --------------
+ 1 file changed, 14 deletions(-)
+
+diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
+index 5c022b258f91..0ce9fff1f7d4 100644
+--- a/drivers/platform/mellanox/mlxreg-hotplug.c
++++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+@@ -348,20 +348,6 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
+ 	u32 regval, bit;
+ 	int ret;
+ 
+-	/*
+-	 * Validate if item related to received signal type is valid.
+-	 * It should never happen, excepted the situation when some
+-	 * piece of hardware is broken. In such situation just produce
+-	 * error message and return. Caller must continue to handle the
+-	 * signals from other devices if any.
+-	 */
+-	if (unlikely(!item)) {
+-		dev_err(priv->dev, "False signal: at offset:mask 0x%02x:0x%02x.\n",
+-			item->reg, item->mask);
+-
+-		return;
+-	}
+-
+ 	/* Mask event. */
+ 	ret = regmap_write(priv->regmap, item->reg + MLXREG_HOTPLUG_MASK_OFF,
+ 			   0);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
