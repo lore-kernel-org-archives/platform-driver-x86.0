@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6579A5E08B
-	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Mar 2024 17:38:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A50135A5B
+	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Mar 2024 17:46:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709746684; cv=none; b=tYcYHGu/12+nEIipc14SuLukTnTx6zttQJC9KwEO0inPrex25QOyrDte2nOEigu/M+Q/NMXcjI+4XcIoVOilq1+sH41cXA6UqTaYoY2G6YJG6UNb0Ho0Pe3WBM8IM5oGfR75TITNq2U80TXoo1jMv49AfJhTNZdUg7AFgWNi7rc=
+	t=1709747185; cv=none; b=S7LviFUnU4c6pYJHvWrtlNEfhAsSYz4x08YIHnVknpxkzXO6tbQKBbz6Shk/jaeFNXjxg5LFvcaFTtxuHLdisMubUU4omy+iWpg08tlV53GlsV+QeQcOqvt9slmF5+kJ6ayhMfWOd3MA7nhNkd1AyWXCzS0ebTvCdFFS4y23Fy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709746684; c=relaxed/simple;
-	bh=XoHqOanKeYNDxj7L59G5YQUSg/YBGTNpNYbXOjswVwA=;
+	s=arc-20240116; t=1709747185; c=relaxed/simple;
+	bh=VrFD2PqUkuEGtq7wWbt9QYYc4G6okjHhcSqZLJpiSKQ=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Wd73mV9mVeTQ3Htgi9w423dhf4KR5hnCMcmUeRdWrDtBMZvnnb+JSgI4zUAcgx7uQDAYQMQvGCkC+0szw7EjhLD63m1f+VuAjHa2NCysKsa/K/bDaqR1oftG7rOdIekTxrk99r7T5lZI4z5yNEjsURF7JiucWOvCqQ5yTNT7yN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VFBDl36/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=TC1nt4O44nViwRhOiOLkrXitM9SuPuii+xfdNvJ70joCFIKCI4PAPLW4u20X+/bGDKYBmGKhePrd9rmQhi5SdE9R4ZJ4bPk5C1hzUDW8ZzjfAwuLGh60EIlW+agseF9zDBCFbWIC20iWZLGGB61GIwlbPU3p1oate4ZlUD2oA4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kRyhKaIx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VFBDl36/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D1F2CC433F1
-	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Mar 2024 17:38:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kRyhKaIx"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1A5D6C43390
+	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Mar 2024 17:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709746683;
-	bh=XoHqOanKeYNDxj7L59G5YQUSg/YBGTNpNYbXOjswVwA=;
+	s=k20201202; t=1709747185;
+	bh=VrFD2PqUkuEGtq7wWbt9QYYc4G6okjHhcSqZLJpiSKQ=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=VFBDl36/0U55tYvxj+wbsex4ECWCaDPyprc1N15pAiv53fFAGDfTyDZD/ojS8JBva
-	 wbDax6dDcFaIo1seBUWdqrbKVJOdP0c3zmvFjc88y74fJlHmgekKGxYgkG+JJUSe8b
-	 syMrAk46U55xvYMgJiW9KC/uW+emYTjZaZ9HwqYVpAGwF/9Q8uGLkId6ZUdrk3Nchc
-	 L0TAcCujtL/97CDff6YkDP0aUCeUPLUsvyZihPjbqg3HdkE/M0NUyKUzuTov+B31WU
-	 bVuxBZ2i7vUSJPviWK9cwTNrJDjKdOqyx+xHRE7jrgO2aJ6mLUawberTdgIzDJpn94
-	 m5wR3dPV503jw==
+	b=kRyhKaIxMvq9QKL59ftQjcpJdaX74kTj83DPickrlYolHOj42oyX/szTuu21EiYpD
+	 9ZPMyUM2fu4Rm5kMvqZX4XKTgNWetM8Kq9zRf4uhTBjew8Eu5WCui1Ty8EXgkBBmNT
+	 3Rzftdu3f4Zetxs4ohzSsOUS3EJ5wMOXfbxg67FxlrZtKPqsEMZMNrmsPFKkol+Jph
+	 3FwrkOV/iHv9bA+jxb2YUhugEsSI/Z3IFdNssSIGmHjQf9JJn/8lWhDJzrJt5ip3ty
+	 WJlA6Egy0+HwF9IUYAVbtwVTHmmJNvNhP1p+suwEy9fh1fzCS9CprwldMlYSfn9Mtw
+	 L7KWQz7sYQ+qg==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id B2F70C4332E; Wed,  6 Mar 2024 17:38:03 +0000 (UTC)
+	id F0180C4332E; Wed,  6 Mar 2024 17:46:24 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
  resuming after unplugging the power cord during sleep
-Date: Wed, 06 Mar 2024 17:38:03 +0000
+Date: Wed, 06 Mar 2024 17:46:24 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: aros@gmx.com
+X-Bugzilla-Who: mario.limonciello@amd.com
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-WoLGNoOM7Q@https.bugzilla.kernel.org/>
+Message-ID: <bug-218305-215701-Hlz4fV2dtu@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
 References: <bug-218305-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,36 +64,30 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
---- Comment #31 from Artem S. Tashkinov (aros@gmx.com) ---
-1)
+--- Comment #32 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+> cat current_power_limits
 
-current_power_limits=20
-spl:51000 fppt:51000 sppt:41000 sppt_apu_only:41001 stt_min:25000 stt[APU]:0
-stt[HS2]: 0
+It looks like those don't change.
 
-2)
+> While we have been discussing this, I've just found out that when this bug
+> occurs, all I need to do is to unplug and that fixes everything.
 
-cat current_power_limits=20
-spl:51000 fppt:51000 sppt:41000 sppt_apu_only:41000 stt_min:25000 stt[APU]:0
-stt[HS2]: 0
+Presumably you mean unplug OR replug (IE opposite of what you did in suspen=
+d)
+right?
 
+> It's actually such a simple workaround, I will leave it up to you whether
+> anything needs to be done to address it.
 
-3-4-5) done
+It's good you have that workaround.  I'd like to know if powerprofilesctl/a=
+cpi
+platform profile can also recover it.
 
-6) cat current_power_limits=20
-spl:51000 fppt:51000 sppt:41000 sppt_apu_only:41000 stt_min:25000 stt[APU]:0
-stt[HS2]: 0
-
-
-7) cat current_power_limits=20
-spl:51000 fppt:51000 sppt:41000 sppt_apu_only:41000 stt_min:25000 stt[APU]:0
-stt[HS2]: 0
-
-While we have been discussing this, I've just found out that when this bug
-occurs, all I need to do is to unplug and that fixes everything.
-
-It's actually such a simple workaround, I will leave it up to you whether
-anything needs to be done to address it.
+If so; we might want to add an explicit code in the suspend/resume callback=
+s to
+rewrite the state if power adapter changed over suspend.  I think this woul=
+d be
+a safe solution for everyone.
 
 --=20
 You may reply to this email to add a comment.
