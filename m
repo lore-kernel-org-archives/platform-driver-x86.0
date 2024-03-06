@@ -1,137 +1,88 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE01E604C2
-	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Mar 2024 11:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A1A5FB91;
+	Wed,  6 Mar 2024 11:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709722888; cv=none; b=IiUMtJlpU1HRz2nTtRxrdFb41O0z4rYNr0cUcSfcKCwzSVCenqVIRNKdTxWW97xkO2Alp20NSArtYsrHTEacts0cMX1uj20PJJXsFNkjYOsV+WpLDePAz/xp8tzYAFRnD9TJkqdBK6/4iqHyIRLS690fw9aAbYzwqIVGfr1A4zc=
+	t=1709723514; cv=none; b=W8CB1rZTBTw9CJR6hItHax74JkeRP1t9HG7nv/NV0Xh8XqTL1QRdsAOrQvwrCdWdHIXWkrsWaCg9NfFpz05Bn7sjnf+0yMRZnrzVpu/AUEVKu2uwUUOkd3+EWg4Fn+3T7P1kVQwC2qvsCXYIrR6PyKriZisSVzIga+60TWROLT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709722888; c=relaxed/simple;
-	bh=0BtgKlkxEFfuAK3jbJm263LilfDmbaFMUABjdQurww4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wx+QH3SVyC9ornnYkILECW5kA7up7M3lpdEUMA07jquTkxEaFa89OTzkxq3ugC3vpmBCFmIehdKTh3pMZVLIlCOjVITST94QK8EyP6a9YjCyaZHmreL4lsRvEhivhcXv2JfcdJMhNt0DmwGTu7HIxnh+HcVSTjTZIH53v7GUCP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J+8TAByU; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709723514; c=relaxed/simple;
+	bh=A2b1bwOR7rg+shnfBmsvF+nNuz4ACbbwnWjTr0Br2rw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=L6l136lXxhMwPSYko+JAE3WSu42U11uqxfhpYi401QKm3clqaVC8jG0AekldEf/3hXIVQMpOUGzZk5l3SX6pRFzq5wFKfs6xjD5PJaEKTnpOH6u3+jTb4ud2CLNHbwaTkoiinjFWvCUwcHKDXu8gHz0PVcq5P639ZxKFuHj+WNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H8OcJnab; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J+8TAByU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709722885;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9/xdqIyX3WHBcfaU82MWvytSSDhoROzy1XJYnAGe0xU=;
-	b=J+8TAByU07am243fz8GjUtlvV4QikhunozhKEw+wpFpnp8C7aTGN/5t47btOVX5QoGE6th
-	2X9v6sLzaf19wbkGMqkbKagZjd2Y3I2ZabI9DZ5WRon82SqaA3rORSh1DMm6O3pnI8BFF8
-	yQNQNcBur0OwaoUtbdQeMlEd9/2+9yw=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-232-MJeKc52NM9epToKxeY2kTA-1; Wed, 06 Mar 2024 06:01:23 -0500
-X-MC-Unique: MJeKc52NM9epToKxeY2kTA-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a4455ae71fcso410809766b.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 06 Mar 2024 03:01:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709722882; x=1710327682;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9/xdqIyX3WHBcfaU82MWvytSSDhoROzy1XJYnAGe0xU=;
-        b=FXXbIKqlFN6Nbynz0yqXSePIjCKjogC29YIKQ4vfXszhouZvZKqpVaE0dhEz0LcVMM
-         aYQ6aBXP0wN2IVUfF70h/kbgD/lx8xQVQYh4rqo1hfGeWxR2VrfZJWCAUSTPDW9ffU/m
-         XVzxK+8NumviUttaEuU5oLWL4+IAf45XLpJsk1U9qZEqeBQUupBt3LwQ+Tq1XkiOBVIW
-         RSuwy88XwqkGzUyPjThBLyb+O4PBSXblxa2ffdr8XY3KlQ/30gvW5AmPffmcbRQFbcVb
-         NHRprxeHCdqTLmrqCuqQhaQid1MVHfZICz9Z/8T6nI9b0gV3C3d6czBE8LXcqE5M+Y7H
-         bsCA==
-X-Forwarded-Encrypted: i=1; AJvYcCXNvECbIQaXMwWcAd1su8Sa+Aee44RHRlb14MXxcx06w2g5hyeiiZ2BOsjHpXEhu4tA9cToZK1/Luhela4D+bOuQRMLzn4L3Up/Hy5Xj/LKA72T6w==
-X-Gm-Message-State: AOJu0YyrOcmw01/6SFXFfzUnY1dXWrBGvnm98bVwZyz2olGApZoIeOI5
-	KJDrwCBUnoN0G936kSKghGrzb7ZHCucKkIoIIA5rALoK9lG4K+TgF9Jpk9eIU/ESLhVXdfFPyWv
-	zdtPUR7sKW/HqBF5nR4lYtKCXJ4aXr1J4WLscw6MfaRP5YkRr7t6rAucDo7Y40ykDeVJhPJE=
-X-Received: by 2002:a17:906:4709:b0:a45:5831:4f00 with SMTP id y9-20020a170906470900b00a4558314f00mr5190501ejq.75.1709722882531;
-        Wed, 06 Mar 2024 03:01:22 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGU2MCC7j95NF/rjcuadNvSxFpI8Ztf1NyvWpuIx8AEUaD0oPQp9HbDvXv2YrwJR9Zze55HCA==
-X-Received: by 2002:a17:906:4709:b0:a45:5831:4f00 with SMTP id y9-20020a170906470900b00a4558314f00mr5190385ejq.75.1709722880571;
-        Wed, 06 Mar 2024 03:01:20 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id wk15-20020a170907054f00b00a4519304f8bsm4011706ejb.14.2024.03.06.03.01.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Mar 2024 03:01:20 -0800 (PST)
-Message-ID: <829d07c8-b602-4463-9f8e-dc8eb73aa077@redhat.com>
-Date: Wed, 6 Mar 2024 12:01:19 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H8OcJnab"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709723512; x=1741259512;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=A2b1bwOR7rg+shnfBmsvF+nNuz4ACbbwnWjTr0Br2rw=;
+  b=H8OcJnab/5n4UZFuXFNKzdRMXnNAeTPeItIjeQw+vWMF5KOS4XEHMEuE
+   XUasuthOHInvvZrG2Of8Q/21EOt5E6n40C4TmYTEzj781bVpcARkmglUB
+   taCpO7H6ALV4MxbpifNoxMBbb66QfhH9+8s2wAvzXfY1qNPNnjaRhrUQm
+   iyXOQeYEW3BgwjUB+zwgzlt5HLpEkeJu3fSw1ACyXfXkFbcste9ffPUHf
+   tYYz7go0sQ40AGorB4YQpFjcNc+L6KLlXImZf3Tcdo6hCIZixU+uOvI3k
+   UVTNha8oiFXD3W0h/Yxxtay2J5CRIl7fOvWcKKIqcbjwziNiotGDKfk9b
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="4446626"
+X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
+   d="scan'208";a="4446626"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 03:11:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
+   d="scan'208";a="40609639"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.146])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 03:11:47 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Prasanth Ksr <prasanth.ksr@dell.com>, 
+ Hans de Goede <hdegoede@redhat.com>, Jorge Lopez <jorge.lopez2@hp.com>, 
+ Mark Pearson <markpearson@lenovo.com>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+Cc: Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In-Reply-To: <20240305-class_cleanup-platform-v1-1-9085c97b9355@marliere.net>
+References: <20240305-class_cleanup-platform-v1-1-9085c97b9355@marliere.net>
+Subject: Re: [PATCH] platform/x86: make fw_attr_class constant
+Message-Id: <170972349774.3698.6241783676827025751.b4-ty@linux.intel.com>
+Date: Wed, 06 Mar 2024 13:11:37 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] platform/x86: add lenovo generic wmi driver
-Content-Language: en-US, nl
-To: =?UTF-8?B?6Im+6LaF?= <aichao@kylinos.cn>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- W_Armin <W_Armin@gmx.de>
-Cc: "ilpo.jarvinen" <ilpo.jarvinen@linux.intel.com>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- platform-driver-x86 <platform-driver-x86@vger.kernel.org>
-References: <2o0aznm5pjb-2o0c9lfkrd4@nsmail7.0.0--kylin--1>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <2o0aznm5pjb-2o0c9lfkrd4@nsmail7.0.0--kylin--1>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.3
 
-Hi,
+On Tue, 05 Mar 2024 15:55:04 -0300, Ricardo B. Marliere wrote:
 
-On 3/6/24 09:17, 艾超 wrote:
-> Hi
-> 
->  
-> 
->> I would be interested on which devices this driver was tested and is
->> expected to work with.
-> 
->  
-> 
-> Lenovo A70，it is a Computer integrated machine.
+> Since commit 43a7206b0963 ("driver core: class: make class_register() take
+> a const *"), the driver core allows for struct class to be in read-only
+> memory, so move the fw_attr_class structure to be declared at build time
+> placing it into read-only memory, instead of having to be dynamically
+> allocated at boot time.
 > 
 > 
->>> This looks similar to a switch.
->>> Would it be more useful for the user to report a standard switch instead
->>> of a key event which needs to be correlated with the sysfs file?
-> 
->> I agree, maybe SW_CAMERA_LENS_COVER might be the right thing to use here,
->> if those camera states (open/closed) are meant to symbolize camera shutter states.
-> 
->> In such a case the initial switch state has to be retrieved, or else the input device
->> cannot be registered until the first event is received (similar how the hp-wmi driver
->> handles SW_CAMERA_LENS_COVER events).
-> 
->> Ai Chao, can you tell us if those two camera states are meant to act like a switch (camera switched off,
->> camera switched on) or meant to act like a key (camera button pressed, camera button released)?
-> 
->  
-> 
-> The camera button is like a switch.  I can used SW_CAMERA_LENS_COVER to report input event , but the OS
-> 
->  can't to show camera OSD. OS need a key value  map to the camera OSD.
+> [...]
 
-Please use SW_CAMERA_LENS_COVER in the next version, that really is the correct
-thing to do here, so that you not only report the event of the camera state
-changing, but also the actual camera state (on/off) to userspace.
 
-This will also allow you to remove the custom sysfs atribute since you
-are now correctly reporting the value to userspace through the evdev event.
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
 
-As for userspace not responding to SW_CAMERA_LENS_COVER, this is because
-SW_CAMERA_LENS_COVER is relatively new and we need to add support to
-userspace for this. SW_CAMERA_LENS_COVER is already used on whole a bunch of
-Dell laptops for this, so we need to do this anyways.
+The list of commits applied:
+[1/1] platform/x86: make fw_attr_class constant
+      commit: 04f53f56655d733c91e9cedfbf0bf9882f6015b6
 
-Please file an issue against GNOME, lets say against gnome-settings-daemon
-for this.
-
-Regards,
-
-Hans
+--
+ i.
 
