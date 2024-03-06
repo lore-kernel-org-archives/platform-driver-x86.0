@@ -1,100 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0915FBB5;
-	Wed,  6 Mar 2024 09:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5A85E085
+	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Mar 2024 09:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709718803; cv=none; b=cpyKsBgG2XLiyM7dczc7bx6Fm+RPKKFijhgoP7ZaBvy9YPYzThxVibnByLKuGkW7L/29UI4I7N04rl6x2YOAvCcbv71kfeap4JVvU22wq/+m7255SheMDiq/WSbjeMqeKjEc3BdwUWjcl35gAGGHjRhOP8VJY/4rOtBBXFCmHBA=
+	t=1709719179; cv=none; b=m8eoZdeaRxL0114twa6gHrsEh0RqO1faGJ/0iiRR8o870ZgZHCy9Ek9PC36Cy48y8LfMvH82gFBkrQZ/nxx+/U2okU3zgZHFpFj6jCrayo/FzpvfbUtj+PaaTbSXnE7mCB0LSZnT1G/pM2OfkWG52M0ghrnqWEFnVZQnYrfTAsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709718803; c=relaxed/simple;
-	bh=io4SbbnyiNckKCLRLcGAVDLGtDr6dhrOEcERzQbK/JY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Tt95gtmLTuSgJ9UpOzyx56yg09AYHHShAa4hlcTAS/D74qLg9n4Rlx9YFHhQIrQpiHMhWOW1NOflZfeNwgXRowXwLi5Q2pYP1+TpRWJpUrdhyIG1WHIMOGy+fWHnWo/xa0N5qjYqFgiKrSBAK2aYlEt3sf69ifcqiKm+llUVRck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n3kLAhH1; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709719179; c=relaxed/simple;
+	bh=iWRSkNSWXOig1i0ZQ5/KDK71nvFN9gl30QZPTj0Zmvc=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FAteRSzCSy9kGOSOhRspkthGUotgjZq6Sqawcx6ur63zOW+j9GNmK3CCf7vY8WNTOZ+xbAJunXdL1lgle943ebs7sLtn07yYchC5shTTpjaRNZR2z5bhOdK5WDM21OWPNKI4Njcw6OSOy6PmZUU8yDUfCQQ1hBBQm5jQUIz3qa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dKRDO6V1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n3kLAhH1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709718801; x=1741254801;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=io4SbbnyiNckKCLRLcGAVDLGtDr6dhrOEcERzQbK/JY=;
-  b=n3kLAhH12AH+qo7NtjkSmeRXgh4qdswYzh/Uw+vNUBqe6IC4fXWmrvei
-   462hSBJ/vDMwhDZ1AFEEJYK9ATYDH66GE2ET8yA/5gQFFban7FcLAMg6l
-   DCOzsHxdsKU0VIyT213980j4ul6BFDrZaf7rmIqza/37D5vGxUaxxm5X/
-   9JphC6jVswKQ5PQCMrl7KhI5EMIhNwzI0tPsziXg/TvgkTsMTAT/GYjMp
-   8dWzvddEFWZGbPpufoACQ/GJR3NjbdDTtSsKiR3LsgvZmBjxl6rKU7oEY
-   dPL4hA23OrozoQfVOCLeQFU0TJQuy4ubBYna/xOg2uiJSqPPkYoFj1k+x
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="4436928"
-X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
-   d="scan'208";a="4436928"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 01:53:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
-   d="scan'208";a="10266716"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.146])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 01:53:19 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 6 Mar 2024 11:53:14 +0200 (EET)
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 0/4] platform/x86/amd/pmf: Fix policy binary
- handling
-In-Reply-To: <839a74c1-6e08-441b-a6e3-9923dfc3f303@amd.com>
-Message-ID: <0b614744-257b-3d4f-533e-f8bf9085f03a@linux.intel.com>
-References: <20240304205005.10078-1-W_Armin@gmx.de> <839a74c1-6e08-441b-a6e3-9923dfc3f303@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dKRDO6V1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 51B6AC433F1
+	for <platform-driver-x86@vger.kernel.org>; Wed,  6 Mar 2024 09:59:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709719179;
+	bh=iWRSkNSWXOig1i0ZQ5/KDK71nvFN9gl30QZPTj0Zmvc=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=dKRDO6V1R2q580lTsbDzyVMiWKB55MK9YKIjsWEkvm1tNy284ihY8WBGYeFjnPrkc
+	 YzHspWTDmsX8W5VStF7BA48LdmsQhakQ/H97NNggg602b9IPK/WsC2OzPcxIlqtbmW
+	 pqcclG88fWCZ5eVaTz5quMmpDSTLLLTj23bTiwPECEB/qIIvzgvPWnenp9egm7ZL7P
+	 uDuNXJtnz1f4nmDhL/1sI3E8gafhHAFkE3/ZIq/QgnhNM7LJxzLA5GGlVdf5sYC78y
+	 WMKYb83vADXi8XpatkquJzxDxSMmwlM1/OhATg6WsCuuAOZ/s8J9NcQMSMvstT6hwJ
+	 +zJJ2+XwdEnLA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 37F09C4332E; Wed,  6 Mar 2024 09:59:39 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after a
+ random number of suspend/resume cycles
+Date: Wed, 06 Mar 2024 09:59:39 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: blocking
+X-Bugzilla-Who: aros@gmx.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218305-215701-eq0XYGigKO@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
+References: <bug-218305-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 6 Mar 2024, Shyam Sundar S K wrote:
-> On 3/5/2024 02:20, Armin Wolf wrote:
-> > This patch series fixes various issues inside the policy binary
-> > handling code.
-> > The first patch makes sure that a valid error code is returned upon
-> > failing to start the policy engine, while the second patch drops the
-> > usage of readl() on non-io memory.
-> > The last two patches fix a possible out-of-bounds memory access when
-> > parsing the policy binary header.
-> > 
-> > All patches are compile-tested only.
-> > 
-> > Changes since v2:
-> > - add patches 1 and 3
-> > 
-> > Changes since v1:
-> > - get the full dword instead of only 8 bits when reading the header
-> > - check if the policy buffer also has enough room for storing the length
-> 
-> Thank you Armin. Series looks good to me.
-> 
-> Reviewed-by: Shyam Sundar S K Shyam-sundar.S-k@amd.com
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-Thanks for taking a look.
+--- Comment #28 from Artem S. Tashkinov (aros@gmx.com) ---
+> For the first issue, Artem can you update to 6.8-rc7, make sure you've ad=
+ded
+> the TEE firmware for the amd-pmf driver from linux-firmware and see if you
+> can still reproduce it?
 
-Btw, you were missing <> around the address so the patchwork automation 
-didn't catch that line. To help the patchwork to capture that tag (no need 
-for you to do anything):
+I've just added the firmware file, "773bd96f-b83f-4d52-b12dc529b13d8543.bin"
+(what a weird name) and I will test 6.8 as soon as it gets released. It's
+coming pretty soon.
 
-Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Thanks.
 
---
- i.
+--=20
+You may reply to this email to add a comment.
 
-> > Armin Wolf (4):
-> >   platform/x86/amd/pmf: Fix return value of
-> >     amd_pmf_start_policy_engine()
-> >   platform/x86/amd/pmf: Do not use readl() for policy buffer access
-> >   platform/x86/amd/pmf: Use struct for cookie header
-> >   platform/x86/amd/pmf: Fix possible out-of-bound memory accesses
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
