@@ -1,57 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A1A5FB91;
-	Wed,  6 Mar 2024 11:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2D060DD0;
+	Wed,  6 Mar 2024 11:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709723514; cv=none; b=W8CB1rZTBTw9CJR6hItHax74JkeRP1t9HG7nv/NV0Xh8XqTL1QRdsAOrQvwrCdWdHIXWkrsWaCg9NfFpz05Bn7sjnf+0yMRZnrzVpu/AUEVKu2uwUUOkd3+EWg4Fn+3T7P1kVQwC2qvsCXYIrR6PyKriZisSVzIga+60TWROLT0=
+	t=1709723846; cv=none; b=lUCp0FC6OM6MKUj6yhBGZIp/YJcWIzSfT8wPgg+4VTfBrpMOg81VClI/ZKZJNmtCW3kRfkIfzj7seoi3ffKZV0YugaYtN67ATU1f11CCPYCcACGEvgFR0CMZjdhLxhXc7gh46vxdkPDtHVOJfJ8EbfRAP51KvXGE9CU1skj0u8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709723514; c=relaxed/simple;
-	bh=A2b1bwOR7rg+shnfBmsvF+nNuz4ACbbwnWjTr0Br2rw=;
+	s=arc-20240116; t=1709723846; c=relaxed/simple;
+	bh=y7S7CF/lnNczOiCRtdsEbEr3jYqVuFGSNQWFxySvkUQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=L6l136lXxhMwPSYko+JAE3WSu42U11uqxfhpYi401QKm3clqaVC8jG0AekldEf/3hXIVQMpOUGzZk5l3SX6pRFzq5wFKfs6xjD5PJaEKTnpOH6u3+jTb4ud2CLNHbwaTkoiinjFWvCUwcHKDXu8gHz0PVcq5P639ZxKFuHj+WNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H8OcJnab; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version:Content-Type; b=p7RHL5TquOfKSkCWxyt7i18cYlIrMsZ4lT28s3raCtrbK3n9KemAh9KlUO/raWogHLS25w08XQBY2AVuPhRJUrBNaqAhe4EjcUZsGGh45/vVI10ROY/Y9GrusgboK1CpAg8M3+V5U5ft/0P7CZCqG9cOHPwK/xJmP5jgeoW5/a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dmq8iIeg; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H8OcJnab"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dmq8iIeg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709723512; x=1741259512;
+  t=1709723845; x=1741259845;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=A2b1bwOR7rg+shnfBmsvF+nNuz4ACbbwnWjTr0Br2rw=;
-  b=H8OcJnab/5n4UZFuXFNKzdRMXnNAeTPeItIjeQw+vWMF5KOS4XEHMEuE
-   XUasuthOHInvvZrG2Of8Q/21EOt5E6n40C4TmYTEzj781bVpcARkmglUB
-   taCpO7H6ALV4MxbpifNoxMBbb66QfhH9+8s2wAvzXfY1qNPNnjaRhrUQm
-   iyXOQeYEW3BgwjUB+zwgzlt5HLpEkeJu3fSw1ACyXfXkFbcste9ffPUHf
-   tYYz7go0sQ40AGorB4YQpFjcNc+L6KLlXImZf3Tcdo6hCIZixU+uOvI3k
-   UVTNha8oiFXD3W0h/Yxxtay2J5CRIl7fOvWcKKIqcbjwziNiotGDKfk9b
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="4446626"
+  bh=y7S7CF/lnNczOiCRtdsEbEr3jYqVuFGSNQWFxySvkUQ=;
+  b=dmq8iIegL2D9QUim2oRMN+J3IquyFC/dhVR3BvUMQxxSRF6pkdJla5rW
+   odO+fu8wCAe6U3yLQm/XI4/03JxIvgdbm55hC15VynEcSd0wzB68XRMs+
+   FKZRAHeKRqO/uApR8RpWfXEX6Y1iG3nyZ2zWrMz6/2kjQoEvYf0zpITZj
+   RlU5/kq4wq5IcpIRUVrnjIi+6hBceDGvGtDvFNANMMw6Myn0L64+xVgLM
+   G7XC5NoAxWVLVE55XvLJrJ04hrN6A2xkCP721vlw/FNFEA8ujOOgHlv67
+   Ka4Vq3blFesov/ypXYNu5kVZ2mgTc9w2gCXl7uUimTpxarZ0p+snRFFYO
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="8135988"
 X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
-   d="scan'208";a="4446626"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 03:11:52 -0800
+   d="scan'208";a="8135988"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 03:17:25 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
-   d="scan'208";a="40609639"
+   d="scan'208";a="9809655"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.146])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 03:11:47 -0800
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 03:17:19 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Prasanth Ksr <prasanth.ksr@dell.com>, 
- Hans de Goede <hdegoede@redhat.com>, Jorge Lopez <jorge.lopez2@hp.com>, 
- Mark Pearson <markpearson@lenovo.com>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-In-Reply-To: <20240305-class_cleanup-platform-v1-1-9085c97b9355@marliere.net>
-References: <20240305-class_cleanup-platform-v1-1-9085c97b9355@marliere.net>
-Subject: Re: [PATCH] platform/x86: make fw_attr_class constant
-Message-Id: <170972349774.3698.6241783676827025751.b4-ty@linux.intel.com>
-Date: Wed, 06 Mar 2024 13:11:37 +0200
+To: Johannes Stezenbach <js@sig21.net>, Takashi Iwai <tiwai@suse.de>, 
+ Andy Shevchenko <andy@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, 
+ "H . Peter Anvin" <hpa@zytor.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org, x86@kernel.org, 
+ linux-clk@vger.kernel.org
+In-Reply-To: <20240305105915.76242-1-hdegoede@redhat.com>
+References: <20240305105915.76242-1-hdegoede@redhat.com>
+Subject: Re: [PATCH v4 0/5] x86: atom-punit/-pmc s2idle device state checks
+Message-Id: <170972383334.4424.8602092578822097419.b4-ty@linux.intel.com>
+Date: Wed, 06 Mar 2024 13:17:13 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,14 +64,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.12.3
 
-On Tue, 05 Mar 2024 15:55:04 -0300, Ricardo B. Marliere wrote:
+On Tue, 05 Mar 2024 11:59:10 +0100, Hans de Goede wrote:
 
-> Since commit 43a7206b0963 ("driver core: class: make class_register() take
-> a const *"), the driver core allows for struct class to be in read-only
-> memory, so move the fw_attr_class structure to be declared at build time
-> placing it into read-only memory, instead of having to be dynamically
-> allocated at boot time.
+> Here is v4 of this patch series to add S0ix related s2idle
+> checks to the pmc_atom and punit_atom code.
 > 
+> Changes in v4:
+> - Add pmc_s2idle_check_register() helper which is a stub when
+>   CONFIG_SUSPEND is not set to avoid needing more then 1 ifdef
+> - Add a couple of Acked-by and Reviewed-by tags
 > 
 > [...]
 
@@ -80,8 +83,16 @@ platform-drivers-x86/review-ilpo branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: make fw_attr_class constant
-      commit: 04f53f56655d733c91e9cedfbf0bf9882f6015b6
+[1/5] clk: x86: Move clk-pmc-atom register defines to include/linux/platform_data/x86/pmc_atom.h
+      commit: 2ad8bda51c6069fa2d616ed57dc3ba8a3ec26ca4
+[2/5] platform/x86: pmc_atom: Annotate d3_sts register bit defines
+      commit: 5c3fc0ff939b0390128dfa852fc56b89016c0884
+[3/5] platform/x86: pmc_atom: Check state of PMC managed devices on s2idle
+      commit: cc7922fff7ee652577165c4fe6035429ccc175cc
+[4/5] platform/x86: pmc_atom: Check state of PMC clocks on s2idle
+      commit: cbb1c5f2b02da78169b6bacf506777f99ed07596
+[5/5] x86/platform/atom: Check state of Punit managed devices on s2idle
+      commit: ea2b3b2292fed64ed9b8451c03d638d61902badc
 
 --
  i.
