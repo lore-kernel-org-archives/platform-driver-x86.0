@@ -1,97 +1,100 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8960C433B9;
-	Wed,  6 Mar 2024 08:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0915FBB5;
+	Wed,  6 Mar 2024 09:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709714182; cv=none; b=bmwndyS1CG01ZXCQoMk/BHEmD6ho4WF6kKkvA9PI+D62uXQVNmmiowqjw039uIQEcKuoAKqzOa2yQyZD5RGmwoJzzQ7TAhxyONp1eq1FJ/Lai8O9pgs/FXK9i/y0EEx515n4y2EskT8phxnVo6ntOOY/EMGYn++4pg/TVF5irSo=
+	t=1709718803; cv=none; b=cpyKsBgG2XLiyM7dczc7bx6Fm+RPKKFijhgoP7ZaBvy9YPYzThxVibnByLKuGkW7L/29UI4I7N04rl6x2YOAvCcbv71kfeap4JVvU22wq/+m7255SheMDiq/WSbjeMqeKjEc3BdwUWjcl35gAGGHjRhOP8VJY/4rOtBBXFCmHBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709714182; c=relaxed/simple;
-	bh=VrjVx0JM+ojkmq5bYA33W2pq6FvUz0OgdKtPpf5WOmM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SHGDDIT8oCXAbwun15FWH+Mdyqneh+dB263W93Nk43PoCgLjSxU/QWA0PjD+oC88VwRWrsXV61Lt6w52D2ZBXH/7g/arBWWXHVAtMnszXzzD1mgcfEMExhMtDcPYhpQyf6RXWG9eVIqoLnEODLXuswVABFAUISbhuM54wJFYygo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SPPZvc5l; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OKPkj88w; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1709718803; c=relaxed/simple;
+	bh=io4SbbnyiNckKCLRLcGAVDLGtDr6dhrOEcERzQbK/JY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Tt95gtmLTuSgJ9UpOzyx56yg09AYHHShAa4hlcTAS/D74qLg9n4Rlx9YFHhQIrQpiHMhWOW1NOflZfeNwgXRowXwLi5Q2pYP1+TpRWJpUrdhyIG1WHIMOGy+fWHnWo/xa0N5qjYqFgiKrSBAK2aYlEt3sf69ifcqiKm+llUVRck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n3kLAhH1; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SPPZvc5l";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OKPkj88w"
-Date: Wed, 6 Mar 2024 09:36:18 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1709714178;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WWNN+xu255TTGbWwnSaz50DvpvIVst/qTUPY9vEWAyg=;
-	b=SPPZvc5l/KVmBnxbEl8SBcpwTJ+dQxYTXa+uK0TDkHf+x4LiSLV2S3d9xYsjV5AJZlyJUf
-	86hI+21DVI9r9NqcdWdO9VCACYIjb7Ixyb1FZnX67OY4I1c5wlG9sWCPlPkIxZblQiWLJI
-	UFvtf5KdZFQ0ZBeOgEIoEsucA1Fa167Ru0A0khw/azHQ7BOF3gzKqkehepjI8F8K6WhfHl
-	8BEsov18cNID+t2zAvxOAiZUyu8Cx370nUfs+YzpdUyPhNBI6udOFUTv1ayQ5gQMoU+h8s
-	UVGQKkO/A7atQEka6asz1lCQ+0vM6dpKUxofr3s2BhsxgXFuNyR+1mn3C6vr2A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1709714178;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WWNN+xu255TTGbWwnSaz50DvpvIVst/qTUPY9vEWAyg=;
-	b=OKPkj88w3XSX7R2Nbq31ZsieTMlpS7+prCKcVxGDpDL7R/gvYPfdObxwFxVK8lNAW+nYJP
-	Grj+Sro6J3Dkm9Aw==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: =?utf-8?B?6Im+6LaF?= <aichao@kylinos.cn>
-Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	W_Armin <W_Armin@gmx.de>, hdegoede <hdegoede@redhat.com>, 
-	"ilpo.jarvinen" <ilpo.jarvinen@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, 
-	platform-driver-x86 <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v4] platform/x86: add lenovo generic wmi driver
-Message-ID: <20240306092652-4ccf20ee-0044-41c8-8712-d8eb30be9ed7@linutronix.de>
-References: <2o0aznm5pjb-2o0c9lfkrd4@nsmail7.0.0--kylin--1>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n3kLAhH1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709718801; x=1741254801;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=io4SbbnyiNckKCLRLcGAVDLGtDr6dhrOEcERzQbK/JY=;
+  b=n3kLAhH12AH+qo7NtjkSmeRXgh4qdswYzh/Uw+vNUBqe6IC4fXWmrvei
+   462hSBJ/vDMwhDZ1AFEEJYK9ATYDH66GE2ET8yA/5gQFFban7FcLAMg6l
+   DCOzsHxdsKU0VIyT213980j4ul6BFDrZaf7rmIqza/37D5vGxUaxxm5X/
+   9JphC6jVswKQ5PQCMrl7KhI5EMIhNwzI0tPsziXg/TvgkTsMTAT/GYjMp
+   8dWzvddEFWZGbPpufoACQ/GJR3NjbdDTtSsKiR3LsgvZmBjxl6rKU7oEY
+   dPL4hA23OrozoQfVOCLeQFU0TJQuy4ubBYna/xOg2uiJSqPPkYoFj1k+x
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="4436928"
+X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
+   d="scan'208";a="4436928"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 01:53:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,207,1705392000"; 
+   d="scan'208";a="10266716"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.146])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 01:53:19 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 6 Mar 2024 11:53:14 +0200 (EET)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 0/4] platform/x86/amd/pmf: Fix policy binary
+ handling
+In-Reply-To: <839a74c1-6e08-441b-a6e3-9923dfc3f303@amd.com>
+Message-ID: <0b614744-257b-3d4f-533e-f8bf9085f03a@linux.intel.com>
+References: <20240304205005.10078-1-W_Armin@gmx.de> <839a74c1-6e08-441b-a6e3-9923dfc3f303@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2o0aznm5pjb-2o0c9lfkrd4@nsmail7.0.0--kylin--1>
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Mar 06, 2024 at 04:17:43PM +0800, 艾超 wrote:
-> > I would be interested on which devices this driver was tested and is
-> > expected to work with.
+On Wed, 6 Mar 2024, Shyam Sundar S K wrote:
+> On 3/5/2024 02:20, Armin Wolf wrote:
+> > This patch series fixes various issues inside the policy binary
+> > handling code.
+> > The first patch makes sure that a valid error code is returned upon
+> > failing to start the policy engine, while the second patch drops the
+> > usage of readl() on non-io memory.
+> > The last two patches fix a possible out-of-bounds memory access when
+> > parsing the policy binary header.
+> > 
+> > All patches are compile-tested only.
+> > 
+> > Changes since v2:
+> > - add patches 1 and 3
+> > 
+> > Changes since v1:
+> > - get the full dword instead of only 8 bits when reading the header
+> > - check if the policy buffer also has enough room for storing the length
 > 
-> Lenovo A70，it is a Computer integrated machine.
-
-Could you mention this in your next commit message?
-
-Do you have any idea on which other devices this should work?
-
-> >> This looks similar to a switch.
-> >> Would it be more useful for the user to report a standard switch
-> instead
-> >> of a key event which needs to be correlated with the sysfs file?
-> > I agree, maybe SW_CAMERA_LENS_COVER might be the right thing to use
-> here,
-> > if those camera states (open/closed) are meant to symbolize camera
-> shutter states.
-> > In such a case the initial switch state has to be retrieved, or else
-> the input device
-> > cannot be registered until the first event is received (similar how
-> the hp-wmi driver
-> > handles SW_CAMERA_LENS_COVER events).
-> > Ai Chao, can you tell us if those two camera states are meant to act
-> like a switch (camera switched off,
-> > camera switched on) or meant to act like a key (camera button pressed,
-> camera button released)?
+> Thank you Armin. Series looks good to me.
 > 
-> The camera button is like a switch.  I can used SW_CAMERA_LENS_COVER to
-> report input event , but the OS
-> 
->  can't to show camera OSD. OS need a key value  map to the camera OSD.
+> Reviewed-by: Shyam Sundar S K Shyam-sundar.S-k@amd.com
 
-Why can't the OS do this?
+Thanks for taking a look.
 
-The switch should report its value.
+Btw, you were missing <> around the address so the patchwork automation 
+didn't catch that line. To help the patchwork to capture that tag (no need 
+for you to do anything):
+
+Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+
+--
+ i.
+
+> > Armin Wolf (4):
+> >   platform/x86/amd/pmf: Fix return value of
+> >     amd_pmf_start_policy_engine()
+> >   platform/x86/amd/pmf: Do not use readl() for policy buffer access
+> >   platform/x86/amd/pmf: Use struct for cookie header
+> >   platform/x86/amd/pmf: Fix possible out-of-bound memory accesses
+
