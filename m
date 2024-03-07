@@ -1,133 +1,170 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B912C180;
-	Thu,  7 Mar 2024 18:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10444137C37;
+	Thu,  7 Mar 2024 19:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709836149; cv=none; b=VhnpsSF2CA3Wl3C3bQNE0UpbZplvg0fmw+lk0vbh2ssa0fiOkYkDkqBasVtJH8SuaoqWCk8VtM156Fb/I3YolUlga88hPhPap6n6H6jVj2Ox0678kKS7Gxi0mGYMdiDl9JEFV9Pbd+xrv/O1CTbWCObwgXDogeo0FDBeEg7+F2E=
+	t=1709841496; cv=none; b=WL5TD3lcG0OS1gIrEbXQtbMs9ZJLP4o82TFhbdEQbwxcpTniMC35JNhMgt/ydq4bi7uROqfLy2LA+Iw1enrvf7nHOmcoWXlVvlvKK0vyUScFjTCxupdPLFDn8uvkCmB7f4IP4/wUHUti6uxq8U9aiX7SgWeZ7wtUsLRD0Pcek9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709836149; c=relaxed/simple;
-	bh=eBSebctmO6Ythh8P9I3Tu0FhUlKA5IX3lUZ879cQR8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b7s51NLqLJXF/IZPxLA3Un6r6qESE4zcXpDj1OVjRHB3Cs4uYMOMvzu/eICobPQpJ8+KZ30pA3+mdrl5jzEnbxrb887xzlBT9i/c1F0X9w38uq4n4coT1uTv8iCY0DuQ++mSDsOSMtWI6hBfJp2SFFG2Avgt9MlghRJA0RDgWuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l3HHOofO; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709841496; c=relaxed/simple;
+	bh=SfL6tjOb05/VPDRBKcHaN0jfguu2f2ZuyXGBWNiPbMM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UL9zw7YdVZd/6M2Tvm5W1Twljd+VXGTUM8xAHupg/4mgnprFxVbku8TvyHUu8xykKM2pF3alO6RzHKIB/iwDLf6XfiwOb2y4U1QNdrIAI2Z/QuZy4v4Imo6X3220xEs5kS3zNnbZABXGnwb0CjpWtyGat3nELQiMS3aUDPhgcZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=lTw8q/Qd; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l3HHOofO"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso957020a12.3;
-        Thu, 07 Mar 2024 10:29:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709836147; x=1710440947; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZNpOPY6J6NoDjcYUmT22gL0RoTRGL1EqV0mF/U5iDE0=;
-        b=l3HHOofOCkuPZcUgo/1dXDVs9fhjs5/z+rwBc0AVyEJxr1EBhemoFNRcxE+nn+MhjQ
-         BNNp32tcF29xWJqN5rUw92ue+wWT6KI+jrOSrSbCiCYDII7KpArNyo/5LGYSy0EAJjg0
-         0fgitrFkq5A5FE7XCsqFKcYuZ33/RnnQKCX4Yauih3SV+UMGWleCoAu0gEB/Xel0heZS
-         sj9b8jldPblsUpKUspNILkaM2UxyJsgBtMyDw2fRo9BE5vCkKFtTcXR2E1F+dWBHkXse
-         ewYi1admE+oATpdRGrlA4amqkIzNyiA7/zX/oaE+hiNtYLsqG5MhwymRxh2RGwE+lPGV
-         jOLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709836147; x=1710440947;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZNpOPY6J6NoDjcYUmT22gL0RoTRGL1EqV0mF/U5iDE0=;
-        b=ILeRJuR+x5foYDKKfwVw63qhFkBH4CynVPvQEJY8Su2JnFQKCX3nk7015BNDL9b1Oj
-         DNrUjLKiRGP3KTlgakMZLkM6cg94L55hILX/MqdqrXx21MLUNrwXpzUov3Qyf9a5n4Xh
-         VkOwfqu5RoGx6IJcHwnj7edJBaasJGaRZzyYPoF9L5UWNNcoSFpS/FqsG3fKhAZtCSFS
-         jZ9UbJ5jNRqZbEDYyQ9ataE1aCe+HeKfY1LjrJsChHA40vzmjoaPTVkakjTTgEE9tbc7
-         zb7GkDkpDGdGFOtb4BwnE4gMGFH9ycK13c+BjRmiK7tHHYejUgxCvhvRclb42YaWWxsI
-         fKBA==
-X-Forwarded-Encrypted: i=1; AJvYcCWkq4r2p7fbmHSdEbHjXwUKzsMCcmckD9v0no3nnoYnzbyNbZZ374pKDXk8lLX2rS4nDw8rj0XZuWUvOmjQIyJ1xIb6UiQXXG9Um+BhYhnCciriyFzPePyOP6HzzfoEpQnuJSEqtg7XW9ONbCleZz1R
-X-Gm-Message-State: AOJu0Yzken+fQUc7mxM7ivWXVfYXOQP37ZGRgKZF7nTw8ZgwYzGAnbgR
-	Cmist5qQJeSRwl4J8tx8p2i+YzAd+68fAa4jOkhfNvw/yFCdetpNkPbOpOku
-X-Google-Smtp-Source: AGHT+IFoqGRAc7bA+Jb5qPn3fbeVju8JdprzvuqhlMjyIn+5aoLqHrodeP54M0NUofB2BTKLM3iynw==
-X-Received: by 2002:a05:6a20:3d27:b0:1a1:6f2c:ceb7 with SMTP id y39-20020a056a203d2700b001a16f2cceb7mr3808492pzi.8.1709836146949;
-        Thu, 07 Mar 2024 10:29:06 -0800 (PST)
-Received: from google.com ([2620:15c:9d:2:7cdb:7132:a03e:7749])
-        by smtp.gmail.com with ESMTPSA id c11-20020aa781cb000000b006e4362d0d8csm12935384pfn.36.2024.03.07.10.29.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 10:29:06 -0800 (PST)
-Date: Thu, 7 Mar 2024 10:29:04 -0800
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Jonathan Denose <jdenose@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, jefferymiller@google.com,
-	Jonathan Denose <jdenose@google.com>,
-	Raul Rangel <rrangel@chromium.org>, linux-input@vger.kernel.org,
-	Ike Panhc <ike.pan@canonical.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] Input: psmouse - add resync_on_resume dmi check
-Message-ID: <ZeoHcH59Qsiv90b-@google.com>
-References: <20231102075243.1.Idb37ff8043a29f607beab6440c32b9ae52525825@changeid>
- <ZcKs589qYxviC1J4@google.com>
- <CALNJtpV0KsOusPQeGv8bQ3jKy2sUj+k=mPHc172f+vMaTDYPfg@mail.gmail.com>
- <ZcZ2oG1Rls-oR593@google.com>
- <CALNJtpWNbSZdpxky9hTiSRsaGgLDUnM66QGEy213d3Lhra0hsw@mail.gmail.com>
- <ZeDLq9gPs5InBmdK@google.com>
- <CALNJtpWwhen2H9OT1-rZ4bt+huwXPOPz6qVDJ5g+emE1wRSLsw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="lTw8q/Qd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1709841477; x=1710446277; i=w_armin@gmx.de;
+	bh=SfL6tjOb05/VPDRBKcHaN0jfguu2f2ZuyXGBWNiPbMM=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=lTw8q/QdTtLoH5EcfrqhI4muZHFRSXfsMeyfBHbc/8P6vcRK6sa6m/CCjMNTl3Lb
+	 Y7psyGVgtYTVNGPKgKEdGs45LHcZBar+RmNUsrBjSMkCcxmJmS3CaovhF2ZReNe9s
+	 NpP8dFJU/f+09JGK/khA8HToudbCBY7wOeInJlm+fsjMsiUz7VlODsu7cvbtAsB9a
+	 5X1cv3odKdV7m1wq14CroJL2/0IZ8ioS/6jJzr2eE14PeoXaDT7c7zuJZNwIHdbDG
+	 FjHkIOJGIso1/Zpcx3eS567OOaQ9qiz0ZjE2vYA7qKmPiUPy6Xgeo98Umc6t6cdeL
+	 BuedyWSvzQ4U/6OvJw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1M59C8-1rjPnt2qDU-001Dm1; Thu, 07 Mar 2024 20:57:57 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: rafael@kernel.org,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] platform/x86: wmi: Support reading/writing 16 bit EC values
+Date: Thu,  7 Mar 2024 20:57:52 +0100
+Message-Id: <20240307195753.2961-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALNJtpWwhen2H9OT1-rZ4bt+huwXPOPz6qVDJ5g+emE1wRSLsw@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:IgIGkb1CooilHWRWBcwjfw6/swGMCO/qvBY2LaJ2FDTkoA4lRXC
+ QZx8TmYGGFQa+8jpXHQRt29yplfLUKlzJPB71qqkdxgHcLOl9i+Fym/FIOpgzUr/EY5iMke
+ Fh1MibgWUy6aFyPhEebKmXVHOaE7BkkjCFAp085bTLxa9qWqP3B7kplbkWxyNVARywIKNht
+ /+5+i09xbNPZANIjPl6eg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:FK4KqCJSjOg=;d6qdQdkCMNfCLDjOKaRTBFFi+u/
+ oMV23C1f+VlTVlIkRfeD0T/kDI7GOYf3ODbwf0tzdeGi1NmIL+z61yym+8pCKcnFnZz9f8jUU
+ 0srfG6RqUoQeY4FlE6JI1Qr1ywuCGYlkMvM+h5ux5/JSGDyDEt3B8LYRqrD3pZvVmgNIrDD9g
+ J0njNBvbI2EUHZZIF9y49tRGt/fep14cnD055R0xSbo2CqMsJZ9tN782CKUXo5ov10pBfBBI6
+ aIK8j33AY1d49lnUBmoEtfYycIqXT8tr5XG04y6ZRGTGErFo38nATlwkWQemN6mE0MI6pObL1
+ 1Ub7jbOYl1XV/erJcFdzihojbZZbWA1cWwgGuC4+qx/qa7QMaQiAseeZgSi2JdAXXb+r25JEx
+ JsqPjs6COkrQiojmXpQPiKgheaIfLT2L8Bec4OfUNtkJJV04r4d/UAF88hrkzKL6wthCw/Uot
+ zf5UKSNdHCGpwpPnqYFSviinIGpbhmmaYvNzWiVPs1McWS+feZHuS+UT9CsTMPBnD9dVi3GtO
+ S7HCFOh57gwupy3DffxiYf8QGPxL4Oz9hd8hIPOsasZP++X7guqwl6dgbcvBTxS5VhVjfs1hu
+ Mrv+2OPotr9auOPWXtSzG5gfNWFnXeVVIIKka3iofEeaxsnReU1lpMT220TFHj+/xEVWHdA5R
+ dHGLy1aMST2O5GNXbJbZ1xGlqyNcae9Pr3xpj9Vt4e4+6yH3AazG0S1+KdiOCgakv5MfL5j+z
+ YjDti6cV5mvupgKniPniJXaraDpNCg0F2AuJvrPGazcFFQFG0blP+BcgTFaRPHSk/bWBmyMIz
+ u2T9GPrCaFRFThsX7SIUBlWFZXn1uRONuRLLpQTeJRoYk=
 
-On Mon, Mar 04, 2024 at 11:17:31AM -0600, Jonathan Denose wrote:
-> I disabled the ideapad driver by rebuilding the kernel without the
-> ideapad_laptop module. That does fix the suspend/resume issue!
-> 
-> Attached are the logs. Is there a way to make this permanent?
-> 
-> On Thu, Feb 29, 2024 at 12:23 PM Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> >
-> > On Mon, Feb 12, 2024 at 02:57:08PM -0600, Jonathan Denose wrote:
-> > ...
-> > > [   50.241235] ideapad_acpi VPC2004:00: PM: calling acpi_subsys_resume+0x0/0x5d @ 4492, parent: PNP0C09:00
-> > > [   50.242055] snd_hda_intel 0000:00:0e.0: PM: pci_pm_resume+0x0/0xed returned 0 after 13511 usecs
-> > > [   50.242120] snd_hda_codec_realtek hdaudioC0D0: PM: calling hda_codec_pm_resume+0x0/0x19 [snd_hda_codec] @ 4518, parent: 0000:00:0e.0
-> > > [   50.247406] i8042: [49434] a8 -> i8042 (command)
-> > > [   50.247468] ideapad_acpi VPC2004:00: PM: acpi_subsys_resume+0x0/0x5d returned 0 after 6220 usecs
-> > ...
-> > > [   50.247883] i8042 kbd 00:01: PM: calling pnp_bus_resume+0x0/0x9d @ 4492, parent: pnp0
-> > > [   50.247894] i8042 kbd 00:01: PM: pnp_bus_resume+0x0/0x9d returned 0 after 0 usecs
-> > > [   50.247906] i8042 aux 00:02: PM: calling pnp_bus_resume+0x0/0x9d @ 4492, parent: pnp0
-> > > [   50.247916] i8042 aux 00:02: PM: pnp_bus_resume+0x0/0x9d returned 0 after 0 usecs
-> > ...
-> > > [   50.248301] i8042 i8042: PM: calling platform_pm_resume+0x0/0x41 @ 4492, parent: platform
-> > > [   50.248377] i8042: [49434] 55 <- i8042 (flush, kbd)
-> > > [   50.248407] i8042: [49435] aa -> i8042 (command)
-> > > [   50.248601] i8042: [49435] 00 <- i8042 (return)
-> > > [   50.248604] i8042: [49435] i8042 controller selftest: 0x0 != 0x55
-> >
-> > So here I see the ideapad-laptop driver trying to access i8042 before it
-> > even starts resuming. I wonder, does it help if you disable
-> > (temporarily) the ideapad driver?
+The ACPI EC address space handler currently only supports
+reading/writing 8 bit values. Some firmware implementations however
+want to access for example 16 bit values, which is prefectly legal
+according to the ACPI spec.
 
-OK, so I tried to cook up a patch that would allow ideapad-laptop driver
-to establish device link with i8042 so that the resume will be processed
-after i8042 resumes, but the longer I think about it, the more I think
-that ideapad driver should not be messing with the touchpad state
-directly. The disable event may come up in a middle of the touchpad
-resume transition, or when we decide to change touchpad mode for one
-reason or another. It also does not respect inhibit/uninhibit controls
-for input devices. I think that the proper way for ideapad driver to
-handle this is to only send KEY_TOUCHPAD_OFF/KEY_TOUCHPAD_ON to
-userspace and let userspace deal with toggling touchpad input (via
-inhibit or by other means).
+Add support for reading/writing such values.
 
-CC-ing ideapad maintainers for their thoughts.
+Tested on a Dell Inspiron 3505 and a Asus Prime B650-Plus.
 
-Thanks.
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+Changes since v1:
+- use BITS_PER_BYTE
+- validate that number of bytes to read/write does not overflow the
+  address
+=2D--
+ drivers/platform/x86/wmi.c | 47 ++++++++++++++++++++++++++++++--------
+ 1 file changed, 37 insertions(+), 10 deletions(-)
 
--- 
-Dmitry
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 1920e115da89..e542aef825a3 100644
+=2D-- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -1153,6 +1153,32 @@ static int parse_wdg(struct device *wmi_bus_dev, st=
+ruct platform_device *pdev)
+ 	return 0;
+ }
+
++static int ec_read_multiple(u8 address, u8 *buffer, size_t bytes)
++{
++	int i, ret;
++
++	for (i =3D 0; i < bytes; i++) {
++		ret =3D ec_read(address + i, &buffer[i]);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
++static int ec_write_multiple(u8 address, u8 *buffer, size_t bytes)
++{
++	int i, ret;
++
++	for (i =3D 0; i < bytes; i++) {
++		ret =3D ec_write(address + i, buffer[i]);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
+ /*
+  * WMI can have EmbeddedControl access regions. In which case, we just wa=
+nt to
+  * hand these off to the EC driver.
+@@ -1162,27 +1188,28 @@ acpi_wmi_ec_space_handler(u32 function, acpi_physi=
+cal_address address,
+ 			  u32 bits, u64 *value,
+ 			  void *handler_context, void *region_context)
+ {
+-	int result =3D 0;
+-	u8 temp =3D 0;
++	int bytes =3D bits / BITS_PER_BYTE;
++	int ret;
++
++	if (!value)
++		return AE_NULL_ENTRY;
+
+-	if ((address > 0xFF) || !value)
++	if (bytes > sizeof(*value))
+ 		return AE_BAD_PARAMETER;
+
+-	if (function !=3D ACPI_READ && function !=3D ACPI_WRITE)
++	if (address > U8_MAX || address + bytes > U8_MAX)
+ 		return AE_BAD_PARAMETER;
+
+-	if (bits !=3D 8)
++	if (function !=3D ACPI_READ && function !=3D ACPI_WRITE)
+ 		return AE_BAD_PARAMETER;
+
+ 	if (function =3D=3D ACPI_READ) {
+-		result =3D ec_read(address, &temp);
+-		*value =3D temp;
++		ret =3D ec_read_multiple(address, (u8 *)value, bytes);
+ 	} else {
+-		temp =3D 0xff & *value;
+-		result =3D ec_write(address, temp);
++		ret =3D ec_write_multiple(address, (u8 *)value, bytes);
+ 	}
+
+-	switch (result) {
++	switch (ret) {
+ 	case -EINVAL:
+ 		return AE_BAD_PARAMETER;
+ 	case -ENODEV:
+=2D-
+2.39.2
+
