@@ -1,49 +1,49 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C57A839EC;
-	Thu,  7 Mar 2024 09:19:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5BD823BF;
+	Thu,  7 Mar 2024 09:21:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709803157; cv=none; b=fFdOyacq/lzOo5xEJJGHfKIVFnIuP93lUWu7ZHmqrXZJbDNgiOmh9D0JQS2gJBP/0lo5hJtcvgmwC4wnCyepegz4/RSpksZMmjMIZsikZqxVj3iHPJUVQTkIo7rT0aQdvMtG+MPUWwfUavGxoucy8vqicskGDYX3kR3F92RNtMI=
+	t=1709803264; cv=none; b=RpU/040Oj73pvxEZrTDEqrVctJaj1K8SKO9NUTqP1J/tVbLRCDFZJ7V9XBKmRtGPmjp+R+bKJDscNV7bfme/ry+mULwpGXIwnGbS/GGz++S52PRaNo1WZ0qC88hbd3hmW8qEK6egJJ7HFyFN+cgCzGD4mKjcmemdHUipob1poxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709803157; c=relaxed/simple;
+	s=arc-20240116; t=1709803264; c=relaxed/simple;
 	bh=r3/myK4/ZpKNlUkLE94ZeTlMFLlsx33jDPOvRo6U2a8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MV7VwV5cJdbGT/HGrNUt+EQiDzik/EYm9z4jO9YSb1Uuv9/yqi8sia1axDFSeXv8lglrPgURDbrZjVu1AjBLeKQ2s8xROW0vrSK7m+uPL7rAIXjbbJHQqpoxC/Zs/SS2rpRkbTdZ/azrhir40OKqQaLqJ1nGDBwyyxHZcLkP12c=
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NDQ9JQl6QOzd09D76QXsCZi/L7petlNHcnazrtMS4H6Pb3kk+rSVtBN7PRkGXM0/IxbTeRmoykbnTRaUZfsl7VsSN6JJY9iE6GtwCNNfi4BW5Bjo/keiTVc8dbSaCCu/grLgesgqvzVN52xCK8VGrvxEI4JI65y9RtBF7i8SItM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: eefd94a9bf34490995e7655ab0e53b93-20240307
+X-UUID: 3607b475cb7d4278aab10ffaaee8bd0e-20240307
 X-CID-O-RULE: Release_Ham
 X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:4ca8a327-a5bd-4c4d-a334-cb7f32cbdad5,IP:20,
+X-CID-O-INFO: VERSION:1.1.37,REQID:e8ea706b-495e-4725-a2f2-38442837f5a6,IP:10,
 	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
-	TION:release,TS:-20
-X-CID-INFO: VERSION:1.1.37,REQID:4ca8a327-a5bd-4c4d-a334-cb7f32cbdad5,IP:20,UR
+	TION:release,TS:-30
+X-CID-INFO: VERSION:1.1.37,REQID:e8ea706b-495e-4725-a2f2-38442837f5a6,IP:10,UR
 	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-20
-X-CID-META: VersionHash:6f543d0,CLOUDID:6e342090-e2c0-40b0-a8fe-7c7e47299109,B
-	ulkID:240307163618P7UYFQLJ,BulkQuantity:0,Recheck:0,SF:17|19|44|66|38|24|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC
-	:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+	ON:release,TS:-30
+X-CID-META: VersionHash:6f543d0,CLOUDID:d65a9eff-c16b-4159-a099-3b9d0558e447,B
+	ulkID:240307163618P7UYFQLJ,BulkQuantity:1,Recheck:0,SF:24|17|19|44|66|38|1
+	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:41,QS:nil,BEC:
+	nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: eefd94a9bf34490995e7655ab0e53b93-20240307
+X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-UUID: 3607b475cb7d4278aab10ffaaee8bd0e-20240307
 X-User: aichao@kylinos.cn
 Received: from localhost.localdomain [(112.64.161.44)] by mailgw
 	(envelope-from <aichao@kylinos.cn>)
 	(Generic MTA)
-	with ESMTP id 672017009; Thu, 07 Mar 2024 16:36:17 +0800
+	with ESMTP id 1393049069; Thu, 07 Mar 2024 16:59:41 +0800
 From: Ai Chao <aichao@kylinos.cn>
 To: hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com,
 	linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
 Cc: Ai Chao <aichao@kylinos.cn>
-Subject: [PATCH v5] platform/x86: add lenovo generic wmi driver
-Date: Wed, 28 Feb 2024 17:01:53 +0800
-Message-Id: <20240228090153.572284-1-aichao@kylinos.cn>
+Subject: [PATCH v5] platform/x86: add lenovo wmi camera button driver
+Date: Thu,  7 Mar 2024 16:59:39 +0800
+Message-Id: <20240307085939.668881-1-aichao@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
