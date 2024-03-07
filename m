@@ -1,109 +1,110 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10408137C36;
-	Thu,  7 Mar 2024 19:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EBC634E4;
+	Thu,  7 Mar 2024 21:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709841496; cv=none; b=PduHsLVtCE8pauatNgRDbstglwjX+xB1x4wJvEUM0E3G9NynTCqxG5X1p6PvMv+uMyf+BDO3gtBmkBSIPWpZjyZTuCmtom4oPGYpXnbbHQVybq6+G3yyrq9TihmYd/MpWI/LjEwLWE3lKEbs4dQkYjw8yt+3pOp/eNl0wIZfFYM=
+	t=1709847176; cv=none; b=ONJ3av8SPBCnAmSj0VJToqZhorsh5OUMnUxxsRr6Z52Lg8pW3akjR19kNJ2ZZYj0s0dbSanYgZXZANh3IHSyXFis0EjJYel5OndKn/2od5cekmb0TAymCkAALy7NFiPEvRhJGrfXJd0nI0xu3RuslbBNkW8g5k2xf4kTYJwhBbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709841496; c=relaxed/simple;
-	bh=dVVO80js759j4nvce22wbRDafQcr7cFxiq3JvwZyOYM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m0wBZvi7DOkgC6Liqo9XyQNKtEu1JPCYQonDiC0HeikS1XPGmr8IFBxe/TyUX6zkdleQxWGRUKqG3L23peIZdbm8TFm/7uDkJzxDWhXxRidLB6nLUw2vTHyO+tlnnn1A4gvALO2PhmW8U3orxw1CiVOzUNhQzNCn+lGnJIjNiDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=eE96wVP5; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1709847176; c=relaxed/simple;
+	bh=T1acbK4syDy12qynlLt3cHonJ2RsscIuuNF0FA+iwB8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o9/jaDVd5v9C9UlXppOg4h59eltrHFvFdNzkxDdNwbhZc9041n/lCnbBm5bL6UpKW7mp8ASvfBEu7rw8dzfpDJs7ZHckiso7THg4H0y1y+M3yy56X6gf1/H28TZDVf7t3wRqBNa4uIKnCHNxY6xvYCaMUQUitRVZPDKS0Q6EO+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aeHWc2uL; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="eE96wVP5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1709841482; x=1710446282; i=w_armin@gmx.de;
-	bh=dVVO80js759j4nvce22wbRDafQcr7cFxiq3JvwZyOYM=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=eE96wVP5omenyoQ3PEfl82WJTUkbrl16Z+HTy0/MAikyXymwen12ChVAqy5fa5UR
-	 kNm94v1wuvG+f/zFRuStZUAtuUVN7zsnFZ2CQWKE7ImNMExi6TPLCBD7OGDpwITVA
-	 tx/T9AcdcpStnBE4ItYRZp6N1sGcsV2OMJ8Hp/kWRxv9z+k3ClN0/rzroWyWWOrzA
-	 gA1r3kkbwWecRZtnkXJ6oJX6w/eMl4UVb1aXPZzItYzwyNNRCJGCbEkVxeSIiy7Tg
-	 IbzDovkYDVxL59aJ1MeJgP5DJ3XZ92cBtJFhhlVwdXrprRLNQ/3+5F6BMzNRVjgTH
-	 tlqw/qtb8jp5h8HVqQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MXp9Y-1rLIIA0NPI-00YCrb; Thu, 07 Mar 2024 20:58:02 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: rafael@kernel.org,
-	lenb@kernel.org,
-	linux-acpi@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] platform/x86: wmi: Avoid returning AE_OK upon unknown error
-Date: Thu,  7 Mar 2024 20:57:53 +0100
-Message-Id: <20240307195753.2961-2-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240307195753.2961-1-W_Armin@gmx.de>
-References: <20240307195753.2961-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aeHWc2uL"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d3f4fef377so18297981fa.1;
+        Thu, 07 Mar 2024 13:32:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709847173; x=1710451973; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BsLM3ni1DoQObcnwbdIeTZvE2aHaqZB+Kv3fZAxgw7k=;
+        b=aeHWc2uLR0vgDWgCa2Ye6ksGip32kOdbalcd0FhkrSVnbq41b6Zv2/yO1F6fixmnKH
+         n1uioYJudNDPPs9rx66ICgZMquwu9yPX/FWIAHXZMoaylwwwWpj34Cac1mki8BsMfO1V
+         HCulHg/O7AphBZFP6oTlm7HyoHkmyE43qokziMi0i5HVSU42aee9gGzbfPBIWHGffllU
+         HEEl3FPWxcsSKqvp2GNr7cD+piJfFVnsrnkMn6nz+I8Wy+QqcKEim0Q63mElMVdMmk5o
+         qMG0aP8C4PwvsBohZJF/tMwPoiOsdwPuqMEh6Kkh3BSs2Z7K9ZuiyoNzR/bUnxYVPiv/
+         g8Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709847173; x=1710451973;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BsLM3ni1DoQObcnwbdIeTZvE2aHaqZB+Kv3fZAxgw7k=;
+        b=FxeFCtp5CYm8yB9E+swq5yrqfVamS12FLdRzbTFIJFZdyCBnJIqFT1BrWHNled5xJ2
+         c1/6VYED5o9o5eLrk8GAuLN1dsEoiM+yyNCj3kSbLaqdlwCjxkI8DQf0jEG5KY/jHuFb
+         lL8Piq/QKvHWhe8xxHnyGMP+Zwi4uLpQ4Y1+nb9L9GcFVLvS3u1F13fX0HFMlIA8lH36
+         it8bBiwomJFxIh+KOxIaPz5yJuB0vSTtLhcYxq9NHzKBylhbY45FHFOm+gaeSCmID/5C
+         8MGtnjvd0rnlethAySlLQCAAY+qgSVsVs5eOJzJ/XmkQG5aJMRrvw4CQJny5X5XtgUAR
+         IxqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXc9FVgH8mESIuaQfZR+Oi8iLTabKI0DkgwYcbm8BTNSaSiOIvXkrrArrbtkDk1t6ZuB6VDVWV3tRHRlZ4g+NxIsrIv+fXOXEhMVo0oXepVpY9mWoBe4SaSck+G2tJmqNWkylh5QwPcoQGvdA==
+X-Gm-Message-State: AOJu0YyeopCwRzckHhHLvzPDV7/+t7hO4FmMZTzBDKtehk2Cpb+6zIst
+	a3kWW5LSVpFMi7VOmfOLgzNStuS7OZblRlxXWTQsQ6Wcjl34GSnxYh2GTdbx9zs=
+X-Google-Smtp-Source: AGHT+IHVDP/rfhfesJ39r7ZJoG3nWsfYfY7twQ8eRzBQ40SS0p8G6JnivZBifvJe0eXxbZJA4aZRFw==
+X-Received: by 2002:a05:651c:10d1:b0:2d2:47e0:4432 with SMTP id l17-20020a05651c10d100b002d247e04432mr2354846ljn.1.1709847167830;
+        Thu, 07 Mar 2024 13:32:47 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id g3-20020a056402180300b00566ea8e9f38sm6968801edy.40.2024.03.07.13.32.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 13:32:47 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 78209BE2EE8; Thu,  7 Mar 2024 22:32:46 +0100 (CET)
+Date: Thu, 7 Mar 2024 22:32:46 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux x86 Platform Drivers <platform-driver-x86@vger.kernel.org>,
+	Linux Stable <stable@vger.kernel.org>
+Subject: Re: Fwd: Continuous ACPI errors resulting in high CPU usage by
+ journald
+Message-ID: <ZeoyfjOdHECxn6ck@eldamar.lan>
+References: <Zd2bsV8VsFJMlbFW@archie.me>
+ <f7f6bcf7-c919-4077-88f6-bfffe112ba72@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:B1KLFHgvBUA/1PWVazQcA7KyQurIENAqhMXKuSgnGfTB6TKorHW
- ZHwSid6Km3NV7GUhbz1ph8/1TKHVcXB6dD7vBg+jvElCYARMZ/5Hw2x6uBZVlAQy9gk5ZLV
- CJB7GjkAttNvl6v5dD0av9lsONBUZusSw2UnK1Qfkymo3xLd/O32AY70pYV7G+yX8HQ1EV+
- KC9kULR8ir2saG02l0D7A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:4wi1RJYkdXk=;tRAdEKzXE8V8wR9rPtN9FACtYRW
- lvvlBw1YqPTZH0lUW4DEyOzTKtSXoHo5gHtKNHUCpJjcOooUgQUiKPtHqO6Cw0b2F49w6QBsg
- irzXd/1Hw9t+Hy2uIg7+W+RVukACQ21Z1+cNm7yLCfeWHhULZhUwXvZB1gX7eTnnVk+nVzXdE
- /T4DbBY29eny50i7tDQpJOq80LnLLfzrF25xIfmTY9O646qn5kAFkFwJozqibVSUROUZmGDtz
- qB3A0NdCE7ct8vHnEAOj2ERrFjAykdmDQ+ztfUe8FwriH6FYD/y1jOEhvkQejdBXvKS6CO6xu
- GwnIrkwokIrgYNMOfllTsOeSlxH2uH8p2EXxjgx/Jq0GeeOv9H85exE1vDkHt+64menvGcObA
- Yo59uzSVi1pnMO2R7JBjvfvXXU4uRPXMlU4LiNYVZFgdNWppH8E0Ve4hCDYQJoCxB+PQRhPkL
- KEzLU9ykViOJd0xsyGac+K8g7DKwwBHxhBZ/DmNtBFoREgp7VzFPuCy6NQr+XSVWUpalhwKx6
- QYpNHGptWjet4ggYHxe+OT/FF6cYs58OIRc4leVY87xklcOdfRjbAobM0eDTn+RgI3nv8iqxf
- s1ucSLQ3pA1Jvn6V3mxwsLxF20ARn5vQ3DYNE54xqQASw5VM6WhvsocuqLrfbqnf7+sOjr9ik
- KmAcqtIba1HGpVvluVJfLwixi+Diot2JCvJClmnQWJYSsfmNVaro8TbNraXO1H/Kcjlc8X8kl
- NFzYsvxGsailVgY5FfXyNNpnDCYOMA1Lt/nmz7Yj0A0n9o6Cs68LaC0AQtnEZq99z0iJuFviH
- 8d7VFiTQmNDiaJ0mOyQz6QEzhY4bIlWejT85CQzNKfsUk=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f7f6bcf7-c919-4077-88f6-bfffe112ba72@leemhuis.info>
 
-If an error code other than EINVAL, ENODEV or ETIME is returned
-by ec_read()/ec_write(), then AE_OK is wrongly returned.
+Hi,
 
-Fix this by only returning AE_OK if the return code is 0, and
-return AE_ERROR otherwise.
+On Thu, Feb 29, 2024 at 09:49:08AM +0100, Linux regression tracking #adding (Thorsten Leemhuis) wrote:
+> [TLDR: I'm adding this report to the list of tracked Linux kernel
+> regressions; the text you find below is based on a few templates
+> paragraphs you might have encountered already in similar form.
+> See link in footer if these mails annoy you.]
+> 
+> On 27.02.24 09:22, Bagas Sanjaya wrote:
+> 
+> > On Bugzilla, danilrybakov249@gmail.com reported stable-specific, ACPI error
+> > regression that led into high CPU temperature [1]. He wrote:
+> > [...]
+> 
+> #regzbot ^introduced 847e1eb30e269a094da046c08273abe3f3361cf2
+> #regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218531
+> #regzbot title platform/x86: p2sb: Continuous ACPI errors resulting in
+> high CPU usage by journald
+> #regzbot ignore-activity
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> That page also explains what to do if mails like this annoy you.
 
-Tested on a Dell Inspiron 3505 and a Asus Prime B650-Plus.
+The fix for this issue seems to have landed in mainline:
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/wmi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+aec7d25b497c ("platform/x86: p2sb: On Goldmont only cache P2SB and SPI devfn BAR")
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index e542aef825a3..ad82a96ed145 100644
-=2D-- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -1216,8 +1216,10 @@ acpi_wmi_ec_space_handler(u32 function, acpi_physic=
-al_address address,
- 		return AE_NOT_FOUND;
- 	case -ETIME:
- 		return AE_TIME;
--	default:
-+	case 0:
- 		return AE_OK;
-+	default:
-+		return AE_ERROR;
- 	}
- }
-
-=2D-
-2.39.2
-
+Regards,
+Salvatore
