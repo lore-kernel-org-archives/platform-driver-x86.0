@@ -1,117 +1,273 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C903D12F371;
-	Thu,  7 Mar 2024 13:36:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B211D13329E;
+	Thu,  7 Mar 2024 18:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709818569; cv=none; b=H+TaOwsKdv6txrvTWFx2gI71PcRGTEbehGoQEWuxc1WlDL7uO0OssIRAQEfVrUzp4mopb0FMJyoued3Q/8b0xOsy0kW7uIcaaKCJJQG8QXji69GrqXH5f1HYu/xPAX7kjhFRH5rEmOinQGeW/de4mXYBciodeqyWIn1CQP9s9QM=
+	t=1709835446; cv=none; b=heLpYqvUshRT5ML8JjceB2kq7X+jQX2F9QlFrYeCsTaEShWzJuNi30Bfe1kGodDXjYJez5zc56+I3KKAiru2M8CgG5SAQ/ksOBtF+E/uSfRIn8RjGGBbSNdWrYBebXt10WGVvJ6AIwJWe3jhsUX6jipK9PTswWpFvGi/Nj/i0MA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709818569; c=relaxed/simple;
-	bh=kPd6mmXqJlgeS1LgIgTNMjfo5t5AhILJdmhpHy1uxyI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=csmff/d9p4QDN8L6spf52w5NHxiyhEnoDdmRmOTn3+exFWEw+9m74L/jnwkTwVksn95N1IztF6rUEBYTrVIno5jdFNNlibZHW/bkn6W3kuA/BArvj6BZ/BxR/JxB7DLxiK11o/XNiUp4R0H/Mriv2H0U5BCCRiGliofStvaWURM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HfV2V92V; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709835446; c=relaxed/simple;
+	bh=17xkoOp/RcqQ2Bfic2Dy+htvwJ8t+y8Dib3iXXsLSV4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=TufG81PZ9wJlcMjzHz/3nMirlydgmTwJawpxsN5ezRduxc87533oavzmiCg5P+8TQpROyO1GPmygnMHYM9JY1ZCU+BMT09OTK2Bi1FysSQUGiFpAXUSc5DaD1cy/y8omcAb2vVmLS1WmFLu3YWCIoU3LSVteJ2dNBenGzNZfcQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=pSqDPCQ5; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HfV2V92V"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-33e285a33bdso481740f8f.2;
-        Thu, 07 Mar 2024 05:36:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709818566; x=1710423366; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1KgEltFIoyV/v4bc8+VtNWH2xoTrTmJYgfHpGTY7mHA=;
-        b=HfV2V92VWS+D5YAJ5q7iIgpYNq7QvQ4I+igjFhiXH/BC0/sNu5l9hA1MsXwsmuu7Ci
-         BsnzDaM3ONTlcT2rBJQExZvSXj6XC3voEWsossA8VErjfVaTjXbE3ZOxhE7/Z4lRgznA
-         cAQ1B/olRhz0v+rhoabEf3F3nd5MLK5RqvZgFGZCARtot2blnbk5XzXCG5S3d5vHGB5x
-         hu3bKHk9S7YlJ63QW5xUJd5fLwBpOl9U3qyZ45FDRKFrHzFNolB+jShQNd9Gg9kITyAJ
-         KjoipMaDYU9OvxUY0WqeNmNyOG+E5fD56uWsBUMAxF/Vvvy+2g7hAqpJ5T2Oahc8R7Ob
-         rliw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709818566; x=1710423366;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1KgEltFIoyV/v4bc8+VtNWH2xoTrTmJYgfHpGTY7mHA=;
-        b=nUHpETUfBTGiZgM6zU9dpe1QNM/I5cBReEwMawUO1G6sCkgBkFOdKsvtMDUTsQjPAx
-         w+Bi2v9qj3nDotrDCLTRIDmzvkZELDCFSImY1Xw3fIfccniJG3kSej4NsfyI2sQePOWx
-         8A831QURGRFXW9LR4orxcsN/lfpFF6sW1lRp9hSibKJEet5I5s21DZeeZEqIAM/e82Bq
-         nvlvItr7mgBqr2MJ9ubfJxhwpXgNUG2hvf5WxT1x9Ji1bcx2hvIL0RrE0WOaeoZsuK8D
-         /Oi0IriRbjMGkkwW/HOpdFazxIAtRkxO92F4KHFtqY+CFoAUCAcErNMcmfyXuTtKD6lu
-         WSBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWyLGvbxAuhQ2IjzBUdakdFx+r4raHY83Hdau2GdBGe/DRJFsvcG1+GvqcFRhtl4TTYlqI/cgUkXRtUvH/WI8PkFWY1xe+c2a5BrAjBROZGThB+0QCYlhKxpndx+WjU0zjJgCVdNKh8Y2Cdc+CzMLIsidlT0q9Jg0sg6dl4IDfsf2LD3Di3x9utNNZ9Bg==
-X-Gm-Message-State: AOJu0YyHPCYXCcb+G38fXIVpe3o0ZXUPsPiBgec0/SBDoN2a/H4eG43N
-	9RWZz6ucL7rscYMCfxpJYZItUuNsG1IjVbnkx8xRt4qW+8AdjvzS
-X-Google-Smtp-Source: AGHT+IEqqBYmdNbWbOxi/AKixJKzkGPw9LEH2Z2epCP38cLi8XKLklPOQ0wvV6mb+hPFifQflYlB0Q==
-X-Received: by 2002:adf:ffd2:0:b0:33d:3abc:8a4a with SMTP id x18-20020adfffd2000000b0033d3abc8a4amr13749829wrs.62.1709818565701;
-        Thu, 07 Mar 2024 05:36:05 -0800 (PST)
-Received: from laptop.. ([62.23.155.154])
-        by smtp.gmail.com with ESMTPSA id bw1-20020a0560001f8100b0033db0c866f7sm20679901wrb.11.2024.03.07.05.36.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 05:36:05 -0800 (PST)
-From: Erwan Velu <erwanaliasr1@gmail.com>
-X-Google-Original-From: Erwan Velu <e.velu@criteo.com>
-To: 
-Cc: Erwan Velu <e.velu@criteo.com>,
-	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
-	Carlos Bilbao <carlos.bilbao@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: [PATCH] doc/arch/x86/amd/hsmp: Updating urls
-Date: Thu,  7 Mar 2024 14:35:59 +0100
-Message-ID: <20240307133601.103521-1-e.velu@criteo.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="pSqDPCQ5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1709835429; x=1710440229; i=w_armin@gmx.de;
+	bh=17xkoOp/RcqQ2Bfic2Dy+htvwJ8t+y8Dib3iXXsLSV4=;
+	h=X-UI-Sender-Class:Date:Subject:To:References:From:In-Reply-To;
+	b=pSqDPCQ5u3gYOqbyX+4uIv9RBmf9O91b2qXk4GqB7axYbEsMziJxtHAW2ewc3f1V
+	 E6ZFS1tdrHkFZ7udXJ7odfy5p7WQhn1vLFKnme2S0fCone7tjojciQ4N959WdV/iF
+	 AORPe+HQCnsQ2d2+tHwX5EwGnabYllSOr7UOs+1gldRrsuOxTadXmsYjRVrQe2z/v
+	 99a8JuKgyP8MRiCnSskXTnd5Nj+IEox3IWIjmzPHlH29SmC8o1xoMpkswno1W99QW
+	 pv6PuHcr5L4B7fY9JsoEFNmW6mBt32HEnK4me1lvAjamDOmTF0AXVvOiq3Hzkg58h
+	 sG4V9RaOYeHwrDc5aQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MLzBj-1rR2ZA1AXZ-00Hxzc; Thu, 07
+ Mar 2024 19:17:09 +0100
+Message-ID: <4138a86e-c0cd-4bd1-948c-88dd73749027@gmx.de>
+Date: Thu, 7 Mar 2024 19:17:04 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] platform/x86: add lenovo wmi camera button driver
+To: Ai Chao <aichao@kylinos.cn>, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <20240307085939.668881-1-aichao@kylinos.cn>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20240307085939.668881-1-aichao@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:rQjpVGoBcHFxH+hSQxJCNqhe0vjPZvbm5a0Ld1TfvEMTfQk61Bh
+ 4xg0J6SAcZMXHyk/w/10bFDgoG/dZEeODvk8jl0M8YS/cm2DtuCO6NTgPkZdkI9laag0qmX
+ x5RTSCJuQ0O/qftm6Ku9sH3nWALZTi+ecyk22Yg1iGdOM0vkhBFhGVQoQpq60sbpJGbMmXo
+ dSq2wfF2GkGDBxEGvLnAA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:2nViqPVXDJI=;AKiMCwB8jmfOMufyK3l0wW+GkXY
+ KurZfcMS4Zb7KvXBhIsv1jKQ4ii1Glw6vGO+jY05XpoqGZtL43KRffVy4JLSYNf9h4hUeyDTF
+ 9+hBdJ5euYzUTlGj/MVQRpT83w39wdLE59niRgP71mIpSyWFUn/hklfv7Wz9Lc4w7YWQ2Bb2o
+ jU3f2Xz5ROiss3xrOMWOJKoeMozo2fac/2LxjPRXtHqXQkJfcZN/69kwhd5B+beucHpetiw/Q
+ xRvRXevS7Tv04g2w1a+zsNIMm8xj2UfqADQ10jD8/wBKv4IELiss4OHwwUtzgKMMVZFIjgN/R
+ akj9sFK3Hj/IzviMb+Y71eFihOOF3j0pJkSI4Y9BpsYtqOGU6oUKqHR4AoZ5Ug7LC8DfVQmRZ
+ 0i991oyn95WNtOsmpzXt0HqLKysXC414I3t5RUeCbf3T3IqI9semxfkKclaUX+nGe1IU9w/E9
+ Hf7mol8bR8sFL4W5CVGrN66OcNx3rBPsHtxijHmI9+rsm2SZ+XDmbgFqMGK/inK77ClHEQRRi
+ X0bZbM6deEGAez1dbckYD2L4d1Da/39gG8be/yW8yAraAanLmwXSDdiu9TExLVHg0MFZ31JuU
+ gjT0dw1WaiK8/lLPNie8IPe3FpEfQ/AyA9wR2cBK/LTNWTggvH/S1x1EG8miSE/vtY9BSbK/f
+ 7sri9Bt5U+yew5+EMK1L8OF+gI2giwQuee5vBfMX56ldd8kbwE4Q3zJfeYDVHUKqlKWpUbasA
+ dt7sQa0gVI+GUbV79lHJaNKOz7DK9GcRhGrTcdqBdsKzwcE0MCvFbIE0ScFjtADLE/8/FGXiC
+ AVrlv64PY3FJeqfPt2lVUBPI74HgGMfJeGdWPOt2HNegU=
 
-When reading this page, some links were broken.
-This commit updates links to get documentation actually pointing the
-intended content.
+Am 07.03.24 um 09:59 schrieb Ai Chao:
 
-Signed-off-by: Erwan Velu <e.velu@criteo.com>
----
- Documentation/arch/x86/amd_hsmp.rst | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+> Add lenovo generic wmi driver to support camera button.
+> The Camera button is a GPIO device. This driver receives ACPI notifyi
+> when the camera button is switched on/off. This driver is used in
+> Lenovo A70, it is a Computer integrated machine.
+>
+> Signed-off-by: Ai Chao <aichao@kylinos.cn>
+> ---
+> v5: Remove camera button groups, modify KEY_CAMERA to SW_CAMERA_LENS_COV=
+ER.
+> v4: Remove lenovo_wmi_input_setup, move camera_mode into struct lenovo_w=
+mi_priv.
+> v3: Remove lenovo_wmi_remove function.
+> v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
+>
+>   drivers/platform/x86/Kconfig             | 12 ++++
+>   drivers/platform/x86/Makefile            |  1 +
+>   drivers/platform/x86/lenovo-wmi-camera.c | 89 ++++++++++++++++++++++++
+>   3 files changed, 102 insertions(+)
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
+>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index bdd302274b9a..9506a455b547 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
+>   	To compile this driver as a module, choose M here: the module
+>   	will be called inspur-platform-profile.
+>
+> +config LENOVO_WMI_CAMERA
+> +	tristate "Lenovo WMI Camera Button driver"
+> +	depends on ACPI_WMI
+> +	depends on INPUT
+> +	help
+> +	  This driver provides support for Lenovo camera button. The Camera
+> +	  button is a GPIO device. This driver receives ACPI notify when the
+> +	  camera button is switched on/off.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called lenovo-wmi-camera.
+> +
+>   source "drivers/platform/x86/x86-android-tablets/Kconfig"
+>
+>   config FW_ATTR_CLASS
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefi=
+le
+> index 1de432e8861e..217e94d7c877 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+=3D hdaps.o
+>   obj-$(CONFIG_THINKPAD_ACPI)	+=3D thinkpad_acpi.o
+>   obj-$(CONFIG_THINKPAD_LMI)	+=3D think-lmi.o
+>   obj-$(CONFIG_YOGABOOK)		+=3D lenovo-yogabook.o
+> +obj-$(CONFIG_LENOVO_WMI_CAMERA)	+=3D lenovo-wmi-camera.o
+>
+>   # Intel
+>   obj-y				+=3D intel/
+> diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform=
+/x86/lenovo-wmi-camera.c
+> new file mode 100644
+> index 000000000000..571d67ade8ac
+> --- /dev/null
+> +++ b/drivers/platform/x86/lenovo-wmi-camera.c
+> @@ -0,0 +1,89 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Lenovo WMI Camera Button Driver
+> + *
+> + * Author: Ai Chao <aichao@kylinos.cn>
+> + * Copyright (C) 2024 KylinSoft Corporation.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/device.h>
+> +#include <linux/input.h>
+> +#include <linux/module.h>
+> +#include <linux/wmi.h>
+> +
+> +#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F=
+4EA400013"
+> +
+> +struct lenovo_wmi_priv {
+> +	struct input_dev *idev;
+> +	struct device *dev;
+> +};
+> +
+> +enum {
+> +	SW_CAMERA_OFF	=3D 0,
+> +	SW_CAMERA_ON	=3D 1,
+> +};
+> +
+> +static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_objec=
+t *obj)
+> +{
+> +	struct lenovo_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
+> +
+> +	if (obj->type =3D=3D ACPI_TYPE_BUFFER &&
+> +	    obj->buffer.pointer[0] <=3D SW_CAMERA_ON) {
 
-diff --git a/Documentation/arch/x86/amd_hsmp.rst b/Documentation/arch/x86/amd_hsmp.rst
-index c92bfd55359f..1e499ecf5f4e 100644
---- a/Documentation/arch/x86/amd_hsmp.rst
-+++ b/Documentation/arch/x86/amd_hsmp.rst
-@@ -13,7 +13,8 @@ set of mailbox registers.
- 
- More details on the interface can be found in chapter
- "7 Host System Management Port (HSMP)" of the family/model PPR
--Eg: https://www.amd.com/system/files/TechDocs/55898_B1_pub_0.50.zip
-+Eg: https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/programmer-references/55898_B1_pub_0_50.zip
-+
- 
- HSMP interface is supported on EPYC server CPU models only.
- 
-@@ -97,8 +98,8 @@ what happened. The transaction returns 0 on success.
- 
- More details on the interface and message definitions can be found in chapter
- "7 Host System Management Port (HSMP)" of the respective family/model PPR
--eg: https://www.amd.com/system/files/TechDocs/55898_B1_pub_0.50.zip
-+eg: https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/programmer-references/55898_B1_pub_0_50.zip
- 
- User space C-APIs are made available by linking against the esmi library,
--which is provided by the E-SMS project https://developer.amd.com/e-sms/.
-+which is provided by the E-SMS project https://www.amd.com/en/developer/e-sms.html.
- See: https://github.com/amd/esmi_ib_library
--- 
-2.44.0
+Hi,
 
+please check that the ACPI buffer has an appropriate size before you acces=
+s it.
+In this case, check that the ACPI buffer has a length of 1;
+
+> +		/* obj->buffer.pointer[0] is camera mode:
+> +		 *      0 camera close
+> +		 *      1 camera open
+> +		 */
+> +		input_report_switch(priv->idev, SW_CAMERA_LENS_COVER,
+> +				    obj->buffer.pointer[0]);
+
+If SW_CAMERA_LENS_COVER is set, then it means that the camera lens is cove=
+red. So in this case
+you have to pass 1 when the camera is closed and 0 when the camera is open=
+ (basically the opposite
+of camera mode).
+
+> +		input_sync(priv->idev);
+> +	} else {
+> +		dev_dbg(&wdev->dev, "Bad response type %d\n", obj->type);
+> +	}
+> +}
+> +
+> +static int lenovo_wmi_probe(struct wmi_device *wdev, const void *contex=
+t)
+> +{
+> +	struct lenovo_wmi_priv *priv;
+> +
+> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(&wdev->dev, priv);
+> +
+> +	priv->idev =3D devm_input_allocate_device(&wdev->dev);
+> +	if (!priv->idev)
+> +		return -ENOMEM;
+> +
+> +	priv->idev->name =3D "Lenovo WMI Camera Button";
+> +	priv->idev->phys =3D "wmi/input0";
+> +	priv->idev->id.bustype =3D BUS_HOST;
+> +	priv->idev->dev.parent =3D &wdev->dev;
+> +	input_set_capability(priv->idev, EV_SW, SW_CAMERA_LENS_COVER);
+> +
+
+Is there a way to determine the current state of the camera switch without=
+ having
+to wait for an WMI event?
+
+If its not possible to determine the current state of the camera switch, t=
+hen your
+driver has to defer the initialization of the input device until it knows =
+the current
+state of the camera switch. Otherwise the initial switch state reported by=
+ the
+input device might be wrong.
+
+In this case, that means your driver must initialize the input device when=
+ receiving
+a valid WMI event for the first time.
+
+Basically when your driver receives a WMI event, it has to check if the in=
+put device
+is already initialized. If this is not the case, then the input device is =
+initialized.
+Please protect this check and the input device initialization with a mutex=
+, since WMI
+event handling is multithreaded.
+
+After that the event is reported as usual.
+
+Other than that, the driver seems to be in good shape.
+
+Thanks,
+Armin Wolf
+
+> +	return input_register_device(priv->idev);
+> +}
+> +
+> +static const struct wmi_device_id lenovo_wmi_id_table[] =3D {
+> +	{ .guid_string =3D WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
+> +	{  }
+> +};
+> +
+> +static struct wmi_driver lenovo_wmi_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "lenovo-wmi-camera",
+> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.id_table =3D lenovo_wmi_id_table,
+> +	.no_singleton =3D true,
+> +	.probe =3D lenovo_wmi_probe,
+> +	.notify =3D lenovo_wmi_notify,
+> +};
+> +
+> +module_wmi_driver(lenovo_wmi_driver);
+> +
+> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
+> +MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
+> +MODULE_DESCRIPTION("Lenovo WMI Camera Button Driver");
+> +MODULE_LICENSE("GPL");
