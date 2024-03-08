@@ -1,115 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25BC54799;
-	Fri,  8 Mar 2024 10:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B0F3DBBF;
+	Fri,  8 Mar 2024 13:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709893179; cv=none; b=mfEK2Akvgi4JLJs1E2ljHbCyZLL6A0bC9d3jj7tEXBlHjOZf/FK4za7unw2QOqV8A66TXrf+kdrer0JL9NSFl2AmQBiB5a7UZpI8OdESZ7Nv9CtSyIlAb2LNMIUtaAgacfEjEMzLHB1M/8qCALdUK2+XkqrNchubT6lNXnnX3L0=
+	t=1709906363; cv=none; b=OD+Vjp37mICm9MgX6Fo3LjmG3hUXYjKU1cK3XL7mWbjUkGnGTQwkGCNzbUXWkiIARBpXAPswjliVe3sON03QL+cU5kuZ56w6L9mfWQchUQRw4BWnHCfKlWCBkxyzPGwzK9noDUdbNTe/Na/PNSqlsUqMwUJ69WZfVgz8ue/NuIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709893179; c=relaxed/simple;
-	bh=Q1N/xDWWH1N2mESqkCTav+THxX2BdxiFo16ZnUREngs=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=POGS/UDqb84+5zwiTJwWAbmSnXRS2YYcEMRxCkGpHuapONjG/+fF9+GeoGYwJispQiBKudCdq3MwMd/KmNsovT0vtfsaiKapEotZpzY1o4YIQh51V7KS2B7RklI98Lo0YpNA/HYl8NEbxywFb1mpCIOjZot+ykbsnQk3QcJrDtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Eq5SZJ1F; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709906363; c=relaxed/simple;
+	bh=QXNA9tK+wmD2HHQFcTyFQ7nNugKbTesrK1cHl52yxac=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=d7tles/CWsHhTiv+qLfQLELeKazwJvSmZ9fHJjZMDu3FFnLXd+rMMljDNA7ALKjeDWb6IbtYH1rsUAUH3Ga+oKwp7D0Se8rGNDxxFvk4liEg0LFba4aLtIHjWoO4w6m+jb2QPACchsoSMWIvmTGPEMlgFpOZnWETl7fO9Ja2C8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=WkjmJMD9; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Eq5SZJ1F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709893176; x=1741429176;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Q1N/xDWWH1N2mESqkCTav+THxX2BdxiFo16ZnUREngs=;
-  b=Eq5SZJ1FtflK6578guuCz2itE8EOTVh/TvQG7hfRR24a4duSyDLwvfyd
-   MjyV9Db3mNPjqRcYmPruJnz6gZc1r22CZRDmN3XVo+s7Sd+kCjtmAisZl
-   uStNmLQ3uqOEYMy8Oa/o2qnu5nE6UK8r/MVdIUgAZOuUP60ieP/Y5LVFE
-   8Fb7FZsqr+xzFrcyY2267fzdCwjG4Gr4S+VT1moJuk5/JfR9R0ivP7/Wb
-   g5vJtCUqnyYl/Zjq0g3cgEp/fZNuNd27JXqw/squ779oLIIqs+AaJFYTH
-   OwWPLJ1xmdBIaACfiPenIDvg9LxyaO7Hy6QFALJXlAn7addtHYsFZSeWx
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="22132934"
-X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
-   d="scan'208";a="22132934"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 02:19:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
-   d="scan'208";a="15004974"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.186])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 02:19:27 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 8 Mar 2024 12:19:21 +0200 (EET)
-To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-cc: virtualization@lists.linux.dev, Richard Weinberger <richard@nod.at>, 
-    Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-    Johannes Berg <johannes@sipsolutions.net>, 
-    Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
-    Bjorn Andersson <andersson@kernel.org>, 
-    Mathieu Poirier <mathieu.poirier@linaro.org>, 
-    Cornelia Huck <cohuck@redhat.com>, Halil Pasic <pasic@linux.ibm.com>, 
-    Eric Farman <farman@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-    Vasily Gorbik <gor@linux.ibm.com>, 
-    Alexander Gordeev <agordeev@linux.ibm.com>, 
-    Christian Borntraeger <borntraeger@linux.ibm.com>, 
-    Sven Schnelle <svens@linux.ibm.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-    Jason Wang <jasowang@redhat.com>, linux-um@lists.infradead.org, 
-    platform-driver-x86@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
-    linux-s390@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH vhost v1 2/4] virtio: vring_create_virtqueue: pass struct
- instead of multi parameters
-In-Reply-To: <20240306114615.88770-3-xuanzhuo@linux.alibaba.com>
-Message-ID: <8f77a787-0bb7-96ad-0dac-f8ef36879ae3@linux.intel.com>
-References: <20240306114615.88770-1-xuanzhuo@linux.alibaba.com> <20240306114615.88770-3-xuanzhuo@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="WkjmJMD9"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4286juhT000826;
+	Fri, 8 Mar 2024 07:59:02 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=PODMain02222019; bh=d
+	yH+H0ET4bfpETq9uSfKDHwS0TiJSVm0/9UjiFrw1Jc=; b=WkjmJMD9A5Sz8dkxo
+	FD1JGeB7zDA6cxNieh+CJIwTTkOWEy57p0d+6Ppi2TZeBb1we138EGpnvdmij37z
+	Ey2L2NOIEiUKWcwINcG/dbe1QfjGU6ONNnJKKMNAsJU/nHSTpFGiMT09ofXoo5NW
+	xaw+NLcIBegx/zgWB4ArskBCQuMs6Awfa9dunQkc/P8Yx6GVO/TP1L16e3yL/uBi
+	Ufr004L8mfJ95rcEsMMWNyH1+kaXCrcnMm1q4/GdZmo09RLo/mUiffXsWI3BN/T4
+	bJc89x6nR6/BGhg6qGs5x+W2EKqgyMr1+Y1qbybH9Uf6ycpq2ISZ30wqxthBpMD1
+	zmzlA==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3wpn933f32-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 08 Mar 2024 07:59:02 -0600 (CST)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 8 Mar 2024
+ 13:59:00 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.4 via Frontend Transport; Fri, 8 Mar 2024 13:59:00 +0000
+Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.18])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id B4D59820242;
+	Fri,  8 Mar 2024 13:59:00 +0000 (UTC)
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+To: <broonie@kernel.org>, <tiwai@suse.com>, <hdegoede@redhat.com>,
+        <lenb@kernel.org>, <rafael@kernel.org>
+CC: <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
+        <platform-driver-x86@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        "Richard
+ Fitzgerald" <rf@opensource.cirrus.com>
+Subject: [PATCH 0/3] ALSA: Add support for Cirrus Logic CS35L54 and CS35L57
+Date: Fri, 8 Mar 2024 13:58:57 +0000
+Message-ID: <20240308135900.603192-1-rf@opensource.cirrus.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: 3Pz0AOdoologX1j2pdPnX3OURDvv61KF
+X-Proofpoint-ORIG-GUID: 3Pz0AOdoologX1j2pdPnX3OURDvv61KF
+X-Proofpoint-Spam-Reason: safe
 
-On Wed, 6 Mar 2024, Xuan Zhuo wrote:
+The CS35L54 and CS35L57 are Boosted Smart Amplifiers. The CS35L54 has
+I2C/SPI control and I2S/TDM audio. The CS35L57 also has SoundWire
+control and audio.
+    
+The hardware differences between L54, L56 and L57 do not affect the
+driver control interface so they can all be handled by the same driver.
 
-> Now, we pass multi parameters to vring_create_virtqueue. These parameters
-> may from transport or from driver.
-> 
-> vring_create_virtqueue is called by many places.
-> Every time, we try to add a new parameter, that is difficult.
-> 
-> If parameters from the driver, that should directly be passed to vring.
-> Then the vring can access the config from driver directly.
-> 
-> If parameters from the transport, we squish the parameters to a
-> structure. That will be helpful to add new parameter.
-> 
-> Because the virtio_uml.c changes the name, so change the "names" inside
-> the virtio_vq_config from "const char *const *names" to
-> "const char **names".
-> 
-> Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> Acked-by: Johannes Berg <johannes@sipsolutions.net>
+The HDA patch has build dependencies on the ASoC patch.
 
-> @@ -60,38 +61,25 @@ struct virtio_device;
->  struct virtqueue;
->  struct device;
->  
-> +struct vq_transport_config {
-> +	unsigned int num;
-> +	unsigned int vring_align;
-> +	bool weak_barriers;
-> +	bool may_reduce_num;
-> +	bool (*notify)(struct virtqueue *vq);
-> +	struct device *dma_dev;
-> +};
+The final patch updates serial-multi-instantiate and scan.c to trap
+the ACPI HID for HDA systems that declare multiple amps all under one
+Device() node. This patch does not have any build dependency on the
+first two patches so can be taken separately.
 
-kerneldoc is missing from this struct too.
+Simon Trimmer (3):
+  ASoC: cs35l56: Add support for CS35L54 and CS35L57
+  ALSA: hda: cs35l56: Add support for CS35L54 and CS35L57
+  platform/x86: serial-multi-instantiate: Add support for CS35L54 and
+    CS35L57
 
-It would be generally helpful if you are proactive when somebody comments 
-your series by checking if there are similar cases within your series,
-instead of waiting them to be pointed out for you specificly.
+ drivers/acpi/scan.c                           |  2 ++
+ .../platform/x86/serial-multi-instantiate.c   | 28 +++++++++++++++++++
+ include/sound/cs35l56.h                       |  1 +
+ sound/pci/hda/cs35l56_hda.c                   | 16 +++++++----
+ sound/pci/hda/cs35l56_hda.h                   |  2 +-
+ sound/pci/hda/cs35l56_hda_i2c.c               |  7 +++--
+ sound/pci/hda/cs35l56_hda_spi.c               |  7 +++--
+ sound/soc/codecs/cs35l56-sdw.c                |  3 +-
+ sound/soc/codecs/cs35l56-shared.c             |  8 ++++--
+ sound/soc/codecs/cs35l56.c                    | 14 +++++++++-
+ 10 files changed, 73 insertions(+), 15 deletions(-)
 
 -- 
- i.
+2.30.2
 
