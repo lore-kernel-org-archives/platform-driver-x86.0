@@ -1,56 +1,53 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CC24F61D;
-	Fri,  8 Mar 2024 08:01:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83519535C8;
+	Fri,  8 Mar 2024 08:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709884876; cv=none; b=Ew+no0YoWok8kPHD7+LS+ppWbv3TNMQzetaiuNq63uHYiWdHI2/FTMMCW2xVCb//rGEoNQs8Ov1RwA9PEm8/lXrhu40Esbl9X6TDd/XOkHaYN6wkScBZRQO8J8DftPfrQETx373jlsRuYSzqdfneDdYwSAjdUC0DRW1skQcgyKE=
+	t=1709887491; cv=none; b=oaZLhLvpVmYYD95cX3di8KtFfXq3WePwq7vXNibl21u7NODIWMcb4ogdCtEus6FieqN+KOwmocv7gAKXQUko2Y3yMm6vmybVEmyQgkeRedXAu1Q75xOq/4LFEJcNqwLpBSLJ3aj8a8sxcyAA8KwS9kU9eYYa+F6Y4lWHP9FlGGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709884876; c=relaxed/simple;
-	bh=ioKP+FCr73IWPP6an5pqKpjOX6aJDfsCIfbs7bCOtM4=;
+	s=arc-20240116; t=1709887491; c=relaxed/simple;
+	bh=MqTFq+pTP6o+klH+NTFFyqhWNYws6ibOnKBQpzbhvN8=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=k76NZPfkfAi6sUK6e6ptyiaHqm1fkxOHYyku1HzO+/RYtzKWjPpmhaynI6paY3KD2aDAUwhswsykPHP69J7BMWKDWG/AflR79bYGiBvJ30R+odOmfQJwKBRIRhGkklvzJ5cdNu9xIYvvrugUUitVDkzD4/RxlGpp4HtQI3k3HYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oFxDBR3u; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version:Content-Type; b=i9lmVeuSROqm0Eux1GWan81ogPhrsilLAyWiZeX5632xVpbNy1SbaheGPxJjk+GEKkKqcZGgNAFIMHA0nGdLlKIU7bkJd4SmQHch6AmaFTaKzHUJDwgautLq8OYT4rC5Cd4HpwxSS/4GvZLzpdWP8RlTlQr/ti558m+rWuDLD/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WyBmVid6; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oFxDBR3u"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WyBmVid6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709884875; x=1741420875;
+  t=1709887488; x=1741423488;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=ioKP+FCr73IWPP6an5pqKpjOX6aJDfsCIfbs7bCOtM4=;
-  b=oFxDBR3uFBt1q5ukkI/g+DqSRm3tD9qyF56RJlHCMb9ot9/zN4uuHMqc
-   +cwlEb/Q6WDE5x+Q4dBHb+CRk3D8TEb+tQWEmmbtsxlF1piphOzAjOd2Q
-   tcG1k87Wy1WJaJrnkhE481hBlSvcUUfWzvJq9nJagReHfA9fFAsHYpxUu
-   9nkeWASFsnIyFwEJEzjhgAQEuQTGuFX2ymRg5vSKIRacSC0lLZocWpNY6
-   +V1fS7HNZvDdNpK7pE7yYFeLPUVrw1DYaC1wsatUXZF1jEutY5XWXs+At
-   Jrg7+xJ0Qv0SXSrcoNcpSRtNbb2GKEd+F+8VHYBLoJVAOajH9haDZaCK/
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="22119413"
-X-IronPort-AV: E=Sophos;i="6.07,108,1708416000"; 
-   d="scan'208";a="22119413"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 00:01:14 -0800
+  bh=MqTFq+pTP6o+klH+NTFFyqhWNYws6ibOnKBQpzbhvN8=;
+  b=WyBmVid6ochK6u4gGi0aDoUSU2pPd+zVJbR1bZnfWuTBax7yr+NQ5dqQ
+   KHuwqLaXkonYTdsdyrYCtRTvZDL9pGtrh1V5QQmME5LsmRxFT+0GDunrH
+   Tlufc3wspNDqJtw/aQB+UnnE6xDQTvVzPGjIsKjiOuKPOMgmNZBA9rTxf
+   uOeMfSGsUKUbaLQxR7DgFBu8LJheZtgAorFbE8UfUpQRFAAJXf3qFllsA
+   OEyc9ZMfS1VaooSdA4IY2RfMD1cmSYMGxx+PP4GCr9y0PkU3ljPemIhOy
+   RPk3TaM+RWipW+be2cH8Tka5TE+ofbA9H1SwHGZUkJI3SQCxjjJ6ufPnK
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="16005609"
+X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
+   d="scan'208";a="16005609"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 00:44:48 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,108,1708416000"; 
-   d="scan'208";a="10267075"
+X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
+   d="scan'208";a="10810386"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.186])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 00:01:11 -0800
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 00:44:46 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 8 Mar 2024 10:01:05 +0200 (EET)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: Hans de Goede <hdegoede@redhat.com>, 
-    "Rafael J. Wysocki" <rafael@kernel.org>, lenb@kernel.org, 
-    linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] platform/x86: wmi: Support reading/writing 16
- bit EC values
-In-Reply-To: <20240307195753.2961-1-W_Armin@gmx.de>
-Message-ID: <21fd57a2-d8c3-779c-7090-b7cdfc8198be@linux.intel.com>
-References: <20240307195753.2961-1-W_Armin@gmx.de>
+Date: Fri, 8 Mar 2024 10:44:41 +0200 (EET)
+To: Ai Chao <aichao@kylinos.cn>
+cc: Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v5] platform/x86: add lenovo wmi camera button driver
+In-Reply-To: <20240307085939.668881-1-aichao@kylinos.cn>
+Message-ID: <13940666-caab-8bde-d76e-231de9ee4f5c@linux.intel.com>
+References: <20240307085939.668881-1-aichao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -59,40 +56,112 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 7 Mar 2024, Armin Wolf wrote:
+On Thu, 7 Mar 2024, Ai Chao wrote:
 
-> The ACPI EC address space handler currently only supports
-> reading/writing 8 bit values. Some firmware implementations however
-> want to access for example 16 bit values, which is prefectly legal
-> according to the ACPI spec.
+> Add lenovo generic wmi driver to support camera button.
+> The Camera button is a GPIO device. This driver receives ACPI notifyi
+> when the camera button is switched on/off. This driver is used in
+> Lenovo A70, it is a Computer integrated machine.
 > 
-> Add support for reading/writing such values.
+> Signed-off-by: Ai Chao <aichao@kylinos.cn>
+> ---
+> v5: Remove camera button groups, modify KEY_CAMERA to SW_CAMERA_LENS_COVER.
+> v4: Remove lenovo_wmi_input_setup, move camera_mode into struct lenovo_wmi_priv.
+> v3: Remove lenovo_wmi_remove function.
+> v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
 > 
-> Tested on a Dell Inspiron 3505 and a Asus Prime B650-Plus.
+>  drivers/platform/x86/Kconfig             | 12 ++++
+>  drivers/platform/x86/Makefile            |  1 +
+>  drivers/platform/x86/lenovo-wmi-camera.c | 89 ++++++++++++++++++++++++
+>  3 files changed, 102 insertions(+)
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
 > 
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-
-> @@ -1162,27 +1188,28 @@ acpi_wmi_ec_space_handler(u32 function, acpi_physical_address address,
->  			  u32 bits, u64 *value,
->  			  void *handler_context, void *region_context)
->  {
-> -	int result = 0;
-> -	u8 temp = 0;
-> +	int bytes = bits / BITS_PER_BYTE;
-> +	int ret;
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index bdd302274b9a..9506a455b547 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
+>  	To compile this driver as a module, choose M here: the module
+>  	will be called inspur-platform-profile.
+>  
+> +config LENOVO_WMI_CAMERA
+> +	tristate "Lenovo WMI Camera Button driver"
+> +	depends on ACPI_WMI
+> +	depends on INPUT
+> +	help
+> +	  This driver provides support for Lenovo camera button. The Camera
+> +	  button is a GPIO device. This driver receives ACPI notify when the
+> +	  camera button is switched on/off.
 > +
-> +	if (!value)
-> +		return AE_NULL_ENTRY;
-> 
-> -	if ((address > 0xFF) || !value)
-> +	if (bytes > sizeof(*value))
->  		return AE_BAD_PARAMETER;
-> 
-> -	if (function != ACPI_READ && function != ACPI_WRITE)
-> +	if (address > U8_MAX || address + bytes > U8_MAX)
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called lenovo-wmi-camera.
+> +
+>  source "drivers/platform/x86/x86-android-tablets/Kconfig"
+>  
+>  config FW_ATTR_CLASS
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 1de432e8861e..217e94d7c877 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
+>  obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+>  obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+>  obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
+> +obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
+>  
+>  # Intel
+>  obj-y				+= intel/
+> diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform/x86/lenovo-wmi-camera.c
+> new file mode 100644
+> index 000000000000..571d67ade8ac
+> --- /dev/null
+> +++ b/drivers/platform/x86/lenovo-wmi-camera.c
+> @@ -0,0 +1,89 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Lenovo WMI Camera Button Driver
+> + *
+> + * Author: Ai Chao <aichao@kylinos.cn>
+> + * Copyright (C) 2024 KylinSoft Corporation.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/device.h>
+> +#include <linux/input.h>
+> +#include <linux/module.h>
+> +#include <linux/wmi.h>
+> +
+> +#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
+> +
+> +struct lenovo_wmi_priv {
+> +	struct input_dev *idev;
+> +	struct device *dev;
+> +};
+> +
+> +enum {
+> +	SW_CAMERA_OFF	= 0,
+> +	SW_CAMERA_ON	= 1,
+> +};
+> +
+> +static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
+> +{
+> +	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+> +
+> +	if (obj->type == ACPI_TYPE_BUFFER &&
+> +	    obj->buffer.pointer[0] <= SW_CAMERA_ON) {
+> +		/* obj->buffer.pointer[0] is camera mode:
+> +		 *      0 camera close
+> +		 *      1 camera open
+> +		 */
+> +		input_report_switch(priv->idev, SW_CAMERA_LENS_COVER,
+> +				    obj->buffer.pointer[0]);
+> +		input_sync(priv->idev);
+> +	} else {
+> +		dev_dbg(&wdev->dev, "Bad response type %d\n", obj->type);
 
-This doesn't look correct. With address = 0xff and bits = 8 this will 
-return AE_BAD_PARAMETER, is that intensional?
+This message seems to assume camera mode is on the valid range. Wouldn't 
+it be useful from debugging point of view to show also the camera mode 
+value?
 
 -- 
  i.
