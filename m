@@ -1,87 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DE9225CF;
-	Fri,  8 Mar 2024 08:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25BC54799;
+	Fri,  8 Mar 2024 10:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709888201; cv=none; b=KmXq5I7nRlRNlwdNkMDqBHmctOc8hQX05EFXo0AcWVJfn5mlOnLO9e0XAnQoLag5JkAh4+UloDL/y/sF33F/amwUAmB8VkqXJ5IrKU1FbyBfq4Nw1BTZhAj0uGGkIj4ScABge5g3Nh8GA5llSaZcdn8Rf5NR2EMnOxOKWHzQJXE=
+	t=1709893179; cv=none; b=mfEK2Akvgi4JLJs1E2ljHbCyZLL6A0bC9d3jj7tEXBlHjOZf/FK4za7unw2QOqV8A66TXrf+kdrer0JL9NSFl2AmQBiB5a7UZpI8OdESZ7Nv9CtSyIlAb2LNMIUtaAgacfEjEMzLHB1M/8qCALdUK2+XkqrNchubT6lNXnnX3L0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709888201; c=relaxed/simple;
-	bh=uQha1tFBJnHaGoRIEeuvrAp8KSth9qG6TxJD/e13900=;
+	s=arc-20240116; t=1709893179; c=relaxed/simple;
+	bh=Q1N/xDWWH1N2mESqkCTav+THxX2BdxiFo16ZnUREngs=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=IdLNTL6MLDHtEv2SWtA9AL/7XGT/wChbTKEN5VBdczO416PQmH3wDu/Cp+mcWQrjLvmD+dSM27tn6OTVDtoOTAu8Oz2c/i1tG5m+hedrdMaZFCIsrkLi4J8HFGL/Ho/P/wPNfIw+KVM37SJ5noYMtvNAL/nxB1UvwCN3ozk0pBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SWcasuGr; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version:Content-Type; b=POGS/UDqb84+5zwiTJwWAbmSnXRS2YYcEMRxCkGpHuapONjG/+fF9+GeoGYwJispQiBKudCdq3MwMd/KmNsovT0vtfsaiKapEotZpzY1o4YIQh51V7KS2B7RklI98Lo0YpNA/HYl8NEbxywFb1mpCIOjZot+ykbsnQk3QcJrDtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Eq5SZJ1F; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SWcasuGr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Eq5SZJ1F"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709888200; x=1741424200;
+  t=1709893176; x=1741429176;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=uQha1tFBJnHaGoRIEeuvrAp8KSth9qG6TxJD/e13900=;
-  b=SWcasuGroCc/osl1OxPbfyAjm8L3kApy9E22od1kE8pjlKADqsuqXn0m
-   mvyD85waw/c7hNCxHP8zS1N8cXJMa2suP/Bk2UmaNZBv8PLtH9PPAhKjE
-   Xb+IW3UFY20pa5Ai5VsIORlAf9MDYAPnHmIRZPmUnH0yfhwSQ0yu1jx/R
-   FuIjItkPDRGI32IWqisL0fnlO0SK8ZsJbXZXb/fsfs1VlJaIVxyWnUIVp
-   zxutVqpZiyb1WKUY4sBJj8dj1DaDG5mAEX70dY3km9hwndryHzmPslZGA
-   s8aAUtRXM10gOJOL/n1B/jdkELQOnE/ND+6KdEX+GSYhShq3dXDr8F5g/
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="4526313"
+  bh=Q1N/xDWWH1N2mESqkCTav+THxX2BdxiFo16ZnUREngs=;
+  b=Eq5SZJ1FtflK6578guuCz2itE8EOTVh/TvQG7hfRR24a4duSyDLwvfyd
+   MjyV9Db3mNPjqRcYmPruJnz6gZc1r22CZRDmN3XVo+s7Sd+kCjtmAisZl
+   uStNmLQ3uqOEYMy8Oa/o2qnu5nE6UK8r/MVdIUgAZOuUP60ieP/Y5LVFE
+   8Fb7FZsqr+xzFrcyY2267fzdCwjG4Gr4S+VT1moJuk5/JfR9R0ivP7/Wb
+   g5vJtCUqnyYl/Zjq0g3cgEp/fZNuNd27JXqw/squ779oLIIqs+AaJFYTH
+   OwWPLJ1xmdBIaACfiPenIDvg9LxyaO7Hy6QFALJXlAn7addtHYsFZSeWx
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="22132934"
 X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
-   d="scan'208";a="4526313"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 00:56:39 -0800
+   d="scan'208";a="22132934"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 02:19:34 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
-   d="scan'208";a="47875239"
+   d="scan'208";a="15004974"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.186])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 00:56:36 -0800
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 02:19:27 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 8 Mar 2024 10:56:30 +0200 (EET)
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-cc: corentin.chary@gmail.com, luke@ljones.dev, 
-    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: asus-wmi: Consider device is absent when
- the read is ~0
-In-Reply-To: <20240308053255.224496-1-kai.heng.feng@canonical.com>
-Message-ID: <2186f344-a3dc-33f2-388a-55f91f31f775@linux.intel.com>
-References: <20240308053255.224496-1-kai.heng.feng@canonical.com>
+Date: Fri, 8 Mar 2024 12:19:21 +0200 (EET)
+To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+cc: virtualization@lists.linux.dev, Richard Weinberger <richard@nod.at>, 
+    Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+    Johannes Berg <johannes@sipsolutions.net>, 
+    Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
+    Bjorn Andersson <andersson@kernel.org>, 
+    Mathieu Poirier <mathieu.poirier@linaro.org>, 
+    Cornelia Huck <cohuck@redhat.com>, Halil Pasic <pasic@linux.ibm.com>, 
+    Eric Farman <farman@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+    Vasily Gorbik <gor@linux.ibm.com>, 
+    Alexander Gordeev <agordeev@linux.ibm.com>, 
+    Christian Borntraeger <borntraeger@linux.ibm.com>, 
+    Sven Schnelle <svens@linux.ibm.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+    Jason Wang <jasowang@redhat.com>, linux-um@lists.infradead.org, 
+    platform-driver-x86@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+    linux-s390@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH vhost v1 2/4] virtio: vring_create_virtqueue: pass struct
+ instead of multi parameters
+In-Reply-To: <20240306114615.88770-3-xuanzhuo@linux.alibaba.com>
+Message-ID: <8f77a787-0bb7-96ad-0dac-f8ef36879ae3@linux.intel.com>
+References: <20240306114615.88770-1-xuanzhuo@linux.alibaba.com> <20240306114615.88770-3-xuanzhuo@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-796059183-1709888190=:1046"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, 6 Mar 2024, Xuan Zhuo wrote:
 
---8323328-796059183-1709888190=:1046
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> Now, we pass multi parameters to vring_create_virtqueue. These parameters
+> may from transport or from driver.
+> 
+> vring_create_virtqueue is called by many places.
+> Every time, we try to add a new parameter, that is difficult.
+> 
+> If parameters from the driver, that should directly be passed to vring.
+> Then the vring can access the config from driver directly.
+> 
+> If parameters from the transport, we squish the parameters to a
+> structure. That will be helpful to add new parameter.
+> 
+> Because the virtio_uml.c changes the name, so change the "names" inside
+> the virtio_vq_config from "const char *const *names" to
+> "const char **names".
+> 
+> Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> Acked-by: Johannes Berg <johannes@sipsolutions.net>
 
-On Fri, 8 Mar 2024, Kai-Heng Feng wrote:
+> @@ -60,38 +61,25 @@ struct virtio_device;
+>  struct virtqueue;
+>  struct device;
+>  
+> +struct vq_transport_config {
+> +	unsigned int num;
+> +	unsigned int vring_align;
+> +	bool weak_barriers;
+> +	bool may_reduce_num;
+> +	bool (*notify)(struct virtqueue *vq);
+> +	struct device *dma_dev;
+> +};
 
-> AAEON PICO-TGU4 board doesn't have any LED but there are bogus LED
-> controls under /sys/class/leds:
-> $ ls /sys/class/leds
-> asus::kbd_backlight asus::lightbar  platform::micmute
->=20
-> The reason is that the ~0 read from asus_wmi_get_devstate() is treated
-> as a valid state, in truth it means the device is absent.
->=20
-> So filter out ~0 read to prevent bogus LED controls being created.
->=20
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+kerneldoc is missing from this struct too.
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+It would be generally helpful if you are proactive when somebody comments 
+your series by checking if there are similar cases within your series,
+instead of waiting them to be pointed out for you specificly.
 
---=20
+-- 
  i.
 
---8323328-796059183-1709888190=:1046--
