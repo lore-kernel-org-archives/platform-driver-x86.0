@@ -1,59 +1,46 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC2AA29;
-	Sat,  9 Mar 2024 00:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1D215BE;
+	Sat,  9 Mar 2024 17:07:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709945929; cv=none; b=GIsDdJrMFrTm/HZiUvOi0X9UPoA5AAaKOdzXUqiAK547w2clC4/0C3fgqQWCv7FA6H+ftlfVvMplNf6ivzS3f0ae4lyTiEsmwZ23Ps6aFffsGAcHwxK3c3GP+gNqcVpsUDKctA42L+aw+88HpJ7Xg5TviwwMw1Q1zmsEfS32Cao=
+	t=1710004053; cv=none; b=TZdeSTHm6ca0cuja0ZB48701gAomZlULeQwny2ZOVff94hzvUaPOzyFwLVEaCHx5pRuoIthn22SI63/AX5xCtgOk6FWZxHKm51SbMF1Cm+4nz3Yb7pxBor6AJu9C4cmzq68apvUQtwFBnw3q9ZsVQ4NpotlEN+Vl45keVQYtKwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709945929; c=relaxed/simple;
-	bh=zJ6Nw5yeQAp6df7eL+ihHG2GLLuX2YiQLwEPcFBAKB8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=aCqrOoK6CwBCMYWxDvfQShaKe54PpSwXWCOEDH+Xaoe8GxdExL/IPDMWBjvx4OXzwe77HaF7MqjpZxAs2DWiHq9b5PRGNJLxJM97ItTRWfzn0V7oVNXe/JVa/Cz2vAbUd9r0x/5oWOOZjs7pgfIENm0XUmOs/5l1GyMH3898bM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dLg6qpQG; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710004053; c=relaxed/simple;
+	bh=3E7oqw6/EdZcH3vXneiO51C/GvwyGjp97u7WZeIrrgU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AGtSwcco9AMsA/yDEP7DgfcvZenZ9jCf0UqSTASz99C3tGRN8TQLPgI/wVjuiT5dQZTsnXdxAZJ4I9C2TVM745X3Gb/PrG9SbgiJsEnsczcw+SdMxjHyG/X/WF9z+cjqJ6pMSVoXr8Xa47l+y4NdChYHRy486odB3qZDtMyAdFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mQSCTd+e; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLg6qpQG"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-412e68b8594so19382235e9.1;
-        Fri, 08 Mar 2024 16:58:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709945926; x=1710550726; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xDWvfMdJ3k4o8SXiIRC+47pnVYnjH2gTOg0JuB9vFCg=;
-        b=dLg6qpQGSlWaCFlSXCCRrg8+a4n0b+0TBXcw8HDJy8Xu2QldfBbz6qQkNzUdEzVv0v
-         /TKenoeZbugD/c/llUIh6afgOD2b1CLOPmJ5xAKV0hgkcHpLHDbUkEKurNSSHwu+qz9Y
-         Scj6/ETyU+fizQ2CfbpqEJbZmfFblyQqTNnNb/uqaxLnXM2d3otrEyzFuX5G5HIP3oNo
-         raUJ9uea/6GAe1eT0U/1nX5fBFNZhzYQcN8KaJwg25nMvFPMIoYpvJdpQqCKrDQWkRU+
-         i5yaxbLr9FiqW4sgrs3qHoP9KllsLV5NUH7FVAeo14Nrir2pZFJJcf+rp+j4c2QsK8wD
-         8CkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709945926; x=1710550726;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xDWvfMdJ3k4o8SXiIRC+47pnVYnjH2gTOg0JuB9vFCg=;
-        b=hE2tuogyYZuzmnohBjXs9UDhkwcKAzh0DZFX6Oh3mUuNGRRkhOtPa40A6pHVkfXQ/7
-         wsCRfUa1f7rQfY4PuAiExMEqesXGbAEpbxrTOWnovMSPEuh1kV9m4+6pL+K4XphseGuX
-         dDPAboqVg2aTtE3Xg5R/RIlGtYPuKYZnxLhg4RTyIYJBuFLy26kUf5a4QNIoPh5PZxBn
-         r3rFEW5ipU4KkPV7QV0H0UoAraSNz7x+lmjixkofUVF6qnV0sIxBMnD10OD0jVMD8Mh1
-         I57vtiaflDFHpk6Gc6iTRAT15f5x6/5zEclAc82ItwjhCDZCHMVVNm7QtYiTRIsUhhoE
-         E6lw==
-X-Forwarded-Encrypted: i=1; AJvYcCXufc7G6N+Z5e6nOgOrA4Vb1hL7cgHSS3SK14xbfV8I1SfakBh2ke56bVgqXqjG9ts9Nl/2zzXHHbSLD78KU8bhHKKek05bPdnER7btxuVkcXL1gM/tLKCAIu0N+pvTxm/qcAu1odBm5WJbvyVd2vJgkQ==
-X-Gm-Message-State: AOJu0YweQ/HnVioDK2MuXEjZqnrS1TZ/FxNTBcF6o3MXnnotVCtvAFWb
-	sY/00GYjGEQI35FBla6FNvMz4xbaZg9CS+2X4ngDdz3NSgb0TarH
-X-Google-Smtp-Source: AGHT+IHDujLlN7fngRaFiZef4a2pu9jQcu5EPzoGII5C4xS3woQ3KEsvlDzbG3yUkWDNUSDDhY4PmA==
-X-Received: by 2002:a05:600c:4f47:b0:413:812:ce7b with SMTP id m7-20020a05600c4f4700b004130812ce7bmr532458wmq.24.1709945926069;
-        Fri, 08 Mar 2024 16:58:46 -0800 (PST)
-Received: from ?IPV6:2a02:8071:b783:140:927c:82ba:d32d:99c1? ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
-        by smtp.gmail.com with ESMTPSA id q17-20020adffed1000000b0033cf5094fcesm639665wrs.36.2024.03.08.16.58.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Mar 2024 16:58:45 -0800 (PST)
-Message-ID: <c4982eed-f3f0-4adc-aba0-1aa2b1631762@gmail.com>
-Date: Sat, 9 Mar 2024 01:58:47 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mQSCTd+e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710004052; x=1741540052;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3E7oqw6/EdZcH3vXneiO51C/GvwyGjp97u7WZeIrrgU=;
+  b=mQSCTd+ejzXcZ8DDIA8Sr//zJQPABU5hqOWqj4A+TpkqYAmOFAF80zbH
+   bz2XXM/xDQrAs8MB245rBuwRPX3h8H0ZLom5PbAfC3QeqLMplDcXZWSUx
+   3V1hIXXkdXhbMwBBCf78Tj3X+dOZOggr13wX99NRBFl6QibyUs/eHrPpL
+   vsjNbpyUzWS8ehKAlJVBzXhC8L5TxQnusJr4wiZos06cyWCqQ7qK/tgkk
+   zszomEUoSvkVZcuQtmA/f/jP5Et6bGkBGUP0+eg1C5zjW21ICeJwUgNT5
+   7JyabnAbqmK+vqktBoy20xvFYgcVV+a04Du9vFfsWL2Mg7ZZqpfjEnozS
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11008"; a="8531413"
+X-IronPort-AV: E=Sophos;i="6.07,112,1708416000"; 
+   d="scan'208";a="8531413"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2024 09:07:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,112,1708416000"; 
+   d="scan'208";a="15409298"
+Received: from chengyin-mobl.amr.corp.intel.com (HELO [10.209.27.224]) ([10.209.27.224])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2024 09:07:30 -0800
+Message-ID: <a6152da8-5f3a-458b-bc48-4bc654677ece@linux.intel.com>
+Date: Sat, 9 Mar 2024 09:07:30 -0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,56 +48,138 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/1] platform/surface: platform_profile: add fan profile
- switching
+Subject: Re: [PATCH v4 1/2] platform/x86: wmi: Support reading/writing 16 bit
+ EC values
 Content-Language: en-US
-To: Ivor Wanders <ivor@iwanders.net>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240302170147.13026-1-ivor@iwanders.net>
-From: Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <20240302170147.13026-1-ivor@iwanders.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Armin Wolf <W_Armin@gmx.de>, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com
+Cc: rafael@kernel.org, lenb@kernel.org, mario.limonciello@amd.com,
+ linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240308210519.2986-1-W_Armin@gmx.de>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240308210519.2986-1-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 3/2/24 18:01, Ivor Wanders wrote:
-> This patch adds functionality that switches the fan profile when the
-> platform profile is switched on the Microsoft Surface Pro 9.
-> 
-> Previously, the fan profile was not changed and that results in poor
-> thermal performance. This makes the behaviour and functionality identical
-> to what the Windows drivers do.
-> 
-> A plot of the different responses to system load, as well as recordings
-> from the SSAM bus can be found at [1]. Based on discussions with
-> Maximilian Luz there this patch proposes the following changes:
-> 
-> In surface_aggregator_registry:
-> - Rename ssam_node_tmp_pprof to ssam_node_tmp_perf_profile for clarity.
-> - Introduce ssam_node_tmp_perf_profile_with_fan that has the has_fan
->    boolean property set.
-> - Use the new ssam_node_tmp_perf_profile_with_fan for the Surface Pro 9.
-> 
-> In the platform profile module:
-> - Rename ssam_tmp_profile_device to ssam_platform_profile_device to make it
->    clear it handles more than just the TMP subsystem.
-> - Rename the enum conversion method to make distinction between TMP and FAN
->    clear.
-> - Add enum and set function & request for the fan profile.
-> - Ensure that if the module's has_fan boolean is true, the fan profile is
->    switched whenever the platform profile changes.
-> 
-> 
-> [1]: https://github.com/linux-surface/kernel/pull/145
-> 
-> Ivor Wanders (1):
->    platform/surface: platform_profile: add fan profile switching
-> 
->   .../surface/surface_aggregator_registry.c     | 36 +++++---
->   .../surface/surface_platform_profile.c        | 86 ++++++++++++++++---
->   2 files changed, 99 insertions(+), 23 deletions(-)
-> 
 
-Looks good to me.
+On 3/8/24 1:05 PM, Armin Wolf wrote:
+> The ACPI EC address space handler currently only supports
+> reading/writing 8 bit values. Some firmware implementations however
+> want to access for example 16 bit values, which is prefectly legal
+> according to the ACPI spec.
+>
+> Add support for reading/writing such values.
+>
+> Tested on a Dell Inspiron 3505 and a Asus Prime B650-Plus.
+>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+> Changes since v3:
+> - change type of variable i to size_t
+>
+> Changes since v2:
+> - fix address overflow check
+>
+> Changes since v1:
+> - use BITS_PER_BYTE
+> - validate that number of bytes to read/write does not overflow the
+>   address
+> ---
+>  drivers/platform/x86/wmi.c | 49 ++++++++++++++++++++++++++++++--------
+>  1 file changed, 39 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index 1920e115da89..d9bf6d452b3a 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -1153,6 +1153,34 @@ static int parse_wdg(struct device *wmi_bus_dev, struct platform_device *pdev)
+>  	return 0;
+>  }
+>
+> +static int ec_read_multiple(u8 address, u8 *buffer, size_t bytes)
+> +{
+> +	size_t i;
+> +	int ret;
+> +
+> +	for (i = 0; i < bytes; i++) {
+> +		ret = ec_read(address + i, &buffer[i]);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
 
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+Why not use ec_transaction?
+
+> +
+> +static int ec_write_multiple(u8 address, u8 *buffer, size_t bytes)
+> +{
+> +	size_t i;
+> +	int ret;
+> +
+> +	for (i = 0; i < bytes; i++) {
+> +		ret = ec_write(address + i, buffer[i]);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+
+Same as above.
+> +
+>  /*
+>   * WMI can have EmbeddedControl access regions. In which case, we just want to
+>   * hand these off to the EC driver.
+> @@ -1162,27 +1190,28 @@ acpi_wmi_ec_space_handler(u32 function, acpi_physical_address address,
+>  			  u32 bits, u64 *value,
+>  			  void *handler_context, void *region_context)
+>  {
+> -	int result = 0;
+> -	u8 temp = 0;
+> +	int bytes = bits / BITS_PER_BYTE;
+> +	int ret;
+> +
+> +	if (!value)
+> +		return AE_NULL_ENTRY;
+>
+> -	if ((address > 0xFF) || !value)
+> +	if (!bytes || bytes > sizeof(*value))
+>  		return AE_BAD_PARAMETER;
+>
+> -	if (function != ACPI_READ && function != ACPI_WRITE)
+> +	if (address > U8_MAX || address + bytes - 1 > U8_MAX)
+>  		return AE_BAD_PARAMETER;
+>
+> -	if (bits != 8)
+
+Since you want to support only 16 bit reads/writes, can you check for >16
+
+> +	if (function != ACPI_READ && function != ACPI_WRITE)
+>  		return AE_BAD_PARAMETER;
+>
+>  	if (function == ACPI_READ) {
+> -		result = ec_read(address, &temp);
+> -		*value = temp;
+> +		ret = ec_read_multiple(address, (u8 *)value, bytes);
+>  	} else {
+> -		temp = 0xff & *value;
+> -		result = ec_write(address, temp);
+> +		ret = ec_write_multiple(address, (u8 *)value, bytes);
+>  	}
+>
+> -	switch (result) {
+> +	switch (ret) {
+>  	case -EINVAL:
+>  		return AE_BAD_PARAMETER;
+>  	case -ENODEV:
+> --
+> 2.39.2
+>
+>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
