@@ -1,59 +1,59 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E5D810;
-	Sat,  9 Mar 2024 00:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC2AA29;
+	Sat,  9 Mar 2024 00:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709945632; cv=none; b=fcfQzBwj0XxyZ8CIkAxt6gDKgmQXvruUyzUVCfSKCb1boWCakELB4qk+gzilgl+lqa9QZrTOLPn4aTRbuTdy4i5iM6IsdMX0bwbcvHuiKoEosTEa3z+DnCgTLPumfPg9GsatW0TA2lYjWEjXnPq41Tjhk/wopmCN94Hb3ctFulk=
+	t=1709945929; cv=none; b=GIsDdJrMFrTm/HZiUvOi0X9UPoA5AAaKOdzXUqiAK547w2clC4/0C3fgqQWCv7FA6H+ftlfVvMplNf6ivzS3f0ae4lyTiEsmwZ23Ps6aFffsGAcHwxK3c3GP+gNqcVpsUDKctA42L+aw+88HpJ7Xg5TviwwMw1Q1zmsEfS32Cao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709945632; c=relaxed/simple;
-	bh=sBS/E+9RYfG8VDbxBvKEINIwthVjn+/3VWTvf/SBitQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F1/7oEcQfclR9x7ilV2oN8akd+FJzaXspFIR9ebfB8eCOsGxtcAmpHDW/2qJSLVv9616F41qxY+iQbBrt86fIEVaxx9VQ7CqzXSWRmbkHV/79Q0eptsw2uyKSwhcb2KFCIKB2l/LA97/NoLsbjnExEYDA1W0qJIs/cISS59P8J8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aaCbL1jU; arc=none smtp.client-ip=209.85.128.54
+	s=arc-20240116; t=1709945929; c=relaxed/simple;
+	bh=zJ6Nw5yeQAp6df7eL+ihHG2GLLuX2YiQLwEPcFBAKB8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=aCqrOoK6CwBCMYWxDvfQShaKe54PpSwXWCOEDH+Xaoe8GxdExL/IPDMWBjvx4OXzwe77HaF7MqjpZxAs2DWiHq9b5PRGNJLxJM97ItTRWfzn0V7oVNXe/JVa/Cz2vAbUd9r0x/5oWOOZjs7pgfIENm0XUmOs/5l1GyMH3898bM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dLg6qpQG; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aaCbL1jU"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-412e68b8594so19364695e9.1;
-        Fri, 08 Mar 2024 16:53:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLg6qpQG"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-412e68b8594so19382235e9.1;
+        Fri, 08 Mar 2024 16:58:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709945629; x=1710550429; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=gmail.com; s=20230601; t=1709945926; x=1710550726; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/Hdx09+d1D0tFZrI6Mxlyu45Tbnev2I6krb0Jix0agU=;
-        b=aaCbL1jUJ68cLK+39lc9+X+oQ6j7kdQo5yc2+33E1vOqmtCazr6vA2F5IrIW8dQuzi
-         kYEje9kh5CT/NXgYtQiW9NvMBhMygeb2IGY07DZRjFi/haK/rdCw3UuX0JNEoV1vPUcQ
-         DAxCPQVGK52UhI0E+qihltpDikfktLMLbu4ldIIfuNNDEg42zENjpS58Q+R1zdSkvag6
-         k17YWG7HTQ65TkjfCqQzpDz7sPWV1kxwD6KH8IL8AL/MVfZhMCxTKwIjNIblgTRGJgb1
-         7fTw1Pu70uOOEa12m/YRrC6y4tmkj31Rvd2z2n+0mXKO5E4du0++Tkj/LL6pMSPzjvD2
-         HBGQ==
+        bh=xDWvfMdJ3k4o8SXiIRC+47pnVYnjH2gTOg0JuB9vFCg=;
+        b=dLg6qpQGSlWaCFlSXCCRrg8+a4n0b+0TBXcw8HDJy8Xu2QldfBbz6qQkNzUdEzVv0v
+         /TKenoeZbugD/c/llUIh6afgOD2b1CLOPmJ5xAKV0hgkcHpLHDbUkEKurNSSHwu+qz9Y
+         Scj6/ETyU+fizQ2CfbpqEJbZmfFblyQqTNnNb/uqaxLnXM2d3otrEyzFuX5G5HIP3oNo
+         raUJ9uea/6GAe1eT0U/1nX5fBFNZhzYQcN8KaJwg25nMvFPMIoYpvJdpQqCKrDQWkRU+
+         i5yaxbLr9FiqW4sgrs3qHoP9KllsLV5NUH7FVAeo14Nrir2pZFJJcf+rp+j4c2QsK8wD
+         8CkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709945629; x=1710550429;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=1e100.net; s=20230601; t=1709945926; x=1710550726;
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Hdx09+d1D0tFZrI6Mxlyu45Tbnev2I6krb0Jix0agU=;
-        b=Fx/CPhpQHAbR0yQ6HI92cBFE0MnSBhczaG7OASl3lJoMYoRhY1J2SP9zWL6Yuy4p1p
-         SV5LRqO/VbNcfr4QZOQ/gZjtjCy6s36mJjNfldskgmQxJcXtxbWktYkRwD1yqGCy29eq
-         fpbT6XfekKEXrRtdWj54cISkxJHDy9LfVbuTfchkAuCoecqfMD2MECr3OgAqshR/kv4c
-         NeyZHKBelazzoaRET1c+MpwxSyYKc7SpDXpFeCTKt6UC+g+ZF7mEK7iO0T+JtQL2uGeI
-         f6CM2YNpKINgLOl5N9wPd2+DkNUQtXAwOU3beP1UX2KlM3JwnTfqSzfvVRGe86AKe+J+
-         rupA==
-X-Forwarded-Encrypted: i=1; AJvYcCWQlqC6M7z5XqifoqY9feViVP6p0x9EWQKcCSE4YiO486JZvqxc7ocY5lxw6+VbfX+jro+zUBnG6YXzUU8xKtwVu7ZsW7aOzKW2OnjskYi6d3ARCQ==
-X-Gm-Message-State: AOJu0Yxiuvt6pXv1lJTxwbzrqrXNJhODjHz1qJMsSuAFSB+vpseLIUZ4
-	0ir/wk9B2pgoW2r2aNMOmvjRg4UOacl4DkKP1Zy6xgQEf7xlCZkdjzaLrRvB
-X-Google-Smtp-Source: AGHT+IE8+MVX2/x69L02bm5YD1xJuMSZGuGbQRo+U2p3KPTlLuzMCt3tyw0ywyeYOIjcQpc6wC67zw==
-X-Received: by 2002:a05:600c:314f:b0:413:127f:f73a with SMTP id h15-20020a05600c314f00b00413127ff73amr517743wmo.20.1709945628351;
-        Fri, 08 Mar 2024 16:53:48 -0800 (PST)
+        bh=xDWvfMdJ3k4o8SXiIRC+47pnVYnjH2gTOg0JuB9vFCg=;
+        b=hE2tuogyYZuzmnohBjXs9UDhkwcKAzh0DZFX6Oh3mUuNGRRkhOtPa40A6pHVkfXQ/7
+         wsCRfUa1f7rQfY4PuAiExMEqesXGbAEpbxrTOWnovMSPEuh1kV9m4+6pL+K4XphseGuX
+         dDPAboqVg2aTtE3Xg5R/RIlGtYPuKYZnxLhg4RTyIYJBuFLy26kUf5a4QNIoPh5PZxBn
+         r3rFEW5ipU4KkPV7QV0H0UoAraSNz7x+lmjixkofUVF6qnV0sIxBMnD10OD0jVMD8Mh1
+         I57vtiaflDFHpk6Gc6iTRAT15f5x6/5zEclAc82ItwjhCDZCHMVVNm7QtYiTRIsUhhoE
+         E6lw==
+X-Forwarded-Encrypted: i=1; AJvYcCXufc7G6N+Z5e6nOgOrA4Vb1hL7cgHSS3SK14xbfV8I1SfakBh2ke56bVgqXqjG9ts9Nl/2zzXHHbSLD78KU8bhHKKek05bPdnER7btxuVkcXL1gM/tLKCAIu0N+pvTxm/qcAu1odBm5WJbvyVd2vJgkQ==
+X-Gm-Message-State: AOJu0YweQ/HnVioDK2MuXEjZqnrS1TZ/FxNTBcF6o3MXnnotVCtvAFWb
+	sY/00GYjGEQI35FBla6FNvMz4xbaZg9CS+2X4ngDdz3NSgb0TarH
+X-Google-Smtp-Source: AGHT+IHDujLlN7fngRaFiZef4a2pu9jQcu5EPzoGII5C4xS3woQ3KEsvlDzbG3yUkWDNUSDDhY4PmA==
+X-Received: by 2002:a05:600c:4f47:b0:413:812:ce7b with SMTP id m7-20020a05600c4f4700b004130812ce7bmr532458wmq.24.1709945926069;
+        Fri, 08 Mar 2024 16:58:46 -0800 (PST)
 Received: from ?IPV6:2a02:8071:b783:140:927c:82ba:d32d:99c1? ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
-        by smtp.gmail.com with ESMTPSA id o1-20020a05600c4fc100b00412f12f00adsm906323wmq.10.2024.03.08.16.53.47
+        by smtp.gmail.com with ESMTPSA id q17-20020adffed1000000b0033cf5094fcesm639665wrs.36.2024.03.08.16.58.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Mar 2024 16:53:47 -0800 (PST)
-Message-ID: <94ba9368-6ce6-4d05-a576-fc58a474df7a@gmail.com>
-Date: Sat, 9 Mar 2024 01:53:49 +0100
+        Fri, 08 Mar 2024 16:58:45 -0800 (PST)
+Message-ID: <c4982eed-f3f0-4adc-aba0-1aa2b1631762@gmail.com>
+Date: Sat, 9 Mar 2024 01:58:47 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,67 +61,56 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] HID: surface-hid: kbd: Convert to platform remove
- callback returning void
+Subject: Re: [PATCH 0/1] platform/surface: platform_profile: add fan profile
+ switching
 Content-Language: en-US
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- kernel@pengutronix.de
-References: <cover.1709747164.git.u.kleine-koenig@pengutronix.de>
- <05d0d6ef781ebd6124a36f70cda1f90331799dc7.1709747164.git.u.kleine-koenig@pengutronix.de>
+To: Ivor Wanders <ivor@iwanders.net>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240302170147.13026-1-ivor@iwanders.net>
 From: Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <05d0d6ef781ebd6124a36f70cda1f90331799dc7.1709747164.git.u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20240302170147.13026-1-ivor@iwanders.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 3/6/24 18:50, Uwe Kleine-König wrote:
-> The .remove() callback for a platform driver returns an int which makes
-> many driver authors wrongly assume it's possible to do error handling by
-> returning an error code. However the value returned is ignored (apart
-> from emitting a warning) and this typically results in resource leaks.
+On 3/2/24 18:01, Ivor Wanders wrote:
+> This patch adds functionality that switches the fan profile when the
+> platform profile is switched on the Microsoft Surface Pro 9.
 > 
-> To improve here there is a quest to make the remove callback return
-> void. In the first step of this quest all drivers are converted to
-> .remove_new(), which already returns void. Eventually after all drivers
-> are converted, .remove_new() will be renamed to .remove().
+> Previously, the fan profile was not changed and that results in poor
+> thermal performance. This makes the behaviour and functionality identical
+> to what the Windows drivers do.
 > 
-> Trivially convert this driver from always returning zero in the remove
-> callback to the void returning variant.
+> A plot of the different responses to system load, as well as recordings
+> from the SSAM bus can be found at [1]. Based on discussions with
+> Maximilian Luz there this patch proposes the following changes:
 > 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> In surface_aggregator_registry:
+> - Rename ssam_node_tmp_pprof to ssam_node_tmp_perf_profile for clarity.
+> - Introduce ssam_node_tmp_perf_profile_with_fan that has the has_fan
+>    boolean property set.
+> - Use the new ssam_node_tmp_perf_profile_with_fan for the Surface Pro 9.
+> 
+> In the platform profile module:
+> - Rename ssam_tmp_profile_device to ssam_platform_profile_device to make it
+>    clear it handles more than just the TMP subsystem.
+> - Rename the enum conversion method to make distinction between TMP and FAN
+>    clear.
+> - Add enum and set function & request for the fan profile.
+> - Ensure that if the module's has_fan boolean is true, the fan profile is
+>    switched whenever the platform profile changes.
+> 
+> 
+> [1]: https://github.com/linux-surface/kernel/pull/145
+> 
+> Ivor Wanders (1):
+>    platform/surface: platform_profile: add fan profile switching
+> 
+>   .../surface/surface_aggregator_registry.c     | 36 +++++---
+>   .../surface/surface_platform_profile.c        | 86 ++++++++++++++++---
+>   2 files changed, 99 insertions(+), 23 deletions(-)
+> 
 
 Looks good to me.
 
 Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
-
-> ---
->   drivers/hid/surface-hid/surface_kbd.c | 5 ++---
->   1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hid/surface-hid/surface_kbd.c b/drivers/hid/surface-hid/surface_kbd.c
-> index 4fbce201db6a..8c0cbb2deb11 100644
-> --- a/drivers/hid/surface-hid/surface_kbd.c
-> +++ b/drivers/hid/surface-hid/surface_kbd.c
-> @@ -271,10 +271,9 @@ static int surface_kbd_probe(struct platform_device *pdev)
->   	return surface_hid_device_add(shid);
->   }
->   
-> -static int surface_kbd_remove(struct platform_device *pdev)
-> +static void surface_kbd_remove(struct platform_device *pdev)
->   {
->   	surface_hid_device_destroy(platform_get_drvdata(pdev));
-> -	return 0;
->   }
->   
->   static const struct acpi_device_id surface_kbd_match[] = {
-> @@ -285,7 +284,7 @@ MODULE_DEVICE_TABLE(acpi, surface_kbd_match);
->   
->   static struct platform_driver surface_kbd_driver = {
->   	.probe = surface_kbd_probe,
-> -	.remove = surface_kbd_remove,
-> +	.remove_new = surface_kbd_remove,
->   	.driver = {
->   		.name = "surface_keyboard",
->   		.acpi_match_table = surface_kbd_match,
