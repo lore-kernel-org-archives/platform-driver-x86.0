@@ -1,108 +1,417 @@
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wfout2-smtp.messagingengine.com (wfout2-smtp.messagingengine.com [64.147.123.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBD43A8C0;
-	Sun, 10 Mar 2024 21:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FAC1E51E;
+	Sun, 10 Mar 2024 23:37:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710106459; cv=none; b=gkjxSoYsn5ydgQ5TYFvnN355TfLawF3Fj7Y/eP7lILYv16pbda8gGk54NQgq8Dl0No+h52NQcat9qPEX2RqhU6KWJcQ5XSDYUEF8TvoOPJmlpi4pbc0tFk7nQANKaMjRSthgnJmL8148RBiTWmAM1UNQqO74ynYeAv7j4XgWdmk=
+	t=1710113856; cv=none; b=Yl6VPgWDFfpryzHrnMAxh8qS611JIRxDJDCHxGFlFdY8l0aQWNwjm3hnk4jSlx+Zb/W/FTi+y1WEzXGOAgaGjx33t9RKB6jBsX2P9eeWwstyPGoCR6p5aixdMRQs0SVMhsAOf5LKyXMmcXLRqB6yqaF6rPXFC8+cIIYf09y1vno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710106459; c=relaxed/simple;
-	bh=8bUV68Q5s5RvpER0dCwK5YJCzkTZNGuP1xPI/F9j9Wo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qwVSqM6OGJ3swL5uHMZk06GzgyfVW+sXhM8jxGyU+nQ8aD3HIyz6f6ji4Uz0yzykK6wdjFlLteb8aFMxdQFPTMRfwPLs56OX4BGl+jSizvAvOG1FkmixTNul3LGppHgRtC1onAdxx+vONopP+LlyEeb+ERBJXIv28gu+e90vNiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OXVT1pEp; arc=none smtp.client-ip=209.85.167.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710113856; c=relaxed/simple;
+	bh=6BFpYmAbSJFTzloFuLEsrFt816vbVb/XhUp9+tos5Po=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oXYBYTXpisnKv1awGlvyesiUcNoiLbMTIhvN5ocrNy4wenmX3tlMaRpNk/nw3gzZ/+hMcgLTilsPZpOekRv3giT3sQkBB7whGf8uU1MFYd4CI4/SaSczORNH0OsbeCnWWPkpTQX1HTmFFFKPPtlKeiI4n1V9c0lIWfIOza8VBR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=BcdrCg40; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=c8TDp037; arc=none smtp.client-ip=64.147.123.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OXVT1pEp"
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3c1e992f060so1597963b6e.0;
-        Sun, 10 Mar 2024 14:34:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710106457; x=1710711257; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ND+nuIGRJ12vGBTQjoZ/CxcUgpIVs6mQOKjwcppR7ZI=;
-        b=OXVT1pEpYr/B+5SiC2nhSdzBiP/LDkZbUQUAx7YJx5aNblApahL6VVqUEjnnJsqJoV
-         wz2RQHTcvQM+RzrY9nUMRaXJCM44MtSPnricl5SZPHdXh63shumAu9v0bR1jdwci/aA1
-         vvwQNa4nX8WZiVJcxqLZ/H4iSBfrGuh8t2APLZdOzuAnSMpBQqj0xSrXnLTp+B11oMvr
-         NKzDb/RaMM/sAV4aKa2mkD4JIx8Nu3chNQEsIMHqgusxge0ZYBAIad+JIEqTreIgNcn0
-         mfGeaToIQaLbGLCv2YbjAWUPe3jBYRWKYBeNeT4K6y0v/tYHbpzTR7/CQelJAPWWwvwz
-         5HnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710106457; x=1710711257;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ND+nuIGRJ12vGBTQjoZ/CxcUgpIVs6mQOKjwcppR7ZI=;
-        b=G81GS3ria5gEcU9h5hAb8TybTxCK8IjoDNrjapp8C1InYWbFsCtltXsdWowyD+qltL
-         dn9PeGOVpRPygHRop7wXOGM415XaIJupjOBUPqFX6rwHu/oNe2LV8YY9OvnEgkOhtwQL
-         ojWqZ03uRvt+VwoLdhfE+QudyOiVl53TONkiNJmuH1xL5Av31QIpsVBco1h72/JDogI6
-         HfZcCFuG2PAqsCBGiNAnaP6hkbw6QXs5xJAoh5Kn+BRdDBDV1yFsRysBI2nAPm1l0GkM
-         dzhTr8RmlC1DOp9rk4V6qXebyJjGBWpY2MmP0ka699DAzvP7mnA2D+bkBy6uHn9Ig/v1
-         G2aA==
-X-Forwarded-Encrypted: i=1; AJvYcCUglJtC4gtU6cdeAFNx/v2iRBqUlKBGI61oiFZ9m8TyVzyt4vWE/TjUcgS7l5kPq/2Sf+hGXfA5jyAurbPhpt/b27i1ISxmLimURZlf9zDYBvBs2RNT7BEZP+QSQvxMDle4NJxJgtkjgtMYmFOL97eP60WXjr7nyMc4WQHnCkbu9+xB1EUUhtU0wAJ/IyQ2
-X-Gm-Message-State: AOJu0YyHwa9vi7SO2f8p3dIKf0l4dmCgjs/gHwDhbJQCmgYhVwUkbXgy
-	g7fja2S5hyHiFA3Q5a7PxtB+US9nC03xRsNYIkY/WVe7JcHXINk+
-X-Google-Smtp-Source: AGHT+IGc0Bj46AyQYYE/IkHFIMg/paIDGIOnXaU7E/SxDEwF3pj4nXkv+icahsb8gDuJLIqi/pGpZg==
-X-Received: by 2002:a05:6808:2124:b0:3c2:39c8:435f with SMTP id r36-20020a056808212400b003c239c8435fmr6665279oiw.51.1710106456759;
-        Sun, 10 Mar 2024 14:34:16 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:fa9b:d52c:840:abd4])
-        by smtp.gmail.com with ESMTPSA id l66-20020a633e45000000b005b7dd356f75sm2998812pga.32.2024.03.10.14.34.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Mar 2024 14:34:16 -0700 (PDT)
-Date: Sun, 10 Mar 2024 14:34:14 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Gergo Koteles <soyer@irl.hu>
-Cc: Ike Panhc <ike.pan@canonical.com>, Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] Input: allocate keycode for Display refresh rate
- toggle
-Message-ID: <Ze4nVovvIV97Ydt7@google.com>
-References: <cover.1710065750.git.soyer@irl.hu>
- <15a5d08c84cf4d7b820de34ebbcf8ae2502fb3ca.1710065750.git.soyer@irl.hu>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="BcdrCg40";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="c8TDp037"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailfout.west.internal (Postfix) with ESMTP id C38771C00088;
+	Sun, 10 Mar 2024 19:37:31 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Sun, 10 Mar 2024 19:37:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm3; t=1710113851; x=1710200251; bh=MsX57JNWXWXgy5MXZkAs7
+	hcdsrp6bnwtQX2LmRVdZMI=; b=BcdrCg40nAR5G8tjRzj1nAUazVGlHI9aTc1Zs
+	EZCqhAHS8TNpf+Fc+o+8tj5zVSGBVheedFvKW3SV+Jv7tPTTDNoMKQEQc8TPktcA
+	dcS832Jvn0NEQ3gchDTTPHiaxo/51HRzdp55zW7hFdwzsqxsT+plZzHY053nEksy
+	JwRQhoZkoq+gRB8PeEzy7zyq0Pg2GJH6g8Q6GSsnY9TtBdTkP9KgfT4SwuiZ+WdO
+	eI0XSBDQILAL4+bi6q2lWyCFbdhM0iScx+46OesM+6dZYZdNKnvxvq2t1pLjRNwy
+	7pAgD0s/lp4bURnCSESuwI3E6AlFAjuLy+vb7tFfZMSvXLd8A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1710113851; x=1710200251; bh=MsX57JNWXWXgy5MXZkAs7hcdsrp6
+	bnwtQX2LmRVdZMI=; b=c8TDp0371iDMNhwk/TaMsSkdica3RottXvn5N2o7DPWK
+	WENAbP6zQx9ojhG6RoUG79hJsgeYpi7UZjW6DyDlI5W1hhVvHKJtpW+l4Yyz2Zrh
+	Yg1doxLTY9PnYHNGfthk8BKlhxFQwc4cS+/6brAYIlObl/V07lGlzqfsG4W7cqss
+	6HPY/2a4LlEs9EmPxWvkP+bvXI18AP3JhnTOfMoiY1UpjDrEjaYC9oPeqC8YmInC
+	ssN1zXux0Kq0NYCXRHP6tNCsvvTj6JxX3OfyZWyD7zKCrosCfHpNVwQhEEcxUwA2
+	knWacveDn8jqeOZhfLK0YwCiuEo8lR5cUjDGsXWclA==
+X-ME-Sender: <xms:OkTuZUN8J27-Lrymk9uzNJm4wfXMCGpwIaAtB14xDkcGyvClCiq1BQ>
+    <xme:OkTuZa82LlB8rfmKD_D6FnbqqumfRaON3OfPOA4labPuliZjdHw4sLsP8ERdpSBz7
+    0wuXPDp2VOOrlk3b24>
+X-ME-Received: <xmr:OkTuZbTagsu_anY2G-cGoA5BlVfxbEsySmNDzyF3UoXidgYi5NSKVu7rOhZS>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrjedtgddufecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgggfestdekredtre
+    dttdenucfhrhhomhepfdfnuhhkvgcuffdrucflohhnvghsfdcuoehluhhkvgeslhhjohhn
+    vghsrdguvghvqeenucggtffrrghtthgvrhhnpefgudejtdfhuddukefffeekiefftddtvd
+    fhgeduudeuffeuhfefgfegfeetvedvgeenucevlhhushhtvghrufhiiigvpedtnecurfgr
+    rhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:OkTuZctCCDIusakzXXgbcpUJygE5R_0pcAed22ezgLOor9HO-1O8-A>
+    <xmx:OkTuZceW7pJol2G8--af554rJSnWHCLG2xjPbjgyqMF0Ey60xGbFTQ>
+    <xmx:OkTuZQ2ZZ_2c0FUba0RBYpomeaV7bGqycbi94jLlMI3wxLItC_UF8g>
+    <xmx:O0TuZb6LIFX7yVS2kAsUPllLfsaQoIh5mBX4pz00xIgKnUthN5iphcJJFlI>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 10 Mar 2024 19:37:27 -0400 (EDT)
+From: "Luke D. Jones" <luke@ljones.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	"Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH] platform/x86: asus-wmi: store a min default for ppt options
+Date: Mon, 11 Mar 2024 12:37:22 +1300
+Message-ID: <20240310233722.30884-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <15a5d08c84cf4d7b820de34ebbcf8ae2502fb3ca.1710065750.git.soyer@irl.hu>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Mar 10, 2024 at 12:31:41PM +0100, Gergo Koteles wrote:
-> Newer Lenovo Yogas and Legions with 60Hz/90Hz displays send a wmi event
-> when Fn + R is pressed. This is intended for use to switch between the
-> two refresh rates.
-> 
-> Allocate a new KEY_REFRESH_RATE_TOGGLE keycode for it.
-> 
-> Signed-off-by: Gergo Koteles <soyer@irl.hu>
+Laptops with any of the ppt or nv tunables default to the minimum setting
+on boot so we can safely assume a stored value is correct.
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+This patch adds storing of those values in the local struct, and enables
+reading of those values back.
 
-> ---
->  include/uapi/linux/input-event-codes.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-> index 022a520e31fc..03edf2ccdf6c 100644
-> --- a/include/uapi/linux/input-event-codes.h
-> +++ b/include/uapi/linux/input-event-codes.h
-> @@ -602,6 +602,7 @@
->  
->  #define KEY_ALS_TOGGLE		0x230	/* Ambient light sensor */
->  #define KEY_ROTATE_LOCK_TOGGLE	0x231	/* Display rotation lock */
-> +#define KEY_REFRESH_RATE_TOGGLE	0x232	/* Display refresh rate toggle */
->  
->  #define KEY_BUTTONCONFIG		0x240	/* AL Button Configuration */
->  #define KEY_TASKMANAGER		0x241	/* AL Task/Project Manager */
-> -- 
-> 2.44.0
-> 
+Secondary to the above it renames some internal variables to be more
+consistent (which makes code grepping show all related parts)
 
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+---
+ drivers/platform/x86/asus-wmi.c | 141 +++++++++++++++++++++++++-------
+ 1 file changed, 111 insertions(+), 30 deletions(-)
+
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index e4341abb71e0..482e23b55e1e 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -272,12 +272,19 @@ struct asus_wmi {
+ 
+ 	/* Tunables provided by ASUS for gaming laptops */
+ 	bool ppt_pl2_sppt_available;
++	u32 ppt_pl2_sppt;
+ 	bool ppt_pl1_spl_available;
++	u32 ppt_pl1_spl;
+ 	bool ppt_apu_sppt_available;
+-	bool ppt_plat_sppt_available;
++	u32 ppt_apu_sppt;
++	bool ppt_platform_sppt_available;
++	u32 ppt_platform_sppt;
+ 	bool ppt_fppt_available;
+-	bool nv_dyn_boost_available;
+-	bool nv_temp_tgt_available;
++	u32 ppt_fppt;
++	bool nv_dynamic_boost_available;
++	u32 nv_dynamic_boost;
++	bool nv_temp_target_available;
++	u32 nv_temp_target;
+ 
+ 	bool kbd_rgb_mode_available;
+ 	u32 kbd_rgb_dev;
+@@ -999,11 +1006,10 @@ static ssize_t ppt_pl2_sppt_store(struct device *dev,
+ 				    struct device_attribute *attr,
+ 				    const char *buf, size_t count)
+ {
++	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	int result, err;
+ 	u32 value;
+ 
+-	struct asus_wmi *asus = dev_get_drvdata(dev);
+-
+ 	result = kstrtou32(buf, 10, &value);
+ 	if (result)
+ 		return result;
+@@ -1022,22 +1028,31 @@ static ssize_t ppt_pl2_sppt_store(struct device *dev,
+ 		return -EIO;
+ 	}
+ 
++	asus->ppt_pl2_sppt = value;
+ 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_pl2_sppt");
+ 
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(ppt_pl2_sppt);
++
++static ssize_t ppt_pl2_sppt_show(struct device *dev,
++				       struct device_attribute *attr,
++				       char *buf)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%d\n", asus->ppt_pl2_sppt);
++}
++static DEVICE_ATTR_RW(ppt_pl2_sppt);
+ 
+ /* Tunable: PPT, Intel=PL1, AMD=SPL ******************************************/
+ static ssize_t ppt_pl1_spl_store(struct device *dev,
+ 				    struct device_attribute *attr,
+ 				    const char *buf, size_t count)
+ {
++	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	int result, err;
+ 	u32 value;
+ 
+-	struct asus_wmi *asus = dev_get_drvdata(dev);
+-
+ 	result = kstrtou32(buf, 10, &value);
+ 	if (result)
+ 		return result;
+@@ -1056,22 +1071,30 @@ static ssize_t ppt_pl1_spl_store(struct device *dev,
+ 		return -EIO;
+ 	}
+ 
++	asus->ppt_pl1_spl = value;
+ 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_pl1_spl");
+ 
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(ppt_pl1_spl);
++static ssize_t ppt_pl1_spl_show(struct device *dev,
++				 struct device_attribute *attr,
++				 char *buf)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%d\n", asus->ppt_pl1_spl);
++}
++static DEVICE_ATTR_RW(ppt_pl1_spl);
+ 
+ /* Tunable: PPT APU FPPT ******************************************************/
+ static ssize_t ppt_fppt_store(struct device *dev,
+ 				    struct device_attribute *attr,
+ 				    const char *buf, size_t count)
+ {
++	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	int result, err;
+ 	u32 value;
+ 
+-	struct asus_wmi *asus = dev_get_drvdata(dev);
+-
+ 	result = kstrtou32(buf, 10, &value);
+ 	if (result)
+ 		return result;
+@@ -1090,22 +1113,31 @@ static ssize_t ppt_fppt_store(struct device *dev,
+ 		return -EIO;
+ 	}
+ 
++	asus->ppt_fppt = value;
+ 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_fpu_sppt");
+ 
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(ppt_fppt);
++
++static ssize_t ppt_fppt_show(struct device *dev,
++				struct device_attribute *attr,
++				char *buf)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%d\n", asus->ppt_fppt);
++}
++static DEVICE_ATTR_RW(ppt_fppt);
+ 
+ /* Tunable: PPT APU SPPT *****************************************************/
+ static ssize_t ppt_apu_sppt_store(struct device *dev,
+ 				    struct device_attribute *attr,
+ 				    const char *buf, size_t count)
+ {
++	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	int result, err;
+ 	u32 value;
+ 
+-	struct asus_wmi *asus = dev_get_drvdata(dev);
+-
+ 	result = kstrtou32(buf, 10, &value);
+ 	if (result)
+ 		return result;
+@@ -1124,22 +1156,31 @@ static ssize_t ppt_apu_sppt_store(struct device *dev,
+ 		return -EIO;
+ 	}
+ 
++	asus->ppt_apu_sppt = value;
+ 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_apu_sppt");
+ 
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(ppt_apu_sppt);
++
++static ssize_t ppt_apu_sppt_show(struct device *dev,
++			     struct device_attribute *attr,
++			     char *buf)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%d\n", asus->ppt_apu_sppt);
++}
++static DEVICE_ATTR_RW(ppt_apu_sppt);
+ 
+ /* Tunable: PPT platform SPPT ************************************************/
+ static ssize_t ppt_platform_sppt_store(struct device *dev,
+ 				    struct device_attribute *attr,
+ 				    const char *buf, size_t count)
+ {
++	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	int result, err;
+ 	u32 value;
+ 
+-	struct asus_wmi *asus = dev_get_drvdata(dev);
+-
+ 	result = kstrtou32(buf, 10, &value);
+ 	if (result)
+ 		return result;
+@@ -1158,22 +1199,31 @@ static ssize_t ppt_platform_sppt_store(struct device *dev,
+ 		return -EIO;
+ 	}
+ 
++	asus->ppt_platform_sppt = value;
+ 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_platform_sppt");
+ 
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(ppt_platform_sppt);
++
++static ssize_t ppt_platform_sppt_show(struct device *dev,
++				 struct device_attribute *attr,
++				 char *buf)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%d\n", asus->ppt_platform_sppt);
++}
++static DEVICE_ATTR_RW(ppt_platform_sppt);
+ 
+ /* Tunable: NVIDIA dynamic boost *********************************************/
+ static ssize_t nv_dynamic_boost_store(struct device *dev,
+ 				    struct device_attribute *attr,
+ 				    const char *buf, size_t count)
+ {
++	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	int result, err;
+ 	u32 value;
+ 
+-	struct asus_wmi *asus = dev_get_drvdata(dev);
+-
+ 	result = kstrtou32(buf, 10, &value);
+ 	if (result)
+ 		return result;
+@@ -1192,22 +1242,31 @@ static ssize_t nv_dynamic_boost_store(struct device *dev,
+ 		return -EIO;
+ 	}
+ 
++	asus->nv_dynamic_boost = value;
+ 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "nv_dynamic_boost");
+ 
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(nv_dynamic_boost);
++
++static ssize_t nv_dynamic_boost_show(struct device *dev,
++				      struct device_attribute *attr,
++				      char *buf)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%d\n", asus->nv_dynamic_boost);
++}
++static DEVICE_ATTR_RW(nv_dynamic_boost);
+ 
+ /* Tunable: NVIDIA temperature target ****************************************/
+ static ssize_t nv_temp_target_store(struct device *dev,
+ 				    struct device_attribute *attr,
+ 				    const char *buf, size_t count)
+ {
++	struct asus_wmi *asus = dev_get_drvdata(dev);
+ 	int result, err;
+ 	u32 value;
+ 
+-	struct asus_wmi *asus = dev_get_drvdata(dev);
+-
+ 	result = kstrtou32(buf, 10, &value);
+ 	if (result)
+ 		return result;
+@@ -1226,11 +1285,21 @@ static ssize_t nv_temp_target_store(struct device *dev,
+ 		return -EIO;
+ 	}
+ 
++	asus->nv_temp_target = value;
+ 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "nv_temp_target");
+ 
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(nv_temp_target);
++
++static ssize_t nv_temp_target_show(struct device *dev,
++				     struct device_attribute *attr,
++				     char *buf)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%d\n", asus->nv_temp_target);
++}
++static DEVICE_ATTR_RW(nv_temp_target);
+ 
+ /* Battery ********************************************************************/
+ 
+@@ -4301,11 +4370,11 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+ 	else if (attr == &dev_attr_ppt_apu_sppt.attr)
+ 		ok = asus->ppt_apu_sppt_available;
+ 	else if (attr == &dev_attr_ppt_platform_sppt.attr)
+-		ok = asus->ppt_plat_sppt_available;
++		ok = asus->ppt_platform_sppt_available;
+ 	else if (attr == &dev_attr_nv_dynamic_boost.attr)
+-		ok = asus->nv_dyn_boost_available;
++		ok = asus->nv_dynamic_boost_available;
+ 	else if (attr == &dev_attr_nv_temp_target.attr)
+-		ok = asus->nv_temp_tgt_available;
++		ok = asus->nv_temp_target_available;
+ 	else if (attr == &dev_attr_boot_sound.attr)
+ 		ok = asus->boot_sound_available;
+ 	else if (attr == &dev_attr_panel_od.attr)
+@@ -4566,6 +4635,15 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	if (err)
+ 		goto fail_platform;
+ 
++	/* ensure defaults for tunables */
++	asus->ppt_pl2_sppt = 5;
++	asus->ppt_pl1_spl = 5;
++	asus->ppt_apu_sppt = 5;
++	asus->ppt_platform_sppt = 5;
++	asus->ppt_fppt = 5;
++	asus->nv_dynamic_boost = 5;
++	asus->nv_temp_target = 75;
++
+ 	asus->charge_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CHARGE_MODE);
+ 	asus->egpu_enable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU);
+ 	asus->egpu_connect_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU_CONNECTED);
+@@ -4576,9 +4654,12 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	asus->ppt_pl1_spl_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PL1_SPL);
+ 	asus->ppt_fppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_FPPT);
+ 	asus->ppt_apu_sppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_APU_SPPT);
+-	asus->ppt_plat_sppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PLAT_SPPT);
+-	asus->nv_dyn_boost_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_NV_DYN_BOOST);
+-	asus->nv_temp_tgt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_NV_THERM_TARGET);
++	asus->ppt_platform_sppt_available = asus_wmi_dev_is_present(asus,
++								    ASUS_WMI_DEVID_PPT_PLAT_SPPT);
++	asus->nv_dynamic_boost_available = asus_wmi_dev_is_present(asus,
++								   ASUS_WMI_DEVID_NV_DYN_BOOST);
++	asus->nv_temp_target_available = asus_wmi_dev_is_present(asus,
++								 ASUS_WMI_DEVID_NV_THERM_TARGET);
+ 	asus->boot_sound_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_BOOT_SOUND);
+ 	asus->panel_overdrive_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PANEL_OD);
+ 	asus->ally_mcu_usb_switch = acpi_has_method(NULL, ASUS_USB0_PWR_EC0_CSEE)
 -- 
-Dmitry
+2.44.0
+
