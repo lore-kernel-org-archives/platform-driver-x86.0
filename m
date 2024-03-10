@@ -1,81 +1,76 @@
-Received: from wfout7-smtp.messagingengine.com (wfout7-smtp.messagingengine.com [64.147.123.150])
+Received: from wfhigh8-smtp.messagingengine.com (wfhigh8-smtp.messagingengine.com [64.147.123.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2282317550;
-	Sun, 10 Mar 2024 05:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9256F11187;
+	Sun, 10 Mar 2024 05:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710049526; cv=none; b=VhS7+Dqw43slnDH94b/nxsvb1UVBP3ZRvbKAM9uWe1JQCCEUGr0r022H/LfoEtZLNYsW+gQExNz8aXN3YXqT+z2jlFFwK4be8Tvsl3woIFxO27YNs5so0w8q4ouuaRaoRKt3qae9G0YjL13dqhNwtMK0CFoa33qDpiYBt45yn6w=
+	t=1710050006; cv=none; b=bdRg5U+XqeO+S4CiaZD6o3moXhjuu1/wkunkup1MedU8YeP6qXwG1YqsIMAAi1Nc3niNfVvFJnRXLstuzpfPSkt5k3QdZ40suCBjTW+n62lytg+BkHDYRE0Ml8zOwf65Jodsd6B4YviUNx5aFylJpK7OIGhU6xU8MX5RSYBKcN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710049526; c=relaxed/simple;
-	bh=jM3W7oyEIGZtvFbs0jdRxwqTdVYD5+zHO6IbTe7uYSc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kfNcec8v7pP+n/b/FcoO5Ntc1lVzW7ncGAHU3X2dE5qci5veNHLeVxfqz7Us1w+VoGFyuQobHMT6QBbH4srF7rriKecyhgQAxgTJJ13HCs3gVLxp0TRFR/78pp3SRwkNkX4EPkaXSzSxmXilhp4GXbtkWvRFP4msRdHNb28gR/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=MQ6CGgKU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OaEHpFM+; arc=none smtp.client-ip=64.147.123.150
+	s=arc-20240116; t=1710050006; c=relaxed/simple;
+	bh=2wOh83HnBhx1otKc16AoVrX9HuNjsfoUVAuZ5jtZxRc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=keaQZUX+l9kvipyhbGmj1/uPpF/aLqEswzNNzN/6K51EGAJrA+9MK0Bhnjb8yKOzg5tfH3INF4VmJl4nCwbMmPEYPiVREHGhvMFNCaYms6qpfS2z3MYgLg+ff3lqr6aPpA90lSN+CTf373JpSoc0QnAaPCrm2HylqYGk8u0nfB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=TYTSvajk; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZBHDVqMB; arc=none smtp.client-ip=64.147.123.159
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="MQ6CGgKU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OaEHpFM+"
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailfout.west.internal (Postfix) with ESMTP id D79B61C0007B;
-	Sun, 10 Mar 2024 00:45:23 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Sun, 10 Mar 2024 00:45:24 -0500
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="TYTSvajk";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZBHDVqMB"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfhigh.west.internal (Postfix) with ESMTP id 086FA1800075;
+	Sun, 10 Mar 2024 00:53:22 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Sun, 10 Mar 2024 00:53:23 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
 	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1710049523; x=
-	1710135923; bh=iNGEngSWEAntTRUMP+C0LJTifEPw1RuXRNqGR65xM2Y=; b=M
-	Q6CGgKUGkP28h+cHiHuyl7ZHU537mIHN+vzGDWnfkcdwxkPdJXHmC0UP2ogklwl4
-	PPGcAfqWhof6HWuDduUuj/zUcKFoLtCjk1d7TJdbkmk4/Y5uDKRriAQWK2Mmjywx
-	Xat7l/ncS0o0U34Z0vG5XqIf/yEay+jBL/76uw2cns75xvk8OM22rbPr+NBjm7XJ
-	7TtaMGI982jsy60H4suquXwTFGRNijXOZbSjH9LQQrclazQXX6zFc2wIz5PTBSa2
-	4x/Hrjr8DyPhuu0wj/LV4JMK0u/v+82oUpFJVbX0fAWo5sYUyMdIQ2XTHCf3tcin
-	KZnq77U4gz8grqwfmf8dQ==
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1710050002; x=1710136402; bh=gmryNO6e4mNG5DUbmtbWL
+	rETime890uOx6ZmnWDhp/k=; b=TYTSvajk/tDsFTsppQJLGHnQFjTRVxnOvp9M2
+	EaIhXapzaeMG+brJsEHRKq1uyZLdgvtFgAu8T4n7k5KH+xCDawFiut2YS5GneEfh
+	UTgAo6TjMj4yczykq0yOJ7ONnzDUIaHic2WrpdhoPR+oQA1no7ucAkmJXO+xq+/M
+	UmQoSZBJ5fFCiVtgUopkPRJxUAY0iFfCedsrjY8/newkRzZ/I7fVJNLnVS2qosDF
+	8d6zokxczzG/CxKVP2t2cVLAYeOPVRbA8uFjTvdwOHrYN9is096f24HQNmMd461P
+	hcV30q5Lnhcye2kH5caD6Y9DTYU8zC1seTrzUUtFY8uif630g==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1710049523; x=
-	1710135923; bh=iNGEngSWEAntTRUMP+C0LJTifEPw1RuXRNqGR65xM2Y=; b=O
-	aEHpFM+qewq0heKD2JJcmE5eXcAgDG7HqBhHYYYVPoFkg5cFN5koFih29eUfOyYL
-	d5TJXUZuuabiewkNsp8m/6z56QMxRYVlO+KmskzJNehnw5W6zfTlvfhVy8/dOCUy
-	I/5nsyB1liBG7QDYLwltbifYQ3kCT2wnddoY9Iyduvps96p3bKCReD9jTABWfVT2
-	IS1ApJZht9vKUbKFg15n9Cr5GsA3qs/7RMqadp2PbItKp02j11snCBxyuwaK7glf
-	SRzxJ2dGD2H2PKMFz0UMNlmGbc6AFT5pN8M4s60jSsLikokEblOR/jtATqbBkbBc
-	Xg2ZKwQjnJ/TFOYSChaKQ==
-X-ME-Sender: <xms:8kjtZX5Avnm48PFNwiceh2wIkRdu8AW0VoFWv-0Uv75tEOQRsC8MDg>
-    <xme:8kjtZc7FEMQHcnd3oPC_-iLiEXvpOQVBomVEllEpJLTGA1SgO5giL_Jkwfn5v8kxj
-    faXBMl-KTAjhe-mBVc>
-X-ME-Received: <xmr:8kjtZeekI4J-bZLwp19gzQNeG8s7iVzWTbcJhuwXtkJ5IuSQYr17GquZaDL5>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrieekgdekjecutefuodetggdotefrodftvf
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1710050002; x=1710136402; bh=gmryNO6e4mNG5DUbmtbWLrETime8
+	90uOx6ZmnWDhp/k=; b=ZBHDVqMBq8+TgmDTqw96PXXgs7FkuWIKwwJPOVPyfZza
+	Hwnc6dtkHHQrY5ecbxgH+h9qdaOAncvJUii98Z/TPfsNwGghIe5tmqVv2KXTOQme
+	WqvTPpe7nxG2ow8nsGSDCr3Wdbu0v2DykUtoD3gXQIUs04ilLc2ODJKHlox1xQm5
+	Yub86nEl5YiCwRxH7SmPh6PsA2TSTTuEKl032Um+8yrZcXV79ukyfStmM1whwgoH
+	06FQhkUDj+ANk84jZN98tgZ6qG78GzHHyrXTDtwof5hn8gdrwG/xhpxus+jAd+sc
+	gR7obpZyzDB4/0CDep3l2VU9aleu05GHhL7qWfiUuQ==
+X-ME-Sender: <xms:0krtZbogWvsu35z7Sd1J_xAKfR9cOsYJOSOOpJ2jl7ThFWWtqPinjQ>
+    <xme:0krtZVonNb5Z003Gx0bTyelRRPiK-ITB3zujhJTLBPeb35atkr5UDeIffqaZNj_-a
+    grvJZaxHl66C2QTmek>
+X-ME-Received: <xmr:0krtZYP1VAgA1XsHFgg-JF0GwNyCz5xq_OR2TbVzlCn13BvJUK14TqZzaYQh>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrieekgdekkecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgjfhgggfestdekre
-    dtredttdenucfhrhhomhepfdfnuhhkvgcuffdrucflohhnvghsfdcuoehluhhkvgeslhhj
-    ohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpefgteefudfgteduueehteejhfeugf
-    fgleeltedvveethfeuueejfedvgeelveehgfenucevlhhushhtvghrufhiiigvpedtnecu
-    rfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:8kjtZYIsLAtBguOowU7sqa5xj8-6U1Ftq27qrQAy23XieUvl6rTh6g>
-    <xmx:8kjtZbKD53HbjFGb2xcYP2XiK2xt_Cp_492pkzImbGd9VkrhNst7uA>
-    <xmx:8kjtZRyb48TldilTrVW8UA615XSz1JmdQHzuDdCNo0xviMDW3lffQw>
-    <xmx:80jtZYGvWFEJwFSHNbAv_T-4I2eMds54gYHriMSfAcoesNCXNGf-Doq4AHA>
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgggfestdekredtre
+    dttdenucfhrhhomhepfdfnuhhkvgcuffdrucflohhnvghsfdcuoehluhhkvgeslhhjohhn
+    vghsrdguvghvqeenucggtffrrghtthgvrhhnpefgudejtdfhuddukefffeekiefftddtvd
+    fhgeduudeuffeuhfefgfegfeetvedvgeenucevlhhushhtvghrufhiiigvpedtnecurfgr
+    rhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:0krtZe6mZxRqsZtCfj__TLczaVT2WEbBk20LZd6v6N3KQZekK6hrXw>
+    <xmx:0krtZa6rx1M85-oIAXEVKQF5dA4Q0lBWu2u2_rpLO-2Kt5-aXl0SxQ>
+    <xmx:0krtZWgJkbnRtSfLNntND1fzlsUFzaFlECBAP8MDjxi-MGKvxZL01A>
+    <xmx:0krtZV3dZ9QD1_4XLM5LjrGdt19pz7Kphql0aErL1S2DXgs5AYz6CtYW4-s>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 10 Mar 2024 00:45:20 -0500 (EST)
+ 10 Mar 2024 00:53:19 -0500 (EST)
 From: "Luke D. Jones" <luke@ljones.dev>
 To: platform-driver-x86@vger.kernel.org
 Cc: hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com,
 	linux-kernel@vger.kernel.org,
 	"Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH v1 1/1] platform/x86: asus-wmi: add support for Vivobook GPU MUX
-Date: Sun, 10 Mar 2024 18:45:08 +1300
-Message-ID: <20240310054508.8528-2-luke@ljones.dev>
+Subject: [PATCH v2 0/1] asus-wmi: add support for Vivobook GPU MUX
+Date: Sun, 10 Mar 2024 18:53:11 +1300
+Message-ID: <20240310055312.11293-1-luke@ljones.dev>
 X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240310054508.8528-1-luke@ljones.dev>
-References: <20240310054508.8528-1-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -84,98 +79,21 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Adjust existing MUX support to select whichever MUX support is available
-so that ASUS Vivobook MUX can also be used if detected.
+Note to self to not try catching up on things while sick.
 
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
----
+Changelog:
+-v1
+  - Add missing define for new WMI method
+-v2
+  - Actually add the right one
+
+Luke D. Jones (1):
+  platform/x86: asus-wmi: add support for Vivobook GPU MUX
+
  drivers/platform/x86/asus-wmi.c            | 18 +++++++++++++-----
  include/linux/platform_data/x86/asus-wmi.h |  1 +
  2 files changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 94cc589607b3..2cf695289655 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -268,6 +268,7 @@ struct asus_wmi {
- 	bool egpu_connect_available;
- 	bool dgpu_disable_available;
- 	bool gpu_mux_mode_available;
-+	u32 gpu_mux_dev;
- 
- 	/* Tunables provided by ASUS for gaming laptops */
- 	bool ppt_pl2_sppt_available;
-@@ -682,7 +683,7 @@ static ssize_t dgpu_disable_store(struct device *dev,
- 		return -EINVAL;
- 
- 	if (asus->gpu_mux_mode_available) {
--		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_GPU_MUX);
-+		result = asus_wmi_get_devstate_simple(asus, asus->gpu_mux_dev);
- 		if (result < 0)
- 			/* An error here may signal greater failure of GPU handling */
- 			return result;
-@@ -748,7 +749,7 @@ static ssize_t egpu_enable_store(struct device *dev,
- 	}
- 
- 	if (asus->gpu_mux_mode_available) {
--		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_GPU_MUX);
-+		result = asus_wmi_get_devstate_simple(asus, asus->gpu_mux_dev);
- 		if (result < 0) {
- 			/* An error here may signal greater failure of GPU handling */
- 			pr_warn("Failed to get gpu mux status: %d\n", result);
-@@ -801,7 +802,7 @@ static ssize_t gpu_mux_mode_show(struct device *dev,
- 	struct asus_wmi *asus = dev_get_drvdata(dev);
- 	int result;
- 
--	result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_GPU_MUX);
-+	result = asus_wmi_get_devstate_simple(asus, asus->gpu_mux_dev);
- 	if (result < 0)
- 		return result;
- 
-@@ -847,7 +848,7 @@ static ssize_t gpu_mux_mode_store(struct device *dev,
- 		}
- 	}
- 
--	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_GPU_MUX, optimus, &result);
-+	err = asus_wmi_set_devstate(asus->gpu_mux_dev, optimus, &result);
- 	if (err) {
- 		dev_err(dev, "Failed to set GPU MUX mode: %d\n", err);
- 		return err;
-@@ -4507,7 +4508,6 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	asus->egpu_enable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU);
- 	asus->egpu_connect_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU_CONNECTED);
- 	asus->dgpu_disable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU);
--	asus->gpu_mux_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_GPU_MUX);
- 	asus->kbd_rgb_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE);
- 	asus->kbd_rgb_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_STATE);
- 	asus->ppt_pl2_sppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PL2_SPPT);
-@@ -4529,6 +4529,14 @@ static int asus_wmi_add(struct platform_device *pdev)
- 		asus->mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE2;
- 	}
- 
-+	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_GPU_MUX)) {
-+		asus->gpu_mux_mode_available = true;
-+		asus->gpu_mux_dev = ASUS_WMI_DEVID_GPU_MUX;
-+	} else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_GPU_MUX_VIVO)) {
-+		asus->gpu_mux_mode_available = true;
-+		asus->gpu_mux_dev = ASUS_WMI_DEVID_GPU_MUX_VIVO;
-+	}
-+
- 	err = fan_boost_mode_check_present(asus);
- 	if (err)
- 		goto fail_fan_boost_mode;
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index 9cadce10ad9a..b0320cb5ebe3 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -131,6 +131,7 @@
- 
- /* TUF laptop RGB modes/colours */
- #define ASUS_WMI_DEVID_TUF_RGB_MODE	0x00100056
-+#define ASUS_WMI_DEVID_TUF_RGB_MODE2	0x0010005a
- 
- /* TUF laptop RGB power/state */
- #define ASUS_WMI_DEVID_TUF_RGB_STATE	0x00100057
 -- 
 2.44.0
 
