@@ -1,202 +1,110 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FC944366;
-	Sat,  9 Mar 2024 19:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0845310E9;
+	Sun, 10 Mar 2024 01:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710011844; cv=none; b=A0bdbUnNLZaJVRF6fZ4pXH0IL4oynCez4LbZxR4qbYrBmc2Qnms99kJfoCAGnjznTg8Ujt+/z7lEzWp+/gJVN5Z9DhyiI+Cb6UYtu4RmCG6V5H1VPLDTeLYtOOw5u5/vOg1M4D7vDzM8nLQYDwq5Q9fUG+0H/RYMBWxYLQeJrNo=
+	t=1710034766; cv=none; b=K3Hf0JWoppiR0vJ1vDOehpqCHCI3+B5k4F5/YyLMVEs+dIcAr/IpG9FzqGah9A36T/NqWCNaZWRLW26SzMq4HJcan4bfzIGyGSf6Qh8+8D/lcU08jMU+DNC9lL9Ejp/F+XK0WnHnjrddlFqv97t+w0BZ/n29USn6j3PLmZO2yOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710011844; c=relaxed/simple;
-	bh=XRlgEWOTVijLiWgo9FahxuxdDdXF/OXoFOorpeUKHVg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ezK+YDqwE9fylfE+y8954xXI0xCAD8/nrBEPEi7jqdzi2yRQqHt9Nv2RGhScg+XgcCzSog3eCHTgZ/2dXfJp9maUs+mU7Srh667miKib5RwtmAxX/BvXC5onRwicpEBapc6iHkuy7j68bgorIy18Nyek+BbKe1NmhCBE6Rcykk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Ev5pHiZN; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1710034766; c=relaxed/simple;
+	bh=Hbv5dKqaLqBrgXClL9twOnok0X7YsUM8U4SrM79+aEc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HAEo4k7b9BL8h61zPICfMhyMZgfO2Rch/81OtEiVl05gtUIZDexN3fwhu95i/tVsyD/WZ4CPvpM3NBUKeekCNHT2RJyXx78p3T8miSIF9UK13S9qZn1O0PqUtytTOLfadNxxaulihNyQ1XTmkJRd/uVtDYKqGrJonxx4JTiPzO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CKXm00mK; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Ev5pHiZN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1710011827; x=1710616627; i=w_armin@gmx.de;
-	bh=XRlgEWOTVijLiWgo9FahxuxdDdXF/OXoFOorpeUKHVg=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=Ev5pHiZNcYYTercqnsnNLQvLbY0Ka1D+dwIWT2MxivlCNB27GKhGfM6wW8tAm5v9
-	 bnR+grdk90QBnxlNuEQisejz5Cjd3ZgaJzlWMNWcOwUDqCVTGIeEOkN7OyHXMl50Z
-	 aQpiTLigIxwbVyYkmfMf2otsU07aVF+eJtbMBzZa9l3dfYpQasFqrb43dOidRXE4k
-	 U4yHntioafOzo4lcK8aMPWTvGXHtP44AA8GuvxT4efXiymd17lcMJ+dxeUhAW7qCl
-	 VeeihpwpmvCVwRS5aE6Qp8rM++Pp7TBk0KCbOgeiFsXlgIJMURITykhi7eS2FCi+M
-	 jb4BF4tnh49G78+LBw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MVvPJ-1rHq9n41Z7-00RnwU; Sat, 09
- Mar 2024 20:17:07 +0100
-Message-ID: <2fcd7176-108a-47dc-8096-99a5b6a69641@gmx.de>
-Date: Sat, 9 Mar 2024 20:17:05 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CKXm00mK"
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5a1cba5d46fso950513eaf.0;
+        Sat, 09 Mar 2024 17:39:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710034764; x=1710639564; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=89dICWtcTgU7rYBclVDfmBzPExpeafeUhsNwlxxomUo=;
+        b=CKXm00mKDeW2qxdbGXESAIJMau/mZmTF9uVBQkuv7OnXpn4BBnStryaFYhZZpBh0T7
+         0Kbtn7YO0aTWaX37EphV69dx93j/+/EinVXicPkkMlv9bZduv6EJq5OeKj3HlTkATRtD
+         K2pCif5RWvAiQ718xk5reP0ohZjMbjqQwlLmowUSL5B0OZOgCkl8/9VXm7KusiutSG0J
+         yhEc1VNOsBF0A2WH+ifHCotAg64OjTyXqbNzyxLsVQMecs1p9fQr5Ip04GGcVUMRvssY
+         UIieBo6SnB5qWr5eGB+FieMkzdgMhHHDxDE41gwKV0rb7LBtOssT0AdM0g4GH+ZR/PJY
+         Q1NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710034764; x=1710639564;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=89dICWtcTgU7rYBclVDfmBzPExpeafeUhsNwlxxomUo=;
+        b=X6YsyTnI3Ejky+9BBnAUPNRFIowhGs+jNluZXYOJ/lXeETq7rxrVYqe3HXr4rHIzRU
+         QRkirElW4kP7yyDjvyTW9/ugctJPllu+Jw/4ES+SUVt9e7qSwy3y4Lpiqy5CTbRtlXeF
+         UWIZxQSZbq5LKBf47ZE+eOAYGj5ggjce24aHR3Ti4VdaEbxNravO5BRfjVJy6S4Xh9oX
+         F3RJjkTsj5EA3yFiFEd+MQ91472DKm+iIlBoYsT2IEM/BG1x5+DsRyojDz8inmfMvlgP
+         cdVt/lcOrq1WApVwxzGi7i/4MQf/YaP3nT9SHeP7PW6jDXfLm96k3Rtft3e6TYb3TIuO
+         ojow==
+X-Forwarded-Encrypted: i=1; AJvYcCUq6O7KLfJtTf4ZB8S22CNAM3elolxq+89wJZi7YdLRT1F+aV+NKwGs6yY4F5imRRBFep8CZwKvvH8oW1kueJ6MdKSPbnTbkLGqJ6+U67HlYhZEyqYM46w5iMcxtmib9S16Hj4C69Mxu5spB9Ndz2KdPAhzYHjz5dz6JqAP37Amy6RHm016pqD+VVfLe0Pv
+X-Gm-Message-State: AOJu0Yz+eASjh6Z7mUyjkKSWZiInmuIxBEk0C7Gnaa6qw4nbzvia6YGH
+	NguVnVW8KbTQlCUvyFcpyabyj/oWjZlHh0IvvwohliLhLuVboC1dMJgWRVI/
+X-Google-Smtp-Source: AGHT+IGa8LWghdsW4lGPMtbGDh64RIJVuU6q8Za08bnTmcCJbvG41L+9ZGzUXxOEHKCRwucHSW9QvA==
+X-Received: by 2002:a05:6808:3994:b0:3c1:b335:12bc with SMTP id gq20-20020a056808399400b003c1b33512bcmr5386225oib.5.1710034763803;
+        Sat, 09 Mar 2024 17:39:23 -0800 (PST)
+Received: from google.com ([2620:15c:9d:2:5296:fec3:1fa8:a601])
+        by smtp.gmail.com with ESMTPSA id w33-20020a17090a6ba400b0029bb5dc7c77sm1990101pjj.23.2024.03.09.17.39.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 Mar 2024 17:39:23 -0800 (PST)
+Date: Sat, 9 Mar 2024 17:39:21 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Ike Panhc <ike.pan@canonical.com>, Hans de Goede <hdegoede@redhat.com>,
+	Philipp Jungkamp <p.jungkamp@gmx.net>, Gergo Koteles <soyer@irl.hu>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org
+Subject: Re: [PATCH 0/2] map Fn + R key on newer Yogas and Legions
+Message-ID: <Ze0PSaOQSJMxL_Ln@google.com>
+References: <cover.1708399689.git.soyer@irl.hu>
+ <170895405312.2243.4199399921923370447.b4-ty@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] platform/x86: wmi: Support reading/writing 16 bit
- EC values
-Content-Language: en-US
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
-Cc: rafael@kernel.org, lenb@kernel.org, mario.limonciello@amd.com,
- linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240308210519.2986-1-W_Armin@gmx.de>
- <a6152da8-5f3a-458b-bc48-4bc654677ece@linux.intel.com>
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <a6152da8-5f3a-458b-bc48-4bc654677ece@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:bULHEOU6HX1JaTlIKMLQ25OmT1v3acdl+rHs8OfvFAc3yHKN2GC
- Ms+Db2sxx2KK1SsbYZrmcdUlKyU7XHpdvOiyYY2ZSyke2hWW1dp6whprny6TZoEnFgyjEvD
- GBq8vLUXq/mSSaWlX0GU9S7IJOPid75vxNLOkGcCXgB0qBUrKSM7o4EGh2jcTC0oY8PzopO
- VFDMPAUHSve3ZM++lJGdQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ceCQFEkWCsY=;+DQKmJPoaMZM4s90BLCt1KVrr01
- IwR2rYzQnyxCx6oNHPjlTVeLBH7wdGz3dI4rGFDH/avUoVIYTOIs/cMxFLCZWwtgrLpnhs8bz
- j4xpo93L+pgXsZ+tv9B9imBr0FZmJQGbvvI61rXgTyHhLxXDexo+sQdsHhPsf9/Enl4bpddtI
- Cv67E/R6je5/CFI0MRJz5NLJ6ZlN3+9YrSq1UimDGJ+F6WKb8qYz4gFZ6pGekc52gfAKEhI3g
- 1hezLCoJt0AAZjBjAoTJdYGGXuRgw1true2gPFw38ewvsAZb4cn+4Vxe3O9uyimCMIFQwJXx8
- wDT5uTYT8UrO2VT6BGAvqElWjxD5ehHBz0zspp4Yr6w5caIuZ7/d70KuBMNHttkuYA32FiaRf
- XfP6HhNIeMysx4j9UgLY3kWlbyugUTxeNS7j1eYF7yc1v2VeoQmpuzZSPfAUx/fnI7P8RElLR
- j9mV24nB0QJWtU9fmOImABjJavMSDAioCHB4yKIVVS0ciFt6yPonSodtzYpr6VmzELkICIsa/
- qzNlI9hbG8810C/CG9Izrxk75BB6K5TDxz35QmyJs8GgTnUkSHhX+nUMJY60kKTiJHFzWlOxo
- 8LA0rHAYsrSjr5kx/G3YWUgDW8SKxxVw9RmIK4SNKWo7KGfi+TLRRIWLp0l58iguFCiu7o/NV
- gcXEP/Dx1tH9XwCEZaJAcV/xB6qawQwcpmRi31KGJyFO9F2ksUkxXrwgMnvdbc5w6+QsmnOwm
- dKzeu5U66CZCLqHsLnM18m7GAiFtLJfmg0XZ6xdHkS3TLG+BnmO9JufMFsrqsxaQM4fXenEEA
- WqT3+CSrxE/gMHmdtf8rQ5szYYSWA7EJGFS1EJz9QmdR8=
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <170895405312.2243.4199399921923370447.b4-ty@linux.intel.com>
 
-Am 09.03.24 um 18:07 schrieb Kuppuswamy Sathyanarayanan:
+On Mon, Feb 26, 2024 at 03:27:33PM +0200, Ilpo Järvinen wrote:
+> On Tue, 20 Feb 2024 04:39:34 +0100, Gergo Koteles wrote:
+> 
+> > This patch series adds a new KEY_FN_R input event code and map the
+> > Fn + R key to it in the ideapad-laptop driver.
+> > 
+> > It affects two WMI keycodes and I couldn't try the 0x0a, but I couldn't
+> > find any indication that the refresh rate toggle should not be Fn + R.
+> > 
+> > Regards,
+> > Gergo
+> > 
+> > [...]
+> 
+> 
+> Thank you for your contribution, it has been applied to my local
+> review-ilpo branch. Note it will show up in the public
+> platform-drivers-x86/review-ilpo branch only once I've pushed my
+> local branch there, which might take a while.
+> 
+> The list of commits applied:
+> [1/2] Input: allocate keycode for Fn + R
+>       commit: 4e45fa464aeef4e803412b5dcce73aad48c94b0e
 
-> On 3/8/24 1:05 PM, Armin Wolf wrote:
->> The ACPI EC address space handler currently only supports
->> reading/writing 8 bit values. Some firmware implementations however
->> want to access for example 16 bit values, which is prefectly legal
->> according to the ACPI spec.
->>
->> Add support for reading/writing such values.
->>
->> Tested on a Dell Inspiron 3505 and a Asus Prime B650-Plus.
->>
->> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->> ---
->> Changes since v3:
->> - change type of variable i to size_t
->>
->> Changes since v2:
->> - fix address overflow check
->>
->> Changes since v1:
->> - use BITS_PER_BYTE
->> - validate that number of bytes to read/write does not overflow the
->>    address
->> ---
->>   drivers/platform/x86/wmi.c | 49 ++++++++++++++++++++++++++++++--------
->>   1 file changed, 39 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
->> index 1920e115da89..d9bf6d452b3a 100644
->> --- a/drivers/platform/x86/wmi.c
->> +++ b/drivers/platform/x86/wmi.c
->> @@ -1153,6 +1153,34 @@ static int parse_wdg(struct device *wmi_bus_dev, struct platform_device *pdev)
->>   	return 0;
->>   }
->>
->> +static int ec_read_multiple(u8 address, u8 *buffer, size_t bytes)
->> +{
->> +	size_t i;
->> +	int ret;
->> +
->> +	for (i = 0; i < bytes; i++) {
->> +		ret = ec_read(address + i, &buffer[i]);
->> +		if (ret < 0)
->> +			return ret;
->> +	}
->> +
->> +	return 0;
->> +}
-> Why not use ec_transaction?
+I am sorry for the delay, but instead of defining a generic name we should define
+a proper keycode for concrete action even if nothing is printed on a
+particular key on a particular device.
 
-Hi,
+Please drop this patch.
 
-because ec_transaction() is meant to send raw commands to the EC. And AFAIK read/write transactions can only transfer a
-single byte at once, so using ec_transaction() would yield no benefit here.
+Thanks.
 
->
->> +
->> +static int ec_write_multiple(u8 address, u8 *buffer, size_t bytes)
->> +{
->> +	size_t i;
->> +	int ret;
->> +
->> +	for (i = 0; i < bytes; i++) {
->> +		ret = ec_write(address + i, buffer[i]);
->> +		if (ret < 0)
->> +			return ret;
->> +	}
->> +
->> +	return 0;
->> +}
-> Same as above.
->> +
->>   /*
->>    * WMI can have EmbeddedControl access regions. In which case, we just want to
->>    * hand these off to the EC driver.
->> @@ -1162,27 +1190,28 @@ acpi_wmi_ec_space_handler(u32 function, acpi_physical_address address,
->>   			  u32 bits, u64 *value,
->>   			  void *handler_context, void *region_context)
->>   {
->> -	int result = 0;
->> -	u8 temp = 0;
->> +	int bytes = bits / BITS_PER_BYTE;
->> +	int ret;
->> +
->> +	if (!value)
->> +		return AE_NULL_ENTRY;
->>
->> -	if ((address > 0xFF) || !value)
->> +	if (!bytes || bytes > sizeof(*value))
->>   		return AE_BAD_PARAMETER;
->>
->> -	if (function != ACPI_READ && function != ACPI_WRITE)
->> +	if (address > U8_MAX || address + bytes - 1 > U8_MAX)
->>   		return AE_BAD_PARAMETER;
->>
->> -	if (bits != 8)
-> Since you want to support only 16 bit reads/writes, can you check for >16
-
-The 16 bit reads/writes where meant as an example, ACPI code can request much larger values.
-The WMI EC handler should be able to handle those, just like the regular ACPI EC handler.
-
-Thanks,
-Armin Wolf
-
->> +	if (function != ACPI_READ && function != ACPI_WRITE)
->>   		return AE_BAD_PARAMETER;
->>
->>   	if (function == ACPI_READ) {
->> -		result = ec_read(address, &temp);
->> -		*value = temp;
->> +		ret = ec_read_multiple(address, (u8 *)value, bytes);
->>   	} else {
->> -		temp = 0xff & *value;
->> -		result = ec_write(address, temp);
->> +		ret = ec_write_multiple(address, (u8 *)value, bytes);
->>   	}
->>
->> -	switch (result) {
->> +	switch (ret) {
->>   	case -EINVAL:
->>   		return AE_BAD_PARAMETER;
->>   	case -ENODEV:
->> --
->> 2.39.2
->>
->>
+-- 
+Dmitry
