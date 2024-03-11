@@ -1,121 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF8D3C08F;
-	Mon, 11 Mar 2024 12:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA30A2C698;
+	Mon, 11 Mar 2024 13:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710159864; cv=none; b=kAW7MrdnWTt85E8Zo2ZQYaOUarlJ8k9b4f0ya2butp0cCP5+geHNfAup0X2NGHN+zKuR/doSgUFFWMsk2kpAOkhzcNU/YX1UW5ZKPKdxM7yv/AzCqaVQUNbTl83TuN6KB53cZEnuODwShLAs0iUECSwap8LYdOTrVLrzyaujoJQ=
+	t=1710162020; cv=none; b=EJMDIxLMM/CUd6onBPd8iznaa9tnnZnS9GKaSwigtZL7re7ebgRkgSY1jjmlaG67UshaXFmyW2/45jL47VmKCB/yykKvMGvgU20sQP84+/0hHlJqKeNbeGKVzokRIRC1qjd8hDGQLcd91IcQNfUOrIQmmQ90QmOf6j5Nm68YDOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710159864; c=relaxed/simple;
-	bh=uvc2srdklbEZWRyAUkveO2lIu9fiESGPXlIMmlZAhO4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=cIP8iYFrvyoJXeeeiGi5omOOUAaabXnqh3amiY0nvOm3bihWyGZmuhoSi2LWoQsGb9SUee8mmKsWerY4Jm8LRFh2V1lxbQ8TDYMxTbsAoUEs3vXgicrVsH58h2K/2WaQkfD+wP2NB6DsyvPy3zCMdpua+iESMyXO3EPfoEyZbxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=glmRphLn; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1710162020; c=relaxed/simple;
+	bh=y+V+z4GfofolxfNywtHLsGFGEJpi+qtkcHOaShAT4g4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PqU35WV1x6nb2ylAuNxjQPgSMzwivO0I8ZZaJG/fvgOuACZNSysVEJV6yO60Lya8GHZq8cXyKCgFLK3nf33GL4b1shj3tx9/tGAcwmwgigacV4CKNzPJ60bTMsUQb7TZqjiQ2bS3Rye9dIVDKCZNu1LbRlOQJgMzHfYqLIUIPSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WUlcf+++; arc=none smtp.client-ip=209.85.217.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="glmRphLn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710159864; x=1741695864;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=uvc2srdklbEZWRyAUkveO2lIu9fiESGPXlIMmlZAhO4=;
-  b=glmRphLnYwKimpNj4U2bNeOiXI0FMC7Widap3UUfPf4xE4ARY82B7wSe
-   OeHl6cVv+d5ltsfABLaNFT7m2W+GUgbl03laIjly73TnuOv/5XL8b5uNe
-   QZuue/LaF9D/gmMS2Z7dr8ar6g9/qYsRqZu2chl/eN21AvGwrEt8Mzp9C
-   U/r9VgepsxliSKygZqWSRTwKotusywAP15Kv0kQ0GIgTSTVdz687GAlyM
-   o4VWtAAZjNygw85d3HDaJ6qF7hk9L5cUvq6kS6VAPjvSmlR2VS0RcYeq0
-   ETA52MKs978ukun3nVCeCSYxTgK/7RUYMFLcx1FgJwnLJlLA543mZB0Zp
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="15956660"
-X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
-   d="scan'208";a="15956660"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 05:24:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
-   d="scan'208";a="11240984"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.201])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 05:24:16 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 11 Mar 2024 14:24:11 +0200 (EET)
-To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-cc: virtualization@lists.linux.dev, Richard Weinberger <richard@nod.at>, 
-    Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-    Johannes Berg <johannes@sipsolutions.net>, 
-    Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
-    Bjorn Andersson <andersson@kernel.org>, 
-    Mathieu Poirier <mathieu.poirier@linaro.org>, 
-    Cornelia Huck <cohuck@redhat.com>, Halil Pasic <pasic@linux.ibm.com>, 
-    Eric Farman <farman@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-    Vasily Gorbik <gor@linux.ibm.com>, 
-    Alexander Gordeev <agordeev@linux.ibm.com>, 
-    Christian Borntraeger <borntraeger@linux.ibm.com>, 
-    Sven Schnelle <svens@linux.ibm.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-    Jason Wang <jasowang@redhat.com>, linux-um@lists.infradead.org, 
-    platform-driver-x86@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
-    linux-s390@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH vhost v2 0/4] refactor the params of find_vqs()
-In-Reply-To: <20240311072113.67673-1-xuanzhuo@linux.alibaba.com>
-Message-ID: <576263bc-5e86-5288-7fc5-de214dc622dd@linux.intel.com>
-References: <20240311072113.67673-1-xuanzhuo@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUlcf+++"
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4725acb539cso710575137.3;
+        Mon, 11 Mar 2024 06:00:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710162018; x=1710766818; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=dNPdTSgihx6APB/qlGwE3GrdCHgKzF4oHFB8F2X6Bm8=;
+        b=WUlcf+++fvZn9Eofpr9v82Fj78eW4WKdvsdM/mkoHy1ZE8ulWIpKCh1FnWPKdaWt+J
+         NpMfd1kC9hP+vbko5zFtwfaLDT6ah9hzDnN8M+f1TSs9QiASQ1zXYWsT7jZF/HPgUe9C
+         /YBbYzR9grUd994//NTNC6PJAks0cHta5+ZUjwjUxROiavkI1cLCVRfWkT7a6TViZX1p
+         9/u7fE9mXYUSAsUN5/KoFdMwf0kkJgYR0Sp6tYgNgHAauzQPF6h1AInOBdbteRq2lEom
+         bfdl5hQ59yf3N7VTWuvBw4YGstfRHli5xlKfjfFF9ApcdyxFIBR9l4NNrWSuSWcDZh6z
+         BBqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710162018; x=1710766818;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dNPdTSgihx6APB/qlGwE3GrdCHgKzF4oHFB8F2X6Bm8=;
+        b=B0o07V8ZY9Wb2G2oDqmhQj2KV5+tpEVPPjPlSmeC10U2sHwilfuydwt2bdKI5yXpcu
+         SElf8RkNQcaHp2h75GCoAE5Yx/XQbHhwbEMYUb029kIco+OD31Q9wbzrsx+m6aX/hKi9
+         MlEaKkdjaWm3GcVYJIlhaBPtbV19Ia+4uWdi6IAX+ygEyNfmk4bAlqnYzweeJvGq0Jez
+         E5U2V0Q/tYO9c/z1K2x89y+PuDDOqqBzaEOlMZHyKR3P6rSpL/M8pAt1E0k2Zh/Y5O9v
+         KeuM46j5NXvu7RaWhCkiiVeRYFxTtK17zvK9149xxdxApawbpGXwof3mXgKNa6MVlkEF
+         FhWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW61noYUXZcHDZ/LYzsyeZNS4zDyhvzc17Nd+4NW/HhzcghlRynw8LoS4EZS/+0c2IAdh3Dytw021wnBe0NSdbwhGRXsnBVKpsZE43Eem/AUfDlI+XYQ4Rr6E7vrVu7vKCT7K/EQBoWs+ZQM/5U+BY+F4/wZZamI2R5w52EIaZ7zuEfToxLmen2DQ9iRg==
+X-Gm-Message-State: AOJu0Yx+YX0ZZqdnsGRU1NWFb6r9AjlEOvOH3EYQVxNxBKFB6PD0Rq7f
+	whcYD9nLDup70c//6gOKRBnKyIVotx9aTXmRgEcXNZvjogaWhmcO4PeQ+mYRwZEbTJfWs9esaDY
+	RS8wVPXdlkGaYdp3D1LgCq4GeYsk=
+X-Google-Smtp-Source: AGHT+IGgljW5afs/Bd9m728X19XoFuAy7J1zC7s4GAdWqIMWMm3E1GTQvPc8yXfBh/BEEpRh3w5qDky2FEwjJ9baG2o=
+X-Received: by 2002:a67:f885:0:b0:473:884:7854 with SMTP id
+ h5-20020a67f885000000b0047308847854mr3603685vso.25.1710162017595; Mon, 11 Mar
+ 2024 06:00:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-925155278-1710159757=:1071"
-Content-ID: <c2f52b25-b189-ac04-112b-c9f04d16b66f@linux.intel.com>
+References: <20240307133601.103521-1-e.velu@criteo.com> <171015844082.2407.9314247833035238689.b4-ty@linux.intel.com>
+In-Reply-To: <171015844082.2407.9314247833035238689.b4-ty@linux.intel.com>
+From: Erwan Velu <erwanaliasr1@gmail.com>
+Date: Mon, 11 Mar 2024 14:00:06 +0100
+Message-ID: <CAL2JzuzSLnxNVqkZJzkmj7hhpSaVG1Odxy4H=sLO=fTXYBt6Dw@mail.gmail.com>
+Subject: Re: [PATCH] doc/arch/x86/amd/hsmp: Updating urls
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Erwan Velu <e.velu@criteo.com>, 
+	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, Carlos Bilbao <carlos.bilbao@amd.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+> Thank you for your contribution, it has been applied to my local
+> review-ilpo branch. Note it will show up in the public
+> platform-drivers-x86/review-ilpo branch only once I've pushed my
+> local branch there, which might take a while.
+>
+> The list of commits applied:
+> [1/1] doc/arch/x86/amd/hsmp: Updating urls
+>       commit: dfea6b10ed15aeec6456e704e08e45fc7c947a9d
 
---8323328-925155278-1710159757=:1071
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <f3d0e1c1-ebcb-baa0-324b-5ca93ffa7301@linux.intel.com>
-
-On Mon, 11 Mar 2024, Xuan Zhuo wrote:
-
-> This pathset is splited from the
->=20
->      http://lore.kernel.org/all/20240229072044.77388-1-xuanzhuo@linux.ali=
-baba.com
->=20
-> That may needs some cycles to discuss. But that notifies too many people.
->=20
-> But just the four commits need to notify so many people.
-> And four commits are independent. So I split that patch set,
-> let us review these first.
->=20
-> The patch set try to  refactor the params of find_vqs().
-> Then we can just change the structure, when introducing new
-> features.
->=20
-> Thanks.
->=20
-> v2:
->   1. add kerneldoc for "struct vq_transport_config" @ilpo.jarvinen
->=20
-> v1:
->   1. fix some comments from ilpo.jarvinen@linux.intel.com
->=20
->=20
-> Xuan Zhuo (4):
->   virtio: find_vqs: pass struct instead of multi parameters
->   virtio: vring_create_virtqueue: pass struct instead of multi
->     parameters
->   virtio: vring_new_virtqueue(): pass struct instead of multi parameters
->   virtio_ring: simplify the parameters of the funcs related to
->     vring_create/new_virtqueue()
-
-FWIW,
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
---8323328-925155278-1710159757=:1071--
+Thx for the merge & happy to contribute a bit to this wonderful project ;)
