@@ -1,186 +1,272 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A463FB84;
-	Mon, 11 Mar 2024 14:03:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE5D4207B;
+	Mon, 11 Mar 2024 15:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710165817; cv=none; b=AHLzTmqLNjsPFINDM/zrI/MoZigFU1STqrPqnNr+IB2jbVThwz2cMXqo8qPSVy1UzmNv6HIGbk2JSsszkrT4AEl1Eil+17j2bxSqoTigU75DC5Iva7TYfPwr1/69cm23TlarUZ80jz6qNXdlndRRA5Y8j+J8OzkbYLKEmk9M9jI=
+	t=1710172614; cv=none; b=gyKNINkGsIr3/pM7UbQq282y+eQJz6SOdq7RgCmdZfKYxQGTyk0trgC9osmi+kjQdHBhyCzhX47gsKZQW7wfCAKGAb1N063Bz7CCp93JOSgbaK9/6DO0KyOQONuYw3EwH06TAwFFOoUIXWel0+5AKZBBZHL0wZsvpIGUY2gV66s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710165817; c=relaxed/simple;
-	bh=+faj2acv6Tj9q/RzQhyGQXkzPMchgaGd3MF2eJayovg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=U9fvt6fGTInuaO3rqoUcF87rLsuujzDsBtpGHDrFmm2D0IiVJjSsuj92MkEnO6troRWC4ONLhNNPFflLwZdg3GVbnQzyqttTATxyKEz/VBXpUY4Z+IwqD4aMTPqBlSf8xhakV3mfjSXULK6GuwNNIHYsKDfSol62U/OX0bCOuew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AKqI55Gs; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1710172614; c=relaxed/simple;
+	bh=DeVDHoqrlAAYXO82i9sgG6eEpZuSi3CQXTqHB7uSVqM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LD+IL+3Xbv37vtGn7rD+ZneYFvu2WniLCLqTlGNtgqr4VHwmV9vYnSrybGg18C529JuTRFLlSJBM1Qo4RKwDHuA2iTVZyjo51WyAjrz27B6M0yGwhw4fB/KFiA/+UyLGymuljpXMv5WZxo3bFqFqSkcExjpjGI6klNQHt3QI5Po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YmdYOxDo; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AKqI55Gs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710165816; x=1741701816;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=+faj2acv6Tj9q/RzQhyGQXkzPMchgaGd3MF2eJayovg=;
-  b=AKqI55GsbUvecPZPKObg2b3/Qbxra0XIPLWqbdhQzEn8AM6gjVvJ/Rv2
-   VcVs0i8oWSAL+wHPjXuXSt5LalUVJWPN0U7Wg2IQHOwCUVGRhUnNNP8iX
-   a0129XqAxfRc+AQg206CCSMhcjgIylppvh+riyzng3ph/R1hujdFlyv28
-   ads0sGe8yknhb/sdRjuzW6vbVOd2GQlTganTED2PDU55X8eSASTcVyHfO
-   mgH/q1jDgZLT8T33ywQOh1vxNao2ov/q3AAytzw4PIQmFx5k6fnS7IOFg
-   PKpshMkkxjkBxJ12yP7zEwEHR9G39CkUs1MX84TLJCcUXFgJwxsHJKe9w
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="15558722"
-X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
-   d="scan'208";a="15558722"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 07:03:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,116,1708416000"; 
-   d="scan'208";a="15881729"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.201])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2024 07:03:31 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 11 Mar 2024 16:03:26 +0200 (EET)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: Hans de Goede <hdegoede@redhat.com>, 
-    "Rafael J. Wysocki" <rafael@kernel.org>, lenb@kernel.org, 
-    mario.limonciello@amd.com, linux-acpi@vger.kernel.org, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/2] platform/x86: wmi: Support reading/writing 16
- bit EC values
-In-Reply-To: <20240308210519.2986-1-W_Armin@gmx.de>
-Message-ID: <891f6a46-fb6c-b366-d17e-64d26cb6f4a2@linux.intel.com>
-References: <20240308210519.2986-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YmdYOxDo"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42BFsGpW014793;
+	Mon, 11 Mar 2024 15:54:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=YX+/25KQmDMtuk6beAw4gYUoyBzSATAPBx7GNiWq54Q=;
+ b=YmdYOxDolyGbGPL9tNk9GWxfrU6bez1t6A6uuOAgfd3c6gPF7a8F1wV6/IEn6+LzkZJb
+ mg9Hf5CQ05nV96S4Cp87LwWzUCJA3HogqsdJHQxWEYDWi4YWX2tgMekg8J2sAknj6B0H
+ MM7RKnRQzTD2A9yM+iNhFtcKaFagcuiF/oIKVN22uKkHz7b42w8nG3JD+UuSEnRIxVQA
+ u9duTtkS3VLU02VwH1MxYWgMrlS4Dv28MiKOO57SrmGm40faReKgcaU4jvZCBqdu298a
+ h0v6nCOZ2YSRYC14JfkznihYWVDqsZIHpMGmyU+6RCcmc69cbk+fDTK2dQ1vtDl8MDqU Bg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wt4p88ex0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Mar 2024 15:54:25 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42BFXPgD024404;
+	Mon, 11 Mar 2024 15:54:24 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wt4p88er3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Mar 2024 15:54:24 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42BCx5tT015485;
+	Mon, 11 Mar 2024 15:52:25 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ws2fyhk6h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Mar 2024 15:52:25 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42BFqMDW45548004
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 11 Mar 2024 15:52:24 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0212C58053;
+	Mon, 11 Mar 2024 15:52:22 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9B30958059;
+	Mon, 11 Mar 2024 15:52:19 +0000 (GMT)
+Received: from li-479af74c-31f9-11b2-a85c-e4ddee11713b.ibm.com (unknown [9.61.78.110])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 11 Mar 2024 15:52:19 +0000 (GMT)
+Message-ID: <77e02ecf8b87ab83ee6e34d1118f13c8fb83353b.camel@linux.ibm.com>
+Subject: Re: [PATCH vhost v2 1/4] virtio: find_vqs: pass struct instead of
+ multi parameters
+From: Eric Farman <farman@linux.ibm.com>
+To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>, virtualization@lists.linux.dev
+Cc: Richard Weinberger <richard@nod.at>,
+        Anton Ivanov
+ <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg
+ <johannes@sipsolutions.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Vadim
+ Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck
+ <cohuck@redhat.com>, Halil Pasic <pasic@linux.ibm.com>,
+        Heiko Carstens
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev
+ <agordeev@linux.ibm.com>,
+        Christian Borntraeger
+ <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        "Michael
+ S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, linux-um@lists.infradead.org,
+        platform-driver-x86@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org
+Date: Mon, 11 Mar 2024 11:52:19 -0400
+In-Reply-To: <20240311072113.67673-2-xuanzhuo@linux.alibaba.com>
+References: <20240311072113.67673-1-xuanzhuo@linux.alibaba.com>
+	 <20240311072113.67673-2-xuanzhuo@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1630043217-1710165727=:1071"
-Content-ID: <33cd499f-81af-71ff-1443-6bca370db796@linux.intel.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: FMt9OmBDBX8TW4TdSfNa-7EqZo2-lqc6
+X-Proofpoint-GUID: yINxBnMN9NkSpBInJ1GIjKG1RBbYvE1Y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-11_10,2024-03-11_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 mlxlogscore=999 mlxscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 malwarescore=0 phishscore=0 bulkscore=0
+ priorityscore=1501 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311290000 definitions=main-2403110120
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1630043217-1710165727=:1071
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <10258b74-3c1e-59a9-6f5f-a79e282eec5b@linux.intel.com>
-
-On Fri, 8 Mar 2024, Armin Wolf wrote:
-
-> The ACPI EC address space handler currently only supports
-> reading/writing 8 bit values. Some firmware implementations however
-> want to access for example 16 bit values, which is prefectly legal
-> according to the ACPI spec.
+On Mon, 2024-03-11 at 15:21 +0800, Xuan Zhuo wrote:
+> Now, we pass multi parameters to find_vqs. These parameters
+> may work for transport or work for vring.
 >=20
-> Add support for reading/writing such values.
+> And find_vqs has multi implements in many places:
 >=20
-> Tested on a Dell Inspiron 3505 and a Asus Prime B650-Plus.
+> =C2=A0arch/um/drivers/virtio_uml.c
+> =C2=A0drivers/platform/mellanox/mlxbf-tmfifo.c
+> =C2=A0drivers/remoteproc/remoteproc_virtio.c
+> =C2=A0drivers/s390/virtio/virtio_ccw.c
+> =C2=A0drivers/virtio/virtio_mmio.c
+> =C2=A0drivers/virtio/virtio_pci_legacy.c
+> =C2=A0drivers/virtio/virtio_pci_modern.c
+> =C2=A0drivers/virtio/virtio_vdpa.c
 >=20
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> Every time, we try to add a new parameter, that is difficult.
+> We must change every find_vqs implement.
+>=20
+> One the other side, if we want to pass a parameter to vring,
+> we must change the call path from transport to vring.
+> Too many functions need to be changed.
+>=20
+> So it is time to refactor the find_vqs. We pass a structure
+> cfg to find_vqs(), that will be passed to vring by transport.
+>=20
+> Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> Acked-by: Johannes Berg <johannes@sipsolutions.net>
 > ---
-> Changes since v3:
-> - change type of variable i to size_t
+> =C2=A0arch/um/drivers/virtio_uml.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 23 +++----
+> =C2=A0drivers/platform/mellanox/mlxbf-tmfifo.c | 13 ++--
+> =C2=A0drivers/remoteproc/remoteproc_virtio.c=C2=A0=C2=A0 | 28 ++++-----
+> =C2=A0drivers/s390/virtio/virtio_ccw.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 | 29 +++++----
+> =C2=A0drivers/virtio/virtio_mmio.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 26 ++++----
+> =C2=A0drivers/virtio/virtio_pci_common.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 | 60 +++++++++---------
+> =C2=A0drivers/virtio/virtio_pci_common.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 9 +--
+> =C2=A0drivers/virtio/virtio_pci_legacy.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 | 11 ++--
+> =C2=A0drivers/virtio/virtio_pci_modern.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 | 33 ++++++----
+> =C2=A0drivers/virtio/virtio_vdpa.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 36 +++++------
+> =C2=A0include/linux/virtio_config.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 77 +++++++++++++++++++---
+> --
+> =C2=A011 files changed, 192 insertions(+), 153 deletions(-)
 >=20
-> Changes since v2:
-> - fix address overflow check
 >=20
-> Changes since v1:
-> - use BITS_PER_BYTE
-> - validate that number of bytes to read/write does not overflow the
->   address
-> ---
->  drivers/platform/x86/wmi.c | 49 ++++++++++++++++++++++++++++++--------
->  1 file changed, 39 insertions(+), 10 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index 1920e115da89..d9bf6d452b3a 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -1153,6 +1153,34 @@ static int parse_wdg(struct device *wmi_bus_dev, s=
-truct platform_device *pdev)
->  =09return 0;
->  }
->=20
-> +static int ec_read_multiple(u8 address, u8 *buffer, size_t bytes)
-> +{
-> +=09size_t i;
-> +=09int ret;
-> +
-> +=09for (i =3D 0; i < bytes; i++) {
-> +=09=09ret =3D ec_read(address + i, &buffer[i]);
-> +=09=09if (ret < 0)
-> +=09=09=09return ret;
-> +=09}
-> +
-> +=09return 0;
-> +}
-> +
-> +static int ec_write_multiple(u8 address, u8 *buffer, size_t bytes)
-> +{
-> +=09size_t i;
-> +=09int ret;
-> +
-> +=09for (i =3D 0; i < bytes; i++) {
-> +=09=09ret =3D ec_write(address + i, buffer[i]);
-> +=09=09if (ret < 0)
-> +=09=09=09return ret;
-> +=09}
-> +
-> +=09return 0;
-> +}
-> +
->  /*
->   * WMI can have EmbeddedControl access regions. In which case, we just w=
-ant to
->   * hand these off to the EC driver.
-> @@ -1162,27 +1190,28 @@ acpi_wmi_ec_space_handler(u32 function, acpi_phys=
-ical_address address,
->  =09=09=09  u32 bits, u64 *value,
->  =09=09=09  void *handler_context, void *region_context)
->  {
-> -=09int result =3D 0;
-> -=09u8 temp =3D 0;
-> +=09int bytes =3D bits / BITS_PER_BYTE;
-> +=09int ret;
-> +
-> +=09if (!value)
-> +=09=09return AE_NULL_ENTRY;
->=20
-> -=09if ((address > 0xFF) || !value)
-> +=09if (!bytes || bytes > sizeof(*value))
->  =09=09return AE_BAD_PARAMETER;
->=20
-> -=09if (function !=3D ACPI_READ && function !=3D ACPI_WRITE)
-> +=09if (address > U8_MAX || address + bytes - 1 > U8_MAX)
->  =09=09return AE_BAD_PARAMETER;
->=20
-> -=09if (bits !=3D 8)
-> +=09if (function !=3D ACPI_READ && function !=3D ACPI_WRITE)
->  =09=09return AE_BAD_PARAMETER;
->=20
->  =09if (function =3D=3D ACPI_READ) {
-> -=09=09result =3D ec_read(address, &temp);
-> -=09=09*value =3D temp;
-> +=09=09ret =3D ec_read_multiple(address, (u8 *)value, bytes);
->  =09} else {
-> -=09=09temp =3D 0xff & *value;
-> -=09=09result =3D ec_write(address, temp);
-> +=09=09ret =3D ec_write_multiple(address, (u8 *)value, bytes);
->  =09}
->=20
-> -=09switch (result) {
-> +=09switch (ret) {
->  =09case -EINVAL:
->  =09=09return AE_BAD_PARAMETER;
->  =09case -ENODEV:
 
-Seems okay now, thanks.
+...snip...
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+>=20
+> diff --git a/drivers/virtio/virtio_pci_modern.c
+> b/drivers/virtio/virtio_pci_modern.c
+> index f62b530aa3b5..b2cdf5d3824d 100644
+> --- a/drivers/virtio/virtio_pci_modern.c
+> +++ b/drivers/virtio/virtio_pci_modern.c
+> @@ -530,9 +530,7 @@ static bool vp_notify_with_data(struct virtqueue
+> *vq)
+> =C2=A0static struct virtqueue *setup_vq(struct virtio_pci_device *vp_dev,
+> =C2=A0				=C2=A0 struct virtio_pci_vq_info *info,
+> =C2=A0				=C2=A0 unsigned int index,
+> -				=C2=A0 void (*callback)(struct virtqueue
+> *vq),
+> -				=C2=A0 const char *name,
+> -				=C2=A0 bool ctx,
+> +				=C2=A0 struct virtio_vq_config *cfg,
+> =C2=A0				=C2=A0 u16 msix_vec)
+> =C2=A0{
+> =C2=A0
+> @@ -563,8 +561,11 @@ static struct virtqueue *setup_vq(struct
+> virtio_pci_device *vp_dev,
+> =C2=A0	/* create the vring */
+> =C2=A0	vq =3D vring_create_virtqueue(index, num,
+> =C2=A0				=C2=A0=C2=A0=C2=A0 SMP_CACHE_BYTES, &vp_dev->vdev,
+> -				=C2=A0=C2=A0=C2=A0 true, true, ctx,
+> -				=C2=A0=C2=A0=C2=A0 notify, callback, name);
+> +				=C2=A0=C2=A0=C2=A0 true, true,
+> +				=C2=A0=C2=A0=C2=A0 cfg->ctx ? cfg->ctx[cfg-
+> >cfg_idx] : false,
+> +				=C2=A0=C2=A0=C2=A0 notify,
+> +				=C2=A0=C2=A0=C2=A0 cfg->callbacks[cfg->cfg_idx],
+> +				=C2=A0=C2=A0=C2=A0 cfg->names[cfg->cfg_idx]);
+> =C2=A0	if (!vq)
+> =C2=A0		return ERR_PTR(-ENOMEM);
+> =C2=A0
+> @@ -593,15 +594,11 @@ static struct virtqueue *setup_vq(struct
+> virtio_pci_device *vp_dev,
+> =C2=A0	return ERR_PTR(err);
+> =C2=A0}
+> =C2=A0
+> -static int vp_modern_find_vqs(struct virtio_device *vdev, unsigned
+> int nvqs,
+> -			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct virtqueue *vqs[],
+> -			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vq_callback_t *callbacks[],
+> -			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const char * const names[], const bool
+> *ctx,
+> -			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct irq_affinity *desc)
+> +static int vp_modern_find_vqs(struct virtio_device *vdev, struct
+> virtio_vq_config *cfg)
+> =C2=A0{
+> =C2=A0	struct virtio_pci_device *vp_dev =3D to_vp_device(vdev);
+> =C2=A0	struct virtqueue *vq;
+> -	int rc =3D vp_find_vqs(vdev, nvqs, vqs, callbacks, names, ctx,
+> desc);
+> +	int rc =3D vp_find_vqs(vdev, cfg);
+> =C2=A0
+> =C2=A0	if (rc)
+> =C2=A0		return rc;
+> @@ -739,10 +736,17 @@ static bool vp_get_shm_region(struct
+> virtio_device *vdev,
+> =C2=A0static int vp_modern_create_avq(struct virtio_device *vdev)
+> =C2=A0{
+> =C2=A0	struct virtio_pci_device *vp_dev =3D to_vp_device(vdev);
+> +	vq_callback_t *callbacks[] =3D { NULL };
+> +	struct virtio_vq_config cfg =3D {};
+> =C2=A0	struct virtio_pci_admin_vq *avq;
+> =C2=A0	struct virtqueue *vq;
+> +	const char *names[1];
+> =C2=A0	u16 admin_q_num;
+> =C2=A0
+> +	cfg.nvqs =3D 1;
+> +	cfg.callbacks =3D callbacks;
+> +	cfg.names =3D names;
+> +
+> =C2=A0	if (!virtio_has_feature(vdev, VIRTIO_F_ADMIN_VQ))
+> =C2=A0		return 0;
+> =C2=A0
+> @@ -753,8 +757,11 @@ static int vp_modern_create_avq(struct
+> virtio_device *vdev)
+> =C2=A0	avq =3D &vp_dev->admin_vq;
+> =C2=A0	avq->vq_index =3D vp_modern_avq_index(&vp_dev->mdev);
+> =C2=A0	sprintf(avq->name, "avq.%u", avq->vq_index);
+> -	vq =3D vp_dev->setup_vq(vp_dev, &vp_dev->admin_vq.info, avq-
+> >vq_index, NULL,
+> -			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 avq->name, NULL,
+> VIRTIO_MSI_NO_VECTOR);
+> +
+> +	cfg.names[0] =3D avq->name;
 
---=20
- i.
---8323328-1630043217-1710165727=:1071--
+While looking at the s390 changes, I observe that the above fails to
+compile and is subsequently fixed in patch 2:
+
+drivers/virtio/virtio_pci_modern.c: In function =E2=80=98vp_modern_create_a=
+vq=E2=80=99:
+drivers/virtio/virtio_pci_modern.c:761:22: error: assignment of read-
+only location =E2=80=98*cfg.names=E2=80=99
+  761 |         cfg.names[0] =3D avq->name;
+      |                      ^
+
+
