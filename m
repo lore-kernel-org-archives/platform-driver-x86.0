@@ -1,148 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAFD41C89;
-	Tue, 12 Mar 2024 10:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF0F58207;
+	Tue, 12 Mar 2024 11:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710239747; cv=none; b=HqJGFvWQYSqhpZajF4LsgC1W3+jxEiMqQcn8ONLnDox4VUdcVdJoyKW1JITI/tE0YKGf/mryxCf/vuDvWZwmq3d/jUZ7Ou9xXFZ6JwwQKtTUDZaz83VRSjYpdC3tFFjAiT3vXSj4lfCH++Il7C8AWKDLmurZq997t0PzP0MMgRM=
+	t=1710241268; cv=none; b=YySWrF9Fjkf8ViAGgx7s0Sl8nb+pg7svIe6gHioKT8rqDFDT6KdQ7xAXDcGyjpRrTKp77mZ5tZLgqILJ8PnkemHj47f+n8xWs3MkJWNpDjgUxioAx7PmOsM34LsffFo9Uvn6b2cuTE4wIbuIhApZP18q+nmAZnv3fySvlxBs6rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710239747; c=relaxed/simple;
-	bh=QDB+v8Xy4M7nLhPofhtwM2OqHObbpVpZmD9JZ7L7PmI=;
+	s=arc-20240116; t=1710241268; c=relaxed/simple;
+	bh=yWxjcqk3nCMt2Sxjy1ZbQ/ciNB8fetvsro9SiWbKotA=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=hP+kw8cfQKz7JogaBaWn2tzwUnxROFmWYNxS+3P7h8mk99uNlL1DuV9ZrQt4LeGS/qOM9nH2u2DyrbRdouwGvhSzB1/Dw743/llaxvTAhANVghb42M6A83+x5M2ig4Xe9MAbHrT9j2VNI5zJd68XVGVvE7WrJq/bNmTQhgPse5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OJkPSNeC; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version:Content-Type; b=k+c9teb09e+qL9og+ra+MSK0tSqkPfUFXCFL8RAwMfhZOVJr/YxFNVcxa2v6rTxHU0TpmvC5Kxv1vCpofUyisCb28WscUtrADvf7TPFsT6N71mJhF5htzCBb+0maiCrZy0RUjfE8EYeO8zvi3sMceR5vUEE9O5Z3hgOtzA6p6S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GbU6fWTi; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OJkPSNeC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GbU6fWTi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710239747; x=1741775747;
+  t=1710241267; x=1741777267;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=QDB+v8Xy4M7nLhPofhtwM2OqHObbpVpZmD9JZ7L7PmI=;
-  b=OJkPSNeCJD8umcFOAfubxRY8TfXNdAWd0yCdsSqf2xP62Y79OVrydINB
-   Dc7PMdiOnrtyEKGdWLfKRjOFhBVv3/y2OTn8GxKR36gRwacMyRQMi7Q4P
-   rvomFnlFfZRsqH8BDvqsx4vrOA25QJbFwsF9Nq6XB/AAIAMGlmW9q67UK
-   3zqXuQncxzeXWGikhmdzCUwlJVdDzLHwNSJB9ANrR5h6KGS85uIdG7Rzf
-   iZ7tIRey/L9/LE4+GJqA93UcGjMt1vUcHxt7/jjQYpcf9kapQvQ6UJ2lM
-   TN1k7A9YqWcAjF0jt1Qou43mWtMdzZ1wzNaGzedtFM2sHJFyUgXK24Urx
+  bh=yWxjcqk3nCMt2Sxjy1ZbQ/ciNB8fetvsro9SiWbKotA=;
+  b=GbU6fWTiHG9X2mPdxLkBq8UH4FivdWrSQ7388R0kYScGE7qG7s+dpKTt
+   HxWvIpLyIRgArlB5AWorQTVJdqynAg07kVko+WDOQoYO8ch0cYV4OF73k
+   XUAbLzfRzfh3npHX140/aAlrbVyaQO0eYT78GNP+qNrUZWuE+Iidry+Qh
+   ASjh88r6xiyQz9WJZzsWnCFXGkR5KQ5CksEpjD5HZDJO50deH9g58I7Lh
+   j5pou6Fy68nLAjm0ditRUby771YYOa9zk8JP4wd6MfWwzN7hw4vV3YFSp
+   DKm+c0Yyuwb0b3IIF69f/EJmTMyGn6Ac0pjCUzp3EQogUMFNmSd+Z+bEx
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11010"; a="4798576"
+X-IronPort-AV: E=McAfee;i="6600,9927,11010"; a="5062316"
 X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="4798576"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 03:35:46 -0700
+   d="scan'208";a="5062316"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 04:01:06 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="11412344"
+   d="scan'208";a="11422913"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.6])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 03:35:42 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 04:01:03 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 12 Mar 2024 12:35:38 +0200 (EET)
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-cc: Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>, 
-    Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
-    platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-    =?ISO-8859-15?Q?Andr=E9_Apitzsch?= <git@apitzsch.eu>, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/2] platform: x86-android-tablets: other: Add swnode
- for Xiaomi pad2 indicator LED
-In-Reply-To: <Ze-I63bNzaMkHfgg@surfacebook.localdomain>
-Message-ID: <18ef7e97-db6e-2dc4-5728-5a539ae4c9bb@linux.intel.com>
-References: <20240306025801.8814-1-hpa@redhat.com> <20240306025801.8814-2-hpa@redhat.com> <Ze-I63bNzaMkHfgg@surfacebook.localdomain>
+Date: Tue, 12 Mar 2024 13:01:00 +0200 (EET)
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+cc: Ike Panhc <ike.pan@canonical.com>, Hans de Goede <hdegoede@redhat.com>, 
+    Philipp Jungkamp <p.jungkamp@gmx.net>, Gergo Koteles <soyer@irl.hu>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-input@vger.kernel.org
+Subject: Re: [PATCH 0/2] map Fn + R key on newer Yogas and Legions
+In-Reply-To: <Ze9RU8Mbnl-w8ZUL@google.com>
+Message-ID: <3aa59524-1d66-0536-a0e0-264e6b089aa5@linux.intel.com>
+References: <cover.1708399689.git.soyer@irl.hu> <170895405312.2243.4199399921923370447.b4-ty@linux.intel.com> <Ze0PSaOQSJMxL_Ln@google.com> <269b8adf-426a-b614-5450-383cde095c75@linux.intel.com> <Ze9RU8Mbnl-w8ZUL@google.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-859821774-1710241260=:1770"
 
-On Tue, 12 Mar 2024, Andy Shevchenko wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> Wed, Mar 06, 2024 at 10:58:00AM +0800, Kate Hsuan kirjoitti:
-> > There is a KTD2026 LED controller to manage the indicator LED for Xiaomi
-> > pad2. The ACPI for it is not properly made so the kernel can't get
-> > a correct description of it.
-> > 
-> > This work add a description for this RGB LED controller and also set a
-> > trigger to indicate the chaging event (bq27520-0-charging). When it is
-> > charging, the indicator LED will be turn on.
-> 
-> Ilpo, Kate, please consider the following remarks.
-> 
-> ...
-> 
-> >  #include <linux/gpio/machine.h>
-> >  #include <linux/input.h>
-> >  #include <linux/platform_device.h>
-> 
-> + Blank line?
-> 
-> > +#include <dt-bindings/leds/common.h>
-> 
-> Not sure where to place this, some drivers put it the first, some after linux/*.
-> 
-> ...
-> 
-> > +/* main fwnode for ktd2026 */
-> > +static const struct software_node ktd2026_node = {
-> 
-> No name?
-> 
-> > +};
-> > +
-> > +static const struct property_entry ktd2026_rgb_led_props[] = {
-> > +	PROPERTY_ENTRY_U32("reg", 0),
-> > +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_RGB),
-> > +	PROPERTY_ENTRY_STRING("function", "indicator"),
-> 
-> > +	PROPERTY_ENTRY_STRING("linux,default-trigger",
-> > +			      "bq27520-0-charging"),
-> 
-> It's less than 80, why not on a single line?
-> 
-> > +
-> 
-> Redundant blank line.
-> 
-> > +	{ }
-> > +};
-> 
-> ...
-> 
-> > +/* B */
-> 
-> B for red?!
-> 
-> > +static const struct property_entry ktd2026_red_led_props[] = {
-> > +	PROPERTY_ENTRY_U32("reg", 0),
-> > +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_BLUE),
-> > +	{ }
-> > +};
+--8323328-859821774-1710241260=:1770
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-The name with "red" and LED_COLOR_ID_BLUE are also inconsistent.
+On Mon, 11 Mar 2024, Dmitry Torokhov wrote:
 
-> ...
-> 
-> > +/* R */
-> 
-> R for blue?!
-> 
-> > +static const struct property_entry ktd2026_blue_led_props[] = {
-> > +	PROPERTY_ENTRY_U32("reg", 2),
-> > +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_RED),
-> > +	{ }
-> > +};
+> On Mon, Mar 11, 2024 at 12:53:36PM +0200, Ilpo J=E4rvinen wrote:
+> > On Sat, 9 Mar 2024, Dmitry Torokhov wrote:
+> >=20
+> > > On Mon, Feb 26, 2024 at 03:27:33PM +0200, Ilpo J=E4rvinen wrote:
+> > > > On Tue, 20 Feb 2024 04:39:34 +0100, Gergo Koteles wrote:
+> > > >=20
+> > > > > This patch series adds a new KEY_FN_R input event code and map th=
+e
+> > > > > Fn + R key to it in the ideapad-laptop driver.
+> > > > >=20
+> > > > > It affects two WMI keycodes and I couldn't try the 0x0a, but I co=
+uldn't
+> > > > > find any indication that the refresh rate toggle should not be Fn=
+ + R.
+> > > > >=20
+> > > > > Regards,
+> > > > > Gergo
+> > > > >=20
+> > > > > [...]
+> > > >=20
+> > > >=20
+> > > > Thank you for your contribution, it has been applied to my local
+> > > > review-ilpo branch. Note it will show up in the public
+> > > > platform-drivers-x86/review-ilpo branch only once I've pushed my
+> > > > local branch there, which might take a while.
+> > > >=20
+> > > > The list of commits applied:
+> > > > [1/2] Input: allocate keycode for Fn + R
+> > > >       commit: 4e45fa464aeef4e803412b5dcce73aad48c94b0e
+> > >=20
+> > > I am sorry for the delay, but instead of defining a generic name we s=
+hould define
+> > > a proper keycode for concrete action even if nothing is printed on a
+> > > particular key on a particular device.
+> > >=20
+> > > Please drop this patch.
+> >=20
+> > Dropping them at this point would bit of a hassle due to backmerges of
+> > fixes branch.
+>=20
+> You should really wait applying patches affecting other parts of the
+> kernel as well as UAPI until all maintainers responsible for them agree
+> with the changes.
+>=20
+> Thanks.
 
-Here as well.
+I'm sorry about that. I'll try to be more careful in the future.
 
-I think it's better I drop this patch (it's only in review-ilpo) and wait 
-for v5 version as there's some much still to correct.
+I've now replaced those patches in pdx86/for-next.
 
-
--- 
+--=20
  i.
 
+--8323328-859821774-1710241260=:1770--
