@@ -1,126 +1,188 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAE81E480
-	for <platform-driver-x86@vger.kernel.org>; Thu, 14 Mar 2024 18:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D5D1A38D0;
+	Thu, 14 Mar 2024 18:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710441431; cv=none; b=VHGargbSUEj3DjhvYctVDEO/xba8czgvrMQDm5q5Wdhssg3jyEKZBriC3fNKIGFElhWoSuqvcygK7dLnhQkQXq2apkZ9RnPWD9eRrSg3jxG4EbLf/XDrPxPUlLm8z323ylB86qYGiUsQ2SvdaP8FkUaHEOhJuOmdOL45dKQT55s=
+	t=1710441960; cv=none; b=OvkZ/T86uM/u0WIOe09mB6fVuYzk2IOQmsw+2mjZWZuiQYrLxefx/oZ/IXkd1ULmSQOIwWZ/bB5oxGPdLy8qE5hJuJzrKOWLG5liDicb2E7XyoDu2msaAN6UJ43sP/mNkJkgNKPLQCXOG2swKCv8p3TipIz7DI2WfUn1VjLE2v0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710441431; c=relaxed/simple;
-	bh=5zX85xcBrLUKqCQn8fjjnIh2KmQKXlgJU7872McN3CU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cxH+5ONIGDP1pIG42QmVaEJlSbEVYNZl8gfRZS85M+TaLUC1cFog0uhIH90+jQ3mqnAnYGYoXHNBMRxVQxC2m/PD/CmXNWhZwOrNR0iFRQz/21cijjyq/YiMJ8y6FX5atFH4X8htF3DHH2865nJYL6s8RqfP8YQL9ktOq1QNgLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=a7rXWeEC; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1710441960; c=relaxed/simple;
+	bh=Yt/Ht2srOy/MWCeGWifQCTS+hIHpil3Qr+8V2f3E2F4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=gKilfIDWLxDlPDOUQLnrEVFYwGUioaSwTzfnvlwhvvNlO9FWcwZRjkn7QAVpk46p2movZZ74lYkLMdviqm4bAR9Zb/tVuhHym3Kn8fn0Ih7s1V8sqIgYPq3CF/Cct7z7af1MxJTBHuZhkDWPkFIhTGa3Bh71nwTC+N3Fai+Mge0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=rHy0czus; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="a7rXWeEC"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a46807a7d3fso22130266b.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Mar 2024 11:37:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1710441428; x=1711046228; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FAnheW04vNnoWidpA9IFyeuIfxk0TvWztCoAISzqkS4=;
-        b=a7rXWeECkGjoGcG7BuycvlcIvIqCR7UBJADH2iIwe0ImNCtuzwR42T15E1qrmnaZrB
-         PZtFBeVq/GRVZsu2gem+VVx9CrNcTI0XbMET+JRKomI6dBt8l06Nl8GLsrR43tADTgDH
-         235CsFIWP4G4zzSYBcAO641GsFB2df/gLsSFk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710441428; x=1711046228;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FAnheW04vNnoWidpA9IFyeuIfxk0TvWztCoAISzqkS4=;
-        b=mkaQ4Tul2k38uDicehquTit0cRwVMCwcrmBTrBPBxhPq0o52n4hX95lCjHFtMOSBXX
-         0xr0zWMQL8RhZJn767DFK8A9bGhhSalaqFQunVgQ55wPp8jONzyPzFXT8QiceG+dbXDb
-         ybR4WjvsMkXNNTP+XrwQA3hRWJBxlZDBeBIPrZkt6FN18UeDfSv0bUaWtYw26cSCNQ7E
-         VuyCfCWdBc0IDd3XIwYT20Kb2Q9lFYjiiLFzSV+mDkedY9ZJRbh2IKfKnnQ7cHuafASR
-         dlV/aURsTvFTNDqrixi26XeS7NQxv+q2iKDKL2Rubb9hjJWblop6XvQm8k+SYsVSs91d
-         Dcag==
-X-Forwarded-Encrypted: i=1; AJvYcCUzKcNjLLpotlhyjAbIc9fsUId2LC0TCiwreL0LpDB6Af3YILphS0fcb/XHrrCiAucsTc6368H27Jf2onezZkYZBW8ksAvN87EYcW2E/z4WOlYwow==
-X-Gm-Message-State: AOJu0YwlMPPAtBJCUeGsETYNkEGGUZHfXEo2TzgA30ruRCYR/sX0tilh
-	gZ30Sf2MLKPeNDz7zXMrqDBGBtgu07G77Kvf7NBMkHh0pIGZW1jouhxqh1ENlS92LUnUzsNvc/j
-	WEe0Vjw==
-X-Google-Smtp-Source: AGHT+IG5Iy0VkW5p6tt/gY77xfm4bjLiEMKqI3csnI8Bn/cd/4sO8FG+VbayK5udmChhAGSiOVR8fg==
-X-Received: by 2002:a17:906:578f:b0:a46:7d45:6904 with SMTP id k15-20020a170906578f00b00a467d456904mr655691ejq.26.1710441427743;
-        Thu, 14 Mar 2024 11:37:07 -0700 (PDT)
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
-        by smtp.gmail.com with ESMTPSA id en2-20020a17090728c200b00a4674ad8ab9sm710633ejc.211.2024.03.14.11.37.07
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Mar 2024 11:37:07 -0700 (PDT)
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-565c6cf4819so3960667a12.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Mar 2024 11:37:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXH5PqnqgAoYsdLJlb5BfieRRlaVkRJskI8NDkqNNBwotlVsrjcJmaMxdUydrR+OjyKdHTypGo3Q6pGET69uj8rQMN6ouFYPMWOZYHTxj23cfLMDQ==
-X-Received: by 2002:a17:906:6ca:b0:a46:6884:ebc3 with SMTP id
- v10-20020a17090606ca00b00a466884ebc3mr3214948ejb.35.1710441426999; Thu, 14
- Mar 2024 11:37:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="rHy0czus"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1710441944; x=1711046744; i=w_armin@gmx.de;
+	bh=/mn6muzWIRKWcjsSnajnl4H8oquLpAAam6hy8/xPwIQ=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=rHy0czusPTznn1fpc3Y8eDzLXfwUvohmWNqKR7VakmygTrjrIvLdQgscmsTpbouB
+	 7eGTBBny+eF0lb2NmjrM81MI4B1V+VAMQnKig4UODlTnofid0Wn+h8pl7v55EVyu+
+	 HM2RCpIjyXPWgASzvIUMNx4UsKgmLaaI+5cSHk4E0F9a74B10fhpmcsYryNfW+6e/
+	 M2+DEz7OxNT3SBPNw2SM5ocYv3kWtxHiP5eDMRCxN9Ol9wRj68uajiVACVMzS2AL/
+	 j1DnEA/KPUL+g91dnDZ1javkRGy7qJ06fDNu0gyKiml/tOGJdHv2v33XjTeewk7rG
+	 peXfegeiqW5OBCM7hw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MGhyS-1rX8yQ0JOM-00DoVs; Thu, 14 Mar 2024 19:45:44 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: rafael@kernel.org,
+	lenb@kernel.org,
+	mario.limonciello@amd.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-acpi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 1/2] platform/x86: wmi: Support reading/writing 16 bit EC values
+Date: Thu, 14 Mar 2024 19:45:37 +0100
+Message-Id: <20240314184538.2933-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <65f2d9d4.050a0220.b240.7bddSMTPIN_ADDED_BROKEN@mx.google.com>
-In-Reply-To: <65f2d9d4.050a0220.b240.7bddSMTPIN_ADDED_BROKEN@mx.google.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 14 Mar 2024 11:36:50 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgy=53GsFDEJsq+6Gd6eotxw=2rh_gVvL+3zPpmrOc=_A@mail.gmail.com>
-Message-ID: <CAHk-=wgy=53GsFDEJsq+6Gd6eotxw=2rh_gVvL+3zPpmrOc=_A@mail.gmail.com>
-Subject: Re: [GIT PULL] platform-drivers-x86 for v6.9-1
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-	Andy Shevchenko <andy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:/cqH+NjydsRZcAVaI7S67/vzGgGpC5ogQtVinAFyhRN575Hz5aH
+ JMetDs+5HM0fcKKi0hHLiAvrwxDRiVYZLkYucxrwmLijq7a6DXOcxjuo6K5YlbDT1wVNFCo
+ 7a5aexbIEKtucHVIn/A8meyuKw3dio5bZDvJMixIjaChquzt5Tn+gcSgNoGhI+YMo8VhCSY
+ WCzlphX8ZUGjhiZjEAuXA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:FabCNjlmGVU=;O794OGRdPae3dIb4R1gaWQv8KA9
+ K8mT4uQ3b5lB08wTSukck2bRDH5MMDcSlkRUiOz1CLci1V9cixwE1CB6aM/rhdGlvc8IiOjwh
+ 1LXM6N4DMeVbL3nsDRo+EoM66MswaECp8q6SMUmiZPhvBd3uWMtyF0VZwMxSC/kCwrFF2gPpz
+ XKmrIV4p0jL0cCkhFhzOILbSAzJzeNpcTzpKvq2hScckdVmENGe76CLaZzJvg5wA2rxH28JJY
+ Co93bkDu45B8ugjVgfkF2PMXdnYTDO56EXmZjp8qY3LAriXJSPLvc31sf3VxhbJIj7qtIOHqP
+ cGodsui0KXrp9U/0h6hZP/jMnYeTnBQFUUIVx0uwLTynwPMscyDX/4A7EZx1huYlHgmEg38UI
+ 277nnnfBkpJmh+RYj0yqakvfKMQ35kiM53Qwvn/bCu1F/vDi553yR7DcLMH3vO+vcK2gtnJx0
+ TGI55mlV1Uf42np2fdhDLAxDFryyG0nCCGhXrohwdpx9T5pGmKn0yS/DLjkIc6dEjaci5fkyv
+ 1l7Eq6u03+H9zaXfaYPBGA68A+ip7lmT3r7POfdOG/ZZC86rt3LmLgWmkow5GB4AVLbOOR1AT
+ iKnYRggAaU1cIiSdxyQgjKZ4J9lzrAihm9+6vjYnSi1Q3LDKFZQtMKt/VjTaZ2L92ZcVP6t6s
+ kwfsfU4rK7+Qj1Ke51vMbapEVd84JxPqbuS4xzAJ438kHWlxSN1ATPFb/9xhWwkl8xyVPJcz3
+ PpgS+4e3NGkZM306xo3sqFknpo5yhreyOyX2QWSUHAUCb224lZaQGDYBAHc4KbWiC0sY/DmUF
+ VD0W3IjMx4gyRZpcYGOtH5gabCHnuMmh01cOXk3dKfRsQ=
 
-On Thu, 14 Mar 2024 at 04:04, Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> Here is the main PDx86 PR for v6.9.
+The ACPI EC address space handler currently only supports
+reading/writing 8 bit values. Some firmware implementations however
+want to access for example 16 bit values, which is perfectly legal
+according to the ACPI spec.
 
-So I've obviously pulled this, and pr-tracker-bot already replied to
-that effect.
+Add support for reading/writing such values.
 
-However, it turns out that the pr-tracker-bot reply didn't thread
-correctly for me, and I looked into why.
+Tested on a Dell Inspiron 3505 and a Asus Prime B650-Plus.
 
-Your SMTP setup is oddly broken. It looks like your original email was
-sent with a bogus Message-ID.
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+Chnages since v4:
+- spelling fix
+- fix checkpatch warning
 
-So in my headers, I see how gmail has added a properly formatted Message-ID=
-:
+Changes since v3:
+- change type of variable i to size_t
 
-  <65f2d9d4.050a0220.b240.7bddSMTPIN_ADDED_BROKEN@mx.google.com>
+Changes since v2:
+- fix address overflow check
 
-and lists your original broken one as
+Changes since v1:
+- use BITS_PER_BYTE
+- validate that number of bytes to read/write does not overflow the
+  address
+=2D--
+ drivers/platform/x86/wmi.c | 54 +++++++++++++++++++++++++++++---------
+ 1 file changed, 41 insertions(+), 13 deletions(-)
 
-  <4844b67c9b1feca386eb739a4592bdbf.Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com>>
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 1920e115da89..9602658711cf 100644
+=2D-- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -1153,6 +1153,34 @@ static int parse_wdg(struct device *wmi_bus_dev, st=
+ruct platform_device *pdev)
+ 	return 0;
+ }
 
-which indeed is completely wrong.
++static int ec_read_multiple(u8 address, u8 *buffer, size_t bytes)
++{
++	size_t i;
++	int ret;
++
++	for (i =3D 0; i < bytes; i++) {
++		ret =3D ec_read(address + i, &buffer[i]);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
++static int ec_write_multiple(u8 address, u8 *buffer, size_t bytes)
++{
++	size_t i;
++	int ret;
++
++	for (i =3D 0; i < bytes; i++) {
++		ret =3D ec_write(address + i, buffer[i]);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
+ /*
+  * WMI can have EmbeddedControl access regions. In which case, we just wa=
+nt to
+  * hand these off to the EC driver.
+@@ -1162,27 +1190,27 @@ acpi_wmi_ec_space_handler(u32 function, acpi_physi=
+cal_address address,
+ 			  u32 bits, u64 *value,
+ 			  void *handler_context, void *region_context)
+ {
+-	int result =3D 0;
+-	u8 temp =3D 0;
++	int bytes =3D bits / BITS_PER_BYTE;
++	int ret;
 
-I have no idea how you managed that, since your headers don't actually
-seem to specify the MUA you used. But whatever it was, it's very very
-mis-configured.
+-	if ((address > 0xFF) || !value)
++	if (!value)
++		return AE_NULL_ENTRY;
++
++	if (!bytes || bytes > sizeof(*value))
+ 		return AE_BAD_PARAMETER;
 
-The pr-tracker-bot reply does have that original Message-ID in its
-threading notes:
+-	if (function !=3D ACPI_READ && function !=3D ACPI_WRITE)
++	if (address > U8_MAX || address + bytes - 1 > U8_MAX)
+ 		return AE_BAD_PARAMETER;
 
-  In-Reply-To: <4844b67c9b1feca386eb739a4592bdbf.Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com>>
-  References: <4844b67c9b1feca386eb739a4592bdbf.Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com>>
+-	if (bits !=3D 8)
++	if (function !=3D ACPI_READ && function !=3D ACPI_WRITE)
+ 		return AE_BAD_PARAMETER;
 
-but it doesn't thread for me because the message-id from the original
-email got rewritten as something valid.
+-	if (function =3D=3D ACPI_READ) {
+-		result =3D ec_read(address, &temp);
+-		*value =3D temp;
+-	} else {
+-		temp =3D 0xff & *value;
+-		result =3D ec_write(address, temp);
+-	}
++	if (function =3D=3D ACPI_READ)
++		ret =3D ec_read_multiple(address, (u8 *)value, bytes);
++	else
++		ret =3D ec_write_multiple(address, (u8 *)value, bytes);
 
-Can you please look into fixing whatever MUA you used for sending that
-pull request?
+-	switch (result) {
++	switch (ret) {
+ 	case -EINVAL:
+ 		return AE_BAD_PARAMETER;
+ 	case -ENODEV:
+=2D-
+2.39.2
 
-This is obviously not a deal breaker, but it's odd.
-
-              Linus
