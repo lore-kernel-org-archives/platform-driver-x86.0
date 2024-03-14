@@ -1,186 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4513774E39;
-	Thu, 14 Mar 2024 18:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3BA385
+	for <platform-driver-x86@vger.kernel.org>; Thu, 14 Mar 2024 22:37:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710442614; cv=none; b=OAzDH2Y/FyWJlEqFHwAFQjE3N13yAaX6Rib/oIOOEekNioWvBTshXnehNCE7r/a8hAJ/alNumuvI89auMJodIX7iJ3VmyuERwPAJozD1zhYcF5tnlTxC3ickw/pfGX4931vl+RW6NWHh8wTnYBGEXSaz+kTzvd9JEMXaHbEpnww=
+	t=1710455870; cv=none; b=peVyRhaR5poJHrqeg32yH9IHGUEjKHa4S9FggGyvGq6hXuxF37mHH00xGxe/Pj/kQ3RbVgBGn8mYRFTWpFgXG3h94lOsEo/I6vTVJ9gviPD1yOfT0svz4aDOUFs7dlNWJW+smIG+0mRFdO9S6xwBegMhl40oZsYPvXL3WuxrCk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710442614; c=relaxed/simple;
-	bh=vbdumEA8i1vHquFSQh0G9ie0UpZsWtmjCxra+Osqsgs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QGnYUqrhXTLmCtsqfHpTA8yeOISkmPl037wRYzHJNShClLqipJBJvO1aFP8f+PSOB4vpS5zfRh1os/8WFR1Ite6w/MhyGGvta8yJ20fLciKNkli+BYw0ZD3zaelgJs1g1LbVwokQGL28AbQfzFiKFJSOZi/J2JEafRShIU2/VdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Co4/9v+M; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1710455870; c=relaxed/simple;
+	bh=DYwGccQ3nzekMxwIlD+dlesOQ3m//0eGti0QnHKOE+c=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=n/8EyhS8TClMKPEGq+XiP1AfPw4XMuMyqsGdOM+ZWBe/aARHqhNXQUM9hnBn6T3J1z2gb6PjYRIy10d71HkR5BzwaSlqNve6hRVh8Dbl8wvSneJkh3PwzCt9YSSMwz0RhXKTxEsxHwRxrISS42EYDDDGByOTxiaE9aKxwXSIJ60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net; spf=pass smtp.mailfrom=iwanders.net; dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b=Y3uSTebv; arc=none smtp.client-ip=209.85.167.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iwanders.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Co4/9v+M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710442612; x=1741978612;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vbdumEA8i1vHquFSQh0G9ie0UpZsWtmjCxra+Osqsgs=;
-  b=Co4/9v+M8+QoRr8tyIcskty2er+P7qlYkzPVfmCadiVTDazk1wA60/LI
-   5SPtOH4LQIMPxWcMwngJeB9SOj++m+xyUaIQwlexM8dejHAggM3U+F36q
-   XPNDhIauo9wbSsPhbELZUxYRM5KIHydzZhwXlX4E9EX1J5/I7pLGEVIaJ
-   CgsY4csaUXMtZnElHK+XmvNTpmJQyvXB43KKhpLSGyFs7m1Pk2e4dYXtE
-   iyL8y7wsCy5QzWcGbCDXayF7/k0ROu3F4KLrO6N7Ai6jdU1tqzTR67xJd
-   EqpbeN62QslkuzkvkQ7M/dYvNt08cazRcfqIlB1cQgHUtxAW1Aedu8/8c
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11013"; a="8224369"
-X-IronPort-AV: E=Sophos;i="6.07,126,1708416000"; 
-   d="scan'208";a="8224369"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 11:56:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,126,1708416000"; 
-   d="scan'208";a="16865490"
-Received: from jtang15-mobl.amr.corp.intel.com (HELO [10.212.137.58]) ([10.212.137.58])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 11:56:51 -0700
-Message-ID: <887d0674-9531-417a-8eca-ecd86c528c29@linux.intel.com>
-Date: Thu, 14 Mar 2024 11:56:50 -0700
+	dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b="Y3uSTebv"
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3c1ea5f29a6so759624b6e.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Mar 2024 15:37:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=iwanders.net; s=google; t=1710455866; x=1711060666; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tVhA3coOgn/7Uvgol5ZvrCmIFQUcKJqMv636I1Hr4vs=;
+        b=Y3uSTebvlyYRN3zw6oGbmEl8m6LT/123oiIaQYAbh/kc9CoUjvADidWaqAiaxjsn+x
+         z76p3qG7whVMFHvvdlMyYag0ELTzuXpyKA7IpVgx2N2PAZE9RZRNZrT/jnclAyh+nMmm
+         FQUBf0o898KhC4zlow7iNaYkozFXI/n60nitU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710455866; x=1711060666;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tVhA3coOgn/7Uvgol5ZvrCmIFQUcKJqMv636I1Hr4vs=;
+        b=vCj8kEura4IwRYuwoct0k0RZMf6m4je0eUtu+HQLypeKfxPzejjsTd6acNEmFCt+Rx
+         +HUuLU2L2hw0svLE2uOPBiGXn2Aa6M2VLw5gF//ym1gBjEhBDeAw8abG8Njuz2kfASv0
+         PkGCZN4OQgctD1woP5DwLDUBcxxNjYQAY3SsSwAJiX5aAenGOF6TWVsGKo+OVbRsNEIp
+         7PUT50NOPOBtiK1imrbVluKY8z+GjTwmXBjWcWcacmZW/zJYLYlpuPTSS77Zd0/y2pSe
+         Vx+3ld9IsplmVoyzHzQAzDhigvIO9ZPPtaUiv33bOBPIoOBb9Up0yGFfOHwshT+XX6Xb
+         SjXg==
+X-Forwarded-Encrypted: i=1; AJvYcCXHKsTaSK8aYsvuBpO2VIDkUcV+GToSoREJukSmShe6ESET96O1H5pfXYTNWPO9RX/p7U/8ouK033nzQO3tNgiUypAmRASIo5DbAT6kCrF0EvlYBA==
+X-Gm-Message-State: AOJu0YzV/B4/cgmsA+bXIHnanQh2DnSwiihN04VlkmEgkLtwICQ24G3U
+	GJGhrF8kItw3lGSdBdsDtEwVmgFy13amEg16tbMClahqJ+sCtlJglDBCTxfmvq2lY7dEwZH6oDK
+	9c2A=
+X-Google-Smtp-Source: AGHT+IGAOOfRBySCiMQZGBg8qH5/0uKU1q+54GPrmNNw5gNbPKI8lYxygfrAgcHz+INi2pgYVe1neg==
+X-Received: by 2002:a05:6808:f12:b0:3c2:aa94:3399 with SMTP id m18-20020a0568080f1200b003c2aa943399mr3004344oiw.2.1710455866201;
+        Thu, 14 Mar 2024 15:37:46 -0700 (PDT)
+Received: from eagle.lan (24-246-30-234.cable.teksavvy.com. [24.246.30.234])
+        by smtp.gmail.com with ESMTPSA id de33-20020a05620a372100b00789dd526bc7sm826447qkb.129.2024.03.14.15.37.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Mar 2024 15:37:45 -0700 (PDT)
+From: Ivor Wanders <ivor@iwanders.net>
+To: Maximilian Luz <luzmaximilian@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Ivor Wanders <ivor@iwanders.net>
+Subject: [PATCH v2 0/1] platform/surface: platform_profile: add fan profile
+Date: Thu, 14 Mar 2024 18:37:32 -0400
+Message-Id: <20240314223733.6236-1-ivor@iwanders.net>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/2] platform/x86: wmi: Support reading/writing 16 bit
- EC values
-Content-Language: en-US
-To: Armin Wolf <W_Armin@gmx.de>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com
-Cc: rafael@kernel.org, lenb@kernel.org, mario.limonciello@amd.com,
- linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240314184538.2933-1-W_Armin@gmx.de>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240314184538.2933-1-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
+Second version of a patch that switches the fan profile together with the
+platform profile on Microsoft Surface Pro 9 devices, improving the cooling.
+Originally submitted in [1] which describes the changes in more detail.
 
-On 3/14/24 11:45 AM, Armin Wolf wrote:
-> The ACPI EC address space handler currently only supports
-> reading/writing 8 bit values. Some firmware implementations however
-> want to access for example 16 bit values, which is perfectly legal
-> according to the ACPI spec.
->
-> Add support for reading/writing such values.
->
-> Tested on a Dell Inspiron 3505 and a Asus Prime B650-Plus.
->
-> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
+Changes in v2:
+  - Use u8 instead of char for the argument of __sam_fan_profile_set.
+  - Made profile and profile_le variable const.
+  - Added link entry pointing to the Github PR to commit message.
+  - Rebased the commit on Torvalds' main branch.
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+[1]: https://lore.kernel.org/all/20240302170147.13026-1-ivor@iwanders.net/
 
-> Chnages since v4:
-> - spelling fix
-> - fix checkpatch warning
->
-> Changes since v3:
-> - change type of variable i to size_t
->
-> Changes since v2:
-> - fix address overflow check
->
-> Changes since v1:
-> - use BITS_PER_BYTE
-> - validate that number of bytes to read/write does not overflow the
->   address
-> ---
->  drivers/platform/x86/wmi.c | 54 +++++++++++++++++++++++++++++---------
->  1 file changed, 41 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index 1920e115da89..9602658711cf 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -1153,6 +1153,34 @@ static int parse_wdg(struct device *wmi_bus_dev, struct platform_device *pdev)
->  	return 0;
->  }
->
-> +static int ec_read_multiple(u8 address, u8 *buffer, size_t bytes)
-> +{
-> +	size_t i;
-> +	int ret;
-> +
-> +	for (i = 0; i < bytes; i++) {
-> +		ret = ec_read(address + i, &buffer[i]);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int ec_write_multiple(u8 address, u8 *buffer, size_t bytes)
-> +{
-> +	size_t i;
-> +	int ret;
-> +
-> +	for (i = 0; i < bytes; i++) {
-> +		ret = ec_write(address + i, buffer[i]);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  /*
->   * WMI can have EmbeddedControl access regions. In which case, we just want to
->   * hand these off to the EC driver.
-> @@ -1162,27 +1190,27 @@ acpi_wmi_ec_space_handler(u32 function, acpi_physical_address address,
->  			  u32 bits, u64 *value,
->  			  void *handler_context, void *region_context)
->  {
-> -	int result = 0;
-> -	u8 temp = 0;
-> +	int bytes = bits / BITS_PER_BYTE;
-> +	int ret;
->
-> -	if ((address > 0xFF) || !value)
-> +	if (!value)
-> +		return AE_NULL_ENTRY;
-> +
-> +	if (!bytes || bytes > sizeof(*value))
->  		return AE_BAD_PARAMETER;
->
-> -	if (function != ACPI_READ && function != ACPI_WRITE)
-> +	if (address > U8_MAX || address + bytes - 1 > U8_MAX)
->  		return AE_BAD_PARAMETER;
->
-> -	if (bits != 8)
-> +	if (function != ACPI_READ && function != ACPI_WRITE)
->  		return AE_BAD_PARAMETER;
->
-> -	if (function == ACPI_READ) {
-> -		result = ec_read(address, &temp);
-> -		*value = temp;
-> -	} else {
-> -		temp = 0xff & *value;
-> -		result = ec_write(address, temp);
-> -	}
-> +	if (function == ACPI_READ)
-> +		ret = ec_read_multiple(address, (u8 *)value, bytes);
-> +	else
-> +		ret = ec_write_multiple(address, (u8 *)value, bytes);
->
-> -	switch (result) {
-> +	switch (ret) {
->  	case -EINVAL:
->  		return AE_BAD_PARAMETER;
->  	case -ENODEV:
-> --
-> 2.39.2
->
+Ivor Wanders (1):
+  platform/surface: platform_profile: add fan profile switching
+
+ .../surface/surface_aggregator_registry.c     | 36 +++++---
+ .../surface/surface_platform_profile.c        | 88 ++++++++++++++++---
+ 2 files changed, 100 insertions(+), 24 deletions(-)
+
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.17.1
 
