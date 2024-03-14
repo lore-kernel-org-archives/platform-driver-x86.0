@@ -1,63 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9571974E0C;
-	Thu, 14 Mar 2024 18:20:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAE81E480
+	for <platform-driver-x86@vger.kernel.org>; Thu, 14 Mar 2024 18:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710440418; cv=none; b=k59RTjr3TKd2AEBzUnws/yiWTfgctgV0PoN4iiU7K7EiExYi0WbM0UWNkAnWtmZ+2OjkUK3LVtDjP4A1htiK7HNEMWqoYWrxNReWTIPA9dRVkE2CIsVIUBaHU3deW9t7T3xggMfdYwJzaCt5H/w3hsIjLBk+xudYrRJb19ZHXEw=
+	t=1710441431; cv=none; b=VHGargbSUEj3DjhvYctVDEO/xba8czgvrMQDm5q5Wdhssg3jyEKZBriC3fNKIGFElhWoSuqvcygK7dLnhQkQXq2apkZ9RnPWD9eRrSg3jxG4EbLf/XDrPxPUlLm8z323ylB86qYGiUsQ2SvdaP8FkUaHEOhJuOmdOL45dKQT55s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710440418; c=relaxed/simple;
-	bh=KDM7jL/NItsAlRX9ILapDaR20pwCqQ7VGHqbXb7CrIY=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=NskU9P16tcEJ026iOwePG5diVlQGgaw5e3Cm8YqtHKmUiZOssWx+6E7Z7ODt0gtFEsQfJmLruNlPXfnFIrweC4YijZbocijYbtA8Ys2mSaDDyV6a5AmFzKp1JDQTJSdqkTRrhl+CugX36TgjPnLvqaGUoqtHyleT98t1BxGL02o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=onZjC/FC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710441431; c=relaxed/simple;
+	bh=5zX85xcBrLUKqCQn8fjjnIh2KmQKXlgJU7872McN3CU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cxH+5ONIGDP1pIG42QmVaEJlSbEVYNZl8gfRZS85M+TaLUC1cFog0uhIH90+jQ3mqnAnYGYoXHNBMRxVQxC2m/PD/CmXNWhZwOrNR0iFRQz/21cijjyq/YiMJ8y6FX5atFH4X8htF3DHH2865nJYL6s8RqfP8YQL9ktOq1QNgLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=a7rXWeEC; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="onZjC/FC"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 77873C433C7;
-	Thu, 14 Mar 2024 18:20:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710440418;
-	bh=KDM7jL/NItsAlRX9ILapDaR20pwCqQ7VGHqbXb7CrIY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=onZjC/FCCiWlMBtA9NaO7JvjzT5DOMCEEFdy9qPUiKxMsCQP4pu/14b5Fr1q4XsCs
-	 3jbVoG/iExX2CjHzEb47rTr3g7hOdNENhfwaXIxiJok87+u3eao4qxy8GrWDg72BuE
-	 AfIuxS1fq/2UXlqlYD0GLk7SUC6U0AguuMPaV75THfTH4H7KD8atFUa6GcBI1XVs2S
-	 yXcnUCf6sc0sWv+U2kfsu/mSvRqMQjT8TOkW7r8fdE29kn/Z2r4KG5kYMVXPvxZeCg
-	 S6TwoaYKn5UAmWvLsW9VCu/2GWjJvBxZeA0cArVtnm3f5Ie8YbQUXEZu7c/tW1FluE
-	 WkYGc0mtOvHVA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 69622D95055;
-	Thu, 14 Mar 2024 18:20:18 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for v6.9-1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <4844b67c9b1feca386eb739a4592bdbf.=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>>
-References: <4844b67c9b1feca386eb739a4592bdbf.=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>>
-X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
-X-PR-Tracked-Message-Id: <4844b67c9b1feca386eb739a4592bdbf.=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.9-1
-X-PR-Tracked-Commit-Id: 16f8091b49175f327120cdbbdde135d38a853ae1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 66fd6d0bd7572fcb7859ebd4dbfb133881e1cd66
-Message-Id: <171044041842.24196.11195751085454538927.pr-tracker-bot@kernel.org>
-Date: Thu, 14 Mar 2024 18:20:18 +0000
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="a7rXWeEC"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a46807a7d3fso22130266b.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Mar 2024 11:37:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1710441428; x=1711046228; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FAnheW04vNnoWidpA9IFyeuIfxk0TvWztCoAISzqkS4=;
+        b=a7rXWeECkGjoGcG7BuycvlcIvIqCR7UBJADH2iIwe0ImNCtuzwR42T15E1qrmnaZrB
+         PZtFBeVq/GRVZsu2gem+VVx9CrNcTI0XbMET+JRKomI6dBt8l06Nl8GLsrR43tADTgDH
+         235CsFIWP4G4zzSYBcAO641GsFB2df/gLsSFk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710441428; x=1711046228;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FAnheW04vNnoWidpA9IFyeuIfxk0TvWztCoAISzqkS4=;
+        b=mkaQ4Tul2k38uDicehquTit0cRwVMCwcrmBTrBPBxhPq0o52n4hX95lCjHFtMOSBXX
+         0xr0zWMQL8RhZJn767DFK8A9bGhhSalaqFQunVgQ55wPp8jONzyPzFXT8QiceG+dbXDb
+         ybR4WjvsMkXNNTP+XrwQA3hRWJBxlZDBeBIPrZkt6FN18UeDfSv0bUaWtYw26cSCNQ7E
+         VuyCfCWdBc0IDd3XIwYT20Kb2Q9lFYjiiLFzSV+mDkedY9ZJRbh2IKfKnnQ7cHuafASR
+         dlV/aURsTvFTNDqrixi26XeS7NQxv+q2iKDKL2Rubb9hjJWblop6XvQm8k+SYsVSs91d
+         Dcag==
+X-Forwarded-Encrypted: i=1; AJvYcCUzKcNjLLpotlhyjAbIc9fsUId2LC0TCiwreL0LpDB6Af3YILphS0fcb/XHrrCiAucsTc6368H27Jf2onezZkYZBW8ksAvN87EYcW2E/z4WOlYwow==
+X-Gm-Message-State: AOJu0YwlMPPAtBJCUeGsETYNkEGGUZHfXEo2TzgA30ruRCYR/sX0tilh
+	gZ30Sf2MLKPeNDz7zXMrqDBGBtgu07G77Kvf7NBMkHh0pIGZW1jouhxqh1ENlS92LUnUzsNvc/j
+	WEe0Vjw==
+X-Google-Smtp-Source: AGHT+IG5Iy0VkW5p6tt/gY77xfm4bjLiEMKqI3csnI8Bn/cd/4sO8FG+VbayK5udmChhAGSiOVR8fg==
+X-Received: by 2002:a17:906:578f:b0:a46:7d45:6904 with SMTP id k15-20020a170906578f00b00a467d456904mr655691ejq.26.1710441427743;
+        Thu, 14 Mar 2024 11:37:07 -0700 (PDT)
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
+        by smtp.gmail.com with ESMTPSA id en2-20020a17090728c200b00a4674ad8ab9sm710633ejc.211.2024.03.14.11.37.07
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Mar 2024 11:37:07 -0700 (PDT)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-565c6cf4819so3960667a12.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 14 Mar 2024 11:37:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXH5PqnqgAoYsdLJlb5BfieRRlaVkRJskI8NDkqNNBwotlVsrjcJmaMxdUydrR+OjyKdHTypGo3Q6pGET69uj8rQMN6ouFYPMWOZYHTxj23cfLMDQ==
+X-Received: by 2002:a17:906:6ca:b0:a46:6884:ebc3 with SMTP id
+ v10-20020a17090606ca00b00a466884ebc3mr3214948ejb.35.1710441426999; Thu, 14
+ Mar 2024 11:37:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <65f2d9d4.050a0220.b240.7bddSMTPIN_ADDED_BROKEN@mx.google.com>
+In-Reply-To: <65f2d9d4.050a0220.b240.7bddSMTPIN_ADDED_BROKEN@mx.google.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 14 Mar 2024 11:36:50 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgy=53GsFDEJsq+6Gd6eotxw=2rh_gVvL+3zPpmrOc=_A@mail.gmail.com>
+Message-ID: <CAHk-=wgy=53GsFDEJsq+6Gd6eotxw=2rh_gVvL+3zPpmrOc=_A@mail.gmail.com>
+Subject: Re: [GIT PULL] platform-drivers-x86 for v6.9-1
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+	Andy Shevchenko <andy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Thu, 14 Mar 2024 12:42:27 +0200:
+On Thu, 14 Mar 2024 at 04:04, Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> Here is the main PDx86 PR for v6.9.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.9-1
+So I've obviously pulled this, and pr-tracker-bot already replied to
+that effect.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/66fd6d0bd7572fcb7859ebd4dbfb133881e1cd66
+However, it turns out that the pr-tracker-bot reply didn't thread
+correctly for me, and I looked into why.
 
-Thank you!
+Your SMTP setup is oddly broken. It looks like your original email was
+sent with a bogus Message-ID.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+So in my headers, I see how gmail has added a properly formatted Message-ID=
+:
+
+  <65f2d9d4.050a0220.b240.7bddSMTPIN_ADDED_BROKEN@mx.google.com>
+
+and lists your original broken one as
+
+  <4844b67c9b1feca386eb739a4592bdbf.Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com>>
+
+which indeed is completely wrong.
+
+I have no idea how you managed that, since your headers don't actually
+seem to specify the MUA you used. But whatever it was, it's very very
+mis-configured.
+
+The pr-tracker-bot reply does have that original Message-ID in its
+threading notes:
+
+  In-Reply-To: <4844b67c9b1feca386eb739a4592bdbf.Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com>>
+  References: <4844b67c9b1feca386eb739a4592bdbf.Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com>>
+
+but it doesn't thread for me because the message-id from the original
+email got rewritten as something valid.
+
+Can you please look into fixing whatever MUA you used for sending that
+pull request?
+
+This is obviously not a deal breaker, but it's odd.
+
+              Linus
