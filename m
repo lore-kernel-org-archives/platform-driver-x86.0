@@ -1,252 +1,193 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494BD25753;
-	Mon, 18 Mar 2024 06:07:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3C22EB05;
+	Mon, 18 Mar 2024 11:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710742029; cv=none; b=oiBMcOCcPLmMjh96gm5KPgWF6Y2sq4bEmbCciuhtWYLq5jtckyPCQKYAxfp9CDmF51GhOT3VP3Ea5yZCosZV5SkuIZqgdbpEwnwiSnTI0rRk5/ySJbdh/Q9v4PHTPi7ryhWnd/Ef3gbxaoOgGMh8HjdQzhwW4ey474mRgXbCeIM=
+	t=1710761514; cv=none; b=ZWSrNUzC+Ld2BptUwYAx8UI9Kf0SyXT9MJFj4txjL6A6Vh1QtodCTyNWNba3ZwEf05nolE8sxiSACNO50TPQWF0QFeEtGj6RDK8emgwUGgXGomFcjb4OPqKdb0jwuf8cfsNZ5gWF5DC8R+KMDEuLZMsxqWbaWQU9/buIDyUQx0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710742029; c=relaxed/simple;
-	bh=+csfDrZ3Yr9Z7rzlWExh7gMUsS0V8YkAx/69hE2Lkgo=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To:
-	 Content-Type; b=SOWyLna4Gp2hShICz7vt+zwWQcRa2ucguKR9lCvQvbjxibT0t5pda+jZYtXMnmaW/lLkm9R/q1gCLlmJQuIQqK1udJXTMaufB7q/Fy4aFmhXgBTc6F4hPINCaNNkeom24kx3onU2DB39LcHSbaGXEHzbYn/dVnpPkpeZFxNIz0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=dZ1tR1FT; arc=none smtp.client-ip=115.124.30.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1710761514; c=relaxed/simple;
+	bh=1BYULFfpmrtdt5zSdHz7afbD+gWoM76bjV/mS7ORSuc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=UWhXiawW7tR5vtUaeaaKsn4NEuiqbc1ghrPZ3TqkdE51yAnoCv0wfzzR/RvM9Du3cf4RSpx6+l9akyt4a82wDIhk70VeY5T6hY/dYJAerVOBF3VMy59Auzswq0XpLMHAyCXyIrN6k7JT5tp2sAcVBjYEAouo4XoZzp3/bB8NA4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jx+K0CQI; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="dZ1tR1FT"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1710742023; h=Message-ID:Subject:Date:From:To:Content-Type;
-	bh=niI6nW2SCTi+Htrg/PArs3WUpjXkqv+GrYUsJh67k4o=;
-	b=dZ1tR1FTXc2gWj8qCek8mlIGJOXr+ElRAt4obFJvFgE8XXJuQXjMCNVVFeBAc0cUO+qEK/NrdUwPXUt6PHVqwK6RGYWOR/N+KjoJ0qCHXl+k3MhegHIUgspiV98EfCsyiZIxOHvwhB1JHwiE3bPotE11wv4CTOV61OwCDziKqPQ=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R891e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=24;SR=0;TI=SMTPD_---0W2gHt5J_1710741698;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W2gHt5J_1710741698)
-          by smtp.aliyun-inc.com;
-          Mon, 18 Mar 2024 14:01:39 +0800
-Message-ID: <1710741592.205804-1-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH vhost v3 1/4] virtio: find_vqs: pass struct instead of multi parameters
-Date: Mon, 18 Mar 2024 13:59:52 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: Jason Wang <jasowang@redhat.com>
-Cc: virtualization@lists.linux.dev,
- Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- Hans de Goede <hdegoede@redhat.com>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Vadim Pasternak <vadimp@nvidia.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Cornelia Huck <cohuck@redhat.com>,
- Halil Pasic <pasic@linux.ibm.com>,
- Eric Farman <farman@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- "Michael S. Tsirkin" <mst@redhat.com>,
- linux-um@lists.infradead.org,
- platform-driver-x86@vger.kernel.org,
- linux-remoteproc@vger.kernel.org,
- linux-s390@vger.kernel.org,
- kvm@vger.kernel.org
-References: <20240312021013.88656-1-xuanzhuo@linux.alibaba.com>
- <20240312021013.88656-2-xuanzhuo@linux.alibaba.com>
- <CACGkMEvVgfgAxLoKeFTgy-1GR0W07ciPYFuqs6PiWtKCnXuWTw@mail.gmail.com>
- <1710395908.7915084-1-xuanzhuo@linux.alibaba.com>
- <CACGkMEsT2JqJ1r_kStUzW0+-f+qT0C05n2A+Yrjpc-mHMZD_mQ@mail.gmail.com>
- <1710487245.6843069-1-xuanzhuo@linux.alibaba.com>
- <CACGkMEspzDTZP1yxkBz17MgU9meyfCUBDxG8mjm=acXHNxAxhg@mail.gmail.com>
-In-Reply-To: <CACGkMEspzDTZP1yxkBz17MgU9meyfCUBDxG8mjm=acXHNxAxhg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jx+K0CQI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710761513; x=1742297513;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=1BYULFfpmrtdt5zSdHz7afbD+gWoM76bjV/mS7ORSuc=;
+  b=jx+K0CQI1i7bGcE3cxe3wLTs1Gj631A+v5ppVJMVs6f16A39Ufgn5Q8d
+   jf6R5IMvi9xTrq/RzEF3Z1nLkbY1pUnpYuLtpeKovAVU3sv0C9RgoWtXM
+   O4xVtX3ceQpJsNAPV4sWYPxi+mkKwVlQ6n8K0GdCrngV6IKmzVi2yJMy3
+   +l+J/RmVceWFB4TWbIRqEYUfVXdPJ9FVPzkjE508SVED/cb9jjH4ZGI/G
+   c30y6AKzCEFlrt/avTfXjhnQNzAx7pb+FPfglWWzHTSB99xVxTEwJd1p+
+   eKmOi46svwgd6ABm8JT23gRg+5LsDl1wrduDPp6h7v7h1RA37MONSLwtL
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11016"; a="5401772"
+X-IronPort-AV: E=Sophos;i="6.07,134,1708416000"; 
+   d="scan'208";a="5401772"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 04:31:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,134,1708416000"; 
+   d="scan'208";a="18117243"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.11])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2024 04:31:47 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 18 Mar 2024 13:31:40 +0200 (EET)
+To: Nikita Travkin <nikita@trvn.ru>
+cc: Hans de Goede <hdegoede@redhat.com>, Sebastian Reichel <sre@kernel.org>, 
+    Rob Herring <robh+dt@kernel.org>, 
+    Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+    Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+    Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+    Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, devicetree@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v5 2/4] platform: Add ARM64 platform directory
+In-Reply-To: <20240315-aspire1-ec-v5-2-f93381deff39@trvn.ru>
+Message-ID: <0634bc80-f149-e75a-40fa-03841d8e9161@linux.intel.com>
+References: <20240315-aspire1-ec-v5-0-f93381deff39@trvn.ru> <20240315-aspire1-ec-v5-2-f93381deff39@trvn.ru>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-1606358534-1710761500=:1041"
 
-On Mon, 18 Mar 2024 12:18:23 +0800, Jason Wang <jasowang@redhat.com> wrote:
-> On Fri, Mar 15, 2024 at 3:26=E2=80=AFPM Xuan Zhuo <xuanzhuo@linux.alibaba=
-.com> wrote:
-> >
-> > On Fri, 15 Mar 2024 11:51:48 +0800, Jason Wang <jasowang@redhat.com> wr=
-ote:
-> > > On Thu, Mar 14, 2024 at 2:00=E2=80=AFPM Xuan Zhuo <xuanzhuo@linux.ali=
-baba.com> wrote:
-> > > >
-> > > > On Thu, 14 Mar 2024 11:12:24 +0800, Jason Wang <jasowang@redhat.com=
-> wrote:
-> > > > > On Tue, Mar 12, 2024 at 10:10=E2=80=AFAM Xuan Zhuo <xuanzhuo@linu=
-x.alibaba.com> wrote:
-> > > > > >
-> > > > > > Now, we pass multi parameters to find_vqs. These parameters
-> > > > > > may work for transport or work for vring.
-> > > > > >
-> > > > > > And find_vqs has multi implements in many places:
-> > > > > >
-> > > > > >  arch/um/drivers/virtio_uml.c
-> > > > > >  drivers/platform/mellanox/mlxbf-tmfifo.c
-> > > > > >  drivers/remoteproc/remoteproc_virtio.c
-> > > > > >  drivers/s390/virtio/virtio_ccw.c
-> > > > > >  drivers/virtio/virtio_mmio.c
-> > > > > >  drivers/virtio/virtio_pci_legacy.c
-> > > > > >  drivers/virtio/virtio_pci_modern.c
-> > > > > >  drivers/virtio/virtio_vdpa.c
-> > > > > >
-> > > > > > Every time, we try to add a new parameter, that is difficult.
-> > > > > > We must change every find_vqs implement.
-> > > > > >
-> > > > > > One the other side, if we want to pass a parameter to vring,
-> > > > > > we must change the call path from transport to vring.
-> > > > > > Too many functions need to be changed.
-> > > > > >
-> > > > > > So it is time to refactor the find_vqs. We pass a structure
-> > > > > > cfg to find_vqs(), that will be passed to vring by transport.
-> > > > > >
-> > > > > > Because the vp_modern_create_avq() use the "const char *names[]=
-",
-> > > > > > and the virtio_uml.c changes the name in the subsequent commit,=
- so
-> > > > > > change the "names" inside the virtio_vq_config from "const char=
- *const
-> > > > > > *names" to "const char **names".
-> > > > > >
-> > > > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > > > > > Acked-by: Johannes Berg <johannes@sipsolutions.net>
-> > > > > > Reviewed-by: Ilpo J=3DE4rvinen <ilpo.jarvinen@linux.intel.com>
-> > > > >
-> > > > > The name seems broken here.
-> > > >
-> > > > Email APP bug.
-> > > >
-> > > > I will fix.
-> > > >
-> > > >
-> > > > >
-> > > > > [...]
-> > > > >
-> > > > > >
-> > > > > >  typedef void vq_callback_t(struct virtqueue *);
-> > > > > >
-> > > > > > +/**
-> > > > > > + * struct virtio_vq_config - configure for find_vqs()
-> > > > > > + * @cfg_idx: Used by virtio core. The drivers should set this =
-to 0.
-> > > > > > + *     During the initialization of each vq(vring setup), we n=
-eed to know which
-> > > > > > + *     item in the array should be used at that time. But sinc=
-e the item in
-> > > > > > + *     names can be null, which causes some item of array to b=
-e skipped, we
-> > > > > > + *     cannot use vq.index as the current id. So add a cfg_idx=
- to let vring
-> > > > > > + *     know how to get the current configuration from the arra=
-y when
-> > > > > > + *     initializing vq.
-> > > > >
-> > > > > So this design is not good. If it is not something that the driver
-> > > > > needs to care about, the core needs to hide it from the API.
-> > > >
-> > > > The driver just ignore it. That will be beneficial to the virtio co=
-re.
-> > > > Otherwise, we must pass one more parameter everywhere.
-> > >
-> > > I don't get here, it's an internal logic and we've already done that.
-> >
-> >
-> > ## Then these must add one param "cfg_idx";
-> >
-> >  struct virtqueue *vring_create_virtqueue(struct virtio_device *vdev,
-> >                                          unsigned int index,
-> >                                          struct vq_transport_config *tp=
-_cfg,
-> >                                          struct virtio_vq_config *cfg,
-> > -->                                      uint cfg_idx);
-> >
-> >  struct virtqueue *vring_new_virtqueue(struct virtio_device *vdev,
-> >                                       unsigned int index,
-> >                                       void *pages,
-> >                                       struct vq_transport_config *tp_cf=
-g,
-> >                                       struct virtio_vq_config *cfg,
-> > -->                                      uint cfg_idx);
-> >
-> >
-> > ## The functions inside virtio_ring also need to add a new param, such =
-as:
-> >
-> >  static struct virtqueue *vring_create_virtqueue_split(struct virtio_de=
-vice *vdev,
-> >                                                       unsigned int inde=
-x,
-> >                                                       struct vq_transpo=
-rt_config *tp_cfg,
-> >                                                       struct virtio_vq_=
-config,
-> > -->                                                   uint cfg_idx);
-> >
-> >
-> >
->
-> I guess what I'm missing is when could the index differ from cfg_idx?
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
+--8323328-1606358534-1710761500=:1041
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
- @cfg_idx: Used by virtio core. The drivers should set this to 0.
-     During the initialization of each vq(vring setup), we need to know whi=
-ch
-     item in the array should be used at that time. But since the item in
-     names can be null, which causes some item of array to be skipped, we
-     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     cannot use vq.index as the current id. So add a cfg_idx to let vring
-     know how to get the current configuration from the array when
-     initializing vq.
+On Fri, 15 Mar 2024, Nikita Travkin wrote:
 
+> Some ARM64 based laptops and computers require vendor/board specific
+> drivers for their embedded controllers. Even though usually the most
+> important functionality of those devices is implemented inside ACPI,
+> unfortunately Linux doesn't currently have great support for ACPI on
+> platforms like Qualcomm Snapdragon that are used in most ARM64 laptops
+> today. Instead Linux relies on Device Tree for Qualcomm based devices
+> and it's significantly easier to reimplement the EC functionality in
+> a dedicated driver than to make use of ACPI code.
+>=20
+> This commit introduces a new platform/arm64 subdirectory to give a
+> place to such drivers for EC-like devices.
+>=20
+> A new MAINTAINERS entry is added for this directory. Patches to files in
+> this directory will be taken up by the platform-drivers-x86 team (i.e.
+> Hans de Goede and Ilpo J=C3=A4rvinen) with additional review from Bryan
+> O'Donoghue to represent ARM64 maintainers.
+>=20
+> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
 
-static int vp_find_vqs_msix(struct virtio_device *vdev, unsigned int nvqs,
+Acked-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
-	................
+And big thanks for Bryan for volunteering!
 
-	for (i =3D 0; i < nvqs; ++i) {
-		if (!names[i]) {
-			vqs[i] =3D NULL;
-			continue;
-		}
+--=20
+ i.
 
-		if (!callbacks[i])
-			msix_vec =3D VIRTIO_MSI_NO_VECTOR;
-		else if (vp_dev->per_vq_vectors)
-			msix_vec =3D allocated_vectors++;
-		else
-			msix_vec =3D VP_MSIX_VQ_VECTOR;
-		vqs[i] =3D vp_setup_vq(vdev, queue_idx++, callbacks[i], names[i],
-				     ctx ? ctx[i] : false,
-				     msix_vec);
-
-
-Thanks.
-
->
-> Thanks
->
-> > Thanks.
-> >
-> >
-> >
-> >
-> > >
-> > > Thanks
-> > >
-> > > >
-> > > > Thanks.
-> > > >
-> > > > >
-> > > > > Thanks
-> > > > >
-> > > >
-> > >
-> >
->
+> ---
+>  MAINTAINERS                     | 10 ++++++++++
+>  drivers/platform/Kconfig        |  2 ++
+>  drivers/platform/Makefile       |  1 +
+>  drivers/platform/arm64/Kconfig  | 19 +++++++++++++++++++
+>  drivers/platform/arm64/Makefile |  6 ++++++
+>  5 files changed, 38 insertions(+)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 76b3714710c2..186338451099 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3050,6 +3050,16 @@ F:=09drivers/mmc/host/sdhci-of-arasan.c
+>  N:=09zynq
+>  N:=09xilinx
+> =20
+> +ARM64 PLATFORM DRIVERS
+> +M:=09Hans de Goede <hdegoede@redhat.com>
+> +M:=09Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> +R:=09Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> +L:=09platform-driver-x86@vger.kernel.org
+> +S:=09Maintained
+> +Q:=09https://patchwork.kernel.org/project/platform-driver-x86/list/
+> +T:=09git git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-dr=
+ivers-x86.git
+> +F:=09drivers/platform/arm64/
+> +
+>  ARM64 PORT (AARCH64 ARCHITECTURE)
+>  M:=09Catalin Marinas <catalin.marinas@arm.com>
+>  M:=09Will Deacon <will@kernel.org>
+> diff --git a/drivers/platform/Kconfig b/drivers/platform/Kconfig
+> index 868b20361769..81a298517df2 100644
+> --- a/drivers/platform/Kconfig
+> +++ b/drivers/platform/Kconfig
+> @@ -14,3 +14,5 @@ source "drivers/platform/olpc/Kconfig"
+>  source "drivers/platform/surface/Kconfig"
+> =20
+>  source "drivers/platform/x86/Kconfig"
+> +
+> +source "drivers/platform/arm64/Kconfig"
+> diff --git a/drivers/platform/Makefile b/drivers/platform/Makefile
+> index 41640172975a..fbbe4f77aa5d 100644
+> --- a/drivers/platform/Makefile
+> +++ b/drivers/platform/Makefile
+> @@ -11,3 +11,4 @@ obj-$(CONFIG_OLPC_EC)=09=09+=3D olpc/
+>  obj-$(CONFIG_GOLDFISH)=09=09+=3D goldfish/
+>  obj-$(CONFIG_CHROME_PLATFORMS)=09+=3D chrome/
+>  obj-$(CONFIG_SURFACE_PLATFORMS)=09+=3D surface/
+> +obj-$(CONFIG_ARM64)=09=09+=3D arm64/
+> diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kcon=
+fig
+> new file mode 100644
+> index 000000000000..644b83ede093
+> --- /dev/null
+> +++ b/drivers/platform/arm64/Kconfig
+> @@ -0,0 +1,19 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# EC-like Drivers for aarch64 based devices.
+> +#
+> +
+> +menuconfig ARM64_PLATFORM_DEVICES
+> +=09bool "ARM64 Platform-Specific Device Drivers"
+> +=09depends on ARM64 || COMPILE_TEST
+> +=09default y
+> +=09help
+> +=09  Say Y here to get to see options for platform-specific device drive=
+rs
+> +=09  for arm64 based devices, primarily EC-like device drivers.
+> +=09  This option alone does not add any kernel code.
+> +
+> +=09  If you say N, all options in this submenu will be skipped and disab=
+led.
+> +
+> +if ARM64_PLATFORM_DEVICES
+> +
+> +endif # ARM64_PLATFORM_DEVICES
+> diff --git a/drivers/platform/arm64/Makefile b/drivers/platform/arm64/Mak=
+efile
+> new file mode 100644
+> index 000000000000..f91cdc7155e2
+> --- /dev/null
+> +++ b/drivers/platform/arm64/Makefile
+> @@ -0,0 +1,6 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Makefile for linux/drivers/platform/arm64
+> +#
+> +# This dir should only include drivers for EC-like devices.
+> +#
+>=20
+>=20
+--8323328-1606358534-1710761500=:1041--
