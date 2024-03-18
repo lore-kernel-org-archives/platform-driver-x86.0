@@ -1,268 +1,230 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0041C18E06;
-	Fri, 15 Mar 2024 18:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F54208A4
+	for <platform-driver-x86@vger.kernel.org>; Mon, 18 Mar 2024 04:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710525815; cv=none; b=ZZ14aVDH7yCjuqzcN+mCmwUGeXmxF6fv4dhyl8NvetEjx8tx0RvDb+hTHYBLUjj2urhMeCjCiudnW2qC8SJZbkhK8CD9R1xpQmDG9GtAfO9f3pFDM2XHb9YLZpI9cqZ4d6AmXnIGjSiuo5l/aM6XwZItE+rxD70NTnLbAk5uKIc=
+	t=1710735722; cv=none; b=feUc/HvtN0QXjUXofmhDZlWKP+xkXRGqSA+fD8eeLaKw11JqYIMsNlNLL1KC9GnaIs25sYxRTze2/CJ2N4VVFvXNbkyDjMuN9bGJhw8/7oq6U/XeY6wHzVrhzdnN0hWszX2uNtd0UwSRAycb0nhm9WDr8+N2ham4EDYbcHG6S2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710525815; c=relaxed/simple;
-	bh=5PExrIX6hZZkjrjwEvc8mBLHVkw1G3s/oizwldnSEA0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DYKi0HvMA+Wz3CNwBXDR8A3s72G78811U9oU4nQOob/DjRfM/7gLgRKh3ToVD7GRVAXxTLLGLqoXNlkvO/iH2xcIU5j9AVWyPt8YN4oTEjUQsI1DX3Z/IAk5pwbhujSiumEyVRqaVxzJdzssIUnwwtxq+ciL+O8yEuWyJyQb3y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=a/0+2rJv; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1710735722; c=relaxed/simple;
+	bh=ekPFn+KMupcA3DsAmtHNfwNQA8+5dgvbgt0ROt0BcLg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tIlKnMi0AcNd2uOAabkh0QuEfkYfvR+Zk4fQD7yFJll3kLBABOSTUtAOhpsUcoiT5PLE5QbycXdgzrPLBufJJytogmpJkZ16BFPJLhPrVo63+3XB6gEEedarrrRGw1eiHwUYO/Gdt2ZxuWXdRNiuAVBNaTMTQUNTV5TypBwqkM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=REzjQUQ/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="a/0+2rJv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1710525801; x=1711130601; i=w_armin@gmx.de;
-	bh=3mZw4lWM1ySsxwWZWpV0eMf7iGWyeeV4Pqe21MaySbU=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=a/0+2rJvjYbqu81G8SPofC/5wbTZFHvdLMiHd+5HTHxQEEU1TcZVitgNYxDo76Uz
-	 nvylazVhCW9N8QU4moBql9AU418WMy61D/Pz86qVE4Owvryx1otoACugVqesHkE9P
-	 XF9Xu7qJC7vo2Iqa9jYhBQJ8BOda+7TGKX4m2YYToYC1ZLLsVjjIcU3fep1ZUM8iZ
-	 sY+Xs3h+F72mah0ywjgP6/sQhVGtWuFKA/RKZeZc5Opahngy2q9hXkiE/wXyGta2h
-	 +Xk2m+STyhlx4M4SUe8b6v5hFmRYUZBC9Qu9p1Z6pEwv6lbLYdtk/VS1BCGmER7Ol
-	 VTxsfFmYFs6PDloWfg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MWRVb-1rJWvi0K0h-00XpEF; Fri, 15
- Mar 2024 19:03:21 +0100
-Message-ID: <ff3b7217-5763-4ed9-8b22-b846d3811e15@gmx.de>
-Date: Fri, 15 Mar 2024 19:03:17 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="REzjQUQ/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710735719;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YcMIvlcXZmHfP6Yrf0ho0KeclSMy8eBKOPAz1pFY4gM=;
+	b=REzjQUQ/xUx0ppffbqg63agM6MVX5Hi/INHFhgbr2fFej9cKuKz34i+Ki6/7fKSzPHcZCY
+	vuXFsbe6XQZyqEfTNRvbJIzoTxfIC/gs1GNjvBBHw8iWQFgTXUzRYre3XfPj8TW77oBtyW
+	Jb2dtsvcyAYBSwdR0GNR0sW3c1w7g0U=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-661-IL_p9kyNOnKh_I0IRKU5gQ-1; Mon, 18 Mar 2024 00:18:35 -0400
+X-MC-Unique: IL_p9kyNOnKh_I0IRKU5gQ-1
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-1e01f53a293so5960055ad.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Mar 2024 21:18:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710735514; x=1711340314;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YcMIvlcXZmHfP6Yrf0ho0KeclSMy8eBKOPAz1pFY4gM=;
+        b=pBx4hbVdbJA1g0k1byEgA3agphtB9rA6VaDPg8GHVh9dHM2+5zeonSsQ0Yadc5JiyC
+         v2si2KKZTrv2GEs478qgGtuM0SGyGfmoXSIbsE0fdEGm7bcZDUAtpnp5zikrcCFRkDt2
+         JuB+EG6yEDeoAYHfJdDFuoIeXxaXBhj1hyKR5vaXnXSl3rZiJOvIBdfftWSr7zuPBaDp
+         LtpRgWYHGxpet/XcUrabKamfnFdfj4cxtWk4y5wBFTEmbSxmkC79lD0uoYEvZcmtGPry
+         rU9UNuU57fZ8Q31ckCHYxNUi4uZ0PYgIUljrXLhEYsFwlfhqvHH7k7+bkVzz8vUHatGV
+         xLTw==
+X-Forwarded-Encrypted: i=1; AJvYcCUp9e0KoO54SJ2EDkDKwmT5TRYka1A7eOF0M7CkaQsvI1NRTsZaUnXDCj+miLnouxW+PRcDq5AM2lNwAngENg97dygP1Dn0NRVLN9IIKWGITnOkrQ==
+X-Gm-Message-State: AOJu0YzzAz8NwpVHA5K6Si6XOJ3njxQjpFVlhSgRQawNwjbgmNpy6ztV
+	iAhDVbCkhNsp+STYU7Q0n0kbOwJU9dC7/dqofl18ndcx/9M/pYNGTx36bSnnm+8SDH4biqPfyV9
+	/BrXUlEmqkYlQV0Oor/Pgf1X3o3lQiRMMB9CnnRVv+Rb4UbWe7ABeEWoa2zLsLJceGWkRFWCc0v
+	7F/KMyTaXuvNMo7DlR0QoF9MDMqTSHTPcNJDJyimkHNSUXGg==
+X-Received: by 2002:a17:902:d68b:b0:1de:f91:3cf3 with SMTP id v11-20020a170902d68b00b001de0f913cf3mr9020690ply.55.1710735514573;
+        Sun, 17 Mar 2024 21:18:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFC9oB0f9oW121Bvau3zWELRsInCawRgYQJTSjt+TRvAgqSmbvs/LBhfOLf7eU9EldQFzvUZZSWPwuwPejjiP0=
+X-Received: by 2002:a17:902:d68b:b0:1de:f91:3cf3 with SMTP id
+ v11-20020a170902d68b00b001de0f913cf3mr9020679ply.55.1710735514309; Sun, 17
+ Mar 2024 21:18:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8] platform/x86: add lenovo wmi camera button driver
-Content-Language: en-US
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Ai Chao <aichao@kylinos.cn>, Hans de Goede <hdegoede@redhat.com>,
- LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-References: <20240314050319.171816-1-aichao@kylinos.cn>
- <d7c2de21-50f9-4602-abd0-b83ecbc3f42f@gmx.de>
- <62b54638-92eb-52e1-d4ad-074963771157@linux.intel.com>
- <a2db8f76-d0c3-402e-9fb0-13f36c848607@gmx.de>
- <c3dba443-89d5-96cb-3e40-a4e3ab87002e@linux.intel.com>
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <c3dba443-89d5-96cb-3e40-a4e3ab87002e@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20240312021013.88656-1-xuanzhuo@linux.alibaba.com>
+ <20240312021013.88656-2-xuanzhuo@linux.alibaba.com> <CACGkMEvVgfgAxLoKeFTgy-1GR0W07ciPYFuqs6PiWtKCnXuWTw@mail.gmail.com>
+ <1710395908.7915084-1-xuanzhuo@linux.alibaba.com> <CACGkMEsT2JqJ1r_kStUzW0+-f+qT0C05n2A+Yrjpc-mHMZD_mQ@mail.gmail.com>
+ <1710487245.6843069-1-xuanzhuo@linux.alibaba.com>
+In-Reply-To: <1710487245.6843069-1-xuanzhuo@linux.alibaba.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Mon, 18 Mar 2024 12:18:23 +0800
+Message-ID: <CACGkMEspzDTZP1yxkBz17MgU9meyfCUBDxG8mjm=acXHNxAxhg@mail.gmail.com>
+Subject: Re: [PATCH vhost v3 1/4] virtio: find_vqs: pass struct instead of
+ multi parameters
+To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc: virtualization@lists.linux.dev, Richard Weinberger <richard@nod.at>, 
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Vadim Pasternak <vadimp@nvidia.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, Cornelia Huck <cohuck@redhat.com>, 
+	Halil Pasic <pasic@linux.ibm.com>, Eric Farman <farman@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, "Michael S. Tsirkin" <mst@redhat.com>, linux-um@lists.infradead.org, 
+	platform-driver-x86@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+	linux-s390@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:7RnQXprhojchEHbrXDGPbbNty4+OMqq7xNhCA/FYV5tyOjle1EX
- +G3U5Ny+zHr21W/iwPuBjc/VsWITKR6mmchwuZHc+5wcxDB0FZ0dw6QVqGxHptFAeNvEc6e
- jJXNnweXUvQQwjBT2H6lyLBQ7IFjWHYIuuUb1QnmCNxJ5T5rHs3m9apMpQxjj8JIVQzpxKM
- DHAIxlr/lJAGeXIBRi3cA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:JNB7gU4FF6w=;5W+cnu6pclC1kBI0PwqoIWJ4mWI
- 1kqzGlI3vtUvBI86cARZO8OoqpXkii8XarmS6GD8d8X8zfWDmpXKBVuykCuqSRBg/imWE07TE
- 42Wx0yGxjYiYk5xPlVdVKdWZxDZ/hW98WTZgknaWiO5UeRRQ5VUW9htaxYq0zX4FyMeTMIZ4l
- BCtRmSzeDfF3hf9jCebPIbt91zhW1DfPK/m/Cr2hZJikl7aEVDCsRsTBgzRU/G3IReqkheh3k
- 7KuQgRTCmr6YlSw/NOc8cF29HowF0MrYAZAO1k3Cg4s3J84z2BVgnDJdQeF8yEi6QdGNvLkFI
- 5unuV9Ax4N4cFhgf5rsLx7jelq2O1O8rQHsBUvz2LYFk/L6s+lt+0h7iIocjHP/bxef9JGvTC
- Zue/4l0xhinQNsBMv8d2RZaeCPtM9w1otDOV5HJ/23B/UzF41sls9+VsyQCkrrSApLDxAyzLC
- bNIOnBRMGa/BMCnqhjpSqe0pT2ORCWLHU4WaJDDa4PXGRjuECtr2G02HIZnkjvUTTPPkdO950
- kQGVtZwIJ9vrVbp+KSxLMdDOLzD8bgvQi6gRiG1B9Zc1uYbULcPQGMOQDRJufqYx3eec1lQ1Y
- ej8yehcWyZbPXAWn0m8szmTlnKZB1SCeQ8I1d3kuiuQJb5WfmKWSjKoD6Y7I5FyFC4nMtOZmI
- yabLwNzWs0q2yqrZOBkoF4ppupn7YRuS9VpfTJMhuGtPCzqnbk8gfwq7pZaL9pLzAed53bgm4
- FNLgrYckwZwCSZy+EOusfcKbjNhRBMl6f7fJ/A8nqEswGDtHVfca2+0LFcPzDWxkLXkQ9bW7f
- qwqIBCMOgucRDLV0q8f6OFsGurs30bQ+iOk26oM22ptiY=
 
-Am 15.03.24 um 18:54 schrieb Ilpo J=C3=A4rvinen:
-
-> On Fri, 15 Mar 2024, Armin Wolf wrote:
->> Am 15.03.24 um 12:51 schrieb Ilpo J=C3=A4rvinen:
->>> On Thu, 14 Mar 2024, Armin Wolf wrote:
->>>> Am 14.03.24 um 06:03 schrieb Ai Chao:
->>>>
->>>>> Add lenovo generic wmi driver to support camera button.
->>>>> The Camera button is a GPIO device. This driver receives ACPI notify=
-i
->>>>> when the camera button is switched on/off. This driver is used in
->>>>> Lenovo A70, it is a Computer integrated machine.
->>>>>
->>>>> Signed-off-by: Ai Chao <aichao@kylinos.cn>
->>>>> ---
->>>>> v8: Dev_deb convert to dev_err.
->>>>> v7: Add dev_dbg and remove unused dev in struct.
->>>>> v6: Modify SW_CAMERA_LENS_COVER to
->>>>> KEY_CAMERA_ACCESS_ENABLE/KEY_CAMERA_ACCESS_DISABLE.
->>>>> v5: Remove camera button groups, modify KEY_CAMERA to
->>>>> SW_CAMERA_LENS_COVER.
->>>>> v4: Remove lenovo_wmi_input_setup, move camera_mode into struct
->>>>> lenovo_wmi_priv.
->>>>> v3: Remove lenovo_wmi_remove function.
->>>>> v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
->>>>>
->>>>>     drivers/platform/x86/Kconfig             |  12 +++
->>>>>     drivers/platform/x86/Makefile            |   1 +
->>>>>     drivers/platform/x86/lenovo-wmi-camera.c | 108
->>>>> +++++++++++++++++++++++
->>>>>     3 files changed, 121 insertions(+)
->>>>>     create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
->>>>>
->>>>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kco=
-nfig
->>>>> index bdd302274b9a..9506a455b547 100644
->>>>> --- a/drivers/platform/x86/Kconfig
->>>>> +++ b/drivers/platform/x86/Kconfig
->>>>> @@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
->>>>>     	To compile this driver as a module, choose M here: the module
->>>>>     	will be called inspur-platform-profile.
->>>>>
->>>>> +config LENOVO_WMI_CAMERA
->>>>> +	tristate "Lenovo WMI Camera Button driver"
->>>>> +	depends on ACPI_WMI
->>>>> +	depends on INPUT
->>>>> +	help
->>>>> +	  This driver provides support for Lenovo camera button. The Camer=
-a
->>>>> +	  button is a GPIO device. This driver receives ACPI notify when t=
-he
->>>>> +	  camera button is switched on/off.
->>>>> +
->>>>> +	  To compile this driver as a module, choose M here: the module
->>>>> +	  will be called lenovo-wmi-camera.
->>>>> +
->>>>>     source "drivers/platform/x86/x86-android-tablets/Kconfig"
->>>>>
->>>>>     config FW_ATTR_CLASS
->>>>> diff --git a/drivers/platform/x86/Makefile
->>>>> b/drivers/platform/x86/Makefile
->>>>> index 1de432e8861e..217e94d7c877 100644
->>>>> --- a/drivers/platform/x86/Makefile
->>>>> +++ b/drivers/platform/x86/Makefile
->>>>> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+=3D hdaps.o
->>>>>     obj-$(CONFIG_THINKPAD_ACPI)	+=3D thinkpad_acpi.o
->>>>>     obj-$(CONFIG_THINKPAD_LMI)	+=3D think-lmi.o
->>>>>     obj-$(CONFIG_YOGABOOK)		+=3D lenovo-yogabook.o
->>>>> +obj-$(CONFIG_LENOVO_WMI_CAMERA)	+=3D lenovo-wmi-camera.o
->>>>>
->>>>>     # Intel
->>>>>     obj-y				+=3D intel/
->>>>> diff --git a/drivers/platform/x86/lenovo-wmi-camera.c
->>>>> b/drivers/platform/x86/lenovo-wmi-camera.c
->>>>> new file mode 100644
->>>>> index 000000000000..f83e3ccd9189
->>>>> --- /dev/null
->>>>> +++ b/drivers/platform/x86/lenovo-wmi-camera.c
->>>>> @@ -0,0 +1,108 @@
->>>>> +// SPDX-License-Identifier: GPL-2.0
->>>>> +/*
->>>>> + * Lenovo WMI Camera Button Driver
->>>>> + *
->>>>> + * Author: Ai Chao <aichao@kylinos.cn>
->>>>> + * Copyright (C) 2024 KylinSoft Corporation.
->>>>> + */
->>>>> +
->>>>> +#include <linux/acpi.h>
->>>>> +#include <linux/device.h>
->>>>> +#include <linux/input.h>
->>>>> +#include <linux/module.h>
->>>>> +#include <linux/wmi.h>
->>>>> +
->>>>> +#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID
->>>>> "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
->>>>> +
->>>>> +struct lenovo_wmi_priv {
->>>>> +	struct input_dev *idev;
->>>>> +};
->>>>> +
->>>>> +enum {
->>>>> +	SW_CAMERA_OFF	=3D 0,
->>>>> +	SW_CAMERA_ON	=3D 1,
->>>>> +};
->>>>> +
->>>>> +static void lenovo_wmi_notify(struct wmi_device *wdev, union
->>>>> acpi_object
->>>>> *obj)
->>>>> +{
->>>>> +	struct lenovo_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
->>>>> +	u8 camera_mode;
->>>>> +
->>>>> +	if (obj->type !=3D ACPI_TYPE_BUFFER) {
->>>>> +		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
->>>>> +		return;
->>>>> +	}
->>>>> +
->>>>> +	if (obj->buffer.length !=3D 1) {
->>>>> +		dev_err(&wdev->dev, "Invalid buffer length %u\n",
->>>>> obj->buffer.length);
->>>>> +		return;
->>>>> +	}
->>>>> +
->>>>> +	/* obj->buffer.pointer[0] is camera mode:
->>>>> +	 *      0 camera close
->>>>> +	 *      1 camera open
->>>>> +	 */
->>>>> +	camera_mode =3D obj->buffer.pointer[0];
->>>>> +	if (camera_mode > SW_CAMERA_ON) {
->>>>> +		dev_err(&wdev->dev, "Unknown camera mode %u\n", camera_mode);
->>>>> +		return;
->>>>> +	}
->>>>> +
->>>>> +	if (camera_mode =3D=3D SW_CAMERA_ON) {
->>>>> +		input_report_key(priv->idev, KEY_CAMERA_ACCESS_ENABLE, 1);
->>>>> +		input_sync(priv->idev);
->>>>> +		input_report_key(priv->idev, KEY_CAMERA_ACCESS_ENABLE, 0);
->>>>> +	} else {
->>>>> +		input_report_key(priv->idev, KEY_CAMERA_ACCESS_DISABLE, 1);
->>>>> +		input_sync(priv->idev);
->>>>> +		input_report_key(priv->idev, KEY_CAMERA_ACCESS_DISABLE, 0);
->>>>> +	}
->>> While not exactly wrong the if seems unnecessary, you could do:
->>>
->>> 	unsigned int keycode;
->>>
->>> 	...
->>>
->>> 	keycode =3D camera_mode =3D=3D SW_CAMERA_ON ? KEY_CAMERA_ACCESS_ENABL=
-E :
->>> 						KEY_CAMERA_ACCESS_DISABLE;
->>>
->>> 	input_report_key(priv->idev, keycode, 1);
->>> 	input_sync(priv->idev);
->>> 	input_report_key(priv->idev, keycode, 0);
->>>>> +	input_sync(priv->idev);
->>>>> +}
->>> Armin,
->>>
->>> I tried to figure out the concurrency rules for the WMI notify handler=
- but
->>> came up basically nothing. I suppose it boils down on ACPI notify hand=
-ling
->>> and I couldn't find useful documentation about that either. :-/
->>>
->>> Could you perhaps add this information into WMI documentation?
->> As far as i know, the ACPI notify handlers can be scheduled concurrentl=
-y on
->> all CPUs,
->> see https://lore.kernel.org/all/7617703.EvYhyI6sBW@kreacher/ for detail=
-s.
-> Hi,
+On Fri, Mar 15, 2024 at 3:26=E2=80=AFPM Xuan Zhuo <xuanzhuo@linux.alibaba.c=
+om> wrote:
 >
-> I meant this from the point of view whether the same notify handler can
-> only have one instance active at a time because otherwise one would
-> need locking to protect e.g. that input injection sequence.
-
-The same WMI notify handler can have multiple instances active at the
-same time, so the input sequence indeed needs some locking.
-
-Chao, can you please add a mutex to the struct lenovo_wmi_priv and use thi=
-s to
-protect the input sequence?
-
-Thanks,
-Armin Wolf
-
+> On Fri, 15 Mar 2024 11:51:48 +0800, Jason Wang <jasowang@redhat.com> wrot=
+e:
+> > On Thu, Mar 14, 2024 at 2:00=E2=80=AFPM Xuan Zhuo <xuanzhuo@linux.aliba=
+ba.com> wrote:
+> > >
+> > > On Thu, 14 Mar 2024 11:12:24 +0800, Jason Wang <jasowang@redhat.com> =
+wrote:
+> > > > On Tue, Mar 12, 2024 at 10:10=E2=80=AFAM Xuan Zhuo <xuanzhuo@linux.=
+alibaba.com> wrote:
+> > > > >
+> > > > > Now, we pass multi parameters to find_vqs. These parameters
+> > > > > may work for transport or work for vring.
+> > > > >
+> > > > > And find_vqs has multi implements in many places:
+> > > > >
+> > > > >  arch/um/drivers/virtio_uml.c
+> > > > >  drivers/platform/mellanox/mlxbf-tmfifo.c
+> > > > >  drivers/remoteproc/remoteproc_virtio.c
+> > > > >  drivers/s390/virtio/virtio_ccw.c
+> > > > >  drivers/virtio/virtio_mmio.c
+> > > > >  drivers/virtio/virtio_pci_legacy.c
+> > > > >  drivers/virtio/virtio_pci_modern.c
+> > > > >  drivers/virtio/virtio_vdpa.c
+> > > > >
+> > > > > Every time, we try to add a new parameter, that is difficult.
+> > > > > We must change every find_vqs implement.
+> > > > >
+> > > > > One the other side, if we want to pass a parameter to vring,
+> > > > > we must change the call path from transport to vring.
+> > > > > Too many functions need to be changed.
+> > > > >
+> > > > > So it is time to refactor the find_vqs. We pass a structure
+> > > > > cfg to find_vqs(), that will be passed to vring by transport.
+> > > > >
+> > > > > Because the vp_modern_create_avq() use the "const char *names[]",
+> > > > > and the virtio_uml.c changes the name in the subsequent commit, s=
+o
+> > > > > change the "names" inside the virtio_vq_config from "const char *=
+const
+> > > > > *names" to "const char **names".
+> > > > >
+> > > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > > > > Acked-by: Johannes Berg <johannes@sipsolutions.net>
+> > > > > Reviewed-by: Ilpo J=3DE4rvinen <ilpo.jarvinen@linux.intel.com>
+> > > >
+> > > > The name seems broken here.
+> > >
+> > > Email APP bug.
+> > >
+> > > I will fix.
+> > >
+> > >
+> > > >
+> > > > [...]
+> > > >
+> > > > >
+> > > > >  typedef void vq_callback_t(struct virtqueue *);
+> > > > >
+> > > > > +/**
+> > > > > + * struct virtio_vq_config - configure for find_vqs()
+> > > > > + * @cfg_idx: Used by virtio core. The drivers should set this to=
+ 0.
+> > > > > + *     During the initialization of each vq(vring setup), we nee=
+d to know which
+> > > > > + *     item in the array should be used at that time. But since =
+the item in
+> > > > > + *     names can be null, which causes some item of array to be =
+skipped, we
+> > > > > + *     cannot use vq.index as the current id. So add a cfg_idx t=
+o let vring
+> > > > > + *     know how to get the current configuration from the array =
+when
+> > > > > + *     initializing vq.
+> > > >
+> > > > So this design is not good. If it is not something that the driver
+> > > > needs to care about, the core needs to hide it from the API.
+> > >
+> > > The driver just ignore it. That will be beneficial to the virtio core=
+.
+> > > Otherwise, we must pass one more parameter everywhere.
+> >
+> > I don't get here, it's an internal logic and we've already done that.
 >
->> I will add a short note about this to the WMI driver guide which i plan=
- to
->> upstream soon (after the EC handler stuff is finished).
+>
+> ## Then these must add one param "cfg_idx";
+>
+>  struct virtqueue *vring_create_virtqueue(struct virtio_device *vdev,
+>                                          unsigned int index,
+>                                          struct vq_transport_config *tp_c=
+fg,
+>                                          struct virtio_vq_config *cfg,
+> -->                                      uint cfg_idx);
+>
+>  struct virtqueue *vring_new_virtqueue(struct virtio_device *vdev,
+>                                       unsigned int index,
+>                                       void *pages,
+>                                       struct vq_transport_config *tp_cfg,
+>                                       struct virtio_vq_config *cfg,
+> -->                                      uint cfg_idx);
+>
+>
+> ## The functions inside virtio_ring also need to add a new param, such as=
+:
+>
+>  static struct virtqueue *vring_create_virtqueue_split(struct virtio_devi=
+ce *vdev,
+>                                                       unsigned int index,
+>                                                       struct vq_transport=
+_config *tp_cfg,
+>                                                       struct virtio_vq_co=
+nfig,
+> -->                                                   uint cfg_idx);
+>
+>
+>
+
+I guess what I'm missing is when could the index differ from cfg_idx?
+
+Thanks
+
 > Thanks.
 >
+>
+>
+>
+> >
+> > Thanks
+> >
+> > >
+> > > Thanks.
+> > >
+> > > >
+> > > > Thanks
+> > > >
+> > >
+> >
+>
+
