@@ -1,192 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8257D7F7C0;
-	Tue, 19 Mar 2024 12:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E940254BDA;
+	Tue, 19 Mar 2024 12:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710851197; cv=none; b=si9x6AeR+1lCYmGYmhbEfPv+5M546iHxrS1Wz8qNloybqfNZduJnZwjUtgQuip4LHTemuy27zK2ep72Km5mjIeWtK3GJCjXm1ElolVt13+SJPzHaLsi8Xkg18vkXftY14yDKzP5Zxy10inigeEepofOZrgU4fIx4T60R10LxgqU=
+	t=1710851506; cv=none; b=a1BbXxFzdh/bOaT0tDc3mAC5jVHIkwLpO+RDyrCV2KVxgk963/6hNQ1zf2Xxg+cEJtmVqfhbtNNlLRSuo65+a31sZsudhG/37eQprG07bqoO7uV2CDNzmjrBwUfIQq7VG+CgnXvnMikeWj9zpHmnnQkAHalDMpDksAZdQk8OPwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710851197; c=relaxed/simple;
-	bh=eKpFl+Eoy4rSTLvE9ONY158gAn1erPt7rr5667NWb+c=;
+	s=arc-20240116; t=1710851506; c=relaxed/simple;
+	bh=dpUPLrqHwakMnlL6jbNOapLyjpMQqdiCfAGidRZmjgI=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=e59QyiM9Q4bCclAzxkF4s4TG9YWAfwdRlmKTsHbnl2+P/fX54mqhEBvZ1WDap+1Bp4mubFkJoSLffNVzqPl0PSE7Zw4jThRTSMACYNOgD/GnhAJwdZnFAMlS/iOT/cMPJ5ktLCvUl5v3vHBvFOapYDwc1kAVSeosve/hVXsCbIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=maRJuovT; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version:Content-Type; b=lMD+I57yUaneqdZQUCndgCtQCoj8sU4Lbp2KOiihyTPzlXqK1KGy/XgXUyDqZtSzc+hVDgyZbh9x9VzDD4xC29NSqQdDrBbuCPutdqEA/pYYCJHhrQR2JUneC+fYPv6SXW35+NfHZE/xNiOEJ6Y23JwXabalHhjoqXmGuzkh0uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eQmoZWZ7; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="maRJuovT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eQmoZWZ7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710851195; x=1742387195;
+  t=1710851505; x=1742387505;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=eKpFl+Eoy4rSTLvE9ONY158gAn1erPt7rr5667NWb+c=;
-  b=maRJuovT1Vy0ZeDJDTa245MEb8uc1jzthiuUpsKyFPxv1Avqu7LUEng+
-   cZkqFuS9/wU9bY6A3vaoVseTKv3VbFdJnIm540Pw+GD47vg27rEXTaZ32
-   AX+N/dyCLpw6vsCNQTSCVS1ZmDvU1YseS+nmcB3XCuvU1fOb4sbT/00aA
-   VF6UX2R+pLy5PIqxrx1dwfMjNUbhedeL0S0cOYbe10pAixi+4ord6GA1B
-   GGiiKtq1Ww/+VQ/HrMbRqVXjMPKt1F+1U2P/QArZOlvpCketDN1mD7dcl
-   ZQm+BWWXr96IAlaiWooTCEaodOn0zqsxH0VG5Qk8jxPuFPbaldoiPVwoU
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="5649010"
+  bh=dpUPLrqHwakMnlL6jbNOapLyjpMQqdiCfAGidRZmjgI=;
+  b=eQmoZWZ7g3BzcE1hRYQkn/AwzXZeNgA8hRAwXYCORSKX1eb3hk6gnawy
+   jhWRJG4HqxNCZj4HIJ5Dn5YLn6AuA0nVW0bhiP7UC62Xc7PXBR5mNbrsp
+   Fn7m34FaOzdTyxZ1rnvBmIpywJM6deA8RFKHlxq5XAfVsMB46h3OQsIL0
+   fCh/tqAkmw0kIGoNiVPK7lFJYAE7fSiP5zb8lBWDcabOX9YVzJIHUscGb
+   lFGLOC+XgcURdSr6ks2a6OUFhA2tZtd0UVAdrsBdcrNoRWVhvqoWzfD6p
+   iqVGVH5vBvoabT4eqf/2bynXoD4GN4bWGgRbk3/S4GtsBS8gB+SWFDa03
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="5583057"
 X-IronPort-AV: E=Sophos;i="6.07,136,1708416000"; 
-   d="scan'208";a="5649010"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 05:26:34 -0700
+   d="scan'208";a="5583057"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 05:31:45 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,136,1708416000"; 
-   d="scan'208";a="13790973"
+   d="scan'208";a="18250218"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.12])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 05:26:32 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 05:31:42 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 19 Mar 2024 14:26:26 +0200 (EET)
+Date: Tue, 19 Mar 2024 14:31:38 +0200 (EET)
 To: "Luke D. Jones" <luke@ljones.dev>
 cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
     LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: add support for Vivobook
- GPU MUX
-In-Reply-To: <20240310055312.11293-2-luke@ljones.dev>
-Message-ID: <0f35beb8-5453-63cb-0570-752b2693f6ec@linux.intel.com>
-References: <20240310055312.11293-1-luke@ljones.dev> <20240310055312.11293-2-luke@ljones.dev>
+Subject: Re: [PATCH v1 1/1] platform/x86: asus-wmi: add support variant of
+ TUF RGB
+In-Reply-To: <20240310055750.13160-2-luke@ljones.dev>
+Message-ID: <42f1c0d5-e7ac-4efb-fef7-75d07ad2ffaa@linux.intel.com>
+References: <20240310055750.13160-1-luke@ljones.dev> <20240310055750.13160-2-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1561235282-1710851186=:1267"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1561235282-1710851186=:1267
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
 
 On Sun, 10 Mar 2024, Luke D. Jones wrote:
 
-> Adjust existing MUX support to select whichever MUX support is available
-> so that ASUS Vivobook MUX can also be used if detected.
-
-This description is a bit on the short side. It wouldn't have hurt to=20
-first state that Vivobooks come with a GPU MUX WMI that has a different=20
-WMI device ID. I can infer that after reading the diff but the description=
-=20
-should not require reading the patch.
-
-The code change itself looks fine,
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
-
->=20
+> Adds support for a second TUF RGB wmi call that some versions of the TUF
+> laptop come with. Also adjusts existing support to select whichever is
+> available.
+> 
 > Signed-off-by: Luke D. Jones <luke@ljones.dev>
 > ---
->  drivers/platform/x86/asus-wmi.c            | 18 +++++++++++++-----
+>  drivers/platform/x86/asus-wmi.c            | 12 +++++++++++-
 >  include/linux/platform_data/x86/asus-wmi.h |  1 +
->  2 files changed, 14 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
-wmi.c
-> index 94cc589607b3..2cf695289655 100644
+>  2 files changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 2cf695289655..ca8c73c15fcc 100644
 > --- a/drivers/platform/x86/asus-wmi.c
 > +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -268,6 +268,7 @@ struct asus_wmi {
->  =09bool egpu_connect_available;
->  =09bool dgpu_disable_available;
->  =09bool gpu_mux_mode_available;
-> +=09u32 gpu_mux_dev;
-> =20
->  =09/* Tunables provided by ASUS for gaming laptops */
->  =09bool ppt_pl2_sppt_available;
-> @@ -682,7 +683,7 @@ static ssize_t dgpu_disable_store(struct device *dev,
->  =09=09return -EINVAL;
-> =20
->  =09if (asus->gpu_mux_mode_available) {
-> -=09=09result =3D asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_GPU_M=
-UX);
-> +=09=09result =3D asus_wmi_get_devstate_simple(asus, asus->gpu_mux_dev);
->  =09=09if (result < 0)
->  =09=09=09/* An error here may signal greater failure of GPU handling */
->  =09=09=09return result;
-> @@ -748,7 +749,7 @@ static ssize_t egpu_enable_store(struct device *dev,
->  =09}
-> =20
->  =09if (asus->gpu_mux_mode_available) {
-> -=09=09result =3D asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_GPU_M=
-UX);
-> +=09=09result =3D asus_wmi_get_devstate_simple(asus, asus->gpu_mux_dev);
->  =09=09if (result < 0) {
->  =09=09=09/* An error here may signal greater failure of GPU handling */
->  =09=09=09pr_warn("Failed to get gpu mux status: %d\n", result);
-> @@ -801,7 +802,7 @@ static ssize_t gpu_mux_mode_show(struct device *dev,
->  =09struct asus_wmi *asus =3D dev_get_drvdata(dev);
->  =09int result;
-> =20
-> -=09result =3D asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_GPU_MUX)=
-;
-> +=09result =3D asus_wmi_get_devstate_simple(asus, asus->gpu_mux_dev);
->  =09if (result < 0)
->  =09=09return result;
-> =20
-> @@ -847,7 +848,7 @@ static ssize_t gpu_mux_mode_store(struct device *dev,
->  =09=09}
->  =09}
-> =20
-> -=09err =3D asus_wmi_set_devstate(ASUS_WMI_DEVID_GPU_MUX, optimus, &resul=
-t);
-> +=09err =3D asus_wmi_set_devstate(asus->gpu_mux_dev, optimus, &result);
->  =09if (err) {
->  =09=09dev_err(dev, "Failed to set GPU MUX mode: %d\n", err);
->  =09=09return err;
-> @@ -4507,7 +4508,6 @@ static int asus_wmi_add(struct platform_device *pde=
-v)
->  =09asus->egpu_enable_available =3D asus_wmi_dev_is_present(asus, ASUS_WM=
-I_DEVID_EGPU);
->  =09asus->egpu_connect_available =3D asus_wmi_dev_is_present(asus, ASUS_W=
-MI_DEVID_EGPU_CONNECTED);
->  =09asus->dgpu_disable_available =3D asus_wmi_dev_is_present(asus, ASUS_W=
-MI_DEVID_DGPU);
-> -=09asus->gpu_mux_mode_available =3D asus_wmi_dev_is_present(asus, ASUS_W=
-MI_DEVID_GPU_MUX);
->  =09asus->kbd_rgb_mode_available =3D asus_wmi_dev_is_present(asus, ASUS_W=
-MI_DEVID_TUF_RGB_MODE);
->  =09asus->kbd_rgb_state_available =3D asus_wmi_dev_is_present(asus, ASUS_=
-WMI_DEVID_TUF_RGB_STATE);
->  =09asus->ppt_pl2_sppt_available =3D asus_wmi_dev_is_present(asus, ASUS_W=
-MI_DEVID_PPT_PL2_SPPT);
-> @@ -4529,6 +4529,14 @@ static int asus_wmi_add(struct platform_device *pd=
-ev)
->  =09=09asus->mini_led_dev_id =3D ASUS_WMI_DEVID_MINI_LED_MODE2;
->  =09}
-> =20
-> +=09if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_GPU_MUX)) {
-> +=09=09asus->gpu_mux_mode_available =3D true;
-> +=09=09asus->gpu_mux_dev =3D ASUS_WMI_DEVID_GPU_MUX;
-> +=09} else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_GPU_MUX_VIVO)=
-) {
-> +=09=09asus->gpu_mux_mode_available =3D true;
-> +=09=09asus->gpu_mux_dev =3D ASUS_WMI_DEVID_GPU_MUX_VIVO;
-> +=09}
-> +
->  =09err =3D fan_boost_mode_check_present(asus);
->  =09if (err)
->  =09=09goto fail_fan_boost_mode;
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/p=
-latform_data/x86/asus-wmi.h
-> index 9cadce10ad9a..b48b024dd844 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -128,6 +128,7 @@
-> =20
->  /* gpu mux switch, 0 =3D dGPU, 1 =3D Optimus */
->  #define ASUS_WMI_DEVID_GPU_MUX=09=090x00090016
-> +#define ASUS_WMI_DEVID_GPU_MUX_VIVO=090x00090026
-> =20
->  /* TUF laptop RGB modes/colours */
->  #define ASUS_WMI_DEVID_TUF_RGB_MODE=090x00100056
->=20
---8323328-1561235282-1710851186=:1267--
+> @@ -280,6 +280,7 @@ struct asus_wmi {
+>  	bool nv_temp_tgt_available;
+>  
+>  	bool kbd_rgb_mode_available;
+> +	u32 kbd_rgb_dev;
+>  	bool kbd_rgb_state_available;
+>  
+>  	bool throttle_thermal_policy_available;
+> @@ -870,6 +871,7 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
+>  				 struct device_attribute *attr,
+>  				 const char *buf, size_t count)
+>  {
+> +	struct asus_wmi *asus = dev_get_drvdata(dev);
+>  	u32 cmd, mode, r, g, b, speed;
+>  	int err;
+>  
+> @@ -906,7 +908,7 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
+>  		speed = 0xeb;
+>  	}
+>  
+> -	err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS, ASUS_WMI_DEVID_TUF_RGB_MODE,
+> +	err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS, asus->kbd_rgb_dev,
+>  			cmd | (mode << 8) | (r << 16) | (g << 24), b | (speed << 8), NULL);
+>  	if (err)
+>  		return err;
+> @@ -4537,6 +4539,14 @@ static int asus_wmi_add(struct platform_device *pdev)
+>  		asus->gpu_mux_dev = ASUS_WMI_DEVID_GPU_MUX_VIVO;
+>  	}
+>  
+> +	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE)) {
+> +		asus->kbd_rgb_mode_available = true;
+> +		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE;
+> +	} else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE2)) {
+> +		asus->kbd_rgb_mode_available = true;
+> +		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE2;
+> +	}
+
+Hi,
+
+Why are you leaving this line there (unlike in the GPU MUX patch where 
+you replaced it with the similar if()s as above):
+
+	asus->kbd_rgb_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE);
+
+?
+
+-- 
+ i.
+
