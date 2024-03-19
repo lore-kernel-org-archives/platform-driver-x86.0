@@ -1,124 +1,272 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E940254BDA;
-	Tue, 19 Mar 2024 12:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EF11CFB6;
+	Tue, 19 Mar 2024 14:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710851506; cv=none; b=a1BbXxFzdh/bOaT0tDc3mAC5jVHIkwLpO+RDyrCV2KVxgk963/6hNQ1zf2Xxg+cEJtmVqfhbtNNlLRSuo65+a31sZsudhG/37eQprG07bqoO7uV2CDNzmjrBwUfIQq7VG+CgnXvnMikeWj9zpHmnnQkAHalDMpDksAZdQk8OPwg=
+	t=1710858855; cv=none; b=Fjp/PxkMA8CZcQN23xj6w5RtCnucHwMh0IYdaqrp5zwwg05rZnLecgiscmSAeaTtyrqflZ8aswXQ2CXvr+bZxunDaj/jxG8yyZy2qc48cfPp4DC/HrQOm61268r+3S40/5kJ66LOBLUr3/uub3j35YvpiKr4m2tol0W0+xpDTzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710851506; c=relaxed/simple;
-	bh=dpUPLrqHwakMnlL6jbNOapLyjpMQqdiCfAGidRZmjgI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lMD+I57yUaneqdZQUCndgCtQCoj8sU4Lbp2KOiihyTPzlXqK1KGy/XgXUyDqZtSzc+hVDgyZbh9x9VzDD4xC29NSqQdDrBbuCPutdqEA/pYYCJHhrQR2JUneC+fYPv6SXW35+NfHZE/xNiOEJ6Y23JwXabalHhjoqXmGuzkh0uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eQmoZWZ7; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1710858855; c=relaxed/simple;
+	bh=AbUm5Pq0aF1FAM5ZWdeBptHKFLNal1zLQvqxvR9sTv4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=EBgb18X04d6UJrki76DcDPzSzsbRyZj9J7olMMq4DUn35fOur3WR7UY157nafLipfAzJsHFCoNssBia7+0TPR/SVP4Euo1B9JEJwc7hi5gyj0XFqJjncJQPU0ql9D/xr6EPmZdfmCuRJdBKli+PYDOKkFMNRkbgTlvTRFkCUxEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=nEiwXxFW; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eQmoZWZ7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710851505; x=1742387505;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=dpUPLrqHwakMnlL6jbNOapLyjpMQqdiCfAGidRZmjgI=;
-  b=eQmoZWZ7g3BzcE1hRYQkn/AwzXZeNgA8hRAwXYCORSKX1eb3hk6gnawy
-   jhWRJG4HqxNCZj4HIJ5Dn5YLn6AuA0nVW0bhiP7UC62Xc7PXBR5mNbrsp
-   Fn7m34FaOzdTyxZ1rnvBmIpywJM6deA8RFKHlxq5XAfVsMB46h3OQsIL0
-   fCh/tqAkmw0kIGoNiVPK7lFJYAE7fSiP5zb8lBWDcabOX9YVzJIHUscGb
-   lFGLOC+XgcURdSr6ks2a6OUFhA2tZtd0UVAdrsBdcrNoRWVhvqoWzfD6p
-   iqVGVH5vBvoabT4eqf/2bynXoD4GN4bWGgRbk3/S4GtsBS8gB+SWFDa03
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11017"; a="5583057"
-X-IronPort-AV: E=Sophos;i="6.07,136,1708416000"; 
-   d="scan'208";a="5583057"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 05:31:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,136,1708416000"; 
-   d="scan'208";a="18250218"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.12])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 05:31:42 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 19 Mar 2024 14:31:38 +0200 (EET)
-To: "Luke D. Jones" <luke@ljones.dev>
-cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/1] platform/x86: asus-wmi: add support variant of
- TUF RGB
-In-Reply-To: <20240310055750.13160-2-luke@ljones.dev>
-Message-ID: <42f1c0d5-e7ac-4efb-fef7-75d07ad2ffaa@linux.intel.com>
-References: <20240310055750.13160-1-luke@ljones.dev> <20240310055750.13160-2-luke@ljones.dev>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="nEiwXxFW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1710858832; x=1711463632; i=w_armin@gmx.de;
+	bh=F78XrSS29LDfIBktWQ4yECtNVi044MB1Oc4ATjgKoMA=;
+	h=X-UI-Sender-Class:Date:Subject:To:References:From:In-Reply-To;
+	b=nEiwXxFWykavWnWCUNrRi6NMJEB/XusSZpiw+Fxwd5hr2ZuL8+E128PMalS82gyW
+	 l2HqL4Y2V/ldVBj34pBNd32cdScwPtQ+4l5pPakF02DePz5vCVL4dWPLE53a6VqYP
+	 Aihm5fVq28FX86PSvW1pHw+Ge+zrjIQQjImMjsILnOGmhJCaPl4kmTv5Hb250XsZh
+	 NCdah9LvG92yyTHOB7/KzZfPhbkiQM/bbtjMM87jdMN89dyxYf0EOJxwN1S9a3QGa
+	 UWhCRnSTaQfF7g9SuGK8Jbv2XSCHqvKfEA6aNNXttC1u6v0JBqskqMV7XWQBWV9XH
+	 tyX8aZG1wTGDvuHQrw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MacOW-1rBbtS2WPC-00cBAi; Tue, 19
+ Mar 2024 15:33:52 +0100
+Message-ID: <40bfa65d-4c4d-47cd-a0fb-a85c47fdd4c0@gmx.de>
+Date: Tue, 19 Mar 2024 15:33:50 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9] platform/x86: add lenovo wmi camera button driver
+To: Ai Chao <aichao@kylinos.cn>, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <20240319021407.15769-1-aichao@kylinos.cn>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20240319021407.15769-1-aichao@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:YYfavhpn4u/mx2K5C4qXwy+NltiFhlMZO7gDAduL+wDP2R9xQ68
+ 6g5LWNPKdXQBgNl4UMiJ8bbs4Fjo4Swn/BkgOZhBiH/++y99Yo9plfcZ/1owc8XXl57fkoc
+ r8EyKRIih4jGGmYi0GmjCT2qo9imf7pZuNwpfY1kdcD+FJVG/hWV4gmUv/diP/jMvUFmIkQ
+ 8vGMgae34WnPeiGO5egEg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:DWvF/XYCkxs=;QNNMjAu1JQGZXQRzyJ/wSQ56tV4
+ +n9TLrLDpZGOYfDXX55Tam3xzF3JU/DWzENxxxWJTn6Daogw9tclYnrlG1KzqsKT1Xd6kGYzA
+ S/0j7anXHeqdgQBVIVWl5V7WroW3X7I3XOIBMYau4T+NWgmmGchpenbD+SXzJla1OTgRm+STU
+ Wf1eLUO77ibIqncLqyW3fDs67l6NG1Uug7rJCQ07x9uHpP0fwVfOyJ2Mm3W+1eHEA9tJBG1/1
+ JFNAdbauoPC2bl4CPyUhqe3n1Pka/CfumBQRou9G7edts+/9iYKFpTf8MMxrpGj4CM94XVj9i
+ AGH6BYKcHPEC1dtHCH3JzWQJ/oi/rptR4BWbiOpvxG+IEeNIk8cTwdbnLMFwhQ7SdzS3K6iKx
+ VaIWji5yjphXDBhfKxFk3KLJ7TuLePuECKZrp5bxteqXkVGHOMCdEf3GyBkub9oMc9RiUJP6L
+ HkK4SlQLmkq3U/U4FT9NtjeBKvt7lrtMgdMGjkra5NyvefJzk7DHbdlgG3xYNi+iOIEIfm7VC
+ 203dLf4aAAzKG5RFjexUpfeMqGXElteOnGkEaQBrb8T3M77XYTyHn6yWNJ82su2BhbsTFF1Ty
+ N4PAVI+7pnHzD0di1OojF4eFR9CAw4NxA1L3kx/H4HcqI3rwbLwbK6OanIYgjBI3NbbFceXfq
+ BPXlobG/fzqd5HEob8sZVLSaKbrTWjRH/GjIQsTVk0s71hdOHtfUUrRg1oZAXWnGeM64zdGBf
+ 21fbI9ciV6bg9ZrhC3EExw6wkyLvXxnlt/GWWpr9RcxDsq6bz3LoBks5vq/11AQKg+QrLXYkz
+ +F8GO4zFrixvDdEBQv614ScPoxFIox/1n2/fSkm3/x5n4=
 
-On Sun, 10 Mar 2024, Luke D. Jones wrote:
+Am 19.03.24 um 03:14 schrieb Ai Chao:
 
-> Adds support for a second TUF RGB wmi call that some versions of the TUF
-> laptop come with. Also adjusts existing support to select whichever is
-> available.
-> 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> Add lenovo generic wmi driver to support camera button.
+> The Camera button is a GPIO device. This driver receives ACPI notifyi
+> when the camera button is switched on/off. This driver is used in
+> Lenovo A70, it is a Computer integrated machine.
+>
+> Signed-off-by: Ai Chao <aichao@kylinos.cn>
 > ---
->  drivers/platform/x86/asus-wmi.c            | 12 +++++++++++-
->  include/linux/platform_data/x86/asus-wmi.h |  1 +
->  2 files changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 2cf695289655..ca8c73c15fcc 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -280,6 +280,7 @@ struct asus_wmi {
->  	bool nv_temp_tgt_available;
->  
->  	bool kbd_rgb_mode_available;
-> +	u32 kbd_rgb_dev;
->  	bool kbd_rgb_state_available;
->  
->  	bool throttle_thermal_policy_available;
-> @@ -870,6 +871,7 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
->  				 struct device_attribute *attr,
->  				 const char *buf, size_t count)
->  {
-> +	struct asus_wmi *asus = dev_get_drvdata(dev);
->  	u32 cmd, mode, r, g, b, speed;
->  	int err;
->  
-> @@ -906,7 +908,7 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
->  		speed = 0xeb;
->  	}
->  
-> -	err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS, ASUS_WMI_DEVID_TUF_RGB_MODE,
-> +	err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS, asus->kbd_rgb_dev,
->  			cmd | (mode << 8) | (r << 16) | (g << 24), b | (speed << 8), NULL);
->  	if (err)
->  		return err;
-> @@ -4537,6 +4539,14 @@ static int asus_wmi_add(struct platform_device *pdev)
->  		asus->gpu_mux_dev = ASUS_WMI_DEVID_GPU_MUX_VIVO;
->  	}
->  
-> +	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE)) {
-> +		asus->kbd_rgb_mode_available = true;
-> +		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE;
-> +	} else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE2)) {
-> +		asus->kbd_rgb_mode_available = true;
-> +		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE2;
+> v9: Add mutex for wmi notify.
+> v8: Dev_deb convert to dev_err.
+> v7: Add dev_dbg and remove unused dev in struct.
+> v6: Modify SW_CAMERA_LENS_COVER to KEY_CAMERA_ACCESS_ENABLE/KEY_CAMERA_A=
+CCESS_DISABLE.
+> v5: Remove camera button groups, modify KEY_CAMERA to SW_CAMERA_LENS_COV=
+ER.
+> v4: Remove lenovo_wmi_input_setup, move camera_mode into struct lenovo_w=
+mi_priv.
+> v3: Remove lenovo_wmi_remove function.
+> v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
+>
+>   drivers/platform/x86/Kconfig             |  12 +++
+>   drivers/platform/x86/Makefile            |   1 +
+>   drivers/platform/x86/lenovo-wmi-camera.c | 112 +++++++++++++++++++++++
+>   3 files changed, 125 insertions(+)
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
+>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index bdd302274b9a..9506a455b547 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
+>   	To compile this driver as a module, choose M here: the module
+>   	will be called inspur-platform-profile.
+>
+> +config LENOVO_WMI_CAMERA
+> +	tristate "Lenovo WMI Camera Button driver"
+> +	depends on ACPI_WMI
+> +	depends on INPUT
+> +	help
+> +	  This driver provides support for Lenovo camera button. The Camera
+> +	  button is a GPIO device. This driver receives ACPI notify when the
+> +	  camera button is switched on/off.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called lenovo-wmi-camera.
+> +
+>   source "drivers/platform/x86/x86-android-tablets/Kconfig"
+>
+>   config FW_ATTR_CLASS
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefi=
+le
+> index 1de432e8861e..217e94d7c877 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+=3D hdaps.o
+>   obj-$(CONFIG_THINKPAD_ACPI)	+=3D thinkpad_acpi.o
+>   obj-$(CONFIG_THINKPAD_LMI)	+=3D think-lmi.o
+>   obj-$(CONFIG_YOGABOOK)		+=3D lenovo-yogabook.o
+> +obj-$(CONFIG_LENOVO_WMI_CAMERA)	+=3D lenovo-wmi-camera.o
+>
+>   # Intel
+>   obj-y				+=3D intel/
+> diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform=
+/x86/lenovo-wmi-camera.c
+> new file mode 100644
+> index 000000000000..820a52588caf
+> --- /dev/null
+> +++ b/drivers/platform/x86/lenovo-wmi-camera.c
+> @@ -0,0 +1,112 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Lenovo WMI Camera Button Driver
+> + *
+> + * Author: Ai Chao <aichao@kylinos.cn>
+> + * Copyright (C) 2024 KylinSoft Corporation.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/device.h>
+> +#include <linux/input.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/wmi.h>
+> +
+> +#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F=
+4EA400013"
+> +
+> +struct lenovo_wmi_priv {
+> +	struct input_dev *idev;
+> +	struct mutex notify_lock;	/* lenovo wmi notify lock */
+> +};
+> +
+> +enum {
+> +	SW_CAMERA_OFF	=3D 0,
+> +	SW_CAMERA_ON	=3D 1,
+> +};
+> +
+> +static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_objec=
+t *obj)
+> +{
+> +	struct lenovo_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
+> +	unsigned int keycode;
+> +	u8 camera_mode;
+> +
+> +	mutex_lock(&priv->notify_lock);
+> +	if (obj->type !=3D ACPI_TYPE_BUFFER) {
+> +		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
+> +		goto out_unlock;
 > +	}
+> +
+> +	if (obj->buffer.length !=3D 1) {
+> +		dev_err(&wdev->dev, "Invalid buffer length %u\n", obj->buffer.length)=
+;
+> +		goto out_unlock;
+> +	}
+> +
+> +	/* obj->buffer.pointer[0] is camera mode:
+> +	 *      0 camera close
+> +	 *      1 camera open
+> +	 */
+> +	camera_mode =3D obj->buffer.pointer[0];
+> +	if (camera_mode > SW_CAMERA_ON) {
+> +		dev_err(&wdev->dev, "Unknown camera mode %u\n", camera_mode);
+> +		goto out_unlock;
+> +	}
+> +
 
 Hi,
 
-Why are you leaving this line there (unlike in the GPU MUX patch where 
-you replaced it with the similar if()s as above):
+can you move the call to mutex_lock() to this line please?
+The ACPI object parsing code does not have to be protected by the mutex,
+just the key input sequence.
 
-	asus->kbd_rgb_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE);
+> +	keycode =3D (camera_mode =3D=3D SW_CAMERA_ON ?
+> +		   KEY_CAMERA_ACCESS_ENABLE : KEY_CAMERA_ACCESS_DISABLE);
+> +	input_report_key(priv->idev, keycode, 1);
+> +	input_sync(priv->idev);
+> +	input_report_key(priv->idev, keycode, 0);
+> +	input_sync(priv->idev);
+> +
+> +out_unlock:
+> +	mutex_unlock(&priv->notify_lock);
+> +}
+> +
+> +static int lenovo_wmi_probe(struct wmi_device *wdev, const void *contex=
+t)
+> +{
+> +	struct lenovo_wmi_priv *priv;
+> +
+> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(&wdev->dev, priv);
+> +
+> +	mutex_init(&priv->notify_lock);
 
-?
+Please note that mutex_destroy() should be called when removing the driver
+or when an error occurred during probe.
 
--- 
- i.
+Other than those two issues, the driver looks fine.
 
+Thanks,
+Armin Wolf
+
+> +	priv->idev =3D devm_input_allocate_device(&wdev->dev);
+> +	if (!priv->idev)
+> +		return -ENOMEM;
+> +
+> +	priv->idev->name =3D "Lenovo WMI Camera Button";
+> +	priv->idev->phys =3D "wmi/input0";
+> +	priv->idev->id.bustype =3D BUS_HOST;
+> +	priv->idev->dev.parent =3D &wdev->dev;
+> +	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_ENABLE);
+> +	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_DISABLE);
+> +
+> +	return input_register_device(priv->idev);
+> +}
+> +
+> +static const struct wmi_device_id lenovo_wmi_id_table[] =3D {
+> +	{ .guid_string =3D WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
+> +	{  }
+> +};
+> +
+> +static struct wmi_driver lenovo_wmi_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "lenovo-wmi-camera",
+> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.id_table =3D lenovo_wmi_id_table,
+> +	.no_singleton =3D true,
+> +	.probe =3D lenovo_wmi_probe,
+> +	.notify =3D lenovo_wmi_notify,
+> +};
+> +
+> +module_wmi_driver(lenovo_wmi_driver);
+> +
+> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
+> +MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
+> +MODULE_DESCRIPTION("Lenovo WMI Camera Button Driver");
+> +MODULE_LICENSE("GPL");
