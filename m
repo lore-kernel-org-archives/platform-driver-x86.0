@@ -1,272 +1,201 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EF11CFB6;
-	Tue, 19 Mar 2024 14:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4F3208D4;
+	Tue, 19 Mar 2024 17:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710858855; cv=none; b=Fjp/PxkMA8CZcQN23xj6w5RtCnucHwMh0IYdaqrp5zwwg05rZnLecgiscmSAeaTtyrqflZ8aswXQ2CXvr+bZxunDaj/jxG8yyZy2qc48cfPp4DC/HrQOm61268r+3S40/5kJ66LOBLUr3/uub3j35YvpiKr4m2tol0W0+xpDTzI=
+	t=1710870514; cv=none; b=eaN6v3vczFlFPXpg1xJxNXHfvMCWr2UyGktSdbguV8C2+jCRdvR4CG0NVtUNSzPARBW0YVylbMGxhBNOf/SPmN2mUt4WO2f/+qp1Z3b4Gc0oofDfW4KA2jJekqiMGI6ZJ09cM1wdN8iCled9jBd/6KZVXagqCZftjbdGXzBgiEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710858855; c=relaxed/simple;
-	bh=AbUm5Pq0aF1FAM5ZWdeBptHKFLNal1zLQvqxvR9sTv4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=EBgb18X04d6UJrki76DcDPzSzsbRyZj9J7olMMq4DUn35fOur3WR7UY157nafLipfAzJsHFCoNssBia7+0TPR/SVP4Euo1B9JEJwc7hi5gyj0XFqJjncJQPU0ql9D/xr6EPmZdfmCuRJdBKli+PYDOKkFMNRkbgTlvTRFkCUxEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=nEiwXxFW; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1710870514; c=relaxed/simple;
+	bh=vPKVHtERmM698/xk0MvrZWvxD2gy5VDHDSR5S21JXkQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=O1oshYi9/e92gzvye9szlptmvlJwlyGbi9zgEHlXQOyMt3wswrmkCIDRKM31ayDPCZAJfB6bgIlbmHaJBwYNzUMA4XMDowrueMZ/odSHxd9GdlHodYMwd6Cn3WfywZWxOj17qw7ryQ6/v4soNwTP7q3DewXmRa+78l1+bKI7KU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a3zk+imh; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="nEiwXxFW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1710858832; x=1711463632; i=w_armin@gmx.de;
-	bh=F78XrSS29LDfIBktWQ4yECtNVi044MB1Oc4ATjgKoMA=;
-	h=X-UI-Sender-Class:Date:Subject:To:References:From:In-Reply-To;
-	b=nEiwXxFWykavWnWCUNrRi6NMJEB/XusSZpiw+Fxwd5hr2ZuL8+E128PMalS82gyW
-	 l2HqL4Y2V/ldVBj34pBNd32cdScwPtQ+4l5pPakF02DePz5vCVL4dWPLE53a6VqYP
-	 Aihm5fVq28FX86PSvW1pHw+Ge+zrjIQQjImMjsILnOGmhJCaPl4kmTv5Hb250XsZh
-	 NCdah9LvG92yyTHOB7/KzZfPhbkiQM/bbtjMM87jdMN89dyxYf0EOJxwN1S9a3QGa
-	 UWhCRnSTaQfF7g9SuGK8Jbv2XSCHqvKfEA6aNNXttC1u6v0JBqskqMV7XWQBWV9XH
-	 tyX8aZG1wTGDvuHQrw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MacOW-1rBbtS2WPC-00cBAi; Tue, 19
- Mar 2024 15:33:52 +0100
-Message-ID: <40bfa65d-4c4d-47cd-a0fb-a85c47fdd4c0@gmx.de>
-Date: Tue, 19 Mar 2024 15:33:50 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a3zk+imh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710870512; x=1742406512;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=vPKVHtERmM698/xk0MvrZWvxD2gy5VDHDSR5S21JXkQ=;
+  b=a3zk+imhxKy+nsJj38EWIbFqy65GYlNzkaG1FPMqd9/IbdUmxXCNgVkL
+   71JpiQX9iw7BigszJznldvcq49FSVf/hg3bbI9JoRigJERARIV6hoikXC
+   Q+nxcFyBw+h/DSJ7ewg/lY+QlcbSga4y98hf6sJUbd2lh9PCSPeG0xt1r
+   NseLY53wzLPRlYoSjW6Rxg5/DaF1/70BR+SqgMSC0VdPbZDecE7KTwzUT
+   mFIGWEhi+F2FfadwclmWocCo9UR+bWmnzXCbiEuse8d5smmeBX+k0m0SC
+   Of50uyE0/T1fqtq+zP4JtSfLulWDL8ZC2CO2GLSF+3guuAEiNFm8DDNCG
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11018"; a="5971402"
+X-IronPort-AV: E=Sophos;i="6.07,137,1708416000"; 
+   d="scan'208";a="5971402"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 10:48:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,137,1708416000"; 
+   d="scan'208";a="18540831"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.14])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2024 10:48:14 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 19 Mar 2024 19:48:09 +0200 (EET)
+To: "Luke D. Jones" <luke@ljones.dev>
+cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: asus-wmi: support toggling POST sound
+In-Reply-To: <20240310061715.16531-1-luke@ljones.dev>
+Message-ID: <5f853562-cbe0-32d7-2644-d42d2bb9e060@linux.intel.com>
+References: <20240310061715.16531-1-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9] platform/x86: add lenovo wmi camera button driver
-To: Ai Chao <aichao@kylinos.cn>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20240319021407.15769-1-aichao@kylinos.cn>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20240319021407.15769-1-aichao@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:YYfavhpn4u/mx2K5C4qXwy+NltiFhlMZO7gDAduL+wDP2R9xQ68
- 6g5LWNPKdXQBgNl4UMiJ8bbs4Fjo4Swn/BkgOZhBiH/++y99Yo9plfcZ/1owc8XXl57fkoc
- r8EyKRIih4jGGmYi0GmjCT2qo9imf7pZuNwpfY1kdcD+FJVG/hWV4gmUv/diP/jMvUFmIkQ
- 8vGMgae34WnPeiGO5egEg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:DWvF/XYCkxs=;QNNMjAu1JQGZXQRzyJ/wSQ56tV4
- +n9TLrLDpZGOYfDXX55Tam3xzF3JU/DWzENxxxWJTn6Daogw9tclYnrlG1KzqsKT1Xd6kGYzA
- S/0j7anXHeqdgQBVIVWl5V7WroW3X7I3XOIBMYau4T+NWgmmGchpenbD+SXzJla1OTgRm+STU
- Wf1eLUO77ibIqncLqyW3fDs67l6NG1Uug7rJCQ07x9uHpP0fwVfOyJ2Mm3W+1eHEA9tJBG1/1
- JFNAdbauoPC2bl4CPyUhqe3n1Pka/CfumBQRou9G7edts+/9iYKFpTf8MMxrpGj4CM94XVj9i
- AGH6BYKcHPEC1dtHCH3JzWQJ/oi/rptR4BWbiOpvxG+IEeNIk8cTwdbnLMFwhQ7SdzS3K6iKx
- VaIWji5yjphXDBhfKxFk3KLJ7TuLePuECKZrp5bxteqXkVGHOMCdEf3GyBkub9oMc9RiUJP6L
- HkK4SlQLmkq3U/U4FT9NtjeBKvt7lrtMgdMGjkra5NyvefJzk7DHbdlgG3xYNi+iOIEIfm7VC
- 203dLf4aAAzKG5RFjexUpfeMqGXElteOnGkEaQBrb8T3M77XYTyHn6yWNJ82su2BhbsTFF1Ty
- N4PAVI+7pnHzD0di1OojF4eFR9CAw4NxA1L3kx/H4HcqI3rwbLwbK6OanIYgjBI3NbbFceXfq
- BPXlobG/fzqd5HEob8sZVLSaKbrTWjRH/GjIQsTVk0s71hdOHtfUUrRg1oZAXWnGeM64zdGBf
- 21fbI9ciV6bg9ZrhC3EExw6wkyLvXxnlt/GWWpr9RcxDsq6bz3LoBks5vq/11AQKg+QrLXYkz
- +F8GO4zFrixvDdEBQv614ScPoxFIox/1n2/fSkm3/x5n4=
+Content-Type: text/plain; charset=US-ASCII
 
-Am 19.03.24 um 03:14 schrieb Ai Chao:
+On Sun, 10 Mar 2024, Luke D. Jones wrote:
 
-> Add lenovo generic wmi driver to support camera button.
-> The Camera button is a GPIO device. This driver receives ACPI notifyi
-> when the camera button is switched on/off. This driver is used in
-> Lenovo A70, it is a Computer integrated machine.
->
-> Signed-off-by: Ai Chao <aichao@kylinos.cn>
+> Add support for toggling the BIOS POST sound on some ASUS laptops.
+> 
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
 > ---
-> v9: Add mutex for wmi notify.
-> v8: Dev_deb convert to dev_err.
-> v7: Add dev_dbg and remove unused dev in struct.
-> v6: Modify SW_CAMERA_LENS_COVER to KEY_CAMERA_ACCESS_ENABLE/KEY_CAMERA_A=
-CCESS_DISABLE.
-> v5: Remove camera button groups, modify KEY_CAMERA to SW_CAMERA_LENS_COV=
-ER.
-> v4: Remove lenovo_wmi_input_setup, move camera_mode into struct lenovo_w=
-mi_priv.
-> v3: Remove lenovo_wmi_remove function.
-> v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
->
->   drivers/platform/x86/Kconfig             |  12 +++
->   drivers/platform/x86/Makefile            |   1 +
->   drivers/platform/x86/lenovo-wmi-camera.c | 112 +++++++++++++++++++++++
->   3 files changed, 125 insertions(+)
->   create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
->
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index bdd302274b9a..9506a455b547 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
->   	To compile this driver as a module, choose M here: the module
->   	will be called inspur-platform-profile.
->
-> +config LENOVO_WMI_CAMERA
-> +	tristate "Lenovo WMI Camera Button driver"
-> +	depends on ACPI_WMI
-> +	depends on INPUT
-> +	help
-> +	  This driver provides support for Lenovo camera button. The Camera
-> +	  button is a GPIO device. This driver receives ACPI notify when the
-> +	  camera button is switched on/off.
+>  .../ABI/testing/sysfs-platform-asus-wmi       |  7 +++
+>  drivers/platform/x86/asus-wmi.c               | 54 +++++++++++++++++++
+>  include/linux/platform_data/x86/asus-wmi.h    |  3 ++
+>  3 files changed, 64 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+> index e32b4f0ae15f..f3c53b7453f0 100644
+> --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
+> +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+> @@ -194,3 +194,10 @@ Contact:	"Luke Jones" <luke@ljones.dev>
+>  Description:
+>  		Set the target temperature limit of the Nvidia dGPU:
+>  			* min=75, max=87
 > +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called lenovo-wmi-camera.
+> +What:		/sys/devices/platform/<platform>/boot_sound
+> +Date:		Jun 2023
+> +KernelVersion:	6.9
+> +Contact:	"Luke Jones" <luke@ljones.dev>
+> +Description:
+> +		Set if the BIOS POST sound is played on boot.
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index ca8c73c15fcc..26084e9846a1 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -297,6 +297,7 @@ struct asus_wmi {
+>  	// The RSOC controls the maximum charging percentage.
+>  	bool battery_rsoc_available;
+>  
+> +	bool boot_sound_available;
+>  	bool panel_overdrive_available;
+>  	bool mini_led_mode_available;
+>  	u32 mini_led_dev_id;
+> @@ -2106,6 +2107,55 @@ static ssize_t panel_od_store(struct device *dev,
+>  }
+>  static DEVICE_ATTR_RW(panel_od);
+>  
+> +/* Bootup sound ***************************************************************/
 > +
->   source "drivers/platform/x86/x86-android-tablets/Kconfig"
->
->   config FW_ATTR_CLASS
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefi=
-le
-> index 1de432e8861e..217e94d7c877 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+=3D hdaps.o
->   obj-$(CONFIG_THINKPAD_ACPI)	+=3D thinkpad_acpi.o
->   obj-$(CONFIG_THINKPAD_LMI)	+=3D think-lmi.o
->   obj-$(CONFIG_YOGABOOK)		+=3D lenovo-yogabook.o
-> +obj-$(CONFIG_LENOVO_WMI_CAMERA)	+=3D lenovo-wmi-camera.o
->
->   # Intel
->   obj-y				+=3D intel/
-> diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform=
-/x86/lenovo-wmi-camera.c
-> new file mode 100644
-> index 000000000000..820a52588caf
-> --- /dev/null
-> +++ b/drivers/platform/x86/lenovo-wmi-camera.c
-> @@ -0,0 +1,112 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Lenovo WMI Camera Button Driver
-> + *
-> + * Author: Ai Chao <aichao@kylinos.cn>
-> + * Copyright (C) 2024 KylinSoft Corporation.
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/device.h>
-> +#include <linux/input.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/wmi.h>
-> +
-> +#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F=
-4EA400013"
-> +
-> +struct lenovo_wmi_priv {
-> +	struct input_dev *idev;
-> +	struct mutex notify_lock;	/* lenovo wmi notify lock */
-> +};
-> +
-> +enum {
-> +	SW_CAMERA_OFF	=3D 0,
-> +	SW_CAMERA_ON	=3D 1,
-> +};
-> +
-> +static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_objec=
-t *obj)
+> +static ssize_t boot_sound_show(struct device *dev,
+> +			     struct device_attribute *attr, char *buf)
 > +{
-> +	struct lenovo_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
-> +	unsigned int keycode;
-> +	u8 camera_mode;
+> +	struct asus_wmi *asus = dev_get_drvdata(dev);
+> +	int result;
 > +
-> +	mutex_lock(&priv->notify_lock);
-> +	if (obj->type !=3D ACPI_TYPE_BUFFER) {
-> +		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
-> +		goto out_unlock;
-> +	}
+> +	result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_BOOT_SOUND);
+> +	if (result < 0)
+> +		return result;
 > +
-> +	if (obj->buffer.length !=3D 1) {
-> +		dev_err(&wdev->dev, "Invalid buffer length %u\n", obj->buffer.length)=
-;
-> +		goto out_unlock;
-> +	}
-> +
-> +	/* obj->buffer.pointer[0] is camera mode:
-> +	 *      0 camera close
-> +	 *      1 camera open
-> +	 */
-> +	camera_mode =3D obj->buffer.pointer[0];
-> +	if (camera_mode > SW_CAMERA_ON) {
-> +		dev_err(&wdev->dev, "Unknown camera mode %u\n", camera_mode);
-> +		goto out_unlock;
-> +	}
-> +
-
-Hi,
-
-can you move the call to mutex_lock() to this line please?
-The ACPI object parsing code does not have to be protected by the mutex,
-just the key input sequence.
-
-> +	keycode =3D (camera_mode =3D=3D SW_CAMERA_ON ?
-> +		   KEY_CAMERA_ACCESS_ENABLE : KEY_CAMERA_ACCESS_DISABLE);
-> +	input_report_key(priv->idev, keycode, 1);
-> +	input_sync(priv->idev);
-> +	input_report_key(priv->idev, keycode, 0);
-> +	input_sync(priv->idev);
-> +
-> +out_unlock:
-> +	mutex_unlock(&priv->notify_lock);
+> +	return sysfs_emit(buf, "%d\n", result);
 > +}
 > +
-> +static int lenovo_wmi_probe(struct wmi_device *wdev, const void *contex=
-t)
+> +static ssize_t boot_sound_store(struct device *dev,
+> +			      struct device_attribute *attr,
+> +			      const char *buf, size_t count)
 > +{
-> +	struct lenovo_wmi_priv *priv;
+> +	int result, err;
+> +	u32 snd;
 > +
-> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
+> +	struct asus_wmi *asus = dev_get_drvdata(dev);
 > +
-> +	dev_set_drvdata(&wdev->dev, priv);
+> +	result = kstrtou32(buf, 10, &snd);
+> +	if (result)
+> +		return result;
 > +
-> +	mutex_init(&priv->notify_lock);
+> +	if (snd > 1)
+> +		return -EINVAL;
 
-Please note that mutex_destroy() should be called when removing the driver
-or when an error occurred during probe.
+Why not just use kstrtobool()?
 
-Other than those two issues, the driver looks fine.
-
-Thanks,
-Armin Wolf
-
-> +	priv->idev =3D devm_input_allocate_device(&wdev->dev);
-> +	if (!priv->idev)
-> +		return -ENOMEM;
 > +
-> +	priv->idev->name =3D "Lenovo WMI Camera Button";
-> +	priv->idev->phys =3D "wmi/input0";
-> +	priv->idev->id.bustype =3D BUS_HOST;
-> +	priv->idev->dev.parent =3D &wdev->dev;
-> +	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_ENABLE);
-> +	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_DISABLE);
+> +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BOOT_SOUND, snd, &result);
 > +
-> +	return input_register_device(priv->idev);
+> +	if (err) {
+
+Don't leave empty lines between the call and its error handling.
+
+-- 
+ i.
+
+> +		pr_warn("Failed to set boot sound: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	if (result > 1) {
+> +		pr_warn("Failed to set panel boot sound (result): 0x%x\n", result);
+> +		return -EIO;
+> +	}
+> +
+> +	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "boot_sound");
+> +
+> +	return count;
 > +}
+> +static DEVICE_ATTR_RW(boot_sound);
 > +
-> +static const struct wmi_device_id lenovo_wmi_id_table[] =3D {
-> +	{ .guid_string =3D WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
-> +	{  }
-> +};
+>  /* Mini-LED mode **************************************************************/
+>  static ssize_t mini_led_mode_show(struct device *dev,
+>  				   struct device_attribute *attr, char *buf)
+> @@ -4196,6 +4246,7 @@ static struct attribute *platform_attributes[] = {
+>  	&dev_attr_ppt_platform_sppt.attr,
+>  	&dev_attr_nv_dynamic_boost.attr,
+>  	&dev_attr_nv_temp_target.attr,
+> +	&dev_attr_boot_sound.attr,
+>  	&dev_attr_panel_od.attr,
+>  	&dev_attr_mini_led_mode.attr,
+>  	&dev_attr_available_mini_led_mode.attr,
+> @@ -4248,6 +4299,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+>  		ok = asus->nv_dyn_boost_available;
+>  	else if (attr == &dev_attr_nv_temp_target.attr)
+>  		ok = asus->nv_temp_tgt_available;
+> +	else if (attr == &dev_attr_boot_sound.attr)
+> +		ok = asus->boot_sound_available;
+>  	else if (attr == &dev_attr_panel_od.attr)
+>  		ok = asus->panel_overdrive_available;
+>  	else if (attr == &dev_attr_mini_led_mode.attr)
+> @@ -4519,6 +4572,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+>  	asus->ppt_plat_sppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PLAT_SPPT);
+>  	asus->nv_dyn_boost_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_NV_DYN_BOOST);
+>  	asus->nv_temp_tgt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_NV_THERM_TARGET);
+> +	asus->boot_sound_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_BOOT_SOUND);
+>  	asus->panel_overdrive_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PANEL_OD);
+>  	asus->ally_mcu_usb_switch = acpi_has_method(NULL, ASUS_USB0_PWR_EC0_CSEE)
+>  						&& dmi_match(DMI_BOARD_NAME, "RC71L");
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> index 3e9a01467c67..3eb5cd6773ad 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -137,6 +137,9 @@
+>  /* TUF laptop RGB power/state */
+>  #define ASUS_WMI_DEVID_TUF_RGB_STATE	0x00100057
+>  
+> +/* Bootup sound control */
+> +#define ASUS_WMI_DEVID_BOOT_SOUND	0x00130022
 > +
-> +static struct wmi_driver lenovo_wmi_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "lenovo-wmi-camera",
-> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
-> +	},
-> +	.id_table =3D lenovo_wmi_id_table,
-> +	.no_singleton =3D true,
-> +	.probe =3D lenovo_wmi_probe,
-> +	.notify =3D lenovo_wmi_notify,
-> +};
-> +
-> +module_wmi_driver(lenovo_wmi_driver);
-> +
-> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
-> +MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
-> +MODULE_DESCRIPTION("Lenovo WMI Camera Button Driver");
-> +MODULE_LICENSE("GPL");
+>  /* DSTS masks */
+>  #define ASUS_WMI_DSTS_STATUS_BIT	0x00000001
+>  #define ASUS_WMI_DSTS_UNKNOWN_BIT	0x00000002
+> 
