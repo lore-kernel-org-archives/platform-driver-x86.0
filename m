@@ -1,100 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333CB3D393;
-	Wed, 20 Mar 2024 12:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C3641C85;
+	Wed, 20 Mar 2024 13:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710936155; cv=none; b=ZemD7nQEs44VgkGRBYChgRMBodXUCxMydS6SrsGSJau1zZEJ8t4EwLZPGB0gWIqaWsCuWpQaR/hMDmucZ9OIG7u7orL5+wP20kzaxos/1Uk+CUKTH/i1sQoyb4w2O0U3dDYwyej68obLF3yGkNDQx/2kuWptG/ktxYGOMm/hqU8=
+	t=1710940401; cv=none; b=aJuqnCI7KPhdrbdglGJJ0cZOw5vmdWj5c71kRD5d59q8zXvG5zXPglu/GzKTYDE8AYd1jO2bFr9R61uNyZd+0M2BgbF4+KN3p1KF368opNLcYGC+Y/F1YFu0yvMQGsVVmxk/k+ErSTIuFCajEtEHLIyHVAmo9zqSJLUJMHq1Ibk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710936155; c=relaxed/simple;
-	bh=3IfBM7CZPsrnnCzumTW5cLGnUB9v0Dgtbn2eIr/xXU0=;
+	s=arc-20240116; t=1710940401; c=relaxed/simple;
+	bh=DbupxmKb2/jnAh4FxY712z8GGAI91p/E883N6rglf48=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=cy0nBClWoHVm/oqDaa04GFyp3meRuTxrGw0E9nGOEr65d0utykx9dJZjFGIvsO119N+uCuZ8jur8Fd7lz6wYUGG+BDRa699IQSEPC9zQRX+P9uZ+eqhUZPw5tih4SPMJUKW/3BHtG2bG0bY8GiGkXRnSW/NgGeRVi0YrGcieqVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SSly6aUg; arc=none smtp.client-ip=192.198.163.15
+	 MIME-Version:Content-Type; b=dflPIIRBuw3dLOJzcp3AorKGeNR9Y5DUqEVHTXdN/mwTQNAalxlehLUsdUtzlLLYLYv4lao+r5rUaRWwECsZcRe9k7+3xIyseAQ1rp0SYoZ9nF1YePwjdspcBA/9RP09Z3lmSsKUGj9PP+3vKbkL4XwtEAcb0nCGytrWRWmJeEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a6VjApze; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SSly6aUg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a6VjApze"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710936154; x=1742472154;
+  t=1710940399; x=1742476399;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=3IfBM7CZPsrnnCzumTW5cLGnUB9v0Dgtbn2eIr/xXU0=;
-  b=SSly6aUga6ezDGbu3Osgwf+0MYdDIxJh3udZv9eKQx9Uj3ezn4rJW68z
-   wwU4lIq2hvFhbL+U8yCuIBroSgqJZiyr4GLVf7RLe4kAvxCTolb9QahJl
-   mRvJILNOMo6w+F0NlTjQHscJOgZ5b2lrEA7IBFMfuczxfBf40EbGO53Xg
-   c8wE2rfvz9/GxWRyPL2WIn7yWdfKMcRkh+AhqmQPERFVpDosWPH13RouL
-   guXGuHIInXlYbwHJiHCDx6PyVEsUPHWzv9+187mAE58TcS05PsWqCdmhp
-   itEYZ6X3g0HCuxG4BPttoo8CyxqEU0embI1iSmYD8iL8qy4EHiS1ZAPfR
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11018"; a="6033671"
+  bh=DbupxmKb2/jnAh4FxY712z8GGAI91p/E883N6rglf48=;
+  b=a6VjApzeSvKPJ2iYQwsDHOSu4dpuFqb/QFbki0n7tB0pvNqgRy+ZywCK
+   x+dpfLtDV1g8bRPpp9nC/LmRfCDi3P1LjeKl6SIkzqXkRrGdEZg2iALiY
+   24o3JEoFWg3TLBAW7NX2QzwoUm5ZrVABQf/4xwfFRIwAVz3bwR9emTgZH
+   3ASjShkKGahXXN1WSNciBfsRwD6PAQB37G90CEWVWB1nb+UXsC4m/Vd2H
+   At1A8un96K2WfBn3zPOxcNtEnRblhIQ1WDJL7/zuNv9UKjHu0sdOmgZce
+   5RrZYc6f2uatnYvMoS6miAjs1go7Jkov5SiVW+LrwnZU5MFrtiFL/cFTz
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11018"; a="23363653"
 X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
-   d="scan'208";a="6033671"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 05:02:33 -0700
+   d="scan'208";a="23363653"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 06:13:18 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
-   d="scan'208";a="14215938"
+   d="scan'208";a="14035681"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.16])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 05:02:31 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 06:13:16 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 20 Mar 2024 14:02:27 +0200 (EET)
-To: Luke Jones <luke@ljones.dev>
+Date: Wed, 20 Mar 2024 15:13:12 +0200 (EET)
+To: "Luke D. Jones" <luke@ljones.dev>
 cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
     LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: add support for Vivobook
- GPU MUX
-In-Reply-To: <fbd2dc65-33d9-447e-9edb-78df370778be@app.fastmail.com>
-Message-ID: <c7e375df-e709-a348-a240-0d6d8bde1840@linux.intel.com>
-References: <20240310055312.11293-1-luke@ljones.dev> <20240310055312.11293-2-luke@ljones.dev> <0f35beb8-5453-63cb-0570-752b2693f6ec@linux.intel.com> <fbd2dc65-33d9-447e-9edb-78df370778be@app.fastmail.com>
+Subject: Re: [PATCH] platform/x86: asus-wmi: store a min default for ppt
+ options
+In-Reply-To: <20240310233722.30884-1-luke@ljones.dev>
+Message-ID: <ebe48668-dfca-775c-880e-dfa333b7e562@linux.intel.com>
+References: <20240310233722.30884-1-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-738845263-1710936147=:1037"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, 11 Mar 2024, Luke D. Jones wrote:
 
---8323328-738845263-1710936147=:1037
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> Laptops with any of the ppt or nv tunables default to the minimum setting
+> on boot so we can safely assume a stored value is correct.
+> 
+> This patch adds storing of those values in the local struct, and enables
+> reading of those values back.
+> 
+> Secondary to the above it renames some internal variables to be more
+> consistent (which makes code grepping show all related parts)
+> 
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> ---
+>  drivers/platform/x86/asus-wmi.c | 141 +++++++++++++++++++++++++-------
+>  1 file changed, 111 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index e4341abb71e0..482e23b55e1e 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -272,12 +272,19 @@ struct asus_wmi {
+>  
+>  	/* Tunables provided by ASUS for gaming laptops */
+>  	bool ppt_pl2_sppt_available;
+> +	u32 ppt_pl2_sppt;
+>  	bool ppt_pl1_spl_available;
+> +	u32 ppt_pl1_spl;
+>  	bool ppt_apu_sppt_available;
+> -	bool ppt_plat_sppt_available;
+> +	u32 ppt_apu_sppt;
+> +	bool ppt_platform_sppt_available;
+> +	u32 ppt_platform_sppt;
+>  	bool ppt_fppt_available;
+> -	bool nv_dyn_boost_available;
+> -	bool nv_temp_tgt_available;
+> +	u32 ppt_fppt;
+> +	bool nv_dynamic_boost_available;
+> +	u32 nv_dynamic_boost;
+> +	bool nv_temp_target_available;
+> +	u32 nv_temp_target;
+>  
+>  	bool kbd_rgb_mode_available;
+>  	u32 kbd_rgb_dev;
 
-On Wed, 20 Mar 2024, Luke Jones wrote:
+Can you check with pahole if this structure is now full of 31-bit holes?
 
-> On Wed, 20 Mar 2024, at 1:26 AM, Ilpo J=C3=A4rvinen wrote:
-> > On Sun, 10 Mar 2024, Luke D. Jones wrote:
-> >=20
-> > > Adjust existing MUX support to select whichever MUX support is availa=
-ble
-> > > so that ASUS Vivobook MUX can also be used if detected.
-> >=20
-> > This description is a bit on the short side. It wouldn't have hurt to=
-=20
-> > first state that Vivobooks come with a GPU MUX WMI that has a different=
-=20
-> > WMI device ID. I can infer that after reading the diff but the descript=
-ion=20
-> > should not require reading the patch.
->=20
-> Would you prefer I changed the commit message?
+The benefit of keeping bool & u32 doesn't seem that big to begin with 
+(in visual sense because of the 1 char variation in column).
 
-I kind of tried to give some leeway for you and not sound like I'm=20
-enforcing you to do it but yes, I do prefer good commit messages myself
-(I know that after reading this patch the reasons will be pretty obvious=20
-to anyone so it's not a grave problem). So half it was said future=20
-patches in mind, half you can do it if you want also for this patch.
+> @@ -999,11 +1006,10 @@ static ssize_t ppt_pl2_sppt_store(struct device *dev,
+>  				    struct device_attribute *attr,
+>  				    const char *buf, size_t count)
+>  {
+> +	struct asus_wmi *asus = dev_get_drvdata(dev);
+>  	int result, err;
+>  	u32 value;
+>  
+> -	struct asus_wmi *asus = dev_get_drvdata(dev);
+> -
 
-But since you'll need to resend this anyway because of the=20
-independent/series issue I mentioned in my reply to one of the other=20
-patches, just cover this minor thing as well, it's one sentence after
-all.
+Please put this into own patch, it's entirely unrelated (but still useful 
+change!).
 
---=20
+>  	result = kstrtou32(buf, 10, &value);
+>  	if (result)
+>  		return result;
+> @@ -1022,22 +1028,31 @@ static ssize_t ppt_pl2_sppt_store(struct device *dev,
+>  		return -EIO;
+>  	}
+>  
+> +	asus->ppt_pl2_sppt = value;
+>  	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_pl2_sppt");
+>  
+>  	return count;
+>  }
+> -static DEVICE_ATTR_WO(ppt_pl2_sppt);
+> +
+> +static ssize_t ppt_pl2_sppt_show(struct device *dev,
+> +				       struct device_attribute *attr,
+> +				       char *buf)
+
+Alignment is not correct?
+
+> +{
+> +	struct asus_wmi *asus = dev_get_drvdata(dev);
+> +
+> +	return sysfs_emit(buf, "%d\n", asus->ppt_pl2_sppt);
+> +}
+> +static DEVICE_ATTR_RW(ppt_pl2_sppt);
+>  
+>  /* Tunable: PPT, Intel=PL1, AMD=SPL ******************************************/
+>  static ssize_t ppt_pl1_spl_store(struct device *dev,
+>  				    struct device_attribute *attr,
+>  				    const char *buf, size_t count)
+>  {
+> +	struct asus_wmi *asus = dev_get_drvdata(dev);
+>  	int result, err;
+>  	u32 value;
+>  
+> -	struct asus_wmi *asus = dev_get_drvdata(dev);
+> -
+
+Unrelated, put to the same move patch as the other change please. I won't 
+mark all thse from this point on but please do them all.
+
+-- 
  i.
 
---8323328-738845263-1710936147=:1037--
