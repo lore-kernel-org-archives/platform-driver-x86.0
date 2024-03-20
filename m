@@ -1,55 +1,55 @@
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+Received: from fhigh1-smtp.messagingengine.com (fhigh1-smtp.messagingengine.com [103.168.172.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A3885923;
-	Wed, 20 Mar 2024 20:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D13710FF;
+	Wed, 20 Mar 2024 20:05:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710964893; cv=none; b=BEL8NKml+GSfrh0x3Wa77k8TYsBd/dWD5JhsHMWl5R8f7ePNxw+EboeDlIOnX9xMDMSlr1Z3R8CMqMvc9zUL+RdTfmIcXQZ4j31VYRn1YUk/xjKEjDj6jDWQuCQuLA4X3AtRSTAj0kKkJITwFFDg38vTR+IAOsZXiXBZPmAnr00=
+	t=1710965144; cv=none; b=tFxNOLk0dO13ngcziu7akjVVujWCNqRryIlRanqHC8WyO+aTjU25jHINUTdrwQ8GY17QAWZGEvj6MnHLBbyE8MUEwJdO3Fniwmpd3xzn56TXUY5iyuzsBY6FROe0Xicaa/h2gDMor8LzJlK7CC0HTV9YDpZa1u1neQCgjx69jiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710964893; c=relaxed/simple;
-	bh=IeLoxB+NsSJEWuKPkn/vovqzZ0GvfZSkvqANV6t7FIo=;
+	s=arc-20240116; t=1710965144; c=relaxed/simple;
+	bh=MQBGGEOhgnc3mj+xCcQEezogIg6iT5/F4/Re4F02QaY=;
 	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=DhNoW8Hcog6BTCsGQibLPlKmNlkOxemhGc6aEeXu70WWuuCZdQfACs0mR5usxOYV5YLGVkJFIGXMap3Zhl5Jeo+spuPSbN9Y6NRO8SpEohGCDdLDv+D7heBi7mYLuikyl8YOAArpBrMuV3NTDFhTiZ6jnybIEgK+D0SCPp/rHtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=TIlQOZ5j; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UsiUIFyI; arc=none smtp.client-ip=66.111.4.27
+	 Subject:Content-Type; b=VFp4+xzze6XCC6FJwh6WmDEhl5IroHmyKJCJG3qJi+qYbkTsVbHmcHZVhUPdROCL8IyDDe8mj5WhzIxgp5CFplUd6DRtIPp9ZXBb3RkI2UFbmYmVUEBPZifOHdRVWbUywcSBjmeHns1/vAKYemjIIJMsuL9iXqe1OMtsgX2FNao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=JIs94X+j; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XcHANk71; arc=none smtp.client-ip=103.168.172.152
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="TIlQOZ5j";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UsiUIFyI"
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="JIs94X+j";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XcHANk71"
 Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailout.nyi.internal (Postfix) with ESMTP id 9A2A05C006A;
-	Wed, 20 Mar 2024 16:01:29 -0400 (EDT)
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 2DDD81140106;
+	Wed, 20 Mar 2024 16:05:42 -0400 (EDT)
 Received: from imap41 ([10.202.2.91])
-  by compute2.internal (MEProxy); Wed, 20 Mar 2024 16:01:29 -0400
+  by compute2.internal (MEProxy); Wed, 20 Mar 2024 16:05:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1710964889;
-	 x=1711051289; bh=AZSqN4s5zsG3HqEikLmq10h58qPWmcD/hoS2dTSCdbg=; b=
-	TIlQOZ5jXkvVFAJaxUGXZHmbWaqvKxcTFdabnmW+hJpcgxON9S58WfllXNNftVP8
-	UJIXMiwQWEc3Ammu+nbGh6c5LG/YYbk4RrZ3CL2yO+ToLbSJF+DyZAudpRtabn8I
-	3qcPD12ostETxRrKT/9f5SeIsM3Hcfsyn0MqOsFQWSXLjCZxnTLvgGQU7QyiyFyD
-	650aD5TqWKgRVZKKe8riLBHrBb0KeJVDBCGDmY3mN9m2QO48vr9/J5znuunTGzgM
-	GlGEaJVsQyONfIJ9pBHYg4taZHHAYWEDpHYMBchoz0IuZV1EapXGf/QP0BbYnudH
-	LacqtH+56wpRqYk7dV99DA==
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1710965142;
+	 x=1711051542; bh=/Oc8U1y8l14/c0pXhzQh6BvDXRT/PDyn/rl7kM5uOLU=; b=
+	JIs94X+jZHLj8blU41Mg23upZY9nf+JFZuByQKIF4C5mlFa0ElRj1x9o14sgCgNy
+	hj8QQ+XZTV0INvI481qS9USaOUva3jYJUYqcK92efkLc5ElExeuxwDzofADvCzRx
+	SI7BIjjNFikiePBNGcmLZOuOnsOPNld/MeDmqF05djs5iV7OLSgqlNvRBx98Ncy4
+	ZBVI31wACeT8JkXt0w4/C/hQa8Yizl78FiKxnpj1UB+OVCjXug7LFdnA5zDYjcjP
+	hyODe/aTjMZwY7Z+9bLLn67M3mZi3GH3umiF8YdC4Lqa9m6mGVXi5ML3LLVxHcZn
+	13ONeldhh53DGicpXs9lhw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1710964889; x=
-	1711051289; bh=AZSqN4s5zsG3HqEikLmq10h58qPWmcD/hoS2dTSCdbg=; b=U
-	siUIFyIzk2xcW4jJT+UvcbdFcli49JWvxKj0rmXNwbMxKqQEb6uCkKf1H22AX6JE
-	lyvcReqVGy8pB//wa+8iwab4bRVTRP/EaABY0xXyGQjiLpCtwhSVkWKycr1HYIJH
-	PuGZ8FdDaSPhAaIAxauAk3z8TN+cgl5wIMEiNA27KohcKqDDe+RxIiSBWFVBmy2P
-	zxJS9kf4H6lSz3I8JF7lxVa6V7VqZT+VFQDIhYxCWV3q10Efuo3CUCv+pxNZnfAW
-	j1XVSsl+LFUbUwIRyYnbSM+7hdWr5SaZLbbs18NXyRdQQE46bQCWJRO5D0wegqpz
-	T1jN8FXSZBeAemr6K475g==
-X-ME-Sender: <xms:mUD7ZSE6Oc306wJI2SS_c_XH4HuHaTIvnf-jPeFEgDDx6vbsPiRUsA>
-    <xme:mUD7ZTWC-UfGp93_2p54aI335Y4XGVUcewEGr40paBk12O6JEnM-yC8-iQzWbxVw2
-    0wtCYW2RFMP7JlDGi4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrleeggddufeduucetufdoteggodetrfdotf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1710965142; x=
+	1711051542; bh=/Oc8U1y8l14/c0pXhzQh6BvDXRT/PDyn/rl7kM5uOLU=; b=X
+	cHANk71GcUI90QEzHbxNuvnfSy2yL3yZL9ZvWAMG6YmDbvrC8Wz7DyD8h413RkgU
+	Or4AUr9GV1kOpLeqqof8Vpw9Szx1Uh+6Ief+EAteT/WHGVQFKXcqITVPKJxR/Ka0
+	M8ey4EBhy9egKv8vZTTFvaDKgP0ezzrZUearDx1lmftwrSHoNKNxvDpx6hwhDpsx
+	QVnG0AEKUPAiv3QqAayXNcItmpS9gtPoac1rOy5IieeGamos55spHXfuROQ6SS1q
+	2yE6xq/O9rURc6vtfYd6wjz20LPXIoUo8un25BhiW7qsN01D036sqaEhKqHKaf7W
+	wii0l1VV+gNR/C+b5Mi4w==
+X-ME-Sender: <xms:lUH7ZRPRc4Q4OCfsjNblHHCfuz35awEZ66DbgQLbbg8NdHil3t7O-w>
+    <xme:lUH7ZT8zofKJodaYRRKmREgp_ExdluavO8pexEqpvq5wbqlMZ_ndQUHRP6-8wMGw7
+    JQhALNvRaB_zmxNUSs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrleeggddufedvucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfn
@@ -57,14 +57,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrleeggddufeduucetufdoteggod
     htvghrnhepfeeugffhvdeufeehieelvdegfeffveegleehtddvheegkeetueegtdegueeh
     vdelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplh
     hukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:mUD7ZcJmdMZ8S7N6xDXIZ_65HYPOcLxDsGuGguIx7L9gcjsZpIylaQ>
-    <xmx:mUD7ZcF4nU__0awuNlzv96B3uD98rjINlOS_cY_7rtTSjEoVvyPsOg>
-    <xmx:mUD7ZYWUuUzmaRS3oC3hiqpLnI90lTM9yujJr9c4rdLM2wFegP9Iig>
-    <xmx:mUD7ZfNW9ieQnMbPH-TTuXducPtmmHIO3mvtaM7mj3yuXqYQ7WDz8w>
-    <xmx:mUD7ZfSHiYqzeTQXVqDUiJ2gcbsoH-HvvTIZjkYxwXLiSov7ib8dxA>
+X-ME-Proxy: <xmx:lUH7ZQTEIfpVfGw1Q_FJbJeaP_SCaKvh3j6OuBaIofved_MX-vPt4Q>
+    <xmx:lUH7Zdt5D0cW9V0VyJ7JFV9D8ylDkl1Or97r74fCTdLSWz79qCQsfA>
+    <xmx:lUH7ZZdoOaXY8P2r2FsijEmfs2pjjdoGXRwwEVQIso1GXz6nwNhZxA>
+    <xmx:lUH7ZZ3Og8uXCPDPTO3HNS4gZHhe7uPXCl03TlIrJiTEZljprit_SQ>
+    <xmx:lkH7Zd6Kql7RNbLWi_4wcUCTUvvwPhuYkezYbLifWuhoiRDGWNsgDA>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 381572340080; Wed, 20 Mar 2024 16:01:29 -0400 (EDT)
+	id BB04B2340080; Wed, 20 Mar 2024 16:05:41 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 User-Agent: Cyrus-JMAP/3.11.0-alpha0-332-gdeb4194079-fm-20240319.002-gdeb41940
 Precedence: bulk
@@ -73,79 +73,118 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <e67f4e91-56dd-471a-b2c6-46161c38883f@app.fastmail.com>
-In-Reply-To: <5d5e8895-8843-a0bf-de97-b293528a0643@linux.intel.com>
-References: <20240320011442.11608-1-luke@ljones.dev>
- <20240320011442.11608-2-luke@ljones.dev>
- <5d5e8895-8843-a0bf-de97-b293528a0643@linux.intel.com>
-Date: Thu, 21 Mar 2024 09:01:07 +1300
+Message-Id: <e04bf262-e024-488a-ade4-698844af20e3@app.fastmail.com>
+In-Reply-To: <bdcc3052-1403-8c2f-f703-66180394c461@linux.intel.com>
+References: <20240310061715.16531-1-luke@ljones.dev>
+ <5f853562-cbe0-32d7-2644-d42d2bb9e060@linux.intel.com>
+ <7276ec7b-9b00-4241-a4eb-a8997daeba5c@app.fastmail.com>
+ <bdcc3052-1403-8c2f-f703-66180394c461@linux.intel.com>
+Date: Thu, 21 Mar 2024 09:05:21 +1300
 From: "Luke Jones" <luke@ljones.dev>
 To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>, corentin.chary@gmail.com,
- platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: add support variant of TUF RGB
+Cc: platform-driver-x86@vger.kernel.org,
+ "Hans de Goede" <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: asus-wmi: support toggling POST sound
 Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-
-
-On Thu, 21 Mar 2024, at 12:36 AM, Ilpo J=C3=A4rvinen wrote:
-> On Wed, 20 Mar 2024, Luke D. Jones wrote:
+On Thu, 21 Mar 2024, at 12:55 AM, Ilpo J=C3=A4rvinen wrote:
+> On Wed, 20 Mar 2024, Luke Jones wrote:
+> > On Wed, 20 Mar 2024, at 6:48 AM, Ilpo J=C3=A4rvinen wrote:
+> > > On Sun, 10 Mar 2024, Luke D. Jones wrote:
+> > >=20
+> > > > Add support for toggling the BIOS POST sound on some ASUS laptop=
+s.
+> > > >=20
+> > > > Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> > > > ---
+> > > >  .../ABI/testing/sysfs-platform-asus-wmi       |  7 +++
+> > > >  drivers/platform/x86/asus-wmi.c               | 54 ++++++++++++=
++++++++
+> > > >  include/linux/platform_data/x86/asus-wmi.h    |  3 ++
+> > > >  3 files changed, 64 insertions(+)
+> > > >=20
+> > > > diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b=
+/Documentation/ABI/testing/sysfs-platform-asus-wmi
+> > > > index e32b4f0ae15f..f3c53b7453f0 100644
+> > > > --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
+> > > > +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+> > > > @@ -194,3 +194,10 @@ Contact: "Luke Jones" <luke@ljones.dev>
+> > > >  Description:
+> > > >  Set the target temperature limit of the Nvidia dGPU:
+> > > >  * min=3D75, max=3D87
+> > > > +
+> > > > +What: /sys/devices/platform/<platform>/boot_sound
+> > > > +Date: Jun 2023
+> > > > +KernelVersion: 6.9
+> > > > +Contact: "Luke Jones" <luke@ljones.dev>
+> > > > +Description:
+> > > > + Set if the BIOS POST sound is played on boot.
 >=20
-> > Adds support for a second TUF RGB wmi call that some versions of the=
- TUF
-> > laptop come with. Also adjusts existing support to select whichever =
-is
-> > available.
+> > > > @@ -2106,6 +2107,55 @@ static ssize_t panel_od_store(struct devi=
+ce *dev,
+> > > >  }
+> > > >  static DEVICE_ATTR_RW(panel_od);
+> > > > =20
+> > > > +/* Bootup sound ***********************************************=
+****************/
+> > > > +
+> > > > +static ssize_t boot_sound_show(struct device *dev,
+> > > > +      struct device_attribute *attr, char *buf)
+> > > > +{
+> > > > + struct asus_wmi *asus =3D dev_get_drvdata(dev);
+> > > > + int result;
+> > > > +
+> > > > + result =3D asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_B=
+OOT_SOUND);
+> > > > + if (result < 0)
+> > > > + return result;
+> > > > +
+> > > > + return sysfs_emit(buf, "%d\n", result);
+> > > > +}
+> > > > +
+> > > > +static ssize_t boot_sound_store(struct device *dev,
+> > > > +       struct device_attribute *attr,
+> > > > +       const char *buf, size_t count)
+> > > > +{
+> > > > + int result, err;
+> > > > + u32 snd;
+> > > > +
+> > > > + struct asus_wmi *asus =3D dev_get_drvdata(dev);
+> > > > +
+> > > > + result =3D kstrtou32(buf, 10, &snd);
+> > > > + if (result)
+> > > > + return result;
+> > > > +
+> > > > + if (snd > 1)
+> > > > + return -EINVAL;
+> > >=20
+> > > Why not just use kstrtobool()?
 > >=20
-> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> > ---
-> >  drivers/platform/x86/asus-wmi.c            | 13 +++++++++++--
-> >  include/linux/platform_data/x86/asus-wmi.h |  1 +
-> >  2 files changed, 12 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/=
-asus-wmi.c
-> > index b9a2fb8007c0..0d8a2b82cc06 100644
-> > --- a/drivers/platform/x86/asus-wmi.c
-> > +++ b/drivers/platform/x86/asus-wmi.c
+> > Consistency with other methods mostly. Plus the possibility that asu=
+s=20
+> > might do something like add different sounds. I'll change it if a re=
+vert=20
+> > back to kstrtou32 later doesn't break things.
 >=20
-> > @@ -4544,6 +4545,14 @@ static int asus_wmi_add(struct platform_devic=
-e *pdev)
-> >  asus->gpu_mux_dev =3D ASUS_WMI_DEVID_GPU_MUX_VIVO;
-> >  }
-> > =20
-> > + if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE)) {
+> Hi Luke,
 >=20
-> The patch itself is fine,
+> I'd tend to think it's not the most likely scenario. But if they still=
+ do=20
+> something like that, the code could do both kstrtou32() and kstrtobool=
+()=20
+> to keep the sysfs interface backwards compatible.
 >=20
-> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> But it isn't end of the world for me if you want to keep it as=20
+> kstrtou32().
 >=20
-> However,
->=20
-> There's a major problem in the way you're submitting these. This patch=
- is=20
-> built on top of the GPU_MUX_VIVO patch as can be seen from the context
-> above. Yet, you're sending these independently instead of series. I=20
-> suspect there are other similar problems among these patches that ther=
-e's=20
-> hidden dependency order in which these should be applied. This will ca=
-use=20
-> problems if maintainer applies the patches in wrong order (they may ev=
-en=20
-> misapply with fuzz).
->=20
-> Only if the patches are truly independent, that is, focus on solving=20
-> entirely differently thing (functional independency) and do not have a=
-ny=20
-> linewise conflicts (code locality independecy) either, it's fine to se=
-nd=20
-> patches as independent ones without making a series out of them. But=20
-> clearly it's not the case here.
+> Annoyingly the other kstrtou32()s may not be easily converted over to=20
+> kstrtobool() because u32 formatting accepts 16-based values too such as
+> 0x0. Perhaps hex format wouldn't be used by anyone but the risk is sti=
+ll=20
+> there and the benefits are not that high.
 
-Honestly, yeah I should have made them a series. I was sick at the time =
-of submission and shouldn't have been near a computer at all but I have =
-a long backlog.
-
-I'll go through your other reviews and then turn the lot in as a series =
-to prevent any mishaps.
+Understood, yeah. I suppose one of the reasons I preferred using kstrtou=
+32 in the first place was no need for casting when making the WMI call. =
+Plus all the other code I've written here is similar to this (you might =
+notice that a large chunk of what is in asus-wmi now is from me).
