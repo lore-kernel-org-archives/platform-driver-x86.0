@@ -1,245 +1,311 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BFF2E415;
-	Wed, 20 Mar 2024 08:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9736039FEB
+	for <platform-driver-x86@vger.kernel.org>; Wed, 20 Mar 2024 09:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710922705; cv=none; b=Z+rx8NiW9db9Kn0Rg9smErT2+vp4YsrK/WbWAzJLLy84y6WLAjfEn+q9tQVtTneEUN9ojGXj5RwrQqpvQ4T+3vrsNIe9z0H+nypD4iJw9bbkOQyQehhQpRrooidSCvdtDH3cQownV48EnnyfL4DcrKTsi5zmSK6L9qzI0qhmfh8=
+	t=1710926589; cv=none; b=mmxF8Ku+vCmasrlHQjT6oR4nKvuKNDR3ulHBFpns3Bwt87HdkzBW8lyiRulxZLHFEiRRhfvQqUXSy36zSEboxDK8hV74l625PJpywrkPi6S/L8oWn2OnOhjJsVOpoA6jrYh5nVIDUrfz8dm4vvCMBUnQ65d0fbVAs00dYmfaYj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710922705; c=relaxed/simple;
-	bh=DmKs3e4zlQ7NWrEdlgBL3DpFXanS7F+Efu0o5r9ztRQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BjlA0oTG/07lFrRyIPa6m9bGQCNdKKsZINyu74wmZ2temBiXO0Depo1LQnGd6GpuonSYdkSwQbytRoIeaaDVjU6edkALBOJph+4txPoC2tUtoKeQMRYDs2O0EwlSSOoyNL9WrOuTJ0D3frGk3DXZE7HF0tLW2iCpYtP/BKJOhrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 86afe358aaf04218abce635c4aaaba53-20240320
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:34d80284-f5a6-4c55-a19e-59cde2e88d39,IP:10,
-	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-10
-X-CID-INFO: VERSION:1.1.37,REQID:34d80284-f5a6-4c55-a19e-59cde2e88d39,IP:10,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-10
-X-CID-META: VersionHash:6f543d0,CLOUDID:641db781-4f93-4875-95e7-8c66ea833d57,B
-	ulkID:240320161813F21B4QA9,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|44|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC
-	:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 86afe358aaf04218abce635c4aaaba53-20240320
-X-User: aichao@kylinos.cn
-Received: from localhost.localdomain [(112.64.161.44)] by mailgw
-	(envelope-from <aichao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1993724695; Wed, 20 Mar 2024 16:18:10 +0800
-From: Ai Chao <aichao@kylinos.cn>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Cc: Ai Chao <aichao@kylinos.cn>
-Subject: [PATCH v10] platform/x86: add lenovo wmi camera button driver
-Date: Wed, 20 Mar 2024 16:17:40 +0800
-Message-Id: <20240320081740.818344-1-aichao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1710926589; c=relaxed/simple;
+	bh=9shQ/eAmTaQK6Q7YTowaKS9ym+5bwIiLd/mi5mRa/SU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VF3C1YzTVuzxttsQh7SRRHHbxZ7e1unGbinSQDnI++lOBCPHYDakvq2fEGZmEpHwURhDafIvK+q86EQH7wqh6b355G4s+9ICO5HxihGxfWHT1EbThUN+9hsP0dKOWzUf6wPzLsRR2bA+3fvUOziuKA9d5uTrGFVU+r0HW/jygB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QhCoCYhR; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QhCoCYhR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710926586;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9Vjg8zrCnFg/tqbys7l4j13t+oLp9giExjkF7oHtAuI=;
+	b=QhCoCYhRI2MbWBXPLyH3Uy3IhBeQ0I4z65vOwTr5zjLVg2ZXwQ0igsLHf4TE/OxgCsHRyG
+	MmbJOMkFB5EDnnS9BezpAAN1lNOGnzk65ckb2D2+Q8mUTVFH9wqQZwfR0sNEX3rq1LdDW0
+	8Luhf/W+dKe0fGQRx1B6esSTB2CXDcc=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-284-QQEACTPDMn21bSLCmG5p-A-1; Wed, 20 Mar 2024 05:23:02 -0400
+X-MC-Unique: QQEACTPDMn21bSLCmG5p-A-1
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-29905ac5c21so4957184a91.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 20 Mar 2024 02:23:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710926581; x=1711531381;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9Vjg8zrCnFg/tqbys7l4j13t+oLp9giExjkF7oHtAuI=;
+        b=XRTmmCpkNvOLjw/ioiJCEG9UatiuSoqLNN2WKqRQpGiJGnKfLSH4K2zTm6ilq9tsRh
+         X5TmMe8ZpT+993lz5oLsmGGu6SALwEJ23RNn+AFG1ZB0VeIKtkx3we+jD4euT097OHu4
+         XazDib10XZeNHEPAoT4/Ldn2oy0LYRdlorYUQ5XJqxKjYv7XoEEUgpM9zRH24rkp18i8
+         w8w7B7zAdUkd9eZRU+0EzUfKqadYe6zXLG8V+JOmX/PTWcCx04u89oljxSpQkOFOq8aj
+         r/33HSj9cVBTaS77FnOdwfHpuIiDiMvb/LS0zlPamUANLZqwSGECdmj5Di9Js7W/Mqz5
+         klzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUwU1tfKlVpcT3cdVwzrxJ1hwLsdb+cNUfQ8Y8DMceiJQLdntlM+fY6J+2HgTHoWrJNKF0SzYN8SCldEGs7zJGDmzBZ2/X8qRW4b8Oh8glug3g9kw==
+X-Gm-Message-State: AOJu0YxMgm+vnqSrRcPcMxvs7SEj1X4WmoP4NtojCax497dT8Epdbnq9
+	ZAA+EFrhdx5CsWfwr30eWbKIP0eu6KuKCJTi46zGxNfzpFIyaUKKYc55i6Ty1Xd5nYprmjMvXeL
+	WF1NSZt2OWtmY1SoFCJ+KoQSJAvVPIxC0U4p15HS3yIBCco10ecQrAUcMV/ToHHK9PIRhkzPQnK
+	ddCLgB8rxB3Q7Qw2w7S1nelOvqANBxkgt4mOWQlfgW5iGmig==
+X-Received: by 2002:a17:90b:3649:b0:29e:926:b582 with SMTP id nh9-20020a17090b364900b0029e0926b582mr10780669pjb.23.1710926581657;
+        Wed, 20 Mar 2024 02:23:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGa5t5yKeGVgUBrB/m7ZYinl2zOV2h69MtzYov0EG5AwEvBxWiWBFcij6dKejn6wI3bBgvnbbPLiFiqn5O6R+A=
+X-Received: by 2002:a17:90b:3649:b0:29e:926:b582 with SMTP id
+ nh9-20020a17090b364900b0029e0926b582mr10780641pjb.23.1710926581319; Wed, 20
+ Mar 2024 02:23:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240312021013.88656-1-xuanzhuo@linux.alibaba.com>
+ <20240312021013.88656-2-xuanzhuo@linux.alibaba.com> <CACGkMEvVgfgAxLoKeFTgy-1GR0W07ciPYFuqs6PiWtKCnXuWTw@mail.gmail.com>
+ <1710395908.7915084-1-xuanzhuo@linux.alibaba.com> <CACGkMEsT2JqJ1r_kStUzW0+-f+qT0C05n2A+Yrjpc-mHMZD_mQ@mail.gmail.com>
+ <1710487245.6843069-1-xuanzhuo@linux.alibaba.com> <CACGkMEspzDTZP1yxkBz17MgU9meyfCUBDxG8mjm=acXHNxAxhg@mail.gmail.com>
+ <1710741592.205804-1-xuanzhuo@linux.alibaba.com> <20240319025726-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20240319025726-mutt-send-email-mst@kernel.org>
+From: Jason Wang <jasowang@redhat.com>
+Date: Wed, 20 Mar 2024 17:22:50 +0800
+Message-ID: <CACGkMEsO6e2=v36F=ezhHCEaXqG0+AhkCM2ZgmKAtyWncnif5Q@mail.gmail.com>
+Subject: Re: [PATCH vhost v3 1/4] virtio: find_vqs: pass struct instead of
+ multi parameters
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>, virtualization@lists.linux.dev, 
+	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Hans de Goede <hdegoede@redhat.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Vadim Pasternak <vadimp@nvidia.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, Cornelia Huck <cohuck@redhat.com>, 
+	Halil Pasic <pasic@linux.ibm.com>, Eric Farman <farman@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, linux-um@lists.infradead.org, 
+	platform-driver-x86@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+	linux-s390@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add lenovo generic wmi driver to support camera button.
-The Camera button is a GPIO device. This driver receives ACPI notifyi
-when the camera button is switched on/off. This driver is used in
-Lenovo A70, it is a Computer integrated machine.
+On Tue, Mar 19, 2024 at 2:58=E2=80=AFPM Michael S. Tsirkin <mst@redhat.com>=
+ wrote:
+>
+> On Mon, Mar 18, 2024 at 01:59:52PM +0800, Xuan Zhuo wrote:
+> > On Mon, 18 Mar 2024 12:18:23 +0800, Jason Wang <jasowang@redhat.com> wr=
+ote:
+> > > On Fri, Mar 15, 2024 at 3:26=E2=80=AFPM Xuan Zhuo <xuanzhuo@linux.ali=
+baba.com> wrote:
+> > > >
+> > > > On Fri, 15 Mar 2024 11:51:48 +0800, Jason Wang <jasowang@redhat.com=
+> wrote:
+> > > > > On Thu, Mar 14, 2024 at 2:00=E2=80=AFPM Xuan Zhuo <xuanzhuo@linux=
+.alibaba.com> wrote:
+> > > > > >
+> > > > > > On Thu, 14 Mar 2024 11:12:24 +0800, Jason Wang <jasowang@redhat=
+.com> wrote:
+> > > > > > > On Tue, Mar 12, 2024 at 10:10=E2=80=AFAM Xuan Zhuo <xuanzhuo@=
+linux.alibaba.com> wrote:
+> > > > > > > >
+> > > > > > > > Now, we pass multi parameters to find_vqs. These parameters
+> > > > > > > > may work for transport or work for vring.
+> > > > > > > >
+> > > > > > > > And find_vqs has multi implements in many places:
+> > > > > > > >
+> > > > > > > >  arch/um/drivers/virtio_uml.c
+> > > > > > > >  drivers/platform/mellanox/mlxbf-tmfifo.c
+> > > > > > > >  drivers/remoteproc/remoteproc_virtio.c
+> > > > > > > >  drivers/s390/virtio/virtio_ccw.c
+> > > > > > > >  drivers/virtio/virtio_mmio.c
+> > > > > > > >  drivers/virtio/virtio_pci_legacy.c
+> > > > > > > >  drivers/virtio/virtio_pci_modern.c
+> > > > > > > >  drivers/virtio/virtio_vdpa.c
+> > > > > > > >
+> > > > > > > > Every time, we try to add a new parameter, that is difficul=
+t.
+> > > > > > > > We must change every find_vqs implement.
+> > > > > > > >
+> > > > > > > > One the other side, if we want to pass a parameter to vring=
+,
+> > > > > > > > we must change the call path from transport to vring.
+> > > > > > > > Too many functions need to be changed.
+> > > > > > > >
+> > > > > > > > So it is time to refactor the find_vqs. We pass a structure
+> > > > > > > > cfg to find_vqs(), that will be passed to vring by transpor=
+t.
+> > > > > > > >
+> > > > > > > > Because the vp_modern_create_avq() use the "const char *nam=
+es[]",
+> > > > > > > > and the virtio_uml.c changes the name in the subsequent com=
+mit, so
+> > > > > > > > change the "names" inside the virtio_vq_config from "const =
+char *const
+> > > > > > > > *names" to "const char **names".
+> > > > > > > >
+> > > > > > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > > > > > > > Acked-by: Johannes Berg <johannes@sipsolutions.net>
+> > > > > > > > Reviewed-by: Ilpo J=3DE4rvinen <ilpo.jarvinen@linux.intel.c=
+om>
+> > > > > > >
+> > > > > > > The name seems broken here.
+> > > > > >
+> > > > > > Email APP bug.
+> > > > > >
+> > > > > > I will fix.
+> > > > > >
+> > > > > >
+> > > > > > >
+> > > > > > > [...]
+> > > > > > >
+> > > > > > > >
+> > > > > > > >  typedef void vq_callback_t(struct virtqueue *);
+> > > > > > > >
+> > > > > > > > +/**
+> > > > > > > > + * struct virtio_vq_config - configure for find_vqs()
+> > > > > > > > + * @cfg_idx: Used by virtio core. The drivers should set t=
+his to 0.
+> > > > > > > > + *     During the initialization of each vq(vring setup), =
+we need to know which
+> > > > > > > > + *     item in the array should be used at that time. But =
+since the item in
+> > > > > > > > + *     names can be null, which causes some item of array =
+to be skipped, we
+> > > > > > > > + *     cannot use vq.index as the current id. So add a cfg=
+_idx to let vring
+> > > > > > > > + *     know how to get the current configuration from the =
+array when
+> > > > > > > > + *     initializing vq.
+> > > > > > >
+> > > > > > > So this design is not good. If it is not something that the d=
+river
+> > > > > > > needs to care about, the core needs to hide it from the API.
+> > > > > >
+> > > > > > The driver just ignore it. That will be beneficial to the virti=
+o core.
+> > > > > > Otherwise, we must pass one more parameter everywhere.
+> > > > >
+> > > > > I don't get here, it's an internal logic and we've already done t=
+hat.
+> > > >
+> > > >
+> > > > ## Then these must add one param "cfg_idx";
+> > > >
+> > > >  struct virtqueue *vring_create_virtqueue(struct virtio_device *vde=
+v,
+> > > >                                          unsigned int index,
+> > > >                                          struct vq_transport_config=
+ *tp_cfg,
+> > > >                                          struct virtio_vq_config *c=
+fg,
+> > > > -->                                      uint cfg_idx);
+> > > >
+> > > >  struct virtqueue *vring_new_virtqueue(struct virtio_device *vdev,
+> > > >                                       unsigned int index,
+> > > >                                       void *pages,
+> > > >                                       struct vq_transport_config *t=
+p_cfg,
+> > > >                                       struct virtio_vq_config *cfg,
+> > > > -->                                      uint cfg_idx);
+> > > >
+> > > >
+> > > > ## The functions inside virtio_ring also need to add a new param, s=
+uch as:
+> > > >
+> > > >  static struct virtqueue *vring_create_virtqueue_split(struct virti=
+o_device *vdev,
+> > > >                                                       unsigned int =
+index,
+> > > >                                                       struct vq_tra=
+nsport_config *tp_cfg,
+> > > >                                                       struct virtio=
+_vq_config,
+> > > > -->                                                   uint cfg_idx)=
+;
+> > > >
+> > > >
+> > > >
+> > >
+> > > I guess what I'm missing is when could the index differ from cfg_idx?
+> >
+> >
+> >  @cfg_idx: Used by virtio core. The drivers should set this to 0.
+> >      During the initialization of each vq(vring setup), we need to know=
+ which
+> >      item in the array should be used at that time. But since the item =
+in
+> >      names can be null, which causes some item of array to be skipped, =
+we
+> >      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> >      cannot use vq.index as the current id. So add a cfg_idx to let vri=
+ng
+> >      know how to get the current configuration from the array when
+> >      initializing vq.
+> >
+> >
+> > static int vp_find_vqs_msix(struct virtio_device *vdev, unsigned int nv=
+qs,
+> >
+> >       ................
+> >
+> >       for (i =3D 0; i < nvqs; ++i) {
+> >               if (!names[i]) {
+> >                       vqs[i] =3D NULL;
+> >                       continue;
+> >               }
+> >
+> >               if (!callbacks[i])
+> >                       msix_vec =3D VIRTIO_MSI_NO_VECTOR;
+> >               else if (vp_dev->per_vq_vectors)
+> >                       msix_vec =3D allocated_vectors++;
+> >               else
+> >                       msix_vec =3D VP_MSIX_VQ_VECTOR;
+> >               vqs[i] =3D vp_setup_vq(vdev, queue_idx++, callbacks[i], n=
+ames[i],
+> >                                    ctx ? ctx[i] : false,
+> >                                    msix_vec);
+> >
+> >
+> > Thanks.
+>
+>
+> Jason what do you think is the way to resolve this?
 
-Signed-off-by: Ai Chao <aichao@kylinos.cn>
----
-v10: Add lenovo_wmi_remove and mutex_destroy.
-v9: Add mutex for wmi notify.
-v8: Dev_deb convert to dev_err.
-v7: Add dev_dbg and remove unused dev in struct.
-v6: Modify SW_CAMERA_LENS_COVER to KEY_CAMERA_ACCESS_ENABLE/KEY_CAMERA_ACCESS_DISABLE.
-v5: Remove camera button groups, modify KEY_CAMERA to SW_CAMERA_LENS_COVER.
-v4: Remove lenovo_wmi_input_setup, move camera_mode into struct lenovo_wmi_priv.
-v3: Remove lenovo_wmi_remove function.
-v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
+I wonder which driver doesn't use a specific virtqueue in this case.
 
- drivers/platform/x86/Kconfig             |  12 +++
- drivers/platform/x86/Makefile            |   1 +
- drivers/platform/x86/lenovo-wmi-camera.c | 123 +++++++++++++++++++++++
- 3 files changed, 136 insertions(+)
- create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
+And it looks to me, introducing a per-vq-config struct might be better
+then we have
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index bdd302274b9a..9506a455b547 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
- 	To compile this driver as a module, choose M here: the module
- 	will be called inspur-platform-profile.
- 
-+config LENOVO_WMI_CAMERA
-+	tristate "Lenovo WMI Camera Button driver"
-+	depends on ACPI_WMI
-+	depends on INPUT
-+	help
-+	  This driver provides support for Lenovo camera button. The Camera
-+	  button is a GPIO device. This driver receives ACPI notify when the
-+	  camera button is switched on/off.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called lenovo-wmi-camera.
-+
- source "drivers/platform/x86/x86-android-tablets/Kconfig"
- 
- config FW_ATTR_CLASS
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 1de432e8861e..217e94d7c877 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
- obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
- obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
- obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
-+obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
- 
- # Intel
- obj-y				+= intel/
-diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform/x86/lenovo-wmi-camera.c
-new file mode 100644
-index 000000000000..4b1bd81cc581
---- /dev/null
-+++ b/drivers/platform/x86/lenovo-wmi-camera.c
-@@ -0,0 +1,123 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Lenovo WMI Camera Button Driver
-+ *
-+ * Author: Ai Chao <aichao@kylinos.cn>
-+ * Copyright (C) 2024 KylinSoft Corporation.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/device.h>
-+#include <linux/input.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/wmi.h>
-+
-+#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
-+
-+struct lenovo_wmi_priv {
-+	struct input_dev *idev;
-+	struct mutex notify_lock;	/* lenovo wmi camera button notify lock */
-+};
-+
-+enum {
-+	SW_CAMERA_OFF	= 0,
-+	SW_CAMERA_ON	= 1,
-+};
-+
-+static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
-+{
-+	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-+	unsigned int keycode;
-+	u8 camera_mode;
-+
-+	if (obj->type != ACPI_TYPE_BUFFER) {
-+		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
-+		return;
-+	}
-+
-+	if (obj->buffer.length != 1) {
-+		dev_err(&wdev->dev, "Invalid buffer length %u\n", obj->buffer.length);
-+		return;
-+	}
-+
-+	/* obj->buffer.pointer[0] is camera mode:
-+	 *      0 camera close
-+	 *      1 camera open
-+	 */
-+	camera_mode = obj->buffer.pointer[0];
-+	if (camera_mode > SW_CAMERA_ON) {
-+		dev_err(&wdev->dev, "Unknown camera mode %u\n", camera_mode);
-+		return;
-+	}
-+
-+	mutex_lock(&priv->notify_lock);
-+
-+	keycode = (camera_mode == SW_CAMERA_ON ?
-+		   KEY_CAMERA_ACCESS_ENABLE : KEY_CAMERA_ACCESS_DISABLE);
-+	input_report_key(priv->idev, keycode, 1);
-+	input_sync(priv->idev);
-+	input_report_key(priv->idev, keycode, 0);
-+	input_sync(priv->idev);
-+
-+	mutex_unlock(&priv->notify_lock);
-+}
-+
-+static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct lenovo_wmi_priv *priv;
-+
-+	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(&wdev->dev, priv);
-+
-+	mutex_init(&priv->notify_lock);
-+	priv->idev = devm_input_allocate_device(&wdev->dev);
-+	if (!priv->idev) {
-+		mutex_destroy(&priv->notify_lock);
-+		return -ENOMEM;
-+	}
-+
-+	priv->idev->name = "Lenovo WMI Camera Button";
-+	priv->idev->phys = "wmi/input0";
-+	priv->idev->id.bustype = BUS_HOST;
-+	priv->idev->dev.parent = &wdev->dev;
-+	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_ENABLE);
-+	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_DISABLE);
-+
-+	return input_register_device(priv->idev);
-+}
-+
-+static void lenovo_wmi_remove(struct wmi_device *wdev)
-+{
-+	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-+
-+	mutex_destroy(&priv->notify_lock);
-+	input_unregister_device(priv->idev);
-+}
-+
-+static const struct wmi_device_id lenovo_wmi_id_table[] = {
-+	{ .guid_string = WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
-+	{  }
-+};
-+
-+static struct wmi_driver lenovo_wmi_driver = {
-+	.driver = {
-+		.name = "lenovo-wmi-camera",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+	.id_table = lenovo_wmi_id_table,
-+	.no_singleton = true,
-+	.probe = lenovo_wmi_probe,
-+	.notify = lenovo_wmi_notify,
-+	.remove = lenovo_wmi_remove,
-+};
-+
-+module_wmi_driver(lenovo_wmi_driver);
-+
-+MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
-+MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
-+MODULE_DESCRIPTION("Lenovo WMI Camera Button Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.25.1
+virtio_vqs_config {
+      unsigned int nvqs;
+      struct virtio_vq_config *configs;
+}
+
+So we don't need the cfg_idx stuff.
+
+Thanks
+
+>
+> > >
+> > > Thanks
+> > >
+> > > > Thanks.
+> > > >
+> > > >
+> > > >
+> > > >
+> > > > >
+> > > > > Thanks
+> > > > >
+> > > > > >
+> > > > > > Thanks.
+> > > > > >
+> > > > > > >
+> > > > > > > Thanks
+> > > > > > >
+> > > > > >
+> > > > >
+> > > >
+> > >
+>
 
