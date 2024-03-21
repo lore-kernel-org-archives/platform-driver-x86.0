@@ -1,367 +1,116 @@
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570D612B70;
-	Thu, 21 Mar 2024 04:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D51B125CB;
+	Thu, 21 Mar 2024 09:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710994371; cv=none; b=BACJQPIfupazsJxiuGlkkf9FcRPbstcl9sXKr4LuTBJNebpBySuIc48UC8WPw4C/q8FjTXfWixD6DEaoBx+Umrs7Nk/q2usXWjxHa4mzmpQjbTdXqUWIItJUwFbk+hAusq+3TeXK2+FmlbG0mCrlTOjjKCWu3qiVcpoeiZaC1yI=
+	t=1711013485; cv=none; b=pIUjEfrZRK4jyzaAlHY5VuutL9vqdo5YQdDBXmWKIBl5ilyuAcfLFSbfnCXYg6pN76+2U9jWLB7naBkzlBCC4CMtkFut0xBrWtTMTB9JWgPCpLiCT/+CwdQQdGEhmffvq2C7sZkc5Kk7UZAhltOylaYH208jUSJLezj6oNBFU9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710994371; c=relaxed/simple;
-	bh=Vp71B4GEMTDHiQM7xMQ+BiW79aJuO9Vlm922xRazkJ0=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To:
-	 Content-Type; b=PcHKYkroPcrdCK6qP4abyZAD1TuPhVoXVmGn79l8RNBEvweVf7hL/NVWFkZlblm0b+N7Uo9FdsYKtWy98NZKi5YMt7cAtxrvLEt/o4S3JDBa59WNQ8V2Ievw1GVY3XMu3IZ5NRvsJFwj6GGoTO4oxoGHWhcZjDH0O/nZiOpBk/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=eq0vEwY9; arc=none smtp.client-ip=115.124.30.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1711013485; c=relaxed/simple;
+	bh=TzFlFyBicWglBuM6+5UuyMfMcNrvW9nqeLaEKUhN0Uo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RW3dXDXijshiar+KW0N8Ulnmk+uC+m1F53YmTxHmFL996iZkaqLYoIvEdb6o+rn4YR87uzqukbFVdC19joOk7fc6RJ21sHzyjAANRX4+7LmPaCabbLzf5taWOdWnuwLPHwtWipkeysqnyphkr1K4mr+rlZUHxXo7TPBrXJyisBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=wsOg9C2n; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="eq0vEwY9"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1710994363; h=Message-ID:Subject:Date:From:To:Content-Type;
-	bh=req0CIF/JHvwS9l1KiNeKKb/Omqe6sSvgFAD4vx65+k=;
-	b=eq0vEwY9Xi0wB9tLzAnaWUdV1+6rhGN5E44vTQvI3Js1R5UXc7Pl2Pg5NqSEiU45x1jCPGUqWc7lEAggaQ3aYGlt6ojFLIM/hPZIVYrxKkLiuYhIQlB8OoY+wqfm1wQC21nE7YimaTk2+KbUzQuYXe/tOKqOG3BSha5l+lvbUFo=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=24;SR=0;TI=SMTPD_---0W2zLFlC_1710994361;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W2zLFlC_1710994361)
-          by smtp.aliyun-inc.com;
-          Thu, 21 Mar 2024 12:12:42 +0800
-Message-ID: <1710994269.7745419-1-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH vhost v3 1/4] virtio: find_vqs: pass struct instead of multi parameters
-Date: Thu, 21 Mar 2024 12:11:09 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: Jason Wang <jasowang@redhat.com>
-Cc: virtualization@lists.linux.dev,
- Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- Hans de Goede <hdegoede@redhat.com>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Vadim Pasternak <vadimp@nvidia.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Cornelia Huck <cohuck@redhat.com>,
- Halil Pasic <pasic@linux.ibm.com>,
- Eric Farman <farman@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- linux-um@lists.infradead.org,
- platform-driver-x86@vger.kernel.org,
- linux-remoteproc@vger.kernel.org,
- linux-s390@vger.kernel.org,
- kvm@vger.kernel.org,
- "Michael S. Tsirkin" <mst@redhat.com>
-References: <20240312021013.88656-1-xuanzhuo@linux.alibaba.com>
- <20240312021013.88656-2-xuanzhuo@linux.alibaba.com>
- <CACGkMEvVgfgAxLoKeFTgy-1GR0W07ciPYFuqs6PiWtKCnXuWTw@mail.gmail.com>
- <1710395908.7915084-1-xuanzhuo@linux.alibaba.com>
- <CACGkMEsT2JqJ1r_kStUzW0+-f+qT0C05n2A+Yrjpc-mHMZD_mQ@mail.gmail.com>
- <1710487245.6843069-1-xuanzhuo@linux.alibaba.com>
- <CACGkMEspzDTZP1yxkBz17MgU9meyfCUBDxG8mjm=acXHNxAxhg@mail.gmail.com>
- <1710741592.205804-1-xuanzhuo@linux.alibaba.com>
- <20240319025726-mutt-send-email-mst@kernel.org>
- <CACGkMEsO6e2=v36F=ezhHCEaXqG0+AhkCM2ZgmKAtyWncnif5Q@mail.gmail.com>
- <1710927569.5383172-1-xuanzhuo@linux.alibaba.com>
- <CACGkMEuEqiLLGj-HY=gx4R1EVh_d=eYrmi=cuLzb1SiqiEHb-A@mail.gmail.com>
-In-Reply-To: <CACGkMEuEqiLLGj-HY=gx4R1EVh_d=eYrmi=cuLzb1SiqiEHb-A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="wsOg9C2n"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=gn3aXvf5VTogYoFCNQ+hze3URTCA0KPJcqB9uzyTWx8=;
+	t=1711013483; x=1711445483; b=wsOg9C2nMK1CryZat1gIgOb3nBUBNq/sOtpmFvIT9mCjUfa
+	CdSG6CfCjbXRepKqxzHUtjFXE7XjwwNaB7+e75HivQA/1gHxAqrcC8uDK5jan4CytAWo/GNNczrYM
+	vchwN4Sw/+NkoNSECrWL1jPFZm/2lGvVppaCTuSP6KeDZocjY2rBoblyYzN15K/+odi2GNT3cJmwN
+	I9k9W0iK+F+r3cicWXS5KFhNlFUTomltpjEVoHZbF1J5X8VyC1kRwr4t0ji5/bXyKZMxuV/tVUM4j
+	coM45dqxwPncaO5e4iv0PemIRogq/izRBKd+qenlQIlqyGnd8T2kIewOzhVVo/qg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rnElb-0005Vn-2F; Thu, 21 Mar 2024 10:31:19 +0100
+Message-ID: <7ed15eea-24f9-4c75-abf0-f120c7f5b09a@leemhuis.info>
+Date: Thu, 21 Mar 2024 10:31:18 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/1] Failure to hibernate on Dell Latitude 7430
+Content-Language: en-US, de-DE
+To: David McFarland <corngood@gmail.com>
+Cc: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Chris Feng <chris.feng@mediatek.com>, linux-pm@vger.kernel.org,
+ Alex Hung <alexhung@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20240318191153.6978-1-corngood@gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20240318191153.6978-1-corngood@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711013483;97f36e79;
+X-HE-SMSGID: 1rnElb-0005Vn-2F
 
-On Thu, 21 Mar 2024 12:03:36 +0800, Jason Wang <jasowang@redhat.com> wrote:
-> On Wed, Mar 20, 2024 at 5:41=E2=80=AFPM Xuan Zhuo <xuanzhuo@linux.alibaba=
-.com> wrote:
-> >
-> > On Wed, 20 Mar 2024 17:22:50 +0800, Jason Wang <jasowang@redhat.com> wr=
-ote:
-> > > On Tue, Mar 19, 2024 at 2:58=E2=80=AFPM Michael S. Tsirkin <mst@redha=
-t.com> wrote:
-> > > >
-> > > > On Mon, Mar 18, 2024 at 01:59:52PM +0800, Xuan Zhuo wrote:
-> > > > > On Mon, 18 Mar 2024 12:18:23 +0800, Jason Wang <jasowang@redhat.c=
-om> wrote:
-> > > > > > On Fri, Mar 15, 2024 at 3:26=E2=80=AFPM Xuan Zhuo <xuanzhuo@lin=
-ux.alibaba.com> wrote:
-> > > > > > >
-> > > > > > > On Fri, 15 Mar 2024 11:51:48 +0800, Jason Wang <jasowang@redh=
-at.com> wrote:
-> > > > > > > > On Thu, Mar 14, 2024 at 2:00=E2=80=AFPM Xuan Zhuo <xuanzhuo=
-@linux.alibaba.com> wrote:
-> > > > > > > > >
-> > > > > > > > > On Thu, 14 Mar 2024 11:12:24 +0800, Jason Wang <jasowang@=
-redhat.com> wrote:
-> > > > > > > > > > On Tue, Mar 12, 2024 at 10:10=E2=80=AFAM Xuan Zhuo <xua=
-nzhuo@linux.alibaba.com> wrote:
-> > > > > > > > > > >
-> > > > > > > > > > > Now, we pass multi parameters to find_vqs. These para=
-meters
-> > > > > > > > > > > may work for transport or work for vring.
-> > > > > > > > > > >
-> > > > > > > > > > > And find_vqs has multi implements in many places:
-> > > > > > > > > > >
-> > > > > > > > > > >  arch/um/drivers/virtio_uml.c
-> > > > > > > > > > >  drivers/platform/mellanox/mlxbf-tmfifo.c
-> > > > > > > > > > >  drivers/remoteproc/remoteproc_virtio.c
-> > > > > > > > > > >  drivers/s390/virtio/virtio_ccw.c
-> > > > > > > > > > >  drivers/virtio/virtio_mmio.c
-> > > > > > > > > > >  drivers/virtio/virtio_pci_legacy.c
-> > > > > > > > > > >  drivers/virtio/virtio_pci_modern.c
-> > > > > > > > > > >  drivers/virtio/virtio_vdpa.c
-> > > > > > > > > > >
-> > > > > > > > > > > Every time, we try to add a new parameter, that is di=
-fficult.
-> > > > > > > > > > > We must change every find_vqs implement.
-> > > > > > > > > > >
-> > > > > > > > > > > One the other side, if we want to pass a parameter to=
- vring,
-> > > > > > > > > > > we must change the call path from transport to vring.
-> > > > > > > > > > > Too many functions need to be changed.
-> > > > > > > > > > >
-> > > > > > > > > > > So it is time to refactor the find_vqs. We pass a str=
-ucture
-> > > > > > > > > > > cfg to find_vqs(), that will be passed to vring by tr=
-ansport.
-> > > > > > > > > > >
-> > > > > > > > > > > Because the vp_modern_create_avq() use the "const cha=
-r *names[]",
-> > > > > > > > > > > and the virtio_uml.c changes the name in the subseque=
-nt commit, so
-> > > > > > > > > > > change the "names" inside the virtio_vq_config from "=
-const char *const
-> > > > > > > > > > > *names" to "const char **names".
-> > > > > > > > > > >
-> > > > > > > > > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > > > > > > > > > > Acked-by: Johannes Berg <johannes@sipsolutions.net>
-> > > > > > > > > > > Reviewed-by: Ilpo J=3DE4rvinen <ilpo.jarvinen@linux.i=
-ntel.com>
-> > > > > > > > > >
-> > > > > > > > > > The name seems broken here.
-> > > > > > > > >
-> > > > > > > > > Email APP bug.
-> > > > > > > > >
-> > > > > > > > > I will fix.
-> > > > > > > > >
-> > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > [...]
-> > > > > > > > > >
-> > > > > > > > > > >
-> > > > > > > > > > >  typedef void vq_callback_t(struct virtqueue *);
-> > > > > > > > > > >
-> > > > > > > > > > > +/**
-> > > > > > > > > > > + * struct virtio_vq_config - configure for find_vqs()
-> > > > > > > > > > > + * @cfg_idx: Used by virtio core. The drivers should=
- set this to 0.
-> > > > > > > > > > > + *     During the initialization of each vq(vring se=
-tup), we need to know which
-> > > > > > > > > > > + *     item in the array should be used at that time=
-. But since the item in
-> > > > > > > > > > > + *     names can be null, which causes some item of =
-array to be skipped, we
-> > > > > > > > > > > + *     cannot use vq.index as the current id. So add=
- a cfg_idx to let vring
-> > > > > > > > > > > + *     know how to get the current configuration fro=
-m the array when
-> > > > > > > > > > > + *     initializing vq.
-> > > > > > > > > >
-> > > > > > > > > > So this design is not good. If it is not something that=
- the driver
-> > > > > > > > > > needs to care about, the core needs to hide it from the=
- API.
-> > > > > > > > >
-> > > > > > > > > The driver just ignore it. That will be beneficial to the=
- virtio core.
-> > > > > > > > > Otherwise, we must pass one more parameter everywhere.
-> > > > > > > >
-> > > > > > > > I don't get here, it's an internal logic and we've already =
-done that.
-> > > > > > >
-> > > > > > >
-> > > > > > > ## Then these must add one param "cfg_idx";
-> > > > > > >
-> > > > > > >  struct virtqueue *vring_create_virtqueue(struct virtio_devic=
-e *vdev,
-> > > > > > >                                          unsigned int index,
-> > > > > > >                                          struct vq_transport_=
-config *tp_cfg,
-> > > > > > >                                          struct virtio_vq_con=
-fig *cfg,
-> > > > > > > -->                                      uint cfg_idx);
-> > > > > > >
-> > > > > > >  struct virtqueue *vring_new_virtqueue(struct virtio_device *=
-vdev,
-> > > > > > >                                       unsigned int index,
-> > > > > > >                                       void *pages,
-> > > > > > >                                       struct vq_transport_con=
-fig *tp_cfg,
-> > > > > > >                                       struct virtio_vq_config=
- *cfg,
-> > > > > > > -->                                      uint cfg_idx);
-> > > > > > >
-> > > > > > >
-> > > > > > > ## The functions inside virtio_ring also need to add a new pa=
-ram, such as:
-> > > > > > >
-> > > > > > >  static struct virtqueue *vring_create_virtqueue_split(struct=
- virtio_device *vdev,
-> > > > > > >                                                       unsigne=
-d int index,
-> > > > > > >                                                       struct =
-vq_transport_config *tp_cfg,
-> > > > > > >                                                       struct =
-virtio_vq_config,
-> > > > > > > -->                                                   uint cf=
-g_idx);
-> > > > > > >
-> > > > > > >
-> > > > > > >
-> > > > > >
-> > > > > > I guess what I'm missing is when could the index differ from cf=
-g_idx?
-> > > > >
-> > > > >
-> > > > >  @cfg_idx: Used by virtio core. The drivers should set this to 0.
-> > > > >      During the initialization of each vq(vring setup), we need t=
-o know which
-> > > > >      item in the array should be used at that time. But since the=
- item in
-> > > > >      names can be null, which causes some item of array to be ski=
-pped, we
-> > > > >      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^=
-^^^^
-> > > > >      cannot use vq.index as the current id. So add a cfg_idx to l=
-et vring
-> > > > >      know how to get the current configuration from the array when
-> > > > >      initializing vq.
-> > > > >
-> > > > >
-> > > > > static int vp_find_vqs_msix(struct virtio_device *vdev, unsigned =
-int nvqs,
-> > > > >
-> > > > >       ................
-> > > > >
-> > > > >       for (i =3D 0; i < nvqs; ++i) {
-> > > > >               if (!names[i]) {
-> > > > >                       vqs[i] =3D NULL;
-> > > > >                       continue;
-> > > > >               }
-> > > > >
-> > > > >               if (!callbacks[i])
-> > > > >                       msix_vec =3D VIRTIO_MSI_NO_VECTOR;
-> > > > >               else if (vp_dev->per_vq_vectors)
-> > > > >                       msix_vec =3D allocated_vectors++;
-> > > > >               else
-> > > > >                       msix_vec =3D VP_MSIX_VQ_VECTOR;
-> > > > >               vqs[i] =3D vp_setup_vq(vdev, queue_idx++, callbacks=
-[i], names[i],
-> > > > >                                    ctx ? ctx[i] : false,
-> > > > >                                    msix_vec);
-> > > > >
-> > > > >
-> > > > > Thanks.
-> > > >
-> > > >
-> > > > Jason what do you think is the way to resolve this?
-> > >
-> > > I wonder which driver doesn't use a specific virtqueue in this case.
-> >
-> >
-> > commit 6457f126c888b3481fdae6f702e616cd0c79646e
-> > Author: Michael S. Tsirkin <mst@redhat.com>
-> > Date:   Wed Sep 5 21:47:45 2012 +0300
-> >
-> >     virtio: support reserved vqs
-> >
-> >     virtio network device multiqueue support reserves
-> >     vq 3 for future use (useful both for future extensions and to make =
-it
-> >     pretty - this way receive vqs have even and transmit - odd numbers).
-> >     Make it possible to skip initialization for
-> >     specific vq numbers by specifying NULL for name.
-> >     Document this usage as well as (existing) NULL callback.
-> >
-> >     Drivers using this not coded up yet, so I simply tested
-> >     with virtio-pci and verified that this patch does
-> >     not break existing drivers.
-> >
-> >     Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> >     Signed-off-by: Rusty Russell <rusty@rustcorp.com.au>
-> >
-> > This patch introduced this.
-> >
-> > Could we remove this? Then we can use the vq.index directly. That will
-> > be great.
-> >
-> > >
-> > > And it looks to me, introducing a per-vq-config struct might be better
-> > > then we have
-> > >
-> > > virtio_vqs_config {
-> > >       unsigned int nvqs;
-> > >       struct virtio_vq_config *configs;
-> > > }
-> >
-> > YES. I prefer this. But we need to refactor every driver.
->
-> Yes.
->
-> >
-> > >
-> > > So we don't need the cfg_idx stuff.
-> >
-> > This still needs cfg_idx.
->
-> Drive needs to pass config for each virtqueue. We can still check
-> config->name so the virtqueue index could be used.
+On 18.03.24 20:11, David McFarland wrote:
+> I have a Dell Latitude 7430, and recently whenever I hibernate with
+> `systemctl hibernate`, the machine would immediately wake.
 
-I see. If we pass the config for one queue to virtio ring,
-then we do not to pass the idx.
+Thanks for the report and the proposed patch.
 
-But for now, I will remove the logic of checking name,
-then we can use vq->index inside virtio ring.
+> I bisected it to:
+> 
+> 0c4cae1bc00d PM: hibernate: Avoid missing wakeup events during hibernation
 
-Thanks.
+I CCed the author of that change, which should at least be aware of this
+any maybe help out.
 
+Also CCed the people that take care of the code your patch modifies,
+they should be the best to judge what should be done here.
 
->
-> Thanks
->
-> >
-> > Thanks
-> >
-> >
-> > >
-> > > Thanks
-> > >
-> > > >
-> > > > > >
-> > > > > > Thanks
-> > > > > >
-> > > > > > > Thanks.
-> > > > > > >
-> > > > > > >
-> > > > > > >
-> > > > > > >
-> > > > > > > >
-> > > > > > > > Thanks
-> > > > > > > >
-> > > > > > > > >
-> > > > > > > > > Thanks.
-> > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > Thanks
-> > > > > > > > > >
-> > > > > > > > >
-> > > > > > > >
-> > > > > > >
-> > > > > >
-> > > >
-> > >
-> >
->
+FWIW, the start of the thread and the proposed patch can be found here:
+https://lore.kernel.org/all/20240318191153.6978-1-corngood@gmail.com/
+
+Ciao, Thorsten
+
+> However, the underlying problem seems to be that during hibernation, my
+> system gets a 0xcf (power button release) event, and the above change
+> causes it to abort hibernation correctly.
+> 
+> I also noticed that holding the power button down (when it's configured
+> to suspend) causes the system to suspend and then wake upon release, if
+> it's held long enough.
+> 
+> I'm attaching a patch which fixes the problem for me, by skipping the
+> wake on any of the release events.  These events are all marked
+> KEY_IGNORE, so think this is a reasonable thing to do.
+> 
+> I'm a little worried about the consequences of doing this
+> unconditionally in intel-hid.  Perhaps it should be a quirk?
+> 
+> David McFarland (1):
+>   platform/x86/intel/hid: Don't wake on 5-button releases
+> 
+>  drivers/platform/x86/intel/hid.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+
+P.S.: To be sure the issue doesn't fall through the cracks unnoticed,
+I'm adding it to regzbot, the Linux kernel regression tracking bot:
+
+#regzbot ^introduced 0c4cae1bc00d
+#regzbot title PM: hibernate: & platform/x86/intel/hid: hibernate on
+Dell Latitude 7430 fails
+#regzbot ignore-activity
+
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
+
