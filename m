@@ -1,283 +1,130 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8AA39AC5;
-	Fri, 22 Mar 2024 18:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9772D78672
+	for <platform-driver-x86@vger.kernel.org>; Fri, 22 Mar 2024 19:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711133356; cv=none; b=cAWtdKcuf9vQDK4D27O/5k4f8ikPXITgDePAgbVA8/DYOzbnf6yhOddBZ2xs6zhlYLooS8R1ZW8NYTVfCSjaA66cAZPrIvYfjLAQnnnQN09wqbOwKSolRF29X1cZ1JKSBwfUZFhe5m+wcyDLqv44oU7PTuPVzV04jzHWMrVrnM0=
+	t=1711135012; cv=none; b=Uy+Kiivf1yTnVSj+P9AqEClJyeLHbufPwUdb+hpG3eSbIXjR66SIDsZuXq/lkj9GAVJcyySK/Xpv0vicYtwsXJyeXLSx0zbHypg7ZuNrSo0gKO5wc5WEQEbWiE76HDQYvcKQjHYCGMObag2aA/9i6mlyV5HViBwsCFBWZ/PND+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711133356; c=relaxed/simple;
-	bh=n53/fcwqscy7JLUVq7eTOs9MewFdG7+seHsjTqDEO9Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XkWSQdiSQzRFj3aDyWv8TXFG1kVHA+hekcYuz5OSqaqEry4LuPuyAvOgm6QHUTU57szChbr3zKNSz1e6h5dVcvGHmTl2+Mm+jF2rMzOiBfkbohrwAmmYR46Ie2Cpb52lSnHJI2mLfP3ujnj7wvjw+Oi1bgPpK2S3m0hdRDoeXgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=fexFCljY; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1711135012; c=relaxed/simple;
+	bh=75iHcA9RFOUt3YMY5SehfwsBmnLNCyI0S4Wb9m834B8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tKzCi/NAv/LDXxaZkgG41HWNW9AUelJ6liA5fTwWvI77QaSyCjnRfhxyBzWUqh2WO5NO5G3yhkSHpgPwvqeA6cXiWwoQDAhworfYfyL7zP4IUePRsTVRe5YrWrZG4+FukD2USU0tRw9l0bmqV9Of8/uvts6CvBEKqLxMKRmzh5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Fbp40RoV; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="fexFCljY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1711133340; x=1711738140; i=w_armin@gmx.de;
-	bh=Gf140vAIe/6XrAFst2m1XbhP5EmoKJXbeR+F4ntRdGU=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=fexFCljYi93Hvqo6mFkliIuDP1KSoVls2MBk+s+j9gCEChHiS+EFsGmjc8+Vvk3U
-	 mS/kykzrZHZUkxy4HeAj/JCYXXEJMAhyQt0BvKwrut34H+I/nJ+kEP9Nsq8U2E570
-	 4A6ropIPRGaOo09FngwBlNIuBSwGXBPDJaLUflzg1T2H7Njicbi0v82qcsT9aFi8q
-	 GqAoajZmabuu3G1CesfArnm3cU8OD8ddMWpN0UoshF4uc2nEDxQu/dzkgE/YcdFX/
-	 rvenp9bIPtdQYzXxAntYLnhFn8Do16urAXfgPBLxXY2ml7IG1UyZj2BtNRIDQRlfQ
-	 Fegb1QcUVvaAM7X3JQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mi2O1-1r9iIM45VR-00e43t; Fri, 22
- Mar 2024 19:49:00 +0100
-Message-ID: <8b2245fb-fce0-4155-b022-19ca1d6b9a77@gmx.de>
-Date: Fri, 22 Mar 2024 19:48:57 +0100
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fbp40RoV"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a4715d4c2cbso294642466b.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Mar 2024 12:16:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711135009; x=1711739809; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=75iHcA9RFOUt3YMY5SehfwsBmnLNCyI0S4Wb9m834B8=;
+        b=Fbp40RoVAsq2zk1ka1gJaBVxa6uz99wpoMLenh/9yBLVvpceTB4KQRr06SkTJpUJGi
+         24TQjFD2aHPnfYS7i8pZJT6nAQebyCJgkrlbzxuOpz+KCS479Y16t4nuQ2BC7onZOU8N
+         qvKmaD5PZST5LydVDOLyyckCC2Jmf/vf25y6Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711135009; x=1711739809;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=75iHcA9RFOUt3YMY5SehfwsBmnLNCyI0S4Wb9m834B8=;
+        b=Voxr7aO0a7W2mSvByVuwb5CrrwTxU810BS330hy5sWy8NeoheHBJYG8jRtHW2neRn7
+         fYRdffSRjkU+qVYMAhJfC0n+9kwZJWL8x5PF3/2MVbbrlPNM+90T8GJiuRDJTrN/MDLo
+         vaQ8iOwjxFuRAktVZ5aPH4Np8YM+AeBZgjiG4JNORrNvcDY9C7KIBR7+QN9IFOlOU2X4
+         WWyX71LyZRKLQvzqF6oooAco+OLm1VVIu3y4TfnximtpzS9vzaHhWXAJ/B3tbeEBilU8
+         Knx7n+tI9w349R02fz64K58d7PUYh/u5g/OvkuYPgl2PrXifq6GNi5siFX5DADLemA5O
+         kmPA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtvUzG1MpV5Vgi6WmqEPXGCvreoGIm5LSNgspoumdVYFbgCkToEVoLPqJb1Ljszyl8onws1fvvkl7SrPRjiAFFshJ9U8qBFuWO5VnD6GBlAwLhbg==
+X-Gm-Message-State: AOJu0YzKkOPh0FThpY4ibA2XJratYJHjZ5Hpa0NN0+QnK7dCfjyBNOIR
+	uPfnqkUhvSTpJ/wxkOPNMdgFh8XjV1Paz2njG9T1JnLsB20UBaCg3e13vxW7B9Y1fJySCA287C7
+	qIw==
+X-Google-Smtp-Source: AGHT+IFLKMF+LHus9RclJ8zLFwhcxTmhAYj4BFQL6xvc1gTKdD1LjdBvevZ6F99jehBuiTIlNmVYfw==
+X-Received: by 2002:a17:906:178a:b0:a47:2163:56c1 with SMTP id t10-20020a170906178a00b00a47216356c1mr398741eje.36.1711135008778;
+        Fri, 22 Mar 2024 12:16:48 -0700 (PDT)
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com. [209.85.128.51])
+        by smtp.gmail.com with ESMTPSA id m3-20020a1709061ec300b00a449026672esm127663ejj.81.2024.03.22.12.16.48
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Mar 2024 12:16:48 -0700 (PDT)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4147f545bacso2270095e9.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Mar 2024 12:16:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWwWnDTKOvRTzu3zicUIeIEVpJNhHa6E5yy/H0sTQhGWfkuvT8F7q8TYVeE2X7L0KDhzpzUJpecMbQkE3u+qUOBnCp/oCAS3eFrmeL9JFnvf4e0JQ==
+X-Received: by 2002:a05:6512:32b2:b0:513:4b90:ae9a with SMTP id
+ q18-20020a05651232b200b005134b90ae9amr255604lfe.67.1711134987739; Fri, 22 Mar
+ 2024 12:16:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11] platform/x86: add lenovo wmi camera button driver
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Ai Chao <aichao@kylinos.cn>, Hans de Goede <hdegoede@redhat.com>,
- LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-References: <20240322064750.267422-1-aichao@kylinos.cn>
- <5e30a445-0a14-4242-9c1d-578a5b7cfcbe@linux.intel.com>
- <f1421e47-a6b7-e8f1-49a0-28e3351b2450@linux.intel.com>
- <7705e36f-829b-4661-9399-496905b3d161@linux.intel.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <7705e36f-829b-4661-9399-496905b3d161@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20240321101532.59272-1-xuanzhuo@linux.alibaba.com> <20240321101532.59272-2-xuanzhuo@linux.alibaba.com>
+In-Reply-To: <20240321101532.59272-2-xuanzhuo@linux.alibaba.com>
+From: Daniel Verkamp <dverkamp@chromium.org>
+Date: Fri, 22 Mar 2024 12:16:00 -0700
+X-Gmail-Original-Message-ID: <CABVzXAkwcKMb7pC21aUDLEM=RoyOtGA2Vim+LF0oWQ7mjUx68g@mail.gmail.com>
+Message-ID: <CABVzXAkwcKMb7pC21aUDLEM=RoyOtGA2Vim+LF0oWQ7mjUx68g@mail.gmail.com>
+Subject: Re: [PATCH vhost v4 1/6] virtio_balloon: remove the dependence where
+ names[] is null
+To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc: virtualization@lists.linux.dev, Richard Weinberger <richard@nod.at>, 
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Vadim Pasternak <vadimp@nvidia.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, Cornelia Huck <cohuck@redhat.com>, 
+	Halil Pasic <pasic@linux.ibm.com>, Eric Farman <farman@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	David Hildenbrand <david@redhat.com>, Jason Wang <jasowang@redhat.com>, linux-um@lists.infradead.org, 
+	platform-driver-x86@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+	linux-s390@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:bUPb3MKzRGowKHd2B2cN6R6gArEQdmOVymPGvZkoFZ6ncCkU/Ec
- fkiw+WWjtGlSqIcr9YzIqJUHVEMMiIJLWlMrAfkT4J8UujjrxUp5yQf9ocUkE/RsHGBT/3B
- EtovWAM886/a4lCniJRum1Gq2PnIU/CNxhiIw61IiViF2VPE/D5xGN9XEos3GOxucB0big7
- skZlpFcV5FnqsQQb+6M7g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:lU2DApP1Dws=;9RljlQCgpoQNUCx7h08Ysj6M9r8
- jfOh/GgkEkKb385vOI0T7Gy/oFjJA65duK+KSSyj9H+4D6FNhHV/gfxPA6t//P+8Kpo0/DF7Y
- 9W8eVpQ/f2YHtxXSYI/xHuhOcyVO6fxuRMdY2mpuICtl9q9uJqn2asc7O9l7oQbNb8bCe4cbt
- 0g5A8FDBA74Ww658HXbPSQgqM/9dlhKCnTJ4noqq1bm8NgC+v3rixDffSmiMXF3WQL42xeau4
- qZqM2h/jlrrOzurYG3WztBTX55OLlRExCliAQ5xec2nQ2q1MAIcUDrNT2Uxl38t9tDb9ZdVPJ
- tsmwjegO4QQmeSdKDSoVkceWmmW/im5nBGHLnU1xP1QgEDeIWVAmoyk4AkjPyNNo+YcZIfAB3
- VM7BNeke8ASziSoACvDfDTbzemRa08IA7ALhbxm0lz2H9pA/WIYyb7xeB2+v/2tDddfj91Z/H
- gjNFgARqvi/5+Ys4ZG+BOXgaxUTp6IhyxeQYwPxOXPhd+nnouSgrC5xzvKFCrN4bOMGSf9+Tf
- z0X4IhetsRFHETKAFHNaQOOEMj8coGty7AxM0zIT0MIdnX7VG4ojDwU18pNeu/SMS1JIwKDkw
- IvnwA+A4agBt1Vl5DL46U2EFcNhnAE/WGa+HszPNP+j22K6rutAjyt9m6v7msCw5OZcjhEb6a
- uSAhIxDngxVSOc0Hx2Af1G+tqteeyBPVUlbN+dGdMATYuu1WpJICpI7F93GGCvdilBrYB3kCt
- OC6xpMnmOTQGbrC48ylpqpcbry0Q6lXi/AUyrYX/lZRNgNRkKnRPLP0fbJP3Pasqft7fFnuYx
- wcgX7ETj5cB/SOFJLSlWX2mMRaIRWLOQG3UJJDvweNMJ4=
 
-Am 22.03.24 um 17:47 schrieb Kuppuswamy Sathyanarayanan:
-
-> On 3/22/24 7:39 AM, Ilpo J=C3=A4rvinen wrote:
->> On Fri, 22 Mar 2024, Kuppuswamy Sathyanarayanan wrote:
->>> On 3/21/24 11:47 PM, Ai Chao wrote:
->>>> Add lenovo generic wmi driver to support camera button.
->>>> The Camera button is a GPIO device. This driver receives ACPI notifyi
->>>> when the camera button is switched on/off. This driver is used in
->>>> Lenovo A70, it is a Computer integrated machine.
->>>>
->>>> Signed-off-by: Ai Chao <aichao@kylinos.cn>
->>>> ---
->>>> v11: remove input_unregister_device.
->>>> v10: Add lenovo_wmi_remove and mutex_destroy.
->>>> v9: Add mutex for wmi notify.
->>>> v8: Dev_deb convert to dev_err.
->>>> v7: Add dev_dbg and remove unused dev in struct.
->>>> v6: Modify SW_CAMERA_LENS_COVER to KEY_CAMERA_ACCESS_ENABLE/KEY_CAMER=
-A_ACCESS_DISABLE.
->>>> v5: Remove camera button groups, modify KEY_CAMERA to SW_CAMERA_LENS_=
-COVER.
->>>> v4: Remove lenovo_wmi_input_setup, move camera_mode into struct lenov=
-o_wmi_priv.
->>>> v3: Remove lenovo_wmi_remove function.
->>>> v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
->>>>
->>>>   drivers/platform/x86/Kconfig             |  12 +++
->>>>   drivers/platform/x86/Makefile            |   1 +
->>>>   drivers/platform/x86/lenovo-wmi-camera.c | 126 ++++++++++++++++++++=
-+++
->>>>   3 files changed, 139 insertions(+)
->>>>   create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
->>>>
->>>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kcon=
-fig
->>>> index bdd302274b9a..9506a455b547 100644
->>>> --- a/drivers/platform/x86/Kconfig
->>>> +++ b/drivers/platform/x86/Kconfig
->>>> @@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
->>>>   	To compile this driver as a module, choose M here: the module
->>>>   	will be called inspur-platform-profile.
->>>>
->>>> +config LENOVO_WMI_CAMERA
->>>> +	tristate "Lenovo WMI Camera Button driver"
->>>> +	depends on ACPI_WMI
->>>> +	depends on INPUT
->>>> +	help
->>>> +	  This driver provides support for Lenovo camera button. The Camera
->>>> +	  button is a GPIO device. This driver receives ACPI notify when th=
-e
->>>> +	  camera button is switched on/off.
->>>> +
->>>> +	  To compile this driver as a module, choose M here: the module
->>>> +	  will be called lenovo-wmi-camera.
->>>> +
->>>>   source "drivers/platform/x86/x86-android-tablets/Kconfig"
->>>>
->>>>   config FW_ATTR_CLASS
->>>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Mak=
-efile
->>>> index 1de432e8861e..217e94d7c877 100644
->>>> --- a/drivers/platform/x86/Makefile
->>>> +++ b/drivers/platform/x86/Makefile
->>>> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+=3D hdaps.o
->>>>   obj-$(CONFIG_THINKPAD_ACPI)	+=3D thinkpad_acpi.o
->>>>   obj-$(CONFIG_THINKPAD_LMI)	+=3D think-lmi.o
->>>>   obj-$(CONFIG_YOGABOOK)		+=3D lenovo-yogabook.o
->>>> +obj-$(CONFIG_LENOVO_WMI_CAMERA)	+=3D lenovo-wmi-camera.o
->>>>
->>>>   # Intel
->>>>   obj-y				+=3D intel/
->>>> diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platf=
-orm/x86/lenovo-wmi-camera.c
->>>> new file mode 100644
->>>> index 000000000000..fda936e2f37c
->>>> --- /dev/null
->>>> +++ b/drivers/platform/x86/lenovo-wmi-camera.c
->>>> @@ -0,0 +1,126 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +/*
->>>> + * Lenovo WMI Camera Button Driver
->>>> + *
->>>> + * Author: Ai Chao <aichao@kylinos.cn>
->>>> + * Copyright (C) 2024 KylinSoft Corporation.
->>>> + */
->>>> +
->>>> +#include <linux/acpi.h>
->>>> +#include <linux/device.h>
->>>> +#include <linux/input.h>
->>>> +#include <linux/module.h>
->>>> +#include <linux/mutex.h>
->>>> +#include <linux/wmi.h>
->>>> +
->>>> +#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-=
-62F4EA400013"
->>>> +
->>>> +struct lenovo_wmi_priv {
->>>> +	struct input_dev *idev;
->>>> +	struct mutex notify_lock;	/* lenovo wmi camera button notify lock *=
-/
->>>> +};
->>>> +
->>>> +enum {
->>>> +	SW_CAMERA_OFF	=3D 0,
->>>> +	SW_CAMERA_ON	=3D 1,
->>>> +};
->>>> +
->>>> +static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_ob=
-ject *obj)
->>>> +{
->>>> +	struct lenovo_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
->>>> +	unsigned int keycode;
->>>> +	u8 camera_mode;
->>>> +
->>>> +	if (obj->type !=3D ACPI_TYPE_BUFFER) {
->>>> +		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
->>>> +		return;
->>>> +	}
->>>> +
->>>> +	if (obj->buffer.length !=3D 1) {
->>>> +		dev_err(&wdev->dev, "Invalid buffer length %u\n", obj->buffer.leng=
-th);
->>>> +		return;
->>>> +	}
->>>> +
->>>> +	/* obj->buffer.pointer[0] is camera mode:
->>>> +	 *      0 camera close
->>>> +	 *      1 camera open
->>>> +	 */
->>>> +	camera_mode =3D obj->buffer.pointer[0];
->>>> +	if (camera_mode > SW_CAMERA_ON) {
->>>> +		dev_err(&wdev->dev, "Unknown camera mode %u\n", camera_mode);
->>>> +		return;
->>>> +	}
->>>> +
->>>> +	mutex_lock(&priv->notify_lock);
->>>> +
->>>> +	keycode =3D (camera_mode =3D=3D SW_CAMERA_ON ?
->>>> +		   KEY_CAMERA_ACCESS_ENABLE : KEY_CAMERA_ACCESS_DISABLE);
->>>> +	input_report_key(priv->idev, keycode, 1);
->>>> +	input_sync(priv->idev);
->>>> +	input_report_key(priv->idev, keycode, 0);
->>>> +	input_sync(priv->idev);
->>>> +
->>>> +	mutex_unlock(&priv->notify_lock);
->>>> +}
->>>> +
->>>> +static int lenovo_wmi_probe(struct wmi_device *wdev, const void *con=
-text)
->>>> +{
->>>> +	struct lenovo_wmi_priv *priv;
->>>> +	int ret;
->>>> +
->>>> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
->>>> +	if (!priv)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	dev_set_drvdata(&wdev->dev, priv);
->>>> +
->>>> +	priv->idev =3D devm_input_allocate_device(&wdev->dev);
->>>> +	if (!priv->idev)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	priv->idev->name =3D "Lenovo WMI Camera Button";
->>>> +	priv->idev->phys =3D "wmi/input0";
->>>> +	priv->idev->id.bustype =3D BUS_HOST;
->>>> +	priv->idev->dev.parent =3D &wdev->dev;
->>>> +	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_ENABLE);
->>>> +	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_DISABLE)=
-;
->>>> +
->>>> +	ret =3D input_register_device(priv->idev);
->>>> +	if (ret)
->>>> +		return ret;
->>>> +
->>>> +	mutex_init(&priv->notify_lock);
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static void lenovo_wmi_remove(struct wmi_device *wdev)
->>>> +{
->>>> +	struct lenovo_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
->>>> +
->>>> +	mutex_destroy(&priv->notify_lock);
->>> Do you really need to call mutex_destroy() during the module unload?
->>>
->>> I don't think kernel allocates any memory during mutex_init() that nee=
-ds
->>> be freed.
->> Is all debug code going to be happy if it's not called?
->>
-> I am not aware of any issue. Do you have any details about it?
+On Thu, Mar 21, 2024 at 3:16=E2=80=AFAM Xuan Zhuo <xuanzhuo@linux.alibaba.c=
+om> wrote:
 >
->  From the comments, it looks like mutex_destroy() is used to mark a
-> mutex unusable. Not sure why we need to mark a device priv lock
-> unusable during the unload process.
+> Currently, the init_vqs function within the virtio_balloon driver relies
+> on the condition that certain names array entries are null in order to
+> skip the initialization of some virtual queues (vqs). This behavior is
+> unique to this part of the codebase. In an upcoming commit, we plan to
+> eliminate this dependency by removing the function entirely. Therefore,
+> with this change, we are ensuring that the virtio_balloon no longer
+> depends on the aforementioned function.
 
-Hi,
+This is a behavior change, and I believe means that the driver no
+longer follows the spec [1].
 
-AFAIK calling mutex_destroy() allows the lock debugging code to catch
-attempts to access the mutex afterwards, so this would allow us to spot
-such issues when enabling lock debugging.
+For example, the spec says that virtqueue 4 is reporting_vq, and
+reporting_vq only exists if VIRTIO_BALLOON_F_PAGE_REPORTING is set,
+but there is no mention of its virtqueue number changing if other
+features are not set. If a device/driver combination negotiates
+VIRTIO_BALLOON_F_PAGE_REPORTING but not VIRTIO_BALLOON_F_STATS_VQ or
+VIRTIO_BALLOON_F_FREE_PAGE_HINT, my reading of the specification is
+that reporting_vq should still be vq number 4, and vq 2 and 3 should
+be unused. This patch would make the reporting_vq use vq 2 instead in
+this case.
 
-For the whole driver:
+If the new behavior is truly intended, then the spec does not match
+reality, and it would need to be changed first (IMO); however,
+changing the spec would mean that any devices implemented correctly
+per the previous spec would now be wrong, so some kind of mechanism
+for detecting the new behavior would be warranted, e.g. a new
+non-device-specific virtio feature flag.
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+I have brought this up previously on the virtio-comment list [2], but
+it did not receive any satisfying answers at that time.
 
+Thanks,
+-- Daniel
+
+[1]: https://docs.oasis-open.org/virtio/virtio/v1.2/csd01/virtio-v1.2-csd01=
+.html#x1-3140005
+[2]: https://lists.oasis-open.org/archives/virtio-comment/202308/msg00280.h=
+tml
