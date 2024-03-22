@@ -1,103 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7056F13ADD;
-	Fri, 22 Mar 2024 10:06:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72EAC7E6
+	for <platform-driver-x86@vger.kernel.org>; Fri, 22 Mar 2024 11:43:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711101967; cv=none; b=jpQ3djRpMYmC851mmWiuiYVnuJnChdXw17+1Xl4B+fbWSWgMTgCUT4zju6VZjsPesobO4uGwUpaok7n+HrOsjVlbGiJAoe06+rzQ9I8rQ1+lTsKAZHBBPoQl/LZeRiPmE28MH5peqW/c/jVna8YqVgRXzHb6mF+qZ0msFZGiujM=
+	t=1711107791; cv=none; b=XAUn0q+ErzfIrnPQ3kjOCLaa6KsnU505xXhkfZxYmjvnsNsh6Gu2cOqjGNJ6ML1oWh3aNGtezqCS9nHJyOjBpmdMPgdpN+wPsdSLovwfKz5yPnvLAebCrDBJUT4qEWlHBOocUim1h7ndORsNtcjlyMz+CSaLZFLxb5vW0EYXbv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711101967; c=relaxed/simple;
-	bh=42h8wfy/T6zcYftxDkn6CpEmueXefJ7lgGagO93KwZI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=gqkWei7TMjblcMByjfPnY8w99qi1+SJutiP91Y8y1/0JYjxXoGC78uCW/l0ffbIAm1sirhH++KZiL/q8dTOPEQoFoxqx1OH/Y38Q9ybS16hFEbmMGkxUhoh9BBxJ1SyLrH8EjJCbkLidOJ0rMQ8ZAQSb1QEBKCplGpb7RxdWj/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fXybtDfH; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1711107791; c=relaxed/simple;
+	bh=W7Q4P/rzj0G3q79QAASFJ4CLV1Bmjoq68CrSY3p+Pi8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=bX8od+xZvHCKa82Q5HwHNe2hmdSIURlHVXLfnOd4Osbz6EIvK23GreXzjRkryxbpnVFQhsglPRm9ZowsFAP5/D8xfwNhwOwUcQuHS0LJgToz1FNUMJQynhmSBkZQsyVWG+nLvSBlpRCS5jw78vnvKv2c/qQ+HY37AxRWj758Eac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net; spf=pass smtp.mailfrom=iwanders.net; dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b=TiO96eF4; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iwanders.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fXybtDfH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711101965; x=1742637965;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=42h8wfy/T6zcYftxDkn6CpEmueXefJ7lgGagO93KwZI=;
-  b=fXybtDfHDRqi/NwpLGhGGmA6kzVDzFK5xAM0oFi6NE3DfHKYsHCD9R5r
-   GZNBgV0HSKcko4gfiDVPu5auyTHsjkmaxnvsuzh7NxXirqM4ulRZ5yHKs
-   40r/pH3MkG+4OFWOcyWVxgxoqmA3o+nbAsTghHeAWqKRlbZQl4J7jsK/j
-   z+a+puyaO0TazL9kza4J2mvfM1/PyagsPT5rItHiCoPj0HVKOY2cyPjTT
-   g/vnnITRU4KSK+ycTvadEZQEOijFGq3dglhqS8HxO4FK4U4KVRrRytgWe
-   U5mhhbauF0EaoxQU9DsZNxHQXI6RcYTldw1eJjbuTobLmQ4Ho8WJ0+xj/
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="5997510"
-X-IronPort-AV: E=Sophos;i="6.07,145,1708416000"; 
-   d="scan'208";a="5997510"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 03:06:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,145,1708416000"; 
-   d="scan'208";a="19559041"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.18])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 03:06:02 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 22 Mar 2024 12:05:57 +0200 (EET)
-To: Ivor Wanders <ivor@iwanders.net>
-cc: Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-    luzmaximilian@gmail.com, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] platform/surface: platform_profile: add fan
- profile switching
-In-Reply-To: <20240321212521.3834-1-ivor@iwanders.net>
-Message-ID: <424d43f0-bcbc-f904-03bf-9f4c0488d706@linux.intel.com>
-References: <71c9e24b-c64b-581c-87f0-fb0c58066ceb@linux.intel.com> <20240321212521.3834-1-ivor@iwanders.net>
+	dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b="TiO96eF4"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-430acd766beso10816221cf.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Mar 2024 04:43:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=iwanders.net; s=google; t=1711107788; x=1711712588; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=DFtkdxWg3YTDXubNhIb/ZMO3gxbH9gnrT5pvNADSnCg=;
+        b=TiO96eF4Mo+81tGU6k+TFPiNR/c0kE4MTLM2wEAoUb+fA9hlwWYQSgvt/CHw7S78C1
+         6+9uj/uOgSdW20IP/rhFXCgctQO0Agq9y1IPtv6+msE6XmFoJqAETsvJZD0CdF/oguwW
+         yOK16/CdlnLW9CIMsQmmNjQWB9XckGTXWBgp8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711107788; x=1711712588;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DFtkdxWg3YTDXubNhIb/ZMO3gxbH9gnrT5pvNADSnCg=;
+        b=qWPbcelgZrs0vpFi6Ac69saR2SqvmobAk3joLaLsYFmBqpJcWKI3vywNGSAr0tct5R
+         nlIjmLf5AnkKiDtoI7WAvfITal/PfjvxXH1E//audKYysUCHhsro4c/VdvUU50K6XL+r
+         BPZE5/Tr3OaWj+zOMXUntIkM6SyLEUzaXfuDPtNlVRt3qMnkCIuDDnGsyydx0X6W2HyZ
+         7e0u66qRfpa26hjor3NiuFNeoULlFunxRBJGSuS8L+6XPrkdgTR81gLV855T/gV/+Ij3
+         sjby0kzvlio0ser89zrzqQaNFpz9GkZhgYkRYoReuJYkags1xsPHj9UxFZJNPsERyJlZ
+         Eqcw==
+X-Forwarded-Encrypted: i=1; AJvYcCVMcaJuH+RkmqheCYxgqQCHbn0NMJxjIai9rmP4LQEodk1Gzx6DgMpMUIvkEq20ft8gUIo3oBzsZhf7GzDduZJdfFCnIQrBQulwlysAk8sQEw2dAA==
+X-Gm-Message-State: AOJu0YyVkBF47wxTz5GDvAgV/DrXBA5zeYk5s8R8hT+84v+fVK0pFdlz
+	a+zyAYHsxdmNImVcD8fXLgyxiSiiNmHNMLojt3eK0rlTsDphlODqTXhxG+MLC+0=
+X-Google-Smtp-Source: AGHT+IE+3zHeeoIhE2g6TVXkodbfwvwwsGK9eDPW/sZjxsDKs2z7Sz1XXBTnamJ7SLqqIwckBFiBbw==
+X-Received: by 2002:ac8:5cce:0:b0:431:1274:9833 with SMTP id s14-20020ac85cce000000b0043112749833mr2187480qta.65.1711107788334;
+        Fri, 22 Mar 2024 04:43:08 -0700 (PDT)
+Received: from eagle.lan (24-246-30-234.cable.teksavvy.com. [24.246.30.234])
+        by smtp.gmail.com with ESMTPSA id e15-20020ac84b4f000000b0042f14f31cd9sm782853qts.92.2024.03.22.04.43.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Mar 2024 04:43:07 -0700 (PDT)
+From: Ivor Wanders <ivor@iwanders.net>
+To: ilpo.jarvinen@linux.intel.com
+Cc: hdegoede@redhat.com,
+	ivor@iwanders.net,
+	linux-kernel@vger.kernel.org,
+	luzmaximilian@gmail.com,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] platform/surface: platform_profile: add fan profile switching
+Date: Fri, 22 Mar 2024 07:43:04 -0400
+Message-Id: <20240322114304.3615-1-ivor@iwanders.net>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <424d43f0-bcbc-f904-03bf-9f4c0488d706@linux.intel.com>
+References: <424d43f0-bcbc-f904-03bf-9f4c0488d706@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-787903796-1711101549=:1315"
-Content-ID: <cb297c0a-ff37-eb02-7a38-466af40263f9@linux.intel.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hey Ilpo,
 
---8323328-787903796-1711101549=:1315
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <05229851-2721-282d-8862-61abe999deb4@linux.intel.com>
+Thanks for the detailed explanation!
 
-On Thu, 21 Mar 2024, Ivor Wanders wrote:
+> We're currently in the two weeks merge window (the time between kernel 
+> release and the next -rc1). Usually, nothing happens during it for new 
+> patches that are not fixes (there might be exceptions with some 
+> subsystems but that's a good general rule and even with fixes severity 
+> matters a lot if they are considered until -rc1 is out).
 
-> > Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
->=20
-> What is the process to get this merged if no further review is coming in?
-> Maximilian Luz approved v1 already. I just confirmed this patch still
-> applies cleanly on the latest upstream master.
+I see, time flies, I thought 6.7 was just wrapped up, but that's already
+over two months ago.
 
-Hi Ivor,
+> Our tools take care of the tags such as Reviewed-by when they're made 
+> against the latest version, there is no need to resubmit just because of 
+> tags people give to your patch.
 
-We're currently in the two weeks merge window (the time between kernel=20
-release and the next -rc1). Usually, nothing happens during it for new=20
-patches that are not fixes (there might be exceptions with some=20
-subsystems but that's a good general rule and even with fixes severity=20
-matters a lot if they are considered until -rc1 is out).
-=20
-Maintainer will consider your patch after the merge window (in this case,=
-=20
-it will be Hans' turn for 3.10 cycle to handle for-next while I handle=20
-fixes branch).
+Perfect, good to know, I'll just sit tight.
 
-> Do I need to send v3 with
-> this reviewed-by tag added to the commit or can this version be merged?
-
-Our tools take care of the tags such as Reviewed-by when they're made=20
-against the latest version, there is no need to resubmit just because of=20
-tags people give to your patch.
-
-(That being said, whenever submitting a new version for other reasons,=20
-remember to add the tags to the new version because tools only capture=20
-them for the latest version.)
-
---=20
- i.
---8323328-787903796-1711101549=:1315--
+~Ivor
