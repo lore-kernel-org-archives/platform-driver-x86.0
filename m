@@ -1,137 +1,137 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7851318622
-	for <platform-driver-x86@vger.kernel.org>; Sun, 24 Mar 2024 14:55:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614DE175AD
+	for <platform-driver-x86@vger.kernel.org>; Sun, 24 Mar 2024 15:01:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711292138; cv=none; b=Gc991hgyVcoUUinHAPoUMnpoGZCERF9WHaa12eL7qetcYyyu58rTvqQl/RzcPjO/dDhPI14KzeEYYVVaSBaAs7DF9D0Wg3ijJR7OAJczhVOqDxSmDAIGkxzL4PKjKAEPC9f5GrRPCazrQwyf7mdrFMZ4VbkZUt5FNqtlpvHiS0w=
+	t=1711292517; cv=none; b=BcF5s4713fCpUQjYMfDPL5i58JtUpk8C6dePn1L+vuJziYseLmuntT4IY85C0JoikDWPbyQgxlfAqFY1Fe7tC+bcmig3oWLApIdD4Hs23hINRCbAalzQBgF+vjjlp9dZx1sduOdqVPB8RpgGZaFR+HN1m3dM++HoNS0ebcJq0cA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711292138; c=relaxed/simple;
-	bh=WJoWst2zWLDtp8+Lu77pigv3C7PxlCT5Xd4GOWz6EAQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fSPTczuzIvXl3Dczp8aGzhDlZmBcSvthNLn1UHzbNtkIXezpiFPnlJYuSAvEb1RXl9PyZefXU/szyfLOIeluc/2NWic0zN/DGaHCs6SYDAYvVHtbQSRPxrxbHzrp0goKYQFnjui8GVt+tbkztqxe7al02lVZlhTXhAKqTtPsz6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GvuPsJ6g; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1711292517; c=relaxed/simple;
+	bh=9kD5mYuA0ixrmsz/Nc+tYzQ3aOX+CXGxr7IZ5BHCiyI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FyB2mcPrzU1femkVTE7QoadxJSd3aLy/fQGuhihMWG84azUd50nh29dpiE+vY4UAaPT96Fnkkxewre9gwUoPm06PhbrxH0WExChIu9iEiJVqiHmXd29lsgMm8+pzEdXYVvIvA9nQCLh32Aa/Gfal9yzIXJONOZjwaxLxPvltTxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XIl6Q9Dr; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GvuPsJ6g"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XIl6Q9Dr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711292135;
+	s=mimecast20190719; t=1711292515;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aoWkPYMgfn83U/WIpgmkyv2XVlLKQD/eNN6maIkW/vQ=;
-	b=GvuPsJ6gXVDN0FGmJt09sK5Q+ymbLRg0n1/WF9lpLGffy0JBqu/1pLAN58XQHagxj5ZeZd
-	tvOqxJjC18IeNyP/6vmEPj6ESGoANnXWQKY8HK79za/lrHrMFuIGfjfkzrVKeHFjjQaqta
-	pNEHRk6qqdQndP4Xbol981tj9yPa82Q=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=NrnaIDGD9GLPzpqf9XIs73N3ICvGrhKs7eQKU2DgFLQ=;
+	b=XIl6Q9Dr3kSg9zobkSuRVIx4ypI0WJMs4NY0NlL/6QQiUJ1Mc7zPAYy17DtO9CO49cWaBE
+	J5Noc4Ir5EYy4DOcr4MU7RLDujwqLKCQ/lFmZZJ6MjMerIkRim87kdLTVDAifxvi8TjC21
+	qr6TgP44um/pdw9/2OoR4g+l07RWGo0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-625-101EHallPBePiUIyCZW87g-1; Sun, 24 Mar 2024 10:55:33 -0400
-X-MC-Unique: 101EHallPBePiUIyCZW87g-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a4921e09cebso14613766b.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 24 Mar 2024 07:55:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711292132; x=1711896932;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aoWkPYMgfn83U/WIpgmkyv2XVlLKQD/eNN6maIkW/vQ=;
-        b=HaWcmuvpF0Tce1f4Ad0sJZykr1TAxOwf1ofzaAtZir+5YeivcfVzF8qiEI6hFMbcNM
-         bXZP9R+3b42Od4o0ifXDpmAqPqGCkbup/whQdnrNb8U3PCRSoPyLq7rE+oz2Lny2rqhE
-         zPvEvfJzXbFoUtl4kNuObOYX1VeQR992DXaXESvXrisHtIgjXhRVyB8TYviLO1lvxXJz
-         BoJDXYyL4nocuetLxmK9t4dcmszou3ZZk/kH4M85BH8Py/foQ4MG2CSjcYWhGN4cI5sY
-         TE4UCYeDdOTEiZEo8aam2rfK61uyQnYPparZip+cq+4ijpawmeuZaUzwq/LYFgGOAm2W
-         rBTg==
-X-Forwarded-Encrypted: i=1; AJvYcCXqamO0UGHKrZbL5FodC3HELo2SjNJAfe6pcg8WXQNax0YD5lgM9AKfCBVl/ucVAzaasCsv3oJdGVP8k9qtTUaxAnTnfNoFIKrjv3McObHDWNiuHA==
-X-Gm-Message-State: AOJu0YwkEfedFQC+NS+QIVNMHBCWciacKt8ziavt4B+RyMEdZWtk57A9
-	anl6+Ui2LvRy2jZWQ7z3peXDWKApzmVOFSckzQ2xPW+6p+5MUK/RjPNae/U2CO0TCvLSiYdjoAq
-	lSIX+j9utErrMIUYEFgcyDAo+Bzx5LnXuuVnLGtlNy/53W0+edpdblzsluUnCzSdIYJg4dXHeaz
-	sytcI=
-X-Received: by 2002:a17:906:110d:b0:a46:967b:7c94 with SMTP id h13-20020a170906110d00b00a46967b7c94mr2972930eja.18.1711292131899;
-        Sun, 24 Mar 2024 07:55:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHxZZIYrtutRgtQNAdaEoOkVNvYIb+8XyS6Fs70snfoHYWImMZPXg0HmOlQNNF4auSy32WHxQ==
-X-Received: by 2002:a17:906:110d:b0:a46:967b:7c94 with SMTP id h13-20020a170906110d00b00a46967b7c94mr2972924eja.18.1711292131571;
-        Sun, 24 Mar 2024 07:55:31 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id b2-20020a1709062b4200b00a4725e4f53asm2031403ejg.40.2024.03.24.07.55.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 24 Mar 2024 07:55:31 -0700 (PDT)
-Message-ID: <c1b08bbb-ad57-4f41-9b7b-40a6aeb3da9b@redhat.com>
-Date: Sun, 24 Mar 2024 15:55:30 +0100
+ us-mta-533-MMq404_uPTOF9T5j7TRl4A-1; Sun, 24 Mar 2024 11:01:53 -0400
+X-MC-Unique: MMq404_uPTOF9T5j7TRl4A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DBA1D85A58C;
+	Sun, 24 Mar 2024 15:01:52 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.39.192.75])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 0C5CE40C6DAE;
+	Sun, 24 Mar 2024 15:01:46 +0000 (UTC)
+From: Kate Hsuan <hpa@redhat.com>
+To: Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	linux-leds@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	=?UTF-8?q?Andr=C3=A9=20Apitzsch?= <git@apitzsch.eu>,
+	linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Sebastian Reichel <sre@kernel.org>,
+	linux-pm@vger.kernel.org
+Cc: Kate Hsuan <hpa@redhat.com>
+Subject: [PATCH v5 RESEND 0/6] KTD2026 indicator LED for X86 Xiaomi Pad2
+Date: Sun, 24 Mar 2024 23:01:01 +0800
+Message-ID: <20240324150107.976025-1-hpa@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] platform/x86: Add ACPI quickstart button driver
-Content-Language: en-US, nl
-To: Armin Wolf <W_Armin@gmx.de>, dennisn@dennisn.mooo.com, lkml@vorpal.se,
- ilpo.jarvinen@linux.intel.com
-Cc: coproscefalo@gmail.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240131111641.4418-1-W_Armin@gmx.de>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240131111641.4418-1-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-Hi Armin and Arvid,
+This patch added the support for Xiaomi Pad2 indicator LED. This work
+included:
+1. Added the KTD2026 swnode description to describe the LED controller.
+2. Migrated the original driver to fwnode to support x86 platform.
+3. Support for multi-color LED trigger event.
+4. The LED will be red when charging and the LED will be green when the
+   battery is full.
 
-On 1/31/24 12:16 PM, Armin Wolf wrote:
-> This patch series adds support for the ACPI PNP0C32 device as
-> proposed in 2022 by Arvid Norlander. The first patch adds support
-> for the device itself, while the second patch was taken from the
-> original series.
-> 
-> Both patches are compile-tested only.
+Moreover, the LED trigger is set to the new trigger, called
+"bq27520-0-charging-red-full-green" for Xiaomi Pad2 so the LED will be
+red when charging and the LED will be green when the battery is full.
 
-Armin, thank you for creating a new cleaned up driver for the
-quickstart button support.
+The new LED API led_mc_trigger_event() can be found in the following
+URL.
+https://lore.kernel.org/linux-leds/f40a0b1a-ceac-e269-c2dd-0158c5b4a1ad@gmail.com/T/#t
 
-I have managed to get my hands on a Toshiba Portege Z830 and
-I have successfully tested this series. That is this makes
-the 2 quickstart application and the toggle-touchpad button
-work when the system is running normally.
+--
+Changes in v5:
+1. Fix swnode LED color settings.
+2. Improve the driver based on the comments.
+3. Introduce a LED new API- led_mc_trigger_event() to make the LED
+   color can be changed according to the trigger.
+4. Introduced a new trigger "charging-red-full-green". The LED will be
+   red when charging and the the LED will be green when the battery is
+   full.
+5. Set the default trigger to "bq27520-0-charging-red-full-green" for
+   Xiaomi Pad2.
 
-Neither the quickstart buttons, nor the touchpad-toggle button
-which also uses the PNP0C32 interface, work to wakeup
-the system from sleep though.
+Changes in v4:
+1. Fix double casting.
+2. Since force casting a pointer value to int will trigger a compiler
+   warning, the type of num_leds was changed to unsigned long.
 
-I've also review both patches and they look good to me:
+Changes in v3:
+1. Drop the patch "leds-ktd202x: Skip regulator settings for Xiaomi
+   pad2"
 
-Tested-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Changes in v2:
+1. Typo and style fixes.
+2. The patch 0003 skips all the regulator setup for Xiaomi pad2 since
+   KTD2026 on Xiaomi pad2 is already powered by BP25890RTWR. So, the
+   sleep can be removed when removing the module.
 
-So I plan to merge this series into pdx86/for-next once
-6.9-rc1 is out.
+Hans de Goede (2):
+  leds: core: Add led_mc_set_brightness() function
+  leds: trigger: Add led_mc_trigger_event() function
 
-Regards,
+Kate Hsuan (4):
+  platform: x86-android-tablets: other: Add swnode for Xiaomi pad2
+    indicator LED
+  leds: rgb: leds-ktd202x: Get device properties through fwnode to
+    support ACPI
+  power: supply: power-supply-leds: Add charging_red_full_green trigger
+    for RGB LED
+  platform: x86-android-tablets: others: Set the LED trigger to
+    charging_red_full_green for Xiaomi pad2
 
-Hans
+ drivers/leds/led-class-multicolor.c           |  1 +
+ drivers/leds/led-core.c                       | 31 +++++++
+ drivers/leds/led-triggers.c                   | 20 +++++
+ drivers/leds/rgb/Kconfig                      |  1 -
+ drivers/leds/rgb/leds-ktd202x.c               | 75 ++++++++++-------
+ .../platform/x86/x86-android-tablets/other.c  | 82 +++++++++++++++++++
+ .../x86/x86-android-tablets/shared-psy-info.h |  2 +
+ drivers/power/supply/power_supply_leds.c      | 25 ++++++
+ include/linux/leds.h                          | 26 ++++++
+ include/linux/power_supply.h                  |  2 +
+ 10 files changed, 235 insertions(+), 30 deletions(-)
 
-
-
-> Armin Wolf (1):
->   platform/x86: Add ACPI quickstart button (PNP0C32) driver
-> 
-> Arvid Norlander (1):
->   platform/x86: toshiba_acpi: Add quirk for buttons on Z830
-> 
->  MAINTAINERS                         |   6 +
->  drivers/platform/x86/Kconfig        |  13 ++
->  drivers/platform/x86/Makefile       |   3 +
->  drivers/platform/x86/quickstart.c   | 225 ++++++++++++++++++++++++++++
->  drivers/platform/x86/toshiba_acpi.c |  36 ++++-
->  5 files changed, 280 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/platform/x86/quickstart.c
-> 
-> --
-> 2.39.2
-> 
-> 
+-- 
+2.44.0
 
