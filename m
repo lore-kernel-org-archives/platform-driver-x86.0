@@ -1,127 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E466F17C9E
-	for <platform-driver-x86@vger.kernel.org>; Sun, 24 Mar 2024 14:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7851318622
+	for <platform-driver-x86@vger.kernel.org>; Sun, 24 Mar 2024 14:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711291739; cv=none; b=B8NsahqkWtno6IfVdLF1cDgd3UZNZ4BC1T4pAXN13YvGryC8CYn2Pia5PJKahc4r26oYfexFLs3uKUvrxc//nKCXfWO9FzGazTb/+PSu3T2nvmhyR4IYKJVH+JuhCCGTEKcTVrNy7t1ORyyHbXaESDqOI5IxMg3IFW0710oxGUA=
+	t=1711292138; cv=none; b=Gc991hgyVcoUUinHAPoUMnpoGZCERF9WHaa12eL7qetcYyyu58rTvqQl/RzcPjO/dDhPI14KzeEYYVVaSBaAs7DF9D0Wg3ijJR7OAJczhVOqDxSmDAIGkxzL4PKjKAEPC9f5GrRPCazrQwyf7mdrFMZ4VbkZUt5FNqtlpvHiS0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711291739; c=relaxed/simple;
-	bh=+hmNad4AcBKeWQma6Izd7CkEUkildK4LrIOj1dEfDRg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ltVpYPN6ecODPvIX86olmjZD2kSC1EfBzsU9aFWDcotmFT2+BldjylPL4R34aAMs50esabeQzuM4h4xagLLSjDEm+3JUUVGQ/2TKxbkl4wyygeRrPmKSFAB8q7LmEl40BbVE8aALaRyVeJEmoP9v+vAWNu0Q/VNGk3/gJe6StfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W7ENOZGf; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1711292138; c=relaxed/simple;
+	bh=WJoWst2zWLDtp8+Lu77pigv3C7PxlCT5Xd4GOWz6EAQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fSPTczuzIvXl3Dczp8aGzhDlZmBcSvthNLn1UHzbNtkIXezpiFPnlJYuSAvEb1RXl9PyZefXU/szyfLOIeluc/2NWic0zN/DGaHCs6SYDAYvVHtbQSRPxrxbHzrp0goKYQFnjui8GVt+tbkztqxe7al02lVZlhTXhAKqTtPsz6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GvuPsJ6g; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W7ENOZGf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GvuPsJ6g"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711291736;
+	s=mimecast20190719; t=1711292135;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=P6C7+8Wp6+2qZOsRGd4+RkqMnsrYwdbiueBVs6ZMFIQ=;
-	b=W7ENOZGfYNHCzGi+ZsZ3/pK9Lu14EfBxYNvZONg+2TwpcwVucsWVPYMalhHjzY+t9L/xbt
-	XSpVsjdV/xBfQTEamH4M87bBs/Y/+SDhYcxpHj4L6JoCEAfjDHzm+x8cL1u+jp4db0jdrp
-	m4Svy6hlCoRQG1WO4DXyogQOQQsUBOg=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=aoWkPYMgfn83U/WIpgmkyv2XVlLKQD/eNN6maIkW/vQ=;
+	b=GvuPsJ6gXVDN0FGmJt09sK5Q+ymbLRg0n1/WF9lpLGffy0JBqu/1pLAN58XQHagxj5ZeZd
+	tvOqxJjC18IeNyP/6vmEPj6ESGoANnXWQKY8HK79za/lrHrMFuIGfjfkzrVKeHFjjQaqta
+	pNEHRk6qqdQndP4Xbol981tj9yPa82Q=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-460-f_vzKyrvPFK8AubT9SnLzQ-1; Sun, 24 Mar 2024 10:48:55 -0400
-X-MC-Unique: f_vzKyrvPFK8AubT9SnLzQ-1
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-29de4f107b7so2790536a91.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 24 Mar 2024 07:48:55 -0700 (PDT)
+ us-mta-625-101EHallPBePiUIyCZW87g-1; Sun, 24 Mar 2024 10:55:33 -0400
+X-MC-Unique: 101EHallPBePiUIyCZW87g-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a4921e09cebso14613766b.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 24 Mar 2024 07:55:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711291734; x=1711896534;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=P6C7+8Wp6+2qZOsRGd4+RkqMnsrYwdbiueBVs6ZMFIQ=;
-        b=RA4cvbUMnsuKJYX6WkvFYbmbvx9rjetqeQZ4TaPmbpa8dXZSlmUXYa/Jk8PVUqejUn
-         qcFaAikU5acMFGrGUnvxyKbQWYJCXFmYP4e1EXYjmnnOPEhpKZq16Uhr0qIgXpCiKOFq
-         Xp4fEGvDHSMHzoTCqjyysQ1Ducj/9s85R2Mrt5zj8TQjKaWli0zsn8m28YEQudj8DSYt
-         uHnAZFWrY2tTUZyhBeYGzk3a0k9LpalaM1ehx8iNiGqufqvoiTLTZ9bGAgSnUTuFe5Af
-         LfXikr9h2uGsiSUxbjQoHwJ/eZRY/b6Q01LKndhNfJmpvtgZDbVL6t2Ykv3QWfiUSRoY
-         BN1w==
-X-Forwarded-Encrypted: i=1; AJvYcCX3yX259QmJZvE/5TsqeC/IPXOyQdSWbbOTK2vlvHkFMStgeu+glcePTUz7VHi/hnK/KHOaGbPO5O0VwkdVd7SO+s9KGX4tUJ3GP1HvsWcC5Q22cA==
-X-Gm-Message-State: AOJu0YwcGHH/kRMTp506cX9m+WRr9ulzOx/L+y5xOYxD1wvYlPBsoUTI
-	eIsVJ/N5cE/ek/LmzK+F5n8xI6T4L/AsGIxNkEc9PmIxocMAgJzKZAO4Tvb7oO1PhstQqKF1pi/
-	uyAPR0c70qF97GdJCaPlgj3edNKXaSO3GY558CdTP67JUU37xRO7WdB9oxMGrs8Iw8gAEWrjgdb
-	6b+xsIPOu9Ypp7LN7Lmgznjx0GVn6oXmcKNBN5zi70GunTVnrApSaUVfZ5
-X-Received: by 2002:a17:90b:1004:b0:29c:6000:a12b with SMTP id gm4-20020a17090b100400b0029c6000a12bmr3410708pjb.38.1711291733823;
-        Sun, 24 Mar 2024 07:48:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFTD1jp0nZuoHDHAd1Pk4uTsJIWjJGwFeXb0QFll1ryEavOQegPIcvGaYKN72cZx2wc/59DCc28e68iStBHLpI=
-X-Received: by 2002:a17:90b:1004:b0:29c:6000:a12b with SMTP id
- gm4-20020a17090b100400b0029c6000a12bmr3410693pjb.38.1711291733484; Sun, 24
- Mar 2024 07:48:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711292132; x=1711896932;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aoWkPYMgfn83U/WIpgmkyv2XVlLKQD/eNN6maIkW/vQ=;
+        b=HaWcmuvpF0Tce1f4Ad0sJZykr1TAxOwf1ofzaAtZir+5YeivcfVzF8qiEI6hFMbcNM
+         bXZP9R+3b42Od4o0ifXDpmAqPqGCkbup/whQdnrNb8U3PCRSoPyLq7rE+oz2Lny2rqhE
+         zPvEvfJzXbFoUtl4kNuObOYX1VeQR992DXaXESvXrisHtIgjXhRVyB8TYviLO1lvxXJz
+         BoJDXYyL4nocuetLxmK9t4dcmszou3ZZk/kH4M85BH8Py/foQ4MG2CSjcYWhGN4cI5sY
+         TE4UCYeDdOTEiZEo8aam2rfK61uyQnYPparZip+cq+4ijpawmeuZaUzwq/LYFgGOAm2W
+         rBTg==
+X-Forwarded-Encrypted: i=1; AJvYcCXqamO0UGHKrZbL5FodC3HELo2SjNJAfe6pcg8WXQNax0YD5lgM9AKfCBVl/ucVAzaasCsv3oJdGVP8k9qtTUaxAnTnfNoFIKrjv3McObHDWNiuHA==
+X-Gm-Message-State: AOJu0YwkEfedFQC+NS+QIVNMHBCWciacKt8ziavt4B+RyMEdZWtk57A9
+	anl6+Ui2LvRy2jZWQ7z3peXDWKApzmVOFSckzQ2xPW+6p+5MUK/RjPNae/U2CO0TCvLSiYdjoAq
+	lSIX+j9utErrMIUYEFgcyDAo+Bzx5LnXuuVnLGtlNy/53W0+edpdblzsluUnCzSdIYJg4dXHeaz
+	sytcI=
+X-Received: by 2002:a17:906:110d:b0:a46:967b:7c94 with SMTP id h13-20020a170906110d00b00a46967b7c94mr2972930eja.18.1711292131899;
+        Sun, 24 Mar 2024 07:55:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHxZZIYrtutRgtQNAdaEoOkVNvYIb+8XyS6Fs70snfoHYWImMZPXg0HmOlQNNF4auSy32WHxQ==
+X-Received: by 2002:a17:906:110d:b0:a46:967b:7c94 with SMTP id h13-20020a170906110d00b00a46967b7c94mr2972924eja.18.1711292131571;
+        Sun, 24 Mar 2024 07:55:31 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id b2-20020a1709062b4200b00a4725e4f53asm2031403ejg.40.2024.03.24.07.55.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 24 Mar 2024 07:55:31 -0700 (PDT)
+Message-ID: <c1b08bbb-ad57-4f41-9b7b-40a6aeb3da9b@redhat.com>
+Date: Sun, 24 Mar 2024 15:55:30 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240306025801.8814-1-hpa@redhat.com> <20240306025801.8814-3-hpa@redhat.com>
- <Ze-N_y5Tbjc93aRp@surfacebook.localdomain> <CAEth8oEdzomdn5avXf44HXpoMFDfGpOjjxPFtaGkh0EhfZsPMQ@mail.gmail.com>
- <CAHp75VeoZ7p=7e9CgZftT5hThf-uMaUrqZBv=+tNYiUOevUOnw@mail.gmail.com>
-In-Reply-To: <CAHp75VeoZ7p=7e9CgZftT5hThf-uMaUrqZBv=+tNYiUOevUOnw@mail.gmail.com>
-From: Kate Hsuan <hpa@redhat.com>
-Date: Sun, 24 Mar 2024 22:48:42 +0800
-Message-ID: <CAEth8oFPwBKPRdTFqgtC8TXYVp1QcRzz-tuwy03VkanWOWfSpA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] leds: rgb: leds-ktd202x: Get device properties
- through fwnode to support ACPI
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	=?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] platform/x86: Add ACPI quickstart button driver
+Content-Language: en-US, nl
+To: Armin Wolf <W_Armin@gmx.de>, dennisn@dennisn.mooo.com, lkml@vorpal.se,
+ ilpo.jarvinen@linux.intel.com
+Cc: coproscefalo@gmail.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240131111641.4418-1-W_Armin@gmx.de>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240131111641.4418-1-W_Armin@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Mar 23, 2024 at 12:02=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Fri, Mar 22, 2024 at 7:45=E2=80=AFAM Kate Hsuan <hpa@redhat.com> wrote=
-:
-> > On Tue, Mar 12, 2024 at 7:04=E2=80=AFAM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
->
-> ...
->
-> > > > +     chip->num_leds =3D (unsigned long)i2c_get_match_data(client);
-> > >
-> > > No warnings during compilation?
-> > Yes, the compiler doesn't complain about it.
->
-> And for 32-bit mode as well?
->
+Hi Armin and Arvid,
 
-Hi Andy,
+On 1/31/24 12:16 PM, Armin Wolf wrote:
+> This patch series adds support for the ACPI PNP0C32 device as
+> proposed in 2022 by Arvid Norlander. The first patch adds support
+> for the device itself, while the second patch was taken from the
+> original series.
+> 
+> Both patches are compile-tested only.
 
-I've tested it with 32bits kernel build and the compiler didn't
-complain about the warnings.
+Armin, thank you for creating a new cleaned up driver for the
+quickstart button support.
 
-> ...
->
-> P.S. You have commented only on the two comments. What about the rest?
+I have managed to get my hands on a Toshiba Portege Z830 and
+I have successfully tested this series. That is this makes
+the 2 quickstart application and the toggle-touchpad button
+work when the system is running normally.
 
-For the rest, including variable renaming, error number shadowing, and
-"%pfw" were fixed in the v5 patch.
-I sent the patch but I forgot to add you.
-I'll resend the v5 patch and keep you in the loop.
+Neither the quickstart buttons, nor the touchpad-toggle button
+which also uses the PNP0C32 interface, work to wakeup
+the system from sleep though.
 
-Thank you :)
+I've also review both patches and they look good to me:
 
->
+Tested-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+So I plan to merge this series into pdx86/for-next once
+6.9-rc1 is out.
+
+Regards,
+
+Hans
+
+
+
+> Armin Wolf (1):
+>   platform/x86: Add ACPI quickstart button (PNP0C32) driver
+> 
+> Arvid Norlander (1):
+>   platform/x86: toshiba_acpi: Add quirk for buttons on Z830
+> 
+>  MAINTAINERS                         |   6 +
+>  drivers/platform/x86/Kconfig        |  13 ++
+>  drivers/platform/x86/Makefile       |   3 +
+>  drivers/platform/x86/quickstart.c   | 225 ++++++++++++++++++++++++++++
+>  drivers/platform/x86/toshiba_acpi.c |  36 ++++-
+>  5 files changed, 280 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/platform/x86/quickstart.c
+> 
 > --
-> With Best Regards,
-> Andy Shevchenko
->
-
-
---=20
-BR,
-Kate
+> 2.39.2
+> 
+> 
 
