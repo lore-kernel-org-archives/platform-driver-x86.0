@@ -1,65 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6496116A986
-	for <platform-driver-x86@vger.kernel.org>; Mon, 25 Mar 2024 14:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9048E16E89E
+	for <platform-driver-x86@vger.kernel.org>; Mon, 25 Mar 2024 14:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711377754; cv=none; b=uDxJw8NmzKwd7gl3dU9CvfgqY/Gcflb8xTrorjV5YkSh3is78VO555MyutYaEH96dis+0Zbm3a8ZiFXh2jtg6g5JVoSrQGlT8nfOB+IqFNXUisd+BZh49wNcZEWQWgS/KRJWdxe3xNc7DOerEKSM+VXphn+dg6iuiiSZk9F7pws=
+	t=1711377766; cv=none; b=e9lALsnAgBv3wSqCBfnfOILg7720Dlh1RRyPFhk4sLb2b7FmTDyNSVXouaNDF/PrwCKj595cmpcERqFinHtbL3wID5vWIOJfwvTYBwzoyYoMOKe457RY2+41yKGMduE7uez3J/MtaK5poFTWFVtkUnm6D0qlFA2hAoVZNqZfQfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711377754; c=relaxed/simple;
-	bh=DYlADzUbU1di/2H68CYRl4rnSbo9j2jMOM39IJaayg4=;
+	s=arc-20240116; t=1711377766; c=relaxed/simple;
+	bh=mA/+DxCC3ihFJ1zYlS33xrreGKwqQ4RqaLfQBqH+EWs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=sZ/AIs+/bF3/JjOTHcqE06q0F9YDefNELLGzQkjkSV0yPZFYV64dhte/11SI3yL1/ezw31dpMTBqzGccCqQ9OFR4fk6c7B+WwCp/O0WbwdTulhepXXP05APbcgo+ugovYmzTGXiUlwD8PHd6xSDnTS50Rp/s1i26ir01FG5m7SI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BlxnzSJ1; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=ksdCee4OAuMHDs2sKmp5hfQgpZiZ4XGHLeNEWyVUpJ0sC7fomAi6bQTcoNyoiwC78Uq2+XmWcNITaZgqpcIzdPNh16EHMJTu94AD71/bMjZt48qQf9amSB8wd/B7lf1/3WG4wdujzcLyGdcCIVkc9G3OW6smPuzCT41dQDx9B20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HQ2/oSdL; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BlxnzSJ1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HQ2/oSdL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711377751;
+	s=mimecast20190719; t=1711377763;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=f/cLCtEJf6Rixzsx98pU0iIcSCtTUmNBzmxhoeo32yw=;
-	b=BlxnzSJ1EyjjvIGSwauUnwp16L0+7zxezUji1qkMbVp5gZn4nGuMLRI2XutvlKQZH+tAVm
-	jRn01jNTbFhpaJ+mBQjM5wCBDswzOExjfY8mxRh/5OnNCGEGMeg5+7jUxxwszUxh6pHTXq
-	x2j+IZs2bezOyp3APob0rAkfG5dOldU=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=/6IrLlIE3Da2db17jeCkesXkCWvY/kCb5MtDYcPSqDA=;
+	b=HQ2/oSdLUh5k+9rbh92w2xuKzAf9YGu6eYSgyGWuk+2/LdGHT3uo6BWBSesS4nlDXE9HSn
+	wmqNH0LAMe0pRzQxhaiKn2KgBPzahzEbnrWW/hvF7ZdhoZKQhY3/Pk+HUPtgGQabqedH0S
+	AQF1L4ho4INlSsUQrBILD0BCadDpcMs=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-381-ekPdfy8yMka0UC5zcrsioQ-1; Mon, 25 Mar 2024 10:42:27 -0400
-X-MC-Unique: ekPdfy8yMka0UC5zcrsioQ-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-56c0d3514baso522930a12.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Mar 2024 07:42:27 -0700 (PDT)
+ us-mta-108-zMN81BOUNKKy69_9wOWHiA-1; Mon, 25 Mar 2024 10:42:41 -0400
+X-MC-Unique: zMN81BOUNKKy69_9wOWHiA-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-50e91f9d422so4262297e87.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Mar 2024 07:42:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711377746; x=1711982546;
+        d=1e100.net; s=20230601; t=1711377760; x=1711982560;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f/cLCtEJf6Rixzsx98pU0iIcSCtTUmNBzmxhoeo32yw=;
-        b=Vo9bLkzSjIpg0ht8txvTQ0sfEnx8ApVJThmnt+h+sgSmApk4JFm+qo0R6kOwIfdNsB
-         v78T9XX6AQITZIHnT3nfJgifIrsYWsSJwumNM1UrM6fXxK1k/k1C6a2PlyxPntxnMhcG
-         tiCTLVbK1jXZS1+K7ny+RbTKBjrPVJyAWX7pEH4VtZUKgbSb0kKGtmmw3Ui33BkoFmny
-         7o82y3I5qI7C4HypNrhxgQjGKSkA1VWJB9vCyqrI6G5xSEqTRuCOlBjUj5f2S1fZM4OC
-         DqBNaKa3a7CP71wjTLOqUdm6FDcYJosmeyMFK1+kV6MFVQx1Aloj1vRA+xvVbpVaDjVl
-         tkFg==
-X-Forwarded-Encrypted: i=1; AJvYcCXcXMonih6CMX2knr5UEHlZ1spIIFVXhi0liLqyZYqEnItPFXM8XobIkICBiTBeiJHTaq0DtCHzwmoLu1NKMjz/G08V1OjVCD1xhRedzEOFa+eLMw==
-X-Gm-Message-State: AOJu0YzRuzYwX1b1LUIRMTUVYs7GzUlwv6IOvAB4jB7wXRll0N6nPfcG
-	1W5SVJ4WArhze3U/UOqky3mOpigfWUljB+Vfw7ApxsZ4lpwk5xmPdfCN7lF/Hm21QwECcvejGDg
-	VgsxJqP/cTnpfGHrfgsvGyTNh2e3TyA/5r3Sgiuh0BdFq5PB/ikOMb6/641t1HNiYFftYGec=
-X-Received: by 2002:a50:cd1a:0:b0:56b:cf40:f712 with SMTP id z26-20020a50cd1a000000b0056bcf40f712mr4668254edi.19.1711377746516;
-        Mon, 25 Mar 2024 07:42:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE1y2OwdHo0pZWiekVXudlRme8momwGYarO2R5s8yxbc4GL8LbOcr9Diqsfq3IHC+9vYc/fkQ==
-X-Received: by 2002:a50:cd1a:0:b0:56b:cf40:f712 with SMTP id z26-20020a50cd1a000000b0056bcf40f712mr4668245edi.19.1711377746329;
-        Mon, 25 Mar 2024 07:42:26 -0700 (PDT)
+        bh=/6IrLlIE3Da2db17jeCkesXkCWvY/kCb5MtDYcPSqDA=;
+        b=c77Ue1bv58EJq+5c44K0oSJNQoiGcCEnLTLZlobHI4Q+GWrWB01Nn+aVMkj4cVORc4
+         7AK8lwgSBMr8kvowZjA3xFv/NxZsBRuRjBQ6Y8rSXIyGCf4T2YYIwufVlG0DJsf1w15+
+         61jfGh/qBXSYKuRSFtwjCVITylJjDU99P/wXGC9/ieUT8QTVrAL2MXBeeGX5jpnnVylo
+         11KPOBzqGptCWbJpdJoV3fS0VM+Q1sBgtWCkuVDBhFvMxcQ1rs9sVyqs1z+cYENkEv1U
+         W5GqBORRgCLX8kr83SHtETZAJVTKSm4H2uAOEIpAgIAnSeLKjbG4WwhS/nb4SrI2cnrW
+         EXNw==
+X-Forwarded-Encrypted: i=1; AJvYcCXvSUoIdiJTQ0xvEPFnDIwis1otZnu5pmqNpEBXWiQKJNzA6wQ92HWO7GJrv06R9gWTi1OwhKfPLYrUzD0GQSKLJJgYQ/nvsVHj4gXcsYWuzUOfog==
+X-Gm-Message-State: AOJu0YzLWU5UahsuKQer/eQXYMxrqt3NQ0ijfmz3kfy8NYixCo89Mvfn
+	O7Ae+KLBl3AA5iAL1nfSiM5bOa1/0Bm1muemLRiolWm5zTj4VoW0kCzIso4UTVgS4JanRM1ks6J
+	X5V93NhM/2YNJT4pKBb3eMccYao8/XOzbVz1JSpDfXdhYpF6prVTEryNnQFAgSXbbnVdt8uA=
+X-Received: by 2002:a05:6512:29b:b0:515:afa8:ae7 with SMTP id j27-20020a056512029b00b00515afa80ae7mr1101738lfp.31.1711377760330;
+        Mon, 25 Mar 2024 07:42:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEG5RBNgmHdsXz6C+hHNh4VMkcoaC1us5TFtqUbGOGEuu51671qBAGuaYZzesHPmPltIhJ2tw==
+X-Received: by 2002:a05:6512:29b:b0:515:afa8:ae7 with SMTP id j27-20020a056512029b00b00515afa80ae7mr1101724lfp.31.1711377759916;
+        Mon, 25 Mar 2024 07:42:39 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id g7-20020a056402320700b0056c0996bf72sm1794239eda.83.2024.03.25.07.42.25
+        by smtp.gmail.com with ESMTPSA id g7-20020a056402320700b0056c0996bf72sm1794239eda.83.2024.03.25.07.42.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 07:42:25 -0700 (PDT)
-Message-ID: <407f241f-e185-4586-9f75-9beb73902870@redhat.com>
-Date: Mon, 25 Mar 2024 15:42:25 +0100
+        Mon, 25 Mar 2024 07:42:39 -0700 (PDT)
+Message-ID: <7d7c3357-48a1-4479-9365-19fb3e9ddf0a@redhat.com>
+Date: Mon, 25 Mar 2024 15:42:39 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,24 +67,20 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] platform/x86: asus-wmi: use sysfs_emit() instead of
+Subject: Re: [PATCH v1] platform/x86: huawei-wmi: use sysfs_emit() instead of
  sprintf()
 Content-Language: en-US, nl
-To: Ai Chao <aichao@kylinos.cn>, corentin.chary@gmail.com, luke@ljones.dev,
- ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240319055636.150289-1-aichao@kylinos.cn>
+To: Ai Chao <aichao@kylinos.cn>, ilpo.jarvinen@linux.intel.com,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240319064243.297320-1-aichao@kylinos.cn>
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240319055636.150289-1-aichao@kylinos.cn>
+In-Reply-To: <20240319064243.297320-1-aichao@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On 3/19/24 6:56 AM, Ai Chao wrote:
-> This changes all *_show attributes in asus-wmi.c to use sysfs_emit()
-> instead of the older method of writing to the output buffer manually.
-> 
+On 3/19/24 7:42 AM, Ai Chao wrote:
 > Follow the advice in Documentation/filesystems/sysfs.rst:
 > show() should only use sysfs_emit() or sysfs_emit_at() when formatting
 > the value to be returned to user space.
@@ -110,40 +106,47 @@ Hans
 
 
 > ---
->  drivers/platform/x86/asus-wmi.c | 8 ++++----
+>  drivers/platform/x86/huawei-wmi.c | 8 ++++----
 >  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 3f07bbf809ef..df4c103459da 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -2326,7 +2326,7 @@ static ssize_t pwm1_show(struct device *dev,
->  
->  	/* If we already set a value then just return it */
->  	if (asus->agfn_pwm >= 0)
-> -		return sprintf(buf, "%d\n", asus->agfn_pwm);
-> +		return sysfs_emit(buf, "%d\n", asus->agfn_pwm);
->  
->  	/*
->  	 * If we haven't set already set a value through the AGFN interface,
-> @@ -2512,8 +2512,8 @@ static ssize_t asus_hwmon_temp1(struct device *dev,
->  	if (err < 0)
+> diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+> index dde139c69945..09d476dd832e 100644
+> --- a/drivers/platform/x86/huawei-wmi.c
+> +++ b/drivers/platform/x86/huawei-wmi.c
+> @@ -379,7 +379,7 @@ static ssize_t charge_control_start_threshold_show(struct device *dev,
+>  	if (err)
 >  		return err;
 >  
-> -	return sprintf(buf, "%ld\n",
-> -		       deci_kelvin_to_millicelsius(value & 0xFFFF));
-> +	return sysfs_emit(buf, "%ld\n",
-> +			  deci_kelvin_to_millicelsius(value & 0xFFFF));
+> -	return sprintf(buf, "%d\n", start);
+> +	return sysfs_emit(buf, "%d\n", start);
 >  }
 >  
->  /* GPU fan on modern ROG laptops */
-> @@ -4061,7 +4061,7 @@ static ssize_t show_sys_wmi(struct asus_wmi *asus, int devid, char *buf)
->  	if (value < 0)
->  		return value;
+>  static ssize_t charge_control_end_threshold_show(struct device *dev,
+> @@ -392,7 +392,7 @@ static ssize_t charge_control_end_threshold_show(struct device *dev,
+>  	if (err)
+>  		return err;
 >  
-> -	return sprintf(buf, "%d\n", value);
-> +	return sysfs_emit(buf, "%d\n", value);
+> -	return sprintf(buf, "%d\n", end);
+> +	return sysfs_emit(buf, "%d\n", end);
 >  }
 >  
->  #define ASUS_WMI_CREATE_DEVICE_ATTR(_name, _mode, _cm)			\
+>  static ssize_t charge_control_thresholds_show(struct device *dev,
+> @@ -405,7 +405,7 @@ static ssize_t charge_control_thresholds_show(struct device *dev,
+>  	if (err)
+>  		return err;
+>  
+> -	return sprintf(buf, "%d %d\n", start, end);
+> +	return sysfs_emit(buf, "%d %d\n", start, end);
+>  }
+>  
+>  static ssize_t charge_control_start_threshold_store(struct device *dev,
+> @@ -562,7 +562,7 @@ static ssize_t fn_lock_state_show(struct device *dev,
+>  	if (err)
+>  		return err;
+>  
+> -	return sprintf(buf, "%d\n", on);
+> +	return sysfs_emit(buf, "%d\n", on);
+>  }
+>  
+>  static ssize_t fn_lock_state_store(struct device *dev,
 
