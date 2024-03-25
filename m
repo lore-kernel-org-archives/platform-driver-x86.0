@@ -1,55 +1,55 @@
-Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B601487FE;
-	Mon, 25 Mar 2024 05:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F8814883B;
+	Mon, 25 Mar 2024 05:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711345826; cv=none; b=DyPiZVgu880AV9lRWigYJloSWbfZSPM0VGQuH48DcjSqQ131BNGEtILI3vl7nPRGKfhpQbjdXtZMLHHgUlh0rQQK/1UjxDPyhOTR+vuNaZR4Zfw3TAeQkqfbzoztQzZ0Dvyvf2EqtkQCDk/lA4Mh+ut2X9bg4VzcZvd1JkYF1RQ=
+	t=1711345839; cv=none; b=LWhVxGBoz80f8Ai5m8VzA+w65t1nOd5MJIeqx0WsyvJ3EI60y6t7q4zOqumlmc6wLbJFJ/7+cXTsfHL725vsvsbX0WyNKK2l2ur/+joHW2LuvVVFXABFfbpPoM6njb8kbmMrSa6T1L03xJjT4Itrz4QpcsI0rMFXSDUFEFfkCog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711345826; c=relaxed/simple;
-	bh=H0XXl2nd4p7lkG53n8fVjt+PQ+8UAhbKACuzm1iveiw=;
+	s=arc-20240116; t=1711345839; c=relaxed/simple;
+	bh=taiR2LqNvN/VeHRdruzcyhYIqXtoIGbp/aHvz+qX/bo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k+gWcsHDQqp28jkUEyMRPGXjzmpmTr3gEXw2qY4rC2Gn73oTHzC/unE4/zABsBwFbqTbW9aOid10mNxlOMP+Kap2bnGnaJBIYXWt+j+NE0IyIFyjwufvuM4/DiDLZM2GpO+Rsb/aIyGynG87Rxg+IJA3grn1S3ybl9RGBkXjFoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=hlvo5M1v; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Qh9mhyJF; arc=none smtp.client-ip=103.168.172.150
+	 MIME-Version; b=pfc/3wNo7+YcI10r9B3Lv+yVN4omQsmrp3JV3AdjyHageQsZ4fkvVULOdEADKlC7uYN1iZ1gcXNuU0NZ0hb357ti1JO4tzIKBPYQOwPejQe3xYxAVXMgOE+97wJ+wy1kw57ZzTrUvD86ZongG7muGfsopskpAcc/NDNrheF+G7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=OJKGiTmJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DChUIr4x; arc=none smtp.client-ip=66.111.4.29
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="hlvo5M1v";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Qh9mhyJF"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id AC48113800F3;
-	Mon, 25 Mar 2024 01:50:23 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="OJKGiTmJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DChUIr4x"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailout.nyi.internal (Postfix) with ESMTP id A28445C0055;
+	Mon, 25 Mar 2024 01:50:36 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Mon, 25 Mar 2024 01:50:23 -0400
+  by compute7.internal (MEProxy); Mon, 25 Mar 2024 01:50:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
 	:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1711345823; x=
-	1711432223; bh=IIk1CZbCz3Dnvbmp1NYtis5LnvpXyEWO8o6T/E3NbVo=; b=h
-	lvo5M1v/76OOBRHqXmKyqXgxmS8S6XrXfhAAA2LhIF1sC7gmTYUdC7DLchMopTv9
-	VWce9A1kNs7FqmyA0JDFxrvtZKJ8iHo/Iym/2uc592lyu3qsEXkiu40MNU8nMh4C
-	UZDW3P3e43uLSFHzBbUc89VXOEoFR6rRqJ8nDbhjk1WRAqce2ELD7oiQU7LYPL3N
-	ReHZnCrH4DakYZiZhuXKNOaxvt0nCBW3fWOJqd/vv0UQpKT7sr/QzOdyGemAjnNe
-	68/Zz5pxGCvJAmfXNRTkZAWEukFzK6m9GQkZHW/F4RNvF65PS+Frq/x7ZeOLAGK7
-	2WNoTeum8j/ZCmqN2JhQw==
+	:reply-to:subject:subject:to:to; s=fm3; t=1711345836; x=
+	1711432236; bh=wHviqYyVaAzxPv74LZp8KS2hwn6YZgLgxNlEoO1eLIg=; b=O
+	JKGiTmJ8nLMIWlhhebolC+z8EAwxHFTZKYEQpQ+dqwQ94T91h//ttFRDXLob0TQI
+	N1tDWycj2VVd68Jo1Afhs/VWHCkHE1rppsAWx+W/6nnZUQvJ+MSJbyWNSW8CEMRy
+	Rz6TxF+GGIaoC4D4980YJJSwu6yBHFVF/EBTyjO/bBUS8exNoWl8E7p83dEQAhE1
+	9Zi1qcheeT7k3C7x64DpE00Mko5tZHmyQSenDa5Qa9xaz1tDTCCBIrMaa2F5wT7l
+	Prbh1IY7BGXvHTDx+VUH2LWc0vWEbI1Lu8WKQ9QlsuKFmPkG6wZLE0lMhT5DBHg+
+	aj/4MxiZSiK3+dFmZlSkw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711345823; x=
-	1711432223; bh=IIk1CZbCz3Dnvbmp1NYtis5LnvpXyEWO8o6T/E3NbVo=; b=Q
-	h9mhyJFzHFbMOATIlq4qnNdCFiPOt4eS18VevlCjAvWiMrpzqqS6QBtYPesaQ9hT
-	xftZddFCxUzqeMLG7Wby/fyPRFzay79FPn4AD06f/tdZVK98ihbFiMAoibEFkTOe
-	4/UUi3yEEuG8IppvwhTIMuZhtdrSJ6yZFCcf1QmQj1XGiOwfoYwP+i43wGZHX21T
-	OPCya59KGAX2I3519Bd69D2h786LHbcNDj5/rWKPAY42tOP2biXB0K+9+LlRnNpv
-	IL9UeYMsC98UaUTbnoXlt58jdog4ykINP13fobNA91OwH1QKP+TpkPzURrLUxQzW
-	4elVTcFu0yYtBOOjCw2Ww==
-X-ME-Sender: <xms:nxABZgsHnoxomLEpPl9R3Ujp0vDV_S8lsLZ-rrW36yWBDjc5Uigu6A>
-    <xme:nxABZtf9til8DQIm3Iq4BADI-1W3YLaKGoWFCKszAIM4cCeWRVHSIVIs9LRZ2EFCQ
-    FtXOWdiWNMclpEZKP0>
-X-ME-Received: <xmr:nxABZryWjZadstuLgdiPCQvSdbuc3NCBMxPjCiSWv4I0fQBKl4bz9Q7tTBtk>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711345836; x=
+	1711432236; bh=wHviqYyVaAzxPv74LZp8KS2hwn6YZgLgxNlEoO1eLIg=; b=D
+	ChUIr4xvlDJCm1cndbzx+IR2PWaRi6UoqBKf8N7m5q9bpddq6qyNFNVFT0k5BSFi
+	69SASCF+GJQkcqyIRxTqXLmsHGtYhqnalOprZhTqSb4rtX7XZxmHTzLlmctTV7F1
+	AvJvjz/EoKY/kLwdo9hzQslv96bzWGYDHtHqDfNLF2r9oF8M0avZoTQD3Fc5BAnI
+	crDsPBDST8XDskq/yxEOlGrixL3FLIKi4REut+daPDSbNUexcS9VLUIsaxJrmKbu
+	cMNCsiYU6GRmCB1jAeyQ1WNsDTMX790QJ9Tyw0iH75VMipMnm71IcOc7x5EzDg/1
+	OhLeCcUECQrxQghJKPqaQ==
+X-ME-Sender: <xms:rBABZh0MDl-0I1ei0yRCi-7Sarlffhjr97rs483ECzxRkrhhAGvv_g>
+    <xme:rBABZoFSj7C0k2GSYCUNwiUGX5fKqIlXxQ15Zj8C4yWSsMPwxERD0mBmGbiuO4Ix3
+    fbZsiWkZiLvOApQFPg>
+X-ME-Received: <xmr:rBABZh5fctWwoH_EEhKMFR9noySOAcue5tAFBbfuI9N61DoommxWaaqRDlHs>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtkedgledtucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
@@ -57,14 +57,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtkedgledtucetufdoteggod
     jhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfetfedugfetudeuheetjefhue
     fggfelleetvdevtefhueeujeefvdegleevhefgnecuvehluhhsthgvrhfuihiivgepuden
     ucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:nxABZjOC6ZHixCUCUgnMiJ5ZB3rbJLocR3YCUGjGs0FLXM2orFGBLA>
-    <xmx:nxABZg8GrmiHHROu4JYqc8XZ5phlhNGN_N_h5gf_Ru-rDuG0bHY-AA>
-    <xmx:nxABZrWqRAQLcwgxZUvZXpFN2dyMjIlzHkQ7oL3eGKkWkd6iPsKc7Q>
-    <xmx:nxABZpfeFEreP-BfK1VFqr2XEvMQ6s55QLk_0zbxweHtAUrmYkPd-Q>
-    <xmx:nxABZgxFl-yFHIZS5aHNAxVgcLibTQEKAaT9XN0-LGRIQk1PlGwtQQ>
+X-ME-Proxy: <xmx:rBABZu3fspsBrNzl7DsT-C9axfH8cgkvMso4i4PWibfxzDCcoQ6AsQ>
+    <xmx:rBABZkEKGDGBd4ndAqt6ocQ7UfWmoJ-7zau0_UBGFBkdSIlSMHZ5sQ>
+    <xmx:rBABZv9fRdPHdeAMjawdz_Yez9kbYWQKWtJT3bhs8Gq3Hun5Ms5E7Q>
+    <xmx:rBABZhmLelwE36MRjEyOWShjCbNcRlMVS1J9nsyFBJA0ANFcp0Pb4w>
+    <xmx:rBABZpPdnPBMDpO5LriUUzk70Ojw_J91LOGvvLed37rz7t8BdyEe0A>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 25 Mar 2024 01:50:20 -0400 (EDT)
+ 25 Mar 2024 01:50:33 -0400 (EDT)
 From: "Luke D. Jones" <luke@ljones.dev>
 To: hdegoede@redhat.com
 Cc: corentin.chary@gmail.com,
@@ -72,9 +72,9 @@ Cc: corentin.chary@gmail.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	"Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH 5/9] platform/x86: asus-wmi: store a min default for ppt options
-Date: Mon, 25 Mar 2024 18:49:34 +1300
-Message-ID: <20240325054938.489732-6-luke@ljones.dev>
+Subject: [PATCH 9/9] platform/x86: asus-wmi: cleanup main struct to avoid some holes
+Date: Mon, 25 Mar 2024 18:49:38 +1300
+Message-ID: <20240325054938.489732-10-luke@ljones.dev>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240325054938.489732-1-luke@ljones.dev>
 References: <20240325054938.489732-1-luke@ljones.dev>
@@ -86,259 +86,103 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Laptops with any of the ppt or nv tunables default to the minimum setting
-on boot so we can safely assume a stored value is correct.
-
-This patch adds storing of those values in the local struct, and enables
-reading of those values back. To prevent creating a series of byte holes
-in the struct the "<name>_available" bool is removed and
-`asus_sysfs_is_visible()` uses the `ASUS_WMI_DEVID_<name>` directly.
+Reorganises some attr-available calls to remove a few unrequired
+booleans in the main driver struct which combined with some
+reorganisation prevents a series of large holes seen with pahole.
 
 Signed-off-by: Luke D. Jones <luke@ljones.dev>
 ---
- drivers/platform/x86/asus-wmi.c | 127 +++++++++++++++++++++++++-------
- 1 file changed, 99 insertions(+), 28 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 20 +++++++-------------
+ 1 file changed, 7 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 6cac9c3eb8b2..1e369b673a72 100644
+index 9927a48b2dc3..e2aadb61b490 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -271,13 +271,13 @@ struct asus_wmi {
+@@ -251,6 +251,9 @@ struct asus_wmi {
+ 	u32 tablet_switch_dev_id;
+ 	bool tablet_switch_inverted;
+ 
++	/* The ROG Ally device requires the MCU USB device be disconnected before suspend */
++	bool ally_mcu_usb_switch;
++
+ 	enum fan_type fan_type;
+ 	enum fan_type gpu_fan_type;
+ 	enum fan_type mid_fan_type;
+@@ -263,9 +266,7 @@ struct asus_wmi {
+ 	u8 fan_boost_mode_mask;
+ 	u8 fan_boost_mode;
+ 
+-	bool charge_mode_available;
+ 	bool egpu_enable_available;
+-	bool egpu_connect_available;
+ 	bool dgpu_disable_available;
+ 	bool gpu_mux_mode_available;
  	u32 gpu_mux_dev;
+@@ -279,8 +280,8 @@ struct asus_wmi {
+ 	u32 nv_dynamic_boost;
+ 	u32 nv_temp_target;
  
- 	/* Tunables provided by ASUS for gaming laptops */
--	bool ppt_pl2_sppt_available;
--	bool ppt_pl1_spl_available;
--	bool ppt_apu_sppt_available;
--	bool ppt_plat_sppt_available;
--	bool ppt_fppt_available;
--	bool nv_dyn_boost_available;
--	bool nv_temp_tgt_available;
-+	u32 ppt_pl2_sppt;
-+	u32 ppt_pl1_spl;
-+	u32 ppt_apu_sppt;
-+	u32 ppt_platform_sppt;
-+	u32 ppt_fppt;
-+	u32 nv_dynamic_boost;
-+	u32 nv_temp_target;
- 
- 	bool kbd_rgb_mode_available;
+-	bool kbd_rgb_mode_available;
  	u32 kbd_rgb_dev;
-@@ -1021,11 +1021,21 @@ static ssize_t ppt_pl2_sppt_store(struct device *dev,
- 		return -EIO;
- 	}
++	bool kbd_rgb_mode_available;
+ 	bool kbd_rgb_state_available;
  
-+	asus->ppt_pl2_sppt = value;
- 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_pl2_sppt");
+ 	bool throttle_thermal_policy_available;
+@@ -297,7 +298,6 @@ struct asus_wmi {
+ 	// The RSOC controls the maximum charging percentage.
+ 	bool battery_rsoc_available;
  
- 	return count;
- }
--static DEVICE_ATTR_WO(ppt_pl2_sppt);
-+
-+static ssize_t ppt_pl2_sppt_show(struct device *dev,
-+				       struct device_attribute *attr,
-+				       char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%d\n", asus->ppt_pl2_sppt);
-+}
-+static DEVICE_ATTR_RW(ppt_pl2_sppt);
+-	bool panel_overdrive_available;
+ 	bool mini_led_mode_available;
+ 	u32 mini_led_dev_id;
  
- /* Tunable: PPT, Intel=PL1, AMD=SPL ******************************************/
- static ssize_t ppt_pl1_spl_store(struct device *dev,
-@@ -1055,11 +1065,20 @@ static ssize_t ppt_pl1_spl_store(struct device *dev,
- 		return -EIO;
- 	}
+@@ -309,9 +309,6 @@ struct asus_wmi {
  
-+	asus->ppt_pl1_spl = value;
- 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_pl1_spl");
+ 	bool fnlock_locked;
  
- 	return count;
- }
--static DEVICE_ATTR_WO(ppt_pl1_spl);
-+static ssize_t ppt_pl1_spl_show(struct device *dev,
-+				 struct device_attribute *attr,
-+				 char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%d\n", asus->ppt_pl1_spl);
-+}
-+static DEVICE_ATTR_RW(ppt_pl1_spl);
+-	/* The ROG Ally device requires the MCU USB device be disconnected before suspend */
+-	bool ally_mcu_usb_switch;
+-
+ 	struct asus_wmi_debug debug;
  
- /* Tunable: PPT APU FPPT ******************************************************/
- static ssize_t ppt_fppt_store(struct device *dev,
-@@ -1089,11 +1108,21 @@ static ssize_t ppt_fppt_store(struct device *dev,
- 		return -EIO;
- 	}
- 
-+	asus->ppt_fppt = value;
- 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_fpu_sppt");
- 
- 	return count;
- }
--static DEVICE_ATTR_WO(ppt_fppt);
-+
-+static ssize_t ppt_fppt_show(struct device *dev,
-+				struct device_attribute *attr,
-+				char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%d\n", asus->ppt_fppt);
-+}
-+static DEVICE_ATTR_RW(ppt_fppt);
- 
- /* Tunable: PPT APU SPPT *****************************************************/
- static ssize_t ppt_apu_sppt_store(struct device *dev,
-@@ -1123,11 +1152,21 @@ static ssize_t ppt_apu_sppt_store(struct device *dev,
- 		return -EIO;
- 	}
- 
-+	asus->ppt_apu_sppt = value;
- 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_apu_sppt");
- 
- 	return count;
- }
--static DEVICE_ATTR_WO(ppt_apu_sppt);
-+
-+static ssize_t ppt_apu_sppt_show(struct device *dev,
-+			     struct device_attribute *attr,
-+			     char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%d\n", asus->ppt_apu_sppt);
-+}
-+static DEVICE_ATTR_RW(ppt_apu_sppt);
- 
- /* Tunable: PPT platform SPPT ************************************************/
- static ssize_t ppt_platform_sppt_store(struct device *dev,
-@@ -1157,11 +1196,21 @@ static ssize_t ppt_platform_sppt_store(struct device *dev,
- 		return -EIO;
- 	}
- 
-+	asus->ppt_platform_sppt = value;
- 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_platform_sppt");
- 
- 	return count;
- }
--static DEVICE_ATTR_WO(ppt_platform_sppt);
-+
-+static ssize_t ppt_platform_sppt_show(struct device *dev,
-+				 struct device_attribute *attr,
-+				 char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%d\n", asus->ppt_platform_sppt);
-+}
-+static DEVICE_ATTR_RW(ppt_platform_sppt);
- 
- /* Tunable: NVIDIA dynamic boost *********************************************/
- static ssize_t nv_dynamic_boost_store(struct device *dev,
-@@ -1191,11 +1240,21 @@ static ssize_t nv_dynamic_boost_store(struct device *dev,
- 		return -EIO;
- 	}
- 
-+	asus->nv_dynamic_boost = value;
- 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "nv_dynamic_boost");
- 
- 	return count;
- }
--static DEVICE_ATTR_WO(nv_dynamic_boost);
-+
-+static ssize_t nv_dynamic_boost_show(struct device *dev,
-+				      struct device_attribute *attr,
-+				      char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%d\n", asus->nv_dynamic_boost);
-+}
-+static DEVICE_ATTR_RW(nv_dynamic_boost);
- 
- /* Tunable: NVIDIA temperature target ****************************************/
- static ssize_t nv_temp_target_store(struct device *dev,
-@@ -1225,11 +1284,21 @@ static ssize_t nv_temp_target_store(struct device *dev,
- 		return -EIO;
- 	}
- 
-+	asus->nv_temp_target = value;
- 	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "nv_temp_target");
- 
- 	return count;
- }
--static DEVICE_ATTR_WO(nv_temp_target);
-+
-+static ssize_t nv_temp_target_show(struct device *dev,
-+				     struct device_attribute *attr,
-+				     char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%d\n", asus->nv_temp_target);
-+}
-+static DEVICE_ATTR_RW(nv_temp_target);
- 
- /* Battery ********************************************************************/
- 
-@@ -4315,19 +4384,19 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 	else if (attr == &dev_attr_throttle_thermal_policy.attr)
- 		ok = asus->throttle_thermal_policy_available;
- 	else if (attr == &dev_attr_ppt_pl2_sppt.attr)
--		ok = asus->ppt_pl2_sppt_available;
-+		devid = ASUS_WMI_DEVID_PPT_PL2_SPPT;
- 	else if (attr == &dev_attr_ppt_pl1_spl.attr)
--		ok = asus->ppt_pl1_spl_available;
-+		devid = ASUS_WMI_DEVID_PPT_PL1_SPL;
- 	else if (attr == &dev_attr_ppt_fppt.attr)
--		ok = asus->ppt_fppt_available;
-+		devid = ASUS_WMI_DEVID_PPT_FPPT;
- 	else if (attr == &dev_attr_ppt_apu_sppt.attr)
--		ok = asus->ppt_apu_sppt_available;
-+		devid = ASUS_WMI_DEVID_PPT_APU_SPPT;
- 	else if (attr == &dev_attr_ppt_platform_sppt.attr)
--		ok = asus->ppt_plat_sppt_available;
-+		devid = ASUS_WMI_DEVID_PPT_PLAT_SPPT;
- 	else if (attr == &dev_attr_nv_dynamic_boost.attr)
--		ok = asus->nv_dyn_boost_available;
-+		devid = ASUS_WMI_DEVID_NV_DYN_BOOST;
- 	else if (attr == &dev_attr_nv_temp_target.attr)
--		ok = asus->nv_temp_tgt_available;
-+		devid = ASUS_WMI_DEVID_NV_THERM_TARGET;
+ 	struct asus_wmi_driver *driver;
+@@ -4411,11 +4408,11 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+ 	else if (attr == &dev_attr_als_enable.attr)
+ 		devid = ASUS_WMI_DEVID_ALS_ENABLE;
+ 	else if (attr == &dev_attr_charge_mode.attr)
+-		ok = asus->charge_mode_available;
++		devid = ASUS_WMI_DEVID_CHARGE_MODE;
+ 	else if (attr == &dev_attr_egpu_enable.attr)
+ 		ok = asus->egpu_enable_available;
+ 	else if (attr == &dev_attr_egpu_connected.attr)
+-		ok = asus->egpu_connect_available;
++		devid = ASUS_WMI_DEVID_EGPU_CONNECTED;
+ 	else if (attr == &dev_attr_dgpu_disable.attr)
+ 		ok = asus->dgpu_disable_available;
+ 	else if (attr == &dev_attr_gpu_mux_mode.attr)
+@@ -4443,7 +4440,7 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
  	else if (attr == &dev_attr_boot_sound.attr)
  		devid = ASUS_WMI_DEVID_BOOT_SOUND;
  	else if (attr == &dev_attr_panel_od.attr)
-@@ -4588,18 +4657,20 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	if (err)
- 		goto fail_platform;
+-		ok = asus->panel_overdrive_available;
++		devid = ASUS_WMI_DEVID_PANEL_OD;
+ 	else if (attr == &dev_attr_mini_led_mode.attr)
+ 		ok = asus->mini_led_mode_available;
  
-+	/* ensure defaults for tunables */
-+	asus->ppt_pl2_sppt = 5;
-+	asus->ppt_pl1_spl = 5;
-+	asus->ppt_apu_sppt = 5;
-+	asus->ppt_platform_sppt = 5;
-+	asus->ppt_fppt = 5;
-+	asus->nv_dynamic_boost = 5;
-+	asus->nv_temp_target = 75;
-+
- 	asus->charge_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CHARGE_MODE);
+@@ -4709,12 +4706,9 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	asus->nv_dynamic_boost = 5;
+ 	asus->nv_temp_target = 75;
+ 
+-	asus->charge_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CHARGE_MODE);
  	asus->egpu_enable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU);
- 	asus->egpu_connect_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU_CONNECTED);
+-	asus->egpu_connect_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU_CONNECTED);
  	asus->dgpu_disable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU);
  	asus->kbd_rgb_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_STATE);
--	asus->ppt_pl2_sppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PL2_SPPT);
--	asus->ppt_pl1_spl_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PL1_SPL);
--	asus->ppt_fppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_FPPT);
--	asus->ppt_apu_sppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_APU_SPPT);
--	asus->ppt_plat_sppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PLAT_SPPT);
--	asus->nv_dyn_boost_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_NV_DYN_BOOST);
--	asus->nv_temp_tgt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_NV_THERM_TARGET);
- 	asus->panel_overdrive_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PANEL_OD);
+-	asus->panel_overdrive_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PANEL_OD);
  	asus->ally_mcu_usb_switch = acpi_has_method(NULL, ASUS_USB0_PWR_EC0_CSEE)
  						&& dmi_match(DMI_BOARD_NAME, "RC71L");
+ 
 -- 
 2.44.0
 
