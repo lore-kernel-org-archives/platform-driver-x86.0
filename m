@@ -1,65 +1,66 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33FA83A10
-	for <platform-driver-x86@vger.kernel.org>; Mon, 25 Mar 2024 15:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F00548F5
+	for <platform-driver-x86@vger.kernel.org>; Mon, 25 Mar 2024 15:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711378931; cv=none; b=ok8mKrY5JddPudSKn3x/mU25dOs6F9M0aSPLyxHOK5fNIM4Aro8QQel9APpo43Slundn+B051CKY8ACNf/Wo42P1/blKgQ6t9JMA30HWTZCBmMal2Y41Qx0CREMSnCrO8XtU+3lHv38W0UXGm3LLHJ0v1qYkZ14Iv0mZUxHzqZA=
+	t=1711378980; cv=none; b=Xax+n5K/6JNg8PDvYk0/E9B+zGMS4no6nrI8XaXJTWs9Km1/giuLuMoqQ+3YA5bPchpq1BMxtaCct9Ai+yN/0SARGXgqUlPrGsVZ5hnicbtIjDzN0o6nePJEUWjbWUXj9/T8PTIljbeydu1U/nsBeX/OIBJRJKwgFbO+9+Xfpxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711378931; c=relaxed/simple;
-	bh=ULZIDNEPoLT4enZWYfUF9Cc6rxjknKhOq3ptWq3zBHg=;
+	s=arc-20240116; t=1711378980; c=relaxed/simple;
+	bh=3dXPudPDiikRoCmhjxwcnF2sBV5x9RGjFXzLDmPO4wQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Oli6B8V4C69Y+ayFxltGlUZXl/0WR0AgYCuT5jCoTOrxUcgqecDjNENix4KBSX5fqndObl7jSix9+P6yq1CTNi/AMx3FGiTP5vWeAhNO2rVa1U1fI/zYv7M+4+GqyVIyKueSBSoLU5NP0RHb7vVlqDxyJMXA68buWRZj5/3QXmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bVGBceDg; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=NlhsjnjA9RYc0Ohlm9GTHQdJSdzJvJfReYNEP99XtfWjqjQXEskOz8z/ZViI51lpbTsr/lbknmJEdN6cYi2cWdUmVMEYaJ2xLOptAN+SONf2P0rmZ1lVsEcBVJTgMz+cZpnHgeC/w03L2cpMX+tlzss0mBAQpDPWdlsl+hebV4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gCx7XhtF; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bVGBceDg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gCx7XhtF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711378929;
+	s=mimecast20190719; t=1711378978;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=T0DO+AvzBOw0UZsidcFTpY9qhmesJwSzCERmqKN8o4U=;
-	b=bVGBceDg9q3oRaxEOQrdY5+KXl704b7F4/BBwrZaGDabOwRQYnnTSKo7HbmQ6BMaB5yd7f
-	M6D5DA4UPTntkqrfmTC5PXvEm9Yr1BIEyq0mAsy/ZMsQdutBhhg5S0zdgk0bfv7f5ypao8
-	TURTVQUDw0326Hi9QSaRvCahu1OpM8A=
+	bh=ymuBJTSOSA/JwVj1Mt7QO1lgQl0vxdz5zB3wolFGHyo=;
+	b=gCx7XhtF15EaYX96SN74zTpbmNs/mU3tGS7fhenEJZbTiYT4HZ8iUvEW+1buYGFw3MKJOy
+	k6+266Hq+Jc08k5ZUJSiQgaGTvbmsjGNhOF51ekpKvmfC7coV/3Xuaja0/OnNpM8syEEBv
+	n30wxsmy6p2jg7PvsT+jqaTnf2GD+sY=
 Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
  [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-648-PQzfDxsXNs6dcNDLQQBz_g-1; Mon, 25 Mar 2024 11:01:57 -0400
-X-MC-Unique: PQzfDxsXNs6dcNDLQQBz_g-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a462e4d8c44so199180966b.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Mar 2024 08:01:57 -0700 (PDT)
+ us-mta-65-LC5GQou-Ps2JadPLjUAW8w-1; Mon, 25 Mar 2024 11:02:56 -0400
+X-MC-Unique: LC5GQou-Ps2JadPLjUAW8w-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a4751b21400so139322166b.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Mar 2024 08:02:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711378916; x=1711983716;
+        d=1e100.net; s=20230601; t=1711378975; x=1711983775;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T0DO+AvzBOw0UZsidcFTpY9qhmesJwSzCERmqKN8o4U=;
-        b=JpO5sgMBuOYwJFArK/PeD+yVUknAc1M38nG933sxA0LRgON6qZDNzDhY66ZahYRhta
-         f4PV9dHH6QEdd0nwBAauTxS4BSLJ+yyeZTGa8YzWYRNqg3CCMt+gUvPpHxmPFHMVOsbY
-         zhXg8jInXoAdeElJwIhuMn+8/NNe50Qv1aok5v1yQ2rIMf0s6Ks4MRY+b0Df29g/Zzki
-         4iwBvUHj6Xba6hgPiv6KDt/nViEkov0Z9U9TNd24wTUXGBf2+OCYswXj0rJKvzeJs1m0
-         h6zx4BQHy1GWJoXq1jKZsN+b75iKyxHrDgBsfbVCY3dYIVReO6GH90F9QOm/REUCx/1u
-         esVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWqmawCu0wWztQO3OxP9Sx/CIKGE6VJgp36HXpACba8jhqGHE9lj4WkguZL4VZ4Pr+0ylxvPzgC62Alns6UV31TrR2V6owds2thxVJ+WZZ2QkL4qw==
-X-Gm-Message-State: AOJu0YyUxsgzu1cashmgIjOd92qXE0WZkJObpJLaDXKOpI4xv/901O+E
-	3wUqkAPmZRatTxtEIDoj+WQlolEiKdfLnrl+v/L7pHsQBnpiFG7ZX4AZwYwZlPdZ1fuLXnR7S/b
-	vZqg4EcNATLEYTb0v4wFtaM+VN5gBbrqzkBViQ6I0TUNQox+hXiGYhF4ubJhssjho43JAJvY=
-X-Received: by 2002:a17:906:2b15:b0:a4d:d87b:e04e with SMTP id a21-20020a1709062b1500b00a4dd87be04emr151549ejg.56.1711378916142;
-        Mon, 25 Mar 2024 08:01:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFr+TpFdHXbyMaCzEUDvbwazZutA7dobYWqACa2oyb0W/pIDAi0SCAChHJHBc13QZ/24JKcMg==
-X-Received: by 2002:a17:906:2b15:b0:a4d:d87b:e04e with SMTP id a21-20020a1709062b1500b00a4dd87be04emr151512ejg.56.1711378915605;
-        Mon, 25 Mar 2024 08:01:55 -0700 (PDT)
+        bh=ymuBJTSOSA/JwVj1Mt7QO1lgQl0vxdz5zB3wolFGHyo=;
+        b=cAox8DgD85/nC87xtayTzhc+x/4Y76cVtakLA8kTbudg9InMX97iEZNECU1K+rhc5s
+         YiQOWmTggMjSk4gpFO+gfve+u7CRLMmqJm5Sc30QH3pjtsBpEmLWGBt7kkOdXfr6rbpG
+         rdra+W1ZvtXxMGGq7yBCJ2bw80mU2ORNtZ83Nb/KBTnONmQOSe8rmcBq6TuDo1c4eE6g
+         y+fJKXuGmko8gGVfNnlX4riIulkf2odJkT8AvUfifSVFvgVRf8DvXi3hMQFJMyPjcTvb
+         qn2KwcJnNFJrq+TPLj8sYGHibxbPnaJFApuEuS/KMOyo7L5ZN1Q8wJ4/o4x5tKnm1WiU
+         bLeg==
+X-Forwarded-Encrypted: i=1; AJvYcCW9Jfu1qPRqVEASzNM1Pe5L9JhAHzjqylZCrgnXmD6OVvCS0czPiwftlavWWFLzuSOarfyiH8xue/c1Ri7fhvXeXQfQhyVUMKjtobYXStGqcwKQjw==
+X-Gm-Message-State: AOJu0Yz3gfuwwcEe3QkzakmJYPoefB5KUGWSfKX8oaJYF4UjhNDbPwOz
+	bLfNvyGXoDA4rfzUIocUxdxDmfgjjbHcVXy3TKS53RGuCaRanASDGh9jgnsp2HvsTOC3krdfKXC
+	AuddiIMqDhkxSX/jGRDuz818lmTCzbmnLz1MS0YYT7paMErKWaD7Iie9EGx1l6blsTd+IeG9QL1
+	SkEY0=
+X-Received: by 2002:a17:906:6b83:b0:a46:9be4:6037 with SMTP id l3-20020a1709066b8300b00a469be46037mr5199800ejr.30.1711378975239;
+        Mon, 25 Mar 2024 08:02:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFRliyMh0OVVZZMKE0TcTP2JC+IOgLryOmuAHHv4q8iPu/gRjj/ho94j8IwW1MhFqK5TMgD7g==
+X-Received: by 2002:a17:906:6b83:b0:a46:9be4:6037 with SMTP id l3-20020a1709066b8300b00a469be46037mr5199776ejr.30.1711378974884;
+        Mon, 25 Mar 2024 08:02:54 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id i8-20020a17090671c800b00a46d4e26301sm3117038ejk.27.2024.03.25.08.01.55
+        by smtp.gmail.com with ESMTPSA id i8-20020a17090671c800b00a46d4e26301sm3117038ejk.27.2024.03.25.08.02.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 08:01:55 -0700 (PDT)
-Message-ID: <8309ebea-69f4-400a-910a-2f1f8838c785@redhat.com>
-Date: Mon, 25 Mar 2024 16:01:54 +0100
+        Mon, 25 Mar 2024 08:02:54 -0700 (PDT)
+Message-ID: <bb7536be-9bed-4557-b111-6409ebfe48f4@redhat.com>
+Date: Mon, 25 Mar 2024 16:02:54 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,32 +68,45 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11] platform/x86: add lenovo wmi camera button driver
+Subject: Re: [PATCH v5 1/6] platform: x86-android-tablets: other: Add swnode
+ for Xiaomi pad2 indicator LED
 Content-Language: en-US, nl
-To: Ai Chao <aichao@kylinos.cn>, ilpo.jarvinen@linux.intel.com,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20240322064750.267422-1-aichao@kylinos.cn>
+To: Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+ Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
+ linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
+ linux-pm@vger.kernel.org
+References: <20240322033736.9344-1-hpa@redhat.com>
+ <20240322033736.9344-2-hpa@redhat.com>
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240322064750.267422-1-aichao@kylinos.cn>
+In-Reply-To: <20240322033736.9344-2-hpa@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
+Hi Kate,
 
-On 3/22/24 7:47 AM, Ai Chao wrote:
-> Add lenovo generic wmi driver to support camera button.
-> The Camera button is a GPIO device. This driver receives ACPI notifyi
-> when the camera button is switched on/off. This driver is used in
-> Lenovo A70, it is a Computer integrated machine.
+On 3/22/24 4:37 AM, Kate Hsuan wrote:
+> There is a KTD2026 LED controller to manage the indicator LED for Xiaomi
+> pad2. The ACPI for it is not properly made so the kernel can't get
+> a correct description of it.
 > 
-> Signed-off-by: Ai Chao <aichao@kylinos.cn>
+> This work add a description for this RGB LED controller and also set a
+> trigger to indicate the chaging event (bq27520-0-charging). When it is
+> charging, the indicator LED will be turn on.
+> 
+> Signed-off-by: Kate Hsuan <hpa@redhat.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+I will also merge [PATCH v5 6/6] platform: x86-android-tablets:
+others: Set the LED trigger to charging_red_full_green for Xiaomi pad2"
+
+Once the new power_supply trigger patch this relies on has been
+accepted.
 
 Once I've run some tests on this branch the patches there will be
 added to the platform-drivers-x86/for-next branch and eventually
@@ -104,191 +118,132 @@ Regards,
 Hans
 
 
-
-
 > ---
-> v11: remove input_unregister_device.
-> v10: Add lenovo_wmi_remove and mutex_destroy.
-> v9: Add mutex for wmi notify.
-> v8: Dev_deb convert to dev_err.
-> v7: Add dev_dbg and remove unused dev in struct.
-> v6: Modify SW_CAMERA_LENS_COVER to KEY_CAMERA_ACCESS_ENABLE/KEY_CAMERA_ACCESS_DISABLE.
-> v5: Remove camera button groups, modify KEY_CAMERA to SW_CAMERA_LENS_COVER.
-> v4: Remove lenovo_wmi_input_setup, move camera_mode into struct lenovo_wmi_priv.
-> v3: Remove lenovo_wmi_remove function.
-> v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
+>  .../platform/x86/x86-android-tablets/other.c  | 82 +++++++++++++++++++
+>  .../x86/x86-android-tablets/shared-psy-info.h |  2 +
+>  2 files changed, 84 insertions(+)
 > 
->  drivers/platform/x86/Kconfig             |  12 +++
->  drivers/platform/x86/Makefile            |   1 +
->  drivers/platform/x86/lenovo-wmi-camera.c | 126 +++++++++++++++++++++++
->  3 files changed, 139 insertions(+)
->  create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index bdd302274b9a..9506a455b547 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1001,6 +1001,18 @@ config INSPUR_PLATFORM_PROFILE
->  	To compile this driver as a module, choose M here: the module
->  	will be called inspur-platform-profile.
+> diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
+> index bc6bbf7ec6ea..1012a158f7b7 100644
+> --- a/drivers/platform/x86/x86-android-tablets/other.c
+> +++ b/drivers/platform/x86/x86-android-tablets/other.c
+> @@ -13,6 +13,8 @@
+>  #include <linux/input.h>
+>  #include <linux/platform_device.h>
 >  
-> +config LENOVO_WMI_CAMERA
-> +	tristate "Lenovo WMI Camera Button driver"
-> +	depends on ACPI_WMI
-> +	depends on INPUT
-> +	help
-> +	  This driver provides support for Lenovo camera button. The Camera
-> +	  button is a GPIO device. This driver receives ACPI notify when the
-> +	  camera button is switched on/off.
+> +#include <dt-bindings/leds/common.h>
 > +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called lenovo-wmi-camera.
-> +
->  source "drivers/platform/x86/x86-android-tablets/Kconfig"
+>  #include "shared-psy-info.h"
+>  #include "x86-android-tablets.h"
 >  
->  config FW_ATTR_CLASS
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 1de432e8861e..217e94d7c877 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
->  obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
->  obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
->  obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
-> +obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
+> @@ -593,6 +595,83 @@ const struct x86_dev_info whitelabel_tm800a550l_info __initconst = {
+>  	.gpiod_lookup_tables = whitelabel_tm800a550l_gpios,
+>  };
 >  
->  # Intel
->  obj-y				+= intel/
-> diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform/x86/lenovo-wmi-camera.c
-> new file mode 100644
-> index 000000000000..fda936e2f37c
-> --- /dev/null
-> +++ b/drivers/platform/x86/lenovo-wmi-camera.c
-> @@ -0,0 +1,126 @@
-> +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * Lenovo WMI Camera Button Driver
-> + *
-> + * Author: Ai Chao <aichao@kylinos.cn>
-> + * Copyright (C) 2024 KylinSoft Corporation.
+> + * The fwnode for ktd2026 on Xaomi pad2. It composed of a RGB LED node
+> + * with three subnodes for each color (B/G/R). The RGB LED node is named
+> + * "multi-led" to align with the name in the device tree.
 > + */
 > +
-> +#include <linux/acpi.h>
-> +#include <linux/device.h>
-> +#include <linux/input.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/wmi.h>
-> +
-> +#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
-> +
-> +struct lenovo_wmi_priv {
-> +	struct input_dev *idev;
-> +	struct mutex notify_lock;	/* lenovo wmi camera button notify lock */
+> +/* main fwnode for ktd2026 */
+> +static const struct software_node ktd2026_node = {
+> +	.name = "ktd2026"
 > +};
 > +
-> +enum {
-> +	SW_CAMERA_OFF	= 0,
-> +	SW_CAMERA_ON	= 1,
+> +static const struct property_entry ktd2026_rgb_led_props[] = {
+> +	PROPERTY_ENTRY_U32("reg", 0),
+> +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_RGB),
+> +	PROPERTY_ENTRY_STRING("function", "indicator"),
+> +	PROPERTY_ENTRY_STRING("linux,default-trigger", "bq27520-0-charging"),
+> +	{ }
 > +};
 > +
-> +static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
+> +static const struct software_node ktd2026_rgb_led_node = {
+> +	.name = "multi-led",
+> +	.properties = ktd2026_rgb_led_props,
+> +	.parent = &ktd2026_node,
+> +};
+> +
+> +static const struct property_entry ktd2026_blue_led_props[] = {
+> +	PROPERTY_ENTRY_U32("reg", 0),
+> +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_BLUE),
+> +	{ }
+> +};
+> +
+> +static const struct software_node ktd2026_blue_led_node = {
+> +	.properties = ktd2026_blue_led_props,
+> +	.parent = &ktd2026_rgb_led_node,
+> +};
+> +
+> +static const struct property_entry ktd2026_green_led_props[] = {
+> +	PROPERTY_ENTRY_U32("reg", 1),
+> +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_GREEN),
+> +	{ }
+> +};
+> +
+> +static const struct software_node ktd2026_green_led_node = {
+> +	.properties = ktd2026_green_led_props,
+> +	.parent = &ktd2026_rgb_led_node,
+> +};
+> +
+> +static const struct property_entry ktd2026_red_led_props[] = {
+> +	PROPERTY_ENTRY_U32("reg", 2),
+> +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_RED),
+> +	{ }
+> +};
+> +
+> +static const struct software_node ktd2026_red_led_node = {
+> +	.properties = ktd2026_red_led_props,
+> +	.parent = &ktd2026_rgb_led_node,
+> +};
+> +
+> +static const struct software_node *ktd2026_node_group[] = {
+> +	&ktd2026_node,
+> +	&ktd2026_rgb_led_node,
+> +	&ktd2026_green_led_node,
+> +	&ktd2026_blue_led_node,
+> +	&ktd2026_red_led_node,
+> +	NULL
+> +};
+> +
+> +static int __init xiaomi_mipad2_init(void)
 > +{
-> +	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-> +	unsigned int keycode;
-> +	u8 camera_mode;
-> +
-> +	if (obj->type != ACPI_TYPE_BUFFER) {
-> +		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
-> +		return;
-> +	}
-> +
-> +	if (obj->buffer.length != 1) {
-> +		dev_err(&wdev->dev, "Invalid buffer length %u\n", obj->buffer.length);
-> +		return;
-> +	}
-> +
-> +	/* obj->buffer.pointer[0] is camera mode:
-> +	 *      0 camera close
-> +	 *      1 camera open
-> +	 */
-> +	camera_mode = obj->buffer.pointer[0];
-> +	if (camera_mode > SW_CAMERA_ON) {
-> +		dev_err(&wdev->dev, "Unknown camera mode %u\n", camera_mode);
-> +		return;
-> +	}
-> +
-> +	mutex_lock(&priv->notify_lock);
-> +
-> +	keycode = (camera_mode == SW_CAMERA_ON ?
-> +		   KEY_CAMERA_ACCESS_ENABLE : KEY_CAMERA_ACCESS_DISABLE);
-> +	input_report_key(priv->idev, keycode, 1);
-> +	input_sync(priv->idev);
-> +	input_report_key(priv->idev, keycode, 0);
-> +	input_sync(priv->idev);
-> +
-> +	mutex_unlock(&priv->notify_lock);
+> +	return software_node_register_node_group(ktd2026_node_group);
 > +}
 > +
-> +static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
+> +static void xiaomi_mipad2_exit(void)
 > +{
-> +	struct lenovo_wmi_priv *priv;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	dev_set_drvdata(&wdev->dev, priv);
-> +
-> +	priv->idev = devm_input_allocate_device(&wdev->dev);
-> +	if (!priv->idev)
-> +		return -ENOMEM;
-> +
-> +	priv->idev->name = "Lenovo WMI Camera Button";
-> +	priv->idev->phys = "wmi/input0";
-> +	priv->idev->id.bustype = BUS_HOST;
-> +	priv->idev->dev.parent = &wdev->dev;
-> +	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_ENABLE);
-> +	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_DISABLE);
-> +
-> +	ret = input_register_device(priv->idev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	mutex_init(&priv->notify_lock);
-> +
-> +	return 0;
+> +	software_node_unregister_node_group(ktd2026_node_group);
 > +}
 > +
-> +static void lenovo_wmi_remove(struct wmi_device *wdev)
-> +{
-> +	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+>  /*
+>   * If the EFI bootloader is not Xiaomi's own signed Android loader, then the
+>   * Xiaomi Mi Pad 2 X86 tablet sets OSID in the DSDT to 1 (Windows), causing
+> @@ -616,6 +695,7 @@ static const struct x86_i2c_client_info xiaomi_mipad2_i2c_clients[] __initconst
+>  			.type = "ktd2026",
+>  			.addr = 0x30,
+>  			.dev_name = "ktd2026",
+> +			.swnode = &ktd2026_node,
+>  		},
+>  		.adapter_path = "\\_SB_.PCI0.I2C3",
+>  	},
+> @@ -624,4 +704,6 @@ static const struct x86_i2c_client_info xiaomi_mipad2_i2c_clients[] __initconst
+>  const struct x86_dev_info xiaomi_mipad2_info __initconst = {
+>  	.i2c_client_info = xiaomi_mipad2_i2c_clients,
+>  	.i2c_client_count = ARRAY_SIZE(xiaomi_mipad2_i2c_clients),
+> +	.init = xiaomi_mipad2_init,
+> +	.exit = xiaomi_mipad2_exit,
+>  };
+> diff --git a/drivers/platform/x86/x86-android-tablets/shared-psy-info.h b/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
+> index c2d2968cddc2..8c33ec47ee12 100644
+> --- a/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
+> +++ b/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
+> @@ -29,4 +29,6 @@ extern const char * const bq24190_modules[];
+>  extern const struct platform_device_info int3496_pdevs[];
+>  extern struct gpiod_lookup_table int3496_reference_gpios;
+>  
+> +extern const struct software_node ktd2026_leds_node;
 > +
-> +	mutex_destroy(&priv->notify_lock);
-> +}
-> +
-> +static const struct wmi_device_id lenovo_wmi_id_table[] = {
-> +	{ .guid_string = WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
-> +	{  }
-> +};
-> +
-> +static struct wmi_driver lenovo_wmi_driver = {
-> +	.driver = {
-> +		.name = "lenovo-wmi-camera",
-> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-> +	},
-> +	.id_table = lenovo_wmi_id_table,
-> +	.no_singleton = true,
-> +	.probe = lenovo_wmi_probe,
-> +	.notify = lenovo_wmi_notify,
-> +	.remove = lenovo_wmi_remove,
-> +};
-> +
-> +module_wmi_driver(lenovo_wmi_driver);
-> +
-> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
-> +MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
-> +MODULE_DESCRIPTION("Lenovo WMI Camera Button Driver");
-> +MODULE_LICENSE("GPL");
+>  #endif
 
