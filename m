@@ -1,38 +1,37 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2517910940;
-	Mon, 25 Mar 2024 20:02:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08BD45033;
+	Mon, 25 Mar 2024 20:10:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711396931; cv=none; b=GDuww+WIdeVZaf+RRJq+1MzimsImPC+qMi3XrbbQCl+ahA3dxMu/wp7asXxEMzfAQgHvgyex7Teo95Rn5Ln4Eoanrm8OV408OEQyGGlXtWFgtXkk5fNaxnRr8miEHj9wu6uadx2yrmshdwKpd4XJJ4vw34tyZn7iwCMQei7PAJE=
+	t=1711397458; cv=none; b=cj05Qs/7s3Eb1iaoMwmFHF4KY85M3ZwtR8tm36Y1b0NEhA/2pEdtxKp+Wj4qSHykQVsmJlAS6OlUCsnG4OIg8Y+0huclQoPLzlxPcSYvBj+Boj/LozM0sXrjUFJx1jSlxjyMUE8xwO3N24LvLTvAxCISlwz1vAuX3TSHS2mhSYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711396931; c=relaxed/simple;
-	bh=009pprbVflcZ0sjcpaw6nGfyrhZrOZSY1rzqbZbtUH0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bhtPaGVT51tBHSRW2G/RfMBwzq44p0BaJ4Q4Yrre6BVAqWlWJgFZq1+eH/pKoLS/BIOLE37ldGDv3LqZqloEk74z5ozutGFyyV6cOl+RxSZnxvzQgEVyG6M6Nd2m3qKkzoAmrDuYdniD+semq4KsBOWx/fXfhqQkveyrPNYX9yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=RlmY6apG; arc=none smtp.client-ip=212.227.15.15
+	s=arc-20240116; t=1711397458; c=relaxed/simple;
+	bh=1hS5NcLSFnVm2dCXuWF1CcXyaqi1PIrZM8H+m08BW8U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=pxVDIcnDKiK/g0BTOB/p0rk85iYNQMGUqiHgGxdryChjhz9t42oJH0mVoX3fAibmBpUT3F9gj0pxo3Pxunxfej9sQYznXTDkMnvLadtx8Uq2lq7z6vgdtklxEMz/UpeRL/nIIETZOmDAB2GOGbjylMgEEJ2EkauaNunIWK6/0Go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=KDCS/0zr; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="RlmY6apG"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="KDCS/0zr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1711396893; x=1712001693; i=w_armin@gmx.de;
-	bh=I7xdYF/K+6S61x6pD/eYYW1ufs3VInyCcEDUxWcOQZQ=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=RlmY6apG2Pb0OAvZG97KfZITfyEUbxyWkDN6yzT6UC1uHHcMAfk/C0z7qf34Z6IJ
-	 3f36f3d2Y8VDy4jP72bGIgr+hFWISLj+YKystPhB20iMmgMbN1l8nwAKKP5hfCBt9
-	 pb5SvZoOXzngv2GqAFD6RyBOKZnCbEVqI/QCFJFh6c2orCDf0XPbYMSGTJ0obkGpc
-	 BjjBE5bs0GLfdw0ekCWZHgcCD0RAhkbDZVtCH5xDzDwneGP/AeVhqurRcBxwHkWle
-	 uXUxEg7Ke3YMIj5EHVsbF6RvJY6gsO+X+cDleGBhWdxRPgTgYmKuPmdxvYVhmZ79I
-	 Np/LI9KtE5qfHAu1fA==
+	s=s31663417; t=1711397427; x=1712002227; i=w_armin@gmx.de;
+	bh=k5GImjZ67YtdbUkAgxVbsS2XJfKlz1HCv891Pa0K9js=;
+	h=X-UI-Sender-Class:Date:Subject:To:References:From:In-Reply-To;
+	b=KDCS/0zrDTxyxdvF/Hy3PacpYWCo72HItPKTv98QWlJz+1cQEWS4RTyxpj2FWDT9
+	 drdwdLQO9c/jsd2fkEnYMBMQwT4Qq4Fhm5Ek2/rZUQxJToOocIp5C+QklPgpUifdN
+	 6JxEpTQWfEDUNdb7rzKYjHxSqVNwOOX6QYAfZiog5h+FJAS0cF5kZaKCFqPDpicrN
+	 Udynh2HboSvaCvRkufE3Ke1QLWK/EOcUAU/DWr7J1FZqAE6RHr9pklp8GqgNgFTpA
+	 2rxGsE0j4Z1lKyrOW2cIk9cdlX4YogkgXblJzWbQoBGc2YifkyqEoK1iN9DmPnQqX
+	 FsXg4jOwFPFv5xu9mA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MEV3I-1s4o110054-00G4zt; Mon, 25
- Mar 2024 21:01:33 +0100
-Message-ID: <b9a8c258-94d4-4c09-8211-31466cdfca7b@gmx.de>
-Date: Mon, 25 Mar 2024 21:01:31 +0100
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N4QwW-1spvPx0OQw-011Tra; Mon, 25
+ Mar 2024 21:10:27 +0100
+Message-ID: <19661160-76d4-43ed-987f-dbf183e891ba@gmx.de>
+Date: Mon, 25 Mar 2024 21:10:25 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -40,96 +39,79 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] platform/x86: Add ACPI quickstart button driver
-To: Hans de Goede <hdegoede@redhat.com>, dennisn@dennisn.mooo.com,
- lkml@vorpal.se, ilpo.jarvinen@linux.intel.com
-Cc: coproscefalo@gmail.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240131111641.4418-1-W_Armin@gmx.de>
- <c1b08bbb-ad57-4f41-9b7b-40a6aeb3da9b@redhat.com>
+Subject: Re: [PATCH v5 0/1] platform/x86: Add wmi driver for Casper Excalibur
+ laptops
+To: mustafa <mustafa.eskieksi@gmail.com>, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, jdelvare@suse.com, linux@roeck-us.net,
+ pavel@ucw.cz, lee@kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-leds@vger.kernel.org
+References: <20240324181201.87882-1-mustafa.eskieksi@gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <c1b08bbb-ad57-4f41-9b7b-40a6aeb3da9b@redhat.com>
+In-Reply-To: <20240324181201.87882-1-mustafa.eskieksi@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:GNHzVl4jHoqeqTOsszHiSw52oCyqw/C/vlRxqHgdwjDAjPDs19P
- /MPCkFMgseVRFtemXk1xrUSknCB2LyWPGgDhZOwq2tqupfjhYCxeQzEOohUSsW+OiZ9Sg6q
- adiRdVx+vzotKo4oxJa4ZPt7quInqcF5fAFDWxv24BE0F2VHWLDPMxOBPfVZtQlFaD4C0hx
- cH5u/vqufpaPLeCmXT30Q==
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:MzAOenI/8ST5bPq1ExjXTewiulUgJsw+eKvNeLMu9b/QqFXI+HZ
+ DDi/1ZBInrf9MDaHj+0zRFBJsC+ua38+dOLRn523wjSiDyxrkQVDsIYh/wieCdbjvFCxy2e
+ hQan7SNyErbcAZwEcUF9cudypMEch+wSOJG25OSM8PqSSAT1yBXZqBcZdy+nOJD0meWazAA
+ TCWWVyHGmNWCrujxWENyg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:VVggtnWfhlA=;9csI6wvmgHmZnfVAKKe4OyBqGX3
- 0ode2c97zmCcRXW5YuU/Z849v4ExT57EQ2vj3HfCr+335zgKxeC2XHReIGJl3dFHuFdcIUthi
- 5b3KvE9MPuBuoOTxVLE2ImoGuPOQ8rDpihfbkjsNqCNXehIGCxIUPKcuCIA1eXvgsEgAvDKNu
- nojdA/dXy7JWqD8hbCB3vYpUfxCBAx7CthM4ITmO40cu/P8jjyKS71VgqbsnzJ6EFhTP6TEH0
- iHndBleszoLd+KzcUlzWqYEp7GL4bhVnL8PU8ENyA1Q29GFmEoIK+fWP0zYzLl4DHe3ICoyp6
- r+2K3bozDVdV+t+Ak6RD0pYLG2sB10vPVeL8cV4ianloIJBhoGLOFEktwCoVSMFH4/obnztZT
- L7hkmhBsJ2lWQ4n/zY0wXQfOlgZedbpdg2SsRYtg3YKV9NdjtdI+87moBzV19KUA1a8c6iOjo
- JQUo95a/GQncumRCOlxsLX8/iQvThhwVDORJuVwItfrcWdwWZ1bFjsa8ByIubF10TCzSC7O+y
- lF3dB/jPxto2KjFxXeM5JFQ91njVoeWpX+6UoR0sCX+Wk8IDKEw/TA1XOVWWJdcQFsoizocB5
- F6XPhG57zyvlLiO7tcsUk2sc5nyf3oSqOHfwTUvBnEzXazcZAAs0RjmyeIdF1HVryxP2aRbHY
- YLie+y4aFM6IHwPjneC496zqCf2MVlAJr4BUCzO4E83kAtSHVAWnbGWFecgtWhvzIkDBTW8gX
- IK9b5GomVkJc+th7n1XmydOEOSO9+NJF5YwnMIkW7BjoxizVsN1EnReyWuCtElQbCIRe+gVLr
- aPw0dhqI/fZgFBr8F2vUrKyAVkGBISEU6OP0z43cY5pzc=
+UI-OutboundReport: notjunk:1;M01:P0:4Q7DKlFfmFE=;1gutw6nxLW14lkJsyKYuM4sLje8
+ z/GVi1B240WDw392PqTI8PmIGLBIaP6em5iITJ+UL7Q+rIYiJevgcuBJ2cu0uFjwUrcoYGyXs
+ s/zKD4WK7gRXFWfWmvd3t4nGLT8p3bijTGAk3STO5TDxGfjU8vK9x/sEjcVmA5M2AwrAIgVzR
+ BNxJmpqbWStWlkBuTuJxjrSZ3PT6Izl42brBi4/z6kNBLrFXzu3E3oXLQc8MIvHFSYWb+spCC
+ XZb+yXWnZc2XSTnuRsFdqA/5g8x2vDLMxyBkqrfZ7yn4IZQoL46n/dsdVgEikTB068zmGl0/o
+ KQ3PrJ4jb+VvOd4Ohs5fzkMJlA1QpN7T5oLQgj0McqNMMhdfz1GnMWNm63jHiQNkKL5UOMP6h
+ WFacbdwoLlJNFcKcFHOHUtp8TutqM/YRAD5v+Nc07bIjelQBV+SMokkst+l7VSqoL7/f36szu
+ kvBeL2vw286XGsMWOwv0oMrnyQggLdHdVhse9NaK5PFiHCNMLAUg6ba5XcDs1TR3MbiyO+pXX
+ gq3YGulqT4AnsvN9O93y/HZIQshKjEeclZJ8WzCSImYHXBXY6b8DhRWI2hqTlbvskXRjQYbnP
+ Nj0J0HFCMyz7xdRwYu+ht/lRbn9WEBr46eWI94dtDidmFu7/YUUQqt7YncO7ZATaax4nC8/nz
+ OcU1IYjBo9+XIFba9EdJxqBZOMJWKDv1GdI1CgyVdzEyniUDtTyXyn4O+F7Vw/NegtDr6rAOJ
+ TCjfULJos8hMDcNteij1eMjoqN4mccnxAF3Ml6tyyPMnbyXnZsb42ed/Ne0+QYEooslCF+8aw
+ d5+zTZpHGYt/N4+6u2FKNQrd1/F3taRwYzruGb54CmmKU=
 
-Am 24.03.24 um 15:55 schrieb Hans de Goede:
+Am 24.03.24 um 19:12 schrieb mustafa:
 
-> Hi Armin and Arvid,
+> From: Mustafa Ek=C5=9Fi <mustafa.eskieksi@gmail.com>
 >
-> On 1/31/24 12:16 PM, Armin Wolf wrote:
->> This patch series adds support for the ACPI PNP0C32 device as
->> proposed in 2022 by Arvid Norlander. The first patch adds support
->> for the device itself, while the second patch was taken from the
->> original series.
->>
->> Both patches are compile-tested only.
-> Armin, thank you for creating a new cleaned up driver for the
-> quickstart button support.
->
-> I have managed to get my hands on a Toshiba Portege Z830 and
-> I have successfully tested this series. That is this makes
-> the 2 quickstart application and the toggle-touchpad button
-> work when the system is running normally.
->
-> Neither the quickstart buttons, nor the touchpad-toggle button
-> which also uses the PNP0C32 interface, work to wakeup
-> the system from sleep though.
->
-> I've also review both patches and they look good to me:
->
-> Tested-by: Hans de Goede <hdegoede@redhat.com>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->
-> So I plan to merge this series into pdx86/for-next once
-> 6.9-rc1 is out.
->
-> Regards,
->
-> Hans
->
-Hi,
+> Hi,
+> I want to note that moving mutex_init to the bottom of the function
+> crashes the driver when mutex_lock is called. I didn't investigate it
+> further but I wanted to say that since Ai Chao also did it like that.
 
-great to hear that the driver works. Can you send me the output of "acpidump" on this machine?
-Maybe the quickstart buttons have no wake capabilities?
+You mean like the lenovo-wmi-camera driver? In this case, the driver was
+only using the mutex inside the WMI notify callback, which can only run
+once the driver has finished probing.
+
+In your case however, the mutex can already be used while the driver is st=
+ill
+probing, because it registers callbacks with other subsystems.
+The subsystem (maybe led?) assumes that the device is already fully operat=
+ional
+and will begin calling the callbacks immediately, causing a crash.
+
+Looking at the code, it seems that you are not calling mutex_destroy() in
+casper_wmi_remove(). I suggest to use devm_add_action_or_reset() for handl=
+ing this.
 
 Thanks,
 Armin Wolf
 
->> Armin Wolf (1):
->>    platform/x86: Add ACPI quickstart button (PNP0C32) driver
->>
->> Arvid Norlander (1):
->>    platform/x86: toshiba_acpi: Add quirk for buttons on Z830
->>
->>   MAINTAINERS                         |   6 +
->>   drivers/platform/x86/Kconfig        |  13 ++
->>   drivers/platform/x86/Makefile       |   3 +
->>   drivers/platform/x86/quickstart.c   | 225 ++++++++++++++++++++++++++++
->>   drivers/platform/x86/toshiba_acpi.c |  36 ++++-
->>   5 files changed, 280 insertions(+), 3 deletions(-)
->>   create mode 100644 drivers/platform/x86/quickstart.c
->>
->> --
->> 2.39.2
->>
->>
+> Driver sets all leds to white on start. Before that, when a led's
+> brightness is changed, that led's color gets set to white but others
+> keep their old colors which creates a bad user experience (at least for
+> me). Please inform me if this is a bad approach.
+> Also, this driver still lacks support for changing modes and I seek
+> advise for that.
+>
+> Mustafa Ek=C5=9Fi (1):
+>    platform/x86: Add wmi driver for Casper Excalibur laptops
+>
+>   MAINTAINERS                       |   6 +
+>   drivers/platform/x86/Kconfig      |  14 +
+>   drivers/platform/x86/Makefile     |   1 +
+>   drivers/platform/x86/casper-wmi.c | 641 ++++++++++++++++++++++++++++++
+>   4 files changed, 662 insertions(+)
+>   create mode 100644 drivers/platform/x86/casper-wmi.c
 >
