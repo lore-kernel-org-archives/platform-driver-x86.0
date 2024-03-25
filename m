@@ -1,65 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD05548FF
-	for <platform-driver-x86@vger.kernel.org>; Mon, 25 Mar 2024 14:51:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2ED14F9EB
+	for <platform-driver-x86@vger.kernel.org>; Mon, 25 Mar 2024 14:54:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711378266; cv=none; b=sw35VTLE3qGm+z2+A5F+miBJgM+XdMvOIu2QyK/6Zq3n/jYcHijVnmjFQhw31zaYgQ5L+s8/T37Q3GD+FoTY9I2krtxT1heqq0B16V+4xf8AlGG0NWq0B8OlnlZc3A3ZU54NdEUrSyPa1cw7C/K3PnhgET4SYNCvZSU+e1pN2wo=
+	t=1711378467; cv=none; b=rkZiPtMcz9sIvjFaobZtzA/oI+QMVMZc3rPYZH7fG9ahPz0BR6Sl6GfVy07t6EqRYwuK6cm/LFCHQtfbtT1Oq6e1Mf4CDRBI6ObPiqY3kx6RaJKkLWYnvuwci2hbJOi5Sq1PDijL8TbWXteZ/lYhPEhXr2xK4EtvfNc/9HeHusk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711378266; c=relaxed/simple;
-	bh=fExKIKJW/Sui9p0QMSEHCLxBIxThmZtBvMsrSKs6nH4=;
+	s=arc-20240116; t=1711378467; c=relaxed/simple;
+	bh=8VnhkxfxjuirtOBESexek616wd5NCpd98WMDdIt5ims=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iV5ZYryRkJs+JJGSROt/0q+ckVlTKitot54Ucqsu51HXGQmmbkDb4CGWONL4hpNoMeKtgqFwTw03gkXlKg+dXU3amBdKsfeRh0/Q5utkc9spq8oPuj6Y6Zpne1IIshRt8PuBwLZofzJBAwZiwQRdj33fiiwOWRlZtcegbUKbntI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QRBS3iyA; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=W1EXo4ZXHz//NfF94KvtaBzn6hM5L5gNGxhcmJdSIywwoURbmBUyhsCJeH/PJmNZRxLERA8tl5t9zRhHzsqvuj0WRjdHNLlD8RydvkX8rykVQulouSBD67KO/4YcPbQ0QtMFwSjSgsGzEgpzuAHYWqyauZU2iYLI8W6dzpgNNrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e4xvPEv3; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QRBS3iyA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e4xvPEv3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711378263;
+	s=mimecast20190719; t=1711378464;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6f76n+F3TImw5GBRyhLX3S/9HNrkYFUIIpB+Isg5Lho=;
-	b=QRBS3iyAuE4lmhivvWt481e/S9aKzXkNZffwa3yUdtsZT+Rx07A5+i6GwHZSBWZ3ftPPNv
-	cZ5F8j69CC5KLLj3GIf+xpaqz5F65GRV944jl7OPmqK5+DITtZmFwMhdcqlp3cl0aUVttX
-	CQM6I+RffDSNE/M6XLev5WAFY7WP7Rk=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=a0TLk3PDJF8gYRGg4jydpewHHRZR1/qQMFUxS/nBJe8=;
+	b=e4xvPEv3L+2HCn+h0rQ5T/WtT5G4k1LwjRmywvBc9J0V+qHfzMFxwYS92KBrEkNsoT1FLM
+	sb0yAG1gnBYpmlYx7O6S+hnpdSLO9Ozs2k2mz85hCGs5ox0mnYNmZSMTT8evYhUSpsArjr
+	TLoCn3YdvS0+W6lgSbRjGelv2WWK6ug=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-265-T1D9X-4KP-Ox-LfnupGmEw-1; Mon, 25 Mar 2024 10:51:02 -0400
-X-MC-Unique: T1D9X-4KP-Ox-LfnupGmEw-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-56c1c344fe0so226974a12.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Mar 2024 07:51:01 -0700 (PDT)
+ us-mta-57-fhrQjK8hPRm09gl1GOh2nA-1; Mon, 25 Mar 2024 10:54:22 -0400
+X-MC-Unique: fhrQjK8hPRm09gl1GOh2nA-1
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-56bf2d97292so1051402a12.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Mar 2024 07:54:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711378261; x=1711983061;
+        d=1e100.net; s=20230601; t=1711378461; x=1711983261;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6f76n+F3TImw5GBRyhLX3S/9HNrkYFUIIpB+Isg5Lho=;
-        b=VZxEmoI2fA/qLwqOz3u8ROnba4x0NKPEQ9hZCm+P53xF9pQX10HUmopbuOeoHvV3aZ
-         9jdS0RMNowxyq7JZrpkW4kLa4PYPzIvJwreuzDdVCMNhKB5XJhUF9JyBI3PY9HGThhEb
-         syPC0ZJ7fCAYcM2LcF/eE60U3o8bLpwA8xONltn8Qm6pb5WtSv7W/FAGECvkzJIqWfB1
-         tKiGGAjCwjuytoBNHU9oQNtEHJCw0V08sp3B7rkkA0ft/td1I0kiwNJhIvUD9NHbVU70
-         HFVIyK8clPO6kJW2irltZKmnm5ApQ3+nzfWD/N2rJ+GsdcjN9wLALB2Ujkn+C2MD8tET
-         tUrg==
-X-Forwarded-Encrypted: i=1; AJvYcCXfrRm5CI9ffG+W13jNQmyfZ+doNXa1iieREpHdm5GLC7HyJFa9Zehuhf+L3um4eHCmn0ZJ/HvXWsXQExgMxPSbcDYp17MC/igEhF57yYdXAFKLFQ==
-X-Gm-Message-State: AOJu0YyvF897ciOvt/29hUMzddOWVuki8/Ko4NoKN3+XmObFTzueXFAH
-	f8ZSdzvgpvfXlDy5gnPxBeFJdWqChOjSRziSLewAMMk6NCSM8yCXjp13PinVj10sPeJFfPmqvk3
-	UiZmScDHFB6dRu2mwTGWRaJiI8JB79WVMbexBMKDSbGiFMzF9vjW/i85LO1m5PncWL+Hj8vU=
-X-Received: by 2002:a50:d659:0:b0:565:665b:9c82 with SMTP id c25-20020a50d659000000b00565665b9c82mr5477533edj.8.1711378260920;
-        Mon, 25 Mar 2024 07:51:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFPqhUMr6qXBjwymyKLKDFFf+Ez8n4lo28gTUTivdmH89U3wE5JSwWmqkk/4T2fLKQMBnPtQw==
-X-Received: by 2002:a50:d659:0:b0:565:665b:9c82 with SMTP id c25-20020a50d659000000b00565665b9c82mr5477507edj.8.1711378260600;
-        Mon, 25 Mar 2024 07:51:00 -0700 (PDT)
+        bh=a0TLk3PDJF8gYRGg4jydpewHHRZR1/qQMFUxS/nBJe8=;
+        b=Op33gF1aiqCQaQUww4UlxfaxOpy1aobUk8HQwIFyg5/kta5tsB9JJfuWVV+/boHyj/
+         LOtVUcTFpbDbhoRUId/vhlsrztD7ogO3/iuQUSGU+jUrkaSru2RJZsfLLZ9cVaL56Gpb
+         HAAWi3RrcvV3C/kzi3+eJ3lPOrFqpgRyytx3ucfYpx5gYUjilo3o70VjRuS/09kUUDQ6
+         EqBP5zhTJFm2Ih/2GpaD/0+ayh2nTTEedHjEkTkNyuynvdNSo2W63EH8YuQQzhQIXfkz
+         4WHAze/TUeQ+eLT07me3KVtiPhh0AoRD9plXRFvZe8HvBqbwuWjxNA2lFaIZdVO9jpAz
+         zDZg==
+X-Forwarded-Encrypted: i=1; AJvYcCU1SOX3pxQ2QG+yZ+thabU4/Q3iZUJ5r8XiXwIFoFrgSHLUmZDukQsEAwm0y7rsJKOiTtSDgdCKkJYtQJN4x6EKNgHbPMSu3lD139T5yE6KagDsIg==
+X-Gm-Message-State: AOJu0Yy7Qk+ZJJnUainUG0u7YXdb6KLbXoP9whl3aZt7Wn+2PMCMmy2J
+	/6y3lAdJ03c3a5huPc2x/37y9jOB6/s4nj05Oxk0Na1mwR4Ls6ZRbtc0S1YLpNftcX4R0mKZhtJ
+	+moDJRfVotelDwuGvAJoTONgEKITtyotj1+3mfOLkgWzWT6hia7tAjjnenoThnxkQu0alkXo=
+X-Received: by 2002:a50:9b4e:0:b0:56b:f2d2:eb8c with SMTP id a14-20020a509b4e000000b0056bf2d2eb8cmr4001987edj.40.1711378461075;
+        Mon, 25 Mar 2024 07:54:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH68YpwfWBvW9gni07CY7AVxgdhlpPWb3L1BY2eMBTbWB0ch8sTsCV/rCb8oe7oK0YESzMMvw==
+X-Received: by 2002:a50:9b4e:0:b0:56b:f2d2:eb8c with SMTP id a14-20020a509b4e000000b0056bf2d2eb8cmr4001973edj.40.1711378460741;
+        Mon, 25 Mar 2024 07:54:20 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id l2-20020aa7cac2000000b00568e3d3337bsm3033238edt.18.2024.03.25.07.50.59
+        by smtp.gmail.com with ESMTPSA id y3-20020a50bb03000000b0056b8dcdaca5sm3195919ede.73.2024.03.25.07.54.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 07:51:00 -0700 (PDT)
-Message-ID: <a1cd7477-570b-48e1-b3fd-941b176bc9c0@redhat.com>
-Date: Mon, 25 Mar 2024 15:50:59 +0100
+        Mon, 25 Mar 2024 07:54:20 -0700 (PDT)
+Message-ID: <5f07bed0-045b-4576-81ee-c87392846334@redhat.com>
+Date: Mon, 25 Mar 2024 15:54:19 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,59 +67,40 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/4] platform: arm64: Acer Aspire 1 embedded controller
+Subject: Re: [PATCH v5 1/2] platform/x86: wmi: Support reading/writing 16 bit
+ EC values
 Content-Language: en-US, nl
-To: Nikita Travkin <nikita@trvn.ru>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org,
- Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20240315-aspire1-ec-v5-0-f93381deff39@trvn.ru>
+To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com
+Cc: rafael@kernel.org, lenb@kernel.org, mario.limonciello@amd.com,
+ sathyanarayanan.kuppuswamy@linux.intel.com, linux-acpi@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240314184538.2933-1-W_Armin@gmx.de>
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240315-aspire1-ec-v5-0-f93381deff39@trvn.ru>
+In-Reply-To: <20240314184538.2933-1-W_Armin@gmx.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi,
 
-On 3/15/24 2:51 PM, Nikita Travkin wrote:
-> The laptop contains an embedded controller that provides a set of
-> features:
+On 3/14/24 7:45 PM, Armin Wolf wrote:
+> The ACPI EC address space handler currently only supports
+> reading/writing 8 bit values. Some firmware implementations however
+> want to access for example 16 bit values, which is perfectly legal
+> according to the ACPI spec.
 > 
-> - Battery and charger monitoring
-> - USB Type-C DP alt mode HPD monitoring
-> - Lid status detection
-> - Small amount of keyboard configuration*
+> Add support for reading/writing such values.
 > 
-> [*] The keyboard is handled by the same EC but it has a dedicated i2c
-> bus and is already enabled. This port only provides fn key behavior
-> configuration.
+> Tested on a Dell Inspiron 3505 and a Asus Prime B650-Plus.
 > 
-> Unfortunately, while all this functionality is implemented in ACPI, it's
-> currently not possible to use ACPI to boot Linux on such Qualcomm
-> devices. Thus this series implements and enables a new driver that
-> provides support for the EC features.
-> 
-> The EC would be one of the last pieces to get almost full support for the
-> Acer Aspire 1 laptop in the upstream Linux kernel.
-> 
-> This series is similar to the EC driver for Lenovo Yoga C630, proposed
-> in [1] but seemingly never followed up...
-> 
-> [1] https://lore.kernel.org/all/20230205152809.2233436-1-dmitry.baryshkov@linaro.org/
-> 
-> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
+> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 
 Thank you for your patch-series, I've applied the series to my
 review-hans branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-I've fixed the Kconfig typo Randy spotted while applying this.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
 Once I've run some tests on this branch the patches there will be
 added to the platform-drivers-x86/for-next branch and eventually
@@ -133,49 +114,106 @@ Hans
 
 
 
-
 > ---
-> Changes in v5:
-> - Various cleanups (Bryan, Ilpo)
-> - Add Bryan as Reviewer for platform/arm64 (Bryan, Ilpo)
-> - Link to v4: https://lore.kernel.org/r/20240312-aspire1-ec-v4-0-bd8e3eea212f@trvn.ru
+> Chnages since v4:
+> - spelling fix
+> - fix checkpatch warning
 > 
-> Changes in v4:
-> - Move to platform/arm64 (Sebastian, Hans)
-> - Drop fn mode dt property (Rob)
-> - Add fn_lock attribute in sysfs (Rob)
-> - Report psy present correctly (Sebastian)
-> - Link to v3: https://lore.kernel.org/r/20240220-aspire1-ec-v3-0-02cb139a4931@trvn.ru
+> Changes since v3:
+> - change type of variable i to size_t
 > 
-> Changes in v3:
-> - Supress warning on few no-op events.
-> - Invert the fn key behavior (Rob, Conor)
-> - Link to v2: https://lore.kernel.org/r/20231212-aspire1-ec-v2-0-ca495ea0a7ac@trvn.ru
+> Changes since v2:
+> - fix address overflow check
 > 
-> Changes in v2:
-> - Drop incorrectly allowed reg in the ec connector binding (Krzysztof)
-> - Minor style changes (Konrad)
-> - Link to v1: https://lore.kernel.org/r/20231207-aspire1-ec-v1-0-ba9e1c227007@trvn.ru
-> 
+> Changes since v1:
+> - use BITS_PER_BYTE
+> - validate that number of bytes to read/write does not overflow the
+>   address
 > ---
-> Nikita Travkin (4):
->       dt-bindings: platform: Add Acer Aspire 1 EC
->       platform: Add ARM64 platform directory
->       platform: arm64: Add Acer Aspire 1 embedded controller driver
->       arm64: dts: qcom: acer-aspire1: Add embedded controller
+>  drivers/platform/x86/wmi.c | 54 +++++++++++++++++++++++++++++---------
+>  1 file changed, 41 insertions(+), 13 deletions(-)
 > 
->  .../bindings/platform/acer,aspire1-ec.yaml         |  60 +++
->  MAINTAINERS                                        |  16 +
->  arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts   |  40 +-
->  drivers/platform/Kconfig                           |   2 +
->  drivers/platform/Makefile                          |   1 +
->  drivers/platform/arm64/Kconfig                     |  35 ++
->  drivers/platform/arm64/Makefile                    |   8 +
->  drivers/platform/arm64/acer-aspire1-ec.c           | 562 +++++++++++++++++++++
->  8 files changed, 723 insertions(+), 1 deletion(-)
-> ---
-> base-commit: a1e7655b77e3391b58ac28256789ea45b1685abb
-> change-id: 20231206-aspire1-ec-6b3d2cac1a72
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index 1920e115da89..9602658711cf 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -1153,6 +1153,34 @@ static int parse_wdg(struct device *wmi_bus_dev, struct platform_device *pdev)
+>  	return 0;
+>  }
 > 
-> Best regards,
+> +static int ec_read_multiple(u8 address, u8 *buffer, size_t bytes)
+> +{
+> +	size_t i;
+> +	int ret;
+> +
+> +	for (i = 0; i < bytes; i++) {
+> +		ret = ec_read(address + i, &buffer[i]);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int ec_write_multiple(u8 address, u8 *buffer, size_t bytes)
+> +{
+> +	size_t i;
+> +	int ret;
+> +
+> +	for (i = 0; i < bytes; i++) {
+> +		ret = ec_write(address + i, buffer[i]);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * WMI can have EmbeddedControl access regions. In which case, we just want to
+>   * hand these off to the EC driver.
+> @@ -1162,27 +1190,27 @@ acpi_wmi_ec_space_handler(u32 function, acpi_physical_address address,
+>  			  u32 bits, u64 *value,
+>  			  void *handler_context, void *region_context)
+>  {
+> -	int result = 0;
+> -	u8 temp = 0;
+> +	int bytes = bits / BITS_PER_BYTE;
+> +	int ret;
+> 
+> -	if ((address > 0xFF) || !value)
+> +	if (!value)
+> +		return AE_NULL_ENTRY;
+> +
+> +	if (!bytes || bytes > sizeof(*value))
+>  		return AE_BAD_PARAMETER;
+> 
+> -	if (function != ACPI_READ && function != ACPI_WRITE)
+> +	if (address > U8_MAX || address + bytes - 1 > U8_MAX)
+>  		return AE_BAD_PARAMETER;
+> 
+> -	if (bits != 8)
+> +	if (function != ACPI_READ && function != ACPI_WRITE)
+>  		return AE_BAD_PARAMETER;
+> 
+> -	if (function == ACPI_READ) {
+> -		result = ec_read(address, &temp);
+> -		*value = temp;
+> -	} else {
+> -		temp = 0xff & *value;
+> -		result = ec_write(address, temp);
+> -	}
+> +	if (function == ACPI_READ)
+> +		ret = ec_read_multiple(address, (u8 *)value, bytes);
+> +	else
+> +		ret = ec_write_multiple(address, (u8 *)value, bytes);
+> 
+> -	switch (result) {
+> +	switch (ret) {
+>  	case -EINVAL:
+>  		return AE_BAD_PARAMETER;
+>  	case -ENODEV:
+> --
+> 2.39.2
+> 
 
