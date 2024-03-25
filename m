@@ -1,92 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02232224DB;
-	Mon, 25 Mar 2024 19:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2517910940;
+	Mon, 25 Mar 2024 20:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711395589; cv=none; b=tIOayVXut9KE/NYDUZcSvyTjAUdAlNKUepz8h3pwoMmawbQghj1W2LklMsrITmu8yUBDAyr865I3blXkQsZOXyRY1VF+6kH7p2oBCJ0mASP+2Sq2LqqrC1ItRPOudgmkOTnF+EQxXnlSj9RsoPKBsYLICl37vgzkNMryi4Yge6o=
+	t=1711396931; cv=none; b=GDuww+WIdeVZaf+RRJq+1MzimsImPC+qMi3XrbbQCl+ahA3dxMu/wp7asXxEMzfAQgHvgyex7Teo95Rn5Ln4Eoanrm8OV408OEQyGGlXtWFgtXkk5fNaxnRr8miEHj9wu6uadx2yrmshdwKpd4XJJ4vw34tyZn7iwCMQei7PAJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711395589; c=relaxed/simple;
-	bh=D6MfnrEFK0/vmjnJEcjSthiQ8tmUlQRWp4661t4UP/k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MwsJk27hpF2ClJvmWBeP+Kp+0rwh8ljR9mxXu4RuSJ36/nzsE/2DMAse0NuByJ1Dbdj5UmoVnkB6Xj3BKT7Ms69vnjvz4+DiiMb+AOnnjeBN1RhEKG3Hk6XLieehai55/qp/y3KoDM4yXbxtDGUe5j468vpASCtFBaHx4zPuG/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HqQ7RdWG; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1711396931; c=relaxed/simple;
+	bh=009pprbVflcZ0sjcpaw6nGfyrhZrOZSY1rzqbZbtUH0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bhtPaGVT51tBHSRW2G/RfMBwzq44p0BaJ4Q4Yrre6BVAqWlWJgFZq1+eH/pKoLS/BIOLE37ldGDv3LqZqloEk74z5ozutGFyyV6cOl+RxSZnxvzQgEVyG6M6Nd2m3qKkzoAmrDuYdniD+semq4KsBOWx/fXfhqQkveyrPNYX9yQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=RlmY6apG; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HqQ7RdWG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711395587; x=1742931587;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=D6MfnrEFK0/vmjnJEcjSthiQ8tmUlQRWp4661t4UP/k=;
-  b=HqQ7RdWG+Lw1MCIjj21cTC1fwXcPU9/EMfx1ROyiBYbmE8eU38GdtPpH
-   YAjxZUCHoA+2MGA1Ui4aMl0u3s9RbcHeXqr5LNUX4n9cH0sEnSz6Y/7PL
-   Un7RgwCxyAWzDNw1MXQOjI3aebAj4Z4BYwKxInG6ciJOn/ra6ZdqoosCx
-   9zVX3W0fAu1teOrPKsy1hG0wLtoIpd7JXhmqMj2DpoyPtfT6kbvw37AMM
-   vjwYlMzlKrnJMvn7768pvnqK7+Qp8boyfYwwjpYufYlgjRYHagdzDmClg
-   imcLLoZmnEwfvDgbulyq927hXSJxo/2uwjubjmjcTipch8Fs5rjyiBGou
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="6601587"
-X-IronPort-AV: E=Sophos;i="6.07,154,1708416000"; 
-   d="scan'208";a="6601587"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 12:39:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="914852875"
-X-IronPort-AV: E=Sophos;i="6.07,154,1708416000"; 
-   d="scan'208";a="914852875"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 12:39:42 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1roqAU-0000000G7FV-4928;
-	Mon, 25 Mar 2024 21:39:38 +0200
-Date: Mon, 25 Mar 2024 21:39:38 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>,
-	linux-scsi@vger.kernel.org,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	Jaroslav Kysela <perex@perex.cz>, linux-sound@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org, ntb@lists.linux.dev,
-	Lee Jones <lee@kernel.org>, David Airlie <airlied@gmail.com>,
-	amd-gfx@lists.freedesktop.org, Jason Gunthorpe <jgg@ziepe.ca>,
-	linux-rdma@vger.kernel.org,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/28] mfd: intel-lpss-pci: Use PCI_IRQ_INTX
-Message-ID: <ZgHS-qZliVyFD5xh@smile.fi.intel.com>
-References: <20240325070944.3600338-1-dlemoal@kernel.org>
- <20240325070944.3600338-10-dlemoal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="RlmY6apG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1711396893; x=1712001693; i=w_armin@gmx.de;
+	bh=I7xdYF/K+6S61x6pD/eYYW1ufs3VInyCcEDUxWcOQZQ=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=RlmY6apG2Pb0OAvZG97KfZITfyEUbxyWkDN6yzT6UC1uHHcMAfk/C0z7qf34Z6IJ
+	 3f36f3d2Y8VDy4jP72bGIgr+hFWISLj+YKystPhB20iMmgMbN1l8nwAKKP5hfCBt9
+	 pb5SvZoOXzngv2GqAFD6RyBOKZnCbEVqI/QCFJFh6c2orCDf0XPbYMSGTJ0obkGpc
+	 BjjBE5bs0GLfdw0ekCWZHgcCD0RAhkbDZVtCH5xDzDwneGP/AeVhqurRcBxwHkWle
+	 uXUxEg7Ke3YMIj5EHVsbF6RvJY6gsO+X+cDleGBhWdxRPgTgYmKuPmdxvYVhmZ79I
+	 Np/LI9KtE5qfHAu1fA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MEV3I-1s4o110054-00G4zt; Mon, 25
+ Mar 2024 21:01:33 +0100
+Message-ID: <b9a8c258-94d4-4c09-8211-31466cdfca7b@gmx.de>
+Date: Mon, 25 Mar 2024 21:01:31 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240325070944.3600338-10-dlemoal@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] platform/x86: Add ACPI quickstart button driver
+To: Hans de Goede <hdegoede@redhat.com>, dennisn@dennisn.mooo.com,
+ lkml@vorpal.se, ilpo.jarvinen@linux.intel.com
+Cc: coproscefalo@gmail.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240131111641.4418-1-W_Armin@gmx.de>
+ <c1b08bbb-ad57-4f41-9b7b-40a6aeb3da9b@redhat.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <c1b08bbb-ad57-4f41-9b7b-40a6aeb3da9b@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:GNHzVl4jHoqeqTOsszHiSw52oCyqw/C/vlRxqHgdwjDAjPDs19P
+ /MPCkFMgseVRFtemXk1xrUSknCB2LyWPGgDhZOwq2tqupfjhYCxeQzEOohUSsW+OiZ9Sg6q
+ adiRdVx+vzotKo4oxJa4ZPt7quInqcF5fAFDWxv24BE0F2VHWLDPMxOBPfVZtQlFaD4C0hx
+ cH5u/vqufpaPLeCmXT30Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:VVggtnWfhlA=;9csI6wvmgHmZnfVAKKe4OyBqGX3
+ 0ode2c97zmCcRXW5YuU/Z849v4ExT57EQ2vj3HfCr+335zgKxeC2XHReIGJl3dFHuFdcIUthi
+ 5b3KvE9MPuBuoOTxVLE2ImoGuPOQ8rDpihfbkjsNqCNXehIGCxIUPKcuCIA1eXvgsEgAvDKNu
+ nojdA/dXy7JWqD8hbCB3vYpUfxCBAx7CthM4ITmO40cu/P8jjyKS71VgqbsnzJ6EFhTP6TEH0
+ iHndBleszoLd+KzcUlzWqYEp7GL4bhVnL8PU8ENyA1Q29GFmEoIK+fWP0zYzLl4DHe3ICoyp6
+ r+2K3bozDVdV+t+Ak6RD0pYLG2sB10vPVeL8cV4ianloIJBhoGLOFEktwCoVSMFH4/obnztZT
+ L7hkmhBsJ2lWQ4n/zY0wXQfOlgZedbpdg2SsRYtg3YKV9NdjtdI+87moBzV19KUA1a8c6iOjo
+ JQUo95a/GQncumRCOlxsLX8/iQvThhwVDORJuVwItfrcWdwWZ1bFjsa8ByIubF10TCzSC7O+y
+ lF3dB/jPxto2KjFxXeM5JFQ91njVoeWpX+6UoR0sCX+Wk8IDKEw/TA1XOVWWJdcQFsoizocB5
+ F6XPhG57zyvlLiO7tcsUk2sc5nyf3oSqOHfwTUvBnEzXazcZAAs0RjmyeIdF1HVryxP2aRbHY
+ YLie+y4aFM6IHwPjneC496zqCf2MVlAJr4BUCzO4E83kAtSHVAWnbGWFecgtWhvzIkDBTW8gX
+ IK9b5GomVkJc+th7n1XmydOEOSO9+NJF5YwnMIkW7BjoxizVsN1EnReyWuCtElQbCIRe+gVLr
+ aPw0dhqI/fZgFBr8F2vUrKyAVkGBISEU6OP0z43cY5pzc=
 
-On Mon, Mar 25, 2024 at 04:09:20PM +0900, Damien Le Moal wrote:
-> Use the macro PCI_IRQ_INTX instead of the deprecated PCI_IRQ_LEGACY
-> macro.
+Am 24.03.24 um 15:55 schrieb Hans de Goede:
 
-Not needed anymore. MFD subsystem has a patch moving this to MSI support.
-But you need to coordinate with Lee how to proceed (in case of conflicts MFD
-version should be taken).
+> Hi Armin and Arvid,
+>
+> On 1/31/24 12:16 PM, Armin Wolf wrote:
+>> This patch series adds support for the ACPI PNP0C32 device as
+>> proposed in 2022 by Arvid Norlander. The first patch adds support
+>> for the device itself, while the second patch was taken from the
+>> original series.
+>>
+>> Both patches are compile-tested only.
+> Armin, thank you for creating a new cleaned up driver for the
+> quickstart button support.
+>
+> I have managed to get my hands on a Toshiba Portege Z830 and
+> I have successfully tested this series. That is this makes
+> the 2 quickstart application and the toggle-touchpad button
+> work when the system is running normally.
+>
+> Neither the quickstart buttons, nor the touchpad-toggle button
+> which also uses the PNP0C32 interface, work to wakeup
+> the system from sleep though.
+>
+> I've also review both patches and they look good to me:
+>
+> Tested-by: Hans de Goede <hdegoede@redhat.com>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>
+> So I plan to merge this series into pdx86/for-next once
+> 6.9-rc1 is out.
+>
+> Regards,
+>
+> Hans
+>
+Hi,
 
--- 
-With Best Regards,
-Andy Shevchenko
+great to hear that the driver works. Can you send me the output of "acpidump" on this machine?
+Maybe the quickstart buttons have no wake capabilities?
 
+Thanks,
+Armin Wolf
 
+>> Armin Wolf (1):
+>>    platform/x86: Add ACPI quickstart button (PNP0C32) driver
+>>
+>> Arvid Norlander (1):
+>>    platform/x86: toshiba_acpi: Add quirk for buttons on Z830
+>>
+>>   MAINTAINERS                         |   6 +
+>>   drivers/platform/x86/Kconfig        |  13 ++
+>>   drivers/platform/x86/Makefile       |   3 +
+>>   drivers/platform/x86/quickstart.c   | 225 ++++++++++++++++++++++++++++
+>>   drivers/platform/x86/toshiba_acpi.c |  36 ++++-
+>>   5 files changed, 280 insertions(+), 3 deletions(-)
+>>   create mode 100644 drivers/platform/x86/quickstart.c
+>>
+>> --
+>> 2.39.2
+>>
+>>
+>
