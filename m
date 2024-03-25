@@ -1,57 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B445473D;
-	Mon, 25 Mar 2024 16:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB71145FE7;
+	Mon, 25 Mar 2024 16:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711384196; cv=none; b=TqkzfKWM4x3UvobAtA2/mt2pv4nu6S6u8UE99KfGU5kO2JC5yu2mrwYBDUBujbI87w8IBynfZ+EheBQMkzlSYK25g3wbcSetA7VvRbhDFLJp6Ic9xxdSEzjACAqktCV3ffq7bF4MQM6qds11gD/sGtT20coq66kv+uoSe/lPVng=
+	t=1711384309; cv=none; b=jnImbsno4kaPJrQUqfQYb2Lfcwe23m11bt0q9n1gbcXEjXdVWP0gtauTFWKmfMmOisIPIurr33b8Cwz2MkqWhvMXj3Ijt9S1t3DKCgLfaOcwJWr75mcxQV8tifvaLAoSD2PJniRD20DJ2KRcWtH8+Csqr+uODPL4ylusRxDOWuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711384196; c=relaxed/simple;
-	bh=qOr94dkjdQAFRjI3x/SoL7AT1gteENtLlwbLMaL3eiI=;
+	s=arc-20240116; t=1711384309; c=relaxed/simple;
+	bh=J6kX6hIi3srqIc3d27UOrwKWtKhvzO16N5KYIadUfQ8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dLRXzwDPu6PTc8r+fHiMJePQ8Z7zirwYClyDRIXqa2aqOtgKwGEmzJlit0qCKdVvftIXnRMagWCOTHpuQLVIk+YA7yiGb3L/6iOIe+T8F4Ecmz/Pk/TsHSwHrhRsVvf//CN1TejkmkDkhQqeIuafz3gcNizIBQYoad3nZ9ChveI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IA59lr5u; arc=none smtp.client-ip=192.198.163.16
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lqo7jz9tPLYIP3m/0leNioPg7WhALSmCo8Cx4JieKTsVVPfEMffuocZZS7HqkHLBGz6KTOVl1JD4lAVDlf8uFRWA/sma5bX1jaCZsNwNb+dgM3B88WqTSncqXehbgmG+gRRPm4X6Fwe4P/f5p/1zd+o2+sbM8CqoO4yHqua2o8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HGmn/RET; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IA59lr5u"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HGmn/RET"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711384194; x=1742920194;
+  t=1711384308; x=1742920308;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=qOr94dkjdQAFRjI3x/SoL7AT1gteENtLlwbLMaL3eiI=;
-  b=IA59lr5u+dQxyDkiVIfrU6ZcAyzm/0wuTd556BNCdo25ToPCQw9maAMD
-   Ii/ggt0xHG+Hs/o+zdZILb1y7+rH68KhF3At9tZgPlZ85u5JweCzRJYjU
-   mNICMUUQeEouAbB1xhB5ksdsTU5t/V11VssylLTZBEtHzC3PlH6dHbgph
-   VsBrbDsUel30geBa48borLV0iKFKhY6GFs4m8c5c6DHjNzgtuOaLl5lto
-   7NRF2EpkotQNIqMi7pYBg9TdtQL/vmrIidUuUCOpD/OgeTwu5zsduN1LG
-   iT2cTJFq7k2NBtT04wCQru65vYlU5Kv23WXXXQGUJCWyyA08wAa6UvcNI
+  bh=J6kX6hIi3srqIc3d27UOrwKWtKhvzO16N5KYIadUfQ8=;
+  b=HGmn/RETqqLs0uFGchxojOJlycuOmbbLaGpsTDxcF13jopDA91rEzt/X
+   7ke4wpHs9496Q+GuZeqKjB3SFjzKFHxkOS35ztAYzvX9aqYTdJ2fhIjyu
+   TS4y/qYnyjxd0EuHd9EHMwezK4Ynb+M0V0esl6QFndXuyL6NUrd6XkOJ/
+   efNhjhYADe1tC4kqxwVTsfzpYCvZ/KwjV8xpR3fLqi+5Cvaug8/H8N5qo
+   ZQ7GggljOepFIEc/cp1KsWXlKNBUwciNOUQHpsvip2w4Xqz4C6wz+P9EW
+   6XqMKFkvoEstYZuM44o6a+8AD1ztSInG0DcaS77G7MDtouVFf126LAxRm
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="6994791"
+X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="17028592"
 X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
-   d="scan'208";a="6994791"
+   d="scan'208";a="17028592"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 09:29:53 -0700
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 09:31:46 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="914848465"
+X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="914848517"
 X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
-   d="scan'208";a="914848465"
+   d="scan'208";a="914848517"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 09:29:52 -0700
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 09:31:44 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
 	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1ronCn-0000000G2uH-367U;
-	Mon, 25 Mar 2024 18:29:49 +0200
-Date: Mon, 25 Mar 2024 18:29:49 +0200
+	id 1ronEb-0000000G2xE-2Yez;
+	Mon, 25 Mar 2024 18:31:41 +0200
+Date: Mon, 25 Mar 2024 18:31:41 +0200
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Ai Chao <aichao@kylinos.cn>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v11] platform/x86: add lenovo wmi camera button driver
-Message-ID: <ZgGmfV9ciPdtbGO1@smile.fi.intel.com>
-References: <20240322064750.267422-1-aichao@kylinos.cn>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	=?iso-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>,
+	linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v5 1/6] platform: x86-android-tablets: other: Add swnode
+ for Xiaomi pad2 indicator LED
+Message-ID: <ZgGm7eDBQtwH37ya@smile.fi.intel.com>
+References: <20240322033736.9344-1-hpa@redhat.com>
+ <20240322033736.9344-2-hpa@redhat.com>
+ <bb7536be-9bed-4557-b111-6409ebfe48f4@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -60,108 +68,37 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240322064750.267422-1-aichao@kylinos.cn>
+In-Reply-To: <bb7536be-9bed-4557-b111-6409ebfe48f4@redhat.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Mar 22, 2024 at 02:47:50PM +0800, Ai Chao wrote:
-> Add lenovo generic wmi driver to support camera button.
+On Mon, Mar 25, 2024 at 04:02:54PM +0100, Hans de Goede wrote:
+> On 3/22/24 4:37 AM, Kate Hsuan wrote:
+> > There is a KTD2026 LED controller to manage the indicator LED for Xiaomi
+> > pad2. The ACPI for it is not properly made so the kernel can't get
+> > a correct description of it.
+> > 
+> > This work add a description for this RGB LED controller and also set a
+> > trigger to indicate the chaging event (bq27520-0-charging). When it is
+> > charging, the indicator LED will be turn on.
+> > 
+> > Signed-off-by: Kate Hsuan <hpa@redhat.com>
+> 
+> Thank you for your patch, I've applied this patch to my review-hans 
+> branch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+> 
+> I will also merge [PATCH v5 6/6] platform: x86-android-tablets:
+> others: Set the LED trigger to charging_red_full_green for Xiaomi pad2"
+> 
+> Once the new power_supply trigger patch this relies on has been
+> accepted.
+> 
+> Once I've run some tests on this branch the patches there will be
+> added to the platform-drivers-x86/for-next branch and eventually
+> will be included in the pdx86 pull-request to Linus for the next
+> merge-window.
 
-WMI
-
-> The Camera button is a GPIO device. This driver receives ACPI notifyi
-> when the camera button is switched on/off. This driver is used in
-> Lenovo A70, it is a Computer integrated machine.
-
-> +config LENOVO_WMI_CAMERA
-> +	tristate "Lenovo WMI Camera Button driver"
-> +	depends on ACPI_WMI
-> +	depends on INPUT
-
-No COMPILE_TEST?
-
-> +	help
-> +	  This driver provides support for Lenovo camera button. The Camera
-> +	  button is a GPIO device. This driver receives ACPI notify when the
-> +	  camera button is switched on/off.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called lenovo-wmi-camera.
-
-...
-
-> +#include <linux/acpi.h>
-> +#include <linux/device.h>
-> +#include <linux/input.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-
-+ types.h
-
-> +#include <linux/wmi.h>
-
-...
-
-> +struct lenovo_wmi_priv {
-> +	struct input_dev *idev;
-> +	struct mutex notify_lock;	/* lenovo wmi camera button notify lock */
-
-WMI
-
-> +};
-
-...
-
-> +	/* obj->buffer.pointer[0] is camera mode:
-> +	 *      0 camera close
-> +	 *      1 camera open
-> +	 */
-
-/*
- * The correct multi-line comment style
- * is depicted here.
- */
-
-...
-
-> +	keycode = (camera_mode == SW_CAMERA_ON ?
-> +		   KEY_CAMERA_ACCESS_ENABLE : KEY_CAMERA_ACCESS_DISABLE);
-
-Useless parentheses.
-
-...
-
-> +	ret = input_register_device(priv->idev);
-> +	if (ret)
-> +		return ret;
-
-> +	mutex_init(&priv->notify_lock);
-
-Your mutex should be initialized before use. Have you tested that?
-
-...
-
-> +static struct wmi_driver lenovo_wmi_driver = {
-> +	.driver = {
-> +		.name = "lenovo-wmi-camera",
-> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-> +	},
-> +	.id_table = lenovo_wmi_id_table,
-> +	.no_singleton = true,
-> +	.probe = lenovo_wmi_probe,
-> +	.notify = lenovo_wmi_notify,
-> +	.remove = lenovo_wmi_remove,
-> +};
-> +
-
-Unneeded blank line.
-
-> +module_wmi_driver(lenovo_wmi_driver);
-
-...
-
-> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
-
-Please, move it closer to the respective table.
+I believe I have commented on the "RESEND" version.
 
 -- 
 With Best Regards,
