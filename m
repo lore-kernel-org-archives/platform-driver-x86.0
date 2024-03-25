@@ -1,187 +1,131 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE37184EEA
-	for <platform-driver-x86@vger.kernel.org>; Mon, 25 Mar 2024 09:44:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24671BAA41
+	for <platform-driver-x86@vger.kernel.org>; Mon, 25 Mar 2024 11:13:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711359898; cv=none; b=G6gotRZdLsZ81Zjjw1MBT05DcDF16k+DxMrx1hI7yDECL2JsfcaPHTH6snXwVmEfRoIcjjS2+ymawGkhiZGozf/tydx26+WOwA940EafcyTNg//zimpl8HUsDhK0WzMPNcpWkUEehcbxp9Rvj8IIffkSNNV8ry4n+8mvvmvjzTQ=
+	t=1711365198; cv=none; b=t38LH41vWRKwmo06/oz2DaAIj5ZV2xG5O1xZg4ixVK9ZfGpC/1SRBVDimgcyBj27IjUKuQwklAZywO4xYSSOl9TZORRaUUUJt8CV7Nj1O5mZZODjVx/xy6FKHTqpzPcx9pXUDlAOsH3KA3Gzw388tDcbsL5HKK0+TfdKOeAJjLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711359898; c=relaxed/simple;
-	bh=yKCyNRThwZiKQFl3ZGytN6SP5I5cAUdIfq1PtSY8/0o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ZmFHd5EWd8hjiosHkwDGevhUOeoqVxmBl3+wtnLg8dvRh5sMgoIuQWT6YmM21bzoCZDXE9YB03Vri28AQVPlEHMDAScKUgZyx3Nm15ngqtq2Sc4BWB6wVYTDet3rQBZzQqp7fNkQqKUsLi734aas5rnhb6FTqfrbLo2RhxM7Hhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TKtB8jWs; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1711365198; c=relaxed/simple;
+	bh=Hsa/4RMLo7slhwDozooCgxr8Rhe6jK9MdW6Cr2Tbkbo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=WGEymDyZqdyLBM4P6YrD2AMvN9AImC1CIr3smPRZ7ARK+ptV/2rmCQId70tT8bxexIvmJd/7bnKAK/qGk9khJ8ccKS6TzGRUbwZ3NF7AbY+iZutfY/cZT3uD9cPokJct23W6b28gDt5ASZKXt7NrBAXSld3yrsfG96lQg1euNhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i6ljovrx; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TKtB8jWs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i6ljovrx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711359894;
+	s=mimecast20190719; t=1711365195;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BdmZcxTxaezoD4ADz7mbOH050D8bZAskNFuCnh+xicc=;
-	b=TKtB8jWs2OhZ6FNfRWaFLKfu2LLgX0/Hkugz6DqNBFr7yGbZzw7QmYGHkoG94ef2+/At+W
-	9gNCWnm2FUnwJ8KlH3NIcf5AtnsChHxVNA5s7ljS7mjwpkRKTWkzvC6zPsp8Lp1SGgAuEN
-	dL7CJM+esachJOYaeQrrDT2ezY7AvTk=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-625-4bwf4HvHONWvCeWH0UPaXQ-1; Mon,
- 25 Mar 2024 05:44:51 -0400
-X-MC-Unique: 4bwf4HvHONWvCeWH0UPaXQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 488B628B6AA2;
-	Mon, 25 Mar 2024 09:44:50 +0000 (UTC)
-Received: from localhost (dhcp-192-239.str.redhat.com [10.33.192.239])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9FD631C060A4;
-	Mon, 25 Mar 2024 09:44:48 +0000 (UTC)
-From: Cornelia Huck <cohuck@redhat.com>
-To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>, David Hildenbrand
- <david@redhat.com>
-Cc: virtualization@lists.linux.dev, Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg
- <johannes@sipsolutions.net>, Hans de Goede <hdegoede@redhat.com>, Ilpo
- =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Vadim Pasternak
- <vadimp@nvidia.com>, Bjorn Andersson <andersson@kernel.org>, Mathieu
- Poirier <mathieu.poirier@linaro.org>, Halil Pasic <pasic@linux.ibm.com>,
- Eric Farman <farman@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, "Michael
- S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- linux-um@lists.infradead.org, platform-driver-x86@vger.kernel.org,
- linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
- kvm@vger.kernel.org, Daniel Verkamp <dverkamp@chromium.org>
-Subject: Re: [PATCH vhost v4 1/6] virtio_balloon: remove the dependence
- where names[] is null
-In-Reply-To: <1711346901.0977402-2-xuanzhuo@linux.alibaba.com>
-Organization: "Red Hat GmbH, Sitz: Werner-von-Siemens-Ring 12, D-85630
- Grasbrunn, Handelsregister: Amtsgericht =?utf-8?Q?M=C3=BCnchen=2C?= HRB
- 153243,
- =?utf-8?Q?Gesch=C3=A4ftsf=C3=BChrer=3A?= Ryan Barnhart, Charles Cachera,
- Michael O'Neill, Amy
- Ross"
-References: <20240321101532.59272-1-xuanzhuo@linux.alibaba.com>
- <20240321101532.59272-2-xuanzhuo@linux.alibaba.com>
- <CABVzXAkwcKMb7pC21aUDLEM=RoyOtGA2Vim+LF0oWQ7mjUx68g@mail.gmail.com>
- <b420a545-0a7a-431c-aa48-c5db3d221420@redhat.com>
- <1711346901.0977402-2-xuanzhuo@linux.alibaba.com>
-User-Agent: Notmuch/0.37 (https://notmuchmail.org)
-Date: Mon, 25 Mar 2024 10:44:47 +0100
-Message-ID: <87zfum7ii8.fsf@redhat.com>
+	bh=QAPHGbxlJ6k982EnibWHBxa9+vZqkzt4vbnevEyQxDY=;
+	b=i6ljovrxAAxtvJII+5FvBck2e+Y+YtGgrYqG7qg0wLeKvICjtKddxa94WSc045W+j5P67U
+	0GSPJYHBf1FupyAeHXOrIVlDAGU2R3BAjBQroPUBnv8F6uE+j1qu/D7GyecBcb/Ry2G38+
+	tGjgXqYK2YW2BQBhQ3E7rxvsTuk/veY=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-97-CaATN6VyPROrG13TZ59gzA-1; Mon, 25 Mar 2024 07:13:14 -0400
+X-MC-Unique: CaATN6VyPROrG13TZ59gzA-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-56bf76d4282so1977772a12.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Mar 2024 04:13:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711365193; x=1711969993;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QAPHGbxlJ6k982EnibWHBxa9+vZqkzt4vbnevEyQxDY=;
+        b=hC1NxGN0vFVR2DfxI4q8858CNRJSMSgfUj9LK24MTbtlSGIAlJeyfiOQvuSoewmE6X
+         imb/TyPxphjAibgSGFpQ3jgn/yO1W1F4q8nxzNUIVKdou5tueb2F4EbSGeKu74ntqp7t
+         B+L9PED9QNOLGQxH+KBH7qsygplGIZnkThEIA9fIGKNfgMTTifSlVW2DUR/gRXnbw5oy
+         sKXLrEJc2HwD6UALKS23VQWdeH110FgSNxcDuCsjLzQkBH2r5UZRkCb7yRTmuVt73iYM
+         Moe1en8mXTG0egPqGzLf7dw8iG0F+HANs68MABQ3Tx8dUEsnjnzB6lsEf1dR9jH5fkJD
+         P+Sw==
+X-Forwarded-Encrypted: i=1; AJvYcCVSqR77OYLBGzT8EpUmEEl6mRvb+0qs4Qq8Lz7MyBzYL7ckAqCaMQ9UAO0+0YqAOAWpzlOWmfKGioacI6nhKlc0q0BPCVaxoXhYE99lJW0pkst1zg==
+X-Gm-Message-State: AOJu0YyLM9M9drV2y7VEXQeKAdVoffFl1kon7W2bv32yMEj+WI1G088Z
+	zVRizBycT8JempRNceJXY+cEjM67p8ryGGzuescXBa7/ftcvVij5NWVCkLAw5ks7obid4KZnVO1
+	UhQmXc/Ub4+8SSf6XD1AlCTxwv5JIFIlNLut9CGqlLSPdDe8CGHbwERNkMzEo5OyVcdNZzWA=
+X-Received: by 2002:a50:8753:0:b0:568:aced:e5a0 with SMTP id 19-20020a508753000000b00568acede5a0mr5705696edv.14.1711365193428;
+        Mon, 25 Mar 2024 04:13:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHDFlIpB/lK3v3cbB5QOQ7Bbg8iNxhFwokSKMspks8TaBGXgxvtbwZi1GudHYxQskJStFdo7A==
+X-Received: by 2002:a50:8753:0:b0:568:aced:e5a0 with SMTP id 19-20020a508753000000b00568acede5a0mr5705672edv.14.1711365193137;
+        Mon, 25 Mar 2024 04:13:13 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id fi24-20020a056402551800b0056bfa6ad5eesm2530825edb.91.2024.03.25.04.13.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Mar 2024 04:13:12 -0700 (PDT)
+Message-ID: <f677cad0-4387-4a79-b7bb-f7b0676e5418@redhat.com>
+Date: Mon, 25 Mar 2024 12:13:11 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 07/28] platform: intel_ips: Use PCI_IRQ_INTX
+Content-Language: en-US, nl
+To: Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>,
+ linux-scsi@vger.kernel.org, "Martin K . Petersen"
+ <martin.petersen@oracle.com>, Jaroslav Kysela <perex@perex.cz>,
+ linux-sound@vger.kernel.org, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
+ linux-serial@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ ntb@lists.linux.dev, Lee Jones <lee@kernel.org>,
+ David Airlie <airlied@gmail.com>, amd-gfx@lists.freedesktop.org,
+ Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240325070944.3600338-1-dlemoal@kernel.org>
+ <20240325070944.3600338-8-dlemoal@kernel.org>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240325070944.3600338-8-dlemoal@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 25 2024, Xuan Zhuo <xuanzhuo@linux.alibaba.com> wrote:
+Hi,
 
-> On Fri, 22 Mar 2024 22:02:27 +0100, David Hildenbrand <david@redhat.com> =
-wrote:
->> On 22.03.24 20:16, Daniel Verkamp wrote:
->> > On Thu, Mar 21, 2024 at 3:16=E2=80=AFAM Xuan Zhuo <xuanzhuo@linux.alib=
-aba.com> wrote:
->> >>
->> >> Currently, the init_vqs function within the virtio_balloon driver rel=
-ies
->> >> on the condition that certain names array entries are null in order to
->> >> skip the initialization of some virtual queues (vqs). This behavior is
->> >> unique to this part of the codebase. In an upcoming commit, we plan to
->> >> eliminate this dependency by removing the function entirely. Therefor=
-e,
->> >> with this change, we are ensuring that the virtio_balloon no longer
->> >> depends on the aforementioned function.
->> >
->> > This is a behavior change, and I believe means that the driver no
->> > longer follows the spec [1].
->> >
->> > For example, the spec says that virtqueue 4 is reporting_vq, and
->> > reporting_vq only exists if VIRTIO_BALLOON_F_PAGE_REPORTING is set,
->> > but there is no mention of its virtqueue number changing if other
->> > features are not set. If a device/driver combination negotiates
->> > VIRTIO_BALLOON_F_PAGE_REPORTING but not VIRTIO_BALLOON_F_STATS_VQ or
->> > VIRTIO_BALLOON_F_FREE_PAGE_HINT, my reading of the specification is
->> > that reporting_vq should still be vq number 4, and vq 2 and 3 should
->> > be unused. This patch would make the reporting_vq use vq 2 instead in
->> > this case.
->> >
->> > If the new behavior is truly intended, then the spec does not match
->> > reality, and it would need to be changed first (IMO); however,
->> > changing the spec would mean that any devices implemented correctly
->> > per the previous spec would now be wrong, so some kind of mechanism
->> > for detecting the new behavior would be warranted, e.g. a new
->> > non-device-specific virtio feature flag.
->> >
->> > I have brought this up previously on the virtio-comment list [2], but
->> > it did not receive any satisfying answers at that time.
+On 3/25/24 8:09 AM, Damien Le Moal wrote:
+> Use the macro PCI_IRQ_INTX instead of the deprecated PCI_IRQ_LEGACY
+> macro.
+> 
+> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 
-I had missed it back then, but now that I read it, I realize that we
-really have a bit of a mess here :/
+Thanks, patch looks good to me, feel free to merge
+this through whatever tree is convenient (or let me
+know if you want me to pick up just this one patch
+from the series).
 
->>
->> Rings a bell, but staring at this patch, I thought that there would be
->> no behavioral change. Maybe I missed it :/
->>
->> I stared at virtio_ccw_find_vqs(), and it contains:
->>
->> 	for (i =3D 0; i < nvqs; ++i) {
->> 		if (!names[i]) {
->> 			vqs[i] =3D NULL;
->> 			continue;
->> 		}
->>
->> 		vqs[i] =3D virtio_ccw_setup_vq(vdev, queue_idx++, callbacks[i],
->> 					     names[i], ctx ? ctx[i] : false,
->> 					     ccw);
->> 		if (IS_ERR(vqs[i])) {
->> 			ret =3D PTR_ERR(vqs[i]);
->> 			vqs[i] =3D NULL;
->> 			goto out;
->> 		}
->> 	}
->>
->> We increment queue_idx only if an entry was not NULL. SO I thought no
->> behavioral change? (at least on s390x :) )
+Acked-by: Hans de Goede <hdegoede@redhat.com>
 
-The code for pci behaves in the same way.
+Regards,
 
->>
->> It's late here in Germany, so maybe I'm missing something.
->
-> I think we've encountered a tricky issue. Currently, all transports handl=
-e queue
-> id by incrementing them in order, without skipping any queue id. So, I'm =
-quite
-> surprised that my changes would affect the spec. The fact that the
-> 'names' value is null is just a small trick in the Linux kernel implement=
-ation
-> and should not have an impact on the queue id.
->
-> I believe that my recent modification will not affect the spec. So, let's
-> consider the issues with this patch set separately for now. Regarding the=
- Memory
-> Balloon Device, it has been operational for many years, and perhaps we sh=
-ould
-> add to the spec that if a certain vq does not exist, then subsequent vqs =
-will
-> take over its id.
+Hans
 
-The changes here do not really seem to affect the spec issue that Daniel
-had noted, unless I'm reading the code wrong.
 
-However, we should try to address the spec mess, where we have at least
-some of the most popular/important implementations behaving differently
-than the spec describes... I would suggest to discuss that on the virtio
-lists -- but they are still dead, and at this point I'm just hoping
-they'll come back eventually :/
+
+
+> ---
+>  drivers/platform/x86/intel_ips.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+> index ba38649cc142..73ec4460a151 100644
+> --- a/drivers/platform/x86/intel_ips.c
+> +++ b/drivers/platform/x86/intel_ips.c
+> @@ -1505,7 +1505,7 @@ static int ips_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  	 * IRQ handler for ME interaction
+>  	 * Note: don't use MSI here as the PCH has bugs.
+>  	 */
+> -	ret = pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_LEGACY);
+> +	ret = pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_INTX);
+>  	if (ret < 0)
+>  		return ret;
+>  
 
