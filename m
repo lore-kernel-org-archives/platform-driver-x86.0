@@ -1,35 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2ABE15253D;
-	Mon, 25 Mar 2024 02:13:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C4113DDD5;
+	Mon, 25 Mar 2024 07:10:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711332788; cv=none; b=kdeHrfc35gKEaEXohVq3g8dJ2nXsdQ4KR6W3d75bqOTEIcNP5kvqHuyY/ankkPxhm2VwKn59Ro0Wfts6WRGI+IXU2BAzUxqfIb4Y7ntMk8qLdvKzpecFZAQJIx+3iIiS86n2t7dzFh1fT4dmsEs9qj2y61lXJyb5uXwx84GYkuQ=
+	t=1711350631; cv=none; b=TNnj+/jAM8Geb5IOV5XUPhil0xGQW8aVu+Ak2c0sSZFkTUfCm1W+R9IPlWWZKNLWOaoZ2+0eZ/Ll2EmjOUV1Lccvy8H7nl/4zEe8D65LrK3SuehSLDGKj8U0BqGaz5HIMDF4uObbsEsvNN8dDt0MieK+t5BrvxS7ZwtzQJbpIJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711332788; c=relaxed/simple;
-	bh=aJvg1KH6joFG6oJkgTHoc61lNEcN6UYDL94Kek/0h5A=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=R48zXyjukBt/Etd1M9nCVkEZlG1fiiroEpe8dgkhWTSZKJewMBoUhqtKirm01WvT+0Bge0vv0kJAjB3CdJ1Oiiw25oqtXiCoXPPqKnyMt/PCq4nNwXfQ2alDH2jKyP50EIZRz3IJcJ30QEDhSOgNg9lMVsQ/U21QNHuh3ld1bGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bUL61oDb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711350631; c=relaxed/simple;
+	bh=yQkEdpK+pQC5xgDqqVQKDe1hrD7TK7KQYXOn9F7ILT4=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sT3XKpghslWqkETgeA53T/DPBCDV8eKuO2z5JfNupQ9URFGCsSq8/vfUdS7ZELXj/HA+/qO+HvaZskq9IL142TmRFlE/Ylnx2aS0NOSR8HZ5BTyjX6YvPnfSRvDeaURQy2PCxUdKb0v56FqVwrQCa8VvKXVTeRmb3Mop04NDCjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rFvvwxM+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bUL61oDb"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7DB0EC43390;
-	Mon, 25 Mar 2024 02:13:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rFvvwxM+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 249C8C43390;
+	Mon, 25 Mar 2024 07:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711332787;
-	bh=aJvg1KH6joFG6oJkgTHoc61lNEcN6UYDL94Kek/0h5A=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=bUL61oDb/M+5KYmdH9GZAQdZT3PYKaJ010SbGP/0QAETJ2gY+Rxd19+hfItokn4fc
-	 qXm+5UshaVvnLaKO+h8US6GsQq7XoxEkTJDEVJIEaNCFv8M2uUBhoQrMAu3fisTCQo
-	 B4fRFMNeMscSki123E/z54cBRXf+v5p5HhYpLJ3jJtc1OvR7VQslOwZ36RRz8NHOez
-	 HFUH5lzzeG0rrZGBHCyr2OTeNZB2H2sILwj6OEqE53Bfd2qCAI/Z34pAg9I1JWd2Cn
-	 dq/bNtJWoCPVpzv9DjBiOxvAIfXazxrFfLBNOkzXYWWq5P+zSQavVa4Lgiia++T7N2
-	 7rjlBqvf/ljRg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5AFA0D2D0E0;
-	Mon, 25 Mar 2024 02:13:07 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1711350630;
+	bh=yQkEdpK+pQC5xgDqqVQKDe1hrD7TK7KQYXOn9F7ILT4=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=rFvvwxM+nOfC6ZINMkuVQCj79iT/f6YfZu82C8ota8vaEaAzc2AFR0ak8taEZM5dg
+	 B5mM5UJWkiNfsPa2zPhe4sasKskWbl7OfeS/VXzUMd/KNc38aM0nuw71t4DsYBpadJ
+	 gHojJtPOMg78lJcw5I4GDKgvLoRY7/ObWycdLbJJUgUgzhb6mcRcqWk44EzKJqZelh
+	 7MxygxPQBzbK5l+dwzver1Eq69x7R9ZhLf2Eip2pB1KYc1HDx6kYTY4vjixVRZgOMX
+	 4HEGu4gqfllsTwe/1Jib+o6VOSJ1yY4PqpPEDQEL93hs6tyLqWQEmEoeDqEnPWt7ti
+	 4sCCR8FUQRWoA==
+From: Damien Le Moal <dlemoal@kernel.org>
+To: linux-pci@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>,
+	linux-scsi@vger.kernel.org,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	linux-sound@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-usb@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org,
+	ntb@lists.linux.dev,
+	Lee Jones <lee@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	amd-gfx@lists.freedesktop.org,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	linux-rdma@vger.kernel.org,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 11/28] infiniband: qib: Use PCI_IRQ_INTX
+Date: Mon, 25 Mar 2024 16:09:22 +0900
+Message-ID: <20240325070944.3600338-12-dlemoal@kernel.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240325070944.3600338-1-dlemoal@kernel.org>
+References: <20240325070944.3600338-1-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -37,84 +62,66 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v6 000/164] pwm: Improve lifetime tracking for pwm_chips
-From: patchwork-bot+chrome-platform@kernel.org
-Message-Id: 
- <171133278736.9916.5526869645378949035.git-patchwork-notify@kernel.org>
-Date: Mon, 25 Mar 2024 02:13:07 +0000
-References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
-In-Reply-To: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig_=3Cu=2Ekleine-koenig=40pengutronix=2Ede=3E?=@ci.codeaurora.org
-Cc: linux-pwm@vger.kernel.org, corbet@lwn.net, Jonathan.Cameron@huawei.com,
- james.clark@arm.com, andriy.shevchenko@linux.intel.com, broonie@kernel.org,
- marcan@marcan.st, sven@svenpeter.dev, claudiu.beznea@tuxon.dev,
- nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
- florian.fainelli@broadcom.com, rjui@broadcom.com, sbranden@broadcom.com,
- shc_work@mail.ru, bleung@chromium.org, p.zabel@pengutronix.de,
- shawnguo@kernel.org, s.hauer@pengutronix.de, paul@crapouillou.net,
- vz@mleia.com, mika.westerberg@linux.intel.com, andy@kernel.org,
- linus.walleij@linaro.org, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
- neil.armstrong@linaro.org, khilman@baylibre.com, conor.dooley@microchip.com,
- daire.mcnamara@microchip.com, j.neuschaefer@gmx.net, heiko@sntech.de,
- krzysztof.kozlowski@linaro.org, palmer@dabbelt.com, paul.walmsley@sifive.com,
- mwalle@kernel.org, orsonzhai@gmail.com, baolin.wang@linux.alibaba.com,
- zhang.lyra@gmail.com, fabrice.gasnier@foss.st.com, mcoquelin.stm32@gmail.com,
- alexandre.torgue@foss.st.com, wens@csie.org, jernej.skrabec@gmail.com,
- samuel@sholland.org, hammerh0314@gmail.com, thierry.reding@gmail.com,
- jonathanh@nvidia.com, nobuhiro1.iwamatsu@toshiba.co.jp,
- sean.anderson@seco.com, michal.simek@amd.com, brgl@bgdev.pl,
- andrzej.hajda@intel.com, rfoss@kernel.org, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
- pavel@ucw.cz, lee@kernel.org, quic_amelende@quicinc.com,
- quic_bjorande@quicinc.com, keescook@chromium.org, robh@kernel.org,
- johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org,
- kernel@pengutronix.de, linux-doc@vger.kernel.org, alyssa@rosenzweig.io,
- asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org,
- groeck@chromium.org, chrome-platform@lists.linux.dev, festevam@gmail.com,
- linux-imx@nxp.com, linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-mediatek@lists.infradead.org,
- jbrunet@baylibre.com, martin.blumenstingl@googlemail.com,
- linux-amlogic@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-rockchip@lists.infradead.org, alim.akhtar@samsung.com,
- linux-samsung-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
- dianders@chromium.org, Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
- dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
- greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
- gustavoars@kernel.org, linux-hardening@vger.kernel.org
 
-Hello:
+Use the macro PCI_IRQ_INTX instead of the deprecated PCI_IRQ_LEGACY
+macro.
 
-This series was applied to chrome-platform/linux.git (for-next)
-by Uwe Kleine-König <u.kleine-koenig@pengutronix.de>:
+Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+---
+ drivers/infiniband/hw/qib/qib_iba7220.c | 2 +-
+ drivers/infiniband/hw/qib/qib_iba7322.c | 5 ++---
+ drivers/infiniband/hw/qib/qib_pcie.c    | 2 +-
+ 3 files changed, 4 insertions(+), 5 deletions(-)
 
-On Wed, 14 Feb 2024 10:30:47 +0100 you wrote:
-> Hello,
-> 
-> this is v6 of the series introducing better lifetime tracking for
-> pwmchips that addresses (for now theoretic) lifetime issues of pwm
-> chips. Addressing these is a necessary precondition to introduce chardev
-> support for PWMs.
-> 
-> [...]
-
-Here is the summary with links:
-  - [v6,001/164] pwm: Provide an inline function to get the parent device of a given chip
-    https://git.kernel.org/chrome-platform/c/4e59267c7a20
-  - [v6,003/164] pwm: Provide pwmchip_alloc() function and a devm variant of it
-    https://git.kernel.org/chrome-platform/c/024913dbf99f
-  - [v6,029/164] pwm: cros-ec: Change prototype of helpers to prepare further changes
-    https://git.kernel.org/chrome-platform/c/7256c2e79b8e
-  - [v6,030/164] pwm: cros-ec: Make use of pwmchip_parent() accessor
-    https://git.kernel.org/chrome-platform/c/19a568a8d3c4
-  - [v6,031/164] pwm: cros-ec: Make use of devm_pwmchip_alloc() function
-    https://git.kernel.org/chrome-platform/c/452be9421eda
-
-You are awesome, thank you!
+diff --git a/drivers/infiniband/hw/qib/qib_iba7220.c b/drivers/infiniband/hw/qib/qib_iba7220.c
+index 6af57067c32e..78dfe98ebcf7 100644
+--- a/drivers/infiniband/hw/qib/qib_iba7220.c
++++ b/drivers/infiniband/hw/qib/qib_iba7220.c
+@@ -3281,7 +3281,7 @@ static int qib_7220_intr_fallback(struct qib_devdata *dd)
+ 
+ 	qib_free_irq(dd);
+ 	dd->msi_lo = 0;
+-	if (pci_alloc_irq_vectors(dd->pcidev, 1, 1, PCI_IRQ_LEGACY) < 0)
++	if (pci_alloc_irq_vectors(dd->pcidev, 1, 1, PCI_IRQ_INTX) < 0)
+ 		qib_dev_err(dd, "Failed to enable INTx\n");
+ 	qib_setup_7220_interrupt(dd);
+ 	return 1;
+diff --git a/drivers/infiniband/hw/qib/qib_iba7322.c b/drivers/infiniband/hw/qib/qib_iba7322.c
+index f93906d8fc09..9db29916e35a 100644
+--- a/drivers/infiniband/hw/qib/qib_iba7322.c
++++ b/drivers/infiniband/hw/qib/qib_iba7322.c
+@@ -3471,8 +3471,7 @@ static void qib_setup_7322_interrupt(struct qib_devdata *dd, int clearpend)
+ 				    pci_irq_vector(dd->pcidev, msixnum),
+ 				    ret);
+ 			qib_7322_free_irq(dd);
+-			pci_alloc_irq_vectors(dd->pcidev, 1, 1,
+-					      PCI_IRQ_LEGACY);
++			pci_alloc_irq_vectors(dd->pcidev, 1, 1, PCI_IRQ_INTX);
+ 			goto try_intx;
+ 		}
+ 		dd->cspec->msix_entries[msixnum].arg = arg;
+@@ -5143,7 +5142,7 @@ static int qib_7322_intr_fallback(struct qib_devdata *dd)
+ 	qib_devinfo(dd->pcidev,
+ 		"MSIx interrupt not detected, trying INTx interrupts\n");
+ 	qib_7322_free_irq(dd);
+-	if (pci_alloc_irq_vectors(dd->pcidev, 1, 1, PCI_IRQ_LEGACY) < 0)
++	if (pci_alloc_irq_vectors(dd->pcidev, 1, 1, PCI_IRQ_INTX) < 0)
+ 		qib_dev_err(dd, "Failed to enable INTx\n");
+ 	qib_setup_7322_interrupt(dd, 0);
+ 	return 1;
+diff --git a/drivers/infiniband/hw/qib/qib_pcie.c b/drivers/infiniband/hw/qib/qib_pcie.c
+index 47bf64ace05c..58c1d62d341b 100644
+--- a/drivers/infiniband/hw/qib/qib_pcie.c
++++ b/drivers/infiniband/hw/qib/qib_pcie.c
+@@ -210,7 +210,7 @@ int qib_pcie_params(struct qib_devdata *dd, u32 minw, u32 *nent)
+ 	}
+ 
+ 	if (dd->flags & QIB_HAS_INTX)
+-		flags |= PCI_IRQ_LEGACY;
++		flags |= PCI_IRQ_INTX;
+ 	maxvec = (nent && *nent) ? *nent : 1;
+ 	nvec = pci_alloc_irq_vectors(dd->pcidev, 1, maxvec, flags);
+ 	if (nvec < 0)
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.44.0
 
