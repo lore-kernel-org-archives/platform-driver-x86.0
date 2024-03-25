@@ -1,165 +1,178 @@
-Received: from fhigh3-smtp.messagingengine.com (fhigh3-smtp.messagingengine.com [103.168.172.154])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78E1148828;
-	Mon, 25 Mar 2024 05:50:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C8514F9F6;
+	Mon, 25 Mar 2024 06:03:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711345819; cv=none; b=oLgACZlK4HbR/fklvVLha1uDSvFslyKKTpo5tkyh20Sdfly3R6tsmwMvIv/C8ePJBqKxBMo6lzz7gZc9QjQCOiBzeeWDRpAxLvUGWJh0APL1N17rx/N0tC+ET6HrI9p+kLK7OaeNy012XPbuBMc501yAL/+EF+K6pvTzwIgMcpI=
+	t=1711346637; cv=none; b=cQCISauqLhTqp4tl3qd/1GI1EnaettVebp4OkUEbADsuaWGGUTQoQ8Tsv/lrX3UYabozxCZOeQLoI/XIREBill9ltlK245MmSne0ctxs7+8an3BeidTdblhGh4Cgyh83ZzV3yTocaD8RNfwxcUjfxxgt5JR1rfS/oWOpJTPffcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711345819; c=relaxed/simple;
-	bh=KwpUxPjB+e9aDlWPffbROPh7AUKzoxmOitBiQ1q996A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lTYtTueVsmBGG7ppb8SEtDmNsHaaXJ9/W8A+C9kAngMk5q3DdUSkKwTSIlr3/+JQrr9zJajIHe+X/ZcOIT/Wp4Yhb6g9Wt5M8wo+SratDVGtgkamFkPdB5vzSPeMoTuSVS/9E14ToJkNalSj6F1SMRh7LxLfoY3JaLrm0+fkgjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=a+lvbqni; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=xuu7FC5q; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1711346637; c=relaxed/simple;
+	bh=nh7RRQLuaSddz65FK3Wb9wuNv3HNQBBH9TtjgCZM/8o=;
+	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=A7tIcPQgNaob80xGsfi49mwhPIEy9qh+e11mL2LDg86SBDYW5+/xwjZxvLjsOr+Z+vAD3wp6qEs3csOvsxJ+ahw9QGtS2mmPpM4I79HAVUmGjoEGV4LyNDbdvGQAlyvtznWY9CY3mslAR8jFIv4YDsyhJTTLmedVgTxEA9WT9VE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ukYZTjjr; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="a+lvbqni";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xuu7FC5q"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id BD3891140099;
-	Mon, 25 Mar 2024 01:50:16 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Mon, 25 Mar 2024 01:50:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1711345816; x=
-	1711432216; bh=D9UhyeGa8+IY4DzspNpO/uLthQOKl8Mdkma1pmolh1A=; b=a
-	+lvbqnijnzt/PYFGc4lQcEoQi0hQqWSW+SzoYXVYFpLQGTGr+RTmXJxPMqS9yyGn
-	cucvMvVJMlKoJmT3sRMaqgoAMDoNsKtCIsPGJzt4gcMaYUILj5Wn/HSmEjt7sbEH
-	sPUNle6MFxVoINOQiTzb4H61Fzfz+jo2vQrHW+W8IJZ/i9CGlw/xNfNz0SIFvmmM
-	RdwERCK+t9DV4LVILcfO3EtCE6jM+mBEfECDds/5m2PpHheHDt/1iRWiV2vjp1Yy
-	ayaEVo0FFeKlBfqjlkxED2QiZMAviRfODtlSzbAFJ6IlbbvCnRCatWeYmJVsr7Wy
-	d8m7KA8bIyZdz/YKJ5trw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711345816; x=
-	1711432216; bh=D9UhyeGa8+IY4DzspNpO/uLthQOKl8Mdkma1pmolh1A=; b=x
-	uu7FC5qvCxRcCR9QQeeK/mzNjP2sOUObQ1JdsIDwNiv+1aAsWZUhqgGEmquDVKtX
-	vlh9BVL9fuTmEemqXqs36I8y/MYlsExQtiZ1mNHM0MExMbVJ6WdOHiosDXWkjJjY
-	D2Fa6BObHL+z99E8mK9R+4r4f4/GW85OEKK0LltM3ftt4fC9m0zgiZ3QXU5gi+qP
-	Qd2jIugEU7RrYamCFFIEl394bsUqoDevAPkUqybT5Rj/hpwf6MZkqwqgcRPxJKky
-	N5jUGS9IV9/lNXVT9RrnsDBDd2d/D4MLbGjqdkvHmeZRvN7OBSDid6nLR6QQQNgr
-	jP39EqbYaHzSEItlEbDyA==
-X-ME-Sender: <xms:mBABZl7Hpqw6rPnlYfz-rdirb21gtWOXHBbd25Q8gKjGLWchTq5BzA>
-    <xme:mBABZi5zv_COEZT0d8E9Kvd3GwkaH_SFxHlcyTqx8OB6snY9aEPf8lC9nEYK1pnmk
-    nG-rzkoeBtn-PDpaF4>
-X-ME-Received: <xmr:mBABZse2x4z1O9XUQ-9_bHFANY04Thr55YBXsjm_7cp9e9CBNHqcTJzDT-8I>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtkedgledtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
-    ertdertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehl
-    jhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfetfedugfetudeuheetjefhue
-    fggfelleetvdevtefhueeujeefvdegleevhefgnecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:mBABZuIIl7XA2xAQpM7JnjJBazSId11-8Y9zYUYhWm92-z5DTdSf-A>
-    <xmx:mBABZpKY5WsuMa2eV-BUJ5uBLYVgeWtRs5MNxzTdE6uzy2GbiYFpvQ>
-    <xmx:mBABZny-U_uv4KR477qqwQvFOoVQTTdOBTINtcuVRyY_Drestk3NHg>
-    <xmx:mBABZlIUudRIQZBCAEzZYU9kUcZuKxQ2--c5PvPFb3ZBcz1dvDJv4Q>
-    <xmx:mBABZh_A7GVyKGYSzj256h3ZPfnPZKvSa5CjMCUEhffYVyq7uCrYGw>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 25 Mar 2024 01:50:13 -0400 (EDT)
-From: "Luke D. Jones" <luke@ljones.dev>
-To: hdegoede@redhat.com
-Cc: corentin.chary@gmail.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH 3/9] platform/x86: asus-wmi: add support variant of TUF RGB
-Date: Mon, 25 Mar 2024 18:49:32 +1300
-Message-ID: <20240325054938.489732-4-luke@ljones.dev>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240325054938.489732-1-luke@ljones.dev>
-References: <20240325054938.489732-1-luke@ljones.dev>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ukYZTjjr"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1711346627; h=Message-ID:Subject:Date:From:To;
+	bh=2wvKbE33fAJ4kNFKPB3UPmddRQV+uumgQtNtBaMBvfA=;
+	b=ukYZTjjrjHhX2o2r+fAJbe9hE47/vJ9QzoRWspS7blS1koKFCbZ/3vknAEdHiAOdkxI0NGp7J15hs7NNdAWXCrjRsk6vxaknMn9fbB8cczRF4NlXPEeJ6SQnYf4V2twbyf6PJYHNFsk6xh2rS8qJURNumzjj/nRgcttCQ+imAIE=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=25;SR=0;TI=SMTPD_---0W39d4bX_1711346625;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W39d4bX_1711346625)
+          by smtp.aliyun-inc.com;
+          Mon, 25 Mar 2024 14:03:46 +0800
+Message-ID: <1711346600.0136697-1-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH vhost v4 1/6] virtio_balloon: remove the dependence where names[] is null
+Date: Mon, 25 Mar 2024 14:03:20 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Vadim Pasternak <vadimp@nvidia.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Cornelia Huck <cohuck@redhat.com>,
+ Halil Pasic <pasic@linux.ibm.com>,
+ Eric Farman <farman@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>,
+ linux-um@lists.infradead.org,
+ platform-driver-x86@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org,
+ linux-s390@vger.kernel.org,
+ kvm@vger.kernel.org,
+ virtualization@lists.linux.dev
+References: <20240321101532.59272-1-xuanzhuo@linux.alibaba.com>
+ <20240321101532.59272-2-xuanzhuo@linux.alibaba.com>
+ <3620be9c-e288-4ff2-a7be-1fcf806e6e6e@redhat.com>
+In-Reply-To: <3620be9c-e288-4ff2-a7be-1fcf806e6e6e@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Adds support for a second TUF RGB wmi call that some versions of the TUF
-laptop come with. Also adjusts existing support to select whichever is
-available.
+On Fri, 22 Mar 2024 12:56:46 +0100, David Hildenbrand <david@redhat.com> wrote:
+> On 21.03.24 11:15, Xuan Zhuo wrote:
+> > Currently, the init_vqs function within the virtio_balloon driver relies
+> > on the condition that certain names array entries are null in order to
+> > skip the initialization of some virtual queues (vqs). This behavior is
+> > unique to this part of the codebase. In an upcoming commit, we plan to
+> > eliminate this dependency by removing the function entirely. Therefore,
+> > with this change, we are ensuring that the virtio_balloon no longer
+> > depends on the aforementioned function.
+> >
+> > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > ---
+> >   drivers/virtio/virtio_balloon.c | 41 +++++++++++++++------------------
+> >   1 file changed, 19 insertions(+), 22 deletions(-)
+> >
+> > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> > index 1f5b3dd31fcf..becc12a05407 100644
+> > --- a/drivers/virtio/virtio_balloon.c
+> > +++ b/drivers/virtio/virtio_balloon.c
+> > @@ -531,49 +531,46 @@ static int init_vqs(struct virtio_balloon *vb)
+> >   	struct virtqueue *vqs[VIRTIO_BALLOON_VQ_MAX];
+> >   	vq_callback_t *callbacks[VIRTIO_BALLOON_VQ_MAX];
+> >   	const char *names[VIRTIO_BALLOON_VQ_MAX];
+> > -	int err;
+> > +	int err, nvqs, idx;
+> >
+> > -	/*
+> > -	 * Inflateq and deflateq are used unconditionally. The names[]
+> > -	 * will be NULL if the related feature is not enabled, which will
+> > -	 * cause no allocation for the corresponding virtqueue in find_vqs.
+> > -	 */
+> >   	callbacks[VIRTIO_BALLOON_VQ_INFLATE] = balloon_ack;
+> >   	names[VIRTIO_BALLOON_VQ_INFLATE] = "inflate";
+> >   	callbacks[VIRTIO_BALLOON_VQ_DEFLATE] = balloon_ack;
+> >   	names[VIRTIO_BALLOON_VQ_DEFLATE] = "deflate";
+>
+> I'd remove the static dependencies here completely and do it
+> consistently:
+>
+> nvqs = 0;
+>
+> callbacks[nvqs] = balloon_ack;
+> names[nvqs++] = "inflate";
+> callbacks[nvqs] = balloon_ack;
+> names[nvqs++] = "deflate";
+>
+>
+> > -	callbacks[VIRTIO_BALLOON_VQ_STATS] = NULL;
+> > -	names[VIRTIO_BALLOON_VQ_STATS] = NULL;
+> > -	callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+> > -	names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+> > -	names[VIRTIO_BALLOON_VQ_REPORTING] = NULL;
+> > +
+> > +	nvqs = VIRTIO_BALLOON_VQ_DEFLATE + 1;
+> >
+> >   	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+> > -		names[VIRTIO_BALLOON_VQ_STATS] = "stats";
+> > -		callbacks[VIRTIO_BALLOON_VQ_STATS] = stats_request;
+> > +		names[nvqs] = "stats";
+> > +		callbacks[nvqs] = stats_request;
+> > +		++nvqs;
+>
+> callbacks[nvqs++] = stats_request;
+>
+> If you prefer to keep it separate, "nvqs++" please.
+>
+> ... same here:
+>
+> idx = 0;
+> vb->inflate_vq = vqs[idx++];
+> vb->deflate_vq = vqs[idx++];
+>
+> ...
+>
+> >
+> >   	vb->inflate_vq = vqs[VIRTIO_BALLOON_VQ_INFLATE];
+> >   	vb->deflate_vq = vqs[VIRTIO_BALLOON_VQ_DEFLATE];
+> > +
+> > +	idx = VIRTIO_BALLOON_VQ_DEFLATE + 1;
+> > +
+> >   	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+> >   		struct scatterlist sg;
+> >   		unsigned int num_stats;
+> > -		vb->stats_vq = vqs[VIRTIO_BALLOON_VQ_STATS];
+> > +		vb->stats_vq = vqs[idx++];
+> >
+> >   		/*
+> >   		 * Prime this virtqueue with one buffer so the hypervisor can
+> > @@ -593,10 +590,10 @@ static int init_vqs(struct virtio_balloon *vb)
+> >   	}
+> >
+> >   	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+> > -		vb->free_page_vq = vqs[VIRTIO_BALLOON_VQ_FREE_PAGE];
+> > +		vb->free_page_vq = vqs[idx++];
+> >
+> >   	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING))
+> > -		vb->reporting_vq = vqs[VIRTIO_BALLOON_VQ_REPORTING];
+> > +		vb->reporting_vq = vqs[idx++];
+> >
+>
+> Apart from that LGTM
 
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
----
- drivers/platform/x86/asus-wmi.c            | 13 +++++++++++--
- include/linux/platform_data/x86/asus-wmi.h |  1 +
- 2 files changed, 12 insertions(+), 2 deletions(-)
+Will fix in next version.
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 285821ef819b..094a93f24667 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -280,6 +280,7 @@ struct asus_wmi {
- 	bool nv_temp_tgt_available;
- 
- 	bool kbd_rgb_mode_available;
-+	u32 kbd_rgb_dev;
- 	bool kbd_rgb_state_available;
- 
- 	bool throttle_thermal_policy_available;
-@@ -870,6 +871,7 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
- 				 struct device_attribute *attr,
- 				 const char *buf, size_t count)
- {
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
- 	u32 cmd, mode, r, g, b, speed;
- 	int err;
- 
-@@ -906,7 +908,7 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
- 		speed = 0xeb;
- 	}
- 
--	err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS, ASUS_WMI_DEVID_TUF_RGB_MODE,
-+	err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS, asus->kbd_rgb_dev,
- 			cmd | (mode << 8) | (r << 16) | (g << 24), b | (speed << 8), NULL);
- 	if (err)
- 		return err;
-@@ -4539,7 +4541,6 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	asus->egpu_enable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU);
- 	asus->egpu_connect_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU_CONNECTED);
- 	asus->dgpu_disable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU);
--	asus->kbd_rgb_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE);
- 	asus->kbd_rgb_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_STATE);
- 	asus->ppt_pl2_sppt_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PL2_SPPT);
- 	asus->ppt_pl1_spl_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PPT_PL1_SPL);
-@@ -4568,6 +4569,14 @@ static int asus_wmi_add(struct platform_device *pdev)
- 		asus->gpu_mux_dev = ASUS_WMI_DEVID_GPU_MUX_VIVO;
- 	}
- 
-+	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE)) {
-+		asus->kbd_rgb_mode_available = true;
-+		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE;
-+	} else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE2)) {
-+		asus->kbd_rgb_mode_available = true;
-+		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE2;
-+	}
-+
- 	err = fan_boost_mode_check_present(asus);
- 	if (err)
- 		goto fail_fan_boost_mode;
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index b48b024dd844..3e9a01467c67 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -132,6 +132,7 @@
- 
- /* TUF laptop RGB modes/colours */
- #define ASUS_WMI_DEVID_TUF_RGB_MODE	0x00100056
-+#define ASUS_WMI_DEVID_TUF_RGB_MODE2	0x0010005A
- 
- /* TUF laptop RGB power/state */
- #define ASUS_WMI_DEVID_TUF_RGB_STATE	0x00100057
--- 
-2.44.0
+Thanks.
 
+
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
