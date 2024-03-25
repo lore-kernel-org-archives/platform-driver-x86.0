@@ -1,91 +1,35 @@
-Received: from fhigh5-smtp.messagingengine.com (fhigh5-smtp.messagingengine.com [103.168.172.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E481C291;
-	Sun, 24 Mar 2024 21:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7F1149C7D;
+	Mon, 25 Mar 2024 01:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711314521; cv=none; b=PxHBZ2Xw9fG2kjYV28z1ntiELn2k8E9IOqBC5iYtyP2LzgpWaAG9ECMrwemWvUKhIhi0Bo8df8V7JStY935GaPj67tiEFoIrZ6vWVz3VaeYdYH3qNj1FAioHj547QahIcDgFDWnzZrb0VLf+QHdjdQkIqxByLongjsw6oR/eBl8=
+	t=1711331662; cv=none; b=Gk9MkEKfQh/D1sbgyIJcS2VT44gcR3xdWwM4FEIckwNLvv7lLKUfsZL6pX33r+4ssJpNmxOXlNTGCSwEzqx295gTe/MgmmUU85qEaDJ9kfQYElfB2ZdgUb72cMd+hNq3t16ami7TgpWt6edLJaKM9znWnFndfLfcDZWKWhKqulE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711314521; c=relaxed/simple;
-	bh=LPqpb/BTLXp5dEMIZD2PSr8NXmFsTBoT9dhSycYnLhM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QzmPP4+1thkoqNHkUibESLrpxWLjVIdzUwV5+qWLemQCTvKE1fmhAFwaTj5RuyCepnJmOFIIfuNQ14NT9PbTPwhEw0s4fXzUhDvpGavbylFwvWrQ0E6424uX5W8KKQuzrVrp3lk6W1cpVxpIv1rVvedYXe5DUeZJqUotwQip/9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=ec8Kipxb; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VAL8N/sF; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1711331662; c=relaxed/simple;
+	bh=x6gbNWDUC3393woiAhRGtrXvkbgxFEKnVO43IWMARsU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=jo4eRyXnHT6pJlze8xtEpd1EeBpqCzs5cNTT6ZJHa8EUHj40hkpdHUwApSEPYljxRFVAPnX0dye4BDIjBhOZuJDCzLFydOpPlDJOiMZB4G7KpGIWtVFbD8Ec9x0bye3cy2qJDr7S0LwJ2Sd7sTThMgJVZwKf91MQmw2WiWm3+TM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jrPZZfZ0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="ec8Kipxb";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VAL8N/sF"
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 6361811400F5;
-	Sun, 24 Mar 2024 17:08:38 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Sun, 24 Mar 2024 17:08:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1711314518; x=
-	1711400918; bh=lkjwIduruMi5XWo7srkLWDeR2ShYX9J54RxCXveF3IE=; b=e
-	c8KipxblEsfe2xO3yWVPYh2e/SrbALb6c6wFJ6UvJWHKDIKlHubdCJ7lYlGuXj+C
-	LYf//CwZeOddSWvcLNJLjfHYYoHEbxU5ok5OvSoa61hKZkoEo6Z3RBnVr6T9udgv
-	t7VJFqiukfb5HVg4F1ozj3VtXK+kMg1z6XWxBl6JEVGes22Nz3e6WhWPf3uhyiIw
-	Rnc55/RFqlYd0Vaw+BzjnglCQ0oMFDSLMVjdsl5lcE5C6cxmqnT15akSWeHzaGaV
-	Dd07t4gprkLSw6+rcTxbUttSV2xC3y4ETn1iG1kdI32zGYRY+vPh0bdTiRklWf3g
-	dOqep8Ydl2eO/rCjsZspA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711314518; x=
-	1711400918; bh=lkjwIduruMi5XWo7srkLWDeR2ShYX9J54RxCXveF3IE=; b=V
-	AL8N/sFCz2LnqQ1RQHk6JF0XeznA7zEM+UQCmNR5lDKcQ79VhQy6q8rfkuSLWWBV
-	EyuDctxNaihBquyh6IC7vNDB8miIf/u0Lp1Wo2xp1EyYd909Ky793CPNHcEdz5B8
-	2XgfgNYLy0j4b3I8fk5Y/qc1OIeooBzhdbk0cgHfB3P7zvcXJ6JfSnqyHvyUCten
-	HFNx5YeLrQHqSgMV3pT+c8qSI/U5kwsq4gsZBmcU1zHSMtrbkSN1uxch8q0ni22z
-	fT/DlqKWHvWjTPIBBpncEpxCu/kszlWaPXQHsxsVN+d0yJFm4rs9NHAzZq7g2p4c
-	Hnh56OuxDdXKCHiJH88Ag==
-X-ME-Sender: <xms:VpYAZlYgopMuK7oXIW6BMmkrB1if_Pbsc21mwnrql0ooJS5jqKegeA>
-    <xme:VpYAZsYkUzAXWi3qtaylMJoW1xpGVFR-QjquLxa20PRLXCqKp9ItUpe5C-Dw-62tT
-    p3H9qAc0fIcfLSCNKQ>
-X-ME-Received: <xmr:VpYAZn_kWNhU38XgsMoKvVOzHi_eAhfBYIYeMFB4KJNiZEGOSMwyiLdFxY7u>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtjedgudeglecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecuogetfedtuddqtdduucdludehmdenucfjughrpe
-    fhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforghrkhcurfgvrghr
-    shhonhcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrqeenucggtf
-    frrghtthgvrhhnpeeftddvjeefleffvefhgfejjeehudetteeigeeugfekhffhgeejudeu
-    teehgfdvffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
-X-ME-Proxy: <xmx:VpYAZjrQGgf5C5sCJ2wFNQUeOmGHjOHyViu9Te0oPZmT4PVUKAtXqw>
-    <xmx:VpYAZgqJOpvh6C2bTlh5dsQAaUBJ2T-caRFsxKo8FlhNCXqNRv1oEA>
-    <xmx:VpYAZpTxKTEoib53ruJt2LAbMplbAdROY3vZG7ktwZe1B3_pN8P09A>
-    <xmx:VpYAZopl9BymDMN-gfMwVGK9fBvcoE40s5GA5CIyBWYHDqMA1EjZRQ>
-    <xmx:VpYAZt7DwJk1CvYdvdR6W6MglubzjwpDZj2GufwH1wKvOYwJY7eFPw>
-Feedback-ID: ibe194615:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 24 Mar 2024 17:08:37 -0400 (EDT)
-From: Mark Pearson <mpearson-lenovo@squebb.ca>
-To: mpearson-lenovo@squebb.ca
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	hmh@hmh.eng.br,
-	dmitry.torokhov@gmail.com,
-	ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	njoshi1@lenovo.com,
-	vsankar@lenovo.com,
-	peter.hutterer@redhat.com
-Subject: [PATCH 4/4] platform/x86: thinkpad_acpi: Support hotkey to disable trackpoint doubletap
-Date: Sun, 24 Mar 2024 17:08:01 -0400
-Message-ID: <20240324210817.192033-5-mpearson-lenovo@squebb.ca>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240324210817.192033-1-mpearson-lenovo@squebb.ca>
-References: <mpearson-lenovo@squebb.ca>
- <20240324210817.192033-1-mpearson-lenovo@squebb.ca>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jrPZZfZ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7D974C43399;
+	Mon, 25 Mar 2024 01:54:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711331662;
+	bh=x6gbNWDUC3393woiAhRGtrXvkbgxFEKnVO43IWMARsU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=jrPZZfZ03PsaQD3fMGm9nq2UPpPmNCR2UhRG5lEG5sj1PDjplq8FZ75Zbzq4M++fX
+	 Q6TVSgOVQbUvhZzKhKOQNbQwhQhy2BZ8MRkhAIEF+3w0ilwV/nWxm1rjxE/qfP/Mr+
+	 E3yc5dSuBNp0Bm1L/KI5QDwiA8kFCuNjxzWIU7cCRVNPOgSNBZV+qUtQOY4O/YoTDT
+	 PFwCgNm3HEFcmI1zG6v/j47VLsywRsjUKgaIEweM6/K8U5bK1qRIu9RKHx/KjIcwnX
+	 cAPddvxMuoVuFBd1hKdjXjkxNm2QAvn+OmyKHTZvNymrjm/TZ8YaQVQ3vy0XdpqBcO
+	 88LTlEfD/nBQw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 59B24D2D0E0;
+	Mon, 25 Mar 2024 01:54:22 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -93,87 +37,84 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v6 000/164] pwm: Improve lifetime tracking for pwm_chips
+From: patchwork-bot+chrome-platform@kernel.org
+Message-Id: 
+ <171133166235.9916.5159550524752322105.git-patchwork-notify@kernel.org>
+Date: Mon, 25 Mar 2024 01:54:22 +0000
+References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
+In-Reply-To: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig_=3Cu=2Ekleine-koenig=40pengutronix=2Ede=3E?=@ci.codeaurora.org
+Cc: linux-pwm@vger.kernel.org, corbet@lwn.net, Jonathan.Cameron@huawei.com,
+ james.clark@arm.com, andriy.shevchenko@linux.intel.com, broonie@kernel.org,
+ marcan@marcan.st, sven@svenpeter.dev, claudiu.beznea@tuxon.dev,
+ nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+ florian.fainelli@broadcom.com, rjui@broadcom.com, sbranden@broadcom.com,
+ shc_work@mail.ru, bleung@chromium.org, p.zabel@pengutronix.de,
+ shawnguo@kernel.org, s.hauer@pengutronix.de, paul@crapouillou.net,
+ vz@mleia.com, mika.westerberg@linux.intel.com, andy@kernel.org,
+ linus.walleij@linaro.org, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+ matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
+ neil.armstrong@linaro.org, khilman@baylibre.com, conor.dooley@microchip.com,
+ daire.mcnamara@microchip.com, j.neuschaefer@gmx.net, heiko@sntech.de,
+ krzysztof.kozlowski@linaro.org, palmer@dabbelt.com, paul.walmsley@sifive.com,
+ mwalle@kernel.org, orsonzhai@gmail.com, baolin.wang@linux.alibaba.com,
+ zhang.lyra@gmail.com, fabrice.gasnier@foss.st.com, mcoquelin.stm32@gmail.com,
+ alexandre.torgue@foss.st.com, wens@csie.org, jernej.skrabec@gmail.com,
+ samuel@sholland.org, hammerh0314@gmail.com, thierry.reding@gmail.com,
+ jonathanh@nvidia.com, nobuhiro1.iwamatsu@toshiba.co.jp,
+ sean.anderson@seco.com, michal.simek@amd.com, brgl@bgdev.pl,
+ andrzej.hajda@intel.com, rfoss@kernel.org, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+ pavel@ucw.cz, lee@kernel.org, quic_amelende@quicinc.com,
+ quic_bjorande@quicinc.com, keescook@chromium.org, robh@kernel.org,
+ johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org,
+ kernel@pengutronix.de, linux-doc@vger.kernel.org, alyssa@rosenzweig.io,
+ asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org,
+ groeck@chromium.org, chrome-platform@lists.linux.dev, festevam@gmail.com,
+ linux-imx@nxp.com, linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ jbrunet@baylibre.com, martin.blumenstingl@googlemail.com,
+ linux-amlogic@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, alim.akhtar@samsung.com,
+ linux-samsung-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
+ dianders@chromium.org, Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+ dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+ greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
+ gustavoars@kernel.org, linux-hardening@vger.kernel.org
 
-The hotkey combination FN+G can be used to disable the trackpoint
-doubletap feature on Windows.
-Add matching functionality for Linux.
+Hello:
 
-Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Signed-off-by: Vishnu Sankar <vsankar@lenovo.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+This series was applied to chrome-platform/linux.git (for-kernelci)
+by Uwe Kleine-König <u.kleine-koenig@pengutronix.de>:
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 854ce971bde2..21756aa3d28d 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -167,6 +167,7 @@ enum tpacpi_hkey_event_t {
- 	TP_HKEY_EV_VOL_MUTE		= 0x1017, /* Mixer output mute */
- 	TP_HKEY_EV_PRIVACYGUARD_TOGGLE	= 0x130f, /* Toggle priv.guard on/off */
- 	TP_HKEY_EV_AMT_TOGGLE		= 0x131a, /* Toggle AMT on/off */
-+	TP_HKEY_EV_DOUBLETAP_TOGGLE	= 0x131c, /* Toggle trackpoint doubletap on/off */
- 	TP_HKEY_EV_PROFILE_TOGGLE	= 0x131f, /* Toggle platform profile */
- 
- 	/* Reasons for waking up from S3/S4 */
-@@ -354,6 +355,7 @@ static struct {
- 	u32 hotkey_poll_active:1;
- 	u32 has_adaptive_kbd:1;
- 	u32 kbd_lang:1;
-+	u32 trackpoint_doubletap:1;
- 	struct quirk_entry *quirks;
- } tp_features;
- 
-@@ -3598,6 +3600,9 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 
- 	hotkey_poll_setup_safe(true);
- 
-+	/* Enable doubletap by default */
-+	tp_features.trackpoint_doubletap = 1;
-+
- 	return 0;
- }
- 
-@@ -3739,6 +3744,7 @@ static bool hotkey_notify_extended_hotkey(const u32 hkey)
- 	case TP_HKEY_EV_PRIVACYGUARD_TOGGLE:
- 	case TP_HKEY_EV_AMT_TOGGLE:
- 	case TP_HKEY_EV_PROFILE_TOGGLE:
-+	case TP_HKEY_EV_DOUBLETAP_TOGGLE:
- 		tpacpi_driver_event(hkey);
- 		return true;
- 	}
-@@ -4092,13 +4098,15 @@ static void hotkey_notify(struct ibm_struct *ibm, u32 event)
- 				send_acpi_ev = true;
- 				ignore_acpi_ev = false;
- 				known_ev = true;
--				/* Send to user space */
--				mutex_lock(&tpacpi_inputdev_send_mutex);
--				input_report_key(tpacpi_inputdev, KEY_DOUBLECLICK, 1);
--				input_sync(tpacpi_inputdev);
--				input_report_key(tpacpi_inputdev, KEY_DOUBLECLICK, 0);
--				input_sync(tpacpi_inputdev);
--				mutex_unlock(&tpacpi_inputdev_send_mutex);
-+				if (tp_features.trackpoint_doubletap) {
-+					/* Send to user space */
-+					mutex_lock(&tpacpi_inputdev_send_mutex);
-+					input_report_key(tpacpi_inputdev, KEY_DOUBLECLICK, 1);
-+					input_sync(tpacpi_inputdev);
-+					input_report_key(tpacpi_inputdev, KEY_DOUBLECLICK, 0);
-+					input_sync(tpacpi_inputdev);
-+					mutex_unlock(&tpacpi_inputdev_send_mutex);
-+				}
- 				break;
- 			}
- 			fallthrough;	/* to default */
-@@ -11228,6 +11236,8 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
- 		/* Notify user space the profile changed */
- 		platform_profile_notify();
- 	}
-+	if (hkey_event == TP_HKEY_EV_DOUBLETAP_TOGGLE)
-+		tp_features.trackpoint_doubletap = !tp_features.trackpoint_doubletap;
- }
- 
- static void hotkey_driver_event(const unsigned int scancode)
+On Wed, 14 Feb 2024 10:30:47 +0100 you wrote:
+> Hello,
+> 
+> this is v6 of the series introducing better lifetime tracking for
+> pwmchips that addresses (for now theoretic) lifetime issues of pwm
+> chips. Addressing these is a necessary precondition to introduce chardev
+> support for PWMs.
+> 
+> [...]
+
+Here is the summary with links:
+  - [v6,001/164] pwm: Provide an inline function to get the parent device of a given chip
+    https://git.kernel.org/chrome-platform/c/4e59267c7a20
+  - [v6,003/164] pwm: Provide pwmchip_alloc() function and a devm variant of it
+    https://git.kernel.org/chrome-platform/c/024913dbf99f
+  - [v6,029/164] pwm: cros-ec: Change prototype of helpers to prepare further changes
+    https://git.kernel.org/chrome-platform/c/7256c2e79b8e
+  - [v6,030/164] pwm: cros-ec: Make use of pwmchip_parent() accessor
+    https://git.kernel.org/chrome-platform/c/19a568a8d3c4
+  - [v6,031/164] pwm: cros-ec: Make use of devm_pwmchip_alloc() function
+    https://git.kernel.org/chrome-platform/c/452be9421eda
+
+You are awesome, thank you!
 -- 
-2.44.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
