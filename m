@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7D0152E11;
-	Mon, 25 Mar 2024 07:11:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A820118149E;
+	Mon, 25 Mar 2024 07:11:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711350695; cv=none; b=lNZkBxFLZPkjZmVxHj11Ymw157AZsULfOjFhKGyRbCrOO1IasAGi9iqPhX7cUO714wlTAkn5MW+z5FaHcwCIjkTdfTM2F3EiK/35+plZNc12KC7rzS0B7GaKkZ9rcEr4J2T4lIBNS72wvBXwLcm6lf5/GuKwkfWdBP14AsNI0N4=
+	t=1711350687; cv=none; b=N/Z5DtqF/bobIys4NI3pyKZ5WA5kNqIN/5q6NF8jTndCgI/z7rOPcc1+1EaRD/y+uAW8dHOw3ZypLPrGE+sZabuOUf9n2Hi46LfGY18ScbiAJjA3rVDo6XG0tRmxI30Pl+sfSM+HW0Y2qrvn/XjqMZjc55iGR9kiLjGlPBVNXHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711350695; c=relaxed/simple;
-	bh=cNYwknOCoYozJYQki18ub+BQTqAuTBwIbKmwkZH+Rdw=;
+	s=arc-20240116; t=1711350687; c=relaxed/simple;
+	bh=RYeTCQwP5u3jJ+AkUZ6LHgFtrd06l1caA0vGxdp3bhM=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RubJxn5LDtsaFFsN8ElWOB4VQ40FV0ueGEpinrINFx2NUgSHRpuWYR4Z1ULMSBo0psDrE5j84wJ5EhVbFWMBIlE+pFpMQfmJimVsEo09ujaol462NJbI0pDmXpI3HpJScdirNSjxzv4HVq3WXNlw0p6oF8c3PjuUyzKX6aHpdn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nu67yIa1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lKs5MDua3g8p4I4+1+OrPvoJjIpk9Xeq5fSnr2Ubg0h5QWA4FN2iGTkHEiPTc697wEdDCOY0EVLtM4fu18BvFi/PMiZlWbjAvgxbzAV53i+jTs/riAWn3xV29RVZ1bPDINDJRKWjwnJ2Q9nQwF9NPmQF8DCDNZZo9lEjCCrluaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Alt9q+ta; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nu67yIa1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B49A5C43390;
-	Mon, 25 Mar 2024 07:11:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Alt9q+ta"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05C10C433F1;
+	Mon, 25 Mar 2024 07:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711350695;
-	bh=cNYwknOCoYozJYQki18ub+BQTqAuTBwIbKmwkZH+Rdw=;
+	s=k20201202; t=1711350687;
+	bh=RYeTCQwP5u3jJ+AkUZ6LHgFtrd06l1caA0vGxdp3bhM=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=nu67yIa15SCpfTJanXaBWhOku7Ap2WldWog9PIvPYtQPZeiYE926Hie6SdsjloJH6
-	 YQ6R8skFC+9ab9kVrHZFuyLivI+Q1eWoHLN5yxo/pgnMhkeb5Pi3wVMr/YnG8STYFh
-	 sOQiwxOgY7p6DxYSBLLIPJ9mTqOqzcLEh/tXKSVLeip3JGYceudpbifFCjbV5FqCBq
-	 8HITItpYSLpEC1F2HzymMHHFEul4WNVKbPWXqQhHogxudlpl7p5i8PRE9nC5tDBgnc
-	 l4pnrR7cP7UAlAso5G48ciHZN4QbC/+8mjek7+1x7jWuc1SMzH55HvRQyXAAFQWm2f
-	 vjO+LHlblY5ww==
+	b=Alt9q+tawym1SyqqoG3+QMsGYWZJgANmwxp9AFI3vdUq2RwmFe7LszV6wCXfmCL04
+	 gNeXiSBV2JraBD3M9ikl3+OwKLNj5BURjtb2f/B1s2BWFxrL36wfliMy2fJRf3pm3e
+	 +7FxrHVGafniohFnc7hl//EbzU5dJJlcv1xXZIcju6daZfpS8M2z/ETtssi7R96I9q
+	 EFKpxTfZ83P4Sp7i+hUwmIMeT39mWgAhj37qlPAm79mS1V5cIhDGYp54/YJwxfGknk
+	 BMxEDK1zEWP5eBYTOFNht0LYBsfnsjK2F3j5REG0LbvZs3329wAz4I/BrXhscniuHI
+	 tRY9YQB+MrWdQ==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: linux-pci@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -49,9 +49,9 @@ To: linux-pci@vger.kernel.org,
 	Eric Dumazet <edumazet@google.com>,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 28/28] PCI: Remove PCI_IRQ_LEGACY
-Date: Mon, 25 Mar 2024 16:09:39 +0900
-Message-ID: <20240325070944.3600338-29-dlemoal@kernel.org>
+Subject: [PATCH 26/28] scsi: pmcraid: Use PCI_IRQ_INTX
+Date: Mon, 25 Mar 2024 16:09:37 +0900
+Message-ID: <20240325070944.3600338-27-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240325070944.3600338-1-dlemoal@kernel.org>
 References: <20240325070944.3600338-1-dlemoal@kernel.org>
@@ -63,47 +63,27 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace the last references to PCI_IRQ_LEGACY with PCI_IRQ_INTX in pci.h
-header file. With this change, PCI_IRQ_LEGACY is unused and we can
-remove its definition.
+Use the macro PCI_IRQ_INTX instead of the deprecated PCI_IRQ_LEGACY
+macro.
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 ---
- include/linux/pci.h | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/scsi/pmcraid.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 16493426a04f..b19992a5dfaf 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1077,8 +1077,6 @@ enum {
- #define PCI_IRQ_MSIX		(1 << 2) /* Allow MSI-X interrupts */
- #define PCI_IRQ_AFFINITY	(1 << 3) /* Auto-assign affinity */
- 
--#define PCI_IRQ_LEGACY		PCI_IRQ_INTX /* Deprecated! Use PCI_IRQ_INTX */
--
- /* These external functions are only available when PCI support is enabled */
- #ifdef CONFIG_PCI
- 
-@@ -1648,8 +1646,7 @@ int pci_set_vga_state(struct pci_dev *pdev, bool decode,
-  */
- #define PCI_IRQ_VIRTUAL		(1 << 4)
- 
--#define PCI_IRQ_ALL_TYPES \
--	(PCI_IRQ_LEGACY | PCI_IRQ_MSI | PCI_IRQ_MSIX)
-+#define PCI_IRQ_ALL_TYPES	(PCI_IRQ_INTX | PCI_IRQ_MSI | PCI_IRQ_MSIX)
- 
- #include <linux/dmapool.h>
- 
-@@ -1719,7 +1716,7 @@ pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
- 			       unsigned int max_vecs, unsigned int flags,
- 			       struct irq_affinity *aff_desc)
+diff --git a/drivers/scsi/pmcraid.c b/drivers/scsi/pmcraid.c
+index e8bcc3a88732..9c57efa10732 100644
+--- a/drivers/scsi/pmcraid.c
++++ b/drivers/scsi/pmcraid.c
+@@ -4033,7 +4033,7 @@ static int
+ pmcraid_register_interrupt_handler(struct pmcraid_instance *pinstance)
  {
--	if ((flags & PCI_IRQ_LEGACY) && min_vecs == 1 && dev->irq)
-+	if ((flags & PCI_IRQ_INTX) && min_vecs == 1 && dev->irq)
- 		return 1;
- 	return -ENOSPC;
- }
+ 	struct pci_dev *pdev = pinstance->pdev;
+-	unsigned int irq_flag = PCI_IRQ_LEGACY, flag;
++	unsigned int irq_flag = PCI_IRQ_INTX, flag;
+ 	int num_hrrq, rc, i;
+ 	irq_handler_t isr;
+ 
 -- 
 2.44.0
 
