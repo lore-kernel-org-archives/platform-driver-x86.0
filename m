@@ -1,117 +1,186 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from fhigh4-smtp.messagingengine.com (fhigh4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08BD45033;
-	Mon, 25 Mar 2024 20:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B646C18EA2;
+	Mon, 25 Mar 2024 20:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711397458; cv=none; b=cj05Qs/7s3Eb1iaoMwmFHF4KY85M3ZwtR8tm36Y1b0NEhA/2pEdtxKp+Wj4qSHykQVsmJlAS6OlUCsnG4OIg8Y+0huclQoPLzlxPcSYvBj+Boj/LozM0sXrjUFJx1jSlxjyMUE8xwO3N24LvLTvAxCISlwz1vAuX3TSHS2mhSYE=
+	t=1711398968; cv=none; b=Jl62sR1GBx7hBnwfxy1eL6tdFnWagU9NAi2AFhmrqxJD+tY1e1O1xsR4Q+0mOScM92rOGdZDA+W8TBj1WjVQgHjuoGa3CPgyuOop5K03Y3U4kwUOyxlVJX3Be/Ww39iazJEnvj5ZjfTkI+TSz+LJ5XZ+D+KkM+hFmJ6JprLnOf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711397458; c=relaxed/simple;
-	bh=1hS5NcLSFnVm2dCXuWF1CcXyaqi1PIrZM8H+m08BW8U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=pxVDIcnDKiK/g0BTOB/p0rk85iYNQMGUqiHgGxdryChjhz9t42oJH0mVoX3fAibmBpUT3F9gj0pxo3Pxunxfej9sQYznXTDkMnvLadtx8Uq2lq7z6vgdtklxEMz/UpeRL/nIIETZOmDAB2GOGbjylMgEEJ2EkauaNunIWK6/0Go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=KDCS/0zr; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1711398968; c=relaxed/simple;
+	bh=y6HSKXbk2LnvKJsz1qMq/c8WA8S7zxbpEE3VAgqsJTQ=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=ZTkenkcXuoMn+VA75LV7vyr8zbyuNMFBi+51T+F4hIKNbb/Op+15JAriSAbPSBtJozZE/Pge2lVDfn6rQ6yznGi4z0CJHSnCdX7aawl2bjIuGBLfZfAZUx+5qsEyWWwQD/d5Fne7uUfG+VEOWG8vrMcOTRz5S4XFdbu2kWB1iQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=QZSJ0LNe; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iQ/rqh1+; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="KDCS/0zr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1711397427; x=1712002227; i=w_armin@gmx.de;
-	bh=k5GImjZ67YtdbUkAgxVbsS2XJfKlz1HCv891Pa0K9js=;
-	h=X-UI-Sender-Class:Date:Subject:To:References:From:In-Reply-To;
-	b=KDCS/0zrDTxyxdvF/Hy3PacpYWCo72HItPKTv98QWlJz+1cQEWS4RTyxpj2FWDT9
-	 drdwdLQO9c/jsd2fkEnYMBMQwT4Qq4Fhm5Ek2/rZUQxJToOocIp5C+QklPgpUifdN
-	 6JxEpTQWfEDUNdb7rzKYjHxSqVNwOOX6QYAfZiog5h+FJAS0cF5kZaKCFqPDpicrN
-	 Udynh2HboSvaCvRkufE3Ke1QLWK/EOcUAU/DWr7J1FZqAE6RHr9pklp8GqgNgFTpA
-	 2rxGsE0j4Z1lKyrOW2cIk9cdlX4YogkgXblJzWbQoBGc2YifkyqEoK1iN9DmPnQqX
-	 FsXg4jOwFPFv5xu9mA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N4QwW-1spvPx0OQw-011Tra; Mon, 25
- Mar 2024 21:10:27 +0100
-Message-ID: <19661160-76d4-43ed-987f-dbf183e891ba@gmx.de>
-Date: Mon, 25 Mar 2024 21:10:25 +0100
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="QZSJ0LNe";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iQ/rqh1+"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id B233B114013C;
+	Mon, 25 Mar 2024 16:36:04 -0400 (EDT)
+Received: from imap41 ([10.202.2.91])
+  by compute2.internal (MEProxy); Mon, 25 Mar 2024 16:36:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1711398964;
+	 x=1711485364; bh=m2xPQEy5YYTJ6xUklP2AVFmhvWw/0rb5mHbcNfNRrGg=; b=
+	QZSJ0LNe2EARQDscXCtYwnIcbm+pcYx6wBIKp79pYoJv6P7hR6eanTbOXGQDSXRr
+	BNCt7mqwPZP4lfZBeWWEj5uz8vM5YslE0aLcdD2w74Xe7w9JKO1+NahiRTaMQG4t
+	Es7kFFQ0qyct4kNNw2QJabWw5BHP+4bEF0qX2JlBZyuEG4Z6Wh+akC5EJn9WKwtq
+	FtD99giaebLC32NGatnJNiKuAAa8uOkNreKSp54mGEyUBdCBRAS86O8XeZHfnXi/
+	Q6OyoL/svp2QBi2h4aOR3NkDF12UMQrJEDfLZpaw2fdWC7FOz/FcuAHacyHfEKFG
+	LHgCxcN7PCV0Do2v6fPenw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711398964; x=
+	1711485364; bh=m2xPQEy5YYTJ6xUklP2AVFmhvWw/0rb5mHbcNfNRrGg=; b=i
+	Q/rqh1+hFRI0ref2JGDFi+ZwvsSKiGbmQdqxrIi14qhEaMlrR9ublOF5lmoxAgV8
+	hiOvpVnToY/Ua0kx7LOrGSRoKW/K6qPmXUJ/K6ypyGWIaJANFI57qZn3dWxpSQh4
+	A5DyEbLWY0kaJr0ZbRP2EsYKOU6Xlh2In0z/fZ19ksqvAm3Yp8YobhUYpmTuHJ0v
+	P2CuPoT/1ilLGXQnsOmfJ3dp8KR8nlOnxXXYnpC6Qh4VlPaZCnD3/5S66Eq4EiQn
+	2iPibr0pfUhynSSIki9529R0u/eBjpMNF5BaFe3WthbihfLo7Cb/GnttEPK/sfvQ
+	XB327zlDgrFfEEy/hqNtg==
+X-ME-Sender: <xms:NOABZl66H2mOZg4MyYYcZzzu760DaBBksfnZ6bcyesrVaqknz8Mhlg>
+    <xme:NOABZi7qkN4nGBLRaYi_GIIfszwqN0hcH7acYeQL6fExoZ5R4kPqZKJPPbSBKiFdt
+    70t0LRZxVf5zzcetc4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudduuddgjeelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfn
+    uhhkvgculfhonhgvshdfuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrth
+    htvghrnhepfeeugffhvdeufeehieelvdegfeffveegleehtddvheegkeetueegtdegueeh
+    vdelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplh
+    hukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:NOABZsdh4bPxQYjeiznLWRa2uxFev8o_G5H163-efyuTXt3-GW7Zog>
+    <xmx:NOABZuLXJg-LQ34_kK-dwXd3G1_WdYbctFQJHbrgaWcgQ-F0RRfgwA>
+    <xmx:NOABZpK7GpZnwBo9zqqenBH3H9V294DhOIfomiO7L5EXOLBHbOIWRg>
+    <xmx:NOABZnylZfUomci-6KAx5_dnJz3jJlgv56gmGokNB99gp4zEaFjvJA>
+    <xmx:NOABZmHWH1FIGhmzJapDZI1k-q8DNq4sotdp1zB6uyhhFYZoZfZX3A>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 47F4A2340080; Mon, 25 Mar 2024 16:36:04 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-332-gdeb4194079-fm-20240319.002-gdeb41940
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/1] platform/x86: Add wmi driver for Casper Excalibur
- laptops
-To: mustafa <mustafa.eskieksi@gmail.com>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, jdelvare@suse.com, linux@roeck-us.net,
- pavel@ucw.cz, lee@kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-leds@vger.kernel.org
-References: <20240324181201.87882-1-mustafa.eskieksi@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20240324181201.87882-1-mustafa.eskieksi@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Message-Id: <9962eb39-23b8-470c-aab9-698f10c80358@app.fastmail.com>
+In-Reply-To: <2cadcf26-7b99-3b32-8441-1b3939cf93b4@linux.intel.com>
+References: <20240325054938.489732-1-luke@ljones.dev>
+ <20240325054938.489732-2-luke@ljones.dev>
+ <2cadcf26-7b99-3b32-8441-1b3939cf93b4@linux.intel.com>
+Date: Tue, 26 Mar 2024 09:35:44 +1300
+From: "Luke Jones" <luke@ljones.dev>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Hans de Goede" <hdegoede@redhat.com>, corentin.chary@gmail.com,
+ platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/9] platform/x86: asus-wmi: add support for 2024 ROG Mini-LED
+Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:MzAOenI/8ST5bPq1ExjXTewiulUgJsw+eKvNeLMu9b/QqFXI+HZ
- DDi/1ZBInrf9MDaHj+0zRFBJsC+ua38+dOLRn523wjSiDyxrkQVDsIYh/wieCdbjvFCxy2e
- hQan7SNyErbcAZwEcUF9cudypMEch+wSOJG25OSM8PqSSAT1yBXZqBcZdy+nOJD0meWazAA
- TCWWVyHGmNWCrujxWENyg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:4Q7DKlFfmFE=;1gutw6nxLW14lkJsyKYuM4sLje8
- z/GVi1B240WDw392PqTI8PmIGLBIaP6em5iITJ+UL7Q+rIYiJevgcuBJ2cu0uFjwUrcoYGyXs
- s/zKD4WK7gRXFWfWmvd3t4nGLT8p3bijTGAk3STO5TDxGfjU8vK9x/sEjcVmA5M2AwrAIgVzR
- BNxJmpqbWStWlkBuTuJxjrSZ3PT6Izl42brBi4/z6kNBLrFXzu3E3oXLQc8MIvHFSYWb+spCC
- XZb+yXWnZc2XSTnuRsFdqA/5g8x2vDLMxyBkqrfZ7yn4IZQoL46n/dsdVgEikTB068zmGl0/o
- KQ3PrJ4jb+VvOd4Ohs5fzkMJlA1QpN7T5oLQgj0McqNMMhdfz1GnMWNm63jHiQNkKL5UOMP6h
- WFacbdwoLlJNFcKcFHOHUtp8TutqM/YRAD5v+Nc07bIjelQBV+SMokkst+l7VSqoL7/f36szu
- kvBeL2vw286XGsMWOwv0oMrnyQggLdHdVhse9NaK5PFiHCNMLAUg6ba5XcDs1TR3MbiyO+pXX
- gq3YGulqT4AnsvN9O93y/HZIQshKjEeclZJ8WzCSImYHXBXY6b8DhRWI2hqTlbvskXRjQYbnP
- Nj0J0HFCMyz7xdRwYu+ht/lRbn9WEBr46eWI94dtDidmFu7/YUUQqt7YncO7ZATaax4nC8/nz
- OcU1IYjBo9+XIFba9EdJxqBZOMJWKDv1GdI1CgyVdzEyniUDtTyXyn4O+F7Vw/NegtDr6rAOJ
- TCjfULJos8hMDcNteij1eMjoqN4mccnxAF3Ml6tyyPMnbyXnZsb42ed/Ne0+QYEooslCF+8aw
- d5+zTZpHGYt/N4+6u2FKNQrd1/F3taRwYzruGb54CmmKU=
 
-Am 24.03.24 um 19:12 schrieb mustafa:
 
-> From: Mustafa Ek=C5=9Fi <mustafa.eskieksi@gmail.com>
->
-> Hi,
-> I want to note that moving mutex_init to the bottom of the function
-> crashes the driver when mutex_lock is called. I didn't investigate it
-> further but I wanted to say that since Ai Chao also did it like that.
 
-You mean like the lenovo-wmi-camera driver? In this case, the driver was
-only using the mutex inside the WMI notify callback, which can only run
-once the driver has finished probing.
+On Tue, 26 Mar 2024, at 2:47 AM, Ilpo J=C3=A4rvinen wrote:
+> On Mon, 25 Mar 2024, Luke D. Jones wrote:
+>=20
+> > Support the 2024 mini-led backlight and adjust the related functions
+> > to select the relevant dev-id. Also add `available_mini_led_mode` to=
+ the
+> > platform sysfs since the available mini-led levels can be different.
+> >=20
+> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> > ---
+> >  .../ABI/testing/sysfs-platform-asus-wmi       |  8 ++
+> >  drivers/platform/x86/asus-wmi.c               | 74 ++++++++++++++++=
++--
+> >  include/linux/platform_data/x86/asus-wmi.h    |  1 +
+> >  3 files changed, 76 insertions(+), 7 deletions(-)
+> >=20
+> > diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Doc=
+umentation/ABI/testing/sysfs-platform-asus-wmi
+> > index 8a7e25bde085..61a745d2476f 100644
+> > --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
+> > +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+> > @@ -126,6 +126,14 @@ Description:
+> >  Change the mini-LED mode:
+> >  * 0 - Single-zone,
+> >  * 1 - Multi-zone
+> > + * 2 - Multi-zone strong (available on newer generation mini-led)
+> > +
+> > +What: /sys/devices/platform/<platform>/available_mini_led_mode
+> > +Date: Jun 2023
+> > +KernelVersion: 6.10
+> > +Contact: "Luke Jones" <luke@ljones.dev>
+> > +Description:
+> > + List the available mini-led modes.
+> > =20
+> >  What: /sys/devices/platform/<platform>/ppt_pl1_spl
+> >  Date: Jun 2023
+> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/=
+asus-wmi.c
+> > index 18be35fdb381..54ce0fb26f42 100644
+> > --- a/drivers/platform/x86/asus-wmi.c
+> > +++ b/drivers/platform/x86/asus-wmi.c
+> > @@ -297,6 +297,7 @@ struct asus_wmi {
+> > =20
+> >  bool panel_overdrive_available;
+> >  bool mini_led_mode_available;
+> > + u32 mini_led_dev_id;
+> > =20
+> >  struct hotplug_slot hotplug_slot;
+> >  struct mutex hotplug_lock;
+> > @@ -2109,10 +2110,27 @@ static ssize_t mini_led_mode_show(struct dev=
+ice *dev,
+> >  struct asus_wmi *asus =3D dev_get_drvdata(dev);
+> >  int result;
+> > =20
+> > - result =3D asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_MINI_=
+LED_MODE);
+> > - if (result < 0)
+> > - return result;
+> > + result =3D asus_wmi_get_devstate_simple(asus, asus->mini_led_dev_i=
+d);
+> > =20
+> > + /* Remap the mode values to match previous generation mini-led.
+> > + * Some BIOSes return -19 instead of 2, which is "mini-LED off", th=
+is
+> > + * appears to be a  BIOS bug.
+> > + */
+> > + if (asus->mini_led_dev_id =3D=3D ASUS_WMI_DEVID_MINI_LED_MODE2) {
+> > + switch (result) {
+> > + case 0:
+> > + result =3D 1;
+> > + break;
+> > + case 1:
+> > + result =3D 2;
+> > + break;
+> > + case 2:
+> > + case -19:
+>=20
+> Can you confirm this -19 really does come from BIOS? Because I suspect=20
+> it's -ENODEV error code from from one of the functions on the driver s=
+ide
+> (which is why I asked you to change it into -ENODEV).
 
-In your case however, the mutex can already be used while the driver is st=
-ill
-probing, because it registers callbacks with other subsystems.
-The subsystem (maybe led?) assumes that the device is already fully operat=
-ional
-and will begin calling the callbacks immediately, causing a crash.
+Yes it does. It is rather annoying. What happens in this case is that `2=
+` is written to the WMI endpoint to turn off the MINI-Led feature, this =
+works fine and it is turned off, there are no errors from the write at a=
+ll - verifying the accepted limits in dsdt also shows it is correct.
 
-Looking at the code, it seems that you are not calling mutex_destroy() in
-casper_wmi_remove(). I suggest to use devm_add_action_or_reset() for handl=
-ing this.
+However, after that, the read fails once. And only if that `2` was writt=
+en. `0` and `1` write fine, and read fine also. I hope I've managed to d=
+escribe and clarify what I'm seeing here.
 
-Thanks,
-Armin Wolf
+I'm happy to change -ENODEV. No problem, queued on my todo list.
 
-> Driver sets all leds to white on start. Before that, when a led's
-> brightness is changed, that led's color gets set to white but others
-> keep their old colors which creates a bad user experience (at least for
-> me). Please inform me if this is a bad approach.
-> Also, this driver still lacks support for changing modes and I seek
-> advise for that.
->
-> Mustafa Ek=C5=9Fi (1):
->    platform/x86: Add wmi driver for Casper Excalibur laptops
->
->   MAINTAINERS                       |   6 +
->   drivers/platform/x86/Kconfig      |  14 +
->   drivers/platform/x86/Makefile     |   1 +
->   drivers/platform/x86/casper-wmi.c | 641 ++++++++++++++++++++++++++++++
->   4 files changed, 662 insertions(+)
->   create mode 100644 drivers/platform/x86/casper-wmi.c
->
+Cheers,
+Luke.
