@@ -1,75 +1,162 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5715475D
-	for <platform-driver-x86@vger.kernel.org>; Tue, 26 Mar 2024 11:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7F3548F0;
+	Tue, 26 Mar 2024 11:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711453441; cv=none; b=C/FYpMiW6cD4PWIodu9L8vE1KjJlLOdfJ2Xe4WGuj6XGN8f5vQhvrpI2OW0XmI7bBbQybEluP/HQUNCXTDZhUJxJN82pYYu/wPAuCNan9ciRyieZfc+C4h/CJtkgJNkc5C3irgBMm08iY8JdpYUKHiN9Iont5hzmGtObaUrvD3s=
+	t=1711453766; cv=none; b=EWPEzdYIv5enwfVlbqd9epjJr/Mr7Q38LXSyeCuiGUwTVYB54qpFhDf5kb+enxAm9496zhB8igWYX75kV6L3u3SOKm+CWZQNvO4Iy36capAHoNb+PWFkVNSy7C9PaJCq3ExbZGEtdmYQarUcxLUAFso08nlNTxZ5fIfJubpXV/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711453441; c=relaxed/simple;
-	bh=qmQ3LlhXY3QFRm9L41Yx5MepVpD7ltyOzolfuuDgGaI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=fZl/bA1yJ98xgDqpnieiQT+DEEN8rgSFityc2NUF5wxUDGimdv03I6XuKRU6P/y9tCL/bYCJOuVjYcsRAmw2Fbmp+9M9oA9S/usqmoaQEDI5kyY5fGuWA7pGUzB/po1pFELRpdDNKOJV63kEGTrV6lJCZZLAZgux8AiEzBxznt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net; spf=pass smtp.mailfrom=iwanders.net; dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b=XpcSX6ST; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iwanders.net
+	s=arc-20240116; t=1711453766; c=relaxed/simple;
+	bh=ma57VUI0N6NfIsuEAjh7CSgl2Wttd/rBTVP3o+v5T0A=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=S1bn3vYbTsS9zzAX1C1/a3xmNfGgzAcFWVnaWw2g9+i5yr1Lvxp9E+i2M7fqXTT/TMSd3mFgTrOrUnEugGKx2h/mM8oYlhdjV2RhJWjCUcChndzD+TQ99Vpv+GicXE230I+suaIaG6vbcA8BEnNT1/hpMCluthrygwcfLMoC+Oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ff4qgSIY; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b="XpcSX6ST"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-609fd5fbe50so60319397b3.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Mar 2024 04:44:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=iwanders.net; s=google; t=1711453439; x=1712058239; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qmQ3LlhXY3QFRm9L41Yx5MepVpD7ltyOzolfuuDgGaI=;
-        b=XpcSX6STeKmKsij3Ow8JWbz5LKK67NkPOmptzCexmVMaJiVkAUuMpgbKE1jjiQWiXX
-         qf4PnWbrzge7zMpN92Kxh40uHH5+XUE1gmIY/hefS7EDLJ2wWikROhPnozZfc+sIvkZl
-         S30rb7DfD8CLyAezwjReqAwawuFYIB1I9HEsI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711453439; x=1712058239;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qmQ3LlhXY3QFRm9L41Yx5MepVpD7ltyOzolfuuDgGaI=;
-        b=fGLCOm1oSsKLJUTpuln0KeP1XjL3gjbKpYcC41Y4lA++HQ0TUhzehNm7+G6KMlBIsJ
-         fzIWJitr2WrVD3d942LZ98gmn2vYh1TFtfBCo6EQk1JiyNm1n5SVx98uMYIsuC5YZbdy
-         Uh1xAirA7oGhSHJqYhXeD08AR/uC0+5jqk4jY8h+13STjx+qZmsdXIPhaoExa+uRDRRe
-         H+3DcI8/J9Id+GfrrCEiUBHLHpJ3Tw1XUsDPIzx4nFy777ha/vMY/LSIddyXbRYswYtf
-         RNIC9AXDqO9vPQwR2Ns3LYeKmZCMAmBq8r0/Xp4lr1gTuUaAXiud/i9qhuTY8Ap4zOeP
-         eTvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUZy6jy0++mkuQLNK4W/3t5l9uLCeIpRvXR3VWnegVHHEwwV0i+zGAIpCf4zDC/LxDeHoAP0Qk9+ErqEFW6AtBuWXuiz4lJ+gRhBLVuuApQ4+OShg==
-X-Gm-Message-State: AOJu0Yy5KF2ikBGr9Xwwu65jCyUDbzjQmJmbpivjkLKHdMeem4yG6dMp
-	X9Qa5l+Mx406OpUPM0mR9M0nTEteLhoyO50z8rSBwSJTzPvpO/j+j97FAE6XmOw=
-X-Google-Smtp-Source: AGHT+IF2Cs0FGB3Z/PMvHAv5nLPWR4QtgOjqxm1/pnuQbMl02laaQ/7QbkJIkoTRm+6XIUt+SciZbg==
-X-Received: by 2002:a0d:e28a:0:b0:60f:ddae:8236 with SMTP id l132-20020a0de28a000000b0060fddae8236mr2553848ywe.20.1711453439239;
-        Tue, 26 Mar 2024 04:43:59 -0700 (PDT)
-Received: from eagle.lan (24-246-30-234.cable.teksavvy.com. [24.246.30.234])
-        by smtp.gmail.com with ESMTPSA id cx7-20020a05620a51c700b007884a54ffb1sm2918486qkb.135.2024.03.26.04.43.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 04:43:58 -0700 (PDT)
-From: Ivor Wanders <ivor@iwanders.net>
-To: hdegoede@redhat.com
-Cc: ilpo.jarvinen@linux.intel.com,
-	ivor@iwanders.net,
-	linux-kernel@vger.kernel.org,
-	luzmaximilian@gmail.com,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] platform/surface: platform_profile: add fan profile switching
-Date: Tue, 26 Mar 2024 07:43:55 -0400
-Message-Id: <20240326114355.3245-1-ivor@iwanders.net>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <aff161d5-cf6e-421b-8250-35e724397dcf@redhat.com>
-References: <aff161d5-cf6e-421b-8250-35e724397dcf@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ff4qgSIY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711453764; x=1742989764;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=ma57VUI0N6NfIsuEAjh7CSgl2Wttd/rBTVP3o+v5T0A=;
+  b=ff4qgSIYcRiATMPUTnS+cxwTqg14ODLv7l0/hg/xefvY2m9xXGmzwASh
+   RU1W2EcMlYHXwP0hIueqkII9tPNi6pr2+PCPLszMYXC5Fz4BMu+xBWLsp
+   1SLpGXQ4oEVHYSHQIH2/10pEfg6IZPRabMz1j4mLQdO/5EiZTjYqChj0d
+   pvkwGmjFy00/GQABqPQhR4BJ2ap2pyL0E03+URzucepKvrgCWRuj2+Al9
+   nldxImIHtAnieimprF/maISy9QdusvQ7jpskcHR2qaAciXl3tgZCgz4My
+   /qsciUqQzd9YcxfRLW4F4XZ/xoVRyt1K6PYHbPgs7W+zkOHuIQ9iGxFCj
+   g==;
+X-CSE-ConnectionGUID: IMaGeflSTlm04YzNam5Egg==
+X-CSE-MsgGUID: 4Fs6VecETI2fMwfENAucmg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="17043712"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="17043712"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 04:49:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="16014379"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.20])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 04:49:21 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 26 Mar 2024 13:49:16 +0200 (EET)
+To: Luke Jones <luke@ljones.dev>
+cc: Hans de Goede <hdegoede@redhat.com>, corentin.chary@gmail.com, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/9] platform/x86: asus-wmi: add support for 2024 ROG
+ Mini-LED
+In-Reply-To: <9962eb39-23b8-470c-aab9-698f10c80358@app.fastmail.com>
+Message-ID: <13a24576-da89-95b8-4ed2-c24b5ba54a21@linux.intel.com>
+References: <20240325054938.489732-1-luke@ljones.dev> <20240325054938.489732-2-luke@ljones.dev> <2cadcf26-7b99-3b32-8441-1b3939cf93b4@linux.intel.com> <9962eb39-23b8-470c-aab9-698f10c80358@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; BOUNDARY="8323328-123968063-1711453452=:1084"
+Content-ID: <4af481a0-3df1-fb51-9340-c76dc95d2617@linux.intel.com>
 
-> Once I've run some tests on this branch the patches there will be
-> added to the platform-drivers-x86/for-next branch and eventually
-> will be included in the pdx86 pull-request to Linus for the next
-> merge-window.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Sounds good, thank you for describing the process.
+--8323328-123968063-1711453452=:1084
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <2fe8638a-8dad-ab77-13ea-f5eb0404094e@linux.intel.com>
 
-~Ivor
+On Tue, 26 Mar 2024, Luke Jones wrote:
+> On Tue, 26 Mar 2024, at 2:47 AM, Ilpo J=E4rvinen wrote:
+> > On Mon, 25 Mar 2024, Luke D. Jones wrote:
+> >=20
+> > > Support the 2024 mini-led backlight and adjust the related functions
+> > > to select the relevant dev-id. Also add `available_mini_led_mode` to =
+the
+> > > platform sysfs since the available mini-led levels can be different.
+> > >=20
+> > > Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> > > ---
+
+> > > @@ -2109,10 +2110,27 @@ static ssize_t mini_led_mode_show(struct devi=
+ce *dev,
+> > >  struct asus_wmi *asus =3D dev_get_drvdata(dev);
+> > >  int result;
+> > > =20
+> > > - result =3D asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_MINI_L=
+ED_MODE);
+> > > - if (result < 0)
+> > > - return result;
+> > > + result =3D asus_wmi_get_devstate_simple(asus, asus->mini_led_dev_id=
+);
+> > > =20
+> > > + /* Remap the mode values to match previous generation mini-led.
+> > > + * Some BIOSes return -19 instead of 2, which is "mini-LED off", thi=
+s
+> > > + * appears to be a  BIOS bug.
+> > > + */
+> > > + if (asus->mini_led_dev_id =3D=3D ASUS_WMI_DEVID_MINI_LED_MODE2) {
+> > > + switch (result) {
+> > > + case 0:
+> > > + result =3D 1;
+> > > + break;
+> > > + case 1:
+> > > + result =3D 2;
+> > > + break;
+> > > + case 2:
+> > > + case -19:
+> >=20
+> > Can you confirm this -19 really does come from BIOS? Because I suspect=
+=20
+> > it's -ENODEV error code from from one of the functions on the driver si=
+de
+> > (which is why I asked you to change it into -ENODEV).
+>=20
+> Yes it does. It is rather annoying. What happens in this case is that=20
+> `2` is written to the WMI endpoint to turn off the MINI-Led feature,=20
+> this works fine and it is turned off, there are no errors from the write=
+=20
+> at all - verifying the accepted limits in dsdt also shows it is correct.=
+=20
+>=20
+> However, after that, the read fails once.
+
+Hi,
+
+I'm left a bit unsure how to interpret your response. If "read fails", it=
+=20
+would indicate that -ENODEV originates from asus_wmi_evaluate_method3(),=20
+asus_wmi_get_devstate() or asus_wmi_get_devstate_bits(), not from BIOS? So=
+=20
+which way it is?
+
+After reading some more code, I think I figured out the answer myself.
+However, that raises another question... So lets now take a step back and=
+=20
+walk through the code:
+
+Your patch does:
+=09result =3D asus_wmi_get_devstate_simple(asus, asus->mini_led_dev_id);
+
+asus_wmi_get_devstate_simple() calls asus_wmi_get_devstate_bits() with
+ASUS_WMI_DSTS_STATUS_BIT mask that is 0x00000001.
+
+If there's no error, retval is masked with that ASUS_WMI_DSTS_STATUS_BIT=20
+forcing the return value to 0-1 range so:
+
+a) I don't think -19 can originate from BIOS but comes from kernel side.
+b) How can it ever return 2 (mini-LED off) ?????
+
+> And only if that `2` was=20
+> written. `0` and `1` write fine, and read fine also. I hope I've managed=
+=20
+> to describe and clarify what I'm seeing here.
+>=20
+> I'm happy to change -ENODEV. No problem, queued on my todo list.
+
+
+--=20
+ i.
+--8323328-123968063-1711453452=:1084--
