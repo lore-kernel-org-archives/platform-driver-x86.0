@@ -1,171 +1,77 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353E712B157;
-	Tue, 26 Mar 2024 21:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7EE1E884;
+	Tue, 26 Mar 2024 21:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711486831; cv=none; b=gtgRKVtZv/8qWAXgTtyyot9QQXU5fUEZ9CNuFVa6WocJW7ruz684xCIrEb3T1oFzRWr2dzIPJBJ2q2DVibrgG2FpdznlOh7YYJeQsSyQerSBZNOYrdtcMZQI7qXUkByIpin6lSg7PxnYeUZ0gY1630ciOJo1BjSdOrnxWxpCYeE=
+	t=1711487673; cv=none; b=TK8eihENos9bIj3hsSIXMhKelu50tKVirjaVCwkFMaVUXKQAxafRLk9y4cvfxrecICHZjwagtAqaPMXzMGW1g5+df4yxruCqfeyfuu1GwvrYl5Gr9WFh28f730QqXxAS2G737elH3YrDIX4ApUvjkeMQ8t+VdBfIBCZTWmhwz6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711486831; c=relaxed/simple;
-	bh=TACiQ+xeZGqKNmYVboNXIyaA6O8fjKoa8PCXLZZyb0M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bdcRCZilHqRGWWkS2y2r6kAPP3l+q8lp/0dfTFSfKtyMPotCl+UcTVbp4WHUvYT2mH5gSLIAbpf37+NgBWjWvzO1B/XYiRteXQzixV7NtNdi7BTKDFpsoaSxPR0dLYFki6/mnnU4krSF98laBWifsPU93wMnAhS4ntwjd9KinFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=dZldq+m4; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1711487673; c=relaxed/simple;
+	bh=cxfzcpVl6iw0nLD4z59WnZub1zdzpHD3Ab/gARw6LCQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=WXjygm7jGJyJxeZdCwGhQSgc9luOnhCIwF/ghWQB1IWDnHkpP6TyCWxXPIkMN+YYrgmq4g66WtMGlm6WcUV5bk/nvaoucHfN98EXvO8D9lMwbz0lq63t1bJuHA5n5kJmdcdkKgmhik32+ktM9FH1GyxTpC986Jn5CIC9wtmy9+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NLVThY5Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="dZldq+m4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1711486805; x=1712091605; i=w_armin@gmx.de;
-	bh=oovH05l1sLDvE4OHaXaGFv4SRMSBo6EJ3rcguRC/AfU=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=dZldq+m4Kq7kIFeVzmxRgb1x7V9xohxFoqOF6mk1C4WZNyzkD8mX37rv1n72uxqx
-	 TBJxXj4FvW9Zzk3C/lz60hImRz79OfEY+zK9pKZcaXJNvpmF90+p+DElqErnwmpMy
-	 FLqhRFijCDE0g/WrnOCoX6rpMulFQY3fzIeatjLBlZwC7HPxbdmeZuH8/1rI2bkGk
-	 Rf77DMPMVaNgzajCNLQ2uXK4liQkT05RCLiJMAaZmjJkIhimEC5DqeZCQUPbOWX7n
-	 DlflnNdBIq+WOxvBvtwH4szIjReJmuLCTnpSjY2rIs9AQUz+95qaz9IZxbES30lXU
-	 x34/OU96JERsOD7IPg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MowGa-1seSUt15B8-00qVsV; Tue, 26
- Mar 2024 22:00:05 +0100
-Message-ID: <31bc6c0a-c0e7-4055-82ec-33da51368e0f@gmx.de>
-Date: Tue, 26 Mar 2024 21:59:58 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NLVThY5Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5738BC433F1;
+	Tue, 26 Mar 2024 21:14:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711487672;
+	bh=cxfzcpVl6iw0nLD4z59WnZub1zdzpHD3Ab/gARw6LCQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=NLVThY5Yh2SzMHj4gx9UytpQfFJgRigfFFXt+bm6Vuu3F1XJQiMr6mpQ5ZiPngd1n
+	 Y3oah6WxB6w8vOtameV4wbrxrY5wofrUOI9g31Io5EdLc/j+KK8tfXH3xtt0JxGB2N
+	 41zLFvHWmMYUpsRk36/3btrCOrPAtRy6KTbcAmYOIBNVugRcJC8xbhUFT667lR/66s
+	 K8/Ub7VERzydJeXZrf3U8gIU/jnq6GIZoo3e1f50o0x4S+IefKUpldWak2O8Z9945C
+	 M/N49IG+6Cnb/a1N5y474X7v3YHt+/i2pidMu6YhpMQK8dJegtAohGlEJNPNCUpTS8
+	 8oqh9BxzR+lAw==
+Date: Tue, 26 Mar 2024 16:14:30 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>,
+	linux-scsi@vger.kernel.org,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Jaroslav Kysela <perex@perex.cz>, linux-sound@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org, ntb@lists.linux.dev,
+	Lee Jones <lee@kernel.org>, David Airlie <airlied@gmail.com>,
+	amd-gfx@lists.freedesktop.org, Jason Gunthorpe <jgg@ziepe.ca>,
+	linux-rdma@vger.kernel.org,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/28] mfd: intel-lpss-pci: Use PCI_IRQ_INTX
+Message-ID: <20240326211430.GA1497386@bhelgaas>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11] platform/x86: add lenovo wmi camera button driver
-To: Andy Shevchenko <andriy.shevchenko@intel.com>, Ai Chao <aichao@kylinos.cn>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20240322064750.267422-1-aichao@kylinos.cn>
- <ZgGmfV9ciPdtbGO1@smile.fi.intel.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <ZgGmfV9ciPdtbGO1@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:R2mVWzkgRZQf922lzF28ziewK/4/O88EndJrffowiB7qy1QldDT
- 2UddGvoOLxIwGd5YhkEwa6Cj73O9iaoV29zZSYwJYYD7V2R45DnXdY9RLg3ankulgJYpeFI
- oadxp3L5KfzUb95mo2VoMBEQUx1mfwuN4gXb7/Wcvnh+Kqtmk3pRucdQen7o+L4VAAFyMyc
- h1RTiD7pCrNuNlz4ncZ3g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:6whmCGcjBL4=;WQUegEFlWSWKLFd1WnF7kbFQd5h
- k/IQesRrup/X+zbEcmwoZPUNAMpl1EWvCiODx7HXYgE5xfF6/lNWiUbTMkLNkcwIQovCzHHbM
- p2irvQnpMdDSl0AXntwih23Oic/pzZvjg4ev5Ir/2J4DER/tuRNJnkZ6gs5n/3/H1ZhJaX2XR
- 7UB1AvWhSbhqncDtBY5tVLT16calfxU32z6jhV62eaMwodLBL5Ytl0UUz3V4XM13oROJznAPe
- d1s+m9Dj1vtDI+O6pHRF1NazzF9e29Z+t/+ix6fXrG2LkE8h8XUGpdhfrpzRc1SGYrAwwUpAB
- PnDgwcMp8B+StSZ1siGFclMCqNljCpbfQCvyOPiiZrWatukkjgJuNymJs/Lzx+FX8fKloeVaX
- Rs6PlAddgcq2m2b6AoLy1g+TAQ/YSH6O30b0wVG+GWGICKdQPr0kW/ly0KimOl/p9LMnJAEjA
- BLPc8VDTckR7noF+SNj/L++Kfn9cIWo7rpkF8ZWPE/0UYQb5jRS0xGQeDIM3P0SBLVpbm/rVz
- OYKbNsy+E7ZiX604uIfSsscZ/vibD8QM57wKg/oJTbYUyLMHtCleVtBtOmsd2WaBZqF+Dr1ym
- fzGHoHapqWtRX02F/POcQCpBO/MqJTgQ581ZDOeps2b9/cRT7zu25Od7UM1gfqC5OtKjvP9C/
- iHeVGJCeENEfPLGNIA1EaNIpYTWwiIdr3Zx3ZpVFmxTDJM0ZUuzTNrnjtqjxg6Caeeiy8z900
- Af4GK2YAzQtkPCIsO0Ta6ONm+K82CspNckbrhM8mm0x8uW7J4WhxyGJMNcdtBM+GHARbsictj
- ZEJlH/a/UOR471or5JPq2CWVlr8BIBR/6S6jwAxyI0np4=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240325210444.GA1449676@bhelgaas>
 
-Am 25.03.24 um 17:29 schrieb Andy Shevchenko:
+On Mon, Mar 25, 2024 at 04:04:44PM -0500, Bjorn Helgaas wrote:
+> On Mon, Mar 25, 2024 at 09:39:38PM +0200, Andy Shevchenko wrote:
+> > On Mon, Mar 25, 2024 at 04:09:20PM +0900, Damien Le Moal wrote:
+> > > Use the macro PCI_IRQ_INTX instead of the deprecated PCI_IRQ_LEGACY
+> > > macro.
+> > 
+> > Not needed anymore. MFD subsystem has a patch moving this to MSI support.
+> > But you need to coordinate with Lee how to proceed (in case of conflicts MFD
+> > version should be taken).
+> 
+> Thanks!  It looks like your patch [1] has been applied already and
+> makes this one obsolete, so I dropped this one from the series.
 
-> On Fri, Mar 22, 2024 at 02:47:50PM +0800, Ai Chao wrote:
->> Add lenovo generic wmi driver to support camera button.
-> WMI
->
->> The Camera button is a GPIO device. This driver receives ACPI notifyi
->> when the camera button is switched on/off. This driver is used in
->> Lenovo A70, it is a Computer integrated machine.
->> +config LENOVO_WMI_CAMERA
->> +	tristate "Lenovo WMI Camera Button driver"
->> +	depends on ACPI_WMI
->> +	depends on INPUT
-> No COMPILE_TEST?
->
->> +	help
->> +	  This driver provides support for Lenovo camera button. The Camera
->> +	  button is a GPIO device. This driver receives ACPI notify when the
->> +	  camera button is switched on/off.
->> +
->> +	  To compile this driver as a module, choose M here: the module
->> +	  will be called lenovo-wmi-camera.
-> ...
->
->> +#include <linux/acpi.h>
->> +#include <linux/device.h>
->> +#include <linux/input.h>
->> +#include <linux/module.h>
->> +#include <linux/mutex.h>
-> + types.h
->
->> +#include <linux/wmi.h>
-> ...
->
->> +struct lenovo_wmi_priv {
->> +	struct input_dev *idev;
->> +	struct mutex notify_lock;	/* lenovo wmi camera button notify lock */
-> WMI
->
->> +};
-> ...
->
->> +	/* obj->buffer.pointer[0] is camera mode:
->> +	 *      0 camera close
->> +	 *      1 camera open
->> +	 */
-> /*
->   * The correct multi-line comment style
->   * is depicted here.
->   */
->
-> ...
->
->> +	keycode = (camera_mode == SW_CAMERA_ON ?
->> +		   KEY_CAMERA_ACCESS_ENABLE : KEY_CAMERA_ACCESS_DISABLE);
-> Useless parentheses.
->
-> ...
->
->> +	ret = input_register_device(priv->idev);
->> +	if (ret)
->> +		return ret;
->> +	mutex_init(&priv->notify_lock);
-> Your mutex should be initialized before use. Have you tested that?
+I put this patch back in to prevent an ordering requirement between
+MFD and PCI.  There will be a trivial merge conflict as Andy
+mentioned.
 
-Hi,
-
-i suggested that the mutex be initialized after calling input_register_device().
-The reason for this is that the mutex is only used inside the WMI notify callback,
-and the WMI driver core will only call it after probe() has returned.
-
-So imho it should be safe.
-
-Thanks,
-Armin Wolf
-
->
-> ...
->
->> +static struct wmi_driver lenovo_wmi_driver = {
->> +	.driver = {
->> +		.name = "lenovo-wmi-camera",
->> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
->> +	},
->> +	.id_table = lenovo_wmi_id_table,
->> +	.no_singleton = true,
->> +	.probe = lenovo_wmi_probe,
->> +	.notify = lenovo_wmi_notify,
->> +	.remove = lenovo_wmi_remove,
->> +};
->> +
-> Unneeded blank line.
->
->> +module_wmi_driver(lenovo_wmi_driver);
-> ...
->
->> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
-> Please, move it closer to the respective table.
->
+> [1] https://lore.kernel.org/all/20240312165905.1764507-1-andriy.shevchenko@linux.intel.com/
