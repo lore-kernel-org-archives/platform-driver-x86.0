@@ -1,167 +1,179 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866C91CA87
-	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 06:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24072C1AA
+	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 07:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711522422; cv=none; b=qLnrCqmQBFTDcLt9MY5Wrykh60Pl+NsBVC/wY0uitIcNHtkkZPboXzECQ0SpamZdjFM31qF0AG0ZBQ2GtcgDgvTRTwNlpEshUoufSq1JeGw5SNHgH/UfYNIJm6jTfKa+svH7cnhwI4KQPdhraVWMtxW3Aw1SiIlVg+PIoOEEoNw=
+	t=1711525484; cv=none; b=Iw/ql/Ut3XUO7By1ELqXqWdehpBZlzCxvFnfCHky7XuoGiMUKFYEglk8DFuqfDcP34J2w/tk9I63LNcYTWS6XkJrTE/MY+91reaTy79Qv9a+sjGm0cJZjxo0k52e/izVI1KuhwG2tkfqX9+L73/+VxMmq+6bB13zJyvkoyTcTUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711522422; c=relaxed/simple;
-	bh=W6RLXUxCHDJY3w70KCqWzO6oGutZMiRq4O8XdSmVm20=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dh4WBw3/PCtur8hgiFHRVYvjEhY2isuP/gu5NxfsBL2D9smw+bO/rFp/nry+xGLUbqTSq6DE0gAMXYHDS4e52jJ2JKEj7jMvkJRqAQv8K+C9Qv7JVNw4Oyzyw77SddgwqJdXLnYCXvAMRj10e9DuBN6AX6s9Vgqtc5PHqJse+Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d0SS72bW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711525484; c=relaxed/simple;
+	bh=meBEX830gRW4HXcwRaI98fQKaU/0vg8wDYKxDADJaXA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EH+s950bN8W3Z2DoTNOLFVJsMcEEvpybwwJm52LJCG6fACSil8Inhl2r0nzVAEofdmAZaT3h0ktZE6sY77oUu1dLadJegLFhuaSBOJAsX7CcAeG/pRtuULEGfE1r8qdR+UX3JJ68oA7r7ybyypHWlZVP/4A8FZocQC+ZL9O3Nd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SdBvHhiu; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d0SS72bW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711522419;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hjyCvIB6syQyBLc/PURAesFgBPIAm7ixXYus2PqXUv8=;
-	b=d0SS72bWPQ6p8uDLVNkl76IrCgbpiRyERUKlX3HrmhNHwvQpWzzGf4Pm2e9KIdBtV7zc5O
-	EcFirHixjSYZ5RTnpTW3y2DZnI6C/2Ha3mm1Bt2zrecSux/4mOQrprtlxJhjlR12N/ibqj
-	6Pq9eaPJhpzq0yMeq2fjRZLtml5Wny0=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-217-LdJt_Ru3M5KwCEoi5TG2Nw-1; Wed, 27 Mar 2024 02:53:37 -0400
-X-MC-Unique: LdJt_Ru3M5KwCEoi5TG2Nw-1
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-6e735084916so4905240b3a.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Mar 2024 23:53:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SdBvHhiu"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a46a7208eedso866344066b.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 00:44:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711525480; x=1712130280; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cwJgbNd9Cb1xxQGP3U28yL2PzFi4V4xZap9Ru43Q/Mw=;
+        b=SdBvHhiuyUFUwk8YiTvwTtM0bHquxeOd2OPGUG8vYvWcXZnHxn1vC3JMkri5DuT2yE
+         izjt00bO/nAqGy0SL8agPK3BuCqc6QXUmOA81omR5XOsCZAWY4+FubBak/OxYtnjhaOi
+         S0FMQW1j/sFO41MbQXMHvg5E1Y3x+AyH+prQe5CztQWuAeX2TuSaqudsfrRLDFw8ULO6
+         hD5OyKb3+NKvXLrQFbLzvXsEoLWswJC2E0e//xCD6uvBc11LNNLZTlqeNKgnxJfNReSE
+         eXjh7sFj/Nwpyil4JxHw4LdEThDgguzEq8fAkBXS8io9mTMUMdbcJ611WUE/hZCi13h8
+         I0Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711522416; x=1712127216;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hjyCvIB6syQyBLc/PURAesFgBPIAm7ixXYus2PqXUv8=;
-        b=wmkyEVPG/pR9Syw4ANhI4EvcYCVwcUuRyI51O3rV69NudrUdzlVkvlMTZREyROJwfU
-         prKXPVyUmnvUe1NKVbi4CVICjXfK6QjgiSr6QWl7/lCcNfCJghowh6CvTqs3An8hwsQD
-         qtGOxLVZj4vd5L6nofIYJltyu4FHzIkBieEnZrkBs8O0HWZ/o80nA4PPcxRp1kuxNHwc
-         aUULBxVe2UoeSHERDqOAg5jeDEZ8PgPkCyXpPjnyDWoPkE6h4uVeEN/f0FpOoDRIJbGZ
-         b9c/H0j0kgvJZ1on7HD8v6pAT4c84Oxb3S+UdIDIAf0KRUxOVYIVJuS/nhfUqM9qFO0x
-         sk8A==
-X-Forwarded-Encrypted: i=1; AJvYcCVmtIQHfDcbTeVYSM1q33YyqjRAjEtuqJkkbXvVrN2OOVVaWncXUYbKfcz9IANEQJ4tM2epLgvSMJAHkJVX5hQCs4lBfZl5unpcRP2AAAgf0FW1Lw==
-X-Gm-Message-State: AOJu0Yy4Oi9PDK4a9MM0Lj+j8PweIDsqqDHgXVuFeTjvEW5YthjnJWaT
-	aUuQRdleRBqDRTGI8I/mfbzF52mCjdoaqwnTrKFFQ+Iy7KCD7SUpQU10wtt/Ve4belRsjuMPPBr
-	9uhcIKNa9SyrxmLg2+PLv8uRjs/YB7Q7wxD21iAlAtvRwZm0XETGLjfO3wYInlc6thihCo6sc1i
-	0VwuAPrg+IOKS9CQ2FgrXmwWAohu4dQ0cdN6HZ9DvnUcfLJA==
-X-Received: by 2002:a05:6a21:339c:b0:1a3:8904:1fc9 with SMTP id yy28-20020a056a21339c00b001a389041fc9mr3637953pzb.41.1711522416608;
-        Tue, 26 Mar 2024 23:53:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE92cxDxgpu4LIAd0jfCXzzTSPP16EKFP9ZwNdIoRwWxtFgYT4c5S27JpSdRV4WKq/fyTzRxyP70R1xOrLebfs=
-X-Received: by 2002:a05:6a21:339c:b0:1a3:8904:1fc9 with SMTP id
- yy28-20020a056a21339c00b001a389041fc9mr3637931pzb.41.1711522416229; Tue, 26
- Mar 2024 23:53:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711525480; x=1712130280;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cwJgbNd9Cb1xxQGP3U28yL2PzFi4V4xZap9Ru43Q/Mw=;
+        b=T5LEV5FszOu8l8yMM6Yrrd6a1aWUGMnhtI3K3aF3bRIPlPIXdgiSs/mLQjEwc8V6On
+         ySF3wF/SRi0tpUGbjNxGG+Ran+N6T6+0+4uoQvmOLPcJZbsgTWSM0f+/rhWdtQJrkoK0
+         OUO+0Elwjonlo1Ov6TZFvCD65QlM5gh1e47AyTTpl0TgRpT10W3DJbCUqLESDnXahZMM
+         ld6ruY87NWFzzn6Hhkc3J0OPQwMJABLX5IRgq16wKI0rN/UGq4M/uB88lsKzRiOBxPUn
+         7zkGR6Qmka4lJ00fHAtJkIA3uAJCpUDd0HXy5WPr3mSQLMbA4gRyvZVo40nvt8qYyKaN
+         DehA==
+X-Forwarded-Encrypted: i=1; AJvYcCWona1KZRJAR9oqDevi1rwlsNc6eErdt4YCCzWA3zEAEFmDBu9+f8u/hVip1rSCUH7cQi9lZmzHDHIHbZqvz5rF18NLfqmzDSY953PKhJ76ZyL/Xg==
+X-Gm-Message-State: AOJu0Yy6lw4Seg37Oi9MrA8NRhQU65WJMiy4dwB3w5zpemH1M0++Z0ge
+	tuyE+5/780/CtDMzkXGh9tKokrC/Wz84xP9raymCgnoz4BblB+dQvLyO8GAzfFM=
+X-Google-Smtp-Source: AGHT+IGlvH7IOquxCns2fE0YzmhHeEjVjLkRMbV5aqG3+Bvmapd6+zXlFoC0J4tu34KlhV5VJ7nhhQ==
+X-Received: by 2002:a17:906:4112:b0:a46:930c:b793 with SMTP id j18-20020a170906411200b00a46930cb793mr2316193ejk.9.1711525480120;
+        Wed, 27 Mar 2024 00:44:40 -0700 (PDT)
+Received: from [127.0.1.1] ([178.197.206.205])
+        by smtp.gmail.com with ESMTPSA id am11-20020a170906568b00b00a474690a946sm4671745ejc.48.2024.03.27.00.44.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 00:44:39 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 00/19] ACPI: store owner from modules with
+ acpi_bus_register_driver()
+Date: Wed, 27 Mar 2024 08:43:47 +0100
+Message-Id: <20240327-b4-module-owner-acpi-v1-0-725241a2d224@linaro.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240324150107.976025-1-hpa@redhat.com> <20240324150107.976025-3-hpa@redhat.com>
- <CAHp75VdosbYNKU90QWt+6SU_i5dWC94=xZy0GXiKvoQeDF30wg@mail.gmail.com>
-In-Reply-To: <CAHp75VdosbYNKU90QWt+6SU_i5dWC94=xZy0GXiKvoQeDF30wg@mail.gmail.com>
-From: Kate Hsuan <hpa@redhat.com>
-Date: Wed, 27 Mar 2024 14:53:24 +0800
-Message-ID: <CAEth8oFuPTRq0z-YbMMFt=kKgre6x+bDhtpUkj2vJeK-u8O72A@mail.gmail.com>
-Subject: Re: [PATCH v5 RESEND 2/6] leds: rgb: leds-ktd202x: Get device
- properties through fwnode to support ACPI
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	=?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
-	linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADPOA2YC/x3MSQqAMAxA0atI1gY0VhyuIi6qjRrQVlocQLy7x
+ eVb/P9AYC8coE0e8HxKEGcj8jSBcdF2ZhQTDZSRygqqcFC4OXOsjO6y7FGPu6BRjap1Q1SUOcR
+ 09zzJ/W+7/n0/4mos7mYAAAA=
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+ Robert Moore <robert.moore@intel.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
+ Corentin Chary <corentin.chary@gmail.com>, 
+ "Luke D. Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>, 
+ Daniel Oliveira Nascimento <don@syst.com.br>, 
+ =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
+ Matan Ziv-Av <matan@svgalib.org>, Mattia Dongili <malattia@linux.it>, 
+ Azael Avalos <coproscefalo@gmail.com>, 
+ Richard Cochran <richardcochran@gmail.com>, Jeff Sipek <jsipek@vmware.com>, 
+ Ajay Kaher <akaher@vmware.com>, Alexey Makhalov <amakhalov@vmware.com>, 
+ VMware PV-Drivers Reviewers <pv-drivers@vmware.com>, 
+ Theodore Ts'o <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ acpica-devel@lists.linux.dev, linux-input@vger.kernel.org, 
+ netdev@vger.kernel.org, chrome-platform@lists.linux.dev, 
+ platform-driver-x86@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2754;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=meBEX830gRW4HXcwRaI98fQKaU/0vg8wDYKxDADJaXA=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmA85It2J1eYnVhuIuXN7MMCJqdE2fAF7WfeZ2j
+ n2apL2796uJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZgPOSAAKCRDBN2bmhouD
+ 1/SnEACOwWo91bl9rH3s5QXO4O8oEUXK1eW8eqIErfBujjd0mBVo1U62GGVdqCTwbnohFmGH8uS
+ 0Hg0mT7Zeq81wweeJX6lhia/0ZXEq+ZS+N/VqqJ7A+7ylKAQBaJ/b12k4fTnfTvl8ROmcKTYwMO
+ xzDw5Zk15EIcQqY7MGSWFtkoR4IrS2/djZzKQcElvc6wPnn9pAGHCnlsuqyNNfA0qKbLEKwbCZL
+ ZHiY9SxWBdWl2HKHK8Mx9QC92FqorWxtdvlyyZbo8P3rLgNwOgKI/2iM2FL86OTTYm/I8h8K0uT
+ 4zjFkXBSfJa5ZtEMyVYWaO/zJcCvsyANCUfmn+nApiQWih+qd2Bfgz7Gha5MiT/O9rP6SsOOlUM
+ tbNEj8Cj8fPjz4pTITvXtRtmnxGIMv7j1sZ7b1tn1QCd0wj9ZTUDDh5LA2Wqr/EqqxRiP7yhmJx
+ VlCIdsMAP0QRviCJeFZ/5IZsqoWkmPw48k2Jj1hAr4Y6e7OhxXXvGltn8sh7mvh4j0J5zpBJlM2
+ fjx/dZOndwUdkjsJSP0MbGEgMKEUw3t1Q1gKfYe6exbD7qfbc0CGKaHnss5MMzmn9bJVCGnsroA
+ wySn4govEwvO62oJtu9o8OUcuu12dPLodXlbGS6LxGJSnQfhXloYUEOlIsusrAiizfR4Vy/tLG2
+ szuZE69hHAS2bhA==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Hi Andy,
+Merging
+=======
+All further patches depend on the first amba patch, therefore please ack
+and this should go via one tree: ACPI?
 
-Thank you for reviewing it.
+Description
+===========
+Modules registering driver with acpi_bus_register_driver() often forget to
+set .owner field.
 
-On Mon, Mar 25, 2024 at 3:57=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Sun, Mar 24, 2024 at 5:02=E2=80=AFPM Kate Hsuan <hpa@redhat.com> wrote=
-:
-> >
-> > This LED controller also installed on a Xiaomi pad2 and it is a x86
-> > platform. The original driver is based on device tree and can't be
->
-> the device
->
-> > used for this ACPI based system. This patch migrated the driver to
-> > use fwnode to access the properties. Moreover, the fwnode API
-> > supports device tree so this work won't effect the original
->
-> affect
->
-> > implementations.
->
-> ...
->
-> > +       fwnode_for_each_available_child_node(fwnode, child) {
-> > +               num_channels++;
-> > +       }
->
-> {} are not needed.
->
-> >         if (!num_channels || num_channels > chip->num_leds)
-> >                 return -EINVAL;
->
-> ...
->
-> > +static int ktd202x_add_led(struct ktd202x *chip,
-> > +                          struct fwnode_handle *fwnode_color,
->
-> Can it be simply fwnode? (Originally it was np, so I assume there is
-> no name collision)
-It can be. I'll revise this.
+Solve the problem by moving this task away from the drivers to the core
+amba bus code, just like we did for platform_driver in commit
+9447057eaff8 ("platform_device: use a macro instead of
+platform_driver_register").
 
->
-> ...
->
-> > +       count =3D device_get_child_node_count(dev);
-> >         if (!count || count > chip->num_leds)
-> >                 return -EINVAL;
->
-> > +       fwnode =3D dev_fwnode(chip->dev);
->
-> Why not dev?
-I'll use dev. I had declared it.
+Best regards,
+Krzysztof
 
->
-> > +       if (!fwnode)
-> > +               return -ENODEV;
->
-> This is dead code. Please remove these three lines.
+---
+Krzysztof Kozlowski (19):
+      ACPI: store owner from modules with acpi_bus_register_driver()
+      Input: atlas: - drop owner assignment
+      net: fjes: drop owner assignment
+      platform: chrome: drop owner assignment
+      platform: asus-laptop: drop owner assignment
+      platform: classmate-laptop: drop owner assignment
+      platform/x86/dell: drop owner assignment
+      platform/x86/eeepc: drop owner assignment
+      platform/x86/intel/rst: drop owner assignment
+      platform/x86/intel/smartconnect: drop owner assignment
+      platform/x86/lg-laptop: drop owner assignment
+      platform/x86/sony-laptop: drop owner assignment
+      platform/x86/toshiba_acpi: drop owner assignment
+      platform/x86/toshiba_bluetooth: drop owner assignment
+      platform/x86/toshiba_haps: drop owner assignment
+      platform/x86/wireless-hotkey: drop owner assignment
+      ptp: vmw: drop owner assignment
+      virt: vmgenid: drop owner assignment
+      ACPI: drop redundant owner from acpi_driver
 
-Okay.
+ drivers/acpi/bus.c                        | 9 +++++----
+ drivers/input/misc/atlas_btns.c           | 1 -
+ drivers/net/fjes/fjes_main.c              | 1 -
+ drivers/platform/chrome/wilco_ec/event.c  | 1 -
+ drivers/platform/x86/asus-laptop.c        | 1 -
+ drivers/platform/x86/classmate-laptop.c   | 5 -----
+ drivers/platform/x86/dell/dell-rbtn.c     | 1 -
+ drivers/platform/x86/eeepc-laptop.c       | 1 -
+ drivers/platform/x86/intel/rst.c          | 1 -
+ drivers/platform/x86/intel/smartconnect.c | 1 -
+ drivers/platform/x86/lg-laptop.c          | 1 -
+ drivers/platform/x86/sony-laptop.c        | 2 --
+ drivers/platform/x86/toshiba_acpi.c       | 1 -
+ drivers/platform/x86/toshiba_bluetooth.c  | 1 -
+ drivers/platform/x86/toshiba_haps.c       | 1 -
+ drivers/platform/x86/wireless-hotkey.c    | 1 -
+ drivers/ptp/ptp_vmw.c                     | 1 -
+ drivers/virt/vmgenid.c                    | 1 -
+ include/acpi/acpi_bus.h                   | 8 ++++++--
+ 19 files changed, 11 insertions(+), 28 deletions(-)
+---
+base-commit: 1fdad13606e104ff103ca19d2d660830cb36d43e
+change-id: 20240327-b4-module-owner-acpi-d4948a922351
 
->
-> ...
->
-> > +       .id_table =3D ktd202x_id,
->
-> Seems to me that you may split the I=C2=B2C ID table addition into a sepa=
-rate change.
-
-Could you please describe this more clearly? Thank you
-
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
-
-I'll propose the v6 patch according to your comments.
-
-
---=20
-BR,
-Kate
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
