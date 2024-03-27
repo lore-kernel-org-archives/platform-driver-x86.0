@@ -1,65 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6A915216D
-	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 20:08:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B89A14F102
+	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 20:16:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711570125; cv=none; b=jNyRZxVhuYvIh9sFGNwS+x3s+VfyisL0zj3Y3FZ25WrouuQ3s6ONaLOpOpWDhU+MamJhudoXx79NSEMD8a5uXJ8v113pQPEH3raeqbvrmbKQc+3yuxu5x1R8yfjhl6ndbxniR3g9oF7kx0FqVkP8LqE6CF40FqJm9QH8ioXAOyI=
+	t=1711570599; cv=none; b=E+S+CNvtUgJRJpQf7GRsUftQ4XdzOK+d0UVySyMQha0WjOcZmL31HnWOuu0sjM5pMhWU6uPFusg7dMiXWu28C9UuHb6UzvCjoDg7jFGKKxkcEqhP2H9uYO94j2OUweCnIF8s058TaOulDZhMirmyuIB1rC7hg/5e8ZVPBCoRtOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711570125; c=relaxed/simple;
-	bh=30+SMF3Q4cLn9iLwhMHMGXF2lJwt/e/uG876R4xdZDU=;
+	s=arc-20240116; t=1711570599; c=relaxed/simple;
+	bh=YrO2w4MQtMGQJl+C4zezHdk+MgMTRx1IBjbjBm7MeS4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hiHpTx83SPLGmvJcy5Nxl54P7jQCD0ecvDX68NTvTlffuENwJfJxItbf51y+5M7eepYjT7P6xLOOlqhk09nCIg11yV9hbPt0Bhi+G3wsd6tJ8HFfptoox1V56wPid7RLv94rbuIW8rBRBS2kK+ZqpRDp+GrsQsUe5UrOq4QEaqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QKLZAxmj; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=DcLzGtVhf1KGftSaW+31AziZZ2T7AUniIvUM8zXwLdUw1cWwoYM7JfenjSorPl8C5L1zBtG1SptvRsMI4WqsLP/mP28e07L+3gwhlDpiuE+hRh01l5wjFk6Y3SecTZzRmH7bE2LGryon5ONZ2hq54cSDHT+Dr9sniwBLAurwr4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UqAqvQnY; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QKLZAxmj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UqAqvQnY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711570122;
+	s=mimecast20190719; t=1711570597;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=u+rbOO6Xjs4/MSVYHbBLn8VkYr1ofXwAfF7JXAClqYE=;
-	b=QKLZAxmjpaQY97V6LVADqg4B6oSr4ooD0/5ksMbLY2wPzkQfVEg/LslrXDm/Ad3NHb16cI
-	HsQbQbvJYAEpuuQNMSmZEKzxscWokWFfa35JliG/sYFu4BmZvNPcaQEGVs0L8WzhaG1P8o
-	FgF38EpF4uJNpn4QoEAyuv4GxrPcq2k=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=GwEBfTVIpv7XvJsh9BUgL+PZXfXZtA0LjRzNOY4muX0=;
+	b=UqAqvQnYc2s6lYyD8iLuWQ1JbRMpEloRB1Xu1FskpyTv+tEqL/Ya6mX1oMK5slg5E0jlnY
+	+ZuVldG23Qn6kRQdm7OUu6HsdU/D6A5cOX4PNLzD1h2BL8GLCiFxXtujZsh8YlJdY6PEGD
+	wX3lTKmA0DLvxxak2wNmOaipcPC72yQ=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-665-FqOC38UVPhWvtTt-ENB6zA-1; Wed, 27 Mar 2024 16:08:40 -0400
-X-MC-Unique: FqOC38UVPhWvtTt-ENB6zA-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a46bae02169so115551466b.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 13:08:40 -0700 (PDT)
+ us-mta-421-F1gKjxJLMJ2IvPBTP_nykw-1; Wed, 27 Mar 2024 16:16:34 -0400
+X-MC-Unique: F1gKjxJLMJ2IvPBTP_nykw-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a473769f8d0so11609966b.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 13:16:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711570119; x=1712174919;
+        d=1e100.net; s=20230601; t=1711570593; x=1712175393;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u+rbOO6Xjs4/MSVYHbBLn8VkYr1ofXwAfF7JXAClqYE=;
-        b=H8DK2oihuf351UIof0EOfpAB6o3cjsctwSelHQTPuxaqiYgM+/wqiEJutoPtyeW6bk
-         GZ7QVpiXU5fUKet1IASV83no5oPItacwWcS/CGWqlwKg+PU3sQw+ID4JDkww+tA20KGS
-         x+Pposx/XOB/qF1j3gNfoqAHYjFU69D4Qamdv/bhgYelDdRTFk68niGRYOm0YlrHPZ/R
-         QFVvQG6YdM620OtxI59WCvsYrza3ZZrDhs5yk9vH2MPFPtUzWnfXHcYKgFIAMINdZEN9
-         3lVFjpJ0ke5nJc6CTskSarzCRJJvEszDc6Ti5EM8FNy8a8c5Q26/42VGgaE/H+WEvDRt
-         hK2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUucGTIiq/+EIMkr/UrHEgqYqnxX3FXVXP3ddqFL1gR7IeqFiKkfQ+7YgKHX5eVeqh0X15USb+3+lB2W8UeyCM74s9GMT47buvY0t0xZU/balB/Ug==
-X-Gm-Message-State: AOJu0YxOb/XPUcyOLPJfam+qbQF9x42FIe1vqcj5AFp0vnZ2ZmFg78oE
-	T5msF1fpns5zgcN2gsKjfsBREQ/ennPSXDvF1tmov2yNc92oaVFZesD4W5jyoyh8n8BkcnEsulp
-	7I7L3g2kAUT1dotsPCZhMMgrOOxByHU/+PqaGundvheaVUwLOy3JDmYPqjXYocN5jDIjJUlU=
-X-Received: by 2002:a17:906:bcda:b0:a46:ebe6:742e with SMTP id lw26-20020a170906bcda00b00a46ebe6742emr306737ejb.23.1711570119686;
-        Wed, 27 Mar 2024 13:08:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGRPseT862/dYHMWEZUySiGhxw6iMcjeUjM2enE0KH2m9DZecWpuyWTRPHl2YQ5pmnSH+a0zw==
-X-Received: by 2002:a17:906:bcda:b0:a46:ebe6:742e with SMTP id lw26-20020a170906bcda00b00a46ebe6742emr306716ejb.23.1711570119373;
-        Wed, 27 Mar 2024 13:08:39 -0700 (PDT)
+        bh=GwEBfTVIpv7XvJsh9BUgL+PZXfXZtA0LjRzNOY4muX0=;
+        b=khJmVCrn+3Zw1D5DdVoP1z6RzMZ4RF1nVxw1bGb2Ym5guY9RuZBolm2AxqzswTdiDy
+         uL0qHzzch0lkufngnP6S2jJRF3J2aLfHIXkF0rxscizK/h9P84MmBSFqS3NlpQATUTLx
+         tvlVbW3Q6xoFK67bS397zOEIl7wvb6zHq+STyHhvPrLk7LqO/IfxqpM2aF/unnk1k0xH
+         NeVYcIOmK0X+fKU7NPD7YFs/4ZQvUC2KbhW6rL5dGGqKV8SmO9H7pIc8JIjSAkxeoSU2
+         gHI+0G7E0St0kgtBCfjHfa0mKrHbdPoCa8scRmvGAnv4hxyHOCEJ6gds893kmQvsULpr
+         6SYg==
+X-Forwarded-Encrypted: i=1; AJvYcCUgdLOQC5o9l1ojYrQTjQ2eFvbLKHrOwQGRmzzqb41LdxEQ+4N51GJTvEJi5VbSJONU9QGAhWWsuwSA6tm+69y1P1r4jvtqKoF6YpAvK/k+GYkzCA==
+X-Gm-Message-State: AOJu0YwV8f/6Y65Y9+0BAwA3CsNdPpp89BtTAekHqUMv8s5fLYhUep1N
+	R7CsHoGf3jJ4oh1zB1aZ9qNbLYLQ9PJpVdI9LvD4c2S1x+uvKiafundMRjNIsYiTmkxVpu1ETQV
+	0P/r3I65Hki4vBsIIHfUxnhuCL/AIHG4TR7IvpPXa0AtWjp2n6phvZb7EgbPkeHlzvUNlbZg=
+X-Received: by 2002:a17:906:2a0c:b0:a47:3c66:b396 with SMTP id j12-20020a1709062a0c00b00a473c66b396mr331867eje.64.1711570593716;
+        Wed, 27 Mar 2024 13:16:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEB2nm6eBBuF/WUHUby6mr03fr0aGqm1maYoTObj3UaeHRr4EMZRSIjy7oYDqKHSbXactVRkQ==
+X-Received: by 2002:a17:906:2a0c:b0:a47:3c66:b396 with SMTP id j12-20020a1709062a0c00b00a473c66b396mr331858eje.64.1711570593466;
+        Wed, 27 Mar 2024 13:16:33 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id hj13-20020a170906874d00b00a474ef94fddsm4790814ejb.70.2024.03.27.13.08.38
+        by smtp.gmail.com with ESMTPSA id js23-20020a170906ca9700b00a4df3ea61a9sm2305759ejb.57.2024.03.27.13.16.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Mar 2024 13:08:39 -0700 (PDT)
-Message-ID: <adc4d0b8-412b-42b0-94fb-96bd6c23bb83@redhat.com>
-Date: Wed, 27 Mar 2024 21:08:38 +0100
+        Wed, 27 Mar 2024 13:16:33 -0700 (PDT)
+Message-ID: <a337c02c-4e85-44a4-acf8-dd1b47e108d5@redhat.com>
+Date: Wed, 27 Mar 2024 21:16:32 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,78 +67,68 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/6] platform: x86-android-tablets: other: Add swnode
- for Xiaomi pad2 indicator LED
+Subject: Re: [PATCH 0/2] platform/x86: Add ACPI quickstart button driver
 Content-Language: en-US, nl
-To: Kate Hsuan <hpa@redhat.com>, Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
- linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
- linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
- linux-pm@vger.kernel.org
-References: <20240322033736.9344-1-hpa@redhat.com>
- <20240322033736.9344-2-hpa@redhat.com>
- <bb7536be-9bed-4557-b111-6409ebfe48f4@redhat.com>
- <ZgGm7eDBQtwH37ya@smile.fi.intel.com>
- <CAEth8oEps=T3JGJiCEH_SknjkcGaTXv+ekBQLgVRm+Nc7qfa1g@mail.gmail.com>
+To: Armin Wolf <W_Armin@gmx.de>, dennisn@dennisn.mooo.com, lkml@vorpal.se,
+ ilpo.jarvinen@linux.intel.com
+Cc: coproscefalo@gmail.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240131111641.4418-1-W_Armin@gmx.de>
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAEth8oEps=T3JGJiCEH_SknjkcGaTXv+ekBQLgVRm+Nc7qfa1g@mail.gmail.com>
+In-Reply-To: <20240131111641.4418-1-W_Armin@gmx.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On 3/27/24 7:09 AM, Kate Hsuan wrote:
-> Hi Hans,
+On 1/31/24 12:16 PM, Armin Wolf wrote:
+> This patch series adds support for the ACPI PNP0C32 device as
+> proposed in 2022 by Arvid Norlander. The first patch adds support
+> for the device itself, while the second patch was taken from the
+> original series.
 > 
-> On Tue, Mar 26, 2024 at 12:32 AM Andy Shevchenko
-> <andriy.shevchenko@intel.com> wrote:
->>
->> On Mon, Mar 25, 2024 at 04:02:54PM +0100, Hans de Goede wrote:
->>> On 3/22/24 4:37 AM, Kate Hsuan wrote:
->>>> There is a KTD2026 LED controller to manage the indicator LED for Xiaomi
->>>> pad2. The ACPI for it is not properly made so the kernel can't get
->>>> a correct description of it.
->>>>
->>>> This work add a description for this RGB LED controller and also set a
->>>> trigger to indicate the chaging event (bq27520-0-charging). When it is
->>>> charging, the indicator LED will be turn on.
->>>>
->>>> Signed-off-by: Kate Hsuan <hpa@redhat.com>
->>>
->>> Thank you for your patch, I've applied this patch to my review-hans
->>> branch:
->>> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
->>>
->>> I will also merge [PATCH v5 6/6] platform: x86-android-tablets:
->>> others: Set the LED trigger to charging_red_full_green for Xiaomi pad2"
->>>
->>> Once the new power_supply trigger patch this relies on has been
->>> accepted.
->>>
->>> Once I've run some tests on this branch the patches there will be
->>> added to the platform-drivers-x86/for-next branch and eventually
->>> will be included in the pdx86 pull-request to Linus for the next
->>> merge-window.
->>
->> I believe I have commented on the "RESEND" version.
+> Both patches are compile-tested only.
 
-Right, sorry. Since there were just a few trivial comments
-I've fixed them up in my review-hans branch now, thank you
-for the review.
+Not anymore :)
 
-> Thank you for your reviewing.
-> Please review the RESEND patch and I'll fix them according to Andy's comments.
 
-No need to do a new version I've squashed fixed for Andy's remarks +
-Andy's commit msg remarks into the version in my review-hans branch.
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Note I'm going offline for a long weekend and I won't be
-replying to emails until next week Tuesday.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
+
+
+
+
+
+> 
+> Armin Wolf (1):
+>   platform/x86: Add ACPI quickstart button (PNP0C32) driver
+> 
+> Arvid Norlander (1):
+>   platform/x86: toshiba_acpi: Add quirk for buttons on Z830
+> 
+>  MAINTAINERS                         |   6 +
+>  drivers/platform/x86/Kconfig        |  13 ++
+>  drivers/platform/x86/Makefile       |   3 +
+>  drivers/platform/x86/quickstart.c   | 225 ++++++++++++++++++++++++++++
+>  drivers/platform/x86/toshiba_acpi.c |  36 ++++-
+>  5 files changed, 280 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/platform/x86/quickstart.c
+> 
+> --
+> 2.39.2
+> 
 
