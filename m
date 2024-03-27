@@ -1,135 +1,137 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046941E88D;
-	Wed, 27 Mar 2024 10:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA9B1CA87;
+	Wed, 27 Mar 2024 11:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711537132; cv=none; b=YNcnIZE8q0cDaP5DJm5nyQm36CedK0moMsGCDh4Mar21QU3JvrKNXPsUc0uhs6g7QtgHP6fXEeTfD2Fm0lf6fDE/b0UNvrRL+McbTFFg4BuIyIAPRTCJTkjIFbxxUgOUC7IbzWVBqkJbOmlqBkLq59jIiTbz6VQb4nWi53ZHkNU=
+	t=1711537585; cv=none; b=YIp9S30TKe9Yz8+bAZurZtyQPX2LLJu+PbAr4dAo0MPm8efwvneY+owAKG98ATTMWlT2fusuC4/xkSEb+7MhIKW4N5PirrW51SdKu2RFBovZyDBeKTXBanF1qNKO3H57paICvKO2rlDTaY3Nokgmypz2WYcKrSYTNTMnSLJBV5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711537132; c=relaxed/simple;
-	bh=FPOIGS3XU/PJpUjx1JSgCVFLz7sjFzTxaraDc1Cj4iA=;
+	s=arc-20240116; t=1711537585; c=relaxed/simple;
+	bh=q3gcyXoKhRYf2fa69N6NdBZzbRfzKOTZ8xEHtHAX8IU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t64uLlr6bZzyFQSD8oHuCpe5bxwUrU7w7U+Zvs75QDA1wlt5MU/VoSaLB8PT4Nwt4yK549eKa3j5pkDap/jUWd62KLHivseZ84fpYZOhKo7JxomDb/7JJ8wfefjTBTwoS5IKhxOuiADL0iazaEppimjB6Oia3JAWHz7F4geuQek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JDOjXZSJ; arc=none smtp.client-ip=209.85.208.50
+	 To:Cc:Content-Type; b=M5p+2X7MIDSIjm64B2fro56lSneYrfpMt3ZIzw480H9MF3rb+KRIy37+Afd2mSYOs4QHprGNOCkfHV2viZKqG6yYs0OgIHGqkIi1AxxPVI6Mbq3oxVXgyrI9EiqDf5q4FGnfazDRDwPqdVW8BwY0x84I35ubZHYqYz6cUME+04I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k/TXKLmF; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JDOjXZSJ"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56bb22ff7baso7764019a12.3;
-        Wed, 27 Mar 2024 03:58:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k/TXKLmF"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-513da1c1f26so8189100e87.3;
+        Wed, 27 Mar 2024 04:06:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711537129; x=1712141929; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711537582; x=1712142382; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LdBJoZMB+M+m7as7ulZ/MHo9uJhY03Nr+jTBbOpnN74=;
-        b=JDOjXZSJ6ipTc+oszly/nqhiauUcyyEHiXfbOJgzP9F4O1ufqG5IXz7pmmidLIIFSE
-         U36O/G8lXfLoD+EqUVCC0mnR95IRvyS1lIVXcFbx3MNt0OVV1TcwNNoY5X9f6Rfbdjxi
-         xcK2HplxTqO9NnygWMN61IccVe6iKXb/lxgFqiFpO8wL8Jeokpg5mWsFcVZo3rqy7NyP
-         7wJ8SkIF4zv9ESGl+24JKqnAUJ9konTmaGeDv9nqDEUnCbCacVy1DJvs4roBq+tmmq6r
-         vMYq9BlK6XEUoZIhU0B/81sFzZ+b+F585rJCgjDRcasdiX89WGFO1+D73ys8TIpwwx4O
-         9Ohg==
+        bh=ayI6BKXEd9WeONlek9wdLp9tj6kKhJtPOmCx1zPxi9Y=;
+        b=k/TXKLmFi41IFRjM3qn5T1INI/8CgASOWtpdJjoZxrGL1omHZzd6DTgaD6jomsqWbv
+         t8fciV7t8NO9c21jhna8pmkXLFetJLeRQi6OjvlIk6m6Y81eCupau+zP2IaDVZgnXlrk
+         jg6hCPx5YzW6jNY5UKYTGWOyqcRGX+/7x93UZ5Qy/NhPgiMhP3hSkZGtoO86kjjHjEfj
+         wYfMFzfQcx6VBBnWjXSTzznTDCMAF+1IwZk3Ovvw25Z1YWKD57OY5z0SQGh2KYnlfBqt
+         mTrNaMphQaBUqunricz0UnXsHT7dClh2Iry2fvali3KJKnkCXnq78ziz1DHZebiKUHMh
+         cb9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711537129; x=1712141929;
+        d=1e100.net; s=20230601; t=1711537582; x=1712142382;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LdBJoZMB+M+m7as7ulZ/MHo9uJhY03Nr+jTBbOpnN74=;
-        b=vGWKzsaKAp7AL26b4MrwKaNi8uOFdmeV+r8M+BuCr9JuyuqKjqIjWBQR29el8cWAe9
-         wThjrzqEeCzXe3uh9UO9dCQZ+M2KmZ4g5bkH1+bOOZtsUrFOPPQ8QuGymZQo3nwEGG6U
-         NVOqoJw8o2Z/PBLUZvDvDGepR5zgdE+4rxBXW51W1DkIuq9U3DhIv8S2KdFDnoptx8T0
-         yA39onSmkuL+iucHH+rvs1/S/g9fHcdLhDZFvRd1stAghZ0TIDKqrZGpv3R4cmoSnRNN
-         cw908CJLMHSo0uq1S1g7CWU9/zNpFyKwvNncpPUD1e9GOs2dLgFFh4XO7wCNQZWXi98Y
-         Ljnw==
-X-Forwarded-Encrypted: i=1; AJvYcCXy7BZQjdZuJuvoV2h7O4ZhYLTOwqI83DrBKG7NmSX2iAz3BrSD1J8h9noZ0Bn8P9fsTOAgsSrB8UX3u53hqOclLfLdAhVKneU8XEVw9G/eLSVEIQxGc2tk/n2Nz5BNhcE5Hx63OOCTbTotrLs/O51MAw==
-X-Gm-Message-State: AOJu0YzcHC364rJQ0Gk4Cbh553RXdFN2yWt5UIS8+25zSi+SYLneqYBD
-	VXBGyzM4KgszHLXsogvci4vyL6B8SgJib3eWp/v1n/tdqDb+aaJ0qHwiKgiUUX8sXE1z17Ih1Nr
-	OiWp4lbEXwZfKCh0YBh5Ej6L94wA=
-X-Google-Smtp-Source: AGHT+IE4QWniaYBGdlfiIo/PIZxypR+YNDlj/T7yCI0n5qUoLGvcU9GGoY+74iIG6sH3olcGanSfCKapfSKQJzLoh9I=
-X-Received: by 2002:a17:907:9689:b0:a4e:dd7:4e24 with SMTP id
- hd9-20020a170907968900b00a4e0dd74e24mr35601ejc.23.1711537129044; Wed, 27 Mar
- 2024 03:58:49 -0700 (PDT)
+        bh=ayI6BKXEd9WeONlek9wdLp9tj6kKhJtPOmCx1zPxi9Y=;
+        b=YOhglBs3VBXAufvziOTopxYfiscEXO5SeNOmlVFSKRNX3d6sIzkKsr0oWbeQDN7jfC
+         1kESEJe8sxi47RN5rKNuTkf+TrMDxZ1KMDk4LXfKtPrcVUTmcbXuS78U4l+J9kNtNfHA
+         R7WykV7EhN50Shllwg6alTyjjiPUwFg9IkX26q8eg5emYXb9ioZHUqvxwuY9pmaFYZ7t
+         pRfhk/jOaJS+r83KWkBArcU8g2XLisHGcBcZNY003aBTYLaKfc6LFGykbnV014I5MI8i
+         r4JpN7h+nf6J8JY52tplpfDF7oNa+pDNTemqTcMjlN8EVsEDezNqjerzMUqtmZSS9OLY
+         6wAA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOYxc40I3lsj5NmHjSBgRC536dqaWcFfPzHMZiQm8qbYXOCp+omr6Ie/H0WDWDdOuZ+MGE0pat/bWRvb7+J0xm1u9Kgmhd056ZZkzM4MgnWgAJxXRj59o2dioOzvGhnW8P+kT6gQe6x1wQ/99VYH+NkxOOZRVbZjB21kNZItxXHel9L2Qim8U5qI9v5XYZyU2bJ2oBBkNNEQRkjto9sEbg/J/ldAQ56A==
+X-Gm-Message-State: AOJu0YwYxX5/iZFj9XtgFagu922FKtKW9eAsm2KEFObIJdypzEOEC3sI
+	0JoHfBVCle0p2zvGm4sH6AQgW25xlOT4kh3mjIMUnUWS47CewhBelUH+5azcuSrlgxnXJWDyGzh
+	xKQpo85X3JKHU9Z2Ew8ekSXcHGl/91MK+n7I=
+X-Google-Smtp-Source: AGHT+IFnYy+AySgWrpXBEZGt4xGMs0W5jejiOVEiyuTICA6bnE05GDy9uSYbdCvYonGwLXIiFkEPLNwKn6JkxI2YreM=
+X-Received: by 2002:ac2:5f91:0:b0:513:184a:ff5f with SMTP id
+ r17-20020ac25f91000000b00513184aff5fmr2552363lfe.50.1711537582050; Wed, 27
+ Mar 2024 04:06:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326223825.4084412-1-arnd@kernel.org> <20240326223825.4084412-6-arnd@kernel.org>
- <20240326230511.GA2796782@dev-arch.thelio-3990X>
-In-Reply-To: <20240326230511.GA2796782@dev-arch.thelio-3990X>
+References: <20240324150107.976025-1-hpa@redhat.com> <20240324150107.976025-2-hpa@redhat.com>
+ <CAHp75Ve5201KNdjvDZYq_unHTKp9wZXPWZXDgStP8y+XjtnWWg@mail.gmail.com> <CAEth8oG7_qFuUrL+kX3ezNatWqKPqT-qiaO5NGY-N3F3ufQL9w@mail.gmail.com>
+In-Reply-To: <CAEth8oG7_qFuUrL+kX3ezNatWqKPqT-qiaO5NGY-N3F3ufQL9w@mail.gmail.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 27 Mar 2024 12:58:12 +0200
-Message-ID: <CAHp75VeTq=eyumbRWiQeLnpbTOZJR=R_7=+RkKtY2YcL-z3isQ@mail.gmail.com>
-Subject: Re: [PATCH 5/9] surface3_power: avoid format string truncation warning
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Arnd Bergmann <arnd@kernel.org>, llvm@lists.linux.dev, 
-	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Maximilian Luz <luzmaximilian@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 27 Mar 2024 13:05:45 +0200
+Message-ID: <CAHp75VdQtmT0G1dFhdY7TrcBj2W6GhOaVv90_T1e3MdEtiduQQ@mail.gmail.com>
+Subject: Re: [PATCH v5 RESEND 1/6] platform: x86-android-tablets: other: Add
+ swnode for Xiaomi pad2 indicator LED
+To: Kate Hsuan <hpa@redhat.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	=?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
+	linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 27, 2024 at 1:05=E2=80=AFAM Nathan Chancellor <nathan@kernel.or=
-g> wrote:
-> On Tue, Mar 26, 2024 at 11:38:04PM +0100, Arnd Bergmann wrote:
-> > From: Arnd Bergmann <arnd@arndb.de>
+On Wed, Mar 27, 2024 at 9:58=E2=80=AFAM Kate Hsuan <hpa@redhat.com> wrote:
+> On Mon, Mar 25, 2024 at 3:30=E2=80=AFAM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Sun, Mar 24, 2024 at 5:02=E2=80=AFPM Kate Hsuan <hpa@redhat.com> wro=
+te:
+
+...
+
+> > > +/* main fwnode for ktd2026 */
+> > > +static const struct software_node ktd2026_node =3D {
+> > > +       .name =3D "ktd2026"
 > >
-> > clang warns about printing a pair of escaped strings into a buffer that=
- is
-> > too short:
+> > Leave a comma, this is not a terminator.
 > >
-> > drivers/platform/surface/surface3_power.c:248:3: error: 'snprintf' will=
- always be truncated; specified size is 10, but format string expands to at=
- least 12 [-Werror,-Wformat-truncation-non-kprintf]
-> >   248 |                 snprintf(bix->serial, ARRAY_SIZE(bix->serial), =
-"%3pE%6pE", buf + 7, buf);
-> >       |                 ^
+> > > +};
 > >
-> > Change the format string two print two less bytes so it always fits. Th=
-e string
-> > is still truncated, so there is no change in behavior, but the compiler=
- no
-> > longer warns about it.
-
-> > Fixes: 85f7582cd484 ("platform/surface: Move Surface 3 Power OpRegion d=
-river to platform/surface")
-
-Hmm... Is it really a move patch (which by title should not have
-changed the contents)?
-(I haven't looked into it, though.)
-
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> > Not entirely sure about this one, as I've never used escaped strings, a=
-nd
-> > don't know if gcc is correct to warn here, or if the kernel defines it
-> > differently from the standard.
+> > When I asked about the name I relied on the fact that you have an idea
+> > how it works. So, assuming my understanding is correct, this platform
+> > may not have more than a single LED of this type. Dunno if we need a
+> > comment about this.
 >
-> As far as I understand it, this is a false positive because clang does
-> not understand the kernel's %p extensions.
+> I'll make a comment to describe the configuration.
+> This LED controller can be configured to an RGB LED like this. Also,
+> it can be configured as three single-color (RGB) LEDs to show red,
+> green, and blue only.
+> I think the name can be "ktd2026-multi-color". Is it good for you?
 
-Yes, %pE here is special. Btw, what has already been discussed a long
-time is to have a validation plugin in the kernel to check those %p
-extensions, but IIUC nobody committed to it.
+My point here is that the name is static and if you have more than one
+LED in the system, the second one won't be registered due to sysfs
+name collisions. Question here is how many of these types of LEDs are
+possible on the platform? If more than one, the name has to be
+dropped. Writing this I think a comment would be good to have in any
+case.
 
-That said, the patch is most likely incorrect.
+...
 
-> GCC does not warn for
-> overflow or truncation when %p is involved but the clang developers
-> chose to intentionally deviate from GCC in that aspect while sticking it
-> under a separate diagnostic that we could disable. I sent a patch that
-> did so some time ago but I guess Masahiro never applied it...
+> > > +static int __init xiaomi_mipad2_init(void)
+> > > +{
+> > > +       return software_node_register_node_group(ktd2026_node_group);
+> > > +}
+> > > +
+> > > +static void xiaomi_mipad2_exit(void)
+> >
+> > __exit ?
+> No need.
+> x86-andriod-tablet is based on platform_driver and platform_device so
+> it doesn't need __exit.
 >
-> https://lore.kernel.org/20231002-disable-wformat-truncation-overflow-non-=
-kprintf-v1-1-35179205c8d9@kernel.org/
->
-> Consider dropping the changes that fix non-kprintf warnings and
-> including that patch as part of this series.
+> I put __exit and the compiler complained about the warning.
+> =3D=3D=3D
+> WARNING: modpost:
+> drivers/platform/x86/x86-android-tablets/x86-android-tablets: section
+> mismatch in reference: xiaomi_mipad2_info+0x50 (section: .init.rodata)
+> -> xiaomi_mipad2_exit (section: .exit.text)
+> =3D=3D=3D
+
+This is interesting. Why then do we call them symmetrically?
+
+Hans, do we need to have anything here been amended?
 
 --=20
 With Best Regards,
