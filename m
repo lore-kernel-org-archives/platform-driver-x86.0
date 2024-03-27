@@ -1,133 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F08D17BB3
-	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 06:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4479620B04
+	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 06:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711519810; cv=none; b=VlgLDbn9lJZPVEY6u/DIuX0ItylLD2b38s7KIljte1fA/NcXLWyjU+CNCegsm2Mz1C2qxItsAyR7NqDqqXW5Ivylh1UgyWuv0J3vsQtrE2deLdCKrw+ZKYvdBTYhIiTzLkI7oLHzOkhPueg4kf2iEk7elydnNrdj3vc5lnbRmBE=
+	t=1711521196; cv=none; b=sybXKKMUcm9N2ZXUN9TnTkUcZd8CFrucxVlqNvZUkpbT5H0S/bSEkBwAg1fuOD5nEA6BEKJu5Nv+IB9C2wqk3MfRh5w7WRqnZaLhWyH2nPU0Dv1Id60AvcJ20IcmhLWnCw5dcRl+TRO1JEkA65wMuxzXTHfC+xnGqW4oAmAUHak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711519810; c=relaxed/simple;
-	bh=aj1aL6upPcAi/oYsdf1FW6tZ/Jif1m82oyTDDBx7OMo=;
+	s=arc-20240116; t=1711521196; c=relaxed/simple;
+	bh=aPQ4cR+Pu5JRYY4fcJayj25/cfknmAwWXxQC4Vp7wCk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pE6LczUTJhyzxdml3RZz/ccD+E0cfEqlAuux7RGhOZzGaQCiAvqAQIsKioqgHwcMt1WAR+Pal94pRfrcpm9HhSr2Gtdm+bkeLeMYnAWBVYr/2pOe1WsUBLh6m/vcmY1rStLd+TyTpHSWY9/rcicqIJb5/9KSXm6QaKu4IQC9st4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TJZlPT0a; arc=none smtp.client-ip=170.10.129.124
+	 To:Cc:Content-Type; b=pAWVXlQiXwMrskiHWpe7gEVetLanua8EJMR309eD+lEpkau8X9n/1WyPCTRtmIRck4eskiDH71LGGA8gXeF2AymOi2XXuj3ug/XVrkF/vfN+i1L8mACdXtDlB6L0cy2u3D13wg/2JnfcFr8Hd5FfanfLeOkISWHXSU/dPAM6CZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CY4iZwPg; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TJZlPT0a"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CY4iZwPg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711519807;
+	s=mimecast20190719; t=1711521193;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aj1aL6upPcAi/oYsdf1FW6tZ/Jif1m82oyTDDBx7OMo=;
-	b=TJZlPT0aLNdhPs6dlgmrDhpIBpoyvJZml+51TlAGKtHbfrycrIZG/ayruJ6yX9q/kOprL7
-	sKx6XfYDFm/t/ALNy16qM6VCITGQFcXSV1tNiqYDrlYkjtXrMqbBJ/5zRSPjYIXaJZmxxR
-	huyzxsY5/yv54VA5mpBnHxNf3WS6BoE=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=QCyDLFuHWL0o9S4b2fO6aGbOLoatVNVmPUDQSZg+cbk=;
+	b=CY4iZwPg8C7sJMzyE7vQ0qLAExBFtRWHOAlZDcZRIJSanw5aCeODOfrNdTVM6/D+C/Crx8
+	C4vPjUuecp5hBzYRVZVhL5ZwuLOC3Zpjl8radU+DLArPQGueEdo7nyDkbgigiCDqTsC7G8
+	d0FNil01SQW08ycxF9RC4NEns4N2xY0=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-301-mohrOOWCM9m-JrVXO6oENw-1; Wed, 27 Mar 2024 02:10:04 -0400
-X-MC-Unique: mohrOOWCM9m-JrVXO6oENw-1
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-29f6765954aso5100645a91.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Mar 2024 23:10:04 -0700 (PDT)
+ us-mta-338-BIWolLP3NVGTPffYKwdxBA-1; Wed, 27 Mar 2024 02:33:11 -0400
+X-MC-Unique: BIWolLP3NVGTPffYKwdxBA-1
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2a04aded772so4117432a91.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Mar 2024 23:33:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711519803; x=1712124603;
+        d=1e100.net; s=20230601; t=1711521190; x=1712125990;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aj1aL6upPcAi/oYsdf1FW6tZ/Jif1m82oyTDDBx7OMo=;
-        b=fqDM+P7TXZ7kjcXPMVyiEPFo0Tn+xhsf/KsDqmO+vo3APZAkt2ZsPTLovEzjdaIJdQ
-         48DA58kyQjchBp/e5NvNSSVUeou1v/0JmiffVItRkZ+Zt7XZUdP9kVy2rjrAsmdaexXb
-         5j8eajY83fTdz37rZ2p9ipkkuXSGk/GIb/gVPOx1XWIEtxv6d1c4jj7Ak/+49j2lCgMM
-         VYY2AdYJQALGMZmaduZUS+M1Tf/PgdQAW8DdsRlWPbsIe/Xk6AojqjPVjoEyiKloxf8C
-         HVYAIP6r9uQ7J8VdAsuJfYwNY3diHpTyrZIwNNh8QuLOkGyt2HvYNE4kpF1H445o1xGA
-         n3rw==
-X-Forwarded-Encrypted: i=1; AJvYcCUjkrH3ilX7f1QUI9h+oaoGndPsnDSWhdl16w+kPIbfpAdUizh2AtXYO+kGbo0v9HQtyoO99m6metpmo9oa4EeO7l2sp0lyjiVK8mG08Zn2tip/zw==
-X-Gm-Message-State: AOJu0Yxf4z8oKwDfrvBWK0FvMdvpDqEN8iNrkEQIaSXBSKRplfkVDmsp
-	NvGbIozretHtwldIIbDfSYm9ZfnhMzViUq+VAXP6cb58mao7yzeTwg6KcKWAMNwm5XO79gFejIm
-	Of+m+xZzZ6DGDGqajVhMVosktlLk5aEJX1o6A/2jlhkjtroeo3w66OgUc0uCkv3B+d9UVbqMQf7
-	CQgKLCc4qRfKkOGVQ5JJC05YGymFEgylZl6IqGFCifWDv7dQ==
-X-Received: by 2002:a17:90b:3ec6:b0:29f:f6c7:1ace with SMTP id rm6-20020a17090b3ec600b0029ff6c71acemr1806622pjb.32.1711519803672;
-        Tue, 26 Mar 2024 23:10:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHnJ9eZnxGImAgN6jxUMCflVFqJDA9V46b7u8wTdTfp151Xu61S6bJ6bs/eJvZiZf6QsvrT47Be/7ekcgEGtgw=
-X-Received: by 2002:a17:90b:3ec6:b0:29f:f6c7:1ace with SMTP id
- rm6-20020a17090b3ec600b0029ff6c71acemr1806611pjb.32.1711519803228; Tue, 26
- Mar 2024 23:10:03 -0700 (PDT)
+        bh=QCyDLFuHWL0o9S4b2fO6aGbOLoatVNVmPUDQSZg+cbk=;
+        b=stH8Ug3msCQzaNLz8TiDTDm0hBauyHI8ovdf8gDX+GDnq7izFLnnE56m55wkSbn/q2
+         cDmcHMfqp5xmdHWY85ghp4dLLYi5uYnAGsMK+MBRRVV2f296wLFZU7ziAQrhvVqt6reA
+         NRQTySZ68GSv4jwpxT7vmkCJRBtny8f3EZR3KLKoNpaed3sKIdTXnqaoVv07tIQdyA/B
+         4GEgfGzcwsJXiSy5PJLhb1uRCafeY3NjjNajHDSMt3zILHGhuWLDvCwLUeJFRU/smWst
+         WzcSns5zgEiFsQO08vugFArmxi+kJwO73ouRBDgeXGrg9oThc/Tj2fD2h9gd1NtBt/6C
+         zSpg==
+X-Forwarded-Encrypted: i=1; AJvYcCXj9MHjYRw81Y25emcbcazd+Rqkq+7KpOuwYPkuSHirS8fNHrrZJoaC1ZloyqK1wJZ19ZREEZxYZirE/cp2ZdcVcWJMfmo2zlNE0tAjeeNbH0Bv9w==
+X-Gm-Message-State: AOJu0Yz0TrVlZ6DNyX+4MktzQmDCkw7I6jtuazkpgOYIKeDwa+qGIn17
+	l89UDy+bNvicwGQYXiLcstkQWwN3z8oToaNcTfHwyTw++25NKtx+AN8lPguX5UpClRKvpT296YG
+	Ot+s9XMh9wjVlDmyJwYYwzxBdyL3twL1O/tZiJggWmmmLeBrTN86F84NzVYxymdA3X+uLXy17Cx
+	2ezZtFz1ibP1q2MiazBYkIT1JJ9eto1xEO1WhYm5hdBQHVLw==
+X-Received: by 2002:a17:90a:d193:b0:29b:331e:ec47 with SMTP id fu19-20020a17090ad19300b0029b331eec47mr1719890pjb.27.1711521190480;
+        Tue, 26 Mar 2024 23:33:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH3DMlhXx8e/Vzy02OUeoC0kwdj6lGi1JTMyko2Di9cAJi24nqjPwhbQfq8NgTZtTo44h6jOCUfUL5CqUPOM4I=
+X-Received: by 2002:a17:90a:d193:b0:29b:331e:ec47 with SMTP id
+ fu19-20020a17090ad19300b0029b331eec47mr1719873pjb.27.1711521190171; Tue, 26
+ Mar 2024 23:33:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240322033736.9344-1-hpa@redhat.com> <20240322033736.9344-2-hpa@redhat.com>
- <bb7536be-9bed-4557-b111-6409ebfe48f4@redhat.com> <ZgGm7eDBQtwH37ya@smile.fi.intel.com>
-In-Reply-To: <ZgGm7eDBQtwH37ya@smile.fi.intel.com>
+References: <20240324150107.976025-1-hpa@redhat.com> <20240324150107.976025-6-hpa@redhat.com>
+ <CAHp75Vdo5TMqm8H0OCGw5=_dwY1M0N4DOYUZy5NEbfJ1=KxXXQ@mail.gmail.com>
+In-Reply-To: <CAHp75Vdo5TMqm8H0OCGw5=_dwY1M0N4DOYUZy5NEbfJ1=KxXXQ@mail.gmail.com>
 From: Kate Hsuan <hpa@redhat.com>
-Date: Wed, 27 Mar 2024 14:09:52 +0800
-Message-ID: <CAEth8oEps=T3JGJiCEH_SknjkcGaTXv+ekBQLgVRm+Nc7qfa1g@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] platform: x86-android-tablets: other: Add swnode
- for Xiaomi pad2 indicator LED
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
-	linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+Date: Wed, 27 Mar 2024 14:32:59 +0800
+Message-ID: <CAEth8oGRvU+QRO_11yyyUgR50XKXuc-Ug9BXHNSCqKT9xC692g@mail.gmail.com>
+Subject: Re: [PATCH v5 RESEND 5/6] power: supply: power-supply-leds: Add
+ charging_red_full_green trigger for RGB LED
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
 	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
 	=?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
 	linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Hans,
+Hi Andy,
 
-On Tue, Mar 26, 2024 at 12:32=E2=80=AFAM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
+On Mon, Mar 25, 2024 at 4:11=E2=80=AFAM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> On Mon, Mar 25, 2024 at 04:02:54PM +0100, Hans de Goede wrote:
-> > On 3/22/24 4:37 AM, Kate Hsuan wrote:
-> > > There is a KTD2026 LED controller to manage the indicator LED for Xia=
-omi
-> > > pad2. The ACPI for it is not properly made so the kernel can't get
-> > > a correct description of it.
-> > >
-> > > This work add a description for this RGB LED controller and also set =
-a
-> > > trigger to indicate the chaging event (bq27520-0-charging). When it i=
-s
-> > > charging, the indicator LED will be turn on.
-> > >
-> > > Signed-off-by: Kate Hsuan <hpa@redhat.com>
+> On Sun, Mar 24, 2024 at 5:02=E2=80=AFPM Kate Hsuan <hpa@redhat.com> wrote=
+:
 > >
-> > Thank you for your patch, I've applied this patch to my review-hans
-> > branch:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-=
-x86.git/log/?h=3Dreview-hans
+> > Add a charging_red_full_green LED trigger and the trigger is based on
+> > led_mc_trigger_event() which can set an RGB LED when the trigger is
+> > triggered. The LED will show red when the battery status is charging.
+> > The LED will show green when the battery status is full.
 > >
-> > I will also merge [PATCH v5 6/6] platform: x86-android-tablets:
-> > others: Set the LED trigger to charging_red_full_green for Xiaomi pad2"
-> >
-> > Once the new power_supply trigger patch this relies on has been
-> > accepted.
-> >
-> > Once I've run some tests on this branch the patches there will be
-> > added to the platform-drivers-x86/for-next branch and eventually
-> > will be included in the pdx86 pull-request to Linus for the next
-> > merge-window.
+> > Link: https://lore.kernel.org/linux-leds/f40a0b1a-ceac-e269-c2dd-0158c5=
+b4a1ad@gmail.com/T/#t
 >
-> I believe I have commented on the "RESEND" version.
+> You can drop the 'T/#t' part.
 >
-
-Thank you for your reviewing.
-Please review the RESEND patch and I'll fix them according to Andy's commen=
-ts.
-
+> ...
+>
+> > +               led_mc_trigger_event(psy->charging_red_full_green_trig,
+> > +                                    intensity_green,
+> > +                                    3,
+>
+> ARRAY_SIZE()
+>
+> > +                                    LED_FULL);
+>
+> ...
+>
+> > +               led_mc_trigger_event(psy->charging_red_full_green_trig,
+> > +                                    intensity_red,
+> > +                                    3,
+>
+> Ditto.
+>
+> > +                                    LED_FULL);
+>
+> ...
+>
+> > +               led_mc_trigger_event(psy->charging_red_full_green_trig,
+> > +                                    intensity_red,
+> > +                                    3,
+>
+> Ditto.
+>
+> > +                                    LED_OFF);
+>
 > --
 > With Best Regards,
 > Andy Shevchenko
 >
->
 
+Thank you for reviewing it.
+I'll fix it in the v6 patch.
 
 --=20
 BR,
