@@ -1,127 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5C914EC44
-	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 20:23:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87295153575;
+	Wed, 27 Mar 2024 21:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711571003; cv=none; b=KzcPnzMwMXnjlimZLDFZJgwGIUWd9odMy+97hYDWVxsRkQt0QVfwNuycoPZyrSohOUDBBA57xmAKd7BTsd/y5JWAdJfDvla/YFr+Bh5uTLlaiCxPeq7TAKlmdQVbP9Swh7A+rJbeqXG7N+U8D+2tXBMrCgE8kMHo4cDQkODX5Hg=
+	t=1711575944; cv=none; b=hcIAzCEHk5gku5am8iMgmOHEs0aBGirXVA9SUOhGE61EwePvWMbbZi6dL4fJh61E8o4z/wWfsBzmiHuX8TwKdG19oB78d/l8YX8YW0h8+CcOMuZ0j54w/9Cns7xqjiLhy8fRBr3iBmZehXyad7ExncIxVfPhP+rrIawKpk6ixzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711571003; c=relaxed/simple;
-	bh=lf3iGRU4+8TJtIaIB5wpVth3vfvKck6uCnm+CIzK0Tg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=hUPr/ddmLxZskq4wbCV7kalCwa1Pvuz3TyHyhM/W2YD5IyeLnStL83QLOlGogRywHFkstXgHuXzCwRLODD6oTYn2U4YW9dWmjdZ1rdvxi/zc8fP7rK9Z9brzvq0zyYCJgi796Vv06Jk9khJ8KEZ0XDZS6QCPpcfENKlPeyGGq4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KqtIzQfQ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711575944; c=relaxed/simple;
+	bh=PcBp9+T7iC+YO1/DasphhHc6vLnsVnjYb5KXmsh/idM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PSNHBfnNZhBNc3XdFkz3TKTrIaLitFkfxcnXTAyicu9y2ep6VJFTrmQcFwYNwuniPhkxZA2czC9yGSPW89KwMOt60qUBG05dVFyhTxGLbt4UnnnpgmizEyEDdHY5ovNqEtEUi0qKmDl34TdgODaDx+tlWRSasYQ2gIKGOJahwh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=B/qEkm0D; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KqtIzQfQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711571001;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lTDl/e4NP4//kzTYlfYlNhyuiB+c7Oh5LOKfCsmlo8o=;
-	b=KqtIzQfQGusYVGK+kMxINSajBkQq7p2elFozP9Eq/+RXSNCQmfn5cS0wiM3ERu3F5wHe2O
-	Exoh2iMHw8i2LqibAeB2xIY1udx7zaS7FItJlbj3GSWsZbF0sVXTfBRg/kTCc2srXPPBkM
-	cNJIucxPRuZvf3iAobMDJ1PKCq8NQR0=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-668-flMVX42HMAuG8gPgEvjd1g-1; Wed, 27 Mar 2024 16:23:19 -0400
-X-MC-Unique: flMVX42HMAuG8gPgEvjd1g-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a4455ae71fcso10845866b.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 13:23:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711570998; x=1712175798;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lTDl/e4NP4//kzTYlfYlNhyuiB+c7Oh5LOKfCsmlo8o=;
-        b=fxA5gixMFnuoCBC/scN11vkgNip99R7CVzne8U7I9jFvX8qs3KVFtkjb0fdSNNnIDg
-         rq3oWdRo9F2NQtJ1FTtjC/R7IwwmLnYEasM5FCLvr0+QqvI1da9DXURnge2r4KsBvFeO
-         mTIwYsm7V9xfWgvwYDJJOYD4Ee0vqItJ4WF3eRd54M3kNbIFY2gJIQ19juixUiV0medC
-         z4nYK3V/Mx/DuD7WGLI6PRS8CwExdfsx6vmqQl8g8HXWfAIf3V/nqW+cHX02Cnb6i764
-         Wf6fLSq3f29TbJopjoT84olLCi9RyX21zYxHa8FOQTCK1o0qNN8VOjLnrEWIi6kUE6yC
-         4LRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVYt7Dn58Xo/vN8MBCAoL5qYNYh1LZP6wCliUOeCguqsoyZuBWXrJcLZVmA+FjzFnKHHEgw8/9JBEeFVV1hVTLwpmUoR7RW/fY2a9gOGFf+7y80DQ==
-X-Gm-Message-State: AOJu0YwXoZvh1+dE8tP6Ht1v2BlaDUE9h8YvCXNesYPtIBk4U5nfT976
-	2it5C5UR80LzP46LnfjKMxfa0lExVBwt5p3h6ApHiwNi5qnNyUP/+nBD603pvlhWHwn75jNrloS
-	Sa5V20NXI09wn0l7DWZdXQTL3JVZNdSHqA/TS7A9OeYT7S5GAxi8fNRSg8luegfDITU7MjJ9LLp
-	AUqvk=
-X-Received: by 2002:a17:907:780e:b0:a4e:1035:3ed7 with SMTP id la14-20020a170907780e00b00a4e10353ed7mr403293ejc.25.1711570998160;
-        Wed, 27 Mar 2024 13:23:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHcEdkUAPLuW/Ae7idu094WKvWLJZe4zJVSSj0CyhZ3tmJC63xdaI7MSHJiYeLoSlECwHmK+g==
-X-Received: by 2002:a17:907:780e:b0:a4e:1035:3ed7 with SMTP id la14-20020a170907780e00b00a4e10353ed7mr403282ejc.25.1711570997669;
-        Wed, 27 Mar 2024 13:23:17 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id ju2-20020a170906e90200b00a4a33db326csm3963869ejb.194.2024.03.27.13.23.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Mar 2024 13:23:17 -0700 (PDT)
-Message-ID: <a76ec816-b5d3-451b-9d3a-f1546fdbbd95@redhat.com>
-Date: Wed, 27 Mar 2024 21:23:17 +0100
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="B/qEkm0D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1711575928; x=1712180728; i=w_armin@gmx.de;
+	bh=wMFL6ewHokY+yq0BxkXWXiOGv+B4gWEKwwiGwP8wdgs=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=B/qEkm0D8BZSVTGnFhD4G+rUQqecKBknOj6kf4GswR6L/UI9BCitLWwKkG/VnDET
+	 C6BHBcTzD106OrxX35bTwe4616yfFj7/AfvszEKcH9bDkGgx7MfN/jxvB+4TobCF5
+	 kEvsG22TLKz/w4AZkGEt3kkpioXAoAiGO5iKKABLD6hf+/hZt608bKDFWmNzHTajJ
+	 AkIn2VYhqicXGEp8HeRnsa2909VBdWxiSd0W8EgiVos+9S/c2W0EsyBI46QuXQbIC
+	 Iceoe/5PwIjD0ieb5nosRko2QJYnw/OXEmUOrAKar0L9nQaaAGq0FTN+UDQJvfYnF
+	 jpr+6qjcodwuBj8QoQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1M42jK-1rpb5M1OJE-00047L; Wed, 27 Mar 2024 22:45:28 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: rafael@kernel.org,
+	linux-acpi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: quickstart: Fix race condition when reporting input event
+Date: Wed, 27 Mar 2024 22:45:24 +0100
+Message-Id: <20240327214524.123935-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: MAINTAINERS: drop Daniel Oliveira
- Nascimento
-Content-Language: en-US, nl
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240327081434.306106-1-krzysztof.kozlowski@linaro.org>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240327081434.306106-1-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:HqHR9WjR1YJw5w+6ZNTv1E2cWk5Fsn63ffEcwNBKClBfq0ifa7p
+ eE2pseif+AAjFJrQU7aAF8AGylnB6iIcdfd/O5ieoHZ5EK5Q8+jxKJh+LWSXjCaP4DfQvA4
+ 7jRKX9xX+kJW3kn6E1aA77523ECoQ8mRir9EeMrJOQZf71s5tjUJIEmGDEXKwM7l2ruyCqM
+ rjKKXWDK35Qhl5BcvlvpA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:l7VohZ+Mi0U=;qHYGmA6f8S3wH6OloSmE0xOZGwb
+ GmioLyNMQCiFBW50tsCTT1BxS2MEr1lDyCotIa7Y/cxDy96zU05zOjt1QMCI3aVjBMp8oYnRn
+ XRvlveZk+IIp+j4yZsFmN2Owd216beUwXIf7DLePzATNVDHpR8ex7vAuJrUz56yoGdImTiEBM
+ cc/3ecJqkjV2Mp6ZuD0WfzAczm5VUgOaim+/fo/8ZhqZ6moTNlrQgMwaqe/4m8s/sWsV5JlWO
+ TK/QrRAzFkUbBY97PUKUx0YGozN0OACpTDl9LDvIVkCgrTXnIbUmKtumxZSWlmLfxhTw4rGuy
+ uRc2bEB/TYz21rJN/JLDdb3i/t/n6ExnOkiuqdUFn4QOEHyxi8ssqKDCpRK1AMlJKTWxQ3ClT
+ oeCRtZ4U+Xj+yV29fhrkUSoYmLARGBurOhP5SdIkUNJfeH+CHWTuQwB835ap3nwxywoXKUsEw
+ MeL17BeWUljhRDSKGmqBoganLS1Mm+82VlbKx5nUaGWKvQQJW0dShTQpUYLE8fi7CJ1uRmFQ1
+ giPklp84gvUSm43v5+vpuzHa5pp6JhZigJwl2HjVv3kGzTXM0I+6XSc2rYHi1mqkg31e3ZZKF
+ plAYUaU+Cy9qQ5lTCDX/Epsh6EilLw9TY/3YsakvGk3KVChX68Puqv0CmyFqWMs6tqMl/HGdc
+ MDFePFXh8eMke8FOCGGG5NfEa36asU4R0LaFhlumLemktx5guSE75MbVEKayOv96kBCCsTgXA
+ OFAshHkDuEUrGu90dsmZslsAmL7MRZ/IRAyKtr/4tiu/YA1VNYa/nrOP1B8scZi5EzFz/+wG0
+ 82GwB4kvFCotcCjWRrHQmRvUck5zD7aPZxWav3bs4QlAc=
 
-Hi,
+Since commit e2ffcda16290 ("ACPI: OSL: Allow Notify () handlers to run
+on all CPUs"), the ACPI core allows multiple notify calls to be active
+at the same time. This means that two instances of quickstart_notify()
+running at the same time can mess which each others input sequences.
 
-On 3/27/24 9:14 AM, Krzysztof Kozlowski wrote:
-> Emails to Daniel Oliveira Nascimento bounce:
-> 
->   "550 5.1.1 The email account that you tried to reach does not exist."
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Fix this by protecting the input sequence with a mutex.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Compile-tested only.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+Fixes: afd66f2a739e ("platform/x86: Add ACPI quickstart button (PNP0C32) d=
+river")
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+This applies on the branch "review-hans". Maybe we could somehow
+document the concurrency rules for ACPI notify handlers?
+=2D--
+ drivers/platform/x86/quickstart.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+diff --git a/drivers/platform/x86/quickstart.c b/drivers/platform/x86/quic=
+kstart.c
+index ba3a7a25dda7..e40f852d42c1 100644
+=2D-- a/drivers/platform/x86/quickstart.c
++++ b/drivers/platform/x86/quickstart.c
+@@ -18,6 +18,7 @@
+ #include <linux/input/sparse-keymap.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/mutex.h>
+ #include <linux/platform_device.h>
+ #include <linux/sysfs.h>
+ #include <linux/types.h>
+@@ -35,6 +36,7 @@
 
-Regards,
+ struct quickstart_data {
+ 	struct device *dev;
++	struct mutex input_lock;	/* Protects input sequence during notify */
+ 	struct input_dev *input_device;
+ 	char input_name[32];
+ 	char phys[32];
+@@ -73,7 +75,10 @@ static void quickstart_notify(acpi_handle handle, u32 e=
+vent, void *context)
 
-Hans
+ 	switch (event) {
+ 	case QUICKSTART_EVENT_RUNTIME:
++		mutex_lock(&data->input_lock);
+ 		sparse_keymap_report_event(data->input_device, 0x1, 1, true);
++		mutex_unlock(&data->input_lock);
++
+ 		acpi_bus_generate_netlink_event(DRIVER_NAME, dev_name(data->dev), event=
+, 0);
+ 		break;
+ 	default:
+@@ -147,6 +152,13 @@ static void quickstart_notify_remove(void *context)
+ 	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, quickstart_notify=
+);
+ }
 
++static void quickstart_mutex_destroy(void *data)
++{
++	struct mutex *lock =3D data;
++
++	mutex_destroy(lock);
++}
++
+ static int quickstart_probe(struct platform_device *pdev)
+ {
+ 	struct quickstart_data *data;
+@@ -165,6 +177,11 @@ static int quickstart_probe(struct platform_device *p=
+dev)
+ 	data->dev =3D &pdev->dev;
+ 	dev_set_drvdata(&pdev->dev, data);
 
-
-> ---
->  MAINTAINERS | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 51d5a64a5a36..de17c0950d83 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5207,7 +5207,6 @@ F:	lib/closure.c
->  
->  CMPC ACPI DRIVER
->  M:	Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
-> -M:	Daniel Oliveira Nascimento <don@syst.com.br>
->  L:	platform-driver-x86@vger.kernel.org
->  S:	Supported
->  F:	drivers/platform/x86/classmate-laptop.c
++	mutex_init(&data->input_lock);
++	ret =3D devm_add_action_or_reset(&pdev->dev, quickstart_mutex_destroy, &=
+data->input_lock);
++	if (ret < 0)
++		return ret;
++
+ 	/* We have to initialize the device wakeup before evaluating GHID becaus=
+e
+ 	 * doing so will notify the device if the button was used to wake the ma=
+chine
+ 	 * from S5.
+=2D-
+2.39.2
 
