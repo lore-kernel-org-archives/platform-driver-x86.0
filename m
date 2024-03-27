@@ -1,140 +1,169 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B375675B
-	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 07:45:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAED47F4B
+	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 07:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711525554; cv=none; b=mMaIHWiLHH5NRWGVCMPIQgc1GVkJR5MvUX0aYuwBgUc9s58QTXhEly+F0+t+8WRe6rE52vN730bmqVd+8v0j6d5GwXvk5iiveYSDCmTOxPR3XlvU92JWvAoMSgUwhxydvvGJVQqlmw3Bww08i+Y6RwwcZe5H7F1g+HyTmFuo1Zg=
+	t=1711526284; cv=none; b=Uyh3H6RJkQXUZgVALhe0lTusodVY+RkMJA8FUS87jg2jKg8jJgbcR4cIJ/IWWlppavUmpROQw6d4go88kQKOeRI8nYsGVY2QtDASXtyr86Vh46J9YMQbuNcxLPwh/8YCc7qwUJuqxuR7RJd7dxsQTTcOaJ2BuKFi0mpNf3dNt3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711525554; c=relaxed/simple;
-	bh=htKh4Jp4vM0zvCuX4KapTUnP1c1FqeWCRPv1BZ+Q/j8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZVqTScBxfBHFr4BzhhmKfxx4BQJuVLv8C9v/MLK0DvZszcuDuObGfYy/3SQA7ZcjYTBspHaLgJpSZ5gIJ1REVQQCjLkdW1nDzGtnvXeuJWdO5oWGgeJt/aBGNPiZTKZ/JN7TqdSzSPxAg3+bfTvzB3l+feRF+dOlMFWn3KQOpdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pFV3igqv; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711526284; c=relaxed/simple;
+	bh=+jMhjERTTtRLM0KWZ1Ds1bG7HJxMTKBPNk0QcjknlfM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gtHR46ehV2dplvjqUeCRvhZE1YxHDy7qxH1AZaVThBwoT/hr4f9Fi0c4oLUGigby0rX1ptFrpv1Kv5vIl3+nOOeaGvVZXBrUR3J+l3aP1rjLp2tHVPC66EeSY1/L3iinaqVzkaHrfgbQIftwupKCiY2DeGNz1gRgJwyC/Ii2WZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QGeKM79S; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pFV3igqv"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a46ea03c2a5so107807966b.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 00:45:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711525551; x=1712130351; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=N7K6idk2YeGVu0lxj/Ps3L084ba7NhsvfbgHIaF82R8=;
-        b=pFV3igqvMJ9HjluHp9Vf0MAhtXbNQ842Fbm5B7bFRfSuyEJNxCwy027lyxinbK1zC9
-         ZmCJgklr0fKbMRe7WPKSN44dgzHg7XJjBSV3FngoSqdey2jX7ObyAXRanlG81bHyvJC9
-         czDRKpp5nVwhNhaj/ZJJ8IkU+DBIWxXl+Xu8aRiz5hdIF4t2S1ILUfp3mra0uEIgvPSk
-         40Abq57DGCsYzUOOGqhQB5wN5edTKBiNbfznKNZxmSA999sLsLfdaFmc1K5u5YMzioly
-         BsA41ig8RRChZ86qzkDLsMP7upAELFQFRSga5bJEb4KoTNJRvNjnEqdjCTuLFArvTMda
-         s0nw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QGeKM79S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711526281;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FvCZIXlyJ0i9W5y1NVajdFVbSmQI+ddDaK6Um2GHqYw=;
+	b=QGeKM79SYM2frmbmt2fxZHlTNPc5Oc842ZXIV9fYAHyaizqKZdm6AQwbQ2/i7sBfZ6yLBG
+	/3zjToBOF6R5v9/jolUeie+s7O0lGrLHanmRp8WfGz9AHCuTQt4iVPqe1SUqo5L+iRAxdS
+	JXhpwPhJDXSNffPjD54Q6jbnEfn3mdQ=
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
+ [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-611-s2A9rkUkPLGZ6NJ9UxCa0g-1; Wed, 27 Mar 2024 03:57:59 -0400
+X-MC-Unique: s2A9rkUkPLGZ6NJ9UxCa0g-1
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-5cfc2041cdfso3641227a12.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 00:57:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711525551; x=1712130351;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1711526279; x=1712131079;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=N7K6idk2YeGVu0lxj/Ps3L084ba7NhsvfbgHIaF82R8=;
-        b=YdSQIc3TunXyPQ9NPLlAvmlQfuTaF9ToRYnV0RbMYCR4U0nTcKNXx9ijS2Wt8jgS65
-         xc5IQGjJvcC9V4hFGdOGICwmDYlgwPUD3Cs4z79U5f17L9Xf87XAFC99dT5Jb1SMltf3
-         UujZAyr7AKXifQW+snN4czKIp92tpG1zBYA4WYKtuTx5/zG9+/7sFTA9oCiEvDU63aly
-         LuvIbYicA+boVsODpymvpGhl8WUFnCNC9smhhINFDazEfpHTpZYUUvW9XHpbKQyDj1ex
-         8RJOM90ZSjrLswQE2V3FS9HkFpyObVLH3ZBvqWN8at19gIpvplM29GFAre5Xv+UpM8K3
-         V0Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCWSOw8c3p+x/xFmQBMXqRq6T9/MHzWgf+zBvRDkLwlkxeT3GBMrJptetFnZv7KDJae7HFZQsZRvSNk5SJcwGUpKBF2ZwI/NysgQLPLzsuxUbStB5Q==
-X-Gm-Message-State: AOJu0YxVckbTM4114K1CXeb2Yo7HizMXmcAhpfwlp0d+3Y+3o58rOvdN
-	wxnPqZG+K75lKktRjwOWSQ6MuO8pcWEDccq+hEkmqQ0Kty0jXgxlmwJpfZYSoQo=
-X-Google-Smtp-Source: AGHT+IFo1SVbUJhfk2D5dISc82f8C01XAvtK/9Ua8RHBqCpkGF1uNtl0N5fMsZ3xQ2K6OiUoagNCQg==
-X-Received: by 2002:a17:907:e8c:b0:a46:a3d1:679a with SMTP id ho12-20020a1709070e8c00b00a46a3d1679amr4106291ejc.14.1711525551050;
-        Wed, 27 Mar 2024 00:45:51 -0700 (PDT)
-Received: from [127.0.1.1] ([178.197.206.205])
-        by smtp.gmail.com with ESMTPSA id am11-20020a170906568b00b00a474690a946sm4671745ejc.48.2024.03.27.00.45.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 00:45:50 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Wed, 27 Mar 2024 08:44:06 +0100
-Subject: [PATCH 19/19] ACPI: drop redundant owner from acpi_driver
+        bh=FvCZIXlyJ0i9W5y1NVajdFVbSmQI+ddDaK6Um2GHqYw=;
+        b=Wgs3D1puT8XiDr5YZ7cMB34MppxsOgfXKFQWRQIewAorw3e4ppnbDf/dlsZ68EGH4N
+         9KUERDsjLZlYILJDR0GDPacAaIIl8ZoK1Rv9BdTAM2w47IHDSjeCfEATyxpmKrduZOUB
+         uEeS8atlr+Gtze9d2mj3+nsJQGcDUxbfDoFm0pv9RFhwKe7SNEVujggPyLZHjfBrUVxI
+         z/2pmJCcmS+HXFBndQcAjXMwXxmJW/bXYstw5QtpdeJ+o3M1x+D6Eyv87rYhMHvCBpr1
+         QdWuHjxeP+QBAyXB5vI39xrZTdkJn/TmBq9/tKzuwJgG4UB9DftZit2+96wTdcGIX1TZ
+         /gHw==
+X-Forwarded-Encrypted: i=1; AJvYcCXIV5xO/SBD33/UhglNdOw5P6IvsFXLaQBS1buBV2jioPm4PfUMq2oSnx3l3M8gZ6n4u1RBDXKe+blSWhL6cjwdQ6zxjb6XSXCZ13YI0o2O76S4mg==
+X-Gm-Message-State: AOJu0Yy2RIgYsXowQinCvSE5ulTfAH6MzYp4CcyLhr8pm60YkWzFfDDK
+	ar+uw2zYilyG1GS23pA6xVigxsDksN9VqxkqcmECECDqCG/Hz6bAOlaCNjupc+olIt0XD/rX9Sl
+	YJH8D82vm/ES7you+rfOuGQe3xx28+BWh4v+MI/3ceKCSsG6vTl43qsLaUhWAdTCc87NeAAZqCU
+	1mT4KibtWSHBVZpLPyztkX+PxMmXKifho7h6gLT9Tj/4ov6A==
+X-Received: by 2002:a05:6a21:78a1:b0:1a3:5440:520 with SMTP id bf33-20020a056a2178a100b001a354400520mr2261627pzc.1.1711526278844;
+        Wed, 27 Mar 2024 00:57:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF+Q9fuG8yTs+ELOSdaWHYwqpSczYEeTI5UtBaHspHNLcfSZRVndgU5mB3Z2zq0Hcih2Q+cX9I9biaM+ykuO08=
+X-Received: by 2002:a05:6a21:78a1:b0:1a3:5440:520 with SMTP id
+ bf33-20020a056a2178a100b001a354400520mr2261613pzc.1.1711526278530; Wed, 27
+ Mar 2024 00:57:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240327-b4-module-owner-acpi-v1-19-725241a2d224@linaro.org>
-References: <20240327-b4-module-owner-acpi-v1-0-725241a2d224@linaro.org>
-In-Reply-To: <20240327-b4-module-owner-acpi-v1-0-725241a2d224@linaro.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
- Robert Moore <robert.moore@intel.com>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
- Corentin Chary <corentin.chary@gmail.com>, 
- "Luke D. Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>, 
- Daniel Oliveira Nascimento <don@syst.com.br>, 
- =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
- Matan Ziv-Av <matan@svgalib.org>, Mattia Dongili <malattia@linux.it>, 
- Azael Avalos <coproscefalo@gmail.com>, 
- Richard Cochran <richardcochran@gmail.com>, Jeff Sipek <jsipek@vmware.com>, 
- Ajay Kaher <akaher@vmware.com>, Alexey Makhalov <amakhalov@vmware.com>, 
- VMware PV-Drivers Reviewers <pv-drivers@vmware.com>, 
- Theodore Ts'o <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
- acpica-devel@lists.linux.dev, linux-input@vger.kernel.org, 
- netdev@vger.kernel.org, chrome-platform@lists.linux.dev, 
- platform-driver-x86@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=674;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=htKh4Jp4vM0zvCuX4KapTUnP1c1FqeWCRPv1BZ+Q/j8=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmA85bDmBUKGxLiw+IE8MXLih8uNdO+fOokRWlT
- TIm2uaEvyuJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZgPOWwAKCRDBN2bmhouD
- 1z6cD/oCytA+t0QmfxlLxr4zYP8tlK64yfX5UfqshoxKOm8kP+7fJ49TPWNAJ/2WOuldx1L8JZP
- GlN8xW/4GU+WN5dsD5vqU4gbr9Fuk5sFzeGpF1Wn+LAWc7Rzm6MSPsGY32bIeJfKiv6H4mha/ps
- 6iC3ilwowIllCYO/VS+7EUinaRgOc4gLWxeG5fsWst0/vaT/ppa+J0RqUaM65oxA2SVXfaGW29Z
- WfdVl9fZ4bIoKvmzM1u0QM8ugLZUVyqdYaaMqZb4oCV9JATh4I80NtpIfy6o4YaCRAmDwxiapUC
- HUHnluTQsUJdqX4wyUG5eukbNSJWoevYgQkyFge+T9YteFs9tbViIAwcMKZDN/XVEY76fDZjxCh
- V9t5i4PTRFJFOxxwQMv34S//WxQreKqDkMyo2m8nbCDEp0dHGXiYPbibrEXk286kkju9dqzQXFL
- SwWC13gJbV5ZXZoYT9ZtKUN7IgyenZ8Emo5hTx8uQQ0hP/r2vwR8uRfZZ2tbr1CEqFdpciqLfBo
- eWfMHiqnX05AtOftT8P6/W5u4JbGxibHOlzGY+SlIFixrIy9beGzWztoHO5v77lVosMNGQixCAH
- Brl8aSiMZnR5rKQUT7+dBC9lBBeAk761YLH+3wjtZoA4c8m63tKEgTknXO4Ny2XJQcxUiykSJaM
- p0b7ggN21hq0YrQ==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+References: <20240324150107.976025-1-hpa@redhat.com> <20240324150107.976025-2-hpa@redhat.com>
+ <CAHp75Ve5201KNdjvDZYq_unHTKp9wZXPWZXDgStP8y+XjtnWWg@mail.gmail.com>
+In-Reply-To: <CAHp75Ve5201KNdjvDZYq_unHTKp9wZXPWZXDgStP8y+XjtnWWg@mail.gmail.com>
+From: Kate Hsuan <hpa@redhat.com>
+Date: Wed, 27 Mar 2024 15:57:47 +0800
+Message-ID: <CAEth8oG7_qFuUrL+kX3ezNatWqKPqT-qiaO5NGY-N3F3ufQL9w@mail.gmail.com>
+Subject: Re: [PATCH v5 RESEND 1/6] platform: x86-android-tablets: other: Add
+ swnode for Xiaomi pad2 indicator LED
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	=?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
+	linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Once all .owner is removed from all acpi_driver instances, drop it from
-the structure.
+Hi Andy,
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Thank you for reviewing it.
 
----
+On Mon, Mar 25, 2024 at 3:30=E2=80=AFAM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Sun, Mar 24, 2024 at 5:02=E2=80=AFPM Kate Hsuan <hpa@redhat.com> wrote=
+:
+> >
+> > There is a KTD2026 LED controller to manage the indicator LED for Xiaom=
+i
+> > pad2. The ACPI for it is not properly made so the kernel can't get
+> > a correct description of it.
+> >
+> > This work add a description for this RGB LED controller and also set a
+>
+> adds
+> sets
+>
+> > trigger to indicate the chaging event (bq27520-0-charging). When it is
+>
+> charging
+>
+> > charging, the indicator LED will be turn on.
+>
+> turned
+>
+> ...
+>
+> > +/* main fwnode for ktd2026 */
+> > +static const struct software_node ktd2026_node =3D {
+> > +       .name =3D "ktd2026"
+>
+> Leave a comma, this is not a terminator.
+>
+> > +};
+>
+> When I asked about the name I relied on the fact that you have an idea
+> how it works. So, assuming my understanding is correct, this platform
+> may not have more than a single LED of this type. Dunno if we need a
+> comment about this.
 
-This depends on all previous patches. It could go next cycle, after
-things got merged.
----
- include/acpi/acpi_bus.h | 1 -
- 1 file changed, 1 deletion(-)
+I'll make a comment to describe the configuration.
+This LED controller can be configured to an RGB LED like this. Also,
+it can be configured as three single-color (RGB) LEDs to show red,
+green, and blue only.
+I think the name can be "ktd2026-multi-color". Is it good for you?
 
-diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-index 7453be56f855..32aae3ee99ac 100644
---- a/include/acpi/acpi_bus.h
-+++ b/include/acpi/acpi_bus.h
-@@ -170,7 +170,6 @@ struct acpi_driver {
- 	unsigned int flags;
- 	struct acpi_device_ops ops;
- 	struct device_driver drv;
--	struct module *owner;
- };
- 
- /*
 
--- 
-2.34.1
+>
+> ...
+>
+> > +static int __init xiaomi_mipad2_init(void)
+> > +{
+> > +       return software_node_register_node_group(ktd2026_node_group);
+> > +}
+> > +
+> > +static void xiaomi_mipad2_exit(void)
+>
+> __exit ?
+No need.
+x86-andriod-tablet is based on platform_driver and platform_device so
+it doesn't need __exit.
+
+I put __exit and the compiler complained about the warning.
+=3D=3D=3D
+WARNING: modpost:
+drivers/platform/x86/x86-android-tablets/x86-android-tablets: section
+mismatch in reference: xiaomi_mipad2_info+0x50 (section: .init.rodata)
+-> xiaomi_mipad2_exit (section: .exit.text)
+=3D=3D=3D
+>
+> > +{
+> > +       software_node_unregister_node_group(ktd2026_node_group);
+> > +}
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+
+I'll propose the v6 patch to fix them according to your comments.
+
+--
+BR,
+Kate
 
