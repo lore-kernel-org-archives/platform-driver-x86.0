@@ -1,194 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59CD6125
-	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 10:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046941E88D;
+	Wed, 27 Mar 2024 10:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711536902; cv=none; b=ZuVZCbCH4Xr8YtxaoCUzEGUgaL/MhJ4r1BaYMjlSSqbdV2+3M+OFJQDV31xEY12qy6RLTJht6ACRH3BtnqIy4GpsK89NqguQJGrwW9NlheG8iai196umu0zyxpbJBSmLIOgFVxnXDZO4usCuIjqYqR1aOCmdWZ1QU/WTzN6LeRo=
+	t=1711537132; cv=none; b=YNcnIZE8q0cDaP5DJm5nyQm36CedK0moMsGCDh4Mar21QU3JvrKNXPsUc0uhs6g7QtgHP6fXEeTfD2Fm0lf6fDE/b0UNvrRL+McbTFFg4BuIyIAPRTCJTkjIFbxxUgOUC7IbzWVBqkJbOmlqBkLq59jIiTbz6VQb4nWi53ZHkNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711536902; c=relaxed/simple;
-	bh=KweQtMWh8ngFMvSjQH6JE+OBPcnHJ4rB/+Q5je6TFH8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hoPXn3aSp0VJhFKOY0PeO4wTnshOptxdQheC+Qz2pd4lTJbvoBA0ZtYYLeE1BYZMqnsknHK0Tt5Ae/Fr9aQUbaM4VnQfN8IUZYVZzT6qO2KqtTe8sE93IpwRc6thEs4cLaAE1ZSH536o6A6Pdum9eRxdb9Km15+kJ5zrhHji4NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xe/sArcA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711537132; c=relaxed/simple;
+	bh=FPOIGS3XU/PJpUjx1JSgCVFLz7sjFzTxaraDc1Cj4iA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t64uLlr6bZzyFQSD8oHuCpe5bxwUrU7w7U+Zvs75QDA1wlt5MU/VoSaLB8PT4Nwt4yK549eKa3j5pkDap/jUWd62KLHivseZ84fpYZOhKo7JxomDb/7JJ8wfefjTBTwoS5IKhxOuiADL0iazaEppimjB6Oia3JAWHz7F4geuQek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JDOjXZSJ; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xe/sArcA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711536899;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jOj1xUDRgKvrKUZwWE47VrEgQM/bvWgtRCCyCpAEu/A=;
-	b=Xe/sArcAjl3XISVPEf9i0i69UBTlMdXH7Lfw45gyVuv6hC00uf246j4k9Z62I6YCAXyDnO
-	jGs2Svw6fNZfKlgI/99buECi/3MvOudRABdrAd+c87svmi1OCfjFPoZIu1NCp7O1v2ibgy
-	CQhCyjscereMsvI+glIj0OmlOzdNQBM=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-91-LRlwxy6fMFiex1W3xFIZUQ-1; Wed, 27 Mar 2024 06:54:58 -0400
-X-MC-Unique: LRlwxy6fMFiex1W3xFIZUQ-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a4943e972d1so82124766b.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 03:54:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JDOjXZSJ"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56bb22ff7baso7764019a12.3;
+        Wed, 27 Mar 2024 03:58:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711537129; x=1712141929; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LdBJoZMB+M+m7as7ulZ/MHo9uJhY03Nr+jTBbOpnN74=;
+        b=JDOjXZSJ6ipTc+oszly/nqhiauUcyyEHiXfbOJgzP9F4O1ufqG5IXz7pmmidLIIFSE
+         U36O/G8lXfLoD+EqUVCC0mnR95IRvyS1lIVXcFbx3MNt0OVV1TcwNNoY5X9f6Rfbdjxi
+         xcK2HplxTqO9NnygWMN61IccVe6iKXb/lxgFqiFpO8wL8Jeokpg5mWsFcVZo3rqy7NyP
+         7wJ8SkIF4zv9ESGl+24JKqnAUJ9konTmaGeDv9nqDEUnCbCacVy1DJvs4roBq+tmmq6r
+         vMYq9BlK6XEUoZIhU0B/81sFzZ+b+F585rJCgjDRcasdiX89WGFO1+D73ys8TIpwwx4O
+         9Ohg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711536897; x=1712141697;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jOj1xUDRgKvrKUZwWE47VrEgQM/bvWgtRCCyCpAEu/A=;
-        b=wc575oKd79vMSFjjmSOIs4FRLgkYtXxrYUnmYsITx/6NCAnUthQ00a8ZCdBnI4zTl0
-         L7cn9WlVJk0Q6QFuP3juk/M6JnUu3D4e04h5LlRmANQl1P01p8bFbhtzR7YRYP7V8ivb
-         TosmudmTicWWURAWuPcDQRp4CVU167VbY2PQrfuCujjXDDULph610WNHDRtVGyk3n7uK
-         guBogE9jAf81L4FLfFtvFi+NGMX0ROEbQAqHvJ1nnEgFswX3ZY2DqQy/3pnMwHVloxOI
-         KFDMyPe2D0/mXOq6PQ610eFgxqIxvNbJK50hbzSVxcQnVOQwy7+JLH+Gouf68ywtJLGj
-         OuhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUP5yW+MkkEtVGsogvUtaiWU68qxjDKPqjD/5Jd23w9y0xHH5f9gbFTbdH5PVeFKc1wcbo+HKsVGVluxr6Fkv0gob7EFoi5fekyudlnocN6XrgfTg==
-X-Gm-Message-State: AOJu0Ywqz8twyFsCYfIvVIlw6m3MoH3GBT0rbR0NnG2ryADRSR+GgQp/
-	p3dL6bLb22Px5aoSfGrADfztfDkK/J/r4n/j3gJPLM14b4XwRKcW5/jPRYxl52VeJ3BTGzqghE2
-	pQ1zWkxGIgSHrts1WaGEpxhGDJ/QGfOo39ya+lvzU9OBjFF1EtJn1XOMK+jJNj16imQMIpmG1OQ
-	NntOA=
-X-Received: by 2002:a17:906:374a:b0:a47:3cd5:b3f1 with SMTP id e10-20020a170906374a00b00a473cd5b3f1mr3083495ejc.35.1711536897097;
-        Wed, 27 Mar 2024 03:54:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGhLJLKLQeaxmFpX4tDgVqdVY05KaUoMv6vx1ZnQa20SN27eR0yLzoiqFoYZY4YoaspWrfDQw==
-X-Received: by 2002:a17:906:374a:b0:a47:3cd5:b3f1 with SMTP id e10-20020a170906374a00b00a473cd5b3f1mr3083483ejc.35.1711536896742;
-        Wed, 27 Mar 2024 03:54:56 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id gx24-20020a1709068a5800b00a46f0d133b9sm5304616ejc.98.2024.03.27.03.54.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Mar 2024 03:54:56 -0700 (PDT)
-Message-ID: <030beaf8-12e1-400a-b064-f17384e32714@redhat.com>
-Date: Wed, 27 Mar 2024 11:54:55 +0100
+        d=1e100.net; s=20230601; t=1711537129; x=1712141929;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LdBJoZMB+M+m7as7ulZ/MHo9uJhY03Nr+jTBbOpnN74=;
+        b=vGWKzsaKAp7AL26b4MrwKaNi8uOFdmeV+r8M+BuCr9JuyuqKjqIjWBQR29el8cWAe9
+         wThjrzqEeCzXe3uh9UO9dCQZ+M2KmZ4g5bkH1+bOOZtsUrFOPPQ8QuGymZQo3nwEGG6U
+         NVOqoJw8o2Z/PBLUZvDvDGepR5zgdE+4rxBXW51W1DkIuq9U3DhIv8S2KdFDnoptx8T0
+         yA39onSmkuL+iucHH+rvs1/S/g9fHcdLhDZFvRd1stAghZ0TIDKqrZGpv3R4cmoSnRNN
+         cw908CJLMHSo0uq1S1g7CWU9/zNpFyKwvNncpPUD1e9GOs2dLgFFh4XO7wCNQZWXi98Y
+         Ljnw==
+X-Forwarded-Encrypted: i=1; AJvYcCXy7BZQjdZuJuvoV2h7O4ZhYLTOwqI83DrBKG7NmSX2iAz3BrSD1J8h9noZ0Bn8P9fsTOAgsSrB8UX3u53hqOclLfLdAhVKneU8XEVw9G/eLSVEIQxGc2tk/n2Nz5BNhcE5Hx63OOCTbTotrLs/O51MAw==
+X-Gm-Message-State: AOJu0YzcHC364rJQ0Gk4Cbh553RXdFN2yWt5UIS8+25zSi+SYLneqYBD
+	VXBGyzM4KgszHLXsogvci4vyL6B8SgJib3eWp/v1n/tdqDb+aaJ0qHwiKgiUUX8sXE1z17Ih1Nr
+	OiWp4lbEXwZfKCh0YBh5Ej6L94wA=
+X-Google-Smtp-Source: AGHT+IE4QWniaYBGdlfiIo/PIZxypR+YNDlj/T7yCI0n5qUoLGvcU9GGoY+74iIG6sH3olcGanSfCKapfSKQJzLoh9I=
+X-Received: by 2002:a17:907:9689:b0:a4e:dd7:4e24 with SMTP id
+ hd9-20020a170907968900b00a4e0dd74e24mr35601ejc.23.1711537129044; Wed, 27 Mar
+ 2024 03:58:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11] platform/x86: add lenovo wmi camera button driver
-Content-Language: en-US, nl
-To: =?UTF-8?B?6Im+6LaF?= <aichao@kylinos.cn>,
- Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: "ilpo.jarvinen" <ilpo.jarvinen@linux.intel.com>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- platform-driver-x86 <platform-driver-x86@vger.kernel.org>
-References: <je8phmmtfz-je9zfg1v9s@nsmail7.0.0--kylin--1>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <je8phmmtfz-je9zfg1v9s@nsmail7.0.0--kylin--1>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240326223825.4084412-1-arnd@kernel.org> <20240326223825.4084412-6-arnd@kernel.org>
+ <20240326230511.GA2796782@dev-arch.thelio-3990X>
+In-Reply-To: <20240326230511.GA2796782@dev-arch.thelio-3990X>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 27 Mar 2024 12:58:12 +0200
+Message-ID: <CAHp75VeTq=eyumbRWiQeLnpbTOZJR=R_7=+RkKtY2YcL-z3isQ@mail.gmail.com>
+Subject: Re: [PATCH 5/9] surface3_power: avoid format string truncation warning
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Arnd Bergmann <arnd@kernel.org>, llvm@lists.linux.dev, 
+	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Maximilian Luz <luzmaximilian@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ai Chao,
+On Wed, Mar 27, 2024 at 1:05=E2=80=AFAM Nathan Chancellor <nathan@kernel.or=
+g> wrote:
+> On Tue, Mar 26, 2024 at 11:38:04PM +0100, Arnd Bergmann wrote:
+> > From: Arnd Bergmann <arnd@arndb.de>
+> >
+> > clang warns about printing a pair of escaped strings into a buffer that=
+ is
+> > too short:
+> >
+> > drivers/platform/surface/surface3_power.c:248:3: error: 'snprintf' will=
+ always be truncated; specified size is 10, but format string expands to at=
+ least 12 [-Werror,-Wformat-truncation-non-kprintf]
+> >   248 |                 snprintf(bix->serial, ARRAY_SIZE(bix->serial), =
+"%3pE%6pE", buf + 7, buf);
+> >       |                 ^
+> >
+> > Change the format string two print two less bytes so it always fits. Th=
+e string
+> > is still truncated, so there is no change in behavior, but the compiler=
+ no
+> > longer warns about it.
 
-On 3/26/24 3:54 AM, 艾超 wrote:
-> Hi
-> 
->  
-> 
-> WMI
-> 
->> > The Camera button is a GPIO device. This driver receives ACPI notifyi
->> > when the camera button is switched on/off. This driver is used in
->> > Lenovo A70, it is a Computer integrated machine.
-> 
->> > +config LENOVO_WMI_CAMERA
->> > + tristate "Lenovo WMI Camera Button driver"
->> > + depends on ACPI_WMI
->> > + depends on INPUT
-> 
->> No COMPILE_TEST?
-> 
->  
-> 
-> I compile this driver and used Evtest tool to test it on lenovo A70.
-> 
-> 
-> ...
-> 
->> > + /* obj->buffer.pointer[0] is camera mode:
->> > + * 0 camera close
->> > + * 1 camera open
->> > + */
-> 
->> /*
->> * The correct multi-line comment style
->> * is depicted here.
->> */
-> 
->  
-> 
-> Thanks, I will modify it.
-> ...
-> 
->> > + keycode = (camera_mode == SW_CAMERA_ON ?
->> > + KEY_CAMERA_ACCESS_ENABLE : KEY_CAMERA_ACCESS_DISABLE);
-> 
->> Useless parentheses.
-> 
->  
-> 
-> I think the parentheses is a good programming style and beneficial for reading.
-> 
->  
-> 
-> ...
-> 
->> > + ret = input_register_device(priv->idev);
->> > + if (ret)
->> > + return ret;
-> 
->> > + mutex_init(&priv->notify_lock);
-> 
->> Your mutex should be initialized before use. Have you tested that?
-> 
->  
-> 
-> Yes, I tested it.
-> 
-> 
-> ...
-> 
->> > +static struct wmi_driver lenovo_wmi_driver = {
->> > + .driver = {
->> > + .name = "lenovo-wmi-camera",
->> > + .probe_type = PROBE_PREFER_ASYNCHRONOUS,
->> > + },
->> > + .id_table = lenovo_wmi_id_table,
->> > + .no_singleton = true,
->> > + .probe = lenovo_wmi_probe,
->> > + .notify = lenovo_wmi_notify,
->> > + .remove = lenovo_wmi_remove,
->> > +};
->> > +
-> 
->> Unneeded blank line.
-> 
->  
-> 
-> Thanks, I will modify it.
-> 
-> 
->> > +module_wmi_driver(lenovo_wmi_driver);
-> 
-> ...
-> 
->> > +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
-> 
->> Please, move it closer to the respective table.
-> 
->  
-> 
-> Thanks, I will modify it.
+> > Fixes: 85f7582cd484 ("platform/surface: Move Surface 3 Power OpRegion d=
+river to platform/surface")
 
-I have already merged this. I'll squash in fixes for the few
-small code style remarks from Andy, so there is no need
-to send a new version.
+Hmm... Is it really a move patch (which by title should not have
+changed the contents)?
+(I haven't looked into it, though.)
 
-Regards,
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> > Not entirely sure about this one, as I've never used escaped strings, a=
+nd
+> > don't know if gcc is correct to warn here, or if the kernel defines it
+> > differently from the standard.
+>
+> As far as I understand it, this is a false positive because clang does
+> not understand the kernel's %p extensions.
 
-Hans
+Yes, %pE here is special. Btw, what has already been discussed a long
+time is to have a validation plugin in the kernel to check those %p
+extensions, but IIUC nobody committed to it.
 
+That said, the patch is most likely incorrect.
 
+> GCC does not warn for
+> overflow or truncation when %p is involved but the clang developers
+> chose to intentionally deviate from GCC in that aspect while sticking it
+> under a separate diagnostic that we could disable. I sent a patch that
+> did so some time ago but I guess Masahiro never applied it...
+>
+> https://lore.kernel.org/20231002-disable-wformat-truncation-overflow-non-=
+kprintf-v1-1-35179205c8d9@kernel.org/
+>
+> Consider dropping the changes that fix non-kprintf warnings and
+> including that patch as part of this series.
+
+--=20
+With Best Regards,
+Andy Shevchenko
