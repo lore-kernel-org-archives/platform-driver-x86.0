@@ -1,75 +1,75 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4479620B04
-	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 06:33:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866C91CA87
+	for <platform-driver-x86@vger.kernel.org>; Wed, 27 Mar 2024 06:53:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711521196; cv=none; b=sybXKKMUcm9N2ZXUN9TnTkUcZd8CFrucxVlqNvZUkpbT5H0S/bSEkBwAg1fuOD5nEA6BEKJu5Nv+IB9C2wqk3MfRh5w7WRqnZaLhWyH2nPU0Dv1Id60AvcJ20IcmhLWnCw5dcRl+TRO1JEkA65wMuxzXTHfC+xnGqW4oAmAUHak=
+	t=1711522422; cv=none; b=qLnrCqmQBFTDcLt9MY5Wrykh60Pl+NsBVC/wY0uitIcNHtkkZPboXzECQ0SpamZdjFM31qF0AG0ZBQ2GtcgDgvTRTwNlpEshUoufSq1JeGw5SNHgH/UfYNIJm6jTfKa+svH7cnhwI4KQPdhraVWMtxW3Aw1SiIlVg+PIoOEEoNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711521196; c=relaxed/simple;
-	bh=aPQ4cR+Pu5JRYY4fcJayj25/cfknmAwWXxQC4Vp7wCk=;
+	s=arc-20240116; t=1711522422; c=relaxed/simple;
+	bh=W6RLXUxCHDJY3w70KCqWzO6oGutZMiRq4O8XdSmVm20=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pAWVXlQiXwMrskiHWpe7gEVetLanua8EJMR309eD+lEpkau8X9n/1WyPCTRtmIRck4eskiDH71LGGA8gXeF2AymOi2XXuj3ug/XVrkF/vfN+i1L8mACdXtDlB6L0cy2u3D13wg/2JnfcFr8Hd5FfanfLeOkISWHXSU/dPAM6CZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CY4iZwPg; arc=none smtp.client-ip=170.10.133.124
+	 To:Cc:Content-Type; b=Dh4WBw3/PCtur8hgiFHRVYvjEhY2isuP/gu5NxfsBL2D9smw+bO/rFp/nry+xGLUbqTSq6DE0gAMXYHDS4e52jJ2JKEj7jMvkJRqAQv8K+C9Qv7JVNw4Oyzyw77SddgwqJdXLnYCXvAMRj10e9DuBN6AX6s9Vgqtc5PHqJse+Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d0SS72bW; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CY4iZwPg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d0SS72bW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711521193;
+	s=mimecast20190719; t=1711522419;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QCyDLFuHWL0o9S4b2fO6aGbOLoatVNVmPUDQSZg+cbk=;
-	b=CY4iZwPg8C7sJMzyE7vQ0qLAExBFtRWHOAlZDcZRIJSanw5aCeODOfrNdTVM6/D+C/Crx8
-	C4vPjUuecp5hBzYRVZVhL5ZwuLOC3Zpjl8radU+DLArPQGueEdo7nyDkbgigiCDqTsC7G8
-	d0FNil01SQW08ycxF9RC4NEns4N2xY0=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=hjyCvIB6syQyBLc/PURAesFgBPIAm7ixXYus2PqXUv8=;
+	b=d0SS72bWPQ6p8uDLVNkl76IrCgbpiRyERUKlX3HrmhNHwvQpWzzGf4Pm2e9KIdBtV7zc5O
+	EcFirHixjSYZ5RTnpTW3y2DZnI6C/2Ha3mm1Bt2zrecSux/4mOQrprtlxJhjlR12N/ibqj
+	6Pq9eaPJhpzq0yMeq2fjRZLtml5Wny0=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-338-BIWolLP3NVGTPffYKwdxBA-1; Wed, 27 Mar 2024 02:33:11 -0400
-X-MC-Unique: BIWolLP3NVGTPffYKwdxBA-1
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2a04aded772so4117432a91.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Mar 2024 23:33:11 -0700 (PDT)
+ us-mta-217-LdJt_Ru3M5KwCEoi5TG2Nw-1; Wed, 27 Mar 2024 02:53:37 -0400
+X-MC-Unique: LdJt_Ru3M5KwCEoi5TG2Nw-1
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-6e735084916so4905240b3a.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Mar 2024 23:53:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711521190; x=1712125990;
+        d=1e100.net; s=20230601; t=1711522416; x=1712127216;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QCyDLFuHWL0o9S4b2fO6aGbOLoatVNVmPUDQSZg+cbk=;
-        b=stH8Ug3msCQzaNLz8TiDTDm0hBauyHI8ovdf8gDX+GDnq7izFLnnE56m55wkSbn/q2
-         cDmcHMfqp5xmdHWY85ghp4dLLYi5uYnAGsMK+MBRRVV2f296wLFZU7ziAQrhvVqt6reA
-         NRQTySZ68GSv4jwpxT7vmkCJRBtny8f3EZR3KLKoNpaed3sKIdTXnqaoVv07tIQdyA/B
-         4GEgfGzcwsJXiSy5PJLhb1uRCafeY3NjjNajHDSMt3zILHGhuWLDvCwLUeJFRU/smWst
-         WzcSns5zgEiFsQO08vugFArmxi+kJwO73ouRBDgeXGrg9oThc/Tj2fD2h9gd1NtBt/6C
-         zSpg==
-X-Forwarded-Encrypted: i=1; AJvYcCXj9MHjYRw81Y25emcbcazd+Rqkq+7KpOuwYPkuSHirS8fNHrrZJoaC1ZloyqK1wJZ19ZREEZxYZirE/cp2ZdcVcWJMfmo2zlNE0tAjeeNbH0Bv9w==
-X-Gm-Message-State: AOJu0Yz0TrVlZ6DNyX+4MktzQmDCkw7I6jtuazkpgOYIKeDwa+qGIn17
-	l89UDy+bNvicwGQYXiLcstkQWwN3z8oToaNcTfHwyTw++25NKtx+AN8lPguX5UpClRKvpT296YG
-	Ot+s9XMh9wjVlDmyJwYYwzxBdyL3twL1O/tZiJggWmmmLeBrTN86F84NzVYxymdA3X+uLXy17Cx
-	2ezZtFz1ibP1q2MiazBYkIT1JJ9eto1xEO1WhYm5hdBQHVLw==
-X-Received: by 2002:a17:90a:d193:b0:29b:331e:ec47 with SMTP id fu19-20020a17090ad19300b0029b331eec47mr1719890pjb.27.1711521190480;
-        Tue, 26 Mar 2024 23:33:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH3DMlhXx8e/Vzy02OUeoC0kwdj6lGi1JTMyko2Di9cAJi24nqjPwhbQfq8NgTZtTo44h6jOCUfUL5CqUPOM4I=
-X-Received: by 2002:a17:90a:d193:b0:29b:331e:ec47 with SMTP id
- fu19-20020a17090ad19300b0029b331eec47mr1719873pjb.27.1711521190171; Tue, 26
- Mar 2024 23:33:10 -0700 (PDT)
+        bh=hjyCvIB6syQyBLc/PURAesFgBPIAm7ixXYus2PqXUv8=;
+        b=wmkyEVPG/pR9Syw4ANhI4EvcYCVwcUuRyI51O3rV69NudrUdzlVkvlMTZREyROJwfU
+         prKXPVyUmnvUe1NKVbi4CVICjXfK6QjgiSr6QWl7/lCcNfCJghowh6CvTqs3An8hwsQD
+         qtGOxLVZj4vd5L6nofIYJltyu4FHzIkBieEnZrkBs8O0HWZ/o80nA4PPcxRp1kuxNHwc
+         aUULBxVe2UoeSHERDqOAg5jeDEZ8PgPkCyXpPjnyDWoPkE6h4uVeEN/f0FpOoDRIJbGZ
+         b9c/H0j0kgvJZ1on7HD8v6pAT4c84Oxb3S+UdIDIAf0KRUxOVYIVJuS/nhfUqM9qFO0x
+         sk8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVmtIQHfDcbTeVYSM1q33YyqjRAjEtuqJkkbXvVrN2OOVVaWncXUYbKfcz9IANEQJ4tM2epLgvSMJAHkJVX5hQCs4lBfZl5unpcRP2AAAgf0FW1Lw==
+X-Gm-Message-State: AOJu0Yy4Oi9PDK4a9MM0Lj+j8PweIDsqqDHgXVuFeTjvEW5YthjnJWaT
+	aUuQRdleRBqDRTGI8I/mfbzF52mCjdoaqwnTrKFFQ+Iy7KCD7SUpQU10wtt/Ve4belRsjuMPPBr
+	9uhcIKNa9SyrxmLg2+PLv8uRjs/YB7Q7wxD21iAlAtvRwZm0XETGLjfO3wYInlc6thihCo6sc1i
+	0VwuAPrg+IOKS9CQ2FgrXmwWAohu4dQ0cdN6HZ9DvnUcfLJA==
+X-Received: by 2002:a05:6a21:339c:b0:1a3:8904:1fc9 with SMTP id yy28-20020a056a21339c00b001a389041fc9mr3637953pzb.41.1711522416608;
+        Tue, 26 Mar 2024 23:53:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE92cxDxgpu4LIAd0jfCXzzTSPP16EKFP9ZwNdIoRwWxtFgYT4c5S27JpSdRV4WKq/fyTzRxyP70R1xOrLebfs=
+X-Received: by 2002:a05:6a21:339c:b0:1a3:8904:1fc9 with SMTP id
+ yy28-20020a056a21339c00b001a389041fc9mr3637931pzb.41.1711522416229; Tue, 26
+ Mar 2024 23:53:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240324150107.976025-1-hpa@redhat.com> <20240324150107.976025-6-hpa@redhat.com>
- <CAHp75Vdo5TMqm8H0OCGw5=_dwY1M0N4DOYUZy5NEbfJ1=KxXXQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vdo5TMqm8H0OCGw5=_dwY1M0N4DOYUZy5NEbfJ1=KxXXQ@mail.gmail.com>
+References: <20240324150107.976025-1-hpa@redhat.com> <20240324150107.976025-3-hpa@redhat.com>
+ <CAHp75VdosbYNKU90QWt+6SU_i5dWC94=xZy0GXiKvoQeDF30wg@mail.gmail.com>
+In-Reply-To: <CAHp75VdosbYNKU90QWt+6SU_i5dWC94=xZy0GXiKvoQeDF30wg@mail.gmail.com>
 From: Kate Hsuan <hpa@redhat.com>
-Date: Wed, 27 Mar 2024 14:32:59 +0800
-Message-ID: <CAEth8oGRvU+QRO_11yyyUgR50XKXuc-Ug9BXHNSCqKT9xC692g@mail.gmail.com>
-Subject: Re: [PATCH v5 RESEND 5/6] power: supply: power-supply-leds: Add
- charging_red_full_green trigger for RGB LED
+Date: Wed, 27 Mar 2024 14:53:24 +0800
+Message-ID: <CAEth8oFuPTRq0z-YbMMFt=kKgre6x+bDhtpUkj2vJeK-u8O72A@mail.gmail.com>
+Subject: Re: [PATCH v5 RESEND 2/6] leds: rgb: leds-ktd202x: Get device
+ properties through fwnode to support ACPI
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
 	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
@@ -81,59 +81,85 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi Andy,
 
-On Mon, Mar 25, 2024 at 4:11=E2=80=AFAM Andy Shevchenko
+Thank you for reviewing it.
+
+On Mon, Mar 25, 2024 at 3:57=E2=80=AFAM Andy Shevchenko
 <andy.shevchenko@gmail.com> wrote:
 >
 > On Sun, Mar 24, 2024 at 5:02=E2=80=AFPM Kate Hsuan <hpa@redhat.com> wrote=
 :
 > >
-> > Add a charging_red_full_green LED trigger and the trigger is based on
-> > led_mc_trigger_event() which can set an RGB LED when the trigger is
-> > triggered. The LED will show red when the battery status is charging.
-> > The LED will show green when the battery status is full.
-> >
-> > Link: https://lore.kernel.org/linux-leds/f40a0b1a-ceac-e269-c2dd-0158c5=
-b4a1ad@gmail.com/T/#t
+> > This LED controller also installed on a Xiaomi pad2 and it is a x86
+> > platform. The original driver is based on device tree and can't be
 >
-> You can drop the 'T/#t' part.
+> the device
 >
-> ...
+> > used for this ACPI based system. This patch migrated the driver to
+> > use fwnode to access the properties. Moreover, the fwnode API
+> > supports device tree so this work won't effect the original
 >
-> > +               led_mc_trigger_event(psy->charging_red_full_green_trig,
-> > +                                    intensity_green,
-> > +                                    3,
+> affect
 >
-> ARRAY_SIZE()
->
-> > +                                    LED_FULL);
+> > implementations.
 >
 > ...
 >
-> > +               led_mc_trigger_event(psy->charging_red_full_green_trig,
-> > +                                    intensity_red,
-> > +                                    3,
+> > +       fwnode_for_each_available_child_node(fwnode, child) {
+> > +               num_channels++;
+> > +       }
 >
-> Ditto.
+> {} are not needed.
 >
-> > +                                    LED_FULL);
+> >         if (!num_channels || num_channels > chip->num_leds)
+> >                 return -EINVAL;
 >
 > ...
 >
-> > +               led_mc_trigger_event(psy->charging_red_full_green_trig,
-> > +                                    intensity_red,
-> > +                                    3,
+> > +static int ktd202x_add_led(struct ktd202x *chip,
+> > +                          struct fwnode_handle *fwnode_color,
 >
-> Ditto.
+> Can it be simply fwnode? (Originally it was np, so I assume there is
+> no name collision)
+It can be. I'll revise this.
+
 >
-> > +                                    LED_OFF);
+> ...
+>
+> > +       count =3D device_get_child_node_count(dev);
+> >         if (!count || count > chip->num_leds)
+> >                 return -EINVAL;
+>
+> > +       fwnode =3D dev_fwnode(chip->dev);
+>
+> Why not dev?
+I'll use dev. I had declared it.
+
+>
+> > +       if (!fwnode)
+> > +               return -ENODEV;
+>
+> This is dead code. Please remove these three lines.
+
+Okay.
+
+>
+> ...
+>
+> > +       .id_table =3D ktd202x_id,
+>
+> Seems to me that you may split the I=C2=B2C ID table addition into a sepa=
+rate change.
+
+Could you please describe this more clearly? Thank you
+
 >
 > --
 > With Best Regards,
 > Andy Shevchenko
 >
 
-Thank you for reviewing it.
-I'll fix it in the v6 patch.
+I'll propose the v6 patch according to your comments.
+
 
 --=20
 BR,
