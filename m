@@ -1,101 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F97F139D13;
-	Thu, 28 Mar 2024 19:52:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9791651B2;
+	Thu, 28 Mar 2024 21:53:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711655555; cv=none; b=kcHtkgaoL9Le5ynYSAtuMteY8QQvZ/cUkehW43dSt6iIwzxQWoc8JTDQOmuWC/iodxLf7dO8EkyXQ6up8IttpQXRB10Z7b1TWofl25mMSmvvQn75110FSf7po14SwqAYrXvvSLjAjC+sCTDqn6LcX7qWm2A38tNJ88DPYREsblQ=
+	t=1711662830; cv=none; b=rFrbKbr2cBxLLG+raIrteT0PehY5ilQGW3zjiK5U+osR/06p35x2W+I9rWBimqBH3ZuoCR1H2gncuIWmPvUkA7aXkb9MaNj59QHdQV3om75EapzFlWP9XGOTzwQeEfWbUo4YCI7/uvLg9wlRbK+sxEF4HoSeTAC6kcvzbToUT/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711655555; c=relaxed/simple;
-	bh=47KuFYZ8L8+G4UI1Pvi3xIrvtmpgxV1zjVNEYiD1uVo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lPImMu3VVirrTj/Gd+bGVL1yNux5qCTIR8oK4zm7MvSZSQtFsaeT9mDAj3hsWjNAKd1dHhx8Gik0bOi0o0zFGa/h/kKTP4uyEjgefSnJqiRQJzNamPfGKrs19kSVrMZbPFwGu7CVGWwgl3oWzpHgf/32RGU9k3tMcjFGmaqJXew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13FC6C433C7;
-	Thu, 28 Mar 2024 19:52:26 +0000 (UTC)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Thu, 28 Mar 2024 20:49:29 +0100
-Subject: [PATCH v2 19/19] ACPI: drop redundant owner from acpi_driver
+	s=arc-20240116; t=1711662830; c=relaxed/simple;
+	bh=hllItWoe55/OAq69a/mspkkgXn6x1Ii1x8UHcxndGkg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cSrcapeOHGIBEZP/KpTmQUc/GHMJ5s9xxgV/CKnKURXQGtE8xL8xGu4N/6esKONAXkiHQOOs8K2SMRbj9wKFwP3Q6nlFouyZErU+fI1jtiLlVm7nL4PokCOixIV6WpTUlQ+NOoxrFskKfo/l4JOI5umLq14Uvvx9O+zfPqNIoRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VvrkwfpN; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VvrkwfpN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711662829; x=1743198829;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=hllItWoe55/OAq69a/mspkkgXn6x1Ii1x8UHcxndGkg=;
+  b=VvrkwfpNftLPxsL0Ael3Cd0V92J4QL2I4hGr7FAXU+2FNlt/qLpIdkKc
+   FdNnvJM3N4uEIe0XDT1oj1u+61x4o36bfGag3729Cb/rwdb9VHrCNaUFH
+   sAl/aKVGzQ3N7BtQMjf3AfNzZ52LYufCxr3ou3yCA36PKHVtfyQGVwJNE
+   cicpjiSpBvLq6c39Mj/j555HRa4dImacmWbSjqoKhH6kIXmdeuOmvirqV
+   nTf3gYvVyxbbIRWzyXLWvTrZKYml9C6BFi/Q5+E2cJAEyTy3w963kJAdt
+   w1ix93LvqCwYLMp5S0vU8iCMvPZJ+JyKz7G96BLz7jXma/PmI0TZrFsAk
+   g==;
+X-CSE-ConnectionGUID: LSA0tPlfSdaTUUWyVeUs+Q==
+X-CSE-MsgGUID: jqafTy4CQq6TpKRq3w2uUg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="6708572"
+X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
+   d="scan'208";a="6708572"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 14:53:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
+   d="scan'208";a="16825714"
+Received: from sroy1-mobl1.amr.corp.intel.com (HELO [10.209.99.151]) ([10.209.99.151])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 14:53:47 -0700
+Message-ID: <fc085af8-12c0-4885-81e1-453ae203e23e@linux.intel.com>
+Date: Thu, 28 Mar 2024 14:53:46 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: panasonic-laptop: fix NULL dereference
+To: Maxim Korotkov <korotkov.maxim.s@gmail.com>,
+ Kenneth Chan <kenneth.t.chan@gmail.com>
+Cc: Len Brown <len.brown@intel.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+ Harald Welte <laforge@gnumonks.org>, Matthew Garrett <mjg@redhat.com>,
+ Ivan Kapranov <i.kapranov@securitycode.ru>, lvc-project@linuxtesting.org,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240328103518.169604-1-korotkov.maxim.s@gmail.com>
+Content-Language: en-US
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240328103518.169604-1-korotkov.maxim.s@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240328-b4-module-owner-acpi-v2-19-1e5552c2c69f@linaro.org>
-References: <20240328-b4-module-owner-acpi-v2-0-1e5552c2c69f@linaro.org>
-In-Reply-To: <20240328-b4-module-owner-acpi-v2-0-1e5552c2c69f@linaro.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
- Robert Moore <robert.moore@intel.com>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
- Corentin Chary <corentin.chary@gmail.com>, 
- "Luke D. Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>, 
- =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
- Matan Ziv-Av <matan@svgalib.org>, Mattia Dongili <malattia@linux.it>, 
- Azael Avalos <coproscefalo@gmail.com>, Ajay Kaher <akaher@vmware.com>, 
- Alexey Makhalov <amakhalov@vmware.com>, 
- VMware PV-Drivers Reviewers <pv-drivers@vmware.com>, 
- Richard Cochran <richardcochran@gmail.com>, Theodore Ts'o <tytso@mit.edu>, 
- "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
- acpica-devel@lists.linux.dev, linux-input@vger.kernel.org, 
- netdev@vger.kernel.org, chrome-platform@lists.linux.dev, 
- platform-driver-x86@vger.kernel.org, 
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=730;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=47KuFYZ8L8+G4UI1Pvi3xIrvtmpgxV1zjVNEYiD1uVo=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmBcnPtASe+iRyJkpoHwhufZ2+JsLopJALmbniw
- UDP7ulp1AWJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZgXJzwAKCRDBN2bmhouD
- 17DoD/0QKCrfY1wzazIXKHtVvuFB1Xfi5lltqqYYwJMDm4OTF6UpYmgo5MzHKJbTebMw05Z4pZf
- EXEmbB9o8tIjsItkWODjFoUzw3Dat2E2/B6Tpv634gKeMiXI2IvBrsOalPHbWk7v1VlzF6zJswj
- pEzdmJhzgyz9J6P9w5Vi/+lUS/Zxt6h/CumlMz0c1xRxxn3jkH31JvpYdyVa6RccfxFA+q7V6Gv
- bPJQFzhqOp1+nZWqd9D/Ykt0u/rWIegxnQHti3T1xfnI7S4HOyXaV47B99l7NOYJvCmr4Ab2BBt
- 5eYRdjRl7jFLLA2gw7Q3FpZ6pHpsQ/g5pb73wrzKO4c68s0Kkphtglr1vOxAJf6owfSb2hbTfei
- u0+17WV0r8xpAmaGBEDuaBKrJ4yHO0Cu81M9LIGBXN808vnkw3BKIcjg/WfxXsViFlvqZhPTuHZ
- eXwou6kxN/EQtyWvmULt496TgdFzxhRHsrGw10bL8gvKrxalcC/on/+sTqzhuBSUVceCxtc4y3e
- gNkZwN+xwaeub2VgVAAW6B+w8jJxRNuRSlgJLwMP+RF0p2kcd9BB0iHytmLZnHf8krluuTFKfZp
- N/GXa4RCkkQcPCCMokvj76NTpBbpX6dq1Ri0N3OnIG0ZA9GcjoJG+WMcDyiELXHjA6YCezqkQvl
- qgi9HU++if1bw9Q==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Once all .owner is removed from all acpi_driver instances, drop it from
-the structure.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
+On 3/28/24 3:35 AM, Maxim Korotkov wrote:
+> When initializing the pcc by calling acpi_driver_data(), the "device"
+> pointer was dereferenced without checking for NULL. This seems like
+> a logical mistake.
+>
+> Added a pointer check to ensure that it is valid
+> before using it for pcc initialization.
+>
+> Found by Security Code and Linux Verification Center(linuxtesting.org)
+>
+> Fixes: 709ee531c153 ("panasonic-laptop: add Panasonic Let's Note laptop extras driver v0.94")
 
-This depends on all previous patches. It could go next cycle, after
-things got merged.
----
- include/acpi/acpi_bus.h | 1 -
- 1 file changed, 1 deletion(-)
+Since this is a remove function within kernel, is there any change for
+device being NULL?
 
-diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-index 7453be56f855..32aae3ee99ac 100644
---- a/include/acpi/acpi_bus.h
-+++ b/include/acpi/acpi_bus.h
-@@ -170,7 +170,6 @@ struct acpi_driver {
- 	unsigned int flags;
- 	struct acpi_device_ops ops;
- 	struct device_driver drv;
--	struct module *owner;
- };
- 
- /*
+> Signed-off-by: Maxim Korotkov <korotkov.maxim.s@gmail.com>
+> ---
+>  drivers/platform/x86/panasonic-laptop.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+> index cf845ee1c7b1..de29758b0384 100644
+> --- a/drivers/platform/x86/panasonic-laptop.c
+> +++ b/drivers/platform/x86/panasonic-laptop.c
+> @@ -1067,9 +1067,12 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
+>  
+>  static void acpi_pcc_hotkey_remove(struct acpi_device *device)
+>  {
+> -	struct pcc_acpi *pcc = acpi_driver_data(device);
+> +	struct pcc_acpi *pcc;
+>  
+> -	if (!device || !pcc)
+> +	if (!device)
+> +		return;
+> +	pcc = acpi_driver_data(device);
+> +	if (!pcc)
+>  		return;
+>  
+>  	i8042_remove_filter(panasonic_i8042_filter);
 
 -- 
-2.34.1
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
