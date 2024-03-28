@@ -1,55 +1,55 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F5D54656;
-	Thu, 28 Mar 2024 10:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B972364DA;
+	Thu, 28 Mar 2024 10:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711621727; cv=none; b=qpPSL3inzU7zDnmkHi9M95CJT0VzbDzE/D2XKdQ/lL+WC4VhU0j2+Jt+DcdL4gVeXGjgD9pTCtk/uCFqQzhrGIbCbHM0zhzQlgaN6Ptw/j90Lump1zdiU7DTZ6aI9jRe8dgLSmRz88NXrq+4eeOqLQSJ6k0iOxj806lgSE47ALY=
+	t=1711622132; cv=none; b=lmcEeVLQwjT0y6fhlr23uLwzOdGMZHY5qARZRodtjfR18e0yYQLI7PpDycx5ZXSmZz+vjx9wDxI+G8wBSvHkarW19lGhr/+3x0539eejl80QbDvZnilKQJWW6FWtE5KlsDfzKz8AGwiZrrc+gMuFvhzgExZfbULmzrmkawzOeew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711621727; c=relaxed/simple;
-	bh=/LL0YUR3AHpDpeNjjd8usMh8iUvC30U5TjNpg8yGwyM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kxXF5Afi7DSHIiE35QwzAMZRAG39QCHtm8CW6Zz+5BBe/4JK4r02wxgfBPxXl1K5BQoDFMzhFbq2kHQkXBC50hdqTFTJ6gceHE9Eoq/uFDWANgB2o16wKOdnd71SP2nsmC17ToFZVDrK6RNAZLO5f9ecf80mZPfr7LRXJalnSY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g+76QrC1; arc=none smtp.client-ip=209.85.167.42
+	s=arc-20240116; t=1711622132; c=relaxed/simple;
+	bh=48l05X6koIb0FE3XzMyR0AcaWBlNE2UfOFJjRw79ODw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dp/vAHPnzX4qaFiIZO61Ocjo8LPmr/qTZN5SNpojHDqMv9LwHbIVhimcUIwwJeD0Bp0oCIL9Ajgiqv5H1x1nAM9tZrDF35jFbrVfaaDGoy9r6KZWIr5xAjJFKVIoOzloyMzSNGsOIcNPcwUE2WVo3i/id4dhkrDg0sZcq3KrPLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a9mATXzx; arc=none smtp.client-ip=209.85.208.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+76QrC1"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-515a68d45faso630960e87.3;
-        Thu, 28 Mar 2024 03:28:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a9mATXzx"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2d4515ec3aaso7115831fa.1;
+        Thu, 28 Mar 2024 03:35:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711621724; x=1712226524; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711622128; x=1712226928; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=N9kF4Mw1ws2vuqWMyi8q7JNdyeGwjwOurqw1h77rDjg=;
-        b=g+76QrC1E34PSTp5LNtruHNnfyXd8R1u2NBW/ocFneLFOWz7vEKZyhZc5BfobP7eZB
-         ApHzIgEKOtistW3DaRFfw9xhmXBqem0Uito545BFNJ6uiPFaqBaXZD152MbNEalvuYgg
-         m0pkxIyKRx55I8bMMe6lgeTsTUyWnzZs5wNVpQFit1q0GgFNcFoAZusrGJhjZQo28NZp
-         XJDnyQYPw0/FzqRpNrGZMAS21EOqjAsnQ949HgobBRRnY2d66Yui1/IgkDgOu07kKywV
-         GYRvm1molSFTdzT8FTC3gUuJHZrgWqs1vOHs54JYkvYfUE1GN5xcpMtIhcREcI8+E9Q0
-         ibFQ==
+        bh=4vdDMEDfYJw8Xnjz/9WOt8Bu/N3DlOsn0fkGOAa6ry8=;
+        b=a9mATXzxA/PCMEynwipW/93vLbVq84KMahOojOIaMBvcGVdDxxWDei8nY7crhsBugh
+         6rXSoAOu9bcJ0CV5UQlT07yJbMnAs0M9WECesyclfWq934EYBkn5AI103lhyIpoQ+ibQ
+         I4K50r07t2076wuaj360uyc71mwg738ikQlch7IwknG6Ed2U7L1X/zvpAXkZ+2KbLbjY
+         wPEfLKcPjUlgiUw/11A1D+7gaKw66kirbkkh25LdEEw9ZF3menUC5jMKRX00P8Hao3yU
+         Lfq0/YPW4NZwemO11YzctWdq2aRAlNiPjZqwHbF16SEWS+etpPX57O1JfrbT+wsSuANN
+         Zz+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711621724; x=1712226524;
+        d=1e100.net; s=20230601; t=1711622128; x=1712226928;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=N9kF4Mw1ws2vuqWMyi8q7JNdyeGwjwOurqw1h77rDjg=;
-        b=XD91AVcwqEa9cdg/EfLhiwvCAEOCKSKSsVPwDCL1+r9suu/l6m6hO4uBmQ5XnwOBs5
-         IfPobzDdL8e6PVF6L8hVSltyarx+Ga7xh7B3c4HqcsniW8qZTnKQ52CP0E4SdOCcw+uv
-         aVe+voQxewvFh0p4b0F4Jj8SyZVJBsomjhA4xfh8kWci/4W6ZMc60AoMA8gCQ0ZK/1SK
-         vdckcdwSmQDg65e8+LpNpfnLa3UA3XNRCniTJctsB/snYSuaxuzK3CS6G07XCXAk5eEh
-         siKW5+uprHn5EpQm2zwWrAghN4FG3h55LLQhy8UfRtR/12TcM5yg1HIabAsCHDb40+yE
-         oPbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUOFikij9yN5w02rtMi/dOTHDq6+6UNGmLEYSmPa4pifRHaXuU1D40vDqc5dnz0ikPZ/XPjiFOi298Ab87Atj/0SvjcbQvX8eDnoKmgYdiS9DxZZw4h3ncl30/duX4c+4sipM7/QVOSwISqTAczTlbZwg==
-X-Gm-Message-State: AOJu0YywZnjiyslbNC9zMy/raYeTjqjq4ocRVkdpGlAHge31nZDFu+GM
-	/WCh9AZiFvq9XcwzSG5JIgl/lhY40+q0KurHselGt0EQIauXPZGbsEYNxW3ORPHOOA==
-X-Google-Smtp-Source: AGHT+IEZZU4s0H27lQ4vcQ0JCkXcJGQWHC1YmerTA8qhpKZ92AvGlh077EpDsnNde5Y7s3+aweAYhw==
-X-Received: by 2002:a05:6512:787:b0:515:c964:7237 with SMTP id x7-20020a056512078700b00515c9647237mr703025lfr.24.1711621723696;
-        Thu, 28 Mar 2024 03:28:43 -0700 (PDT)
+        bh=4vdDMEDfYJw8Xnjz/9WOt8Bu/N3DlOsn0fkGOAa6ry8=;
+        b=NiICexzN69nsQogD1Z3pQ8n03zdYaLsR/5AQjZosDs0wYSxPAanEbvIaZQ3cNytgwp
+         aS0FcDVlW72jjNA0fTwbFcb32aJumm4KlqqPO7o0cceWnIMYIFG9XpmSZVVAjL49rvjY
+         /lD9rziq9yO9TfHNpbTldgN/qtNLCdnRD438e1HZxhUaeFBvZLZax8JCLpbrWfujo7YJ
+         6Ghwa1W9o4xW3u046m5LlXxGIfuG/h9pxEE/5DMg8kWGEoNUqAQdaIEpHxFhlsk/oUtd
+         mBbg77ciPuCofFcKYp2/Iy05oJZVq1xAOrcyf3jIFfifKKFpdeOu20XyJ9spVa4jWcNt
+         y11A==
+X-Forwarded-Encrypted: i=1; AJvYcCWJund1zXV0thFDQhvRfAqo79JN/eM6lv2wIZDzztnNBOqiJkMmiM936vNpBA0Zpav3RF64AMZQKx66F+bK3ty69KhDltO+xF1iy08qeqInASPUxbtIpZXIbayxLpllMCxucCtTx96Gf5/R5MlIlWHOMw==
+X-Gm-Message-State: AOJu0Yxu/i9JrdxDIs6zsmXPf3WeHJIeJpw7fFAnMNgGVQP2gZVEnYVX
+	ArX3IMmxDNtBIqNfO8g0J9HvBdrtA0HB+pe38uXFwzLoxwPnaj4hfgma5uQAWYZWeA==
+X-Google-Smtp-Source: AGHT+IFSU7iE1Pbb/RHR+06nsWtoD+yohTIKRazdftnLyeHfAUqyh2rngxJAdW3M8Q5dDylioSXRjQ==
+X-Received: by 2002:a2e:a489:0:b0:2d4:86a7:19be with SMTP id h9-20020a2ea489000000b002d486a719bemr643765lji.24.1711622128441;
+        Thu, 28 Mar 2024 03:35:28 -0700 (PDT)
 Received: from localhost.localdomain ([212.22.67.162])
-        by smtp.gmail.com with ESMTPSA id p13-20020a056512312d00b00515a87e1288sm149612lfd.123.2024.03.28.03.28.43
+        by smtp.gmail.com with ESMTPSA id n22-20020a2e8796000000b002d46cceea5esm179735lji.130.2024.03.28.03.35.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Mar 2024 03:28:43 -0700 (PDT)
+        Thu, 28 Mar 2024 03:35:28 -0700 (PDT)
 From: Maxim Korotkov <korotkov.maxim.s@gmail.com>
 To: Kenneth Chan <kenneth.t.chan@gmail.com>
 Cc: Maxim Korotkov <korotkov.maxim.s@gmail.com>,
@@ -61,9 +61,9 @@ Cc: Maxim Korotkov <korotkov.maxim.s@gmail.com>,
 	lvc-project@linuxtesting.org,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: 
-Date: Thu, 28 Mar 2024 13:28:05 +0300
-Message-Id: <20240328102805.165070-1-korotkov.maxim.s@gmail.com>
+Subject: [PATCH] platform/x86: panasonic-laptop: fix NULL dereference
+Date: Thu, 28 Mar 2024 13:35:18 +0300
+Message-Id: <20240328103518.169604-1-korotkov.maxim.s@gmail.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -72,9 +72,6 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-
-Date: Thu, 28 Mar 2024 11:22:37 +0300
-Subject: [PATCH] platform/x86: panasonic-laptop: fix NULL dereference
 
 When initializing the pcc by calling acpi_driver_data(), the "device"
 pointer was dereferenced without checking for NULL. This seems like
