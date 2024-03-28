@@ -1,107 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F186E7EF03;
-	Thu, 28 Mar 2024 15:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEB240856;
+	Thu, 28 Mar 2024 17:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711639096; cv=none; b=MoYShkfDThuoIo8c55EcwQ137PSvrxhhH0TTjzNrABtaZFa3jZzFF82Y5r3vd2TK2q5IBFiMCigZXJQDNt8x1QY58pVosrt/9cYcXsbJo1FPbbj7I8GiFVRyD3B/Nid9llqkqj8BxhFm3lHsU/Z0u27tUZFMD56SYcdrPXtnEaI=
+	t=1711648512; cv=none; b=rCNusSNWawPdtBev9rBxKvcMyWP4CBPziROQ4R7k7qEJdo8fyKomF5XgdGotdff+qMx2bv5UDISv7ANR/fk/+cInznBOysVsO6VklJDYm2pEeEcJcXiP9Y6cNuHOWyH4Mc5TE31H9UR+qbHN0OG4a66Hu7rxcZwaubM6O+hoHaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711639096; c=relaxed/simple;
-	bh=ygUv44C6fCMRIUqPyxznSTwJE2TEnNoEGSK5L1twTvo=;
+	s=arc-20240116; t=1711648512; c=relaxed/simple;
+	bh=o/ViFlzn9DcSB6zcA7kLtK65QCPH/Ss4D4l1HH9emKY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UKGUr+8PZLOpWYEfWn9sR+HJyNIf2QekgTQk/4CVuAejRLAnhvVuDL5B1VNg6i+TcnzTN4VpJ8keAEvqJs2O4qxyMFttWmayyp88ici+hZb6/958GmOfu9J28trcuKEqkwpbcZUxRM8rkjPhD163HG4xyicaJEMyRbDuW/BDYKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CpPeGYEF; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qp3gRY+mBkqKv6pmLXP6ISa1//f9MbZliapH+/irw3ssTL02eMwD/AVllUrx6yRDq6OO+holO5Y+mf5v7ScJUN7LY7TthnoWS6HbwZjgVm6yy8iXHwGW+32KpKDoBXUSxLb4d0AjiruXxcZKihacu6ewvgWSShA6rfOdnhLFeY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IffZ6Zq7; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CpPeGYEF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711639094; x=1743175094;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=ygUv44C6fCMRIUqPyxznSTwJE2TEnNoEGSK5L1twTvo=;
-  b=CpPeGYEFbrVnJGKYUfUX9+mVtyi4UdHCo4oV7xOKJtBGrUGKoGVygXps
-   RDpv6gkON2SzLc8fVOvsnjtP/WJd+b1gyXmj7YCnGg7x5N5LocAJyU7Fq
-   vC+eXJJoiXvXwglFX7QACfkdNuQyCndLbplb7fGpQM/NBPt/PYLconoj7
-   qExTbH5UPN1Mei+4K86Ul7QAggakQPGkUI9sLtLzRA3B/ipIpGHSPn19o
-   TQRx4WmZEnwyJloHLVm2kQu8MzUrXxwzw0Xh8urDQZ76D5l8lVyGoMJXO
-   pMZXwsxLjwn5NvXi352y3yahIgAWMHPo7iTyOpOmIpCMP0aGuS9zsCe8u
-   A==;
-X-CSE-ConnectionGUID: xvGgeUjSSmaqfU640ucE4A==
-X-CSE-MsgGUID: Fv83MgJBSpSwTGvr9/3+uQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="24284186"
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="24284186"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 08:18:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="914953082"
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="914953082"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 08:18:11 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rprW5-0000000H35x-1cSf;
-	Thu, 28 Mar 2024 17:18:09 +0200
-Date: Thu, 28 Mar 2024 17:18:09 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: =?utf-8?B?6Im+6LaF?= <aichao@kylinos.cn>,
-	"ilpo.jarvinen" <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	platform-driver-x86 <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v11] platform/x86: add lenovo wmi camera button driver
-Message-ID: <ZgWKMUKmEhYtlyQ0@smile.fi.intel.com>
-References: <je8phmmtfz-je9zfg1v9s@nsmail7.0.0--kylin--1>
- <030beaf8-12e1-400a-b064-f17384e32714@redhat.com>
- <ZgQbz5pBTuY64pNF@smile.fi.intel.com>
- <4b6aa3ef-82f1-43d4-9544-89f591f49e41@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IffZ6Zq7"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-29e0a1fd9a7so980847a91.2;
+        Thu, 28 Mar 2024 10:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711648511; x=1712253311; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yWQ5s/MasTSk4jjQrdrW05L8Qpoj2heGIDr+tGSERBM=;
+        b=IffZ6Zq7mdTlgFNOXYKYk8APhEZ+jnWd5P7vwV8L5bZgdd5YBj99UAEtTmBYfmR5vI
+         gExwSz+/raqBzCXL2yKp/akDSbKK4j7V/ZzyD8CH9e+ylDWW1RtX0MbZa14kZfmILufE
+         /t3NJ3FtHc4hJDtK0Ox1C+/15dK6UqLmvleGLbLMkMMCfZBj2UHcoQ7dL8xtIpJRwJl+
+         H89s8wOuwf68ipXVqoyOIbAlimD9s8bMgjmEGEgfJ7gGYdhKPob06n89IRUa+tQvD5gm
+         KwmFbmNMvYYX6vVqLyGIRIBIAYpr3u0zZqWZMKvv+Sxeh0voL1kH9oCsa0rVhT+AlTSF
+         o8DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711648511; x=1712253311;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yWQ5s/MasTSk4jjQrdrW05L8Qpoj2heGIDr+tGSERBM=;
+        b=igCQB4QFsYScQJeP3cRiQxUa5qmLNqpZC5tOlwX33nWNCf888oEZxhRUtBNw6Az6De
+         ayrIpJosrt6iJl7D+ax3xPKN8uCp/jyESYD8z8rs9mXeYrLD1DY3pPv92MZJu2F5f23t
+         NWhdBQuIEovlxVw0gsUf00ja9tHjqs2nBCcP6Ogwtv1JjTs+xRuwYXtQQCZMB4MhtLu3
+         7Rjbh5TEQQTDwCBcOds3vpthVYN3CT+bF3kfHE76b2X36+qhh5oqjYbuTbt5YNGJTxJY
+         aLRmt/G4WfGjB2+dKLvjCvG91AleXJG/H49ITYfiFvNR1IR9hafdcTG6r9wS6YfgpJQ8
+         awuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXuGa0nZKrEsNS7AXHHBRX65WF9XiM3fFvpPsn3s2rxTK/FMqe7m4o9cyoHYzwTFthYPh/CRYANPbWi0C0UEr2FCaOA1ZKayBxC+DCIuj8jS4RmiRYVxh2oEX60+KNM4p7RiuNdFSZg2iSNS7s50CRed6fjNUC1FAHnjyDZEGJ1wzDUIw1SUqXjMIkioK/ok0h0W6hrDTsvkbBRQfY6oi8aRzzmf7IzP8dSJJOq9iCUeyAARKJJXE3OY2FQCQp4TbB4QQ==
+X-Gm-Message-State: AOJu0YyzHv5stqt7AuVoBIO8Gpz08IsWdmauhSa1iX/DxA1OW/oUtjV3
+	6bf5HpY87l7xy1IlctxEQ2/KuciA1G63gA5DB1HzsuIdcZk1r+n7
+X-Google-Smtp-Source: AGHT+IEL2KsBed1zz8v9qIzuDDeEt0qqVBch3QKL5XMgY1v1rvbtZioXqmZcYbMTotvgHuw38SY6bw==
+X-Received: by 2002:a17:90a:e7c6:b0:29b:d748:fae5 with SMTP id kb6-20020a17090ae7c600b0029bd748fae5mr155051pjb.32.1711648510684;
+        Thu, 28 Mar 2024 10:55:10 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:493e:82a3:49f9:d88])
+        by smtp.gmail.com with ESMTPSA id z2-20020a17090ab10200b0029c7963a33fsm3791215pjq.10.2024.03.28.10.55.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Mar 2024 10:55:10 -0700 (PDT)
+Date: Thu, 28 Mar 2024 10:55:07 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Robert Moore <robert.moore@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Benson Leung <bleung@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>,
+	Daniel Oliveira Nascimento <don@syst.com.br>,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+	Matan Ziv-Av <matan@svgalib.org>,
+	Mattia Dongili <malattia@linux.it>,
+	Azael Avalos <coproscefalo@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Jeff Sipek <jsipek@vmware.com>, Ajay Kaher <akaher@vmware.com>,
+	Alexey Makhalov <amakhalov@vmware.com>,
+	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	acpica-devel@lists.linux.dev, linux-input@vger.kernel.org,
+	netdev@vger.kernel.org, chrome-platform@lists.linux.dev,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 02/19] Input: atlas: - drop owner assignment
+Message-ID: <ZgWu-33aKyCOjRBX@google.com>
+References: <20240327-b4-module-owner-acpi-v1-0-725241a2d224@linaro.org>
+ <20240327-b4-module-owner-acpi-v1-2-725241a2d224@linaro.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4b6aa3ef-82f1-43d4-9544-89f591f49e41@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20240327-b4-module-owner-acpi-v1-2-725241a2d224@linaro.org>
 
-On Wed, Mar 27, 2024 at 09:03:38PM +0100, Hans de Goede wrote:
-> On 3/27/24 2:14 PM, Andy Shevchenko wrote:
-> > On Wed, Mar 27, 2024 at 11:54:55AM +0100, Hans de Goede wrote:
-> >> On 3/26/24 3:54 AM, 艾超 wrote:
-
-...
-
-> >>>>> +config LENOVO_WMI_CAMERA
-> >>>>> + tristate "Lenovo WMI Camera Button driver"
-> >>>>> + depends on ACPI_WMI
-> >>>>> + depends on INPUT
-> >>>
-> >>>> No COMPILE_TEST?
-> >>>
-> >>> I compile this driver and used Evtest tool to test it on lenovo A70.
-> > 
-> > What I meant here is to add respective COMPILE_TEST to the dependency(ies).
+On Wed, Mar 27, 2024 at 08:43:49AM +0100, Krzysztof Kozlowski wrote:
+> ACPI bus core already sets the .owner, so driver does not need to.
 > 
-> Neither include/linux/input.h nor include/linux/wmi.h offer
-> stubs when disabled so this will not work.
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Oh, I didn't realize that!
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-> Besides x86 has a lot of compile test coverage in general,
-> so I don't see much value in adding || COMPILE_TEST to
-> dependencies.
+But please fix the stray colon in the subject.
 
-Agree.
+> 
+> ---
+> 
+> Depends on the first patch.
+> ---
+>  drivers/input/misc/atlas_btns.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/input/misc/atlas_btns.c b/drivers/input/misc/atlas_btns.c
+> index 3c9bbd04e143..5b9be2957746 100644
+> --- a/drivers/input/misc/atlas_btns.c
+> +++ b/drivers/input/misc/atlas_btns.c
+> @@ -127,7 +127,6 @@ MODULE_DEVICE_TABLE(acpi, atlas_device_ids);
+>  static struct acpi_driver atlas_acpi_driver = {
+>  	.name	= ACPI_ATLAS_NAME,
+>  	.class	= ACPI_ATLAS_CLASS,
+> -	.owner	= THIS_MODULE,
+>  	.ids	= atlas_device_ids,
+>  	.ops	= {
+>  		.add	= atlas_acpi_button_add,
+> 
+> -- 
+> 2.34.1
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Dmitry
