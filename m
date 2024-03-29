@@ -1,103 +1,217 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDAA1CD21
-	for <platform-driver-x86@vger.kernel.org>; Fri, 29 Mar 2024 15:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6989785298;
+	Fri, 29 Mar 2024 16:23:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711726295; cv=none; b=OYM9huTs162FX0a+THPHRUdLkI6so3oLryAaots4lTQtAnNLUfe/hvXDO7s+GqIUAAoyK4x3xLOcZ/ebRCIfKZXLvUby2eYXIBBf+qbhGLyuBQiiqNRzEAdq8TfryUkR9P3dXEp+Hf4xSZqaZAP6R259Lf9OQxXTYZ2bVfWdBCI=
+	t=1711729431; cv=none; b=OJcgGNGKWIgIoLdr2fkB+jw9uZN+t/VXLPeK51DWJetKcKL1kgCxw8gUQiUiOdWE/CjVV5bUNaG7kbHmmvuqh+1FcEla9W63khlnOEAeBVlkG8eU3i4OCKEb9G5CHAy5uQH5fcMXs2lzEtmMMuaSwKMSQSccHzRWH6FkXSBTu0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711726295; c=relaxed/simple;
-	bh=e+BQtyz+R/vmvwkltCBHxspJxIr8Y1jFRmEMtkh4+zo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=R9OIaBqdhBa+z23QFE38+ulnDWrd1zw0A1ZlgcYbuURPgv0WHj1wHRSLk8m8FkEGRnupUN+lSw533QDbC66oJ6GiSok/RVKMDvYsrQlXQyAobUiYjVVnYZH2JoWUomZZBCjCss3zkHoQ6jBXkYyEItwbo8gRSY80uS9zuYmhv5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=tsDzz/ct; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1711729431; c=relaxed/simple;
+	bh=xAIheBzeDFe9gAy7K03pZGAgl2K/WDJn0EzGeK10nsU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JQQeVFogo9kBlOF3ZeZGxbGSiQ0L1z56tmdtu+o4xUVqK6MrWWzswS9I2sbTv74XFg8jDCGBV3+lC9cE4fBjIX1Hw3InV18AOfuo1hujGmuKrftzgrFaTK7IyXuGhnh74tUlCCwrmcHfuRinR+jne33xxzL3gReUMRpC2JqFyJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VqjEwkC4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="tsDzz/ct"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4154614b47eso9307375e9.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Mar 2024 08:31:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711726292; x=1712331092; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=m258F6KAkYv5whie4zvIuYfAIKK7ihN/LQFSFmJvAXE=;
-        b=tsDzz/ctbicTBC2clp3aJjyRpB8jD4MGMAz+WefIrRl3H0KoPVjUcfKg7NKNPQWxxm
-         1Skhaz9VSCAhKj6k5hSowE2V1lsLtg0RCRIXtOAdWNjyAQFx5wjr2nnAlldy8TJGf2bb
-         YxHOyT+P93fg9MF60tEgiIn9/mz1VoVR6qh+y3ThdnyNXpkq5+f+IE2KrcjHfCk152Zi
-         GIXkEGiIz1h2pDp5eNZ2CzDnE/LsGRiOz4lirpXKaSAYWl4V8HaD0tbAH0GZowQCoftV
-         q2hz8Y/ozopHAL43C4hKZ1u7noyyZffNOGTUP/FxHK8ihvu4JGHc92xBxyY5FzLQdYSF
-         H+EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711726292; x=1712331092;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=m258F6KAkYv5whie4zvIuYfAIKK7ihN/LQFSFmJvAXE=;
-        b=YeLtXGj6yEwrIrLzZzP71153K3fctdtah5ei95ya6gsBORuz1hJQbVylNpDLZ7zqyq
-         gTVoHCvubBsrgfb29rZ+aDgEyfl4NBKfRzDjvt9hhSwITeDbPPlEcpUZt+0V8uITM2hn
-         EV/JQqsS8QZnYEydBrJLlwB80Uq3M/XcS8ujm69mbYt0db39X8r/shUC+rGMyDLsxeBv
-         XvTR1zWTE72tLKSw6E9vJXTuB8x7Zw0jQcROSoVZikhoVJb8vrMUukCOIYaOK76Nvrrs
-         ZmnOaCryjkFWTk5DeiRWjEF5SS7mLD6jpXeRk6FCiS4VMDOGGqbKX+Srsi/yPguKTIgC
-         dTjw==
-X-Gm-Message-State: AOJu0YyUHrfxdgAsqBHEFMGIRLsgqXTnBgKWdGXQ0I6a/bzQ43Si1BTA
-	h7xSmzGWXqjs9Nktpj01XqHxdX1qoButCI7HD3bD6VlbQ1UNGb7zd9kgGVySg+V7ftySD6uVVrP
-	bceo8Pg==
-X-Google-Smtp-Source: AGHT+IFnFtyz7M0SRCkWW+kdv83i6HZ+Advv4U3i9XwfB4T4hrtqb5rQL5fWiVK95vkYvZTzzDFW9Q==
-X-Received: by 2002:a05:600c:1caa:b0:414:8ffb:a6bf with SMTP id k42-20020a05600c1caa00b004148ffba6bfmr4841008wms.18.1711726292181;
-        Fri, 29 Mar 2024 08:31:32 -0700 (PDT)
-Received: from ph18.baylibre (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id o2-20020a05600c510200b004140d326399sm7020791wms.1.2024.03.29.08.31.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Mar 2024 08:31:31 -0700 (PDT)
-From: =?UTF-8?q?Bernhard=20Rosenkr=C3=A4nzer?= <bero@baylibre.com>
-To: platform-driver-x86@vger.kernel.org,
-	jlee@suse.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	onenowy@gmail.com
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: acer-wmi: Add support for Acer PH18-71
-Date: Fri, 29 Mar 2024 16:28:00 +0100
-Message-ID: <20240329152800.29393-1-bero@baylibre.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VqjEwkC4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6C4EC433F1;
+	Fri, 29 Mar 2024 16:23:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711729431;
+	bh=xAIheBzeDFe9gAy7K03pZGAgl2K/WDJn0EzGeK10nsU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VqjEwkC4s+9WKiWWBrbzPJwZvUjPGr1GsJssTW2nTPBB3UJHunb82vNyDdMrSnZDx
+	 mVoAOuStXGPM9OMW57nu9ZkN8BS6nlBVoXr7ERJh4sA+KF5d7Gq0b8jkAzxveCIsSH
+	 7Le0wZvz6aKeYK3oqEAZFrmrYl1DEIRdOCQB/RGtcjB6qeWSsz5o5Ifod8dRN34rrX
+	 gzpU0La+Tj5I3RlQOdpsNBrHtfl9RsWyACCvr0UC2WAveSaNR3T+Biacmij3GE19/S
+	 SSn/mIKegVbQeQqMbrPJTdlJDDmEJj6KXygFvmkmx4X3ychBnMPt9KhePJLQMGJ1ag
+	 vQEGNuyN8hnQQ==
+Received: by mercury (Postfix, from userid 1000)
+	id 5A97510608D9; Fri, 29 Mar 2024 17:23:48 +0100 (CET)
+Date: Fri, 29 Mar 2024 17:23:48 +0100
+From: Sebastian Reichel <sre@kernel.org>
+To: Kate Hsuan <hpa@redhat.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+	linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	Hans de Goede <hdegoede@redhat.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	=?utf-8?B?QW5kcsOp?= Apitzsch <git@apitzsch.eu>, linux-kernel@vger.kernel.org, 
+	Andy Shevchenko <andy.shevchenko@gmail.com>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v5 RESEND 5/6] power: supply: power-supply-leds: Add
+ charging_red_full_green trigger for RGB LED
+Message-ID: <nakbogrilul6skiab5opfsqhhqfotfgmb47wyd3xbgbpf6hurc@6xshfz3obj7m>
+References: <20240324150107.976025-1-hpa@redhat.com>
+ <20240324150107.976025-6-hpa@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="bnl5eqiu4mggmjza"
+Content-Disposition: inline
+In-Reply-To: <20240324150107.976025-6-hpa@redhat.com>
 
-Add Acer Predator PH18-71 to acer_quirks with predator_v4
-to support mode button and fan speed sensor.
 
-Signed-off-by: Bernhard Rosenkränzer <bero@baylibre.com>
----
- drivers/platform/x86/acer-wmi.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+--bnl5eqiu4mggmjza
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index ee2e164f86b9c..38c932df6446a 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -597,6 +597,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
- 		},
- 		.driver_data = &quirk_acer_predator_v4,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Acer Predator PH18-71",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Predator PH18-71"),
-+		},
-+		.driver_data = &quirk_acer_predator_v4,
-+	},
- 	{
- 		.callback = set_force_caps,
- 		.ident = "Acer Aspire Switch 10E SW3-016",
--- 
-2.44.0
+Hello Kate,
 
+On Sun, Mar 24, 2024 at 11:01:06PM +0800, Kate Hsuan wrote:
+> Add a charging_red_full_green LED trigger and the trigger is based on
+> led_mc_trigger_event() which can set an RGB LED when the trigger is
+> triggered. The LED will show red when the battery status is charging.
+> The LED will show green when the battery status is full.
+>=20
+> Link: https://lore.kernel.org/linux-leds/f40a0b1a-ceac-e269-c2dd-0158c5b4=
+a1ad@gmail.com/T/#t
+> Signed-off-by: Kate Hsuan <hpa@redhat.com>
+> ---
+
+Have you considered using orange instead of red? Using orange as
+charging indicator seems to be more common nowadays and allows
+
+green  =3D battery full
+orange =3D battery charging
+red    =3D battery empty / battery dead / error
+
+Greetings,
+
+-- Sebastian
+
+>  drivers/power/supply/power_supply_leds.c | 25 ++++++++++++++++++++++++
+>  include/linux/power_supply.h             |  2 ++
+>  2 files changed, 27 insertions(+)
+>=20
+> diff --git a/drivers/power/supply/power_supply_leds.c b/drivers/power/sup=
+ply/power_supply_leds.c
+> index c7db29d5fcb8..bd9c8fec5870 100644
+> --- a/drivers/power/supply/power_supply_leds.c
+> +++ b/drivers/power/supply/power_supply_leds.c
+> @@ -22,6 +22,8 @@
+>  static void power_supply_update_bat_leds(struct power_supply *psy)
+>  {
+>  	union power_supply_propval status;
+> +	unsigned int intensity_green[3] =3D {255, 0, 0};
+> +	unsigned int intensity_red[3] =3D {0, 0, 255};
+> =20
+>  	if (power_supply_get_property(psy, POWER_SUPPLY_PROP_STATUS, &status))
+>  		return;
+> @@ -36,12 +38,20 @@ static void power_supply_update_bat_leds(struct power=
+_supply *psy)
+>  		/* Going from blink to LED on requires a LED_OFF event to stop blink */
+>  		led_trigger_event(psy->charging_blink_full_solid_trig, LED_OFF);
+>  		led_trigger_event(psy->charging_blink_full_solid_trig, LED_FULL);
+> +		led_mc_trigger_event(psy->charging_red_full_green_trig,
+> +				     intensity_green,
+> +				     3,
+> +				     LED_FULL);
+>  		break;
+>  	case POWER_SUPPLY_STATUS_CHARGING:
+>  		led_trigger_event(psy->charging_full_trig, LED_FULL);
+>  		led_trigger_event(psy->charging_trig, LED_FULL);
+>  		led_trigger_event(psy->full_trig, LED_OFF);
+>  		led_trigger_blink(psy->charging_blink_full_solid_trig, 0, 0);
+> +		led_mc_trigger_event(psy->charging_red_full_green_trig,
+> +				     intensity_red,
+> +				     3,
+> +				     LED_FULL);
+>  		break;
+>  	default:
+>  		led_trigger_event(psy->charging_full_trig, LED_OFF);
+> @@ -49,6 +59,10 @@ static void power_supply_update_bat_leds(struct power_=
+supply *psy)
+>  		led_trigger_event(psy->full_trig, LED_OFF);
+>  		led_trigger_event(psy->charging_blink_full_solid_trig,
+>  			LED_OFF);
+> +		led_mc_trigger_event(psy->charging_red_full_green_trig,
+> +				     intensity_red,
+> +				     3,
+> +				     LED_OFF);
+>  		break;
+>  	}
+>  }
+> @@ -74,6 +88,11 @@ static int power_supply_create_bat_triggers(struct pow=
+er_supply *psy)
+>  	if (!psy->charging_blink_full_solid_trig_name)
+>  		goto charging_blink_full_solid_failed;
+> =20
+> +	psy->charging_red_full_green_trig_name =3D kasprintf(GFP_KERNEL,
+> +		"%s-charging-red-full-green", psy->desc->name);
+> +	if (!psy->charging_red_full_green_trig_name)
+> +		goto charging_red_full_green_failed;
+> +
+>  	led_trigger_register_simple(psy->charging_full_trig_name,
+>  				    &psy->charging_full_trig);
+>  	led_trigger_register_simple(psy->charging_trig_name,
+> @@ -82,9 +101,13 @@ static int power_supply_create_bat_triggers(struct po=
+wer_supply *psy)
+>  				    &psy->full_trig);
+>  	led_trigger_register_simple(psy->charging_blink_full_solid_trig_name,
+>  				    &psy->charging_blink_full_solid_trig);
+> +	led_trigger_register_simple(psy->charging_red_full_green_trig_name,
+> +				    &psy->charging_red_full_green_trig);
+> =20
+>  	return 0;
+> =20
+> +charging_red_full_green_failed:
+> +	kfree(psy->charging_blink_full_solid_trig_name);
+>  charging_blink_full_solid_failed:
+>  	kfree(psy->full_trig_name);
+>  full_failed:
+> @@ -101,10 +124,12 @@ static void power_supply_remove_bat_triggers(struct=
+ power_supply *psy)
+>  	led_trigger_unregister_simple(psy->charging_trig);
+>  	led_trigger_unregister_simple(psy->full_trig);
+>  	led_trigger_unregister_simple(psy->charging_blink_full_solid_trig);
+> +	led_trigger_unregister_simple(psy->charging_red_full_green_trig);
+>  	kfree(psy->charging_blink_full_solid_trig_name);
+>  	kfree(psy->full_trig_name);
+>  	kfree(psy->charging_trig_name);
+>  	kfree(psy->charging_full_trig_name);
+> +	kfree(psy->charging_red_full_green_trig_name);
+>  }
+> =20
+>  /* Generated power specific LEDs triggers. */
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index c0992a77feea..1d7c0b43070f 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -318,6 +318,8 @@ struct power_supply {
+>  	char *online_trig_name;
+>  	struct led_trigger *charging_blink_full_solid_trig;
+>  	char *charging_blink_full_solid_trig_name;
+> +	struct led_trigger *charging_red_full_green_trig;
+> +	char *charging_red_full_green_trig_name;
+>  #endif
+>  };
+> =20
+> --=20
+> 2.44.0
+>=20
+>=20
+
+--bnl5eqiu4mggmjza
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmYG6woACgkQ2O7X88g7
++pphVQ/6A1+OXzjPuauzgsq0RMlPlWxqIS4j3Cg7r3vvo1ZxFjb2sMFGGzgBPAwP
+n+zwP462szCeWuqdZCL62h9JSQvB4eUx0HdNqiLb6Z3GCJmCjdLjtUwnsgVPT3ny
+6OPra4jyw1y+1UcwVePwhz23jphH+8CDk5VF7uZu4PUgNryyS2owID7CAKQgNdPp
+56Mz/FRgJXPRb6iAEOqKFe0eveYeRDYWbve/GBZ9XkBObeJAQ+qb8ko8oL99BrlD
+bubkvSRGXtaldkk7oUfhhMutZYowK86Gmc4zUkFFjMLIXVACUE1aR8zq0lPVIxfL
+9FFP6kNwa47+hTU9/GyNRmF5bhukcaSQIdhucW2/vUFeu651V/Gou/z3NAe48PM+
+40owjIPXLfMuvX08e/OKAOzvrwuVee7sg9K51L0s8r3xQ6xUzwRKXuLVuxa6nV61
+OnLG6Rfblg3qaerClMk1v2vFdAsHZGhnN0oxoJDAndT8rJZ+ywGWiyehX0P91JwC
+7PkBvOUXdf+QJn7S4Wy5yT5uwTMJm9x1GRYhzSUVVqq8UUVFXnFHioaqI+nLXewa
+uqy59GzObqGnZuDAD6NNyRb+N8NVHMtqWG88PxxhGNq3Ep4+Vc92+M6cN55icG3X
+TfZRlxBzsilyuq7Rte8YW0URiZIRY5zDfg/ib8UmPdyFHkMW4Bg=
+=F8cp
+-----END PGP SIGNATURE-----
+
+--bnl5eqiu4mggmjza--
