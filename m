@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E8E204054;
-	Fri, 29 Mar 2024 12:45:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76ACE1A5667;
+	Fri, 29 Mar 2024 12:47:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711716333; cv=none; b=MXupMkjXp4t260Tftrm6UL4WM2D//IzFF7MZZMLhOuywzL7Av1WPwQNwphXhkpfjcGPJMucCjhI9SXxu9tRjArSdrpooNsYGYTjtWQeMLIAqp1uNPyt0mYIdHVJMCGRGsOepTuVzPeHeCJ9qPyzr4TmzPgcRg8uuoR3grDpPB+E=
+	t=1711716449; cv=none; b=fYDCCMreDSKFSfwgfRGJHyfZwUHB4E80/15PJ/wWBCsGH/Gd/AcNL9NQbT5oaWS12QIxNW4mLgTNKs6JzF8vZ3M7dtYxW8h3JVKf7KVYwVrya8265E3vfCR+RTmyZUVg1u414zx6C8TtF5giEeLm/KdTvej+4Rqiu/EgROWJTpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711716333; c=relaxed/simple;
-	bh=3o/CuBphMJvJQCkiYuvD/itep/WB5d2yyRYl8PtwFWc=;
+	s=arc-20240116; t=1711716449; c=relaxed/simple;
+	bh=+ydgHXvTtI2J3Q/wnAFUDwMjqi3X8xRO4j6Yq9zkydA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z7WYAwyD0PH0eOJeOFyZ/OnplQyIepepnCMshmmsRL1+MehOhXcSJW2/oQdUxXef9Wcz8mp5UnN/mnTR2Pmlq0sM1oPbvJKAxlzm2aVC/J6E4u3V5lQI47U6orx75VmSYYoJ5+aGGr3LJom+u9H0Dm1XTndWE239cGEaMYwtz4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IeB6x4oC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=cIfDuTrbs/+dNjhuTSCtvKHHaT9XR6kQknoUaPNVPHHoi2kxBx5T5SF+NRyZ34y+9eGEMzfD1LkDCAm48hbs2BrWoYnl9APSLzLk14YRipGEsbgRd3K6vrpfkVvi884ZjV+6yLeZDCGsS+diP1FYe/R4dKQ6/6Zln3mi9eAdKDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WXyxV8Tn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IeB6x4oC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30E3FC433C7;
-	Fri, 29 Mar 2024 12:45:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXyxV8Tn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68A5CC43390;
+	Fri, 29 Mar 2024 12:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711716333;
-	bh=3o/CuBphMJvJQCkiYuvD/itep/WB5d2yyRYl8PtwFWc=;
+	s=k20201202; t=1711716449;
+	bh=+ydgHXvTtI2J3Q/wnAFUDwMjqi3X8xRO4j6Yq9zkydA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IeB6x4oCfneiItgqilMPgKJWEJV6XbPw0578qRWinmj9jJmstL7MJrFB0TrW8s74x
-	 IlRPrlB1b0WDUonIQLmC5E2JSoCv2gHZNobW01QmxUs+0jRRUpCwPWjVrTaJ9ExTRx
-	 XVPEfE0DHIwDsy24AZlwO81ONuUaJKdAiHQj+5jk9+IijdSDts98cobCuokAeVdWqC
-	 XB/8xWPBFd1Ie//4THR/Ent5hqW+TauhSV5xncNA/M0JYSPmrRGM2JemR6LCzWCCT2
-	 d5w6N+vTwV6yQENOKDI0Iny6J4PqzPVazVHzv9UKgG7/j1RiBQS1LJ70dQjIqWCWIW
-	 3QNA3Jux9QrUg==
+	b=WXyxV8TnXxpOmRmmBYqn9NFKiWxpg97wT4+kwAVmXyrJNQTCu2NvLz4slbfegrVLx
+	 tTMiODtM2eVCkz0HoAsdvgN7Moud/GoXRH43etWIiAdS/nZKJ86/M35pT0EMx9Bdu/
+	 MCt7Ye8TiFjQ/9SQX3G+q3wo8Wy0spD3e8eipmazbWjuRT+nQGNL3b57GyNC5nDr6u
+	 67IgibI3XBur8pA9gJqmleYg758YE+3GRIWF5nkoKvfdeZMaGAKPjyxkEbzIyHRM6i
+	 oO0+etbzZUN+5IoHHzC7PYKec6lvrS2n7UJ09rzJkWL5HauH5EN5Ud+maV1CcnhgYd
+	 IBGgfADxOEO+Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -35,12 +35,12 @@ Cc: =?UTF-8?q?Alban=20Boy=C3=A9?= <alban.boye@protonmail.com>,
 	hdegoede@redhat.com,
 	linux-input@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 70/75] platform/x86: touchscreen_dmi: Add an extra entry for a variant of the Chuwi Vi8 tablet
-Date: Fri, 29 Mar 2024 08:42:51 -0400
-Message-ID: <20240329124330.3089520-70-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 49/52] platform/x86: touchscreen_dmi: Add an extra entry for a variant of the Chuwi Vi8 tablet
+Date: Fri, 29 Mar 2024 08:45:43 -0400
+Message-ID: <20240329124605.3091273-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240329124330.3089520-1-sashal@kernel.org>
-References: <20240329124330.3089520-1-sashal@kernel.org>
+In-Reply-To: <20240329124605.3091273-1-sashal@kernel.org>
+References: <20240329124605.3091273-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -50,7 +50,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.23
+X-stable-base: Linux 6.1.83
 Content-Transfer-Encoding: 8bit
 
 From: Alban Boyé <alban.boye@protonmail.com>
@@ -67,10 +67,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 9 insertions(+)
 
 diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 969477c83e56e..630ed0515b1e9 100644
+index 11d72a3533552..399b97b54dd0f 100644
 --- a/drivers/platform/x86/touchscreen_dmi.c
 +++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -1222,6 +1222,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+@@ -1177,6 +1177,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
  			DMI_MATCH(DMI_BIOS_VERSION, "CHUWI.D86JLBNR"),
  		},
  	},
