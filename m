@@ -1,48 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E6A17BA6;
-	Fri, 29 Mar 2024 01:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03EBA4F5E6;
+	Fri, 29 Mar 2024 08:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711676257; cv=none; b=ZNLxQWT3Jkg4hdlGyqcyVy2DyiYAZY9xFk1BxrHJz2z1A7afj3reFsu5VdCWO5FluKpUAAlJB3W/udi8YQOISDc0xdBrMosQVAfz9pzQ1U542nN5tIC7eQ1df5bV5E7ryzQIZlGMYNx+qW9JO/aA20ctpZ9M4sTnqachziGXZu4=
+	t=1711700461; cv=none; b=uDU4e6PFq+WbeNlNge5lIC7uQlTf7bN1jt3wI32GM82mRPYrSP2YyoV3zlUbW/tfE6VQiNcDSTJw5C1RYzW1JwKCgiydRYkjFdY2t08VzVj3aygy5GeM1j5WHzHRywOlFXycLZ5UTwmgiMuID1xyaVJ+ex5wsKUCKfuFlhHitlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711676257; c=relaxed/simple;
-	bh=JbtAUyPT22AwxJqe3Ht5mIeULM921gwcPFoPfCYQBJI=;
+	s=arc-20240116; t=1711700461; c=relaxed/simple;
+	bh=poB3GYiK3s4vTpd3sNI2EcQXWhWfyJmfEh2lhmTKKVA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H/bUp644kTVaE8dZWgpcaUjOciDdhfbFYUNbKNDGwdm6/PspQhYHPEXquuaslhIkLlyCLFpZ5nH3kVZe/n+QyEuJ4pKCvBF5/00s3xlO9q53cgLtPLOIJgJ1kf2VzIzt+cCIaOxa9L8qAAsHQNIGjnOnukYhb+pcEja8SDhPE48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mcRVJLnS; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=iCxaEoCBHxITf5hlMkma9q5EThrexDU7ZvrusScV4pJ39cmGXx8MAip6iF2xr6Af+wzvfsyHZsG9z5ILOoqM8BSdTyZNVClFhIcXVh8fKd/3yiQrGcRuliKQm8hPsrPprHlkqtTE9vgdhoo+WhVX97XmdJ4xzyngnmYOAvM8GYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=McOTllFQ; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mcRVJLnS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711676254; x=1743212254;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=JbtAUyPT22AwxJqe3Ht5mIeULM921gwcPFoPfCYQBJI=;
-  b=mcRVJLnSmnVzmKZgOvXashN3nmWY/SwPOaRHqw/vxJ2wEekreEVVT7xy
-   +ork8l8I6h3mjJs3UECXN7rshwVA0bm0bhV7gptdHLuE+34Vr44HQtjVz
-   lBXGcuHLg2fKdvRfBPLaXz6T7yhvoyazmZoNRrhWPec7BVYGISAS+kUEj
-   feiHhPtxdrcagFOhfD5mfYYu4QCOAPSnRHtcNBctx0pRXFrXhnAR8Frr8
-   bugXjjIfjfDAUS5y8pTOqW+SF7JpSeXYN4ETqY2Ym0+4jwBiKH8a/OWYU
-   6W5W1cFHehQlO2cxz1ZgEGZT/+gbNsVg/VvXDM8cVYJj0s129JqJUzWtB
-   Q==;
-X-CSE-ConnectionGUID: ffjTCIcOTyWYkwlWA5WDEA==
-X-CSE-MsgGUID: fRiq+XiGQzmoo45MOUMXVA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11027"; a="24357769"
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="24357769"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 18:37:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,162,1708416000"; 
-   d="scan'208";a="16659567"
-Received: from sroy1-mobl1.amr.corp.intel.com (HELO [10.209.99.151]) ([10.209.99.151])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2024 18:37:34 -0700
-Message-ID: <9e7a081f-b727-4ead-84b9-3c80530a1039@linux.intel.com>
-Date: Thu, 28 Mar 2024 18:37:33 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="McOTllFQ"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d6ee81bc87so15972841fa.1;
+        Fri, 29 Mar 2024 01:20:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711700458; x=1712305258; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bKMfJF+33MfslrzqDI8Y93Z4dJtyyr9HeqUkZdA00xI=;
+        b=McOTllFQz1qe4fTOj3SzRFIUKdX/ksNAugkdD6SzSRN1Yr6opw/rQHJZiE/d0+OoWB
+         nwrQWvG8CQv3B53VHo986Zxrcfh/QU5jgnE1Uixmax8Y3LRgYe0cGhjA3ZH58K/xdFru
+         BBeGzTOMahauMJ6luS0J7RpyMaBEZy1bEEuaVgs2949E64ISATXGvNSzaW5Wq8ZNhQQj
+         VlziTzy1yvP7M+EBYW2asYDxW92MB2a5goLtGL912jixv9IilhvOZIEeUUIGOzzWeEKw
+         VM8eS6t7bVXmK03+lBVtByg3LCN0xMMwshn6MHr4dsyGOI2cTtFJSPe807X/rg4pCxS+
+         8dfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711700458; x=1712305258;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bKMfJF+33MfslrzqDI8Y93Z4dJtyyr9HeqUkZdA00xI=;
+        b=TePzJl47iREEmrhqiz1HG64J1JXkPThmUKspXWSOfAQDU0cByo70WPSXC+CpQoFOYw
+         l+jtIMbqMoJe35oQpdBMmB2dC6zfMAtzbWP+IO1NT5hv+aISU7kNTM8CRlAY6L69TJ3T
+         HOLdAGinXeANY/1AvR2ejG8ek3MyvD6GvhCgHb3TrSv02VXmGbbH7657VSztILqdk2Ut
+         ZDUwGxZfioouMCGmNpA2PHK9vdQXxMQJ8FnMzwXDdGlIqmDL04mX1UC4KZs9NgiAgj91
+         EcXOxmwGh8xceYhWY+y9x649gxIoQtncRNsdHfyypABbdUxraAU4OueLmYDkyBdGEwpZ
+         Wimw==
+X-Forwarded-Encrypted: i=1; AJvYcCVLFyfUoejjtP2YvhOYWz1d6tC5RCJU9OrtD8S4zVygRLh4p7TZFsBcNj7RKoaJv2Vilyk2v8jtAXkdSddR6EKw/KNo+F4AVBRWsF5t5z7NIwiKUcrliGNPJrpi7MC7dNQem0XIa4ekCZ/YfsN8cDI07g==
+X-Gm-Message-State: AOJu0Yz3P6hhuXyA3jBNQltHrh888qvptfSDc4Bg8nMb4tBsiTrTLTSo
+	/M9eEcEA9AEFjQRXd/nLnZkCgn61iqMUmNuC3PvKOMuNwO0ue1Nx
+X-Google-Smtp-Source: AGHT+IFj4y0LM+XREESddz/IWd30+cWnfGRfidj2jse+o3VrCEQwP4+D0QjMB+BxyC173Lbvy91jtw==
+X-Received: by 2002:a2e:a7c8:0:b0:2d4:77c0:d61c with SMTP id x8-20020a2ea7c8000000b002d477c0d61cmr973284ljp.35.1711700457942;
+        Fri, 29 Mar 2024 01:20:57 -0700 (PDT)
+Received: from [172.25.56.57] ([213.87.93.36])
+        by smtp.gmail.com with ESMTPSA id s10-20020a05651c048a00b002d46863583bsm560173ljc.110.2024.03.29.01.20.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 Mar 2024 01:20:57 -0700 (PDT)
+Message-ID: <9c4cfaf8-7738-4ba8-951e-5b91a3414f37@gmail.com>
+Date: Fri, 29 Mar 2024 11:20:49 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -50,132 +61,42 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] platform/x86: xiaomi-wmi: Fix race condition when
- reporting key events
-To: Armin Wolf <W_Armin@gmx.de>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com
-Cc: corbet@lwn.net, linux-doc@vger.kernel.org,
+Subject: Re: [PATCH] platform/x86: panasonic-laptop: fix NULL dereference
+To: Armin Wolf <W_Armin@gmx.de>, Kenneth Chan <kenneth.t.chan@gmail.com>,
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Len Brown <len.brown@intel.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+ Harald Welte <laforge@gnumonks.org>, Matthew Garrett <mjg@redhat.com>,
+ Ivan Kapranov <i.kapranov@securitycode.ru>, lvc-project@linuxtesting.org,
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240328012336.145612-1-W_Armin@gmx.de>
- <20240328012336.145612-2-W_Armin@gmx.de>
- <b82ded95-d599-4ef7-b984-ac4d8a5c2370@linux.intel.com>
- <3e41e132-98b9-496d-987f-6838289926b6@gmx.de>
+References: <20240328103518.169604-1-korotkov.maxim.s@gmail.com>
+ <da442a04-9db8-4951-98b4-3e149ea06415@gmx.de>
 Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <3e41e132-98b9-496d-987f-6838289926b6@gmx.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Maxim Korotkov <korotkov.maxim.s@gmail.com>
+In-Reply-To: <da442a04-9db8-4951-98b4-3e149ea06415@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-On 3/28/24 5:26 PM, Armin Wolf wrote:
-> Am 28.03.24 um 03:58 schrieb Kuppuswamy Sathyanarayanan:
->
->> On 3/27/24 6:23 PM, Armin Wolf wrote:
->>> Multiple WMI events can be received concurrently, so multiple instances
->>> of xiaomi_wmi_notify() can be active at the same time. Since the input
->>> device is shared between those handlers, the key input sequence can be
->>> disturbed.
->> Since locking is needed for all notify related calls in all WMI drivers,
->> is there a generic way to add this support in WMI core driver? Like
->> defining some common function which will hold the lock and call
->> driver specific notify handler? I am just thinking aloud.. If it is not
->> feasible, then it is fine.
->
+Hi,
+On 29.03.2024 03:21, Armin Wolf wrote:
+>> Added a pointer check to ensure that it is valid
+>> before using it for pcc initialization.
+> 
 > Hi,
->
-> actually, not all notify-related calls need locking. It just so happens that
-> input drivers must protect their key sequence, other WMI drivers might not need
-> to use any locking at all.
-
-Got it.
-
->
-> I would prefer if the WMI driver does the locking, so it can be optimized for
-> each WMI driver.
-
-Why not implement this support?
-
->
+> 
+> is this check even needed? I think the ACPI driver core takes care
+> of passing a valid ACPI device pointer to acpi_pcc_hotkey_remove().
+> 
 > Thanks,
 > Armin Wolf
->
->>> Fix this by protecting the key input sequence with a mutex.
->>>
->>> Compile-tested only.
->>>
->>> Fixes: edb73f4f0247 ("platform/x86: wmi: add Xiaomi WMI key driver")
->>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->>> ---
->>>   drivers/platform/x86/xiaomi-wmi.c | 18 ++++++++++++++++++
->>>   1 file changed, 18 insertions(+)
->>>
->>> diff --git a/drivers/platform/x86/xiaomi-wmi.c b/drivers/platform/x86/xiaomi-wmi.c
->>> index 1f5f108d87c0..7efbdc111803 100644
->>> --- a/drivers/platform/x86/xiaomi-wmi.c
->>> +++ b/drivers/platform/x86/xiaomi-wmi.c
->>> @@ -2,8 +2,10 @@
->>>   /* WMI driver for Xiaomi Laptops */
->>>
->>>   #include <linux/acpi.h>
->>> +#include <linux/device.h>
->>>   #include <linux/input.h>
->>>   #include <linux/module.h>
->>> +#include <linux/mutex.h>
->>>   #include <linux/wmi.h>
->>>
->>>   #include <uapi/linux/input-event-codes.h>
->>> @@ -20,12 +22,21 @@
->>>
->>>   struct xiaomi_wmi {
->>>       struct input_dev *input_dev;
->>> +    struct mutex key_lock;    /* Protects the key event sequence */
->>>       unsigned int key_code;
->>>   };
->>>
->>> +static void xiaomi_mutex_destroy(void *data)
->>> +{
->>> +    struct mutex *lock = data;
->>> +
->>> +    mutex_destroy(lock);
->>> +}
->>> +
->>>   static int xiaomi_wmi_probe(struct wmi_device *wdev, const void *context)
->>>   {
->>>       struct xiaomi_wmi *data;
->>> +    int ret;
->>>
->>>       if (wdev == NULL || context == NULL)
->>>           return -EINVAL;
->>> @@ -35,6 +46,11 @@ static int xiaomi_wmi_probe(struct wmi_device *wdev, const void *context)
->>>           return -ENOMEM;
->>>       dev_set_drvdata(&wdev->dev, data);
->>>
->>> +    mutex_init(&data->key_lock);
->>> +    ret = devm_add_action_or_reset(&wdev->dev, xiaomi_mutex_destroy, &data->key_lock);
->>> +    if (ret < 0)
->>> +        return ret;
->>> +
->>>       data->input_dev = devm_input_allocate_device(&wdev->dev);
->>>       if (data->input_dev == NULL)
->>>           return -ENOMEM;
->>> @@ -59,10 +75,12 @@ static void xiaomi_wmi_notify(struct wmi_device *wdev, union acpi_object *dummy)
->>>       if (data == NULL)
->>>           return;
->>>
->>> +    mutex_lock(&data->key_lock);
->>>       input_report_key(data->input_dev, data->key_code, 1);
->>>       input_sync(data->input_dev);
->>>       input_report_key(data->input_dev, data->key_code, 0);
->>>       input_sync(data->input_dev);
->>> +    mutex_unlock(&data->key_lock);
->>>   }
->>>
->>>   static const struct wmi_device_id xiaomi_wmi_id_table[] = {
->>> -- 
->>> 2.39.2
->>>
->>>
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
 
+I proceeded from the assumption that the current check was not redundant.
+Kuppuswamy correctly noted in the message that the device would most 
+likely be valid for the function of removal.
+
+However, in my opinion, checking for NULL is a good coding practice, and 
+has now been implemented incorrectly in this case.
+
+Eliminating NULL checks could potentially cause bugs in this context.
+
+Best regards, Max
