@@ -1,129 +1,137 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF891C0DF1;
-	Fri, 29 Mar 2024 13:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7B218643
+	for <platform-driver-x86@vger.kernel.org>; Fri, 29 Mar 2024 14:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711720317; cv=none; b=TtPfBZRl0GTZwCSvrbDwTJDcNRliSDwvF/DAg4C/QGADMtIJ0pbYspj37p4HUqT7HZsNMCNL7PU4+UxUZBvrJ3YFSFfNfs0o3H3+xhdZQxD3xz1x7XGUCwRyRgsgsXwP5LXy0C5JVIVDWU3hY3QLAnhY8xWgBu7Fq9hdO9C1jy4=
+	t=1711722734; cv=none; b=h1kV/5p8gaqovJv4vCw4Atx8Yvs0gcg90jF9UU2gFZvxBphSGNAKukMczlCyw6o7E1pj1s5cWLGl3MHGj2P2OptpRxSE/pKyuC2CBMZmRUiShwP3IWmH36mcprnbnmnsWvmBIRx8zWWgiMDJFWtVc7oil66JpD9aNK10ndpbl7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711720317; c=relaxed/simple;
-	bh=1CtEIoW5Had2QClPgeyy73NMyNE2vfzEvp6rwVupVy8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QsY8Z30U3YSPmylknW2uxART9nBy2lEkIkBHB1TDBIoV0WK+GKVb4PQLsQjX2qLyZgPo62DmBLDA9jxjhKBSbqB791Wx4f5oEwZiXeV+NwHg1TQH3sRih4+Wnnur0PGBeoGUymVB4pgeX4nUg6Sa0Ti72QA2CBFnfTG7kcSH9hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=pnxVq16l; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1711722734; c=relaxed/simple;
+	bh=XZOxE2DewWzxH/CoeY+staODrFN0YpqiN16ttPlus6c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UOPjjSMOlGneCXQODKvSY19Se+4KOU6mVKYvsKFaxt5Ba411Coccj6U3Tirm+iyg//iaDKKpSgyg1BLX1lH2WqYfV9ntcm0krNUCBcksClRf88ZhAedgwdbTVn505Zxz8DDIqJZqQJMtTeMCNCpL9eqWaMFbC59bqUMf11yC52w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ph07Rcom; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="pnxVq16l"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=alXGIJuT49Qp7PxLLBHbTD5jAobwVRz5/+8YtYzfgt0=;
-	t=1711720315; x=1712152315; b=pnxVq16l1hp8mJs8kpmu42j+TltxDSKbXlVKtgzWcMWVmyy
-	vyVxqKenFSkOm6c2huPnzCRaWep7vdvL4qahX+qdlz0dfp4rQ2cXTE3FSs6xIU6+x5WpuiQe6ZXSD
-	njzgrDkhofXOJhQwWTq6EotYeFMaSew4JIuYr5kETsVCOT8g967xmtYEedoSypGrUKY+8CBdPUDfu
-	xJMvVp20tjRM5+sG2mKF5B7TYswCZ1QgrfuDDED/Gh3q4XFGYfwbIA6qm8BcgOPmWWVgK1FJ2zUko
-	bhBVQf8TXceQ0v+8LVXbokifaIFzF2w+VBN2xRgzI5HR4Jg4qn3jvDLMZNVELWvw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rqCe3-0000RK-QN; Fri, 29 Mar 2024 14:51:47 +0100
-Message-ID: <1198933e-bf89-4237-a6e8-f7daeeebf885@leemhuis.info>
-Date: Fri, 29 Mar 2024 14:51:47 +0100
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ph07Rcom"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e0878b76f3so15460575ad.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 29 Mar 2024 07:32:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1711722732; x=1712327532; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IfJXhfOMasTJP1msaSAsD8IcMhe4+ahDsqEiGggMSx8=;
+        b=Ph07RcomwHQ2SK+GoQXje2Y2IvyKtr2NBbuLDKSpG0ziJ7LxF82aPw9V/8ucMRuHCk
+         quFNrW91lLBvo/YoRnHNHiyMvIucGYuPbR1LrX8aVwxISP5+UdJnv8cRmRZfGse+7T7J
+         /onBi41jBfUDlWpWdP3Y9Y72D+f5uSgDC8rSk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711722732; x=1712327532;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IfJXhfOMasTJP1msaSAsD8IcMhe4+ahDsqEiGggMSx8=;
+        b=fImHiQYTnqJ5Z2aLm4I4yFj3Z+UVDmF9dngUrbuF9gzI0pRvgv6IIGmJU8zxbI0z2W
+         44GNr5RHsUDZx8oEbDWT4TXwpz4P9nNEa7HoAc9r93SVvrDQPqH8OEjBG/B5dy6seGAU
+         KJtm+WMEOdS+48MlojYcCYGoV0s16wL3641pAqTW20jimbbWNaw6pG3JHlAfVhKE363B
+         kFbZS/Gosxs70MmGixm4NObaGkeMJawx5h++dWiPS87q1eRZbl6irdDyPUJA5XT3kQI0
+         gE9lN/UKk4+6DtMOPg7EKqGk7sOAigQ1apEOUuIfpzjxlcfAWcK+dyeiEH1x17MTQ6Q5
+         MiRQ==
+X-Gm-Message-State: AOJu0Yz3UpdRr/bthAD/0GUFo06/9TCyG8gBTszU9YgcL77L2r6UVzOi
+	wYDOLWrRHXc95fkq5UOAy4o0ibJKHJtMfC8p/V8sXYEQUBzHuwPam5BBRtuJwQ==
+X-Google-Smtp-Source: AGHT+IHecrELI6+lrTv5mtccbMdQjPR9aabIpfQ7VuR+LPqwTSqIXc8ldjVwZHU/I9VHjq+DXfLCQA==
+X-Received: by 2002:a17:902:d487:b0:1e0:b697:d3ae with SMTP id c7-20020a170902d48700b001e0b697d3aemr9244202plg.19.1711722731693;
+        Fri, 29 Mar 2024 07:32:11 -0700 (PDT)
+Received: from localhost ([2620:15c:9d:2:dfa:a229:6909:21a8])
+        by smtp.gmail.com with UTF8SMTPSA id a11-20020a170902eccb00b001e0c94913d4sm3514055plh.15.2024.03.29.07.32.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 Mar 2024 07:32:10 -0700 (PDT)
+From: Gwendal Grignou <gwendal@chromium.org>
+To: hdegoede@redhat.com
+Cc: platform-driver-x86@vger.kernel.org,
+	Gwendal Grignou <gwendal@chromium.org>
+Subject: [PATCH 0/2] platform/x86: intel-vbtn: Fix ASUS VivoBook boot state
+Date: Fri, 29 Mar 2024 07:32:04 -0700
+Message-ID: <20240329143206.2977734-1-gwendal@chromium.org>
+X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH 1/1] platform/x86/intel/hid: Don't wake on 5-button
- releases
-To: David McFarland <corngood@gmail.com>, Chris Feng <chris.feng@mediatek.com>
-Cc: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
- Alex Hung <alexhung@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- linux-pm@vger.kernel.org
-References: <20240318191153.6978-1-corngood@gmail.com>
- <20240318191153.6978-2-corngood@gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <20240318191153.6978-2-corngood@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711720315;987166c3;
-X-HE-SMSGID: 1rqCe3-0000RK-QN
+Content-Transfer-Encoding: 8bit
 
-[CCing Chris, who authored the culprit; also CCing the platform folks
-and a few lists]
+While qualifying ASUS VivoBook Flip 14 (TP401NAS) for ChromeOS Plex,
+we notice it always boot in tablet mode, with the keyboard and touchpad
+disabled. We have to rotate its lid over 180 degree and back to get into
+clamshell mode, or put it into sleep and wake it up.
 
-On 18.03.24 20:11, David McFarland wrote:
-> If, for example, the power button is configured to suspend, holding it
-> and releasing it after the machine has suspended, will wake the machine.
+Disassembling the ACPI table, the virtual button/switch ACPI device is
+implemented as follow:
 
-David, from here is looks like this is stalled for ten days now. Or was
-there some progress and I just missed it?
+  Device (VGBI)
+  {
+      Name (_HID, EisaId ("INT33D6") /* Intel Virtual Buttons Device */)  // _HID: Hardware ID
+      Name (VBDS, Zero)
+      Method (_STA, 0, Serialized)  // _STA: Status
+      {
+          PB1E |= 0x20
+          If ((OSYS >= 0x07DD))
+          {
+              Return (0x0F)
+          }
 
-> Also on some machines, power button release events are sent during
-> hibernation, even if the button wasn't used to hibernate the machine.
-> This causes hibernation to be aborted.
+          Return (Zero)
+      }
 
-From the cover letter[1] is sounds a lot like a "Fixes: 0c4cae1bc00d31
-("PM: hibernate: Avoid missing wakeup events during hibernation")" would
-be appropriate here.
+      Method (VBDL, 0, Serialized)
+      {
+          PB1E |= 0x20
+          VBDS |= 0x40
+      }
 
-Regarding the patch itself: hopefully this mail will get things moving.
+      Method (VGBS, 0, Serialized)
+      {
+          Return (VBDS) /* \_SB_.PCI0.SBRG.EC0_.VGBI.VBDS */
+      }
 
-[1]
-https://lore.kernel.org/linux-pm/20240318191153.6978-1-corngood@gmail.com/
+      Method (UPBT, 2, Serialized)
+      {
+          Local0 = (One << Arg0)
+          If (Arg1)
+          {
+              VBDS |= Local0
+          }
+          Else
+          {
+              VBDS &= ~Local0
+          }
+      }
+  }
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Method UBPT is called when lid angle cross 180 degree boundary or when
+the device is woken up.
 
-#regzbot poke
+At boot, VBDS is set to 0 ("tablet mode") until UBPT or VBDL are called.
 
-> Signed-off-by: David McFarland <corngood@gmail.com>
->> ---
->  drivers/platform/x86/intel/hid.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-> index 7457ca2b27a6..707de9895965 100644
-> --- a/drivers/platform/x86/intel/hid.c
-> +++ b/drivers/platform/x86/intel/hid.c
-> @@ -504,6 +504,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
->  	struct platform_device *device = context;
->  	struct intel_hid_priv *priv = dev_get_drvdata(&device->dev);
->  	unsigned long long ev_index;
-> +	struct key_entry *ke;
->  	int err;
->  
->  	/*
-> @@ -545,11 +546,16 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
->  		if (event == 0xc0 || !priv->array)
->  			return;
->  
-> -		if (!sparse_keymap_entry_from_scancode(priv->array, event)) {
-> +		ke = sparse_keymap_entry_from_scancode(priv->array, event);
-> +
-> +		if (!ke) {
->  			dev_info(&device->dev, "unknown event 0x%x\n", event);
->  			return;
->  		}
->  
-> +		if (ke->type == KE_IGNORE)
-> +			return;
-> +
->  wakeup:
->  		pm_wakeup_hard_event(&device->dev);
->  
+VBDL used to be evaluated before VGBS by the intel-vbtn driver probe
+routine, but since commit 26173179fae1 ("platform/x86: intel-vbtn: Eval VBDL after registering our notifier"),
+call to VGBS is delayed until after the notifier is register.
+
+To bring back the expected behavior (device booting in clamshell
+mode), make sure we evaluate VGBS after VBDL.
+
+While at it, use function acpi_has_method() when we only need to know if a
+method exist, as commit 26173179fae1 does.
+
+Gwendal Grignou (2):
+  platform/x86: intel-vbtn: Use acpi_has_method to check for switch
+  platform/x86: intel-vbtn: Update tablet mode switch at end of probe
+
+ drivers/platform/x86/intel/vbtn.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
+
+-- 
+2.44.0.478.gd926399ef9-goog
+
