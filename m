@@ -1,91 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C0B1EEE4;
-	Fri, 29 Mar 2024 19:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4A315CE;
+	Sat, 30 Mar 2024 06:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711740633; cv=none; b=Y3AO3jOXTEgQYgdkbMV5ewrZXrVKIo6X4CYShjKv6NdKcjbw3VUuXTgX6iKbaKNUnVKVChX5FkkEdkpv3iXyTc2gQOx0ld+O0FfG7VjD1gKw/ao3DGZC7AyK12+hK3ag1Y2SAycLRM/tO1/Ih8FrgIdrAOgSzW7O5mNPsiyhcTQ=
+	t=1711781680; cv=none; b=HEGhAd5B/shieFcMg+Jus8J5n0dYiRs/yT8jtpORp50DOIgKfSY1K/ieM7pF9n9krqP8Bf31Dq86ea9fauhiFYRJjI7CEcWSP156VaZUXAGo5WWs3M2J4WuA2R4P9mgfkgSKnPxBB9hAdlnryhNxbEqFjaIseq5xytjJfnFQ2ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711740633; c=relaxed/simple;
-	bh=kASKGM3dFtExpzEE03kTs35TIgPe+csliIufLHzIK04=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=UqowPDwocud2Wj+bZuOSSys0qv9GjoET7RZzSWGxGa3G6E/OBej94f4wXaAe8vZCZsubIQhZhS6gBt4K1VKYAff947m6odSezcJPV4n1DrxVukivW4s5hRZyS0HxXvAB5WBwYM8kjXxqlhP2jF38ZpDyzoX86MS8xRz258oc/PA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IVV3npmS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711781680; c=relaxed/simple;
+	bh=+ou0jJukvfoQwr+mDiPl4YAYu4nw/6Sg7nRXHQldpJU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZmL5NhqOT75vvtOGpH6Cuc/7dTt/0ulDjQjszhQ17HRrHSpBPepSUoKoDoqjpnSq0cjJA4TYmceH8dyM20ffsLfoXl3AGSS9HHdq2xZUm89tu7P+auQFDd6umEsCQ62aVDuo1O215hVRMkhMsiR/LUABxc4l4RQ5UpXMBp0m5+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=IOfhLqrZ; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IVV3npmS"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 293A4C43390;
-	Fri, 29 Mar 2024 19:30:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711740633;
-	bh=kASKGM3dFtExpzEE03kTs35TIgPe+csliIufLHzIK04=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=IVV3npmSePL8advnxP77niTJn9r5VWn3Rp+dlR8NGJ9lX2oLIqkoGV+xDPWNxKxDQ
-	 Vy1L2g8YCGgRSXrLc/sQkv/2M4J9jxdAA8SAbhGR8ajFTlmfsqHLf0fvOTAPm2dcKv
-	 R1fVsKFXQ0PjDCVdjZFjTagXNRerIfdbo2okMOvrjklmOXE9qqZC9SCAN3EPi44fip
-	 ZCq07ahttvJ9JoOo07ITMoNBIgDCC6Y+Xv77EcLFfSARbiSqQFxIHg2hw6SwpkmRbP
-	 ts7yiXSanAtz/RnbfgXbCMeoFa7uggmPCtKepIwsnK9u0syfJQLIrvmxPSuoFye3BV
-	 B+EvADBhn/jTg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0FC90D2D0EE;
-	Fri, 29 Mar 2024 19:30:33 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="IOfhLqrZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=syQUrvl2dgCvGtizdT7QEDmhkcbW3zS6mu/xuvhkvtM=;
+	t=1711781677; x=1712213677; b=IOfhLqrZA72NhvaODwms+j/TUGDaktmxl7rIt5SzvR9XJCu
+	pRmxQdkS7iBWhBHdsqirH7B62wh+zyJbfyCTeYXSH/SeojvRfPpFrru+4GsB//utXfPcjT9/N1FA7
+	zo0/Lmfj9wohTFvOGOnoI3hLjuQVS/21I/N/8iZSgJruzG36OQxyqjTaz++t6zKwzHWNoqc2cgwVI
+	sQqwRDwHGGpb5NoEIaqb5UKkzDG7WLqRqKmHoRKgkKJZsGiv2huHdgtlRQAbw+az5z1RXLND21MOw
+	YlJxmuaerWzn/5POOGYp3reviF933SCDJA4b31uLO07v3FIHCfHniBxCmeGnLQTA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rqSbo-00030o-V8; Sat, 30 Mar 2024 07:54:33 +0100
+Message-ID: <29abd2f6-2de5-4a69-9113-61042c52f6bc@leemhuis.info>
+Date: Sat, 30 Mar 2024 07:54:32 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 0/9] enabled -Wformat-truncation for clang
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171174063305.18563.745216419087873927.git-patchwork-notify@kernel.org>
-Date: Fri, 29 Mar 2024 19:30:33 +0000
-References: <20240326223825.4084412-1-arnd@kernel.org>
-In-Reply-To: <20240326223825.4084412-1-arnd@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: llvm@lists.linux.dev, arnd@arndb.de, dmitry.torokhov@gmail.com,
- claudiu.manoil@nxp.com, vladimir.oltean@nxp.com, kuba@kernel.org,
- saeedm@nvidia.com, leon@kernel.org, aelior@marvell.com, manishc@marvell.com,
- hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, luzmaximilian@gmail.com,
- hare@kernel.org, martin.petersen@oracle.com, deller@gmx.de,
- masahiroy@kernel.org, nathan@kernel.org, nicolas@fjasle.eu,
- johannes@sipsolutions.net, perex@perex.cz, tiwai@suse.com,
- ndesaulniers@google.com, morbo@google.com, justinstitt@google.com,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-kbuild@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] platform/x86/intel/hid: Don't wake on 5-button
+ releases
+To: David McFarland <corngood@gmail.com>
+Cc: Chris Feng <chris.feng@mediatek.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+ Alex Hung <alexhung@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
+References: <20240318191153.6978-1-corngood@gmail.com>
+ <20240318191153.6978-2-corngood@gmail.com>
+ <1198933e-bf89-4237-a6e8-f7daeeebf885@leemhuis.info>
+ <87bk6wlxpp.fsf@gmail.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <87bk6wlxpp.fsf@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711781677;ddeb3204;
+X-HE-SMSGID: 1rqSbo-00030o-V8
 
-Hello:
-
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Tue, 26 Mar 2024 23:37:59 +0100 you wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On 29.03.24 19:06, David McFarland wrote:
+> "Linux regression tracking (Thorsten Leemhuis)"
+> <regressions@leemhuis.info> writes:
 > 
-> With randconfig build testing, I found only eight files that produce
-> warnings with clang when -Wformat-truncation is enabled. This means
-> we can just turn it on by default rather than only enabling it for
-> "make W=1".
+>> David, from here is looks like this is stalled for ten days now. Or was
+>> there some progress and I just missed it?
+> No, I've not seen any emails since your last.
+
+Thx for confirming.
+
+>> From the cover letter[1] is sounds a lot like a "Fixes: 0c4cae1bc00d31
+>> ("PM: hibernate: Avoid missing wakeup events during hibernation")" would
+>> be appropriate here.
 > 
-> [...]
+> The specific behaviour I encountered (failure to hibernate) started with
+> that commit, but I think it just exposed the underlying behaviour (wake
+> on button release), which probably dates to when the driver was
+> introduced.
 
-Here is the summary with links:
-  - [2/9] enetc: avoid truncating error message
-    https://git.kernel.org/netdev/net-next/c/9046d581ed58
-  - [3/9] qed: avoid truncating work queue length
-    https://git.kernel.org/netdev/net-next/c/954fd908f177
-  - [4/9] mlx5: avoid truncating error message
-    https://git.kernel.org/netdev/net-next/c/b324a960354b
+Well, it depends on the maintainer in question (so you might better want
+to ignore this advice!), but I'd say: mention that in the patch
+description and add Fixes: tag, to ensure people pick it up when the
+change that exposed the problem is backported.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+This is hinted at in submitting-patches: "This tag also assists the
+stable kernel team in determining which stable kernel versions should
+receive your fix.". Maybe that text should mention scenario.
 
-
+Ciao, Thorsten
