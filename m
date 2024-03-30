@@ -1,94 +1,104 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4A315CE;
-	Sat, 30 Mar 2024 06:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E54847B;
+	Sat, 30 Mar 2024 11:24:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711781680; cv=none; b=HEGhAd5B/shieFcMg+Jus8J5n0dYiRs/yT8jtpORp50DOIgKfSY1K/ieM7pF9n9krqP8Bf31Dq86ea9fauhiFYRJjI7CEcWSP156VaZUXAGo5WWs3M2J4WuA2R4P9mgfkgSKnPxBB9hAdlnryhNxbEqFjaIseq5xytjJfnFQ2ts=
+	t=1711797877; cv=none; b=QgPMvIw4mfbh9VMpvmv8TZ151Z+oGtt+6XC04JjYZ9QLYvT5uQe6T64HkymW5cob8XrRl+B4LoF0rCyoQkdtY2TnF8Z9utJjTL3QVLF69PeUP6FZtBU9DMufI53WuDf8niRTuyjolr3gT2Bce50ks3O32c770Hr4sa+85Z1kw4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711781680; c=relaxed/simple;
-	bh=+ou0jJukvfoQwr+mDiPl4YAYu4nw/6Sg7nRXHQldpJU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZmL5NhqOT75vvtOGpH6Cuc/7dTt/0ulDjQjszhQ17HRrHSpBPepSUoKoDoqjpnSq0cjJA4TYmceH8dyM20ffsLfoXl3AGSS9HHdq2xZUm89tu7P+auQFDd6umEsCQ62aVDuo1O215hVRMkhMsiR/LUABxc4l4RQ5UpXMBp0m5+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=IOfhLqrZ; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1711797877; c=relaxed/simple;
+	bh=I02NGCnaxRi9by2gF42e6EGB3pDQOAJ19b/1+lVtkMw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kzQQY+NUXDXtgdinSgnPXbTREKTRsx58BjfW8TKIdL+gw01vUuRFNaUzqGiQTPNGr0mxCsX0HfIHuKsaW09c/wTACo7FzDm4bkhxBfzeeeRDRqi12CCYo9fZviaqEBkvzTg9G+mBKc0cdXK3paz8qLHIhovEkK5V1z2RpxAdOIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SoCO+RS5; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="IOfhLqrZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=syQUrvl2dgCvGtizdT7QEDmhkcbW3zS6mu/xuvhkvtM=;
-	t=1711781677; x=1712213677; b=IOfhLqrZA72NhvaODwms+j/TUGDaktmxl7rIt5SzvR9XJCu
-	pRmxQdkS7iBWhBHdsqirH7B62wh+zyJbfyCTeYXSH/SeojvRfPpFrru+4GsB//utXfPcjT9/N1FA7
-	zo0/Lmfj9wohTFvOGOnoI3hLjuQVS/21I/N/8iZSgJruzG36OQxyqjTaz++t6zKwzHWNoqc2cgwVI
-	sQqwRDwHGGpb5NoEIaqb5UKkzDG7WLqRqKmHoRKgkKJZsGiv2huHdgtlRQAbw+az5z1RXLND21MOw
-	YlJxmuaerWzn/5POOGYp3reviF933SCDJA4b31uLO07v3FIHCfHniBxCmeGnLQTA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rqSbo-00030o-V8; Sat, 30 Mar 2024 07:54:33 +0100
-Message-ID: <29abd2f6-2de5-4a69-9113-61042c52f6bc@leemhuis.info>
-Date: Sat, 30 Mar 2024 07:54:32 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SoCO+RS5"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4155bdc0bf5so932015e9.1;
+        Sat, 30 Mar 2024 04:24:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711797874; x=1712402674; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=x4e1X6/wtbBZaSSH3NYFtpZ3MgjRKbwmGNZdau5FbQ0=;
+        b=SoCO+RS538EsPEgEZvBKVe+qqIOxcq+Lpc4DCDqMhwTX2SxGUcUSQd0DscGvUaKEE4
+         IAU0EWd6+aXKK5Na23CO6j6t7xmXAcUU8gqnAy4xnm1WU2VeTuDaMrPgKVlCl8UvoewL
+         pix9T2QMPhgMRdbMG37XlOKsck+uh3zjzTtCbPTWlwJ5ih981/LEk7yYA52SsAF+mNqB
+         UzLckere3/oR+Fjv6r6vFk16uxDWM//cQpxi8wxy7YHCcDOAlPqq83IElFaqQMsYQH+T
+         mYuYZg+hqVVC6siKFuTsvoM2F7S1ZrU5czuBLHjLAcLPlQr2o/35BnKenjjc94GYUJko
+         jKCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711797874; x=1712402674;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=x4e1X6/wtbBZaSSH3NYFtpZ3MgjRKbwmGNZdau5FbQ0=;
+        b=MSLHXhCaifZperEn2F1nTvq+/896m4Wn+Wsqto2zabHEnro9EwaM90ui72Ssvoy34u
+         Jf5TlndKpN9NwfBH2asNAnJ3ayWl0O91XrgRRI8Ay/bjSGMimIp8Zy5BE3VmHNpZYzNK
+         021paK9z/S9RrofkKuJiWwaSrMGUAt3HKjKTpKABxjtFvy7pqZsSGrTaV2o9z/Uhxb+4
+         DoKSWQ6uWAz1Veaiq6R3lxTAiRlXqoxNgqUOo9Hgr30+q8pIewsPFh6ozF+TS9eaHfnl
+         350TnliwoYGBOa+9U+3H17YrNM8Q8qFrMQMEGH4coDqF7LOM3RSqbvUYJ4Prrl/HRg22
+         HYpw==
+X-Forwarded-Encrypted: i=1; AJvYcCXqFB7PXwU4/KiDyFUGCJ/8CwAAmDGGE1s+8BQQdCSgtwQNAyAsipmjWytqj774rJxTRoIsMnloVpSKHwN/neobeycivU+WIB5X+PVRoQFfA0fzARnLaGcmNwFP+0tsadci8NTW5q8+8z/8tN7g/L06QiaJOfX7hCwe3+Jzi8LFwmkp1WoBCnT44CBP65kx
+X-Gm-Message-State: AOJu0YyGmfjVmH83uYiaZMkqdc7jXxrFdElFTIPZNKr7C0Etm8Hjx+z5
+	gSQPReYTGNKxyswinoh44M1xHc2hdPRnLXUAWLfx2NBS+WpkGl/cIaRaEh++
+X-Google-Smtp-Source: AGHT+IFe1w7BdVt6IWldVDlgzg+Pmkd1rmqFcvaqx+zpCRs9G6L6k5G8GIt4alPGs7zC8zHYsLfW3g==
+X-Received: by 2002:a05:600c:35c5:b0:413:f4d0:c233 with SMTP id r5-20020a05600c35c500b00413f4d0c233mr2865778wmq.35.1711797873961;
+        Sat, 30 Mar 2024 04:24:33 -0700 (PDT)
+Received: from xws.fritz.box ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
+        by smtp.gmail.com with ESMTPSA id m31-20020a05600c3b1f00b004146750314csm11441775wms.3.2024.03.30.04.24.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 Mar 2024 04:24:33 -0700 (PDT)
+From: Maximilian Luz <luzmaximilian@gmail.com>
+To: Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>
+Cc: Ivor Wanders <ivor@iwanders.net>,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [PATCH 0/3] Add thermal sensor driver for Surface Aggregator
+Date: Sat, 30 Mar 2024 12:23:59 +0100
+Message-ID: <20240330112409.3402943-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] platform/x86/intel/hid: Don't wake on 5-button
- releases
-To: David McFarland <corngood@gmail.com>
-Cc: Chris Feng <chris.feng@mediatek.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
- Alex Hung <alexhung@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
-References: <20240318191153.6978-1-corngood@gmail.com>
- <20240318191153.6978-2-corngood@gmail.com>
- <1198933e-bf89-4237-a6e8-f7daeeebf885@leemhuis.info>
- <87bk6wlxpp.fsf@gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <87bk6wlxpp.fsf@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1711781677;ddeb3204;
-X-HE-SMSGID: 1rqSbo-00030o-V8
+Content-Transfer-Encoding: 8bit
 
-On 29.03.24 19:06, David McFarland wrote:
-> "Linux regression tracking (Thorsten Leemhuis)"
-> <regressions@leemhuis.info> writes:
-> 
->> David, from here is looks like this is stalled for ten days now. Or was
->> there some progress and I just missed it?
-> No, I've not seen any emails since your last.
+This series adds support for reading thermal sensors connected via the
+Surface Aggregatgor Module (the embedded controller found on all modern
+Microsoft Surface devices).
 
-Thx for confirming.
+The EC can have up to 16 thermal sensors connected via a single
+sub-device, each providing temperature readings and a label string.
 
->> From the cover letter[1] is sounds a lot like a "Fixes: 0c4cae1bc00d31
->> ("PM: hibernate: Avoid missing wakeup events during hibernation")" would
->> be appropriate here.
-> 
-> The specific behaviour I encountered (failure to hibernate) started with
-> that commit, but I think it just exposed the underlying behaviour (wake
-> on button release), which probably dates to when the driver was
-> introduced.
+This has been developed together with Ivor Wanders. For more details,
+see the following links:
 
-Well, it depends on the maintainer in question (so you might better want
-to ignore this advice!), but I'd say: mention that in the patch
-description and add Fixes: tag, to ensure people pick it up when the
-change that exposed the problem is backported.
+- https://github.com/linux-surface/surface-aggregator-module/issues/59
+- https://github.com/linux-surface/surface-aggregator-module/pull/68
 
-This is hinted at in submitting-patches: "This tag also assists the
-stable kernel team in determining which stable kernel versions should
-receive your fix.". Maybe that text should mention scenario.
+Maximilian Luz (3):
+  hwmon: Add thermal sensor driver for Surface Aggregator Module
+  hwmon: surface_temp: Add support for sensor names
+  platform/surface: aggregator_registry: Add support for thermal sensors
+    on the Surface Pro 9
 
-Ciao, Thorsten
+ MAINTAINERS                                   |   6 +
+ drivers/hwmon/Kconfig                         |  10 +
+ drivers/hwmon/Makefile                        |   1 +
+ drivers/hwmon/surface_temp.c                  | 243 ++++++++++++++++++
+ .../surface/surface_aggregator_registry.c     |   7 +
+ 5 files changed, 267 insertions(+)
+ create mode 100644 drivers/hwmon/surface_temp.c
+
+-- 
+2.44.0
+
