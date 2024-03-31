@@ -1,59 +1,59 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B70B8BFC;
-	Sat, 30 Mar 2024 12:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6E7143C74
+	for <platform-driver-x86@vger.kernel.org>; Sun, 31 Mar 2024 10:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711803541; cv=none; b=k4mr8rwyoWiwHqM5e7Iw+tj0V1FHDvYqekiKeIU7FStQ4Ami0y2t4MrFbva261fVC1dSLcFfpdvcDk3d1PFYGCQIdcHiOnigvhVShe/Sx/fI3rzSHqEQl4yY8y8Z8Kc6d+1dtf/Xv2k2kShX37IHu8wQ2vkSL2LcoH+LK5X42+A=
+	t=1711882298; cv=none; b=P1IICCvx9ca2lF3ATz4e6Hf+mqOvjhM+08RtH+NstJYLmcI3dROExZAUW34YmhLxKMbAmFb1AKgrXZ9uY+pDHbtRkMETWEJozQZpvrrBEKCF7i0miS1kUKECwdQ/Eb0R/5guiwM+XxOg2zS9K1lZKGcwOmgZG2MWvjMGb9f5+8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711803541; c=relaxed/simple;
-	bh=Car9GN2tQNeTTS1TNLTIQj5FQX9M9R0UjeM03caoV6s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C8rrncozQZjsL12DBqK9PNYXAnIaZnF9E8gajFgCkFn4PbVNBv8EFQMX7zSSOmwEt2jiM6kXuEKT1gbsjZolsJ/+VK2zW5no4VNu2Uft8SBuwz+4oDIM3zN0ZjPxl4aonY4zyqAGxHgfAJsck7r/eilPRcfZQ89eirwGi4ukqUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XpB/f+C2; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711882298; c=relaxed/simple;
+	bh=pcdIiEhM2l/zdXKf8Ui9dBMz5cNT2DJKO3WWCjp2iwA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:In-Reply-To:
+	 Content-Type; b=Qu2DcTW31vtK1Q210Tg1F3B2BonOUShWI+Hihwfakk5I57g/xHpT8s9luzVrg85WGu5FxdwtuBoXxGDLmCGA2HuQ5AOF6DGfhTwO3GNPGEy4zQcrdGevgc3x/Lvgj+E4ubcq8iUMm/lJt6WoQuWYcHi2h1r/LTA41x/91d/hrNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cpp.in; spf=none smtp.mailfrom=cpp.in; dkim=pass (2048-bit key) header.d=cpp-in.20230601.gappssmtp.com header.i=@cpp-in.20230601.gappssmtp.com header.b=aBNd2L+h; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cpp.in
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cpp.in
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XpB/f+C2"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4155bc085dfso1406505e9.1;
-        Sat, 30 Mar 2024 05:58:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cpp-in.20230601.gappssmtp.com header.i=@cpp-in.20230601.gappssmtp.com header.b="aBNd2L+h"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5d81b08d6f2so2491637a12.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 31 Mar 2024 03:51:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711803537; x=1712408337; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9JaMGVJLZuF28CmdzYEI45s8CkO4naifu4l9FLwAvec=;
-        b=XpB/f+C2jg3uxvcaqp73OYSSjUjLeD3tHJMXnJ8zRglMKzXBnQVmmxQEIvrZJKowLn
-         525Mr7hn/mdc7daD+cZksp233jJNxw79rjiWUlHVCL07MwN8OgzCrgYBS0gDRvIs+2C8
-         YsPtzUlAiWmasbF3P49aMy79G1QkE7FSqa31piYRlwRduOqPuZCddkOfYMwzZu/a4m0r
-         Q3rsDXcNVQSn+cFGZNE9BS6pHie4jK3DppZliyFYqaGgT9deqoGbHBB//zysAO2C7nbc
-         GJcYxCDbivNkpeFIkCT3NEGcD4FiBoVAuwPUyLqDPOaSRRYLFfiOPmPXwBjUAmFgqEw6
-         uUkg==
+        d=cpp-in.20230601.gappssmtp.com; s=20230601; t=1711882294; x=1712487094; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:cc:to
+         :subject:from:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JiyEjUctzgw3d5cbSMfpqrqZz263bg9AlN7/QV97RU8=;
+        b=aBNd2L+hxc81bM21Uuez4jAwYVhyEEzN3xKS7QvFuFW4PI2WG/FxYGyOYqHxNsMKCB
+         jQ9UtS+1P4SsPfvuk/t4r1ic1ZBG1pmMlez99z1keJ2q974Zz7OJqCcbzrdg05MZ0KGW
+         z23AgaOwVKeiEV/Xyilcfmt37fWzoKdl6Cq+v7qmjd7E1M9ox4Y3qUuRfonKeA9or6wS
+         7mIn1z03Jn+JD+tiOHWrYk+w1aYwTF0dsS/GeCIOt0xCytsbpqEJ+X9oizkuf81r/N03
+         gxNF0zpGtRCFhs3uLpThM3vcDAaDgFINvtshtiVGerG279tm5nyA1/Q1Vo8ZF2TGWMCD
+         UvBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711803537; x=1712408337;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1711882294; x=1712487094;
+        h=content-transfer-encoding:in-reply-to:content-language:cc:to
+         :subject:from:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9JaMGVJLZuF28CmdzYEI45s8CkO4naifu4l9FLwAvec=;
-        b=r6BdbLQ2fJbSGIcMF6seIW8nt093weiNc5wLxVpkYAKNAVZ3E3Fri5VCgdwZoe5c9l
-         pM/fn+n3zfCqB9D6JHeCCPnyBw4HSw6fWTEKaAQtTGCv1PE8RB0JbBz07fAyCYxfv0Dj
-         TeNlGv7Xj+a9lAKE4yBZpYi0osBDykZVT3OR4ntxF0XzDP7Gz9uiQmgD1+gPxnVGygmD
-         QRudv1bOeMN5Tr2qlf7VTnr+4ezsoncBrmTlL8ZUzJDfRO6ijF0299ZbfBhM/uhmrPY/
-         viR0tL4yEroceNZzhyH8Q2KCPHhHlehdXzB4VkDxJ0wQrS7uly6MLsaqtKekJLdSB3tN
-         i5aQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVTToItFdW8nfLk4xVonvh0SU+yqT2CIBvNawxyzAcLcHjHY2rLzbs/Bw8Ub9lkM0fjwzoDsCZdDAo3VdFNvpcfAuZwT7/3w/uJl4FjP1OJa63ewk/5i7eOysvDpgzKAvwL3WlrHxo7gTTtG6VFP/aQeCMdDy7D/36RpnniAy0aXEqviAiUCtfCjQia0cu7
-X-Gm-Message-State: AOJu0Ywf+/5YcMvVRSJtjG4MVZUAjeY9d5MwHioCNQesODnfQFzn3sz4
-	9pK9o+IgpQLMseRjheO6E8AipJZ8vdDchONb0wK1wB3GLYgbnEq6
-X-Google-Smtp-Source: AGHT+IEa0WdkS11BCB1d7NoUqJwCtyKOfTMUYVoDqiClzq+5hTM/tfUqq9qFJHWlzyPAyvES/KxpuA==
-X-Received: by 2002:a05:600c:1913:b0:414:6172:8366 with SMTP id j19-20020a05600c191300b0041461728366mr4006133wmq.15.1711803537355;
-        Sat, 30 Mar 2024 05:58:57 -0700 (PDT)
-Received: from [172.18.121.29] (ip-185-104-138-51.ptr.icomera.net. [185.104.138.51])
-        by smtp.gmail.com with ESMTPSA id bi8-20020a05600c3d8800b00415461b9ab2sm7735216wmb.5.2024.03.30.05.58.52
+        bh=JiyEjUctzgw3d5cbSMfpqrqZz263bg9AlN7/QV97RU8=;
+        b=TXBh2iuUDvhJuIAkmMo6uofyQG8Y5oGhf7LPNw3w9CKZAHTGLq6wKKk/pFGCG56zeK
+         AT/+R3t1L2TNiBQNDpmEYkX5/247hPD2skkaGHmuaiZG2Bs6BvXPxT+sGimTe27XOasE
+         ockwNo6JN3EcXqQ1cHPCgEoFcTVmramok1etlQSgVwRF4VnG1PcSyhsMXa8N9Ch4yn7h
+         LZ3rnOIZ4BQU3BSOOLNeyCiU8buKqxDsrMoB/kFG+SuatFW9r8xkorznZSBfQb8aULRh
+         fkOcAFSajd6P22BzPwGK6vXaRGlh8K+RcwEIK/2hNOgg4HUsAZQxSK3j/O/CO0H+bXRH
+         ntXw==
+X-Forwarded-Encrypted: i=1; AJvYcCW1MA7WTOSnvCoOedYxH3AuxQhkYq0HVegTBcdb7RUPYNs6uqs0+JV7CS0vqMp+6cjJbvqQObGi9pFG359TfOiHEpr2iQYkot5ovZY76Gzlq06voA==
+X-Gm-Message-State: AOJu0YyuojB8APE85s7IGrQ/aL77Ub31Gp7mxJ8jaJwV+xPVtxd+sKPz
+	/8hTJrsUqkq+yj1hivDKL9IESzBkow005mgtJNdPkdIDkT/6S2hEot4y42/zQg==
+X-Google-Smtp-Source: AGHT+IGbCXPjBovSTHKR9172xf/YfQYGs9t0Y+nud/nfFHTvv80yMaWcmcBoZV1xkyeTwbzmrc7sPQ==
+X-Received: by 2002:a17:903:228e:b0:1e0:b687:c5d1 with SMTP id b14-20020a170903228e00b001e0b687c5d1mr8767015plh.64.1711882294570;
+        Sun, 31 Mar 2024 03:51:34 -0700 (PDT)
+Received: from [192.168.3.23] (mx-ll-180.183.76-49.dynamic.3bb.co.th. [180.183.76.49])
+        by smtp.gmail.com with ESMTPSA id s7-20020a170902ea0700b001e0a7e617d9sm6642277plg.82.2024.03.31.03.51.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 30 Mar 2024 05:58:56 -0700 (PDT)
-Message-ID: <e8ccce25-86d5-492a-8fb4-3f39036fa91a@gmail.com>
-Date: Sat, 30 Mar 2024 13:58:44 +0100
+        Sun, 31 Mar 2024 03:51:34 -0700 (PDT)
+Message-ID: <bde342c6-be23-4afa-978f-9503e3c11223@cpp.in>
+Date: Sun, 31 Mar 2024 13:51:28 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,92 +61,132 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] hwmon: Add thermal sensor driver for Surface
- Aggregator Module
-To: Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hdegoede@redhat.com>
-Cc: Ivor Wanders <ivor@iwanders.net>, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org
-References: <20240330112409.3402943-1-luzmaximilian@gmail.com>
- <20240330112409.3402943-2-luzmaximilian@gmail.com>
- <d49ea735-3113-4c1f-a8dc-c6d8e821c4f1@roeck-us.net>
+From: Anthony I Gilea <i@cpp.in>
+Subject: Re: [PATCH] platform/x86: int3472: Add handshake GPIO function
+To: hdegoede@redhat.com
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ bingbu.cao@intel.com, dan.scally@ideasonboard.com, djrscally@gmail.com,
+ hao.yao@intel.com, linux-media@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, sakari.ailus@intel.com
 Content-Language: en-US
-From: Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <d49ea735-3113-4c1f-a8dc-c6d8e821c4f1@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <186830d2-dd18-7948-b2c5-bcda934ad3e8@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 3/30/24 12:58, Guenter Roeck wrote:
-> On 3/30/24 04:24, Maximilian Luz wrote:
->> Some of the newer Microsoft Surface devices (such as the Surface Book
->> 3 and Pro 9) have thermal sensors connected via the Surface Aggregator
->> Module (the embedded controller on those devices). Add a basic driver
->> to read out the temperature values of those sensors.
->>
->> Link: https://github.com/linux-surface/surface-aggregator-module/issues/59
->> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+
+Hello,
+
+I'm trying to get camera on HP Spectre x360 14-eu0xxx (2024) laptop to work.
+I was able to make main sensor driver (ov08x40) to play nice with IPU6,
+INT3472 and libcamera-SoftISP and the resulting image quality is absolutely
+usable and even surprisingly good.
+
+This laptop also uses this "MIPI aggregator".
+
+
+> Hi,
 > 
-> I very much dislike the idea of having multiple drivers for hardware
-> monitoring on the same system. Please explain in detail why this and
-> the fan driver for the same system need separate drivers.
+> On 10/7/23 04:12, Hao Yao wrote:
+> > Handshake pin is used for Lattice MIPI aggregator to enable the
+> > camera sensor. After pulled up, recommend to wail ~250ms to get
+> > everything ready.
 > 
-> I'll also very much want to know if we will see submissions for separate
-> voltage, current, power, energy, humidity, and/or other hardware monitoring
-> entities for the same system later on.
+> If this is a pin on the "Lattice MIPI aggregator" and
+> not on the sensor itself then this really should be
+> modeled as such and should not be registered as a GPIO
+> consumed by the sensor since the actual sensor does not
+> have a handshake pin at all.
+> 
+> Also we really don't want to need to patch all involved
+> sensor drivers to toggle a handshake pin, especially since
+> the sensor itself does not physically have this pin.
+> 
+> Can you explain a bit more:
+> 
+> 1. What the "Lattice MIPI aggregator" is.
+> 2. What its functions are, does this control reset + pwdn
+>    GPIOs for the sensor? Voltages to the sensor? Clk
+>    to the sensor ?
 
-The Surface Aggregator EC is not really a single device, but rather a
-collection of subsystems. For example, there's one for the battery, one
-for thermal sensors, and a separate one for the fan. Not all subsystems
-are present on all devices with that EC, so we have modeled them as
-separate subdevices of the parent EC controller. This makes it quite a
-bit easier to maintain. Especially, since I haven't found any reliable
-way to auto-detect the active/supported subsystems.
+It acts like MIPI switch as no MIPI data gets from the sensor to IPU6 if
+handshake signal is not asserted. Eventually IPU6 times out with "start stream
+of firmware failed" message. Any further attempts to start streaming lead to
+a panic.
 
-For example: The Surface Book 3 has thermal sensors that can be accessed
-via this driver as well as a fan. As far as I know, however, the fan
-subsystem has been introduced later and the Surface Book 3 doesn't
-support that yet. So there's (as far as I know) no fan-monitoring
-support. Trying to access that will fail with a timeout. For that reason
-(but not specifically for that device), we have introduced the split
-into subystem devices, which are maunally registered in
-surface_aggregator_registry.c based on what we know the device actually
-supports.
+I2C communication is not affected by the handshake signal but it looks like
+reset signal is also going through this "MIPI aggregator" as it takes about
+150ms for the sensor to reliably start responding via I2C after the reset
+is deasserted. It should be about few ms if the reset signal was connected to
+the sensor directly.
 
-Further, the devices created for these subsystems also act as a binding
-mechanism to the subsystem, speficying the subsystem ID/category used
-for making requests to it. For example, this driver probes for
+> 3. How the aggregator is connected to both the main
+>    CPU/SoC as well as how it is connected to the sensor ?
+>    Some example diagram would be really helpful here.
+> 
+> Then with this info in hand we can try to come up
+> with a way how to model this.
+> 
+> Assuming this controls the entire power-up sequence
+> for the sensor then I think it could be modelled
+> as a GPIO regulator. This also allows making the
+> regulator core take care of the necessary delay
+> between setting the GPIO and trying to talk to
+> the sensor.
 
-     SSAM_SDEV(TMP, SAM, 0x00, 0x02)
+Are there any updates on how this signal should be implemented? For now I'm
+just applying this patch and asserting it from the sensor driver.
 
-meaning it looks for a device of the TMP subsystem on the SAM target ID
-(which can be seen as a bus number) with instance 0 and function 2. This
-(in particular subsystem ID and target ID) are directly used when making
-requests to the EC. So if we find out down the line that temperature
-sensors can be accessed on target ID KIP in addition to SAM, it's as easy
-as adding a new device match to the driver.
+Regards
 
-I believe that this would be more difficult if the driver is merged
-together: Doing so would require us to figure out what's present and
-what we can or should access inside of the driver (instead of via the
-already established registry). So it would either require us to do a
-certain amount of hardcoding and if/else branches or we would have to
-introduce a bunch of device properties and a meta-device just to bundle
-all monitoring-related subsystems together, and again use a bunch of
-if/else branches... And in both cases, the direct subsystem binding
-originally intended in the device structure of the Surface Aggregator
-bus goes out of the window.
 
-So, in my opinion at least, having separate smaller but specific drivers
-and leaving that "logic" to the registry driver makes this much more
-maintainable.
-
-Regarding other monitoring entities: In short, I don't know. I am not
-aware of any other (current/power/...) monitoring capabilities of the EC
-right now, but I can't guarantee that MS won't introduce a new subsystem
-for those down the line (or that there already is one and we just don't
-know about it). At which point, it will quite likely only be supported
-on some (probably newer) devices again.
-
-Best regards,
-Max
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> > 
+> > Signed-off-by: Hao Yao <hao.yao@intel.com>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> >  drivers/platform/x86/intel/int3472/common.h   | 1 +
+> >  drivers/platform/x86/intel/int3472/discrete.c | 5 +++++
+> >  2 files changed, 6 insertions(+)
+> > 
+> > diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
+> > index 655ae3ec0593..3ad4c72afb45 100644
+> > --- a/drivers/platform/x86/intel/int3472/common.h
+> > +++ b/drivers/platform/x86/intel/int3472/common.h
+> > @@ -23,6 +23,7 @@
+> >  #define INT3472_GPIO_TYPE_POWER_ENABLE				0x0b
+> >  #define INT3472_GPIO_TYPE_CLK_ENABLE				0x0c
+> >  #define INT3472_GPIO_TYPE_PRIVACY_LED				0x0d
+> > +#define INT3472_GPIO_TYPE_HANDSHAKE				0x12
+> >  
+> >  #define INT3472_PDEV_MAX_NAME_LEN				23
+> >  #define INT3472_MAX_SENSOR_GPIOS				3
+> > diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+> > index b644ce65c990..4753161b4080 100644
+> > --- a/drivers/platform/x86/intel/int3472/discrete.c
+> > +++ b/drivers/platform/x86/intel/int3472/discrete.c
+> > @@ -111,6 +111,10 @@ static void int3472_get_func_and_polarity(u8 type, const char **func, u32 *polar
+> >  		*func = "power-enable";
+> >  		*polarity = GPIO_ACTIVE_HIGH;
+> >  		break;
+> > +	case INT3472_GPIO_TYPE_HANDSHAKE:
+> > +		*func = "handshake";
+> > +		*polarity = GPIO_ACTIVE_HIGH;
+> > +		break;
+> >  	default:
+> >  		*func = "unknown";
+> >  		*polarity = GPIO_ACTIVE_HIGH;
+> > @@ -201,6 +205,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+> >  	switch (type) {
+> >  	case INT3472_GPIO_TYPE_RESET:
+> >  	case INT3472_GPIO_TYPE_POWERDOWN:
+> > +	case INT3472_GPIO_TYPE_HANDSHAKE:
+> >  		ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, func, polarity);
+> >  		if (ret)
+> >  			err_msg = "Failed to map GPIO pin to sensor\n";
+> 
