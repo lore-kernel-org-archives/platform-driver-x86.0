@@ -1,173 +1,149 @@
-Received: from mail.inka.de (quechua.inka.de [193.197.184.2])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6324501C;
-	Mon,  1 Apr 2024 15:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.197.184.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFF0249E4;
+	Mon,  1 Apr 2024 19:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711985810; cv=none; b=gRBoHAMRSppPND7vtpbIaneEUhLK51dposn1KRJ4MLMNhHBth3KGPLrpb7HrqiuZuBWMKKBM+AP5YaMn6ITRyafVJN1E+uTShjOXCTVhxB5MRLEjtOL/8qNBEERU4/i0KDt22JthRab30skQQcpu2WiW+un4dHAHfOnkOUw8M7E=
+	t=1711998186; cv=none; b=GDKdSTiD+YxaWEDfeWtKN2P3Hhi9AdlIObxzIjNoFY5tyUED+dbLhXWRv61n2UnlwX9TuZ7E5Tz+7od4CwH/VD28ae9PDEHkFAr9WKDA6UlZ1WmgGfhqSny75GPXm0XX1rYlmyE+r7QdJFgLEnTw9T7Sa6ezSyM6uBgE/nDRVnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711985810; c=relaxed/simple;
-	bh=4IkYm12Xm40qZ4Fx7s8GjYsSBQxNdQAXgH2rzdNq4sw=;
+	s=arc-20240116; t=1711998186; c=relaxed/simple;
+	bh=JbQ/vyagne1B2SNAZ1pSK9x8j0xrTBqxnXBPQrwReEA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sq9OXk9HhAdw0/CvxN2/My5zO5MYx5opPuTt/L5NeduUVcYxhVPxra24P25/wJHKre0+lweM/fULtkECUHcXu5wpHak8/tu8kDXdmnWbTNv+srf9U8tVzQodX/tKjvQ8ieMEz+LAe/tRaX2YaQefYwvxYySTPXJSKqzt20Bi3QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inka.de; spf=pass smtp.mailfrom=inka.de; arc=none smtp.client-ip=193.197.184.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inka.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inka.de
-Received: from mail.berkhan-weisser.de ([2a03:4000:54:b9a::4])
-	by mail.inka.de with esmtpsa 
-	id 1rrJiE-00ArAD-30; Mon, 01 Apr 2024 17:36:42 +0200
-Received: from 127.0.0.1 (helo=localhost.localdomain)
-	by mail.berkhan-weisser.de with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <Enrik.Berkhan@inka.de>)
-	id 1rrJiD-003wxe-30;
-	Mon, 01 Apr 2024 17:36:41 +0200
-Message-ID: <85837371eadac58dec812c0be14264152ee1e5fd.camel@inka.de>
-Subject: Re: [PATCH 1/1] platform/x86/intel/hid: Don't wake on 5-button
- releases
-From: Enrik Berkhan <Enrik.Berkhan@inka.de>
-To: Linux regressions mailing list <regressions@lists.linux.dev>, David
- McFarland <corngood@gmail.com>, Chris Feng <chris.feng@mediatek.com>
-Cc: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Alex Hung
- <alexhung@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Ilpo
+	 Content-Type:MIME-Version; b=NjibEzeIE4linYMskbtOxCnmoXJ4CFXxmoZHNSVGNFcQkuBeTT6x0eg/VoLZi5ascGbDipSO01j5LFScKmialA8TNdmlSccqjp4zT/ueroHFnEXghylkrLAJUp0nl3sJmlwoFXg6P8Z/mOnYAKAz71tRRBDkiGged8dh1UlK0Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bAc4K7FD; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bAc4K7FD"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 431IvYNB011088;
+	Mon, 1 Apr 2024 19:02:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=JbQ/vyagne1B2SNAZ1pSK9x8j0xrTBqxnXBPQrwReEA=;
+ b=bAc4K7FDIfOzcAy62OkeeAUsX6ql6uHvU/ukjq5DsKj7m96BB1g3nuoRzKfPz/IUm1xt
+ 0fy2cUAG1IgJqQH24E3k0a3ZPX3Z/7hozrvV/+m5MjL4+LdTcbBoT9ZF7AmMq58FUOyD
+ 0ztKcecNXpz9I5+juG+tT9Of/8Bpd6hrSvYBKYCznnVYqCVWK8PnQuoI9gEG5xt3Rc6+
+ L12jo4rcmbD+5bevoeW6ZwlgCvmnMzvTi0SnUHxeamPh0vqoqgZXDEmqxkt4Ig3Zkq4W
+ sdoPpLXleVhq4Kl7GHQYBmIM10vOyMubCxbpyWbqbiKxNCDfRJDOugnp/33z8skRRDmV Kg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x82nf00gs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Apr 2024 19:02:23 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 431J2MA1020505;
+	Mon, 1 Apr 2024 19:02:22 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x82nf00gn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Apr 2024 19:02:22 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 431J2Ds3015234;
+	Mon, 1 Apr 2024 19:02:21 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x6y9ksk1b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Apr 2024 19:02:21 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 431J2Iru23134946
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 1 Apr 2024 19:02:20 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 536B058058;
+	Mon,  1 Apr 2024 19:02:18 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A75E25805C;
+	Mon,  1 Apr 2024 19:02:15 +0000 (GMT)
+Received: from li-479af74c-31f9-11b2-a85c-e4ddee11713b.ibm.com (unknown [9.61.184.184])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  1 Apr 2024 19:02:15 +0000 (GMT)
+Message-ID: <00311e8bb63ba873da9906d87e49499f40df5134.camel@linux.ibm.com>
+Subject: Re: [PATCH vhost v7 2/6] virtio: remove support for names array
+ entries being null.
+From: Eric Farman <farman@linux.ibm.com>
+To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>, virtualization@lists.linux.dev
+Cc: Richard Weinberger <richard@nod.at>,
+        Anton Ivanov
+ <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg
+ <johannes@sipsolutions.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ilpo
  =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>,  LKML
- <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
-Date: Mon, 01 Apr 2024 17:36:35 +0200
-In-Reply-To: <1198933e-bf89-4237-a6e8-f7daeeebf885@leemhuis.info>
-References: <20240318191153.6978-1-corngood@gmail.com>
-	 <20240318191153.6978-2-corngood@gmail.com>
-	 <1198933e-bf89-4237-a6e8-f7daeeebf885@leemhuis.info>
-Autocrypt: addr=Enrik.Berkhan@inka.de; prefer-encrypt=mutual;
- keydata=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
- Dh1pYX8125Sys26JeDfnh3bnI=
-Content-Transfer-Encoding: quoted-printable
+        Vadim
+ Pasternak <vadimp@nvidia.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck
+ <cohuck@redhat.com>, Halil Pasic <pasic@linux.ibm.com>,
+        Heiko Carstens
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev
+ <agordeev@linux.ibm.com>,
+        Christian Borntraeger
+ <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        "Michael
+ S. Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason
+ Wang <jasowang@redhat.com>, linux-um@lists.infradead.org,
+        platform-driver-x86@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org
+Date: Mon, 01 Apr 2024 15:02:15 -0400
+In-Reply-To: <20240328080348.3620-3-xuanzhuo@linux.alibaba.com>
+References: <20240328080348.3620-1-xuanzhuo@linux.alibaba.com>
+	 <20240328080348.3620-3-xuanzhuo@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.0 
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: P1ukwj2SO_fm-loIj3BYJeRlaiRy_jcA
+X-Proofpoint-GUID: coub_UfOYCf5qBMsA2tFbBkXJ8453ebI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-01_14,2024-04-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1011 malwarescore=0 spamscore=0 adultscore=0 mlxlogscore=999
+ bulkscore=0 lowpriorityscore=0 mlxscore=0 suspectscore=0 impostorscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2404010134
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
-
-On Fri, 2024-03-29 at 14:51 +0100, Linux regression tracking (Thorsten
-Leemhuis) wrote:
-> [CCing Chris, who authored the culprit; also CCing the platform folks
-> and a few lists]
-
-(Intentionally replying to the "wrong" e-mail to get the enlarged
-recipient list for free ...)
-
+On Thu, 2024-03-28 at 16:03 +0800, Xuan Zhuo wrote:
+> commit 6457f126c888 ("virtio: support reserved vqs") introduced this
+> support. Multiqueue virtio-net use 2N as ctrl vq finally, so the
+> logic
+> doesn't apply. And not one uses this.
 >=20
-
-> Regarding the patch itself: hopefully this mail will get things
-> moving.
+> On the other side, that makes some trouble for us to refactor the
+> find_vqs() params.
 >=20
-> [1]
-> https://lore.kernel.org/linux-pm/20240318191153.6978-1-corngood@gmail.com=
-/
+> So I remove this support.
 >=20
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker'
-> hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
->=20
-> #regzbot poke
->=20
-> > Signed-off-by: David McFarland <corngood@gmail.com>
+> Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> Acked-by: Jason Wang <jasowang@redhat.com>
+> ---
+> =C2=A0arch/um/drivers/virtio_uml.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 8 ++++----
+> =C2=A0drivers/remoteproc/remoteproc_virtio.c | 11 ++++-------
+> =C2=A0drivers/s390/virtio/virtio_ccw.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 8 ++++----
+> =C2=A0drivers/virtio/virtio_mmio.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 | 11 ++++-------
+> =C2=A0drivers/virtio/virtio_pci_common.c=C2=A0=C2=A0=C2=A0=C2=A0 | 18 +++=
+++++++---------
+> =C2=A0drivers/virtio/virtio_vdpa.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 | 11 ++++-------
+> =C2=A0include/linux/virtio_config.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> =C2=A07 files changed, 30 insertions(+), 39 deletions(-)
 
-Tested-by: Enrik Berkhan <Enrik.Berkhan@inka.de>
-
-> > > ---
-> > =C2=A0drivers/platform/x86/intel/hid.c | 8 +++++++-
-> > =C2=A01 file changed, 7 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/platform/x86/intel/hid.c
-> > b/drivers/platform/x86/intel/hid.c
-> > index 7457ca2b27a6..707de9895965 100644
-> > --- a/drivers/platform/x86/intel/hid.c
-> > +++ b/drivers/platform/x86/intel/hid.c
-> > @@ -504,6 +504,7 @@ static void notify_handler(acpi_handle handle,
-> > u32 event, void *context)
-> > =C2=A0	struct platform_device *device =3D context;
-> > =C2=A0	struct intel_hid_priv *priv =3D dev_get_drvdata(&device-
-> > >dev);
-> > =C2=A0	unsigned long long ev_index;
-> > +	struct key_entry *ke;
-> > =C2=A0	int err;
-> > =C2=A0
-> > =C2=A0	/*
-> > @@ -545,11 +546,16 @@ static void notify_handler(acpi_handle
-> > handle, u32 event, void *context)
-> > =C2=A0		if (event =3D=3D 0xc0 || !priv->array)
-> > =C2=A0			return;
-> > =C2=A0
-> > -		if (!sparse_keymap_entry_from_scancode(priv-
-> > >array, event)) {
-> > +		ke =3D sparse_keymap_entry_from_scancode(priv-
-> > >array, event);
-> > +
-> > +		if (!ke) {
-> > =C2=A0			dev_info(&device->dev, "unknown event
-> > 0x%x\n", event);
-> > =C2=A0			return;
-> > =C2=A0		}
-> > =C2=A0
-> > +		if (ke->type =3D=3D KE_IGNORE)
-> > +			return;
-> > +
-> > =C2=A0wakeup:
-> > =C2=A0		pm_wakeup_hard_event(&device->dev);
-> > =C2=A0
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAEBCAAdFiEEbLyQBMI0qAWiF6l31AjqSkbLPKQFAmYK1IQACgkQ1AjqSkbL
-PKSUXwv/YWiU334Osus+niffw9gN94vCQid6OWuTIbX2zMNIunHmpHouMtfo6dpb
-7Qsyaz0sxaUEclRPLf/bSAV8zWromM/4Xoa/DoBq+GPOLle5wTJAlislhZVfDZFX
-FZ0EfUg+MvThqlJD8yhGNJWGVnSn92hDid7yy5Y/BSWTPCNhRxEsqy+d0pN82EnD
-0mqWnpfG28uqK6dtOLnvbiOuWQhgKYerKFYHXw8FLxZV0eKb3+RqBFf6ZdsAjUEC
-+d7G9Oq4pc9jxZNvOMop+z3Eskd/bD8Wi2aDtR1qcRENMaK0ucevTuOjGL8Gh80c
-SbgKu2eU/qVlbnVrcaPgpB0CXXza7SYUynw5XWB8jBWOj6w2nxpnQPm5a0Z5aNYw
-/kLuabhSommEmUIJtoOA2vgO8D0ACfF2n95cNXaJRiOhuag3SRoair50TOzmf09Z
-4uco5iaWeIQwEpVFGdy+qh0V18kYclnNMZHC9bhO6heBDLB9Wy/iXDxko9tMXm/v
-XnfAKKw9
-=3DudJV
------END PGP SIGNATURE-----
+Acked-by: Eric Farman <farman@linux.ibm.com> # s390
