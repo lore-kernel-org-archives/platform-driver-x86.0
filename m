@@ -1,101 +1,93 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB46779DD
-	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Apr 2024 06:24:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7434115A4
+	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Apr 2024 08:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711952675; cv=none; b=DLUpOYzGB1z+AN40AlMCm9ljJZqHq5JW6amFC/lIFTwDIywxZ1qnj5QJUUNZmw7vj85wPqhK1xVBs1860m3iUArT393M6BSM+bIaTlJTu0l0XC+cZNfdDLt4CZFK13mrdW/0LhG12fGnDvu7MddCfYAxYMSkJtFvTZtVMaIjWmo=
+	t=1711958448; cv=none; b=LDaKBPVzJ2sQ+dowNOTGHgd09kGwVkm1B2Mqi1qvY8CUlFybnVPdmkoPkhB14tDpMzMC1a181lJ8FBky0MamdSE1A4mDdZa8hVaKSFjnZBCFJ9anCnDLUtgOlxb2uOcfD0zmiO26+Qm6LQnvbv+7gyS3ooUVjSojbFedZB5C+E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711952675; c=relaxed/simple;
-	bh=tNXqN5M71+tjw6FpcPPDIY/Rszo4GvwiHe9uN7gj2b8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ljkk7/vpozuZK0Ub7UKPSvFh7wX5bkWJQEec7bc9tM2OWqVw/KpP8UigD1EUrEBPFVpP0lQTuQbjEZXQs0OjFQS0bzuH8Vic39OWxKIfKcfjQS1lMp4fuEQXQdibEd5zDhU1aSLktY3sTJ+qusDvCOHjS07rGvBAeevUsMU8Tk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rrB5a-0000GP-Mi; Mon, 01 Apr 2024 08:24:14 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rrB5Z-009k0b-D4; Mon, 01 Apr 2024 08:24:13 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rrB5Z-00Dx64-0z;
-	Mon, 01 Apr 2024 08:24:13 +0200
-Date: Mon, 1 Apr 2024 08:24:13 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: llvm@lists.linux.dev, Hans de Goede <hdegoede@redhat.com>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Maximilian Luz <luzmaximilian@gmail.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/9] surface3_power: avoid format string truncation
- warning
-Message-ID: <yiqdxzxtcw4dpths24sl4x2qwmuf2bj5lnayd3pclk5zf4h3mm@oc4l3ojar2i4>
-References: <20240326223825.4084412-1-arnd@kernel.org>
- <20240326223825.4084412-6-arnd@kernel.org>
+	s=arc-20240116; t=1711958448; c=relaxed/simple;
+	bh=ax+e7SgtbWWwURBN/iIkK+1h0FQNLoOEBJMw6w7lwdw=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Cxk9EBZqSY3Z6enoc4rXKUk3c5Pk20sjhcDWs2vveiJVIemhLwXH6JeQ3jW0FiHPtLdBX7GwkJA8k93g57tzENJoG12oF84V2dOQOIeeMx4Ujzi1tw1qhzLBT1QaR4X1ruqwi3dGFMzb2dk9X5rdlsii43xMuueB+0Ivv/OcAfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uaT770zc; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uaT770zc"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 04C05C43394
+	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Apr 2024 08:00:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711958448;
+	bh=ax+e7SgtbWWwURBN/iIkK+1h0FQNLoOEBJMw6w7lwdw=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=uaT770zc2uTBeMpyI4hzbpsHJ4oUz5woDGG0iNa06vu7C9FBhquLLBDaHhOq2RrSo
+	 8Sf1tcN8EB0kPJTIie5eDAVAeGnT5VTu4AKZUlagoocObR7r6LbgyRjzvxcaqog++s
+	 HO/dstnZD5tFz7F99GqffWh04UhXwLxZojmqc+QBeJB6jgcoZILtEpVuoSpTdMupKz
+	 bPVAojDlzUnwQHg8ZmZLNg3sfKxOK3TsGTB78l+yFDgeSjrQY9q6m+E49KYKRyVTxs
+	 utSPIDEDzSbbB2fwWbXN7YC5WPU6D9U5sEDlYOHpdvWmZfZ0F0tsMiJVFLJt/l7iPR
+	 TheURYLUaF7PA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id EE459C53BD8; Mon,  1 Apr 2024 08:00:47 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
+ resuming after unplugging the power cord during sleep
+Date: Mon, 01 Apr 2024 08:00:47 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: blocking
+X-Bugzilla-Who: ries.infotec+kernel@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218305-215701-xQKnRNKyfN@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
+References: <bug-218305-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="v26yt34kxi4ilpyq"
-Content-Disposition: inline
-In-Reply-To: <20240326223825.4084412-6-arnd@kernel.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
---v26yt34kxi4ilpyq
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+--- Comment #40 from Peter Ries (ries.infotec+kernel@gmail.com) ---
+Hello everyone. I just read through this bugreport as I have the same probl=
+em
+on my HP Elitebook 845 G10 with a 7840U CPU. It randomely gets stuck at 544=
+MHz.
 
-Hello,
+I'm running Endeavour OS (Arch based) with the latest Kernel (6.8.2-arch2-1)
+and Firmware (core/linux-firmware 20240312.3b128b60-1).
 
-just a nitpick:
+I thought things would be fixed now, but I just had the hanging CPU freq ag=
+ain.
 
-On Tue, Mar 26, 2024 at 11:38:04PM +0100, Arnd Bergmann wrote:
-> Change the format string two print two less bytes so it always fits. The =
-string
+As the bug is not closed and last comment is nearly 4 weeks old I just want=
+ed
+to know if the fix is not official yet...
 
-s/two/to/
+Thanks for an update and to all for investigating here :)
 
-> is still truncated, so there is no change in behavior, but the compiler no
-> longer warns about it.
-
-Best regards
-Uwe
+(Meanwhile I'll try the "sudo cpupower frequency-set -g powersave" workarou=
+nd
+to see if it helps to circumvent an annoying reboot)
 
 --=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+You may reply to this email to add a comment.
 
---v26yt34kxi4ilpyq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYKUwwACgkQj4D7WH0S
-/k69qwgAo8++BQ8OE5ajtNU6wrlQxb07HGXRy3w/Nb7iL0ELQ6yDY51J7dRFylDo
-/hmKPWn6X+ybKlK1W1VXlA1Qm+UbMHaj3KhHMUR9rFAC2r1SLzxJ1DpP0zdXe1Qw
-h/rErFvH2tgtF/C9ZeNNWputJhMsSlTkJJUJYACkEb8hdEDDbv/wB0y/wBsl3uBi
-KFdxlCFmr54MtZbQ+khq31iVIrmbAqHKL8VAVPiiuB16I0OJwsOzL5C0mr/w1t6F
-C2Ijqcy2kHwcdzzNQYRwAJR48nwZNc6Vp3G2jD2FlhuptBMngX1RrFpUeYkAgjbt
-04h9y2wTPfVkwMUViYBW/huM0Fgi+g==
-=VQ95
------END PGP SIGNATURE-----
-
---v26yt34kxi4ilpyq--
+You are receiving this mail because:
+You are watching the assignee of the bug.=
