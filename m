@@ -1,192 +1,245 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6E7143C74
-	for <platform-driver-x86@vger.kernel.org>; Sun, 31 Mar 2024 10:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070BBA59
+	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Apr 2024 01:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711882298; cv=none; b=P1IICCvx9ca2lF3ATz4e6Hf+mqOvjhM+08RtH+NstJYLmcI3dROExZAUW34YmhLxKMbAmFb1AKgrXZ9uY+pDHbtRkMETWEJozQZpvrrBEKCF7i0miS1kUKECwdQ/Eb0R/5guiwM+XxOg2zS9K1lZKGcwOmgZG2MWvjMGb9f5+8A=
+	t=1711935616; cv=none; b=LaHP8lL/m/EwDRb19FwbAL4H30vXim8vqy8cHCPzgbkjQpckE76gmUKUAcmDA86ebPBBmyDD1lI2pkd/dgrVla/nRIg9dyyxUPNLX4/V0YMQtc1hs6bCNxmu4NGh9/Y9/C+4a5BRnyROUXDag+tS4UcJfsKKd+NPLx+1r1zH/ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711882298; c=relaxed/simple;
-	bh=pcdIiEhM2l/zdXKf8Ui9dBMz5cNT2DJKO3WWCjp2iwA=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:In-Reply-To:
-	 Content-Type; b=Qu2DcTW31vtK1Q210Tg1F3B2BonOUShWI+Hihwfakk5I57g/xHpT8s9luzVrg85WGu5FxdwtuBoXxGDLmCGA2HuQ5AOF6DGfhTwO3GNPGEy4zQcrdGevgc3x/Lvgj+E4ubcq8iUMm/lJt6WoQuWYcHi2h1r/LTA41x/91d/hrNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cpp.in; spf=none smtp.mailfrom=cpp.in; dkim=pass (2048-bit key) header.d=cpp-in.20230601.gappssmtp.com header.i=@cpp-in.20230601.gappssmtp.com header.b=aBNd2L+h; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cpp.in
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cpp.in
+	s=arc-20240116; t=1711935616; c=relaxed/simple;
+	bh=CVvjRkKEQ1K8GZwwAs6XND1VVBqZ3gscg8qbSw1O88Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=vDyrSqjDIFQmaN8C1dtI6FvoQYqtrMpaLMNnHbw/N9FNp83rz+XZYLAyNzosGeiUtnInIMulC65XgIdwV0geltU+MAmOLkW9RXzfhM/LjaINY2ybtXBpVU7SMxSsDkqTe8pHcERlgvKi31ACQABF2xu6bNznsfpj77BPWL64FaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UyFOkA0n; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cpp-in.20230601.gappssmtp.com header.i=@cpp-in.20230601.gappssmtp.com header.b="aBNd2L+h"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5d81b08d6f2so2491637a12.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 31 Mar 2024 03:51:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cpp-in.20230601.gappssmtp.com; s=20230601; t=1711882294; x=1712487094; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:cc:to
-         :subject:from:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JiyEjUctzgw3d5cbSMfpqrqZz263bg9AlN7/QV97RU8=;
-        b=aBNd2L+hxc81bM21Uuez4jAwYVhyEEzN3xKS7QvFuFW4PI2WG/FxYGyOYqHxNsMKCB
-         jQ9UtS+1P4SsPfvuk/t4r1ic1ZBG1pmMlez99z1keJ2q974Zz7OJqCcbzrdg05MZ0KGW
-         z23AgaOwVKeiEV/Xyilcfmt37fWzoKdl6Cq+v7qmjd7E1M9ox4Y3qUuRfonKeA9or6wS
-         7mIn1z03Jn+JD+tiOHWrYk+w1aYwTF0dsS/GeCIOt0xCytsbpqEJ+X9oizkuf81r/N03
-         gxNF0zpGtRCFhs3uLpThM3vcDAaDgFINvtshtiVGerG279tm5nyA1/Q1Vo8ZF2TGWMCD
-         UvBA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UyFOkA0n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711935613;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IBzwZVE6/XZJhG9lhNuBo21FIhFKpdiDUdcBLxSjjtE=;
+	b=UyFOkA0nLKjU4Pxr6LprSsmMqO276xw0Qt7acLnHns87fUU7KIJ+yi+LTDUsO7WUHwYYQQ
+	+a0XY+YegOEir7XREWO8gW+l/sbIJ9wnfAQKCx82CsMJF1a8M5BUmfL3a0cUtHJ2G6SQlB
+	eQ2SlgbSCus5meCImu1NxqDZ55p5rTI=
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
+ [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-482-SzsnSB0-M4-ci6XvNkM8vg-1; Sun, 31 Mar 2024 21:40:11 -0400
+X-MC-Unique: SzsnSB0-M4-ci6XvNkM8vg-1
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-5d8df7c5500so2051347a12.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 31 Mar 2024 18:40:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711882294; x=1712487094;
-        h=content-transfer-encoding:in-reply-to:content-language:cc:to
-         :subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JiyEjUctzgw3d5cbSMfpqrqZz263bg9AlN7/QV97RU8=;
-        b=TXBh2iuUDvhJuIAkmMo6uofyQG8Y5oGhf7LPNw3w9CKZAHTGLq6wKKk/pFGCG56zeK
-         AT/+R3t1L2TNiBQNDpmEYkX5/247hPD2skkaGHmuaiZG2Bs6BvXPxT+sGimTe27XOasE
-         ockwNo6JN3EcXqQ1cHPCgEoFcTVmramok1etlQSgVwRF4VnG1PcSyhsMXa8N9Ch4yn7h
-         LZ3rnOIZ4BQU3BSOOLNeyCiU8buKqxDsrMoB/kFG+SuatFW9r8xkorznZSBfQb8aULRh
-         fkOcAFSajd6P22BzPwGK6vXaRGlh8K+RcwEIK/2hNOgg4HUsAZQxSK3j/O/CO0H+bXRH
-         ntXw==
-X-Forwarded-Encrypted: i=1; AJvYcCW1MA7WTOSnvCoOedYxH3AuxQhkYq0HVegTBcdb7RUPYNs6uqs0+JV7CS0vqMp+6cjJbvqQObGi9pFG359TfOiHEpr2iQYkot5ovZY76Gzlq06voA==
-X-Gm-Message-State: AOJu0YyuojB8APE85s7IGrQ/aL77Ub31Gp7mxJ8jaJwV+xPVtxd+sKPz
-	/8hTJrsUqkq+yj1hivDKL9IESzBkow005mgtJNdPkdIDkT/6S2hEot4y42/zQg==
-X-Google-Smtp-Source: AGHT+IGbCXPjBovSTHKR9172xf/YfQYGs9t0Y+nud/nfFHTvv80yMaWcmcBoZV1xkyeTwbzmrc7sPQ==
-X-Received: by 2002:a17:903:228e:b0:1e0:b687:c5d1 with SMTP id b14-20020a170903228e00b001e0b687c5d1mr8767015plh.64.1711882294570;
-        Sun, 31 Mar 2024 03:51:34 -0700 (PDT)
-Received: from [192.168.3.23] (mx-ll-180.183.76-49.dynamic.3bb.co.th. [180.183.76.49])
-        by smtp.gmail.com with ESMTPSA id s7-20020a170902ea0700b001e0a7e617d9sm6642277plg.82.2024.03.31.03.51.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 31 Mar 2024 03:51:34 -0700 (PDT)
-Message-ID: <bde342c6-be23-4afa-978f-9503e3c11223@cpp.in>
-Date: Sun, 31 Mar 2024 13:51:28 +0300
+        d=1e100.net; s=20230601; t=1711935610; x=1712540410;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IBzwZVE6/XZJhG9lhNuBo21FIhFKpdiDUdcBLxSjjtE=;
+        b=ba1ZoeloOcAxiaszhgTyyDdQIIeagvcSp8fO2UN5uFvt6sCo50G8XGsew5HtE9DJuw
+         ReV5QtQoeEgwTLh149s49aH3fpvwFxZUOjDZWY+iHjLDyDrAhhzMGnN47TP5AT3YpNvE
+         3KbdTj2J9XV/rLv+6E15AjQNAW4MMYX6KtdN8xkl2FawVGWrI3Ei3SY63rsU8I2yXWjb
+         d8vempwW1RxX77pl7PaNcdPL4yv6NhZkugubzHwK8u4bx3nU0TQE+nKE3qxWZ4mfnEoI
+         8JCGNX9eLiL0ZKxYD0ZO5Fata1znoXiFF7jk1skq/zDsfgIpc2bbUWY6mQJxBPWDoeoO
+         Zopg==
+X-Forwarded-Encrypted: i=1; AJvYcCUKsNeBJ+Aa9a76SHxrUYyWkQcjSSxCTZ4jKGEVsVAvdGjoWNWOWJeQOWxVC6Mrr0lpjutybqNf7CJ+lMwiJ6NPGs8V57Z/6ZBaDAQyKko0aNZWuQ==
+X-Gm-Message-State: AOJu0Yw5x9fEHC36z6IzHmmfVObeqcTQexozJvy+zHMITnxz7yVAmdDl
+	YLBSUZvDyQ+lo5QXaFAqHgFGqy/SDefXYzuUL/oC/xpdaDHEPM1v9U4xC/HaM8qk0eIODNYr4iH
+	1Vs9fyal0IEF/8+WU+kUEtEZPgTVPwY3++BOtTROWxX09xAEWC3eA/1x8HsxRiIkQ3HEh2yy+J5
+	rmsOlKuadjoAf2M8dOCIZh+pAW0qcbkYtdsH8OnhUNdr3LZA==
+X-Received: by 2002:a17:902:7005:b0:1e0:a3dd:82df with SMTP id y5-20020a170902700500b001e0a3dd82dfmr6524525plk.38.1711935610174;
+        Sun, 31 Mar 2024 18:40:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEOam+CBLcJgkKx62NYgxq8ze9IbSjrgmvGMm3dvSXCb5VwSU29/cplx6cbZS3eX9jokod62DqaTZD9RRyNze8=
+X-Received: by 2002:a17:902:7005:b0:1e0:a3dd:82df with SMTP id
+ y5-20020a170902700500b001e0a3dd82dfmr6524516plk.38.1711935609797; Sun, 31 Mar
+ 2024 18:40:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Anthony I Gilea <i@cpp.in>
-Subject: Re: [PATCH] platform/x86: int3472: Add handshake GPIO function
-To: hdegoede@redhat.com
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- bingbu.cao@intel.com, dan.scally@ideasonboard.com, djrscally@gmail.com,
- hao.yao@intel.com, linux-media@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, sakari.ailus@intel.com
-Content-Language: en-US
-In-Reply-To: <186830d2-dd18-7948-b2c5-bcda934ad3e8@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240324150107.976025-1-hpa@redhat.com> <20240324150107.976025-6-hpa@redhat.com>
+ <nakbogrilul6skiab5opfsqhhqfotfgmb47wyd3xbgbpf6hurc@6xshfz3obj7m>
+In-Reply-To: <nakbogrilul6skiab5opfsqhhqfotfgmb47wyd3xbgbpf6hurc@6xshfz3obj7m>
+From: Kate Hsuan <hpa@redhat.com>
+Date: Mon, 1 Apr 2024 09:39:51 +0800
+Message-ID: <CAEth8oE21tdcEgb9K_d7cY=nBaazkVvcBg2piQeALwRiB2eY+w@mail.gmail.com>
+Subject: Re: [PATCH v5 RESEND 5/6] power: supply: power-supply-leds: Add
+ charging_red_full_green trigger for RGB LED
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	=?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
+	linux-kernel@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi
 
-Hello,
-
-I'm trying to get camera on HP Spectre x360 14-eu0xxx (2024) laptop to work.
-I was able to make main sensor driver (ov08x40) to play nice with IPU6,
-INT3472 and libcamera-SoftISP and the resulting image quality is absolutely
-usable and even surprisingly good.
-
-This laptop also uses this "MIPI aggregator".
-
-
-> Hi,
-> 
-> On 10/7/23 04:12, Hao Yao wrote:
-> > Handshake pin is used for Lattice MIPI aggregator to enable the
-> > camera sensor. After pulled up, recommend to wail ~250ms to get
-> > everything ready.
-> 
-> If this is a pin on the "Lattice MIPI aggregator" and
-> not on the sensor itself then this really should be
-> modeled as such and should not be registered as a GPIO
-> consumed by the sensor since the actual sensor does not
-> have a handshake pin at all.
-> 
-> Also we really don't want to need to patch all involved
-> sensor drivers to toggle a handshake pin, especially since
-> the sensor itself does not physically have this pin.
-> 
-> Can you explain a bit more:
-> 
-> 1. What the "Lattice MIPI aggregator" is.
-> 2. What its functions are, does this control reset + pwdn
->    GPIOs for the sensor? Voltages to the sensor? Clk
->    to the sensor ?
-
-It acts like MIPI switch as no MIPI data gets from the sensor to IPU6 if
-handshake signal is not asserted. Eventually IPU6 times out with "start stream
-of firmware failed" message. Any further attempts to start streaming lead to
-a panic.
-
-I2C communication is not affected by the handshake signal but it looks like
-reset signal is also going through this "MIPI aggregator" as it takes about
-150ms for the sensor to reliably start responding via I2C after the reset
-is deasserted. It should be about few ms if the reset signal was connected to
-the sensor directly.
-
-> 3. How the aggregator is connected to both the main
->    CPU/SoC as well as how it is connected to the sensor ?
->    Some example diagram would be really helpful here.
-> 
-> Then with this info in hand we can try to come up
-> with a way how to model this.
-> 
-> Assuming this controls the entire power-up sequence
-> for the sensor then I think it could be modelled
-> as a GPIO regulator. This also allows making the
-> regulator core take care of the necessary delay
-> between setting the GPIO and trying to talk to
-> the sensor.
-
-Are there any updates on how this signal should be implemented? For now I'm
-just applying this patch and asserting it from the sensor driver.
-
-Regards
-
-
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
-> > 
-> > Signed-off-by: Hao Yao <hao.yao@intel.com>
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Sat, Mar 30, 2024 at 12:24=E2=80=AFAM Sebastian Reichel <sre@kernel.org>=
+ wrote:
+>
+> Hello Kate,
+>
+> On Sun, Mar 24, 2024 at 11:01:06PM +0800, Kate Hsuan wrote:
+> > Add a charging_red_full_green LED trigger and the trigger is based on
+> > led_mc_trigger_event() which can set an RGB LED when the trigger is
+> > triggered. The LED will show red when the battery status is charging.
+> > The LED will show green when the battery status is full.
+> >
+> > Link: https://lore.kernel.org/linux-leds/f40a0b1a-ceac-e269-c2dd-0158c5=
+b4a1ad@gmail.com/T/#t
+> > Signed-off-by: Kate Hsuan <hpa@redhat.com>
 > > ---
-> >  drivers/platform/x86/intel/int3472/common.h   | 1 +
-> >  drivers/platform/x86/intel/int3472/discrete.c | 5 +++++
-> >  2 files changed, 6 insertions(+)
-> > 
-> > diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
-> > index 655ae3ec0593..3ad4c72afb45 100644
-> > --- a/drivers/platform/x86/intel/int3472/common.h
-> > +++ b/drivers/platform/x86/intel/int3472/common.h
-> > @@ -23,6 +23,7 @@
-> >  #define INT3472_GPIO_TYPE_POWER_ENABLE				0x0b
-> >  #define INT3472_GPIO_TYPE_CLK_ENABLE				0x0c
-> >  #define INT3472_GPIO_TYPE_PRIVACY_LED				0x0d
-> > +#define INT3472_GPIO_TYPE_HANDSHAKE				0x12
-> >  
-> >  #define INT3472_PDEV_MAX_NAME_LEN				23
-> >  #define INT3472_MAX_SENSOR_GPIOS				3
-> > diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-> > index b644ce65c990..4753161b4080 100644
-> > --- a/drivers/platform/x86/intel/int3472/discrete.c
-> > +++ b/drivers/platform/x86/intel/int3472/discrete.c
-> > @@ -111,6 +111,10 @@ static void int3472_get_func_and_polarity(u8 type, const char **func, u32 *polar
-> >  		*func = "power-enable";
-> >  		*polarity = GPIO_ACTIVE_HIGH;
-> >  		break;
-> > +	case INT3472_GPIO_TYPE_HANDSHAKE:
-> > +		*func = "handshake";
-> > +		*polarity = GPIO_ACTIVE_HIGH;
-> > +		break;
-> >  	default:
-> >  		*func = "unknown";
-> >  		*polarity = GPIO_ACTIVE_HIGH;
-> > @@ -201,6 +205,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
-> >  	switch (type) {
-> >  	case INT3472_GPIO_TYPE_RESET:
-> >  	case INT3472_GPIO_TYPE_POWERDOWN:
-> > +	case INT3472_GPIO_TYPE_HANDSHAKE:
-> >  		ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, func, polarity);
-> >  		if (ret)
-> >  			err_msg = "Failed to map GPIO pin to sensor\n";
-> 
+>
+> Have you considered using orange instead of red? Using orange as
+> charging indicator seems to be more common nowadays and allows
+
+Sounds good.
+I'll change the color for them.
+
+Thank you
+
+>
+> green  =3D battery full
+> orange =3D battery charging
+> red    =3D battery empty / battery dead / error
+>
+> Greetings,
+>
+> -- Sebastian
+>
+> >  drivers/power/supply/power_supply_leds.c | 25 ++++++++++++++++++++++++
+> >  include/linux/power_supply.h             |  2 ++
+> >  2 files changed, 27 insertions(+)
+> >
+> > diff --git a/drivers/power/supply/power_supply_leds.c b/drivers/power/s=
+upply/power_supply_leds.c
+> > index c7db29d5fcb8..bd9c8fec5870 100644
+> > --- a/drivers/power/supply/power_supply_leds.c
+> > +++ b/drivers/power/supply/power_supply_leds.c
+> > @@ -22,6 +22,8 @@
+> >  static void power_supply_update_bat_leds(struct power_supply *psy)
+> >  {
+> >       union power_supply_propval status;
+> > +     unsigned int intensity_green[3] =3D {255, 0, 0};
+> > +     unsigned int intensity_red[3] =3D {0, 0, 255};
+> >
+> >       if (power_supply_get_property(psy, POWER_SUPPLY_PROP_STATUS, &sta=
+tus))
+> >               return;
+> > @@ -36,12 +38,20 @@ static void power_supply_update_bat_leds(struct pow=
+er_supply *psy)
+> >               /* Going from blink to LED on requires a LED_OFF event to=
+ stop blink */
+> >               led_trigger_event(psy->charging_blink_full_solid_trig, LE=
+D_OFF);
+> >               led_trigger_event(psy->charging_blink_full_solid_trig, LE=
+D_FULL);
+> > +             led_mc_trigger_event(psy->charging_red_full_green_trig,
+> > +                                  intensity_green,
+> > +                                  3,
+> > +                                  LED_FULL);
+> >               break;
+> >       case POWER_SUPPLY_STATUS_CHARGING:
+> >               led_trigger_event(psy->charging_full_trig, LED_FULL);
+> >               led_trigger_event(psy->charging_trig, LED_FULL);
+> >               led_trigger_event(psy->full_trig, LED_OFF);
+> >               led_trigger_blink(psy->charging_blink_full_solid_trig, 0,=
+ 0);
+> > +             led_mc_trigger_event(psy->charging_red_full_green_trig,
+> > +                                  intensity_red,
+> > +                                  3,
+> > +                                  LED_FULL);
+> >               break;
+> >       default:
+> >               led_trigger_event(psy->charging_full_trig, LED_OFF);
+> > @@ -49,6 +59,10 @@ static void power_supply_update_bat_leds(struct powe=
+r_supply *psy)
+> >               led_trigger_event(psy->full_trig, LED_OFF);
+> >               led_trigger_event(psy->charging_blink_full_solid_trig,
+> >                       LED_OFF);
+> > +             led_mc_trigger_event(psy->charging_red_full_green_trig,
+> > +                                  intensity_red,
+> > +                                  3,
+> > +                                  LED_OFF);
+> >               break;
+> >       }
+> >  }
+> > @@ -74,6 +88,11 @@ static int power_supply_create_bat_triggers(struct p=
+ower_supply *psy)
+> >       if (!psy->charging_blink_full_solid_trig_name)
+> >               goto charging_blink_full_solid_failed;
+> >
+> > +     psy->charging_red_full_green_trig_name =3D kasprintf(GFP_KERNEL,
+> > +             "%s-charging-red-full-green", psy->desc->name);
+> > +     if (!psy->charging_red_full_green_trig_name)
+> > +             goto charging_red_full_green_failed;
+> > +
+> >       led_trigger_register_simple(psy->charging_full_trig_name,
+> >                                   &psy->charging_full_trig);
+> >       led_trigger_register_simple(psy->charging_trig_name,
+> > @@ -82,9 +101,13 @@ static int power_supply_create_bat_triggers(struct =
+power_supply *psy)
+> >                                   &psy->full_trig);
+> >       led_trigger_register_simple(psy->charging_blink_full_solid_trig_n=
+ame,
+> >                                   &psy->charging_blink_full_solid_trig)=
+;
+> > +     led_trigger_register_simple(psy->charging_red_full_green_trig_nam=
+e,
+> > +                                 &psy->charging_red_full_green_trig);
+> >
+> >       return 0;
+> >
+> > +charging_red_full_green_failed:
+> > +     kfree(psy->charging_blink_full_solid_trig_name);
+> >  charging_blink_full_solid_failed:
+> >       kfree(psy->full_trig_name);
+> >  full_failed:
+> > @@ -101,10 +124,12 @@ static void power_supply_remove_bat_triggers(stru=
+ct power_supply *psy)
+> >       led_trigger_unregister_simple(psy->charging_trig);
+> >       led_trigger_unregister_simple(psy->full_trig);
+> >       led_trigger_unregister_simple(psy->charging_blink_full_solid_trig=
+);
+> > +     led_trigger_unregister_simple(psy->charging_red_full_green_trig);
+> >       kfree(psy->charging_blink_full_solid_trig_name);
+> >       kfree(psy->full_trig_name);
+> >       kfree(psy->charging_trig_name);
+> >       kfree(psy->charging_full_trig_name);
+> > +     kfree(psy->charging_red_full_green_trig_name);
+> >  }
+> >
+> >  /* Generated power specific LEDs triggers. */
+> > diff --git a/include/linux/power_supply.h b/include/linux/power_supply.=
+h
+> > index c0992a77feea..1d7c0b43070f 100644
+> > --- a/include/linux/power_supply.h
+> > +++ b/include/linux/power_supply.h
+> > @@ -318,6 +318,8 @@ struct power_supply {
+> >       char *online_trig_name;
+> >       struct led_trigger *charging_blink_full_solid_trig;
+> >       char *charging_blink_full_solid_trig_name;
+> > +     struct led_trigger *charging_red_full_green_trig;
+> > +     char *charging_red_full_green_trig_name;
+> >  #endif
+> >  };
+> >
+> > --
+> > 2.44.0
+> >
+> >
+
+
+
+--=20
+BR,
+Kate
+
