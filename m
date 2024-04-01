@@ -1,39 +1,45 @@
 Received: from mail.inka.de (quechua.inka.de [193.197.184.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD104644C;
-	Mon,  1 Apr 2024 15:25:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6324501C;
+	Mon,  1 Apr 2024 15:36:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.197.184.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711985145; cv=none; b=VyWf1djRzsEbsvrnnOvb83/rvN5pDbiHjfOVq9DhBfxQ5qQ1mwaFCxpzvn/+zaf23V69fxpJxJT1y4YB/lvOdPW3zZhLFtEYmXI5x4NRa4lbwgwxUyWfQ0CI9IX6w4LrZRce+krwAgRjXtVnb0Gu0Ew79kDG74e62oUVNlGnDSY=
+	t=1711985810; cv=none; b=gRBoHAMRSppPND7vtpbIaneEUhLK51dposn1KRJ4MLMNhHBth3KGPLrpb7HrqiuZuBWMKKBM+AP5YaMn6ITRyafVJN1E+uTShjOXCTVhxB5MRLEjtOL/8qNBEERU4/i0KDt22JthRab30skQQcpu2WiW+un4dHAHfOnkOUw8M7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711985145; c=relaxed/simple;
-	bh=OeNqEg970RTZFsUUtlkvbwTO3+NJJk6oGB2hi48PVx4=;
+	s=arc-20240116; t=1711985810; c=relaxed/simple;
+	bh=4IkYm12Xm40qZ4Fx7s8GjYsSBQxNdQAXgH2rzdNq4sw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NVvBleHsU9Ic8D8oVLdwx31a7G1qlSEx2/nF+3EnyEwwXIl41bcXODXqwO0ua3N/pHrUWUe91e+XPS8r5x5YWHordoIZg1a09XJjbPPJRuF1C3VltuwW+I+hStckNlW1as/zKp18sjGurawfVUcEWpXz2Hn27hYXq4baG6+Ocbs=
+	 Content-Type:MIME-Version; b=sq9OXk9HhAdw0/CvxN2/My5zO5MYx5opPuTt/L5NeduUVcYxhVPxra24P25/wJHKre0+lweM/fULtkECUHcXu5wpHak8/tu8kDXdmnWbTNv+srf9U8tVzQodX/tKjvQ8ieMEz+LAe/tRaX2YaQefYwvxYySTPXJSKqzt20Bi3QE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inka.de; spf=pass smtp.mailfrom=inka.de; arc=none smtp.client-ip=193.197.184.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inka.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inka.de
 Received: from mail.berkhan-weisser.de ([2a03:4000:54:b9a::4])
 	by mail.inka.de with esmtpsa 
-	id 1rrJXW-00Ar1s-Fc; Mon, 01 Apr 2024 17:25:38 +0200
+	id 1rrJiE-00ArAD-30; Mon, 01 Apr 2024 17:36:42 +0200
 Received: from 127.0.0.1 (helo=localhost.localdomain)
 	by mail.berkhan-weisser.de with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.96)
 	(envelope-from <Enrik.Berkhan@inka.de>)
-	id 1rrJXW-003wrk-16;
-	Mon, 01 Apr 2024 17:25:38 +0200
-Message-ID: <590320d523ace70d3b1fc86735849229040b8886.camel@inka.de>
-Subject: Re: [PATCH] platform/x86/intel/hid: Ignore power button release in
- wakeup mode
+	id 1rrJiD-003wxe-30;
+	Mon, 01 Apr 2024 17:36:41 +0200
+Message-ID: <85837371eadac58dec812c0be14264152ee1e5fd.camel@inka.de>
+Subject: Re: [PATCH 1/1] platform/x86/intel/hid: Don't wake on 5-button
+ releases
 From: Enrik Berkhan <Enrik.Berkhan@inka.de>
-To: Alex Hung <alexhung@gmail.com>, David McFarland <corngood@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
-	 <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Date: Mon, 01 Apr 2024 17:25:22 +0200
-In-Reply-To: <20240401133919.4304-1-Enrik.Berkhan@inka.de>
-References: <20240401133919.4304-1-Enrik.Berkhan@inka.de>
+To: Linux regressions mailing list <regressions@lists.linux.dev>, David
+ McFarland <corngood@gmail.com>, Chris Feng <chris.feng@mediatek.com>
+Cc: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Alex Hung
+ <alexhung@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>,  LKML
+ <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
+Date: Mon, 01 Apr 2024 17:36:35 +0200
+In-Reply-To: <1198933e-bf89-4237-a6e8-f7daeeebf885@leemhuis.info>
+References: <20240318191153.6978-1-corngood@gmail.com>
+	 <20240318191153.6978-2-corngood@gmail.com>
+	 <1198933e-bf89-4237-a6e8-f7daeeebf885@leemhuis.info>
 Autocrypt: addr=Enrik.Berkhan@inka.de; prefer-encrypt=mutual;
  keydata=mQGNBF0BQWwBDACqVwNmsHX65pIZKLiW2zjQZDvALp9Xf09KwJyp1969Hxa4UqP4l+ORS
  Z9uKGYJuxJj1T7OiZ3WoXYKUrcLtrnotOrcBwmCgCtPQupfaXFUg1CnCuLsr3gclSG5Lt4V+/fkVd
@@ -79,34 +85,89 @@ MIME-Version: 1.0
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA256
 
-On Mon, 2024-04-01 at 15:39 +0200, Enrik Berkhan wrote:
-> Since commit 0c4cae1bc00d ("PM: hibernate: Avoid missing wakeup
-> events
-> during hibernation"), the return value of
-> hibernation_platform_enter() is
-> used. This will, for example, cancel every hibernation attempt if a
-> wakeup
-> event is registered during the (long) preparation time needed before
-> entering platform hibernate mode.
+On Fri, 2024-03-29 at 14:51 +0100, Linux regression tracking (Thorsten
+Leemhuis) wrote:
+> [CCing Chris, who authored the culprit; also CCing the platform folks
+> and a few lists]
 
-Oops, too late, already obsoleted by
-https://lore.kernel.org/all/20240318191153.6978-2-corngood@gmail.com/#t
+(Intentionally replying to the "wrong" e-mail to get the enlarged
+recipient list for free ...)
 
-Cheers,
-Enrik
+>=20
 
+> Regarding the patch itself: hopefully this mail will get things
+> moving.
+>=20
+> [1]
+> https://lore.kernel.org/linux-pm/20240318191153.6978-1-corngood@gmail.com=
+/
+>=20
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker'
+> hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+>=20
+> #regzbot poke
+>=20
+> > Signed-off-by: David McFarland <corngood@gmail.com>
+
+Tested-by: Enrik Berkhan <Enrik.Berkhan@inka.de>
+
+> > > ---
+> > =C2=A0drivers/platform/x86/intel/hid.c | 8 +++++++-
+> > =C2=A01 file changed, 7 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/platform/x86/intel/hid.c
+> > b/drivers/platform/x86/intel/hid.c
+> > index 7457ca2b27a6..707de9895965 100644
+> > --- a/drivers/platform/x86/intel/hid.c
+> > +++ b/drivers/platform/x86/intel/hid.c
+> > @@ -504,6 +504,7 @@ static void notify_handler(acpi_handle handle,
+> > u32 event, void *context)
+> > =C2=A0	struct platform_device *device =3D context;
+> > =C2=A0	struct intel_hid_priv *priv =3D dev_get_drvdata(&device-
+> > >dev);
+> > =C2=A0	unsigned long long ev_index;
+> > +	struct key_entry *ke;
+> > =C2=A0	int err;
+> > =C2=A0
+> > =C2=A0	/*
+> > @@ -545,11 +546,16 @@ static void notify_handler(acpi_handle
+> > handle, u32 event, void *context)
+> > =C2=A0		if (event =3D=3D 0xc0 || !priv->array)
+> > =C2=A0			return;
+> > =C2=A0
+> > -		if (!sparse_keymap_entry_from_scancode(priv-
+> > >array, event)) {
+> > +		ke =3D sparse_keymap_entry_from_scancode(priv-
+> > >array, event);
+> > +
+> > +		if (!ke) {
+> > =C2=A0			dev_info(&device->dev, "unknown event
+> > 0x%x\n", event);
+> > =C2=A0			return;
+> > =C2=A0		}
+> > =C2=A0
+> > +		if (ke->type =3D=3D KE_IGNORE)
+> > +			return;
+> > +
+> > =C2=A0wakeup:
+> > =C2=A0		pm_wakeup_hard_event(&device->dev);
+> > =C2=A0
 
 -----BEGIN PGP SIGNATURE-----
 
-iQGzBAEBCAAdFiEEbLyQBMI0qAWiF6l31AjqSkbLPKQFAmYK0eIACgkQ1AjqSkbL
-PKTuzwwAhPy9c5/GuTHkaZJhhWcz5VHjbuY9rvywiI3nswEC/Pkav97wIL2IN8jW
-9x4+VGJWCv3q/TlNauaD3T6WaPyulTNI9zcFmIY3Adm73+TEQ3OITmZMTJEv3BPC
-tgXbs+v0Iuu9G1twpNOrtpQ6aWvwtZJugAN4UOEk+Avx2OIYTc6zoRLTTV+0PMsy
-0GlQ3jEQDpB//0ZroP0t9duGtqOIEa6xGfCMOf0ccyyydeVvXjRQOGZ+ZkZ81Egp
-fWnc0KRb5gzNAgLa4wzksOtu6sBDtXj1jBcrbqwzOuTfr+KBgebfbalHNExPAVxJ
-6DYaZ3yPBL81EaUu/QSGFwOodphtkjGvfkGonvtX/bQOSxXEhwAe4wvWeeE0wncN
-um6YVw+QoBKaIxXEV+jtjkelMazAopf6jp6EDEoqmcfPS17oag2Hkg05oooJNSNc
-PizbNmYZv6imykUpM8vC9nX54jup9t9MKbNdcMRcU/ReRdhLKm6au4qjWTSxfXXp
-ll4euik0
-=3D0GKA
+iQGzBAEBCAAdFiEEbLyQBMI0qAWiF6l31AjqSkbLPKQFAmYK1IQACgkQ1AjqSkbL
+PKSUXwv/YWiU334Osus+niffw9gN94vCQid6OWuTIbX2zMNIunHmpHouMtfo6dpb
+7Qsyaz0sxaUEclRPLf/bSAV8zWromM/4Xoa/DoBq+GPOLle5wTJAlislhZVfDZFX
+FZ0EfUg+MvThqlJD8yhGNJWGVnSn92hDid7yy5Y/BSWTPCNhRxEsqy+d0pN82EnD
+0mqWnpfG28uqK6dtOLnvbiOuWQhgKYerKFYHXw8FLxZV0eKb3+RqBFf6ZdsAjUEC
++d7G9Oq4pc9jxZNvOMop+z3Eskd/bD8Wi2aDtR1qcRENMaK0ucevTuOjGL8Gh80c
+SbgKu2eU/qVlbnVrcaPgpB0CXXza7SYUynw5XWB8jBWOj6w2nxpnQPm5a0Z5aNYw
+/kLuabhSommEmUIJtoOA2vgO8D0ACfF2n95cNXaJRiOhuag3SRoair50TOzmf09Z
+4uco5iaWeIQwEpVFGdy+qh0V18kYclnNMZHC9bhO6heBDLB9Wy/iXDxko9tMXm/v
+XnfAKKw9
+=3DudJV
 -----END PGP SIGNATURE-----
