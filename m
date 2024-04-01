@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EABD3F8C2
-	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Apr 2024 13:19:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1317F9DF
+	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Apr 2024 13:37:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711977600; cv=none; b=EnRKAnFKDJZvcreYBxMfx6Sxl046+8O9IKeqZJUezVnNQ3F8hEKPPodfoyfmGLZoPIsHfZgHDZfJyQ3SlKCp2f3Acik7d6bqcX9UBb5CTrfmqlhSmuqhPtL8bW9JgqMzIcnkFY4GxpYhsg6GQcPL4cj4dL77VWaSilwSliDnUsY=
+	t=1711978670; cv=none; b=Kbm05sGxfjeaqAqFB81iX/P9XSWwGZiGu1234lotJ+IDBxa3HNKvxxSr+H2SNCL1wLlggP1kPtv7ufQVSNXMM14XHmd2FodA4JwnyyLPdtH1NUpWPRJP0Q/FKHQy3BGOd9co7r707cbMEOXdJaZyJEYsiDHAI0mZzB5gspPH05g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711977600; c=relaxed/simple;
-	bh=Rh/NY75PuIPU9BWDTA1gkN+AsHnM9MuctHe5fG3Zdp0=;
+	s=arc-20240116; t=1711978670; c=relaxed/simple;
+	bh=qEeUTCgXidCqII7GdldCnCnzdhl5aNRYDlD+npB/bTo=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WPSmwxKdThhjDyuxz7apn3JeijTDskVOk65TmVBRn9WLLt6t1scW6lY1OH4eRLZAybKMB5B5uSrNtx08X7qNKm++2EeIfdPU7frHwfWcLGZh8b6GkhzMEXs93yCJrhqUIMSLUbuLkjTQ/i4H6Q6C7Z5u0o3z1+tN0XssHuLsigA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZeBd8LDC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=NvRBVHiTl3+k/TcBaZ9ZS4Exdvj4x3ti8YKQgoPv1q0jgOKA3zFNY6TJJxc54rFMNVwNmL4VljsTJgulEQaICYuf7ffoq4DTeYaq8T5yxFUJv4kB1YgGE4cBI5T/oJuqal0K+5Is7dQDiUo7kCz97tUM0daA8hmpnBGz2R0KkU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/Ne2u5W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZeBd8LDC"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9295CC43390
-	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Apr 2024 13:19:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/Ne2u5W"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7C1E7C433A6
+	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Apr 2024 13:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711977599;
-	bh=Rh/NY75PuIPU9BWDTA1gkN+AsHnM9MuctHe5fG3Zdp0=;
+	s=k20201202; t=1711978669;
+	bh=qEeUTCgXidCqII7GdldCnCnzdhl5aNRYDlD+npB/bTo=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=ZeBd8LDC8i3rvQAF0EjAAsddWgfdBonHWFYy93HBhpzBZJBMIEYg2r6o+lx5VK/Em
-	 37WJVpm+iDH8R+patYxiL0bCKMlcr2hYic6PA5rfno7BGOg7Os9ForKftT4Udqhkl4
-	 MiEzfySJa1K6QWm3kNIV6AU2N4tnN21u4MwITOatKO+MEz565cC+L4efAHrdKYxEZj
-	 XVl3LPjNdco7IdxQ56NOqIR4lJ3X7oEtaAjfWiopn9ymiY4bV7lpvZOlzd3B+76fwD
-	 G3x8rCePsYZukzQqFpPaXKAr23CalRrDtqZtGW/e7OPO9q8DnRpDLSOmnpuOe8x6df
-	 DEDxK1DNU6z8w==
+	b=U/Ne2u5Wl/6d/UcZU9nE69fMAwHISIwCTBccDda4LPceaO9BcvDrnr3DNMGxxpGAU
+	 K2CImZ/bCo/zi3eqH9tnvKLiM6mbbbgSuZQbkdrD3fsYBhNxWdkSdYPaOsmYA8FEhe
+	 KJm/KSGfQwUwRquXBiey+TJRF5L3U55mBmvNy/41pHv4CisuXiJnDPtsUEavqdc01R
+	 sNRD94y1hZxdSzRJcNDckfjrDJS/0b3OY+mY4nyVWSziQdgs1TwKs6m18ydhMj9AJT
+	 uZBtRIx0lc0RTq/LYZwgX2mTtFVTCLcMn5Vbja/m7n1cObOibnIa6LUMtHqTONPUzG
+	 WaXEsc1kLCCag==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 790FBC53BD7; Mon,  1 Apr 2024 13:19:59 +0000 (UTC)
+	id 7090AC53BD8; Mon,  1 Apr 2024 13:37:49 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
  resuming after unplugging the power cord during sleep
-Date: Mon, 01 Apr 2024 13:19:58 +0000
+Date: Mon, 01 Apr 2024 13:37:49 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Who: aros@gmx.com
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-218305-215701-CrUrceKbE7@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218305-215701-ULQv2FERnh@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
 References: <bug-218305-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,37 +64,13 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
---- Comment #41 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-Created attachment 306075
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D306075&action=3Dedit
-possible patch (v1)
+--- Comment #42 from Artem S. Tashkinov (aros@gmx.com) ---
+>  From the above discussions I believe it is triggered specifically from an
+>  event sent by the EC when changing the power adapter while suspended.
 
-> It randomely gets stuck at 544MHz.
-
-Are you sure it's random?  From the above discussions I believe it is trigg=
-ered
-specifically from an event sent by the EC when changing the power adapter w=
-hile
-suspended.
-
-> with the latest Kernel (6.8.2-arch2-1)=20
-
-Thanks.  I've been waiting for feedback with kernel 6.8.  And you have
-CONFIG_AMD_PMF set?
-
-> I just wanted to know if the fix is not official yet...
-
-There is no fix or workaround right now, like I said above this "looks" lik=
-e a
-bug caused by HP's EC or BIOS.
-
-Assuming you tested with amd-pmf in place and it really is the same root ca=
-use
-described above (only by power adapter) I was thinking about it and this so=
-unds
-like it could be a race condition. I do have an idea for a workaround.  Can=
- you
-see if this patch helps?
+Yep, and like I said in my case unplugging/plugging the power cord is enoug=
+h to
+fix it which was a relief for me.
 
 --=20
 You may reply to this email to add a comment.
