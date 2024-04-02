@@ -1,109 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F912335A7;
-	Tue,  2 Apr 2024 12:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F32D79B87
+	for <platform-driver-x86@vger.kernel.org>; Tue,  2 Apr 2024 12:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712061389; cv=none; b=Uz6UFLcD4DYLB6ITcC9MpH+UuiPuvDnro5Dy1Xd6uLP7VyooHv1/2U97BuwnZYfbJI8Ayn5byRaXQX6oKuf88Ygav0dbO7gB8gdOWM32OMP95//o6Jjc7IY2g+u46hwaQ/y4rHhGmrYN+KtfA4lju2y5ZE0YqbGp6cwLmJxxrA4=
+	t=1712061866; cv=none; b=Zqx3nTM28GHQY8/E8VrP5FhyVPb6TMp7FAUUJdvQi6Uc56Gdfa37ackfAgYu2l0L0LTeT9Cdv62+rlob/e0DkBfeYEFuZTezDy6ox9n/t9Bx6eYtlvNZDpFgShYzPlAiWIvBp582mO2c8FQHLW2WQniiquo6+4gPul91EOgmHl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712061389; c=relaxed/simple;
-	bh=LSeP6HN3z5K0OrmN8QMXYgQgBRdsW+fePyJf3hdOeBM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=SclKaaRfzdLQO6+D6GqrvbHmebeEmCUKi53DdOS1eV2cTKw+sN0mgNWrpgvjzF0X54pY4Y86YGHL8MdhyQkPUXCW8tJpHNo3L7XM6AULzSsE7cIJIp9JZ+HkI8wh4/Q/MLA2UYIlaWse04cAYfzSjPXB2T/+ceZhxcv3E2dtslY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U80+1NCT; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712061866; c=relaxed/simple;
+	bh=qfE8PezeJ0JIHZAkNhHbI4tf4fcIGHY7WUbwDGB+e0U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XB9uCc1vQGg9k1WMDT7wy0DIm7i7JNN2LpzC0/XVnHLb6TJQz8okzXjNX4/qSjsEknXvX2it0/AUXYgNYvQLXu9QbPuJSs3FkmK/XL3mdbu60795W7Nk5UGlbkdupdChGxMTCRKUJ5ZoUbPv/ogobckC9jmTNOZfW1TJ1ELyovs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VSkh3ouT; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U80+1NCT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712061388; x=1743597388;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=LSeP6HN3z5K0OrmN8QMXYgQgBRdsW+fePyJf3hdOeBM=;
-  b=U80+1NCTpJVptOlpbA3DqcvAx+wofy2mw5B3N9faYVVPXlAQjtLIdOAn
-   XFB9A5ILVhWkTYlT68wVOUsGGQoLeBnjTD5KdRMIcIc4ugeSAVztp4/Ok
-   D35oNtaR9Ut0TXad2h4C/SF954O9PsQ0/OvZFwlFrgdgG0C+5xmDA1Kwu
-   0fO3f009gwTTMxtY+WAJPXV4+0Scss/3dCYFjxdeJsqaBdq7QPcckTjQm
-   aYGr+sSZRJS4J2ZE1Y+ixEuDZjesJ0t8wwiOy2PRo0C+awxdiat0duKn/
-   qpat3cOgwBIYU+l61YjdBhT3MeDTJI/caIalLfQyacwlmTYlKS1/eZ1WN
-   g==;
-X-CSE-ConnectionGUID: o0qCbYu6R3ioGQ3VYgVAWA==
-X-CSE-MsgGUID: MAd9wtCLSxuCRZ96H8jq/g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="7415864"
-X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
-   d="scan'208";a="7415864"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 05:36:27 -0700
-X-CSE-ConnectionGUID: bpp0ap3QQ02FGnbHYhaZeg==
-X-CSE-MsgGUID: OGqpTPEnRY6nrhf+1VUPGw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
-   d="scan'208";a="22507089"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.23])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 05:36:24 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 2 Apr 2024 15:36:21 +0300 (EEST)
-To: Maxim Korotkov <korotkov.maxim.s@gmail.com>
-cc: Armin Wolf <W_Armin@gmx.de>, Kenneth Chan <kenneth.t.chan@gmail.com>, 
-    Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-    Len Brown <len.brown@intel.com>, 
-    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-    Harald Welte <laforge@gnumonks.org>, Matthew Garrett <mjg@redhat.com>, 
-    Ivan Kapranov <i.kapranov@securitycode.ru>, lvc-project@linuxtesting.org, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: panasonic-laptop: fix NULL dereference
-In-Reply-To: <9c4cfaf8-7738-4ba8-951e-5b91a3414f37@gmail.com>
-Message-ID: <ab04ebea-235b-e3ec-5982-e1f7907bcc64@linux.intel.com>
-References: <20240328103518.169604-1-korotkov.maxim.s@gmail.com> <da442a04-9db8-4951-98b4-3e149ea06415@gmx.de> <9c4cfaf8-7738-4ba8-951e-5b91a3414f37@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VSkh3ouT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712061863;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=DzmCvL3Nsd29+cJ9eQpeaTEVTss6ce5zle9OwCf5pG4=;
+	b=VSkh3ouTwHF+8yFbG9RSJIYqyf5htH7NijS07O+GGfq1EF7FsrFWe8fpwqCxPmRGp1pkZC
+	ZJixjRFpbaLAIq8zOu7cJ0aV0DebilyzFEGgjQt8qiGZQj2qq9lWtc1ikGCo4azEdpsLcY
+	mZsUWFMYBTtZUVarvOeYH0k1CAt0aIU=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-58-Mk9jzuelNuyLwvmKax3rDA-1; Tue,
+ 02 Apr 2024 08:44:20 -0400
+X-MC-Unique: Mk9jzuelNuyLwvmKax3rDA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 396A11C41A03;
+	Tue,  2 Apr 2024 12:44:20 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.194.45])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 8F4043C85;
+	Tue,  2 Apr 2024 12:44:19 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: toshiba_acpi: Silence logging for some events
+Date: Tue,  2 Apr 2024 14:43:51 +0200
+Message-ID: <20240402124351.167152-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-On Fri, 29 Mar 2024, Maxim Korotkov wrote:
-> On 29.03.2024 03:21, Armin Wolf wrote:
-> > > Added a pointer check to ensure that it is valid
-> > > before using it for pcc initialization.
-> > 
-> > is this check even needed? I think the ACPI driver core takes care
-> > of passing a valid ACPI device pointer to acpi_pcc_hotkey_remove().
-> 
-> I proceeded from the assumption that the current check was not redundant.
-> Kuppuswamy correctly noted in the message that the device would most likely be
-> valid for the function of removal.
-> 
-> However, in my opinion, checking for NULL is a good coding practice, and has
-> now been implemented incorrectly in this case.
-> 
-> Eliminating NULL checks could potentially cause bugs in this context.
+Stop logging unknown event / unknown keycode messages on suspend /
+resume on a Toshiba Portege Z830:
 
-Hi,
+1. The Toshiba Portege Z830 sends a 0x8e event when the power button
+is pressed, ignore this.
 
-If you're going to be submitting patches based on some automated tool 
-which finds "bugs" in kernel, you need to be ready to go through the hoops 
-of the review process and not just assume the patches are good as is.
+2. The Toshiba Portege Z830 sends a 0xe00 hotkey event on resume from
+suspend, ignore this.
 
-We do not do pointless NULL checks in the kernel, this is not a matter of 
-opinion. If there are unnecessary NULL checks, they should to be 
-eventually removed (and definitely not used as an excuse to add more).
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/toshiba_acpi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-If the NULL check is not required as was implied to you by the reviewers, 
-the correct response is to go check that the what the reviewers pointed 
-out is true and _adapt_ the patch based on that. Then send a v2 of the 
-patch. It how the kernel development process works. You might sometimes 
-find the reviewers are wrong too, if that happens you can come back and 
-point out why the patch is correct.
-
-Either removing that check adds a bug or it doesn't. Not "potentially" 
-which is just an excuse for not wanting to figure it out from the code.
-It takes time and significant effort, I know, but spending time is 
-required if you want to participate in the kernel development.
-
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index 2a5a651235fe..16e941449b14 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -270,6 +270,7 @@ static const struct key_entry toshiba_acpi_keymap[] = {
+ 	{ KE_KEY, 0xb32, { KEY_NEXTSONG } },
+ 	{ KE_KEY, 0xb33, { KEY_PLAYPAUSE } },
+ 	{ KE_KEY, 0xb5a, { KEY_MEDIA } },
++	{ KE_IGNORE, 0x0e00, { KEY_RESERVED } }, /* Wake from sleep */
+ 	{ KE_IGNORE, 0x1430, { KEY_RESERVED } }, /* Wake from sleep */
+ 	{ KE_IGNORE, 0x1501, { KEY_RESERVED } }, /* Output changed */
+ 	{ KE_IGNORE, 0x1502, { KEY_RESERVED } }, /* HDMI plugged/unplugged */
+@@ -3553,9 +3554,10 @@ static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
+ 					(dev->kbd_mode == SCI_KBD_MODE_ON) ?
+ 					LED_FULL : LED_OFF);
+ 		break;
++	case 0x8e: /* Power button pressed */
++		break;
+ 	case 0x85: /* Unknown */
+ 	case 0x8d: /* Unknown */
+-	case 0x8e: /* Unknown */
+ 	case 0x94: /* Unknown */
+ 	case 0x95: /* Unknown */
+ 	default:
 -- 
- i.
+2.44.0
 
