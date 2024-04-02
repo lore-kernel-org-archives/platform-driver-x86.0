@@ -1,73 +1,152 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B24B12C52C;
-	Tue,  2 Apr 2024 14:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2532A14B07B;
+	Tue,  2 Apr 2024 18:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712068590; cv=none; b=jyTcjDXSy5z2AAYaheKBtqNduP6oYei0VTWMPBcXp9HFS349sBMO53m3XqB6Uw34If3/WXrgi/Au7fegLzGdq+2NQZKmZlnKxQbySU63NQYv4V2Dm/nnMKPP6ixEexBPx2DwRz6sxkpc5Ap0rSX+o148BZ9eVlZzhba0wTPl/n8=
+	t=1712080901; cv=none; b=Tvm+4h9QI0YOV/Qi1AcMAuf7xcHA5HiZdvjjiz6FXn3HvzUKAVxmtjK9Pabvvvbjjbbltg4mkgUKns5sP7KiIL/xSz6UntPt6ebsM9FsafZ0P+dOitC5yCMvcELLVErwj1SrYYREV4yVglF7Wu2tCRORsz4lTTCkJjQ0IFbs7cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712068590; c=relaxed/simple;
-	bh=VyO/g5EMsSMNooFA+4a16rpT6xImDeimmmSJAcH6rQ4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=c+pqciUm1WdXAxr45dD9V6Z8EWxf51GCV0gx/uHPycuIAQRnECpag791h1Z4Pr+ObGnDOiCDJLyb8v7ZNE7NMVkl7Faml7w5a5K1D1lsp8NifJyrL4fHAWTLfQQrCJJFTKYyx1KauHvgy4UEbZ0VgKSyhSnw5+TwHoERwVrIsFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from [192.168.2.4] (51b69867.dsl.pool.telekom.hu [::ffff:81.182.152.103])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 0000000000064F1F.00000000660C17E8.00252CB9; Tue, 02 Apr 2024 16:36:24 +0200
-Message-ID: <5864594aa47ecfeb23d5d05a3afc02393f84b44e.camel@irl.hu>
-Subject: Re: [PATCH 1/3] dt-bindings: leds: add LED_FUNCTION_FNLOCK
-From: Gergo Koteles <soyer@irl.hu>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-  Ike Panhc <ike.pan@canonical.com>,
-  Hans de Goede <hdegoede@redhat.com>,
-  Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-  Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-  Rob Herring <robh@kernel.org>,
-  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-  Conor Dooley <conor+dt@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org,
-  linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-  devicetree@vger.kernel.org
-Date: Tue, 02 Apr 2024 16:36:24 +0200
-In-Reply-To: <6b47886e-09ac-4cb9-ab53-ca64f5320005@linaro.org>
-References: <cover.1712063200.git.soyer@irl.hu>
-	 <8ac95e85a53dc0b8cce1e27fc1cab6d19221543b.1712063200.git.soyer@irl.hu>
-	 <6b47886e-09ac-4cb9-ab53-ca64f5320005@linaro.org>
-Autocrypt: addr=soyer@irl.hu; prefer-encrypt=mutual;
- keydata=mDMEZgeDQBYJKwYBBAHaRw8BAQdAD5oxV6MHkjzSfQL2O8VsPW3rSUeCHfbx/a6Yfj3NUnS0HEdlcmdvIEtvdGVsZXMgPHNveWVyQGlybC5odT6ImQQTFgoAQRYhBLSYvEYEgjzzEMQCqgtEJzXf/1IRBQJmB4NAAhsDBQkFo5qABQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheAAAoJEAtEJzXf/1IRmdYA/0bE1BX7zOGKBgCa1DwzH2UHXawSKLpptADvI/ao6OOtAP4+wYgpR0kWR28lhmkRTpzG/+8GiMWsT60SV2bz9B7sCbg4BGYHg0ASCisGAQQBl1UBBQEBB0CPo8ow/E97WYtaek9EsLXvsvwpBsjWLq5mMOgJL/ukCwMBCAeIfgQYFgoAJhYhBLSYvEYEgjzzEMQCqgtEJzXf/1IRBQJmB4NAAhsMBQkFo5qAAAoJEAtEJzXf/1IRklEA/ipTfAI/onzNwZIp9sCdnt0bLhR5Oz8RD/FpbrJV1v7eAP0c/C6NQPDPWbQpobBR0pf1eTjWXjjr1fj2jxSvWbMRCw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=arc-20240116; t=1712080901; c=relaxed/simple;
+	bh=I/KfB5CieqB04RJ8p97BvpVXen9Z0TrS8q4lo+lHyiI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OJxHqYr6dWv9nLDPMskoxUjojys/0SnhiWh+itFmbxJnCKFqlJJzYtiFtQZhthwiO0tuMQg8Cy32AsRJcUmjy2oIfY+G4Qp6fbi6j/17I7YFZ1x+fCu5XQ3aMAHid9uHNXh/OGXywRXqw3ghloqxKjK+FL6QWErutIKiRWw8OLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aRpk6iA+; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aRpk6iA+"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 432HqscV029201;
+	Tue, 2 Apr 2024 18:01:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=Ge+PCdmfdapG3nCKI7WpuuoKJVjlsUHNMa5EZQPh+Qk=;
+ b=aRpk6iA+UUeeVLtiuFhtNmSaMQsQ7/8MXvzEu8Mz9fU+69iduRNpXZr4ilYShTeGvl7j
+ izRH42UiYy1PGawVts2wptHJH9nKHPEVcb9LeC9zAChnX8rdlYfUdPqXyejA8yLVyAVn
+ bxYtOAW+XsUXB9qZHA8XprmlMQF3LrMq9kFoE6/2LIbrud66CVO1vAVsYomrl6m0O/nC
+ MZu3H4GhAdO0FgpD2zJ+yEFYnXlgSPrjIuQOZ1Tc4Sa9vK0QZ040Glv38O99yavZ9mP0
+ BNS823odZ/QAGUbl7LUJSOPsZi+h31FyUGa/ykcnCSSXz75mj31jzypSvf1L76ucvfrX WA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x8pt70121-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Apr 2024 18:01:14 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 432I1Dtf009350;
+	Tue, 2 Apr 2024 18:01:13 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x8pt7011r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Apr 2024 18:01:13 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 432I0tfR029616;
+	Tue, 2 Apr 2024 18:01:12 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x6ys2ypvh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Apr 2024 18:01:12 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 432I16XT33620508
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 2 Apr 2024 18:01:08 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A898A2004F;
+	Tue,  2 Apr 2024 18:01:06 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 305C120043;
+	Tue,  2 Apr 2024 18:01:05 +0000 (GMT)
+Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.171.41.83])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with SMTP;
+	Tue,  2 Apr 2024 18:01:05 +0000 (GMT)
+Date: Tue, 2 Apr 2024 20:01:03 +0200
+From: Halil Pasic <pasic@linux.ibm.com>
+To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc: virtualization@lists.linux.dev, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg
+ <johannes@sipsolutions.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ilpo
+ =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+        Vadim Pasternak
+ <vadimp@nvidia.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mathieu
+ Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>, Eric Farman <farman@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev
+ <agordeev@linux.ibm.com>,
+        Christian Borntraeger
+ <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        "Michael
+ S. Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason
+ Wang <jasowang@redhat.com>, linux-um@lists.infradead.org,
+        platform-driver-x86@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        Halil Pasic
+ <pasic@linux.ibm.com>
+Subject: Re: [PATCH vhost v7 2/6] virtio: remove support for names array
+ entries being null.
+Message-ID: <20240402200103.19618d0c.pasic@linux.ibm.com>
+In-Reply-To: <20240328080348.3620-3-xuanzhuo@linux.alibaba.com>
+References: <20240328080348.3620-1-xuanzhuo@linux.alibaba.com>
+	<20240328080348.3620-3-xuanzhuo@linux.alibaba.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 6KSAETINDiOyU9QFEllktnLI-PyY1diP
+X-Proofpoint-GUID: xwEdoevRFYCwufoSFRJa0qEo9oBQY5g_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-02_10,2024-04-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 adultscore=0
+ clxscore=1011 mlxscore=0 mlxlogscore=999 bulkscore=0 spamscore=0
+ phishscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2403210000 definitions=main-2404020133
 
-Hi Krzysztof,
+On Thu, 28 Mar 2024 16:03:44 +0800
+Xuan Zhuo <xuanzhuo@linux.alibaba.com> wrote:
 
-On Tue, 2024-04-02 at 15:55 +0200, Krzysztof Kozlowski wrote:
->=20
-> Do we really need to define all these possible LED functions? Please
-> link to DTS user for this.
->=20
+> --- a/drivers/s390/virtio/virtio_ccw.c
+> +++ b/drivers/s390/virtio/virtio_ccw.c
+> @@ -659,7 +659,7 @@ static int virtio_ccw_find_vqs(struct virtio_device *vdev, unsigned nvqs,
+>  {
+>  	struct virtio_ccw_device *vcdev = to_vc_device(vdev);
+>  	unsigned long *indicatorp = NULL;
+> -	int ret, i, queue_idx = 0;
+> +	int ret, i;
+>  	struct ccw1 *ccw;
+>  
+>  	ccw = ccw_device_dma_zalloc(vcdev->cdev, sizeof(*ccw));
+> @@ -668,11 +668,11 @@ static int virtio_ccw_find_vqs(struct virtio_device *vdev, unsigned nvqs,
+>  
+>  	for (i = 0; i < nvqs; ++i) {
+>  		if (!names[i]) {
+> -			vqs[i] = NULL;
+> -			continue;
+> +			ret = -EINVAL;
+> +			goto out;
+>  		}
+>  
+> -		vqs[i] = virtio_ccw_setup_vq(vdev, queue_idx++, callbacks[i],
+> +		vqs[i] = virtio_ccw_setup_vq(vdev, i, callbacks[i],
+>  					     names[i], ctx ? ctx[i] : false,
+>  					     ccw);
+>  		if (IS_ERR(vqs[i])) {
 
-I think for userspace it's easier to support an LED with a specified
-name than to use various sysfs attributes. LED devices are easy to find
-because they available are in the /sys/class/leds/ directory.
-So I think it's a good thing to define LED names somewhere.
-
-J Luke missed this LED from /sys/class/leds/, that's where the idea
-came from. The scrollock, numlock, capslock and kbd_backlight LEDs are
-already exported.
-
-https://github.com/tomsom/yoga-linux/issues/58#issuecomment-2029926094
-
-Best regards,
-Gergo
-
+For the virtio-ccw part:
+Acked-by: Halil Pasic <pasic@linux.ibm.com>
