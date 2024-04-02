@@ -1,59 +1,38 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5538282893
-	for <platform-driver-x86@vger.kernel.org>; Tue,  2 Apr 2024 13:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523358405F;
+	Tue,  2 Apr 2024 14:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712066162; cv=none; b=EV06nSGPzl7OVOTlp03jr5dTmbIKzPqq/yDNRmoZ1snRkv/36szz/tmRdn7tB5vyrQDOMw9g2RugtcfkiRsy53/khWwNJ3xQad4WuOCN0QDBwOJlzNNKTIfOSMqL2vC23UhiEvLBCWL8cuRbw7E2exBR09pVcZ4e1cZJsiYALAU=
+	t=1712067226; cv=none; b=npC1lC5siUUxg7L1+5I0JSYWmqOWxL+vzaR7+sih58Px8FABcGlnlMrRw9Hcxl6ySqKMIWvkJRcW5MGCBd0uC+oWx/mvfV6nCeJv4iebG/O4HaTry178S39ihXxpIBLOBDe41BTpCOTEYrbsYWe561wrcNPsOkAhKrPqyQBNN5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712066162; c=relaxed/simple;
-	bh=3RYlQMdAk1kSbFeG0UabxDH8CjbXI3Avrk756agQQy0=;
+	s=arc-20240116; t=1712067226; c=relaxed/simple;
+	bh=t60O7Ucy+WoXthLtuuAOS1Utxu8te3IwlUtsBNQHNiI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bZSjhWMggIU+VjCIPURpT4LO0gBTIUyhUXSxplHMgmMX3ak6loD5OJV0dPJMHZVemqUQScBNlBNCI2lLeUo441CXG4TUYxpBi0dhpMmW7rKPo/cz16rX68eznTzbawBKkemZFQt2rulPgDl5ktHZKI3/yLiyCangIyzHbm2e2tI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fTVF+N5U; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=FHenScpG4aWe13s2rLXSa9pxKjJLP8DfVkF4GmWtddevwwGK6jiDbkeR8zuSMt+yHD0PfL7EVLAX7VT2Yj+uMX4I/t0H21JXE/eexyksCCyYQnpfFSSk2tTIsgsxeWlnM1Rw0TS/FqIfboHfLbhQChrJj0k5+g+l5nuJRQHNqac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=mSztMLus; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fTVF+N5U"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-515c50dc2afso5701778e87.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Apr 2024 06:56:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712066158; x=1712670958; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rr/3jgsq/y6quIiVf2XQx3I3wZFyCdLaPeu+eAcGk/I=;
-        b=fTVF+N5U5Idxrygpw0jVY1d5bP5tyhHc07WlA3yUixXs9butsLipIchKH8Mh2+0TPA
-         IqiMIYCWBYkwFx5BhHXsy2eikDxw+UbiThRs4NZidFXKwOdjBq+GheUmVv16tIXIc+MN
-         vyhnmlvzSCcAQVoUAo7DIjPGsv5MXvsGEw6XsgC/CgBxW9aTmbbwiCXwsQaueQE1RXlk
-         JzlrjDFSft4Ym/MSs8IHUGsemLmtg8C9tpNwz5dxkw69FfsE8v6de7Wy99mguRW0rqkH
-         3jIQ5v8yvtsKcyfpKtfekbzDp508BgRlWN/4GV9LN0WMOjN6DqbUnPRZIzOTnPf2y+IF
-         b9ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712066158; x=1712670958;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Rr/3jgsq/y6quIiVf2XQx3I3wZFyCdLaPeu+eAcGk/I=;
-        b=HV3Xjgwfl94WQuF0s9ArHwTmyjYs1Iq+WGhgUgsyE24Bwx69LiEatnBodBnz5ho7kx
-         FNb7lmcqUZZtHuqnNFiXhJUrCIDK4PXGWY8EqbErS3LLI41QQEjp4nLYwlQ+wpTcMj6M
-         Gswb2N/W1VWTsfprtAdvLnUCRCI0SGw2B14+Enmv1VKYNg000RHZ8baPF8B+I9k3FKo9
-         k6R6JRPIArZvl1dnRv8iXvIphLb33Js6BMQI7SwUtvEQNhIg46Z4OCBGP3aXTeR8539C
-         RvaGs0ZZoQdlRLdZ0s+ZBUACRtonSUWbAOYB4W+hDbD9I2U8PEctDfd3TlwnpemOyjO9
-         Kw2Q==
-X-Gm-Message-State: AOJu0YxY6LFJOhOXUbYtKEQWwh4eEhB2FsQEkQCKni4PbHCKXjkOuchg
-	c0tbwLaIUAmO5Jqr9uZeXtsODQ5SJEHnmYbTvxw51TR/HkT8JcNu4NljNI/9/A4=
-X-Google-Smtp-Source: AGHT+IHF63flTEx8ct3nL+qzYKMao881y40Gb4WtlQQ9zGIwOpR9jnpo5n0Y2QLMMn5WL81JG3JifQ==
-X-Received: by 2002:ac2:4c16:0:b0:515:d3dc:43e with SMTP id t22-20020ac24c16000000b00515d3dc043emr6673463lfq.51.1712066158248;
-        Tue, 02 Apr 2024 06:55:58 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id r20-20020a17090638d400b00a4e59587f63sm3506762ejd.193.2024.04.02.06.55.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Apr 2024 06:55:57 -0700 (PDT)
-Message-ID: <6b47886e-09ac-4cb9-ab53-ca64f5320005@linaro.org>
-Date: Tue, 2 Apr 2024 15:55:55 +0200
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="mSztMLus"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1712067211; x=1712672011; i=w_armin@gmx.de;
+	bh=cN9hRjRBiqa1a82umFnF3bDT9Wh/6VtwazCBdn3JI7M=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=mSztMLusppk30uMkKOin+S409Lg4nWIN5GHht+a7yNc87gNo4UrTGK6csaE+RFeO
+	 IjqnKMmEIt6SmW3Tsf44CwQq5VnERRBv7e1OM0nFM0B+lSAyHIb9GvNtnIqnzpVSl
+	 bysgqzMqioVvNtiZoZPCOOziAUw8QgdRsSB04Mtdj8Bfl8fJ/ln4naAFNtZBLHMin
+	 Tiqy7GP3URwNGNKeioH2rMNprWikYObnGs1oEfsBGcBo6Z4OZ/25VxRhcz51tsLRa
+	 2XO2z+ZZUjezkHLFJMYBfeHyK4W7UZH/pyk9n4b+bhfJEWqobKWQG+Jz8bblXMT/J
+	 9b7zz8k91M9CHlDaew==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N0XCw-1slwqN21SO-00wYbL; Tue, 02
+ Apr 2024 16:13:31 +0200
+Message-ID: <01bb8576-d75f-4d22-ab29-f366fcfc5bc8@gmx.de>
+Date: Tue, 2 Apr 2024 16:13:30 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,80 +40,175 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: leds: add LED_FUNCTION_FNLOCK
-To: Gergo Koteles <soyer@irl.hu>, Ike Panhc <ike.pan@canonical.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-References: <cover.1712063200.git.soyer@irl.hu>
- <8ac95e85a53dc0b8cce1e27fc1cab6d19221543b.1712063200.git.soyer@irl.hu>
+Subject: Re: [PATCH 2/4] platform/x86: xiaomi-wmi: Fix race condition when
+ reporting key events
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
+Cc: corbet@lwn.net, linux-doc@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240328012336.145612-1-W_Armin@gmx.de>
+ <20240328012336.145612-2-W_Armin@gmx.de>
+ <b82ded95-d599-4ef7-b984-ac4d8a5c2370@linux.intel.com>
+ <3e41e132-98b9-496d-987f-6838289926b6@gmx.de>
+ <9e7a081f-b727-4ead-84b9-3c80530a1039@linux.intel.com>
 Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <8ac95e85a53dc0b8cce1e27fc1cab6d19221543b.1712063200.git.soyer@irl.hu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <9e7a081f-b727-4ead-84b9-3c80530a1039@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:3OoE19N2WbRLvk/NJ2ws2qpST8R317jcnYqOafiD+FGf9JWGZCy
+ 3K/VZRUQQ1SQB46DhaWpL0cIbjAzV+Waz/WP+0xJokbLY8WPhBJ98vUXMCUwhqCNAIhwWQi
+ xVsbhoYkOb0zANlcXSHaaN1J2I9CzCUuLMfJs0BlgOidN1GgXxz6t9OnNN9HBJ8w9cDtd3j
+ QDTq3nGj15yr33FybuxkQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:92JrpwzlREI=;9f5acDzr829R4opzUgfEo3pUCCv
+ ypNOtryVHGaeRM9e4NcPUVXM4BCvZN458qKde9xUUJ5dZWw3KhOkg81mK4/0S227m2nR60UgY
+ cn0w0TmqZ+OXZyIOLQx+dLXI5jn3U8A9BZK/ppq5Gua07fgFlIJCX/XirheynXiKlK8SNfY5U
+ LjE7nXF9TpRZFzoJzLIVXOK2wUChZWRZmAZjwAi850pyLR517gbjnObQpVuZzNVk6r3G8iqvk
+ SwH7FIIoiLVbNenY3xGc2vTK4qct01MfMLFkE01lWHEic564B3lkx6KTUGaquQrnvRuo1oWFu
+ eYqlnwj1reyAP1Z6Nv1HZvpj4Zc5bCrE3YjfKy08osLFpQXzLKehwCLouHo+t6FSzMU6DLLsi
+ 7Yg1m4j3nOZo5QTQyLYcYCfGLw8gtMXaraCiooOnuPE7rht9wUWDKJAUvyC74AEAdLUxfq2XH
+ 6rHTkby1q3m86xIaZ/DnGyRCcEyrWJMP160VUM0GUMhLB+RKbuMckVstjCm/nsFSRG7KAbCsU
+ QUAN9pMqVUpP3Rilf3bsuCElkWd9DQAUjeRBesZ4G8VGLLxrSSoK9Mw0h/52hRp9rPtF3ktYX
+ SWaNH3dtLSsew8U+kcq9jnrbpD6iEeay04aWZv14txjrfGVanKNLT/icsM8oGGm8841Fv9okC
+ prPQoEf11xqA7BgQrFiFDk5iYCUbklCwB0t17WQKNQISfkXQRD5MsCqCcMHr3vuO36AWkCieb
+ yEB2UkaOHE6oEwL0XohhFWkY4iX8nPIaTsFMjfeq1ORy3Ve9thPiFOilLFyePoJzGsgFTKZK+
+ RtRb/utkRw5z5u3tpacg9wni1Rzpe54C3fIXC9iaUkMfY=
 
-On 02/04/2024 15:21, Gergo Koteles wrote:
-> Newer laptops have FnLock LED.
-> 
-> Add a define for this very common function.
-> 
-> Signed-off-by: Gergo Koteles <soyer@irl.hu>
-> ---
->  include/dt-bindings/leds/common.h | 1 +
+Am 29.03.24 um 02:37 schrieb Kuppuswamy Sathyanarayanan:
 
-Do we really need to define all these possible LED functions? Please
-link to DTS user for this.
+> On 3/28/24 5:26 PM, Armin Wolf wrote:
+>> Am 28.03.24 um 03:58 schrieb Kuppuswamy Sathyanarayanan:
+>>
+>>> On 3/27/24 6:23 PM, Armin Wolf wrote:
+>>>> Multiple WMI events can be received concurrently, so multiple instanc=
+es
+>>>> of xiaomi_wmi_notify() can be active at the same time. Since the inpu=
+t
+>>>> device is shared between those handlers, the key input sequence can b=
+e
+>>>> disturbed.
+>>> Since locking is needed for all notify related calls in all WMI driver=
+s,
+>>> is there a generic way to add this support in WMI core driver? Like
+>>> defining some common function which will hold the lock and call
+>>> driver specific notify handler? I am just thinking aloud.. If it is no=
+t
+>>> feasible, then it is fine.
+>> Hi,
+>>
+>> actually, not all notify-related calls need locking. It just so happens=
+ that
+>> input drivers must protect their key sequence, other WMI drivers might =
+not need
+>> to use any locking at all.
+> Got it.
+>
+>> I would prefer if the WMI driver does the locking, so it can be optimiz=
+ed for
+>> each WMI driver.
+> Why not implement this support?
 
-Best regards,
-Krzysztof
+Because different WMI drivers will most certainly have different need when=
+ it comes to locking.
+Some might want to use a simple mutex, some might want to use a RW-lock, a=
+nd others might need
+something totally different.
 
+Implementing all of this inside the WMI driver core will be difficult.
+
+Thanks,
+Armin Wolf
+
+>> Thanks,
+>> Armin Wolf
+>>
+>>>> Fix this by protecting the key input sequence with a mutex.
+>>>>
+>>>> Compile-tested only.
+>>>>
+>>>> Fixes: edb73f4f0247 ("platform/x86: wmi: add Xiaomi WMI key driver")
+>>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>>>> ---
+>>>>  =C2=A0 drivers/platform/x86/xiaomi-wmi.c | 18 ++++++++++++++++++
+>>>>  =C2=A0 1 file changed, 18 insertions(+)
+>>>>
+>>>> diff --git a/drivers/platform/x86/xiaomi-wmi.c b/drivers/platform/x86=
+/xiaomi-wmi.c
+>>>> index 1f5f108d87c0..7efbdc111803 100644
+>>>> --- a/drivers/platform/x86/xiaomi-wmi.c
+>>>> +++ b/drivers/platform/x86/xiaomi-wmi.c
+>>>> @@ -2,8 +2,10 @@
+>>>>  =C2=A0 /* WMI driver for Xiaomi Laptops */
+>>>>
+>>>>  =C2=A0 #include <linux/acpi.h>
+>>>> +#include <linux/device.h>
+>>>>  =C2=A0 #include <linux/input.h>
+>>>>  =C2=A0 #include <linux/module.h>
+>>>> +#include <linux/mutex.h>
+>>>>  =C2=A0 #include <linux/wmi.h>
+>>>>
+>>>>  =C2=A0 #include <uapi/linux/input-event-codes.h>
+>>>> @@ -20,12 +22,21 @@
+>>>>
+>>>>  =C2=A0 struct xiaomi_wmi {
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct input_dev *input_dev;
+>>>> +=C2=A0=C2=A0=C2=A0 struct mutex key_lock;=C2=A0=C2=A0=C2=A0 /* Prote=
+cts the key event sequence */
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int key_code;
+>>>>  =C2=A0 };
+>>>>
+>>>> +static void xiaomi_mutex_destroy(void *data)
+>>>> +{
+>>>> +=C2=A0=C2=A0=C2=A0 struct mutex *lock =3D data;
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 mutex_destroy(lock);
+>>>> +}
+>>>> +
+>>>>  =C2=A0 static int xiaomi_wmi_probe(struct wmi_device *wdev, const vo=
+id *context)
+>>>>  =C2=A0 {
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct xiaomi_wmi *data;
+>>>> +=C2=A0=C2=A0=C2=A0 int ret;
+>>>>
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (wdev =3D=3D NULL || context =3D=
+=3D NULL)
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVA=
+L;
+>>>> @@ -35,6 +46,11 @@ static int xiaomi_wmi_probe(struct wmi_device *wde=
+v, const void *context)
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOME=
+M;
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_set_drvdata(&wdev->dev, data);
+>>>>
+>>>> +=C2=A0=C2=A0=C2=A0 mutex_init(&data->key_lock);
+>>>> +=C2=A0=C2=A0=C2=A0 ret =3D devm_add_action_or_reset(&wdev->dev, xiao=
+mi_mutex_destroy, &data->key_lock);
+>>>> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>>>> +
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->input_dev =3D devm_input_alloca=
+te_device(&wdev->dev);
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (data->input_dev =3D=3D NULL)
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOME=
+M;
+>>>> @@ -59,10 +75,12 @@ static void xiaomi_wmi_notify(struct wmi_device *=
+wdev, union acpi_object *dummy)
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (data =3D=3D NULL)
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>>>>
+>>>> +=C2=A0=C2=A0=C2=A0 mutex_lock(&data->key_lock);
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 input_report_key(data->input_dev, dat=
+a->key_code, 1);
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 input_sync(data->input_dev);
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 input_report_key(data->input_dev, dat=
+a->key_code, 0);
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 input_sync(data->input_dev);
+>>>> +=C2=A0=C2=A0=C2=A0 mutex_unlock(&data->key_lock);
+>>>>  =C2=A0 }
+>>>>
+>>>>  =C2=A0 static const struct wmi_device_id xiaomi_wmi_id_table[] =3D {
+>>>> --
+>>>> 2.39.2
+>>>>
+>>>>
