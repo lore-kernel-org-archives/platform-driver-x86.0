@@ -1,119 +1,136 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from wfout3-smtp.messagingengine.com (wfout3-smtp.messagingengine.com [64.147.123.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF7FDDB1;
-	Tue,  2 Apr 2024 01:49:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE78D518;
+	Tue,  2 Apr 2024 02:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712022590; cv=none; b=JqEuOyJfh9quP716unrbxc1DiY8w1VbG02P+RFLJ+6kv6BVBeG8s147PZBeQkKbBjMhiJNNP/TMZyIbLDyqou/VYKYK6O8UBGNlgwfONE9tcCKroRBf74z3Iw0mZALFbCv+e2PepDc6UZWP/u5w71VvyRWCfBaqCPSqrajFkTn8=
+	t=1712024780; cv=none; b=YQpvhnx5l6y6mssMTPRV0J65SBS8q96jMLufuXKlvXTob76RYlxDqZpRIa4FKg4lnvQErlfLMsY/RlhuZAV+c4Z6qhrmdzUemKyA9Dx0yAYIaK+d7gq5W2P9dpg5hSeCYCwuIEDO4hWdc5dCC35icPyrkeAew5Be6IUkfvbHP0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712022590; c=relaxed/simple;
-	bh=xwgKT4QWg7PYY2MgtNiuW0lK0ZdOIRwkOV/Mdj/hbpw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AaBj/RViLPHyjaEnpn4EmM0e5/sZo8Q3gybN9aPH4TnMGOkabEP1pm6z0Im+a3+Xq95XU1aSS1uUVeT1AZiAjBbGN32aNEhlZ7P2cKS4FKDXCXjIXF8kUEiu4NdLfBjB4+NvZij/li5Tiz+LiCofDUQXUw4o3lPCPpBw/8z2BfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=CTG48LGu; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1712024780; c=relaxed/simple;
+	bh=yNMIU5BvcLrM2YSULEEBT+OZnGdDn9XlMsu794feDEo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rSgc54yd6KDSy3ieobpPcJSQe/ML6yTI0fU4uBWFm69Cf0fRi2dyM0vYSqZtx6OFPm3iK3J58dkeKyaRk94ys//wdvtX/66TA1Revq+2/R2JOR8PJ/ZuBdFI34z6gNXV8isbxh4xSukcXneRumXTQc6yd7Od48C6SwB7iJOfIkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=SeLqHJin; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=L5ZU+66W; arc=none smtp.client-ip=64.147.123.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CTG48LGu"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 431IKCQ9009659;
-	Tue, 2 Apr 2024 01:48:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2023-11-20;
- bh=L9IxItlvqA1yIzQ1+sVrLHxRvr61/Tb3C75G4rmCcAQ=;
- b=CTG48LGug34c6CkHKet8GhYB1nQVJyps9stIGiL2hqvslsOCRAnbCUzpzFEWEM18EoXs
- EB9+H+zbmdhOpo6dbXmJIKRAg882F7RZFi6eEjeKnpCBouaOCBa4tckN470B1QAIvSy6
- T9Rjy1wb38hRO/bXH+5oKDyqbHgajqQolR94I6D/dlIyKltmAGBPbfO7WO3BRTgruUA8
- AGgI3GOFll2Qo/cwy70tT/yq80qBikDcnhfAd96YVhvW+QJS+JE1JX1ZM0cEaRiAr5C1
- s81LKqWNXX7K4nSvYdTOaS0jY3QC5uNlzmudLs0vOK6xtHptVIFZWFKHXb15w8vOCIfL OA== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x7tb9sjps-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 02 Apr 2024 01:48:47 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 4320lCLT018692;
-	Tue, 2 Apr 2024 01:48:47 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3x696cd6c1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 02 Apr 2024 01:48:47 +0000
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4321mkN9030130;
-	Tue, 2 Apr 2024 01:48:46 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3x696cd6bp-1;
-	Tue, 02 Apr 2024 01:48:46 +0000
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-To: llvm@lists.linux.dev, Arnd Bergmann <arnd@kernel.org>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Jakub Kicinski <kuba@kernel.org>, Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>, Ariel Elior <aelior@marvell.com>,
-        Manish Chopra <manishc@marvell.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Hannes Reinecke <hare@kernel.org>, Helge Deller <deller@gmx.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Bill Wendling <morbo@google.com>,
-        Justin Stitt <justinstitt@google.com>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kbuild@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org,
-        linux-sound@vger.kernel.org
-Subject: Re: (subset) [PATCH 0/9] enabled -Wformat-truncation for clang
-Date: Mon,  1 Apr 2024 21:48:35 -0400
-Message-ID: <171202249144.2135322.4411557752324466054.b4-ty@oracle.com>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="SeLqHJin";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="L5ZU+66W"
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailfout.west.internal (Postfix) with ESMTP id 104291C000E7;
+	Mon,  1 Apr 2024 22:26:16 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Mon, 01 Apr 2024 22:26:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm3; t=1712024776; x=1712111176; bh=revw4RU6t4YZXMwj8jW6C
+	AjJkLJLGU8mWvurq1rpA6I=; b=SeLqHJinupEJDXfkBn9O7Ea2hQda4q9swKhF0
+	k9N/XqbWqb6Yg5aBK11I0e/yt4xc0pxxRyBLO9YghrcprWmTtp67ny1Hhr+vcrPr
+	L5kqxjLf3YHYPk97xVCJbT5N6NyacbN7GK7UmFLH2K6EH+XxT8AmAiQJ9ilGChn1
+	vLVN0f+RqeQR0zQx3dJmwzE/K77NmtWiXMRerfTYGn30SlywzfgP/T2Is2uWqiH/
+	/irlboRYSZ77MMcAe7ql6yFRMCrnuZ87vIwZFXnK2LXrdV4JWUA06eBg9jVJezeG
+	nulNAxPVVYPGOPQhSjQAgZHlRrswGLCFBhCMuTF1xgdy4F8Ow==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1712024776; x=1712111176; bh=revw4RU6t4YZXMwj8jW6CAjJkLJL
+	GU8mWvurq1rpA6I=; b=L5ZU+66W47sJLNqlddhdvwORqPN3HOKTBxI8KbMCvQs0
+	aNvRpbA/HOlQylqFHjwoUwEAtHyTVM9N7ERzxZV37iXj/OEjgZn4mbTLxKaEpvsi
+	YdXi5sMOKlDBbCinwrtyF5o7qcrLx/jZU8eAUf3/BE4xIMRsQ+8eAx0xBsg+l8tP
+	COhIiJrJf/+Gaohhr5B7R3fo7u3tR6j47HVPeIy3IA7F1KhtfP6wKzwvSs0lEh4m
+	nT2EMbPUnqrisiwD90CZlVbLNoHFLcZLUiuBacTMkrOtPd5Zs+v+3LaG9p1gT/g+
+	YV7SUSmxQvROFJjUiIwnyFlaDJDU/Klxkf1XUPbkDw==
+X-ME-Sender: <xms:yGwLZq5tjGegbbLzJFaEU5VAgf9pXW3gjR9v2emHuXJ9wmePIpGgKw>
+    <xme:yGwLZj4js4nsbhq1Kb1gYbjany21VWwlB7NZyGWXbSY3TR33weZPf6xrkYv5gv71L
+    JxU5zl05X6ZDqc_oRs>
+X-ME-Received: <xmr:yGwLZpcNeMtyH_pBV4tYzhxDxWzpTADOgEgYuvU3jOPZSVL65wz9qGhWXiRT>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudefuddgheekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhho
+    nhgvshdruggvvheqnecuggftrfgrthhtvghrnheptdehkeeigeeggfelkeeufeefjeduvd
+    ejveduvdehtdegveeftdeugeetvdeltdejnecuffhomhgrihhnpehkvghrnhgvlhdrohhr
+    ghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluh
+    hkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:yGwLZnLfajzKE0pyAH2GMYKoNHZH9-KqLjHOHHN_KPCKpw79WdjLyQ>
+    <xmx:yGwLZuJTndNTeQ2ZfKgKcFvSuigWw0yc9jD3qHyeGYXtp9nORL1G0A>
+    <xmx:yGwLZoxfmETCITzYBXit7b2lV8fisz8UkHEoO3yKG7klrZPuEI0yCA>
+    <xmx:yGwLZiIIZgpivfUvXTKdXOX_thiZwqIqVqp417694cAg7ZLxoDM9Tw>
+    <xmx:yGwLZm-ayAF7ELJSzbVJ9gab9VFniaKKCc5579w7m3pO3CnhHpNX6Xo7SGU>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 1 Apr 2024 22:26:13 -0400 (EDT)
+From: "Luke D. Jones" <luke@ljones.dev>
+To: hdegoede@redhat.com
+Cc: corentin.chary@gmail.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH v2 0/9] asus-wmi: add new features, clean up, fixes
+Date: Tue,  2 Apr 2024 15:25:58 +1300
+Message-ID: <20240402022607.34625-1-luke@ljones.dev>
 X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240326223825.4084412-1-arnd@kernel.org>
-References: <20240326223825.4084412-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-01_18,2024-04-01_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 spamscore=0
- bulkscore=0 adultscore=0 mlxlogscore=999 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2403210000
- definitions=main-2404020012
-X-Proofpoint-GUID: LNUyxeCija5WK7SmvL47CZEEitUJovRX
-X-Proofpoint-ORIG-GUID: LNUyxeCija5WK7SmvL47CZEEitUJovRX
 
-On Tue, 26 Mar 2024 23:37:59 +0100, Arnd Bergmann wrote:
+My appologies for the rapid v2. I hadn't run checkpatch like I usually do and
+when I did it showed some improvements.
 
-> With randconfig build testing, I found only eight files that produce
-> warnings with clang when -Wformat-truncation is enabled. This means
-> we can just turn it on by default rather than only enabling it for
-> "make W=1".
-> 
-> Unfortunately, gcc produces a lot more warnings when the option
-> is enabled, so it's not yet possible to turn it on both both
-> compilers.
-> 
-> [...]
+This patch series touches quite a few things along with adding support for some
+new features.
 
-Applied to 6.9/scsi-fixes, thanks!
+- Add support for mini-LED on 2024 ROG lpatops
+- Add support for the gpu MUX WMI call on Vivobook laptops
+- Add support for the POST boot sound on ROG laptops
+- Add support for MCU power-save (ROG Ally only, saves more power on suspend)
+- Store written values for ppt_* features
+- Small formatting cleanup
+- Small fixes to cleanup struct holes found with pahole
 
-[7/9] scsi: mylex: fix sysfs buffer lengths
-      https://git.kernel.org/mkp/scsi/c/1197c5b2099f
+Obsoletes:
+- https://lore.kernel.org/all/20240320011442.11608-1-luke@ljones.dev/
+- https://lore.kernel.org/all/20240310065408.63703-1-luke@ljones.dev/
+- https://lore.kernel.org/all/20240310061715.16531-1-luke@ljones.dev/
+- https://lore.kernel.org/all/20240310055312.11293-1-luke@ljones.dev/
+- https://lore.kernel.org/all/20240310233722.30884-1-luke@ljones.dev/
+
+Changelog:
+- V1
+  - Mini-LED: use asus_wmi_get_devstate() and not asus_wmi_get_devstate_simple()
+  - Fix dates in Documentation/ABI/testing/sysfs-platform-asus-wmi
+  - Remove <name>_available bools and rely on devid for:
+    - gpu_mux
+    - mini_led
+    - kbd_rgb (TUF RGB LED)
+- V2
+  - Fix formating on select if/else blocks shown by checkpatch.pl
+
+Luke D. Jones (9):
+  platform/x86: asus-wmi: add support for 2024 ROG Mini-LED
+  platform/x86: asus-wmi: add support for Vivobook GPU MUX
+  platform/x86: asus-wmi: add support variant of TUF RGB
+  platform/x86: asus-wmi: support toggling POST sound
+  platform/x86: asus-wmi: store a min default for ppt options
+  platform/x86: asus-wmi: adjust formatting of ppt-<name>() functions
+  platform/x86: asus-wmi: ROG Ally increase wait time, allow MCU
+    powersave
+  platform/x86: asus-wmi: Add support for MCU powersave
+  platform/x86: asus-wmi: cleanup main struct to avoid some holes
+
+ .../ABI/testing/sysfs-platform-asus-wmi       |  26 ++
+ drivers/platform/x86/asus-wmi.c               | 393 ++++++++++++++----
+ include/linux/platform_data/x86/asus-wmi.h    |   6 +
+ 3 files changed, 338 insertions(+), 87 deletions(-)
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.44.0
+
