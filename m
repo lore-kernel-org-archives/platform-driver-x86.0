@@ -1,214 +1,118 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523358405F;
-	Tue,  2 Apr 2024 14:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9031D17F3;
+	Tue,  2 Apr 2024 14:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712067226; cv=none; b=npC1lC5siUUxg7L1+5I0JSYWmqOWxL+vzaR7+sih58Px8FABcGlnlMrRw9Hcxl6ySqKMIWvkJRcW5MGCBd0uC+oWx/mvfV6nCeJv4iebG/O4HaTry178S39ihXxpIBLOBDe41BTpCOTEYrbsYWe561wrcNPsOkAhKrPqyQBNN5c=
+	t=1712068276; cv=none; b=KSuy6UQN3MSfclaLnlqqLAnOQc6vfryMMKQuLgAZzDvQH5rIxdQwBJK/oxhQ65Ui8+J4ey4RNxk1bgtp54faIhP5jZ6Ss4AMABYUajeo0yim3MPwktStIqjNQ0FdRhFaU6CBjo8bPrtnZXnCf+oWmjddWjuPgIho+vsU8XrN4xQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712067226; c=relaxed/simple;
-	bh=t60O7Ucy+WoXthLtuuAOS1Utxu8te3IwlUtsBNQHNiI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FHenScpG4aWe13s2rLXSa9pxKjJLP8DfVkF4GmWtddevwwGK6jiDbkeR8zuSMt+yHD0PfL7EVLAX7VT2Yj+uMX4I/t0H21JXE/eexyksCCyYQnpfFSSk2tTIsgsxeWlnM1Rw0TS/FqIfboHfLbhQChrJj0k5+g+l5nuJRQHNqac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=mSztMLus; arc=none smtp.client-ip=212.227.15.15
+	s=arc-20240116; t=1712068276; c=relaxed/simple;
+	bh=NYmtOecKlLyzO3nfLMqfP9YJByKvOkIZO/4pDmRw5vg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fzrW8M62xp5YytkbjkVarLVPVPQeCRURg9KUAlBYZ7T5fr8FbSOR5iBfqAA/FYHuAKj7PFOU1BvtSEaETpU+vdhphj8vX3AfqVKd5gIK6oIj27xt1QM7DAmNhsfWHRoYMQB7me5MR6g0PT1QcgmuiQd3e6x9MueyeEHLVcNSEUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=YP+9/42D; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="mSztMLus"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="YP+9/42D"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1712067211; x=1712672011; i=w_armin@gmx.de;
-	bh=cN9hRjRBiqa1a82umFnF3bDT9Wh/6VtwazCBdn3JI7M=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=mSztMLusppk30uMkKOin+S409Lg4nWIN5GHht+a7yNc87gNo4UrTGK6csaE+RFeO
-	 IjqnKMmEIt6SmW3Tsf44CwQq5VnERRBv7e1OM0nFM0B+lSAyHIb9GvNtnIqnzpVSl
-	 bysgqzMqioVvNtiZoZPCOOziAUw8QgdRsSB04Mtdj8Bfl8fJ/ln4naAFNtZBLHMin
-	 Tiqy7GP3URwNGNKeioH2rMNprWikYObnGs1oEfsBGcBo6Z4OZ/25VxRhcz51tsLRa
-	 2XO2z+ZZUjezkHLFJMYBfeHyK4W7UZH/pyk9n4b+bhfJEWqobKWQG+Jz8bblXMT/J
-	 9b7zz8k91M9CHlDaew==
+	s=s31663417; t=1712068263; x=1712673063; i=w_armin@gmx.de;
+	bh=RwQaqFwNpLwiUaZNu6AXD2WMwZk2ta/0PgKPGIo7pDU=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=YP+9/42DlR6D3HEkpeMMp7fISgGBGI0zbTfhtNIlrjsD8Sp4gslKjbipYxPIRVkX
+	 0LfWSwoHR3SUrHF1kLRFgeaT5vn/vtbS5gqZSxUjon6tv8S/c4C6BVUvgwwRaBIOw
+	 XWCUG0XLRY+OoONjs3c494f3obdqW5/QHb2IFejMGNWQMWHpK/yUnhBJasGG2TgHX
+	 zPp43C6swgXrO+GHmdflY7RLoiydKToaMWO3sIPBLwLjelxuAA0pq9yoi2Al9mcxW
+	 l81aJwHTnPmsaz9/Ai2mWPfgYPXs3Aml0yuArDuP4m9vBKH23M9GeQI7K+H+0VYAY
+	 9Yds5U+WJppcTGz4LQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N0XCw-1slwqN21SO-00wYbL; Tue, 02
- Apr 2024 16:13:31 +0200
-Message-ID: <01bb8576-d75f-4d22-ab29-f366fcfc5bc8@gmx.de>
-Date: Tue, 2 Apr 2024 16:13:30 +0200
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1N0G1d-1smlf60Chz-00xHS1; Tue, 02 Apr 2024 16:31:03 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: corbet@lwn.net,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-doc@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/4] platform/x86: wmi: Mark simple WMI drivers as legacy-free
+Date: Tue,  2 Apr 2024 16:30:56 +0200
+Message-Id: <20240402143059.8456-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] platform/x86: xiaomi-wmi: Fix race condition when
- reporting key events
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
-Cc: corbet@lwn.net, linux-doc@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240328012336.145612-1-W_Armin@gmx.de>
- <20240328012336.145612-2-W_Armin@gmx.de>
- <b82ded95-d599-4ef7-b984-ac4d8a5c2370@linux.intel.com>
- <3e41e132-98b9-496d-987f-6838289926b6@gmx.de>
- <9e7a081f-b727-4ead-84b9-3c80530a1039@linux.intel.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <9e7a081f-b727-4ead-84b9-3c80530a1039@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:3OoE19N2WbRLvk/NJ2ws2qpST8R317jcnYqOafiD+FGf9JWGZCy
- 3K/VZRUQQ1SQB46DhaWpL0cIbjAzV+Waz/WP+0xJokbLY8WPhBJ98vUXMCUwhqCNAIhwWQi
- xVsbhoYkOb0zANlcXSHaaN1J2I9CzCUuLMfJs0BlgOidN1GgXxz6t9OnNN9HBJ8w9cDtd3j
- QDTq3nGj15yr33FybuxkQ==
+X-Provags-ID: V03:K1:dtSjc7LZamFk+Gy/7gLU9y0Uon9xGkle8LMwgaUZ6ChQ1P1wyFV
+ 7tSOcK7dc5LNU100bDBSPR0apxI6S7SR64t0AtwnNIdkZU7h3/38hOG9qSN1tK98//2dZPm
+ lwhrw2FQ0Z4lYnUvqFPIiSlvMrVWqpdF9FDaXXXilWqB2XmtuY3C0bPNP4xL3YixcSsdzif
+ TewC2uk8TFlXrW2C5KaSw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:92JrpwzlREI=;9f5acDzr829R4opzUgfEo3pUCCv
- ypNOtryVHGaeRM9e4NcPUVXM4BCvZN458qKde9xUUJ5dZWw3KhOkg81mK4/0S227m2nR60UgY
- cn0w0TmqZ+OXZyIOLQx+dLXI5jn3U8A9BZK/ppq5Gua07fgFlIJCX/XirheynXiKlK8SNfY5U
- LjE7nXF9TpRZFzoJzLIVXOK2wUChZWRZmAZjwAi850pyLR517gbjnObQpVuZzNVk6r3G8iqvk
- SwH7FIIoiLVbNenY3xGc2vTK4qct01MfMLFkE01lWHEic564B3lkx6KTUGaquQrnvRuo1oWFu
- eYqlnwj1reyAP1Z6Nv1HZvpj4Zc5bCrE3YjfKy08osLFpQXzLKehwCLouHo+t6FSzMU6DLLsi
- 7Yg1m4j3nOZo5QTQyLYcYCfGLw8gtMXaraCiooOnuPE7rht9wUWDKJAUvyC74AEAdLUxfq2XH
- 6rHTkby1q3m86xIaZ/DnGyRCcEyrWJMP160VUM0GUMhLB+RKbuMckVstjCm/nsFSRG7KAbCsU
- QUAN9pMqVUpP3Rilf3bsuCElkWd9DQAUjeRBesZ4G8VGLLxrSSoK9Mw0h/52hRp9rPtF3ktYX
- SWaNH3dtLSsew8U+kcq9jnrbpD6iEeay04aWZv14txjrfGVanKNLT/icsM8oGGm8841Fv9okC
- prPQoEf11xqA7BgQrFiFDk5iYCUbklCwB0t17WQKNQISfkXQRD5MsCqCcMHr3vuO36AWkCieb
- yEB2UkaOHE6oEwL0XohhFWkY4iX8nPIaTsFMjfeq1ORy3Ve9thPiFOilLFyePoJzGsgFTKZK+
- RtRb/utkRw5z5u3tpacg9wni1Rzpe54C3fIXC9iaUkMfY=
+UI-OutboundReport: notjunk:1;M01:P0:RMvd0Pwq79Y=;YURxJ9+LhdA4F4u7rOfTe6Eajek
+ 0jh1KOSPVrrQVr8aOOOapjQoMc005rzLyFf3Wq5eawD0zjmyWB7KLpj3Xmcpw/zvvtKgC7vYv
+ hmACSoqoH8nn97CI/rQFn58UQqFR6bJH/W5WUnL7g999kxG/4LldQTF/YfKbccqH0lxuBSk1O
+ SIHj/0EnzV/H7RkPW0Pm9Hm5Ssf1heCAtbCx3LWhvqFhq0Duxfn5vAyzBL/w69DwdgFYuELrd
+ ELhFfVIoMhjG4145uFcWbrI/klADQTaULudrlBzZbCYcAfBK5hLozAgvbVd6tGKy/DSlwEFjd
+ XrqUBxlTMTHzW0lCL3yUdCewsydDKBsDJ4PcINDvE0NuK6ofbE51QCwQSk/Z9dNDV6qdFA8jy
+ G4enrSIODs7yil3O8gu5npv7wVBIo5F753yM9889VRmt4CKsdwT99/gTWokxB4GEXIB42njoF
+ PD7ubnkFbFHIBF3w/kjFVkNQPvnqmXfmcAachLP0lAtMO0JIDYaqGZj+WKB9GROyyKvfBC6Hr
+ RpdDsKNYmqwGyUU8lO2Uh8e71P9sF4ZsQ+L8KYPtsqXtVYkFx3qTxRFVA9+QUpF6Y6dgpEgaC
+ BLQRK5JL+HrBFJTF/5dMiy6Y2JFAR7SQspul+nySzDlvINTP8z8Fs4QmN80MfKjDIHrtS5pHi
+ vSsFSODE2t0aBUWoaPkZdb52bTNfYz1+RYGfkIHWBz2EtyD6NOL8Ty7WyHL3xaJl5r0hWXbOT
+ 6Hy9atdqmv4y9TuQG2r84b3lcZ/y9xfAlFA1JDaOEz+jtzGXUwJXh6WmhQsODxvm3fBNSP93x
+ N/Ek1AAOLHUpBhjxMTMJsliXk41o15opng8Dc1247tFC0=
 
-Am 29.03.24 um 02:37 schrieb Kuppuswamy Sathyanarayanan:
+The inspur_platform_profile driver and the xiaomi-wmi driver both
+meet the requirements for modern WMI drivers, as they both do not
+use the legacy GUID-based interface and can be safely instantiated
+multiple times.
 
-> On 3/28/24 5:26 PM, Armin Wolf wrote:
->> Am 28.03.24 um 03:58 schrieb Kuppuswamy Sathyanarayanan:
->>
->>> On 3/27/24 6:23 PM, Armin Wolf wrote:
->>>> Multiple WMI events can be received concurrently, so multiple instanc=
-es
->>>> of xiaomi_wmi_notify() can be active at the same time. Since the inpu=
-t
->>>> device is shared between those handlers, the key input sequence can b=
-e
->>>> disturbed.
->>> Since locking is needed for all notify related calls in all WMI driver=
-s,
->>> is there a generic way to add this support in WMI core driver? Like
->>> defining some common function which will hold the lock and call
->>> driver specific notify handler? I am just thinking aloud.. If it is no=
-t
->>> feasible, then it is fine.
->> Hi,
->>
->> actually, not all notify-related calls need locking. It just so happens=
- that
->> input drivers must protect their key sequence, other WMI drivers might =
-not need
->> to use any locking at all.
-> Got it.
->
->> I would prefer if the WMI driver does the locking, so it can be optimiz=
-ed for
->> each WMI driver.
-> Why not implement this support?
+Mark them both as legacy-free using the no_singleton flag.
 
-Because different WMI drivers will most certainly have different need when=
- it comes to locking.
-Some might want to use a simple mutex, some might want to use a RW-lock, a=
-nd others might need
-something totally different.
+Compile-tested only.
 
-Implementing all of this inside the WMI driver core will be difficult.
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.=
+intel.com>
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+Changes since v1:
+- add Reviewed-by tag
+=2D--
+ drivers/platform/x86/inspur_platform_profile.c | 1 +
+ drivers/platform/x86/xiaomi-wmi.c              | 1 +
+ 2 files changed, 2 insertions(+)
 
-Thanks,
-Armin Wolf
+diff --git a/drivers/platform/x86/inspur_platform_profile.c b/drivers/plat=
+form/x86/inspur_platform_profile.c
+index 743705bddda3..8440defa6788 100644
+=2D-- a/drivers/platform/x86/inspur_platform_profile.c
++++ b/drivers/platform/x86/inspur_platform_profile.c
+@@ -207,6 +207,7 @@ static struct wmi_driver inspur_wmi_driver =3D {
+ 	.id_table =3D inspur_wmi_id_table,
+ 	.probe =3D inspur_wmi_probe,
+ 	.remove =3D inspur_wmi_remove,
++	.no_singleton =3D true,
+ };
 
->> Thanks,
->> Armin Wolf
->>
->>>> Fix this by protecting the key input sequence with a mutex.
->>>>
->>>> Compile-tested only.
->>>>
->>>> Fixes: edb73f4f0247 ("platform/x86: wmi: add Xiaomi WMI key driver")
->>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->>>> ---
->>>>  =C2=A0 drivers/platform/x86/xiaomi-wmi.c | 18 ++++++++++++++++++
->>>>  =C2=A0 1 file changed, 18 insertions(+)
->>>>
->>>> diff --git a/drivers/platform/x86/xiaomi-wmi.c b/drivers/platform/x86=
-/xiaomi-wmi.c
->>>> index 1f5f108d87c0..7efbdc111803 100644
->>>> --- a/drivers/platform/x86/xiaomi-wmi.c
->>>> +++ b/drivers/platform/x86/xiaomi-wmi.c
->>>> @@ -2,8 +2,10 @@
->>>>  =C2=A0 /* WMI driver for Xiaomi Laptops */
->>>>
->>>>  =C2=A0 #include <linux/acpi.h>
->>>> +#include <linux/device.h>
->>>>  =C2=A0 #include <linux/input.h>
->>>>  =C2=A0 #include <linux/module.h>
->>>> +#include <linux/mutex.h>
->>>>  =C2=A0 #include <linux/wmi.h>
->>>>
->>>>  =C2=A0 #include <uapi/linux/input-event-codes.h>
->>>> @@ -20,12 +22,21 @@
->>>>
->>>>  =C2=A0 struct xiaomi_wmi {
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct input_dev *input_dev;
->>>> +=C2=A0=C2=A0=C2=A0 struct mutex key_lock;=C2=A0=C2=A0=C2=A0 /* Prote=
-cts the key event sequence */
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int key_code;
->>>>  =C2=A0 };
->>>>
->>>> +static void xiaomi_mutex_destroy(void *data)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 struct mutex *lock =3D data;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 mutex_destroy(lock);
->>>> +}
->>>> +
->>>>  =C2=A0 static int xiaomi_wmi_probe(struct wmi_device *wdev, const vo=
-id *context)
->>>>  =C2=A0 {
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct xiaomi_wmi *data;
->>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>>
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (wdev =3D=3D NULL || context =3D=
-=3D NULL)
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVA=
-L;
->>>> @@ -35,6 +46,11 @@ static int xiaomi_wmi_probe(struct wmi_device *wde=
-v, const void *context)
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOME=
-M;
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_set_drvdata(&wdev->dev, data);
->>>>
->>>> +=C2=A0=C2=A0=C2=A0 mutex_init(&data->key_lock);
->>>> +=C2=A0=C2=A0=C2=A0 ret =3D devm_add_action_or_reset(&wdev->dev, xiao=
-mi_mutex_destroy, &data->key_lock);
->>>> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->input_dev =3D devm_input_alloca=
-te_device(&wdev->dev);
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (data->input_dev =3D=3D NULL)
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOME=
-M;
->>>> @@ -59,10 +75,12 @@ static void xiaomi_wmi_notify(struct wmi_device *=
-wdev, union acpi_object *dummy)
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (data =3D=3D NULL)
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->>>>
->>>> +=C2=A0=C2=A0=C2=A0 mutex_lock(&data->key_lock);
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 input_report_key(data->input_dev, dat=
-a->key_code, 1);
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 input_sync(data->input_dev);
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 input_report_key(data->input_dev, dat=
-a->key_code, 0);
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 input_sync(data->input_dev);
->>>> +=C2=A0=C2=A0=C2=A0 mutex_unlock(&data->key_lock);
->>>>  =C2=A0 }
->>>>
->>>>  =C2=A0 static const struct wmi_device_id xiaomi_wmi_id_table[] =3D {
->>>> --
->>>> 2.39.2
->>>>
->>>>
+ module_wmi_driver(inspur_wmi_driver);
+diff --git a/drivers/platform/x86/xiaomi-wmi.c b/drivers/platform/x86/xiao=
+mi-wmi.c
+index 54a2546bb93b..1f5f108d87c0 100644
+=2D-- a/drivers/platform/x86/xiaomi-wmi.c
++++ b/drivers/platform/x86/xiaomi-wmi.c
+@@ -83,6 +83,7 @@ static struct wmi_driver xiaomi_wmi_driver =3D {
+ 	.id_table =3D xiaomi_wmi_id_table,
+ 	.probe =3D xiaomi_wmi_probe,
+ 	.notify =3D xiaomi_wmi_notify,
++	.no_singleton =3D true,
+ };
+ module_wmi_driver(xiaomi_wmi_driver);
+
+=2D-
+2.39.2
+
