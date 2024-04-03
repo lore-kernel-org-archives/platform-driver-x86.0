@@ -1,166 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4DF6EB4C;
-	Wed,  3 Apr 2024 08:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EAFF6F524;
+	Wed,  3 Apr 2024 08:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712132470; cv=none; b=t+IkVuPtfLxam62wZxn1i1EkEpg4EXoIoIJJ2Srva06NqPW3FRBtwZxiVwty1p/2hYB2Fxp0/8jZfteE5Gkvbe7r03HnbAWug0ho3KhxmNUfT6hcbHAYQsq9BnfLEriVnF4gyZ1G7Pn0ZB6xrkbpcshgzyk86/V6RIFeEzQYDKE=
+	t=1712132602; cv=none; b=t3vZ8E4RiOfH5A/OYveTFObZF8qFMSgWMO8+pPSZh6bX1Pv5GHYsnhZzB9LGt3ZGpAS+qI0Sma3yTNfmxW0cQ0pjgXX176TDZN1hGHCfRUwTwA4qKStCkFak9710EU2BQnNC5bf/XuLQF7aISlOJMD/a+c6JHn/0S81qGpt6Ce8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712132470; c=relaxed/simple;
-	bh=2ymn81XuhMJBQNb1n7q7kDeZWjVqWfG2FeFn4C7QNh8=;
+	s=arc-20240116; t=1712132602; c=relaxed/simple;
+	bh=3UEaKcNQCsquDKRqA9/0D7BIcxSP6v8eFK/FMp1INVc=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=cx8IKUqyu186SXR3YT/2wvyQuFQA/+ufpG/FUqYe8uFKa4+iG30kIYce17GUbq7u26a7+ln3sTCie5XrTBPwXJxlg0h/MIs5TsRXIvS/8xvh28cjY967gGlZs4ckGIVDIe8Mrjk9VjeJr2qrh20o1uLO6kXnonh0owF+I0Nad2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PrynK8X/; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version:Content-Type; b=nN+Mpk4ygjAHlBfDhA8IOMq76CNH+oHu0Oa1JomXrMIMRmd5bWgGiqeJTPCmm15U/U0jx1GvEVS0yMWhk9nCOKnzsBsXltUlIFrpthou/8kKIY7C0IYEyZXCMayPvGIs095v7FCdYBBVVqXmW5SYYUWYYkm2Dp6PT0vEbYFmowU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ll5hSGia; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PrynK8X/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ll5hSGia"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712132470; x=1743668470;
+  t=1712132601; x=1743668601;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=2ymn81XuhMJBQNb1n7q7kDeZWjVqWfG2FeFn4C7QNh8=;
-  b=PrynK8X/iczD1rrA3w3xb44acQCKVsJptJIHe6IpkIeDCSKt0PBr6bDu
-   AvebJHOSVonSScNYSP7DBso8R8jpHtXkff0UyRi+tLr1lg4HCnPpaOKIm
-   mvOqQ5OAeRlTNTQ0FA/Z4l0aqpqvnlB9VypVifOVOXf3K0TmpkiHKZ120
-   OI6X3Z34H8uzDSx4VL4htxxKJp4a+NTqNZwQiLRtPuJ3Zy2hpYJOidh9h
-   D1loB0o1CYtgylI+KNgANhHBOkwB2LP93nvUewsLJwkDEwjY2YwEBz1tF
-   eB9bbesk0iZ+Rr2EEaMzxKe642aynsifNpOtdQgji0+x5+sS6HmkF0qlv
-   A==;
-X-CSE-ConnectionGUID: xULLFY75RNq07h6zp9yYgA==
-X-CSE-MsgGUID: +279yEJIRWSgoFh/w5MapQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="29826699"
+  bh=3UEaKcNQCsquDKRqA9/0D7BIcxSP6v8eFK/FMp1INVc=;
+  b=Ll5hSGiaCKtHgmhOWru4tgNX0tRCcQqUmaosqH6MMhopDPlCVAqW7SOo
+   BV/pHon2GpQILaY9JEK/2OdPVl8z39aanLGOAPz2pQhlN87pSjvmp1wep
+   jNAAYnvnEggLHBA71aoIvRmUZTUvtryXvbt63Xo6JNu0iBwJtH48l9YNt
+   1Ti9F3tlpDXG3X4cBZK4sdubVQmPXdj+K13uPuSlLq1kvd9eY5sytAtpT
+   MAffuwpXS4FL6aF+bVagWsJRMgFMMpWh3pA2FYI5ApHnz4Sj3Sa68joVQ
+   MUKtwWjK53m1gvLc9oOazVMIT7VpbFg37ZN/O6c6hIYNVy96UWXMzEeov
+   Q==;
+X-CSE-ConnectionGUID: iqaKRxWYSvi6gE/3dhz1KQ==
+X-CSE-MsgGUID: AJXqprGVQcKNR+f1cLpHBg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="18791915"
 X-IronPort-AV: E=Sophos;i="6.07,176,1708416000"; 
-   d="scan'208";a="29826699"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 01:21:09 -0700
-X-CSE-ConnectionGUID: Jmmd9za4RQi0EK94ZoYXGg==
-X-CSE-MsgGUID: OFX3mc4OTUOBOoo7FnJ+lg==
+   d="scan'208";a="18791915"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 01:23:21 -0700
+X-CSE-ConnectionGUID: HYAhQ03pSvOjkl+4zUDbvA==
+X-CSE-MsgGUID: GYBqKbDeTWyCFtZFS+SXSQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,176,1708416000"; 
-   d="scan'208";a="55795064"
+   d="scan'208";a="41492900"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.24])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 01:21:06 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 01:23:18 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 3 Apr 2024 11:21:02 +0300 (EEST)
-To: Luke Jones <luke@ljones.dev>
+Date: Wed, 3 Apr 2024 11:23:14 +0300 (EEST)
+To: "Luke D. Jones" <luke@ljones.dev>
 cc: Hans de Goede <hdegoede@redhat.com>, corentin.chary@gmail.com, 
     platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 5/9] platform/x86: asus-wmi: store a min default for
+Subject: Re: [PATCH v3 5/9] platform/x86: asus-wmi: store a min default for
  ppt options
-In-Reply-To: <4555327.yiUUSuA9gR@fedora>
-Message-ID: <678014c5-5d2d-7128-88ea-c71a71410dd3@linux.intel.com>
-References: <20240402022607.34625-1-luke@ljones.dev> <20240402022607.34625-6-luke@ljones.dev> <89b0c0ea-30ce-28c6-19d2-ebd113b17935@linux.intel.com> <4555327.yiUUSuA9gR@fedora>
+In-Reply-To: <20240403002917.2870959-6-luke@ljones.dev>
+Message-ID: <e48c5226-9a25-ff24-45d8-5cc73d7d914e@linux.intel.com>
+References: <20240403002917.2870959-1-luke@ljones.dev> <20240403002917.2870959-6-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-667445792-1712132462=:1449"
+Content-Type: multipart/mixed; boundary="8323328-1375749286-1712132594=:1449"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-667445792-1712132462=:1449
+--8323328-1375749286-1712132594=:1449
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Wed, 3 Apr 2024, Luke Jones wrote:
+On Wed, 3 Apr 2024, Luke D. Jones wrote:
 
-> On Tuesday, 2 April 2024 11:49:50=E2=80=AFPM NZDT Ilpo J=C3=A4rvinen wrot=
-e:
-> > On Tue, 2 Apr 2024, Luke D. Jones wrote:
-> > > Laptops with any of the ppt or nv tunables default to the minimum set=
-ting
-> > > on boot so we can safely assume a stored value is correct.
-> > >=20
-> > > This patch adds storing of those values in the local struct, and enab=
-les
-> > > reading of those values back. To prevent creating a series of byte ho=
-les
-> > > in the struct the "<name>_available" bool is removed and
-> > > `asus_sysfs_is_visible()` uses the `ASUS_WMI_DEVID_<name>` directly.
-> > >=20
-> > > Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> > > ---
-> > >=20
-> > >  drivers/platform/x86/asus-wmi.c | 127 +++++++++++++++++++++++++-----=
---
-> > >  1 file changed, 99 insertions(+), 28 deletions(-)
-> > >=20
-> > > diff --git a/drivers/platform/x86/asus-wmi.c
-> > > b/drivers/platform/x86/asus-wmi.c index b795f9c1941f..c80afa385532 10=
-0644
-> > > --- a/drivers/platform/x86/asus-wmi.c
-> > > +++ b/drivers/platform/x86/asus-wmi.c
-> > > @@ -262,13 +262,13 @@ struct asus_wmi {
-> > >=20
-> > >  =09u32 gpu_mux_dev;
-> > >  =09
-> > >  =09/* Tunables provided by ASUS for gaming laptops */
-> > >=20
-> > > -=09bool ppt_pl2_sppt_available;
-> > > -=09bool ppt_pl1_spl_available;
-> > > -=09bool ppt_apu_sppt_available;
-> > > -=09bool ppt_plat_sppt_available;
-> > > -=09bool ppt_fppt_available;
-> > > -=09bool nv_dyn_boost_available;
-> > > -=09bool nv_temp_tgt_available;
-> > > +=09u32 ppt_pl2_sppt;
-> > > +=09u32 ppt_pl1_spl;
-> > > +=09u32 ppt_apu_sppt;
-> > > +=09u32 ppt_platform_sppt;
-> > > +=09u32 ppt_fppt;
-> > > +=09u32 nv_dynamic_boost;
-> > > +=09u32 nv_temp_target;
-> > >=20
-> > >  =09u32 kbd_rgb_dev;
-> > >  =09bool kbd_rgb_state_available;
-> > >=20
-> > > @@ -1020,11 +1020,21 @@ static ssize_t ppt_pl2_sppt_store(struct devi=
-ce
-> > > *dev,>=20
-> > >  =09=09return -EIO;
-> > >  =09
-> > >  =09}
-> > >=20
-> > > +=09asus->ppt_pl2_sppt =3D value;
-> > >=20
-> > >  =09sysfs_notify(&asus->platform_device->dev.kobj, NULL,=20
-> "ppt_pl2_sppt");
-> > >  =09
-> > >  =09return count;
-> > > =20
-> > >  }
-> > >=20
-> > > -static DEVICE_ATTR_WO(ppt_pl2_sppt);
-> > > +
-> > > +static ssize_t ppt_pl2_sppt_show(struct device *dev,
-> > > +=09=09=09=09       struct device_attribute=20
-> *attr,
-> > > +=09=09=09=09       char *buf)
-> > > +{
-> > > +=09struct asus_wmi *asus =3D dev_get_drvdata(dev);
-> > > +
-> > > +=09return sysfs_emit(buf, "%d\n", asus->ppt_pl2_sppt);
-> >=20
-> > Use %u for u32 values. This applies to all sysfs_emits in this patch.
+> Laptops with any of the ppt or nv tunables default to the minimum setting
+> on boot so we can safely assume a stored value is correct.
 >=20
-> Thought checkpatch or the compiler would catch that. Done.
+> This patch adds storing of those values in the local struct, and enables
+> reading of those values back. To prevent creating a series of byte holes
+> in the struct the "<name>_available" bool is removed and
+> `asus_sysfs_is_visible()` uses the `ASUS_WMI_DEVID_<name>` directly.
 >=20
-> I've added your reviewed tag due to the simplicity of the change requeste=
-d. I=20
-> hope this was okay.
+> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
 
-Hi,
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
-Please don't add Reviewed-by tags automatically in the future. Its=20
-meaning is not that the person has looked the patch.
+(I know it is already among the tags but I had not given it until now.)
 
 --=20
  i.
 
---8323328-667445792-1712132462=:1449--
+--8323328-1375749286-1712132594=:1449--
