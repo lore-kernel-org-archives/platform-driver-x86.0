@@ -1,128 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16E66EB69
-	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Apr 2024 08:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A0C136989;
+	Wed,  3 Apr 2024 10:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712134270; cv=none; b=IlR4+MSueuYiG0AmIKOz+oT+VmSXWMpWEM+5KhyI7/rrDBQaL6DJ7ZTaR5ZztMLT36C2N7Ln1892p4dk4laDmo8i0e+q3zX8AZWVnnd4bYBAZ/n9w2yEWTEStxKeAAbzKrpb5Ki54mbZ+1onSQJmVJRGawVlntyplyVmozYeJXU=
+	t=1712141718; cv=none; b=QWPyfKefLta1MnOFvHlbwiRDmOWFyyjjWm9t5jq2HF2NJlAtbHWMq5ZdWTCeIhf7LIK5MIIvJ7JvZ/us7DlHaPLw79zEfqbijY1l+RLE3dG/Nnos6ppET06mTvTw70phW7GFlh8RRvD8NtwMAl7c/4lj1IIskJnJrf61PFNL5eQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712134270; c=relaxed/simple;
-	bh=yNeV4z/PWJVyzzzivGAxNQiXug1KMK16UfKr4VpFu10=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uHjAY3JAOWxty1DjPhTC3xq+kQFzHtMkV2T2HT0fC4ODVI6R2vpHX8UReTs+jvrDRccAtFPkpKy/hngOlpeJxlt32Xf6SO4W8CdXeYyxluzYaptxpavrXYd6R2EWBgHlpaCqX50zjo6PwwihAA3aYqb7sN7BhEgK3OmmonBVrhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cPL1cmfW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712141718; c=relaxed/simple;
+	bh=lrJ50ChqWjiafdbnGjnP1GXQZSC7KNkvDUoe1E9xguc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cWnV+vk3/D5eWtoHjM8QBSPzI+OklLqujoGPs69w0lFyBuMQI7hpBWtmsh/fEvylvi/WR00N9iub+QNnBpsjpNYcqSwKPEMXHUBNTyOyEde0wJBIX+7rT6KK2Z8lJXoWD2N+TiZ+ETOy4RSA2+oUs9XFrZs1AsGbzHQ7691wK0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O9JMqndl; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cPL1cmfW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712134268;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ftwTQ4DomVP4vKswlA/sGzSPQmPFYykxxeMk1bR9OoQ=;
-	b=cPL1cmfWI0kejVp9qRPWh5hv2RD5aCqf6vZkgiXGICLcjI86aesOOrx4grnn6fB9URHOKj
-	GGx2Oo0+aVkaAVGIDgDyd/Rpm+MdOdnyIaZbRImYwz6AqWlrauydivES/8p7BHDdOIm+OH
-	vBQ/g/kaLpEbx0+H1h3KwPBAi/M731g=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-584-1jwuS9u8NTKRn6jzKpqJPQ-1; Wed, 03 Apr 2024 04:51:05 -0400
-X-MC-Unique: 1jwuS9u8NTKRn6jzKpqJPQ-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-56c137aef05so2226748a12.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 03 Apr 2024 01:51:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712134265; x=1712739065;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ftwTQ4DomVP4vKswlA/sGzSPQmPFYykxxeMk1bR9OoQ=;
-        b=gtvKoJw/o7h/5NLL4thAmUbsq+Rh24FJX0l0az2VhydUY4Cyq6ZA3g6NoWyjhDfp0a
-         ThRcMmVBU8Wdoaa0LRkoKtKsRz9EHSFH6ul1uUM9kiU8SFE3QICMy9mJnqUkDwUesaeQ
-         nv6q6zyho8Tw/LlYZAjCcH6pn3yKuWw+RyL3zKlNcMrGPxJC9NFAl4uFv0rDfgta3YTC
-         ci16J0sX9RqP98AbGIBJxaBTGgxXkIxdDbnvD0VVkuIjSTJt07zmVZg29w8tUxcW9hEX
-         7uSpSIalpS24Xlo3+oXvn0IKoDpXI5W0XvuZaif7EtbqICE1dlAAukrtz4JF8e4W6jf2
-         tmiA==
-X-Gm-Message-State: AOJu0Yx/lj0efKD9p01y3t0f0ShBcY4GCMPqsMitthFS/PC39NS6eiNX
-	8QbFIbdhhbtW/mHM3UdDjEHniy78KeiKMCibqt1bShQNRcVBJHj7oZ2j0VSPR584WgldlK38ZLH
-	EwWo+z5Q776wUzAe9oEmF5PlhMucYtx3NckK/XEzKNXShiJ1qOHZXH29bD0P3ry+qgcyyEKE=
-X-Received: by 2002:a50:9550:0:b0:56d:f375:29a8 with SMTP id v16-20020a509550000000b0056df37529a8mr2256038eda.36.1712134264871;
-        Wed, 03 Apr 2024 01:51:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEwT6tT+kScrk/JwtM/C4YQ4Oeghtzd6zvvvgwsKFGDFynobYE/66/6Tw6MA36U5g1BHNJNXA==
-X-Received: by 2002:a50:9550:0:b0:56d:f375:29a8 with SMTP id v16-20020a509550000000b0056df37529a8mr2256031eda.36.1712134264599;
-        Wed, 03 Apr 2024 01:51:04 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id i23-20020a05640200d700b0056ddc4415eesm2723204edu.14.2024.04.03.01.51.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Apr 2024 01:51:04 -0700 (PDT)
-Message-ID: <98229bf5-791f-4914-82de-7cee15bc41ce@redhat.com>
-Date: Wed, 3 Apr 2024 10:51:03 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O9JMqndl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712141717; x=1743677717;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=lrJ50ChqWjiafdbnGjnP1GXQZSC7KNkvDUoe1E9xguc=;
+  b=O9JMqndlTOdhPqc3eqyF+I4ysJdzgP2tc4ZymLxojX23VYrpZmehBJO/
+   wzth97j1lca02Oss8Z+Gs9VOphMz5+zCn1fWrXeEV/eGWhdIdzvRLwN/2
+   7NQ0Ox/EfOQdJQqlG0ABZk13FhtrN15K8X8RmsVNz50RP8q96WVyK9eYb
+   /X4YD5XlHhqxUX7crC7QKcFkYku+vBnon+piSkcF3hxHsaUS4By8eyfh6
+   rFY8BORYAHFm9CJ09QheqpLDV/rINYXAFWoJsKZ0PNFaflYuDdj0LSoIZ
+   KptZpSV1OT+1Hokek/JsJXXtOsvuYcIn++g2Np6vziSzEul198UrGSIfL
+   g==;
+X-CSE-ConnectionGUID: +ro0M6pDRpSLMJkZbXAFFw==
+X-CSE-MsgGUID: S7gZBttxQuC1vIEwMgTNgw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="10334263"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="10334263"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 03:55:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="937084887"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="937084887"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 03 Apr 2024 03:55:15 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 3A4A83E5; Wed,  3 Apr 2024 13:55:14 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v1 1/1] platform/x86/intel: atomisp2: Replace deprecated UNIVERSAL_DEV_PM_OPS()
+Date: Wed,  3 Apr 2024 13:55:11 +0300
+Message-ID: <20240403105511.558395-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: leds: add LED_FUNCTION_FNLOCK
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Gergo Koteles <soyer@irl.hu>, Ike Panhc <ike.pan@canonical.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-References: <cover.1712063200.git.soyer@irl.hu>
- <8ac95e85a53dc0b8cce1e27fc1cab6d19221543b.1712063200.git.soyer@irl.hu>
- <6b47886e-09ac-4cb9-ab53-ca64f5320005@linaro.org>
- <39acb3b9-a69f-4654-9749-a9af42fea39e@redhat.com>
- <368e9817-0000-4f69-9f09-568827466121@linaro.org>
- <4956933c-49c4-49ab-a91a-7e0efcc211d5@redhat.com>
- <17a700a7-44f0-4e46-9a0c-4c2da44c9e27@linaro.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <17a700a7-44f0-4e46-9a0c-4c2da44c9e27@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+The UNIVERSAL_DEV_PM_OPS() macro is deprecated. Replace it.
 
-On 4/3/24 10:46 AM, Krzysztof Kozlowski wrote:
-> On 03/04/2024 10:39, Hans de Goede wrote:
->>>>
->>>> must have a dts user before being approved too ? Since
->>>> that file is included from include/dt-bindings/input/input.h ?
->>>
->>> Wait, that's UAPI :) and we just share the constants. That's kind of
->>> special case, but I get what you mean.
->>>
->>>>
->>>> TL;DR: not only is this patch fine, this is actually
->>>> the correct place to add such a define according to
->>>> the docs in Documentation/leds/leds-class.rst :
->>>>
->>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->>>
->>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>
->> Thanks. Is it ok for me to merge this through the pdx86
->> tree (once I've reviewed the other 2 patches) ?
-> 
-> You need to sync (ack) with LED folks, because by default this should go
-> via LED subsystem.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/intel/atomisp2/pm.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Ok, will do.
-
-Pavel, Lee can you give me an ack for merging this through the pdx86 tree?
-
-Regards,
-
-Hans
-
-
-
+diff --git a/drivers/platform/x86/intel/atomisp2/pm.c b/drivers/platform/x86/intel/atomisp2/pm.c
+index 805fc0d8515c..1081b632bd5e 100644
+--- a/drivers/platform/x86/intel/atomisp2/pm.c
++++ b/drivers/platform/x86/intel/atomisp2/pm.c
+@@ -118,8 +118,7 @@ static int isp_pci_resume(struct device *dev)
+ 	return 0;
+ }
+ 
+-static UNIVERSAL_DEV_PM_OPS(isp_pm_ops, isp_pci_suspend,
+-			    isp_pci_resume, NULL);
++static DEFINE_RUNTIME_DEV_PM_OPS(isp_pm_ops, isp_pci_suspend, isp_pci_resume, NULL);
+ 
+ static const struct pci_device_id isp_id_table[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x0f38), },
+@@ -133,7 +132,7 @@ static struct pci_driver isp_pci_driver = {
+ 	.id_table = isp_id_table,
+ 	.probe = isp_probe,
+ 	.remove = isp_remove,
+-	.driver.pm = &isp_pm_ops,
++	.driver.pm = pm_ptr(&isp_pm_ops),
+ };
+ 
+ module_pci_driver(isp_pci_driver);
+-- 
+2.43.0.rc1.1.gbec44491f096
 
