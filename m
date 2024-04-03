@@ -1,74 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D59143874;
-	Wed,  3 Apr 2024 11:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5107E147C90;
+	Wed,  3 Apr 2024 13:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712143434; cv=none; b=rg4TjAQ/Jy7oGYIu2l3vDbaqzrN/Dude3t3J4z0GbpStORzuY+6J6OfWy/UgAnWllGzdidkmAd5yTl1Qw+LBpIEVwSPu89zLy+upiV9MiMR9K584FmjtrfLZfeNksRmTR8u2TwiWIiLhtvMUD8L5tTVVlH/hFbV26JaLO9SkW1U=
+	t=1712149758; cv=none; b=NYnom+Aw0rOcLaGq8YQwC8BTOxb7lLNx04HsQp6xKZ4F7BAUd3XAAIeHlLy8Cc/5Yx6YyE1REzHu2xDeBFZQM/O0Ks/Xy/g4Qurw3CsP1285o+Ta9xkiWq5Jw4ccqMOczQXvhtyKSA+vXnI1l/8p1F+SEwVYcmE1T53QOUxdUHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712143434; c=relaxed/simple;
-	bh=Yt+RnJL5y2H1KaDSc7YxFYnA7Ph19WWyILBFYqaUHNc=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=jI21Zy2woAJ9BtXLk6filVKCOyZOmsQ4CkRba0KEeJlB6um2kAoN80vQmcBhkCUHiXHcf99dePu1O1YKf7oNSV2BbaTLYWJTcOW89GvBjqPceeDqt0LdNkR6t9PpT3wmdY97dAIdDk1tRovl0DrhRL1HdLLBLvWcHgj3H38wbFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ewnkyJC8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ewnkyJC8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3AAFC433C7;
-	Wed,  3 Apr 2024 11:23:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712143434;
-	bh=Yt+RnJL5y2H1KaDSc7YxFYnA7Ph19WWyILBFYqaUHNc=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=ewnkyJC8bgU9TxBx9xgqRlGoOnpOgddAFGG/voiONHNz7l0/Xm4S34qm4x4CQsps7
-	 LBIwwUaWdgI3OJmVio8mvhSirQK9dGb+a3BjyK2VtFbf0MIFH/UYqaDbsCy/A9BRZ7
-	 0cLSaiH9F+AqOrS4eTz7bT4oMXnCJABOwjzJ+E04diD7WELFJ30vEQjcAh0a8CVTWs
-	 Air3JwHHcILxoVt9opHdrdnE+8PLUN1MfteHAw52KEW52epgsBeqrVKfPUdrnyJ2mk
-	 CCgq4huu8/t31NvMy7ud9Sg3U3blUPLM261SwpRtejBMZumJIgs7bE0Z6DYi8e8Q2W
-	 Ua6nwu38X9Iiw==
-Date: Wed, 3 Apr 2024 13:23:51 +0200 (CEST)
-From: Jiri Kosina <jikos@kernel.org>
-To: =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
-    linux-input@vger.kernel.org, kernel@pengutronix.de, 
-    Jonathan Cameron <jic23@kernel.org>, 
-    Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-    linux-iio@vger.kernel.org, Maximilian Luz <luzmaximilian@gmail.com>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 0/3] HID: Convert to platform remove callback returning
- void
-In-Reply-To: <cover.1709747164.git.u.kleine-koenig@pengutronix.de>
-Message-ID: <nycvar.YFH.7.76.2404031323430.20263@cbobk.fhfr.pm>
-References: <cover.1709747164.git.u.kleine-koenig@pengutronix.de>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+	s=arc-20240116; t=1712149758; c=relaxed/simple;
+	bh=j/2Sfnuuaf/D6GVHHD0zV3RKWfEs3vbqzQqRmEe9Kj0=;
+	h=From:To:Cc:Subject:Date:Message-ID:Mime-Version:Content-Type; b=N8ODRMHo7XlE+GUqv2pJF/tmVr1WvuUNVVueQPcIUkIqC3naf59+xvajo2+rFMGsUqd0WYNYOqCukq6jzCvNSVPoclQeG2DcU20adXzUMvm785IBI+uRRwG7K1Z+oyjH1xe2Vk2qgp3xtxK6aOtBuQ8P2etJeMwJPdPi2/nRdmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from fedori.lan (51b69867.dsl.pool.telekom.hu [::ffff:81.182.152.103])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 000000000006C9F3.00000000660D54FA.00255DE5; Wed, 03 Apr 2024 15:09:14 +0200
+From: Gergo Koteles <soyer@irl.hu>
+To: Ike Panhc <ike.pan@canonical.com>,
+  Hans de Goede <hdegoede@redhat.com>,
+  =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+  linux-kernel@vger.kernel.org, Gergo Koteles <soyer@irl.hu>
+Subject: [PATCH] platform/x86: ideapad-laptop: switch platform profiles using thermal management key
+Date: Wed,  3 Apr 2024 15:09:07 +0200
+Message-ID: <85254ce8e87570c05e7f04d6507701bef954ed75.1712149429.git.soyer@irl.hu>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
 
-On Wed, 6 Mar 2024, Uwe Kleine-K=C3=B6nig wrote:
+Ideapad laptops have thermal management or performance mode switch key
+(Fn + Q). Now it sends KEY_PROG4.
 
-> Hello,
->=20
-> this series converts all platform drivers below drivers/hid to use
-> struct platform_driver::remove_new(). See commit 5c5a7680e67b
-> ("platform: Provide a remove callback that returns no value") for an
-> extended explanation and the eventual goal.
->=20
-> All conversations are trivial, because their .remove() callbacks
-> returned zero unconditionally.
->=20
-> There are no interdependencies between these patches, so they could be
-> picked up individually. But I'd hope that they get picked up all
-> together.
+Switch platform profiles instead, like the ThinkPad ACPI driver.
 
-Applied, thanks.
+Tested on Yoga7 14ARB7.
 
---=20
-Jiri Kosina
-SUSE Labs
+Signed-off-by: Gergo Koteles <soyer@irl.hu>
+---
+ drivers/platform/x86/ideapad-laptop.c | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 901849810ce2..6310011cc1b3 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -1071,7 +1071,6 @@ static const struct key_entry ideapad_keymap[] = {
+ 	{ KE_KEY,  16, { KEY_PROG1 } },
+ 	{ KE_KEY,  17, { KEY_PROG2 } },
+ 	{ KE_KEY,  64, { KEY_PROG3 } },
+-	{ KE_KEY,  65, { KEY_PROG4 } },
+ 	{ KE_KEY,  66, { KEY_TOUCHPAD_OFF } },
+ 	{ KE_KEY,  67, { KEY_TOUCHPAD_ON } },
+ 	{ KE_KEY, 128, { KEY_ESC } },
+@@ -1181,8 +1180,27 @@ static void ideapad_check_special_buttons(struct ideapad_private *priv)
+ 		switch (bit) {
+ 		case 6:	/* Z570 */
+ 		case 0:	/* Z580 */
+-			/* Thermal Management button */
+-			ideapad_input_report(priv, 65);
++			/* Thermal Management / Performance Mode button */
++			switch (priv->dytc->current_profile) {
++			case PLATFORM_PROFILE_LOW_POWER:
++				dytc_profile_set(&priv->dytc->pprof,
++						 PLATFORM_PROFILE_BALANCED);
++				break;
++			case PLATFORM_PROFILE_BALANCED:
++				dytc_profile_set(&priv->dytc->pprof,
++						 PLATFORM_PROFILE_PERFORMANCE);
++				break;
++			case PLATFORM_PROFILE_PERFORMANCE:
++				dytc_profile_set(&priv->dytc->pprof,
++						 PLATFORM_PROFILE_LOW_POWER);
++				break;
++			default:
++				dev_warn(&priv->platform_device->dev,
++					 "Unexpected platform profile %d",
++					 priv->dytc->current_profile);
++			}
++			/* Notify user space the profile changed */
++			platform_profile_notify();
+ 			break;
+ 		case 1:
+ 			/* OneKey Theater button */
+
+base-commit: 39cd87c4eb2b893354f3b850f916353f2658ae6f
+-- 
+2.44.0
 
