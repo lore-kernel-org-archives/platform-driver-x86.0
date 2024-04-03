@@ -1,321 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAB759B61;
-	Wed,  3 Apr 2024 07:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4DF6EB4C;
+	Wed,  3 Apr 2024 08:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712127980; cv=none; b=VZ9LOzJdA78zuoj/utq9bidKjNmQjgar8UFRgVZDbIKyAmCOVffwgW+9GVvZGVNn2p7A4naeoZ/f2UjJacbsh3mRA/zFZsmax10tdfXShoCHLxPF7mOT0dUHOs32c7AOFrHalrkZETpC1akkhwq9MqswlI10GG92V2DZ4y58pBY=
+	t=1712132470; cv=none; b=t+IkVuPtfLxam62wZxn1i1EkEpg4EXoIoIJJ2Srva06NqPW3FRBtwZxiVwty1p/2hYB2Fxp0/8jZfteE5Gkvbe7r03HnbAWug0ho3KhxmNUfT6hcbHAYQsq9BnfLEriVnF4gyZ1G7Pn0ZB6xrkbpcshgzyk86/V6RIFeEzQYDKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712127980; c=relaxed/simple;
-	bh=/MxgVfDUVgRb+s66Jx7hWB5C8Sq2uAQNn/d7MnoZ2y8=;
+	s=arc-20240116; t=1712132470; c=relaxed/simple;
+	bh=2ymn81XuhMJBQNb1n7q7kDeZWjVqWfG2FeFn4C7QNh8=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=S1Y6NqF6FDWIih3hIR/lFZ4WgG33k2t6V7xKS5i+g/j+l6UdWKj/n0ZZjj+3H2pdn7QWg6dZP/tYREgOgZTwtSZ/VZ3INZDXYCIl/GmjSnSfe2midzQKHlJNUnle99kWePmTi0ELMSRrYDZFbaM+O5AKzxl2YmdtphBdnHX5i9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NcvNWVzf; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version:Content-Type; b=cx8IKUqyu186SXR3YT/2wvyQuFQA/+ufpG/FUqYe8uFKa4+iG30kIYce17GUbq7u26a7+ln3sTCie5XrTBPwXJxlg0h/MIs5TsRXIvS/8xvh28cjY967gGlZs4ckGIVDIe8Mrjk9VjeJr2qrh20o1uLO6kXnonh0owF+I0Nad2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PrynK8X/; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NcvNWVzf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PrynK8X/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712127979; x=1743663979;
+  t=1712132470; x=1743668470;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=/MxgVfDUVgRb+s66Jx7hWB5C8Sq2uAQNn/d7MnoZ2y8=;
-  b=NcvNWVzf74L461xloQ5DwYxKibPXTuHWyjQKBpaQGe91Hq3d1q0/IIgz
-   uYVBgcvKaePNWngKbdzoOCs2+AR0tqljxfDrOPoEnbVkWe9U7kC/M0t6R
-   MYFOlat+gXnpWenZdnTw5wTes7SrD8MRvNTJITYJM1PZxfobtllHCo7td
-   oBKUaKsxqPN0FYPi0SONnPOp1FA6zrCL+XolS9lS6YeM4m1voGBduWaWi
-   h5qpXeIMEOcIPqv0bXc6HmpCqJefPAmfycE8kL7NyPiWgWOkQHrZcJ//z
-   bD+Ys4oUex8rk/MQPa5bpftfeE8gslwKCTbe+IfC7KU3hJxh0Y5QRgszv
+  bh=2ymn81XuhMJBQNb1n7q7kDeZWjVqWfG2FeFn4C7QNh8=;
+  b=PrynK8X/iczD1rrA3w3xb44acQCKVsJptJIHe6IpkIeDCSKt0PBr6bDu
+   AvebJHOSVonSScNYSP7DBso8R8jpHtXkff0UyRi+tLr1lg4HCnPpaOKIm
+   mvOqQ5OAeRlTNTQ0FA/Z4l0aqpqvnlB9VypVifOVOXf3K0TmpkiHKZ120
+   OI6X3Z34H8uzDSx4VL4htxxKJp4a+NTqNZwQiLRtPuJ3Zy2hpYJOidh9h
+   D1loB0o1CYtgylI+KNgANhHBOkwB2LP93nvUewsLJwkDEwjY2YwEBz1tF
+   eB9bbesk0iZ+Rr2EEaMzxKe642aynsifNpOtdQgji0+x5+sS6HmkF0qlv
    A==;
-X-CSE-ConnectionGUID: /lS9qLxaSk2cOsgTA++agw==
-X-CSE-MsgGUID: MBTudAqYSRK4dd5PuPcrBw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="7498663"
+X-CSE-ConnectionGUID: xULLFY75RNq07h6zp9yYgA==
+X-CSE-MsgGUID: +279yEJIRWSgoFh/w5MapQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="29826699"
 X-IronPort-AV: E=Sophos;i="6.07,176,1708416000"; 
-   d="scan'208";a="7498663"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 00:06:18 -0700
-X-CSE-ConnectionGUID: kQ441IM1RAyw65pTmu7oKA==
-X-CSE-MsgGUID: jFJEPC7TS0eqhUAgvsyjpw==
+   d="scan'208";a="29826699"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 01:21:09 -0700
+X-CSE-ConnectionGUID: Jmmd9za4RQi0EK94ZoYXGg==
+X-CSE-MsgGUID: OFX3mc4OTUOBOoo7FnJ+lg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,176,1708416000"; 
-   d="scan'208";a="18427205"
+   d="scan'208";a="55795064"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.24])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 00:06:15 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 01:21:06 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 3 Apr 2024 10:06:11 +0300 (EEST)
-To: "Luke D. Jones" <luke@ljones.dev>
+Date: Wed, 3 Apr 2024 11:21:02 +0300 (EEST)
+To: Luke Jones <luke@ljones.dev>
 cc: Hans de Goede <hdegoede@redhat.com>, corentin.chary@gmail.com, 
     platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/9] platform/x86: asus-wmi: add support for 2024 ROG
- Mini-LED
-In-Reply-To: <20240403002917.2870959-2-luke@ljones.dev>
-Message-ID: <60dc1e89-ea67-3215-8e39-e71e97c49df8@linux.intel.com>
-References: <20240403002917.2870959-1-luke@ljones.dev> <20240403002917.2870959-2-luke@ljones.dev>
+Subject: Re: [PATCH v2 5/9] platform/x86: asus-wmi: store a min default for
+ ppt options
+In-Reply-To: <4555327.yiUUSuA9gR@fedora>
+Message-ID: <678014c5-5d2d-7128-88ea-c71a71410dd3@linux.intel.com>
+References: <20240402022607.34625-1-luke@ljones.dev> <20240402022607.34625-6-luke@ljones.dev> <89b0c0ea-30ce-28c6-19d2-ebd113b17935@linux.intel.com> <4555327.yiUUSuA9gR@fedora>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1537023240-1712127971=:1449"
+Content-Type: multipart/mixed; boundary="8323328-667445792-1712132462=:1449"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1537023240-1712127971=:1449
-Content-Type: text/plain; charset=ISO-8859-15
+--8323328-667445792-1712132462=:1449
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Wed, 3 Apr 2024, Luke D. Jones wrote:
+On Wed, 3 Apr 2024, Luke Jones wrote:
 
-> Support the 2024 mini-led backlight and adjust the related functions
-> to select the relevant dev-id. Also add `available_mini_led_mode` to the
-> platform sysfs since the available mini-led levels can be different.
+> On Tuesday, 2 April 2024 11:49:50=E2=80=AFPM NZDT Ilpo J=C3=A4rvinen wrot=
+e:
+> > On Tue, 2 Apr 2024, Luke D. Jones wrote:
+> > > Laptops with any of the ppt or nv tunables default to the minimum set=
+ting
+> > > on boot so we can safely assume a stored value is correct.
+> > >=20
+> > > This patch adds storing of those values in the local struct, and enab=
+les
+> > > reading of those values back. To prevent creating a series of byte ho=
+les
+> > > in the struct the "<name>_available" bool is removed and
+> > > `asus_sysfs_is_visible()` uses the `ASUS_WMI_DEVID_<name>` directly.
+> > >=20
+> > > Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> > > ---
+> > >=20
+> > >  drivers/platform/x86/asus-wmi.c | 127 +++++++++++++++++++++++++-----=
+--
+> > >  1 file changed, 99 insertions(+), 28 deletions(-)
+> > >=20
+> > > diff --git a/drivers/platform/x86/asus-wmi.c
+> > > b/drivers/platform/x86/asus-wmi.c index b795f9c1941f..c80afa385532 10=
+0644
+> > > --- a/drivers/platform/x86/asus-wmi.c
+> > > +++ b/drivers/platform/x86/asus-wmi.c
+> > > @@ -262,13 +262,13 @@ struct asus_wmi {
+> > >=20
+> > >  =09u32 gpu_mux_dev;
+> > >  =09
+> > >  =09/* Tunables provided by ASUS for gaming laptops */
+> > >=20
+> > > -=09bool ppt_pl2_sppt_available;
+> > > -=09bool ppt_pl1_spl_available;
+> > > -=09bool ppt_apu_sppt_available;
+> > > -=09bool ppt_plat_sppt_available;
+> > > -=09bool ppt_fppt_available;
+> > > -=09bool nv_dyn_boost_available;
+> > > -=09bool nv_temp_tgt_available;
+> > > +=09u32 ppt_pl2_sppt;
+> > > +=09u32 ppt_pl1_spl;
+> > > +=09u32 ppt_apu_sppt;
+> > > +=09u32 ppt_platform_sppt;
+> > > +=09u32 ppt_fppt;
+> > > +=09u32 nv_dynamic_boost;
+> > > +=09u32 nv_temp_target;
+> > >=20
+> > >  =09u32 kbd_rgb_dev;
+> > >  =09bool kbd_rgb_state_available;
+> > >=20
+> > > @@ -1020,11 +1020,21 @@ static ssize_t ppt_pl2_sppt_store(struct devi=
+ce
+> > > *dev,>=20
+> > >  =09=09return -EIO;
+> > >  =09
+> > >  =09}
+> > >=20
+> > > +=09asus->ppt_pl2_sppt =3D value;
+> > >=20
+> > >  =09sysfs_notify(&asus->platform_device->dev.kobj, NULL,=20
+> "ppt_pl2_sppt");
+> > >  =09
+> > >  =09return count;
+> > > =20
+> > >  }
+> > >=20
+> > > -static DEVICE_ATTR_WO(ppt_pl2_sppt);
+> > > +
+> > > +static ssize_t ppt_pl2_sppt_show(struct device *dev,
+> > > +=09=09=09=09       struct device_attribute=20
+> *attr,
+> > > +=09=09=09=09       char *buf)
+> > > +{
+> > > +=09struct asus_wmi *asus =3D dev_get_drvdata(dev);
+> > > +
+> > > +=09return sysfs_emit(buf, "%d\n", asus->ppt_pl2_sppt);
+> >=20
+> > Use %u for u32 values. This applies to all sysfs_emits in this patch.
 >=20
-> signed-off-by: Luke D. Jones <luke@ljones.dev>
-
-A few small things still below, but in general this is now in much better=
-=20
-shape!
-
-> ---
->  .../ABI/testing/sysfs-platform-asus-wmi       |  8 ++
->  drivers/platform/x86/asus-wmi.c               | 94 +++++++++++++++++--
->  include/linux/platform_data/x86/asus-wmi.h    |  1 +
->  3 files changed, 93 insertions(+), 10 deletions(-)
+> Thought checkpatch or the compiler would catch that. Done.
 >=20
-> diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Document=
-ation/ABI/testing/sysfs-platform-asus-wmi
-> index 8a7e25bde085..ef1ac1a20a71 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> @@ -126,6 +126,14 @@ Description:
->  =09=09Change the mini-LED mode:
->  =09=09=09* 0 - Single-zone,
->  =09=09=09* 1 - Multi-zone
-> +=09=09=09* 2 - Multi-zone strong (available on newer generation mini-led=
-)
-> +
-> +What:=09=09/sys/devices/platform/<platform>/available_mini_led_mode
-> +Date:=09=09Apr 2024
-> +KernelVersion:=096.10
-> +Contact:=09"Luke Jones" <luke@ljones.dev>
-> +Description:
-> +=09=09List the available mini-led modes.
-> =20
->  What:=09=09/sys/devices/platform/<platform>/ppt_pl1_spl
->  Date:=09=09Jun 2023
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
-wmi.c
-> index 3f07bbf809ef..588c099103de 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -126,6 +126,17 @@ module_param(fnlock_default, bool, 0444);
->  #define ASUS_SCREENPAD_BRIGHT_MAX 255
->  #define ASUS_SCREENPAD_BRIGHT_DEFAULT 60
-> =20
-> +#define ASUS_MINI_LED_MODE_MASK=09=090x03
-> +/* Standard modes for devices with only on/off */
-> +#define ASUS_MINI_LED_OFF=09=090x00
-> +#define ASUS_MINI_LED_ON=09=090x01
-> +/* New mode on some devices, define here to clarify remapping later */
-> +#define ASUS_MINI_LED_STRONG_MODE=090x02
-> +/* New modes for devices with 3 mini-led mode types */
-> +#define ASUS_MINI_LED_2024_WEAK=09=090x00
-> +#define ASUS_MINI_LED_2024_STRONG=090x01
-> +#define ASUS_MINI_LED_2024_OFF=09=090x02
-> +
->  /* Controls the power state of the USB0 hub on ROG Ally which input is o=
-n */
->  #define ASUS_USB0_PWR_EC0_CSEE "\\_SB.PCI0.SBRG.EC0.CSEE"
->  /* 300ms so far seems to produce a reliable result on AC and battery */
-> @@ -288,7 +299,7 @@ struct asus_wmi {
->  =09bool battery_rsoc_available;
-> =20
->  =09bool panel_overdrive_available;
-> -=09bool mini_led_mode_available;
-> +=09u32 mini_led_dev_id;
-> =20
->  =09struct hotplug_slot hotplug_slot;
->  =09struct mutex hotplug_lock;
-> @@ -2108,13 +2119,33 @@ static ssize_t mini_led_mode_show(struct device *=
-dev,
->  =09=09=09=09   struct device_attribute *attr, char *buf)
->  {
->  =09struct asus_wmi *asus =3D dev_get_drvdata(dev);
-> -=09int result;
-> +=09int err;
-> +=09u32 value;
+> I've added your reviewed tag due to the simplicity of the change requeste=
+d. I=20
+> hope this was okay.
 
-reverse xmas order.
+Hi,
 
-> =20
-> -=09result =3D asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_MINI_LED=
-_MODE);
-> -=09if (result < 0)
-> -=09=09return result;
-> +=09err =3D asus_wmi_get_devstate(asus, asus->mini_led_dev_id, &value);
-> +=09if (err < 0)
-> +=09=09return err;
-> +=09value =3D value & ASUS_MINI_LED_MODE_MASK;
-> =20
-> -=09return sysfs_emit(buf, "%d\n", result);
-> +=09/*
-> +=09 * Remap the mode values to match previous generation mini-led. The l=
-ast gen
-> +=09 * WMI 0 =3D=3D off, while on this version WMI 2 =3D=3Doff (flipped).
-> +=09 */
-> +=09if (asus->mini_led_dev_id =3D=3D ASUS_WMI_DEVID_MINI_LED_MODE2) {
-> +=09=09switch (value) {
-> +=09=09case ASUS_MINI_LED_2024_WEAK:
-> +=09=09=09value =3D ASUS_MINI_LED_ON;
-> +=09=09=09break;
-> +=09=09case ASUS_MINI_LED_2024_STRONG:
-> +=09=09=09value =3D ASUS_MINI_LED_STRONG_MODE;
-> +=09=09=09break;
-> +=09=09case ASUS_MINI_LED_2024_OFF:
-> +=09=09=09value =3D ASUS_MINI_LED_OFF;
-> +=09=09=09break;
-> +=09=09}
-> +=09}
-> +
-> +=09return sysfs_emit(buf, "%d\n", value);
->  }
-> =20
->  static ssize_t mini_led_mode_store(struct device *dev,
-> @@ -2130,11 +2161,30 @@ static ssize_t mini_led_mode_store(struct device =
-*dev,
->  =09if (result)
->  =09=09return result;
-> =20
-> -=09if (mode > 1)
-> +=09if (mode > 1 && asus->mini_led_dev_id =3D=3D ASUS_WMI_DEVID_MINI_LED_=
-MODE)
-> +=09=09return -EINVAL;
-> +=09if (mode > 2 && asus->mini_led_dev_id =3D=3D ASUS_WMI_DEVID_MINI_LED_=
-MODE2)
-
-These literals should use the new defines I think.
-
-With those small things fixed,
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
+Please don't add Reviewed-by tags automatically in the future. Its=20
+meaning is not that the person has looked the patch.
 
 --=20
  i.
 
->  =09=09return -EINVAL;
-> =20
-> -=09err =3D asus_wmi_set_devstate(ASUS_WMI_DEVID_MINI_LED_MODE, mode, &re=
-sult);
-> +=09/*
-> +=09 * Remap the mode values so expected behaviour is the same as the las=
-t
-> +=09 * generation of mini-LED with 0 =3D=3D off, 1 =3D=3D on.
-> +=09 */
-> +=09if (asus->mini_led_dev_id =3D=3D ASUS_WMI_DEVID_MINI_LED_MODE2) {
-> +=09=09switch (mode) {
-> +=09=09case ASUS_MINI_LED_OFF:
-> +=09=09=09mode =3D ASUS_MINI_LED_2024_OFF;
-> +=09=09=09break;
-> +=09=09case ASUS_MINI_LED_ON:
-> +=09=09=09mode =3D ASUS_MINI_LED_2024_WEAK;
-> +=09=09=09break;
-> +=09=09case ASUS_MINI_LED_STRONG_MODE:
-> +=09=09=09mode =3D ASUS_MINI_LED_2024_STRONG;
-> +=09=09=09break;
-> +=09=09}
-> +=09}
-> =20
-> +=09err =3D asus_wmi_set_devstate(asus->mini_led_dev_id, mode, &result);
->  =09if (err) {
->  =09=09pr_warn("Failed to set mini-LED: %d\n", err);
->  =09=09return err;
-> @@ -2151,6 +2201,23 @@ static ssize_t mini_led_mode_store(struct device *=
-dev,
->  }
->  static DEVICE_ATTR_RW(mini_led_mode);
-> =20
-> +static ssize_t available_mini_led_mode_show(struct device *dev,
-> +=09=09=09=09  struct device_attribute *attr, char *buf)
-> +{
-> +=09struct asus_wmi *asus =3D dev_get_drvdata(dev);
-> +
-> +=09switch (asus->mini_led_dev_id) {
-> +=09case ASUS_WMI_DEVID_MINI_LED_MODE:
-> +=09=09return sysfs_emit(buf, "0 1\n");
-> +=09case ASUS_WMI_DEVID_MINI_LED_MODE2:
-> +=09=09return sysfs_emit(buf, "0 1 2\n");
-> +=09}
-> +
-> +=09return sysfs_emit(buf, "0\n");
-> +}
-> +
-> +static DEVICE_ATTR_RO(available_mini_led_mode);
-> +
->  /* Quirks **************************************************************=
-*******/
-> =20
->  static void asus_wmi_set_xusb2pr(struct asus_wmi *asus)
-> @@ -4139,6 +4206,7 @@ static struct attribute *platform_attributes[] =3D =
-{
->  =09&dev_attr_nv_temp_target.attr,
->  =09&dev_attr_panel_od.attr,
->  =09&dev_attr_mini_led_mode.attr,
-> +=09&dev_attr_available_mini_led_mode.attr,
->  =09NULL
->  };
-> =20
-> @@ -4191,7 +4259,9 @@ static umode_t asus_sysfs_is_visible(struct kobject=
- *kobj,
->  =09else if (attr =3D=3D &dev_attr_panel_od.attr)
->  =09=09ok =3D asus->panel_overdrive_available;
->  =09else if (attr =3D=3D &dev_attr_mini_led_mode.attr)
-> -=09=09ok =3D asus->mini_led_mode_available;
-> +=09=09ok =3D asus->mini_led_dev_id !=3D 0;
-> +=09else if (attr =3D=3D &dev_attr_available_mini_led_mode.attr)
-> +=09=09ok =3D asus->mini_led_dev_id !=3D 0;
-> =20
->  =09if (devid !=3D -1)
->  =09=09ok =3D !(asus_wmi_get_devstate_simple(asus, devid) < 0);
-> @@ -4444,10 +4514,14 @@ static int asus_wmi_add(struct platform_device *p=
-dev)
->  =09asus->nv_dyn_boost_available =3D asus_wmi_dev_is_present(asus, ASUS_W=
-MI_DEVID_NV_DYN_BOOST);
->  =09asus->nv_temp_tgt_available =3D asus_wmi_dev_is_present(asus, ASUS_WM=
-I_DEVID_NV_THERM_TARGET);
->  =09asus->panel_overdrive_available =3D asus_wmi_dev_is_present(asus, ASU=
-S_WMI_DEVID_PANEL_OD);
-> -=09asus->mini_led_mode_available =3D asus_wmi_dev_is_present(asus, ASUS_=
-WMI_DEVID_MINI_LED_MODE);
->  =09asus->ally_mcu_usb_switch =3D acpi_has_method(NULL, ASUS_USB0_PWR_EC0=
-_CSEE)
->  =09=09=09=09=09=09&& dmi_match(DMI_BOARD_NAME, "RC71L");
-> =20
-> +=09if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MINI_LED_MODE))
-> +=09=09asus->mini_led_dev_id =3D ASUS_WMI_DEVID_MINI_LED_MODE;
-> +=09else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MINI_LED_MODE2)=
-)
-> +=09=09asus->mini_led_dev_id =3D ASUS_WMI_DEVID_MINI_LED_MODE2;
-> +
->  =09err =3D fan_boost_mode_check_present(asus);
->  =09if (err)
->  =09=09goto fail_fan_boost_mode;
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/p=
-latform_data/x86/asus-wmi.h
-> index ab1c7deff118..9cadce10ad9a 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -71,6 +71,7 @@
->  #define ASUS_WMI_DEVID_LID_FLIP=09=090x00060062
->  #define ASUS_WMI_DEVID_LID_FLIP_ROG=090x00060077
->  #define ASUS_WMI_DEVID_MINI_LED_MODE=090x0005001E
-> +#define ASUS_WMI_DEVID_MINI_LED_MODE2=090x0005002E
-> =20
->  /* Storage */
->  #define ASUS_WMI_DEVID_CARDREADER=090x00080013
->=20
---8323328-1537023240-1712127971=:1449--
+--8323328-667445792-1712132462=:1449--
