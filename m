@@ -1,96 +1,65 @@
 Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5107E147C90;
-	Wed,  3 Apr 2024 13:09:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DAE3611A;
+	Wed,  3 Apr 2024 14:34:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712149758; cv=none; b=NYnom+Aw0rOcLaGq8YQwC8BTOxb7lLNx04HsQp6xKZ4F7BAUd3XAAIeHlLy8Cc/5Yx6YyE1REzHu2xDeBFZQM/O0Ks/Xy/g4Qurw3CsP1285o+Ta9xkiWq5Jw4ccqMOczQXvhtyKSA+vXnI1l/8p1F+SEwVYcmE1T53QOUxdUHs=
+	t=1712154896; cv=none; b=LY8u9AWGSMQDDgiLBsnP/n1PNoHhGB6OgAhmL9nomF5nLdwZ6OhR7YwhBXOPnu3QoC+TTMprhx/jniOWNq08xcnw58SHzSlqtNi8jTzd0cTgnGU9f0nnqXDo3vqmStbS6k+e85Vbvx/XUbOlBoYCiu56uNLWRR8Z8bjbTlq2VA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712149758; c=relaxed/simple;
-	bh=j/2Sfnuuaf/D6GVHHD0zV3RKWfEs3vbqzQqRmEe9Kj0=;
-	h=From:To:Cc:Subject:Date:Message-ID:Mime-Version:Content-Type; b=N8ODRMHo7XlE+GUqv2pJF/tmVr1WvuUNVVueQPcIUkIqC3naf59+xvajo2+rFMGsUqd0WYNYOqCukq6jzCvNSVPoclQeG2DcU20adXzUMvm785IBI+uRRwG7K1Z+oyjH1xe2Vk2qgp3xtxK6aOtBuQ8P2etJeMwJPdPi2/nRdmg=
+	s=arc-20240116; t=1712154896; c=relaxed/simple;
+	bh=G2HvTA7QQh281vXLzFT87hogTKZ0vI3ojifngZlw0qA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VT0+8tAaJ5snMrPJ/VGjPhnduNlRSnUGvWQ0I9n9SGQ04hAODOzHcMKhDQYT2XLl50OHV9IHMxXAekYW+KSkpkNlkZiCoG49EtfvtCUy2RzTlK7k6kak6xThZToQ740EKGZx72TqQo0MdurhmGHEE94tSHOUOjFRKOGdrn3saDE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
 Received: from fedori.lan (51b69867.dsl.pool.telekom.hu [::ffff:81.182.152.103])
   (AUTH: CRAM-MD5 soyer@irl.hu, )
   by irl.hu with ESMTPSA
-  id 000000000006C9F3.00000000660D54FA.00255DE5; Wed, 03 Apr 2024 15:09:14 +0200
+  id 000000000006D414.00000000660D6906.00256086; Wed, 03 Apr 2024 16:34:45 +0200
 From: Gergo Koteles <soyer@irl.hu>
-To: Ike Panhc <ike.pan@canonical.com>,
+To: Matan Ziv-Av <matan@svgalib.org>,
   Hans de Goede <hdegoede@redhat.com>,
   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: platform-driver-x86@vger.kernel.org,
   linux-kernel@vger.kernel.org, Gergo Koteles <soyer@irl.hu>
-Subject: [PATCH] platform/x86: ideapad-laptop: switch platform profiles using thermal management key
-Date: Wed,  3 Apr 2024 15:09:07 +0200
-Message-ID: <85254ce8e87570c05e7f04d6507701bef954ed75.1712149429.git.soyer@irl.hu>
+Subject: [PATCH] platform/x86: lg-laptop: fix %s null argument warning
+Date: Wed,  3 Apr 2024 16:34:27 +0200
+Message-ID: <33d40e976f08f82b9227d0ecae38c787fcc0c0b2.1712154684.git.soyer@irl.hu>
 X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Ideapad laptops have thermal management or performance mode switch key
-(Fn + Q). Now it sends KEY_PROG4.
+W=1 warns about null argument to kprintf:
+warning: ‘%s’ directive argument is null [-Wformat-overflow=]
+pr_info("product: %s  year: %d\n", product, year);
 
-Switch platform profiles instead, like the ThinkPad ACPI driver.
-
-Tested on Yoga7 14ARB7.
+Use "unknown" instead of NULL.
 
 Signed-off-by: Gergo Koteles <soyer@irl.hu>
 ---
- drivers/platform/x86/ideapad-laptop.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ drivers/platform/x86/lg-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 901849810ce2..6310011cc1b3 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -1071,7 +1071,6 @@ static const struct key_entry ideapad_keymap[] = {
- 	{ KE_KEY,  16, { KEY_PROG1 } },
- 	{ KE_KEY,  17, { KEY_PROG2 } },
- 	{ KE_KEY,  64, { KEY_PROG3 } },
--	{ KE_KEY,  65, { KEY_PROG4 } },
- 	{ KE_KEY,  66, { KEY_TOUCHPAD_OFF } },
- 	{ KE_KEY,  67, { KEY_TOUCHPAD_ON } },
- 	{ KE_KEY, 128, { KEY_ESC } },
-@@ -1181,8 +1180,27 @@ static void ideapad_check_special_buttons(struct ideapad_private *priv)
- 		switch (bit) {
- 		case 6:	/* Z570 */
- 		case 0:	/* Z580 */
--			/* Thermal Management button */
--			ideapad_input_report(priv, 65);
-+			/* Thermal Management / Performance Mode button */
-+			switch (priv->dytc->current_profile) {
-+			case PLATFORM_PROFILE_LOW_POWER:
-+				dytc_profile_set(&priv->dytc->pprof,
-+						 PLATFORM_PROFILE_BALANCED);
-+				break;
-+			case PLATFORM_PROFILE_BALANCED:
-+				dytc_profile_set(&priv->dytc->pprof,
-+						 PLATFORM_PROFILE_PERFORMANCE);
-+				break;
-+			case PLATFORM_PROFILE_PERFORMANCE:
-+				dytc_profile_set(&priv->dytc->pprof,
-+						 PLATFORM_PROFILE_LOW_POWER);
-+				break;
-+			default:
-+				dev_warn(&priv->platform_device->dev,
-+					 "Unexpected platform profile %d",
-+					 priv->dytc->current_profile);
-+			}
-+			/* Notify user space the profile changed */
-+			platform_profile_notify();
- 			break;
- 		case 1:
- 			/* OneKey Theater button */
+diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
+index ad3c39e9e9f5..e714ee6298dd 100644
+--- a/drivers/platform/x86/lg-laptop.c
++++ b/drivers/platform/x86/lg-laptop.c
+@@ -736,7 +736,7 @@ static int acpi_add(struct acpi_device *device)
+ 		default:
+ 			year = 2019;
+ 		}
+-	pr_info("product: %s  year: %d\n", product, year);
++	pr_info("product: %s  year: %d\n", product ?: "unknown", year);
+ 
+ 	if (year >= 2019)
+ 		battery_limit_use_wmbb = 1;
 
 base-commit: 39cd87c4eb2b893354f3b850f916353f2658ae6f
 -- 
