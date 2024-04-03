@@ -1,64 +1,59 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7A71401C
-	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Apr 2024 08:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169806D1BA
+	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Apr 2024 08:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712133186; cv=none; b=gTPauP+4MGPjuZYdaN0q2aTU7LX/q6BPOnFj/xtyTUyQqWVIi9AE00ZJ/tLw5wccOn1uSaRo8qOlpKTKclV8MeENvUw5kMfOIAvJ/umMxP3VtfljFS+2pfSXVMHKH49jcxFT3qA6AjYoS8Qd/LoHMun07DlHk5KgBNmAkEgy7Lw=
+	t=1712133375; cv=none; b=kLAT4NEFltCIMDproZqCG0BuQh1o4OpKzr620pY6T0yf3WHUiPrA+E6EYtkMCIfrSZ5Rimwub9PKJmKCuVM7gcAgXzg/byBy6Eld0V8cW73L19e+k7hj6AB8IWGBFz2XPDe0+kCbu3NMoeweSHEQIQxc7K8I7xeve5SYfkXsH9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712133186; c=relaxed/simple;
-	bh=2Z+Ejko7FofGkIpI4wJ7ZPsjyB8mCnSvFfx+1YEfT4M=;
+	s=arc-20240116; t=1712133375; c=relaxed/simple;
+	bh=EugTqBg0dFxHDkBdwswn5IxyxqQxh3qQJGuQ1IoDt8s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B5BYxLkoRa45kAjc3Bs4jFi4Ixg8GGtX9G2LXBXJwugCsq/EzzoA846K5Ebg433Ymr2DKuYOz3sjy2EoXwLFf9SHsrfRnkDDMLifYTUxQ+bb6RScPP4KfRBPfdbCTS34xV7w+l0RK7BgXuXf2qpzMmo1ViOZOhlbd4fxhRVBW54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DjkhvEZh; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=g4aGImR+hxcB9VPbkdAo8uPuSXgD5Ymktqc8SvGsC1qw8B2EUAppDgBvDenLekFO5sA4G824li/XpnS1jdgRJnGPBTTPpFXVHwkNd8TeHPUwQBPT6WsE/xK1SpiaoiyLwp2WT35DKOTkVZsXtqrjwYAnlyI+vk7hMoN04Sf9kz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DwZ3RkmU; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DjkhvEZh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712133184;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9hBwVccZBg0Fl5p97DfphA9YXGRXtnSdOSqA1Wworgs=;
-	b=DjkhvEZhGrkB5nVC4eboxXbfrk7ypn5nOcfrV/avO+aoR3dtges1V1zXe5+oJrqet3vPk6
-	nbkt4GCl2dJqyxeMZqdPsjU1LY6UD54jWUO1gp90i8v21B8mStM24d/RNdKXsHVare1EJj
-	+QSoG1hQtpr1XbQtLWfzuSIc0XB5zOg=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-433-raY8NPgGMMmxmTdzqwqDpA-1; Wed, 03 Apr 2024 04:33:02 -0400
-X-MC-Unique: raY8NPgGMMmxmTdzqwqDpA-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a4747f29e19so191312166b.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 03 Apr 2024 01:33:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DwZ3RkmU"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a4a393b699fso115604466b.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 03 Apr 2024 01:36:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712133372; x=1712738172; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=2DlE9sdE174jtHAbEEqp/3KgZCYrkauZb2b8kE3LRVc=;
+        b=DwZ3RkmUzC4kYU7yLd3yYl6vBx0TlwRey4vIJNTL3h2IjJO9U0Zvk5EDQVjb1QI1AF
+         kLvSUUBqrY/ZFcEtUKCX5qbBRrcGO42wMOU+Egy7K3ABIDalRjqJvjDlvb451gX2sKTf
+         fVSpyxuY/kUQMYRd+dNf0B6+BP14a44affef49VPgT4ejZIaHOlLc5bnpLDEA68lBt9c
+         0rV9Adw4pU8P85C/oVKX9qUHzKJizR4sC0YTsv32n1j/7UpVh3QisjXGbDoWdZhqoeQs
+         O4UVaVFTvEKTqovT8x+zIH0Wz6tr0yaVzDRoQOQqnJxCCVn1nMtJKgN5kQyzkOA3GSPc
+         8Lug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712133182; x=1712737982;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9hBwVccZBg0Fl5p97DfphA9YXGRXtnSdOSqA1Wworgs=;
-        b=ETrNK2YT2bcEgu4e12npocUoID05EyjxrZkkX5KSeKZua0Glfv2BG2yu8VGan0dGje
-         1iZaSexXaNGoHlW/tmA+xz0CcbgtIqtUtke8vMfR372Jpxvjj9ewlMPzjg6TK4baPKSQ
-         XEyJwzODWRlYJ9PgKvrcg5MoBDB/8YfwKMohYhmoPJaSzfcAym0s4FtNs9nkKBEY87Tr
-         LFniMz4iHQKNebGXyQX11JbOx7NPojilpCbp/JRqGLNQQeVRyAz8f6JQIuTB7gi7Gwck
-         d5YAcNj4LrZJYYMb3NtyOM7bwrCVi4yO7dmmK2AHjXHgbeE7viiWO0bnzRPaiWCexUSD
-         iAWQ==
-X-Gm-Message-State: AOJu0YxaHybvM+Ss3/xsghjRnqTPGkkJ4o7jJnNcpynmH17+G/40hVk1
-	mEGgYozlpXaasMwTvRv+uAVgAOCzjUprZ7c0mUUTkrkyNOKEMHUXt03IsiVW1bNqUw7XspmvcZX
-	QONkGralGZForfD5kidYi4QZSR31fAq6h25jwLbvWt952IcWMWBl32bxa3oqC0N2qjVLaGbU=
-X-Received: by 2002:a17:906:1157:b0:a4e:6414:5afd with SMTP id i23-20020a170906115700b00a4e64145afdmr5759439eja.52.1712133181936;
-        Wed, 03 Apr 2024 01:33:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFUYrX1YOrnmR10vdbq+ufbRk4BHlYYJBSP3DuH1BuQ6YlKfpjx3idfoB6rTEHjFrNn1Q5mmA==
-X-Received: by 2002:a17:906:1157:b0:a4e:6414:5afd with SMTP id i23-20020a170906115700b00a4e64145afdmr5759429eja.52.1712133181648;
-        Wed, 03 Apr 2024 01:33:01 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id jx24-20020a170906ca5800b00a47152e6d10sm7426027ejb.134.2024.04.03.01.33.00
+        d=1e100.net; s=20230601; t=1712133372; x=1712738172;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2DlE9sdE174jtHAbEEqp/3KgZCYrkauZb2b8kE3LRVc=;
+        b=T2pMtU/P5fZgwJw2xMvRz6L7GfIScgnOqGH553JNxKjHyohyo/BoZJQkqRG+PkkpK3
+         zu7zWs56/nNq1C6zg17fUUv7RMkewDJOwcoMWEkMM7TCAJmoaxlPFlbF5XY46lh40YIu
+         +Zoav7S15fg16Vt8IzzCdrT33h182aUQIpa/rh+WAzH2yMSZqq3zPyR1wh7MBpKYknHv
+         R1kN3CLBshGE454J/BP6E9G/aiMbAXNuCnXCNpxSFyMqcuEF25Uhp8ec6En0iqQ8BeC6
+         AFQqVJKed0nZyi/DUV9oV+mfkk1zgpzCYx42SPKUsiQKLWPeGX7lx3at5ifKjnbowUy/
+         xRIA==
+X-Gm-Message-State: AOJu0Yx0zIJQRnBNsl4u/xBWBgbeAEwVDNWPq5WetmCsMw8Y2mHddrjn
+	LCTAv4pMjvuahxb1PZtWI8yUY3W4wQj+bY3Gq4FHk4Zg2TzA6FIs5oqWSvzBsPs=
+X-Google-Smtp-Source: AGHT+IEOD9nY8jBi39laMExK/xyCbXnh66JjnaAqLDdr9ArwjZEi3U2TPyBXhCjkky8SdMpOd526bQ==
+X-Received: by 2002:a17:906:806:b0:a4e:405d:8e3d with SMTP id e6-20020a170906080600b00a4e405d8e3dmr1696475ejd.22.1712133372368;
+        Wed, 03 Apr 2024 01:36:12 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id jt20-20020a170906ca1400b00a47439647efsm7452946ejb.133.2024.04.03.01.36.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Apr 2024 01:33:01 -0700 (PDT)
-Message-ID: <283b5056-29df-486f-8a4a-5271af8a5b8c@redhat.com>
-Date: Wed, 3 Apr 2024 10:33:00 +0200
+        Wed, 03 Apr 2024 01:36:11 -0700 (PDT)
+Message-ID: <368e9817-0000-4f69-9f09-568827466121@linaro.org>
+Date: Wed, 3 Apr 2024 10:36:09 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,8 +62,7 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 1/3] dt-bindings: leds: add LED_FUNCTION_FNLOCK
-To: Gergo Koteles <soyer@irl.hu>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+To: Hans de Goede <hdegoede@redhat.com>, Gergo Koteles <soyer@irl.hu>,
  Ike Panhc <ike.pan@canonical.com>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
  Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
@@ -80,53 +74,140 @@ Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
 References: <cover.1712063200.git.soyer@irl.hu>
  <8ac95e85a53dc0b8cce1e27fc1cab6d19221543b.1712063200.git.soyer@irl.hu>
  <6b47886e-09ac-4cb9-ab53-ca64f5320005@linaro.org>
- <5864594aa47ecfeb23d5d05a3afc02393f84b44e.camel@irl.hu>
- <a19688d3-5402-41c0-b10a-131cefed5b91@linaro.org>
- <2710283677cf12ca6b826565ec39652f560a43d8.camel@irl.hu>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <2710283677cf12ca6b826565ec39652f560a43d8.camel@irl.hu>
+ <39acb3b9-a69f-4654-9749-a9af42fea39e@redhat.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <39acb3b9-a69f-4654-9749-a9af42fea39e@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi George,
-
-On 4/2/24 8:50 PM, Gergo Koteles wrote:
+On 03/04/2024 10:31, Hans de Goede wrote:
 > Hi Krzysztof,
 > 
-> On Tue, 2024-04-02 at 20:08 +0200, Krzysztof Kozlowski wrote:
->> On 02/04/2024 16:36, Gergo Koteles wrote:
->>> Hi Krzysztof,
+> On 4/2/24 3:55 PM, Krzysztof Kozlowski wrote:
+>> On 02/04/2024 15:21, Gergo Koteles wrote:
+>>> Newer laptops have FnLock LED.
 >>>
->>> On Tue, 2024-04-02 at 15:55 +0200, Krzysztof Kozlowski wrote:
->>>>
->>>> Do we really need to define all these possible LED functions? Please
->>>> link to DTS user for this.
->>>>
+>>> Add a define for this very common function.
 >>>
->>> I think for userspace it's easier to support an LED with a specified
->>> name than to use various sysfs attributes. LED devices are easy to find
->>> because they available are in the /sys/class/leds/ directory.
->>> So I think it's a good thing to define LED names somewhere.
+>>> Signed-off-by: Gergo Koteles <soyer@irl.hu>
+>>> ---
+>>>  include/dt-bindings/leds/common.h | 1 +
 >>
->> You did not add anything for user-space, but DT bindings. We do not keep
->> here anything for user-space.
->>
+>> Do we really need to define all these possible LED functions? Please
+>> link to DTS user for this.
 > 
-> The LED_FUNCTION_KBD_BACKLIGHT confused me. Ok, this shouldn't be here,
-> I will remove it from v2.
+> It is useful to have well established names for common
+> LED functions instead of having each driver come up
+> with its own name with slightly different spelling
+> for various fixed function LEDs.
+> 
+> This is even documented in:
+> 
+> Documentation/leds/leds-class.rst :
+> 
+> """
+> LED Device Naming
+> =================
+> 
+> Is currently of the form:
+> 
+>         "devicename:color:function"
+> 
+> ...
+> 
+> 
+> - function:
+>         one of LED_FUNCTION_* definitions from the header
+>         include/dt-bindings/leds/common.h.
+> """
+> 
+> Note this even specifies these definitions should go into
+> include/dt-bindings/leds/common.h .
+> 
+> In this case there is no dts user (yet) only an in kernel
+> driver which wants to use a LED_FUNCTION_* define to
+> establish how to identify FN-lock LEDs going forward.
 
-I don't believe that is necessary, see my direct reply to Krzysztof first
-email about this. According to Documentation/leds/leds-class.rst
-you did exactly the right thing.
+Ack, reasonable.
 
-Also thank you for your interesting contribution. I have only briefly
-looked over your other 2 patches, but I like the concept.
+> 
+> Since a lot of LED_FUNCTION_* defines happen to be used
+> in dts files these happen to live under include/dt-bindings/
+> but the dts files are not the only consumer of these defines (1).
 
-I'll hopefully have time to do a full review coming Monday.
+Yes, but if there was no DTS consumer at all, then it is not a binding,
+so it should not go to include/dt-bindings.
 
-Regards,
+> 
+> IMHO having a hard this must be used in a dts file rule
+> is not helpful for these kinda files with defines shared
+> between dts and non dts cases.
+> 
+> If we were to follow this logic then any addition to
+> 
+> include/uapi/linux/input-event-codes.h
+> 
+> must have a dts user before being approved too ? Since
+> that file is included from include/dt-bindings/input/input.h ?
 
-Hans
+Wait, that's UAPI :) and we just share the constants. That's kind of
+special case, but I get what you mean.
 
+> 
+> TL;DR: not only is this patch fine, this is actually
+> the correct place to add such a define according to
+> the docs in Documentation/leds/leds-class.rst :
+> 
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+
+Best regards,
+Krzysztof
 
