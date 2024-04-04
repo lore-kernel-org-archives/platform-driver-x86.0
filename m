@@ -1,38 +1,37 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41A61BC3F;
-	Thu,  4 Apr 2024 14:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52AC1C2AD
+	for <platform-driver-x86@vger.kernel.org>; Thu,  4 Apr 2024 14:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712241994; cv=none; b=jyafSa0sUgxrI2Y3iptZ/t8zW7zG+MGfToxBOr/Q0OZbTrGW4IBWXoNTi7W1PswedVN8ALbhBl+RRuFYRqVz9Xs0Q+XcTG7y3vnaQ/TpCrB4WH16/Hk3JTLop3GU07du3SDi9dZHcZ09aLu04QGUR/eOi3e4QaeugFY4Plm+lOo=
+	t=1712242560; cv=none; b=cVM4D+6k+gyYxnJMWMpyGyTBLwFh6BNqGKph8wbX1F0Srxn88iCSVaAi0yXgW07pqtH8twLLlnZ/xqTkGzBlNSR4AfQuJax1vRqecDVysAKGbRzvzqCh2Y6C6owy7gt0+riwt7Pxq8+06HHRm6KjwxA8Rtqjle9QgZ3hb9QPjO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712241994; c=relaxed/simple;
-	bh=H9LwAnAlR1s3cnX8NQpC928+ZbKYlx1Vcabhv3XjSG0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L0YsXgFjNfq1almN9oAY6EIr3dgupVcZfBwjDrZhwA7KKY2z72i45nX8b8q5QUEyKiqFMeAEWTBBD72596yNdkIHW1RIBlxM5vUXyqqxOvW8ipofw0QF2eKa3bS8akZr0Vpqqohym6ebokPEXEkMtg7wZxw6etwS4UnH9+zIvqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=btrL0Hdf; arc=none smtp.client-ip=212.227.15.18
+	s=arc-20240116; t=1712242560; c=relaxed/simple;
+	bh=pLb92LhAvampfltVfG1zLaFeBawf2YhmT9+U8zxrPTw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Qe5v7QAJGomBTl6b/FpH2SMZ2e3VsKcnlZEZI15KvQAQ2mQDQMr5lYx4CUiI23LHJ09tM8BvVmxwUea9OsBg/3ad7rHPQQwfrj1erU747XsmZWPVCmEeOgPepH852Fu7XJb/hq1JKSRG0DGVdfEoYgA2Ta6Qw7xg8K7+TOrhl9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=QRZUD689; arc=none smtp.client-ip=212.227.15.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="btrL0Hdf"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="QRZUD689"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1712241958; x=1712846758; i=w_armin@gmx.de;
-	bh=u2RRwremyrYLfAgIcFOQ0P9YXMEq91At7nkmHlm85gM=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=btrL0Hdf8J/CDszJWSacoGtJs1vbSY5+W5xnpErLrM8ORb8c808YJxEe7myWoWT/
-	 o/WRtgc0BAjGnBPUB8GomvYzBv7/oLlpe23cjian7LY4nb8GbW6uGA1rNTvOlK2J6
-	 TRgwNyL/cwjOdI2ZISbHh54NvSyFmQuXa5TJYXJVvMhZ/hhGf47QlYqy9rDPtmeGE
-	 /jR14GcC0JcEm6Zx4ZLnTQUAX9IVwdTkoWYqvFfBRzrPLQqNcjN9pRMP+na1y7PY6
-	 Qd7W0Vo3LgwYgw1C/l/uevV+nQXFuEixmZGOZs12ZJD/wbpZZpS6Pz1TXCpK1/Qur
-	 2W3jDDLUJveZ6B9Rig==
+	s=s31663417; t=1712242554; x=1712847354; i=w_armin@gmx.de;
+	bh=pLb92LhAvampfltVfG1zLaFeBawf2YhmT9+U8zxrPTw=;
+	h=X-UI-Sender-Class:Date:Subject:To:References:From:In-Reply-To;
+	b=QRZUD689/xK1qPknLRytRGfSjIaP28Sa528wDMJO7frrf8lK7pIGk3jn3aF0J5sg
+	 /xo9oOnWkFDXHejbGCN6gXJOMfFrMZawnZQ/Ie1EmH8wQ+NN6nvbCDKta/mpVYtSe
+	 aIl0Vyqv9XbYgbeBy7Gq2Rwmu1wuV+ewkXR65djIFcOZHWlp4ODBZu7Yc+ebXwGcA
+	 niMecZjX+TKyrPpXXcsl5Si7PdoHIhUXY1Cj9qRzRHUV9y2p96BpuyF3vZbLbwwM5
+	 O0xrfxYztdSN8sKTzVLdWLdATkYoVhXF0Cb1jE564iyFXF0ZcpWE5XfD7oBYhDdp4
+	 coTKIn3nxyQdQ9k6yQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N33Ed-1soqYF04OD-013Nwj; Thu, 04
- Apr 2024 16:45:58 +0200
-Message-ID: <091f53a0-4921-46c8-987a-3b11a499e46f@gmx.de>
-Date: Thu, 4 Apr 2024 16:45:49 +0200
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MRmfo-1sG49I0wEU-00TCDi; Thu, 04
+ Apr 2024 16:55:54 +0200
+Message-ID: <b85d1fbe-af3a-446e-a4d2-fbbd53c0c398@gmx.de>
+Date: Thu, 4 Apr 2024 16:55:53 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -40,72 +39,63 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: quickstart: fix Kconfig selects
-To: Arnd Bergmann <arnd@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Henning Schild
- <henning.schild@siemens.com>, SungHwan Jung <onenowy@gmail.com>,
- Ai Chao <aichao@kylinos.cn>, Robert Joslyn <robert.joslyn@redrectangle.org>,
- Henry Shi <henryshi2018@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240404123435.2684819-1-arnd@kernel.org>
+Subject: Re: ishtp_eclite: reading fan tacho value from ElkgartLake PSE
+To: Mikael Lund Jepsen <mlj@danelec.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+References: <AS4P189MB2133A68C6CB82C58E0268311BA3C2@AS4P189MB2133.EURP189.PROD.OUTLOOK.COM>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20240404123435.2684819-1-arnd@kernel.org>
+In-Reply-To: <AS4P189MB2133A68C6CB82C58E0268311BA3C2@AS4P189MB2133.EURP189.PROD.OUTLOOK.COM>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:Ge7Yo0tsLcqXgoYDFU5J7P83kmLSK/RB3QOHXEDHH78KwXlEAat
- vBLY6RnN2S2Zkl0qrm0WyNjy0x0hKWdcO1Clx3VrbiqCbegjix++01B2ateCNo4w4VNlwxY
- buQ2BrS8n7ii0mhsfHtOA3+xui6zqX9qm2z48RS2M6ugmdVp53Yia5PtfHA1JQynfu69qLA
- ApvN59luzYQkTzKGNG6sw==
+X-Provags-ID: V03:K1:4s0XT0sLSPWXMyUnA25VpMxvsyp60mTsW3Tu7G6a88SiIzld7PV
+ KubZrSPXx0oHxXzIESHENFlEWf39K1mYhZyNroyDK2aL2djacEFyWUWrh7RHObHEqlYovx2
+ JodrvvMlXmIt+5vppuAVV/1m0n0mR8ihQWYOairgewJVPDh4+txGvj9cSX6+BwZ2yytI61c
+ bxAIsauYYykIBa+Zwrw3A==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:OsAq2A0ZZXM=;fse40cX9dYkNcfET9Da8iPzm9DO
- yAhnjkLyyRe6Dymh9q1jegZ0G5WDgXjill2yepsl/zMWltNUZ2nJQQHvMuMbz2zoFniEWVHpA
- /i8tkk+b1Dlbre7q2TgAXXnYBMzjx57lqDvd8I38pn6q+9F7f8kH4aCzgLXTbFYa03v6RgXql
- 2qtj/uV29AdGe8dm9aOp2A2SeRs69chLQ4u26Tdk7VQVkMx6qYhkfm0ZyEfyVRRoLDTWWCW8/
- oUecoNkiyf/tcjRhk4W0LCRkCxVq6fnQtGpvR4VIiT437b9wRzkroWU3aVJK2Ocj1F9bx/ICb
- LDqWcX1zuQrrmQj8MctEoQk8m5kndd8s45dyyhtIOOOH07i92Bu4SlUa8LM7E2LWnWpyTZgDv
- O/MPd11NZNzleHKZX0PLlpphZuFc6I7i2XADMjTk03LZpK3Y2uZQI8KlU34FKWUtYqOQkJ5Wk
- mYJa2mev6I2+t6vu16su/6bhoIirPzNmUK2D5UA0H9sjdFAY5UVTNeSNyvz2F5GxPiaqXD0M4
- p6xaIlqfSK3ppjNN3aNij25+es8LjrkX96xrpB9C96CUwOPkbMbrIwIPGNqj3ZYkKqztTgEs1
- bNw+4JmLymnPo9o8nlW9BEwuuuuYZhNZgNrjjgcBzWSxSJ3R1o4QBdrvS78vdBGbSl9j00isI
- YxQkvYN7e0OXLX0j5iq1hFTFvVH3nd4rFgA+2AU7K6SbmCder8OVotqVwRnn0m3ItYj3dbEtm
- zXyiYCzVjbHLnbFJNB9O/H81xhyCvfsQH9B41W/0kirqda283mmslzSCDQnkgg192nGXeFaUz
- S2U6/yw/CaRreAVCaW6GdnUVjpEjyu+Yn/IRz7Wwa90w4=
+UI-OutboundReport: notjunk:1;M01:P0:2I8mbGlMVeI=;eT5JUoWPjv06YzQlpnMombouiP7
+ h+6727wOGg1QgkyE/8IO1pjz7OaAMJRl5duW1qwnfyu7LCqUKCF+2VEpcpgUui5MSGbn/e1Cj
+ UFUy8g9ZW5v3ygUIO/QHtSXk6IQpmCXfvg9OmTVVCwMSPonZE/E6FP2h8FgO1I3wHKzhofumb
+ 0CbqaeHICJ4JInXisPdSx7hDEZJZXgdtDVBHgVZ7EVIhdpieV4lq2ZQ/1666RuNK3nZ+WJ/6j
+ SDeCVBr0frYdS6kwv9yTyLdOwZk96KB/RBS8v3TOIimnSgWHOEQ++beI5WRQyaqNWMSraKXUD
+ vT1RpLXFu6do/q/+wE3gGuyw59iEFrCrkfyeskk4601WT/PJXzAyhjIYNmtav/BhVh1h0bwyX
+ 73eocMd5sm6K/SiQ/0Rxm+0byaGRzyiTQKeTJSazoPl1hPb36I27ztw9ThXNtE5yrEBdJgwm8
+ oblWSJqStcKxpw6eWouDUXVBhwW5SMv9wwyFInEr11Ub5/IGaQlTmMGpa1R1v9JTQRiaUbmUf
+ 0+y0Hv0mQpdT9P4M/W2ByxZr/qA5dGE/foSS342gtYBxUn61qkrNj0Pf0ji7jla0Xj6oBcxXQ
+ qvp6mleim/NoCbw7/3OgsGfq1+XwFKDp87VXj+PmlPgo0aDKQxfwvNKGUx702rBD5WCBoMZhy
+ kescsgHbFLDuwKh5xBLvagn7lS0d+qXM+/Z8KwZG6FWYYM5f7deKIIskJ01Ianmg+GgLcp/f8
+ RV6nUm3CMudj1hn1U7tVcJmIrzqgwqzIv0cK6ZUdFC0nEhFkm21N3VM+j8wnxxHR7QcHfAWEI
+ 3EAB//lrdp48303LUXEnc4aq8TJ8aIPLUqZ8tzLMYwYIU=
 
-Am 04.04.24 um 14:34 schrieb Arnd Bergmann:
+Am 04.04.24 um 10:37 schrieb Mikael Lund Jepsen:
 
-> From: Arnd Bergmann <arnd@arndb.de>
+> We are using the Intel ElkhartLake CRB board and need to read the CPU Fan tacho signal from Linux userspace (so we can raise an application-level alert if fan is broken).
 >
-> The new driver Kconfig entry has a typo that causes a link failure
-> when CONFIG_INPUT_SPARSEKMAP is disabled:
+> The CPU Fan PWM output and tacho inputs are controlled by firmware running on the PSE controller (Cortex-M), which is embedded in the ElkhartLake SoC.
+> The PSE Firmware contains an ECLite feature which updates the eclite_opregion.tacho_rpm field. This field is also declared in ACPI (offset 330) by the bootloader (Slimbootloader).
 >
-> x86_64-linux-ld: drivers/platform/x86/quickstart.o: in function `quickstart_notify':
-> quickstart.c:(.text+0x96): undefined reference to `sparse_keymap_report_event'
-> x86_64-linux-ld: drivers/platform/x86/quickstart.o: in function `quickstart_probe':
-> quickstart.c:(.text+0x1da): undefined reference to `sparse_keymap_setup'
+> Fan control works fine via the thermal_zone sysfs interface, but we cannot find any entries for the tacho.
+> As we understand it, the ishtp_eclite driver merely acts as glue layer to the PSE/ECLite, so some other kernel code needs to call it, we guess based on ACPI definitions.
 >
-> Select this symbol instead of the incorrect INPUT_SPARSE_KEYMAP.
+> Does any drivers exist which expose the tacho value to userspace (preferably via hwmon as is the standard way to do this in previous Intel designs with LPC + SuperIO)?
+> Or if none exist, we may need to add this, but could really use some pointers to understand how such a driver should communicate with ECLite via the ishtp_eclite driver.
 >
-> Fixes: afd66f2a739e ("platform/x86: Add ACPI quickstart button (PNP0C32) driver")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->   drivers/platform/x86/Kconfig | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> Note: The official Intel binary release of the PSE FW (MR7) does not enable the low-level TGPIO SEDI driver in the PSE environment, so the tacho input is simply ignored.
+> If rebuilding the PSE FW (https://github.com/intel/pse-fw) with the SEDI driver enabled, ECLite starts to read tacho as expected, but this does makes us wonder how well implemented (or used) the tacho feature really is.
 >
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index ba88a7f259f1..21a37f1b73ab 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -647,7 +647,7 @@ config ACPI_QUICKSTART
->   	tristate "ACPI Quickstart button driver"
->   	depends on ACPI
->   	depends on INPUT
-> -	select INPUT_SPARSE_KEYMAP
-> +	select INPUT_SPARSEKMAP
->   	help
->   	  This driver adds support for ACPI quickstart button (PNP0C32) devices.
->   	  The button emits a manufacturer-specific key value when pressed, so
+> Best regards
+> Mikael Lund Jepsen
+> Software Engineer
+> Danelec
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Hi,
+
+maybe you could provide a ACPI Fan device which implements fan speed reporting through the _FST control method?
+In such a case the generic ACPI fan driver would export this value to user space through sysfs.
+
+If you want to use the standard hwmon sysfs interface instead, i can provide you with a prototype patch for exposing
+this values as a standard hwmon device.
+
+Thanks,
+Armin Wolf
 
