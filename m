@@ -1,172 +1,120 @@
-Received: from wfhigh8-smtp.messagingengine.com (wfhigh8-smtp.messagingengine.com [64.147.123.159])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02D31C6A4;
-	Thu,  4 Apr 2024 00:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317DE59B40
+	for <platform-driver-x86@vger.kernel.org>; Thu,  4 Apr 2024 07:27:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712189865; cv=none; b=OkVbzq6Nd44v2IIUDgIEdwv50X+030lLzxgYbMXehcTwSwL0jTIR7OB9uJVsUXrBg0Ce4Bu9ki2gdnSybgwOJrZ27kz5mBQxXwwEWkCkAFjQSqCdtb3Db1zmIeFB2hNvHDpcNoMPsJmyrjHvJCDITHcjwv9WjFCamxCX4WVskgw=
+	t=1712215635; cv=none; b=YjC9PdDek6bbQxNhGBcDzuWARoUsTtx9F3IEYv8QlmtwVWgtYnXPg2AdisMAw5jlMm3zcyWTzb7pqfv9CRxlbf5uKYJQzR+LkyvrjGe/WoGK7Fmze+xSZKuSv0wk8YbKKheTYJzq+IuVIsV2bxYZCfHPRiaw9Geg/VsMo+NFsDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712189865; c=relaxed/simple;
-	bh=VKZYrJDBI4Tg+jJYZ5tYzIFr1wEKASSqze+TdUIUhYw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rKoQtGIL8RE4zqrMGPfy8Qh1AJ4D2J7SFtJF2wFUhfyU/BqqWhmq0eU/Db7yQMxyRD38RGzCcww6vJGfQRYPTByey5MD3s0XfPIDM/iLCLpLzVVoe2dGMfPcI/3dakneFKwy2BgPimabrvg/YdDbP+kW2gVfZUo5Bm+qyRA8NLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=vhfJmPvq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=axl4b+IU; arc=none smtp.client-ip=64.147.123.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1712215635; c=relaxed/simple;
+	bh=ODjwOVF2Ek6QJTtQ51zjS8Yf6VSLCSnZh7p/guZ3IJA=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Mj/TTDPECFskDKWoGtLgaHhna74+EIfKzs3HhWauROB0wdIxVmkkMtgrQd5WqFbZVoqzyvgoaiyXNz213Os+jN3NQjZe1SQoirIqUiXeo8ajrIN6Tp0jkhdCav3Ep4RUwkkkYSh0xSQlemW/ArsMJgUd4JAAMob7dgmBbXMFouM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jKCB7EMd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="vhfJmPvq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="axl4b+IU"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 9BD9E18000DD;
-	Wed,  3 Apr 2024 20:17:42 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Wed, 03 Apr 2024 20:17:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1712189862;
-	 x=1712276262; bh=SWwR8iaMb1pyiVmb4GJOb8En73DRDg4SXGzGWsHKjIM=; b=
-	vhfJmPvqCkuxfiRTB7SAkmwQZsqAmMy+0MBdSWJIsi2PSAErVqv9QKaXHbGEmA2j
-	fAVAfGfehC1vZY2WBm99ll/l4b6ctE1BUHljSOdhxWM0bd3FOUCLfUOA8Jp3ev96
-	7C4oJMV3APOB5dE2gogV4/x0awN/7Azds3laYV95aTF5K/ULy4h4EjxuoypmD1E0
-	cndgtbzgnpvVe1jTcnBcJEXI3SEUqtFli1AVBl/gqyQHLWBz7uu0/62NX1tDanQu
-	7WM9IFqvlPqtEttmgZ9/BDveZuyWXxT/Zvyjdf7xmTbW4qKs82Qlji0u234i18Om
-	hommiemUKWmVp8aFpIzThA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1712189862; x=
-	1712276262; bh=SWwR8iaMb1pyiVmb4GJOb8En73DRDg4SXGzGWsHKjIM=; b=a
-	xl4b+IUtOsntKPlOEqzUBQZkulhzXdZrQTLU8RYX9Z1vIql/L4FWEC1nHBtmPfOD
-	OjGfwh9KMfM+j0tDfCAyI5iji0fO31BRQNHvZzA7r1kbCwLDW1dbcuFgrdxwsNNK
-	Zv2zS/+e+7GOjl51DvjVaDW+4U+jUWrsRuCRnOgki5jNPrl0VV/3MVt8nL6X7cLG
-	20cDbPIwv5JoPg5yG/egqknAKsnD4tGdmrT/DPynChp6se+KJU3OT3oe1BXMuqbJ
-	6kyrmMjOYKf5Q8qW0PTAypwnh28EspThfLOeoiWbyMBIv0TZLjFUXD5CfJJEjbPE
-	xrhIkzkFEvMmsHzqRkJzQ==
-X-ME-Sender: <xms:pfENZrVlpi05RBI-FklAIX4BysVUy8nJBTU6buFln1eJKoZFcyRfIQ>
-    <xme:pfENZjkIDPAQ3245KpzNdnePB26Hmiw6Ky7k4H3xS31HN1V8lNHueiyYWilQ3E51i
-    EFsci7MVSyO6xIJW40>
-X-ME-Received: <xmr:pfENZnYOb_74TOdBsClWZyMeAV5mDunffN4qNevY0VC1IY2prmUOMq9lMYCq>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudefjedgfeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfgggtgfesth
-    ekredtredtjeenucfhrhhomhepfdfnuhhkvgcuffdrucflohhnvghsfdcuoehluhhkvges
-    lhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpeduudetudehiedvvdevveelhf
-    egkeefffdvfeetuefgveefgffgffeiffeitdelieenucevlhhushhtvghrufhiiigvpeeg
-    necurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:pfENZmWY8gnn5Iwd-pBo1kXAXZ0zAHoUpmKRlUy0otms8OkG1idSDQ>
-    <xmx:pfENZllllYAieemXmbiuLJ_sU7Yue7V809jyOk9Mj7IbDNfmUWEvAw>
-    <xmx:pfENZje5nBX_UEPt4C4R_7IFCh-bV8SSjgdXN4cqaq5OzA1rYa18NQ>
-    <xmx:pfENZvHXc-XaI49aPe70eBv8f-ZX_iCRbQpFzkDUVNWaFuYfK-PTQw>
-    <xmx:pvENZjaifIX-FT5p4rs368vYXXofWO4oft3WugS5r3NfqFl00D1qRBob>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 3 Apr 2024 20:17:39 -0400 (EDT)
-From: "Luke D. Jones" <luke@ljones.dev>
-To: hdegoede@redhat.com
-Cc: corentin.chary@gmail.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH v4 9/9] platform/x86: asus-wmi: cleanup main struct to avoid some holes
-Date: Thu,  4 Apr 2024 13:16:52 +1300
-Message-ID: <20240404001652.86207-10-luke@ljones.dev>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240404001652.86207-1-luke@ljones.dev>
-References: <20240404001652.86207-1-luke@ljones.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jKCB7EMd"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B734AC43141
+	for <platform-driver-x86@vger.kernel.org>; Thu,  4 Apr 2024 07:27:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712215634;
+	bh=ODjwOVF2Ek6QJTtQ51zjS8Yf6VSLCSnZh7p/guZ3IJA=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=jKCB7EMdiSEzPKD70mA/Jm3agzNeoeF+FgFs0X6EFZ5puosSamN5acAuituhUztGY
+	 U7gaQ6uZK3p+thusT9cIFPr1jktct+L5LuMtv+EpvbYy8tp9jGzwSJbLSgwuhcg7Tx
+	 uiyBgcuhJ6/N5m2nysQthSeRsgAPk34V7ymRMwrkHgjkJaL1oihrppxSNleNxL+Zr8
+	 OXUPTyhzFmCO5hL3FH1AyUmA2/5/BImz/y/JW8kPJayORettDpPuPz3IehwsYAhEze
+	 COvi7T1lwXSvqBv/fiTHPHHdko2prAMmLVcY8gPbBGN2H47o0BfmC5wUXbp7clFqgx
+	 +AQxyQd40MLeQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id B3A96C53BD7; Thu,  4 Apr 2024 07:27:14 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date: Thu, 04 Apr 2024 07:27:12 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: felix.schmidtpeter@yahoo.de
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-204807-215701-PGgeDsvUrA@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Reorganises some attr-available calls to remove a few unrequired
-booleans in the main driver struct which combined with some
-reorganisation prevents a series of large holes seen with pahole.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
----
- drivers/platform/x86/asus-wmi.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+zerofixgiven (felix.schmidtpeter@yahoo.de) changed:
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index d06d9e0c498c..2d2b4eca7fd8 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -254,6 +254,9 @@ struct asus_wmi {
- 	u32 tablet_switch_dev_id;
- 	bool tablet_switch_inverted;
- 
-+	/* The ROG Ally device requires the MCU USB device be disconnected before suspend */
-+	bool ally_mcu_usb_switch;
-+
- 	enum fan_type fan_type;
- 	enum fan_type gpu_fan_type;
- 	enum fan_type mid_fan_type;
-@@ -266,9 +269,7 @@ struct asus_wmi {
- 	u8 fan_boost_mode_mask;
- 	u8 fan_boost_mode;
- 
--	bool charge_mode_available;
- 	bool egpu_enable_available;
--	bool egpu_connect_available;
- 	bool dgpu_disable_available;
- 	u32 gpu_mux_dev;
- 
-@@ -309,9 +310,6 @@ struct asus_wmi {
- 
- 	bool fnlock_locked;
- 
--	/* The ROG Ally device requires the MCU USB device be disconnected before suspend */
--	bool ally_mcu_usb_switch;
--
- 	struct asus_wmi_debug debug;
- 
- 	struct asus_wmi_driver *driver;
-@@ -4391,11 +4389,11 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 	else if (attr == &dev_attr_als_enable.attr)
- 		devid = ASUS_WMI_DEVID_ALS_ENABLE;
- 	else if (attr == &dev_attr_charge_mode.attr)
--		ok = asus->charge_mode_available;
-+		devid = ASUS_WMI_DEVID_CHARGE_MODE;
- 	else if (attr == &dev_attr_egpu_enable.attr)
- 		ok = asus->egpu_enable_available;
- 	else if (attr == &dev_attr_egpu_connected.attr)
--		ok = asus->egpu_connect_available;
-+		devid = ASUS_WMI_DEVID_EGPU_CONNECTED;
- 	else if (attr == &dev_attr_dgpu_disable.attr)
- 		ok = asus->dgpu_disable_available;
- 	else if (attr == &dev_attr_gpu_mux_mode.attr)
-@@ -4423,7 +4421,7 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 	else if (attr == &dev_attr_boot_sound.attr)
- 		devid = ASUS_WMI_DEVID_BOOT_SOUND;
- 	else if (attr == &dev_attr_panel_od.attr)
--		ok = asus->panel_overdrive_available;
-+		devid = ASUS_WMI_DEVID_PANEL_OD;
- 	else if (attr == &dev_attr_mini_led_mode.attr)
- 		ok = asus->mini_led_dev_id != 0;
- 	else if (attr == &dev_attr_available_mini_led_mode.attr)
-@@ -4674,12 +4672,9 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	asus->nv_dynamic_boost = 5;
- 	asus->nv_temp_target = 75;
- 
--	asus->charge_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CHARGE_MODE);
- 	asus->egpu_enable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU);
--	asus->egpu_connect_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU_CONNECTED);
- 	asus->dgpu_disable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU);
- 	asus->kbd_rgb_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_STATE);
--	asus->panel_overdrive_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PANEL_OD);
- 	asus->ally_mcu_usb_switch = acpi_has_method(NULL, ASUS_USB0_PWR_EC0_CSEE)
- 						&& dmi_match(DMI_BOARD_NAME, "RC71L");
- 
--- 
-2.44.0
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |felix.schmidtpeter@yahoo.de
 
+--- Comment #335 from zerofixgiven (felix.schmidtpeter@yahoo.de) ---
+(In reply to Denis Pauk from comment #265)
+> (In reply to zykr.caswell from comment #264)
+> > Created attachment 303116 [details]
+> > DSDT - X99-E-WS-USB3 - Decompiled
+> >=20
+> > Same or similar issue with X99-E WS/USB 3.1:
+> >=20
+> > nct6775: Found NCT6791D or compatible chip at 0x2e:0x290
+> > ACPI Warning: SystemIO range 0x0000000000000295-0x0000000000000296
+> conflicts
+> > with OpRegion 0x0000000000000290-0x0000000000000299 (\_GPE.HWM)
+> > (20200925/utaddress-204)
+> >=20
+> > I've been trying to make sense of the DSDT by reading the ACPI spec, but
+> I'm
+> > not having a lot success. Built kernels 5.10, 5.19, 6.0.2, 6.03, and
+> several
+> > different versions of nct6775 driver for each including "Asus WMI for
+> > nct6775 v5.20 base (2022.10.20)", both in tree and as a custom DKMS mod=
+ule
+> > to no effect.
+> >=20
+> > I'm rather reluctant to actually try using acpi_enforce_resourses=3Dlax=
+, so I
+> > don't know for sure if that would make it work or not. I've attached my
+> DSDT
+> > as pulled from the latest BIOS update for my board from ASUS. Could som=
+eone
+> > take a look and confirm for me that I likely have this same problem?
+>=20
+> Could you please apply patch and add line with you board and recheck? Cha=
+nge
+> should be like "DMI_MATCH_ASUS_WMI_BOARD("<You board name>",
+> &acpi_board_LPCB_MUTEX)," near "MAXIMUS VII HERO" definition.
+>=20
+> Name board should be from /sys/class/dmi/id/board_name.
+
+I would like to ask if the support for the board "MAXIMUS VII HERO" will be
+merged to the kernel in the future?
+If any assistance for testing is needed I am happy to help to get this adde=
+d.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
