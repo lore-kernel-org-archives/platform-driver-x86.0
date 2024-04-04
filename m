@@ -1,100 +1,148 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
+Received: from wfout8-smtp.messagingengine.com (wfout8-smtp.messagingengine.com [64.147.123.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A0EA31;
-	Wed,  3 Apr 2024 20:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A661C36;
+	Thu,  4 Apr 2024 00:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712175807; cv=none; b=gUG3ioRILlil4ESUR7KYCMwO4jW0v/fhiXITuU7vbZWMuvZqBBF2ff/q+6DtKYuR3Y6XkVn1XwrkBCm+2C+WHoDnrV83zxWFze0qb04qKxJ7GuZ8ZMb5qehL8QJAEmH75H0wn94dWcJoa8+NI8CHXzaoDA0lJhN4rh6e/GRNOcw=
+	t=1712189827; cv=none; b=qMmhmkdxfWd75UdYx7akr+vLoWVNeRDovx37vA/M+ZdM2CxiS3nyyLL7Hkz2BLdJUQwb4E8kPYUTjx/lZDTAVKZAy9S3AG3+hEKSxGbcHRukVFXJDdF2piuXpNnL/gNuDiophXORqebL1MlUdSfAXZ9gykrc5a9yyBc2Snpqoa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712175807; c=relaxed/simple;
-	bh=MPsU28H2POUdiVS1YuPmiLhg1Rt8kKEk7jcvZln4UP8=;
-	h=From:To:Cc:Subject:Date:Message-ID:Mime-Version:Content-Type; b=hQYNo0ZdH/05eDYhzv13kkbO31ICAjd0od6mDZjF3erpg7Z0B5CqgNTnS2/2zJc+lkBgRShoj0NIemc7lHIGRqvzK4ZTmdK8NqqfRLHjDwzwIcB/6ZaV1o8R4jATf68Ye2HtMJvAgwJYE1S+Kgo85sAwHQB6zUfIRSxUuvXrwK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from fedori.lan (51b69867.dsl.pool.telekom.hu [::ffff:81.182.152.103])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 000000000006DFF9.00000000660DBABA.00256B88; Wed, 03 Apr 2024 22:23:22 +0200
-From: Gergo Koteles <soyer@irl.hu>
-To: Ike Panhc <ike.pan@canonical.com>,
-  Hans de Goede <hdegoede@redhat.com>,
-  =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-  linux-kernel@vger.kernel.org, Gergo Koteles <soyer@irl.hu>
-Subject: [PATCH v2] platform/x86: ideapad-laptop: switch platform profiles using thermal management key
-Date: Wed,  3 Apr 2024 22:23:15 +0200
-Message-ID: <797884d8cab030d3a2b656dba67f3c423cc58be7.1712174794.git.soyer@irl.hu>
+	s=arc-20240116; t=1712189827; c=relaxed/simple;
+	bh=1NV3k0jBNoLNvWDnYUr5wMabBSYCJhk5lMMYMr/hPts=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QFtKN29Qy+/hF5hzmn3lm1HaxQ0vrClv0aCE5K+fi6DepN0Q9FRJb38xJVk1XEaD3Yq6S2oYxvQLDsDsgPYzMeiOhEI0LvEc21jqVG9hJc1sg9T7El+K0BCbtOCfgb4YqLao5w5DW9LQFInwsv7+oAyo09mrpV4fmQygd3baCc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=qeAnu6Cc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Qf48OQxL; arc=none smtp.client-ip=64.147.123.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="qeAnu6Cc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Qf48OQxL"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfout.west.internal (Postfix) with ESMTP id 581FC1C00101;
+	Wed,  3 Apr 2024 20:17:03 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Wed, 03 Apr 2024 20:17:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm3; t=1712189822; x=1712276222; bh=9p
+	ePwZQdFiMLHLTOsr0Ukt/rDRUDL+dja2g60K6h1GI=; b=qeAnu6CcG8gNDDoQ5s
+	ble7ZmU1bOvCUUYCtE0nrWxw6crXpR0SQdVYKsy1jsr9cKa0meik+W/LEUl6u1O/
+	Fu4o08xm4bacXGx2agnKNdT6GCA+hYR+797NOp5osUEvrE+tuFaFSrcubU1+STir
+	fWtLMN9zEY+zKbd6MVDjAN0QPQZ89E2K0RwjavotiVpQmIRqD4+a2dNgMScBKgRO
+	/eGulP+d8c0itODimqA54+hSUJpaLJF5ag0NU9qA1SG5NDIcdkSOk1aN2bMFTDIG
+	r25V+nxjT3lQoFgnFOmQFtCRht34/wMcSRdaRO7VBax6qXNPcIfOwbsG3wWkO2uk
+	S7bA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; t=1712189822; x=1712276222; bh=9pePwZQdFiMLH
+	LTOsr0Ukt/rDRUDL+dja2g60K6h1GI=; b=Qf48OQxLA1wFqYjbSZISF8wsO1Jd3
+	oURcaAvJvvjNJePiHZePju6+EbeA4YVjMl52QncF3TiiKU29IkyYCPAT673BRcZT
+	OaPWg8Ak6kdc2w1D8UD/u/sCFN0yg4wy40KW6dgHXIlaYIV1PcDUeGmjLCqHy+mh
+	F6dilQTUXLPKnHWlaP0tyMgjT/54QCTam2cm81snAiEGGHrT/nqa2Pcnm+2nH5JY
+	eMJm7w/q78ItLS+IGSV0BdvH14uzIW+Qm0GBLbHjFhHMKHx9h6T6knRCJy9ul1hi
+	c74TGRPMDCKgMN42fLuhHrWboxZ9SvYL5gOJjU0Mw6XrHfeIQ3T/QF9ZQ==
+X-ME-Sender: <xms:fvENZvoHwGG9BZChz5nk_m_KQ2wzc9gP41yjl4e_J4OJ0YSLOFzm2A>
+    <xme:fvENZpodXJRkgcO4Vs1mM63iIU4nKWP3PFY14ccDpN95yKfyaOYfDAonh87ZQ4dvv
+    _GqX9-0SwTC5tPaZdE>
+X-ME-Received: <xmr:fvENZsNOKbuHzgXfLYH_5CExUO0cdr8urpJ5ogi5NbLcD277LVMalDuEr3b8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudefjedgfeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffogggtgfesthekre
+    dtredtjeenucfhrhhomhepfdfnuhhkvgcuffdrucflohhnvghsfdcuoehluhhkvgeslhhj
+    ohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpeejtdfhheffkefhteekleduteegud
+    fgleekheejuedvueefvdeltdehuefgveekkeenucffohhmrghinhepkhgvrhhnvghlrdho
+    rhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplh
+    hukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:fvENZi4nAchTMhaxh_SxQKYeK9GQPowYmvgh2FTOvIeE0FijGwdaJw>
+    <xmx:fvENZu7GXHC_eekkR7hzJw5cnVXgB1cUVwUBmZCFoIKU2zK1a0Ufew>
+    <xmx:fvENZqgjiXpXdZiXAgomecBrNjKCpdewzexOUKtR58XjurpmvfmMcg>
+    <xmx:fvENZg6w6mOE9WqJ8mR3J2m73RZGTh3j7HNux-T9dg59BsnDwYxHQg>
+    <xmx:fvENZrtfh1r2sqTLgoaWGyzUzRFl19cnA5FUhDN6GwLW-RyslvpMDEzt>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 3 Apr 2024 20:16:59 -0400 (EDT)
+From: "Luke D. Jones" <luke@ljones.dev>
+To: hdegoede@redhat.com
+Cc: corentin.chary@gmail.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH v4 0/9] asus-wmi: add new features, clean up, fixes
+Date: Thu,  4 Apr 2024 13:16:43 +1300
+Message-ID: <20240404001652.86207-1-luke@ljones.dev>
 X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Ideapad laptops have thermal management or performance mode switch key
-(Fn + Q). Now it sends KEY_PROG4.
+This patch series touches quite a few things along with adding support for some
+new features.
 
-If supported, switch platform profiles instead.
+- Add support for mini-LED on 2024 ROG lpatops
+- Add support for the gpu MUX WMI call on Vivobook laptops
+- Add support for the POST boot sound on ROG laptops
+- Add support for MCU power-save (ROG Ally only, saves more power on suspend)
+- Store written values for ppt_* features
+- Small formatting cleanup
+- Small fixes to cleanup struct holes found with pahole
 
-Tested on Yoga7 14ARB7.
+Obsoletes:
+- https://lore.kernel.org/all/20240320011442.11608-1-luke@ljones.dev/
+- https://lore.kernel.org/all/20240310065408.63703-1-luke@ljones.dev/
+- https://lore.kernel.org/all/20240310061715.16531-1-luke@ljones.dev/
+- https://lore.kernel.org/all/20240310055312.11293-1-luke@ljones.dev/
+- https://lore.kernel.org/all/20240310233722.30884-1-luke@ljones.dev/
 
-Signed-off-by: Gergo Koteles <soyer@irl.hu>
----
-Changes in v2:
- - only switch platform profiles if supported, otherwise keep the 
-   behavior.
+Changelog:
+- V1
+  - Mini-LED: use asus_wmi_get_devstate() and not asus_wmi_get_devstate_simple()
+  - Fix dates in Documentation/ABI/testing/sysfs-platform-asus-wmi
+  - Remove <name>_available bools and rely on devid for:
+    - gpu_mux
+    - mini_led
+    - kbd_rgb (TUF RGB LED)
+- V2
+  - Fix formating on select if/else blocks shown by checkpatch.pl
+- V3
+  - mini-led patch:
+    - Add error handling
+    - Add defines inplace of "magic" numbers
+    - Remove outdated comment
+    - Clarify existing comments
+  - post-sound patch:
+    - Add missing newline
+  - min-default-ppt patch
+    Use `%u` instead of `%d` in sysfs_emit()
+- V4
+  - mini-led patch:
+    - Minor formatting cleanup
 
-[1]: https://lore.kernel.org/all/85254ce8e87570c05e7f04d6507701bef954ed75.1712149429.git.soyer@irl.hu/
----
- drivers/platform/x86/ideapad-laptop.c | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+Luke D. Jones (9):
+  platform/x86: asus-wmi: add support for 2024 ROG Mini-LED
+  platform/x86: asus-wmi: add support for Vivobook GPU MUX
+  platform/x86: asus-wmi: add support variant of TUF RGB
+  platform/x86: asus-wmi: support toggling POST sound
+  platform/x86: asus-wmi: store a min default for ppt options
+  platform/x86: asus-wmi: adjust formatting of ppt-<name>() functions
+  platform/x86: asus-wmi: ROG Ally increase wait time, allow MCU
+    powersave
+  platform/x86: asus-wmi: Add support for MCU powersave
+  platform/x86: asus-wmi: cleanup main struct to avoid some holes
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 901849810ce2..dba43c2d244b 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -1181,8 +1181,31 @@ static void ideapad_check_special_buttons(struct ideapad_private *priv)
- 		switch (bit) {
- 		case 6:	/* Z570 */
- 		case 0:	/* Z580 */
--			/* Thermal Management button */
--			ideapad_input_report(priv, 65);
-+			/* Thermal Management / Performance Mode button */
-+			if (!priv->dytc) {
-+				ideapad_input_report(priv, 65);
-+				break;
-+			}
-+			switch (priv->dytc->current_profile) {
-+			case PLATFORM_PROFILE_LOW_POWER:
-+				dytc_profile_set(&priv->dytc->pprof,
-+						 PLATFORM_PROFILE_BALANCED);
-+				break;
-+			case PLATFORM_PROFILE_BALANCED:
-+				dytc_profile_set(&priv->dytc->pprof,
-+						 PLATFORM_PROFILE_PERFORMANCE);
-+				break;
-+			case PLATFORM_PROFILE_PERFORMANCE:
-+				dytc_profile_set(&priv->dytc->pprof,
-+						 PLATFORM_PROFILE_LOW_POWER);
-+				break;
-+			default:
-+				dev_warn(&priv->platform_device->dev,
-+					 "Unexpected platform profile %d",
-+					 priv->dytc->current_profile);
-+			}
-+			/* Notify user space the profile changed */
-+			platform_profile_notify();
- 			break;
- 		case 1:
- 			/* OneKey Theater button */
+ .../ABI/testing/sysfs-platform-asus-wmi       |  26 ++
+ drivers/platform/x86/asus-wmi.c               | 409 ++++++++++++++----
+ include/linux/platform_data/x86/asus-wmi.h    |   6 +
+ 3 files changed, 355 insertions(+), 86 deletions(-)
 
-base-commit: 39cd87c4eb2b893354f3b850f916353f2658ae6f
 -- 
 2.44.0
 
