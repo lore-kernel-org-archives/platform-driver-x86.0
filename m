@@ -1,74 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC265101F2
-	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Apr 2024 02:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7795B125C9;
+	Fri,  5 Apr 2024 03:05:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712283634; cv=none; b=Y49f8ZlMcD5ItrLj0LY3OxqafaKFgp+YMgC22mT8ai0pnYGJrZzCoSd7SQqVBdSObuKy+KVckSmjyGa9cpNVz+t6iA2aQ4Le0SWNfZIFAfaN0LTx84oc2XzAcDAHE2Y5N2on2AkTmBc+aedxnYhsSMs8+em+5aOpMSWwVrqP98M=
+	t=1712286358; cv=none; b=ZzIEsUUtiaKOu/YE6dtF90nogvIzcxFse8bHpkFAYeSbpa+HXSMjaDBzMWbLpVZ2AanHWa3s7up2FukgYEqX+QMg381/waolzm95TmY4FRAS4e88fVbNDyzl0TVTNMOEYZ+jkDzsAtDvG5VWrAsGzEQrpenvzHGuH20J81vBAD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712283634; c=relaxed/simple;
-	bh=4ZlDkVtFapi71TlE3kvOS4Gs+mGS7u2U+Ff6z6admwA=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HtrRQ7sKhq1CFnO/IBRgqM/iRs2oQor6NEY7NCQFxs+qLJT1gXqBj9/edpH/da0oKSvgPaWVzJgV3/NwVupLXlwUZoeXvxhDiO3zKL405Qkellw+jWBBWyeG0Pf3ur5bAB/NOR9YI2zBkHUIM/ZcwVSGQ9vC+e+ID27snD6fCtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HaLWTekx; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HaLWTekx"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 64E37C433C7
-	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Apr 2024 02:20:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712283634;
-	bh=4ZlDkVtFapi71TlE3kvOS4Gs+mGS7u2U+Ff6z6admwA=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=HaLWTekxQHFDaZcowFZCzCYfV21KuS4Ox3DAnxAG2ugIwVOWpGDVaZ8J/v1LI5epD
-	 Mx4JulUofUhtohmxfnrHiuaoUvlSKwdGou8ss/nwlTWJWjcLiBuJJbmaHTnQgoCrAU
-	 gJkzQogMhJGNS+kzrwZ6WNf1Y9U5YjCjOXNWEbDfEzJMGzmZsXMQhN22679nyZZpZd
-	 ywbShIRArxxmpQHYT56KDSeCovVCUiGmwmaT9dE0AN5LoCelEp6ZId2xIPqH8QM8dQ
-	 bi/Q6InKEyzHhmg83Jk5Czgj99KiIhWgIPgbwr3stS4o40IAz/FuP0tJhs5FzcepMK
-	 +Fhl2uef0Y6WQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 54B16C53BD3; Fri,  5 Apr 2024 02:20:34 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
- resuming after unplugging the power cord during sleep
-Date: Fri, 05 Apr 2024 02:20:34 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-OcqPZ5TXgV@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	s=arc-20240116; t=1712286358; c=relaxed/simple;
+	bh=8RuxM6J8Cm2RSk+vd4fvxUTuSbBohuHlixB97Gvdd+s=;
+	h=From:To:Cc:Subject:Date:Message-ID:Mime-Version:Content-Type; b=ZNDskeumvSsftz0kLrkwHGUVYm1zXzdeVyJweikyFj8qkK2TAnm38SroFBx4/hV35hDGHO2Imc/s9qFpbJ/OiwK9yPxbuLEZl1sO40gUvpLwaVW2EaoXW8ykhawWbQFJ2INBQQLJv2bZgIS4OTCM5FEH7SlZPE51vEO4ixGberY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from fedori.lan (51b69867.dsl.pool.telekom.hu [::ffff:81.182.152.103])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 000000000006F204.00000000660F6A92.0025A893; Fri, 05 Apr 2024 05:05:54 +0200
+From: Gergo Koteles <soyer@irl.hu>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+  Len Brown <lenb@kernel.org>, Ike Panhc <ike.pan@canonical.com>,
+  Hans de Goede <hdegoede@redhat.com>,
+  =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+  Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: linux-acpi@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+  Gergo Koteles <soyer@irl.hu>
+Subject: [PATCH v4 0/3] switch platform profiles with Lenovo laptops
+Date: Fri,  5 Apr 2024 05:05:27 +0200
+Message-ID: <cover.1712282976.git.soyer@irl.hu>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
+Hi All,
 
---- Comment #46 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-Any testing results for that patch idea?
+This patch series adds a platform_profile_cycle function to the platform 
+profile module, which allows modules to easily switch between the 
+enabled profiles.
 
---=20
-You may reply to this email to add a comment.
+Use it in ideapad-laptop and thinkpad-acpi modules.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Best regards,
+Gergo
+
+Changes in v4:
+ - move the cycle to the platform profile module where it can switch 
+ between the enabled profiles
+ - add a patch to use it in the thinkpad-acpi module
+
+Changes in v3:
+ - add dytc_profile_cycle function
+
+Changes in v2:
+ - only switch platform profiles if supported, otherwise keep the 
+   behavior.
+
+[3]: https://lore.kernel.org/all/7c358ad8dd6de7889fa887954145a181501ac362.1712236099.git.soyer@irl.hu/
+[2]: https://lore.kernel.org/all/797884d8cab030d3a2b656dba67f3c423cc58be7.1712174794.git.soyer@irl.hu/
+[1]: https://lore.kernel.org/all/85254ce8e87570c05e7f04d6507701bef954ed75.1712149429.git.soyer@irl.hu/
+---
+Gergo Koteles (3):
+  ACPI: platform-profile: add platform_profile_cycle()
+  platform/x86: ideapad-laptop: switch platform profiles using thermal
+    management key
+  platform/x86: thinkpad_acpi: use platform_profile_cycle()
+
+ drivers/acpi/platform_profile.c       | 42 +++++++++++++++++++++++++++
+ drivers/platform/x86/ideapad-laptop.c |  7 +++--
+ drivers/platform/x86/thinkpad_acpi.c  | 19 ++----------
+ include/linux/platform_profile.h      |  1 +
+ 4 files changed, 50 insertions(+), 19 deletions(-)
+
+
+base-commit: 39cd87c4eb2b893354f3b850f916353f2658ae6f
+-- 
+2.44.0
+
