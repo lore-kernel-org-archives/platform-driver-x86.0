@@ -1,102 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFF11311A3;
-	Thu,  4 Apr 2024 19:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC265101F2
+	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Apr 2024 02:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712259382; cv=none; b=gXKeYK/kf2e1gKB/dga+5uqw8xFMLjZBSgjCBIq0NqJFi7k3xVdVt4RJcwPwSMGncBSLowhCnpxtiHxHAhy62P/3i9a7NsNbeaNttNgIwC46PybCJ0bfoWxXszBZHD0DGarAZDNYMmpSeQtR9fdTa00JXhl8nJOhOuQNUsiXODY=
+	t=1712283634; cv=none; b=Y49f8ZlMcD5ItrLj0LY3OxqafaKFgp+YMgC22mT8ai0pnYGJrZzCoSd7SQqVBdSObuKy+KVckSmjyGa9cpNVz+t6iA2aQ4Le0SWNfZIFAfaN0LTx84oc2XzAcDAHE2Y5N2on2AkTmBc+aedxnYhsSMs8+em+5aOpMSWwVrqP98M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712259382; c=relaxed/simple;
-	bh=MstYzcyGUXpMjvIesH3P0JOixnzqDZN4TkdenMuVwr8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=npfMc4yNcIEVHgGLBfErX7zFW/9F/mti0faT0uEMsXh67x6CNZWllfauM8QjTCTIbko5jfwqgrTxv1ECsU5nQenlvtBFav208ZmDePnZ2c3ADZvgEbe4xGog+SW5XQux2RtYYLHVrVSPs2BVHKeDfFnxLQHACxmx4mH9zSmHoPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O9jmwMG3; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712283634; c=relaxed/simple;
+	bh=4ZlDkVtFapi71TlE3kvOS4Gs+mGS7u2U+Ff6z6admwA=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HtrRQ7sKhq1CFnO/IBRgqM/iRs2oQor6NEY7NCQFxs+qLJT1gXqBj9/edpH/da0oKSvgPaWVzJgV3/NwVupLXlwUZoeXvxhDiO3zKL405Qkellw+jWBBWyeG0Pf3ur5bAB/NOR9YI2zBkHUIM/ZcwVSGQ9vC+e+ID27snD6fCtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HaLWTekx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O9jmwMG3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712259381; x=1743795381;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=MstYzcyGUXpMjvIesH3P0JOixnzqDZN4TkdenMuVwr8=;
-  b=O9jmwMG3x3wvR9/19nT7WDnCBNxsjDkl9B3/v7iMwuotxIR1JYHCjJF7
-   4Ra5L23/2BWGjysWr3oM26dxsLCJu34Jj7JifhK5sHUbX2sVvvQ+GLrwB
-   jxR4ERUl4059ukfBEzddifnbJCnyG6xTpxnEMNqFRpl/bTak0NqBZYj3I
-   SpNuwes42w03DxJV6mVdm7n7kh/LQrG32bg2dXfpBxZbsTgnsFlGNTzUh
-   WkXn7gCKhx+sp1NQdKdSu6xH+n5fCBczhZYgDZkn5wCdxIMCciZedgPnm
-   1I3WIkt+wzGpuRWdFCexwAcvYxIMqZAAEcdsIYYJoYOcvJlT9qrfddhBh
-   w==;
-X-CSE-ConnectionGUID: ZSZQZbwXT1qxi8d5I0z0vA==
-X-CSE-MsgGUID: SNUBVUB8R2quZIqFbeTZBw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="7698469"
-X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
-   d="scan'208";a="7698469"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 12:36:21 -0700
-X-CSE-ConnectionGUID: URAVo7AtRwKr1WSsfNnZ6w==
-X-CSE-MsgGUID: TaCQw88bQd+WcjBkxXteMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
-   d="scan'208";a="18916555"
-Received: from ypottimu-mobl.amr.corp.intel.com (HELO [10.209.51.123]) ([10.209.51.123])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 12:36:20 -0700
-Message-ID: <5f040ba2-627b-4b5d-959a-59f97b6ad0af@linux.intel.com>
-Date: Thu, 4 Apr 2024 12:36:19 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HaLWTekx"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 64E37C433C7
+	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Apr 2024 02:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712283634;
+	bh=4ZlDkVtFapi71TlE3kvOS4Gs+mGS7u2U+Ff6z6admwA=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=HaLWTekxQHFDaZcowFZCzCYfV21KuS4Ox3DAnxAG2ugIwVOWpGDVaZ8J/v1LI5epD
+	 Mx4JulUofUhtohmxfnrHiuaoUvlSKwdGou8ss/nwlTWJWjcLiBuJJbmaHTnQgoCrAU
+	 gJkzQogMhJGNS+kzrwZ6WNf1Y9U5YjCjOXNWEbDfEzJMGzmZsXMQhN22679nyZZpZd
+	 ywbShIRArxxmpQHYT56KDSeCovVCUiGmwmaT9dE0AN5LoCelEp6ZId2xIPqH8QM8dQ
+	 bi/Q6InKEyzHhmg83Jk5Czgj99KiIhWgIPgbwr3stS4o40IAz/FuP0tJhs5FzcepMK
+	 +Fhl2uef0Y6WQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 54B16C53BD3; Fri,  5 Apr 2024 02:20:34 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
+ resuming after unplugging the power cord during sleep
+Date: Fri, 05 Apr 2024 02:20:34 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: blocking
+X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218305-215701-OcqPZ5TXgV@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
+References: <bug-218305-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: lg-laptop: fix %s null argument warning
-To: Gergo Koteles <soyer@irl.hu>, Matan Ziv-Av <matan@svgalib.org>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <33d40e976f08f82b9227d0ecae38c787fcc0c0b2.1712154684.git.soyer@irl.hu>
-Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <33d40e976f08f82b9227d0ecae38c787fcc0c0b2.1712154684.git.soyer@irl.hu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-On 4/3/24 7:34 AM, Gergo Koteles wrote:
-> W=1 warns about null argument to kprintf:
-> warning: ‘%s’ directive argument is null [-Wformat-overflow=]
-> pr_info("product: %s  year: %d\n", product, year);
->
-> Use "unknown" instead of NULL.
->
-> Signed-off-by: Gergo Koteles <soyer@irl.hu>
-> ---
+--- Comment #46 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+Any testing results for that patch idea?
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+--=20
+You may reply to this email to add a comment.
 
->  drivers/platform/x86/lg-laptop.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
-> index ad3c39e9e9f5..e714ee6298dd 100644
-> --- a/drivers/platform/x86/lg-laptop.c
-> +++ b/drivers/platform/x86/lg-laptop.c
-> @@ -736,7 +736,7 @@ static int acpi_add(struct acpi_device *device)
->  		default:
->  			year = 2019;
->  		}
-> -	pr_info("product: %s  year: %d\n", product, year);
-> +	pr_info("product: %s  year: %d\n", product ?: "unknown", year);
->  
->  	if (year >= 2019)
->  		battery_limit_use_wmbb = 1;
->
-> base-commit: 39cd87c4eb2b893354f3b850f916353f2658ae6f
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
