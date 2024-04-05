@@ -1,131 +1,190 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8293522EEF;
-	Fri,  5 Apr 2024 03:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5438B22F11
+	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Apr 2024 06:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712287521; cv=none; b=B00w1mEuWMxeW29Z0lPOhWrdfWyKWb0oPguxbIk5BjegeATIT6cK+o0faaghNt7Wx1Ek0B/kdJfKhL7JLvTLQRXNmLytOy9ovsZHSaI56yhx2SC+oaUsvjOlxyHka5vs4SDLk4xhQoxiR/1lKJNRatzfSiHRH8YF1k9Vck7U47g=
+	t=1712299723; cv=none; b=ANBMiFaaBjFs2DW+5dyd6lAxE2vLzxCgcj7L6YBfArp+JS5Fx0TvVHUBU4cEfN1wgGv767xQO/sF1RYXyrMdYwQMjzcDtEAGRV5du0JvQhEsB9Yg2pcvguVvjslkXj4aepflivQQHMdLmklaeZzEClqfROsFH1zrvJR5LYll/I0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712287521; c=relaxed/simple;
-	bh=4+zOGgONv/PHR45HxcG9SdDuhPsuOA8XY6mYEd8/s4w=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kh7Fr8ncFc1Pnm2GTIpWPBDMQ0GWrjPjdaLA+yoskKYw0MTAnRmULuijjskOk9bWBfoloVNpPCGUO1HqIJH5PoLKYuQ1M/ay68IojwEhplFP/QKebHajoz1uujwQvi+otomf/30lnFedUHDQLvPFim2rh17ETkCQzbsHhzwDlrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QdtNvVfU; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712299723; c=relaxed/simple;
+	bh=/b8O9gBIJDbC8t7IFTk9NqyR6nI2lxc2utw0dqInQsE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mS2MfKBRIiuD2oQN2ELGK2SNiCW29FCV6uwG5oJzIjWURnfH9FDHDyAJsXhu6QMjEmXIrB9F6tnezUlZ/Q2VWkCaXO2URZnno9uUWqwDefjJuDPjL+l6AioDi3lIexBu/N1QBAO8+qITKmn2WTETzgvpC0aa2ExFzSxJmLWAiUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GOJjR2Vb; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QdtNvVfU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712287519; x=1743823519;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=4+zOGgONv/PHR45HxcG9SdDuhPsuOA8XY6mYEd8/s4w=;
-  b=QdtNvVfUlEgwtCxCqJ7i7fyKYN6ek9NRKaUHt6h3QH7I9tQr0IdJ9Nuy
-   Spcy75beiPHGB6iqCphaW9SU1bvrqMLxPvatdBwYHxWPc9KawrHrGmiBZ
-   gK8UZ6QOTYuEBs0S84UMS10yyJa4VHi8rLecDCYpzmm9ZU2rYZSqJ/WVR
-   PAA+MnB8Rq0dYMvdkFkeUfI+GLSQyudujZhMzW5rny9sUZwh5wz6w69b9
-   rw1Z9fTtk23Oxc01Tio7Z6D45ECmhCXSlBFD0JBYNUKUKbWfGQyHk29ri
-   2sIG2XK6IvDhr0jrxcnGYwlJUoC0kqyyil8X0mBhIvb8m1cjp5+mrMUkK
-   Q==;
-X-CSE-ConnectionGUID: pwDRpvLMRSOWubLV1bu5iA==
-X-CSE-MsgGUID: LhMTFxxfTS2I5zRXA6IrKA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="25112474"
-X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
-   d="scan'208";a="25112474"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 20:25:15 -0700
-X-CSE-ConnectionGUID: h1XgiHBwSYu9p702Q7pxDw==
-X-CSE-MsgGUID: /keb5FYYQFyCuJsICgBbHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
-   d="scan'208";a="18955991"
-Received: from alexpabo-mobl.amr.corp.intel.com (HELO debox1-desk4.lan) ([10.209.49.45])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 20:25:15 -0700
-From: "David E. Box" <david.e.box@linux.intel.com>
-To: david.e.box@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH V3 8/9] platform/x86/intel/sdsi: Simplify ascii printing
-Date: Thu,  4 Apr 2024 20:25:06 -0700
-Message-Id: <20240405032507.2637311-9-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240405032507.2637311-1-david.e.box@linux.intel.com>
-References: <20240405032507.2637311-1-david.e.box@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GOJjR2Vb"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4148c6132b4so17083605e9.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Apr 2024 23:48:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712299719; x=1712904519; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FYA+SCSxfqEp0pTsowJFPNSyASe14I0IoFn+b3BXCPQ=;
+        b=GOJjR2VbhaWghYSpgpGMaJ55VbLAVo4eRP4Jy9UQWcbgGOlZVsxneNgy0j2bSoSu73
+         TWNG/fUOm25MJa3cUMBeUkosVHkLLLm+BHFjKSzGGMQEhC0epWGnnMh125ZMIBMkkqXX
+         4hPmgntGYtMGZI0ueyS+CZHhffj6h2Fj6fmuBDwJFlgiUpFQnu/nS1Vf3k9EC/K3XEv4
+         B5uPqpAsX8BrkS+IzjmP467HyB9bjCBA6mYfAIpq4CsSrjO2S7lvzc6/sccmrGULnViF
+         E/ZPTRXJZ2v8/ublop7vSuA6HyaxVtlB7yqKXpYOIJeKhhdxWWKJOgsHlE9haN9AL38U
+         zQgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712299719; x=1712904519;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FYA+SCSxfqEp0pTsowJFPNSyASe14I0IoFn+b3BXCPQ=;
+        b=eIa5h9At38NHek6/E6Sxo6Lx87t+bUo2EU/qmjgBghQH8oanDi8XBJqvRgQGUDDQF2
+         K/8NtMcl2Fr6plj5rhMD/73xmki9K8eEok39NYZylUQpQVUmCsLV2NK/It6W3V7JNYF0
+         8vHbgWr8Er3cYDq7bOVRIiufWlQAzrQL4skOFWiMbObN00fSGiLCJkV27f/YbSa7/yPq
+         nmU8eMQfuFFTB1pBt6ssA2ry5rGALDq27OXiAwFipOngf4FUXY2Q02wU3d3fce/lpJZp
+         0YuTNenRwTIUeKb5C9INpPwtfzI1EnTOdBLLOxvOCWVMwEIzk+1Vcp4OfZnh80Kb47S8
+         eq2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVF6jRKnIxgz7ZHuVF3svgaEiMBwiuaMzN/m1Ncaz5LvLA7md0HJIXhUJwcp0YhfXvn99hs5UzEgzwHRa4bmQgjd/iZt1Fdl+bczVfliaj/zWrrww==
+X-Gm-Message-State: AOJu0Yx9+YVinc2Mz2umiSQQ4ymh/JQmIcZPaF6Mgr6VTDHnCn7CpMcL
+	9ugtp/FauGzVkxd/BBTJ0IsePlAWJxiOf+LDmg/u8I3zIhVU0X2z1dXpkMUdd6A=
+X-Google-Smtp-Source: AGHT+IHTVPfI8wZQVwV/WvqRqm+1jQjfgbqg3npICXYzkU+J+sod8+GGneWqQf8O0E1jNH0kGbGDDg==
+X-Received: by 2002:a05:600c:3b26:b0:416:235d:7635 with SMTP id m38-20020a05600c3b2600b00416235d7635mr628935wms.9.1712299719505;
+        Thu, 04 Apr 2024 23:48:39 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id m32-20020a05600c3b2000b004154e48bcdesm5303559wms.14.2024.04.04.23.48.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Apr 2024 23:48:39 -0700 (PDT)
+Message-ID: <87d38d4c-14e2-4c64-baba-c9b8bd694339@linaro.org>
+Date: Fri, 5 Apr 2024 08:48:38 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] ACPI: platform-profile: add
+ platform_profile_cycle()
+Content-Language: en-US
+To: Gergo Koteles <soyer@irl.hu>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>, Ike Panhc <ike.pan@canonical.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: linux-acpi@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1712282976.git.soyer@irl.hu>
+ <fdc1b0b9f910753967b7a9b1996e4923cc63124f.1712282976.git.soyer@irl.hu>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <fdc1b0b9f910753967b7a9b1996e4923cc63124f.1712282976.git.soyer@irl.hu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Use printf width specifier to set the display length of encoded feature
-names.
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
+Hi Gergo,
 
-V3 - Add FEAT_LEN #def
+please Cc people who commented your changes.
 
-V2 - Split of V1 patch 7
+see below:
 
- tools/arch/x86/intel_sdsi/intel_sdsi.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+On 05/04/2024 05:05, Gergo Koteles wrote:
+> Some laptops have a key to switch platform profiles.
+> 
+> Add a platform_profile_cycle() function to cycle between the enabled
+> profiles.
+> 
+> Signed-off-by: Gergo Koteles <soyer@irl.hu>
+> ---
+>   drivers/acpi/platform_profile.c  | 42 ++++++++++++++++++++++++++++++++
+>   include/linux/platform_profile.h |  1 +
+>   2 files changed, 43 insertions(+)
+> 
+> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+> index d418462ab791..1579f380d469 100644
+> --- a/drivers/acpi/platform_profile.c
+> +++ b/drivers/acpi/platform_profile.c
+> @@ -136,6 +136,48 @@ void platform_profile_notify(void)
+>   }
+>   EXPORT_SYMBOL_GPL(platform_profile_notify);
+>   
+> +int platform_profile_cycle(void)
+> +{
+> +	enum platform_profile_option profile;
+> +	enum platform_profile_option next;
+> +	int err;
+> +
+> +	err = mutex_lock_interruptible(&profile_lock);
+> +	if (err)
+> +		return err;
+> +
+> +	if (!cur_profile) {
+> +		mutex_unlock(&profile_lock);
+> +		return -ENODEV;
+> +	}
+> +
+> +	err = cur_profile->profile_get(cur_profile, &profile);
+> +	if (err) {
+> +		mutex_unlock(&profile_lock);
+> +		return err;
+> +	}
+> +
+> +	next = ffs(cur_profile->choices[0] >> (profile + 1)) + profile;
+> +
+> +	/* current profile is the highest, select the lowest */
+> +	if (next == profile)
+> +		next = ffs(cur_profile->choices[0]) - 1;
+> +
+> +	if (WARN_ON((next < 0) || (next >= ARRAY_SIZE(profile_names)))) {
+> +		mutex_unlock(&profile_lock);
+> +		return -EINVAL;
+> +	}
 
-diff --git a/tools/arch/x86/intel_sdsi/intel_sdsi.c b/tools/arch/x86/intel_sdsi/intel_sdsi.c
-index 45bc69e6718e..0c9670ba1f15 100644
---- a/tools/arch/x86/intel_sdsi/intel_sdsi.c
-+++ b/tools/arch/x86/intel_sdsi/intel_sdsi.c
-@@ -43,6 +43,7 @@
- #define METER_CERT_MAX_SIZE	4096
- #define STATE_MAX_NUM_LICENSES	16
- #define STATE_MAX_NUM_IN_BUNDLE	(uint32_t)8
-+#define FEAT_LEN		4
- 
- #define __round_mask(x, y) ((__typeof__(x))((y) - 1))
- #define round_up(x, y) ((((x) - 1) | __round_mask(x, y)) + 1)
-@@ -409,11 +410,10 @@ static int sdsi_meter_cert_show(struct sdsi_dev *s)
- 
- 	printf("Number of Feature Counters:   %ld\n", BUNDLE_COUNT(mc->bundle_length));
- 	while (count < BUNDLE_COUNT(mc->bundle_length)) {
--		char feature[5];
-+		char feature[FEAT_LEN];
- 
--		feature[4] = '\0';
- 		get_feature(bec[count].encoding, feature);
--		printf("    %s:          %d\n", feature, bec[count].counter);
-+		printf("    %.4s:          %d\n", feature, bec[count].counter);
- 		++count;
- 	}
- 
-@@ -494,7 +494,7 @@ static int sdsi_state_cert_show(struct sdsi_dev *s)
- 			sizeof(*lki) +			// size of the license key info
- 			offset;				// offset to this blob content
- 		struct bundle_encoding *bundle = (void *)(lbc) + sizeof(*lbc);
--		char feature[5];
-+		char feature[FEAT_LEN];
- 		uint32_t i;
- 
- 		printf("     Blob %d:\n", count - 1);
-@@ -507,11 +507,9 @@ static int sdsi_state_cert_show(struct sdsi_dev *s)
- 		printf("        Blob revision ID:           %u\n", lbc->rev_id);
- 		printf("        Number of Features:         %u\n", lbc->num_bundles);
- 
--		feature[4] = '\0';
--
- 		for (i = 0; i < min(lbc->num_bundles, STATE_MAX_NUM_IN_BUNDLE); i++) {
- 			get_feature(bundle[i].encoding, feature);
--			printf("                 Feature %d:         %s\n", i, feature);
-+			printf("                 Feature %d:         %.4s\n", i, feature);
- 		}
- 
- 		if (lbc->num_bundles > STATE_MAX_NUM_IN_BUNDLE)
+Why do you need to do this?
+
+That can be simplified by:
+
+	[ ... ]
+
+	err = cur_profile->profile_get(cur_profile, &profile);
+	if (err)
+		goto out;
+
+	profile = (profile + 1) % ARRAY_SIZE(profile_names);
+
+	err = cur_profile->profile_set(cur_profile, next);
+out:
+	mutex_unlock(&profile_lock);
+	
+	[ ... ]
+
+> +	err = cur_profile->profile_set(cur_profile, next);
+> +	mutex_unlock(&profile_lock);
+> +
+> +	if (!err)
+> +		sysfs_notify(acpi_kobj, NULL, "platform_profile");
+> +
+> +	return err;
+> +}
+> +EXPORT_SYMBOL_GPL(platform_profile_cycle);
+> +
+>   int platform_profile_register(struct platform_profile_handler *pprof)
+>   {
+>   	int err;
+> diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
+> index e5cbb6841f3a..f5492ed413f3 100644
+> --- a/include/linux/platform_profile.h
+> +++ b/include/linux/platform_profile.h
+> @@ -36,6 +36,7 @@ struct platform_profile_handler {
+>   
+>   int platform_profile_register(struct platform_profile_handler *pprof);
+>   int platform_profile_remove(void);
+> +int platform_profile_cycle(void);
+>   void platform_profile_notify(void);
+>   
+>   #endif  /*_PLATFORM_PROFILE_H_*/
+
 -- 
-2.34.1
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
