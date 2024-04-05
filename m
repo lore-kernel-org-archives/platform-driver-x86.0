@@ -1,89 +1,90 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C9F17BAA;
-	Fri,  5 Apr 2024 03:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DBDF15E9B;
+	Fri,  5 Apr 2024 03:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712286359; cv=none; b=bOIgrFsybGTCZIIdH+O9nFTfJuvF/PVqbj3ZzSKhBBKjzCCU9d7a/biTtXbllWICx5PJkvjjo0eLa20xbSLM6nkyCnY7/8jp6bBSGNP7Qm+JvJddgpX849v1EwGjFMrLasNSb7Urb1W5mcARojyWetN9UtyPdTdF5OgGmtky8rM=
+	t=1712287514; cv=none; b=op3AVNiPrDF3ukI/WwEOCZffpKzUZ4lW1lZ2dTmE0Eb3Lj7wIxaQvxPJjOu9iAm6OtVpoGCnwpf8NWyFn+Z1V7B0onZqyxqHn3bUozw3g9+MR0d5qY5Nwegnn13L9RzQsGvbGlBjtH3Ph5lq4n+iK140Qonf312ymwjYyhhLNgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712286359; c=relaxed/simple;
-	bh=ReyZ/SK2T9RJMzqGhOr+f/IyAMkYqv/fQkx3qjS6WBI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=e0q1Ia9Si3x+ERpnAOh2PhvgyabqfGJdCp85PtIzknlkOV+V89iqy6su6v8xwxlJUd/jC6V3opMLsOVrySSrqFeYlpHplmjo71b+qdWfANowpLFXqrHLmZ1MSGsZEe/1lnJbMMCISFqWh5cVxdclLKD7YAND3DcU6bzoY6QNedg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from fedori.lan (51b69867.dsl.pool.telekom.hu [::ffff:81.182.152.103])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 000000000006F242.00000000660F6A94.0025A8B9; Fri, 05 Apr 2024 05:05:56 +0200
-From: Gergo Koteles <soyer@irl.hu>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-  Len Brown <lenb@kernel.org>, Ike Panhc <ike.pan@canonical.com>,
-  Hans de Goede <hdegoede@redhat.com>,
-  =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-  Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: linux-acpi@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-  Gergo Koteles <soyer@irl.hu>
-Subject: [PATCH v4 3/3] platform/x86: thinkpad_acpi: use platform_profile_cycle()
-Date: Fri,  5 Apr 2024 05:05:30 +0200
-Message-ID: <25733f2e4b87705a27ee23540b69459cf8931255.1712282976.git.soyer@irl.hu>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1712282976.git.soyer@irl.hu>
-References: <cover.1712282976.git.soyer@irl.hu>
+	s=arc-20240116; t=1712287514; c=relaxed/simple;
+	bh=fmbf22/6PrzbvehPK0DfA68erI1ahHCSNNgi1ygbKPE=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Egwj3x37uVSBpIH+AB0kfJ8Y3mvh6oWYBHe1xqmSZRhruEIITTXrsJPQZ1YYR/ZjHPFRO2Xalov9b7iYnppYWzFKdOruz37Lh7V/naf+aQfY6qZJm0MyEmM2e5u09TAni1dtC21jNaabkd3479CdkMbkU23pqecJQtmiE7+QuyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d61Ahqwe; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d61Ahqwe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712287513; x=1743823513;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=fmbf22/6PrzbvehPK0DfA68erI1ahHCSNNgi1ygbKPE=;
+  b=d61AhqweSuJKiZuxKvqFJXjQwrbj+Gw+Y28wDp5ETbbNvEz2OOb0Jq7u
+   4CO48rmkYnvgwJOcPZChvVlptwGa/yj0vXUN0o2m8cEvqdswxAHZooQE5
+   M7HrVhWt08es2Di49zCzKbS9SmywLP3fH0Vg5VZTUBR1qlb6F6f7yKxHH
+   HyslK2EQufLZFZe9L3Vsx+EniHT+/+kk9qUoGOzaCzYzuZyXj/pTf4EhN
+   JidGqPEodpjCgpuhHuQYimTdKtTBLMj+HKPo9tMjQD7LxHsjtB/x/fP1a
+   XFcOBKBK4h773zcYo/r2sz9fjYur81kTas5A6SwVERLgk5lmytnwrLBiL
+   g==;
+X-CSE-ConnectionGUID: mnsn+GoEQ1So4mPbdWZ79w==
+X-CSE-MsgGUID: sJdZ/JuRS7WNSCc8xrf+Fg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="25112456"
+X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
+   d="scan'208";a="25112456"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 20:25:12 -0700
+X-CSE-ConnectionGUID: kcXpTs3dTda2GdisN+6LJw==
+X-CSE-MsgGUID: BpBkgbB2SmqZm3C7B36fxw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
+   d="scan'208";a="18955979"
+Received: from alexpabo-mobl.amr.corp.intel.com (HELO debox1-desk4.lan) ([10.209.49.45])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 20:25:11 -0700
+From: "David E. Box" <david.e.box@linux.intel.com>
+To: david.e.box@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: [PATCH V3 0/9] Intel On Demand changes
+Date: Thu,  4 Apr 2024 20:24:58 -0700
+Message-Id: <20240405032507.2637311-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Some Thinkpads have a 'mode' button that switches between platform
-profiles.
+Adds driver and tool support for a new "current" meter that allows reading
+the most current, but not attested, value of the meter counters. Also adds
+fixes for the intel_sdsi tool.
 
-Use the new platform_module_cycle function instead of the existing
-switch-based one.
+David E. Box (8):
+  platform/x86/intel/sdsi: Set message size during writes
+  platform/x86/intel/sdsi: Combine read and write mailbox flows
+  platform/x86/intel/sdsi: Add attribute to read the current meter state
+  tools/arch/x86/intel_sdsi: Fix maximum meter bundle length
+  tools/arch/x86/intel_sdsi: Fix meter_show display
+  tools/arch/x86/intel_sdsi: Fix meter_certificate decoding
+  platform/x86/intel/sdsi: Simplify ascii printing
+  tools: intel_sdsi: Add current meter support
 
-Signed-off-by: Gergo Koteles <soyer@irl.hu>
----
- drivers/platform/x86/thinkpad_acpi.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+Kuppuswamy Sathyanarayanan (1):
+  platform/x86/intel/sdsi: Add in-band BIOS lock support
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 82429e59999d..771aaa7ae4cf 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -11190,23 +11190,8 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
- 		else
- 			dytc_control_amt(!dytc_amt_active);
- 	}
--	if (hkey_event == TP_HKEY_EV_PROFILE_TOGGLE) {
--		switch (dytc_current_profile) {
--		case PLATFORM_PROFILE_LOW_POWER:
--			dytc_profile_set(NULL, PLATFORM_PROFILE_BALANCED);
--			break;
--		case PLATFORM_PROFILE_BALANCED:
--			dytc_profile_set(NULL, PLATFORM_PROFILE_PERFORMANCE);
--			break;
--		case PLATFORM_PROFILE_PERFORMANCE:
--			dytc_profile_set(NULL, PLATFORM_PROFILE_LOW_POWER);
--			break;
--		default:
--			pr_warn("Profile HKEY unexpected profile %d", dytc_current_profile);
--		}
--		/* Notify user space the profile changed */
--		platform_profile_notify();
--	}
-+	if (hkey_event == TP_HKEY_EV_PROFILE_TOGGLE)
-+		platform_profile_cycle();
- }
- 
- static void hotkey_driver_event(const unsigned int scancode)
+ drivers/platform/x86/intel/sdsi.c      | 118 ++++++++++++++++---------
+ tools/arch/x86/intel_sdsi/intel_sdsi.c | 110 ++++++++++++++---------
+ 2 files changed, 145 insertions(+), 83 deletions(-)
+
+
+base-commit: 4cece764965020c22cff7665b18a012006359095
 -- 
-2.44.0
+2.34.1
 
