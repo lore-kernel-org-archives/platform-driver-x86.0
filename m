@@ -1,190 +1,78 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5438B22F11
-	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Apr 2024 06:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7503E2C1BA
+	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Apr 2024 08:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712299723; cv=none; b=ANBMiFaaBjFs2DW+5dyd6lAxE2vLzxCgcj7L6YBfArp+JS5Fx0TvVHUBU4cEfN1wgGv767xQO/sF1RYXyrMdYwQMjzcDtEAGRV5du0JvQhEsB9Yg2pcvguVvjslkXj4aepflivQQHMdLmklaeZzEClqfROsFH1zrvJR5LYll/I0=
+	t=1712304542; cv=none; b=mGjYv2bFatwE2snoRcJgRAUM8YkZ2Bjn5NcwqPQy4AQXj25LsYjzzQudix0lueOvF842NWmf7JBPUmw6rHNwDhyRnGLUIeuaMsIZAq6PqtTz0IY/CxyrzLqOGoUEKYmdLv+Q7xNKbO+TNILZmyL6OJ6Wa7vt9ywsdERwkojrVrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712299723; c=relaxed/simple;
-	bh=/b8O9gBIJDbC8t7IFTk9NqyR6nI2lxc2utw0dqInQsE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mS2MfKBRIiuD2oQN2ELGK2SNiCW29FCV6uwG5oJzIjWURnfH9FDHDyAJsXhu6QMjEmXIrB9F6tnezUlZ/Q2VWkCaXO2URZnno9uUWqwDefjJuDPjL+l6AioDi3lIexBu/N1QBAO8+qITKmn2WTETzgvpC0aa2ExFzSxJmLWAiUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GOJjR2Vb; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712304542; c=relaxed/simple;
+	bh=x4GYH11+rKP7nsrrUfUgSpr807fQOU5SiMmyRn+TiB0=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=M2u51C5ja4jrXpumtOTgRvYiu4wiEi26V7KvxEoYICMP0G2V5Z7HgTPkoc+tx5SmYR9RBHRBbV8CIRjiVT+0s+ReT3FqmA67CD0cfnB9EHvcYM36o2VxlOME21x2q0TlinRKTOxCN1q9AUyQ985xtOR4JclCZ03tXzwpqrSjq48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MmqJOy69; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GOJjR2Vb"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4148c6132b4so17083605e9.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Apr 2024 23:48:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712299719; x=1712904519; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FYA+SCSxfqEp0pTsowJFPNSyASe14I0IoFn+b3BXCPQ=;
-        b=GOJjR2VbhaWghYSpgpGMaJ55VbLAVo4eRP4Jy9UQWcbgGOlZVsxneNgy0j2bSoSu73
-         TWNG/fUOm25MJa3cUMBeUkosVHkLLLm+BHFjKSzGGMQEhC0epWGnnMh125ZMIBMkkqXX
-         4hPmgntGYtMGZI0ueyS+CZHhffj6h2Fj6fmuBDwJFlgiUpFQnu/nS1Vf3k9EC/K3XEv4
-         B5uPqpAsX8BrkS+IzjmP467HyB9bjCBA6mYfAIpq4CsSrjO2S7lvzc6/sccmrGULnViF
-         E/ZPTRXJZ2v8/ublop7vSuA6HyaxVtlB7yqKXpYOIJeKhhdxWWKJOgsHlE9haN9AL38U
-         zQgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712299719; x=1712904519;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FYA+SCSxfqEp0pTsowJFPNSyASe14I0IoFn+b3BXCPQ=;
-        b=eIa5h9At38NHek6/E6Sxo6Lx87t+bUo2EU/qmjgBghQH8oanDi8XBJqvRgQGUDDQF2
-         K/8NtMcl2Fr6plj5rhMD/73xmki9K8eEok39NYZylUQpQVUmCsLV2NK/It6W3V7JNYF0
-         8vHbgWr8Er3cYDq7bOVRIiufWlQAzrQL4skOFWiMbObN00fSGiLCJkV27f/YbSa7/yPq
-         nmU8eMQfuFFTB1pBt6ssA2ry5rGALDq27OXiAwFipOngf4FUXY2Q02wU3d3fce/lpJZp
-         0YuTNenRwTIUeKb5C9INpPwtfzI1EnTOdBLLOxvOCWVMwEIzk+1Vcp4OfZnh80Kb47S8
-         eq2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVF6jRKnIxgz7ZHuVF3svgaEiMBwiuaMzN/m1Ncaz5LvLA7md0HJIXhUJwcp0YhfXvn99hs5UzEgzwHRa4bmQgjd/iZt1Fdl+bczVfliaj/zWrrww==
-X-Gm-Message-State: AOJu0Yx9+YVinc2Mz2umiSQQ4ymh/JQmIcZPaF6Mgr6VTDHnCn7CpMcL
-	9ugtp/FauGzVkxd/BBTJ0IsePlAWJxiOf+LDmg/u8I3zIhVU0X2z1dXpkMUdd6A=
-X-Google-Smtp-Source: AGHT+IHTVPfI8wZQVwV/WvqRqm+1jQjfgbqg3npICXYzkU+J+sod8+GGneWqQf8O0E1jNH0kGbGDDg==
-X-Received: by 2002:a05:600c:3b26:b0:416:235d:7635 with SMTP id m38-20020a05600c3b2600b00416235d7635mr628935wms.9.1712299719505;
-        Thu, 04 Apr 2024 23:48:39 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id m32-20020a05600c3b2000b004154e48bcdesm5303559wms.14.2024.04.04.23.48.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Apr 2024 23:48:39 -0700 (PDT)
-Message-ID: <87d38d4c-14e2-4c64-baba-c9b8bd694339@linaro.org>
-Date: Fri, 5 Apr 2024 08:48:38 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MmqJOy69"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E9408C43390
+	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Apr 2024 08:09:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712304541;
+	bh=x4GYH11+rKP7nsrrUfUgSpr807fQOU5SiMmyRn+TiB0=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=MmqJOy694A7D6inynAaYscV7iPaYYzuJclQOgcbyAy39eTTb8R3hbDz2NETQSX4wa
+	 vXDHUBVJgx4PZdqAMD2dW3cvVgr5kO/NNVALYf0dtRViFQ6PLjudd6Vdnn2WGT1K/+
+	 l2uFTN8tmSMiVy16botN1FhPvmZQzXw7PYHew5R1FtU+0HqBK00I7MIZ5OmBL8HqvV
+	 vg5HiZH51UumBi+OmW8kReN+T3E17U7idLN88oYYscykFS7xcCjXQiBwxxx167qkhZ
+	 PRcebN/LdXvMvQ6jMQw/mzG3Q0/YUIIC36TI3oeYQNHajYDKfY4At1MOMhChGmrChl
+	 A4qIJ5sZYfhsA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id D8977C53BD2; Fri,  5 Apr 2024 08:09:01 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
+ resuming after unplugging the power cord during sleep
+Date: Fri, 05 Apr 2024 08:09:01 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: blocking
+X-Bugzilla-Who: ries.infotec+kernel@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218305-215701-HiN2ALKHWQ@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
+References: <bug-218305-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/3] ACPI: platform-profile: add
- platform_profile_cycle()
-Content-Language: en-US
-To: Gergo Koteles <soyer@irl.hu>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Len Brown <lenb@kernel.org>, Ike Panhc <ike.pan@canonical.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: linux-acpi@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1712282976.git.soyer@irl.hu>
- <fdc1b0b9f910753967b7a9b1996e4923cc63124f.1712282976.git.soyer@irl.hu>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <fdc1b0b9f910753967b7a9b1996e4923cc63124f.1712282976.git.soyer@irl.hu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-Hi Gergo,
+--- Comment #47 from Peter Ries (ries.infotec+kernel@gmail.com) ---
+Hi Mario, sorry for not responding, I still haven't been able to reproduce =
+the
+bug. Just had it once after Kernel 6.8.x.=20
 
-please Cc people who commented your changes.
+I will test once I have a reproduceable scenario.
 
-see below:
+--=20
+You may reply to this email to add a comment.
 
-On 05/04/2024 05:05, Gergo Koteles wrote:
-> Some laptops have a key to switch platform profiles.
-> 
-> Add a platform_profile_cycle() function to cycle between the enabled
-> profiles.
-> 
-> Signed-off-by: Gergo Koteles <soyer@irl.hu>
-> ---
->   drivers/acpi/platform_profile.c  | 42 ++++++++++++++++++++++++++++++++
->   include/linux/platform_profile.h |  1 +
->   2 files changed, 43 insertions(+)
-> 
-> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-> index d418462ab791..1579f380d469 100644
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -136,6 +136,48 @@ void platform_profile_notify(void)
->   }
->   EXPORT_SYMBOL_GPL(platform_profile_notify);
->   
-> +int platform_profile_cycle(void)
-> +{
-> +	enum platform_profile_option profile;
-> +	enum platform_profile_option next;
-> +	int err;
-> +
-> +	err = mutex_lock_interruptible(&profile_lock);
-> +	if (err)
-> +		return err;
-> +
-> +	if (!cur_profile) {
-> +		mutex_unlock(&profile_lock);
-> +		return -ENODEV;
-> +	}
-> +
-> +	err = cur_profile->profile_get(cur_profile, &profile);
-> +	if (err) {
-> +		mutex_unlock(&profile_lock);
-> +		return err;
-> +	}
-> +
-> +	next = ffs(cur_profile->choices[0] >> (profile + 1)) + profile;
-> +
-> +	/* current profile is the highest, select the lowest */
-> +	if (next == profile)
-> +		next = ffs(cur_profile->choices[0]) - 1;
-> +
-> +	if (WARN_ON((next < 0) || (next >= ARRAY_SIZE(profile_names)))) {
-> +		mutex_unlock(&profile_lock);
-> +		return -EINVAL;
-> +	}
-
-Why do you need to do this?
-
-That can be simplified by:
-
-	[ ... ]
-
-	err = cur_profile->profile_get(cur_profile, &profile);
-	if (err)
-		goto out;
-
-	profile = (profile + 1) % ARRAY_SIZE(profile_names);
-
-	err = cur_profile->profile_set(cur_profile, next);
-out:
-	mutex_unlock(&profile_lock);
-	
-	[ ... ]
-
-> +	err = cur_profile->profile_set(cur_profile, next);
-> +	mutex_unlock(&profile_lock);
-> +
-> +	if (!err)
-> +		sysfs_notify(acpi_kobj, NULL, "platform_profile");
-> +
-> +	return err;
-> +}
-> +EXPORT_SYMBOL_GPL(platform_profile_cycle);
-> +
->   int platform_profile_register(struct platform_profile_handler *pprof)
->   {
->   	int err;
-> diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
-> index e5cbb6841f3a..f5492ed413f3 100644
-> --- a/include/linux/platform_profile.h
-> +++ b/include/linux/platform_profile.h
-> @@ -36,6 +36,7 @@ struct platform_profile_handler {
->   
->   int platform_profile_register(struct platform_profile_handler *pprof);
->   int platform_profile_remove(void);
-> +int platform_profile_cycle(void);
->   void platform_profile_notify(void);
->   
->   #endif  /*_PLATFORM_PROFILE_H_*/
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
