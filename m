@@ -1,91 +1,96 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D081E533;
-	Sat,  6 Apr 2024 00:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2FDA50
+	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Apr 2024 07:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712361712; cv=none; b=BcbkEXDYb7kEOinlg10PBjQjLTWmLH4rB4hv2Sdr5cpvyDpSq2bQANtSW9Z9S0n8BIUBvMQKy+RwYk3T++Y0+JUG4t0cntTOz+wfAliCEtSF//IvyZF1xgdvhbR1kGDkaF1vNp01OBdrOf4FSwe+IwSjuy4cG/q8KV1TBrbaT9E=
+	t=1712389703; cv=none; b=AV4P72Mpj87wF0JYoVMZN0FigUEiHgxJt4nm42suA8icKGQkDFPcUGV/883H2t3BsGm1z3JYJrhiYGmEuhpNCFnanE4y9h/0Sl/JD7n8GUwpSx1PAlAz2cpCOLBci4iP08LhCKkScm8ZiwWnv5rLDmoxdr8r+gEqc5KiGc6Mnbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712361712; c=relaxed/simple;
-	bh=ReyZ/SK2T9RJMzqGhOr+f/IyAMkYqv/fQkx3qjS6WBI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=TwmICj7IsWCuQ8DFOLtzJlSkA2xXlxyZcD3Veyze+hbxlFKVRSAKvR6RWSSEq9CKGHNop0kn9y9ZWPCN5WI8Adf3irpi8ceMTYAjDopNR9ySFI+KKbUF+kjz+8XjWsxEZnVipg76+bCTOmkisTBhvk8Wcpu1QdY7aJoLrd8lQUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from fedori.lan (51b69f53.dsl.pool.telekom.hu [::ffff:81.182.159.83])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 000000000006F9A2.00000000661090ED.0025D582; Sat, 06 Apr 2024 02:01:48 +0200
-From: Gergo Koteles <soyer@irl.hu>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-  Len Brown <lenb@kernel.org>, Ike Panhc <ike.pan@canonical.com>,
-  Hans de Goede <hdegoede@redhat.com>,
-  =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-  Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-  Daniel Lezcano <daniel.lezcano@linaro.org>,
-  =?UTF-8?q?Barnab=C3=A1s=20P=C5=91cze?= <pobrn@protonmail.com>
-Cc: linux-acpi@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-  Gergo Koteles <soyer@irl.hu>
-Subject: [PATCH v5 3/3] platform/x86: thinkpad_acpi: use platform_profile_cycle()
-Date: Sat,  6 Apr 2024 02:01:33 +0200
-Message-ID: <b70f4f1639451965ed76db7c023476ddd80e6241.1712360639.git.soyer@irl.hu>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1712360639.git.soyer@irl.hu>
-References: <cover.1712360639.git.soyer@irl.hu>
+	s=arc-20240116; t=1712389703; c=relaxed/simple;
+	bh=3aRYt4wb75fyJyH39gGbxrYQ/cZ7hFdayzs78BqHL5A=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LmLYLCc4poKGGBZZiIT8f5ooaW2jDc6aqrVmvC1v6T/SLZzdE+gd3e+UxMvdTlincQ7FbO5K7IKdvHBtGmqTQXPqQJ1q+Jj1vVxzkiknYoK/qe5SLbmUEj3U7YJxQmoF57WkFIgow0v1r69O61oentWGAOQJlLChEUZ76x9YjtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MPNXXRzr; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MPNXXRzr"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C58D9C43394
+	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Apr 2024 07:48:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712389702;
+	bh=3aRYt4wb75fyJyH39gGbxrYQ/cZ7hFdayzs78BqHL5A=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=MPNXXRzrNL3MQfaWUma4Hg8DpXTr3cOKMx67UNjRKHOVtxquZyevTyDAqoTihDgAA
+	 W4FKy+S7dAUkiZ3JYDcFiCkyH7J5eDJmAt2kTAfg+r4FWxp7Ta7QrHOPoxMAP42vw6
+	 FleQMN4FtAqvycP0XfvFLzIdr4LRgECEXL++jG6ZSRfnyPiWldwewXPaw41LxpPsJn
+	 fMIuI+kplO55wB93Cq7NzEiwtld0RDn+ftQSrcKMp1SCGpVHMgfVOhxJfFdAItd+BI
+	 p+Zpew7Ngito5ODInapKfHJevP+CaG5lk2zW7etNpOgBUY2s8NGUPpxnLU2JL8H28Q
+	 AECNCRdxa12EQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id B63C5C53BD1; Sat,  6 Apr 2024 07:48:22 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
+ resuming after unplugging the power cord during sleep
+Date: Sat, 06 Apr 2024 07:48:22 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: blocking
+X-Bugzilla-Who: ries.infotec+kernel@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218305-215701-rpTk4POGdO@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
+References: <bug-218305-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
+MIME-Version: 1.0
 
-Some Thinkpads have a 'mode' button that switches between platform
-profiles.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-Use the new platform_module_cycle function instead of the existing
-switch-based one.
+--- Comment #49 from Peter Ries (ries.infotec+kernel@gmail.com) ---
+Hi Arten, this unfortunately works for me - meaning the CPU frequency does =
+NOT
+get stuck if I do it like this.=20
 
-Signed-off-by: Gergo Koteles <soyer@irl.hu>
----
- drivers/platform/x86/thinkpad_acpi.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+- I put laptop to sleep
+- unplugged
+- waited 1 minute (without resuming on battery)
+- plugged back in
+- resume
+-> CPU scales up and down as expected=20
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 82429e59999d..771aaa7ae4cf 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -11190,23 +11190,8 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
- 		else
- 			dytc_control_amt(!dytc_amt_active);
- 	}
--	if (hkey_event == TP_HKEY_EV_PROFILE_TOGGLE) {
--		switch (dytc_current_profile) {
--		case PLATFORM_PROFILE_LOW_POWER:
--			dytc_profile_set(NULL, PLATFORM_PROFILE_BALANCED);
--			break;
--		case PLATFORM_PROFILE_BALANCED:
--			dytc_profile_set(NULL, PLATFORM_PROFILE_PERFORMANCE);
--			break;
--		case PLATFORM_PROFILE_PERFORMANCE:
--			dytc_profile_set(NULL, PLATFORM_PROFILE_LOW_POWER);
--			break;
--		default:
--			pr_warn("Profile HKEY unexpected profile %d", dytc_current_profile);
--		}
--		/* Notify user space the profile changed */
--		platform_profile_notify();
--	}
-+	if (hkey_event == TP_HKEY_EV_PROFILE_TOGGLE)
-+		platform_profile_cycle();
- }
- 
- static void hotkey_driver_event(const unsigned int scancode)
--- 
-2.44.0
+I just wonder what happened AFTER I had the effect with kernel 6.8.x (only
+once)
 
+
+I currently have
+
+6.8.2-arch2-1
+
+core/linux-firmware-whence 20240312.3b128b60-1
+core/linux-firmware 20240312.3b128b60-1=20
+
+really weird
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
