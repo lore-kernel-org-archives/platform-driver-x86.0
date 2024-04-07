@@ -1,154 +1,96 @@
-Received: from gnuweeb.org (gnuweeb.org [51.81.211.47])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F5F81F;
-	Sun,  7 Apr 2024 01:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.211.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D3E10A14;
+	Sun,  7 Apr 2024 06:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712452124; cv=none; b=FeZLYsjV4kTFoOCA+tu/x6cmmTNaGmKC994CFTpIfQXEnL7XffsuQgKeaoiR7A28f0e7+qko/3oeOHAI1PxSzevHbdCwCsOJ5OO920//JMwbqWR+bIMq/X9E0fUvV3/WGpbCHlCjo3uaX2Epv6taH0z+qo5OzQX7V3Q/Qxypq/A=
+	t=1712470180; cv=none; b=lwtSm4sabxyUtC6vW3SdjGmG+mQtXt/6msxBcSuYWQzDo7WapWwUblBMmliuQUMg/GXAbx5V9PPJPx0NPuS3b2eY5tuBRYpeXt7ORjvQ8DcHYkRzseCyoILDi31HAqsK5VaafAyFsvfe+HI33w5qbbGNyout+B7WiBTzkizYR1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712452124; c=relaxed/simple;
-	bh=CcOjLI0GWZofIXrmTkh1+TI42ZiuHGsX7W4wxX6Rbrk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nzf8CR81WqRnbCsyy4AqtlltfX6hUgUi/80Ew2gsAII+TEO4qmOCt3uffjw88a4Da/7CETaguZOPxXHq8EBLc74UPPUZaFUh+nhZ08N0O9Sy5n2Ds0jx7iAV2Rds60na6Ts78ijnjyX/lNTTo5p9yf4DEESEw8KbLfIk0t9Z1+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=tT7beCP5; arc=none smtp.client-ip=51.81.211.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnuweeb.org
+	s=arc-20240116; t=1712470180; c=relaxed/simple;
+	bh=ofRHBQ9pjEzVTU+BhIfnFz15PkMBDFjuXoHrdk58MLg=;
+	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To:
+	 Content-Type; b=HAXxFeqMY5yTSz8gIBPEfyGY2GxmSC+3Z4+GB+IfYBiXkLF6+wOLZMlOK4rTdWTbtJFoNLC751ROIyQVvPXYo4Qpj0WgacuedRw0ZixaG8fCxRaUnWQe4pSZxPUMEAoHsTm1caGQMevVCa9P3FTAAAYTHUid1Unw6xs2abnvEco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=u83ZXHgo; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="tT7beCP5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
-	s=default; t=1712451480;
-	bh=CcOjLI0GWZofIXrmTkh1+TI42ZiuHGsX7W4wxX6Rbrk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=tT7beCP5uJdNDAwo2F8QzZhPOGKlTtYflRA0eOsZ99OWIL80ZtEK2BCjPVu7KSh1H
-	 kUgRk4SILVRQdGSP9MWM+PB5bX3u1/kRrGR8azZWzjwm3Hj+bdmYnhYO5CweG0gJ4l
-	 GEZIYaaqoCLOyLO5a9M96k3jaZMV7U3EUrmkZ+ZdCIuJCx2OksHM/IQMh3juIBeLgF
-	 9cYXFmXP3sTAMoy+T0Wv+6Uv/2UU1btEJ7kKDh1comW6jUpmwKMdHT9jXtMDNf/khv
-	 19btnxYuTXjf0pSo4FHfjfICrZPkm2fW6oqLO/3NBvMvvVQ6g646gQ21wcBK1I80Hz
-	 d7ll5nKyHfkLg==
-Received: from bloom.tail0d56f.ts.net (unknown [88.235.219.169])
-	by gnuweeb.org (Postfix) with ESMTPSA id 6ABA824AA7D;
-	Sun,  7 Apr 2024 07:57:56 +0700 (WIB)
-From: Stella Bloom <windowz414@gnuweeb.org>
-To: mustafa <mustafa.eskieksi@gmail.com>
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	jdelvare@suse.com,
-	lee@kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	linux@roeck-us.net,
-	pavel@ucw.cz,
-	platform-driver-x86@vger.kernel.org,
-	Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>,
-	Ammar Faizi <ammarfaizi2@gnuweeb.org>,
-	GNU/Weeb Mailing List <gwml@vger.gnuweeb.org>,
-	Stella Bloom <stelbl@elrant.team>,
-	Bedirhan KURT <bedirhan_kurt22@erdogan.edu.tr>
-Subject: [PATCH v5 0/1] platform/x86: Add wmi driver for Casper Excalibur laptops
-Date: Sun,  7 Apr 2024 03:57:44 +0300
-Message-ID: <20240407005746.412603-1-windowz414@gnuweeb.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240324181201.87882-1-mustafa.eskieksi@gmail.com>
-References: <20240324181201.87882-1-mustafa.eskieksi@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="u83ZXHgo"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1712470170; h=Message-ID:Subject:Date:From:To:Content-Type;
+	bh=nv5U4hxWPS4bKJYdRAmApCzcDyYdxKTgR8eKush4hJU=;
+	b=u83ZXHgoUCPBRvV27j5Z9AGqCPMmOPgBC57FMHbfW8cT0NcQd4Z24pM6DK4ziKP1xcrKTVNgwNdB3WSGxu9Nw/yULmZBTeOpRRgehiekGC6c9wFaj+xxV5BF2YcmRAuf/3I8r12ClsF4HX+Wrf6A3wMfgEAIdsAUUWd1rtEfrPY=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R541e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=25;SR=0;TI=SMTPD_---0W4.JPHS_1712470168;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W4.JPHS_1712470168)
+          by smtp.aliyun-inc.com;
+          Sun, 07 Apr 2024 14:09:28 +0800
+Message-ID: <1712470058.1558342-2-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH vhost v7 0/6] refactor the params of find_vqs()
+Date: Sun, 7 Apr 2024 14:07:38 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: Eric Farman <farman@linux.ibm.com>
+Cc: Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?utf-8?q?IlpoJ=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Vadim Pasternak <vadimp@nvidia.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Cornelia Huck <cohuck@redhat.com>,
+ Halil Pasic <pasic@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>,
+ David Hildenbrand <david@redhat.com>,
+ Jason Wang <jasowang@redhat.com>,
+ linux-um@lists.infradead.org,
+ platform-driver-x86@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org,
+ linux-s390@vger.kernel.org,
+ kvm@vger.kernel.org,
+ virtualization@lists.linux.dev
+References: <20240328080348.3620-1-xuanzhuo@linux.alibaba.com>
+ <cbdce01bbf2843062f4afd7e5c9af767e69cc70b.camel@linux.ibm.com>
+In-Reply-To: <cbdce01bbf2843062f4afd7e5c9af767e69cc70b.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-> From: Mustafa Ekşi <mustafa.eskieksi@gmail.com>
+On Mon, 01 Apr 2024 15:57:53 -0400, Eric Farman <farman@linux.ibm.com> wrot=
+e:
+> On Thu, 2024-03-28 at 16:03 +0800, Xuan Zhuo wrote:
+> > This pathset is splited from the
+> >
+> > =C2=A0=C2=A0=C2=A0=C2=A0
+> > http://lore.kernel.org/all/20240229072044.77388-1-xuanzhuo@linux.alibab=
+a.com
+> >
+> > That may needs some cycles to discuss. But that notifies too many
+> > people.
 >
-> Hi,
-> I want to note that moving mutex_init to the bottom of the function
-> crashes the driver when mutex_lock is called. I didn't investigate it
-> further but I wanted to say that since Ai Chao also did it like that.
+> This will need to be rebased to 6.9; there were some conflicts when I
+> tried to apply this locally which I didn't chase down, but it works
+> fine on 6.8.
+
+The target branch is Michael's vhost branch.
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git/log/?h=3Dlin=
+ux-next
+
+I will rebase that after Michael updates the branch.
+
+Thanks.
+
+
 >
-> Driver sets all leds to white on start. Before that, when a led's
-> brightness is changed, that led's color gets set to white but others
-> keep their old colors which creates a bad user experience (at least for
-> me). Please inform me if this is a bad approach.
-> Also, this driver still lacks support for changing modes and I seek
-> advise for that.
->
-> Mustafa Ekşi (1):
->    platform/x86: Add wmi driver for Casper Excalibur laptops
->
->   MAINTAINERS                       |   6 +
->   drivers/platform/x86/Kconfig      |  14 +
->   drivers/platform/x86/Makefile     |   1 +
->   drivers/platform/x86/casper-wmi.c | 641 ++++++++++++++++++++++++++++++
->   4 files changed, 662 insertions(+)
->   create mode 100644 drivers/platform/x86/casper-wmi.c
->
-
-Hi there,
-
-I just wanted to pitch in by testing the driver on the kernel I use
-on my Arch install on an Excalibur G770.1245, namely xdevs23's
-linux-nitrous (https://gitlab.com/xdevs23/linux-nitrous), but trying to
-compile the driver using LLVM, which is the default compilation behavior
-in this kernel's AUR package, spits out the following error;
-```
-drivers/platform/x86/casper-wmi.c:633:3: error: field designator 'no_singleton' does not refer to any field in type 'struct wmi_driver'
-  633 |         .no_singleton = true,
-      |         ~^~~~~~~~~~~~~~~~~~~
-1 error generated.
-make[5]: *** [scripts/Makefile.build:243: drivers/platform/x86/casper-wmi.o] Error 1
-make[4]: *** [scripts/Makefile.build:481: drivers/platform/x86] Error 2
-make[3]: *** [scripts/Makefile.build:481: drivers/platform] Error 2
-make[2]: *** [scripts/Makefile.build:481: drivers] Error 2
-make[1]: *** [/home/stella/.cache/yay/linux-nitrous/src/linux-nitrous/Makefile:1919: .] Error 2
-make: *** [Makefile:240: __sub-make] Error 2
-```
-
-I want to help debug this somehow, but I'm more of an Android custom
-ROM developer than a Linux kernel maintainer, so my knowledge on the
-programming and build system languages other than Java, Makefile, Bash,
-etc is pretty much limited if not outright non-existent.
-
-I would *love* to see this driver actually hit mainline repos, and
-eventually the upcoming kernel releases, given how much I need to use
-this laptop of mine as a computer engineering student.
-
-Asking just for the case I manage to get this driver up and going on
-my end somehow: Is there a tool made for controlling the LED colors yet?
-I can still use CLI tools much like on ASUS ROG series laptops, but it
-would be much easier and more appreciated to have a GUI provided
-Excalibur series laptops' LED lights can virtually take any color in
-the RGB space - At least that's how I interpreted with the
-configurations I used to do on mine using Excalibur Control Center
-on Windows 10/11.
-
-And as for the profiles, let me make sure we're talking about the same
-thing in this term: You're talking about the "Office", "Gaming" and
-"High Performance" modes as seen in Excalibur Control Center, right?
-If so, can this be somehow integrated into `power-profiles-daemon`
-SystemD service for easier controlling with GNOME and other DEs that
-use it? It's fine if it can't be, this was just a thought struck on my
-mind for whatever reason.
-
-Please do CC me and the people I've added to the CC list with this email
-of mine on the upcoming revisions, if any. We would love to keep track
-of this driver and I personally would love to contribute into testing
-as a power user.
-
-Cc: Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>
-Cc: Ammar Faizi <ammarfaizi2@gnuweeb.org>
-Cc: GNU/Weeb Mailing List <gwml@vger.gnuweeb.org>
-
-Also adding my organizational and school email addresses to the CC list
-so I can still be notified while I stay offline on this email address.
-GNOME Evolution doesn't run in the background and periodically check
-for emails sadly, and I switch ROMs every now and then on my phone as a
-source maintainer of 3 different custom ROMs. :/
-
-Cc: Stella Bloom <stelbl@elrant.team>
-Cc: Bedirhan KURT <bedirhan_kurt22@erdogan.edu.tr>
-
---
-Stella Bloom
+> Thanks,
+> Eric
