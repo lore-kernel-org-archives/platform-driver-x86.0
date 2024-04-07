@@ -1,96 +1,150 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D3E10A14;
-	Sun,  7 Apr 2024 06:09:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD5E2BAFD;
+	Sun,  7 Apr 2024 12:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712470180; cv=none; b=lwtSm4sabxyUtC6vW3SdjGmG+mQtXt/6msxBcSuYWQzDo7WapWwUblBMmliuQUMg/GXAbx5V9PPJPx0NPuS3b2eY5tuBRYpeXt7ORjvQ8DcHYkRzseCyoILDi31HAqsK5VaafAyFsvfe+HI33w5qbbGNyout+B7WiBTzkizYR1U=
+	t=1712493561; cv=none; b=VK1SVdIUG4QO0E4e/rfpaiWi91mCSaO18hnrqHN0BCqPsugRo748Pyf1/xqw/3/yf68OZ2SsVGrkm6btZjNPZVG2MXrC/h0W8JEjzfd0hntFxP3+rbjvYgP0D9Bw5ZivpIPrD1E9pErb8wzjrdG0OJkXFoyRHPn0kgVOtFlJx9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712470180; c=relaxed/simple;
-	bh=ofRHBQ9pjEzVTU+BhIfnFz15PkMBDFjuXoHrdk58MLg=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To:
-	 Content-Type; b=HAXxFeqMY5yTSz8gIBPEfyGY2GxmSC+3Z4+GB+IfYBiXkLF6+wOLZMlOK4rTdWTbtJFoNLC751ROIyQVvPXYo4Qpj0WgacuedRw0ZixaG8fCxRaUnWQe4pSZxPUMEAoHsTm1caGQMevVCa9P3FTAAAYTHUid1Unw6xs2abnvEco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=u83ZXHgo; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="u83ZXHgo"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1712470170; h=Message-ID:Subject:Date:From:To:Content-Type;
-	bh=nv5U4hxWPS4bKJYdRAmApCzcDyYdxKTgR8eKush4hJU=;
-	b=u83ZXHgoUCPBRvV27j5Z9AGqCPMmOPgBC57FMHbfW8cT0NcQd4Z24pM6DK4ziKP1xcrKTVNgwNdB3WSGxu9Nw/yULmZBTeOpRRgehiekGC6c9wFaj+xxV5BF2YcmRAuf/3I8r12ClsF4HX+Wrf6A3wMfgEAIdsAUUWd1rtEfrPY=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R541e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=25;SR=0;TI=SMTPD_---0W4.JPHS_1712470168;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W4.JPHS_1712470168)
-          by smtp.aliyun-inc.com;
-          Sun, 07 Apr 2024 14:09:28 +0800
-Message-ID: <1712470058.1558342-2-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH vhost v7 0/6] refactor the params of find_vqs()
-Date: Sun, 7 Apr 2024 14:07:38 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: Eric Farman <farman@linux.ibm.com>
-Cc: Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- Hans de Goede <hdegoede@redhat.com>,
- =?utf-8?q?IlpoJ=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Vadim Pasternak <vadimp@nvidia.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Cornelia Huck <cohuck@redhat.com>,
- Halil Pasic <pasic@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- "Michael S. Tsirkin" <mst@redhat.com>,
- David Hildenbrand <david@redhat.com>,
- Jason Wang <jasowang@redhat.com>,
- linux-um@lists.infradead.org,
- platform-driver-x86@vger.kernel.org,
- linux-remoteproc@vger.kernel.org,
- linux-s390@vger.kernel.org,
- kvm@vger.kernel.org,
- virtualization@lists.linux.dev
-References: <20240328080348.3620-1-xuanzhuo@linux.alibaba.com>
- <cbdce01bbf2843062f4afd7e5c9af767e69cc70b.camel@linux.ibm.com>
-In-Reply-To: <cbdce01bbf2843062f4afd7e5c9af767e69cc70b.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1712493561; c=relaxed/simple;
+	bh=J1H/qX8SRFDlHJ/QBkm7cFTa1sYh0vN4k5jahtXiAaQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pUQGVzu/ZwFNkvDqQ/iwJpy9vd3ORzaA8LgeUeVS4EkprUFwv+JKmSY6ghpX68m8mI7BdMSnmSk6/ugU+xyN/uWIWmLdpHkoLyWiwWWTFmn043vW/eHe7rQ7LSySCipA+eoTudEUbeylnWmhiOaeZs6IftuSpAHkKJvNOhPS5wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1e2be2361efso6417585ad.0;
+        Sun, 07 Apr 2024 05:39:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712493557; x=1713098357;
+        h=content-transfer-encoding:mime-version:list-id:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gH1KKOCelF2ThGU1cHU4FIyi0LwXgGcMVoj+JXuvN68=;
+        b=vg5GThUmBhLZLqR7YeFet6S30bYvAc28z8jKXY7XPcqSg6gNSYnp4u/3qLl5dxHEJR
+         IwxIShFsQtbtUrAfGibJMyvwkENO7V+0AFQLx9DDY34PWZnplD1QHJSl5v6gncNrNhGu
+         jwIF7px5xObWGtg1lOv+TP60jMQWFSq8pXy5VIec1n5McacCNqGuISWplOffjSO2h3A1
+         xSr2NZBR5esF3sWhjXy2SwCFYnvYN+AALlu3S184fHN+yi8iglA9jaFLDgVG7l+oMuO7
+         grS1OwU1HkDAzvsj3jk0k4GDLbxVztZ6D2F6j4Kxet9ZImZPi9/pCAKIVyaeyOJt4tzk
+         exzg==
+X-Forwarded-Encrypted: i=1; AJvYcCUJLW3Q4knEX5vy21AgGdd++yeBcbM7ii9wYTGIIxO3erWzoqiay54FyyXH6suuI0aBX1sn1vnofb8lR41nzuO19KxWhvf3se4x4N4d1jmuzVu7nYjyQcUI+zqqLE/nQcNkDYC9OO5pw06i+R631APetr+PaEDU2UwTqsdjg1QnikLwFyayeX8lA1kmrYEj4+tO9wcNWDuEJZ3kYn4TUBU6Kni6HW9Zl80aKEdDTJTqkAwkGsrarm7Qzd91hU+gJ/FLD24=
+X-Gm-Message-State: AOJu0YxGLrNZMT3iBbQLyo9o7VeA0haQSuCGSaImLBrF/d9HPuQ/uiVV
+	nOdpTWLQIDANd3wHQGPaRGseXfagr0ouDpBxXNMgIcVcKx0+m6uZ
+X-Google-Smtp-Source: AGHT+IHyvAb+guuz0e00AaSmzIzllRxt4szwRJ66ajt1UGZg+b5metBcaJu7z1HTr0mFKQWF0c3bmQ==
+X-Received: by 2002:a17:902:e5c1:b0:1dd:b883:3398 with SMTP id u1-20020a170902e5c100b001ddb8833398mr7436090plf.4.1712493557482;
+        Sun, 07 Apr 2024 05:39:17 -0700 (PDT)
+Received: from tgsp-ThinkPad-X280.. ([223.153.78.230])
+        by smtp.gmail.com with ESMTPSA id h15-20020a170902f7cf00b001e27c7ecd24sm4828518plw.283.2024.04.07.05.39.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Apr 2024 05:39:17 -0700 (PDT)
+From: xiongxin <xiongxin@kylinos.cn>
+To: xiongxin@kylinos.cn,
+	Rafael Wysocki <rafael@kernel.org>,
+	hdegoede@redhat.com,
+	linus.walleij@linaro.org
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Basavaraj.Natikar@amd.com,
+	Shyam-sundar.S-k@amd.com
+Subject: [PATCH v4 1/4] include/linux/suspend.h: Only show pm_pr_dbg messages at suspend/resume
+Date: Sun,  7 Apr 2024 20:39:03 +0800
+Message-ID: <20230602073025.22884-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230602073025.22884-1-mario.limonciello@amd.com>
+References: <20230602073025.22884-1-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-ID: <20240407123903.lWqaMr0BiYMzvCGkCgqhPSVpIz03QrukWt1i7idwX00@z>
 
-On Mon, 01 Apr 2024 15:57:53 -0400, Eric Farman <farman@linux.ibm.com> wrot=
-e:
-> On Thu, 2024-03-28 at 16:03 +0800, Xuan Zhuo wrote:
-> > This pathset is splited from the
-> >
-> > =C2=A0=C2=A0=C2=A0=C2=A0
-> > http://lore.kernel.org/all/20240229072044.77388-1-xuanzhuo@linux.alibab=
-a.com
-> >
-> > That may needs some cycles to discuss. But that notifies too many
-> > people.
->
-> This will need to be rebased to 6.9; there were some conflicts when I
-> tried to apply this locally which I didn't chase down, but it works
-> fine on 6.8.
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-The target branch is Michael's vhost branch.
+All uses in the kernel are currently already oriented around
+suspend/resume. As some other parts of the kernel may also use these
+messages in functions that could also be used outside of
+suspend/resume, only enable in suspend/resume path.
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git/log/?h=3Dlin=
-ux-next
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+v3->v4:
+ * add back do/while as it wasn't pointless.  It fixes a warning.
+---
+ include/linux/suspend.h | 8 +++++---
+ kernel/power/main.c     | 6 ++++++
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
-I will rebase that after Michael updates the branch.
+diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+index 1a0426e6761c..74f406c53ac0 100644
+--- a/include/linux/suspend.h
++++ b/include/linux/suspend.h
+@@ -555,6 +555,7 @@ static inline void unlock_system_sleep(unsigned int flags) {}
+ #ifdef CONFIG_PM_SLEEP_DEBUG
+ extern bool pm_print_times_enabled;
+ extern bool pm_debug_messages_on;
++extern bool pm_debug_messages_should_print(void);
+ static inline int pm_dyn_debug_messages_on(void)
+ {
+ #ifdef CONFIG_DYNAMIC_DEBUG
+@@ -568,14 +569,14 @@ static inline int pm_dyn_debug_messages_on(void)
+ #endif
+ #define __pm_pr_dbg(fmt, ...)					\
+ 	do {							\
+-		if (pm_debug_messages_on)			\
++		if (pm_debug_messages_should_print())		\
+ 			printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__);	\
+ 		else if (pm_dyn_debug_messages_on())		\
+ 			pr_debug(fmt, ##__VA_ARGS__);	\
+ 	} while (0)
+ #define __pm_deferred_pr_dbg(fmt, ...)				\
+ 	do {							\
+-		if (pm_debug_messages_on)			\
++		if (pm_debug_messages_should_print())		\
+ 			printk_deferred(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__);	\
+ 	} while (0)
+ #else
+@@ -593,7 +594,8 @@ static inline int pm_dyn_debug_messages_on(void)
+ /**
+  * pm_pr_dbg - print pm sleep debug messages
+  *
+- * If pm_debug_messages_on is enabled, print message.
++ * If pm_debug_messages_on is enabled and the system is entering/leaving
++ *      suspend, print message.
+  * If pm_debug_messages_on is disabled and CONFIG_DYNAMIC_DEBUG is enabled,
+  *	print message only from instances explicitly enabled on dynamic debug's
+  *	control.
+diff --git a/kernel/power/main.c b/kernel/power/main.c
+index 3113ec2f1db4..daa535012e51 100644
+--- a/kernel/power/main.c
++++ b/kernel/power/main.c
+@@ -556,6 +556,12 @@ power_attr_ro(pm_wakeup_irq);
+ 
+ bool pm_debug_messages_on __read_mostly;
+ 
++bool pm_debug_messages_should_print(void)
++{
++	return pm_debug_messages_on && pm_suspend_target_state != PM_SUSPEND_ON;
 
-Thanks.
+> hibernate processes also mostly use the pm_pr_dbg() function, which
+> results in hibernate processes only being able to output such logs
+> through dynamic debug, which is unfriendly to kernels without
+> CONFIG_DYNAMIC_DEBUG configuration.
 
++}
++EXPORT_SYMBOL_GPL(pm_debug_messages_should_print);
++
+ static ssize_t pm_debug_messages_show(struct kobject *kobj,
+ 				      struct kobj_attribute *attr, char *buf)
+ {
 
->
-> Thanks,
-> Eric
+-- 
+2.34.1
