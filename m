@@ -1,157 +1,154 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from gnuweeb.org (gnuweeb.org [51.81.211.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014512E400;
-	Sat,  6 Apr 2024 18:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F5F81F;
+	Sun,  7 Apr 2024 01:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.211.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712429836; cv=none; b=I/U9s57DeagUOeLWfgowvla7XVja6ocgXenOwFh1GY1b2KvVgLvOLlR40hFqvR9yggVvZ72RkLfl/9COLX2uO8ek04y8Y0vLzNhFgXf52qhPz0k2ggImargp9RyewfihDBoAlGPeSRsOXNYd8w+POECgpbJm6NYz5STEIXleezw=
+	t=1712452124; cv=none; b=FeZLYsjV4kTFoOCA+tu/x6cmmTNaGmKC994CFTpIfQXEnL7XffsuQgKeaoiR7A28f0e7+qko/3oeOHAI1PxSzevHbdCwCsOJ5OO920//JMwbqWR+bIMq/X9E0fUvV3/WGpbCHlCjo3uaX2Epv6taH0z+qo5OzQX7V3Q/Qxypq/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712429836; c=relaxed/simple;
-	bh=WAwIw/MLBYLUVgD0m6GquIMTDruiOiSlIHl+3RfeCVA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=KIiWqPJMuajyl89FlP21xrQ+bxnmnx7gff5FtcebAz7CGFGVj6EM0+hRdzOjuw4CXfpQluVUiU5eZDJ4T6OmUrUyr1U3BRaiCtTJP0SZAJU76JKd3hPZHnRFsHvvqfNjz0XKK867ZuUCq8Udfh2IzgIpo6MFu46W7BfYmZrnBWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=aC1J19Ic; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1712452124; c=relaxed/simple;
+	bh=CcOjLI0GWZofIXrmTkh1+TI42ZiuHGsX7W4wxX6Rbrk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nzf8CR81WqRnbCsyy4AqtlltfX6hUgUi/80Ew2gsAII+TEO4qmOCt3uffjw88a4Da/7CETaguZOPxXHq8EBLc74UPPUZaFUh+nhZ08N0O9Sy5n2Ds0jx7iAV2Rds60na6Ts78ijnjyX/lNTTo5p9yf4DEESEw8KbLfIk0t9Z1+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=tT7beCP5; arc=none smtp.client-ip=51.81.211.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnuweeb.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="aC1J19Ic"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1712429822; x=1713034622; i=w_armin@gmx.de;
-	bh=2aOurW5Cd5Uw6SZMXDN5iRUn26UMquU9Ugd7mKHNdMY=;
-	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
-	 In-Reply-To;
-	b=aC1J19IcXiqcTkXk7BmYQRxgY17tHtAbSAgNjBu5177GrbLNfwvp8IWbyYagCEAJ
-	 6/HuVG5vrwNxoMcjzlziMBgtzbRchb837qnCqCITuUXH2BHVzx18eMBS3eYROqiNx
-	 WbNJnhm6IMnMSXRHJpCzTyFBrNKFMgToYFQsuSffAJbyz/UCzgaQw9cvrkfxe1q5V
-	 OA9Y3uN6ajdOMJz6kuNXQudNcT9zpERCT7xhyxilNlBKBEt/ih9HSakvw60XmMKv5
-	 xHfDiK/cttNypgSbw4uFiP175ocq/v18VhUYKjhZq96DvExhjx4d07XdPC+LBMPqC
-	 hZ+zIx2wEA+lWfnLQA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mwwdl-1shxHp0Q1r-00yNK9; Sat, 06
- Apr 2024 20:57:02 +0200
-Message-ID: <f662fab0-0f47-4b71-ab71-2b9492253483@gmx.de>
-Date: Sat, 6 Apr 2024 20:57:00 +0200
+	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="tT7beCP5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
+	s=default; t=1712451480;
+	bh=CcOjLI0GWZofIXrmTkh1+TI42ZiuHGsX7W4wxX6Rbrk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=tT7beCP5uJdNDAwo2F8QzZhPOGKlTtYflRA0eOsZ99OWIL80ZtEK2BCjPVu7KSh1H
+	 kUgRk4SILVRQdGSP9MWM+PB5bX3u1/kRrGR8azZWzjwm3Hj+bdmYnhYO5CweG0gJ4l
+	 GEZIYaaqoCLOyLO5a9M96k3jaZMV7U3EUrmkZ+ZdCIuJCx2OksHM/IQMh3juIBeLgF
+	 9cYXFmXP3sTAMoy+T0Wv+6Uv/2UU1btEJ7kKDh1comW6jUpmwKMdHT9jXtMDNf/khv
+	 19btnxYuTXjf0pSo4FHfjfICrZPkm2fW6oqLO/3NBvMvvVQ6g646gQ21wcBK1I80Hz
+	 d7ll5nKyHfkLg==
+Received: from bloom.tail0d56f.ts.net (unknown [88.235.219.169])
+	by gnuweeb.org (Postfix) with ESMTPSA id 6ABA824AA7D;
+	Sun,  7 Apr 2024 07:57:56 +0700 (WIB)
+From: Stella Bloom <windowz414@gnuweeb.org>
+To: mustafa <mustafa.eskieksi@gmail.com>
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	jdelvare@suse.com,
+	lee@kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	linux@roeck-us.net,
+	pavel@ucw.cz,
+	platform-driver-x86@vger.kernel.org,
+	Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>,
+	Ammar Faizi <ammarfaizi2@gnuweeb.org>,
+	GNU/Weeb Mailing List <gwml@vger.gnuweeb.org>,
+	Stella Bloom <stelbl@elrant.team>,
+	Bedirhan KURT <bedirhan_kurt22@erdogan.edu.tr>
+Subject: [PATCH v5 0/1] platform/x86: Add wmi driver for Casper Excalibur laptops
+Date: Sun,  7 Apr 2024 03:57:44 +0300
+Message-ID: <20240407005746.412603-1-windowz414@gnuweeb.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240324181201.87882-1-mustafa.eskieksi@gmail.com>
+References: <20240324181201.87882-1-mustafa.eskieksi@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: quickstart: Fix race condition when
- reporting input event
-From: Armin Wolf <W_Armin@gmx.de>
-To: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
-Cc: rafael@kernel.org, linux-acpi@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240327214524.123935-1-W_Armin@gmx.de>
-Content-Language: en-US
-In-Reply-To: <20240327214524.123935-1-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:gYZ/ru4E3uFgyw1J6uyPIn4b2hNb0LEhUIeZjSbNAegQD7IZbcx
- rUZOjGGZxnThA5UazhG8iaBfi8xu2mZ27ic0jtz3aTMaKkW/HPtvSUyiB9tZvpO+1z1WZMr
- lbpF60dbucJK1Mep/oj4oEJk81nIU5k+c7yJqYRfmsqwx9mk4s8eKONttfQRlF2mmopo4lR
- 5Dm+r1yZ7S3ueb85W4vCA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:pASYl1kF/LE=;j5zV2jq4yTXSOqJNJYnPNOQ6jGZ
- LB7GSHjl/MwG1g2XUNwOvN5yc/EPERVXgoKudEwYVf1ONmUPmJuTZqfe0F6wArPWqdJgVhHvf
- ssmVn/KW81TWpIm2SYBbdBF+7gOpeBdc5W/qL7AZDJPeF30auSdvijlLpoIU2RHNNHDWQIsel
- CgBWcHGuPbhnLysqFLAKxdm/vpm9a5rwwAPDTpWjToQ2nvdJO2moXNo9zvjFegvk9fzGnDiyb
- ISc2rtQasUzEcVABzufCcc2sZ2Xxkll3wphWr04A/sR+bgL2jVdn3DZEo04g8CN8OO4AXnmo2
- F7fHV2bmAngyy57SNdCiGrd3DF7r/3TbJAyV6jKjy8N5Ie3+7wMjWngxHJZsCUNZ73iZsGXQM
- TQWpums83MLPn2qiq3qKIunp7NHXOgVJcToOH3urqsR7o3mAN2lC13aP2ISFN5qpyHUjkChJ4
- 2PuBfjKbAtQyQFl0J84vh2ows4yF+/5I+xt/tnTGV+ohsYnFh4nbQwLA3IIMM2QZQJrlJwHpV
- izdO8GrA0Qwv2ets5xrRB5bC9m51uO83MLp4wCiqAjdt35YOR5/HzJTt+ag9+S0XxxYfpEyT2
- JERFDXKJLWl+7iR02vzCwnDZzvHfIbBlyRM1qniOQ2+aivp94LdgX4nIFzU02vAdN7b3Em6nQ
- gJLtV61Actqh9M8eS+z55EVkA5iNU5FLCOUy03ne5Sjuxg418naNjZLwUROAEPDYAP8zsYsg2
- 4i6d8FBynQpB/lBJ6qk0lWCt1ZO+OByeLVaKgWLDn3K0WhW8FocH6KCzYaDZ8q1ztgDXM4h/G
- vWtYi9i8zt2r7V3I84ugJCUIxVfKZBccNxDgNlKmniZIo=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Am 27.03.24 um 22:45 schrieb Armin Wolf:
+> From: Mustafa Ekşi <mustafa.eskieksi@gmail.com>
+>
+> Hi,
+> I want to note that moving mutex_init to the bottom of the function
+> crashes the driver when mutex_lock is called. I didn't investigate it
+> further but I wanted to say that since Ai Chao also did it like that.
+>
+> Driver sets all leds to white on start. Before that, when a led's
+> brightness is changed, that led's color gets set to white but others
+> keep their old colors which creates a bad user experience (at least for
+> me). Please inform me if this is a bad approach.
+> Also, this driver still lacks support for changing modes and I seek
+> advise for that.
+>
+> Mustafa Ekşi (1):
+>    platform/x86: Add wmi driver for Casper Excalibur laptops
+>
+>   MAINTAINERS                       |   6 +
+>   drivers/platform/x86/Kconfig      |  14 +
+>   drivers/platform/x86/Makefile     |   1 +
+>   drivers/platform/x86/casper-wmi.c | 641 ++++++++++++++++++++++++++++++
+>   4 files changed, 662 insertions(+)
+>   create mode 100644 drivers/platform/x86/casper-wmi.c
+>
 
-> Since commit e2ffcda16290 ("ACPI: OSL: Allow Notify () handlers to run
-> on all CPUs"), the ACPI core allows multiple notify calls to be active
-> at the same time. This means that two instances of quickstart_notify()
-> running at the same time can mess which each others input sequences.
->
-> Fix this by protecting the input sequence with a mutex.
->
-> Compile-tested only.
+Hi there,
 
-Any thoughts on this?
+I just wanted to pitch in by testing the driver on the kernel I use
+on my Arch install on an Excalibur G770.1245, namely xdevs23's
+linux-nitrous (https://gitlab.com/xdevs23/linux-nitrous), but trying to
+compile the driver using LLVM, which is the default compilation behavior
+in this kernel's AUR package, spits out the following error;
+```
+drivers/platform/x86/casper-wmi.c:633:3: error: field designator 'no_singleton' does not refer to any field in type 'struct wmi_driver'
+  633 |         .no_singleton = true,
+      |         ~^~~~~~~~~~~~~~~~~~~
+1 error generated.
+make[5]: *** [scripts/Makefile.build:243: drivers/platform/x86/casper-wmi.o] Error 1
+make[4]: *** [scripts/Makefile.build:481: drivers/platform/x86] Error 2
+make[3]: *** [scripts/Makefile.build:481: drivers/platform] Error 2
+make[2]: *** [scripts/Makefile.build:481: drivers] Error 2
+make[1]: *** [/home/stella/.cache/yay/linux-nitrous/src/linux-nitrous/Makefile:1919: .] Error 2
+make: *** [Makefile:240: __sub-make] Error 2
+```
 
-Armin Wolf
+I want to help debug this somehow, but I'm more of an Android custom
+ROM developer than a Linux kernel maintainer, so my knowledge on the
+programming and build system languages other than Java, Makefile, Bash,
+etc is pretty much limited if not outright non-existent.
 
-> Fixes: afd66f2a739e ("platform/x86: Add ACPI quickstart button (PNP0C32) driver")
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
-> This applies on the branch "review-hans". Maybe we could somehow
-> document the concurrency rules for ACPI notify handlers?
-> ---
->   drivers/platform/x86/quickstart.c | 17 +++++++++++++++++
->   1 file changed, 17 insertions(+)
->
-> diff --git a/drivers/platform/x86/quickstart.c b/drivers/platform/x86/quickstart.c
-> index ba3a7a25dda7..e40f852d42c1 100644
-> --- a/drivers/platform/x86/quickstart.c
-> +++ b/drivers/platform/x86/quickstart.c
-> @@ -18,6 +18,7 @@
->   #include <linux/input/sparse-keymap.h>
->   #include <linux/kernel.h>
->   #include <linux/module.h>
-> +#include <linux/mutex.h>
->   #include <linux/platform_device.h>
->   #include <linux/sysfs.h>
->   #include <linux/types.h>
-> @@ -35,6 +36,7 @@
->
->   struct quickstart_data {
->   	struct device *dev;
-> +	struct mutex input_lock;	/* Protects input sequence during notify */
->   	struct input_dev *input_device;
->   	char input_name[32];
->   	char phys[32];
-> @@ -73,7 +75,10 @@ static void quickstart_notify(acpi_handle handle, u32 event, void *context)
->
->   	switch (event) {
->   	case QUICKSTART_EVENT_RUNTIME:
-> +		mutex_lock(&data->input_lock);
->   		sparse_keymap_report_event(data->input_device, 0x1, 1, true);
-> +		mutex_unlock(&data->input_lock);
-> +
->   		acpi_bus_generate_netlink_event(DRIVER_NAME, dev_name(data->dev), event, 0);
->   		break;
->   	default:
-> @@ -147,6 +152,13 @@ static void quickstart_notify_remove(void *context)
->   	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, quickstart_notify);
->   }
->
-> +static void quickstart_mutex_destroy(void *data)
-> +{
-> +	struct mutex *lock = data;
-> +
-> +	mutex_destroy(lock);
-> +}
-> +
->   static int quickstart_probe(struct platform_device *pdev)
->   {
->   	struct quickstart_data *data;
-> @@ -165,6 +177,11 @@ static int quickstart_probe(struct platform_device *pdev)
->   	data->dev = &pdev->dev;
->   	dev_set_drvdata(&pdev->dev, data);
->
-> +	mutex_init(&data->input_lock);
-> +	ret = devm_add_action_or_reset(&pdev->dev, quickstart_mutex_destroy, &data->input_lock);
-> +	if (ret < 0)
-> +		return ret;
-> +
->   	/* We have to initialize the device wakeup before evaluating GHID because
->   	 * doing so will notify the device if the button was used to wake the machine
->   	 * from S5.
-> --
-> 2.39.2
->
->
+I would *love* to see this driver actually hit mainline repos, and
+eventually the upcoming kernel releases, given how much I need to use
+this laptop of mine as a computer engineering student.
+
+Asking just for the case I manage to get this driver up and going on
+my end somehow: Is there a tool made for controlling the LED colors yet?
+I can still use CLI tools much like on ASUS ROG series laptops, but it
+would be much easier and more appreciated to have a GUI provided
+Excalibur series laptops' LED lights can virtually take any color in
+the RGB space - At least that's how I interpreted with the
+configurations I used to do on mine using Excalibur Control Center
+on Windows 10/11.
+
+And as for the profiles, let me make sure we're talking about the same
+thing in this term: You're talking about the "Office", "Gaming" and
+"High Performance" modes as seen in Excalibur Control Center, right?
+If so, can this be somehow integrated into `power-profiles-daemon`
+SystemD service for easier controlling with GNOME and other DEs that
+use it? It's fine if it can't be, this was just a thought struck on my
+mind for whatever reason.
+
+Please do CC me and the people I've added to the CC list with this email
+of mine on the upcoming revisions, if any. We would love to keep track
+of this driver and I personally would love to contribute into testing
+as a power user.
+
+Cc: Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>
+Cc: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+Cc: GNU/Weeb Mailing List <gwml@vger.gnuweeb.org>
+
+Also adding my organizational and school email addresses to the CC list
+so I can still be notified while I stay offline on this email address.
+GNOME Evolution doesn't run in the background and periodically check
+for emails sadly, and I switch ROMs every now and then on my phone as a
+source maintainer of 3 different custom ROMs. :/
+
+Cc: Stella Bloom <stelbl@elrant.team>
+Cc: Bedirhan KURT <bedirhan_kurt22@erdogan.edu.tr>
+
+--
+Stella Bloom
