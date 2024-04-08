@@ -1,230 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F76142906;
-	Mon,  8 Apr 2024 17:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3192F143860;
+	Mon,  8 Apr 2024 17:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712596527; cv=none; b=cR9nwkY5O0OLQ4/t5p7QL4hAJTcmcX571azwPfryD/WwcCZoEF1lxIRzgTVv1ROrzQ2KxAsUimi1hZR/UbmRmneh68c4g3sDvfKbeL6ghwpEYBepTggkqobKLbPgQE/RxleSYgiwxppaBD0/KtxqhC4YBJqQl46I3RC5atWLx/c=
+	t=1712596985; cv=none; b=SC1CiHo8IQkeX9TJDFBw5Bi72iyhJAZ3/WE4N3ZTdyzJP6Oo3esoG5yY7WGVmaqoCrUajeLja+iUyh0Fko7HY+qXQPcofdcmKzrzfKFCKdQ9oecMg+KrO6OaWZ+KkQteEtVHsIdx2C5g+hylmwr2ULLtFgcIo3AvpSIhk9aIGaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712596527; c=relaxed/simple;
-	bh=cb3yCHZjckEDvem/7qkDx7+ocNrNL4H3d8W/mSBltHc=;
+	s=arc-20240116; t=1712596985; c=relaxed/simple;
+	bh=Pqh3pyoAGMUHh7oj7/eiymnpIKVlFY2rZB4bG8dyHWI=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=SqQxS10lbI3DMu7OmlmMGd/JwNCU2mQ8gHNHTw44vTNxArrZGqXETYUic1wbYWhpA52fCUCe4D18ZoGjnZcJqJXYOdXN4bBbtwkBcWVsH4SSzTwLvfQDl09L6Z4wLY+gP20JRsnQ1ZdwMKczTGMuMJXNCXmT/I8635++GL+OdrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zef5djim; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version:Content-Type; b=h2Z7pwoAq6mjMYC49hTFyaqBCF2fWX+Dy0cAYQYdkNJFzcHSwMRWHS0itms9jHX50xn4C9gYQdO/gkwloX7wpncEn3Lm2Hq60wpmSsfLYEEfmwELIWlN32sK6miN69O3awyS1zaKjULXBN/4RCeRmEpIAH8V22HgxkRbluGQb7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y8Tggwn2; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zef5djim"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y8Tggwn2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712596525; x=1744132525;
+  t=1712596984; x=1744132984;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=cb3yCHZjckEDvem/7qkDx7+ocNrNL4H3d8W/mSBltHc=;
-  b=Zef5djimDvlod85TlhdR7U5mN7Lhsg9mG0qvPaE2iVijpoVkMiLGy6zf
-   j2C6TfOz7RlMhAttpbtcHC2LJtGx18dh/dBtN85zFQK/AANrTbMhWVzTX
-   F3dpTYOzgsEd2DVAftPe/tPx6/4sOm++SRyZ0LpPj06uRoJPQMixR0HRO
-   I2Fc67RZE7OqK3HQo3PoDZLPwcZMGKwRzkk3J6JcDe9SxTp/9VsY42NRW
-   SQsEJTtRLqnfF2xdJXMiI48s7FKc/dqhck4Tko4XndY5j7FKqsHZdnQxK
-   aLKAI+dADCBc3WJ/xCS8RUbOkgBnElkhp/0spPeEPoAGPSwSIOQWfOtY+
-   Q==;
-X-CSE-ConnectionGUID: EM9+v3cIQvescg2JlZ8urA==
-X-CSE-MsgGUID: UddkRFC4TKarMozCvhME1g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="18497437"
+  bh=Pqh3pyoAGMUHh7oj7/eiymnpIKVlFY2rZB4bG8dyHWI=;
+  b=Y8Tggwn2E7nnZ1xEP3lOhSfcO5IQl55ssMdB9lmfsvtabS/SaD3w2Fg2
+   2YDzTP6HkbXcA7PsP1TvgPb/2YriqvotGmnqtdUoYqI1DSG+Em62MkUUl
+   K8qeId8RUHRHk4I9Ero5joK95uaAAfd/9xxVWyQKecWyPEEWMLvQQ1Nql
+   kjig9jAWMWETSwO/acKzxNy1AHQ62mtpu79BA2C/NHv5IywQfT2edSURm
+   zhVyjlKRn15h3H85c/iZCxgQH6yDzhBPZZUBLUivc5cjgqot50daENG0a
+   tAI+GKrS/YjC1aepISY441jjDIAI5dfvBFlOEESzXhQusYt5YeTXicG5c
+   w==;
+X-CSE-ConnectionGUID: KOw7q+nwSz674k2fFXtLIA==
+X-CSE-MsgGUID: dSR1qco2TPCnPOT6mhfGdw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="8112054"
 X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="18497437"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 10:15:24 -0700
-X-CSE-ConnectionGUID: mpnUkkKMSJWvY24XJKOp0A==
-X-CSE-MsgGUID: HoxRDC2aSX+hAH2ZkWUTyQ==
+   d="scan'208";a="8112054"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 10:23:03 -0700
+X-CSE-ConnectionGUID: axvwqU3gQVOpapr20X6fPA==
+X-CSE-MsgGUID: JxHFW/8+Qwm9nS4h3K8IXA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="20037843"
+   d="scan'208";a="19877439"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.28])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 10:15:21 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 10:23:02 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 8 Apr 2024 20:15:17 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: mlj@danelec.com, rafael.j.wysocki@intel.com, lenb@kernel.org, 
-    linux-acpi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] ACPI: fan: Add hwmon support
-In-Reply-To: <36a8ebff-8a89-44e0-9b30-374913bd8cbd@gmx.de>
-Message-ID: <d5cf9425-c43d-2771-0906-7c055244d783@linux.intel.com>
-References: <20240408123718.15512-1-W_Armin@gmx.de> <63187b48-7978-3b0f-0526-79afea65c492@linux.intel.com> <36a8ebff-8a89-44e0-9b30-374913bd8cbd@gmx.de>
+Date: Mon, 8 Apr 2024 20:22:57 +0300 (EEST)
+To: "David E. Box" <david.e.box@linux.intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH V3 8/9] platform/x86/intel/sdsi: Simplify ascii
+ printing
+In-Reply-To: <20240405032507.2637311-9-david.e.box@linux.intel.com>
+Message-ID: <6dd8b2c0-1c89-43f0-0426-df8d483a7b1e@linux.intel.com>
+References: <20240405032507.2637311-1-david.e.box@linux.intel.com> <20240405032507.2637311-9-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-884334050-1712596517=:14302"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, 4 Apr 2024, David E. Box wrote:
 
---8323328-884334050-1712596517=:14302
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> Use printf width specifier to set the display length of encoded feature
+> names.
+> 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+> 
+> V3 - Add FEAT_LEN #def
+> 
+> V2 - Split of V1 patch 7
+> 
+>  tools/arch/x86/intel_sdsi/intel_sdsi.c | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/arch/x86/intel_sdsi/intel_sdsi.c b/tools/arch/x86/intel_sdsi/intel_sdsi.c
+> index 45bc69e6718e..0c9670ba1f15 100644
+> --- a/tools/arch/x86/intel_sdsi/intel_sdsi.c
+> +++ b/tools/arch/x86/intel_sdsi/intel_sdsi.c
+> @@ -43,6 +43,7 @@
+>  #define METER_CERT_MAX_SIZE	4096
+>  #define STATE_MAX_NUM_LICENSES	16
+>  #define STATE_MAX_NUM_IN_BUNDLE	(uint32_t)8
+> +#define FEAT_LEN		4
+>  
+>  #define __round_mask(x, y) ((__typeof__(x))((y) - 1))
+>  #define round_up(x, y) ((((x) - 1) | __round_mask(x, y)) + 1)
+> @@ -409,11 +410,10 @@ static int sdsi_meter_cert_show(struct sdsi_dev *s)
+>  
+>  	printf("Number of Feature Counters:   %ld\n", BUNDLE_COUNT(mc->bundle_length));
+>  	while (count < BUNDLE_COUNT(mc->bundle_length)) {
+> -		char feature[5];
+> +		char feature[FEAT_LEN];
+>  
+> -		feature[4] = '\0';
+>  		get_feature(bec[count].encoding, feature);
+> -		printf("    %s:          %d\n", feature, bec[count].counter);
+> +		printf("    %.4s:          %d\n", feature, bec[count].counter);
+>  		++count;
+>  	}
+>  
+> @@ -494,7 +494,7 @@ static int sdsi_state_cert_show(struct sdsi_dev *s)
+>  			sizeof(*lki) +			// size of the license key info
+>  			offset;				// offset to this blob content
+>  		struct bundle_encoding *bundle = (void *)(lbc) + sizeof(*lbc);
+> -		char feature[5];
+> +		char feature[FEAT_LEN];
+>  		uint32_t i;
+>  
+>  		printf("     Blob %d:\n", count - 1);
+> @@ -507,11 +507,9 @@ static int sdsi_state_cert_show(struct sdsi_dev *s)
+>  		printf("        Blob revision ID:           %u\n", lbc->rev_id);
+>  		printf("        Number of Features:         %u\n", lbc->num_bundles);
+>  
+> -		feature[4] = '\0';
+> -
+>  		for (i = 0; i < min(lbc->num_bundles, STATE_MAX_NUM_IN_BUNDLE); i++) {
+>  			get_feature(bundle[i].encoding, feature);
+> -			printf("                 Feature %d:         %s\n", i, feature);
+> +			printf("                 Feature %d:         %.4s\n", i, feature);
+>  		}
+>  
+>  		if (lbc->num_bundles > STATE_MAX_NUM_IN_BUNDLE)
+> 
 
-On Mon, 8 Apr 2024, Armin Wolf wrote:
-> Am 08.04.24 um 17:48 schrieb Ilpo J=C3=A4rvinen:
-> > On Mon, 8 Apr 2024, Armin Wolf wrote:
-> >=20
-> > > Currently, the driver does only supports a custom sysfs
-> > > interface to allow userspace to read the fan speed.
-> > > Add support for the standard hwmon interface so users
-> > > can read the fan speed with standard tools like "sensors".
-> > >=20
-> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> > > ---
-> > >   drivers/acpi/Makefile    |  1 +
-> > >   drivers/acpi/fan.h       |  2 ++
-> > >   drivers/acpi/fan_core.c  |  7 ++++
-> > >   drivers/acpi/fan_hwmon.c | 78 +++++++++++++++++++++++++++++++++++++=
-+++
-> > >   4 files changed, 88 insertions(+)
-> > >   create mode 100644 drivers/acpi/fan_hwmon.c
-> > >=20
-> > > diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
-> > > index d69d5444acdb..9a2e03acc1be 100644
-> > > --- a/drivers/acpi/Makefile
-> > > +++ b/drivers/acpi/Makefile
-> > > @@ -83,6 +83,7 @@ obj-$(CONFIG_ACPI_TINY_POWER_BUTTON)=09+=3D
-> > > tiny-power-button.o
-> > >   obj-$(CONFIG_ACPI_FAN)=09=09+=3D fan.o
-> > >   fan-objs=09=09=09:=3D fan_core.o
-> > >   fan-objs=09=09=09+=3D fan_attr.o
-> > > +fan-objs=09=09=09+=3D fan_hwmon.o
-> > >=20
-> > >   obj-$(CONFIG_ACPI_VIDEO)=09+=3D video.o
-> > >   obj-$(CONFIG_ACPI_TAD)=09=09+=3D acpi_tad.o
-> > > diff --git a/drivers/acpi/fan.h b/drivers/acpi/fan.h
-> > > index e7b4b4e4a55e..45c2637566da 100644
-> > > --- a/drivers/acpi/fan.h
-> > > +++ b/drivers/acpi/fan.h
-> > > @@ -56,4 +56,6 @@ struct acpi_fan {
-> > >   int acpi_fan_get_fst(struct acpi_device *device, struct acpi_fan_fs=
-t
-> > > *fst);
-> > >   int acpi_fan_create_attributes(struct acpi_device *device);
-> > >   void acpi_fan_delete_attributes(struct acpi_device *device);
-> > > +
-> > > +int devm_acpi_fan_create_hwmon(struct acpi_device *device);
-> > >   #endif
-> > > diff --git a/drivers/acpi/fan_core.c b/drivers/acpi/fan_core.c
-> > > index ff72e4ef8738..6bbdbb914e95 100644
-> > > --- a/drivers/acpi/fan_core.c
-> > > +++ b/drivers/acpi/fan_core.c
-> > > @@ -7,6 +7,7 @@
-> > >    *  Copyright (C) 2022 Intel Corporation. All rights reserved.
-> > >    */
-> > >=20
-> > > +#include <linux/kconfig.h>
-> > >   #include <linux/kernel.h>
-> > >   #include <linux/module.h>
-> > >   #include <linux/init.h>
-> > > @@ -336,6 +337,12 @@ static int acpi_fan_probe(struct platform_device
-> > > *pdev)
-> > >   =09=09if (result)
-> > >   =09=09=09return result;
-> > >=20
-> > > +=09=09if (IS_REACHABLE(CONFIG_HWMON)) {
-> > > +=09=09=09result =3D devm_acpi_fan_create_hwmon(device);
-> > > +=09=09=09if (result)
-> > > +=09=09=09=09return result;
-> > > +=09=09}
-> > > +
-> > >   =09=09result =3D acpi_fan_create_attributes(device);
-> > >   =09=09if (result)
-> > >   =09=09=09return result;
-> > > diff --git a/drivers/acpi/fan_hwmon.c b/drivers/acpi/fan_hwmon.c
-> > > new file mode 100644
-> > > index 000000000000..4f2bec8664f4
-> > > --- /dev/null
-> > > +++ b/drivers/acpi/fan_hwmon.c
-> > > @@ -0,0 +1,78 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > > +/*
-> > > + * fan_hwmon.c - hwmon interface for the ACPI Fan driver
-> > > + *
-> > > + * Copyright (C) 2024 Armin Wolf <W_Armin@gmx.de>
-> > > + */
-> > > +
-> > > +#include <linux/acpi.h>
-> > > +#include <linux/hwmon.h>
-> > > +#include <linux/limits.h>
-> > > +
-> > > +#include "fan.h"
-> > > +
-> > > +static umode_t acpi_fan_is_visible(const void *drvdata, enum
-> > > hwmon_sensor_types type, u32 attr,
-> > > +=09=09=09=09   int channel)
-> > > +{
-> > > +=09return 0444;
-> > > +}
-> > > +
-> > > +static int acpi_fan_read(struct device *dev, enum hwmon_sensor_types
-> > > type, u32 attr, int channel,
-> > > +=09=09=09 long *val)
-> > > +{
-> > > +=09struct acpi_device *adev =3D dev_get_drvdata(dev);
-> > > +=09struct acpi_fan_fst fst;
-> > > +=09int ret;
-> > > +
-> > > +=09switch (type) {
-> > > +=09case hwmon_fan:
-> > > +=09=09ret =3D acpi_fan_get_fst(adev, &fst);
-> > > +=09=09if (ret < 0)
-> > > +=09=09=09return ret;
-> > > +
-> > > +=09=09switch (attr) {
-> > > +=09=09case hwmon_fan_input:
-> > > +=09=09=09if (fst.speed > LONG_MAX)
-> > > +=09=09=09=09return -EOVERFLOW;
-> > > +
-> > > +=09=09=09*val =3D fst.speed;
-> > > +=09=09=09return 0;
-> > > +=09=09case hwmon_fan_fault:
-> > > +=09=09=09*val =3D (fst.speed =3D=3D U32_MAX);
-> > > +=09=09=09return 0;
-> > Is it okay to return 0 in this case?
->=20
-> Hi,
->=20
-> i think so, since the value of the attribute (with the meaning of "is the=
- rpm
-> value ok?") is being
-> correctly stored in val. If acpi_fan_get_fst() fails, we already return a
-> negative error code.
+Hi,
 
-Ah, right. It seems fine.
+After staring this for a while, I cannot get rid of the feeling that the 
+removal of NUL termination is a step into wrong direction. But IMO, 
+instead of the caller side, the NUL termination could be added inside 
+get_feature().
 
---=20
+-- 
  i.
 
-> > > +=09=09default:
-> > > +=09=09=09break;
-> > > +=09=09}
-> > > +=09=09break;
-> > > +=09default:
-> > > +=09=09break;
-> > > +=09}
-> > > +
-> > > +=09return -EOPNOTSUPP;
-> > > +}
-> > > +
-> > > +static const struct hwmon_ops acpi_fan_ops =3D {
-> > > +=09.is_visible =3D acpi_fan_is_visible,
-> > > +=09.read =3D acpi_fan_read,
-> > > +};
-> > > +
-> > > +static const struct hwmon_channel_info * const acpi_fan_info[] =3D {
-> > > +=09HWMON_CHANNEL_INFO(fan,
-> > > +=09=09=09   HWMON_F_INPUT | HWMON_F_FAULT),
-> > One line.
-> >=20
->=20
-
---8323328-884334050-1712596517=:14302--
