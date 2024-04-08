@@ -1,236 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gnuweeb.org (gnuweeb.org [51.81.211.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94886847B
-	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Apr 2024 19:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01C9145321;
+	Mon,  8 Apr 2024 19:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.211.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712604722; cv=none; b=a+hadZCX0ZaVZ51F6z46eyWp/tRb8hy+bJJS08hsXppTGkjrYBQ1Qt3wBbnk7DJB2cIAL5FEZ+OzAcOhIhV61Lx8goxvOJ37rntpX8F+PIEBu5M4+f+1LXnrm/1nuGiRk5g8H97qaKwkdPH5F6MFUZQsMyMGZOSza6YmIwJqNKY=
+	t=1712604758; cv=none; b=BIlIjpN9FusA4dfhcAsvyKaOxjbscCO2+pSEyZIPYw2XaVGGTumfmiGW5CiUbxuz73A7q2Ups68VJWA4FMpdbqBzKAmgKys2dCMvlqnr4jnBOwmhIprXuQGjQASOIxt0bA4unmjMBzR1dDoqB5c7V8LZufSlTnzeJXBIlLOxr9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712604722; c=relaxed/simple;
-	bh=upXV+7/BOpEUr2Q0RCJkOGzRyJDXrzvh3Gxio/4TplQ=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Tj+K1jB/HB0Te3COvDAVOsRLRggO19fPrnYnL+FopDD2U6HAlPc3wxDSa6kxvuZbRHLwhZGH/FekPw6Q72a1moySst/ChMESl5kCgaLF7gxeMBiPfpxEqrd/GFyqJqKtyv4JQp8WeBcMaNVcl6+hxO0Rqi0uMFrp84aJO7vbrlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sY6lrEQO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712604758; c=relaxed/simple;
+	bh=8YLMTLDWH3NghugdmXPWJ6D2/GZYKf+qb4W4/n17nks=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YMuxPn9dei8LYvuOij0AZ0IyYxDmh36e93e1EoFhPIlVlH18Z8P7MMXCVxAc2o0BYydRMqIMZF424J8YIPUdK23bcsSJvbqGWu7R9LIZnKBTiPKh1Ran5ciSe20u3eeyc4zYR6Oook3xj7o7W3Hs/tAMBkSyKAeA50YxsnyQQkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=YWn73cB4; arc=none smtp.client-ip=51.81.211.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnuweeb.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sY6lrEQO"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2A7C7C433C7
-	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Apr 2024 19:32:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712604722;
-	bh=upXV+7/BOpEUr2Q0RCJkOGzRyJDXrzvh3Gxio/4TplQ=;
-	h=From:To:Subject:Date:From;
-	b=sY6lrEQOOCRGJuJncf33aOEdETjfQW07HWugdeRU420sCLM9u+r+CwGEismEoorO3
-	 v3shbI4eR0ChFYL+aOoVnrqNLDMDxPUD+2vjuPWlJ4437qTL1aTP0IAqFSyCHHGqKv
-	 GTuapicznIcVXADny5bhT4M/1G30g4Noec5eLd16+1Po5p2BeQX5RroPKyHqllIpRF
-	 CH5gZpHLAjJuVZBhbnQtnyEGeLxtPHngfJVm6v6bQ4uWnZnLE5Mro4XHPFCKSPyZkT
-	 lHkxh7WeH9CVDvaFFSLEr6EaLvqt5r+yZ2UCtIci+ql8hna5Rwhms7xcV9IKhBG3XZ
-	 f6thM7hwTSD+g==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 08D2FC4332E; Mon,  8 Apr 2024 19:32:02 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218696] New: DYTC frequency scaling deterioration
-Date: Mon, 08 Apr 2024 19:32:01 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: lmulling@proton.me
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
- op_sys bug_status bug_severity priority component assigned_to reporter
- cf_regression attachments.created
-Message-ID: <bug-218696-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="YWn73cB4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
+	s=default; t=1712604755;
+	bh=8YLMTLDWH3NghugdmXPWJ6D2/GZYKf+qb4W4/n17nks=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=YWn73cB4vjbD3T+hykH+IJoxOsOLx1ZIxC8v9951XhambwuhlkUxI+Dmvq+f4RkJd
+	 0lWf/SqIB1Tr3AQzPf546VmzZKKR0hGKzIjnm+7XKQA2MYN4z5Yq4TB1Xtzfv5z+/D
+	 dfegL05r5wtzYNZWomePGlrGmsOg4+6RQpsrMDBAoPMa4jJFgbwN/v3+YHJ+cpyZVH
+	 T7TbFnigYoMzsjtLuxMOeAiTN0WXdoIOiYUOGCA1V6Xa2V/M+eFqBmWhO+tX3pkZla
+	 gnQ0MnlGEQDYJR+oHqikZLKRKYzJNF172v6Bmlnyrs+EUzUIdot2qfrW6+JBqjV5/y
+	 OzmdVTteKuc5g==
+Received: from bloom.tail0d56f.ts.net (unknown [88.235.219.169])
+	by gnuweeb.org (Postfix) with ESMTPSA id 4B4EC24AC60;
+	Tue,  9 Apr 2024 02:32:29 +0700 (WIB)
+From: Stella Bloom <windowz414@gnuweeb.org>
+To: Armin Wolf <w_armin@gmx.de>
+Cc: Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>,
+	Ammar Faizi <ammarfaizi2@gnuweeb.org>,
+	Bedirhan KURT <bedirhan_kurt22@erdogan.edu.tr>,
+	GNU/Weeb Mailing List <gwml@vger.gnuweeb.org>,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	jdelvare@suse.com,
+	lee@kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	linux@roeck-us.net,
+	=?UTF-8?q?Mustafa=20Ek=C5=9Fi?= <mustafa.eskieksi@gmail.com>,
+	pavel@ucw.cz,
+	platform-driver-x86@vger.kernel.org,
+	Stella Bloom <stelbl@elrant.team>
+Subject: Re: [PATCH v5 0/1] platform/x86: Add wmi driver for Casper Excalibur laptops
+Date: Mon,  8 Apr 2024 22:32:22 +0300
+Message-ID: <20240408193224.476521-1-windowz414@gnuweeb.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <abc9f198-e61f-4116-bdea-4ace82daba10@gmx.de>
+References: <abc9f198-e61f-4116-bdea-4ace82daba10@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218696
-
-            Bug ID: 218696
-           Summary: DYTC frequency scaling deterioration
-           Product: Drivers
-           Version: 2.5
-          Hardware: All
-                OS: Linux
-            Status: NEW
-          Severity: normal
-          Priority: P3
-         Component: Platform_x86
-          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
-          Reporter: lmulling@proton.me
-        Regression: No
-
-Created attachment 306108
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D306108&action=3Dedit
-ACPI Feilds dump before during and after the problem
+> Am 08.04.24 um 18:13 schrieb Stella Bloom:
+>
+>> On Mon, 2024-04-08 at 18:23 +0300, Mustafa Ekşi wrote:
+>>> On 7.04.2024 03:57, Stella Bloom wrote:
+>>>>> From: Mustafa Ekşi <mustafa.eskieksi@gmail.com>
+>>>>>
+>>>>> Hi,
+>>>>> I want to note that moving mutex_init to the bottom of the function
+>>>>> crashes the driver when mutex_lock is called. I didn't investigate it
+>>>>> further but I wanted to say that since Ai Chao also did it like that.
+>>>>>
+>>>>> Driver sets all leds to white on start. Before that, when a led's
+>>>>> brightness is changed, that led's color gets set to white but others
+>>>>> keep their old colors which creates a bad user experience (at least for
+>>>>> me). Please inform me if this is a bad approach.
+>>>>> Also, this driver still lacks support for changing modes and I seek
+>>>>> advise for that.
+>>>>>
+>>>>> Mustafa Ekşi (1):
+>>>>>     platform/x86: Add wmi driver for Casper Excalibur laptops
+>>>>>
+>>>>>    MAINTAINERS                       |   6 +
+>>>>>    drivers/platform/x86/Kconfig      |  14 +
+>>>>>    drivers/platform/x86/Makefile     |   1 +
+>>>>>    drivers/platform/x86/casper-wmi.c | 641 ++++++++++++++++++++++++++++++
+>>>>>    4 files changed, 662 insertions(+)
+>>>>>    create mode 100644 drivers/platform/x86/casper-wmi.c
+>>>>>
+>>>> Hi there,
+>>>>
+>>>> I just wanted to pitch in by testing the driver on the kernel I use
+>>>> on my Arch install on an Excalibur G770.1245, namely xdevs23's
+>>>> linux-nitrous (https://gitlab.com/xdevs23/linux-nitrous), but trying to
+>>>> compile the driver using LLVM, which is the default compilation behavior
+>>>> in this kernel's AUR package, spits out the following error;
+>>>> ```
+>>>> drivers/platform/x86/casper-wmi.c:633:3: error: field designator 'no_singleton' does not refer to any field in type 'struct wmi_driver'
+>>>>    633 |         .no_singleton = true,
+>>>>        |         ~^~~~~~~~~~~~~~~~~~~
+>>>> 1 error generated.
+>>>> make[5]: *** [scripts/Makefile.build:243: drivers/platform/x86/casper-wmi.o] Error 1
+>>>> make[4]: *** [scripts/Makefile.build:481: drivers/platform/x86] Error 2
+>>>> make[3]: *** [scripts/Makefile.build:481: drivers/platform] Error 2
+>>>> make[2]: *** [scripts/Makefile.build:481: drivers] Error 2
+>>>> make[1]: *** [/home/stella/.cache/yay/linux-nitrous/src/linux-nitrous/Makefile:1919: .] Error 2
+>>>> make: *** [Makefile:240: __sub-make] Error 2
+>>>> ```
+>>>>
+>>>> I want to help debug this somehow, but I'm more of an Android custom
+>>>> ROM developer than a Linux kernel maintainer, so my knowledge on the
+>>>> programming and build system languages other than Java, Makefile, Bash,
+>>>> etc is pretty much limited if not outright non-existent.
+>>> Hi,
+>>> This is because of a newly merged patch from Armin Wolf:
+>>> https://lore.kernel.org/platform-driver-x86/20240226193557.2888-2-W_Armin@gmx.de/
+>>> You can comment that line or apply that patch to your tree to make it
+>>> compile. Also, you'll probablyneed to change the call to wmidev_block_set in
+>>> casper_query function with wmi_set_block (which is now deprecated).
+>> Well, I prefer not to touch the driver itself, so I already resorted to
+>> picking the patch over the latest RC, which is v6.9-rc2 as of now, and
+>> got onto compiling `linux-mainline` AUR package with it. It will be
+>> kind of a hassle considering how I have to write systemd-boot entries
+>> after the installation to get the kernel to appear (one for normal
+>> initramfs and the other for fallback one) and sign the kernel image
+>> using `sbctl` so I don't fail secure boot, but I'm willing to go
+>> through it just for the sake of seeing this driver in action without
+>> bugs related to the "backport" modifications I would do to it.
+>
+> Hi,
+>
+> if you use kernel 6.9-rc2, then wmidev_block_set() is already available, so you do not
+> have to change that.
+>
+> You just have to comment out the line with the no_singleton flag, then the driver should
+> work.
 
 Hi,
 
-I'm trying to implement automatic user-space platform profile controls for =
-my
-ThinkPad and noticed that while under load, i.e. compiling the kernel, the
-firmware (I think) will start sending `ibm/hotkey LEN0268:00 00000080 00006=
-032`
-events non-stop, which causes thinkpad_acpi to update the platform profile.
-This happens once every second. However, the profile doe's not change. This
-render any userspace tool useless, since we cannot react according to Fn +
-[L|M|H] events.
+Thanks for letting me know of that. I'm doing the change locally right away.
 
-While this is happening, the max frequency scaling will get stuck at a maxi=
-mum
-of around 2990MHz (78 C). The baseline for this model, from my measurements=
-, is
-3.400MHz (95 C). This seems to happen only if the GPU is used and DYTC is in
-MMC mode.
+> Thanks,
+> Armin Wolf
+>
+>>>> I would *love* to see this driver actually hit mainline repos, and
+>>>> eventually the upcoming kernel releases, given how much I need to use
+>>>> this laptop of mine as a computer engineering student.
+>>>>
+>>>> Asking just for the case I manage to get this driver up and going on
+>>>> my end somehow: Is there a tool made for controlling the LED colors yet?
+>>>> I can still use CLI tools much like on ASUS ROG series laptops, but it
+>>>> would be much easier and more appreciated to have a GUI provided
+>>>> Excalibur series laptops' LED lights can virtually take any color in
+>>>> the RGB space - At least that's how I interpreted with the
+>>>> configurations I used to do on mine using Excalibur Control Center
+>>>> on Windows 10/11.
+>>> No, there isn't a tool yet but controlling leds via sysfs ispretty easy.
+>>> For example, if you wanted to change the left led zone's color to red:
+>>> ```
+>>> # echo 0xff0000 > /sys/class/leds/casper\:\:kbd_zoned_backlight-left/multi_intensity
+>>> ```
+>> Oh so the LED zones are in different sysfs directories, that's pretty
+>> good. I might code a simple Bash script to make things easier later
+>> down the road.
+>>> And don't forget that all leds' initial brightnesses are 0.
+>> Yeah I think I read that somewhere in the initial message. Can't I
+>> change the brightness of the LEDs using Fn+Space anyway if I can't find
+>> the sysfs entries for that? At least it works just fine on the latest
+>> stable release - v6.8.4.
+>>> Also, I'm planning to add support for this API in OpenRGB.
+>> That's pretty nice to hear! If you need someone to test it out on a
+>> 12th gen G770, I'm more than willing to do so!
+>>>> And as for the profiles, let me make sure we're talking about the same
+>>>> thing in this term: You're talking about the "Office", "Gaming" and
+>>>> "High Performance" modes as seen in Excalibur Control Center, right?
+>>> For laptops with 11th gen processors or newer: yes.
+>>> For laptops with 10th gen processors or older: no, there are 4 power
+>>> profiles for these laptops (High Performance, Gaming, Text Mode andPower
+>>> save).
+>> Oh so that's a yes in my case as my laptop has a 12th gen processor.
+>> Glad to know.
+>>>> If so, can this be somehow integrated into `power-profiles-daemon`
+>>>> SystemD service for easier controlling with GNOME and other DEs that
+>>>> use it? It's fine if it can't be, this was just a thought struck on my
+>>>> mind for whatever reason.
+>>> Yes, power-profiles-daemon is already integrated with platform_profile.
+>> Now that's exciting to hear. I haven't seen a laptop that has its power
+>> profiles integrated into the system with a driver in terms of Linux...
+>> At least on the Monster and ASUS laptops I've tried Ubuntu on IIRC.
+>>>> Please do CC me and the people I've added to the CC list with this email
+>>>> of mine on the upcoming revisions, if any. We would love to keep track
+>>>> of this driver and I personally would love to contribute into testing
+>>>> as a power user.
+>>>>
+>>>> Cc: Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>
+>>>> Cc: Ammar Faizi <ammarfaizi2@gnuweeb.org>
+>>>> Cc: GNU/Weeb Mailing List <gwml@vger.gnuweeb.org>
+>>>>
+>>>> Also adding my organizational and school email addresses to the CC list
+>>>> so I can still be notified while I stay offline on this email address.
+>>>> GNOME Evolution doesn't run in the background and periodically check
+>>>> for emails sadly, and I switch ROMs every now and then on my phone as a
+>>>> source maintainer of 3 different custom ROMs. :/
+>>>>
+>>>> Cc: Stella Bloom <stelbl@elrant.team>
+>>>> Cc: Bedirhan KURT <bedirhan_kurt22@erdogan.edu.tr>
+>>>>
+>>>> -- 
+>>>> Stella Bloom
+>>> Thanks for your interest,
+>>> Mustafa Ekşi
+>> Also I apologize for the previous (empty) email. I forgot to put one
+>> newline after the "Subject" line, which caused git-send-email to not
+>> pick up the email content.
+>>
+>> -- 
+>> Stella Bloom
 
-I can reproduce this reliably by playing a full-screen YouTube video while
-compiling the kernel.
-
-Changing platform profile to low-power and then back to performance fixes t=
-his
-for a while. I've also noticed that leaving the deceive sleeping for long
-periods of time fixes this.
-
-I've tried looking at the DYTC implementation but didn't find anything spec=
-ial
-about going into low-power, I've tried to dump the the ACPI fields using
-acpi_dbg, but haven't found anything useful yet.
-
-I've attached the dumps (in the same file), which are:
-
-- before, taken after reboot.
-- during, taken while the firmware is sending 6032 events and frequency sca=
-ling
-is stuck;
-- after, taken after changing the platform profile to low-power and back to
-performance (this was done using Fn + L then Fn + H)
-
-Bellow, also, is the diff between during and after. But it does not show
-anything useful to me.
-```
---- during      2024-04-08 15:17:49.998768985 -0300
-+++ after       2024-04-08 15:20:56.829128627 -0300
-@@ -151,7 +151,7 @@
- \_SB.PCI0.SMB.LRG3 {00000000000000FF}
- \_SB.PCI0.SMB.LHC3 {00000000000000FF}
- \_SB.PCI0.SMB.SEC {0000000000000031}
--\_SB.PCI0.SMB.MIN {0000000000000017}
-+\_SB.PCI0.SMB.MIN {0000000000000020}
- \_SB.PCI0.SMB.MX01 {00000000000000FF}
- \_SB.PCI0.SMB.MX07 {00000000000000FF}
- \_SB.PCI0.SMB.MX14 {00000000000000FF}
-@@ -191,7 +191,7 @@
- \_SB.PCI0.SMB.MS04 {00000000000000F0}
- \_SB.PCI0.SMB.MS40 {0000000000000042}
- \_SB.PCI0.SMB.ECES {0000000000000000}
--\_SB.PCI0.LPC0.EC0.SBVO {000000000000317B}
-+\_SB.PCI0.LPC0.EC0.SBVO {000000000000317A}
- \_SB.PCI0.LPC0.EC0.SBAC {0000000000000000}
- \_SB.PCI0.LPC0.EC0.SBRS {0000000000000064}
- \_SB.PCI0.LPC0.EC0.SBRC {000000000000110A}
-@@ -210,7 +210,7 @@
- \_SB.PCI0.LPC0.EC0.SBCH {000000000050694C}
- \_SB.PCI0.LPC0.EC0.SBMN {53 4D 50 00 32 30 32 31 00 00 00 00 00 00 C0 C0 }
- \_SB.PCI0.LPC0.EC0.SBDN {4C 4E 56 2D 35 42 31 31 48 35 36 33 33 39       }
--\_SB.PCI0.LPC0.EC0.TWBT {C0 C0 01 03 E0 41 00 00 00 00 00 00 00 00 00 00 C=
-0 C0
-20 E0 DC 0B 7B 31 00 00 00 00 64 00 0A 11 C0 C0 0A 11 FF FF FF FF FF FF E0 =
-00
-0A 00 14 0C C0 C0 68 10 F2 2B 31 00 B4 56 8F 06 EE 12 00 00 C0 C0 53 4D 50 =
-00
-32 30 32 31 00 00 00 00 00 00 C0 C0 4C 4E 56 2D 35 42 31 31 48 35 36 33 33 =
-39
-C0 C0 4C 69 50 00 00 00 00 00 00 00 00 00 00 00 C0 C0 58 32 58 50 33 35 4C =
-30
-31 4C 46 00 00 00 C0 C0 4C 58 C1 41 80 00 05 00 42 05 00 01 06 00 C0 C0 10 =
-00
-02 00 00 00 00 00 00 00 00 00 00 00 C0 C0 42 01 01 01 00 00 7E 10 7E 10 7E =
-10
-04 50 C0 C0 B0 01 B6 0A 29 02 00 00 00 00 00 00 00 00 C0 C0 00 07 00 00 00 =
-00
-00 00 00 00 00 00 00 00 C0 C0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 C0 =
-C0
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 C0 C0 00 00 00 00 00 00 00 00 00 =
-00
-00 00 00 00 }
-+\_SB.PCI0.LPC0.EC0.TWBT {C0 C0 01 03 E0 41 00 00 00 00 00 00 00 00 00 00 C=
-0 C0
-20 E0 DE 0B 7A 31 00 00 00 00 64 00 0A 11 C0 C0 0A 11 FF FF FF FF FF FF E0 =
-00
-0A 00 0D 0C C0 C0 68 10 F2 2B 31 00 B4 56 8F 06 EE 12 00 00 C0 C0 53 4D 50 =
-00
-32 30 32 31 00 00 00 00 00 00 C0 C0 4C 4E 56 2D 35 42 31 31 48 35 36 33 33 =
-39
-C0 C0 4C 69 50 00 00 00 00 00 00 00 00 00 00 00 C0 C0 58 32 58 50 33 35 4C =
-30
-31 4C 46 00 00 00 C0 C0 4C 58 C1 41 80 00 05 00 42 05 00 01 06 00 C0 C0 10 =
-00
-02 00 00 00 00 00 00 00 00 00 00 00 C0 C0 42 01 01 01 00 00 7E 10 7E 10 7E =
-10
-04 50 C0 C0 B0 01 B6 0A 29 02 00 00 00 00 00 00 00 00 C0 C0 00 07 00 00 00 =
-00
-00 00 00 00 00 00 00 00 C0 C0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 C0 =
-C0
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 C0 C0 00 00 00 00 00 00 00 00 00 =
-00
-00 00 00 00 }
- \_SB.PCI0.LPC0.EC0.T2BT {00 01 00 00 00 00 00 00 7A 00 00 00 00 00 41 50 5=
-0 20
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00
-00 00 00 00 1A 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 =
-00
-00 00 00 00 }
- \_SB.SMIB {00000000000000B0}
- \_SB.PEBA {00000000F8000000}
-@@ -903,5 +903,3 @@
- \M414 {0000000000000B00}
- \M444 {00 00 00 00 00 00 00 00 00                      }
- \M449 {00 00 00 00 00 00 00 00 00                      }
-```
-
-Tested on:
-- Kernel: 6.8.1
-- Host: 21C6000UBO
-- UEFI: 0.1.30
-
-I'm willing to help debug this in any way I can, though i'm out of ideas ri=
-ght
-now. I'm also not sure if this is a firmware bug and wanted a second opinion
-before sinking more time into this.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+--
+Stella Bloom
