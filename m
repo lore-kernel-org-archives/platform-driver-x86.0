@@ -1,57 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6897E1411E2
-	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Apr 2024 15:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE2D1420B6;
+	Mon,  8 Apr 2024 15:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712590947; cv=none; b=G8n9sRTA+j3LLXsFCDcojou3jKM2GS6NxzIC03k+s+VADQJmdxxvXZk9riZYBfIzOQUStiZXZmqss0hkNzQpX325uEwOIbj77r7P0E4jcu/rQfQHabVtZWMWgTNRUkpVBZOxMTOYe8aFBPqQahhYd6yxRCR1lBqHKSpHSow/lKE=
+	t=1712590954; cv=none; b=EWP76zCYRAQy+jy+gj/gan4m5AAErgrJfZzk/J4dj1/nEzs12Kw+RMXPQwUFNV1emQg1bvfTEowahCTSmUm+DrF7XL3EfOzqtjafeqP1TK9ZewlceOEBSfA09lEaZ07sOl3BUqoqjiP6+h3gwfDrp4APj6onbn87fR1i1k8Fk2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712590947; c=relaxed/simple;
-	bh=tJpbrluwt0P9ICJjQfsv7slJ/4XR0fP1JHrZzK813EI=;
+	s=arc-20240116; t=1712590954; c=relaxed/simple;
+	bh=wAt9hHU1NvhG5I5QM0RA8vIU8EEsSSGfsnpVfKylQxQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=P2HBGWWs8TSmN4SXwEnDU63viEotKtXAW971fGFhkpRqMaTiz1zmQPHZ5zl8USrDwvNitfgNsHs+zfoy8yfwgyP4ZZ5Dc12F+kXGAPQYRwXiwJPBvmfsqyPDaUTJXoT9iaF8g66LGtJb0F+cLRwQn6S6Gw/NRqHykWLf/n6wog4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ROsuezii; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version:Content-Type; b=vD6vC5FqnpRZnVxaAdsV2m5SZO/KuTwUi1CZpAc4SbwSMUz2Q8l4XQp9Ix4zAzTg/oME+HRjRdqMGsXbg1V65hCrs+nWYC0c2KBE8jL1INcyF/mHgkaqByYL7VDQtxWibvJL2yiVOkT1dxvZwAVCZVukISTOUqiLR/xQN1d1LvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jWzxgVr3; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ROsuezii"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jWzxgVr3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712590946; x=1744126946;
+  t=1712590953; x=1744126953;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=tJpbrluwt0P9ICJjQfsv7slJ/4XR0fP1JHrZzK813EI=;
-  b=ROsueziiWZGG3h/eGyw/aC4a486zYSrHQaYj06olI2LFOk+jsO2mcG8c
-   4kgweCvYvffodz450TxQejh8xnb18VH5+pQqsykogiPDPJ3JGiGMJXX12
-   6XyGWTMjymxqRtfQH0cK9zfBAZG7HqTVpfA7zIz6v3s9uP7nUKJ7BX+ze
-   T/0FHZsq8hUcY9gWjPsSBEoR62adV+uC3k9k6OWigsZpBumUHDHd/KJvm
-   qFaG5iBOuSg33/nzGpsAxuhIamn2A4C/FN4ZYVhddvBOvrieMtX/+WR1H
-   m/OPnhzJwqu6d/0JiZB+vOY9OwfB8+kNoBQm/JxMiY6w7PLjMFWCosx4o
-   w==;
-X-CSE-ConnectionGUID: 7KmJX2y6TyqXejc+MdpM0w==
-X-CSE-MsgGUID: EAM+Dc9bRS+aqObEYKREUg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="19018794"
+  bh=wAt9hHU1NvhG5I5QM0RA8vIU8EEsSSGfsnpVfKylQxQ=;
+  b=jWzxgVr3k9ZttHyTzQR9cmFm50TN+tcSWogxL528IVrtAdlAf6UIfnZz
+   buy2UHfjtNDHUoxco0zqnXvR6ii2WXDmrq9wdVoHL9xlCiSdqhfB2PJbe
+   5Vg5ELlQooK6fqm3nFU+9w3HDm89wd6vViuQGI9jLOXwU8LYVgkMpYMbh
+   T5O/fVss8oM8BwdMkgyhdQaY8Rvzzq5lBjMDUICGqQOV3iPyOrjcxqT2Z
+   p2WJGFvh1DrP/rzDQTph0b3EN9q37aDR/PzGRMCg5OY61vfWW4smtE9EN
+   LpqwXuKW9MsdJgJMsjnZ32qxVOerkVX4x65QK7Pwniq+tSDjXTo6Y4zqz
+   A==;
+X-CSE-ConnectionGUID: 8B757hh7R5SudEQ3WoInjA==
+X-CSE-MsgGUID: wz3ekWUERFWYdBttBZ+uig==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="8037053"
 X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="19018794"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 08:42:25 -0700
-X-CSE-ConnectionGUID: AP3gbZOfQVK8+7yxDAMkWA==
-X-CSE-MsgGUID: 0R1En9JXTaOwE//R15V2Mg==
+   d="scan'208";a="8037053"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 08:42:32 -0700
+X-CSE-ConnectionGUID: JBctKsOcQD6iCmMqaMO37A==
+X-CSE-MsgGUID: hTnfXv0FTMmOGbZ6/A5viQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="24622308"
+   d="scan'208";a="20355701"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.28])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 08:42:23 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 08:42:30 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hdegoede@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org
-In-Reply-To: <20240402124351.167152-1-hdegoede@redhat.com>
-References: <20240402124351.167152-1-hdegoede@redhat.com>
-Subject: Re: [PATCH] platform/x86: toshiba_acpi: Silence logging for some
- events
-Message-Id: <171259093806.17776.3713671881492753491.b4-ty@linux.intel.com>
-Date: Mon, 08 Apr 2024 18:42:18 +0300
+To: Matan Ziv-Av <matan@svgalib.org>, Hans de Goede <hdegoede@redhat.com>, 
+ Gergo Koteles <soyer@irl.hu>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <33d40e976f08f82b9227d0ecae38c787fcc0c0b2.1712154684.git.soyer@irl.hu>
+References: <33d40e976f08f82b9227d0ecae38c787fcc0c0b2.1712154684.git.soyer@irl.hu>
+Subject: Re: [PATCH] platform/x86: lg-laptop: fix %s null argument warning
+Message-Id: <171259094483.17776.6352383956854097118.b4-ty@linux.intel.com>
+Date: Mon, 08 Apr 2024 18:42:24 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -59,19 +59,17 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.13.0
 
-On Tue, 02 Apr 2024 14:43:51 +0200, Hans de Goede wrote:
+On Wed, 03 Apr 2024 16:34:27 +0200, Gergo Koteles wrote:
 
-> Stop logging unknown event / unknown keycode messages on suspend /
-> resume on a Toshiba Portege Z830:
+> W=1 warns about null argument to kprintf:
+> warning: ‘%s’ directive argument is null [-Wformat-overflow=]
+> pr_info("product: %s  year: %d\n", product, year);
 > 
-> 1. The Toshiba Portege Z830 sends a 0x8e event when the power button
-> is pressed, ignore this.
+> Use "unknown" instead of NULL.
 > 
-> 2. The Toshiba Portege Z830 sends a 0xe00 hotkey event on resume from
-> suspend, ignore this.
 > 
 > [...]
 
@@ -82,8 +80,8 @@ platform-drivers-x86/review-ilpo branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: toshiba_acpi: Silence logging for some events
-      commit: 0dd50b3e2c3d651ea972c97cff1af67870f3deaf
+[1/1] platform/x86: lg-laptop: fix %s null argument warning
+      commit: e71c8481692582c70cdfd0996c20cdcc71e425d3
 
 --
  i.
