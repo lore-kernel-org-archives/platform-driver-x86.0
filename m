@@ -1,59 +1,57 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768021419AD;
-	Mon,  8 Apr 2024 15:42:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6897E1411E2
+	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Apr 2024 15:42:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712590939; cv=none; b=Gsj2674PgAn8FJbTD0p8M154fwl62ycUkr+v5546utz+6B0a1558tIQfXxeF/DNrlvidNspzWc33Fd8xbJ4JxkFzFEnj75gr953jq1K2aEeJWLSNc1icJ4IRNeodExNnWUSp9HaV7qD0rLTjTTrL5KcdgIAv3Cq2Nrve3p6mlt8=
+	t=1712590947; cv=none; b=G8n9sRTA+j3LLXsFCDcojou3jKM2GS6NxzIC03k+s+VADQJmdxxvXZk9riZYBfIzOQUStiZXZmqss0hkNzQpX325uEwOIbj77r7P0E4jcu/rQfQHabVtZWMWgTNRUkpVBZOxMTOYe8aFBPqQahhYd6yxRCR1lBqHKSpHSow/lKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712590939; c=relaxed/simple;
-	bh=3AJSebzjsSWUSUNDEEWi2scDVJAYrLS9xuHrpPaGAzE=;
+	s=arc-20240116; t=1712590947; c=relaxed/simple;
+	bh=tJpbrluwt0P9ICJjQfsv7slJ/4XR0fP1JHrZzK813EI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=aIfj86A8PtrlWjizFUn8+3VxqJgJaGUjW+EVGu92MvUpY+8S2wTrvjRq7nt/vK4geJelAS9GL0ciQkG+hO0CdgUs68KRCW8AkFpeptT6HOJf8zTTSla1cBoYMows0SZOb8GN4T/fIXOUcq59XBwRJ8F9HeKz2pg1ZtBCTr4DX6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DP0GuPyg; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version:Content-Type; b=P2HBGWWs8TSmN4SXwEnDU63viEotKtXAW971fGFhkpRqMaTiz1zmQPHZ5zl8USrDwvNitfgNsHs+zfoy8yfwgyP4ZZ5Dc12F+kXGAPQYRwXiwJPBvmfsqyPDaUTJXoT9iaF8g66LGtJb0F+cLRwQn6S6Gw/NRqHykWLf/n6wog4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ROsuezii; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DP0GuPyg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ROsuezii"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712590939; x=1744126939;
+  t=1712590946; x=1744126946;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=3AJSebzjsSWUSUNDEEWi2scDVJAYrLS9xuHrpPaGAzE=;
-  b=DP0GuPygt9c+U5W3AMNsgi0uLQZM5c5e0VjmO1fm7fcV2m3IsumDg5Ck
-   FXp0JQVyHuNWdX8YMHjpbzOgp12wL2NggVIiXGK0tGU2ioH8GQjzcZDzQ
-   O0RWqRGMl2LBVRi7V6mLNjFnWDW97a7b0H6bjb7luoF9n1V84GjH4xmgM
-   bZIt+hy0JSK1NjCW1maEK3nddmKCyYiW1bNXLzk1ufbXgZPI2PBSPSmwT
-   aM5xS/Q79LRgxSoUwdj3S7GoGaEzIJpIe7RVRNM9H08PLKdR2BksFK2JB
-   b9s+Mxf/hOh7sYfgEs56yWBClcIcdKGPzDvSvfuVXVdzJaJLwits3324J
-   g==;
-X-CSE-ConnectionGUID: bD4h7Z4cRF2GCn5qfc7J6w==
-X-CSE-MsgGUID: dg0E6ZIWT+eE6aYcW8JSXA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="19018785"
+  bh=tJpbrluwt0P9ICJjQfsv7slJ/4XR0fP1JHrZzK813EI=;
+  b=ROsueziiWZGG3h/eGyw/aC4a486zYSrHQaYj06olI2LFOk+jsO2mcG8c
+   4kgweCvYvffodz450TxQejh8xnb18VH5+pQqsykogiPDPJ3JGiGMJXX12
+   6XyGWTMjymxqRtfQH0cK9zfBAZG7HqTVpfA7zIz6v3s9uP7nUKJ7BX+ze
+   T/0FHZsq8hUcY9gWjPsSBEoR62adV+uC3k9k6OWigsZpBumUHDHd/KJvm
+   qFaG5iBOuSg33/nzGpsAxuhIamn2A4C/FN4ZYVhddvBOvrieMtX/+WR1H
+   m/OPnhzJwqu6d/0JiZB+vOY9OwfB8+kNoBQm/JxMiY6w7PLjMFWCosx4o
+   w==;
+X-CSE-ConnectionGUID: 7KmJX2y6TyqXejc+MdpM0w==
+X-CSE-MsgGUID: EAM+Dc9bRS+aqObEYKREUg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="19018794"
 X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="19018785"
+   d="scan'208";a="19018794"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 08:42:19 -0700
-X-CSE-ConnectionGUID: QUNMDhjbSXqGOKj68kps+w==
-X-CSE-MsgGUID: b/SuNznBRZGxWFe5OJYF2w==
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 08:42:25 -0700
+X-CSE-ConnectionGUID: AP3gbZOfQVK8+7yxDAMkWA==
+X-CSE-MsgGUID: 0R1En9JXTaOwE//R15V2Mg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="24622290"
+   d="scan'208";a="24622308"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.28])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 08:42:15 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 08:42:23 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: alexhung@gmail.com, hdegoede@redhat.com, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
-Cc: srinivas.pandruvada@linux.intel.com
-In-Reply-To: <20240405122630.32154-1-sumeet.r.pawnikar@intel.com>
-References: <20240405122630.32154-1-sumeet.r.pawnikar@intel.com>
-Subject: Re: [PATCH] platform/x86/intel/hid: Add Lunar Lake and Arrow Lake
- support
-Message-Id: <171259093040.17776.4173321595571990356.b4-ty@linux.intel.com>
-Date: Mon, 08 Apr 2024 18:42:10 +0300
+To: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org
+In-Reply-To: <20240402124351.167152-1-hdegoede@redhat.com>
+References: <20240402124351.167152-1-hdegoede@redhat.com>
+Subject: Re: [PATCH] platform/x86: toshiba_acpi: Silence logging for some
+ events
+Message-Id: <171259093806.17776.3713671881492753491.b4-ty@linux.intel.com>
+Date: Mon, 08 Apr 2024 18:42:18 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,11 +62,18 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Fri, 05 Apr 2024 17:56:30 +0530, Sumeet Pawnikar wrote:
+On Tue, 02 Apr 2024 14:43:51 +0200, Hans de Goede wrote:
 
-> Add INTC107B for Lunar Lake and INTC10CB for Arrow Lake ACPI devices IDs.
+> Stop logging unknown event / unknown keycode messages on suspend /
+> resume on a Toshiba Portege Z830:
 > 
+> 1. The Toshiba Portege Z830 sends a 0x8e event when the power button
+> is pressed, ignore this.
 > 
+> 2. The Toshiba Portege Z830 sends a 0xe00 hotkey event on resume from
+> suspend, ignore this.
+> 
+> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -77,8 +82,8 @@ platform-drivers-x86/review-ilpo branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86/intel/hid: Add Lunar Lake and Arrow Lake support
-      commit: 79ce88064bb04ec62c4e9e4da4614d36906f8a04
+[1/1] platform/x86: toshiba_acpi: Silence logging for some events
+      commit: 0dd50b3e2c3d651ea972c97cff1af67870f3deaf
 
 --
  i.
