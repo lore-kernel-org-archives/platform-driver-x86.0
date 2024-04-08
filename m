@@ -1,180 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C32A148833;
-	Mon,  8 Apr 2024 22:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F528171B0;
+	Mon,  8 Apr 2024 23:31:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712614312; cv=none; b=lUIrwrEV2qqHdnFdJP8WUeEtYFoOdOO/MYdDJaXkOLnVGVgcedgsVN2G797UEzqxaRXaIWsjxurJWrJfncV1SX3vuPIE7xIZe+6vyNkWNV3LE58Dye70dtjjHQ0mS2gv6z7w95aLiVmaG8TgeZToi91uUbBhJ4i1WxGkUPWDK3Q=
+	t=1712619101; cv=none; b=tKAV1iQhoSnlutpyvPb1YOHpyVyhSebl4evtv+YMmRw393oKUO9T4e6XDuj2FCE4YA8Prwv/KS+VoLIfXUhbcPff5+BCCCE5w7/r0Sq6zbYOcaO7o8fN/sbVooK3MvZrJ9O8hfMqyGIdAaXXBnv5k2e//nIySEcZw7vudAgLMB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712614312; c=relaxed/simple;
-	bh=6CaajjRMxU6ExyUiP+Js6IlPxZ2GuFI6Ls3pLbonWcE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FWrunVklkDB3eEOEyJBgDbNQZdx4g5bck8s8noq3lBuFiwETOKG5AU+WJ9F2z01H1H2IIyAGk1EIyOq3Abfe5/s98jJnLs1M94NbKzoKU0KbAOmiouU8FDCWfJM0QfIIAxOC7ncIuV7upnDzHa0skMWQ32CnUYQqzr6kRUsPgN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DjyYts4d; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712619101; c=relaxed/simple;
+	bh=Lf20BAMJDntTSPzEumiirtwvbuJ/TuNDUyWB6WEUaSo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jBNlUsN+JWls0JFLzlBBkX1P2Eja6b/ah0MgkYRml/rx1oCglJXY2KuIeAqM0lkTtc3zK1+tdQL7eqrRZmxBHqKWSHYsQrx/fyAB2pijQ0CQonDqckkUqmg+cCRzjXms5FFEKb8psuEBVqb37m0+3DoA7Pq1NcHmDiTzOdNv7tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DZkvfDXP; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DjyYts4d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712614310; x=1744150310;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=6CaajjRMxU6ExyUiP+Js6IlPxZ2GuFI6Ls3pLbonWcE=;
-  b=DjyYts4dTbN1dK0Rnax6HOyeLfN7G+Ew1aohXwlrhFUmctOrAo2Vn6lZ
-   OXorVh5CsO7Oq034tLedDnN/xbL1mzZKfmWeo6NVH4qn0tjhphkF4GoxC
-   31uLdWebCxf3cSebH0aw9p6RXOALdLGk6p4XQ2mJXs/To96vEHg2YPyZy
-   IfJBAwwfSlS6NYHurNxBUwLDVJOYxSqCXCsfRUWo/dmI2UR/tvSxo2+Nu
-   6CRq0CcPZvv7oUs14nzDRzvbFMxubBsNttYgIg0wPKF9xAqck+zxjbT14
-   sutmHKt2z7BwNpco3AZX5mdfO2U24Inr53ogLi496TgLDwmPjxetglR+H
-   A==;
-X-CSE-ConnectionGUID: PKfbBqHpRlSh7ziMjsFZUw==
-X-CSE-MsgGUID: yUBsJBneTCyrPQBAR9EFjQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="19295153"
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="19295153"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 15:11:49 -0700
-X-CSE-ConnectionGUID: K12hbKsiTNO36vICOUR9Hw==
-X-CSE-MsgGUID: blluMDKCSC+LZjBHiSH3xA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="57483734"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 15:11:49 -0700
-Received: from [10.54.75.156] (debox1-desk1.jf.intel.com [10.54.75.156])
-	by linux.intel.com (Postfix) with ESMTP id 2D3FF20B573A;
-	Mon,  8 Apr 2024 15:11:49 -0700 (PDT)
-Message-ID: <41b41cfbd79d8f9d0a9dfd187710015021fae252.camel@linux.intel.com>
-Subject: Re: [PATCH V3 8/9] platform/x86/intel/sdsi: Simplify ascii printing
-From: "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
- platform-driver-x86@vger.kernel.org,  LKML <linux-kernel@vger.kernel.org>,
- sathyanarayanan.kuppuswamy@linux.intel.com
-Date: Mon, 08 Apr 2024 15:11:49 -0700
-In-Reply-To: <6dd8b2c0-1c89-43f0-0426-df8d483a7b1e@linux.intel.com>
-References: <20240405032507.2637311-1-david.e.box@linux.intel.com>
-	 <20240405032507.2637311-9-david.e.box@linux.intel.com>
-	 <6dd8b2c0-1c89-43f0-0426-df8d483a7b1e@linux.intel.com>
-Autocrypt: addr=david.e.box@linux.intel.com; prefer-encrypt=mutual;
- keydata=mQENBF2w2YABCACw5TpqmFTR6SgsrNqZE8ro1q2lUgVZda26qIi8GeHmVBmu572RfPydisEpCK246rYM5YY9XAps810ZxgFlLyBqpE/rxB4Dqvh04QePD6fQNui/QCSpyZ6j9F8zl0zutOjfNTIQBkcar28hazL9I8CGnnMko21QDl4pkrq1dgLSgl2r2N1a6LJ2l8lLnQ1NJgPAev4BWo4WAwH2rZ94aukzAlkFizjZXmB/6em+lhinTR9hUeXpTwcaAvmCHmrUMxeOyhx+csO1uAPUjxL7olj2J83dv297RrpjMkDyuUOv8EJlPjvVogJF1QOd5MlkWdj+6vnVDRfO8zUwm2pqg25DABEBAAG0KkRhdmlkIEUuIEJveCA8ZGF2aWQuZS5ib3hAbGludXguaW50ZWwuY29tPokBTgQTAQgAOBYhBBFoZ8DYRC+DyeuV6X7Mry1gl3p/BQJdsNmAAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEH7Mry1gl3p/NusIAK9z1xnXphedgZMGNzifGUs2UUw/xNl91Q9qRaYGyNYATI6E7zBYmynsUL/4yNFnXK8P/I7WMffiLoMqmUvNp9pG6oYYj8ouvbCexS21jgw54I3m61M+wTokieRIO/GettVlCGhz7YHlHtGGqhzzWB3CGPSJMwsouDPvyFFE+28p5d2v9l6rXSb7T297Kh50VX9Ele8QEKngrG+Z/u2lr/bHEhvx24vI8ka22cuTaZvThYMwLTSC4kq9L9WgRv31JBSa1pcbcHLOCoUl0RaQwe6J8w9hN2uxCssHrrfhSA4YjxKNIIp3YH4IpvzuDR3AadYz1klFTnEOxIM7fvQ2iGu5AQ0EXbDZgAEIAPGbL3wvbYUDGMoBSN89GtiC6ybWo28JSiYIN5N9LhDTwfWROenkRvmTESaE5fAM24sh8S0h+F+eQ7j/E/RF3pM31gSovTKw0Pxk7GorK
-	FSa25CWemxSV97zV8fVegGkgfZkBMLUId+AYCD1d2R+tndtgjrHtVq/AeN0N09xv/d3a+Xzc4ib/SQh9mM50ksqiDY70EDe8hgPddYH80jHJtXFVA7Ar1ew24TIBF2rxYZQJGLe+Mt2zAzxOYeQTCW7WumD/ZoyMm7bg46/2rtricKnpaACM7M0r7g+1gUBowFjF4gFqY0tbLVQEB/H5e9We/C2zLG9r5/Lt22dj7I8A6kAEQEAAYkBNgQYAQgAIBYhBBFoZ8DYRC+DyeuV6X7Mry1gl3p/BQJdsNmAAhsMAAoJEH7Mry1gl3p/Z/AH/Re8YwzY5I9ByPM56B3Vkrh8qihZjsF7/WB14Ygl0HFzKSkSMTJ+fvZv19bk3lPIQi5lUBuU5rNruDNowCsnvXr+sFxFyTbXw0AQXIsnX+EkMg/JO+/V/UszZiqZPkvHsQipCFVLod/3G/yig9RUO7A/1efRi0E1iJAa6qHrPqE/kJANbz/x+9wcx1VfFwraFXbdT/P2JeOcW/USW89wzMRmOo+AiBSnTI4xvb1s/TxSfoLZvtoj2MR+2PW1zBALWYUKHOzhfFKs3cMufwIIoQUPVqGVeH+u6Asun6ZpNRxdDONop+uEXHe6q6LzI/NnczqoZQLhM8d1XqokYax/IZ4=
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DZkvfDXP"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e2232e30f4so44333855ad.2;
+        Mon, 08 Apr 2024 16:31:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712619100; x=1713223900; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZzTpKViV2Dcm/KyMkuaFPP0/U/kgyCGskJ3yYQuoi34=;
+        b=DZkvfDXPv8GMGFHfnBtrdkqye0Zlh3e32nd/YYbFPkvEDotN6qBWDYWxGx2oHAx7ct
+         mI9Q+8hy4sFc5KjztOv9GXNWRjttyf2g//E8OsD/Xj3qFpmDfnHoWbLxIIueyB6k9Pj9
+         Z29lMSjEoZzwxIWORjl1BRGoe7Q9KiXfqRSJjvyByiVNMDKQQL0QuAk56IuMW9tW8Coq
+         +Om7lu+22tQvxR+xSyUhgdqaiwDkT5U/RE+o/tKzBFKNhYGg+Vp1dHivd0LpOl/ihv5B
+         UGz8Kxbb4TIhPf1didhscLG5v9IRP0V0vz4tA6Dfmjomch4cl3rmEYBToW9lcHxpvViN
+         KUHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712619100; x=1713223900;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZzTpKViV2Dcm/KyMkuaFPP0/U/kgyCGskJ3yYQuoi34=;
+        b=dMlhH5tSqXDKvReOYj+UrVoTfRoEZXDnOK89gWxi5TV9esvAcYZjJbQQaFF+tMd4ew
+         NJlXewIW+jKmFRjPyy+Th58LG0nyEcF74OidVKEZUlpNG5MtiMwQxVT7iaEPhHDK6sMD
+         K/AeS/ZijzxwGZvVqhOoc5PcTZdoAISGGncKX3R4snZSYZisnHPpel1uDpV65AZZTIp9
+         xMga5Q9EcY4d38hNLgnTlh7EDBsODuXTVrT5v2LFpuXoxhs5Q6k5ytt98bFc2jwjMYFo
+         Bh6UyTJxdewlH/2Tx70u8+O/2cjbJ//1KYuIeGJtVYjqcurDojdqa4pnfy4l1jCVIId5
+         CATg==
+X-Forwarded-Encrypted: i=1; AJvYcCVtTtLm2uUO/b3OqZOyT51jzthHom30Qxxf2OrZTBH1umCsH1mJs1KTpmpI+fIuX/SK3aQ/pA/nAxt+BhTEC4PKfmTc71BOsZLJ6THpjgdZ7Qd6f1WpOPkBVGHl3wycInrpdZ+C9vLY+MMREM2TxnFxkiuuX+aP1DdsXwS8lT3wIjf6/Bs8768wzPXzpoYy
+X-Gm-Message-State: AOJu0Yw8eTxdpcCsfrW5bYxb0MidPyEH6zrspYWgUDCo92DGtV0WorZd
+	c9GmpaiSPJXkQcaF48V4LN0gfeaP7sXaOnSa7jDHOg71igWCinrq
+X-Google-Smtp-Source: AGHT+IFS3F36fsetJvUPZpbat4+TSuZ7yDpgMTewKajtRAYjXpPSRT5ZA67Q5InVAxnXRnhV/VFnHw==
+X-Received: by 2002:a17:902:c946:b0:1e4:24bc:48e with SMTP id i6-20020a170902c94600b001e424bc048emr4222078pla.22.1712619099622;
+        Mon, 08 Apr 2024 16:31:39 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:a480:1072:3aaf:99a0])
+        by smtp.gmail.com with ESMTPSA id jj20-20020a170903049400b001dee9d80bdcsm7569687plb.107.2024.04.08.16.31.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Apr 2024 16:31:39 -0700 (PDT)
+Date: Mon, 8 Apr 2024 16:31:36 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, hmh@hmh.eng.br,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, njoshi1@lenovo.com,
+	vsankar@lenovo.com, peter.hutterer@redhat.com
+Subject: Re: [PATCH 1/4] Input: Add trackpoint doubletap and system debug
+ info keycodes
+Message-ID: <ZhR-WPx7dgKxziMb@google.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20240324210817.192033-1-mpearson-lenovo@squebb.ca>
+ <20240324210817.192033-2-mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240324210817.192033-2-mpearson-lenovo@squebb.ca>
 
-On Mon, 2024-04-08 at 20:22 +0300, Ilpo J=C3=A4rvinen wrote:
-> On Thu, 4 Apr 2024, David E. Box wrote:
->=20
-> > Use printf width specifier to set the display length of encoded feature
-> > names.
-> >=20
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > Reviewed-by: Kuppuswamy Sathyanarayanan
-> > <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > ---
-> >=20
-> > V3 - Add FEAT_LEN #def
-> >=20
-> > V2 - Split of V1 patch 7
-> >=20
-> > =C2=A0tools/arch/x86/intel_sdsi/intel_sdsi.c | 13 ++++++-------
-> > =C2=A01 file changed, 6 insertions(+), 7 deletions(-)
-> >=20
-> > diff --git a/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> > b/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> > index 45bc69e6718e..0c9670ba1f15 100644
-> > --- a/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> > +++ b/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> > @@ -43,6 +43,7 @@
-> > =C2=A0#define METER_CERT_MAX_SIZE	4096
-> > =C2=A0#define STATE_MAX_NUM_LICENSES	16
-> > =C2=A0#define STATE_MAX_NUM_IN_BUNDLE	(uint32_t)8
-> > +#define FEAT_LEN		4
-> > =C2=A0
-> > =C2=A0#define __round_mask(x, y) ((__typeof__(x))((y) - 1))
-> > =C2=A0#define round_up(x, y) ((((x) - 1) | __round_mask(x, y)) + 1)
-> > @@ -409,11 +410,10 @@ static int sdsi_meter_cert_show(struct sdsi_dev *=
-s)
-> > =C2=A0
-> > =C2=A0	printf("Number of Feature Counters:=C2=A0=C2=A0 %ld\n", BUNDLE_C=
-OUNT(mc-
-> > >bundle_length));
-> > =C2=A0	while (count < BUNDLE_COUNT(mc->bundle_length)) {
-> > -		char feature[5];
-> > +		char feature[FEAT_LEN];
-> > =C2=A0
-> > -		feature[4] =3D '\0';
-> > =C2=A0		get_feature(bec[count].encoding, feature);
-> > -		printf("=C2=A0=C2=A0=C2=A0 %s:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 %d\n", feature,
-> > bec[count].counter);
-> > +		printf("=C2=A0=C2=A0=C2=A0 %.4s:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 %d\n", feature,
-> > bec[count].counter);
-> > =C2=A0		++count;
-> > =C2=A0	}
-> > =C2=A0
-> > @@ -494,7 +494,7 @@ static int sdsi_state_cert_show(struct sdsi_dev *s)
-> > =C2=A0			sizeof(*lki) +			// size of the
-> > license key info
-> > =C2=A0			offset;				// offset
-> > to this blob content
-> > =C2=A0		struct bundle_encoding *bundle =3D (void *)(lbc) +
-> > sizeof(*lbc);
-> > -		char feature[5];
-> > +		char feature[FEAT_LEN];
-> > =C2=A0		uint32_t i;
-> > =C2=A0
-> > =C2=A0		printf("=C2=A0=C2=A0=C2=A0=C2=A0 Blob %d:\n", count - 1);
-> > @@ -507,11 +507,9 @@ static int sdsi_state_cert_show(struct sdsi_dev *s=
-)
-> > =C2=A0		printf("=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Blob revisio=
-n ID:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 %u\n", lb=
-c-
-> > >rev_id);
-> > =C2=A0		printf("=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Number of Fe=
-atures:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 %u\n", lbc-
-> > >num_bundles);
-> > =C2=A0
-> > -		feature[4] =3D '\0';
-> > -
-> > =C2=A0		for (i =3D 0; i < min(lbc->num_bundles,
-> > STATE_MAX_NUM_IN_BUNDLE); i++) {
-> > =C2=A0			get_feature(bundle[i].encoding, feature);
-> > -			printf("=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Feature %d:=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 %s\n",
-> > i, feature);
-> > +			printf("=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Feature %d:=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0
-> > %.4s\n", i, feature);
-> > =C2=A0		}
-> > =C2=A0
-> > =C2=A0		if (lbc->num_bundles > STATE_MAX_NUM_IN_BUNDLE)
-> >=20
->=20
-> Hi,
->=20
-> After staring this for a while, I cannot get rid of the feeling that the=
-=20
-> removal of NUL termination is a step into wrong direction. But IMO,=20
-> instead of the caller side, the NUL termination could be added inside=20
-> get_feature().
+Hi Mark,
 
-Yeah, you're right. I'll make this change.
+On Sun, Mar 24, 2024 at 05:07:58PM -0400, Mark Pearson wrote:
+> Add support for new input events on Lenovo laptops that need exporting to
+> user space.
+> 
+> Lenovo trackpoints are adding the ability to generate a doubletap event.
+> Add a new keycode to allow this to be used by userspace.
 
-David
->=20
+What is the intended meaning of this keycode? How does it differ from
+the driver sending BTN_LEFT press/release twice?
+> 
+> Lenovo support is using FN+N with Windows to collect needed details for
+> support cases. Add a keycode so that we'll be able to provide similar
+> support on Linux.
 
+Is there a userspace consumer for this?
+
+Thanks.
+
+-- 
+Dmitry
