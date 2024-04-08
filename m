@@ -1,65 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4047F7BAE4
-	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Apr 2024 13:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AB87BB07
+	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Apr 2024 13:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712582625; cv=none; b=hWVVIMo35oL4gDZyts2/WyZqvve4DKempP8/SN0F7vUA3ADv0pBcm8dWEoSCEXM6O5+4HDRbnmmkncdX2byEjMfVZUp8LMXoUre30RbftWC87kRlfa6Pj6LGgV8kpBC7b4le5NI4bZwwCMms0geSzw8IDPnDgYgKXcSOtohDkv0=
+	t=1712583184; cv=none; b=eXZeOpOHIIiMAZUI1KngtsBAau9/2jZM/87u+biv39oUmFggWuloZCmScvlmy0/qi2z8FF1oe3VPbvkOau6LlOYq692wwAsWiHPJS+GbC/hCPaseL/+gJ/Z4oURlQ2zJjCEsclBtg8JiI69mzMhNUyZblMx41RY/oHUZGLO7/I4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712582625; c=relaxed/simple;
-	bh=AjMcuDVSfQz9mEkdUJ3nOENaBtruvEhJ1oKoGoktTdE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=tSR4iLUxxLPQYJW5mdRucEc5xqlOMGXtSDXByFco2DkzcHhx1mErCBLqpLhV9cE4ZDtufHLT/kzW/IA/N8Gw6ydRvDaBKWo+ETpY3GAClLGWpVrAyD5DYfT1WwhBr9g8XVAPLPCL4UXlO+MLFuRiDveA5R+ThLmjY4RUzkrhRYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RuD4A+Hk; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1712583184; c=relaxed/simple;
+	bh=pW4t1AncsQ8tMvf/wxv5D6LUPKTSE5Rey2z/6XrH+7M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J5kcRSzauLIlYQZ+4ay2t04sxC8j8CZ9ML1qFfZFOI13dbuNWFT9maMueMRDttaKQour1FZ7UPSHfdEhrPKMwoGe/hkoTbtVwRd2ilv9MeZ8oJabu0RPtauI1I5u2Z17i0GRmhwy25H9MDd1RFf9rPJHuNl86PrKhg4/cNr0iRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GDCh7x6T; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RuD4A+Hk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GDCh7x6T"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712582623;
+	s=mimecast20190719; t=1712583181;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0mxn2AaedYDOGszqLmSIzySTE68+KWDxw9NAP4Ae8Ao=;
-	b=RuD4A+HkLuDVPSUw1Y8wyhWm1p/Rkp/3ZWQzWupfSb49gifrFuZpInUEk+1hr5NWOMOg9Z
-	WnmdO1shAJ+EVbUQUSfWGX7QcrEIYlEO45gowHSIPux+KHcp23aTe4qAUiYAeUzWGXMSEf
-	t5eAElpzggGG3w3RBnnL9MiBPRkfVuA=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=OJUImv89Y37aG2kc0mQxy8vkhYbAZfTGFvjYeh6Mk8k=;
+	b=GDCh7x6TbrUIWwd1lIBlAIrupHmdl26AWtwL5aQsrI8xZZL3xbU7RGXzsDUSJTsmztAzXy
+	vqQWoD6p3K/jUUUlo8zjg4FZe2dVtIHLZVHNUi3X7C4DvSNKCuAI1eKKQ7EcW3F8ClVrUO
+	bG+RWdFpJg/JAT/ly5RePauX3JJrdTs=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-201-Nz8fvuGBOXWz7wjBYc0lWQ-1; Mon, 08 Apr 2024 09:23:41 -0400
-X-MC-Unique: Nz8fvuGBOXWz7wjBYc0lWQ-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5684c1abc7fso1838918a12.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 08 Apr 2024 06:23:41 -0700 (PDT)
+ us-mta-672-3IwDL16NM7ye7yVnEUxZOQ-1; Mon, 08 Apr 2024 09:32:59 -0400
+X-MC-Unique: 3IwDL16NM7ye7yVnEUxZOQ-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a5190b1453fso249042466b.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 08 Apr 2024 06:32:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712582621; x=1713187421;
+        d=1e100.net; s=20230601; t=1712583178; x=1713187978;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0mxn2AaedYDOGszqLmSIzySTE68+KWDxw9NAP4Ae8Ao=;
-        b=teteQzPDK7cJcyfJ8iJtehkNAW/bgEwi02Mw6G3Cwx8r/78+0yHAiU0xElUGpJhguT
-         p8cAg0U76gQH+cbMfgRtcTvasCg2bxHKzwFvy9+dQQiarMdQrhMQfH6ru/RkU7td0GGi
-         n9MD5f5xr9OJz1wEILuEuUyLgdt4KMs6dX1sXgSmwMJVcKdTuoS5jLiajR4iYw48jF/s
-         KRnQ5z59W3arZUmSpkUuoMB/C3AyId8SpAWnqa4ZefrNGwxzIGloRcfZjF/D08ois7tZ
-         7gWFqed8g1FTfAnl6MrdjwmynlIlZjtZ7RpTbL/m8gAd1UhdtLqyHP2idzbCUrT5L9QA
-         YVeA==
-X-Forwarded-Encrypted: i=1; AJvYcCWGujBOz8V1+70vcBkDaFh90TSd1knUaG7hSZ530zp9E2ClvRu3xCX036FCrnmcyE3A7RovzOTvaY8Pei0kSLlBVpvW2VnsoSFcoFS2gJ1B0ydtZA==
-X-Gm-Message-State: AOJu0YzOKKLzVCnnExTPJapjAWF25UUq2g6HBjQw1tENOxJ21PL/gUOP
-	3P8BvLA6HVqPHRc38AoSHsG3cpppAGOiMn0G60T3+9p56jCh/ow6+rhiwmKLBgMV2Gu/UB8HBqv
-	s6BA6zFVisJS1kCStWrZ7DhkxnTqGWL/+IpGKjGr2N8I1cqUjbHTieOiKxNxlbpCT7bN1LYE=
-X-Received: by 2002:a50:d59b:0:b0:56b:cfef:b2de with SMTP id v27-20020a50d59b000000b0056bcfefb2demr6959815edi.26.1712582620752;
-        Mon, 08 Apr 2024 06:23:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE50OwnyeeTq8ukE1a70PAtB3pBPLYwURLkK9afjse+/Yq/o9SrygSaXsBVnaES0Wgt0JUivw==
-X-Received: by 2002:a50:d59b:0:b0:56b:cfef:b2de with SMTP id v27-20020a50d59b000000b0056bcfefb2demr6959801edi.26.1712582620322;
-        Mon, 08 Apr 2024 06:23:40 -0700 (PDT)
+        bh=OJUImv89Y37aG2kc0mQxy8vkhYbAZfTGFvjYeh6Mk8k=;
+        b=CW2/mfge9052ubdGAOSZQsJOgV5gkzp2llre8RoW66OckJfRTWNqPP2jxdrKwNT2t0
+         BXMY6SxIONYkgjZGzLYtCb0Gr5sBDIcnRVqAJIpnjVd/pbt0jH3MyunQ1C5lNqN6TQYB
+         vBwaZPmyYPevD9ePEVXMRGiupFZM3BKscE24NMyfpES/zEQkb1l6vn0fQI+WYohjkO0/
+         qb5+avCyNNOIvx7iuN1dTutKCj8fpHgj43b8Tjs+GYstYxn3eUjikHiU79VR2y6kpAuH
+         /BOCMQum9Z0pFpnETKyX79NVYfRnOrxUBWjKPRHYNdmERk1o5aUxQnRdtrfmFhRUdAeB
+         /qzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVW508Vvb2/f1opRsynP9wc6Ouzb1yiYpqLHF90vGxutDVfSQAl2uvCffNBmdLAopAxc8IhDffjlaXMqUMWgu2a959e3PX7QhA5vFREfnp07LN5fg==
+X-Gm-Message-State: AOJu0YyR61pWUkipRn2tCNvyWPRwYtXqeCacp94yI/dNEdk+0jByvcRi
+	U0PMlRx9mLKez4N+vU8m/DwIL+QoIbVhbdBiEfjqafwplMxe7MhuuJfn052WWIQlNu3qBhJtY9/
+	FX2iMhkza1MmxX1J8Hm+qLCiGxXPGgjXsq9LCPvzjOf+K3muqEvZoXu11AOpmhShCG6mzo3k=
+X-Received: by 2002:a17:906:338f:b0:a51:9cce:cf6a with SMTP id v15-20020a170906338f00b00a519ccecf6amr5334596eja.53.1712583177857;
+        Mon, 08 Apr 2024 06:32:57 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG/Kh0jumPG4b000Jp0hZYkG/hCHJH0vM+pd5NJczuFkQT1+36nYLTOYHCvrKt2qgwsMkp+4w==
+X-Received: by 2002:a17:906:338f:b0:a51:9cce:cf6a with SMTP id v15-20020a170906338f00b00a519ccecf6amr5334582eja.53.1712583177434;
+        Mon, 08 Apr 2024 06:32:57 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id fd21-20020a056402389500b00568d7b0a21csm4070948edb.61.2024.04.08.06.23.39
+        by smtp.gmail.com with ESMTPSA id p19-20020a17090635d300b00a51b78aed1csm3251761ejb.150.2024.04.08.06.32.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Apr 2024 06:23:39 -0700 (PDT)
-Message-ID: <be0f0a67-d397-470c-ac29-8707b5e6a1a8@redhat.com>
-Date: Mon, 8 Apr 2024 15:23:39 +0200
+        Mon, 08 Apr 2024 06:32:57 -0700 (PDT)
+Message-ID: <28bd0070-28e3-40d6-845a-7ac3d3cf67f2@redhat.com>
+Date: Mon, 8 Apr 2024 15:32:56 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,232 +67,90 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12] platform/x86: add lenovo WMI camera button driver
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Ai Chao <aichao@kylinos.cn>, ilpo.jarvinen@linux.intel.com,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20240327082737.336992-1-aichao@kylinos.cn>
- <3552cb41-88b2-41c0-b327-a1aefe508e14@linux.intel.com>
+Subject: Re: [PATCH 1/3] hwmon: Add thermal sensor driver for Surface
+ Aggregator Module
+To: Maximilian Luz <luzmaximilian@gmail.com>,
+ Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Ivor Wanders <ivor@iwanders.net>, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org
+References: <20240330112409.3402943-1-luzmaximilian@gmail.com>
+ <20240330112409.3402943-2-luzmaximilian@gmail.com>
+ <d49ea735-3113-4c1f-a8dc-c6d8e821c4f1@roeck-us.net>
+ <e8ccce25-86d5-492a-8fb4-3f39036fa91a@gmail.com>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <3552cb41-88b2-41c0-b327-a1aefe508e14@linux.intel.com>
+In-Reply-To: <e8ccce25-86d5-492a-8fb4-3f39036fa91a@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi,
 
-On 3/28/24 12:35 AM, Kuppuswamy Sathyanarayanan wrote:
-> 
-> On 3/27/24 1:27 AM, Ai Chao wrote:
->> Add lenovo WMI camera button driver to support camera button.
->> The Camera button is a GPIO device. This driver receives ACPI notifyi
-> 
-> /s/notifyi/notification
-> 
->> when the camera button is switched on/off. This driver is used in
->> Lenovo A70, it is a Computer integrated machine.
+On 3/30/24 1:58 PM, Maximilian Luz wrote:
+> On 3/30/24 12:58, Guenter Roeck wrote:
+>> On 3/30/24 04:24, Maximilian Luz wrote:
+>>> Some of the newer Microsoft Surface devices (such as the Surface Book
+>>> 3 and Pro 9) have thermal sensors connected via the Surface Aggregator
+>>> Module (the embedded controller on those devices). Add a basic driver
+>>> to read out the temperature values of those sensors.
+>>>
+>>> Link: https://github.com/linux-surface/surface-aggregator-module/issues/59
+>>> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 >>
->> Signed-off-by: Ai Chao <aichao@kylinos.cn>
->> ---
->> v12: Remove useless parentheses and unneeded blank line.
->> v11: Remove input_unregister_device.
->> v10: Add lenovo_wmi_remove and mutex_destroy.
->> v9: Add mutex for wmi notify.
->> v8: Dev_deb convert to dev_err.
->> v7: Add dev_dbg and remove unused dev in struct.
->> v6: Modify SW_CAMERA_LENS_COVER to KEY_CAMERA_ACCESS_ENABLE/KEY_CAMERA_ACCESS_DISABLE.
->> v5: Remove camera button groups, modify KEY_CAMERA to SW_CAMERA_LENS_COVER.
->> v4: Remove lenovo_wmi_input_setup, move camera_mode into struct lenovo_wmi_priv.
->> v3: Remove lenovo_wmi_remove function.
->> v2: Adjust GPL v2 to GPL, adjust sprintf to sysfs_emit.
+>> I very much dislike the idea of having multiple drivers for hardware
+>> monitoring on the same system. Please explain in detail why this and
+>> the fan driver for the same system need separate drivers.
 >>
->>  drivers/platform/x86/Kconfig             |  12 +++
->>  drivers/platform/x86/Makefile            |   1 +
->>  drivers/platform/x86/lenovo-wmi-camera.c | 127 +++++++++++++++++++++++
->>  3 files changed, 140 insertions(+)
->>  create mode 100644 drivers/platform/x86/lenovo-wmi-camera.c
->>
->> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->> index 7e9251fc3341..b8c806506423 100644
->> --- a/drivers/platform/x86/Kconfig
->> +++ b/drivers/platform/x86/Kconfig
->> @@ -996,6 +996,18 @@ config INSPUR_PLATFORM_PROFILE
->>  	To compile this driver as a module, choose M here: the module
->>  	will be called inspur-platform-profile.
->>  
->> +config LENOVO_WMI_CAMERA
->> +	tristate "Lenovo WMI Camera Button driver"
->> +	depends on ACPI_WMI
->> +	depends on INPUT
->> +	help
->> +	  This driver provides support for Lenovo camera button. The Camera
->> +	  button is a GPIO device. This driver receives ACPI notify when the
+>> I'll also very much want to know if we will see submissions for separate
+>> voltage, current, power, energy, humidity, and/or other hardware monitoring
+>> entities for the same system later on.
 > 
-> /s/notify/notification
+> The Surface Aggregator EC is not really a single device, but rather a
+> collection of subsystems. For example, there's one for the battery, one
+> for thermal sensors, and a separate one for the fan. Not all subsystems
+> are present on all devices with that EC, so we have modeled them as
+> separate subdevices of the parent EC controller. This makes it quite a
+> bit easier to maintain. Especially, since I haven't found any reliable
+> way to auto-detect the active/supported subsystems.
+> 
+> For example: The Surface Book 3 has thermal sensors that can be accessed
+> via this driver as well as a fan. As far as I know, however, the fan
+> subsystem has been introduced later and the Surface Book 3 doesn't
+> support that yet. So there's (as far as I know) no fan-monitoring
+> support. Trying to access that will fail with a timeout. For that reason
+> (but not specifically for that device), we have introduced the split
+> into subystem devices, which are maunally registered in
+> surface_aggregator_registry.c based on what we know the device actually
+> supports.
+> 
+> Further, the devices created for these subsystems also act as a binding
+> mechanism to the subsystem, speficying the subsystem ID/category used
+> for making requests to it. For example, this driver probes for
+> 
+>     SSAM_SDEV(TMP, SAM, 0x00, 0x02)
+> 
+> meaning it looks for a device of the TMP subsystem on the SAM target ID
+> (which can be seen as a bus number) with instance 0 and function 2. This
+> (in particular subsystem ID and target ID) are directly used when making
+> requests to the EC. So if we find out down the line that temperature
+> sensors can be accessed on target ID KIP in addition to SAM, it's as easy
+> as adding a new device match to the driver.
 
-Thank you. Since I already merged v12 I've squashed a fix for this
-into the patch/commit in my review-hans branch.
+<snip>
+
+Right this is all working as designed, it is just that Microsoft has
+gone a pretty custom route with the Surface devices.
+
+Guenter another way of looking at this is if there were 2 ACPI devices
+describing the fan vs the temperature monitoring capabilities that too
+would result in 2 drivers even though the underlying ACPI AML code
+might end up talking to the same monitoring-IC in the end.
+
+I'll go and merge patch 3/3 of this series. I'll leave merging
+1/3 and 2/3 up to the hwmon subsystem of course.
 
 Regards,
 
 Hans
 
-
-
-
-> 
->> +	  camera button is switched on/off.
->> +
->> +	  To compile this driver as a module, choose M here: the module
->> +	  will be called lenovo-wmi-camera.
->> +
->>  source "drivers/platform/x86/x86-android-tablets/Kconfig"
->>  
->>  config FW_ATTR_CLASS
->> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
->> index 1de432e8861e..217e94d7c877 100644
->> --- a/drivers/platform/x86/Makefile
->> +++ b/drivers/platform/x86/Makefile
->> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
->>  obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
->>  obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
->>  obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
->> +obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
->>  
->>  # Intel
->>  obj-y				+= intel/
->> diff --git a/drivers/platform/x86/lenovo-wmi-camera.c b/drivers/platform/x86/lenovo-wmi-camera.c
->> new file mode 100644
->> index 000000000000..0c0bedaf7407
->> --- /dev/null
->> +++ b/drivers/platform/x86/lenovo-wmi-camera.c
->> @@ -0,0 +1,127 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Lenovo WMI Camera Button Driver
->> + *
->> + * Author: Ai Chao <aichao@kylinos.cn>
->> + * Copyright (C) 2024 KylinSoft Corporation.
->> + */
->> +
->> +#include <linux/acpi.h>
->> +#include <linux/device.h>
->> +#include <linux/input.h>
->> +#include <linux/types.h>
->> +#include <linux/module.h>
->> +#include <linux/mutex.h>
->> +#include <linux/wmi.h>
->> +
->> +#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
->> +
->> +struct lenovo_wmi_priv {
->> +	struct input_dev *idev;
->> +	struct mutex notify_lock;	/* lenovo WMI camera button notify lock */
->> +};
->> +
->> +enum {
->> +	SW_CAMERA_OFF	= 0,
->> +	SW_CAMERA_ON	= 1,
->> +};
->> +
->> +static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
->> +{
->> +	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
->> +	unsigned int keycode;
->> +	u8 camera_mode;
->> +
->> +	if (obj->type != ACPI_TYPE_BUFFER) {
->> +		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
->> +		return;
->> +	}
->> +
->> +	if (obj->buffer.length != 1) {
->> +		dev_err(&wdev->dev, "Invalid buffer length %u\n", obj->buffer.length);
->> +		return;
->> +	}
->> +
->> +	/*
->> +	 * obj->buffer.pointer[0] is camera mode:
->> +	 *      0 camera close
->> +	 *      1 camera open
->> +	 */
->> +	camera_mode = obj->buffer.pointer[0];
->> +	if (camera_mode > SW_CAMERA_ON) {
->> +		dev_err(&wdev->dev, "Unknown camera mode %u\n", camera_mode);
->> +		return;
->> +	}
->> +
->> +	mutex_lock(&priv->notify_lock);
->> +
->> +	keycode = camera_mode == SW_CAMERA_ON ?
->> +		   KEY_CAMERA_ACCESS_ENABLE : KEY_CAMERA_ACCESS_DISABLE;
->> +	input_report_key(priv->idev, keycode, 1);
->> +	input_sync(priv->idev);
->> +	input_report_key(priv->idev, keycode, 0);
->> +	input_sync(priv->idev);
->> +
->> +	mutex_unlock(&priv->notify_lock);
->> +}
->> +
->> +static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
->> +{
->> +	struct lenovo_wmi_priv *priv;
->> +	int ret;
->> +
->> +	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
->> +	if (!priv)
->> +		return -ENOMEM;
->> +
->> +	dev_set_drvdata(&wdev->dev, priv);
->> +
->> +	priv->idev = devm_input_allocate_device(&wdev->dev);
->> +	if (!priv->idev)
->> +		return -ENOMEM;
->> +
->> +	priv->idev->name = "Lenovo WMI Camera Button";
->> +	priv->idev->phys = "wmi/input0";
->> +	priv->idev->id.bustype = BUS_HOST;
->> +	priv->idev->dev.parent = &wdev->dev;
->> +	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_ENABLE);
->> +	input_set_capability(priv->idev, EV_KEY, KEY_CAMERA_ACCESS_DISABLE);
->> +
->> +	ret = input_register_device(priv->idev);
->> +	if (ret)
->> +		return ret;
->> +
->> +	mutex_init(&priv->notify_lock);
->> +
->> +	return 0;
->> +}
->> +
->> +static void lenovo_wmi_remove(struct wmi_device *wdev)
->> +{
->> +	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
->> +
->> +	mutex_destroy(&priv->notify_lock);
->> +}
->> +
->> +static const struct wmi_device_id lenovo_wmi_id_table[] = {
->> +	{ .guid_string = WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
->> +	{  }
->> +};
->> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
->> +
->> +static struct wmi_driver lenovo_wmi_driver = {
->> +	.driver = {
->> +		.name = "lenovo-wmi-camera",
->> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
->> +	},
->> +	.id_table = lenovo_wmi_id_table,
->> +	.no_singleton = true,
->> +	.probe = lenovo_wmi_probe,
->> +	.notify = lenovo_wmi_notify,
->> +	.remove = lenovo_wmi_remove,
->> +};
->> +module_wmi_driver(lenovo_wmi_driver);
->> +
->> +MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
->> +MODULE_DESCRIPTION("Lenovo WMI Camera Button Driver");
->> +MODULE_LICENSE("GPL");
-> 
 
