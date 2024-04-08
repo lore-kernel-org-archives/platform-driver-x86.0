@@ -1,171 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675BA142E79;
-	Mon,  8 Apr 2024 17:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 037E5142906;
+	Mon,  8 Apr 2024 17:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712595910; cv=none; b=MzP2A+KVuIZn1ipZxcsO/Vv3tCOaRzH5aAO9/Jle/lK6A31R+vQzhZ1KDj2QgRKoDuaYsdp63LUWRK8EpYPIhBauRwfXGkbJlWFhW1Rtt7yZrR94jxuzg/kU/4KzhDlE/cLRrEc3OKQ/4+FJsWGDVwjWY5TClDzwdvH0jjazIWU=
+	t=1712596225; cv=none; b=S2Awch2LXy6xS3FerIrUgt1fPeydxP5Bs0yli8TaRjkxpqSk9UM9UTr3lsI4oHg6TBaH286NinwMRCob5MUOInhp0aLlwirYc3UWtXJ0L82q7euJr+a8XmonTTAAyDLiwgFGIpNDmNRVpddfwC17/zQH0zW+0oEBHuYfoJJMRkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712595910; c=relaxed/simple;
-	bh=q3aHEkDIaUg/6DDpl2Hw0IWOkW0evQ42aHBcgH6sLDQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZQsW7Im/7vamuj7ccQLaw8PNV0IuxCUmnT3W1UN0gvwAFFqP/8Yyl5l9UtBDZQ4jz0OdUm7j5U5ZJVJUat9SknsZj+1N5Lb5frmjj8leDNrhuJpYK41vg+Hzhm72S7Ft5+LY4eE/0VfFokrgxS5bMiCt/SbZfSPyXlDUiJQZ9Vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ioHiPICM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712596225; c=relaxed/simple;
+	bh=qB02tO0c11oTDoGkptLF9S44KzrfXCWpSzxS13m35GA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=raLTy9j0c5IFQv5Csj87BWMJbWWDTBD81FONIOSv38OtUqXI/F8Jrc3N2eZWKPWNXhqNyMEAw8T3ey4n5kJq3UQ03tDXfQxXoPX9eq2dZF5QHydK9AWx+VQqR+iPP84V29lSIrOI3vAxagf4i7NkqpDum2tTv3gqWcVzbiCi8AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jduS4//O; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ioHiPICM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFFABC433C7;
-	Mon,  8 Apr 2024 17:05:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712595910;
-	bh=q3aHEkDIaUg/6DDpl2Hw0IWOkW0evQ42aHBcgH6sLDQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ioHiPICMdv/jEMGntcCv9aUV/MVpOZZDfda4pKRK3afqjK/qbxUA2oECXtWD0joET
-	 iiQWyqwAtSU5cFOmNQ5OUxdWsYd0oydyfmaYzmJ6lzb6tM0KGe2HVLp3qL+xqL5VnG
-	 69qN5d0DGlpowOhzRz6uwZJyNGoxEL6zBe6m90BJe7akUXvG0MPOoitCpLPOgYVhrL
-	 f2IYzUS3hGGp2tUMYXdhdhC8nZijZqDUYSr6X8C8wCkZ6XdbZjpueNtSry8p1pRanD
-	 rz7wAP0uBP0nCal1oa5/RCw3N0R8cZOBZhPjDxxC+pgi1dART1qBuAO0QC3g5MDmPj
-	 845tkPFRYlLyg==
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5aa17bf8cf0so256422eaf.1;
-        Mon, 08 Apr 2024 10:05:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWaD95n6HDAKNVjJt6LrAxzzAei/4GhTiODObAwKZLVEkNZGaO5zFpNV5sv4oUZrBoGH5g6CcW2HgSazgsaqVwrwJwWDb8TSTQc+RMPwV3/IP/ivKS9Dk7KIial6SRAwEBqulooT6QNiS7Hn6LXkq2KqNaz7qXfIoMvClvYhop6Zzout1PO0UYwi3rlDLQ=
-X-Gm-Message-State: AOJu0YwK7h6vf+we6QCuIok5a7KC/vPeJ++BOHD+qbh0d3S48E6uGQ9O
-	mdt3TA3tMl4DlNM8XZKK8Jxi3ZOurv8e8r9QYq8HlV0GgmZnDH4LVRqFHOlvQX+y4sjh5J018ni
-	V/gLu+yynRWgpPSA7o6bIgdUFvEM=
-X-Google-Smtp-Source: AGHT+IEzjnPGX0iQ8amIZ3HV8gdrikLJRs4fdK6C3/HmSvcFMJx6nS6t2DWmTLeaL50L22e7Wnf/dcbFETWvuhpbUZc=
-X-Received: by 2002:a4a:d0af:0:b0:5aa:241a:7f4b with SMTP id
- t15-20020a4ad0af000000b005aa241a7f4bmr5545431oor.1.1712595909295; Mon, 08 Apr
- 2024 10:05:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jduS4//O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712596224; x=1744132224;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=qB02tO0c11oTDoGkptLF9S44KzrfXCWpSzxS13m35GA=;
+  b=jduS4//OMiC71tK2mwlg/ZZYB2Cyl8HywMkjie+o0lXHoqsfthdgL/dp
+   Z2YrPkCOJb7MNwrFRhY20k6S9vmMzzjPupGi7vDJVLqlHMMVbndxzSE3U
+   bc5J12bKvXzJonuquswkh1r3JIxFfh8W4jcT0c4rOUQi9lQ9yWkU9lGDt
+   Ic95Vwj1eKiPKN5uZeUvrZywjuuCy18Ky1wtIjbE1rv59enRnC3aVfshD
+   jx/knl7w0sFOZBn7k1zQ1ym205yqOP4esw0tO+90VmWmObsgej5b027gb
+   qYLTCgEN3IQP79Zo57MO5+2wZNNAYEytpSQjpfWOU44TDJyOjXNvSibt0
+   g==;
+X-CSE-ConnectionGUID: EJlnlxQTQ9+binjwE18Xsg==
+X-CSE-MsgGUID: K8mxhO8qTWu160/4TmpfiA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="33285774"
+X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
+   d="scan'208";a="33285774"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 10:10:23 -0700
+X-CSE-ConnectionGUID: 7rD6KCJESBGEq2pgugLXIA==
+X-CSE-MsgGUID: Vo9e1p9GSHKfBP7XuibKdQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
+   d="scan'208";a="50949697"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.28])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 10:10:22 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 8 Apr 2024 20:10:16 +0300 (EEST)
+To: "David E. Box" <david.e.box@linux.intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH V3 7/9] tools/arch/x86/intel_sdsi: Fix meter_certificate
+ decoding
+In-Reply-To: <20240405032507.2637311-8-david.e.box@linux.intel.com>
+Message-ID: <5fa57609-fc49-c499-b2c7-ec9400696619@linux.intel.com>
+References: <20240405032507.2637311-1-david.e.box@linux.intel.com> <20240405032507.2637311-8-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1712360639.git.soyer@irl.hu> <afd975d98708921f67a269aaf031a1dd1be1220d.1712360639.git.soyer@irl.hu>
- <4e37511c-7570-4ea5-bdf9-6bdd62c63575@redhat.com>
-In-Reply-To: <4e37511c-7570-4ea5-bdf9-6bdd62c63575@redhat.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 8 Apr 2024 19:04:58 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jD=xECU=et=YHYbykyDjz4cBi6RvjmUrf4shzV2dJzRg@mail.gmail.com>
-Message-ID: <CAJZ5v0jD=xECU=et=YHYbykyDjz4cBi6RvjmUrf4shzV2dJzRg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] ACPI: platform-profile: add platform_profile_cycle()
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Gergo Koteles <soyer@irl.hu>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Ike Panhc <ike.pan@canonical.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	=?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>, 
-	linux-acpi@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Apr 8, 2024 at 6:41=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
-wrote:
->
-> Hi Gergo,
->
-> On 4/6/24 2:01 AM, Gergo Koteles wrote:
-> > Some laptops have a key to switch platform profiles.
-> >
-> > Add a platform_profile_cycle() function to cycle between the enabled
-> > profiles.
-> >
-> > Signed-off-by: Gergo Koteles <soyer@irl.hu>
->
-> Thank you for your patch, 1 small remark below,
-> otherwise this looks good to me.
->
-> Rafael, may I have your Ack for merging this through the pdx86 tree
-> together with the rest of the series once my remark has been addressed ?
+On Thu, 4 Apr 2024, David E. Box wrote:
 
-Sure, please feel free to add
+> Fix errors in the calculation of the start position of the counters and in
+> the display loop. While here, use a #define for the bundle count and size.
+> 
+> Fixes: 7fdc03a7370f ("tools/arch/x86: intel_sdsi: Add support for reading meter certificates")
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+> 
+> V3 - Use macros for bundle size and count
+> 
+> V2 - Split of V1 patch 7
+> 
+>  tools/arch/x86/intel_sdsi/intel_sdsi.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/arch/x86/intel_sdsi/intel_sdsi.c b/tools/arch/x86/intel_sdsi/intel_sdsi.c
+> index a0711177e1bb..45bc69e6718e 100644
+> --- a/tools/arch/x86/intel_sdsi/intel_sdsi.c
+> +++ b/tools/arch/x86/intel_sdsi/intel_sdsi.c
+> @@ -394,7 +394,7 @@ static int sdsi_meter_cert_show(struct sdsi_dev *s)
+>  	printf("MMRC encoding:                %.4s\n", name);
+>  
+>  	printf("MMRC counter:                 %d\n", mc->mmrc_counter);
+> -	if (mc->bundle_length % 8) {
+> +	if (mc->bundle_length % METER_BUNDLE_SIZE) {
+>  		fprintf(stderr, "Invalid bundle length\n");
+>  		return -1;
+>  	}
+> @@ -405,15 +405,16 @@ static int sdsi_meter_cert_show(struct sdsi_dev *s)
+>  		return -1;
+>  	}
+>  
+> -	bec = (void *)(mc) + sizeof(mc);
+> +	bec = (void *)(mc) + sizeof(*mc);
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+The first (mc) doesn't need parenthesis. But this could be rewritten to 
+avoid void * entirely:
 
-to this patch.  Thanks!
+	bec = (struct bundle_encoding_counter *)(mc + 1);
 
-> > ---
-> >  drivers/acpi/platform_profile.c  | 39 ++++++++++++++++++++++++++++++++
-> >  include/linux/platform_profile.h |  1 +
-> >  2 files changed, 40 insertions(+)
-> >
-> > diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_pr=
-ofile.c
-> > index d418462ab791..acc606af812a 100644
-> > --- a/drivers/acpi/platform_profile.c
-> > +++ b/drivers/acpi/platform_profile.c
-> > @@ -136,6 +136,45 @@ void platform_profile_notify(void)
-> >  }
-> >  EXPORT_SYMBOL_GPL(platform_profile_notify);
-> >
-> > +int platform_profile_cycle(void)
-> > +{
-> > +     enum platform_profile_option profile;
-> > +     enum platform_profile_option next;
-> > +     int err;
-> > +
-> > +     err =3D mutex_lock_interruptible(&profile_lock);
-> > +     if (err)
-> > +             return err;
-> > +
-> > +     if (!cur_profile) {
-> > +             mutex_unlock(&profile_lock);
-> > +             return -ENODEV;
-> > +     }
-> > +
-> > +     err =3D cur_profile->profile_get(cur_profile, &profile);
-> > +     if (err) {
-> > +             mutex_unlock(&profile_lock);
-> > +             return err;
-> > +     }
-> > +
-> > +     next =3D find_next_bit_wrap(cur_profile->choices,
-> > +                               ARRAY_SIZE(profile_names), profile + 1)=
-;
-> > +
-> > +     if (WARN_ON(next =3D=3D ARRAY_SIZE(profile_names))) {
->
-> Other code in drivers/acpi/platform_profile.c uses PLATFORM_PROFILE_LAST
-> instead of ARRAY_SIZE(profile_names) (these are guaranteed to be equal)
-> please switch to using PLATFORM_PROFILE_LAST for consistency.
->
-> Regards,
->
-> Hans
->
->
->
->
->
-> > +             mutex_unlock(&profile_lock);
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     err =3D cur_profile->profile_set(cur_profile, next);
-> > +     mutex_unlock(&profile_lock);
-> > +
-> > +     if (!err)
-> > +             sysfs_notify(acpi_kobj, NULL, "platform_profile");
-> > +
-> > +     return err;
-> > +}
-> > +EXPORT_SYMBOL_GPL(platform_profile_cycle);
-> > +
-> >  int platform_profile_register(struct platform_profile_handler *pprof)
-> >  {
-> >       int err;
-> > diff --git a/include/linux/platform_profile.h b/include/linux/platform_=
-profile.h
-> > index e5cbb6841f3a..f5492ed413f3 100644
-> > --- a/include/linux/platform_profile.h
-> > +++ b/include/linux/platform_profile.h
-> > @@ -36,6 +36,7 @@ struct platform_profile_handler {
-> >
-> >  int platform_profile_register(struct platform_profile_handler *pprof);
-> >  int platform_profile_remove(void);
-> > +int platform_profile_cycle(void);
-> >  void platform_profile_notify(void);
-> >
-> >  #endif  /*_PLATFORM_PROFILE_H_*/
->
+-- 
+ i.
+
+>  	printf("Number of Feature Counters:   %ld\n", BUNDLE_COUNT(mc->bundle_length));
+> -	while (count++ < mc->bundle_length / 8) {
+> +	while (count < BUNDLE_COUNT(mc->bundle_length)) {
+>  		char feature[5];
+>  
+>  		feature[4] = '\0';
+>  		get_feature(bec[count].encoding, feature);
+>  		printf("    %s:          %d\n", feature, bec[count].counter);
+> +		++count;
+>  	}
+>  
+>  	return 0;
+> 
