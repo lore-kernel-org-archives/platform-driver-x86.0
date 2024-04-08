@@ -1,140 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3192F143860;
-	Mon,  8 Apr 2024 17:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E503143C52;
+	Mon,  8 Apr 2024 17:35:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712596985; cv=none; b=SC1CiHo8IQkeX9TJDFBw5Bi72iyhJAZ3/WE4N3ZTdyzJP6Oo3esoG5yY7WGVmaqoCrUajeLja+iUyh0Fko7HY+qXQPcofdcmKzrzfKFCKdQ9oecMg+KrO6OaWZ+KkQteEtVHsIdx2C5g+hylmwr2ULLtFgcIo3AvpSIhk9aIGaw=
+	t=1712597720; cv=none; b=J+bBr5xovS+0vqNEVB3Cn2ehNkaixRuY4/GzgQtkEWEZ8khf33Uwu7PNxoPYwvluQ5kcFyqt4LGZyaMWgcBdhvRAlN1HBNXcHk8R2DO/BU2Q+zPkknjlG3YBeYvoPC3tw3CX5lDza2vrAyq/7z5crAbZqctN1O7CxzAWnSwI4P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712596985; c=relaxed/simple;
-	bh=Pqh3pyoAGMUHh7oj7/eiymnpIKVlFY2rZB4bG8dyHWI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=h2Z7pwoAq6mjMYC49hTFyaqBCF2fWX+Dy0cAYQYdkNJFzcHSwMRWHS0itms9jHX50xn4C9gYQdO/gkwloX7wpncEn3Lm2Hq60wpmSsfLYEEfmwELIWlN32sK6miN69O3awyS1zaKjULXBN/4RCeRmEpIAH8V22HgxkRbluGQb7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y8Tggwn2; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y8Tggwn2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712596984; x=1744132984;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Pqh3pyoAGMUHh7oj7/eiymnpIKVlFY2rZB4bG8dyHWI=;
-  b=Y8Tggwn2E7nnZ1xEP3lOhSfcO5IQl55ssMdB9lmfsvtabS/SaD3w2Fg2
-   2YDzTP6HkbXcA7PsP1TvgPb/2YriqvotGmnqtdUoYqI1DSG+Em62MkUUl
-   K8qeId8RUHRHk4I9Ero5joK95uaAAfd/9xxVWyQKecWyPEEWMLvQQ1Nql
-   kjig9jAWMWETSwO/acKzxNy1AHQ62mtpu79BA2C/NHv5IywQfT2edSURm
-   zhVyjlKRn15h3H85c/iZCxgQH6yDzhBPZZUBLUivc5cjgqot50daENG0a
-   tAI+GKrS/YjC1aepISY441jjDIAI5dfvBFlOEESzXhQusYt5YeTXicG5c
-   w==;
-X-CSE-ConnectionGUID: KOw7q+nwSz674k2fFXtLIA==
-X-CSE-MsgGUID: dSR1qco2TPCnPOT6mhfGdw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="8112054"
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="8112054"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 10:23:03 -0700
-X-CSE-ConnectionGUID: axvwqU3gQVOpapr20X6fPA==
-X-CSE-MsgGUID: JxHFW/8+Qwm9nS4h3K8IXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="19877439"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.28])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 10:23:02 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 8 Apr 2024 20:22:57 +0300 (EEST)
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH V3 8/9] platform/x86/intel/sdsi: Simplify ascii
- printing
-In-Reply-To: <20240405032507.2637311-9-david.e.box@linux.intel.com>
-Message-ID: <6dd8b2c0-1c89-43f0-0426-df8d483a7b1e@linux.intel.com>
-References: <20240405032507.2637311-1-david.e.box@linux.intel.com> <20240405032507.2637311-9-david.e.box@linux.intel.com>
+	s=arc-20240116; t=1712597720; c=relaxed/simple;
+	bh=AG5FVer0czQB1zSAMA46mk/VvnsPmT9sOnmRMzqKe38=;
+	h=From:To:Cc:Subject:Date:Message-ID:Mime-Version:Content-Type; b=afgRMvhwWc41+JdBUBYtFL+wteyxKZVJ1isg4FOTnA8R1EDLs9Vd7ZdtLeRy696eculSBURdrMMY2cGtgsGPOmMpsI8oZerQabkLWaD/Nwpl5W5IWDaht2yGoAM/fDBfpiAkjkeCT75+sG+6DshmeAZ9vpu3SUNRW/8SWWd65/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from fedori.lan (51b69f53.dsl.pool.telekom.hu [::ffff:81.182.159.83])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 00000000000706C6.0000000066142AD3.002645EE; Mon, 08 Apr 2024 19:35:15 +0200
+From: Gergo Koteles <soyer@irl.hu>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+  Len Brown <lenb@kernel.org>, Ike Panhc <ike.pan@canonical.com>,
+  Hans de Goede <hdegoede@redhat.com>,
+  =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+  Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+  Daniel Lezcano <daniel.lezcano@linaro.org>,
+  =?UTF-8?q?Barnab=C3=A1s=20P=C5=91cze?= <pobrn@protonmail.com>
+Cc: linux-acpi@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
+  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+  Gergo Koteles <soyer@irl.hu>
+Subject: [PATCH v6 0/3] switch platform profiles with Lenovo laptops
+Date: Mon,  8 Apr 2024 19:35:09 +0200
+Message-ID: <cover.1712597199.git.soyer@irl.hu>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
 
-On Thu, 4 Apr 2024, David E. Box wrote:
+Hi All,
 
-> Use printf width specifier to set the display length of encoded feature
-> names.
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
-> 
-> V3 - Add FEAT_LEN #def
-> 
-> V2 - Split of V1 patch 7
-> 
->  tools/arch/x86/intel_sdsi/intel_sdsi.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/arch/x86/intel_sdsi/intel_sdsi.c b/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> index 45bc69e6718e..0c9670ba1f15 100644
-> --- a/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> +++ b/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> @@ -43,6 +43,7 @@
->  #define METER_CERT_MAX_SIZE	4096
->  #define STATE_MAX_NUM_LICENSES	16
->  #define STATE_MAX_NUM_IN_BUNDLE	(uint32_t)8
-> +#define FEAT_LEN		4
->  
->  #define __round_mask(x, y) ((__typeof__(x))((y) - 1))
->  #define round_up(x, y) ((((x) - 1) | __round_mask(x, y)) + 1)
-> @@ -409,11 +410,10 @@ static int sdsi_meter_cert_show(struct sdsi_dev *s)
->  
->  	printf("Number of Feature Counters:   %ld\n", BUNDLE_COUNT(mc->bundle_length));
->  	while (count < BUNDLE_COUNT(mc->bundle_length)) {
-> -		char feature[5];
-> +		char feature[FEAT_LEN];
->  
-> -		feature[4] = '\0';
->  		get_feature(bec[count].encoding, feature);
-> -		printf("    %s:          %d\n", feature, bec[count].counter);
-> +		printf("    %.4s:          %d\n", feature, bec[count].counter);
->  		++count;
->  	}
->  
-> @@ -494,7 +494,7 @@ static int sdsi_state_cert_show(struct sdsi_dev *s)
->  			sizeof(*lki) +			// size of the license key info
->  			offset;				// offset to this blob content
->  		struct bundle_encoding *bundle = (void *)(lbc) + sizeof(*lbc);
-> -		char feature[5];
-> +		char feature[FEAT_LEN];
->  		uint32_t i;
->  
->  		printf("     Blob %d:\n", count - 1);
-> @@ -507,11 +507,9 @@ static int sdsi_state_cert_show(struct sdsi_dev *s)
->  		printf("        Blob revision ID:           %u\n", lbc->rev_id);
->  		printf("        Number of Features:         %u\n", lbc->num_bundles);
->  
-> -		feature[4] = '\0';
-> -
->  		for (i = 0; i < min(lbc->num_bundles, STATE_MAX_NUM_IN_BUNDLE); i++) {
->  			get_feature(bundle[i].encoding, feature);
-> -			printf("                 Feature %d:         %s\n", i, feature);
-> +			printf("                 Feature %d:         %.4s\n", i, feature);
->  		}
->  
->  		if (lbc->num_bundles > STATE_MAX_NUM_IN_BUNDLE)
-> 
+This patch series adds a platform_profile_cycle function to the platform 
+profile module, which allows modules to easily switch between the 
+enabled profiles.
 
-Hi,
+Use it in ideapad-laptop and thinkpad-acpi modules.
 
-After staring this for a while, I cannot get rid of the feeling that the 
-removal of NUL termination is a step into wrong direction. But IMO, 
-instead of the caller side, the NUL termination could be added inside 
-get_feature().
+Best regards,
+Gergo
 
+Changes in v6:
+ - use PLATFORM_PROFILE_LAST instead of ARRAY_SIZE(profile_names) for 
+ consistency
+
+Changes in v5:
+ - use find_next_bit_wrap function to find the next enabled profile 
+ instead of multiple ffs calls
+
+Changes in v4:
+ - move the cycle to the platform profile module where it can switch 
+ between the enabled profiles
+ - add a patch to use it in the thinkpad-acpi module
+
+Changes in v3:
+ - add dytc_profile_cycle function
+
+Changes in v2:
+ - only switch platform profiles if supported, otherwise keep the 
+   behavior.
+
+[5]: https://lore.kernel.org/all/cover.1712360639.git.soyer@irl.hu/
+[4]: https://lore.kernel.org/all/cover.1712282976.git.soyer@irl.hu/
+[3]: https://lore.kernel.org/all/7c358ad8dd6de7889fa887954145a181501ac362.17122>
+[2]: https://lore.kernel.org/all/797884d8cab030d3a2b656dba67f3c423cc58be7.17121>
+[1]: https://lore.kernel.org/all/85254ce8e87570c05e7f04d6507701bef954ed75.17121>
+
+
+Gergo Koteles (3):
+  ACPI: platform-profile: add platform_profile_cycle()
+  platform/x86: ideapad-laptop: switch platform profiles using thermal
+    management key
+  platform/x86: thinkpad_acpi: use platform_profile_cycle()
+
+ drivers/acpi/platform_profile.c       | 39 +++++++++++++++++++++++++++
+ drivers/platform/x86/ideapad-laptop.c |  7 +++--
+ drivers/platform/x86/thinkpad_acpi.c  | 19 ++-----------
+ include/linux/platform_profile.h      |  1 +
+ 4 files changed, 47 insertions(+), 19 deletions(-)
+
+
+base-commit: 39cd87c4eb2b893354f3b850f916353f2658ae6f
 -- 
- i.
+2.44.0
 
