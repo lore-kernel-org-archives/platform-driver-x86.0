@@ -1,145 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wfout4-smtp.messagingengine.com (wfout4-smtp.messagingengine.com [64.147.123.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F54912BEA0;
-	Mon,  8 Apr 2024 14:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303F913F422;
+	Mon,  8 Apr 2024 14:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712585947; cv=none; b=TPgrV0ujlvEYoG3oqg+ZzPvE0WEAj/zSAq4eCTqCOXyCIL7HSbg9ICtRnK31/vF/SlTZJZllGkiYh5mrSUaNVbTNFDLXLbVMzMW6rVqa3ns2+vPzMGBAR/tRxky2KOFSR+bnIHNoej7VTB9Af8Xen70QFAix0WxWIZZSxw+L7Ow=
+	t=1712588187; cv=none; b=p9XGO6+lmmBkY8Zn/LWDDvE07Z51V2avQFEvEuYz21uPLph4xU/SCgaebFV34pvLTqtXHHKC1CjrT2ymgkvj4aG6XBxG6RmObHT6l4pADqhVmkUGgi0NxwPvPNZ/Dz12Mf9fBcDZXlr4qChBvano+8R5Ptqp15r39EaNumQSSxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712585947; c=relaxed/simple;
-	bh=fCohwsfER8OLWfZl6LReGaQxXONj5RyinO1IgQBzs1s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LeIP1ZqvXdyUa/hZ7Do6hmea6oYfk45uRxEGl2DzWCH6bE2/aoBcsZMqICV4PbPOIIt/zF1EcOvsAJBKL5iiDn3J2T7HweO4YOkW9Y4A03aTB3U+84vm2KXGM/Kw9GLPk1ZF9udv/SpoBV8LYikec5YsOxV2euXrkf2WKdVXLPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YuAljUOw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712588187; c=relaxed/simple;
+	bh=uvf6TFwCLvpcgJnWKp+IqUvyxTwUo7A7wcFLgOftIvw=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=ZOmtyNPLaxX2iTtMmntGfKfgzUWQ7j+rVIeK++hhXRkN2S5HIRpgGag+IJEj3fMTYvM2lSEPGHqpkcVbdDa9TvKjRzh9SYTlvODlBIWD4353okgHNeMoMP2I9EKulvrzvnQTmURQgCIlJ25ix6S71zxD1COEde+rFEoHo+cM08c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=DLNhd8JY; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=e1TuCh66; arc=none smtp.client-ip=64.147.123.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YuAljUOw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB69EC41606;
-	Mon,  8 Apr 2024 14:19:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712585947;
-	bh=fCohwsfER8OLWfZl6LReGaQxXONj5RyinO1IgQBzs1s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YuAljUOw0VGTL6reKBytSgl0plRNv+TSjZRfD3ZKuqxOSYkzoXC5WrRi5cw+S+B+M
-	 D4nwox90lYEDvOC2kltYpVUw1dnHyUlGf0Vz9gQ+VSZQ6UY2PlnOXYtJXUxFO+DpNk
-	 45njopcwprSMB+gVFh0LkX6VN8kgR0mIB2295lbbV+KLETQgy8jgbddtYnqL+2OrFg
-	 vSHyTr4CwHU1Vo0rTAX5E99YyX7sNSwK1JC6glkOPrGKg9aBLjrx4igbUnczVMBXk5
-	 xW34dqGA0uX7ktND0DNuPaGnARMfTcEH0+2d19P/OCslQK+OlaTFr1JQ1fC4J87VDd
-	 UWSr4GruMWPXA==
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3be110bbff9so30077b6e.1;
-        Mon, 08 Apr 2024 07:19:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUWnu19PPY0u4kVmxIIQh3V/SM/BPfg0qTlHd1e4rM20PCoEN6dfWSHMDK8e2k4suvScCIAZ2gxzPYvL00HDQbYYniFMCi+YZzr5KKFTBRBzKr3m7itiKFRsotpYNLKXDVyDkcrMitWV3yS7MWyPxKMAT6ivqJgEqnY5RsSoEGzVdvj0BoSh37BKItReZWQnkC/AnFZnd0+eAZw7xASmwZnWtCH7WAvQebyD7Y/y9ASjzzIPlt/a9ipogHQXjuUVs+42A==
-X-Gm-Message-State: AOJu0Yy7ko1dqw+gs0xHuZ66keowJ/N5dPEWaommk6GVa95Bv3HM8fo3
-	feKxrZaqn9+YfMoJg740mOp+qLNWfnO9JlqRiUdqGqSJ4Nnamf4Vr/eVOiTfuC1vIpaeU+gM05A
-	+hJolD3LO6W7d/ZTTa1YcsN0opoo=
-X-Google-Smtp-Source: AGHT+IE2cd5MIHpLilsMOefxnD7lqhVeZau5m81/yoSXqMyOs4mTHwzl+84AR6mEi+xDVYbCBwtZjPGYOY8LlCssj9M=
-X-Received: by 2002:a05:6808:138e:b0:3c5:eab3:657 with SMTP id
- c14-20020a056808138e00b003c5eab30657mr5718403oiw.4.1712585945878; Mon, 08 Apr
- 2024 07:19:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="DLNhd8JY";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="e1TuCh66"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfout.west.internal (Postfix) with ESMTP id 52A501C000E1;
+	Mon,  8 Apr 2024 10:56:23 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute3.internal (MEProxy); Mon, 08 Apr 2024 10:56:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1712588182; x=1712674582; bh=bCWpPGV2vJ
+	YgZ3bq3vRrz3FGsmLszaLN5U7PO44bhCI=; b=DLNhd8JYzB3+bRSSRNyvtjPFZy
+	7L2UummJ5c8SIg2vWVcF0DproH/wJmUPOz5bxXuGmNRLTYg07aW/mz74NUETTc2s
+	wq9ke0TuZ6bFEmSBo1SJLRTqjDCzFmxXcsiAEtMKaCnupJxED31XGQIkcQ1zRJeC
+	pgOuePuOOMoyic2bLNXVJs0Su3sUr2o00W2A0UikZEYaY59lLprY6UCTP1/q41q4
+	Y2IH8c/up11UvgRXPJmM4dXOEgWXvt3DETcd6I6x/y9lBppZKGsW48nrvZb9oRLE
+	ahoKHsUbeSXJUzJRE8f5ieD0cKntYppt4lc4P/XNAA0w/8giBM3p6il2FWGw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1712588182; x=1712674582; bh=bCWpPGV2vJYgZ3bq3vRrz3FGsmLs
+	zaLN5U7PO44bhCI=; b=e1TuCh66ExaTJ5mMSci9uxjBSdh8YePTAdXxa/KFBQ+V
+	wokLBtcCDb7TS30pwZMlMortskyCCUf3olQ6ENpBwfU990rVgEDfqREBFyTs9Dnn
+	IjeeFZ2LVxZZFalnT58rGH08SZaJpich7pyBa8AlB5BBXNg90gYaXqoNBvp6I45I
+	Xy2WZpOE+vy5n7M/QVUF8NJJvFsk0YxA1WzGx4YYOoYyGpVBswnwdwWBKpXbRZKk
+	7i5SBIH5z6KVCN0pcOr0zZ1Jb5l7pGfD21tFWlc1PkgznQ5UWtGA5xp8ldxqm+QT
+	+xuxax0Ai3CJ8xX7nYGDThJzJYNYTMilpjcTjVf5yQ==
+X-ME-Sender: <xms:lgUUZtBiFYcQspTQiF_PDSC1PnalTnMmbd382eSRDiwVSix1t11MOA>
+    <xme:lgUUZrgOmHppfF9lcScIedcgeGZD5pBPSlKRtf1vH2pzNIMHAdgW-h9b9LSi8sc4t
+    N3tyixI1kNwriShhCw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudegiedgkedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
+    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
+    drtggrqeenucggtffrrghtthgvrhhnpeeiueefjeeiveetuddvkeetfeeltdevffevudeh
+    ffefjedufedvieejgedugeekhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:lgUUZons9-jeK2MfxW_wGy-Zgf66EiA9OnhoRboSx3Mw_Ect6KTakA>
+    <xmx:lgUUZnw4QhG5vNeFtm_ynfrFh5T9WFQWgAX6esdQtkoTvOUrSTJnXw>
+    <xmx:lgUUZiQ5ha7EAc0BHCYSG2hMYR4PHQOnFiHlEKXIqsBAsX6sNeWz-g>
+    <xmx:lgUUZqZIJmZAcDs72TEaOU4hSbbhq6-Aynseo0VUmUm41OWLcHve2w>
+    <xmx:lgUUZnJc_E4BFyb8Ou12ytisOPdkCbxghCRb-3uPgP2Jfu95QdOpsw03>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 251DFC60097; Mon,  8 Apr 2024 10:56:22 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-368-gc733b1d8df-fm-20240402.001-gc733b1d8
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240328-b4-module-owner-acpi-v2-0-1e5552c2c69f@linaro.org>
-In-Reply-To: <20240328-b4-module-owner-acpi-v2-0-1e5552c2c69f@linaro.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 8 Apr 2024 16:18:54 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jd7FegkcnJyDn61uBEdGRKHWoaQ8SKJE+JX18W0QHh1Q@mail.gmail.com>
-Message-ID: <CAJZ5v0jd7FegkcnJyDn61uBEdGRKHWoaQ8SKJE+JX18W0QHh1Q@mail.gmail.com>
-Subject: Re: [PATCH v2 00/19] ACPI: store owner from modules with acpi_bus_register_driver()
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Robert Moore <robert.moore@intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Benson Leung <bleung@chromium.org>, 
-	Tzung-Bi Shih <tzungbi@kernel.org>, Corentin Chary <corentin.chary@gmail.com>, 
-	"Luke D. Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
-	Matan Ziv-Av <matan@svgalib.org>, Mattia Dongili <malattia@linux.it>, 
-	Azael Avalos <coproscefalo@gmail.com>, Ajay Kaher <akaher@vmware.com>, 
-	Alexey Makhalov <amakhalov@vmware.com>, VMware PV-Drivers Reviewers <pv-drivers@vmware.com>, 
-	Richard Cochran <richardcochran@gmail.com>, "Theodore Ts'o" <tytso@mit.edu>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	acpica-devel@lists.linux.dev, linux-input@vger.kernel.org, 
-	netdev@vger.kernel.org, chrome-platform@lists.linux.dev, 
-	platform-driver-x86@vger.kernel.org, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-Id: <e88a2f41-f89d-444c-a09a-487097c6e9eb@app.fastmail.com>
+In-Reply-To: <e1ccf281-5c77-4447-a6c7-5b0b008c7c56@redhat.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20240324210817.192033-1-mpearson-lenovo@squebb.ca>
+ <20240324210817.192033-3-mpearson-lenovo@squebb.ca>
+ <e1ccf281-5c77-4447-a6c7-5b0b008c7c56@redhat.com>
+Date: Mon, 08 Apr 2024 10:56:25 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Hans de Goede" <hdegoede@redhat.com>
+Cc: dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "Vishnu Sankar" <vsankar@lenovo.com>, ibm-acpi-devel@lists.sourceforge.net,
+ "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>, linux-input@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Peter Hutterer" <peter.hutterer@redhat.com>,
+ "Nitin Joshi1" <njoshi1@lenovo.com>
+Subject: Re: [ibm-acpi-devel] [PATCH 2/4] platform/x86: thinkpad_acpi: Support for
+ trackpoint doubletap
+Content-Type: text/plain
 
-On Thu, Mar 28, 2024 at 8:49=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> Changes in v2:
-> - Correct input and platform/chrome subjects.
-> - Add acks.
-> - Link to v1: https://lore.kernel.org/r/20240327-b4-module-owner-acpi-v1-=
-0-725241a2d224@linaro.org
->
-> Merging
-> =3D=3D=3D=3D=3D=3D=3D
-> All further patches depend on the first amba patch, therefore one way is
-> to ack and take it via one tree, e.g. ACPI.
->
-> Description
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> Modules registering driver with acpi_bus_register_driver() often forget t=
-o
-> set .owner field.
->
-> Solve the problem by moving this task away from the drivers to the core
-> amba bus code, just like we did for platform_driver in commit
-> 9447057eaff8 ("platform_device: use a macro instead of
-> platform_driver_register").
->
-> Best regards,
-> Krzysztof
->
-> ---
-> Krzysztof Kozlowski (19):
->       ACPI: store owner from modules with acpi_bus_register_driver()
->       Input: atlas - drop owner assignment
->       net: fjes: drop owner assignment
->       platform/chrome: wilco_ec: drop owner assignment
->       platform: asus-laptop: drop owner assignment
->       platform: classmate-laptop: drop owner assignment
->       platform/x86/dell: drop owner assignment
->       platform/x86/eeepc: drop owner assignment
->       platform/x86/intel/rst: drop owner assignment
->       platform/x86/intel/smartconnect: drop owner assignment
->       platform/x86/lg-laptop: drop owner assignment
->       platform/x86/sony-laptop: drop owner assignment
->       platform/x86/toshiba_acpi: drop owner assignment
->       platform/x86/toshiba_bluetooth: drop owner assignment
->       platform/x86/toshiba_haps: drop owner assignment
->       platform/x86/wireless-hotkey: drop owner assignment
->       ptp: vmw: drop owner assignment
->       virt: vmgenid: drop owner assignment
->       ACPI: drop redundant owner from acpi_driver
->
->  drivers/acpi/bus.c                        | 9 +++++----
->  drivers/input/misc/atlas_btns.c           | 1 -
->  drivers/net/fjes/fjes_main.c              | 1 -
->  drivers/platform/chrome/wilco_ec/event.c  | 1 -
->  drivers/platform/x86/asus-laptop.c        | 1 -
->  drivers/platform/x86/classmate-laptop.c   | 5 -----
->  drivers/platform/x86/dell/dell-rbtn.c     | 1 -
->  drivers/platform/x86/eeepc-laptop.c       | 1 -
->  drivers/platform/x86/intel/rst.c          | 1 -
->  drivers/platform/x86/intel/smartconnect.c | 1 -
->  drivers/platform/x86/lg-laptop.c          | 1 -
->  drivers/platform/x86/sony-laptop.c        | 2 --
->  drivers/platform/x86/toshiba_acpi.c       | 1 -
->  drivers/platform/x86/toshiba_bluetooth.c  | 1 -
->  drivers/platform/x86/toshiba_haps.c       | 1 -
->  drivers/platform/x86/wireless-hotkey.c    | 1 -
->  drivers/ptp/ptp_vmw.c                     | 1 -
->  drivers/virt/vmgenid.c                    | 1 -
->  include/acpi/acpi_bus.h                   | 8 ++++++--
->  19 files changed, 11 insertions(+), 28 deletions(-)
-> ---
+Hi Hans,
 
-Whole series applied as 6.10 material, thanks!
+Many thanks for the review.
+
+On Mon, Apr 8, 2024, at 9:04 AM, Hans de Goede wrote:
+> Hi Mark,
+>
+> On 3/24/24 10:07 PM, Mark Pearson wrote:
+>> Lenovo trackpoints are adding the ability to generate a doubletap event.
+>> This handles the doubletap event and sends the KEY_DOUBLECLICK event to
+>> userspace.
+>> 
+>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> Signed-off-by: Vishnu Sankar <vsankar@lenovo.com>
+>> ---
+>>  drivers/platform/x86/thinkpad_acpi.c | 17 +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>> 
+>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+>> index 82429e59999d..2bbb32c898e9 100644
+>> --- a/drivers/platform/x86/thinkpad_acpi.c
+>> +++ b/drivers/platform/x86/thinkpad_acpi.c
+>> @@ -232,6 +232,7 @@ enum tpacpi_hkey_event_t {
+>>  
+>>  	/* Misc */
+>>  	TP_HKEY_EV_RFKILL_CHANGED	= 0x7000, /* rfkill switch changed */
+>> +	TP_HKEY_EV_TRACKPOINT_DOUBLETAP = 0x8036, /* doubletap on Trackpoint*/
+>>  };
+>>  
+>>  /****************************************************************************
+>> @@ -4081,6 +4082,22 @@ static void hotkey_notify(struct ibm_struct *ibm, u32 event)
+>>  				break;
+>>  			}
+>>  			fallthrough;	/* to default */
+>
+> This now no longer fallsthrough to default. IMHO the best thing to do
+> here is add a new preparation patch which initializes known_ev to false
+> inside the while before the switch-case (together with the send_acpi_ev
+> and ignore_acpi_ev init). and then change this fallthrough to a break
+> in the preparation patch. You can then also remove the default case
+> altogether in this prep patch.
+>
+Ack - that makes sense. I'll look at doing that.
+
+>> +		case 8:
+>> +			/* 0x8036: Trackpoint doubletaps */
+>> +			if (hkey == TP_HKEY_EV_TRACKPOINT_DOUBLETAP) {
+>> +				send_acpi_ev = true;
+>> +				ignore_acpi_ev = false;
+>
+> These 2 values are set as the default above the switch-case, please
+> drop these 2 lines.
+
+Agreed. Will change.
+
+>
+>> +				known_ev = true;
+>> +				/* Send to user space */
+>> +				mutex_lock(&tpacpi_inputdev_send_mutex);
+>> +				input_report_key(tpacpi_inputdev, KEY_DOUBLECLICK, 1);
+>> +				input_sync(tpacpi_inputdev);
+>> +				input_report_key(tpacpi_inputdev, KEY_DOUBLECLICK, 0);
+>> +				input_sync(tpacpi_inputdev);
+>> +				mutex_unlock(&tpacpi_inputdev_send_mutex);
+>
+> This code duplicates tpacpi_input_send_key(), what you want to do here
+> is define a hotkey_keycode_map scancode range for new 0x8xxx codes like how this
+> was done when extended scancodes where added to deal with the new 0x13xx hotkey
+> event codes for the 2017+ models.
+>
+> See commit 696c6523ec8f ("platform/x86: thinkpad_acpi: add mapping for 
+> new hotkeys")
+>
+> Despite re-using tpacpi_input_send_key() there are 2 reasons why we want
+> scancodes for these new "keys".
+>
+> 1. By adding the keys to the hotkey_keycode_map they automatically
+> also get input_set_capability(tpacpi_inputdev, EV_KEY, hotkey_keycode_map[i]);
+> called on them advertising to userspace that tpacpi_inputdev can actually
+> generate these keypresses. Something which is currently lacking from your
+> patch. Related to this did you test this with evtest? I think that the input
+> core will suppress the events when you do not set the capability ?
+>
+> 2. This allows remapping scancodes to different KEY_foo values with hwdb
+> entries.
+>
+Will look into doing this.
+There was a reason originally I did it like this, but I can't remember what it was. I'll revisit it.
+
+I did test with evtest but I ended up having to cheat as there's quite a few layers in userspace and I got a bit bogged down chewing my way through those (building them against the right headers etc). 
+I ended up using an already existing code to make sure it was doing the right thing in the driver - and then assumed that once the keycode was 'released', and the different user space projects updated per normal procedure, it would work. It's possible it meant I bypassed/missed this issue so I'll retry once I've made the updates.
+
+Mark
