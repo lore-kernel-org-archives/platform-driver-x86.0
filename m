@@ -1,88 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE2D1420B6;
-	Mon,  8 Apr 2024 15:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296E42561F
+	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Apr 2024 15:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712590954; cv=none; b=EWP76zCYRAQy+jy+gj/gan4m5AAErgrJfZzk/J4dj1/nEzs12Kw+RMXPQwUFNV1emQg1bvfTEowahCTSmUm+DrF7XL3EfOzqtjafeqP1TK9ZewlceOEBSfA09lEaZ07sOl3BUqoqjiP6+h3gwfDrp4APj6onbn87fR1i1k8Fk2k=
+	t=1712591059; cv=none; b=LLUc0didaTHyeQhZB0dMo5xfQQWQY1OH2mcwILItlnLW8CyU41pSwaqqV0kwPSdxLFr2lwpzdwjU0iG888llk1RGdani1HUIwcuezpQztUGLT4v2j9dRSqZcc+MISx8vx5iJZ89zKyiEkK/KelczDsVhEQZmZeMx/fzMBQdOKrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712590954; c=relaxed/simple;
-	bh=wAt9hHU1NvhG5I5QM0RA8vIU8EEsSSGfsnpVfKylQxQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=vD6vC5FqnpRZnVxaAdsV2m5SZO/KuTwUi1CZpAc4SbwSMUz2Q8l4XQp9Ix4zAzTg/oME+HRjRdqMGsXbg1V65hCrs+nWYC0c2KBE8jL1INcyF/mHgkaqByYL7VDQtxWibvJL2yiVOkT1dxvZwAVCZVukISTOUqiLR/xQN1d1LvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jWzxgVr3; arc=none smtp.client-ip=198.175.65.18
+	s=arc-20240116; t=1712591059; c=relaxed/simple;
+	bh=IvfYhsPkX9eo/0y4HgqUk8d3IF+mLQtdItA6qYojAw4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=rvuPqGczTidQccrZKjEe5GIPoqoSPCnwXyiDAVQJarQLLDIK/ACMRm3Hr1+ffjv/fPGH2EbwUUgR8NAqEMp/YSdfe4w+5epwcBDiI21wizw81RHNuo3aZpg6iNM4PPjySdWDctQQ1/q/vveGKRCBK/2PM8f28s9CvSUQY4EvoTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gRJPRlXh; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jWzxgVr3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gRJPRlXh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712590953; x=1744126953;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=wAt9hHU1NvhG5I5QM0RA8vIU8EEsSSGfsnpVfKylQxQ=;
-  b=jWzxgVr3k9ZttHyTzQR9cmFm50TN+tcSWogxL528IVrtAdlAf6UIfnZz
-   buy2UHfjtNDHUoxco0zqnXvR6ii2WXDmrq9wdVoHL9xlCiSdqhfB2PJbe
-   5Vg5ELlQooK6fqm3nFU+9w3HDm89wd6vViuQGI9jLOXwU8LYVgkMpYMbh
-   T5O/fVss8oM8BwdMkgyhdQaY8Rvzzq5lBjMDUICGqQOV3iPyOrjcxqT2Z
-   p2WJGFvh1DrP/rzDQTph0b3EN9q37aDR/PzGRMCg5OY61vfWW4smtE9EN
-   LpqwXuKW9MsdJgJMsjnZ32qxVOerkVX4x65QK7Pwniq+tSDjXTo6Y4zqz
-   A==;
-X-CSE-ConnectionGUID: 8B757hh7R5SudEQ3WoInjA==
-X-CSE-MsgGUID: wz3ekWUERFWYdBttBZ+uig==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="8037053"
+  t=1712591058; x=1744127058;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=IvfYhsPkX9eo/0y4HgqUk8d3IF+mLQtdItA6qYojAw4=;
+  b=gRJPRlXhEIigzHnXUyIGMruSSeKe3k9XVXzDGUYpPm5zubtjVwO9MjaY
+   yTNcJpwOler25aVIpXpvNiYdF68hpXW3o7aTzkh9GcLa43USfidM8U0jU
+   iN2d01WQRsNOYKzBs0+HK4GUds55OjigmFJdRk80DeWj4iIM63zcJB8Ch
+   C6CHy/s3y/lcXmTc0jQ/E6DG+1T+G34uCukIcQkypavSL+meYVjHagzWJ
+   RXxXyTWLbYlm73NRbkYLqqNb57J6GWyc6sEVFeaOMOvJC8hkJy7yvET7G
+   2VL0XlU7iFZFef+DXNPbFb3+F56x3ByVrn9YpvauWJyBKkLgavuHO1+N6
+   Q==;
+X-CSE-ConnectionGUID: +2+aaPwcQiiRJEWaW/RVxg==
+X-CSE-MsgGUID: j4u3Bc8ASE2RgYih3NxijQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="7742036"
 X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="8037053"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 08:42:32 -0700
-X-CSE-ConnectionGUID: JBctKsOcQD6iCmMqaMO37A==
-X-CSE-MsgGUID: hTnfXv0FTMmOGbZ6/A5viQ==
+   d="scan'208";a="7742036"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 08:44:18 -0700
+X-CSE-ConnectionGUID: f8pOfed5TpWp6tg5jlyoJA==
+X-CSE-MsgGUID: 5UpuuLpnTiKYZSkaeilTvw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="20355701"
+   d="scan'208";a="20487133"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.28])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 08:42:30 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 08:44:16 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Matan Ziv-Av <matan@svgalib.org>, Hans de Goede <hdegoede@redhat.com>, 
- Gergo Koteles <soyer@irl.hu>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <33d40e976f08f82b9227d0ecae38c787fcc0c0b2.1712154684.git.soyer@irl.hu>
-References: <33d40e976f08f82b9227d0ecae38c787fcc0c0b2.1712154684.git.soyer@irl.hu>
-Subject: Re: [PATCH] platform/x86: lg-laptop: fix %s null argument warning
-Message-Id: <171259094483.17776.6352383956854097118.b4-ty@linux.intel.com>
-Date: Mon, 08 Apr 2024 18:42:24 +0300
+Date: Mon, 8 Apr 2024 18:44:11 +0300 (EEST)
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+cc: Gwendal Grignou <gwendal@chromium.org>, hdegoede@redhat.com, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 1/2] platform/x86: intel-vbtn: Use acpi_has_method to
+ check for switch
+In-Reply-To: <030a3bb8-6246-4289-b188-65ad3fc72d62@linux.intel.com>
+Message-ID: <24fa2a92-78bd-f563-d848-2b9b557dade5@linux.intel.com>
+References: <20240329143206.2977734-1-gwendal@chromium.org> <20240329143206.2977734-2-gwendal@chromium.org> <030a3bb8-6246-4289-b188-65ad3fc72d62@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 03 Apr 2024 16:34:27 +0200, Gergo Koteles wrote:
-
-> W=1 warns about null argument to kprintf:
-> warning: ‘%s’ directive argument is null [-Wformat-overflow=]
-> pr_info("product: %s  year: %d\n", product, year);
+On Fri, 29 Mar 2024, Kuppuswamy Sathyanarayanan wrote:
+> On 3/29/24 7:32 AM, Gwendal Grignou wrote:
+> > To mimic how we check if the device has virtual buttons,
+> > acpi_has_method(..."VBDL"), use the same method for checking virtual
+> > switch presence.
 > 
-> Use "unknown" instead of NULL.
+> if possible don't use words like we/I in the commit log.
 > 
+> Other wise, it looks fine.
 > 
-> [...]
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> >
+> > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
 
+Thanks all.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
-local branch there, which might take a while.
+I've applied these into review-ilpo branch. I edited the commit message 
+to get rid of "we" while applying.
 
-The list of commits applied:
-[1/1] platform/x86: lg-laptop: fix %s null argument warning
-      commit: e71c8481692582c70cdfd0996c20cdcc71e425d3
-
---
+-- 
  i.
 
