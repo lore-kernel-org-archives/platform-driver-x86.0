@@ -1,149 +1,88 @@
-Received: from wfhigh5-smtp.messagingengine.com (wfhigh5-smtp.messagingengine.com [64.147.123.156])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1246D1CD21;
-	Mon,  8 Apr 2024 14:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E25E13F439;
+	Mon,  8 Apr 2024 15:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712588216; cv=none; b=L9vW7tkvmws6uxteFtFloRfe8wyoCcJWvH2xE/nfcryHf0aNdBe9mUkQNFAKYkl67RstvAODjEyX+Acq3raazpjzBc00pimulGZroC5N8cs9MrGPm1JTra7kyH9YzolB7L28Uy3ewr8+IcwBhIp5fW3FHh/mlWT8I8Zw7Yw7yvc=
+	t=1712589129; cv=none; b=ZMAlqIWfRy7r474Q+yCoFJpnI1CxHzymhmdoDcGVl96tuKtfxEHgqfJnOeMDAHrwpPxk0YnUxmhqpk6lB/g9mWJ3rGwBw988bOcjRkQwAc0MEmBfqr+rejyt674zORimgwQTrmZCUy0OipLqxmbmB57tQDefYBfP4P1exMyJ5LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712588216; c=relaxed/simple;
-	bh=BsLAMIMjStbva84N75DgzSgJ1PObFKJZ68YVDpu0jGI=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=X+QKC+dtYBqcvZ5oeXFeVI7T1Ttq3ci33bmSPAMTAFEPoy/Blot7GQ1oBRDa1UTeVxbfN0jnBVkxzxPcLzcQjToTPCsKKC8OGvJmyKu7ikyQxPNNU3SDYWK1PZFudxu92il8WV9u9Yagwo0q8lSE1nh15j5Ld6SlEVlYQnt5n+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=AWwPDu5/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fMKeOxcs; arc=none smtp.client-ip=64.147.123.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1712589129; c=relaxed/simple;
+	bh=qr2rFW6w9/fvO6Ij1T8ekWnLY0TacXSC2/hiYqqAFmQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XUys2MXJX7h9dWNfUS1k6KdWhsUPz78B+PdGcOqudKlb0Z6CqeLXwtEYqaHm/GcxHLAY5m7M+FxM3/OW4L64pLAIT4QyI1jyQjiUxc5NZKcI1d5445P16aKoQb2eRnthMb0B2hjhliiIdyi05r+Zx4aLfO9HnyEqSDlenCVDCTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=oDSGbC8e; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="AWwPDu5/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fMKeOxcs"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 6C7A418000BE;
-	Mon,  8 Apr 2024 10:56:52 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute3.internal (MEProxy); Mon, 08 Apr 2024 10:56:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1712588211; x=1712674611; bh=MeGqRsPK4F
-	4ifIoW4vFpk0vD/NLFxc1zuaV/atwBur0=; b=AWwPDu5/kyr24uHVM4uQ1TcF4c
-	dlRaoPT9j3sewvdWF4MOtn7QtFHUaGcB40Ij45ZcqBh+1HeFyT4rn4Gy4LUak+Q1
-	l+1Te/Al3Nwx4eiJcpLk46gXax29QyfftLh8mSkdtbOJNxYkPPkyfquC5k6V8wfv
-	pCzFFkQWDHZTB5QGduj+FLhZZ7875QdsLV4DwYB2obspOyCgZVmEsT+D9qWptkkN
-	XBRJS0rQMCHqUNjUaYA22+3MacZxYKK9+vhAnVbSiJzCag0RrP7NpQFC2xvvoGNC
-	vKKKijGjx+GMbPlmVCR8ClruhwgkOlE3DGdsysbX6p10lzF2woZtalwO6xmA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1712588211; x=1712674611; bh=MeGqRsPK4F4ifIoW4vFpk0vD/NLF
-	xc1zuaV/atwBur0=; b=fMKeOxcsQ7NLCpxPRD6Zq0n88uV8G4ecCumCkylg9M/4
-	YKnzsThGqT8LMLz7gOKDMgjf61kheWkXv4HHaZs53iO6Qw7gzC/bgCXJimxuk+Rj
-	qEm4VTE+vqoM3FalnbZy5IJ/vI05XZBArOUz7xjz8KLFju+k4orK5hL77baQ7lJO
-	Xhn8/xd5TW8hEd7YawFBeLeTxv/W50L/ZcdpmbCVc1Bx6u+dcSFYMQ4ILIgaJdgf
-	RdorEQrl1OUHcwK3wBsc+JOKsJC3t+aLesjk37xO5kj39iIPDfvaZrOCQYiuLhf9
-	8/eniR1cHV3QwQK0amjz91R4pylTixxmRZNhulieLQ==
-X-ME-Sender: <xms:swUUZofagPIBlHj2SMQeFMY-V3WH0k0F2RD8LasE798wuC8CYWPcOw>
-    <xme:swUUZqNxnNMlD0IF0yidcHOksCYpb09JuE3Mr813FytFNQpzKFBU3wuX4nT4AT7W4
-    Hjgf6v0Ml8_8TFzwxQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudegiedgkedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
-    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
-    drtggrqeenucggtffrrghtthgvrhhnpeeiueefjeeiveetuddvkeetfeeltdevffevudeh
-    ffefjedufedvieejgedugeekhfenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
-X-ME-Proxy: <xmx:swUUZpgsWbsiDz8F8gl9PX3LJ1xtXrv3re3wv-sDUW3_O4m7Cc2ZFw>
-    <xmx:swUUZt_4CxQrwv7RobF8FXWzu5AjwNvIsWOq-Z0VJT1OiHEjWkViGQ>
-    <xmx:swUUZksViVYcZGfnB6Rvk0gCuJG9Txp9ZhS_gs_4wt_1paWAJVcsJA>
-    <xmx:swUUZkEPii1grCxAZw6HWnCnqmLFEzySfXspD-Ce65N0UyvPITMhtQ>
-    <xmx:swUUZlmQW2GMXE45buRb4_I4Hdw6wN4Pn-k-PkYLmOZrRdgkhew2AzxR>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 90F70C60097; Mon,  8 Apr 2024 10:56:51 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-368-gc733b1d8df-fm-20240402.001-gc733b1d8
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="oDSGbC8e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1712589118;
+	bh=qr2rFW6w9/fvO6Ij1T8ekWnLY0TacXSC2/hiYqqAFmQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oDSGbC8elT7mNaWJPttrR6M96crZSrhUQpXj4MBczDc6c+xxtAjQJ4AJcVjQn1u8S
+	 pbPg25UPAmUENh1PRbCXrDz2HFCvnqBqP52ovQH0yqcAo9SFZZiUL1nGhMaLCEryLi
+	 D53tuPWKGc/8UPFAbtyb8RV9asVDuasmnU+S5Kz8=
+Date: Mon, 8 Apr 2024 17:11:57 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: mlj@danelec.com, rafael.j.wysocki@intel.com, lenb@kernel.org, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] ACPI: fan: Add hwmon support
+Message-ID: <8bccc21e-58ce-460f-b73b-de3b4cf383dd@t-8ch.de>
+References: <20240408123718.15512-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <97f369ee-18b2-4e34-9e08-69329ca2193b@app.fastmail.com>
-In-Reply-To: <a2237f76-dae6-4198-b393-7d0c18224205@redhat.com>
-References: <mpearson-lenovo@squebb.ca>
- <20240324210817.192033-1-mpearson-lenovo@squebb.ca>
- <20240324210817.192033-4-mpearson-lenovo@squebb.ca>
- <a2237f76-dae6-4198-b393-7d0c18224205@redhat.com>
-Date: Mon, 08 Apr 2024 10:56:54 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Hans de Goede" <hdegoede@redhat.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>, dmitry.torokhov@gmail.com,
- ibm-acpi-devel@lists.sourceforge.net,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Nitin Joshi1" <njoshi1@lenovo.com>, "Vishnu Sankar" <vsankar@lenovo.com>,
- "Peter Hutterer" <peter.hutterer@redhat.com>
-Subject: Re: [PATCH 3/4] platform/x86: thinkpad_acpi: Support for system debug info
- hotkey
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240408123718.15512-1-W_Armin@gmx.de>
 
-Thanks Hans
+Hi,
 
-On Mon, Apr 8, 2024, at 9:11 AM, Hans de Goede wrote:
-> Hi,
->
-> On 3/24/24 10:08 PM, Mark Pearson wrote:
->> New Lenovo platforms are adding the FN+N key to generate system debug
->> details that support can use for collecting important details on any
->> customer cases for Windows.
->> Add the infrastructure so we can do the same on Linux by generating a
->> SYS_DEBUG_INFO keycode to userspace.
->> 
->> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->> Signed-off-by: Nitin Joshi <njoshi1@lenovo.com>
->> ---
->>  drivers/platform/x86/thinkpad_acpi.c | 4 ++++
->>  1 file changed, 4 insertions(+)
->> 
->> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
->> index 2bbb32c898e9..854ce971bde2 100644
->> --- a/drivers/platform/x86/thinkpad_acpi.c
->> +++ b/drivers/platform/x86/thinkpad_acpi.c
->> @@ -1787,6 +1787,7 @@ enum {	/* hot key scan codes (derived from ACPI DSDT) */
->>  	TP_ACPI_HOTKEYSCAN_NOTIFICATION_CENTER,
->>  	TP_ACPI_HOTKEYSCAN_PICKUP_PHONE,
->>  	TP_ACPI_HOTKEYSCAN_HANGUP_PHONE,
->> +	TP_ACPI_HOTKEYSCAN_SYS_DEBUG_INFO = 81,
->>  
->>  	/* Hotkey keymap size */
->>  	TPACPI_HOTKEY_MAP_LEN
->> @@ -3337,6 +3338,9 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
->>  		KEY_NOTIFICATION_CENTER,	/* Notification Center */
->>  		KEY_PICKUP_PHONE,		/* Answer incoming call */
->>  		KEY_HANGUP_PHONE,		/* Decline incoming call */
->> +		KEY_UNKNOWN,			/* AMT Toggle (event), 0x31A */
->> +		KEY_UNKNOWN, KEY_UNKNOWN,
->> +		KEY_SYS_DEBUG_INFO,             /* System debug info, 0x31D */
->>  		},
->>  	};
->>  
->
-> Looking at the next patch 0x131c is TP_HKEY_EV_DOUBLETAP_TOGGLE and 0x131a is
-> TP_HKEY_EV_AMT_TOGGLE based on this please change this to:
->
->   		KEY_NOTIFICATION_CENTER,	/* Notification Center */
->   		KEY_PICKUP_PHONE,		/* Answer incoming call */
->   		KEY_HANGUP_PHONE,		/* Decline incoming call */
-> 		KEY_UNKNOWN,			/* TP_HKEY_EV_AMT_TOGGLE handled in driver, 0x31a */
-> 		KEY_UNKNOWN,			/* ?, 0X31b */
-> 		KEY_UNKNOWN,			/* TP_HKEY_EV_DOUBLETAP_TOGGLE handled in driver, 0x31c */
-> 		KEY_SYS_DEBUG_INFO,             /* System debug info, 0x31d */
-> 		},
->
-Will do
+On 2024-04-08 14:37:18+0200, Armin Wolf wrote:
+> Currently, the driver does only supports a custom sysfs
+> interface to allow userspace to read the fan speed.
+> Add support for the standard hwmon interface so users
+> can read the fan speed with standard tools like "sensors".
+> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  drivers/acpi/Makefile    |  1 +
+>  drivers/acpi/fan.h       |  2 ++
+>  drivers/acpi/fan_core.c  |  7 ++++
+>  drivers/acpi/fan_hwmon.c | 78 ++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 88 insertions(+)
+>  create mode 100644 drivers/acpi/fan_hwmon.c
 
-Mark
+[snip]
+
+> +
+> +int devm_acpi_fan_create_hwmon(struct acpi_device *device)
+> +{
+> +	struct device *hdev;
+> +
+> +	hdev = devm_hwmon_device_register_with_info(&device->dev, "acpi_fan", device,
+> +						    &acpi_fan_chip_info, NULL);
+
+This fails to link if CONFIG_ACPI_FAN=y and CONFIG_HWMON=n:
+
+ld: vmlinux.o: in function `devm_acpi_fan_create_hwmon':
+.../drivers/acpi/fan_hwmon.c:74:(.text+0x819e65): undefined reference to `devm_hwmon_device_register_with_info'
+
+With this fixed:
+
+Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
+
+> +
+> +	return PTR_ERR_OR_ZERO(hdev);
+> +}
+> --
+> 2.39.2
+> 
+> 
