@@ -1,202 +1,137 @@
-Received: from gnuweeb.org (gnuweeb.org [51.81.211.47])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3B1757FF;
-	Mon,  8 Apr 2024 16:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.211.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E817D40E
+	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Apr 2024 16:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712592837; cv=none; b=cctH4azVEkzkhBhsEWJZX0fAqKIf8cMJ4Q1A+PRM6eQUxrl0L4h5kMISNNSGm14rKZppK97wRcI45Kwx4AdZaK5u0QrNQaWW0RLdvPe7AcRNm3qzKyVeZ/hsTFzap4y+viEXdEVCEoevOGwfq1RzASFSz8IslVQW3OVD+SEa+Xc=
+	t=1712593212; cv=none; b=erhkEuWF97KvHAvXlb+b4SHpJ1YkX45Zl6BuOTxc5wPHfhMtw73dlCHNnyLfd41p+ImTJkOowECszKMc7FV4Y66XjSR0hf7gbLlNU1kFSum8t7nI7FPRKBwWPdDRuwCH1Fff1d00uPSDUI4vWwuyDHlWKOKR7odd9JjBwQoKOFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712592837; c=relaxed/simple;
-	bh=Do9FKM1CWRPf91QOy3CUWXV2Tko8dFZtHCEe3Y0GgZw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JZ6exJp+QLE6l+L8Xu/p5Tze0eEqVXG2p4nCjVwFB5jtdW1S8aY6D+sbokf93esDgkRxb1WJt+kHdotl3Q8fW3Qanm5I4h8yG2/k2dhtC2s/2A5Ws4xY+acdiascaM2+EVm8zcpjM2q/ENh5ST7ReYYrb2cu+nuwYYVe7rPfy14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=Oz1wtV2A; arc=none smtp.client-ip=51.81.211.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnuweeb.org
+	s=arc-20240116; t=1712593212; c=relaxed/simple;
+	bh=3YTcCvOrTIb8ztr9NoSc8FqKlvU9VhJIM/P9pQlXReo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sbXpbdmPrFdwRt9otPqmqlchvlvNVUhf/YumMtuT/6g32HVl4HPsVmTGXVv6nRgCB3SVnbnl0xHPoXsXTTJ7gRVeLam90euAEB/MaAWXJUyjY7+SnTMpUde49wg3ZDotzmBzTY8VQnkLMxxPE6UnBscHhBgzKk3jglJA93lWnKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jEIAmA8x; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="Oz1wtV2A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
-	s=default; t=1712592835;
-	bh=Do9FKM1CWRPf91QOy3CUWXV2Tko8dFZtHCEe3Y0GgZw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Oz1wtV2A1zM7PbtXNLdjDywPq00oYeH6pslxw0JsTvXNsFnQ4l/5dxXFH1OEofNhf
-	 igT0Y2RI9KZ58/B0TWpZef03HNmzRxTiPpVfLwnPS1NZ9DanmlNIlACPsk/bhWLaUZ
-	 NmDLWarKghLznXkGR4fCFhi8SQGREqH4bjKPyEPqIFKoP2cLbRrRjmKJnMOovTzlom
-	 etsmBCwz5KaSA/oNHBcsjzIHcNbtl5hcXzq6QlsOm4YmUnZa5AuPn0hxtSkbqUXGRa
-	 BJDDlPHZqwGy5bkI3FdcxqWlIFznwll+IWuj1bz/TsW33Vnbso+GwmIO5TstzfWbrx
-	 UZ0fzzc4KDuUQ==
-Received: from bloom.tail0d56f.ts.net (unknown [88.235.219.169])
-	by gnuweeb.org (Postfix) with ESMTPSA id 1EE7B249D1C;
-	Mon,  8 Apr 2024 23:13:49 +0700 (WIB)
-From: Stella Bloom <windowz414@gnuweeb.org>
-To: =?UTF-8?q?Mustafa=20Ek=C5=9Fi?= <mustafa.eskieksi@gmail.com>
-Cc: Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>,
-	Ammar Faizi <ammarfaizi2@gnuweeb.org>,
-	Bedirhan KURT <bedirhan_kurt22@erdogan.edu.tr>,
-	GNU/Weeb Mailing List <gwml@vger.gnuweeb.org>,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	jdelvare@suse.com,
-	lee@kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	linux@roeck-us.net,
-	pavel@ucw.cz,
-	platform-driver-x86@vger.kernel.org,
-	Stella Bloom <stelbl@elrant.team>
-Subject: Re: [PATCH v5 0/1] platform/x86: Add wmi driver for Casper Excalibur laptops
-Date: Mon,  8 Apr 2024 19:13:38 +0300
-Message-ID: <20240408161345.143779-1-windowz414@gnuweeb.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <15fdc072-9329-4675-8d9e-189862d88351@gmail.com>
-References: <15fdc072-9329-4675-8d9e-189862d88351@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jEIAmA8x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712593208;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=h22863Hy//pfBouSlhMFbsB3REYm2hRFCV0bcbkG38I=;
+	b=jEIAmA8xrVk+vzIXE6DT2LqqhJUUAjAsZ+P2A27z7wTTdiXLxIGCRh6nEOsS+Q2EJ1MEy7
+	Z4dyKRYx206BzaTqkO46vRQMvy6cAII4Npbzaf7GarLME/J/oo3RE70qMI/a5beXa/Si8h
+	U3BvNtyjx/5/7FfkdWX3TB8LBZV+s4o=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-360-OlQwelsuPnWg3aLmXz7ehg-1; Mon, 08 Apr 2024 12:20:06 -0400
+X-MC-Unique: OlQwelsuPnWg3aLmXz7ehg-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a51b97efbb8so227554066b.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 08 Apr 2024 09:20:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712593205; x=1713198005;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h22863Hy//pfBouSlhMFbsB3REYm2hRFCV0bcbkG38I=;
+        b=uN7ZdjIbmIw+M813t5KLbn6N1lNkNjrlHEdgXHccfcQ2rRtWkyNzmdzlSbe9sw6ovo
+         kjG+4AX+rDXxDNeHJwPo3QkqroOCzS5VcOojp5hC1QBXi0uv55FWh0A/Leq3wMKlNVZa
+         ONp/XbrrbXBH0oWEPgI9RdqEXvbu3xMX8CmSDDd7gs9oB1UO8KJuBjekDQYxS1Ee5U/Y
+         ebH1JsC8QAHju3NnAUNpiuoVQvx92IumHSQfAbgSWE3TkWavzJB2CDBSQvqhDzLbRrRC
+         JEcIn4RZh2oQxFlug6QAvpQevSFViP4TIC+CPPmktEvqNvDLxs2HspMfx9vaJ1zZWccj
+         q9LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTo4Q96Lp/wq0FUXGXiCB4q1nHwLSKbMg85Mqt0tDGqoT32h/jxF9OJXwmwpwz7x3t4jzItw2VtP7cjtXpSCVWZk+ifGZJ0/HHFxiEVOrkYZ+M+g==
+X-Gm-Message-State: AOJu0Yy3I/dcBByisnzQDaP1ulrvISMYSbc4LliMsxYBN64dNgYE7cEr
+	lN0ASPGKTAgXUzZV/P1/OtM2OkMF25kmZfMmTQaN8oEH24fLscSRf3sVLLrBxYK0j4wFMWmN5Xd
+	ub9DC7Jcq2qciLXmia7CDfFKPSmcQ/wjTiDwW35JY+USW6U8cQq8dqv0Kyslswc4sOaOeBNI=
+X-Received: by 2002:a17:906:37d5:b0:a51:985d:949e with SMTP id o21-20020a17090637d500b00a51985d949emr166445ejc.2.1712593205268;
+        Mon, 08 Apr 2024 09:20:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFa6K3OLMNW4jUMdcW9sA1jkRXcBLkNteJW1AwAA1eEenPDvlhGrrlpPIgzeeRX+lEnxq3YPQ==
+X-Received: by 2002:a17:906:37d5:b0:a51:985d:949e with SMTP id o21-20020a17090637d500b00a51985d949emr166424ejc.2.1712593204916;
+        Mon, 08 Apr 2024 09:20:04 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id t1-20020a1709067c0100b00a46aac377e8sm4611412ejo.54.2024.04.08.09.20.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Apr 2024 09:20:04 -0700 (PDT)
+Message-ID: <609652ce-0336-4d69-ab79-f84c8a8506e5@redhat.com>
+Date: Mon, 8 Apr 2024 18:20:03 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] platform/x86/intel: atomisp2: Replace deprecated
+ UNIVERSAL_DEV_PM_OPS()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20240403105511.558395-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240403105511.558395-1-andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2024-04-08 at 18:23 +0300, Mustafa Ekşi wrote:
-> On 7.04.2024 03:57, Stella Bloom wrote:
->>> From: Mustafa Ekşi <mustafa.eskieksi@gmail.com>
->>>
->>> Hi,
->>> I want to note that moving mutex_init to the bottom of the function
->>> crashes the driver when mutex_lock is called. I didn't investigate it
->>> further but I wanted to say that since Ai Chao also did it like that.
->>>
->>> Driver sets all leds to white on start. Before that, when a led's
->>> brightness is changed, that led's color gets set to white but others
->>> keep their old colors which creates a bad user experience (at least for
->>> me). Please inform me if this is a bad approach.
->>> Also, this driver still lacks support for changing modes and I seek
->>> advise for that.
->>>
->>> Mustafa Ekşi (1):
->>>    platform/x86: Add wmi driver for Casper Excalibur laptops
->>>
->>>   MAINTAINERS                       |   6 +
->>>   drivers/platform/x86/Kconfig      |  14 +
->>>   drivers/platform/x86/Makefile     |   1 +
->>>   drivers/platform/x86/casper-wmi.c | 641 ++++++++++++++++++++++++++++++
->>>   4 files changed, 662 insertions(+)
->>>   create mode 100644 drivers/platform/x86/casper-wmi.c
->>>
->> Hi there,
->>
->> I just wanted to pitch in by testing the driver on the kernel I use
->> on my Arch install on an Excalibur G770.1245, namely xdevs23's
->> linux-nitrous (https://gitlab.com/xdevs23/linux-nitrous), but trying to
->> compile the driver using LLVM, which is the default compilation behavior
->> in this kernel's AUR package, spits out the following error;
->> ```
->> drivers/platform/x86/casper-wmi.c:633:3: error: field designator 'no_singleton' does not refer to any field in type 'struct wmi_driver'
->>   633 |         .no_singleton = true,
->>       |         ~^~~~~~~~~~~~~~~~~~~
->> 1 error generated.
->> make[5]: *** [scripts/Makefile.build:243: drivers/platform/x86/casper-wmi.o] Error 1
->> make[4]: *** [scripts/Makefile.build:481: drivers/platform/x86] Error 2
->> make[3]: *** [scripts/Makefile.build:481: drivers/platform] Error 2
->> make[2]: *** [scripts/Makefile.build:481: drivers] Error 2
->> make[1]: *** [/home/stella/.cache/yay/linux-nitrous/src/linux-nitrous/Makefile:1919: .] Error 2
->> make: *** [Makefile:240: __sub-make] Error 2
->> ```
->>
->> I want to help debug this somehow, but I'm more of an Android custom
->> ROM developer than a Linux kernel maintainer, so my knowledge on the
->> programming and build system languages other than Java, Makefile, Bash,
->> etc is pretty much limited if not outright non-existent.
-> Hi,
-> This is because of a newly merged patch from Armin Wolf:
-> https://lore.kernel.org/platform-driver-x86/20240226193557.2888-2-W_Armin@gmx.de/
-> You can comment that line or apply that patch to your tree to make it
-> compile. Also, you'll probablyneed to change the call to wmidev_block_set in
-> casper_query function with wmi_set_block (which is now deprecated).
-Well, I prefer not to touch the driver itself, so I already resorted to
-picking the patch over the latest RC, which is v6.9-rc2 as of now, and
-got onto compiling `linux-mainline` AUR package with it. It will be
-kind of a hassle considering how I have to write systemd-boot entries
-after the installation to get the kernel to appear (one for normal
-initramfs and the other for fallback one) and sign the kernel image
-using `sbctl` so I don't fail secure boot, but I'm willing to go
-through it just for the sake of seeing this driver in action without
-bugs related to the "backport" modifications I would do to it.
->> I would *love* to see this driver actually hit mainline repos, and
->> eventually the upcoming kernel releases, given how much I need to use
->> this laptop of mine as a computer engineering student.
->>
->> Asking just for the case I manage to get this driver up and going on
->> my end somehow: Is there a tool made for controlling the LED colors yet?
->> I can still use CLI tools much like on ASUS ROG series laptops, but it
->> would be much easier and more appreciated to have a GUI provided
->> Excalibur series laptops' LED lights can virtually take any color in
->> the RGB space - At least that's how I interpreted with the
->> configurations I used to do on mine using Excalibur Control Center
->> on Windows 10/11.
-> No, there isn't a tool yet but controlling leds via sysfs ispretty easy.
-> For example, if you wanted to change the left led zone's color to red:
-> ```
-> # echo 0xff0000 > /sys/class/leds/casper\:\:kbd_zoned_backlight-left/multi_intensity
-> ```
-Oh so the LED zones are in different sysfs directories, that's pretty
-good. I might code a simple Bash script to make things easier later
-down the road.
-> And don't forget that all leds' initial brightnesses are 0.
-Yeah I think I read that somewhere in the initial message. Can't I
-change the brightness of the LEDs using Fn+Space anyway if I can't find
-the sysfs entries for that? At least it works just fine on the latest
-stable release - v6.8.4.
-> Also, I'm planning to add support for this API in OpenRGB.
-That's pretty nice to hear! If you need someone to test it out on a
-12th gen G770, I'm more than willing to do so!
->> And as for the profiles, let me make sure we're talking about the same
->> thing in this term: You're talking about the "Office", "Gaming" and
->> "High Performance" modes as seen in Excalibur Control Center, right?
-> For laptops with 11th gen processors or newer: yes.
-> For laptops with 10th gen processors or older: no, there are 4 power
-> profiles for these laptops (High Performance, Gaming, Text Mode andPower
-> save).
-Oh so that's a yes in my case as my laptop has a 12th gen processor.
-Glad to know.
->> If so, can this be somehow integrated into `power-profiles-daemon`
->> SystemD service for easier controlling with GNOME and other DEs that
->> use it? It's fine if it can't be, this was just a thought struck on my
->> mind for whatever reason.
-> Yes, power-profiles-daemon is already integrated with platform_profile.
-Now that's exciting to hear. I haven't seen a laptop that has its power
-profiles integrated into the system with a driver in terms of Linux...
-At least on the Monster and ASUS laptops I've tried Ubuntu on IIRC.
->> Please do CC me and the people I've added to the CC list with this email
->> of mine on the upcoming revisions, if any. We would love to keep track
->> of this driver and I personally would love to contribute into testing
->> as a power user.
->>
->> Cc: Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>
->> Cc: Ammar Faizi <ammarfaizi2@gnuweeb.org>
->> Cc: GNU/Weeb Mailing List <gwml@vger.gnuweeb.org>
->>
->> Also adding my organizational and school email addresses to the CC list
->> so I can still be notified while I stay offline on this email address.
->> GNOME Evolution doesn't run in the background and periodically check
->> for emails sadly, and I switch ROMs every now and then on my phone as a
->> source maintainer of 3 different custom ROMs. :/
->>
->> Cc: Stella Bloom <stelbl@elrant.team>
->> Cc: Bedirhan KURT <bedirhan_kurt22@erdogan.edu.tr>
->>
->> --
->> Stella Bloom
-> Thanks for your interest,
-> Mustafa Ekşi
+Hi Andy,
 
-Also I apologize for the previous (empty) email. I forgot to put one
-newline after the "Subject" line, which caused git-send-email to not
-pick up the email content.
+On 4/3/24 12:55 PM, Andy Shevchenko wrote:
+> The UNIVERSAL_DEV_PM_OPS() macro is deprecated. Replace it.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
---
-Stella Bloom
+As mentioned in the description of DEFINE_RUNTIME_DEV_PM_OPS()
+DEFINE_RUNTIME_DEV_PM_OPS() is NOT a 1:1 replacement for
+UNIVERSAL_DEV_PM_OPS() specifically it uses pm_runtime_force_suspend() /
+pm_runtime_force_resume() .
+
+Specifically pm_runtime_force_suspend() may NOT get set (and in this case
+will not set) needs_force_resume skipping a resume + suspend cycle
+after a system suspend, which is a problem if firmware has touched
+the state of the device during the suspend/resume cycle since the device
+may now actually be left powered on.
+
+It seems there is no direct replacement for UNIVERSAL_DEV_PM_OPS()
+without a behavior change.
+
+Regards,
+
+Hans
+
+
+
+
+> ---
+>  drivers/platform/x86/intel/atomisp2/pm.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/atomisp2/pm.c b/drivers/platform/x86/intel/atomisp2/pm.c
+> index 805fc0d8515c..1081b632bd5e 100644
+> --- a/drivers/platform/x86/intel/atomisp2/pm.c
+> +++ b/drivers/platform/x86/intel/atomisp2/pm.c
+> @@ -118,8 +118,7 @@ static int isp_pci_resume(struct device *dev)
+>  	return 0;
+>  }
+>  
+> -static UNIVERSAL_DEV_PM_OPS(isp_pm_ops, isp_pci_suspend,
+> -			    isp_pci_resume, NULL);
+> +static DEFINE_RUNTIME_DEV_PM_OPS(isp_pm_ops, isp_pci_suspend, isp_pci_resume, NULL);
+>  
+>  static const struct pci_device_id isp_id_table[] = {
+>  	{ PCI_VDEVICE(INTEL, 0x0f38), },
+> @@ -133,7 +132,7 @@ static struct pci_driver isp_pci_driver = {
+>  	.id_table = isp_id_table,
+>  	.probe = isp_probe,
+>  	.remove = isp_remove,
+> -	.driver.pm = &isp_pm_ops,
+> +	.driver.pm = pm_ptr(&isp_pm_ops),
+>  };
+>  
+>  module_pci_driver(isp_pci_driver);
+
