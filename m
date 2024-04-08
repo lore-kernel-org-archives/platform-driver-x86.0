@@ -1,585 +1,223 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 716212AF13
-	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Apr 2024 12:34:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17984433BA;
+	Mon,  8 Apr 2024 12:37:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712579654; cv=none; b=ko46WxYvb6qdV+HkNB1WCgifRQ4bmZwMbCT6zm2TMVS7+P8qVTuRCio0ob6SLHBlC05wsBNfDipnu4HOvCe9YqM9XPX4LJfmDYEMjfVXA53LmY47P6VFOYPl8/d5oMh/8gjJQoAyZgHLy06M5RxSUdLg7ttUkVmipZWKxM4kOkQ=
+	t=1712579855; cv=none; b=LFIRqCuQw3mq0givcoBg2zOodihI/CDU2+696/sgYipEHNYGSzWW+wrIgRJKWD7TC0j3w4qhu/+/26G2kx8z/Yt9l3bYyKUndrb6ovMYP14D2AchVrDqjW3t2hknLSJgpHvsO9Y6UY8+EylSpmnu7ZVwTyNT/e4kYAR6ErUT97s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712579654; c=relaxed/simple;
-	bh=dj5LAfsrTeiYzz4ndEmaJ/OyvFWl+oYNDC6SImYQTHQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AQMN9s/1Hx97aYfbXuua5kYewe7zlfQpyvmH31R2AYoSZxwL50gGWmPruEuCTd8J5Z08xEk3OTxuseqlTsj7xAoYo/2Xk2uk5DyxceFtPSmEbsIWmgAl7epZHSfPK1N3SzmUJ2VguXINurNpzagAlZgwKZZWpHKHHuZjON/6DII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OBWLnnOJ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712579855; c=relaxed/simple;
+	bh=yefMtkxcArShVlH4gKmHcFyVb/vZbZvOhfWn1j2P5VM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lBZdgtRz9KXfwcXoy8B2079Gsdy1HVGyKIZhF8u+0EPoiMX+TSSYBBT6fyF6XF+SRPlI67W2PrIb4XFBoX1LiWmL49fNWK5+jmTAL9chZZDhK+/lekBDSnM8Jb9+HgUc7mqKA1hQtEAmX7cXBtkVYzt5UszrD4My3C+QgLyMSsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=S9Q7HphF; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OBWLnnOJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712579651;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sJ9FknPyFolJWo9kktE00JvLm6NhkWwlePPMXGCBJgE=;
-	b=OBWLnnOJcVDWeGDSH9Ka/K/+6YKnEGduVLgDu79kRnnUasaAn+pngvxU9MXuoFhjWNtn7O
-	/gU3f7sb2tsLk0U4Td1VvLNCSmiq5zYjMwttf5sahKZpsXQ2CPRdwQHhNSFHBv8HcfGM+i
-	C6COU+YStAItXFBZsDiKxWR2W9xHUjE=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-664-tZ9nyW_iPsmfXFm3Po4mzg-1; Mon, 08 Apr 2024 08:34:07 -0400
-X-MC-Unique: tZ9nyW_iPsmfXFm3Po4mzg-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-56e5309b4d6so1179457a12.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 08 Apr 2024 05:34:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712579646; x=1713184446;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sJ9FknPyFolJWo9kktE00JvLm6NhkWwlePPMXGCBJgE=;
-        b=W0sYG8EWiXIYVFWqtBLKJICVPksbRRdxM87q24GZMHyFEEbHP9u7CCZIXhsxIDLo7M
-         HY5zglOrFS++sox/ahoXvvfyk20T0WmGsrEEZqr0zJ2zRG/JLARA+TqlH+80QkidQ9vU
-         OkSyULTP68jTkF7jrKEfAM3VGuf4cRlLc/y4+PDmKD8y8zLgOVAubohCqgyrSE+2OGnD
-         sO5mBezyovD0/MoaUJ9dee+nhazm3bixuewwJq3Q1G/bdakbqFTYzmp9MpKwzXrWMKhF
-         B5Rkc+oGIVjVqdIxdIb7LOnIX+AlryyCFhoIzLlB7UrEQUkG8aoqoDUm7gR5xqolcyou
-         lRow==
-X-Gm-Message-State: AOJu0Yz1Qj4pO7wZ+CymE0vA40q0Zvqaz/v7rk/olOvrziSFIt12x7Bq
-	CHLOJc9eR39pRgAuxDksKZ39GC9M4oXp+UiEdgkFK9lZA46rdSNF0sO68q8kbwDTIUUFf5tYp5k
-	x+rCYY61VfzGwhs2HQslVXYdKUof7wkXJNu4neweWjW9SYksC/oU3s57bgX4OxQKFWmnfO84=
-X-Received: by 2002:a17:906:11da:b0:a4e:146c:ff09 with SMTP id o26-20020a17090611da00b00a4e146cff09mr5570910eja.7.1712579646572;
-        Mon, 08 Apr 2024 05:34:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFdxAgdOGtdNePVBdRUjz9HRKrP+pDPjcQEFa1phRAOaF8bDt421J4Xb9kgwDw7TjCL7GlFDg==
-X-Received: by 2002:a17:906:11da:b0:a4e:146c:ff09 with SMTP id o26-20020a17090611da00b00a4e146cff09mr5570889eja.7.1712579646094;
-        Mon, 08 Apr 2024 05:34:06 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id qy25-20020a170907689900b00a51b18a77b2sm3487694ejc.180.2024.04.08.05.34.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Apr 2024 05:34:05 -0700 (PDT)
-Message-ID: <473d8897-7b97-4175-b171-42fd2c8de0d6@redhat.com>
-Date: Mon, 8 Apr 2024 14:34:04 +0200
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="S9Q7HphF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1712579841; x=1713184641; i=w_armin@gmx.de;
+	bh=L1BU2ousVKg/7DmZnw1u5sv8vb4fB8a7T761tiV3qfE=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=S9Q7HphFy27GlMXLfw8AHgtihTfaL/SmvzwRaEDv2NlovsXJj8DykQvWlI8Ehk9u
+	 gBLjviYaslpfZGYWozDg4ssLFTzi1l83LULosLpHpQ5NtH0BR/K9CZz9DmIG0h+7Q
+	 giZWiki3YxPAd8CNDrBwIX9g5zSU3nd/23Uc1yd75oEQvVvIhA0VM9PWlR/GZh20V
+	 k+IIxxSzKzuuqIOBq6xvzFez/Qh5mSqJbuG6PkLFonJs0fkGWawK2dlCKdXUdIMnA
+	 iWTBYdmj5ciamUq+AMnTWhaMi8V2NLCsV7LlNDPjhWCJEQ0whSMolGV828c8uHY9a
+	 YDNfGFwzTqTzkmuFiw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MSKu0-1sMJVA45Um-00SfKi; Mon, 08 Apr 2024 14:37:21 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: mlj@danelec.com,
+	rafael.j.wysocki@intel.com,
+	lenb@kernel.org
+Cc: linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH] ACPI: fan: Add hwmon support
+Date: Mon,  8 Apr 2024 14:37:18 +0200
+Message-Id: <20240408123718.15512-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] HP: wmi: added support for 4 zone keyboard rgb
-To: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>,
- Rishit Bansal <rishitbansal0@gmail.com>, mustafa <mustafa.eskieksi@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Werner Sembach <wse@tuxedocomputers.com>,
- Linux LED Subsystem <linux-leds@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>
-References: <20240324180549.148812-1-carlosmiguelferreira.2003@gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240324180549.148812-1-carlosmiguelferreira.2003@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:TK8i3nSi3uO+dm9pfkFvHgu1Ru5aKAWC+801oPC3Z2vPUGCb6xd
+ GSOfeeyZ+hwd391g2hc3ov22j6T0G75yPo82BuPRdypwM/ccL3tyC/nxiYWb5iS/8XK4PWK
+ jnlB/yO/Mrx+//S7G8MJNPIOHOBOCEUI5iDJA6Wug3zQeS5RWKCZRrmKLObl2EE4Of2yHQh
+ RwrJ6W91gzNngxumDt+YA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:NOgi25aLGd0=;iMCVK8eKt9CCCYGQdxi8VOTrS5H
+ SF5wcrvUdxUqVXeT7r2zZtWQrKSVf3ElAmy5XvJnVR5LPER1mtXY0u0otXK+kKqyLAoUsA4HA
+ zt9NU0tAWyLe/n73hw/2auc8J9vnRzp04bsSnmF+2Q6ulaKKf+T++Bo5F4MgGE3T1livVO0Zy
+ H8hUPuPb3xQxn066Way1cN7LsW0VrAWfWTegtdnKeVkrVf6vpKwueFX2iQrEcEoY1hQxU9wKU
+ G0sPYyP0qOWEfLvn5ZrXtLAAL+EvqY0lozhxqbA6LZUidvG5Nrqe4Yuer1AR2X+Ebpnnus0ee
+ XdS220hOAS5MfIXGn/6WhN6LgDzgWOFwoNNkBT4CLBxuKpQW/5KHk+7mBdI2BC/D/dOQFzcHs
+ HeUiDpc+ylKI+OcyQ7iMWMBXCwoK2NsrK+soK5Z2iKJqmAuF6KRuc4myilriu1SnouplGXQGA
+ 757ve82M+3+6/lJdtycsj4jq2rf7OecTTsbWgd9qrdGzoJHXhiM4JbzFxAjcbWVtQAkvpOFi4
+ bDnXo9ylpu1X86b8efkFo6Y53RFmGDu9fnz5FluJDCs55X/JufpqgDql+/R6CtuZsk+36LVnv
+ V+/P8GLgkzhW0aQ3gGo9kyp0V8MmrC4ul1iznuy2PEd096DqgcjMD2AIK+pXpGVgA3qCWtd4m
+ 1XEGq/v0VEXQNKl0XrTmMOZmLYvHmJBOCE1dGhw/40VXUBLhzm9DUl6Irf6D0LvX5bIfeLDaF
+ EVZex4sm7SDJs2tLP0kQdRoRqHcR8kvkYpwfe97//eLwMcC9vGsSQI7CRMcloJUdEQoXvjkz+
+ eTlmHKsB9eUiJYvRDZHToh5mAx2xnw/TzXzMgrvJJlGf8=
 
-Hi Carlos,
+Currently, the driver does only supports a custom sysfs
+interface to allow userspace to read the fan speed.
+Add support for the standard hwmon interface so users
+can read the fan speed with standard tools like "sensors".
 
-On 3/24/24 7:05 PM, Carlos Ferreira wrote:
-> Added support for 4 zone keyboard rgb on omen laptops.
-> 
-> Signed-off-by: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/acpi/Makefile    |  1 +
+ drivers/acpi/fan.h       |  2 ++
+ drivers/acpi/fan_core.c  |  7 ++++
+ drivers/acpi/fan_hwmon.c | 78 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 88 insertions(+)
+ create mode 100644 drivers/acpi/fan_hwmon.c
 
-Thank you for your patch and sorry for being slow with replying to this.
+diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+index d69d5444acdb..9a2e03acc1be 100644
+=2D-- a/drivers/acpi/Makefile
++++ b/drivers/acpi/Makefile
+@@ -83,6 +83,7 @@ obj-$(CONFIG_ACPI_TINY_POWER_BUTTON)	+=3D tiny-power-but=
+ton.o
+ obj-$(CONFIG_ACPI_FAN)		+=3D fan.o
+ fan-objs			:=3D fan_core.o
+ fan-objs			+=3D fan_attr.o
++fan-objs			+=3D fan_hwmon.o
 
-There actually already was a previous attemp to add support for
-the 4 zone keyboard to hp-wmi by Rishit Bansal:
+ obj-$(CONFIG_ACPI_VIDEO)	+=3D video.o
+ obj-$(CONFIG_ACPI_TAD)		+=3D acpi_tad.o
+diff --git a/drivers/acpi/fan.h b/drivers/acpi/fan.h
+index e7b4b4e4a55e..45c2637566da 100644
+=2D-- a/drivers/acpi/fan.h
++++ b/drivers/acpi/fan.h
+@@ -56,4 +56,6 @@ struct acpi_fan {
+ int acpi_fan_get_fst(struct acpi_device *device, struct acpi_fan_fst *fst=
+);
+ int acpi_fan_create_attributes(struct acpi_device *device);
+ void acpi_fan_delete_attributes(struct acpi_device *device);
++
++int devm_acpi_fan_create_hwmon(struct acpi_device *device);
+ #endif
+diff --git a/drivers/acpi/fan_core.c b/drivers/acpi/fan_core.c
+index ff72e4ef8738..6bbdbb914e95 100644
+=2D-- a/drivers/acpi/fan_core.c
++++ b/drivers/acpi/fan_core.c
+@@ -7,6 +7,7 @@
+  *  Copyright (C) 2022 Intel Corporation. All rights reserved.
+  */
 
-https://lore.kernel.org/platform-driver-x86/20230131235027.36304-1-rishitbansal0@gmail.com/
++#include <linux/kconfig.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+@@ -336,6 +337,12 @@ static int acpi_fan_probe(struct platform_device *pde=
+v)
+ 		if (result)
+ 			return result;
 
-As discussed there we really want to define a new standardized
-userspace API for the backlight functionality of these zoned
-RGB keyboards. Using driver specific sysfs attributes for this
-is undesirable, since that will never get wide support in userspace.
-
-OTOH if we define and document a new standard userspace API for this
-then hopefully standard userspace stacks like KDE and GNOME will
-eventually get support for this and then for the next zoned rgb
-keyboard things will just work using the new standard API once
-kernel support is merged.
-
-I realize that using a single LED class device with kbd_backlight
-in the name to tap into the existing userspace support to at least
-control the overall backlight brightness is useful and tempting but
-
-IMHO this really is a case where we need a new userspace API and then
-emulating just a single brightness control for compatilbility with
-existing userspace UI code can be done in powerdevil (KDE) or
-upower (GNOME and others) in combination with offereing a more
-complete DBUS API to also allow controlling the zones separately.
-
-Recently another (laptop) driver for Casper Excalibur laptops has
-been posted and this also include support for a 4 zone rgb keyboard:
-https://lore.kernel.org/platform-driver-x86/20240324181201.87882-2-mustafa.eskieksi@gmail.com/
-
-This driver actually already implements the userspace API proposed in
-the discussion surrounding the earlier "[PATCH V3] platform/x86: hp-wmi:
-Support omen backlight control wmi-acpi methods" patch.
-
-This driver creates 4 LED class devices using the multi-color LED API
-for RGB. One LED class device per zone. These are named:
-
-casper:rgb:kbd_zoned_backlight-right
-casper:rgb:kbd_zoned_backlight-middle
-casper:rgb:kbd_zoned_backlight-left
-casper:rgb:kbd_zoned_backlight-corners
-
-Where as for the HP laptop case I believe the 4 multi-color LED
-class devices should have the following names since the zones
-are different:
-
-hp:rgb:kbd_zoned_backlight-main
-hp:rgb:kbd_zoned_backlight-wasd
-hp:rgb:kbd_zoned_backlight-cursor
-hp:rgb:kbd_zoned_backlight-numpad
-
-As I mentioned in my review of the Casper Excalibur laptop driver
-as part of adding support for these zoned rgb keyboards to various
-laptop vendor specific drivers we should also document how these
-devices are presented to userspace:
-
-A separate patch needs to be written to add documentation about
-the use of these names for zoned RGB backlit kbds in a new paragraph /
-subsection of the "LED Device Naming" section of:
-
-Documentation/leds/leds-class.rst 
-
-And this should document at least the 2 currently known
-zone sets:
-
-:rgb:kbd_zoned_backlight-right
-:rgb:kbd_zoned_backlight-middle
-:rgb:kbd_zoned_backlight-left
-:rgb:kbd_zoned_backlight-corners
-
-:rgb:kbd_zoned_backlight-main
-:rgb:kbd_zoned_backlight-wasd
-:rgb:kbd_zoned_backlight-cursor
-:rgb:kbd_zoned_backlight-numpad
-
-with a comment that in the future different zone names are possible
-if keyboards with a different zoning scheme show up.
-
-Perhaps you can work together with Mustafa on writing a patch for:
-Documentation/leds/leds-class.rst ?
-
-for this and then hopefully Pavel can review + ack this patch
-and then we can move forward with both the hp and the casper
-laptop zoned rgb keyboard support.
-
-Regards,
-
-Hans
-
-
-
-
-> ---
->  drivers/platform/x86/hp/hp-wmi.c | 308 +++++++++++++++++++++++++++----
->  1 file changed, 273 insertions(+), 35 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-> index e53660422..f420f41c7 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -103,7 +103,7 @@ enum hp_wmi_event_ids {
->  /*
->   * struct bios_args buffer is dynamically allocated.  New WMI command types
->   * were introduced that exceeds 128-byte data size.  Changes to handle
-> - * the data size allocation scheme were kept in hp_wmi_perform_qurey function.
-> + * the data size allocation scheme were kept in hp_wmi_perform_query function.
->   */
->  struct bios_args {
->  	u32 signature;
-> @@ -114,15 +114,15 @@ struct bios_args {
->  };
->  
->  enum hp_wmi_commandtype {
-> -	HPWMI_DISPLAY_QUERY		= 0x01,
-> -	HPWMI_HDDTEMP_QUERY		= 0x02,
-> -	HPWMI_ALS_QUERY			= 0x03,
-> +	HPWMI_DISPLAY_QUERY			= 0x01,
-> +	HPWMI_HDDTEMP_QUERY			= 0x02,
-> +	HPWMI_ALS_QUERY				= 0x03,
->  	HPWMI_HARDWARE_QUERY		= 0x04,
->  	HPWMI_WIRELESS_QUERY		= 0x05,
-> -	HPWMI_BATTERY_QUERY		= 0x07,
-> -	HPWMI_BIOS_QUERY		= 0x09,
-> -	HPWMI_FEATURE_QUERY		= 0x0b,
-> -	HPWMI_HOTKEY_QUERY		= 0x0c,
-> +	HPWMI_BATTERY_QUERY			= 0x07,
-> +	HPWMI_BIOS_QUERY			= 0x09,
-> +	HPWMI_FEATURE_QUERY			= 0x0b,
-> +	HPWMI_HOTKEY_QUERY			= 0x0c,
->  	HPWMI_FEATURE2_QUERY		= 0x0d,
->  	HPWMI_WIRELESS2_QUERY		= 0x1b,
->  	HPWMI_POSTCODEERROR_QUERY	= 0x2a,
-> @@ -131,18 +131,36 @@ enum hp_wmi_commandtype {
->  };
->  
->  enum hp_wmi_gm_commandtype {
-> -	HPWMI_FAN_SPEED_GET_QUERY = 0x11,
-> -	HPWMI_SET_PERFORMANCE_MODE = 0x1A,
-> +	HPWMI_FAN_SPEED_GET_QUERY	  = 0x11,
-> +	HPWMI_SET_PERFORMANCE_MODE    = 0x1A,
->  	HPWMI_FAN_SPEED_MAX_GET_QUERY = 0x26,
->  	HPWMI_FAN_SPEED_MAX_SET_QUERY = 0x27,
-> -	HPWMI_GET_SYSTEM_DESIGN_DATA = 0x28,
-> +	HPWMI_GET_SYSTEM_DESIGN_DATA  = 0x28,
-> +	HPWMI_GET_KEYBOARD_TYPE		  = 0x2B,
-> +};
-> +
-> +enum hp_wmi_fourzone_commandtype {
-> +	HPWMI_SUPPORTS_LIGHTNING = 0x01,
-> +	HPWMI_FOURZONE_COLOR_GET = 0x02,
-> +	HPWMI_FOURZONE_COLOR_SET = 0x03,
-> +	HPWMI_FOURZONE_MODE_GET  = 0x04,
-> +	HPWMI_FOURZONE_MODE_SET  = 0x05,
-> +};
-> +
-> +enum hp_wmi_keyboardtype {
-> +	HPWMI_KEYBOARD_INVALID		  = 0x00,
-> +	HPWMI_KEYBOARD_NORMAL		  = 0x01,
-> +	HPWMI_KEYBOARD_WITH_NUMPAD	  = 0x02,
-> +	HPWMI_KEYBOARD_WITHOUT_NUMPAD = 0x03,
-> +	HPWMI_KEYBOARD_RGB			  = 0x04,
->  };
->  
->  enum hp_wmi_command {
-> -	HPWMI_READ	= 0x01,
-> -	HPWMI_WRITE	= 0x02,
-> -	HPWMI_ODM	= 0x03,
-> -	HPWMI_GM	= 0x20008,
-> +	HPWMI_READ	   = 0x01,
-> +	HPWMI_WRITE	   = 0x02,
-> +	HPWMI_ODM	   = 0x03,
-> +	HPWMI_GM	   = 0x20008,
-> +	HPWMI_FOURZONE = 0x20009,
->  };
->  
->  enum hp_wmi_hardware_mask {
-> @@ -156,18 +174,18 @@ struct bios_return {
->  };
->  
->  enum hp_return_value {
-> -	HPWMI_RET_WRONG_SIGNATURE	= 0x02,
-> -	HPWMI_RET_UNKNOWN_COMMAND	= 0x03,
-> -	HPWMI_RET_UNKNOWN_CMDTYPE	= 0x04,
-> -	HPWMI_RET_INVALID_PARAMETERS	= 0x05,
-> +	HPWMI_RET_WRONG_SIGNATURE	 = 0x02,
-> +	HPWMI_RET_UNKNOWN_COMMAND	 = 0x03,
-> +	HPWMI_RET_UNKNOWN_CMDTYPE	 = 0x04,
-> +	HPWMI_RET_INVALID_PARAMETERS = 0x05,
->  };
->  
->  enum hp_wireless2_bits {
-> -	HPWMI_POWER_STATE	= 0x01,
-> -	HPWMI_POWER_SOFT	= 0x02,
-> -	HPWMI_POWER_BIOS	= 0x04,
-> -	HPWMI_POWER_HARD	= 0x08,
-> -	HPWMI_POWER_FW_OR_HW	= HPWMI_POWER_BIOS | HPWMI_POWER_HARD,
-> +	HPWMI_POWER_STATE	 = 0x01,
-> +	HPWMI_POWER_SOFT	 = 0x02,
-> +	HPWMI_POWER_BIOS	 = 0x04,
-> +	HPWMI_POWER_HARD	 = 0x08,
-> +	HPWMI_POWER_FW_OR_HW = HPWMI_POWER_BIOS | HPWMI_POWER_HARD,
->  };
->  
->  enum hp_thermal_profile_omen_v0 {
-> @@ -177,22 +195,22 @@ enum hp_thermal_profile_omen_v0 {
->  };
->  
->  enum hp_thermal_profile_omen_v1 {
-> -	HP_OMEN_V1_THERMAL_PROFILE_DEFAULT	= 0x30,
-> -	HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE	= 0x31,
-> -	HP_OMEN_V1_THERMAL_PROFILE_COOL		= 0x50,
-> +	HP_OMEN_V1_THERMAL_PROFILE_DEFAULT	   = 0x30,
-> +	HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE = 0x31,
-> +	HP_OMEN_V1_THERMAL_PROFILE_COOL		   = 0x50,
->  };
->  
->  enum hp_thermal_profile_victus {
-> -	HP_VICTUS_THERMAL_PROFILE_DEFAULT		= 0x00,
-> -	HP_VICTUS_THERMAL_PROFILE_PERFORMANCE		= 0x01,
-> -	HP_VICTUS_THERMAL_PROFILE_QUIET			= 0x03,
-> +	HP_VICTUS_THERMAL_PROFILE_DEFAULT	  = 0x00,
-> +	HP_VICTUS_THERMAL_PROFILE_PERFORMANCE = 0x01,
-> +	HP_VICTUS_THERMAL_PROFILE_QUIET		  = 0x03,
->  };
->  
->  enum hp_thermal_profile {
-> -	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
-> -	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
-> -	HP_THERMAL_PROFILE_COOL			= 0x02,
-> -	HP_THERMAL_PROFILE_QUIET		= 0x03,
-> +	HP_THERMAL_PROFILE_PERFORMANCE = 0x00,
-> +	HP_THERMAL_PROFILE_DEFAULT	   = 0x01,
-> +	HP_THERMAL_PROFILE_COOL		   = 0x02,
-> +	HP_THERMAL_PROFILE_QUIET	   = 0x03,
->  };
->  
->  #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
-> @@ -754,6 +772,67 @@ static ssize_t postcode_store(struct device *dev, struct device_attribute *attr,
->  	return count;
->  }
->  
-> +static int fourzone_get_colors(u32 *colors);
-> +static int fourzone_set_colors(u32 *colors);
-> +
-> +static ssize_t colors_show(struct device *dev, struct device_attribute *attr,
-> +			     char *buf)
-> +{
-> +	u32 colors[4];
-> +
-> +	/* read the colors from wmi and write them to the buf */
-> +	if (fourzone_get_colors(colors) == 0)
-> +		return sprintf(buf, "%06x %06x %06x %06x\n",
-> +					colors[0], colors[1], colors[2], colors[3]);
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static ssize_t colors_store(struct device *dev, struct device_attribute *attr,
-> +			      const char *buf, size_t count)
-> +{
-> +	u32 colors[4];
-> +
-> +	if (sscanf(buf, "%6x %6x %6x %6x", &colors[0], &colors[1], &colors[2], &colors[3]) != 4)
-> +		return -EINVAL;
-> +
-> +	/* set the colors */
-> +	int ret = fourzone_set_colors(colors);
-> +
-> +	return ret == 0 ? count : ret;
-> +}
-> +
-> +static int fourzone_get_mode(void);
-> +static int fourzone_set_mode(u32 mode);
-> +
-> +static ssize_t mode_show(struct device *dev, struct device_attribute *attr,
-> +			     char *buf)
-> +{
-> +	/* read the mode from wmi and write it to the buf */
-> +	u32 ret = fourzone_get_mode();
-> +
-> +	if (ret >= 0)
-> +		return sprintf(buf, "%d\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static ssize_t mode_store(struct device *dev, struct device_attribute *attr,
-> +			      const char *buf, size_t count)
-> +{
-> +	u32 mode;
-> +
-> +	int ret = kstrtou32(buf, 10, &mode);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* set the mode */
-> +	ret = fourzone_set_mode(mode);
-> +
-> +	return ret == 0 ? count : ret;
-> +}
-> +
->  static int camera_shutter_input_setup(void)
->  {
->  	int err;
-> @@ -781,6 +860,22 @@ static int camera_shutter_input_setup(void)
->  	return err;
->  }
->  
-> +static enum hp_wmi_keyboardtype fourzone_get_keyboard_type(void);
-> +
-> +static ssize_t type_show(struct device *dev, struct device_attribute *attr,
-> +			     char *buf)
-> +{
-> +	enum hp_wmi_keyboardtype type = fourzone_get_keyboard_type();
-> +
-> +	if (type != HPWMI_KEYBOARD_INVALID)
-> +		return sprintf(buf, "%d\n", type - 1);
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +/*
-> + * Generic device attributes.
-> + */
->  static DEVICE_ATTR_RO(display);
->  static DEVICE_ATTR_RO(hddtemp);
->  static DEVICE_ATTR_RW(als);
-> @@ -797,7 +892,35 @@ static struct attribute *hp_wmi_attrs[] = {
->  	&dev_attr_postcode.attr,
->  	NULL,
->  };
-> -ATTRIBUTE_GROUPS(hp_wmi);
-> +
-> +static struct attribute_group hp_wmi_group = {
-> +	.attrs = hp_wmi_attrs,
-> +};
-> +
-> +/*
-> + * Omen fourzone specific device attributes.
-> + */
-> +static DEVICE_ATTR_RW(colors);
-> +static DEVICE_ATTR_RW(mode);
-> +static DEVICE_ATTR_RO(type);
-> +
-> +static struct attribute *hp_wmi_fourzone_attrs[] = {
-> +	&dev_attr_colors.attr,
-> +	&dev_attr_mode.attr,
-> +	&dev_attr_type.attr,
-> +	NULL,
-> +};
-> +
-> +static struct attribute_group hp_wmi_fourzone_group = {
-> +	.attrs = hp_wmi_fourzone_attrs,
-> +	.name = "kbd-backlight",
-> +};
-> +
-> +static const struct attribute_group *hp_wmi_groups[] = {
-> +	&hp_wmi_group,
-> +	NULL,
-> +	NULL,
-> +};
->  
->  static void hp_wmi_notify(u32 value, void *context)
->  {
-> @@ -1446,6 +1569,118 @@ static int thermal_profile_setup(void)
->  	return 0;
->  }
->  
-> +static bool fourzone_supports_lighting(void)
-> +{
-> +	u8 buff[128];
-> +
-> +	int ret = hp_wmi_perform_query(HPWMI_SUPPORTS_LIGHTNING, HPWMI_FOURZONE,
-> +								&buff, sizeof(buff), sizeof(buff));
-> +	/* the first bit in the response is set to 1 if the system supports lighting */
-> +	if (ret == 0)
-> +		return (buff[0] & 0x01) == 1;
-> +
-> +	return false;
-> +}
-> +
-> +static enum hp_wmi_keyboardtype fourzone_get_keyboard_type(void)
-> +{
-> +	u8 buff[128];
-> +
-> +	int ret = hp_wmi_perform_query(HPWMI_GET_KEYBOARD_TYPE, HPWMI_GM,
-> +								&buff, sizeof(buff), sizeof(buff));
-> +	/* the first byte in the response represents the keyborad type */
-> +	if (ret == 0)
-> +		return (enum hp_wmi_keyboardtype)(buff[0] + 1);
-> +
-> +	return HPWMI_KEYBOARD_INVALID;
-> +}
-> +
-> +static int fourzone_get_colors(u32 *colors)
-> +{
-> +	u8 buff[128];
-> +
-> +	if (hp_wmi_perform_query(HPWMI_FOURZONE_COLOR_GET, HPWMI_FOURZONE,
-> +							&buff, sizeof(buff), sizeof(buff)) == 0) {
-> +		for (int i = 0; i < 4; i++) {
-> +			colors[3 - i] = ((buff[25 + i * 3]     & 0xFF) << 16)  // r
-> +						  | ((buff[25 + i * 3 + 1] & 0xFF) <<  8)  // g
-> +						  | ((buff[25 + i * 3 + 2] & 0xFF) <<  0); // b
-> +		}
-> +
-> +		return 0;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static int fourzone_set_colors(u32 *colors)
-> +{
-> +	u8 buff[128];
-> +
-> +	if (hp_wmi_perform_query(HPWMI_FOURZONE_COLOR_GET, HPWMI_FOURZONE,
-> +							&buff, sizeof(buff), sizeof(buff)) == 0) {
-> +		for (int i = 0; i < 4; i++) {
-> +			buff[25 + i * 3]	 = (colors[3 - i] >> 16) & 0xFF; // r
-> +			buff[25 + i * 3 + 1] = (colors[3 - i] >>  8) & 0xFF; // g
-> +			buff[25 + i * 3 + 2] = (colors[3 - i] >>  0) & 0xFF; // b
-> +		}
-> +
-> +		return hp_wmi_perform_query(HPWMI_FOURZONE_COLOR_SET, HPWMI_FOURZONE,
-> +						&buff, sizeof(buff), sizeof(buff));
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +/*
-> + * Returns a negative number on error or 0/1 for the mode.
-> + */
-> +static int fourzone_get_mode(void)
-> +{
-> +	u8 buff[4];
-> +
-> +	int ret = hp_wmi_perform_query(HPWMI_FOURZONE_MODE_GET, HPWMI_FOURZONE,
-> +								&buff, sizeof(buff), sizeof(buff));
-> +
-> +	if (ret == 0)
-> +		return buff[0] == 228 ? 1 : 0;
-> +
-> +	return ret;
-> +}
-> +
-> +/*
-> + * This device supports only two different modes:
-> + * 1 -> lights on
-> + * 0 -> lights off
-> + */
-> +static int fourzone_set_mode(u32 mode)
-> +{
-> +	u8 buff[4] = {mode ? 228 : 100, 0, 0, 0};
-> +
-> +	return hp_wmi_perform_query(HPWMI_FOURZONE_MODE_SET, HPWMI_FOURZONE,
-> +								&buff, sizeof(buff), 0);
-> +}
-> +
-> +static int fourzone_setup(struct platform_device *device)
-> +{
-> +	/* check if the system supports lighting */
-> +	bool supports_lighting = fourzone_supports_lighting();
-> +
-> +	if (!supports_lighting)
-> +		return -ENODEV;
-> +
-> +	/* check if we have a supported keyboard type */
-> +	enum hp_wmi_keyboardtype kbd_type = fourzone_get_keyboard_type();
-> +
-> +	if (kbd_type != HPWMI_KEYBOARD_WITHOUT_NUMPAD)
-> +		return -ENODEV;
-> +
-> +	/* register the new groups */
-> +	hp_wmi_groups[1] = &hp_wmi_fourzone_group;
-> +
-> +	return 0;
-> +}
-> +
->  static int hp_wmi_hwmon_init(void);
->  
->  static int __init hp_wmi_bios_setup(struct platform_device *device)
-> @@ -1475,6 +1710,9 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
->  
->  	thermal_profile_setup();
->  
-> +	/* setup 4 zone rgb, no problem if it fails */
-> +	fourzone_setup(device);
-> +
->  	return 0;
->  }
->  
++		if (IS_REACHABLE(CONFIG_HWMON)) {
++			result =3D devm_acpi_fan_create_hwmon(device);
++			if (result)
++				return result;
++		}
++
+ 		result =3D acpi_fan_create_attributes(device);
+ 		if (result)
+ 			return result;
+diff --git a/drivers/acpi/fan_hwmon.c b/drivers/acpi/fan_hwmon.c
+new file mode 100644
+index 000000000000..4f2bec8664f4
+=2D-- /dev/null
++++ b/drivers/acpi/fan_hwmon.c
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * fan_hwmon.c - hwmon interface for the ACPI Fan driver
++ *
++ * Copyright (C) 2024 Armin Wolf <W_Armin@gmx.de>
++ */
++
++#include <linux/acpi.h>
++#include <linux/hwmon.h>
++#include <linux/limits.h>
++
++#include "fan.h"
++
++static umode_t acpi_fan_is_visible(const void *drvdata, enum hwmon_sensor=
+_types type, u32 attr,
++				   int channel)
++{
++	return 0444;
++}
++
++static int acpi_fan_read(struct device *dev, enum hwmon_sensor_types type=
+, u32 attr, int channel,
++			 long *val)
++{
++	struct acpi_device *adev =3D dev_get_drvdata(dev);
++	struct acpi_fan_fst fst;
++	int ret;
++
++	switch (type) {
++	case hwmon_fan:
++		ret =3D acpi_fan_get_fst(adev, &fst);
++		if (ret < 0)
++			return ret;
++
++		switch (attr) {
++		case hwmon_fan_input:
++			if (fst.speed > LONG_MAX)
++				return -EOVERFLOW;
++
++			*val =3D fst.speed;
++			return 0;
++		case hwmon_fan_fault:
++			*val =3D (fst.speed =3D=3D U32_MAX);
++			return 0;
++		default:
++			break;
++		}
++		break;
++	default:
++		break;
++	}
++
++	return -EOPNOTSUPP;
++}
++
++static const struct hwmon_ops acpi_fan_ops =3D {
++	.is_visible =3D acpi_fan_is_visible,
++	.read =3D acpi_fan_read,
++};
++
++static const struct hwmon_channel_info * const acpi_fan_info[] =3D {
++	HWMON_CHANNEL_INFO(fan,
++			   HWMON_F_INPUT | HWMON_F_FAULT),
++	NULL
++};
++
++static const struct hwmon_chip_info acpi_fan_chip_info =3D {
++	.ops =3D &acpi_fan_ops,
++	.info =3D acpi_fan_info,
++};
++
++int devm_acpi_fan_create_hwmon(struct acpi_device *device)
++{
++	struct device *hdev;
++
++	hdev =3D devm_hwmon_device_register_with_info(&device->dev, "acpi_fan", =
+device,
++						    &acpi_fan_chip_info, NULL);
++
++	return PTR_ERR_OR_ZERO(hdev);
++}
+=2D-
+2.39.2
 
