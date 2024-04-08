@@ -1,46 +1,59 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A13F146A65;
-	Mon,  8 Apr 2024 20:13:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F2C1EB46
+	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Apr 2024 20:58:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712607187; cv=none; b=bgWWTgIkRfdmbhLSgA7WX4T7q8ytVZLPQW2L/Hy6CbNeOwU8a1JEtFtV4Vr9MpV1er8TYI/27BrqsKcavHzBJKUlm8RE6j/si6rarIFUjaGR5FZ+csC7N4zNvTSgholcUtQEWoW2AwInMV2ySmyQrZUYzWQ0L5JljVXJO9etRSw=
+	t=1712609892; cv=none; b=eqJnAbmVH41rHUgUjr0Dv2zqzFOq08yM97+sfNmJ6Xg6Xue/9eDLlJ32q82/jtg3nbqIynUDZ6NUhclszxFDw3X+0gEc/WtBiplR+Ht6mxP2XBxGBZwelq5d0KLoxHOlbStA/ah3ZJcM4adk3L4H39I5Ec6JdL1CleEwzApZiQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712607187; c=relaxed/simple;
-	bh=tfLVnov28inMOXr94rGhXSFffQYW23uzyFBDUBbpJyk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TVjwmEe9EI8xO3DzmoYoDj4r5UqluNghsg83eUa+ZvkP5RelABiXQ7nCBzpxrV331QRBeUWTApbOVqgE7LBkNAyHtRaeL2hPMHKWFdAz/S5OYLWdd9o2A2QMqlU+F9d4DVM8ncyYnc+/Kl80Pc3VwZagMrgWCiGgCICOxwIwJ18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from [192.168.2.4] (51b69f53.dsl.pool.telekom.hu [::ffff:81.182.159.83])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 000000000007076B.0000000066144FCE.00264A80; Mon, 08 Apr 2024 22:13:02 +0200
-Message-ID: <b925c84615d3edadb1a9c351dd93f84e6e0dce94.camel@irl.hu>
-Subject: Re: [PATCH v5 1/3] ACPI: platform-profile: add
- platform_profile_cycle()
-From: Gergo Koteles <soyer@irl.hu>
-To: Hans de Goede <hdegoede@redhat.com>,
-  "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-  Ike Panhc <ike.pan@canonical.com>,
-  Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-  Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-  Daniel Lezcano <daniel.lezcano@linaro.org>,
-  =?UTF-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc: linux-acpi@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Mon, 08 Apr 2024 22:13:01 +0200
-In-Reply-To: <4e37511c-7570-4ea5-bdf9-6bdd62c63575@redhat.com>
-References: <cover.1712360639.git.soyer@irl.hu>
-	 <afd975d98708921f67a269aaf031a1dd1be1220d.1712360639.git.soyer@irl.hu>
-	 <4e37511c-7570-4ea5-bdf9-6bdd62c63575@redhat.com>
-Autocrypt: addr=soyer@irl.hu; prefer-encrypt=mutual;
- keydata=mDMEZgeDQBYJKwYBBAHaRw8BAQdAD5oxV6MHkjzSfQL2O8VsPW3rSUeCHfbx/a6Yfj3NUnS0HEdlcmdvIEtvdGVsZXMgPHNveWVyQGlybC5odT6ImQQTFgoAQRYhBLSYvEYEgjzzEMQCqgtEJzXf/1IRBQJmB4NAAhsDBQkFo5qABQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheAAAoJEAtEJzXf/1IRmdYA/0bE1BX7zOGKBgCa1DwzH2UHXawSKLpptADvI/ao6OOtAP4+wYgpR0kWR28lhmkRTpzG/+8GiMWsT60SV2bz9B7sCbg4BGYHg0ASCisGAQQBl1UBBQEBB0CPo8ow/E97WYtaek9EsLXvsvwpBsjWLq5mMOgJL/ukCwMBCAeIfgQYFgoAJhYhBLSYvEYEgjzzEMQCqgtEJzXf/1IRBQJmB4NAAhsMBQkFo5qAAAoJEAtEJzXf/1IRklEA/ipTfAI/onzNwZIp9sCdnt0bLhR5Oz8RD/FpbrJV1v7eAP0c/C6NQPDPWbQpobBR0pf1eTjWXjjr1fj2jxSvWbMRCw==
+	s=arc-20240116; t=1712609892; c=relaxed/simple;
+	bh=vm9zp4ah1YH7Uv+Bn2wres4TN6Gy5ovJQlQ4F0liC14=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JX00iYylCnRnOL2NPbdFdSDOGUGiwvhWKUh2TsjtHMYXOhV4OxYzRk5/xC3s0khRSDPen2h1jvOF7SaYqDdxmWhVIRFYnCdbSmxzeZv6Ty0+09bqz7GSxJDPw4nGrpPGRlWcGCV+n1FXhhNFMhY8FfJkUUDWwG1zyoj+IBA6B3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hlU0Mvjg; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hlU0Mvjg"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1126AC433F1
+	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Apr 2024 20:58:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712609892;
+	bh=vm9zp4ah1YH7Uv+Bn2wres4TN6Gy5ovJQlQ4F0liC14=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=hlU0MvjgGiu25O4ALv+SLI7Nyird7lksP0R7w7T7+DuUFLzkcl6pk7zZClXuS4g/P
+	 ajyBRrnUbUrXC/5sLgehubUgtDODmCYFtCRdvgUZNVVe9L4j+p8J/fA0Wqw/6GIcu3
+	 fU+l6fsIJpTnwvCo4nP+3MkYiutLdR6gZEZ6onf4NHro3P5tk7LYK66bOJ6LNHOYtU
+	 2r+FeuGkEvVdHY/Vwimbksvs2NnPboVUq27EuBVUFIMjOiNoAJdyVL/PPR1Jr53D15
+	 EnDWe1cjZo/ZQHpn/WE2LwUCZMaazV8Qnvdb2NjNAXfRhk31G5Meg+eXNXPRW8UgJU
+	 CHcd+uHUgPC8g==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id F220BC4332E; Mon,  8 Apr 2024 20:58:11 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218696] DYTC frequency scaling deterioration and event spam
+Date: Mon, 08 Apr 2024 20:58:11 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: lmulling@proton.me
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: short_desc
+Message-ID: <bug-218696-215701-DzQAe5H2p4@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218696-215701@https.bugzilla.kernel.org/>
+References: <bug-218696-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -48,22 +61,18 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-Hi Hans,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218696
 
-On Mon, 2024-04-08 at 18:41 +0200, Hans de Goede wrote:
-> > +	next =3D find_next_bit_wrap(cur_profile->choices,
-> > +				  ARRAY_SIZE(profile_names), profile + 1);
-> > +
-> > +	if (WARN_ON(next =3D=3D ARRAY_SIZE(profile_names))) {
->=20
-> Other code in drivers/acpi/platform_profile.c uses PLATFORM_PROFILE_LAST
-> instead of ARRAY_SIZE(profile_names) (these are guaranteed to be equal)
-> please switch to using PLATFORM_PROFILE_LAST for consistency.
->=20
+Lucas M=C3=BClling (lmulling@proton.me) changed:
 
-Thanks for the review. I changed these in v6.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+            Summary|DYTC frequency scaling      |DYTC frequency scaling
+                   |deterioration               |deterioration and event
+                   |                            |spam
 
+--=20
+You may reply to this email to add a comment.
 
-Best regards,
-Gergo
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
