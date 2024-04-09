@@ -1,136 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AC181AB4
-	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Apr 2024 10:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328291369B9
+	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Apr 2024 13:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712657771; cv=none; b=UYQ4dtjFXLUdyoHS9iY1x5NAtdcSMGcnDgbBEl2hMYUrO6hEn25RdVPRcFcYFLz4lN9Fu7qg6/hyKP55TbNX0UQ7z15uZwdqPbHCvOQDAaXdpFnTNIGeY7VcxePo+O91gjt2Xm7wvoVwycJbgfdcCgF8asO69m4vn3+TUSbjL7c=
+	t=1712669215; cv=none; b=Lh2P+7Mc2VqbTCK23lZhVi2HmzHZY13xIHZzpy0x6yhs+BmrFz6euL6wcXvHiNEsrl+bFSjjWPeHw39q88w7CGnPFmM4YzmRk4Kb743RPTT6EhQ1VIFAv+2tS/BzCEGkgAN/cJCSYGV5Y0YzksZHfxnrmqcjlpxA2QXHknieSug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712657771; c=relaxed/simple;
-	bh=SBYSZeuDuqQ415H7h7fcMx9tUPGz1q1BRTWKuCD0r00=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AwgPjOaPx6UXtgbJ7HgmpYt7EJFaFIxyApzRssazO/A+Aoez9uij70ajQR3742aCkThK0K+dEwxY8ChlDG65hatHocK2Lcjh07NB+/YgHClaUy/yycq++A5Hd6F2ni8iV85ZiaW0nK0cj4Q+V4fQEqh2EdN16woCPjUcbilkUTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q4XIOmbT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712669215; c=relaxed/simple;
+	bh=hfqQGRKoQt5sZODexZ6NdKtYnuAW/rdleks2SLhsaNY=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WUKdavh2wLbJrhqCUBUkYSVOgprYeaTiBD3qzz09NeMWATuf9ySCmOZ77rFwhhMFzI6oEiEewccq8oQiP04fiTGFRxMaC49V2UEV+tFYTFb8ao6YH4ptDitZWRXWh7dfRKSAw6E6Th0ZxEbDuOjitDVEA+rafxFGX+0gxbIqRt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UIyRoLIA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q4XIOmbT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712657768;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aMeePPemknPpIlqp3R4BbTMH+iMIzQbR2BJB446CC8o=;
-	b=Q4XIOmbThfheYW++kc+F06kcjrNGC8tP3rPxSAy1Jnjm96OM3TftClT511J1tuHS120RxF
-	3OjZ7umHEIlvIikhdAl9w2oJJN3+6bK4V8n2nWUN8roey9fIowdhvfg4GXgDVsI695uX14
-	+52kyPCSO4Lo7pLemSNcpWDZUaqvNGM=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-57-E2RizQMYN4iw6Xdgvg1Bhg-1; Tue, 09 Apr 2024 06:16:07 -0400
-X-MC-Unique: E2RizQMYN4iw6Xdgvg1Bhg-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a51beadf1f8so202968166b.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 09 Apr 2024 03:16:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712657766; x=1713262566;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aMeePPemknPpIlqp3R4BbTMH+iMIzQbR2BJB446CC8o=;
-        b=VAhxaDVhKkrA3yUpJbLqJnGhGAEekV9UqW4zcr8/Ji6eNsId0memOMET4W7Fdw89pA
-         vmZzwozTV7z47kzcm1PND+KY+1xIaOGvb7QJa/UdNn8BGNE5XCNLohAh7gKRtU0Oylgl
-         1I5YlhRMvpm8AVOTaaYeVdWO15e9oMeIRm6rInSnIzUZududVCKuZVZ45/iCYL50URjV
-         TAG5PHlwNFDsftsL22D1TcYsQhcIPBft9jmsaclur8Ydd1TEmGVwYXE5vDfxQ0bURPqZ
-         9+zk2rgBIZGhPCl1o2TjCAGhOM1k6yr1y+NEgPgX8Bw/4lULoCQHqc8MdgOZE1A+AKDW
-         LLFg==
-X-Forwarded-Encrypted: i=1; AJvYcCXWRCyNRYH/MbOsddcPX8r8K3fcowly2mSpY0kOrA+rLXBRg8JZP21iGI0RUxOWRrPGjjGcOin3ZxGE8Og7u5rsbDhwKhSIbvuLpjyPi/q/19exzA==
-X-Gm-Message-State: AOJu0Yxh9a5+msNhO7NQbx/vebLSh6SzIJ7nfOxyixswxy++9nrxQLvo
-	Ja3LjH9CgcobiAb+fzurADc8V4srhovpRYQXWNkPkqDfouM9Kt9fkASe6DUZ13RsxviJlxLLA+o
-	cM2od4E4LViHdoblQqGS4hv0JMxf94PW3qDIvMMLmznvWxNe/E0hnZsatdCaeC+bAlJyV/3U=
-X-Received: by 2002:a17:907:980c:b0:a4e:e61:b5fa with SMTP id ji12-20020a170907980c00b00a4e0e61b5famr10411685ejc.15.1712657766189;
-        Tue, 09 Apr 2024 03:16:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGNC0SM3GLkJe2l6pl8yMpUjris79RVE1HgtJTa1aHHLO8ip+nVXtFxc8Q0SGPPZICM3onLkQ==
-X-Received: by 2002:a17:907:980c:b0:a4e:e61:b5fa with SMTP id ji12-20020a170907980c00b00a4e0e61b5famr10411673ejc.15.1712657765872;
-        Tue, 09 Apr 2024 03:16:05 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id lg11-20020a170906f88b00b00a4e2db8ffdcsm5493019ejb.111.2024.04.09.03.16.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Apr 2024 03:16:05 -0700 (PDT)
-Message-ID: <dded171e-4cb4-47cc-aece-d5afd229060a@redhat.com>
-Date: Tue, 9 Apr 2024 12:16:04 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UIyRoLIA"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9F10EC433F1
+	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Apr 2024 13:26:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712669214;
+	bh=hfqQGRKoQt5sZODexZ6NdKtYnuAW/rdleks2SLhsaNY=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=UIyRoLIA+pUs3XSOBNDjq7YyBWGf7fBywvypfOHDmi5caLff313YRwXZ+GRm7OW/+
+	 Xra2JFcvoQc6+Li0K9jaYXQ78VWrSO1jdiIvvCg9xLT4nwLcpaIZfN97GkLip3xIVg
+	 3dMuEUahn6kAcjzuoM7dLocqrC5wUl59ZynGjXAZFQzsANq8zPKJ+P8NyDa0mSUVVR
+	 i+P6teBO7RGoHrVYMBREkhj2QC0ScR7N1WNGMelBa4Kvf0LkUzj6xBty9NDbZ0a5hf
+	 aPIsJhFyOr8vYW7S7txo9d0FcbQgMziOd4icA1oXyfdbFSe/YevpzYlYyCb2f6CC/A
+	 F0m9A32Gy1oeA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 8F1FDC4332E; Tue,  9 Apr 2024 13:26:54 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218696] DYTC frequency scaling deterioration and event spam
+Date: Tue, 09 Apr 2024 13:26:54 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: lmulling@proton.me
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218696-215701-fyZxshdJjv@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218696-215701@https.bugzilla.kernel.org/>
+References: <bug-218696-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] Input: Add trackpoint doubletap and system debug info
- keycodes
-To: Mark Pearson <mpearson-lenovo@squebb.ca>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
- ibm-acpi-devel@lists.sourceforge.net,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- Nitin Joshi1 <njoshi1@lenovo.com>, Vishnu Sankar <vsankar@lenovo.com>,
- Peter Hutterer <peter.hutterer@redhat.com>
-References: <mpearson-lenovo@squebb.ca>
- <20240324210817.192033-1-mpearson-lenovo@squebb.ca>
- <20240324210817.192033-2-mpearson-lenovo@squebb.ca>
- <ZhR-WPx7dgKxziMb@google.com>
- <c6427b27-3c9d-4aa4-abfa-c3588b5d9a42@app.fastmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <c6427b27-3c9d-4aa4-abfa-c3588b5d9a42@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Dmitry,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218696
 
-On 4/9/24 2:00 AM, Mark Pearson wrote:
-> Hi Dmitry
-> 
-> On Mon, Apr 8, 2024, at 7:31 PM, Dmitry Torokhov wrote:
->> Hi Mark,
->>
->> On Sun, Mar 24, 2024 at 05:07:58PM -0400, Mark Pearson wrote:
->>> Add support for new input events on Lenovo laptops that need exporting to
->>> user space.
->>>
->>> Lenovo trackpoints are adding the ability to generate a doubletap event.
->>> Add a new keycode to allow this to be used by userspace.
->>
->> What is the intended meaning of this keycode? How does it differ from
->> the driver sending BTN_LEFT press/release twice?
-> 
-> Double tapping on the trackpoint is a unique event - it's not the same as BTN_LEFT twice. The BIOS will send a new ACPI event for it and it's not meant to be the same as mouse button clicks.
+--- Comment #3 from Lucas M=C3=BClling (lmulling@proton.me) ---
+It's a ThinkPad L14 Gen 3 (21C6000UBO)
 
-To extend a bit on this, this double-tap event is not reported through
-the PS/2 trackpoint interface at all. Instead it is reported to
-the OS by the ACPI hotkey notifier, which is used to report various
-multi-media hotkeys and things like that, this is handled by
-the thinkpad_apci driver which sofar only reports key-presses.
+--=20
+You may reply to this email to add a comment.
 
-So there is no BTN_LEFT to report twice and if we add a BTN_LEFT
-then we end up with an input_device which has a bunch of KEYs
-+ BTN_LEFT but no abs/rel axis which will just confuse userspace.
-
-We could add a second input_device which looks like a mouse
-but only ever reports BTN_LEFT double-clicks I guess, but as
-Mark said the intention is for this double-tap to work more
-like a hotkey then a double click. Also note that regular
-taps on the trackstick do nothing. Clicking the mouse buttons
-of the stick involves pressing separate physical buttons between
-the trackpad and the keyboard and those are reported over
-the same PS/2 port as the relative motion events from the stick.
-
-Regards,
-
-Hans
-
-
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
