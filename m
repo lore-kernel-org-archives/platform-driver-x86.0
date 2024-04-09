@@ -1,105 +1,250 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3984C85;
-	Tue,  9 Apr 2024 17:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B94F158213;
+	Tue,  9 Apr 2024 21:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712682966; cv=none; b=ZHxTIYXzVyj9Wc5XPBPNDAVRpy+DhRS5XvY6GIkLj1dlvwmb/+pFfHsGdA5VwYFawX5cFZ4HUb3Ude2UJbbYMCC84uOTXO5A92wbbnIXE1FIOsjMDif/1bPSDMn6mWUps5DtI9l34Qz3Aw6lwySR+8Vldh50tzelVTVKkcd9eV4=
+	t=1712698440; cv=none; b=hsLj6JwBxfrG/zJ8MJ4cmhXHcU0h+mdPYdXy9FMLp0NoKXZycVgG7+XzzjTePjWw15caBOdYwqhokRz5fxJL/lu3NlfA3pBz8Dq6R0GpKwb8Awj8q1pCavSl6QqpDffcfrGjG8lQ5LNsnu6xqujTpzpUxil9zmZ6DtbguW5P+F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712682966; c=relaxed/simple;
-	bh=sLn1MkuowWjc6krARTBpYDuzXpWucWq2bmwehniidC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DVAres22MFw4RZnpkGuWohao46EW94IXtYmnsZELYd35FBgDrokWKplkhwGjlEwcIilwS0lbrEk2ISRJl5+Q9CC2c+BrO7CHdnRx0FN1t5QLUMjRRizdmI6PIN6r73P3njlEhn0URMK65sJtwZbfVNk3lIIjICOMBVjGC67Syi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cTbcuocS; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712698440; c=relaxed/simple;
+	bh=6GDlg+zLBx4PsLbRoItai3KSHzYY5NK1nUnquIRqNRI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=E8D05nez2smU5HLEdUzrJTMasGRyOfd48DJuWf7s+NaNbs2/crJ9TYZ5CcLT06Ke+I/ZHLZRO/0hafOQ6Ax6b1wkzlxFYYgcDCQZAoHckeMStfjqbcMi0s1J8RuA5MIyAyDJXY0b018qJb6K4cHi2c99XTMacSkJ3S3+cGom+no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=OejyuHux; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cTbcuocS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712682962; x=1744218962;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sLn1MkuowWjc6krARTBpYDuzXpWucWq2bmwehniidC4=;
-  b=cTbcuocSVEUwF/PxfZitr06XsU24gddl+egzds5jWzaDSQjDRKCmeabt
-   Q2gxrwC8MoQ5Ai+kQhTGQrIJnWH7Y0iYikGcBbSiVSAXlenzLWeZ1rHoA
-   Y9ywQh7bJH0D18HN2I4lpV71MUhe2Vsr2wHRIkT0UzyQqC/Y5Jiz662ga
-   aZnYbT/0bQBsdyrFRqhSngFU+XYGCr36yaVHId5Zem4x+XE563/P2HjdD
-   tRfhDYjWRxaqqd9+gtNF+uMHik65YDqfAj9mk+OV8R5vxK+VSsnKVGUJM
-   ZOqE9bGy+d/vQOVDW9H8TFzB4wXoCRZKwPg4Ap3Q62sZBy/Ji/TsT82xW
-   w==;
-X-CSE-ConnectionGUID: sFO0iKuoSRGVoHY+0wx90g==
-X-CSE-MsgGUID: NihCW0DjQtSPgPa91ZNbPQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7924889"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="7924889"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 10:16:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="915405484"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="915405484"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 10:15:59 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1ruF4f-00000002rrI-2EXk;
-	Tue, 09 Apr 2024 20:15:57 +0300
-Date: Tue, 9 Apr 2024 20:15:57 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH v1 1/1] platform/x86/intel: atomisp2: Replace deprecated
- UNIVERSAL_DEV_PM_OPS()
-Message-ID: <ZhV3zUgZjAMUZ0yD@smile.fi.intel.com>
-References: <20240403105511.558395-1-andriy.shevchenko@linux.intel.com>
- <609652ce-0336-4d69-ab79-f84c8a8506e5@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="OejyuHux"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1712698408; x=1713303208; i=w_armin@gmx.de;
+	bh=sjuhz+TaLmV9ixOiAi3uRJXQXF3anu1HLOApgAGNu3w=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=OejyuHuxq9kd6VqEiWc4efIV7P2tLRwE60CmjTJCKvPEEeCx1wZ9StpeHtCBZkPa
+	 Urc4Gd5fK9g+l12DW/I6GEWnT4hrt4CAUJp/cvtT9K81Z9GGPbqmGKKmBRCFEfjE0
+	 OdSGdaWn9AkB9hWDAij5I/znCxnaMF3KnVCa5bK+qL/ANmnwzjh5hUdB3jeoB860f
+	 EOmdIGZwA2Jv/k5s9Ni3GsWsCFBN72rn6WAtCTuzG4xWVsouZpNMfWMKbOO2WRqFq
+	 MH3RVZ0sJOXC2ud1azJuBsjaXsjiCNxKz87+FqOud1eBU57Xh6U0K36AH3evclMPY
+	 ZfRyjtKApYwwC3DJCg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1N6bfq-1sr2Xu1PAs-0181f3; Tue, 09 Apr 2024 23:33:28 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: mlj@danelec.com,
+	rafael.j.wysocki@intel.com,
+	lenb@kernel.org
+Cc: jdelvare@suse.com,
+	linux@roeck-us.net,
+	linux@weissschuh.net,
+	ilpo.jarvinen@linux.intel.com,
+	linux-acpi@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2] ACPI: fan: Add hwmon support
+Date: Tue,  9 Apr 2024 23:33:23 +0200
+Message-Id: <20240409213323.8031-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <609652ce-0336-4d69-ab79-f84c8a8506e5@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:yYdU5SWqH/bNqNsamsZdNYjgngACK2VgYu9rtYrDw57TzVQOfzk
+ nbwx7FnKGIQD4a8CQDvsHEZ/Ospk5g7w4vd5fY8vJGFGBwg7MiETD/G1gpBdl12yKFbcc2z
+ A0B0HMdpaANJd+A3Ya97MirLbdVG2NtLy1UxNDhf/yeY1inuODu5Nz3awDzud4o6PG0khzh
+ Cmf0GOTxKcwAgCqFJ/GtA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:wtmSOyWMUO4=;7DDBbaFiuDx6Dit4uUKw2lAzbRA
+ k7pkIyPjTCgqpyjA8tgOz/neI3lGQj7fWg26E65YT+M3NP2shf5PJEX7Oqr6eeMEgmeX0mM4o
+ 0M8pDyPdv3Sy5Arh30XY+Wd9PbSqxrbZet5pjcWPEm1lTZs0BbBN+GpZtbW2F1RgCC7neVtjK
+ ViiyTuenqv8liQVouUHwCZKKnDcQihN3YlxNbf/E/41eLbMLlBaypRv3VumgtOtTziiI/yNyQ
+ e4ju/GD0HqHBFILae98JDql4ETFH58Ht/CxXqfKZT/UVyrjSCyLHxg7CkDNx1es/mpDVPiLxX
+ WygY6lpfkj+UJ9o7etf5WTRebiu+Q8U9J7VuGsVcyCdf/T+SDsCYsgibDMsh//+kVjFuod3So
+ Q5PHW+mCldy9Hdq7efwz30J0ljeT2vq22SEqqMzbAq2lSYjEw7Q2+gIWl4DW2Nj1EuRhxukXc
+ kC6CJSG79591XxqBilNEWavox4u3HyVaWCQxGrbnCOnj4cJ33BEboAm5aRkplldsQkx7H7gm8
+ kMoGd/5s1T8rAHS833amsTd1OkyCflbjHumzsGXAtcUzWy8Ple5ZxD1v782H53gQr/Dek/EEP
+ lSR0GmWKlHsR29qgyDmifLBjTFdNrNvxxSXDgU8q9UO1yx0ObiN+T7fNw6QrwfdWbO1S/RVL0
+ gF0CXVlIRbyct79se4m/bVsL+DZUCr+nFZ8RMFHayA9BlbuvC1U8x2hm6LhQia/5cn3DWytaJ
+ dGOcF7qn8JNCCop976XiNgLkw8GU/KprE3h45fDXGXFfNETCn7+HeAlluLez8nM+cYOaPLbhN
+ YbjU5X96fOBnfdhhrmKiMWwwVG/4deimRs4Gu7ErQWSYY=
 
-On Mon, Apr 08, 2024 at 06:20:03PM +0200, Hans de Goede wrote:
-> On 4/3/24 12:55 PM, Andy Shevchenko wrote:
+Currently, the driver does only support a custom sysfs
+to allow userspace to read the fan speed.
+Add support for the standard hwmon interface so users
+can read the fan speed with standard tools like "sensors".
 
-...
+Compile-tested only.
 
-> As mentioned in the description of DEFINE_RUNTIME_DEV_PM_OPS()
-> DEFINE_RUNTIME_DEV_PM_OPS() is NOT a 1:1 replacement for
-> UNIVERSAL_DEV_PM_OPS() specifically it uses pm_runtime_force_suspend() /
-> pm_runtime_force_resume() .
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+Changes since v1:
+- fix undefined reference error
+- fix fan speed validation
+- coding style fixes
+- clarify that the changes are compile-tested only
+- add hwmon maintainers to cc list
 
-Right.
+The changes will be tested by Mikael Lund Jepsen from Danelec and
+should be merged only after those tests.
+=2D--
+ drivers/acpi/Makefile    |  1 +
+ drivers/acpi/fan.h       |  9 +++++
+ drivers/acpi/fan_core.c  |  4 ++
+ drivers/acpi/fan_hwmon.c | 83 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 97 insertions(+)
+ create mode 100644 drivers/acpi/fan_hwmon.c
 
-> Specifically pm_runtime_force_suspend() may NOT get set (and in this case
-> will not set) needs_force_resume skipping a resume + suspend cycle
-> after a system suspend, which is a problem if firmware has touched
-> the state of the device during the suspend/resume cycle since the device
-> may now actually be left powered on.
+diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+index d69d5444acdb..c272ab2c93b9 100644
+=2D-- a/drivers/acpi/Makefile
++++ b/drivers/acpi/Makefile
+@@ -83,6 +83,7 @@ obj-$(CONFIG_ACPI_TINY_POWER_BUTTON)	+=3D tiny-power-but=
+ton.o
+ obj-$(CONFIG_ACPI_FAN)		+=3D fan.o
+ fan-objs			:=3D fan_core.o
+ fan-objs			+=3D fan_attr.o
++fan-$(CONFIG_HWMON)		+=3D fan_hwmon.o
 
-I see, thanks for explaining me this. So this driver is kinda very special.
-Still the old question, can we get rid altogether of these atomisp "drivers"
-in PDx86?
+ obj-$(CONFIG_ACPI_VIDEO)	+=3D video.o
+ obj-$(CONFIG_ACPI_TAD)		+=3D acpi_tad.o
+diff --git a/drivers/acpi/fan.h b/drivers/acpi/fan.h
+index e7b4b4e4a55e..97863bdb6303 100644
+=2D-- a/drivers/acpi/fan.h
++++ b/drivers/acpi/fan.h
+@@ -10,6 +10,8 @@
+ #ifndef _ACPI_FAN_H_
+ #define _ACPI_FAN_H_
 
-> It seems there is no direct replacement for UNIVERSAL_DEV_PM_OPS()
-> without a behavior change.
++#include <linux/kconfig.h>
++
+ #define ACPI_FAN_DEVICE_IDS	\
+ 	{"INT3404", }, /* Fan */ \
+ 	{"INTC1044", }, /* Fan for Tiger Lake generation */ \
+@@ -56,4 +58,11 @@ struct acpi_fan {
+ int acpi_fan_get_fst(struct acpi_device *device, struct acpi_fan_fst *fst=
+);
+ int acpi_fan_create_attributes(struct acpi_device *device);
+ void acpi_fan_delete_attributes(struct acpi_device *device);
++
++#if IS_REACHABLE(CONFIG_HWMON)
++int devm_acpi_fan_create_hwmon(struct acpi_device *device);
++#else
++static inline int devm_acpi_fan_create_hwmon(struct acpi_device *device) =
+{ return 0; };
++#endif
++
+ #endif
+diff --git a/drivers/acpi/fan_core.c b/drivers/acpi/fan_core.c
+index ff72e4ef8738..7cea4495f19b 100644
+=2D-- a/drivers/acpi/fan_core.c
++++ b/drivers/acpi/fan_core.c
+@@ -336,6 +336,10 @@ static int acpi_fan_probe(struct platform_device *pde=
+v)
+ 		if (result)
+ 			return result;
 
-Correct.
-
-...
-
-Btw, have you seen a few cleanup patches against AtomISP v2 by me?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
++		result =3D devm_acpi_fan_create_hwmon(device);
++		if (result)
++			return result;
++
+ 		result =3D acpi_fan_create_attributes(device);
+ 		if (result)
+ 			return result;
+diff --git a/drivers/acpi/fan_hwmon.c b/drivers/acpi/fan_hwmon.c
+new file mode 100644
+index 000000000000..b01055432ded
+=2D-- /dev/null
++++ b/drivers/acpi/fan_hwmon.c
+@@ -0,0 +1,83 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * fan_hwmon.c - hwmon interface for the ACPI Fan driver
++ *
++ * Copyright (C) 2024 Armin Wolf <W_Armin@gmx.de>
++ */
++
++#include <linux/acpi.h>
++#include <linux/hwmon.h>
++#include <linux/limits.h>
++
++#include "fan.h"
++
++/* Returned when the ACPI fan does not support speed reporting */
++#define FAN_SPEED_UNAVAILABLE	0xffffffff
++
++static umode_t acpi_fan_is_visible(const void *drvdata, enum hwmon_sensor=
+_types type, u32 attr,
++				   int channel)
++{
++	return 0444;
++}
++
++static int acpi_fan_read(struct device *dev, enum hwmon_sensor_types type=
+, u32 attr, int channel,
++			 long *val)
++{
++	struct acpi_device *adev =3D dev_get_drvdata(dev);
++	struct acpi_fan_fst fst;
++	int ret;
++
++	switch (type) {
++	case hwmon_fan:
++		ret =3D acpi_fan_get_fst(adev, &fst);
++		if (ret < 0)
++			return ret;
++
++		switch (attr) {
++		case hwmon_fan_input:
++			if (fst.speed =3D=3D FAN_SPEED_UNAVAILABLE)
++				return -ENODATA;
++
++			if (fst.speed > LONG_MAX)
++				return -EOVERFLOW;
++
++			*val =3D fst.speed;
++			return 0;
++		case hwmon_fan_fault:
++			*val =3D (fst.speed =3D=3D FAN_SPEED_UNAVAILABLE);
++			return 0;
++		default:
++			break;
++		}
++		break;
++	default:
++		break;
++	}
++
++	return -EOPNOTSUPP;
++}
++
++static const struct hwmon_ops acpi_fan_ops =3D {
++	.is_visible =3D acpi_fan_is_visible,
++	.read =3D acpi_fan_read,
++};
++
++static const struct hwmon_channel_info * const acpi_fan_info[] =3D {
++	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT | HWMON_F_FAULT),
++	NULL
++};
++
++static const struct hwmon_chip_info acpi_fan_chip_info =3D {
++	.ops =3D &acpi_fan_ops,
++	.info =3D acpi_fan_info,
++};
++
++int devm_acpi_fan_create_hwmon(struct acpi_device *device)
++{
++	struct device *hdev;
++
++	hdev =3D devm_hwmon_device_register_with_info(&device->dev, "acpi_fan", =
+device,
++						    &acpi_fan_chip_info, NULL);
++
++	return PTR_ERR_OR_ZERO(hdev);
++}
+=2D-
+2.39.2
 
