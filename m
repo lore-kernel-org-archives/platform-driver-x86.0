@@ -1,250 +1,115 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B94F158213;
-	Tue,  9 Apr 2024 21:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AB36A342;
+	Tue,  9 Apr 2024 21:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712698440; cv=none; b=hsLj6JwBxfrG/zJ8MJ4cmhXHcU0h+mdPYdXy9FMLp0NoKXZycVgG7+XzzjTePjWw15caBOdYwqhokRz5fxJL/lu3NlfA3pBz8Dq6R0GpKwb8Awj8q1pCavSl6QqpDffcfrGjG8lQ5LNsnu6xqujTpzpUxil9zmZ6DtbguW5P+F8=
+	t=1712699230; cv=none; b=noMGkIrUfAzi7tBLAzM8Rcfkp01x5CE+ozJJAAZyr2GkK+6EHwPy3qExwyQaTjpFTLgkuZ0B7YamiET1Wk893YFt66TvZoI740pmNgXjRNVYRnMgWwXI+aKzfPpfHLLvK+lT3pM6vB3HDgrTzBnTOJIX75OSn/TalyhEiyQwvpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712698440; c=relaxed/simple;
-	bh=6GDlg+zLBx4PsLbRoItai3KSHzYY5NK1nUnquIRqNRI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=E8D05nez2smU5HLEdUzrJTMasGRyOfd48DJuWf7s+NaNbs2/crJ9TYZ5CcLT06Ke+I/ZHLZRO/0hafOQ6Ax6b1wkzlxFYYgcDCQZAoHckeMStfjqbcMi0s1J8RuA5MIyAyDJXY0b018qJb6K4cHi2c99XTMacSkJ3S3+cGom+no=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=OejyuHux; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1712699230; c=relaxed/simple;
+	bh=wR57uFwYE/K06eHef43ZXZf9HQ28hXkJFfydCJ1lIdw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n2P0zuu2h0tJHzp2Hadxil8ZsXND00jN1qNhxpCLyJ/eERaXkfY14LzYYD74YVgI/f8wof60sT26VPg+e1YiKwxLWc50mh+yxEc9LVTgC3wXRGGSu8aCejRH0TxY80v5knMVOuiDWJdFJq251rZBMtUKgbroPHObRk8bYOE3EUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zo+eTNCB; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="OejyuHux"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1712698408; x=1713303208; i=w_armin@gmx.de;
-	bh=sjuhz+TaLmV9ixOiAi3uRJXQXF3anu1HLOApgAGNu3w=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=OejyuHuxq9kd6VqEiWc4efIV7P2tLRwE60CmjTJCKvPEEeCx1wZ9StpeHtCBZkPa
-	 Urc4Gd5fK9g+l12DW/I6GEWnT4hrt4CAUJp/cvtT9K81Z9GGPbqmGKKmBRCFEfjE0
-	 OdSGdaWn9AkB9hWDAij5I/znCxnaMF3KnVCa5bK+qL/ANmnwzjh5hUdB3jeoB860f
-	 EOmdIGZwA2Jv/k5s9Ni3GsWsCFBN72rn6WAtCTuzG4xWVsouZpNMfWMKbOO2WRqFq
-	 MH3RVZ0sJOXC2ud1azJuBsjaXsjiCNxKz87+FqOud1eBU57Xh6U0K36AH3evclMPY
-	 ZfRyjtKApYwwC3DJCg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1N6bfq-1sr2Xu1PAs-0181f3; Tue, 09 Apr 2024 23:33:28 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: mlj@danelec.com,
-	rafael.j.wysocki@intel.com,
-	lenb@kernel.org
-Cc: jdelvare@suse.com,
-	linux@roeck-us.net,
-	linux@weissschuh.net,
-	ilpo.jarvinen@linux.intel.com,
-	linux-acpi@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2] ACPI: fan: Add hwmon support
-Date: Tue,  9 Apr 2024 23:33:23 +0200
-Message-Id: <20240409213323.8031-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zo+eTNCB"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6eaf1005fcaso4210455b3a.3;
+        Tue, 09 Apr 2024 14:47:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712699229; x=1713304029; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+o+B5YhePemCqfLG1nDv/Zdx5bIr2DP7esNue6DPpZI=;
+        b=Zo+eTNCBQi8r899toTeUMquHHg4QRCB4lz1sXujDRwMeNopaNUqWSY4JmV7FIfPJA2
+         /rSV/mzV6Qr2lqLOxxMsnQlIecookGuYmAFSsB6ER3RjZG6wjpYaD0xOT6eYhWGoPr2W
+         jfnjXOjn77mnacLjdvpcRyJI1A52Nvi8MyoocTja1FThJpfIuIk7AkCds4Q24OqbJ+dj
+         +NmLROlXCvBm7z1hkRKhdoLfhk7Zx/UJfVz3l0BfPvQ43cmWztE6Ggz+Y0V+s25cavCv
+         GOKU9NUOplaBnCrUUfZEQk37SGNmRTeMbDsyATCeME/hwMiBl1R7Ovd7zkLL9KggSf3B
+         b09Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712699229; x=1713304029;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+o+B5YhePemCqfLG1nDv/Zdx5bIr2DP7esNue6DPpZI=;
+        b=KGJW3McbBz9JK/BXZCjsizB7CoJAsuWjji5VrCLm4nMLxhdnlPzflRKej73n2V0bSd
+         qti8XeahLq0i2g99D3rBmok0llS7xfkXes9lKOPXzC7S1Sl5etSzGU73UG/zExjo7DsS
+         Q9hj/N5ZD1ybgbzHEL2yRbo6RBIL2YJF1QEGE0NqmXSpssfoX5R9cNMJVgEwJU8PRSNz
+         yHrFLmiA1Ivt8D76MQm9HgztwtgQCOsgKLgh+ZvfBkv7Es3q5FxSYfDVchwbu1q7pvQc
+         dDfn0i5HLtOfVM7IHwhGik4jvHnVdOK00qF2pDmdZ2Px5YBG2ac4YbatJlTwlVOL/iJq
+         SuHg==
+X-Forwarded-Encrypted: i=1; AJvYcCXfoEhVxEQk/8bpHDoXTn6ewIQSOCbjraXKoTDwf7nQEKaEa2A/UhLr29eWYbY+8O0xNnePeYeHBRz6NuFya+OnySv7R1S+rr9KvYMJKAeLNCfJ33l8AD/tAl+OurjRaIWcOMV9pZMklPwlJyrk6Jv+JXqPDxEutcTA9eHTy3syG+j0ruCao0Ni3gGPb2dK
+X-Gm-Message-State: AOJu0YwWRs+8MOv1f+haJJdrRjV9IuESNCEyUpcwbG1f8cDkqSyunCe9
+	TAhLN0GOPp2Nj6h2YmdOvJsICuJ8MrSa/io/L+VvjTexUFlJhjFJ
+X-Google-Smtp-Source: AGHT+IE0AXDZ7mxhBIKI2K2SwHTXzzxrPsmCVAkqpJSqBbHwVMwvEk7JTbahLXe3AbavTrD0Zc148Q==
+X-Received: by 2002:a05:6a20:2591:b0:1a9:3287:9180 with SMTP id k17-20020a056a20259100b001a932879180mr1283441pzd.52.1712699228456;
+        Tue, 09 Apr 2024 14:47:08 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:6c8c:a143:d391:6ace])
+        by smtp.gmail.com with ESMTPSA id x23-20020a17090a165700b0029b59bf77b4sm76638pje.42.2024.04.09.14.47.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 14:47:08 -0700 (PDT)
+Date: Tue, 9 Apr 2024 14:47:05 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Peter Hutterer <peter.hutterer@redhat.com>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com, hmh@hmh.eng.br,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, njoshi1@lenovo.com,
+	vsankar@lenovo.com
+Subject: Re: [PATCH 1/4] Input: Add trackpoint doubletap and system debug
+ info keycodes
+Message-ID: <ZhW3Wbn4YSGFBgfS@google.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20240324210817.192033-1-mpearson-lenovo@squebb.ca>
+ <20240324210817.192033-2-mpearson-lenovo@squebb.ca>
+ <ZhR-WPx7dgKxziMb@google.com>
+ <f3342c0b-fb31-4323-aede-7fb02192cf44@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:yYdU5SWqH/bNqNsamsZdNYjgngACK2VgYu9rtYrDw57TzVQOfzk
- nbwx7FnKGIQD4a8CQDvsHEZ/Ospk5g7w4vd5fY8vJGFGBwg7MiETD/G1gpBdl12yKFbcc2z
- A0B0HMdpaANJd+A3Ya97MirLbdVG2NtLy1UxNDhf/yeY1inuODu5Nz3awDzud4o6PG0khzh
- Cmf0GOTxKcwAgCqFJ/GtA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:wtmSOyWMUO4=;7DDBbaFiuDx6Dit4uUKw2lAzbRA
- k7pkIyPjTCgqpyjA8tgOz/neI3lGQj7fWg26E65YT+M3NP2shf5PJEX7Oqr6eeMEgmeX0mM4o
- 0M8pDyPdv3Sy5Arh30XY+Wd9PbSqxrbZet5pjcWPEm1lTZs0BbBN+GpZtbW2F1RgCC7neVtjK
- ViiyTuenqv8liQVouUHwCZKKnDcQihN3YlxNbf/E/41eLbMLlBaypRv3VumgtOtTziiI/yNyQ
- e4ju/GD0HqHBFILae98JDql4ETFH58Ht/CxXqfKZT/UVyrjSCyLHxg7CkDNx1es/mpDVPiLxX
- WygY6lpfkj+UJ9o7etf5WTRebiu+Q8U9J7VuGsVcyCdf/T+SDsCYsgibDMsh//+kVjFuod3So
- Q5PHW+mCldy9Hdq7efwz30J0ljeT2vq22SEqqMzbAq2lSYjEw7Q2+gIWl4DW2Nj1EuRhxukXc
- kC6CJSG79591XxqBilNEWavox4u3HyVaWCQxGrbnCOnj4cJ33BEboAm5aRkplldsQkx7H7gm8
- kMoGd/5s1T8rAHS833amsTd1OkyCflbjHumzsGXAtcUzWy8Ple5ZxD1v782H53gQr/Dek/EEP
- lSR0GmWKlHsR29qgyDmifLBjTFdNrNvxxSXDgU8q9UO1yx0ObiN+T7fNw6QrwfdWbO1S/RVL0
- gF0CXVlIRbyct79se4m/bVsL+DZUCr+nFZ8RMFHayA9BlbuvC1U8x2hm6LhQia/5cn3DWytaJ
- dGOcF7qn8JNCCop976XiNgLkw8GU/KprE3h45fDXGXFfNETCn7+HeAlluLez8nM+cYOaPLbhN
- YbjU5X96fOBnfdhhrmKiMWwwVG/4deimRs4Gu7ErQWSYY=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f3342c0b-fb31-4323-aede-7fb02192cf44@redhat.com>
 
-Currently, the driver does only support a custom sysfs
-to allow userspace to read the fan speed.
-Add support for the standard hwmon interface so users
-can read the fan speed with standard tools like "sensors".
+On Tue, Apr 09, 2024 at 03:23:52PM +1000, Peter Hutterer wrote:
+> On 09/04/2024 09:31, Dmitry Torokhov wrote:
+> > Hi Mark,
+> > 
+> > On Sun, Mar 24, 2024 at 05:07:58PM -0400, Mark Pearson wrote:
+> > > Add support for new input events on Lenovo laptops that need exporting to
+> > > user space.
+> > > 
+> > > Lenovo trackpoints are adding the ability to generate a doubletap event.
+> > > Add a new keycode to allow this to be used by userspace.
+> > 
+> > What is the intended meaning of this keycode? How does it differ from
+> > the driver sending BTN_LEFT press/release twice?
+> > > 
+> > > Lenovo support is using FN+N with Windows to collect needed details for
+> > > support cases. Add a keycode so that we'll be able to provide similar
+> > > support on Linux.
+> > 
+> > Is there a userspace consumer for this?
+> 
+> Funnily enough XKB has had a keysym for this for decades but it's not
+> hooked up anywhere due to the way it's pointer keys accessibility
+> feature was implemented. Theory is that most of userspace just needs
+> to patch the various pieces together for the new evdev code + keysym,
+> it's not really any different to handling a volume key (except this
+> one needs to be assignable).
 
-Compile-tested only.
+What is the keysym? If we can make them relatable to each other that
+would be good. Or maybe we could find a matching usage from HID usage
+tables...
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
-Changes since v1:
-- fix undefined reference error
-- fix fan speed validation
-- coding style fixes
-- clarify that the changes are compile-tested only
-- add hwmon maintainers to cc list
+Thanks.
 
-The changes will be tested by Mikael Lund Jepsen from Danelec and
-should be merged only after those tests.
-=2D--
- drivers/acpi/Makefile    |  1 +
- drivers/acpi/fan.h       |  9 +++++
- drivers/acpi/fan_core.c  |  4 ++
- drivers/acpi/fan_hwmon.c | 83 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 97 insertions(+)
- create mode 100644 drivers/acpi/fan_hwmon.c
-
-diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
-index d69d5444acdb..c272ab2c93b9 100644
-=2D-- a/drivers/acpi/Makefile
-+++ b/drivers/acpi/Makefile
-@@ -83,6 +83,7 @@ obj-$(CONFIG_ACPI_TINY_POWER_BUTTON)	+=3D tiny-power-but=
-ton.o
- obj-$(CONFIG_ACPI_FAN)		+=3D fan.o
- fan-objs			:=3D fan_core.o
- fan-objs			+=3D fan_attr.o
-+fan-$(CONFIG_HWMON)		+=3D fan_hwmon.o
-
- obj-$(CONFIG_ACPI_VIDEO)	+=3D video.o
- obj-$(CONFIG_ACPI_TAD)		+=3D acpi_tad.o
-diff --git a/drivers/acpi/fan.h b/drivers/acpi/fan.h
-index e7b4b4e4a55e..97863bdb6303 100644
-=2D-- a/drivers/acpi/fan.h
-+++ b/drivers/acpi/fan.h
-@@ -10,6 +10,8 @@
- #ifndef _ACPI_FAN_H_
- #define _ACPI_FAN_H_
-
-+#include <linux/kconfig.h>
-+
- #define ACPI_FAN_DEVICE_IDS	\
- 	{"INT3404", }, /* Fan */ \
- 	{"INTC1044", }, /* Fan for Tiger Lake generation */ \
-@@ -56,4 +58,11 @@ struct acpi_fan {
- int acpi_fan_get_fst(struct acpi_device *device, struct acpi_fan_fst *fst=
-);
- int acpi_fan_create_attributes(struct acpi_device *device);
- void acpi_fan_delete_attributes(struct acpi_device *device);
-+
-+#if IS_REACHABLE(CONFIG_HWMON)
-+int devm_acpi_fan_create_hwmon(struct acpi_device *device);
-+#else
-+static inline int devm_acpi_fan_create_hwmon(struct acpi_device *device) =
-{ return 0; };
-+#endif
-+
- #endif
-diff --git a/drivers/acpi/fan_core.c b/drivers/acpi/fan_core.c
-index ff72e4ef8738..7cea4495f19b 100644
-=2D-- a/drivers/acpi/fan_core.c
-+++ b/drivers/acpi/fan_core.c
-@@ -336,6 +336,10 @@ static int acpi_fan_probe(struct platform_device *pde=
-v)
- 		if (result)
- 			return result;
-
-+		result =3D devm_acpi_fan_create_hwmon(device);
-+		if (result)
-+			return result;
-+
- 		result =3D acpi_fan_create_attributes(device);
- 		if (result)
- 			return result;
-diff --git a/drivers/acpi/fan_hwmon.c b/drivers/acpi/fan_hwmon.c
-new file mode 100644
-index 000000000000..b01055432ded
-=2D-- /dev/null
-+++ b/drivers/acpi/fan_hwmon.c
-@@ -0,0 +1,83 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * fan_hwmon.c - hwmon interface for the ACPI Fan driver
-+ *
-+ * Copyright (C) 2024 Armin Wolf <W_Armin@gmx.de>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/hwmon.h>
-+#include <linux/limits.h>
-+
-+#include "fan.h"
-+
-+/* Returned when the ACPI fan does not support speed reporting */
-+#define FAN_SPEED_UNAVAILABLE	0xffffffff
-+
-+static umode_t acpi_fan_is_visible(const void *drvdata, enum hwmon_sensor=
-_types type, u32 attr,
-+				   int channel)
-+{
-+	return 0444;
-+}
-+
-+static int acpi_fan_read(struct device *dev, enum hwmon_sensor_types type=
-, u32 attr, int channel,
-+			 long *val)
-+{
-+	struct acpi_device *adev =3D dev_get_drvdata(dev);
-+	struct acpi_fan_fst fst;
-+	int ret;
-+
-+	switch (type) {
-+	case hwmon_fan:
-+		ret =3D acpi_fan_get_fst(adev, &fst);
-+		if (ret < 0)
-+			return ret;
-+
-+		switch (attr) {
-+		case hwmon_fan_input:
-+			if (fst.speed =3D=3D FAN_SPEED_UNAVAILABLE)
-+				return -ENODATA;
-+
-+			if (fst.speed > LONG_MAX)
-+				return -EOVERFLOW;
-+
-+			*val =3D fst.speed;
-+			return 0;
-+		case hwmon_fan_fault:
-+			*val =3D (fst.speed =3D=3D FAN_SPEED_UNAVAILABLE);
-+			return 0;
-+		default:
-+			break;
-+		}
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return -EOPNOTSUPP;
-+}
-+
-+static const struct hwmon_ops acpi_fan_ops =3D {
-+	.is_visible =3D acpi_fan_is_visible,
-+	.read =3D acpi_fan_read,
-+};
-+
-+static const struct hwmon_channel_info * const acpi_fan_info[] =3D {
-+	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT | HWMON_F_FAULT),
-+	NULL
-+};
-+
-+static const struct hwmon_chip_info acpi_fan_chip_info =3D {
-+	.ops =3D &acpi_fan_ops,
-+	.info =3D acpi_fan_info,
-+};
-+
-+int devm_acpi_fan_create_hwmon(struct acpi_device *device)
-+{
-+	struct device *hdev;
-+
-+	hdev =3D devm_hwmon_device_register_with_info(&device->dev, "acpi_fan", =
-device,
-+						    &acpi_fan_chip_info, NULL);
-+
-+	return PTR_ERR_OR_ZERO(hdev);
-+}
-=2D-
-2.39.2
-
+-- 
+Dmitry
