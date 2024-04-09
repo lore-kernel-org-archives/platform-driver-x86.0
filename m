@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C81050A62
-	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Apr 2024 14:30:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C0A1369AC
+	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Apr 2024 15:49:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712673059; cv=none; b=thsiuwyj2c6Ck2intc2co0i3UoaGY5srZehEC9gZrWaI835a1S1FavCQSGZt5zLjrjJKZhuXiXZxsvOI2iKRwEvjusSwQCcdMWloR2xnNytLAqlJd19VW7297WoDbwgL+dZQpD9FDYRpIdP4nAZpp9TEg4LUpy9R1659lxBuJVE=
+	t=1712677777; cv=none; b=bnyOCBJiBmNJEy0C0bihq94fuAGgCGabcxOHuebjbFnFAlrm0PMA/3tsfdaa/IWbjcvnNbPxx3jLd1uKkHllQLvuRDj1B5XqPu7BqsAKhwY30vyC3LzIHr2VCFmkz4z3Ri3K3G+lvrPeECCNf8rlt1Zublichp8ydGd5oAOKbQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712673059; c=relaxed/simple;
-	bh=NHVdSlq6P1IEAHq1YRW2CDNwC6uS9IrLMTOiNwhrcfQ=;
+	s=arc-20240116; t=1712677777; c=relaxed/simple;
+	bh=VJsZPS/k151IlbWrLU5CpwTJ4ep2rZqOCa8PQqMHZrs=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=P11EWr7Wnu0nJRNESqxqfwhF2CvIun+x4Q4YcqVqIOfurLyDfKOcFhddmhSsKB54YXClTpsGWJuQk6QmRKRvv5eq3mH7DoEWq5RMZpdxyIhyZ3Of2EulycCSLc1INDgQDw+t/MSA4yua4jvkyimRFGF4TFfHVpSzUmHf9RamTzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H1NvJVMG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=qW/JE/BsUmG2r+n/Nc1e7rHVGrIdgsLDGdX4TNKNK1RD+dQPWKvaejSTjh0Oy4pP0Ei590pt9KHXBbpxubYT3gnt+nOPiZj42NsAorm4I0K8aR+eWSWnEcSK6NEtOVOW1rSOxua0nscW4W1xkH1AE5ouXLymLSCnFn8QW0C/SHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FPBdBHCx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H1NvJVMG"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 35AFAC433C7
-	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Apr 2024 14:30:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FPBdBHCx"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C2FD0C433B2
+	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Apr 2024 15:49:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712673059;
-	bh=NHVdSlq6P1IEAHq1YRW2CDNwC6uS9IrLMTOiNwhrcfQ=;
+	s=k20201202; t=1712677776;
+	bh=VJsZPS/k151IlbWrLU5CpwTJ4ep2rZqOCa8PQqMHZrs=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=H1NvJVMGgrVsDDGDluSbgeAkx/zKeUHjrp5CWGnM+g51bE3vxzQiL/lTFZ4m5jsWJ
-	 nYJddxS0DR2xkVJK3TzF4Hq7EE1dJ+Vo8T/pAlDylG00zpbnAUEQamjWUvIvBhLF/g
-	 iY0bqj7E/bGJXQ/6aci6lOW1ILErFxVzwqYIJbukz8VJ+HoRXULUVnciUmuDjqVojX
-	 HzUn8VsmEHwR4HIUwLKktCJVFCzQK7hq8sclJNTykCYwXMgus/nh4OhLLi8f7qKEd8
-	 4MCagfG8lqIQ30LCjQULR6fttlyCrfKUSYBvVcpFTyDl6Ni2kJlbWMO/e1+5B/M4Q6
-	 D5jGtGyjbgkLg==
+	b=FPBdBHCxca+YF3djWyJza0z4spK8i042HvOAppVndFRY1/m7WyBS9D1Pyfi84b1Pi
+	 70SKJUoZHLnQuuqmzIMmWZOcuTw6Vl+ZsPPKDlxGtb49bciaZr7SzNMJoltN3eS7ix
+	 vbqE51IbxDCDyqqBCzKCcbAxvBk4griM4koz1tEoutv9yYp1QwdtM+mqq6KUpituw7
+	 H+VxWQ7OPAEeJriNkQbKr1I3ogAuvvFeZjwcAn+as4BG7ZBCEsUpG2vhVOtIsr5mRw
+	 hXdmxeQTd6A7nhnZkURbuJYXOVYqT0ITP3UwQbZOO+XiV8i0YUCSw1MNTuns4p+wBb
+	 ODc9mUxqyQszA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 212C3C4332E; Tue,  9 Apr 2024 14:30:59 +0000 (UTC)
+	id BCC29C53BD3; Tue,  9 Apr 2024 15:49:36 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218696] DYTC frequency scaling deterioration and event spam
-Date: Tue, 09 Apr 2024 14:30:58 +0000
+Subject: [Bug 218685] asus-nb-wmi fails to load due to conflict with amd-pmf
+Date: Tue, 09 Apr 2024 15:49:36 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -40,16 +40,16 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mpearson-lenovo@squebb.ca
+X-Bugzilla-Who: mario.limonciello@amd.com
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218696-215701-xKBD64573G@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218696-215701@https.bugzilla.kernel.org/>
-References: <bug-218696-215701@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: component assigned_to product
+Message-ID: <bug-218685-215701-O1EFEIqNOK@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218685-215701@https.bugzilla.kernel.org/>
+References: <bug-218685-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Bugzilla-URL: https://bugzilla.kernel.org/
@@ -61,21 +61,16 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218696
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218685
 
---- Comment #4 from Mark Pearson (mpearson-lenovo@squebb.ca) ---
-Thanks! (for my reference - L14 G3 AMD)
+Mario Limonciello (AMD) (mario.limonciello@amd.com) changed:
 
-I've created internal ticket LO-2964 and we'll see if we can reproduce and =
-get
-insight from the FW team as to what is happening.
-
-If you have some of the ACPI events recorded (I assume you're running
-acpi_listen?) that might be useful - just so we can show the FW team what
-events are being sent. Hopefully we can reproduce the issue in the lab thou=
-gh.
-
-Mark
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+          Component|x86-64                      |Platform_x86
+           Assignee|platform_x86_64@kernel-bugs |drivers_platform_x86@kernel
+                   |.osdl.org                   |-bugs.osdl.org
+            Product|Platform Specific/Hardware  |Drivers
 
 --=20
 You may reply to this email to add a comment.
