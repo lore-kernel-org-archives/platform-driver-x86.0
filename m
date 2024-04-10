@@ -1,45 +1,46 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2049.outbound.protection.outlook.com [40.107.92.49])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2084.outbound.protection.outlook.com [40.107.236.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36ECF13E3F3
-	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Apr 2024 14:10:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52D615FA61
+	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Apr 2024 14:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.84
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712758222; cv=fail; b=ErAB1BLxMbHn/X14KBNcB42c+B73+cYIro35h3SlyoCJMOfmC7tgf9P+9ru0jqjZIaFg4UEf1EOjiLKV9SiNAXGFcBEJ7mwwkyuXT4hu5IMSKj5DreM+bjJTtjo1mDaiOpA6bwQMNFHhSBfv+mV76sv1VQw57rkZ1pakKptQtRg=
+	t=1712758223; cv=fail; b=qmHQ2oKRJSZIKESFLyn6ByRXDVzyRfblqVMuMQ4T8awZJcq04YFY/WtRQd7xAwXQU02oaoKTnmyHOvzZCgWe37mQF3SawwI02azmL609QoDh4oECW8sxfq4dHXhJM5W86YzjaY0j3sRa8JBwszVZVKwmbNzT5RHiNDLEVQZJdmc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712758222; c=relaxed/simple;
-	bh=IIBiiwIX8s+EuILgthvA0p+BvGBY77/Tzz72zQUehro=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dp4N/AZN7G72uWbOvtpfF/DfcrxGYSHBiAndAJzK3uE6cU7VWc16u8SYUQmzNkC/gJdJY2BQ1wqmSUWsa5yID72Yd8KomVgTmX0g46DqokQWcjYmYy0fJtMNSt3rk/Dfci81+610Ct/dPQDgnAZn/ki2lOgwR+O7CpaGKb0ALM0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lS4RpwBK; arc=fail smtp.client-ip=40.107.92.49
+	s=arc-20240116; t=1712758223; c=relaxed/simple;
+	bh=raNXm6jDLj2l/vcnp4IAVrVyjFbfGoLZbw2T3NYSCR0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tbuAl9g2qCBTnlK5QxGCZyBljpLGl2khHnoDElIWDbXCj6sXr5bOKnSc5xJ4B1776nXOGD3YsD7epowkZ4wSuKUj8rzCuUozxePUbYvavVVhRXY9I0uSyoQ3mq7j0yfkuOY/m4ZbNEpgzN3UhoSaLzLoBbE53qzt3phF4Oe5Vo0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5WEPLXW4; arc=fail smtp.client-ip=40.107.236.84
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lS4RpwBK"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5WEPLXW4"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gwWUYiZNJ3BWpyZV3M8BbazP82bsjXEOC6DChsTCTInMFfI0nM0s0Ran0NygvpKCpCco1ACKcTNkVF1hVjtEq1vhg2RU7r5tddC3a+QFiuB0og+ozmfSBc/yDKtYtHWae1irscJjTgCXOLIHNvHyBj7VnqUuKSnGYgTBTYe5VZ+F/ZD9i7Joth6narvGtgtAAyusffGcBa6j//jbl2J9YQISsDu/cHuERwNyeFRy2hFl9WXCkS/mr7cXjBhfTuR95L6YZqK3MBhtTVDwcwHMT2X0i/0TVp+S4CoqMJ6C12CPm4XAJeEMX9oiHusl2H8WT3w/F2cMp3jRu3hsimZr6Q==
+ b=G/nMkV8eoRhokpxaMqOayf5JqDL7SeVWg1pFURAYgnpo+eTPKfiffEzWpcOGtQI/H4cGFvpt0auQFKpITfFSPeQH/SLNL+vuiCp8jLaTcohYm1KvC35Ew+9bQVrYuyNqou3GvVe7sPp5yqYg6q8s+7YOC1Owm92dKkMzlEqA8I7TEOfjpUjUiBy/VYWAsYuKVHh6uDfIEAs5BNcHgMpadpLOrsmQA4xQSeKaNJDLWB2hLgRhntFlbfGLbE2SLqRAkoAYkMPPV+0WR9nzRNL94SKtiyaF03c8JXSrEoGbBccNJUPXBbcFJT90JukezgWFzyy1eXXWdPFAH6jzScrMfQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=d1rpRrSBjDLlyp8kfrtI2j93ypt3zZg5YREyo3YvmAo=;
- b=UW4oqwC0xcbvBV5stLQgMRqO2Xx5xMcZabHX2q+1XtSMWnmO8aa+eSxHiYlEVUeJu73zjKEsbpNC6Elws2fJz08qkAKZIQ8Naq0A0PNK9fHU5yzR/7QEf0JGOBlPJjauHAQvBztogEfYAY3Qw1nRZHhjjzNSXqad58Plo37JXJC6EEeq0yakHoNULR5VvWdX6uyh8nIP2sggUbiCWYhchNBcTCZzDw91Tc/OoJKbrKe2QQnnw5xmLzfhYIg8esNgTsIzaOXFAF/gFVCE5lT44p9BRNGxnfodCQAJuh6uZVH4lOfL2/1HuRAGHssFlvV3xbRB9lv996mN59H4/ibQIQ==
+ bh=FETWJEU5JErB+zNSVjp9MjUrZD0KydkJptt2frHiLF8=;
+ b=IB2rrAAuK7hWlMBa6Sq1mfL8xGvrWNowD040V8igIfsZpLEFZlGD6L7BvFiihyQqkClJZgCamn1Qw77hEzwL3StNhuiHwmMQOcXsWCm2N0CXQnQVJnItpx7DTO8ckiMGcXFBkuF+RWeca3NtoajZkOeTF9X1NzLEEoFbC0p4+39KiGAyP6vs6hP5p2/w+nZL5l+R7ce3oi/AwClTEbv78QdZpJGupIU8a5g5TquoFKbVkrictBPVVPKosJDAQ3OVvR3wIPmBFPytdnwvsrtwZC+mAyhGpm1BJ2HJI+fWl61fDxFqjUC6zq4LgfeNMKxCamunKx0jKSX4/8D2v742gA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d1rpRrSBjDLlyp8kfrtI2j93ypt3zZg5YREyo3YvmAo=;
- b=lS4RpwBKFGjOAkJLZVNphZZzV0Ji+CnDOW23ABRkSQHsoQ5tvSJW9LzojSUDmkhE9TiBa5EHjAEN7dLbaej/R9ZuMin0Ghh1MKCQnMpIVCHl++U63rxzFY9lHM5Rb6BZnHVPhqKbDMXiRRf2NhWFHoH4CAsqjwle+NQLDT4/yXQ=
-Received: from CH0PR03CA0229.namprd03.prod.outlook.com (2603:10b6:610:e7::24)
- by MN0PR12MB6175.namprd12.prod.outlook.com (2603:10b6:208:3c4::19) with
+ bh=FETWJEU5JErB+zNSVjp9MjUrZD0KydkJptt2frHiLF8=;
+ b=5WEPLXW4SiBjnd/tTSh7BOGhnlSAhIZO3aEY/F1cGoiQonFd+qvdBdlO/JqQbbhY6Yrm5he+sPGNuRc627fI3FLWeJpB8UOEkftsTH5Y+mqokWWKuzOX9m+nu+h0tV3MC8CvCJMDr+yVn31hp6El0vFtVX6i2WRm2q4BpUB6bK8=
+Received: from BYAPR21CA0020.namprd21.prod.outlook.com (2603:10b6:a03:114::30)
+ by SA1PR12MB8164.namprd12.prod.outlook.com (2603:10b6:806:338::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 10 Apr
- 2024 14:10:13 +0000
-Received: from CH1PEPF0000AD76.namprd04.prod.outlook.com
- (2603:10b6:610:e7:cafe::22) by CH0PR03CA0229.outlook.office365.com
- (2603:10b6:610:e7::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.36 via Frontend
- Transport; Wed, 10 Apr 2024 14:10:12 +0000
+ 2024 14:10:17 +0000
+Received: from CO1PEPF000044F5.namprd05.prod.outlook.com
+ (2603:10b6:a03:114:cafe::67) by BYAPR21CA0020.outlook.office365.com
+ (2603:10b6:a03:114::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.9 via Frontend
+ Transport; Wed, 10 Apr 2024 14:10:17 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -47,23 +48,25 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH1PEPF0000AD76.mail.protection.outlook.com (10.167.244.53) with Microsoft
+ CO1PEPF000044F5.mail.protection.outlook.com (10.167.241.75) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Wed, 10 Apr 2024 14:10:12 +0000
+ 15.20.7452.22 via Frontend Transport; Wed, 10 Apr 2024 14:10:17 +0000
 Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 10 Apr
- 2024 09:10:11 -0500
+ 2024 09:10:12 -0500
 From: Mario Limonciello <mario.limonciello@amd.com>
 To: Hans de Goede <hdegoede@redhat.com>, =?UTF-8?q?Ilpo=20J=C3=A4rvinen?=
 	<ilpo.jarvinen@linux.intel.com>
 CC: "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>,
 	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, <al0uette@outlook.com>, "Mario
  Limonciello" <mario.limonciello@amd.com>
-Subject: [PATCH 1/3] platform/x86/amd: pmf: Decrease error message to debug
-Date: Wed, 10 Apr 2024 09:09:54 -0500
-Message-ID: <20240410140956.385-1-mario.limonciello@amd.com>
+Subject: [PATCH 3/3] platform/x86/amd: pmf: Add quirk for ROG Zephyrus G14
+Date: Wed, 10 Apr 2024 09:09:56 -0500
+Message-ID: <20240410140956.385-3-mario.limonciello@amd.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240410140956.385-1-mario.limonciello@amd.com>
+References: <20240410140956.385-1-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -76,49 +79,59 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD76:EE_|MN0PR12MB6175:EE_
-X-MS-Office365-Filtering-Correlation-Id: de75c556-3bf6-41a4-c5bf-08dc5967f054
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F5:EE_|SA1PR12MB8164:EE_
+X-MS-Office365-Filtering-Correlation-Id: 93a583cd-4183-40ab-1199-08dc5967f2e9
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	dH5W1jBxMJ51EZtEtm23fdnv4EuTFQ9y0/tcIxmocZ6lwrwxr4liiuwLeGveuGtvGTPM0cSOw9XnK7yqROqLgb+Bp8+U0zKfok50M/dy9CPH1wtcJHDs/qsfIKs9VJ8T3YrdKM+ke8bikGhi5nDzyaiRSAzleSohKh7sQH22bLCVm5Sxof8sbfqsq/0xAEqh/9gWEfbZlc7+qjkYyM06IOdBmL3RPxPf06F/UsdCUTlfjVkl1Rvqqe+8DDWJxfKJQmf/fOmgxrJD1NXq8YckfJ88st1bUeC4viSrl8rL4J1z7QQvxuaq4ZaN5vGZkRMgO5anUxE58rAQPa+b2A3JjS/MiNE/B37visNwWoXudql6j13hffOlU/gDXeT7uHO+4x418FoQ+i/zpt4N6V3MP6TyekTn93tmk1XWDgeULeWGwPcloglR8egKRplpLYzVyWaBRBdeoeBrEVno44vZVXbEDXb+03qFIri+da063x1Z7+dGYMLAVIbNMDcip7feX69gCYzdEn7A3tgtGbRA5ABbzdxL4nkgkkjRT8sVUgpJmT7Aq7zr0X7JB6EhONn5vcMyWiNN3+Bt5ncdXVCZu3cbMSOUnQelvW528aFgTyxgzHbosdu65DBLYhYy5rlUzm9YskIsUbhO+uc5ljRujY2JxAuRCRDPsgAyp51R7q0p5o+yPoDIxw6vAwHV339pYFpjUFF6PR2NCidOPDFuSTa4uMn40PJa2/wyH7UWd/qYiVeiKReSIHySFgLdfOaZRXmdzWi5psGlhDt6DqRs3R/BSOQv70ZHquUv89R4DZc=
+	AeDBXLKsN0a/fV4Vb/zI+6qhAesqj6l2USAtbxKF+w50omMLsvRAB/gSE7hYs8570IOBAyrXMLLGzDYGqS9+OmLgUaUBnjtagnVLBFq4Sa2a8Atlvjd7c5P9bm1rEVXGtMNRoy2ILT6ndZD2lK+9WYMDRiKZIkTCLzqra6oT0n9fecrBNPRBjfzTbxOhZtWUbXs7MPRh4hmFEeIZfRIYoModw3QP0Kp8fVkK0HdzkknBT9Ex00P0BkU3dREEA5A8Bblu8ZomXcBCUElkT+nHbaU17DGPEdnXuPhWJ22Z1tyuU3PpaKNNQtWLk5haWKGGSFrCdzl2HMWAx0M6szF8oJtW4Zt1eDfhKn1cTlCX6HKvJhup7tTjvdRZiDVgZNTa2tf1dvQOUwYD+Usl6GNNo6uJSo1M2EBy558xYZBvh6uZ3MZBA/uACSbceYc2AVPQez13VN2oNmAVhkNHCF6txqWgp1H86jaxT1amBtonqF9/ZKzXhhF/CD8PX/v492oVf0Yh+KST/QEkVATGV7w9tGLiTNsxo8wtQbuJFiXlZK2f32rX7ufHWEpnuU5kscrtZoQkIKsctnOP2Q+s3pve2dUIwvRNuOmRGiTfvgb+PRzXaojeSDim+p+lH2d2ZXRlzRIITkXdm9YkNbK/rmRLFvrt6mB2nPnHZEQ3alAtHncot9EWOp9vLUlY2xB7A9Z6BZMIfGrohOeXx+WAi8TQ1XVpOWQXKHNebun2ugadtFJPEOTFIvwBi67g0DUqpWrwcbavCJDbCV6FzNA1hrUgKbxw0Egp3sGtMEaEOv9C7uI=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(32650700005)(1800799015)(82310400014)(376005);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(36860700004)(376005)(32650700005)(1800799015);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2024 14:10:12.7733
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2024 14:10:17.0225
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: de75c556-3bf6-41a4-c5bf-08dc5967f054
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93a583cd-4183-40ab-1199-08dc5967f2e9
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000AD76.namprd04.prod.outlook.com
+	CO1PEPF000044F5.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6175
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8164
 
-ASUS ROG Zephyrus G14 doesn't have _CRS in AMDI0102 device and so
-there are no resources to walk.  This is expected behavior because
-it doesn't support Smart PC.  Decrease error message to debug.
+ROG Zephyrus G14 advertises support for SPS notifications to the
+BIOS but doesn't actually use them. Instead the asus-nb-wmi driver
+utilizes such events.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=218685
+Add a quirk to prevent the system from registering for ACPI platform
+profile when this system is found to avoid conflicts.
+
+Reported-by: al0uette@outlook.com
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218685
 Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
- drivers/platform/x86/amd/pmf/acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/amd/pmf/pmf-quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-index d0cf46e2fc8e..60fc71c9fb0f 100644
---- a/drivers/platform/x86/amd/pmf/acpi.c
-+++ b/drivers/platform/x86/amd/pmf/acpi.c
-@@ -437,7 +437,7 @@ int apmf_check_smart_pc(struct amd_pmf_dev *pmf_dev)
+diff --git a/drivers/platform/x86/amd/pmf/pmf-quirks.c b/drivers/platform/x86/amd/pmf/pmf-quirks.c
+index 9f3790eaaa30..0b2eb0ae85fe 100644
+--- a/drivers/platform/x86/amd/pmf/pmf-quirks.c
++++ b/drivers/platform/x86/amd/pmf/pmf-quirks.c
+@@ -21,6 +21,14 @@ static struct quirk_entry quirk_no_sps_bug = {
+ };
  
- 	status = acpi_walk_resources(ahandle, METHOD_NAME__CRS, apmf_walk_resources, pmf_dev);
- 	if (ACPI_FAILURE(status)) {
--		dev_err(pmf_dev->dev, "acpi_walk_resources failed :%d\n", status);
-+		dev_dbg(pmf_dev->dev, "acpi_walk_resources failed :%d\n", status);
- 		return -EINVAL;
- 	}
+ static const struct dmi_system_id fwbug_list[] = {
++	{
++		.ident = "ROG Zephyrus G14",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA403UV"),
++		},
++		.driver_data = &quirk_no_sps_bug,
++	},
+ 	{}
+ };
  
 -- 
 2.34.1
