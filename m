@@ -1,146 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75C513D274;
-	Wed, 10 Apr 2024 08:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3169715921E
+	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Apr 2024 11:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712738912; cv=none; b=XsLE082xazRZvzaYJzg3Bi76xQ2f0pRb2P6xmTDP5gTLwbyDOFtGTmXYnAY6sAf8I8j/JmsIB2RyUVEzWILywGCseYIaDCYJdNjX/t6wjpJX4xuUtMG+CUdVD1M310+2OhICTjRZ/MtUuys8NxqQMhyadqpVVaIJDkyiT7gVSWU=
+	t=1712746829; cv=none; b=PT8q1qcMQnElrBLfBnuFa8cQOpqhBTYX80E1HnCCahy8eBZsAqsvHDz1w3Q5ztXHVjw3rsFZYGPLV2kluiGn18zVj/DasKhQdX5PEPBdW7+hCyq0HxtWDN9tlMVR4XNVZLbZmp4Lq/CL27H66jpxnzXJ/KPOICXmUU51lI/u4MA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712738912; c=relaxed/simple;
-	bh=61jPHnCZ/8pf2B+mY3nN/ZOKCq8JfMnl5uS92Vb8dAA=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=eL8Gx+V2mmWnRozzvefSzncbQZkX9OSmY6GSDUoG6tQ4iNS8FKkHz5TAgz2CXbmeUoQQXEpBo9d+AV6OEzU3nhDOmtz3B2tUsMuQn5Np1Y5jwH4YCpJt8s8JskmjBKAVRLJi7t8EV3FEFlIFh3MoLwWvouP6S2PIDA6gepbx5WI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mZ3Kc7cz; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712746829; c=relaxed/simple;
+	bh=TRbv3m5WRpUW/kPuUQ9Lt5c9hgvwOcwmU6Rb0Cht/0I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lyS01VNBwjOz45nOorYsJXqezEHKESYoTz8Y6ghHpM8kp+IJLQJay6B6y/hC3n/w/IBtws+mEHWiWUc3POnZ6bBcEPd8tmenle3IVICoZUQnyPrnHbsTWGVibBdKbgWLsxHKv5rZ3D/cS74EGFjT2UVcHzhwv9X7ZXIJciGDg00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YOkFV1Ar; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mZ3Kc7cz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712738911; x=1744274911;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=61jPHnCZ/8pf2B+mY3nN/ZOKCq8JfMnl5uS92Vb8dAA=;
-  b=mZ3Kc7cz1W3LCLHg4AQGkF48tmZDTL6J1cOFOV6YYgl/rGdi27YVZud4
-   5Eoz1Wl5JCRRY47N9v9wduM+J8o6LBuPbf3C8j7hrSe9tkixe6q7vQ1ad
-   sca34h3JPH+mlENUCKujPV3tMCSW8TkmqytwKDfvNFjM1mbLbv73kadA1
-   jvlJfkOzMEhEkLmpM4wOb5xoQd4FLSykacuRIVwWhIhpL1EM/V8yowzPj
-   7FmD75kYE82ypApKaUPdNS+XHskCgn9PGh9UnH69wHHaGWJo2vN9j0zcc
-   evOp3NAyQjDwGjldR36jdhVDUPrHo+uFjtRwTtbqqDapc14c+CRz8SCs3
-   A==;
-X-CSE-ConnectionGUID: eslKSWjRR+qU247JBTo/CA==
-X-CSE-MsgGUID: OV3N/o0gSVCnsqh2yOND8Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7946191"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="7946191"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 01:48:30 -0700
-X-CSE-ConnectionGUID: EcNDN0JxSceH1mlDremgeQ==
-X-CSE-MsgGUID: czqeVPCiQTiKstaCEPtrfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="51457052"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.29])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 01:48:28 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
-Date: Wed, 10 Apr 2024 11:43:57 +0300
-Subject: [GIT PULL] platform-drivers-x86 for v6.9-2
-Message-ID: <pdx86-pr-20240410114357-295477719@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YOkFV1Ar"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712746827;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8FAN6eh8bu67NKq/ARd7vlUpySDLdLJHrs4fZKNdTOc=;
+	b=YOkFV1ArBakA8PgaQSh4we6K2fn/41ug9oBGOe3KmPcSysO05ZX30crI12807TN4KtnOFc
+	wRHdHsDYMw3cQmRd4toK7oUY7g6ucHN6ttMqbBkWVidErkq80zDb1J1WZF3T/PaqSiuKPU
+	M20SJgn1RECgBEmAFlAujRzNojcJVsM=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-353-nJ8X4LiIOpeQX3zWpagxIw-1; Wed, 10 Apr 2024 07:00:25 -0400
+X-MC-Unique: nJ8X4LiIOpeQX3zWpagxIw-1
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-515d5dcd75cso5643180e87.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Apr 2024 04:00:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712746823; x=1713351623;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8FAN6eh8bu67NKq/ARd7vlUpySDLdLJHrs4fZKNdTOc=;
+        b=hTlWDYcbpEQ9bU5HBVP2lIBsiCsJ3Jz1n7z9SLmExge9Lt8RM5CP0+k7Bgyjbic4Qc
+         G+81Z7lOoCwVk22Wq31pOcfXqC6+Ba6ZL9tliA4UQpUArwFsD4NULaSCcnhr1iezGNJJ
+         wPsCuyLoUrhROql40voQm4CRU1htgVKZeHiudb59hRB5AzSuEUGEqxqAHdPgcOAKubgE
+         vDynLIqHyTHVJMmg2MXI7TaZ5XPqNoda6uGg39CIK9ZksMMFHfruodBtw5fZAKmXD5As
+         g1gLSo26LzwE2XNM3Rm0CEMwar5UI1TZIJs0SRLNM6dZTMVd9i4YM/WGYZhQlSheLEDS
+         lmHw==
+X-Gm-Message-State: AOJu0YyukokCgavJzXMSRygTwalAneH0Fo+DSx8sLdIST4omfXdc/XEP
+	aryolfM9UgEKjwFQcEydEcKM/hcc/SMreA3yqHMH9Hg/dlUG+OJXie2z8d31tvWqTvdhZw0d6qN
+	7JRcS3lisLlTSM9h8iK0IAJjy7zy07APjc/JJhXn1LOPTfnBkslSH8SUlaE9F6lh1dP+8mOOEcC
+	sv4+U=
+X-Received: by 2002:ac2:4213:0:b0:515:8c3e:5665 with SMTP id y19-20020ac24213000000b005158c3e5665mr1549504lfh.27.1712746822809;
+        Wed, 10 Apr 2024 04:00:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFtRBcodkfAPVzHzR6rAgLYuyNguGaz5aoTqXtK2sLX0oISN7HiFpdxmAXTvLXYwNeQOn8Lvg==
+X-Received: by 2002:ac2:4213:0:b0:515:8c3e:5665 with SMTP id y19-20020ac24213000000b005158c3e5665mr1549484lfh.27.1712746822304;
+        Wed, 10 Apr 2024 04:00:22 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id ak2-20020a170906888200b00a51dccd16d9sm3222697ejc.99.2024.04.10.04.00.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Apr 2024 04:00:21 -0700 (PDT)
+Message-ID: <a510f246-1f3e-4674-9825-e1dee11c3ee9@redhat.com>
+Date: Wed, 10 Apr 2024 13:00:21 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] platform/x86/intel: atomisp2: Replace deprecated
+ UNIVERSAL_DEV_PM_OPS()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20240403105511.558395-1-andriy.shevchenko@linux.intel.com>
+ <609652ce-0336-4d69-ab79-f84c8a8506e5@redhat.com>
+ <ZhV3zUgZjAMUZ0yD@smile.fi.intel.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <ZhV3zUgZjAMUZ0yD@smile.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Linus,
+Hi,
 
-Here is a platform-drivers-x86 fixes PR for v6.9.
+On 4/9/24 7:15 PM, Andy Shevchenko wrote:
+> On Mon, Apr 08, 2024 at 06:20:03PM +0200, Hans de Goede wrote:
+>> On 4/3/24 12:55 PM, Andy Shevchenko wrote:
+> 
+> ...
+> 
+>> As mentioned in the description of DEFINE_RUNTIME_DEV_PM_OPS()
+>> DEFINE_RUNTIME_DEV_PM_OPS() is NOT a 1:1 replacement for
+>> UNIVERSAL_DEV_PM_OPS() specifically it uses pm_runtime_force_suspend() /
+>> pm_runtime_force_resume() .
+> 
+> Right.
+> 
+>> Specifically pm_runtime_force_suspend() may NOT get set (and in this case
+>> will not set) needs_force_resume skipping a resume + suspend cycle
+>> after a system suspend, which is a problem if firmware has touched
+>> the state of the device during the suspend/resume cycle since the device
+>> may now actually be left powered on.
+> 
+> I see, thanks for explaining me this. So this driver is kinda very special.
+> Still the old question, can we get rid altogether of these atomisp "drivers"
+> in PDx86?
 
-Fixes:
- - intel/hid: Solve spurious hibernation aborts (power button release)
- - toshiba_acpi: Ignore 2 keys to avoid log noise during suspend/resume
- - intel-vbtn: Fix probe by restoring VBDL and VGBS evalutation order
- - lg-laptop: Fix W=1 %s null argument warning
+At some time in the future yes. I've recently done some improvements to
+the staging atomisp driver so that it will run in a pm-only mode when
+the firmware is missing so that the ISP still gets turned off properly
+in this case and the driver now supports both BYT + CHT in a single
+build so in a way it is ready to replace the atomisp2 pm driver.
 
-New HW Support:
- - acer-wmi: PH18-71 mode button and fan speed sensor
- - intel/hid: Lunar Lake and Arrow Lake HID IDs
+But it is still in staging, so distros are unlikely to enable it
+and without a atomisp2-pm driver the battery drains much to quickly
+especially when suspended.
 
-Regards, i.
+So I think we are getting there, but now is not the right moment
+to drop this driver.
+
+>> It seems there is no direct replacement for UNIVERSAL_DEV_PM_OPS()
+>> without a behavior change.
+> 
+> Correct.
+> 
+> ...
+> 
+> Btw, have you seen a few cleanup patches against AtomISP v2 by me?
+
+Yes I have a bit of a backlog, I have just processed them,
+thank you for those patches.
+
+Regards,
+
+Hans
 
 
-The following changes since commit 4cece764965020c22cff7665b18a012006359095:
 
-  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
 
-are available in the Git repository at:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.9-2
 
-for you to fetch changes up to e71c8481692582c70cdfd0996c20cdcc71e425d3:
-
-  platform/x86: lg-laptop: fix %s null argument warning (2024-04-08 18:32:14 +0300)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.9-2
-
-Fixes:
- - intel/hid: Solve spurious hibernation aborts (power button release)
- - toshiba_acpi: Ignore 2 keys to avoid log noise during suspend/resume
- - intel-vbtn: Fix probe by restoring VBDL and VGBS evalutation order
- - lg-laptop: Fix W=1 %s null argument warning
-
-New HW Support:
- - acer-wmi: PH18-71 mode button and fan speed sensor
- - intel/hid: Lunar Lake and Arrow Lake HID IDs
-
-The following is an automated shortlog grouped by driver:
-
-acer-wmi:
- -  Add support for Acer PH18-71
-
-intel/hid:
- -  Add Lunar Lake and Arrow Lake support
- -  Don't wake on 5-button releases
-
-intel-vbtn:
- -  Update tablet mode switch at end of probe
- -  Use acpi_has_method to check for switch
-
-lg-laptop:
- -  fix %s null argument warning
-
-toshiba_acpi:
- -  Silence logging for some events
-
-----------------------------------------------------------------
-Bernhard Rosenkränzer (1):
-      platform/x86: acer-wmi: Add support for Acer PH18-71
-
-David McFarland (1):
-      platform/x86/intel/hid: Don't wake on 5-button releases
-
-Gergo Koteles (1):
-      platform/x86: lg-laptop: fix %s null argument warning
-
-Gwendal Grignou (2):
-      platform/x86: intel-vbtn: Use acpi_has_method to check for switch
-      platform/x86: intel-vbtn: Update tablet mode switch at end of probe
-
-Hans de Goede (1):
-      platform/x86: toshiba_acpi: Silence logging for some events
-
-Sumeet Pawnikar (1):
-      platform/x86/intel/hid: Add Lunar Lake and Arrow Lake support
-
- drivers/platform/x86/acer-wmi.c     |  9 +++++++++
- drivers/platform/x86/intel/hid.c    |  9 ++++++++-
- drivers/platform/x86/intel/vbtn.c   | 11 ++++-------
- drivers/platform/x86/lg-laptop.c    |  2 +-
- drivers/platform/x86/toshiba_acpi.c |  4 +++-
- 5 files changed, 25 insertions(+), 10 deletions(-)
