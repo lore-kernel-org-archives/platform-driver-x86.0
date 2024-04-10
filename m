@@ -1,95 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BAB626291
-	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Apr 2024 06:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75C513D274;
+	Wed, 10 Apr 2024 08:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712729417; cv=none; b=oE0+9bsx5jInUZhVBpWk9Y464ECvtJJUkNMtprNwewTe+zfK9bD69Ezcqvx3mWXdjO66yFYMhGVc4DPnBnKX9rRvrSYoToRC4IeYz75KCRIS6DPOr7gmnO33EpD2zkEK26gwPsFPHR39IDPUwTYzdUJFvGZJlPGI4qkx2F4wu2o=
+	t=1712738912; cv=none; b=XsLE082xazRZvzaYJzg3Bi76xQ2f0pRb2P6xmTDP5gTLwbyDOFtGTmXYnAY6sAf8I8j/JmsIB2RyUVEzWILywGCseYIaDCYJdNjX/t6wjpJX4xuUtMG+CUdVD1M310+2OhICTjRZ/MtUuys8NxqQMhyadqpVVaIJDkyiT7gVSWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712729417; c=relaxed/simple;
-	bh=oOV9/9TRFYBKgp2uQhe4OG67sK81OxNsPjaIyusPJfQ=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OGHfShGhWVyc9k+bjuZl9R0BT80IizUdQ2XytCRUiE10MlG6XXwcJvF5t8fZoqng1O+M0fJedC7Puy/dmaOewPp0zxbPuTONZpQocbgnBSyfZhUNaxbBishBOrHBIUZfC3pcYziMLnIR8cl7JHISnq3fYIqGGkuLpRVuoiUZxEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YTmIUAX0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712738912; c=relaxed/simple;
+	bh=61jPHnCZ/8pf2B+mY3nN/ZOKCq8JfMnl5uS92Vb8dAA=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=eL8Gx+V2mmWnRozzvefSzncbQZkX9OSmY6GSDUoG6tQ4iNS8FKkHz5TAgz2CXbmeUoQQXEpBo9d+AV6OEzU3nhDOmtz3B2tUsMuQn5Np1Y5jwH4YCpJt8s8JskmjBKAVRLJi7t8EV3FEFlIFh3MoLwWvouP6S2PIDA6gepbx5WI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mZ3Kc7cz; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YTmIUAX0"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B04B7C433C7
-	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Apr 2024 06:10:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712729416;
-	bh=oOV9/9TRFYBKgp2uQhe4OG67sK81OxNsPjaIyusPJfQ=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=YTmIUAX08iG/aLJM/pbK8ckeaqoU8cgPFIDZ58MHsnua+/3cXfUPw7rFoIjojy9ID
-	 AdXRxGZxMLXXuC4Xxs6hqxq+pm01BC1IUlLK2S15OCIx4TH8MGJf3uTsfBfDmDzFWy
-	 bW8DtQdlcDxZ5uu43I9704sK7EVmi5bIssXw/v4Ilp601fp+saxybRe24uBoedd34b
-	 kazPEZNQkLLOiL2GtWtN+YWi0P/apMaTZ5bACogIom8O+SXoUyQ+FiOrr5WbHF2xgD
-	 pwmZdlDFuNPwlCxzGZpr/i7ZmDNqUkcyw8JHZMfhlcJ4/RI1m9nyPm0GxcWZgQixYX
-	 4y18jAZUZ7efw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id A9129C4332E; Wed, 10 Apr 2024 06:10:16 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218685] asus-nb-wmi fails to load due to conflict with amd-pmf
-Date: Wed, 10 Apr 2024 06:10:16 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: al0uette@outlook.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218685-215701-wSecWDf8qv@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218685-215701@https.bugzilla.kernel.org/>
-References: <bug-218685-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mZ3Kc7cz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712738911; x=1744274911;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=61jPHnCZ/8pf2B+mY3nN/ZOKCq8JfMnl5uS92Vb8dAA=;
+  b=mZ3Kc7cz1W3LCLHg4AQGkF48tmZDTL6J1cOFOV6YYgl/rGdi27YVZud4
+   5Eoz1Wl5JCRRY47N9v9wduM+J8o6LBuPbf3C8j7hrSe9tkixe6q7vQ1ad
+   sca34h3JPH+mlENUCKujPV3tMCSW8TkmqytwKDfvNFjM1mbLbv73kadA1
+   jvlJfkOzMEhEkLmpM4wOb5xoQd4FLSykacuRIVwWhIhpL1EM/V8yowzPj
+   7FmD75kYE82ypApKaUPdNS+XHskCgn9PGh9UnH69wHHaGWJo2vN9j0zcc
+   evOp3NAyQjDwGjldR36jdhVDUPrHo+uFjtRwTtbqqDapc14c+CRz8SCs3
+   A==;
+X-CSE-ConnectionGUID: eslKSWjRR+qU247JBTo/CA==
+X-CSE-MsgGUID: OV3N/o0gSVCnsqh2yOND8Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7946191"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="7946191"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 01:48:30 -0700
+X-CSE-ConnectionGUID: EcNDN0JxSceH1mlDremgeQ==
+X-CSE-MsgGUID: czqeVPCiQTiKstaCEPtrfA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="51457052"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.29])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 01:48:28 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+Date: Wed, 10 Apr 2024 11:43:57 +0300
+Subject: [GIT PULL] platform-drivers-x86 for v6.9-2
+Message-ID: <pdx86-pr-20240410114357-295477719@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218685
+Hi Linus,
 
---- Comment #22 from al0uette@outlook.com ---
-(In reply to al0uette from comment #19)
-> Oh sorry for that, here's the new result(amd-pmf)
->=20
-> [low-power]
-> sudo cat /sys/kernel/debug/amd_pmf/current_power_limits=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20
-> spl:45000 fppt:65000 sppt:65000 sppt_apu_only:54000 stt_min:0 stt[APU]:0
-> stt[HS2]: 0
->=20
-> [balanced]
-> sudo cat /sys/kernel/debug/amd_pmf/current_power_limits=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20
-> spl:45000 fppt:65000 sppt:65000 sppt_apu_only:54000 stt_min:0 stt[APU]:0
-> stt[HS2]: 0
->=20
-> [performance]
-> sudo cat /sys/kernel/debug/amd_pmf/current_power_limits=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20
->=20
-> spl:45000 fppt:65000 sppt:65000 sppt_apu_only:54000 stt_min:0 stt[APU]:0
-> stt[HS2]: 0
+Here is a platform-drivers-x86 fixes PR for v6.9.
 
-This result is also taken with power cable connected
+Fixes:
+ - intel/hid: Solve spurious hibernation aborts (power button release)
+ - toshiba_acpi: Ignore 2 keys to avoid log noise during suspend/resume
+ - intel-vbtn: Fix probe by restoring VBDL and VGBS evalutation order
+ - lg-laptop: Fix W=1 %s null argument warning
 
---=20
-You may reply to this email to add a comment.
+New HW Support:
+ - acer-wmi: PH18-71 mode button and fan speed sensor
+ - intel/hid: Lunar Lake and Arrow Lake HID IDs
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Regards, i.
+
+
+The following changes since commit 4cece764965020c22cff7665b18a012006359095:
+
+  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.9-2
+
+for you to fetch changes up to e71c8481692582c70cdfd0996c20cdcc71e425d3:
+
+  platform/x86: lg-laptop: fix %s null argument warning (2024-04-08 18:32:14 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.9-2
+
+Fixes:
+ - intel/hid: Solve spurious hibernation aborts (power button release)
+ - toshiba_acpi: Ignore 2 keys to avoid log noise during suspend/resume
+ - intel-vbtn: Fix probe by restoring VBDL and VGBS evalutation order
+ - lg-laptop: Fix W=1 %s null argument warning
+
+New HW Support:
+ - acer-wmi: PH18-71 mode button and fan speed sensor
+ - intel/hid: Lunar Lake and Arrow Lake HID IDs
+
+The following is an automated shortlog grouped by driver:
+
+acer-wmi:
+ -  Add support for Acer PH18-71
+
+intel/hid:
+ -  Add Lunar Lake and Arrow Lake support
+ -  Don't wake on 5-button releases
+
+intel-vbtn:
+ -  Update tablet mode switch at end of probe
+ -  Use acpi_has_method to check for switch
+
+lg-laptop:
+ -  fix %s null argument warning
+
+toshiba_acpi:
+ -  Silence logging for some events
+
+----------------------------------------------------------------
+Bernhard Rosenkränzer (1):
+      platform/x86: acer-wmi: Add support for Acer PH18-71
+
+David McFarland (1):
+      platform/x86/intel/hid: Don't wake on 5-button releases
+
+Gergo Koteles (1):
+      platform/x86: lg-laptop: fix %s null argument warning
+
+Gwendal Grignou (2):
+      platform/x86: intel-vbtn: Use acpi_has_method to check for switch
+      platform/x86: intel-vbtn: Update tablet mode switch at end of probe
+
+Hans de Goede (1):
+      platform/x86: toshiba_acpi: Silence logging for some events
+
+Sumeet Pawnikar (1):
+      platform/x86/intel/hid: Add Lunar Lake and Arrow Lake support
+
+ drivers/platform/x86/acer-wmi.c     |  9 +++++++++
+ drivers/platform/x86/intel/hid.c    |  9 ++++++++-
+ drivers/platform/x86/intel/vbtn.c   | 11 ++++-------
+ drivers/platform/x86/lg-laptop.c    |  2 +-
+ drivers/platform/x86/toshiba_acpi.c |  4 +++-
+ 5 files changed, 25 insertions(+), 10 deletions(-)
