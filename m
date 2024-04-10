@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D92315EFA8
-	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Apr 2024 11:49:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDE615B541
+	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Apr 2024 11:52:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712749761; cv=none; b=rCBQyqVQmqUoKK9LkChozi9UPntKNO0pgB2DVwmt0rhViZPpm18Htd9W8OM2h6VBf+TI4Z6DC/+dD8XHB3/ysLP1oMApcpf9S+2rWnG96R9u4ytj/Lfazo6igWGSeuMT2tRq4G+b6pJT3+8GKVXl3E7PcMzK4WMZGdwVkZYkh1M=
+	t=1712749933; cv=none; b=qQX6JNnWM8vlAqw1o5RU4bS8671wBm+WHTmQ0oViPB/WKq7rcpzqtLAKR8M84HHcvxMg6/0olkydqLJJG7qR7Xf4RvC8LBbnnVgPIatYEcG3oc0c70rum+VS5EpTtVcYZbXpixtxNL8qlZS6tj5p4xFg6vxuB1UghLJF14YZVfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712749761; c=relaxed/simple;
-	bh=KtE/cYj3D62aLsaFl/XZm4TrW4J4RSXpCfc+OWj+tF0=;
+	s=arc-20240116; t=1712749933; c=relaxed/simple;
+	bh=vRSWwmxO0DNvN58YD4Q+t0EyCAGGrgRY9mjFnTlaJxQ=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GTwM1ZAQb4NdNso45CGOW5M54Mz9jFf2SQ3LbZUhlfJtpDLlaiacHG6FxB9mjTBQX2snCaVln64SjvUYUR2QL0wkPmudJnHJwxyMfvKOQhQz99q5AGEOcMHKY2iyJj8pXMIjiP5+QvM986QP2cmYJNBsk9HJEaQLQ5og7UV61C8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QWpL6TJx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=bdez6g6k4xZZTwtExiOfzQRfnHQ+kX9DW5x4nMVq1nA/b3UIyI1zZ8UoyUALtxCZd/szSvAG79BwMZsLikhKtrol1ImxVNKUrxaX4JQy+HcyHnxtKzXVRdRWnlthXsyOfl/rVa9kwNGjfyUqBaipPMuxBz65NSaGWUBJcbBpMuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vQDWpu5q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QWpL6TJx"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CF60FC433B1
-	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Apr 2024 11:49:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vQDWpu5q"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 68703C433F1
+	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Apr 2024 11:52:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712749760;
-	bh=KtE/cYj3D62aLsaFl/XZm4TrW4J4RSXpCfc+OWj+tF0=;
+	s=k20201202; t=1712749933;
+	bh=vRSWwmxO0DNvN58YD4Q+t0EyCAGGrgRY9mjFnTlaJxQ=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=QWpL6TJxUqHA42KvPcPpk8ZxX8jsGwd1m8uysNSXl3ovr3Y/2iKspYsiYbzRxQZYY
-	 pA+fh1qVLLHDt9ExlLPvDiBYAp/XL6EJjwgchUXTYtETQfX+6Rl6ut+stfCl3FXPlA
-	 ghRASNmUMLHLjTvebqK320WF1YZPu/r/jn+3t67XskXC3D2fMyHb1Si4xQQsm4cUom
-	 izZR8fZTrBSfV3eDobt6SP2yRjX6qqh6Z9q1JbyGGdEJxi8Tqo7VAk5GfuEFqtpxXH
-	 WVUe44U+YcuZto7I4zFESp/H1fDA1YlDWGvW4ftjUDcWKQ5rBMmz4KQcLHDQAPmDrr
-	 hIYAdnC27MHZA==
+	b=vQDWpu5qW8r5oI2okbl7q/kaqIuU8OHACcp/EfmPJMEygZA+pEcYSqxrTz5x2L2AP
+	 bNQqUgOXFBww/06La7nf0Gqp1TgXCki1lyqejd92W3fFrkAHXpiHAi6ZPR7HPhfr1K
+	 oD40++A2G4k5NDLxyl3asGM2rbOKd+/4XtFRKzpLGVy3Hcz9e8Jsbj0+SMrFgjfVPR
+	 E2wvsC88OUxsSU6ZqTL6RgZEBx3vKgbh8rX/5rspf0GU8x7VdKX5byR/+jA/Glt5ME
+	 MP4JFzISFafSxTpbhsDwMtNZGEpMH3gv4lLIMVVlxvsMkDh5FF/nIo4jLdxlBHfYtV
+	 a8WYJDEGbsLEQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id BBAC5C4332E; Wed, 10 Apr 2024 11:49:20 +0000 (UTC)
+	id 57280C4332E; Wed, 10 Apr 2024 11:52:13 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218685] asus-nb-wmi fails to load due to conflict with amd-pmf
-Date: Wed, 10 Apr 2024 11:49:20 +0000
+Date: Wed, 10 Apr 2024 11:52:13 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -40,14 +40,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Who: jwrdegoede@fedoraproject.org
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218685-215701-rOXM2YAC0c@https.bugzilla.kernel.org/>
+Message-ID: <bug-218685-215701-SZZT1dHpGe@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218685-215701@https.bugzilla.kernel.org/>
 References: <bug-218685-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -63,15 +63,23 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218685
 
---- Comment #29 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-I did do something a few years ago to let multiple drivers react to profile
-changes. This was in advance of amd pmf driver existing but I think the same
-concepts can potentially apply.
+--- Comment #30 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
+(In reply to Mario Limonciello (AMD) from comment #29)
+> I did do something a few years ago to let multiple drivers react to profi=
+le
+> changes. This was in advance of amd pmf driver existing but I think the s=
+ame
+> concepts can potentially apply.
+>=20
+> https://lore.kernel.org/linux-acpi/20211026180535.9096-4-mario.
+> limonciello@amd.com/T/
+>=20
+> It "could" be dusted off to find the rough edges instead of quirking.
 
-https://lore.kernel.org/linux-acpi/20211026180535.9096-4-mario.limonciello@=
-amd.com/T/
-
-It "could" be dusted off to find the rough edges instead of quirking.
+So how would this work in a case like this where one platform-profile provi=
+der
+supports "quiet" and the other "low-power" (and both support "balanced" +
+"performance"  ?
 
 --=20
 You may reply to this email to add a comment.
