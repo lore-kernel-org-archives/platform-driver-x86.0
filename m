@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C92D51A
-	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Apr 2024 05:03:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B5012E5E
+	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Apr 2024 05:19:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712725383; cv=none; b=SGKUTucRiKXpq/B+wPgqgkMmPTGKiEcigjBql/YjG7NOJiAMM/46MzHGJZdZ0kt9MM8fCcdI+r68tnTFDwWPajszvv9EZoWZ1aOwwEfPpO9oBP2TSy9giloE3BCe08yNjbKnAstbm6pHbwGY413aS+xLPf3asYta5L4T9JHbb3w=
+	t=1712726398; cv=none; b=kiNrQUssHdG+j3TbrvWQuPVjl4QKpGJSJtu/nCOdoMJPFUiUErGmMvgFeREVSpQE7muGfs34px3ERi9uHKGXfow5Kx4PiUwqhXMHwLaDiuZ4wZZHe7HHrRcR21uOs//f3ATNSPZfU3A5tE+ARYQVWHDOUU/S5Bez5wWBdYy8oX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712725383; c=relaxed/simple;
-	bh=5QDc1rPQ3TYFmVGVgeXsz9MfjLJ9ZoXJK6FAS6hl3+0=;
+	s=arc-20240116; t=1712726398; c=relaxed/simple;
+	bh=7tpfcDAlIcPG3Vc3Xx5K2sOiP3fsZsMCmOpNrPgarG8=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=btJRIKupnpiYS8LK7vQ5X2zfbNCf7qitFUWRHhqCaVQII1i1CVcAHJvgXjwZBU5ybpex+FIC2HyEAUTPh//axTUeDswUnhXrxqyd6IZQ5zdIeeE3aeA5DCcFu/SpM/9pgWw6ezXQUcDGJx0g0tDfMaGYU1K8twpjmE0PjNhHA7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V339osqy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=U2VCi//UledMj086GkxLLoWGsSvTvmNPmaQ0jgem8uA5aV6EiEi/bwREU3QNu5owJclk5HbPwOEMpHfCoT1NZdngEdGrsTaCFgTZbiUqgkZ/RW9SWaUzJru5pOMAZfCWd0b1oDBHenSLd2V2RS1eBUwgzzdnONqHn/MSuXhgn+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PcIbWlhp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V339osqy"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DCC48C43390
-	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Apr 2024 05:03:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PcIbWlhp"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9C9F0C43390
+	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Apr 2024 05:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712725382;
-	bh=5QDc1rPQ3TYFmVGVgeXsz9MfjLJ9ZoXJK6FAS6hl3+0=;
+	s=k20201202; t=1712726397;
+	bh=7tpfcDAlIcPG3Vc3Xx5K2sOiP3fsZsMCmOpNrPgarG8=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=V339osqyU+/5a31/uK1Rmb+bzfQdx5HsA3MkM59bvrXM7s3MCNrRpk4Oe0pfEA8Y1
-	 n4I4IGspDav+4/uIG+kXECUZYbY/5pDXo6NmYCjRoWzPHO9rp1Dmop1AQaLAcPrOqc
-	 asnw25DRaONRqcYudSiI58SRQ1aFzgf/YBmhtxHvAI7oeQV9t3+j7KX/Qc46ckBdQW
-	 lVBoi5PVD6ZdNFAL7ASWlVKSo/vFlAz9GSJCXQJ/9wiCN3AGtsAibqNcXh5+ANXkAf
-	 DfmOKjaR1jaS9NKEAf2qHJs5aj9s3skQcjZ3zuZgelR2Rk96F1hUCEfxqNzXkTtSvt
-	 erGX3G7UXbKEA==
+	b=PcIbWlhpEBe/98/6qjv4pVO4OPjcmbfPlvyL+dkHpGN0vDYj4aNKR3hnhkZeCOfzw
+	 D7Im06kswUaSmO4dF4ZktzbsMxaxk4UY3GY0H8S4qPNQApCuBZ2EdBek1jGpxR/snr
+	 3nXjY4xlcY2BBtWJlmDv7ypgQMKEjbhQ0G68pDMlWTimWzePTZLrz3WxreDocDb4tn
+	 v8I47p0fZxKCx4KgG9sTl0UeOeOuHfpbw5XzxIX3IO6Ptzpl01oKPN5UXODwkxww4G
+	 QiurfPb+aU73od7vkW6k5WEhZcXTw1PgmDicG6Nets8fyfG5CYB1laLqDV1/78SZqR
+	 5Du4QJWaGF6OQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id CBFC1C4332E; Wed, 10 Apr 2024 05:03:02 +0000 (UTC)
+	id 81BBAC4332E; Wed, 10 Apr 2024 05:19:57 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218685] asus-nb-wmi fails to load due to conflict with amd-pmf
-Date: Wed, 10 Apr 2024 05:03:02 +0000
+Date: Wed, 10 Apr 2024 05:19:57 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -40,14 +40,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: al0uette@outlook.com
+X-Bugzilla-Who: mario.limonciello@amd.com
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218685-215701-52NmhgILaT@https.bugzilla.kernel.org/>
+Message-ID: <bug-218685-215701-Q4W3cYebuD@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218685-215701@https.bugzilla.kernel.org/>
 References: <bug-218685-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -63,16 +63,26 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218685
 
---- Comment #14 from al0uette@outlook.com ---
-(In reply to Mario Limonciello (AMD) from comment #13)
-> Do you find that various CPU
-> coefficients don't get updated even when you've changed the power profile
-> when amd-pmf is bound?
+--- Comment #15 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+No; not that.  I'm talking about things like sPPT and fPPT.
+Try reading /sys/kernel/debug/amd_pmf/current_power_limits and then changing
+the platform profile to power saver or performance.
+See if any of those limits change.
 
-If you're talking about energy_performance_profile, then I do have such a
-problem. You can see another issue opened by me:
+For reference; this is what I see on a Framework 13 AMD:
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218686
+(in balanced):
+spl:35000 fppt:35000 sppt:33000 sppt_apu_only:41000 stt_min:28000 stt[APU]:0
+stt[HS2]: 0
+
+(in power saver):
+spl:15000 fppt:15000 sppt:15000 sppt_apu_only:41000 stt_min:15000 stt[APU]:0
+stt[HS2]: 0
+
+(in performance):
+spl:30000 fppt:30000 sppt:30000 sppt_apu_only:41000 stt_min:30000 stt[APU]:=
+128
+stt[HS2]: 0
 
 --=20
 You may reply to this email to add a comment.
