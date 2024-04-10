@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61D015920A
-	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Apr 2024 11:22:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87DF15920A
+	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Apr 2024 11:24:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712748126; cv=none; b=OoB+BABwf+tlsrjdEPqnmPCDUUbpUQkNJalYUBBTNmv4CD2VyXLHfzitZN0rrAA5LBUGM3fpKRZeIXTSM4pFrnygG/bC3svuBAVPtX9NE8KaVOTFAVxMAicA3OHxwQygK1UnyNFiGpj6+gG+v2DYWgcTFZEezPMIP48c0aVpRfM=
+	t=1712748281; cv=none; b=aoA2BuA67nHUfTcjXWuQvKJ+/9Zu0NGyqpYA27RR1/ZDtwjXPBeRCK0yFPYUVdSc7WDS9jHzJ4RpuHlKlDFz46ZnMVNlTEmCj+fe7UiTRrpobDgZSwSYTZDAAEaadbbAEjvMjVzzhtHy5AiDUD2l1T0ZAWVXiYW0SZPIdr21aYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712748126; c=relaxed/simple;
-	bh=h47PH4tzXmzNkCuDsxEfSvwr+IGkhEN6RZnGqSw6PH4=;
+	s=arc-20240116; t=1712748281; c=relaxed/simple;
+	bh=+qrN8cWfOkEusFV0MQH7gkDZpOGtcGX79GRJIUf8F4o=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Bynsa0hAzjpN/EV25oQgpv8L1nC5X2othvASYNDQR4xdtXxUVICg7sqv2Dcw6j2VIk9DW+xW7lvk/72AwLd6DpQaXIBoquhXbMVb3NVczGsTe9E2wMmeST+SG1OoO1UPO69k/RX/CT2j0H84VTX4ICuboGNa0eIWu0Yy4XepH6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mhNEz2+N; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=Q15ujt+k87vQSpEA1OrPhO1rwse7qRTyhcVUCaXtDjZiZ27dPy2IOKlh8GjenxFIIomBsVNvp4lpZXCADrOgB6NWX8hOPlGJFkee9YbmOEQATNxjpzEBlUZhWgncz3pN8Hy/atvu6n1JH/JjKP1MhMEFsyhRv/COeOhRhu9SLuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZZRCla2C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mhNEz2+N"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 61EE3C43390
-	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Apr 2024 11:22:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZZRCla2C"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3914BC433C7
+	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Apr 2024 11:24:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712748126;
-	bh=h47PH4tzXmzNkCuDsxEfSvwr+IGkhEN6RZnGqSw6PH4=;
+	s=k20201202; t=1712748281;
+	bh=+qrN8cWfOkEusFV0MQH7gkDZpOGtcGX79GRJIUf8F4o=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=mhNEz2+NV1AhgGb1whCiXuV65xS+sFfk66fdCd5mVy9XjTb6bW63LWtzbchZfpGHl
-	 nVUuG0BzSVG+ERUbWfBQrT0j9XJE8uT2hA8iqs0Iw/dWPgS8bkmhbTXD+W4LvaILSo
-	 uh7wkAywxuViRQzDu28O+0tSEb2RGq/kczYbDWBbjjVk/45ohUkHeaegnto24S+CkS
-	 Dn5jpfPlR+G9+xGndoWSKAF3O0YOWUhhJM3C0XNX4cGtjbp4TBbEg3by8T6uYsSD/d
-	 noOB1HFMLvpJsNRL1SyKOsukqcyK36cm/FOb7ulgp+r80Hc47dBz4P2TxK4mrdNabZ
-	 RtJJdALg0oaLQ==
+	b=ZZRCla2CYxyz6i3/7YL4zHPWHBcCxIJcCBp53dcaid5vbzF3G+HMH/9bEyoF+ZzSk
+	 G5y46qIyimAyRjlsxBmns/4YWtHmTcFuHg4ia6nZMXSewC7M5+o0W8PeEgvr+9ni/J
+	 1WqTkYapN8PP7ifnZG36ywrOoACAQruPL7DiDh9UnAb506CgTCtpRNGh+2thnVCBHH
+	 LIEDkZxPi6G+ZC8TaOharKfAp/l7s/pD1iG9Is0hCtIWfdt588PrygXhaWNABWtjY3
+	 yMMjXXjOujBL9vdJdmYTnTf5NZWSzyqIed9BQSEY2gJTF83TiDLkc8RFiDsJgq3mkZ
+	 BaV6jru4bX8Og==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 489D5C4332E; Wed, 10 Apr 2024 11:22:06 +0000 (UTC)
+	id 29BF3C4332E; Wed, 10 Apr 2024 11:24:41 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218685] asus-nb-wmi fails to load due to conflict with amd-pmf
-Date: Wed, 10 Apr 2024 11:22:06 +0000
+Date: Wed, 10 Apr 2024 11:24:41 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,7 +47,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218685-215701-wWWp14hNNq@https.bugzilla.kernel.org/>
+Message-ID: <bug-218685-215701-T0R7o3v5UA@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218685-215701@https.bugzilla.kernel.org/>
 References: <bug-218685-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -63,17 +63,9 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218685
 
---- Comment #23 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-It looks like the BIOS has a bug that it's advertisement of that bit even
-though it doesn't work.
-I guess in Windows this is a no-op.
-
-Hans - there's a few ways to handle this I can think of.
-1. Quirk against this system and BIOS to ignore that bit in AMD PMF.
-2. Allow multiple drivers to register for platform profile.
-3. Do nothing, let Asus fix in BIOS.
-
-What do you want to do?
+--- Comment #24 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+And before we decide al0uette did you already update to the latest BIOS
+available by Asus? Issue still exists?
 
 --=20
 You may reply to this email to add a comment.
