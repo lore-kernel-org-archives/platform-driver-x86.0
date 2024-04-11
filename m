@@ -1,325 +1,208 @@
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Received: from fhigh5-smtp.messagingengine.com (fhigh5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF5713AD23;
-	Thu, 11 Apr 2024 02:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF2E282FA;
+	Thu, 11 Apr 2024 02:48:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712802946; cv=none; b=JgVBWGblzmh+yBW69O9narqwKnUvYjWVrj5iuVe4jl23yXv3WyrFFYvSIC8HbnWiSMB39W5Ribt8CemX5LZzfuWIwanCqIQrCHM0/748JU0GlZaTMQMOsgXMQQOXtPVks7s9sajzAuSnj1lj9ngFX73bzbAXJBllOHEQeCtonmQ=
+	t=1712803719; cv=none; b=kK1WQZ9c71R0PWMAxMMwwlG1pGTukS1caBi/IEltsNXdnY9ILkUOy46c761FRcyAaefSk2sCKopTRssJacQR+Q1RgfvDKT2vWUIikHZ+m4o8JciHedgtz6QR/OM4t6wRISBE5+/X7RfH1upJY+H4YxATUIezg9kS8EamLm//q5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712802946; c=relaxed/simple;
-	bh=PuvC33TVS1qm4PU5j0dcV1yhW4mEmTgl8nq0bFS0dJ4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KJDG6IQp81HI0rHQLJ15FbbxuTsKQNtE8bLC6o/rPn5qg51p4Sc4T1kwrBQdf9dsu7NT2Bj/UL6Q5BCYujvQ0saj9SNE284uYc8e9Zyl6SEHMrJBTieveN2AxzNcOSPgRYzWWN/pDaerUGOE6+fMtJ067su703yGnUYZM/3Oj6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=VLYh8seB; arc=none smtp.client-ip=115.124.30.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1712803719; c=relaxed/simple;
+	bh=aG9jifOeSRS55H2245LVoteuYcyfAxJTCH4WvXM9sqs=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=MGrb++8As1d2SLwuogL/4x0f5/Nu35w4JfzclSK/gBO0ss01+LerIjWWVn9dUah0Os0zSHqoUbXYsmyQcl9oAJ22BAb/Qwnt89mspCQteR2k/rzQFmXGNoG/seJHIfevBpxNkdD2HJO4cmH+HLoHRlw2oFTMcen+SCKt6ZbMh7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=cDFgNMkC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qLVMCqzi; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="VLYh8seB"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1712802936; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
-	bh=Zq5ZIs1lycb8+fRPLrFWO3fWSd1JFqpmuShYk0Wcu0s=;
-	b=VLYh8seBF3rfI524Rd/2L8V5XB3hfXE2O1773z7Z6C8ws1XagyhFDSgE2JkwzNJjDZAKPMHIMdL7SFVMw2DOmmvJIga4mHbUGJfzFxCM93T8CDYUuYiO+LbXWkGBgTjb+vdzMUqKlq1kuS2kD6FreNybzoIL4PIYoNAFP7HeHVM=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R331e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=26;SR=0;TI=SMTPD_---0W4JWqPJ_1712802933;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W4JWqPJ_1712802933)
-          by smtp.aliyun-inc.com;
-          Thu, 11 Apr 2024 10:35:34 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: virtualization@lists.linux.dev
-Cc: Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Vadim Pasternak <vadimp@nvidia.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Cornelia Huck <cohuck@redhat.com>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	David Hildenbrand <david@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	linux-um@lists.infradead.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: [PATCH vhost v8 5/6] virtio: vring_new_virtqueue(): pass struct instead of multi parameters
-Date: Thu, 11 Apr 2024 10:35:27 +0800
-Message-Id: <20240411023528.10914-6-xuanzhuo@linux.alibaba.com>
-X-Mailer: git-send-email 2.32.0.3.g01195cf9f
-In-Reply-To: <20240411023528.10914-1-xuanzhuo@linux.alibaba.com>
-References: <20240411023528.10914-1-xuanzhuo@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="cDFgNMkC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qLVMCqzi"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 325B411400AC;
+	Wed, 10 Apr 2024 22:48:35 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute3.internal (MEProxy); Wed, 10 Apr 2024 22:48:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1712803715; x=1712890115; bh=Yw4/+Kal2y
+	eV6OQ9nNVgwAfjyawJa5osSvgbqIuMBbk=; b=cDFgNMkCDQagIwh89ozW3+dNxX
+	JIx76JtiRg1yil3hIFOm3sYBzkyAO62Pf/zeesWS48iWAiLLIO9B3Ogc60GitJZt
+	RRPZJQ/pGeZMENiZI1FXnzL5j95XtbdgwLU44OxF72lzUtsJYFsokAlQC7moIT/G
+	BbliYLv02Sjm/0XvRuA1e08lNDdYK0Wmn0RYhsNhhhW2hu8Wxj5rhcaislklOhVn
+	gSw3ptOTbMbmjb/qEGb7eSzGNS5bQ1ySy43v7WVTkliWl9Yl/bvGVQNstp+rMHdS
+	NPrk9K0QRuKgbujZirPJNC644dL2IGZ8ynHVUBVpBROO/GaiDNV7cz2AytPQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1712803715; x=1712890115; bh=Yw4/+Kal2yeV6OQ9nNVgwAfjyawJ
+	a5osSvgbqIuMBbk=; b=qLVMCqzihWgQYAgIx99+5pUe+B+Sk3ij2mOyTCrkJ+4E
+	Py4HtW6V/2mS0T7+pFIqIz4v5youvS4mbq84mmakWoElz8P2YakwSU/RgqcaAXn+
+	0DffBKYD3vAGb/5SfDQ0TTBYuMOvzoQD2Yf9eydpIuCLyc7g0RKofQCj4gCYlXBN
+	YxsEunwiG3XqgMv+fYNjpifOXCi+AufMnbAIthuKwDvi6Bv3j3urr65rU6o7HHHJ
+	drBUdpLOlktBZYEc6It4+6NxwqD+6ba+42oOzOD6vnGzY30qRJtqCcKB4glOQXlC
+	EAWbJ4LAkRpfE1alBpKZzoSJwHc18WYxJEQXT9K0pQ==
+X-ME-Sender: <xms:gU8XZiOIkaJtmADG6hCgvnfqAd9OE5g4h6IlGL3-6IJOItbj9unHVA>
+    <xme:gU8XZg-FgBqWspQi8ASo6QGUfmg39Wb7-LB-c6XoNd3pzk3wOJ_EN7MjzW4uypIWg
+    e4Qt_uXmtC--XzRIOk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudehjedgieehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
+    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
+    drtggrqeenucggtffrrghtthgvrhhnpeeiueefjeeiveetuddvkeetfeeltdevffevudeh
+    ffefjedufedvieejgedugeekhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:gU8XZpR5eGPwJrlhs8YcAJtY8N4Iodzk98txlzhlwE5hdsmPBHu-lw>
+    <xmx:gU8XZiso2kjSAJKB0vuqUN-Rw_45NQH7jgxNuhVDQTIEsdaADx6fEg>
+    <xmx:gU8XZqeA4ZINDp6f73pmLVXCXgZZUuPSpzIoyPoErJhQffcJzzWmRg>
+    <xmx:gU8XZm1tdBCDkbkmLlOBRqIv2va1xa_ljdXDr8UZQeSWaWjXp8DUUQ>
+    <xmx:g08XZrWKVYpc9L-o5PBObPNAQBvlBIfRzb3pBV7bxKtKCbBmHkSmkbbD>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id C6ECBC60097; Wed, 10 Apr 2024 22:48:33 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-379-gabd37849b7-fm-20240408.001-gabd37849
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Git-Hash: d277a0b9519b
-Content-Transfer-Encoding: 8bit
+Message-Id: <91593303-4a6a-49c9-87a0-bb6f72f512a1@app.fastmail.com>
+In-Reply-To: <ZhcogDESvZmUPEEf@google.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20240324210817.192033-1-mpearson-lenovo@squebb.ca>
+ <20240324210817.192033-2-mpearson-lenovo@squebb.ca>
+ <ZhR-WPx7dgKxziMb@google.com>
+ <f3342c0b-fb31-4323-aede-7fb02192cf44@redhat.com>
+ <ZhW3Wbn4YSGFBgfS@google.com> <ZhXpZe1Gm5e4xP6r@google.com>
+ <92ee5cb2-565e-413c-b968-81393a9211c4@app.fastmail.com>
+ <ZhcogDESvZmUPEEf@google.com>
+Date: Wed, 10 Apr 2024 22:48:10 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
+Cc: "Peter Hutterer" <peter.hutterer@redhat.com>,
+ "Hans de Goede" <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ ibm-acpi-devel@lists.sourceforge.net,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "Nitin Joshi1" <njoshi1@lenovo.com>, "Vishnu Sankar" <vsankar@lenovo.com>
+Subject: Re: [PATCH 1/4] Input: Add trackpoint doubletap and system debug info keycodes
+Content-Type: text/plain
 
-Now, we pass multi parameters to vring_new_virtqueue. These parameters
-may from transport or from driver.
+Hi Dmitry,
 
-vring_new_virtqueue is called by many places.
-Every time, we try to add a new parameter, that is difficult.
+On Wed, Apr 10, 2024, at 8:02 PM, Dmitry Torokhov wrote:
+> On Tue, Apr 09, 2024 at 10:17:05PM -0400, Mark Pearson wrote:
+>> Hi Dmitry
+>> 
+>> On Tue, Apr 9, 2024, at 9:20 PM, Dmitry Torokhov wrote:
+>> > On Tue, Apr 09, 2024 at 02:47:05PM -0700, Dmitry Torokhov wrote:
+>> >> On Tue, Apr 09, 2024 at 03:23:52PM +1000, Peter Hutterer wrote:
+>> >> > On 09/04/2024 09:31, Dmitry Torokhov wrote:
+>> >> > > Hi Mark,
+>> >> > > 
+>> >> > > On Sun, Mar 24, 2024 at 05:07:58PM -0400, Mark Pearson wrote:
+>> >> > > > Add support for new input events on Lenovo laptops that need exporting to
+>> >> > > > user space.
+>> >> > > > 
+>> >> > > > Lenovo trackpoints are adding the ability to generate a doubletap event.
+>> >> > > > Add a new keycode to allow this to be used by userspace.
+>> >> > > 
+>> >> > > What is the intended meaning of this keycode? How does it differ from
+>> >> > > the driver sending BTN_LEFT press/release twice?
+>> >> > > > 
+>> >> > > > Lenovo support is using FN+N with Windows to collect needed details for
+>> >> > > > support cases. Add a keycode so that we'll be able to provide similar
+>> >> > > > support on Linux.
+>> >> > > 
+>> >> > > Is there a userspace consumer for this?
+>> >> > 
+>> >> > Funnily enough XKB has had a keysym for this for decades but it's not
+>> >> > hooked up anywhere due to the way it's pointer keys accessibility
+>> >> > feature was implemented. Theory is that most of userspace just needs
+>> >> > to patch the various pieces together for the new evdev code + keysym,
+>> >> > it's not really any different to handling a volume key (except this
+>> >> > one needs to be assignable).
+>> >> 
+>> >> What is the keysym? If we can make them relatable to each other that
+>> >> would be good. Or maybe we could find a matching usage from HID usage
+>> >> tables...
+>> >
+>> > I was looking through the existing codes and I see:
+>> >
+>> > #define KEY_INFO		0x166	/* AL OEM Features/Tips/Tutorial */
+>> >
+>> > We also have KEY_VENDOR used in a few drivers/plafrom/x86, including
+>> > thinkkpad_acpi.c and I wonder if it would be suitable for this vendor
+>> > specific debug info collection application (which I honestly doubt will
+>> > materialize).
+>> >
+>> 
+>> That's a somewhat disappointing note on your doubts, is that based on
+>> anything? Just wondering what we've done to deserve that criticism.
+>
+> Sorry, this was not meant as a criticism really, but you mentioned
+> yourself that there isn't anything in the works yet, you just have some
+> plans.
 
-If parameters from the driver, that should directly be passed to vring.
-Then the vring can access the config from driver directly.
+All good - I was just worried we'd promised something previously and not delivered. We're often slow at delivering - but I try not to fail completely. I try especially hard not to annoy hard working kernel maintainers :)
 
-If parameters from the transport, we squish the parameters to a
-structure. That will be helpful to add new parameter.
+We do have something developed internally, but it's pretty basic and we'll need to have discussion with 'userspace' fol as to if we release that as a standalone application, or if we tie into gnome (which we don't have a lot of experience with)...or something else.
+Kernel world is much easier :)
 
-Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
----
- drivers/platform/mellanox/mlxbf-tmfifo.c | 12 ++++---
- drivers/remoteproc/remoteproc_virtio.c   | 11 ++++---
- drivers/virtio/virtio_ring.c             | 29 +++++++++++-----
- include/linux/virtio_ring.h              | 42 +++++++++++++++++++-----
- tools/virtio/virtio_test.c               |  4 +--
- tools/virtio/vringh_test.c               | 28 ++++++++--------
- 6 files changed, 84 insertions(+), 42 deletions(-)
+>
+> For such a project to succeed Lenovo needs to invest into selling
+> devices with Linux as a primary operating system, and it has to be
+> consumer segment (or small business, because for corporate they
+> typically roll their own support channels). The case of retrofitting
+> Linux onto a that device originally came with Windows OS rarely gets
+> much if any response from the normal support channels.
+>
+> Is this something that is actually happening?
 
-diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-index 4252388f52a2..d2e871fad8b4 100644
---- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-+++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-@@ -1059,6 +1059,7 @@ static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
- 					struct virtio_vq_config *cfg)
- {
- 	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+	struct vq_transport_config tp_cfg = {};
- 	struct virtqueue **vqs = cfg->vqs;
- 	struct mlxbf_tmfifo_vring *vring;
- 	unsigned int nvqs = cfg->nvqs;
-@@ -1078,10 +1079,13 @@ static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
- 		/* zero vring */
- 		size = vring_size(vring->num, vring->align);
- 		memset(vring->va, 0, size);
--		vq = vring_new_virtqueue(i, vring->num, vring->align, vdev,
--					 false, false, vring->va,
--					 mlxbf_tmfifo_virtio_notify,
--					 cfg->callbacks[i], cfg->names[i]);
-+
-+		tp_cfg.num = vring->num;
-+		tp_cfg.vring_align = vring->align;
-+		tp_cfg.weak_barriers = false;
-+		tp_cfg.notify = mlxbf_tmfifo_virtio_notify;
-+
-+		vq = vring_new_virtqueue(vdev, i, vring->va, &tp_cfg, cfg);
- 		if (!vq) {
- 			dev_err(&vdev->dev, "vring_new_virtqueue failed\n");
- 			ret = -ENOMEM;
-diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
-index bbde11287f8a..a819bcd39dde 100644
---- a/drivers/remoteproc/remoteproc_virtio.c
-+++ b/drivers/remoteproc/remoteproc_virtio.c
-@@ -106,6 +106,7 @@ static struct virtqueue *rp_find_vq(struct virtio_device *vdev,
- {
- 	struct rproc_vdev *rvdev = vdev_to_rvdev(vdev);
- 	struct rproc *rproc = vdev_to_rproc(vdev);
-+	struct vq_transport_config tp_cfg = {};
- 	struct device *dev = &rproc->dev;
- 	struct rproc_mem_entry *mem;
- 	struct rproc_vring *rvring;
-@@ -135,14 +136,16 @@ static struct virtqueue *rp_find_vq(struct virtio_device *vdev,
- 	dev_dbg(dev, "vring%d: va %pK qsz %d notifyid %d\n",
- 		id, addr, num, rvring->notifyid);
- 
-+	tp_cfg.num = num;
-+	tp_cfg.vring_align = rvring->align;
-+	tp_cfg.weak_barriers = false;
-+	tp_cfg.notify = rproc_virtio_notify;
-+
- 	/*
- 	 * Create the new vq, and tell virtio we're not interested in
- 	 * the 'weak' smp barriers, since we're talking with a real device.
- 	 */
--	vq = vring_new_virtqueue(id, num, rvring->align, vdev, false,
--				 cfg->ctx ? cfg->ctx[id] : false,
--				 addr, rproc_virtio_notify, cfg->callbacks[id],
--				 cfg->names[id]);
-+	vq = vring_new_virtqueue(vdev, id, addr, &tp_cfg, cfg);
- 	if (!vq) {
- 		dev_err(dev, "vring_new_virtqueue %s failed\n", cfg->names[id]);
- 		rproc_free_vring(rvring);
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index b0e19a84644c..20e5e4779f36 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -2835,18 +2835,29 @@ int virtqueue_reset(struct virtqueue *_vq,
- EXPORT_SYMBOL_GPL(virtqueue_reset);
- 
- /* Only available for split ring */
--struct virtqueue *vring_new_virtqueue(unsigned int index,
--				      unsigned int num,
--				      unsigned int vring_align,
--				      struct virtio_device *vdev,
--				      bool weak_barriers,
--				      bool context,
-+struct virtqueue *vring_new_virtqueue(struct virtio_device *vdev,
-+				      unsigned int index,
- 				      void *pages,
--				      bool (*notify)(struct virtqueue *vq),
--				      void (*callback)(struct virtqueue *vq),
--				      const char *name)
-+				      struct vq_transport_config *tp_cfg,
-+				      struct virtio_vq_config *cfg)
- {
- 	struct vring_virtqueue_split vring_split = {};
-+	unsigned int num;
-+	unsigned int vring_align;
-+	bool weak_barriers;
-+	bool context;
-+	bool (*notify)(struct virtqueue *_);
-+	void (*callback)(struct virtqueue *_);
-+	const char *name;
-+
-+	num            = tp_cfg->num;
-+	vring_align    = tp_cfg->vring_align;
-+	weak_barriers  = tp_cfg->weak_barriers;
-+	notify         = tp_cfg->notify;
-+
-+	name     = cfg->names[index];
-+	callback = cfg->callbacks[index];
-+	context  = cfg->ctx ? cfg->ctx[index] : false;
- 
- 	if (virtio_has_feature(vdev, VIRTIO_F_RING_PACKED))
- 		return NULL;
-diff --git a/include/linux/virtio_ring.h b/include/linux/virtio_ring.h
-index 0a81f7f025ce..ed005dc65cc0 100644
---- a/include/linux/virtio_ring.h
-+++ b/include/linux/virtio_ring.h
-@@ -96,16 +96,40 @@ struct virtqueue *vring_create_virtqueue(struct virtio_device *vdev,
-  * Creates a virtqueue with a standard layout but a caller-allocated
-  * ring.
-  */
--struct virtqueue *vring_new_virtqueue(unsigned int index,
--				      unsigned int num,
--				      unsigned int vring_align,
--				      struct virtio_device *vdev,
--				      bool weak_barriers,
--				      bool ctx,
-+struct virtqueue *vring_new_virtqueue(struct virtio_device *vdev,
-+				      unsigned int index,
- 				      void *pages,
--				      bool (*notify)(struct virtqueue *vq),
--				      void (*callback)(struct virtqueue *vq),
--				      const char *name);
-+				      struct vq_transport_config *tp_cfg,
-+				      struct virtio_vq_config *cfg);
-+
-+static inline struct virtqueue *vring_new_virtqueue_one(unsigned int index,
-+							unsigned int num,
-+							unsigned int vring_align,
-+							struct virtio_device *vdev,
-+							bool weak_barriers,
-+							bool context,
-+							void *pages,
-+							bool (*notify)(struct virtqueue *vq),
-+							void (*callback)(struct virtqueue *vq),
-+							const char *name)
-+{
-+	struct vq_transport_config tp_cfg = {};
-+	struct virtio_vq_config cfg = {};
-+	vq_callback_t *callbacks[] = { callback };
-+	const char *names[] = { name };
-+
-+	tp_cfg.num = num;
-+	tp_cfg.vring_align = vring_align;
-+	tp_cfg.weak_barriers = weak_barriers;
-+	tp_cfg.notify = notify;
-+
-+	cfg.nvqs = 1;
-+	cfg.callbacks = callbacks;
-+	cfg.names = names;
-+	cfg.ctx = &context;
-+
-+	return vring_new_virtqueue(vdev, index, pages, &tp_cfg, &cfg);
-+}
- 
- /*
-  * Destroys a virtqueue.  If created with vring_create_virtqueue, this
-diff --git a/tools/virtio/virtio_test.c b/tools/virtio/virtio_test.c
-index 028f54e6854a..e41300d71d5e 100644
---- a/tools/virtio/virtio_test.c
-+++ b/tools/virtio/virtio_test.c
-@@ -102,8 +102,8 @@ static void vq_reset(struct vq_info *info, int num, struct virtio_device *vdev)
- 
- 	memset(info->ring, 0, vring_size(num, 4096));
- 	vring_init(&info->vring, num, info->ring, 4096);
--	info->vq = vring_new_virtqueue(info->idx, num, 4096, vdev, true, false,
--				       info->ring, vq_notify, vq_callback, "test");
-+	info->vq = vring_new_virtqueue_one(info->idx, num, 4096, vdev, true, false,
-+					   info->ring, vq_notify, vq_callback, "test");
- 	assert(info->vq);
- 	info->vq->priv = info;
- }
-diff --git a/tools/virtio/vringh_test.c b/tools/virtio/vringh_test.c
-index 98ff808d6f0c..040689111584 100644
---- a/tools/virtio/vringh_test.c
-+++ b/tools/virtio/vringh_test.c
-@@ -316,11 +316,11 @@ static int parallel_test(u64 features,
- 		if (sched_setaffinity(getpid(), sizeof(cpu_set), &cpu_set))
- 			err(1, "Could not set affinity to cpu %u", first_cpu);
- 
--		vq = vring_new_virtqueue(0, RINGSIZE, ALIGN, &gvdev.vdev, true,
--					 false, guest_map,
--					 fast_vringh ? no_notify_host
--					 : parallel_notify_host,
--					 never_callback_guest, "guest vq");
-+		vq = vring_new_virtqueue_one(0, RINGSIZE, ALIGN, &gvdev.vdev, true,
-+					     false, guest_map,
-+					     fast_vringh ? no_notify_host
-+					     : parallel_notify_host,
-+					     never_callback_guest, "guest vq");
- 
- 		/* Don't kfree indirects. */
- 		__kfree_ignore_start = indirects;
-@@ -485,10 +485,10 @@ int main(int argc, char *argv[])
- 	memset(__user_addr_min, 0, vring_size(RINGSIZE, ALIGN));
- 
- 	/* Set up guest side. */
--	vq = vring_new_virtqueue(0, RINGSIZE, ALIGN, &vdev, true, false,
--				 __user_addr_min,
--				 never_notify_host, never_callback_guest,
--				 "guest vq");
-+	vq = vring_new_virtqueue_one(0, RINGSIZE, ALIGN, &vdev, true, false,
-+				     __user_addr_min,
-+				     never_notify_host, never_callback_guest,
-+				     "guest vq");
- 
- 	/* Set up host side. */
- 	vring_init(&vrh.vring, RINGSIZE, __user_addr_min, ALIGN);
-@@ -668,11 +668,11 @@ int main(int argc, char *argv[])
- 
- 		/* Force creation of direct, which we modify. */
- 		__virtio_clear_bit(&vdev, VIRTIO_RING_F_INDIRECT_DESC);
--		vq = vring_new_virtqueue(0, RINGSIZE, ALIGN, &vdev, true,
--					 false, __user_addr_min,
--					 never_notify_host,
--					 never_callback_guest,
--					 "guest vq");
-+		vq = vring_new_virtqueue_one(0, RINGSIZE, ALIGN, &vdev, true,
-+					     false, __user_addr_min,
-+					     never_notify_host,
-+					     never_callback_guest,
-+					     "guest vq");
- 
- 		sg_init_table(guest_sg, 4);
- 		sg_set_buf(&guest_sg[0], d, sizeof(*d)*2);
--- 
-2.32.0.3.g01195cf9f
+This is way off topic for the patch set, but as you asked :)
 
+I'm afraid I'm going to disagree. What you're suggesting is probably the more common and easier route vendors take, but it has some issues and I think some longer term limitations.
+For me one of the things I like the most about our program using the same exact HW as Windows is it means:
+ - I have a business lever to get Linux support from HW vendors. This makes a difference when you're dealing with 'minor' components - panels, fingerprint readers, touchpads etc - the smaller devices (though it helps for the CPU vendors too). We have requirements that state the upstream Linux support is needed or the chip vendor will not be considered for the platform...and that's a big deal.
+ - It gets FW teams thinking about Linux support. Yeah, there are still a ton of issues there and it's far from perfect, but it means they have to think about Linux support and at least helps us shine a bit of light on what is going on in that horrible closed box.
+ - It means I get Linux running at a good level on a wider range of HW then would be otherwise possible. It means that when there is new technology I get to go and ask "how about Linux" and have that discussion (including schedules). It might come later than I'd like - but at least we get to put Linux on the roadmap rather than being excluded for being so niche. Shrug.
+
+I think our Linux program still has a long way to go before it's even close to good - but it's in better shape than it (at least I think so, I don't love the way the industry is going with more being stuffed in FW...but that's above my paygrade)
+
+>
+>> 
+>> That aside, I guess KEY_INFO or KEY_VENDOR could be a good fit (I
+>> personally don't think KEY_CONFIG matches well), but I would be
+>> worried about clashing with existing functionality.
+>> 
+>> Peter - do you have any opinion from the user space side of things, or
+>> are these likely unused? KEY_VENDOR seems the safer bet to me (but I
+>> don't love it).
+>> 
+>> Dmitry - What are the downsides or concerns of introducing a new code?
+>> I'd like to evaluate that against the potential to cause conflicts by
+>> re-using existing codes. If you feel strongly about it then I'll defer
+>> to your judgement, but I'd like to understand better the context.
+>
+> The keycode space is finite and extending bitmaps leads to more memory
+> consumption and weird breakages (like uevent generation exceeding 4K
+> memory page resulting in failures). I am trying to balance need for new
+> keycodes with how likely they are to be used.
+>
+Ack.
+So I've been refactoring my patches to implement the feedback from Hans for the latter patches and just need to figure out what works here.
+
+For the SYS_DEBUG_INFO, if you'd rather we use KEY_VENDOR (I think that's my preference - as its intended for a Lenovo support role it seems the best fit), and Peter has no objections, I will make that change.
+
+I have a stronger preference to keep the KEY_DOUBLECLICK - that one seems less controversial as a genuine new input event.
+
+Is that OK?
+
+Mark
