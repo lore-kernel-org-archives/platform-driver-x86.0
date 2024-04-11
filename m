@@ -1,107 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E460F13C696;
-	Thu, 11 Apr 2024 05:01:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EA513CAB3;
+	Thu, 11 Apr 2024 07:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712811666; cv=none; b=uzVlnnUoL9ttynKcBvYaehqltbhEbBVZxo6+Fa/Rw4kOsDPqR+eTcC42MzjmBtwsvoCCFFqkTz0IpZLWUDiSaSK0CeoMI3FOvM5GHr435wQk/Wysn+oCOwfxA+i765Z/Y3Jjjgom89A8qDQD2CNbo4xAadJHRwnG+Ale9pWYSaU=
+	t=1712819630; cv=none; b=UvAbggGjjkkO5IecAL9GsN0wJRjT9WKATng8cES+zR4h+3SDPEWh+jmgqn16m5A9/1do7wFKNmeRfLHy1Bg92a6kJn87A2/0b/efgX8G2eQUvqU0eZ24l3WBZIuT8hLEUuCwo1uB1h1pngHf2sYbzpFmcBtwmsgOAHh/3Mxk1YM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712811666; c=relaxed/simple;
-	bh=5VxM0AYd2IXDBMwhwjlHKCDuJH2Zn8zHb0Kxjlub/iY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=nlej/Jc7crIWU06Tgwd99E7WU5I3nVpn612gODLlGqcB1HL+kFvjBCfIOSTR69ypFgiz/hz0Aj3bW6ERPsmFRT+47D6od+sMcHRkfXvUltcU60r+cVsnCmrF4bPs99zkYeWjNqSxy/IdL2BOVeW6unG5j9+LY9rERuGW1snoL+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EApQP9eA; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712819630; c=relaxed/simple;
+	bh=T2onanXhUB90qbp92d4O/yikgUDkfoXcWX/VnkksrUI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NyGoVVl8Ahn/g3IEIBwBxyKsjMKCkag/An8RvBg+CYIlLE/y1PRs/whAon6geUE8TbIxPMwPEaL57Ov854pn10WIKNyHWaJt+nBswyORF/5PCnSGuiXt3n3WD7+txpbdPeH0+ufsk1zLMZWGF2DqTHBCteNODRt/x1lKB0VRnEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V2yW8qZY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EApQP9eA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712811664; x=1744347664;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=5VxM0AYd2IXDBMwhwjlHKCDuJH2Zn8zHb0Kxjlub/iY=;
-  b=EApQP9eA8GNWHiHaHOAGOEeVkm3TCIoZi1vqyWWMDPDVUvXw6nEtiwhq
-   4BwlOFMXqIVVtr375tXfuvepVg2UaS9xz3JHtFuzEcH1yeIxOIyACMUVa
-   ZE6b9LrQ5O7RNxo0NfXw0qjaGJXpTBvQVjiqwseimups1003FmrQjmIO9
-   TO2Kn7YDh5G8Iu3eLMofNQLhwfIC87AKx2iIJ0k4tiNKLK0KTO4x3H6pV
-   29XPIuXA4Aku6dxQ/gdpsHYGyTxO50qugpKiWfmH84zisN/2k0Tz/FEG6
-   xiPk/WvHrlI4V3TNGcMhaNw9tURMfV0jFBuO8yD+7z/YCk7JXrrKT3ISP
-   A==;
-X-CSE-ConnectionGUID: UcdB9u8gT9yfOzIdfHd6Gg==
-X-CSE-MsgGUID: xK/XCDY6RRGH+R1lOEKJNQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8331521"
-X-IronPort-AV: E=Sophos;i="6.07,192,1708416000"; 
-   d="scan'208";a="8331521"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 22:01:04 -0700
-X-CSE-ConnectionGUID: gVZsv62LQfqUstYoNLYHPg==
-X-CSE-MsgGUID: 4W7Kg3OHReWBPKNpRDM2/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,192,1708416000"; 
-   d="scan'208";a="25554176"
-Received: from tashley-mobl.amr.corp.intel.com (HELO [10.255.230.246]) ([10.255.230.246])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 22:01:04 -0700
-Message-ID: <cd3a1be5-cca3-4af2-8736-00598b3896d4@linux.intel.com>
-Date: Wed, 10 Apr 2024 22:01:03 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V2yW8qZY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6868C43394;
+	Thu, 11 Apr 2024 07:13:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712819630;
+	bh=T2onanXhUB90qbp92d4O/yikgUDkfoXcWX/VnkksrUI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V2yW8qZYPrgZm48lFWXmmyAAjk2yjr5uXgZynyxgAjZ5UeSBzPdwmAWIvaPzuY+EJ
+	 7Ds/gv9fjtHA/z1Y7SI8FFrIXyw3aP+chII4UQF0VDcYjwMrm0LeAwdpGEUnSbk0A3
+	 MPu1uJqxNOSibXBYK+ochRdRk8InqS6377pLX7rgx1zYrSeje3TypkX+5tYUVBDtvH
+	 ORARQNKLYmnykXV76oafHFt+MzRgznD6wazUGOEP6IMRJ8xo1+OSAqCbQS0eULBD/x
+	 Tsqsk+QSq+d0/TaAvAqR9pdCcQEIiPzWXSaTvnBz2zvp+YBF25AMvnzc5px/DJqBD0
+	 ILVJS10uJ2ZQg==
+Date: Thu, 11 Apr 2024 08:13:45 +0100
+From: Lee Jones <lee@kernel.org>
+To: Gergo Koteles <soyer@irl.hu>
+Cc: Ike Panhc <ike.pan@canonical.com>, Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: leds: add LED_FUNCTION_FNLOCK
+Message-ID: <20240411071345.GF6194@google.com>
+References: <cover.1712063200.git.soyer@irl.hu>
+ <8ac95e85a53dc0b8cce1e27fc1cab6d19221543b.1712063200.git.soyer@irl.hu>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 1/9] platform/x86/intel/sdsi: Set message size during
- writes
-To: "David E. Box" <david.e.box@linux.intel.com>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240411025856.2782476-1-david.e.box@linux.intel.com>
- <20240411025856.2782476-2-david.e.box@linux.intel.com>
-Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240411025856.2782476-2-david.e.box@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <8ac95e85a53dc0b8cce1e27fc1cab6d19221543b.1712063200.git.soyer@irl.hu>
 
+On Tue, 02 Apr 2024, Gergo Koteles wrote:
 
-On 4/10/24 7:58 PM, David E. Box wrote:
-> New mailbox commands will support sending multi packet writes and updated
-> firmware now requires that the message size be written for all commands
-> along with the packet size. Since the driver doesn't perform writes larger
-> than the packet size, set the message size to the same value.
->
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Newer laptops have FnLock LED.
+> 
+> Add a define for this very common function.
+> 
+> Signed-off-by: Gergo Koteles <soyer@irl.hu>
 > ---
-
-
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
-
->
-> V4 - no changes
-> V3 - no changes
-> V2 - no changes
->
->  drivers/platform/x86/intel/sdsi.c | 1 +
+>  include/dt-bindings/leds/common.h | 1 +
 >  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
-> index 556e7c6dbb05..a70c071de6e2 100644
-> --- a/drivers/platform/x86/intel/sdsi.c
-> +++ b/drivers/platform/x86/intel/sdsi.c
-> @@ -252,6 +252,7 @@ static int sdsi_mbox_cmd_write(struct sdsi_priv *priv, struct sdsi_mbox_info *in
->  		  FIELD_PREP(CTRL_SOM, 1) |
->  		  FIELD_PREP(CTRL_RUN_BUSY, 1) |
->  		  FIELD_PREP(CTRL_READ_WRITE, 1) |
-> +		  FIELD_PREP(CTRL_MSG_SIZE, info->size) |
->  		  FIELD_PREP(CTRL_PACKET_SIZE, info->size);
->  	writeq(control, priv->control_addr);
->  
+
+Hans,
+
+You can take this in via the x86 tree, but please capitalise the first
+letter of the subject line when doing so.
+
+ dt-bindings: leds: Add LED_FUNCTION_FNLOCK
+
+Acked-by: Lee Jones <lee@kernel.org>
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+Lee Jones [李琼斯]
