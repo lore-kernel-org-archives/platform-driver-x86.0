@@ -1,185 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B865933F2
-	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Apr 2024 12:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFD014D432;
+	Thu, 11 Apr 2024 13:29:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712838643; cv=none; b=HNKV1h1bGUkJeFoBBcngJFbflO8PxR47qCm0zq/oZRgGcATeRE8dgsRKmq5hxBfjPL4s4Ls3JUN4hRXiZmv+3HgbuJ2ks6GUFBrTYG5ua4gEc860ovJ6KZhsPoB87TrGY3XihkmHcfRJCvcn2by+Zn650UYwikkOOQrmQ2vRLMg=
+	t=1712842187; cv=none; b=LaLnv7IzMhrlZwy2W8VDENiAOFoZsafShkNPKBP0cHxJa2/bcvvMXl54COaXvU5LebqYkiHp/JapfDGcLfF7maBuuivMegrFETUiaWzlYukyeGDXtwAFkFANT6ry8WGdPYM3IFI+7ShVW+il6prgjsjqLmCegU4iS0f0Lvr9jJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712838643; c=relaxed/simple;
-	bh=m6ZmLjNtsMal/jBiy3eS3fgwccfEbHpXSv38sFCq8QE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j1jU4ySnzXZd4zyjIxuEyd3/N6Ey4LgSeyZfJwxlxnNanxhfH+lonnB1RcAMOnkK/ZHyB055oEjft0WrzyidvGHq9OR+UqB0wbGz5ebrMudbHQlJo5PaSaDCfz1zozleRWbpoiquS6tcuybnp2L0OhK3+oMVSofBZ8miEsbbrlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g1O5XFpk; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712842187; c=relaxed/simple;
+	bh=rlhUbue3Okuksf9A4eO6cufPxBHqURR74Vpnu3TJTRI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Ily2m73d9dG8/y+0ELlSCOQL8YJRE19BDjnjnjqaDVKQwoPOr9XReSBjDCNCySSueWYz1SnJQj94YviGN0bJRIvbI15O2/ze+YBZQC/XgdosHn2FGiX0uYHpRr6PV7ToQX8CiP6MVhw7RNJ4zu5AdqgwsDX7XsXslI9myfn5bps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZvEDXoyV; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g1O5XFpk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712838640;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o39791NgVPOGygPt4yvbiHEMYNSCg3KIip+yEED7lns=;
-	b=g1O5XFpkK8u5KQpMwzhw1K6JVuY0UPL/0XEoHwK/nDmwxjPJKoVPoDzHS3HA1xK/GM+fZR
-	3Bi8CI3m0gMqk1NTOPeIEhH9kepfreGC5ZAeQUDDYHl0+2Cz9qz5sJroIkEnqFueWIxoOt
-	Gz0e2vGNtSireHfsjh82PfRT42sNtgQ=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-195-KnuzxPWpP8qTgE6zoPNcMg-1; Thu, 11 Apr 2024 08:30:38 -0400
-X-MC-Unique: KnuzxPWpP8qTgE6zoPNcMg-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-56e41cde4b7so3615171a12.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Apr 2024 05:30:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712838637; x=1713443437;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o39791NgVPOGygPt4yvbiHEMYNSCg3KIip+yEED7lns=;
-        b=UIJg5X2Vb1n6UwmIn/bPW0IGYEfBnVim7J7vxU7cNb6V6rTXTo7OZhg3ZMNwrGjt8L
-         Plu/xu4cRO4bbZl9DEHDNP++uJqwnUvC0FnWptRADa9eH0NaPL+dS7sVSfTY9i3Td12y
-         yNt+5sum0AmeCXzZot0VBThPG5UGHKJ/G7VJb6yHhBrOZiudbFcvXzUYEM78lndnvC8e
-         1Su1h6CXzV9vaxUg9uiJLKRtdycfwGKhTjlDxE8sQjvPUlT+h8g1RpEiHmeojFUlTXHm
-         y2c7Wts/ZfYWiCEas2D/Eo+exf+MN7rdclE05hl8Me6ZEQMFunc8ALqcxYHkxjOkK6cU
-         MfFg==
-X-Forwarded-Encrypted: i=1; AJvYcCXMsefxh2RFPUT530/Te1sJhGN/7+geFZrD+ZSuUK0PLSRn7VSzrn1Job9622ZOAhlARJBAySMdNbODNpfJLI0+WPYcLFkIdAhjIwSfJ+AyFO+73A==
-X-Gm-Message-State: AOJu0YzqNPFd8yTP7XUE/mbY9RpOxNFrlhvqnMZQ9Kvfks905UInvZis
-	pBw/+2rY7/plk5kAmFHOkVD70NKkc8EO3tS0VbpyCncmrqE/Doj8n5pXjwk8YZU0l0Cxvm+jPZk
-	JY6bl/tTKZ+C43m1jwuVIfAUZNCSve/cP6GCK/N2wNm3QfTEavvpRPOO2ncJcbdsPiFoqF44=
-X-Received: by 2002:a50:cd19:0:b0:56e:7751:ae4e with SMTP id z25-20020a50cd19000000b0056e7751ae4emr2253965edi.33.1712838637388;
-        Thu, 11 Apr 2024 05:30:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEfczbrDYphsIXAmP5vXOQog7edYp3/hYYdYnPGuJW85oLkEvHop5fgUsPZglqMhlGlVlPhyg==
-X-Received: by 2002:a50:cd19:0:b0:56e:7751:ae4e with SMTP id z25-20020a50cd19000000b0056e7751ae4emr2253947edi.33.1712838636991;
-        Thu, 11 Apr 2024 05:30:36 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id n22-20020aa7c796000000b0056feeb85ed0sm177407eds.19.2024.04.11.05.30.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Apr 2024 05:30:36 -0700 (PDT)
-Message-ID: <411e6353-16ef-455b-98fa-2d38bb7bf9bd@redhat.com>
-Date: Thu, 11 Apr 2024 14:30:35 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZvEDXoyV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712842186; x=1744378186;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=rlhUbue3Okuksf9A4eO6cufPxBHqURR74Vpnu3TJTRI=;
+  b=ZvEDXoyVlFd4e48hXm3kADoYh5w3rM3VyZDF31zXmd9I0z5itb2oXajY
+   lF87EbcjsEuIAWIcSbR0q0WwTONu6Q7Tl5qS46rDa1UMTJqK7Njiz/EcK
+   NLwhJeTTqUoMyTIS//Lr4rC5UaOHqGKpHRqpj8dQOGsIgpg+LU7Kmu7FF
+   4VEtZvshh2FCbpTSR6+P0CHtkmXNiuA0UZ1RM1MH806l+ERbUQCXr/I66
+   +9PJLRHP9HhmZ1U9O+kDnQpt0FsmfObIwnBvejlPZ1ZhC4MLoPwMFTZ2+
+   LuMWyhb23nGYG6kRUU8y3s9KpTj/3K++RX528tXVoJ4IEukO+cnn6Y99+
+   Q==;
+X-CSE-ConnectionGUID: +frMXBvuSO2t3TrBkdPw1g==
+X-CSE-MsgGUID: 0fG1HeWARwOkBFwcjDBJSg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="18958339"
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="18958339"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 06:25:57 -0700
+X-CSE-ConnectionGUID: 1l85Ri6bRUisX1ZFlaqEMA==
+X-CSE-MsgGUID: iSdZOJNtSpC9k56ui8EMmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="20948262"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.30])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 06:25:55 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 11 Apr 2024 16:25:50 +0300 (EEST)
+To: "David E. Box" <david.e.box@linux.intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH V4 8/9] platform/x86/intel/sdsi: Simplify ascii
+ printing
+In-Reply-To: <77993eef-b896-7e75-93ba-a76f126b5fad@linux.intel.com>
+Message-ID: <626fd010-aa6e-2963-5860-658b6069e035@linux.intel.com>
+References: <20240411025856.2782476-1-david.e.box@linux.intel.com> <20240411025856.2782476-9-david.e.box@linux.intel.com> <77993eef-b896-7e75-93ba-a76f126b5fad@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] Input: Add trackpoint doubletap and system debug info
- keycodes
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Peter Hutterer <peter.hutterer@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
- ibm-acpi-devel@lists.sourceforge.net,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- Nitin Joshi1 <njoshi1@lenovo.com>, Vishnu Sankar <vsankar@lenovo.com>
-References: <mpearson-lenovo@squebb.ca>
- <20240324210817.192033-1-mpearson-lenovo@squebb.ca>
- <20240324210817.192033-2-mpearson-lenovo@squebb.ca>
- <ZhR-WPx7dgKxziMb@google.com>
- <f3342c0b-fb31-4323-aede-7fb02192cf44@redhat.com>
- <ZhW3Wbn4YSGFBgfS@google.com> <ZhXpZe1Gm5e4xP6r@google.com>
- <92ee5cb2-565e-413c-b968-81393a9211c4@app.fastmail.com>
- <ZhcogDESvZmUPEEf@google.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <ZhcogDESvZmUPEEf@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323328-326121552-1712841950=:1017"
 
-Hi Dmitry,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 4/11/24 2:02 AM, Dmitry Torokhov wrote:
-> On Tue, Apr 09, 2024 at 10:17:05PM -0400, Mark Pearson wrote:
->> Hi Dmitry
->>
->> On Tue, Apr 9, 2024, at 9:20 PM, Dmitry Torokhov wrote:
->>> On Tue, Apr 09, 2024 at 02:47:05PM -0700, Dmitry Torokhov wrote:
->>>> On Tue, Apr 09, 2024 at 03:23:52PM +1000, Peter Hutterer wrote:
->>>>> On 09/04/2024 09:31, Dmitry Torokhov wrote:
->>>>>> Hi Mark,
->>>>>>
->>>>>> On Sun, Mar 24, 2024 at 05:07:58PM -0400, Mark Pearson wrote:
->>>>>>> Add support for new input events on Lenovo laptops that need exporting to
->>>>>>> user space.
->>>>>>>
->>>>>>> Lenovo trackpoints are adding the ability to generate a doubletap event.
->>>>>>> Add a new keycode to allow this to be used by userspace.
->>>>>>
->>>>>> What is the intended meaning of this keycode? How does it differ from
->>>>>> the driver sending BTN_LEFT press/release twice?
->>>>>>>
->>>>>>> Lenovo support is using FN+N with Windows to collect needed details for
->>>>>>> support cases. Add a keycode so that we'll be able to provide similar
->>>>>>> support on Linux.
->>>>>>
->>>>>> Is there a userspace consumer for this?
->>>>>
->>>>> Funnily enough XKB has had a keysym for this for decades but it's not
->>>>> hooked up anywhere due to the way it's pointer keys accessibility
->>>>> feature was implemented. Theory is that most of userspace just needs
->>>>> to patch the various pieces together for the new evdev code + keysym,
->>>>> it's not really any different to handling a volume key (except this
->>>>> one needs to be assignable).
->>>>
->>>> What is the keysym? If we can make them relatable to each other that
->>>> would be good. Or maybe we could find a matching usage from HID usage
->>>> tables...
->>>
->>> I was looking through the existing codes and I see:
->>>
->>> #define KEY_INFO		0x166	/* AL OEM Features/Tips/Tutorial */
->>>
->>> We also have KEY_VENDOR used in a few drivers/plafrom/x86, including
->>> thinkkpad_acpi.c and I wonder if it would be suitable for this vendor
->>> specific debug info collection application (which I honestly doubt will
->>> materialize).
->>>
->>
->> That's a somewhat disappointing note on your doubts, is that based on
->> anything? Just wondering what we've done to deserve that criticism.
-> 
-> Sorry, this was not meant as a criticism really, but you mentioned
-> yourself that there isn't anything in the works yet, you just have some
-> plans.
-> 
-> For such a project to succeed Lenovo needs to invest into selling
-> devices with Linux as a primary operating system, and it has to be
-> consumer segment (or small business, because for corporate they
-> typically roll their own support channels). The case of retrofitting
-> Linux onto a that device originally came with Windows OS rarely gets
-> much if any response from the normal support channels.
-> 
-> Is this something that is actually happening?
+--8323328-326121552-1712841950=:1017
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Yes, Lenovo is actually offering Fedora as an OS choice when
-ordering ThinkPads directly from their website in many countries
-including when ordering as a consumer.
+On Thu, 11 Apr 2024, Ilpo J=E4rvinen wrote:
 
-And unlike other vendor's Linux preloads which often use a kernel
-with downstream laptop specific changes these laptops are running
-unmodified Fedora kernels, which themselves are almost pristine
-upstream kernels.
+> On Wed, 10 Apr 2024, David E. Box wrote:
+>=20
+> > Add #define for feature length and move NUL assignment from callers to
+> > get_feature().
+> >=20
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@lin=
+ux.intel.com>
+> > ---
+> > V4 - Move NUL assignment to get_feature() and increment FEAT_LEN.
+> >=20
+> > V3 - Add FEAT_LEN #def
+> >=20
+> > V2 - Split of V1 patch 7
+> >=20
+> >  tools/arch/x86/intel_sdsi/intel_sdsi.c | 17 ++++++++---------
+> >  1 file changed, 8 insertions(+), 9 deletions(-)
+> >=20
+> > diff --git a/tools/arch/x86/intel_sdsi/intel_sdsi.c b/tools/arch/x86/in=
+tel_sdsi/intel_sdsi.c
+> > index ba2a6b6645ae..301213370740 100644
+> > --- a/tools/arch/x86/intel_sdsi/intel_sdsi.c
+> > +++ b/tools/arch/x86/intel_sdsi/intel_sdsi.c
+> > @@ -43,6 +43,7 @@
+> >  #define METER_CERT_MAX_SIZE=094096
+> >  #define STATE_MAX_NUM_LICENSES=0916
+> >  #define STATE_MAX_NUM_IN_BUNDLE=09(uint32_t)8
+> > +#define FEAT_LEN=09=095=09/* 4 plus NUL terminator */
+> > =20
+> >  #define __round_mask(x, y) ((__typeof__(x))((y) - 1))
+> >  #define round_up(x, y) ((((x) - 1) | __round_mask(x, y)) + 1)
+> > @@ -321,10 +322,11 @@ static char *content_type(uint32_t type)
+> >  =09}
+> >  }
+> > =20
+> > -static void get_feature(uint32_t encoding, char *feature)
+> > +static void get_feature(uint32_t encoding, char feature[5])
+> >  {
+> >  =09char *name =3D (char *)&encoding;
+> > =20
+> > +=09feature[4] =3D '\0';
+> >  =09feature[3] =3D name[0];
+> >  =09feature[2] =3D name[1];
+> >  =09feature[1] =3D name[2];
+>=20
+> Works, assuming none of the name bytes are 0.
 
-Lenovo (Mark) has been really good the last couple of years in
-making sure that their hw just works with mainline kernels without
-any downstream vendor specific patches.
+Before somebody starts to wonder, while writing that, I thought this patch=
+=20
+was also about alignment (were <4 chars would have mattered), which was=20
+just wrong recollection from my part and related to some other patch in=20
+this series.
 
->> That aside, I guess KEY_INFO or KEY_VENDOR could be a good fit (I
->> personally don't think KEY_CONFIG matches well), but I would be
->> worried about clashing with existing functionality.
+> Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-Using KEY_INFO / KEY_VENDOR works for me too. So maybe we should
-just go with one of those 2 ?
+--=20
+ i.
 
-Regards,
-
-Hans
-
-
-
+--8323328-326121552-1712841950=:1017--
