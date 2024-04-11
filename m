@@ -1,171 +1,179 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5248E63D;
-	Thu, 11 Apr 2024 00:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C45D13AD23;
+	Thu, 11 Apr 2024 02:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712793733; cv=none; b=H31xp9vhebqFn37emuIWmwWA3Dw0nlwUBSbZqEoHoJRkxtmU8jnsyk056lO0wH/AZlKu8VVXP9AAlroet4uNRdTZiNWNEbbIJpqfMhfbKh/YQTNhyC4v2r9qCEqVY6hysKmN77PcSZbbd7w1WQk0TJa9Jle5aIgU9u4KP+yh9xI=
+	t=1712802936; cv=none; b=esTka26Y2qwTdYdauH9s9/Mre8MhBjvWYsUssY+POM7Uh8VybsuoEgKAMXVEDF4+xCNJMupDcvhy+XjDHgX2rxhH0T/NKNBcYISuddQ673B7pspfgt0vuul7jeGOeQtiasr2JRaJ7vO0lDTIWpUDwSDSo2Wn6x2zmLLAMWhL3l8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712793733; c=relaxed/simple;
-	bh=OSTd7Qy7f+1f9UZ9ao6IxRPViSiIVpqybSuKe7pfrC8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e1E9nOaqLaPBpOEaXGQSmyUjLJcv5IBGr4J5Jf1sb0ZKZK+DjH6DZfcZylzQapan4t0E1QBsUWtOt9qTnnvYANqgT2jou5B3XxTeBVTg9Wnn+r3duCjhMCaR2bPCYDkHDxYAZrFVVxVeNp+AbgmvUZdMVFtwUX8EqVQbX3pmTlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g2dUieEy; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712802936; c=relaxed/simple;
+	bh=pD0PHgRIr4QAD7ckc8UQSsbAKSahbn8SJvAjJkgT0gY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=I9LqNiMW1pU13HwHAPE10MplxW2TsVhZSEgfRrm+o3+OE6Um+I6sNvpPaLlI+JZZO/6hCJlteEkP5cRBuvmKaRhFIUGKCwKffUH0T7Sb/6a8VwTAP/OpkRHa71umLWr6HRGhzBfGF43vREf05PzRyG5nM6IHXrcp7iIsw/jayvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QnUgqwAj; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g2dUieEy"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2a519ac18b3so2723268a91.2;
-        Wed, 10 Apr 2024 17:02:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712793731; x=1713398531; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wfrCZroFultv+MXju5r6SP+mW/5Hc70daHzU+zkVS5Y=;
-        b=g2dUieEyKmmRwjQeLqhovjUrnvb+etJ0UyZ3pJAw94R/+pIFPENRx/mfXe59E3+Kjb
-         rzSKcaSLXBI9noM6FBHNd/JUMus9z2W6xDFw5R2ZC8QpMbn3TEf0OK8ieiQaidVI859L
-         ZUkXAEn9UPm5n6cwqO872VdcSGXakSkuB5Pf+f4iGPk084hj1eT2nomr4uPNwjn1WGYP
-         yoqDEnmiK/eH597QFP2/6W5Ov8hXkvko+by6Jqd9Pq7r/ECjmvWSD9lCAVzzuLSv6/Vx
-         nyOpLfJHs8ZtmvZHC+rbFzrExKIuY5Xn54FYamlwH5+be+f4CTDCZdSUhfgguyyNQ83H
-         HfQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712793731; x=1713398531;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wfrCZroFultv+MXju5r6SP+mW/5Hc70daHzU+zkVS5Y=;
-        b=odvjd/U5v75KVmXhlHf8OU1VmnBV/jIZV/ItWRsQ88P1ei05YVGoWZOgJwQWwIzCLj
-         ONqWGhBuSVRMMdKnzViuie/316coDLfqhL820mOw1cPI7Yp1SCSWtbLI10hEcstHtTTP
-         pGaz5BLYlircK0GYB6k9ApnDl6q+gpPiQIZCeQS+wyVPiSmdBZZTuIaDvQcOnLsXo1Al
-         TU4QfaOa1of52ZFoevg4X9FYmsZ+t+dupv2iaUQeLXHuQRYTwyCM9ZNePP2qZCYWewFl
-         IK94SiYFggDIzqjH0KtUF3n4YqF2+Iod5a1oVSpsWuNasfwn9otoFO9KrcdBjCiHLmfu
-         ciIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJqB6x0FmN1MT3vgjMvmDK9O8PaXtmc5XlKrdxNwWvzNUwZXU8Z1GHUaf22XeMKFq8oAld/wzMhE+aHVsGxJI5JeWuNh/+gsChGHpepMhjQFGYR66sYpHkYRIlXoNfhmjf/qz1gNJ3rN1Va2QfIdd6Rcjzclcpz9ro73vgPLBAUDcYpL2OMNkJWOfqww/X
-X-Gm-Message-State: AOJu0Yz6DXAeVC2EhJBvUS5TKWlIlan8mmJq6w0i1LkZPnZAL2Rh6Tff
-	QxjhBt0sunQK/wqo7ORrvFKAc0l4iIGhZSaBrN1Jl7ne5X3cL5Nr
-X-Google-Smtp-Source: AGHT+IGigq1nRlAG3wzK4rdyckpZKJucY604QtyMnvFuJC/poZuw8R8R2TYwxexL8XTYjwY++6JkRA==
-X-Received: by 2002:a17:90a:d484:b0:2a5:d0cf:3ef with SMTP id s4-20020a17090ad48400b002a5d0cf03efmr3096746pju.37.1712793731204;
-        Wed, 10 Apr 2024 17:02:11 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:60da:41be:a28d:f612])
-        by smtp.gmail.com with ESMTPSA id h16-20020a17090a051000b002a2e4b593cdsm2079501pjh.51.2024.04.10.17.02.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 17:02:10 -0700 (PDT)
-Date: Wed, 10 Apr 2024 17:02:08 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Peter Hutterer <peter.hutterer@redhat.com>,
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QnUgqwAj"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1712802931; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=4mPU8uVU62Gx+L9YfY51VYVWJr6/PqFv0TCtZ2FCoKo=;
+	b=QnUgqwAjbI45oTvhlx2egEP5yHdbf7U+7pwUImIV3m81f9Qam438liCL2y4JEk4M0pbJ8/wtvEkFntKZcB9kDreMbYtg4h10qhFXSt+rsOeAoub/jVadH3Wy/epgMromZ/jKrNyDPprHT8bMAnOaENCQQ06va3fhr9xy5+rVbQo=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=26;SR=0;TI=SMTPD_---0W4JW4H8_1712802929;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W4JW4H8_1712802929)
+          by smtp.aliyun-inc.com;
+          Thu, 11 Apr 2024 10:35:30 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: virtualization@lists.linux.dev
+Cc: Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
 	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	ibm-acpi-devel@lists.sourceforge.net,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Nitin Joshi1 <njoshi1@lenovo.com>,
-	Vishnu Sankar <vsankar@lenovo.com>
-Subject: Re: [PATCH 1/4] Input: Add trackpoint doubletap and system debug
- info keycodes
-Message-ID: <ZhcogDESvZmUPEEf@google.com>
-References: <mpearson-lenovo@squebb.ca>
- <20240324210817.192033-1-mpearson-lenovo@squebb.ca>
- <20240324210817.192033-2-mpearson-lenovo@squebb.ca>
- <ZhR-WPx7dgKxziMb@google.com>
- <f3342c0b-fb31-4323-aede-7fb02192cf44@redhat.com>
- <ZhW3Wbn4YSGFBgfS@google.com>
- <ZhXpZe1Gm5e4xP6r@google.com>
- <92ee5cb2-565e-413c-b968-81393a9211c4@app.fastmail.com>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Vadim Pasternak <vadimp@nvidia.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Cornelia Huck <cohuck@redhat.com>,
+	Halil Pasic <pasic@linux.ibm.com>,
+	Eric Farman <farman@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	David Hildenbrand <david@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	linux-um@lists.infradead.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [PATCH vhost v8 1/6] virtio_balloon: remove the dependence where names[] is null
+Date: Thu, 11 Apr 2024 10:35:23 +0800
+Message-Id: <20240411023528.10914-2-xuanzhuo@linux.alibaba.com>
+X-Mailer: git-send-email 2.32.0.3.g01195cf9f
+In-Reply-To: <20240411023528.10914-1-xuanzhuo@linux.alibaba.com>
+References: <20240411023528.10914-1-xuanzhuo@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <92ee5cb2-565e-413c-b968-81393a9211c4@app.fastmail.com>
+X-Git-Hash: d277a0b9519b
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 09, 2024 at 10:17:05PM -0400, Mark Pearson wrote:
-> Hi Dmitry
-> 
-> On Tue, Apr 9, 2024, at 9:20 PM, Dmitry Torokhov wrote:
-> > On Tue, Apr 09, 2024 at 02:47:05PM -0700, Dmitry Torokhov wrote:
-> >> On Tue, Apr 09, 2024 at 03:23:52PM +1000, Peter Hutterer wrote:
-> >> > On 09/04/2024 09:31, Dmitry Torokhov wrote:
-> >> > > Hi Mark,
-> >> > > 
-> >> > > On Sun, Mar 24, 2024 at 05:07:58PM -0400, Mark Pearson wrote:
-> >> > > > Add support for new input events on Lenovo laptops that need exporting to
-> >> > > > user space.
-> >> > > > 
-> >> > > > Lenovo trackpoints are adding the ability to generate a doubletap event.
-> >> > > > Add a new keycode to allow this to be used by userspace.
-> >> > > 
-> >> > > What is the intended meaning of this keycode? How does it differ from
-> >> > > the driver sending BTN_LEFT press/release twice?
-> >> > > > 
-> >> > > > Lenovo support is using FN+N with Windows to collect needed details for
-> >> > > > support cases. Add a keycode so that we'll be able to provide similar
-> >> > > > support on Linux.
-> >> > > 
-> >> > > Is there a userspace consumer for this?
-> >> > 
-> >> > Funnily enough XKB has had a keysym for this for decades but it's not
-> >> > hooked up anywhere due to the way it's pointer keys accessibility
-> >> > feature was implemented. Theory is that most of userspace just needs
-> >> > to patch the various pieces together for the new evdev code + keysym,
-> >> > it's not really any different to handling a volume key (except this
-> >> > one needs to be assignable).
-> >> 
-> >> What is the keysym? If we can make them relatable to each other that
-> >> would be good. Or maybe we could find a matching usage from HID usage
-> >> tables...
-> >
-> > I was looking through the existing codes and I see:
-> >
-> > #define KEY_INFO		0x166	/* AL OEM Features/Tips/Tutorial */
-> >
-> > We also have KEY_VENDOR used in a few drivers/plafrom/x86, including
-> > thinkkpad_acpi.c and I wonder if it would be suitable for this vendor
-> > specific debug info collection application (which I honestly doubt will
-> > materialize).
-> >
-> 
-> That's a somewhat disappointing note on your doubts, is that based on
-> anything? Just wondering what we've done to deserve that criticism.
+Currently, the init_vqs function within the virtio_balloon driver relies
+on the condition that certain names array entries are null in order to
+skip the initialization of some virtual queues (vqs). This behavior is
+unique to this part of the codebase. In an upcoming commit, we plan to
+eliminate this dependency by removing the function entirely. Therefore,
+with this change, we are ensuring that the virtio_balloon no longer
+depends on the aforementioned function.
 
-Sorry, this was not meant as a criticism really, but you mentioned
-yourself that there isn't anything in the works yet, you just have some
-plans.
+As specification 1.0-1.2, vq indexes should not be contiguous if some
+vq does not exist. But currently the virtqueue index is contiguous for
+all existing devices. The Linux kernel does not implement functionality
+to allow vq indexes to be discontinuous. So the current behavior of the
+virtio-balloon device is different for the spec. But this commit has no
+functional changes.
 
-For such a project to succeed Lenovo needs to invest into selling
-devices with Linux as a primary operating system, and it has to be
-consumer segment (or small business, because for corporate they
-typically roll their own support channels). The case of retrofitting
-Linux onto a that device originally came with Windows OS rarely gets
-much if any response from the normal support channels.
+Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
+---
+ drivers/virtio/virtio_balloon.c | 48 ++++++++++++++-------------------
+ 1 file changed, 20 insertions(+), 28 deletions(-)
 
-Is this something that is actually happening?
-
-> 
-> That aside, I guess KEY_INFO or KEY_VENDOR could be a good fit (I
-> personally don't think KEY_CONFIG matches well), but I would be
-> worried about clashing with existing functionality.
-> 
-> Peter - do you have any opinion from the user space side of things, or
-> are these likely unused? KEY_VENDOR seems the safer bet to me (but I
-> don't love it).
-> 
-> Dmitry - What are the downsides or concerns of introducing a new code?
-> I'd like to evaluate that against the potential to cause conflicts by
-> re-using existing codes. If you feel strongly about it then I'll defer
-> to your judgement, but I'd like to understand better the context.
-
-The keycode space is finite and extending bitmaps leads to more memory
-consumption and weird breakages (like uevent generation exceeding 4K
-memory page resulting in failures). I am trying to balance need for new
-keycodes with how likely they are to be used.
-
-Thanks.
-
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+index 1f5b3dd31fcf..f5ed351e31d4 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -531,49 +531,41 @@ static int init_vqs(struct virtio_balloon *vb)
+ 	struct virtqueue *vqs[VIRTIO_BALLOON_VQ_MAX];
+ 	vq_callback_t *callbacks[VIRTIO_BALLOON_VQ_MAX];
+ 	const char *names[VIRTIO_BALLOON_VQ_MAX];
+-	int err;
++	int err, idx = 0;
+ 
+-	/*
+-	 * Inflateq and deflateq are used unconditionally. The names[]
+-	 * will be NULL if the related feature is not enabled, which will
+-	 * cause no allocation for the corresponding virtqueue in find_vqs.
+-	 */
+-	callbacks[VIRTIO_BALLOON_VQ_INFLATE] = balloon_ack;
+-	names[VIRTIO_BALLOON_VQ_INFLATE] = "inflate";
+-	callbacks[VIRTIO_BALLOON_VQ_DEFLATE] = balloon_ack;
+-	names[VIRTIO_BALLOON_VQ_DEFLATE] = "deflate";
+-	callbacks[VIRTIO_BALLOON_VQ_STATS] = NULL;
+-	names[VIRTIO_BALLOON_VQ_STATS] = NULL;
+-	callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+-	names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+-	names[VIRTIO_BALLOON_VQ_REPORTING] = NULL;
++	callbacks[idx] = balloon_ack;
++	names[idx++] = "inflate";
++	callbacks[idx] = balloon_ack;
++	names[idx++] = "deflate";
+ 
+ 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+-		names[VIRTIO_BALLOON_VQ_STATS] = "stats";
+-		callbacks[VIRTIO_BALLOON_VQ_STATS] = stats_request;
++		names[idx] = "stats";
++		callbacks[idx++] = stats_request;
+ 	}
+ 
+ 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
+-		names[VIRTIO_BALLOON_VQ_FREE_PAGE] = "free_page_vq";
+-		callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
++		names[idx] = "free_page_vq";
++		callbacks[idx++] = NULL;
+ 	}
+ 
+ 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
+-		names[VIRTIO_BALLOON_VQ_REPORTING] = "reporting_vq";
+-		callbacks[VIRTIO_BALLOON_VQ_REPORTING] = balloon_ack;
++		names[idx] = "reporting_vq";
++		callbacks[idx++] = balloon_ack;
+ 	}
+ 
+-	err = virtio_find_vqs(vb->vdev, VIRTIO_BALLOON_VQ_MAX, vqs,
+-			      callbacks, names, NULL);
++	err = virtio_find_vqs(vb->vdev, idx, vqs, callbacks, names, NULL);
+ 	if (err)
+ 		return err;
+ 
+-	vb->inflate_vq = vqs[VIRTIO_BALLOON_VQ_INFLATE];
+-	vb->deflate_vq = vqs[VIRTIO_BALLOON_VQ_DEFLATE];
++	idx = 0;
++
++	vb->inflate_vq = vqs[idx++];
++	vb->deflate_vq = vqs[idx++];
++
+ 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
+ 		struct scatterlist sg;
+ 		unsigned int num_stats;
+-		vb->stats_vq = vqs[VIRTIO_BALLOON_VQ_STATS];
++		vb->stats_vq = vqs[idx++];
+ 
+ 		/*
+ 		 * Prime this virtqueue with one buffer so the hypervisor can
+@@ -593,10 +585,10 @@ static int init_vqs(struct virtio_balloon *vb)
+ 	}
+ 
+ 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
+-		vb->free_page_vq = vqs[VIRTIO_BALLOON_VQ_FREE_PAGE];
++		vb->free_page_vq = vqs[idx++];
+ 
+ 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING))
+-		vb->reporting_vq = vqs[VIRTIO_BALLOON_VQ_REPORTING];
++		vb->reporting_vq = vqs[idx++];
+ 
+ 	return 0;
+ }
 -- 
-Dmitry
+2.32.0.3.g01195cf9f
+
