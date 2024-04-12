@@ -1,73 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962145F874
-	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Apr 2024 13:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BAC13EA83;
+	Fri, 12 Apr 2024 13:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712927045; cv=none; b=mj7w82Xcfsq3VNn5EKEvd/iaL8hxviuCiwcgn972ZgPmGN5C/1iee2j4fsup82MTqI4ZUqdiN4xzS1lwqZ6mFi2SmJ3/UcG+LgWNGFdUk2xlVR3iPbdSKaCqWb6u6mGLCVmky3bPWbVQ40Sc0Qj2j6l2/T0zXL4ToUBAY7M/JXE=
+	t=1712927356; cv=none; b=AMDZYOBB4iqKuvK0z967aFdnVURX+Zrs+02UPd7o8qmt7kZ9gMY45rgZ5PRakxsMLdymluQfxvjI+BBp6kXKdigJ52CShQBVSiniI7WfBGwcDzy+4hwsmIFi7mQQND11FTzQDSX1cHRD1CxCUS8gll4/EvAPEswdrm8Sy1JfiiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712927045; c=relaxed/simple;
-	bh=iZb5wQL1WIhQ/UUcfK2jeto9xkP9wYl5x6ToEANpqZ4=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MWlPrr2+EhDcqDpejDpe84FrcCd8sE0DopApduy4JAOw/+W5zayt+FQJEt+GhkXLxhew3Loob0LCk2nku+21xHDA/oYubRJB8LkIDvFlNL6x4n6W0Vus0sbcbwA6R/OrOLWkSQ2rx2RH3NfVkllvGN4h5SLayHGBv6pIrup2rZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DKGEW70C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712927356; c=relaxed/simple;
+	bh=gY/J7/J1lZWqmcEQqo/U8q+U1/cFFpdrPaU/Htjfo/o=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=DfAueNbdqaRUVSKBWx9Kq7Y830gfHL4aEb8KnT0CVHBDX84Z3LMNqgJvHotrfhP979SAxuDaBFfV/6QPacBeepFDCN4G3u6ILhv1iofd8wr96AUZlSaURuM9cOEWdUdWv5Aav8hzvgrVImkTzWLivz6c/eiA0b3nZutGee+OPJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OIYowc/D; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DKGEW70C"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 18C63C2BD10
-	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Apr 2024 13:04:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712927045;
-	bh=iZb5wQL1WIhQ/UUcfK2jeto9xkP9wYl5x6ToEANpqZ4=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=DKGEW70CuE4raWYCdsEHHFSOvKXq+BoqbwwJKhfKv4pndV1Sabf9oq6cNQ/gXwM98
-	 pQrfn7Ymn3BLeKZiApe2B7nbKo+RV+bVX3SakHsQlqdamFDLLbmx7SGmE2jz8OJQkk
-	 7lNi8PsGYTIGfd1vjq2t6hthcAKQPj7dzsk53b+JoN5d/3HUVWvp0Z3il2OJpeCV6b
-	 FBXpDJHE23EHsD28NkoN3JFwG4tbUKatcu2I50DhBhn+gwEn+AceLnt3xgM6JDmqwk
-	 2OfHgAkqOlbiSBnv9bD14ghbJP+6JfHW6Nf/hV9h067rOFpAV1v5hh6J096tYrphZ2
-	 57jsMiSe9DowA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 111D1C433DE; Fri, 12 Apr 2024 13:04:05 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218685] asus-nb-wmi fails to load due to conflict with amd-pmf
-Date: Fri, 12 Apr 2024 13:04:04 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mario.limonciello@amd.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218685-215701-ohlVTP09iA@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218685-215701@https.bugzilla.kernel.org/>
-References: <bug-218685-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OIYowc/D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712927355; x=1744463355;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gY/J7/J1lZWqmcEQqo/U8q+U1/cFFpdrPaU/Htjfo/o=;
+  b=OIYowc/Dq9rw6HOZxlpc+7ZDkBn4SAKBtWM4SoBScnEC55uWYCe4NjgF
+   6wxuClXnmEHxcMQsbCD6DqAcUrNejYhb+1FbcMydzai1xB5O3yGMy/g3x
+   N2YIdpwX8puYdLYOK+P488M+d7cg6nlqoDOq5iF90yX9h8QxI/3oDZrnM
+   ph9/bHpsIOFDnCZ1zXGTKPJWMXXr5MFnSIjFhDzbq70QpJkWtOApRmWAT
+   jfzDc9lmvDs2N571KnCs/2RN57cd3Csv+ltPBQyheUWFqtcZ526+ACyA5
+   HaYUhabtVRJhiS+Px0oEXWRsyKBQNRwlq0rP6Jn77dO/u5fZs6+WuxMEo
+   A==;
+X-CSE-ConnectionGUID: VeOK2D+rTx2f3SFoCdlHXA==
+X-CSE-MsgGUID: MwaEW81oQ+WR3jYN0HOmfw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="33775310"
+X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
+   d="scan'208";a="33775310"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 06:09:14 -0700
+X-CSE-ConnectionGUID: pVgmtzzERDCx+hYK6w0hXQ==
+X-CSE-MsgGUID: F0BalwvfST2fymMA5qpojA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
+   d="scan'208";a="21293123"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.32])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 06:09:12 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Mark Pearson <markpearson@lenovo.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] platform/x86: think-lmi: Convert container_of() macros to static inline
+Date: Fri, 12 Apr 2024 16:09:03 +0300
+Message-Id: <20240412130903.2836-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218685
+The macros to_tlmi_pwd_setting() and to_tlmi_attr_setting() are fragile
+because they expect the variable name to be 'kobj', otherwise the build
+will fail because container_of()'s 3rd parameter (member) is taken from
+the parameter given to the macro.
 
---- Comment #40 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-*my
+While at it, move them into a more logical place.
 
---=20
-You may reply to this email to add a comment.
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/platform/x86/think-lmi.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+index 9345316b45db..0f2264bb7577 100644
+--- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -175,9 +175,6 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
+ #define TLMI_SMP_PWD BIT(6) /* System Management */
+ #define TLMI_CERT    BIT(7) /* Certificate Based */
+ 
+-#define to_tlmi_pwd_setting(kobj)  container_of(kobj, struct tlmi_pwd_setting, kobj)
+-#define to_tlmi_attr_setting(kobj)  container_of(kobj, struct tlmi_attr_setting, kobj)
+-
+ static const struct tlmi_err_codes tlmi_errs[] = {
+ 	{"Success", 0},
+ 	{"Not Supported", -EOPNOTSUPP},
+@@ -198,6 +195,16 @@ static struct think_lmi tlmi_priv;
+ static const struct class *fw_attr_class;
+ static DEFINE_MUTEX(tlmi_mutex);
+ 
++static inline struct tlmi_pwd_setting *to_tlmi_pwd_setting(struct kobject *kobj)
++{
++	return container_of(kobj, struct tlmi_pwd_setting, kobj);
++}
++
++static inline struct tlmi_attr_setting *to_tlmi_attr_setting(struct kobject *kobj)
++{
++	return container_of(kobj, struct tlmi_attr_setting, kobj);
++}
++
+ /* Convert BIOS WMI error string to suitable error code */
+ static int tlmi_errstr_to_err(const char *errstr)
+ {
+-- 
+2.39.2
+
