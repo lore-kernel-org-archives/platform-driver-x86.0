@@ -1,154 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406D2824A3
-	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Apr 2024 13:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178095914E;
+	Fri, 12 Apr 2024 13:42:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712928749; cv=none; b=F+wBAahXNlcJ5YvKGDotTGcaPm+GjZ3DcD6HN7yang9PLUXNmwFRqf/AVjLssEr08Hf8aIjKmON7KpE5p5Wi3H2g7ldTp8RicxenLJZnbMGywK9aXvTRMYOQFhNBV2MO00X4vVRjtyOkfk87eQr4TGQzSnhF/pEoLJXLO2iG9D8=
+	t=1712929332; cv=none; b=Wi9rMdhO4JLRJwOHb6aZuF44h/RRLJolQ3aj/P1GwI2ZY7I2xG5/jnLzVyFDoLT1eiZIeNDAfG/97qjriozKk3Axsa3J21SicNp6MufpAWpM6mCZx19/th4nBkCQpzx346WmvKLVkKN/G0LDw4bg9kr+yv9O/m+vKlKOwmnLHEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712928749; c=relaxed/simple;
-	bh=AQvz3pntucVa7EGnMTaOPPgIQlaGaehsyPNr+XhARbw=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Lwbgtnl35v54suWXJ8nL/9Lv9UGFvs5XSUuiUKxPV4QX8+oLQE4njsW1jMfB4aVh7SK02n3Nd/9jsZWxoiHz6M8aI8dabCM8sFV59ia9wsEENdwHk7LTokkp7reNTzvWWS1lidiKvlxi14aSeqkPAxYQr5SOlYMPGWRsorL088s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VqX+wIN4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712929332; c=relaxed/simple;
+	bh=xfhdUWr+FK3ehEq4BJSMZt6PGr4ulOUSnBROKlcRrFg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=KZbc02B5XUt/wLWCXVnvEctrHMq62uBLw3EuLHUdzAPQqbbd5VFqFogm0j6Jo7j7ayW2vObybRv2U4TnbE+MSGf5TcrC+JUfdCUEoL1P3jG9S5nDzr8mBN7ZBEmhcqGFQA/5fSM9kLPYDhMu/Aq33xuh6QOOIRoUVJrnofEv06I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gLlUvI1E; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VqX+wIN4"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CE2A6C113CC
-	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Apr 2024 13:32:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712928748;
-	bh=AQvz3pntucVa7EGnMTaOPPgIQlaGaehsyPNr+XhARbw=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=VqX+wIN4Tnq9o7uEjniu/kqDVEhE3igJLbQU2jQw8VQY+JowhcXtDlOpurVgEua5S
-	 tSMt57hLIkFIpUdca17sTLUVwOIcQuxdO8nrGWJ5mfVK35DmGwOtQzgRoZkOwHahlg
-	 bvXSNyKma/BO7wStvCbyig7l2un4iAooZZ2F/YvQcWmx9dcC7cxcEWMRQuX88rD/vT
-	 N46clRFr+DyQqFurb//Q9S0JwnhsBzQtBps31zHVHQecpdAGqQ4Cwl8jRyLV00jCMP
-	 XJkUTHSVUXQ/wTdFwNKstNCTlCgquuEhujg6Ks6yBGCwpSyuv0eCePDJbcAw13d5gP
-	 dM/QrmshbCXLA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id A9E6BC433DE; Fri, 12 Apr 2024 13:32:28 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218685] asus-nb-wmi fails to load due to conflict with amd-pmf
-Date: Fri, 12 Apr 2024 13:32:28 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: al0uette@outlook.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218685-215701-MTQadeh5Fh@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218685-215701@https.bugzilla.kernel.org/>
-References: <bug-218685-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gLlUvI1E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712929331; x=1744465331;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=xfhdUWr+FK3ehEq4BJSMZt6PGr4ulOUSnBROKlcRrFg=;
+  b=gLlUvI1Eeq6xmIWCIwoW01+qdcInd1XPskzz2/Y/11hRY4FAozQUV7jL
+   5yetN10C3/TQKRNCJyYxb3IEdamj3YyOfWkDEACilsbz/30NqJPFu+v5G
+   jco0w0tKX2vTZZOv3tqRaXGHGbCWqpP4K9txpGbj95V9dfR7opG/OFebV
+   PWs3Y83BFjzY+9L3Uy5O399Tjc+JlL+/u0SITnOIRcPrwHzV44bAj+HR6
+   4l1YnIXHK0rtg2TpkXsiXerJNgDEoS0zanKLCCBRaJtO/tnHh8NkNdDMJ
+   T03znNOEoqMa2EXGowUyoZ3QkcC9ejAo5xiYarY1JYB8N3vwpDGX8Pu1N
+   g==;
+X-CSE-ConnectionGUID: BTShjTvcQBO5Z2sAJvlYxQ==
+X-CSE-MsgGUID: CgIM26wNQAKA874tcgIbvQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="8938566"
+X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
+   d="scan'208";a="8938566"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 06:42:08 -0700
+X-CSE-ConnectionGUID: dex42KcgRSyWJZm0NznP4w==
+X-CSE-MsgGUID: IOloDzXJQCSWDfkvDwtNsg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
+   d="scan'208";a="58663577"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.32])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 06:42:06 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 12 Apr 2024 16:42:01 +0300 (EEST)
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+cc: Mark Pearson <markpearson@lenovo.com>, Hans de Goede <hdegoede@redhat.com>, 
+    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] platform/x86: think-lmi: Convert container_of()
+ macros to static inline
+In-Reply-To: <212159e6-66b5-45d3-bce8-d6fde43370fe@app.fastmail.com>
+Message-ID: <3bbac14a-23fd-33f3-a55c-1dde0c81bc29@linux.intel.com>
+References: <20240412130903.2836-1-ilpo.jarvinen@linux.intel.com> <212159e6-66b5-45d3-bce8-d6fde43370fe@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-449063926-1712929321=:1014"
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218685
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
---- Comment #41 from al0uette@outlook.com ---
-(In reply to Mario Limonciello (AMD) from comment #39)
-> Just to be crystal clear you mean 6.9-rc1 + ghY patch series right?
+--8323328-449063926-1712929321=:1014
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-To be accurate, it's 6.9.0-rc1 from tiwai's
-branch(https://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git, com=
-mit
-f17dcc83a813d62cc249ade09167acdbb0c3d5e3), plus your patch series and a pat=
-ch
-to fix volume control for cirrus amps. The content of that patch is as foll=
-ows:
+On Fri, 12 Apr 2024, Mark Pearson wrote:
 
-From 28668199b2a6f7df30d9192fe23de48859a988e7 Mon Sep 17 00:00:00 2001
-From: "Luke D. Jones" <luke@ljones.dev>
-Date: Wed, 3 Apr 2024 12:05:16 +1300
-Subject: [PATCH] Test patch for GA403U series
+> Thanks Ilpo,
+>=20
+> On Fri, Apr 12, 2024, at 9:09 AM, Ilpo J=C3=A4rvinen wrote:
+> > The macros to_tlmi_pwd_setting() and to_tlmi_attr_setting() are fragile
+> > because they expect the variable name to be 'kobj', otherwise the build
+> > will fail because container_of()'s 3rd parameter (member) is taken from
+> > the parameter given to the macro.
+> >
+> > While at it, move them into a more logical place.
+> >
+> > Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> > ---
+> >  drivers/platform/x86/think-lmi.c | 13 ++++++++++---
+> >  1 file changed, 10 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/think-lmi.c=20
+> > b/drivers/platform/x86/think-lmi.c
+> > index 9345316b45db..0f2264bb7577 100644
+> > --- a/drivers/platform/x86/think-lmi.c
+> > +++ b/drivers/platform/x86/think-lmi.c
+> > @@ -175,9 +175,6 @@ MODULE_PARM_DESC(debug_support, "Enable debug=20
+> > command support");
+> >  #define TLMI_SMP_PWD BIT(6) /* System Management */
+> >  #define TLMI_CERT    BIT(7) /* Certificate Based */
+> >=20
+> > -#define to_tlmi_pwd_setting(kobj)  container_of(kobj, struct=20
+> > tlmi_pwd_setting, kobj)
+> > -#define to_tlmi_attr_setting(kobj)  container_of(kobj, struct=20
+> > tlmi_attr_setting, kobj)
+> > -
+> >  static const struct tlmi_err_codes tlmi_errs[] =3D {
+> >  =09{"Success", 0},
+> >  =09{"Not Supported", -EOPNOTSUPP},
+> > @@ -198,6 +195,16 @@ static struct think_lmi tlmi_priv;
+> >  static const struct class *fw_attr_class;
+> >  static DEFINE_MUTEX(tlmi_mutex);
+> >=20
+> > +static inline struct tlmi_pwd_setting *to_tlmi_pwd_setting(struct=20
+> > kobject *kobj)
+> > +{
+> > +=09return container_of(kobj, struct tlmi_pwd_setting, kobj);
+> > +}
+> > +
+> > +static inline struct tlmi_attr_setting *to_tlmi_attr_setting(struct=20
+> > kobject *kobj)
+> > +{
+> > +=09return container_of(kobj, struct tlmi_attr_setting, kobj);
+> > +}
+> > +
+> >  /* Convert BIOS WMI error string to suitable error code */
+> >  static int tlmi_errstr_to_err(const char *errstr)
+> >  {
+> > --=20
+> > 2.39.2
+>=20
+> Looks good to me. Let me know if you want this tested on Lenovo HW and=20
+> I'll do a build with this in - but it looks very uncontroversial :)=20
+>=20
+> Reviewed-by Mark Pearson <mpearson-lenovo@squebbb.ca>
 
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
----
- sound/pci/hda/patch_realtek.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index cdcb28aa9d7b..1c08bf26b15e 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7467,6 +7467,8 @@ enum {
-        ALC285_FIXUP_CS35L56_I2C_2,
-        ALC285_FIXUP_CS35L56_I2C_4,
-        ALC285_FIXUP_ASUS_GA403U,
-+       ALC285_FIXUP_ASUS_GA403U_HEADSET_MIC,
-+       ALC285_FIXUP_ASUS_GA403U_I2C_SPEAKER2_TO_DAC1,
- };
-
- /* A special fixup for Lenovo C940 and Yoga Duet 7;
-@@ -9690,6 +9692,22 @@ static const struct hda_fixup alc269_fixups[] =3D {
-                .type =3D HDA_FIXUP_FUNC,
-                .v.func =3D alc285_fixup_asus_ga403u,
-        },
-+       [ALC285_FIXUP_ASUS_GA403U_HEADSET_MIC] =3D {
-+               .type =3D HDA_FIXUP_PINS,
-+               .v.pins =3D (const struct hda_pintbl[]) {
-+                       { 0x19, 0x03a11050 },
-+                       { 0x1b, 0x03a11c30 },
-+                       { }
-+               },
-+               .chained =3D true,
-+               .chain_id =3D ALC285_FIXUP_ASUS_GA403U_I2C_SPEAKER2_TO_DAC1
-+       },
-+       [ALC285_FIXUP_ASUS_GA403U_I2C_SPEAKER2_TO_DAC1] =3D {
-+               .type =3D HDA_FIXUP_FUNC,
-+               .v.func =3D alc285_fixup_speaker2_to_dac1,
-+               .chained =3D true,
-+               .chain_id =3D ALC285_FIXUP_ASUS_GA403U,
-+       },
- };
-
- static const struct snd_pci_quirk alc269_fixup_tbl[] =3D {
-@@ -10143,7 +10161,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[=
-] =3D
-{
-        SND_PCI_QUIRK(0x1043, 0x1a83, "ASUS UM5302LA",
-ALC294_FIXUP_CS35L41_I2C_2),
-        SND_PCI_QUIRK(0x1043, 0x1a8f, "ASUS UX582ZS",
-ALC245_FIXUP_CS35L41_SPI_2),
-        SND_PCI_QUIRK(0x1043, 0x1b11, "ASUS UX431DA",
-ALC294_FIXUP_ASUS_COEF_1B),
--       SND_PCI_QUIRK(0x1043, 0x1b13, "ASUS U41SV/GA403U",
-ALC285_FIXUP_ASUS_GA403U),
-+       SND_PCI_QUIRK(0x1043, 0x1b13, "ASUS U41SV/GA403U",
-ALC285_FIXUP_ASUS_GA403U_HEADSET_MIC),
-        SND_PCI_QUIRK(0x1043, 0x1b93, "ASUS G614JVR/JIR",
-ALC245_FIXUP_CS35L41_SPI_2),
-        SND_PCI_QUIRK(0x1043, 0x1bbd, "ASUS Z550MA",
-ALC255_FIXUP_ASUS_MIC_NO_PRESENCE),
-        SND_PCI_QUIRK(0x1043, 0x1c03, "ASUS UM3406HA",
-ALC287_FIXUP_CS35L41_I2C_2),
---=20
-2.44.0
-
-I guess other parts doesn't really matters, since the major differences are=
- in
-audio part.
+Yes, pretty uncontroversial so probably not worth the effort to test on=20
+HW. The compile done by lkp is good enough to capture stupid mistakes=20
+(which it already passed here internally before I even sent these out).
 
 --=20
-You may reply to this email to add a comment.
+ i.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+--8323328-449063926-1712929321=:1014--
