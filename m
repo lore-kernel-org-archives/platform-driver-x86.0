@@ -1,149 +1,154 @@
-Received: from fhigh3-smtp.messagingengine.com (fhigh3-smtp.messagingengine.com [103.168.172.154])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC0F50275;
-	Fri, 12 Apr 2024 13:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406D2824A3
+	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Apr 2024 13:32:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712927724; cv=none; b=tzHayyJxGlPr+gUSYT85iHH9H1bfQumsB7gpuDisQHW4CuIvwjYHJNsObYjFVbsr39J1l00UeSjyHaL7Xq/bGaxtt930A3sPsnuiZzAjE6+fpdTL18Pvke814l3riNdHjZXdTRPaflRJoDPnvO7StLIHT52QLmSCzm+VIwoe5js=
+	t=1712928749; cv=none; b=F+wBAahXNlcJ5YvKGDotTGcaPm+GjZ3DcD6HN7yang9PLUXNmwFRqf/AVjLssEr08Hf8aIjKmON7KpE5p5Wi3H2g7ldTp8RicxenLJZnbMGywK9aXvTRMYOQFhNBV2MO00X4vVRjtyOkfk87eQr4TGQzSnhF/pEoLJXLO2iG9D8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712927724; c=relaxed/simple;
-	bh=G/CAnWQVwJlZsevuXGcKmZ4k1MkuHfrJSDBRwH53I+Y=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:
-	 Subject:Content-Type; b=YLFVEe9fLYwLd/mNJKwykz5NVhqqCRX1BhjSQ64DAAyIwEPXuKaNKneBLdIrtzh2bG40K4vvd5OmSfHZ4rsTSUtoSVenanBoKeZtz4Ky94/SeuX02ra05zI4PpjLpGPW+dFU1iwOwK34iJIIAImEsGzpZWoDmZO9XcT4HsZMZCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=jgplKWKh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=EBzziB8K; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1712928749; c=relaxed/simple;
+	bh=AQvz3pntucVa7EGnMTaOPPgIQlaGaehsyPNr+XhARbw=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Lwbgtnl35v54suWXJ8nL/9Lv9UGFvs5XSUuiUKxPV4QX8+oLQE4njsW1jMfB4aVh7SK02n3Nd/9jsZWxoiHz6M8aI8dabCM8sFV59ia9wsEENdwHk7LTokkp7reNTzvWWS1lidiKvlxi14aSeqkPAxYQr5SOlYMPGWRsorL088s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VqX+wIN4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="jgplKWKh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EBzziB8K"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 3FCBC114020A;
-	Fri, 12 Apr 2024 09:15:21 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute3.internal (MEProxy); Fri, 12 Apr 2024 09:15:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:content-transfer-encoding:content-type:content-type:date:date
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1712927721;
-	 x=1713014121; bh=LMMkhZtU6SPcb8ZErUBvL/c9FjjlKWtrP/A62oroo+s=; b=
-	jgplKWKhdFXOZLeHGMQv/uyAD0nKdEYvAoMI93sYnRBODmkGuCyTG2YJM9DLq50E
-	xMzxxXY4xHo380HZnNGFwKJe2Z3olWm9DEgUI3ftFoV62BQP3c8FMZDcZqsOmGfg
-	T1igQTnbbH1cnTNiYFMoY8WS0Xgwl+c/9hiVdcfIpnjYKfcIa+yWXJ5MHEfUYSmf
-	Cz2B/Mqfvj3th0QpULrKBmcFPTTmyP+sN9B5lgECvg4L37U6nhipm1NKBSHENAHF
-	AG4MwMsim2SR1lZFJ3gBU45q3idjeyghdUA+g/vSBhkZEZ2L4RSuCTYFqBgFDfRC
-	0qo25ljbSgYOKiW0l0a9aw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1712927721; x=
-	1713014121; bh=LMMkhZtU6SPcb8ZErUBvL/c9FjjlKWtrP/A62oroo+s=; b=E
-	BzziB8K+t2FKdMlLBBXjYMHmV3ziNIXULMALO/kfhc0iWBHvH6mzdGaSeZ5f8Oww
-	AQrfGJowwXy4cd7IaBiQv0SyuPAkie8F46nnQFEIHoK8xd6FSnRiCQPCVDeBD+sS
-	wqD9BCg8vCsJuvBrsF8sY6+6d39mb5hxCXjs8Q8BqRDIfc67ZrLM+33cXinAlsf9
-	YBYCDV5wuD8bC8GGGUyN/JhTBaQpr2x1QB23Eep6A50ROCKfX4XbiqqijausCfgx
-	hZQCkivDNeY2lk/3U8XgXN4RAVEyoFFBkaIFuIe3BuwCM26zOcDLjiMyPTclL7Gl
-	K1UQUUaO6mSYI9m3DBBAQ==
-X-ME-Sender: <xms:6TMZZtTlQ4L4L4Xax8G9l2MryE1CHyGkx_iEpLLNTlwqg7_bqT-Lew>
-    <xme:6TMZZmxvy3ZMXf4o6mC4fCS62OkpI0P2gOwEsjHVRcUpmSapPMrGkm1xeLnJjaCPm
-    zcCbjekhKkmQbuXGeE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudeiuddgieefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgfgsehtqhertderreejnecuhfhrohhmpedfofgr
-    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
-    drtggrqeenucggtffrrghtthgvrhhnpeffueevudduhefgudehtdevgeeftdehuefhleet
-    jeetvdevfefhveeuhfehgeeuieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
-X-ME-Proxy: <xmx:6TMZZi3RqbGydlfUeHKVs4AZa7GjAokaw17c8AMCI-XIlnCF308QXw>
-    <xmx:6TMZZlDqm1ePRG0OT7nYGG7ayNG8zLgranGOpiwGBhMXUm5xZ50tEA>
-    <xmx:6TMZZmho6v9VM0cHKsRDQCBC3BoH1UN7MrCO3eWAh--2cWRdhO69Cw>
-    <xmx:6TMZZpqAYoFPB7wPSGmhDAZqDgu3ZJk6i2qab0SlD6KblKHeQqrEeQ>
-    <xmx:6TMZZucIUG3fFAmiWovWuUexFW2dgeGZCzrZVWpQhq_YYxY9MqsC1pIG>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id D94CFC60097; Fri, 12 Apr 2024 09:15:20 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-379-gabd37849b7-fm-20240408.001-gabd37849
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VqX+wIN4"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CE2A6C113CC
+	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Apr 2024 13:32:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712928748;
+	bh=AQvz3pntucVa7EGnMTaOPPgIQlaGaehsyPNr+XhARbw=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=VqX+wIN4Tnq9o7uEjniu/kqDVEhE3igJLbQU2jQw8VQY+JowhcXtDlOpurVgEua5S
+	 tSMt57hLIkFIpUdca17sTLUVwOIcQuxdO8nrGWJ5mfVK35DmGwOtQzgRoZkOwHahlg
+	 bvXSNyKma/BO7wStvCbyig7l2un4iAooZZ2F/YvQcWmx9dcC7cxcEWMRQuX88rD/vT
+	 N46clRFr+DyQqFurb//Q9S0JwnhsBzQtBps31zHVHQecpdAGqQ4Cwl8jRyLV00jCMP
+	 XJkUTHSVUXQ/wTdFwNKstNCTlCgquuEhujg6Ks6yBGCwpSyuv0eCePDJbcAw13d5gP
+	 dM/QrmshbCXLA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id A9E6BC433DE; Fri, 12 Apr 2024 13:32:28 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218685] asus-nb-wmi fails to load due to conflict with amd-pmf
+Date: Fri, 12 Apr 2024 13:32:28 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: al0uette@outlook.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218685-215701-MTQadeh5Fh@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218685-215701@https.bugzilla.kernel.org/>
+References: <bug-218685-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <212159e6-66b5-45d3-bce8-d6fde43370fe@app.fastmail.com>
-In-Reply-To: <20240412130903.2836-1-ilpo.jarvinen@linux.intel.com>
-References: <20240412130903.2836-1-ilpo.jarvinen@linux.intel.com>
-Date: Fri, 12 Apr 2024 09:15:02 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Mark Pearson" <markpearson@lenovo.com>,
- "Hans de Goede" <hdegoede@redhat.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] platform/x86: think-lmi: Convert container_of() macros to
- static inline
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-Thanks Ilpo,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218685
 
-On Fri, Apr 12, 2024, at 9:09 AM, Ilpo J=C3=A4rvinen wrote:
-> The macros to_tlmi_pwd_setting() and to_tlmi_attr_setting() are fragile
-> because they expect the variable name to be 'kobj', otherwise the build
-> will fail because container_of()'s 3rd parameter (member) is taken from
-> the parameter given to the macro.
->
-> While at it, move them into a more logical place.
->
-> Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> ---
->  drivers/platform/x86/think-lmi.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/platform/x86/think-lmi.c=20
-> b/drivers/platform/x86/think-lmi.c
-> index 9345316b45db..0f2264bb7577 100644
-> --- a/drivers/platform/x86/think-lmi.c
-> +++ b/drivers/platform/x86/think-lmi.c
-> @@ -175,9 +175,6 @@ MODULE_PARM_DESC(debug_support, "Enable debug=20
-> command support");
->  #define TLMI_SMP_PWD BIT(6) /* System Management */
->  #define TLMI_CERT    BIT(7) /* Certificate Based */
->=20
-> -#define to_tlmi_pwd_setting(kobj)  container_of(kobj, struct=20
-> tlmi_pwd_setting, kobj)
-> -#define to_tlmi_attr_setting(kobj)  container_of(kobj, struct=20
-> tlmi_attr_setting, kobj)
-> -
->  static const struct tlmi_err_codes tlmi_errs[] =3D {
->  	{"Success", 0},
->  	{"Not Supported", -EOPNOTSUPP},
-> @@ -198,6 +195,16 @@ static struct think_lmi tlmi_priv;
->  static const struct class *fw_attr_class;
->  static DEFINE_MUTEX(tlmi_mutex);
->=20
-> +static inline struct tlmi_pwd_setting *to_tlmi_pwd_setting(struct=20
-> kobject *kobj)
-> +{
-> +	return container_of(kobj, struct tlmi_pwd_setting, kobj);
-> +}
-> +
-> +static inline struct tlmi_attr_setting *to_tlmi_attr_setting(struct=20
-> kobject *kobj)
-> +{
-> +	return container_of(kobj, struct tlmi_attr_setting, kobj);
-> +}
-> +
->  /* Convert BIOS WMI error string to suitable error code */
->  static int tlmi_errstr_to_err(const char *errstr)
->  {
-> --=20
-> 2.39.2
+--- Comment #41 from al0uette@outlook.com ---
+(In reply to Mario Limonciello (AMD) from comment #39)
+> Just to be crystal clear you mean 6.9-rc1 + ghY patch series right?
 
-Looks good to me. Let me know if you want this tested on Lenovo HW and I=
-'ll do a build with this in - but it looks very uncontroversial :)
+To be accurate, it's 6.9.0-rc1 from tiwai's
+branch(https://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git, com=
+mit
+f17dcc83a813d62cc249ade09167acdbb0c3d5e3), plus your patch series and a pat=
+ch
+to fix volume control for cirrus amps. The content of that patch is as foll=
+ows:
 
-Reviewed-by Mark Pearson <mpearson-lenovo@squebbb.ca>
+From 28668199b2a6f7df30d9192fe23de48859a988e7 Mon Sep 17 00:00:00 2001
+From: "Luke D. Jones" <luke@ljones.dev>
+Date: Wed, 3 Apr 2024 12:05:16 +1300
+Subject: [PATCH] Test patch for GA403U series
+
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+---
+ sound/pci/hda/patch_realtek.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index cdcb28aa9d7b..1c08bf26b15e 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7467,6 +7467,8 @@ enum {
+        ALC285_FIXUP_CS35L56_I2C_2,
+        ALC285_FIXUP_CS35L56_I2C_4,
+        ALC285_FIXUP_ASUS_GA403U,
++       ALC285_FIXUP_ASUS_GA403U_HEADSET_MIC,
++       ALC285_FIXUP_ASUS_GA403U_I2C_SPEAKER2_TO_DAC1,
+ };
+
+ /* A special fixup for Lenovo C940 and Yoga Duet 7;
+@@ -9690,6 +9692,22 @@ static const struct hda_fixup alc269_fixups[] =3D {
+                .type =3D HDA_FIXUP_FUNC,
+                .v.func =3D alc285_fixup_asus_ga403u,
+        },
++       [ALC285_FIXUP_ASUS_GA403U_HEADSET_MIC] =3D {
++               .type =3D HDA_FIXUP_PINS,
++               .v.pins =3D (const struct hda_pintbl[]) {
++                       { 0x19, 0x03a11050 },
++                       { 0x1b, 0x03a11c30 },
++                       { }
++               },
++               .chained =3D true,
++               .chain_id =3D ALC285_FIXUP_ASUS_GA403U_I2C_SPEAKER2_TO_DAC1
++       },
++       [ALC285_FIXUP_ASUS_GA403U_I2C_SPEAKER2_TO_DAC1] =3D {
++               .type =3D HDA_FIXUP_FUNC,
++               .v.func =3D alc285_fixup_speaker2_to_dac1,
++               .chained =3D true,
++               .chain_id =3D ALC285_FIXUP_ASUS_GA403U,
++       },
+ };
+
+ static const struct snd_pci_quirk alc269_fixup_tbl[] =3D {
+@@ -10143,7 +10161,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[=
+] =3D
+{
+        SND_PCI_QUIRK(0x1043, 0x1a83, "ASUS UM5302LA",
+ALC294_FIXUP_CS35L41_I2C_2),
+        SND_PCI_QUIRK(0x1043, 0x1a8f, "ASUS UX582ZS",
+ALC245_FIXUP_CS35L41_SPI_2),
+        SND_PCI_QUIRK(0x1043, 0x1b11, "ASUS UX431DA",
+ALC294_FIXUP_ASUS_COEF_1B),
+-       SND_PCI_QUIRK(0x1043, 0x1b13, "ASUS U41SV/GA403U",
+ALC285_FIXUP_ASUS_GA403U),
++       SND_PCI_QUIRK(0x1043, 0x1b13, "ASUS U41SV/GA403U",
+ALC285_FIXUP_ASUS_GA403U_HEADSET_MIC),
+        SND_PCI_QUIRK(0x1043, 0x1b93, "ASUS G614JVR/JIR",
+ALC245_FIXUP_CS35L41_SPI_2),
+        SND_PCI_QUIRK(0x1043, 0x1bbd, "ASUS Z550MA",
+ALC255_FIXUP_ASUS_MIC_NO_PRESENCE),
+        SND_PCI_QUIRK(0x1043, 0x1c03, "ASUS UM3406HA",
+ALC287_FIXUP_CS35L41_I2C_2),
+--=20
+2.44.0
+
+I guess other parts doesn't really matters, since the major differences are=
+ in
+audio part.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
