@@ -1,109 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C0914EC76;
-	Fri, 12 Apr 2024 17:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E4584DE1;
+	Fri, 12 Apr 2024 18:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712943049; cv=none; b=PdHVKee6f6KbyeUC72ZbCdLEsaUxPI5tbso3mwunMs8Vf+5OnaD5kzs8qJGM6f2Jn7N+7JiqMPXOIfxAXFFUzJq87yTebyKFN1heZN4ALO+cvox9PZdrgTU1SFcr21eAwTA7Mpi3Ea4a/YTSd8DUbQsiZN2jOaJjxE4yITGtYqg=
+	t=1712946753; cv=none; b=QrySX2KSnB9zN950Ij0cXBXXtyGtiJGq/ANOM3G0ZG7hpjysoTI+uOIVrJdR8XZeII8aj/malnWn1K3xSTDNJfjx71kQmZG3n2DnqF2YXg9zIgVMiH0Eps0CAYu6Y6kHPmdXf8xLc678CZz/RvZ0uHPyH/xLX6uMvhhHlsnCB4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712943049; c=relaxed/simple;
-	bh=0q/n4BB5A4qfKK7WTII1e9HuGi84JwM3B21N0UMYoMo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tiIZ9BVbcMitdQJZDQB+dGCGCnRVTR9k6PKuKjuvQO9iF1CpNFb8/0ijiPvGoq0gyZzSJcaLBVKln0QggzUVC+H+dQGicUtRlnQsQRTWzgYvMKWh4Zg3+AnHClk04Io+g/BdoghOJr8SZnf7dEmhf66rmmbK+3RtfONpKv3SP/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eKKRrOyb; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712946753; c=relaxed/simple;
+	bh=ttvLuHMoGwHeewRvCwDqfzT3SMzAGEX8nFjD//4xCgs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pHBlUqOOyKgbnv6lcyXD+v/+AiAmXrg/2jWp92KqF48HtQ/kUiB6X53m0CanhJcE9kQ5joLQMcMglfnT4GwO/juZ4QyFdSum3fftaf/ktvmd1VbmrrNw4/tPc1cLwz8A6+GBEadVWjlPS9hepeiDMn3XQkQE3zxRK+xkcy6YgDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ggwifxal; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eKKRrOyb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ggwifxal"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712943048; x=1744479048;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=0q/n4BB5A4qfKK7WTII1e9HuGi84JwM3B21N0UMYoMo=;
-  b=eKKRrOybPFyQitMwSC8LilydS1LD+NAA3RKncuHdtoUbcsaiPtuRC4zx
-   UtVK5fELIYAdXX2liXAv1Yb1hJQBy5EwA1ETWlg9OHNbfiJFioYF5wcme
-   jKCUD0TF6LuhmWSD1Gj94/6vm0NSSDZUyBQrr6oW9zFtyGpJO+3txNEug
-   qzNggYevA4X6MvYHwf2R6E2VdU5D47DNSvYoZMfc1qn8zGTDjxi7TBmKc
-   mprn6qs1vy/88KZj0gba0+Pmj116N61pm28yGzk5G1+NTjyWDxdx7Pzaa
-   nC+S8ErSGhF/SdFSaYYch/KvlBsX+gqLzrrvHcM805nAw4pnh37DzfH4v
-   A==;
-X-CSE-ConnectionGUID: dsqflwa8Q7K5Iwdn+80Wbw==
-X-CSE-MsgGUID: SE20U8scR1G2W+0jQ3LQrQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="11365694"
+  t=1712946752; x=1744482752;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ttvLuHMoGwHeewRvCwDqfzT3SMzAGEX8nFjD//4xCgs=;
+  b=ggwifxalrQK1/nzTFC/o5MdMLpF67FjUKo6DvtiUnfL0xEdBV9++3ImE
+   3GTtCdLKjaPt3BuRwP/ZX7A9kQXC1KAtdDnbWl6Ul6ic6YCC48/0Lkytx
+   p96W4mY5qZ2cGyDbjz163rtYe2eg59BuZ7EsCRuf7dLd9/r7ksE2KM6JA
+   f0XtyjYbH2L6tVq+9w05c6tV2EkTGpxK8Vz971lWSy5V1bA9mFmOq0Jkp
+   hsI7y3024K/yzYcPDce6YWahxORnnO0EIFl4IhQxX9id9l1F7cOzq9j4c
+   WHmO3qoOMRlOZg5B38Gw5lO8GVDTTFyNTenPVCTJ3I4Beg6i7gndmgG0u
+   g==;
+X-CSE-ConnectionGUID: oYZfG546RR+lQp5KOJOHDg==
+X-CSE-MsgGUID: yIBIf/rVRku21sxBdsWbMg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="18971725"
 X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="11365694"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:30:43 -0700
-X-CSE-ConnectionGUID: zPCuEzLMT5miAOxrOYdj0Q==
-X-CSE-MsgGUID: OFOLKwADSD+tETiNBK/HVQ==
+   d="scan'208";a="18971725"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 11:32:31 -0700
+X-CSE-ConnectionGUID: sVe73lVISr27H0YQwp5q+Q==
+X-CSE-MsgGUID: K0K4azY0TC6o/W9mWqeStw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="21780778"
-Received: from jithujos.sc.intel.com ([172.25.103.66])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:30:43 -0700
-From: Jithu Joseph <jithu.joseph@intel.com>
-To: ilpo.jarvinen@linux.intel.com,
-	hdegoede@redhat.com,
-	markgross@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	jithu.joseph@intel.com,
-	ashok.raj@intel.com,
-	tony.luck@intel.com,
-	rostedt@goodmis.org,
-	sathyanarayanan.kuppuswamy@intel.com,
-	ravi.v.shankar@intel.com,
-	patches@lists.linux.dev
-Subject: [PATCH 3/3] platform/x86/intel/ifs: Disable irq during one load stage
-Date: Fri, 12 Apr 2024 10:23:49 -0700
-Message-Id: <20240412172349.544064-4-jithu.joseph@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240412172349.544064-1-jithu.joseph@intel.com>
-References: <20240412172349.544064-1-jithu.joseph@intel.com>
+   d="scan'208";a="44568319"
+Received: from zchen24-mobl1.amr.corp.intel.com (HELO [10.209.67.36]) ([10.209.67.36])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 11:32:30 -0700
+Message-ID: <69d360fc-85e4-4a6d-8f08-9f90dd7ec583@linux.intel.com>
+Date: Fri, 12 Apr 2024 11:32:29 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] platform/x86/intel/ifs: Classify error scenarios
+ correctly
+To: Jithu Joseph <jithu.joseph@intel.com>, ilpo.jarvinen@linux.intel.com,
+ hdegoede@redhat.com, markgross@kernel.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ ashok.raj@intel.com, tony.luck@intel.com, rostedt@goodmis.org,
+ ravi.v.shankar@intel.com, patches@lists.linux.dev
+References: <20240412172349.544064-1-jithu.joseph@intel.com>
+ <20240412172349.544064-2-jithu.joseph@intel.com>
+Content-Language: en-US
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240412172349.544064-2-jithu.joseph@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-One of the stages in IFS image loading process involves loading individual
-chunks (test patterns) from test image file to secure memory.
 
-Driver issues a WRMSR(MSR_AUTHENTICATE_AND_COPY_CHUNK) operation to do
-this. This operation can take up to 5 msec, and if an interrupt occurs
-in between, the AUTH_AND_COPY_CHUNK u-code implementation aborts the
-operation.
+On 4/12/24 10:23 AM, Jithu Joseph wrote:
+> Based on inputs from hardware architects, only "scan signature failures"
+> should be treated as actual hardware/cpu failure.
 
-Interrupt sources such as NMI or SMI are handled by retrying. Regular
-interrupts may occur frequently enough to prevent this operation from ever
-completing. Disable irq on local cpu around the aforementioned WRMSR to
-allow the operation to complete.
+Instead of just saying input from hardware architects, it would be better
+if you mention the rationale behind it.
 
-Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Ashok Raj <ashok.raj@intel.com>
----
- drivers/platform/x86/intel/ifs/load.c | 2 ++
- 1 file changed, 2 insertions(+)
+> Current driver, in addition, classifies "scan controller error" scenario
+> too as a hardware/cpu failure. Modify the driver to classify this situation
+> with a more appropriate "untested" status instead of "fail" status.
+>
+> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> Reviewe
 
-diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
-index 584c44387e10..39f19cb51749 100644
---- a/drivers/platform/x86/intel/ifs/load.c
-+++ b/drivers/platform/x86/intel/ifs/load.c
-@@ -233,7 +233,9 @@ static int copy_hashes_authenticate_chunks_gen2(struct device *dev)
- 		chunk_table[0] = starting_chunk_nr + i;
- 		chunk_table[1] = linear_addr;
- 		do {
-+			local_irq_disable();
- 			wrmsrl(MSR_AUTHENTICATE_AND_COPY_CHUNK, (u64)chunk_table);
-+			local_irq_enable();
- 			rdmsrl(MSR_CHUNKS_AUTHENTICATION_STATUS, chunk_status.data);
- 			err_code = chunk_status.error_code;
- 		} while (err_code == AUTH_INTERRUPTED_ERROR && --retry_count);
+Code wise it looks good to me.
+
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
+> d-by: Ashok Raj <ashok.raj@intel.com>
+> ---
+>  drivers/platform/x86/intel/ifs/runtest.c | 27 +++++++++++++-----------
+>  1 file changed, 15 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
+> index 95b4b71fab53..282e4bfe30da 100644
+> --- a/drivers/platform/x86/intel/ifs/runtest.c
+> +++ b/drivers/platform/x86/intel/ifs/runtest.c
+> @@ -69,6 +69,19 @@ static const char * const scan_test_status[] = {
+>  
+>  static void message_not_tested(struct device *dev, int cpu, union ifs_status status)
+>  {
+> +	struct ifs_data *ifsd = ifs_get_data(dev);
+> +
+> +	/*
+> +	 * control_error is set when the microcode runs into a problem
+> +	 * loading the image from the reserved BIOS memory, or it has
+> +	 * been corrupted. Reloading the image may fix this issue.
+> +	 */
+> +	if (status.control_error) {
+> +		dev_warn(dev, "CPU(s) %*pbl: Scan controller error. Batch: %02x version: 0x%x\n",
+> +			 cpumask_pr_args(cpu_smt_mask(cpu)), ifsd->cur_batch, ifsd->loaded_version);
+> +		return;
+> +	}
+> +
+>  	if (status.error_code < ARRAY_SIZE(scan_test_status)) {
+>  		dev_info(dev, "CPU(s) %*pbl: SCAN operation did not start. %s\n",
+>  			 cpumask_pr_args(cpu_smt_mask(cpu)),
+> @@ -90,16 +103,6 @@ static void message_fail(struct device *dev, int cpu, union ifs_status status)
+>  {
+>  	struct ifs_data *ifsd = ifs_get_data(dev);
+>  
+> -	/*
+> -	 * control_error is set when the microcode runs into a problem
+> -	 * loading the image from the reserved BIOS memory, or it has
+> -	 * been corrupted. Reloading the image may fix this issue.
+> -	 */
+> -	if (status.control_error) {
+> -		dev_err(dev, "CPU(s) %*pbl: could not execute from loaded scan image. Batch: %02x version: 0x%x\n",
+> -			cpumask_pr_args(cpu_smt_mask(cpu)), ifsd->cur_batch, ifsd->loaded_version);
+> -	}
+> -
+>  	/*
+>  	 * signature_error is set when the output from the scan chains does not
+>  	 * match the expected signature. This might be a transient problem (e.g.
+> @@ -285,10 +288,10 @@ static void ifs_test_core(int cpu, struct device *dev)
+>  	/* Update status for this core */
+>  	ifsd->scan_details = status.data;
+>  
+> -	if (status.control_error || status.signature_error) {
+> +	if (status.signature_error) {
+>  		ifsd->status = SCAN_TEST_FAIL;
+>  		message_fail(dev, cpu, status);
+> -	} else if (status.error_code) {
+> +	} else if (status.control_error || status.error_code) {
+>  		ifsd->status = SCAN_NOT_TESTED;
+>  		message_not_tested(dev, cpu, status);
+>  	} else {
+
 -- 
-2.25.1
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
