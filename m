@@ -1,109 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from fhigh3-smtp.messagingengine.com (fhigh3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BAC13EA83;
-	Fri, 12 Apr 2024 13:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC0F50275;
+	Fri, 12 Apr 2024 13:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712927356; cv=none; b=AMDZYOBB4iqKuvK0z967aFdnVURX+Zrs+02UPd7o8qmt7kZ9gMY45rgZ5PRakxsMLdymluQfxvjI+BBp6kXKdigJ52CShQBVSiniI7WfBGwcDzy+4hwsmIFi7mQQND11FTzQDSX1cHRD1CxCUS8gll4/EvAPEswdrm8Sy1JfiiA=
+	t=1712927724; cv=none; b=tzHayyJxGlPr+gUSYT85iHH9H1bfQumsB7gpuDisQHW4CuIvwjYHJNsObYjFVbsr39J1l00UeSjyHaL7Xq/bGaxtt930A3sPsnuiZzAjE6+fpdTL18Pvke814l3riNdHjZXdTRPaflRJoDPnvO7StLIHT52QLmSCzm+VIwoe5js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712927356; c=relaxed/simple;
-	bh=gY/J7/J1lZWqmcEQqo/U8q+U1/cFFpdrPaU/Htjfo/o=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=DfAueNbdqaRUVSKBWx9Kq7Y830gfHL4aEb8KnT0CVHBDX84Z3LMNqgJvHotrfhP979SAxuDaBFfV/6QPacBeepFDCN4G3u6ILhv1iofd8wr96AUZlSaURuM9cOEWdUdWv5Aav8hzvgrVImkTzWLivz6c/eiA0b3nZutGee+OPJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OIYowc/D; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712927724; c=relaxed/simple;
+	bh=G/CAnWQVwJlZsevuXGcKmZ4k1MkuHfrJSDBRwH53I+Y=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:
+	 Subject:Content-Type; b=YLFVEe9fLYwLd/mNJKwykz5NVhqqCRX1BhjSQ64DAAyIwEPXuKaNKneBLdIrtzh2bG40K4vvd5OmSfHZ4rsTSUtoSVenanBoKeZtz4Ky94/SeuX02ra05zI4PpjLpGPW+dFU1iwOwK34iJIIAImEsGzpZWoDmZO9XcT4HsZMZCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=jgplKWKh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=EBzziB8K; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OIYowc/D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712927355; x=1744463355;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=gY/J7/J1lZWqmcEQqo/U8q+U1/cFFpdrPaU/Htjfo/o=;
-  b=OIYowc/Dq9rw6HOZxlpc+7ZDkBn4SAKBtWM4SoBScnEC55uWYCe4NjgF
-   6wxuClXnmEHxcMQsbCD6DqAcUrNejYhb+1FbcMydzai1xB5O3yGMy/g3x
-   N2YIdpwX8puYdLYOK+P488M+d7cg6nlqoDOq5iF90yX9h8QxI/3oDZrnM
-   ph9/bHpsIOFDnCZ1zXGTKPJWMXXr5MFnSIjFhDzbq70QpJkWtOApRmWAT
-   jfzDc9lmvDs2N571KnCs/2RN57cd3Csv+ltPBQyheUWFqtcZ526+ACyA5
-   HaYUhabtVRJhiS+Px0oEXWRsyKBQNRwlq0rP6Jn77dO/u5fZs6+WuxMEo
-   A==;
-X-CSE-ConnectionGUID: VeOK2D+rTx2f3SFoCdlHXA==
-X-CSE-MsgGUID: MwaEW81oQ+WR3jYN0HOmfw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="33775310"
-X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="33775310"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 06:09:14 -0700
-X-CSE-ConnectionGUID: pVgmtzzERDCx+hYK6w0hXQ==
-X-CSE-MsgGUID: F0BalwvfST2fymMA5qpojA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="21293123"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.32])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 06:09:12 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Mark Pearson <markpearson@lenovo.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] platform/x86: think-lmi: Convert container_of() macros to static inline
-Date: Fri, 12 Apr 2024 16:09:03 +0300
-Message-Id: <20240412130903.2836-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="jgplKWKh";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EBzziB8K"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 3FCBC114020A;
+	Fri, 12 Apr 2024 09:15:21 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute3.internal (MEProxy); Fri, 12 Apr 2024 09:15:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:content-transfer-encoding:content-type:content-type:date:date
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1712927721;
+	 x=1713014121; bh=LMMkhZtU6SPcb8ZErUBvL/c9FjjlKWtrP/A62oroo+s=; b=
+	jgplKWKhdFXOZLeHGMQv/uyAD0nKdEYvAoMI93sYnRBODmkGuCyTG2YJM9DLq50E
+	xMzxxXY4xHo380HZnNGFwKJe2Z3olWm9DEgUI3ftFoV62BQP3c8FMZDcZqsOmGfg
+	T1igQTnbbH1cnTNiYFMoY8WS0Xgwl+c/9hiVdcfIpnjYKfcIa+yWXJ5MHEfUYSmf
+	Cz2B/Mqfvj3th0QpULrKBmcFPTTmyP+sN9B5lgECvg4L37U6nhipm1NKBSHENAHF
+	AG4MwMsim2SR1lZFJ3gBU45q3idjeyghdUA+g/vSBhkZEZ2L4RSuCTYFqBgFDfRC
+	0qo25ljbSgYOKiW0l0a9aw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-transfer-encoding:content-type
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1712927721; x=
+	1713014121; bh=LMMkhZtU6SPcb8ZErUBvL/c9FjjlKWtrP/A62oroo+s=; b=E
+	BzziB8K+t2FKdMlLBBXjYMHmV3ziNIXULMALO/kfhc0iWBHvH6mzdGaSeZ5f8Oww
+	AQrfGJowwXy4cd7IaBiQv0SyuPAkie8F46nnQFEIHoK8xd6FSnRiCQPCVDeBD+sS
+	wqD9BCg8vCsJuvBrsF8sY6+6d39mb5hxCXjs8Q8BqRDIfc67ZrLM+33cXinAlsf9
+	YBYCDV5wuD8bC8GGGUyN/JhTBaQpr2x1QB23Eep6A50ROCKfX4XbiqqijausCfgx
+	hZQCkivDNeY2lk/3U8XgXN4RAVEyoFFBkaIFuIe3BuwCM26zOcDLjiMyPTclL7Gl
+	K1UQUUaO6mSYI9m3DBBAQ==
+X-ME-Sender: <xms:6TMZZtTlQ4L4L4Xax8G9l2MryE1CHyGkx_iEpLLNTlwqg7_bqT-Lew>
+    <xme:6TMZZmxvy3ZMXf4o6mC4fCS62OkpI0P2gOwEsjHVRcUpmSapPMrGkm1xeLnJjaCPm
+    zcCbjekhKkmQbuXGeE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudeiuddgieefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgfgsehtqhertderreejnecuhfhrohhmpedfofgr
+    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
+    drtggrqeenucggtffrrghtthgvrhhnpeffueevudduhefgudehtdevgeeftdehuefhleet
+    jeetvdevfefhveeuhfehgeeuieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:6TMZZi3RqbGydlfUeHKVs4AZa7GjAokaw17c8AMCI-XIlnCF308QXw>
+    <xmx:6TMZZlDqm1ePRG0OT7nYGG7ayNG8zLgranGOpiwGBhMXUm5xZ50tEA>
+    <xmx:6TMZZmho6v9VM0cHKsRDQCBC3BoH1UN7MrCO3eWAh--2cWRdhO69Cw>
+    <xmx:6TMZZpqAYoFPB7wPSGmhDAZqDgu3ZJk6i2qab0SlD6KblKHeQqrEeQ>
+    <xmx:6TMZZucIUG3fFAmiWovWuUexFW2dgeGZCzrZVWpQhq_YYxY9MqsC1pIG>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id D94CFC60097; Fri, 12 Apr 2024 09:15:20 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-379-gabd37849b7-fm-20240408.001-gabd37849
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-Id: <212159e6-66b5-45d3-bce8-d6fde43370fe@app.fastmail.com>
+In-Reply-To: <20240412130903.2836-1-ilpo.jarvinen@linux.intel.com>
+References: <20240412130903.2836-1-ilpo.jarvinen@linux.intel.com>
+Date: Fri, 12 Apr 2024 09:15:02 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Mark Pearson" <markpearson@lenovo.com>,
+ "Hans de Goede" <hdegoede@redhat.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] platform/x86: think-lmi: Convert container_of() macros to
+ static inline
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The macros to_tlmi_pwd_setting() and to_tlmi_attr_setting() are fragile
-because they expect the variable name to be 'kobj', otherwise the build
-will fail because container_of()'s 3rd parameter (member) is taken from
-the parameter given to the macro.
+Thanks Ilpo,
 
-While at it, move them into a more logical place.
+On Fri, Apr 12, 2024, at 9:09 AM, Ilpo J=C3=A4rvinen wrote:
+> The macros to_tlmi_pwd_setting() and to_tlmi_attr_setting() are fragile
+> because they expect the variable name to be 'kobj', otherwise the build
+> will fail because container_of()'s 3rd parameter (member) is taken from
+> the parameter given to the macro.
+>
+> While at it, move them into a more logical place.
+>
+> Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> ---
+>  drivers/platform/x86/think-lmi.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/platform/x86/think-lmi.c=20
+> b/drivers/platform/x86/think-lmi.c
+> index 9345316b45db..0f2264bb7577 100644
+> --- a/drivers/platform/x86/think-lmi.c
+> +++ b/drivers/platform/x86/think-lmi.c
+> @@ -175,9 +175,6 @@ MODULE_PARM_DESC(debug_support, "Enable debug=20
+> command support");
+>  #define TLMI_SMP_PWD BIT(6) /* System Management */
+>  #define TLMI_CERT    BIT(7) /* Certificate Based */
+>=20
+> -#define to_tlmi_pwd_setting(kobj)  container_of(kobj, struct=20
+> tlmi_pwd_setting, kobj)
+> -#define to_tlmi_attr_setting(kobj)  container_of(kobj, struct=20
+> tlmi_attr_setting, kobj)
+> -
+>  static const struct tlmi_err_codes tlmi_errs[] =3D {
+>  	{"Success", 0},
+>  	{"Not Supported", -EOPNOTSUPP},
+> @@ -198,6 +195,16 @@ static struct think_lmi tlmi_priv;
+>  static const struct class *fw_attr_class;
+>  static DEFINE_MUTEX(tlmi_mutex);
+>=20
+> +static inline struct tlmi_pwd_setting *to_tlmi_pwd_setting(struct=20
+> kobject *kobj)
+> +{
+> +	return container_of(kobj, struct tlmi_pwd_setting, kobj);
+> +}
+> +
+> +static inline struct tlmi_attr_setting *to_tlmi_attr_setting(struct=20
+> kobject *kobj)
+> +{
+> +	return container_of(kobj, struct tlmi_attr_setting, kobj);
+> +}
+> +
+>  /* Convert BIOS WMI error string to suitable error code */
+>  static int tlmi_errstr_to_err(const char *errstr)
+>  {
+> --=20
+> 2.39.2
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/platform/x86/think-lmi.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+Looks good to me. Let me know if you want this tested on Lenovo HW and I=
+'ll do a build with this in - but it looks very uncontroversial :)
 
-diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-index 9345316b45db..0f2264bb7577 100644
---- a/drivers/platform/x86/think-lmi.c
-+++ b/drivers/platform/x86/think-lmi.c
-@@ -175,9 +175,6 @@ MODULE_PARM_DESC(debug_support, "Enable debug command support");
- #define TLMI_SMP_PWD BIT(6) /* System Management */
- #define TLMI_CERT    BIT(7) /* Certificate Based */
- 
--#define to_tlmi_pwd_setting(kobj)  container_of(kobj, struct tlmi_pwd_setting, kobj)
--#define to_tlmi_attr_setting(kobj)  container_of(kobj, struct tlmi_attr_setting, kobj)
--
- static const struct tlmi_err_codes tlmi_errs[] = {
- 	{"Success", 0},
- 	{"Not Supported", -EOPNOTSUPP},
-@@ -198,6 +195,16 @@ static struct think_lmi tlmi_priv;
- static const struct class *fw_attr_class;
- static DEFINE_MUTEX(tlmi_mutex);
- 
-+static inline struct tlmi_pwd_setting *to_tlmi_pwd_setting(struct kobject *kobj)
-+{
-+	return container_of(kobj, struct tlmi_pwd_setting, kobj);
-+}
-+
-+static inline struct tlmi_attr_setting *to_tlmi_attr_setting(struct kobject *kobj)
-+{
-+	return container_of(kobj, struct tlmi_attr_setting, kobj);
-+}
-+
- /* Convert BIOS WMI error string to suitable error code */
- static int tlmi_errstr_to_err(const char *errstr)
- {
--- 
-2.39.2
-
+Reviewed-by Mark Pearson <mpearson-lenovo@squebbb.ca>
