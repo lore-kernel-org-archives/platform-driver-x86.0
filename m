@@ -1,141 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178095914E;
-	Fri, 12 Apr 2024 13:42:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3A914884C;
+	Fri, 12 Apr 2024 16:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712929332; cv=none; b=Wi9rMdhO4JLRJwOHb6aZuF44h/RRLJolQ3aj/P1GwI2ZY7I2xG5/jnLzVyFDoLT1eiZIeNDAfG/97qjriozKk3Axsa3J21SicNp6MufpAWpM6mCZx19/th4nBkCQpzx346WmvKLVkKN/G0LDw4bg9kr+yv9O/m+vKlKOwmnLHEI=
+	t=1712938176; cv=none; b=nDhjCQhYmBzTcLv8HLmzjHL2dgJaU0w1mLyT813x7df3Ms+yMuhoYaCRBlZNOGFEC+z94PJ+RhXBKBNB6SOAOrBjvxaLBFxyXIMv8z5wZeDJKULBHiMflS+tqS1mqrEqq6S4XWjzokLRwP72JM7s8g3t5LnojXIskqeo+f993bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712929332; c=relaxed/simple;
-	bh=xfhdUWr+FK3ehEq4BJSMZt6PGr4ulOUSnBROKlcRrFg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=KZbc02B5XUt/wLWCXVnvEctrHMq62uBLw3EuLHUdzAPQqbbd5VFqFogm0j6Jo7j7ayW2vObybRv2U4TnbE+MSGf5TcrC+JUfdCUEoL1P3jG9S5nDzr8mBN7ZBEmhcqGFQA/5fSM9kLPYDhMu/Aq33xuh6QOOIRoUVJrnofEv06I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gLlUvI1E; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712938176; c=relaxed/simple;
+	bh=key2rY0okj8iTY/sKjeNG8DebhT6mn/FJZAaKfGK91E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BEXLpjz7PsJbpirgwIDmvnutxNTrRNyRPxySzKnQAr2AZlBV6aex0uthEpctalgV+KnKcP3vy8tcn1RTGUzw9xfpTy0Wb2BwFbNlVvJSpVcW46wyzLfiubF881fytnS4VykgouUZawpC0NIPMl7PzQzS3W1j3PzNMURUY+DTURg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=m/5W5Ayg; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gLlUvI1E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712929331; x=1744465331;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=xfhdUWr+FK3ehEq4BJSMZt6PGr4ulOUSnBROKlcRrFg=;
-  b=gLlUvI1Eeq6xmIWCIwoW01+qdcInd1XPskzz2/Y/11hRY4FAozQUV7jL
-   5yetN10C3/TQKRNCJyYxb3IEdamj3YyOfWkDEACilsbz/30NqJPFu+v5G
-   jco0w0tKX2vTZZOv3tqRaXGHGbCWqpP4K9txpGbj95V9dfR7opG/OFebV
-   PWs3Y83BFjzY+9L3Uy5O399Tjc+JlL+/u0SITnOIRcPrwHzV44bAj+HR6
-   4l1YnIXHK0rtg2TpkXsiXerJNgDEoS0zanKLCCBRaJtO/tnHh8NkNdDMJ
-   T03znNOEoqMa2EXGowUyoZ3QkcC9ejAo5xiYarY1JYB8N3vwpDGX8Pu1N
-   g==;
-X-CSE-ConnectionGUID: BTShjTvcQBO5Z2sAJvlYxQ==
-X-CSE-MsgGUID: CgIM26wNQAKA874tcgIbvQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="8938566"
-X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="8938566"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 06:42:08 -0700
-X-CSE-ConnectionGUID: dex42KcgRSyWJZm0NznP4w==
-X-CSE-MsgGUID: IOloDzXJQCSWDfkvDwtNsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="58663577"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.32])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 06:42:06 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 12 Apr 2024 16:42:01 +0300 (EEST)
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-cc: Mark Pearson <markpearson@lenovo.com>, Hans de Goede <hdegoede@redhat.com>, 
-    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] platform/x86: think-lmi: Convert container_of()
- macros to static inline
-In-Reply-To: <212159e6-66b5-45d3-bce8-d6fde43370fe@app.fastmail.com>
-Message-ID: <3bbac14a-23fd-33f3-a55c-1dde0c81bc29@linux.intel.com>
-References: <20240412130903.2836-1-ilpo.jarvinen@linux.intel.com> <212159e6-66b5-45d3-bce8-d6fde43370fe@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="m/5W5Ayg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1712938143; x=1713542943; i=w_armin@gmx.de;
+	bh=GfYGlzTabZ/Md6Ur06TpQylZldL1dEkuYiWABfiFon0=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=m/5W5Ayg/cLKO6mqu+hsj+RN9pqKhFwmqKRKSFCwCY0gV+qinWNOKYvpFF/lRTeR
+	 OQYLA0rpOYfYN6WvX8BajQ0+WNaDRexCLtOuK0M43KtsO6Hu6n7r+h2DfqnOiAoc3
+	 xVD6trFryUR9HyRjvEAghFYRcEo81mVmlGM945nUPH6jnaxVEUSwn80u6+MuwcGVe
+	 2y01YTIVE/Jz+sA68Q7TYbYUqcommHH56V0RTNv7lLhifG+z/jcxiB8yGjcEmIvBl
+	 B1mHlQUXTUxrM+cEgXFegxmUidPjmxRxIbgAQIk3aeassvfaXN9O8b4QKtuuCFCvK
+	 wdTTTKliQTVcI76Nag==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MHXFr-1rzSKU0AOv-00Db32; Fri, 12 Apr 2024 18:09:03 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: mlj@danelec.com,
+	rafael.j.wysocki@intel.com,
+	lenb@kernel.org
+Cc: jdelvare@suse.com,
+	linux@roeck-us.net,
+	linux@weissschuh.net,
+	ilpo.jarvinen@linux.intel.com,
+	linux-acpi@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v3 1/2] hwmon: (core) Add support for power fault attribute
+Date: Fri, 12 Apr 2024 18:08:56 +0200
+Message-Id: <20240412160857.79858-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-449063926-1712929321=:1014"
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:FxN8oOpXNdjbD6CD5rAKuRlwWxOj0azlCpDAY3MnyB/WSTkNHyl
+ HE/auXD4vpPP6BXM+nU9pvumVwDf4Su+KryhDAmxqJDu8yiDN65uHKbPYAw97u/FiWmko1q
+ Hho5TLZCzT0BwtE7qJV4xiv3mJ/a8nOewjXizuGz1IP0TwXpaVSPDkpdyoI8WjdMpxv/mUW
+ QAgUgReNCQyayF+gFWCyQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:14VeDLJl1bg=;KEqr7ll/Hc3qkWPfpw6n4LsbJL1
+ c8x8CgG9ChVqgozx19NjB6vtmvVcPnWUZuIkUpXd2IoU1eZxfT8st/8o4e7LzBmt2gxfCuoZJ
+ dVWm+IxbFQr74U/KExjrG3HYcg1DmvcwKFzBg5KfT9Ng4slLYwOXl+DLprnJ/4sRxjKsLgEFj
+ ca90DiwEra/KsOtbhhXRxB2GaAE3PU6pfdu7jjtWey7U/YQULXX7X4oSK2nS7prKEaVZDtYMZ
+ EmG477JPhy1mZRtXIiqebhQCEXag6gBngjcjzJetSi/R2HbbHMA7ZgKyzLppjU8JsHdyn5hUK
+ 1J5O6tE8njQN3dbBb4I4lrqy+SfDiUXyqENKxPARclE1bAq+Mtxy27ItVMUxGlFBsod4EMXoj
+ GRMBeLmJi4GRPiYl39q4C1mcK4RQ0QhJiXNR0kLbbBN0n+tAD83sn5RRtkLmNWG+//eGEAFpq
+ PQIZMrfgM2afNEdermyHaO4Yywd1PEja+zdzVMi9VtJ0b7IECl3M3nBgW+Z30AgsGhqPyXz8f
+ om6O35uDstQ9wsH5lXRSO6Z5NoKCqVbhBlWa3Mu7YdaVOxKzGw9qy+Zuj6l4sBLNYVndcURaW
+ 0XG1mKeU5NG3rJPHlfgfbWh23k0lFJIZoTHzhZQ7vnkCUDEeZx79ND6loApE1IkwDJ/eJu8hJ
+ NId6Dv2NIk55CmVKgEynArgI0MuuMkzArq4PdrmN6NXGI339DSedyIgGf6+HDob2OCR2o2KGM
+ png1ApJBjheu5hAxEnGoqcuOgCf3oxZ5rMBguz8z2/hqGT8V4aqkrWLk9URKLV2dif/6krtQx
+ lvV4hWowzBevjjmigXh0FKNSsMK53JPj75lmKMi+8/iuc=
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Power sensor driver might want to signal that the power
+value is not usable. Add a new power fault attribute to
+report such failures.
 
---8323328-449063926-1712929321=:1014
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+Changes since v2:
+- added patch
+=2D--
+ Documentation/ABI/testing/sysfs-class-hwmon | 9 +++++++++
+ drivers/hwmon/hwmon.c                       | 1 +
+ include/linux/hwmon.h                       | 2 ++
+ 3 files changed, 12 insertions(+)
 
-On Fri, 12 Apr 2024, Mark Pearson wrote:
+diff --git a/Documentation/ABI/testing/sysfs-class-hwmon b/Documentation/A=
+BI/testing/sysfs-class-hwmon
+index cfd0d0bab483..ed01d43d2491 100644
+=2D-- a/Documentation/ABI/testing/sysfs-class-hwmon
++++ b/Documentation/ABI/testing/sysfs-class-hwmon
+@@ -882,6 +882,15 @@ Description:
 
-> Thanks Ilpo,
->=20
-> On Fri, Apr 12, 2024, at 9:09 AM, Ilpo J=C3=A4rvinen wrote:
-> > The macros to_tlmi_pwd_setting() and to_tlmi_attr_setting() are fragile
-> > because they expect the variable name to be 'kobj', otherwise the build
-> > will fail because container_of()'s 3rd parameter (member) is taken from
-> > the parameter given to the macro.
-> >
-> > While at it, move them into a more logical place.
-> >
-> > Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> > ---
-> >  drivers/platform/x86/think-lmi.c | 13 ++++++++++---
-> >  1 file changed, 10 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/think-lmi.c=20
-> > b/drivers/platform/x86/think-lmi.c
-> > index 9345316b45db..0f2264bb7577 100644
-> > --- a/drivers/platform/x86/think-lmi.c
-> > +++ b/drivers/platform/x86/think-lmi.c
-> > @@ -175,9 +175,6 @@ MODULE_PARM_DESC(debug_support, "Enable debug=20
-> > command support");
-> >  #define TLMI_SMP_PWD BIT(6) /* System Management */
-> >  #define TLMI_CERT    BIT(7) /* Certificate Based */
-> >=20
-> > -#define to_tlmi_pwd_setting(kobj)  container_of(kobj, struct=20
-> > tlmi_pwd_setting, kobj)
-> > -#define to_tlmi_attr_setting(kobj)  container_of(kobj, struct=20
-> > tlmi_attr_setting, kobj)
-> > -
-> >  static const struct tlmi_err_codes tlmi_errs[] =3D {
-> >  =09{"Success", 0},
-> >  =09{"Not Supported", -EOPNOTSUPP},
-> > @@ -198,6 +195,16 @@ static struct think_lmi tlmi_priv;
-> >  static const struct class *fw_attr_class;
-> >  static DEFINE_MUTEX(tlmi_mutex);
-> >=20
-> > +static inline struct tlmi_pwd_setting *to_tlmi_pwd_setting(struct=20
-> > kobject *kobj)
-> > +{
-> > +=09return container_of(kobj, struct tlmi_pwd_setting, kobj);
-> > +}
-> > +
-> > +static inline struct tlmi_attr_setting *to_tlmi_attr_setting(struct=20
-> > kobject *kobj)
-> > +{
-> > +=09return container_of(kobj, struct tlmi_attr_setting, kobj);
-> > +}
-> > +
-> >  /* Convert BIOS WMI error string to suitable error code */
-> >  static int tlmi_errstr_to_err(const char *errstr)
-> >  {
-> > --=20
-> > 2.39.2
->=20
-> Looks good to me. Let me know if you want this tested on Lenovo HW and=20
-> I'll do a build with this in - but it looks very uncontroversial :)=20
->=20
-> Reviewed-by Mark Pearson <mpearson-lenovo@squebbb.ca>
+ 		RW
 
-Yes, pretty uncontroversial so probably not worth the effort to test on=20
-HW. The compile done by lkp is good enough to capture stupid mistakes=20
-(which it already passed here internally before I even sent these out).
++What:		/sys/class/hwmon/hwmonX/powerY_fault
++Description:
++		Reports a power sensor failure.
++
++		- 1: Failed
++		- 0: Ok
++
++		RO
++
+ What:		/sys/class/hwmon/hwmonX/powerY_rated_min
+ Description:
+ 		Minimum rated power.
+diff --git a/drivers/hwmon/hwmon.c b/drivers/hwmon/hwmon.c
+index 3b259c425ab7..6150d64f5c4c 100644
+=2D-- a/drivers/hwmon/hwmon.c
++++ b/drivers/hwmon/hwmon.c
+@@ -560,6 +560,7 @@ static const char * const hwmon_power_attr_templates[]=
+ =3D {
+ 	[hwmon_power_crit] =3D "power%d_crit",
+ 	[hwmon_power_label] =3D "power%d_label",
+ 	[hwmon_power_alarm] =3D "power%d_alarm",
++	[hwmon_power_fault] =3D "power%d_fault",
+ 	[hwmon_power_cap_alarm] =3D "power%d_cap_alarm",
+ 	[hwmon_power_min_alarm] =3D "power%d_min_alarm",
+ 	[hwmon_power_max_alarm] =3D "power%d_max_alarm",
+diff --git a/include/linux/hwmon.h b/include/linux/hwmon.h
+index edf96f249eb5..00122e565dbf 100644
+=2D-- a/include/linux/hwmon.h
++++ b/include/linux/hwmon.h
+@@ -237,6 +237,7 @@ enum hwmon_power_attributes {
+ 	hwmon_power_max_alarm,
+ 	hwmon_power_lcrit_alarm,
+ 	hwmon_power_crit_alarm,
++	hwmon_power_fault,
+ 	hwmon_power_rated_min,
+ 	hwmon_power_rated_max,
+ };
+@@ -270,6 +271,7 @@ enum hwmon_power_attributes {
+ #define HWMON_P_MAX_ALARM		BIT(hwmon_power_max_alarm)
+ #define HWMON_P_LCRIT_ALARM		BIT(hwmon_power_lcrit_alarm)
+ #define HWMON_P_CRIT_ALARM		BIT(hwmon_power_crit_alarm)
++#define HWMON_P_FAULT			BIT(hwmon_power_fault)
+ #define HWMON_P_RATED_MIN		BIT(hwmon_power_rated_min)
+ #define HWMON_P_RATED_MAX		BIT(hwmon_power_rated_max)
 
---=20
- i.
+=2D-
+2.39.2
 
---8323328-449063926-1712929321=:1014--
