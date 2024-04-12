@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2F241232
-	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Apr 2024 07:08:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDDA53E2B
+	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Apr 2024 11:21:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712905725; cv=none; b=F6xqrj7ZrK93lo15plvRq+5dQVuDDlHFTJc59ChV1yCpsJda6236+ND3cnarX/GrF8Rt3mXY3ZfbYIL9b6/2zYRNdOS/Daa0tc3VBmn/gFlnMLRu2yZrWm8e/Eo2QQfOUF0UKmMWxbxaPRx2kdZxcswwj/0XNrAhaGO2rCExvbw=
+	t=1712920901; cv=none; b=HinyjpGLt0WYmPpdKv6iFJnmWAsA3ZiSRIEqBsWNiylWpOBhVuCXRLx+d6E10mDLbeK9qmh/sgj99VIb1O2qkREnt263+oHVd0918uBBX2H3sPuRaZ9s8s1hTc73cMxBhwd6K/o3u2dgIFlSG+nS8SUkEnd6j3y74a8pxAgjF9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712905725; c=relaxed/simple;
-	bh=1DCRlUOw9g0+tJLxETqM45GZtZJz3tYzzCEY8VdnTM8=;
+	s=arc-20240116; t=1712920901; c=relaxed/simple;
+	bh=se+YkrxRh82QFEGBH+wjWTyP0haPZqDxFb6JNcrROkI=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UIYxwfdE0J5iyy/dINvd2BsvicOBfFL/qRK0mBw652UWxlR23ysiC8TJeB2vFN1fDPxv7QE7GMjR+FNUxPxxdF4cMea0Cv3XgzDucozlhygAA5YV5VS5KDLUEWYA9sAGLD9IvJw36NXkjznZ1xt7Q28KDiqDZfN0Ol32oRnUjeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EtCbvuKu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=WWlu5GO4NOIbSllCAiMZWEo3iRV25sCxFSsVLIa08Ul/ttdRTaXQH8RAubjnTTNjZJF32HhLaFFrC8TKnelQdIL6za35CGGFBRDd1KpFjpaiH45kxtFLaT6ESW7ei0Ja3dtnLzBLVGBsvwrXv/UAzP816Ur5umueXRr7mybRAs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CwIkBPOP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EtCbvuKu"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 56C3AC113CC
-	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Apr 2024 07:08:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CwIkBPOP"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F0176C113CD
+	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Apr 2024 11:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712905725;
-	bh=1DCRlUOw9g0+tJLxETqM45GZtZJz3tYzzCEY8VdnTM8=;
+	s=k20201202; t=1712920901;
+	bh=se+YkrxRh82QFEGBH+wjWTyP0haPZqDxFb6JNcrROkI=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=EtCbvuKumaP1a/9XmWcpdSwL1sMu+nm2pQpKHOjfVGPZw4MRva8MziwJAP1okvGis
-	 rmlExqlDO42TDDBamX12lpL9JGwuZwJ+oCb8BTBm4c4w0wS/3I5CyoP6wGuh2e7qwr
-	 bAh9Q+YA2gzrlB0lIJmDhkPSnQ0DPklWMBxi9jKvDzIV6sinj5zIjV4lcYNFmOfbgd
-	 L1+WqgqvbfnlP0l5qja5DG2zxxgiWsxMR8+MbH6mCxIgktg2xo+e1Bj29yuGSN9rzT
-	 ivh+qgf6VsXtkwEzyxNsETHnBgp9oucUSvGQVePkFTRDE6XOKv48F0Q+wb1tewLrID
-	 0XQu+UvVhgOWg==
+	b=CwIkBPOPraoEcRtvGBKrw4szmiaMDcpUVMohWSpWbxVVTnyLRCH7nMCZ4eKOLlgGD
+	 aWsEiMFGWu5d/4LTjLW1UPEGohNVGCUxeqKh2kp6LglNthImskuvB+nNhKI93pHUI7
+	 STH+zTMm4JwWEsrqCU/6O0NGGMffj9XrdvzrQadCOIqL8Pt5XAIcFKnE59FQssmGuM
+	 KmBZ5K6H0ZGRAXQUUiVQEryDqeqEHfrkj91xZP5IEPiJ5nBPKvhy1wVm6qJ8JhAb8Y
+	 zDwekQCPvHs0nn1fq8RsK0apC3FtremyyYJ6aGfzTQ30wPgO1ybDAAF01QS1Pdd8oG
+	 5+TkjT0fRlBLw==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 3C4B6C433DE; Fri, 12 Apr 2024 07:08:45 +0000 (UTC)
+	id D2DB2C433E2; Fri, 12 Apr 2024 11:21:40 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218685] asus-nb-wmi fails to load due to conflict with amd-pmf
-Date: Fri, 12 Apr 2024 07:08:45 +0000
+Date: Fri, 12 Apr 2024 11:21:40 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -40,14 +40,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: al0uette@outlook.com
+X-Bugzilla-Who: mario.limonciello@amd.com
 X-Bugzilla-Status: RESOLVED
 X-Bugzilla-Resolution: CODE_FIX
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_status resolution
-Message-ID: <bug-218685-215701-rKQhetALFy@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218685-215701-k2TK0Ae6KQ@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218685-215701@https.bugzilla.kernel.org/>
 References: <bug-218685-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -63,12 +63,8 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218685
 
-al0uette@outlook.com changed:
-
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-             Status|NEW                         |RESOLVED
-         Resolution|---                         |CODE_FIX
+--- Comment #39 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+Just to be crystal clear you mean 6.9-rc1 + ghY patch series right?
 
 --=20
 You may reply to this email to add a comment.
