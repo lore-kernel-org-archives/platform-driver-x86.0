@@ -1,142 +1,75 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FCA8827;
-	Fri, 12 Apr 2024 23:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC9E4C65
+	for <platform-driver-x86@vger.kernel.org>; Sat, 13 Apr 2024 05:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712963965; cv=none; b=A/0oeZhxcpzP4q23T9WGQHI/c/18oOvqzXsQ2IGGqh2XVTs0IMkfosWZDgs3BQGpR+9juEAvFfKq58oJXRXaxr2014SVe563ZIQlod39Wdroxx1l5L+dOwFuRFPwscb8Jj7wwNLP4krs4MGZsx2ZWwG/YsLw5wRpDglSC9FKJWI=
+	t=1712985838; cv=none; b=CKO41eY9qYs1w6zOOlmdC+FKNDO4MwjjItddnCxjCcfPVoYLllxFGDncL+WdCLlTzRxe+OjO5V4ec3FX8POwYKkjVkvpcDWfhvSKwejfX5O0YU9UyspxiWY3+XWs2Fr+lpC7rWoK7cb3dDpkOMECB/rq/9NIrFHHQSa+hlsrqho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712963965; c=relaxed/simple;
-	bh=1PqmQOz7f6Mg34nrwW1LWtgdcqFL46uiZRxe1KeZ1Ao=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pUm2/mzqtaCBMGjw4KA1Li14xajyzeZ21wgUl4ga9O8/bkLCURxSymPPluRT34jlGr2zs6X2MThMeiaKHBWuSSxUE3c0ry2oBFGxvlGKvY9xPOpVVnA0fRis6QoiY5OwOXietl9qBlvGEBXbChCOh2dVG11JTcOgzwzQmfBRIbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=OTuqDoOk; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1712985838; c=relaxed/simple;
+	bh=3ZvyDXP5ghyPhT6QQTyduyTqYoXPpBKAObHeBu605go=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dhyvxgeoiiTd4Hz/wkvfRwH2Aapweb9yAkzwqiCURNLyWBVRX3adQ7hhLQ+1+6pSIV93jA55rUsg986igrq6VEzsqutFLj06srdDN1rbEQxfDg+RbSLkfdRe4XZoUDcawSHkn0ycu6tzQ9Al5l+RdaapWWhkkiJoBVgpQmPVgRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GCOenDL4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="OTuqDoOk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1712963933; x=1713568733; i=w_armin@gmx.de;
-	bh=GCKN2GrkE/h3UBU7HQPua1iMX32XMHXFjTvuZe6xhbg=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=OTuqDoOk4IPxwMvmTwzGXfvWEWIFNvEcYYN/mC4DUfENtZIHmgufkd5AvEC62kAV
-	 p3nJy7Kz4S1XHdMdotlRmVX8hvZPRgwfGI44up3DrBwgG2bXDJgQ9tEsp/HUEF/eD
-	 vbrB6Xd+OgPQhBxwsEV4Mz9kbi5+05UjYRhOuyalRqRrZ/cuUzIBN9D9YOcdSNJe9
-	 2ttwZgIztp/QRroIyk99MmvWQ7oXhsmPP+BIlKQPCht+VABhmkxHc1Pn97RlsWtZJ
-	 sud5AC+OXWacVFfZye4dRt0QxcOXPXYxUAn2rPtJzFs5+i/jrDWNY2rKh4lj/Qd/C
-	 0MV8kqN4bNrCDDaE6w==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MryXN-1sZlGa2kfV-00o1SG; Sat, 13
- Apr 2024 01:18:53 +0200
-Message-ID: <77d99950-5abe-4e36-822f-351cd3c51954@gmx.de>
-Date: Sat, 13 Apr 2024 01:18:51 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GCOenDL4"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5B93BC113CE
+	for <platform-driver-x86@vger.kernel.org>; Sat, 13 Apr 2024 05:23:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712985837;
+	bh=3ZvyDXP5ghyPhT6QQTyduyTqYoXPpBKAObHeBu605go=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=GCOenDL40GdHiAmSQLAcNAjhr2EItGmoxPoLcU9OTXMMXMsZA4NzBw6dLhQxJQ/Of
+	 Acm6njtYf15/pTu5H5TXJlwSFS/sXBcJ7fAow9Pjx6HurrzRGQxAvZIvuz7eEOYfzT
+	 76Nq3UgBqTCEn8Qjl99kMbW9RUV1C1i2XRvuPQdCQSwFw/C8t4MS8jwybNUa03Wp1N
+	 G2KZceaqJlhmwSlWpXgSg8+Lzl43Ghw6NXbY9IXdhG9smzOWxX0AZ44O3RPbiq2UxC
+	 wZoSjSSz8HYO3KD/SxqG2vpxXTVw/xjxaZXDxgMztpoVzIaRJVq4GhHKmeLa64tB32
+	 ZXY3T/vV3VB+Q==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 40BB2C433E2; Sat, 13 Apr 2024 05:23:57 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218696] DYTC frequency scaling deterioration and event spam
+Date: Sat, 13 Apr 2024 05:23:57 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: lmulling@proton.me
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218696-215701-pG5kcVbJwa@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218696-215701@https.bugzilla.kernel.org/>
+References: <bug-218696-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] ACPI: fan: Add hwmon support
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: mlj@danelec.com, rafael.j.wysocki@intel.com, lenb@kernel.org,
- jdelvare@suse.com, linux@weissschuh.net, ilpo.jarvinen@linux.intel.com,
- linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20240412160857.79858-1-W_Armin@gmx.de>
- <20240412160857.79858-2-W_Armin@gmx.de>
- <4a07f4d1-bbee-445c-a7cc-377506de850d@roeck-us.net>
- <aace96e3-8645-469b-9056-0199af9d220c@gmx.de>
- <cff6f5f3-d883-4509-819d-9d2307bdcd56@roeck-us.net>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <cff6f5f3-d883-4509-819d-9d2307bdcd56@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:LAHJi+DHrkiXvbuRf4us5LkGPBSxNV7qQWebIqbdkO/DYkhGyVe
- M/UCM1asToK63JefNSkGrRx8q/+W3q1XAc49DVWeVTHkEEpYyaCpN8vp0PBXtTICT9Pn8hu
- 1jEfTXRt7IhoRez5xtSVD/vEzu13KJ+CCrfYWcc0CEZIhiNHX31sEY5eLiwVMPxa2hBea3t
- /1D299e1LwerttjEWn++w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:RadTmnZ2Nlc=;MNOyrJnEFyMqLNa/F7e6IzXjNMd
- HpS6fBfhb2Z5eGZLmdNZzwxveleYIyGagaVcr/r3xDvmNp3zOsfMtATQEtMd6piy38P2gIf25
- +O2eZzukAWx17r3O3OYEnxLcjTUa5Q1cSBEvWp1aeAeX6NRZXHozeWs+Wkvdh0ttYalpoTm97
- IH8fRaadwv39//NIX/fFMNjgAuHJp6gngi+ZTdP3AeaBNGk+nu19KONYiJmnyQYXRwOzPRQGU
- TWaC+0rMO9V7MJwpSLlx4bLWcem6pu2qgdBUIIT2OYKcakEulDwjgpmoHXCu6G8GqNOLsTWzr
- CDBS9IR6sRFPwHbA4bulLf6NEqw6qjoCd1NEHGSLTFovkTxABWMpnmzUpKK9ovBzW+HEsj9M9
- VPGuT92U4JqqURQmQwHKZdbN9gklV03+P9ywdCEBAtjXEMLyH5FyrtXlh2+8cWNNREie74PPi
- P2s02cwEkEHfVIzuewDWnIlqed6q0pbL3NNtchQWmivOfJtsQkZzj5kW17YFA9Q8aUv3Tnctj
- 74ZeS0kp7wpTxS6AV4bS+XUicRoemAEoeQ0ptb7JfjzdqIwbdQ0rFUCbDdZ/JwTGxNWuML8RK
- Sezn5tCerKqrn83xwtH5QKxIrzaTuCOyzpZZWD8bKu9uWjAovRhOLi+teg1Iu49BESQpZj1fp
- emXkH9D/cRmcN0p24NEPNbtg27q5nSnO0R0/FnEjmtKoRBvr5v2cXPFmhrqzRuuO2J0+CcpZu
- 5ZogBgzQJwu0Y1Z/9tPL3SexRHbs67C3wZMlA8jO5SS4DX+4oo4bKUYJaICYLVrwMRZdwg3AA
- fOuQCDHgcwD0ZmpKxAi//NoczSr0RslO5BEVSvzAKOCSI=
 
-Am 12.04.24 um 23:01 schrieb Guenter Roeck:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218696
 
-> On Fri, Apr 12, 2024 at 10:27:56PM +0200, Armin Wolf wrote:
->>>> +		case hwmon_fan_fault:
->>>> +			*val = (fst.speed == FAN_SPEED_UNAVAILABLE);
->>> Is it documented that this is indeed a fault (broken fan) ?
->>>
->> Hi,
->>
->> it actually means that the fan does not support speed reporting.
->>
->>>> +			return 0;
->>>> +		default:
->>>> +			break;
->>>> +		}
->>>> +		break;
->>>> +	case hwmon_power:
->>>> +		fps = acpi_fan_get_current_fps(fan, fst.control);
->>>> +		if (!fps)
->>>> +			return -ENODATA;
->>>> +
->>>> +		switch (attr) {
->>>> +		case hwmon_power_input:
->>>> +			if (fps->power == FAN_POWER_UNAVAILABLE)
->>>> +				return -ENODATA;
->>>> +
->>>> +			if (fps->power > LONG_MAX / MICROWATT_PER_MILLIWATT)
->>>> +				return -EOVERFLOW;
->>>> +
->>>> +			*val = fps->power * MICROWATT_PER_MILLIWATT;
->>>> +			return 0;
->>>> +		case hwmon_power_fault:
->>>> +			*val = (fps->power == FAN_POWER_UNAVAILABLE);
->>> Is it documented that this is indeed a power supply failure ?
->>> What if the value is simply not reported ? "UNAVAILABLE" is not
->>> commonly associated with a "fault".
->>>
->>> Guenter
->>>
->> FAN_POWER_UNAVAILABLE signals that the power value is not supported.
->> Would it be more suitable to drop the fault attributes and just return -ENODATA in such a case?
->>
-> There should be no fault attributes unless a real fault
-> is reported, and if power reporting is not supported the
-> hwmon_power_input attribute should not even be created.
->
-> The same really applies to the fan speed atribute: If reading
-> the fan speed is not supported, the attribute should not even
-> exist.
->
-> Guenter
->
-I see, however it seems that some ACPI implementations also return a fan speed of 0xffffffff
-to signal an error, so we cannot use this value to check if the BIOS supports fan speed
-reporting.
+--- Comment #7 from Lucas M=C3=BClling (lmulling@proton.me) ---
+Hey Mark, I was testing today and noticed that it happens when GPU temps re=
+ach
+~70C.
 
-I will send a v4 patch witch will drop the fault attributes. When encountering a fan speed
-of 0xffffffff, returning -ENODATA should be ok i think.
+--=20
+You may reply to this email to add a comment.
 
-Thanks,
-Armin Wolf
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
