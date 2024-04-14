@@ -1,348 +1,345 @@
-Received: from wfhigh3-smtp.messagingengine.com (wfhigh3-smtp.messagingengine.com [64.147.123.154])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3416123BE;
-	Sat, 13 Apr 2024 20:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336B317551;
+	Sun, 14 Apr 2024 17:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713039692; cv=none; b=BevMIMG/PTGXiYI25YgSuiMMwvWSADnu82odJTzeVgtNgQKPxmmDOXvw9zU8uYMQD6dTLJI+Y4QvQ6mTP0sPnYcBavChcGkJXF6lmXKGd1BGelk2RoayGL//l2a7rhWs49fng9WmgMKRHV/d4f5f0+9HIllGClUH3DX0VnuXp2M=
+	t=1713116898; cv=none; b=hosijtEUZ/4V+56LT6lvS+5KQapI9zG7vKCl7lnByw0Xcv9O+bGX66YgUwr3vlYfFVzNi95Yh1q81y/HTBL12ZcTIrsQE/Nr4AhHaM0QAutxwzTAjuJM9zjjovNcq0aK0OL36iC+SmIMjBNOPgShK1yB3CsgaGI72kzo5JbrFG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713039692; c=relaxed/simple;
-	bh=zAdtXVatRJXtfODpENwmf60lQdVBH44vsMoxw4Llvok=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P1GVgJKCCkeSBGAVkrgbUiPZGG1uLYLesyTkYPozYVQNZnwHpBhrru7wW3UEdT+Yuf7jPcxP9R0+2h/djHeWbtga8CoDrPokMnSBdnbkYUbzrCtjDcMjN+Nr2xS/Qi7AaMTIdY0zgYSRUg4TLETcTDd5+uzB6YkPWTfdTgDXAj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=RaMxr38k; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=rZvXXyi3; arc=none smtp.client-ip=64.147.123.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1713116898; c=relaxed/simple;
+	bh=zhVnywKsEUVVn68Ox5CjsJoC5KY2EseaaYYPUAX69wM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZKdlmUxCchn+KB+iVFbgBdyea7D4CbPRwCP+L5Wv+zuJ73bzVsZzUG16oUP0/WKP3OPYyIwEelrp+yG56SwhuUnfK/P6c6qfcnCmOl/3rlwtd9TrTea3U3Adq+pH1jpZgpn+K6xOXHHA4YUGDlxzr1b5skVdJXdAXYkESdTSKP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=T+SGprR1; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="RaMxr38k";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rZvXXyi3"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 889CA180009D;
-	Sat, 13 Apr 2024 16:21:24 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Sat, 13 Apr 2024 16:21:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm1; t=1713039683; x=1713126083; bh=fq+/IgHD56xmC4qkpsxEe
-	ynTUfNdHkceCUnjS4UT8n8=; b=RaMxr38kvHAQXuvZH5AmgGBID/RIk0NBKXncv
-	Hwe774igEmTGuCkdWtZ5h8Aji3FTVI+jCanJLMO+qg+leX9ExEXi5ubWo8telzsf
-	FmO8XS1oW1Yp/s0QyzD9UOLRkiFybvY+Mrm5r0BgO2rnSrpWThsjCKCIhGObZ0BI
-	y/2PqphKmwe9iMvJWpC73LXv3rZhOR+rcuTW0PDg75kOb27jCCykH2Y886tQsxhv
-	h2aGA+CCNe0OsGhke1ovgBqgoRgA2RSL04YcDKDRa8z4Sa4LI6X0kySJ2dYKYkmM
-	s09MPKf5OekwcJ/hS4dFqRaSrVDKwey6IWm6VcgLPe4m7r6MQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1713039683; x=1713126083; bh=fq+/IgHD56xmC4qkpsxEeynTUfNd
-	HkceCUnjS4UT8n8=; b=rZvXXyi3KdHjf9o/uY7MtWTykh5BZIl5AqT9W8zXfLhd
-	eeiqnKasuuyo5b5mOIC6xyF+aH82rQYHbyE9nd5wovEdSCs/BmQoWlVhRNaZwdad
-	9bbSukUqKrzjlLsl4SevNOngrtaEvmxHEDYKILw6EVdGC6PyS7Ib53LT3pkvRWz5
-	+pqp2LDsbm7pEoXiYt3Z3Hw4eZBS5FNt50O3ho2R1IaEuD4OVmWT6S7tzVu1FvRr
-	lPWu1IN6MvVPtt6GQx45u3e5+cmx+z4jeQNd+gtLafR264IZxV9/ITM0H2Cpbwi/
-	nfNrRsIuutEi8K4XFaqw09PiaRUGu7MU72wKDI4Uwg==
-X-ME-Sender: <xms:Q-kaZm3U39qQhflagP5ZI6W0srmSQcdm2ZimjmlkEw4mS3LKK0iyfw>
-    <xme:Q-kaZpF8mewhPc3FhSfcOsPqnHesP5-MARSJ4BubZnYh4BBuntG6uoQxUVcgm8bkQ
-    Zg9n4kdc7rT-fakEbg>
-X-ME-Received: <xmr:Q-kaZu6nUC4qd9UhrPisaCYluRzDY5RpFUGZuMoFp-iGvaqp5S8AH7ZKTKs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudeiiedgudehudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpedfnfhukhgv
-    ucffrdculfhonhgvshdfuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrth
-    htvghrnhepgfdujedthfduudekffefkeeiffdttddvhfegudduueffuefhfefggeefteev
-    vdegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplh
-    hukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:Q-kaZn3AgqfjMT8QMTxk8XcYdJAWdshtjgZ0zV0bXnuSLFppo4wxow>
-    <xmx:Q-kaZpEHHOFbEZDYOL0egJ2-d0O8PS-l-6jit7H85u9UU21wq1Cvkg>
-    <xmx:Q-kaZg8bTkC7Oz3Z6SzB1PLf8bUbrotH4Wo-V6MiWOClaRoDZt6mrw>
-    <xmx:Q-kaZumQAvS9791HFa87dpYXLGbg8Ijv6f1_oIxxH8xsW1HiEaipqw>
-    <xmx:Q-kaZu4uTx8lNUgS5GNXIR1CNcn_hsFL1gj16Xs7YYKQuDBdnQkmCGHm>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 13 Apr 2024 16:21:19 -0400 (EDT)
-From: "Luke D. Jones" <luke@ljones.dev>
-To: hdegoede@redhat.com
-Cc: corentin.chary@gmail.com,
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="T+SGprR1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1713116867; x=1713721667; i=w_armin@gmx.de;
+	bh=FMQEYJPewr7GILJ3NurF0NrXO7XmqpcHPKyvchRKn38=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=T+SGprR16ucGdS5+p9tfmzAWAh9dkhGfA4veeoWmwuko9/wDjtKu1yMyellNE42j
+	 m6xqD8ZZbG+4Ygl57pYW8evNBGDB2gAE8edFMy4+b2+JlNXelXuJgvYGR+y4ssrJx
+	 cB1CBUZQzbmbOgdQwnjpnfp6OqTni7Ua5KQbwwlFjLV9P74CNokz9R2SAKA37oNEQ
+	 vQPrgmUYCr2/j5B7X0FpE3THW1p7psietw9t5i9QfdWhRZSLFcZE7uhrLakFizGTR
+	 FcSxtJklfzrstPcSTwQ2C6cT8vmYascXdFZLXRkRKDEVahuwCtB82LGND354ZuYMC
+	 DYc8dsi+pP5j1Wzu5A==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1M6llE-1rotkz1lQU-008LhE; Sun, 14 Apr 2024 19:47:47 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: mlj@danelec.com,
+	rafael.j.wysocki@intel.com,
+	lenb@kernel.org
+Cc: jdelvare@suse.com,
+	linux@roeck-us.net,
+	linux@weissschuh.net,
 	ilpo.jarvinen@linux.intel.com,
-	mohamed.ghanmi@supcom.tn,
-	platform-driver-x86@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	"Luke D . Jones" <luke@ljones.dev>
-Subject: [PATCH] platform/x86: asus-wmi: add support for vivobook fan profiles
-Date: Sun, 14 Apr 2024 08:21:12 +1200
-Message-ID: <20240413202112.37729-1-luke@ljones.dev>
-X-Mailer: git-send-email 2.44.0
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v4] ACPI: fan: Add hwmon support
+Date: Sun, 14 Apr 2024 19:47:43 +0200
+Message-Id: <20240414174743.8575-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:JTAIN1SDiJ+ioZAZSegP/Wnm7T0hGNjAXPgf9eB/nHXlRr74H6x
+ UnU5+37nwIfdBKcwXdL/Fe4llLagEnGx7ZLIRxrmSs44BTYepp7ijd+lsJs16TBnGMFQt+R
+ iw4KdrsXgWyisVqeHY+CDm066R9LTzINZq4TStrUJEfMdqNdioiVhtuYRNluVWOM5hswE7/
+ 7eowojLL4QzbEqAfSGMnA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:2eyDB5KdDLM=;P5ZRJy52lXzbxhzYa4GA1d80HDB
+ sDnk0bgWvVlxpsQTag5Q+60ysWXUkleNz1FQ/prTl9DJ0gynf8Mhh9EXOMTGlXp7d4xe3V6wZ
+ ZY5KvqZZ6+M12aAHqP3pATcgQpvMWlRLsMEf7+xNZhy92lGyUmWBanF3ptGpauD8PJlnGrRCw
+ IzJtysBAjX+RvhuR64I+wn9g/rhlhcS9+kRNu1Y7gidya4NikP7EghS5ktSRSCxJX8goWPz7o
+ +qFHryP+KDiA7QHTMEmdJQg5CqL8P52oipS7elzhIq8B4debTk4S26IY32LS4G5ok77m56AEb
+ q39yfRrIsh539QApFNPONwPDV0xZcNqFgkyU7ihOrMKjfxQ6G9TxHgsaSFOR9qHyhPfbysAN/
+ BGaK4jeTORSts9ekDGy6CP8ULOdqf0At1AbQKemogGfmTC/f4RZkVtgSF1WCWqiOfkFXhPgwM
+ krMKbi4UUxPRYulRYx7JZS1ASyVbD0pFouwlXNR6WD58ENeH3/Vtn7VnJtMunnQifk2A682hs
+ 7XDr++NUiDneL2YGeQXHB53Fa5FrmKhlSJf17Xor775Ib0vgQwmTozAWdL5/eagXmzMZT4qql
+ T+RE3Z/5kSgRtxg4MhchU8ehH/X6O+tDLSPuE2GQ81HnZ/Me7xDWlI0/uiFMvmXPS1ADw0Rnq
+ 11NOf0wW/315socfkCANrJwZt7AnFda7T6xErC4hTZ+ZVKS/xmCZ6QOHwuh/0mYTPNDxfvAMD
+ JmHO7kMZu4NRPILlNQF54lSFWYF+oUpN0SEwXDMwHBDOrvujd+IshJHEb5v/u7gEC0ifnmwRS
+ yfwsbVLWFVWjWfMCFUck+6wVq7M20oztz5+dSmXFbsHv0=
 
-From: Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
+Currently, the driver does only support a custom sysfs
+to allow userspace to read the fan speed.
+Add support for the standard hwmon interface so users
+can read the fan speed with standard tools like "sensors".
 
-Add support for vivobook fan profiles wmi call on the ASUS VIVOBOOK
-to adjust power limits.
+Compile-tested only.
 
-These fan profiles have a different device id than the ROG series.
-and different order. This reorders the existing modes and adds a new
-full speed mode available on these laptops.
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+Changes since v3:
+- drop fault attrs
+- rework initialization
 
-As part of keeping the patch clean the throttle_thermal_policy_available
-boolean stored in the driver struct is removed and
-throttle_thermal_policy_dev is used in place (as on init it is zeroed).
+Changes since v2:
+- add support for fanX_target and power attrs
 
-Signed-off-by: Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
-Co-developed-by: Luke D. Jones <luke@ljones.dev>
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
----
- drivers/platform/x86/asus-wmi.c            | 100 +++++++++++----------
- include/linux/platform_data/x86/asus-wmi.h |   1 +
- 2 files changed, 55 insertions(+), 46 deletions(-)
+Changes since v1:
+- fix undefined reference error
+- fix fan speed validation
+- coding style fixes
+- clarify that the changes are compile-tested only
+- add hwmon maintainers to cc list
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 2d2b4eca7fd8..439d330fb80b 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -97,6 +97,11 @@ module_param(fnlock_default, bool, 0444);
- #define ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST	1
- #define ASUS_THROTTLE_THERMAL_POLICY_SILENT	2
- 
-+#define ASUS_THROTTLE_THERMAL_POLICY_DEFAULT_VIVO	0
-+#define ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST_VIVO	2
-+#define ASUS_THROTTLE_THERMAL_POLICY_SILENT_VIVO		1
-+#define ASUS_THROTTLE_THERMAL_POLICY_FULLSPEED		3
+The changes will be tested by Mikael Lund Jepsen from Danelec and
+should be merged only after those tests.
+=2D--
+ drivers/acpi/Makefile    |   1 +
+ drivers/acpi/fan.h       |   9 +++
+ drivers/acpi/fan_core.c  |   4 +
+ drivers/acpi/fan_hwmon.c | 170 +++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 184 insertions(+)
+ create mode 100644 drivers/acpi/fan_hwmon.c
+
+diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+index 39ea5cfa8326..61ca4afe83dc 100644
+=2D-- a/drivers/acpi/Makefile
++++ b/drivers/acpi/Makefile
+@@ -77,6 +77,7 @@ obj-$(CONFIG_ACPI_TINY_POWER_BUTTON)	+=3D tiny-power-but=
+ton.o
+ obj-$(CONFIG_ACPI_FAN)		+=3D fan.o
+ fan-objs			:=3D fan_core.o
+ fan-objs			+=3D fan_attr.o
++fan-$(CONFIG_HWMON)		+=3D fan_hwmon.o
+
+ obj-$(CONFIG_ACPI_VIDEO)	+=3D video.o
+ obj-$(CONFIG_ACPI_TAD)		+=3D acpi_tad.o
+diff --git a/drivers/acpi/fan.h b/drivers/acpi/fan.h
+index f89d19c922dc..db25a3898af7 100644
+=2D-- a/drivers/acpi/fan.h
++++ b/drivers/acpi/fan.h
+@@ -10,6 +10,8 @@
+ #ifndef _ACPI_FAN_H_
+ #define _ACPI_FAN_H_
+
++#include <linux/kconfig.h>
 +
- #define USB_INTEL_XUSB2PR		0xD0
- #define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI	0x9c31
- 
-@@ -285,8 +290,8 @@ struct asus_wmi {
- 	u32 kbd_rgb_dev;
- 	bool kbd_rgb_state_available;
- 
--	bool throttle_thermal_policy_available;
- 	u8 throttle_thermal_policy_mode;
-+	u32 throttle_thermal_policy_dev;
- 
- 	bool cpu_fan_curve_available;
- 	bool gpu_fan_curve_available;
-@@ -3153,7 +3158,7 @@ static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
- 	int err, fan_idx;
- 	u8 mode = 0;
- 
--	if (asus->throttle_thermal_policy_available)
-+	if (asus->throttle_thermal_policy_dev)
- 		mode = asus->throttle_thermal_policy_mode;
- 	/* DEVID_<C/G>PU_FAN_CURVE is switched for OVERBOOST vs SILENT */
- 	if (mode == 2)
-@@ -3360,7 +3365,7 @@ static ssize_t fan_curve_enable_store(struct device *dev,
- 		 * For machines with throttle this is the only way to reset fans
- 		 * to default mode of operation (does not erase curve data).
- 		 */
--		if (asus->throttle_thermal_policy_available) {
-+		if (asus->throttle_thermal_policy_dev) {
- 			err = throttle_thermal_policy_write(asus);
- 			if (err)
- 				return err;
-@@ -3577,8 +3582,8 @@ static const struct attribute_group asus_fan_curve_attr_group = {
- __ATTRIBUTE_GROUPS(asus_fan_curve_attr);
- 
- /*
-- * Must be initialised after throttle_thermal_policy_check_present() as
-- * we check the status of throttle_thermal_policy_available during init.
-+ * Must be initialised after throttle_thermal_policy_dev is set as
-+ * we check the status of throttle_thermal_policy_dev during init.
-  */
- static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
- {
-@@ -3619,38 +3624,31 @@ static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
- }
- 
- /* Throttle thermal policy ****************************************************/
--
--static int throttle_thermal_policy_check_present(struct asus_wmi *asus)
--{
--	u32 result;
--	int err;
--
--	asus->throttle_thermal_policy_available = false;
--
--	err = asus_wmi_get_devstate(asus,
--				    ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
--				    &result);
--	if (err) {
--		if (err == -ENODEV)
--			return 0;
--		return err;
--	}
--
--	if (result & ASUS_WMI_DSTS_PRESENCE_BIT)
--		asus->throttle_thermal_policy_available = true;
--
--	return 0;
--}
--
- static int throttle_thermal_policy_write(struct asus_wmi *asus)
- {
--	int err;
--	u8 value;
-+	u8 value = asus->throttle_thermal_policy_mode;
- 	u32 retval;
-+	bool vivo;
-+	int err;
- 
--	value = asus->throttle_thermal_policy_mode;
-+	vivo = asus->throttle_thermal_policy_dev == ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
-+	if (vivo) {
-+		switch (value) {
-+		case ASUS_THROTTLE_THERMAL_POLICY_DEFAULT:
-+			value = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT_VIVO;
-+			break;
-+		case ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST:
-+			value = ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST_VIVO;
-+			break;
-+		case ASUS_THROTTLE_THERMAL_POLICY_SILENT:
-+			value = ASUS_THROTTLE_THERMAL_POLICY_SILENT_VIVO;
-+			break;
+ #define ACPI_FAN_DEVICE_IDS	\
+ 	{"INT3404", }, /* Fan */ \
+ 	{"INTC1044", }, /* Fan for Tiger Lake generation */ \
+@@ -57,4 +59,11 @@ struct acpi_fan {
+ int acpi_fan_get_fst(struct acpi_device *device, struct acpi_fan_fst *fst=
+);
+ int acpi_fan_create_attributes(struct acpi_device *device);
+ void acpi_fan_delete_attributes(struct acpi_device *device);
++
++#if IS_REACHABLE(CONFIG_HWMON)
++int devm_acpi_fan_create_hwmon(struct acpi_device *device);
++#else
++static inline int devm_acpi_fan_create_hwmon(struct acpi_device *device) =
+{ return 0; };
++#endif
++
+ #endif
+diff --git a/drivers/acpi/fan_core.c b/drivers/acpi/fan_core.c
+index ff72e4ef8738..7cea4495f19b 100644
+=2D-- a/drivers/acpi/fan_core.c
++++ b/drivers/acpi/fan_core.c
+@@ -336,6 +336,10 @@ static int acpi_fan_probe(struct platform_device *pde=
+v)
+ 		if (result)
+ 			return result;
+
++		result =3D devm_acpi_fan_create_hwmon(device);
++		if (result)
++			return result;
++
+ 		result =3D acpi_fan_create_attributes(device);
+ 		if (result)
+ 			return result;
+diff --git a/drivers/acpi/fan_hwmon.c b/drivers/acpi/fan_hwmon.c
+new file mode 100644
+index 000000000000..0ae9017bdbae
+=2D-- /dev/null
++++ b/drivers/acpi/fan_hwmon.c
+@@ -0,0 +1,170 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * fan_hwmon.c - hwmon interface for the ACPI Fan driver
++ *
++ * Copyright (C) 2024 Armin Wolf <W_Armin@gmx.de>
++ */
++
++#include <linux/acpi.h>
++#include <linux/hwmon.h>
++#include <linux/limits.h>
++#include <linux/units.h>
++
++#include "fan.h"
++
++/* Returned when the ACPI fan does not support speed reporting */
++#define FAN_SPEED_UNAVAILABLE	0xffffffff
++#define FAN_POWER_UNAVAILABLE	0xffffffff
++
++static struct acpi_fan_fps *acpi_fan_get_current_fps(struct acpi_fan *fan=
+, u64 control)
++{
++	int i;
++
++	for (i =3D 0; i < fan->fps_count; i++) {
++		if (fan->fps[i].control =3D=3D control)
++			return &fan->fps[i];
++	}
++
++	return NULL;
++}
++
++static umode_t acpi_fan_is_visible(const void *drvdata, enum hwmon_sensor=
+_types type, u32 attr,
++				   int channel)
++{
++	const struct acpi_fan *fan =3D drvdata;
++	int i;
++
++	switch (type) {
++	case hwmon_fan:
++		switch (attr) {
++		case hwmon_fan_input:
++			return 0444;
++		case hwmon_fan_target:
++			/* When in fine grain control mode, not every fan control value
++			 * has an associated fan performance state.
++			 */
++			if (fan->fif.fine_grain_ctrl)
++				return 0;
++
++			return 0444;
 +		default:
 +			break;
 +		}
++		break;
++	case hwmon_power:
++		switch (attr) {
++		case hwmon_power_input:
++			/* When in fine grain control mode, not every fan control value
++			 * has an associated fan performance state.
++			 */
++			if (fan->fif.fine_grain_ctrl)
++				return 0;
++
++			/* When all fan performance states contain no valid power data,
++			 * when the associated atttribute should not be created.
++			 */
++			for (i =3D 0; i < fan->fps_count; i++) {
++				if (fan->fps[i].power !=3D FAN_POWER_UNAVAILABLE)
++					return 0444;
++			}
++
++			return 0;
++		default:
++			break;
++		}
++		break;
++	default:
++		break;
 +	}
- 
--	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
-+	err = asus_wmi_set_devstate(asus->throttle_thermal_policy_dev,
- 				    value, &retval);
- 
- 	sysfs_notify(&asus->platform_device->dev.kobj, NULL,
-@@ -3680,7 +3678,7 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
- 
- static int throttle_thermal_policy_set_default(struct asus_wmi *asus)
- {
--	if (!asus->throttle_thermal_policy_available)
-+	if (!asus->throttle_thermal_policy_dev)
- 		return 0;
- 
- 	asus->throttle_thermal_policy_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
-@@ -3690,9 +3688,14 @@ static int throttle_thermal_policy_set_default(struct asus_wmi *asus)
- static int throttle_thermal_policy_switch_next(struct asus_wmi *asus)
- {
- 	u8 new_mode = asus->throttle_thermal_policy_mode + 1;
-+	bool vivo;
- 	int err;
- 
--	if (new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
-+	vivo = asus->throttle_thermal_policy_dev == ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
-+	if (!vivo && new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
-+		new_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
 +
-+	if (vivo && new_mode > ASUS_THROTTLE_THERMAL_POLICY_FULLSPEED)
- 		new_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
- 
- 	asus->throttle_thermal_policy_mode = new_mode;
-@@ -3725,13 +3728,17 @@ static ssize_t throttle_thermal_policy_store(struct device *dev,
- 	struct asus_wmi *asus = dev_get_drvdata(dev);
- 	u8 new_mode;
- 	int result;
-+	bool vivo;
- 	int err;
- 
- 	result = kstrtou8(buf, 10, &new_mode);
- 	if (result < 0)
- 		return result;
- 
--	if (new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
-+	vivo = asus->throttle_thermal_policy_dev == ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
-+	if (vivo && new_mode > ASUS_THROTTLE_THERMAL_POLICY_FULLSPEED)
-+		return -EINVAL;
-+	else if (!vivo && new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
- 		return -EINVAL;
- 
- 	asus->throttle_thermal_policy_mode = new_mode;
-@@ -3748,7 +3755,10 @@ static ssize_t throttle_thermal_policy_store(struct device *dev,
- 	return count;
- }
- 
--// Throttle thermal policy: 0 - default, 1 - overboost, 2 - silent
-+/*
-+ * Throttle thermal policy: 0 - default, 1 - overboost, 2 - silent
-+ * VIVOBOOK: 3 - fans full speed
-+ */
- static DEVICE_ATTR_RW(throttle_thermal_policy);
- 
- /* Platform profile ***********************************************************/
-@@ -3814,7 +3824,7 @@ static int platform_profile_setup(struct asus_wmi *asus)
- 	 * Not an error if a component platform_profile relies on is unavailable
- 	 * so early return, skipping the setup of platform_profile.
- 	 */
--	if (!asus->throttle_thermal_policy_available)
-+	if (!asus->throttle_thermal_policy_dev)
- 		return 0;
- 
- 	dev_info(dev, "Using throttle_thermal_policy for platform_profile support\n");
-@@ -4229,7 +4239,7 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
- 	if (code == NOTIFY_KBD_FBM || code == NOTIFY_KBD_TTP) {
- 		if (asus->fan_boost_mode_available)
- 			fan_boost_mode_switch_next(asus);
--		if (asus->throttle_thermal_policy_available)
-+		if (asus->throttle_thermal_policy_dev)
- 			throttle_thermal_policy_switch_next(asus);
- 		return;
- 
-@@ -4401,7 +4411,7 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 	else if (attr == &dev_attr_fan_boost_mode.attr)
- 		ok = asus->fan_boost_mode_available;
- 	else if (attr == &dev_attr_throttle_thermal_policy.attr)
--		ok = asus->throttle_thermal_policy_available;
-+		ok = asus->throttle_thermal_policy_dev != 0;
- 	else if (attr == &dev_attr_ppt_pl2_sppt.attr)
- 		devid = ASUS_WMI_DEVID_PPT_PL2_SPPT;
- 	else if (attr == &dev_attr_ppt_pl1_spl.attr)
-@@ -4693,16 +4703,15 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE2))
- 		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE2;
- 
-+	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY))
-+		asus->throttle_thermal_policy_dev = ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY;
-+	else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO))
-+		asus->throttle_thermal_policy_dev = ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
++	return 0;
++}
 +
- 	err = fan_boost_mode_check_present(asus);
- 	if (err)
- 		goto fail_fan_boost_mode;
- 
--	err = throttle_thermal_policy_check_present(asus);
--	if (err)
--		goto fail_throttle_thermal_policy;
--	else
--		throttle_thermal_policy_set_default(asus);
--
- 	err = platform_profile_setup(asus);
- 	if (err)
- 		goto fail_platform_profile_setup;
-@@ -4797,7 +4806,6 @@ static int asus_wmi_add(struct platform_device *pdev)
- fail_input:
- 	asus_wmi_sysfs_exit(asus->platform_device);
- fail_sysfs:
--fail_throttle_thermal_policy:
- fail_custom_fan_curve:
- fail_platform_profile_setup:
- 	if (asus->platform_profile_support)
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index 3eb5cd6773ad..982a637744ec 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -64,6 +64,7 @@
- #define ASUS_WMI_DEVID_SCREENPAD_LIGHT	0x00050032
- #define ASUS_WMI_DEVID_FAN_BOOST_MODE	0x00110018
- #define ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY 0x00120075
-+#define ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO 0x00110019
- 
- /* Misc */
- #define ASUS_WMI_DEVID_PANEL_OD		0x00050019
--- 
-2.44.0
++static int acpi_fan_read(struct device *dev, enum hwmon_sensor_types type=
+, u32 attr, int channel,
++			 long *val)
++{
++	struct acpi_device *adev =3D to_acpi_device(dev->parent);
++	struct acpi_fan *fan =3D dev_get_drvdata(dev);
++	struct acpi_fan_fps *fps;
++	struct acpi_fan_fst fst;
++	int ret;
++
++	ret =3D acpi_fan_get_fst(adev, &fst);
++	if (ret < 0)
++		return ret;
++
++	switch (type) {
++	case hwmon_fan:
++		switch (attr) {
++		case hwmon_fan_input:
++			if (fst.speed =3D=3D FAN_SPEED_UNAVAILABLE)
++				return -ENODATA;
++
++			if (fst.speed > LONG_MAX)
++				return -EOVERFLOW;
++
++			*val =3D fst.speed;
++			return 0;
++		case hwmon_fan_target:
++			fps =3D acpi_fan_get_current_fps(fan, fst.control);
++			if (!fps)
++				return -ENODATA;
++
++			*val =3D fps->speed;
++			return 0;
++		default:
++			break;
++		}
++		break;
++	case hwmon_power:
++		switch (attr) {
++		case hwmon_power_input:
++			fps =3D acpi_fan_get_current_fps(fan, fst.control);
++			if (!fps)
++				return -ENODATA;
++
++			if (fps->power =3D=3D FAN_POWER_UNAVAILABLE)
++				return -ENODATA;
++
++			if (fps->power > LONG_MAX / MICROWATT_PER_MILLIWATT)
++				return -EOVERFLOW;
++
++			*val =3D fps->power * MICROWATT_PER_MILLIWATT;
++			return 0;
++		default:
++			break;
++		}
++		break;
++	default:
++		break;
++	}
++
++	return -EOPNOTSUPP;
++}
++
++static const struct hwmon_ops acpi_fan_ops =3D {
++	.is_visible =3D acpi_fan_is_visible,
++	.read =3D acpi_fan_read,
++};
++
++static const struct hwmon_channel_info * const acpi_fan_info[] =3D {
++	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT | HWMON_F_TARGET),
++	HWMON_CHANNEL_INFO(power, HWMON_P_INPUT),
++	NULL
++};
++
++static const struct hwmon_chip_info acpi_fan_chip_info =3D {
++	.ops =3D &acpi_fan_ops,
++	.info =3D acpi_fan_info,
++};
++
++int devm_acpi_fan_create_hwmon(struct acpi_device *device)
++{
++	struct acpi_fan *fan =3D acpi_driver_data(device);
++	struct device *hdev;
++
++	hdev =3D devm_hwmon_device_register_with_info(&device->dev, "acpi_fan", =
+fan,
++						    &acpi_fan_chip_info, NULL);
++
++	return PTR_ERR_OR_ZERO(hdev);
++}
+=2D-
+2.39.2
 
