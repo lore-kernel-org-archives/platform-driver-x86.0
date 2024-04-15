@@ -1,85 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501A315687D
-	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Apr 2024 19:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ADF8158DDD;
+	Mon, 15 Apr 2024 19:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713209755; cv=none; b=YiUVZnfihiDDD+3DDgh2jLY9EMdw8e6u4Q35cpZzTg9WMUuec6HP/Oz6zDgvHc9vJDtmn8FS5pSPA90vJXGtVhtAb0swPMTM1Rw+mfTTGOx/hRdlq1bGWCG01MCY8gTHpLAEmmTeiFiDvd1TMCUALWmVqf4gmeLX8AYZ0IX4IJw=
+	t=1713210041; cv=none; b=IewseuL4f4hOhEc6CyU6f8qC1M+iy95scE7V/q43i9pNNwHsm8jAqmVYasKXBSA/aWhCP3v6MUlBMn+RsJouFHxm6L8rxO+3ZJKDj2FjTvBuqWxthqjNWeYnrNwKspDzhTxTeKIOWHo5qpAxe1NlwDUG8Jgt8jU86fgcnh2M1YQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713209755; c=relaxed/simple;
-	bh=XyZchZMbq2G2Z3p/f4xWaSbqjEAzVoppxnP/38PwPvo=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NC/rr0YG98YJ9bIbvoRUMRlotzBvrvRl0wEoQnOiWPPOhqUyddnCe7qjkGrVV0vjoLXBU0jp2SdBwCvggbTPp+m5oW4gSjk2Q3whGSVmd8dm2ddsbAbCjQIfGA/uAsVEYw80xg4d+uVrI2mB0zerjyK/PrfYM6fteJa0pkcV9is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DTgI1wRZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713210041; c=relaxed/simple;
+	bh=6Ttx8LXV+Esj2TgrBQzSuZueSQvIpovS42b8zl0f2oU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hKdzL+0fCf3fkpNU6a22g6X3Ge1qduG+seT5jt2wTgTpcpuxNpVwepKpvhK0YNmRK41C4g188ouWPp5dXMwnV6E+PzUx1IFiWPjQ0aSCLWVE/frkP/38zexEm20IhiZzNvtcT911obFPh4ZW97bNSzudiOZxLKBac2kS116gnv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BIQEanwn; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DTgI1wRZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C10EEC32781
-	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Apr 2024 19:35:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713209754;
-	bh=XyZchZMbq2G2Z3p/f4xWaSbqjEAzVoppxnP/38PwPvo=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=DTgI1wRZApAv2YhENxfR4kfJfrxNmN4kQIp4/k8Bn5ANAINUu1td6jgWgrtUooQxD
-	 dZR+GV0QgMtLRRlrhDEunXPUWvIKgCyTci8Mq4GgXOjnUOsHzfETpLu69l1YZFgQKD
-	 EIqp6rQ4gu/cMWUTwUBoKZb7h4BAK/lA7X6oHKHkIE3qs0gLNSCw5BgqQF5Vfr/OcO
-	 FlMo09PLACpRCXVJcKCk39175CIAq1An7sdsBfDcTYhBfsqYWGcG6OTj2ZUvGNrZeN
-	 EmRZMwa7bSkBwx+PQQvbt69fMWaloEOotkP6GGdlD8Nbenw7rXHQIHnkR23sWjH/tC
-	 YbGj3wKYFylwA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id B77AAC4166A; Mon, 15 Apr 2024 19:35:54 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
- resuming after unplugging the power cord during sleep
-Date: Mon, 15 Apr 2024 19:35:54 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: voidpointertonull+kernelorgbugzilla@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-Wccgdxw5Me@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BIQEanwn"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5d4d15ec7c5so3115473a12.1;
+        Mon, 15 Apr 2024 12:40:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713210040; x=1713814840; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nECW4dFQOyypWbzxFUAI8T3e9FduAl7Mv8A1PasfnEo=;
+        b=BIQEanwnivN5ovghwTHhvUaShv//9WVs8uTpZIB6B0CtCh9MgJ25xfYnjVJt6YnPsT
+         6qT7eOXFQcSu26x2t+/fVOyXQw1hG5f9fy6xc+lU6y6k4F+b7O2BV2PVXkQEVoWt5blL
+         +p5HYlEYnQ1GuUEqd0E073t8ynrKTSTFu4/pNtTTIGODrmm/Pa3Q0Xta8GEPpHa5pkpy
+         BydP+F0qbC7VGTNU6DiLHGy1y6UvwebPwDbI8ss9P65lHaxlNkwOFflIB8mUjlxsPy9L
+         jZPHJz04255DW9ID95fdBty/VI4PQoMqpv2yOZwoFLaZjpyMJ31DrqRHOi3ZUTiVoyAk
+         X0SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713210040; x=1713814840;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nECW4dFQOyypWbzxFUAI8T3e9FduAl7Mv8A1PasfnEo=;
+        b=v4hG5REiQ2jaFZfy6c+eAOicHIRG3YDsp7KY1hIiH0nBkmOev24qQweOXNPJE0em9J
+         Z/lwDwiqncyKYjbOD+j8UKi0T4mMBhIld33/pahz8gNfSDOnS68eTA3U2V0Yo+KLoqye
+         WeXMGP92uACkjrtN07QrEXpRB0a+P4N4CuwiO+XIh9cp3kpMmV11h0qdMJWWZ4nIKDY/
+         E2tDnnwWm3r8dNxaCVZoioXRITbonqcrdgLrEJw4UDt8uoooKw5nmeNBL5KhHwXTuEzZ
+         IT1Qw0psG9hCp2sn+1/BExmzgLiKS/LA9pSdILDXdQdAzcvOv2ZGFhQ5ySRUbABVLRi+
+         1Zgw==
+X-Forwarded-Encrypted: i=1; AJvYcCVlXubv2AxDMU3tsCID50Y7VOny7o5zkQqt8aY6TFbR0kA2fBGgt/b4VKTKxQJdDC72LewzK31zb2WDwkcmq8i3Vwi6CluojEsgs20+pR/vfygiszLOj9SJuE/XYncyKm33XT7aUKaxVvnATygj8GfAM67H4yGmg7xOsI2qqt64aPfvJh4ubJV05Epg7rqm
+X-Gm-Message-State: AOJu0YwIHEBZnT0oqAEZmcJ0tyUSqGRRqsbTH3cmWfv8+hI7pEBh1F9e
+	LKxhzv2SgKbih48nZ6/8iqDi0YGBq3IFFPkeohwC2nqdVPBr4wJO
+X-Google-Smtp-Source: AGHT+IHabfXmkdzNGpRUvJgw4CTICvVnL2aJzRBUWETYyo+U0ii4Iu4bvX10MY+jIFKKbTYhWmnTYA==
+X-Received: by 2002:a17:90a:f2ce:b0:2a2:e183:6306 with SMTP id gt14-20020a17090af2ce00b002a2e1836306mr9727764pjb.45.1713210039626;
+        Mon, 15 Apr 2024 12:40:39 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:fbbe:421b:9296:f28c])
+        by smtp.gmail.com with ESMTPSA id j1-20020a17090a588100b002a058af5e12sm9083064pji.12.2024.04.15.12.40.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Apr 2024 12:40:39 -0700 (PDT)
+Date: Mon, 15 Apr 2024 12:40:36 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: Peter Hutterer <peter.hutterer@redhat.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	ibm-acpi-devel@lists.sourceforge.net,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Nitin Joshi1 <njoshi1@lenovo.com>,
+	Vishnu Sankar <vsankar@lenovo.com>
+Subject: Re: [PATCH 1/4] Input: Add trackpoint doubletap and system debug
+ info keycodes
+Message-ID: <Zh2CtKy1NfKfojzS@google.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20240324210817.192033-1-mpearson-lenovo@squebb.ca>
+ <20240324210817.192033-2-mpearson-lenovo@squebb.ca>
+ <ZhR-WPx7dgKxziMb@google.com>
+ <f3342c0b-fb31-4323-aede-7fb02192cf44@redhat.com>
+ <ZhW3Wbn4YSGFBgfS@google.com>
+ <ZhXpZe1Gm5e4xP6r@google.com>
+ <92ee5cb2-565e-413c-b968-81393a9211c4@app.fastmail.com>
+ <ZhcogDESvZmUPEEf@google.com>
+ <91593303-4a6a-49c9-87a0-bb6f72f512a1@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <91593303-4a6a-49c9-87a0-bb6f72f512a1@app.fastmail.com>
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
+On Wed, Apr 10, 2024 at 10:48:10PM -0400, Mark Pearson wrote:
+> 
+> I have a stronger preference to keep the KEY_DOUBLECLICK - that one seems less controversial as a genuine new input event.
 
---- Comment #52 from Pedro (voidpointertonull+kernelorgbugzilla@gmail.com) =
----
-I believe the other issue was supposed to be strictly about limiting max
-frequency causing issues, and I'm definitely not doing that, but possibly I
-missed other fixed, I surely didn't keep up with everything.
-Understood the warning though, but that's exactly why I pointed out that my
-kernel version might not be helpful.
+Please see my response to Peter's letter. I think it very much depends
+on how it will be used (associated with the pointer or standalone as it
+is now).
 
-The main point was that while all discussions seems to be about APUs, I
-encountered an issue that appears to be really similar if not the same with=
- a
-desktop CPU. Just wanted this information to be added as I've found 3 bug
-reports where this problem is mentioned but with only laptop CPUs discussed.
+For standalone application, recalling your statement that on Win you
+have this gesture invoke configuration utility I would argue for
+KEY_CONFIG for it.
 
---=20
-You may reply to this email to add a comment.
+Thanks.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+-- 
+Dmitry
