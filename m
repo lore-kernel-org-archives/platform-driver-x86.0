@@ -1,338 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC2C1E535;
-	Mon, 15 Apr 2024 15:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B338248E
+	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Apr 2024 17:42:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713196661; cv=none; b=Z5egYbub3SFkOq1bEbElVMhlp6DgI7Jb2PT4JmJHhQ9Md3mOzafrIlBBz6iFc5EOVkW/VVtEhLxd+ZgZfx3Vxvu26sFUhFtJ4rOLrcTcas2t//1lulPNzn3msrMHs1LrdY90JqI5PMRIActkB77U0O00PmLMwKFEOYAjtmGyjj8=
+	t=1713202942; cv=none; b=oE2JNYap/CpB1wfzmuU387/izZe1N66rODdncn2/8vMvf1DPL8ksGjKL6G33ooCHFjJBW53xtdZhZBJvv6CqIVPjHO/gbrvn1akeMIF9Q9ETX4hUbJnm+ln1Iqvag0aLsM4td6qIZeC0y3FqSfBYJeVBFjSx6vpR9IrUpS2KTJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713196661; c=relaxed/simple;
-	bh=1VFPf/8L9loaEb3hWCEyFbiAGfd1d8Io/SEPciZW5jk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=W3rrJxa/3HMh4pyAIkD2nmhZ70fbllg5qiDoHCUCsy32BgPPePmMxEVp59FEhusz+6dPiKGw2wiitClV2HebHsmScfJTCTM8exOO3bshu7goW9sFyPoocYILHgSNn3MtZXbBDN0P5KtR6kmhXBdZS6N1POH6J3IzKNIDSxCNpbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gHawwHEK; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713202942; c=relaxed/simple;
+	bh=lP56Vh7Y+17iGJClWmjTpufJIwZF0uNsKtNR9m2YvRQ=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FOUIuWyE8Szy5OcfiBFFQVFQeGTrmrU+mL8PuuudrljGMImr3/mod7Whn13MWKsr4C3jNcV7O+Gnz0D2In8po/Xg+FQmU4JwSwjMOh++qIjKUIrkjcji8CyaOkevvmHoJkeaKmLIeJDnxVh7YmZt/XtaaVMkRkSYpXPH9YKQyBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mbYsQNtO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gHawwHEK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713196659; x=1744732659;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=1VFPf/8L9loaEb3hWCEyFbiAGfd1d8Io/SEPciZW5jk=;
-  b=gHawwHEKvg5I4QkDsc9nNJP/onPXwJVFOVMmTGJNof7kjJuHYPkOAae5
-   Jz28S9wgZFWCY0xP6D3z5EVe9Frr46HQU3TEboSUnK4B6jqRJVuPAtfwl
-   5krjgyU1oya0oP+QyxExdaa6rkBt8uaxGMluRlIfdHGgOAfdMo6AcRtpa
-   k8CjOu7a8u3eEoGyJLNJH4TtpU+e2f/rGK3PdPe5oC4rwL70gDub1fe5A
-   fwUwrdOQuzkrHZOPR3BHYULyufkr1VCXSEayFAAuiAIhRX+30SHT4M1ik
-   5VShHlQcMxTmZ3dLxxhnYjOAaSWqs/6PITcZue1SNyD1RwtRN4LIxYpoQ
-   w==;
-X-CSE-ConnectionGUID: kGnz1jjBTWC5AzSMa1yP5A==
-X-CSE-MsgGUID: hhZxhdf/TaO42UfTOgJ9Mg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="19156643"
-X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
-   d="scan'208";a="19156643"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 08:57:38 -0700
-X-CSE-ConnectionGUID: JTqYNy7lR/W6ya5NtXaxrQ==
-X-CSE-MsgGUID: 1tY8o3/9QoaKdWPxehmVoA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,203,1708416000"; 
-   d="scan'208";a="22052435"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.33])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 08:57:35 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 15 Apr 2024 18:57:29 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: mlj@danelec.com, rafael.j.wysocki@intel.com, lenb@kernel.org, 
-    jdelvare@suse.com, linux@roeck-us.net, linux@weissschuh.net, 
-    ilpo.jarvinen@linux.intel.com, linux-acpi@vger.kernel.org, 
-    linux-hwmon@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v4] ACPI: fan: Add hwmon support
-In-Reply-To: <20240414174743.8575-1-W_Armin@gmx.de>
-Message-ID: <67b4faf4-eadc-3375-62b4-aaad1b3af564@linux.intel.com>
-References: <20240414174743.8575-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mbYsQNtO"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EDD63C4AF07
+	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Apr 2024 17:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713202942;
+	bh=lP56Vh7Y+17iGJClWmjTpufJIwZF0uNsKtNR9m2YvRQ=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=mbYsQNtOLCYo+ROn96RA7EA9DJ1xdNOaxNPjPGChOsNblTqqvjhEe9iut/cxTfkC5
+	 W5PuCw9d6rZFQD4AnfYu0qtgkNyZSn0duG9/P0ZgfkxrwVGBCTLt+SieXIk2M+6do6
+	 /HD91OH1lOYJDuICWMtBXWaCnmko7+nBWgl5DPP27Td51J16BdyJDpI8qbw6kPVeqf
+	 e10466Wsfo8+ZTOizESp+ZSJ9qcY68a6u6zIMPyl5De/rPLGDcOR6Tf9mLWRLAsmgJ
+	 HomlI3Z+9bD5lyYVsAZfNf4uDbSL0NDpf/+YAd5PfClu1lrclwZYHoC+4aa8Lj9bzF
+	 HxA7j/t/XeGPA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id E47AFC433E2; Mon, 15 Apr 2024 17:42:21 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
+ resuming after unplugging the power cord during sleep
+Date: Mon, 15 Apr 2024 17:42:21 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: blocking
+X-Bugzilla-Who: voidpointertonull+kernelorgbugzilla@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-218305-215701-fEbV7ZcQVU@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
+References: <bug-218305-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 
-On Sun, 14 Apr 2024, Armin Wolf wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-> Currently, the driver does only support a custom sysfs
-> to allow userspace to read the fan speed.
-> Add support for the standard hwmon interface so users
-> can read the fan speed with standard tools like "sensors".
-> 
-> Compile-tested only.
-> 
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
-> Changes since v3:
-> - drop fault attrs
-> - rework initialization
-> 
-> Changes since v2:
-> - add support for fanX_target and power attrs
-> 
-> Changes since v1:
-> - fix undefined reference error
-> - fix fan speed validation
-> - coding style fixes
-> - clarify that the changes are compile-tested only
-> - add hwmon maintainers to cc list
-> 
-> The changes will be tested by Mikael Lund Jepsen from Danelec and
-> should be merged only after those tests.
-> ---
->  drivers/acpi/Makefile    |   1 +
->  drivers/acpi/fan.h       |   9 +++
->  drivers/acpi/fan_core.c  |   4 +
->  drivers/acpi/fan_hwmon.c | 170 +++++++++++++++++++++++++++++++++++++++
->  4 files changed, 184 insertions(+)
->  create mode 100644 drivers/acpi/fan_hwmon.c
-> 
-> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
-> index 39ea5cfa8326..61ca4afe83dc 100644
-> --- a/drivers/acpi/Makefile
-> +++ b/drivers/acpi/Makefile
-> @@ -77,6 +77,7 @@ obj-$(CONFIG_ACPI_TINY_POWER_BUTTON)	+= tiny-power-button.o
->  obj-$(CONFIG_ACPI_FAN)		+= fan.o
->  fan-objs			:= fan_core.o
->  fan-objs			+= fan_attr.o
-> +fan-$(CONFIG_HWMON)		+= fan_hwmon.o
-> 
->  obj-$(CONFIG_ACPI_VIDEO)	+= video.o
->  obj-$(CONFIG_ACPI_TAD)		+= acpi_tad.o
-> diff --git a/drivers/acpi/fan.h b/drivers/acpi/fan.h
-> index f89d19c922dc..db25a3898af7 100644
-> --- a/drivers/acpi/fan.h
-> +++ b/drivers/acpi/fan.h
-> @@ -10,6 +10,8 @@
->  #ifndef _ACPI_FAN_H_
->  #define _ACPI_FAN_H_
-> 
-> +#include <linux/kconfig.h>
-> +
->  #define ACPI_FAN_DEVICE_IDS	\
->  	{"INT3404", }, /* Fan */ \
->  	{"INTC1044", }, /* Fan for Tiger Lake generation */ \
-> @@ -57,4 +59,11 @@ struct acpi_fan {
->  int acpi_fan_get_fst(struct acpi_device *device, struct acpi_fan_fst *fst);
->  int acpi_fan_create_attributes(struct acpi_device *device);
->  void acpi_fan_delete_attributes(struct acpi_device *device);
-> +
-> +#if IS_REACHABLE(CONFIG_HWMON)
-> +int devm_acpi_fan_create_hwmon(struct acpi_device *device);
-> +#else
-> +static inline int devm_acpi_fan_create_hwmon(struct acpi_device *device) { return 0; };
-> +#endif
-> +
->  #endif
-> diff --git a/drivers/acpi/fan_core.c b/drivers/acpi/fan_core.c
-> index ff72e4ef8738..7cea4495f19b 100644
-> --- a/drivers/acpi/fan_core.c
-> +++ b/drivers/acpi/fan_core.c
-> @@ -336,6 +336,10 @@ static int acpi_fan_probe(struct platform_device *pdev)
->  		if (result)
->  			return result;
-> 
-> +		result = devm_acpi_fan_create_hwmon(device);
-> +		if (result)
-> +			return result;
-> +
->  		result = acpi_fan_create_attributes(device);
->  		if (result)
->  			return result;
-> diff --git a/drivers/acpi/fan_hwmon.c b/drivers/acpi/fan_hwmon.c
-> new file mode 100644
-> index 000000000000..0ae9017bdbae
-> --- /dev/null
-> +++ b/drivers/acpi/fan_hwmon.c
-> @@ -0,0 +1,170 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * fan_hwmon.c - hwmon interface for the ACPI Fan driver
-> + *
-> + * Copyright (C) 2024 Armin Wolf <W_Armin@gmx.de>
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/limits.h>
-> +#include <linux/units.h>
-> +
-> +#include "fan.h"
-> +
-> +/* Returned when the ACPI fan does not support speed reporting */
-> +#define FAN_SPEED_UNAVAILABLE	0xffffffff
-> +#define FAN_POWER_UNAVAILABLE	0xffffffff
-> +
-> +static struct acpi_fan_fps *acpi_fan_get_current_fps(struct acpi_fan *fan, u64 control)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < fan->fps_count; i++) {
-> +		if (fan->fps[i].control == control)
-> +			return &fan->fps[i];
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +static umode_t acpi_fan_is_visible(const void *drvdata, enum hwmon_sensor_types type, u32 attr,
-> +				   int channel)
-> +{
-> +	const struct acpi_fan *fan = drvdata;
-> +	int i;
-> +
-> +	switch (type) {
-> +	case hwmon_fan:
-> +		switch (attr) {
-> +		case hwmon_fan_input:
-> +			return 0444;
-> +		case hwmon_fan_target:
-> +			/* When in fine grain control mode, not every fan control value
-> +			 * has an associated fan performance state.
-> +			 */
-> +			if (fan->fif.fine_grain_ctrl)
-> +				return 0;
-> +
-> +			return 0444;
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	case hwmon_power:
-> +		switch (attr) {
-> +		case hwmon_power_input:
-> +			/* When in fine grain control mode, not every fan control value
-> +			 * has an associated fan performance state.
-> +			 */
-> +			if (fan->fif.fine_grain_ctrl)
-> +				return 0;
-> +
-> +			/* When all fan performance states contain no valid power data,
-> +			 * when the associated atttribute should not be created.
+Pedro (voidpointertonull+kernelorgbugzilla@gmail.com) changed:
 
-attribute
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |voidpointertonull+kernelorg
+                   |                            |bugzilla@gmail.com
 
--- 
- i.
+--- Comment #50 from Pedro (voidpointertonull+kernelorgbugzilla@gmail.com) =
+---
+Coming from Bug #217931 , I found the mentions of being stuck at low freque=
+ncy
+odd as I couldn't observe that despite managing multiple hosts, but then he=
+re I
+am.
 
+The twist is that I have a 7950X3D desktop setup, not a laptop one, and I
+apparently I just ran into the same low frequency issue others experienced.
+Unfortunately the usefulness of my information will be limited as I'm on a =
+not
+really customized Kubuntu 23.10 setup with kernel 6.5.0 , but on the other =
+hand
+I haven't touched anything relevant, not even setting a frequency limit.
 
-> +			 */
-> +			for (i = 0; i < fan->fps_count; i++) {
-> +				if (fan->fps[i].power != FAN_POWER_UNAVAILABLE)
-> +					return 0444;
-> +			}
-> +
-> +			return 0;
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int acpi_fan_read(struct device *dev, enum hwmon_sensor_types type, u32 attr, int channel,
-> +			 long *val)
-> +{
-> +	struct acpi_device *adev = to_acpi_device(dev->parent);
-> +	struct acpi_fan *fan = dev_get_drvdata(dev);
-> +	struct acpi_fan_fps *fps;
-> +	struct acpi_fan_fst fst;
-> +	int ret;
-> +
-> +	ret = acpi_fan_get_fst(adev, &fst);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	switch (type) {
-> +	case hwmon_fan:
-> +		switch (attr) {
-> +		case hwmon_fan_input:
-> +			if (fst.speed == FAN_SPEED_UNAVAILABLE)
-> +				return -ENODATA;
-> +
-> +			if (fst.speed > LONG_MAX)
-> +				return -EOVERFLOW;
-> +
-> +			*val = fst.speed;
-> +			return 0;
-> +		case hwmon_fan_target:
-> +			fps = acpi_fan_get_current_fps(fan, fst.control);
-> +			if (!fps)
-> +				return -ENODATA;
-> +
-> +			*val = fps->speed;
-> +			return 0;
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	case hwmon_power:
-> +		switch (attr) {
-> +		case hwmon_power_input:
-> +			fps = acpi_fan_get_current_fps(fan, fst.control);
-> +			if (!fps)
-> +				return -ENODATA;
-> +
-> +			if (fps->power == FAN_POWER_UNAVAILABLE)
-> +				return -ENODATA;
-> +
-> +			if (fps->power > LONG_MAX / MICROWATT_PER_MILLIWATT)
-> +				return -EOVERFLOW;
-> +
-> +			*val = fps->power * MICROWATT_PER_MILLIWATT;
-> +			return 0;
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static const struct hwmon_ops acpi_fan_ops = {
-> +	.is_visible = acpi_fan_is_visible,
-> +	.read = acpi_fan_read,
-> +};
-> +
-> +static const struct hwmon_channel_info * const acpi_fan_info[] = {
-> +	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT | HWMON_F_TARGET),
-> +	HWMON_CHANNEL_INFO(power, HWMON_P_INPUT),
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_chip_info acpi_fan_chip_info = {
-> +	.ops = &acpi_fan_ops,
-> +	.info = acpi_fan_info,
-> +};
-> +
-> +int devm_acpi_fan_create_hwmon(struct acpi_device *device)
-> +{
-> +	struct acpi_fan *fan = acpi_driver_data(device);
-> +	struct device *hdev;
-> +
-> +	hdev = devm_hwmon_device_register_with_info(&device->dev, "acpi_fan", fan,
-> +						    &acpi_fan_chip_info, NULL);
-> +
-> +	return PTR_ERR_OR_ZERO(hdev);
-> +}
-> --
-> 2.39.2
-> 
+I'm observing the CPU being stuck in the 400 MHz - 549 MHz range which is q=
+uite
+fitting for this bug report, and the host was never suspended / hibernated.
+The only relevant oddity I've found so far is that
+/sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq was sticking out like=
+ a
+sore thumb with 400000 set while other cores had the value of 5759000, but
+changing that didn't make a difference.
+
+Not really sure when did this manifest itself, but highly likely after (or
+during?) a case of Bug #204253 as I brushed away the slowness for a while as
+the usual heavy I/O (over NFS) problem which even used to freeze the desktop
+for more than a minute on a weaker setup, but the current higher performance
+CPU seemed to take it better, although the experience was still disruptive.
+Is this really a laptop bug then instead of a more generic problem with a l=
+arge
+stutter causing some logic to get upset possibly due to timing problems? He=
+avy
+CPU usage alone surely doesn't do the trick as I've seen hosts doing fine w=
+ith
+that, but heavy I/O seems more brutal with possibly similar "world stopping
+power" as suspending.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
