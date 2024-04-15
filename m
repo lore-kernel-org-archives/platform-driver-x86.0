@@ -1,57 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628091EF1A;
-	Mon, 15 Apr 2024 21:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE3325601;
+	Mon, 15 Apr 2024 22:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713217943; cv=none; b=beL6lKDJdJZmVBMkQPPk718T43jkmmRt/iAXhV7p0LWnC1HmShdNlFzQ6Q64Wn1KQUO02TZXgOp1gnbn/M8CPLy8NrBEcEiaXLzR+sTIDaGDaJy7th8BXdL27Upt4MlsKlK5SFoGVHVeQZTbLR4+4h/SQQJU7L+J6XpRZDPKthU=
+	t=1713218799; cv=none; b=HFvvSI77XyLs6o0jaowG5KN7HWvP6wq2KhDh9K/SEUP0FOnk5LWWiSKaqFv2BkwXpYEmtZfpXIc3aSUM8tY4fMrNZOCvzi0YTswSVToDx5w2rkPIUmCeFJfRnCMZ8TxuANvEYUKPDR9jSJnBElkViPOeNsUjubfoRoD6+S3NDQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713217943; c=relaxed/simple;
-	bh=KJ52F3vvXnDFFDYcpRHY11CkLnLJ7fh/q+VR/api2QU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VMi9sfxOTCbMKcs44WCY9+WiXI+i/dtullqxutML3T/ZTRC3YedTQ3Zkh+nB1rpsWCK86t13G1M4VnaNQiLguJkHWJ/nG/09AYsHZugUAkz9UzZL/PnDf4oe7gyU15WqVZkBx01YzGNdYzU5unSXEcCqaT3poZxljXnfvTfyQ2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D1UQX5Vl; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1713218799; c=relaxed/simple;
+	bh=cfgrhk9pYDpOtV2H39ercNHeZSILx4+hGmgX0aJINjw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=C44XzKCXJTb3u707sOvsrTNnVLRUYu2e5lg5LZCKaWkjAVPYoq32MrwS1+SmjQyKMTb9BYpRoHh/g9duCMqpm/inaXXnWcuwtQYSJJDXz2/y/BMlh0Yu+8f7/3fLUWd1qg+UBsaQlz6IOeC1SsL8LTavTvNVdKCmquIOsm3HIZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jocyVbEi; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D1UQX5Vl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jocyVbEi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713217942; x=1744753942;
+  t=1713218798; x=1744754798;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=KJ52F3vvXnDFFDYcpRHY11CkLnLJ7fh/q+VR/api2QU=;
-  b=D1UQX5VlXRNaXGres5M51FohKdsvh3DR/FKz59xZVgFVCwgJIS6OCyL6
-   JZHaTRoUYkiyFpFsuyIxGbShG9ChLjXk5xHfahP6S2lnwOXcJ55y5TPS6
-   rIpUqSokF3OAI/6Casy+s8CIb8MUZSAgGEpU8Es+Qv+xLFBuSSEFLPE5n
-   MwQwzeuQfmlPskPPGeshdgvC0vXCGIoIcmkC/hrqSjhQx2dkbO4wgw8t8
-   p/A/12FD4vFc1e7hBPsm7x8+uMXXjo30n7HRPIGYCU/t1YOtW2TheUDL2
-   yiiTUyCnLx5/WbhGrsRwoWGmQTSL3oR1QgiIzrPHZKumW7WsJXYHqXJAq
-   w==;
-X-CSE-ConnectionGUID: U0IP5gVbTp2uQ/GXq8PtaA==
-X-CSE-MsgGUID: VWW6hZ1BQ2a8sCMeQd7Faw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="12420708"
+  bh=cfgrhk9pYDpOtV2H39ercNHeZSILx4+hGmgX0aJINjw=;
+  b=jocyVbEiuEv4+FfgN8a9ByetnnTI1rzkApUxCEvW8/ANdlsCw364Kv65
+   Ounmjpwo9QsrFZcnpk5vwStNuymplqQkH+zqfpCEDJRb3bPppCwtLpdE/
+   7u2mjhj7vInyO8ps9ArOkg1sJQEcWnDzu1AW9ph6Zs4/48SRUFpEWkV7M
+   yXoX8DQvinZT9XbnDLiLJpMEE3fCELxAjSIcBjr2jJBAduLsXjNqasB5X
+   /wZTrJo9dbBUAXbgR77xKDC358Pk2cYpfJ6RzmWIKGVh1byYu0wr7+oed
+   fHcmCz2za5vZ24U7JBX6sfjrBd0lO24Uh80z+57sY//fblHXDEWcMgqd4
+   Q==;
+X-CSE-ConnectionGUID: kscx6EoSTgOeijg5ke+IJw==
+X-CSE-MsgGUID: MtxVCn9TQReXDIT4Dl2cbQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="20021977"
 X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
-   d="scan'208";a="12420708"
+   d="scan'208";a="20021977"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 14:52:21 -0700
-X-CSE-ConnectionGUID: UWZ5JvWRQcuqI0TvjinHSQ==
-X-CSE-MsgGUID: 5GauRyGPRGCHQv12s/w8Zg==
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 15:06:37 -0700
+X-CSE-ConnectionGUID: ZdO8/rfUTyyrWSXRPlALMw==
+X-CSE-MsgGUID: JflKa/FqRW+xvBIwNzsRUw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
-   d="scan'208";a="26845113"
+   d="scan'208";a="26847205"
 Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
-  by orviesa005.jf.intel.com with ESMTP; 15 Apr 2024 14:52:21 -0700
+  by orviesa005.jf.intel.com with ESMTP; 15 Apr 2024 15:06:36 -0700
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 To: hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] platform/x86/intel-uncore-freq: Don't present root domain on error
-Date: Mon, 15 Apr 2024 14:52:10 -0700
-Message-Id: <20240415215210.2824868-1-srinivas.pandruvada@linux.intel.com>
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] platform/x86/intel-uncore-freq: Increase minor number support
+Date: Mon, 15 Apr 2024 15:06:25 -0700
+Message-Id: <20240415220625.2828339-1-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -61,48 +60,37 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If none of the clusters are added because of some error, fail to load
-driver without presenting root domain. In this case root domain will
-present invalid data.
+No new changes will be added for minor version 2. Change the minor
+version number to 2 and stop displaying log message for unsupported
+minor version 2.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Fixes: 01c10f88c9b7 ("platform/x86/intel-uncore-freq: tpmi: Provide cluster level control")
-Cc: <stable@vger.kernel.org> # 6.5+
 ---
-This error can be reproduced in the pre production hardware only.
-So can go through regular cycle and they apply to stable.
-
- .../x86/intel/uncore-frequency/uncore-frequency-tpmi.c     | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .../x86/intel/uncore-frequency/uncore-frequency-tpmi.c        | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-index bd75d61ff8a6..587437211d72 100644
+index 587437211d72..bb8e72deb354 100644
 --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
 +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-@@ -240,6 +240,7 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
- 	bool read_blocked = 0, write_blocked = 0;
- 	struct intel_tpmi_plat_info *plat_info;
- 	struct tpmi_uncore_struct *tpmi_uncore;
-+	bool uncore_sysfs_added = false;
- 	int ret, i, pkg = 0;
- 	int num_resources;
+@@ -29,7 +29,7 @@
+ #include "uncore-frequency-common.h"
  
-@@ -384,9 +385,15 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
- 			}
- 			/* Point to next cluster offset */
- 			cluster_offset >>= UNCORE_MAX_CLUSTER_PER_DOMAIN;
-+			uncore_sysfs_added = true;
+ #define	UNCORE_MAJOR_VERSION		0
+-#define	UNCORE_MINOR_VERSION		1
++#define	UNCORE_MINOR_VERSION		2
+ #define UNCORE_HEADER_INDEX		0
+ #define UNCORE_FABRIC_CLUSTER_OFFSET	8
+ 
+@@ -330,7 +330,7 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
+ 			goto remove_clusters;
  		}
- 	}
  
-+	if (!uncore_sysfs_added) {
-+		ret = -ENODEV;
-+		goto remove_clusters;
-+	}
-+
- 	auxiliary_set_drvdata(auxdev, tpmi_uncore);
+-		if (TPMI_MINOR_VERSION(pd_info->ufs_header_ver) != UNCORE_MINOR_VERSION)
++		if (TPMI_MINOR_VERSION(pd_info->ufs_header_ver) > UNCORE_MINOR_VERSION)
+ 			dev_info(&auxdev->dev, "Uncore: Ignore: Unsupported minor version:%lx\n",
+ 				 TPMI_MINOR_VERSION(pd_info->ufs_header_ver));
  
- 	tpmi_uncore->root_cluster.root_domain = true;
 -- 
 2.40.1
 
