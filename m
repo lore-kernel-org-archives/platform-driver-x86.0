@@ -1,58 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7DF823CE;
-	Mon, 15 Apr 2024 21:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628091EF1A;
+	Mon, 15 Apr 2024 21:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713216541; cv=none; b=RN44D5FKe6fGxDKlGpKqoP/iN4Ca2YoGCGdNyV2vtOHEiSr7MUnaSC1QFhW95tULLhMMUiujSo6BHqBwxgEi0nW5udnZouamhUtpxFDrWAS8eNNonBnVKDhqF0ItkFz9blRzmYwCZpGxyzJNVf0dVgF55TBaATu3WuaQQ7xKmU0=
+	t=1713217943; cv=none; b=beL6lKDJdJZmVBMkQPPk718T43jkmmRt/iAXhV7p0LWnC1HmShdNlFzQ6Q64Wn1KQUO02TZXgOp1gnbn/M8CPLy8NrBEcEiaXLzR+sTIDaGDaJy7th8BXdL27Upt4MlsKlK5SFoGVHVeQZTbLR4+4h/SQQJU7L+J6XpRZDPKthU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713216541; c=relaxed/simple;
-	bh=tnp3Gy5QouPkq1ZPCN4tIf7ajUpjlx10BNU1uvCdm1w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LZ6d7bRsOXtqaGqefIDuEyYdDhzuV9P6I6ujWf9KzweWRTtlVj51D+b39Qzm2oA+xA064UiJTBhkuz8hJAhSwwpmc2VTWRBy0jY+wsxrrZdMTJF8oXiEi8AaSarW/ts36OlEsxZHY2WPPvY6aFsb/U/za/2pdcIrA+FSy8KbVSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NbjY1I9B; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1713217943; c=relaxed/simple;
+	bh=KJ52F3vvXnDFFDYcpRHY11CkLnLJ7fh/q+VR/api2QU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VMi9sfxOTCbMKcs44WCY9+WiXI+i/dtullqxutML3T/ZTRC3YedTQ3Zkh+nB1rpsWCK86t13G1M4VnaNQiLguJkHWJ/nG/09AYsHZugUAkz9UzZL/PnDf4oe7gyU15WqVZkBx01YzGNdYzU5unSXEcCqaT3poZxljXnfvTfyQ2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D1UQX5Vl; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NbjY1I9B"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D1UQX5Vl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713216540; x=1744752540;
+  t=1713217942; x=1744753942;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=tnp3Gy5QouPkq1ZPCN4tIf7ajUpjlx10BNU1uvCdm1w=;
-  b=NbjY1I9BLv/TH7w2c05nU+IpksXoEmoUsPO8zQjKWsbImR/Zln2rUsSW
-   I/toEjfyeyvgju5v9+sdfNaVJurtw42b2vmQ6qF5PoG1Oy/jUWvxIcoX0
-   wKbW3I8rAz/s8ZRpLVtwFncTXCSFcSm0SYY2aeKEI9LNVVh0rAYg7hoRq
-   F8TSP2jL58rIms7f9wSSdKpnWIMMh5oRop9RJkiEHSaw+zTjt4E1UJK6p
-   RA/ylH/oxSklADzuqHrVabuAoTZH4Y2Gr0iyojHoxul/9iRlbbwkRhUly
-   zoSSVb/PdfZkPj0QQGu2NvlyTN3aUR5ro8UqH0nj0d7+wKu5mYNjkqTdv
-   g==;
-X-CSE-ConnectionGUID: 7p0zlTKGQZyQHSnd77TBVQ==
-X-CSE-MsgGUID: mmgZyEKvQke32K8fj0ie3g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="11573450"
+  bh=KJ52F3vvXnDFFDYcpRHY11CkLnLJ7fh/q+VR/api2QU=;
+  b=D1UQX5VlXRNaXGres5M51FohKdsvh3DR/FKz59xZVgFVCwgJIS6OCyL6
+   JZHaTRoUYkiyFpFsuyIxGbShG9ChLjXk5xHfahP6S2lnwOXcJ55y5TPS6
+   rIpUqSokF3OAI/6Casy+s8CIb8MUZSAgGEpU8Es+Qv+xLFBuSSEFLPE5n
+   MwQwzeuQfmlPskPPGeshdgvC0vXCGIoIcmkC/hrqSjhQx2dkbO4wgw8t8
+   p/A/12FD4vFc1e7hBPsm7x8+uMXXjo30n7HRPIGYCU/t1YOtW2TheUDL2
+   yiiTUyCnLx5/WbhGrsRwoWGmQTSL3oR1QgiIzrPHZKumW7WsJXYHqXJAq
+   w==;
+X-CSE-ConnectionGUID: U0IP5gVbTp2uQ/GXq8PtaA==
+X-CSE-MsgGUID: VWW6hZ1BQ2a8sCMeQd7Faw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="12420708"
 X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
-   d="scan'208";a="11573450"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 14:29:00 -0700
-X-CSE-ConnectionGUID: om3b2GjhTnaJonPR5+AUyQ==
-X-CSE-MsgGUID: Z3aD3ybBT1Gzg1V2Xdg4Ww==
+   d="scan'208";a="12420708"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 14:52:21 -0700
+X-CSE-ConnectionGUID: UWZ5JvWRQcuqI0TvjinHSQ==
+X-CSE-MsgGUID: 5GauRyGPRGCHQv12s/w8Zg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
-   d="scan'208";a="52984360"
+   d="scan'208";a="26845113"
 Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
-  by orviesa002.jf.intel.com with ESMTP; 15 Apr 2024 14:28:59 -0700
+  by orviesa005.jf.intel.com with ESMTP; 15 Apr 2024 14:52:21 -0700
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 To: hdegoede@redhat.com,
-	markgross@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	andriy.shevchenko@linux.intel.com
+	ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] platform/x86: ISST: Add Granite Rapids-D to HPM CPU list
-Date: Mon, 15 Apr 2024 14:28:53 -0700
-Message-Id: <20240415212853.2820470-1-srinivas.pandruvada@linux.intel.com>
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] platform/x86/intel-uncore-freq: Don't present root domain on error
+Date: Mon, 15 Apr 2024 14:52:10 -0700
+Message-Id: <20240415215210.2824868-1-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -62,25 +61,48 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add Granite Rapids-D to hpm_cpu_ids, so that MSR 0x54 can be used.
+If none of the clusters are added because of some error, fail to load
+driver without presenting root domain. In this case root domain will
+present invalid data.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Fixes: 01c10f88c9b7 ("platform/x86/intel-uncore-freq: tpmi: Provide cluster level control")
+Cc: <stable@vger.kernel.org> # 6.5+
 ---
- drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 1 +
- 1 file changed, 1 insertion(+)
+This error can be reproduced in the pre production hardware only.
+So can go through regular cycle and they apply to stable.
 
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-index 08df9494603c..30951f7131cd 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-@@ -719,6 +719,7 @@ static struct miscdevice isst_if_char_driver = {
- };
+ .../x86/intel/uncore-frequency/uncore-frequency-tpmi.c     | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
+index bd75d61ff8a6..587437211d72 100644
+--- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
++++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
+@@ -240,6 +240,7 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
+ 	bool read_blocked = 0, write_blocked = 0;
+ 	struct intel_tpmi_plat_info *plat_info;
+ 	struct tpmi_uncore_struct *tpmi_uncore;
++	bool uncore_sysfs_added = false;
+ 	int ret, i, pkg = 0;
+ 	int num_resources;
  
- static const struct x86_cpu_id hpm_cpu_ids[] = {
-+	X86_MATCH_INTEL_FAM6_MODEL(GRANITERAPIDS_D,	NULL),
- 	X86_MATCH_INTEL_FAM6_MODEL(GRANITERAPIDS_X,	NULL),
- 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_CRESTMONT_X,	NULL),
- 	{}
+@@ -384,9 +385,15 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
+ 			}
+ 			/* Point to next cluster offset */
+ 			cluster_offset >>= UNCORE_MAX_CLUSTER_PER_DOMAIN;
++			uncore_sysfs_added = true;
+ 		}
+ 	}
+ 
++	if (!uncore_sysfs_added) {
++		ret = -ENODEV;
++		goto remove_clusters;
++	}
++
+ 	auxiliary_set_drvdata(auxdev, tpmi_uncore);
+ 
+ 	tpmi_uncore->root_cluster.root_domain = true;
 -- 
 2.40.1
 
