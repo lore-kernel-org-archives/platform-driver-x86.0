@@ -1,110 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8530B12BEB6
-	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Apr 2024 12:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3856B12BE9E
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Apr 2024 12:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713271371; cv=none; b=CMJ8M7vVH+vw9VuBSiWsuVuGjGv0ZB4DOpqy208LI3CzWnIOsvYtVqgRbFn456onMJtihf7CwFXKBVJKVq0qHhWkYVJUA0b+DnwfFksvQUsNhA7M8U7WQVSd2svWWLYjOWGcCaDWQGilkUn7Jz2LfEJkHC3V73Ed/cKarNtuNZw=
+	t=1713271453; cv=none; b=XqfLXeqYj6wblfmEEiQD0PziEb16wrfrQbHKcpy4NlU4clOqFVrzs61SVcJbDAr4dJvQ+Bb8RgtJN2efp0Oyho5F2Yihc9vYLfbbGCoRgjDmYwODWUK7XjdChjm7jnYW1Fv9VTPzijovTAO8l4KTqmtE7P+FY5vQPe/orpTkgiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713271371; c=relaxed/simple;
-	bh=ahupOTTvMn/c4LlkrpxeO4Me2P3aIl7x4LqHUt6K94E=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=DDiUm/7mmHRHn+ALgmbGdvSMfbmabJ7JLYDewXctXIaiilWtqt1dTv2n4PzhL5sLrjcHP8b2X1/MPLOTbHVS/FQ69U16fSHpRxVQtRlrsQ+CowASwrr5TyULCSgIJBuzbj5XXB23LrStirAkoVi9wOTkS//4Y3TMxHzTM0G71Go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kl4OYYVb; arc=none smtp.client-ip=192.198.163.12
+	s=arc-20240116; t=1713271453; c=relaxed/simple;
+	bh=alUXWcO0Em/Zsly+9I1gddJQ312qHP+dx/yW23dkGZc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=FPPaBynF/nmd9q7B6hXp6JxPdWQf+yIpwNCvdfp6iZKHhIkYYtrmF918xWqxMy5XBdvCHm8RdopCujDrGcnzOUm7nRGZLL4KWZZbN/UaY11WAE0bp+r2Cpqy7E1XJjtHwIdwGpHfbcU6jYiFyc9kXVlVEDOCpEWWVc4nYNr18P4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L2GTF70w; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kl4OYYVb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L2GTF70w"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713271370; x=1744807370;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ahupOTTvMn/c4LlkrpxeO4Me2P3aIl7x4LqHUt6K94E=;
-  b=kl4OYYVbmCCpOcankExPAJqdn4+1HSKoL6lN1FLyNllCw24Nj1QupMYO
-   /ugxhI4sAnGB/HhHuWU4G2umTjfw2C9FKViwiX3BaA3Mhq0Y4Ib5Xe7aF
-   eaOeWc0K7EhHf/IS1CHtRmm1zrffcWjsw5FmV2Q3epUtoMO7eO6Xzxvav
-   Y6RBjDyyUyqVzEiLA0aRj4vyRHUWPawQKmI/hAryZQrHpNajaIryrh8Co
-   0HZRXrdvWwVNAmQ0AWP1j5XLNv8skgiGruKIsRvwATE0XI+WpFsq/Gv4d
-   LzVcFf8g5zHFQ161fTDJGv/ftrn849Xze+LiVNS9sla67EDkTZwjC7ZSp
-   g==;
-X-CSE-ConnectionGUID: HDbJGX2pSiKqTWiK9myo9g==
-X-CSE-MsgGUID: +fPwug9lT7WiVeLKG/R8gg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="12482346"
+  t=1713271452; x=1744807452;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=alUXWcO0Em/Zsly+9I1gddJQ312qHP+dx/yW23dkGZc=;
+  b=L2GTF70wz1v6qAenGhJzARos9nOFUrEH7Zl+YdgaPRqphtjZTrixkFhJ
+   bkeq8txxqAVyMCN4SGWZ1FmIHnN4O53e8U2wMl0TEn81Uj3TxMbWGOrLo
+   xOFd4bM/xEBPfwuUfknDIuwyRjRKtq3Xn5X/q4zA4153Dn3Bm/1VIHDK4
+   JXyeWLQPP3LySlzmMiphsN6i6RFhPHwRWYq8qA0+YBxFwt7fHLAbpxipq
+   OnPIm07MjCnh+NmRN9N+Fu/V/8gCCG9oylDdek3TyLlnw6BTBjPPuhEDv
+   3GuCXhXklu5i9DO3ZQ3aSz+MHh2gwC50We++dputw0MsZ0dOwjCL/u5tF
+   A==;
+X-CSE-ConnectionGUID: Kwg2mhefRdaWpEuyX4HPRg==
+X-CSE-MsgGUID: kOVdp1bsTIeKJHYfmKwHgA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="19308781"
 X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="12482346"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 05:42:49 -0700
-X-CSE-ConnectionGUID: QiYllImURayaZsX3vq3S5w==
-X-CSE-MsgGUID: uvq58lx/SKOTW5w+L6h33Q==
+   d="scan'208";a="19308781"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 05:44:11 -0700
+X-CSE-ConnectionGUID: /EaYHw3BTnOWAHwszJLFFA==
+X-CSE-MsgGUID: rEtZEXTzSQSAhkhYXJVpSQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
-   d="scan'208";a="26914608"
+   d="scan'208";a="59699182"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.34])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 05:42:46 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 05:44:09 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 16 Apr 2024 15:42:42 +0300 (EEST)
-To: Mario Limonciello <superm1@gmail.com>
-cc: Mario Limonciello <mario.limonciello@amd.com>, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>, 
-    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To: Hans de Goede <hdegoede@redhat.com>, 
+ Mario Limonciello <mario.limonciello@amd.com>
+Cc: "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>, 
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20240410141046.433-1-mario.limonciello@amd.com>
+References: <20240410141046.433-1-mario.limonciello@amd.com>
 Subject: Re: [PATCH] platform/x86/amd: Extend Framework 13 quirk to more
  BIOSes
-In-Reply-To: <f2ae6813-0e88-4d64-8dd5-465c02061cb6@gmail.com>
-Message-ID: <bdd174d6-7097-06b5-16f8-4bda9331e83c@linux.intel.com>
-References: <20240410141046.433-1-mario.limonciello@amd.com> <ace9e5fe-0565-b24d-5394-ba4bd9f4305c@linux.intel.com> <f2ae6813-0e88-4d64-8dd5-465c02061cb6@gmail.com>
+Message-Id: <171327144171.3806.12861126838321364062.b4-ty@linux.intel.com>
+Date: Tue, 16 Apr 2024 15:44:01 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-320657222-1713271362=:1005"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, 10 Apr 2024 09:10:46 -0500, Mario Limonciello wrote:
 
---8323328-320657222-1713271362=:1005
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> BIOS 03.05 still hasn't fixed the spurious IRQ1 issue.  As it's still
+> being worked on there is still a possiblitiy that it won't need to
+> apply to future BIOS releases.
+> 
+> Add a quirk for BIOS 03.05 as well.
+> 
+> 
+> [...]
 
-On Tue, 16 Apr 2024, Mario Limonciello wrote:
-> On 4/16/24 07:24, Ilpo J=C3=A4rvinen wrote:
-> > On Wed, 10 Apr 2024, Mario Limonciello wrote:
-> >=20
-> > > BIOS 03.05 still hasn't fixed the spurious IRQ1 issue.  As it's still
-> > > being worked on there is still a possiblitiy that it won't need to
-> > > apply to future BIOS releases.
-> >=20
-> > Hi Mario,
-> >=20
-> > Could you explain/confirm what the second sentence is supposed to mean?
-> > Mainly I mean "it won't need to apply to future", did you perhaps mean =
-it
-> > might need to be applied still to some future versions too besides this
-> > one because the fix is still being worked on, or what?
-> >=20
-> > There's also "possiblitiy" typo, in case you end up rewriting the messa=
-ge
-> > and send v2.
-> >=20
->=20
-> You probably missed my follow up message in the thread, I tried to explai=
-n in
-> more detail (and also caught the same typo; sorry!)
->=20
-> https://lore.kernel.org/platform-driver-x86/ace9e5fe-0565-b24d-5394-ba4bd=
-9f4305c@linux.intel.com/T/#mcf25cbfbd9dc5f4aace5b58c56a7f91671b2f0cc
 
-Okay, I had indeed missed that (or probably seen it but didn't recall/make=
-=20
-the connection now while I started to apply patches).
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
 
-I'll fix the possibility typo while applying.
+The list of commits applied:
+[1/1] platform/x86/amd: Extend Framework 13 quirk to more BIOSes
+      commit: 978af6121b4b000befd9a45f5b65c00e39920273
 
---=20
+--
  i.
 
---8323328-320657222-1713271362=:1005--
