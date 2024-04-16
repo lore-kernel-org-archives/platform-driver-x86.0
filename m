@@ -1,348 +1,165 @@
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2129.outbound.protection.outlook.com [40.107.247.129])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433BBF9F0;
-	Tue, 16 Apr 2024 16:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.129
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713285306; cv=fail; b=fZqA/WMnG5aqUWCGEzXfw1bQfJKSGfVxaU6vqAkdewXG8xD7JHxUCgTmfjQrEv2a4f9TnPYxP4BBLD0iKCJrMtBN1IfJhCMH619ERVqu4LJJ+muJ+y1M6QgS2RxkIjs4qgcraqKucHClaIko8Tq1rcPvbtrI0hjKCjdfdiBmfxI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713285306; c=relaxed/simple;
-	bh=jY7odxM3F5zS8u8WyG9LAFnvlAP8OyC7187BcvaO1mE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=qSmQYqn+31qJGMn8PwzYxXC3Z+c3xHmLJ5gu3dbtLFsTWFrjjIplEI/EFwLo+dJcIJGvNpm2FAVrOhIpu00hPAWocfugBVCI5tr3hI4GVh7WY5lJ4i9v7OsvTdt5jQyvGxvPeqXq8ELLjsVFW/kxium+4/g7gHujW0fDgI4aUIE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=supcom.tn; spf=pass smtp.mailfrom=supcom.tn; dkim=fail (1024-bit key) header.d=supcom.onmicrosoft.com header.i=@supcom.onmicrosoft.com header.b=EyhIbSE1 reason="signature verification failed"; arc=fail smtp.client-ip=40.107.247.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=supcom.tn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=supcom.tn
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD73B6CDC8;
+	Tue, 16 Apr 2024 17:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713287012; cv=none; b=U2kH9QoXRDbkGjdL4nRGka0tqefkgQ+VJZbi4+hO1AykKPbPQYX1h9IJWJ2mIhRw8OhZDnYfiqurfQfn/dTDuMoca9QdfzjPY5/ntayr+TKMtC+y93WvWGo/u+J2HQFnQSwJQSywB9aMk3742nYhdD9WBrCOorUouQ5oczdp7Wk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713287012; c=relaxed/simple;
+	bh=Un2VWB9hTUioCrHHhwGGPMwy0QcEr+HIPdn95f2YV34=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pjuDthjU/FMlvrYHCys42ySKPPaw50LFrpikbbps9+cbYmgQ5ecx3ZfP3TP2jr8eeTZTixSmFSi4YmRLupdMvif1SnMs27eEMkcilWhnFLs7L7jLnUI3BNTRGpBLHBnjkdrR6YWIsin7WIYqJQh55JkEvnGImITK/YSu/3GuK4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LHfqTx0T; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=supcom.onmicrosoft.com header.i=@supcom.onmicrosoft.com header.b="EyhIbSE1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mXVQ2NoWlPJNwrxuFyXZZvMS5gkOeoqafKDXemj07U4MaymBFp7Dofh0ZM9A5tbLlj23qGvxwgt+9JwtA1X579HF7hqH9WSQXS9izmBy45uLx87juKVTTsJF44wbcf83DRD+GT3Kiz3GvcjnfsCrpHEHVSDKhpvl2iRylmAsCeRQboGU/mzxSdFJgOKbV3eDv3tqnWuAXzy2GbndRfZP6GX/U/086aAO02bZhP4KqoyEM+d7aYjtXoGRBLbCro5aouIXIj3XKyTooZ4oPdBP1igy2ENiQAVyvy2vTH0JIox/OjT6HajXGgG6O80pzoRP6e/veEKzQEglW/gq/lJN7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6bcEQpvahvPKIwQZlnwpD1ofKD4vPWJbXCeQULKBYT0=;
- b=RatYyz1Qty95UpIonLLzJlx8scYGGKKp7sXjfeolryg867r8cOeGMsHQMVYYd6O7S1haoBB2t+em03aJNfDRPDHA3aJpUyWNS+Rfh57nOSARlfJKUzQ6GoWHR5ZlMYNrFvJpi5hl6lekBsMRVZuDiG2Di+WIj51zWtf6Dm7bIvWFIELN5H8f8VJwjSfiYKSN4hjgm+NXfrm1Rsr1IPm5ZbVK+PWuOVworkgKPYlVvyv2gUsiFa4xYhTwBXMfEiFAcRhHYXynobN4dW2Lv8Gei0u96qKYMg63jgRqgM/KQJV3e5i0x5fnpjWcHvzjedN/U0SFjxwMDf7hVco6Mrqk0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=supcom.tn; dmarc=pass action=none header.from=supcom.tn;
- dkim=pass header.d=supcom.tn; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=supcom.onmicrosoft.com; s=selector2-supcom-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6bcEQpvahvPKIwQZlnwpD1ofKD4vPWJbXCeQULKBYT0=;
- b=EyhIbSE12tF0eg/BSmzxvR39A77CSJaPhnnz/lBxVQmlMIm7mz9ppAz3iNkccv0Nq2OXdhpSWv1Vh7fCj7illwqkvGMs/dW74W7bL74D7QmJCARFpTf8SwblcL+gwIBbvfbW4/QOOr2+dlQBCgHPb86m55z+94snqnZ2A7KIx9g=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=supcom.tn;
-Received: from AM0PR0402MB3905.eurprd04.prod.outlook.com (2603:10a6:208:b::23)
- by AS4PR04MB9506.eurprd04.prod.outlook.com (2603:10a6:20b:4c9::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.50; Tue, 16 Apr
- 2024 16:34:43 +0000
-Received: from AM0PR0402MB3905.eurprd04.prod.outlook.com
- ([fe80::eb9a:367f:6384:7d62]) by AM0PR0402MB3905.eurprd04.prod.outlook.com
- ([fe80::eb9a:367f:6384:7d62%4]) with mapi id 15.20.7452.049; Tue, 16 Apr 2024
- 16:34:43 +0000
-Date: Tue, 16 Apr 2024 17:34:42 +0100
-From: Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Luke D. Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>,
-	corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: asus-wmi: add support for vivobook fan
- profiles
-Message-ID: <Zh6oooU-DL2IXLg9@laptop>
-References: <20240413202112.37729-1-luke@ljones.dev>
- <dccc5701-f533-e80e-09f8-199f232f447f@linux.intel.com>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dccc5701-f533-e80e-09f8-199f232f447f@linux.intel.com>
-X-ClientProxiedBy: MR2P264CA0131.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:500:30::23) To AM0PR0402MB3905.eurprd04.prod.outlook.com
- (2603:10a6:208:b::23)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LHfqTx0T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713287008; x=1744823008;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Un2VWB9hTUioCrHHhwGGPMwy0QcEr+HIPdn95f2YV34=;
+  b=LHfqTx0TZirpNG+DWFwUTiRa+/sMvO9rfKYEwBtefhJ1Qc0MCe5Md0St
+   vVfkG529/auTAvXrndVL9xXzCs1QMI4/6EVkGHN3VLBWCBaJJVDCxuvmd
+   H2vAR9hX8I03PSKEzzEYFloa8Qpzh/KuWP/IxGYRwP1fEhMm/wJyRkoMI
+   1Ge6cKV+t3ODxDhwDy3thoKKGtcfDxr8A24yGK09qKuJkCfIk6Bv81QeR
+   XMRnZQ7JXPKQsBsqoboPQUr6fNkiXyQEWqvEDCsWQS2oybXotNwMf5KF6
+   IYwd11TcVNDIR7HLLg5Xeri4omTLLofFpyOZPFIvL/YNrbrxdo1kcxkLC
+   w==;
+X-CSE-ConnectionGUID: EaoaVZ78TgyahtouOLhlwA==
+X-CSE-MsgGUID: eWDjk97gSBaIW3VZsOFz/g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="8605567"
+X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
+   d="scan'208";a="8605567"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 10:03:27 -0700
+X-CSE-ConnectionGUID: 77d0qG4rT22sClB14gS1Gw==
+X-CSE-MsgGUID: bxNqqc0xS0Ola9R2Pq5ehA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,206,1708416000"; 
+   d="scan'208";a="22729400"
+Received: from unknown (HELO 23c141fc0fd8) ([10.239.97.151])
+  by orviesa006.jf.intel.com with ESMTP; 16 Apr 2024 10:03:23 -0700
+Received: from kbuild by 23c141fc0fd8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rwmDJ-0005b0-0h;
+	Tue, 16 Apr 2024 17:03:21 +0000
+Date: Wed, 17 Apr 2024 01:03:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	=?iso-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>,
+	linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Kate Hsuan <hpa@redhat.com>
+Subject: Re: [PATCH v6 4/5] power: supply: power-supply-leds: Add
+ charging_orange_full_green trigger for RGB LED
+Message-ID: <202404170023.1zEGO9ja-lkp@intel.com>
+References: <20240416053909.256319-5-hpa@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM0PR0402MB3905:EE_|AS4PR04MB9506:EE_
-X-MS-Office365-Filtering-Correlation-Id: f406e4e0-7347-42d9-b9c9-08dc5e331f0a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	utP6Pn51K0TMxkPaXT1o4J4j54KcmIdYjW9LO9ojmkoJs9u2gr+3Ww90VrLbbDU46ND/GXOTmTqPyIYBfa5TJS8FOdS2LSlsXN43QMu7QBawmlueJzZxiIXXZkIoLHQVSKFvud8piztaVLrICJR9KhhJzLboD9jTjwgONFY8n7dR3JPU9MU1Sk7snfzzfNXQP9WoaXOjJjHNSMHR5ZJXg6bsO7KWunRv9s2tIl5u4QUpWvW3x38/H/kIpYenEWT/iidN3ya7W7A7WMBdmr/TmTvFC3qhWP6oyOuaZl+fjRrMhcr8bUKMo9k5Jln2wBAoZg9PPPwUm8O7VCyHbCQAIUwuRSLO7iZgNpH2yW/ZU6nCMtJpqdxVgetLyT18jOLqwe0tkcxtUvmzFWlYYlQG7NP9fm9Ufp8vBeweeI2hBkvd8zsXmoKiAoREk12t480rZgknCHYRARKzLXkd6MeCnl8yrY9vmM6BtyM/LNk/eE9Bct5ju/XC8fj1vzT3M+/tUIZ9L2kIlMMczCCPreCDQrInNvZ9fD3NuYXlPFW5He/TwOxlRYnZ9bTxd8M6841xdJ2LFm60eh8+qlhmqDQvAmi4TFV2KAaZY8gRQsXv7us6hPfL8t46KKJ4+HS1YvHbU02HnltCG4V/3guw7iBlldfBxHnE5eufdTufazDwQZg=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR0402MB3905.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(41320700004)(1800799015)(376005)(366007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?HL958PgSwG/AGvWG4b1AxMT3+COJgcP//zQutjE4JVIpVoUe3+JHOxk+tO?=
- =?iso-8859-1?Q?2arB+Bp0YMJyBaVFXttUPhCswvo1gGpUsNe47rFVU91CFr5EF9p7vo5P47?=
- =?iso-8859-1?Q?dlUT0tT3c3qQ+4aPSi9K7yo1LRvQ5TTHKxXcpU5Ks6yX+qd7ZmkIZg/o1C?=
- =?iso-8859-1?Q?fcEE8XhN5CeGrNVqVOIJdca2ctPeeba2J7ILSYGzjM7Nas0xkhH1YtzZYD?=
- =?iso-8859-1?Q?WR6q2re/dtQO+TAwjFgoVuJzojdDr8XYv76Tqy7fCIilsIKpeq5dB3xsYW?=
- =?iso-8859-1?Q?3oFKUmkUfsLk2pHrw2sF931aftx0TFDTLHLRulIejI5rQxPauZMsWa06sj?=
- =?iso-8859-1?Q?EGJoPiJEelVNksY/Xui1dwQA2+YAVeRoVUXNPqmI59sX9B3Ikd9aFQ/gAJ?=
- =?iso-8859-1?Q?RzqMTEUGvsAJYfsL6zzaJ/6UxgtqjFZ5i66XbP1YYD4JAJZjkcJZKG0XVF?=
- =?iso-8859-1?Q?CvQa272URVYIk1Kedk+yDUIA4y+RryEfHvvdaUMtfR8vzFM+45Uy6oO7a8?=
- =?iso-8859-1?Q?3p9IiSF5Re3D2rA/cRGNM8TKebDONJk+TbAaXOmWe8Tjvh9Uumg6cCgkZZ?=
- =?iso-8859-1?Q?hK53UagDRdNQhI945HuphpfdaRS3q1B/p1M6LxzpUJYUz2mL6ncym8NKk6?=
- =?iso-8859-1?Q?JXP8YFw2mccm/mK9ESPVExaiQmw68UYibmMvSf9WapxQm4kfJmVg7q4DHu?=
- =?iso-8859-1?Q?nEZLw+7FfV1/4agmWxPff1qsjazoe6vBii4D7Aogdb3WgQdgLSaU1ccCqS?=
- =?iso-8859-1?Q?/DlpQPYmIGV4PSaJBQ79ntk0ywTntoe6CsgmDtVphYNkv6XfJIMgaCHv1L?=
- =?iso-8859-1?Q?5rRx/syDSuJWuX7sLr47WC3WNsXYNTP8LL/Rvr+CCdlwxai3TzmrysAQX3?=
- =?iso-8859-1?Q?sjdZf4KvEa9KyZ6JxrBqfsIN46OSsVKOevvxiqKPn958K8AHm9zuMcOSsP?=
- =?iso-8859-1?Q?KGWP/Tw3AuVMEUyCNIqV5wwYEBoXxsSao29W3J1H+yv7kecy+O3adSLZfA?=
- =?iso-8859-1?Q?CGUanFFdLMWiemH+TawJmIyps2/k72IQWdfjOTIcXZu4xOF7daUYyHQIhK?=
- =?iso-8859-1?Q?9q86tc0dSrY+0H70Z0XZNlnw15/vFVH2bmtvZyirY7SF4dQcqrMyK9sXBj?=
- =?iso-8859-1?Q?b5zKfw+kkLtOChTBwQ7edX4MiQlZNgkKKXaNQOi3xmKEPLmgedSnQLH4Fj?=
- =?iso-8859-1?Q?c0xzsLa86Q5fPoRXwMYtSFM0GA4osDGV0EnwTAJezQy2b34VJU+MLtoJnM?=
- =?iso-8859-1?Q?U79DIKCF4ylkkNbdiut+HUESV/hssyfHfS2OZNevwH5qX0x9xllMZmwX43?=
- =?iso-8859-1?Q?HtXr/F+1I77UfeMXueUx4YUmM0dhyAu5tD6fmhFFayZov2RPoo2AyY/Qu+?=
- =?iso-8859-1?Q?iWGXu/kxgbV6hTEQ9C+eAVEUJ6jMTTTPtc28/djjgkvjfbLhhv3ZdtdCzF?=
- =?iso-8859-1?Q?lwX+G82/yGzcoQX7wGWoqadRFZGxEMdPZp0t18ZBoe9HE28P/6Td4Xr+Vl?=
- =?iso-8859-1?Q?CTtm1lGDuBlblTciyUjHHQjHCFhgM05eenGJ+MLEZGUbM77tIXWZwyQxeS?=
- =?iso-8859-1?Q?gZ/pVasj4MKdgZXg416cWNm0GLyBHbsOrdrpPvBjIhm+2bEcVQxixDD6MO?=
- =?iso-8859-1?Q?Xbki8+QQJ499Clx6oJ33YnbVxuuxLITw4Tf8KPkIUUOESMv+7AIQgMeVJd?=
- =?iso-8859-1?Q?hwIMt7xJYDjQikI3yQz+IVYiOefm3EgwAgB8tQBXIv568jNg724/Oe9vAD?=
- =?iso-8859-1?Q?ndWw=3D=3D?=
-X-OriginatorOrg: supcom.tn
-X-MS-Exchange-CrossTenant-Network-Message-Id: f406e4e0-7347-42d9-b9c9-08dc5e331f0a
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR0402MB3905.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2024 16:34:43.8323
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8f85f528-6195-4e97-8e41-f5a9ad3bed4a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zjoJ4+CuVQM3N2soNGdZaasZTcNzUj/X+24XHJlBQBP11b+tZkROIsAisrKymvQjFbtS0pLQIiwvEKMHrOBg/yM5P9ruJ1NCH6oR5TI4kp4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR04MB9506
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240416053909.256319-5-hpa@redhat.com>
 
-On Tue, Apr 16, 2024 at 03:51:03PM +0300, Ilpo Järvinen wrote:
-> On Sun, 14 Apr 2024, Luke D. Jones wrote:
-> 
-> > From: Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
-> > 
-> > Add support for vivobook fan profiles wmi call on the ASUS VIVOBOOK
-> > to adjust power limits.
-> > 
-> > These fan profiles have a different device id than the ROG series.
-> > and different order.
-> 
-> Fix grammar.
-> 
+Hi Kate,
 
-my grammar is not the greatest so i'm finding it hard to know what is
-the error you're referring to but I think that 'add'
-should become 'adds' ?
+kernel test robot noticed the following build errors:
 
-> > This reorders the existing modes and adds a new
-> > full speed mode available on these laptops.
-> > 
-> > As part of keeping the patch clean the throttle_thermal_policy_available
-> > boolean stored in the driver struct is removed and
-> > throttle_thermal_policy_dev is used in place (as on init it is zeroed).
-> > 
-> > Signed-off-by: Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
-> > Co-developed-by: Luke D. Jones <luke@ljones.dev>
-> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> > ---
-> >  drivers/platform/x86/asus-wmi.c            | 100 +++++++++++----------
-> >  include/linux/platform_data/x86/asus-wmi.h |   1 +
-> >  2 files changed, 55 insertions(+), 46 deletions(-)
-> > 
-> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> > index 2d2b4eca7fd8..439d330fb80b 100644
-> > --- a/drivers/platform/x86/asus-wmi.c
-> > +++ b/drivers/platform/x86/asus-wmi.c
-> > @@ -97,6 +97,11 @@ module_param(fnlock_default, bool, 0444);
-> >  #define ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST	1
-> >  #define ASUS_THROTTLE_THERMAL_POLICY_SILENT	2
-> >  
-> > +#define ASUS_THROTTLE_THERMAL_POLICY_DEFAULT_VIVO	0
-> > +#define ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST_VIVO	2
-> > +#define ASUS_THROTTLE_THERMAL_POLICY_SILENT_VIVO		1
-> 
-> Any good reason why these are not in numerical order?
->
+[auto build test ERROR on sre-power-supply/for-next]
+[also build test ERROR on lee-leds/for-leds-next linus/master v6.9-rc4]
+[cannot apply to pavel-leds/for-next next-20240416]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-these are not in their numerical order but in their logical order
+url:    https://github.com/intel-lab-lkp/linux/commits/Kate-Hsuan/platform-x86-android-tablets-other-Add-swnode-for-Xiaomi-pad2-indicator-LED/20240416-134240
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git for-next
+patch link:    https://lore.kernel.org/r/20240416053909.256319-5-hpa%40redhat.com
+patch subject: [PATCH v6 4/5] power: supply: power-supply-leds: Add charging_orange_full_green trigger for RGB LED
+config: parisc64-defconfig (https://download.01.org/0day-ci/archive/20240417/202404170023.1zEGO9ja-lkp@intel.com/config)
+compiler: hppa64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240417/202404170023.1zEGO9ja-lkp@intel.com/reproduce)
 
-from the point of view of userspace both asus ROG devices and asus
-VIVOBOOK should behave the same: 0 -> default, 1 -> overboost, 2 ->
-silent.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404170023.1zEGO9ja-lkp@intel.com/
 
-I'll add a comment to better explain the reasons behind the order
-of the macros.
+All errors (new ones prefixed by >>):
 
-> > +#define ASUS_THROTTLE_THERMAL_POLICY_FULLSPEED		3
-> > +
-> >  #define USB_INTEL_XUSB2PR		0xD0
-> >  #define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI	0x9c31
-> >  
-> > @@ -285,8 +290,8 @@ struct asus_wmi {
-> >  	u32 kbd_rgb_dev;
-> >  	bool kbd_rgb_state_available;
-> >  
-> > -	bool throttle_thermal_policy_available;
-> >  	u8 throttle_thermal_policy_mode;
-> > +	u32 throttle_thermal_policy_dev;
-> >  
-> >  	bool cpu_fan_curve_available;
-> >  	bool gpu_fan_curve_available;
-> > @@ -3153,7 +3158,7 @@ static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
-> >  	int err, fan_idx;
-> >  	u8 mode = 0;
-> >  
-> > -	if (asus->throttle_thermal_policy_available)
-> > +	if (asus->throttle_thermal_policy_dev)
-> >  		mode = asus->throttle_thermal_policy_mode;
-> >  	/* DEVID_<C/G>PU_FAN_CURVE is switched for OVERBOOST vs SILENT */
-> >  	if (mode == 2)
-> > @@ -3360,7 +3365,7 @@ static ssize_t fan_curve_enable_store(struct device *dev,
-> >  		 * For machines with throttle this is the only way to reset fans
-> >  		 * to default mode of operation (does not erase curve data).
-> >  		 */
-> > -		if (asus->throttle_thermal_policy_available) {
-> > +		if (asus->throttle_thermal_policy_dev) {
-> >  			err = throttle_thermal_policy_write(asus);
-> >  			if (err)
-> >  				return err;
-> > @@ -3577,8 +3582,8 @@ static const struct attribute_group asus_fan_curve_attr_group = {
-> >  __ATTRIBUTE_GROUPS(asus_fan_curve_attr);
-> >  
-> >  /*
-> > - * Must be initialised after throttle_thermal_policy_check_present() as
-> > - * we check the status of throttle_thermal_policy_available during init.
-> > + * Must be initialised after throttle_thermal_policy_dev is set as
-> > + * we check the status of throttle_thermal_policy_dev during init.
-> >   */
-> >  static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
-> >  {
-> > @@ -3619,38 +3624,31 @@ static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
-> >  }
-> >  
-> >  /* Throttle thermal policy ****************************************************/
-> > -
-> > -static int throttle_thermal_policy_check_present(struct asus_wmi *asus)
-> > -{
-> > -	u32 result;
-> > -	int err;
-> > -
-> > -	asus->throttle_thermal_policy_available = false;
-> > -
-> > -	err = asus_wmi_get_devstate(asus,
-> > -				    ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
-> > -				    &result);
-> > -	if (err) {
-> > -		if (err == -ENODEV)
-> > -			return 0;
-> > -		return err;
-> > -	}
-> > -
-> > -	if (result & ASUS_WMI_DSTS_PRESENCE_BIT)
-> > -		asus->throttle_thermal_policy_available = true;
-> > -
-> > -	return 0;
-> > -}
-> > -
-> >  static int throttle_thermal_policy_write(struct asus_wmi *asus)
-> >  {
-> > -	int err;
-> > -	u8 value;
-> > +	u8 value = asus->throttle_thermal_policy_mode;
-> >  	u32 retval;
-> > +	bool vivo;
-> > +	int err;
-> >  
-> > -	value = asus->throttle_thermal_policy_mode;
-> > +	vivo = asus->throttle_thermal_policy_dev == ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
-> > +	if (vivo) {
-> > +		switch (value) {
-> > +		case ASUS_THROTTLE_THERMAL_POLICY_DEFAULT:
-> > +			value = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT_VIVO;
-> > +			break;
-> > +		case ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST:
-> > +			value = ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST_VIVO;
-> > +			break;
-> > +		case ASUS_THROTTLE_THERMAL_POLICY_SILENT:
-> > +			value = ASUS_THROTTLE_THERMAL_POLICY_SILENT_VIVO;
-> > +			break;
-> > +		default:
-> > +			break;
-> > +		}
-> > +	}
-> >  
-> > -	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
-> > +	err = asus_wmi_set_devstate(asus->throttle_thermal_policy_dev,
-> >  				    value, &retval);
-> >  
-> >  	sysfs_notify(&asus->platform_device->dev.kobj, NULL,
-> > @@ -3680,7 +3678,7 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
-> >  
-> >  static int throttle_thermal_policy_set_default(struct asus_wmi *asus)
-> >  {
-> > -	if (!asus->throttle_thermal_policy_available)
-> > +	if (!asus->throttle_thermal_policy_dev)
-> >  		return 0;
-> >  
-> >  	asus->throttle_thermal_policy_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
-> > @@ -3690,9 +3688,14 @@ static int throttle_thermal_policy_set_default(struct asus_wmi *asus)
-> >  static int throttle_thermal_policy_switch_next(struct asus_wmi *asus)
-> >  {
-> >  	u8 new_mode = asus->throttle_thermal_policy_mode + 1;
-> > +	bool vivo;
-> >  	int err;
-> >  
-> > -	if (new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
-> > +	vivo = asus->throttle_thermal_policy_dev == ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
-> > +	if (!vivo && new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
-> > +		new_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
-> > +
-> > +	if (vivo && new_mode > ASUS_THROTTLE_THERMAL_POLICY_FULLSPEED)
-> >  		new_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
-> 
-> Hmm, add a throttle_thermal_policy_max_mode() helper instead so you can do 
-> just this:
-> 
-> 	if (new_mode > throttle_thermal_policy_max_mode(...))
-> 		new_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
-> 
-> 
+   drivers/power/supply/power_supply_leds.c: In function 'power_supply_update_bat_leds':
+>> drivers/power/supply/power_supply_leds.c:42:17: error: implicit declaration of function 'led_mc_trigger_event'; did you mean 'led_trigger_event'? [-Werror=implicit-function-declaration]
+      42 |                 led_mc_trigger_event(psy->charging_orange_full_green_trig,
+         |                 ^~~~~~~~~~~~~~~~~~~~
+         |                 led_trigger_event
+   cc1: some warnings being treated as errors
 
-this is definitely better! i'll make the necessary changes in v1.
 
-> >  	asus->throttle_thermal_policy_mode = new_mode;
-> > @@ -3725,13 +3728,17 @@ static ssize_t throttle_thermal_policy_store(struct device *dev,
-> >  	struct asus_wmi *asus = dev_get_drvdata(dev);
-> >  	u8 new_mode;
-> >  	int result;
-> > +	bool vivo;
-> >  	int err;
-> >  
-> >  	result = kstrtou8(buf, 10, &new_mode);
-> >  	if (result < 0)
-> >  		return result;
-> >  
-> > -	if (new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
-> > +	vivo = asus->throttle_thermal_policy_dev == ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
-> > +	if (vivo && new_mode > ASUS_THROTTLE_THERMAL_POLICY_FULLSPEED)
-> > +		return -EINVAL;
-> > +	else if (!vivo && new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
-> 
-> Use the throttle_thermal_policy_max_mode() helper here too.
-> 
+vim +42 drivers/power/supply/power_supply_leds.c
 
-i'll do the appropriate changes here too.
+    21	
+    22	static void power_supply_update_bat_leds(struct power_supply *psy)
+    23	{
+    24		union power_supply_propval status;
+    25		unsigned int intensity_green[3] = {255, 0, 0};
+    26		unsigned int intensity_orange[3] = {128, 0, 255};
+    27		unsigned int intensity_red[3] = {0, 0, 255};
+    28	
+    29		if (power_supply_get_property(psy, POWER_SUPPLY_PROP_STATUS, &status))
+    30			return;
+    31	
+    32		dev_dbg(&psy->dev, "%s %d\n", __func__, status.intval);
+    33	
+    34		switch (status.intval) {
+    35		case POWER_SUPPLY_STATUS_FULL:
+    36			led_trigger_event(psy->charging_full_trig, LED_FULL);
+    37			led_trigger_event(psy->charging_trig, LED_OFF);
+    38			led_trigger_event(psy->full_trig, LED_FULL);
+    39			/* Going from blink to LED on requires a LED_OFF event to stop blink */
+    40			led_trigger_event(psy->charging_blink_full_solid_trig, LED_OFF);
+    41			led_trigger_event(psy->charging_blink_full_solid_trig, LED_FULL);
+  > 42			led_mc_trigger_event(psy->charging_orange_full_green_trig,
+    43					     intensity_green,
+    44					     ARRAY_SIZE(intensity_green),
+    45					     LED_FULL);
+    46			break;
+    47		case POWER_SUPPLY_STATUS_CHARGING:
+    48			led_trigger_event(psy->charging_full_trig, LED_FULL);
+    49			led_trigger_event(psy->charging_trig, LED_FULL);
+    50			led_trigger_event(psy->full_trig, LED_OFF);
+    51			led_trigger_blink(psy->charging_blink_full_solid_trig, 0, 0);
+    52			led_mc_trigger_event(psy->charging_orange_full_green_trig,
+    53					     intensity_orange,
+    54					     ARRAY_SIZE(intensity_orange),
+    55					     LED_FULL);
+    56			break;
+    57		default:
+    58			led_trigger_event(psy->charging_full_trig, LED_OFF);
+    59			led_trigger_event(psy->charging_trig, LED_OFF);
+    60			led_trigger_event(psy->full_trig, LED_OFF);
+    61			led_trigger_event(psy->charging_blink_full_solid_trig,
+    62				LED_OFF);
+    63			led_mc_trigger_event(psy->charging_orange_full_green_trig,
+    64					     intensity_red,
+    65					     ARRAY_SIZE(intensity_red),
+    66					     LED_OFF);
+    67			break;
+    68		}
+    69	}
+    70	
 
-> >  		return -EINVAL;
-> >  
-> >  	asus->throttle_thermal_policy_mode = new_mode;
-> 
-> -- 
->  i.
-> 
-
-thank you for your time.
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
