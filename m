@@ -1,143 +1,106 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61CE5A116;
-	Tue, 16 Apr 2024 21:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808CF152DF7;
+	Tue, 16 Apr 2024 21:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713301694; cv=none; b=poN922tUYUOXH/xoQxdPrI2SCljLf95TQjEomVjuwWT0i3DND+M6bpSW3krpalaeyg0MgL34O7uRTbRmRAXvDV/JrYL28jwUhzy447e2r+hYz1ziEKMRB8bMTVeqyCdtASXPbMV4wakpy1FVF0L9iwnL7gCGepFCyuYKXAr0RnU=
+	t=1713302545; cv=none; b=kHBpdy35l+qxLVyUoxfrQtIsHkwYX1hcPOZTAEV3tUPTBqQ4SeNv5T3ylo75h0UDZZa3dgKFP7gK8wQ72hxoUsESHh+iL6TWHW8/qurCUcIBJm0hBKlp/80LaIzIocTmIuLreFyEhn773nOTSLGjrkAMgY6NLdrRExInvcx8O6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713301694; c=relaxed/simple;
-	bh=cVRfsInjV4PY1kypj4NTkJ8QGpl3sEUZhiB9xb82I3s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fv/kCsCwcGqcluXIXguITo3vO7hb1V+EoKvHdLBrrtn1Bf8lcWjlBGwEB4FETDBsRnv/XazqMb5o+nW/DFWRWFDEFvCXYWTm0AP6cFHMnyg4L5mn11Lvevtf81spwC354Ghj2nQqcSQJKbANn7yCV7voA0uXFkrbeHZUeKfOOnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kmcd84tO; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713302545; c=relaxed/simple;
+	bh=GAJ4tXjEN7lQ2UunRHqVUyKqhAXnTvHjZyO58Eg7pVo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mYpSqquzL/gUwBidLU56M20P0yJVy+ZO52sDsBfBO7wcqozoEUck+2xANpkW0I4tRPxYI5dBfhGjNFEU6bWxTVgpbIcBhOp6HZcZztqhHsHdvhpdSX7/jG7UNDDRmU+7sSfsW0PqSbig/Kzbgm+klbFoI+/3NkK2ZJKG7ywm5l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j2otpApf; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kmcd84tO"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6ed9fc77bbfso3813279b3a.1;
-        Tue, 16 Apr 2024 14:08:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713301692; x=1713906492; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=i331i1Wcy5r/lDRFeghXmoWu6lGxaTU061BqljzeiVk=;
-        b=Kmcd84tOCxod5e9zwD3Fxg+ZRIBfMn4AOBeIUt3rC0llJHcRgtcW0dWVdWVwWwd4Sg
-         JazfHbp7LrHWF3akmohcqKyv7FXonzbumCSZFvo7Udy3+ahikjxGaMdXCjTJRyb9pJWj
-         wibgo6ZUlgsTzwmpCzpAytbuBzXHUXYHxN4YGvb7TcQbobZxcZtK7Pu9BcaeKZJlcjzH
-         Dl1R2F7+sBeahSlI8/qj0x2xx+OlMKRmmuG67f78qywzeGwlG1UUK/PCsgqT8PfGh/4W
-         +AWY6ziA5AT73SEpZ0xq3WvX3RrMT7TqpoXi6DyI7uRiwlwGtvJbSSG5d1d0lvRhME6n
-         RwGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713301692; x=1713906492;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=i331i1Wcy5r/lDRFeghXmoWu6lGxaTU061BqljzeiVk=;
-        b=rkhJzLnBujUzQAFTyKF1VDaU71LHhC9JULJ2EESKYkwor4iVsH4vqjBgeOa5wSV052
-         iwQVKrlTjdpcvYRpVvFRQXZnH2/vtuSWymldSXOULXju8lHkgem4K9ht9P4Pc5LI2Rzr
-         vNS+BcLXlnfdk1JbAVMhobSJZNGpcI4/COyQNKq9Wsg/IZKvAwFYdyMab9Env8vryZ+X
-         zZ+ko5Y5XbtK14yaGQlRpfW6QbSHJgornRtqi0Cu+NBS/r4HxMACaFhoLWX3kfW11j/T
-         fXdKg+xekpUZklLk12BkKq/vXzgwVWGCKBK9y9kjiUURMWKHp7lD2rtHOCsT45pmm/2z
-         w9MQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/yZ4qW06okP2To7YdmPPnUWzh5zdVxoKDC741llBtjrfFCUdc2802WB/sY9BU2YJxC0yvzKFN7vXf5zjIra/LDVm0vSDGh/oFKirUWxzMF+Ize0qp+M0upzE3IuxIaxPPepQO8dvmM2XdjL1dvJmPLmh9JjZaU4Y8zcbSOf8sLHNTyVAeCUPDguQBEz3/
-X-Gm-Message-State: AOJu0YxkRd6sX6FZ0nKjlqqOf7xYA5qPNdIpLnPpCWE96UWg3pyDHAUR
-	zEFLUKganSamrFn6ph2n4chglSYBS1cEjxL6r3NzKROtkrYpNUeS
-X-Google-Smtp-Source: AGHT+IHHi3KdjnjY0V9UEzcg8HtLCOxWhI6RMCOGq0dHKinG4EJl4xSHwSXlUd7jG9SeBpwVzdTetg==
-X-Received: by 2002:a05:6a21:3405:b0:1a9:f44b:98f6 with SMTP id yn5-20020a056a21340500b001a9f44b98f6mr7502419pzb.15.1713301692028;
-        Tue, 16 Apr 2024 14:08:12 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c21-20020a62e815000000b006ed0199bd57sm9734902pfi.177.2024.04.16.14.08.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 14:08:11 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Tue, 16 Apr 2024 14:08:09 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Maximilian Luz <luzmaximilian@gmail.com>
-Cc: Jean Delvare <jdelvare@suse.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j2otpApf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713302545; x=1744838545;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=GAJ4tXjEN7lQ2UunRHqVUyKqhAXnTvHjZyO58Eg7pVo=;
+  b=j2otpApf2XSK1qo4zL48ao81F2uLo/xdUrXNNjH9Uj724vh1NfncuVHY
+   h3X9rJ/etCyYMMWoG9abPS5nCi97gplwYtqX75HORCGJU7Zo8VJ7pzUsw
+   ex45ADqfhCB2/dyabfx6SCdF4ea3a0cN8MPxkS2oNUMc3QYiLmp5RK7UP
+   RjbPXZwDdIsQIbEQ6ZsDO0DPuKn7oi2ni2j0BPPwX4TLQ64jaV1ENcI6C
+   2Y7vZGzJkaFhJ4vRXwTKCNd02E2mj4EDh2U+rQMq38IDqtDj5YsO/eR6V
+   jqn+PMGiEX948Rg9Sop9osbmv4HDstZXW6Vv5t+DU5OcZDaBqGwlwo9jx
+   A==;
+X-CSE-ConnectionGUID: K7UAsONjS1S+cZC40rEP3Q==
+X-CSE-MsgGUID: Pg8RHgEFQhGH2rtqybB/Sg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="26234927"
+X-IronPort-AV: E=Sophos;i="6.07,207,1708416000"; 
+   d="scan'208";a="26234927"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 14:22:25 -0700
+X-CSE-ConnectionGUID: 8HuaCAnEQ2+bhEqnjgK5OA==
+X-CSE-MsgGUID: lwRgnZ30SsGhA2NCoUwOSg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,207,1708416000"; 
+   d="scan'208";a="22267098"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 14:22:24 -0700
+From: Tony Luck <tony.luck@intel.com>
+To: Jithu Joseph <jithu.joseph@intel.com>,
 	Hans de Goede <hdegoede@redhat.com>,
-	Ivor Wanders <ivor@iwanders.net>, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH 2/3] hwmon: surface_temp: Add support for sensor names
-Message-ID: <8d62af9d-281a-44c0-a40c-93ae76827705@roeck-us.net>
-References: <20240330112409.3402943-1-luzmaximilian@gmail.com>
- <20240330112409.3402943-3-luzmaximilian@gmail.com>
- <43908511-198f-42ee-af21-dad79bdf799a@roeck-us.net>
- <97d0f68f-63da-4f72-ae8d-89fbf9aadf62@gmail.com>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Ashok Raj <ashok.raj@intel.com>,
+	Tony Luck <tony.luck@intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: [PATCH v3 54/74] x86/cpu/vfm: Update drivers/platform/x86/intel/ifs/core.c
+Date: Tue, 16 Apr 2024 14:22:23 -0700
+Message-ID: <20240416212223.9681-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240416211941.9369-1-tony.luck@intel.com>
+References: <20240416211941.9369-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <97d0f68f-63da-4f72-ae8d-89fbf9aadf62@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 16, 2024 at 09:00:05PM +0200, Maximilian Luz wrote:
-> On 4/16/24 3:30 PM, Guenter Roeck wrote:
-> > On Sat, Mar 30, 2024 at 12:24:01PM +0100, Maximilian Luz wrote:
-> 
-> [...]
-> 
-> > > +static int ssam_tmp_get_name(struct ssam_device *sdev, u8 iid, char *buf, size_t buf_len)
-> > > +{
-> > > +	struct ssam_tmp_get_name_rsp name_rsp;
-> > > +	int status;
-> > > +
-> > > +	status =  __ssam_tmp_get_name(sdev->ctrl, sdev->uid.target, iid, &name_rsp);
-> > > +	if (status)
-> > > +		return status;
-> > > +
-> > > +	/*
-> > > +	 * This should not fail unless the name in the returned struct is not
-> > > +	 * null-terminated or someone changed something in the struct
-> > > +	 * definitions above, since our buffer and struct have the same
-> > > +	 * capacity by design. So if this fails blow this up with a warning.
-> > > +	 * Since the more likely cause is that the returned string isn't
-> > > +	 * null-terminated, we might have received garbage (as opposed to just
-> > > +	 * an incomplete string), so also fail the function.
-> > > +	 */
-> > > +	status = strscpy(buf, name_rsp.name, buf_len);
-> > > +	WARN_ON(status < 0);
-> > 
-> > Not acceptable. From include/asm-generic/bug.h:
-> > 
-> >   * Do not use these macros when checking for invalid external inputs
-> >   * (e.g. invalid system call arguments, or invalid data coming from
-> >   * network/devices), and on transient conditions like ENOMEM or EAGAIN.
-> >   * These macros should be used for recoverable kernel issues only.
-> > 
-> 
-> Hmm, I always interpreted that as "do not use for checking user-defined
-> input", which this is not.
-> 
+New CPU #defines encode vendor and family as well as model.
 
-"invalid data coming from network/devices" is not user-defined input.
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+---
+ drivers/platform/x86/intel/ifs/core.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-> The reason I added/requested it here was to check for "bugs" in how we
-> think the interface behaves (and our definitions related to it) as the
-> interface was reverse-engineered. Generally, when this fails I expect
-> that we made some mistake in our code (or the things we assume about the
-> interface), which likely causes us to interpret the received data as
-> "garbage" (and not the EC sending corrupted data, which it is generally
-> not due to CRC checking and validation in the SAM driver). Hence, I
-> personally would prefer if this blows up in a big warning with a trace
-> attached to it, so that an end-user can easily report this to us and
-> that we can appropriately deal with it. As opposed to some one-line
-> error message that will likely get overlooked or not taken as seriously.
-> 
+diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
+index 7b11198d85a1..33412a584836 100644
+--- a/drivers/platform/x86/intel/ifs/core.c
++++ b/drivers/platform/x86/intel/ifs/core.c
+@@ -11,16 +11,15 @@
+ 
+ #include "ifs.h"
+ 
+-#define X86_MATCH(model, array_gen)				\
+-	X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6,	\
+-		INTEL_FAM6_##model, X86_FEATURE_CORE_CAPABILITIES, array_gen)
++#define X86_MATCH(vfm, array_gen)				\
++	X86_MATCH_VFM_FEATURE(vfm, X86_FEATURE_CORE_CAPABILITIES, array_gen)
+ 
+ static const struct x86_cpu_id ifs_cpu_ids[] __initconst = {
+-	X86_MATCH(SAPPHIRERAPIDS_X, ARRAY_GEN0),
+-	X86_MATCH(EMERALDRAPIDS_X, ARRAY_GEN0),
+-	X86_MATCH(GRANITERAPIDS_X, ARRAY_GEN0),
+-	X86_MATCH(GRANITERAPIDS_D, ARRAY_GEN0),
+-	X86_MATCH(ATOM_CRESTMONT_X, ARRAY_GEN1),
++	X86_MATCH(INTEL_SAPPHIRERAPIDS_X, ARRAY_GEN0),
++	X86_MATCH(INTEL_EMERALDRAPIDS_X, ARRAY_GEN0),
++	X86_MATCH(INTEL_GRANITERAPIDS_X, ARRAY_GEN0),
++	X86_MATCH(INTEL_GRANITERAPIDS_D, ARRAY_GEN0),
++	X86_MATCH(INTEL_ATOM_CRESTMONT_X, ARRAY_GEN1),
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(x86cpu, ifs_cpu_ids);
+-- 
+2.44.0
 
-I have heard the "This backtrace is absolutely essential" argument before,
-including the "will be fixed" part. Chromebooks report more than 500,000
-warning backtraces _every single day_. None of them is getting fixed.
-
-> If you still insist, I could change that to a dev_err() message. Or
-> maybe make the comment a bit clearer.
-
-dev_err() would be acceptable. WARN() or WARN_ON() are no-go.
-
-Guenter
