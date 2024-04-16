@@ -1,94 +1,206 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F0944C81
-	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Apr 2024 05:40:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE0A83CAE
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Apr 2024 08:33:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713246025; cv=none; b=oCKJXCnZ5u1beTe+i1vm8pjdM6sxGgCammbCwUAVONNL//I5XdTfjyVsXAKSIgdhDGrX6FIAIcPGeP/6CJeWQ/vNlKGcM8iH6yLfsxTfamJ8DrEB/7WbQ/PkrRJTRK6hAXSTpLcap4J9QISKVe9nhBTMfbcn7o6VKzOsg37JnAA=
+	t=1713256387; cv=none; b=rl6RlZXJNzEmAsOphLIoRSL8KCgnCHyE3ljqtuPh/aZskOYA3GneXu+doiTF0PHlC0XQe85hWPVhC0Yi0MhME+QkVr8dJthtIvwaMsbA2nb4t0QXQSY9XmkSJj9T8qUti+0sRCIFDq2Hpnd8g3XLjzWM2lcfYU2h7sBJNQJzgPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713246025; c=relaxed/simple;
-	bh=p7Qf/Wv2gRIQXdGwm+8FyGDK8jF8gAk1WduxuCaLuAU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p/phnSPICKTIGXSUFEC0BfFtG8NzsRwxMGHrqvc+TAGhfxhErtCfv7PKyjf7MZxeNMstDz9vUNY0eseOWWOch7U0jtBrM+fOANfv1YtTpNs5OcRug1LocPkYeSjKGV9NIaqD8BQMmRfHhlHz50sbtFikUas2btVYBt5hSq6ZOxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GZBOy22q; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1713256387; c=relaxed/simple;
+	bh=E61E8H16GakIaEmE/TXSR6XZKZtY7a81hn578ZQMSOc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c1CvN8eFH84dBdmJC7Dggx1+wRZlGX3tR1WQE0zhDR05nAeM1COupf9RFV/YQ6ckCaExiwf03WUXnOr5xUZd+qaePoVCZK0V4+PIAOqUc2dx7HRuwCSuC2pkrhPjOkZsSGnqkbG5oYvVWhgrUtLlpx4bJ0Gs0Bfm7RB/XER9EiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i7TisAt0; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GZBOy22q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i7TisAt0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713246023;
+	s=mimecast20190719; t=1713256385;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oCFCbOFCL4zzLvTeJtHwSPF85SA+R3VeJ49a5BsSC8o=;
-	b=GZBOy22q3QXUtN5OKocwSieHYsY9CEQd4kmi9NWOV1cBz78CGt63SoiNFYMUyONKdNCK7I
-	DoSqQUEME9Yn6+vEeVmvr6nAOGcZalDHqoxsD+qqyY4pWg6h5FD7ikp1c2ZiP7xBpR1JYD
-	WPTG2GOhT5jrQ/GPW/h3IbhFYPGzfSo=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=bzpK2jyxFnbS3uykXAlBWfyvSN7g3DKEoILwHz1vuj8=;
+	b=i7TisAt0sYOwy3NWXB+rsDk+5mls8A1o3zbSKiBSfrVxNS0WjDkjsVcB0Ax8cTCZWk9E73
+	xfvCpyGpDdExN3idFkt2S1SraTqJ5CNXb4h5jlBFSak+GSjrPIqM8xtVR/iPyDc3xMiqQ3
+	aJYpP59sqwkKhmETKg8Tp6Rj29RkBlw=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-692-GYCt1oTgPSinxF7vLj3KzQ-1; Tue, 16 Apr 2024 01:40:18 -0400
-X-MC-Unique: GYCt1oTgPSinxF7vLj3KzQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D7F418007BA;
-	Tue, 16 Apr 2024 05:40:17 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.39.192.2])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 2AA0E51EF;
-	Tue, 16 Apr 2024 05:40:11 +0000 (UTC)
-From: Kate Hsuan <hpa@redhat.com>
-To: Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>,
-	linux-leds@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	=?UTF-8?q?Andr=C3=A9=20Apitzsch?= <git@apitzsch.eu>,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Sebastian Reichel <sre@kernel.org>,
-	linux-pm@vger.kernel.org
-Cc: Kate Hsuan <hpa@redhat.com>
-Subject: [PATCH v6 5/5] platform: x86-android-tablets: others: Set the LED trigger to charging_orange_full_green for Xiaomi pad2
-Date: Tue, 16 Apr 2024 13:39:09 +0800
-Message-ID: <20240416053909.256319-6-hpa@redhat.com>
-In-Reply-To: <20240416053909.256319-1-hpa@redhat.com>
-References: <20240416053909.256319-1-hpa@redhat.com>
+ us-mta-376-Fk3PHW6cM-CkKhbXPwkAMw-1; Tue, 16 Apr 2024 04:33:03 -0400
+X-MC-Unique: Fk3PHW6cM-CkKhbXPwkAMw-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-56bf2d59fceso3601228a12.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 16 Apr 2024 01:33:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713256382; x=1713861182;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bzpK2jyxFnbS3uykXAlBWfyvSN7g3DKEoILwHz1vuj8=;
+        b=w2JZfBOo+HQ1n7bRH3KVL+IK934eZLA/bTZ/LXObHN1qY0jda7GmbO5AFLYs9yZnW9
+         1qn8RfrLpUBE+1aHXlhmuS9CABm3VJWmUhyCdmYXqqOmL3W2NNFnZpx3P9yjizaKEl/M
+         lU5Q2QuxTNgsRXGWHLpjR+pif8RGvXpOKarWKWfPGyd7CrIv4yoL6Bbu13MVXogNaT3w
+         NN6MOGecZjZ+ENm+WVJCZLws8rR8S1V5gUqbPBV/FP8GVL+D4d6y62PECw6JGNZnvOCd
+         yEPTKFLvLIbVbF5AHRIqe+gl3JtlZdfyCjQZnXykk8baV3kPMYz3GDJ52oqpwwDpigLi
+         7D1g==
+X-Forwarded-Encrypted: i=1; AJvYcCWZgL1W+dVXidtm1b5LrCRiOnkDaOkVr2ju5F/dQ3hE34SKTn1fiHERZwa1QAbGk4wsGYbeKUKMyPq7vYBlagcYRcchPjc0AAJRFe9iPb633NN6VQ==
+X-Gm-Message-State: AOJu0Yxlv7XEBbvfrVyT+GD7C4AXBsRs1TcYq2mYBbdK6z5SqzOE64OZ
+	2n5VEcVA00B/ITbIrgcPGPSwkYifjX8hDjQcMTfsf9RGrIdEGDGGSxFzbGF4CXWumvypUuDU3h/
+	XLF9gRcxL8NvqmsQCqIdjhPgCmh6FBQoNMR6lxmX8w0JxHajeg4mJH2bY0BdPwjh5QUDl+Zs=
+X-Received: by 2002:a50:d716:0:b0:56e:63d3:cb3e with SMTP id t22-20020a50d716000000b0056e63d3cb3emr8580033edi.41.1713256382598;
+        Tue, 16 Apr 2024 01:33:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGmGRIbPaa1zBElQ+wLeSk/BgoY6QqwrgiNVIehp0etno1auNVqL5G4D3OtM6pxepLqXW5HPA==
+X-Received: by 2002:a50:d716:0:b0:56e:63d3:cb3e with SMTP id t22-20020a50d716000000b0056e63d3cb3emr8580010edi.41.1713256382220;
+        Tue, 16 Apr 2024 01:33:02 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id l3-20020a056402124300b00570229afc16sm2671144edw.7.2024.04.16.01.33.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Apr 2024 01:33:01 -0700 (PDT)
+Message-ID: <27b1b6cf-759c-4778-a53c-5d01442120b7@redhat.com>
+Date: Tue, 16 Apr 2024 10:33:00 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] Input: Add trackpoint doubletap and system debug info
+ keycodes
+To: Mark Pearson <mpearson-lenovo@squebb.ca>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Peter Hutterer <peter.hutterer@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+ ibm-acpi-devel@lists.sourceforge.net,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Nitin Joshi1 <njoshi1@lenovo.com>, Vishnu Sankar <vsankar@lenovo.com>
+References: <f3342c0b-fb31-4323-aede-7fb02192cf44@redhat.com>
+ <ZhW3Wbn4YSGFBgfS@google.com> <ZhXpZe1Gm5e4xP6r@google.com>
+ <92ee5cb2-565e-413c-b968-81393a9211c4@app.fastmail.com>
+ <ZhcogDESvZmUPEEf@google.com>
+ <91593303-4a6a-49c9-87a0-bb6f72f512a1@app.fastmail.com>
+ <Zh2CtKy1NfKfojzS@google.com>
+ <484638e2-1565-454b-97f8-4fcc6514a69c@redhat.com>
+ <Zh2G85df29tPP6OK@google.com>
+ <539776c5-6243-464b-99ae-5b1b1fb40e4b@app.fastmail.com>
+ <Zh2wO0Bnyr8vFSpc@google.com>
+ <7de52ec3-86f3-4a1d-ac87-a106ae1acb5d@app.fastmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <7de52ec3-86f3-4a1d-ac87-a106ae1acb5d@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Set the default trigger to bq27520-0-charging-orange-full-green. The LED
-will show orange when the battery is charging. The LED will show green
-when the battery status is full.
+Hi Mark,
 
-Signed-off-by: Kate Hsuan <hpa@redhat.com>
----
- drivers/platform/x86/x86-android-tablets/other.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 4/16/24 1:57 AM, Mark Pearson wrote:
+> Hi Dmitry,
+> 
+> On Mon, Apr 15, 2024, at 6:54 PM, Dmitry Torokhov wrote:
+>> On Mon, Apr 15, 2024 at 04:28:19PM -0400, Mark Pearson wrote:
+>>> Hi
+>>>
+>>> On Mon, Apr 15, 2024, at 3:58 PM, Dmitry Torokhov wrote:
+>>>> On Mon, Apr 15, 2024 at 09:50:37PM +0200, Hans de Goede wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On 4/15/24 9:40 PM, Dmitry Torokhov wrote:
+>>>>>> On Wed, Apr 10, 2024 at 10:48:10PM -0400, Mark Pearson wrote:
+>>>>>>>
+>>>>>>> I have a stronger preference to keep the KEY_DOUBLECLICK - that one seems less controversial as a genuine new input event.
+>>>>>>
+>>>>>> Please see my response to Peter's letter. I think it very much depends
+>>>>>> on how it will be used (associated with the pointer or standalone as it
+>>>>>> is now).
+>>>>>>
+>>>>>> For standalone application, recalling your statement that on Win you
+>>>>>> have this gesture invoke configuration utility I would argue for
+>>>>>> KEY_CONFIG for it.
+>>>>>
+>>>>> KEY_CONFIG is already generated by Fn + F# on some ThinkPads to launch
+>>>>> the GNOME/KDE control center/panel and I believe that at least GNOME
+>>>>> comes with a default binding to map KEY_CONFIG to the control-center.
+>>>>
+>>>> Not KEY_CONTROLPANEL?
+>>>>
+>>>> Are there devices that use both Fn+# and the doubleclick? Would it be an
+>>>> acceptable behavior for the users to have them behave the same?
+>>>>
+>>> Catching up with the thread, thanks for all the comments.
+>>>
+>>> For FN+N (originally KEY_DEBUG_SYS_INFO) the proposal was to now use
+>>> KEY_VENDOR there. My conclusion was that this is targeting vendor
+>>> specific functionality, and that was the closest fit, if a new keycode
+>>> was not preferred.
+>>
+>> Fn+N -> KEY_VENDOR mapping sounds good to me.
+>>
+>>>
+>>> For the doubletap (which is a unique input event - not related to the
+>>> pointer) I would like to keep it as a new unique event. 
+>>>
+>>> I think it's most likely use would be for control panel, but I don't
+>>> think it should be limited to that. I can see it being useful if users
+>>> are able to reconfigure it to launch something different (browser or
+>>> music player maybe?), hence it would be best if it did not conflict
+>>> with an existing keycode function. I also can't confirm it doesn't
+>>> clash on existing or future systems - it's possible.
+>>
+>> So here is the problem. Keycodes in linux input are not mere
+>> placeholders for something that will be decided later how it is to be
+>> used, they are supposed to communicate intent and userspace ideally does
+>> not need to have any additional knowledge about where the event is
+>> coming from. A keyboard either internal or external sends KEY_SCREENLOCK
+>> and the system should lock the screen. It should not be aware that one
+>> device was a generic USB external keyboard while another had an internal
+>> sensor that recognized hovering palm making swiping motion to the right
+>> because a vendor decided to make it. Otherwise you have millions of
+>> input devices all generating unique codes and you need userspace to
+>> decide how to interpret data coming from each device individually.
+>>
+>> If you truly do not have a defined use case for it you have a couple
+>> options:
+>>
+>> - assign it KEY_RESERVED, ensure your driver allows remapping to an
+>>   arbitrary keycode, let user or distro assign desired keycode to it
+>>
+>> - assign KEY_PROG1 .. KEY_PROG4 - pretty much the same - leave it in the
+>>   hand of the user to define a shortcut in their DE to make it useful
+>>
+>>>
+>>> FWIW - I wouldn't be surprised with some of the new gaming systems
+>>> we're seeing (Steamdeck, Legion-Go, etc), that a doubletap event on a
+>>> joystick might be useful to have, if the HW supports it?
+>>
+>> What would it do exactly? Once we have this answer we can define key or
+>> button code (although I do agree that game controller buttons are
+>> different from "normal" keys because they map to the geometry of the
+>> controller which in turn defines their commonly understood function).
+>>
+>> But in any case you would not reuse the same keycode for something that
+>> is supposed to invoke a configuration utility and also to let's say
+>> drop a flash grenade in a game.
+>>
+> 
+> Understood.
+> 
+> I don't see a path forward within your stated parameters. I did not realise that there were such limitations, so my apologies for wasting everybody's time, and thank you for your patience and guidance.
+> 
+> I will drop this patch from the series and proceed using existing defined codes only.
+> 
+> Hans, I'll need to rejig things a bits but I have some ideas and I think I can make it work and stay within the pdx86 tree, which will make it simpler.
 
-diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
-index c77d56454f2d..52032a874b7f 100644
---- a/drivers/platform/x86/x86-android-tablets/other.c
-+++ b/drivers/platform/x86/x86-android-tablets/other.c
-@@ -610,7 +610,7 @@ static const struct property_entry ktd2026_rgb_led_props[] = {
- 	PROPERTY_ENTRY_U32("reg", 0),
- 	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_RGB),
- 	PROPERTY_ENTRY_STRING("function", "indicator"),
--	PROPERTY_ENTRY_STRING("linux,default-trigger", "bq27520-0-charging"),
-+	PROPERTY_ENTRY_STRING("linux,default-trigger", "bq27520-0-charging-orange-full-green"),
- 	{ }
- };
- 
--- 
-2.44.0
+Ok this sounds good to me. For Fn + N using KEY_VENDOR sounds good for
+me and for the doubletap any one of KEY_CONFIG/KEY_CONTROLPANEL/KEY_INFO/KEY_PROG1
+or some other suitable KEY_foo define works for me.
+
+Regards,
+
+Hans
+
+
 
