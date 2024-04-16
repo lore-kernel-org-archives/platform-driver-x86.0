@@ -1,126 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25F8156895;
-	Tue, 16 Apr 2024 21:22:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D46812C81A
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Apr 2024 21:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713302574; cv=none; b=ndg219F8g+hkRUZiLSnvFptqdjhnPluzthwakbQzSxFBvEphuqdZWJxetwyv9XI8uMxe/3pc2Wya4IjN9M2nHT+KiTvB5y9oeUivQbrRoJun6NJJD6E/W5jKb9TNeEgISXlqNEbZuOhVXhmPjfWlIJM4Y6eiqkqs9ThKRNJc6Ws=
+	t=1713303303; cv=none; b=QAC4U3F9reB2idK9yq73bM7JrFuAGo4B9N4Tkh9pPsBrV1dcUpaAuNtMR/fqQLa6lAG4D87trxqM9HB25YW/81JBpGOUm6i8Jrl214g1oGXTilTwSHk6WNq04tGRGq7spqjX7cOCuf5aXuQN1qJ9yqSTGMDoL55+li9S3z4PcQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713302574; c=relaxed/simple;
-	bh=IUM4l0d+HAzrageBnuTfsgyVu/n79Su2Td/OJNGsTIg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oO2K5Zo904b5VEM6AFmTqYwooeYa2ijTDZe8ZFFzLbZubGiRtPDGpqWeXvurSZz79cvdYHx2Q9I1FjK8bof7AbQFBQaAgqqprdrjdQtOlT/riqn/QYjPMBYs8lABZq6Q09MLH8Xm7fpZ/0P+3X/sN7l8ag+phBxzU9GwfGzris8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bLSZ4Fgb; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1713303303; c=relaxed/simple;
+	bh=AbGUTIr93cIZBICMTdcgi4m66F6R94LZwRvkAx0ybN4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=EuwmpCbsizFtwpdsnTdT131zBPamiyrdHEgNU8Im/4tNdqzacM9z3GTPygMA91b2l4JsMhrUSY2CxpChWrPm2d5po8sLoJ7emuLG2shzA8KC/NSZYr2VHVxkLlIyWcJ54YyFn5nexBodnRmHR+VnwIQ8uMThwd/L7X1oykahOvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net; spf=pass smtp.mailfrom=iwanders.net; dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b=X3BX3xxB; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iwanders.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bLSZ4Fgb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713302573; x=1744838573;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IUM4l0d+HAzrageBnuTfsgyVu/n79Su2Td/OJNGsTIg=;
-  b=bLSZ4FgbBGMvU73QXQ98zl0siMkg/FTZ+WrDVZ8S7wg6y1oolfzyNLC7
-   JnpxvlYNlj7604A4u/RpMIHCDxtFrj8WQmGvE9og+JsavnxJ7AECjYMr9
-   8L8uHdFmiJbIkP2/av742ytI+Eg4YwB5SrJuX7e0wZd/eXKhnY2bKs2eF
-   bs9jcPNMsgLNkGr15JLV3Mt4gQspTNHEfl4Vbo0aydRFWcuxASZadPVdm
-   sVnhCg6yZVJ5h4Rdeyni2gbj6uDzVZvUzrHc4szgOljxD4lkQxQBXEIo/
-   i2s7DlRCehuBEh3MDaWt2fJstvz9GOXkfoA1oRxxXGerwqAtsmfntOCyV
-   g==;
-X-CSE-ConnectionGUID: 0yUp4Y96SZWCnAcUXOUKvQ==
-X-CSE-MsgGUID: 85ZKYqvUTQS3SPwpXfwE1g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="31254718"
-X-IronPort-AV: E=Sophos;i="6.07,207,1708416000"; 
-   d="scan'208";a="31254718"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 14:22:53 -0700
-X-CSE-ConnectionGUID: j2BIYU25TlKgLgO2PmyICQ==
-X-CSE-MsgGUID: IdfXabIQQ7isy+ZJ4BIFgg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,207,1708416000"; 
-   d="scan'208";a="45677878"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 14:22:51 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Tony Luck <tony.luck@intel.com>,
-	linux-pm@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b="X3BX3xxB"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4376157292fso2047541cf.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 16 Apr 2024 14:35:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=iwanders.net; s=google; t=1713303300; x=1713908100; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=AbGUTIr93cIZBICMTdcgi4m66F6R94LZwRvkAx0ybN4=;
+        b=X3BX3xxBdfZyLm2Y7uCzFrunCUEdaIQJYFUNYrgsuZV0URPn8HN6hGiaZZ6r1oJT0u
+         Utge9fWhUY4s7yOVYneuf4Fz14j0ZcE/RLTuDzu/jVRRzodKavKPDEhEH6au4d1sDovN
+         t98mjnzqZWWanHx2WCgd4uHfGskwTtsEPatls=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713303300; x=1713908100;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AbGUTIr93cIZBICMTdcgi4m66F6R94LZwRvkAx0ybN4=;
+        b=H1rbrqLCYJSiDnDFnF2H98IZncAw7H6PQ4bSJQjSZJXwvV+UDGmIt5y4EUBQgOzXMV
+         AMhvkxaZ0UgQSCGd7xqffIUWWGUNUcCPNhOVnXdavv7yEXkgiQ5uRuXq/bzJSjQn2PQV
+         IPc5B7qpg3nV/RH+3yBM4KeCrG26ot/CidcnvpiqveaKKQbKtZjxKrcIEDYiyfcsaf35
+         3uyynDlhXPsK4/wrjE3gxtsaz3jyEyqs0Zv/0Le34AtuP4RM83M3S17ks+Ie3xdzhezC
+         VLtoymVJfsHgLJh1Tc/TntMP00VW5MR28wSsyH0o/hqVXP8n4eF73ng6GBmCkdkiNAtu
+         2bgg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPwNVw/2pVY6EVohN0Jc9TehqIoGGHNRsRqWu9jx2R/jWpYLCASbDJzCDEIKL4B/RBaldbgEstt62aPM6JPKBtIJFaW2mg+z2I3AZgM+5YLXGLow==
+X-Gm-Message-State: AOJu0YwgPilfIpkn85AvZmmNRVBGn3CqFxFY+6YKTIoTMIG4OsLjN1j6
+	6rTe7D49iMFMLfgo+SMgF0btsjyO53frFcTgf9TJ9nL3Roxr/nGiVWRy57VY7H8=
+X-Google-Smtp-Source: AGHT+IHDjh9+d1ObR8Ij8WEXEfjPgBM7QNiW7UwML0UelHwkd95ejcMfHejXGyIypHi5JcRJDdmBKQ==
+X-Received: by 2002:a05:622a:40c:b0:434:8f14:d24 with SMTP id n12-20020a05622a040c00b004348f140d24mr19186828qtx.62.1713303300063;
+        Tue, 16 Apr 2024 14:35:00 -0700 (PDT)
+Received: from eagle.lan (24-246-30-234.cable.teksavvy.com. [24.246.30.234])
+        by smtp.gmail.com with ESMTPSA id s11-20020ac8528b000000b0043476c7f668sm7566740qtn.5.2024.04.16.14.34.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Apr 2024 14:34:59 -0700 (PDT)
+From: Ivor Wanders <ivor@iwanders.net>
+To: luzmaximilian@gmail.com
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	ivor@iwanders.net,
+	jdelvare@suse.com,
+	linux-hwmon@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: [PATCH v3 69/74] x86/cpu/vfm: Update intel_soc_dts_thermal.c
-Date: Tue, 16 Apr 2024 14:22:50 -0700
-Message-ID: <20240416212250.9969-1-tony.luck@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240416211941.9369-1-tony.luck@intel.com>
-References: <20240416211941.9369-1-tony.luck@intel.com>
+	linux@roeck-us.net,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 2/3] hwmon: surface_temp: Add support for sensor names
+Date: Tue, 16 Apr 2024 17:34:56 -0400
+Message-Id: <20240416213456.3214-1-ivor@iwanders.net>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <97d0f68f-63da-4f72-ae8d-89fbf9aadf62@gmail.com>
+References: <97d0f68f-63da-4f72-ae8d-89fbf9aadf62@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-New CPU #defines encode vendor and family as well as model.
+> Ivor reverse-engineered the interface calls to get the sensor
+> names and wrote the vast majority of this patch (I only changed some
+> smaller things and gave advice, hence the co-developed-by). Therefore I
+> wanted to give proper attribution to Ivor for his work and not squash it
+> into a single patch.
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
----
- include/linux/platform_data/x86/soc.h         | 12 ++++++------
- drivers/thermal/intel/intel_soc_dts_thermal.c |  2 +-
- 2 files changed, 7 insertions(+), 7 deletions(-)
+By all means squash them in the next patch revision to make things simpler
+to review, I don't think it's a large enough piece of work to worry too
+much about attribution if it makes review more difficult.
 
-diff --git a/include/linux/platform_data/x86/soc.h b/include/linux/platform_data/x86/soc.h
-index a5705189e2ac..f981907a5cb0 100644
---- a/include/linux/platform_data/x86/soc.h
-+++ b/include/linux/platform_data/x86/soc.h
-@@ -20,7 +20,7 @@
- static inline bool soc_intel_is_##soc(void)			\
- {								\
- 	static const struct x86_cpu_id soc##_cpu_ids[] = {	\
--		X86_MATCH_INTEL_FAM6_MODEL(type, NULL),		\
-+		X86_MATCH_VFM(type, NULL),			\
- 		{}						\
- 	};							\
- 	const struct x86_cpu_id *id;				\
-@@ -31,11 +31,11 @@ static inline bool soc_intel_is_##soc(void)			\
- 	return false;						\
- }
- 
--SOC_INTEL_IS_CPU(byt, ATOM_SILVERMONT);
--SOC_INTEL_IS_CPU(cht, ATOM_AIRMONT);
--SOC_INTEL_IS_CPU(apl, ATOM_GOLDMONT);
--SOC_INTEL_IS_CPU(glk, ATOM_GOLDMONT_PLUS);
--SOC_INTEL_IS_CPU(cml, KABYLAKE_L);
-+SOC_INTEL_IS_CPU(byt, INTEL_ATOM_SILVERMONT);
-+SOC_INTEL_IS_CPU(cht, INTEL_ATOM_AIRMONT);
-+SOC_INTEL_IS_CPU(apl, INTEL_ATOM_GOLDMONT);
-+SOC_INTEL_IS_CPU(glk, INTEL_ATOM_GOLDMONT_PLUS);
-+SOC_INTEL_IS_CPU(cml, INTEL_KABYLAKE_L);
- 
- #undef SOC_INTEL_IS_CPU
- 
-diff --git a/drivers/thermal/intel/intel_soc_dts_thermal.c b/drivers/thermal/intel/intel_soc_dts_thermal.c
-index 9c825c6e1f38..718c6326eaf4 100644
---- a/drivers/thermal/intel/intel_soc_dts_thermal.c
-+++ b/drivers/thermal/intel/intel_soc_dts_thermal.c
-@@ -36,7 +36,7 @@ static irqreturn_t soc_irq_thread_fn(int irq, void *dev_data)
- }
- 
- static const struct x86_cpu_id soc_thermal_ids[] = {
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT, BYT_SOC_DTS_APIC_IRQ),
-+	X86_MATCH_VFM(INTEL_ATOM_SILVERMONT, BYT_SOC_DTS_APIC_IRQ),
- 	{}
- };
- MODULE_DEVICE_TABLE(x86cpu, soc_thermal_ids);
--- 
-2.44.0
-
+~Ivor
