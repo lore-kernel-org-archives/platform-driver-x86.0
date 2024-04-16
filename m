@@ -1,81 +1,168 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D46812C81A
-	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Apr 2024 21:35:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C0213A41B;
+	Tue, 16 Apr 2024 23:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713303303; cv=none; b=QAC4U3F9reB2idK9yq73bM7JrFuAGo4B9N4Tkh9pPsBrV1dcUpaAuNtMR/fqQLa6lAG4D87trxqM9HB25YW/81JBpGOUm6i8Jrl214g1oGXTilTwSHk6WNq04tGRGq7spqjX7cOCuf5aXuQN1qJ9yqSTGMDoL55+li9S3z4PcQM=
+	t=1713310106; cv=none; b=XqZtDkKLNLHRWUXtrIudd09NFkLGg7xi0QWoP+P8aaPQdbsRcagU2ATPyYDCQ9ZHgOnq/1xPpZ/rEdtup7MsRW/d9bRPqde7hcZI+dpRlAVYNeeZaW25+ETnQoyE2ZviD7PG51niINiuOsk0nGGYIimctcKaQU/Zw13xLGx4Cb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713303303; c=relaxed/simple;
-	bh=AbGUTIr93cIZBICMTdcgi4m66F6R94LZwRvkAx0ybN4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=EuwmpCbsizFtwpdsnTdT131zBPamiyrdHEgNU8Im/4tNdqzacM9z3GTPygMA91b2l4JsMhrUSY2CxpChWrPm2d5po8sLoJ7emuLG2shzA8KC/NSZYr2VHVxkLlIyWcJ54YyFn5nexBodnRmHR+VnwIQ8uMThwd/L7X1oykahOvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net; spf=pass smtp.mailfrom=iwanders.net; dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b=X3BX3xxB; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iwanders.net
+	s=arc-20240116; t=1713310106; c=relaxed/simple;
+	bh=RWjT95QphPZ5AOknCIiCxI3mE5E53bV0YbYg4KQf3RQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UHQG9iUfOIO1HsFzwHprtlITSKfZQ2YfFrfVNxx3cR46DN/gdu4O+bJLoQFZwdE1MF8kV0p4Px73pIMnzCw21v3iC+4stMosuN+dVPuH5/fQljUeVpt86Wc9i22XLmiRTHk7x3qyEogOnxQbA+bN/kPPu/sBZUpO3Q72fZN5a7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h78knIKr; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b="X3BX3xxB"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4376157292fso2047541cf.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 16 Apr 2024 14:35:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=iwanders.net; s=google; t=1713303300; x=1713908100; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=AbGUTIr93cIZBICMTdcgi4m66F6R94LZwRvkAx0ybN4=;
-        b=X3BX3xxBdfZyLm2Y7uCzFrunCUEdaIQJYFUNYrgsuZV0URPn8HN6hGiaZZ6r1oJT0u
-         Utge9fWhUY4s7yOVYneuf4Fz14j0ZcE/RLTuDzu/jVRRzodKavKPDEhEH6au4d1sDovN
-         t98mjnzqZWWanHx2WCgd4uHfGskwTtsEPatls=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713303300; x=1713908100;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AbGUTIr93cIZBICMTdcgi4m66F6R94LZwRvkAx0ybN4=;
-        b=H1rbrqLCYJSiDnDFnF2H98IZncAw7H6PQ4bSJQjSZJXwvV+UDGmIt5y4EUBQgOzXMV
-         AMhvkxaZ0UgQSCGd7xqffIUWWGUNUcCPNhOVnXdavv7yEXkgiQ5uRuXq/bzJSjQn2PQV
-         IPc5B7qpg3nV/RH+3yBM4KeCrG26ot/CidcnvpiqveaKKQbKtZjxKrcIEDYiyfcsaf35
-         3uyynDlhXPsK4/wrjE3gxtsaz3jyEyqs0Zv/0Le34AtuP4RM83M3S17ks+Ie3xdzhezC
-         VLtoymVJfsHgLJh1Tc/TntMP00VW5MR28wSsyH0o/hqVXP8n4eF73ng6GBmCkdkiNAtu
-         2bgg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPwNVw/2pVY6EVohN0Jc9TehqIoGGHNRsRqWu9jx2R/jWpYLCASbDJzCDEIKL4B/RBaldbgEstt62aPM6JPKBtIJFaW2mg+z2I3AZgM+5YLXGLow==
-X-Gm-Message-State: AOJu0YwgPilfIpkn85AvZmmNRVBGn3CqFxFY+6YKTIoTMIG4OsLjN1j6
-	6rTe7D49iMFMLfgo+SMgF0btsjyO53frFcTgf9TJ9nL3Roxr/nGiVWRy57VY7H8=
-X-Google-Smtp-Source: AGHT+IHDjh9+d1ObR8Ij8WEXEfjPgBM7QNiW7UwML0UelHwkd95ejcMfHejXGyIypHi5JcRJDdmBKQ==
-X-Received: by 2002:a05:622a:40c:b0:434:8f14:d24 with SMTP id n12-20020a05622a040c00b004348f140d24mr19186828qtx.62.1713303300063;
-        Tue, 16 Apr 2024 14:35:00 -0700 (PDT)
-Received: from eagle.lan (24-246-30-234.cable.teksavvy.com. [24.246.30.234])
-        by smtp.gmail.com with ESMTPSA id s11-20020ac8528b000000b0043476c7f668sm7566740qtn.5.2024.04.16.14.34.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 14:34:59 -0700 (PDT)
-From: Ivor Wanders <ivor@iwanders.net>
-To: luzmaximilian@gmail.com
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	ivor@iwanders.net,
-	jdelvare@suse.com,
-	linux-hwmon@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h78knIKr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713310104; x=1744846104;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RWjT95QphPZ5AOknCIiCxI3mE5E53bV0YbYg4KQf3RQ=;
+  b=h78knIKr/ZjKUgK6sV9HLmgvLDdw+UcVTUzM/MdQqpwJF/sdmKcYApPp
+   d7iLFTG4vxWgwZZ3cKN6l7pXM2GSrMSmN4pEhdd0AUtQ8xdAHRXVZIsFC
+   VOoWRnWxOe3Nxmzf/jA6jT8kt0Qbo7IjhqCY4BFMMlcrHFruNd+8R/EpF
+   8QiCp6Dhp0OnQPzyc5awLqPl4QLMriVGgIVjxym3gVPNpsjEpExG+0x/v
+   zeQk3GtglTEPBNMZZmtBPvrIndnZ5aFBKtZ1UDCDRn1iu005gLac+BZks
+   kSdjfBTjhysosD1R9NXPA9Ws3f4DRiOe9UJvzCGHjnTDDbtORzxHWtmdj
+   w==;
+X-CSE-ConnectionGUID: ohl2ZBz3RAac/o8kfZFKOA==
+X-CSE-MsgGUID: 1OSof5m0TX+rOrzrN0NfoQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="26294546"
+X-IronPort-AV: E=Sophos;i="6.07,207,1708416000"; 
+   d="scan'208";a="26294546"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 16:28:20 -0700
+X-CSE-ConnectionGUID: H/mRELqoQU6ABXfhBxqDvQ==
+X-CSE-MsgGUID: EjFeB3IYQ/2rC9oO8AUjYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,207,1708416000"; 
+   d="scan'208";a="22478448"
+Received: from unknown (HELO 23c141fc0fd8) ([10.239.97.151])
+  by fmviesa008.fm.intel.com with ESMTP; 16 Apr 2024 16:28:16 -0700
+Received: from kbuild by 23c141fc0fd8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rwsDm-0005qD-2G;
+	Tue, 16 Apr 2024 23:28:14 +0000
+Date: Wed, 17 Apr 2024 07:27:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	=?iso-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>,
 	linux-kernel@vger.kernel.org,
-	linux@roeck-us.net,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 2/3] hwmon: surface_temp: Add support for sensor names
-Date: Tue, 16 Apr 2024 17:34:56 -0400
-Message-Id: <20240416213456.3214-1-ivor@iwanders.net>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <97d0f68f-63da-4f72-ae8d-89fbf9aadf62@gmail.com>
-References: <97d0f68f-63da-4f72-ae8d-89fbf9aadf62@gmail.com>
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Kate Hsuan <hpa@redhat.com>
+Subject: Re: [PATCH v6 4/5] power: supply: power-supply-leds: Add
+ charging_orange_full_green trigger for RGB LED
+Message-ID: <202404170705.Or8MFKNi-lkp@intel.com>
+References: <20240416053909.256319-5-hpa@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240416053909.256319-5-hpa@redhat.com>
 
-> Ivor reverse-engineered the interface calls to get the sensor
-> names and wrote the vast majority of this patch (I only changed some
-> smaller things and gave advice, hence the co-developed-by). Therefore I
-> wanted to give proper attribution to Ivor for his work and not squash it
-> into a single patch.
+Hi Kate,
 
-By all means squash them in the next patch revision to make things simpler
-to review, I don't think it's a large enough piece of work to worry too
-much about attribution if it makes review more difficult.
+kernel test robot noticed the following build errors:
 
-~Ivor
+[auto build test ERROR on sre-power-supply/for-next]
+[also build test ERROR on lee-leds/for-leds-next linus/master v6.9-rc4]
+[cannot apply to next-20240416]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Kate-Hsuan/platform-x86-android-tablets-other-Add-swnode-for-Xiaomi-pad2-indicator-LED/20240416-134240
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git for-next
+patch link:    https://lore.kernel.org/r/20240416053909.256319-5-hpa%40redhat.com
+patch subject: [PATCH v6 4/5] power: supply: power-supply-leds: Add charging_orange_full_green trigger for RGB LED
+config: arm-defconfig (https://download.01.org/0day-ci/archive/20240417/202404170705.Or8MFKNi-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240417/202404170705.Or8MFKNi-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404170705.Or8MFKNi-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/power/supply/power_supply_leds.c:42:3: error: implicit declaration of function 'led_mc_trigger_event' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
+                   led_mc_trigger_event(psy->charging_orange_full_green_trig,
+                   ^
+   drivers/power/supply/power_supply_leds.c:42:3: note: did you mean 'led_trigger_event'?
+   include/linux/leds.h:489:6: note: 'led_trigger_event' declared here
+   void led_trigger_event(struct led_trigger *trigger,  enum led_brightness event);
+        ^
+   1 error generated.
+
+
+vim +/led_mc_trigger_event +42 drivers/power/supply/power_supply_leds.c
+
+    21	
+    22	static void power_supply_update_bat_leds(struct power_supply *psy)
+    23	{
+    24		union power_supply_propval status;
+    25		unsigned int intensity_green[3] = {255, 0, 0};
+    26		unsigned int intensity_orange[3] = {128, 0, 255};
+    27		unsigned int intensity_red[3] = {0, 0, 255};
+    28	
+    29		if (power_supply_get_property(psy, POWER_SUPPLY_PROP_STATUS, &status))
+    30			return;
+    31	
+    32		dev_dbg(&psy->dev, "%s %d\n", __func__, status.intval);
+    33	
+    34		switch (status.intval) {
+    35		case POWER_SUPPLY_STATUS_FULL:
+    36			led_trigger_event(psy->charging_full_trig, LED_FULL);
+    37			led_trigger_event(psy->charging_trig, LED_OFF);
+    38			led_trigger_event(psy->full_trig, LED_FULL);
+    39			/* Going from blink to LED on requires a LED_OFF event to stop blink */
+    40			led_trigger_event(psy->charging_blink_full_solid_trig, LED_OFF);
+    41			led_trigger_event(psy->charging_blink_full_solid_trig, LED_FULL);
+  > 42			led_mc_trigger_event(psy->charging_orange_full_green_trig,
+    43					     intensity_green,
+    44					     ARRAY_SIZE(intensity_green),
+    45					     LED_FULL);
+    46			break;
+    47		case POWER_SUPPLY_STATUS_CHARGING:
+    48			led_trigger_event(psy->charging_full_trig, LED_FULL);
+    49			led_trigger_event(psy->charging_trig, LED_FULL);
+    50			led_trigger_event(psy->full_trig, LED_OFF);
+    51			led_trigger_blink(psy->charging_blink_full_solid_trig, 0, 0);
+    52			led_mc_trigger_event(psy->charging_orange_full_green_trig,
+    53					     intensity_orange,
+    54					     ARRAY_SIZE(intensity_orange),
+    55					     LED_FULL);
+    56			break;
+    57		default:
+    58			led_trigger_event(psy->charging_full_trig, LED_OFF);
+    59			led_trigger_event(psy->charging_trig, LED_OFF);
+    60			led_trigger_event(psy->full_trig, LED_OFF);
+    61			led_trigger_event(psy->charging_blink_full_solid_trig,
+    62				LED_OFF);
+    63			led_mc_trigger_event(psy->charging_orange_full_green_trig,
+    64					     intensity_red,
+    65					     ARRAY_SIZE(intensity_red),
+    66					     LED_OFF);
+    67			break;
+    68		}
+    69	}
+    70	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
