@@ -1,103 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42EF7D512
-	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Apr 2024 02:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230DE39FD3
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Apr 2024 05:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713236186; cv=none; b=rjrwaIWK6o5V4U578TsZ9OBrIaEmBbQQBQcakMELToyRYMuq+O89F2YNkdkmuMaBUw2IiXM9YmI+tGVDsftyw/OhtVHeRc9SHBaiL88LAqfnG6eSAYCrfKUCXKPOsPW+UvGyIlOjqUx5lyqodL0SujJB4aXA8HaY8T4/6Lk/emE=
+	t=1713245980; cv=none; b=nAE7SHcEjfHk1Tmpmfkyi/0YlDftMybcVrXvwuNuLamvydEF/mgKcIjOA91H4Zraxcg+W1UYgmAMXkbwWpNycP/yPJw56+iAm3bDThW/e9YC2LaY2D1ne9h0Lfwz09LqekOs9ZfsZXS0Ht6RzYOJNe/gMHnwjKYpgzuQxsdyg10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713236186; c=relaxed/simple;
-	bh=oL1Lz3XCJH4682IXRrccnwIYnE2gV0k84WL59InrnC0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fBd4xKDiU51RbGJVe1IYERScjd3fNbh/dZMfIoQn/Q+/0TNREh7JO6fM7uRQ7rZ6DfFAB37cPpdSI1T2+UY7XlGWUnr7QdpkLSXB1h61mdQICHXbS2FQbm6qUgCOzl6U0kft8euur83tgb/gBZHxeHF+9W5RQKdeQHq+u0r6U5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eaq3/LQj; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713245980; c=relaxed/simple;
+	bh=K8CWsGrSvjlor4XOvpsr5xcvDhGAFvw/vbJ8MGvqIds=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lbqUpXtNkBET5pCngogzpN+vTmzrjc4Wa/76WzKlo6Nsz+9K681pB0l7ZHeE1QW9CbszgKdCwmtOT6jD8p0edup8WQq/QYfww2gMBBMTgsC1fpg2efvmZbi7rbuwhH5WQ6aFFQYqIalfA0ujjfhsH1qs/ROWYuKeBOEZTDmReyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ym3MFEHL; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eaq3/LQj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713236185; x=1744772185;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=oL1Lz3XCJH4682IXRrccnwIYnE2gV0k84WL59InrnC0=;
-  b=eaq3/LQjZwM7jbBO5g6D6VbK823SHWCStN1PvMN5U1J1R1hsJXOJpM1m
-   Y09ZGHh/C6SFf+fknvOVTgQUowzHIS/ncRIsYWx7O0TNWCw+XHZh3veUB
-   t9RRH6Ju6vQTAIFHuCwHXo8Kc6S8kX3WJcLL+Tz+uuZ5dWwc1AifV9ASR
-   gYdcTnwPw5n5r6FJX7JXBJzYNS+O2u1Up/35Tix7iQfownyC+yDp+AXi6
-   UDmN22DjWaKN5lSC6HimnqdfPzYyS7SRKws1PuLvjeCY/2YjQcVUayY2s
-   ZNeRcIAjHepuxARwbWnCgawFT7zH0bVMEmGUC+C0W3kDVGx6lZ5ajmnu2
-   g==;
-X-CSE-ConnectionGUID: M5noaywMQH6/DOGClDCKaw==
-X-CSE-MsgGUID: hhRyxOybREmdx25X1kM7cg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11045"; a="8572561"
-X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
-   d="scan'208";a="8572561"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 19:56:23 -0700
-X-CSE-ConnectionGUID: s47MuQHnRKKDIU0/NFxPpQ==
-X-CSE-MsgGUID: cY1qbWOtRWK07Eo2GH3oqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,204,1708416000"; 
-   d="scan'208";a="22186592"
-Received: from garumuga-mobl1.amr.corp.intel.com (HELO [10.209.93.175]) ([10.209.93.175])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2024 19:56:22 -0700
-Message-ID: <bacf2247-a91f-4cad-ab83-26f99cad7470@linux.intel.com>
-Date: Mon, 15 Apr 2024 19:56:21 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ym3MFEHL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713245977;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0+Hc2p+jT5Q4vVgv9O18REk/mQYHW8ZTSMxALLmVm0w=;
+	b=Ym3MFEHL+IbCd3cXMTHFbyrhLqLxYynZajnG19suSutIxckUb7mfr8txmX8KO0N8SJ8wQX
+	jNPIi+as+Y20lm2HM0S4hI50sNh1XI3JLOKTZDRNNAeH0QGZ92DDRXsgDjnEtMfk+v7OKz
+	GfUnFYql0lVJdQ6QeIsHwiIHyiK2Pqo=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-299-JAle0uHGO3-I45bfo7nj6A-1; Tue,
+ 16 Apr 2024 01:39:33 -0400
+X-MC-Unique: JAle0uHGO3-I45bfo7nj6A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4547929AA3B7;
+	Tue, 16 Apr 2024 05:39:33 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.39.192.2])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 67FCC51EF;
+	Tue, 16 Apr 2024 05:39:26 +0000 (UTC)
+From: Kate Hsuan <hpa@redhat.com>
+To: Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	linux-leds@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	=?UTF-8?q?Andr=C3=A9=20Apitzsch?= <git@apitzsch.eu>,
+	linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Sebastian Reichel <sre@kernel.org>,
+	linux-pm@vger.kernel.org
+Cc: Kate Hsuan <hpa@redhat.com>
+Subject: [PATCH v6 0/5] KTD2026 indicator LED for X86 Xiaomi Pad2
+Date: Tue, 16 Apr 2024 13:39:04 +0800
+Message-ID: <20240416053909.256319-1-hpa@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next] platform/x86/amd/pmc: Fix implicit declaration
- error on i386
-To: Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
- andriy.shevchenko@linux.intel.com, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, Shyam-sundar.S-k@amd.com,
- platform-driver-x86@vger.kernel.org
-Cc: kernel test robot <lkp@intel.com>
-References: <20240416025312.731809-1-Basavaraj.Natikar@amd.com>
-Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240416025312.731809-1-Basavaraj.Natikar@amd.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+
+This patch added the support for Xiaomi Pad2 indicator LED. This work
+included:
+1. Added the KTD2026 swnode description to describe the LED controller.
+2. Migrated the original driver to fwnode to support x86 platform.
+3. Support for multi-color LED trigger event.
+4. The LED shows orange  when charging and the LED shows green when the
+   battery is full.
+
+Moreover, the LED trigger is set to the new trigger, called
+"bq27520-0-charging-orange-full-green" for Xiaomi Pad2 so the LED shows
+orange when charging and the LED shows green when the battery is full.
+
+The new LED API led_mc_trigger_event() can be found in the following
+URL.
+https://lore.kernel.org/linux-leds/f40a0b1a-ceac-e269-c2dd-0158c5b4a1ad@gmail.com/
+
+--
+Changes in v6:
+1. The I2C ID table was moved to a separate patch.
+2. The LED shows orange when charging.
+3. The trigger name was renamed to charging-orange-full-green.
+4. The default trigger of Xiaomi Pad2 is
+   "bq27520-0-charging-orange-full-green".
+
+Changes in v5:
+1. Fix swnode LED color settings.
+2. Improve the driver based on the comments.
+3. Introduce a LED new API- led_mc_trigger_event() to make the LED
+   color can be changed according to the trigger.
+4. Introduced a new trigger "charging-red-full-green". The LED will be
+   red when charging and the the LED will be green when the battery is
+   full.
+5. Set the default trigger to "bq27520-0-charging-red-full-green" for
+   Xiaomi Pad2.
+
+Changes in v4:
+1. Fix double casting.
+2. Since force casting a pointer value to int will trigger a compiler
+   warning, the type of num_leds was changed to unsigned long.
+
+Changes in v3:
+1. Drop the patch "leds-ktd202x: Skip regulator settings for Xiaomi
+   pad2"
+
+Changes in v2:
+1. Typo and style fixes.
+2. The patch 0003 skips all the regulator setup for Xiaomi pad2 since
+   KTD2026 on Xiaomi pad2 is already powered by BP25890RTWR. So, the
+   sleep can be removed when removing the module.
 
 
-On 4/15/24 7:53 PM, Basavaraj Natikar wrote:
-> Add depended header file to fix error on i386 due to implicit declaration
-> of function ‘writeq’.
->
-> Fixes: 2dc77993cb5e ("platform/x86/amd/pmc: Add AMD MP2 STB functionality")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202404160320.QAHyZ0c3-lkp@intel.com/
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-> ---
+Kate Hsuan (5):
+  platform: x86-android-tablets: other: Add swnode for Xiaomi pad2
+    indicator LED
+  leds: rgb: leds-ktd202x: Get device properties through fwnode to
+    support ACPI
+  leds: rgb: leds-ktd202x: I2C ID tables for KTD2026 and 2027
+  power: supply: power-supply-leds: Add charging_orange_full_green
+    trigger for RGB LED
+  platform: x86-android-tablets: others: Set the LED trigger to
+    charging_orange_full_green for Xiaomi pad2
 
-LGTM
-
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->  drivers/platform/x86/amd/pmc/mp2_stb.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/platform/x86/amd/pmc/mp2_stb.c b/drivers/platform/x86/amd/pmc/mp2_stb.c
-> index dfa55327e5f1..9775ddc1b27a 100644
-> --- a/drivers/platform/x86/amd/pmc/mp2_stb.c
-> +++ b/drivers/platform/x86/amd/pmc/mp2_stb.c
-> @@ -11,6 +11,7 @@
->  #include <linux/debugfs.h>
->  #include <linux/device.h>
->  #include <linux/io.h>
-> +#include <linux/io-64-nonatomic-lo-hi.h>
->  #include <linux/iopoll.h>
->  #include <linux/pci.h>
->  #include <linux/sizes.h>
+ drivers/leds/rgb/Kconfig                      |  1 -
+ drivers/leds/rgb/leds-ktd202x.c               | 73 ++++++++++-------
+ .../platform/x86/x86-android-tablets/other.c  | 82 +++++++++++++++++++
+ .../x86/x86-android-tablets/shared-psy-info.h |  2 +
+ drivers/power/supply/power_supply_leds.c      | 26 ++++++
+ include/linux/power_supply.h                  |  2 +
+ 6 files changed, 156 insertions(+), 30 deletions(-)
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.44.0
 
