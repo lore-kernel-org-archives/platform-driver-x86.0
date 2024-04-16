@@ -1,100 +1,106 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 997F412FF72;
-	Tue, 16 Apr 2024 17:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1FB13343F;
+	Tue, 16 Apr 2024 18:12:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713288870; cv=none; b=nFrnjg1PPD9CnzUdEPC1q+jIwY3hVrtnVVmUUfWfSbhf5m4FcZ5uPWo0ajjcdibsGpguCwLjdfvBhWSmTwoNuczRMimu+/pRQTgFJprVq5zgLLT9NgC7G6qeY4vhidlcgaQdpz+0xOK0WpltKNnel2Ql+IznuuUAt5ijB7irEW8=
+	t=1713291164; cv=none; b=q7EZJtaOb8pKbLLHMfVpHjIMPcsWiyzd5Zqn2iEyp5vkbrWONQJ7IDtleiYAtFVTj3jPW7H+rcvKzdhHv9Ph55dVsXsHgG3gErnvfyqLeSINJanf9PLAyfG8eSrfPaPw5w4ktKBDDYUT3StS6gynndhPU+i94fqUDb/s6UED+LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713288870; c=relaxed/simple;
-	bh=xu+k3B6e0S5uV2AeyPNUBYkGSJodPLz6zhec+aOyGCc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a06AHTDgLRBSKGmBMIEzhrzWyAVjFXhK7dqiCB/nmwHQrwCsjN7qx3X9scZOmoMqFvUePelrlOo0DWJwKk5AvwXs6Vl4fAtzOM0ykDAAOyFDK8hDAJxyT0He8stsccz4kIlxYXGAztv0+v8uyKibw+OVOPz1xMqWvFYnm8K4fkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NjTyf0JL; arc=none smtp.client-ip=209.85.218.53
+	s=arc-20240116; t=1713291164; c=relaxed/simple;
+	bh=w2WOdK+HDz1fazSED3Oxm9eq69k3yabhpN25jQHSvKA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CDpQb7pMfVHw8t/uM5cgMjxda9n5Z7BKViHaGKw5AREb5Mnjjtsr25zAblcy24lxWiGzGUS+uCWQwUaAjca7VxL3IzfjzAJoaRaRAhv8tPAyajgAA2dXioi2bGz3nGcsr1KdC09ACqLZ4jCyEqUse4tgB4W+SZDOsSLVTIPSmUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VF+Shdl5; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NjTyf0JL"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a51a1c8d931so604171266b.0;
-        Tue, 16 Apr 2024 10:34:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VF+Shdl5"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-570441bc23bso1277774a12.0;
+        Tue, 16 Apr 2024 11:12:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713288867; x=1713893667; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XBGtZhXrsDv9/IU80RlwXoRNjhCMbNIbfxUge/aRn1Q=;
-        b=NjTyf0JLqTV953rWO+NTClV5fq1t5KbksMf9skJGxo7oSRc+MARP+bPUs/CufTXTOC
-         dyZFS1aIeqUXQ3XyODeWNtsRjyTC7clYyQ/07nV/A4JACvzpsul4AiTCe7Kb6ACvXc7n
-         VMG9jrqIT0jYXD9CaF1wJkcTWBc1rJjOTQUZaUesLWqbo1BX2vQq9lIZG/SAwmtgPklV
-         knYFm5DFbysz1c5Vrvi8EgpfAqRR5WsFy45LLAgxk3z5PjRF4uliH7ATJrxT0Zjj6XWe
-         hNT5CHliYC74ietoEeAHQeoyFp+Qw5aDdus2CjQGp0/e/Gp9QVSSGc0RItu8P9iQN2eQ
-         l22A==
+        d=gmail.com; s=20230601; t=1713291161; x=1713895961; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+DxrBa0GRP7KC9Ck4Q7bz92lpzIac44ohmTeC1MwbNU=;
+        b=VF+Shdl5n2le2uTJdl36RR5bNLp+CkcxIvayYDceMyc9EJIUT7Hfl1NJh/NM85uVNA
+         jgBvTwbXV41UO3eIpmc3zH9430JhdoqSjontKYilq1FphhXG499naUbJ+EDGO9YOf2hp
+         3aMKR0hIUfMWUeG67KTbd4EzI+K4BOwX7H1fMz4yV2NoYqC2ipG/2oJ1pGe42P5HCB/U
+         G2LLqVmvEdujyf/5AhNHVZA4QfBk6TggK/tSvK2lJpRO3C3IT6cZinvRhzuZ62waxon2
+         BVNz0TUJe4ppOEIjMbUMR0snl4fsNejVIfPVw5IyO/hm3bKFov+ORclaelypYccO58+4
+         QHTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713288867; x=1713893667;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XBGtZhXrsDv9/IU80RlwXoRNjhCMbNIbfxUge/aRn1Q=;
-        b=SJX/OtRka5lmul2WAWd9+5cHjOD3f6rzSfyRfF1UNx1lbpeCLHrKkzO5ATZZm4hJH1
-         x8/but4VJihol/6dAMYaDmpsLOX0GKD5ewWikc/2jQxRigndjQPp4IkzNtFdWFL0B8TK
-         JyxUtkBFbyNT9aQUfTVgYd09Vp/5xXXmDtsX+dPyuO5RIQdeZk/yeB0PuRzbl+yBOtUQ
-         vHi5NtD0h525zW8vPwhv0+CDuWATwdGNm5NO5Wj1D8iYaQ2aODUDam23nW2dp7M/a/Ny
-         aTM8NFasLHLi7MIrqNPhHyUQENKdhx4xDGq7R0mR4eZzZudxkyoDhghC2vQRob7I8nVS
-         xHYA==
-X-Forwarded-Encrypted: i=1; AJvYcCXCdFdih/TsQVoKZ1T0ruiC5pjger2UZg3sJ92Lg8tfu5zynJzPTK2Qvs10wHJ+ACChFNay2tfjWlPj3btZyNjXlVSbJ5dRvSL627EZlrlwN3+xZwhSAv9ih5wfM81UvtnYXW8LIEwQG0OT3nctnqngBYYQCw3vtYUQzFwo40UQ/VkivhQhzTpau1Q+ZQ5IomP8fUB5IFBrGoWvGoZzmVBDuudavv+oqQ==
-X-Gm-Message-State: AOJu0Yz/Sr1LTT50BhFlMDVy/rVgBrEHZP6v8AESTTFVryersdw7hpzc
-	VLxDK2OK9z6d3vKpTy4oaFY1nDjskwxzJ+AkufdGFHbXXA4/IiCF6Mx8Zqv8thRf8LRIIKIvPc5
-	31k3fZ4cgXL03fzT6PL79zAjhAh8=
-X-Google-Smtp-Source: AGHT+IESOFgHtJldCSkg3hlXty7KCffRAd8b1WXWXaSWCE1frVgK14VVZblAjVAWRBOrri139ePgBSSDR7J4vov0Bco=
-X-Received: by 2002:a17:907:31c9:b0:a52:4fc1:ea90 with SMTP id
- xf9-20020a17090731c900b00a524fc1ea90mr7379092ejb.62.1713288866697; Tue, 16
- Apr 2024 10:34:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713291161; x=1713895961;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+DxrBa0GRP7KC9Ck4Q7bz92lpzIac44ohmTeC1MwbNU=;
+        b=aonmYTLdawPJSco9uFP+1kg0y8Q17nXoFN1Eq1Ae70SFbmNuF7aJXwPZCNxA0r0Lkp
+         mzgysVgb20vQpZ+GgE9m1jdAXzG/96nrjuCGC99dEC9kSCo1HZuxbWnPWXGzZbe9EQRm
+         GmExDOUMZ8okVVtjYGeowPiUYATHF7JDcOb4uy/lS8j/P2LCvTIWe+u0vlAiGbPA1XNH
+         CMHct8+v+gvBR39bPnTakipDgJuc5ZcMkt+d8LOS10o2xu+DugVCLcQeGx7CV5Wwb6H3
+         2qrAWzF579cDb5A03UTDMzf2dgypA1iSAxmbk0Qy4WjahHDr934W9kcTutnAeindn+h4
+         HeEg==
+X-Forwarded-Encrypted: i=1; AJvYcCWya67GB6X5riUHQXdQf0qF0yRM60dwD157FMQPG1lu08lnqCzqbC8yFonWc8pZwH6m0QsfWbNVsd9dbpBd3Vt5Vcgh2UohAryTxBKGFg1D9uqvpuO3gid7SZkUkDtQyEeu/3OPetQqQCRcM/oTlCIMMe46Kwl71XIREYsASZ8ATkkujlsS/4D4ZZE6gk9M
+X-Gm-Message-State: AOJu0YzN/7JQDFMEq69qCP9+pDjJTalGorQVSbvQgYxMjxFvEg8PZr4Z
+	J8LZF0Epx17g+lX+hYkiSpSOKg/qTuthhI99BWxIf6vBgWx5OPdN
+X-Google-Smtp-Source: AGHT+IEi27VqQOVvq3KICDHbzcbhpfiY9hUDzKEjxbQmObbqYcwoFQmAo/mQ7qL2GxHkuGyWZ+kFDA==
+X-Received: by 2002:a17:907:d2a:b0:a52:2f19:f1d7 with SMTP id gn42-20020a1709070d2a00b00a522f19f1d7mr9931916ejc.53.1713291161232;
+        Tue, 16 Apr 2024 11:12:41 -0700 (PDT)
+Received: from ?IPV6:2a02:8071:b783:140:927c:82ba:d32d:99c1? ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
+        by smtp.gmail.com with ESMTPSA id lb10-20020a170906adca00b00a526fd6362asm2616106ejb.117.2024.04.16.11.12.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Apr 2024 11:12:40 -0700 (PDT)
+Message-ID: <ee8c39ab-d47a-481d-a19c-1d656519e66d@gmail.com>
+Date: Tue, 16 Apr 2024 20:12:41 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416053909.256319-5-hpa@redhat.com> <202404170023.1zEGO9ja-lkp@intel.com>
-In-Reply-To: <202404170023.1zEGO9ja-lkp@intel.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 16 Apr 2024 20:33:50 +0300
-Message-ID: <CAHp75VeKCGSZTb5bGU4YNr9r-z+gXmk4GC5HOZCFcoRQRN37CA@mail.gmail.com>
-Subject: Re: [PATCH v6 4/5] power: supply: power-supply-leds: Add
- charging_orange_full_green trigger for RGB LED
-To: kernel test robot <lkp@intel.com>
-Cc: Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
-	linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	=?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
-	linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org, 
-	oe-kbuild-all@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] hwmon: Add thermal sensor driver for Surface
+ Aggregator Module
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Jean Delvare <jdelvare@suse.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>, Ivor Wanders <ivor@iwanders.net>,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-hwmon@vger.kernel.org
+References: <20240330112409.3402943-1-luzmaximilian@gmail.com>
+ <20240330112409.3402943-2-luzmaximilian@gmail.com>
+ <7ba2554a-4f71-4ca0-ab49-59dbd03e1968@roeck-us.net>
+Content-Language: en-US
+From: Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <7ba2554a-4f71-4ca0-ab49-59dbd03e1968@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 16, 2024 at 8:03=E2=80=AFPM kernel test robot <lkp@intel.com> w=
-rote:
->
-> Hi Kate,
->
-> kernel test robot noticed the following build errors:
+On 4/16/24 3:27 PM, Guenter Roeck wrote:
+> On Sat, Mar 30, 2024 at 12:24:00PM +0100, Maximilian Luz wrote:
+>> Some of the newer Microsoft Surface devices (such as the Surface Book
+>> 3 and Pro 9) have thermal sensors connected via the Surface Aggregator
+>> Module (the embedded controller on those devices). Add a basic driver
+>> to read out the temperature values of those sensors.
+>>
+>> Link: https://github.com/linux-surface/surface-aggregator-module/issues/59
+>> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+> [ ... ]
+>> +	hwmon_dev = devm_hwmon_device_register_with_info(&sdev->dev,
+>> +			"surface_thermal", ssam_temp, &ssam_temp_hwmon_chip_info,
+>> +			NULL);
+>> +	if (IS_ERR(hwmon_dev))
+>> +		return PTR_ERR(hwmon_dev);
+>> +
+>> +	return 0;
+> 
+> 	return PTR_ERR_OR_ZERO(hwmon_dev);
 
-> All errors (new ones prefixed by >>):
->
->    drivers/power/supply/power_supply_leds.c: In function 'power_supply_up=
-date_bat_leds':
-> >> drivers/power/supply/power_supply_leds.c:42:17: error: implicit declar=
-ation of function 'led_mc_trigger_event'; did you mean 'led_trigger_event'?=
- [-Werror=3Dimplicit-function-declaration]
->       42 |                 led_mc_trigger_event(psy->charging_orange_full=
-_green_trig,
->          |                 ^~~~~~~~~~~~~~~~~~~~
->          |                 led_trigger_event
->    cc1: some warnings being treated as errors
+ACK. Will fix this and the blank lines.
 
-Probably you need a new dependency or so.
-
---=20
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Max
