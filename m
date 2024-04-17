@@ -1,121 +1,143 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77152F516;
-	Wed, 17 Apr 2024 09:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A6713D265;
+	Wed, 17 Apr 2024 13:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713345669; cv=none; b=aAXyaoYhD00yCPGOI4rmWllbCDWz5nK87GFtvR4gfdRryFPoiDbZaILhn4QatNGoUCMCE2BSqGrEC4yOcgxCEmSO6uNM+kiY1CDaLdOH9e0mUprckx07I36zuXlEx5NI1ImcJIUTgf0frUA76rp+EeZsBXEBuUkgkk3sTotNPbI=
+	t=1713359641; cv=none; b=l3egTsOkcnyB1noCl81Rx6Nl8Q6KLFkDlXV8O2A2/T3NdVNBPoYhTopOh1kACKfONDUcQOICbQsyCkX7j6Xco0T+1DPvyA+jhHw/FgfG0DJJZ2X3EXv02D9ak03Ekq0k9UttoNCXwvfsNoK89i1p7f6EilfSSkca8o2w+8DFMns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713345669; c=relaxed/simple;
-	bh=ywsN3ggstkBDL7MooDKikdbSvYUjUsxtghPnqKNym48=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KUHqwLlAPsodbWv6NekF+VVfO8INPKUOxCjpjW2qtL/BfAc8AGAsESeLh1Urg4dPIwx8z4ogDW8nSxxpImr85Rm0PshwQxSRJCwwApvDLz7WpRCf9AIdYe/wtKL6ybX+72XraTqZqTrGStZz+C+3BiEZt8c3/kq6sBMjgsiF0XY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: cc993a36fc9b11ee9305a59a3cc225df-20240417
-X-CID-UNFAMILIAR: 1
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_HamU
-X-CID-O-INFO: VERSION:1.1.37,REQID:61c24f1a-98c9-4119-b296-d7c8a6f0907b,IP:20,
-	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:8,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:3
-X-CID-INFO: VERSION:1.1.37,REQID:61c24f1a-98c9-4119-b296-d7c8a6f0907b,IP:20,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:8,FILE:0,BULK:0,RULE:Release_HamU,ACTIO
-	N:release,TS:3
-X-CID-META: VersionHash:6f543d0,CLOUDID:ba8cf38c25e9dc103cf64083a088bcb5,BulkI
-	D:2404171720588EJWUJGL,BulkQuantity:0,Recheck:0,SF:19|44|66|24|16|102,TC:n
-	il,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,CO
-	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_USA,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED
-	SN_UNTRUSTED, SN_UNFAMILIAR, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
-	CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
-	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
-	ABX_MISS_RDNS
-X-UUID: cc993a36fc9b11ee9305a59a3cc225df-20240417
-X-User: jiangyunshui@kylinos.cn
-Received: from kylin-pc.. [(112.64.161.44)] by mailgw.kylinos.cn
-	(envelope-from <jiangyunshui@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 490147603; Wed, 17 Apr 2024 17:20:57 +0800
-From: yunshui <jiangyunshui@kylinos.cn>
-To: linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org,
-	hmh@hmh.eng.br,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	yunshui <jiangyunshui@kylinos.cn>,
-	Ai Chao <aichao@kylinos.cn>
-Subject: [PATCH] platform/x86: thinkpad_acpi: change sprintf() to sysfs_emit()
-Date: Wed, 17 Apr 2024 17:20:55 +0800
-Message-Id: <20240417092055.1170586-1-jiangyunshui@kylinos.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1713359641; c=relaxed/simple;
+	bh=XVrBhz63k5iaVlC5eR2S2TPWPIQYlVoRr+xpqxATrpI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=JEQI9PyqeIWntHaVcr1p27v/imn8c/ODhI3A9R6yyv4fIm7i45qQsowDDY/oFBMeS64LzqaoV7dcYP+SHqM5yFDtwuhdi4ten9AZ6FGhrSnBIiPXwz89FvmRb75p/GFVAtHC5bg/h9al5SaO4Tm3bqYMwCDuf4WQ+uM1omVaRt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cfYHVyGa; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cfYHVyGa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713359640; x=1744895640;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=XVrBhz63k5iaVlC5eR2S2TPWPIQYlVoRr+xpqxATrpI=;
+  b=cfYHVyGaKA0Bev7C0yUGEbwZGowPLigpyUSBgZjLlQ/OYkTFzMwFqTVI
+   Dn8mF2+R5wmFQv2yaGcIHatnbaQLR8vAPAXA+ZD/9JUlHNj59IBYjPjZ9
+   ESljf0Qdy9KG+KItOXGv5WznKUkcCuTED7czaryoCkr3nTDvWkSSAccAo
+   L0/CBWMHHUBpRWNUcrXXeNUgr7Xg2Lziq1vRZmIrxk67K8D/RCVnARaYy
+   xfZoKrbNkrRolXlas96jIS4uQbW1PnwDT6zvkaHBbxKq8t1SEfUrSEISj
+   uPWtRfhKcC2wWxCeAqKii7GzCPuOw6LIhkJPXuSiGIRGHSLmivGUicSvb
+   w==;
+X-CSE-ConnectionGUID: JO/GsW+vSr61kaChutsJvw==
+X-CSE-MsgGUID: mMnS+j1CQRWnGzeZb3tcdw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="19997295"
+X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
+   d="scan'208";a="19997295"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 06:13:59 -0700
+X-CSE-ConnectionGUID: wHxRZ53gS9ChLi8YcqDuLw==
+X-CSE-MsgGUID: lft0N95FSa6MO+oU/IOQ7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
+   d="scan'208";a="45919609"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.35])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 06:13:56 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 17 Apr 2024 16:13:52 +0300 (EEST)
+To: Shravan Kumar Ramani <shravankr@nvidia.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
+    David Thompson <davthompson@nvidia.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/3] Documentation/ABI: Add document for Mellanox PMC
+ driver
+In-Reply-To: <b2a3ca5502008dbe4d07a5d07493022c04c135d6.1713334019.git.shravankr@nvidia.com>
+Message-ID: <fd7c3b6c-8e5a-6112-b825-ba17763a8094@linux.intel.com>
+References: <cover.1713334019.git.shravankr@nvidia.com> <b2a3ca5502008dbe4d07a5d07493022c04c135d6.1713334019.git.shravankr@nvidia.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-As Documentation/filesystems/sysfs.rst suggested,
-show() should only use sysfs_emit() or sysfs_emit_at() when formatting
-the value to be returned to user space.
+On Wed, 17 Apr 2024, Shravan Kumar Ramani wrote:
 
-Signed-off-by: yunshui <jiangyunshui@kylinos.cn>
-Signed-off-by: Ai Chao <aichao@kylinos.cn>
----
- drivers/platform/x86/thinkpad_acpi.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> The sysfs interface is created for programming and monitoring the
+> performance counters in various HW blocks of Mellanox BlueField-1,
+> BlueField-2 and BlueField-3.
+> 
+> Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
+> Reviewed-by: David Thompson <davthompson@nvidia.com>
+> ---
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 82429e59999d..1ed27fc21a7d 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -817,7 +817,7 @@ static int __init setup_acpi_notify(struct ibm_struct *ibm)
- 	}
- 
- 	ibm->acpi->device->driver_data = ibm;
--	sprintf(acpi_device_class(ibm->acpi->device), "%s/%s",
-+	sysfs_emit(acpi_device_class(ibm->acpi->device), "%s/%s",
- 		TPACPI_ACPI_EVENT_PREFIX,
- 		ibm->name);
- 
-@@ -857,7 +857,7 @@ static int __init register_tpacpi_subdriver(struct ibm_struct *ibm)
- 		return -ENOMEM;
- 	}
- 
--	sprintf(ibm->acpi->driver->name, "%s_%s", TPACPI_NAME, ibm->name);
-+	sysfs_emit(ibm->acpi->driver->name, "%s_%s", TPACPI_NAME, ibm->name);
- 	ibm->acpi->driver->ids = ibm->acpi->hid;
- 
- 	ibm->acpi->driver->ops.add = &tpacpi_device_add;
-@@ -2679,7 +2679,7 @@ static ssize_t hotkey_bios_enabled_show(struct device *dev,
- 			   struct device_attribute *attr,
- 			   char *buf)
- {
--	return sprintf(buf, "0\n");
-+	return sysfs_emit(buf, "0\n");
- }
- 
- static DEVICE_ATTR_RO(hotkey_bios_enabled);
-@@ -9789,7 +9789,7 @@ static ssize_t tpacpi_battery_show(int what,
- 		battery = BAT_PRIMARY;
- 	if (tpacpi_battery_get(what, battery, &ret))
- 		return -ENODEV;
--	return sprintf(buf, "%d\n", ret);
-+	return sysfs_emit(buf, "%d\n", ret);
- }
- 
- static ssize_t charge_control_start_threshold_show(struct device *device,
+This documents the existing sysfs files? Which is good, thank you!
+
+However, there's still no PATCH 4/ which would document the new interface 
+added by this series, namely use_odd_counter and count_clock, am I 
+correct?
+
 -- 
-2.34.1
+ i.
 
+>  .../ABI/testing/sysfs-platform-mellanox-pmc   | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-platform-mellanox-pmc
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-platform-mellanox-pmc b/Documentation/ABI/testing/sysfs-platform-mellanox-pmc
+> new file mode 100644
+> index 000000000000..47094024dbeb
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-platform-mellanox-pmc
+> @@ -0,0 +1,49 @@
+> +HID           Driver         Description
+> +MLNXBFD0      mlxbf-pmc      Performance counters (BlueField-1)
+> +MLNXBFD1      mlxbf-pmc      Performance counters (BlueField-2)
+> +MLNXBFD2      mlxbf-pmc      Performance counters (BlueField-3)
+> +
+> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/event_list
+> +Date:		Dec 2020
+> +KernelVersion:	5.10
+> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
+> +Description:
+> +		List of events supported by the counters in the specific block.
+> +		It is used to extract the event number or ID associated with
+> +		each event.
+> +
+> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/event<N>
+> +Date:		Dec 2020
+> +KernelVersion:	5.10
+> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
+> +Description:
+> +		Event monitored by corresponding counter. This is used to
+> +		program or read back the event that should be or is currently
+> +		being monitored by counter<N>.
+> +
+> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/counter<N>
+> +Date:		Dec 2020
+> +KernelVersion:	5.10
+> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
+> +Description:
+> +		Counter value of the event being monitored. This is used to
+> +		read the counter value of the event which was programmed using
+> +		event<N>. This is also used to clear or reset the counter value.
+> +
+> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/enable
+> +Date:		Dec 2020
+> +KernelVersion:	5.10
+> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
+> +Description:
+> +		Start or stop counters. This is used to start the counters
+> +		for monitoring the programmed events and also to stop the
+> +		counters after the desired duration.
+> +
+> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/<reg>
+> +Date:		Dec 2020
+> +KernelVersion:	5.10
+> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
+> +Description:
+> +		Value of register. This is used to read or reset the registers
+> +		where various performance statistics are counted for each block.
+> +
+> 
