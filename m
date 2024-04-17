@@ -1,126 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A40584FAC;
-	Wed, 17 Apr 2024 08:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77152F516;
+	Wed, 17 Apr 2024 09:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713342200; cv=none; b=SZKq+1XplUGwavJX+bYqPMUwwwEl+f4VLHOfiKtuC3KAV84PUtTk09cer0b0ACqhjgAS/DcqSoOa2xHRuqfshQPBv3XawtalwXgN8D/hrgockhUcP4IqAV7pUalVu5yIOBxGEgZBXIFKfV1JPd95geH3PWjM7ZUdS0wPQOP7FzQ=
+	t=1713345669; cv=none; b=aAXyaoYhD00yCPGOI4rmWllbCDWz5nK87GFtvR4gfdRryFPoiDbZaILhn4QatNGoUCMCE2BSqGrEC4yOcgxCEmSO6uNM+kiY1CDaLdOH9e0mUprckx07I36zuXlEx5NI1ImcJIUTgf0frUA76rp+EeZsBXEBuUkgkk3sTotNPbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713342200; c=relaxed/simple;
-	bh=C4tOCdvuBbe0nWsP1RYC0WfHw/yvoZ/fnppLyqdrzVg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NIfvlyUbyss5dti7iYFDrnOZSSrTpUTRapEFLIAWPAR2oqxhp9UW1SZWQRQZgpa1cnR7abC2eHyQdGPcwq7av0b1GQYfzBlI0B1TYa6YEDyuYHcDPAeHqyNZPgMu6X8jx/I4ecb/bcNZeVRp9sU347vbS4iCsTZi4/5BpUwKhXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cl0dXFi7; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cl0dXFi7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B2F4C32783;
-	Wed, 17 Apr 2024 08:23:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713342199;
-	bh=C4tOCdvuBbe0nWsP1RYC0WfHw/yvoZ/fnppLyqdrzVg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Cl0dXFi7+cjctcO4EmDYic4Anp14X9g7oZQmOJzpgfUGrw+jlsNE4rsYPyaSGibd5
-	 AgrdAoHAghKXhkZuTLTsdHvmIxd8bjB5LauD7bPkXD1DMbx39P9GtgNZ33VtZzKLpp
-	 JfxgYOAT2KLRgnBpiDL4IsZ1RdcJpcEGZKQCWk0kilcCQaEqIZ0az8CrMEenlmvx0i
-	 dqWgyK1XnPJD7BGHp5uiFJzNv6UZyhwNBo27xo6aAM/EEIw/ZkLrPyDo4AJVKUaliG
-	 7eEYwPlT2cTGcnUA1IloRrDpURijulNu6E56nh2yOUvDC+UBMOh0sekIQ3V9XwuEqh
-	 KaK9v7OdBfLIg==
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5acdbfa6e95so191406eaf.3;
-        Wed, 17 Apr 2024 01:23:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWEarIp0Ahk38DyjcVUPMVj58WlTPjvmUZDq3deQ3R3dAi4jUfkubLodv/IXozSPD7/bmlK4F8t0D8Nn1b/kCwbbJsy5ODCIx4Twc25JhWI9yuuK27CaRNGuX7s2fWkKMK8HHk29d9cKOfytOQgWpDR198nsg0y6y1H9ZJ2sMInjveigAQH4tEA1taG
-X-Gm-Message-State: AOJu0YyX4r5tLUo5gLrCSj/v9kQy3UH7foDmsDrFvGP3mRi1U0LoF7p1
-	32NJPlsVfnnMONvGBKZXMU0g8DgT14y2IdfvWwhcBtyWo/X2KQjtqDodCWJoWDaEcKD0J6y1WBq
-	+lFPjcp317NawiSohOghjqqgUeMA=
-X-Google-Smtp-Source: AGHT+IEwWhyxwziJmItu3CudJNR/cbcOGfyy1lJsPIqbwVt2BL7zHv844Kmjt0yZaihq6jyNI/6OLt9Cemu6KrK30DQ=
-X-Received: by 2002:a05:6820:4003:b0:5a7:db56:915c with SMTP id
- fh3-20020a056820400300b005a7db56915cmr17216803oob.1.1713342198919; Wed, 17
- Apr 2024 01:23:18 -0700 (PDT)
+	s=arc-20240116; t=1713345669; c=relaxed/simple;
+	bh=ywsN3ggstkBDL7MooDKikdbSvYUjUsxtghPnqKNym48=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KUHqwLlAPsodbWv6NekF+VVfO8INPKUOxCjpjW2qtL/BfAc8AGAsESeLh1Urg4dPIwx8z4ogDW8nSxxpImr85Rm0PshwQxSRJCwwApvDLz7WpRCf9AIdYe/wtKL6ybX+72XraTqZqTrGStZz+C+3BiEZt8c3/kq6sBMjgsiF0XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: cc993a36fc9b11ee9305a59a3cc225df-20240417
+X-CID-UNFAMILIAR: 1
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_HamU
+X-CID-O-INFO: VERSION:1.1.37,REQID:61c24f1a-98c9-4119-b296-d7c8a6f0907b,IP:20,
+	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:8,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:3
+X-CID-INFO: VERSION:1.1.37,REQID:61c24f1a-98c9-4119-b296-d7c8a6f0907b,IP:20,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:8,FILE:0,BULK:0,RULE:Release_HamU,ACTIO
+	N:release,TS:3
+X-CID-META: VersionHash:6f543d0,CLOUDID:ba8cf38c25e9dc103cf64083a088bcb5,BulkI
+	D:2404171720588EJWUJGL,BulkQuantity:0,Recheck:0,SF:19|44|66|24|16|102,TC:n
+	il,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,CO
+	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_USA,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED
+	SN_UNTRUSTED, SN_UNFAMILIAR, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
+	CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
+	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
+	ABX_MISS_RDNS
+X-UUID: cc993a36fc9b11ee9305a59a3cc225df-20240417
+X-User: jiangyunshui@kylinos.cn
+Received: from kylin-pc.. [(112.64.161.44)] by mailgw.kylinos.cn
+	(envelope-from <jiangyunshui@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 490147603; Wed, 17 Apr 2024 17:20:57 +0800
+From: yunshui <jiangyunshui@kylinos.cn>
+To: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	hmh@hmh.eng.br,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	yunshui <jiangyunshui@kylinos.cn>,
+	Ai Chao <aichao@kylinos.cn>
+Subject: [PATCH] platform/x86: thinkpad_acpi: change sprintf() to sysfs_emit()
+Date: Wed, 17 Apr 2024 17:20:55 +0800
+Message-Id: <20240417092055.1170586-1-jiangyunshui@kylinos.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416211941.9369-1-tony.luck@intel.com> <20240416212250.9969-1-tony.luck@intel.com>
-In-Reply-To: <20240416212250.9969-1-tony.luck@intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 17 Apr 2024 10:23:06 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hJbpCzGeshmP4NT0P6We=GTTgxVi0OTUoRF8DYpvKGCQ@mail.gmail.com>
-Message-ID: <CAJZ5v0hJbpCzGeshmP4NT0P6We=GTTgxVi0OTUoRF8DYpvKGCQ@mail.gmail.com>
-Subject: Re: [PATCH v3 69/74] x86/cpu/vfm: Update intel_soc_dts_thermal.c
-To: Tony Luck <tony.luck@intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 16, 2024 at 11:22=E2=80=AFPM Tony Luck <tony.luck@intel.com> wr=
-ote:
->
-> New CPU #defines encode vendor and family as well as model.
->
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
+As Documentation/filesystems/sysfs.rst suggested,
+show() should only use sysfs_emit() or sysfs_emit_at() when formatting
+the value to be returned to user space.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: yunshui <jiangyunshui@kylinos.cn>
+Signed-off-by: Ai Chao <aichao@kylinos.cn>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> ---
->  include/linux/platform_data/x86/soc.h         | 12 ++++++------
->  drivers/thermal/intel/intel_soc_dts_thermal.c |  2 +-
->  2 files changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/include/linux/platform_data/x86/soc.h b/include/linux/platfo=
-rm_data/x86/soc.h
-> index a5705189e2ac..f981907a5cb0 100644
-> --- a/include/linux/platform_data/x86/soc.h
-> +++ b/include/linux/platform_data/x86/soc.h
-> @@ -20,7 +20,7 @@
->  static inline bool soc_intel_is_##soc(void)                    \
->  {                                                              \
->         static const struct x86_cpu_id soc##_cpu_ids[] =3D {      \
-> -               X86_MATCH_INTEL_FAM6_MODEL(type, NULL),         \
-> +               X86_MATCH_VFM(type, NULL),                      \
->                 {}                                              \
->         };                                                      \
->         const struct x86_cpu_id *id;                            \
-> @@ -31,11 +31,11 @@ static inline bool soc_intel_is_##soc(void)          =
-       \
->         return false;                                           \
->  }
->
-> -SOC_INTEL_IS_CPU(byt, ATOM_SILVERMONT);
-> -SOC_INTEL_IS_CPU(cht, ATOM_AIRMONT);
-> -SOC_INTEL_IS_CPU(apl, ATOM_GOLDMONT);
-> -SOC_INTEL_IS_CPU(glk, ATOM_GOLDMONT_PLUS);
-> -SOC_INTEL_IS_CPU(cml, KABYLAKE_L);
-> +SOC_INTEL_IS_CPU(byt, INTEL_ATOM_SILVERMONT);
-> +SOC_INTEL_IS_CPU(cht, INTEL_ATOM_AIRMONT);
-> +SOC_INTEL_IS_CPU(apl, INTEL_ATOM_GOLDMONT);
-> +SOC_INTEL_IS_CPU(glk, INTEL_ATOM_GOLDMONT_PLUS);
-> +SOC_INTEL_IS_CPU(cml, INTEL_KABYLAKE_L);
->
->  #undef SOC_INTEL_IS_CPU
->
-> diff --git a/drivers/thermal/intel/intel_soc_dts_thermal.c b/drivers/ther=
-mal/intel/intel_soc_dts_thermal.c
-> index 9c825c6e1f38..718c6326eaf4 100644
-> --- a/drivers/thermal/intel/intel_soc_dts_thermal.c
-> +++ b/drivers/thermal/intel/intel_soc_dts_thermal.c
-> @@ -36,7 +36,7 @@ static irqreturn_t soc_irq_thread_fn(int irq, void *dev=
-_data)
->  }
->
->  static const struct x86_cpu_id soc_thermal_ids[] =3D {
-> -       X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT, BYT_SOC_DTS_APIC_IRQ)=
-,
-> +       X86_MATCH_VFM(INTEL_ATOM_SILVERMONT, BYT_SOC_DTS_APIC_IRQ),
->         {}
->  };
->  MODULE_DEVICE_TABLE(x86cpu, soc_thermal_ids);
-> --
-> 2.44.0
->
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 82429e59999d..1ed27fc21a7d 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -817,7 +817,7 @@ static int __init setup_acpi_notify(struct ibm_struct *ibm)
+ 	}
+ 
+ 	ibm->acpi->device->driver_data = ibm;
+-	sprintf(acpi_device_class(ibm->acpi->device), "%s/%s",
++	sysfs_emit(acpi_device_class(ibm->acpi->device), "%s/%s",
+ 		TPACPI_ACPI_EVENT_PREFIX,
+ 		ibm->name);
+ 
+@@ -857,7 +857,7 @@ static int __init register_tpacpi_subdriver(struct ibm_struct *ibm)
+ 		return -ENOMEM;
+ 	}
+ 
+-	sprintf(ibm->acpi->driver->name, "%s_%s", TPACPI_NAME, ibm->name);
++	sysfs_emit(ibm->acpi->driver->name, "%s_%s", TPACPI_NAME, ibm->name);
+ 	ibm->acpi->driver->ids = ibm->acpi->hid;
+ 
+ 	ibm->acpi->driver->ops.add = &tpacpi_device_add;
+@@ -2679,7 +2679,7 @@ static ssize_t hotkey_bios_enabled_show(struct device *dev,
+ 			   struct device_attribute *attr,
+ 			   char *buf)
+ {
+-	return sprintf(buf, "0\n");
++	return sysfs_emit(buf, "0\n");
+ }
+ 
+ static DEVICE_ATTR_RO(hotkey_bios_enabled);
+@@ -9789,7 +9789,7 @@ static ssize_t tpacpi_battery_show(int what,
+ 		battery = BAT_PRIMARY;
+ 	if (tpacpi_battery_get(what, battery, &ret))
+ 		return -ENODEV;
+-	return sprintf(buf, "%d\n", ret);
++	return sysfs_emit(buf, "%d\n", ret);
+ }
+ 
+ static ssize_t charge_control_start_threshold_show(struct device *device,
+-- 
+2.34.1
+
