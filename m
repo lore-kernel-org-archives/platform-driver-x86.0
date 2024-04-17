@@ -1,59 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A6713D265;
-	Wed, 17 Apr 2024 13:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A632713D8B4;
+	Wed, 17 Apr 2024 13:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713359641; cv=none; b=l3egTsOkcnyB1noCl81Rx6Nl8Q6KLFkDlXV8O2A2/T3NdVNBPoYhTopOh1kACKfONDUcQOICbQsyCkX7j6Xco0T+1DPvyA+jhHw/FgfG0DJJZ2X3EXv02D9ak03Ekq0k9UttoNCXwvfsNoK89i1p7f6EilfSSkca8o2w+8DFMns=
+	t=1713359927; cv=none; b=Dgnu129MuB4wDwVLHVRW+9r8SH+MJVVFB8zHHyJKL5Un9IEeNg22ZWpsEOlcJgS9emiA43cSqNlZBrzAHOjS53F8RXXm/cLtLIoCZmkbzYO5QVSOF8GEEXzKV+h+eybcpMPb4Wb00fSOBTYRmi5UjDTwHFoVRWe+GA7oKLg9ILo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713359641; c=relaxed/simple;
-	bh=XVrBhz63k5iaVlC5eR2S2TPWPIQYlVoRr+xpqxATrpI=;
+	s=arc-20240116; t=1713359927; c=relaxed/simple;
+	bh=RuHzYN0ZhBqkJDC8Ui0Nm3edOOTTp2WF+RIcT7keQlQ=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=JEQI9PyqeIWntHaVcr1p27v/imn8c/ODhI3A9R6yyv4fIm7i45qQsowDDY/oFBMeS64LzqaoV7dcYP+SHqM5yFDtwuhdi4ten9AZ6FGhrSnBIiPXwz89FvmRb75p/GFVAtHC5bg/h9al5SaO4Tm3bqYMwCDuf4WQ+uM1omVaRt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cfYHVyGa; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version:Content-Type; b=gWT4X/GeaRpwHdRTTaZ1KdpL3y4y1lSidFQKcc7IJATTpFPsdlJezY8T2mfnxJg3uLDwd/7vmSPrUDdV/HKX34NyZYRLEe9y7gUHpasNUROBSB1mdBeaxK/JiJ54NL2zjFDWCVIlCKbh682DoL80cYtfFfYRrR5ssxgfr3F13R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z3MjoS6v; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cfYHVyGa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z3MjoS6v"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713359640; x=1744895640;
+  t=1713359925; x=1744895925;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=XVrBhz63k5iaVlC5eR2S2TPWPIQYlVoRr+xpqxATrpI=;
-  b=cfYHVyGaKA0Bev7C0yUGEbwZGowPLigpyUSBgZjLlQ/OYkTFzMwFqTVI
-   Dn8mF2+R5wmFQv2yaGcIHatnbaQLR8vAPAXA+ZD/9JUlHNj59IBYjPjZ9
-   ESljf0Qdy9KG+KItOXGv5WznKUkcCuTED7czaryoCkr3nTDvWkSSAccAo
-   L0/CBWMHHUBpRWNUcrXXeNUgr7Xg2Lziq1vRZmIrxk67K8D/RCVnARaYy
-   xfZoKrbNkrRolXlas96jIS4uQbW1PnwDT6zvkaHBbxKq8t1SEfUrSEISj
-   uPWtRfhKcC2wWxCeAqKii7GzCPuOw6LIhkJPXuSiGIRGHSLmivGUicSvb
-   w==;
-X-CSE-ConnectionGUID: JO/GsW+vSr61kaChutsJvw==
-X-CSE-MsgGUID: mMnS+j1CQRWnGzeZb3tcdw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="19997295"
+  bh=RuHzYN0ZhBqkJDC8Ui0Nm3edOOTTp2WF+RIcT7keQlQ=;
+  b=Z3MjoS6vLhbve00pn1jDDBm7HFc2hDU1ueBEYggr1dl40gb0FVbSGQNq
+   527vgUnegtKGMHQE3ZdNaSBTVsHDnysFd1u4BSIjIhZ3erhDQCXsxWK4h
+   bPrdECyLiAi83ipfRR/z85C9kKKrCqU0QsOOkZJpFtpLE5Y78jmftwpfo
+   4nzLi2z+PWYymcUHTrAEevS45zmyF+y4dqKzKxJuObZyhv5H4d0VBhSAR
+   tpZKudrHh9ZRPWBJDgoNmBK8rIgA/RhydoASDq7UEllnDd/HIXJP/m3TC
+   Qsr+X76Ztf+nLvAWc7OFDnsA/usvcKpHoiQRz8hOmJ7WGxtNcHGG3GPOw
+   Q==;
+X-CSE-ConnectionGUID: /GM8inDWTMuHvj7DRy79ng==
+X-CSE-MsgGUID: DaTE+ZnUSsO//O4LdEDRjA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="9018534"
 X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
-   d="scan'208";a="19997295"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 06:13:59 -0700
-X-CSE-ConnectionGUID: wHxRZ53gS9ChLi8YcqDuLw==
-X-CSE-MsgGUID: lft0N95FSa6MO+oU/IOQ7Q==
+   d="scan'208";a="9018534"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 06:18:44 -0700
+X-CSE-ConnectionGUID: sMzf6z22SD618eNgS1KsNw==
+X-CSE-MsgGUID: FJFoLFuUSRyFr4MWccoxdg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,209,1708416000"; 
-   d="scan'208";a="45919609"
+   d="scan'208";a="23211608"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.35])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 06:13:56 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2024 06:18:41 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 17 Apr 2024 16:13:52 +0300 (EEST)
+Date: Wed, 17 Apr 2024 16:18:37 +0300 (EEST)
 To: Shravan Kumar Ramani <shravankr@nvidia.com>
 cc: Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
     David Thompson <davthompson@nvidia.com>, 
     platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/3] Documentation/ABI: Add document for Mellanox PMC
- driver
-In-Reply-To: <b2a3ca5502008dbe4d07a5d07493022c04c135d6.1713334019.git.shravankr@nvidia.com>
-Message-ID: <fd7c3b6c-8e5a-6112-b825-ba17763a8094@linux.intel.com>
-References: <cover.1713334019.git.shravankr@nvidia.com> <b2a3ca5502008dbe4d07a5d07493022c04c135d6.1713334019.git.shravankr@nvidia.com>
+Subject: Re: [PATCH v1 2/3] platform/mellanox: mlxbf-pmc: Add support for
+ 64-bit counters and cycle count
+In-Reply-To: <aec3aaa44a5738940b2511726177976336a6c72d.1713334019.git.shravankr@nvidia.com>
+Message-ID: <e77f01b4-f314-6822-8533-95f37a42cd4f@linux.intel.com>
+References: <cover.1713334019.git.shravankr@nvidia.com> <aec3aaa44a5738940b2511726177976336a6c72d.1713334019.git.shravankr@nvidia.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,80 +64,60 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Wed, 17 Apr 2024, Shravan Kumar Ramani wrote:
 
-> The sysfs interface is created for programming and monitoring the
-> performance counters in various HW blocks of Mellanox BlueField-1,
-> BlueField-2 and BlueField-3.
+> Add support for programming any counter to monitor the cycle count.
+> Since counting of cycles using 32-bit ocunters would result in frequent
+> wraparounds, add the ability to combine 2 adjacent 32-bit counters to
+> form 1 64-bit counter.
+> Both these features are supported by BlueField-3 PMC hardware, hence
+> the required bit-fields are exposed by the driver via sysfs to allow
+> the user to configure as needed.
 > 
 > Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
 > Reviewed-by: David Thompson <davthompson@nvidia.com>
+> Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
 > ---
 
-This documents the existing sysfs files? Which is good, thank you!
+> @@ -1799,6 +1902,37 @@ static int mlxbf_pmc_init_perftype_counter(struct device *dev, unsigned int blk_
+>  		attr = NULL;
+>  	}
+>  
+> +	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE) {
+> +		/*
+> +		 * Couple adjacent odd and even 32-bit counters to form 64-bit counters
+> +		 * using "use_odd_counter" sysfs which has one bit per even counter.
+> +		 */
+> +		attr = &pmc->block[blk_num].attr_use_odd_counter;
+> +		attr->dev_attr.attr.mode = 0644;
+> +		attr->dev_attr.show = mlxbf_pmc_use_odd_counter_show;
+> +		attr->dev_attr.store = mlxbf_pmc_use_odd_counter_store;
+> +		attr->nr = blk_num;
+> +		attr->dev_attr.attr.name = devm_kasprintf(dev, GFP_KERNEL,
+> +							  "use_odd_counter");
+> +		if (!attr->dev_attr.attr.name)
+> +			return -ENOMEM;
+> +		pmc->block[blk_num].block_attr[++i] = &attr->dev_attr.attr;
+> +		attr = NULL;
+> +
+> +		/* Program crspace counters to count clock cycles using "count_clock" sysfs */
+> +		attr = &pmc->block[blk_num].attr_count_clock;
+> +		attr->dev_attr.attr.mode = 0644;
+> +		attr->dev_attr.show = mlxbf_pmc_count_clock_show;
+> +		attr->dev_attr.store = mlxbf_pmc_count_clock_store;
+> +		attr->nr = blk_num;
+> +		attr->dev_attr.attr.name = devm_kasprintf(dev, GFP_KERNEL,
+> +							  "count_clock");
+> +		if (!attr->dev_attr.attr.name)
+> +			return -ENOMEM;
+> +		pmc->block[blk_num].block_attr[++i] = &attr->dev_attr.attr;
+> +		attr = NULL;
+> +	}
 
-However, there's still no PATCH 4/ which would document the new interface 
-added by this series, namely use_odd_counter and count_clock, am I 
-correct?
+Hi,
+
+What was the reason why this driver could not use .dev_groups to setup 
+sysfs (filtering can be done with .is_visible)?
+
 
 -- 
  i.
 
->  .../ABI/testing/sysfs-platform-mellanox-pmc   | 49 +++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-platform-mellanox-pmc
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-mellanox-pmc b/Documentation/ABI/testing/sysfs-platform-mellanox-pmc
-> new file mode 100644
-> index 000000000000..47094024dbeb
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-platform-mellanox-pmc
-> @@ -0,0 +1,49 @@
-> +HID           Driver         Description
-> +MLNXBFD0      mlxbf-pmc      Performance counters (BlueField-1)
-> +MLNXBFD1      mlxbf-pmc      Performance counters (BlueField-2)
-> +MLNXBFD2      mlxbf-pmc      Performance counters (BlueField-3)
-> +
-> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/event_list
-> +Date:		Dec 2020
-> +KernelVersion:	5.10
-> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
-> +Description:
-> +		List of events supported by the counters in the specific block.
-> +		It is used to extract the event number or ID associated with
-> +		each event.
-> +
-> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/event<N>
-> +Date:		Dec 2020
-> +KernelVersion:	5.10
-> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
-> +Description:
-> +		Event monitored by corresponding counter. This is used to
-> +		program or read back the event that should be or is currently
-> +		being monitored by counter<N>.
-> +
-> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/counter<N>
-> +Date:		Dec 2020
-> +KernelVersion:	5.10
-> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
-> +Description:
-> +		Counter value of the event being monitored. This is used to
-> +		read the counter value of the event which was programmed using
-> +		event<N>. This is also used to clear or reset the counter value.
-> +
-> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/enable
-> +Date:		Dec 2020
-> +KernelVersion:	5.10
-> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
-> +Description:
-> +		Start or stop counters. This is used to start the counters
-> +		for monitoring the programmed events and also to stop the
-> +		counters after the desired duration.
-> +
-> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/<reg>
-> +Date:		Dec 2020
-> +KernelVersion:	5.10
-> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
-> +Description:
-> +		Value of register. This is used to read or reset the registers
-> +		where various performance statistics are counted for each block.
-> +
-> 
