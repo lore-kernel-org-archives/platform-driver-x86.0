@@ -1,104 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2045.outbound.protection.outlook.com [40.107.223.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D57E537E5;
-	Wed, 17 Apr 2024 06:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713335336; cv=none; b=IfBSpCPnzMoy+YFAxp2ixc6fVtcNuy43wxMJfwvOtrl754OsO5weeTwpmYkStVdAJ29Y/Zoj68txJLAgqXGZtu+2MGVTtICrpeRs9UZEPxPBrb+ihtF2qhADtl/CPjjxged2cSOrTw9aeJOA0Q3Mk/8ZGCJPRAk9vmHINm+6EyM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713335336; c=relaxed/simple;
-	bh=smjDec/8rpAG7SGBZVdym3JuATOncC3nq4kDgqqp4T4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=szVJ85XzvBGXh8G4ru+zFVhNecgxu7q/5320gsMScg5fdCUnujDUu2Q9ic0rexyjV42yWFzYQ8paFlbTSREpZdSbxQd0oQ5EntwnGC6THdP+gv1g82UyuGESkl86D07AvxXOFZiklLfwQlbZmy8YEmMgip3BN4gUkPLHzviT7g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FmElhFwZ; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F6D604D3;
+	Wed, 17 Apr 2024 07:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713339049; cv=fail; b=NwhJDhyDRJ4TRz7MUnb3apjACBGMP4mO2Dg2bNjFG/CGPF4KWvd2o8ztp0fFL8dJ0OiLxCwf8lOU/mo/el3diSibfH9HdcZmdfNhpXYh69UYsq+pVir5N74Hvv24BqfKpU2S50dkmfTChOdmqL73miziMqU5hdRpqe+QCElrTUM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713339049; c=relaxed/simple;
+	bh=aIFduZYNjuZDYhgFmTvvcMIhaPALoIRnY+mawj1AyZ0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SScG+cDYCbfOVXSJZDKPURgCgjRzX192mZwBYkSc5pgJF6vF0/urmgBueuyIHKiM4RJPoPPDkctxQs16ijQw/GXY3otIO/LJmgnpa/Vq3m6XHX7bQCXDPtTJlkgl/V67wGPLgUc7jJwKAXSYoI2BBzaUl/EG8z6zIbxN5lqk9U4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NEUbkjDB; arc=fail smtp.client-ip=40.107.223.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FmElhFwZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713335330; x=1744871330;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=smjDec/8rpAG7SGBZVdym3JuATOncC3nq4kDgqqp4T4=;
-  b=FmElhFwZ5+4nZs2Rp62bc4+DJi/4d+9oBIRKs6pp5GKMZVRdebR3R3z7
-   YM4UcepTykRw1WBgQGfLYkJmnMi7x//ueNFh43vWDlNMlLCUHSxtM8gy+
-   IXzNgpLxjgBadVnmlfb7dVU3zzDGFQ9C3EchJQL7JflPxozgKmproFto4
-   zllyz9xOnOj6TzNwE1zYTJr5h4uW20Kr1YkL1CR6mDn6isX8m6wpiCuGj
-   G6HjeEM8y1mZD3aPf+QqvpV0hF1fGu/vDkb/mySNkktEEfKjQwsa9/5KP
-   tMRVSN+ra3pNZigc6q3pWskR0fjz7OvoD8xsyQzp1ocj35iQ57iX1nAei
-   Q==;
-X-CSE-ConnectionGUID: ABqC9J+DTtiDs7uV+cmsPQ==
-X-CSE-MsgGUID: xMC1x+RGQw+In89kSntntA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11046"; a="9030484"
-X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
-   d="scan'208";a="9030484"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 23:28:49 -0700
-X-CSE-ConnectionGUID: 0GDMQVMmTrmsmFjCQAMLgQ==
-X-CSE-MsgGUID: 8ylpVV5nRniLqcZYoLqfmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,208,1708416000"; 
-   d="scan'208";a="22576325"
-Received: from unknown (HELO localhost) ([10.245.247.35])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2024 23:28:47 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 17 Apr 2024 09:28:44 +0300 (EEST)
-To: Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
-cc: "Luke D. Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>, 
-    corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: asus-wmi: add support for vivobook fan
- profiles
-In-Reply-To: <Zh6oooU-DL2IXLg9@laptop>
-Message-ID: <e61ddc4f-5e55-248c-72fa-3c15d6316961@linux.intel.com>
-References: <20240413202112.37729-1-luke@ljones.dev> <dccc5701-f533-e80e-09f8-199f232f447f@linux.intel.com> <Zh6oooU-DL2IXLg9@laptop>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NEUbkjDB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RunX36ZD/XZR4gZ/a/ggeZBCxPxpqa/I6s2zzZaTK2V7xHHsaggntlezxfrrqNQKRQQAx+4V03lwWNWYVK5fGP9ttElpRmJrimYrf5xXcPvcC88v74rtqt2nbc7zrkYKjsexohOg4tlP+7s3Ih4fJHRZ3FxGoJ44PsSa84qoG0s/9kFYvH5RSDqk64hBJw8nlNLVdG6IXbF+uGVzqFksMjqma+6yFrlxz7YQ4r2IfOkPDWqUZCTjas9WpSAqL+IUv9Mn2UJL/1zKhi58tcLkEaWAiwZHVu3PQOZu4+/5Lo6eZnP7rZ82+jECMBi2k52xfGD6D9exb+Ffi4/Um6IY6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DQZXlV/5sW0pdE+f6OPcAZHmxWuc9sFZ7/qTFPpkRPY=;
+ b=hUSgNav27teozH63/Q0TsMP2Mt+o+kzzAkhQDsP1+Six4+RBxcIcVgyHF9F5yH3a/FFl9By/fT8ipMK9jH+p0t4JM4cH0ERnTeTJKM/NQpszgK4FxOn2FA0GsCSJ0d/fZj+nLUB4oxNleDy4m/Kzig7rcccrI7uRLoVNiDKM07RRRsCi58IRYhrbGF2FAy41cqpkvTCbdnBxEwQUgk6G6AWbNZQDw5/QvgaUM5GRl7eLQAhJrOMsIxg21gwZmlWxkhjCA2SOXXvYl9tM39UDCynRcex6Ia/GT82WnEJ3it6a49/mjjBNWvFwxywFog6Qc4votbZU31+0NVZpsCq3gQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DQZXlV/5sW0pdE+f6OPcAZHmxWuc9sFZ7/qTFPpkRPY=;
+ b=NEUbkjDBmUGK8Q4anrmsPMUkNKoMcy0Og1qtFp9EJuvgzYVhhdVtRfeGfTTvWEaCYnqrmFFjeYQByDvFJeqf1XnxupaSI1mpfAM7I9TIxPG6lou4nLSLDLKmJPC3N0YXwWG3+J8n+iEWKkH5f7tX2M6fn5KiWbWw5/DaVYUY2uWgc596UreSfhneokVH8X6K03Rr77Q9vtMGUW6L4Cn9nMs84faBDM501LrxLzsa/jBjpcNqYgCNQ47IEXeL5X7VLfAkvody26KlogpEGoWFPiiyf6NVwdsbGTzsr+h8uwuRvl5OokwSCpLVdy0YwXGv40rkv3Mj7geoCJ2Qhmsc+w==
+Received: from DM5PR07CA0066.namprd07.prod.outlook.com (2603:10b6:4:ad::31) by
+ SJ2PR12MB7991.namprd12.prod.outlook.com (2603:10b6:a03:4d1::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.49; Wed, 17 Apr
+ 2024 07:30:44 +0000
+Received: from DS3PEPF000099D8.namprd04.prod.outlook.com
+ (2603:10b6:4:ad:cafe::ec) by DM5PR07CA0066.outlook.office365.com
+ (2603:10b6:4:ad::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.33 via Frontend
+ Transport; Wed, 17 Apr 2024 07:30:43 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ DS3PEPF000099D8.mail.protection.outlook.com (10.167.17.9) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7452.22 via Frontend Transport; Wed, 17 Apr 2024 07:30:43 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 17 Apr
+ 2024 00:30:30 -0700
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Wed, 17 Apr 2024 00:30:30 -0700
+Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Wed, 17 Apr 2024 00:30:29 -0700
+From: Shravan Kumar Ramani <shravankr@nvidia.com>
+To: Hans de Goede <hdegoede@redhat.com>, Ilpo Jarvinen
+	<ilpo.jarvinen@linux.intel.com>, Vadim Pasternak <vadimp@nvidia.com>, "David
+ Thompson" <davthompson@nvidia.com>
+CC: Shravan Kumar Ramani <shravankr@nvidia.com>,
+	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 0/3] Updates to mlxbf-pmc
+Date: Wed, 17 Apr 2024 03:30:15 -0400
+Message-ID: <cover.1713334019.git.shravankr@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1066009640-1713335324=:1007"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099D8:EE_|SJ2PR12MB7991:EE_
+X-MS-Office365-Filtering-Correlation-Id: b0a178ed-7f53-4eef-e57d-08dc5eb04a9d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	lgGG9Cr4SicAqaz4nZc69r0VEhMvKJTGuiOTjlWpPy81oan9IIChFXJ2aiK/63t28+GYaV5jEsHVW4BpNFvQfBzZrQWcLOY3ubE5pdZnFpWwezgSN0PY6Ptz+6b0OuLz0rBEQ4TWkBFzKTK+dYQEenwa/+M/6ndcagf1aH/e65PMQIdTMo+eQ67kc/Rq2BARwCwiwXOnZf2r38tCp1CwmeuEO/JJve5v0FiVmCeNOEkBJ3kDa5U693Yce5O/9PBFmraz0OagEyFEBtK+4aqz0G9eQir+jOw0G2eK83cCBNNcgP9MJWl/qNj6ryVmXPwTXHuQfV9lw3wEVEGbihC0kZe43WPd9rLK6khTGGSFGpsje/87VA3SxQTaEbtT/G+m1rJakW+62YviRoLEu0AgTDeOXtAERsFYYZ7ivYvhdFgkrTvBKrOEZxw0NPIXrI0fs/T6pv4gFYbNTr1EeBL2a13G2KBVpL9Rk71kYQswOBT2uhTnnnalXtZaEyXBsCc/3CUq1QRCDVtOx85Iva7aix1n5jYNu3d55ttHsl+RwA90TMFUq+P7ugy29oHOdD1oXU6I7imi/TIUrTlNGUn4M1T8MdSsIL2vBsXhSun3mMaN2XSdvslfk9SgamDrmKqtBcsC8W4Lj1r9ILh9tw3dBNWt/0GgguAsi33mjqNfkzszAaZteOde2AXMU5+Ct77CTt6nz2UmAP5b2VoemRbdQLfBNwDwqNxMEi+RzzHl1qtbna8hiHm3RmWR1IexJRXm
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230031)(82310400014)(36860700004)(376005)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2024 07:30:43.7478
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0a178ed-7f53-4eef-e57d-08dc5eb04a9d
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099D8.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7991
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+This submission contains 3 patches relating to mlxbf-pmc.
 
---8323328-1066009640-1713335324=:1007
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Patch 1 adds documentation for the sysfs files created by the driver.
+Patches 2 and 3 add specific functionality to the driver for supporting
+64-bit ocunters, cycle count and clock_measure performance block.
 
-On Tue, 16 Apr 2024, Mohamed Ghanmi wrote:
+Shravan Kumar Ramani (3):
+  Documentation/ABI: Add document for Mellanox PMC driver
+  platform/mellanox: mlxbf-pmc: Add support for 64-bit counters and
+    cycle count
+  platform/mellanox: mlxbf-pmc: Add support for clock_measure
+    performance block
 
-> On Tue, Apr 16, 2024 at 03:51:03PM +0300, Ilpo J=E4rvinen wrote:
-> > On Sun, 14 Apr 2024, Luke D. Jones wrote:
-> >=20
-> > > From: Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
-> > >=20
-> > > Add support for vivobook fan profiles wmi call on the ASUS VIVOBOOK
-> > > to adjust power limits.
-> > >=20
-> > > These fan profiles have a different device id than the ROG series.
+ .../ABI/testing/sysfs-platform-mellanox-pmc   |  49 +++++
+ drivers/platform/mellanox/mlxbf-pmc.c         | 180 +++++++++++++++++-
+ 2 files changed, 225 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-mellanox-pmc
 
+-- 
+2.30.1
 
-> > > and different order.
-> >=20
-> > Fix grammar.
->=20
-> my grammar is not the greatest so i'm finding it hard to know what is
-> the error you're referring to but I think that 'add'
-> should become 'adds' ?
-
-That's not what I was referring to, you've a dangling/broken "sentence"
-right in front of my reply:=20
-
-"and different order."
-
-Please fix that. Perhaps you just want to remove the stop (".") from=20
-the previous sentence to join the sentences together?
-
---=20
- i.
-
---8323328-1066009640-1713335324=:1007--
