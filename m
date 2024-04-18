@@ -1,34 +1,34 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DD238DD9;
-	Thu, 18 Apr 2024 07:06:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF201B94D;
+	Thu, 18 Apr 2024 07:23:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713423984; cv=none; b=kiuyhSQtIgnsCvfbH6+ryfDnNGcl8rftx2wBSYF1huvZ2m7p07RlXo14q0Aq62LNs4FtkRvKxv5NwTqXpGn4RNkFWAMkPTvJeMHoDr9oSmf76UvMKUBid3JbVFf+vehX0PgpxuCptYNPx0FVwkfp5Xe/4hWT133llyfsHwNS9Dg=
+	t=1713424993; cv=none; b=QKa22A6AWK9ja9ZH57Hi17C0qmxaIh6uFj7q/7GyoihXQrqP82OthunU5I33OjkHfvVk19DYP+Y87swyDTLkytuw2i38iZ0Fncen9NbSdAwzEDv1CRMKhtW6jCl/NNPLOzKZyzcyDO+V/PKPkKSVXWQON2iID93leSeHG0b3Kj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713423984; c=relaxed/simple;
-	bh=0cq2KNXJm8olaBiLZ4pdwZRcVn9JY5hk7eaXRwyGEJ8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CTwmhfzwfcOkpMjwFC0YlY562vWJee0AAZV8HkIDMDA8cxnArAnKWVBVklw/V3lwaz+xrtuEUJSvIkBD4OBYRfESqOzImQ6EQfQIPAsnRGKROg1wPswRAmIX/tk06HinuT/dCVtHULVY4v+1DvtsWRWTmQ1IxPo85EPjb9qbY0M=
+	s=arc-20240116; t=1713424993; c=relaxed/simple;
+	bh=Dxz58vEyEKkqjs1QSEty08WH1mBRGt/iT8kvwm1w4cc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Z9GplhXOyZV0uR/msmogkpWTV42CSFMp/qKCh0A6XS2iYNeiT9ppNxRi6S1d7ChDDRjQXtjp1vOyemRz+vRfmdLnVSbVKO08Ty3QxbzbvfKzsGtg1Z5rSOBkzd5ovOatgVVyLnXI3+FXrRweQ+CDRmj8TWSkYCRdrUR1PLnzOAw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 1e8c7d88fd5211ee9305a59a3cc225df-20240418
+X-UUID: 7c8a0df4fd5411ee9305a59a3cc225df-20240418
 X-CID-O-RULE: Release_Ham
 X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:ac5da2f7-eedb-4fdc-948d-0bc3ae0cfbd4,IP:20,
-	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:10
-X-CID-INFO: VERSION:1.1.37,REQID:ac5da2f7-eedb-4fdc-948d-0bc3ae0cfbd4,IP:20,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:10
-X-CID-META: VersionHash:6f543d0,CLOUDID:152c965dcca78d4fb2b481a9159d2bc1,BulkI
-	D:24041815060521XOATZ6,BulkQuantity:0,Recheck:0,SF:66|24|72|19|44|102,TC:n
-	il,Content:0,EDM:-3,IP:-2,URL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil
-	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-O-INFO: VERSION:1.1.37,REQID:24472c9b-f27b-4a55-9c40-65d4dedffbb0,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:5
+X-CID-INFO: VERSION:1.1.37,REQID:24472c9b-f27b-4a55-9c40-65d4dedffbb0,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:5
+X-CID-META: VersionHash:6f543d0,CLOUDID:c974f96fbe60705e6a422d5423a1f8b7,BulkI
+	D:240418152302OTZXSRTQ,BulkQuantity:0,Recheck:0,SF:72|19|44|66|24|102,TC:n
+	il,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,CO
+	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
 X-CID-BVR: 0,NGT
 X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_ULN,TF_CID_SPAM_SNR,TF_CID_SPAM_FSD
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
 X-CTIC-Tags:
 	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
 	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
@@ -39,23 +39,23 @@ X-CTIC-Tags:
 	CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
 	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
 	ABX_MISS_RDNS
-X-UUID: 1e8c7d88fd5211ee9305a59a3cc225df-20240418
+X-UUID: 7c8a0df4fd5411ee9305a59a3cc225df-20240418
 X-User: jiangyunshui@kylinos.cn
 Received: from kylin-pc.. [(112.64.161.44)] by mailgw.kylinos.cn
 	(envelope-from <jiangyunshui@kylinos.cn>)
 	(Generic MTA)
-	with ESMTP id 424594125; Thu, 18 Apr 2024 15:06:03 +0800
+	with ESMTP id 1430011517; Thu, 18 Apr 2024 15:23:00 +0800
 From: yunshui <jiangyunshui@kylinos.cn>
 To: linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
-Cc: corentin.chary@gmail.com,
+Cc: jlee@suse.com,
 	hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com,
 	yunshui <jiangyunshui@kylinos.cn>,
 	Ai Chao <aichao@kylinos.cn>
-Subject: [PATCH] platform/x86: samsung-laptop: Use sysfs_emit() to replace the old interface sprintf()
-Date: Thu, 18 Apr 2024 15:05:50 +0800
-Message-Id: <20240418070550.628310-1-jiangyunshui@kylinos.cn>
+Subject: [PATCH] platform/x86: msi-laptop: Use sysfs_emit() to replace sprintf()
+Date: Thu, 18 Apr 2024 15:22:57 +0800
+Message-Id: <20240418072257.631977-1-jiangyunshui@kylinos.cn>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -72,52 +72,103 @@ Content-Transfer-Encoding: 8bit
 Signed-off-by: yunshui <jiangyunshui@kylinos.cn>
 Signed-off-by: Ai Chao <aichao@kylinos.cn>
 ---
- drivers/platform/x86/samsung-laptop.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/platform/x86/msi-laptop.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-index b4aa8ba35d2d..3d2f8e758369 100644
---- a/drivers/platform/x86/samsung-laptop.c
-+++ b/drivers/platform/x86/samsung-laptop.c
-@@ -661,9 +661,9 @@ static ssize_t get_performance_level(struct device *dev,
- 	/* The logic is backwards, yeah, lots of fun... */
- 	for (i = 0; config->performance_levels[i].name; ++i) {
- 		if (sretval.data[0] == config->performance_levels[i].value)
--			return sprintf(buf, "%s\n", config->performance_levels[i].name);
-+			return sysfs_emit(buf, "%s\n", config->performance_levels[i].name);
- 	}
--	return sprintf(buf, "%s\n", "unknown");
-+	return sysfs_emit(buf, "%s\n", "unknown");
- }
- 
- static ssize_t set_performance_level(struct device *dev,
-@@ -744,7 +744,7 @@ static ssize_t get_battery_life_extender(struct device *dev,
+diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
+index f4c6c36e05a5..e5391a37014d 100644
+--- a/drivers/platform/x86/msi-laptop.c
++++ b/drivers/platform/x86/msi-laptop.c
+@@ -317,7 +317,7 @@ static ssize_t show_wlan(struct device *dev,
  	if (ret < 0)
  		return ret;
  
--	return sprintf(buf, "%d\n", ret);
-+	return sysfs_emit(buf, "%d\n", ret);
+-	return sprintf(buf, "%i\n", enabled);
++	return sysfs_emit(buf, "%i\n", enabled);
  }
  
- static ssize_t set_battery_life_extender(struct device *dev,
-@@ -813,7 +813,7 @@ static ssize_t get_usb_charge(struct device *dev,
+ static ssize_t store_wlan(struct device *dev,
+@@ -341,7 +341,7 @@ static ssize_t show_bluetooth(struct device *dev,
  	if (ret < 0)
  		return ret;
  
--	return sprintf(buf, "%d\n", ret);
-+	return sysfs_emit(buf, "%d\n", ret);
+-	return sprintf(buf, "%i\n", enabled);
++	return sysfs_emit(buf, "%i\n", enabled);
  }
  
- static ssize_t set_usb_charge(struct device *dev,
-@@ -878,7 +878,7 @@ static ssize_t get_lid_handling(struct device *dev,
+ static ssize_t store_bluetooth(struct device *dev,
+@@ -364,7 +364,7 @@ static ssize_t show_threeg(struct device *dev,
  	if (ret < 0)
  		return ret;
  
--	return sprintf(buf, "%d\n", ret);
-+	return sysfs_emit(buf, "%d\n", ret);
+-	return sprintf(buf, "%i\n", threeg_s);
++	return sysfs_emit(buf, "%i\n", threeg_s);
  }
  
- static ssize_t set_lid_handling(struct device *dev,
+ static ssize_t store_threeg(struct device *dev,
+@@ -383,7 +383,7 @@ static ssize_t show_lcd_level(struct device *dev,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return sprintf(buf, "%i\n", ret);
++	return sysfs_emit(buf, "%i\n", ret);
+ }
+ 
+ static ssize_t store_lcd_level(struct device *dev,
+@@ -413,7 +413,7 @@ static ssize_t show_auto_brightness(struct device *dev,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return sprintf(buf, "%i\n", ret);
++	return sysfs_emit(buf, "%i\n", ret);
+ }
+ 
+ static ssize_t store_auto_brightness(struct device *dev,
+@@ -443,7 +443,7 @@ static ssize_t show_touchpad(struct device *dev,
+ 	if (result < 0)
+ 		return result;
+ 
+-	return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_TOUCHPAD_MASK));
++	return sysfs_emit(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_TOUCHPAD_MASK));
+ }
+ 
+ static ssize_t show_turbo(struct device *dev,
+@@ -457,7 +457,7 @@ static ssize_t show_turbo(struct device *dev,
+ 	if (result < 0)
+ 		return result;
+ 
+-	return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_TURBO_MASK));
++	return sysfs_emit(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_TURBO_MASK));
+ }
+ 
+ static ssize_t show_eco(struct device *dev,
+@@ -471,7 +471,7 @@ static ssize_t show_eco(struct device *dev,
+ 	if (result < 0)
+ 		return result;
+ 
+-	return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_ECO_MASK));
++	return sysfs_emit(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_ECO_MASK));
+ }
+ 
+ static ssize_t show_turbo_cooldown(struct device *dev,
+@@ -485,7 +485,7 @@ static ssize_t show_turbo_cooldown(struct device *dev,
+ 	if (result < 0)
+ 		return result;
+ 
+-	return sprintf(buf, "%i\n", (!!(rdata & MSI_STANDARD_EC_TURBO_MASK)) |
++	return sysfs_emit(buf, "%i\n", (!!(rdata & MSI_STANDARD_EC_TURBO_MASK)) |
+ 		(!!(rdata & MSI_STANDARD_EC_TURBO_COOLDOWN_MASK) << 1));
+ }
+ 
+@@ -500,7 +500,7 @@ static ssize_t show_auto_fan(struct device *dev,
+ 	if (result < 0)
+ 		return result;
+ 
+-	return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_AUTOFAN_MASK));
++	return sysfs_emit(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_AUTOFAN_MASK));
+ }
+ 
+ static ssize_t store_auto_fan(struct device *dev,
 -- 
 2.34.1
 
