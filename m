@@ -1,65 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790327B3FD
-	for <platform-driver-x86@vger.kernel.org>; Thu, 18 Apr 2024 08:47:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BCAB15AABB
+	for <platform-driver-x86@vger.kernel.org>; Thu, 18 Apr 2024 08:55:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713430026; cv=none; b=htAkQ8i03aCykqDICvv2tmD9Wn6Fm6XwNXACCX5qjgThC32rSS1KFzoy7cqwXx2QxPTjPlAAWHWQC2RJ3/7XOO+KBLmaMzH+pb/sS7AV3PpzwdGLCoFtMVeTPW18dv2XzVg2n9tBRXEg+OMWGnDBgp2MP7DRZjMpI6M26Qn+kzc=
+	t=1713430529; cv=none; b=rDQyxz23zCxv1uk77dOLNBfc4ktFufhhSo8cKYeJKoE9PMYsGIj55lnxa0MQV4oSqxRfLdFQehix8D/8By/8ClMwZwlxih8MPsISzVJCZSEv4Z3QegXmxMwsuPRNk5slhet376uQBetHQKQ3mq0WZQMLDcWNkYGygegOHwumg68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713430026; c=relaxed/simple;
-	bh=hZhXW9wg4wjoavT+9EfcCTWpvN/SZJQnteH7FnhHDXI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tvwcS6yePJaEi+3qySCrNe07x8271uItGwY4cEmJ7KuPhc1iv/StEbwIl/W0VZhdQsbohgf2A7/v7X3IjYU6/PfTwQnbUVQynzPL6KpVDIIXSz1VygH0/w8CYXHhRGPETkPbWqhr1QdoHO1Pi2dK41RfbL7qBSG8XbaMZtgaSqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gd/ZJtJ6; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1713430529; c=relaxed/simple;
+	bh=rg1Htv+lB6hxsvVaFwD5Nffj1OIzHqszQvu3GxaKkIg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=rrgS2eGzfbSwP2zo9nuf2NL6QBWkSAShXkdJM5Gk5LsSKS7qeagfaHkhf/HR8bLmUVWqd3DlxS6UZBXx8J1BsdPlXQaW2PtmnWYlomxc9+08SloTVRS1u+AchU/wCd2knuOkKcwUKbN5jPky7r+NabMxB6UKvRLgMTNxp/t+pJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hWAcdUwG; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gd/ZJtJ6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hWAcdUwG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713430024;
+	s=mimecast20190719; t=1713430526;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ypu/IzdSRACz4KGvkLD7l6pluK2joJIPj93eOoJKFJU=;
-	b=Gd/ZJtJ6nQ6wAGsux7zoAVMNqQavIgpAMSTLsoIarQOs+Ozib7vb85WdMc+jjYC0IiRb9f
-	2oVO0c+YuazINKkO+VIP4ucIabpiRPocRZWJ2oRPRLTKuKKo3Jl97Hk3NXYINc8RzE6d5B
-	f49svQuBLVMhDovuvKCTNdls4HJxhPY=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=a3ijnHOr2lMizZp28dkk/a8tpj5sBpid4ALmXZbWPA8=;
+	b=hWAcdUwG5KfDuu41xabzY+J2CbrUK/M/HO9BtcGh3Ow+4cD4QNPDxOLR5rJF0GmZSQeok1
+	BTd8MDZG4mZdYtp71UcykwWxfUDdjugKhnpffmJxFJQ4nctb86HBDYKpDdLlkhgvUpkP0M
+	OSSyVoOWxL6WkgSxouXLpR3hWCGKrbY=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-696-coN1DQ0GNriDu_se8XDFOA-1; Thu, 18 Apr 2024 04:47:03 -0400
-X-MC-Unique: coN1DQ0GNriDu_se8XDFOA-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2d45c064742so6262861fa.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Apr 2024 01:47:02 -0700 (PDT)
+ us-mta-54-_H2NW0WlNU2eGYbMLH_etQ-1; Thu, 18 Apr 2024 04:55:23 -0400
+X-MC-Unique: _H2NW0WlNU2eGYbMLH_etQ-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a556121c01aso32721266b.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Apr 2024 01:55:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713430021; x=1714034821;
+        d=1e100.net; s=20230601; t=1713430522; x=1714035322;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ypu/IzdSRACz4KGvkLD7l6pluK2joJIPj93eOoJKFJU=;
-        b=mxDKaAqC1IoCq4lCCQRDGkLfQmfVhCsDqDmRT3mEbcnMGDMN7g4BwuTTZ9A/XARiZ2
-         5WVEFJrGvJ3uqNQcapTQHfcWAkB5DTx8ACSsM5lEOWlNlVpA16BnWFMfyYjeAyzNnoz9
-         YVhuvrvs+a9O1HoM+WwWFqo+UfrvYJ4ppGPHbkucGBB04DZiTJ2xQ4LSm7C3dJmKcfnx
-         aIVdnb2VIbRwxTgjg1p2c9kMmFDY0W+nX9tIo6SNGD/DZ1QWv4emA9Lhnj25bW0oM76R
-         ItyCdz/0vcKU8ykl3g4bqNq4G8AMSehAVfReltGP3mt1EtixNZH0GIBElZC4wD2OjPOh
-         u7bA==
-X-Forwarded-Encrypted: i=1; AJvYcCVGpgBKGVzH8p4Ui3aT/n+7nwlGb7TMZ0/iBcR75BZs+ckOwreeXedC8ECsIs1kWCHNC1mrnz3/ER2BaZuNOSDDwYgwFnZZtmFycyNnrzAQi9mDeA==
-X-Gm-Message-State: AOJu0YyTL3xjpjO5hsf1cNzD/M9JWDBRqo7jvAMw0X+9tESUosUJ2t0o
-	G8op04C97LyN5d/PYBcUNOcgVcyVDsO9GOcuxNJIbRhiClR2uWfrvhVzmXOQu/PE0VIWcC5090h
-	o9Djfycv/8Au6x11Pyi08InlqFj1lJleuj0r9rtfkm0lHXgmUUbYXAt2m6BxS1IbjkGggVMA=
-X-Received: by 2002:ac2:514a:0:b0:518:dfae:2691 with SMTP id q10-20020ac2514a000000b00518dfae2691mr934549lfd.11.1713430021715;
-        Thu, 18 Apr 2024 01:47:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHmRh2T6pvnSqHalT0e9jZSTumH+2b2s1Adv+nj5rhoXDlqkM4PEjAaGAuY6sV4enTEM5Eukw==
-X-Received: by 2002:ac2:514a:0:b0:518:dfae:2691 with SMTP id q10-20020ac2514a000000b00518dfae2691mr934538lfd.11.1713430021471;
-        Thu, 18 Apr 2024 01:47:01 -0700 (PDT)
+        bh=a3ijnHOr2lMizZp28dkk/a8tpj5sBpid4ALmXZbWPA8=;
+        b=n61X3PijOcxPPkXTyb7d1bS6xR6qPpZYXP0jPA93Y2L7drOISu6sBYClIuA0IldcWl
+         YVnQEW52RUctPvZPXZHRzIG81JFpHwwBS/wycDIWNv2O1GkS+vRlqpMQTsSIIsezcD5r
+         W487fEUuMWZhWIQiv2h5NMvML/2Y+aKBm6oa2iKaBwsILIewesiIX8n0mYOJCEu4xGiP
+         Fa8UUyfvCur056AJ3L1gxecdhEsZ5b3Bd4cTuKwlMgGGuv6OYwCM3Kxk+b72eStnSkX7
+         qv5pM7/7MgrpfSIPsPAHo2R3ZEORCOCAMTTmQ1FP2Ot9QxUTwrsWBY8vudd4gYh/MP3x
+         JQkA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVpJWEMFhwTN1FwOHVkWuNwYhh/CjILzrwGdDHW4dsoqSODSF8j4a7E1KoHBkFpFimFAgseAUQeK0F+ZAfk/NMMLO7QxLIsKLhClmRrMXexcbk+w==
+X-Gm-Message-State: AOJu0YxVWKuAJxVLddkXeX4BHa6Nn0HJXqOj4uPwPzAXaWKr7Ja+HaRx
+	NEip2quFeAlrtwoRNjFJnKGQV/dbYwwlQ4SAWpIJEyImyi+T7sEfvTgbHrif5eD2rMSIDXWLIwh
+	A2PmRrxQdyqxPR33rcX9OO1hGOH+G/mUNuwV6/UY6JW8lxoFzBv+CxsOTrurG3/K5bInn+AM=
+X-Received: by 2002:a17:907:76a9:b0:a55:59e8:b780 with SMTP id jw9-20020a17090776a900b00a5559e8b780mr1277607ejc.4.1713430522290;
+        Thu, 18 Apr 2024 01:55:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGKfvYq8xxFx0WBymZMPuQA2LKlM895k5PHfbu+ObgkMs+Rqx5cC1+8yukvqXz4+PJX9lUPTw==
+X-Received: by 2002:a17:907:76a9:b0:a55:59e8:b780 with SMTP id jw9-20020a17090776a900b00a5559e8b780mr1277588ejc.4.1713430521889;
+        Thu, 18 Apr 2024 01:55:21 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id k4-20020a50cb84000000b005705bb48307sm600965edi.42.2024.04.18.01.47.00
+        by smtp.gmail.com with ESMTPSA id t7-20020a1709066bc700b00a5556cd0fd5sm598453ejs.183.2024.04.18.01.55.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Apr 2024 01:47:01 -0700 (PDT)
-Message-ID: <9d4800ed-ac7d-406e-ad66-7b5bcd136c30@redhat.com>
-Date: Thu, 18 Apr 2024 10:47:00 +0200
+        Thu, 18 Apr 2024 01:55:21 -0700 (PDT)
+Message-ID: <218ad508-88bf-451a-a4cc-8246c3d02535@redhat.com>
+Date: Thu, 18 Apr 2024 10:55:20 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,33 +67,44 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: msi-laptop: Use sysfs_emit() to replace
- sprintf()
-To: yunshui <jiangyunshui@kylinos.cn>, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: jlee@suse.com, ilpo.jarvinen@linux.intel.com, Ai Chao <aichao@kylinos.cn>
-References: <20240418072257.631977-1-jiangyunshui@kylinos.cn>
+Subject: Re: [PATCH v6 1/5] platform: x86-android-tablets: other: Add swnode
+ for Xiaomi pad2 indicator LED
+To: Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+ Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
+ linux-kernel@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>,
+ Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
+References: <20240416053909.256319-1-hpa@redhat.com>
+ <20240416053909.256319-2-hpa@redhat.com>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240418072257.631977-1-jiangyunshui@kylinos.cn>
+In-Reply-To: <20240416053909.256319-2-hpa@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
+Hi Kate,
 
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-On 4/18/24 9:22 AM, yunshui wrote:
->     As Documentation/filesystems/sysfs.rst suggested,
->     show() should only use sysfs_emit() or sysfs_emit_at() when formatting
->     the value to be returned to user space.
+On 4/16/24 7:39 AM, Kate Hsuan wrote:
+> KTD2026 LED controller manages the indicator LED for Xiaomi pad2. The ACPI
+> for it is not properly made so the kernel can't get a correct description.
 > 
-> Signed-off-by: yunshui <jiangyunshui@kylinos.cn>
-> Signed-off-by: Ai Chao <aichao@kylinos.cn>
+> This work adds a description for this RGB LED controller and also sets a
+> trigger to indicate the changing event (bq27520-0-charging). When it is
+> charging, the indicator LED will be turned on.
+> 
+> Signed-off-by: Kate Hsuan <hpa@redhat.com>
 
-Note same weird S-o-b here though.
+Since this patch is more or less done and since which fwnodes there should
+be and with which contents is prescribed by the existing devicetree
+bindings which are not being changes I have already merged this patch
+into pdx86/for-next:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/commit/?h=for-next&id=fcc6220ddc7e54d8442287273d0cb8c415ada022
+
+So there is no reason to resend this. Please drop this patch from v7
+of the patch-set.
 
 Regards,
 
@@ -103,101 +114,131 @@ Hans
 
 
 > ---
->  drivers/platform/x86/msi-laptop.c | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
+>  .../platform/x86/x86-android-tablets/other.c  | 82 +++++++++++++++++++
+>  .../x86/x86-android-tablets/shared-psy-info.h |  2 +
+>  2 files changed, 84 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
-> index f4c6c36e05a5..e5391a37014d 100644
-> --- a/drivers/platform/x86/msi-laptop.c
-> +++ b/drivers/platform/x86/msi-laptop.c
-> @@ -317,7 +317,7 @@ static ssize_t show_wlan(struct device *dev,
->  	if (ret < 0)
->  		return ret;
+> diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
+> index bc6bbf7ec6ea..c77d56454f2d 100644
+> --- a/drivers/platform/x86/x86-android-tablets/other.c
+> +++ b/drivers/platform/x86/x86-android-tablets/other.c
+> @@ -13,6 +13,8 @@
+>  #include <linux/input.h>
+>  #include <linux/platform_device.h>
 >  
-> -	return sprintf(buf, "%i\n", enabled);
-> +	return sysfs_emit(buf, "%i\n", enabled);
->  }
+> +#include <dt-bindings/leds/common.h>
+> +
+>  #include "shared-psy-info.h"
+>  #include "x86-android-tablets.h"
 >  
->  static ssize_t store_wlan(struct device *dev,
-> @@ -341,7 +341,7 @@ static ssize_t show_bluetooth(struct device *dev,
->  	if (ret < 0)
->  		return ret;
+> @@ -593,6 +595,83 @@ const struct x86_dev_info whitelabel_tm800a550l_info __initconst = {
+>  	.gpiod_lookup_tables = whitelabel_tm800a550l_gpios,
+>  };
 >  
-> -	return sprintf(buf, "%i\n", enabled);
-> +	return sysfs_emit(buf, "%i\n", enabled);
->  }
+> +/*
+> + * The fwnode for ktd2026 on Xaomi pad2. It composed of a RGB LED node
+> + * with three subnodes for each color. The RGB LED node is named
+> + * "multi-led" to align with the name in the device tree.
+> + */
+> +
+> +/* main fwnode for ktd2026 */
+> +static const struct software_node ktd2026_node = {
+> +	.name = "ktd2026"
+> +};
+> +
+> +static const struct property_entry ktd2026_rgb_led_props[] = {
+> +	PROPERTY_ENTRY_U32("reg", 0),
+> +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_RGB),
+> +	PROPERTY_ENTRY_STRING("function", "indicator"),
+> +	PROPERTY_ENTRY_STRING("linux,default-trigger", "bq27520-0-charging"),
+> +	{ }
+> +};
+> +
+> +static const struct software_node ktd2026_rgb_led_node = {
+> +	.name = "multi-led",
+> +	.properties = ktd2026_rgb_led_props,
+> +	.parent = &ktd2026_node,
+> +};
+> +
+> +static const struct property_entry ktd2026_blue_led_props[] = {
+> +	PROPERTY_ENTRY_U32("reg", 0),
+> +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_BLUE),
+> +	{ }
+> +};
+> +
+> +static const struct software_node ktd2026_blue_led_node = {
+> +	.properties = ktd2026_blue_led_props,
+> +	.parent = &ktd2026_rgb_led_node,
+> +};
+> +
+> +static const struct property_entry ktd2026_green_led_props[] = {
+> +	PROPERTY_ENTRY_U32("reg", 1),
+> +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_GREEN),
+> +	{ }
+> +};
+> +
+> +static const struct software_node ktd2026_green_led_node = {
+> +	.properties = ktd2026_green_led_props,
+> +	.parent = &ktd2026_rgb_led_node,
+> +};
+> +
+> +static const struct property_entry ktd2026_red_led_props[] = {
+> +	PROPERTY_ENTRY_U32("reg", 2),
+> +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_RED),
+> +	{ }
+> +};
+> +
+> +static const struct software_node ktd2026_red_led_node = {
+> +	.properties = ktd2026_red_led_props,
+> +	.parent = &ktd2026_rgb_led_node,
+> +};
+> +
+> +static const struct software_node *ktd2026_node_group[] = {
+> +	&ktd2026_node,
+> +	&ktd2026_rgb_led_node,
+> +	&ktd2026_green_led_node,
+> +	&ktd2026_blue_led_node,
+> +	&ktd2026_red_led_node,
+> +	NULL
+> +};
+> +
+> +static int __init xiaomi_mipad2_init(void)
+> +{
+> +	return software_node_register_node_group(ktd2026_node_group);
+> +}
+> +
+> +static void xiaomi_mipad2_exit(void)
+> +{
+> +	software_node_unregister_node_group(ktd2026_node_group);
+> +}
+> +
+>  /*
+>   * If the EFI bootloader is not Xiaomi's own signed Android loader, then the
+>   * Xiaomi Mi Pad 2 X86 tablet sets OSID in the DSDT to 1 (Windows), causing
+> @@ -616,6 +695,7 @@ static const struct x86_i2c_client_info xiaomi_mipad2_i2c_clients[] __initconst
+>  			.type = "ktd2026",
+>  			.addr = 0x30,
+>  			.dev_name = "ktd2026",
+> +			.swnode = &ktd2026_node,
+>  		},
+>  		.adapter_path = "\\_SB_.PCI0.I2C3",
+>  	},
+> @@ -624,4 +704,6 @@ static const struct x86_i2c_client_info xiaomi_mipad2_i2c_clients[] __initconst
+>  const struct x86_dev_info xiaomi_mipad2_info __initconst = {
+>  	.i2c_client_info = xiaomi_mipad2_i2c_clients,
+>  	.i2c_client_count = ARRAY_SIZE(xiaomi_mipad2_i2c_clients),
+> +	.init = xiaomi_mipad2_init,
+> +	.exit = xiaomi_mipad2_exit,
+>  };
+> diff --git a/drivers/platform/x86/x86-android-tablets/shared-psy-info.h b/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
+> index c2d2968cddc2..8c33ec47ee12 100644
+> --- a/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
+> +++ b/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
+> @@ -29,4 +29,6 @@ extern const char * const bq24190_modules[];
+>  extern const struct platform_device_info int3496_pdevs[];
+>  extern struct gpiod_lookup_table int3496_reference_gpios;
 >  
->  static ssize_t store_bluetooth(struct device *dev,
-> @@ -364,7 +364,7 @@ static ssize_t show_threeg(struct device *dev,
->  	if (ret < 0)
->  		return ret;
->  
-> -	return sprintf(buf, "%i\n", threeg_s);
-> +	return sysfs_emit(buf, "%i\n", threeg_s);
->  }
->  
->  static ssize_t store_threeg(struct device *dev,
-> @@ -383,7 +383,7 @@ static ssize_t show_lcd_level(struct device *dev,
->  	if (ret < 0)
->  		return ret;
->  
-> -	return sprintf(buf, "%i\n", ret);
-> +	return sysfs_emit(buf, "%i\n", ret);
->  }
->  
->  static ssize_t store_lcd_level(struct device *dev,
-> @@ -413,7 +413,7 @@ static ssize_t show_auto_brightness(struct device *dev,
->  	if (ret < 0)
->  		return ret;
->  
-> -	return sprintf(buf, "%i\n", ret);
-> +	return sysfs_emit(buf, "%i\n", ret);
->  }
->  
->  static ssize_t store_auto_brightness(struct device *dev,
-> @@ -443,7 +443,7 @@ static ssize_t show_touchpad(struct device *dev,
->  	if (result < 0)
->  		return result;
->  
-> -	return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_TOUCHPAD_MASK));
-> +	return sysfs_emit(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_TOUCHPAD_MASK));
->  }
->  
->  static ssize_t show_turbo(struct device *dev,
-> @@ -457,7 +457,7 @@ static ssize_t show_turbo(struct device *dev,
->  	if (result < 0)
->  		return result;
->  
-> -	return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_TURBO_MASK));
-> +	return sysfs_emit(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_TURBO_MASK));
->  }
->  
->  static ssize_t show_eco(struct device *dev,
-> @@ -471,7 +471,7 @@ static ssize_t show_eco(struct device *dev,
->  	if (result < 0)
->  		return result;
->  
-> -	return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_ECO_MASK));
-> +	return sysfs_emit(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_ECO_MASK));
->  }
->  
->  static ssize_t show_turbo_cooldown(struct device *dev,
-> @@ -485,7 +485,7 @@ static ssize_t show_turbo_cooldown(struct device *dev,
->  	if (result < 0)
->  		return result;
->  
-> -	return sprintf(buf, "%i\n", (!!(rdata & MSI_STANDARD_EC_TURBO_MASK)) |
-> +	return sysfs_emit(buf, "%i\n", (!!(rdata & MSI_STANDARD_EC_TURBO_MASK)) |
->  		(!!(rdata & MSI_STANDARD_EC_TURBO_COOLDOWN_MASK) << 1));
->  }
->  
-> @@ -500,7 +500,7 @@ static ssize_t show_auto_fan(struct device *dev,
->  	if (result < 0)
->  		return result;
->  
-> -	return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_AUTOFAN_MASK));
-> +	return sysfs_emit(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_AUTOFAN_MASK));
->  }
->  
->  static ssize_t store_auto_fan(struct device *dev,
+> +extern const struct software_node ktd2026_leds_node;
+> +
+>  #endif
 
