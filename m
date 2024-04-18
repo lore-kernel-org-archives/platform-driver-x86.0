@@ -1,219 +1,120 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9749E6FC3;
-	Thu, 18 Apr 2024 12:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6764FEAD2;
+	Thu, 18 Apr 2024 13:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713443662; cv=none; b=AdE1l3rcdUcBnSwkTs/yHVNbtP4Fc/T6CxVmaOeXJbn/obKd+dCDJzrKwYX+CXPHbL4JZ8ObVzk4Lx2F9iuRTKklvbZhak3KYwkIblf9AFSZAa074nxBVQDHx8dyRDAo36ueiueXtVySKX/QdOcLG25K0HqYR32gmhljCMzzSeI=
+	t=1713448317; cv=none; b=eGDOolQl9N3fOoPFAmDgUeczqziUgX9m7QWJKFYMAllUShczcPShPe6RnvQBTcdh0Dc5fRog5jZggfRyd0omNMjIEYZGfTZuFiwPnJ6M9sLW9dcV3BTQuuza8VoAHQrIrFhMYow4NDI5ghgfqnQSiFyCl61sVX0fBoLRCQXjvXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713443662; c=relaxed/simple;
-	bh=9nrO80FRTuJXMuwoaTwMR7mzXbtEaRk4icXUo6sWJXM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oL+o4Crf+3GKHCYu6pND2K2P+LwjrFpFmhPtQqiu6XEblcajSWcxmKtlLr913diJdinM5JfK+/SXqNfPkq0uIWWCmlGF77D1Dqk/X/OiFCYDqeSBMqaRpxPMtA6FW73S7QE4yceRxDWwzysrWO/Nfu32xBPsAh30VuYNePNHDMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=HaYZpKgd; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1713448317; c=relaxed/simple;
+	bh=/AePQYYlE4rgjN8mQKUL+TS+cAZpdj5pA/ak+RGccg0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=f74mTJ0v4oEfLYNe8MEzINp0yb6+xgf8B56aANiRs6meup5LdOLv9UQv37+QG0w/y/B5cpHj8G3sPgpI8JwVcCZv8r2jsC//QykwpTymTsS6/LRP8aer3+C7vhzE1/uJYSgyDJdZKgPLsSuQtAqfJtnvkzxIlKwjBUpjznt0EcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EfKz6XKj; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="HaYZpKgd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713443655;
-	bh=9nrO80FRTuJXMuwoaTwMR7mzXbtEaRk4icXUo6sWJXM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HaYZpKgdNFUdHkfAcsARDN6AXW4gxCFkHK6jY2fTv8nDN53OqOyhSjzpAHXORAVJ3
-	 lddss/S96/oRtugpzT0eEUkMnOwv6hB64H+/UuUtYLltujwMWlqpO0Dl/9Bz+3+tk7
-	 tQ9vroTmxaCya/ZCHLdrFd1qU1tPWLNjqa70tGyPvHjjPqaktDJMZ0V8gZzy9VpeKt
-	 eygdvspEX9yI52Gf1aY2ZhT0wYABhcPPoHCo+y0oxG53TZJNsNi45UavBH7s5zytuR
-	 m5GgUTSDWoWev3XQrBjN7fdV1J7Uv+ip7bH/HT/1hrVwF/JXoUHkrTbFLHh51yDEQn
-	 j1kB16xP5U5ZQ==
-Received: from mercury (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sre)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 238373781116;
-	Thu, 18 Apr 2024 12:34:15 +0000 (UTC)
-Received: by mercury (Postfix, from userid 1000)
-	id C3714106071D; Thu, 18 Apr 2024 14:34:14 +0200 (CEST)
-Date: Thu, 18 Apr 2024 14:34:14 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Kate Hsuan <hpa@redhat.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
-	linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	Hans de Goede <hdegoede@redhat.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	=?utf-8?B?QW5kcsOp?= Apitzsch <git@apitzsch.eu>, linux-kernel@vger.kernel.org, 
-	Andy Shevchenko <andy.shevchenko@gmail.com>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v6 4/5] power: supply: power-supply-leds: Add
- charging_orange_full_green trigger for RGB LED
-Message-ID: <sjhe7jvzvrlthf42lipnsnooh3z7vczdcruupsbstmpiujprze@jxwc3lquzvki>
-References: <20240416053909.256319-1-hpa@redhat.com>
- <20240416053909.256319-5-hpa@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EfKz6XKj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713448316; x=1744984316;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=/AePQYYlE4rgjN8mQKUL+TS+cAZpdj5pA/ak+RGccg0=;
+  b=EfKz6XKj//AsIqmokuvJy/0wjWZ1af32eMvDaLHCuQt71a7ClLJKjWTV
+   VPIURnNIoB5gJ2l2j44Kvm7szf/vA7Na6+YO4/MK0mjmA4SMyYUifdVcs
+   BsqAFTt5i76lqIJZ3WpYHm4w4x/l0buldwBC616nxUO0D/EqCvFSUdVrh
+   nKuCICCzUgz2fKQITEYgUdY8UcUoJbdCeEa+Oi+67TVHRBrytvLbC2s2N
+   WtgCLW542F0nh0VMZptO70hm+AZ5yE7f8TrPtVGaRlzDIKV9dmQmrA2yv
+   7yyTbsExPeLaCrt7Fitfnsgoca/jCC5p0oznoCUh5dgtMQQZBJ02G+WQY
+   A==;
+X-CSE-ConnectionGUID: r6vBJUM1QJmfqwhuRiMyOw==
+X-CSE-MsgGUID: mRYn5ptDSF6uaJO/rk6aKQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11047"; a="12782296"
+X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
+   d="scan'208";a="12782296"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 06:51:55 -0700
+X-CSE-ConnectionGUID: ixemoxb4TrCbHevpB1fLhw==
+X-CSE-MsgGUID: JzYUla7xQQyT19Tsnj/nWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,212,1708416000"; 
+   d="scan'208";a="60415341"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.36])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2024 06:51:53 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 18 Apr 2024 16:51:48 +0300 (EEST)
+To: Mario Limonciello <superm1@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, 
+    Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
+    Carlos Bilbao <carlos.bilbao@amd.com>, 
+    "open list:AMD HSMP DRIVER" <platform-driver-x86@vger.kernel.org>, 
+    open list <linux-kernel@vger.kernel.org>, 
+    Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v2] platform/x86/amd: Don't allow HSMP to be loaded on
+ non-server hardware
+In-Reply-To: <1071ea83-7919-469a-ac5b-3209fe9e018c@gmail.com>
+Message-ID: <85728284-d771-bf06-9ed3-333633ebf8b0@linux.intel.com>
+References: <20240416182057.8230-1-superm1@gmail.com> <ca6e0dc7-f5ea-4c0a-b9fe-0667fadc78a6@redhat.com> <1071ea83-7919-469a-ac5b-3209fe9e018c@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rjak7nyqoe7bx2om"
-Content-Disposition: inline
-In-Reply-To: <20240416053909.256319-5-hpa@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
 
+On Thu, 18 Apr 2024, Mario Limonciello wrote:
+> On 4/18/24 04:04, Hans de Goede wrote:
+> > On 4/16/24 8:20 PM, Mario Limonciello wrote:
+> > > From: Mario Limonciello <mario.limonciello@amd.com>
+> > > 
+> > > If the HSMP driver is compiled into the kernel or a module manually loaded
+> > > on client hardware it can cause problems with the functionality of the PMC
+> > > module since it probes a mailbox with a different definition on servers.
+> > > 
+> > > Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2414
+> > > Link: https://gitlab.freedesktop.org/drm/amd/-/issues/3285
+> > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> > > ---
+> > > v1->v2:
+> > >   * use pm preferred profile instead
+> > 
+> > Thanks, patch looks good to me:
+> > 
+> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> > 
+> > Mario, should this go in as a fix for the 6.9 cylce, or is
+> > this for-next material ?  (I'm not sure what to do myself)
+> The main risk with this patch is if there are servers that previously loaded
+> amd-hsmp no longer working because of a BIOS bug to exporting the incorrect
+> profile.  I think this is quite unlikely but not non-zero.
+> 
+> To at least give some time for anything like that to be raised I feel this
+> should go to for-next.
 
---rjak7nyqoe7bx2om
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I was also thinking it would be better to route this through for-next.
 
-Hi,
+> Ideally I do want to see it go to stable kernels after we're all sufficiently
+> happy though.  Random bug reports to me like the ones I added to the commit
+> message get raised mostly by people who compile their own (stable) kernels and
+> enable all the AMD stuff because they have AMD hardware.
+> 
+> So how about we target for-next, but also add a stable tag for when it gets
+> merged in the 6.10 cycle?
 
-On Tue, Apr 16, 2024 at 01:39:08PM +0800, Kate Hsuan wrote:
-> Add a charging_orange_full_green LED trigger and the trigger is based on
-> led_mc_trigger_event() which can set an RGB LED when the trigger is
-> triggered. The LED will show orange when the battery status is charging.
-> The LED will show green when the battery status is full.
->=20
-> Link: https://lore.kernel.org/linux-leds/f40a0b1a-ceac-e269-c2dd-0158c5b4=
-a1ad@gmail.com/
->=20
-> Signed-off-by: Kate Hsuan <hpa@redhat.com>
-> ---
+That's possible but if you want to retain true control over it, don't add 
+stable tag at all now. You can send it on your own volition into stable 
+address later once the change is in Linus' tree and your "happy" condition 
+is met (Option 3 in Documentation/process/stable-kernel-rules.rst). 
 
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Otherwise, stable will autoselect it the moment it lands into Linus' tree
+and you don't have much control over the timeline from that point on (I've 
+seen stable folks to grumble when somebody asked to delay including a 
+patch marked for stable, their reasoning was that their autotools keep 
+reselecting the patch over and over again).
 
--- Sebastian
+-- 
+ i.
 
->  drivers/power/supply/power_supply_leds.c | 26 ++++++++++++++++++++++++
->  include/linux/power_supply.h             |  2 ++
->  2 files changed, 28 insertions(+)
->=20
-> diff --git a/drivers/power/supply/power_supply_leds.c b/drivers/power/sup=
-ply/power_supply_leds.c
-> index c7db29d5fcb8..8dd99199c65b 100644
-> --- a/drivers/power/supply/power_supply_leds.c
-> +++ b/drivers/power/supply/power_supply_leds.c
-> @@ -22,6 +22,9 @@
->  static void power_supply_update_bat_leds(struct power_supply *psy)
->  {
->  	union power_supply_propval status;
-> +	unsigned int intensity_green[3] =3D {255, 0, 0};
-> +	unsigned int intensity_orange[3] =3D {128, 0, 255};
-> +	unsigned int intensity_red[3] =3D {0, 0, 255};
-> =20
->  	if (power_supply_get_property(psy, POWER_SUPPLY_PROP_STATUS, &status))
->  		return;
-> @@ -36,12 +39,20 @@ static void power_supply_update_bat_leds(struct power=
-_supply *psy)
->  		/* Going from blink to LED on requires a LED_OFF event to stop blink */
->  		led_trigger_event(psy->charging_blink_full_solid_trig, LED_OFF);
->  		led_trigger_event(psy->charging_blink_full_solid_trig, LED_FULL);
-> +		led_mc_trigger_event(psy->charging_orange_full_green_trig,
-> +				     intensity_green,
-> +				     ARRAY_SIZE(intensity_green),
-> +				     LED_FULL);
->  		break;
->  	case POWER_SUPPLY_STATUS_CHARGING:
->  		led_trigger_event(psy->charging_full_trig, LED_FULL);
->  		led_trigger_event(psy->charging_trig, LED_FULL);
->  		led_trigger_event(psy->full_trig, LED_OFF);
->  		led_trigger_blink(psy->charging_blink_full_solid_trig, 0, 0);
-> +		led_mc_trigger_event(psy->charging_orange_full_green_trig,
-> +				     intensity_orange,
-> +				     ARRAY_SIZE(intensity_orange),
-> +				     LED_FULL);
->  		break;
->  	default:
->  		led_trigger_event(psy->charging_full_trig, LED_OFF);
-> @@ -49,6 +60,10 @@ static void power_supply_update_bat_leds(struct power_=
-supply *psy)
->  		led_trigger_event(psy->full_trig, LED_OFF);
->  		led_trigger_event(psy->charging_blink_full_solid_trig,
->  			LED_OFF);
-> +		led_mc_trigger_event(psy->charging_orange_full_green_trig,
-> +				     intensity_red,
-> +				     ARRAY_SIZE(intensity_red),
-> +				     LED_OFF);
->  		break;
->  	}
->  }
-> @@ -74,6 +89,11 @@ static int power_supply_create_bat_triggers(struct pow=
-er_supply *psy)
->  	if (!psy->charging_blink_full_solid_trig_name)
->  		goto charging_blink_full_solid_failed;
-> =20
-> +	psy->charging_orange_full_green_trig_name =3D kasprintf(GFP_KERNEL,
-> +		"%s-charging-orange-full-green", psy->desc->name);
-> +	if (!psy->charging_orange_full_green_trig_name)
-> +		goto charging_red_full_green_failed;
-> +
->  	led_trigger_register_simple(psy->charging_full_trig_name,
->  				    &psy->charging_full_trig);
->  	led_trigger_register_simple(psy->charging_trig_name,
-> @@ -82,9 +102,13 @@ static int power_supply_create_bat_triggers(struct po=
-wer_supply *psy)
->  				    &psy->full_trig);
->  	led_trigger_register_simple(psy->charging_blink_full_solid_trig_name,
->  				    &psy->charging_blink_full_solid_trig);
-> +	led_trigger_register_simple(psy->charging_orange_full_green_trig_name,
-> +				    &psy->charging_orange_full_green_trig);
-> =20
->  	return 0;
-> =20
-> +charging_red_full_green_failed:
-> +	kfree(psy->charging_blink_full_solid_trig_name);
->  charging_blink_full_solid_failed:
->  	kfree(psy->full_trig_name);
->  full_failed:
-> @@ -101,10 +125,12 @@ static void power_supply_remove_bat_triggers(struct=
- power_supply *psy)
->  	led_trigger_unregister_simple(psy->charging_trig);
->  	led_trigger_unregister_simple(psy->full_trig);
->  	led_trigger_unregister_simple(psy->charging_blink_full_solid_trig);
-> +	led_trigger_unregister_simple(psy->charging_orange_full_green_trig);
->  	kfree(psy->charging_blink_full_solid_trig_name);
->  	kfree(psy->full_trig_name);
->  	kfree(psy->charging_trig_name);
->  	kfree(psy->charging_full_trig_name);
-> +	kfree(psy->charging_orange_full_green_trig_name);
->  }
-> =20
->  /* Generated power specific LEDs triggers. */
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index c0992a77feea..9b6898085224 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -318,6 +318,8 @@ struct power_supply {
->  	char *online_trig_name;
->  	struct led_trigger *charging_blink_full_solid_trig;
->  	char *charging_blink_full_solid_trig_name;
-> +	struct led_trigger *charging_orange_full_green_trig;
-> +	char *charging_orange_full_green_trig_name;
->  #endif
->  };
-> =20
-> --=20
-> 2.44.0
->=20
->=20
-
---rjak7nyqoe7bx2om
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmYhEzsACgkQ2O7X88g7
-+prC0Q//Rb0bzJmGZkOxFWmxv+IBe9q++qbxCWIjBwwb4XT6VSj0i9LdMdJ5NKr3
-nwqUL2LT7NZ7xjQJ7tq60AwEvmCB/okPOGDmB6zdwHcgWDtVV/vJjjWvtv0G9goz
-2szdOTQfPx7B8RcM+2TEe1YX+N4aVvx+OOY7eWiZlvf6Oec8UcnstUU9Oei/BHod
-WL5Hvy1fbf2TZdIOW/HuXFgORaiC1JJ3uPjNI4DfH7vuHUiMSHxHHuAhvAGl7Vst
-LlLLXIHgEgrFsAnlWa750e6VqvWLcK0INRuh/N7BzDz8kNuJe8PX4TDsdwOZgYTO
-1EleCSYoElW4C/CDTeJeYu1g9810F09jsnM4DEAwnWhWsg1hrb3cfdhnViunDpVU
-eJt/6iwHCVtBx10hJAQEaKCY5GIZ3UKUCGa37DkndO23Bv0LOy7AKmbwefaE1FCf
-lp8NPFXM1Wvlwfh4fr+casBzwKem5e6JTsy+DXnm9ogfBgUxldzw5um8+DEBc+Jl
-LDVQqsSGPlIxb7N/GUSzimWj86GTJwsIhFcqedmi5t0nI68kDNYXBlEYccgm6JiA
-wOJZ0Km2yVEa+NYkUGxTxEW453G2ycZTRVB3494Tt379JwW161woDC+ko5eMEbXA
-McOywM0Z+Yciiinx/G9RnAkdge/bL/hZiaMBwUdEkm8kD/X3tFs=
-=En/T
------END PGP SIGNATURE-----
-
---rjak7nyqoe7bx2om--
