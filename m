@@ -1,145 +1,230 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781D22576F
-	for <platform-driver-x86@vger.kernel.org>; Thu, 18 Apr 2024 07:46:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35652155388;
+	Thu, 18 Apr 2024 08:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713426384; cv=none; b=Fi/suCyvlz3DyPY0BiYWS/5TjbmB5wLNl/YyYQZ0pFI8UpAvceP1P7FDijrMhA5FjK9r5nKLBGwDym2Uxj53MhuBRC7EcH3Thd6dleTlUQht07HKuPwHcsO66amUDAokey+od21jOPIMgvIZ2403r0sRv1xmcySoQoLZA680flk=
+	t=1713429109; cv=none; b=lF52zZlXsWpvWc4ZVGTwaFVfAqkzxSQTfIzje1c4cXW66jVxnmxB51RIRKZx/3AMouN1wsH9nMrUiKz2w2jqFpvf8beecVnN2LbyMdkCpUVEJ29vS7kwbZrgs6SiN8+/Ns/0Ng4whJtosTOLwJTSfxE9CRA6u1qgMrZF1CKja6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713426384; c=relaxed/simple;
-	bh=llKGbsWJJugAlydvpNrlvNLT18fU0/e8MYbfh9aScqE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AIKq+N0TbQgVRtuEWMbyAqmDQ0faDfUh+DEiTJoLU3jv9UL1KtPUlp7waeswvIVjxgzzkQts6kld9+TxDuQyhkiUNjsPElwZkFdRYPJ0nz8HQCyatJtWXLsii9NyqpBhHTa7hdTpZHkaGjaqVG6QEy6nO8chb46J2DczR4lHDkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Uw2ygL05; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uw2ygL05"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713426381;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E8aynBx44eRT0HfwifIP95ObSSJcm85NJy67vieUQMc=;
-	b=Uw2ygL05RIROcILC/gFvbhK39y8lbK1VGMd/7iDRTxHvsv2hYu0UnxEj8bt7IRilKFnehb
-	LVhRQdvfw0xL76ktjugnK3ePuEEPYeRk/r6DG4k+/YR7fCIe4rXhDsMRhQIRGIkMZhyXpx
-	Of7nKlqN3Glak8XpqQHZelRvOuqUlZA=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-342-jb6LMPUmNSiZjZ6GdhsAIQ-1; Thu, 18 Apr 2024 03:46:19 -0400
-X-MC-Unique: jb6LMPUmNSiZjZ6GdhsAIQ-1
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2a5d989e820so843296a91.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Apr 2024 00:46:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713426378; x=1714031178;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E8aynBx44eRT0HfwifIP95ObSSJcm85NJy67vieUQMc=;
-        b=IytKyetaRQw+9ykapNoU7mRWzcaa+mxTVKMMD3oSdBeHYa6kkl/j/GSuQSbod5pt8m
-         YDWaVY4XcoiJg6aopRrguZ02JICTG0spAuJTu0KunKXW5mMXilf31pgtkiuNtiFrtbFZ
-         vJpEe0XoazonsGndU+tmwKHMsr2QxxW1ngC1ih9yO8grCDnKfbtY+S4dgaEg0Eq8fG/4
-         LdrdKfdC/KvgsQuNjpRff7sC2ulPDXeEyL/x/b2iFFbiGxg2YvI30u9Df0HVQBiQWigq
-         jnSE+S6JFAJKYfrpMxBQMKW7wYFF+7q9ztf4BHbZn//p8qkk+YH47SwjdLuG8+jBoJI0
-         bSCA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxNBOj4ZQOXxRqvhQC9CIKyPs3IlrSMjgk8j1GI/O7gv32odLB21xlROA+H6Q/VV4Pdv68BLYHTuGgZu/IK5Go4P8GCwyyXarDvtMIlUlwya5pAQ==
-X-Gm-Message-State: AOJu0YzwFnadWSIT9vSMmpBUA4hKc8iUe5FxgqsJBypARtRfFUPYqRVA
-	9zxKd2zkQZbkxzOiV0wCUGFaKfaaRKKfvfDfvWuFr2kLz6lYwqCgUmN1tapwCey3idpE3m4pqk0
-	qz4zWQpmRyrE3KniwVtrkwarLnvlypXsPm7MFBDtNO1g5SuHy+RGebW/2CegeD4dvF8FaPyzXKg
-	AV4pKSwJARrT1IiWLgrRT4R8qajPpE+/pAFdUogC/7Kfz5aQ==
-X-Received: by 2002:a17:90b:374c:b0:2ac:2b6:8d4f with SMTP id ne12-20020a17090b374c00b002ac02b68d4fmr212861pjb.45.1713426378240;
-        Thu, 18 Apr 2024 00:46:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEfqIf4uawCXSgXLqIrbzwcOfCcpO8u/zX70z+9Fok+E11Lzwon3KiW0+V16R2BfK3cXsls+i4CBab4pjMoDUQ=
-X-Received: by 2002:a17:90b:374c:b0:2ac:2b6:8d4f with SMTP id
- ne12-20020a17090b374c00b002ac02b68d4fmr212852pjb.45.1713426377926; Thu, 18
- Apr 2024 00:46:17 -0700 (PDT)
+	s=arc-20240116; t=1713429109; c=relaxed/simple;
+	bh=M3btJCCB5zygjQXZTT1q7MxcWhz/b3GtTsDQxAN7tpg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QiAHNVK/E4oc0XYxaD9Dj0qEAmwt2ic0FNTlcEwnEcmPxqA0JX8WZYgBn5nVeEOCo+NN0XlVHJUT1pJTuYlnngBp/fiYvemyKIuw4ahclA0PFRNcVCjEfXJMiouv8WQ3z0ht3OwWOqtCWVBFVOH8iSEby1xvvko2xeBR/Jku+Po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 1366cf88fd5e11ee9305a59a3cc225df-20240418
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:a0c11aa4-70a4-42d5-8230-bea924440967,IP:10,
+	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:-20
+X-CID-INFO: VERSION:1.1.37,REQID:a0c11aa4-70a4-42d5-8230-bea924440967,IP:10,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-20
+X-CID-META: VersionHash:6f543d0,CLOUDID:f91d5bae69d231735bc110360b603ea8,BulkI
+	D:240418163140BSUDYQ6O,BulkQuantity:0,Recheck:0,SF:72|19|44|66|24|102,TC:n
+	il,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,CO
+	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED
+	SN_UNTRUSTED, SN_UNFAMILIAR, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
+	CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
+	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
+	ABX_MISS_RDNS
+X-UUID: 1366cf88fd5e11ee9305a59a3cc225df-20240418
+X-User: jiangyunshui@kylinos.cn
+Received: from kylin-pc.. [(112.64.161.44)] by mailgw.kylinos.cn
+	(envelope-from <jiangyunshui@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 908215557; Thu, 18 Apr 2024 16:31:38 +0800
+From: yunshui <jiangyunshui@kylinos.cn>
+To: linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Cc: corentin.chary@gmail.com,
+	luke@ljones.dev,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	yunshui <jiangyunshui@kylinos.cn>,
+	Ai Chao <aichao@kylinos.cn>
+Subject: [PATCH] platform/x86: asus-laptop: Use sysfs_emit() to replace sprintf()
+Date: Thu, 18 Apr 2024 16:31:36 +0800
+Message-Id: <20240418083136.668869-1-jiangyunshui@kylinos.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240416053909.256319-1-hpa@redhat.com> <20240416053909.256319-2-hpa@redhat.com>
- <CAHp75VeuXuD7USd=bS1X=HCtKRPYWZ7r1NApPfDFZ4RRCUSRLg@mail.gmail.com>
-In-Reply-To: <CAHp75VeuXuD7USd=bS1X=HCtKRPYWZ7r1NApPfDFZ4RRCUSRLg@mail.gmail.com>
-From: Kate Hsuan <hpa@redhat.com>
-Date: Thu, 18 Apr 2024 15:46:07 +0800
-Message-ID: <CAEth8oFvVtxpd1n9rjzCqgUfHKaNCCyni8=hK9M+HvVeraPk4Q@mail.gmail.com>
-Subject: Re: [PATCH v6 1/5] platform: x86-android-tablets: other: Add swnode
- for Xiaomi pad2 indicator LED
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	=?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
-	linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Andy,
+As Documentation/filesystems/sysfs.rst suggested,
+show() should only use sysfs_emit() or sysfs_emit_at() when formatting
+the value to be returned to user space.
 
-Thank you for reviewing.
+Signed-off-by: yunshui <jiangyunshui@kylinos.cn>
+Signed-off-by: Ai Chao <aichao@kylinos.cn>
+---
+ drivers/platform/x86/asus-laptop.c | 44 +++++++++++++++---------------
+ 1 file changed, 22 insertions(+), 22 deletions(-)
 
-On Tue, Apr 16, 2024 at 9:46=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Tue, Apr 16, 2024 at 8:39=E2=80=AFAM Kate Hsuan <hpa@redhat.com> wrote=
-:
-> >
-> > KTD2026 LED controller manages the indicator LED for Xiaomi pad2. The A=
-CPI
-> > for it is not properly made so the kernel can't get a correct descripti=
-on.
-> >
-> > This work adds a description for this RGB LED controller and also sets =
-a
-> > trigger to indicate the changing event (bq27520-0-charging). When it is
-> > charging, the indicator LED will be turned on.
->
-> ...
->
-> > +/*
-> > + * The fwnode for ktd2026 on Xaomi pad2. It composed of a RGB LED node
->
-> is composed
-
-Okay.
-
->
-> > + * with three subnodes for each color. The RGB LED node is named
-> > + * "multi-led" to align with the name in the device tree.
-> > + */
->
-> ...
->
-> > +static const struct software_node ktd2026_node =3D {
-> > +       .name =3D "ktd2026"
->
-> Please, leave a trailing comma as it's not a termination entry.
-
-Okay.
-
->
-> > +};
->
-> (TBH I'm still unsure that having a name is a good idea even if it's
-> supposed to be only a single device on the platform, but it's up to
-> Hans who has an experience with those.)
-
-Hans gave me an example without a name. I think, it can be dropped.
-Moreover, Only one KTD2026 is on Xiaomi Pad2 so having a name is ok too.
-
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
-
-
---=20
-BR,
-Kate
+diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+index 78c42767295a..2857aefc3d60 100644
+--- a/drivers/platform/x86/asus-laptop.c
++++ b/drivers/platform/x86/asus-laptop.c
+@@ -852,8 +852,8 @@ static ssize_t infos_show(struct device *dev, struct device_attribute *attr,
+ 	 * so we don't set eof to 1
+ 	 */
+ 
+-	len += sprintf(page, ASUS_LAPTOP_NAME " " ASUS_LAPTOP_VERSION "\n");
+-	len += sprintf(page + len, "Model reference    : %s\n", asus->name);
++	len += sysfs_emit(page, ASUS_LAPTOP_NAME " " ASUS_LAPTOP_VERSION "\n");
++	len += sysfs_emit(page + len, "Model reference    : %s\n", asus->name);
+ 	/*
+ 	 * The SFUN method probably allows the original driver to get the list
+ 	 * of features supported by a given model. For now, 0x0100 or 0x0800
+@@ -862,7 +862,7 @@ static ssize_t infos_show(struct device *dev, struct device_attribute *attr,
+ 	 */
+ 	rv = acpi_evaluate_integer(asus->handle, "SFUN", NULL, &temp);
+ 	if (ACPI_SUCCESS(rv))
+-		len += sprintf(page + len, "SFUN value         : %#x\n",
++		len += sysfs_emit(page + len, "SFUN value         : %#x\n",
+ 			       (uint) temp);
+ 	/*
+ 	 * The HWRS method return informations about the hardware.
+@@ -874,7 +874,7 @@ static ssize_t infos_show(struct device *dev, struct device_attribute *attr,
+ 	 */
+ 	rv = acpi_evaluate_integer(asus->handle, "HWRS", NULL, &temp);
+ 	if (ACPI_SUCCESS(rv))
+-		len += sprintf(page + len, "HWRS value         : %#x\n",
++		len += sysfs_emit(page + len, "HWRS value         : %#x\n",
+ 			       (uint) temp);
+ 	/*
+ 	 * Another value for userspace: the ASYM method returns 0x02 for
+@@ -885,25 +885,25 @@ static ssize_t infos_show(struct device *dev, struct device_attribute *attr,
+ 	 */
+ 	rv = acpi_evaluate_integer(asus->handle, "ASYM", NULL, &temp);
+ 	if (ACPI_SUCCESS(rv))
+-		len += sprintf(page + len, "ASYM value         : %#x\n",
++		len += sysfs_emit(page + len, "ASYM value         : %#x\n",
+ 			       (uint) temp);
+ 	if (asus->dsdt_info) {
+ 		snprintf(buf, 16, "%d", asus->dsdt_info->length);
+-		len += sprintf(page + len, "DSDT length        : %s\n", buf);
++		len += sysfs_emit(page + len, "DSDT length        : %s\n", buf);
+ 		snprintf(buf, 16, "%d", asus->dsdt_info->checksum);
+-		len += sprintf(page + len, "DSDT checksum      : %s\n", buf);
++		len += sysfs_emit(page + len, "DSDT checksum      : %s\n", buf);
+ 		snprintf(buf, 16, "%d", asus->dsdt_info->revision);
+-		len += sprintf(page + len, "DSDT revision      : %s\n", buf);
++		len += sysfs_emit(page + len, "DSDT revision      : %s\n", buf);
+ 		snprintf(buf, 7, "%s", asus->dsdt_info->oem_id);
+-		len += sprintf(page + len, "OEM id             : %s\n", buf);
++		len += sysfs_emit(page + len, "OEM id             : %s\n", buf);
+ 		snprintf(buf, 9, "%s", asus->dsdt_info->oem_table_id);
+-		len += sprintf(page + len, "OEM table id       : %s\n", buf);
++		len += sysfs_emit(page + len, "OEM table id       : %s\n", buf);
+ 		snprintf(buf, 16, "%x", asus->dsdt_info->oem_revision);
+-		len += sprintf(page + len, "OEM revision       : 0x%s\n", buf);
++		len += sysfs_emit(page + len, "OEM revision       : 0x%s\n", buf);
+ 		snprintf(buf, 5, "%s", asus->dsdt_info->asl_compiler_id);
+-		len += sprintf(page + len, "ASL comp vendor id : %s\n", buf);
++		len += sysfs_emit(page + len, "ASL comp vendor id : %s\n", buf);
+ 		snprintf(buf, 16, "%x", asus->dsdt_info->asl_compiler_revision);
+-		len += sprintf(page + len, "ASL comp revision  : 0x%s\n", buf);
++		len += sysfs_emit(page + len, "ASL comp revision  : 0x%s\n", buf);
+ 	}
+ 
+ 	return len;
+@@ -933,7 +933,7 @@ static ssize_t ledd_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct asus_laptop *asus = dev_get_drvdata(dev);
+ 
+-	return sprintf(buf, "0x%08x\n", asus->ledd_status);
++	return sysfs_emit(buf, "0x%08x\n", asus->ledd_status);
+ }
+ 
+ static ssize_t ledd_store(struct device *dev, struct device_attribute *attr,
+@@ -993,7 +993,7 @@ static ssize_t wlan_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct asus_laptop *asus = dev_get_drvdata(dev);
+ 
+-	return sprintf(buf, "%d\n", asus_wireless_status(asus, WL_RSTS));
++	return sysfs_emit(buf, "%d\n", asus_wireless_status(asus, WL_RSTS));
+ }
+ 
+ static ssize_t wlan_store(struct device *dev, struct device_attribute *attr,
+@@ -1022,7 +1022,7 @@ static ssize_t bluetooth_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct asus_laptop *asus = dev_get_drvdata(dev);
+ 
+-	return sprintf(buf, "%d\n", asus_wireless_status(asus, BT_RSTS));
++	return sysfs_emit(buf, "%d\n", asus_wireless_status(asus, BT_RSTS));
+ }
+ 
+ static ssize_t bluetooth_store(struct device *dev,
+@@ -1052,7 +1052,7 @@ static ssize_t wimax_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct asus_laptop *asus = dev_get_drvdata(dev);
+ 
+-	return sprintf(buf, "%d\n", asus_wireless_status(asus, WM_RSTS));
++	return sysfs_emit(buf, "%d\n", asus_wireless_status(asus, WM_RSTS));
+ }
+ 
+ static ssize_t wimax_store(struct device *dev, struct device_attribute *attr,
+@@ -1081,7 +1081,7 @@ static ssize_t wwan_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct asus_laptop *asus = dev_get_drvdata(dev);
+ 
+-	return sprintf(buf, "%d\n", asus_wireless_status(asus, WW_RSTS));
++	return sysfs_emit(buf, "%d\n", asus_wireless_status(asus, WW_RSTS));
+ }
+ 
+ static ssize_t wwan_store(struct device *dev, struct device_attribute *attr,
+@@ -1151,7 +1151,7 @@ static ssize_t ls_switch_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct asus_laptop *asus = dev_get_drvdata(dev);
+ 
+-	return sprintf(buf, "%d\n", asus->light_switch);
++	return sysfs_emit(buf, "%d\n", asus->light_switch);
+ }
+ 
+ static ssize_t ls_switch_store(struct device *dev,
+@@ -1182,7 +1182,7 @@ static ssize_t ls_level_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct asus_laptop *asus = dev_get_drvdata(dev);
+ 
+-	return sprintf(buf, "%d\n", asus->light_level);
++	return sysfs_emit(buf, "%d\n", asus->light_level);
+ }
+ 
+ static ssize_t ls_level_store(struct device *dev, struct device_attribute *attr,
+@@ -1228,7 +1228,7 @@ static ssize_t ls_value_show(struct device *dev, struct device_attribute *attr,
+ 	if (!err)
+ 		err = pega_int_read(asus, PEGA_READ_ALS_L, &lo);
+ 	if (!err)
+-		return sprintf(buf, "%d\n", 10 * hi + lo);
++		return sysfs_emit(buf, "%d\n", 10 * hi + lo);
+ 	return err;
+ }
+ static DEVICE_ATTR_RO(ls_value);
+@@ -1264,7 +1264,7 @@ static ssize_t gps_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct asus_laptop *asus = dev_get_drvdata(dev);
+ 
+-	return sprintf(buf, "%d\n", asus_gps_status(asus));
++	return sysfs_emit(buf, "%d\n", asus_gps_status(asus));
+ }
+ 
+ static ssize_t gps_store(struct device *dev, struct device_attribute *attr,
+-- 
+2.34.1
 
