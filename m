@@ -1,174 +1,245 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from wfhigh1-smtp.messagingengine.com (wfhigh1-smtp.messagingengine.com [64.147.123.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E314E15F321
-	for <platform-driver-x86@vger.kernel.org>; Thu, 18 Apr 2024 12:12:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D45E15E7E7;
+	Thu, 18 Apr 2024 12:23:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713442332; cv=none; b=tZGrHSHsa5UmweaxNb2Gcxtp/PcjG6o4lc5Z62yh86uX/By7V9jWrYAv3FuOpM/rdbPB2OZabTj2g22Xsu4NzlcW/kOAMCLznxoQQ4iQKkX2VLD1pyJWw2WsKSZYBl7Gq8oXI+qyykuv7O6XTZP3IBe5YcPycLIARv0Q4VFZTXk=
+	t=1713443031; cv=none; b=R7GMlbRfkAj//0EFFHOZH8m98/OLKvfsbC6OFyZqVII4xD1N88ZTfZ/Du4jkFJpRpqFXd0hJRlMpZwC7z22okwSOu8fL2c7NcXaQct9IfzinVDCM4iaj722k2mYOhzRJldNo+1QVI1UZWLeo0YT8UYyCPFQLC/l3ZKHz35vInm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713442332; c=relaxed/simple;
-	bh=9MAfaRyifghyGBKAvzdc6kFAtwMLsSXsF66leLRJIN0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J6R+8hjgMUgdX9EFWZfS4QZ3mdW88TUSbBhtr/7zsgsJpfXdVujLUiSnLFE6U1bYIonc/ojWn4DmFnRJkXtgfVKDJ2MoFH2dKK3v5rZxgmsLX62EQN4Zj97bAAPzJPK9H1cH/PSh+NNdu8XeWQk0eeuqcF3lRwFbI7Q5le20ah4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H0UVVTz4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1713443031; c=relaxed/simple;
+	bh=CW+ZkdqeMy+Gcnrm9/xb2jWnC0SqwGr/GAHMdTk3Kmc=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=LNLgk1nUGs9BDJ0qjniTMLQy/CT6sQ3p0alNFvSU4VYtcarzJmX+blHH1u1cUtgsvGlXNK38HkGmC3yOQOYLVx0XqWyBwzjAIhzjdb5w1i21IiGnPIPICtJAyXbtI7czN2rqdGTiBZACmlAjDcWPFVMq38g4uu2wqpXPS/Vy5qE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=ldN9XJZi; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Vh4wuoky; arc=none smtp.client-ip=64.147.123.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H0UVVTz4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713442327;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=or6k/SQ+ZiA88i4NucrFxJ6IuuwjDqoBoopuuP1QuRU=;
-	b=H0UVVTz4jQwRZ34y/LelTvbw+IY9wDS/n4/+CN549kGulIjjnN9Yr6pQSRsya9ucxSErFx
-	CYf7xsCUdUl3ljErVtdhDfx6mHa6zVLnX0zYzPx8YngpavKHUpHWxw+HeRUHKrSS+iZbTl
-	hUe2cvkEa6AXHr1DzN4eYXIornFgfg4=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-65-SKBAcxAFM9ePNuFOTRgujw-1; Thu, 18 Apr 2024 08:12:06 -0400
-X-MC-Unique: SKBAcxAFM9ePNuFOTRgujw-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a524b774e39so95127566b.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Apr 2024 05:12:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713442325; x=1714047125;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=or6k/SQ+ZiA88i4NucrFxJ6IuuwjDqoBoopuuP1QuRU=;
-        b=jYSH+LE/mF5q7ux1sA+37D/LyXn41jxUNq3PtqwE8H3JyicKAjnopap0U8jt576h2R
-         OFlPpGV7nUmN0Cnd+mtEZ89BpvEnez4uNy9AXhETkyg58F4FZaXJMRdF7YJldPECYwsi
-         lFpCR36mIDBKaU2NKvHUSo+ZS9VFPdPrmlNNWGO9kzBGlSR1KAldhR0v54b0ouSRdNN4
-         Vf0woTmc0+ThTGPAC0CEyen2f/ugVcNBBKWdDYDiDESnTuGFAG7sKLAQYiprk1iK7r6T
-         BVbiN0Lz5POnSB8BQLucWZQeBkPRe0b9iSRd00/eRV/B1rwISKj1tSfqFEkum0DaB8Ri
-         3aTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVOrqVGs9sdoZKDb/S2k5BKjPxaJs5BaK0tsbnKb9ZdFeETd8PJw5/gUwaUy8vybA3HY9M1tlTCYI3ShTQ6spFsuq1AbG01n+vF8xPQT//T8po56A==
-X-Gm-Message-State: AOJu0YzGoziJSC6dfISLN5w64fSmwLtd+phwOJjmgL4a/q5NXfsT+NrY
-	71/YkRdF2ZxIb5DngE2dNZyLo4zJrjHx1AGlnFuUui2jeHgfHAHLF2XCXKLFmKx9D9GItu3RvZr
-	WZFQnTboHQ3vftDZigHcNZ2KTTOBEEKBFLDEVd0M8WjbiUA+bz/B6evgO013ODnCPNEgihxQ=
-X-Received: by 2002:a17:906:903:b0:a51:ee80:bae9 with SMTP id i3-20020a170906090300b00a51ee80bae9mr1790069ejd.17.1713442325091;
-        Thu, 18 Apr 2024 05:12:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG8W5a6sqALulCXn//I/MSe+hj2s2mXgVVfbmIyDaBBFlYJBIgfVpbiGA7+mctjskXQzcGh7g==
-X-Received: by 2002:a17:906:903:b0:a51:ee80:bae9 with SMTP id i3-20020a170906090300b00a51ee80bae9mr1790046ejd.17.1713442324735;
-        Thu, 18 Apr 2024 05:12:04 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id nb33-20020a1709071ca100b00a55778c1af7sm403615ejc.11.2024.04.18.05.12.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Apr 2024 05:12:04 -0700 (PDT)
-Message-ID: <103294af-cb15-43d7-9f63-1d6eb458b61a@redhat.com>
-Date: Thu, 18 Apr 2024 14:12:03 +0200
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="ldN9XJZi";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Vh4wuoky"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfhigh.west.internal (Postfix) with ESMTP id BB1E318001A3;
+	Thu, 18 Apr 2024 08:23:47 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute3.internal (MEProxy); Thu, 18 Apr 2024 08:23:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1713443027; x=1713529427; bh=Ku9n4CtW+a
+	96ju08gyViB+v8W7/g00oO3k3aplYVJ0E=; b=ldN9XJZi8g5C7BvQTJ2ERKhwqt
+	ZkZUAHQgaWyxHDMCfD20MYO7I3md2CZyEW4t4x0BkBiyvngHia5qKIMhbCzK2qql
+	O1k5MjzaDJImQCITAtUGd534740UcPiI7jVN36X/irtGijjUlLaysTRJuPvTRCjc
+	nHlf0hhQECIuLkNAfCpzUlTDbxS0MBeJSsQym6hEhopVNpn1WvEF0Xdu4VsnFX+k
+	Vfmjwn0yJlUT0Vp1JKxrW+nzx2vQFZpa+6u6tJjkPsKRrjpwFkrT6axZOuIfV8F/
+	MKRgkVkoXeUcR9obRQ1U1kPRoUcOuiRbCciIkcrHpF3lQEw/Px7rHPFjd6QQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1713443027; x=1713529427; bh=Ku9n4CtW+a96ju08gyViB+v8W7/g
+	00oO3k3aplYVJ0E=; b=Vh4wuokyMg9jrF/4RxLHf/QfW94Pz10TAsrHwP6cnTBn
+	wic9F2Mic+GtLTNkpXY34xQfKOev8x5HXjQcYKzdhj27urzqzemlR+CivQSIioDh
+	1m9AbjcRfvdIkNi1E6s9Nmis+Hoth+a5IO0y8I68d+1iw042DysGCFVrUo9oeYjn
+	6/LjIohpIEcq04YKrMkrza3Dwue8iF8nMtwgPELAbbJb3+/EE4qdMhyQXw6O2VGo
+	ejlOtBSlrzW3jSh879pirw+ze3fPsjq+l6dsYo+TercxC6VLnLJsDV14/JkTu6NE
+	LnSZ0JgDvL9MDdE4MIanLETZJW0PK6WEH2p/kO17xg==
+X-ME-Sender: <xms:0hAhZr15_2WWwS4UaEjGdYycNHw4hyLevagG1RII9cBz0xTG7bm7JQ>
+    <xme:0hAhZqG_WF1K63Sbk9dF9R5kaA30o84dWidAeIq5Erw_iaNXNVxG6eo6BZX_gUs6t
+    AtvHl38VzLrqTzIyBI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudektddghedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
+    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
+    drtggrqeenucggtffrrghtthgvrhhnpeeiueefjeeiveetuddvkeetfeeltdevffevudeh
+    ffefjedufedvieejgedugeekhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:0hAhZr6VwLi-cJHYY508U-ABMdYz8x2XdotuhxjokEYbGp-9u2nzbA>
+    <xmx:0hAhZg3ik8QeEoUAZHlwc0CYpahtJK6v9E9XHQiT43IjTj8nhUWZ4A>
+    <xmx:0hAhZuGxTnY1Rw-NVP9SMMAULkxDlkN-Qf78vy1-001oxveALjTtZQ>
+    <xmx:0hAhZh9_pK2fai9sW6wthgXItVxHRU45KyyLfE6CegQpQg1a2cyAFQ>
+    <xmx:0xAhZhCgSXx1qVWsezvEvDn0hwp3sZmcyTwj0TAmAAv-_uRwXHl3DBOF>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 85BA8C60098; Thu, 18 Apr 2024 08:23:46 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-379-gabd37849b7-fm-20240408.001-gabd37849
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86/amd: Don't allow HSMP to be loaded on
- non-server hardware
-To: Mario Limonciello <superm1@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
- Carlos Bilbao <carlos.bilbao@amd.com>,
- "open list:AMD HSMP DRIVER" <platform-driver-x86@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20240416182057.8230-1-superm1@gmail.com>
- <ca6e0dc7-f5ea-4c0a-b9fe-0667fadc78a6@redhat.com>
- <1071ea83-7919-469a-ac5b-3209fe9e018c@gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <1071ea83-7919-469a-ac5b-3209fe9e018c@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-Id: <0917e5bc-a198-4aa8-812e-31434408e78d@app.fastmail.com>
+In-Reply-To: <76d92fdc-ad0a-40a2-9e1b-d550f8e07267@redhat.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20240417173124.9953-1-mpearson-lenovo@squebb.ca>
+ <20240417173124.9953-2-mpearson-lenovo@squebb.ca>
+ <98082080-0fcf-470f-afa5-76ec2bbffee7@redhat.com>
+ <55ded7c3-fbc5-4fa5-8b63-da4d7aa4966c@redhat.com>
+ <a7f7d94a-f1c8-4d6a-9c65-b5de59b9f7c0@app.fastmail.com>
+ <76d92fdc-ad0a-40a2-9e1b-d550f8e07267@redhat.com>
+Date: Thu, 18 Apr 2024 08:24:40 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Hans de Goede" <hdegoede@redhat.com>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ ibm-acpi-devel@lists.sourceforge.net,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, "Nitin Joshi1" <njoshi1@lenovo.com>,
+ "Vishnu Sankar" <vsankar@lenovo.com>,
+ "Peter Hutterer" <peter.hutterer@redhat.com>,
+ "Vishnu Sankar" <vishnuocv@gmail.com>
+Subject: Re: [PATCH v2 2/4] platform/x86: thinkpad_acpi: Support for trackpoint
+ doubletap
+Content-Type: text/plain
 
-HI,
+Hi Hans,
 
-On 4/18/24 1:27 PM, Mario Limonciello wrote:
-> 
-> 
-> On 4/18/24 04:04, Hans de Goede wrote:
->> Hi,
->>
->> On 4/16/24 8:20 PM, Mario Limonciello wrote:
->>> From: Mario Limonciello <mario.limonciello@amd.com>
+On Thu, Apr 18, 2024, at 7:34 AM, Hans de Goede wrote:
+> Hi Mark,
+>
+> On 4/18/24 1:57 AM, Mark Pearson wrote:
+>> Hi Hans,
+>> 
+>> On Wed, Apr 17, 2024, at 4:06 PM, Hans de Goede wrote:
+>>> Hi Mark,
 >>>
->>> If the HSMP driver is compiled into the kernel or a module manually loaded
->>> on client hardware it can cause problems with the functionality of the PMC
->>> module since it probes a mailbox with a different definition on servers.
+>>> On 4/17/24 9:39 PM, Hans de Goede wrote:
+>>>> Hi Mark,
+>>>>
+>>>> Thank you for the new version of this series, overall this looks good,
+>>>> one small remark below.
+>>>>
+>>>> On 4/17/24 7:31 PM, Mark Pearson wrote:
+>>>>> Lenovo trackpoints are adding the ability to generate a doubletap event.
+>>>>> This handles the doubletap event and sends the KEY_PROG1 event to
+>>>>> userspace.
+>>>>>
+>>>>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>>>>> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+>>>>> ---
+>>>>> Changes in v2:
+>>>>>  - Use KEY_PROG1 instead of KEY_DOUBLETAP as input maintainer doesn't
+>>>>>    want new un-specific key codes added.
+>>>>>  - Add doubletap to hotkey scan code table and use existing hotkey
+>>>>>    functionality.
+>>>>>  - Tested using evtest, and then gnome settings to configure a custom shortcut
+>>>>>    to launch an application.
+>>>>>
+>>>>>  drivers/platform/x86/thinkpad_acpi.c | 18 ++++++++++++++++++
+>>>>>  1 file changed, 18 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+>>>>> index 3b48d893280f..6d04d45e8d45 100644
+>>>>> --- a/drivers/platform/x86/thinkpad_acpi.c
+>>>>> +++ b/drivers/platform/x86/thinkpad_acpi.c
+>>>>> @@ -232,6 +232,9 @@ enum tpacpi_hkey_event_t {
+>>>>>  
+>>>>>  	/* Misc */
+>>>>>  	TP_HKEY_EV_RFKILL_CHANGED	= 0x7000, /* rfkill switch changed */
+>>>>> +
+>>>>> +	/* Misc2 */
+>>>>> +	TP_HKEY_EV_TRACK_DOUBLETAP      = 0x8036, /* trackpoint doubletap */
+>>>>>  };
+>>>>>  
+>>>>>  /****************************************************************************
+>>>>> @@ -1786,6 +1789,7 @@ enum {	/* hot key scan codes (derived from ACPI DSDT) */
+>>>>>  	TP_ACPI_HOTKEYSCAN_NOTIFICATION_CENTER,
+>>>>>  	TP_ACPI_HOTKEYSCAN_PICKUP_PHONE,
+>>>>>  	TP_ACPI_HOTKEYSCAN_HANGUP_PHONE,
+>>>>
+>>>> I understand why you've done this but I think this needs a comment,
+>>>> something like:
+>>>>
+>>>>         /*
+>>>>          * For TP_HKEY_EV_TRACK_DOUBLETAP, unlike the codes above which map to:
+>>>>          * (hkey_event - 0x1300) + TP_ACPI_HOTKEYSCAN_EXTENDED_START, this is
+>>>>          * hardcoded for TP_HKEY_EV_TRACK_DOUBLETAP handling. Therefor this must
+>>>>          * always be the last entry (after any 0x1300-0x13ff entries).
+>>>>          */
+>>>> +	TP_ACPI_HOTKEYSCAN_DOUBLETAP,
 >>>
->>> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2414
->>> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/3285
->>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>> ---
->>> v1->v2:
->>>   * use pm preferred profile instead
->>
->> Thanks, patch looks good to me:
->>
->> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->>
->> Mario, should this go in as a fix for the 6.9 cylce, or is
->> this for-next material ?  (I'm not sure what to do myself)
-> The main risk with this patch is if there are servers that previously loaded amd-hsmp no longer working because of a BIOS bug to exporting the incorrect profile.  I think this is quite unlikely but not non-zero.
-> 
-> To at least give some time for anything like that to be raised I feel this should go to for-next.
-> 
-> Ideally I do want to see it go to stable kernels after we're all sufficiently happy though.  Random bug reports to me like the ones I added to the commit message get raised mostly by people who compile their own (stable) kernels and enable all the AMD stuff because they have AMD hardware.
-> 
-> So how about we target for-next, but also add a stable tag for when it gets merged in the 6.10 cycle?
-
-Works for me. I'll merge this during my next round of patch merging and I'll
-add a Cc: stable while merging.
-
-Regards,
-
-Hans
-
-
-
-
-
-
->>> ---
->>>   drivers/platform/x86/amd/hsmp.c | 16 ++++++++++++++++
->>>   1 file changed, 16 insertions(+)
+>>> Ugh, actually this will not work becuuse we want hotkeyscancodes to be stable
+>>> because these are userspace API since they can be remapped using hwdb so we
+>>> cannot have the hotkeyscancode changing when new 0x1300-0x13ff range entries
+>>> get added.
 >>>
->>> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
->>> index 1927be901108..102a49c3e945 100644
->>> --- a/drivers/platform/x86/amd/hsmp.c
->>> +++ b/drivers/platform/x86/amd/hsmp.c
->>> @@ -907,6 +907,17 @@ static int hsmp_plat_dev_register(void)
->>>       return ret;
->>>   }
->>>   +static bool hsmp_supported_profile(void)
->>> +{
->>> +    switch (acpi_gbl_FADT.preferred_profile) {
->>> +    case PM_ENTERPRISE_SERVER:
->>> +    case PM_SOHO_SERVER:
->>> +    case PM_PERFORMANCE_SERVER:
->>> +        return true;
->>> +    }
->>> +    return false;
->>> +}
->>> +
->>>   static int __init hsmp_plt_init(void)
->>>   {
->>>       int ret = -ENODEV;
->>> @@ -917,6 +928,11 @@ static int __init hsmp_plt_init(void)
->>>           return ret;
->>>       }
->>>   +    if (!hsmp_supported_profile()) {
->>> +        pr_err("HSMP is only supported on servers");
->>> +        return ret;
->>> +    }
->>> +
->>>       /*
->>>        * amd_nb_num() returns number of SMN/DF interfaces present in the system
->>>        * if we have N SMN/DF interfaces that ideally means N sockets
->>
-> 
+>>> So we need to either grow the table a lot and reserve a whole bunch of space
+>>> for future 0x13xx - 0x13ff codes or maybe something like this:
+>>>
+>>> diff --git a/drivers/platform/x86/thinkpad_acpi.c 
+>>> b/drivers/platform/x86/thinkpad_acpi.c
+>>> index 771aaa7ae4cf..af3279889ecc 100644
+>>> --- a/drivers/platform/x86/thinkpad_acpi.c
+>>> +++ b/drivers/platform/x86/thinkpad_acpi.c
+>>> @@ -1742,7 +1742,12 @@ enum {	/* hot key scan codes (derived from ACPI 
+>>> DSDT) */
+>>>  	TP_ACPI_HOTKEYSCAN_VOLUMEDOWN,
+>>>  	TP_ACPI_HOTKEYSCAN_MUTE,
+>>>  	TP_ACPI_HOTKEYSCAN_THINKPAD,
+>>> -	TP_ACPI_HOTKEYSCAN_UNK1,
+>>> +	/*
+>>> +	 * Note this gets send both on 0x1019 and on 
+>>> TP_HKEY_EV_TRACK_DOUBLETAP
+>>> +	 * hotkey-events. 0x1019 events have never been seen on any actual hw
+>>> +	 * and a scancode is needed for the special 0x8036 doubletap 
+>>> hotkey-event.
+>>> +	 */
+>>> +	TP_ACPI_HOTKEYSCAN_DOUBLETAP,
+>>>  	TP_ACPI_HOTKEYSCAN_UNK2,
+>>>  	TP_ACPI_HOTKEYSCAN_UNK3,
+>>>  	TP_ACPI_HOTKEYSCAN_UNK4,
+>>>
+>>> or just hardcode KEY_PROG1 like your previous patch does, but I'm not
+>>> a fan of that because of loosing hwdb remapping functionality for this
+>>> "key" then.
+>>>
+>>> Note I'm open to other suggestions.
+>>>
+>> Oh...I hadn't thought of that impact. That's not great :(
+>> 
+>> I have an idea, but want to prototype it to see if it works out or not. Will update once I've had a chance to play with it.
+>
+> Thinking more about this I just realized that the input subsystem
+> already has a mechanism for dealing with scancode ranges with
+> (big) holes in them in the form of linux/input/sparse-keymap.h .
+>
+> I think that what needs to be done is convert the existing code
+> to use sparse-keymap, keeping the mapping of the "MHKP"
+> returned hkey codes to internal TP_ACPI_HOTKEYSCAN_* values
+> for currently supported "MHKP" hkey codes for compatibility
+> and then for new codes just directly map them in the sparse map
+> aka the struct key_entry table. After converting the existing code
+> to use sparse-keymap, then for the new events we would simply add:
+>
+>
+> 	{ KE_KEY, 0x131d, { KEY_VENDOR} }, /* Fn + N, system debug info */
+> 	{ KE_KEY, 0x8036, { KEY_PROG1 } }, /* Trackpoint doubletap */
+>
+> entries to the table without needing to define intermediate
+> TP_ACPI_HOTKEYSCAN_* values for these.
+>
+
+Ah! I didn't know about sparse-keymap but it looks similar to what I was thinking and played with a bit last night. Agreed using existing infrastructure is better.
+
+Only things I'd flag is that:
+ - It did look like it would be useful to identify keys that the driver handles (there aren't many but a few). Maybe one of the other key types can help handle that?
+ - There are also some keys that use the tpacpi_input_send_key_masked that might need some special consideration.
+
+> I already have somewhat of a design for this in my head and I really
+> believe this is the way forward as it uses existing kernel infra
+> and it will avoid hitting this problem again when some other new
+> "MHKP" hkey codes show up.
+>
+> I plan to start working on implementing conversion of the existing
+> code to use sparse-keymap, which should result in a nice cleanup
+> after lunch and I hope to have something for you to test no later
+> then next Tuesday.
+>
+
+That would be amazing - do let me know if there is anything I can help with. Agreed this will help clean up a bunch of the keycode handling :)
+
+Mark
 
