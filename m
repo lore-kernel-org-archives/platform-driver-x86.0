@@ -1,65 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BCAB15AABB
-	for <platform-driver-x86@vger.kernel.org>; Thu, 18 Apr 2024 08:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF8D7BAF0
+	for <platform-driver-x86@vger.kernel.org>; Thu, 18 Apr 2024 09:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713430529; cv=none; b=rDQyxz23zCxv1uk77dOLNBfc4ktFufhhSo8cKYeJKoE9PMYsGIj55lnxa0MQV4oSqxRfLdFQehix8D/8By/8ClMwZwlxih8MPsISzVJCZSEv4Z3QegXmxMwsuPRNk5slhet376uQBetHQKQ3mq0WZQMLDcWNkYGygegOHwumg68=
+	t=1713431056; cv=none; b=cpmGIMrkOWW51NLfOv9wrpx3rdtETfvQAGGylgR+nbm2Pu+ztWriLTh7xjt0/ntOE1W4YbuitNgfAxIWix+xBg/Mbc3mNaBafv3LRt3RUk7ICRTzsgI68VzvWbXH7EDdqiuZbxPVQRpDAddQskdWNZTURXZYT17D9y3eFw/oduA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713430529; c=relaxed/simple;
-	bh=rg1Htv+lB6hxsvVaFwD5Nffj1OIzHqszQvu3GxaKkIg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=rrgS2eGzfbSwP2zo9nuf2NL6QBWkSAShXkdJM5Gk5LsSKS7qeagfaHkhf/HR8bLmUVWqd3DlxS6UZBXx8J1BsdPlXQaW2PtmnWYlomxc9+08SloTVRS1u+AchU/wCd2knuOkKcwUKbN5jPky7r+NabMxB6UKvRLgMTNxp/t+pJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hWAcdUwG; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1713431056; c=relaxed/simple;
+	bh=Ng07Evum/BkjkcFlRfN5kIJF+7KwBj2VJeuEezw65Fs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=inob3LetJNdDhI4V5YseRWsiP6Bji/IUb91YdtDJf5qmRi6SWO83GwInuL/AhAbMZwEEFHzhMuTJGyTW9vIoL4hxXRRnTZRJxTiasV0US6quw438XCAwa2db6jdOMBOV+cqJcEgXEqV1J0eOi2JTmjCAtRvQ1UVstVJqVo0VZgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EyjkLMGQ; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hWAcdUwG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EyjkLMGQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713430526;
+	s=mimecast20190719; t=1713431052;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=a3ijnHOr2lMizZp28dkk/a8tpj5sBpid4ALmXZbWPA8=;
-	b=hWAcdUwG5KfDuu41xabzY+J2CbrUK/M/HO9BtcGh3Ow+4cD4QNPDxOLR5rJF0GmZSQeok1
-	BTd8MDZG4mZdYtp71UcykwWxfUDdjugKhnpffmJxFJQ4nctb86HBDYKpDdLlkhgvUpkP0M
-	OSSyVoOWxL6WkgSxouXLpR3hWCGKrbY=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=fjUdQEZsyr1B+cnLstK3ud8ll9tHc4f4QHn3Yp4TzDU=;
+	b=EyjkLMGQW6+jkVaiGQ+A9TPFDrxhgQZOEZDY8qWAP86zhSVXbTSV10FFM8g47Tk8bnVRex
+	LJudbf2I311boe4sAWQFmoysrUgz/hXcxgn5l0DMfayhdXOv95/EceyquocnMeYsOm8GaN
+	HLtxkx2gX0pBN2MHV/W1nnj1+rLwC80=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-54-_H2NW0WlNU2eGYbMLH_etQ-1; Thu, 18 Apr 2024 04:55:23 -0400
-X-MC-Unique: _H2NW0WlNU2eGYbMLH_etQ-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a556121c01aso32721266b.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Apr 2024 01:55:23 -0700 (PDT)
+ us-mta-621-67835CkQP_uE0YozD9pkbQ-1; Thu, 18 Apr 2024 05:04:08 -0400
+X-MC-Unique: 67835CkQP_uE0YozD9pkbQ-1
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-516d6407352so575942e87.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Apr 2024 02:04:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713430522; x=1714035322;
+        d=1e100.net; s=20230601; t=1713431047; x=1714035847;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a3ijnHOr2lMizZp28dkk/a8tpj5sBpid4ALmXZbWPA8=;
-        b=n61X3PijOcxPPkXTyb7d1bS6xR6qPpZYXP0jPA93Y2L7drOISu6sBYClIuA0IldcWl
-         YVnQEW52RUctPvZPXZHRzIG81JFpHwwBS/wycDIWNv2O1GkS+vRlqpMQTsSIIsezcD5r
-         W487fEUuMWZhWIQiv2h5NMvML/2Y+aKBm6oa2iKaBwsILIewesiIX8n0mYOJCEu4xGiP
-         Fa8UUyfvCur056AJ3L1gxecdhEsZ5b3Bd4cTuKwlMgGGuv6OYwCM3Kxk+b72eStnSkX7
-         qv5pM7/7MgrpfSIPsPAHo2R3ZEORCOCAMTTmQ1FP2Ot9QxUTwrsWBY8vudd4gYh/MP3x
-         JQkA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVpJWEMFhwTN1FwOHVkWuNwYhh/CjILzrwGdDHW4dsoqSODSF8j4a7E1KoHBkFpFimFAgseAUQeK0F+ZAfk/NMMLO7QxLIsKLhClmRrMXexcbk+w==
-X-Gm-Message-State: AOJu0YxVWKuAJxVLddkXeX4BHa6Nn0HJXqOj4uPwPzAXaWKr7Ja+HaRx
-	NEip2quFeAlrtwoRNjFJnKGQV/dbYwwlQ4SAWpIJEyImyi+T7sEfvTgbHrif5eD2rMSIDXWLIwh
-	A2PmRrxQdyqxPR33rcX9OO1hGOH+G/mUNuwV6/UY6JW8lxoFzBv+CxsOTrurG3/K5bInn+AM=
-X-Received: by 2002:a17:907:76a9:b0:a55:59e8:b780 with SMTP id jw9-20020a17090776a900b00a5559e8b780mr1277607ejc.4.1713430522290;
-        Thu, 18 Apr 2024 01:55:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGKfvYq8xxFx0WBymZMPuQA2LKlM895k5PHfbu+ObgkMs+Rqx5cC1+8yukvqXz4+PJX9lUPTw==
-X-Received: by 2002:a17:907:76a9:b0:a55:59e8:b780 with SMTP id jw9-20020a17090776a900b00a5559e8b780mr1277588ejc.4.1713430521889;
-        Thu, 18 Apr 2024 01:55:21 -0700 (PDT)
+        bh=fjUdQEZsyr1B+cnLstK3ud8ll9tHc4f4QHn3Yp4TzDU=;
+        b=Wrg2VIZilcGcIFPOygxrZg1kzoziZRVuNokiUuuUUJa2Bn5R1MUCKEkfilXsXv6dju
+         jn5QPcbgjFs7gR5Oc002AUEjdkR07zW2LyrTOyMb39YQfTOUZ5uqnab+ltc6m+z7EmOM
+         8QvQVBIkJ1b0/1MlTpMRMHW3kjiojamAiSO9Tl7LfqxC2YWqNDL4iTFJldeG35jYsLGQ
+         WEw2guB876OfRpBnQiJ/FuuRFgJ4QIrF/juqQNHfbWkusL/4WilSh0+WjU9XPp5gIjuR
+         sVGOoiN9KJu1vG4Xgl8Dy8bm1Stzd4pl5wMj/wiyi9mc50Nw3B2Ojgm2p3zowNRxOwuk
+         2lpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBC5N16PWC0zUt4+AmrRUTiT7vvI1uBmjTrKwRX3CtrM8hehiD5uKBJlrHUMu7gpYoECETtjAoadiGOpzFZjdLa7UnYx5Y5rVQTcrKPOGHB7lFKw==
+X-Gm-Message-State: AOJu0YyvwUCgFkItiuxqn1PbL0qmVhb8aGfZ1O1w/5u5Zb6QPge6A1z0
+	QYtXD1I74kf3V6PoqVOY/7LIL+VNk1dmB7TwhibbmIuTXKVuQIYfCFUFkwmUmggXEPScWDx4LiK
+	+9Ded9FHQyXDnUhpJYZ5I6KUytxEA2XIEdNv0oelMGh4AIFqlcbr4Fk79LTlTGKSDHsubvow=
+X-Received: by 2002:a19:644c:0:b0:515:c91a:f4e2 with SMTP id b12-20020a19644c000000b00515c91af4e2mr1018890lfj.24.1713431046936;
+        Thu, 18 Apr 2024 02:04:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFCX+axwo24HZErHphPUmlk46UZojOnXZn1R68yXCn5Wa506iFYwqgVmPiE8g4upF2OnLB21g==
+X-Received: by 2002:a19:644c:0:b0:515:c91a:f4e2 with SMTP id b12-20020a19644c000000b00515c91af4e2mr1018868lfj.24.1713431046340;
+        Thu, 18 Apr 2024 02:04:06 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id t7-20020a1709066bc700b00a5556cd0fd5sm598453ejs.183.2024.04.18.01.55.21
+        by smtp.gmail.com with ESMTPSA id h25-20020a0564020e9900b0056bc0c44f02sm597045eda.96.2024.04.18.02.04.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Apr 2024 01:55:21 -0700 (PDT)
-Message-ID: <218ad508-88bf-451a-a4cc-8246c3d02535@redhat.com>
-Date: Thu, 18 Apr 2024 10:55:20 +0200
+        Thu, 18 Apr 2024 02:04:05 -0700 (PDT)
+Message-ID: <ca6e0dc7-f5ea-4c0a-b9fe-0667fadc78a6@redhat.com>
+Date: Thu, 18 Apr 2024 11:04:05 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,44 +67,44 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/5] platform: x86-android-tablets: other: Add swnode
- for Xiaomi pad2 indicator LED
-To: Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
- Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
- platform-driver-x86@vger.kernel.org,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
- linux-kernel@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>,
- Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
-References: <20240416053909.256319-1-hpa@redhat.com>
- <20240416053909.256319-2-hpa@redhat.com>
+Subject: Re: [PATCH v2] platform/x86/amd: Don't allow HSMP to be loaded on
+ non-server hardware
+To: Mario Limonciello <superm1@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
+ Carlos Bilbao <carlos.bilbao@amd.com>,
+ "open list:AMD HSMP DRIVER" <platform-driver-x86@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20240416182057.8230-1-superm1@gmail.com>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240416053909.256319-2-hpa@redhat.com>
+In-Reply-To: <20240416182057.8230-1-superm1@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Kate,
+Hi,
 
-On 4/16/24 7:39 AM, Kate Hsuan wrote:
-> KTD2026 LED controller manages the indicator LED for Xiaomi pad2. The ACPI
-> for it is not properly made so the kernel can't get a correct description.
+On 4/16/24 8:20 PM, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
 > 
-> This work adds a description for this RGB LED controller and also sets a
-> trigger to indicate the changing event (bq27520-0-charging). When it is
-> charging, the indicator LED will be turned on.
+> If the HSMP driver is compiled into the kernel or a module manually loaded
+> on client hardware it can cause problems with the functionality of the PMC
+> module since it probes a mailbox with a different definition on servers.
 > 
-> Signed-off-by: Kate Hsuan <hpa@redhat.com>
+> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2414
+> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/3285
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v1->v2:
+>  * use pm preferred profile instead
 
-Since this patch is more or less done and since which fwnodes there should
-be and with which contents is prescribed by the existing devicetree
-bindings which are not being changes I have already merged this patch
-into pdx86/for-next:
+Thanks, patch looks good to me:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/commit/?h=for-next&id=fcc6220ddc7e54d8442287273d0cb8c415ada022
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-So there is no reason to resend this. Please drop this patch from v7
-of the patch-set.
+Mario, should this go in as a fix for the 6.9 cylce, or is
+this for-next material ?  (I'm not sure what to do myself)
 
 Regards,
 
@@ -114,131 +114,41 @@ Hans
 
 
 > ---
->  .../platform/x86/x86-android-tablets/other.c  | 82 +++++++++++++++++++
->  .../x86/x86-android-tablets/shared-psy-info.h |  2 +
->  2 files changed, 84 insertions(+)
+>  drivers/platform/x86/amd/hsmp.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
-> index bc6bbf7ec6ea..c77d56454f2d 100644
-> --- a/drivers/platform/x86/x86-android-tablets/other.c
-> +++ b/drivers/platform/x86/x86-android-tablets/other.c
-> @@ -13,6 +13,8 @@
->  #include <linux/input.h>
->  #include <linux/platform_device.h>
+> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
+> index 1927be901108..102a49c3e945 100644
+> --- a/drivers/platform/x86/amd/hsmp.c
+> +++ b/drivers/platform/x86/amd/hsmp.c
+> @@ -907,6 +907,17 @@ static int hsmp_plat_dev_register(void)
+>  	return ret;
+>  }
 >  
-> +#include <dt-bindings/leds/common.h>
-> +
->  #include "shared-psy-info.h"
->  #include "x86-android-tablets.h"
->  
-> @@ -593,6 +595,83 @@ const struct x86_dev_info whitelabel_tm800a550l_info __initconst = {
->  	.gpiod_lookup_tables = whitelabel_tm800a550l_gpios,
->  };
->  
-> +/*
-> + * The fwnode for ktd2026 on Xaomi pad2. It composed of a RGB LED node
-> + * with three subnodes for each color. The RGB LED node is named
-> + * "multi-led" to align with the name in the device tree.
-> + */
-> +
-> +/* main fwnode for ktd2026 */
-> +static const struct software_node ktd2026_node = {
-> +	.name = "ktd2026"
-> +};
-> +
-> +static const struct property_entry ktd2026_rgb_led_props[] = {
-> +	PROPERTY_ENTRY_U32("reg", 0),
-> +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_RGB),
-> +	PROPERTY_ENTRY_STRING("function", "indicator"),
-> +	PROPERTY_ENTRY_STRING("linux,default-trigger", "bq27520-0-charging"),
-> +	{ }
-> +};
-> +
-> +static const struct software_node ktd2026_rgb_led_node = {
-> +	.name = "multi-led",
-> +	.properties = ktd2026_rgb_led_props,
-> +	.parent = &ktd2026_node,
-> +};
-> +
-> +static const struct property_entry ktd2026_blue_led_props[] = {
-> +	PROPERTY_ENTRY_U32("reg", 0),
-> +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_BLUE),
-> +	{ }
-> +};
-> +
-> +static const struct software_node ktd2026_blue_led_node = {
-> +	.properties = ktd2026_blue_led_props,
-> +	.parent = &ktd2026_rgb_led_node,
-> +};
-> +
-> +static const struct property_entry ktd2026_green_led_props[] = {
-> +	PROPERTY_ENTRY_U32("reg", 1),
-> +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_GREEN),
-> +	{ }
-> +};
-> +
-> +static const struct software_node ktd2026_green_led_node = {
-> +	.properties = ktd2026_green_led_props,
-> +	.parent = &ktd2026_rgb_led_node,
-> +};
-> +
-> +static const struct property_entry ktd2026_red_led_props[] = {
-> +	PROPERTY_ENTRY_U32("reg", 2),
-> +	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_RED),
-> +	{ }
-> +};
-> +
-> +static const struct software_node ktd2026_red_led_node = {
-> +	.properties = ktd2026_red_led_props,
-> +	.parent = &ktd2026_rgb_led_node,
-> +};
-> +
-> +static const struct software_node *ktd2026_node_group[] = {
-> +	&ktd2026_node,
-> +	&ktd2026_rgb_led_node,
-> +	&ktd2026_green_led_node,
-> +	&ktd2026_blue_led_node,
-> +	&ktd2026_red_led_node,
-> +	NULL
-> +};
-> +
-> +static int __init xiaomi_mipad2_init(void)
+> +static bool hsmp_supported_profile(void)
 > +{
-> +	return software_node_register_node_group(ktd2026_node_group);
+> +	switch (acpi_gbl_FADT.preferred_profile) {
+> +	case PM_ENTERPRISE_SERVER:
+> +	case PM_SOHO_SERVER:
+> +	case PM_PERFORMANCE_SERVER:
+> +		return true;
+> +	}
+> +	return false;
 > +}
 > +
-> +static void xiaomi_mipad2_exit(void)
-> +{
-> +	software_node_unregister_node_group(ktd2026_node_group);
-> +}
-> +
->  /*
->   * If the EFI bootloader is not Xiaomi's own signed Android loader, then the
->   * Xiaomi Mi Pad 2 X86 tablet sets OSID in the DSDT to 1 (Windows), causing
-> @@ -616,6 +695,7 @@ static const struct x86_i2c_client_info xiaomi_mipad2_i2c_clients[] __initconst
->  			.type = "ktd2026",
->  			.addr = 0x30,
->  			.dev_name = "ktd2026",
-> +			.swnode = &ktd2026_node,
->  		},
->  		.adapter_path = "\\_SB_.PCI0.I2C3",
->  	},
-> @@ -624,4 +704,6 @@ static const struct x86_i2c_client_info xiaomi_mipad2_i2c_clients[] __initconst
->  const struct x86_dev_info xiaomi_mipad2_info __initconst = {
->  	.i2c_client_info = xiaomi_mipad2_i2c_clients,
->  	.i2c_client_count = ARRAY_SIZE(xiaomi_mipad2_i2c_clients),
-> +	.init = xiaomi_mipad2_init,
-> +	.exit = xiaomi_mipad2_exit,
->  };
-> diff --git a/drivers/platform/x86/x86-android-tablets/shared-psy-info.h b/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
-> index c2d2968cddc2..8c33ec47ee12 100644
-> --- a/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
-> +++ b/drivers/platform/x86/x86-android-tablets/shared-psy-info.h
-> @@ -29,4 +29,6 @@ extern const char * const bq24190_modules[];
->  extern const struct platform_device_info int3496_pdevs[];
->  extern struct gpiod_lookup_table int3496_reference_gpios;
+>  static int __init hsmp_plt_init(void)
+>  {
+>  	int ret = -ENODEV;
+> @@ -917,6 +928,11 @@ static int __init hsmp_plt_init(void)
+>  		return ret;
+>  	}
 >  
-> +extern const struct software_node ktd2026_leds_node;
+> +	if (!hsmp_supported_profile()) {
+> +		pr_err("HSMP is only supported on servers");
+> +		return ret;
+> +	}
 > +
->  #endif
+>  	/*
+>  	 * amd_nb_num() returns number of SMN/DF interfaces present in the system
+>  	 * if we have N SMN/DF interfaces that ideally means N sockets
 
