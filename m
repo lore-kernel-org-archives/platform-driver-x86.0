@@ -1,230 +1,218 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2084.outbound.protection.outlook.com [40.107.212.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF6015E80E
-	for <platform-driver-x86@vger.kernel.org>; Thu, 18 Apr 2024 11:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713440089; cv=none; b=EBrHrxT3O08JuABai0X8wlFaoLloOa+wINcACUFPzN328Wg7uekpV2foAITpywr2z+aqHy16I7yG1SP+Jr9PBcnlTvmO9lz2ccpdOsEqJ7GDc8q/7bd0xloMMm7Oa89kK52ZY5hzeK1mreeOc6h+eTt+eW0JxGnR44ImzFYYXpE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713440089; c=relaxed/simple;
-	bh=hHqENnGF5QmlzfYc/zlCjNf5/wf36TEQzNVQDbuhNz0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tn3OvVkvadLU8sjmaEyhpdumA4SrA66kfdI0p9W79j8nJyEo/1Vs6EalTN5i1ICex/SLyhdTukc/9HrKy3QtB9okl+ILDb/SAzAkX+m8+Y67ZMeqg2bqlAnut9apwMhrP5PkASybTTQ41f8E17i5uip3NJHR9XzRAA+z0IaEaCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CrYnZI5q; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D348615F404;
+	Thu, 18 Apr 2024 12:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713441992; cv=fail; b=XSA/VzxFsCIQJj4yz4ioxG1KLLuPzaV8Bcbpwitten+m87EBJIfai+/6Z7tb968vYqglHZhXYBhWfHwTzSKdyQ4dsUFcmPP+8vViHUaE+pVh2bA9+eaH7hkY3E0nlljKgV0vOae7uO43MJwc+BtvB3ZNqbbyq8EMwZYhtinG7iI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713441992; c=relaxed/simple;
+	bh=6kvGBmulQHFrOAATB020hgT1+LFfWmlNaDN6/0cBIro=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=k6yvqWNvBgOTydsDFUK1V8Njv6U7HH28ORAi4B6w+DOl/jlUwkwn81H/dp2QCK2nOkuUZrMEk2GGbQI12Bxs8cwTbngwaMmaVK2sJvkuRuRWZ6zSco8jsX2GW33oo5t2MqOoIOLrD9PVfhyhQQuB99I8LbiNcXIjogS7Ug0mCXU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OH4tm4jQ; arc=fail smtp.client-ip=40.107.212.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CrYnZI5q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713440086;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sxee1bwLiGmeojh/o1lDYTW0rtf42vjkZkESyKbCvc4=;
-	b=CrYnZI5q+JUoWZS9pBBDe1D/TI4MDrLESd9kVaDqa/amMpatbHrpovBrJRXnq+h6WjxSZq
-	ZCJgD+d6E+7k8hBTLK5rb3/DEt7ZXJvg0fqnHi7TbBE6NQSZtOhBeB2YBgFiugeAK0p+V1
-	7Dx/2vk6qDeToxC9RL5TB3+HiYgfpho=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-299-SkJv013MMUKcMxWMDrXybw-1; Thu, 18 Apr 2024 07:34:43 -0400
-X-MC-Unique: SkJv013MMUKcMxWMDrXybw-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a5564a2e3a5so49740066b.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Apr 2024 04:34:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713440082; x=1714044882;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sxee1bwLiGmeojh/o1lDYTW0rtf42vjkZkESyKbCvc4=;
-        b=nida9Z5cBVYeSxLXJ4auSMyeKdPjl2PnpdV0dUGy3smzLV33SSzvvbLOR41l+viOu4
-         uL58CzYX/dZEOuTVl0uk+dO26wLC4g4m01HwhpItMHi9axDiAl276x2jiwBAWtlVttiP
-         2VjfJZg1HxnpCzzLTXLulEEH7M/G0htPbkAtaxSz8D4i4OnFr5cE6MAk3IKviPGyv5I2
-         AOW7NgsU/BE/pSRPABpk5OLOOzI8w8BngODfHPSFQ5w9wjBfidD9vXv7bVZ67CD/WSdd
-         6WcvmyxPhoUV05N2Gs9d3vgHKZpu/I/BPf5/HPD3ZTupbksJkOW2HgTnMrrSTpzbklw3
-         CeGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQSAjvNSpHwP9jXh3t/tyQPFT0VorHXDfgBgqQ6PyU2OHSBJyPAeowKyumsdPYxB21riNb6MArGLq7bz5YUbWDAJayr5FF0bIfTTNc6nKfwWswUw==
-X-Gm-Message-State: AOJu0YyzF8XYnhvk6vqEP60i0fK4ZEOMHj82MLMnFAKXnjY9U2oujZij
-	xTQNEIO8dIzkLQ001Fd/Pi8aHGgdLL3OUzkoXX/bNCykt4GOJy+WYSUkSJenX6ePuC+X7kM6Cu3
-	IMs51Te5aSeifkMpcHyFJ5T2pgwLv9ZZQGCT17IbQBSC3ghTMFXDryUzmm6j3Mxu9L8A+d/s=
-X-Received: by 2002:a17:906:1e07:b0:a55:67b9:dadc with SMTP id g7-20020a1709061e0700b00a5567b9dadcmr1474935ejj.73.1713440082447;
-        Thu, 18 Apr 2024 04:34:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG7rx4TILRxr4Gn9I0O7SjoE9LCwDvo3Xt0PfzcannkK2g3ls6y2EAszGA/8YJzhO3HTPqwZA==
-X-Received: by 2002:a17:906:1e07:b0:a55:67b9:dadc with SMTP id g7-20020a1709061e0700b00a5567b9dadcmr1474922ejj.73.1713440082069;
-        Thu, 18 Apr 2024 04:34:42 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a24-20020a1709065f9800b00a526fcac8aesm763366eju.208.2024.04.18.04.34.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Apr 2024 04:34:41 -0700 (PDT)
-Message-ID: <76d92fdc-ad0a-40a2-9e1b-d550f8e07267@redhat.com>
-Date: Thu, 18 Apr 2024 13:34:40 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OH4tm4jQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S/BFWaAzG9WuZf4pf8FEFuXrwexzHBZuBcnsFNmwxtBviWZfYS7vruy999LBvyNJtphCjgTDHYF2T/CdRW6BXrV1BNoZ6rgvOH95M8eDsZybJDEPU9yGCZtAC/tXFxsUCexbEfEKVcuHLQ0AQkwz2RoMn5tNMso5TJphkkD7qtYAiGBCH+FF1fsxHqM27GoQceDNVZ0ncyF73PviASiH+Cy8vFj8T+AL0wDab1Rr8OvjBWSFQBnDTrWFMAhY32E8Gp4ImqgcDV21UkpeFFdvJR5gtVapYdjT+t3SJ7/hw8jSJu2aOJzjkCR+BYDEZ/JlUz/gGQRcFik00DyIQmK01A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6kvGBmulQHFrOAATB020hgT1+LFfWmlNaDN6/0cBIro=;
+ b=OqcmihcXlxJ30vBMNWF63yQyxOqp+tsAzsbdPQqTpeL2Ez0XZKBaex26ArkbgCV/BA5ddHpezjwlxq7U7R/v5T4VysxaWgpPfGBan2057BurtbeT8eaELhyzt5zmt6ODfwHpb6m/tPfQqRo/4oZI0DqOmwBp2seT71Rb+S0mZOTwNlG5BAv/kCMV7ahSYxfA5abb4Aqdb45mkdig2ik2BIBvYc4paYODFEKeyBudhO+Oq3icTq0r+xXfP5kJPOyqtEB7pDwEgoPOapcxGHMi+aTqWqqnD+Lk+1aOs14JsbamAgg+mI/wOrktS6JLo8GNrVCnOFXs8Wrk5lgGlRpb+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6kvGBmulQHFrOAATB020hgT1+LFfWmlNaDN6/0cBIro=;
+ b=OH4tm4jQUclpLsfGA2qGYpSRqlRoktNhGs+L8wipCpA5Z2F7ihk9m2gQrpUrvYTA33R+GRXShuW09K1cxc7begkc4PP4wTtp1ODP3aUgbPm+DclZZT5cjV8tIl4z4kTMcuL46BY/YNC0UrI4pWE13m3yI2CuHUF0mRY3xUk4epbluslFwpnJRAvi5NjS/lvHE5kTwsvS1ejcQ3S2Jq8R9sDD9fph/C09ZaY8tqSZJLuAbx/WikKsPhp8W8bYqoVARgIsEDMmPZnHm1XffgiMazD83TbN5/CVj7wT5zXFpDkUOgiKEoYVSyMXlmedjKjNueBxmEVCVoKMliDPVVqTFg==
+Received: from DM4PR12MB5136.namprd12.prod.outlook.com (2603:10b6:5:393::23)
+ by SA1PR12MB6848.namprd12.prod.outlook.com (2603:10b6:806:25f::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.37; Thu, 18 Apr
+ 2024 12:06:23 +0000
+Received: from DM4PR12MB5136.namprd12.prod.outlook.com
+ ([fe80::5404:f658:2d07:451f]) by DM4PR12MB5136.namprd12.prod.outlook.com
+ ([fe80::5404:f658:2d07:451f%7]) with mapi id 15.20.7472.037; Thu, 18 Apr 2024
+ 12:06:23 +0000
+From: Shravan Ramani <shravankr@nvidia.com>
+To: =?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>,
+	David Thompson <davthompson@nvidia.com>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 2/3] platform/mellanox: mlxbf-pmc: Add support for
+ 64-bit counters and cycle count
+Thread-Topic: [PATCH v1 2/3] platform/mellanox: mlxbf-pmc: Add support for
+ 64-bit counters and cycle count
+Thread-Index: AQHakJktkEiBSozD4E+AQxbCdqj0ObFsclCAgAFyTeU=
+Date: Thu, 18 Apr 2024 12:06:22 +0000
+Message-ID:
+ <DM4PR12MB513613B05FB14A933AB7304DC00E2@DM4PR12MB5136.namprd12.prod.outlook.com>
+References: <cover.1713334019.git.shravankr@nvidia.com>
+ <aec3aaa44a5738940b2511726177976336a6c72d.1713334019.git.shravankr@nvidia.com>
+ <e77f01b4-f314-6822-8533-95f37a42cd4f@linux.intel.com>
+In-Reply-To: <e77f01b4-f314-6822-8533-95f37a42cd4f@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM4PR12MB5136:EE_|SA1PR12MB6848:EE_
+x-ms-office365-filtering-correlation-id: 3c1a988b-4c44-4c7a-8f63-08dc5f9ff71c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ 33yQvW3+kAZgT+i7cXmKKOi+LTu2+tPSVQdsrsUL3bDuPjMs7GlQVAf4ViLhIcIfOpuyu6yoIoe3nBQK2QlEgi7bjYRFf8Txp8QdE61F3Mc1VXeds/xCToZLz6YW1sISD8gBGehYkmFdnW3cuxLB7Sgqo6GU3+labWSDGvSUTamZQSGNREYqHOQaC45EVAINqPYP3T8vvihtogWgiRrwZ0sDwtd3RFz5OfWfcqVveulGZjzoCtMzCy5tz0ycqDGdKk3bwwMEKTwv82D/L2f/DJylulK5vg2saA9tIo1gtVsinW22LXG2BZa7SjnmA1/mxnznyEn8WjP7rNQHh7MuYdKnhVeRLy6ZsC0q0YfXny91d8JEs1gq/f93FzpHLU0g8D9VdUD9QkkSAJguoA54yWa1Wp8NWTKTU6JPSJeNxCKUXoe9Uk5LHRrj4gEVGCgK4HuRjXQUJkY/q/eSG30xNkM30XNjJUb3IEkYFxV2NNNlbSYJx/ylMLDLwiSvvY6Uf/cFHWkcNnyctSXNQNRXNl7jk/5nF3wHOKPwHONEpjR8DyBBa1KA5j2kxlUvOaxw5rGDAVUKljazKztefSMzBB319pag+ZlXqhBqj6h/oULDWl+KeUSpfklvB2Svs0G+mymnCKEhaojf4PPvMz2udJjlSMG+Bg1WI3xv3k7GcPBTZgdlj2J3DFplpbqRT4QSoQ3fgcwKig1tqU2htDY1UOtFx4d93H4S3L4wOEKWn7o=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5136.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?sBueUcV8wrvvcSKHQ/L7dL8APHCaTpaSXMpkGU2z04d0UvklJZ7j+JDphG?=
+ =?iso-8859-1?Q?6DdbsDXXwu86gyBVdNuQGO+ks7/9FZQ2GJmwdpUavVwHdOMb8A5Kf3bQU9?=
+ =?iso-8859-1?Q?YvFA9oPAuq0c1YA/4cIh6PqsqfrUoYQQURmZgr8KrRHzw4oGSd4ufCfajC?=
+ =?iso-8859-1?Q?k31H7Upk674Y56hyXc4rhXquJY19Lhb6Gx97ZoQnJAFUCGyChUfY7XZcyn?=
+ =?iso-8859-1?Q?4XTzlrv6F9rquC2hjC27TRkLbXvItFQiLJoPO21p56gJ6RyjGbCJCpckZZ?=
+ =?iso-8859-1?Q?eyUfVtk78dDkZn658UASOMw+upKp1A72VlPPcdirouZ6k87dbR2VHWdvGG?=
+ =?iso-8859-1?Q?mb2NBzXZUUOSfJ3V+RoIse+ccCKCsd4vhyGrvvcZ4gnn9Su8RXoyUaCH+n?=
+ =?iso-8859-1?Q?6P3EmSJyUX2sq67CwcWi2sdMg2ZQ87TfyIkCjgkyCfMC0XxwEw/sX6G5JR?=
+ =?iso-8859-1?Q?ptNX7nTznIPMaY5pdtBYTDgv5RSNOi/JANM9DvZ3uSHghE1/2tvfttBECH?=
+ =?iso-8859-1?Q?G726HXj8Ff9P0TXJQhAAn3hUG0pz21EmX2b1R+e+LLcD13cajo/dpH5VpZ?=
+ =?iso-8859-1?Q?ZGRc5Wq1lXFCUKmR93QMHmDUaw41OEcCQ8DBGqNCsuib5yta/brn95jJaz?=
+ =?iso-8859-1?Q?72oSCx1UQTAVQ61FSRtRx7UrL9Rny5uWkjYveR0LdnbeXBkAiBGFANJN1b?=
+ =?iso-8859-1?Q?lUfp04lG2ITRzh5HsBBVlpifDe5bDeVE/cHDpUNikuiPiNmuhUGMB+Mfwa?=
+ =?iso-8859-1?Q?WtYiVNDYd/gZATJa5mzzg01DQdBWos0H988ZJX/5qujD/3f/ebuXDcAtsE?=
+ =?iso-8859-1?Q?ZnHlDAyHFUnH1xkn5LdTIrFjb6uC7hd59XL5yl6p0VMFdVA3lD0JZFDyiP?=
+ =?iso-8859-1?Q?G6yOhX4c9QYwRVGqxyF8KJRHEh9NZD0IsW4Ze74ZWSq6ASEXWXJ7fx7Dx/?=
+ =?iso-8859-1?Q?0Js3hCkq53K1C8GB8oK3FYw3pZ/bZbqnoLTpZF8e2EVGIVsRnwhrNXEduW?=
+ =?iso-8859-1?Q?SLfVrIQf1pPMQpmeyya1/qeMe5ALM/FasfVeWvRj4PAR8vLVJOUOFWGNPw?=
+ =?iso-8859-1?Q?TQHixn5kBh5xJp7cUDsUdvjbOq2HYvpheLG4e1N66iJXAJVUGWtXo7g9gz?=
+ =?iso-8859-1?Q?g+mbyEiYt1RD3ZV1GktLlaoqpCEiyxRUrKl4RWik4Pf1TFvX+eu88LEqVU?=
+ =?iso-8859-1?Q?9VUhtcF8f9o6BXjrvLqQskrDuUjfFqaDw0CgnrQnlyjJB6bCMtaFZygtp6?=
+ =?iso-8859-1?Q?rHIjq2Aw3houUNV34IZyrxoSYQHHUB1LsWtlJYOEelzD4hgCcNg8grbIOQ?=
+ =?iso-8859-1?Q?pCdnfZH3kuXQwgMymro9DYrovTL80lrbvAGMCAKFJb+LhoM6P9eU12gjeH?=
+ =?iso-8859-1?Q?tFI3mNuSY6vPlJ5rDJmBtknGX0jxhX4J5nkYQHJz2vmsZVGhyxaz8tbIC8?=
+ =?iso-8859-1?Q?+jtrLrZ1QxpK1Lmsv9Q7K2tAwor9S/dgUP11RMRQLzcSzyQPQX755R8Fl/?=
+ =?iso-8859-1?Q?YlOd0nwg6uc7XKY3bWntU66q1UO+kkCgz/ch5q1Txl8S3ihoywQgMZd7r7?=
+ =?iso-8859-1?Q?dee6O8fJjyKHgEc8714CMv+fsFs4zj2WiDow8ZYlQAp5y++z/0WCtqOSr2?=
+ =?iso-8859-1?Q?AM8zFlojM0KYc=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] platform/x86: thinkpad_acpi: Support for
- trackpoint doubletap
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
- ibm-acpi-devel@lists.sourceforge.net,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org, Nitin Joshi1 <njoshi1@lenovo.com>,
- Vishnu Sankar <vsankar@lenovo.com>,
- Peter Hutterer <peter.hutterer@redhat.com>,
- Vishnu Sankar <vishnuocv@gmail.com>
-References: <mpearson-lenovo@squebb.ca>
- <20240417173124.9953-1-mpearson-lenovo@squebb.ca>
- <20240417173124.9953-2-mpearson-lenovo@squebb.ca>
- <98082080-0fcf-470f-afa5-76ec2bbffee7@redhat.com>
- <55ded7c3-fbc5-4fa5-8b63-da4d7aa4966c@redhat.com>
- <a7f7d94a-f1c8-4d6a-9c65-b5de59b9f7c0@app.fastmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <a7f7d94a-f1c8-4d6a-9c65-b5de59b9f7c0@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5136.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3c1a988b-4c44-4c7a-8f63-08dc5f9ff71c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2024 12:06:22.9455
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xJJgfziixLWVPMFs3MSbS4hAfT4wZem1d0KO2h2w5rSA+wjvW9DRnh2PId2j4RL//+eCq3BIf1clmkXSAX4jKQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6848
 
-Hi Mark,
-
-On 4/18/24 1:57 AM, Mark Pearson wrote:
-> Hi Hans,
-> 
-> On Wed, Apr 17, 2024, at 4:06 PM, Hans de Goede wrote:
->> Hi Mark,
->>
->> On 4/17/24 9:39 PM, Hans de Goede wrote:
->>> Hi Mark,
->>>
->>> Thank you for the new version of this series, overall this looks good,
->>> one small remark below.
->>>
->>> On 4/17/24 7:31 PM, Mark Pearson wrote:
->>>> Lenovo trackpoints are adding the ability to generate a doubletap event.
->>>> This handles the doubletap event and sends the KEY_PROG1 event to
->>>> userspace.
->>>>
->>>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->>>> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
->>>> ---
->>>> Changes in v2:
->>>>  - Use KEY_PROG1 instead of KEY_DOUBLETAP as input maintainer doesn't
->>>>    want new un-specific key codes added.
->>>>  - Add doubletap to hotkey scan code table and use existing hotkey
->>>>    functionality.
->>>>  - Tested using evtest, and then gnome settings to configure a custom shortcut
->>>>    to launch an application.
->>>>
->>>>  drivers/platform/x86/thinkpad_acpi.c | 18 ++++++++++++++++++
->>>>  1 file changed, 18 insertions(+)
->>>>
->>>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
->>>> index 3b48d893280f..6d04d45e8d45 100644
->>>> --- a/drivers/platform/x86/thinkpad_acpi.c
->>>> +++ b/drivers/platform/x86/thinkpad_acpi.c
->>>> @@ -232,6 +232,9 @@ enum tpacpi_hkey_event_t {
->>>>  
->>>>  	/* Misc */
->>>>  	TP_HKEY_EV_RFKILL_CHANGED	= 0x7000, /* rfkill switch changed */
->>>> +
->>>> +	/* Misc2 */
->>>> +	TP_HKEY_EV_TRACK_DOUBLETAP      = 0x8036, /* trackpoint doubletap */
->>>>  };
->>>>  
->>>>  /****************************************************************************
->>>> @@ -1786,6 +1789,7 @@ enum {	/* hot key scan codes (derived from ACPI DSDT) */
->>>>  	TP_ACPI_HOTKEYSCAN_NOTIFICATION_CENTER,
->>>>  	TP_ACPI_HOTKEYSCAN_PICKUP_PHONE,
->>>>  	TP_ACPI_HOTKEYSCAN_HANGUP_PHONE,
->>>
->>> I understand why you've done this but I think this needs a comment,
->>> something like:
->>>
->>>         /*
->>>          * For TP_HKEY_EV_TRACK_DOUBLETAP, unlike the codes above which map to:
->>>          * (hkey_event - 0x1300) + TP_ACPI_HOTKEYSCAN_EXTENDED_START, this is
->>>          * hardcoded for TP_HKEY_EV_TRACK_DOUBLETAP handling. Therefor this must
->>>          * always be the last entry (after any 0x1300-0x13ff entries).
->>>          */
->>> +	TP_ACPI_HOTKEYSCAN_DOUBLETAP,
->>
->> Ugh, actually this will not work becuuse we want hotkeyscancodes to be stable
->> because these are userspace API since they can be remapped using hwdb so we
->> cannot have the hotkeyscancode changing when new 0x1300-0x13ff range entries
->> get added.
->>
->> So we need to either grow the table a lot and reserve a whole bunch of space
->> for future 0x13xx - 0x13ff codes or maybe something like this:
->>
->> diff --git a/drivers/platform/x86/thinkpad_acpi.c 
->> b/drivers/platform/x86/thinkpad_acpi.c
->> index 771aaa7ae4cf..af3279889ecc 100644
->> --- a/drivers/platform/x86/thinkpad_acpi.c
->> +++ b/drivers/platform/x86/thinkpad_acpi.c
->> @@ -1742,7 +1742,12 @@ enum {	/* hot key scan codes (derived from ACPI 
->> DSDT) */
->>  	TP_ACPI_HOTKEYSCAN_VOLUMEDOWN,
->>  	TP_ACPI_HOTKEYSCAN_MUTE,
->>  	TP_ACPI_HOTKEYSCAN_THINKPAD,
->> -	TP_ACPI_HOTKEYSCAN_UNK1,
->> +	/*
->> +	 * Note this gets send both on 0x1019 and on 
->> TP_HKEY_EV_TRACK_DOUBLETAP
->> +	 * hotkey-events. 0x1019 events have never been seen on any actual hw
->> +	 * and a scancode is needed for the special 0x8036 doubletap 
->> hotkey-event.
->> +	 */
->> +	TP_ACPI_HOTKEYSCAN_DOUBLETAP,
->>  	TP_ACPI_HOTKEYSCAN_UNK2,
->>  	TP_ACPI_HOTKEYSCAN_UNK3,
->>  	TP_ACPI_HOTKEYSCAN_UNK4,
->>
->> or just hardcode KEY_PROG1 like your previous patch does, but I'm not
->> a fan of that because of loosing hwdb remapping functionality for this
->> "key" then.
->>
->> Note I'm open to other suggestions.
->>
-> Oh...I hadn't thought of that impact. That's not great :(
-> 
-> I have an idea, but want to prototype it to see if it works out or not. Will update once I've had a chance to play with it.
-
-Thinking more about this I just realized that the input subsystem
-already has a mechanism for dealing with scancode ranges with
-(big) holes in them in the form of linux/input/sparse-keymap.h .
-
-I think that what needs to be done is convert the existing code
-to use sparse-keymap, keeping the mapping of the "MHKP"
-returned hkey codes to internal TP_ACPI_HOTKEYSCAN_* values
-for currently supported "MHKP" hkey codes for compatibility
-and then for new codes just directly map them in the sparse map
-aka the struct key_entry table. After converting the existing code
-to use sparse-keymap, then for the new events we would simply add:
-
-
-	{ KE_KEY, 0x131d, { KEY_VENDOR} }, /* Fn + N, system debug info */
-	{ KE_KEY, 0x8036, { KEY_PROG1 } }, /* Trackpoint doubletap */
-
-entries to the table without needing to define intermediate
-TP_ACPI_HOTKEYSCAN_* values for these.
-
-I already have somewhat of a design for this in my head and I really
-believe this is the way forward as it uses existing kernel infra
-and it will avoid hitting this problem again when some other new
-"MHKP" hkey codes show up.
-
-I plan to start working on implementing conversion of the existing
-code to use sparse-keymap, which should result in a nice cleanup
-after lunch and I hope to have something for you to test no later
-then next Tuesday.
-
-Regards,
-
-Hans
-
-
+> On Wed, 17 Apr 2024, Shravan Kumar Ramani wrote:=0A=
+> =0A=
+> > Add support for programming any counter to monitor the cycle count.=0A=
+> > Since counting of cycles using 32-bit ocunters would result in frequent=
+=0A=
+> > wraparounds, add the ability to combine 2 adjacent 32-bit counters to=
+=0A=
+> > form 1 64-bit counter.=0A=
+> > Both these features are supported by BlueField-3 PMC hardware, hence=0A=
+> > the required bit-fields are exposed by the driver via sysfs to allow=0A=
+> > the user to configure as needed.=0A=
+> >=0A=
+> > Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>=0A=
+> > Reviewed-by: David Thompson <davthompson@nvidia.com>=0A=
+> > Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>=0A=
+> > ---=0A=
+> =0A=
+> > @@ -1799,6 +1902,37 @@ static int mlxbf_pmc_init_perftype_counter(struc=
+t device *dev, unsigned int blk_=0A=
+> >=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr =3D NULL;=0A=
+> >=A0=A0=A0=A0=A0=A0=A0 }=0A=
+> >=A0=0A=
+> > +=A0=A0=A0=A0 if (pmc->block[blk_num].type =3D=3D MLXBF_PMC_TYPE_CRSPAC=
+E) {=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 /*=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * Couple adjacent odd and even=
+ 32-bit counters to form 64-bit counters=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * using "use_odd_counter" sysf=
+s which has one bit per even counter.=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 */=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr =3D &pmc->block[blk_num].att=
+r_use_odd_counter;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->dev_attr.attr.mode =3D 0644=
+;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->dev_attr.show =3D mlxbf_pmc=
+_use_odd_counter_show;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->dev_attr.store =3D mlxbf_pm=
+c_use_odd_counter_store;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->nr =3D blk_num;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->dev_attr.attr.name =3D devm=
+_kasprintf(dev, GFP_KERNEL,=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0 "use_odd_counter");=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (!attr->dev_attr.attr.name)=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return -E=
+NOMEM;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 pmc->block[blk_num].block_attr[++=
+i] =3D &attr->dev_attr.attr;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr =3D NULL;=0A=
+> > +=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 /* Program crspace counters to co=
+unt clock cycles using "count_clock" sysfs */=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr =3D &pmc->block[blk_num].att=
+r_count_clock;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->dev_attr.attr.mode =3D 0644=
+;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->dev_attr.show =3D mlxbf_pmc=
+_count_clock_show;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->dev_attr.store =3D mlxbf_pm=
+c_count_clock_store;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->nr =3D blk_num;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr->dev_attr.attr.name =3D devm=
+_kasprintf(dev, GFP_KERNEL,=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0 "count_clock");=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (!attr->dev_attr.attr.name)=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return -E=
+NOMEM;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 pmc->block[blk_num].block_attr[++=
+i] =3D &attr->dev_attr.attr;=0A=
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 attr =3D NULL;=0A=
+> > +=A0=A0=A0=A0 }=0A=
+> =0A=
+> Hi,=0A=
+> =0A=
+> What was the reason why this driver could not use .dev_groups to setup=0A=
+> sysfs (filtering can be done with .is_visible)?=0A=
+> =0A=
+=0A=
+The current approach was suggested during the initial submission of the dri=
+ver and the same has=0A=
+been followed since. Do you mean to add a is_visible routine for each of th=
+e sysfs types like=0A=
+count_clock, use_odd_counter, etc and check the conditions for their inclus=
+ion in this routine?=0A=
+=0A=
+Thanks,=0A=
+Shravan=0A=
+=0A=
