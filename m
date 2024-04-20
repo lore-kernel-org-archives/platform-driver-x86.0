@@ -1,119 +1,89 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546D280BF3;
-	Fri, 19 Apr 2024 11:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C953B299;
+	Sat, 20 Apr 2024 20:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713525299; cv=none; b=k9UnkIEK77zgSFGi4st0o0vK2mr0NdnsPXvqGbGut9hBH6bPYvTpeQuulTjtwftfnmArotmVCDNidELFrVHNyaQXRfWWeR3Lf5Rm84LfTZ7FYPjEZI5A1IM3SpPp3RrR+O+CuGDhq2y8p82YIyJTBcxE/37WPS+1eh1Sc5nat08=
+	t=1713643298; cv=none; b=HXR3zDGrOv3dBoHOO5eTsEe4aRLednpV1cWsPTxM/WYySkVaL74TccRtxDPPk/RItSJ9TbfLmuYC1HAydjvw2+VatgYiEg2Zat9MGkctpTqXXiKwtEbdAybdywM5TsxsdgMDFk6uSlnyc3XCyAbq1DOVGC0tw8gvDJNFIxAercs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713525299; c=relaxed/simple;
-	bh=gDPa2MrXoMrXr4as5EkG42RSNIOl7KdjtQco1b6NedI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lUOVoPqHUbE5AUnuADWV91ErD6bG9KqNH1m61YeW0XxhCDxiPwkn9MPcigpPjlCYB6SeivZ33mkY+xVbY7jaFO/ZMDrZQku78Z3GU2obIZH03g51cZHRmHo7Q2RlK5g7DCVOK5WfSzhetqCWlGI4Tn2BerzQfVmu75YwykSKdUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ViHSVXBA; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ViHSVXBA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1713525290;
-	bh=gDPa2MrXoMrXr4as5EkG42RSNIOl7KdjtQco1b6NedI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ViHSVXBAbYwkBpODcua3/KxNbqWdYuqaCwmgFoVbOGT2jEJ90KG6r7f60374Zo4dl
-	 ZtU9fExQBKh2P6siEbZi/YR+rG/fdFyu1tdSvM7UNgcqgkCIxl+DVOrqflq44a+dBD
-	 2982+1sYXPgiD2P1USZuTMyQkIFIHKDm/WQRJlsSjgmUtH7l53k/rQTwomvycXa10p
-	 5dl92dqDvB2AuL13SeW58+AtlYuGIwv5Y8YAZyVCgXid1Bx0Y7SxUlbJd4cTG9IgLT
-	 yTcFywZ/SB7eec8nG8iIqLus/Sid92rTf5ShdKG3p9ImGjKPLq15EV+J3KDP/TlzjA
-	 z8jr399lFk1KQ==
-Received: from mercury (cola.collaboradmins.com [195.201.22.229])
+	s=arc-20240116; t=1713643298; c=relaxed/simple;
+	bh=4xgw46KEtZnT9GMEWjwss10m249evoF6JijhofbNk+0=;
+	h=Message-ID:From:Date:Subject:To:Cc; b=Z67eGNr4eGMEm2K2tzbuyzNSULCpORmXH9hP3d34hP/8JpRkd7dJ66N63V9BhRYin6Kj5TgE54h+veOjif/Fq/qREs3Fw96R9AgsRXO07cuu6Soy45HSk2ZnT/5RqCISFI5wag39h+ZNs6yVACzCV8oBQ0YhnfY6zo+HoDZh2LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sre)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4A88E3782145;
-	Fri, 19 Apr 2024 11:14:50 +0000 (UTC)
-Received: by mercury (Postfix, from userid 1000)
-	id E4CBC106139F; Fri, 19 Apr 2024 13:14:49 +0200 (CEST)
-Date: Fri, 19 Apr 2024 13:14:49 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>, 
-	Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, =?utf-8?B?QW5kcsOp?= Apitzsch <git@apitzsch.eu>, 
-	linux-kernel@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>, 
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v6 4/5] power: supply: power-supply-leds: Add
- charging_orange_full_green trigger for RGB LED
-Message-ID: <ppwhxcsruclsdrvd6gfxwan3so2shtxyarml5rgi6fo4ukb7bi@a4b5acxh3w65>
-References: <20240416053909.256319-1-hpa@redhat.com>
- <20240416053909.256319-5-hpa@redhat.com>
- <sjhe7jvzvrlthf42lipnsnooh3z7vczdcruupsbstmpiujprze@jxwc3lquzvki>
- <a9e8759e-4d30-4923-bcfd-4cd133fe950d@redhat.com>
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id C6E382800C99F;
+	Sat, 20 Apr 2024 22:01:24 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id BF393CC625; Sat, 20 Apr 2024 22:01:24 +0200 (CEST)
+Message-ID: <cover.1713608122.git.lukas@wunner.de>
+From: Lukas Wunner <lukas@wunner.de>
+Date: Sat, 20 Apr 2024 22:00:00 +0200
+Subject: [PATCH 0/6] Deduplicate string exposure in sysfs
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, linux-rdma@vger.kernel.org, Shuai Xue <xueshuai@linux.alibaba.com>, Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, Yicong Yang <yangyicong@hisilicon.com>, Jijie Shao <shaojijie@huawei.com>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, Khuong Dinh <khuong@os.amperecomputing.com>, linux-arm-kernel@lists.infradead.org, Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>, "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, Azael Avalos <coproscefalo@gmail.com>, Hans de Goede <hdegoede@redhat.com>, "Ilpo Jaervinen" <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, Anil Gurumur
+ thy <anil.gurumurthy@qlogic.com>, Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>, Tyrel Datwyler <tyreld@linux.ibm.com>, Nilesh Javali <njavali@marvell.com>, GR-QLogic-Storage-Upstream@marvell.com, Don Brace <don.brace@microchip.com>, storagedev@microchip.com, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="m7iifoiplmzvvdow"
-Content-Disposition: inline
-In-Reply-To: <a9e8759e-4d30-4923-bcfd-4cd133fe950d@redhat.com>
+
+Introduce a generic ->show() callback to expose a string as a device
+attribute in sysfs.  Deduplicate various identical callbacks across
+the tree.
+
+Result:  Minus 216 LoC, minus 1576 bytes vmlinux size (x86_64 allyesconfig).
+
+This is a byproduct of my upcoming PCI device authentication v2 patches.
 
 
---m7iifoiplmzvvdow
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Lukas Wunner (6):
+  driver core: Add device_show_string() helper for sysfs attributes
+  hwmon: Use device_show_string() helper for sysfs attributes
+  IB/qib: Use device_show_string() helper for sysfs attributes
+  perf: Use device_show_string() helper for sysfs attributes
+  platform/x86: Use device_show_string() helper for sysfs attributes
+  scsi: Use device_show_string() helper for sysfs attributes
 
-Hi,
+ arch/powerpc/perf/hv-24x7.c              | 10 ----
+ arch/x86/events/intel/core.c             | 13 ++---
+ drivers/base/core.c                      |  9 ++++
+ drivers/hwmon/i5k_amb.c                  | 15 ++----
+ drivers/hwmon/ibmpex.c                   | 14 ++----
+ drivers/infiniband/hw/qib/qib.h          |  1 -
+ drivers/infiniband/hw/qib/qib_driver.c   |  6 ---
+ drivers/infiniband/hw/qib/qib_sysfs.c    | 10 +---
+ drivers/perf/alibaba_uncore_drw_pmu.c    | 12 +----
+ drivers/perf/arm-cci.c                   | 12 +----
+ drivers/perf/arm-ccn.c                   | 11 +----
+ drivers/perf/arm_cspmu/arm_cspmu.c       | 10 ----
+ drivers/perf/arm_cspmu/arm_cspmu.h       |  7 +--
+ drivers/perf/arm_dsu_pmu.c               | 11 +----
+ drivers/perf/cxl_pmu.c                   | 13 +----
+ drivers/perf/hisilicon/hisi_pcie_pmu.c   | 13 +----
+ drivers/perf/hisilicon/hisi_uncore_pmu.c | 14 ------
+ drivers/perf/hisilicon/hisi_uncore_pmu.h |  4 +-
+ drivers/perf/hisilicon/hns3_pmu.c        | 12 +----
+ drivers/perf/qcom_l3_pmu.c               | 11 +----
+ drivers/perf/xgene_pmu.c                 | 11 +----
+ drivers/platform/x86/asus-wmi.c          | 62 ++++++------------------
+ drivers/platform/x86/thinkpad_acpi.c     | 10 +---
+ drivers/platform/x86/toshiba_acpi.c      |  9 +---
+ drivers/scsi/bfa/bfad_attr.c             | 28 +++--------
+ drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c | 11 +----
+ drivers/scsi/mvsas/mv_init.c             | 10 +---
+ drivers/scsi/qla2xxx/qla_attr.c          | 11 +----
+ drivers/scsi/smartpqi/smartpqi_init.c    | 11 ++---
+ include/linux/device.h                   | 15 ++++++
+ 30 files changed, 85 insertions(+), 301 deletions(-)
 
-On Fri, Apr 19, 2024 at 09:37:56AM +0200, Hans de Goede wrote:
-> On 4/18/24 2:34 PM, Sebastian Reichel wrote:
-> > On Tue, Apr 16, 2024 at 01:39:08PM +0800, Kate Hsuan wrote:
-> >> Add a charging_orange_full_green LED trigger and the trigger is based =
-on
-> >> led_mc_trigger_event() which can set an RGB LED when the trigger is
-> >> triggered. The LED will show orange when the battery status is chargin=
-g.
-> >> The LED will show green when the battery status is full.
-> >>
-> >> Link: https://lore.kernel.org/linux-leds/f40a0b1a-ceac-e269-c2dd-0158c=
-5b4a1ad@gmail.com/
-> >>
-> >> Signed-off-by: Kate Hsuan <hpa@redhat.com>
-> >> ---
-> >=20
-> > Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
->=20
-> Thanks. Does this mean your ok with routing this change through the LED t=
-ree
-> together with the 2 LED core patches adding the new led_mc_trigger_event()
-> function this uses ?
+-- 
+2.43.0
 
-Yes.
-
--- Sebastian
-
---m7iifoiplmzvvdow
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmYiUiUACgkQ2O7X88g7
-+prOFQ//TjbtkQ0OJWGd6ZCuFNOVohJ1IEGplVxLSx6KRXskQ32PZ9P1gcH7irdF
-DShkzHdkeb7M7HmX15+34nuqVQF67HM3lpjmnk1jTzzV+fEy5gUiL/vGvvW/zXQ5
-Lf66FfWVW0AJRn9/Rdr8HF9VlS6UWhTzgGC6+x3+1OPUm+zVxC/PV9/68a/bF8rv
-RaDvyor5NbEIi5RuJzw+Zkl3gzoQNgc0kG5JUEtlGYhP5wGMdDsJLShAy3KxMKMc
-b8SsPw7xeoJjU6NJog3yTwqDFtjHDYaGB68d1LQJyyNUNI3kwl1ZbmP4XuD2W1B4
-ChfWvuyhD+O/L5D9SClmEdfWHatATMpiAcNLWMcyCla0E5f1T/zOqlqDLZpxLMx+
-heEV5G/ZUHXBQjh6xnGd0TvVf8ikroJQaFKn48zGYLhSK0ve+/h4hMLADUm7lHlb
-Ef3+/5c4Y5h7ropk4yLLgN9NBy59lqXXesELGnDF7F5+mM2wEoRlwT7+8y/Olh8Q
-OwKl0DY2hmlLjOOick2y/IW3spmdIp39vy5A4JIwWywuMPRR6PJ4pqP6IZ8Ow2Lb
-17chbX8TJNu+YXxL+/SxrujcvyuY8e+742pSZYWKaJNHIi/yskHOg2155clAuD3D
-k/pCp43naYDabsiqKZQRcN3BRIE5tAo792W76qBnniIUWKHdTb4=
-=ClyY
------END PGP SIGNATURE-----
-
---m7iifoiplmzvvdow--
