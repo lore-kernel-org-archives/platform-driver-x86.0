@@ -1,45 +1,45 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458073D66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4583C17BA2
 	for <platform-driver-x86@vger.kernel.org>; Sun, 21 Apr 2024 15:45:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713714342; cv=none; b=Vkbstft4kE5n5yGCFlZ3kg4EBQheJWzDXyOYioUiMV9ouI0U2lLXJaTwMLgov5SEwIJrvIZuZ3fowJbyQytP7nRNzCw2ggL9qdE7ojHVHl7vVgCDYFmCrMK8SN49IXjEzW0ZsMyM/lrxxoXHRpTka1OUqO2enXcAUJOjThC3h/4=
+	t=1713714344; cv=none; b=hWujksxIJNZ8WI5wCQFvqrgWDuizZ19c0dMyC05R/4DJs9/KGChyukweLsK3N/Etj0v1nc2tq4kdfm7+7SYrCzGH9p4P4Z+aggEaUZgyVhoNiXg+6Oea117C6bnIBo2h5Mag4XSW54hyD6kQzI33AiI2FDYskBz/OzkNr1dKzyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713714342; c=relaxed/simple;
-	bh=nrx7tzZtMQ8lY4Vh0wEzhi5M/T34DmhMxsxfxtFbzRA=;
+	s=arc-20240116; t=1713714344; c=relaxed/simple;
+	bh=8c4dQWJTMNm8tij1yVZNP3a3xbcM+4p2UVOulti9tKA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rURTKwiZ29D0FlGN4711QdhbvpvIJ6dikbWbCOgnTXUs6BDVcPOkg+9SMlhj0y2h4pmLPV0JaiGFUjxs39SjmIJiCA7Ey6pNCagfE48twU1brS3zBhArNnQWgV4/M/oGLw6RCkexlwIj7Q5/sxztFEBnnB3mY4r56++cF2Jaxco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g3/w8/Bn; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=qs4xA1EXOaXqFHT58DjRoKWXRFJyn3p+ofPMR9dCllnU5QmDFQ2KCNid/3neiGuQE+xR4VFK9sMgCnlM3gdzfoMiPHjS4Ecj30qqE269BD/w9SdfvDx/16udGbPqRncNOCG7FTMWvjuDr6YwZHBEZISloK/Qtu3ZgY3wdqN7rBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i6Yyu72p; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g3/w8/Bn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i6Yyu72p"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713714340;
+	s=mimecast20190719; t=1713714339;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fuG5/FiMeJxxWLVKewZftLA5M7sA1AJN6R27AAxM6lk=;
-	b=g3/w8/BnRmgHDZXiJedDcQRX/LHtBRE0weGUtOklHWeGK2StSHE8pAmH2xaLTBLqx9kXpj
-	nQi3vVQ+Nh865fjqsws7sfK1dueNFfrA6mDIpf4Tc1JBNb0elYPhZ0GlEN9S2Jfqxz54bL
-	8i8iSNEUrh0VIn3TsF+frXoCTElYJPw=
+	bh=OsjauILosSwsdrban+b3pKebhm2tdkEwIbD6csXmSwY=;
+	b=i6Yyu72paswUC7HqJowds6j4Xsk9Gkz+KbgOrvG+imB65z+etF9EEDTzusdOi4XVFuFYMt
+	Mk+Qex8+kPqgjc4RNFHfDammG08m1QAeK4f9l56+6o/N1yUFMqYelPAdkPSrcdeZIGmNuZ
+	LYOEpD+SYix4RNMKNC2GrjtGpd5hAV8=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-114-GNHxUrG_MAWYizY2M7oFFw-1; Sun, 21 Apr 2024 11:45:36 -0400
-X-MC-Unique: GNHxUrG_MAWYizY2M7oFFw-1
+ us-mta-96-_lPldDwnN8-4IWetk47L4Q-1; Sun, 21 Apr 2024 11:45:32 -0400
+X-MC-Unique: _lPldDwnN8-4IWetk47L4Q-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5E0E01011351;
-	Sun, 21 Apr 2024 15:45:36 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2CCE789A245;
+	Sun, 21 Apr 2024 15:45:31 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.192.66])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 4265D40357A7;
-	Sun, 21 Apr 2024 15:45:35 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 12BF040357A7;
+	Sun, 21 Apr 2024 15:45:29 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Andy Shevchenko <andy@kernel.org>,
@@ -50,9 +50,9 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	Nitin Joshi <njoshi1@lenovo.com>,
 	ibm-acpi-devel@lists.sourceforge.net,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH 07/24] platform/x86: thinkpad_acpi: Make tpacpi_driver_event() return if it handled the event
-Date: Sun, 21 Apr 2024 17:45:03 +0200
-Message-ID: <20240421154520.37089-8-hdegoede@redhat.com>
+Subject: [PATCH 03/24] platform/x86: thinkpad_acpi: Drop setting send_/ignore_acpi_ev defaults twice
+Date: Sun, 21 Apr 2024 17:44:59 +0200
+Message-ID: <20240421154520.37089-4-hdegoede@redhat.com>
 In-Reply-To: <20240421154520.37089-1-hdegoede@redhat.com>
 References: <20240421154520.37089-1-hdegoede@redhat.com>
 Precedence: bulk
@@ -64,179 +64,99 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-tpacpi_driver_event() already only responds to hkey events which it knows
-about. Make it return a bool and return true when it has handled the event.
-
-This avoids the need to list TP_HKEY_EV_foo values to which it responds
-both in its caller and in the function itself.
-
-Instead callers can now call it unconditionally and check the return value.
+send_acpi_ev, ignore_acpi_ev are already initialized to true resp. false by
+hotkey_notify() before calling the various helpers. Drop the needless
+re-initialization from the helpers.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 115 ++++++++++++++-------------
- 1 file changed, 61 insertions(+), 54 deletions(-)
+ drivers/platform/x86/thinkpad_acpi.c | 24 +++++-------------------
+ 1 file changed, 5 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index c009885c8820..0bbc462d604c 100644
+index fc5681808c3b..007223fded30 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -1918,7 +1918,7 @@ static u32 hotkey_acpi_mask;		/* events enabled in firmware */
- 
- static u16 *hotkey_keycode_map;
- 
--static void tpacpi_driver_event(const unsigned int hkey_event);
-+static bool tpacpi_driver_event(const unsigned int hkey_event);
- static void hotkey_driver_event(const unsigned int scancode);
- static void hotkey_poll_setup(const bool may_warn);
- 
-@@ -3726,13 +3726,8 @@ static bool adaptive_keyboard_hotkey_notify_hotkey(const u32 hkey)
- 
- static bool hotkey_notify_extended_hotkey(const u32 hkey)
- {
--	switch (hkey) {
--	case TP_HKEY_EV_PRIVACYGUARD_TOGGLE:
--	case TP_HKEY_EV_AMT_TOGGLE:
--	case TP_HKEY_EV_PROFILE_TOGGLE:
--		tpacpi_driver_event(hkey);
-+	if (tpacpi_driver_event(hkey))
- 		return true;
--	}
- 
- 	if (hkey >= TP_HKEY_EV_EXTENDED_KEY_START &&
- 	    hkey <= TP_HKEY_EV_EXTENDED_KEY_END) {
-@@ -11081,72 +11076,84 @@ static struct platform_driver tpacpi_hwmon_pdriver = {
-  * HKEY event callout for other subdrivers go here
-  * (yes, it is ugly, but it is quick, safe, and gets the job done
-  */
--static void tpacpi_driver_event(const unsigned int hkey_event)
-+static bool tpacpi_driver_event(const unsigned int hkey_event)
- {
--	if (ibm_backlight_device) {
--		switch (hkey_event) {
--		case TP_HKEY_EV_BRGHT_UP:
--		case TP_HKEY_EV_BRGHT_DOWN:
-+	switch (hkey_event) {
-+	case TP_HKEY_EV_BRGHT_UP:
-+	case TP_HKEY_EV_BRGHT_DOWN:
-+		if (ibm_backlight_device)
- 			tpacpi_brightness_notify_change();
--		}
--	}
--	if (alsa_card) {
--		switch (hkey_event) {
--		case TP_HKEY_EV_VOL_UP:
--		case TP_HKEY_EV_VOL_DOWN:
--		case TP_HKEY_EV_VOL_MUTE:
--			volume_alsa_notify_change();
--		}
--	}
--	if (tp_features.kbdlight && hkey_event == TP_HKEY_EV_KBD_LIGHT) {
--		enum led_brightness brightness;
--
--		mutex_lock(&kbdlight_mutex);
--
- 		/*
--		 * Check the brightness actually changed, setting the brightness
--		 * through kbdlight_set_level() also triggers this event.
-+		 * Key press events are suppressed by default hotkey_user_mask
-+		 * and should still be reported if explicitly requested.
- 		 */
--		brightness = kbdlight_sysfs_get(NULL);
--		if (kbdlight_brightness != brightness) {
--			kbdlight_brightness = brightness;
--			led_classdev_notify_brightness_hw_changed(
--				&tpacpi_led_kbdlight.led_classdev, brightness);
-+		return false;
-+	case TP_HKEY_EV_VOL_UP:
-+	case TP_HKEY_EV_VOL_DOWN:
-+	case TP_HKEY_EV_VOL_MUTE:
-+		if (alsa_card)
-+			volume_alsa_notify_change();
-+
-+		/* Key events are suppressed by default hotkey_user_mask */
-+		return false;
-+	case TP_HKEY_EV_KBD_LIGHT:
-+		if (tp_features.kbdlight) {
-+			enum led_brightness brightness;
-+
-+			mutex_lock(&kbdlight_mutex);
-+
-+			/*
-+			 * Check the brightness actually changed, setting the brightness
-+			 * through kbdlight_set_level() also triggers this event.
-+			 */
-+			brightness = kbdlight_sysfs_get(NULL);
-+			if (kbdlight_brightness != brightness) {
-+				kbdlight_brightness = brightness;
-+				led_classdev_notify_brightness_hw_changed(
-+					&tpacpi_led_kbdlight.led_classdev, brightness);
-+			}
-+
-+			mutex_unlock(&kbdlight_mutex);
- 		}
--
--		mutex_unlock(&kbdlight_mutex);
--	}
--
--	if (hkey_event == TP_HKEY_EV_THM_CSM_COMPLETED) {
-+		/* Key events are suppressed by default hotkey_user_mask */
-+		return false;
-+	case TP_HKEY_EV_THM_CSM_COMPLETED:
- 		lapsensor_refresh();
- 		/* If we are already accessing DYTC then skip dytc update */
- 		if (!atomic_add_unless(&dytc_ignore_event, -1, 0))
- 			dytc_profile_refresh();
--	}
- 
--	if (lcdshadow_dev && hkey_event == TP_HKEY_EV_PRIVACYGUARD_TOGGLE) {
--		enum drm_privacy_screen_status old_hw_state;
--		bool changed;
-+		return true;
-+	case TP_HKEY_EV_PRIVACYGUARD_TOGGLE:
-+		if (lcdshadow_dev) {
-+			enum drm_privacy_screen_status old_hw_state;
-+			bool changed;
- 
--		mutex_lock(&lcdshadow_dev->lock);
--		old_hw_state = lcdshadow_dev->hw_state;
--		lcdshadow_get_hw_state(lcdshadow_dev);
--		changed = lcdshadow_dev->hw_state != old_hw_state;
--		mutex_unlock(&lcdshadow_dev->lock);
-+			mutex_lock(&lcdshadow_dev->lock);
-+			old_hw_state = lcdshadow_dev->hw_state;
-+			lcdshadow_get_hw_state(lcdshadow_dev);
-+			changed = lcdshadow_dev->hw_state != old_hw_state;
-+			mutex_unlock(&lcdshadow_dev->lock);
- 
--		if (changed)
--			drm_privacy_screen_call_notifier_chain(lcdshadow_dev);
--	}
--	if (hkey_event == TP_HKEY_EV_AMT_TOGGLE) {
-+			if (changed)
-+				drm_privacy_screen_call_notifier_chain(lcdshadow_dev);
-+		}
-+		return true;
-+	case TP_HKEY_EV_AMT_TOGGLE:
- 		/* If we're enabling AMT we need to force balanced mode */
- 		if (!dytc_amt_active)
- 			/* This will also set AMT mode enabled */
- 			dytc_profile_set(NULL, PLATFORM_PROFILE_BALANCED);
- 		else
- 			dytc_control_amt(!dytc_amt_active);
--	}
--	if (hkey_event == TP_HKEY_EV_PROFILE_TOGGLE)
-+
-+		return true;
-+	case TP_HKEY_EV_PROFILE_TOGGLE:
- 		platform_profile_cycle();
-+		return true;
-+	}
-+
-+	return false;
+@@ -3754,14 +3754,12 @@ static bool hotkey_notify_extended_hotkey(const u32 hkey)
+ 	return false;
  }
  
- static void hotkey_driver_event(const unsigned int scancode)
++/* 0x1000-0x1FFF: key presses */
+ static bool hotkey_notify_hotkey(const u32 hkey,
+ 				 bool *send_acpi_ev,
+ 				 bool *ignore_acpi_ev)
+ {
+-	/* 0x1000-0x1FFF: key presses */
+ 	unsigned int scancode = hkey & 0xfff;
+-	*send_acpi_ev = true;
+-	*ignore_acpi_ev = false;
+ 
+ 	/*
+ 	 * Original events are in the 0x10XX range, the adaptive keyboard
+@@ -3794,14 +3792,11 @@ static bool hotkey_notify_hotkey(const u32 hkey,
+ 	return false;
+ }
+ 
++/* 0x2000-0x2FFF: Wakeup reason */
+ static bool hotkey_notify_wakeup(const u32 hkey,
+ 				 bool *send_acpi_ev,
+ 				 bool *ignore_acpi_ev)
+ {
+-	/* 0x2000-0x2FFF: Wakeup reason */
+-	*send_acpi_ev = true;
+-	*ignore_acpi_ev = false;
+-
+ 	switch (hkey) {
+ 	case TP_HKEY_EV_WKUP_S3_UNDOCK: /* suspend, undock */
+ 	case TP_HKEY_EV_WKUP_S4_UNDOCK: /* hibernation, undock */
+@@ -3834,14 +3829,11 @@ static bool hotkey_notify_wakeup(const u32 hkey,
+ 	return true;
+ }
+ 
++/* 0x4000-0x4FFF: dock-related events */
+ static bool hotkey_notify_dockevent(const u32 hkey,
+ 				 bool *send_acpi_ev,
+ 				 bool *ignore_acpi_ev)
+ {
+-	/* 0x4000-0x4FFF: dock-related events */
+-	*send_acpi_ev = true;
+-	*ignore_acpi_ev = false;
+-
+ 	switch (hkey) {
+ 	case TP_HKEY_EV_UNDOCK_ACK:
+ 		/* ACPI undock operation completed after wakeup */
+@@ -3879,14 +3871,11 @@ static bool hotkey_notify_dockevent(const u32 hkey,
+ 	}
+ }
+ 
++/* 0x5000-0x5FFF: human interface helpers */
+ static bool hotkey_notify_usrevent(const u32 hkey,
+ 				 bool *send_acpi_ev,
+ 				 bool *ignore_acpi_ev)
+ {
+-	/* 0x5000-0x5FFF: human interface helpers */
+-	*send_acpi_ev = true;
+-	*ignore_acpi_ev = false;
+-
+ 	switch (hkey) {
+ 	case TP_HKEY_EV_PEN_INSERTED:  /* X61t: tablet pen inserted into bay */
+ 	case TP_HKEY_EV_PEN_REMOVED:   /* X61t: tablet pen removed from bay */
+@@ -3914,14 +3903,11 @@ static bool hotkey_notify_usrevent(const u32 hkey,
+ static void thermal_dump_all_sensors(void);
+ static void palmsensor_refresh(void);
+ 
++/* 0x6000-0x6FFF: thermal alarms/notices and keyboard events */
+ static bool hotkey_notify_6xxx(const u32 hkey,
+ 				 bool *send_acpi_ev,
+ 				 bool *ignore_acpi_ev)
+ {
+-	/* 0x6000-0x6FFF: thermal alarms/notices and keyboard events */
+-	*send_acpi_ev = true;
+-	*ignore_acpi_ev = false;
+-
+ 	switch (hkey) {
+ 	case TP_HKEY_EV_THM_TABLE_CHANGED:
+ 		pr_debug("EC reports: Thermal Table has changed\n");
 -- 
 2.44.0
 
