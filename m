@@ -1,255 +1,140 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550ED374F7;
-	Sat, 20 Apr 2024 20:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3521A205E22;
+	Sun, 21 Apr 2024 03:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713643657; cv=none; b=vDjbuslxXaL1qvoPU3wJZAIftTSAnL7UNHUtzGnUavanwbYy+xUg+DzzcPcTOJ8Qw7ZrgflZo+n/GoGMBVm3PYHTUZcEvqQTH1HEVjqNzvPJ2KHk3voLiSoeUlrBpgRrSoikkTZtYMZudgfWLf4lpMtV6vBKA6uSf3FzpQcP6EA=
+	t=1713670396; cv=none; b=J7eExWsMy+HSPD0XzNnEDsthd8NlJIB67gTjUpDMs2xtJ9vR9TPAWfWWSsaHVOfsIC1ymYdMfJdWxRTc2dLimhtxZNGoj+7kS8UV4at8RkyUYaeVCMp/+8HkZoOENQ8mMZQh8xeTkGadOcq16Vmq8MH1qWl0+g6DcalcAR8y//c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713643657; c=relaxed/simple;
-	bh=N2bafYYP+b4kw+NKMOsMMvGGjOuIQlEGeTYftOJBCZI=;
-	h=Message-ID:In-Reply-To:References:From:Date:Subject:To:Cc; b=tTpcRCUH0nok4yFmBvxOBwMSjB0N0rpdhbWKJZYWyJozqPM9e2iPkCf06Pe+tfPA9b53g9KuHrJ31f/5e7+19aqYXk5ZhrRTbEBTjBWfs3yDZcqcFsxqErKC/769LqySr4Bz4pbNzo5omTk65EWmMO5UjecGX6fF+oXphM2HW0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id ED4D01003D027;
-	Sat, 20 Apr 2024 22:07:32 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id C669A1D3F8; Sat, 20 Apr 2024 22:07:32 +0200 (CEST)
-Message-ID: <3ae8c9a73fbb291c1c863777af175c657a2a10e9.1713608122.git.lukas@wunner.de>
-In-Reply-To: <cover.1713608122.git.lukas@wunner.de>
-References: <cover.1713608122.git.lukas@wunner.de>
-From: Lukas Wunner <lukas@wunner.de>
-Date: Sat, 20 Apr 2024 22:00:05 +0200
-Subject: [PATCH 5/6] platform/x86: Use device_show_string() helper for sysfs
- attributes
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org
-Cc: Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>, "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, Azael Avalos <coproscefalo@gmail.com>, Hans de Goede <hdegoede@redhat.com>, "Ilpo Jaervinen" <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org
+	s=arc-20240116; t=1713670396; c=relaxed/simple;
+	bh=2wGoBsP6PzGZdr0dF6/8wwx8vJ80lvo1VMdDLh+ZaHY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nHNx5EBnrUdZucC70E5DP9C1Rue67MJ0aogI10E4WVqzOjhGJhOcVoETxpHDggmM0Bw51kTtbhMiqdGt1GHTc5rAJnj0IAnMGLRCPyxl3UUJFkj9PnL+BdlgPyAWGaewVtI0ljU7iBXICghyy1OX1ZEhH3ce6Swe86JWSGLTV50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZPXriNdq; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZPXriNdq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713670392; x=1745206392;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2wGoBsP6PzGZdr0dF6/8wwx8vJ80lvo1VMdDLh+ZaHY=;
+  b=ZPXriNdqyLNBJEJaSODk4/8mxnLmBJExywuyoWqW56ERyNut2REFCkHE
+   Go8w6pWdaSaxrliSpIUXbv9kcBE8+sqbmLn/KXT+sy5/3NMhFwrMHsnci
+   bi0I8NW4ZitQsR0MKFL+OooOTKN6KK51U5ebo+Bdx0mLU83iYo8wZutzm
+   taxKqfccOCWz85Vzv9nQlvTi5ZMJpH+eyX4fd3rEmO6spxgHqxB75Rl2m
+   WkFidhiZCSQQITR+WH4Ui6f+L0Zywy2qAJO3JeDUXy7fAXKFlMTUCqlvX
+   8S+JcDK3HfmHNiDeCJYqF7I3qOwV8gU3t+8Ou0RTLAocz36yEN/hEV4IF
+   w==;
+X-CSE-ConnectionGUID: lEaCESP+Sqie6jlollFPcw==
+X-CSE-MsgGUID: k7Xp2aqvT7u7LwaZNSKLHw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11050"; a="31715546"
+X-IronPort-AV: E=Sophos;i="6.07,217,1708416000"; 
+   d="scan'208";a="31715546"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2024 20:33:11 -0700
+X-CSE-ConnectionGUID: 2OlAjcfJRt2fW/MzsH2jJw==
+X-CSE-MsgGUID: +eJRpfAvSV6+wAapHyc8gw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,217,1708416000"; 
+   d="scan'208";a="28501483"
+Received: from unknown (HELO 23c141fc0fd8) ([10.239.97.151])
+  by orviesa004.jf.intel.com with ESMTP; 20 Apr 2024 20:33:09 -0700
+Received: from kbuild by 23c141fc0fd8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ryNww-000Bex-0G;
+	Sun, 21 Apr 2024 03:33:06 +0000
+Date: Sun, 21 Apr 2024 11:32:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>, hdegoede@redhat.com
+Cc: oe-kbuild-all@lists.linux.dev, corentin.chary@gmail.com,
+	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org, "Luke D . Jones" <luke@ljones.dev>,
+	Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
+Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: add support for vivobook
+ fan profiles
+Message-ID: <202404211141.mYHti4dq-lkp@intel.com>
+References: <20240418214727.10658-2-mohamed.ghanmi@supcom.tn>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240418214727.10658-2-mohamed.ghanmi@supcom.tn>
 
-Deduplicate sysfs ->show() callbacks which expose a string at a static
-memory location.  Use the newly introduced device_show_string() helper
-in the driver core instead by declaring those sysfs attributes with
-DEVICE_STRING_ATTR_RO().
+Hi Mohamed,
 
-No functional change intended.
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
----
- drivers/platform/x86/asus-wmi.c      | 62 +++++++---------------------
- drivers/platform/x86/thinkpad_acpi.c | 10 +----
- drivers/platform/x86/toshiba_acpi.c  |  9 +---
- 3 files changed, 20 insertions(+), 61 deletions(-)
+[auto build test ERROR on next-20240418]
+[cannot apply to linus/master v6.9-rc4 v6.9-rc3 v6.9-rc2 v6.9-rc4]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 3f07bbf809ef..78d7579b2fdd 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -915,17 +915,12 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
- }
- static DEVICE_ATTR_WO(kbd_rgb_mode);
- 
--static ssize_t kbd_rgb_mode_index_show(struct device *device,
--						 struct device_attribute *attr,
--						 char *buf)
--{
--	return sysfs_emit(buf, "%s\n", "cmd mode red green blue speed");
--}
--static DEVICE_ATTR_RO(kbd_rgb_mode_index);
-+static DEVICE_STRING_ATTR_RO(kbd_rgb_mode_index, 0444,
-+			     "cmd mode red green blue speed");
- 
- static struct attribute *kbd_rgb_mode_attrs[] = {
- 	&dev_attr_kbd_rgb_mode.attr,
--	&dev_attr_kbd_rgb_mode_index.attr,
-+	&dev_attr_kbd_rgb_mode_index.attr.attr,
- 	NULL,
- };
- 
-@@ -967,17 +962,12 @@ static ssize_t kbd_rgb_state_store(struct device *dev,
- }
- static DEVICE_ATTR_WO(kbd_rgb_state);
- 
--static ssize_t kbd_rgb_state_index_show(struct device *device,
--						 struct device_attribute *attr,
--						 char *buf)
--{
--	return sysfs_emit(buf, "%s\n", "cmd boot awake sleep keyboard");
--}
--static DEVICE_ATTR_RO(kbd_rgb_state_index);
-+static DEVICE_STRING_ATTR_RO(kbd_rgb_state_index, 0444,
-+			     "cmd boot awake sleep keyboard");
- 
- static struct attribute *kbd_rgb_state_attrs[] = {
- 	&dev_attr_kbd_rgb_state.attr,
--	&dev_attr_kbd_rgb_state_index.attr,
-+	&dev_attr_kbd_rgb_state_index.attr.attr,
- 	NULL,
- };
- 
-@@ -2493,13 +2483,6 @@ static ssize_t pwm1_enable_store(struct device *dev,
- 	return count;
- }
- 
--static ssize_t fan1_label_show(struct device *dev,
--					  struct device_attribute *attr,
--					  char *buf)
--{
--	return sysfs_emit(buf, "%s\n", ASUS_FAN_DESC);
--}
--
- static ssize_t asus_hwmon_temp1(struct device *dev,
- 				struct device_attribute *attr,
- 				char *buf)
-@@ -2534,13 +2517,6 @@ static ssize_t fan2_input_show(struct device *dev,
- 	return sysfs_emit(buf, "%d\n", value * 100);
- }
- 
--static ssize_t fan2_label_show(struct device *dev,
--					  struct device_attribute *attr,
--					  char *buf)
--{
--	return sysfs_emit(buf, "%s\n", ASUS_GPU_FAN_DESC);
--}
--
- /* Middle/Center fan on modern ROG laptops */
- static ssize_t fan3_input_show(struct device *dev,
- 					struct device_attribute *attr,
-@@ -2559,13 +2535,6 @@ static ssize_t fan3_input_show(struct device *dev,
- 	return sysfs_emit(buf, "%d\n", value * 100);
- }
- 
--static ssize_t fan3_label_show(struct device *dev,
--					  struct device_attribute *attr,
--					  char *buf)
--{
--	return sysfs_emit(buf, "%s\n", ASUS_MID_FAN_DESC);
--}
--
- static ssize_t pwm2_enable_show(struct device *dev,
- 				struct device_attribute *attr,
- 				char *buf)
-@@ -2662,15 +2631,16 @@ static ssize_t pwm3_enable_store(struct device *dev,
- static DEVICE_ATTR_RW(pwm1);
- static DEVICE_ATTR_RW(pwm1_enable);
- static DEVICE_ATTR_RO(fan1_input);
--static DEVICE_ATTR_RO(fan1_label);
-+static DEVICE_STRING_ATTR_RO(fan1_label, 0444, ASUS_FAN_DESC);
-+
- /* Fan2 - GPU fan */
- static DEVICE_ATTR_RW(pwm2_enable);
- static DEVICE_ATTR_RO(fan2_input);
--static DEVICE_ATTR_RO(fan2_label);
-+static DEVICE_STRING_ATTR_RO(fan2_label, 0444, ASUS_GPU_FAN_DESC);
- /* Fan3 - Middle/center fan */
- static DEVICE_ATTR_RW(pwm3_enable);
- static DEVICE_ATTR_RO(fan3_input);
--static DEVICE_ATTR_RO(fan3_label);
-+static DEVICE_STRING_ATTR_RO(fan3_label, 0444, ASUS_MID_FAN_DESC);
- 
- /* Temperature */
- static DEVICE_ATTR(temp1_input, S_IRUGO, asus_hwmon_temp1, NULL);
-@@ -2681,11 +2651,11 @@ static struct attribute *hwmon_attributes[] = {
- 	&dev_attr_pwm2_enable.attr,
- 	&dev_attr_pwm3_enable.attr,
- 	&dev_attr_fan1_input.attr,
--	&dev_attr_fan1_label.attr,
-+	&dev_attr_fan1_label.attr.attr,
- 	&dev_attr_fan2_input.attr,
--	&dev_attr_fan2_label.attr,
-+	&dev_attr_fan2_label.attr.attr,
- 	&dev_attr_fan3_input.attr,
--	&dev_attr_fan3_label.attr,
-+	&dev_attr_fan3_label.attr.attr,
- 
- 	&dev_attr_temp1_input.attr,
- 	NULL
-@@ -2702,17 +2672,17 @@ static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
- 		if (asus->fan_type != FAN_TYPE_AGFN)
- 			return 0;
- 	} else if (attr == &dev_attr_fan1_input.attr
--	    || attr == &dev_attr_fan1_label.attr
-+	    || attr == &dev_attr_fan1_label.attr.attr
- 	    || attr == &dev_attr_pwm1_enable.attr) {
- 		if (asus->fan_type == FAN_TYPE_NONE)
- 			return 0;
- 	} else if (attr == &dev_attr_fan2_input.attr
--	    || attr == &dev_attr_fan2_label.attr
-+	    || attr == &dev_attr_fan2_label.attr.attr
- 	    || attr == &dev_attr_pwm2_enable.attr) {
- 		if (asus->gpu_fan_type == FAN_TYPE_NONE)
- 			return 0;
- 	} else if (attr == &dev_attr_fan3_input.attr
--	    || attr == &dev_attr_fan3_label.attr
-+	    || attr == &dev_attr_fan3_label.attr.attr
- 	    || attr == &dev_attr_pwm3_enable.attr) {
- 		if (asus->mid_fan_type == FAN_TYPE_NONE)
- 			return 0;
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 82429e59999d..47a64a213d14 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -10991,13 +10991,7 @@ static struct ibm_struct auxmac_data = {
- 	.name = "auxmac",
- };
- 
--static ssize_t auxmac_show(struct device *dev,
--			   struct device_attribute *attr,
--			   char *buf)
--{
--	return sysfs_emit(buf, "%s\n", auxmac);
--}
--static DEVICE_ATTR_RO(auxmac);
-+static DEVICE_STRING_ATTR_RO(auxmac, 0444, auxmac);
- 
- static umode_t auxmac_attr_is_visible(struct kobject *kobj,
- 				      struct attribute *attr, int n)
-@@ -11006,7 +11000,7 @@ static umode_t auxmac_attr_is_visible(struct kobject *kobj,
- }
- 
- static struct attribute *auxmac_attributes[] = {
--	&dev_attr_auxmac.attr,
-+	&dev_attr_auxmac.attr.attr,
- 	NULL
- };
- 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 291f14ef6702..01cf60a015bf 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -1814,12 +1814,7 @@ static DECLARE_WORK(kbd_bl_work, toshiba_acpi_kbd_bl_work);
- /*
-  * Sysfs files
-  */
--static ssize_t version_show(struct device *dev,
--			    struct device_attribute *attr, char *buf)
--{
--	return sprintf(buf, "%s\n", TOSHIBA_ACPI_VERSION);
--}
--static DEVICE_ATTR_RO(version);
-+static DEVICE_STRING_ATTR_RO(version, 0444, TOSHIBA_ACPI_VERSION);
- 
- static ssize_t fan_store(struct device *dev,
- 			 struct device_attribute *attr,
-@@ -2428,7 +2423,7 @@ static ssize_t cooling_method_store(struct device *dev,
- static DEVICE_ATTR_RW(cooling_method);
- 
- static struct attribute *toshiba_attributes[] = {
--	&dev_attr_version.attr,
-+	&dev_attr_version.attr.attr,
- 	&dev_attr_fan.attr,
- 	&dev_attr_kbd_backlight_mode.attr,
- 	&dev_attr_kbd_type.attr,
+url:    https://github.com/intel-lab-lkp/linux/commits/Mohamed-Ghanmi/platform-x86-asus-wmi-add-support-for-vivobook-fan-profiles/20240419-055003
+base:   next-20240418
+patch link:    https://lore.kernel.org/r/20240418214727.10658-2-mohamed.ghanmi%40supcom.tn
+patch subject: [PATCH v2 1/1] platform/x86: asus-wmi: add support for vivobook fan profiles
+config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20240421/202404211141.mYHti4dq-lkp@intel.com/config)
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240421/202404211141.mYHti4dq-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404211141.mYHti4dq-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/platform/x86/asus-wmi.c: In function 'throttle_thermal_policy_store':
+>> drivers/platform/x86/asus-wmi.c:3730:56: error: 'asus' undeclared (first use in this function)
+    3730 |         u8 max_mode = throttle_thermal_policy_max_mode(asus);
+         |                                                        ^~~~
+   drivers/platform/x86/asus-wmi.c:3730:56: note: each undeclared identifier is reported only once for each function it appears in
+
+
+vim +/asus +3730 drivers/platform/x86/asus-wmi.c
+
+  3725	
+  3726	static ssize_t throttle_thermal_policy_store(struct device *dev,
+  3727					    struct device_attribute *attr,
+  3728					    const char *buf, size_t count)
+  3729	{
+> 3730		u8 max_mode = throttle_thermal_policy_max_mode(asus);
+  3731		struct asus_wmi *asus = dev_get_drvdata(dev);
+  3732		u8 new_mode;
+  3733		int result;
+  3734		int err;
+  3735	
+  3736		result = kstrtou8(buf, 10, &new_mode);
+  3737		if (result < 0)
+  3738			return result;
+  3739	
+  3740		if (new_mode > max_mode)
+  3741			return -EINVAL;
+  3742	
+  3743		asus->throttle_thermal_policy_mode = new_mode;
+  3744		err = throttle_thermal_policy_write(asus);
+  3745		if (err)
+  3746			return err;
+  3747	
+  3748		/*
+  3749		 * Ensure that platform_profile updates userspace with the change to ensure
+  3750		 * that platform_profile and throttle_thermal_policy_mode are in sync.
+  3751		 */
+  3752		platform_profile_notify();
+  3753	
+  3754		return count;
+  3755	}
+  3756	
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
