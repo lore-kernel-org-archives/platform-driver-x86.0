@@ -1,62 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3521A205E22;
-	Sun, 21 Apr 2024 03:33:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861B84C70;
+	Sun, 21 Apr 2024 03:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713670396; cv=none; b=J7eExWsMy+HSPD0XzNnEDsthd8NlJIB67gTjUpDMs2xtJ9vR9TPAWfWWSsaHVOfsIC1ymYdMfJdWxRTc2dLimhtxZNGoj+7kS8UV4at8RkyUYaeVCMp/+8HkZoOENQ8mMZQh8xeTkGadOcq16Vmq8MH1qWl0+g6DcalcAR8y//c=
+	t=1713671059; cv=none; b=Udw7smjQ2zerw+JzASV4tpTiCdgPoC8+aXIuuz6j4qTMQIH4m0PTx2jeG/0cnMWSFebz3mmC4Ag++wvTfhWsLV3JYcbLNEUc3PnC5eedSxvugW0iTU9z5n+Owx68B1oNoW8IExrkJj4orKyV+LZuy1KeGEt8T2fbmJ3K996Xrhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713670396; c=relaxed/simple;
-	bh=2wGoBsP6PzGZdr0dF6/8wwx8vJ80lvo1VMdDLh+ZaHY=;
+	s=arc-20240116; t=1713671059; c=relaxed/simple;
+	bh=7w0n391lEOJiB4Bkz9LUiRO65cvGXQ/0hj8tv7G2fJc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nHNx5EBnrUdZucC70E5DP9C1Rue67MJ0aogI10E4WVqzOjhGJhOcVoETxpHDggmM0Bw51kTtbhMiqdGt1GHTc5rAJnj0IAnMGLRCPyxl3UUJFkj9PnL+BdlgPyAWGaewVtI0ljU7iBXICghyy1OX1ZEhH3ce6Swe86JWSGLTV50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZPXriNdq; arc=none smtp.client-ip=198.175.65.9
+	 Content-Type:Content-Disposition:In-Reply-To; b=lFuefCoXP4o+6og2VghFeTjOhgxPmI9w5766+/QeRW22kvd5vU68XesQ5e8x8iWwbGFKjwrvhI5qHPQm6eY8PpqUNImQ24B9LZ3GmOBfAooL5nMak71+d3URXChdT8dvUSfsNU3ypMZJSxS3oPcwvnmXK/idBx1QuvsBLKONjrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l9WKXXjF; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZPXriNdq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l9WKXXjF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713670392; x=1745206392;
+  t=1713671055; x=1745207055;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=2wGoBsP6PzGZdr0dF6/8wwx8vJ80lvo1VMdDLh+ZaHY=;
-  b=ZPXriNdqyLNBJEJaSODk4/8mxnLmBJExywuyoWqW56ERyNut2REFCkHE
-   Go8w6pWdaSaxrliSpIUXbv9kcBE8+sqbmLn/KXT+sy5/3NMhFwrMHsnci
-   bi0I8NW4ZitQsR0MKFL+OooOTKN6KK51U5ebo+Bdx0mLU83iYo8wZutzm
-   taxKqfccOCWz85Vzv9nQlvTi5ZMJpH+eyX4fd3rEmO6spxgHqxB75Rl2m
-   WkFidhiZCSQQITR+WH4Ui6f+L0Zywy2qAJO3JeDUXy7fAXKFlMTUCqlvX
-   8S+JcDK3HfmHNiDeCJYqF7I3qOwV8gU3t+8Ou0RTLAocz36yEN/hEV4IF
-   w==;
-X-CSE-ConnectionGUID: lEaCESP+Sqie6jlollFPcw==
-X-CSE-MsgGUID: k7Xp2aqvT7u7LwaZNSKLHw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11050"; a="31715546"
+  bh=7w0n391lEOJiB4Bkz9LUiRO65cvGXQ/0hj8tv7G2fJc=;
+  b=l9WKXXjFwf+8smdBxl7Y8QpVdBI8vjscihlY9xkRi96U3o/gVQPYZP5Z
+   Q5vmomwfDUine7X85whUng8nUeQdC/K+vfpRiMrmaQqCSr+qtSyI4y1EB
+   OlAp9JE5fMIaLfv130EERsrKRCh7OsF1/5JeXOlsGUyczKBJkasuqFx+V
+   SOKg5iX2Ilo6lVilIragqj5GnSjlDlrs4du56enHOjhBVw4739nVSKsgA
+   vE2q+ogd1SL+Koq+OaX5gsCJWMIdsRJL8xpv4NwXZZBgynZvyLpH6sZ40
+   ePAI93LhSIzUTFZizjisvvpMtRkLVh90xL6kALPiupKF5u8xjTc4UboNk
+   g==;
+X-CSE-ConnectionGUID: ShkHpnZTTiCHNCPn205ZkQ==
+X-CSE-MsgGUID: pg59g6i9RmKEfFzSAUzPPg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11050"; a="20374178"
 X-IronPort-AV: E=Sophos;i="6.07,217,1708416000"; 
-   d="scan'208";a="31715546"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2024 20:33:11 -0700
-X-CSE-ConnectionGUID: 2OlAjcfJRt2fW/MzsH2jJw==
-X-CSE-MsgGUID: +eJRpfAvSV6+wAapHyc8gw==
+   d="scan'208";a="20374178"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2024 20:44:14 -0700
+X-CSE-ConnectionGUID: bhsNMk0ETOmtQirJyLeisA==
+X-CSE-MsgGUID: CrFy/DzhTk+NvEY3j8zkTg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,217,1708416000"; 
-   d="scan'208";a="28501483"
+   d="scan'208";a="23751069"
 Received: from unknown (HELO 23c141fc0fd8) ([10.239.97.151])
-  by orviesa004.jf.intel.com with ESMTP; 20 Apr 2024 20:33:09 -0700
+  by fmviesa010.fm.intel.com with ESMTP; 20 Apr 2024 20:44:11 -0700
 Received: from kbuild by 23c141fc0fd8 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1ryNww-000Bex-0G;
-	Sun, 21 Apr 2024 03:33:06 +0000
-Date: Sun, 21 Apr 2024 11:32:58 +0800
+	id 1ryO7c-000BfO-2g;
+	Sun, 21 Apr 2024 03:44:08 +0000
+Date: Sun, 21 Apr 2024 11:43:37 +0800
 From: kernel test robot <lkp@intel.com>
 To: Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>, hdegoede@redhat.com
-Cc: oe-kbuild-all@lists.linux.dev, corentin.chary@gmail.com,
-	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org, "Luke D . Jones" <luke@ljones.dev>,
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	corentin.chary@gmail.com, ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Luke D . Jones" <luke@ljones.dev>,
 	Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
 Subject: Re: [PATCH v2 1/1] platform/x86: asus-wmi: add support for vivobook
  fan profiles
-Message-ID: <202404211141.mYHti4dq-lkp@intel.com>
+Message-ID: <202404211110.YaZAJhfU-lkp@intel.com>
 References: <20240418214727.10658-2-mohamed.ghanmi@supcom.tn>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -82,22 +83,21 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Mohamed-Ghanmi/platform-x
 base:   next-20240418
 patch link:    https://lore.kernel.org/r/20240418214727.10658-2-mohamed.ghanmi%40supcom.tn
 patch subject: [PATCH v2 1/1] platform/x86: asus-wmi: add support for vivobook fan profiles
-config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20240421/202404211141.mYHti4dq-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240421/202404211141.mYHti4dq-lkp@intel.com/reproduce)
+config: x86_64-rhel-8.3-rust (https://download.01.org/0day-ci/archive/20240421/202404211110.YaZAJhfU-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240421/202404211110.YaZAJhfU-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404211141.mYHti4dq-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404211110.YaZAJhfU-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   drivers/platform/x86/asus-wmi.c: In function 'throttle_thermal_policy_store':
->> drivers/platform/x86/asus-wmi.c:3730:56: error: 'asus' undeclared (first use in this function)
+>> drivers/platform/x86/asus-wmi.c:3730:49: error: use of undeclared identifier 'asus'
     3730 |         u8 max_mode = throttle_thermal_policy_max_mode(asus);
-         |                                                        ^~~~
-   drivers/platform/x86/asus-wmi.c:3730:56: note: each undeclared identifier is reported only once for each function it appears in
+         |                                                        ^
+   1 error generated.
 
 
 vim +/asus +3730 drivers/platform/x86/asus-wmi.c
