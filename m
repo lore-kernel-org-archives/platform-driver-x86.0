@@ -1,352 +1,230 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92FE718042;
-	Mon, 22 Apr 2024 06:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57BD8405F9;
+	Mon, 22 Apr 2024 06:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713766158; cv=none; b=ArMV60QQZsyIqz0UwUhvMpHvPk/WfbsgMKU6FJD4XyZMxAbbG0xNL2uN0uoOmAqJVfZnDb4CKZ+SDo1aRrDvKvQjRYyG0rlOwF6Ws0hUBQJTeuQAD+UHm4UBxd90EPjtq1X7LiU55E8HgNRcMDSvBQKqtRIfDNYhmar5utksrhc=
+	t=1713767367; cv=none; b=q69LoSD7vsMMQ/7sjwOurUv6BH6LxZo8qaRZrOmB4aW5Ucls+qtPhp8RJ4KUKVWEhmH/qKDNrSJ/+CDRXVuAo7qZjNy7blmYaQbwjNWTHpuf8NEihWlRLF7SHtNny49g1FlLQ9Eg6snJjtgNhnWUGMgCBEJRB0Rg+upYzTCGCB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713766158; c=relaxed/simple;
-	bh=He0zbL0PU3S3TFQfRLYChmdyE6XrqZzNgLl89NZgNZI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=n9k1ORWeENagAI1M71LSNNZ/X1WD3HOwwEhHq8mki7BTlaK/MHqR03mseEP5fTiIFx/h1/2Eok4SOflHW4FMQGbSpFwYt7rfMUHH+CO6KseDVD+Z883jIzBsPPNRoXLM0SaFFI1NHSL8ikDSkoKvrVt8Gl1bGmLvSitsR1/+21g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Dvqp8S9J; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Dvqp8S9J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1713766128; x=1714370928; i=w_armin@gmx.de;
-	bh=WEN7aBRlN37FKl+bSkFenqf1s7tCuOCXoTIAUr90SiY=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Dvqp8S9JQQVINoWKocwqKcl7/zQP5yw+GhOsXvAp6ym7oXFFD/9MClFohBFr1Jes
-	 c1rcM5khVSp3TB3WB5Voc2rcgwW8zW69GCP8KNmuEjtcZLF5aoqv3KiA5vQKDuvw8
-	 SRjLNKt9h9TKpOKQyvuS5Qmq/cro+ixONJDrRCB/q5pGcmQ0BFmsbkRPJdUZgxT5d
-	 mhLY6UxYVmhXaY6FBiOF/3brGua0PDFPK7LW9AD4SmAPJpPZ/DqBpsG/P5DeSLFB+
-	 f2lzACxtmQMlH20dec85+5kG6UdUjmWt7PeLvu2CbslM3UC/dFRBapak2RD4IaaE3
-	 ulYX48qFU7dq9mOBwA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1My32F-1sv7VP04eV-00zZ98; Mon, 22 Apr 2024 08:08:48 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: mlj@danelec.com,
-	rafael.j.wysocki@intel.com,
-	lenb@kernel.org
-Cc: jdelvare@suse.com,
-	linux@roeck-us.net,
-	linux@weissschuh.net,
-	ilpo.jarvinen@linux.intel.com,
-	linux-acpi@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1713767367; c=relaxed/simple;
+	bh=HlzQh948S8sIzvNyBVPCB6monqUovoXIO4DHiPWGYRw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jYmXwQP+HKX1VN5859K5NaQSA8s/tbN/pA7oz9pzjXC3vnqLTMLoxmKxEUDq81oveZx0Lqnkgs8aE95bfjlxpu0/zoaTEuR46XCouPTZVNejCVP24PWqsmtiWPVEoytf3CIUeDqEVG4H504RndlI5PJSfTGbtQSEqo6DMAPpzgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: a51326be007111ef9305a59a3cc225df-20240422
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:d05a343c-c0ca-4f1c-8c97-b7c21f260929,IP:10,
+	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
+	TION:release,TS:-30
+X-CID-INFO: VERSION:1.1.37,REQID:d05a343c-c0ca-4f1c-8c97-b7c21f260929,IP:10,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-30
+X-CID-META: VersionHash:6f543d0,CLOUDID:75c230c35f4886e2cece48bf194582e1,BulkI
+	D:240422142917Q175OXDX,BulkQuantity:0,Recheck:0,SF:66|24|17|19|44|102,TC:n
+	il,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,CO
+	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED
+	SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
+	CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
+	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
+	ABX_MISS_RDNS
+X-UUID: a51326be007111ef9305a59a3cc225df-20240422
+X-User: jiangyunshui@kylinos.cn
+Received: from kylin-pc.. [(112.64.161.44)] by mailgw.kylinos.cn
+	(envelope-from <jiangyunshui@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1917057899; Mon, 22 Apr 2024 14:29:17 +0800
+From: yunshui <jiangyunshui@kylinos.cn>
+To: linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH RESEND v5] ACPI: fan: Add hwmon support
-Date: Mon, 22 Apr 2024 08:08:35 +0200
-Message-Id: <20240422060835.71708-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
+Cc: corentin.chary@gmail.com,
+	luke@ljones.dev,
+	ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com,
+	yunshui <jiangyunshui@kylinos.cn>,
+	Ai Chao <aichao@kylinos.cn>
+Subject: [PATCH v2] platform/x86: asus-laptop: Use sysfs_emit() and sysfs_emit_at() to replace sprintf()
+Date: Mon, 22 Apr 2024 14:29:15 +0800
+Message-Id: <20240422062915.3393480-1-jiangyunshui@kylinos.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:XymzL+xZUhXnHU/30jYAXRTwXlcY46UBJQeingUz2ca1mN4C7ge
- yMxO8lRdlIDEFi1xD9ceAwgytRR8gzouN92WO0sIrVEvXqaAbg+pAOKWbIS3mOfxTxAS5Q/
- eqrHqt9ugv0G5TDYrQsddsjau41ECQvSlIT7DgDHZDA6c0eP34a5fhTfzxnlKaahRO2D7aG
- hjtbXPBGWqpuzlpRAtyJw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:BrTNafZfKhA=;hT+tE1vUPXs/Zy4yarizHRAD9NZ
- XkdR1/7Kuk6clNTwQ3PHeiLHxN730CTpDpz0Nqgd63IL5VNqBNkRpDMPLP8/SAoe9HKH9nwpv
- DupNjgVL6A/oAtBV4CFm9CK2vC7n3nLcJblQBSNmx1i0F7MU0IBe29hg2o/wd0A1CjY1mGNkj
- u+lcgSwW+qVurmyUYU/rUbghsVgTSCp16w4xl9Or6Ha8Uj3hRNA4rnHuY9Yy7iqQAxTkHvs3t
- txIq/AUEZoSavtbTteT+ImVlJVKSQE1X+T4jRK5FMjpFgET8XRqAWx1gHpUUbUASxEytxCuYp
- Afjg4g+QHs5xSMaXHFe/aSVVHe1nQve7CxRsyjoBKtgOsNTM/yPLFkoy1F3hrAKOlu91dLShA
- rRZLChlPNJXrIryeW1qMJGnepNecBc9nlXL9hmLGuxlF3hL/TMM2QfaqrXeWWmKqVfr/17lpp
- F2oPAqzpEFAnZP1lAZdp/poAOlDWi8rl0xE8c7tdpo+x6R2tpp4U/bnHg7AJJcqmnNQ44NGhE
- JLHb6AZmQNjVfM3hddwB2KnXL3EdYTG+ZCS3OSYB1vuhjgiYLTfk4N6qLEGGDQSJ338Mzjzpm
- /avQ7cZTPnLhOnNornO2i1XPTJc5xuDl2LKW07HzeuNbTolYHAne/JGgOdcAcE/0OD5AMf8ck
- Mk+7hojHiNDOK/E1xC06lsNZLPoas8NMKYCj/8eow11WbfQDMYsDaaFwrxQ97rShSDWsHcntf
- 1z14famHpHhlw1n7gw1HccEAnpWadiGxmQq2A9a0eUBy+b1XcwEldZF3lsaaxzySIjRf17Aog
- fT2RQWeQRv/KonFVAJ4Er/ZRjFnqz9kZfT+dSOlOzy8CA=
+Content-Transfer-Encoding: 8bit
 
-Currently, the driver does only support a custom sysfs
-interface to allow userspace to read the fan speed.
-Add support for the standard hwmon interface so users
-can read the fan speed with standard tools like "sensors".
+As Documentation/filesystems/sysfs.rst suggested,
+show() should only use sysfs_emit() or sysfs_emit_at() when formatting
+the value to be returned to user space.
 
-Tested with a custom ACPI SSDT.
+Signed-off-by: yunshui <jiangyunshui@kylinos.cn>
+Signed-off-by: Ai Chao <aichao@kylinos.cn>
+---
+ drivers/platform/x86/asus-laptop.c | 44 +++++++++++++++---------------
+ 1 file changed, 22 insertions(+), 22 deletions(-)
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
-Changes since v4:
-- fix spelling issues
-- check power values for overflow condition too
-
-Changes since v3:
-- drop fault attrs
-- rework initialization
-
-Changes since v2:
-- add support for fanX_target and power attrs
-
-Changes since v1:
-- fix undefined reference error
-- fix fan speed validation
-- coding style fixes
-- clarify that the changes are compile-tested only
-- add hwmon maintainers to cc list
-=2D--
- drivers/acpi/Makefile    |   1 +
- drivers/acpi/fan.h       |   9 ++
- drivers/acpi/fan_core.c  |   4 +
- drivers/acpi/fan_hwmon.c | 173 +++++++++++++++++++++++++++++++++++++++
- 4 files changed, 187 insertions(+)
- create mode 100644 drivers/acpi/fan_hwmon.c
-
-diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
-index 39ea5cfa8326..61ca4afe83dc 100644
-=2D-- a/drivers/acpi/Makefile
-+++ b/drivers/acpi/Makefile
-@@ -77,6 +77,7 @@ obj-$(CONFIG_ACPI_TINY_POWER_BUTTON)	+=3D tiny-power-but=
-ton.o
- obj-$(CONFIG_ACPI_FAN)		+=3D fan.o
- fan-objs			:=3D fan_core.o
- fan-objs			+=3D fan_attr.o
-+fan-$(CONFIG_HWMON)		+=3D fan_hwmon.o
-
- obj-$(CONFIG_ACPI_VIDEO)	+=3D video.o
- obj-$(CONFIG_ACPI_TAD)		+=3D acpi_tad.o
-diff --git a/drivers/acpi/fan.h b/drivers/acpi/fan.h
-index f89d19c922dc..db25a3898af7 100644
-=2D-- a/drivers/acpi/fan.h
-+++ b/drivers/acpi/fan.h
-@@ -10,6 +10,8 @@
- #ifndef _ACPI_FAN_H_
- #define _ACPI_FAN_H_
-
-+#include <linux/kconfig.h>
-+
- #define ACPI_FAN_DEVICE_IDS	\
- 	{"INT3404", }, /* Fan */ \
- 	{"INTC1044", }, /* Fan for Tiger Lake generation */ \
-@@ -57,4 +59,11 @@ struct acpi_fan {
- int acpi_fan_get_fst(struct acpi_device *device, struct acpi_fan_fst *fst=
-);
- int acpi_fan_create_attributes(struct acpi_device *device);
- void acpi_fan_delete_attributes(struct acpi_device *device);
-+
-+#if IS_REACHABLE(CONFIG_HWMON)
-+int devm_acpi_fan_create_hwmon(struct acpi_device *device);
-+#else
-+static inline int devm_acpi_fan_create_hwmon(struct acpi_device *device) =
-{ return 0; };
-+#endif
-+
- #endif
-diff --git a/drivers/acpi/fan_core.c b/drivers/acpi/fan_core.c
-index ff72e4ef8738..7cea4495f19b 100644
-=2D-- a/drivers/acpi/fan_core.c
-+++ b/drivers/acpi/fan_core.c
-@@ -336,6 +336,10 @@ static int acpi_fan_probe(struct platform_device *pde=
-v)
- 		if (result)
- 			return result;
-
-+		result =3D devm_acpi_fan_create_hwmon(device);
-+		if (result)
-+			return result;
-+
- 		result =3D acpi_fan_create_attributes(device);
- 		if (result)
- 			return result;
-diff --git a/drivers/acpi/fan_hwmon.c b/drivers/acpi/fan_hwmon.c
-new file mode 100644
-index 000000000000..e7e5b6a29e7f
-=2D-- /dev/null
-+++ b/drivers/acpi/fan_hwmon.c
-@@ -0,0 +1,173 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * fan_hwmon.c - hwmon interface for the ACPI Fan driver
-+ *
-+ * Copyright (C) 2024 Armin Wolf <W_Armin@gmx.de>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/hwmon.h>
-+#include <linux/limits.h>
-+#include <linux/units.h>
-+
-+#include "fan.h"
-+
-+/* Returned when the ACPI fan does not support speed reporting */
-+#define FAN_SPEED_UNAVAILABLE	0xffffffff
-+#define FAN_POWER_UNAVAILABLE	0xffffffff
-+
-+static struct acpi_fan_fps *acpi_fan_get_current_fps(struct acpi_fan *fan=
-, u64 control)
-+{
-+	int i;
-+
-+	for (i =3D 0; i < fan->fps_count; i++) {
-+		if (fan->fps[i].control =3D=3D control)
-+			return &fan->fps[i];
-+	}
-+
-+	return NULL;
-+}
-+
-+static umode_t acpi_fan_is_visible(const void *drvdata, enum hwmon_sensor=
-_types type, u32 attr,
-+				   int channel)
-+{
-+	const struct acpi_fan *fan =3D drvdata;
-+	int i;
-+
-+	switch (type) {
-+	case hwmon_fan:
-+		switch (attr) {
-+		case hwmon_fan_input:
-+			return 0444;
-+		case hwmon_fan_target:
-+			/* When in fine grain control mode, not every fan control value
-+			 * has an associated fan performance state.
-+			 */
-+			if (fan->fif.fine_grain_ctrl)
-+				return 0;
-+
-+			return 0444;
-+		default:
-+			break;
-+		}
-+		break;
-+	case hwmon_power:
-+		switch (attr) {
-+		case hwmon_power_input:
-+			/* When in fine grain control mode, not every fan control value
-+			 * has an associated fan performance state.
-+			 */
-+			if (fan->fif.fine_grain_ctrl)
-+				return 0;
-+
-+			/* When all fan performance states contain no valid power data,
-+			 * when the associated attribute should not be created.
-+			 */
-+			for (i =3D 0; i < fan->fps_count; i++) {
-+				if (fan->fps[i].power !=3D FAN_POWER_UNAVAILABLE)
-+					return 0444;
-+			}
-+
-+			return 0;
-+		default:
-+			break;
-+		}
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int acpi_fan_read(struct device *dev, enum hwmon_sensor_types type=
-, u32 attr, int channel,
-+			 long *val)
-+{
-+	struct acpi_device *adev =3D to_acpi_device(dev->parent);
-+	struct acpi_fan *fan =3D dev_get_drvdata(dev);
-+	struct acpi_fan_fps *fps;
-+	struct acpi_fan_fst fst;
-+	int ret;
-+
-+	ret =3D acpi_fan_get_fst(adev, &fst);
-+	if (ret < 0)
-+		return ret;
-+
-+	switch (type) {
-+	case hwmon_fan:
-+		switch (attr) {
-+		case hwmon_fan_input:
-+			if (fst.speed =3D=3D FAN_SPEED_UNAVAILABLE)
-+				return -ENODATA;
-+
-+			if (fst.speed > LONG_MAX)
-+				return -EOVERFLOW;
-+
-+			*val =3D fst.speed;
-+			return 0;
-+		case hwmon_fan_target:
-+			fps =3D acpi_fan_get_current_fps(fan, fst.control);
-+			if (!fps)
-+				return -ENODATA;
-+
-+			if (fps->speed > LONG_MAX)
-+				return -EOVERFLOW;
-+
-+			*val =3D fps->speed;
-+			return 0;
-+		default:
-+			break;
-+		}
-+		break;
-+	case hwmon_power:
-+		switch (attr) {
-+		case hwmon_power_input:
-+			fps =3D acpi_fan_get_current_fps(fan, fst.control);
-+			if (!fps)
-+				return -ENODATA;
-+
-+			if (fps->power =3D=3D FAN_POWER_UNAVAILABLE)
-+				return -ENODATA;
-+
-+			if (fps->power > LONG_MAX / MICROWATT_PER_MILLIWATT)
-+				return -EOVERFLOW;
-+
-+			*val =3D fps->power * MICROWATT_PER_MILLIWATT;
-+			return 0;
-+		default:
-+			break;
-+		}
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return -EOPNOTSUPP;
-+}
-+
-+static const struct hwmon_ops acpi_fan_ops =3D {
-+	.is_visible =3D acpi_fan_is_visible,
-+	.read =3D acpi_fan_read,
-+};
-+
-+static const struct hwmon_channel_info * const acpi_fan_info[] =3D {
-+	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT | HWMON_F_TARGET),
-+	HWMON_CHANNEL_INFO(power, HWMON_P_INPUT),
-+	NULL
-+};
-+
-+static const struct hwmon_chip_info acpi_fan_chip_info =3D {
-+	.ops =3D &acpi_fan_ops,
-+	.info =3D acpi_fan_info,
-+};
-+
-+int devm_acpi_fan_create_hwmon(struct acpi_device *device)
-+{
-+	struct acpi_fan *fan =3D acpi_driver_data(device);
-+	struct device *hdev;
-+
-+	hdev =3D devm_hwmon_device_register_with_info(&device->dev, "acpi_fan", =
-fan,
-+						    &acpi_fan_chip_info, NULL);
-+
-+	return PTR_ERR_OR_ZERO(hdev);
-+}
-=2D-
-2.39.2
+diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+index 78c42767295a..ccb33d034e2a 100644
+--- a/drivers/platform/x86/asus-laptop.c
++++ b/drivers/platform/x86/asus-laptop.c
+@@ -852,8 +852,8 @@ static ssize_t infos_show(struct device *dev, struct device_attribute *attr,
+ 	 * so we don't set eof to 1
+ 	 */
+ 
+-	len += sprintf(page, ASUS_LAPTOP_NAME " " ASUS_LAPTOP_VERSION "\n");
+-	len += sprintf(page + len, "Model reference    : %s\n", asus->name);
++	len += sysfs_emit_at(page, len, ASUS_LAPTOP_NAME " " ASUS_LAPTOP_VERSION "\n");
++	len += sysfs_emit_at(page, len, "Model reference    : %s\n", asus->name);
+ 	/*
+ 	 * The SFUN method probably allows the original driver to get the list
+ 	 * of features supported by a given model. For now, 0x0100 or 0x0800
+@@ -862,7 +862,7 @@ static ssize_t infos_show(struct device *dev, struct device_attribute *attr,
+ 	 */
+ 	rv = acpi_evaluate_integer(asus->handle, "SFUN", NULL, &temp);
+ 	if (ACPI_SUCCESS(rv))
+-		len += sprintf(page + len, "SFUN value         : %#x\n",
++		len += sysfs_emit_at(page, len, "SFUN value         : %#x\n",
+ 			       (uint) temp);
+ 	/*
+ 	 * The HWRS method return informations about the hardware.
+@@ -874,7 +874,7 @@ static ssize_t infos_show(struct device *dev, struct device_attribute *attr,
+ 	 */
+ 	rv = acpi_evaluate_integer(asus->handle, "HWRS", NULL, &temp);
+ 	if (ACPI_SUCCESS(rv))
+-		len += sprintf(page + len, "HWRS value         : %#x\n",
++		len += sysfs_emit_at(page, len, "HWRS value         : %#x\n",
+ 			       (uint) temp);
+ 	/*
+ 	 * Another value for userspace: the ASYM method returns 0x02 for
+@@ -885,25 +885,25 @@ static ssize_t infos_show(struct device *dev, struct device_attribute *attr,
+ 	 */
+ 	rv = acpi_evaluate_integer(asus->handle, "ASYM", NULL, &temp);
+ 	if (ACPI_SUCCESS(rv))
+-		len += sprintf(page + len, "ASYM value         : %#x\n",
++		len += sysfs_emit_at(page, len, "ASYM value         : %#x\n",
+ 			       (uint) temp);
+ 	if (asus->dsdt_info) {
+ 		snprintf(buf, 16, "%d", asus->dsdt_info->length);
+-		len += sprintf(page + len, "DSDT length        : %s\n", buf);
++		len += sysfs_emit_at(page, len, "DSDT length        : %s\n", buf);
+ 		snprintf(buf, 16, "%d", asus->dsdt_info->checksum);
+-		len += sprintf(page + len, "DSDT checksum      : %s\n", buf);
++		len += sysfs_emit_at(page, len, "DSDT checksum      : %s\n", buf);
+ 		snprintf(buf, 16, "%d", asus->dsdt_info->revision);
+-		len += sprintf(page + len, "DSDT revision      : %s\n", buf);
++		len += sysfs_emit_at(page, len, "DSDT revision      : %s\n", buf);
+ 		snprintf(buf, 7, "%s", asus->dsdt_info->oem_id);
+-		len += sprintf(page + len, "OEM id             : %s\n", buf);
++		len += sysfs_emit_at(page, len, "OEM id             : %s\n", buf);
+ 		snprintf(buf, 9, "%s", asus->dsdt_info->oem_table_id);
+-		len += sprintf(page + len, "OEM table id       : %s\n", buf);
++		len += sysfs_emit_at(page, len, "OEM table id       : %s\n", buf);
+ 		snprintf(buf, 16, "%x", asus->dsdt_info->oem_revision);
+-		len += sprintf(page + len, "OEM revision       : 0x%s\n", buf);
++		len += sysfs_emit_at(page, len, "OEM revision       : 0x%s\n", buf);
+ 		snprintf(buf, 5, "%s", asus->dsdt_info->asl_compiler_id);
+-		len += sprintf(page + len, "ASL comp vendor id : %s\n", buf);
++		len += sysfs_emit_at(page, len, "ASL comp vendor id : %s\n", buf);
+ 		snprintf(buf, 16, "%x", asus->dsdt_info->asl_compiler_revision);
+-		len += sprintf(page + len, "ASL comp revision  : 0x%s\n", buf);
++		len += sysfs_emit_at(page, len, "ASL comp revision  : 0x%s\n", buf);
+ 	}
+ 
+ 	return len;
+@@ -933,7 +933,7 @@ static ssize_t ledd_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct asus_laptop *asus = dev_get_drvdata(dev);
+ 
+-	return sprintf(buf, "0x%08x\n", asus->ledd_status);
++	return sysfs_emit(buf, "0x%08x\n", asus->ledd_status);
+ }
+ 
+ static ssize_t ledd_store(struct device *dev, struct device_attribute *attr,
+@@ -993,7 +993,7 @@ static ssize_t wlan_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct asus_laptop *asus = dev_get_drvdata(dev);
+ 
+-	return sprintf(buf, "%d\n", asus_wireless_status(asus, WL_RSTS));
++	return sysfs_emit(buf, "%d\n", asus_wireless_status(asus, WL_RSTS));
+ }
+ 
+ static ssize_t wlan_store(struct device *dev, struct device_attribute *attr,
+@@ -1022,7 +1022,7 @@ static ssize_t bluetooth_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct asus_laptop *asus = dev_get_drvdata(dev);
+ 
+-	return sprintf(buf, "%d\n", asus_wireless_status(asus, BT_RSTS));
++	return sysfs_emit(buf, "%d\n", asus_wireless_status(asus, BT_RSTS));
+ }
+ 
+ static ssize_t bluetooth_store(struct device *dev,
+@@ -1052,7 +1052,7 @@ static ssize_t wimax_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct asus_laptop *asus = dev_get_drvdata(dev);
+ 
+-	return sprintf(buf, "%d\n", asus_wireless_status(asus, WM_RSTS));
++	return sysfs_emit(buf, "%d\n", asus_wireless_status(asus, WM_RSTS));
+ }
+ 
+ static ssize_t wimax_store(struct device *dev, struct device_attribute *attr,
+@@ -1081,7 +1081,7 @@ static ssize_t wwan_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct asus_laptop *asus = dev_get_drvdata(dev);
+ 
+-	return sprintf(buf, "%d\n", asus_wireless_status(asus, WW_RSTS));
++	return sysfs_emit(buf, "%d\n", asus_wireless_status(asus, WW_RSTS));
+ }
+ 
+ static ssize_t wwan_store(struct device *dev, struct device_attribute *attr,
+@@ -1151,7 +1151,7 @@ static ssize_t ls_switch_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct asus_laptop *asus = dev_get_drvdata(dev);
+ 
+-	return sprintf(buf, "%d\n", asus->light_switch);
++	return sysfs_emit(buf, "%d\n", asus->light_switch);
+ }
+ 
+ static ssize_t ls_switch_store(struct device *dev,
+@@ -1182,7 +1182,7 @@ static ssize_t ls_level_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct asus_laptop *asus = dev_get_drvdata(dev);
+ 
+-	return sprintf(buf, "%d\n", asus->light_level);
++	return sysfs_emit(buf, "%d\n", asus->light_level);
+ }
+ 
+ static ssize_t ls_level_store(struct device *dev, struct device_attribute *attr,
+@@ -1228,7 +1228,7 @@ static ssize_t ls_value_show(struct device *dev, struct device_attribute *attr,
+ 	if (!err)
+ 		err = pega_int_read(asus, PEGA_READ_ALS_L, &lo);
+ 	if (!err)
+-		return sprintf(buf, "%d\n", 10 * hi + lo);
++		return sysfs_emit(buf, "%d\n", 10 * hi + lo);
+ 	return err;
+ }
+ static DEVICE_ATTR_RO(ls_value);
+@@ -1264,7 +1264,7 @@ static ssize_t gps_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct asus_laptop *asus = dev_get_drvdata(dev);
+ 
+-	return sprintf(buf, "%d\n", asus_gps_status(asus));
++	return sysfs_emit(buf, "%d\n", asus_gps_status(asus));
+ }
+ 
+ static ssize_t gps_store(struct device *dev, struct device_attribute *attr,
+-- 
+2.34.1
 
