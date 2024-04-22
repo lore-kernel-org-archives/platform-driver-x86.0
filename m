@@ -1,86 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1507618EA1;
-	Mon, 22 Apr 2024 21:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B56158A21;
+	Mon, 22 Apr 2024 23:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713820972; cv=none; b=Dn8U2UNVOFc9e/n9QRiVmfVXVGSmt8uJ0uemJhzFEb5/TUmhnW5U8gyiSyld97BjmooaKiiGlWj8CL9y5dZWubXMcp4ak9TyWs6LaOR2l+zUB5oXkpL3ASEVH9bg2cSrViy7cNFMguSIvR5ZZ8ruhtv3vgDmICifvBXvOrScB5k=
+	t=1713830080; cv=none; b=MtL0OASVZ9CtACUGIlojhK4CvUJnu2bNHFq+ia9paCGjJz9/ecwfgx29xBTV/jMdqM7q6T2m9jSXMGlJ+stYk6j1HAkWEdLr1F/clH9PPdKMcgLRnmr/hoBminr4+1KvZN39llKbp5kzFynmNb1ZIttb88LqE/SqBvJjhP3+Owk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713820972; c=relaxed/simple;
-	bh=gcMnYjRxq49Z29IdyKaH3RkNtJ3qnwypqUjyitZsSV8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aIWF3QhmyA+I7GAnVoIa7TNOunTsMStjjuc5dL4VJpnQKIzx3aupclBOWJ1/HFH54oURp+OwR9hiffPd+j8GhqJo2pPoLvBjeSwC6bhMv6J2oLVwYUoTR7e5Ugjntgkg0mJB207idQwrIb8HyQNcJTDl/O9/1/key1bxrUvIqpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BQp/52cj; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713830080; c=relaxed/simple;
+	bh=OBGzgHbyNRCadm3FlMUZPDHo1xwdodf+7htN+WHMExk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t2BL9HDfoCynID3eXzPpVSpgEthAsLXz8O/8qi6iNV84G31kVX2aESD8JGcpTgIuQ6SJvkkrvonbVRFpAWouL9hReN2EF4/tw2EhfF7npH3y3SX1mu8pYI2Nn1WY8d2lrMpdNpIDKqYhS0MvFJs6FrqhTL0+GF3Gf2pQZJ6MZtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TKwfGySv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BQp/52cj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713820971; x=1745356971;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=gcMnYjRxq49Z29IdyKaH3RkNtJ3qnwypqUjyitZsSV8=;
-  b=BQp/52cjdcIig0AJTWrFfAU4yYWLuOfbGEU38KIAvx8FV4OJpuWTd3LP
-   xRldBPpyYtA7gkF2Zfh9jqsE4tPMFEVPodlzKtImvoPzqddUKdgbJH+OO
-   jZZYphzVc16elnmFeWUg4yaXOJuJIxOmRXD+nUVB/72qMl4fGApY0yU1d
-   u5kV+pfZnFt/ZmQXJdgkFOI5D97PtDzYHxZJcisQSZPvS+EU12qVHoEJM
-   8mJdqNjCvGJ+JQWORYkwOauKOYnqBr0V8MDmAZ4owtvQHhGkOlvOnK/Ln
-   2GZTOHcBW7++gWDa8IEMGPEfhXpbvQGNTclkfk1ASWe/xj72SKNXnS9JH
-   g==;
-X-CSE-ConnectionGUID: pQu3l9kpSh+0DjnXWMPTjg==
-X-CSE-MsgGUID: R7jSAwibQquKpibVeFu2Rw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="20804895"
-X-IronPort-AV: E=Sophos;i="6.07,221,1708416000"; 
-   d="scan'208";a="20804895"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 14:22:51 -0700
-X-CSE-ConnectionGUID: a/QXbaJDQBiwUjj6yK7IOA==
-X-CSE-MsgGUID: dmyoFCJ7SnqATSNVWWwdkw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,221,1708416000"; 
-   d="scan'208";a="55356728"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
-  by fmviesa001.fm.intel.com with ESMTP; 22 Apr 2024 14:22:50 -0700
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: hdegoede@redhat.com,
-	markgross@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] platform/x86: ISST: Add Grand Ridge to HPM CPU list
-Date: Mon, 22 Apr 2024 14:22:22 -0700
-Message-Id: <20240422212222.3881606-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TKwfGySv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D406C3277B;
+	Mon, 22 Apr 2024 23:54:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713830080;
+	bh=OBGzgHbyNRCadm3FlMUZPDHo1xwdodf+7htN+WHMExk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=TKwfGySvcUVQPu+TCuQU/BMKnx6xXFMXG3G659ZSTsTlsBPJDqO05X2e/u1PNrz7R
+	 gfyXioj9Gk3R8/rjXrSp8NRPAMsyPYK6PWF9s6qK/J5eMN2fPDwX/6HtSWx39J5Qlv
+	 2kKARJWN8Gou/RUDfYgvkfI2RKux7aOpt4YhCLLSJI1NAvZOnAhabeyjdm+Z6Mt9e1
+	 qyCy2xURyE+c1VI1cafaKe9EoE8NY60hta2KId1xThVI0HnrIk253sJcdOaM3tnHMp
+	 buzs2/UfliXDi/XkCRMD1Jk/txyNT/xU7sR2prAmw833akX+LjXk39quX2u6dzvVel
+	 2b3zKsT9uajhw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: =?UTF-8?q?Bernhard=20Rosenkr=C3=A4nzer?= <bero@baylibre.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	jlee@suse.com,
+	hdegoede@redhat.com,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.8 20/43] platform/x86: acer-wmi: Add support for Acer PH18-71
+Date: Mon, 22 Apr 2024 19:14:06 -0400
+Message-ID: <20240422231521.1592991-20-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240422231521.1592991-1-sashal@kernel.org>
+References: <20240422231521.1592991-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.8.7
 Content-Transfer-Encoding: 8bit
 
-Add Grand Ridge (ATOM_CRESTMONT) to hpm_cpu_ids, so that MSR 0x54 can be
-used.
+From: Bernhard Rosenkränzer <bero@baylibre.com>
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+[ Upstream commit b45d0d01da542be280d935d87b71465028cdcb1f ]
+
+Add Acer Predator PH18-71 to acer_quirks with predator_v4
+to support mode button and fan speed sensor.
+
+Signed-off-by: Bernhard Rosenkränzer <bero@baylibre.com>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Link: https://lore.kernel.org/r/20240329152800.29393-1-bero@baylibre.com
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/acer-wmi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-index 30951f7131cd..1accdaaf282c 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-@@ -721,6 +721,7 @@ static struct miscdevice isst_if_char_driver = {
- static const struct x86_cpu_id hpm_cpu_ids[] = {
- 	X86_MATCH_INTEL_FAM6_MODEL(GRANITERAPIDS_D,	NULL),
- 	X86_MATCH_INTEL_FAM6_MODEL(GRANITERAPIDS_X,	NULL),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_CRESTMONT,	NULL),
- 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_CRESTMONT_X,	NULL),
- 	{}
- };
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index ee2e164f86b9c..38c932df6446a 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -597,6 +597,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
+ 		},
+ 		.driver_data = &quirk_acer_predator_v4,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "Acer Predator PH18-71",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Predator PH18-71"),
++		},
++		.driver_data = &quirk_acer_predator_v4,
++	},
+ 	{
+ 		.callback = set_force_caps,
+ 		.ident = "Acer Aspire Switch 10E SW3-016",
 -- 
-2.40.1
+2.43.0
 
