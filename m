@@ -1,64 +1,66 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9390314F9F8
-	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Apr 2024 13:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69C0136988
+	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Apr 2024 13:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713793165; cv=none; b=lyhn6yq+KQU7HY5/gLi4fWKCUJ/HlzaqqkZFjRWjLvJrh6+blrxgp5ckcK3XU/izVz1kIRG9LF7AoQlJ9EOeoFHHOcXQ5AO9bT6SDoixJVCj2inf2h8rPGgVoQAB077BtXPuMBS1rz3cNyCAGL5RuYejM4jfMMHeCgyZGZ0FlOk=
+	t=1713793315; cv=none; b=SV8tN1p6RsvCLdZA8OLzW2Wi4I4Ua0zS7BX0msKFG+vgPYlpIEo7bn8uyPOMX9Wg956f9XUS8QHincqh/g5SfK4UO/Zf4hXaqqi7kYcXzbn4bZzeOpEJ2+lO2qlBHlnYKi3rzQx16vzGM6Hvm1tGeX0M4glSgoz70vJed4Cm01U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713793165; c=relaxed/simple;
-	bh=rKNWGbbelSWXmDZk6qzieOynFuUJzmm3g4Nik3RV2uE=;
+	s=arc-20240116; t=1713793315; c=relaxed/simple;
+	bh=4oim69y/9OfKbI8BdKLij662Sppol9ItNizhr27QLms=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rhh+4g2ado6aKMYGdl3TglGWlcvFNjYPQeEGuFbi+EAnber4mSlY7K/eJjrewAuHL+oRSnwFDQzwv9USq5KCii2lDW4EVLcxCOO7gqfZgLwx4EzLM27z0ynjOpl0TU46y+dxfuwczysg32fbvmRDvGVucCsftV6dFC1JD4+nHQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c20hvpVZ; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=qFBTMN4b+D0IqDN6gvvfSWildrs7M2RBTsSB2QkfF3o+Luh+TpapSInsJ1sLgG7P5DSoPoXqpGv19wGljZmEma3z1dMFrwr7nvc4znIkcIQxYhTeNDtoPr+ssp/uMZJC/wItNNCdOO3SXnUS18H0c0HL++4JR0A0r5thH7YWqQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CxXywcTX; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c20hvpVZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CxXywcTX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713793162;
+	s=mimecast20190719; t=1713793312;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EKCizU5xv1hF+5h7xbiS1EPOIMbVIqYGGrC9ITejgdo=;
-	b=c20hvpVZhFOU1VEZQTnkl31heUc1YdlNWbo0079IWppiKCljp8cqSHvQdFzPD+/VyavZmU
-	1/3DLmZs2BaPVf3okjboZpmNJWBWPVTVC793YIISQnhr4uYS7RK/rLWlVVJ2ATorPGxqq/
-	h9hz+O+dp1Rtka3CE1rVe4wxzjhXDUw=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=kRxwkIFUs9CTScVUXhPkf0X+3b18MF4xd0ddKvmTSu8=;
+	b=CxXywcTXkIhyohZS7uQE3uT7HRC6yKNXMiF9KiIwzuSx2U2wKE+RXkYk9cFngyEdCQARn4
+	A+5BEZadFwCFEv7avVRCtc4oYKrI5holYLqJJPWQG0V4RfaJl2MzNDg3tXtXXWEDIj2+Hv
+	YQ/b1M/NM68zEH0Xq+TxsUl9KxHj5yQ=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-443-DyEnvs58NY2d2LEAggDxXA-1; Mon, 22 Apr 2024 09:39:21 -0400
-X-MC-Unique: DyEnvs58NY2d2LEAggDxXA-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a523cb0c818so118926366b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Apr 2024 06:39:20 -0700 (PDT)
+ us-mta-340-dStpfvpjMeybEMDKssIGqA-1; Mon, 22 Apr 2024 09:41:51 -0400
+X-MC-Unique: dStpfvpjMeybEMDKssIGqA-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-34b40e8482aso416224f8f.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Apr 2024 06:41:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713793160; x=1714397960;
+        d=1e100.net; s=20230601; t=1713793309; x=1714398109;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EKCizU5xv1hF+5h7xbiS1EPOIMbVIqYGGrC9ITejgdo=;
-        b=bq4RauuQBH18so6ik+LoSlMg7w61ozXdp0mz75jpuglS5XIiGUTzzLmDYFntRuKoO6
-         lELydvi+AcuL+KX+iBNu2zmW2+DlGSBtOvcptD48tiOgzT41od87cv+TpJR7BWdH51Os
-         9Nzl58mGS45TJf3iNWuDwuiHUFvKiucfvIKJm1+4/YaxuDzO2bv3RIZPk7zjasCl+ZL/
-         b42pW8wURUzijTgDJJzPiHR6AtRfU88cYW41zoqMnCN3k5WS+pa+ztLlHoJDDmtE1QqI
-         muFOzNYcF7B2S2KoXzxqSBv1o66ZdKBTVCsP8WnFVY9CcthxSvV48SzNRczAMVTwu+KK
-         FMXA==
-X-Gm-Message-State: AOJu0YzfM2piDtVTJIpH8M9xeXEZyl8D3+v4Byac+EzzVJouiYa4fIj7
-	rOkK1hC1IgpX00nbNgebzTS4nxoJ9ph3AhzL+oTxT0m3KO8dFC9eq5o4FLDVXJNx2AiUvWqcnUP
-	Fo7e/xt6ozyMfSlbCr8DofRzauQCImUehI/p5pYG1hWMIQdr+LZvId0JWhGtl9HjI1heIIxw=
-X-Received: by 2002:a50:9f43:0:b0:56e:2b80:d87e with SMTP id b61-20020a509f43000000b0056e2b80d87emr8777964edf.2.1713793159973;
-        Mon, 22 Apr 2024 06:39:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGqU43ogGpA6obw7aoysC5Rf0RNBQASyMYOWXcZAdZLCK6tL3ZeClYHMviS29cAKvVBljXK4w==
-X-Received: by 2002:a50:9f43:0:b0:56e:2b80:d87e with SMTP id b61-20020a509f43000000b0056e2b80d87emr8777939edf.2.1713793159535;
-        Mon, 22 Apr 2024 06:39:19 -0700 (PDT)
+        bh=kRxwkIFUs9CTScVUXhPkf0X+3b18MF4xd0ddKvmTSu8=;
+        b=Brh5MMBgLAkZOg1Kfu47/jXgOSK0AJeT8eWkCTljzGMcr6dpZoJSxrrmTxD6vO9sY9
+         z6TGX+9cMhG3GKayGe8u/UA0NNmkgg4Gq/DOwbFLVa2NBcFSealrhpFNaUyjC0jtNIBF
+         W/0EBIO91WGaKtXtFfP9gkUINILbDR54cxrT5W1x7wsBMaK//yp28pjArJ9vIYWkt49r
+         POw9vvSz7aosM8jX02qGeRV5Yh5XpwGrp2gPjowM7YBIIHzwyLnS268YQNRzBQZpPmHW
+         LrP+cJ+WhJMH8d1WtMcuUBnbB0QQdV2L9cg6rSc5SlnFSajhPm2CN1dNV/F/yVUDWh3b
+         mLlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXhsDKgfdLoWYyYB8dzupDQKrA1t12FFezYlDZ2P9bcz34VtrpkniFYm/AF+LoTxOqE2SI8Kfloc/esb8Kki+EeLyvCiJROSM2hKV7oJDz0Wer1bg==
+X-Gm-Message-State: AOJu0YwHLSYWWB0j4kcZAhzz5YcIcMMtWEjH2XJaaCDyC/Xls5bIPDjC
+	+nL5nRzf6VX37Bf6NghWzP3OrFmLH5I5r+aesGiLAe/oUfZbJTP0a43O7QxMs8xdvDF/ALCbrqf
+	VyS0am1fR7O3IE/oL6xDFOLG6p28+iIRcfPDTqvS4c1x8e93pDJTFDZWSAqXUbi1NhBAdiAVxfG
+	dx8OnDvQ==
+X-Received: by 2002:adf:f343:0:b0:343:5cca:f7c7 with SMTP id e3-20020adff343000000b003435ccaf7c7mr8253512wrp.41.1713793309116;
+        Mon, 22 Apr 2024 06:41:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG0jLaTWNc6yGyIvSKmiCD5yZ7ygpSwhzslfbyzrlx20Ts+CP4YuQ0EwZ9+WZX60zIsyyVJ9A==
+X-Received: by 2002:adf:f343:0:b0:343:5cca:f7c7 with SMTP id e3-20020adff343000000b003435ccaf7c7mr8253486wrp.41.1713793308682;
+        Mon, 22 Apr 2024 06:41:48 -0700 (PDT)
 Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id l11-20020a50cbcb000000b0057030326144sm5555206edi.47.2024.04.22.06.39.18
+        by smtp.gmail.com with ESMTPSA id f15-20020a170906c08f00b00a553574ae71sm5742142ejz.7.2024.04.22.06.41.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Apr 2024 06:39:19 -0700 (PDT)
-Message-ID: <49263c2d-4fb8-49be-b74e-9f432e8a5994@redhat.com>
-Date: Mon, 22 Apr 2024 15:39:16 +0200
+        Mon, 22 Apr 2024 06:41:47 -0700 (PDT)
+Message-ID: <1e4e5799-38b7-42ca-b196-3eac82601ff4@redhat.com>
+Date: Mon, 22 Apr 2024 15:41:45 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,61 +68,27 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: change sprintf() to
- sysfs_emit()
-To: yunshui <jiangyunshui@kylinos.cn>, linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org, hmh@hmh.eng.br,
- ilpo.jarvinen@linux.intel.com, Ai Chao <aichao@kylinos.cn>
-References: <20240417092055.1170586-1-jiangyunshui@kylinos.cn>
+Subject: Re: [PATCH -v2] platform/x86: msi-laptop: Use sysfs_emit() to replace
+ sprintf()
+To: yunshui <jiangyunshui@kylinos.cn>, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+Cc: Ai Chao <aichao@kylinos.cn>
+References: <20240419063649.2396461-1-jiangyunshui@kylinos.cn>
 Content-Language: en-US
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240417092055.1170586-1-jiangyunshui@kylinos.cn>
+In-Reply-To: <20240419063649.2396461-1-jiangyunshui@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On 4/17/24 11:20 AM, yunshui wrote:
+On 4/19/24 8:36 AM, yunshui wrote:
 > As Documentation/filesystems/sysfs.rst suggested,
 > show() should only use sysfs_emit() or sysfs_emit_at() when formatting
 > the value to be returned to user space.
 > 
 > Signed-off-by: yunshui <jiangyunshui@kylinos.cn>
-> Signed-off-by: Ai Chao <aichao@kylinos.cn>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 82429e59999d..1ed27fc21a7d 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -817,7 +817,7 @@ static int __init setup_acpi_notify(struct ibm_struct *ibm)
->  	}
->  
->  	ibm->acpi->device->driver_data = ibm;
-> -	sprintf(acpi_device_class(ibm->acpi->device), "%s/%s",
-> +	sysfs_emit(acpi_device_class(ibm->acpi->device), "%s/%s",
->  		TPACPI_ACPI_EVENT_PREFIX,
->  		ibm->name);
-> 
-
-This is not a sysfs show() function.
-
- 
-> @@ -857,7 +857,7 @@ static int __init register_tpacpi_subdriver(struct ibm_struct *ibm)
->  		return -ENOMEM;
->  	}
->  
-> -	sprintf(ibm->acpi->driver->name, "%s_%s", TPACPI_NAME, ibm->name);
-> +	sysfs_emit(ibm->acpi->driver->name, "%s_%s", TPACPI_NAME, ibm->name);
->  	ibm->acpi->driver->ids = ibm->acpi->hid;
->  
->  	ibm->acpi->driver->ops.add = &tpacpi_device_add;
-
-This also is not a sysfs show() function.
-
-I've dropped these 2 parts of the patch while applying it:
+> Reviewed-by: Ai Chao <aichao@kylinos.cn>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -140,23 +108,102 @@ Hans
 
 
 
-
-> @@ -2679,7 +2679,7 @@ static ssize_t hotkey_bios_enabled_show(struct device *dev,
->  			   struct device_attribute *attr,
->  			   char *buf)
->  {
-> -	return sprintf(buf, "0\n");
-> +	return sysfs_emit(buf, "0\n");
+> ---
+>  drivers/platform/x86/msi-laptop.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
+> index f4c6c36e05a5..e5391a37014d 100644
+> --- a/drivers/platform/x86/msi-laptop.c
+> +++ b/drivers/platform/x86/msi-laptop.c
+> @@ -317,7 +317,7 @@ static ssize_t show_wlan(struct device *dev,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	return sprintf(buf, "%i\n", enabled);
+> +	return sysfs_emit(buf, "%i\n", enabled);
 >  }
 >  
->  static DEVICE_ATTR_RO(hotkey_bios_enabled);
-> @@ -9789,7 +9789,7 @@ static ssize_t tpacpi_battery_show(int what,
->  		battery = BAT_PRIMARY;
->  	if (tpacpi_battery_get(what, battery, &ret))
->  		return -ENODEV;
-> -	return sprintf(buf, "%d\n", ret);
-> +	return sysfs_emit(buf, "%d\n", ret);
+>  static ssize_t store_wlan(struct device *dev,
+> @@ -341,7 +341,7 @@ static ssize_t show_bluetooth(struct device *dev,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	return sprintf(buf, "%i\n", enabled);
+> +	return sysfs_emit(buf, "%i\n", enabled);
 >  }
 >  
->  static ssize_t charge_control_start_threshold_show(struct device *device,
+>  static ssize_t store_bluetooth(struct device *dev,
+> @@ -364,7 +364,7 @@ static ssize_t show_threeg(struct device *dev,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	return sprintf(buf, "%i\n", threeg_s);
+> +	return sysfs_emit(buf, "%i\n", threeg_s);
+>  }
+>  
+>  static ssize_t store_threeg(struct device *dev,
+> @@ -383,7 +383,7 @@ static ssize_t show_lcd_level(struct device *dev,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	return sprintf(buf, "%i\n", ret);
+> +	return sysfs_emit(buf, "%i\n", ret);
+>  }
+>  
+>  static ssize_t store_lcd_level(struct device *dev,
+> @@ -413,7 +413,7 @@ static ssize_t show_auto_brightness(struct device *dev,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	return sprintf(buf, "%i\n", ret);
+> +	return sysfs_emit(buf, "%i\n", ret);
+>  }
+>  
+>  static ssize_t store_auto_brightness(struct device *dev,
+> @@ -443,7 +443,7 @@ static ssize_t show_touchpad(struct device *dev,
+>  	if (result < 0)
+>  		return result;
+>  
+> -	return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_TOUCHPAD_MASK));
+> +	return sysfs_emit(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_TOUCHPAD_MASK));
+>  }
+>  
+>  static ssize_t show_turbo(struct device *dev,
+> @@ -457,7 +457,7 @@ static ssize_t show_turbo(struct device *dev,
+>  	if (result < 0)
+>  		return result;
+>  
+> -	return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_TURBO_MASK));
+> +	return sysfs_emit(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_TURBO_MASK));
+>  }
+>  
+>  static ssize_t show_eco(struct device *dev,
+> @@ -471,7 +471,7 @@ static ssize_t show_eco(struct device *dev,
+>  	if (result < 0)
+>  		return result;
+>  
+> -	return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_ECO_MASK));
+> +	return sysfs_emit(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_ECO_MASK));
+>  }
+>  
+>  static ssize_t show_turbo_cooldown(struct device *dev,
+> @@ -485,7 +485,7 @@ static ssize_t show_turbo_cooldown(struct device *dev,
+>  	if (result < 0)
+>  		return result;
+>  
+> -	return sprintf(buf, "%i\n", (!!(rdata & MSI_STANDARD_EC_TURBO_MASK)) |
+> +	return sysfs_emit(buf, "%i\n", (!!(rdata & MSI_STANDARD_EC_TURBO_MASK)) |
+>  		(!!(rdata & MSI_STANDARD_EC_TURBO_COOLDOWN_MASK) << 1));
+>  }
+>  
+> @@ -500,7 +500,7 @@ static ssize_t show_auto_fan(struct device *dev,
+>  	if (result < 0)
+>  		return result;
+>  
+> -	return sprintf(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_AUTOFAN_MASK));
+> +	return sysfs_emit(buf, "%i\n", !!(rdata & MSI_STANDARD_EC_AUTOFAN_MASK));
+>  }
+>  
+>  static ssize_t store_auto_fan(struct device *dev,
 
