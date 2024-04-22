@@ -1,105 +1,207 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832214CB2E
-	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Apr 2024 08:25:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48764F5FD
+	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Apr 2024 08:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713774304; cv=none; b=OaXPah1av5Yc4y0bw5X35AEMCjb3dXVVOlI9i9Ct3FdNBEYBhUyyt1dqHExb0KEuoBdDS3XuXgyKV27cBiDVgfVVSE5Y0hg0l8tWDIlnR6oTyGR5WYdU1/zKgqeMpXzFWfTYBZt+37VU4VOH+Z6EFSNKc0auYyBy+kb1pPNYdlM=
+	t=1713774567; cv=none; b=J+fS9LZBl2h8MyPCXJTh3yPERyhCqKQeAsvM9H8k8pFWm4AnlfNNgc0L485NUymySQ66hpqzbWGrUKxat3dykPvCfF8YMei0Deyl9nWHWSHnWN9pm6qQ8dCTiccFMpzrSA0HqAI7ndoEcbVoZkhyghTX6WsZMXTtZEQbR2tijOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713774304; c=relaxed/simple;
-	bh=ZZUkxcd5HRPlU6HRuiPzN1HLyYZMGypeXh5z5HcjtyQ=;
+	s=arc-20240116; t=1713774567; c=relaxed/simple;
+	bh=zSVBedYegDe/2QMEXLsfrTchWkMvOwDEFIqe4ABbrrU=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=XyB1oUbckDN83Wi7ChQUsfrHdS/DROe3I/JfiUyefjlOeA2/KaPq8kv7N0XHLTeatYktKqzPcsjGfOsEaFVs98UfBavWW+lJOdnQUMScTJIzk/BXso/3ziAWfq6SyMAf5QBT3vww3HL+x8LUZLIPMxZNEfaelziGKJ3PvgZgQkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kIcEwcUH; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version:Content-Type; b=qtT2SSXvQlI1QovdxRa7nQgLtX9sHOnEk6Dm6AIOgpt/NaevcTkrUqUOt0QTxErTuy3OW1CzCGEJsCSJ6UbHCMJD0R9JOtRYa1oUMPDlOEm4y2RPby0fxhBdV47uqkhcIVDAgo36M2ws8MKIRWqIe+KT99Utm53hRScsCtN2OCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nBd+n1TU; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kIcEwcUH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nBd+n1TU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713774302; x=1745310302;
+  t=1713774566; x=1745310566;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=ZZUkxcd5HRPlU6HRuiPzN1HLyYZMGypeXh5z5HcjtyQ=;
-  b=kIcEwcUHoB5WWnBSAkHPeylUD0aL1vPrSpFkcY/WzAp33ELAR25SG1NR
-   kGwFGyHQWHIs5iMbd9mLjIviBMs3IiOeCdWiQiiHxr+lGBbNBYCP280ZZ
-   ZCGupkIAibzRSsPvvEUCDW1h/4kw/T4eiYxqO5ZoJ7MLskO3hSZnPOHek
-   gYhxYRMNMXouFiV/uyoVkWc8ifL9Rc6Lb+XqfxDRnNgjda79blFli+oYh
-   gy4w5+J9FhqlfQ4XDOU9XNk4vYvb1Z7GSpCZz+5kTWMayXQ7vCVXQsRaj
-   jgxyDm3TAR5uefQndk/cP0n4pPngn/oM4CDs8p0Ef1eFI9MPjkth54EoR
-   Q==;
-X-CSE-ConnectionGUID: cfxxCprXRR2IyJBcLNt7ug==
-X-CSE-MsgGUID: vLFzp8MzSHCfWOeVTzAc7g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11051"; a="12239459"
+  bh=zSVBedYegDe/2QMEXLsfrTchWkMvOwDEFIqe4ABbrrU=;
+  b=nBd+n1TUihwFsOqCrOS3mQI/0sh3t/lzHIxroPXuKL9ogIG+k6knAMoo
+   UxJXUtrQSsMP7IY5Q3IvZmUluEdw7lyHq8U6+gkRAPhzq47EUR+sLFrCF
+   7S7GgY4MEz8gK1kbe6qJkyM2JofNRVxDjsrpQxllY3Mc1aa5v3Ng8snJD
+   fwikjmjXP5jYLm/04Z22CPMK3dH3IFWuw4wyhSQAdkB1WLNoFOcSK0/IE
+   wo3+9fFzVgIVX5M3ILb/ZoAzwuXG0Vp4J8OTlzn5HiiccpHlbvRzJWb0r
+   1u3yaCGo5nlc7hty3RcGnsgPlgUcoaWpy5JNNi0CoUv4JqqfrmYeMBDJD
+   A==;
+X-CSE-ConnectionGUID: fhjbB3XGSlu/GAS+YyQijQ==
+X-CSE-MsgGUID: rd5PpGUESsORRZKQVUqC+w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11051"; a="9469905"
 X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
-   d="scan'208";a="12239459"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 01:25:02 -0700
-X-CSE-ConnectionGUID: Tbutb64/QoW53S6iE2h1ww==
-X-CSE-MsgGUID: ptqU0Hl8RGKNHlqLRXBcGA==
+   d="scan'208";a="9469905"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 01:29:24 -0700
+X-CSE-ConnectionGUID: pvTiepcYSe+M4K+raXNtug==
+X-CSE-MsgGUID: Nr3WqFIcTEyWnuK47X0j0Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
-   d="scan'208";a="61382338"
+   d="scan'208";a="28407865"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.39])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 01:24:59 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 01:29:21 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 22 Apr 2024 11:24:53 +0300 (EEST)
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, 
-    Hans de Goede <hdegoede@redhat.com>
+Date: Mon, 22 Apr 2024 11:29:16 +0300 (EEST)
+To: Hans de Goede <hdegoede@redhat.com>
 cc: Andy Shevchenko <andy@kernel.org>, 
     Mark Pearson <mpearson-lenovo@squebb.ca>, 
     Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
     Vishnu Sankar <vishnuocv@gmail.com>, Nitin Joshi <njoshi1@lenovo.com>, 
     ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 03/24] platform/x86: thinkpad_acpi: Drop setting
- send_/ignore_acpi_ev defaults twice
-In-Reply-To: <CAHp75VffM9nygSf-5Hn7wvo-sE6awma2VoFumnV9Xjj5d_d-pw@mail.gmail.com>
-Message-ID: <3e005949-4319-5b16-c52c-c8bfd366e1b4@linux.intel.com>
-References: <20240421154520.37089-1-hdegoede@redhat.com> <20240421154520.37089-4-hdegoede@redhat.com> <4f62150d-da65-7ecf-fc5d-50afa5dfccb3@linux.intel.com> <CAHp75VffM9nygSf-5Hn7wvo-sE6awma2VoFumnV9Xjj5d_d-pw@mail.gmail.com>
+Subject: Re: [PATCH 08/24] platform/x86: thinkpad_acpi: Move adaptive kbd
+ event handling to tpacpi_driver_event()
+In-Reply-To: <20240421154520.37089-9-hdegoede@redhat.com>
+Message-ID: <a591120c-72c6-7b6c-92ba-c65c36a8d70f@linux.intel.com>
+References: <20240421154520.37089-1-hdegoede@redhat.com> <20240421154520.37089-9-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1812511948-1713774293=:2288"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Sun, 21 Apr 2024, Hans de Goede wrote:
 
---8323328-1812511948-1713774293=:2288
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> Factor out the adaptive kbd non hotkey event handling into
+> adaptive_keyboard_change_row() and adaptive_keyboard_s_quickview_row()
+> helpers and move the handling of TP_HKEY_EV_DFR_CHANGE_ROW and
+> TP_HKEY_EV_DFR_S_QUICKVIEW_ROW to tpacpi_driver_event().
+> 
+> This groups all the handling of hotkey events which do not emit
+> a key press event together in tpacpi_driver_event().
+> 
+> This is a preparation patch for moving to sparse-keymaps.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 85 +++++++++++++++-------------
+>  1 file changed, 45 insertions(+), 40 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 0bbc462d604c..e8d30f4af126 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -3677,51 +3677,50 @@ static int adaptive_keyboard_get_next_mode(int mode)
+>  	return adaptive_keyboard_modes[i];
+>  }
+>  
+> +static void adaptive_keyboard_change_row(void)
+> +{
+> +	int mode;
+> +
+> +	if (adaptive_keyboard_mode_is_saved) {
+> +		mode = adaptive_keyboard_prev_mode;
+> +		adaptive_keyboard_mode_is_saved = false;
+> +	} else {
+> +		mode = adaptive_keyboard_get_mode();
+> +		if (mode < 0)
+> +			return;
+> +		mode = adaptive_keyboard_get_next_mode(mode);
+> +	}
+> +
+> +	adaptive_keyboard_set_mode(mode);
+> +}
+> +
+> +static void adaptive_keyboard_s_quickview_row(void)
+> +{
+> +	int mode = adaptive_keyboard_get_mode();
+> +
+> +	if (mode < 0)
 
-On Mon, 22 Apr 2024, Andy Shevchenko wrote:
+Please try to keep call and it's error handling together, it costs one 
+line but takes less effort to understand:
 
-> On Mon, Apr 22, 2024 at 11:07=E2=80=AFAM Ilpo J=C3=A4rvinen
-> <ilpo.jarvinen@linux.intel.com> wrote:
-> > On Sun, 21 Apr 2024, Hans de Goede wrote:
-> >
-> > > send_acpi_ev, ignore_acpi_ev are already initialized to true resp. fa=
-lse by
-> >
-> > Wording here is odd (but I'm not native so could be I just don't
-> > understand what "true resp. false" is supposed to mean/fit into the
-> > general structure of this sentence). I could nonetheless guess the
-> > general meaning of the sentence despite that, but you might want to
-> > consider rewording it into something that is easier to understand.
->=20
-> I read that as "true and false respectively", which is probably better
+	int mode;
 
-That's what I expected to see (although with a comma before respectively).
+	mode = adaptive_keyboard_get_mode();
+	if (mode < 0)
 
-Looking a bit more into it, it seems the placement in the middle is=20
-probably an artifact from another language (claimed to not be correct=20
-English):
+> +		return;
+> +
+> +	adaptive_keyboard_prev_mode = mode;
+> +	adaptive_keyboard_mode_is_saved = true;
+> +
+> +	adaptive_keyboard_set_mode(FUNCTION_MODE);
+> +}
 
-https://en.wiktionary.org/wiki/resp.
-
-> to be spelled this way.
-
---=20
+-- 
  i.
 
---8323328-1812511948-1713774293=:2288--
+
+
+> +
+>  static bool adaptive_keyboard_hotkey_notify_hotkey(const u32 hkey)
+>  {
+> -	int current_mode = 0;
+> -	int new_mode = 0;
+> -
+> -	switch (hkey) {
+> -	case TP_HKEY_EV_DFR_CHANGE_ROW:
+> -		if (adaptive_keyboard_mode_is_saved) {
+> -			new_mode = adaptive_keyboard_prev_mode;
+> -			adaptive_keyboard_mode_is_saved = false;
+> -		} else {
+> -			current_mode = adaptive_keyboard_get_mode();
+> -			if (current_mode < 0)
+> -				return false;
+> -			new_mode = adaptive_keyboard_get_next_mode(
+> -					current_mode);
+> -		}
+> -
+> -		if (adaptive_keyboard_set_mode(new_mode) < 0)
+> -			return false;
+> -
+> +	if (tpacpi_driver_event(hkey))
+>  		return true;
+>  
+> -	case TP_HKEY_EV_DFR_S_QUICKVIEW_ROW:
+> -		current_mode = adaptive_keyboard_get_mode();
+> -		if (current_mode < 0)
+> -			return false;
+> -
+> -		adaptive_keyboard_prev_mode = current_mode;
+> -		adaptive_keyboard_mode_is_saved = true;
+> -
+> -		if (adaptive_keyboard_set_mode (FUNCTION_MODE) < 0)
+> -			return false;
+> -		return true;
+> -
+> -	default:
+> -		if (hkey < TP_HKEY_EV_ADAPTIVE_KEY_START ||
+> -		    hkey > TP_HKEY_EV_ADAPTIVE_KEY_END) {
+> -			pr_info("Unhandled adaptive keyboard key: 0x%x\n", hkey);
+> -			return false;
+> -		}
+> -		tpacpi_input_send_key(hkey - TP_HKEY_EV_ADAPTIVE_KEY_START +
+> -				      TP_ACPI_HOTKEYSCAN_ADAPTIVE_START);
+> -		return true;
+> +	if (hkey < TP_HKEY_EV_ADAPTIVE_KEY_START ||
+> +	    hkey > TP_HKEY_EV_ADAPTIVE_KEY_END) {
+> +		pr_info("Unhandled adaptive keyboard key: 0x%x\n", hkey);
+> +		return false;
+>  	}
+> +
+> +	tpacpi_input_send_key(hkey - TP_HKEY_EV_ADAPTIVE_KEY_START +
+> +			      TP_ACPI_HOTKEYSCAN_ADAPTIVE_START);
+> +	return true;
+>  }
+>  
+>  static bool hotkey_notify_extended_hotkey(const u32 hkey)
+> @@ -11117,6 +11116,12 @@ static bool tpacpi_driver_event(const unsigned int hkey_event)
+>  		}
+>  		/* Key events are suppressed by default hotkey_user_mask */
+>  		return false;
+> +	case TP_HKEY_EV_DFR_CHANGE_ROW:
+> +		adaptive_keyboard_change_row();
+> +		return true;
+> +	case TP_HKEY_EV_DFR_S_QUICKVIEW_ROW:
+> +		adaptive_keyboard_s_quickview_row();
+> +		return true;
+>  	case TP_HKEY_EV_THM_CSM_COMPLETED:
+>  		lapsensor_refresh();
+>  		/* If we are already accessing DYTC then skip dytc update */
+> 
