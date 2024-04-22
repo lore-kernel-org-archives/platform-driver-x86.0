@@ -1,93 +1,105 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948F948CF2
-	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Apr 2024 08:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832214CB2E
+	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Apr 2024 08:25:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713773548; cv=none; b=k60r0bPromStJAJfJAccjvI3OlilDXv4tVBtp5bVCJA/4Gz3H3GN5+R3UmjVipKYi9k5cN/iPlcKbfU2d0VE4cpGuS5gFRQYJqY8yye/S3shmkn3klkBSagebSEf2cSTniBTWMACrEw3jS+dgZdFR7US5fh57Ewhr27h6us5oQ0=
+	t=1713774304; cv=none; b=OaXPah1av5Yc4y0bw5X35AEMCjb3dXVVOlI9i9Ct3FdNBEYBhUyyt1dqHExb0KEuoBdDS3XuXgyKV27cBiDVgfVVSE5Y0hg0l8tWDIlnR6oTyGR5WYdU1/zKgqeMpXzFWfTYBZt+37VU4VOH+Z6EFSNKc0auYyBy+kb1pPNYdlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713773548; c=relaxed/simple;
-	bh=qbDlLFNVO4x6gAeeU7l2z+E9coMIS5aOXfWsGqCnv7M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yj17f0ydLyHN2/W36ozIHSDjIR/ezZn1jOs8ElYGnxtn2+lkpGi0IpSEVDcSz6ZM8SdcV0o1mQKiwBxx3Xqni4yx3hMWKY2kX1w8THQo8TKfQemcI/a6Y5aAQ9Cv6Jd8VK4NByGpNsU/djBHGfq1B+PDu+spw1UoG2DHMzll4E4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GY+vaUWG; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713774304; c=relaxed/simple;
+	bh=ZZUkxcd5HRPlU6HRuiPzN1HLyYZMGypeXh5z5HcjtyQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=XyB1oUbckDN83Wi7ChQUsfrHdS/DROe3I/JfiUyefjlOeA2/KaPq8kv7N0XHLTeatYktKqzPcsjGfOsEaFVs98UfBavWW+lJOdnQUMScTJIzk/BXso/3ziAWfq6SyMAf5QBT3vww3HL+x8LUZLIPMxZNEfaelziGKJ3PvgZgQkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kIcEwcUH; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GY+vaUWG"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-56e78970853so8220376a12.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Apr 2024 01:12:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713773545; x=1714378345; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qbDlLFNVO4x6gAeeU7l2z+E9coMIS5aOXfWsGqCnv7M=;
-        b=GY+vaUWGZNbiA0ePYFWPddHoLZ8qIR6dtH6bWf2pdDRuv4NZh7HW+EyRA0Xa/t4lLH
-         DwcCPpZCJZv6Qp9Nd7Cc9rkOZIpg8sOIuFpsNLc50InjKi16O0oZEbDQZbogfY3uJXd2
-         exWl/39tBjFFciYKDp24EkX1Ftg4b6UjlaRVspGPTJLLnk6XqLZHtT95/1PEx3DJI7EE
-         5Kt+/tdSxvPqGxH7UtGsKNUP0rHkux599PgP7Xk5gYj3TMUzUcsj8mWYr4OvohwG1mkV
-         LZuaDKDVebiOW5LExnuycO+qNnZvAtP2ZgAS1/6nAUbqK+q5nFsACSLjBBpo+LMIeRIQ
-         StGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713773545; x=1714378345;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qbDlLFNVO4x6gAeeU7l2z+E9coMIS5aOXfWsGqCnv7M=;
-        b=CN2kskyVBq+ZNuQPEejOID2t5RvSQyaHoPUmWj1c52mzYShyssD3XF66LzuPWTx3Bn
-         lHkYDr+szF1Bc8YDMKZc3AVBKV+FK/3wy37WEqaASSIGxnZbLMeMnwxeS+qrNmUCU7rV
-         7pRZdO1zqI/6+5nYIYc3cLXV3coxdLv+vCfSyx+epQDAnlMoJybzJRnbQaaSUV9owlQb
-         2H5ySjN6KmJsXvydEDE+QwNKaI9YcHIeX2sGMt4c5hfj+Vf+CcdFf3iuw6UFHN2JRnl0
-         QctOkq2Ngxaz0zVqLPKQV0/FOzStn2AhK1G8W2lEBkPgivWwmT58v4QAxBbNgaduDdFe
-         PxEg==
-X-Forwarded-Encrypted: i=1; AJvYcCXVN7Tp2ZANj/7RmMH6qP0Kr1gGU873nkev15C6Z9saqezWc54xbhaQ7eAiVuSn0ptSsVORVvsd50HmYr++2GNptb0YO9+f6UoIR3LvCcNFumJKuA==
-X-Gm-Message-State: AOJu0YyO7JTC99mC1hEAOkqygLVo8V0g1I85q+B34r57Y/YIu8jAGbbX
-	QzgqZRtcIHQtI6OtutB1MmnwT0Ao2XW23j1wYF8riOPhVvYOMK2iOfvdbIzEVUCwwEy5Oydy3AS
-	sk/7Dhzxa9nTH2kg7aCLwzd0MOJ4RcAwI
-X-Google-Smtp-Source: AGHT+IE69oOFWfi7CqD5yKNcCqmBI6jkWHnZQALlp+F8+Gi10+mfcsCi/kqrocVwuuY9mCR118pQRgcJ34nxFf+iA58=
-X-Received: by 2002:a17:907:94cb:b0:a55:b25e:a2df with SMTP id
- dn11-20020a17090794cb00b00a55b25ea2dfmr2953969ejc.37.1713773544603; Mon, 22
- Apr 2024 01:12:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kIcEwcUH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713774302; x=1745310302;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ZZUkxcd5HRPlU6HRuiPzN1HLyYZMGypeXh5z5HcjtyQ=;
+  b=kIcEwcUHoB5WWnBSAkHPeylUD0aL1vPrSpFkcY/WzAp33ELAR25SG1NR
+   kGwFGyHQWHIs5iMbd9mLjIviBMs3IiOeCdWiQiiHxr+lGBbNBYCP280ZZ
+   ZCGupkIAibzRSsPvvEUCDW1h/4kw/T4eiYxqO5ZoJ7MLskO3hSZnPOHek
+   gYhxYRMNMXouFiV/uyoVkWc8ifL9Rc6Lb+XqfxDRnNgjda79blFli+oYh
+   gy4w5+J9FhqlfQ4XDOU9XNk4vYvb1Z7GSpCZz+5kTWMayXQ7vCVXQsRaj
+   jgxyDm3TAR5uefQndk/cP0n4pPngn/oM4CDs8p0Ef1eFI9MPjkth54EoR
+   Q==;
+X-CSE-ConnectionGUID: cfxxCprXRR2IyJBcLNt7ug==
+X-CSE-MsgGUID: vLFzp8MzSHCfWOeVTzAc7g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11051"; a="12239459"
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="12239459"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 01:25:02 -0700
+X-CSE-ConnectionGUID: Tbutb64/QoW53S6iE2h1ww==
+X-CSE-MsgGUID: ptqU0Hl8RGKNHlqLRXBcGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="61382338"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.39])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 01:24:59 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 22 Apr 2024 11:24:53 +0300 (EEST)
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, 
+    Hans de Goede <hdegoede@redhat.com>
+cc: Andy Shevchenko <andy@kernel.org>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+    Vishnu Sankar <vishnuocv@gmail.com>, Nitin Joshi <njoshi1@lenovo.com>, 
+    ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 03/24] platform/x86: thinkpad_acpi: Drop setting
+ send_/ignore_acpi_ev defaults twice
+In-Reply-To: <CAHp75VffM9nygSf-5Hn7wvo-sE6awma2VoFumnV9Xjj5d_d-pw@mail.gmail.com>
+Message-ID: <3e005949-4319-5b16-c52c-c8bfd366e1b4@linux.intel.com>
+References: <20240421154520.37089-1-hdegoede@redhat.com> <20240421154520.37089-4-hdegoede@redhat.com> <4f62150d-da65-7ecf-fc5d-50afa5dfccb3@linux.intel.com> <CAHp75VffM9nygSf-5Hn7wvo-sE6awma2VoFumnV9Xjj5d_d-pw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240421154520.37089-1-hdegoede@redhat.com> <20240421154520.37089-4-hdegoede@redhat.com>
- <4f62150d-da65-7ecf-fc5d-50afa5dfccb3@linux.intel.com>
-In-Reply-To: <4f62150d-da65-7ecf-fc5d-50afa5dfccb3@linux.intel.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 22 Apr 2024 11:11:47 +0300
-Message-ID: <CAHp75VffM9nygSf-5Hn7wvo-sE6awma2VoFumnV9Xjj5d_d-pw@mail.gmail.com>
-Subject: Re: [PATCH 03/24] platform/x86: thinkpad_acpi: Drop setting
- send_/ignore_acpi_ev defaults twice
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-	Vishnu Sankar <vishnuocv@gmail.com>, Nitin Joshi <njoshi1@lenovo.com>, 
-	ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323328-1812511948-1713774293=:2288"
 
-On Mon, Apr 22, 2024 at 11:07=E2=80=AFAM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
-> On Sun, 21 Apr 2024, Hans de Goede wrote:
->
-> > send_acpi_ev, ignore_acpi_ev are already initialized to true resp. fals=
-e by
->
-> Wording here is odd (but I'm not native so could be I just don't
-> understand what "true resp. false" is supposed to mean/fit into the
-> general structure of this sentence). I could nonetheless guess the
-> general meaning of the sentence despite that, but you might want to
-> consider rewording it into something that is easier to understand.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I read that as "true and false respectively", which is probably better
-to be spelled this way.
+--8323328-1812511948-1713774293=:2288
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Mon, 22 Apr 2024, Andy Shevchenko wrote:
+
+> On Mon, Apr 22, 2024 at 11:07=E2=80=AFAM Ilpo J=C3=A4rvinen
+> <ilpo.jarvinen@linux.intel.com> wrote:
+> > On Sun, 21 Apr 2024, Hans de Goede wrote:
+> >
+> > > send_acpi_ev, ignore_acpi_ev are already initialized to true resp. fa=
+lse by
+> >
+> > Wording here is odd (but I'm not native so could be I just don't
+> > understand what "true resp. false" is supposed to mean/fit into the
+> > general structure of this sentence). I could nonetheless guess the
+> > general meaning of the sentence despite that, but you might want to
+> > consider rewording it into something that is easier to understand.
+>=20
+> I read that as "true and false respectively", which is probably better
+
+That's what I expected to see (although with a comma before respectively).
+
+Looking a bit more into it, it seems the placement in the middle is=20
+probably an artifact from another language (claimed to not be correct=20
+English):
+
+https://en.wiktionary.org/wiki/resp.
+
+> to be spelled this way.
 
 --=20
-With Best Regards,
-Andy Shevchenko
+ i.
+
+--8323328-1812511948-1713774293=:2288--
