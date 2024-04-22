@@ -1,141 +1,176 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9BF14F9EE
-	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Apr 2024 13:32:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7736E502B4
+	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Apr 2024 13:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713792721; cv=none; b=WH6Iu2HMjGwEb8yfDFnhwXHK0NdbzEC/dtJY2YWYpZEZHqagRlLHtvsuJgv6yLfszebNeC4LLYJ/sU530Qi/nVWzT84J63E9xcvRm+t26/2LtCUCZEWZuwcv0RC72nBFbVN2xFlGZJLq3VcWrc/ZmlSlXyvmiSt1EWB/pnRdlyE=
+	t=1713793025; cv=none; b=a2BIJhd67gcD6ToqgLlXNjidMzmp+GQdj3G3LQRwbMIU7pB3PTbEG8yHdW3ZgtGKERfo2GK5E3QtjnUMo0oT6+QsorzN614OkrOEOZq/AumdxGM+/qNOgSHN5gZdJ+48DXJxk6wHszs3hCAm6rzL5D+Hi2YK+56P29ZTQj/5LjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713792721; c=relaxed/simple;
-	bh=awX5B76+HzKgX2w5I2DsXCUaJAK/mYe3tND15fSkqMY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ARH32/FiFCpwcRmVObkH3jr87Bknwmxl8wBiugx5L1RtXQI7u5u/+vOfbNCBCGK6lBQAUEGmsf849Z+57XHqgECvbhdPvtuQW3xGF4Y41DP1z8uArojWI6uZ8VUgDbzIAK+XaknmM5pAJc1OMjCLTCKWACdRAeErw3XILVO23nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BdpCVAH1; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1713793025; c=relaxed/simple;
+	bh=jHmrLYZ9rlVTgF1b06oQ3ynQqEnosaRydI+onPY5kvM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ugzWkNE2KgE0MSso1XCB5UHDFuFFy2Oh6rTMALmUz02+S/eiHV0Wta/ENZrg5Oq96W4opfAZl0RJbnpBhPj1vGxFPTWM6ie9Ipbs/ouYJ7XMBkKLuLgTISWalg2Al4JJ8vmdvyFaFs+njpfxnVduv09fNkMlKo1xjNt4vHey3DM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gL1h23fG; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BdpCVAH1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713792719;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ANX+xaTgZeaaXkTxg9wkNgDys/2r+xl16Yffp7Qdk4w=;
-	b=BdpCVAH17xvRTh29y5nKxzxfrMRJaH+nhHA+dz4dURPHPJECCjvYLWlNFZcIFHdMBUOciY
-	+mE6O+o4PLgN73zoP3i7VxRrlkM7cyMn2Iws5YduDUpYulytTkj/2fmETzza9QpPM6UnBZ
-	cRZ0W9y5v6b0pys31/Z0JqHsdtASwyA=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-634-r97tuwTyMr20uIDsxztCxg-1; Mon, 22 Apr 2024 09:31:56 -0400
-X-MC-Unique: r97tuwTyMr20uIDsxztCxg-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a5741ee352bso27611666b.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Apr 2024 06:31:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713792715; x=1714397515;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ANX+xaTgZeaaXkTxg9wkNgDys/2r+xl16Yffp7Qdk4w=;
-        b=im4Fr361rFmouMFo6krIzMhvorjXcG3OBa5gvuohNzw4eQYpbn1R5/yvz1JSg6NSoP
-         8jgx/PPW6SMwawbkSFW/t5O87erds+SbB+D9/tyc06xieKP98xuCyjEL68jB130xoAHo
-         ZZszxOrhxcSKEdGCKPxO2vqI6/Qh9aQZyZ2BstJgiBwJDX5C8qlZASoDyJL5a4/G28OD
-         VxicQIZjyN/4JDV1Ic0xjyq61F9tgxONSUWkQYBZZan58WoqAJloLCnxl9fIFRsLqGyy
-         01qXjmAAzPv6sMq5O3NO0Yjxf5BmFfrtBbfVQqIru+eFkTpMFGu2BU+zeMAnQgH2qrOf
-         mmZA==
-X-Forwarded-Encrypted: i=1; AJvYcCVKkJiio2D5NjSoOTkT9wvzdGv9XyTNELOSw5G/NsZvnT3+deVNh3C/yUINavFUDRHiEFOSgWh/8XI6o7rmgrWiEvZGhVMHukD+LyfMdpz1Qf/2Tw==
-X-Gm-Message-State: AOJu0Yzr/FUE6hIjcxi6KCqmDC4LfplCckFjixvetPE6d5eW0vy8QJZS
-	JsT8M2l5SDFWt37etqnYEZdmtIYGw07a42BjgXYenv5fIZWHssUEkm4o4KveIUltg5gLWAUP419
-	H6tIyCFGFL3kZlvhPBAFzT0QwnGo23bSKTC+BKzm1re/Xe4SG0KQaovTC7TKNRBIFFHAH6Jg=
-X-Received: by 2002:a17:907:94cb:b0:a55:b272:ea02 with SMTP id dn11-20020a17090794cb00b00a55b272ea02mr2618071ejc.75.1713792714915;
-        Mon, 22 Apr 2024 06:31:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG82ZH8/Jtju0mhAdG8/PW4XqvBdwQxaB7D0jxdPhLmOnBwNV/D0nX8zuy+43rjCw52vpCfaQ==
-X-Received: by 2002:a17:907:94cb:b0:a55:b272:ea02 with SMTP id dn11-20020a17090794cb00b00a55b272ea02mr2618055ejc.75.1713792714632;
-        Mon, 22 Apr 2024 06:31:54 -0700 (PDT)
-Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id bk2-20020a170907360200b00a55a8ec5879sm2130351ejc.116.2024.04.22.06.31.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Apr 2024 06:31:54 -0700 (PDT)
-Message-ID: <25965583-4d8a-4e7a-9a2e-83ec2faa4187@redhat.com>
-Date: Mon, 22 Apr 2024 15:31:53 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gL1h23fG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713793023; x=1745329023;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=jHmrLYZ9rlVTgF1b06oQ3ynQqEnosaRydI+onPY5kvM=;
+  b=gL1h23fG5hKhqbG1Vt7QuAc15zXKDjtw7kKpY0tRT0W2JXmLtGIJDDab
+   FOFkEe8i5NlPMHvkyMBXLsL2pc4aAtxYShW+VQ3n+SJ9hXHHBwsk4o9U2
+   ZelbsRSJhen4Lr33Wf7bTB2Y+WMdDroPEPSNwNeU71FQ9nt8Yw92ToxXl
+   8dsS/Hm3qE5Bcdqg9i32/cQuzqYFsNn2SenIubgC5GkBEJlpBdYUC3OD/
+   9L13+4+fybVHGl//kzguxOjOlAxKWdq4WBG82dDt7JY5Ma9CslOkhIle4
+   LSsCPADvHczjcf6npDlD3PbvT2hD57ZbKe8Qp+emw+pf96YmsSqxtAWy/
+   Q==;
+X-CSE-ConnectionGUID: UwC5DVW8RhGHzVRg+8PAGw==
+X-CSE-MsgGUID: TrUiD8rDT4utmsN5LIB2BA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11052"; a="9158656"
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="9158656"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 06:37:03 -0700
+X-CSE-ConnectionGUID: jaCctwm2RiuG9PSSPFfviw==
+X-CSE-MsgGUID: XN8egspWRwiDUwD2LblIbw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
+   d="scan'208";a="54954305"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.39])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 06:37:01 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 22 Apr 2024 16:36:57 +0300 (EEST)
+To: Hans de Goede <hdegoede@redhat.com>
+cc: Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: Add lenovo-yoga-tab2-pro-1380-fastcharger
+ driver
+In-Reply-To: <20240422131649.46002-1-hdegoede@redhat.com>
+Message-ID: <f6260783-5ff9-2ab4-81bc-9d3ad8d363b2@linux.intel.com>
+References: <20240422131649.46002-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] platform/x86/intel/pmc: Fix PCH names in comments
-To: Colin Ian King <colin.i.king@gmail.com>,
- Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- David E Box <david.e.box@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240418215202.879171-1-colin.i.king@gmail.com>
-Content-Language: en-US
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240418215202.879171-1-colin.i.king@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323328-38787652-1713793017=:2288"
 
-Hi,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 4/18/24 11:52 PM, Colin Ian King wrote:
-> The PCH names in the pmc drivers are incorrect in the comments,
-> fix these.
-> 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+--8323328-38787652-1713793017=:2288
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+On Mon, 22 Apr 2024, Hans de Goede wrote:
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
+> Add a new driver for the custom fast charging protocol found on Lenovo Yo=
+ga
+> Tablet 2 1380F / 1380L models.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  drivers/platform/x86/intel/pmc/arl.c | 2 +-
->  drivers/platform/x86/intel/pmc/lnl.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
-> index 34b4cd23bfe5..e10527c4e3e0 100644
-> --- a/drivers/platform/x86/intel/pmc/arl.c
-> +++ b/drivers/platform/x86/intel/pmc/arl.c
-> @@ -1,7 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
->   * This file contains platform specific structure definitions
-> - * and init function used by Meteor Lake PCH.
-> + * and init function used by Arrow Lake PCH.
->   *
->   * Copyright (c) 2022, Intel Corporation.
->   * All Rights Reserved.
-> diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/intel/pmc/lnl.c
-> index 068d72504683..ec89e7dda103 100644
-> --- a/drivers/platform/x86/intel/pmc/lnl.c
-> +++ b/drivers/platform/x86/intel/pmc/lnl.c
-> @@ -1,7 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
->   * This file contains platform specific structure definitions
-> - * and init function used by Meteor Lake PCH.
-> + * and init function used by Lunar Lake PCH.
->   *
->   * Copyright (c) 2022, Intel Corporation.
->   * All Rights Reserved.
+> Changes in v2 (from review by Andy):
+> - Add a couple of missing includes
+> - Couple of small coding style fixes
+> ---
+>  drivers/platform/x86/Kconfig                  |  11 +
+>  drivers/platform/x86/Makefile                 |   1 +
+>  .../lenovo-yoga-tab2-pro-1380-fastcharger.c   | 337 ++++++++++++++++++
+>  3 files changed, 349 insertions(+)
+>  create mode 100644 drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastch=
+arger.c
+>=20
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index cd0ec10240b6..318f2f77c97a 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -133,6 +133,17 @@ config YOGABOOK
+>  =09  To compile this driver as a module, choose M here: the module will
+>  =09  be called lenovo-yogabook.
+> =20
+> +config YT2_1380
+> +=09tristate "Lenovo Yoga Tablet 2 1380 fast charge driver"
+> +=09depends on SERIAL_DEV_BUS
+> +=09depends on ACPI
+> +=09help
+> +=09  Say Y here to enable support for the custom fast charging protocol
+> +=09  found on the Lenovo Yoga Tablet 2 1380F / 1380L models.
+> +
+> +=09  To compile this driver as a module, choose M here: the module will
+> +=09  be called lenovo-yogabook.
+> +
+>  config ACERHDF
+>  =09tristate "Acer Aspire One temperature and fan driver"
+>  =09depends on ACPI && THERMAL
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefil=
+e
+> index 5521a87f0718..2640475a9f97 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)=09+=3D hdaps.o
+>  obj-$(CONFIG_THINKPAD_ACPI)=09+=3D thinkpad_acpi.o
+>  obj-$(CONFIG_THINKPAD_LMI)=09+=3D think-lmi.o
+>  obj-$(CONFIG_YOGABOOK)=09=09+=3D lenovo-yogabook.o
+> +obj-$(CONFIG_YT2_1380)=09=09+=3D lenovo-yoga-tab2-pro-1380-fastcharger.o
+>  obj-$(CONFIG_LENOVO_WMI_CAMERA)=09+=3D lenovo-wmi-camera.o
+> =20
+>  # Intel
+> diff --git a/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c=
+ b/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
+> new file mode 100644
+> index 000000000000..035d8cc86079
+> --- /dev/null
+> +++ b/drivers/platform/x86/lenovo-yoga-tab2-pro-1380-fastcharger.c
+> @@ -0,0 +1,337 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Support for the custom fast charging protocol found on the Lenovo Yog=
+a
+> + * Tablet 2 1380F / 1380L models.
+> + *
+> + * Copyright (C) 2024 Hans de Goede <hansg@kernel.org>
+> + */
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/errno.h>
+> +#include <linux/extcon.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/notifier.h>
+> +#include <linux/pinctrl/consumer.h>
+> +#include <linux/pinctrl/machine.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/serdev.h>
+> +#include <linux/types.h>
+> +#include <linux/workqueue.h>
+> +#include "serdev_helpers.h"
+> +
+> +#define YT2_1380_FC_PDEV_NAME=09=09"lenovo-yoga-tab2-pro-1380-fastcharge=
+r"
+> +#define YT2_1380_FC_SERDEV_CTRL=09=09"serial0"
+> +#define YT2_1380_FC_SERDEV_NAME=09=09"serial0-0"
+> +#define YT2_1380_FC_EXTCON_NAME=09=09"i2c-lc824206xa"
+> +
+> +#define YT2_1380_FC_MAX_TRIES=09=095
+> +#define YT2_1380_FC_PIN_SW_DELAY_US=09(10 * USEC_PER_MSEC)
+> +#define YT2_1380_FC_UART_DRAIN_DELAY_US=09(50 * USEC_PER_MSEC)
+> +#define YT2_1380_FC_VOLT_SW_DELAY_US=09(1000 * USEC_PER_MSEC)
 
+Add include for *SEC_PER_*SEC.
+
+Once that's taken care of,
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+--8323328-38787652-1713793017=:2288--
