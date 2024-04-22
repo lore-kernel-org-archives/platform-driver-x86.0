@@ -1,207 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48764F5FD
-	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Apr 2024 08:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1627A1465A2
+	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Apr 2024 11:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713774567; cv=none; b=J+fS9LZBl2h8MyPCXJTh3yPERyhCqKQeAsvM9H8k8pFWm4AnlfNNgc0L485NUymySQ66hpqzbWGrUKxat3dykPvCfF8YMei0Deyl9nWHWSHnWN9pm6qQ8dCTiccFMpzrSA0HqAI7ndoEcbVoZkhyghTX6WsZMXTtZEQbR2tijOc=
+	t=1713785752; cv=none; b=ByV6y+ccwvIMCoFN3QSIil5peQB6jgWXKs6xa8QWP5bvwPz5S1iFZfUXSS1VKe/Hdlg88blGLCs74fiv4lH+uK8/eM/4/eswIhHDvb4m2C4G7YJU4gZorb5IxrLzwkcDOEIX/pJrzU9aVLyzDg0NVlt4Wk8F6rA3vRXKOuTSkW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713774567; c=relaxed/simple;
-	bh=zSVBedYegDe/2QMEXLsfrTchWkMvOwDEFIqe4ABbrrU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=qtT2SSXvQlI1QovdxRa7nQgLtX9sHOnEk6Dm6AIOgpt/NaevcTkrUqUOt0QTxErTuy3OW1CzCGEJsCSJ6UbHCMJD0R9JOtRYa1oUMPDlOEm4y2RPby0fxhBdV47uqkhcIVDAgo36M2ws8MKIRWqIe+KT99Utm53hRScsCtN2OCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nBd+n1TU; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713785752; c=relaxed/simple;
+	bh=GZgxhB4soXpkcQLkDP9YlJqehsROYIvCF2lEckKBQmA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ijTw9Xl/a0sQ+SVEgUboxETa7R1tTEcyZ7oWuF77xTrQaqr5+feyOnL6wHnVACBNt2HSolsZ/oo3xaxtj7PcSbpse3Q8UXV9609vEn4omycj/NfvYjsve4pG48k8gVyqImdxThw5KsqfjWJ0c74WQgTjL4hW0UG9qlYbBPkqzTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U2GylrKh; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nBd+n1TU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713774566; x=1745310566;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=zSVBedYegDe/2QMEXLsfrTchWkMvOwDEFIqe4ABbrrU=;
-  b=nBd+n1TUihwFsOqCrOS3mQI/0sh3t/lzHIxroPXuKL9ogIG+k6knAMoo
-   UxJXUtrQSsMP7IY5Q3IvZmUluEdw7lyHq8U6+gkRAPhzq47EUR+sLFrCF
-   7S7GgY4MEz8gK1kbe6qJkyM2JofNRVxDjsrpQxllY3Mc1aa5v3Ng8snJD
-   fwikjmjXP5jYLm/04Z22CPMK3dH3IFWuw4wyhSQAdkB1WLNoFOcSK0/IE
-   wo3+9fFzVgIVX5M3ILb/ZoAzwuXG0Vp4J8OTlzn5HiiccpHlbvRzJWb0r
-   1u3yaCGo5nlc7hty3RcGnsgPlgUcoaWpy5JNNi0CoUv4JqqfrmYeMBDJD
-   A==;
-X-CSE-ConnectionGUID: fhjbB3XGSlu/GAS+YyQijQ==
-X-CSE-MsgGUID: rd5PpGUESsORRZKQVUqC+w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11051"; a="9469905"
-X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
-   d="scan'208";a="9469905"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 01:29:24 -0700
-X-CSE-ConnectionGUID: pvTiepcYSe+M4K+raXNtug==
-X-CSE-MsgGUID: Nr3WqFIcTEyWnuK47X0j0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,220,1708416000"; 
-   d="scan'208";a="28407865"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.39])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2024 01:29:21 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 22 Apr 2024 11:29:16 +0300 (EEST)
-To: Hans de Goede <hdegoede@redhat.com>
-cc: Andy Shevchenko <andy@kernel.org>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-    Vishnu Sankar <vishnuocv@gmail.com>, Nitin Joshi <njoshi1@lenovo.com>, 
-    ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 08/24] platform/x86: thinkpad_acpi: Move adaptive kbd
- event handling to tpacpi_driver_event()
-In-Reply-To: <20240421154520.37089-9-hdegoede@redhat.com>
-Message-ID: <a591120c-72c6-7b6c-92ba-c65c36a8d70f@linux.intel.com>
-References: <20240421154520.37089-1-hdegoede@redhat.com> <20240421154520.37089-9-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2GylrKh"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56e6a1edecfso6532210a12.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Apr 2024 04:35:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713785749; x=1714390549; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pzj5YK1Bd80oPjOtv0BzKMOOVvRtSlpXAgwXFAF8hIg=;
+        b=U2GylrKhr59QVrlI8VgyhrC/4pQ1HujDqaPvFoXBqgJsdBip4XMoWodga39Y76RG4c
+         Ae7Yk+FIyjLYkKdVZ3Zjdwkcmqrye7dMFUuYxqKUHsMQG2ZIAOgGxe2Hb1S19A4uwMI9
+         b7oxRn7BhpDeylrkP0FCK9cPj2Gmwg8LJQWsAoEzKENjNhTQycoWU0hF07p3c4vXH7cA
+         N+f8GSI7x7lXXeoJ25E7AM/xlTe/3I/c5lSuWNXUZ4fWvFMfhbFv6oku8mKRCtGBDPtW
+         yx13kDIArohqQJQdZ9103y3N20PJXr3vIm+ugaMhSDbm9IIydJ1L4qUfB/4ppj03qP9Z
+         OIxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713785749; x=1714390549;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pzj5YK1Bd80oPjOtv0BzKMOOVvRtSlpXAgwXFAF8hIg=;
+        b=UoI2XYMTmYrwdQF3jzE2n5tq8E5/OuAo7M4iRpy5qkH5zLS60Bt8CSjuq8n/VWI0/q
+         nISHshhCRc52Eo8SJ0idbb9pris9ndV7oWKAsW2I5l0IFI9aeG77hPOFGFHjS9XYHtBC
+         Qxk/nr+bOq6kLOP8OjkBNiRbybd832aPHxl/QhH0/FJj61hghFhTEJuKTmzfEpJ0AfMw
+         tjtj+TZzAvBc4qAFNU148cfj7w22Kysjtf7Rp1LyRU8rj80QEU6xGGYf4mBu/4yth2Py
+         PvTHhR8S8rswZqDg7CRnOmiD4IUwowZskgQ1wkMrqYBxwj1mLrV1zQh/QdrH5m6ioEUR
+         o0cg==
+X-Forwarded-Encrypted: i=1; AJvYcCVMuGUUCtVa1Y5cHUoRMdR42RZ5TwrpfOL/JpTnnL2zg8zA3MmEJtIHNC9XneEHwCEyFRvhUFCdEcGvA2k1OH8btc6EqlkNlyHFOtR9OU6kVmz7uQ==
+X-Gm-Message-State: AOJu0YzOvViM1OtY6A0ZRoGWXgZAvYuFhpXtyI280WUQnQXJkHoczCCp
+	OdLw/O58QrM2HS78RaJ4Yz/LbX92Y9DSJmgkCNjbD0LkFWWxdQSwzBt+4MlILqPMrUgmng2rm/g
+	/dhuxA2EClPoyyQbq7a8zFMqVLnK7+Stz
+X-Google-Smtp-Source: AGHT+IGnCelmQzhv9aeURXGp8t89ibUvXDMrPd1ZcoiHxDqfvIn2WOKz1vpyYK01ZmGYWtQ271e52H7pJshnBx7eTmQ=
+X-Received: by 2002:a17:907:7b86:b0:a52:5b71:d91f with SMTP id
+ ne6-20020a1709077b8600b00a525b71d91fmr8102241ejc.19.1713785749097; Mon, 22
+ Apr 2024 04:35:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20240421154520.37089-1-hdegoede@redhat.com> <20240421154520.37089-9-hdegoede@redhat.com>
+ <a591120c-72c6-7b6c-92ba-c65c36a8d70f@linux.intel.com>
+In-Reply-To: <a591120c-72c6-7b6c-92ba-c65c36a8d70f@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 22 Apr 2024 14:35:13 +0300
+Message-ID: <CAHp75VfM8WgZt_cDp3htfJSusvMRyoDb6LoFewb+bc4AD0T-gQ@mail.gmail.com>
+Subject: Re: [PATCH 08/24] platform/x86: thinkpad_acpi: Move adaptive kbd
+ event handling to tpacpi_driver_event()
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+	Vishnu Sankar <vishnuocv@gmail.com>, Nitin Joshi <njoshi1@lenovo.com>, 
+	ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 21 Apr 2024, Hans de Goede wrote:
+On Mon, Apr 22, 2024 at 11:29=E2=80=AFAM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+> On Sun, 21 Apr 2024, Hans de Goede wrote:
 
-> Factor out the adaptive kbd non hotkey event handling into
-> adaptive_keyboard_change_row() and adaptive_keyboard_s_quickview_row()
-> helpers and move the handling of TP_HKEY_EV_DFR_CHANGE_ROW and
-> TP_HKEY_EV_DFR_S_QUICKVIEW_ROW to tpacpi_driver_event().
-> 
-> This groups all the handling of hotkey events which do not emit
-> a key press event together in tpacpi_driver_event().
-> 
-> This is a preparation patch for moving to sparse-keymaps.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 85 +++++++++++++++-------------
->  1 file changed, 45 insertions(+), 40 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 0bbc462d604c..e8d30f4af126 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -3677,51 +3677,50 @@ static int adaptive_keyboard_get_next_mode(int mode)
->  	return adaptive_keyboard_modes[i];
->  }
->  
-> +static void adaptive_keyboard_change_row(void)
-> +{
-> +	int mode;
-> +
-> +	if (adaptive_keyboard_mode_is_saved) {
-> +		mode = adaptive_keyboard_prev_mode;
-> +		adaptive_keyboard_mode_is_saved = false;
-> +	} else {
-> +		mode = adaptive_keyboard_get_mode();
-> +		if (mode < 0)
-> +			return;
-> +		mode = adaptive_keyboard_get_next_mode(mode);
-> +	}
-> +
-> +	adaptive_keyboard_set_mode(mode);
-> +}
-> +
-> +static void adaptive_keyboard_s_quickview_row(void)
-> +{
-> +	int mode = adaptive_keyboard_get_mode();
-> +
-> +	if (mode < 0)
+...
 
-Please try to keep call and it's error handling together, it costs one 
-line but takes less effort to understand:
+> > +     int mode =3D adaptive_keyboard_get_mode();
+> > +
+> > +     if (mode < 0)
+>
+> Please try to keep call and it's error handling together, it costs one
+> line but takes less effort to understand:
+>
+>         int mode;
+>
+>         mode =3D adaptive_keyboard_get_mode();
+>         if (mode < 0)
+>
+> > +             return;
 
-	int mode;
+And not only that. In long-term maintenance the original code is prone
+to subtle errors in case some other code is squeezed in between.
 
-	mode = adaptive_keyboard_get_mode();
-	if (mode < 0)
-
-> +		return;
-> +
-> +	adaptive_keyboard_prev_mode = mode;
-> +	adaptive_keyboard_mode_is_saved = true;
-> +
-> +	adaptive_keyboard_set_mode(FUNCTION_MODE);
-> +}
-
--- 
- i.
-
-
-
-> +
->  static bool adaptive_keyboard_hotkey_notify_hotkey(const u32 hkey)
->  {
-> -	int current_mode = 0;
-> -	int new_mode = 0;
-> -
-> -	switch (hkey) {
-> -	case TP_HKEY_EV_DFR_CHANGE_ROW:
-> -		if (adaptive_keyboard_mode_is_saved) {
-> -			new_mode = adaptive_keyboard_prev_mode;
-> -			adaptive_keyboard_mode_is_saved = false;
-> -		} else {
-> -			current_mode = adaptive_keyboard_get_mode();
-> -			if (current_mode < 0)
-> -				return false;
-> -			new_mode = adaptive_keyboard_get_next_mode(
-> -					current_mode);
-> -		}
-> -
-> -		if (adaptive_keyboard_set_mode(new_mode) < 0)
-> -			return false;
-> -
-> +	if (tpacpi_driver_event(hkey))
->  		return true;
->  
-> -	case TP_HKEY_EV_DFR_S_QUICKVIEW_ROW:
-> -		current_mode = adaptive_keyboard_get_mode();
-> -		if (current_mode < 0)
-> -			return false;
-> -
-> -		adaptive_keyboard_prev_mode = current_mode;
-> -		adaptive_keyboard_mode_is_saved = true;
-> -
-> -		if (adaptive_keyboard_set_mode (FUNCTION_MODE) < 0)
-> -			return false;
-> -		return true;
-> -
-> -	default:
-> -		if (hkey < TP_HKEY_EV_ADAPTIVE_KEY_START ||
-> -		    hkey > TP_HKEY_EV_ADAPTIVE_KEY_END) {
-> -			pr_info("Unhandled adaptive keyboard key: 0x%x\n", hkey);
-> -			return false;
-> -		}
-> -		tpacpi_input_send_key(hkey - TP_HKEY_EV_ADAPTIVE_KEY_START +
-> -				      TP_ACPI_HOTKEYSCAN_ADAPTIVE_START);
-> -		return true;
-> +	if (hkey < TP_HKEY_EV_ADAPTIVE_KEY_START ||
-> +	    hkey > TP_HKEY_EV_ADAPTIVE_KEY_END) {
-> +		pr_info("Unhandled adaptive keyboard key: 0x%x\n", hkey);
-> +		return false;
->  	}
-> +
-> +	tpacpi_input_send_key(hkey - TP_HKEY_EV_ADAPTIVE_KEY_START +
-> +			      TP_ACPI_HOTKEYSCAN_ADAPTIVE_START);
-> +	return true;
->  }
->  
->  static bool hotkey_notify_extended_hotkey(const u32 hkey)
-> @@ -11117,6 +11116,12 @@ static bool tpacpi_driver_event(const unsigned int hkey_event)
->  		}
->  		/* Key events are suppressed by default hotkey_user_mask */
->  		return false;
-> +	case TP_HKEY_EV_DFR_CHANGE_ROW:
-> +		adaptive_keyboard_change_row();
-> +		return true;
-> +	case TP_HKEY_EV_DFR_S_QUICKVIEW_ROW:
-> +		adaptive_keyboard_s_quickview_row();
-> +		return true;
->  	case TP_HKEY_EV_THM_CSM_COMPLETED:
->  		lapsensor_refresh();
->  		/* If we are already accessing DYTC then skip dytc update */
-> 
+--=20
+With Best Regards,
+Andy Shevchenko
