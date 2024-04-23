@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07035143881;
-	Tue, 23 Apr 2024 20:46:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB9813E02C;
+	Tue, 23 Apr 2024 20:46:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713905188; cv=none; b=oIMf09SP5V5KVlWp5VK1lZHrXgDvUiI2pBZyNHd6Oc5hjqUvqn/VYFOHeRl8bK/W3rZ6TgWVZEfNrIFJJ2H1zt1CVnP7W8NRD+eyp3zYzkUL8XwMOJ5vpzSTwiVUNgtyzhnL9iseIsbVWln8NhC6yEwphrePFedx+IdrfHdb208=
+	t=1713905189; cv=none; b=I0w/DXUxWc7eJqG3wbxO/TKyw/X1s2cgBB10v9RXBPc5xmHhpwPXKKuCJ6x9VrhPOvtTEX1FQ1AlcN0NEusKa5LqRiO3Ivp2/q5lcHlvlwe1AM2MEs+E1Je8IGxdXP2tw5dIr4tzS2QkIMYkk1IZ+cY/fI/HEaeY9DWtGeLIhGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713905188; c=relaxed/simple;
-	bh=8Ynf/Pm+14Q4LJbIb6hfnZAW5/G6gUx7m7m0EFyWFBo=;
+	s=arc-20240116; t=1713905189; c=relaxed/simple;
+	bh=I8WlCO7J0Bkb/d2OhXTFjWUNzIGy1ipush1doJz1FUY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ddbd0yquHFKnIpuw4rrP5hJdQKENSVHf8s7cpHKOXyLedHlpzDyWZ/NDC+ykOYCXBJJ80NbFJGjNGdaolm0xw7jEZSYBjU2IEVlhHII6S7QRgN05YPUtl9X6S7GhzhDucT1CTNVBcmmN3QDPsvptdb4SsjbgZaPzpJqQw+iR7gY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lhgR6eEB; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version:Content-Type; b=htj8LtOb+anjG2nPNJpWImFN215p1hiGjEoF5D/BWMo95mtdZAt5HiaKCT5dFHhgKGG3YwbeleVk2FXZX+XIe1NXvODfswjBmxZYcCp2FX6kOUNoJfKuPuNM9dfgUKygttkgUU7fO+VPtSFs1UVYaVZ7t083zPXHaI58HakVngE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MsAOrce8; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lhgR6eEB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MsAOrce8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713905187; x=1745441187;
+  t=1713905188; x=1745441188;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=8Ynf/Pm+14Q4LJbIb6hfnZAW5/G6gUx7m7m0EFyWFBo=;
-  b=lhgR6eEBmvHnDWW5La/MfxJJYP6jRkOcYwPsoG9oeKR30EdJRWUaJAdC
-   SQNo+e3alpE6sm70AKlcfqh97lN+czK2508ZagWNnO05730LFc7vIi+nN
-   kw+OwW7iNgwkZTrW7RhF/rWOxACfygZAU+RO6Z6jGuUGtP5rNoITl/B90
-   Vufb1kp3O7MEDMNrllxM+J46tFQiNOGh+fjBrGKPfdg7gPA8J32Ca9tW5
-   xfeCOJL6NjzLAsMV/bt9PIe6HsvDC0vUdbWFDCQkNZ3kqtXwJBwh4jrid
-   fWhVZLLO/NkB1mNrCKIomQHZa6A3OYxPrjDwdVPrj4IM/cYoQz8MDiVNH
-   A==;
-X-CSE-ConnectionGUID: rYou+DyqTOmzs2psF60Xfw==
-X-CSE-MsgGUID: /JRBjFzfSFSX37rqersWbg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="34912328"
+  bh=I8WlCO7J0Bkb/d2OhXTFjWUNzIGy1ipush1doJz1FUY=;
+  b=MsAOrce8enKHod35wZ6qMkQP3YAnt91qKn0Cls35W0r/gunZN/GRAAN7
+   hpoGeuC5whh7FdMMcy4LpHruh5+bQ9HDamzWa5E/ZaW4iXlxN29kyfgqb
+   KYZKkPnG42LRjuDq+AFagOyBnU+9vI/jdMUecaqodMoOuEPzL3ftjKJgb
+   p4dzntGz97LEtKDPMbwbHQ2WlZYNkzJT23QRrgkH1594I7NfM6sHAMMmE
+   AyiO3btSQeIvpcp2/nifZvliU3ohXYyaYC9W+6kyBntYrfE+AeDl+RPnc
+   gqwQy8u96Dvb1I1pVx0/fWfkUlMV1wkX+jgAyRx9g1p8lL0+f/v5g10Lx
+   g==;
+X-CSE-ConnectionGUID: R3blV5sKSWK+jFpWAPcY3Q==
+X-CSE-MsgGUID: CIHJZ+CMSeKZI8ODNlJO6Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="34912332"
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="34912328"
+   d="scan'208";a="34912332"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 13:46:24 -0700
-X-CSE-ConnectionGUID: G8CsckxyQ3eULXmtEoTyOg==
-X-CSE-MsgGUID: mnmGiIUwTZ+2UxerMoRWBQ==
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 13:46:25 -0700
+X-CSE-ConnectionGUID: OsTMaS0AQdKUURh0e7oLDw==
+X-CSE-MsgGUID: Sz08ig30S+21tyyoFhL86Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="24533087"
+   d="scan'208";a="24533091"
 Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
   by fmviesa010.fm.intel.com with ESMTP; 23 Apr 2024 13:46:24 -0700
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
@@ -48,10 +48,11 @@ To: hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 06/10] platform/x86: ISST: Shorten the assignments for power_domain_info
-Date: Tue, 23 Apr 2024 13:46:15 -0700
-Message-Id: <20240423204619.3946901-7-srinivas.pandruvada@linux.intel.com>
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 08/10] platform/x86: ISST: Use in_range() to check package ID validity
+Date: Tue, 23 Apr 2024 13:46:17 -0700
+Message-Id: <20240423204619.3946901-9-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240423204619.3946901-1-srinivas.pandruvada@linux.intel.com>
 References: <20240423204619.3946901-1-srinivas.pandruvada@linux.intel.com>
@@ -64,88 +65,32 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Instead of long lines for assignment to tpmi_sst->power_domain_info, use
-a local variable pd_info and assign later. Also move the assignment
-of number of resources after the assignment of pd_info.
+Use in_range() macro to simplify range check.
 
-No functional change is expected.
+No functional impact is expected.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- .../intel/speed_select_if/isst_tpmi_core.c    | 33 +++++++++----------
- 1 file changed, 16 insertions(+), 17 deletions(-)
+ drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-index 4e09a5611aca..49d573fcbd72 100644
+index b8da6847622b..e75fb9eba598 100644
 --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
 +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-@@ -1271,6 +1271,7 @@ static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
+@@ -531,8 +531,7 @@ static struct tpmi_per_power_domain_info *get_instance(int pkg_id, int power_dom
+ 	struct tpmi_sst_struct *sst_inst;
+ 	u8 part;
  
- int tpmi_sst_dev_add(struct auxiliary_device *auxdev)
- {
-+	struct tpmi_per_power_domain_info *pd_info;
- 	bool read_blocked = 0, write_blocked = 0;
- 	struct intel_tpmi_plat_info *plat_info;
- 	struct device *dev = &auxdev->dev;
-@@ -1311,35 +1312,31 @@ int tpmi_sst_dev_add(struct auxiliary_device *auxdev)
- 	if (!tpmi_sst)
- 		return -ENOMEM;
+-	if (pkg_id < 0 || pkg_id > isst_common.max_index ||
+-	    pkg_id >= topology_max_packages())
++	if (!in_range(pkg_id, 0, topology_max_packages()) || pkg_id > isst_common.max_index)
+ 		return NULL;
  
--	tpmi_sst->power_domain_info = devm_kcalloc(dev, num_resources,
--						   sizeof(*tpmi_sst->power_domain_info),
--						   GFP_KERNEL);
--	if (!tpmi_sst->power_domain_info)
-+	pd_info = devm_kcalloc(dev, num_resources, sizeof(*pd_info), GFP_KERNEL);
-+	if (!pd_info)
- 		return -ENOMEM;
- 
--	tpmi_sst->number_of_power_domains = num_resources;
--
- 	for (i = 0; i < num_resources; ++i) {
- 		struct resource *res;
- 
- 		res = tpmi_get_resource_at_index(auxdev, i);
- 		if (!res) {
--			tpmi_sst->power_domain_info[i].sst_base = NULL;
-+			pd_info[i].sst_base = NULL;
- 			continue;
- 		}
- 
--		tpmi_sst->power_domain_info[i].package_id = pkg;
--		tpmi_sst->power_domain_info[i].power_domain_id = i;
--		tpmi_sst->power_domain_info[i].auxdev = auxdev;
--		tpmi_sst->power_domain_info[i].write_blocked = write_blocked;
--		tpmi_sst->power_domain_info[i].sst_base = devm_ioremap_resource(dev, res);
--		if (IS_ERR(tpmi_sst->power_domain_info[i].sst_base))
--			return PTR_ERR(tpmi_sst->power_domain_info[i].sst_base);
-+		pd_info[i].package_id = pkg;
-+		pd_info[i].power_domain_id = i;
-+		pd_info[i].auxdev = auxdev;
-+		pd_info[i].write_blocked = write_blocked;
-+		pd_info[i].sst_base = devm_ioremap_resource(dev, res);
-+		if (IS_ERR(pd_info[i].sst_base))
-+			return PTR_ERR(pd_info[i].sst_base);
- 
--		ret = sst_main(auxdev, &tpmi_sst->power_domain_info[i]);
-+		ret = sst_main(auxdev, &pd_info[i]);
- 		if (ret) {
--			devm_iounmap(dev, tpmi_sst->power_domain_info[i].sst_base);
--			tpmi_sst->power_domain_info[i].sst_base =  NULL;
-+			devm_iounmap(dev, pd_info[i].sst_base);
-+			pd_info[i].sst_base = NULL;
- 			continue;
- 		}
- 
-@@ -1350,6 +1347,8 @@ int tpmi_sst_dev_add(struct auxiliary_device *auxdev)
- 		return -ENODEV;
- 
- 	tpmi_sst->package_id = pkg;
-+	tpmi_sst->power_domain_info = pd_info;
-+	tpmi_sst->number_of_power_domains = num_resources;
- 	auxiliary_set_drvdata(auxdev, tpmi_sst);
- 
- 	mutex_lock(&isst_tpmi_dev_lock);
+ 	sst_inst = isst_common.sst_inst[pkg_id];
 -- 
 2.40.1
 
