@@ -1,252 +1,217 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2048.outbound.protection.outlook.com [40.107.93.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F861E526
-	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Apr 2024 08:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713861310; cv=none; b=BRm0Xqcut5kBOanniV3YoY+t1utORPor+pAoa5iZdsBI+RXmcdCvvTtVK/9PlcTjChB5BtjQ7UNeokTjW14eDEf1fTKPeK1YWyq1uSmQrSeaig2i1vexoIf1lq+0Q9mZZR0UjLCJYjD409f0U0ICKlH35Q4Sp7/TyzcO9zx0Ndk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713861310; c=relaxed/simple;
-	bh=sHbgME6uiWITK48JW0XVkV+HsksmBicsQlTa1h7pmp4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VvSVDCtLPTVv8X42HaKhefJEdqiTdF5K9n+GddxtVNoCXqdMd94X7nBQqDLWUz8UmY3wuSLGmb2TuPgaYR09Hypeza8hRDdsEwmsygpUga9PkOPDvjRkWDxg8oghm81Jqm17B/eG419PfYD9+Vne4O0ReN4PPGD/HyEu/QO9wLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VG3vteX9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1E421345
+	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Apr 2024 09:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1713863705; cv=fail; b=uIw5sgy2U6zj3hdfdwXPEppQO+vEr9px0bhEYrDP+rValVUngy71qR91+NN5rmpU9GAGzJWWmCcUxG40usW8F+eHFB+3i+M5qo4aWFbcwRYYOUDuKkztAGWFvh5kpWi5KFvRf+fjca1RrDKP1djhQqvtwP5YAWDnIUOd0EKP0ms=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1713863705; c=relaxed/simple;
+	bh=qoDJErEd671eliTIZKMKeGN13/Ya3dUn5hOxJChHZyk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MA6dHxKOtAA8gpLccYg1ZPc+q1q/JnEhobaxs4Wz7YlRydnb8hFXbrCxQ/fjAcc6jo3LL2TpCyrCNvL8L3iX0t2ZbxXuQjLJ6DkP3G+flJMA+R5hkzt2CvPQBHzKAWui1cUKTin/Kmi6aI4kcdg5SpfJ982Jzd4h5nlzLbBo5iw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NCXtHsv/; arc=fail smtp.client-ip=40.107.93.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VG3vteX9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713861307;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fuCZlkhR6CJcvu6bt7VGJhHFidB/RrQLb/ndWNyC344=;
-	b=VG3vteX9HKIOA4mn/ro1jZcfVVgbCAqxGM5OyFlVawBHgaaW12XuPMPuYgVKuR0Yk2J+fk
-	HZ9uz8i7eGvR7ueUe/ZT99EO4D3qmifiFQbGPZI5nO5RlGHZwSCqCHfF3ZiT/RQ6JBZBba
-	5GsPKgvJosO7+/nYpc9wCs11J5V6YOs=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-695-FYlRVdf-PGyF7VDYzsbkxg-1; Tue, 23 Apr 2024 04:35:04 -0400
-X-MC-Unique: FYlRVdf-PGyF7VDYzsbkxg-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a57bf8ae2fcso80234066b.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Apr 2024 01:35:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713861303; x=1714466103;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fuCZlkhR6CJcvu6bt7VGJhHFidB/RrQLb/ndWNyC344=;
-        b=lqc2rFcjFrLtEelwyqduc4HfZZWsC+Ae9WSRdR9/IzNyr7crVW2OnLODnv31WJAKfs
-         wqx+yneEIm0Fczrg0gQo9GUnqQ1hPd1RM5s716lG76B6tNZavWTxaeJDDYkgAVjYJSXA
-         utTwrCRU9J+MlTciqiFpoaEN7YmuWYiUKJkNQJJsehQJ6H/aY0CpOGBAqEF0CRz2CjLw
-         g0OyLnFcC5GOjv2gMm2dscPArPsrVXkzxSK1soqZ3U583e3pu0HahTA+VVMLj/wKS7vY
-         cjXToDYjcovqSS/26bzQ+7N+WgGw/aVjPXNwukKD8hMtp2HU6MaqcTKbo7KOh6pNz9v2
-         /0ng==
-X-Forwarded-Encrypted: i=1; AJvYcCVnh9Tg0g34rt2SBsowkeMUJzSbL5FmSztSMb1wFlOhXJP0TrrmnVzg3JK2BQOHKU0M1VR52FgnurTF6LlkVKKhU/EWqdfQ4vfI8HZgRvZAj3cUZw==
-X-Gm-Message-State: AOJu0YzNwOPd1Dl4xr3Y5qqKgVOAxTGDXoxhjXBSZsLbS2aGDFW/7A3s
-	WLviyxpDy4PByEqPXrbocghtHV6pvbovXup4Ie0ZEQGAHvpoFzjafylNIKOVrRVinDQu/exAUDP
-	NhnAeyz+PeEXFUr0Sz/VKSYxFb/blLgVZJuzhxHP6Kv2H1Z1AyEGqCdVqraU+fgoqjTPx4PE=
-X-Received: by 2002:a17:907:7f2a:b0:a55:bb1c:80fb with SMTP id qf42-20020a1709077f2a00b00a55bb1c80fbmr3783767ejc.15.1713861303044;
-        Tue, 23 Apr 2024 01:35:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEGTOHjOh6JE6w6XiCS49xz0gpI+dE9rfbVtJZrbSDPUg11Jh+H6xEAtTvfvnkn2cWRXF8ksA==
-X-Received: by 2002:a17:907:7f2a:b0:a55:bb1c:80fb with SMTP id qf42-20020a1709077f2a00b00a55bb1c80fbmr3783747ejc.15.1713861302629;
-        Tue, 23 Apr 2024 01:35:02 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id dn22-20020a17090794d600b00a5577f7be5esm6263058ejc.81.2024.04.23.01.35.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Apr 2024 01:35:02 -0700 (PDT)
-Message-ID: <48408c1a-1745-46a8-bd33-a13861dc9884@redhat.com>
-Date: Tue, 23 Apr 2024 10:35:01 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NCXtHsv/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Fpq4op/45ZPeJC/f+YGBla7FedyNsj1AUDsOzTGghsU3sPHywA+f3ws1rnBQCKdmIJRKeNKwHZZL8ylWYrROjHxt4N+szcQQnWH5vILm+JV/2K2bm4k1w+/Yc2mW6fGLxOenDN+HcgGAVm28pv0qvv8ZUXIUh+eNH2skgR7+7SdOBxo/heZVk/hF/R6YFnZWa3VaeYyUDQYlJrw3fW36aZzNU5MDo60ZrJKPSRAhgQnNIqNmfoDKlljK7WBaMDp8zv2N6ZheLC9njqR2+K+PJsXeIYlQriVHTlSo9Yt6MoFLQ8H+dkTR/XlnWlJG7TyiLrqhtV2vuN8ZJlc6ivqjYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JPY6wYs9aorxAZ5EOXL7p2YZ/kV9sd8pu5IfsaC4rQU=;
+ b=badO+1+jvc/FdGIx7dtewi8juJT1Cv+C91t0DSKJxzCzPndAeThyYtPpCmumAYe+sQCrNgFyhqKKlZZ9n2kQ6KFIiL41FiBmnm5aV7lWNaSqdVdXWk1Zp2g8TswHanrSC3AH5DMJLwbo3h9vtNDVbr+Kb6a4uy4J5ANd5jCrKrAV3vfCbcs1T2gcA84Si3DN/jpEWzL0uOsq9bsaziYh7qUh+H4Ah8qG8mThmYbytHBirNca8w+uY0WdAGjUl3EGC/Jqjq5r2BNeBLYQ0L2HkUK4f8Vs1sVy+rUmtmWtIvVHhgf/LfCcyUzHfioo6bknPRbNGBLdAURL4NZRNXbGyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JPY6wYs9aorxAZ5EOXL7p2YZ/kV9sd8pu5IfsaC4rQU=;
+ b=NCXtHsv/JoGLkt/b/c1kE68nCfiTFYxQQt8VLIPfF3p9Bvg04qaQZZrfFx7yFqJCpk7TME6IVVPxS68Crz4lfCvCFvBYRf9wktISxTc6IqHKZNy5msfQXPmpC2+2xgwiLzYcCIi4++usv+cHmGmHCqp+QWahlMVWgPhO6CPNcTU=
+Received: from SA1P222CA0040.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:2d0::8)
+ by SA3PR12MB9228.namprd12.prod.outlook.com (2603:10b6:806:39c::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Tue, 23 Apr
+ 2024 09:15:01 +0000
+Received: from SA2PEPF00001507.namprd04.prod.outlook.com
+ (2603:10b6:806:2d0:cafe::c8) by SA1P222CA0040.outlook.office365.com
+ (2603:10b6:806:2d0::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7495.35 via Frontend
+ Transport; Tue, 23 Apr 2024 09:15:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SA2PEPF00001507.mail.protection.outlook.com (10.167.242.39) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7519.19 via Frontend Transport; Tue, 23 Apr 2024 09:15:01 +0000
+Received: from amd.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 23 Apr
+ 2024 04:14:59 -0500
+From: Suma Hegde <suma.hegde@amd.com>
+To: <platform-driver-x86@vger.kernel.org>
+CC: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>, Suma Hegde
+	<suma.hegde@amd.com>, Naveen Krishna Chatradhi
+	<naveenkrishna.chatradhi@amd.com>
+Subject: [PATCH 1/3] platform/x86/amd/hsmp: Check HSMP support on AMD family of processors
+Date: Tue, 23 Apr 2024 09:14:32 +0000
+Message-ID: <20240423091434.2063246-2-suma.hegde@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240423091434.2063246-1-suma.hegde@amd.com>
+References: <20240423091434.2063246-1-suma.hegde@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/24] platform/x86: thinkpad_acpi: Move adaptive kbd
- event handling to tpacpi_driver_event()
-To: Mark Pearson <mpearson-lenovo@squebb.ca>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>,
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Vishnu Sankar <vishnuocv@gmail.com>, Nitin Joshi1 <njoshi1@lenovo.com>,
- ibm-acpi-devel@lists.sourceforge.net,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-References: <20240421154520.37089-1-hdegoede@redhat.com>
- <20240421154520.37089-9-hdegoede@redhat.com>
- <3b8a783f-eeaf-4f30-8a12-57c14f51bfc5@app.fastmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <3b8a783f-eeaf-4f30-8a12-57c14f51bfc5@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF00001507:EE_|SA3PR12MB9228:EE_
+X-MS-Office365-Filtering-Correlation-Id: da1c404d-fa8b-4056-81e4-08dc6375daed
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?bfbH38YiJdzdM/xOSEvGWCxu+ngeet72/aW5JKr3j2QQBDP25TiBxn43Y2s/?=
+ =?us-ascii?Q?A/EcUzdFB+7xbH4lMtRPm/s+Py8PjvpN7uU76C+aiDaHhGUERU1ZAMylw/Bo?=
+ =?us-ascii?Q?bDHcHcxyl0pI1fe2DV4nEcL3d8FAhLy7/DYO9W8hX0pL0Yy9WgkmdyXEHMQG?=
+ =?us-ascii?Q?7umSaR4kLR4NBv1hOBZBpZjxVONqiq8nPylhYjFw9aGF0M0imJJFy5jEki8W?=
+ =?us-ascii?Q?d+8Su0FHS+LVQhi/uRhADr9998NpEbZUW+pmB+S0yTVbvjNyWWQ+xdguTF9T?=
+ =?us-ascii?Q?oe2eem7JrYZjbe55qKb2F6z7pJQ0HGtZKKdH9AGG0UkoUo9b3HiWqyw0heSk?=
+ =?us-ascii?Q?5Om1YzAHG9RKc65dUTd8kvRXJk4cWj1Q2dUEYohnxsWXoiYILePT3D9M5SJl?=
+ =?us-ascii?Q?dpa7LRXoBVvHT1314p+rGzI+iMq8y+FC6blk9NmvdzfrHStVLr4RNB7SdL56?=
+ =?us-ascii?Q?oXb14r0MsgQYnHZ3kz/DWyF5u3PkcO+N4KgSbrxy/T56CUzP68e8vsruCcm4?=
+ =?us-ascii?Q?RjF5tPtSzkKe6OzCuS5AZgDUzEbqIM43ol30UgvfZjRPZ55ztGIKamV9KNqc?=
+ =?us-ascii?Q?UDPhS1fK3UomnOdWzmMEBeij9aaoyTjc77tnCLfNB5mZDI52gi1FF0AzQ9cO?=
+ =?us-ascii?Q?R0sbW8D+S0Y83rmz4hwBm5V88y5Bh6lvcIGGhmhqWh3GaTQtVky3hFLvViwh?=
+ =?us-ascii?Q?oljRypcbxBe9l+YZ9oHdTAb9E/VG3iq+bp5+u0d06xmY0Xne078YHBhc784l?=
+ =?us-ascii?Q?lAVdXTbzJTFYQQyuRrC6SJA1Nekk0Y66RcSGVvvXxRZmfZgLJI+cGumuYcIk?=
+ =?us-ascii?Q?+wxDC9ml6zzgV2OHY+h6MRVIxM+lFkqymAxcUGa1zZ8buVeTSQCkVB4zsJiz?=
+ =?us-ascii?Q?lzYZFsSfNW621H2EnfAkSX2D1UmHB8otKHYa3myjRD0Yke3hn1zEdd7bgV0u?=
+ =?us-ascii?Q?r6Q8iyeTSFVyqY/lFehohL3Oqqrkto8VCov7YXJtdZL7ymJBGWIhWOQv/BZD?=
+ =?us-ascii?Q?WdARoLBfUalEYTkv0FYT+jhqhrpGqrti/eshpYC/SNT03JRwlLGQjbzPCsm6?=
+ =?us-ascii?Q?ULNNa+Z2WDDccMW0QGKOrYnl+Q1uo2Smxr73iQWf1OvOF3kbaHkbQeE0XY3L?=
+ =?us-ascii?Q?IhduOj59BwQ0qmzdSwbTWdJc16OPFvr4vrsu/nCUGOvTKMRtrPpn2oTLGGTf?=
+ =?us-ascii?Q?qA8VtMJgOUYz0g/xNhIeULBy5uDY2LtEWDdXFaPVIfjP0Wt7z7woABrnyomn?=
+ =?us-ascii?Q?o7BX/VrvEgthsi+okrS1F3s2AAuSdYpYgsPYcYdCAO1Lhnhn0xst0yeNt2A0?=
+ =?us-ascii?Q?XX2GsukqLLjezQf2aQ2Pv/qg92xsNbVD8fZ3V06dEYMh0p4OrDCFF40sTKlU?=
+ =?us-ascii?Q?esSwotgQhgjuMEIMPbkxv93p43pE?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(376005)(82310400014)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2024 09:15:01.4308
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: da1c404d-fa8b-4056-81e4-08dc6375daed
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00001507.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB9228
 
-Hi Mark,
+HSMP interface is supported only on few x86 processors from AMD.
+Accessing HSMP registers on rest of the platforms might cause
+unexpected behaviour. So add a check.
 
-On 4/22/24 9:27 PM, Mark Pearson wrote:
-> Hi Hans,
-> 
-> On Sun, Apr 21, 2024, at 11:45 AM, Hans de Goede wrote:
->> Factor out the adaptive kbd non hotkey event handling into
->> adaptive_keyboard_change_row() and adaptive_keyboard_s_quickview_row()
->> helpers and move the handling of TP_HKEY_EV_DFR_CHANGE_ROW and
->> TP_HKEY_EV_DFR_S_QUICKVIEW_ROW to tpacpi_driver_event().
->>
->> This groups all the handling of hotkey events which do not emit
->> a key press event together in tpacpi_driver_event().
->>
->> This is a preparation patch for moving to sparse-keymaps.
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>  drivers/platform/x86/thinkpad_acpi.c | 85 +++++++++++++++-------------
->>  1 file changed, 45 insertions(+), 40 deletions(-)
->>
->> diff --git a/drivers/platform/x86/thinkpad_acpi.c 
->> b/drivers/platform/x86/thinkpad_acpi.c
->> index 0bbc462d604c..e8d30f4af126 100644
->> --- a/drivers/platform/x86/thinkpad_acpi.c
->> +++ b/drivers/platform/x86/thinkpad_acpi.c
->> @@ -3677,51 +3677,50 @@ static int adaptive_keyboard_get_next_mode(int 
->> mode)
->>  	return adaptive_keyboard_modes[i];
->>  }
->>
->> +static void adaptive_keyboard_change_row(void)
->> +{
->> +	int mode;
->> +
->> +	if (adaptive_keyboard_mode_is_saved) {
->> +		mode = adaptive_keyboard_prev_mode;
->> +		adaptive_keyboard_mode_is_saved = false;
->> +	} else {
->> +		mode = adaptive_keyboard_get_mode();
->> +		if (mode < 0)
->> +			return;
->> +		mode = adaptive_keyboard_get_next_mode(mode);
->> +	}
->> +
->> +	adaptive_keyboard_set_mode(mode);
->> +}
->> +
->> +static void adaptive_keyboard_s_quickview_row(void)
->> +{
->> +	int mode = adaptive_keyboard_get_mode();
->> +
->> +	if (mode < 0)
->> +		return;
->> +
->> +	adaptive_keyboard_prev_mode = mode;
->> +	adaptive_keyboard_mode_is_saved = true;
->> +
->> +	adaptive_keyboard_set_mode(FUNCTION_MODE);
->> +}
->> +
->>  static bool adaptive_keyboard_hotkey_notify_hotkey(const u32 hkey)
->>  {
->> -	int current_mode = 0;
->> -	int new_mode = 0;
->> -
->> -	switch (hkey) {
->> -	case TP_HKEY_EV_DFR_CHANGE_ROW:
->> -		if (adaptive_keyboard_mode_is_saved) {
->> -			new_mode = adaptive_keyboard_prev_mode;
->> -			adaptive_keyboard_mode_is_saved = false;
->> -		} else {
->> -			current_mode = adaptive_keyboard_get_mode();
->> -			if (current_mode < 0)
->> -				return false;
->> -			new_mode = adaptive_keyboard_get_next_mode(
->> -					current_mode);
->> -		}
->> -
->> -		if (adaptive_keyboard_set_mode(new_mode) < 0)
->> -			return false;
->> -
->> +	if (tpacpi_driver_event(hkey))
->>  		return true;
->>
->> -	case TP_HKEY_EV_DFR_S_QUICKVIEW_ROW:
->> -		current_mode = adaptive_keyboard_get_mode();
->> -		if (current_mode < 0)
->> -			return false;
->> -
->> -		adaptive_keyboard_prev_mode = current_mode;
->> -		adaptive_keyboard_mode_is_saved = true;
->> -
->> -		if (adaptive_keyboard_set_mode (FUNCTION_MODE) < 0)
->> -			return false;
->> -		return true;
->> -
->> -	default:
->> -		if (hkey < TP_HKEY_EV_ADAPTIVE_KEY_START ||
->> -		    hkey > TP_HKEY_EV_ADAPTIVE_KEY_END) {
->> -			pr_info("Unhandled adaptive keyboard key: 0x%x\n", hkey);
->> -			return false;
->> -		}
->> -		tpacpi_input_send_key(hkey - TP_HKEY_EV_ADAPTIVE_KEY_START +
->> -				      TP_ACPI_HOTKEYSCAN_ADAPTIVE_START);
->> -		return true;
->> +	if (hkey < TP_HKEY_EV_ADAPTIVE_KEY_START ||
->> +	    hkey > TP_HKEY_EV_ADAPTIVE_KEY_END) {
->> +		pr_info("Unhandled adaptive keyboard key: 0x%x\n", hkey);
->> +		return false;
->>  	}
->> +
->> +	tpacpi_input_send_key(hkey - TP_HKEY_EV_ADAPTIVE_KEY_START +
->> +			      TP_ACPI_HOTKEYSCAN_ADAPTIVE_START);
->> +	return true;
->>  }
->>
->>  static bool hotkey_notify_extended_hotkey(const u32 hkey)
->> @@ -11117,6 +11116,12 @@ static bool tpacpi_driver_event(const unsigned 
->> int hkey_event)
->>  		}
->>  		/* Key events are suppressed by default hotkey_user_mask */
->>  		return false;
->> +	case TP_HKEY_EV_DFR_CHANGE_ROW:
->> +		adaptive_keyboard_change_row();
->> +		return true;
->> +	case TP_HKEY_EV_DFR_S_QUICKVIEW_ROW:
->> +		adaptive_keyboard_s_quickview_row();
-> 
-> Was there a reason to get rid of error handling that was previously done with adaptive_keyboard_set_mode and is now not used here?
+Also unavailability of this interface on rest of the processors
+is not an error. Hence, use pr_info() instead of the pr_err() to
+log the message.
 
-The error handling consisted of returning false instead of true
-(for known_ev), causing an unknown event message to get logged on
-top of the error already logged by adaptive_keyboard_get_mode() /
-adaptive_keyboard_set_mode().
+Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+---
+ drivers/platform/x86/amd/hsmp.c | 54 ++++++++++++++++++++++++++++-----
+ 1 file changed, 47 insertions(+), 7 deletions(-)
 
-This second unknown event error is consfusin / not helpful so
-I've dropped the "return false" on error behavior, note that
-the new helpers do still return early if get_mode() fails just
-as before.
-
-I'll add a note about this to the commit message for v2 of
-the series.
-
-Regards,
-
-Hans
-
-
-
-
-
-
-> 
->> +		return true;
->>  	case TP_HKEY_EV_THM_CSM_COMPLETED:
->>  		lapsensor_refresh();
->>  		/* If we are already accessing DYTC then skip dytc update */
->> -- 
->> 2.44.0
-> 
-> Thanks
-> Mark
-> 
+diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
+index 1927be901108..807a5066dacc 100644
+--- a/drivers/platform/x86/amd/hsmp.c
++++ b/drivers/platform/x86/amd/hsmp.c
+@@ -907,16 +907,48 @@ static int hsmp_plat_dev_register(void)
+ 	return ret;
+ }
+ 
++/*
++ * This check is only needed for backward compatibility of previous platforms.
++ * All new platforms are expected to support ACPI based probing.
++ */
++static bool is_hsmp_supported(void)
++{
++	bool ret = true;
++
++	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD)
++		return false;
++
++	switch (boot_cpu_data.x86) {
++	case 0x19:
++		switch (boot_cpu_data.x86_model) {
++		case 0x00 ... 0x1F:
++		case 0x30 ... 0x3F:
++		case 0x90 ... 0x9F:
++		case 0xA0 ... 0xAF:
++			break;
++		default:
++			ret = false;
++		}
++		break;
++	case 0x1A:
++		switch (boot_cpu_data.x86_model) {
++		case 0x00 ... 0x1F:
++			break;
++		default:
++			ret = false;
++		}
++		break;
++	default:
++		ret = false;
++	}
++
++	return ret;
++}
++
+ static int __init hsmp_plt_init(void)
+ {
+ 	int ret = -ENODEV;
+ 
+-	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD || boot_cpu_data.x86 < 0x19) {
+-		pr_err("HSMP is not supported on Family:%x model:%x\n",
+-		       boot_cpu_data.x86, boot_cpu_data.x86_model);
+-		return ret;
+-	}
+-
+ 	/*
+ 	 * amd_nb_num() returns number of SMN/DF interfaces present in the system
+ 	 * if we have N SMN/DF interfaces that ideally means N sockets
+@@ -930,7 +962,15 @@ static int __init hsmp_plt_init(void)
+ 		return ret;
+ 
+ 	if (!plat_dev.is_acpi_device) {
+-		ret = hsmp_plat_dev_register();
++		if (is_hsmp_supported()) {
++			/* Not ACPI device, but supports HSMP, register a plat_dev */
++			ret = hsmp_plat_dev_register();
++		} else {
++			/* Not ACPI, Does not support HSMP */
++			pr_info("HSMP is not supported on Family:%x model:%x\n",
++				boot_cpu_data.x86, boot_cpu_data.x86_model);
++			ret = -ENODEV;
++		}
+ 		if (ret)
+ 			platform_driver_unregister(&amd_hsmp_driver);
+ 	}
+-- 
+2.25.1
 
