@@ -1,63 +1,63 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2069.outbound.protection.outlook.com [40.107.223.69])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2083.outbound.protection.outlook.com [40.107.212.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A1113DDAC
-	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Apr 2024 17:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD4A1BC23
+	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Apr 2024 17:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.83
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713892082; cv=fail; b=tB6QUGkJtwEDAHFavr7UdZjQI8K/3EPDEAAjvEa++kfwQ8kze/RKMjp/jUAaGJo5ZrWmCai/vruRCORFOlafzHZzu1MDtHL91Y3gLqN2MYQSW9obCng95W3tQVAk1tUuFngcfGnKaTaZvjnP5+Hr/3gMEnnlCPtvmnJByiyFs2U=
+	t=1713892294; cv=fail; b=COwEkLI1QdmLHF4zhL2Ml5XaUKE0XRrgPFc1YJ6ZBP4c9mtsx0uUXjjZld2Nzw/PTql8Cx2PlcFWbX8bK6d4Qbg7sxxBb/YwQLZxnbJg0mqTKneB6vsj5hEgPmoxlRdjwvdpNRrgScwf7NASJfhyROFnTRyoapg9EK3iUn/BHMU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713892082; c=relaxed/simple;
-	bh=h8ou8g9qTdeu+MOV7qiVm2Gd29QhBvKBNJCsImbXd2U=;
+	s=arc-20240116; t=1713892294; c=relaxed/simple;
+	bh=yV1leAd8RfOGR9z/U5KWnQ1/dCOUDGJZ20gNWSzFD8E=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=CIJP5Dx5ML0LcuEPQXIrfKs9Ok0Ni3FAQhBmdFE5kQuJyiK+sEaqNj+8M1PyTy685TyghMJkWu8Qz9NEbVdwRRq0PH8YAJo8EOqgUXW/synZ1nXNDhxnXhs1dNbeAgRQqDZtXzhxRJYKP1Zvj+FZX23KwRpVQ9jfDZSFBcpIECE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QWTU0Xyb; arc=fail smtp.client-ip=40.107.223.69
+	 Content-Type:MIME-Version; b=fu3B8MpQHQj+nKpgI9W/5LzBuLb3G8zSvLN0+GKgcMfkfz8EOtsrPVH/yJ/qEJgCfcf0stQ8vCggAShrUSmg2Fla0FYMUxW6VJJ1FvNbuKzKGPKVJUsY+GUVd86+VLtxkCqCfvH3/aPOwe6std96nak58mDzQjWMzZqYt/oSzl0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=bLfW7T7v; arc=fail smtp.client-ip=40.107.212.83
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QWTU0Xyb"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="bLfW7T7v"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h0lyuZAWuE4UZbyr27WMD8jPjaooXKNApsBe33cCm/CfMOOrIVvST4wWe7crR8XCnFvrkBA82SkWOOGf0O417bNFr6a+K9cTvW3aFmd/BZjm2PJujgfAuVeDpub8+2mO1H8n761Crz92mYPhKmVn0JBiUEZ6NjqtomsSRVomeY3y+iyM70CMB5pWXhCAucdSAmlujj3FppzLcNy7R5gu1pUeLHlfc2Mib2ZyqaKOwXYSZrkoo+aMHmZvbXFU0t853p6J0bqLye2IOzwyj9OI2an6tfOe6lJNe6LL0A4PIe20wQsSK4sYZbSUW8K0anGqYAoUZztIu/fnkCy7qqu32A==
+ b=SCAygXBWG/dyMzIw7L2tJYRrUDjA7R0S4iIGbL15Ofd/M4bYyR5Dzj9LicvxVokC7OsmYmcoQRxSKM0lmVMQvML6J5IFrQV4ZCM8xbCMLn6rOLn6270z4kqIIyS45W0cdeD0tW5GWN6SDSVSq287pgwQTyEO03BKHHlzyRrPXEiEHNz2/+F5Unee1MxXRPQ+W3dhshQu7lihHeKKFsNPOl/69r6KpeF193MGIB27ZQd16kEQsWEeKWdJtE8SWUiul2+ym3jSt3d2jX3GEAxwFmBdEl9NlYMyNb90Xnt94RD95gsH3x79wIow2r8Gs3MAUUd9YAO3iAvqnsHVq4by6g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9NnAWaKvXve2mD80Jw+lL4iMC6mE2xjgd9T4WheF3gg=;
- b=Nl6JzVAW9Aw2+CNH6X9MXfQ3gphUHDjJpL0bRX0NjrU3TE0d4gv29pXPUd/rJpbxToPNuj5jmvixDx5LSERMWsTca/pjFO04BLuRjTbILKj7FVoDk1QF+EDsND4JULS1dwt3N2TH5RS7YFYUnyhhli1RAEJ26OCmD5xP+QMYXjINXXw07t38C/IROyQDxjJuie9jK2TQc57XEevRdECRvr9D30ntVP8Y+lF6Cc8TgEF5A6rF5dprS/hFhLTRhJ4t/QmwLVATdnj7KVuacykhCD64iDlDAILD5cq+RDSRBnfDSP7kYKPfcSBO7qBTHjHQXNNqCtEBIDjHaccax8lbOg==
+ bh=i3IqsF+kMQCGsSF7XGzQZKoe0a6NGuc14BpuT9mQ0YA=;
+ b=TrkbS7IDWg1XbmecaFh1BQG9z7B+6Gfl4Q3V8dDkgNsj955SS9yMgRRWt43ACOD5exATZvJwRnrhodlvfcqZ9TOh/cfxLJcD0yxiBDkjTXs4Ourn8DnBfsmnVhR2bRaLvEC/93FoTbayuJIZgnoLL6ZNdPPnZKkN4HuVe4MiYO68OxQLJW66+8v5tSn/JAbEMr/eWHrpK+Dg+WQMDMy54Bqboz6tOT3U8XDAH+FyqXCM1BHOXNUJoGLlThZIf9g3DLwbqg+5YHWw3QJpP++7/4ThzP8DO2WWxSQcmoql+JbVxLs4V4ik3LLELoZK87XWIp/KNJVUSoBb14/BpGDXdA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9NnAWaKvXve2mD80Jw+lL4iMC6mE2xjgd9T4WheF3gg=;
- b=QWTU0Xyb2OsNdErlURysZsZuMisP1OPd0AwafCFmbuN61CDqPpeb6X2YNSUkiXPElJjPaC4KJu4JJhzJvmZQJ0LgY6Zd2ynXrV0eqyCcdpBN86jPvT+utzewahRVdsehj6Ru6NYt3TVQAXjgJm0eNRXDwoVt2QnarUb+1x3tS/Y=
+ bh=i3IqsF+kMQCGsSF7XGzQZKoe0a6NGuc14BpuT9mQ0YA=;
+ b=bLfW7T7v2wrYvA/Mb/23Obx2ZHrKj3IYggrR7/dKKEQNG7rbBpGTpM+ql9fTLiS6cpVOlAWU+fVevcGsJyFjZtLT4+Q98rJmta4x5gZgApKd3/PPZqw2unCNPvHfP1uxpYfPtr8qK1gBnVjN/7VybnUkupZeWiJCK6Nr8sLDe+A=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SA1PR12MB6917.namprd12.prod.outlook.com (2603:10b6:806:24c::18) with
+ by SA1PR12MB5614.namprd12.prod.outlook.com (2603:10b6:806:228::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22; Tue, 23 Apr
- 2024 17:07:58 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Tue, 23 Apr
+ 2024 17:11:29 +0000
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::d9b0:364f:335d:bb5b]) by MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::d9b0:364f:335d:bb5b%4]) with mapi id 15.20.7472.044; Tue, 23 Apr 2024
- 17:07:58 +0000
-Message-ID: <a0a27a27-0deb-41c5-9625-ddaebf42f405@amd.com>
-Date: Tue, 23 Apr 2024 12:07:56 -0500
+ 17:11:29 +0000
+Message-ID: <307b0691-e4b7-470d-b4a9-3556a4269cf7@amd.com>
+Date: Tue, 23 Apr 2024 12:11:27 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] platform/x86/amd/hsmp: ACPI, Non-ACPI code split and
- other misc changes
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: ilpo.jarvinen@linux.intel.com,
- "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>,
- Suma Hegde <suma.hegde@amd.com>
+Subject: Re: [PATCH 1/3] platform/x86/amd/hsmp: Check HSMP support on AMD
+ family of processors
+To: Suma Hegde <suma.hegde@amd.com>, platform-driver-x86@vger.kernel.org
+Cc: ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com,
+ Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
 References: <20240423091434.2063246-1-suma.hegde@amd.com>
+ <20240423091434.2063246-2-suma.hegde@amd.com>
 Content-Language: en-US
 From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20240423091434.2063246-1-suma.hegde@amd.com>
+In-Reply-To: <20240423091434.2063246-2-suma.hegde@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM6PR03CA0088.namprd03.prod.outlook.com
- (2603:10b6:5:333::21) To MN0PR12MB6101.namprd12.prod.outlook.com
+X-ClientProxiedBy: DS7PR03CA0340.namprd03.prod.outlook.com
+ (2603:10b6:8:55::21) To MN0PR12MB6101.namprd12.prod.outlook.com
  (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -66,139 +66,198 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SA1PR12MB6917:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8667240c-abcb-488b-addc-08dc63b7ecb8
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SA1PR12MB5614:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8e3f939d-7e79-4960-d5cc-08dc63b86a6a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005|366007;
+X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?V05oeFJwWVBaeHJLUWtpbUh6YzhZcVA0S2MwK1ZTbFFVTUhieitTL0FQdjdQ?=
- =?utf-8?B?WWJWdnFMYisxekVPRHl1U1d4djdKdnNXclI0SEh3UUw0R28vT2dvSDJvRWUv?=
- =?utf-8?B?WUxBYkdua3FzbTB4R0x6OWRFaEY4SE1qVmhnOHRTR2lydkVFM05QUmFoVVBk?=
- =?utf-8?B?dTVTNkhPVkxkV2hlelZ3TnNZZXJ6QUh0czFiNEk2bFBrbERXa2k4NXlEd0x2?=
- =?utf-8?B?aDRoRHp6Z0JPY2lmZDA1c3NPQ3pQeEVYc0U1dGhpZ1lWUi9WM3haNjRNNHFn?=
- =?utf-8?B?SkNZQTl2VDV3YVRoaThiaTJQb3hocFM5RHVWMExncmhMOW5xVW5XbzlDN3hR?=
- =?utf-8?B?aVlKamEyNUlQWTRLRUJ3WmNaOG9HM1ljWEg2bFByRWpQeWNoZ20zVy83UDZm?=
- =?utf-8?B?aDNNRGxCNXFZLzNMQ2ZvMm1jTUhzUVlYa2ZMdE5lc2lNOU00Y2pZTlcwNG0r?=
- =?utf-8?B?V0tSMjRQL0I1Y2k2K2o3aUVPc3pwKzJ0blpFdFZ1bTdsc0c0ajA1L2UramRH?=
- =?utf-8?B?Rk5WbDIzbldUMmYwdlJBQXU3UlR1SWFIeEsvZ3hUVHRqRVFJRXhjZytSeXQz?=
- =?utf-8?B?bG1IMG9ZSk5OZTBrd0p2Y1R4cVhUN0NEZTMwak1XanMyQWlJa2F2VzNHQ3dM?=
- =?utf-8?B?MW5FTE11RkN3YzVBY3VtOVBtNHdHRS9sa1cyamFJSjRtTnZzaExHR0RjUXpS?=
- =?utf-8?B?TjNmY0N4QUw0SG1Ib0VQM2ZMWlBObE5GUXJYSW43NkMzc1huZE5pTHBzUi8x?=
- =?utf-8?B?MDdrdHRQYkxrdkZua2JwamNYSnZYMm5ndjZYMTRHVVpyYnByTy94Q1dZT1BJ?=
- =?utf-8?B?Si9pdEcrSFBLV2FqeTR6dmhWcnZXQzh6REZBUisxRnlNVFBHWlpvbzBlakxL?=
- =?utf-8?B?aUxUWTNTa05jRkl3S2t3eWIzZnNVVU5scm1jcm1SQ3ZQN1JXeEhPMTJtWmxC?=
- =?utf-8?B?Z3YyNnB4bW5JWkFHWUR2cUVnWTFXK3ppUS9SWUwzUE5YUTRDcG1JaTBQRDhO?=
- =?utf-8?B?T0lzUXZSS0JNc3JiN2dSaE9RK1dSeUVSOVJKTGsvOFFMcWhqb0xncjIvRUIr?=
- =?utf-8?B?Ym9Eb08wS3VUWFIvdVVaUjcwdjdhM3FYSFZNVWZ1Kzh3NHhteUhab3d4MTZ1?=
- =?utf-8?B?emxTSlVXdld3bnN5RzlzeE00VDB1bW9vUmZPOFBZRXIvOFVLL2dSZjFhdGoy?=
- =?utf-8?B?amx2ckFzR3VnTmxXY0g3bVZsK01QUDRyMFZRcmN6N2Z6L3dMMGs2SmRZSTBn?=
- =?utf-8?B?Zy9xMkJFcjB3dTRXbklXZGFtQTFDRUZKd1NZYnk0enRvcWcyd1VtMUh0R3Zt?=
- =?utf-8?B?Nm9kbXhKWTdmY2VPZENDcjJzT3YxS0w1eTdqcnAvS1VsWDEvU0x6SG1md08w?=
- =?utf-8?B?OXNLa29hcFdwNHZmejRTekNtbXF5UkczR1hJaWplRFNaNXRoUXhkSkxwTzFG?=
- =?utf-8?B?NEs3cEJ3a28xUzdFQlJDVXB2QjZpam41R1FxdnJIQ3Q0YlE5bzM4K011a2Na?=
- =?utf-8?B?MWREamRFOVo2VWVhYzNRQVhKMm1OMFYzVEZoQlBiVCtxbE9HNDF4a1o3c1Vu?=
- =?utf-8?B?NjJMOXJWR3R2NU9nR2syNUNuL1B1QWREVWg4cTNYczQ3Z2ovUlBUY2M2cGxy?=
- =?utf-8?B?NUZjRHhsNldnMTZPaU5BbTZwTkxMUVlCWlkyMjJ1V0pKdWxuTzh4NFl0d2ZR?=
- =?utf-8?B?MEJlem9QbWQ5L2JhT2poTkxBTXBJbUdOck9Vd2UvWW1mbzJhYUxYNmFBPT0=?=
+	=?utf-8?B?bGtQR2VTamJXdXhaRHU1NGd0SGFNb1lvR2dYUXJlR1EvMklUdjV5UFlTQjN5?=
+ =?utf-8?B?a043aXoyd1Q1M09xbm9hcTE4cnN2bkQrZm5jaGk5MEdSaDMxUTRXc0xOV2RP?=
+ =?utf-8?B?R05oY3VOVHVoTkNndFhJSUFLc0pLc2NEVWtRL3p0clg5WGNWMUVlRS8zaStS?=
+ =?utf-8?B?UzYycVRDK1JrR0tNMkZHem5QZjRZU3dsR21Za3dNMWVWNk5vRzhVa0JNSS9t?=
+ =?utf-8?B?VkQxcGR5M1JaR1ZLMVZ4TitlL2FnTksrVzFNVnJtL09STW1UcFc3emE5R1R5?=
+ =?utf-8?B?OFBYZGphckcwYzVtaEFIM3IyYzZwZVpoNWZ4QTh4Ukg3WW93QURLaWMyaDFh?=
+ =?utf-8?B?QW1QNGt3OTJ5TDV2Z1NGME9jekIwWnh4azZIZnlFQTUvWHFjUHpnMERLL2RU?=
+ =?utf-8?B?aFFXQjVQZEdLS1luRHRNWjRFOUJ0K29XMzRsRlRmTnJMZ0F4NVBhL2RZM0Rk?=
+ =?utf-8?B?bjJkanBDdkZuaVJmUXhBbzM1S1FFMG44aWxKY0pJSnBndEFRN29wSzZ3b044?=
+ =?utf-8?B?NUQ0SzM4MHJKV1V3VUFJbDJUTWdnRHUxRDRYTlV4SVk4RVYxRnpCdlhhci9U?=
+ =?utf-8?B?N09DUy84TkxTVS9semV5S3RFb1hibHArUHlrMmFkUzJGMDRsN2M5ZmRDZWlL?=
+ =?utf-8?B?ZTlnTDlzdWtUbEI2TWx6ZitoMlBEdU5CenRFUVFwR2FKWHBTWElZa1Fyb2Vy?=
+ =?utf-8?B?cXFXaS9CR1hyb0hQd2JCdkpGZnAxTmNhR1cxVTUzZkFUcnhTUnovSTFYcHVo?=
+ =?utf-8?B?UTNjSkhWU3hqSHBPUkhHWDBJbTF1RmQ5aExNMHFxUGgxN1lJbTJKZmNNaXN6?=
+ =?utf-8?B?cmtCaGRSL1pVd0I0T2VGUFlGeTc2UFRXRzNYTjg1WitnSW9oVXVnaTNaZEpW?=
+ =?utf-8?B?RXB1N3hYRldTZ3ZxemIrWVJucThlT3I2dDFobW00cjVjWXcxZStCcHZIWTY3?=
+ =?utf-8?B?akY3NkpHZ29NaWk3RTRJVmEzQ2g3YW1DdnN4eWtUcWpuVXRVWEVCZFdXUVhV?=
+ =?utf-8?B?YWZUTldPZHplV3FrWmhPU09ReFZHRllBUjZMdjFab0tNV2paR3hwK3ZZUFRN?=
+ =?utf-8?B?ZFVQR1B6OWhhcngzOEMzcUdTM0dhdDQ4RG16ZGN6SE5NT2hUeVBMVk9mQnd3?=
+ =?utf-8?B?NWJjVUtzSy9jU1ljVkJSTzdSL1hMK1RuYVk3a3lwdHdSaGhaSU44SWYzRTQ2?=
+ =?utf-8?B?OEFSdGszdUFnRjZVRVdqZEE3d0MyR2drVHU2ZkVQRFd1TWtNWGY2UGZRVVBp?=
+ =?utf-8?B?VlU5ejAwWWkrclF0Q0lqTWMxdjJFZStiQ0hFeG9CR1JYdkRMQ2YrTDBFc25K?=
+ =?utf-8?B?c1MvUXlzdElkbnJYaHRVMUlOY0J0ZFhSVDEvVGVSQzVVcUxEbTgvYjZTSmxE?=
+ =?utf-8?B?QlJaQkc0NVp5QUxIUWFlNU1VVktUTkFFYTVqNG0venRoMU5EYWVuMERlSjh1?=
+ =?utf-8?B?NStjL1Y5bkM3Tnljd1hZVktpeDZoMXZtb0ZMYWU2TU9NVm5MbU9tOHFhWkZP?=
+ =?utf-8?B?THpyb2dCbTJlMjZDejgraFFGek5GVFdxNlNzK0tYeVJZem9lOEtYcWxVRHpo?=
+ =?utf-8?B?MmlOdGdLSHdRUkZnKzlUNmlCcVRzSHVza1NyQjFZOVQ0UTNya1ZYZFJPTVJo?=
+ =?utf-8?B?SHVON3lTbG1INVNEUGptVTl4VVpSZ241Z0F5RjNIZDhDVmU0MURzU3RjSXNI?=
+ =?utf-8?B?MjFpQkQwU0VhWmpXa1NsZWFTRXFPaGl3TlhOM3RxbTRQM3V0R0JWenN3PT0=?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NEdNaWRmanpxZnV2WVZuMkRwUzZweVBtUVZqck5CNDU0dHFkRjZYVm83NzNx?=
- =?utf-8?B?Mk0yVGpBMEJYd2NQUXZwWmVBcGtrVlU0djBKcFl1ZjhCdnl5S2pHcEJpSCt6?=
- =?utf-8?B?VGtCNFRCNUpKTU1KS0JYVFdpRGFEaVV5Ui8ycFFTc3FrcTErQ2ExMjZ2eFdx?=
- =?utf-8?B?YkEwak43L1J6eXZSNUdqd1pKUFhEa1dVOGdqTUZ2Z2MzT2dzQjdoeXBYbXFC?=
- =?utf-8?B?akxGVk5taE12cithaVFTOEJheWRGZ3d0ZXZpQkl3OURNbU10YThZT1hMS3NK?=
- =?utf-8?B?allQZzV2Nk02Zm9sRktsdEdlMHdNM1dGbW8ydXZpbm4zQkRRYTZFMWViVTZw?=
- =?utf-8?B?SUI5cm9kanRVK1JxZWxDZ0FZYnJjbHRYRytHOGxZeXRldW1VV0NGYllOT2Mx?=
- =?utf-8?B?bkJxd0pPWDZ1WUN0S2t5bXhMVml1TmhMNGJUYS83aUxpVWMrUVdTOW00bWZq?=
- =?utf-8?B?MGRkMTY4T0FQdWR2S0NCcThZSVBTM2pHanJIMkNZV2k1NlBGWUo2eU1JQjRs?=
- =?utf-8?B?aUdyaUt1V3dJSUJuUkpqV3FveDdJaWFhRTFVMFduVTNkaDZoa2JRT1V3RkFF?=
- =?utf-8?B?MDJ2OUh4clhKQ3FnMCtud1U0RkMxV1hvOExwT3UxTDhqQmRzazQ2MXRqcWhs?=
- =?utf-8?B?VkxhK3pDbDR0VlYvdkMrK09mdGRhVXRSblIxUnZia2tNNGxBNmd2cWNsLzA3?=
- =?utf-8?B?UzlHdHhFODRvb1YxSjFYSWN5RFdLcmVGTUViSXl3eXVZc0FMRVM4cFA1czFq?=
- =?utf-8?B?VkNyVE43cktuZU50TitRdnlMZnNES0FLYlQyMVNkS0ZJdjByRzVVeUZSanZC?=
- =?utf-8?B?WlhEdnhjM0t4anplUU5vUnJQSm42K0N6MTg0V3lZcXRjWWhucmNHMUcrNFBC?=
- =?utf-8?B?Q0tkSWFjZHZnenRGeW5zK3BacWFSaWM1d1NsWTRuL0ZRbUVGbVAzcncwSE9k?=
- =?utf-8?B?VHpqenNoRDlaWDJjeXNMdDBpTExQTTcxdGlrSFh6bEhYWEFheUh1c1o5RmpS?=
- =?utf-8?B?ZU1nZ0tCUnVyWG9HQWpVNWpXVEREdHpqYTFtUUJDYWxIc1FoTmdDU2lNQWlG?=
- =?utf-8?B?UzFhaGxjODg0R01pN3NWR1YzSi9rcnYxaHVsV2twNWtIQm5xNkZOaXh5cmM5?=
- =?utf-8?B?b1FXcUxLbnVwYVpBUzA4M2FoM1hlT1o5NC9lL0pJeHlqUi8zekhmYXFvK2N4?=
- =?utf-8?B?SS9CaVR6bmRJU0NManllY3d4eXFoUlBqR25URmNCamZwTDBhbm1qUjVqaXdy?=
- =?utf-8?B?N3RBc2JHWk5MeVRSQTJHeHllMDBNblJpaFlxVUdJVlhIZ1FROGsyeC9PcUZo?=
- =?utf-8?B?NjdHaGF5Vlo3V25LUmRIUTc0L0pCdFF2dUh4NU9PVnRYQWtLdVJJbnJOTFlN?=
- =?utf-8?B?UFlCU0pwU0RkRkpDWEorcnZJWlVvditBNDdHN3d1TEF3R3VnNE9PbGFZenFG?=
- =?utf-8?B?Y08zN1VndnNIUlo4ejJIc2JmSjkxemF3Q3dIR3JLV1ptdEZrWmtuUmxZUUNS?=
- =?utf-8?B?bzBMbU91OXF4QzV2R29na3BmOHduaEh3TUNhVnRBSENjazNlc2ExNGVMdG9C?=
- =?utf-8?B?ZTJwWnFLeWlXcXVOcDFmSWNTclVyVUNTWEQ3cFBDNHBRQ2VRdmhlODA1RHhJ?=
- =?utf-8?B?VzhHL0IrSGVSSGpFQk8rRWtKUyt4dzRXWGZlUjhiYmU1Nk9PdExURHlCTTd0?=
- =?utf-8?B?MEI1TXdFNCtRaWxvU3p1R3k1U3FUZk43S0pSSDdjMHViNm9yQnRJOVA1ZEJQ?=
- =?utf-8?B?YUJDVW1qWHBRaVMzUjV4SlNXSEhUZWtjQ0s0L1Q5TjROZzlNZHQrUWppS1R1?=
- =?utf-8?B?czFqSXc4aE9Ka1NMYkhoaDAvb21BODBtVktGMU42Q2dITVJNQnFOUERWL3pD?=
- =?utf-8?B?b3VtU1FUaHFRcWRLVU9JWk4wU1FITCs3dkpTd2Z3UWZMSG9laUYrQWV4OVdq?=
- =?utf-8?B?ZlpPSWl3bUlmVFhTUHE1OENqWUdZSUJXdmE4dWxoa1dObmZIb1c3TktsYWNB?=
- =?utf-8?B?c2RYN05maHp4Zmt4K2o5eGRHM0d6U2phY2Z2aGZ6U0dVeklxQzc5NVRxU2dY?=
- =?utf-8?B?cmJZby9hZlpzYlNKVTlUMk1vSnBwN3E1WXIrczdEVzg4VXF3MHN0bC9STE9K?=
- =?utf-8?Q?1D+9o+rI6Te+ILOcz9jl/+lQ0?=
+	=?utf-8?B?SnMrMnh2Y3NpV2hZZnFyaG5sNVhxdFF0UXc5bUJsdmlMQ1VkY1Ywc2MyTEhX?=
+ =?utf-8?B?TEJxRis0TVNvdklDZ1IyR0paRXUzanhFZlZRQ1JqVXpoTGNYbEowRFFCeFJv?=
+ =?utf-8?B?cWNRYXFIREFCYXVwV05Db0R3UThreXl3NnRyRFdNWXhGbWp5eVVoRE15L2Rj?=
+ =?utf-8?B?cmZrZlZXQTl2UkpBQlZoS3hydGJ4OFo2MElYSFp6ZFR3VG5HOS8xbFdwelhB?=
+ =?utf-8?B?R0lsUlRNdlhVZVByUFZZcHNWdi9Gc2VMeGpEcVRIVXZJV05vSmFmbksralVn?=
+ =?utf-8?B?NkxlcFY2T0c0QzBVdnB6SE1ucWVRTGZad1YwSXh4SGp1bWNQTjRRUWFhVXBx?=
+ =?utf-8?B?ckZkN0FyM0oreWZxRWJuTFdZYWl2T1IzOXdHNDkremprMHRuSVNSMG9hUnZl?=
+ =?utf-8?B?eXFhNmE1WFIzTzhCNXgwblhDMnFVUituRHl0cEJwSGJnb1hVcndqVVlmc0pa?=
+ =?utf-8?B?SUJjZS9neG5mS1JtUmRhU01WR1pDWGJFNzhqVkhodXdXbzR4ZDJmZUJmMXFX?=
+ =?utf-8?B?UFkwV1ZTcTZwUC9XazNtdVFqU0t2bVFwbUJaUjkyUzBwMng5bFJCWVBpNHFz?=
+ =?utf-8?B?YW1seHhvV21KbTNrNk5iZlN3WnVYSzdSSnlMS1ZUblZaUEJVUjk5UWNJTWo2?=
+ =?utf-8?B?UzlLdGxla2xHK0VLQkliM0dkY1lodUkyb2c4NlFweEtab3dKNlVvMCtSTzBP?=
+ =?utf-8?B?TFFEWXNaZ1dOVHNLd1BhYnZPTzNKOXZZUWIzWmJzeGtqZ2pBc3RCNEdCSHp6?=
+ =?utf-8?B?V2tUUXdhR000bW53NE9OcEE2NE0yQUx6aHVOaC9VMlZwN3N5U0k5R2NrK0RF?=
+ =?utf-8?B?KzVsanYrM29La2w0TG5Gai8wbGVuWlBSM2FMaERZNnF2NHc5QlNWQXNuRlNm?=
+ =?utf-8?B?MzVpclZFMXp4TVlpNlViRmJRQU5ocW5ERjhNMzNHeVhYdXZqYU1uRE1tSnBB?=
+ =?utf-8?B?NngxOTIxNkVJOVZFcUZQaHlhbHNkRzdYelMwTVdLU2RRclVOMng1NGhxdWU1?=
+ =?utf-8?B?SWw1NUdXTXhPYWx4blhDYkJnWlMzRXV0SkRQYWRJc0w3Qmo0c1BieEViTTFt?=
+ =?utf-8?B?WXBYZVRFc3o1ME5qM3Z1SFh5M3JXOVBqR3hMWFFCM2ErL29UOGlmSU9HK1Z3?=
+ =?utf-8?B?ZDduODJiaXZwZDdnUE5nVFZuYVNxTFJYYkFiYWhvaTY2Y1hDcWRVd2ZFblRP?=
+ =?utf-8?B?dkpPK0VzMmQwTDRGTVM1U3I3bFkxRytaSzlHeGZnRkhNWmlLS0hCKzBMbE01?=
+ =?utf-8?B?R3NIMC94dUZHRnhTb1p4TmxoY2ZpdVkrM3YvcndyLzJTL1lXVFN6clBkWmR5?=
+ =?utf-8?B?Q2JydzNWR29Mb3JTSWJSNU1YQjRNN205TmxnQmhUZ3NmQWdFajl4ejNxcGdk?=
+ =?utf-8?B?U1NMdklRd1ZiZk1CQmI1QjJURGg1bVEyRTRlTVo0SmMreEY3eXNMczVnNGtH?=
+ =?utf-8?B?NzYvbVhMZkhtblA1enQ1WHBrUUN2azlXMUZMNk5vSHBORnd3d3diUWRtem5J?=
+ =?utf-8?B?N0FabjZjVmJpUXUvWlgyM1pCbmdDeFNoTnp6WXBQc2o0a1V6ME9RTHlYMXhG?=
+ =?utf-8?B?eWkxalk0c0ZsRnhLMVgzbmU2UHdMRGpacXpJb3JvOVhVMjVqem9oRmN1WnVK?=
+ =?utf-8?B?RkVNYUdvbDRyKzNOYkZueTZaUkZ6YlBYWmxOZHlGc0UzNy9OVDBQVGFCbWFT?=
+ =?utf-8?B?eHlrc292MWJnbnFGQlorRVVDTGxCQUgxejI5VFhJSjR4UXJvdjZFbXE5UEdv?=
+ =?utf-8?B?cU5iL2dSRzNnUGFUNE1YY0dWUUxiRkJzcWdDY1NBczlyWFVublFVZjcyVTVQ?=
+ =?utf-8?B?NWxiMU1VMkZreHlMUzc2MW51aWszR2dXcTJhWERjeW1JRWhyZkNCN0s1RndC?=
+ =?utf-8?B?TTNlZE9ub1JnR2JHc3JTdCtTQnF3dGhQNUc0a3dlUFJOeHJLWmdVcUJxdnhp?=
+ =?utf-8?B?bXpQcVBMU0JvWW4yMWNmUFdKOStobmQ3NFpXT0xycmxMdmxlazFSUXE1WW1r?=
+ =?utf-8?B?cFEvaVo4VDZheWFHUHNBZW4wWDFjYnpEUlY0SlY0QnZXYmF5R2tLenVqTXIz?=
+ =?utf-8?B?UHNtVHFLNzdWRy8rbDJOMDkybnBoVC9aaG80VXVsbU5sYlJUT2t0YWpoNkNK?=
+ =?utf-8?Q?iaOZ1sbvriQBN8vK/7zFASRvg?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8667240c-abcb-488b-addc-08dc63b7ecb8
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e3f939d-7e79-4960-d5cc-08dc63b86a6a
 X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2024 17:07:58.2839
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2024 17:11:29.1868
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gdsaCQdPVunYr4LUlBu0D3paZGF1nLmablO4L8Hhb9tzYnDavmpFE2eAXYxuPW4rdFUQmhsPNb1d+UBHn7b8Cg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6917
+X-MS-Exchange-CrossTenant-UserPrincipalName: U+TOm1b+CHsq7ieN9riiZ+rwsNwHaNW3ONoeVl+ugbkNTCVDmsBcsGaIJROZKgwt9/PZ0B9ZTCAOGVVooxWC4g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB5614
 
 On 4/23/2024 04:14, Suma Hegde wrote:
-> Patch1:
-> The first patch is to address the concerns mentioned by Limonciello,
-> Mario i.e to address the issue of
-> "Probing registers that don't match the same mailboxes randomly on
-> client or embedded parts might lead to unexpected behaviors".
+> HSMP interface is supported only on few x86 processors from AMD.
+> Accessing HSMP registers on rest of the platforms might cause
+> unexpected behaviour. So add a check.
 > 
-> Because of some limitations, instead of the methods suggested by Mario,
-> family check is added to differentiate server socs and client socs.
-> This check is only for backward compatibility, Going forward all
-> systems will have ACPI based probing only.
+> Also unavailability of this interface on rest of the processors
+> is not an error. Hence, use pr_info() instead of the pr_err() to
+> log the message.
 > 
+> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+> ---
+>   drivers/platform/x86/amd/hsmp.c | 54 ++++++++++++++++++++++++++++-----
+>   1 file changed, 47 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
+> index 1927be901108..807a5066dacc 100644
+> --- a/drivers/platform/x86/amd/hsmp.c
+> +++ b/drivers/platform/x86/amd/hsmp.c
+> @@ -907,16 +907,48 @@ static int hsmp_plat_dev_register(void)
+>   	return ret;
+>   }
+>   
+> +/*
+> + * This check is only needed for backward compatibility of previous platforms.
+> + * All new platforms are expected to support ACPI based probing.
+> + */
+> +static bool is_hsmp_supported(void)
 
-Thanks!  Hans, please drop the PM profile patch from your review queue 
-in favor of this series instead.
+I think it's better to use "legacy" in this function name to make it 
+clear that this isn't a requirement for newer platforms going forward. 
+Maybe like
 
-> 
-> Patch2:
-> The second patch splits ACPI code into  separate file there by removing the
-> dependency of ACPI in Kconfig.
-> This is based on the suggestion from Ilpo Jarvinen.
-> 
-> 
-> Patch3:
-> The third patch makes HSMP as "default m" so that anyone who uses standard
-> distros will be able to use HSMP by dynamically loading it.
-> 
-> 
-> Suma Hegde (3):
->    platform/x86/amd/hsmp: Check HSMP support on AMD family of processors
->    platform/x86/amd/hsmp: Split the ACPI and non-ACPI code
->    platform/x86/amd/hsmp: Make HSMP as default m
-> 
->   MAINTAINERS                                |   2 +-
->   drivers/platform/x86/amd/Kconfig           |  14 +-
->   drivers/platform/x86/amd/Makefile          |   3 +-
->   drivers/platform/x86/amd/hsmp/Kconfig      |  18 +
->   drivers/platform/x86/amd/hsmp/Makefile     |   9 +
->   drivers/platform/x86/amd/hsmp/hsmp-acpi.c  | 219 ++++++++++++
->   drivers/platform/x86/amd/{ => hsmp}/hsmp.c | 378 +++++----------------
->   drivers/platform/x86/amd/hsmp/hsmp.h       |  82 +++++
->   8 files changed, 425 insertions(+), 300 deletions(-)
->   create mode 100644 drivers/platform/x86/amd/hsmp/Kconfig
->   create mode 100644 drivers/platform/x86/amd/hsmp/Makefile
->   create mode 100644 drivers/platform/x86/amd/hsmp/hsmp-acpi.c
->   rename drivers/platform/x86/amd/{ => hsmp}/hsmp.c (71%)
->   create mode 100644 drivers/platform/x86/amd/hsmp/hsmp.h
-> 
+legacy_hsmp_support()?
+
+> +{
+> +	bool ret = true;
+
+As this is a simple boolean return with no needing to clear memory, I 
+think you can just "return true" or "return false" everywhere in this 
+function.
+
+> +
+> +	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD)
+> +		return false;
+> +
+> +	switch (boot_cpu_data.x86) {
+> +	case 0x19:
+> +		switch (boot_cpu_data.x86_model) {
+> +		case 0x00 ... 0x1F:
+> +		case 0x30 ... 0x3F:
+> +		case 0x90 ... 0x9F:
+> +		case 0xA0 ... 0xAF:
+> +			break;
+> +		default:
+> +			ret = false;
+> +		}
+> +		break;
+> +	case 0x1A:
+> +		switch (boot_cpu_data.x86_model) {
+> +		case 0x00 ... 0x1F:
+> +			break;
+
+There actually are going to be 0x1A platforms that don't use ACPI?
+I guess I'm surprised.
+
+> +		default:
+> +			ret = false;
+> +		}
+> +		break;
+> +	default:
+> +		ret = false;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>   static int __init hsmp_plt_init(void)
+>   {
+>   	int ret = -ENODEV;
+>   
+> -	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD || boot_cpu_data.x86 < 0x19) {
+> -		pr_err("HSMP is not supported on Family:%x model:%x\n",
+> -		       boot_cpu_data.x86, boot_cpu_data.x86_model);
+> -		return ret;
+> -	}
+> -
+>   	/*
+>   	 * amd_nb_num() returns number of SMN/DF interfaces present in the system
+>   	 * if we have N SMN/DF interfaces that ideally means N sockets
+> @@ -930,7 +962,15 @@ static int __init hsmp_plt_init(void)
+>   		return ret;
+>   
+>   	if (!plat_dev.is_acpi_device) {
+> -		ret = hsmp_plat_dev_register();
+> +		if (is_hsmp_supported()) {
+> +			/* Not ACPI device, but supports HSMP, register a plat_dev */
+> +			ret = hsmp_plat_dev_register();
+> +		} else {
+> +			/* Not ACPI, Does not support HSMP */
+> +			pr_info("HSMP is not supported on Family:%x model:%x\n",
+> +				boot_cpu_data.x86, boot_cpu_data.x86_model);
+> +			ret = -ENODEV;
+> +		}
+>   		if (ret)
+>   			platform_driver_unregister(&amd_hsmp_driver);
+>   	}
 
