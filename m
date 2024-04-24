@@ -1,217 +1,362 @@
-Received: from wfhigh7-smtp.messagingengine.com (wfhigh7-smtp.messagingengine.com [64.147.123.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA4217A926
-	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Apr 2024 18:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0721B7FD;
+	Wed, 24 Apr 2024 19:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713983271; cv=none; b=ghatseqvXOUy1kEBa1I4CZlATdp/Mz3Jz272X6fVyUkkIqIgakrlwjiLn3JCwbA6OSSAMeatq0icDRUuAV8eLBRENDfxrj29j3/x4osdViwPx5Cd2vSAMO4kFwZOuFvUi/Ee3G55MpPdYwP5Kub+jUEmlpq9R0+wti3p8+kzEOA=
+	t=1713985300; cv=none; b=flXc4Qgmnesj/ZgtHkl5hNIq4V2UYW65H/qIXMQzXPS2MxKsYaTroXFgK8zoEC/aIfv1mtbS2Tb0ghzpt5sBEmF8ZlM0wklk9t/1iSMlYbvj8VuVdFvID3WWhe5nKDSEBmH/0H6INFLYFBZne7eVso6/4bD9afZQs5kW48qcYKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713983271; c=relaxed/simple;
-	bh=3a52tJ68FTtaP8GFrrTej/q4GaYuPRq3nVlS3nNrW1o=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=s3NrzmbWXgBPwlz6wuMtgHS7w8GuWc4yGoNuD1h6/B+X034oXu8NFXfSqprGaAULdph7Xy/0H7aBX/ZAbmmxMfiLlad/GpnZm/sSTcYKeoFjkQpX4uY6/pHDHD82poY2vk3zOeJ82V3L+Hsl+l4m11nzgWHqOEYx8vcV8SWtnFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=CvYrMC4W; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=EWoPgRej; arc=none smtp.client-ip=64.147.123.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1713985300; c=relaxed/simple;
+	bh=AUAwhdW+M8AMnRI433zCP6rrFHe66cysjLyGIeXMbYU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kOU5+pwrWUyqVXnSSHriE79gG7VWFRkxsAgaR7fIXBipIPlILjLdpcwWR4Bquc2X54hYDOxfvlk4IsM7uQRkK4Q+nLm1XDCyIfb9B1BqHcolAf/Rz7r/8WgJR8cxZtYC/HDgMmPB02jLTEfv2tcAMi7KeR6w+VBexaArVhBS5Ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gUVL1y/B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="CvYrMC4W";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EWoPgRej"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 2934418000C3;
-	Wed, 24 Apr 2024 14:27:48 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute3.internal (MEProxy); Wed, 24 Apr 2024 14:27:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1713983267; x=1714069667; bh=b1igEN2FEv
-	ryVdN0GD97w9dQJ5HJoT+BTW4hH0R+1/I=; b=CvYrMC4Wi33f7aEpp0ds9oPPAB
-	i20s7tndcG4Z0oCGsl9BJTgG46xvpRBxpGaQHyNZV6ccbNguy5WJHh1itdwsKjKP
-	tvVlHSCbg9FYSqm2qyQ1unlzHvcdwKyhhSXQn2cgtonU/DRL2sdoXupdlH2qNHej
-	R8438da80zoO6fMcSSeRuuBhn3nyxTwQMo1jcSlnsMCLblsKOeUYtzveO4aNcXow
-	XikJD/B/fTGw5C4ffP494mMPyzDWl3oA5CrAyFPLEru2oEnVc+1flMjs6Ou32GrO
-	zI4eaMxpezUMH4F6ULpF/A0WDFj+V+TKZV6t5Fsql5zG7e3DyjxCkF785tow==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1713983267; x=1714069667; bh=b1igEN2FEvryVdN0GD97w9dQJ5HJ
-	oT+BTW4hH0R+1/I=; b=EWoPgRejW3hmlskFFYONJ0G/qCUOPAPYAnmLxC73c5O2
-	Z478jZGV6qdgLdCYXiwXxIl3Q1/nzTMKHzRPNXcZXoO5WwtbX9OPOsLvD8+981/F
-	ZhSsg9HuDXU56npr2xoGBqBqEonlaTbDLpQ81nSBxhRYmkTDVkwU8EmcTi/PKj9r
-	iMIRIxNspZ5p3t5vEyV5z1bnuBzPSeP0DY6h4on6QthaIWG2puielnDq67fVRkWH
-	S33GMuFir7BnTmj9DaSHtmSWxkiJLs/vV9v9RWonSxfWihW6G55bEQabIIExjtFx
-	fnhrXa45GCXVQ0/64kc6/ROHrfHGApfPJkN+yG3Vug==
-X-ME-Sender: <xms:I08pZi-39Eh3ATZGPG_od5sIhHbAcG1hZwhmtIVZ-DNDCv9ooWF2Nw>
-    <xme:I08pZitVENbOdW1ftmxGJ8zX2DMlJaYTAF5iT3GOFzPLHeEbBsppM7PYm7-9YcFR7
-    e9sCIKrAx7vYebIFg0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudelhedgieehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
-    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
-    drtggrqeenucggtffrrghtthgvrhhnpeeiueefjeeiveetuddvkeetfeeltdevffevudeh
-    ffefjedufedvieejgedugeekhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
-X-ME-Proxy: <xmx:I08pZoA9fZZxAvQjr7DFV1mPWXCW5WKWddhezNKwlo9N5SVjYJ_bMg>
-    <xmx:I08pZqebd4-IgsblKbtA0w0TdcM9ThZ5h-7T8lQuYLFmmm1SSM_jSw>
-    <xmx:I08pZnMU_RcQds-BRkxnLqTCnrmElXVSeWKw28rkiWA3ISplAMPUyw>
-    <xmx:I08pZkmjC6zp4CAraXG6cgI0yM7mcx6G76QIoT5ZwMlSjVEbKuKgrQ>
-    <xmx:I08pZieAtSS1_XcV8wXUWc9EFFD7EJcBLdzY6C5hetrmh0-iz8g7WIOz>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 4DF3DC60097; Wed, 24 Apr 2024 14:27:47 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-386-g4cb8e397f9-fm-20240415.001-g4cb8e397
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gUVL1y/B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EC42C32783;
+	Wed, 24 Apr 2024 19:01:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713985300;
+	bh=AUAwhdW+M8AMnRI433zCP6rrFHe66cysjLyGIeXMbYU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=gUVL1y/BKDh3ii9owcmzWkQXKwWdUgsIaP/pNHQrnybXwAIqY2XJkCN+kLscAy+zV
+	 Ziq7LcVHWWmxzyrqVPecEH+Z5ChOZj6Z5b7kS2/qfhw4CsVB0KBlkFczMnGj6Fr+YQ
+	 mk9L5t+HJCsepwn31OLY3utw4N50Fiavg1onS91kdTsJkQNXwlvBktIdwgaHW4mJWz
+	 JV087DgZjC6kokUNQEaKzJz8OHDixG4NpZEFsCVhktMypAxhsg8PLu/xZCyQlFicLh
+	 7eXC73E6ILSJtvar1DyYacdP9QZFv640GZDu9S37FLHn3YroH7yfJAwIgd28qD1UFn
+	 +Z5BhkKG0ASFg==
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5aca32d3f78so33239eaf.1;
+        Wed, 24 Apr 2024 12:01:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW6+wXcIOuvwwb0VVc5RmGDDHKw1U88ERwUgmSmdRU7WKP7ZIk3A+5pLt85gSAWNET4yNkrQ0F7hMcs7hQTJZ4k/wwGMDzZoRXIqqOP4CHYXkuKHmhVIuM/AK+Z1zT40/hKPtUGqoW+SJj1EfBU8xaUjqShReGQeJOlry0vLBviB053aHaVF0FtHkn1E7TpYw5K0eiF55gUKY5+1jrb8rp6ENCEGcTonB169A==
+X-Gm-Message-State: AOJu0YwPbuLTghc+4FAf1FCXtORHyOdpinB913PzfNCPfaSTDDUV8SXp
+	zcw1KWrecck2m0YH1urlX4Xe7AAtpw40f2BXY7rjnRL2z8YwGiDfVj8Bkb4N0FzocLbq4vXLWiT
+	DzusfIdLYCUAqlZzooaZNiI5dcEk=
+X-Google-Smtp-Source: AGHT+IGvBQ2jFo2NOYEzKPYTqsFLqDDLw5PpBktYstWvuP0UE7S+AFO3g19ze7Bwo0WYNLV3mUTJhJ2us3ywPEAtuhc=
+X-Received: by 2002:a4a:c710:0:b0:5aa:3e4f:f01e with SMTP id
+ n16-20020a4ac710000000b005aa3e4ff01emr3319234ooq.1.1713985299242; Wed, 24 Apr
+ 2024 12:01:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <10eeb2d3-0786-43e5-99dd-f609804021a2@app.fastmail.com>
-In-Reply-To: <20240424122834.19801-1-hdegoede@redhat.com>
-References: <20240424122834.19801-1-hdegoede@redhat.com>
-Date: Wed, 24 Apr 2024 14:28:49 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Andy Shevchenko" <andy@kernel.org>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>
-Cc: "Vishnu Sankar" <vishnuocv@gmail.com>,
- "Nitin Joshi1" <njoshi1@lenovo.com>, ibm-acpi-devel@lists.sourceforge.net,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v2 00/24] platform/x86: thinkpad_acpi: Refactor hotkey handling and
- add support for some new hotkeys
-Content-Type: text/plain
+References: <20240422195745.5089-1-W_Armin@gmx.de>
+In-Reply-To: <20240422195745.5089-1-W_Armin@gmx.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 24 Apr 2024 21:01:27 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gLQYOWLTmpe24epb9GzV5o2qSuaP5t25eu-OXYoE2pAQ@mail.gmail.com>
+Message-ID: <CAJZ5v0gLQYOWLTmpe24epb9GzV5o2qSuaP5t25eu-OXYoE2pAQ@mail.gmail.com>
+Subject: Re: [PATCH v6] ACPI: fan: Add hwmon support
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: mlj@danelec.com, rafael.j.wysocki@intel.com, lenb@kernel.org, 
+	jdelvare@suse.com, andy.shevchenko@gmail.com, linux@roeck-us.net, 
+	linux@weissschuh.net, ilpo.jarvinen@linux.intel.com, 
+	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Apr 22, 2024 at 9:58=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
+>
+> Currently, the driver does only support a custom sysfs
+> interface to allow userspace to read the fan speed.
+> Add support for the standard hwmon interface so users
+> can read the fan speed with standard tools like "sensors".
+>
+> Tested with a custom ACPI SSDT.
+>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 
+I need Guenter to tell me that this is fine with him.
 
-On Wed, Apr 24, 2024, at 8:28 AM, Hans de Goede wrote:
-> Hi All,
->
-> Here is v2 of my patch-series to refactor thinkpad_acpi's hotkey handling
-> and to add support for some new hotkeys on new models.
->
-> Changes in v2:
-> - Some small code style tweaks in response to reviews
-> - Add various Reviewed-by and Tested-by tags
->
-> Relevant parts of v1 cover-letter:
->
-> I have been very careful to not introduce any changes wrt support for
-> the original ThinkPad models / hotkeys which use the hotkey_*_mask
-> related code.
->
-> I've also done my best to avoid any *significant* functional change but
-> there are still some functional changes, which should all not impact
-> userspace compatibility:
->
-> 1. Adaptive keyboard special keys will now also send EV_MSC events with
->    the scancode, just like all the other hotkeys.
->
-> 2. Rely on the input core for KEY_RESERVED suppression. This means that
->    keys marked as KEY_RESERVED will still send EV_MSC evdev events when
->    pressed (which helps users with mapping them to non reserved KEY_FOO
->    values if desired).
->
-> 3. Align the keycodes for volume up/down/mute and brightness up/down with
->    those set by userspace through udev upstream's hwdb. Note these are all
->    for keys which are suppressed by hotkey_reserved_mask by default.
->    So this is only a functional change for users who override the default
->    hotkey-mask *and* who do not have udev's default hwdb installed.
->
-> 4. Suppress ACPI netlink event generation for unknown 0x1xxx hkey events to
->    avoid userspace starting to rely on the netlink events for new hotkeys
->    before these have been added to the keymap, only to have the netlink
->    events get disabled by the adding of the new hotkeys to the keymap.
->
->    This should not cause a behavior change for existing models since all
->    currently known 0x1xxx events have a mapping.
->
-> Here is a quick breakdown of the patches in this series:
->
-> Patch 1 - 2: Fix a small locking issue on rmmod the only problem here
->    really is a lockdep warning, so I plan to route these fixes through
->    for-next together with the rest to keep things simple.
->
-> Patch 3 - 14: Do a bunch of cleanups and refactoring
->
-> Patch 15: Implements functional change no 4. I really kinda want to just
->    completely disable ACPI netlink event generation when also sending evdev
->    events instead of reporting these twice. But for the 0x11xx / 0x13xx
->    hkey events the kernel has send ACPI netlink events for years now. So
->    this disables ACPI netlink events for any new hotkeys going forward.
->
-> Patch 16 - 18: Refactor / cleanup reserved key handling
->
-> Patch 19: Actually move to sparse-keymaps
->
-> Patch 20: Update the keymap for 2 adaptive kbd Fn row keys
->
-> Patch 21 - 24: Mark's original patches adding support for the new Fn + N
->    key combo and for trackpoint doubletap slightly reworked to use
->    the new sparse-keymap.
->
-> Regards,
->
-> Hans
->
->
-> Hans de Goede (20):
->   platform/x86: thinkpad_acpi: Take hotkey_mutex during hotkey_exit()
->   platform/x86: thinkpad_acpi: Provide hotkey_poll_stop_sync() dummy
->   platform/x86: thinkpad_acpi: Drop setting send_/ignore_acpi_ev
->     defaults twice
->   platform/x86: thinkpad_acpi: Drop ignore_acpi_ev
->   platform/x86: thinkpad_acpi: Use tpacpi_input_send_key() in adaptive
->     kbd code
->   platform/x86: thinkpad_acpi: Do hkey to scancode translation later
->   platform/x86: thinkpad_acpi: Make tpacpi_driver_event() return if it
->     handled the event
->   platform/x86: thinkpad_acpi: Move adaptive kbd event handling to
->     tpacpi_driver_event()
->   platform/x86: thinkpad_acpi: Move special original hotkeys handling
->     out of switch-case
->   platform/x86: thinkpad_acpi: Move hotkey_user_mask check to
->     tpacpi_input_send_key()
->   platform/x86: thinkpad_acpi: Always call tpacpi_driver_event() for
->     hotkeys
->   platform/x86: thinkpad_acpi: Drop tpacpi_input_send_key_masked() and
->     hotkey_driver_event()
->   platform/x86: thinkpad_acpi: Move hkey > scancode mapping to
->     tpacpi_input_send_key()
->   platform/x86: thinkpad_acpi: Move tpacpi_driver_event() call to
->     tpacpi_input_send_key()
->   platform/x86: thinkpad_acpi: Do not send ACPI netlink events for
->     unknown hotkeys
->   platform/x86: thinkpad_acpi: Change hotkey_reserved_mask
->     initialization
->   platform/x86: thinkpad_acpi: Use correct keycodes for volume and
->     brightness keys
->   platform/x86: thinkpad_acpi: Drop KEY_RESERVED special handling
->   platform/x86: thinkpad_acpi: Switch to using sparse-keymap helpers
->   platform/x86: thinkpad_acpi: Add mappings for adaptive kbd
->     clipping-tool and cloud keys
->
-> Mark Pearson (4):
->   platform/x86: thinkpad_acpi: Simplify known_ev handling
->   platform/x86: thinkpad_acpi: Support for trackpoint doubletap
->   platform/x86: thinkpad_acpi: Support for system debug info hotkey
->   platform/x86: thinkpad_acpi: Support hotkey to disable trackpoint
->     doubletap
->
->  drivers/platform/x86/thinkpad_acpi.c | 854 +++++++++++----------------
->  1 file changed, 353 insertions(+), 501 deletions(-)
->
-> -- 
-> 2.44.0
+Also please see one nit below.
 
-For the entire v2 series:
-Reviewed-by: mpearson-lenovo@squebb.ca
+> ---
+> Changes since v5:
+> - fix coding style issues
+> - replace double break with return
+> - add missing includes
+>
+> Changes since v4:
+> - fix spelling issues
+> - check power values for overflow condition too
+>
+> Changes since v3:
+> - drop fault attrs
+> - rework initialization
+>
+> Changes since v2:
+> - add support for fanX_target and power attrs
+>
+> Changes since v1:
+> - fix undefined reference error
+> - fix fan speed validation
+> - coding style fixes
+> - clarify that the changes are compile-tested only
+> - add hwmon maintainers to cc list
+> ---
+>  drivers/acpi/Makefile    |   1 +
+>  drivers/acpi/fan.h       |   9 +++
+>  drivers/acpi/fan_core.c  |   4 +
+>  drivers/acpi/fan_hwmon.c | 169 +++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 183 insertions(+)
+>  create mode 100644 drivers/acpi/fan_hwmon.c
+>
+> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+> index 39ea5cfa8326..61ca4afe83dc 100644
+> --- a/drivers/acpi/Makefile
+> +++ b/drivers/acpi/Makefile
+> @@ -77,6 +77,7 @@ obj-$(CONFIG_ACPI_TINY_POWER_BUTTON)  +=3D tiny-power-b=
+utton.o
+>  obj-$(CONFIG_ACPI_FAN)         +=3D fan.o
+>  fan-objs                       :=3D fan_core.o
+>  fan-objs                       +=3D fan_attr.o
+> +fan-$(CONFIG_HWMON)            +=3D fan_hwmon.o
+>
+>  obj-$(CONFIG_ACPI_VIDEO)       +=3D video.o
+>  obj-$(CONFIG_ACPI_TAD)         +=3D acpi_tad.o
+> diff --git a/drivers/acpi/fan.h b/drivers/acpi/fan.h
+> index f89d19c922dc..db25a3898af7 100644
+> --- a/drivers/acpi/fan.h
+> +++ b/drivers/acpi/fan.h
+> @@ -10,6 +10,8 @@
+>  #ifndef _ACPI_FAN_H_
+>  #define _ACPI_FAN_H_
+>
+> +#include <linux/kconfig.h>
+> +
+>  #define ACPI_FAN_DEVICE_IDS    \
+>         {"INT3404", }, /* Fan */ \
+>         {"INTC1044", }, /* Fan for Tiger Lake generation */ \
+> @@ -57,4 +59,11 @@ struct acpi_fan {
+>  int acpi_fan_get_fst(struct acpi_device *device, struct acpi_fan_fst *fs=
+t);
+>  int acpi_fan_create_attributes(struct acpi_device *device);
+>  void acpi_fan_delete_attributes(struct acpi_device *device);
+> +
+> +#if IS_REACHABLE(CONFIG_HWMON)
+> +int devm_acpi_fan_create_hwmon(struct acpi_device *device);
+> +#else
+> +static inline int devm_acpi_fan_create_hwmon(struct acpi_device *device)=
+ { return 0; };
+> +#endif
+> +
+>  #endif
+> diff --git a/drivers/acpi/fan_core.c b/drivers/acpi/fan_core.c
+> index ff72e4ef8738..7cea4495f19b 100644
+> --- a/drivers/acpi/fan_core.c
+> +++ b/drivers/acpi/fan_core.c
+> @@ -336,6 +336,10 @@ static int acpi_fan_probe(struct platform_device *pd=
+ev)
+>                 if (result)
+>                         return result;
+>
+> +               result =3D devm_acpi_fan_create_hwmon(device);
+> +               if (result)
+> +                       return result;
+> +
+>                 result =3D acpi_fan_create_attributes(device);
+>                 if (result)
+>                         return result;
+> diff --git a/drivers/acpi/fan_hwmon.c b/drivers/acpi/fan_hwmon.c
+> new file mode 100644
+> index 000000000000..34a524c285a5
+> --- /dev/null
+> +++ b/drivers/acpi/fan_hwmon.c
+> @@ -0,0 +1,169 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Hwmon interface for the ACPI Fan driver.
+> + *
+> + * Copyright (C) 2024 Armin Wolf <W_Armin@gmx.de>
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/limits.h>
+> +#include <linux/units.h>
+> +
+> +#include "fan.h"
+> +
+> +/* Returned when the ACPI fan does not support speed reporting */
+> +#define FAN_SPEED_UNAVAILABLE  U32_MAX
+> +#define FAN_POWER_UNAVAILABLE  U32_MAX
+> +
+> +static struct acpi_fan_fps *acpi_fan_get_current_fps(struct acpi_fan *fa=
+n, u64 control)
+> +{
+> +       unsigned int i;
+> +
+> +       for (i =3D 0; i < fan->fps_count; i++) {
+> +               if (fan->fps[i].control =3D=3D control)
+> +                       return &fan->fps[i];
+> +       }
+> +
+> +       return NULL;
+> +}
+> +
+> +static umode_t acpi_fan_is_visible(const void *drvdata, enum hwmon_senso=
+r_types type, u32 attr,
+> +                                  int channel)
+> +{
+> +       const struct acpi_fan *fan =3D drvdata;
+> +       unsigned int i;
+> +
+> +       switch (type) {
+> +       case hwmon_fan:
+> +               switch (attr) {
+> +               case hwmon_fan_input:
+> +                       return 0444;
+> +               case hwmon_fan_target:
+> +                       /*
+> +                        * When in fine grain control mode, not every fan=
+ control value
+> +                        * has an associated fan performance state.
+> +                        */
+> +                       if (fan->fif.fine_grain_ctrl)
+> +                               return 0;
+> +
+> +                       return 0444;
+> +               default:
+> +                       return 0;
+> +               }
+> +       case hwmon_power:
+> +               switch (attr) {
+> +               case hwmon_power_input:
+> +                       /*
+> +                        * When in fine grain control mode, not every fan=
+ control value
+> +                        * has an associated fan performance state.
+> +                        */
+> +                       if (fan->fif.fine_grain_ctrl)
+> +                               return 0;
+> +
+> +                       /*
+> +                        * When all fan performance states contain no val=
+id power data,
+> +                        * when the associated attribute should not be cr=
+eated.
+> +                        */
+> +                       for (i =3D 0; i < fan->fps_count; i++) {
+> +                               if (fan->fps[i].power !=3D FAN_POWER_UNAV=
+AILABLE)
+> +                                       return 0444;
+> +                       }
+> +
+> +                       return 0;
+> +               default:
+> +                       return 0;
+> +               }
+> +       default:
+> +               return 0;
+> +       }
+> +}
+> +
+> +static int acpi_fan_read(struct device *dev, enum hwmon_sensor_types typ=
+e, u32 attr, int channel,
+> +                        long *val)
+> +{
+> +       struct acpi_device *adev =3D to_acpi_device(dev->parent);
+> +       struct acpi_fan *fan =3D dev_get_drvdata(dev);
+> +       struct acpi_fan_fps *fps;
+> +       struct acpi_fan_fst fst;
+> +       int ret;
+> +
+> +       ret =3D acpi_fan_get_fst(adev, &fst);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       switch (type) {
+> +       case hwmon_fan:
+> +               switch (attr) {
+> +               case hwmon_fan_input:
+> +                       if (fst.speed =3D=3D FAN_SPEED_UNAVAILABLE)
+> +                               return -ENODATA;
+> +
+> +                       if (fst.speed > LONG_MAX)
+> +                               return -EOVERFLOW;
+> +
+> +                       *val =3D fst.speed;
+> +                       return 0;
+> +               case hwmon_fan_target:
+> +                       fps =3D acpi_fan_get_current_fps(fan, fst.control=
+);
+> +                       if (!fps)
+> +                               return -ENODATA;
+> +
+> +                       if (fps->speed > LONG_MAX)
+> +                               return -EOVERFLOW;
+> +
+> +                       *val =3D fps->speed;
+> +                       return 0;
+> +               default:
+> +                       return -EOPNOTSUPP;
+> +               }
+> +       case hwmon_power:
+> +               switch (attr) {
+> +               case hwmon_power_input:
+> +                       fps =3D acpi_fan_get_current_fps(fan, fst.control=
+);
+> +                       if (!fps)
+> +                               return -ENODATA;
+> +
+> +                       if (fps->power =3D=3D FAN_POWER_UNAVAILABLE)
+> +                               return -ENODATA;
+> +
+> +                       if (fps->power > LONG_MAX / MICROWATT_PER_MILLIWA=
+TT)
+> +                               return -EOVERFLOW;
+> +
+> +                       *val =3D fps->power * MICROWATT_PER_MILLIWATT;
+> +                       return 0;
+> +               default:
+> +                       return -EOPNOTSUPP;
+> +               }
+> +       default:
+> +               return -EOPNOTSUPP;
+> +       }
+> +}
+> +
+> +static const struct hwmon_ops acpi_fan_ops =3D {
+> +       .is_visible =3D acpi_fan_is_visible,
+> +       .read =3D acpi_fan_read,
+> +};
 
-Plus a thank you. I learnt a bunch about the keymap interface/sub-system from reviewing the patch series; and I think the new sparse-keymap is a really nice cleanup.
+I would add "hwmon" to the names of functions and variables related to
+hwmon.  Something like
 
-Mark 
++static const struct hwmon_ops acpi_fan_hwmon_ops =3D {
++       .is_visible =3D acpi_fan_hwmon_is_visible,
++       .read =3D acpi_fan_hwmon_read,
++};
+
+Otherwise, it looks fine to me.
+
+> +
+> +static const struct hwmon_channel_info * const acpi_fan_info[] =3D {
+> +       HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT | HWMON_F_TARGET),
+> +       HWMON_CHANNEL_INFO(power, HWMON_P_INPUT),
+> +       NULL
+> +};
+> +
+> +static const struct hwmon_chip_info acpi_fan_chip_info =3D {
+> +       .ops =3D &acpi_fan_ops,
+> +       .info =3D acpi_fan_info,
+> +};
+> +
+> +int devm_acpi_fan_create_hwmon(struct acpi_device *device)
+> +{
+> +       struct acpi_fan *fan =3D acpi_driver_data(device);
+> +       struct device *hdev;
+> +
+> +       hdev =3D devm_hwmon_device_register_with_info(&device->dev, "acpi=
+_fan", fan,
+> +                                                   &acpi_fan_chip_info, =
+NULL);
+> +       return PTR_ERR_OR_ZERO(hdev);
+> +}
+> --
