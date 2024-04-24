@@ -1,45 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A2F15B100
-	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Apr 2024 12:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B3F15B140
+	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Apr 2024 12:28:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713961729; cv=none; b=lCkWi1WI58Y9CZwNFnxLrUeJ72om4g8QlslSpht9lGaTell2CG1aqKcBeurNj+OhOPXm87I9XdQisZk0uLWeO0KBh4BrYrf/G8WyAbdt87Fth3UbYS87sTj9c//0466rpdLUYoLH2ftSeY8NgikuDIa4NEvayFlgOPGYxqKq07A=
+	t=1713961731; cv=none; b=XUwaKojPXrDHoHKqcGehUba176Sgn5OwNzxEQ+2K7bK2WIMQGmA864nMjKI1C7BfXXeY3rfydWJ+YxyRRkbCbyAaWajcN0kPC4jPjFNbXvnviP65AFzZPPRzD/FVUSkt2F85AmL35cFmcOMSAmzGgeMrPEBiaQX/2oErULM7U4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713961729; c=relaxed/simple;
-	bh=e8lkT9aKq/OVdKJLbZbXx4Jyn5Wvucqc5ZsKakIEb48=;
+	s=arc-20240116; t=1713961731; c=relaxed/simple;
+	bh=oSjVB65n8BFAneI1ATtLDa4vFzP8BFZYB1/n0m4VVwU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e7YvS2jIAUKJdL7ePScT3g7lfD2Gsbo/TFkeTZwvBgpyqS6zK0X6kCwjlAWs2AoeZS4FIym3kgASWUNYxab9SYACkXVV6goIAXbhkr0NrLlebaAcoSxSP7LOG4j3+Fh115t9jy/dFFC5ma0kr6C5n0bDxcqByjuIMbdecDjXBsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iqZngKHw; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=XiMZWgceyhD6Y6DIjr43YzdtvYQAqQfooWdd4l2b+RjS0NwBc3KP9RGR5w84Crgmq+7sRn8BxPIv8qRw6Eakk+zKpZkM3wUKXI6FXajZtJz8/eeGFSTLCX7VNFepmXnrPohKJLP3yH+ZdyAQrtCpgAmoCFoq8JOgclcCU4ODOJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aikj5IP5; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iqZngKHw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aikj5IP5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713961726;
+	s=mimecast20190719; t=1713961728;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5mn6FsvgtcvpKBi7BgWiFPQXrfFhsYOq30ZwjDWjmJs=;
-	b=iqZngKHw8t6RpwKZ2fYZK1qv4ZwtjfjTPfZR258hg05XtGiFTpeq5MKwY8r/fvGJDh5/kY
-	GNybhoJc4aIM49rWmMVCqNHQxOMZElfa4rfbbGkqt/gJuqpj3kiVBX94Zs9ERnsOppJxN1
-	27jJFNwwfchu5YPbWoKETsZAC5JyBOk=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-528-Kj2ykyFyPq2tpkrK0BrRfA-1; Wed,
- 24 Apr 2024 08:28:42 -0400
-X-MC-Unique: Kj2ykyFyPq2tpkrK0BrRfA-1
+	bh=EHU8ENazpT+icHGyJmvr7AE+SmYQgHGvvaL4FvwZIpo=;
+	b=aikj5IP5SqRUwwb90M/5LcBV0Yi3O3TEB/u2KaSzZ7iWxO4ccMMAPDI24BSjQRvBA+Y7pS
+	db+RG1M0Uld1EAq5hN5ibfWfZmKYMDtsReXNmE8KI/RGRX07rZlY6MKLwPXaKiURq+Wqk/
+	ZiSJsvfEdHU+fHd26jT1jkyE1wRD2PY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-299-WfWSpa4nN-iwnFLGVwL2xw-1; Wed, 24 Apr 2024 08:28:44 -0400
+X-MC-Unique: WfWSpa4nN-iwnFLGVwL2xw-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A1A603820EA0;
-	Wed, 24 Apr 2024 12:28:41 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5817810113E5;
+	Wed, 24 Apr 2024 12:28:44 +0000 (UTC)
 Received: from shalem.redhat.com (unknown [10.39.195.45])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 7B93BC15771;
-	Wed, 24 Apr 2024 12:28:40 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 3102BC13FA3;
+	Wed, 24 Apr 2024 12:28:43 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Andy Shevchenko <andy@kernel.org>,
@@ -50,9 +50,9 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	Nitin Joshi <njoshi1@lenovo.com>,
 	ibm-acpi-devel@lists.sourceforge.net,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 04/24] platform/x86: thinkpad_acpi: Drop ignore_acpi_ev
-Date: Wed, 24 Apr 2024 14:28:14 +0200
-Message-ID: <20240424122834.19801-5-hdegoede@redhat.com>
+Subject: [PATCH v2 06/24] platform/x86: thinkpad_acpi: Do hkey to scancode translation later
+Date: Wed, 24 Apr 2024 14:28:16 +0200
+Message-ID: <20240424122834.19801-7-hdegoede@redhat.com>
 In-Reply-To: <20240424122834.19801-1-hdegoede@redhat.com>
 References: <20240424122834.19801-1-hdegoede@redhat.com>
 Precedence: bulk
@@ -64,199 +64,198 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-Setting ignore_acpi_ev to true has the same result as setting
-send_acpi_ev to false, so there is no need to have both.
+Modify hotkey_notify_hotkey() and it helpers to mostly directly operate
+on hkey codes (TP_HKEY_EV_* returned by "MHKP") instead of on the 0 -
+TPACPI_HOTKEY_MAP_LEN scancodes used for scancode -> keycode translation.
 
-Drop ignore_acpi_ev.
+Keeping things in the hkey format as long a possible is a bit cleaner and
+this patch prepares things for moving to sparse-keymaps.
 
 Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 56 +++++++++-------------------
- 1 file changed, 17 insertions(+), 39 deletions(-)
+ drivers/platform/x86/thinkpad_acpi.c | 71 ++++++++++++++--------------
+ 1 file changed, 36 insertions(+), 35 deletions(-)
 
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 007223fded30..bb6b880a5b50 100644
+index 126e39367924..c009885c8820 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -3755,9 +3755,7 @@ static bool hotkey_notify_extended_hotkey(const u32 hkey)
- }
+@@ -157,15 +157,30 @@ enum {
  
- /* 0x1000-0x1FFF: key presses */
--static bool hotkey_notify_hotkey(const u32 hkey,
--				 bool *send_acpi_ev,
--				 bool *ignore_acpi_ev)
-+static bool hotkey_notify_hotkey(const u32 hkey, bool *send_acpi_ev)
- {
- 	unsigned int scancode = hkey & 0xfff;
- 
-@@ -3772,12 +3770,10 @@ static bool hotkey_notify_hotkey(const u32 hkey,
- 		    scancode <= TP_ACPI_HOTKEYSCAN_ADAPTIVE_START) {
- 			/* HKEY event 0x1001 is scancode 0x00 */
- 			scancode--;
--			if (!(hotkey_source_mask & (1 << scancode))) {
-+			if (!(hotkey_source_mask & (1 << scancode)))
- 				tpacpi_input_send_key_masked(scancode);
--				*send_acpi_ev = false;
--			} else {
--				*ignore_acpi_ev = true;
--			}
+ /* HKEY events */
+ enum tpacpi_hkey_event_t {
+-	/* Hotkey-related */
+-	TP_HKEY_EV_HOTKEY_BASE		= 0x1001, /* first hotkey (FN+F1) */
++	/* Original hotkeys */
++	TP_HKEY_EV_ORIG_KEY_START	= 0x1001, /* First hotkey (FN+F1) */
+ 	TP_HKEY_EV_BRGHT_UP		= 0x1010, /* Brightness up */
+ 	TP_HKEY_EV_BRGHT_DOWN		= 0x1011, /* Brightness down */
+ 	TP_HKEY_EV_KBD_LIGHT		= 0x1012, /* Thinklight/kbd backlight */
+ 	TP_HKEY_EV_VOL_UP		= 0x1015, /* Volume up or unmute */
+ 	TP_HKEY_EV_VOL_DOWN		= 0x1016, /* Volume down or unmute */
+ 	TP_HKEY_EV_VOL_MUTE		= 0x1017, /* Mixer output mute */
++	TP_HKEY_EV_ORIG_KEY_END		= 0x1020, /* Last original hotkey code */
 +
-+			*send_acpi_ev = false;
- 			return true;
- 		}
- 		break;
-@@ -3793,21 +3789,19 @@ static bool hotkey_notify_hotkey(const u32 hkey,
++	/* Adaptive keyboard (2014 X1 Carbon) */
++	TP_HKEY_EV_DFR_CHANGE_ROW	= 0x1101, /* Change adaptive kbd Fn row mode */
++	TP_HKEY_EV_DFR_S_QUICKVIEW_ROW	= 0x1102, /* Set adap. kbd Fn row to function mode */
++	TP_HKEY_EV_ADAPTIVE_KEY_START	= 0x1103, /* First hotkey code on adaptive kbd */
++	TP_HKEY_EV_ADAPTIVE_KEY_END	= 0x1116, /* Last hotkey code on adaptive kbd */
++
++	/* Extended hotkey events in 2017+ models */
++	TP_HKEY_EV_EXTENDED_KEY_START	= 0x1300, /* First extended hotkey code */
+ 	TP_HKEY_EV_PRIVACYGUARD_TOGGLE	= 0x130f, /* Toggle priv.guard on/off */
++	TP_HKEY_EV_EXTENDED_KEY_END	= 0x1319, /* Last extended hotkey code using
++						   * hkey -> scancode translation for
++						   * compat. Later codes are entered
++						   * directly in the sparse-keymap.
++						   */
+ 	TP_HKEY_EV_AMT_TOGGLE		= 0x131a, /* Toggle AMT on/off */
+ 	TP_HKEY_EV_PROFILE_TOGGLE	= 0x131f, /* Toggle platform profile */
+ 
+@@ -1752,7 +1767,7 @@ enum {	/* hot key scan codes (derived from ACPI DSDT) */
+ 	TP_ACPI_HOTKEYSCAN_UNK8,
+ 
+ 	/* Adaptive keyboard keycodes */
+-	TP_ACPI_HOTKEYSCAN_ADAPTIVE_START,
++	TP_ACPI_HOTKEYSCAN_ADAPTIVE_START, /* 32 / 0x20 */
+ 	TP_ACPI_HOTKEYSCAN_MUTE2        = TP_ACPI_HOTKEYSCAN_ADAPTIVE_START,
+ 	TP_ACPI_HOTKEYSCAN_BRIGHTNESS_ZERO,
+ 	TP_ACPI_HOTKEYSCAN_CLIPPING_TOOL,
+@@ -1775,7 +1790,7 @@ enum {	/* hot key scan codes (derived from ACPI DSDT) */
+ 	TP_ACPI_HOTKEYSCAN_ROTATE_DISPLAY,
+ 
+ 	/* Lenovo extended keymap, starting at 0x1300 */
+-	TP_ACPI_HOTKEYSCAN_EXTENDED_START,
++	TP_ACPI_HOTKEYSCAN_EXTENDED_START, /* 52 / 0x34 */
+ 	/* first new observed key (star, favorites) is 0x1311 */
+ 	TP_ACPI_HOTKEYSCAN_STAR = 69,
+ 	TP_ACPI_HOTKEYSCAN_CLIPPING_TOOL2,
+@@ -3612,10 +3627,6 @@ static const int adaptive_keyboard_modes[] = {
+ 	FUNCTION_MODE
+ };
+ 
+-#define DFR_CHANGE_ROW			0x101
+-#define DFR_SHOW_QUICKVIEW_ROW		0x102
+-#define FIRST_ADAPTIVE_KEY		0x103
+-
+ /* press Fn key a while second, it will switch to Function Mode. Then
+  * release Fn key, previous mode be restored.
+  */
+@@ -3666,13 +3677,13 @@ static int adaptive_keyboard_get_next_mode(int mode)
+ 	return adaptive_keyboard_modes[i];
  }
  
- /* 0x2000-0x2FFF: Wakeup reason */
--static bool hotkey_notify_wakeup(const u32 hkey,
--				 bool *send_acpi_ev,
--				 bool *ignore_acpi_ev)
-+static bool hotkey_notify_wakeup(const u32 hkey, bool *send_acpi_ev)
+-static bool adaptive_keyboard_hotkey_notify_hotkey(unsigned int scancode)
++static bool adaptive_keyboard_hotkey_notify_hotkey(const u32 hkey)
  {
- 	switch (hkey) {
- 	case TP_HKEY_EV_WKUP_S3_UNDOCK: /* suspend, undock */
- 	case TP_HKEY_EV_WKUP_S4_UNDOCK: /* hibernation, undock */
- 		hotkey_wakeup_reason = TP_ACPI_WAKEUP_UNDOCK;
--		*ignore_acpi_ev = true;
-+		*send_acpi_ev = false;
- 		break;
+ 	int current_mode = 0;
+ 	int new_mode = 0;
  
- 	case TP_HKEY_EV_WKUP_S3_BAYEJ: /* suspend, bay eject */
- 	case TP_HKEY_EV_WKUP_S4_BAYEJ: /* hibernation, bay eject */
- 		hotkey_wakeup_reason = TP_ACPI_WAKEUP_BAYEJ;
--		*ignore_acpi_ev = true;
-+		*send_acpi_ev = false;
- 		break;
+-	switch (scancode) {
+-	case DFR_CHANGE_ROW:
++	switch (hkey) {
++	case TP_HKEY_EV_DFR_CHANGE_ROW:
+ 		if (adaptive_keyboard_mode_is_saved) {
+ 			new_mode = adaptive_keyboard_prev_mode;
+ 			adaptive_keyboard_mode_is_saved = false;
+@@ -3689,7 +3700,7 @@ static bool adaptive_keyboard_hotkey_notify_hotkey(unsigned int scancode)
  
- 	case TP_HKEY_EV_WKUP_S3_BATLOW: /* Battery on critical low level/S3 */
-@@ -3830,9 +3824,7 @@ static bool hotkey_notify_wakeup(const u32 hkey,
- }
+ 		return true;
  
- /* 0x4000-0x4FFF: dock-related events */
--static bool hotkey_notify_dockevent(const u32 hkey,
--				 bool *send_acpi_ev,
--				 bool *ignore_acpi_ev)
-+static bool hotkey_notify_dockevent(const u32 hkey, bool *send_acpi_ev)
- {
- 	switch (hkey) {
- 	case TP_HKEY_EV_UNDOCK_ACK:
-@@ -3863,7 +3855,6 @@ static bool hotkey_notify_dockevent(const u32 hkey,
- 	case TP_HKEY_EV_KBD_COVER_ATTACH:
- 	case TP_HKEY_EV_KBD_COVER_DETACH:
- 		*send_acpi_ev = false;
--		*ignore_acpi_ev = true;
+-	case DFR_SHOW_QUICKVIEW_ROW:
++	case TP_HKEY_EV_DFR_S_QUICKVIEW_ROW:
+ 		current_mode = adaptive_keyboard_get_mode();
+ 		if (current_mode < 0)
+ 			return false;
+@@ -3702,15 +3713,12 @@ static bool adaptive_keyboard_hotkey_notify_hotkey(unsigned int scancode)
  		return true;
  
  	default:
-@@ -3872,9 +3863,7 @@ static bool hotkey_notify_dockevent(const u32 hkey,
+-		if (scancode < FIRST_ADAPTIVE_KEY ||
+-		    scancode >= FIRST_ADAPTIVE_KEY +
+-		    TP_ACPI_HOTKEYSCAN_EXTENDED_START -
+-		    TP_ACPI_HOTKEYSCAN_ADAPTIVE_START) {
+-			pr_info("Unhandled adaptive keyboard key: 0x%x\n",
+-				scancode);
++		if (hkey < TP_HKEY_EV_ADAPTIVE_KEY_START ||
++		    hkey > TP_HKEY_EV_ADAPTIVE_KEY_END) {
++			pr_info("Unhandled adaptive keyboard key: 0x%x\n", hkey);
+ 			return false;
+ 		}
+-		tpacpi_input_send_key(scancode - FIRST_ADAPTIVE_KEY +
++		tpacpi_input_send_key(hkey - TP_HKEY_EV_ADAPTIVE_KEY_START +
+ 				      TP_ACPI_HOTKEYSCAN_ADAPTIVE_START);
+ 		return true;
+ 	}
+@@ -3718,8 +3726,6 @@ static bool adaptive_keyboard_hotkey_notify_hotkey(unsigned int scancode)
+ 
+ static bool hotkey_notify_extended_hotkey(const u32 hkey)
+ {
+-	unsigned int scancode;
+-
+ 	switch (hkey) {
+ 	case TP_HKEY_EV_PRIVACYGUARD_TOGGLE:
+ 	case TP_HKEY_EV_AMT_TOGGLE:
+@@ -3728,13 +3734,10 @@ static bool hotkey_notify_extended_hotkey(const u32 hkey)
+ 		return true;
+ 	}
+ 
+-	/* Extended keycodes start at 0x300 and our offset into the map
+-	 * TP_ACPI_HOTKEYSCAN_EXTENDED_START. The calculated scancode
+-	 * will be positive, but might not be in the correct range.
+-	 */
+-	scancode = (hkey & 0xfff) - (0x300 - TP_ACPI_HOTKEYSCAN_EXTENDED_START);
+-	if (scancode >= TP_ACPI_HOTKEYSCAN_EXTENDED_START &&
+-	    scancode < TPACPI_HOTKEY_MAP_LEN) {
++	if (hkey >= TP_HKEY_EV_EXTENDED_KEY_START &&
++	    hkey <= TP_HKEY_EV_EXTENDED_KEY_END) {
++		unsigned int scancode = hkey - TP_HKEY_EV_EXTENDED_KEY_START +
++					TP_ACPI_HOTKEYSCAN_EXTENDED_START;
+ 		tpacpi_input_send_key(scancode);
+ 		return true;
+ 	}
+@@ -3745,7 +3748,7 @@ static bool hotkey_notify_extended_hotkey(const u32 hkey)
+ /* 0x1000-0x1FFF: key presses */
+ static bool hotkey_notify_hotkey(const u32 hkey, bool *send_acpi_ev)
+ {
+-	unsigned int scancode = hkey & 0xfff;
++	unsigned int scancode = hkey - TP_HKEY_EV_ORIG_KEY_START;
+ 
+ 	/*
+ 	 * Original events are in the 0x10XX range, the adaptive keyboard
+@@ -3754,10 +3757,8 @@ static bool hotkey_notify_hotkey(const u32 hkey, bool *send_acpi_ev)
+ 	 */
+ 	switch ((hkey >> 8) & 0xf) {
+ 	case 0:
+-		if (scancode > 0 &&
+-		    scancode <= TP_ACPI_HOTKEYSCAN_ADAPTIVE_START) {
+-			/* HKEY event 0x1001 is scancode 0x00 */
+-			scancode--;
++		if (hkey >= TP_HKEY_EV_ORIG_KEY_START &&
++		    hkey <= TP_HKEY_EV_ORIG_KEY_END) {
+ 			if (!(hotkey_source_mask & (1 << scancode)))
+ 				tpacpi_input_send_key_masked(scancode);
+ 
+@@ -3767,7 +3768,7 @@ static bool hotkey_notify_hotkey(const u32 hkey, bool *send_acpi_ev)
+ 		break;
+ 
+ 	case 1:
+-		return adaptive_keyboard_hotkey_notify_hotkey(scancode);
++		return adaptive_keyboard_hotkey_notify_hotkey(hkey);
+ 
+ 	case 3:
+ 		return hotkey_notify_extended_hotkey(hkey);
+@@ -11150,7 +11151,7 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
+ 
+ static void hotkey_driver_event(const unsigned int scancode)
+ {
+-	tpacpi_driver_event(TP_HKEY_EV_HOTKEY_BASE + scancode);
++	tpacpi_driver_event(TP_HKEY_EV_ORIG_KEY_START + scancode);
  }
  
- /* 0x5000-0x5FFF: human interface helpers */
--static bool hotkey_notify_usrevent(const u32 hkey,
--				 bool *send_acpi_ev,
--				 bool *ignore_acpi_ev)
-+static bool hotkey_notify_usrevent(const u32 hkey, bool *send_acpi_ev)
- {
- 	switch (hkey) {
- 	case TP_HKEY_EV_PEN_INSERTED:  /* X61t: tablet pen inserted into bay */
-@@ -3892,7 +3881,7 @@ static bool hotkey_notify_usrevent(const u32 hkey,
- 	case TP_HKEY_EV_LID_OPEN:	/* Lid opened */
- 	case TP_HKEY_EV_BRGHT_CHANGED:	/* brightness changed */
- 		/* do not propagate these events */
--		*ignore_acpi_ev = true;
-+		*send_acpi_ev = false;
- 		return true;
- 
- 	default:
-@@ -3904,9 +3893,7 @@ static void thermal_dump_all_sensors(void);
- static void palmsensor_refresh(void);
- 
- /* 0x6000-0x6FFF: thermal alarms/notices and keyboard events */
--static bool hotkey_notify_6xxx(const u32 hkey,
--				 bool *send_acpi_ev,
--				 bool *ignore_acpi_ev)
-+static bool hotkey_notify_6xxx(const u32 hkey, bool *send_acpi_ev)
- {
- 	switch (hkey) {
- 	case TP_HKEY_EV_THM_TABLE_CHANGED:
-@@ -3953,14 +3940,12 @@ static bool hotkey_notify_6xxx(const u32 hkey,
- 		/* key press events, we just ignore them as long as the EC
- 		 * is still reporting them in the normal keyboard stream */
- 		*send_acpi_ev = false;
--		*ignore_acpi_ev = true;
- 		return true;
- 
- 	case TP_HKEY_EV_KEY_FN_ESC:
- 		/* Get the media key status to force the status LED to update */
- 		acpi_evalf(hkey_handle, NULL, "GMKS", "v");
- 		*send_acpi_ev = false;
--		*ignore_acpi_ev = true;
- 		return true;
- 
- 	case TP_HKEY_EV_TABLET_CHANGED:
-@@ -3988,7 +3973,6 @@ static void hotkey_notify(struct ibm_struct *ibm, u32 event)
- {
- 	u32 hkey;
- 	bool send_acpi_ev;
--	bool ignore_acpi_ev;
- 	bool known_ev;
- 
- 	if (event != 0x80) {
-@@ -4013,18 +3997,15 @@ static void hotkey_notify(struct ibm_struct *ibm, u32 event)
- 		}
- 
- 		send_acpi_ev = true;
--		ignore_acpi_ev = false;
- 
- 		switch (hkey >> 12) {
- 		case 1:
- 			/* 0x1000-0x1FFF: key presses */
--			known_ev = hotkey_notify_hotkey(hkey, &send_acpi_ev,
--						 &ignore_acpi_ev);
-+			known_ev = hotkey_notify_hotkey(hkey, &send_acpi_ev);
- 			break;
- 		case 2:
- 			/* 0x2000-0x2FFF: Wakeup reason */
--			known_ev = hotkey_notify_wakeup(hkey, &send_acpi_ev,
--						 &ignore_acpi_ev);
-+			known_ev = hotkey_notify_wakeup(hkey, &send_acpi_ev);
- 			break;
- 		case 3:
- 			/* 0x3000-0x3FFF: bay-related wakeups */
-@@ -4045,19 +4026,16 @@ static void hotkey_notify(struct ibm_struct *ibm, u32 event)
- 			break;
- 		case 4:
- 			/* 0x4000-0x4FFF: dock-related events */
--			known_ev = hotkey_notify_dockevent(hkey, &send_acpi_ev,
--						&ignore_acpi_ev);
-+			known_ev = hotkey_notify_dockevent(hkey, &send_acpi_ev);
- 			break;
- 		case 5:
- 			/* 0x5000-0x5FFF: human interface helpers */
--			known_ev = hotkey_notify_usrevent(hkey, &send_acpi_ev,
--						 &ignore_acpi_ev);
-+			known_ev = hotkey_notify_usrevent(hkey, &send_acpi_ev);
- 			break;
- 		case 6:
- 			/* 0x6000-0x6FFF: thermal alarms/notices and
- 			 *                keyboard events */
--			known_ev = hotkey_notify_6xxx(hkey, &send_acpi_ev,
--						 &ignore_acpi_ev);
-+			known_ev = hotkey_notify_6xxx(hkey, &send_acpi_ev);
- 			break;
- 		case 7:
- 			/* 0x7000-0x7FFF: misc */
-@@ -4079,7 +4057,7 @@ static void hotkey_notify(struct ibm_struct *ibm, u32 event)
- 		}
- 
- 		/* netlink events */
--		if (!ignore_acpi_ev && send_acpi_ev) {
-+		if (send_acpi_ev) {
- 			acpi_bus_generate_netlink_event(
- 					ibm->acpi->device->pnp.device_class,
- 					dev_name(&ibm->acpi->device->dev),
+ /* --------------------------------------------------------------------- */
 -- 
 2.44.0
 
