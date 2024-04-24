@@ -1,98 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E101A1448F4;
-	Tue, 23 Apr 2024 20:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBEB947E;
+	Wed, 24 Apr 2024 03:23:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713905191; cv=none; b=Yv9/v1q8+o5xZmQJ7jwlguP/BJrFUCl24SMFj4v2/DjuW34Ez5KX10o60vbBvgWjFErg4zqB/9vl1BhLPXxjS8TFt0kdRci7sD0Kby2d2H/OcGS1OL8ex+xG9pTdJiq56TdSnoZmNK91ZaZh/OXxE2dKIEnXmwLblI5YaCDFdbw=
+	t=1713929041; cv=none; b=TEMHmqEW8BmT9LhuVnBwwlfpZzddA6e94ChBKLZtzGHcYaLUN1NpO4L+eqUNFg/3YH6M6cSl8471ZB2Tv6D379gp+ITJj3PCzc0T3tJp8c7nQXoDJl9FuVoA8Zys/5Kqf2pW8u78sk+/+CelBJf7+3M0FuWZkSOOkaatixTtLGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713905191; c=relaxed/simple;
-	bh=drkyXSjGm8GFfGPcgPvR0ybUmkf8fe6rUFnbVa6tYdM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ocy2nJ+OaFWZKPRiPU8q4MxjU472/1DlNOn5Iinkbb7MAwulk0xw7BUmyEByavasQfePgwZ8Hhp8uzVSF2lypgCOaa3arzXnM5UyXWKN8nqDVvp06T5+o3hbfpm0xG+OCS1pMad6ODPrMx1E56uIcZufNfViCzinBjU5sHVKB3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OsPp/BGb; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1713929041; c=relaxed/simple;
+	bh=2ilosTxuAhCUG2qY58ePq0iv0kOfTTUijwPy3GQzft4=;
+	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=PPn+0tqto1mO73m1A3LxZTVJ9QCJIAg0n7DOrbl+r53gtCQUd38mauzo3FSRz3GJi1JWjp8J35Ml9NIyMyUA+3EVEf1sH5/QjhxKOXWW7ZoAV6fGaN0NutSKCWSuJCI41OLnGGm9zrztAV+8f3FknQwDr4iTdxHa3MK6lpqWOGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=kL4Tru/P; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OsPp/BGb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1713905190; x=1745441190;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=drkyXSjGm8GFfGPcgPvR0ybUmkf8fe6rUFnbVa6tYdM=;
-  b=OsPp/BGb0kpvZf33Pg4iZabnUiswJafv2fHRbhKleU+drZ8QqOqkrzYM
-   MgscqZKecgD8ZfJVgt7rMzC/WAUbCGMKoSzstJEdgXUPOTtaVUgCtlw5p
-   9dtL3bCyygHf7AEWDVNKNjSP7FNE3AS6vR4xut4RnTJOu5+pveFP88uoU
-   aKlhZAXWPIAFAwvn0dDEHYnMJRh57XF1hKWw2b+ICX6W+zwlXf9MLBv0y
-   YpjMhvn+fz3DStxYo78NBf4HW54LOaOOTwFnHu1gYQbYXFsOFX7n9rPSm
-   JiRpVct8Xg/uUfd2J9ofwTnn/nKt1b4hRsgqpXiAzG7IAlek7ad+XL+5E
-   A==;
-X-CSE-ConnectionGUID: oGPEAOM0SjeY/XNP/B0dNA==
-X-CSE-MsgGUID: kG11clBIRvuYUYnSxc1vag==
-X-IronPort-AV: E=McAfee;i="6600,9927,11053"; a="34912336"
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="34912336"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2024 13:46:25 -0700
-X-CSE-ConnectionGUID: DMiWd+JzT0GUHjXNF5l+8A==
-X-CSE-MsgGUID: /rR1nF5SQnKIvt7tmkpHIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,222,1708416000"; 
-   d="scan'208";a="24533093"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.14])
-  by fmviesa010.fm.intel.com with ESMTP; 23 Apr 2024 13:46:25 -0700
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 10/10] platform/x86: ISST: Add missing MODULE_DESCRIPTION
-Date: Tue, 23 Apr 2024 13:46:19 -0700
-Message-Id: <20240423204619.3946901-11-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240423204619.3946901-1-srinivas.pandruvada@linux.intel.com>
-References: <20240423204619.3946901-1-srinivas.pandruvada@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="kL4Tru/P"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1713929034; h=Message-ID:Subject:Date:From:To;
+	bh=TUh+RkRklYBJ+mkvjkcUkywnqg3ifKSp6udIGGXSugo=;
+	b=kL4Tru/PIMu9htbf0ttz2O8k4pTC1nRxqWofwVpVC4OkQmG/0iZK7UWw5hB1BPMNhByXkrFW0J4T2ui2cODKchPt2jEofAptfYcFw3d7zFylPZlVrkcwbXSppSuOvEP4HqgLrlx7WE3yd1HlAN0yNcR/4jI7aIFmWFGw1tjsQ5A=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=28;SR=0;TI=SMTPD_---0W5Alh-O_1713929031;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W5Alh-O_1713929031)
+          by smtp.aliyun-inc.com;
+          Wed, 24 Apr 2024 11:23:52 +0800
+Message-ID: <1713928975.976684-5-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH vhost v8 6/6] virtio_ring: simplify the parameters of the funcs related to vring_create/new_virtqueue()
+Date: Wed, 24 Apr 2024 11:22:55 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: kernel test robot <oliver.sang@intel.com>
+Cc: <oe-lkp@lists.linux.dev>,
+ <lkp@intel.com>,
+ =?utf-8?q?IlpoJ=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Jason Wang <jasowang@redhat.com>,
+ <virtualization@lists.linux.dev>,
+ Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Hans de Goede <hdegoede@redhat.com>,
+ Vadim Pasternak <vadimp@nvidia.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Cornelia Huck <cohuck@redhat.com>,
+ Halil Pasic <pasic@linux.ibm.com>,
+ Eric Farman <farman@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>,
+ David Hildenbrand <david@redhat.com>,
+ <linux-um@lists.infradead.org>,
+ <platform-driver-x86@vger.kernel.org>,
+ <linux-remoteproc@vger.kernel.org>,
+ <linux-s390@vger.kernel.org>,
+ <kvm@vger.kernel.org>,
+ <oliver.sang@intel.com>
+References: <20240411023528.10914-1-xuanzhuo@linux.alibaba.com>
+ <20240411023528.10914-7-xuanzhuo@linux.alibaba.com>
+ <202404221626.b938f1d6-oliver.sang@intel.com>
+In-Reply-To: <202404221626.b938f1d6-oliver.sang@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Add missing MODULE_DESCRIPTION() to ISST modules.
+On Mon, 22 Apr 2024 22:26:23 +0800, kernel test robot <oliver.sang@intel.com> wrote:
+>
+>
+> Hello,
+>
+> kernel test robot noticed "BUG:kernel_reboot-without-warning_in_boot_stage" on:
+>
+> commit: fce2775b7bb39424d5ed656612a1d83fd265b670 ("[PATCH vhost v8 6/6] virtio_ring: simplify the parameters of the funcs related to vring_create/new_virtqueue()")
+> url: https://github.com/intel-lab-lkp/linux/commits/Xuan-Zhuo/virtio_balloon-remove-the-dependence-where-names-is-null/20240411-103822
+> base: git://git.kernel.org/cgit/linux/kernel/git/remoteproc/linux.git rproc-next
+> patch link: https://lore.kernel.org/all/20240411023528.10914-7-xuanzhuo@linux.alibaba.com/
+> patch subject: [PATCH vhost v8 6/6] virtio_ring: simplify the parameters of the funcs related to vring_create/new_virtqueue()
+>
+> in testcase: boot
+>
+> compiler: gcc-13
+> test machine: qemu-system-riscv64 -machine virt -device virtio-net-device,netdev=net0 -netdev user,id=net0 -smp 2 -m 16G
+>
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
+>
+>
+> +-------------------------------------------------+------------+------------+
+> |                                                 | 3235a471eb | fce2775b7b |
+> +-------------------------------------------------+------------+------------+
+> | boot_successes                                  | 30         | 2          |
+> | boot_failures                                   | 0          | 28         |
+> | BUG:kernel_reboot-without-warning_in_boot_stage | 0          | 28         |
+> +-------------------------------------------------+------------+------------+
+>
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <oliver.sang@intel.com>
+> | Closes: https://lore.kernel.org/oe-lkp/202404221626.b938f1d6-oliver.sang@intel.com
+>
+>
+> Boot HART PMP Granularity : 4
+> Boot HART PMP Address Bits: 54
+> Boot HART MHPM Count      : 16
+> Boot HART MIDELEG         : 0x0000000000001666
+> Boot HART MEDELEG         : 0x0000000000f0b509
+> BUG: kernel reboot-without-warning in boot stage
+> Linux version  #
+> Command line: ip=::::vm-meta-11::dhcp root=/dev/ram0 RESULT_ROOT=/result/boot/1/vm-snb-riscv64/debian-13-riscv64-20240310.cgz/riscv-defconfig/gcc-13/fce2775b7bb39424d5ed656612a1d83fd265b670/6 BOOT_IMAGE=/pkg/linux/riscv-defconfig/gcc-13/fce2775b7bb39424d5ed656612a1d83fd265b670/vmlinuz-6.9.0-rc1-00009-gfce2775b7bb3 branch=linux-review/Xuan-Zhuo/virtio_balloon-remove-the-dependence-where-names-is-null/20240411-103822 job=/lkp/jobs/scheduled/vm-meta-11/boot-1-debian-13-riscv64-20240310.cgz-fce2775b7bb3-20240417-37917-x2hsv1-16.yaml user=lkp ARCH=riscv kconfig=riscv-defconfig commit=fce2775b7bb39424d5ed656612a1d83fd265b670 nmi_watchdog=0 intremap=posted_msi vmalloc=256M initramfs_async=0 page_owner=on max_uptime=600 LKP_SERVER=internal-lkp-server selinux=0 debug apic=debug sysrq_always_enabled rcupdate.rcu_cpu_stall_timeout=100 net.ifnames=0 printk.devkmsg=on panic=-1 softlockup_panic=1 nmi_watchdog=panic oops=panic load_ramdisk=2 prompt_ramdisk=0 drbd.minor_count=8 systemd.log_level=err ignore_loglevel console=tty0 earlyprintk=ttyS0,115200 console=ttyS0,115200 vga=normal rw rcuperf.shutdown=0 watchdog_thresh=240 audit=0
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 1 +
- drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 1 +
- 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-index 08df9494603c..88a17be7cb7e 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-@@ -837,4 +837,5 @@ void isst_if_cdev_unregister(int device_type)
- }
- EXPORT_SYMBOL_GPL(isst_if_cdev_unregister);
- 
-+MODULE_DESCRIPTION("ISST common interface module");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-index 039333eac71a..6bcbb97b0101 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-@@ -1705,4 +1705,5 @@ EXPORT_SYMBOL_NS_GPL(tpmi_sst_exit, INTEL_TPMI_SST);
- MODULE_IMPORT_NS(INTEL_TPMI);
- MODULE_IMPORT_NS(INTEL_TPMI_POWER_DOMAIN);
- 
-+MODULE_DESCRIPTION("ISST TPMI interface module");
- MODULE_LICENSE("GPL");
--- 
-2.40.1
+cmd: ~/lkp-tests/bin/lkp qemu -k build_dir/arch/riscv/boot/Image  -m modules.cgz job-script
 
+Boot HART ID              : 1
+Boot HART Domain          : root
+Boot HART Priv Version    : v1.12
+Boot HART Base ISA        : rv64imafdch
+Boot HART ISA Extensions  : time,sstc
+Boot HART PMP Count       : 16
+Boot HART PMP Granularity : 4
+Boot HART PMP Address Bits: 54
+Boot HART MHPM Count      : 16
+Boot HART MIDELEG         : 0x0000000000001666
+Boot HART MEDELEG         : 0x0000000000f0b509
+
+I do not encounter this problem.
+Do I miss something?
+
+Thanks.
+
+
+
+>
+>
+>
+> The kernel config and materials to reproduce are available at:
+> https://download.01.org/0day-ci/archive/20240422/202404221626.b938f1d6-oliver.sang@intel.com
+>
+>
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
+>
