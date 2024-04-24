@@ -1,73 +1,108 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFF916F0C9
-	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Apr 2024 15:40:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6F116D9D8;
+	Wed, 24 Apr 2024 18:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713973234; cv=none; b=edl+pQlImSiUVzevQ2ik+r7JQ4UC8altWDmklXy4O73MGUPZemAAgdX/pW5mFAbCeY1EMxbJPg/gMYX6LdrpbJhVDeKxIO+J6Cy/46T3fczHK3qImyDQScuNE3KoNttbmeo8p/fTs1gM7I6YQR0mRwZpkcMeTcHwlBAeXeWuB5w=
+	t=1713982490; cv=none; b=MPinb3uPWD99aAz/n2QtKDcrrnsM1iKuqMjTZU8T3Iki3mjWtmm/4F5YOtVPm5qH9I3mXO2gCEg+kA127RigVV/WkhhcdCEfZ7bNKdt096pWAbEmk5XpCI5mBS7/DClEjtH/rKWNcD+JeaRyfxXukTAsr1fAk5HJjgED8hv4BdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713973234; c=relaxed/simple;
-	bh=Tu2+814/Dq8TXDCPxBDdBge8JxaQTS/q6ngA7zuMIy8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type:Content-Disposition; b=lYweZoon1jg/z31DXSf7t5IoQ/W0xYnbMvwTJiV/lpGo9WhM14ViIIOOXSnOYN8yfIPmIE90Fqx8otzR6ECRXosVH2autiBgCDGjH472vt6N4w3r0I+4xnSSQ9hlcq354vnqY9RGYHOf/FnQBv5D8DAtzJoaqN6UwKeQzAWJz/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=craftyguy.net; spf=pass smtp.mailfrom=craftyguy.net; dkim=pass (2048-bit key) header.d=craftyguy.net header.i=@craftyguy.net header.b=FmEJQvGh; arc=none smtp.client-ip=95.215.58.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=craftyguy.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=craftyguy.net
+	s=arc-20240116; t=1713982490; c=relaxed/simple;
+	bh=yQ5L+dbNHtvkAp/pj5zzra7nuxWzgvQKIkDpzo8Sudc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DtVkeZqv2gDfdJDwSyY7LitSTwwyt1OK3Tjik3Mrm66zjjeZVlhmFlaqLP+8L6dLV/E0attbJuW3F9uEAdMg1wJ7RNZfSlEChv1xexfycgPFwctZ08UN6ND2qffygZStsa3zwzmK+f6H4OGGtIuMvmUVVjpNrwU0ruQBZySTENc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j2YH92De; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=craftyguy.net header.i=@craftyguy.net header.b="FmEJQvGh"
-Date: Wed, 24 Apr 2024 08:40:24 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=craftyguy.net;
-	s=key1; t=1713973229;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gg+XCabiBQTUKesq34TeNd0ZwGbgVR9S2ZKLjUE4Ojw=;
-	b=FmEJQvGhB2O1nQi+xxwSyVM76v9WM7dULhguJNyJlIFmzs0DpbJQh7WOlrI+Sbz18e/9de
-	QKpkvfdU5v6StuNa1GbIEq1N9Sa8ABmz2cUAkRfQPTwmZH+wnpdbcL+uAqPu4UokuzS9px
-	LxrEOLowd2zqhpACoPk0DAOyPlVXBUadIIKkZ4XsvsMTKwMLbTGr/RkAu7penHfaGxyteL
-	eYdio9d01hTFJpmr2y2rE2Gft6573tv1B+UN9vSaV45r3e1D2hLVZV47wrJc39HcfNa8D2
-	VxVK0E4NCsSdVlSS8JbUHDz9ImYNnAySqAIMBQtbxK2KOPn5T4mu+/HiDKpcSA==
-Message-ID: <20240424084024.GC5670@craftyguy.net>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Clayton Craft <clayton@craftyguy.net>
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, platform-driver-x86@vger.kernel.org,
- Hans de Goede <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>,
- Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
- linux-kernel <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
- gpiccoli@igalia.com
-Subject: Re: [PATCH] platform/x86: Add Steam Deck driver
-In-Reply-To: <CAHQ1cqE_iA0gKmqxS21JMAoFpz-ebhG+axVuUT9P62_JTB9kZQ@mail.gmail.com>
-References: <20220206022023.376142-1-andrew.smirnov@gmail.com>
- <YgIu+Lrt0p85yog1@kroah.com>
- <CAHQ1cqE_iA0gKmqxS21JMAoFpz-ebhG+axVuUT9P62_JTB9kZQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j2YH92De"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1713982488; x=1745518488;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=yQ5L+dbNHtvkAp/pj5zzra7nuxWzgvQKIkDpzo8Sudc=;
+  b=j2YH92DerdBsb3j2CULYHy6xGiznmxpCkIUbkRTODj0lmdYCglH8fuG7
+   ZbSH8mm0KJvCtFL092gbtwibGfqA17bPjSQHCULZdtGYHFiG1ujcZFPPE
+   UMWxSwlRfKOJB9wV5Ih6HATNUOJ+8EFJ+LISiYhLRhzzgqBI0r8g3KVc3
+   Kdk+KR0iLDEWdjzO58FFddm5KlctBZrLqFow9264sKloLbT/Ej+RPx8Fg
+   YQF2DwK+TKe+3fTLUkId0JT1by2aCFYLGxpqe5GceyVg8K5hBQAwdyB8r
+   2BJiZnwxdzIUebt0MpMw9pTR0if7FSugLCXOhdW87DL/HjJh1Hl5njGH4
+   Q==;
+X-CSE-ConnectionGUID: Y05e2gROSh66M3N7mTXVlA==
+X-CSE-MsgGUID: vspZE9jjSHqK3qMPnpoRbA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11054"; a="9503368"
+X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
+   d="scan'208";a="9503368"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 11:14:46 -0700
+X-CSE-ConnectionGUID: mb43gOObTESWrDtc6+X6xA==
+X-CSE-MsgGUID: NiRwbu/jRtevqmqHDB1oEg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,226,1708416000"; 
+   d="scan'208";a="24683653"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.105])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2024 11:14:46 -0700
+From: Tony Luck <tony.luck@intel.com>
+To: Borislav Petkov <bp@alien8.de>,
+	Jithu Joseph <jithu.joseph@intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Ashok Raj <ashok.raj@intel.com>,
+	Tony Luck <tony.luck@intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: [PATCH v4 02/71] platform/x86/intel/ifs: Switch to new Intel CPU model defines
+Date: Wed, 24 Apr 2024 11:14:45 -0700
+Message-ID: <20240424181445.41193-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240424181245.41141-1-tony.luck@intel.com>
+References: <20240424181245.41141-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-On Sat, 12 Feb 2022 15:37:19 -0800 Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
-> 
-> Yeah, my bad, will add in v2.
+New CPU #defines encode vendor and family as well as model.
 
-Hi Andrey,
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Jithu Joseph <jithu.joseph@intel.com>
+---
+ drivers/platform/x86/intel/ifs/core.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-I want to run the latest mainline kernels on the Steam Deck and came across some
-newer patches of yours (and others) in Valve's steamOS kernel that may(?)
-replace the ones from this thread. They seem to be required for properly
-handling input, thermals, etc on this device. I rebased and used them
-successfully on 6.9-rc5[1], and was curious what the status is of upstreaming
-these (e.g. as a V2 here)? It would be wonderful to have support for this device
-upstreamed.
+diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86/intel/ifs/core.c
+index 7b11198d85a1..33412a584836 100644
+--- a/drivers/platform/x86/intel/ifs/core.c
++++ b/drivers/platform/x86/intel/ifs/core.c
+@@ -11,16 +11,15 @@
+ 
+ #include "ifs.h"
+ 
+-#define X86_MATCH(model, array_gen)				\
+-	X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6,	\
+-		INTEL_FAM6_##model, X86_FEATURE_CORE_CAPABILITIES, array_gen)
++#define X86_MATCH(vfm, array_gen)				\
++	X86_MATCH_VFM_FEATURE(vfm, X86_FEATURE_CORE_CAPABILITIES, array_gen)
+ 
+ static const struct x86_cpu_id ifs_cpu_ids[] __initconst = {
+-	X86_MATCH(SAPPHIRERAPIDS_X, ARRAY_GEN0),
+-	X86_MATCH(EMERALDRAPIDS_X, ARRAY_GEN0),
+-	X86_MATCH(GRANITERAPIDS_X, ARRAY_GEN0),
+-	X86_MATCH(GRANITERAPIDS_D, ARRAY_GEN0),
+-	X86_MATCH(ATOM_CRESTMONT_X, ARRAY_GEN1),
++	X86_MATCH(INTEL_SAPPHIRERAPIDS_X, ARRAY_GEN0),
++	X86_MATCH(INTEL_EMERALDRAPIDS_X, ARRAY_GEN0),
++	X86_MATCH(INTEL_GRANITERAPIDS_X, ARRAY_GEN0),
++	X86_MATCH(INTEL_GRANITERAPIDS_D, ARRAY_GEN0),
++	X86_MATCH(INTEL_ATOM_CRESTMONT_X, ARRAY_GEN1),
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(x86cpu, ifs_cpu_ids);
+-- 
+2.44.0
 
--Clayton
-
-1. https://gitlab.com/postmarketOS/pmaports/-/tree/master/device/testing/linux-valve-jupiter?ref_type=heads
