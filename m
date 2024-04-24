@@ -1,148 +1,145 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBEB947E;
-	Wed, 24 Apr 2024 03:23:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFA0157478
+	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Apr 2024 06:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713929041; cv=none; b=TEMHmqEW8BmT9LhuVnBwwlfpZzddA6e94ChBKLZtzGHcYaLUN1NpO4L+eqUNFg/3YH6M6cSl8471ZB2Tv6D379gp+ITJj3PCzc0T3tJp8c7nQXoDJl9FuVoA8Zys/5Kqf2pW8u78sk+/+CelBJf7+3M0FuWZkSOOkaatixTtLGI=
+	t=1713941598; cv=none; b=BWAfpgK6NQGTq193g0knaTD9mJYaR4TNyQUEqYAEb7607youGrquzMgNnDn0NDEqzyaLmcZY9z1q1oU94stosEHx6ygW6wXznS8Qe913xt2On/wx85NVUX6uO7ClY19kMtlsfKGZpKPqiapuXiLboiHc/Z2p3n6T/vb5mbYaxPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713929041; c=relaxed/simple;
-	bh=2ilosTxuAhCUG2qY58ePq0iv0kOfTTUijwPy3GQzft4=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=PPn+0tqto1mO73m1A3LxZTVJ9QCJIAg0n7DOrbl+r53gtCQUd38mauzo3FSRz3GJi1JWjp8J35Ml9NIyMyUA+3EVEf1sH5/QjhxKOXWW7ZoAV6fGaN0NutSKCWSuJCI41OLnGGm9zrztAV+8f3FknQwDr4iTdxHa3MK6lpqWOGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=kL4Tru/P; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1713941598; c=relaxed/simple;
+	bh=kE6ujwyCxDJ3wnj3LmnUncuzn1h+gS9jTvaCIsXf/Xo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iy922++L3YyVAMveuNCJ1XlOfEFsGjfkwwJ5atO/S2gfN5KEf4rtdpT5BHViUG/mCS2epzuX0NbYLEDH72cbkqplKN67hn85AxujsX5GSvgN65gPxylAbRe8O/EtkZuR/wmmBDvwee0phWw1gKI2TQMT/hs2WAoitOhUUycE+DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iSBZCu7n; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="kL4Tru/P"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1713929034; h=Message-ID:Subject:Date:From:To;
-	bh=TUh+RkRklYBJ+mkvjkcUkywnqg3ifKSp6udIGGXSugo=;
-	b=kL4Tru/PIMu9htbf0ttz2O8k4pTC1nRxqWofwVpVC4OkQmG/0iZK7UWw5hB1BPMNhByXkrFW0J4T2ui2cODKchPt2jEofAptfYcFw3d7zFylPZlVrkcwbXSppSuOvEP4HqgLrlx7WE3yd1HlAN0yNcR/4jI7aIFmWFGw1tjsQ5A=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=28;SR=0;TI=SMTPD_---0W5Alh-O_1713929031;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W5Alh-O_1713929031)
-          by smtp.aliyun-inc.com;
-          Wed, 24 Apr 2024 11:23:52 +0800
-Message-ID: <1713928975.976684-5-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH vhost v8 6/6] virtio_ring: simplify the parameters of the funcs related to vring_create/new_virtqueue()
-Date: Wed, 24 Apr 2024 11:22:55 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: kernel test robot <oliver.sang@intel.com>
-Cc: <oe-lkp@lists.linux.dev>,
- <lkp@intel.com>,
- =?utf-8?q?IlpoJ=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jason Wang <jasowang@redhat.com>,
- <virtualization@lists.linux.dev>,
- Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- Hans de Goede <hdegoede@redhat.com>,
- Vadim Pasternak <vadimp@nvidia.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Cornelia Huck <cohuck@redhat.com>,
- Halil Pasic <pasic@linux.ibm.com>,
- Eric Farman <farman@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- "Michael S. Tsirkin" <mst@redhat.com>,
- David Hildenbrand <david@redhat.com>,
- <linux-um@lists.infradead.org>,
- <platform-driver-x86@vger.kernel.org>,
- <linux-remoteproc@vger.kernel.org>,
- <linux-s390@vger.kernel.org>,
- <kvm@vger.kernel.org>,
- <oliver.sang@intel.com>
-References: <20240411023528.10914-1-xuanzhuo@linux.alibaba.com>
- <20240411023528.10914-7-xuanzhuo@linux.alibaba.com>
- <202404221626.b938f1d6-oliver.sang@intel.com>
-In-Reply-To: <202404221626.b938f1d6-oliver.sang@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iSBZCu7n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713941594;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Hyxx3rdoKtkVIC3dpNxTEvu2bQJBAWkkgUSYJDIUqbc=;
+	b=iSBZCu7nbCXfzxft82Eio9eqA4d0b+fdkBHDcggo02bAntMCXl0UZ4U/ggatq3joLsw+fQ
+	WlRZfhMwxvnqusnJa0Ou3sINPIUQYXh/UMVWH8BjMnclV7pO2lt7hKK6VeKeebhSEYu6od
+	pM0y/lKqXS0xgRdF7+wuSBJ1NaagI4U=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-507-n9IxvPLSOne6_cJI1CrQQg-1; Wed, 24 Apr 2024 02:53:10 -0400
+X-MC-Unique: n9IxvPLSOne6_cJI1CrQQg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AA3F880021A;
+	Wed, 24 Apr 2024 06:53:09 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.39.193.73])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C86DCC01595;
+	Wed, 24 Apr 2024 06:53:03 +0000 (UTC)
+From: Kate Hsuan <hpa@redhat.com>
+To: Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	linux-leds@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	=?UTF-8?q?Andr=C3=A9=20Apitzsch?= <git@apitzsch.eu>,
+	linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Sebastian Reichel <sre@kernel.org>,
+	linux-pm@vger.kernel.org
+Cc: Kate Hsuan <hpa@redhat.com>
+Subject: [PATCH v7 0/6] KTD2026 indicator LED for X86 Xiaomi Pad2
+Date: Wed, 24 Apr 2024 14:52:06 +0800
+Message-ID: <20240424065212.263784-1-hpa@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-On Mon, 22 Apr 2024 22:26:23 +0800, kernel test robot <oliver.sang@intel.com> wrote:
->
->
-> Hello,
->
-> kernel test robot noticed "BUG:kernel_reboot-without-warning_in_boot_stage" on:
->
-> commit: fce2775b7bb39424d5ed656612a1d83fd265b670 ("[PATCH vhost v8 6/6] virtio_ring: simplify the parameters of the funcs related to vring_create/new_virtqueue()")
-> url: https://github.com/intel-lab-lkp/linux/commits/Xuan-Zhuo/virtio_balloon-remove-the-dependence-where-names-is-null/20240411-103822
-> base: git://git.kernel.org/cgit/linux/kernel/git/remoteproc/linux.git rproc-next
-> patch link: https://lore.kernel.org/all/20240411023528.10914-7-xuanzhuo@linux.alibaba.com/
-> patch subject: [PATCH vhost v8 6/6] virtio_ring: simplify the parameters of the funcs related to vring_create/new_virtqueue()
->
-> in testcase: boot
->
-> compiler: gcc-13
-> test machine: qemu-system-riscv64 -machine virt -device virtio-net-device,netdev=net0 -netdev user,id=net0 -smp 2 -m 16G
->
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
->
->
-> +-------------------------------------------------+------------+------------+
-> |                                                 | 3235a471eb | fce2775b7b |
-> +-------------------------------------------------+------------+------------+
-> | boot_successes                                  | 30         | 2          |
-> | boot_failures                                   | 0          | 28         |
-> | BUG:kernel_reboot-without-warning_in_boot_stage | 0          | 28         |
-> +-------------------------------------------------+------------+------------+
->
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202404221626.b938f1d6-oliver.sang@intel.com
->
->
-> Boot HART PMP Granularity : 4
-> Boot HART PMP Address Bits: 54
-> Boot HART MHPM Count      : 16
-> Boot HART MIDELEG         : 0x0000000000001666
-> Boot HART MEDELEG         : 0x0000000000f0b509
-> BUG: kernel reboot-without-warning in boot stage
-> Linux version  #
-> Command line: ip=::::vm-meta-11::dhcp root=/dev/ram0 RESULT_ROOT=/result/boot/1/vm-snb-riscv64/debian-13-riscv64-20240310.cgz/riscv-defconfig/gcc-13/fce2775b7bb39424d5ed656612a1d83fd265b670/6 BOOT_IMAGE=/pkg/linux/riscv-defconfig/gcc-13/fce2775b7bb39424d5ed656612a1d83fd265b670/vmlinuz-6.9.0-rc1-00009-gfce2775b7bb3 branch=linux-review/Xuan-Zhuo/virtio_balloon-remove-the-dependence-where-names-is-null/20240411-103822 job=/lkp/jobs/scheduled/vm-meta-11/boot-1-debian-13-riscv64-20240310.cgz-fce2775b7bb3-20240417-37917-x2hsv1-16.yaml user=lkp ARCH=riscv kconfig=riscv-defconfig commit=fce2775b7bb39424d5ed656612a1d83fd265b670 nmi_watchdog=0 intremap=posted_msi vmalloc=256M initramfs_async=0 page_owner=on max_uptime=600 LKP_SERVER=internal-lkp-server selinux=0 debug apic=debug sysrq_always_enabled rcupdate.rcu_cpu_stall_timeout=100 net.ifnames=0 printk.devkmsg=on panic=-1 softlockup_panic=1 nmi_watchdog=panic oops=panic load_ramdisk=2 prompt_ramdisk=0 drbd.minor_count=8 systemd.log_level=err ignore_loglevel console=tty0 earlyprintk=ttyS0,115200 console=ttyS0,115200 vga=normal rw rcuperf.shutdown=0 watchdog_thresh=240 audit=0
+This patch added the support for Xiaomi Pad2 indicator LED. This work
+included:
+1. Added the KTD2026 swnode description to describe the LED controller.
+2. Migrated the original driver to fwnode to support x86 platform.
+3. Support for multi-color LED trigger event.
+4. The LED shows orange  when charging and the LED shows green when the
+   battery is full.
 
+Moreover, the LED trigger is set to the new trigger, called
+"bq27520-0-charging-orange-full-green" for Xiaomi Pad2 so the LED shows
+orange when charging and the LED shows green when the battery is full.
 
-cmd: ~/lkp-tests/bin/lkp qemu -k build_dir/arch/riscv/boot/Image  -m modules.cgz job-script
+--
+Changes in v7:
+1. Platform: x86-android-tablets: other: Add swnode for Xiaomi pad2
+   indicator LED was included in Hans' branch.
+2. Included the tags from the previous version in the commit message.
+3. Fixed the comma issue for the structure initialiser.
 
-Boot HART ID              : 1
-Boot HART Domain          : root
-Boot HART Priv Version    : v1.12
-Boot HART Base ISA        : rv64imafdch
-Boot HART ISA Extensions  : time,sstc
-Boot HART PMP Count       : 16
-Boot HART PMP Granularity : 4
-Boot HART PMP Address Bits: 54
-Boot HART MHPM Count      : 16
-Boot HART MIDELEG         : 0x0000000000001666
-Boot HART MEDELEG         : 0x0000000000f0b509
+Changes in v6:
+1. The I2C ID table was moved to a separate patch.
+2. The LED shows orange when charging.
+3. The trigger name was renamed to charging-orange-full-green.
+4. The default trigger of Xiaomi Pad2 is
+   "bq27520-0-charging-orange-full-green".
 
-I do not encounter this problem.
-Do I miss something?
+Changes in v5:
+1. Fix swnode LED color settings.
+2. Improve the driver based on the comments.
+3. Introduce a LED new API- led_mc_trigger_event() to make the LED
+   color can be changed according to the trigger.
+4. Introduced a new trigger "charging-red-full-green". The LED will be
+   red when charging and the the LED will be green when the battery is
+   full.
+5. Set the default trigger to "bq27520-0-charging-red-full-green" for
+   Xiaomi Pad2.
 
-Thanks.
+Changes in v4:
+1. Fix double casting.
+2. Since force casting a pointer value to int will trigger a compiler
+   warning, the type of num_leds was changed to unsigned long.
+
+Changes in v3:
+1. Drop the patch "leds-ktd202x: Skip regulator settings for Xiaomi
+   pad2"
+
+Changes in v2:
+1. Typo and style fixes.
+2. The patch 0003 skips all the regulator setup for Xiaomi pad2 since
+   KTD2026 on Xiaomi pad2 is already powered by BP25890RTWR. So, the
+   sleep can be removed when removing the module.
 
 
+Hans de Goede (2):
+  leds: core: Add led_mc_set_brightness() function
+  leds: trigger: Add led_mc_trigger_event() function
 
->
->
->
-> The kernel config and materials to reproduce are available at:
-> https://download.01.org/0day-ci/archive/20240422/202404221626.b938f1d6-oliver.sang@intel.com
->
->
->
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
->
+Kate Hsuan (4):
+  leds: rgb: leds-ktd202x: Get device properties through fwnode to
+    support ACPI
+  leds: rgb: leds-ktd202x: I2C ID tables for KTD2026 and 2027
+  power: supply: power-supply-leds: Add charging_orange_full_green
+    trigger for RGB LED
+  platform: x86-android-tablets: others: Set the LED trigger to
+    charging_orange_full_green for Xiaomi pad2
+
+ drivers/leds/led-class-multicolor.c           |  1 +
+ drivers/leds/led-core.c                       | 31 ++++++++
+ drivers/leds/led-triggers.c                   | 20 ++++++
+ drivers/leds/rgb/Kconfig                      |  1 -
+ drivers/leds/rgb/leds-ktd202x.c               | 72 +++++++++++--------
+ .../platform/x86/x86-android-tablets/other.c  |  2 +-
+ drivers/power/supply/power_supply_leds.c      | 26 +++++++
+ include/linux/leds.h                          | 26 +++++++
+ include/linux/power_supply.h                  |  2 +
+ 9 files changed, 149 insertions(+), 32 deletions(-)
+
+-- 
+2.44.0
+
