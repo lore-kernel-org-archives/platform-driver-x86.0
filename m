@@ -1,209 +1,377 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from wfout4-smtp.messagingengine.com (wfout4-smtp.messagingengine.com [64.147.123.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E7911721;
-	Thu, 25 Apr 2024 16:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714062858; cv=fail; b=MSoUp5//rMX+N67OPJeZTpgpNc1hqLeRrb6g7KNuOyU2L3hgZbNh52IaV5WBuMJ8kfo7bVg9JGTXkonaWC13xiHh4RY3TYcmJlS5Rw4wjooDgijdqJpuZNGwLKtVA2/3jvD4n4fosbBkFidwE4Npy7BIQSVkubAHwb4mVx+MwiI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714062858; c=relaxed/simple;
-	bh=Ze7kDQqskMB1DwNRKuUqKq93UCMP5x56w9ujks/LrlM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=N3mi39QoNEZdFtk+c57fuWmFNOb7JCQVQ9Zfcd92IQW/th6iOme8sTgqph7bzRlKwPulB01Zu6rZptTzSSt5lalHITgflV6YOUtO+v5STTywFjWbPYOmcFJx3hVJB6LO4eZ6LB//Iv2doqmwcTnB4jr8LMh2PJnzfDCeepQUod0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TCQNpQiF; arc=fail smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40AE014B077;
+	Thu, 25 Apr 2024 17:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.147
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714066186; cv=none; b=h19BFegfh2cDUWdWASBQCZrIJwgxjEJYe/4PRbmgXWSM7b6/JNBlOadnxRrX0MVx3xwEKHqShkP6Vqvij/5Im4Y122NB53OWpDc8wa5wXTtzDSFxyAmTTpvRRAfkRpHTjU6u4IViQMJf+JVh35CNUjPnCNHPhANTIsAaYGfh1Ss=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714066186; c=relaxed/simple;
+	bh=IdX1DsByIet9n5PBe8ieFNKHO8b7P4X3usY6bDnoiXM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oCYLveO2/nJHuu9kbMPQQV2kqxSpUTveh1+vpMO4zNRHBLL8w9ArZKC7ItZPag8dq1PjgV++HXjdMZUVSFDjHs3ZW8wVLUIBipRe3E8DOz06oc/enk1+Q94MteTM33vdWR/w9aOi4MbEfnZk0TS5wDqPRgz291iL6d5zDZsc1lQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=M61/zjIj; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XeSgxN2P; arc=none smtp.client-ip=64.147.123.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TCQNpQiF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714062857; x=1745598857;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Ze7kDQqskMB1DwNRKuUqKq93UCMP5x56w9ujks/LrlM=;
-  b=TCQNpQiF9Qx5IhnP8naqRMrds6NhSt5VjCdlSNSC1+0/ombnGMLJHYRG
-   gt2eehhShmiPU+PC3bsxq/oM+vlJdb7I8XMSq7hWVS+uXZ1F6qQKvRWvY
-   +R8mh7t6XWPfbyECUv61jjc1QWfVu2vZaRPooAJPDHtcnAa3Lx3qettmF
-   sTmy8Z/8ySYkVbDsRUkRIPhzX0u6xMLUSaCQ6S5MxxUaIiUAsf1EY/oxd
-   iKxFCu91XmWXj+0W0FyFDXjjcVPBcs7FOLzQt0foUVm23aW24jlucdY1x
-   XSTALcB9Dk2fZFiaeGLtSbQXYO/EVRltAO/NpmOwT2FBDBCOTON2M9fUN
-   A==;
-X-CSE-ConnectionGUID: XsP6TItcQZC1s7JQ9bD6CA==
-X-CSE-MsgGUID: 2ucGvVBRQ6GyLEvpT3FFkw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11055"; a="10300544"
-X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
-   d="scan'208";a="10300544"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2024 09:34:15 -0700
-X-CSE-ConnectionGUID: iGfJxNfCQfyNYls+/nA4Rw==
-X-CSE-MsgGUID: lFJdWY/fTSaCba3/f1C1Mw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,229,1708416000"; 
-   d="scan'208";a="25126776"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Apr 2024 09:34:16 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 25 Apr 2024 09:34:14 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 25 Apr 2024 09:34:14 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 25 Apr 2024 09:34:14 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.40) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 25 Apr 2024 09:34:13 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QLnjbyxAgJJNBixdx+Vi/8CAY6F/8k9oUP7tyvhKYNxlsHpweC3AqCpb2VMnarniFRmWsjhejxg0C9gbQE6h5NDbU0epQwOFwwezCOu0IBcAXNqIKN3vp80QFiC6q+/fS1RUsEr6S9qBL3dCxKZGiVuTdOGn52MdlX0GZ+GhIXb3R7n3vDTHvFUFdidQF6r1Wbn+WuXTXFT3qTfGvHP2jBMZq7V2/3x1WEUTbMg0vHhbPlFy5FQKvWlDLScf9LtuMm11K3rDL2x8SRKrqxXhLH2l4tO6lhiqVaHl8H8dyb5z735gnaUGaU7FXfK75FGsa4rm5EUIP6VPC48/k+z+Kg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ze7kDQqskMB1DwNRKuUqKq93UCMP5x56w9ujks/LrlM=;
- b=ZPvbTHh1vVSh+7TuHaOHHqAsfZLS5g1ZgJF5aywYcl1hLmWTAOAzVKvTM2hvTbHa1pPKKm7ReXv11Kj2MTpXk5VAs0zoyMDB0FU2KluV061FcBllIFQ67pAYClFOBh/Vurpr3Nj855JNEQr9ia8MZiEzz92FoGwcrE9Z7g3sOcmCipynKWOChSPlUSYIAWaWPwz48ZAKVDgFrtX+G4sL9ripE/yzdWIx+Ak6wo9ShGgEfngg3ATIwGISRaIfqgmattNIpzPV2ebSuo1crxs993vDHsUs6GXootO5TAddfQvWBlUUJCZWFModSgwiZX+ilYDyLDusFoKg2t/P60Gjwg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SJ1PR11MB6083.namprd11.prod.outlook.com (2603:10b6:a03:48a::9)
- by PH0PR11MB4775.namprd11.prod.outlook.com (2603:10b6:510:34::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.23; Thu, 25 Apr
- 2024 16:34:06 +0000
-Received: from SJ1PR11MB6083.namprd11.prod.outlook.com
- ([fe80::fca9:7c00:b6d0:1d62]) by SJ1PR11MB6083.namprd11.prod.outlook.com
- ([fe80::fca9:7c00:b6d0:1d62%5]) with mapi id 15.20.7519.015; Thu, 25 Apr 2024
- 16:34:06 +0000
-From: "Luck, Tony" <tony.luck@intel.com>
-To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>, Borislav Petkov
-	<bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>,
-	=?utf-8?B?SWxwbyBKw6RydmluZW4=?= <ilpo.jarvinen@linux.intel.com>
-CC: "platform-driver-x86@vger.kernel.org"
-	<platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "patches@lists.linux.dev"
-	<patches@lists.linux.dev>
-Subject: RE: [PATCH v4 60/71] platform/x86: ISST: Switch to new Intel CPU
- model defines
-Thread-Topic: [PATCH v4 60/71] platform/x86: ISST: Switch to new Intel CPU
- model defines
-Thread-Index: AQHalnN1LjN3dqm9SkOQN48H8pXA3rF47HmAgABCwdA=
-Date: Thu, 25 Apr 2024 16:34:06 +0000
-Message-ID: <SJ1PR11MB6083FBA3B2830D14CD6FA76EFC172@SJ1PR11MB6083.namprd11.prod.outlook.com>
-References: <20240424181245.41141-1-tony.luck@intel.com>
-	 <20240424181539.42311-1-tony.luck@intel.com>
- <eafd7f1dd4fd3c86ffd97cf7f5c8a0f1de87f214.camel@linux.intel.com>
-In-Reply-To: <eafd7f1dd4fd3c86ffd97cf7f5c8a0f1de87f214.camel@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SJ1PR11MB6083:EE_|PH0PR11MB4775:EE_
-x-ms-office365-filtering-correlation-id: 8a74e854-2a24-443f-651b-08dc654586ce
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230031|1800799015|366007|376005|38070700009;
-x-microsoft-antispam-message-info: =?utf-8?B?UTBhdUx1YzF4ZHpIMXVRemlUeG1kYW1UUU1lRVJVb2tqNXppNGs0NkVrNTVI?=
- =?utf-8?B?TER3WW4vOWY0aHcxWVV6K2lNcVZlNHZRWHRLOWdtWTFuTzdHN29Tc09ZLy9z?=
- =?utf-8?B?T0svVExNSEE0eDRRQ0YvZG9TWENidDU4ak9Zcm1kckUySmFScHVlZGo2NDA0?=
- =?utf-8?B?S21oMEhZaE1DTCtzWmthT0JqM0loTEx1VEEzeGVFS2VpanlXRzZHbkFibEtu?=
- =?utf-8?B?Y3dBWUhYVDErVGw5dkNzamEvenhaWkwxVnRNNzRlekMwbUhNQWdmYWdiOUpX?=
- =?utf-8?B?SFhNZm13VXYrNmNOUDVzN3BSV3paVzBaY2FFYW1HRWhaQW9RS3dmQ21BKy9J?=
- =?utf-8?B?U2VGNk1GbUtLNkwzYUhGdWxCYzNycEU5cHdkbnkxUVQzVGd5TTE5ZGhac2JS?=
- =?utf-8?B?bklKelEwTUNoYmhlQmVCT3VDaXFWRWM1aVR4MG9ZRUlXeGxUQkk3bENLQVJn?=
- =?utf-8?B?S1hZcE13RnVHMGZ4dDV3aVdwUnc2SkdSVDNtaEpoSnd4dDJzdEdGN1hBWVhM?=
- =?utf-8?B?Ull0SnZ1K21ISi8zRURnaS9FVW5IZlpIUG9kYXJYazI2a3E4NmRZWTB1Wjlx?=
- =?utf-8?B?T0k0cTFHdGYwak81dFVxQ0Y4a3k0Zll5aUx2Z1NLUDZTSDRSdGgwNFN1aVdY?=
- =?utf-8?B?Z2ozYmZHRG96RlRacnJ0S09zWG9MdDQwYUVHbndrZTBaa2I3N0cyaktESUQy?=
- =?utf-8?B?R3V1K1daQnFkNitCT3BBZ3dXVHlaL0VXalc2cGEzWG5IUE9nRkZ5aDBoZmZh?=
- =?utf-8?B?d2l1d2NqNWdXdkZUOXBENkx2TFhiVjU2dWU4TVhFWFV0WFEvVmJmYjRURnlI?=
- =?utf-8?B?aGpuWmsxcExQLzFDR25kS09Jcjh1dit0YTdwOUVFMFZMZlBxdExDNE84MVdR?=
- =?utf-8?B?dlhMS2ltNTlCU0dpaGR5WkoxbFJiMTlIWkJuRTJPN09BcGxtQWtqbVVSV0Jl?=
- =?utf-8?B?bWo5VDd5WlA2b2trUDljVk4yM045Qkt5SEF1S3R3eDFOSFF0V0NwQksySTE2?=
- =?utf-8?B?UWh0dzRYYkpBT20xWkRic2VzSXhyb1dKUUZySmdWakhKakRFaUcrNVUwU2Qr?=
- =?utf-8?B?Nk5Ed1BXWERBazNGVVA3cXl0bVVCaXptTTFHZjc2Z1N4S1lvY1NMQ0g4cHk0?=
- =?utf-8?B?ZTZtcjMwdFFoNWNkclVCS3NKeXNVeGlQa0s1RndSRlBTRWxUYUdmN0ZoL2hw?=
- =?utf-8?B?RDF4RVNzV0FjY2o0b09QT0M1MXFuKzlqRUJTVU16Umdlbzhuc1lKVnVPamtZ?=
- =?utf-8?B?UjBzdVpUM3ZXQnhkSUx1ZTMrMHcwVzNWNkRZY20zZkhhQjhOcFJkay8wTVUz?=
- =?utf-8?B?M1lFWlR4MWo5djh2ZEVKbU1IejFxdkVhcU5XaEdGRVQ2K3BxOERjd1lITmQ0?=
- =?utf-8?B?SHBYTHE1dzk5dVJkR2NiR1hqZkVPRFhzcFlxWlkrYWcyQWc3eW53T0dRVTcw?=
- =?utf-8?B?YU1VN2RyQWJPaGdOcmErM1grcFhkeWxia0dXMTF6YTRaR3NUUzBvbzM3ZElW?=
- =?utf-8?B?WitYVGZ6MWVRaHE0QkxEcG9qemIxSDZYd24xY0o0WUdUUi9ORURQVzBXalBR?=
- =?utf-8?B?MmE4K2VJOUNUTWRxeUw5dEJUTEc4Wjg2ZGdIN2U2M2RoR05jNkJVajE2ZWdw?=
- =?utf-8?B?dWErb3JKZyttZnpDeU5NbVJ4MUFiS0lxS3dIUGJ1clIyNnZSYTlRYUFOemtS?=
- =?utf-8?B?ckQyTmR1YXh2Q0NmN3RuQkFiQ0hEc2tBcGhMZGxuTDZpM0ltMmtoQytWMlNa?=
- =?utf-8?B?ZC9MN0FVVG1BOWZuZGpCUm5ZWmRzVHU3OE1oVGxQMVppMHQrMkF4WGdTRWFj?=
- =?utf-8?B?L25VTGRDbTZjQlhia0dGQT09?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6083.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WWRNNmladFczU08xejE4MWpGVVdvOC9mbUtHMUJEOUVWbDJxUWFlYVkxUUJu?=
- =?utf-8?B?T3NQT0JLd1NXT3NkQ0Y2RSt4OFYzZ2NSeklYY2FWQnJ2d2FnSlozODU3eWJP?=
- =?utf-8?B?N2tydlhuWG0yeVJvWFRMTmlqNWpveVAydUFWZUNFeDMxS2xURzkzVXVBUy9x?=
- =?utf-8?B?YVhSb3I3L2RnRWZkeUlzUFBHREppWHRiWkttc2s1ZDhENHdma3A5Y2M2VTJI?=
- =?utf-8?B?VngybFZ2cEo0MUFyT1NJSERtNDAyQmlhY3ZVNVA5R3lnbUtmUDdpTnFpeGU0?=
- =?utf-8?B?R0prdFoxU1JacWZMTHlNR1BCaU5mZVo5UUJDeE5vRHUvdVI3NVRVMUtrdmNJ?=
- =?utf-8?B?MnVvZGVUL2xjcUR5UTZZRjNaVWhvYmx6bjlselhiMTR0Wm9LUW1SVWJpSFRV?=
- =?utf-8?B?VmZaOU9pYTArb0I2MWN5K1Jpakw4TEdzQS92QjJnUXlReG1xSHVzbkFHajNm?=
- =?utf-8?B?U1hCdGhRd1Ayanh6K2o2ckJiUFJ0LytseE43ei8rZmp1THcrWW85WUZTNUtv?=
- =?utf-8?B?U2RrRzIrTTFabWd1WlJVWXVnc1RRYlc1N0tvWUIvd2Q4UlRqRkg4bEV4Sitt?=
- =?utf-8?B?bVAraVNnNjZNNE01TzB6U2lwWnpNVlRWS2JaOFdFRTd2OWt6WE4ya0g1L2hO?=
- =?utf-8?B?UnA0M2NkeUwzRXk5aE1CZXM4Ly9TSDBvRlQ4dVk1Mm92VFBpOWM2YTVwK1Va?=
- =?utf-8?B?VVIvU1VVMW5kaFVidlJWR2hpVDNvTkYrUkdOeXF5VkIwQkNpTGNXdGpqUTJE?=
- =?utf-8?B?ZVNhMTNhSVlMRnFzdTBxWmxHRm96R0E4cWptdVVZQmZPWjZEK0VPTVlBcFNU?=
- =?utf-8?B?UE5sVWhaWDZCT3M1QXA3Y3NOQlo4ODFwaVhaSU5LUElLY0I4Q2ZFZk1zcmF2?=
- =?utf-8?B?U2ZsVTFaMENwT096amRpRHdSNFZpaDdhaXZ6bmRmaDZJVHRqRDExK0gzYVlh?=
- =?utf-8?B?VTJYWGExWU5SdG5OZkh6WjNCNjMvemhhaGtPMDBUallIV1doYmphQnlWTVc4?=
- =?utf-8?B?bUxGcU9qY21nN2c1djR6LzIxS3REVmRrUHBPTjloR0tsSVEzNnpzMGkxYWg5?=
- =?utf-8?B?SW9Ia1B0U0J5UmlhN0d0enk5VFZnU2VWaWl6UnhaMUVSYWdhckNwQ0lETmxv?=
- =?utf-8?B?UkVnOEFvYW9EQXZxU1MvR3ZLQXZDQzdsSWpaMUZwd1BWSXdvejk2QkZxQS9J?=
- =?utf-8?B?dXc0L0o2Vm96dzVFT0dsa3lsMXdtK1FZbkV3OTVZbGdabTE3amh2bWc5d2sw?=
- =?utf-8?B?THVZQWV6SVFpQ2V1eUZjaDE5b2VtZ2hLY3Q3RHJNVWJNWG5Icjc1VWlsUHBK?=
- =?utf-8?B?czlHRDN0NVF6ekIyNm1EamozSnYxTW9qTWpmdmE4bFNhZHhEbE1kT05vZlFE?=
- =?utf-8?B?d243U0c1aUtIdmhQeFRFekVXamR1M1g1aU02N1hKQU05MktiVEtveDcrTEEx?=
- =?utf-8?B?WGR4WXJQSlZ0WVJKK2dzYUJsRWptcFBTZ1JLWEthVWdKT21GbU1ENGZsQTJD?=
- =?utf-8?B?eEVrd09SRFVuRjhKOVVxdWhIMThNc01zekthblAxZ2VnUEVpNGRERmpLbkdx?=
- =?utf-8?B?Mjk2R1pRWEpnMkdUMG53Q1E2NzlVTnY2SmNWYVV2VzdHcWxSNENsa2o2bDkv?=
- =?utf-8?B?MzdSaVpvZjZLL1hGK040NEFTNUZPMUMybktVbExFOXdybWo4MmRRMVAvTyta?=
- =?utf-8?B?NXdhUlZCSTdhbkRtYkpSTUpDQ0tPL2xBNjNPcThhczRaUTJsWjlNRzFaMEhJ?=
- =?utf-8?B?VXpKbjRINEpyZzUrSGI5VUVoZXVvdHlNVWl5M1dlOUJleXJ4QmpGQnZuZ0JW?=
- =?utf-8?B?S2pHd00vL1lJVUZmRnhPMzdNU0NMaHVCcFkyb2JSQ3VzeGVxVUZsYXRwK2tL?=
- =?utf-8?B?OSsxTGl3d1RuMFpxNkhkVXBhaUdERVUrRllLVlZNblhtY0xxWXlUME9EOVBo?=
- =?utf-8?B?QlV0RTVEZVBScVVrY0ZreEJGSE5zZTQ0K2hHOUt4VW5oL3JyaDhjbGxuc2FQ?=
- =?utf-8?B?U1JSUWYyVUZobTE3M3Z3NmNGcS9KQmFiWkNGVTFTM3dWZXFEZFZDOGo0OEhi?=
- =?utf-8?B?cXJJMTRWZ3VUTnAxU2YycXM1b2JCblhCclpUdHhDVDR5UXV6SDA5SXJHQVpR?=
- =?utf-8?Q?TesrUcfbzEqodImEVJIpfjyH5?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="M61/zjIj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XeSgxN2P"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfout.west.internal (Postfix) with ESMTP id 9D4FA1C0016A;
+	Thu, 25 Apr 2024 13:29:42 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Thu, 25 Apr 2024 13:29:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1714066182; x=1714152582; bh=Y5T8dXy+0IuzWwo5IEYIV
+	EtK9ssccq41CPbLF2/ePpA=; b=M61/zjIjAIP7ExRllpoB5mItmQ0m+RhGMEHZI
+	fN23T3TU9p2QRtz4vMsQ1cx8sDsVUsxepz+pnRq2dY7lW+RO3Ug+JMoIc+r4v0Uq
+	C72xwlqC3842+YlUHUxwLK9qkZIJUelL+4NAwBhCLCSqVWv2tPWT95ZRfRWjaVZw
+	V+ZbTTzmz50waLVkAi0eDZ5xMAwytC9w2Tt1fdv2Vj/CsBgbdguvvmb4Z0fhH2cp
+	CM32kZiZ6YfbvrDD6ewBKkE1p8Zkt4M8ackuf+EtTJoviHN3bgyDYq4cR84/yjJ5
+	ZCVGD1GvFDMtkeUzAZPuXGl28y3mLBwTFyUEWHh13OPDXdX3w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1714066182; x=1714152582; bh=Y5T8dXy+0IuzWwo5IEYIVEtK9ssc
+	cq41CPbLF2/ePpA=; b=XeSgxN2PgWn2ZxpvNL5XFITz1N143IivaspEkZNlhREB
+	vvavQLVosFYWvrWe7R+KTvzfCNjMF4mwVJdutyc4CGrGWuoVtADqFLO9uwRbQgOp
+	r3POSKgVvRGGt5Y7ayoM7onAW+i2KiWtDaX7iQOSvlr75t0mmKRYtxXQGyFgLmJi
+	6xyd9RBJAMQU6GajTLdUFcCD2Bg/d3hlVaYsVso57z2Vu307rQhwoKzBkWfiWnd8
+	GOf/O0lhj/2P7W+D6WPUU88van9PspQFt9MQtcmKxVmMOmoyesJZGgpHwJ/Yt99x
+	QpH6mztUb+frp2iCybjSDEmo6bkwyunvLuVStE86hA==
+X-ME-Sender: <xms:BZMqZjshkVjgQqzt-xabEfBeBsx0Eij41z9RpNoBNhjUMPgbyyukWw>
+    <xme:BZMqZkdEAC7eDhgA8EuuTgfm6rdLwL26s9jO-Xn4mjf5-8K2Xdo4jb3wXAIAsZVey
+    -IhFAYXuuvJYTPas7Y>
+X-ME-Received: <xmr:BZMqZmw0SU6lW8Zc3iQDRybEaNrs8b7ud0agSCx-iZ4WUtYUFwP3rG8eCKx4IA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudeljedguddufecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enogetfedtuddqtdduucdludehmdenucfjughrpefhvfevufffkffoggfgsedtkeertder
+    tddtnecuhfhrohhmpefnhihnughonhcuufgrnhgthhgvuceolhhsrghntghhvgeslhihnh
+    guvghnohdrtggrqeenucggtffrrghtthgvrhhnpeeitdfhjeejgfejtdeihfdviedvuddt
+    vdfgfedvheeitedttdehvdefkeetkeffjeenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehlshgrnhgthhgvsehlhihnuggvnhhordgtrg
+X-ME-Proxy: <xmx:BZMqZiPGt1qAo82i-18wSsorE9Ckb42pFS6z5RIZ1la0onfqq4qU2w>
+    <xmx:BZMqZj-Tyvob3B0grhVKkHPumR3pZ6qNDjIKfY6w96baf5qi9Ywm2g>
+    <xmx:BZMqZiXohanuSkxxiggpi4h2s44K8DcR2PcxawuOcTXsbjzOinUmrg>
+    <xmx:BZMqZkenTgeN4yaYEtIdL2lLRD-kV9QCqNvovqRIeUygzFpsYxELJA>
+    <xmx:BpMqZvQPnuvEfwfLyb_xaqutp-mETrfMqK7l5FtjHrrSA1Ub81p14URv>
+Feedback-ID: i1719461a:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 25 Apr 2024 13:29:40 -0400 (EDT)
+From: Lyndon Sanche <lsanche@lyndeno.ca>
+To: lsanche@lyndeno.ca
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>,
+	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dell.Client.Kernel@dell.com
+Subject: [PATCH] platform/x86: dell-laptop: Implement platform_profile
+Date: Thu, 25 Apr 2024 11:27:57 -0600
+Message-ID: <20240425172758.67831-1-lsanche@lyndeno.ca>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6083.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a74e854-2a24-443f-651b-08dc654586ce
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2024 16:34:06.8478
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rhL9289oVjxTiUPWGuOgTjX1bNfm3ZnZNDncLXA7lINm6YGzhRXVtdRoUTLh90pMCkoeG515HJOGzFVzmkwR0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4775
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Pj4gTmV3IENQVSAjZGVmaW5lcyBlbmNvZGUgdmVuZG9yIGFuZCBmYW1pbHkgYXMgd2VsbCBhcyBt
-b2RlbC4NCj4+IA0KPj4gU2lnbmVkLW9mZi1ieTogVG9ueSBMdWNrIDx0b255Lmx1Y2tAaW50ZWwu
-Y29tPg0KPg0KPiBBY2tlZC1ieTogU3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1
-dmFkYUBsaW51eC5pbnRlbC5jb20+DQoNClRoYW5rcy4NCg0KPiBCdXQgd2UgYWRkZWQgbmV3IENQ
-VSBtb2RlbCBoZXJlLCB3aGljaCBpcyB0YXJnZXRlZCBmb3IgNi4xMC1yYzEuIFNvDQo+IHRoZXJl
-IHdpbGwgYmUgbWVyZ2UgaXNzdWVzLg0KDQpZdXAuIFRoaXMgaXMgdGhlIHNlY29uZCBwYXRjaCB0
-aGF0IHdhcyBjcmVhdGVkIGJlZm9yZSBzb21lIG5ldyBDUFUgd2FzIGFkZGVkLg0KSSBleHBlY3Qg
-dGhlcmUgd2lsbCBiZSBtb3JlIGJlZm9yZSB0aGlzIGlzIGFsbCBvdmVyLg0KDQpJJ2xsIGJlIG1v
-cHBpbmcgdGhvc2UgdXAgcG9zdCA2LjEwLXJjMQ0KDQotVG9ueQ0KDQo=
+Some Dell laptops support configuration of preset
+fan modes through smbios tables.
+
+If the platform supports these fan modes, set up
+platform_profile to change these modes. If not
+supported, skip enabling platform_profile.
+
+Signed-off-by: Lyndon Sanche <lsanche@lyndeno.ca>
+---
+ drivers/platform/x86/dell/dell-laptop.c | 220 ++++++++++++++++++++++++
+ drivers/platform/x86/dell/dell-smbios.h |   1 +
+ 2 files changed, 221 insertions(+)
+
+diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
+index 42f7de2b4522..7f9c4e0e5ef5 100644
+--- a/drivers/platform/x86/dell/dell-laptop.c
++++ b/drivers/platform/x86/dell/dell-laptop.c
+@@ -27,6 +27,7 @@
+ #include <linux/i8042.h>
+ #include <linux/debugfs.h>
+ #include <linux/seq_file.h>
++#include <linux/platform_profile.h>
+ #include <acpi/video.h>
+ #include "dell-rbtn.h"
+ #include "dell-smbios.h"
+@@ -95,10 +96,18 @@ static struct backlight_device *dell_backlight_device;
+ static struct rfkill *wifi_rfkill;
+ static struct rfkill *bluetooth_rfkill;
+ static struct rfkill *wwan_rfkill;
++static struct platform_profile_handler *thermal_handler;
+ static bool force_rfkill;
+ static bool micmute_led_registered;
+ static bool mute_led_registered;
+ 
++enum thermal_mode_bits {
++	DELL_BALANCED = 0,
++	DELL_COOL_BOTTOM = 1,
++	DELL_QUIET = 2,
++	DELL_PERFORMANCE = 3,
++};
++
+ module_param(force_rfkill, bool, 0444);
+ MODULE_PARM_DESC(force_rfkill, "enable rfkill on non whitelisted models");
+ 
+@@ -2199,6 +2208,211 @@ static int mute_led_set(struct led_classdev *led_cdev,
+ 	return 0;
+ }
+ 
++// Derived from smbios-thermal-ctl
++//
++// cbClass 17
++// cbSelect 19
++// User Selectable Thermal Tables(USTT)
++// cbArg1 determines the function to be performed
++// cbArg1 0x0 = Get Thermal Information
++//  cbRES1         Standard return codes (0, -1, -2)
++//  cbRES2, byte 0  Bitmap of supported thermal modes. A mode is supported if its bit is set to 1
++//     Bit 0 Balanced
++//     Bit 1 Cool Bottom
++//     Bit 2 Quiet
++//     Bit 3 Performance
++//  cbRES2, byte 1 Bitmap of supported Active Acoustic Controller (AAC) modes. Each mode
++//                 corresponds to the supported thermal modes in byte 0. A mode is supported if
++//                 its bit is set to 1.
++//     Bit 0 AAC (Balanced)
++//     Bit 1 AAC (Cool Bottom
++//     Bit 2 AAC (Quiet)
++//     Bit 3 AAC (Performance)
++//  cbRes3, byte 0 Current Thermal Mode
++//     Bit 0 Balanced
++//     Bit 1 Cool Bottom
++//     Bit 2 Quiet
++//     Bit 3 Performanc
++//  cbRes3, byte 1  AAC Configuration type
++//          0       Global (AAC enable/disable applies to all supported USTT modes)
++//          1       USTT mode specific
++//  cbRes3, byte 2  Current Active Acoustic Controller (AAC) Mode
++//     If AAC Configuration Type is Global,
++//          0       AAC mode disabled
++//          1       AAC mode enabled
++//     If AAC Configuration Type is USTT mode specific (multiple bits may be set),
++//          Bit 0 AAC (Balanced)
++//          Bit 1 AAC (Cool Bottom
++//          Bit 2 AAC (Quiet)
++//          Bit 3 AAC (Performance)
++//  cbRes3, byte 3  Current Fan Failure Mode
++//     Bit 0 Minimal Fan Failure (at least one fan has failed, one fan working)
++//     Bit 1 Catastrophic Fan Failure (all fans have failed)
++//  cbArg1 0x1   (Set Thermal Information), both desired thermal mode and
++//               desired AAC mode shall be applied
++//  cbArg2, byte 0  Desired Thermal Mode to set (only one bit may be set for this parameter)
++//     Bit 0 Balanced
++//     Bit 1 Cool Bottom
++//     Bit 2 Quiet
++//     Bit 3 Performance
++//  cbArg2, byte 1  Desired Active Acoustic Controller (AAC) Mode to set
++//     If AAC Configuration Type is Global,
++//         0  AAC mode disabled
++//         1  AAC mode enabled
++//
++//     If AAC Configuration Type is USTT mode specific (multiple bits may be set for this parameter),
++//         Bit 0 AAC (Balanced)
++//         Bit 1 AAC (Cool Bottom
++//         Bit 2 AAC (Quiet)
++//         Bit 3 AAC (Performance)
++static int thermal_get_mode(void)
++{
++	struct calling_interface_buffer buffer;
++	int state;
++	int ret;
++
++	dell_fill_request(&buffer, 0x0, 0, 0, 0);
++	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAGEMENT);
++	if (ret)
++		return ret;
++	state = buffer.output[2];
++	if ((state >> DELL_BALANCED) & 1)
++		return DELL_BALANCED;
++	else if ((state >> DELL_COOL_BOTTOM) & 1)
++		return DELL_COOL_BOTTOM;
++	else if ((state >> DELL_QUIET) & 1)
++		return DELL_QUIET;
++	else if ((state >> DELL_PERFORMANCE) & 1)
++		return DELL_PERFORMANCE;
++	else
++		return 0;
++}
++
++static int thermal_get_supported_modes(int *supported_bits)
++{
++	struct calling_interface_buffer buffer;
++	int ret;
++
++	dell_fill_request(&buffer, 0x0, 0, 0, 0);
++	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAGEMENT);
++	if (ret)
++		return ret;
++	*supported_bits = buffer.output[1] & 0xF;
++	return 0;
++}
++
++static int thermal_get_acc_mode(int *acc_mode)
++{
++	struct calling_interface_buffer buffer;
++	int ret;
++
++	dell_fill_request(&buffer, 0x0, 0, 0, 0);
++	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAGEMENT);
++	if (ret)
++		return ret;
++	*acc_mode = ((buffer.output[3] >> 8) & 0xFF);
++	return 0;
++}
++
++static int thermal_set_mode(enum thermal_mode_bits state)
++{
++	struct calling_interface_buffer buffer;
++	int ret;
++	int acc_mode;
++
++	ret = thermal_get_acc_mode(&acc_mode);
++	if (ret)
++		return ret;
++
++	dell_fill_request(&buffer, 0x1, (acc_mode << 8) | BIT(state), 0, 0);
++	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAGEMENT);
++	return ret;
++}
++
++static int thermal_platform_profile_set(struct platform_profile_handler *pprof,
++					enum platform_profile_option profile)
++{
++	int ret;
++
++	switch (profile) {
++	case PLATFORM_PROFILE_BALANCED:
++		ret = thermal_set_mode(DELL_BALANCED);
++		break;
++	case PLATFORM_PROFILE_PERFORMANCE:
++		ret = thermal_set_mode(DELL_PERFORMANCE);
++		break;
++	case PLATFORM_PROFILE_QUIET:
++		ret = thermal_set_mode(DELL_QUIET);
++		break;
++	case PLATFORM_PROFILE_COOL:
++		ret = thermal_set_mode(DELL_COOL_BOTTOM);
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	return ret;
++}
++
++static int thermal_platform_profile_get(struct platform_profile_handler *pprof,
++					enum platform_profile_option *profile)
++{
++	switch (thermal_get_mode()) {
++	case DELL_BALANCED:
++		*profile = PLATFORM_PROFILE_BALANCED;
++		break;
++	case DELL_PERFORMANCE:
++		*profile = PLATFORM_PROFILE_PERFORMANCE;
++		break;
++	case DELL_COOL_BOTTOM:
++		*profile = PLATFORM_PROFILE_COOL;
++		break;
++	case DELL_QUIET:
++		*profile = PLATFORM_PROFILE_QUIET;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++int thermal_init(void)
++{
++	int ret;
++	int supported_modes;
++
++	ret = thermal_get_supported_modes(&supported_modes);
++
++	if (ret != 0 || supported_modes == 0)
++		return -ENXIO;
++
++	thermal_handler = kzalloc(sizeof(*thermal_handler), GFP_KERNEL);
++	if (!thermal_handler)
++		return -ENOMEM;
++	thermal_handler->profile_get = thermal_platform_profile_get;
++	thermal_handler->profile_set = thermal_platform_profile_set;
++
++	if ((supported_modes >> DELL_QUIET) & 1)
++		set_bit(PLATFORM_PROFILE_QUIET, thermal_handler->choices);
++	if ((supported_modes >> DELL_COOL_BOTTOM) & 1)
++		set_bit(PLATFORM_PROFILE_COOL, thermal_handler->choices);
++	if ((supported_modes >> DELL_BALANCED) & 1)
++		set_bit(PLATFORM_PROFILE_BALANCED, thermal_handler->choices);
++	if ((supported_modes >> DELL_PERFORMANCE) & 1)
++		set_bit(PLATFORM_PROFILE_PERFORMANCE, thermal_handler->choices);
++
++	platform_profile_register(thermal_handler);
++
++	return 0;
++}
++
++void thermal_cleanup(void)
++{
++	platform_profile_remove();
++	kfree(thermal_handler);
++}
++
+ static struct led_classdev mute_led_cdev = {
+ 	.name = "platform::mute",
+ 	.max_brightness = 1,
+@@ -2266,6 +2480,11 @@ static int __init dell_init(void)
+ 		mute_led_registered = true;
+ 	}
+ 
++	// Do not fail module if thermal modes not supported,
++	// just skip
++	if (thermal_init() != 0)
++		pr_warn("Unable to setup platform_profile, skipping");
++
+ 	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
+ 		return 0;
+ 
+@@ -2344,6 +2563,7 @@ static void __exit dell_exit(void)
+ 		platform_device_unregister(platform_device);
+ 		platform_driver_unregister(&platform_driver);
+ 	}
++	thermal_cleanup();
+ }
+ 
+ /* dell-rbtn.c driver export functions which will not work correctly (and could
+diff --git a/drivers/platform/x86/dell/dell-smbios.h b/drivers/platform/x86/dell/dell-smbios.h
+index eb341bf000c6..585d042f1779 100644
+--- a/drivers/platform/x86/dell/dell-smbios.h
++++ b/drivers/platform/x86/dell/dell-smbios.h
+@@ -19,6 +19,7 @@
+ /* Classes and selects used only in kernel drivers */
+ #define CLASS_KBD_BACKLIGHT 4
+ #define SELECT_KBD_BACKLIGHT 11
++#define SELECT_THERMAL_MANAGEMENT 19
+ 
+ /* Tokens used in kernel drivers, any of these
+  * should be filtered from userspace access
+-- 
+2.42.0
+
