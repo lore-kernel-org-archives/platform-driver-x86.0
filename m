@@ -1,68 +1,70 @@
 Received: from wfout6-smtp.messagingengine.com (wfout6-smtp.messagingengine.com [64.147.123.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E15155A5F;
-	Thu, 25 Apr 2024 20:25:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09EB1534E6;
+	Thu, 25 Apr 2024 20:27:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714076711; cv=none; b=Pjn3mgBvGYCKoV+C8XrQ3OUXxZgktZc5Sj1OlfU72ekrO2RP1fEPbnvy5gzCZGqOYBX7y+vShCGdBZbg4yxE8oxeYzl7wvzJyuuLtj9iaTLmL6eemgRQbjLUdNpfOpOzvGD915lMsjI99h7RkAagwO24m0AH8axZHGDTk248kCc=
+	t=1714076877; cv=none; b=GsP0+LkQTkJ8mzYpVS9dVxNvHL+O5xCst3VClDvZi6Jpeb+UcTZs39ZJBzNbW3ub0Wpvw5PvIVt/PgjkLh4JysWNAabYHXI2R9SAO6AxXqCfbNTiSMN7HiSHiSQyNamYuz64Dh4H30QWqCzs743TgcVcwZoyDBDusAtHSUqQPLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714076711; c=relaxed/simple;
-	bh=3qL5bQrHVoSLNO5S53wuqeASLy3WpgTiTwwMc/VF3vQ=;
+	s=arc-20240116; t=1714076877; c=relaxed/simple;
+	bh=0hvitMNES5HdanLiWjeyAzACH8peCKF8XQu82Szogd0=;
 	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=Leu2Tv/YQfOk3q8IM1D0GE7TS1qAyYkx9J4AZ06pfhhjgrJo62D5JZPOcFBos9soPKPGrmSBY99P5LB3GMUmUgpBgctF/6MCcjdy7Z2YHM+N8v0ek1uBBfGKTFPK9Scvdu0b7gQX6UQIFrqcRVsvJGlnDZW/U2uaO2uL0xjKu10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=O265K69a; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=V1CJjvDu; arc=none smtp.client-ip=64.147.123.149
+	 Subject:Content-Type; b=DXCoC8U+aEZKCeGovcnGiYDmmE9b4Q60si2kp/WaWCWUOQWqXaE+r1oz9nRXmBi92niDWTwnNoaukt1RpZb7Yy0+dmmVMzCQAYntvu/VPfp4bc0CQNa2krbbyUcY6xknJo0QhCBxoZ3EW2h/Ww8Mjnc7SRoeDGQzH2242TfdqN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=O/n3A6gN; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PXJZFKg4; arc=none smtp.client-ip=64.147.123.149
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="O265K69a";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="V1CJjvDu"
+	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="O/n3A6gN";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PXJZFKg4"
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id 3ECEF1C0011F;
-	Thu, 25 Apr 2024 16:25:07 -0400 (EDT)
+	by mailfout.west.internal (Postfix) with ESMTP id 413EB1C00119;
+	Thu, 25 Apr 2024 16:27:54 -0400 (EDT)
 Received: from imap52 ([10.202.2.102])
-  by compute5.internal (MEProxy); Thu, 25 Apr 2024 16:25:08 -0400
+  by compute5.internal (MEProxy); Thu, 25 Apr 2024 16:27:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1714076706; x=1714163106; bh=269Snn4epN
-	C/bOip1qAeWtLnjpiwa6nS6ACNbG7tbn0=; b=O265K69a7IOpOvrfHmK2iEz/Up
-	DATfSwkLFOxqnOZP+TWjZuxwqUhZl0WwnDUMidEnviGtZUfmT2W+MI27YgPcGmJc
-	fYT757kKU0RWzUagRn4aYHzQXLvBEo+IZMV2AQk6CxwYNzk0yJh3Isad0h0FbsZi
-	yFPKDsS6de+ZgIBiJrnl8vAJLmdFvtouZC0K4Bxoa+7apANB5d1Ts+ZKp9NOpaMx
-	bKllKG3D56Uta2Sz3xtid+VcOg9683+Xwm9OdoIjgjmIv1Ovjo2ggy5fJ+K87GBm
-	H76sSZQZkODL0yGe7tphjq/oydRnQQDGkF2cthY1JOJCOtLi6glEDJLpyrlQ==
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1714076873;
+	 x=1714163273; bh=zXPU98xIFonWd2oKiecGlx8Xw7dR9ggDvf74tP8NE2I=; b=
+	O/n3A6gNIiYzQJZuxU/EfqENSb8MDLTwfWpmUffHbo/XO9H/ZXOkAXJZa5M2uHiw
+	KPJZcYA8JMSgZLGL7M51AxIRw5VFxy4teLOe0/nYC2YZBqK6hMu0WDimNCBbRLTk
+	7RJPFphiEVyHlQavmtoquHXMsClAnu7KT4kM9bXb8knUwZw+W6F15B6ukBvSJhGA
+	bw2SB+aEA7Ghvct6ZWOfFg6MC3I9v6Fg0WmmEIv7coDiD1x4OpOVBwaLrRfsnrpY
+	rEsOMjmGNMV1DPIngE5ZpyMW76gONr5o56gJ19q0ZKAUHmS8Cf4ceEFD9FgXyx8H
+	t/27+zE2dYa2a9cYXMlmxg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1714076706; x=1714163106; bh=269Snn4epNC/bOip1qAeWtLnjpiw
-	a6nS6ACNbG7tbn0=; b=V1CJjvDu08XGU55v6o2eiGTzXK50t+B21aUX0brtl2gN
-	eENBIZTMNSxdulBaodoJhfCIHcPA2JeVD4mUnDQCBTqElsXd0sIDtMKE4WmlOjSg
-	ATwFt2+qxnN5rzWuUKSWaEXJCViiEuINtTW5PTQ2x2HnyjQOCXO/XUu3O1Fxzk3A
-	hVk8gk/fSIFjIWGjAzCEphVfwBfdngZ+M4CY0NHYMSH27hfCaO7IP5SvgKg1bFSb
-	EFRgTpzF1e18LQDaUpSO2PkjECCyUAhCMXm5Xl99lCguwecuYG+xjhXSEC/UpTw8
-	oDCwE4XsyiL/qfmRRFoqyFN6R14irVciK8Bs/0D+GQ==
-X-ME-Sender: <xms:IrwqZoUjwFsChgYY351w4kE9-5kxLCOjy1y5OduAU9blm1QfNQsNjw>
-    <xme:IrwqZsm5Sg0N6vwp0fD0CUUhDpQhejdvxv2kugubjZPzxtGC_YMTauV_DvJsnfgPz
-    kV-a4r1kHgqCEr0uSE>
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1714076873; x=
+	1714163273; bh=zXPU98xIFonWd2oKiecGlx8Xw7dR9ggDvf74tP8NE2I=; b=P
+	XJZFKg42LtIGnRd/3n2smH2N0gHrSw7GOCpy72l+7qqJi82lR1Hj4RT2gRdFtyL3
+	zEjDoGLNQNm3MokNVVuX5Norzaj8FNnqoN/snL4SNq0znIKbubm7Rrs2EOHM53Lw
+	xGm49+lI5y+bIxNc9Q0DotKLFZ4iRdwKELo0pwjZ7hi0jL1R0ksgX6D3BV0QOJcl
+	nk+XJd+5qQVPofpkb7PEAv6tBOlLiTm5A1Tjg1e8x4eCYp4DVzSSRZAe1D4wKsJU
+	zD7kzDAzszr42AqH9nIWuCmBeTgn0Y6NVAWvZMnfOxrbUvydV54+f/QWY3xne1qn
+	6rwHelz+herVsP0LXzgTw==
+X-ME-Sender: <xms:ybwqZotcQ8c2PqohDFAEjmUn_PtIyAP3t6gW8QvErbEIbPnZ9gtptA>
+    <xme:ybwqZldl7X4hLh1ko0wVfBgO7lLISbDalublJfO7aM60PcJEP2GuFntz5YP61Ctff
+    GZ6snDzWbC2PBSfNrE>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudeljedgudehtdcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdfn
-    hihnughonhcuufgrnhgthhgvfdcuoehlshgrnhgthhgvsehlhihnuggvnhhordgtrgeqne
-    cuggftrfgrthhtvghrnhepfeekieeggedvuedtjeelffetgeelgeeludffjefhkedvudeh
-    gefffeehtefftdetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomheplhhsrghntghhvgeslhihnhguvghnohdrtggr
-X-ME-Proxy: <xmx:IrwqZsYIaFZFxEUTQ2njp13fWKT9tG4QHkapailAGiZcKXbXH-jH3Q>
-    <xmx:IrwqZnUMmVG3HDsctkbI4VYTVj7J35HGmcgwCS9H68ungTYwLolUAg>
-    <xmx:IrwqZikwe23XfTYW7h-mdP8BZ4Vi_DO6RuUTelpXLKIos3QUl2HghQ>
-    <xmx:IrwqZsfzar9UcR1-L6w2_0AHICU2oxxcyMqfWrm5K_pCApzDZdSZ_w>
-    <xmx:IrwqZs6u4jHdzgEtE5RZSUWWW6w7W5xxSUasiK9JwdUr8ENK1MjmhYRQ>
+    enucfjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedf
+    nfihnhguohhnucfurghntghhvgdfuceolhhsrghntghhvgeslhihnhguvghnohdrtggrqe
+    enucggtffrrghtthgvrhhnpeehfefgveejieevvdekgfeftddugfetgfetueelieduffet
+    ieelheetieevvdefkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpehlshgrnhgthhgvsehlhihnuggvnhhordgtrg
+X-ME-Proxy: <xmx:ybwqZjyotClwBYUO61vl0OD60bH1pDKvfxQX5305Z5vUSyaGQSQ5XA>
+    <xmx:ybwqZrP1RHVKllE4kt8v6PcQMon8mBNo2W-z_vhl66LlLG5FI6SCng>
+    <xmx:ybwqZo8zY9o1mTdJJxYRyI8qQYoOfhiaagJhciv70SsVTlIqtNWoBA>
+    <xmx:ybwqZjUKSiehfrTHl0MHlFI0YvvlETuXxlagufuk9JuskU_z5nG7tA>
+    <xmx:ybwqZoz6PNloyhgtjNWatH10WDaA0bKl8V98A6UgJ3c31-F3YMbkckle>
 Feedback-ID: i1719461a:Fastmail
 Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 37434C60097; Thu, 25 Apr 2024 16:25:06 -0400 (EDT)
+	id 0D0A8C60097; Thu, 25 Apr 2024 16:27:52 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 User-Agent: Cyrus-JMAP/3.11.0-alpha0-386-g4cb8e397f9-fm-20240415.001-g4cb8e397
 Precedence: bulk
@@ -71,51 +73,85 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <24c7a9ea-7755-4270-a338-4701c8e262e2@app.fastmail.com>
-In-Reply-To: <a6009bed-aa34-4a3f-91f5-23937e915132@amd.com>
+Message-Id: <d31486b6-d71d-4985-adb1-2425f19b0b5c@app.fastmail.com>
+In-Reply-To: <20240425201213.apwdxazbdbjddtpr@pali>
 References: <20240425172758.67831-1-lsanche@lyndeno.ca>
- <a6009bed-aa34-4a3f-91f5-23937e915132@amd.com>
-Date: Thu, 25 Apr 2024 14:24:45 -0600
+ <20240425201213.apwdxazbdbjddtpr@pali>
+Date: Thu, 25 Apr 2024 14:27:32 -0600
 From: "Lyndon Sanche" <lsanche@lyndeno.ca>
-To: "Mario Limonciello" <mario.limonciello@amd.com>
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
 Cc: "Matthew Garrett" <mjg59@srcf.ucam.org>,
- =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
  "Hans de Goede" <hdegoede@redhat.com>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Dell.Client.Kernel@dell.com,
- "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>
+ Dell.Client.Kernel@dell.com
 Subject: Re: [PATCH] platform/x86: dell-laptop: Implement platform_profile
-Content-Type: text/plain
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 25, 2024, at 2:07 PM, Mario Limonciello wrote:
-> + Srinivas
+On Thu, Apr 25, 2024, at 2:12 PM, Pali Roh=C3=A1r wrote:
+> On Thursday 25 April 2024 11:27:57 Lyndon Sanche wrote:
+>> +int thermal_init(void)
+>> +{
+>> +	int ret;
+>> +	int supported_modes;
+>> +
+>> +	ret =3D thermal_get_supported_modes(&supported_modes);
+>> +
+>> +	if (ret !=3D 0 || supported_modes =3D=3D 0)
+>> +		return -ENXIO;
+>> +
+>> +	thermal_handler =3D kzalloc(sizeof(*thermal_handler), GFP_KERNEL);
+>> +	if (!thermal_handler)
+>> +		return -ENOMEM;
+>> +	thermal_handler->profile_get =3D thermal_platform_profile_get;
+>> +	thermal_handler->profile_set =3D thermal_platform_profile_set;
+>> +
+>> +	if ((supported_modes >> DELL_QUIET) & 1)
+>> +		set_bit(PLATFORM_PROFILE_QUIET, thermal_handler->choices);
+>> +	if ((supported_modes >> DELL_COOL_BOTTOM) & 1)
+>> +		set_bit(PLATFORM_PROFILE_COOL, thermal_handler->choices);
+>> +	if ((supported_modes >> DELL_BALANCED) & 1)
+>> +		set_bit(PLATFORM_PROFILE_BALANCED, thermal_handler->choices);
+>> +	if ((supported_modes >> DELL_PERFORMANCE) & 1)
+>> +		set_bit(PLATFORM_PROFILE_PERFORMANCE, thermal_handler->choices);
+>> +
+>> +	platform_profile_register(thermal_handler);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +void thermal_cleanup(void)
+>> +{
+>> +	platform_profile_remove();
+>> +	kfree(thermal_handler);
+>> +}
+>> +
+>>  static struct led_classdev mute_led_cdev =3D {
+>>  	.name =3D "platform::mute",
+>>  	.max_brightness =3D 1,
+>> @@ -2266,6 +2480,11 @@ static int __init dell_init(void)
+>>  		mute_led_registered =3D true;
+>>  	}
+>> =20
+>> +	// Do not fail module if thermal modes not supported,
+>> +	// just skip
+>> +	if (thermal_init() !=3D 0)
+>> +		pr_warn("Unable to setup platform_profile, skipping");
 >
-> On 4/25/2024 12:27, Lyndon Sanche wrote:
->> Some Dell laptops support configuration of preset
->> fan modes through smbios tables.
->> 
->> If the platform supports these fan modes, set up
->> platform_profile to change these modes. If not
->> supported, skip enabling platform_profile.
->> 
->> Signed-off-by: Lyndon Sanche <lsanche@lyndeno.ca>
->> ---
+> I think that -ENOMEM error should be failure of the loading the driver.
+> It does not make sense to continue of memory allocation failed.
 >
-> When you developed this was it using a Dell Intel or Dell AMD system?
->
-> If it was an Intel system, did you test it with thermald installed and 
-> active?
->
-> I'm wondering how all this stuff jives with the stuff that thermald 
-> does.  I don't know if they fight for any of the same "resources".
+> On the other hand when the thermal modes are not support (e.g. old
+> Latitude models) then there should not be a warning message. It is
+> expected that on systems without thermal modes the setup fails.
 
-Thank you for your response.
+Thank you for your feedback.
 
-I did my development and testing on a Dell Intel system. Specifically the XPS 15 9560 with i7-7700HQ.
+I agree with your suggestion. -ENOMEM would indicate something bigger is=
+ amiss. I can add a check:
 
-I do have thermald running, though I admit I am not really aware of what exactly it does, besides being related to thermals in some way.
-
-I normally set the thermal mode with Dell's smbios-thermal-ctl program. I am not too sure all the values that the bios configures on it's own depending on the provided mode, so I am not sure if thermald conflicts. But my understanding is that would be out of scope of this driver, since we are only telling the bios what we want at a high level.
+If -ENOMEM, fail driver.
+If anything other error, skip, but do not show a message.
 
 Lyndon
