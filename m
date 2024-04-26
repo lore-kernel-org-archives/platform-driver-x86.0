@@ -1,84 +1,85 @@
 Received: from wfhigh5-smtp.messagingengine.com (wfhigh5-smtp.messagingengine.com [64.147.123.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865B216D4CE;
-	Fri, 26 Apr 2024 18:05:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB89245037;
+	Fri, 26 Apr 2024 18:23:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714154753; cv=none; b=P39FA0bZkRsvIpnVBhRKYoUU958hwMHjERr2/6lzrL9qhfyVgY+cCbcESGR9Npy5BIVrlJpAfbP287Fldo0P81SsEa6xJc569f0QxbiBbnNL3jJce2sqkU1+3/l/VReFfun/MT+x3Yltoif5dNIudKlJ81A6cw29BeOmk2TxbK8=
+	t=1714155806; cv=none; b=cKCJ7D4d/KgQdSR0YdIr3N8MJdhqJ+t58bX8Umk8XWX+AouavHJFj1/Nx4NnHtztFHmVlHO729vNLBe5O3jU6Rbnv8XutNzDU8JWU7HPBNsK0mo0b0htJuGiWPdZDbuMeNb4+lO0efprGfrwJoj47k0NBRv4SbKKi5SIfrFc1qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714154753; c=relaxed/simple;
-	bh=nT/oBBOjjNApvJlf7aRiQoZ6G2VijJYzRaV0cSow35I=;
+	s=arc-20240116; t=1714155806; c=relaxed/simple;
+	bh=AdSo0Q6YNhJsuAOB1X7CHnljeCBv0U8dMhZm578k/Fs=;
 	h=Date:From:Subject:To:Cc:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pu197jDAVTHD0PaAhpJWr5ALUJicfHANd6Sa11vc2J/DoyJvi4yLlagGPaiNJ+a6akn6pQQNXxtuJHBwl8NsCJY/EPslNnH3l6SUtUTzWxP83JTVNaLF5qZD2bTQXNL2COovQmowbJtOL3VDVcJJmiQBe/7ZISGB8eigR9ckqzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=QE+QogRD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cZ16Xyqj; arc=none smtp.client-ip=64.147.123.156
+	 MIME-Version:Content-Type; b=nzo0QuYy0Z+y8QHZZ6c9Pd45n23SMKbjBpWJbsjkX+gIOouU9KVvphue5dkIP0I7ZreYOnbmhiN7V9F3C310CJ9Hs8OYWkb9Y4yb9en2v2rs/2WYkw06acRUc+qqEOzid6Lf1bDeuQpkWOYa/MYf3j8cNL6pyar6sV7a9GuzP5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=T13clV67; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Z1mD2BcG; arc=none smtp.client-ip=64.147.123.156
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="QE+QogRD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cZ16Xyqj"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id B868B180007B;
-	Fri, 26 Apr 2024 14:05:49 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Fri, 26 Apr 2024 14:05:50 -0400
+	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="T13clV67";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Z1mD2BcG"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailfhigh.west.internal (Postfix) with ESMTP id 6031E1800090;
+	Fri, 26 Apr 2024 14:23:22 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Fri, 26 Apr 2024 14:23:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1714154749;
-	 x=1714241149; bh=nPovvuf7k5MAjZUZqG7ireg2weJG8ZVQLCrzLgnFtK0=; b=
-	QE+QogRDZrHEWEIk7sK+UYjH18TcZqf6JK6vXJW653Vq2EihijYbGHzHpBgEu4VH
-	DdJpZuEphwEXQxtedQJsDl5HVAO2wR4JPpiDlbsRbD/K56/E1ek4pEGOZJO0n4nZ
-	d+MEON6BKAkHTBdL+DY4XVXLgeAL2pZ6tBlDkUoVfSH4EGwg1bobkPa3eMoSMzoF
-	DW4yozLEtDvC2RiLLn5XvkbtNY3vWy7aKDF2lrzSwHDHJg+FIsTAX38EUIxYvLkh
-	dWjW2iu6+f/DF3PdxR865CokJiYyEcFGqwnGjFAKxrkUpE0I/GD+QBwJFag8dyLh
-	4BRcKM9NJTE/lXiJdKsnhA==
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1714155801; x=1714242201; bh=F9cSC2Wo0Z
+	/qlYmQgkUvvjtknFVMj+Q6laJAkMRV3y8=; b=T13clV67IZkE+Thx1FXEaP2aua
+	AaiD2rDHXY4I4I/+UL53lWnjvDHiUbhzJ+AVDF+u98FQ9ZmoOzYXbJBZjZfH23sj
+	G6KrPWZigCizkrc1PkJ6kXDeL6nhKE4vtRUXbpyFWtV7SCNdwWPCRQ60GNFA+KaE
+	5kxoJViM2aq1MlHejKiZQD9uKv3g584ED4ZuajKH4Y27xcGRP2cLzzDtRp7iCt4j
+	f8QE7yW1nH617I92ee8lOIQAtYtXyWzuQKyFjTpwL9oBax/ZjXS9L4ucUtkx2r6e
+	7V/j4Ws6jyi9323U80SlPcwAJUw+0LxtD7q0MoxRHECMx/AfZCI4GfnpY/+Q==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1714154749; x=
-	1714241149; bh=nPovvuf7k5MAjZUZqG7ireg2weJG8ZVQLCrzLgnFtK0=; b=c
-	Z16Xyqjk6QXPSrNSYa9fbl4w2Smfd9B2QYmS64QMVBGiyZpqqKNwaCon6nLB52Qu
-	Rqte/4PMCCCj3NOXadN+xAO2vlRYb9E+IHuND5003I6C2UaXDEfI3NyMi5UZh6oQ
-	Ja0s6h5MODFdeESYZMGiIr/GEmEat3Q3rLXuZT5CF5zvVaha9D5AUI6D2ewdm+0e
-	0uYgquwdJOJ+Zv9W1Ai3TN/TGLAfS9QuFsdUP9FSmGla5zZXFkVjKcXb2HE32Gx8
-	qsc5Y1MdLiNnPghfUX8H+H/ttY68LEHNaXOtiWWHTiV0Pq+dfyey+1FNxO88fqtB
-	AlkzVx9+B8MKAGYR3F2Fw==
-X-ME-Sender: <xms:_OwrZhVxmH5RaDkmPUXMyt5m7bzyM38Y-pP_uPTI1T3A_e5l613xGA>
-    <xme:_OwrZhkg05lDn7v2rhAAXGd1OJFNlVfs--StDoY8V2vwy0h3l3n9frj3Yhf84rtus
-    kJcurg6MSJ5XQHq1og>
-X-ME-Received: <xmr:_OwrZtZ4J2qW6od58rCeQAK65UtFtOU_syc8QTsOcWIxRmgG5X2dpgrPMs_MH_kP3lkhB2ZT3yol0Nmc4E0VXIW2r13z6WwfkXUr0zQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudelledguddvudcutefuodetggdotefrod
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1714155801; x=1714242201; bh=F9cSC2Wo0Z/qlYmQgkUvvjtknFVM
+	j+Q6laJAkMRV3y8=; b=Z1mD2BcGYp+KiSsYc683qyA9FWTFiH2mo2NZcl2PmJ8W
+	3Ra0zZtE2u/+ujEzTDTeXLqwwuhvMzWPJG31dcG/1e+yGiwnc2vDObgD0zG0cJwD
+	PmYmnEJu6yldSZnh7T75p8RL9AO3ykqdzy32mzyWXKyvHpib4kz7zg0nAvY152zt
+	VD8Lrk+QdS4TV+OIftukUrPcteRAVkBxgGjUsFOaDWHjyifLJY73JgiYpO/kJwSt
+	J+a8ALBfmYddhNsRgW6LGl8HH1Av4I99uxisIB0PNeDKCjxajO7r97qxV2+KCa1o
+	Hzvzt041iY1lZ2fNguyIKYmLnX/P2UhfbDKvumRDsA==
+X-ME-Sender: <xms:GfErZraIHBDKHxc8dx6MeK8senGzDSJAu8sXYcVPJvYAbv2JxAdAgQ>
+    <xme:GfErZqbVt6JaeNfiLNedsAnHSINzlX_Nws6wyU1ZW8_gBdFku2IIIuJ4hvRzxktxB
+    RRgYlDiMNcN01uPygY>
+X-ME-Received: <xmr:GfErZt9zoVJdMGJipF_aPrOiL8DkOz8ZreJ_o1yhdXNr8mZvS85glZq2VFbclpuifIRbEjIyR1VMw8sFm8JRXvkscDhqRO_ZSJWlXn0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudelledguddvgecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffuvfevkfgjfhfogggtgfesthhqredtredtudenucfhrhhomhepnfih
-    nhguohhnucfurghntghhvgcuoehlshgrnhgthhgvsehlhihnuggvnhhordgtrgeqnecugg
-    ftrfgrthhtvghrnheptddvfedvteefgeegjeegjedvveetjedvheehtdeuuefglefhueei
-    ffeiheffteehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
-    homheplhhsrghntghhvgeslhihnhguvghnohdrtggr
-X-ME-Proxy: <xmx:_OwrZkUjiudZZu876SUQX4EFZGeHdHAE_SbyCgTSyq3y1aFlBizHFA>
-    <xmx:_OwrZrnGYEfFDEY6mA22gTphwUj3jKIPwEsQ4opUJ7yeYB6Fw4FO4Q>
-    <xmx:_OwrZhdvMXjyXVGVXB2oJjmH6MWR58v6qYPc-KzoGcLbA_aBUU73pw>
-    <xmx:_OwrZlGIrGSsxbt114v6rjQVOivKiy7L3b0iUgIodWKei3_5u325mQ>
-    <xmx:_ewrZkd5Wt2020nARb5BvvNuhIncq_4yKEH8iXp6ZMaAX1qh4Re8ay3t>
+    enucfjughrpeffhffuvfevkfgjfhfogggtsehttdertdertddvnecuhfhrohhmpefnhihn
+    ughonhcuufgrnhgthhgvuceolhhsrghntghhvgeslhihnhguvghnohdrtggrqeenucggtf
+    frrghtthgvrhhnpeektdeuvddtfeeuueduteehtdeuhfeufedtfeduveelveeiteefheel
+    geekgfelfeenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhsrghntghhvgeslhihnhguvghn
+    ohdrtggr
+X-ME-Proxy: <xmx:GfErZhocULUdE0e1CmAZLvd2Z_z6rm_V1IhHdYuhdwUODKDT7YqFGQ>
+    <xmx:GfErZmoXl9wwxzKacbiljPFV7kifHSfw2BPyGvvyHo0-kwLD4ust9w>
+    <xmx:GfErZnTQ_K3eccWRjDTR6FKvgfqknWNU5WlooG7Ao6uHrNELhWC5tQ>
+    <xmx:GfErZuqKem2H2r4JgyS0TcNXw_QXqNt1DIv-UR62vxXl93Bx0w_M3g>
+    <xmx:GfErZl13bEL85tJoqeCxtkS4mTp2jbCBvXdbfX3fATF9H4_UbUULHext>
 Feedback-ID: i1719461a:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 26 Apr 2024 14:05:45 -0400 (EDT)
-Date: Fri, 26 Apr 2024 12:05:36 -0600
+ 26 Apr 2024 14:23:19 -0400 (EDT)
+Date: Fri, 26 Apr 2024 12:23:11 -0600
 From: Lyndon Sanche <lsanche@lyndeno.ca>
-Subject: Re: [PATCH v2] platform/x86: dell-laptop: Implement platform_profile
-To: Ilpo =?iso-8859-1?q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: mario.limonciello@amd.com, pali@kernel.org, W_Armin@gmx.de,
-	srinivas.pandruvada@linux.intel.com, Matthew Garrett <mjg59@srcf.ucam.org>,
-	Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, Dell.Client.Kernel@dell.com
-Message-Id: <C9AKCS.CKJOJZMUUKSZ1@lyndeno.ca>
-In-Reply-To: <e861d645-0908-d68b-87ad-0b8b8999fc06@linux.intel.com>
+Subject: Re: [PATCH] platform/x86: dell-laptop: Implement platform_profile
+To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>, Matthew Garrett
+	<mjg59@srcf.ucam.org>, Pali =?iso-8859-1?b?Um9o4XI=?= <pali@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>, Ilpo =?iso-8859-1?q?J=E4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
+Message-Id: <N2BKCS.UBBG0H0KMCYF2@lyndeno.ca>
+In-Reply-To: <13fe0f7c7da2cb6ce52ec34d4648e90e40f2fbc0.camel@linux.intel.com>
 References: <20240425172758.67831-1-lsanche@lyndeno.ca>
-	<20240426020448.10862-1-lsanche@lyndeno.ca>
-	<e861d645-0908-d68b-87ad-0b8b8999fc06@linux.intel.com>
+	<a6009bed-aa34-4a3f-91f5-23937e915132@amd.com>
+	<24c7a9ea-7755-4270-a338-4701c8e262e2@app.fastmail.com>
+	<13fe0f7c7da2cb6ce52ec34d4648e90e40f2fbc0.camel@linux.intel.com>
 X-Mailer: geary/44.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -86,78 +87,31 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
 
 
 
-On Fri, Apr 26 2024 at 12:23:00 PM +03:00:00, Ilpo J=E4rvinen=20
-<ilpo.jarvinen@linux.intel.com> wrote:
-> On Thu, 25 Apr 2024, Lyndon Sanche wrote:
->=20
->>  Some Dell laptops support configuration of preset
->>  fan modes through smbios tables.
->>=20
->>  If the platform supports these fan modes, set up
->>  platform_profile to change these modes. If not
->>  supported, skip enabling platform_profile.
->>=20
->>  Signed-off-by: Lyndon Sanche <lsanche@lyndeno.ca>
->>  ---
->=20
-> Two things:
-> - You're missing patch version history (put it below the --- line)
-> - Don't send updates so soon, give people time to comment. When I saw=20
-> v1
->   for the first time, you had already posted the next version.
->=20
->>  +void thermal_cleanup(void)
->>  +{
->>  +	platform_profile_remove();
->>  +	kfree(thermal_handler);
->>  +}
->>  +
->>   static struct led_classdev mute_led_cdev =3D {
->>   	.name =3D "platform::mute",
->>   	.max_brightness =3D 1,
->>  @@ -2238,6 +2452,12 @@ static int __init dell_init(void)
->>   		goto fail_rfkill;
->>   	}
->>=20
->>  +	// Do not fail module if thermal modes not supported,
->>  +	// just skip
->>  +	ret =3D thermal_init();
->>  +	if (ret)
->>  +		goto fail_thermal;
->>  +
->>   	if (quirks && quirks->touchpad_led)
->>   		touchpad_led_init(&platform_device->dev);
->>=20
->>  @@ -2317,6 +2537,8 @@ static int __init dell_init(void)
->>   		led_classdev_unregister(&mute_led_cdev);
->>   fail_led:
->>   	dell_cleanup_rfkill();
->>  +fail_thermal:
->>  +	thermal_cleanup();
->>   fail_rfkill:
->>   	platform_device_del(platform_device);
->>   fail_platform_device2:
->>  @@ -2344,6 +2566,7 @@ static void __exit dell_exit(void)
->>   		platform_device_unregister(platform_device);
->>   		platform_driver_unregister(&platform_driver);
->>   	}
->>  +	thermal_cleanup();
->=20
-> This is still not right, you'll still platform_profile_remove() even=20
-> if
-> the init side call failed.
->=20
-> --
->  i.
->=20
+On Fri, Apr 26 2024 at 09:14:07 AM -07:00:00, srinivas pandruvada 
+<srinivas.pandruvada@linux.intel.com> wrote:
+>> Can you share output of acpidump tool to me? I want to make sure if
+> there is some way the platform will bypass thermal table if you 
+> changed
+> to some profile.
+> 
+> Thanks,
+> Srinivas
 
-Thank you for your feedback. I agree with your comments and will add=20
-more checking on whether certain cleanup actions are necessary.
+Hello Srinivas:
+
+I used acpidump. For sake of completeness I ran acpidump with each of 
+the thermal modes enabled. The files are too large to provide here so I 
+uploaded them to a public gist:
+https://gist.github.com/Lyndeno/65ade5a15f1f2cd07175256dc021f551
+
+Please let me know if there is a more appropriate medium for sharing 
+files like this, and I will remember for next time.
+
+Thank you,
 
 Lyndon
 
