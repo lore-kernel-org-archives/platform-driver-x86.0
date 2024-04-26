@@ -1,117 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from wfhigh5-smtp.messagingengine.com (wfhigh5-smtp.messagingengine.com [64.147.123.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA54145358;
-	Fri, 26 Apr 2024 16:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865B216D4CE;
+	Fri, 26 Apr 2024 18:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714148060; cv=none; b=aOoqpaNvqr1BTMAmnwzsuV3bA6QMzKAEbVx+LCgh2w/GoCOvkrdrjQ30dgZljeaDtjHCdsflUrix0IGfK5fElECksglWeTjEH+X525aXi5rQHDTIVJtdIFjRHKOqUTQDMixMRDphSSFSOEwjiKpac+HypyE+qyLM/Vjrhss0y8k=
+	t=1714154753; cv=none; b=P39FA0bZkRsvIpnVBhRKYoUU958hwMHjERr2/6lzrL9qhfyVgY+cCbcESGR9Npy5BIVrlJpAfbP287Fldo0P81SsEa6xJc569f0QxbiBbnNL3jJce2sqkU1+3/l/VReFfun/MT+x3Yltoif5dNIudKlJ81A6cw29BeOmk2TxbK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714148060; c=relaxed/simple;
-	bh=gxfIvs2FhkwmskjgUeXOhHt49KN7YTPPnA6Le5WZTsc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=n/TCp/BnJ+GvzimDEkU1+iTpWf4zPLvCtxUyXC7yvHCk+YT9PoyxuQyOMEDH7Qg/8ggP8YsPIId3O8YBdyOBM0QZEbY3V5ZX4NJNfHKYbmugb8wbGvTG/fatURl2trGo669FJwomAQ4yCVB1R7dU6e/bmxX+ZdojFI+/ogQX80Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E+Dzn38l; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1714154753; c=relaxed/simple;
+	bh=nT/oBBOjjNApvJlf7aRiQoZ6G2VijJYzRaV0cSow35I=;
+	h=Date:From:Subject:To:Cc:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pu197jDAVTHD0PaAhpJWr5ALUJicfHANd6Sa11vc2J/DoyJvi4yLlagGPaiNJ+a6akn6pQQNXxtuJHBwl8NsCJY/EPslNnH3l6SUtUTzWxP83JTVNaLF5qZD2bTQXNL2COovQmowbJtOL3VDVcJJmiQBe/7ZISGB8eigR9ckqzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=QE+QogRD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cZ16Xyqj; arc=none smtp.client-ip=64.147.123.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E+Dzn38l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714148058; x=1745684058;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=gxfIvs2FhkwmskjgUeXOhHt49KN7YTPPnA6Le5WZTsc=;
-  b=E+Dzn38lbqIP56aIr5ydtBx+kb5LBDe8MEvUdBT0HGveH9TpPyMENxOS
-   KKL2I7wRERWvC7lZ2LnHNHVmAQND7i4WrQxsSpqElIoMSMk9uwyMqWPPU
-   iOSrMyuCK7jsrOSJ06BZWBKK70ftcXvGpoqBJJYdMn9JBb4i0EJFvmXMk
-   hkN2moiGfPDDn2Tx3zy2GmmlXdAZGFFQMcHOHm9zscb6yRsvsV6Xtg36P
-   91u5h+aXP7Yryg1xVWoMlHDQNsWF+qBnFCF/XyH04kxNQMHl5bX/CYwTw
-   uBqQozh54l0K2St7rbOnFSfSmP1QikrZOO3Ot6W0/dDD4KQaQGyJ6g/qu
-   w==;
-X-CSE-ConnectionGUID: DdbUNyWlTaqOa1YvJcpC6w==
-X-CSE-MsgGUID: xBPyRQ7KRQ652F0F1ZDqUQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11056"; a="10048018"
-X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
-   d="scan'208";a="10048018"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 09:14:17 -0700
-X-CSE-ConnectionGUID: n/1jZoIFQzi4/0YF0kpmxw==
-X-CSE-MsgGUID: nkVo7aakSaOM2RFCVugpOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,233,1708416000"; 
-   d="scan'208";a="30272767"
-Received: from spandruv-desk1.amr.corp.intel.com ([10.247.119.99])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2024 09:14:13 -0700
-Message-ID: <13fe0f7c7da2cb6ce52ec34d4648e90e40f2fbc0.camel@linux.intel.com>
-Subject: Re: [PATCH] platform/x86: dell-laptop: Implement platform_profile
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Lyndon Sanche <lsanche@lyndeno.ca>, Mario Limonciello
-	 <mario.limonciello@amd.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?ISO-8859-1?Q?Roh=E1r?=
- <pali@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Dell.Client.Kernel@dell.com
-Date: Fri, 26 Apr 2024 09:14:07 -0700
-In-Reply-To: <24c7a9ea-7755-4270-a338-4701c8e262e2@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="QE+QogRD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cZ16Xyqj"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.west.internal (Postfix) with ESMTP id B868B180007B;
+	Fri, 26 Apr 2024 14:05:49 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Fri, 26 Apr 2024 14:05:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1714154749;
+	 x=1714241149; bh=nPovvuf7k5MAjZUZqG7ireg2weJG8ZVQLCrzLgnFtK0=; b=
+	QE+QogRDZrHEWEIk7sK+UYjH18TcZqf6JK6vXJW653Vq2EihijYbGHzHpBgEu4VH
+	DdJpZuEphwEXQxtedQJsDl5HVAO2wR4JPpiDlbsRbD/K56/E1ek4pEGOZJO0n4nZ
+	d+MEON6BKAkHTBdL+DY4XVXLgeAL2pZ6tBlDkUoVfSH4EGwg1bobkPa3eMoSMzoF
+	DW4yozLEtDvC2RiLLn5XvkbtNY3vWy7aKDF2lrzSwHDHJg+FIsTAX38EUIxYvLkh
+	dWjW2iu6+f/DF3PdxR865CokJiYyEcFGqwnGjFAKxrkUpE0I/GD+QBwJFag8dyLh
+	4BRcKM9NJTE/lXiJdKsnhA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1714154749; x=
+	1714241149; bh=nPovvuf7k5MAjZUZqG7ireg2weJG8ZVQLCrzLgnFtK0=; b=c
+	Z16Xyqjk6QXPSrNSYa9fbl4w2Smfd9B2QYmS64QMVBGiyZpqqKNwaCon6nLB52Qu
+	Rqte/4PMCCCj3NOXadN+xAO2vlRYb9E+IHuND5003I6C2UaXDEfI3NyMi5UZh6oQ
+	Ja0s6h5MODFdeESYZMGiIr/GEmEat3Q3rLXuZT5CF5zvVaha9D5AUI6D2ewdm+0e
+	0uYgquwdJOJ+Zv9W1Ai3TN/TGLAfS9QuFsdUP9FSmGla5zZXFkVjKcXb2HE32Gx8
+	qsc5Y1MdLiNnPghfUX8H+H/ttY68LEHNaXOtiWWHTiV0Pq+dfyey+1FNxO88fqtB
+	AlkzVx9+B8MKAGYR3F2Fw==
+X-ME-Sender: <xms:_OwrZhVxmH5RaDkmPUXMyt5m7bzyM38Y-pP_uPTI1T3A_e5l613xGA>
+    <xme:_OwrZhkg05lDn7v2rhAAXGd1OJFNlVfs--StDoY8V2vwy0h3l3n9frj3Yhf84rtus
+    kJcurg6MSJ5XQHq1og>
+X-ME-Received: <xmr:_OwrZtZ4J2qW6od58rCeQAK65UtFtOU_syc8QTsOcWIxRmgG5X2dpgrPMs_MH_kP3lkhB2ZT3yol0Nmc4E0VXIW2r13z6WwfkXUr0zQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudelledguddvudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffuvfevkfgjfhfogggtgfesthhqredtredtudenucfhrhhomhepnfih
+    nhguohhnucfurghntghhvgcuoehlshgrnhgthhgvsehlhihnuggvnhhordgtrgeqnecugg
+    ftrfgrthhtvghrnheptddvfedvteefgeegjeegjedvveetjedvheehtdeuuefglefhueei
+    ffeiheffteehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
+    homheplhhsrghntghhvgeslhihnhguvghnohdrtggr
+X-ME-Proxy: <xmx:_OwrZkUjiudZZu876SUQX4EFZGeHdHAE_SbyCgTSyq3y1aFlBizHFA>
+    <xmx:_OwrZrnGYEfFDEY6mA22gTphwUj3jKIPwEsQ4opUJ7yeYB6Fw4FO4Q>
+    <xmx:_OwrZhdvMXjyXVGVXB2oJjmH6MWR58v6qYPc-KzoGcLbA_aBUU73pw>
+    <xmx:_OwrZlGIrGSsxbt114v6rjQVOivKiy7L3b0iUgIodWKei3_5u325mQ>
+    <xmx:_ewrZkd5Wt2020nARb5BvvNuhIncq_4yKEH8iXp6ZMaAX1qh4Re8ay3t>
+Feedback-ID: i1719461a:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 26 Apr 2024 14:05:45 -0400 (EDT)
+Date: Fri, 26 Apr 2024 12:05:36 -0600
+From: Lyndon Sanche <lsanche@lyndeno.ca>
+Subject: Re: [PATCH v2] platform/x86: dell-laptop: Implement platform_profile
+To: Ilpo =?iso-8859-1?q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: mario.limonciello@amd.com, pali@kernel.org, W_Armin@gmx.de,
+	srinivas.pandruvada@linux.intel.com, Matthew Garrett <mjg59@srcf.ucam.org>,
+	Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, Dell.Client.Kernel@dell.com
+Message-Id: <C9AKCS.CKJOJZMUUKSZ1@lyndeno.ca>
+In-Reply-To: <e861d645-0908-d68b-87ad-0b8b8999fc06@linux.intel.com>
 References: <20240425172758.67831-1-lsanche@lyndeno.ca>
-	 <a6009bed-aa34-4a3f-91f5-23937e915132@amd.com>
-	 <24c7a9ea-7755-4270-a338-4701c8e262e2@app.fastmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	<20240426020448.10862-1-lsanche@lyndeno.ca>
+	<e861d645-0908-d68b-87ad-0b8b8999fc06@linux.intel.com>
+X-Mailer: geary/44.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2024-04-25 at 14:24 -0600, Lyndon Sanche wrote:
-> On Thu, Apr 25, 2024, at 2:07 PM, Mario Limonciello wrote:
-> > + Srinivas
-> >=20
-> > On 4/25/2024 12:27, Lyndon Sanche wrote:
-> > > Some Dell laptops support configuration of preset
-> > > fan modes through smbios tables.
-> > >=20
-> > > If the platform supports these fan modes, set up
-> > > platform_profile to change these modes. If not
-> > > supported, skip enabling platform_profile.
-> > >=20
-> > > Signed-off-by: Lyndon Sanche <lsanche@lyndeno.ca>
-> > > ---
-> >=20
-> > When you developed this was it using a Dell Intel or Dell AMD
-> > system?
-> >=20
-> > If it was an Intel system, did you test it with thermald installed
-> > and=20
-> > active?
-> >=20
-> > I'm wondering how all this stuff jives with the stuff that thermald
-> > does.=C2=A0 I don't know if they fight for any of the same "resources".
->=20
-> Thank you for your response.
->=20
-> I did my development and testing on a Dell Intel system. Specifically
-> the XPS 15 9560 with i7-7700HQ.
->=20
-> I do have thermald running, though I admit I am not really aware of
-> what exactly it does, besides being related to thermals in some way.
->=20
-> I normally set the thermal mode with Dell's smbios-thermal-ctl
-> program. I am not too sure all the values that the bios configures on
-> it's own depending on the provided mode, so I am not sure if thermald
-> conflicts. But my understanding is that would be out of scope of this
-> driver, since we are only telling the bios what we want at a high
-> level.
->=20
-> Lyndon
-Can you share output of acpidump tool to me? I want to make sure if
-there is some way the platform will bypass thermal table if you changed
-to some profile.
 
-Thanks,
-Srinivas
+
+On Fri, Apr 26 2024 at 12:23:00 PM +03:00:00, Ilpo J=E4rvinen=20
+<ilpo.jarvinen@linux.intel.com> wrote:
+> On Thu, 25 Apr 2024, Lyndon Sanche wrote:
+>=20
+>>  Some Dell laptops support configuration of preset
+>>  fan modes through smbios tables.
+>>=20
+>>  If the platform supports these fan modes, set up
+>>  platform_profile to change these modes. If not
+>>  supported, skip enabling platform_profile.
+>>=20
+>>  Signed-off-by: Lyndon Sanche <lsanche@lyndeno.ca>
+>>  ---
+>=20
+> Two things:
+> - You're missing patch version history (put it below the --- line)
+> - Don't send updates so soon, give people time to comment. When I saw=20
+> v1
+>   for the first time, you had already posted the next version.
+>=20
+>>  +void thermal_cleanup(void)
+>>  +{
+>>  +	platform_profile_remove();
+>>  +	kfree(thermal_handler);
+>>  +}
+>>  +
+>>   static struct led_classdev mute_led_cdev =3D {
+>>   	.name =3D "platform::mute",
+>>   	.max_brightness =3D 1,
+>>  @@ -2238,6 +2452,12 @@ static int __init dell_init(void)
+>>   		goto fail_rfkill;
+>>   	}
+>>=20
+>>  +	// Do not fail module if thermal modes not supported,
+>>  +	// just skip
+>>  +	ret =3D thermal_init();
+>>  +	if (ret)
+>>  +		goto fail_thermal;
+>>  +
+>>   	if (quirks && quirks->touchpad_led)
+>>   		touchpad_led_init(&platform_device->dev);
+>>=20
+>>  @@ -2317,6 +2537,8 @@ static int __init dell_init(void)
+>>   		led_classdev_unregister(&mute_led_cdev);
+>>   fail_led:
+>>   	dell_cleanup_rfkill();
+>>  +fail_thermal:
+>>  +	thermal_cleanup();
+>>   fail_rfkill:
+>>   	platform_device_del(platform_device);
+>>   fail_platform_device2:
+>>  @@ -2344,6 +2566,7 @@ static void __exit dell_exit(void)
+>>   		platform_device_unregister(platform_device);
+>>   		platform_driver_unregister(&platform_driver);
+>>   	}
+>>  +	thermal_cleanup();
+>=20
+> This is still not right, you'll still platform_profile_remove() even=20
+> if
+> the init side call failed.
+>=20
+> --
+>  i.
+>=20
+
+Thank you for your feedback. I agree with your comments and will add=20
+more checking on whether certain cleanup actions are necessary.
+
+Lyndon
+
+
