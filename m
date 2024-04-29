@@ -1,65 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA21BA2E
-	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 11:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870103D969
+	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 11:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714389016; cv=none; b=n0ZpOyv2872VdyY+hervj+gOgr1GX3R1Kvf8EV7yP6Vj/r/wYR7Cm12hUSNXtjdXhZrb6LmM9q9/qq6rEqDDq3CGZRAMBPAhAbY8tPsPYFjilZga2m4xqNurzA3egA0zBNd/o6XVCJB44gm/CiYM+JTHg02wZD3wYs0GBILtAfQ=
+	t=1714389032; cv=none; b=QdXikr96E4ohoJjAQJ1L155U0PuYlGefGHxZYrqBBZcaH75SmsCIVfGBjuetLoNzJJyQZGGsX8gmv3aO3SVcQvvxpp7K6tiRSib2Z4WFhHYfXrCCnwE+ob+Ar7dA6rWtnJ8SVkyFOxE5hx/IyJ2lEV0M/fro4gRD/wAnlrwrj08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714389016; c=relaxed/simple;
-	bh=ntnrAWCjAOHHGilIANLmGKab2I7VtQxYNxQHAql4D+o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H3OlvRmijSiTCTuh+zZjH+IgUJVbsuVE3M9l06WHoZTx6fIszJ3Q77Kr1PkI6+MT4CoWps/4hb271+8xLPiKOPThDUYdaoFVSsEGT+iPco88mXno3dneJNu5KQNYFnP49WOlKUzhRYv7Ss8WpmpMhWLqaSo4pyrWA6DPt8nCF24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UcA+jZDQ; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1714389032; c=relaxed/simple;
+	bh=xtfhi2lRXFAsjd8WJbAKjr5hr8U/HWoTLSYoTbffFwY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=buPQI0FaO0srUjnecCZJ0hbGanwmTdAThuQphV9iqyxq9lsW+ZefZgT3xouP9Hw4HdBgq4mfGmabD5OwJ9apkvqtl3O9xwjZwapv+odklnhUOHp+7jIP1jBPApSQC6HiEN1hZwYYfAiImz/AfP9a/X3Ub+lVSvI2M2RpM8wwykM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U5qVjIKH; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UcA+jZDQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U5qVjIKH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714389014;
+	s=mimecast20190719; t=1714389030;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TD7HmQbU9mOgAHiXzeaj3BhsO3Ox44E4vsCadC3C2WU=;
-	b=UcA+jZDQztu8dgPxSVZZVgH9RL9o+fqHebZtjd2BuCjQC8N7Y5L3wKNt+T1XD4IVGT6OxA
-	c+D/gFxTT2jxQtdfziH1YOLUUAMK4aW5zWo5TyPnUtdgVXvNnJapnDHiEgJ3CPpiWMXefF
-	jy0HGbuLIT60bOfzIMB/ScqcFKH4sQk=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=WdqbQcKjEI5vcuFU2p8wlb5cXeIYqE2md5KD9zgkjwo=;
+	b=U5qVjIKHAbu8w+Ewc3AtNMFLKFbRM66UupShlrR3uMHAzVo0OYxHwSIrShAeOhXVEwxFJm
+	yx+JKGxfwEvIWp7Dv3RUGoEsp1UPXVlCbKCKXl2hH0Qk7i3XurxnLQEUN2Ej0DxG7l93yK
+	xicd9QUn319MhAOeantrHPK2RZxFM2Y=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-621-yVe5U4I0P-S31AyT8webrQ-1; Mon, 29 Apr 2024 07:10:12 -0400
-X-MC-Unique: yVe5U4I0P-S31AyT8webrQ-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a556121c01aso229040866b.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 04:10:11 -0700 (PDT)
+ us-mta-246-LSmakIYfPTerV0suEWy8zQ-1; Mon, 29 Apr 2024 07:10:28 -0400
+X-MC-Unique: LSmakIYfPTerV0suEWy8zQ-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-56c1ac93679so3396259a12.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 04:10:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714389010; x=1714993810;
+        d=1e100.net; s=20230601; t=1714389027; x=1714993827;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TD7HmQbU9mOgAHiXzeaj3BhsO3Ox44E4vsCadC3C2WU=;
-        b=LhnztBL8KQn4K/bE0eU2f7POO0us/LB56Rr8lZJA7eJ9g11/Bah5VLkERi9MgiDr6u
-         yEx3bzeN3S4udA2/ERJKghq77kIaISCIk8qjKuTR2cLD5bcKIXovSkivgzehYx0KmbCc
-         qMFX3XgZsbrzSJfD/VhI7+v9TbkMrlbIkQhZ3qw25PT7AxXZheGM0KA5dkk5Qj4966dA
-         Cy+aLveBrRPMibhFPobZYV7z07hb5ihSlsna1pO6xEylMxlyfTVIcpK+FX5m9sgkySyu
-         MMqQjZq2q/pDZ2BjnIn6F+nCCoC2S6S7P3wg+fsVGpYyDiMxl1yU4rNqFUQl6B6Ya94v
-         SsKw==
-X-Forwarded-Encrypted: i=1; AJvYcCW1a0seke0CChYFHgCBe5M8idJp9ZpFNVHH+xQbrj70QkrlcrrJl0kchrhWNVVMd5liIo2sT4SV3VzDtA6A5zhK6H+DIy6Aq8cuZBOCkkb9L2laUQ==
-X-Gm-Message-State: AOJu0YwItF4hadXakfHoFY1Nc++BMZ82WbgaSYkZvvUz0tV7jemF3+J9
-	3ypkw1i+Y+bJUyo8j1s+Xe3OjyzNEQsmB7ouexQ4W4/tFHQMuKFOEbRJzVtNA/hghFsEUKsR3EE
-	ZoX0EzRdSrTEl/de3OU2OEZFqtzZzuGaJQJnY9p6SoGb5WKev+18pDbQGoZKCWaLf3+ZWHic=
-X-Received: by 2002:a17:906:b55:b0:a46:f9c2:f059 with SMTP id v21-20020a1709060b5500b00a46f9c2f059mr6219332ejg.22.1714389010013;
-        Mon, 29 Apr 2024 04:10:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFR0ojatb/lFEb/FPKwL15M19QpXBCdZhETLZLlSObDFRDmZLDdhpd83l15LAivhxDSQI6i4g==
-X-Received: by 2002:a17:906:b55:b0:a46:f9c2:f059 with SMTP id v21-20020a1709060b5500b00a46f9c2f059mr6219304ejg.22.1714389009649;
-        Mon, 29 Apr 2024 04:10:09 -0700 (PDT)
+        bh=WdqbQcKjEI5vcuFU2p8wlb5cXeIYqE2md5KD9zgkjwo=;
+        b=TV3lU73V8VVPn4RqjjRH8aTDhCS5iIITQZaYrfAHQ8MmnnKn1uSHHy4EarMnB6njva
+         a5fo1Fg9+viD1HyzTqn5ntC08v4i3aHy6XRQK5N9rJmlwdFENSS1Q0tkjRHgUsmuFAxe
+         5WLmHvReSfnMZv/JShxWy8LxxyJZ1/pcN5KJSwxnAWxR79X2tR6RAZTHob2xHAAG6GnF
+         4B/bERCrsnDAcJYu+9+CALO5tJJhIZ2fVGyeZBo/jtJZMnp/pZo4rrXhAfkxXnnDs3wL
+         2BsiD/BV+gNmfJQjmE3mxSXAHo9MhZIBmY3dbW5Og+I4dpAZJdgvkF1zIntn4G98ssjD
+         C0Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJ1PPlgEmfVPzBjDd3vRxljEhERtuPd9JV9odF3qhfKk/ntXi301BRsMfz2we7vGF3+sZnkUNYbo9ITrK/XbS0FKaE5D8Vh7ghANaaIDanSb0uug==
+X-Gm-Message-State: AOJu0YwYJWhfohtT1FpF5S2MSlJ4a+AbTjUKyqtAYsjTIN/xtCYRvVbB
+	V7cai7YhSFQ4p3UlcGVeV2aRlFS6Qp9LKuqowKKkYswutO9Ycnz9F2cYGBT3FpEKtTkhkmhqQDZ
+	aKIOB5qAauhSnlds3DdHYlUBd00C9/clYwKlEkAfzYAsL9SV+tfgML0WYR130M8jxNlEb5SU=
+X-Received: by 2002:a50:aa93:0:b0:56e:23e3:bdc3 with SMTP id q19-20020a50aa93000000b0056e23e3bdc3mr5865167edc.16.1714389027235;
+        Mon, 29 Apr 2024 04:10:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH+GeBDgDo2JBd+tgDcSYk8RG5tx1gn1dkUHGjKY1XaEOpPVLbqDyaIMP5fCJYqIgZOrL2blQ==
+X-Received: by 2002:a50:aa93:0:b0:56e:23e3:bdc3 with SMTP id q19-20020a50aa93000000b0056e23e3bdc3mr5865151edc.16.1714389026997;
+        Mon, 29 Apr 2024 04:10:26 -0700 (PDT)
 Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id jw17-20020a170906e95100b00a58df78ab27sm3049363ejb.166.2024.04.29.04.10.08
+        by smtp.gmail.com with ESMTPSA id d19-20020a50fe93000000b00571c2402e6dsm12261753edt.0.2024.04.29.04.10.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Apr 2024 04:10:09 -0700 (PDT)
-Message-ID: <6c692ae4-e78a-441d-8487-71a6ad4a4ed8@redhat.com>
-Date: Mon, 29 Apr 2024 13:10:08 +0200
+        Mon, 29 Apr 2024 04:10:26 -0700 (PDT)
+Message-ID: <27aefc94-3bf3-44bd-8689-22e0c984855f@redhat.com>
+Date: Mon, 29 Apr 2024 13:10:26 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,8 +67,8 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 5/6] power: supply: power-supply-leds: Add
- charging_orange_full_green trigger for RGB LED
+Subject: Re: [PATCH v7 6/6] platform: x86-android-tablets: others: Set the LED
+ trigger to charging_orange_full_green for Xiaomi pad2
 To: Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
  Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
  platform-driver-x86@vger.kernel.org,
@@ -76,27 +76,22 @@ To: Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
  =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
  linux-kernel@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>,
  Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
-Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
 References: <20240424065212.263784-1-hpa@redhat.com>
- <20240424065212.263784-6-hpa@redhat.com>
+ <20240424065212.263784-7-hpa@redhat.com>
 Content-Language: en-US
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240424065212.263784-6-hpa@redhat.com>
+In-Reply-To: <20240424065212.263784-7-hpa@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
 On 4/24/24 8:52 AM, Kate Hsuan wrote:
-> Add a charging_orange_full_green LED trigger and the trigger is based on
-> led_mc_trigger_event() which can set an RGB LED when the trigger is
-> triggered. The LED will show orange when the battery status is charging.
-> The LED will show green when the battery status is full.
-> 
-> Link: https://lore.kernel.org/linux-leds/f40a0b1a-ceac-e269-c2dd-0158c5b4a1ad@gmail.com/
+> Set the default trigger to bq27520-0-charging-orange-full-green. The LED
+> will show orange when the battery is charging. The LED will show green
+> when the battery status is full.
 > 
 > Signed-off-by: Kate Hsuan <hpa@redhat.com>
-> Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
 Thanks, patch looks good to me:
 
@@ -109,106 +104,20 @@ Hans
 
 
 > ---
->  drivers/power/supply/power_supply_leds.c | 26 ++++++++++++++++++++++++
->  include/linux/power_supply.h             |  2 ++
->  2 files changed, 28 insertions(+)
+>  drivers/platform/x86/x86-android-tablets/other.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/power/supply/power_supply_leds.c b/drivers/power/supply/power_supply_leds.c
-> index c7db29d5fcb8..8dd99199c65b 100644
-> --- a/drivers/power/supply/power_supply_leds.c
-> +++ b/drivers/power/supply/power_supply_leds.c
-> @@ -22,6 +22,9 @@
->  static void power_supply_update_bat_leds(struct power_supply *psy)
->  {
->  	union power_supply_propval status;
-> +	unsigned int intensity_green[3] = {255, 0, 0};
-> +	unsigned int intensity_orange[3] = {128, 0, 255};
-> +	unsigned int intensity_red[3] = {0, 0, 255};
->  
->  	if (power_supply_get_property(psy, POWER_SUPPLY_PROP_STATUS, &status))
->  		return;
-> @@ -36,12 +39,20 @@ static void power_supply_update_bat_leds(struct power_supply *psy)
->  		/* Going from blink to LED on requires a LED_OFF event to stop blink */
->  		led_trigger_event(psy->charging_blink_full_solid_trig, LED_OFF);
->  		led_trigger_event(psy->charging_blink_full_solid_trig, LED_FULL);
-> +		led_mc_trigger_event(psy->charging_orange_full_green_trig,
-> +				     intensity_green,
-> +				     ARRAY_SIZE(intensity_green),
-> +				     LED_FULL);
->  		break;
->  	case POWER_SUPPLY_STATUS_CHARGING:
->  		led_trigger_event(psy->charging_full_trig, LED_FULL);
->  		led_trigger_event(psy->charging_trig, LED_FULL);
->  		led_trigger_event(psy->full_trig, LED_OFF);
->  		led_trigger_blink(psy->charging_blink_full_solid_trig, 0, 0);
-> +		led_mc_trigger_event(psy->charging_orange_full_green_trig,
-> +				     intensity_orange,
-> +				     ARRAY_SIZE(intensity_orange),
-> +				     LED_FULL);
->  		break;
->  	default:
->  		led_trigger_event(psy->charging_full_trig, LED_OFF);
-> @@ -49,6 +60,10 @@ static void power_supply_update_bat_leds(struct power_supply *psy)
->  		led_trigger_event(psy->full_trig, LED_OFF);
->  		led_trigger_event(psy->charging_blink_full_solid_trig,
->  			LED_OFF);
-> +		led_mc_trigger_event(psy->charging_orange_full_green_trig,
-> +				     intensity_red,
-> +				     ARRAY_SIZE(intensity_red),
-> +				     LED_OFF);
->  		break;
->  	}
->  }
-> @@ -74,6 +89,11 @@ static int power_supply_create_bat_triggers(struct power_supply *psy)
->  	if (!psy->charging_blink_full_solid_trig_name)
->  		goto charging_blink_full_solid_failed;
->  
-> +	psy->charging_orange_full_green_trig_name = kasprintf(GFP_KERNEL,
-> +		"%s-charging-orange-full-green", psy->desc->name);
-> +	if (!psy->charging_orange_full_green_trig_name)
-> +		goto charging_red_full_green_failed;
-> +
->  	led_trigger_register_simple(psy->charging_full_trig_name,
->  				    &psy->charging_full_trig);
->  	led_trigger_register_simple(psy->charging_trig_name,
-> @@ -82,9 +102,13 @@ static int power_supply_create_bat_triggers(struct power_supply *psy)
->  				    &psy->full_trig);
->  	led_trigger_register_simple(psy->charging_blink_full_solid_trig_name,
->  				    &psy->charging_blink_full_solid_trig);
-> +	led_trigger_register_simple(psy->charging_orange_full_green_trig_name,
-> +				    &psy->charging_orange_full_green_trig);
->  
->  	return 0;
->  
-> +charging_red_full_green_failed:
-> +	kfree(psy->charging_blink_full_solid_trig_name);
->  charging_blink_full_solid_failed:
->  	kfree(psy->full_trig_name);
->  full_failed:
-> @@ -101,10 +125,12 @@ static void power_supply_remove_bat_triggers(struct power_supply *psy)
->  	led_trigger_unregister_simple(psy->charging_trig);
->  	led_trigger_unregister_simple(psy->full_trig);
->  	led_trigger_unregister_simple(psy->charging_blink_full_solid_trig);
-> +	led_trigger_unregister_simple(psy->charging_orange_full_green_trig);
->  	kfree(psy->charging_blink_full_solid_trig_name);
->  	kfree(psy->full_trig_name);
->  	kfree(psy->charging_trig_name);
->  	kfree(psy->charging_full_trig_name);
-> +	kfree(psy->charging_orange_full_green_trig_name);
->  }
->  
->  /* Generated power specific LEDs triggers. */
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index c0992a77feea..9b6898085224 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -318,6 +318,8 @@ struct power_supply {
->  	char *online_trig_name;
->  	struct led_trigger *charging_blink_full_solid_trig;
->  	char *charging_blink_full_solid_trig_name;
-> +	struct led_trigger *charging_orange_full_green_trig;
-> +	char *charging_orange_full_green_trig_name;
->  #endif
+> diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
+> index c77d56454f2d..52032a874b7f 100644
+> --- a/drivers/platform/x86/x86-android-tablets/other.c
+> +++ b/drivers/platform/x86/x86-android-tablets/other.c
+> @@ -610,7 +610,7 @@ static const struct property_entry ktd2026_rgb_led_props[] = {
+>  	PROPERTY_ENTRY_U32("reg", 0),
+>  	PROPERTY_ENTRY_U32("color", LED_COLOR_ID_RGB),
+>  	PROPERTY_ENTRY_STRING("function", "indicator"),
+> -	PROPERTY_ENTRY_STRING("linux,default-trigger", "bq27520-0-charging"),
+> +	PROPERTY_ENTRY_STRING("linux,default-trigger", "bq27520-0-charging-orange-full-green"),
+>  	{ }
 >  };
 >  
 
