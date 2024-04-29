@@ -1,168 +1,210 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fout3-smtp.messagingengine.com (fout3-smtp.messagingengine.com [103.168.172.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37604E1C1
-	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 11:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524D3322E
+	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 12:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714390510; cv=none; b=ah5tzM4tqPWU4/Y75d9EVTdTwIv1KUebAjgtuE5atf0UzLeCxjuEYhLRaKx8WnMqa65d8jLxinjVPMRXM9kqIh2BXqH6kkwQICTsTQj3hX+hy8MvbszEvYhCaccte5+xfW0v4NyUdm2Evtk/fPsGq3fAC0XzneBmfKs954aXBYs=
+	t=1714394401; cv=none; b=tmQi8vpXSo9q8+BZZO3M3dM4wMcXkwsns+qwnKfvrHlN3Hpq3gNQtbdQYA09/4lK0x84Z2MtAlTaGTC7lepp1BDn+dJlbO0ZQh1G54EINR+uoghrC0t0BUdfKPFUHxp3LmL8fh8I2M1ikd98M6AL5cppTkYnPKjgWcKqwA1ep8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714390510; c=relaxed/simple;
-	bh=vWbJZVKuevzqkRDh2MXaKpilD4eyfGU02ScMboMQbJU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=QZi5MEJPD/EIakFtwda6TajgudJRX9SXLvOn3za8PFG5UiNjux0ZkzVPJiT4QLdJ3XnWoaFJFOB5GO+7NyrllqTU0LDZi61wWCXazU5egmZ5B3rdpIZOyFEJmc2S7nTb9ysvYcM9CKIoF0IX5C3iV6+DZMJ626oJpvwVgb40yzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DTR6sYmn; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714394401; c=relaxed/simple;
+	bh=4PrKeir4bK54yWYxShK9W9HqP2DMEvTGNVTCCSOTXoc=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=b2YxrII4p5aQ6YoI4mccZhqcnBQd1VSDgswTxNaocCe5kwt/8eTeIOXBB9LI2AHeJt+Chcl/sAhxfK+bWqQmKMpt2lVqHEThOzwqWh5IolGNk8a5FC7p6up0yKNkWlzy+cl4WMscWN3s/MtbnmYng/rwO9uhFmB+4GSw3rl78l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=bP0yGN4U; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HooB3xL2; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DTR6sYmn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714390507;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=adxQWQhd0XrFa5oXvgwXbmjrSI2T0lJVLqdvh5MvXZo=;
-	b=DTR6sYmnR8m5jyM/BpeoLpzvvOpBT6h+Ptyc8uLYzdsCiQoJGnwkAqyza6mWcNpJiJvsQN
-	QOk8uwzbUIDBfEAjTAYwqwXstSKl5YIx1Vsv287VeC+3cAamu+OefWrCbq6U0muEXXx84I
-	RDb6DhMXBtPRcf3EqSi9Oat0CQ8j0Ig=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-292-_YiUZ65gN7-gI_OjecTuyA-1; Mon, 29 Apr 2024 07:35:06 -0400
-X-MC-Unique: _YiUZ65gN7-gI_OjecTuyA-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5725fffb621so539710a12.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 04:35:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714390505; x=1714995305;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=adxQWQhd0XrFa5oXvgwXbmjrSI2T0lJVLqdvh5MvXZo=;
-        b=vZjtmzFh9Mp9vWo26nazHhlKEhTbnooPESxAgB3T55JsiperN9uK+Zepn91sZEsWuP
-         6D5EE3r9q7M4X0WJmM3cfCiWM3gwZ+h9pOOXYSG6knn0/BzAW6fWSnJRYWUophFefnA3
-         o3SXYUR4an0fsWoEd7dJPUE9rpHduqDQ/O44XMspxl802PNG2yxY04709wuCaQguzJ9H
-         hSHpw0xtqMgIX1fPCAGvDksLzEQFGK4J6evlkpDGe2fxGmgWb+nIqD+dEVZ+WGBpU0AN
-         RjaZTMBk4pj82QM3PSBTYBafcWVx84Ie/PqarJ9U1RzQ8mvLiq+276PoZqKfVDEQr/K7
-         +1Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCVva+R4csIy7IfAHX4KSq+vNhVc+ZpdnWNWwyhIUI0MsQL1B9nUOfbC6BvVX1DUwxxkE0S42MGm4+B/ykNpMo7P7oRfmpewqYhPEjVzefyH8nrLjA==
-X-Gm-Message-State: AOJu0Yyl1jETq8XS009WC8CFm6p9ZdcpYrcRweRsDMOj7VPKWcJs/BqS
-	I91Bpgc64bslu7w+7MDKL7ePI6bbEDSvUx/eCge9NFONXg0D7EL7NsLyV++72AKZHo8ihnnWwq5
-	Q+9Lcyt7hMEkh7bziW8BjbJsK0JzNsmwYBxm6ooEDZAX5Q4HBGIJS7d240pjXwSkK1MFDpsAROq
-	WZUi4=
-X-Received: by 2002:a50:c056:0:b0:572:7e7e:4296 with SMTP id u22-20020a50c056000000b005727e7e4296mr2292367edd.3.1714390504923;
-        Mon, 29 Apr 2024 04:35:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFBHHqSoYBKSugtDyzCtP1PK/DuZ2Y8c17tJdc/C16ed+YD1q6T1VMD8zgg7bDcZkBC30+qEQ==
-X-Received: by 2002:a50:c056:0:b0:572:7e7e:4296 with SMTP id u22-20020a50c056000000b005727e7e4296mr2292356edd.3.1714390504562;
-        Mon, 29 Apr 2024 04:35:04 -0700 (PDT)
-Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id u7-20020a50eac7000000b005727eadcb79sm1283025edp.46.2024.04.29.04.35.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Apr 2024 04:35:03 -0700 (PDT)
-Message-ID: <5eaf12a7-c49e-4606-85f4-f6e5a2d78a79@redhat.com>
-Date: Mon, 29 Apr 2024 13:35:02 +0200
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="bP0yGN4U";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HooB3xL2"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 4094B138197F;
+	Mon, 29 Apr 2024 08:39:58 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute3.internal (MEProxy); Mon, 29 Apr 2024 08:39:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1714394398; x=1714480798; bh=hjKiwpe50k
+	J00uK1INTrQaTFhpsCGRDJdX8lxLYPHtE=; b=bP0yGN4UfldUlNlBNiN4e2G2hi
+	2at3zt+RsMZqWOeUN3P9QCdWRstqCjZoJGTV7B2mqnkpUTqGy26rI6lCbtQ7/ZVz
+	ZjLW2wSETanSsZN5a+PNmdsgD7sPktvnsQ/eX8pKsJSodpNsfFddeaf/LPMMTz01
+	xYU4aSRN/fPifu1tA/T7hLs6+XYI66HtIE9+tZ/jULctxFPBYhq8xVKWejwh8YBQ
+	Do69xFe4pKPo/FjUChbzQWniI42LQFrt1vCCzYe+BpcbKokWG6YI9bjSdMdAjiRB
+	UgtFLg+61QLhLLiGfeLps8wLW6WNI6KniX0rRIwefXu/MHGCKj1SXaaku1+A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1714394398; x=1714480798; bh=hjKiwpe50kJ00uK1INTrQaTFhpsC
+	GRDJdX8lxLYPHtE=; b=HooB3xL2RpwZ0scS80kbLylH8hsChyTp74ai+H7TnPFy
+	iTE6bBJ2bz3LudHH7ypX6HGDugSgUo6rIn9Nvx24Q+w5sDa7gJjyotnwklPefEhq
+	7ldl0ocJ18eDyhSv8nasL5FLefLYBjBLdnvbNI+9WG0UVjMDlahSevkvbLjjz+Pc
+	v6ySaSIw7bji7+HWkp9gcHx40JRPB6v8/o0oMYfE5QLfbzWNmKVoB+l3dFAOhYjz
+	junYOmpc+bZSLIZkc0T+GJZdPBEv3/Gy+eKJZIAsFDTY029V6YbsdUALG0z5rm0Q
+	UmPBZGltTEMzKgyK50yoHoR49EaB55TzR5q+IPfbLQ==
+X-ME-Sender: <xms:HZUvZsrynyYmOlFje4tSbx2rsEHbrJZc3FdzpafgS58p8Vgobgvs8Q>
+    <xme:HZUvZir4aWxSgpZp8g-CdwTvY5HzUBcm58xhv8qTdZlViZxp1b9Q36x3nukAEsxZb
+    O1TphuzeJD43g37Cd8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdduuddgheegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
+    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
+    drtggrqeenucggtffrrghtthgvrhhnpeeivedtkeeftdefhfdugfelgeehieeivdefffek
+    jeetuddvueeijefgjeekudevtdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhs
+    ohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
+X-ME-Proxy: <xmx:HZUvZhO-LIiZLRM2wiyxNeymKN2mImvV-D_R4FFeKzG2I4Udk6jQzQ>
+    <xmx:HZUvZj5sOSYDzqaaecqJ18cV57jwrk5SUwO3uwKrJOB741oJeiVt4g>
+    <xmx:HZUvZr6OHqevGU6YJYEUZNnDvDotihrARX9Rw1dQJ3pXkYCAickGtw>
+    <xmx:HZUvZjgXUHhDpDSh2DfxnG3GtpJ7TZzNXZfR6vSbs1PE0A9bLfuyPg>
+    <xmx:HpUvZubgSYBUUSZDJbraoJIbAtvW_GMgV4Axw7pKQS5Y0khgqHiynq3c>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 935CFC60099; Mon, 29 Apr 2024 08:39:57 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-386-g4cb8e397f9-fm-20240415.001-g4cb8e397
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
- 6.10-rc1
-To: "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
- "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
- "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>,
+Message-Id: <28d295a8-7226-4222-b167-060a99134607@app.fastmail.com>
+In-Reply-To: <5ea90914-16f7-4904-b7a6-e1997880e5f0@redhat.com>
+References: <20240424122834.19801-1-hdegoede@redhat.com>
+ <20240424122834.19801-23-hdegoede@redhat.com>
+ <8f150aef-0d56-4c5b-af17-9c66084a3ae7@app.fastmail.com>
+ <5ea90914-16f7-4904-b7a6-e1997880e5f0@redhat.com>
+Date: Mon, 29 Apr 2024 08:40:50 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Hans de Goede" <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Andy Shevchenko" <andy@kernel.org>,
+ "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>
+Cc: "Vishnu Sankar" <vishnuocv@gmail.com>,
+ "Nitin Joshi1" <njoshi1@lenovo.com>, ibm-acpi-devel@lists.sourceforge.net,
  "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-References: <6993d8890e0831efee03924ff09a9fc80afebd75.camel@intel.com>
-Content-Language: en-US
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <6993d8890e0831efee03924ff09a9fc80afebd75.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-Hi,
-
-On 4/27/24 12:41 AM, Pandruvada, Srinivas wrote:
-> Hi Hans/Ilpo,
-> 
-> Pull request for Intel Speed Select version v1.19:
-> Summary of changes:
-> - Support of SST BF/TF support per level
-> - Increase number of CPUs displayed
-> - Present all TRL levels for turbo-freq
-> - Fix display for unsupported levels
-> - Support multiple dies
-> - Increase die count
-> - Change CPU display for non compute domain
-> 
-> 
-> The base branch for these changes
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git
-> branch: review-hans
-> 
-> The following changes since commit
-> 0084b1ef25438293c74efe6f8c5c1c8bdb1a34c7:
-> 
->   platform/x86: asus-laptop: Use sysfs_emit() and sysfs_emit_at() to
-> replace sprintf() (2024-04-22 15:44:26 +0200)
-> 
-> are available in the Git repository at:
-> 
->   https://github.com/spandruvada/linux-kernel.git intel-sst
-> 
-> for you to fetch changes up to
-> af243b7508f1ce8d49f1ba944c643c8850573e13:
-> 
->   tools/power/x86/intel-speed-select: v1.19 release (2024-04-26
-> 15:08:19 -0700)
-
-Thanks. I had to rebase my review-hans branch due to other reasons,
-so this did not merge properly.
-
-Instead I have cherry-picked the 8 patches. You can find the patches
-in my review-hans branch now:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
+Subject: Re: [PATCH v2 22/24] platform/x86: thinkpad_acpi: Support for trackpoint
+ doubletap
+Content-Type: text/plain
 
 
 
+On Mon, Apr 29, 2024, at 5:57 AM, Hans de Goede wrote:
+> Hi Mark,
+>
+> On 4/24/24 8:19 PM, Mark Pearson wrote:
+>> Hi Hans,
+>> 
+>> On Wed, Apr 24, 2024, at 8:28 AM, Hans de Goede wrote:
+>>> From: Mark Pearson <mpearson-lenovo@squebb.ca>
+>>>
+>>> Lenovo trackpoints are adding the ability to generate a doubletap event.
+>>> This handles the doubletap event and sends the KEY_PROG4 event to
+>>> userspace. Despite the driver itself not using KEY_PROG1 - KEY_PROG3 this
+>>> still uses KEY_PROG4 because of some keys being remapped to KEY_PROG1 -
+>>> KEY_PROG3 by default by the upstream udev hwdb containing:
+>>>
+>>> evdev:name:ThinkPad Extra Buttons:dmi:bvn*:bvr*:bd*:svnLENOVO*:pn*:*
+>>>  ...
+>>>  KEYBOARD_KEY_17=prog1
+>>>  KEYBOARD_KEY_1a=f20       # Microphone mute button
+>>>  KEYBOARD_KEY_45=bookmarks
+>>>  KEYBOARD_KEY_46=prog2     # Fn + PrtSc, on Windows: Snipping tool
+>>>  KEYBOARD_KEY_4a=prog3     # Fn + Right shift, on Windows: No idea
+>>>
+>>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>>> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+>>> Link: https://lore.kernel.org/r/20240417173124.9953-2-mpearson-lenovo@squebb.ca
+>>> [hdegoede@redhat.com: Adjust for switch to sparse-keymap keymaps]
+>>> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>> ---
+>>>  drivers/platform/x86/thinkpad_acpi.c | 19 +++++++++++++++++++
+>>>  1 file changed, 19 insertions(+)
+>>>
+>>> diff --git a/drivers/platform/x86/thinkpad_acpi.c 
+>>> b/drivers/platform/x86/thinkpad_acpi.c
+>>> index a53b00fecf1a..b6d6466215e1 100644
+>>> --- a/drivers/platform/x86/thinkpad_acpi.c
+>>> +++ b/drivers/platform/x86/thinkpad_acpi.c
+>>> @@ -248,6 +248,9 @@ enum tpacpi_hkey_event_t {
+>>>
+>>>  	/* Misc */
+>>>  	TP_HKEY_EV_RFKILL_CHANGED	= 0x7000, /* rfkill switch changed */
+>>> +
+>>> +	/* Misc2 */
+>>> +	TP_HKEY_EV_TRACK_DOUBLETAP      = 0x8036, /* trackpoint doubletap */
+>>>  };
+>>>
+>>>  
+>>> /****************************************************************************
+>>> @@ -3268,6 +3271,7 @@ static const struct key_entry keymap_lenovo[] 
+>>> __initconst = {
+>>>  	 * after switching to sparse keymap support. The mappings above use 
+>>> translated
+>>>  	 * scancodes to preserve uAPI compatibility, see 
+>>> tpacpi_input_send_key().
+>>>  	 */
+>>> +	{ KE_KEY, TP_HKEY_EV_TRACK_DOUBLETAP /* 0x8036 */, { KEY_PROG4 } },
+>>>  	{ KE_END }
+>>>  };
+>>>
+>>> @@ -3817,6 +3821,17 @@ static bool hotkey_notify_6xxx(const u32 hkey, 
+>>> bool *send_acpi_ev)
+>>>  	return true;
+>>>  }
+>>>
+>>> +static bool hotkey_notify_8xxx(const u32 hkey, bool *send_acpi_ev)
+>>> +{
+>>> +	switch (hkey) {
+>>> +	case TP_HKEY_EV_TRACK_DOUBLETAP:
+>>> +		tpacpi_input_send_key(hkey, send_acpi_ev);
+>>> +		return true;
+>>> +	default:
+>>> +		return false;
+>>> +	}
+>>> +}
+>>> +
+>>>  static void hotkey_notify(struct ibm_struct *ibm, u32 event)
+>>>  {
+>>>  	u32 hkey;
+>>> @@ -3893,6 +3908,10 @@ static void hotkey_notify(struct ibm_struct 
+>>> *ibm, u32 event)
+>>>  				known_ev = true;
+>>>  			}
+>>>  			break;
+>>> +		case 8:
+>>> +			/* 0x8000-0x8FFF: misc2 */
+>>> +			known_ev = hotkey_notify_8xxx(hkey, &send_acpi_ev);
+>>> +			break;
+>>>  		}
+>>>  		if (!known_ev) {
+>>>  			pr_notice("unhandled HKEY event 0x%04x\n", hkey);
+>>> -- 
+>>> 2.44.0
+>> 
+>> Instead of needing hotkey_notify_8xxx, now we are using the sparse_keymap can we just use hotkey_notify_hotkey for case 8? No need to check what the hkey is either.
+>
+> I prefer to keep things consistent and have each case #: path call a separate
+> helper for those #xxx codes.
+>
+> ATM some of the simpler cases handle things directly, but as more 
+> handling for
+> different events get added that becomes a bit messy IMHO. I would 
+> actually
+> like to see those other cases converted to use a small helper function 
+> too
+> (with a switch-case in the helper for future proofing) to make things 
+> consistent.
+>
+Got it - no problem.
 
+> Patches to do this small cleanup are welcome.
+>
+Sounds good. Will look at doing this.
 
-
-> 
-> ----------------------------------------------------------------
-> Srinivas Pandruvada (8):
->       tools/power/x86/intel-speed-select: Increase die count
->       tools/power/x86/intel-speed-select: Support multiple dies
->       tools/power/x86/intel-speed-select: Fix display for unsupported
-> levels
->       tools/power/x86/intel-speed-select: Present all TRL levels for
-> turbo-freq
->       tools/power/x86/intel-speed-select: Increase number of CPUs
-> displayed
->       tools/power/x86/intel-speed-select: SST BF/TF support per level
->       tools/power/x86/intel-speed-select: Display CPU as None for -1
->       tools/power/x86/intel-speed-select: v1.19 release
-> 
->  tools/power/x86/intel-speed-select/isst-config.c    | 25
-> +++++++++++++++++++++++--
->  tools/power/x86/intel-speed-select/isst-core-mbox.c |  3 ++-
->  tools/power/x86/intel-speed-select/isst-core-tpmi.c | 10 ++++++++--
->  tools/power/x86/intel-speed-select/isst-core.c      |  1 +
->  tools/power/x86/intel-speed-select/isst-display.c   | 30
-> +++++++++++++++++++++---------
->  tools/power/x86/intel-speed-select/isst.h           |  2 +-
->  6 files changed, 56 insertions(+), 15 deletions(-)
-> 
-> Thanks,
-> Srinivas
-
+Mark
