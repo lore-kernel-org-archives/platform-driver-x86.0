@@ -1,64 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D143ABA2E
-	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 11:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8046222091
+	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 11:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714388603; cv=none; b=dBoeHWUxo6WMJp4GHPum3Rnu12h/PTeiVdEw4ejk8F43zId/+bKZUkR9gICbMOvAJKLpYMI5N765x8efRtSMqkYhselKQ6M9UvqgVbVJ6YvegFNEn1V2TmBVFX2CK+sXaLmIOuSqQXrTUPLmv5VYJNh/U76tOzXjeH1srS+1U2s=
+	t=1714388731; cv=none; b=tbfHPMIEdPBSmZYXeXlXbPtuwDxroFTCoHwH6DnkQdth6naUzXPxpVN9p4H09/QN5L8WBXxaNknd/32lRxauOA2Ip+ufdnLMPDwUyLlhOq8crDbe5gy70ay8Kn6PXodBi+u5PnXAkphcFBykcBYKTfr3BMo1ZN7DxaPYVoz4B+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714388603; c=relaxed/simple;
-	bh=DizmVvoymQvAKI/J96lzMW5cvF/aIcOIof9SIfMLceM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EZgPJQ0u3X7ic8cnFdXQor4Y+sAaWma698gUObMPo6q3EgZ2J+naNgPAa+eqbUkdr57SArglcCwXtAAMLx5P4BddBSQZNK85MaFsp6vveOGhQCVXXINkfjF96b46PCUYQ6hZ6/LTboQZGHue6JjPm0Jp2EsVnPvmJLKCGFpUOSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T+MlUeDL; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1714388731; c=relaxed/simple;
+	bh=qGDaqg63/846loIrKt3rLFBTn/55BAVx41K8+VKsKC4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=TEpzodaA6ac3VRDrFllLn17IxlBEZrepx0AJnyIyHtHeqEKBrm8lPfqpYdWubEpqHPTf6bKh6OerTdIEeBQGSWVqWFRU3TKwzQ78Ymj2qZR7ZPJzf+PpwnNCLOTaB5pRXtcqvpB9E6/QlcYWU/bwMBURNI+XVbxVQlmMcX2jfc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bWC0CKUK; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T+MlUeDL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bWC0CKUK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714388600;
+	s=mimecast20190719; t=1714388728;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pbW61cPTq5VMph+SlwYX4bBGdewo3Ji/UxuDzLoeL0s=;
-	b=T+MlUeDLNI0lOMCgb5K06Ro467rhFIf+GhiVr3K4RjRP/W7RQQE145ii/twK6+Cz3AghLI
-	62S4hhU8vxWWYZPsktNzckMiOn7rZJqtb8G9jycoIPjdXcU1MXVlvQYMARt1PiRbHCNwQc
-	Sm8z/D4XInNfWywqs977yRJCz5PR3LQ=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=URyUBWwW/8s6cUiXsNVvT240BG7i32T50ylUsy9Neg0=;
+	b=bWC0CKUKV0MOhyYSUmwlFh5hvykdZ7XaPoF3MKSu5t6ZZcJDjzHc7L/db5BT9OFS+JhDEX
+	vYUyrfcbE0Dg/m6RcPPq/+F5qhFnKxZua/RJyldZOJ7IzhbHE+VCHjrM4jvsccP7t9e8kH
+	f7SuzRhFYL/fukBB0lzAHFQudMK8FAQ=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-299-mdQc3rUHNhicXH8TPUenxQ-1; Mon, 29 Apr 2024 07:03:19 -0400
-X-MC-Unique: mdQc3rUHNhicXH8TPUenxQ-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2dd1dbde466so38514021fa.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 04:03:18 -0700 (PDT)
+ us-mta-18-dH9-nSL0Nbmi7qm4-5JEOw-1; Mon, 29 Apr 2024 07:05:26 -0400
+X-MC-Unique: dH9-nSL0Nbmi7qm4-5JEOw-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a5898670941so312730966b.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 04:05:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714388597; x=1714993397;
+        d=1e100.net; s=20230601; t=1714388725; x=1714993525;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pbW61cPTq5VMph+SlwYX4bBGdewo3Ji/UxuDzLoeL0s=;
-        b=IT7Mzo92GqjuRnWXmwnyXtFjZ88z2noX+cK7hXyTpoOBTGkcKIM43nkQN4X3ohXBB6
-         umRKR3W2YyrMjStJkphwcuChMqSSgIIwlkQWOnL9KOPFUd4OxGnYZDkY8sP1fSzpfITt
-         29fu8NHCUoU6UPJv33a9EQIxlV61P4Gb0Q0ThlJgMyuGPdZmF6FOtQEaExRLO8XZeEw2
-         y++mRhJ8gwxpFLB2Pt0OpDQo1bmowEmKNJVrbL0QLL/LwRatQyCztLn6f0vx5ZVQ4v3S
-         QvWuY77Cu7241eJ1ToFhl+diLFHt/F94ZpsoZceNAmIxEcDpH3SBA7p0auVYFt+tta5l
-         P0ZA==
-X-Gm-Message-State: AOJu0Yz1dLaAe7OlFqqYTnwuvIBqUDA+4ANRlhcT5/Fd5yXggXh1qmQ7
-	66fCMVqBG17x4tWszAnCS+EJ9N9ZuLtmTitpb3BxL14HwmZx6YTktEPtKx8x5OALTy4w7VLzwG1
-	c0Zgron7Zc8OJBBvJ40U+w5pxUVWn2WtI5lelLZOdJiKvLBy0TX7gGLGUCM/W0j0tlE1RryU=
-X-Received: by 2002:a19:2d54:0:b0:51b:6366:6267 with SMTP id t20-20020a192d54000000b0051b63666267mr5932853lft.32.1714388597622;
-        Mon, 29 Apr 2024 04:03:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHWrSYa6u56rkksTK55h/ogi20rYz6SGFz+72DxwAuEuGVFHx53aIUrAnaV17HapeFw79W1uA==
-X-Received: by 2002:a19:2d54:0:b0:51b:6366:6267 with SMTP id t20-20020a192d54000000b0051b63666267mr5932826lft.32.1714388597201;
-        Mon, 29 Apr 2024 04:03:17 -0700 (PDT)
+        bh=URyUBWwW/8s6cUiXsNVvT240BG7i32T50ylUsy9Neg0=;
+        b=pxcmwuS9R5uiDvCXV2HYWBQxncwy5Q/81OPIv4LWazj0fdPxHN4Ngt0DjNB3Fx7qbh
+         TeGLjOdkjtqoncaR9iKulpWmCuD48qR6FcKZiaKtXgtX2sTRiLs0+BRXhQ3U6PX2XwEQ
+         dYvQZTFJo2OaMEMGxKBBdFmgIVHIfzemUnRpbBnFXNiQT6aoqYdv4+umh23BtJZIGegK
+         ML17Kl+Lkby6vja1QjFo6fhcY6P+kA0mmltLNvlprzAsusuxeNtjot0XBpqTnu/zRker
+         IHUJCnvYCwNwBMgbPbfABwYBvNcg3ORn9zIn+fPgHDEy06GKTFgtRQJIFkKhqf5SYxaW
+         ujZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV1GP4lRkC/pBzt5ILNfVwbvxSw5SiZZg0V31kpUieLQzgNN7hGaDLdoRoMLGH/u4ImN1PvRwiqcrudkitRhVSiBaj+/5yg1J6OUuITo1PIAnqFHA==
+X-Gm-Message-State: AOJu0Yy53ZwzJ/oT7UDuyWHtAFbh/cPP45vDCwtNfJ+eWo4xn2nZV81x
+	G6qq5pXsiXUMwi2B2uD6/pvCRcY2toMz3r160SvhyWXLRLL3VHBBIOceSriB4utdbWGezlQ15fi
+	SzTtSVyIQ8EpIVVUcRRiMHCt4xbSDeqkczfuXwCQv+aNgIE8CaCEJDhvu4uuaoj5FT8d/rsw=
+X-Received: by 2002:a17:906:244d:b0:a51:e05f:2455 with SMTP id a13-20020a170906244d00b00a51e05f2455mr8326820ejb.48.1714388725283;
+        Mon, 29 Apr 2024 04:05:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHl2hONlsSnUfKEuig2Ybcrp0d2fsKU86vh/maQFAEN/gUKMAU6+9L/rs1Hz400Xsu454Qb0A==
+X-Received: by 2002:a17:906:244d:b0:a51:e05f:2455 with SMTP id a13-20020a170906244d00b00a51e05f2455mr8326796ejb.48.1714388724878;
+        Mon, 29 Apr 2024 04:05:24 -0700 (PDT)
 Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id v19-20020a05651203b300b005159412ab81sm4072210lfp.216.2024.04.29.04.03.16
+        by smtp.gmail.com with ESMTPSA id n4-20020a170906378400b00a522fb5587esm11767090ejc.144.2024.04.29.04.05.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Apr 2024 04:03:16 -0700 (PDT)
-Message-ID: <015908b2-8fd1-42f2-b145-96765163d06b@redhat.com>
-Date: Mon, 29 Apr 2024 13:03:15 +0200
+        Mon, 29 Apr 2024 04:05:24 -0700 (PDT)
+Message-ID: <fe0bb552-52d8-4ae1-a20b-c7236cf1f255@redhat.com>
+Date: Mon, 29 Apr 2024 13:05:23 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,38 +67,38 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/10] Support partitioned systems
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240423204619.3946901-1-srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH v7 1/6] leds: rgb: leds-ktd202x: Get device properties
+ through fwnode to support ACPI
+To: Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+ Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
+ linux-kernel@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>,
+ Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
+References: <20240424065212.263784-1-hpa@redhat.com>
+ <20240424065212.263784-2-hpa@redhat.com>
 Content-Language: en-US
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240423204619.3946901-1-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <20240424065212.263784-2-hpa@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi,
 
-On 4/23/24 10:46 PM, Srinivas Pandruvada wrote:
-> A partitioned system has two PCI device per package compared to only one.
-> This doesn't change any TPMI functionality. Just while reading, different
-> MMIO region is used for TPMI instances.
+On 4/24/24 8:52 AM, Kate Hsuan wrote:
+> This LED controller is installed on a Xiaomi pad2 and it is an x86
+> platform. The original driver is based on the device tree and can't be
+> used for this ACPI based system. This patch migrated the driver to use
+> fwnode to access the properties. Moreover, the fwnode API supports the
+> device tree so this work won't affect the original implementations.
 > 
-> Some patches are not directly related to partitions, but added for easy
-> application of series.
-> 
-> Patches are applied on top of origin/review-hans branch as of April 23,
-> 2024.
+> Signed-off-by: Kate Hsuan <hpa@redhat.com>
+> Tested-by: André Apitzsch <git@apitzsch.eu> # on BQ Aquaris M5
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Thanks, patch looks good to me:
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
 Regards,
 
@@ -105,24 +106,205 @@ Hans
 
 
 
+> ---
+>  drivers/leds/rgb/Kconfig        |  1 -
+>  drivers/leds/rgb/leds-ktd202x.c | 64 +++++++++++++++++----------------
+>  2 files changed, 34 insertions(+), 31 deletions(-)
 > 
-> Srinivas Pandruvada (10):
->   platform/x86/intel/tpmi: Handle error from tpmi_process_info()
->   platform/x86/intel/tpmi: Check major version change for TPMI
->     Information
->   platform/x86/intel/tpmi: Align comments in kernel-doc
->   platform/x86/intel/tpmi: Add additional TPMI header fields
->   platform/x86: ISST: Use local variable for auxdev->dev
->   platform/x86: ISST: Shorten the assignments for power_domain_info
->   platform/x86: ISST: Support partitioned systems
->   platform/x86: ISST: Use in_range() to check package ID validity
->   platform/x86: ISST: Add dev_fmt
->   platform/x86: ISST: Add missing MODULE_DESCRIPTION
-> 
->  .../intel/speed_select_if/isst_if_common.c    |   1 +
->  .../intel/speed_select_if/isst_tpmi_core.c    | 345 +++++++++++++++---
->  drivers/platform/x86/intel/tpmi.c             |  39 +-
->  include/linux/intel_tpmi.h                    |  12 +-
->  4 files changed, 333 insertions(+), 64 deletions(-)
-> 
+> diff --git a/drivers/leds/rgb/Kconfig b/drivers/leds/rgb/Kconfig
+> index e66bd21b9852..14d6b294a786 100644
+> --- a/drivers/leds/rgb/Kconfig
+> +++ b/drivers/leds/rgb/Kconfig
+> @@ -17,7 +17,6 @@ config LEDS_GROUP_MULTICOLOR
+>  config LEDS_KTD202X
+>  	tristate "LED support for KTD202x Chips"
+>  	depends on I2C
+> -	depends on OF
+>  	select REGMAP_I2C
+>  	help
+>  	  This option enables support for the Kinetic KTD2026/KTD2027
+> diff --git a/drivers/leds/rgb/leds-ktd202x.c b/drivers/leds/rgb/leds-ktd202x.c
+> index 514965795a10..f1c810c415a4 100644
+> --- a/drivers/leds/rgb/leds-ktd202x.c
+> +++ b/drivers/leds/rgb/leds-ktd202x.c
+> @@ -99,7 +99,7 @@ struct ktd202x {
+>  	struct device *dev;
+>  	struct regmap *regmap;
+>  	bool enabled;
+> -	int num_leds;
+> +	unsigned long num_leds;
+>  	struct ktd202x_led leds[] __counted_by(num_leds);
+>  };
+>  
+> @@ -381,16 +381,19 @@ static int ktd202x_blink_mc_set(struct led_classdev *cdev,
+>  				 mc->num_colors);
+>  }
+>  
+> -static int ktd202x_setup_led_rgb(struct ktd202x *chip, struct device_node *np,
+> +static int ktd202x_setup_led_rgb(struct ktd202x *chip, struct fwnode_handle *fwnode,
+>  				 struct ktd202x_led *led, struct led_init_data *init_data)
+>  {
+> +	struct fwnode_handle *child;
+>  	struct led_classdev *cdev;
+> -	struct device_node *child;
+>  	struct mc_subled *info;
+>  	int num_channels;
+>  	int i = 0;
+>  
+> -	num_channels = of_get_available_child_count(np);
+> +	num_channels = 0;
+> +	fwnode_for_each_available_child_node(fwnode, child)
+> +		num_channels++;
+> +
+>  	if (!num_channels || num_channels > chip->num_leds)
+>  		return -EINVAL;
+>  
+> @@ -398,22 +401,22 @@ static int ktd202x_setup_led_rgb(struct ktd202x *chip, struct device_node *np,
+>  	if (!info)
+>  		return -ENOMEM;
+>  
+> -	for_each_available_child_of_node(np, child) {
+> +	fwnode_for_each_available_child_node(fwnode, child) {
+>  		u32 mono_color;
+>  		u32 reg;
+>  		int ret;
+>  
+> -		ret = of_property_read_u32(child, "reg", &reg);
+> +		ret = fwnode_property_read_u32(child, "reg", &reg);
+>  		if (ret != 0 || reg >= chip->num_leds) {
+> -			dev_err(chip->dev, "invalid 'reg' of %pOFn\n", child);
+> -			of_node_put(child);
+> -			return -EINVAL;
+> +			dev_err(chip->dev, "invalid 'reg' of %pfw\n", child);
+> +			fwnode_handle_put(child);
+> +			return ret;
+>  		}
+>  
+> -		ret = of_property_read_u32(child, "color", &mono_color);
+> +		ret = fwnode_property_read_u32(child, "color", &mono_color);
+>  		if (ret < 0 && ret != -EINVAL) {
+> -			dev_err(chip->dev, "failed to parse 'color' of %pOF\n", child);
+> -			of_node_put(child);
+> +			dev_err(chip->dev, "failed to parse 'color' of %pfw\n", child);
+> +			fwnode_handle_put(child);
+>  			return ret;
+>  		}
+>  
+> @@ -433,16 +436,16 @@ static int ktd202x_setup_led_rgb(struct ktd202x *chip, struct device_node *np,
+>  	return devm_led_classdev_multicolor_register_ext(chip->dev, &led->mcdev, init_data);
+>  }
+>  
+> -static int ktd202x_setup_led_single(struct ktd202x *chip, struct device_node *np,
+> +static int ktd202x_setup_led_single(struct ktd202x *chip, struct fwnode_handle *fwnode,
+>  				    struct ktd202x_led *led, struct led_init_data *init_data)
+>  {
+>  	struct led_classdev *cdev;
+>  	u32 reg;
+>  	int ret;
+>  
+> -	ret = of_property_read_u32(np, "reg", &reg);
+> +	ret = fwnode_property_read_u32(fwnode, "reg", &reg);
+>  	if (ret != 0 || reg >= chip->num_leds) {
+> -		dev_err(chip->dev, "invalid 'reg' of %pOFn\n", np);
+> +		dev_err(chip->dev, "invalid 'reg' of %pfw\n", fwnode);
+>  		return -EINVAL;
+>  	}
+>  	led->index = reg;
+> @@ -454,7 +457,7 @@ static int ktd202x_setup_led_single(struct ktd202x *chip, struct device_node *np
+>  	return devm_led_classdev_register_ext(chip->dev, &led->cdev, init_data);
+>  }
+>  
+> -static int ktd202x_add_led(struct ktd202x *chip, struct device_node *np, unsigned int index)
+> +static int ktd202x_add_led(struct ktd202x *chip, struct fwnode_handle *fwnode, unsigned int index)
+>  {
+>  	struct ktd202x_led *led = &chip->leds[index];
+>  	struct led_init_data init_data = {};
+> @@ -463,21 +466,21 @@ static int ktd202x_add_led(struct ktd202x *chip, struct device_node *np, unsigne
+>  	int ret;
+>  
+>  	/* Color property is optional in single color case */
+> -	ret = of_property_read_u32(np, "color", &color);
+> +	ret = fwnode_property_read_u32(fwnode, "color", &color);
+>  	if (ret < 0 && ret != -EINVAL) {
+> -		dev_err(chip->dev, "failed to parse 'color' of %pOF\n", np);
+> +		dev_err(chip->dev, "failed to parse 'color' of %pfw\n", fwnode);
+>  		return ret;
+>  	}
+>  
+>  	led->chip = chip;
+> -	init_data.fwnode = of_fwnode_handle(np);
+> +	init_data.fwnode = fwnode;
+>  
+>  	if (color == LED_COLOR_ID_RGB) {
+>  		cdev = &led->mcdev.led_cdev;
+> -		ret = ktd202x_setup_led_rgb(chip, np, led, &init_data);
+> +		ret = ktd202x_setup_led_rgb(chip, fwnode, led, &init_data);
+>  	} else {
+>  		cdev = &led->cdev;
+> -		ret = ktd202x_setup_led_single(chip, np, led, &init_data);
+> +		ret = ktd202x_setup_led_single(chip, fwnode, led, &init_data);
+>  	}
+>  
+>  	if (ret) {
+> @@ -490,15 +493,14 @@ static int ktd202x_add_led(struct ktd202x *chip, struct device_node *np, unsigne
+>  	return 0;
+>  }
+>  
+> -static int ktd202x_probe_dt(struct ktd202x *chip)
+> +static int ktd202x_probe_fw(struct ktd202x *chip)
+>  {
+> -	struct device_node *np = dev_of_node(chip->dev), *child;
+> +	struct fwnode_handle *child;
+> +	struct device *dev = chip->dev;
+>  	int count;
+>  	int i = 0;
+>  
+> -	chip->num_leds = (int)(unsigned long)of_device_get_match_data(chip->dev);
+> -
+> -	count = of_get_available_child_count(np);
+> +	count = device_get_child_node_count(dev);
+>  	if (!count || count > chip->num_leds)
+>  		return -EINVAL;
+>  
+> @@ -507,11 +509,11 @@ static int ktd202x_probe_dt(struct ktd202x *chip)
+>  	/* Allow the device to execute the complete reset */
+>  	usleep_range(200, 300);
+>  
+> -	for_each_available_child_of_node(np, child) {
+> +	device_for_each_child_node(dev, child) {
+>  		int ret = ktd202x_add_led(chip, child, i);
+>  
+>  		if (ret) {
+> -			of_node_put(child);
+> +			fwnode_handle_put(child);
+>  			return ret;
+>  		}
+>  		i++;
+> @@ -554,6 +556,8 @@ static int ktd202x_probe(struct i2c_client *client)
+>  		return ret;
+>  	}
+>  
+> +	chip->num_leds = (unsigned long)i2c_get_match_data(client);
+> +
+>  	chip->regulators[0].supply = "vin";
+>  	chip->regulators[1].supply = "vio";
+>  	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(chip->regulators), chip->regulators);
+> @@ -568,7 +572,7 @@ static int ktd202x_probe(struct i2c_client *client)
+>  		return ret;
+>  	}
+>  
+> -	ret = ktd202x_probe_dt(chip);
+> +	ret = ktd202x_probe_fw(chip);
+>  	if (ret < 0) {
+>  		regulator_bulk_disable(ARRAY_SIZE(chip->regulators), chip->regulators);
+>  		return ret;
+> @@ -605,7 +609,7 @@ static void ktd202x_shutdown(struct i2c_client *client)
+>  static const struct of_device_id ktd202x_match_table[] = {
+>  	{ .compatible = "kinetic,ktd2026", .data = (void *)KTD2026_NUM_LEDS },
+>  	{ .compatible = "kinetic,ktd2027", .data = (void *)KTD2027_NUM_LEDS },
+> -	{},
+> +	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, ktd202x_match_table);
+>  
 
