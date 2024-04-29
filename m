@@ -1,66 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0BE3C482
-	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 11:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA21BA2E
+	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 11:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714388912; cv=none; b=dAfjV+ET9SdPaBB+KaStQVhjKt9928fUQKjwoRL/pNlwmbpbiKnbTDwCfgEmQ/Vr0eUW4UxIQgu0RJcHTGdewnIIk2GW8zkHzgskzBUmiAqO7OaH0LGoP8RZS7JLLEQNQ5YyMPkbu6/KpmSON8b8/2XiwCDe1ZjngCLcRKO+Xoc=
+	t=1714389016; cv=none; b=n0ZpOyv2872VdyY+hervj+gOgr1GX3R1Kvf8EV7yP6Vj/r/wYR7Cm12hUSNXtjdXhZrb6LmM9q9/qq6rEqDDq3CGZRAMBPAhAbY8tPsPYFjilZga2m4xqNurzA3egA0zBNd/o6XVCJB44gm/CiYM+JTHg02wZD3wYs0GBILtAfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714388912; c=relaxed/simple;
-	bh=rp6+hKC+ad+mgkEi98DBJjCqcJINH+IEzxTI1mkGLxI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=hjE2zCh4xBC1JsgRcOCuI8ziwEAWeACCi9ivJdRNgzzqD+8xjeprQT51i6BM3OdXbN851DmwIGglS9iN9mTpFT/JZUR5jleTrEfYHLagG93PIfMXCQIoJY1xL2K2FsOVK5psTwqqkcOv4gwxzcH+Jj1Nwoa2vfEmYUxlxKJXEVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OiJZzC9m; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1714389016; c=relaxed/simple;
+	bh=ntnrAWCjAOHHGilIANLmGKab2I7VtQxYNxQHAql4D+o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H3OlvRmijSiTCTuh+zZjH+IgUJVbsuVE3M9l06WHoZTx6fIszJ3Q77Kr1PkI6+MT4CoWps/4hb271+8xLPiKOPThDUYdaoFVSsEGT+iPco88mXno3dneJNu5KQNYFnP49WOlKUzhRYv7Ss8WpmpMhWLqaSo4pyrWA6DPt8nCF24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UcA+jZDQ; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OiJZzC9m"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UcA+jZDQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714388909;
+	s=mimecast20190719; t=1714389014;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Fi9Ww5WN0UHN0lPfAwwVKTm5WIJO8LV9mSzNDaozAKk=;
-	b=OiJZzC9mieOw0dAUDNXRKXhE6xcKM6oDkIIMutKLVJgNihi3AMHHmu+ZmpzRkzHRDDUssg
-	Ti/nC/wfMZ6wfd9VW9lPEORUp1/4FBPrxAE8bDJiaWAcKnqYwNNfXKvbYox/W0z/LsJknq
-	oT/m6aoGafRxKAi+87PMzFmU8xQa7uk=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=TD7HmQbU9mOgAHiXzeaj3BhsO3Ox44E4vsCadC3C2WU=;
+	b=UcA+jZDQztu8dgPxSVZZVgH9RL9o+fqHebZtjd2BuCjQC8N7Y5L3wKNt+T1XD4IVGT6OxA
+	c+D/gFxTT2jxQtdfziH1YOLUUAMK4aW5zWo5TyPnUtdgVXvNnJapnDHiEgJ3CPpiWMXefF
+	jy0HGbuLIT60bOfzIMB/ScqcFKH4sQk=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-272-70vGdK72MVihAYJ1rbXL7A-1; Mon, 29 Apr 2024 07:08:23 -0400
-X-MC-Unique: 70vGdK72MVihAYJ1rbXL7A-1
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2da2f30cb50so34967261fa.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 04:08:22 -0700 (PDT)
+ us-mta-621-yVe5U4I0P-S31AyT8webrQ-1; Mon, 29 Apr 2024 07:10:12 -0400
+X-MC-Unique: yVe5U4I0P-S31AyT8webrQ-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a556121c01aso229040866b.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 04:10:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714388901; x=1714993701;
+        d=1e100.net; s=20230601; t=1714389010; x=1714993810;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fi9Ww5WN0UHN0lPfAwwVKTm5WIJO8LV9mSzNDaozAKk=;
-        b=LeiqUUqLUx4VGEmTN4j70NxoLaZUnk7xlbUrLVdspcC28SCZKbqiUxCgOnrzVJh9SG
-         g8hk6qk12S0VEJ+wSU8nkGwo4kHWZbnwg1HW5coY19OIMQRz6W5PwIMkqlmhOYfZNPQn
-         leTkcp/ip4k0nEOiqwR9MnLIr4w8M7Qt3Evz+/y39RuBMk1cEIr4yZt4yZoVX79SwQo6
-         a726NWwkMFzpcXX1iStFRmMjz5kOwtaEEkQdH5dy1RYma7VzFXY9MpLGDCUNMPgU7eNq
-         bSES0sMMYPTun5hflC5duZJbQx4okjWu2MY6HP6a1N8r5C5Q1Cc7woq5eZlo2M5sDuST
-         n6EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWcdDQ05gZ1U9E0L6Bno4vgSD7BtxKRlKCsl1/cgjH/NJLpm9i7Ddq1eEIU65JpXs6pQrEpAn0dqEdIs3zTo7lB9QoIffDT+uLe2BAsoE2T8RZvLg==
-X-Gm-Message-State: AOJu0YwTQI2FiQzoc/F9yI3O44ZumTwHIWjZjtI0bUcJpDMTF6oz8NYG
-	zx6ozsmBDwVo9NWVwClheZgtUJBQFWOWkRfRrMeh9Nv4FqgWDPbzcFCYpwBoP6vrr5CqjscD1rJ
-	r/XIz76BJcwfTeP2khNjoDRMu6CGPgdEO70/NbKpQj3v7LGsFZR9UONUtY8ZBIwlWF2oto5cQUp
-	lYO2g=
-X-Received: by 2002:ac2:58e4:0:b0:51a:c8ba:d908 with SMTP id v4-20020ac258e4000000b0051ac8bad908mr4900888lfo.62.1714388901471;
-        Mon, 29 Apr 2024 04:08:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG8/9kepMq4qGDA0SgBLzUsoTj90wfyKWPp2nBHN74LvVd8ORCf32skRlaD0gI0fxbnFiZi7g==
-X-Received: by 2002:ac2:58e4:0:b0:51a:c8ba:d908 with SMTP id v4-20020ac258e4000000b0051ac8bad908mr4900881lfo.62.1714388901138;
-        Mon, 29 Apr 2024 04:08:21 -0700 (PDT)
+        bh=TD7HmQbU9mOgAHiXzeaj3BhsO3Ox44E4vsCadC3C2WU=;
+        b=LhnztBL8KQn4K/bE0eU2f7POO0us/LB56Rr8lZJA7eJ9g11/Bah5VLkERi9MgiDr6u
+         yEx3bzeN3S4udA2/ERJKghq77kIaISCIk8qjKuTR2cLD5bcKIXovSkivgzehYx0KmbCc
+         qMFX3XgZsbrzSJfD/VhI7+v9TbkMrlbIkQhZ3qw25PT7AxXZheGM0KA5dkk5Qj4966dA
+         Cy+aLveBrRPMibhFPobZYV7z07hb5ihSlsna1pO6xEylMxlyfTVIcpK+FX5m9sgkySyu
+         MMqQjZq2q/pDZ2BjnIn6F+nCCoC2S6S7P3wg+fsVGpYyDiMxl1yU4rNqFUQl6B6Ya94v
+         SsKw==
+X-Forwarded-Encrypted: i=1; AJvYcCW1a0seke0CChYFHgCBe5M8idJp9ZpFNVHH+xQbrj70QkrlcrrJl0kchrhWNVVMd5liIo2sT4SV3VzDtA6A5zhK6H+DIy6Aq8cuZBOCkkb9L2laUQ==
+X-Gm-Message-State: AOJu0YwItF4hadXakfHoFY1Nc++BMZ82WbgaSYkZvvUz0tV7jemF3+J9
+	3ypkw1i+Y+bJUyo8j1s+Xe3OjyzNEQsmB7ouexQ4W4/tFHQMuKFOEbRJzVtNA/hghFsEUKsR3EE
+	ZoX0EzRdSrTEl/de3OU2OEZFqtzZzuGaJQJnY9p6SoGb5WKev+18pDbQGoZKCWaLf3+ZWHic=
+X-Received: by 2002:a17:906:b55:b0:a46:f9c2:f059 with SMTP id v21-20020a1709060b5500b00a46f9c2f059mr6219332ejg.22.1714389010013;
+        Mon, 29 Apr 2024 04:10:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFR0ojatb/lFEb/FPKwL15M19QpXBCdZhETLZLlSObDFRDmZLDdhpd83l15LAivhxDSQI6i4g==
+X-Received: by 2002:a17:906:b55:b0:a46:f9c2:f059 with SMTP id v21-20020a1709060b5500b00a46f9c2f059mr6219304ejg.22.1714389009649;
+        Mon, 29 Apr 2024 04:10:09 -0700 (PDT)
 Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id y20-20020a056402271400b00572300f0768sm5885853edd.79.2024.04.29.04.08.19
+        by smtp.gmail.com with ESMTPSA id jw17-20020a170906e95100b00a58df78ab27sm3049363ejb.166.2024.04.29.04.10.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Apr 2024 04:08:19 -0700 (PDT)
-Message-ID: <3e103075-c170-42e3-928b-41d3bb11e6e8@redhat.com>
-Date: Mon, 29 Apr 2024 13:08:18 +0200
+        Mon, 29 Apr 2024 04:10:09 -0700 (PDT)
+Message-ID: <6c692ae4-e78a-441d-8487-71a6ad4a4ed8@redhat.com>
+Date: Mon, 29 Apr 2024 13:10:08 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -68,8 +67,8 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/6] leds: rgb: leds-ktd202x: I2C ID tables for KTD2026
- and 2027
+Subject: Re: [PATCH v7 5/6] power: supply: power-supply-leds: Add
+ charging_orange_full_green trigger for RGB LED
 To: Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
  Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
  platform-driver-x86@vger.kernel.org,
@@ -77,31 +76,29 @@ To: Kate Hsuan <hpa@redhat.com>, Pavel Machek <pavel@ucw.cz>,
  =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
  linux-kernel@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>,
  Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
 References: <20240424065212.263784-1-hpa@redhat.com>
- <20240424065212.263784-3-hpa@redhat.com>
+ <20240424065212.263784-6-hpa@redhat.com>
 Content-Language: en-US
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240424065212.263784-3-hpa@redhat.com>
+In-Reply-To: <20240424065212.263784-6-hpa@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
 On 4/24/24 8:52 AM, Kate Hsuan wrote:
+> Add a charging_orange_full_green LED trigger and the trigger is based on
+> led_mc_trigger_event() which can set an RGB LED when the trigger is
+> triggered. The LED will show orange when the battery status is charging.
+> The LED will show green when the battery status is full.
+> 
+> Link: https://lore.kernel.org/linux-leds/f40a0b1a-ceac-e269-c2dd-0158c5b4a1ad@gmail.com/
+> 
+> Signed-off-by: Kate Hsuan <hpa@redhat.com>
+> Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Maybe start the commit message with:
-
-Add an i2c_device_id id_table to match manually instantiated
-(non device-tree / ACPI instantiated) KTD202x controllers as
-found on some x86 boards.
-
-?
-
-> This table shows the maximum support LED channel for KTD2026 and KTD-2027.
-> The 3-channel LED controller KTD2026 controls R/G/B three LEDs. The
-> 4-channel LED controller KTD2027 controls R/G/B and flashing LEDs.
-
-Other then that this looks good to me:
+Thanks, patch looks good to me:
 
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
@@ -111,37 +108,107 @@ Hans
 
 
 
-> 
-> Datasheet: https://www.kinet-ic.com/uploads/KTD2026-7-04h.pdf
-> Signed-off-by: Kate Hsuan <hpa@redhat.com>
 > ---
->  drivers/leds/rgb/leds-ktd202x.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  drivers/power/supply/power_supply_leds.c | 26 ++++++++++++++++++++++++
+>  include/linux/power_supply.h             |  2 ++
+>  2 files changed, 28 insertions(+)
 > 
-> diff --git a/drivers/leds/rgb/leds-ktd202x.c b/drivers/leds/rgb/leds-ktd202x.c
-> index f1c810c415a4..60ca6ec34336 100644
-> --- a/drivers/leds/rgb/leds-ktd202x.c
-> +++ b/drivers/leds/rgb/leds-ktd202x.c
-> @@ -606,6 +606,13 @@ static void ktd202x_shutdown(struct i2c_client *client)
->  	regmap_write(chip->regmap, KTD202X_REG_RESET_CONTROL, KTD202X_RSTR_RESET);
+> diff --git a/drivers/power/supply/power_supply_leds.c b/drivers/power/supply/power_supply_leds.c
+> index c7db29d5fcb8..8dd99199c65b 100644
+> --- a/drivers/power/supply/power_supply_leds.c
+> +++ b/drivers/power/supply/power_supply_leds.c
+> @@ -22,6 +22,9 @@
+>  static void power_supply_update_bat_leds(struct power_supply *psy)
+>  {
+>  	union power_supply_propval status;
+> +	unsigned int intensity_green[3] = {255, 0, 0};
+> +	unsigned int intensity_orange[3] = {128, 0, 255};
+> +	unsigned int intensity_red[3] = {0, 0, 255};
+>  
+>  	if (power_supply_get_property(psy, POWER_SUPPLY_PROP_STATUS, &status))
+>  		return;
+> @@ -36,12 +39,20 @@ static void power_supply_update_bat_leds(struct power_supply *psy)
+>  		/* Going from blink to LED on requires a LED_OFF event to stop blink */
+>  		led_trigger_event(psy->charging_blink_full_solid_trig, LED_OFF);
+>  		led_trigger_event(psy->charging_blink_full_solid_trig, LED_FULL);
+> +		led_mc_trigger_event(psy->charging_orange_full_green_trig,
+> +				     intensity_green,
+> +				     ARRAY_SIZE(intensity_green),
+> +				     LED_FULL);
+>  		break;
+>  	case POWER_SUPPLY_STATUS_CHARGING:
+>  		led_trigger_event(psy->charging_full_trig, LED_FULL);
+>  		led_trigger_event(psy->charging_trig, LED_FULL);
+>  		led_trigger_event(psy->full_trig, LED_OFF);
+>  		led_trigger_blink(psy->charging_blink_full_solid_trig, 0, 0);
+> +		led_mc_trigger_event(psy->charging_orange_full_green_trig,
+> +				     intensity_orange,
+> +				     ARRAY_SIZE(intensity_orange),
+> +				     LED_FULL);
+>  		break;
+>  	default:
+>  		led_trigger_event(psy->charging_full_trig, LED_OFF);
+> @@ -49,6 +60,10 @@ static void power_supply_update_bat_leds(struct power_supply *psy)
+>  		led_trigger_event(psy->full_trig, LED_OFF);
+>  		led_trigger_event(psy->charging_blink_full_solid_trig,
+>  			LED_OFF);
+> +		led_mc_trigger_event(psy->charging_orange_full_green_trig,
+> +				     intensity_red,
+> +				     ARRAY_SIZE(intensity_red),
+> +				     LED_OFF);
+>  		break;
+>  	}
+>  }
+> @@ -74,6 +89,11 @@ static int power_supply_create_bat_triggers(struct power_supply *psy)
+>  	if (!psy->charging_blink_full_solid_trig_name)
+>  		goto charging_blink_full_solid_failed;
+>  
+> +	psy->charging_orange_full_green_trig_name = kasprintf(GFP_KERNEL,
+> +		"%s-charging-orange-full-green", psy->desc->name);
+> +	if (!psy->charging_orange_full_green_trig_name)
+> +		goto charging_red_full_green_failed;
+> +
+>  	led_trigger_register_simple(psy->charging_full_trig_name,
+>  				    &psy->charging_full_trig);
+>  	led_trigger_register_simple(psy->charging_trig_name,
+> @@ -82,9 +102,13 @@ static int power_supply_create_bat_triggers(struct power_supply *psy)
+>  				    &psy->full_trig);
+>  	led_trigger_register_simple(psy->charging_blink_full_solid_trig_name,
+>  				    &psy->charging_blink_full_solid_trig);
+> +	led_trigger_register_simple(psy->charging_orange_full_green_trig_name,
+> +				    &psy->charging_orange_full_green_trig);
+>  
+>  	return 0;
+>  
+> +charging_red_full_green_failed:
+> +	kfree(psy->charging_blink_full_solid_trig_name);
+>  charging_blink_full_solid_failed:
+>  	kfree(psy->full_trig_name);
+>  full_failed:
+> @@ -101,10 +125,12 @@ static void power_supply_remove_bat_triggers(struct power_supply *psy)
+>  	led_trigger_unregister_simple(psy->charging_trig);
+>  	led_trigger_unregister_simple(psy->full_trig);
+>  	led_trigger_unregister_simple(psy->charging_blink_full_solid_trig);
+> +	led_trigger_unregister_simple(psy->charging_orange_full_green_trig);
+>  	kfree(psy->charging_blink_full_solid_trig_name);
+>  	kfree(psy->full_trig_name);
+>  	kfree(psy->charging_trig_name);
+>  	kfree(psy->charging_full_trig_name);
+> +	kfree(psy->charging_orange_full_green_trig_name);
 >  }
 >  
-> +static const struct i2c_device_id ktd202x_id[] = {
-> +	{"ktd2026", KTD2026_NUM_LEDS},
-> +	{"ktd2027", KTD2027_NUM_LEDS},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, ktd202x_id);
-> +
->  static const struct of_device_id ktd202x_match_table[] = {
->  	{ .compatible = "kinetic,ktd2026", .data = (void *)KTD2026_NUM_LEDS },
->  	{ .compatible = "kinetic,ktd2027", .data = (void *)KTD2027_NUM_LEDS },
-> @@ -621,6 +628,7 @@ static struct i2c_driver ktd202x_driver = {
->  	.probe = ktd202x_probe,
->  	.remove = ktd202x_remove,
->  	.shutdown = ktd202x_shutdown,
-> +	.id_table = ktd202x_id,
+>  /* Generated power specific LEDs triggers. */
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index c0992a77feea..9b6898085224 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -318,6 +318,8 @@ struct power_supply {
+>  	char *online_trig_name;
+>  	struct led_trigger *charging_blink_full_solid_trig;
+>  	char *charging_blink_full_solid_trig_name;
+> +	struct led_trigger *charging_orange_full_green_trig;
+> +	char *charging_orange_full_green_trig_name;
+>  #endif
 >  };
->  module_i2c_driver(ktd202x_driver);
 >  
 
