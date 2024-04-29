@@ -1,54 +1,54 @@
 Received: from wfhigh4-smtp.messagingengine.com (wfhigh4-smtp.messagingengine.com [64.147.123.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7211836C6;
-	Mon, 29 Apr 2024 21:22:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0859882D90;
+	Mon, 29 Apr 2024 21:25:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714425742; cv=none; b=FhPbE+ArO5CbLe/DIgmU5tuIxcEaWVtrURBwRV9vLl7VEJL6qIAOeAdnptTg33Itzv8GWKH9ttG/i5JWABXtlx49tKw6cOFOmL/2ebygDZTD4LZ0rRPcq43210iMsLNEsh7jHCkXG72FfeVlU44kEH1cLva4yWIlD4ZhEUElrIU=
+	t=1714425954; cv=none; b=DkK6cKRUJa8jO3tBb38OUWdjEqV9jf0rKK2JUi87JuhUfzmC5nAeg7AUreuP+Bb238snZittk/dJeUKczo9+cT63gj795kCIPLcBu0CXj39bofHLIuPxTuE7vyLWUK6UzC3XHpQkur6AZtU3nCNTI2SgskKIDFwin2lWdWgDLys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714425742; c=relaxed/simple;
-	bh=TfXq4JCL/Hs/bpkpYDBRIz7T31yLLfzQJKQtMc4ciJw=;
+	s=arc-20240116; t=1714425954; c=relaxed/simple;
+	bh=dQBRubZsYQuMnytLZJwJqxHoVwRnluEMpe2562DEkrA=;
 	h=Date:From:Subject:To:Cc:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RpOKxx/9nROG77jNQWzyaBkPlC50hJ+e/hlNZfKhPZHz1/JIE3SdbV7AI7Jew4SLHXVz5QgdJgvlYNorM29GA37X6gu2hjuZgnWjcHMrBDJ7y31+qc5nMArxbHNp32S0Lr9fj2iJNFtIZbu0h/GCyBFWUrVn6icAQLvJFwWAu2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=TP56wFuN; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Q365N2MQ; arc=none smtp.client-ip=64.147.123.155
+	 MIME-Version:Content-Type; b=DgKdQBeVuuKcVZ0Pw0NwhducfJjEHXVksE61UxrA/FKxzdDsUNnvwt9zTRUab/YyWL3K8OR7YK8OJ7FeDSnVgr+0k3KxBzJTsXTWiSYQh2y8noK1NOZEJBl5i/qb8W+cnoIuXcMzHP26GyRwT3AR+v7LKHm4rrXERAqE/3uu9DM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=XYM871hr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Bb2KdSON; arc=none smtp.client-ip=64.147.123.155
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="TP56wFuN";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Q365N2MQ"
+	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="XYM871hr";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Bb2KdSON"
 Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 4FFE91800124;
-	Mon, 29 Apr 2024 17:22:18 -0400 (EDT)
+	by mailfhigh.west.internal (Postfix) with ESMTP id 94D9B180017B;
+	Mon, 29 Apr 2024 17:25:51 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Mon, 29 Apr 2024 17:22:19 -0400
+  by compute2.internal (MEProxy); Mon, 29 Apr 2024 17:25:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
 	:cc:content-type:content-type:date:date:from:from:in-reply-to
 	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1714425737; x=1714512137; bh=sJmpB3SmOP
-	+OJLwp4SoU1l4+ZfNDN+uqj3tieQq4ilA=; b=TP56wFuNTGk7610MT/EaapZxL8
-	1YgTtUCuU4/gV2MmoguhOp4ze0XrAyx2XnypkKa6gFuWGxAwq6hMsMg9qulEfKaB
-	ap7P87AzubbEJ2VtNvPd3+5eKD3KOJVrkD0kZUMdTOzXOmNZE524hcTRZbByNutm
-	Ex1m67zReWM4lSRa0olnKdeW6CXMZI8KSzAAA5XNVjNbqVCiQaQZYTinPqjkWeMs
-	i21OEXoXbw6kObW3wLYcxRc9ox+uWjPsWIlHEnryuqR6kmZbaOrcinR96h0UIGld
-	Bt8hlwAaK801X5/7t34u7SalP7XLWnBIN0lHoIF46QsC02xcEyfzEuq7lgfQ==
+	:subject:to:to; s=fm2; t=1714425951; x=1714512351; bh=gS3ckrq8vt
+	l0jimEpRPVb4E0YJmt16m/9Kirg4P9Ces=; b=XYM871hrI/Ql5AeQdoCidhC2+3
+	cvFPplvPY7ZnOeDztmgc9r3N1a7XX7fDq/KnlC5XfekG97zol8K5mFT4NVGUj7mk
+	FPnfdGxW9jEn3sUHzP2QpxQWkFEpAROHWkv7lIS4Y3IW3MYO4wVsVkIqacPbR14a
+	onh1Ck/6iGB2WLSKl3URtsHPoJETq9nbqpkhAu5QVMmQX982uLMvfGHgOpEUKzWC
+	wPTeFOEerZA72zszTCS3qcGJuSrnYpXH7uumd1sl2EBcto5PEIYF+gKlILFx0oOq
+	g21uWKCJf4Wnr92KzeNMPT37tBcpHqjUDLKmQrMvwklk0VO6Hud3H2Gw1g9Q==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-type:content-type:date:date
 	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
 	:message-id:mime-version:references:reply-to:subject:subject:to
 	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1714425737; x=1714512137; bh=sJmpB3SmOP+OJLwp4SoU1l4+ZfND
-	N+uqj3tieQq4ilA=; b=Q365N2MQAaDI79NIg93sNtJid9WamQDMmU4F1j2MzcAc
-	vhf+xMxPgdROzQft7s0u4nf9c1YdxsZ5uZtTdg6HdcOepwdHMnnrjVXR8HoJh3a5
-	BNoZZWtRKeWVnOxhcSONMNY7GM+tAkWKfCwdjh96QEChIzISjVaFjGD5tKBildVD
-	2U+9HvAtVJcqFfg0wA0AOV34i0511qglq0RVzsXQAg6Cmcp9ltwX6ckZmsHTzGiT
-	XVL/Ofx++GgCdLM8LBmCM705bJDxRpqJiPi7rcaqJUyqoGDsXTFArFZNE9OpqHJR
-	aV1E49pvacq5HdTqn+3ORnMfrpZGelKwhxhyw/dnOw==
-X-ME-Sender: <xms:iQ8wZqfrFi6RFngwPK4pakzhdRRB9OAgU9x7CSHYztV3wx9KY4gsbQ>
-    <xme:iQ8wZkN8ZI9ZFUid0kaCKqlTDzTsApEaBlTYH4JTfEl4S3uJX6A-bbD-mW1T8tuDm
-    ZELbYykFCFA49MI6SU>
-X-ME-Received: <xmr:iQ8wZrhykfQrbhVwomhisXpiqx5ytFxdx2B6pDFMPAoaUXBmjyY815SK6wK9WWS4WSPTvw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdduuddgudehlecutefuodetggdotefrod
+	fm3; t=1714425951; x=1714512351; bh=gS3ckrq8vtl0jimEpRPVb4E0YJmt
+	16m/9Kirg4P9Ces=; b=Bb2KdSONS9lRPwk8A8DfMxLIXfpZGO0AwOy/o/BwO+SI
+	c9bo7VJ6/sQ5O/iONReLza5k3MGWbn8W4FvCxwFm+EfzvP9wZzuT1DBMTvfLmkan
+	rZHaOpCUOxUXsbEtl5DSm6QVcBEpDwcHnGm8rnqJ08HuYGmK8oS1bBgqTaClh6qs
+	o6CrfdENFHU0Y9w8piHgVnLC/S2mxfnRfxAJ6Zkw25+NaBSYVGTF7n+9LwpflSuA
+	imfRpQ9KSuhuup5Qmxb9ImgRVKdho4TnaorQO1QvdbJCzcPEWdPx4kOvnGHU6h4s
+	uXj/4OIePHVeB5L5+MMHLQgAV+G6686sl2PvYiNDoQ==
+X-ME-Sender: <xms:XhAwZgSF6FSITLbCxnbmSwyFXheVGyI7kC4w-5H343aGKLSVXK6g4g>
+    <xme:XhAwZtxWKG4kMGxqZQpeA00TdjffqnVPZUHjF9o7MmeWHKIAE2I2DjXpywOvfTtio
+    4dZgZjxnQ2ODOITzlw>
+X-ME-Received: <xmr:XhAwZt37Zvf5kQJMMtTLrXZyaKL9Zksv4IBkU_6PybBaH55QH-7z2sdxjLtGTqVjZJdYsg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdduuddgudeitdcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
     enucfjughrpeffhffuvfevkfgjfhfogggtsehttdertdertddvnecuhfhrohhmpefnhihn
@@ -56,15 +56,15 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdduuddgudehlecutefuodetgg
     frrghtthgvrhhnpeejffeukeegieejhfdvudegtdekfeevveetgffhveefueffgfdvveel
     ieduhfdtvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
     hmpehlshgrnhgthhgvsehlhihnuggvnhhordgtrg
-X-ME-Proxy: <xmx:iQ8wZn-UgmWYqfJjenyzaSCW7zsf5gd5ktVnP4lhgAt89QIUwtPc6w>
-    <xmx:iQ8wZmsYW80TcWkMO1XF3nGyp3QkEwpUW8qLEZCs3CIX99XRFCNUSA>
-    <xmx:iQ8wZuEjRBUOtKG1BQHkDvAcbtSy1-s4efOW6iTX6aysXPdFYxFQFQ>
-    <xmx:iQ8wZlP-SOp6NdxVGSnNa7iU93PBzsiMPPxhAgRlztPWzm1_t-OQZw>
-    <xmx:iQ8wZnmbNJtHaGnVxTbFecOzt41A5__E7DOY2b6_-pssyhmpO7471KVG>
+X-ME-Proxy: <xmx:XhAwZkA3wfe1HhSaV_i1rBWuVx3uDk29oRa6UPy-oKa5l5DQHYgkeQ>
+    <xmx:XhAwZpjKK8BtgFbJ67Oz0DVSrGO4ksguyKzjOa6BhZUgixpGSNbteQ>
+    <xmx:XhAwZgpvsD9Z3IZzjLSn4TfLQdfshYVc8KaHee_xHMjTIcCAoy4yUQ>
+    <xmx:XhAwZsjUtx22kzwBv-ciDhMN1dw3pGWQvh_U9NImmj67MU_DyUW2HQ>
+    <xmx:XxAwZuYy-n83ldxjQoJXEEL_6TDuLZvYNAvmG95XS5vPTCqFeNYonFj7>
 Feedback-ID: i1719461a:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 29 Apr 2024 17:22:11 -0400 (EDT)
-Date: Mon, 29 Apr 2024 15:21:59 -0600
+ 29 Apr 2024 17:25:44 -0400 (EDT)
+Date: Mon, 29 Apr 2024 15:25:34 -0600
 From: Lyndon Sanche <lsanche@lyndeno.ca>
 Subject: Re: [PATCH v3] platform/x86: dell-laptop: Implement platform_profile
 To: Mario Limonciello <mario.limonciello@amd.com>
@@ -72,11 +72,12 @@ Cc: pali@kernel.org, W_Armin@gmx.de, srinivas.pandruvada@linux.intel.com,
 	ilpo.jarvinen@linux.intel.com, Matthew Garrett <mjg59@srcf.ucam.org>,
 	Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
-Message-Id: <NC3QCS.LEAYSBJ8Y8GC1@lyndeno.ca>
-In-Reply-To: <5cbb8981-5e24-4dce-a78f-1cabc29f08e3@amd.com>
+Message-Id: <MI3QCS.72BHE7ZBD8ZE3@lyndeno.ca>
+In-Reply-To: <bcd4fc9f-8900-46bc-9577-d95fa67adc25@amd.com>
 References: <20240425172758.67831-1-lsanche@lyndeno.ca>
 	<20240429164844.7544-2-lsanche@lyndeno.ca>
 	<5cbb8981-5e24-4dce-a78f-1cabc29f08e3@amd.com>
+	<bcd4fc9f-8900-46bc-9577-d95fa67adc25@amd.com>
 X-Mailer: geary/44.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -88,63 +89,24 @@ Content-Type: text/plain; charset=us-ascii; format=flowed
 
 
 
-On Mon, Apr 29 2024 at 12:45:19 PM -05:00:00, Mario Limonciello 
+On Mon, Apr 29 2024 at 12:51:31 PM -05:00:00, Mario Limonciello 
 <mario.limonciello@amd.com> wrote:
-> On 4/29/2024 11:48, Lyndon Sanche wrote:
->>   #include <linux/i8042.h>
->>   #include <linux/debugfs.h>
->>   #include <linux/seq_file.h>
->> +#include <linux/platform_profile.h>
->> +#include <linux/bitfield.h>
+> On 4/29/2024 12:45, Mario Limonciello wrote:
+>> On 4/29/2024 11:48, Lyndon Sanche wrote:
+>>>   #define CLASS_KBD_BACKLIGHT 4
+>>>   #define SELECT_KBD_BACKLIGHT 11
+>>> +#define SELECT_THERMAL_MANAGEMENT 19
 > 
-> These should be inserted in alphabetical order.
+> I think you should insert this into dell-smbios-base.c under 
+> call_blacklist.  This will prevent userspace from fighting with the 
+> kernel on the same data when this code goes in.
 
-Agree
+Good idea, I have been using smbios-thermal-ctl for checking the state 
+when testing. I will include this in the patch, then smbios-thermal-ctl 
+cannot interfere.
 
->> +
->> +	// Clean up but do not fail
-> 
-> Switch comment style to /* */
-
-Agree
-
-> 
->> +	if (platform_profile_register(thermal_handler))
->> +		kfree(thermal_handler);
-> 
-> Don't you also want to return an error in this case?  Because this 
-> means that the platform supports thermal modes but it failed to setup 
-> due to other issues.
-> 
-> It's different than the case of no supported modes in which case 
-> returning 0 makes sense.
-> 
-> Maybe like this:
-> 
-> 
-> ret = platform_profile_register(thermal_handler);
-> if (ret)
-> 	kfree(thermal_handler);
-> 
-> return ret;
-
-Good idea, I will propogate this error. Failure of module will then 
-occur on allocation or platform_profile error.
-
-> 
-> 
->> 
->>   		goto fail_rfkill;
->>   	}
->>   +	// Do not fail module if thermal modes not supported, just skip
-> 
-> Switch comment style to /* */
-
-Agree.
-
-Thank you for this feedback.
+Thanks,
 
 Lyndon
-> 
 
 
