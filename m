@@ -1,112 +1,108 @@
-Received: from mail-4022.proton.ch (mail-4022.proton.ch [185.70.40.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B7B79EA
-	for <platform-driver-x86@vger.kernel.org>; Sun, 28 Apr 2024 19:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDD57F;
+	Mon, 29 Apr 2024 01:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.101.241.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714332410; cv=none; b=fu1zMRQTVvAy/L6iWBI7XlCz/WPnU4fWBLxZFCOCXYI3Zc7OqZWMPDfVN3rJQ/6/GFDPApZ2GguE4fI2Jgwi5kOMRFdT5Si5ruor8jjVo4UxQ7fLMH32LrvSPZP8bPX5JUmhAWRCSV7eOcqCq0xFUltd910PpWpNMgd++SZy0sE=
+	t=1714353548; cv=none; b=t2AUDE1KW4aZIX3py7FTrowlnCG6Fa20PZ7dh4dA5efjyn8vTAI3pjI5U9uQS7bX3BJ9QJR3SrR+x+ZTEIEOmkRMf8LW5eYwwMkp+2FpmSilQqbUeKNWGcYGdDqwJ8Pem4GtrG3pMBmqWNQBphcy9S3OOKQn6k6gJrLr1Hk2GqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714332410; c=relaxed/simple;
-	bh=7SeU37LkQUjBnW0vKM/OHdQSjwL1fMqh2Dr0tLsHXyE=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=MWsx2LYpW6YN5pqrp7KM4h+t1FMT1trOxpn377sfc6DB4zWREMyC4n4ZRSYvPNoHYsBix65rN8w15ecnNxziYLLowP+an60q7YnPKnSK6cE5kqrddkhimh0DGlgM7A96Vt8FWENHWwiixK90tY1jQha9LCTr0/jpHj+gawgxDEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bluemarch.art; spf=pass smtp.mailfrom=bluemarch.art; dkim=pass (2048-bit key) header.d=bluemarch.art header.i=@bluemarch.art header.b=W00eijjg; arc=none smtp.client-ip=185.70.40.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bluemarch.art
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bluemarch.art
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bluemarch.art header.i=@bluemarch.art header.b="W00eijjg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bluemarch.art;
-	s=protonmail2; t=1714332400; x=1714591600;
-	bh=7SeU37LkQUjBnW0vKM/OHdQSjwL1fMqh2Dr0tLsHXyE=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=W00eijjgfJQAt30WGglrJnav/ZykdRkD2O3Uy34DsavAvLMSnYqhVnDjMcvHex67U
-	 hihmxA85t8dwNUIpJHX/+/LoHBOtmtvtAxMRN6hylxYGy/FYtTDpkPcvJx1+CV5jiU
-	 ifIbYNC0eyFewVrB7THZNOH5QW4uwAgslcK2orVPnLYUEpgoyp6aLu5kmK6rzh4Flw
-	 hfoQFYNnv0cVZg6WyQM+28i2DteWtQKJhASRU1stQPdfkNBs86nbdBE7V/lceHBKmP
-	 di6hSovs+8YKAQ+TmAzOcZL5ieeG7TCjM7f68ZDDOFp2ncYS/JCVd0rR6Sfmjxcvvs
-	 RNkngUjEKoChw==
-Date: Sun, 28 Apr 2024 19:26:33 +0000
-To: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jwoithe@just42.net, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
-From: Szilard Fabian <szfabian@bluemarch.art>
-Cc: Szilard Fabian <szfabian@bluemarch.art>
-Subject: [PATCH] platform/x86/fujitsu-laptop: Replace sprintf() with sysfs_emit()
-Message-ID: <20240428192548.113261-1-szfabian@bluemarch.art>
-Feedback-ID: 87830438:user:proton
-X-Pm-Message-ID: 91986108e2b793fc817e8c7a9acf033c4c9c77e6
+	s=arc-20240116; t=1714353548; c=relaxed/simple;
+	bh=CKS3du/7e+GPCqzNT8eSGOvRiJ/GyU/R+Cz7M5rCuiE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y8CZujzCRQKEV+Pbi+PR3ZUc5vyxrB5ykttw/yIIzkmUUYKkcZzd0LM2SQ1mB6UV1JHg6fdpRSrNS3DFA5TR5b2jbIbTUqDnZf0UlgZK3/5a0FK0GhukW+8N2Y3pkJAmQP3f/ztqlZfi1netBduOW8quFhJ/3qdD2wIen5tadEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net; spf=pass smtp.mailfrom=just42.net; arc=none smtp.client-ip=150.101.241.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=just42.net
+Received: from marvin.atrad.com.au (marvin.atrad.com.au [192.168.0.2])
+	by server.atrad.com.au (8.18.1/8.18.1) with ESMTPS id 43T102D7008874
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Mon, 29 Apr 2024 10:30:03 +0930
+Date: Mon, 29 Apr 2024 10:30:02 +0930
+From: Jonathan Woithe <jwoithe@just42.net>
+To: Szilard Fabian <szfabian@bluemarch.art>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
+Subject: Re: [PATCH] platform/x86/fujitsu-laptop: Replace sprintf() with
+ sysfs_emit()
+Message-ID: <Zi7xEp5Gs4qtzB5p@marvin.atrad.com.au>
+References: <20240428192548.113261-1-szfabian@bluemarch.art>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240428192548.113261-1-szfabian@bluemarch.art>
+X-MIMEDefang-action: accept
+X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
 
-As suggested by Documentation/filesystems/sysfs.rst sysfs_emit() should be
-used when formatting the value to be returned to user space.
+On Sun, Apr 28, 2024 at 07:26:33PM +0000, Szilard Fabian wrote:
+> As suggested by Documentation/filesystems/sysfs.rst sysfs_emit() should be
+> used when formatting the value to be returned to user space.
+> 
+> Signed-off-by: Szilard Fabian <szfabian@bluemarch.art>
 
-Signed-off-by: Szilard Fabian <szfabian@bluemarch.art>
----
- drivers/platform/x86/fujitsu-laptop.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+This seems entirely reasonable.
 
-diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/f=
-ujitsu-laptop.c
-index 94480af49467..968fc91bd5e4 100644
---- a/drivers/platform/x86/fujitsu-laptop.c
-+++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -386,11 +386,11 @@ static ssize_t lid_show(struct device *dev, struct de=
-vice_attribute *attr,
- =09struct fujitsu_laptop *priv =3D dev_get_drvdata(dev);
-=20
- =09if (!(priv->flags_supported & FLAG_LID))
--=09=09return sprintf(buf, "unknown\n");
-+=09=09return sysfs_emit(buf, "unknown\n");
- =09if (priv->flags_state & FLAG_LID)
--=09=09return sprintf(buf, "open\n");
-+=09=09return sysfs_emit(buf, "open\n");
- =09else
--=09=09return sprintf(buf, "closed\n");
-+=09=09return sysfs_emit(buf, "closed\n");
- }
-=20
- static ssize_t dock_show(struct device *dev, struct device_attribute *attr=
-,
-@@ -399,11 +399,11 @@ static ssize_t dock_show(struct device *dev, struct d=
-evice_attribute *attr,
- =09struct fujitsu_laptop *priv =3D dev_get_drvdata(dev);
-=20
- =09if (!(priv->flags_supported & FLAG_DOCK))
--=09=09return sprintf(buf, "unknown\n");
-+=09=09return sysfs_emit(buf, "unknown\n");
- =09if (priv->flags_state & FLAG_DOCK)
--=09=09return sprintf(buf, "docked\n");
-+=09=09return sysfs_emit(buf, "docked\n");
- =09else
--=09=09return sprintf(buf, "undocked\n");
-+=09=09return sysfs_emit(buf, "undocked\n");
- }
-=20
- static ssize_t radios_show(struct device *dev, struct device_attribute *at=
-tr,
-@@ -412,11 +412,11 @@ static ssize_t radios_show(struct device *dev, struct=
- device_attribute *attr,
- =09struct fujitsu_laptop *priv =3D dev_get_drvdata(dev);
-=20
- =09if (!(priv->flags_supported & FLAG_RFKILL))
--=09=09return sprintf(buf, "unknown\n");
-+=09=09return sysfs_emit(buf, "unknown\n");
- =09if (priv->flags_state & FLAG_RFKILL)
--=09=09return sprintf(buf, "on\n");
-+=09=09return sysfs_emit(buf, "on\n");
- =09else
--=09=09return sprintf(buf, "killed\n");
-+=09=09return sysfs_emit(buf, "killed\n");
- }
-=20
- static DEVICE_ATTR_RO(lid);
---=20
-2.44.0
+Acked-by: Jonathan Woithe <jwoithe@just42.net>
 
-
+> ---
+>  drivers/platform/x86/fujitsu-laptop.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index 94480af49467..968fc91bd5e4 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -386,11 +386,11 @@ static ssize_t lid_show(struct device *dev, struct device_attribute *attr,
+>  	struct fujitsu_laptop *priv = dev_get_drvdata(dev);
+>  
+>  	if (!(priv->flags_supported & FLAG_LID))
+> -		return sprintf(buf, "unknown\n");
+> +		return sysfs_emit(buf, "unknown\n");
+>  	if (priv->flags_state & FLAG_LID)
+> -		return sprintf(buf, "open\n");
+> +		return sysfs_emit(buf, "open\n");
+>  	else
+> -		return sprintf(buf, "closed\n");
+> +		return sysfs_emit(buf, "closed\n");
+>  }
+>  
+>  static ssize_t dock_show(struct device *dev, struct device_attribute *attr,
+> @@ -399,11 +399,11 @@ static ssize_t dock_show(struct device *dev, struct device_attribute *attr,
+>  	struct fujitsu_laptop *priv = dev_get_drvdata(dev);
+>  
+>  	if (!(priv->flags_supported & FLAG_DOCK))
+> -		return sprintf(buf, "unknown\n");
+> +		return sysfs_emit(buf, "unknown\n");
+>  	if (priv->flags_state & FLAG_DOCK)
+> -		return sprintf(buf, "docked\n");
+> +		return sysfs_emit(buf, "docked\n");
+>  	else
+> -		return sprintf(buf, "undocked\n");
+> +		return sysfs_emit(buf, "undocked\n");
+>  }
+>  
+>  static ssize_t radios_show(struct device *dev, struct device_attribute *attr,
+> @@ -412,11 +412,11 @@ static ssize_t radios_show(struct device *dev, struct device_attribute *attr,
+>  	struct fujitsu_laptop *priv = dev_get_drvdata(dev);
+>  
+>  	if (!(priv->flags_supported & FLAG_RFKILL))
+> -		return sprintf(buf, "unknown\n");
+> +		return sysfs_emit(buf, "unknown\n");
+>  	if (priv->flags_state & FLAG_RFKILL)
+> -		return sprintf(buf, "on\n");
+> +		return sysfs_emit(buf, "on\n");
+>  	else
+> -		return sprintf(buf, "killed\n");
+> +		return sysfs_emit(buf, "killed\n");
+>  }
+>  
+>  static DEVICE_ATTR_RO(lid);
+> -- 
+> 2.44.0
+> 
+> 
