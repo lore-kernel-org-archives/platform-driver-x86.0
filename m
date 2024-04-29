@@ -1,210 +1,414 @@
-Received: from fout3-smtp.messagingengine.com (fout3-smtp.messagingengine.com [103.168.172.146])
+Received: from wfout7-smtp.messagingengine.com (wfout7-smtp.messagingengine.com [64.147.123.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524D3322E
-	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 12:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB218595F;
+	Mon, 29 Apr 2024 16:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714394401; cv=none; b=tmQi8vpXSo9q8+BZZO3M3dM4wMcXkwsns+qwnKfvrHlN3Hpq3gNQtbdQYA09/4lK0x84Z2MtAlTaGTC7lepp1BDn+dJlbO0ZQh1G54EINR+uoghrC0t0BUdfKPFUHxp3LmL8fh8I2M1ikd98M6AL5cppTkYnPKjgWcKqwA1ep8g=
+	t=1714409947; cv=none; b=rkLoS7Dbi/EeT0plk/RXJaX9yZ1LMKG1/oIjO7YuUxtfeaqXWEwNpx9t3jOFTlcsz6mbTydS36nM+L45Lbj5u7eh9PKpgfZngfh/3pDJ0t6vcjRUATCBGStDiNW6jXbCH1ToEauHRPz/NIRJQkx1Tw4eRWnFuTNlykIKGp/y5ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714394401; c=relaxed/simple;
-	bh=4PrKeir4bK54yWYxShK9W9HqP2DMEvTGNVTCCSOTXoc=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=b2YxrII4p5aQ6YoI4mccZhqcnBQd1VSDgswTxNaocCe5kwt/8eTeIOXBB9LI2AHeJt+Chcl/sAhxfK+bWqQmKMpt2lVqHEThOzwqWh5IolGNk8a5FC7p6up0yKNkWlzy+cl4WMscWN3s/MtbnmYng/rwO9uhFmB+4GSw3rl78l8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=bP0yGN4U; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HooB3xL2; arc=none smtp.client-ip=103.168.172.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1714409947; c=relaxed/simple;
+	bh=o5ddzOwpsLMZDc6Yz9gyrYwwQLk13a/bHgJ9M8fGxj4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ArujtAAhvYd+lUn0vuSkywSkpWiZLh3hqnXVnB/1KeRvEMwZLLhYPBvM1d5rUVizE9V/Kg8aapIo4qCvYsXq7b/wH0dkAImJAdiany/VLOUwkzzdFjcchG+KZPtli21GwBUiPHIvQYeqIpelLc3uT7edrWdb13xL7aKW+F9E3n4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=GFO3OI21; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JpjOF11k; arc=none smtp.client-ip=64.147.123.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="bP0yGN4U";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HooB3xL2"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 4094B138197F;
-	Mon, 29 Apr 2024 08:39:58 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute3.internal (MEProxy); Mon, 29 Apr 2024 08:39:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1714394398; x=1714480798; bh=hjKiwpe50k
-	J00uK1INTrQaTFhpsCGRDJdX8lxLYPHtE=; b=bP0yGN4UfldUlNlBNiN4e2G2hi
-	2at3zt+RsMZqWOeUN3P9QCdWRstqCjZoJGTV7B2mqnkpUTqGy26rI6lCbtQ7/ZVz
-	ZjLW2wSETanSsZN5a+PNmdsgD7sPktvnsQ/eX8pKsJSodpNsfFddeaf/LPMMTz01
-	xYU4aSRN/fPifu1tA/T7hLs6+XYI66HtIE9+tZ/jULctxFPBYhq8xVKWejwh8YBQ
-	Do69xFe4pKPo/FjUChbzQWniI42LQFrt1vCCzYe+BpcbKokWG6YI9bjSdMdAjiRB
-	UgtFLg+61QLhLLiGfeLps8wLW6WNI6KniX0rRIwefXu/MHGCKj1SXaaku1+A==
+	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="GFO3OI21";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JpjOF11k"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailfout.west.internal (Postfix) with ESMTP id 2C4691C000FC;
+	Mon, 29 Apr 2024 12:59:03 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 29 Apr 2024 12:59:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1714409942; x=
+	1714496342; bh=JgK/Kt4hl32qAVMHSJkvz/7NFmIpCjXK8EzE4Y8Nejo=; b=G
+	FO3OI219ipM4uwgFifA59+FiSFHNIXSIq8f5vkih7S/dCI0mz8t2/3AMP+urFiSI
+	E4wVyLfb+lwbeJeVLQ79IC5UH357ZjwdmQ2G/3WGEZhidBE8Ulo+/WeTAtrJriFk
+	8dgOpk1ryjH6qgEho2fSCMScu/b8Sks3JPGEMWqMqWj3i2nqDJFd9VF7+BQ9N62W
+	0abv1J9eVvrj7LYPZqyX8myj1Q9Fq/DjQLD4YOtvWkDK1k8pHB8Vtj2Sc2BZ+/yK
+	c0GDLDC0+SG72Ksr+LKVY0dMei3iViNvBS5+Ni49cPrHE9dWZ71VEhJEPjPbX7HQ
+	ezH6fMtn6CaFXfvW8ssXQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1714394398; x=1714480798; bh=hjKiwpe50kJ00uK1INTrQaTFhpsC
-	GRDJdX8lxLYPHtE=; b=HooB3xL2RpwZ0scS80kbLylH8hsChyTp74ai+H7TnPFy
-	iTE6bBJ2bz3LudHH7ypX6HGDugSgUo6rIn9Nvx24Q+w5sDa7gJjyotnwklPefEhq
-	7ldl0ocJ18eDyhSv8nasL5FLefLYBjBLdnvbNI+9WG0UVjMDlahSevkvbLjjz+Pc
-	v6ySaSIw7bji7+HWkp9gcHx40JRPB6v8/o0oMYfE5QLfbzWNmKVoB+l3dFAOhYjz
-	junYOmpc+bZSLIZkc0T+GJZdPBEv3/Gy+eKJZIAsFDTY029V6YbsdUALG0z5rm0Q
-	UmPBZGltTEMzKgyK50yoHoR49EaB55TzR5q+IPfbLQ==
-X-ME-Sender: <xms:HZUvZsrynyYmOlFje4tSbx2rsEHbrJZc3FdzpafgS58p8Vgobgvs8Q>
-    <xme:HZUvZir4aWxSgpZp8g-CdwTvY5HzUBcm58xhv8qTdZlViZxp1b9Q36x3nukAEsxZb
-    O1TphuzeJD43g37Cd8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdduuddgheegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
-    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
-    drtggrqeenucggtffrrghtthgvrhhnpeeivedtkeeftdefhfdugfelgeehieeivdefffek
-    jeetuddvueeijefgjeekudevtdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhs
-    ohhnqdhlvghnohhvohesshhquhgvsggsrdgtrg
-X-ME-Proxy: <xmx:HZUvZhO-LIiZLRM2wiyxNeymKN2mImvV-D_R4FFeKzG2I4Udk6jQzQ>
-    <xmx:HZUvZj5sOSYDzqaaecqJ18cV57jwrk5SUwO3uwKrJOB741oJeiVt4g>
-    <xmx:HZUvZr6OHqevGU6YJYEUZNnDvDotihrARX9Rw1dQJ3pXkYCAickGtw>
-    <xmx:HZUvZjgXUHhDpDSh2DfxnG3GtpJ7TZzNXZfR6vSbs1PE0A9bLfuyPg>
-    <xmx:HpUvZubgSYBUUSZDJbraoJIbAtvW_GMgV4Axw7pKQS5Y0khgqHiynq3c>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 935CFC60099; Mon, 29 Apr 2024 08:39:57 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-386-g4cb8e397f9-fm-20240415.001-g4cb8e397
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1714409942; x=
+	1714496342; bh=JgK/Kt4hl32qAVMHSJkvz/7NFmIpCjXK8EzE4Y8Nejo=; b=J
+	pjOF11kN25K4cFOBAnettDQkgLAw9th0yOgfqVVBS8Kzs4lWj5UBG+6+PpljKfQo
+	RAQlaLlWJwjP6tcIucbbm3xpATC5HL2iWw3s7rHvRK2QeqTdD/28YNmB7vk+Pk0C
+	SYZ9MxzTGdhVuxIQifqogu6yZALRz2HZ8kudDn0PJtHr4STFk6onVoRqavdp+P7/
+	R/RumHV9vaRxEs2vj8nSAGTYLTCpQphqCYDV7sp1xjfuDU+D8hzrxEprWgAhSD+H
+	pMgP4JXdLmy/MUT/ety6xR3/zvEmrHFtv8bRPj7kOEwrkPS7/ezyn53jhwIm+hhO
+	4jJzIsx0FghJ+6TZtQU/Q==
+X-ME-Sender: <xms:1dEvZn9eF_sVRm3nOZOIwukLmtcSQ45uuRCtorrDFxVOO2KPpoOiVg>
+    <xme:1dEvZjty425uDhH3cO0HPTAsIL2nd3ZYvu3cp_RgTbndKlElpM3HdiqtcHrpfZkSS
+    mJ09K83DloVqErrpXA>
+X-ME-Received: <xmr:1dEvZlD9PP_ZlCV9x2Sf2Lk4zcmbtUdk34G4aEiJpuB1MgcDwGnM3L4AOFg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdduuddguddthecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enogetfedtuddqtdduucdludehmdenucfjughrpefhvfevufffkffojghfggfgsedtkeer
+    tdertddtnecuhfhrohhmpefnhihnughonhcuufgrnhgthhgvuceolhhsrghntghhvgeslh
+    ihnhguvghnohdrtggrqeenucggtffrrghtthgvrhhnpeelhfeiffektdeludfgtefggeef
+    hefhtefhhfffueevhfdtkedvieekheeljeeiteenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehlshgrnhgthhgvsehlhihnuggvnhhordgtrg
+X-ME-Proxy: <xmx:1dEvZjcnMaOEJj3eRAeKPjQxw1BDbGU7vYdaWKXQ3abdyr97dA_j-g>
+    <xmx:1tEvZsPgILq07eqXXjhlceNtvQlYBtFTLN-D89Ads8V098i7nivgJg>
+    <xmx:1tEvZlmBmZihy69807Efpl7w490bWIXKbDiUUvZiF9R2GPsMUTGbgQ>
+    <xmx:1tEvZmuaO8LAg9yYONg3YfopDO1P0SjKNs0b1V_6_p6JclnhZrM2Kg>
+    <xmx:1tEvZlmc5izdTvMmGj5xjkciQL7Og1znkeeGWRYrLjXovq-Xo43lX5Lu>
+Feedback-ID: i1719461a:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 29 Apr 2024 12:59:00 -0400 (EDT)
+From: Lyndon Sanche <lsanche@lyndeno.ca>
+To: lsanche@lyndeno.ca
+Cc: mario.limonciello@amd.com,
+	pali@kernel.org,
+	W_Armin@gmx.de,
+	srinivas.pandruvada@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	Matthew Garrett <mjg59@srcf.ucam.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dell.Client.Kernel@dell.com
+Subject: [PATCH v3] platform/x86: dell-laptop: Implement platform_profile
+Date: Mon, 29 Apr 2024 10:48:26 -0600
+Message-ID: <20240429164844.7544-2-lsanche@lyndeno.ca>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240425172758.67831-1-lsanche@lyndeno.ca>
+References: <20240425172758.67831-1-lsanche@lyndeno.ca>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <28d295a8-7226-4222-b167-060a99134607@app.fastmail.com>
-In-Reply-To: <5ea90914-16f7-4904-b7a6-e1997880e5f0@redhat.com>
-References: <20240424122834.19801-1-hdegoede@redhat.com>
- <20240424122834.19801-23-hdegoede@redhat.com>
- <8f150aef-0d56-4c5b-af17-9c66084a3ae7@app.fastmail.com>
- <5ea90914-16f7-4904-b7a6-e1997880e5f0@redhat.com>
-Date: Mon, 29 Apr 2024 08:40:50 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Andy Shevchenko" <andy@kernel.org>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>
-Cc: "Vishnu Sankar" <vishnuocv@gmail.com>,
- "Nitin Joshi1" <njoshi1@lenovo.com>, ibm-acpi-devel@lists.sourceforge.net,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v2 22/24] platform/x86: thinkpad_acpi: Support for trackpoint
- doubletap
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
+Some Dell laptops support configuration of preset fan modes through
+smbios tables.
 
+If the platform supports these fan modes, set up platform_profile to
+change these modes. If not supported, skip enabling platform_profile.
 
-On Mon, Apr 29, 2024, at 5:57 AM, Hans de Goede wrote:
-> Hi Mark,
->
-> On 4/24/24 8:19 PM, Mark Pearson wrote:
->> Hi Hans,
->> 
->> On Wed, Apr 24, 2024, at 8:28 AM, Hans de Goede wrote:
->>> From: Mark Pearson <mpearson-lenovo@squebb.ca>
->>>
->>> Lenovo trackpoints are adding the ability to generate a doubletap event.
->>> This handles the doubletap event and sends the KEY_PROG4 event to
->>> userspace. Despite the driver itself not using KEY_PROG1 - KEY_PROG3 this
->>> still uses KEY_PROG4 because of some keys being remapped to KEY_PROG1 -
->>> KEY_PROG3 by default by the upstream udev hwdb containing:
->>>
->>> evdev:name:ThinkPad Extra Buttons:dmi:bvn*:bvr*:bd*:svnLENOVO*:pn*:*
->>>  ...
->>>  KEYBOARD_KEY_17=prog1
->>>  KEYBOARD_KEY_1a=f20       # Microphone mute button
->>>  KEYBOARD_KEY_45=bookmarks
->>>  KEYBOARD_KEY_46=prog2     # Fn + PrtSc, on Windows: Snipping tool
->>>  KEYBOARD_KEY_4a=prog3     # Fn + Right shift, on Windows: No idea
->>>
->>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->>> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
->>> Link: https://lore.kernel.org/r/20240417173124.9953-2-mpearson-lenovo@squebb.ca
->>> [hdegoede@redhat.com: Adjust for switch to sparse-keymap keymaps]
->>> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>> ---
->>>  drivers/platform/x86/thinkpad_acpi.c | 19 +++++++++++++++++++
->>>  1 file changed, 19 insertions(+)
->>>
->>> diff --git a/drivers/platform/x86/thinkpad_acpi.c 
->>> b/drivers/platform/x86/thinkpad_acpi.c
->>> index a53b00fecf1a..b6d6466215e1 100644
->>> --- a/drivers/platform/x86/thinkpad_acpi.c
->>> +++ b/drivers/platform/x86/thinkpad_acpi.c
->>> @@ -248,6 +248,9 @@ enum tpacpi_hkey_event_t {
->>>
->>>  	/* Misc */
->>>  	TP_HKEY_EV_RFKILL_CHANGED	= 0x7000, /* rfkill switch changed */
->>> +
->>> +	/* Misc2 */
->>> +	TP_HKEY_EV_TRACK_DOUBLETAP      = 0x8036, /* trackpoint doubletap */
->>>  };
->>>
->>>  
->>> /****************************************************************************
->>> @@ -3268,6 +3271,7 @@ static const struct key_entry keymap_lenovo[] 
->>> __initconst = {
->>>  	 * after switching to sparse keymap support. The mappings above use 
->>> translated
->>>  	 * scancodes to preserve uAPI compatibility, see 
->>> tpacpi_input_send_key().
->>>  	 */
->>> +	{ KE_KEY, TP_HKEY_EV_TRACK_DOUBLETAP /* 0x8036 */, { KEY_PROG4 } },
->>>  	{ KE_END }
->>>  };
->>>
->>> @@ -3817,6 +3821,17 @@ static bool hotkey_notify_6xxx(const u32 hkey, 
->>> bool *send_acpi_ev)
->>>  	return true;
->>>  }
->>>
->>> +static bool hotkey_notify_8xxx(const u32 hkey, bool *send_acpi_ev)
->>> +{
->>> +	switch (hkey) {
->>> +	case TP_HKEY_EV_TRACK_DOUBLETAP:
->>> +		tpacpi_input_send_key(hkey, send_acpi_ev);
->>> +		return true;
->>> +	default:
->>> +		return false;
->>> +	}
->>> +}
->>> +
->>>  static void hotkey_notify(struct ibm_struct *ibm, u32 event)
->>>  {
->>>  	u32 hkey;
->>> @@ -3893,6 +3908,10 @@ static void hotkey_notify(struct ibm_struct 
->>> *ibm, u32 event)
->>>  				known_ev = true;
->>>  			}
->>>  			break;
->>> +		case 8:
->>> +			/* 0x8000-0x8FFF: misc2 */
->>> +			known_ev = hotkey_notify_8xxx(hkey, &send_acpi_ev);
->>> +			break;
->>>  		}
->>>  		if (!known_ev) {
->>>  			pr_notice("unhandled HKEY event 0x%04x\n", hkey);
->>> -- 
->>> 2.44.0
->> 
->> Instead of needing hotkey_notify_8xxx, now we are using the sparse_keymap can we just use hotkey_notify_hotkey for case 8? No need to check what the hkey is either.
->
-> I prefer to keep things consistent and have each case #: path call a separate
-> helper for those #xxx codes.
->
-> ATM some of the simpler cases handle things directly, but as more 
-> handling for
-> different events get added that becomes a bit messy IMHO. I would 
-> actually
-> like to see those other cases converted to use a small helper function 
-> too
-> (with a switch-case in the helper for future proofing) to make things 
-> consistent.
->
-Got it - no problem.
+Signed-off-by: Lyndon Sanche <lsanche@lyndeno.ca>
+---
+v3:
+ - Convert smbios-thermal-ctl docs to multiline comment and wrap
+ - Change thermal_mode_bits enum to directly be BIT() values
+  - Convert related code to use this
+ - Use FIELD_GET/PREP and GENNMASK for getting/setting thermal modes
+  - Correct offset for getting current ACC mode, setting offset
+		unchanged
+ - Check if thermal_handler is allocated before freeing and
+	 unregistering platform_profile
+v2:
+ - Wrap smbios-thermal-ctl comment
+ - Return proper error code when invalid state returned
+ - Simplify platform_profile_get returns
+ - Propogate ENOMEM error
+---
+ drivers/platform/x86/dell/dell-laptop.c | 232 ++++++++++++++++++++++++
+ drivers/platform/x86/dell/dell-smbios.h |   1 +
+ 2 files changed, 233 insertions(+)
 
-> Patches to do this small cleanup are welcome.
->
-Sounds good. Will look at doing this.
+diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
+index 42f7de2b4522..fa58e7751d06 100644
+--- a/drivers/platform/x86/dell/dell-laptop.c
++++ b/drivers/platform/x86/dell/dell-laptop.c
+@@ -27,6 +27,8 @@
+ #include <linux/i8042.h>
+ #include <linux/debugfs.h>
+ #include <linux/seq_file.h>
++#include <linux/platform_profile.h>
++#include <linux/bitfield.h>
+ #include <acpi/video.h>
+ #include "dell-rbtn.h"
+ #include "dell-smbios.h"
+@@ -95,6 +97,7 @@ static struct backlight_device *dell_backlight_device;
+ static struct rfkill *wifi_rfkill;
+ static struct rfkill *bluetooth_rfkill;
+ static struct rfkill *wwan_rfkill;
++static struct platform_profile_handler *thermal_handler;
+ static bool force_rfkill;
+ static bool micmute_led_registered;
+ static bool mute_led_registered;
+@@ -2199,6 +2202,227 @@ static int mute_led_set(struct led_classdev *led_cdev,
+ 	return 0;
+ }
+ 
++/* Derived from smbios-thermal-ctl
++ *
++ * cbClass 17
++ * cbSelect 19
++ * User Selectable Thermal Tables(USTT)
++ * cbArg1 determines the function to be performed
++ * cbArg1 0x0 = Get Thermal Information
++ *  cbRES1         Standard return codes (0, -1, -2)
++ *  cbRES2, byte 0  Bitmap of supported thermal modes. A mode is supported if
++ *                  its bit is set to 1
++ *     Bit 0 Balanced
++ *     Bit 1 Cool Bottom
++ *     Bit 2 Quiet
++ *     Bit 3 Performance
++ *  cbRES2, byte 1 Bitmap of supported Active Acoustic Controller (AAC) modes.
++ *                 Each mode corresponds to the supported thermal modes in
++ *                  byte 0. A mode is supported if its bit is set to 1.
++ *     Bit 0 AAC (Balanced)
++ *     Bit 1 AAC (Cool Bottom
++ *     Bit 2 AAC (Quiet)
++ *     Bit 3 AAC (Performance)
++ *  cbRes3, byte 0 Current Thermal Mode
++ *     Bit 0 Balanced
++ *     Bit 1 Cool Bottom
++ *     Bit 2 Quiet
++ *     Bit 3 Performanc
++ *  cbRes3, byte 1  AAC Configuration type
++ *          0       Global (AAC enable/disable applies to all supported USTT modes)
++ *          1       USTT mode specific
++ *  cbRes3, byte 2  Current Active Acoustic Controller (AAC) Mode
++ *     If AAC Configuration Type is Global,
++ *          0       AAC mode disabled
++ *          1       AAC mode enabled
++ *     If AAC Configuration Type is USTT mode specific (multiple bits may be set),
++ *          Bit 0 AAC (Balanced)
++ *          Bit 1 AAC (Cool Bottom
++ *          Bit 2 AAC (Quiet)
++ *          Bit 3 AAC (Performance)
++ *  cbRes3, byte 3  Current Fan Failure Mode
++ *     Bit 0 Minimal Fan Failure (at least one fan has failed, one fan working)
++ *     Bit 1 Catastrophic Fan Failure (all fans have failed)
++ *  cbArg1 0x1   (Set Thermal Information), both desired thermal mode and
++ *               desired AAC mode shall be applied
++ *  cbArg2, byte 0  Desired Thermal Mode to set
++ *                  (only one bit may be set for this parameter)
++ *     Bit 0 Balanced
++ *     Bit 1 Cool Bottom
++ *     Bit 2 Quiet
++ *     Bit 3 Performance
++ *  cbArg2, byte 1  Desired Active Acoustic Controller (AAC) Mode to set
++ *     If AAC Configuration Type is Global,
++ *         0  AAC mode disabled
++ *         1  AAC mode enabled
++ *
++ *     If AAC Configuration Type is USTT mode specific
++ *     (multiple bits may be set for this parameter),
++ *         Bit 0 AAC (Balanced)
++ *         Bit 1 AAC (Cool Bottom
++ *         Bit 2 AAC (Quiet)
++ *         Bit 3 AAC (Performance)
++ */
++
++#define DELL_ACC_GET_FIELD GENMASK(19, 16)
++#define DELL_ACC_SET_FIELD GENMASK(11, 8)
++#define DELL_THERMAL_SUPPORTED GENMASK(3, 0)
++
++enum thermal_mode_bits {
++	DELL_BALANCED = BIT(0),
++	DELL_COOL_BOTTOM = BIT(1),
++	DELL_QUIET = BIT(2),
++	DELL_PERFORMANCE = BIT(3),
++};
++
++static int thermal_get_mode(void)
++{
++	struct calling_interface_buffer buffer;
++	int state;
++	int ret;
++
++	dell_fill_request(&buffer, 0x0, 0, 0, 0);
++	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAGEMENT);
++	if (ret)
++		return ret;
++	state = buffer.output[2];
++	if (state & DELL_BALANCED)
++		return DELL_BALANCED;
++	else if (state & DELL_COOL_BOTTOM)
++		return DELL_COOL_BOTTOM;
++	else if (state & DELL_QUIET)
++		return DELL_QUIET;
++	else if (state & DELL_PERFORMANCE)
++		return DELL_PERFORMANCE;
++	else
++		return -ENXIO;
++}
++
++static int thermal_get_supported_modes(int *supported_bits)
++{
++	struct calling_interface_buffer buffer;
++	int ret;
++
++	dell_fill_request(&buffer, 0x0, 0, 0, 0);
++	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAGEMENT);
++	if (ret)
++		return ret;
++	*supported_bits = FIELD_GET(DELL_THERMAL_SUPPORTED, buffer.output[1]);
++	return 0;
++}
++
++static int thermal_get_acc_mode(int *acc_mode)
++{
++	struct calling_interface_buffer buffer;
++	int ret;
++
++	dell_fill_request(&buffer, 0x0, 0, 0, 0);
++	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAGEMENT);
++	if (ret)
++		return ret;
++	*acc_mode = FIELD_GET(DELL_ACC_GET_FIELD, buffer.output[3]);
++	return 0;
++}
++
++static int thermal_set_mode(enum thermal_mode_bits state)
++{
++	struct calling_interface_buffer buffer;
++	int ret;
++	int acc_mode;
++
++	ret = thermal_get_acc_mode(&acc_mode);
++	if (ret)
++		return ret;
++
++	dell_fill_request(&buffer, 0x1, FIELD_PREP(DELL_ACC_SET_FIELD, acc_mode) | state, 0, 0);
++	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAGEMENT);
++	return ret;
++}
++
++static int thermal_platform_profile_set(struct platform_profile_handler *pprof,
++					enum platform_profile_option profile)
++{
++	switch (profile) {
++	case PLATFORM_PROFILE_BALANCED:
++		return thermal_set_mode(DELL_BALANCED);
++	case PLATFORM_PROFILE_PERFORMANCE:
++		return thermal_set_mode(DELL_PERFORMANCE);
++	case PLATFORM_PROFILE_QUIET:
++		return thermal_set_mode(DELL_QUIET);
++	case PLATFORM_PROFILE_COOL:
++		return thermal_set_mode(DELL_COOL_BOTTOM);
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static int thermal_platform_profile_get(struct platform_profile_handler *pprof,
++					enum platform_profile_option *profile)
++{
++	int ret = thermal_get_mode();
++
++	if (ret < 0)
++		return ret;
++
++	switch (ret) {
++	case DELL_BALANCED:
++		*profile = PLATFORM_PROFILE_BALANCED;
++		break;
++	case DELL_PERFORMANCE:
++		*profile = PLATFORM_PROFILE_PERFORMANCE;
++		break;
++	case DELL_COOL_BOTTOM:
++		*profile = PLATFORM_PROFILE_COOL;
++		break;
++	case DELL_QUIET:
++		*profile = PLATFORM_PROFILE_QUIET;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++int thermal_init(void)
++{
++	int ret;
++	int supported_modes;
++
++	ret = thermal_get_supported_modes(&supported_modes);
++	if (ret || !supported_modes)
++		return 0;
++
++	thermal_handler = kzalloc(sizeof(*thermal_handler), GFP_KERNEL);
++	if (!thermal_handler)
++		return -ENOMEM;
++	thermal_handler->profile_get = thermal_platform_profile_get;
++	thermal_handler->profile_set = thermal_platform_profile_set;
++
++	if (supported_modes & DELL_QUIET)
++		set_bit(PLATFORM_PROFILE_QUIET, thermal_handler->choices);
++	if (supported_modes & DELL_COOL_BOTTOM)
++		set_bit(PLATFORM_PROFILE_COOL, thermal_handler->choices);
++	if (supported_modes & DELL_BALANCED)
++		set_bit(PLATFORM_PROFILE_BALANCED, thermal_handler->choices);
++	if (supported_modes & DELL_PERFORMANCE)
++		set_bit(PLATFORM_PROFILE_PERFORMANCE, thermal_handler->choices);
++
++	// Clean up but do not fail
++	if (platform_profile_register(thermal_handler))
++		kfree(thermal_handler);
++
++	return 0;
++}
++
++void thermal_cleanup(void)
++{
++	if (thermal_handler) {
++		platform_profile_remove();
++		kfree(thermal_handler);
++	}
++}
++
+ static struct led_classdev mute_led_cdev = {
+ 	.name = "platform::mute",
+ 	.max_brightness = 1,
+@@ -2238,6 +2462,11 @@ static int __init dell_init(void)
+ 		goto fail_rfkill;
+ 	}
+ 
++	// Do not fail module if thermal modes not supported, just skip
++	ret = thermal_init();
++	if (ret)
++		goto fail_thermal;
++
+ 	if (quirks && quirks->touchpad_led)
+ 		touchpad_led_init(&platform_device->dev);
+ 
+@@ -2317,6 +2546,8 @@ static int __init dell_init(void)
+ 		led_classdev_unregister(&mute_led_cdev);
+ fail_led:
+ 	dell_cleanup_rfkill();
++fail_thermal:
++	thermal_cleanup();
+ fail_rfkill:
+ 	platform_device_del(platform_device);
+ fail_platform_device2:
+@@ -2344,6 +2575,7 @@ static void __exit dell_exit(void)
+ 		platform_device_unregister(platform_device);
+ 		platform_driver_unregister(&platform_driver);
+ 	}
++	thermal_cleanup();
+ }
+ 
+ /* dell-rbtn.c driver export functions which will not work correctly (and could
+diff --git a/drivers/platform/x86/dell/dell-smbios.h b/drivers/platform/x86/dell/dell-smbios.h
+index eb341bf000c6..585d042f1779 100644
+--- a/drivers/platform/x86/dell/dell-smbios.h
++++ b/drivers/platform/x86/dell/dell-smbios.h
+@@ -19,6 +19,7 @@
+ /* Classes and selects used only in kernel drivers */
+ #define CLASS_KBD_BACKLIGHT 4
+ #define SELECT_KBD_BACKLIGHT 11
++#define SELECT_THERMAL_MANAGEMENT 19
+ 
+ /* Tokens used in kernel drivers, any of these
+  * should be filtered from userspace access
+-- 
+2.42.0
 
-Mark
