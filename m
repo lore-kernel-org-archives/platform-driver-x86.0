@@ -1,115 +1,124 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698A0F9C3
-	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 10:03:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A175A175AD
+	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 10:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714385028; cv=none; b=uhGZcpxKJ7/oSSXGDmNz7vUyjBJAqD9e8D9Yg/OaOUnYBKtopR3vcDHIeZubWLfLL7+FiQkiDnQzzmtQjU+YrBQAXzPPHCB1bFCHQOdjL/tDRrKC8eO8HyssoRgHO1zUCEsOqiuD9pqLvQT5f6N3bnSJob+EYQWM269VRFMP22M=
+	t=1714385195; cv=none; b=VN8g6ceC2FDcz7Q5sNDmdu4rQaA9SLM6z9Al8cPcKY74HRIwfYN/YYGPJlIS/k0c/DttjpxVDEUDI+S/JATO6tTJSBLBTzubBINOktkcf9UxR+ua2AOvncLNBzTw7cjl/kWQzL9UyOsKFk/8Rvo9QRIXvLUpoiE2w7YhrHeL+L0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714385028; c=relaxed/simple;
-	bh=sKQj30EMZrnVGsY4qDPVU5jeMH1gYGjxCL0tENiy9PY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SRXZsl/Fj0OhdO+p2e5xVgG5JxmHvQU126xwQ80KlOalp248Lv9FyrgfC3woWPo4Eirg2V5lswGm//FHZknA24+FdpthFFf5IYo62rM/2GtZsGvKoozGq2yDajl7ap3w7bCH4biAO/XC+E20BirymQdPDCdtdEEh2qbcQRLX2dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xf5Gjk+t; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714385195; c=relaxed/simple;
+	bh=JY8KcHAAy1ynnUlBkW0InCu/ze++LVyVGKFQMnvgwdU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=GLKTnhTxPsQXsGahQ9MuCepUxthoKLm5it63DSBhU4hQMZLSwNyvLuSQOSQWeRmAaw9ABFWNU/imMWz4maherBE5ZHkf0toKj22fW1M8pOSKvcakhN4QKn1qWecCNCCrTOH6L82euHYmFMtbrirx/AgbO3E2uONsTKVP5r+OTLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cXY86/4j; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xf5Gjk+t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714385026;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I6hA4Rq4TRwKIDPNlrjGwovqEpFNEkS/ipDL5aGr/VA=;
-	b=Xf5Gjk+t81EGbssOmJJTfRmYdBCDuNKhrt2L0kQ37oOzw3x+TNkDQNFtQTta97fx+AHOQw
-	tizqxaQRJf6flTtUZUICZmcEPeQ6dhu8uQtpxqDzZyLaxZe3uYeI82SftAUu/HRjxM9ikw
-	g4r/CdH54TD6LfyNY0ddcl/Dm3Khd4Q=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-516-3wNRUVHsNL-oHeXBcJ4pfA-1; Mon, 29 Apr 2024 06:03:44 -0400
-X-MC-Unique: 3wNRUVHsNL-oHeXBcJ4pfA-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a52539e4970so279301966b.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Apr 2024 03:03:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714385022; x=1714989822;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I6hA4Rq4TRwKIDPNlrjGwovqEpFNEkS/ipDL5aGr/VA=;
-        b=WZQmly11pff94Afee5SgUM8oir8/Z3JTb3G9UC18ikMwoR7ojDi6TleBvOFMg2+/Iz
-         7ux5cOaP0C2DgmRKGRRiqHrnMcBQ3aXlr9V2BYY6QE8MZBYXqAB6lgj2AxkwuuvjTIjo
-         yliGdMKqVUCfcXvdVm+F7aULl/H0GyQ2qE6NO33JKir26HKrAdtpzWL6bDoac/v3T1HO
-         VHvZzxLMetEIslReYkQqd8DuAZsOiGIzOSsrTdJcWsobBq5i25gxwPunr10lUjBRmVEr
-         AgNU+3HuzgGO2dT/QB/Vznvsm13oHFlxhX3LDO7WBDLNBrptkKErMfcCcAOZUEpIW199
-         H8TA==
-X-Gm-Message-State: AOJu0YyRU046Yk85XbSeQaM4LW5RrQzK+EQfnPsyPEIX/MaXyXz1foKl
-	kSqXhFJ9wXJfcL0/DJeXl47hMXeNlLtHzO46KH3ZQl4p9MM6Rh0OTYHOHnMyEUTYczztvJ2BuOl
-	c4hbZejzyoFmB488rkynG/v93CZ0Ac7+lkeVeaceoPRm5M7OGCjaslGDdcFB+6+Qpx5NFgEI=
-X-Received: by 2002:a50:8a9b:0:b0:56a:ae8a:acc0 with SMTP id j27-20020a508a9b000000b0056aae8aacc0mr6875924edj.21.1714385022718;
-        Mon, 29 Apr 2024 03:03:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFnEC/zDAyj/PFoV2C9XknPAaXI2Ivqh2WT4ifkRE/foEtJ0yID1DCKBxBg7HvvUN5ZLW45Jw==
-X-Received: by 2002:a50:8a9b:0:b0:56a:ae8a:acc0 with SMTP id j27-20020a508a9b000000b0056aae8aacc0mr6875914edj.21.1714385022435;
-        Mon, 29 Apr 2024 03:03:42 -0700 (PDT)
-Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id es21-20020a056402381500b005725c56b35bsm3307703edb.71.2024.04.29.03.03.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Apr 2024 03:03:42 -0700 (PDT)
-Message-ID: <e3489dce-9d9b-4d3e-82f5-b5ba6a2ef1f9@redhat.com>
-Date: Mon, 29 Apr 2024 12:03:41 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cXY86/4j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714385193; x=1745921193;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=JY8KcHAAy1ynnUlBkW0InCu/ze++LVyVGKFQMnvgwdU=;
+  b=cXY86/4jYi/bMTFkaYK0Esjuo33Yl9eqiedZuQ8E2zMoj0Ui4x2NgS1U
+   iz7buSJ5CwYcGMErsSDymugBl0MAMUyqt5ZGIx4c6HgPmaKHOCN15oxEk
+   ScbpiOD8OPJ5PWv4j65VDcaQ2hZw0OYqo/sIT74ZQ6FiGUEeLubwJflWE
+   C5oI4s23sZoFwL7GpjtVxfm2TfpzozK0Wptjyh6N6/NuZqArClQQAdYPn
+   qkgXOlL24jChD6/HVkHYHUo1IW5vDiZC8/ZllZmvCJ7vM7Y4nxUiH94CW
+   oTPotKAwl/9v3Yw2NFSgbI5a55BNZGKr5athxNrbTl7tNnsYoQoVQQUO+
+   g==;
+X-CSE-ConnectionGUID: qohwESOKSaCXDQUOqJqe/A==
+X-CSE-MsgGUID: 84AMUWKmRUOOaWBs/GWgpA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="10159547"
+X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
+   d="scan'208";a="10159547"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 03:06:33 -0700
+X-CSE-ConnectionGUID: M3ABj0AiS8a34S9FudXypw==
+X-CSE-MsgGUID: bp28cTwGQYOCHGzSUp30NA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
+   d="scan'208";a="30747434"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.45])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 03:06:30 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 29 Apr 2024 13:06:26 +0300 (EEST)
+To: Hans de Goede <hdegoede@redhat.com>
+cc: Andy Shevchenko <andy@kernel.org>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+    Vishnu Sankar <vishnuocv@gmail.com>, Nitin Joshi <njoshi1@lenovo.com>, 
+    ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 16/24] platform/x86: thinkpad_acpi: Change
+ hotkey_reserved_mask initialization
+In-Reply-To: <b00d7c9c-db55-4337-84f1-fd1d19c00859@redhat.com>
+Message-ID: <1fdd3f05-523e-c882-9c9c-c406ff750ca3@linux.intel.com>
+References: <20240424122834.19801-1-hdegoede@redhat.com> <20240424122834.19801-17-hdegoede@redhat.com> <d56986cf-e400-4f8f-d2aa-0fb1bba297cf@linux.intel.com> <b00d7c9c-db55-4337-84f1-fd1d19c00859@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Use false to set
- acpi_send_ev to false
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>
-Cc: platform-driver-x86@vger.kernel.org
-References: <20240429093446.130322-1-hdegoede@redhat.com>
-Content-Language: en-US
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240429093446.130322-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-848392664-1714385060=:1286"
+Content-ID: <d14eeb24-bf8d-439d-cd48-ef0b1171a7ad@linux.intel.com>
 
-Hi,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 4/29/24 11:34 AM, Hans de Goede wrote:
-> acpi_send_ev is a bool and everywhere else true/false is used
-> to set it. Replace the one instance using 0 with false.
-> 
-> Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+--8323328-848392664-1714385060=:1286
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <35adacab-ba4f-cce6-2767-6b07abfc2a7c@linux.intel.com>
 
-I've added this to my review-hans (soon to be for-next) branch now.
+On Mon, 29 Apr 2024, Hans de Goede wrote:
+>
+> Thank you for reviewing this series.
+>=20
+> On 4/25/24 11:14 AM, Ilpo J=E4rvinen wrote:
+> > On Wed, 24 Apr 2024, Hans de Goede wrote:
+> >=20
+> >> Change the hotkey_reserved_mask initialization to hardcode the list
+> >> of reserved keys. There are only a few reserved keys and the code to
+> >> iterate over the keymap will be removed when moving to sparse-keymaps.
+> >=20
+> > Hi,
+> >=20
+> > Consider extending this explanation. It's hard to see how the old and n=
+ew=20
+> > code are identical because there are more KEY_RESERVED entries in the=
+=20
+> > array than in the new code. I can see the list of keys in the new code=
+=20
+> > matches to those set using tpacpi_hotkey_driver_mask_set() but it's har=
+d=20
+> > to connect the dots here.
+>=20
+> Right, this is basically the same question as which Mark asked. I've adde=
+d
+> the following to the commit message while merging this series to clarify =
+this:
+>=20
+> """
+> Note only the 32 original hotkeys are affected by any of the hotkey_*_mas=
+k
+> values, note:
+>=20
+>         if (i < sizeof(hotkey_reserved_mask)*8)
+>                 hotkey_reserved_mask |=3D 1 << i;
+>=20
+> The (i < sizeof(hotkey_reserved_mask)*8) condition translates to (i < 32)
+> so this code only ever set bits in hotkey_reserved_mask for the 32 origin=
+al
+> hotkeys. Therefor this patch does not set any bits in hotkey_reserved_mas=
+k
+> for the KEY_RESERVED mappings for the adaptive keyboard scancodes.
+> """
 
-Regards,
+Thanks for adding it, very clear now!
 
-Hans
-
-
-
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 7e2288009063..e2e6c4d3dff7 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -3912,7 +3912,7 @@ static void hotkey_notify(struct ibm_struct *ibm, u32 event)
->  			if (tp_features.hotkey_wlsw &&
->  					hkey == TP_HKEY_EV_RFKILL_CHANGED) {
->  				tpacpi_send_radiosw_update();
-> -				send_acpi_ev = 0;
-> +				send_acpi_ev = false;
->  				known_ev = true;
->  			}
->  			break;
-
+--=20
+ i.
+--8323328-848392664-1714385060=:1286--
