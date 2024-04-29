@@ -1,58 +1,83 @@
-Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDD57F;
-	Mon, 29 Apr 2024 01:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.101.241.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A528479;
+	Mon, 29 Apr 2024 03:17:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714353548; cv=none; b=t2AUDE1KW4aZIX3py7FTrowlnCG6Fa20PZ7dh4dA5efjyn8vTAI3pjI5U9uQS7bX3BJ9QJR3SrR+x+ZTEIEOmkRMf8LW5eYwwMkp+2FpmSilQqbUeKNWGcYGdDqwJ8Pem4GtrG3pMBmqWNQBphcy9S3OOKQn6k6gJrLr1Hk2GqU=
+	t=1714360650; cv=none; b=WugXaqwiQEwHoAusv0y5fNNdpz4aCJPvPNNjQpH2YxaXgCPghDAZ5Cf0tFBh6UCUaFwJzq4Y8AjRWRiLwzRLP/nYzxT2Ytf5BRZpGttHjmqBSjy15Yf+v0sGyg4QjdXcVippq/GziQ+UVgmahcwpFl7JOqg9g+G1U4KIt74vZyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714353548; c=relaxed/simple;
-	bh=CKS3du/7e+GPCqzNT8eSGOvRiJ/GyU/R+Cz7M5rCuiE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y8CZujzCRQKEV+Pbi+PR3ZUc5vyxrB5ykttw/yIIzkmUUYKkcZzd0LM2SQ1mB6UV1JHg6fdpRSrNS3DFA5TR5b2jbIbTUqDnZf0UlgZK3/5a0FK0GhukW+8N2Y3pkJAmQP3f/ztqlZfi1netBduOW8quFhJ/3qdD2wIen5tadEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net; spf=pass smtp.mailfrom=just42.net; arc=none smtp.client-ip=150.101.241.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=just42.net
-Received: from marvin.atrad.com.au (marvin.atrad.com.au [192.168.0.2])
-	by server.atrad.com.au (8.18.1/8.18.1) with ESMTPS id 43T102D7008874
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Mon, 29 Apr 2024 10:30:03 +0930
-Date: Mon, 29 Apr 2024 10:30:02 +0930
-From: Jonathan Woithe <jwoithe@just42.net>
-To: Szilard Fabian <szfabian@bluemarch.art>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
-Subject: Re: [PATCH] platform/x86/fujitsu-laptop: Replace sprintf() with
- sysfs_emit()
-Message-ID: <Zi7xEp5Gs4qtzB5p@marvin.atrad.com.au>
-References: <20240428192548.113261-1-szfabian@bluemarch.art>
+	s=arc-20240116; t=1714360650; c=relaxed/simple;
+	bh=LpZ9V9l5qJovLac16qnAWUf3Hb3AUmwg8mQ6a+IXK74=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=LHmz5+dYr5sXPm66fXvNEoqu/OE7zfrwc5ATEqVJelCg3i9fBzYMcaJaKhch9ldaesg9avz4LR68vRbneGC8UoWaGh+0F5mMw8FRCGek8x9s63H4Q3i7L+g1jTf1vl2BPsa7OErIJ4zdbbNCGPCOm1s6GT9sQPAj7vb0dH3R3ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g5vBSTSx; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g5vBSTSx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714360649; x=1745896649;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=LpZ9V9l5qJovLac16qnAWUf3Hb3AUmwg8mQ6a+IXK74=;
+  b=g5vBSTSxkqnS8oh+qHrKnNj7Tnvk8pof9ypRYTBxpEf3qOee4KJu1aDH
+   l38YIfNJpNeChRLm07PJ06uGvffEw1PhGFUWaLJgJjSwqx/bGpDlkoZ9/
+   DXnbPJvevVR5H26BTz6cl7GEO8wSZHOwbGARO3w6vACWEWolirwqynCOZ
+   WQnymrcY9v0YROAyuKQ51buYgNQrKO0ptHT/hnIQ4SnxWJcf9tfHuunMV
+   EOtnTOF4+swK4Bq2qEidZfNM9mqvm2kVhyUrOgWbCQB3hVOb1c+7mhFbB
+   RnEGi3voW1ZoV5PYrZ8/7JKbY+NuFisxTWlMtMkoBnoUg0w4OwnnrOmD3
+   g==;
+X-CSE-ConnectionGUID: mIBKOGZfRle8WQIrd4zGjw==
+X-CSE-MsgGUID: AkYXZ6U/QLm3wzT13asjHQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="10226751"
+X-IronPort-AV: E=Sophos;i="6.07,238,1708416000"; 
+   d="scan'208";a="10226751"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2024 20:17:28 -0700
+X-CSE-ConnectionGUID: kw3XAXG/RaymIdn1zh5qfg==
+X-CSE-MsgGUID: BTu6RewSQ4WPFi7knnvEUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,238,1708416000"; 
+   d="scan'208";a="56876721"
+Received: from kscheema-mobl.amr.corp.intel.com (HELO [10.251.17.13]) ([10.251.17.13])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2024 20:17:27 -0700
+Message-ID: <2e27438f-8f96-43fc-afa3-b2e34817a0fd@linux.intel.com>
+Date: Sun, 28 Apr 2024 20:17:26 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86/fujitsu-laptop: Replace sprintf() with
+ sysfs_emit()
+To: Szilard Fabian <szfabian@bluemarch.art>, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, jwoithe@just42.net,
+ hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
+References: <20240428192548.113261-1-szfabian@bluemarch.art>
+Content-Language: en-US
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 In-Reply-To: <20240428192548.113261-1-szfabian@bluemarch.art>
-X-MIMEDefang-action: accept
-X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Apr 28, 2024 at 07:26:33PM +0000, Szilard Fabian wrote:
+Hi,
+
+On 4/28/24 12:26 PM, Szilard Fabian wrote:
 > As suggested by Documentation/filesystems/sysfs.rst sysfs_emit() should be
 > used when formatting the value to be returned to user space.
-> 
+>
 > Signed-off-by: Szilard Fabian <szfabian@bluemarch.art>
-
-This seems entirely reasonable.
-
-Acked-by: Jonathan Woithe <jwoithe@just42.net>
-
 > ---
+
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
 >  drivers/platform/x86/fujitsu-laptop.c | 18 +++++++++---------
 >  1 file changed, 9 insertions(+), 9 deletions(-)
-> 
+>
 > diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
 > index 94480af49467..968fc91bd5e4 100644
 > --- a/drivers/platform/x86/fujitsu-laptop.c
@@ -102,7 +127,8 @@ Acked-by: Jonathan Woithe <jwoithe@just42.net>
 >  }
 >  
 >  static DEVICE_ATTR_RO(lid);
-> -- 
-> 2.44.0
-> 
-> 
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
