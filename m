@@ -1,181 +1,123 @@
-Received: from fhigh2-smtp.messagingengine.com (fhigh2-smtp.messagingengine.com [103.168.172.153])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A0D23C9;
-	Tue, 30 Apr 2024 18:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B782B1E52C;
+	Tue, 30 Apr 2024 21:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714502339; cv=none; b=TxAUFIeH8p3/Q8ypy+I1e/suS+czM7STuq5kYN3S2umH+bU+2ry8VYJ1lWgT7AnP7fB1vspMp/nmww22HMHKht919uPvzdKShnqeAu3WVm8vtRBp2aO21vfqvguBdKG7taV22uMYuhvOvFiYJJmsP5ndTH90xyW4SUesKJqoOro=
+	t=1714513279; cv=none; b=As7W+g85etL3pjbzVQuNV8xoAAa8BMTPsYClcKN1LrHdUM9Ft6zlCpMRant4g0Oa2i7dN6tSHpF7X27BzBvuh5dFKjoDd1qsiuEoxZK5Eq2FefBPiojAVUHPy7kZIrN5axEhKA+F4nXQ266U+paoldTLsol6nv0m/tspN1Br2wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714502339; c=relaxed/simple;
-	bh=BUbM4t3oqiVAbDg956xtEKGQp/WUp0rlclFojITBMIo=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=j/5dBzJfBlPR1PCzL/Jmm25E0advL4Z2RmxdA/TLfzOXZgqdfuDCrRmI3sO3ouzE6FX80ZOaflExFA4Brtx10qfL6Px0M8AfWaSKImBVPo0ZAsTQDhtIRjTZXJpLFgIbweThyoRjJLhiXNrVzlpfx/NAF5F7I9qAP0Ss02EBrR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=snV3ggZQ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jHuC3a8a; arc=none smtp.client-ip=103.168.172.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
+	s=arc-20240116; t=1714513279; c=relaxed/simple;
+	bh=9/DOjDzMqqIpe1Cr5IpxE30sH9jmN38JRgc2UZCcRY4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZUvnTqOLqNuAGkfUW9QBYfGcG7z+nmvT66KAN4UdbHIE4Qz3WrpioDIPP0jKy/OyCydSiE8uD7+nI4IwP5lo8uveIqxdsymOCHI40RFm4XM/qxQcyONWFSsfSNERkiY5EbPUKOhpebPfPEzWvE1VTYSpCMDXgmQeRL6EMYV9YX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZBBbcPhV; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="snV3ggZQ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jHuC3a8a"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 468D51140121;
-	Tue, 30 Apr 2024 14:38:56 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute5.internal (MEProxy); Tue, 30 Apr 2024 14:38:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1714502336;
-	 x=1714588736; bh=htMlaiKAEHd46q3bkXM/XEl9g3l+/DJfYlU33y1M7ss=; b=
-	snV3ggZQloW1SbwN3bhfuky5cnOO6iHOBI8EsE3rI0DNnntu/ls89gnidtY6Es7/
-	VuuT2BmjhL8T3uGXW2n5Z7s/C+ELENV/G9gcNBJnxj/fLYnseStqsgWqXeRo0598
-	E+3iciGKfJsea5+/o0xV+ZnF92qp7+l0FcInzma2R+SiMv7avksqNRHyTK5L9hkY
-	dQdcOTLfCLADyKqP+KyD2gm+agmdq8gY1hw03U/5Efhqk+YJGtjNiXtYFGwhg8K4
-	Rs8v7rp9vC73XgGE9pwIGS2MzE5f/redxnBppMRab0+eyJJfOxzaDI/LCLXeTA0C
-	3DBej73GpqVNEwJfAvvuEw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1714502336; x=
-	1714588736; bh=htMlaiKAEHd46q3bkXM/XEl9g3l+/DJfYlU33y1M7ss=; b=j
-	HuC3a8a/6ww/EYErsO4yuPdTipO3S47yuIGQWUzmF7tTwXAkGPj5pL2u9aQNrcfP
-	2RsmQLyTBwQOssBVB8X2xnoamzSTYcR0u25RDLsZBEN8Qxc20d5qdIUl/EPKVBQZ
-	wNTJ/mdzp1XYGjxUiu0fei7vhcEPzM6tjpt1Xf/RAhgY4IL6kV13+awol7M8Oi8Q
-	+gR5jwHcdnmNg16Ujy26Fimj83BkKpuAnwyJtndLGaqzACQWXxdxUh0XzNtFnTUM
-	+RQZsWE9AdEDpRjtR2ftra9FgCOSZVaEBBLqjzcvZcGQ07xSz7nA1zlo/gk7Mluv
-	2YOA5Dn2yb0P+No3odOBg==
-X-ME-Sender: <xms:vzoxZqx97TamvUQat38YLjt5ibRpermvBvEGtfDwIhG8NzKML4LgJg>
-    <xme:vzoxZmQmjQymypDdRWmgoaOjmqN_S4JkRqnl-YL68AJbmYQx8z-F7URhMfnvOFJL1
-    4uu9221b3rxfGkhtTM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddufedguddvhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedf
-    nfihnhguohhnucfurghntghhvgdfuceolhhsrghntghhvgeslhihnhguvghnohdrtggrqe
-    enucggtffrrghtthgvrhhnpeehfefgveejieevvdekgfeftddugfetgfetueelieduffet
-    ieelheetieevvdefkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehlshgrnhgthhgvsehlhihnuggvnhhordgtrg
-X-ME-Proxy: <xmx:vzoxZsWIJzyqZkdw5Tukm_dcFCZ912YB2NB0BJMb6awlTELfqLAJGA>
-    <xmx:vzoxZgimNVLLvjM_FlmD6VOlSbrVZLlx1yzUpwmStxDcXI_OPntCNg>
-    <xmx:vzoxZsClpm8ObUznLdxtH200FFXuCC566w9qe9CFzSNmSBRQR0vgIQ>
-    <xmx:vzoxZhKvxRBtLUIKdYZBUw1QgAaRENGPARaYyVCPp0SF2z53vEAXDg>
-    <xmx:wDoxZstYoKPfNeQ5dUe2rWxCVP10ngzdJjQd7GoA5KUEMzvTj6GXUHhV>
-Feedback-ID: i1719461a:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id C6ABAC60098; Tue, 30 Apr 2024 14:38:55 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-416-g2c1796742e-fm-20240424.001-g2c179674
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZBBbcPhV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714513278; x=1746049278;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9/DOjDzMqqIpe1Cr5IpxE30sH9jmN38JRgc2UZCcRY4=;
+  b=ZBBbcPhVltPj7begrFMCcJ4Urnu/JjGWAJKfCqmDDs1cxPEx4XcK+1wx
+   YHTn4FDmNgV4jxV/81KiYDD1uAsPAXEwhhK7DvpZ9vCHkaEB5lw+woEZg
+   1+PNp8OA0taz4o/RfAFfMkPDmeR3zSV33qK5t8eZXLBMcsEQoBcZf7g20
+   w+Uzu3LOMbgUnfuFNRJrXY4/0hIgF80wZ/8txfdwO0WcGmNZiO5xwNhRL
+   7ix0getK9FVGwx9BYlxkJpVrn4zb0kYrlR357RRAaD1tq8Ad4WFFwv2Fr
+   rhIAvBTnKcbPbbD/q+uGdtW7fLX40jQiOaIHcuON5EPH5p089l+sjDaW9
+   g==;
+X-CSE-ConnectionGUID: PW5ojW1QTvu6gmapnjZ93A==
+X-CSE-MsgGUID: au6V1T2pRSaXsqq2WXX8bw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="14023056"
+X-IronPort-AV: E=Sophos;i="6.07,243,1708416000"; 
+   d="scan'208";a="14023056"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 14:41:17 -0700
+X-CSE-ConnectionGUID: jyIqOWrdSd6haZJlHP9tDQ==
+X-CSE-MsgGUID: 8vyoVP9ORxifald+d/axjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,243,1708416000"; 
+   d="scan'208";a="26693363"
+Received: from chang-linux-3.sc.intel.com ([172.25.66.175])
+  by fmviesa006.fm.intel.com with ESMTP; 30 Apr 2024 14:41:16 -0700
+From: "Chang S. Bae" <chang.seok.bae@intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	tony.luck@intel.com,
+	ashok.raj@intel.com,
+	jithu.joseph@intel.com,
+	chang.seok.bae@intel.com
+Subject: [PATCH 0/2] x86/fpu: Extend kernel_fpu_begin_mask() for the In-Field Scan driver
+Date: Tue, 30 Apr 2024 14:25:06 -0700
+Message-Id: <20240430212508.105117-1-chang.seok.bae@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <992f3688-fff9-4970-a5f4-103fd868551d@app.fastmail.com>
-In-Reply-To: <6075bdd1-324c-ced7-4424-826b50767afc@linux.intel.com>
-References: <20240425172758.67831-1-lsanche@lyndeno.ca>
- <20240429164844.7544-2-lsanche@lyndeno.ca>
- <6075bdd1-324c-ced7-4424-826b50767afc@linux.intel.com>
-Date: Tue, 30 Apr 2024 12:38:35 -0600
-From: "Lyndon Sanche" <lsanche@lyndeno.ca>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: mario.limonciello@amd.com, pali@kernel.org, W_Armin@gmx.de,
- srinivas.pandruvada@linux.intel.com, "Matthew Garrett" <mjg59@srcf.ucam.org>,
- "Hans de Goede" <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, Dell.Client.Kernel@dell.com
-Subject: Re: [PATCH v3] platform/x86: dell-laptop: Implement platform_profile
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 30, 2024, at 4:31 AM, Ilpo J=C3=A4rvinen wrote:
-> On Mon, 29 Apr 2024, Lyndon Sanche wrote:
->> + */
->> +
->> +#define DELL_ACC_GET_FIELD GENMASK(19, 16)
->> +#define DELL_ACC_SET_FIELD GENMASK(11, 8)
->> +#define DELL_THERMAL_SUPPORTED GENMASK(3, 0)
->
-> Please align these with tabs.
->
+The recent update [1] in the SDM highlights the requirement of
+initializing the AMX state for executing the scan test:
+    "... maintaining AMX state in a non-initialized state ... will
+     prevent the execution of In-Field Scan tests."
+which is one of CPU state conditions required for the test's execution.
 
-Agreed.
+In situations where AMX workloads are running, the switched-away active
+user AMX state remains due to the optimization to reduce the state
+switching cost. A user state reload is fully completed right before
+returning to userspace. Consequently, if the switched-in kernel task is
+executing the scan test, this non-initialized AMX state causes the test
+to be unable to start.
 
->> +enum thermal_mode_bits {
->> +	DELL_BALANCED =3D BIT(0),
->> +	DELL_COOL_BOTTOM =3D BIT(1),
->> +	DELL_QUIET =3D BIT(2),
->> +	DELL_PERFORMANCE =3D BIT(3),
->
-> You need #include <linux/bits.h> for BIT().
->
+Given the benefit of the scan test in detecting hardware faults, ensuring
+its seamless execution is not negligible. This necessitates a proper API
+for the driver code to initialize AMX states. Although fpu_idle_fpregs()
+may initialize the AMX state, its primary usage should be limited to
+sleep state handling, making it unsuitable for the scan test.
 
-Agreed.
+The across-architecture FPU API, kernel_fpu_begin()/kernel_fpu_end(), is
+universally established for floating-point SIMD code in the kernel. On
+x86, kernel_fpu_begin_mask() is available, with kernel_fpu_begin()
+serving as a wrapper to it for initializing legacy states by default.
 
->> +	}
->> +}
->> +
->> +static int thermal_platform_profile_get(struct platform_profile_hand=
-ler *pprof,
->> +					enum platform_profile_option *profile)
->> +{
->> +	int ret =3D thermal_get_mode();
->> +
->> +	if (ret < 0)
->
-> I think I already mentioned about this, change to:
->
-> 	int ret;
->
-> 	ret =3D thermal_get_mode();
-> 	if (ret < 0)
->
+The proposed solution extends kernel_fpu_begin_mask() to accept a new
+option for initializing the AMX state. Additionally, it introduces custom
+FPU handling wrappers for the In-Field Scan driver, which are variants of
+kernel_fpu_begin()/kernel_fpu_end(). This approach is considerably
+compliant with established semantics, following the EFI case with
+efi_fpu_begin/efi_fpu_end().
 
-I missed this.
+Thanks,
+Chang
 
->> +		return ret;
->> +
->> +	switch (ret) {
->> +	case DELL_BALANCED:
->> +		*profile =3D PLATFORM_PROFILE_BALANCED;
->> +		break;
->> +	case DELL_PERFORMANCE:
->> +		*profile =3D PLATFORM_PROFILE_PERFORMANCE;
->> +		break;
->> +	case DELL_COOL_BOTTOM:
->> +		*profile =3D PLATFORM_PROFILE_COOL;
->> +		break;
->> +	case DELL_QUIET:
->> +		*profile =3D PLATFORM_PROFILE_QUIET;
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +int thermal_init(void)
->> +{
->> +	int ret;
->> +	int supported_modes;
->> +
->> +	ret =3D thermal_get_supported_modes(&supported_modes);
->> +	if (ret || !supported_modes)
->> +		return 0;
->
-> I think you should propagate the error code differently from nothing=20
-> supported:
->
-> 	if (ret < 0)
-> 		return ret;
-> 	if (!supported_modes)
-> 		return 0;
->
+[1] Intel Software Development Manual as of March 2024, Section 18.2
+    RECOMMENDATIONS FOR SYSTEM SOFTWARE of Vol. 1.
+    https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html
 
-Agreed.
+Chang S. Bae (2):
+  x86/fpu: Extend kernel_fpu_begin_mask() to initialize AMX state
+  platform/x86/intel/ifs: Initialize AMX state for the scan test
 
-Thank you for your feedback.
+ arch/x86/include/asm/fpu/api.h           |  1 +
+ arch/x86/kernel/fpu/core.c               |  3 +++
+ drivers/platform/x86/intel/ifs/ifs.h     | 14 ++++++++++++++
+ drivers/platform/x86/intel/ifs/runtest.c |  6 ++++++
+ 4 files changed, 24 insertions(+)
 
-Lyndon
+
+base-commit: e67572cd2204894179d89bd7b984072f19313b03
+-- 
+2.34.1
+
