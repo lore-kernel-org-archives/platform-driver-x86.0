@@ -1,151 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE5B1E493;
-	Tue, 30 Apr 2024 15:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B25180A8D;
+	Tue, 30 Apr 2024 16:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714491462; cv=none; b=EU0EWV6IBw7BcRU6SXqXRa5jDaBp0SEhFcsoGJzO0W4uVB2rx/fAphaKFLG5x6U2IVkHCiMFZaeFfL/M3Q1H9yZ4mXd1zlly/HgTKeurQa6jxj2s2H/XcP3Hd3iFAP5cEu7OXyJ5eV8p1yW09JpMQjRshh6P1Sn/67OOnwSaOpc=
+	t=1714494796; cv=none; b=CpKUuHRWJBx6s7pBy6isapRDZ2mF5oPH9uPWTbiVi6/4btWI0k47M1dvydUsCtirO1Hmbup4YPy5xufqmH7GkiOAKgr2Rabhe8YOoW4k8ppxy8u/uSRMLs+J7lzpBLicD8IKEeMNa0uJRX942g+BMwGAvcCrvAqLeG8MCZ1nkno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714491462; c=relaxed/simple;
-	bh=mzCvvGmzi+tDG2LjR2pFFqD74q9WqTrcAc4c07C/Kig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KrdT85nBn398VCoSY1C7KqILAMBqh1vCmzGuKWTdR/fL0qMiVK47IjJb/weeNn+NqEr1QQnoWhHxcuEzUTwnidRK60hUPCNpqc9jUvvV6721dp9s4Gxo2kdu8t/fQof1cvrKiQUy/SDqYQzAyLR0V/jE/2NiXJ44s+k27usy0+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TJH82wkB; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714494796; c=relaxed/simple;
+	bh=2VW8d61N4NAeyGCm2dkIywGhQ7MuUKwRdc6tMwJHRnY=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=aJnogpI6H/Q/2/1YbZQg2zDdnep4wGqQGcYLVNDC0bVvFgY66BCnjJ5Ese6RcnEiKNATiKvPm3SA6pmY+k8FxEGaFe/OJQqPQLtxas1TWYzW45HQdBWmgyiIBT75Wru9nQZtlZwaronuTwd5gQUBmuItc/XHYm9mlBRBFv8ah3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TjfLl3XL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TJH82wkB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714491461; x=1746027461;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mzCvvGmzi+tDG2LjR2pFFqD74q9WqTrcAc4c07C/Kig=;
-  b=TJH82wkBPexVkwXuHq0vTj1ypL3+F0zMA//Qt5AFZoZCmzREvKMkQK6Z
-   EFPeL0Rqi9AFXNm/qwpc2h2N7hlzFx91vbtDbYv9HlMiBmNxi46ECdPR2
-   bVnIitnVEE3lU/iZzkbGZ3Ykvg+N9zVlIChz6vlnD8AkyH6DhDVW+Ssxx
-   kK1ps2977XHFx3PcAYPCNJkmvBWkiwfdKR0rejI1960yG1hZe6HITV6jK
-   IAAFs71MvAj7AtJuEvLBGk5bu7FLj7bG4W6KieP/9fb9Z8HYM594uHE3p
-   YkSjxbwKvoPtStH/WysA9/pnQXqpHAqV/4NcttSvBbaqstfKK2xax65Ve
-   g==;
-X-CSE-ConnectionGUID: pYTmHjg0RtyrA4T7T9vx2g==
-X-CSE-MsgGUID: meWQBy2fQtirF912RQ+AUQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11060"; a="10427251"
-X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="10427251"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2024 08:37:31 -0700
-X-CSE-ConnectionGUID: zSro6sTXTzSbDRXyhuVpRA==
-X-CSE-MsgGUID: 0mMX/D5zQ6OfbTmGwMreXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,242,1708416000"; 
-   d="scan'208";a="57385201"
-Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 30 Apr 2024 08:37:28 -0700
-Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s1pXp-0008HF-2a;
-	Tue, 30 Apr 2024 15:37:25 +0000
-Date: Tue, 30 Apr 2024 23:36:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Lyndon Sanche <lsanche@lyndeno.ca>
-Cc: oe-kbuild-all@lists.linux.dev, mario.limonciello@amd.com,
-	pali@kernel.org, W_Armin@gmx.de,
-	srinivas.pandruvada@linux.intel.com, ilpo.jarvinen@linux.intel.com,
-	Matthew Garrett <mjg59@srcf.ucam.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Dell.Client.Kernel@dell.com
-Subject: Re: [PATCH v3] platform/x86: dell-laptop: Implement platform_profile
-Message-ID: <202404302351.31IWk45T-lkp@intel.com>
-References: <20240429164844.7544-2-lsanche@lyndeno.ca>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TjfLl3XL"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9CC45C4AF18;
+	Tue, 30 Apr 2024 16:33:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714494795;
+	bh=2VW8d61N4NAeyGCm2dkIywGhQ7MuUKwRdc6tMwJHRnY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=TjfLl3XL3UA0LP309RPQdyDMQIyP3YC6kDzHHKCnmxZnLyK+/MqPsXHMUKQlyjy0L
+	 njBfF1eC97WcxTuDM0yBPtibjURdyFDW6vrcCJTI9hpzVI/3/Fa8VNhT1dsOF1yvjj
+	 3pJK/+8Sjo/IkCmRmDUvCJD0dG/Ck9lp6AoKWOMCg5Ftrz8NJ0v61oHYRnQMIQwWFR
+	 F7axWX7S3uCWQMDWbIu5p/nqTPDoXNJiojnqR3tiR0mJdGzxt7pi4oH1mYYK5600hk
+	 1POXsRsvrkkpDsvcZUyZ9JNMCld7BfnrevrWmTtwgAdqvNdq2pqyF7eXLFuToPYsFw
+	 VDkv5N2WklU1A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8BA9EC43443;
+	Tue, 30 Apr 2024 16:33:15 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for v6.9-4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <pdx86-pr-20240430142334-272144146@linux.intel.com>
+References: <pdx86-pr-20240430142334-272144146@linux.intel.com>
+X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
+X-PR-Tracked-Message-Id: <pdx86-pr-20240430142334-272144146@linux.intel.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.9-4
+X-PR-Tracked-Commit-Id: 515a3c3a5489a890c7c3c1df3855eb4868a27598
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a52a0b3997472d680b627170366c22a5c34b89c5
+Message-Id: <171449479556.9419.1717364965416933589.pr-tracker-bot@kernel.org>
+Date: Tue, 30 Apr 2024 16:33:15 +0000
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240429164844.7544-2-lsanche@lyndeno.ca>
 
-Hi Lyndon,
+The pull request you sent on Tue, 30 Apr 2024 14:23:34 +0300:
 
-kernel test robot noticed the following build warnings:
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.9-4
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.9-rc6 next-20240430]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a52a0b3997472d680b627170366c22a5c34b89c5
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Lyndon-Sanche/platform-x86-dell-laptop-Implement-platform_profile/20240430-135932
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240429164844.7544-2-lsanche%40lyndeno.ca
-patch subject: [PATCH v3] platform/x86: dell-laptop: Implement platform_profile
-config: i386-allyesconfig (https://download.01.org/0day-ci/archive/20240430/202404302351.31IWk45T-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240430/202404302351.31IWk45T-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404302351.31IWk45T-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/platform/x86/dell/dell-laptop.c:2387:5: warning: no previous prototype for 'thermal_init' [-Wmissing-prototypes]
-    2387 | int thermal_init(void)
-         |     ^~~~~~~~~~~~
->> drivers/platform/x86/dell/dell-laptop.c:2418:6: warning: no previous prototype for 'thermal_cleanup' [-Wmissing-prototypes]
-    2418 | void thermal_cleanup(void)
-         |      ^~~~~~~~~~~~~~~
-
-
-vim +/thermal_init +2387 drivers/platform/x86/dell/dell-laptop.c
-
-  2386	
-> 2387	int thermal_init(void)
-  2388	{
-  2389		int ret;
-  2390		int supported_modes;
-  2391	
-  2392		ret = thermal_get_supported_modes(&supported_modes);
-  2393		if (ret || !supported_modes)
-  2394			return 0;
-  2395	
-  2396		thermal_handler = kzalloc(sizeof(*thermal_handler), GFP_KERNEL);
-  2397		if (!thermal_handler)
-  2398			return -ENOMEM;
-  2399		thermal_handler->profile_get = thermal_platform_profile_get;
-  2400		thermal_handler->profile_set = thermal_platform_profile_set;
-  2401	
-  2402		if (supported_modes & DELL_QUIET)
-  2403			set_bit(PLATFORM_PROFILE_QUIET, thermal_handler->choices);
-  2404		if (supported_modes & DELL_COOL_BOTTOM)
-  2405			set_bit(PLATFORM_PROFILE_COOL, thermal_handler->choices);
-  2406		if (supported_modes & DELL_BALANCED)
-  2407			set_bit(PLATFORM_PROFILE_BALANCED, thermal_handler->choices);
-  2408		if (supported_modes & DELL_PERFORMANCE)
-  2409			set_bit(PLATFORM_PROFILE_PERFORMANCE, thermal_handler->choices);
-  2410	
-  2411		// Clean up but do not fail
-  2412		if (platform_profile_register(thermal_handler))
-  2413			kfree(thermal_handler);
-  2414	
-  2415		return 0;
-  2416	}
-  2417	
-> 2418	void thermal_cleanup(void)
-  2419	{
-  2420		if (thermal_handler) {
-  2421			platform_profile_remove();
-  2422			kfree(thermal_handler);
-  2423		}
-  2424	}
-  2425	
+Thank you!
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
