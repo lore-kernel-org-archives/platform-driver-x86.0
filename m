@@ -1,175 +1,203 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E503A52F62
-	for <platform-driver-x86@vger.kernel.org>; Wed,  1 May 2024 10:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85287C125;
+	Wed,  1 May 2024 16:35:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714557903; cv=none; b=W3NYwX61UUbfKN/V4OwNYH16LtbgsoQ2MYnQX11W6KqRncqmDwJStmpioUHSuUtxYS65b6N3t5JWYmjH/pr2zs6ubPp/rD5VR5IC00lGpQ21j5+JhsGEYRvIiYAdixudriurvau3Hz861g7hlY9+3YVzuzZHQN465JPn5cuXqQ4=
+	t=1714581358; cv=none; b=ELi6/ycLToK966LRYam6LlAgfXKiJW8Otum4NX9lC16W5WE3wQJPr0PBzSpBS3Hlh8ejDwj8IAxnxqj88ZMFQacez2V9yuQML4IrW26gv5SAL92uueP2kwczvB7tE4dSUW/m4iZBr8Ran5V3T9J3FEN2iDd++Af1LQqAxsxoFaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714557903; c=relaxed/simple;
-	bh=zRIOVwIbuRT/C61qM9NViozdpwS2MV3uEzoWw2VcWUw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TcoKoD1Ok4TPuMZgyxtQ1NRcUOUZKUnc7G7l8wmWecg836bAFLksrCULILY3kQCQiLcX1G6svsRtSthYDla02oxLHP8ISsh19oy6OuEI+WTbDUhhz0v0FhZ/q2Uv31grh0zydiOsS4cY5AWTKC+G7p7ZJ1Jp0+JOSLCFWy/ECfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PxLZmO+U; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714581358; c=relaxed/simple;
+	bh=7eiu06DauTM8rAtM/+KSa1QacWUVefp4MOSQ9l8gcb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CNqd27/EpuSWZXQmDHLOGXzzze5+7Gt11r29wEJZrcONak++q1UIeZMMpNgsHUKWtyXVKeweVSirL902V5fh4wPnCWwedbxmMNc1QN27PJB5ym8vOa+8oGa/2VmQtUjsgptV7pA5BSxPtgEPAXeg0WlbtDz4oYGN8j0f6zXRP/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mg3iF57i; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PxLZmO+U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714557899;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nco7um67jte34vjyYL03elkp+CiCw7RycyAoOwG9/n4=;
-	b=PxLZmO+UR2JIv6xRLMOiJbCjNzYs1RT4ggZi0gmKSWlPcAECokJ6hskynTfjovgbb7OCzn
-	Vhu4rOdxQ9effFQdTwmG8smCkdTRCMYX3UoHMCjrXW3hgwlcj7EcJzuDfU3QmQS2H+8w6d
-	qudAm+auEbccpwBVL2cRIL/MSWdXho0=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-259-SHpaP8jJOUms3ZtOwrP-Hg-1; Wed, 01 May 2024 06:04:58 -0400
-X-MC-Unique: SHpaP8jJOUms3ZtOwrP-Hg-1
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-51d797671b7so3226378e87.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 01 May 2024 03:04:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714557897; x=1715162697;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nco7um67jte34vjyYL03elkp+CiCw7RycyAoOwG9/n4=;
-        b=gKqlYOxng7HVMURsTSMtnPiytTcASWqtpMY9EVJPRUz6rUyJgrBSzx5Uy1T2tw0EMo
-         jfyTC8gglBldE79wkNS4MrWHGAXAigFqYiv54iuvgtY4ZV8ovsNoadC+b1z8mDcM2+Rv
-         C8egXd5pNSHq7MLz7/CsA91z6TT4vV5rHZO/P4vcV9voYeZ4//DfW8boBOFpKG2QZFWv
-         Ux8xgdJPIsOne+JX9B8d7kVcEFn0Am7PHBfqVHQgs4mmGisJ2UlePgHtvPJtlf2W1N7t
-         AZ0PUF+yxP87PgLPbjkF6dOLCBnIymJ8/JRHOK8BYWYslfUhtHKEx6pIOViVBltDTo+x
-         /EEw==
-X-Gm-Message-State: AOJu0Yy9UmjdQvxUMOD5T8u2mVo4GtJkpSt02Sq7lONr2YEGZ1BVB1VQ
-	gbTTU8G/6Yo1mu95PbMSDsLNBJBaOLf1BMn27UIxSv/DbDyBzpLsW8J2JgulWOFhhYX8wJA53U9
-	kUULb37hhrbh6kozDBRgm6UIVjdDblKVkrrCOIElfASRaZQ6nqC2u4R6SqB7oEbHVL6pw47nkQ1
-	BohlM=
-X-Received: by 2002:a05:6512:478:b0:51e:25d2:453f with SMTP id x24-20020a056512047800b0051e25d2453fmr1062761lfd.68.1714557896856;
-        Wed, 01 May 2024 03:04:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFDzNjgasG6pTmAis+w8S8UbF/yOq/g9I/RXtOuc1slfRwaMySZoMjc7NM5pkOViqTv3n6VqQ==
-X-Received: by 2002:a05:6512:478:b0:51e:25d2:453f with SMTP id x24-20020a056512047800b0051e25d2453fmr1062749lfd.68.1714557896403;
-        Wed, 01 May 2024 03:04:56 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id s3-20020a056402164300b00562d908daf4sm15176493edx.84.2024.05.01.03.04.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 May 2024 03:04:55 -0700 (PDT)
-Message-ID: <7940339d-e9a9-4367-9fce-1e5a201e7ab7@redhat.com>
-Date: Wed, 1 May 2024 12:04:54 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mg3iF57i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714581356; x=1746117356;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7eiu06DauTM8rAtM/+KSa1QacWUVefp4MOSQ9l8gcb8=;
+  b=mg3iF57ior3MjSfvWmmkl8rogMx6DLYcWMRrUkDohjUoZ6knDeNJoNpD
+   Uj76zjQ33rjFPRNZjOE7Vg7mrsEo8rR7wm51rA0n56vyiJakROmLK4xN1
+   toeeSG1TZ7oQKEZt/O395b4xZe+PHhN60K7aTP3vUXBQ+emwlA+csdje9
+   e1ltXCHGN2rEdpcX0XftBvJm3zBkztji1rj7+INqGrQCwOFVt3C4oJ/ip
+   53SPZUlrgKMbdwkHZyky+EGV2FIx0NrTtmFSqbWyWYHJTvYv9bMTxTbUM
+   YqMfJC9InK6+nZRhLgtLyAG6hl9GD/kT5jie2ydT/MQKBx1jdh91WQ4rg
+   A==;
+X-CSE-ConnectionGUID: 6PGp4VjtRRO/Q3li/H3/Pg==
+X-CSE-MsgGUID: g8qCMrzpQo+xB68jCejLgg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11061"; a="10442466"
+X-IronPort-AV: E=Sophos;i="6.07,245,1708416000"; 
+   d="scan'208";a="10442466"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2024 09:35:55 -0700
+X-CSE-ConnectionGUID: zi3EnUl8SdCVIMEwipx2cA==
+X-CSE-MsgGUID: BI6HlNcfSxut8VyeVU7aKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,245,1708416000"; 
+   d="scan'208";a="26690704"
+Received: from lkp-server01.sh.intel.com (HELO e434dd42e5a1) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 01 May 2024 09:35:52 -0700
+Received: from kbuild by e434dd42e5a1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s2Cvt-0009kq-1M;
+	Wed, 01 May 2024 16:35:49 +0000
+Date: Thu, 2 May 2024 00:35:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Lyndon Sanche <lsanche@lyndeno.ca>
+Cc: oe-kbuild-all@lists.linux.dev, mario.limonciello@amd.com,
+	pali@kernel.org, W_Armin@gmx.de,
+	srinivas.pandruvada@linux.intel.com, ilpo.jarvinen@linux.intel.com,
+	Matthew Garrett <mjg59@srcf.ucam.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dell.Client.Kernel@dell.com
+Subject: Re: [PATCH v3] platform/x86: dell-laptop: Implement platform_profile
+Message-ID: <202405020004.y49VOvGS-lkp@intel.com>
+References: <20240429164844.7544-2-lsanche@lyndeno.ca>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: ISST: Support SST-BF and SST-TF per level
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- ilpo.jarvinen@linux.intel.com, andriy.shevchenko@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Zhang Rui <rui.zhang@intel.com>
-References: <20240430221052.15825-1-srinivas.pandruvada@linux.intel.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240430221052.15825-1-srinivas.pandruvada@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240429164844.7544-2-lsanche@lyndeno.ca>
 
-Hi,
+Hi Lyndon,
 
-On 5/1/24 12:10 AM, Srinivas Pandruvada wrote:
-> SST SST-BF and SST-TF can be enabled/disabled per SST-PP level. So return
-> a mask of all levels, where the feature is supported, instead of just for
-> level 0.
-> 
-> Since the return value returns all levels mask, not just level 0, update
-> API version.
-> 
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> Reviewed-by: Zhang Rui <rui.zhang@intel.com>
+kernel test robot noticed the following build errors:
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.9-rc6 next-20240501]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+url:    https://github.com/intel-lab-lkp/linux/commits/Lyndon-Sanche/platform-x86-dell-laptop-Implement-platform_profile/20240430-135932
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20240429164844.7544-2-lsanche%40lyndeno.ca
+patch subject: [PATCH v3] platform/x86: dell-laptop: Implement platform_profile
+config: x86_64-buildonly-randconfig-001-20240501 (https://download.01.org/0day-ci/archive/20240502/202405020004.y49VOvGS-lkp@intel.com/config)
+compiler: gcc-9 (Ubuntu 9.5.0-4ubuntu2) 9.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240502/202405020004.y49VOvGS-lkp@intel.com/reproduce)
 
-Regards,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405020004.y49VOvGS-lkp@intel.com/
 
-Hans
+All errors (new ones prefixed by >>, old ones prefixed by <<):
 
-> ---
->  .../intel/speed_select_if/isst_tpmi_core.c    | 38 +++++++++++++++----
->  1 file changed, 31 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> index 6bcbb97b0101..7bac7841ff0a 100644
-> --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> @@ -847,6 +847,8 @@ static int isst_if_get_perf_level(void __user *argp)
->  {
->  	struct isst_perf_level_info perf_level;
->  	struct tpmi_per_power_domain_info *power_domain_info;
-> +	unsigned long level_mask;
-> +	u8 level, support;
->  
->  	if (copy_from_user(&perf_level, argp, sizeof(perf_level)))
->  		return -EFAULT;
-> @@ -866,12 +868,34 @@ static int isst_if_get_perf_level(void __user *argp)
->  		      SST_PP_FEATURE_STATE_START, SST_PP_FEATURE_STATE_WIDTH, SST_MUL_FACTOR_NONE)
->  	perf_level.enabled = !!(power_domain_info->sst_header.cap_mask & BIT(1));
->  
-> -	_read_bf_level_info("bf_support", perf_level.sst_bf_support, 0, 0,
-> -			    SST_BF_FEATURE_SUPPORTED_START, SST_BF_FEATURE_SUPPORTED_WIDTH,
-> -			    SST_MUL_FACTOR_NONE);
-> -	_read_tf_level_info("tf_support", perf_level.sst_tf_support, 0, 0,
-> -			    SST_TF_FEATURE_SUPPORTED_START, SST_TF_FEATURE_SUPPORTED_WIDTH,
-> -			    SST_MUL_FACTOR_NONE);
-> +	level_mask = perf_level.level_mask;
-> +	perf_level.sst_bf_support = 0;
-> +	for_each_set_bit(level, &level_mask, BITS_PER_BYTE) {
-> +		/*
-> +		 * Read BF support for a level. Read output is updated
-> +		 * to "support" variable by the below macro.
-> +		 */
-> +		_read_bf_level_info("bf_support", support, level, 0, SST_BF_FEATURE_SUPPORTED_START,
-> +				    SST_BF_FEATURE_SUPPORTED_WIDTH, SST_MUL_FACTOR_NONE);
-> +
-> +		/* If supported set the bit for the level */
-> +		if (support)
-> +			perf_level.sst_bf_support |= BIT(level);
-> +	}
-> +
-> +	perf_level.sst_tf_support = 0;
-> +	for_each_set_bit(level, &level_mask, BITS_PER_BYTE) {
-> +		/*
-> +		 * Read TF support for a level. Read output is updated
-> +		 * to "support" variable by the below macro.
-> +		 */
-> +		_read_tf_level_info("tf_support", support, level, 0, SST_TF_FEATURE_SUPPORTED_START,
-> +				    SST_TF_FEATURE_SUPPORTED_WIDTH, SST_MUL_FACTOR_NONE);
-> +
-> +		/* If supported set the bit for the level */
-> +		if (support)
-> +			perf_level.sst_tf_support |= BIT(level);
-> +	}
->  
->  	if (copy_to_user(argp, &perf_level, sizeof(perf_level)))
->  		return -EFAULT;
-> @@ -1648,7 +1672,7 @@ void tpmi_sst_dev_resume(struct auxiliary_device *auxdev)
->  }
->  EXPORT_SYMBOL_NS_GPL(tpmi_sst_dev_resume, INTEL_TPMI_SST);
->  
-> -#define ISST_TPMI_API_VERSION	0x02
-> +#define ISST_TPMI_API_VERSION	0x03
->  
->  int tpmi_sst_init(void)
->  {
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_probe_helper_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tests/drm_rect_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/gud/gud.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/udl/udl.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-kunit.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-ram.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-raw-ram.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-spmi.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/pcf50633-gpio.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dax/dax.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/firewire/firewire-uapi-test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/misc/isight_firmware.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/mon/usbmon.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/chipidea/ci_hdrc_msm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/libcomposite.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_acm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_ss_lb.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/u_serial.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_serial.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/u_ether.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_ncm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_ecm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_mass_storage.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_printer.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/function/usb_f_tcm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/gadget/legacy/g_zero.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/touchscreen/cyttsp_i2c_common.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/tests/input_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/rtc/lib_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/rtc/rtc-goldfish.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-ali1563.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwmon/corsair-cpro.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/watchdog/menz69_wdt.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/mmc_core.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mmc/core/sdio_uart.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-a4tech.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-apple.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-aureal.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-betopff.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-bigbenff.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-cherry.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-chicony.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-dr.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-emsff.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-elecom.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-elo.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-holtek-kbd.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-holtek-mouse.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-ite.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-keytouch.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-lcpower.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-letsketch.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-logitech.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-lg-g15.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-magicmouse.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-maltron.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-mf.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-megaworld.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-microsoft.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-ntrig.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-ortek.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-pl.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-razer.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-redragon.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-retrode.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-saitek.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-semitek.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-sony.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-speedlink.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-steam.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-steelseries.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-sunplus.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-gaff.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-tmff.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-tivo.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-twinhan.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-uclogic.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-zydacron.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-waltop.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/greybus/gb-es2.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-bootrom.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-hid.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-loopback.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-power-supply.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-gbphy.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-gpio.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-usb.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/x86/intel/speed_select_if/isst_if_common.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/goldfish/goldfish_pipe.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_powersave.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwtracing/intel_th/intel_th_msu_sink.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/siox/siox-bus-gpio.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/uio/uio.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/uio/uio_cif.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/uio/uio_netx.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dca/dca.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/configfs/configfs_sample.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kprobes/kprobe_example.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kprobes/kretprobe_example.o
+>> ERROR: modpost: "platform_profile_register" [drivers/platform/x86/dell/dell-laptop.ko] undefined!
+>> ERROR: modpost: "platform_profile_remove" [drivers/platform/x86/dell/dell-laptop.ko] undefined!
 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
