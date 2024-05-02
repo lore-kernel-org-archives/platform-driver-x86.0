@@ -1,170 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61661364D2
-	for <platform-driver-x86@vger.kernel.org>; Thu,  2 May 2024 08:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B473657AE;
+	Thu,  2 May 2024 11:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714639141; cv=none; b=fmSQ/moyif0gDHDcQwP6i7ob4QumwHTtqWYayeU2w5nfr9qofD/lY8F3+uau9PnFIrXKkY/kIwOy25PDwzliFsyNTLoKCa76Mwxx8aE+Q3UKHkfW0o3UdkHb/o15UcdL0LMADPOGZu858YGyJygNBCGRCumkPeqD33am5tRFnWY=
+	t=1714647619; cv=none; b=EpiPrJ/cXb56VCKm8oWbZeRjPu7tcFXlLrOqq/CxFKTAeh9HBVPcnhlhls+s2vBDHQXFgoTsnCce+VLW4KP6Bc9Fz77o81/jqCp7v/wSedTYRfLCEdBY3YsSAlJzsZ6f4pNfO48fCGrRU77hw4GvmY8fy/Eq5rdyuouJ+n6yAIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714639141; c=relaxed/simple;
-	bh=ilrFFY6gpqsREXL0hStdjMoDt3s4SbHsDOogLS0qdRA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M1tvUE5pNWiu5tq5Q1+fGKKDrihqoHaWN90eIpP0ShKtIaJlky/VU4yYAONO1GY3o7LZ9xYEW4i4HO72wSGubGFX95W8gZ1UUIXOAAWLAYHLpW+3xM7dZW0apScI0GubIRZAdr0ZQt8K1qZa+aspaDmqeqCqjk0o460blgQRcEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JwwYdYne; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714647619; c=relaxed/simple;
+	bh=lmtz+epT2zQrOYIcCikEEH5WfUpPn0LSP4C6ZySsU/s=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=KLyGzkNb6RW51Drh30+4u2QljsdKUiZ4TuiikW9AZLYXZqviG27Ne7C7MKEthryz3sE8eTpTsKKxPeHHcPf8KQxqno1U6W/Ind4beB3r2ZN70lQmp8F91ZVnhpqRR2vpXxwq7I4YCTrB8tM/gZt0U4H/NBdjQG/DT9IQ7cgLd48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TVXEveIN; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JwwYdYne"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714639139;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c31vrJZLeYpGeljEYJNMs2vOunRYlPKu2sBlSVFxYg8=;
-	b=JwwYdYne29a+Tg3H+3XtR3IrvA/Ctl8qNAkr1dOkwKfgx1AJhFXfb5dChtBj+sbFkvbpkG
-	QPLdv1u1W9TGJE0Lk0jfartjwoLaGW+f5+ZeNQUfl3+NA6gfHgjrnsKxlT5L+/s7y1i1mK
-	HGHV0uu1dA6nQCc0JCZeE1mTTr+FUJs=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-574-EUr2GPt0Pq2yOwP1jt_VNA-1; Thu, 02 May 2024 04:38:57 -0400
-X-MC-Unique: EUr2GPt0Pq2yOwP1jt_VNA-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a51eb0c14c8so272671366b.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 02 May 2024 01:38:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714639137; x=1715243937;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c31vrJZLeYpGeljEYJNMs2vOunRYlPKu2sBlSVFxYg8=;
-        b=OcCK1JCvORnCWe6om04Y7sB5AUZ44ZfSdAVk9+pdC5FAyiF4z7QfPvJ6YsQgj+zSU3
-         y64SriDzFTQsU0qwa+4zkIaUlUqYolqp1NHk33FhENtMYy+H8jgQJkZ6b7rUDFAddgnv
-         xkWh9DsZBGwhTDxlaggMy4sSghOrfV3foNB1AUyzPV0X80O86vnX/Yc2yzL8DzJN14o+
-         TSKfLjSjwZlekjGJcs8C8NSb1780LHzygv7+9oO7Ba/ZJRH3R5IMEO4GheBR8X4ze4XF
-         ZNaqgkAo7z0UA2RgTQ0fuJ7P99WmebBExtw7bsq6E+JoCJHMYCeWbj86X5qO1FL18nFz
-         ohBw==
-X-Forwarded-Encrypted: i=1; AJvYcCVZGhjwtNVIiJarF3SK8BQZhFQebdD74gtCIKFc3ffWDAc7YeNIG/EY8JQbyOnANcalzx5QFMB8JwDAelPu29XUvECAZT+bh/H2y1QJrAGHsquGug==
-X-Gm-Message-State: AOJu0YxgpZOyAoWPH6VTKHAmrhcq14cgZqA02Qdb0rVdGWih62dv8wPZ
-	RoUaoXis5XNsjIPHylbl+smbjAT1aZowtHCloC40Hg8hgVPG62DVvOl5TqnrayF17GOjLp6lKM6
-	wypSDtLOXnPyFv0WD/CcQdW5SkxLve0fWNH80cPKw/1XvRJprVLuZXvHgn6Ek38auan/He5Q=
-X-Received: by 2002:a17:907:760f:b0:a59:62f5:e81d with SMTP id jx15-20020a170907760f00b00a5962f5e81dmr1502922ejc.48.1714639136726;
-        Thu, 02 May 2024 01:38:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFozuGaQ9i7FrTfhc8WZ9SlinQ341gN1S7oDrnyTC5jvrZ2XKSVrXXBUtT70huwAJT6mQwHng==
-X-Received: by 2002:a17:907:760f:b0:a59:62f5:e81d with SMTP id jx15-20020a170907760f00b00a5962f5e81dmr1502909ejc.48.1714639136313;
-        Thu, 02 May 2024 01:38:56 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id v2-20020a17090606c200b00a5910978658sm277502ejb.208.2024.05.02.01.38.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 May 2024 01:38:55 -0700 (PDT)
-Message-ID: <b08a6155-0701-403a-9c33-b1e24fd99e42@redhat.com>
-Date: Thu, 2 May 2024 10:38:55 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TVXEveIN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714647618; x=1746183618;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=lmtz+epT2zQrOYIcCikEEH5WfUpPn0LSP4C6ZySsU/s=;
+  b=TVXEveIN46K1TNXzGPw7wjN9rzVqvMuxOh3buIPrRRFldloewctBZjLM
+   vNFMWW23774bVymHP3fzEjOJxYCaX53MP8UcSUnwlpxD89swGwZQxlqzE
+   9eDHtJYlxHdeE9lfAZyzmdo6JDjVLbe/h+uEwi6+PHj9Jy3RAEtDn3KBb
+   lXtMAhbMkWaEUDsy66Ws/KF5+akznHxY0QepeGd2tXRH4RQFaDsS2zzTs
+   FmhxxriGOPFMLH3m+f6O2VdC8thaBfk6km3N7O7O4J5dU/SmqnRS0NCtl
+   0JJLuQBooTriyby8QGzWSQvvxy+4+gRO6ngBwaMlQS+FXYNkZV92TjrV/
+   A==;
+X-CSE-ConnectionGUID: lPJvOzWaTQCj2oGSe7RdXw==
+X-CSE-MsgGUID: V2t4EWf3RhSnlovzuVpGYw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11061"; a="10265956"
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="10265956"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 04:00:17 -0700
+X-CSE-ConnectionGUID: DCbRcM49RX6PpE8SItRZNw==
+X-CSE-MsgGUID: cik+Sa9/R0OVu95UN4wpKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
+   d="scan'208";a="27693417"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.54])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 04:00:13 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 2 May 2024 14:00:06 +0300 (EEST)
+To: "Chang S. Bae" <chang.seok.bae@intel.com>
+cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org, 
+    platform-driver-x86@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, 
+    bp@alien8.de, dave.hansen@linux.intel.com, 
+    Hans de Goede <hdegoede@redhat.com>, tony.luck@intel.com, 
+    ashok.raj@intel.com, jithu.joseph@intel.com
+Subject: Re: [PATCH 2/2] platform/x86/intel/ifs: Initialize AMX state for
+ the scan test
+In-Reply-To: <20240430212508.105117-3-chang.seok.bae@intel.com>
+Message-ID: <f97d4275-11b1-4b98-9491-ff6c5f117eee@linux.intel.com>
+References: <20240430212508.105117-1-chang.seok.bae@intel.com> <20240430212508.105117-3-chang.seok.bae@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/2] Defer probing of SAM if serdev device is not
- ready
-To: Weifeng Liu <weifeng.liu.z@gmail.com>,
- platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org
-Cc: Maximilian Luz <luzmaximilian@gmail.com>
-References: <20240502040255.655957-2-weifeng.liu.z@gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240502040255.655957-2-weifeng.liu.z@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Weifeng,
+On Tue, 30 Apr 2024, Chang S. Bae wrote:
 
-On 5/2/24 6:02 AM, Weifeng Liu wrote:
-> Greetings,
+> The scan test does not start when the AMX state remains active and is not
+> re-initialized. With the extension of kernel_fpu_begin_mask(), the driver
+> code can now initialize the state properly.
 > 
-> This series is intended to remedy a race condition where surface
-> aggregator module (SAM) which is a serdev driver could fail to probe if
-> the underlying UART port is not ready to open.  In such circumstance,
-> invoking serdev_device_open() gets errno -ENXIO, leading to failure in
-> probing of SAM.  However, if the probe is retried in a short delay,
-> serdev_device_open() would work as expected and everything just goes
-> fine.  As a workaround, adding the serial driver (8250_dw) into
-> initramfs or building it into the kernel image significantly mitigates
-> the likelihood of encountering this race condition, as in this way the
-> serial device would be initialized much earlier than probing of SAM.
+> Introduce custom FPU handling wrappers to ensure compliant with the
+> established FPU API semantics, as kernel_fpu_begin() exclusively sets
+> legacy states. This follows the EFI case from commit b0dc553cfc9d
+> ("x86/fpu: Make the EFI FPU calling convention explicit").
 > 
-> However, IMO we should reliably avoid this sort of race condition.  A
-> good way is returning -EPROBE_DEFER when serdev_device_open returns
-> -ENXIO so that the kernel will be able to retry the probing later.  This
-> is what the first patch tries to do.
+> Then, use these wrappers to surround the MSR_ACTIVATE_SCAN write to
+> minimize the critical section. To prevent unnecessary delays, invoke
+> ifs_fpu_begin() before entering the rendezvous loop.
 > 
-> Though this solution might be a good enough solution for this specific
-> issue, I am wondering why this kind of race condition could ever happen,
-> i.e., why a serdes device could be not ready yet at the moment the
-> serdev driver gets called and tries to bind it.  And even if this is an
-> expected behavior how serdev driver works, I do feel it a little bit
-> weird that we need to identify serdev_device_open() returning -ENXIO as
-> non-fatal error and thus return -EPROBE_DEFER manually in such case, as
-> I don't see this sort of behavior in other serdev driver.  Maximilian
-> and Hans suggested discussing the root cause of the race condition here.
-> I will be grateful if you could provide some reasoning and insights on
-> this.
+> Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
+> Reviewed-by: Jithu Joseph <jithu.joseph@intel.com>
+> Tested-by: Jithu Joseph <jithu.joseph@intel.com>
+> ---
+>  drivers/platform/x86/intel/ifs/ifs.h     | 14 ++++++++++++++
+>  drivers/platform/x86/intel/ifs/runtest.c |  6 ++++++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
+> index 56b9f3e3cf76..71d8b50854b2 100644
+> --- a/drivers/platform/x86/intel/ifs/ifs.h
+> +++ b/drivers/platform/x86/intel/ifs/ifs.h
+> @@ -325,4 +325,18 @@ int do_core_test(int cpu, struct device *dev);
+>  extern struct attribute *plat_ifs_attrs[];
+>  extern struct attribute *plat_ifs_array_attrs[];
+>  
+> +static inline void ifs_fpu_begin(void)
+> +{
+> +	/*
+> +	 * The AMX state must be initialized prior to executing In-Field
+> +	 * Scan tests, according to Intel SDM.
+> +	 */
+> +	kernel_fpu_begin_mask(KFPU_AMX);
+> +}
+> +
+> +static inline void ifs_fpu_end(void)
+> +{
+> +	kernel_fpu_end();
+> +}
+> +
+>  #endif
+> diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
+> index 95b4b71fab53..a35eac7c0b44 100644
+> --- a/drivers/platform/x86/intel/ifs/runtest.c
+> +++ b/drivers/platform/x86/intel/ifs/runtest.c
+> @@ -188,6 +188,9 @@ static int doscan(void *data)
+>  	/* Only the first logical CPU on a core reports result */
+>  	first = cpumask_first(cpu_smt_mask(cpu));
+>  
+> +	/* Prepare FPU state before entering the rendezvous loop*/
 
-Ack, I have no objection against the changes and if Maximilian is ok with
-it I can merge these right away as an interim fix, but I would really
-like to know why the serdev core / tty code is registering a serdev
-device for a serial port before it is ready to have serdev_device_open()
-called on it. To me it seems that the root cause is in somewhere in
-the 8250_dw code or the serdev core code.
+Missing space
 
-Resources sometimes not being ready is sometimes which drivers generally
-speaking need to handle, but in this case the resource which is not
-ready is the device the driver is binding to, so it seems that
-the device is registered too soon.
-
-If someone familiar with the serial / serdev code can provide some
-insight here that would be great.
-
-Regards,
-
-Hans
-
-
-
-
-> 
-> Following is the code path when the issue occurs:
-> 
-> 	ssam_serial_hub_probe()
-> 	serdev_device_open()
-> 	ctrl->ops->open()	/* this callback being ttyport_open() */
-> 	tty->ops->open()	/* this callback being uart_open() */
-> 	tty_port_open()
-> 	port->ops->activate()	/* this callback being uart_port_activate() */
-> 	Find bit UPF_DEAD is set in uport->flags and fail with errno -ENXIO.
-> 
-> I notice that flag UPF_DEAD would be set in serial_core_register_port()
-> during calling serial_core_add_one_port() but don't have much idea
-> what's going on under the hood.
-> 
-> Additionally, add logs to the probe procedure of SAM in the second
-> patch, hoping it could help provide context to user when something
-> miserable happens.
-> 
-> Context of this series is available in [1].
-> 
-> Best regards,
-> Weifeng
-> 
-> [1] https://github.com/linux-surface/kernel/pull/152
-> 
-> Weifeng Liu (2):
->   platform/surface: aggregator: Defer probing when serdev is not ready
->   platform/surface: aggregator: Log critical errors during SAM probing
-> 
->  drivers/platform/surface/aggregator/core.c | 39 ++++++++++++++++++----
->  1 file changed, 32 insertions(+), 7 deletions(-)
-> 
+-- 
+ i.
 
