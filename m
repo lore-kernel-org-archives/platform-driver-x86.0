@@ -1,163 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270112208E;
-	Thu,  2 May 2024 20:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005E117F38D
+	for <platform-driver-x86@vger.kernel.org>; Thu,  2 May 2024 21:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714683573; cv=none; b=OC6dNHYHNNg7k6a+WRpTJ4KmeOd8SoKg46hduXw42ie6SigxazrxP/ySPxg9T5pqVgv9ajDzs3ffKjrXVLC2w+AT06eH1i3E1ox9zcAcqzEsyKCZDPf8PM3GDxQ6z2oUtIFOw8OlvAigRGJS5Z6TZt7iRI9cF5GFFeB2XSNV+Bo=
+	t=1714684475; cv=none; b=oTtrKBxhQGkaIUOgMVup+LVufRDbYjQwH/A/osE+nIN7Q22bUDuV8Qscz8q4TxwstS7t8i6cclUB1PPvNsdyX+Ui46hhe8F3qc6KfDx7QRYC8Sr75Y2TZbiN1dIVzr+qhYrVMZpgcjfPOpE1WXv3olQRxu/3v5IaaApB0e2jqKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714683573; c=relaxed/simple;
-	bh=imWJGduNQZ/GmKlx25kP+MMoyuUMWCHWurULK3dgfQU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eNXNDysNFXyzAj6Hj2YO0a3DDjHymR076MsMZUXmghrwPPpFyD6P/H8OdGCzYlCTIoWu7t5zFk7Vf0VBfd8d+41Wy+131BNvXZ6ZikEoSdWaCJTASH0siCWPbUTFoyVQYDsAqYzlktMZPEw4YFDIBWg3y9b+DRGbTNLo4UofK5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e7/WU0C1; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1714684475; c=relaxed/simple;
+	bh=rgKiuxp0KFmYpUzNhIDlxHrx2g/X1BRfNqkEpVlSA/M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TP2DkPNwz3GFPsx++rt/GyQHvOFnjfc/fufZCDIM4qfap6bgKFiFUJBJzGx54srfDKBPXzeiulLmOusqAXvY+Yjd4RjDO6dcHn6pM567Ne0JkFV9RyXeGy0TMwU5yLYbEVuicU7lIoDJ0JxaIW32wXwKYu01ezj92lxWds/fdYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AZAa41bz; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e7/WU0C1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714683572; x=1746219572;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=imWJGduNQZ/GmKlx25kP+MMoyuUMWCHWurULK3dgfQU=;
-  b=e7/WU0C18BwxYhnkrkDgWoMEMspfd8HFKCyEUe/rE4AzXOaA8RSfCvOf
-   qVdhcfzipkInpvsUlIQa8jSJq78v4ltJgh8+kCQoC2u79lH5TwVZLQBzf
-   I301iusrPKon8mm14nwxmfrS42DSRHRcwp5/aNN2gjmcpkV7Bx1baAtJh
-   ATgd4+COt9ZoL4Rkci8hDEnemdJIodXOj1CniDmtumLOxKSNmx+WabSle
-   jlgeC5zzUyhDnqywYm40T8/DcEP67C79DyE0T7UqqWf2+DDWUIz+olYy/
-   g2rmz1CBqzM+p4bkoHoHhraBn4xx4FAcux3Pfb6Jz5lKdg+9xKSqytch7
-   Q==;
-X-CSE-ConnectionGUID: yvRzLB3KS/u2/6NaE3P/wQ==
-X-CSE-MsgGUID: IDCEU36MQFyCREEEFxxKXg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="10639459"
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="10639459"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 13:59:32 -0700
-X-CSE-ConnectionGUID: 8Y1Mtm/KQqySIqIC6HisOA==
-X-CSE-MsgGUID: jaUYGSOCT7+msXdtzV59dg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="27658980"
-Received: from ramanisw-mobl.amr.corp.intel.com (HELO [10.251.17.226]) ([10.251.17.226])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 13:59:31 -0700
-Message-ID: <a41d7012-2eea-436e-9f7e-6a7702f7e2c2@intel.com>
-Date: Thu, 2 May 2024 13:59:30 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AZAa41bz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714684472;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+yb74sCZBPhPPjmzE+BoPdK3yuptgNQ0UnjwumtB9W0=;
+	b=AZAa41bz4gLjMQ4m4B33bk1jTAl7B6nRJTZLna1PcGbYOJ5chClox5WVplYp1vVLYGfcET
+	FN21vduM6tDlpNxn7mOVGY4eaNgXj4t1rO9XbCo031LsO6jo8VAQIXZkKl9ZC//unuFRHZ
+	9P86Q1FeAGVUWEHrz23YwhgAeSDt6ZY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-474-5ZquhIAeNCSNTSyryoojlw-1; Thu, 02 May 2024 17:14:28 -0400
+X-MC-Unique: 5ZquhIAeNCSNTSyryoojlw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9171D81F469;
+	Thu,  2 May 2024 21:14:27 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.33])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 38098477F82;
+	Thu,  2 May 2024 21:14:26 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	Kate Hsuan <hpa@redhat.com>,
+	Sebastian Reichel <sre@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org,
+	=?UTF-8?q?Andr=C3=A9=20Apitzsch?= <git@apitzsch.eu>,
+	linux-leds@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH v8 0/7] KTD2026 indicator LED for X86 Xiaomi Pad2
+Date: Thu,  2 May 2024 23:14:18 +0200
+Message-ID: <20240502211425.8678-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] x86/fpu: Extend kernel_fpu_begin_mask() for the
- In-Field Scan driver
-To: "Chang S. Bae" <chang.seok.bae@intel.com>, linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, tony.luck@intel.com,
- ashok.raj@intel.com, jithu.joseph@intel.com
-References: <20240430212508.105117-1-chang.seok.bae@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20240430212508.105117-1-chang.seok.bae@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-On 4/30/24 14:25, Chang S. Bae wrote:
-> The recent update [1] in the SDM highlights the requirement of
-> initializing the AMX state for executing the scan test:
->     "... maintaining AMX state in a non-initialized state ... will
->      prevent the execution of In-Field Scan tests."
-> which is one of CPU state conditions required for the test's execution.
+Hi All,
 
-This ended up just being phrased weirdly.  It's a lot more compact to
-just say:
+Here is v8 of Kate's series to add support for Xiaomi Pad2 indicator LED.
 
-	AMX must be in its init state for In-Field Scan tests to run.
+I believe this is ready for merging now. Patch 6/7 has an Acked-by from
+Sebastien for merging this patch through the leds tree since it depends
+on the earlier patches. LEDs tree maintainers please merge patches 1-6,
+then patch 7 can be merged through the pdx86 tree indepdently.
 
-> In situations where AMX workloads are running, the switched-away active
-> user AMX state remains due to the optimization to reduce the state
-> switching cost. A user state reload is fully completed right before
-> returning to userspace. Consequently, if the switched-in kernel task is
-> executing the scan test, this non-initialized AMX state causes the test
-> to be unable to start.
+This work includes:
+1. Added the KTD2026 swnode description to describe the LED controller.
+2. Migrated the original driver to fwnode to support x86 platform.
+3. Support for multi-color LED trigger event.
+4. The LED shows orange  when charging and the LED shows green when the
+   battery is full.
 
-FPU state in general (and AMX state in particular) is large and
-expensive to context switch so the kernel tries to leave FPU state alone
- even while running kernel tasks.  But, this behavior obviously
-conflicts with the (new) IFS need for AMX must be in its init state.
+Moreover, the LED trigger is set to the new trigger, called
+"bq27520-0-charging-orange-full-green" for Xiaomi Pad2 so the LED shows
+orange when charging and the LED shows green when the battery is full.
 
-Right?
+--
+Changes in v8:
+1. New bugfix: "leds: rgb: leds-ktd202x: Initialize mutex earlier"
+2. Make charging_orange_full_green triggers set the colors in RGB order
+3. Modify the Pad2 ktd202x fwnode to have the colors in RGB order
 
-...
-> [1] Intel Software Development Manual as of March 2024, Section 18.2
->     RECOMMENDATIONS FOR SYSTEM SOFTWARE of Vol. 1.
->     https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html
+Changes in v7:
+1. Platform: x86-android-tablets: other: Add swnode for Xiaomi pad2
+   indicator LED was included in Hans' branch.
+2. Included the tags from the previous version in the commit message.
+3. Fixed the comma issue for the structure initialiser.
 
-Rather than, "we're just following the spec", I think there can be a
-better explanation here.
+Changes in v6:
+1. The I2C ID table was moved to a separate patch.
+2. The LED shows orange when charging.
+3. The trigger name was renamed to charging-orange-full-green.
+4. The default trigger of Xiaomi Pad2 is
+   "bq27520-0-charging-orange-full-green".
 
-These in-field scan tests (IFS) poke the hardware in unique ways. It
-ends up that IFS and AMX could attempt to use the same hardware
-resources at the same time and step on each other.  While it would be
-possible to add additional resources to the CPU to allow simultaneous
-AMX and IFS, the hardware to do this would be relatively expensive.  It
-seems pretty reasonable for software to help out here.
+Changes in v5:
+1. Fix swnode LED color settings.
+2. Improve the driver based on the comments.
+3. Introduce a LED new API- led_mc_trigger_event() to make the LED
+   color can be changed according to the trigger.
+4. Introduced a new trigger "charging-red-full-green". The LED will be
+   red when charging and the LED will be green when the battery is full.
+5. Set the default trigger to "bq27520-0-charging-red-full-green" for
+   Xiaomi Pad2.
 
-The other argument that could be made is that an admin could isolate the
-CPUs on which they wanted to run an IFS test.  They could use cpusets,
-or even the task binding API to try and evict AMX workloads from these
-CPUs.  But, the promise of IFS is that it can be run without disturbing
-workloads _too_ much.  Basically anything an admin would do is probably
-too onerous and high-impact.
+Changes in v4:
+1. Fix double casting.
+2. Since force casting a pointer value to int will trigger a compiler
+   warning, the type of num_leds was changed to unsigned long.
 
-So this mechanism provides two things: One, it makes the hardware
-simpler and two, it takes the admin out of the picture.  Thing just work.
+Changes in v3:
+1. Drop the patch "leds-ktd202x: Skip regulator settings for Xiaomi
+   pad2"
 
+Changes in v2:
+1. Typo and style fixes.
+2. The patch 0003 skips all the regulator setup for Xiaomi pad2 since
+   KTD2026 on Xiaomi pad2 is already powered by BP25890RTWR. So, the
+   sleep can be removed when removing the module.
+
+Regards,
+
+Hans
+
+
+Hans de Goede (3):
+  leds: rgb: leds-ktd202x: Initialize mutex earlier
+  leds: core: Add led_mc_set_brightness() function
+  leds: trigger: Add led_mc_trigger_event() function
+
+Kate Hsuan (4):
+  leds: rgb: leds-ktd202x: Get device properties through fwnode to
+    support ACPI
+  leds: rgb: leds-ktd202x: I2C ID tables for KTD2026 and 2027
+  power: supply: power-supply-leds: Add charging_orange_full_green
+    trigger for RGB LED
+  platform: x86-android-tablets: Xiaomi pad2 RGB LED fwnode updates
+
+ drivers/leds/led-class-multicolor.c           |  1 +
+ drivers/leds/led-core.c                       | 31 +++++++
+ drivers/leds/led-triggers.c                   | 20 +++++
+ drivers/leds/rgb/Kconfig                      |  1 -
+ drivers/leds/rgb/leds-ktd202x.c               | 84 +++++++++++--------
+ .../platform/x86/x86-android-tablets/other.c  |  6 +-
+ drivers/power/supply/power_supply_leds.c      | 23 +++++
+ include/linux/leds.h                          | 26 ++++++
+ include/linux/power_supply.h                  |  2 +
+ 9 files changed, 156 insertions(+), 38 deletions(-)
+
+-- 
+2.44.0
 
