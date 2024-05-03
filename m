@@ -1,57 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B46317C6D;
-	Fri,  3 May 2024 08:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACEF14E2F2;
+	Fri,  3 May 2024 09:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714725020; cv=none; b=Su0ZSkCbUYtcQzUwyGm6w3oS82O0vY/0K8v4cqiNwoQGp9NZjX6AZg4lA2qdF6H1Cj0GReYGzlm/f1wLhumV0KyrAJu063bkYJ4TWC5LTM8tZv7qHjnYrDzPXimNeagX0GSb80cKOPxzdnZNlSFj8YKm8KqnKHu2fDV75+4/1aE=
+	t=1714727070; cv=none; b=UQoa7XlkFuMZcdhyZBTiUopF5L9ipYAc5SIf03yZkv/HfuvJb6RrIE3PO2Fv8HFj2NXugylRXCKKd5/UEeiCX3VvTSUFOf9tZZgs5DhjHx95AlC3sL58I2qC2E14nAD2o3ONLzRaowhqNSOg3ua0YOEcuB7b/bpnIasZQ7DEU34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714725020; c=relaxed/simple;
-	bh=2c1HxpMiDtlMZuBg2aZ3i/0g03ebVG0A/11pi6dMJME=;
+	s=arc-20240116; t=1714727070; c=relaxed/simple;
+	bh=L9mym5HUs0jB6zHpWIWPd24vsCgaxBi+qB3rwEwqx+4=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Q6Kgd/YlwPuX0vMXdjmoBnyK4w7XhC9Aarp5bZR1L3YNHahqFqJEF7uKUU7cIYGq1IR0B/v4meEvX26tzxWLFfts4EofXbPtvuE8mpEB/1I2QjOPlBLR1Acri8f07FOlQQ5Sce35KfsLM+i8E2sTKi+o61gkGuiPkX6BxB70sGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=flDpKJzy; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version:Content-Type; b=iloD9fj/ET/pb9HqNoAyGmtdaDZlnyZjuV2urylxmM/AHYFE4CvnQiIuMtjvO7Trf6QfXh+1hLvHnjgh7KspTtR501Xaz3+O+jtaV/WrilORGzxAprzE0bDuyPMKuh0eW7tU217fkJBvC597zUfm4/i+1V204Z5loNiv11l0QZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DpJu4Ale; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="flDpKJzy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DpJu4Ale"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714725019; x=1746261019;
+  t=1714727068; x=1746263068;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=2c1HxpMiDtlMZuBg2aZ3i/0g03ebVG0A/11pi6dMJME=;
-  b=flDpKJzymbZx0jJ2mMOy87onZFrBsAe8JAtVVR4yrO3UajHI6C1yCn6E
-   Q1o/hcJ9u9MKRoQGV6NTRr3DIosDkmDQ4VPzYK8ujY6uV1tasyqPQtlOA
-   102mAiywGLQO2jxWeqKcLlGssdHcd5hMfQBGPZsNowYuFIEPioUmx0vkD
-   +JIBJZYBymcXCtaGRgcEkKa2IpQPsUrKToZfwGQylKr5ybqLHd3RpHBLk
-   q8dDtwu8FZ+ltWqBQcgzjFOOB7u9gWEN80QgsTaVY9BpfGiAaiF811GMK
-   YQw/O5eqsdwX/SRLHi4Fdl8ODWC+5JJO3yHZc2Rgh2+XAZOX7euhTRZv4
-   A==;
-X-CSE-ConnectionGUID: ccv37Xl4TRilCFZ8FmAXCA==
-X-CSE-MsgGUID: wpzeX9MAQtyl0YbfW3yVpw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="21678118"
+  bh=L9mym5HUs0jB6zHpWIWPd24vsCgaxBi+qB3rwEwqx+4=;
+  b=DpJu4AleBOfF70xFTWgfTbZQ//Ci8+LHB2eqgJG2v3tDxcphFJxZWFd6
+   FAcuHnLfklP5Ji7X/lm18HAkJQD7CHEwEVvF1gqriQDQf+fpB4mCHh70P
+   c5WT/3TaU6IbeaXJriuth0SJtTC8pyYvuIEH8NysX+zTg+Igkn3cRcwgg
+   yv/PcMvzk/ZD0c/dFb9DtThYD9uKXyXbog+oPgwF+/EqIvJetn2GhTp0K
+   cX+poqaAVL3ZwqZZaa2rAp+JJSm1ke6UBmc7HgV0OzX7ubmmfy3mMznDn
+   fICK4+8fM3giTqixY5kX5Wp/EC1//xlQVIZ9UM1anc+YOCin8v9/+KexF
+   Q==;
+X-CSE-ConnectionGUID: 7wgEkiC/RqCSbqtcyOxXaA==
+X-CSE-MsgGUID: RhRWtEHdQ/+tr3Nn2QrKHg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11062"; a="10656572"
 X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="21678118"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 01:30:18 -0700
-X-CSE-ConnectionGUID: PeoEPU5JQUOfBlBJfPE2Vg==
-X-CSE-MsgGUID: hPkPO75BTbKH2AVK3uiLrQ==
+   d="scan'208";a="10656572"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 02:04:27 -0700
+X-CSE-ConnectionGUID: gyWdPFp4S9u31rhTod4NBQ==
+X-CSE-MsgGUID: 5hkp3xgURZetLduywtwaLg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,247,1708416000"; 
-   d="scan'208";a="27438350"
+   d="scan'208";a="27369361"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.56])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 01:30:15 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2024 02:04:24 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 3 May 2024 11:30:10 +0300 (EEST)
+Date: Fri, 3 May 2024 12:04:19 +0300 (EEST)
 To: "David E. Box" <david.e.box@linux.intel.com>
 cc: linux-doc@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
     LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 2/2] tools/arch/x86/intel_sdsi: Add attestation support
-In-Reply-To: <20240503025727.10254-2-david.e.box@linux.intel.com>
-Message-ID: <92993e65-463a-584b-c818-45c409ad69fb@linux.intel.com>
-References: <20240503025727.10254-1-david.e.box@linux.intel.com> <20240503025727.10254-2-david.e.box@linux.intel.com>
+Subject: Re: [PATCH 1/2] platform/x86/intel/sdsi: Add ioctl SPDM transport
+In-Reply-To: <20240503025727.10254-1-david.e.box@linux.intel.com>
+Message-ID: <9a91ca6e-99cd-d53a-0ea1-228ac555cd02@linux.intel.com>
+References: <20240503025727.10254-1-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,731 +62,450 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Thu, 2 May 2024, David E. Box wrote:
 
-> Add support on the intel_sdsi tool to perform SPDM GET_DIGESTS and
-> GET_CERTIFICATE commands. Output is sent to stdout.
+> Intel On Demand adds attestation and firmware measurement retrieval
+> services through use of the protocols defined the Security Protocols and
+> Data Measurement (SPDM) specification. SPDM messages exchanges are used to
+> authenticate On Demand hardware and to retrieve signed measurements of the
+> NVRAM state used to track feature provisioning and the NVRAM state used for
+> metering services. These allow software to verify the authenticity of the
+> On Demand hardware as well as the integrity of the reported silicon
+> configuration.
 > 
-> Example reading the certificate chain from socket 0:
-> 
-> intel_sdsi -d 1 -attest get_certificate | openssl x509 -inform DER -nout -text
+> Add an ioctl interface for sending SPDM messages through the On Demand
+> mailbox. Provides commands to get a list of SPDM enabled devices, get the
+> message size limits for SPDM Requesters and Responders, and perform an SPDM
+> message exchange.
 > 
 > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Link: https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.1.pdf [1]
 > ---
->  tools/arch/x86/intel_sdsi/Makefile     |  27 +-
->  tools/arch/x86/intel_sdsi/intel_sdsi.c |  70 +++-
->  tools/arch/x86/intel_sdsi/spdm.c       | 466 +++++++++++++++++++++++++
->  tools/arch/x86/intel_sdsi/spdm.h       |  13 +
->  4 files changed, 565 insertions(+), 11 deletions(-)
->  create mode 100644 tools/arch/x86/intel_sdsi/spdm.c
->  create mode 100644 tools/arch/x86/intel_sdsi/spdm.h
+>  .../userspace-api/ioctl/ioctl-number.rst      |   1 +
+>  MAINTAINERS                                   |   1 +
+>  drivers/platform/x86/intel/sdsi.c             | 210 +++++++++++++++++-
+>  include/uapi/linux/intel_sdsi.h               |  72 ++++++
+>  4 files changed, 283 insertions(+), 1 deletion(-)
+>  create mode 100644 include/uapi/linux/intel_sdsi.h
 > 
-> diff --git a/tools/arch/x86/intel_sdsi/Makefile b/tools/arch/x86/intel_sdsi/Makefile
-> index 5de2288cda79..6da6c4ee96d7 100644
-> --- a/tools/arch/x86/intel_sdsi/Makefile
-> +++ b/tools/arch/x86/intel_sdsi/Makefile
-> @@ -1,21 +1,28 @@
->  # SPDX-License-Identifier: GPL-2.0
->  # Makefile for Intel Software Defined Silicon provisioning tool
-> -
-> -intel_sdsi: intel_sdsi.c
-> -
-> -CFLAGS = -Wextra
-> -
-> +include ../../../scripts/Makefile.include
->  BINDIR ?= /usr/sbin
+> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> index c472423412bf..20dcc2dbcaf6 100644
+> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
+> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> @@ -382,6 +382,7 @@ Code  Seq#    Include File                                           Comments
+>                                                                       <mailto:mathieu.desnoyers@efficios.com>
+>  0xF8  all    arch/x86/include/uapi/asm/amd_hsmp.h                    AMD HSMP EPYC system management interface driver
+>                                                                       <mailto:nchatrad@amd.com>
+> +0xFC  all    linux/intel_sdsi.h
+>  0xFD  all    linux/dm-ioctl.h
+>  0xFE  all    linux/isst_if.h
+>  ====  =====  ======================================================= ================================================================
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3fb0fa67576d..e3865e61f302 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11165,6 +11165,7 @@ INTEL SDSI DRIVER
+>  M:	David E. Box <david.e.box@linux.intel.com>
+>  S:	Supported
+>  F:	drivers/platform/x86/intel/sdsi.c
+> +F:	include/uapi/linux/intel_sdsi.h
+>  F:	tools/arch/x86/intel_sdsi/
+>  F:	tools/testing/selftests/drivers/sdsi/
 >  
-> -override CFLAGS += -O2 -Wall
-> +SRCS = intel_sdsi.c spdm.c
+> diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
+> index 277e4f4b20ac..bab6df0521b4 100644
+> --- a/drivers/platform/x86/intel/sdsi.c
+> +++ b/drivers/platform/x86/intel/sdsi.c
+> @@ -11,9 +11,12 @@
+>  #include <linux/auxiliary_bus.h>
+>  #include <linux/bits.h>
+>  #include <linux/bitfield.h>
+> +#include <linux/cleanup.h>
+>  #include <linux/device.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/intel_sdsi.h>
+>  #include <linux/kernel.h>
+> +#include <linux/miscdevice.h>
+>  #include <linux/module.h>
+>  #include <linux/overflow.h>
+>  #include <linux/pci.h>
+> @@ -42,6 +45,7 @@
 >  
-> -%: %.c
-> -	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
-> +OBJS = $(SRCS:.c=.o)
-> +
-> +override CFLAGS += -O2 -Wall -Wextra -I../../../include -ggdb3
-> +
-> +intel_sdsi: intel_sdsi.h $(OBJS)
-> +	$(CC) $(CFLAGS) $(OBJS) -o $@
-> +
-> +intel_sdsi.h: ../../../../include/uapi/linux/intel_sdsi.h
-> +	ln -sf ../../../../include/uapi/linux/intel_sdsi.h $@
-> +
-> +%.o: %.c
-> +	$(CC) $(CFLAGS) -c $< -o $@
+>  #define SDSI_ENABLED_FEATURES_OFFSET	16
+>  #define SDSI_FEATURE_SDSI		BIT(3)
+> +#define SDSI_FEATURE_ATTESTATION	BIT(12)
+>  #define SDSI_FEATURE_METERING		BIT(26)
 >  
-> -.PHONY : clean
->  clean :
-> -	@rm -f intel_sdsi
-> +	@rm -f intel_sdsi intel_sdsi.h $(OBJS)
->  
->  install : intel_sdsi
->  	install -d  $(DESTDIR)$(BINDIR)
->  	install -m 755 -p intel_sdsi $(DESTDIR)$(BINDIR)/intel_sdsi
-> +
-> +.PHONY : clean install
-
-Why is Makefile rework in this patch. Should it like be in own patch?
-
-> diff --git a/tools/arch/x86/intel_sdsi/intel_sdsi.c b/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> index 766a5d26f534..419f43e403b7 100644
-> --- a/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> +++ b/tools/arch/x86/intel_sdsi/intel_sdsi.c
-> @@ -22,6 +22,9 @@
->  
->  #include <sys/types.h>
->  
-> +#include "spdm.h"
-> +#include "intel_sdsi.h"
-> +
->  #ifndef __packed
->  #define __packed __attribute__((packed))
->  #endif
-> @@ -179,6 +182,7 @@ struct sdsi_dev {
->  	struct state_certificate sc;
->  	char *dev_name;
->  	char *dev_path;
-> +	int dev_no;
->  	uint32_t guid;
+>  #define SDSI_SOCKET_ID_OFFSET		64
+> @@ -91,6 +95,7 @@ enum sdsi_command {
+>  	SDSI_CMD_PROVISION_CAP		= 0x0008,
+>  	SDSI_CMD_READ_STATE		= 0x0010,
+>  	SDSI_CMD_READ_METER		= 0x0014,
+> +	SDSI_CMD_ATTESTATION		= 0x1012,
 >  };
 >  
-> @@ -189,6 +193,12 @@ enum command {
->  	CMD_STATE_CERT,
->  	CMD_PROV_AKC,
->  	CMD_PROV_CAP,
-> +	CMD_ATTESTATION,
-> +};
-> +
-> +enum spdm_message {
-> +	GET_DIGESTS,
-> +	GET_CERTIFICATE,
+>  struct sdsi_mbox_info {
+> @@ -109,12 +114,14 @@ struct disc_table {
+>  struct sdsi_priv {
+>  	struct mutex		mb_lock;	/* Mailbox access lock */
+>  	struct device		*dev;
+> +	struct miscdevice	miscdev;
+>  	void __iomem		*control_addr;
+>  	void __iomem		*mbox_addr;
+>  	void __iomem		*regs_addr;
+>  	int			control_size;
+>  	int			maibox_size;
+>  	int			registers_size;
+> +	int			id;
+>  	u32			guid;
+>  	u32			features;
 >  };
+> @@ -582,6 +589,94 @@ static const struct attribute_group sdsi_group = {
+>  };
+>  __ATTRIBUTE_GROUPS(sdsi);
 >  
->  static void sdsi_list_devices(void)
-> @@ -647,6 +657,41 @@ static int sdsi_provision_cap(struct sdsi_dev *s, char *bin_file)
->  	return sdsi_provision(s, bin_file, CMD_PROV_CAP);
->  }
->  
-> +static int sdsi_attestation(struct sdsi_dev *s, enum spdm_message message)
+> +/* SPDM transport  */
+> +static int sdsi_spdm_exchange(void *private, const void *request,
+> +			      size_t request_sz, void *response,
+> +			      size_t response_sz)
 > +{
-> +	struct cert_chain c;
-> +	uint8_t digest[TPM_ALG_SHA_384_SIZE];
-> +	size_t size;
-> +	int ret, i;
+> +	struct sdsi_priv *priv = private;
+> +	struct sdsi_mbox_info info = {};
+> +	size_t spdm_msg_size, size;
+> +	int ret;
 > +
-> +	switch (message) {
-> +	case GET_CERTIFICATE:
-> +		ret = spdm_get_certificate(s->dev_no, &c);
-> +		if (ret)
-> +			return ret;
-> +
-> +		size = fwrite(c.chain, sizeof(uint8_t), c.len, stdout);
-> +		if (size != c.len) {
-> +			fprintf(stderr, "Unable to write complete certificate chain\n");
-> +			ret = -1;
-> +		}
-> +
-> +		free(c.chain);
-> +		break;
-> +	case GET_DIGESTS:
-> +		ret = spdm_get_digests(s->dev_no, digest);
-> +		if (ret)
-> +			return ret;
-> +
-> +		for (i = 0; i < TPM_ALG_SHA_384_SIZE; i++)
-> +			printf("%02x", digest[i]);
-> +		printf("\n");
-> +		break;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static int read_sysfs_data(const char *file, int *value)
->  {
->  	char buff[16];
-> @@ -728,6 +773,7 @@ static struct sdsi_dev *sdsi_create_dev(char *dev_no)
->  	}
->  
->  	s->guid = guid;
-> +	s->dev_no = atoi(dev_no);
->  
->  	return s;
->  }
-> @@ -742,6 +788,7 @@ static void sdsi_free_dev(struct sdsi_dev *s)
->  static void usage(char *prog)
->  {
->  	printf("Usage: %s [-l] [-d DEVNO [-i] [-s] [-m | -C] [-a FILE] [-c FILE]\n", prog);
-> +	printf("       [-attest MESSAGE]\n");
+> +	/*
+> +	 * For the attestation command, the mailbox write size is the sum of:
+> +	 *     Size of the SPDM request payload, padded for qword alignment
+> +	 *     8 bytes for the mailbox command
+> +	 *     8 bytes for the actual (non-padded) size of the SPDM request
+> +	 */
+> +	if (request_sz > (SDSI_SIZE_WRITE_MSG - (2 * sizeof(u64))))
 
-Long options use -- ?
+This looks way more readable when unnecessary parethesis are eliminated:
 
->  }
->  
->  static void show_help(void)
-> @@ -754,12 +801,15 @@ static void show_help(void)
->  	printf("  %-18s\t%s\n", "-m, --meter",          "show meter certificate data");
->  	printf("  %-18s\t%s\n", "-C, --meter_current",  "show live unattested meter data");
->  	printf("  %-18s\t%s\n", "-a, --akc FILE",       "provision socket with AKC FILE");
-> -	printf("  %-18s\t%s\n", "-c, --cap FILE>",      "provision socket with CAP FILE");
-> +	printf("  %-18s\t%s\n", "-c, --cap FILE",       "provision socket with CAP FILE");
-> +	printf("  %-18s\t%s\n", "-attest MESSAGE",      "send attestion MESSAGE. MESSAGE");
+	if (request_sz > SDSI_SIZE_WRITE_MSG - 2 * sizeof(u64))
 
--- ?
-
-> +	printf("  %-18s\t%s\n", "",                     "values are:");
->  }
->  
->  int main(int argc, char *argv[])
->  {
->  	char bin_file[PATH_MAX], *dev_no = NULL;
-> +	enum spdm_message message = GET_DIGESTS;
->  	bool device_selected = false;
->  	char *progname;
->  	enum command command = -1;
-> @@ -769,6 +819,7 @@ int main(int argc, char *argv[])
->  
->  	static struct option long_options[] = {
->  		{"akc",			required_argument,	0, 'a'},
-> +		{"attest",		required_argument,	0, 0},
->  		{"cap",			required_argument,	0, 'c'},
->  		{"devno",		required_argument,	0, 'd'},
->  		{"help",		no_argument,		0, 'h'},
-> @@ -820,6 +871,20 @@ int main(int argc, char *argv[])
->  
->  			command = (opt == 'a') ? CMD_PROV_AKC : CMD_PROV_CAP;
->  			break;
-> +		case 0:
-> +			if (strcmp(long_options[option_index].name, "attest") == 0) {
-> +				command = CMD_ATTESTATION;
+> +		return -EOVERFLOW;
 > +
-> +				if (strcmp(optarg, "get_digests") == 0)
-> +					message = GET_DIGESTS;
-> +				else if (strcmp(optarg, "get_certificate") == 0)
-> +					message = GET_CERTIFICATE;
-> +				else {
-> +					fprintf(stderr, "Unrecognized attestation command\n");
-> +					return -1;
-> +				}
-> +			}
-> +			break;
->  		case 'h':
->  			usage(progname);
->  			show_help();
-> @@ -854,6 +919,9 @@ int main(int argc, char *argv[])
->  		case CMD_PROV_CAP:
->  			ret = sdsi_provision_cap(s, bin_file);
->  			break;
-> +		case CMD_ATTESTATION:
-> +			ret = sdsi_attestation(s, message);
-> +			break;
->  		default:
->  			fprintf(stderr, "No command specified\n");
->  			return -1;
-> diff --git a/tools/arch/x86/intel_sdsi/spdm.c b/tools/arch/x86/intel_sdsi/spdm.c
-> new file mode 100644
-> index 000000000000..b5bf91215cbb
-> --- /dev/null
-> +++ b/tools/arch/x86/intel_sdsi/spdm.c
-> @@ -0,0 +1,466 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * spdm: Lightweight Security Protocol and Data Model (SPDM) specification
-> + * support code for performing attestation commands using the Intel On
-> + * Demand driver ioctl interface. Intel On Demand currently supports
-> + * SPDM version 1.0
-> + *
-> + * See the SPDM v1.0 specification at:
-> + * https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.1.pdf
-> + *
-> + * Copyright (C) 2024 Intel Corporation. All rights reserved.
-> + */
+> +	info.size = round_up(request_sz, sizeof(u64)) + 2 * sizeof(u64);
+>
+> +	u64 *payload __free(kfree) = kzalloc(info.size, GFP_KERNEL);
+> +	if (!payload)
+> +		return -ENOMEM;
 > +
-> +#include<linux/bits.h>
+> +	memcpy(payload, request, request_sz);
 > +
-> +#include<fcntl.h>
-> +#include<stdio.h>
-> +#include<stdlib.h>
-> +#include<stdint.h>
-> +#include<string.h>
-> +#include<unistd.h>
-> +#include<sys/ioctl.h>
-
-Where's the whitespace?
-
+> +	/* The non-padded SPDM payload size is the 2nd-to-last qword */
+> +	payload[(info.size / sizeof(u64)) - 2] = request_sz;
 > +
-> +#include "spdm.h"
-> +#include "intel_sdsi.h"
+> +	/* Attestation mailbox command is the last qword of payload buffer */
+> +	payload[(info.size / sizeof(u64)) - 1] = SDSI_CMD_ATTESTATION;
 > +
-> +// SPDM constants
-> +#define SPDM_VERSION			0x10
-> +#define SPDM_REQUEST			0x80
-> +#define SPDM_ERROR			0x7f
+> +	info.payload = payload;
+> +	info.buffer = response;
 > +
-> +// SPDM request codes
-> +#define SPDM_GET_VERSION		0x84
-> +#define SPDM_GET_CAPABILITIES		0xE1
-> +#define SPDM_NEGOTIATE_ALGORITHMS	0xE3
-> +#define SPDM_GET_DIGESTS		0x81
-> +#define SPDM_GET_CERTIFICATE		0x82
-> +#define SPDM_CHALLENGE			0x83
-> +#define SPDM_GET_MEASUREMENTS		0xE0
-> +
-> +#define SDSI_DEV_PATH			"/dev/isdsi"
-> +
-> +#define SPDM_RSVD			0
-> +
-> +#ifndef __packed
-> +#define __packed __attribute__((packed))
-> +#endif
-> +
-> +struct spdm_header {
-> +	uint8_t version;
-> +	uint8_t code;
-> +	uint8_t param1;
-> +	uint8_t param2;
-> +} __packed;
-
-Does this really need packed?
-
-> +static int error_response(struct spdm_header *response)
-> +{
-> +	if (response->code != SPDM_ERROR)
-> +		fprintf(stderr, "ERROR: Unrecognized SPDM response\n");
-> +
-> +	switch (response->param1) {
-> +	case 0x00:
-> +	case 0x02:
-> +	case 0x06:
-> +	case 0x08 ... 0x40:
-> +	case 0x44 ... 0xfe:
-> +		fprintf(stderr, "SPDM RSP ERROR: Reserved.\n");
-> +		break;
-> +	case 0x01:
-> +		fprintf(stderr, "SPDM RSP ERROR: One or more request fields are invalid.\n");
-> +		break;
-> +	case 0x03:
-> +		fprintf(stderr, "SPDM RSP ERROR: The Responder received the request message\n");
-> +		fprintf(stderr, "and the Responder decided to ignore the request message\n");
-> +		fprintf(stderr, "but the Responder may be able to process the request message\n");
-> +		fprintf(stderr, "if the request message is sent again in the future.\n");
-> +		break;
-> +	case 0x04:
-> +		fprintf(stderr, "SPDM RSP ERROR: The Responder received an unexpected request\n");
-> +		fprintf(stderr, "message. For example, CHALLENGE before NEGOTIATE_ALGORITHMS.\n");
-> +		break;
-> +	case 0x05:
-> +		fprintf(stderr, "SPDM RSP ERROR: Unspecified error occurred.\n");
-> +		break;
-> +	case 0x07:
-> +		fprintf(stderr, "SPDM RSP ERROR: The RequestResponseCode in the request\n");
-> +		fprintf(stderr, "message is unsupported.\n");
-> +		break;
-> +	case 0x41:
-> +		fprintf(stderr, "SPDM RSP ERROR: Requested SPDM Major Version is not\n");
-> +		fprintf(stderr, "supported.\n");
-> +		break;
-> +	case 0x42:
-> +		fprintf(stderr, "SPDM RSP ERROR: See the RESPONSE_IF_READY request message.\n");
-> +		break;
-> +	case 0x43:
-> +		fprintf(stderr, "SPDM RSP ERROR: Responder is requesting Requester to reissue\n");
-> +		fprintf(stderr, "GET_VERSION to resynchronize.\n");
-> +		break;
-> +	case 0xFF:
-> +		fprintf(stderr, "SPDM RSP ERROR: Vendor or Other Standards defined.\n");
-> +		break;
-> +	}
-> +
-> +	return -1;
-> +}
-> +
-> +static int sdsi_process_ioctl(int ioctl_no, void *info, uint8_t dev_no)
-> +{
-> +	char pathname[14];
-> +	int fd, ret;
-> +
-> +	ret = snprintf(pathname, 14, "%s%d", SDSI_DEV_PATH, dev_no);
+> +	ret = mutex_lock_interruptible(&priv->mb_lock);
+> +	if (ret)
+> +		return ret;
+> +	ret = sdsi_mbox_write(priv, &info, &size);
+> +	mutex_unlock(&priv->mb_lock);
 > +	if (ret < 0)
 > +		return ret;
 > +
-> +	fd = open(pathname, O_RDONLY);
-> +	if (fd < 0)
-> +		return fd;
+> +	/*
+> +	 * The read size is the sum of:
+> +	 *     Size of the SPDM response payload, padded for qword alignment
+> +	 *     8 bytes for the actual (non-padded) size of the SPDM payload
+> +	 */
 > +
-> +	ret = ioctl(fd, ioctl_no, info);
-> +	if (ret)
-> +		perror("Failed to process ioctl\n");
+> +	if (size < sizeof(u64)) {
+> +		dev_err(priv->dev,
+> +			"Attestation error: Mailbox reply size, %ld, too small\n",
+> +			size);
+> +		return -EPROTO;
+> +	}
 > +
-> +	close(fd);
+> +	if (!IS_ALIGNED(size, sizeof(u64))) {
+> +		dev_err(priv->dev,
+> +			"Attestation error: Mailbox reply size, %ld, is not aligned\n",
+> +			size);
+> +		return -EPROTO;
+> +	}
+> +
+> +	/*
+> +	 * Get the SPDM response size from the last QWORD and check it fits
+> +	 * with no more than 7 bytes of padding
+> +	 */
+> +	spdm_msg_size = ((u64 *)info.buffer)[(size - sizeof(u64)) / sizeof(u64)];
+> +	if (!in_range(size - spdm_msg_size - sizeof(u64), 0, 8)) {
+> +		dev_err(priv->dev,
+> +			"Attestation error: Invalid SPDM response size, %ld\n",
+> +			spdm_msg_size);
+> +		return -EPROTO;
+> +	}
+> +
+> +	if (spdm_msg_size > response_sz) {
+> +		dev_err(priv->dev, "Attestation error: Expected response size %ld, got %ld\n",
+> +			 response_sz, spdm_msg_size);
+> +		return -EOVERFLOW;
+> +	}
+> +
+> +	memcpy(response, info.buffer, spdm_msg_size);
+> +
+> +	return spdm_msg_size;
+> +}
+> +
+>  static int sdsi_get_layout(struct sdsi_priv *priv, struct disc_table *table)
+>  {
+>  	switch (table->guid) {
+> @@ -649,6 +744,92 @@ static int sdsi_map_mbox_registers(struct sdsi_priv *priv, struct pci_dev *paren
+>  	return 0;
+>  }
+>  
+> +#define SDSI_SPDM_DRIVER_VERSION	1
+> +
+> +static int sdsi_spdm_get_info(struct sdsi_priv *priv,
+> +			      struct sdsi_spdm_info __user *argp)
+> +{
+> +	struct sdsi_spdm_info info;
+> +
+> +	info.driver_version = SDSI_SPDM_DRIVER_VERSION;
+> +	info.api_version = priv->guid;
+> +	info.dev_no = priv->id;
+> +	info.max_request_size = SDSI_SIZE_WRITE_MSG - (2 * sizeof(u64));
+> +	info.max_response_size = SDSI_SIZE_READ_MSG - (sizeof(u64));
+
+Unnecessary parenthesis on both lines.
+
+> +
+> +	if (copy_to_user(argp, &info, sizeof(info)))
+> +		return -EFAULT;
+> +
+> +	return 0;
+> +}
+> +
+> +static int sdsi_spdm_do_command(struct sdsi_priv *priv,
+> +				struct sdsi_spdm_command __user *argp)
+> +{
+> +	u32 req_size, rsp_size;
+> +
+> +	if (get_user(req_size, &argp->size))
+> +		return -EFAULT;
+> +
+> +	if (req_size < 4 || req_size > sizeof(struct sdsi_spdm_message))
+> +		return -EINVAL;
+> +
+> +	struct sdsi_spdm_message *request __free(kfree) =
+> +		kmalloc(req_size, GFP_KERNEL);
+> +	if (!request)
+> +		return -ENOMEM;
+> +
+> +	struct sdsi_spdm_command *response __free(kfree) =
+> +		kmalloc(SDSI_SIZE_READ_MSG, GFP_KERNEL);
+> +	if (!response)
+> +		return -ENOMEM;
+> +
+> +	if (copy_from_user(request, &argp->message, req_size))
+> +		return -EFAULT;
+> +
+> +	rsp_size = sdsi_spdm_exchange(priv, request, req_size, response,
+> +				      SDSI_SIZE_READ_MSG);
+> +	if (rsp_size < 4)
+> +		return rsp_size;
+
+Hmm, what the return value of this function actually means? Here it can 
+returns -inf..3 but in the end you return 0. So clearly the return value 
+isn't size. Is it something "work remaining to do" or what? Consider 
+adding function comment about the return value because it looks a bit 
+odd from the code alone.
+
+> +
+> +	if (put_user(rsp_size, &argp->size))
+> +		return -EFAULT;
+> +
+> +	if (copy_to_user(&argp->message, response, rsp_size))
+> +		return -EFAULT;
+> +
+> +	return 0;
+> +}
+> +
+> +static long sdsi_spdm_ioctl(struct file *file, unsigned int cmd,
+> +			    unsigned long arg)
+> +{
+> +	struct sdsi_priv *priv;
+> +	long ret = -ENOTTY;
+> +
+> +	priv = container_of(file->private_data, struct sdsi_priv, miscdev);
+> +
+> +	switch (cmd) {
+> +	case SDSI_IF_SPDM_INFO:
+> +		ret = sdsi_spdm_get_info(priv,
+> +				(struct sdsi_spdm_info __user *)arg);
+> +		break;
+> +	case SDSI_IF_SPDM_COMMAND:
+> +		ret = sdsi_spdm_do_command(priv,
+> +				(struct sdsi_spdm_command __user *)arg);
+> +		break;
+> +	default:
+> +		break;
+> +	}
 > +
 > +	return ret;
 > +}
 > +
-> +static int
-> +sdsi_process_spdm(void *request, void *response, int req_size, uint32_t rsp_size,
-> +		  int dev_no)
-> +{
-> +	struct sdsi_spdm_command *command;
-> +	struct sdsi_spdm_message *message = request;
-> +	uint8_t request_code;
-> +	int ret;
-> +
-> +	command = malloc(sizeof(*command));
-> +	if (!command) {
-> +		perror("malloc\n");
-
-perror() strings should not end into newline characted because the colon 
-and error message is appended into the string argument.
-
-> +		return -1;
-> +	}
-> +
-> +	command->size = req_size;
-> +	command->message = *message;
-> +	request_code = command->message.request_response_code;
-> +
-> +	ret = sdsi_process_ioctl(SDSI_IF_SPDM_COMMAND, command, dev_no);
-> +	if (ret)
-> +		goto free_command;
-> +
-> +	if (command->size < sizeof(struct spdm_header)) {
-> +		fprintf(stderr, "Bad SPDM message size\n");
-> +		ret = -1;
-> +		goto free_command;
-> +	}
-> +
-> +	if (command->message.request_response_code != (request_code & ~SPDM_REQUEST)) {
-> +		ret = error_response((struct spdm_header *)&command->message);
-> +		goto free_command;
-> +	}
-> +
-> +	if (response) {
-> +		if (command->size > rsp_size) {
-> +			fprintf(stderr, "SPDM response buffer too small\n");
-> +			ret = -1;
-> +			goto free_command;
-> +		}
-> +
-> +		memcpy(response, &command->message, command->size);
-> +	}
-> +
-> +free_command:
-> +	free(command);
-> +	return ret;
-> +}
-> +
-> +struct version_number_entry {
-> +	uint8_t alpha:4;
-> +	uint8_t update_version_number:4;
-> +	union {
-> +		uint8_t version;
-> +		struct {
-> +			uint8_t minor:4;
-> +			uint8_t major:4;
-> +		};
-> +	};
-> +} __packed;
-> +
-> +struct get_version_response {
-> +	struct spdm_header header;
-> +	uint16_t reserved:8;
-> +	uint16_t version_number_entry_count:8;
-> +	struct version_number_entry entry[10];
-> +} __packed;
-> +
-> +static int spdm_get_version(int dev_no)
-> +{
-> +	struct spdm_header request = {};
-> +	struct get_version_response response = {};
-> +	uint8_t version;
-> +	int ret;
-> +
-> +	request.version = SPDM_VERSION;
-> +	request.code = SPDM_GET_VERSION;
-> +	request.param1 = SPDM_RSVD;
-> +	request.param2 = SPDM_RSVD;
-> +
-> +	ret = sdsi_process_spdm(&request, &response, sizeof(request),
-> +				sizeof(response), dev_no);
-> +	if (ret) {
-> +		fprintf(stderr, "Failed GET_VERSION\n");
-> +		return ret;
-> +	}
-> +
-> +	if (!response.version_number_entry_count) {
-> +		fprintf(stderr, "Bad GET_VERSION entry count\n");
-> +		return -1;
-> +	}
-> +
-> +	version = response.entry[0].version;
-> +
-> +	if (version != SPDM_VERSION) {
-> +		fprintf(stderr, "Unsupported version 0x%x\n", SPDM_VERSION);
-> +		return -1;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int spdm_get_capabilities(int dev_no)
-> +{
-> +	struct spdm_header request = {};
-> +	int ret;
-> +
-> +	request.version = SPDM_VERSION;
-> +	request.code = SPDM_GET_CAPABILITIES;
-> +	request.param1 = SPDM_RSVD;
-> +	request.param2 = SPDM_RSVD;
-> +
-> +	ret = sdsi_process_spdm(&request, NULL, sizeof(request), 0, dev_no);
-> +	if (ret) {
-> +		fprintf(stderr, "Failed GET_CAPABILITIES\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +struct spdm_negotiate_alg {
-> +	struct spdm_header header;
-> +	uint32_t	length:16;
-> +	uint32_t	measurement_specification:8;
-> +	uint32_t	reserved:8;
-> +	uint32_t	base_asym_algo;
-> +	uint32_t	base_hash_algo;
-> +	uint32_t	reserved2[3];
-> +	uint32_t	ext_asym_count:8;
-> +	uint32_t	ext_hash_count:8;
-> +	uint32_t	reserved3:16;
-> +} __packed;
-
-I'd expect this to not need __packed.
-
-> +#define MEASUREMENT_SPEC_DMTF			BIT(0)
-> +#define BASE_ASYM_ALG_ECDSA_ECC_NIST_P384	BIT(7)
-> +#define BASE_HASH_ALG_SHA_384			BIT(1)
-> +
-> +static int spdm_negotiate_algorithms(int dev_no)
-> +{
-> +	struct spdm_negotiate_alg request = {};
-> +	int ret;
-> +
-> +	request.header.version = SPDM_VERSION;
-> +	request.header.code = SPDM_NEGOTIATE_ALGORITHMS;
-> +	request.header.param1 = SPDM_RSVD;
-> +	request.header.param2 = SPDM_RSVD;
-> +
-> +	request.length = sizeof(request);
-> +	request.measurement_specification = MEASUREMENT_SPEC_DMTF;
-> +	request.base_asym_algo = BASE_ASYM_ALG_ECDSA_ECC_NIST_P384;
-> +	request.base_hash_algo = BASE_HASH_ALG_SHA_384;
-> +
-> +	ret = sdsi_process_spdm(&request, NULL, sizeof(request), 0, dev_no);
-> +	if (ret) {
-> +		fprintf(stderr, "Failed NEGOTIATE_ALGORITHMS\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int spdm_negotiate(int dev_no)
-> +{
-> +	int ret;
-> +
-> +	ret = spdm_get_version(dev_no);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = spdm_get_capabilities(dev_no);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return spdm_negotiate_algorithms(dev_no);
-> +}
-> +
-> +struct get_digests_response {
-> +	struct spdm_header header;
-> +	uint8_t digest[TPM_ALG_SHA_384_SIZE];
+> +static const struct file_operations sdsi_spdm_ops = {
+> +	.owner = THIS_MODULE,
+> +	.unlocked_ioctl = sdsi_spdm_ioctl,
 > +};
 > +
-> +#define SLOT_MASK(slot) BIT(slot)
+>  static int sdsi_probe(struct auxiliary_device *auxdev, const struct auxiliary_device_id *id)
+>  {
+>  	struct intel_vsec_device *intel_cap_dev = auxdev_to_ivdev(auxdev);
+> @@ -663,6 +844,7 @@ static int sdsi_probe(struct auxiliary_device *auxdev, const struct auxiliary_de
+>  		return -ENOMEM;
+>  
+>  	priv->dev = &auxdev->dev;
+> +	priv->id = auxdev->id;
+>  	mutex_init(&priv->mb_lock);
+>  	auxiliary_set_drvdata(auxdev, priv);
+>  
+> @@ -686,9 +868,35 @@ static int sdsi_probe(struct auxiliary_device *auxdev, const struct auxiliary_de
+>  	if (ret)
+>  		return ret;
+>  
+> +	/* Attestation miscdevice */
+> +	if (priv->features & SDSI_FEATURE_ATTESTATION) {
+> +		priv->miscdev.name = kasprintf(GFP_KERNEL, "isdsi%d", priv->id);
+
+devm_kasprintf() ?
+
+> +		if (!priv->miscdev.name)
+> +			return -ENOMEM;
 > +
-> +int spdm_get_digests(int dev_no, uint8_t digest[TPM_ALG_SHA_384_SIZE])
+> +		priv->miscdev.minor = MISC_DYNAMIC_MINOR;
+> +		priv->miscdev.fops = &sdsi_spdm_ops;
+> +
+> +		ret = misc_register(&priv->miscdev);
+> +		if (!ret) {
+> +			kfree_const(priv->miscdev.name);
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> +static void sdsi_remove(struct auxiliary_device *auxdev)
 > +{
-> +	struct spdm_header request = {};
-> +	struct get_digests_response response = {};
-> +	int ret;
+> +	struct sdsi_priv *priv = auxiliary_get_drvdata(auxdev);
 > +
-> +	ret = spdm_negotiate(dev_no);
-> +	if (ret)
-> +		return ret;
-> +
-> +	request.version = SPDM_VERSION;
-> +	request.code = SPDM_GET_DIGESTS;
-> +	request.param1 = SPDM_RSVD;
-> +	request.param2 = SPDM_RSVD;
-> +
-> +	ret = sdsi_process_spdm(&request, &response, sizeof(request),
-> +				sizeof(response), dev_no);
-> +	if (ret) {
-> +		fprintf(stderr, "Failed GET_DIGESTS\n");
-> +		return ret;
+> +	if (priv->features & SDSI_FEATURE_ATTESTATION) {
+> +		misc_deregister(&priv->miscdev);
+> +		kfree_const(priv->miscdev.name);
 > +	}
-> +
-> +	if (!(response.header.param2 & SLOT_MASK(0))) {
-> +		fprintf(stderr, "Error, Slot 0 not selected in GET_DIGESTS\n");
-> +		return -1;
-> +	}
-> +
-> +	if (digest)
-> +		memcpy(digest, response.digest, TPM_ALG_SHA_384_SIZE);
-> +
-> +	return 0;
 > +}
 > +
-> +#define CERT_SLOT	0
-> +#define CERT_BUF_LEN	4096
+>  static const struct auxiliary_device_id sdsi_aux_id_table[] = {
+>  	{ .name = "intel_vsec.sdsi" },
+>  	{}
+> @@ -701,7 +909,7 @@ static struct auxiliary_driver sdsi_aux_driver = {
+>  	},
+>  	.id_table	= sdsi_aux_id_table,
+>  	.probe		= sdsi_probe,
+> -	/* No remove. All resources are handled under devm */
+> +	.remove		= sdsi_remove,
+>  };
+>  module_auxiliary_driver(sdsi_aux_driver);
+>  
+> diff --git a/include/uapi/linux/intel_sdsi.h b/include/uapi/linux/intel_sdsi.h
+> new file mode 100644
+> index 000000000000..de9e7f6c44c5
+> --- /dev/null
+> +++ b/include/uapi/linux/intel_sdsi.h
+> @@ -0,0 +1,72 @@
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> +/*
+> + * Intel On Demand (SDSi) Interface for SPDM based attestation.
+> + * Copyright (c) 2019, Intel Corporation.
+> + * All rights reserved.
+> + *
+> + * Author: David E. Box <david.e.box@linux.intel.com>
+> + */
 > +
-> +struct get_cert_request {
-> +	struct spdm_header header;
-> +	uint16_t offset;
-> +	uint16_t length;
-> +} __packed;
+> +#ifndef __SDSI_H
+> +#define __SDSI_H
 > +
-> +struct get_cert_response {
-> +	struct spdm_header header;
-> +	uint16_t portion_length;
-> +	uint16_t remainder_length;
-> +	uint8_t certificate_chain[CERT_BUF_LEN];
-> +} __packed;
+> +#include <linux/types.h>
+> +
+> +/**
+> + * struct sdsi_spdm_info - Define platform information
+> + * @api_version:	Version of the firmware document, which this driver
+> + *			can communicate
+> + * @driver_version:	Driver version, which will help user to send right
+> + *			commands. Even if the firmware is capable, driver may
+> + *			not be ready
+> + * @dev_no:		Returns the auxiliary device number the corresponding
+> + *			sdsi instance
+> + * @max_request_size:	Returns the maximum allowed size for SPDM request
+> + *			messages
+> + * @max_response_size:	Returns the maximum size of an SPDM response message
+> + *
+> + * Used to return output of IOCTL SDSI_SPDM_INFO. This
+> + * information can be used by the user space, to get the driver, firmware
+> + * support and also number of commands to send in a single IOCTL request.
+> + */
+> +struct sdsi_spdm_info {
+> +	__u32 api_version;
+> +	__u16 driver_version;
+> +	__u16 dev_no;
+> +	__u16 max_request_size;
+> +	__u16 max_response_size;
+> +};
+> +
+> +/**
+> + * struct sdsi_spdm_message - The SPDM message sent and received from the device
+> + * @spdm_version:		Supported SPDM version
+> + * @request_response_code:	The SPDM message code for requests and responses
+> + * @param1:			Parameter 1
+> + * @param2:			Parameter 2
+> + * @buffer:			SDPM message specific buffer
+> + *
+> + */
+> +struct sdsi_spdm_message {
+> +	__u8 spdm_version;
+> +	__u8 request_response_code;
+> +	__u8 param1;
+> +	__u8 param2;
+> +	__u8 buffer[4092];
 
-Neither of these needs packed?
+How about SZ_4K - 4 * sizeof(__u8) ?
 
+Or move those header/metadata fields into another struct which is 
+anonymously embedded into this one so you could do SZ_4K - sizeof(struct 
+sdsi_spdm_message_header).
+
+Remember to add #include for SZ_4K.
 
 -- 
  i.
 
-> +static int get_certificate_size(int dev_no)
-> +{
-> +	struct get_cert_request request = {};
-> +	struct get_cert_response response = {};
-> +	int ret;
-> +
-> +	request.header.version = SPDM_VERSION;
-> +	request.header.code = SPDM_GET_CERTIFICATE;
-> +	request.header.param1 = CERT_SLOT;
-> +	request.header.param2 = SPDM_RSVD;
-> +	request.offset = 0;
-> +	request.length = CERT_BUF_LEN;
-> +
-> +	ret = sdsi_process_spdm(&request, &response, sizeof(request),
-> +				sizeof(response), dev_no);
-> +	if (ret) {
-> +		fprintf(stderr, "Error getting size during GET_CERTIFICATE\n");
-> +		return ret;
-> +	}
-> +
-> +	return response.portion_length + response.remainder_length;
-> +}
-> +
-> +static int get_certificate_portion(int dev_no, uint16_t offset, uint16_t length,
-> +				   uint16_t *portion_length, uint16_t *remainder_length,
-> +				   uint8_t *cert_chain)
-> +{
-> +	struct get_cert_request request = {};
-> +	struct get_cert_response response = {};
-> +	int ret;
-> +
-> +	request.header.version = SPDM_VERSION;
-> +	request.header.code = SPDM_GET_CERTIFICATE;
-> +	request.header.param1 = CERT_SLOT;
-> +	request.header.param2 = SPDM_RSVD;
-> +	request.offset = offset;
-> +	request.length = length;
-> +
-> +	ret = sdsi_process_spdm(&request, &response, sizeof(request),
-> +				sizeof(response), dev_no);
-> +	if (ret) {
-> +		fprintf(stderr, "Failed GET_CERTIFICATE\n");
-> +		return ret;
-> +	}
-> +
-> +	*portion_length = response.portion_length;
-> +	*remainder_length = response.remainder_length;
-> +
-> +	memcpy(cert_chain + offset, response.certificate_chain, *portion_length);
-> +
-> +	return 0;
-> +}
-> +
-> +int spdm_get_certificate(int dev_no, struct cert_chain *c)
-> +{
-> +	uint16_t remainder_length = CERT_BUF_LEN;
-> +	uint16_t portion_length = 0;
-> +	uint16_t offset = 0;
-> +	int ret, size;
-> +
-> +	ret = spdm_negotiate(dev_no);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = spdm_get_digests(dev_no, NULL);
-> +	if (ret)
-> +		return ret;
-> +
-> +	size = get_certificate_size(dev_no);
-> +	if (size < 0)
-> +		return size;
-> +
-> +	c->chain = malloc(size);
-> +	if (!c->chain) {
-> +		perror("malloc");
-> +		return -1;
-> +	}
-> +
-> +	while (remainder_length) {
-> +		int length;
-> +
-> +		if (remainder_length > CERT_BUF_LEN)
-> +			length = CERT_BUF_LEN;
-> +		else
-> +			length = remainder_length;
-> +
-> +		offset += portion_length;
-> +
-> +		ret = get_certificate_portion(dev_no, offset, length,
-> +					      &portion_length,
-> +					      &remainder_length,
-> +					      c->chain);
-> +		if (ret < 0)
-> +			goto free_cert_chain;
-> +	}
-> +
-> +	c->len = offset + portion_length;
-> +	return 0;
-> +
-> +free_cert_chain:
-> +	free(c->chain);
-> +	c->chain = NULL;
-> +	return ret;
-> +}
-> diff --git a/tools/arch/x86/intel_sdsi/spdm.h b/tools/arch/x86/intel_sdsi/spdm.h
-> new file mode 100644
-> index 000000000000..aa7e08ffb872
-> --- /dev/null
-> +++ b/tools/arch/x86/intel_sdsi/spdm.h
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#include <stdint.h>
-> +
-> +#define TPM_ALG_SHA_384_SIZE 48
-> +
-> +struct cert_chain {
-> +	void *chain;
-> +	size_t len;
 > +};
 > +
-> +int spdm_get_digests(int dev_no, uint8_t digest[TPM_ALG_SHA_384_SIZE]);
-> +int spdm_get_certificate(int dev_no, struct cert_chain *c);
+> +/**
+> + * struct sdsi_spdm_command - The SPDM command
+> + * @ size:		The size of the SPDM message
+> + * @ message:		The SPDM message
+> + *
+> + * Used to return output of IOCTL SDSI_SPDM_COMMAND.
+> + */
+> +struct sdsi_spdm_command {
+> +	__u32 size;
+> +	struct sdsi_spdm_message message;
+> +};
 > +
+> +#define SDSI_IF_MAGIC		0xFC
+> +#define SDSI_IF_SPDM_INFO	_IOR(SDSI_IF_MAGIC, 0, struct sdsi_spdm_info *)
+> +#define SDSI_IF_SPDM_COMMAND	_IOWR(SDSI_IF_MAGIC, 1, struct sdsi_spdm_command *)
+> +#endif
 > 
-
+> base-commit: 36dc58c367149680bed334e83ec54728f980a96e
+> 
