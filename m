@@ -1,153 +1,155 @@
-Received: from wfout8-smtp.messagingengine.com (wfout8-smtp.messagingengine.com [64.147.123.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A879E17F0;
-	Sat,  4 May 2024 01:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0647DAD2D;
+	Sat,  4 May 2024 04:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714784650; cv=none; b=JvXHJKiWL8KZP3dbK0szBd+HGgmUci2s2Bfs1/TO/DAGFNzNq4bInXwsWgzMCpsGTns0IGc5INs/ijHiyt5Kx0NerVJ2pltwDIHEcFf+k3AI0U36eiMIwvhEAAZkD+0wwvOyAgDtlhpw6ByloNjxqXeClwTrYBhHUsvH0AjrI1U=
+	t=1714796232; cv=none; b=VhNVn+JYmXYI6f2l762BtDb10aRL2qpp/3nN4KWCnK1JxtDLIajpHTbE/W+/sKaAdMKn1mxU/T5chvCkqTrCUM47OKfEpikZ6evUSMGv5qQAwGxK6Igjz7e3bd1yiMOzhfOc+mFjV7pXJlC8P3PevqRadllk78awdocYTRLOYFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714784650; c=relaxed/simple;
-	bh=GTAviRUSbLhWepPZbkOt/9B6fmwH/X/W0vVQuT4dRwk=;
-	h=Date:From:Subject:To:Cc:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XcRou8pO2cF18aQzOQEz3YcL26IMCvV9fU7iiMaVfUNcscyAgFlXCZVITZiuVOeQZ1j4+jOWBl0I8sw8fzda1h2xkF1iXNkLPmdss1mxaTQmdF3uIT1/sPtdpzVCnPGmfAAMsMehBny6YM6W/OsvntAYmbHaFN6rA/z/MLoBw1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=IWH4myxU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SkXMJr2Y; arc=none smtp.client-ip=64.147.123.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
+	s=arc-20240116; t=1714796232; c=relaxed/simple;
+	bh=b2lTUeDMgTot2tq51wa/9lK7Ivb8jkSSeQ3JX6w03A8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ZmxqLtpP1BBy4465BExO7OTkSBPrix54ZeCsPP+1qdbRIjKCxgodYAz6q1GgGTcM2PMbNdNAEsqCHP7cy46xFPHks/PkSoXi1WT982FC4wz/er2VqWd6+nfNa41NWUWCseINyleoqeHTOlTSrFAOShWIbk3JvhwuXXgCUY8/EAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PY9yWJfP; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="IWH4myxU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SkXMJr2Y"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfout.west.internal (Postfix) with ESMTP id C03C41C00122;
-	Fri,  3 May 2024 21:04:05 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Fri, 03 May 2024 21:04:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1714784645; x=1714871045; bh=hqb5qPm2Ez
-	Fq5XsSUyPxT/J/oPYrlFVrHq8anqHONac=; b=IWH4myxUaXyxJWEEwlZyo4zXUr
-	KlMPgbIxu93asxZ2GT74V9c+vm/qwnRl1AAJEh8BNTEbNvGs19+ZddDVvS1pFZU3
-	KvA6R8tbPM2yKcnWqEXqGzAyW5LVCGXjdRHrtHjloJ7LQSgdQIaSwufshhExBsBV
-	yp2VyKcf6uIgoKFgMS4cXr1C196VRCtW2qI6lQq+YfKBzSfrHpntW8ly3FDQtys+
-	+cq0yEJIpfmBGGf7VxIfkFqafQIFTiyTmfS+L9+rtOpPQKP3Ssr8WQRLecKGCFOJ
-	jTIQ7q3sZuZVrOQUt/9A6TgY2ePS0Xv0Wtl2YOhPWQ/oVksyFgbgCZo5PCCg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1714784645; x=1714871045; bh=hqb5qPm2EzFq5XsSUyPxT/J/oPYr
-	lFVrHq8anqHONac=; b=SkXMJr2YnD04MZ0x/+PVsHd59w85r74zC76FZE67D46Z
-	syf5HoMFxpg51gQF/ObM4beSJurk+hUuzfkT9e9D1YYnQLSjVtQ3pc7QkqbzPTFg
-	hXYAc6X/oDoNswk+FzY9CLE/l6y2N/9kuaamHU0RDfZt+TDowhMCUCutcmZ21tGo
-	7WnjgmrjgZDa7TFdh2RGfE4hh0FCJU8apdTHc6u0kgL5QrepTiHBrGxHoQutq0Lj
-	KWlnzQR+1sQw2uVwZCwJ8VaTo/pWUpJRdRm1mBS8b5pd8oYJJCHTEfXi/S+n74z1
-	jibpoTLRLkZZOcqpXV9ZwFWyN1X3VdXK/mbCXiyX2w==
-X-ME-Sender: <xms:hIk1Zs7fqncGfg8UXnrEHClTwRowOaZcKy_OlS0HzFlMeySxZ1cPmg>
-    <xme:hIk1Zt56sraQMlXzhWCIqmw8TgciaZWIcffG0I6JbyvYFKYPT_DN3hCGK8zzqMVLv
-    23ZpjR3mqG0pkmm6mw>
-X-ME-Received: <xmr:hIk1ZrccauRwvWZhM5twEGeylc18zUOkCPg47CJtuL-LNOe_hxAoUcdKFSu9ntp4U3bH>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddvuddggedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhuffvvefkjghfofggtgesthdtredtredtvdenucfhrhhomhepnfihnhgu
-    ohhnucfurghntghhvgcuoehlshgrnhgthhgvsehlhihnuggvnhhordgtrgeqnecuggftrf
-    grthhtvghrnhepvdfgjeduvddtheekkeduiedtieegveefgeekgfevffffjeevgeffueev
-    heejjedtnecuffhomhgrihhnpehgihhtqdhstghmrdgtohhmpdhgihhthhhusgdrtghomh
-    dpkhgvrhhnvghlrdhorhhgpddtuddrohhrghenucevlhhushhtvghrufhiiigvpedtnecu
-    rfgrrhgrmhepmhgrihhlfhhrohhmpehlshgrnhgthhgvsehlhihnuggvnhhordgtrg
-X-ME-Proxy: <xmx:hIk1ZhIQkgaynT7idR4bB-x_YMq0NVM106dCScAeY0O4tfQtiRQM-w>
-    <xmx:hIk1ZgLIfK_63V8oTkanacBDwLbAB5SSdTjlGNbsMcGIfFu-pFGmEw>
-    <xmx:hIk1ZiyRkXLf5OQN9bY3upnEA5-FxH4p4FoI2iqeFll4ABhIsFzqZw>
-    <xmx:hIk1ZkLplf_lQRtRvjbjrR9NRrnmLOsairvz-pAUNf0DFowZ4CP_eg>
-    <xmx:hYk1Zpeqtfdo85_ZJMW1kDxy4gw61w5IEYys4TSa9BO8QWcJn70t9zyA>
-Feedback-ID: i1719461a:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 3 May 2024 21:03:45 -0400 (EDT)
-Date: Fri, 03 May 2024 19:03:10 -0600
-From: Lyndon Sanche <lsanche@lyndeno.ca>
-Subject: Re: [PATCH v5] platform/x86: dell-laptop: Implement platform_profile
-To: kernel test robot <lkp@intel.com>
-Cc: Paul Gazzillo <paul@pgazz.com>, Necip Fazil Yildiran
-	<fazilyildiran@gmail.com>, oe-kbuild-all@lists.linux.dev,
-	mario.limonciello@amd.com, pali@kernel.org, W_Armin@gmx.de,
-	srinivas.pandruvada@linux.intel.com, ilpo.jarvinen@linux.intel.com,
-	Hans de Goede <hdegoede@redhat.com>, Matthew Garrett <mjg59@srcf.ucam.org>,
-	Jonathan Corbet <corbet@lwn.net>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Vegard Nossum <vegard.nossum@oracle.com>, platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
-Message-Id: <A9SXCS.IUN31UTTT9GM2@lyndeno.ca>
-In-Reply-To: <202405031851.NYy0ZB02-lkp@intel.com>
-References: <20240501215829.4991-2-lsanche@lyndeno.ca>
-	<202405031851.NYy0ZB02-lkp@intel.com>
-X-Mailer: geary/44.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PY9yWJfP"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5af2358c7e5so343839eaf.0;
+        Fri, 03 May 2024 21:17:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714796230; x=1715401030; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tSo6zwOKqQsGcSGbmDOSdgFiHjnaPqYR6z7N4u/pMMc=;
+        b=PY9yWJfP2W4ONOG3QVoirtlCuyTmGCzuGIj+BtfAA4uoW9tbkBnhzNQlzvAzxuhLa0
+         vtTc3C+OykoLVvC339ByPH6OUnNbRa/VsSJRwuZ1QAxujBfdyXbmYplFNiQLI1lv6WF7
+         /hx1ai7hEKstDdtrNz841iuCx1U5naSdIlFxgKi5YnP7Vq/UnSlAqUZBdC+5/Wx//ndD
+         yYYQi3vYymu8SgGEZidRaQ5oEG4aRI7f2PXOa7TxV+rsXCEd6a6U32EvDArPXfYHl6Zr
+         xbM/LxLRPYt8GALXW9cHBEJp0NasrH5BArTbSR3R4WvaKTxDQUd0IHN+Okyt7r++Fhwg
+         XVdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714796230; x=1715401030;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tSo6zwOKqQsGcSGbmDOSdgFiHjnaPqYR6z7N4u/pMMc=;
+        b=Jz6yLvvuE52GTtmfask8jm7muO7zGzrDNL9V+UtWwNT6CpzmPUv3g+8F8NpldsdSLs
+         UhVL7uXmKAsUWUvvudhNOEoPY6DVbFuJwJD2ynpVILWG1gw+q2CTIQCnfxa8ACrA+wT5
+         iwEqVZRIiz1/ksn1Qkj0Tsm/rTr2XWwMKtCCPVqT68T3nnI4yJm0zCxeBR9PdsQahq5D
+         rpQvt60CbaxbWz3PPfdxTndb5ntPleS3UQn79SYXzHWGG261rn9iFAOTlE+h6CliXRbw
+         N9OuIBkHBoGBKarpBe2Y1YYqvFMJtb/Yz4jmOk0NHb/tWQmU1mKThgqE06gZh6SrOXye
+         0AuA==
+X-Forwarded-Encrypted: i=1; AJvYcCVO9ZtjMn112LRDNeGxjY7aPaeeqArFKVuYqX1bFgbUMpYaojv8xNhEDzyGNiDybwcBtYrcFKGfUy5jqiYkBWKQKgjLg0NNzuNnx/ol
+X-Gm-Message-State: AOJu0YzYDQq2lKZ2NiJmV7QPc5wP8XTdsX23CAk243NTf3Ia8v4Gx2DX
+	/ubOOKgLi2hoag96Tc4laYfNwGEs/OnYT+Q42Eye+QndvUYbIxWM
+X-Google-Smtp-Source: AGHT+IGdvZsYHYLwNI4cw0uRqUHM3E2Fqp+63lsTFTNCHPScphYrAOc4ufA4UUrHI6VTXtoHVAw+yw==
+X-Received: by 2002:a05:6358:988f:b0:18a:78c2:7ccf with SMTP id q15-20020a056358988f00b0018a78c27ccfmr5238421rwa.13.1714796229852;
+        Fri, 03 May 2024 21:17:09 -0700 (PDT)
+Received: from [192.168.5.213] ([101.229.120.80])
+        by smtp.gmail.com with ESMTPSA id d14-20020a63f24e000000b0060063c4be3bsm3911940pgk.14.2024.05.03.21.17.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 May 2024 21:17:09 -0700 (PDT)
+Message-ID: <15e9c1278505677e813df48190a5cd9c200453c3.camel@gmail.com>
+Subject: Re: [PATCH v2 1/2] platform/surface: aggregator: Defer probing when
+ serdev is not ready
+From: Weifeng Liu <weifeng.liu.z@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org, 
+ Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede
+ <hdegoede@redhat.com>
+Date: Sat, 04 May 2024 12:17:05 +0800
+In-Reply-To: <ZjUY7xPXszBulKap@smile.fi.intel.com>
+References: <20240503030900.1334763-1-weifeng.liu.z@gmail.com>
+	 <20240503030900.1334763-2-weifeng.liu.z@gmail.com>
+	 <ZjUY7xPXszBulKap@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 (3.52.1-1.fc40) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+
+Hi Andy,
+
+On Fri, 2024-05-03 at 20:03 +0300, Andy Shevchenko wrote:
+> On Fri, May 03, 2024 at 11:08:46AM +0800, Weifeng Liu wrote:
+> > This is an attempt to alleviate race conditions in the SAM driver where
+> > essential resources like serial device and GPIO pins are not ready at
+> > the time ssam_serial_hub_probe() is called.  Instead of giving up
+> > probing, a better way would be to defer the probing by returning
+> > -EPROBE_DEFER, allowing the kernel try again later.
+> >=20
+> > However, there is no way of identifying all such cases from other real
+> > errors in a few days.  So let's take a gradual approach identify and
+> > address these cases as they arise.  This commit marks the initial step
+> > in this process.
+>=20
+> ...
+>=20
+> > +	/*
+> > +	 * The following step can fail when it's called too early before the
+> > +	 * underlying UART device is ready (in this case -ENXIO is returned).
+> > +	 * Instead of simply giving up and losing everything, we can defer
+> > +	 * the probing by returning -EPROBE_DEFER so that the kernel would be
+> > +	 * able to retry later.
+> > +	 */
+>=20
+> You can add the following to the
+> serial_core.c (at the top after the headers)
+>=20
+> #undef ENXIO
+> #define ENXIO __LINE__
+>=20
+> And I'm pretty much sure it will point out you to the uart_port_activate(=
+).
+> If it's the case you may elaborate this in the comment.
+> Otherwise you may add the same hack to other files and find the culprit.
+
+Indeed, uart_port_activate() is the function where we gets errno -
+ENXIO.  Please see the cover letter [1] of this series:
 
 
+  ssam_serial_hub_probe()
+  serdev_device_open()
+  ctrl->ops->open()	/* this callback being ttyport_open() */
+  tty->ops->open()	/* this callback being uart_open() */
+  tty_port_open()
+  port->ops->activate()	/* this callback being uart_port_activate() */
+  Find bit UPF_DEAD is set in uport->flags and fail with errno -ENXIO.
 
-On Fri, May 3 2024 at 06:19:18 PM +08:00:00, kernel test robot 
-<lkp@intel.com> wrote:
-> Hi Lyndon,
-> 
-> kernel test robot noticed the following build warnings:
-> 
-> [auto build test WARNING on linus/master]
-> [also build test WARNING on v6.9-rc6 next-20240503]
-> [If your patch is applied to the wrong git tree, kindly drop us a 
-> note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    
-> https://github.com/intel-lab-lkp/linux/commits/Lyndon-Sanche/platform-x86-dell-laptop-Implement-platform_profile/20240502-060146
-> base:   linus/master
-> patch link:    
-> https://lore.kernel.org/r/20240501215829.4991-2-lsanche%40lyndeno.ca
-> patch subject: [PATCH v5] platform/x86: dell-laptop: Implement 
-> platform_profile
-> config: 
-> i386-kismet-CONFIG_ACPI_PLATFORM_PROFILE-CONFIG_DELL_LAPTOP-0-0 
-> (https://download.01.org/0day-ci/archive/20240503/202405031851.NYy0ZB02-lkp@intel.com/config)
-> reproduce: 
-> (https://download.01.org/0day-ci/archive/20240503/202405031851.NYy0ZB02-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new 
-> version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: 
-> https://lore.kernel.org/oe-kbuild-all/202405031851.NYy0ZB02-lkp@intel.com/
-> 
-> kismet warnings: (new ones prefixed by >>)
->>>  kismet: WARNING: unmet direct dependencies detected for 
->>> ACPI_PLATFORM_PROFILE when selected by DELL_LAPTOP
->    WARNING: unmet direct dependencies detected for 
-> ACPI_PLATFORM_PROFILE
->      Depends on [n]: ACPI [=n]
->      Selected by [y]:
->      - DELL_LAPTOP [=y] && X86_PLATFORM_DEVICES [=y] && 
-> X86_PLATFORM_DRIVERS_DELL [=y] && DMI [=y] && BACKLIGHT_CLASS_DEVICE 
-> [=y] && (ACPI_VIDEO [=n] || ACPI_VIDEO [=n]=n) && (RFKILL [=n] || 
-> RFKILL [=n]=n) && (DELL_WMI [=n] || DELL_WMI [=n]=n) && SERIO_I8042 
-> [=y] && DELL_SMBIOS [=y]
-> 
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+What confuses me is that when ssam_serial_hub_probe() (probe callback
+of a serdev driver) gets called and tries to open the provided serdev
+device by serdev_device_open(), it simply fails to open it...  The
+serdev device is not the kind of auxiliary devices but the main device
+this driver is to manage.  And I don't find other serdev driver doing
+this sort of checking and returning -EPROBE_DEFER thing when opening
+serdev device.  Thus, from the perspective of a newcomer to this area,
+I think this phenomenon is somewhat abnormal.  Maybe somehow the
+initializing of the UART device and probing of serdev driver are
+interleaved...
 
-I will try reproducing this test on my machine, to avoid spamming the 
-mailing list with the same error over and over.
+Andy, do you have any idea what's going wrong here?  Or do you think
+this is an expected behavior?
 
+>=20
+> Also it might be that we add some error code substitution inside serdev c=
+ore.
+> At least there more data is available to make the (better) decision.
+>=20
 
+Agree.  If failing in serdev_device_open() is common in a serdev
+driver, we'd better handle it properly inside serdev core and convey
+explicit semantics to the caller.
 
+Best regards,
+Weifeng
 
-
-
-
+[1]
+https://lore.kernel.org/linux-serial/20240503030900.1334763-1-weifeng.liu.z=
+@gmail.com/T/#m40d73c44bf92ad45e4fca5ed5f01f9c11e30adb1
