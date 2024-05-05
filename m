@@ -1,63 +1,66 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E105BACF
-	for <platform-driver-x86@vger.kernel.org>; Sat,  4 May 2024 16:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E631865B;
+	Sun,  5 May 2024 13:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714840893; cv=none; b=mIgPZF4RnbcufCF8ug6AlMv5TAnucQI4+UVNkKr3DCXK43gwZR5Ok4ts8N17js0znTaA8rAKd6cY8F93rciE4ieP1Chhp9B1IwjOEBTLbn+duN+eY3hMJrjVjwBbqgSqcLNBNhoX5L5Eel0LhSwkz+MooVW6yUZQ+qG+uW2oOWw=
+	t=1714914523; cv=none; b=FR8EGhCGFwzNxjuOldbNL0dQ9FShHTDrNVom4WcyVl5C82L2V0752fiewyBY9PxW+/li65LISa2wIi+xCUDIQOQPXK6L5ooYpt+0zUO9ioZ3JJeMgbm5nT1EHVi6qCdimVjTc0phHzSfwHs9iB3LA15zi3791JG8waZWkQOEBuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714840893; c=relaxed/simple;
-	bh=a8m+8+e12Ee+CccBOHshe0OQsistjn54NNvnebu/DWA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JwTCiCe8bLA3VTop9PPNwHOHO/3F9+PWzRARnNIRkI+nZ10B6CMy2nx0EuNAMjBsZnarNzhboapZxoCXC/nCFuQlaLJ/s7+0YOQh074tEcbiQm8z03FkJqmtWmHRDCPksICukRSUj9fZ9HQ0DSKRDjDyZ5meDMHmgHK8osWpxO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Cr+62168; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1714914523; c=relaxed/simple;
+	bh=Px8PRHZ803xOrqkehMecytmPVy2Bj6D7/bRb+lKTk9I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZDYq7Qfl+qSBd2el4LmIBJ/P1FneIP52vv5H+VacSYObzYCsi/+LwbBqNq4zouQXfofBRYIGoduM1ILEJniWV39qTkB+A4mWHSqcPvQ1RR040xANb5yH/7mIhk42QFYrW72AVj/oKYTFcgno0omvg7sRZQF/Khg6MzHIda9kLPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DsPypYXb; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cr+62168"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1714840891;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zsUUJqxO2YzjHdqDwi1FpZnhd5na65/RZYeiDHHsZs0=;
-	b=Cr+62168UzWguF+Pt+C9o1EFA9WuVPpLs+9m8NGY6mCQbc0AHfw/63ZN2tR79S59GCpEZd
-	UdDs3G3JZYnN2rDuRmCouwN35owlDa/FhZ21MzyDucu4xBeEA5xOER1KR1X1NKTXojwesn
-	sHC3WTVVRH5uIwhLNRx5CVg+a54WuJA=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-388-KdMSVrE8PuOP6dLXXiuFRA-1; Sat,
- 04 May 2024 12:41:27 -0400
-X-MC-Unique: KdMSVrE8PuOP6dLXXiuFRA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E35591C03150;
-	Sat,  4 May 2024 16:41:26 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.41])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 73B93EC682;
-	Sat,  4 May 2024 16:41:25 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>,
-	Kate Hsuan <hpa@redhat.com>,
-	Sebastian Reichel <sre@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org,
-	=?UTF-8?q?Andr=C3=A9=20Apitzsch?= <git@apitzsch.eu>,
-	linux-leds@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH v9 6/7] power: supply: power-supply-leds: Add charging_orange_full_green trigger for RGB LED
-Date: Sat,  4 May 2024 18:41:04 +0200
-Message-ID: <20240504164105.114017-7-hdegoede@redhat.com>
-In-Reply-To: <20240504164105.114017-1-hdegoede@redhat.com>
-References: <20240504164105.114017-1-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DsPypYXb"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5f415fd71f8so857450a12.3;
+        Sun, 05 May 2024 06:08:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714914520; x=1715519320; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=82t8iKOnzOMcTOXyExboVbky/f5PQ2Kw9lsluTPOV48=;
+        b=DsPypYXbEASRXTXV+5AFNm6zgAIjOb5TwAMANrkEOHwqQ0oJrSuZnXLiemO6NhsmRZ
+         ep1Dvl16vPiwjkKQ9I6TdMAhyyh/dpeAeOAbmd+1towZFqbhYBl8bREhbUXt0Pce7Evc
+         IAc5j4MHXU7paWdWitG362FT9+ymBF5zfDI1VkzBOqfdphTppq4jlJzFyM+uZjeWESJd
+         kzwhLMKFgKC0ciSckCjMOyhrXfLaipcZXUC+en5O3MSq02r5eykeYhK7IOGNatt9pKkv
+         I+vk4/QROD968Al4iS8EyHVoapTlGYc6w4dmGoz9ODL+Sh77AgjAr9S8VcJzBcHLdm47
+         /fCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714914520; x=1715519320;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=82t8iKOnzOMcTOXyExboVbky/f5PQ2Kw9lsluTPOV48=;
+        b=qXBYXCuSK60sk5u4YX+ZeDdi8G+Wr5qQjffETQBiudKkbRCXFkBsmTgLXJhp6Oz36R
+         pjSJWoMt+E3SWM+2TQRy4pNUR9XxnHL6/dha+HHIByU1JsbfALx1H5FpXZC1NS8TR5i/
+         Ia3gcxg5OHf1M+MzRVVg40MD1pD9xLioZvvQ/sJvZDl77rMRewtQyCcT0QrTUuwveBU7
+         cx43bmLRQVfDDX01uE7jpluKkBfygWsY9qiCffDCE6nD/+NRqjpqXekd3FA31T1GJcYz
+         dY2a/Bw4a3w4SPp7JgsoFZ8K95EA3ejPg6rD4uja5Ewho+p5oRUNTm/X8kXvPm8DTqP7
+         C2gg==
+X-Forwarded-Encrypted: i=1; AJvYcCXkjWZ2bDPI4ioZb47y+vr8h0cWEIZmOT7IAfFWUlMSnFfdZ8gE53/TOAOwHHzWh2GzfAqUgiDkb8+/b64kXmZzYubIHLSKMApS2PM4
+X-Gm-Message-State: AOJu0Yx+/Yw+RP53qXXZ6ZMScEyXfJhY/SWXaoHeZBtxUjKc9H01+56D
+	3fBtdrx8eNURI0/8Lo2gRCFWgLuD83swu+zywfZQt9qIKgKDsgXSolb+sh4emqdDeWEB
+X-Google-Smtp-Source: AGHT+IFaLbgAnNKhIox09dwN/Fh+vfBvzSu4E1eIxm8+2M+I5oYXmakwTf1X41gix4GhviO0p0Tpig==
+X-Received: by 2002:a05:6a00:3cc6:b0:6e8:3d5b:f3b1 with SMTP id ln6-20020a056a003cc600b006e83d5bf3b1mr8057710pfb.22.1714914520073;
+        Sun, 05 May 2024 06:08:40 -0700 (PDT)
+Received: from localhost ([103.192.227.200])
+        by smtp.gmail.com with ESMTPSA id h4-20020a056a00218400b006f3e3d928fesm6029471pfi.220.2024.05.05.06.08.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 May 2024 06:08:39 -0700 (PDT)
+From: Weifeng Liu <weifeng.liu.z@gmail.com>
+To: platform-driver-x86@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Cc: Weifeng Liu <weifeng.liu.z@gmail.com>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v3 0/2] Defer probing of SAM if serdev device is not ready
+Date: Sun,  5 May 2024 21:07:48 +0800
+Message-ID: <20240505130800.2546640-1-weifeng.liu.z@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -65,121 +68,75 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-From: Kate Hsuan <hpa@redhat.com>
+v3 changes:
+* better formatting, nothing special
 
-Add a charging_orange_full_green LED trigger and the trigger is based on
-led_mc_trigger_event() which can set an RGB LED when the trigger is
-triggered. The LED will show orange when the battery status is charging.
-The LED will show green when the battery status is full.
+v2 changes:
+* resolves Andy's comments
 
-Link: https://lore.kernel.org/linux-leds/f40a0b1a-ceac-e269-c2dd-0158c5b4a1ad@gmail.com/
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Kate Hsuan <hpa@redhat.com>
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
-[hdegoede@redhat.com change color order to RGB]
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/power/supply/power_supply_leds.c | 23 +++++++++++++++++++++++
- include/linux/power_supply.h             |  2 ++
- 2 files changed, 25 insertions(+)
+Original letter:
 
-diff --git a/drivers/power/supply/power_supply_leds.c b/drivers/power/supply/power_supply_leds.c
-index c7db29d5fcb8..73935de844d9 100644
---- a/drivers/power/supply/power_supply_leds.c
-+++ b/drivers/power/supply/power_supply_leds.c
-@@ -22,6 +22,8 @@
- static void power_supply_update_bat_leds(struct power_supply *psy)
- {
- 	union power_supply_propval status;
-+	unsigned int intensity_green[3] = { 0, 255, 0 };
-+	unsigned int intensity_orange[3] = { 255, 128, 0 };
- 
- 	if (power_supply_get_property(psy, POWER_SUPPLY_PROP_STATUS, &status))
- 		return;
-@@ -36,12 +38,20 @@ static void power_supply_update_bat_leds(struct power_supply *psy)
- 		/* Going from blink to LED on requires a LED_OFF event to stop blink */
- 		led_trigger_event(psy->charging_blink_full_solid_trig, LED_OFF);
- 		led_trigger_event(psy->charging_blink_full_solid_trig, LED_FULL);
-+		led_mc_trigger_event(psy->charging_orange_full_green_trig,
-+				     intensity_green,
-+				     ARRAY_SIZE(intensity_green),
-+				     LED_FULL);
- 		break;
- 	case POWER_SUPPLY_STATUS_CHARGING:
- 		led_trigger_event(psy->charging_full_trig, LED_FULL);
- 		led_trigger_event(psy->charging_trig, LED_FULL);
- 		led_trigger_event(psy->full_trig, LED_OFF);
- 		led_trigger_blink(psy->charging_blink_full_solid_trig, 0, 0);
-+		led_mc_trigger_event(psy->charging_orange_full_green_trig,
-+				     intensity_orange,
-+				     ARRAY_SIZE(intensity_orange),
-+				     LED_FULL);
- 		break;
- 	default:
- 		led_trigger_event(psy->charging_full_trig, LED_OFF);
-@@ -49,6 +59,8 @@ static void power_supply_update_bat_leds(struct power_supply *psy)
- 		led_trigger_event(psy->full_trig, LED_OFF);
- 		led_trigger_event(psy->charging_blink_full_solid_trig,
- 			LED_OFF);
-+		led_trigger_event(psy->charging_orange_full_green_trig,
-+			LED_OFF);
- 		break;
- 	}
- }
-@@ -74,6 +86,11 @@ static int power_supply_create_bat_triggers(struct power_supply *psy)
- 	if (!psy->charging_blink_full_solid_trig_name)
- 		goto charging_blink_full_solid_failed;
- 
-+	psy->charging_orange_full_green_trig_name = kasprintf(GFP_KERNEL,
-+		"%s-charging-orange-full-green", psy->desc->name);
-+	if (!psy->charging_orange_full_green_trig_name)
-+		goto charging_red_full_green_failed;
-+
- 	led_trigger_register_simple(psy->charging_full_trig_name,
- 				    &psy->charging_full_trig);
- 	led_trigger_register_simple(psy->charging_trig_name,
-@@ -82,9 +99,13 @@ static int power_supply_create_bat_triggers(struct power_supply *psy)
- 				    &psy->full_trig);
- 	led_trigger_register_simple(psy->charging_blink_full_solid_trig_name,
- 				    &psy->charging_blink_full_solid_trig);
-+	led_trigger_register_simple(psy->charging_orange_full_green_trig_name,
-+				    &psy->charging_orange_full_green_trig);
- 
- 	return 0;
- 
-+charging_red_full_green_failed:
-+	kfree(psy->charging_blink_full_solid_trig_name);
- charging_blink_full_solid_failed:
- 	kfree(psy->full_trig_name);
- full_failed:
-@@ -101,10 +122,12 @@ static void power_supply_remove_bat_triggers(struct power_supply *psy)
- 	led_trigger_unregister_simple(psy->charging_trig);
- 	led_trigger_unregister_simple(psy->full_trig);
- 	led_trigger_unregister_simple(psy->charging_blink_full_solid_trig);
-+	led_trigger_unregister_simple(psy->charging_orange_full_green_trig);
- 	kfree(psy->charging_blink_full_solid_trig_name);
- 	kfree(psy->full_trig_name);
- 	kfree(psy->charging_trig_name);
- 	kfree(psy->charging_full_trig_name);
-+	kfree(psy->charging_orange_full_green_trig_name);
- }
- 
- /* Generated power specific LEDs triggers. */
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 8e5705a56b85..c852cc882501 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -319,6 +319,8 @@ struct power_supply {
- 	char *online_trig_name;
- 	struct led_trigger *charging_blink_full_solid_trig;
- 	char *charging_blink_full_solid_trig_name;
-+	struct led_trigger *charging_orange_full_green_trig;
-+	char *charging_orange_full_green_trig_name;
- #endif
- };
- 
+Greetings,
+
+This series is intended to remedy a race condition where surface
+aggregator module (SAM) which is a serdev driver could fail to probe if
+the underlying UART port is not ready to open.  In such circumstance,
+invoking serdev_device_open() gets errno -ENXIO, leading to failure in
+probing of SAM.  However, if the probe is retried in a short delay,
+serdev_device_open() would work as expected and everything just goes
+fine.  As a workaround, adding the serial driver (8250_dw) into
+initramfs or building it into the kernel image significantly mitigates
+the likelihood of encountering this race condition, as in this way the
+serial device would be initialized much earlier than probing of SAM.
+
+However, IMO we should reliably avoid this sort of race condition.  A
+good way is returning -EPROBE_DEFER when serdev_device_open returns
+-ENXIO so that the kernel will be able to retry the probing later.  This
+is what the first patch tries to do.
+
+Though this solution might be a good enough solution for this specific
+issue, I am wondering why this kind of race condition could ever happen,
+i.e., why a serdes device could be not ready yet at the moment the
+serdev driver gets called and tries to bind it.  And even if this is an
+expected behavior how serdev driver works, I do feel it a little bit
+weird that we need to identify serdev_device_open() returning -ENXIO as
+non-fatal error and thus return -EPROBE_DEFER manually in such case, as
+I don't see this sort of behavior in other serdev driver.  Maximilian
+and Hans suggested discussing the root cause of the race condition here.
+I will be grateful if you could provide some reasoning and insights on
+this.
+
+Following is the code path when the issue occurs:
+
+	ssam_serial_hub_probe()
+	serdev_device_open()
+	ctrl->ops->open()	/* this callback being ttyport_open() */
+	tty->ops->open()	/* this callback being uart_open() */
+	tty_port_open()
+	port->ops->activate()	/* this callback being uart_port_activate() */
+	Find bit UPF_DEAD is set in uport->flags and fail with errno -ENXIO.
+
+I notice that flag UPF_DEAD would be set in serial_core_register_port()
+during calling serial_core_add_one_port() but don't have much idea
+what's going on under the hood.
+
+Additionally, add logs to the probe procedure of SAM in the second
+patch, hoping it could help provide context to user when something
+miserable happens.
+
+Context of this series is available in [1].
+
+Best regards,
+Weifeng
+
+Weifeng Liu (2):
+  platform/surface: aggregator: Defer probing when serdev is not ready
+  platform/surface: aggregator: Log critical errors during SAM probing
+
+ drivers/platform/surface/aggregator/core.c | 53 ++++++++++++++++------
+ 1 file changed, 39 insertions(+), 14 deletions(-)
+
 -- 
 2.44.0
 
