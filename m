@@ -1,71 +1,52 @@
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D153118C36;
-	Sun,  5 May 2024 13:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495E722081
+	for <platform-driver-x86@vger.kernel.org>; Sun,  5 May 2024 16:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714914530; cv=none; b=XuOnVnyA0/MCjRGFpldq9xAQMNObgOLVnFe8FPM1zhv9bTGo5Gnl5r9HNNnukWEpi97NAOLscun7hi2bOqon+E39zYENx7MsFXw80bukuLcY8vDPVsC3BzA6whCf9mgaKJakGGZ1Ln7sxVBsaKhr0XIppyOa7XKQpW6lNkwM6pg=
+	t=1714925327; cv=none; b=NbaPNOuDdD7Vq3cXzr2vJPiy2pwJoo0wOFqbTd92dO8W2QwqzBDqkZ3VMrR+ieayp5vRroYKfc4prklr2CUWV6vONYv4nzLWIHsyzfsw2hidI8zmERfDSKst/OyL9vzxLsLq4t4ZXDIRie6uIWuRwpF4i6YpuK+TQZo62Dg+dRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714914530; c=relaxed/simple;
-	bh=zq43g6gAg6FMvS7N1fUSfXeG+KHgEaE4anQQnw0VFRs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tx0waYeCE1Vu1Hr21TKn7GoOsm9/WKrXICuLW9pnt/48wVNZcXazPR3y6ltpF6hKN+e5RnA9ijHHm/GreVGmUX/GHi1CHQ+0AwdR2mZlakE1H6Mk//kaTmySdZRl+cH0pgJfCv6WuQ/io16v3zZdwp9s7Vvi0T75aJHOcVjNKuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G5v5hmLL; arc=none smtp.client-ip=209.85.161.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714925327; c=relaxed/simple;
+	bh=BBsbYwOA5HNTXkdGMTwdoYkc9DlnuYCmJ900U1T9zEI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oZco11Q7Naa3eDtn/8KEv3u5Tci4zaJUYbP2xikQHFZfi4/drY1bYdYtAeMbG5n+G2AGrXw8Fp9nrQRi15ov6u+rTORiUSUVpAIeCLEqm+xaW6uzoxY2BXxxTp9QALokQkOa9IGDIZU30HhHsBTWwk8yb1/Yi8qgt/7x1v8wVjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hRIa/tSw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G5v5hmLL"
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5b2058b16d3so270257eaf.1;
-        Sun, 05 May 2024 06:08:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714914527; x=1715519327; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+xriyLlmRhNTWVyp8sYeonBH1Bp/KhxXjUXeTasaaqA=;
-        b=G5v5hmLLXIgMkhSsWplo5juiJWm77ykBu/dBYoYOmxd5+znsx4QJbQbLw46ukkJxav
-         eCBdwVFglOG5BbISMkhwqwkYNQqSB3yd+m2y2RFU7HLgscgty7DEKqE0yg+4q72zvmKB
-         4WtyxyR9gDIxt85JZYPAAeCsBVVmIGrV2RvOoUUKnfvIvyWRDAwzAhozJpZ9VOm8guDB
-         Z+xciFT0c9TlU1f9DxUmE8K5tX5RCNo56lDK+GTLa8f+OcPI2IL0+b9sJbmEYi2szwA1
-         nFXMb1g3B30/OQVRwGzBs/5qh7+Kn/n0DErtI0n3NVuVb2x+3vtXjuj/LdSuAzccBMbc
-         92tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714914527; x=1715519327;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+xriyLlmRhNTWVyp8sYeonBH1Bp/KhxXjUXeTasaaqA=;
-        b=Snk5jcjBAnvmcvrlc8FMeul1HztkYp4dGUaZYoEUF5DKj6FdOjnKJcq/DExZIDUB9y
-         uKhdUKKMvcpkobIjBBY7zJ0D1UZXUWyTCSbOFoTBhW3UbnTtQ5QNY+Hnj2S+KvnHL+uZ
-         89rY35QibDNCj9OP0b4djUD0heTmN9j0m9GX/876qg5EDe1SHUxpQXQARH/zTNZM6ldc
-         Vef9foHDF8Cm0OaFrJkPCE6gbnq2DxLmfWTy8vysaR6zyTQ0tKbRz24+lZv5adME3WHM
-         6DvGkQ0lSw7CS1UsMA7Q8b7dVX0Ol3iXZfG/4Qov9iLljtiaImGmhR/sdM9vtiXhiwhC
-         l6uQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUWdbVAeGz+ZXBBD6/zHt1QHVTBv79wyK3qKlBi/HRK00ex6hm5r5cffq1NaJvbN9dgp9P0Nk4AraxOB6cpIQgFjUGHRflATSR614UV
-X-Gm-Message-State: AOJu0YydTi7FX/QJsg1FoHQ5kRIiN/yeV19f5PYiuvUXEgUqBB4t7HXe
-	Ocn92Y+kOJIcXcGq7Skusus8LYmbmJd4Fqh573UJXsR1ex+7PCS20jLmArj0r/WpoC8S
-X-Google-Smtp-Source: AGHT+IG9oC3Gm1PNn3QyUlvVeLRCJloUh/6bXiz7sJ8ofFB8AP1X4Ysqr6OLLfISQk3FQ/H1Zz3LHw==
-X-Received: by 2002:a05:6358:2996:b0:186:3fea:b69f with SMTP id j22-20020a056358299600b001863feab69fmr14232170rwc.21.1714914527084;
-        Sun, 05 May 2024 06:08:47 -0700 (PDT)
-Received: from localhost ([103.192.227.200])
-        by smtp.gmail.com with ESMTPSA id h64-20020a638343000000b0061a943e043fsm5869933pge.80.2024.05.05.06.08.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 May 2024 06:08:46 -0700 (PDT)
-From: Weifeng Liu <weifeng.liu.z@gmail.com>
-To: platform-driver-x86@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Cc: Weifeng Liu <weifeng.liu.z@gmail.com>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v3 2/2] platform/surface: aggregator: Log critical errors during SAM probing
-Date: Sun,  5 May 2024 21:07:50 +0800
-Message-ID: <20240505130800.2546640-3-weifeng.liu.z@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240505130800.2546640-1-weifeng.liu.z@gmail.com>
-References: <20240505130800.2546640-1-weifeng.liu.z@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hRIa/tSw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714925323;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0ZsU6TEj5G3bpFZxbMiKX7oZ18OwQ7OZ1IrSH3kWVXo=;
+	b=hRIa/tSw4Mh+bn4g9g4eFWb56CGRhUCTPtHF0TPzEYYNNIZzCWl8hQ1MA/c0tP6Hd698Ta
+	TGylsyocjz3Y87r2n73dogBp58lY2ZrUNRBktwl2RVsxRBQJqHgcncCeLVOnleW9t2oN7x
+	2NfpODvSU+pOeXhxlxn3IHbvvl3bF4s=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-186-PgPZ3f_mNdylOzQlMw6sOw-1; Sun,
+ 05 May 2024 12:08:41 -0400
+X-MC-Unique: PgPZ3f_mNdylOzQlMw6sOw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3797F1C03143;
+	Sun,  5 May 2024 16:08:41 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.192.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 75691EC680;
+	Sun,  5 May 2024 16:08:40 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org,
+	Kate Hsuan <hpa@redhat.com>
+Subject: [PATCH 1/2] platform/x86: x86-android-tablets: Pass struct device to init()
+Date: Sun,  5 May 2024 18:08:31 +0200
+Message-ID: <20240505160832.44216-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -73,132 +54,126 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-Emits messages upon errors during probing of SAM.  Hopefully this could
-provide useful context to user for the purpose of diagnosis when
-something miserable happen.
+Pass a struct device pointer for x86_android_tablet_device to the board
+specific init() functions, so that these functions can use this for
+e.g. devm_*() functions.
 
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Weifeng Liu <weifeng.liu.z@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/surface/aggregator/core.c | 42 ++++++++++++++--------
- 1 file changed, 27 insertions(+), 15 deletions(-)
+ drivers/platform/x86/x86-android-tablets/core.c        |  2 +-
+ drivers/platform/x86/x86-android-tablets/lenovo.c      | 10 +++++-----
+ drivers/platform/x86/x86-android-tablets/other.c       |  6 +++---
+ .../x86/x86-android-tablets/x86-android-tablets.h      |  2 +-
+ 4 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/platform/surface/aggregator/core.c b/drivers/platform/surface/aggregator/core.c
-index 7b1871eb7a6f..046fa63446bf 100644
---- a/drivers/platform/surface/aggregator/core.c
-+++ b/drivers/platform/surface/aggregator/core.c
-@@ -618,15 +618,17 @@ static const struct acpi_gpio_mapping ssam_acpi_gpios[] = {
+diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
+index 9bb10eadb699..919ef4471229 100644
+--- a/drivers/platform/x86/x86-android-tablets/core.c
++++ b/drivers/platform/x86/x86-android-tablets/core.c
+@@ -341,7 +341,7 @@ static __init int x86_android_tablet_probe(struct platform_device *pdev)
+ 		gpiod_add_lookup_table(gpiod_lookup_tables[i]);
  
- static int ssam_serial_hub_probe(struct serdev_device *serdev)
+ 	if (dev_info->init) {
+-		ret = dev_info->init();
++		ret = dev_info->init(&pdev->dev);
+ 		if (ret < 0) {
+ 			x86_android_tablet_remove(pdev);
+ 			return ret;
+diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
+index 16fa04d604a0..74f39b658d2c 100644
+--- a/drivers/platform/x86/x86-android-tablets/lenovo.c
++++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
+@@ -230,7 +230,7 @@ static struct gpiod_lookup_table * const lenovo_yb1_x90_gpios[] = {
+ 	NULL
+ };
+ 
+-static int __init lenovo_yb1_x90_init(void)
++static int __init lenovo_yb1_x90_init(struct device *dev)
  {
--	struct acpi_device *ssh = ACPI_COMPANION(&serdev->dev);
-+	struct device *dev = &serdev->dev;
-+	struct acpi_device *ssh = ACPI_COMPANION(dev);
- 	struct ssam_controller *ctrl;
- 	acpi_status astatus;
- 	int status;
+ 	/* Enable the regulators used by the touchscreens */
  
--	if (gpiod_count(&serdev->dev, NULL) < 0)
--		return -ENODEV;
-+	status = gpiod_count(dev, NULL);
-+	if (status < 0)
-+		return dev_err_probe(dev, status, "no GPIO found\n");
+@@ -412,7 +412,7 @@ static struct gpiod_lookup_table * const lenovo_yoga_tab2_830_1050_gpios[] = {
+ 	NULL
+ };
  
--	status = devm_acpi_dev_add_driver_gpios(&serdev->dev, ssam_acpi_gpios);
-+	status = devm_acpi_dev_add_driver_gpios(dev, ssam_acpi_gpios);
- 	if (status)
- 		return status;
+-static int __init lenovo_yoga_tab2_830_1050_init(void);
++static int __init lenovo_yoga_tab2_830_1050_init(struct device *dev);
+ static void lenovo_yoga_tab2_830_1050_exit(void);
  
-@@ -637,8 +639,11 @@ static int ssam_serial_hub_probe(struct serdev_device *serdev)
+ const struct x86_dev_info lenovo_yoga_tab2_830_1050_info __initconst = {
+@@ -534,7 +534,7 @@ static int lenovo_yoga_tab2_830_1050_power_off(struct sys_off_data *data)
+ 	return NOTIFY_DONE;
+ }
  
- 	/* Initialize controller. */
- 	status = ssam_controller_init(ctrl, serdev);
--	if (status)
-+	if (status) {
-+		dev_err_probe(dev, status,
-+			      "failed to initialize ssam controller\n");
- 		goto err_ctrl_init;
-+	}
+-static int __init lenovo_yoga_tab2_830_1050_init(void)
++static int __init lenovo_yoga_tab2_830_1050_init(struct device *dev)
+ {
+ 	int ret;
  
- 	ssam_controller_lock(ctrl);
+@@ -731,7 +731,7 @@ const char * const lenovo_yoga_tab2_1380_modules[] __initconst = {
+ 	NULL
+ };
  
-@@ -657,14 +662,13 @@ static int ssam_serial_hub_probe(struct serdev_device *serdev)
- 	if (status == -ENXIO)
- 		status = -EPROBE_DEFER;
- 	if (status) {
--		dev_err_probe(&serdev->dev, status,
--			      "failed to open serdev device\n");
-+		dev_err_probe(dev, status, "failed to open serdev device\n");
- 		goto err_devopen;
+-static int __init lenovo_yoga_tab2_1380_init(void)
++static int __init lenovo_yoga_tab2_1380_init(struct device *dev)
+ {
+ 	int ret;
+ 
+@@ -978,7 +978,7 @@ static const struct x86_spi_dev_info lenovo_yt3_spi_devs[] __initconst = {
  	}
+ };
  
- 	astatus = ssam_serdev_setup_via_acpi(ssh->handle, serdev);
- 	if (ACPI_FAILURE(astatus)) {
--		status = -ENXIO;
-+		status = dev_err_probe(dev, -ENXIO, "failed to setup serdev\n");
- 		goto err_devinit;
- 	}
+-static int __init lenovo_yt3_init(void)
++static int __init lenovo_yt3_init(struct device *dev)
+ {
+ 	int ret;
  
-@@ -680,25 +684,33 @@ static int ssam_serial_hub_probe(struct serdev_device *serdev)
- 	 * states.
- 	 */
- 	status = ssam_log_firmware_version(ctrl);
--	if (status)
-+	if (status) {
-+		dev_err_probe(dev, status, "failed to get firmware version\n");
- 		goto err_initrq;
-+	}
+diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
+index d3fb19cff555..ff7b1d0abaa3 100644
+--- a/drivers/platform/x86/x86-android-tablets/other.c
++++ b/drivers/platform/x86/x86-android-tablets/other.c
+@@ -183,7 +183,7 @@ static const struct x86_i2c_client_info chuwi_hi8_i2c_clients[] __initconst = {
+ 	},
+ };
  
- 	status = ssam_ctrl_notif_d0_entry(ctrl);
--	if (status)
-+	if (status) {
-+		dev_err_probe(dev, status, "D0-entry notification failed\n");
- 		goto err_initrq;
-+	}
+-static int __init chuwi_hi8_init(void)
++static int __init chuwi_hi8_init(struct device *dev)
+ {
+ 	/*
+ 	 * Avoid the acpi_unregister_gsi() call in x86_acpi_irq_helper_get()
+@@ -244,7 +244,7 @@ const struct x86_dev_info cyberbook_t116_info __initconst = {
+ #define CZC_EC_EXTRA_PORT	0x68
+ #define CZC_EC_ANDROID_KEYS	0x63
  
- 	status = ssam_ctrl_notif_display_on(ctrl);
--	if (status)
-+	if (status) {
-+		dev_err_probe(dev, status, "display-on notification failed\n");
- 		goto err_initrq;
-+	}
+-static int __init czc_p10t_init(void)
++static int __init czc_p10t_init(struct device *dev)
+ {
+ 	/*
+ 	 * The device boots up in "Windows 7" mode, when the home button sends a
+@@ -662,7 +662,7 @@ static const struct software_node *ktd2026_node_group[] = {
+ 	NULL
+ };
  
--	status = sysfs_create_group(&serdev->dev.kobj, &ssam_sam_group);
-+	status = sysfs_create_group(&dev->kobj, &ssam_sam_group);
- 	if (status)
- 		goto err_initrq;
+-static int __init xiaomi_mipad2_init(void)
++static int __init xiaomi_mipad2_init(struct device *dev)
+ {
+ 	return software_node_register_node_group(ktd2026_node_group);
+ }
+diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+index 821dc094b025..86402b9b46a3 100644
+--- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
++++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+@@ -89,7 +89,7 @@ struct x86_dev_info {
+ 	int pdev_count;
+ 	int serdev_count;
+ 	int gpio_button_count;
+-	int (*init)(void);
++	int (*init)(struct device *dev);
+ 	void (*exit)(void);
+ };
  
- 	/* Set up IRQ. */
- 	status = ssam_irq_setup(ctrl);
--	if (status)
-+	if (status) {
-+		dev_err_probe(dev, status, "failed to setup IRQ\n");
- 		goto err_irq;
-+	}
- 
- 	/* Finally, set main controller reference. */
- 	status = ssam_try_set_controller(ctrl);
-@@ -715,7 +727,7 @@ static int ssam_serial_hub_probe(struct serdev_device *serdev)
- 	 *       resumed. In short, this causes some spurious unwanted wake-ups.
- 	 *       For now let's thus default power/wakeup to false.
- 	 */
--	device_set_wakeup_capable(&serdev->dev, true);
-+	device_set_wakeup_capable(dev, true);
- 	acpi_dev_clear_dependencies(ssh);
- 
- 	return 0;
-@@ -723,7 +735,7 @@ static int ssam_serial_hub_probe(struct serdev_device *serdev)
- err_mainref:
- 	ssam_irq_free(ctrl);
- err_irq:
--	sysfs_remove_group(&serdev->dev.kobj, &ssam_sam_group);
-+	sysfs_remove_group(&dev->kobj, &ssam_sam_group);
- err_initrq:
- 	ssam_controller_lock(ctrl);
- 	ssam_controller_shutdown(ctrl);
 -- 
 2.44.0
 
