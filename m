@@ -1,81 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4597C8F66
-	for <platform-driver-x86@vger.kernel.org>; Mon,  6 May 2024 14:55:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D58E153BD9
+	for <platform-driver-x86@vger.kernel.org>; Mon,  6 May 2024 14:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715007309; cv=none; b=YAhmD4H2zAu6Oup7MEzXzHeDaEkmWTW3EMZO0Wt6noQ/slg0dnK9+k59pd3CiLLggEBKrBchRvOMtukvV8ob8gzehqK2UoLWjVpjHhDjnz5l+MU1UGs7FFa2/uqarJ0WvunGiu7yPd7ZdaFrxpkymivfuHP3v0rrOb4VSqp81Rc=
+	t=1715007561; cv=none; b=Dw28Ues02X6hTSz9B3Ihq176ay5iHz5CpRKWkvDcQhD/n2M5Cc5WfAbSTlPpAvlGYhDP4pyo1Ei60kMrbw+u4tbhL9d6HYSg/IWoCdGMorLshRJ60wv5G5HJv3juuk2pbyVJ/w/8mmCtyhaRFOSWKSwLKuTa6cvaXsFeH9hjvg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715007309; c=relaxed/simple;
-	bh=E5YSpf7aTmFWyOkxn7bxQSkEVTSPqgdotICcxMmWgcM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TRoZHAgjyjUyIHNnt5GKcBurCHmGVu0aT4muoeBP2I8y7ru6kxTOtGBfzeAaa/pdMLOG04DaQo2NeQ6a2FDBbaTdTgTAykfgtoj9DRj/0oCSzELNbK83PdZQt/ffcBuUCQUcmVmGGrKr7P92AuFyVtPt+nsUglZ0bmx+4bUin+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Avs9cv5M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715007561; c=relaxed/simple;
+	bh=igTSXji7LJpeXsn+c63L7sZWONFSWh4+SjsjGmethsQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=WpExoAQDeBX9LMyb9mvB8BHySoKzzP4LmE/zaOYbAHn8wesvoQLkTdqhDU+LuOK24W7q4S9MdS6waZZzrTZcY0qFYDfDdE4Xs7GYfDu+5thj5xgIgXY4tlgX9ijXVLwbx3poydNhw+/SFFe89U9/Hq5/ArWQti07Nap4QQUZpdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fkhCFVHD; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Avs9cv5M"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BA443C4AF66
-	for <platform-driver-x86@vger.kernel.org>; Mon,  6 May 2024 14:55:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715007308;
-	bh=E5YSpf7aTmFWyOkxn7bxQSkEVTSPqgdotICcxMmWgcM=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Avs9cv5Mg8RXL4Ia7dnPkWW0SS7lRHbE0vXXwvWoQLt95Vg0z7bXsETjqq/Z5519/
-	 laVCVNcMNG6/g6mV5wwmbCiQ5K/eJjV4QhaG2lPnx19vUO+B554elShAZtjWMgwlWT
-	 maQ50zh1gHBh1pzCJJqKRvAM/N62/JolfHlX89qI5NRHSFf5I6KppTvmdufBPR00NG
-	 lpmR1yc9gSiHagbWsToKxwLts9Ptg2SCeP8bRKkw2tTpwEhlQI07t2RABMcjx+M+pn
-	 VtHMPp5GJ/8eID2QaxOfAjOh3cpVTFVadiePI/lvCPVgYI9yjvZ2GxDEI4zRWOvXlI
-	 o5cs0Xn0loWwg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id B077BC53B6C; Mon,  6 May 2024 14:55:08 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
- resuming after unplugging the power cord during sleep
-Date: Mon, 06 May 2024 14:55:08 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: aros@gmx.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-qpWFbhXbxZ@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fkhCFVHD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715007560; x=1746543560;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=igTSXji7LJpeXsn+c63L7sZWONFSWh4+SjsjGmethsQ=;
+  b=fkhCFVHDVJgU/v/H/4gOBm77rIsv69mwDcnemshEZAjTWDsteECFqxN7
+   1K8MhCUlhb1SpY2iCfLRFUKCkp0ixTa+9R1CIgIR1Q/A4F0qlz1sDfr4M
+   GGlph+Qym+24r0ZFeyTRQ5X6F6oV1528R2P6L6Nx2s0MM+PjUufiMo+0B
+   2OvkQMcuUTbGastoW3TiFKLC1eE12z7BvhNO8Hc9DPKgZJdRZ9bzhFNmY
+   X71I3AgXAQy+snmFKFrMojFoVnMgcWbtof1YSV/wjsv/F5abs2Bio/s6Q
+   EYHJwZm/7KdYQt3F/e97oBkeA5ZTGXxJySCVllVDYReLH421sihaNvTVh
+   g==;
+X-CSE-ConnectionGUID: xVu80R/tRTqxGVtl3tjf+w==
+X-CSE-MsgGUID: 8Zan4aWLSMi9tdNtoOiNiw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="21912925"
+X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
+   d="scan'208";a="21912925"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 07:59:19 -0700
+X-CSE-ConnectionGUID: aquOeOCsSiah9OaE57I+aA==
+X-CSE-MsgGUID: +VpTBwBQQ1WkxBwcwcX2xQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
+   d="scan'208";a="28186463"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.68])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 07:59:17 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 6 May 2024 17:59:13 +0300 (EEST)
+To: Hans de Goede <hdegoede@redhat.com>
+cc: Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    Kate Hsuan <hpa@redhat.com>
+Subject: Re: [PATCH 1/2] platform/x86: x86-android-tablets: Pass struct device
+ to init()
+In-Reply-To: <20240505160832.44216-1-hdegoede@redhat.com>
+Message-ID: <8fd64b93-36f3-ddc7-3984-2d232a28a395@linux.intel.com>
+References: <20240505160832.44216-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-3228699-1715007553=:1111"
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
---- Comment #57 from Artem S. Tashkinov (aros@gmx.com) ---
-> Eh?  I don't recall saying I'd post a patch to reset EC on resume.
+--8323328-3228699-1715007553=:1111
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-My memory is faltering obviously. Sorry.
+On Sun, 5 May 2024, Hans de Goede wrote:
 
-> The Windows equivalent of the amd-pmf driver on this HP system uses the
-> features in kernel 6.8 that I've been asking Artem to test.
+> Pass a struct device pointer for x86_android_tablet_device to the board
+> specific init() functions, so that these functions can use this for
+> e.g. devm_*() functions.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-No, kernel 6.8 didn't fix the issue for me.
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
 --=20
-You may reply to this email to add a comment.
+ i.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+--8323328-3228699-1715007553=:1111--
