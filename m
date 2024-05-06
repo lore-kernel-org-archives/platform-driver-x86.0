@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D954EB45
-	for <platform-driver-x86@vger.kernel.org>; Mon,  6 May 2024 15:16:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB78157494
+	for <platform-driver-x86@vger.kernel.org>; Mon,  6 May 2024 17:26:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715008613; cv=none; b=Di8zZgNHqZskSOkyhboEi3R3/gsaKXhbmLpVxDGPV+tzhyIwWL5KXvtS942BcjtFedPl1tHiBdNBHDX+ADhXaNnQ2o7NhletFs7PPiwBq1UD0jEMyJ3sHa8kzzrAzznGrywrlm9FAmFjUDbW0x7sfED7RCMtiv8u+W+8jMsYjgY=
+	t=1715016385; cv=none; b=VdF8UzUVUb1Ru5aA6SzG1Td6gHSZ42Sl6VlF8widfr3/4mbk6r7jQhbIoHxTNbkIYkOkR9f4UgRDTjWssyIsLmuD6BiLCciuwoBRRTtqqCDB97oMHDmdFK2izJ8FhVN5xcMXoltC0/xQm10YnvVjihRtqlhpfB7iHzAVWrYNOsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715008613; c=relaxed/simple;
-	bh=n3tGXfXq9WNppC0r2wL6n4mIH+g4rgAzMCWNSdropr0=;
+	s=arc-20240116; t=1715016385; c=relaxed/simple;
+	bh=c1inpWFflJ5lSg+HLGiv4xUPPQMaOLCsHuVDDk0+GxY=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=F4gGwhkyFr6moGW2dOt8Fg27Ma3wfzpnelEuoSD//pHmip04bKLGhz1IO97tx3ui3ztAGa4J7vR646HZg5AtUShzqjQLV6KNw3GSYiiJFbYaLzJRqotSHFMRw9VGnld1Sg3cfPALrfCL7QCS6ETzXzJimhFJ+Ezkggz+4rN4wCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iH71E1wg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=kJ1vsNCw74PnO2Ky8SUJn23NAtHxqcRZWzCpns8K4vn6LCrABIp0/MeWYIEiW/dtCPA/Ed1TwXcSsvufA1iYvnmsCt/ginaY/MLMWd11841vS7N7rAOUGxgntHO0oQC/9kirz2tOcApHA5CI5qq57ZtLh0jD4GeVfL7FSSwfBk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nL7B0NUc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iH71E1wg"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AD241C4AF67
-	for <platform-driver-x86@vger.kernel.org>; Mon,  6 May 2024 15:16:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nL7B0NUc"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2BBE4C4AF66
+	for <platform-driver-x86@vger.kernel.org>; Mon,  6 May 2024 17:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715008612;
-	bh=n3tGXfXq9WNppC0r2wL6n4mIH+g4rgAzMCWNSdropr0=;
+	s=k20201202; t=1715016384;
+	bh=c1inpWFflJ5lSg+HLGiv4xUPPQMaOLCsHuVDDk0+GxY=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=iH71E1wgvGntgG1JMHEZ0oBAuLfjWbM1y3UvX+KX9rc+K9rM6fxj3pKr8LCFwLyYB
-	 yNIWEVrQU3Kkc7X2XI8gpaWtAOgbJLZCHYZx53PPoc39q+mE6eWNxc8Nz2kvwD+936
-	 niSu36aOZ4DSUT8YTqQwL6VnheCENPvugtPb5yC6ujmWTO6hR/sOxMqiR7V2AOwOa+
-	 J24Wn5fG6aCya0U7D110bB1R+nOdY5U/4LtgYkjaMBLyNETyGCIPfkAX5axxjTz4/A
-	 Z0jk0iSCugk2yePSvTshRPH9sxxGlBKy9blVT3Iiq1bZnT4RpCHzyRZi0+zAWrnODZ
-	 nE/kkVJFY4bYQ==
+	b=nL7B0NUcrs4hMwh7p1Od4hBpekjSF4N0QUn7e02cfq/IpUY9k2eKOIPe5SyYupiFe
+	 rYx57QGBR+uI6k9m5rRIsWS2eD0MvnAQwQhWTEyMaKHAgyvWU0khJMifQgb1BAPoSM
+	 xgUOBm7y/PyUentZ3S1PaAWKpCpmrXpOcc71nB5m+km6OtgtrbnACFBb6nLd8+3AUT
+	 WL4YvaSDCNT9XxME1bH6TFj2kE62Ejh9pZGGTnYs7/1h5cFrr++wCY3T/5L2CTtCSW
+	 JGqNr2+ysVl4O3n+ZJRLiuzFlLvQcKtKQWC1/iPB03HsEghzxP9abRJqlgugkWUOjX
+	 TpyBJzP83fGDA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id A1DA3C53B6D; Mon,  6 May 2024 15:16:52 +0000 (UTC)
+	id 1B46AC53B6D; Mon,  6 May 2024 17:26:24 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
  resuming after unplugging the power cord during sleep
-Date: Mon, 06 May 2024 15:16:52 +0000
+Date: Mon, 06 May 2024 17:26:23 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: vanoverloopdaan@gmail.com
+X-Bugzilla-Who: mario.limonciello@amd.com
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-THWUy2niH8@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-218305-215701-YWevupMWqK@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
 References: <bug-218305-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,19 +64,29 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
---- Comment #58 from Daan Vanoverloop (vanoverloopdaan@gmail.com) ---
-> I did post a patch to this bug that could try to adjust the timing that is
-> waiting for testing though in case it's a race condition.  It will force
-> 10-20ms more time spent in the Linux kernel when the power adapter is
-> unplugged over suspend.=20=20
->
-> Also if it doesn't help, please modify it to make it 100-200ms.  This sho=
-uld
-> rule out a race condition.
+--- Comment #59 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+Created attachment 306264
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D306264&action=3Dedit
+debugging patch
 
+I'm attaching a patch that isn't upstreamed at the moment, but you can appl=
+y to
+your kernel to try to capture a debug register for me.  Apply it to your ke=
+rnel
+and then read the register value like this:
 
-I will apply this patch later today or tomorrow and report back on whether I
-can still reproduce this issue.
+echo "0x59804" | sudo tee /sys/kernel/debug/amd_nb/smn_address
+sudo cat /sys/kernel/debug/amd_nb/smn_value
+
+Here is what a reasonable value looks like on my local system:
+$ echo "0x59804" | sudo tee /sys/kernel/debug/amd_nb/smn_address
+$ sudo cat /sys/kernel/debug/amd_nb/smn_value
+0x017f1201
+
+Share to me the values that you get from smn_value in these 3 situations:
+1) At bootup (before you suspend)
+2) After you've suspended and reproduced the issue
+3) After you've done the W/A to undo the issue.
 
 --=20
 You may reply to this email to add a comment.
