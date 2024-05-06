@@ -1,74 +1,63 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3F6136E1C;
-	Sun,  5 May 2024 23:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB11747F6A;
+	Mon,  6 May 2024 09:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714950216; cv=none; b=eQGpvQp7qCCp0SlUYleszIxQ738EyybFSWSfZLYuO+zSiRG/Rbp6d3SKX/zR9DtrkSQeh2WLUnr7/WWU9nbbEVt89JkrZm/FqCrQp0jBYgrARQ5Zo58ryvvKkBqHiOXbgqIpiEWqx6HSliQ+2f+g2uD05IFonVZjgrdUhD5ydog=
+	t=1714986391; cv=none; b=ShVP7pb4IPPVuwpVStz+du8CRc+3RI9AKse62p5EX3klWh0IK/fxE71WbjTBw+DuA72qqsjn6Ymw1MWW6Mh3NiAHkhWdSTzqkYpJ2XzPggGUkc/JIXpSS5bM3IctQ8dYCPqf8OozeWg/YC8eZg9jBNl5fgh0NHMp0G6dUFldXww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714950216; c=relaxed/simple;
-	bh=Yi/t1dwyhXI2XCfAAFmWGHdSihInEbM7eoNSA4XmDA8=;
+	s=arc-20240116; t=1714986391; c=relaxed/simple;
+	bh=tqLwBBsU8XUYyPZe4zlNDPBjG1jozpREhzFA84XIjlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OM/sLbMZ40eqzjGdpQJnNGk3skBJumQDakQtZih92Sa92BwYOkBLq7/AMn8dKiXwso5VCLrng6aW1R8F7p9ez4hfrWJI2DXbhStpgL3HZZ+bAP8k0UmYMqeyYIOGyTHhoKt8Jqq8FBZuxAXj0UuDoHdK+7wvz29K5/b8Kr6jFGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eUwR+esL; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=gGTXJP4/R5mWvkvjHFeys29aoJTtIOfnu0wbs2GyCC01GioMP9nWpAsAsNNRZ5gj40TBwyW3gJG47UrbjBEfFhiV7ox55IsqYJtTPgZ2ed+v5Nh39tDdJajRRDzkIk2gDIl9EwRVyyKPiWqUqk2rclmCmYD+Jh6eN7SpCmLFqs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PaiqW9Kt; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eUwR+esL"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6f44d2b3130so1142236b3a.2;
-        Sun, 05 May 2024 16:03:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714950214; x=1715555014; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0ixh0Q49+td9KsqPLxjMpp3ISkgfUjGoiYb6DGMNR8c=;
-        b=eUwR+esLFvuqU1WQUsAFGbUwVtaR0At3aGAhizhfEVwxtEHtHmj4D1wQDO9Ppo7tT5
-         YsOFUDSlWYn1eWay2dDr4wpped3iPJjLTjFuzxgJn0xqG1YhU7jtcetk/L/gY5sR9WHQ
-         fqDdlAZ0Z2lLnugwO0E3N/bQYh+dpjdBHF5Cyc0U+Q0axRiJMLDl9FZ8aFi8KJVye47a
-         Aeyoyao3h3Lef4U0fpO/Xf844fL6iCaWs5u5mzzRhOmAIwY8OVpuDqP/GxrmdRcaouJt
-         OrQo+ReyatCZFp+Q54kmQdcCjo+GGAgiL9lRfOg2EPzi094V2e8lNUW3H0kEPi9DDEWs
-         IEtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714950214; x=1715555014;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0ixh0Q49+td9KsqPLxjMpp3ISkgfUjGoiYb6DGMNR8c=;
-        b=M/+8eTnLMOPiYHY/CFvSHAv9c9SP6HNIYFG5EpOxyim1vngGyxJuaa8NB5n7KnNp0r
-         IowUhZaxjq/xLExgVuKI8qT77knjnTECjSSqGBFjxL+hnvZrgoABpuECSpJX3PfelqyJ
-         3FZ+d7pVVQB+RUk42/tRTRGDoeWIKVdXORmwjx5a4pTGNoBTpH69TSSMtU1pGB3AzZx+
-         iEYixRWo3EWWBCybz7YySIOBFTluRkdAVDkudME4ul+dluJ0f0NF2LLLYGzHL1cP9wOt
-         q3hs56xviyBjLaD2kq3+cDP9INgQ1yOhOx4IzoeB/UQaWiRyL3vGmwAT5MAogxR8g0HW
-         tnJA==
-X-Forwarded-Encrypted: i=1; AJvYcCUc1v7DhhrV9Ak5kfvj9FXQhTQaz1fwDqzdq10yqDZXv4JNKayWgFAJ7D0bpcQlL+nvp2BzNzBXpAMyebXTuz2HeCzzVIEv8j8PIt9Pq55PAb72qgCAuGn48M4gFLj+/9pPoMP57zgZ/KED45QHMwL04ZyH8+EugNaPp923P/U3bGPuiC9KgMy+ttyZP6PH+nE0pVdhuKZ70j1YZ9yiiUiXiry7maHCJ4b5/Q==
-X-Gm-Message-State: AOJu0YzxCMch0Ys/Wcqigi4mZQfNWbJ+mGQ1BZ5DS4qGxLhKIsZC6+84
-	L1236xJR39FLa5l1znDNkjPFy6gJKjE1pJFBhlABeWSiCWc7a9tA
-X-Google-Smtp-Source: AGHT+IE2mB8S1n9bJnbgreD36wclmulY+xR4ASpHRAO8hPEz1QLWrwuSmmAs2Yn6faTaIr07PlMCyw==
-X-Received: by 2002:a05:6a20:3241:b0:1aa:48d1:2144 with SMTP id hm1-20020a056a20324100b001aa48d12144mr6565070pzc.52.1714950214268;
-        Sun, 05 May 2024 16:03:34 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id jc18-20020a17090325d200b001e85d0b6a7dsm6931807plb.293.2024.05.05.16.03.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 May 2024 16:03:33 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sun, 5 May 2024 16:03:31 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, mlj@danelec.com,
-	rafael.j.wysocki@intel.com, lenb@kernel.org, jdelvare@suse.com,
-	andy.shevchenko@gmail.com, linux@weissschuh.net,
-	ilpo.jarvinen@linux.intel.com, linux-acpi@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v6] ACPI: fan: Add hwmon support
-Message-ID: <8c654bca-098f-41c4-8440-880bdbb88b82@roeck-us.net>
-References: <20240422195745.5089-1-W_Armin@gmx.de>
- <CAJZ5v0gLQYOWLTmpe24epb9GzV5o2qSuaP5t25eu-OXYoE2pAQ@mail.gmail.com>
- <4c4dbcf8-5c8e-4398-a17d-be5af93f2d6c@roeck-us.net>
- <7f97fa54-8240-4b71-acff-0fc5e92cb710@gmx.de>
- <558ac2ee-2817-4999-97bd-e1bd39681696@gmx.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PaiqW9Kt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714986389; x=1746522389;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tqLwBBsU8XUYyPZe4zlNDPBjG1jozpREhzFA84XIjlw=;
+  b=PaiqW9KtLqsbB5/0R+Mcr2gKA+fApJ/tjgJwf5A42dqnqqYE/Jbd1mje
+   lxZ/h994ZWh7uvEnshIavG0tXj7Jyhz+/oX+TZyv83Vmls9XUpNF8lIZy
+   WlLpz0yL3NtcylkDke4QmoSi5JyGKIgBtoDRqyLH7RST6uLSBoIooQQ91
+   KciMqBP0dcpgdu2P3+vHfqG88sbfj+YuuWYrJ7XdV+pnZ3kzMq7lSGJGe
+   ss/vWfvRgETA1QMTXQKXE9mDgmL17pvmGCw12Px7RzPK8MD+4q0HSNvOe
+   5fNBNEDYbfdC8uRaHhZqeIWgbCs8QmVPUxunN6wbLtNopaTC4exh2R/6f
+   w==;
+X-CSE-ConnectionGUID: YcIXLHLNRkyjkzTQ2fAkIQ==
+X-CSE-MsgGUID: ooJ7V/IvT7y5tFVuUi2UBA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11064"; a="14507898"
+X-IronPort-AV: E=Sophos;i="6.07,257,1708416000"; 
+   d="scan'208";a="14507898"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 02:06:29 -0700
+X-CSE-ConnectionGUID: 0Aohw503RB2v79zCuNVKtw==
+X-CSE-MsgGUID: QBR04b7+TgGZP2UQygraXg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,257,1708416000"; 
+   d="scan'208";a="59297196"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 02:06:27 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1s3uIj-00000004cRs-1QV6;
+	Mon, 06 May 2024 12:06:25 +0300
+Date: Mon, 6 May 2024 12:06:25 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Weifeng Liu <weifeng.liu.z@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v3 1/2] platform/surface: aggregator: Defer probing when
+ serdev is not ready
+Message-ID: <ZjidkdGjNzbLNxJa@smile.fi.intel.com>
+References: <20240505130800.2546640-1-weifeng.liu.z@gmail.com>
+ <20240505130800.2546640-2-weifeng.liu.z@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -77,16 +66,40 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <558ac2ee-2817-4999-97bd-e1bd39681696@gmx.de>
+In-Reply-To: <20240505130800.2546640-2-weifeng.liu.z@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Sun, May 05, 2024 at 07:22:25PM +0200, Armin Wolf wrote:
+On Sun, May 05, 2024 at 09:07:49PM +0800, Weifeng Liu wrote:
+> This is an attempt to alleviate race conditions in the SAM driver where
+> essential resources like serial device and GPIO pins are not ready at
+> the time ssam_serial_hub_probe() is called.  Instead of giving up
+> probing, a better way would be to defer the probing by returning
+> -EPROBE_DEFER, allowing the kernel try again later.
 > 
-> Any progress with this?
-> 
+> However, there is no way of identifying all such cases from other real
+> errors in a few days.  So let's take a gradual approach identify and
+> address these cases as they arise.  This commit marks the initial step
+> in this process.
 
-Not really. It all seems odd, and I returning -ENODATA doesn't seem right,
-but then I don't understand the specification or the logic behind it, and
-I don't have the time to read and understand it. No objection from my side
-against moving forward.
+It's a bit pointless to send a new version while we haven't settled yet down on
+the previous one.
 
-Guenter
+Moreover, there is no added details as I asked in the previous round of review.
+
+The decision of moving this part to serdev is up to Hans, but I think we also
+can at least put TODO line here with explanations you gave in the reply to v2
+that this is currently the only driver needs this and there is still a chance
+that more might need it.
+
+While writing the above paragraph I realised that this might be due to
+non-standard appearance of the device in DSDT, that it gets enumerated
+before the controller.
+
+Do you have a DSDT excerpt for the controller and device parts in the order
+of appearance?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
