@@ -1,159 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAC5213BAC7;
-	Mon,  6 May 2024 14:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4597C8F66
+	for <platform-driver-x86@vger.kernel.org>; Mon,  6 May 2024 14:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715007175; cv=none; b=o5YNBXn1kICCohuMdGkTkcXBPLQ1sMzrrGGiOY/S1HHBLCcISvOfnSTSyuLsKuiDVmSv0Q5RjFbXCpJtZodmunDeMOJ61jmKiTGmyJ/OlbU5ApRnAqLCdjX0nxelK4FBwN4O7WCOwiT95bgdyPsQGDJVj4ICr1M6BrE3jTGMNO0=
+	t=1715007309; cv=none; b=YAhmD4H2zAu6Oup7MEzXzHeDaEkmWTW3EMZO0Wt6noQ/slg0dnK9+k59pd3CiLLggEBKrBchRvOMtukvV8ob8gzehqK2UoLWjVpjHhDjnz5l+MU1UGs7FFa2/uqarJ0WvunGiu7yPd7ZdaFrxpkymivfuHP3v0rrOb4VSqp81Rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715007175; c=relaxed/simple;
-	bh=DI3yNIsp/Iy/OvjzwTd2lIhn+/AKCMGXGRVuoRh7YNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tYCbisPSuMdsV/v0v9HEoJAzY5ZMudW1ncY6t1z5eHTio+7nHaihQR5evH2Gaxnl1kiVlFuIRjTN9/o6y81pQg7cx+LkpPp6CgYgjFoOOLgq5n/qybuYmk79Xcu+hDe1ZNHoQkiC+PAUVytJxXJPvnAbiAv28zJ9mUAAqPz0RDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tt1VKLCm; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715007309; c=relaxed/simple;
+	bh=E5YSpf7aTmFWyOkxn7bxQSkEVTSPqgdotICcxMmWgcM=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=TRoZHAgjyjUyIHNnt5GKcBurCHmGVu0aT4muoeBP2I8y7ru6kxTOtGBfzeAaa/pdMLOG04DaQo2NeQ6a2FDBbaTdTgTAykfgtoj9DRj/0oCSzELNbK83PdZQt/ffcBuUCQUcmVmGGrKr7P92AuFyVtPt+nsUglZ0bmx+4bUin+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Avs9cv5M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tt1VKLCm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715007173; x=1746543173;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DI3yNIsp/Iy/OvjzwTd2lIhn+/AKCMGXGRVuoRh7YNc=;
-  b=Tt1VKLCmXmJILT7ybTdryRfPamk73mKNxVGPitzc9Efucr9mdZ9wd4P6
-   4258ztuetL9bBtWAYqgR9gspCUs5v+3Kcw7RpUCJtcfbfyRwnxexWx7T9
-   2iQB7/h158UO7ZHaFCoh+Rt4wPpGasM2e5h1qNH4VCKoWv92xv/3qHeS5
-   0/Y6WjrULYg9PY9KAD0dpk7ObJd/7xVM1y2kCE/XiWWPo8ouTwcxMHNyy
-   kE79lyJHpRA72Dk/LcFYOawRcwVC8p/h2RGr0DneQhW0NfuX94tf2Pa/X
-   Dhm/dGVc1LDS7a0RNt5ZlOS/k/X53rehuasu6DQQnF41lIPmJgixPAXtf
-   Q==;
-X-CSE-ConnectionGUID: DAMuflN7Rku1jGhDiAaw5g==
-X-CSE-MsgGUID: qhOGIYHNToWWsEqaoco/wQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="28281051"
-X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
-   d="scan'208";a="28281051"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 07:52:51 -0700
-X-CSE-ConnectionGUID: 3pyUBm5tTby3wGXV81kkWQ==
-X-CSE-MsgGUID: g+t1Na37TrqOmFoQyIM5CA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
-   d="scan'208";a="28150764"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 07:52:50 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s3zhv-00000004jRC-2J9G;
-	Mon, 06 May 2024 17:52:47 +0300
-Date: Mon, 6 May 2024 17:52:47 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Hans de Goede <hdegoede@redhat.com>, Tony Lindgren <tony@atomide.com>
-Cc: Weifeng Liu <weifeng.liu.z@gmail.com>,
-	platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org,
-	Maximilian Luz <luzmaximilian@gmail.com>
-Subject: Re: [PATCH v3 0/2] Defer probing of SAM if serdev device is not ready
-Message-ID: <Zjjuvx3t7UYQPR_y@smile.fi.intel.com>
-References: <20240505130800.2546640-1-weifeng.liu.z@gmail.com>
- <85ac363b-d129-4525-89aa-d4528b8188a7@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Avs9cv5M"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BA443C4AF66
+	for <platform-driver-x86@vger.kernel.org>; Mon,  6 May 2024 14:55:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715007308;
+	bh=E5YSpf7aTmFWyOkxn7bxQSkEVTSPqgdotICcxMmWgcM=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=Avs9cv5Mg8RXL4Ia7dnPkWW0SS7lRHbE0vXXwvWoQLt95Vg0z7bXsETjqq/Z5519/
+	 laVCVNcMNG6/g6mV5wwmbCiQ5K/eJjV4QhaG2lPnx19vUO+B554elShAZtjWMgwlWT
+	 maQ50zh1gHBh1pzCJJqKRvAM/N62/JolfHlX89qI5NRHSFf5I6KppTvmdufBPR00NG
+	 lpmR1yc9gSiHagbWsToKxwLts9Ptg2SCeP8bRKkw2tTpwEhlQI07t2RABMcjx+M+pn
+	 VtHMPp5GJ/8eID2QaxOfAjOh3cpVTFVadiePI/lvCPVgYI9yjvZ2GxDEI4zRWOvXlI
+	 o5cs0Xn0loWwg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id B077BC53B6C; Mon,  6 May 2024 14:55:08 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
+ resuming after unplugging the power cord during sleep
+Date: Mon, 06 May 2024 14:55:08 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: blocking
+X-Bugzilla-Who: aros@gmx.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218305-215701-qpWFbhXbxZ@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
+References: <bug-218305-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <85ac363b-d129-4525-89aa-d4528b8188a7@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, May 06, 2024 at 04:41:19PM +0200, Hans de Goede wrote:
-> On 5/5/24 3:07 PM, Weifeng Liu wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-...
+--- Comment #57 from Artem S. Tashkinov (aros@gmx.com) ---
+> Eh?  I don't recall saying I'd post a patch to reset EC on resume.
 
-> If a serdev_device_driver is already loaded for a serdev_tty_port when it
-> gets registered by tty_port_register_device_attr_serdev() then that
-> driver's probe() method will be called immediately.
-> 
-> The serdev_device_driver's probe() method should then be able to call
-> serdev_device_open() successfully, but because UPF_DEAD is still dead
-> serdev_device_open() will fail with -ENXIO in this scenario:
-> 
->   serdev_device_open()
->   ctrl->ops->open()	/* this callback being ttyport_open() */
->   tty->ops->open()	/* this callback being uart_open() */
->   tty_port_open()
->   port->ops->activate()	/* this callback being uart_port_activate() */
->   Find bit UPF_DEAD is set in uport->flags and fail with errno -ENXIO.
-> 
-> Fix this be clearing UPF_DEAD before tty_port_register_device_attr_serdev()
-> note this only moves up the UPD_DEAD clearing a small bit, before:
-> 
->   tty_port_register_device_attr_serdev();
->   mutex_unlock(&tty_port.mutex);
->   uart_port.flags &= ~UPF_DEAD;
->   mutex_unlock(&port_mutex);
-> 
-> after:
-> 
->   uart_port.flags &= ~UPF_DEAD;
->   tty_port_register_device_attr_serdev();
->   mutex_unlock(&tty_port.mutex);
->   mutex_unlock(&port_mutex);
+My memory is faltering obviously. Sorry.
 
-> Reported-by: Weifeng Liu <weifeng.liu.z@gmail.com>
-> Closes: https://lore.kernel.org/platform-driver-x86/20240505130800.2546640-1-weifeng.liu.z@gmail.com/
+> The Windows equivalent of the amd-pmf driver on this HP system uses the
+> features in kernel 6.8 that I've been asking Artem to test.
 
-> Cc: Maximilian Luz <luzmaximilian@gmail.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+No, kernel 6.8 didn't fix the issue for me.
 
-Can you move Cc after the cutter '---' line?
+--=20
+You may reply to this email to add a comment.
 
-The patch makes sense to me, FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-but Cc'ed Tony just in case.
-
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/tty/serial/serial_core.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-> index ff85ebd3a007..d9424fe6513b 100644
-> --- a/drivers/tty/serial/serial_core.c
-> +++ b/drivers/tty/serial/serial_core.c
-> @@ -3196,6 +3196,9 @@ static int serial_core_add_one_port(struct uart_driver *drv, struct uart_port *u
->  	if (uport->attr_group)
->  		uport->tty_groups[1] = uport->attr_group;
->  
-> +	/* Ensure serdev drivers can call serdev_device_open() right away */
-> +	uport->flags &= ~UPF_DEAD;
-> +
->  	/*
->  	 * Register the port whether it's detected or not.  This allows
->  	 * setserial to be used to alter this port's parameters.
-> @@ -3206,6 +3209,7 @@ static int serial_core_add_one_port(struct uart_driver *drv, struct uart_port *u
->  	if (!IS_ERR(tty_dev)) {
->  		device_set_wakeup_capable(tty_dev, 1);
->  	} else {
-> +		uport->flags |= UPF_DEAD;
->  		dev_err(uport->dev, "Cannot register tty device on line %d\n",
->  		       uport->line);
->  	}
-> @@ -3411,8 +3415,6 @@ int serial_core_register_port(struct uart_driver *drv, struct uart_port *port)
->  	if (ret)
->  		goto err_unregister_port_dev;
->  
-> -	port->flags &= ~UPF_DEAD;
-> -
->  	mutex_unlock(&port_mutex);
->  
->  	return 0;
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
