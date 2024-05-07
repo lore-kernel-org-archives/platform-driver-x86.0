@@ -1,224 +1,500 @@
-Received: from wfhigh8-smtp.messagingengine.com (wfhigh8-smtp.messagingengine.com [64.147.123.159])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B19D1649D3;
-	Tue,  7 May 2024 16:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587C816C857;
+	Tue,  7 May 2024 18:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715097655; cv=none; b=dL7lvXoPHHMxZ1uyC3K0rI0Ph6/Nui8NHo4T1P/+uffQnlW2cue5thKBK3echCqBOsGh5SkDDiMPDwRi/WKP+0bGW+8QJYF4eM2r8S8wBqlncm1PJurH1gSkeorrwZ1Q9FPf+7ccwUDBeOkDBQbYz79KW6sx10b3bqosTTvwpGs=
+	t=1715104872; cv=none; b=ofckUVGfSrlO4asBovMRQhZJY5uWm4BPSnqFYwAh7GIvaI5dOn/JzJV8auE5hiBPQHV7Rfizrvg6Iq0AcGgA9enYiQst+68MWO/m/wt8n3iFH7D016NEwUrUumvI0M45F07aS+bFZJBlUss1L6iV9/Zh0wnLg9xtKj+EjJWqB0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715097655; c=relaxed/simple;
-	bh=FddP+c4dgFZb9XdTcHg7G1UtgfmUmewlW32Kal5emFk=;
-	h=Date:From:Subject:To:Cc:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sDnXqqWQsqsJAkuHk+4JdpyA0zR+XGUQZQDPi146ZxrrAp4pkNTYlHFqD4zrcIrLzKI+gaJApoJ3TRI+mjfHvOOo657Cb3s4d/ebMULJzvtk9EXOzRbBszb5lVfMJopY8GYCuF1PjRqBTZivT8d+3YXd3hXDcU3i4aUs0tMHxOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=WM5EB99d; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eSTXjV9P; arc=none smtp.client-ip=64.147.123.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
+	s=arc-20240116; t=1715104872; c=relaxed/simple;
+	bh=n80rU1XO2xaHBq3Pvpo9pJCz1eYmhkEpuzmwc7e+osU=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=hQI5u7YqQtFyyHgNeTiDoaSw+tfO8q888MiBzYbvphQIhE1oywMmW7dXD0jKNUvNJUo3P8F+Kp2+03PblM8gqTHFf+wvGvnI5QwWCWQ/CuvCko1euAI8pE0NWZHoixYWS9ZQdUYYG4mRYJSeZ5AYmH8FaPzXe5rrb70756bXmxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hXIH45EX; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="WM5EB99d";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eSTXjV9P"
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailfhigh.west.internal (Postfix) with ESMTP id C808F18000E1;
-	Tue,  7 May 2024 12:00:51 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Tue, 07 May 2024 12:00:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1715097650; x=1715184050; bh=x9SXQUaEjS
-	lb5DAJspjir6oHwES+a/5cta9M20wGfws=; b=WM5EB99deHS6/YdZrhB1WiWOsT
-	9RjEotf3L1RU8tVMjYbuMiuC+DFfGOFx4kXsYynGUsWLdXUHPtbw0gSYilAUUfNN
-	s1OvtIexwbQsJ3FG3p9nX8zT/kbCw3SOpPGdU5ZEbPPyMTREucaRYgZYc3aBYG58
-	/aoFehJ/W0dhKDBLstNFumaNWs3zIrq0fITK7KRUeeTfRJ+wX+MU6IPOfJatU1bu
-	3EtiN8RIY/kqINrvf7m34TbT4GCJ4Kqa33u8ttJvLzeWsFtpmqRw8Y8VqcAZdfaD
-	mopAeYwlx02M3E7TF/NJBdKk9iK6h1z2NxrdQi1yjehVsLkOWyUjVZx7PJ4A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1715097650; x=1715184050; bh=x9SXQUaEjSlb5DAJspjir6oHwES+
-	a/5cta9M20wGfws=; b=eSTXjV9PxS8BRR/5pdxJbkNthk6INdFXzSVtret03MOl
-	+I/wk8/hMVzrNt19myDKRS+y35QieKcTViO8abvIyrEuPE+dZgXS9viFFHpLJcce
-	MAsTsgosUXJI09LWX5b8p68r5VUQwIj3X3zckUStbgLOgVrLgaUkrgQbDwTsMB8x
-	yhTz92rwwgOP9/R4r2CqWYgiQJA506M8sjDP74pJ0HNMwbhYvtI4d9EUOe36/u/A
-	krWn74VL36cp55EcAes4vbno7nOc9bnOrbE42K+HOf+/UN9HoO1tSDL0SfAgh+cM
-	rn9qTLdf+mcLEPwzh5FlqSEkAn2EobtHRr+nssmw+w==
-X-ME-Sender: <xms:MVA6Zvy2cC3gTDiG_gj8l5UgmwuK_vafMQSazFuoLZ-o27zKPqUcow>
-    <xme:MVA6ZnRtqh082m2305P2kvCoD9mVh1CCpMixR-OrOAJ7sm6FQa0gZysn8PA6w5d4z
-    pn7TdycuGOr3TlR8as>
-X-ME-Received: <xmr:MVA6ZpUqNzbDVqIGC3OwXwlPlxx8-XWGAweaKYj1AeVC2nWPRpXJfGEGASo5SERpYsw7Pw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddvkedgleefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhuffvvefkjghfofggtgesthdtredtredtvdenucfhrhhomhepnfihnhgu
-    ohhnucfurghntghhvgcuoehlshgrnhgthhgvsehlhihnuggvnhhordgtrgeqnecuggftrf
-    grthhtvghrnhepvdfgjeduvddtheekkeduiedtieegveefgeekgfevffffjeevgeffueev
-    heejjedtnecuffhomhgrihhnpehgihhtqdhstghmrdgtohhmpdhgihhthhhusgdrtghomh
-    dpkhgvrhhnvghlrdhorhhgpddtuddrohhrghenucevlhhushhtvghrufhiiigvpedtnecu
-    rfgrrhgrmhepmhgrihhlfhhrohhmpehlshgrnhgthhgvsehlhihnuggvnhhordgtrg
-X-ME-Proxy: <xmx:MVA6Zphr_mHn0ROrXrxSuf5s3IrRSW7tMa7W6Cz1My0_xWLhSCszBw>
-    <xmx:MVA6ZhAkYopwc5mE9wysh0rHnwrmmI1aXNyN9PR1W3eD1-VKkYmWnw>
-    <xmx:MVA6ZiJX1rcsNobFuk1g8oGrPSBkvz3bR7bkciotQfZGnzNLqdDj2w>
-    <xmx:MVA6ZgA3gRqE-Hp1GLhhtUVLxUbpxU1_MfM8toM6bYsCeAATIeZY_A>
-    <xmx:MlA6Zl3OKYHu3VH2ojdk4xDeC9FUponUcqAeddS7mEP1IVPiC1po8ES2>
-Feedback-ID: i1719461a:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 7 May 2024 12:00:44 -0400 (EDT)
-Date: Tue, 07 May 2024 10:00:33 -0600
-From: Lyndon Sanche <lsanche@lyndeno.ca>
-Subject: Re: [PATCH v5] platform/x86: dell-laptop: Implement platform_profile
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: kernel test robot <lkp@intel.com>, Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>, oe-kbuild-all@lists.linux.dev,
-	mario.limonciello@amd.com, pali@kernel.org, W_Armin@gmx.de,
-	srinivas.pandruvada@linux.intel.com, ilpo.jarvinen@linux.intel.com,
-	Matthew Garrett <mjg59@srcf.ucam.org>, Jonathan Corbet <corbet@lwn.net>,
-	Heiner Kallweit <hkallweit1@gmail.com>, Vegard Nossum
-	<vegard.nossum@oracle.com>, platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
-Message-Id: <XSH4DS.Y4TZMDPWKC5Z1@lyndeno.ca>
-In-Reply-To: <4bb43e89-c387-4219-9051-421d700f332e@redhat.com>
-References: <20240501215829.4991-2-lsanche@lyndeno.ca>
-	<202405031851.NYy0ZB02-lkp@intel.com> <A9SXCS.IUN31UTTT9GM2@lyndeno.ca>
-	<4bb43e89-c387-4219-9051-421d700f332e@redhat.com>
-X-Mailer: geary/44.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hXIH45EX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715104870; x=1746640870;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=n80rU1XO2xaHBq3Pvpo9pJCz1eYmhkEpuzmwc7e+osU=;
+  b=hXIH45EXenl94Dh9HuJbnQ/DsPtKC+whGL7mrjWIEaaITNt2ZjitIssp
+   WHV8FY0OLrQ+IUpiRV77EijIF+fHv1B520Xg7cZM902o+fhW0lrUxDCCf
+   nRHmDQv9skFiKms/FcxjiHhi6Y4cX0IHnDmKwcEJxxkiiMsUE8TCC7Syb
+   QKPe41lve59slwbnP/Ptk4iSA1PUrAASbekCG8+slMZBKl/FOZto3jzLx
+   emnLCw16e2xcxwauTH1qg4WGK2ecztdlnmVK37pAtbClZcgABAv5iFpdQ
+   Kh9ug7fZEFGSmzsSKg4BYz4McDU3A12ZsI2E1JWReaHwdUoEok996agEh
+   Q==;
+X-CSE-ConnectionGUID: gslVf1SiRiKPBWoIuntzIg==
+X-CSE-MsgGUID: 5uFFxWRBRuSblw2ZPK/t9g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="22333254"
+X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
+   d="scan'208";a="22333254"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 11:01:10 -0700
+X-CSE-ConnectionGUID: eaxvEC9PRr6S6DRGojJ6tA==
+X-CSE-MsgGUID: XcNFcKB+TCehOIxd8aLArQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
+   d="scan'208";a="28491199"
+Received: from sayakray-mobl2.amr.corp.intel.com (HELO debox1-desk4.lan) ([10.212.130.28])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 11:01:10 -0700
+From: "David E. Box" <david.e.box@linux.intel.com>
+To: linux-doc@vger.kernel.org,
+	david.e.box@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH V2 1/3] platform/x86/intel/sdsi: Add ioctl SPDM transport
+Date: Tue,  7 May 2024 11:01:04 -0700
+Message-Id: <20240507180106.5218-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 8bit
 
+Intel On Demand adds attestation and firmware measurement retrieval
+services through use of the protocols defined the Security Protocols and
+Data Measurement (SPDM) specification. SPDM messages exchanges are used to
+authenticate On Demand hardware and to retrieve signed measurements of the
+NVRAM state used to track feature provisioning and the NVRAM state used for
+metering services. These allow software to verify the authenticity of the
+On Demand hardware as well as the integrity of the reported silicon
+configuration.
 
+Add an ioctl interface for sending SPDM messages through the On Demand
+mailbox. Provides commands to get a list of SPDM enabled devices, get the
+message size limits for SPDM Requesters and Responders, and perform an SPDM
+message exchange.
 
-On Mon, May 6 2024 at 12:18:05 PM +02:00:00, Hans de Goede 
-<hdegoede@redhat.com> wrote:
-> Hi Lyndon,
-> 
-> Thank you for your patch!
-> 
-> On 5/4/24 3:03 AM, Lyndon Sanche wrote:
->> 
->> 
->>  On Fri, May 3 2024 at 06:19:18 PM +08:00:00, kernel test robot 
->> <lkp@intel.com> wrote:
->>>  Hi Lyndon,
->>> 
->>>  kernel test robot noticed the following build warnings:
->>> 
->>>  [auto build test WARNING on linus/master]
->>>  [also build test WARNING on v6.9-rc6 next-20240503]
->>>  [If your patch is applied to the wrong git tree, kindly drop us a 
->>> note.
->>>  And when submitting patch, we suggest to use '--base' as 
->>> documented in
->>>  https://git-scm.com/docs/git-format-patch#_base_tree_information]
->>> 
->>>  url:    
->>> https://github.com/intel-lab-lkp/linux/commits/Lyndon-Sanche/platform-x86-dell-laptop-Implement-platform_profile/20240502-060146
->>>  base:   linus/master
->>>  patch link:    
->>> https://lore.kernel.org/r/20240501215829.4991-2-lsanche%40lyndeno.ca
->>>  patch subject: [PATCH v5] platform/x86: dell-laptop: Implement 
->>> platform_profile
->>>  config: 
->>> i386-kismet-CONFIG_ACPI_PLATFORM_PROFILE-CONFIG_DELL_LAPTOP-0-0 
->>> (https://download.01.org/0day-ci/archive/20240503/202405031851.NYy0ZB02-lkp@intel.com/config)
->>>  reproduce: 
->>> (https://download.01.org/0day-ci/archive/20240503/202405031851.NYy0ZB02-lkp@intel.com/reproduce)
->>> 
->>>  If you fix the issue in a separate patch/commit (i.e. not just a 
->>> new version of
->>>  the same patch/commit), kindly add following tags
->>>  | Reported-by: kernel test robot <lkp@intel.com>
->>>  | Closes: 
->>> https://lore.kernel.org/oe-kbuild-all/202405031851.NYy0ZB02-lkp@intel.com/
->>> 
->>>  kismet warnings: (new ones prefixed by >>)
->>>>>   kismet: WARNING: unmet direct dependencies detected for 
->>>>> ACPI_PLATFORM_PROFILE when selected by DELL_LAPTOP
->>>     WARNING: unmet direct dependencies detected for 
->>> ACPI_PLATFORM_PROFILE
->>>       Depends on [n]: ACPI [=n]
->>>       Selected by [y]:
->>>       - DELL_LAPTOP [=y] && X86_PLATFORM_DEVICES [=y] && 
->>> X86_PLATFORM_DRIVERS_DELL [=y] && DMI [=y] && 
->>> BACKLIGHT_CLASS_DEVICE [=y] && (ACPI_VIDEO [=n] || ACPI_VIDEO 
->>> [=n]=n) && (RFKILL [=n] || RFKILL [=n]=n) && (DELL_WMI [=n] || 
->>> DELL_WMI [=n]=n) && SERIO_I8042 [=y] && DELL_SMBIOS [=y]
->>> 
->>>  --
->>>  0-DAY CI Kernel Test Service
->>>  https://github.com/intel/lkp-tests/wiki
->> 
->>  I will try reproducing this test on my machine, to avoid spamming 
->> the mailing list with the same error over and over.
-> 
-> No need to reproduce this. When you select something in Kconfig you 
-> must ensure
-> that the item doing the selecting depends on all the dependencies of 
-> what you
-> are selecting.
-> 
-> IOW if you add this change to your next version then that should fix 
-> this:
-> 
-> diff --git a/drivers/platform/x86/dell/Kconfig 
-> b/drivers/platform/x86/dell/Kconfig
-> index bd9f445974cc..d18fbc6a5fbf 100644
-> --- a/drivers/platform/x86/dell/Kconfig
-> +++ b/drivers/platform/x86/dell/Kconfig
-> @@ -47,6 +47,7 @@ config DCDBAS
->  config DELL_LAPTOP
->  	tristate "Dell Laptop Extras"
->  	default m
-> +	depends on ACPI
->  	depends on DMI
->  	depends on BACKLIGHT_CLASS_DEVICE
->  	depends on ACPI_VIDEO || ACPI_VIDEO = n
-> 
-> And please also address Armin's remark about making sure that failure
-> to initialize platform_profile support should not cause the entire 
-> driver
-> to fail to probe.
-> 
-> I see that Armin suggests to check da_supported_commands for this,
-> this is a good idea but atm this is private to dell-smbios-base. So
-> you will first need to do a small preparation patch adding a small:
-> 
-> bool dell_laptop_check_supported_cmds(struct calling_interface_buffer 
-> *buffer)
-> {
-> 	return da_supported_commands & (1 << buffer->cmd_class);
-> }
-> EXPORT_SYMBOL_GPL(dell_laptop_check_supported_cmds):
-> 
-> helper for this.
-> 
-> If this check fails (returns false) make the code not register
-> the platform_profile() while allowing probe() to continue / succeed,
-> please do not log anything in this case (or use dev_dbg())
-> 
-> If this check succeeds but subsequent dell_smbios_call()'s
-> fail during probe, then it is ok to log an error but please
-> still let probe() continue / succeed (without registering
-> a platform_profile handler).
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-Hello Hans:
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Link: https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.1.pdf [1]
+---
+V2
+   - Move size < 4 check into sdsi_spdm_exchange() and add comment
+     clarifying return values of that function.
+   - Use SZ_4K and add helpers
+   - Use devm_kasprintf()
+   - Remove unnecessary parens
+   - Use --attest for long option
 
-Thank you very much for your feedback and suggestions! I have been busy 
-the past few days, but will be able to tackle this this week. These are 
-good ideas which I plan to implement.
+ .../userspace-api/ioctl/ioctl-number.rst      |   1 +
+ MAINTAINERS                                   |   1 +
+ drivers/platform/x86/intel/sdsi.c             | 210 +++++++++++++++++-
+ include/uapi/linux/intel_sdsi.h               |  81 +++++++
+ 4 files changed, 292 insertions(+), 1 deletion(-)
+ create mode 100644 include/uapi/linux/intel_sdsi.h
 
-Thank you,
+diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+index c472423412bf..20dcc2dbcaf6 100644
+--- a/Documentation/userspace-api/ioctl/ioctl-number.rst
++++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+@@ -382,6 +382,7 @@ Code  Seq#    Include File                                           Comments
+                                                                      <mailto:mathieu.desnoyers@efficios.com>
+ 0xF8  all    arch/x86/include/uapi/asm/amd_hsmp.h                    AMD HSMP EPYC system management interface driver
+                                                                      <mailto:nchatrad@amd.com>
++0xFC  all    linux/intel_sdsi.h
+ 0xFD  all    linux/dm-ioctl.h
+ 0xFE  all    linux/isst_if.h
+ ====  =====  ======================================================= ================================================================
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 846187625552..060bd3358cec 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11165,6 +11165,7 @@ INTEL SDSI DRIVER
+ M:	David E. Box <david.e.box@linux.intel.com>
+ S:	Supported
+ F:	drivers/platform/x86/intel/sdsi.c
++F:	include/uapi/linux/intel_sdsi.h
+ F:	tools/arch/x86/intel_sdsi/
+ F:	tools/testing/selftests/drivers/sdsi/
+ 
+diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
+index 277e4f4b20ac..686dd9e4e026 100644
+--- a/drivers/platform/x86/intel/sdsi.c
++++ b/drivers/platform/x86/intel/sdsi.c
+@@ -11,9 +11,12 @@
+ #include <linux/auxiliary_bus.h>
+ #include <linux/bits.h>
+ #include <linux/bitfield.h>
++#include <linux/cleanup.h>
+ #include <linux/device.h>
+ #include <linux/iopoll.h>
++#include <linux/intel_sdsi.h>
+ #include <linux/kernel.h>
++#include <linux/miscdevice.h>
+ #include <linux/module.h>
+ #include <linux/overflow.h>
+ #include <linux/pci.h>
+@@ -42,6 +45,7 @@
+ 
+ #define SDSI_ENABLED_FEATURES_OFFSET	16
+ #define SDSI_FEATURE_SDSI		BIT(3)
++#define SDSI_FEATURE_ATTESTATION	BIT(12)
+ #define SDSI_FEATURE_METERING		BIT(26)
+ 
+ #define SDSI_SOCKET_ID_OFFSET		64
+@@ -91,6 +95,7 @@ enum sdsi_command {
+ 	SDSI_CMD_PROVISION_CAP		= 0x0008,
+ 	SDSI_CMD_READ_STATE		= 0x0010,
+ 	SDSI_CMD_READ_METER		= 0x0014,
++	SDSI_CMD_ATTESTATION		= 0x1012,
+ };
+ 
+ struct sdsi_mbox_info {
+@@ -109,12 +114,14 @@ struct disc_table {
+ struct sdsi_priv {
+ 	struct mutex		mb_lock;	/* Mailbox access lock */
+ 	struct device		*dev;
++	struct miscdevice	miscdev;
+ 	void __iomem		*control_addr;
+ 	void __iomem		*mbox_addr;
+ 	void __iomem		*regs_addr;
+ 	int			control_size;
+ 	int			maibox_size;
+ 	int			registers_size;
++	int			id;
+ 	u32			guid;
+ 	u32			features;
+ };
+@@ -582,6 +589,97 @@ static const struct attribute_group sdsi_group = {
+ };
+ __ATTRIBUTE_GROUPS(sdsi);
+ 
++/*
++ * SPDM transport
++ * Returns size of the response message or an error code on failure.
++ */
++static int sdsi_spdm_exchange(void *private, const void *request,
++			      size_t request_sz, void *response,
++			      size_t response_sz)
++{
++	struct sdsi_priv *priv = private;
++	struct sdsi_mbox_info info = {};
++	size_t spdm_msg_size, size;
++	int ret;
++
++	/*
++	 * For the attestation command, the mailbox write size is the sum of:
++	 *     Size of the SPDM request payload, padded for qword alignment
++	 *     8 bytes for the mailbox command
++	 *     8 bytes for the actual (non-padded) size of the SPDM request
++	 */
++	if (request_sz > SDSI_SIZE_WRITE_MSG - 2 * sizeof(u64))
++		return -EOVERFLOW;
++
++	info.size = round_up(request_sz, sizeof(u64)) + 2 * sizeof(u64);
++
++	u64 *payload __free(kfree) = kzalloc(info.size, GFP_KERNEL);
++	if (!payload)
++		return -ENOMEM;
++
++	memcpy(payload, request, request_sz);
++
++	/* The non-padded SPDM payload size is the 2nd-to-last qword */
++	payload[(info.size / sizeof(u64)) - 2] = request_sz;
++
++	/* Attestation mailbox command is the last qword of payload buffer */
++	payload[(info.size / sizeof(u64)) - 1] = SDSI_CMD_ATTESTATION;
++
++	info.payload = payload;
++	info.buffer = response;
++
++	ret = mutex_lock_interruptible(&priv->mb_lock);
++	if (ret)
++		return ret;
++	ret = sdsi_mbox_write(priv, &info, &size);
++	mutex_unlock(&priv->mb_lock);
++
++	if (ret < 0)
++		return ret;
++
++	/*
++	 * The read size is the sum of:
++	 *     Size of the SPDM response payload, padded for qword alignment
++	 *     8 bytes for the actual (non-padded) size of the SPDM payload
++	 */
++
++	if (size < sizeof(u64)) {
++		dev_err(priv->dev,
++			"Attestation error: Mailbox reply size, %ld, too small\n",
++			size);
++		return -EPROTO;
++	}
++
++	if (!IS_ALIGNED(size, sizeof(u64))) {
++		dev_err(priv->dev,
++			"Attestation error: Mailbox reply size, %ld, is not aligned\n",
++			size);
++		return -EPROTO;
++	}
++
++	/*
++	 * Get the SPDM response size from the last QWORD and check it fits
++	 * with no more than 7 bytes of padding
++	 */
++	spdm_msg_size = ((u64 *)info.buffer)[(size - sizeof(u64)) / sizeof(u64)];
++	if (!in_range(size - spdm_msg_size - sizeof(u64), 0, 8)) {
++		dev_err(priv->dev,
++			"Attestation error: Invalid SPDM response size, %ld\n",
++			spdm_msg_size);
++		return -EPROTO;
++	}
++
++	if (spdm_msg_size > response_sz || spdm_msg_size < SPDM_HEADER_SIZE) {
++		dev_err(priv->dev, "Attestation error: Expected response size %ld, got %ld\n",
++			response_sz, spdm_msg_size);
++		return -EOVERFLOW;
++	}
++
++	memcpy(response, info.buffer, spdm_msg_size);
++
++	return spdm_msg_size;
++}
++
+ static int sdsi_get_layout(struct sdsi_priv *priv, struct disc_table *table)
+ {
+ 	switch (table->guid) {
+@@ -649,6 +747,92 @@ static int sdsi_map_mbox_registers(struct sdsi_priv *priv, struct pci_dev *paren
+ 	return 0;
+ }
+ 
++#define SDSI_SPDM_DRIVER_VERSION	1
++
++static int sdsi_spdm_get_info(struct sdsi_priv *priv,
++			      struct sdsi_spdm_info __user *argp)
++{
++	struct sdsi_spdm_info info;
++
++	info.driver_version = SDSI_SPDM_DRIVER_VERSION;
++	info.api_version = priv->guid;
++	info.dev_no = priv->id;
++	info.max_request_size = SDSI_SIZE_WRITE_MSG - 2 * sizeof(u64);
++	info.max_response_size = SDSI_SIZE_READ_MSG - sizeof(u64);
++
++	if (copy_to_user(argp, &info, sizeof(info)))
++		return -EFAULT;
++
++	return 0;
++}
++
++static int sdsi_spdm_do_command(struct sdsi_priv *priv,
++				struct sdsi_spdm_command __user *argp)
++{
++	u32 req_size, rsp_size;
++
++	if (get_user(req_size, &argp->size))
++		return -EFAULT;
++
++	if (req_size < 4 || req_size > sizeof(struct sdsi_spdm_message))
++		return -EINVAL;
++
++	struct sdsi_spdm_message *request __free(kfree) =
++		kmalloc(req_size, GFP_KERNEL);
++	if (!request)
++		return -ENOMEM;
++
++	struct sdsi_spdm_command *response __free(kfree) =
++		kmalloc(SDSI_SIZE_READ_MSG, GFP_KERNEL);
++	if (!response)
++		return -ENOMEM;
++
++	if (copy_from_user(request, &argp->message, req_size))
++		return -EFAULT;
++
++	rsp_size = sdsi_spdm_exchange(priv, request, req_size, response,
++				      SDSI_SIZE_READ_MSG);
++	if (rsp_size < 0)
++		return rsp_size;
++
++	if (put_user(rsp_size, &argp->size))
++		return -EFAULT;
++
++	if (copy_to_user(&argp->message, response, rsp_size))
++		return -EFAULT;
++
++	return 0;
++}
++
++static long sdsi_spdm_ioctl(struct file *file, unsigned int cmd,
++			    unsigned long arg)
++{
++	struct sdsi_priv *priv;
++	long ret = -ENOTTY;
++
++	priv = container_of(file->private_data, struct sdsi_priv, miscdev);
++
++	switch (cmd) {
++	case SDSI_IF_SPDM_INFO:
++		ret = sdsi_spdm_get_info(priv,
++				(struct sdsi_spdm_info __user *)arg);
++		break;
++	case SDSI_IF_SPDM_COMMAND:
++		ret = sdsi_spdm_do_command(priv,
++				(struct sdsi_spdm_command __user *)arg);
++		break;
++	default:
++		break;
++	}
++
++	return ret;
++}
++
++static const struct file_operations sdsi_spdm_ops = {
++	.owner = THIS_MODULE,
++	.unlocked_ioctl = sdsi_spdm_ioctl,
++};
++
+ static int sdsi_probe(struct auxiliary_device *auxdev, const struct auxiliary_device_id *id)
+ {
+ 	struct intel_vsec_device *intel_cap_dev = auxdev_to_ivdev(auxdev);
+@@ -663,6 +847,7 @@ static int sdsi_probe(struct auxiliary_device *auxdev, const struct auxiliary_de
+ 		return -ENOMEM;
+ 
+ 	priv->dev = &auxdev->dev;
++	priv->id = auxdev->id;
+ 	mutex_init(&priv->mb_lock);
+ 	auxiliary_set_drvdata(auxdev, priv);
+ 
+@@ -686,9 +871,32 @@ static int sdsi_probe(struct auxiliary_device *auxdev, const struct auxiliary_de
+ 	if (ret)
+ 		return ret;
+ 
++	/* Attestation miscdevice */
++	if (priv->features & SDSI_FEATURE_ATTESTATION) {
++		priv->miscdev.name = devm_kasprintf(&auxdev->dev, GFP_KERNEL,
++						    "isdsi%d", priv->id);
++		if (!priv->miscdev.name)
++			return -ENOMEM;
++
++		priv->miscdev.minor = MISC_DYNAMIC_MINOR;
++		priv->miscdev.fops = &sdsi_spdm_ops;
++
++		ret = misc_register(&priv->miscdev);
++		if (ret)
++			return ret;
++	}
++
+ 	return 0;
+ }
+ 
++static void sdsi_remove(struct auxiliary_device *auxdev)
++{
++	struct sdsi_priv *priv = auxiliary_get_drvdata(auxdev);
++
++	if (priv->features & SDSI_FEATURE_ATTESTATION)
++		misc_deregister(&priv->miscdev);
++}
++
+ static const struct auxiliary_device_id sdsi_aux_id_table[] = {
+ 	{ .name = "intel_vsec.sdsi" },
+ 	{}
+@@ -701,7 +909,7 @@ static struct auxiliary_driver sdsi_aux_driver = {
+ 	},
+ 	.id_table	= sdsi_aux_id_table,
+ 	.probe		= sdsi_probe,
+-	/* No remove. All resources are handled under devm */
++	.remove		= sdsi_remove,
+ };
+ module_auxiliary_driver(sdsi_aux_driver);
+ 
+diff --git a/include/uapi/linux/intel_sdsi.h b/include/uapi/linux/intel_sdsi.h
+new file mode 100644
+index 000000000000..8e28764f4a98
+--- /dev/null
++++ b/include/uapi/linux/intel_sdsi.h
+@@ -0,0 +1,81 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * Intel On Demand (SDSi) Interface for SPDM based attestation.
++ * Copyright (c) 2019, Intel Corporation.
++ * All rights reserved.
++ *
++ * Author: David E. Box <david.e.box@linux.intel.com>
++ */
++
++#ifndef __SDSI_H
++#define __SDSI_H
++
++#include <linux/sizes.h>
++#include <linux/types.h>
++
++/**
++ * struct sdsi_spdm_info - Define platform information
++ * @api_version:	Version of the firmware document, which this driver
++ *			can communicate
++ * @driver_version:	Driver version, which will help user to send right
++ *			commands. Even if the firmware is capable, driver may
++ *			not be ready
++ * @dev_no:		Returns the auxiliary device number the corresponding
++ *			sdsi instance
++ * @max_request_size:	Returns the maximum allowed size for SPDM request
++ *			messages
++ * @max_response_size:	Returns the maximum size of an SPDM response message
++ *
++ * Used to return output of IOCTL SDSI_SPDM_INFO. This
++ * information can be used by the user space, to get the driver, firmware
++ * support and also number of commands to send in a single IOCTL request.
++ */
++struct sdsi_spdm_info {
++	__u32 api_version;
++	__u16 driver_version;
++	__u16 dev_no;
++	__u16 max_request_size;
++	__u16 max_response_size;
++};
++
++#define SPDM_HEADER				\
++	struct {				\
++		__u8 spdm_version;		\
++		__u8 request_response_code;	\
++		__u8 param1;			\
++		__u8 param2;			\
++	}
++#define SPDM_HEADER_SIZE	sizeof(SPDM_HEADER)
++
++/**
++ * struct sdsi_spdm_message - The SPDM message sent and received from the device
++ * @spdm_version:		Supported SPDM version
++ * @request_response_code:	The SPDM message code for requests and responses
++ * @param1:			Parameter 1
++ * @param2:			Parameter 2
++ * @buffer:			SDPM message specific buffer
++ *
++ */
++struct sdsi_spdm_message {
++	SPDM_HEADER;
++	__u8 buffer[SZ_4K - SPDM_HEADER_SIZE];
++};
++
++#define SDSI_SPDM_BUF_SIZE	(sizeof(struct sdsi_spdm_message) - SPDM_HEADER_SIZE)
++
++/**
++ * struct sdsi_spdm_command - The SPDM command
++ * @ size:		The size of the SPDM message
++ * @ message:		The SPDM message
++ *
++ * Used to return output of IOCTL SDSI_SPDM_COMMAND.
++ */
++struct sdsi_spdm_command {
++	__u32 size;
++	struct sdsi_spdm_message message;
++};
++
++#define SDSI_IF_MAGIC		0xFC
++#define SDSI_IF_SPDM_INFO	_IOR(SDSI_IF_MAGIC, 0, struct sdsi_spdm_info *)
++#define SDSI_IF_SPDM_COMMAND	_IOWR(SDSI_IF_MAGIC, 1, struct sdsi_spdm_command *)
++#endif
 
-Lyndon
-
+base-commit: 76f09e22027fc0dbec1e9c82898d9059b4455df6
+-- 
+2.34.1
 
