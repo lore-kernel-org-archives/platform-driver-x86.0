@@ -1,85 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102C316D4CA;
-	Tue,  7 May 2024 23:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B33DDDC;
+	Wed,  8 May 2024 00:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715123481; cv=none; b=oYGqeh1fj7XExaVnWI/s7+zRL+c4euQJTRAl4ou2At8+SoJO+RLxWnCCL2dV2Un9u4EoHQ0NKjwnAPCdMFV8E1DcnJJs/FtVrQTfLThhwewVkYeZrMu3q4qftl5x1MauByc3MbaHYU8nlG6j9PUDc5KzvGvmr3Kbpr3t7dHQvls=
+	t=1715127000; cv=none; b=mYIY0zo5MYNPtK7C9ccHwY1iFvwmXcBEUfPGC3JiRFGVeH8IuN7TtiFxgZMpQEiKHLDVxNVXfeDe2e0PM67Jg1s4bVnouvZUjL8WlsWrHpxb5kOYJvt4hoCoxRrUlezV5T+IdTtzmEPFlVFRJUiiUNZ4cYVSJqxPe230nbQBMzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715123481; c=relaxed/simple;
-	bh=Vjg4Fmi6G6fzx0gO2iQTTiPmXRNi21IOpym6rx+7TWY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gI9G4mU3Ouup0eCEv4W6Q2gzwQA+H8oXdti8rtodZpMAxRoI4FqW/2fDZJI0rkjT2cPET1OlIYIPu5ptxyoGX6WKZ6Xn38fI0vNojcCSSp4UwB3Bhh1B+Cu15F9V3KKWv2eDB9uLXFtp2Lmomsyrg+xVABsXepqDdsWx+LEiASI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LlPpkkCT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715127000; c=relaxed/simple;
+	bh=a1a7kGmJhVbWVk9Qjv4HmPA2feFqp8D3U+r5u1agPsY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ht3GLMw66aJlJsccV38sXrC187mpkuhe4DQ1lSLP2YPFIopD4fqgnZOvZUqpM8f6+3Vw5U5nF5n/IK6ABw8UAgdE3XNrlmbheiwMsrOadU8mvKyQmY8WxZQlL3D8N45egU911Kxlz/j5v3tI69vOYZYaSJEVjXvMS0f7YptyOhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RXxGjRjS; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LlPpkkCT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21512C3277B;
-	Tue,  7 May 2024 23:11:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715123480;
-	bh=Vjg4Fmi6G6fzx0gO2iQTTiPmXRNi21IOpym6rx+7TWY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LlPpkkCTS9sBO5WOCizTxXbCHIuZJ5J0qZztFgz37aP73OVeCUaLKAf4TBNaBhn4H
-	 E88SjCQT/jqlpf/VZ4uHJYlHLmBJQdO5+QLSFP99ovpRaOCTrLCGuR8yVMKt6oy1j+
-	 3zRCVy72MN+XeEI5ZDMDuaGjJEGg+NqzGK1JgdeH8OwAISwtAXp8Q8F9Jt8y02l6gH
-	 oZNcLxGjzNZCg4X6XNWLBBFyTB7N49D3hVcCLBVfT+8DHfFQiAGTUg+kjmb+kPC/jY
-	 QJB/wCVAXkd6YKXLh7TdpMYQMzvUnVi2/kerLbz3pVOq0R1dSWyZcraCMzG1GKNYvb
-	 iDQ8VwISngyDg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Sasha Levin <sashal@kernel.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RXxGjRjS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715126998; x=1746662998;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=a1a7kGmJhVbWVk9Qjv4HmPA2feFqp8D3U+r5u1agPsY=;
+  b=RXxGjRjSzhdH8cX3E9B7lIKNXp9cEbA9chmD77W0TuH4lhLI1AgRKN9/
+   XoNqdUV8rMou+AB7FBEtdfPuOmoelX8eC9500qpODaYx9uAnluMuVIZm/
+   PWrDA90uBcADroC4gO23Sn7vQnkL58vToJDDC5qv1OkZwBIuvIi+OQW2Q
+   ovs8+9xb0jFcv7AO5kwgSzRMhv/FGpIpRgigHpSgWChmDPfZik+LB9r6F
+   YyPjra825rNCrmhUgd+XoA1lJi9mN8z2GGqD0yd5POfGTj17IYVjNDlXV
+   ODQexQHnauH7GvbMyA2oUOAe8FM8SouDr2DIe2v7ieLA+KkijCC3kQLb4
+   w==;
+X-CSE-ConnectionGUID: AuLAhxr5Tg+K6i2dqaRldw==
+X-CSE-MsgGUID: XkL2QbgEQF2bIpFbW9Xgng==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="10898733"
+X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
+   d="scan'208";a="10898733"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 17:09:58 -0700
+X-CSE-ConnectionGUID: S6NuRJE9R4O3aPD9LAFBDw==
+X-CSE-MsgGUID: eNmRilucQreQgMM/ssbf4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
+   d="scan'208";a="29108939"
+Received: from chang-linux-3.sc.intel.com ([172.25.66.175])
+  by orviesa006.jf.intel.com with ESMTP; 07 May 2024 17:09:58 -0700
+From: "Chang S. Bae" <chang.seok.bae@intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
 	hdegoede@redhat.com,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 25/43] platform/x86: ISST: Add Grand Ridge to HPM CPU list
-Date: Tue,  7 May 2024 19:09:46 -0400
-Message-ID: <20240507231033.393285-25-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240507231033.393285-1-sashal@kernel.org>
-References: <20240507231033.393285-1-sashal@kernel.org>
+	ilpo.jarvinen@linux.intel.com,
+	tony.luck@intel.com,
+	ashok.raj@intel.com,
+	jithu.joseph@intel.com,
+	chang.seok.bae@intel.com
+Subject: [PATCH v2 0/2] x86/fpu: Extend kernel_fpu_begin_mask() for the In-Field Scan driver
+Date: Tue,  7 May 2024 16:53:42 -0700
+Message-Id: <20240507235344.249103-1-chang.seok.bae@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240430212508.105117-1-chang.seok.bae@intel.com>
+References: <20240430212508.105117-1-chang.seok.bae@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.30
 Content-Transfer-Encoding: 8bit
 
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Following feedback from the previous posting [1], this revision comes
+with the changelog updates for more clarity:
 
-[ Upstream commit 515a3c3a5489a890c7c3c1df3855eb4868a27598 ]
+* The recent change in the SDM alone does not fully explain the
+  underlying reasons. Provide a clearer explanation rather than simply
+  echoing the SDM text.
 
-Add Grand Ridge (ATOM_CRESTMONT) to hpm_cpu_ids, so that MSR 0x54 can be
-used.
+* While it is feasible for administrators to isolate CPUs running the
+  In-Field Scan tests from those running AMX workloads, this approach is
+  considerably disruptive and conflicts with the goal of its live
+  testing. Add this point to the changelog as well.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Link: https://lore.kernel.org/r/20240422212222.3881606-1-srinivas.pandruvada@linux.intel.com
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks to Dave for highlighting these aspects [2]. Additionally, it is
+worth noting that the IFS Technical Paper [3] was recently published,
+which may offer further context on the IFS testing.
 
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-index 08df9494603c5..84fe2e5a06044 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-@@ -720,6 +720,7 @@ static struct miscdevice isst_if_char_driver = {
- 
- static const struct x86_cpu_id hpm_cpu_ids[] = {
- 	X86_MATCH_INTEL_FAM6_MODEL(GRANITERAPIDS_X,	NULL),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_CRESTMONT,	NULL),
- 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_CRESTMONT_X,	NULL),
- 	{}
- };
+Thanks,
+Chang
+
+[1] V1: https://lore.kernel.org/lkml/20240430212508.105117-1-chang.seok.bae@intel.com/
+[2] Feedback: https://lore.kernel.org/lkml/a41d7012-2eea-436e-9f7e-6a7702f7e2c2@intel.com/
+[3] IFS Paper: https://www.intel.com/content/www/us/en/content-details/822279/finding-faulty-components-in-a-live-fleet-environment.html
+
+Chang S. Bae (2):
+  x86/fpu: Extend kernel_fpu_begin_mask() to initialize AMX state
+  platform/x86/intel/ifs: Initialize AMX state for the scan test
+
+ arch/x86/include/asm/fpu/api.h           |  1 +
+ arch/x86/kernel/fpu/core.c               |  3 +++
+ drivers/platform/x86/intel/ifs/ifs.h     | 15 +++++++++++++++
+ drivers/platform/x86/intel/ifs/runtest.c |  6 ++++++
+ 4 files changed, 25 insertions(+)
+
+
+base-commit: 7598293ab37c92025086de4b0ecd9474013a725f
 -- 
-2.43.0
+2.34.1
 
