@@ -1,89 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE5E82871
-	for <platform-driver-x86@vger.kernel.org>; Wed,  8 May 2024 11:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172FD55E40;
+	Wed,  8 May 2024 13:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715168543; cv=none; b=FzFA6cc8Ayty07+A0+jrDQzmRg9wSgEUTA4+rA5ciZebl9TdIww50ovYIBhClt4vJTTcUrQRwr3Q5EXrpzvI5DpaCJmG8QSJgnkSnh41XpjPS2NshQoKp6bLAmz4IxZn1QQy9S9KaImZbMP6+sjYuDgPXeugsYPwM5eijuXT0Bk=
+	t=1715173222; cv=none; b=DbQ40hWofX3UV3paWxkmazEsMd98E4vbH4L1BVPjOIXd/lTR9XGHTlKodw2phLXkQkF1OuD4IP8IbAL43qLm+7Z0O5uMcl2TWKUznhRjAdyYvWuSQ2lyTBDkqFpZJfdpzHqNffhUUnkxcgEbSUwCbykrg97PMMZ+OErSJcGNCOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715168543; c=relaxed/simple;
-	bh=ENmtqGZzW81/Gqz525tru9dNqfCxqgWWnCUV04udGck=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OzCX7vC5U648Fsr7mShG+xPyfUMGo5aHt6sq8eqGhUwnYImzTXw3K0OJYAYH2sskm/lbrXRYFqs9/b6v8D4HSxqqh+Brh8Spej9tROyk3czTus+IHkJTQXAcuQa7g0FG1xU7n+3GSlAprmYnIYoSYhNr4J3Kc2ISuxk9YcgysYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RUePGPUe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715173222; c=relaxed/simple;
+	bh=VL/B/S5LHPg1SxdBK+Kgk3Vm5npaZzfKR8tx7ySUJDI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rS5vOuCWdhtFGY6D8s6EQ7Fzepxs3aHgS4iZVI7mfy99t2QJnknjKjsCtVJ4SZEAEePito0ITIQ9kYYGRsjOcBFCxUJx0/fYzYlESTHcILPrQ7ioLfrpQ+isXcLK9Ofkd6qGupNm13ZoXgdFgfznc1VI/BAUOYl3VFFFeCXzsW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RsIxO76q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VILWxv3Y; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUePGPUe"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id ED60FC4AF67
-	for <platform-driver-x86@vger.kernel.org>; Wed,  8 May 2024 11:42:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715168543;
-	bh=ENmtqGZzW81/Gqz525tru9dNqfCxqgWWnCUV04udGck=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=RUePGPUePtlkQl6g0XTz18QsbCGYFkeLEIwjXE/90jM2E1bT3GuJLxPUjsky8j1zB
-	 W0rK4C4Jmf5qzLGbfkIu1n638YZlMh44El15Bi5rwwv9KGU8+iG0aZWwQ/mU7W6+R9
-	 zlfq9OP0voYhZyeJOqdwPVnWvtDdrDnH80Qhx2JZqjkspjCAHB0gN+z9zx+kuocvEY
-	 vlKNXGPm43WdrvpReZmU/yJWpu+bO9a4SPLmeVYfsSxe+lQcBtOuypF0ttPa8x6QoI
-	 98vy4jnJCtGkk3XQaI2Ox7wyH7VMxFW4AiB/iiGR+vsOJUHzHOmSu7+bt/38oJm/yl
-	 sKGlb1UtPDITQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id E091FC53B6E; Wed,  8 May 2024 11:42:22 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
- resuming after unplugging the power cord during sleep
-Date: Wed, 08 May 2024 11:42:22 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: vanoverloopdaan@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-vO1Hx7ewCI@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RsIxO76q";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VILWxv3Y"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1715173219;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uPhuL3UM5yIxpg2EhK/QKw4q/Os8hXdmW0AhRhBQxVo=;
+	b=RsIxO76qBJhkUwxYZzk0EZmrqcaXa6TGwgA9yhn1OFnCCiX+vM+Rjaet+sA3uKeW9jlZ/I
+	YBMnet4OmVvC4HTj6h/wnH7MYzNejU6crko2WY9cTsYBBoXSculbnI6VxD5vuywJMLxB/U
+	R/4qj7RNq2IEbkjCawwFidS20dNbgEVMAGAXFz/omasMc+CG083Isx332CmP43Jfadj9g9
+	TPSogDBLLteOTLyeXKBPzsuI7OQzFL1wh9HQQmLRIFcuWN2tJHQxMN2A+c2w2mWzrsmmTU
+	ZDPHZzZd+FyBYF49M9X+4c8QLLYEuAF5274MdsPgJ9xbOMBsVZTqS/pSx4CeJQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1715173219;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uPhuL3UM5yIxpg2EhK/QKw4q/Os8hXdmW0AhRhBQxVo=;
+	b=VILWxv3YDTYeJXbdLujOFah1LUVELZzQ+nIsfI2L9cDhNN6gHXB3rv+AeLxvQ+tCbKQfk1
+	jIIj9Aev4bV2EzAw==
+To: "Chang S. Bae" <chang.seok.bae@intel.com>, linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, tony.luck@intel.com, ashok.raj@intel.com,
+ jithu.joseph@intel.com, chang.seok.bae@intel.com
+Subject: Re: [PATCH v2 1/2] x86/fpu: Extend kernel_fpu_begin_mask() to
+ initialize AMX state
+In-Reply-To: <20240507235344.249103-2-chang.seok.bae@intel.com>
+References: <20240430212508.105117-1-chang.seok.bae@intel.com>
+ <20240507235344.249103-1-chang.seok.bae@intel.com>
+ <20240507235344.249103-2-chang.seok.bae@intel.com>
+Date: Wed, 08 May 2024 15:00:18 +0200
+Message-ID: <87y18ko3vh.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
+On Tue, May 07 2024 at 16:53, Chang S. Bae wrote:
+> diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+> index 1209c7aebb21..04cc6f14ca42 100644
+> --- a/arch/x86/kernel/fpu/core.c
+> +++ b/arch/x86/kernel/fpu/core.c
+> @@ -440,6 +440,9 @@ void kernel_fpu_begin_mask(unsigned int kfpu_mask)
+>  
+>  	if (unlikely(kfpu_mask & KFPU_387) && boot_cpu_has(X86_FEATURE_FPU))
+>  		asm volatile ("fninit");
+> +
+> +	if (unlikely(kfpu_mask & KFPU_AMX) && boot_cpu_has(X86_FEATURE_AMX_TILE))
 
---- Comment #64 from Daan Vanoverloop (vanoverloopdaan@gmail.com) ---
-I just encountered the issue again, but this time I unplugged my power adap=
-ter
-while the device was suspended, which can also trigger this bug. When I loo=
-k at
-the smn_value, I find 0x017f1201 again (the "normal" value). When I plug in=
- the
-adapter, I can work around the issue and find smn_value 0x017f1221. The val=
-ue
-will stay on 0x017f1221 until I do a suspend/wake cycle, which resets it ba=
-ck
-to 0x017f1201, regardless of whether I the low clock speed issue occurred or
-not. Any kind of plugging or unplugging of the power adapter while the devi=
-ce
-is awake causes it to change to 0x017f1221. Plugging and unplugging while
-suspended does not seem to have any effect on this value, as it would always
-reset to 0x017f1201 when waking from suspend.
+  cpu_feature_enabled() please
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+> +		restore_fpregs_from_fpstate(&init_fpstate, XFEATURE_MASK_XTILE);
+>  }
+>  EXPORT_SYMBOL_GPL(kernel_fpu_begin_mask);
