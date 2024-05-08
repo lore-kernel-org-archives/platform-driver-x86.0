@@ -1,114 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72031A28B;
-	Wed,  8 May 2024 08:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1148378C9E
+	for <platform-driver-x86@vger.kernel.org>; Wed,  8 May 2024 10:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715156903; cv=none; b=PL910Dcei9HY702ohLzjEkRUukWGmBkdZecUDFxCDEsBAoAS7+OPikkXUjL9cJhy4T7YYn1eL6kZTq6SLCtAp5ZQVrMBgIPx40WLacEYfPPLi9gNLgB1eXNUTXQocLToSY1W7p31u4YpzoEjwvn934kSiCsrJM2lr9hOoTokg7g=
+	t=1715165005; cv=none; b=XrROqSIDoSQNZUe/oHngfr4FhSY/HL6Vg17ttqLfaaolqOqA30iKGy5fnPCcvmg6xZDxDR1jsd6Yg02eCMxkBrqwDWVnfC5ZS9l5G5hESfIDfHF6iObiw+XEhcB3SeHtSMJPTT56n2P36cTbm5jd9PIqkxCNb0mPPPRWeGvOxGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715156903; c=relaxed/simple;
-	bh=L1Lspn0M8w8szRsrIq5g4DMduLChT+SxYoYpT6S+K4I=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BGhfiC2FH/iQdV/T7784B+bfY/Z7exVZwRjyVZZyz+BGSL+ZSRiLiTPnSorkVcl6idaCksjNYxH/AAcn1wtzT1zznKrlDGdKiitNwNhdeH1Ah567d2mMGQwH0SrlpfDEJJ0A9Bb4u2t0GfhEAX9N8o32cDn6kP+0IFxsJlzKwbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d2DrG6QJ; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715165005; c=relaxed/simple;
+	bh=AdV+B9yUmsPOyuDJKdAkNFoSqAGDd/uKzuOMYP2Y0+4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IBsl5Mvo3/+bpUakfGRUr8A19TLf2tb1LNPJNxkk5G4Qrst/oJO1mHZBef0aWM32eaE2cpzZGoYnRDqIrAmyJ9skFrt5+RG0tpvkMLLh/ObHTUdr7naBNprvw941/Y97AyrnQTbDScFM99EJv8Fd3t4Tvy28uB6vTejWbG/QqAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=aX0Pcbz3; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d2DrG6QJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715156903; x=1746692903;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=L1Lspn0M8w8szRsrIq5g4DMduLChT+SxYoYpT6S+K4I=;
-  b=d2DrG6QJYWIAup9z6Y0G/zbkCBikUx6V41LU3lZ+FRZ6xVWkn8eL07dP
-   7i4NGWSM2r37wwtTqG+lii3tlG1Z4I7sz7KJLKxhf/TbgTwkXRRkM82oe
-   NwNF9SwizR6csQb3q7Hq56TsTzcdWeXXXtaPvl0gA/mQH5xKMtOY3M020
-   NCbANzXz8+P/Qv3ZC5u6jp6nYbamsyGNu2oS/bIqqFAzHAnkUI/0o6XeF
-   i2ctnVf1dy8TI/JN5cZSwY8Mb2QhYEIRNVANROUeMJwpHM2dG/3rYnSH+
-   KVOErW+xqNgISYyLeP/Pm2bRENZaXngxGqLWhhGhGZYVHcyjiMktNaUE6
-   g==;
-X-CSE-ConnectionGUID: vUeseLJmRQSPLM/G1CYrBw==
-X-CSE-MsgGUID: dkmBrYyvT1yaZq5O4X/l5w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="21563903"
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="21563903"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 01:28:21 -0700
-X-CSE-ConnectionGUID: cg70KTtxQXKU9tWoogn3Zw==
-X-CSE-MsgGUID: siTQPQqARdu8IGyJ0ibx9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="28680769"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.80])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 01:28:15 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 8 May 2024 11:28:10 +0300 (EEST)
-To: "Chang S. Bae" <chang.seok.bae@intel.com>
-cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org, 
-    platform-driver-x86@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, 
-    bp@alien8.de, dave.hansen@linux.intel.com, 
-    Hans de Goede <hdegoede@redhat.com>, tony.luck@intel.com, 
-    ashok.raj@intel.com, jithu.joseph@intel.com
-Subject: Re: [PATCH v2 0/2] x86/fpu: Extend kernel_fpu_begin_mask() for the
- In-Field Scan driver
-In-Reply-To: <20240507235344.249103-1-chang.seok.bae@intel.com>
-Message-ID: <80023e25-e582-e0aa-7428-ee17fecdbcef@linux.intel.com>
-References: <20240430212508.105117-1-chang.seok.bae@intel.com> <20240507235344.249103-1-chang.seok.bae@intel.com>
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="aX0Pcbz3"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a59ece5e18bso482772966b.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 08 May 2024 03:43:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1715165001; x=1715769801; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AImnvo1Yv6QQBwBo/PQQOErjpEng1YiXNlTdoFkDN/c=;
+        b=aX0Pcbz3cZtlC+JPuc+tv5udwZNr8a+ZCWod4bNrwhjpnrQo3P/VZokOotnZ4x+mub
+         KduD1gxBJlib9CH82f3v2k6kzTaD+rcck8xFhXxGsopNg0/Wcs+/WlPQLabt4fQYCbI9
+         YyrtpkZr4Kg46dqK/B7s/sHh/ikocit+fWYJFUugPE6MgNNia0bXflrezUKZ95PsYv+k
+         nwA0phSYoY7vRPKGY3F6aHt3IfEcT7JM1Q1dXADN51nP47KwE9FpR8kDyugLYwVpElRp
+         52vt8uI4uE2FCOnwpDjgY/VOMxkwsIkYWvdo76Rsd5ns7Lp23OdnUwuHQdUcpH00P/ex
+         6bUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715165001; x=1715769801;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AImnvo1Yv6QQBwBo/PQQOErjpEng1YiXNlTdoFkDN/c=;
+        b=EGp2zFajx5cj3p+39dhHucaR8SXnIMx+y0LuvdlLNquY4I/q/gcchqLrZw5/HUwF/k
+         C07iX6GY9dM3m4w4ABN5G1NTOPu1btUFkN/Yme1c+U4T1Rw4Os5oCuX4CHwcbqHcFTuM
+         6SJS2maClNeYAnDe1jBOb9nH36UKlmvrbNMG+31BouRum2hMRL61mJDxmsI5mifK9S41
+         Zl9tIQhiQxz9k3577Vudfn0J4cn9S7TcxWrWVYuLhnLMEbNo5q6wKiazDacYb0NtpMtR
+         fkaceZesxzrOrI5rXHAZnAhZkdHbx3d7MWwKx3VNfVbRTeE+BgnGSaZHRP/v4ApXfDaA
+         et6A==
+X-Gm-Message-State: AOJu0YwOrn3BwZYGQ2GUfIRCgsXy9EENKZUEEcxqX9i9L/AkiGqlEBn5
+	0ti0qcKFRp2vOEgMK3hnbWLrlUBpJEYNVS78PW+gmmXav00wAxq7jXKa5sUqSyc=
+X-Google-Smtp-Source: AGHT+IFInUoAInvNUg+Pr6feANwga+FXl0TeerqG+DsnNLAldMdb7HKUnSL+Mh0YRl5gYy0rkPm9+g==
+X-Received: by 2002:a17:906:f8da:b0:a59:c0a6:25cd with SMTP id a640c23a62f3a-a59fb91fa9emr172899266b.5.1715165001153;
+        Wed, 08 May 2024 03:43:21 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-62-216-208-100.dynamic.mnet-online.de. [62.216.208.100])
+        by smtp.gmail.com with ESMTPSA id r13-20020a170906548d00b00a59caa028b0sm3877237ejo.225.2024.05.08.03.43.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 May 2024 03:43:20 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] platform/x86/amd/pmf: Use memdup_user()
+Date: Wed,  8 May 2024 11:46:29 +0200
+Message-ID: <20240508094628.308221-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1145016416-1715156890=:3164"
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Switching to memdup_user() overwrites the allocated memory only once,
+whereas kzalloc() followed by copy_from_user() initializes the allocated
+memory to zero and then immediately overwrites it.
 
---8323328-1145016416-1715156890=:3164
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Fixes the following Coccinelle/coccicheck warning reported by
+memdup_user.cocci:
 
-On Tue, 7 May 2024, Chang S. Bae wrote:
+	WARNING opportunity for memdup_user
 
-> Following feedback from the previous posting [1], this revision comes
-> with the changelog updates for more clarity:
->=20
-> * The recent change in the SDM alone does not fully explain the
->   underlying reasons. Provide a clearer explanation rather than simply
->   echoing the SDM text.
->=20
-> * While it is feasible for administrators to isolate CPUs running the
->   In-Field Scan tests from those running AMX workloads, this approach is
->   considerably disruptive and conflicts with the goal of its live
->   testing. Add this point to the changelog as well.
->=20
-> Thanks to Dave for highlighting these aspects [2]. Additionally, it is
-> worth noting that the IFS Technical Paper [3] was recently published,
-> which may offer further context on the IFS testing.
->=20
-> Thanks,
-> Chang
->=20
-> [1] V1: https://lore.kernel.org/lkml/20240430212508.105117-1-chang.seok.b=
-ae@intel.com/
-> [2] Feedback: https://lore.kernel.org/lkml/a41d7012-2eea-436e-9f7e-6a7702=
-f7e2c2@intel.com/
-> [3] IFS Paper: https://www.intel.com/content/www/us/en/content-details/82=
-2279/finding-faulty-components-in-a-live-fleet-environment.html
->=20
-> Chang S. Bae (2):
->   x86/fpu: Extend kernel_fpu_begin_mask() to initialize AMX state
->   platform/x86/intel/ifs: Initialize AMX state for the scan test
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ drivers/platform/x86/amd/pmf/tee-if.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-For both patches:
+diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+index b438de4d6bfc..1b53cabc9aa2 100644
+--- a/drivers/platform/x86/amd/pmf/tee-if.c
++++ b/drivers/platform/x86/amd/pmf/tee-if.c
+@@ -301,14 +301,9 @@ static ssize_t amd_pmf_get_pb_data(struct file *filp, const char __user *buf,
+ 		return -EINVAL;
+ 
+ 	/* re-alloc to the new buffer length of the policy binary */
+-	new_policy_buf = kzalloc(length, GFP_KERNEL);
+-	if (!new_policy_buf)
+-		return -ENOMEM;
+-
+-	if (copy_from_user(new_policy_buf, buf, length)) {
+-		kfree(new_policy_buf);
+-		return -EFAULT;
+-	}
++	new_policy_buf = memdup_user(buf, length);
++	if (IS_ERR(new_policy_buf))
++		return PTR_ERR(new_policy_buf);
+ 
+ 	kfree(dev->policy_buf);
+ 	dev->policy_buf = new_policy_buf;
+-- 
+2.45.0
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
-
---=20
- i.
-
---8323328-1145016416-1715156890=:3164--
