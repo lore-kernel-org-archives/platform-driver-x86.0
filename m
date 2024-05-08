@@ -1,109 +1,74 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1148378C9E
-	for <platform-driver-x86@vger.kernel.org>; Wed,  8 May 2024 10:43:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCEE76037
+	for <platform-driver-x86@vger.kernel.org>; Wed,  8 May 2024 11:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715165005; cv=none; b=XrROqSIDoSQNZUe/oHngfr4FhSY/HL6Vg17ttqLfaaolqOqA30iKGy5fnPCcvmg6xZDxDR1jsd6Yg02eCMxkBrqwDWVnfC5ZS9l5G5hESfIDfHF6iObiw+XEhcB3SeHtSMJPTT56n2P36cTbm5jd9PIqkxCNb0mPPPRWeGvOxGU=
+	t=1715166899; cv=none; b=AUvZtUrohgiBplk3JnNpV1HthRYfQ/BMmYzSm8vNEp6Gt5ywvmGzJOUrQHHoXpgAWjcFfUeBB06daClVdBbUd1JMO2NMT25mUxY3wm9ypxDiMQNCMRtPQBPWBPHzZhZ78oRPrruOmg0yKmKKqI3mDCVu84XJPqW1OKK5kZO/GT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715165005; c=relaxed/simple;
-	bh=AdV+B9yUmsPOyuDJKdAkNFoSqAGDd/uKzuOMYP2Y0+4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IBsl5Mvo3/+bpUakfGRUr8A19TLf2tb1LNPJNxkk5G4Qrst/oJO1mHZBef0aWM32eaE2cpzZGoYnRDqIrAmyJ9skFrt5+RG0tpvkMLLh/ObHTUdr7naBNprvw941/Y97AyrnQTbDScFM99EJv8Fd3t4Tvy28uB6vTejWbG/QqAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=aX0Pcbz3; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1715166899; c=relaxed/simple;
+	bh=B4WQSgYY5D1vtKdtWOG4oqgway4XS+BgJGuZAJDAq3o=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mIWgJ+ziz+VMCZyMYEVNGiCHciMG79fRZlB2eXCyhFRpheHviSFbbEDrojYRv2OKmoEu+YLDHJLl83o8kNRAWnGwW9XB3ggHInwMKaatDTgLWOew32niHVs6jTXlXEgTgksPK0y4XpaaNSMJwxe0rEF5sDdk1mHWvmcTyw4PIqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0cJD7nR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="aX0Pcbz3"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a59ece5e18bso482772966b.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 08 May 2024 03:43:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1715165001; x=1715769801; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AImnvo1Yv6QQBwBo/PQQOErjpEng1YiXNlTdoFkDN/c=;
-        b=aX0Pcbz3cZtlC+JPuc+tv5udwZNr8a+ZCWod4bNrwhjpnrQo3P/VZokOotnZ4x+mub
-         KduD1gxBJlib9CH82f3v2k6kzTaD+rcck8xFhXxGsopNg0/Wcs+/WlPQLabt4fQYCbI9
-         YyrtpkZr4Kg46dqK/B7s/sHh/ikocit+fWYJFUugPE6MgNNia0bXflrezUKZ95PsYv+k
-         nwA0phSYoY7vRPKGY3F6aHt3IfEcT7JM1Q1dXADN51nP47KwE9FpR8kDyugLYwVpElRp
-         52vt8uI4uE2FCOnwpDjgY/VOMxkwsIkYWvdo76Rsd5ns7Lp23OdnUwuHQdUcpH00P/ex
-         6bUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715165001; x=1715769801;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AImnvo1Yv6QQBwBo/PQQOErjpEng1YiXNlTdoFkDN/c=;
-        b=EGp2zFajx5cj3p+39dhHucaR8SXnIMx+y0LuvdlLNquY4I/q/gcchqLrZw5/HUwF/k
-         C07iX6GY9dM3m4w4ABN5G1NTOPu1btUFkN/Yme1c+U4T1Rw4Os5oCuX4CHwcbqHcFTuM
-         6SJS2maClNeYAnDe1jBOb9nH36UKlmvrbNMG+31BouRum2hMRL61mJDxmsI5mifK9S41
-         Zl9tIQhiQxz9k3577Vudfn0J4cn9S7TcxWrWVYuLhnLMEbNo5q6wKiazDacYb0NtpMtR
-         fkaceZesxzrOrI5rXHAZnAhZkdHbx3d7MWwKx3VNfVbRTeE+BgnGSaZHRP/v4ApXfDaA
-         et6A==
-X-Gm-Message-State: AOJu0YwOrn3BwZYGQ2GUfIRCgsXy9EENKZUEEcxqX9i9L/AkiGqlEBn5
-	0ti0qcKFRp2vOEgMK3hnbWLrlUBpJEYNVS78PW+gmmXav00wAxq7jXKa5sUqSyc=
-X-Google-Smtp-Source: AGHT+IFInUoAInvNUg+Pr6feANwga+FXl0TeerqG+DsnNLAldMdb7HKUnSL+Mh0YRl5gYy0rkPm9+g==
-X-Received: by 2002:a17:906:f8da:b0:a59:c0a6:25cd with SMTP id a640c23a62f3a-a59fb91fa9emr172899266b.5.1715165001153;
-        Wed, 08 May 2024 03:43:21 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-62-216-208-100.dynamic.mnet-online.de. [62.216.208.100])
-        by smtp.gmail.com with ESMTPSA id r13-20020a170906548d00b00a59caa028b0sm3877237ejo.225.2024.05.08.03.43.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 03:43:20 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] platform/x86/amd/pmf: Use memdup_user()
-Date: Wed,  8 May 2024 11:46:29 +0200
-Message-ID: <20240508094628.308221-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0cJD7nR"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 209E9C4AF17
+	for <platform-driver-x86@vger.kernel.org>; Wed,  8 May 2024 11:14:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715166899;
+	bh=B4WQSgYY5D1vtKdtWOG4oqgway4XS+BgJGuZAJDAq3o=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=o0cJD7nR5KSmF/YotucYK5ecQdAqR1q7rZsv3kNvLdR2+9lokHk15OKv4smVmxwmG
+	 o5lUYq4+2VEvMR0PWE1xCLS84nUo8fse7wt+e+nwuNN8e8FJchi6hHqR1VNE5ZSqys
+	 6JeNg3w3ngtX8f5nMqclBp6NC7z7TlcO0eIbMIwVwvxCZApy6UETNGANQqrivXNfvF
+	 4qoQM5DzJ9PUSdxULl6IW+k9zntZw8zbwMoumXdgmfsxone4QehAaQlGqNaa9LboeU
+	 Ub44bNOA1UBmZRt+/Vt2C/QCGQpEN379TeUkoD1j8r2ZIHbhxKJWFbDDbXukCJII/H
+	 47wzP1DZKPO9w==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 145D0C53B6D; Wed,  8 May 2024 11:14:59 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
+ resuming after unplugging the power cord during sleep
+Date: Wed, 08 May 2024 11:14:58 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: blocking
+X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218305-215701-fCLz2FqKNI@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
+References: <bug-218305-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Switching to memdup_user() overwrites the allocated memory only once,
-whereas kzalloc() followed by copy_from_user() initializes the allocated
-memory to zero and then immediately overwrites it.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-Fixes the following Coccinelle/coccicheck warning reported by
-memdup_user.cocci:
+--- Comment #62 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+Are you sure you didn't mix up 2 & 3?
 
-	WARNING opportunity for memdup_user
+--=20
+You may reply to this email to add a comment.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- drivers/platform/x86/amd/pmf/tee-if.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-index b438de4d6bfc..1b53cabc9aa2 100644
---- a/drivers/platform/x86/amd/pmf/tee-if.c
-+++ b/drivers/platform/x86/amd/pmf/tee-if.c
-@@ -301,14 +301,9 @@ static ssize_t amd_pmf_get_pb_data(struct file *filp, const char __user *buf,
- 		return -EINVAL;
- 
- 	/* re-alloc to the new buffer length of the policy binary */
--	new_policy_buf = kzalloc(length, GFP_KERNEL);
--	if (!new_policy_buf)
--		return -ENOMEM;
--
--	if (copy_from_user(new_policy_buf, buf, length)) {
--		kfree(new_policy_buf);
--		return -EFAULT;
--	}
-+	new_policy_buf = memdup_user(buf, length);
-+	if (IS_ERR(new_policy_buf))
-+		return PTR_ERR(new_policy_buf);
- 
- 	kfree(dev->policy_buf);
- 	dev->policy_buf = new_policy_buf;
--- 
-2.45.0
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
