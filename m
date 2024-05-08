@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCEE76037
-	for <platform-driver-x86@vger.kernel.org>; Wed,  8 May 2024 11:14:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3A87E799
+	for <platform-driver-x86@vger.kernel.org>; Wed,  8 May 2024 11:21:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715166899; cv=none; b=AUvZtUrohgiBplk3JnNpV1HthRYfQ/BMmYzSm8vNEp6Gt5ywvmGzJOUrQHHoXpgAWjcFfUeBB06daClVdBbUd1JMO2NMT25mUxY3wm9ypxDiMQNCMRtPQBPWBPHzZhZ78oRPrruOmg0yKmKKqI3mDCVu84XJPqW1OKK5kZO/GT0=
+	t=1715167315; cv=none; b=MTqBWfHN5j2lCF+185MdpyfL8FLYNnPqCvwcpg+36oY1K9+VPMndnkDWFV+vv7Rf9lNGAFHnjvFRm5/dzrDGok8/M9ej4ghGUKBAV9XZfB+2zH1W82gfWmrAsGejDhHnELv3gRvDiNJCRF2gwOheaR21OByiQZd//Osiz/AofxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715166899; c=relaxed/simple;
-	bh=B4WQSgYY5D1vtKdtWOG4oqgway4XS+BgJGuZAJDAq3o=;
+	s=arc-20240116; t=1715167315; c=relaxed/simple;
+	bh=J+ZgUWsg7HgFcU6t/OHVcuapM4dhYRatTJRuvHAk6OE=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mIWgJ+ziz+VMCZyMYEVNGiCHciMG79fRZlB2eXCyhFRpheHviSFbbEDrojYRv2OKmoEu+YLDHJLl83o8kNRAWnGwW9XB3ggHInwMKaatDTgLWOew32niHVs6jTXlXEgTgksPK0y4XpaaNSMJwxe0rEF5sDdk1mHWvmcTyw4PIqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0cJD7nR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=ex0A/QqBLwtdbRjGK/7Q7lAE0rXVMJVlB9PdZasb/IQ+kB8fQQvWdtI7A80iMrkoGxKzloD+6MJAHlbhT3HddBx42qIn7ro+hOhVPYNm+tHSHzkbfSUj4tIXJxNCDJ4RRg9/blNEjTD3gXIDH/RSqa6sPClgkknBIIfu8pgbKeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uD2oej3O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0cJD7nR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 209E9C4AF17
-	for <platform-driver-x86@vger.kernel.org>; Wed,  8 May 2024 11:14:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uD2oej3O"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 08C3CC4AF67
+	for <platform-driver-x86@vger.kernel.org>; Wed,  8 May 2024 11:21:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715166899;
-	bh=B4WQSgYY5D1vtKdtWOG4oqgway4XS+BgJGuZAJDAq3o=;
+	s=k20201202; t=1715167315;
+	bh=J+ZgUWsg7HgFcU6t/OHVcuapM4dhYRatTJRuvHAk6OE=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=o0cJD7nR5KSmF/YotucYK5ecQdAqR1q7rZsv3kNvLdR2+9lokHk15OKv4smVmxwmG
-	 o5lUYq4+2VEvMR0PWE1xCLS84nUo8fse7wt+e+nwuNN8e8FJchi6hHqR1VNE5ZSqys
-	 6JeNg3w3ngtX8f5nMqclBp6NC7z7TlcO0eIbMIwVwvxCZApy6UETNGANQqrivXNfvF
-	 4qoQM5DzJ9PUSdxULl6IW+k9zntZw8zbwMoumXdgmfsxone4QehAaQlGqNaa9LboeU
-	 Ub44bNOA1UBmZRt+/Vt2C/QCGQpEN379TeUkoD1j8r2ZIHbhxKJWFbDDbXukCJII/H
-	 47wzP1DZKPO9w==
+	b=uD2oej3OF0VRIpgklYub8hDvjdE7IuYu9PpwDarOHtF6COyMRqT8l8s9iD5BqDq90
+	 +ECVimomtOJYyfgqlJhdw8s9ykFD4Z3ViaqR7DV40T1dHACbiNYdRDA/urlONWShBn
+	 XWm+19HHB3S0UEvanHhmIvRjeKAexnCZ2t2uYq03wVylAcCYTo07Bv1uw8tDXK+KpU
+	 geJs9onMqJWVmAcbX9GDObt+Izp/3W6RcT0tpEJ5/FYnLInPVGm4HjmwkxOwDpM0O+
+	 M3agE2ZW7pWsK50iYPvNJ2ZMtKtrxP6RdBnpSvbGD59vbvMUcSOQRxqmkAX25Ys4A3
+	 13ReWLF2YG4Ig==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 145D0C53B6D; Wed,  8 May 2024 11:14:59 +0000 (UTC)
+	id EEABDC53B70; Wed,  8 May 2024 11:21:54 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
  resuming after unplugging the power cord during sleep
-Date: Wed, 08 May 2024 11:14:58 +0000
+Date: Wed, 08 May 2024 11:21:54 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Who: vanoverloopdaan@gmail.com
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-fCLz2FqKNI@https.bugzilla.kernel.org/>
+Message-ID: <bug-218305-215701-SKM8aVDalw@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
 References: <bug-218305-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,8 +64,11 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
---- Comment #62 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
-Are you sure you didn't mix up 2 & 3?
+--- Comment #63 from Daan Vanoverloop (vanoverloopdaan@gmail.com) ---
+Yes, I tried it a few times and I'm pretty sure this is correct. I noticed =
+that
+the value only changes to 0x017f1221 after unplugging the power adapter. But
+I'll try again just to make sure.
 
 --=20
 You may reply to this email to add a comment.
