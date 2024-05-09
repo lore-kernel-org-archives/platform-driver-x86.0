@@ -1,148 +1,360 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27EA67F460;
-	Thu,  9 May 2024 18:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7905770E0;
+	Thu,  9 May 2024 22:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715280636; cv=none; b=A5+ewSKvj0iPU6ybYovrYS/j44FPeaHEEkX7r0SpNngD23jtlovkRQw/GD2aIRhR2/moyx+0clSDBlgotx1nZW5sw8qzzqxayflfOnl2iL3nVJ8Fkt5EAsvhAX0JGX0e9pjpa1wYyEUNqHDHX/EN9LZ5G4566hlPWTAJT92p0Mw=
+	t=1715293227; cv=none; b=dr6Mjfd6UO2m/ZMnOCgnPb5PRvM6wURqaUvl2vL63DqBKeG6VszQQU9MpfxudFnAl/ew0iqwKxWCdGP6TO/lRW44joP2EnpFK+suQJcO07uk6Bj+YgnPs0AjYV8nES41LP0l9R3GSKzLh8SauQaqgDHLN5YNq4YWUncdbG2vqro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715280636; c=relaxed/simple;
-	bh=XqSaXYcrYHr0Fk299cpkW8/+41zPwvYFBBODYi7ZPV0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CLkjZ74pbLF/IxfzAET0rBRHne6mIsxoxRdmWOQ4A6JkFq2UFzqfapvR+Sg7Zgtx+E0AfJUIcX5bdIje7AhtDoT9EYvbGkdj3qXr//9E/sw5rFWuYfHtieszcr2Lm/6WR1Oq3lBrsQd0PZBY4sIyUreEhjwWNT/klP0yHzklyOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mhj3xzL+; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715293227; c=relaxed/simple;
+	bh=eqJK/Rn6qanxxe4EBE/Fk3aejoZgpfMEjXIWxfjWGtY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KuXV0RzdWrQ/QeAN9eGZliKsEL2cnEuY3Qeid13RBLYSrLqf46j0LEBIkje2mcz+s/czNwjaChG7BGDtEAjFW4uAS8ZD7oRKW/kPk9ri1C5jp25sv2lBCMuakCjRBAvo4Zf1dmmwEtXQNgzdLAWz+og8Fx5zYM+MIMbPRpSmJ4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ZT70aRlT; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mhj3xzL+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715280634; x=1746816634;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=XqSaXYcrYHr0Fk299cpkW8/+41zPwvYFBBODYi7ZPV0=;
-  b=Mhj3xzL+EhyMUX1beZbci3u+HWbS7MMN0vGiZUfrQQebuu+RQqqoKFW6
-   s86700UWHs8fPT2gQzfFjg5qC5kZpui8hGQl58ffwRXEUguVcvrm1hru/
-   Xhf7LuOtMoOO1Mdp0GUPDar8yfDn2ncEyZiLT+BwqGYTMWEEfNBiLF3TZ
-   qY5xKwtkRGlwS4lJBgYSBXd2n9kp739ae2IuNJZSvvkloI7prWzuyEPX2
-   ptho6h95ObNQnmcY41SkU7Ux5GbrpFDLHX9rBhkFJpcZuQDLvvcPQ9LdN
-   GrCR9oHlU5dyhT0F7DwjYQyc+74lyf1qEPvmtpBl2Ic8SA9oS+VGHiacL
-   Q==;
-X-CSE-ConnectionGUID: k+oNI6J+TuGroy9Hnn7qEw==
-X-CSE-MsgGUID: Pvy56McTRvuy15iyoJ0juw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="11352728"
-X-IronPort-AV: E=Sophos;i="6.08,148,1712646000"; 
-   d="scan'208";a="11352728"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 11:50:34 -0700
-X-CSE-ConnectionGUID: 6r8a4nBDTdiuOtt+yZbnyQ==
-X-CSE-MsgGUID: 81tL3rngTUehJxWpGmuyaA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,148,1712646000"; 
-   d="scan'208";a="34199101"
-Received: from epinckar-mobl.amr.corp.intel.com (HELO [10.209.98.74]) ([10.209.98.74])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 11:50:33 -0700
-Message-ID: <228b8157-9148-4175-b5b7-0e0f8da6bad6@intel.com>
-Date: Thu, 9 May 2024 11:50:33 -0700
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ZT70aRlT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1715293195; x=1715897995; i=w_armin@gmx.de;
+	bh=MHd8t9IlX0+WAwv1hPyqVWDeN40kQ7ZcdSmxKIuiwjE=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=ZT70aRlT959ikcadIH3YSLnmGh+qVVZ1cgqPyquw/PIZK46IH1pSz8Uzi1FlM3v3
+	 nC4Dep0Lf8s97QJYFIM4fFIiDwRiewznMT5BZR7zm8aM6QGuf8xvT03Wymqt1xjLw
+	 SNUxLGoCWjc/Fg3i+emfglbA9bQ4aGxa6UwQF0AdurSNuzelY0NpqXNlpiebBHJvk
+	 7I63xoBIbla+24QkQozRGtQ2ygjA+fu8FiwsKPHc+e2Ixnl49sQAPJKoDPi1BlCm2
+	 pokbkq0DhY5GXxFOqUvsTIjAD1GN40bkJof0UsHszgANJzJEVPxZkon7RR1BXu/1k
+	 bdg+5eG+gC+S08WVTQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1N63Ra-1sghko3FFo-015HJm; Fri, 10 May 2024 00:19:54 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: mlj@danelec.com,
+	rafael.j.wysocki@intel.com,
+	lenb@kernel.org
+Cc: jdelvare@suse.com,
+	andy.shevchenko@gmail.com,
+	linux@roeck-us.net,
+	linux@weissschuh.net,
+	ilpo.jarvinen@linux.intel.com,
+	linux-acpi@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v7] ACPI: fan: Add hwmon support
+Date: Fri, 10 May 2024 00:19:47 +0200
+Message-Id: <20240509221947.3118-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] x86/fpu: Extend kernel_fpu_begin_mask() to
- initialize AMX state
-To: "Chang S. Bae" <chang.seok.bae@intel.com>, linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, tony.luck@intel.com,
- ashok.raj@intel.com, jithu.joseph@intel.com
-References: <20240430212508.105117-1-chang.seok.bae@intel.com>
- <20240507235344.249103-1-chang.seok.bae@intel.com>
- <20240507235344.249103-2-chang.seok.bae@intel.com>
- <f82879a5-f3ca-436f-8c4a-96d4c5d90354@intel.com>
- <7e589b35-4ff8-43fa-99dd-d3b17f56d3ea@intel.com>
- <fde6149c-7ddf-488f-98c0-04f336b7092e@intel.com>
- <758089a4-52d5-4649-8aee-89e60044918a@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <758089a4-52d5-4649-8aee-89e60044918a@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:kGWr9AYivua3WIlxOqZJzKhqZuKoLmNEOFjE1HzE+YCKZwAr/zW
+ hH8g3uN5zNpTE1R+yWnOAI2pue3u9mauL63PpvxnkzcUo/wXC+vu0fHSdqSMvr7VEm9uRKL
+ 8Rh9HxEQU77s3WjhrIeConyJCO0KhOqVfXyJi5LBYxdMIBe6Uk3DgV0kS1fctpj4wV/bit/
+ rhWx5sm3bezvnf30CvpIw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:zMXrHW4MwJM=;qZdCLMrpKgQ8AWWP5d925ZZunsw
+ rgQNZfWBe/9+/KCTlKjPzZnCIicukNqsJ+hoQlAlrL8d6p3yENF7YWkqUdc0k+haEyaQ0rS5i
+ dBnTpK3EtCYD195NmPuu4CgjxN8ZSqsAt6fICtiLJkRrkn8jEGzzdYCQVqH/n6PO8JdqyOl/y
+ yxUR4aeiFfxEwPW9ZzJBPSaJ6S8V0VRuIVaYDHDUjHrtr+zJpjL6LG/E3BYVgvYjlb+g76iYl
+ YMXEbDp3/XHtHi8Ft0QE1XMr+g8WC38p3rRPcCMDT4r1razZkoDX/8SfJLlVreIVbkrBScPM9
+ VXPAN7Me/Z51xEcQPd+LzUqe3dZpBUywbnywYhWO47MCogHv2+YO2o2ZVj7jnxAPjcdA5X51C
+ NhM/QxXqvowIa2SFRaKbnIeivOSZzvsLNWrkahz1o0132rKyAkuY30/tY3CppjpVO7zwD0b9s
+ vixN0QD6Oao2LFTsJ0sNOoh7zyoXSvIVt3Oz2QSydDMsHcsn2oYd6ba92m5WSB1Gwf9BANogh
+ r6GOVOwGX5juM/npVmtEBxJZWmlyGjXKerkV58BxMOAPFB882a7oPP/K2wiQHEK2luP8UjQ3C
+ Y81NYMMbaduNEQWK4OhQwQRQyQ3yFjIFZASRQBCCqCim3Xbwo9QqvjQGd1tQuj+wDcyvPvOai
+ pQZOLkf8pRcHMdAeyTcWsymtApQsdMuZM4Dk0UbXB2K3ep+PsFo4+5q5ocsSEHTSIdeg+nJZD
+ eAzJJiNu9FjNJCWxvugLXwTshN9d8dlXGFV1dTXMD2+Qhrryk0SOg33ICShLBbyKwfD285Omx
+ hmY0QNab80m7J9xr8bg8kJ6nJ8/2RgJDKdLoZqQ9LvLaY=
 
-On 5/9/24 11:41, Chang S. Bae wrote:
-> On 5/9/2024 10:36 AM, Dave Hansen wrote:
->>
->> I'd probably just do this:
->>
->> +    kernel_fpu_begin();
->> +    // AMX *MUST* be in the init state for the wrmsr() to work.
->> +    // But, the more in the init state, the less state the test
->> +    // has to save and restore.  Just zap everything.
->> +    restore_fpregs_from_fpstate(&init_fpstate,   
->> +                    fpu_user_cfg.max_features);
->> +
-> 
-> I assume that this snippet goes to the IFS driver side. Then, we need
-> to introduce and export a new wrapper for this. 
-> restore_fpregs_from_fpstate() and its arguments are not accessible as
-> of now.
+Currently, the driver does only support a custom sysfs
+interface to allow userspace to read the fan speed.
+Add support for the standard hwmon interface so users
+can read the fan speed with standard tools like "sensors".
 
-Yes, a new wrapper to initialize all the user FPU state is fine.
+Tested with a custom ACPI SSDT.
 
-> Also, I think we should encapsulate them. If we follow this style, we
-> could have invoked tilerelease() directly from the idle driver, right?
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+Changes since v6:
+- add "hwmon" to the names of functions and variables
+related to hwmon
+- replace -ENODATA with -EIO/-ENODEV
 
-You could have...  But I think the point there truly was to do a minimal
-amount of work because you're going idle and need to race to get there.
-The path to idle is super hot and you don't want to do _any_ additional
-work.  It's worth writing highly AMX-specific code because generic code
-would be slow there.
+Changes since v5:
+- fix coding style issues
+- replace double break with return
+- add missing includes
 
-The IFS path is a super duper slow one.  It takes *FOREVER*.  I like the
-idea of being simple, dumb and slow.
+Changes since v4:
+- fix spelling issues
+- check power values for overflow condition too
+
+Changes since v3:
+- drop fault attrs
+- rework initialization
+
+Changes since v2:
+- add support for fanX_target and power attrs
+
+Changes since v1:
+- fix undefined reference error
+- fix fan speed validation
+- coding style fixes
+- clarify that the changes are compile-tested only
+- add hwmon maintainers to cc list
+=2D--
+ drivers/acpi/Makefile    |   1 +
+ drivers/acpi/fan.h       |   9 +++
+ drivers/acpi/fan_core.c  |   4 +
+ drivers/acpi/fan_hwmon.c | 169 +++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 183 insertions(+)
+ create mode 100644 drivers/acpi/fan_hwmon.c
+
+diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+index 39ea5cfa8326..61ca4afe83dc 100644
+=2D-- a/drivers/acpi/Makefile
++++ b/drivers/acpi/Makefile
+@@ -77,6 +77,7 @@ obj-$(CONFIG_ACPI_TINY_POWER_BUTTON)	+=3D tiny-power-but=
+ton.o
+ obj-$(CONFIG_ACPI_FAN)		+=3D fan.o
+ fan-objs			:=3D fan_core.o
+ fan-objs			+=3D fan_attr.o
++fan-$(CONFIG_HWMON)		+=3D fan_hwmon.o
+
+ obj-$(CONFIG_ACPI_VIDEO)	+=3D video.o
+ obj-$(CONFIG_ACPI_TAD)		+=3D acpi_tad.o
+diff --git a/drivers/acpi/fan.h b/drivers/acpi/fan.h
+index f89d19c922dc..db25a3898af7 100644
+=2D-- a/drivers/acpi/fan.h
++++ b/drivers/acpi/fan.h
+@@ -10,6 +10,8 @@
+ #ifndef _ACPI_FAN_H_
+ #define _ACPI_FAN_H_
+
++#include <linux/kconfig.h>
++
+ #define ACPI_FAN_DEVICE_IDS	\
+ 	{"INT3404", }, /* Fan */ \
+ 	{"INTC1044", }, /* Fan for Tiger Lake generation */ \
+@@ -57,4 +59,11 @@ struct acpi_fan {
+ int acpi_fan_get_fst(struct acpi_device *device, struct acpi_fan_fst *fst=
+);
+ int acpi_fan_create_attributes(struct acpi_device *device);
+ void acpi_fan_delete_attributes(struct acpi_device *device);
++
++#if IS_REACHABLE(CONFIG_HWMON)
++int devm_acpi_fan_create_hwmon(struct acpi_device *device);
++#else
++static inline int devm_acpi_fan_create_hwmon(struct acpi_device *device) =
+{ return 0; };
++#endif
++
+ #endif
+diff --git a/drivers/acpi/fan_core.c b/drivers/acpi/fan_core.c
+index ff72e4ef8738..7cea4495f19b 100644
+=2D-- a/drivers/acpi/fan_core.c
++++ b/drivers/acpi/fan_core.c
+@@ -336,6 +336,10 @@ static int acpi_fan_probe(struct platform_device *pde=
+v)
+ 		if (result)
+ 			return result;
+
++		result =3D devm_acpi_fan_create_hwmon(device);
++		if (result)
++			return result;
++
+ 		result =3D acpi_fan_create_attributes(device);
+ 		if (result)
+ 			return result;
+diff --git a/drivers/acpi/fan_hwmon.c b/drivers/acpi/fan_hwmon.c
+new file mode 100644
+index 000000000000..af6365f1591a
+=2D-- /dev/null
++++ b/drivers/acpi/fan_hwmon.c
+@@ -0,0 +1,169 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Hwmon interface for the ACPI Fan driver.
++ *
++ * Copyright (C) 2024 Armin Wolf <W_Armin@gmx.de>
++ */
++
++#include <linux/acpi.h>
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/hwmon.h>
++#include <linux/limits.h>
++#include <linux/units.h>
++
++#include "fan.h"
++
++/* Returned when the ACPI fan does not support speed reporting */
++#define FAN_SPEED_UNAVAILABLE	U32_MAX
++#define FAN_POWER_UNAVAILABLE	U32_MAX
++
++static struct acpi_fan_fps *acpi_fan_get_current_fps(struct acpi_fan *fan=
+, u64 control)
++{
++	unsigned int i;
++
++	for (i =3D 0; i < fan->fps_count; i++) {
++		if (fan->fps[i].control =3D=3D control)
++			return &fan->fps[i];
++	}
++
++	return NULL;
++}
++
++static umode_t acpi_fan_hwmon_is_visible(const void *drvdata, enum hwmon_=
+sensor_types type,
++					 u32 attr, int channel)
++{
++	const struct acpi_fan *fan =3D drvdata;
++	unsigned int i;
++
++	switch (type) {
++	case hwmon_fan:
++		switch (attr) {
++		case hwmon_fan_input:
++			return 0444;
++		case hwmon_fan_target:
++			/*
++			 * When in fine grain control mode, not every fan control value
++			 * has an associated fan performance state.
++			 */
++			if (fan->fif.fine_grain_ctrl)
++				return 0;
++
++			return 0444;
++		default:
++			return 0;
++		}
++	case hwmon_power:
++		switch (attr) {
++		case hwmon_power_input:
++			/*
++			 * When in fine grain control mode, not every fan control value
++			 * has an associated fan performance state.
++			 */
++			if (fan->fif.fine_grain_ctrl)
++				return 0;
++
++			/*
++			 * When all fan performance states contain no valid power data,
++			 * when the associated attribute should not be created.
++			 */
++			for (i =3D 0; i < fan->fps_count; i++) {
++				if (fan->fps[i].power !=3D FAN_POWER_UNAVAILABLE)
++					return 0444;
++			}
++
++			return 0;
++		default:
++			return 0;
++		}
++	default:
++		return 0;
++	}
++}
++
++static int acpi_fan_hwmon_read(struct device *dev, enum hwmon_sensor_type=
+s type, u32 attr,
++			       int channel, long *val)
++{
++	struct acpi_device *adev =3D to_acpi_device(dev->parent);
++	struct acpi_fan *fan =3D dev_get_drvdata(dev);
++	struct acpi_fan_fps *fps;
++	struct acpi_fan_fst fst;
++	int ret;
++
++	ret =3D acpi_fan_get_fst(adev, &fst);
++	if (ret < 0)
++		return ret;
++
++	switch (type) {
++	case hwmon_fan:
++		switch (attr) {
++		case hwmon_fan_input:
++			if (fst.speed =3D=3D FAN_SPEED_UNAVAILABLE)
++				return -ENODEV;
++
++			if (fst.speed > LONG_MAX)
++				return -EOVERFLOW;
++
++			*val =3D fst.speed;
++			return 0;
++		case hwmon_fan_target:
++			fps =3D acpi_fan_get_current_fps(fan, fst.control);
++			if (!fps)
++				return -EIO;
++
++			if (fps->speed > LONG_MAX)
++				return -EOVERFLOW;
++
++			*val =3D fps->speed;
++			return 0;
++		default:
++			return -EOPNOTSUPP;
++		}
++	case hwmon_power:
++		switch (attr) {
++		case hwmon_power_input:
++			fps =3D acpi_fan_get_current_fps(fan, fst.control);
++			if (!fps)
++				return -EIO;
++
++			if (fps->power =3D=3D FAN_POWER_UNAVAILABLE)
++				return -ENODEV;
++
++			if (fps->power > LONG_MAX / MICROWATT_PER_MILLIWATT)
++				return -EOVERFLOW;
++
++			*val =3D fps->power * MICROWATT_PER_MILLIWATT;
++			return 0;
++		default:
++			return -EOPNOTSUPP;
++		}
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static const struct hwmon_ops acpi_fan_hwmon_ops =3D {
++	.is_visible =3D acpi_fan_hwmon_is_visible,
++	.read =3D acpi_fan_hwmon_read,
++};
++
++static const struct hwmon_channel_info * const acpi_fan_hwmon_info[] =3D =
+{
++	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT | HWMON_F_TARGET),
++	HWMON_CHANNEL_INFO(power, HWMON_P_INPUT),
++	NULL
++};
++
++static const struct hwmon_chip_info acpi_fan_hwmon_chip_info =3D {
++	.ops =3D &acpi_fan_hwmon_ops,
++	.info =3D acpi_fan_hwmon_info,
++};
++
++int devm_acpi_fan_create_hwmon(struct acpi_device *device)
++{
++	struct acpi_fan *fan =3D acpi_driver_data(device);
++	struct device *hdev;
++
++	hdev =3D devm_hwmon_device_register_with_info(&device->dev, "acpi_fan", =
+fan,
++						    &acpi_fan_hwmon_chip_info, NULL);
++	return PTR_ERR_OR_ZERO(hdev);
++}
+=2D-
+2.39.2
+
