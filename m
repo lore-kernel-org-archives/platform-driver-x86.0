@@ -1,166 +1,141 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C69215E203
-	for <platform-driver-x86@vger.kernel.org>; Thu,  9 May 2024 14:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130C8148302
+	for <platform-driver-x86@vger.kernel.org>; Thu,  9 May 2024 14:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715263945; cv=none; b=JAD9yuPgXnkxb0vYvuKrOSCr4/aCk4ffnoTCUnknB2t088IUNovuOG+zW0unxdGGC4aaqAADL+CqwMW8MTP3sJCBuIe3uOlqkd5uBt9WRMr41zwBPZRF1je4DraJuZiBb10z8ZJJ+C4GnaqHv1YJM4GbTMPY1RxugqYVlQpm2UE=
+	t=1715264175; cv=none; b=KNV/jrfaj+xUqD7hbdcrSJR8Ke5jNPtokRyz9RB//WCVR2G0WTranQ9PnARHPjv9IOKBpCxOHLXSsHPSFCn5tfEbjTnCB2SILc0YoZVTnxWTPxdInzh9vnvPkUo/IfcRKIwhVu8xtX5qATKW4NbmLqpF/exHkuD1MhIXIAZEsJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715263945; c=relaxed/simple;
-	bh=pqQRpSnwphIUeDYJKFfwOpgR1thxvwib59zCwgPV6Og=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D4tnONXAj9jj3zIZGwkTIJgBynlmJt4OrusFEfHT0jFk3/NNpScXJHrXaOhNvSeVNH7OuQpN8f5EISxipH3LHfhm6FYCteymWyC3mzRxE4qvEh3heePCKp+P3uBS4ncZiNSM+3sNUMKrqQZN7NBfnEhEttbDQm0joniZ1Jam3yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F/c8udDZ; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1715264175; c=relaxed/simple;
+	bh=iKI8B26jQgXC1gf6sjiv7uyRRarcbvb/adEB97oymRs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RHPORX8WGN4nEVGK/Ilgs9lEAo+eYKsOx5yX9odDse3K/WHVacC41M2X9Owk3VhAKSXRV4/y1h4+h3ifdXH+nNYq5ScAgKzSuPhhi0ConXW4x/RbMlLNnA0KNKfTzAayVvnc2zaEiRhmvt+/Us40hHxkbr7NjArl09HNjEWSGMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CT27dX9z; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F/c8udDZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CT27dX9z"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715263942;
+	s=mimecast20190719; t=1715264173;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GQGEW9DOgNoLaKfnB5RMfE2+2bq6K1CLbB7naqGoGKU=;
-	b=F/c8udDZNETLcfknxFDUkwnZwc0ImZuG0Ig/M7xFVlW9wLoOdKn0+OfK9xLiL4MJstDInp
-	gqXHg8KIHGnKHyAC7huQ1raDxb8GN0FWgjVksaOnl8QIeMO3nIORERBqLK4l6ZFoiUK+VP
-	Lo1uz4j/l/tct9zDgDSr4DuOUCnOjWY=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-456-Od0U-JCSMIeQLWXUS-SuzQ-1; Thu,
- 09 May 2024 10:12:18 -0400
-X-MC-Unique: Od0U-JCSMIeQLWXUS-SuzQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=pjg2PKCpdxD/auehornrq3SKgRXBrYxahB9gVsCUM2k=;
+	b=CT27dX9z5SbC12L4vDfUoVy2HnLaKAEoO0srpZuVM8F41QK+6V5HJ7nazOqI8d8FuPs1oX
+	93sGuHHaN4WSagr8w8NxU6Rpx2cw06I+x6lbAKXssviIRJvtn6KrFFJwaPQTsH43WviImk
+	DPUDdY2sDRMEUY+yVhttFMi+rzEQ3Pw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-333-0FSzwytgP2iFufjAmQvDhw-1; Thu, 09 May 2024 10:16:03 -0400
+X-MC-Unique: 0FSzwytgP2iFufjAmQvDhw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 14B093C0DD04;
-	Thu,  9 May 2024 14:12:18 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E0E0E800206;
+	Thu,  9 May 2024 14:15:59 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.192.19])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 587B020441E2;
-	Thu,  9 May 2024 14:12:17 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6E9C91C8BECC;
+	Thu,  9 May 2024 14:15:58 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Tony Lindgren <tony@atomide.com>
 Cc: Hans de Goede <hdegoede@redhat.com>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
 	platform-driver-x86@vger.kernel.org,
-	Kate Hsuan <hpa@redhat.com>
-Subject: [PATCH v2 2/2] platform/x86: x86-android-tablets: Create LED device for Xiaomi Pad 2 bottom bezel touch buttons
-Date: Thu,  9 May 2024 16:12:06 +0200
-Message-ID: <20240509141207.63570-2-hdegoede@redhat.com>
-In-Reply-To: <20240509141207.63570-1-hdegoede@redhat.com>
-References: <20240509141207.63570-1-hdegoede@redhat.com>
+	linux-serial@vger.kernel.org,
+	Weifeng Liu <weifeng.liu.z@gmail.com>,
+	Tony Lindgren <tony.lindgren@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH] serial: Clear UPF_DEAD before calling tty_port_register_device_attr_serdev()
+Date: Thu,  9 May 2024 16:15:49 +0200
+Message-ID: <20240509141549.63704-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-The Xiaomi [Mi]Pad 2 has 3 menu / home / back capacitive touch-buttons
-on its bottom bezel. These are backlit by LEDs attached to a TPS61158 LED
-controller which is controlled by the "pwm_soc_lpss_2" PWM output.
+If a serdev_device_driver is already loaded for a serdev_tty_port when it
+gets registered by tty_port_register_device_attr_serdev() then that
+driver's probe() method will be called immediately.
 
-Create a LED class device for this, using the new input-events trigger
-as default trigger so that the buttons automatically light up on any
-input activity.
+The serdev_device_driver's probe() method should then be able to call
+serdev_device_open() successfully, but because UPF_DEAD is still dead
+serdev_device_open() will fail with -ENXIO in this scenario:
 
-Note alternatively a "leds_pwm" platform device could be created together
-with the necessary fwnode_s_ and a fwnode link to the PWM controller.
-There are 2 downsides to this approach:
+  serdev_device_open()
+  ctrl->ops->open()	/* this callback being ttyport_open() */
+  tty->ops->open()	/* this callback being uart_open() */
+  tty_port_open()
+  port->ops->activate()	/* this callback being uart_port_activate() */
+  Find bit UPF_DEAD is set in uport->flags and fail with errno -ENXIO.
 
-1. The code would still need to pwm_get() the PWM controller to get/attach
-a fwnode for the PWM controller fwnode link and setting up the necessary
-fwnodes is non-trivial. So this would likely require more code then simply
-registering the LED class device directly.
+Fix this be clearing UPF_DEAD before tty_port_register_device_attr_serdev()
+note this only moves up the UPD_DEAD clearing a small bit, before:
 
-2. Currently the leds_pwm driver and its devicetree bindings do not support
-limiting the maximum dutycycle to less then 100% which is required in this
-case (the leds_pwm driver can probably be extended to allow this).
+  tty_port_register_device_attr_serdev();
+  mutex_unlock(&tty_port.mutex);
+  uart_port.flags &= ~UPF_DEAD;
+  mutex_unlock(&port_mutex);
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+after:
+
+  uart_port.flags &= ~UPF_DEAD;
+  tty_port_register_device_attr_serdev();
+  mutex_unlock(&tty_port.mutex);
+  mutex_unlock(&port_mutex);
+
+Reported-by: Weifeng Liu <weifeng.liu.z@gmail.com>
+Closes: https://lore.kernel.org/platform-driver-x86/20240505130800.2546640-1-weifeng.liu.z@gmail.com/
+Tested-by: Weifeng Liu <weifeng.liu.z@gmail.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v2:
-- When the LED is off, make duty-cycle 0% but keep the PWM controller enabled
-  otherwise the pin seems to get stuck in whatever state it was in when the PWM
-  controller disable runs, so either continue high or low (PWM driver bug ?)
+Cc: Tony Lindgren <tony.lindgren@linux.intel.com>
+Cc: Maximilian Luz <luzmaximilian@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- .../platform/x86/x86-android-tablets/other.c  | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ drivers/tty/serial/serial_core.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
-index ff7b1d0abaa3..eb0e55c69dfe 100644
---- a/drivers/platform/x86/x86-android-tablets/other.c
-+++ b/drivers/platform/x86/x86-android-tablets/other.c
-@@ -11,7 +11,9 @@
- #include <linux/acpi.h>
- #include <linux/gpio/machine.h>
- #include <linux/input.h>
-+#include <linux/leds.h>
- #include <linux/platform_device.h>
-+#include <linux/pwm.h>
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index c476d884356d..b47a277978a0 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -3211,6 +3211,9 @@ static int serial_core_add_one_port(struct uart_driver *drv, struct uart_port *u
+ 	if (uport->attr_group)
+ 		uport->tty_groups[1] = uport->attr_group;
  
- #include <dt-bindings/leds/common.h>
++	/* Ensure serdev drivers can call serdev_device_open() right away */
++	uport->flags &= ~UPF_DEAD;
++
+ 	/*
+ 	 * Register the port whether it's detected or not.  This allows
+ 	 * setserial to be used to alter this port's parameters.
+@@ -3221,6 +3224,7 @@ static int serial_core_add_one_port(struct uart_driver *drv, struct uart_port *u
+ 	if (!IS_ERR(tty_dev)) {
+ 		device_set_wakeup_capable(tty_dev, 1);
+ 	} else {
++		uport->flags |= UPF_DEAD;
+ 		dev_err(uport->dev, "Cannot register tty device on line %d\n",
+ 		       uport->line);
+ 	}
+@@ -3426,8 +3430,6 @@ int serial_core_register_port(struct uart_driver *drv, struct uart_port *port)
+ 	if (ret)
+ 		goto err_unregister_port_dev;
  
-@@ -662,8 +664,53 @@ static const struct software_node *ktd2026_node_group[] = {
- 	NULL
- };
+-	port->flags &= ~UPF_DEAD;
+-
+ 	mutex_unlock(&port_mutex);
  
-+/*
-+ * For the LEDs which backlight the menu / home / back capacitive buttons on
-+ * the bottom bezel. These are attached to a TPS61158 LED controller which
-+ * is controlled by the "pwm_soc_lpss_2" PWM output.
-+ */
-+#define XIAOMI_MIPAD2_LED_PERIOD_NS		19200
-+#define XIAOMI_MIPAD2_LED_DEFAULT_DUTY		 6000 /* From Android kernel */
-+
-+static struct pwm_device *xiaomi_mipad2_led_pwm;
-+
-+static int xiaomi_mipad2_brightness_set(struct led_classdev *led_cdev,
-+					enum led_brightness val)
-+{
-+	struct pwm_state state = {
-+		.period = XIAOMI_MIPAD2_LED_PERIOD_NS,
-+		.duty_cycle = val,
-+		/* Always set PWM enabled to avoid the pin floating */
-+		.enabled = true,
-+	};
-+
-+	return pwm_apply_might_sleep(xiaomi_mipad2_led_pwm, &state);
-+}
-+
- static int __init xiaomi_mipad2_init(struct device *dev)
- {
-+	struct led_classdev *led_cdev;
-+	int ret;
-+
-+	xiaomi_mipad2_led_pwm = devm_pwm_get(dev, "pwm_soc_lpss_2");
-+	if (IS_ERR(xiaomi_mipad2_led_pwm))
-+		return dev_err_probe(dev, PTR_ERR(xiaomi_mipad2_led_pwm), "getting pwm\n");
-+
-+	led_cdev = devm_kzalloc(dev, sizeof(*led_cdev), GFP_KERNEL);
-+	if (!led_cdev)
-+		return -ENOMEM;
-+
-+	led_cdev->name = "mipad2:white:touch-buttons-backlight";
-+	led_cdev->max_brightness = XIAOMI_MIPAD2_LED_PERIOD_NS;
-+	/* "input-events" trigger uses blink_brightness */
-+	led_cdev->blink_brightness = XIAOMI_MIPAD2_LED_DEFAULT_DUTY;
-+	led_cdev->default_trigger = "input-events";
-+	led_cdev->brightness_set_blocking = xiaomi_mipad2_brightness_set;
-+
-+	ret = devm_led_classdev_register(dev, led_cdev);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "registering LED\n");
-+
- 	return software_node_register_node_group(ktd2026_node_group);
- }
- 
+ 	return 0;
 -- 
 2.44.0
 
