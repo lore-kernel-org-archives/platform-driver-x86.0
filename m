@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB4729402;
-	Thu,  9 May 2024 17:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE43954744;
+	Thu,  9 May 2024 17:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715276182; cv=none; b=L1RVb0XG33ibFkTz9qCi+4Hj3nzb+ghuW+XexZnZ5mvvzq2gweQRC0EnrzNBAMNbaEmgJAgNR4jB+4Be5fPzEEbgkBFunM10T9AD66Z9eQDt8jHrEzzgIy9+OptVWARzIAN3TF3msbw8cc3so23kvfwmFl0cgU7yBaAqIf3rOyo=
+	t=1715276491; cv=none; b=VQAw9nB2XDxhFwl7akPSyOns59hY6T5B6/fBppYZbWviJ1kY+IUQunfGiy/r94uCwvXsgwbW2/7s07UELk9LZJwqdAUoJD/m3wxhdSv6N5wIknk0W2qFxCh23KzuMJQr7urkFHoTWRd59IFOKCL1bpDUJZzeEy85l9aYN7XcJ8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715276182; c=relaxed/simple;
-	bh=5VFBIPnrVFf4x4OvHP0Zp5lkQSs1/BhTUl/W3QazAzg=;
+	s=arc-20240116; t=1715276491; c=relaxed/simple;
+	bh=TvAv6RIRdJ6UXYVDyY55mGFngtRMP3lARVmH25SoP6Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cRxJTvo4Xbru3PhC1Mqzn1FPhpZ6iZgi+uCWhBDplBMIYvfUEefJEBOSPUkXSRxoMqT4BeNZ1MLOxtWSCfmQ98T7QVlijjKqg24N4XUVbRS844vvjhmAU1Re60wJq+HQJPkMHt3a3zHli3mBHGQkDLgHr388rd5NezqXkRflPvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bZBhO6XJ; arc=none smtp.client-ip=192.198.163.10
+	 In-Reply-To:Content-Type; b=i5xghisjQvBRZbmBPdW0r+kMIKSKJteRzN+3+Nez9vlZGg7wHPgzk9SX869G4D7j1aFU2P88qAfoKDsXejo+7grRidK0Mnwh4vMXJWDmXOEKLOJs8DIrBWu685bEYR+IwW8jlpFNCOF28G81usc68NxeVxZk4LkHr7lMXVBQhTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gAvvjhHC; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bZBhO6XJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gAvvjhHC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715276180; x=1746812180;
+  t=1715276489; x=1746812489;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=5VFBIPnrVFf4x4OvHP0Zp5lkQSs1/BhTUl/W3QazAzg=;
-  b=bZBhO6XJ8rmMc4cQD/r3oqzTpQwH/kZycwcwjbySb6Yl/E3wme828zt7
-   1rKaAkquKhsIoNhD7GaAmGjQGz9/rck5+zIyjRsUTHOHDffdWxf3rcK0W
-   QBveFIRtLOtiHMU8ZXWyu1X4ehxxr7+sSWh0+tIQGxc4Hn4VRzLMZ9kxr
-   iMibY+EFxsao6EGQT0W4TEWeG3EnEgf9zVrIxU/ibwqjVb4KdeQJj5bQP
-   v/KLGI5LHaibIuVZoRLZIKu8vtfrsDDZ3duA1DC82LJc+QfXKXSDWCKro
-   TgTyDLnhDjoWC+1R1LnpQqVQTNmfaV4NzEp7XMqg86i9uCu/aCnzi1oAO
-   g==;
-X-CSE-ConnectionGUID: +sLz2YubSnaxO2yz1fNUpw==
-X-CSE-MsgGUID: FyAy4VhfQsyNFuke+A+tlA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="22612701"
+  bh=TvAv6RIRdJ6UXYVDyY55mGFngtRMP3lARVmH25SoP6Y=;
+  b=gAvvjhHCkS13wMgj+iBn52u1x6OAwzqw2yZ1Qxr2UTKqyAGe0DpvStG9
+   Ns3FreuLocG0lbw58qWkM5rfoDYA/mKvlJpSkX0J0vlCp1C+uYXY7Qnsk
+   zo57g3QR7cwUocs4xqO50nZIggqUV5hlht6G6QkdVookMfqbO0DY3YH/a
+   K+EErZ2NV40jNbP5hm++PJgCUDcyuXKQhu6yTgEsgZ1xE6xV7BwTRx3Ti
+   EHMtJL2vh/72G1BW24mlngyhQErhpVDPhNbYagXA5e3El+nGd4ZG0GtDc
+   SZUcNsSuxO7fs5sly0XqFmnQFYr0rYkRhPfLroE/zQbt0WXoUQ/ye0D0Y
+   A==;
+X-CSE-ConnectionGUID: 4Aj0kh4PS0G/MBBRd5ukUA==
+X-CSE-MsgGUID: z7z5+KjbTG+h+1eluX0Dgg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="28726535"
 X-IronPort-AV: E=Sophos;i="6.08,148,1712646000"; 
-   d="scan'208";a="22612701"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 10:36:18 -0700
-X-CSE-ConnectionGUID: 8njCEuWlSyGjc8L8CnFGyQ==
-X-CSE-MsgGUID: Lq19GTVbQwGbvxYIxqb4Xw==
+   d="scan'208";a="28726535"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 10:41:29 -0700
+X-CSE-ConnectionGUID: jpyht6XkRlOFAwJvw10NOw==
+X-CSE-MsgGUID: BfaaeqSWTHCej6QY8wZyYQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,148,1712646000"; 
-   d="scan'208";a="29381534"
+   d="scan'208";a="29264745"
 Received: from epinckar-mobl.amr.corp.intel.com (HELO [10.209.98.74]) ([10.209.98.74])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 10:36:17 -0700
-Message-ID: <fde6149c-7ddf-488f-98c0-04f336b7092e@intel.com>
-Date: Thu, 9 May 2024 10:36:16 -0700
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 10:41:28 -0700
+Message-ID: <a19a7713-7211-4952-b36e-a296794079d1@intel.com>
+Date: Thu, 9 May 2024 10:41:27 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,6 +64,7 @@ References: <20240430212508.105117-1-chang.seok.bae@intel.com>
  <20240507235344.249103-2-chang.seok.bae@intel.com>
  <f82879a5-f3ca-436f-8c4a-96d4c5d90354@intel.com>
  <7e589b35-4ff8-43fa-99dd-d3b17f56d3ea@intel.com>
+ <fde6149c-7ddf-488f-98c0-04f336b7092e@intel.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -109,70 +110,14 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <7e589b35-4ff8-43fa-99dd-d3b17f56d3ea@intel.com>
+In-Reply-To: <fde6149c-7ddf-488f-98c0-04f336b7092e@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 5/8/24 17:29, Chang S. Bae wrote:
-> +void kernel_fpu_reset(void)
-> +{
-> +       kernel_fpu_begin();
-> +       if (cpu_feature_enabled(X86_FEATURE_AMX_TILE))
-> +               tile_release();
-> +       kernel_fpu_end();
-> +}
-> +EXPORT_SYMBOL(kernel_fpu_reset);
-> +
-...
-> --- a/drivers/platform/x86/intel/ifs/runtest.c
-> +++ b/drivers/platform/x86/intel/ifs/runtest.c
-> @@ -188,6 +188,8 @@ static int doscan(void *data)
->         /* Only the first logical CPU on a core reports result */
->         first = cpumask_first(cpu_smt_mask(cpu));
-> 
-> +       kernel_fpu_reset();
-> +
->         wait_for_sibling_cpu(&scan_cpus_in, NSEC_PER_SEC);
+On 5/9/24 10:36, Dave Hansen wrote:
+> +	restore_fpregs_from_fpstate(&init_fpstate,	
+> +				    fpu_user_cfg.max_features);
 
-Remember, kernel_fpu_begin/end() mark a section of code that needs the
-FPU.  Once code calls kernel_fpu_end(), it no longer owns the FPU and
-all bets are off.  A interrupt could theoretically come in and do
-whatever it wants.
-
-I _assume_ that this is practically impossible since the stop_machine()
-infrastructure keeps interrupts at bay.  But it's rather subtle.
-
-I'd probably just do this:
-
-+	kernel_fpu_begin();
-+	// AMX *MUST* be in the init state for the wrmsr() to work.
-+	// But, the more in the init state, the less state the test
-+	// has to save and restore.  Just zap everything.
-+	restore_fpregs_from_fpstate(&init_fpstate,	
-+				    fpu_user_cfg.max_features);
-+
-        wrmsrl(MSR_ACTIVATE_SCAN, params->activate->data);
-        rdmsrl(MSR_SCAN_STATUS, status.data);
-
-+	kernel_fpu_end();
-
-That's dirt simple.  It doesn't require new infrastructure.  It doesn't
-call an opaque new helper.  It doesn't require a feature check.  It
-probably makes the IFS test run faster.  It will also magically work for
-any fancy new feature that comes along which *ALSO* needs to be in its
-init state ... with zero changes to this code.  For bonus points, this
-code is quite universal.  It will work, as-is, in a bunch of kernel
-contexts if future deranged kernel developer copies and pastes it.  The
-code you suggested above can race unless it's called under
-stop_machine() and isn't safe to copy elsewhere.
-
-Three lines of code:
-
-	1. IFS declares its need to own the FPU for a moment, like any
-	   other kernel_fpu_begin() user.  It's not a special snowflake.
-	   It is boring.
-	2. IFS zaps the FPU state
-	3. IFS gives up the FPU
-
-Am I out of my mind?  What am I missing?  Why bother with _anything_
-more complicated than this?
+There is *one* subtlety here.  This assumes that 'init_fpstate' has AMX
+marked as being in its init state.  But I think that's a pretty safe
+assumption.
