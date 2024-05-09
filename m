@@ -1,141 +1,189 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from wfout3-smtp.messagingengine.com (wfout3-smtp.messagingengine.com [64.147.123.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130C8148302
-	for <platform-driver-x86@vger.kernel.org>; Thu,  9 May 2024 14:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7DD13C672;
+	Thu,  9 May 2024 15:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715264175; cv=none; b=KNV/jrfaj+xUqD7hbdcrSJR8Ke5jNPtokRyz9RB//WCVR2G0WTranQ9PnARHPjv9IOKBpCxOHLXSsHPSFCn5tfEbjTnCB2SILc0YoZVTnxWTPxdInzh9vnvPkUo/IfcRKIwhVu8xtX5qATKW4NbmLqpF/exHkuD1MhIXIAZEsJw=
+	t=1715267518; cv=none; b=YmFAA5ZSwBBY+Kz/DvR8L9VL+Lzgz/Fu7LjmL562fHV8ApUZ8XfICi45Sk0RyRgsW1PvavZhM90PbdVeLp+CKxldUFe8ShK4azowMEz9Esg6ZesvAYjsVw+Qu/ztgRRXyHU6qPyxI82DxBTLNI5fA98YA8nA+3VgTeDDUTfYTMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715264175; c=relaxed/simple;
-	bh=iKI8B26jQgXC1gf6sjiv7uyRRarcbvb/adEB97oymRs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RHPORX8WGN4nEVGK/Ilgs9lEAo+eYKsOx5yX9odDse3K/WHVacC41M2X9Owk3VhAKSXRV4/y1h4+h3ifdXH+nNYq5ScAgKzSuPhhi0ConXW4x/RbMlLNnA0KNKfTzAayVvnc2zaEiRhmvt+/Us40hHxkbr7NjArl09HNjEWSGMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CT27dX9z; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715267518; c=relaxed/simple;
+	bh=S0Je4Bi3wxZqJxDWwfO4lgsyHN9V5CWUEMEoC1uRP1g=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=tqC1aOBq2YHdRmMiQnEKIUdj8TMjBNumruGBUugmYyzOTundbeY79Absdu4/HL8EexvnYZnTFlvk/dhwCe7Uwb0AXM755wvp5bRiRHQLMLKCQnUqLKzr+xxNIeJG2YXdYhKfOPUZ8d746r/STjGXw+mc+1WliyDPjFLZ66RZflg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=wseeupdL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FRVh6Xz8; arc=none smtp.client-ip=64.147.123.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CT27dX9z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715264173;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=pjg2PKCpdxD/auehornrq3SKgRXBrYxahB9gVsCUM2k=;
-	b=CT27dX9z5SbC12L4vDfUoVy2HnLaKAEoO0srpZuVM8F41QK+6V5HJ7nazOqI8d8FuPs1oX
-	93sGuHHaN4WSagr8w8NxU6Rpx2cw06I+x6lbAKXssviIRJvtn6KrFFJwaPQTsH43WviImk
-	DPUDdY2sDRMEUY+yVhttFMi+rzEQ3Pw=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-333-0FSzwytgP2iFufjAmQvDhw-1; Thu, 09 May 2024 10:16:03 -0400
-X-MC-Unique: 0FSzwytgP2iFufjAmQvDhw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E0E0E800206;
-	Thu,  9 May 2024 14:15:59 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.19])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 6E9C91C8BECC;
-	Thu,  9 May 2024 14:15:58 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Tony Lindgren <tony@atomide.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	platform-driver-x86@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	Weifeng Liu <weifeng.liu.z@gmail.com>,
-	Tony Lindgren <tony.lindgren@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH] serial: Clear UPF_DEAD before calling tty_port_register_device_attr_serdev()
-Date: Thu,  9 May 2024 16:15:49 +0200
-Message-ID: <20240509141549.63704-1-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="wseeupdL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FRVh6Xz8"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.west.internal (Postfix) with ESMTP id 93F8D1C000B6;
+	Thu,  9 May 2024 11:11:54 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute5.internal (MEProxy); Thu, 09 May 2024 11:11:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1715267514; x=1715353914; bh=uRD3UGMTlM
+	1va4wVkCN6cdsRowwChsRjRs6EMV+RywI=; b=wseeupdLcN1/eN/25ElX6mV/La
+	+mlm8TWr3+UVqXqSgZzgUyVybwvUaSj7PIWA2Kcdq32bCThrPC2hGunCAXlh2aj7
+	QhJAJz2MNT5ZnYdkpiY+1sGo0igw8EaM9MlYLkyiT5YTikOpOw2stbJxh3EYjGzR
+	pXXr+U1C//9XfaMJduZ3vZD55GfVsBXuKtQVDVA6BxeZNnyVScPOlbM9eC8M2Mf2
+	LfdWj4c3UfjSLlp+pRcljsDGkr7uwBzNZ6+n7TjwSRO/qBu9HCWkj2O3Gptk0z0v
+	jjhuL6h9hSZYh7j0Qxtd7suTqfpB2RVjomVJhRZuReB7hQqrx90ZtCnhY+Dg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1715267514; x=1715353914; bh=uRD3UGMTlM1va4wVkCN6cdsRowwC
+	hsRjRs6EMV+RywI=; b=FRVh6Xz8yWq1oIf9jBeswUd/KHcHWTzpSij7Hd4pMO8X
+	aQ61FRVPqB3XYJnauU9BN6C5xyeBZa6+7eOqS5cho4C/dQ+Ozia5S+HeVc8yClaT
+	UA9QsBQHjZgSFSyDsdQN/QHqmdOdxW547manvL/CKjl2svcfHHBA9UzqsnwglmuL
+	oVxmFd65b1ZmVfm0QdmBZDOJXyIok0HC0KrRyZbsy7yfxh0r41bxPSO6gTbf4fkY
+	iEk+ko8etYJ4f8MLBZbC+5hyU/UWegZZh9mo+ecLbseJmsnXo3AQgH62Ch7CmWfi
+	KdDWQBFI+LMbBt7A/gX3bZVuf82ayJRSH/Jk37P7og==
+X-ME-Sender: <xms:uec8Zkd4UsdElSvVk3wBC1lYzbsWTkoxpRNVHcUq0HR4W9CiX2kvaQ>
+    <xme:uec8ZmMcl7EdbRO8awmjHgckfhRAuf7LolNP_FJXOoUmzBjgx1IgYsxgbeY5oGXhG
+    SETFXoDnQ0tBIjjwVE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdefvddgkeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfnfih
+    nhguohhnucfurghntghhvgdfuceolhhsrghntghhvgeslhihnhguvghnohdrtggrqeenuc
+    ggtffrrghtthgvrhhnpeejieefhfegtdefieejtdegieelfeduueejvdfgteevveejjefg
+    hfevteevledvffenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrghenucevlh
+    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehlshgrnhgthhgv
+    sehlhihnuggvnhhordgtrg
+X-ME-Proxy: <xmx:uec8ZlhgfF1SE1AJVXO19ngYR2dd87vbaYB4FUUBW3CZjuopERgEfg>
+    <xmx:uec8Zp-Bh_L_NDrjPo_mjyRIWmCcUcEJnCygs_TQIuoBUQjpv6Vz-w>
+    <xmx:uec8ZgvP_p6UIHpz246AzXBWo_UvIiY2xynG7zPr5uTpBZXPgIT4fg>
+    <xmx:uec8ZgGmjIkfNNg08xSXHkGPiW-uwG4OQJfb5CW0i5kC0PLTUfFLZw>
+    <xmx:uuc8ZgHG9LBOw3enlvVslj3ZMsTnXHuQYMrK1Wb3DfZDr4eiAqlzez5y>
+Feedback-ID: i1719461a:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 75B48C600B0; Thu,  9 May 2024 11:11:53 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-443-g0dc955c2a-fm-20240507.001-g0dc955c2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+Message-Id: <aaa1ebb5-3e0a-40ef-b53d-d8adc1589085@app.fastmail.com>
+In-Reply-To: 
+ <BY5PR19MB392256C65661E76FC292C0889AE52@BY5PR19MB3922.namprd19.prod.outlook.com>
+References: <20240425172758.67831-1-lsanche@lyndeno.ca>
+ <20240501215829.4991-2-lsanche@lyndeno.ca>
+ <BY5PR19MB392256C65661E76FC292C0889AE52@BY5PR19MB3922.namprd19.prod.outlook.com>
+Date: Thu, 09 May 2024 09:10:51 -0600
+From: "Lyndon Sanche" <lsanche@lyndeno.ca>
+To: "Shen, Yijun" <Yijun.Shen@dell.com>
+Cc: "Mario Limonciello" <mario.limonciello@amd.com>,
+ =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, "Armin Wolf" <W_Armin@gmx.de>,
+ "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "kernel test robot" <lkp@intel.com>, "Hans de Goede" <hdegoede@redhat.com>,
+ "Matthew Garrett" <mjg59@srcf.ucam.org>, "Jonathan Corbet" <corbet@lwn.net>,
+ "Heiner Kallweit" <hkallweit1@gmail.com>,
+ "Vegard Nossum" <vegard.nossum@oracle.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "Dell Client Kernel" <Dell.Client.Kernel@dell.com>
+Subject: Re: [PATCH v5] platform/x86: dell-laptop: Implement platform_profile
+Content-Type: text/plain
 
-If a serdev_device_driver is already loaded for a serdev_tty_port when it
-gets registered by tty_port_register_device_attr_serdev() then that
-driver's probe() method will be called immediately.
+On Wed, May 8, 2024, at 8:24 AM, Shen, Yijun wrote:
+> Hi Lyndon,
+>
+>  Thanks for working on this patch.
+>
+>
+> Internal Use - Confidential
+>> -----Original Message-----
+>> From: Lyndon Sanche <lsanche@lyndeno.ca>
+>> Sent: Thursday, May 2, 2024 5:58 AM
+>> To: lsanche@lyndeno.ca
+>> Cc: mario.limonciello@amd.com; pali@kernel.org; W_Armin@gmx.de;
+>> srinivas.pandruvada@linux.intel.com; ilpo.jarvinen@linux.intel.com;
+>> lkp@intel.com; Hans de Goede <hdegoede@redhat.com>; Matthew Garrett
+>> <mjg59@srcf.ucam.org>; Jonathan Corbet <corbet@lwn.net>; Heiner Kallweit
+>> <hkallweit1@gmail.com>; Vegard Nossum <vegard.nossum@oracle.com>;
+>> platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org; Dell Client
+>> Kernel <Dell.Client.Kernel@dell.com>
+>> Subject: [PATCH v5] platform/x86: dell-laptop: Implement platform_profile
+>>
+>>
+>> [EXTERNAL EMAIL]
+>>
+>> Some Dell laptops support configuration of preset fan modes through smbios
+>> tables.
+>>
+>> If the platform supports these fan modes, set up platform_profile to change
+>> these modes. If not supported, skip enabling platform_profile.
+>>
+>> Signed-off-by: Lyndon Sanche <lsanche@lyndeno.ca>
+>> ---
+>> v5:
+>>  - Fix indent in smbios-thermal-ctl comment
+>>  - Remove linux/wmi.h include
+>>  - Add 'select ACPI_PLATFORM_PROFILE' to Dell KConfig
+>> v4:
+>>  - Make thermal_init and thermal_cleanup static
+>>  - Rearrange order of added includes, did not edit current includes
+>>  - Include bits.h
+>>  - Switch comment style
+>>  - Return error if platform_profile registering failed
+>>  - Add thermal calls to call_blacklist
+>>  - Align defines with tabs
+>>  - Correct separation of function and error handling
+>>  - Propagate error codes up
+>> v3:
+>>  - Convert smbios-thermal-ctl docs to multiline comment and wrap
+>>  - Change thermal_mode_bits enum to directly be BIT() values
+>>       - Convert related code to use this
+>>  - Use FIELD_GET/PREP and GENNMASK for getting/setting thermal modes
+>>       - Correct offset for getting current ACC mode, setting offset
+>>               unchanged
+>>  - Check if thermal_handler is allocated before freeing and
+>>        unregistering platform_profile
+>> v2:
+>>  - Wrap smbios-thermal-ctl comment
+>>  - Return proper error code when invalid state returned
+>>  - Simplify platform_profile_get returns
+>>  - Propogate ENOMEM error
+>> ---
+>
+>  Dell side has an initial testing with this patch on some laptops, it 
+> looks good. While changing the platform profile:
+> 1. The corresponding USTT option in BIOS will be changed.
+> 2. thermald will not be impacted. The related PSVT and ITMT will be 
+> loaded.
+>  Some Dell DTs does not have the USTT, Dell'll have a check if nothing 
+> is broken.
+>
+>   Additional, with this patch, follow behavior is found:
+>  1. For example, the platform profile is quiet.
+>  2. Reboot the system and change the USTT to performance.
+>  3. Boot to desktop, the platform profile is "quiet", the USTT will be 
+> changed back to "quiet".
+>  This looks like not a proper user experience. The platform profile 
+> should honor the BIOS setting, aka, the platform profile should be 
+> switched to "performance".
 
-The serdev_device_driver's probe() method should then be able to call
-serdev_device_open() successfully, but because UPF_DEAD is still dead
-serdev_device_open() will fail with -ENXIO in this scenario:
+Hello:
 
-  serdev_device_open()
-  ctrl->ops->open()	/* this callback being ttyport_open() */
-  tty->ops->open()	/* this callback being uart_open() */
-  tty_port_open()
-  port->ops->activate()	/* this callback being uart_port_activate() */
-  Find bit UPF_DEAD is set in uport->flags and fail with errno -ENXIO.
+Thank you for your email. This is definitely undesirable behaviour, I will have a look at the code to see why this is happening. Does it always revert to quiet on boot, or always the mode that you had switched to prior to reboot?
 
-Fix this be clearing UPF_DEAD before tty_port_register_device_attr_serdev()
-note this only moves up the UPD_DEAD clearing a small bit, before:
+Do you happen to have power-profiles-daemon or something similar running? My understanding is it remembers profiles across reboots, this could potentially also revert the profile back to what it was. See this release for details:
+https://gitlab.freedesktop.org/upower/power-profiles-daemon/-/releases/0.9.0
 
-  tty_port_register_device_attr_serdev();
-  mutex_unlock(&tty_port.mutex);
-  uart_port.flags &= ~UPF_DEAD;
-  mutex_unlock(&port_mutex);
+I will assume there is a bug in my code at this point. I will test with and without ppd running on my system to see if it changes across reboots.
 
-after:
+Are USTT settings exposed in your BIOS configuration menu? On my laptop they are not and I have to use smbios-thermal-ctl.
 
-  uart_port.flags &= ~UPF_DEAD;
-  tty_port_register_device_attr_serdev();
-  mutex_unlock(&tty_port.mutex);
-  mutex_unlock(&port_mutex);
+Thank you,
 
-Reported-by: Weifeng Liu <weifeng.liu.z@gmail.com>
-Closes: https://lore.kernel.org/platform-driver-x86/20240505130800.2546640-1-weifeng.liu.z@gmail.com/
-Tested-by: Weifeng Liu <weifeng.liu.z@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Cc: Tony Lindgren <tony.lindgren@linux.intel.com>
-Cc: Maximilian Luz <luzmaximilian@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/tty/serial/serial_core.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index c476d884356d..b47a277978a0 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -3211,6 +3211,9 @@ static int serial_core_add_one_port(struct uart_driver *drv, struct uart_port *u
- 	if (uport->attr_group)
- 		uport->tty_groups[1] = uport->attr_group;
- 
-+	/* Ensure serdev drivers can call serdev_device_open() right away */
-+	uport->flags &= ~UPF_DEAD;
-+
- 	/*
- 	 * Register the port whether it's detected or not.  This allows
- 	 * setserial to be used to alter this port's parameters.
-@@ -3221,6 +3224,7 @@ static int serial_core_add_one_port(struct uart_driver *drv, struct uart_port *u
- 	if (!IS_ERR(tty_dev)) {
- 		device_set_wakeup_capable(tty_dev, 1);
- 	} else {
-+		uport->flags |= UPF_DEAD;
- 		dev_err(uport->dev, "Cannot register tty device on line %d\n",
- 		       uport->line);
- 	}
-@@ -3426,8 +3430,6 @@ int serial_core_register_port(struct uart_driver *drv, struct uart_port *port)
- 	if (ret)
- 		goto err_unregister_port_dev;
- 
--	port->flags &= ~UPF_DEAD;
--
- 	mutex_unlock(&port_mutex);
- 
- 	return 0;
--- 
-2.44.0
-
+Lyndon
