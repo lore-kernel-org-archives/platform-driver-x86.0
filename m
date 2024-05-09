@@ -1,151 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75BD93D548;
-	Thu,  9 May 2024 00:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E3614884B
+	for <platform-driver-x86@vger.kernel.org>; Thu,  9 May 2024 07:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715215525; cv=none; b=X0vcGd9zkqHhK9zb0LxhUfkF6a6rA42F/rK+iEnJqB08r9T687YOW6REed2wSjzH9xFerZuoTHbHgg49do94zLIB9E/1ljluSObzz/OPrPCAY9I0NWsqZJ5t0FLJlS+umPkpz4SBubgNSy5H52ocPZY2gdt/IuOTNFuJ/lfIMgk=
+	t=1715240952; cv=none; b=tEGPx564u2QIdBgHSCbQW0frueNd0sgfATtQRqMIeHEVU+W5gDdtkubGswBUGl57zDF7LA1RnFDrB7OmIkvbfFkOjpsFS/R8HXO3n3Ot/5LdEqDTiZe+H3D5rR8p0IYpuMF8HzHTzqlwRoqf9DqYu7bzhk/EvzqhhQwN2IHHmdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715215525; c=relaxed/simple;
-	bh=fU4qJTjvN/HQfhmAI8Gy/NQ76F8oZKqSQcpO7VySfk0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qhag6k/C5KGnIhEh2g6d22/WHrK5DdmGpOlPaVJ3ftrA85o68cN4gogrcKDdT2+BKQGm+ZyaPjxH+hG6AZmMlYummMSjEQGkV0YLzrHyV5mmQLutcCfwtmHsNK2Ry/5UTMl7Jlv59F6eU8Xm8ZDqhiB4kCN4NztqddVHZfXkBJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nDflKSIu; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715240952; c=relaxed/simple;
+	bh=tdG5wEZayd8yBbR6l6np0CcdKvDYEbHzxKwxRWTThhs=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ncKb6/ElX16XFMd9xHj2leSbx+78ddiit+ciO672YTzVd9IsF8PMUKHvt+QSRKD4/j3jwNcWI3sEuvGg9Kg9huEGC5m+8jePx4mFSWDs+AU721fqXy7AbjmwxniVdMMOBVDgdhYXEVsRFLiROeIXmUMVRJixY7whte5dWxjGzLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=riLXbFAo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nDflKSIu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715215523; x=1746751523;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=fU4qJTjvN/HQfhmAI8Gy/NQ76F8oZKqSQcpO7VySfk0=;
-  b=nDflKSIuJ4LF2HAeu7YeY7+seMU/w13YRlYxPfHuEviLuuLPCx9b8A8c
-   Xn506caPeQHfV/pN3jTY6+YWz/McCrtaohDpYPLHMPts7jiQRhyXh1XXH
-   dUpoP/P9khnldeAVpLNWt4G7RrcwDIwHR74RRqZqIvUur65QbhUY7t1En
-   yMkxw0b4kQ4HnIVefM1tyZBVi1JTj/dvUEwoV/BkC86mwcKJDzvkhWJG0
-   1HjW7dR/2EaqZ2LfpGLlxcdS8v4C/vcDv4ye6NxoZC25W5HIAtUfbOzpb
-   S4zu27mbYC3SVC/sO7k3Zn0SGKHEoIWnT88zLXnxTTadNqwq2SFS9/aVk
-   g==;
-X-CSE-ConnectionGUID: zzTv5b9WQfKpqwFeaGEHlg==
-X-CSE-MsgGUID: N4IbIIvTQzK2Nye+8uyBeQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="22503951"
-X-IronPort-AV: E=Sophos;i="6.08,146,1712646000"; 
-   d="scan'208";a="22503951"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 17:45:22 -0700
-X-CSE-ConnectionGUID: 9i08LsuQRriO/o05XDxhdg==
-X-CSE-MsgGUID: JNRQ31J0Tr2ashe2OesSWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,146,1712646000"; 
-   d="scan'208";a="66495708"
-Received: from ibganev-mobl.amr.corp.intel.com (HELO [10.125.110.203]) ([10.125.110.203])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 17:45:22 -0700
-Message-ID: <0c983c29-d146-4ddb-a554-6c9728ff2af4@linux.intel.com>
-Date: Wed, 8 May 2024 17:45:21 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="riLXbFAo"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 47CB6C3277B
+	for <platform-driver-x86@vger.kernel.org>; Thu,  9 May 2024 07:49:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715240952;
+	bh=tdG5wEZayd8yBbR6l6np0CcdKvDYEbHzxKwxRWTThhs=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=riLXbFAomDbjGABdHtX66O4uIbsRNrgf8pvfUhmVMFXXQRVr4Jh3I6io6q+0UmRPM
+	 n3J7QNlqmv4xN6PMG/uMPTo7reTTq5rM9OfVZeqjj/oLw5QNO8+zd8pefKtmZjLzPN
+	 KV27RID25VV+IQuNZmAdxXXwxK8LUIINTN5ynZwKjtTSbnUcg5jSr8vj/uraoaHpZQ
+	 7W//PlJOR+96NoccOg8UWADd5t+JCLRVz34MLbhuENdq41yeHJWWNU16UoHeWQO79d
+	 3e1md1CyV3LunY7gPsgGLe83Sd0sjKhJYJpX93Lg2pGZijkxqhOrrCRL1ODaRt9kXa
+	 D9Lpb0u8CfFkg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 391BBC53B70; Thu,  9 May 2024 07:49:12 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
+ resuming after unplugging the power cord during sleep
+Date: Thu, 09 May 2024 07:49:11 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: blocking
+X-Bugzilla-Who: darkbasic@linuxsystems.it
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218305-215701-yS8Yb7R8Ly@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
+References: <bug-218305-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] platform/x86/intel/ifs: Initialize AMX state for the
- scan test
-To: "Chang S. Bae" <chang.seok.bae@intel.com>, linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, tony.luck@intel.com,
- ashok.raj@intel.com, jithu.joseph@intel.com
-References: <20240430212508.105117-1-chang.seok.bae@intel.com>
- <20240430212508.105117-3-chang.seok.bae@intel.com>
-Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240430212508.105117-3-chang.seok.bae@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
-On 4/30/24 2:25 PM, Chang S. Bae wrote:
-> The scan test does not start when the AMX state remains active and is not
-> re-initialized. With the extension of kernel_fpu_begin_mask(), the driver
-> code can now initialize the state properly.
->
-> Introduce custom FPU handling wrappers to ensure compliant with the
-> established FPU API semantics, as kernel_fpu_begin() exclusively sets
-> legacy states. This follows the EFI case from commit b0dc553cfc9d
-> ("x86/fpu: Make the EFI FPU calling convention explicit").
->
-> Then, use these wrappers to surround the MSR_ACTIVATE_SCAN write to
-> minimize the critical section. To prevent unnecessary delays, invoke
-> ifs_fpu_begin() before entering the rendezvous loop.
->
-> Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-> Reviewed-by: Jithu Joseph <jithu.joseph@intel.com>
-> Tested-by: Jithu Joseph <jithu.joseph@intel.com>
-> ---
+--- Comment #66 from darkbasic (darkbasic@linuxsystems.it) ---
+> Especially paired with the fact that different adapters don't trigger it I
+> stand by this being an EC issue as the EC controls the throttling behavio=
+r.
 
-Looks good to me.
+What does EC stand for?
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->  drivers/platform/x86/intel/ifs/ifs.h     | 14 ++++++++++++++
->  drivers/platform/x86/intel/ifs/runtest.c |  6 ++++++
->  2 files changed, 20 insertions(+)
->
-> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-> index 56b9f3e3cf76..71d8b50854b2 100644
-> --- a/drivers/platform/x86/intel/ifs/ifs.h
-> +++ b/drivers/platform/x86/intel/ifs/ifs.h
-> @@ -325,4 +325,18 @@ int do_core_test(int cpu, struct device *dev);
->  extern struct attribute *plat_ifs_attrs[];
->  extern struct attribute *plat_ifs_array_attrs[];
->  
-> +static inline void ifs_fpu_begin(void)
-> +{
-> +	/*
-> +	 * The AMX state must be initialized prior to executing In-Field
-> +	 * Scan tests, according to Intel SDM.
+Might this
+(https://h30434.www3.hp.com/t5/Business-Notebooks/HP-Elitebook-865-G10-w-AM=
+D-Ryzen-9-PRO-7940HS-cannot-sustain/m-p/9061799)
+be related?
 
-Nit: May be helpful to include the section title in SDM.
+What's weird is that it only happens when I'm using the external monitors
+plugged into the dock, but I don't have any problem if I'm just using the
+dock's ethernet adapter or USB hub.
 
-> +	 */
-> +	kernel_fpu_begin_mask(KFPU_AMX);
-> +}
-> +
-> +static inline void ifs_fpu_end(void)
-> +{
-> +	kernel_fpu_end();
-> +}
-> +
->  #endif
-> diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
-> index 95b4b71fab53..a35eac7c0b44 100644
-> --- a/drivers/platform/x86/intel/ifs/runtest.c
-> +++ b/drivers/platform/x86/intel/ifs/runtest.c
-> @@ -188,6 +188,9 @@ static int doscan(void *data)
->  	/* Only the first logical CPU on a core reports result */
->  	first = cpumask_first(cpu_smt_mask(cpu));
->  
-> +	/* Prepare FPU state before entering the rendezvous loop*/
-> +	ifs_fpu_begin();
-> +
->  	wait_for_sibling_cpu(&scan_cpus_in, NSEC_PER_SEC);
->  
->  	/*
-> @@ -199,6 +202,9 @@ static int doscan(void *data)
->  	 * are processed in a single pass) before it retires.
->  	 */
->  	wrmsrl(MSR_ACTIVATE_SCAN, params->activate->data);
-> +
-> +	ifs_fpu_end();
-> +
->  	rdmsrl(MSR_SCAN_STATUS, status.data);
->  
->  	trace_ifs_status(ifsd->cur_batch, start, stop, status.data);
+> I suggest you guys raise with HP and point them at this issue.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Easier said that done: they don't care about Linux via the official support
+channels.
+I'm sure there is someone who cares because they distribute updates via LVFS
+and they even sold Linux laptops like the HP Dev One but I have no idea how=
+ to
+reach whoever could be interested to fix this.
 
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
