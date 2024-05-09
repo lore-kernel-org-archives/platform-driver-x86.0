@@ -1,189 +1,120 @@
-Received: from wfout3-smtp.messagingengine.com (wfout3-smtp.messagingengine.com [64.147.123.146])
+Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7DD13C672;
-	Thu,  9 May 2024 15:11:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D6B4C70;
+	Thu,  9 May 2024 16:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.77.79.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715267518; cv=none; b=YmFAA5ZSwBBY+Kz/DvR8L9VL+Lzgz/Fu7LjmL562fHV8ApUZ8XfICi45Sk0RyRgsW1PvavZhM90PbdVeLp+CKxldUFe8ShK4azowMEz9Esg6ZesvAYjsVw+Qu/ztgRRXyHU6qPyxI82DxBTLNI5fA98YA8nA+3VgTeDDUTfYTMM=
+	t=1715273396; cv=none; b=qRXfPCn0gQfsiXvAibHiz6g+vzRETitmuPCJ58kY/yPd/d/mFIUCukER3qBB12lGDZUP9VWY9+3PbYAGTvxJ0FcQEe8cXVR6+c0rfIrLaN4pP9e8exXnZHxgJo/OCWA65481HNGWxCpalLRje2gwAgwQ3rYfi/uCSII35GfIt80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715267518; c=relaxed/simple;
-	bh=S0Je4Bi3wxZqJxDWwfO4lgsyHN9V5CWUEMEoC1uRP1g=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=tqC1aOBq2YHdRmMiQnEKIUdj8TMjBNumruGBUugmYyzOTundbeY79Absdu4/HL8EexvnYZnTFlvk/dhwCe7Uwb0AXM755wvp5bRiRHQLMLKCQnUqLKzr+xxNIeJG2YXdYhKfOPUZ8d746r/STjGXw+mc+1WliyDPjFLZ66RZflg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=wseeupdL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FRVh6Xz8; arc=none smtp.client-ip=64.147.123.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
+	s=arc-20240116; t=1715273396; c=relaxed/simple;
+	bh=Gf9y6jAuMcgqo9Gd+TKKg5IoxCdtOXzzseeLVLgbN/E=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=n7m6qN4FT1Hta53QVf2JoX/yCUBGg+5SnFCWG2dL3j5Z+29HyYJZcPwdz18fldfcLhdvNKeRutoIcCsfEXq2au1b6g/n+1L/OVlo9XGSwmEHvnnpmGQIU/H/wX/gFYOZ97FJjywEbGNB3FPCs9FNjMnTHJDQeD2xy2c2uva5LdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=CqCwZqh9; arc=none smtp.client-ip=51.77.79.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="wseeupdL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FRVh6Xz8"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id 93F8D1C000B6;
-	Thu,  9 May 2024 11:11:54 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute5.internal (MEProxy); Thu, 09 May 2024 11:11:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1715267514; x=1715353914; bh=uRD3UGMTlM
-	1va4wVkCN6cdsRowwChsRjRs6EMV+RywI=; b=wseeupdLcN1/eN/25ElX6mV/La
-	+mlm8TWr3+UVqXqSgZzgUyVybwvUaSj7PIWA2Kcdq32bCThrPC2hGunCAXlh2aj7
-	QhJAJz2MNT5ZnYdkpiY+1sGo0igw8EaM9MlYLkyiT5YTikOpOw2stbJxh3EYjGzR
-	pXXr+U1C//9XfaMJduZ3vZD55GfVsBXuKtQVDVA6BxeZNnyVScPOlbM9eC8M2Mf2
-	LfdWj4c3UfjSLlp+pRcljsDGkr7uwBzNZ6+n7TjwSRO/qBu9HCWkj2O3Gptk0z0v
-	jjhuL6h9hSZYh7j0Qxtd7suTqfpB2RVjomVJhRZuReB7hQqrx90ZtCnhY+Dg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1715267514; x=1715353914; bh=uRD3UGMTlM1va4wVkCN6cdsRowwC
-	hsRjRs6EMV+RywI=; b=FRVh6Xz8yWq1oIf9jBeswUd/KHcHWTzpSij7Hd4pMO8X
-	aQ61FRVPqB3XYJnauU9BN6C5xyeBZa6+7eOqS5cho4C/dQ+Ozia5S+HeVc8yClaT
-	UA9QsBQHjZgSFSyDsdQN/QHqmdOdxW547manvL/CKjl2svcfHHBA9UzqsnwglmuL
-	oVxmFd65b1ZmVfm0QdmBZDOJXyIok0HC0KrRyZbsy7yfxh0r41bxPSO6gTbf4fkY
-	iEk+ko8etYJ4f8MLBZbC+5hyU/UWegZZh9mo+ecLbseJmsnXo3AQgH62Ch7CmWfi
-	KdDWQBFI+LMbBt7A/gX3bZVuf82ayJRSH/Jk37P7og==
-X-ME-Sender: <xms:uec8Zkd4UsdElSvVk3wBC1lYzbsWTkoxpRNVHcUq0HR4W9CiX2kvaQ>
-    <xme:uec8ZmMcl7EdbRO8awmjHgckfhRAuf7LolNP_FJXOoUmzBjgx1IgYsxgbeY5oGXhG
-    SETFXoDnQ0tBIjjwVE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdefvddgkeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfnfih
-    nhguohhnucfurghntghhvgdfuceolhhsrghntghhvgeslhihnhguvghnohdrtggrqeenuc
-    ggtffrrghtthgvrhhnpeejieefhfegtdefieejtdegieelfeduueejvdfgteevveejjefg
-    hfevteevledvffenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrghenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehlshgrnhgthhgv
-    sehlhihnuggvnhhordgtrg
-X-ME-Proxy: <xmx:uec8ZlhgfF1SE1AJVXO19ngYR2dd87vbaYB4FUUBW3CZjuopERgEfg>
-    <xmx:uec8Zp-Bh_L_NDrjPo_mjyRIWmCcUcEJnCygs_TQIuoBUQjpv6Vz-w>
-    <xmx:uec8ZgvP_p6UIHpz246AzXBWo_UvIiY2xynG7zPr5uTpBZXPgIT4fg>
-    <xmx:uec8ZgGmjIkfNNg08xSXHkGPiW-uwG4OQJfb5CW0i5kC0PLTUfFLZw>
-    <xmx:uuc8ZgHG9LBOw3enlvVslj3ZMsTnXHuQYMrK1Wb3DfZDr4eiAqlzez5y>
-Feedback-ID: i1719461a:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 75B48C600B0; Thu,  9 May 2024 11:11:53 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-443-g0dc955c2a-fm-20240507.001-g0dc955c2
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="CqCwZqh9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1715273380; x=1715532580;
+	bh=C60PPXrDiM6US9HUzSb1J44PAIcjYzqF9scPyqWaHcQ=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=CqCwZqh98z416mS2XCKqzmuiyUHMyT0Y7GpREyNWr0KK8SXQJj9rtR148itRyPaUx
+	 cNn6GMjx1gIS5AuK1/E/BQIgB17tmnazOQypBfHRiWndN5EdDBtJXsBtPYHAX1/dkH
+	 vBkfA2BY6/lzqcHw8SssMw2/OqQjg/klxkHNqMPPnQFWejgh84NHN9E/3Z3w5PteyL
+	 IZwHYMZ+HcW/ZpuBxPW52JQmk2dVu0QJooQA4E9AOeLwsorToK0oRYk8DAx4i1f18Z
+	 7vMqY2W0hBfb/SAuOxtIck6yLIQiX5PB+q3AIk8FvstCPM6O0SRcOTfRcUR8vS1w7/
+	 kyrDRiw9GdxLw==
+Date: Thu, 09 May 2024 16:49:34 +0000
+To: Hans de Goede <hdegoede@redhat.com>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+From: bcfradella@proton.me
+Cc: Ben Fradella <bfradell@netapp.com>, Ranjan Dutta <ranjan.dutta@intel.com>, Yifan2 Li <yifan2.li@intel.com>, Jonathan Yong <jonathan.yong@intel.com>
+Subject: [PATCH] p2sb: Don't init until unassigned resources have been assigned.
+Message-ID: <20240509164905.41016-1-bcfradella@proton.me>
+Feedback-ID: 52522960:user:proton
+X-Pm-Message-ID: b9b1474f879f010a3fa2db3d7408df99edc412c6
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <aaa1ebb5-3e0a-40ef-b53d-d8adc1589085@app.fastmail.com>
-In-Reply-To: 
- <BY5PR19MB392256C65661E76FC292C0889AE52@BY5PR19MB3922.namprd19.prod.outlook.com>
-References: <20240425172758.67831-1-lsanche@lyndeno.ca>
- <20240501215829.4991-2-lsanche@lyndeno.ca>
- <BY5PR19MB392256C65661E76FC292C0889AE52@BY5PR19MB3922.namprd19.prod.outlook.com>
-Date: Thu, 09 May 2024 09:10:51 -0600
-From: "Lyndon Sanche" <lsanche@lyndeno.ca>
-To: "Shen, Yijun" <Yijun.Shen@dell.com>
-Cc: "Mario Limonciello" <mario.limonciello@amd.com>,
- =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, "Armin Wolf" <W_Armin@gmx.de>,
- "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "kernel test robot" <lkp@intel.com>, "Hans de Goede" <hdegoede@redhat.com>,
- "Matthew Garrett" <mjg59@srcf.ucam.org>, "Jonathan Corbet" <corbet@lwn.net>,
- "Heiner Kallweit" <hkallweit1@gmail.com>,
- "Vegard Nossum" <vegard.nossum@oracle.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- "Dell Client Kernel" <Dell.Client.Kernel@dell.com>
-Subject: Re: [PATCH v5] platform/x86: dell-laptop: Implement platform_profile
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 8, 2024, at 8:24 AM, Shen, Yijun wrote:
-> Hi Lyndon,
->
->  Thanks for working on this patch.
->
->
-> Internal Use - Confidential
->> -----Original Message-----
->> From: Lyndon Sanche <lsanche@lyndeno.ca>
->> Sent: Thursday, May 2, 2024 5:58 AM
->> To: lsanche@lyndeno.ca
->> Cc: mario.limonciello@amd.com; pali@kernel.org; W_Armin@gmx.de;
->> srinivas.pandruvada@linux.intel.com; ilpo.jarvinen@linux.intel.com;
->> lkp@intel.com; Hans de Goede <hdegoede@redhat.com>; Matthew Garrett
->> <mjg59@srcf.ucam.org>; Jonathan Corbet <corbet@lwn.net>; Heiner Kallweit
->> <hkallweit1@gmail.com>; Vegard Nossum <vegard.nossum@oracle.com>;
->> platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org; Dell Client
->> Kernel <Dell.Client.Kernel@dell.com>
->> Subject: [PATCH v5] platform/x86: dell-laptop: Implement platform_profile
->>
->>
->> [EXTERNAL EMAIL]
->>
->> Some Dell laptops support configuration of preset fan modes through smbios
->> tables.
->>
->> If the platform supports these fan modes, set up platform_profile to change
->> these modes. If not supported, skip enabling platform_profile.
->>
->> Signed-off-by: Lyndon Sanche <lsanche@lyndeno.ca>
->> ---
->> v5:
->>  - Fix indent in smbios-thermal-ctl comment
->>  - Remove linux/wmi.h include
->>  - Add 'select ACPI_PLATFORM_PROFILE' to Dell KConfig
->> v4:
->>  - Make thermal_init and thermal_cleanup static
->>  - Rearrange order of added includes, did not edit current includes
->>  - Include bits.h
->>  - Switch comment style
->>  - Return error if platform_profile registering failed
->>  - Add thermal calls to call_blacklist
->>  - Align defines with tabs
->>  - Correct separation of function and error handling
->>  - Propagate error codes up
->> v3:
->>  - Convert smbios-thermal-ctl docs to multiline comment and wrap
->>  - Change thermal_mode_bits enum to directly be BIT() values
->>       - Convert related code to use this
->>  - Use FIELD_GET/PREP and GENNMASK for getting/setting thermal modes
->>       - Correct offset for getting current ACC mode, setting offset
->>               unchanged
->>  - Check if thermal_handler is allocated before freeing and
->>        unregistering platform_profile
->> v2:
->>  - Wrap smbios-thermal-ctl comment
->>  - Return proper error code when invalid state returned
->>  - Simplify platform_profile_get returns
->>  - Propogate ENOMEM error
->> ---
->
->  Dell side has an initial testing with this patch on some laptops, it 
-> looks good. While changing the platform profile:
-> 1. The corresponding USTT option in BIOS will be changed.
-> 2. thermald will not be impacted. The related PSVT and ITMT will be 
-> loaded.
->  Some Dell DTs does not have the USTT, Dell'll have a check if nothing 
-> is broken.
->
->   Additional, with this patch, follow behavior is found:
->  1. For example, the platform profile is quiet.
->  2. Reboot the system and change the USTT to performance.
->  3. Boot to desktop, the platform profile is "quiet", the USTT will be 
-> changed back to "quiet".
->  This looks like not a proper user experience. The platform profile 
-> should honor the BIOS setting, aka, the platform profile should be 
-> switched to "performance".
+From: Ben Fradella <bfradell@netapp.com>
 
-Hello:
+The P2SB could get an invalid BAR from the BIOS, and that won't be fixed
+up until pcibios_assign_resources(), which is an fs_initcall().
 
-Thank you for your email. This is definitely undesirable behaviour, I will have a look at the code to see why this is happening. Does it always revert to quiet on boot, or always the mode that you had switched to prior to reboot?
+- Move p2sb_fs_init() to an fs_initcall_sync(). This is still early
+  enough to avoid a race with any dependent drivers.
 
-Do you happen to have power-profiles-daemon or something similar running? My understanding is it remembers profiles across reboots, this could potentially also revert the profile back to what it was. See this release for details:
-https://gitlab.freedesktop.org/upower/power-profiles-daemon/-/releases/0.9.0
+- Add a check for IORESOURCE_UNSET in p2sb_valid_resource() to catch
+  unset BARs going forward.
 
-I will assume there is a bug in my code at this point. I will test with and without ppd running on my system to see if it changes across reboots.
+- Return error values from p2sb_fs_init() so that the 'initcall_debug'
+  cmdline arg provides useful data.
 
-Are USTT settings exposed in your BIOS configuration menu? On my laptop they are not and I have to use smbios-thermal-ctl.
+Signed-off-by: Ben Fradella <bfradell@netapp.com>
+---
+ drivers/platform/x86/p2sb.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
-Thank you,
+diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
+index 3d66e1d4eb1f..1938a3ef9480 100644
+--- a/drivers/platform/x86/p2sb.c
++++ b/drivers/platform/x86/p2sb.c
+@@ -56,12 +56,9 @@ static int p2sb_get_devfn(unsigned int *devfn)
+ =09return 0;
+ }
+=20
+-static bool p2sb_valid_resource(struct resource *res)
++static bool p2sb_valid_resource(const struct resource *res)
+ {
+-=09if (res->flags)
+-=09=09return true;
+-
+-=09return false;
++=09return res->flags & ~IORESOURCE_UNSET;
+ }
+=20
+ /* Copy resource from the first BAR of the device in question */
+@@ -220,16 +217,20 @@ EXPORT_SYMBOL_GPL(p2sb_bar);
+=20
+ static int __init p2sb_fs_init(void)
+ {
+-=09p2sb_cache_resources();
+-=09return 0;
++=09return p2sb_cache_resources();
+ }
+=20
+ /*
+- * pci_rescan_remove_lock to avoid access to unhidden P2SB devices can
+- * not be locked in sysfs pci bus rescan path because of deadlock. To
+- * avoid the deadlock, access to P2SB devices with the lock at an early
+- * step in kernel initialization and cache required resources. This
+- * should happen after subsys_initcall which initializes PCI subsystem
+- * and before device_initcall which requires P2SB resources.
++ * pci_rescan_remove_lock() can not be locked in sysfs pci bus rescan path
++ * because of deadlock. To avoid the deadlock, access P2SB devices with th=
+e lock
++ * at an early step in kernel initialization and cache required resources.
++ *
++ * We want to run as early as possible. If the P2SB was assigned a bad BAR=
+,
++ * we'll need to wait on pcibios_assign_resources() to fix it. So, our lis=
+t of
++ * initcall dependencies looks something like this:
++ *
++ * ...
++ * subsys_initcall (pci_subsys_init)
++ * fs_initcall     (pcibios_assign_resources)
+  */
+-fs_initcall(p2sb_fs_init);
++fs_initcall_sync(p2sb_fs_init);
+--=20
+2.43.0
 
-Lyndon
+
