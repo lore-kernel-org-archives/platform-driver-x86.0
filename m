@@ -1,96 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2490012D766;
-	Thu,  9 May 2024 23:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92FEE12AAE5;
+	Fri, 10 May 2024 07:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715295769; cv=none; b=lzf41l1y0+bVJIB7qliBP/CMvcyi55cTlOJIwEwsOi/i/Ro8dPX5BtIQF986rSOoOm8qJeIuxCgtjHgMkDg3r8rQ5HY76fM/lRGrvgOoptrlgwxQaJ1O10pRHCjrTtZiZT4tob79WWwe5hFBZVXD7qDkHqSJzwTPFfuPbdwaY4s=
+	t=1715327467; cv=none; b=aG/Js4jQyAENUAWJroXxVkmZy2uQz+/nng+f0bu47JDY7mwTqyshrQRLmOgWg9mZbuwnSInRq8cx3IW60vCbWtQHqZOwqPMRhVWMxdHTwmPGIo+53D4m20tb/OLlhfRVkqQCbzrWvWjTExefVdjJZzhJf0LSx38FcVzJc12B0l8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715295769; c=relaxed/simple;
-	bh=oNrUGgcCk1pvGWzqlqg4HGyJYpoKusDOo1+YDxj1Nig=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ny1tj6MZj0S+TwZryfkAwSOGpVonfcOQK/MfR2+Q9LZhkx/Vat2qBxX0OL4SMOdoc2c45GXvUHi7sRTmW95kKKJloeUZFbASDp988k61QfJHQMbyNAKK+ljvZbMbskDSUYNuHa1zBp/Rzp8VeMbkZBonUFrC7u5jmSV+az1sQSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XVn9MbBs; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715327467; c=relaxed/simple;
+	bh=VYM7fGJjhmjLymVRv/fDQo6hN8Spqtzfyzs+nbT2mX0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=cXHuvT+6tvqE0mYSbGIpDKO+M+M/3Rk43sdJ4QMvWe8bo6YQ/t8luyB7XljMcG9/xBG2QlFDTNaaRnEdyTetsXw5geWxFq2psgioMILqJk69ph0C5gTKQyDjDt/PYgX39TY1UkRKYW+No5N7g/Ay1HPXoWlTyX+2vZ2PH6z0dCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QvyCwmVY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=c9xSZ0jX; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XVn9MbBs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715295768; x=1746831768;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=oNrUGgcCk1pvGWzqlqg4HGyJYpoKusDOo1+YDxj1Nig=;
-  b=XVn9MbBsk/jdogk02prsLxhgdjTaE/WmmIvpS5Ap+h7ADiikdJkWTUHK
-   9fneZqf9oYBkWAYzf/9zcXauRcJXrgm23GUbPq+wTBwO5ZMTRohjrSidc
-   9rTzHtjydq67uTLCWUqBtlo3bxOjvXpD2qNDpk/KUsQAF0r+S6W71rOwk
-   AK0GQmLm7YRGfuquAcl2u0a+up05mbc+PSAjX7f0BBZALDsz4raiT0qR8
-   6QLXhAfPueTh3Dhx5I18bJQDRFMAS99wUjNsWyvrlrAPqEFYzUbPtNUdE
-   iEiZyWkhNamkVWQn7m2OdAfpopqYaf5voYsqGk4F1vqSRiQZESLXLWD+Y
-   w==;
-X-CSE-ConnectionGUID: 9+1LTUnIQSuD2fV6rx6Rkg==
-X-CSE-MsgGUID: cJyeWIGERcS9oy2BIzFUiQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="11100509"
-X-IronPort-AV: E=Sophos;i="6.08,149,1712646000"; 
-   d="scan'208";a="11100509"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 16:02:46 -0700
-X-CSE-ConnectionGUID: LEwwS8lGTWG5x4DP1jj5rQ==
-X-CSE-MsgGUID: 0/AfS9CWRO6tKs3tr5L0TQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,149,1712646000"; 
-   d="scan'208";a="29790214"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.19])
-  by orviesa006.jf.intel.com with ESMTP; 09 May 2024 16:02:45 -0700
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	andriy.shevchenko@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 2/2] platform/x86: ISST: Use only TPMI interface when present
-Date: Thu,  9 May 2024 16:02:36 -0700
-Message-ID: <20240509230236.1494326-3-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240509230236.1494326-1-srinivas.pandruvada@linux.intel.com>
-References: <20240509230236.1494326-1-srinivas.pandruvada@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QvyCwmVY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c9xSZ0jX"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1715327464;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bIm1fAKcGzV2+29L6VoKcR07i20QYU5XtuqRPiLw9LA=;
+	b=QvyCwmVYbnn0fGMU4flRLFxCJjjGSJGvR5zdOvdujP5QMKsg81ungs2dZBaEbNMxH+eiwn
+	S5H8J8w0eF1kkdkqrK1tKWt+Cx9rO9VTz09Lqa8xZhAmY1fsqoIgWTsWyMBfLRber0D700
+	nHLs59eFqUdXzRzJaPgRZOLDHovX95mAFrGCO9ltHUgDefI3ABnFxA05+uaWWaezdjOr3P
+	yAz7nOVmL4aYtTpqYoksbSJOISxA4qewPzxVt86prQxll7CPzFzjCnrm0Qd00UTYDTZ+/1
+	217m3a9tYn3QXcCdkViB4w3Pi98icliXINAqjQbjNslLoTVR4muYQBFdTutq+g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1715327464;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bIm1fAKcGzV2+29L6VoKcR07i20QYU5XtuqRPiLw9LA=;
+	b=c9xSZ0jXY56J3+wI1zztvYxMSeM6l3zm6SfKxC0U7J08W4MgONBNXH/ejXbs1UTNWzGYIs
+	fUMElEUTmIX3TdCA==
+To: Dave Hansen <dave.hansen@intel.com>, "Chang S. Bae"
+ <chang.seok.bae@intel.com>, linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com, tony.luck@intel.com, ashok.raj@intel.com,
+ jithu.joseph@intel.com
+Subject: Re: [PATCH v2 1/2] x86/fpu: Extend kernel_fpu_begin_mask() to
+ initialize AMX state
+In-Reply-To: <fde6149c-7ddf-488f-98c0-04f336b7092e@intel.com>
+References: <20240430212508.105117-1-chang.seok.bae@intel.com>
+ <20240507235344.249103-1-chang.seok.bae@intel.com>
+ <20240507235344.249103-2-chang.seok.bae@intel.com>
+ <f82879a5-f3ca-436f-8c4a-96d4c5d90354@intel.com>
+ <7e589b35-4ff8-43fa-99dd-d3b17f56d3ea@intel.com>
+ <fde6149c-7ddf-488f-98c0-04f336b7092e@intel.com>
+Date: Fri, 10 May 2024 09:51:03 +0200
+Message-ID: <875xvmnlzs.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-When the TPMI interface is present, use this interface instead of legacy.
-On some systems legacy IO device is also present. Using both interfaces
-together is confusing and may set the hardware in inconsistent state.
+On Thu, May 09 2024 at 10:36, Dave Hansen wrote:
+> Three lines of code:
+>
+> 	1. IFS declares its need to own the FPU for a moment, like any
+> 	   other kernel_fpu_begin() user.  It's not a special snowflake.
+> 	   It is boring.
+> 	2. IFS zaps the FPU state
+> 	3. IFS gives up the FPU
+>
+> Am I out of my mind?  What am I missing?  Why bother with _anything_
+> more complicated than this?
 
-When TPMI interface is present, don't load legacy drivers.
-
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Zhang Rui <rui.zhang@intel.com
----
- drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-index f886f9369fad..6283af37e73b 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-@@ -775,6 +775,9 @@ int isst_if_cdev_register(int device_type, struct isst_if_cmd_cb *cb)
- 	if (device_type >= ISST_IF_DEV_MAX)
- 		return -EINVAL;
- 
-+	if (device_type < ISST_IF_DEV_TPMI && isst_hpm_support)
-+		return -ENODEV;
-+
- 	mutex_lock(&punit_misc_dev_open_lock);
- 	/* Device is already open, we don't want to add new callbacks */
- 	if (misc_device_open) {
--- 
-2.44.0
-
+Right. Keep it simple :)
