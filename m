@@ -1,116 +1,133 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE17B12C47D;
-	Fri, 10 May 2024 13:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C033EAC0;
+	Fri, 10 May 2024 14:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715348667; cv=none; b=rSJKibuOqAGdb6x8qPsq4UWG4zv0LFVkOwdDEWuLrRF5+apSVABIw9p+YqlOG6ryCo55ucd7weQsqjlMT2RbzfMijcPBI35tiiK0rEx7gk9gKLDpTxDPo77uqcUrA9QFa7SC5weMkZgktfZh+vmwQNR9zW0m/Jja7qOogmbvsFE=
+	t=1715352655; cv=none; b=lwQHzzQ9xIog5lBMKInK0cO1cdwiWlJp11nlcAlGiFSjewDeGQ5DEm1D3H02SdTvwfMc+VOzXos9R9BKQBrzNK6GtalM3MK6aiLZdaxKyGzDZPoVlSiFmHN9I12GVoPfT4xcX/I/dLfl/SN5ZGeUVvRI4RUTsSFVqSDwUbjwQrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715348667; c=relaxed/simple;
-	bh=a+narUI2zW12K8fH5XAnD87sFiDziSZ6ANXk+XWXg8c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pxUB9PFNqqNtqWslCMamG8n1khEOMeIMjGeflgl1RDpzLyoFHJ+relA/Hjtabt/ZwY6bXlkcQ7Sdc5RzplQvLdx70AjgGbC8Qnq/AwHmCcq1FeW27k53wXBYwIN9mKpm8DHes81mU1gwOD0CJcPEv/E7FhsPJfxXwz7dMn8NWz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mc8rduGU; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715352655; c=relaxed/simple;
+	bh=fyvpNv67G/1TXLVLJpNT2RU8QZLRTMZI02XA5sDLFgU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IB2XfnZGmSJVdP7oMp3qlD6Gx49a2xZ7zJyChyulU/JHBNkeYD21au4C3b1LfG1T9Kn2tTAfwCtvDkxrrdABptLv3LJNbyl3vnVSVA1uQkDY+vyRVBjbZdINShkCqh0S1YWhUuy0b81Rf1k26nRYjE+G+KJAFrFklKNRFy4Py/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HqgElacR; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mc8rduGU"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a59a609dd3fso359284766b.0;
-        Fri, 10 May 2024 06:44:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715348664; x=1715953464; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W8zQ1+fOyoN9FxhEKizmSfFFoRfjJDAWVbQkvx4VSmE=;
-        b=Mc8rduGUMDy62jJfmaxXjW3ILRIOwmLNqLwGuZvwD+YhScUPF4Agyyn/FYwGJdKeFn
-         Rab7aRdn/T3p9MUeiwJ1CSGu+q4/O40o3dkDcgRV4Bbz4I939eiqmk8B5Y3wl/r47Wr8
-         EpVGbBaAsmK1aYBCQWZ4gdmolixjUQnSdEANpjgcSz+XjPPIjipUdliqmD8bJVgx8ccF
-         TbBujpzClj9uquvK/uugaiRH3TTY1qClkg7jdXQCqA/cs+5bI5UU4cE+UXhpwKut8Ra3
-         oNObvFo/D9wNrOTn8e8IGdIvr68xZvpPPt3wGpBMeOQVSSzqXVfc5jl1OpNReRLHKOg2
-         u86w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715348664; x=1715953464;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W8zQ1+fOyoN9FxhEKizmSfFFoRfjJDAWVbQkvx4VSmE=;
-        b=BlF3F0F0+MgP7/wcwDh3gJqIrV6OcgjctwfLDzAvA+CkXyPNcDUQIfU+LTyc02RwdK
-         y3R6EQbIzjequOPHTSbqlTNIl61S38cKFmbFKBWr1QhNOzhIDO9svh+y/jz4ak+FO+Xw
-         fo7h49RYN7/VxqwwGIoDj8YAlp+25OeBSkqWkCMilqRTqSptjLNwRQaZUrAeRM1ck41z
-         9ZtQ3N/3x5BE0y6Ka0Ftc4eQ8hppk3iPILtmDyfQk09NX4SlVoSSp8NnpuPSEqeeW4rM
-         sRoe41DqRTC/tF3yGH+jeMy7gC8RZcVt7Wcmt/WKvwDLCy2fXlu/DSnrHhCdZVvmxXCh
-         ZCbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZZfwoWLksr9J0zf+c7hdOIloIaiz3HYScmBhyK80vOSMK+k7aPcYNPUgurcjZH7ecmSYJ9oAMuwtORsZY44KqzlPux886nF/RWH/zNBCaRDobs00F9R4YzKYanZr+9vtxHqQLFSoToVFaDm3L5pZctQ==
-X-Gm-Message-State: AOJu0Yw4Ub66789fjpV+0X0UsTY+zlKkAgn7nYqyF61P+VAM4DXZYcX5
-	WUKEVA2h03mRtm7bJTEe8NUrnkplZh/SfUsAwK7udHek1MI8EuevTzlIB0QBlqEMAagpHeamfxh
-	EcTiv0JaNAiFFSHk4bKSg6igKK+0=
-X-Google-Smtp-Source: AGHT+IHgGoFxkAWnw1M42UAl8QpDJxvW0EvSEIQzxEapo6qUpe5rDOx59WyY+PdQGBWjYvgbBApx71SzI4LHBBoi30E=
-X-Received: by 2002:a17:906:b098:b0:a59:cf0d:d7c8 with SMTP id
- a640c23a62f3a-a5a11601484mr486463866b.15.1715348664064; Fri, 10 May 2024
- 06:44:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HqgElacR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715352653; x=1746888653;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fyvpNv67G/1TXLVLJpNT2RU8QZLRTMZI02XA5sDLFgU=;
+  b=HqgElacRjE5/zhXFIE5lr1YxU70XV6JNOYXnN82xnG+/oZa4e7GL9Rhc
+   AZerexj3Md379Ik3dmKG6dAjeT/Y+sKnsMLZzj2C8lX9NYAW1QAgq0vkA
+   PMolDENTycrFXW3rsc2hL8zmftCkbRFHI68RQ5WR1C/CCueHdpBBwDmKp
+   2veTnPNe6zBK9RHkb9qAF2a8ZRNcbRSjbskIe5+lZ+emTEjVgCucrqzKc
+   hSStwrrgMNgOhgWaH1lEjtgQhDwhPR9u4N0bghHaKE2IeahyC+m7fHBv7
+   fqOzYRL0k41wqule2X0PRtkgb7S85/+JI1jZLFiLlLDLa0mbzevB/wcBP
+   w==;
+X-CSE-ConnectionGUID: YnWBPlvFSw+XGiwcPBWxVQ==
+X-CSE-MsgGUID: d3aoLrU4QWSaT5EGg2hYNA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="11187646"
+X-IronPort-AV: E=Sophos;i="6.08,151,1712646000"; 
+   d="scan'208";a="11187646"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 07:50:53 -0700
+X-CSE-ConnectionGUID: xFwi5WDETv2lQkpwF7DG5w==
+X-CSE-MsgGUID: eXObE9V5Ra+05BkRPN5D5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,151,1712646000"; 
+   d="scan'208";a="34151256"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 07:50:49 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1s5RaA-000000068MS-1U6b;
+	Fri, 10 May 2024 17:50:46 +0300
+Date: Fri, 10 May 2024 17:50:46 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: bcfradella@proton.me, Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+	Klara Modin <klarasmodin@gmail.com>,
+	Danil Rybakov <danilrybakov249@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ben Fradella <bfradell@netapp.com>,
+	Ranjan Dutta <ranjan.dutta@intel.com>,
+	Yifan2 Li <yifan2.li@intel.com>,
+	Jonathan Yong <jonathan.yong@intel.com>
+Subject: Re: [PATCH] p2sb: Don't init until unassigned resources have been
+ assigned.
+Message-ID: <Zj40RnWnNqpr4Nom@smile.fi.intel.com>
+References: <20240509164905.41016-1-bcfradella@proton.me>
+ <Zj0CIPR5djf0-hHb@wunner.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240509141549.63704-1-hdegoede@redhat.com>
-In-Reply-To: <20240509141549.63704-1-hdegoede@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 10 May 2024 16:43:47 +0300
-Message-ID: <CAHp75VfdZYVSbNfAQ5OzX632f-oGeU08-pHPWb9tf34Q1QU_RA@mail.gmail.com>
-Subject: Re: [PATCH] serial: Clear UPF_DEAD before calling tty_port_register_device_attr_serdev()
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Tony Lindgren <tony@atomide.com>, Maximilian Luz <luzmaximilian@gmail.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org, 
-	linux-serial@vger.kernel.org, Weifeng Liu <weifeng.liu.z@gmail.com>, 
-	Tony Lindgren <tony.lindgren@linux.intel.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zj0CIPR5djf0-hHb@wunner.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, May 9, 2024 at 5:16=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
-wrote:
->
-> If a serdev_device_driver is already loaded for a serdev_tty_port when it
-> gets registered by tty_port_register_device_attr_serdev() then that
-> driver's probe() method will be called immediately.
->
-> The serdev_device_driver's probe() method should then be able to call
-> serdev_device_open() successfully, but because UPF_DEAD is still dead
-> serdev_device_open() will fail with -ENXIO in this scenario:
->
->   serdev_device_open()
->   ctrl->ops->open()     /* this callback being ttyport_open() */
->   tty->ops->open()      /* this callback being uart_open() */
->   tty_port_open()
->   port->ops->activate() /* this callback being uart_port_activate() */
->   Find bit UPF_DEAD is set in uport->flags and fail with errno -ENXIO.
->
-> Fix this be clearing UPF_DEAD before tty_port_register_device_attr_serdev=
-()
-> note this only moves up the UPD_DEAD clearing a small bit, before:
->
->   tty_port_register_device_attr_serdev();
->   mutex_unlock(&tty_port.mutex);
->   uart_port.flags &=3D ~UPF_DEAD;
->   mutex_unlock(&port_mutex);
->
-> after:
->
->   uart_port.flags &=3D ~UPF_DEAD;
->   tty_port_register_device_attr_serdev();
->   mutex_unlock(&tty_port.mutex);
->   mutex_unlock(&port_mutex);
+On Thu, May 09, 2024 at 07:04:32PM +0200, Lukas Wunner wrote:
+> [cc += Shin'ichiro, Klara, Andy, Danil]
 
-I guess I have given the tag, anyway since Tony OK with this, no more quest=
-ions:
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Thank you!
 
---=20
+> On Thu, May 09, 2024 at 04:49:34PM +0000, bcfradella@proton.me wrote:
+> > From: Ben Fradella <bfradell@netapp.com>
+> > 
+> > The P2SB could get an invalid BAR from the BIOS, and that won't be fixed
+> > up until pcibios_assign_resources(), which is an fs_initcall().
+> > 
+> > - Move p2sb_fs_init() to an fs_initcall_sync(). This is still early
+> >   enough to avoid a race with any dependent drivers.
+> > 
+> > - Add a check for IORESOURCE_UNSET in p2sb_valid_resource() to catch
+> >   unset BARs going forward.
+> > 
+> > - Return error values from p2sb_fs_init() so that the 'initcall_debug'
+> >   cmdline arg provides useful data.
+
+...
+
+> >  /*
+> > - * pci_rescan_remove_lock to avoid access to unhidden P2SB devices can
+> > - * not be locked in sysfs pci bus rescan path because of deadlock. To
+> > - * avoid the deadlock, access to P2SB devices with the lock at an early
+> > - * step in kernel initialization and cache required resources. This
+> > - * should happen after subsys_initcall which initializes PCI subsystem
+> > - * and before device_initcall which requires P2SB resources.
+> > + * pci_rescan_remove_lock() can not be locked in sysfs pci bus rescan path
+
+PCI bus
+
+> > + * because of deadlock. To avoid the deadlock, access P2SB devices with the lock
+> > + * at an early step in kernel initialization and cache required resources.
+> > + *
+> > + * We want to run as early as possible. If the P2SB was assigned a bad BAR,
+> > + * we'll need to wait on pcibios_assign_resources() to fix it. So, our list of
+> > + * initcall dependencies looks something like this:
+> > + *
+> > + * ...
+> > + * subsys_initcall (pci_subsys_init)
+> > + * fs_initcall     (pcibios_assign_resources)
+> >   */
+
+This makes sense to me
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+I assume others will conduct the proper review and testing.
+
+-- 
 With Best Regards,
 Andy Shevchenko
+
+
