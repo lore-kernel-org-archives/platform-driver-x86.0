@@ -1,77 +1,144 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2065.outbound.protection.outlook.com [40.107.223.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92FEE12AAE5;
-	Fri, 10 May 2024 07:51:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715327467; cv=none; b=aG/Js4jQyAENUAWJroXxVkmZy2uQz+/nng+f0bu47JDY7mwTqyshrQRLmOgWg9mZbuwnSInRq8cx3IW60vCbWtQHqZOwqPMRhVWMxdHTwmPGIo+53D4m20tb/OLlhfRVkqQCbzrWvWjTExefVdjJZzhJf0LSx38FcVzJc12B0l8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715327467; c=relaxed/simple;
-	bh=VYM7fGJjhmjLymVRv/fDQo6hN8Spqtzfyzs+nbT2mX0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=cXHuvT+6tvqE0mYSbGIpDKO+M+M/3Rk43sdJ4QMvWe8bo6YQ/t8luyB7XljMcG9/xBG2QlFDTNaaRnEdyTetsXw5geWxFq2psgioMILqJk69ph0C5gTKQyDjDt/PYgX39TY1UkRKYW+No5N7g/Ay1HPXoWlTyX+2vZ2PH6z0dCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QvyCwmVY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=c9xSZ0jX; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765D626AC7
+	for <platform-driver-x86@vger.kernel.org>; Fri, 10 May 2024 10:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715337358; cv=fail; b=PVSr2kKmB1zHHAx1GWzIBgN8PTb8RQQYMV8S8YG2M8LqyOxg3B2V9+/N3Va6bYdTsDwsqYyv7BlHPJh8QJQeAD8H6JuNarjgDqlNVUST3KQ/M1bldB3Cm65jHtgBePBVw57U04LTPssr4ky4lGr1Pf2NkqquKjRthgFPVuybcbg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715337358; c=relaxed/simple;
+	bh=iS30QqDXePf07n7sUqlq3NztGkagXFk4b3KNgEErS8c=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NF6U4/NuGhNByb6x8iYENprxwmwaBg1s9zEN//v4I+SLgyomMNAmXrCVttsFnPLqpgpnCjjDHN7fQQE3QD1/S8AZhq9le0TcvAXEbn5Iea1faOQzYT32tBPcJQPVfI7o3oHozsSaw/Fkmp60F2xdaoUSRWFYuFeJyiEPgRk3Czc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FwgrgRfe; arc=fail smtp.client-ip=40.107.223.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QvyCwmVY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c9xSZ0jX"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1715327464;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bIm1fAKcGzV2+29L6VoKcR07i20QYU5XtuqRPiLw9LA=;
-	b=QvyCwmVYbnn0fGMU4flRLFxCJjjGSJGvR5zdOvdujP5QMKsg81ungs2dZBaEbNMxH+eiwn
-	S5H8J8w0eF1kkdkqrK1tKWt+Cx9rO9VTz09Lqa8xZhAmY1fsqoIgWTsWyMBfLRber0D700
-	nHLs59eFqUdXzRzJaPgRZOLDHovX95mAFrGCO9ltHUgDefI3ABnFxA05+uaWWaezdjOr3P
-	yAz7nOVmL4aYtTpqYoksbSJOISxA4qewPzxVt86prQxll7CPzFzjCnrm0Qd00UTYDTZ+/1
-	217m3a9tYn3QXcCdkViB4w3Pi98icliXINAqjQbjNslLoTVR4muYQBFdTutq+g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1715327464;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bIm1fAKcGzV2+29L6VoKcR07i20QYU5XtuqRPiLw9LA=;
-	b=c9xSZ0jXY56J3+wI1zztvYxMSeM6l3zm6SfKxC0U7J08W4MgONBNXH/ejXbs1UTNWzGYIs
-	fUMElEUTmIX3TdCA==
-To: Dave Hansen <dave.hansen@intel.com>, "Chang S. Bae"
- <chang.seok.bae@intel.com>, linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, tony.luck@intel.com, ashok.raj@intel.com,
- jithu.joseph@intel.com
-Subject: Re: [PATCH v2 1/2] x86/fpu: Extend kernel_fpu_begin_mask() to
- initialize AMX state
-In-Reply-To: <fde6149c-7ddf-488f-98c0-04f336b7092e@intel.com>
-References: <20240430212508.105117-1-chang.seok.bae@intel.com>
- <20240507235344.249103-1-chang.seok.bae@intel.com>
- <20240507235344.249103-2-chang.seok.bae@intel.com>
- <f82879a5-f3ca-436f-8c4a-96d4c5d90354@intel.com>
- <7e589b35-4ff8-43fa-99dd-d3b17f56d3ea@intel.com>
- <fde6149c-7ddf-488f-98c0-04f336b7092e@intel.com>
-Date: Fri, 10 May 2024 09:51:03 +0200
-Message-ID: <875xvmnlzs.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FwgrgRfe"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bQQ9bpdKhQ9mxRvvIvRYEuXewi9O8kA22Ap7ORTuNylF/TPzJbYGD+SldZ7BnV9Rawj3Mf0RFhKWEMhMK3VALT+Yxxol0TEhl3DaP2JjWzhxJnYMBjvkJNJesBOiwDbXL5KK3Foxj4Fpdyp4LXYwdLCxYYpR/ac8mXplpq1cz7eOeP/A7gFMPZQDSWKKa1SCs2Ay27IKGHiGLLjHjsKnOqRPI3DvA18jxX+TNZfFqQk6ObEAdyTGcz14pWtoEPnapfCGqGYE0i4aQpRcJATnGUlVIfoiP76EYGBXIMkkIRJVgk3NSjxDGMUcZILnPQdg0IrX0GaLW8qFpcWzYY6YIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xEnKHT6atMVjhVVOry7BflKkomJ5LFSNT4qXd3bFFLU=;
+ b=AtwUaJ9mZa2FpZFmOqYtkMTGAXLoGnVIOnnJJ5gJnm6V4K7NFvNC8KjC5QDcH82gmDgMoNdCS5Bh7swCiWg9ws+qrO09Ap0wf6FhzReleFSur7sE0aUohtmrx4qwU9gDzZipijrZ8evp/cfHayVs9zFXai/W4tk6Ft0Ht+kfx4YKnMnHLfbKw7aHqwYsd70BIl9e3XOLhlKGL1PD5EP+gnGD0GNPOSYhuCcpnhsOSptXPp8f+/4uNZfyW97EokvhWn3Y07iXcQFlXiOpRbn+Y4Lhqygvu51BsuO1Zs5IDO0HRJ94hXLm9N+YdImH3nH+RVkTswFMsi5xhpUNzSlXZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xEnKHT6atMVjhVVOry7BflKkomJ5LFSNT4qXd3bFFLU=;
+ b=FwgrgRfetMP9p7/NbajiBMEN3G7/aEVakZUYVbtFaEW+FFzERT6MmHxa/IgyQpvhMWos5TaQ8gxtO5etSTX1o4sSQYkzK18GS8/K2ztwnD+TdqqoYgdQ6wewcfNPWaegCDYjMbezoEFS3dZ6fuiP6apMY0YDge/isrJedMgN4Uk=
+Received: from MW4P220CA0012.NAMP220.PROD.OUTLOOK.COM (2603:10b6:303:115::17)
+ by DM6PR12MB4355.namprd12.prod.outlook.com (2603:10b6:5:2a3::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.49; Fri, 10 May
+ 2024 10:35:52 +0000
+Received: from MWH0EPF000A672E.namprd04.prod.outlook.com
+ (2603:10b6:303:115:cafe::16) by MW4P220CA0012.outlook.office365.com
+ (2603:10b6:303:115::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.49 via Frontend
+ Transport; Fri, 10 May 2024 10:35:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MWH0EPF000A672E.mail.protection.outlook.com (10.167.249.20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7544.18 via Frontend Transport; Fri, 10 May 2024 10:35:52 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 10 May
+ 2024 05:35:49 -0500
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>, "Shyam
+ Sundar S K" <Shyam-sundar.S-k@amd.com>
+Subject: [PATCH] platform/x86/amd: pmf: Add new ACPI ID AMDI0105
+Date: Fri, 10 May 2024 16:05:19 +0530
+Message-ID: <20240510103519.876646-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000A672E:EE_|DM6PR12MB4355:EE_
+X-MS-Office365-Filtering-Correlation-Id: 02205254-1b09-43e5-90d3-08dc70dcf754
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|36860700004|1800799015|376005|82310400017;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?b7Jnc+z355JZ6pjbEqQxSeF8dPL/lUQv2QKnVSrAFRY/XiO2vyDPgczTTfy9?=
+ =?us-ascii?Q?K65EGpBz6zJhIaIzXBBh1r6jFfP1ezEGC2RucZZ6sCM6cmTWzFCpsrY/PFAY?=
+ =?us-ascii?Q?/B9s4VK2UbVqPVvmCKV+bpAU8jSgqjymiO6fC23WB+Ua9gldpPYPm7TfUx7z?=
+ =?us-ascii?Q?JAPVW1TwTBnQVWqjnX0EDlE8bumneSJK4jqv4uxyWR2D6wWt558kadRTane1?=
+ =?us-ascii?Q?8W7WvoEjn2ePn9tWlQimAZgKQCUu7e3/MDbb59amrdlvLcqlr+4ERr01UYya?=
+ =?us-ascii?Q?KvDAjIxz9E9hgN71QlB8G2KU6D13ZAQfCAfO5dM6Mpe3Hbh4SePX1vfpB7CH?=
+ =?us-ascii?Q?mTxT/3B3rHKciJdg3oV8zfl4a2BtFdqdCT+OXQ920pNohnujtXOfk/AIgaJh?=
+ =?us-ascii?Q?1SAKta5ZYqzWxzafUw8Mj7JtkfIDBGcmWf05R7l71UafcQ/Etd7YztjYAjjd?=
+ =?us-ascii?Q?tDH868JB+JcqlBQF3bgprUkRpAK6nijFjbv+Bk79wdDXRq/BgfYUVEbjI5UW?=
+ =?us-ascii?Q?hwHWspj4Us/r7pL+ePiCUZgPlNYxiB9MI7wjRLtU153SPqfZiJI6Q4fNq8pT?=
+ =?us-ascii?Q?OyUp/t48Ju9fu01d+stkmWSBLTmRVWZP0PS4TYbEqE8ikM+11dD/dWkJ5fgj?=
+ =?us-ascii?Q?4kMnKTa/o0NwaoKKGKfWspGMjuX3d8FxFQ33IJaF/YbUskyfYsioNB7uRP33?=
+ =?us-ascii?Q?CMAyzUma4yY0gjpcKT7fXggLytBqCxoAdHCRFohUczUOpAYuFk5dHTKT2L22?=
+ =?us-ascii?Q?giiKeoYVBo6+E5wLhkIJFiIpWmwuBDOdw6vetAxw2UBDxBb76Kq31VHbI7s2?=
+ =?us-ascii?Q?cL/SM4JP9s814jmGa/N87LPJFLPVY879L90+exDlgnYUzI4i/Ckw4kOHBGHk?=
+ =?us-ascii?Q?Xu9OZFyhSjrv2l+a2HzNLckA2o1fFf95J7jvbEpOihxbOmSUQlYpxPa7BS84?=
+ =?us-ascii?Q?4ZJbWJLgzGjt/xjxCKNUO8fNE04xgNX6Cmn7p+LADMo2Jum9q0W65FvAH6/s?=
+ =?us-ascii?Q?z0BX0VKx548tphB1s9CIC9VrvM5B6JC0JCPsGXRCLWKkG2k3ujKSfwb/0PIC?=
+ =?us-ascii?Q?4u9ADcqHgcStqfPJeYepbVxFf80fLPG81o9T8OBcaQFDmUCsmlnlLJaJY6fL?=
+ =?us-ascii?Q?g37OT0i3qQda4JG7ac0s2kTjayNr7EsUClkqiMSeuuoyU7CsCxJ1vgEItWd9?=
+ =?us-ascii?Q?dTxXVkeVeN2yHClE9ntCvKXomf39EyZRKVlXhyNYSJAUSkR4AMBmoX4Aa+wk?=
+ =?us-ascii?Q?w+RtRn9zNX5g/VYJGYnVkXArcAVWoX7OgJSIJVSskfeSRh12WN4aqhYrCJfZ?=
+ =?us-ascii?Q?8E714p18XC79K2S/NLWXmu+TbenKIiMBfPSSMa4a3hkfAHvbU+bBLu0ljptm?=
+ =?us-ascii?Q?qj1pkPZ1xkKCvcgJamGQGZvIl0r1?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(1800799015)(376005)(82310400017);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 May 2024 10:35:52.2523
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02205254-1b09-43e5-90d3-08dc70dcf754
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000A672E.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4355
 
-On Thu, May 09 2024 at 10:36, Dave Hansen wrote:
-> Three lines of code:
->
-> 	1. IFS declares its need to own the FPU for a moment, like any
-> 	   other kernel_fpu_begin() user.  It's not a special snowflake.
-> 	   It is boring.
-> 	2. IFS zaps the FPU state
-> 	3. IFS gives up the FPU
->
-> Am I out of my mind?  What am I missing?  Why bother with _anything_
-> more complicated than this?
+Add new ACPI ID AMDI0105 used by upcoming AMD platform to the PMF
+supported list of devices.
 
-Right. Keep it simple :)
+Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+---
+ drivers/platform/x86/amd/pmf/core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+index 64e6e34a2a9a..2d6e2558863c 100644
+--- a/drivers/platform/x86/amd/pmf/core.c
++++ b/drivers/platform/x86/amd/pmf/core.c
+@@ -381,6 +381,7 @@ static const struct acpi_device_id amd_pmf_acpi_ids[] = {
+ 	{"AMDI0100", 0x100},
+ 	{"AMDI0102", 0},
+ 	{"AMDI0103", 0},
++	{"AMDI0105", 0},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(acpi, amd_pmf_acpi_ids);
+-- 
+2.25.1
+
