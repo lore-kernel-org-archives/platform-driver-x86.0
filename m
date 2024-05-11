@@ -1,329 +1,259 @@
-Received: from mx0a-00154904.pphosted.com (mx0a-00154904.pphosted.com [148.163.133.20])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2068.outbound.protection.outlook.com [40.107.243.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9556848CF2;
-	Sat, 11 May 2024 15:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.133.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348194431;
+	Sat, 11 May 2024 15:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.68
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715440027; cv=fail; b=lx7kG3Su2SM+Yxv9CqDYVdtZBrM0U9M+yn1Gt3ygR9D8rocSxq01lZWqtONlqz9dzPQywsBZG6YnsblvoF+Nm1AEdPNlJDuqnWzkFp7z+lEaFXbNCruAQH0SsULQImkKURQvPeOM2uCFuuMpbiR8Lzjz29J1NobKVRqlFGagTjY=
+	t=1715440382; cv=fail; b=FkdMLnuzVDN7CGnsHWofjn9qrECnz02aAHk3i9wvoklfrELCYHEDdLEGvi+VeotCvcfslZ9kd4/aBxVEAtlkK4fHAo28ZiiLUNLjx7RkZH8AHMXKqiXt+E967ozE5AAeWvHbHles2oJ5fJag4uYXhtrD/u/W/Q3PFXfdTjxheLY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715440027; c=relaxed/simple;
-	bh=x9L+daUYqwKBmPCRuiA6a9wy2xhXgMZLtNOO2TrH0o8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=KJF67dVewGUspKlRbsO2T+uhH47BbqeX0nG7DwKjQ32dbTp1uKHnoXx+MWkqlhNph6mALbM86qf2B1jm6pvUx7sKTrm+KzqbRURIH4QfTafd54nmoBqED0LbQVs5d1ItELPyiNZj2hm0Y/sv2skwXwwfLUn4RK94yfZ34Gd9QOk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dell.com; spf=pass smtp.mailfrom=dell.com; dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b=m/u2SsJE; arc=fail smtp.client-ip=148.163.133.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dell.com
+	s=arc-20240116; t=1715440382; c=relaxed/simple;
+	bh=N/F32oCVw8XNVCL7DOoiWwSmWQDo1XO5AX5KJaViZQM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Su30X7P9Nk0/BChmT0NIlljdX7CrAbBWYuwMHdclPdJi8XqjOdYp0mIi2H0+BklQcw+fhDWItFBYEzJujAcuHeBoUQOqEJwkGU08S+oxXOaURwor4i1lq78WW+FllgDOrIEWQxTa33hxNOFfnISqnoHqX4oqv7pKZk/djq6cYus=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NceUx6S4; arc=fail smtp.client-ip=40.107.243.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="m/u2SsJE"
-Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
-	by mx0a-00154904.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44B6muFL006993;
-	Sat, 11 May 2024 11:06:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=Fkv/NU0osxnr8ILAD4KfElua0Cgw5tLNbo+AtShUNZw=;
- b=m/u2SsJE26R7B75JT80ztN7FaAqnXfYzpT8OeCuBuxjUF+YcWGb9r002rnq593hpvY6V
- DgJ17j26o+PCv7LgLw4joXzzv37snXSZ3CeN3siTrqG9iq10SH1Q+aQ8xBWy6Jj8ikcq
- Rl+tn+S6A1Uibe05BxP0O9GIEM85qJmV/NJqsz4wtLAJenA/mR6pGgtvKq2G2pjVdFog
- GasUiPF5sdvwdZlw/69qRFdYP+nCmNs2bPVwoaHqCJkKLQytiGKWgAOgkzNWYSZ0+6ns
- eCG5XKqVf5u5p/9BpmomGMYSN9MmeqsK1Y+ohrOquHYo7KU4bPm88H/5JjCBmM4QheKf eA== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-	by mx0a-00154904.pphosted.com (PPS) with ESMTPS id 3y23r40vmm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 11 May 2024 11:06:12 -0400
-Received: from pps.filterd (m0133268.ppops.net [127.0.0.1])
-	by mx0a-00154901.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44BF5e5G005134;
-	Sat, 11 May 2024 11:06:12 -0400
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
-	by mx0a-00154901.pphosted.com (PPS) with ESMTPS id 3y2b0wr018-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 11 May 2024 11:06:11 -0400
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NceUx6S4"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZrN9Nujzjs0Q9A+Cn+MEPXvN0NGSp7xH96P0YPofKonTH0KnLK4y904eaYMXSuKie3dFPxZcITEYcbP4TLBijjL12d3GgVzBbBqTP5zZluYq7U8MucBZ5rhOyYEPMVosai0fvC5vP6Wc/94943yGr041e249c1AJ+u6CAoymbeFKrUx2mqs88bCiymkFIHrPdb4SpNJ6dDW6HOghu3ys94H1x/H4OHJ1iay/3a4/yLwbgIVBdhNIzKlO5xBTB3akW/X4MGJsL6eTu24CRlZFnPfrqoSop1ojLT/wl45R1PKfJp5Y2eKu82xaYEvxBftpQaylDhSyHj+7HXQGI7h/og==
+ b=VWJ+aAyBy/C3iX4e04svhgJOaEy2LcYk+FmdTna21ymi2ttmLahn/AHIVvlGYmdHx435lxeL8ic+MlCL4ubVovAjtZLvZ7KPTZInUlkQy2bYu36XfP+u+TLw1SyP+53Q6vzKtg+i/gVX9VXCBQBwHdOBm6fjalvkspjpvDucbNScchEI7Un3PtuOMuKm/K0gwH0L9K2PGNOVJwSPknYggKvTfO9KD3wR5ctHqc+/vHkoHiaz0jTzlRIy9q9pc/sDu7URbGDGLXyaCyKm5gfkeIx3NfweIEStExqeJ53iA/fVm6kVDfL6OrkOzP41DwQmZjeOgQOkTosTJh9OXqQngw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Fkv/NU0osxnr8ILAD4KfElua0Cgw5tLNbo+AtShUNZw=;
- b=dDYsuC53iVGzdwjl3hQkPNqZc5inZXfZc7fQXgfMw4QZ+kLPYyY61jlyq+xOLa1RVjn9yKV1Wk0B7z0WQ2hitCLUk2+VL5w6VGo+SDuZomEKuFMjKq0f2UONNKqi8k+pQsELDI7e6jDnHdydr+QYCMUoVNT7bIxGVC198Hd1raKuzep/aF4cXafDny1Rq93fNMO6Y1LWkapVxDYQIjVmf/rMTfIlzxmmNwOG6Tn2LuuHdKamYcc4jbHUVjqLmqZuOiJmK1hFsRpm752gH60zjEG113TF+2/duuWHub/Moqr0tv7C1jYpKs2fsiOPrgMWPidAt9riEHJv7syErjziGw==
+ bh=22KswzgjOa62/K/K9jc3bzvbQckL5rSNn72XhOC0GI4=;
+ b=Z533gr9s4PPoMBGUOs8v7vJOGTVjJhIpDJfk5Ff7/ALUmAkLfkbGWIbtsz5Z5mNG3vNBV58xZGzeNccl+aEAz7avJrW9wypH+8Aa/VDHit/PfSToatjy5Fk56RI8Uadf3TP10zJkwZqyNOCnlu9zxIluG4sywNfJvS2b0pKsHPXXW8Qi9SumxUrvH77kXGoUwpSBj9/t19IDs0BgaR1d4WWJld9RPuBHa0uCoAON80jhbFCa0w4Z6CZZ4XZW2sQuBRDolCyHRtYC+SWMGqBNUDBqbpa1OKaC/xPcH/3BNLM1CubZyPrtcpARny9AcjHNSlSx5v02qDFM8m99rwKRAQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-Received: from BY5PR19MB3922.namprd19.prod.outlook.com (2603:10b6:a03:228::23)
- by PH0PR19MB7389.namprd19.prod.outlook.com (2603:10b6:510:284::21) with
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=22KswzgjOa62/K/K9jc3bzvbQckL5rSNn72XhOC0GI4=;
+ b=NceUx6S4pAw99j7xNz3jITbxndUnmCHxH9Xp/utaTZJZcFNPz5N+jUIjghmK1ehmlcAMxYy5oJWy0BeMyfogyIADCcI/FJkhthDgCelVp982fnTkl0wuqZXovWnAv0UyjerrIXqL6QlFxYlq84bF1edcD8LZEO8VPDHU2/yOTbM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by BL1PR12MB5706.namprd12.prod.outlook.com (2603:10b6:208:385::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.49; Sat, 11 May
- 2024 15:05:16 +0000
-Received: from BY5PR19MB3922.namprd19.prod.outlook.com
- ([fe80::afc3:5bb2:37fb:2f9d]) by BY5PR19MB3922.namprd19.prod.outlook.com
- ([fe80::afc3:5bb2:37fb:2f9d%2]) with mapi id 15.20.7544.052; Sat, 11 May 2024
- 15:05:16 +0000
-From: "Shen, Yijun" <Yijun.Shen@dell.com>
-To: Mario Limonciello <mario.limonciello@amd.com>,
-        Lyndon Sanche
-	<lsanche@lyndeno.ca>
-CC: "pali@kernel.org" <pali@kernel.org>, "W_Armin@gmx.de" <W_Armin@gmx.de>,
-        "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>,
-        "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
-        "lkp@intel.com" <lkp@intel.com>, Hans de Goede <hdegoede@redhat.com>,
-        Matthew
- Garrett <mjg59@srcf.ucam.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Heiner
- Kallweit <hkallweit1@gmail.com>,
-        Vegard Nossum <vegard.nossum@oracle.com>,
-        "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dell Client
- Kernel <Dell.Client.Kernel@dell.com>
-Subject: RE: RE: [PATCH v5] platform/x86: dell-laptop: Implement
- platform_profile
-Thread-Topic: RE: [PATCH v5] platform/x86: dell-laptop: Implement
- platform_profile
-Thread-Index: AQHanBLh5VIydjU6UEi/YU1qu3GPk7GNIdqggABltQCABKWpUA==
-Date: Sat, 11 May 2024 15:05:15 +0000
-Message-ID: 
- <BY5PR19MB392299916A85FF06387DC9C19AE02@BY5PR19MB3922.namprd19.prod.outlook.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Sat, 11 May
+ 2024 15:12:55 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.7544.052; Sat, 11 May 2024
+ 15:12:54 +0000
+Message-ID: <a1306ffa-c0ea-4ce6-8692-76bf37850e8a@amd.com>
+Date: Sat, 11 May 2024 10:12:51 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] platform/x86: dell-laptop: Implement platform_profile
+To: "Shen, Yijun" <Yijun.Shen@dell.com>, Lyndon Sanche <lsanche@lyndeno.ca>
+Cc: "pali@kernel.org" <pali@kernel.org>, "W_Armin@gmx.de" <W_Armin@gmx.de>,
+ "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>,
+ "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
+ "lkp@intel.com" <lkp@intel.com>, Hans de Goede <hdegoede@redhat.com>,
+ Matthew Garrett <mjg59@srcf.ucam.org>, Jonathan Corbet <corbet@lwn.net>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Vegard Nossum <vegard.nossum@oracle.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Dell Client Kernel <Dell.Client.Kernel@dell.com>
 References: <20240425172758.67831-1-lsanche@lyndeno.ca>
  <20240501215829.4991-2-lsanche@lyndeno.ca>
  <BY5PR19MB392256C65661E76FC292C0889AE52@BY5PR19MB3922.namprd19.prod.outlook.com>
  <63894ef1-c482-4646-8351-4d6cfc6c528f@amd.com>
-In-Reply-To: <63894ef1-c482-4646-8351-4d6cfc6c528f@amd.com>
-Accept-Language: en-US
+ <BY5PR19MB392299916A85FF06387DC9C19AE02@BY5PR19MB3922.namprd19.prod.outlook.com>
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
- MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_ActionId=15a2a190-d069-49e8-b9d3-ad589111997d;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_ContentBits=0;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_Enabled=true;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_Method=Standard;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_Name=No
- Protection (Label Only) - Internal
- Use;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_SetDate=2024-05-11T14:51:20Z;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BY5PR19MB3922:EE_|PH0PR19MB7389:EE_
-x-ms-office365-filtering-correlation-id: 3ffdb32e-5489-4172-572c-08dc71cbc3fd
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: 
- BCL:0;ARA:13230031|376005|1800799015|7416005|366007|38070700009;
-x-microsoft-antispam-message-info: 
- =?utf-7?B?UTd5YTFQL3lCTWsrLTdQSzR3N2ZXM2tGbkFreTBHTlNmNElNYUVzODkwdTBz?=
- =?utf-7?B?RTAxeVhDbzhKcTZqTSstMlFoRll5aDBHMmVseU4rLWRmZjlUWmtpcHV0bkd0?=
- =?utf-7?B?NnBSMlhkNHE1N2FvS3NVTTQ0c1FKQUwyVVd4NHlZYjRtVGN0VVdjUkJPOGNQ?=
- =?utf-7?B?MWVFQnNQWXgxTVVLU055MjB2bS92SVZIdjI2Ky1keHpMT054c1dwMkhVdE1M?=
- =?utf-7?B?S1dhRTBranBKRDZuU2pQemhVS1ZibFVyd2I5TDdMTlY2OUExUVRyKy1jb3dq?=
- =?utf-7?B?N24zcVprZmhVelkyaCstNEc3YVkyRlVsVWoySGVNRVJDSjNhUEREcmtYWDVj?=
- =?utf-7?B?N2M0ZjFiL1JJVHEvNWVwTGJxZGI1RHErLUdML29TOXNPaklWRE8rLTZkQm96?=
- =?utf-7?B?Wi9kNkNaV29XdldsKy1Bczc3Ky1HajNhaUNHdnN0ODZnckJhOG9BeDJsUnZS?=
- =?utf-7?B?T0VzeDh6T0ZnVlpwZGM1UG9JczhiUnRsY05oMDdpdHVlVy9waEducDNQOWl4?=
- =?utf-7?B?YUZDUU9lL0k3OUVGSFlZV3pYa1hST3JIRmhsbzNrTzN0Qzk0cjdKQWhCRTRR?=
- =?utf-7?B?S0FwU2NzU2s3TmdlSG5YRVNXTk5qcUFOTmk0aDBiNC9SaVVKTEhyblZranBL?=
- =?utf-7?B?NXpuejJZQjJxYzVnTEJ2WlAxMHdEb3QzUWFrYllVRzNoSEF1MzA4b1hHVUtU?=
- =?utf-7?B?YmUxWTVRVzIvTUlUeGFQbDFRem9jTWlrQWdnNy9aR1VlZFhSWGFqc3IwaEVH?=
- =?utf-7?B?NFZLZ3Q4SWJobXM0S3phRkpOZzI3MWxVaEkvRE1iNXFYMldvRWRmN3JjTWJP?=
- =?utf-7?B?ZEIvMFNrZUY1cy9BalpaSC8vRGt0M0lRNzNySHNpdDk4M3dhSXlXMXVYSUN5?=
- =?utf-7?B?MllMR01xcmlPRmErLW1pbklKamJKa20vdXRRdlgxeTdQL0hvRjM3VExrVkxM?=
- =?utf-7?B?WDFxRWZ2VUtKa2Jjb3ovVHIzSWxqYystalBPQ2VwU05CYnp4SEgybDI0aGE=?=
- =?utf-7?B?ZCstS05IUUxndVgxQkJoQU8xVHozdGFiMkJ2ekxiMUxpSWV6a3BPdmpHUEJJ?=
- =?utf-7?B?ZnlpZU0rLVM1NGxDVE00MEJ4VG5vVFgzN2hsMDRtbFY5RXNEcHVBOUZrVm1G?=
- =?utf-7?B?anJ3dk9ZZ0YrLTBQOW1yZTdIbnVadFJGZUpvMFdRUHRTRUJha000R3ZvWU4y?=
- =?utf-7?B?VWNTbHZuT2cyRXlxVjdpNDRyanpxSistbGxIaVh4Ky1iT0RLeHBmdEpDT25V?=
- =?utf-7?B?aDNaRWV1QUhIQ1M1SXl3WlRXL1lVbFZaSjBBQmtDbWZYTElyaTM5bFdqbkpm?=
- =?utf-7?B?QjZ4cDR1VDZwelVjc3NrT01XMFBuWVA0U20rLWRtdHNsUkFaRystRlNETXM1?=
- =?utf-7?B?bFFCRnM1Ky16ZHdjNjkzckdUOGdPcUZiYmZOKy1vdWxMY3E5ZjVDU05iS0E5?=
- =?utf-7?B?eUxia0pBbDNmaWRZTGR2NmxHeDNnRllTOWVrU3JML0NsRzFoM3lITDlzTG84?=
- =?utf-7?B?TVZ1dXRQbVBmUjNRNW8yb1FYM1psZTlPQXBoMlUvRENURWNaYVZVYVVCWDJD?=
- =?utf-7?B?a2FoODdVVHo2QjJqSndBUEJGYTc2N0drKy1NdExTdE41VVR0bThQOXZBancz?=
- =?utf-7?B?N3RUcHFkcVFaYm10WHlIc25HVFk4YkowR0lGRFRHVDFadWR3Q3lBWUczQjh1?=
- =?utf-7?B?ckNQUlVKbEZwM1hlRUZlVmJ1V0dyelNneHhXSW9KUUdyamtLeEJjV1dEMDBr?=
- =?utf-7?B?ZlRUcFFOM2M5azdWampoc3dWWVErQUQwQVBRLQ==?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR19MB3922.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(366007)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?utf-7?B?YlkxVkZZNTNDVGxVdTdyc0ZvKy1VbE1UMFhJMWRSckNFQmFDMnJuSVJYaTZN?=
- =?utf-7?B?TDdYWk1qMWNaam82UHdOaGltNFJHcXZMNUlydUFhVVM3WWpzVWUxczNZVmI0?=
- =?utf-7?B?Rnc0STFiREwzUEx0TE9sUlo0anBuVkZILzVCNWQ1SGlIN3JBbDFLY0JaTzVw?=
- =?utf-7?B?ZWtCMGoveDEyTFVnelpTTVpnVnpacXhWbU50UmZMbFh1ZHFpNi9aN2pLdkhP?=
- =?utf-7?B?RWUxWGtHby9GbkJGM2M4QWNYVVBiUU5VRjhTcU5BU2I0WWIvTGt6S2E4OFM5?=
- =?utf-7?B?bkFPYWpaaEl6Uk9kYmRDWGhhTHN6TDA5TistRVUyZHhCajJaaE9mM3djM09x?=
- =?utf-7?B?c0J0MlNrbnZhZkhKeUIrLXdnTTJVRHRqL3Vqc1g2ZTVSSVRLR2hTd0tPUXRK?=
- =?utf-7?B?Y1ZjbHo2QWNlRFVWVXB2L2R5eUxFU3FpM0dvOXdMVm5JbmU3c3pmUTJFRmt5?=
- =?utf-7?B?UlQzaTBtclJJTzdvN0NCVWtGZWtISkhkN1FkTVVhVjdjSGgrLThTYktrdFYv?=
- =?utf-7?B?VEIyVlYxVnRpdkJRMDFibGJYMXZxN0Y3ODN0NmY5NjZsdlMrLXhCcFZORndt?=
- =?utf-7?B?NzMvZkx5aUpCQUZJY09QR0tBc1pvb3FDM1F3SjJUUnRHZENpclVTVEg2SDVF?=
- =?utf-7?B?SUcwUDhvRnN0WHVBcUJLcXEyTjFtcVlLaystMnBhdk04Ly9xUTlHUDY2dDQ4?=
- =?utf-7?B?cnByS0tNdUFXeE1HUzdNV255ejVRb0h4d3RxcmlFKy10QmVlMzhsNlpweWUx?=
- =?utf-7?B?RjhTMkd6aGNvaXd1Ky1mN0kvTldISUVRRXRsZmVJZDBIZERTRWFxY1EvcFlP?=
- =?utf-7?B?T0pkazdVa3VkNkRhOC85bTE2aystME50VXlxUklKNWdYUE1UTlpnQUdzdnBz?=
- =?utf-7?B?M1NqNDhkS05jaDBKQ2VrVDY2R3lGSjVpU2xJWU5XRlhZNzRxVTlwbVZyNFdY?=
- =?utf-7?B?MmYyZlJOQUxNNVRVQUUwNHZpSGYvNkM3WUdjRUY4RGgrLU8rLXlITDVNTERL?=
- =?utf-7?B?SzRXL3hjNDdFVE5kbTY4WnBocDBEVTJsNnZNYW15aWFYWWM2UmpxL3d1UE1s?=
- =?utf-7?B?Qk9vTldiQnN0OVpNSmkrLVhxM0VpRWpOYk9lU040dXczTnZZU0U0b0p1RjNB?=
- =?utf-7?B?QXhtUks3WHdrbnArLVNIa1FmRWhIUzhmKy1hT0c0Z0Nxb282L0xpdEswL2Ry?=
- =?utf-7?B?bjFlcXgzTVRVU2taZlhJRXlRbG9SSUwwSjF0NGRsZ1lWUmJWOWpCKy1HcW0=?=
- =?utf-7?B?Ky01cGxQNk9uYnVaTUo1QWhmMHNVKy1WYUpqOXRmY3EzRmNPaE9LUEhDckZt?=
- =?utf-7?B?RC96UkFPNnpmUmlVUnFRUC82UVhEcXd0U1o5QS95eEpwL2tQWWg1bzN3Y1gx?=
- =?utf-7?B?blcxOHprSTJUSi92blNlcElxejdqdVpJUHkwbThia0Y4eFV4bXczb293UHM2?=
- =?utf-7?B?ZTczNistSG1wWVdOb00wMEVjb3JDMkNFNDBYQTFBVzFyYTRubDhyaXI1YXZE?=
- =?utf-7?B?SVEzN2dCNVB3SEhyRllPTEQ0eXpGaW1CT1JsUDhCRXp0d1FJQk5KR0VyajB4?=
- =?utf-7?B?ai9EY0xMN216aXFBMEZ4QVJYNGxZbWNzMTNGRjVoSE44QXNKaWJMQkVPYWdk?=
- =?utf-7?B?TGtYOUFDUWovNlBJZ2RYNzVmZzJPeDBPRzdmU1NrR0dLblFRdHRZeW9ndExC?=
- =?utf-7?B?clFxbUVKNTN5eE1WMFhOQjUxTFVWZnZ1VlJ6c3pkSjJCazFoUEZhWFJSaWZ3?=
- =?utf-7?B?WXRuWnljWjh0dWthLzJrd3ZpNTlTekVGQXRFRmNjb0NkVjQxWUpuYldXQkh6?=
- =?utf-7?B?Zlpqd0Jsa0FOc2ZDT0tBVk5uUW90OWVSOHhRandGM25ISkpXc0kybTlkeUFo?=
- =?utf-7?B?eEIrLWNNNnBmSmtkbUlrWG9RMGYzWTdLMlkyR2dFYU4wSGlQUFROMEgyUXdC?=
- =?utf-7?B?SUE0SUlRdFl6dHVlU2RMdk9Jdmg0T1Rsb3ZVM095emsrLTZ1MSstM0N3WWs2?=
- =?utf-7?B?SW5xSistUHUwZ2dEYTM1VVZGY2RVeDJPb2k0NjBoamhIRmo0ME9KRHFscnNk?=
- =?utf-7?B?VHNxWFFkeVFOM1BwMUZkKy1GWm95RFFXS0dIL1lGbkRHeERWKy1JM1ZSRnFB?=
- =?utf-7?B?LzMrLWh5OGRuQVJWKy1heU9oTU1jZy95MExHR2g4SUFtbWZYeEdLT3d5am9s?=
- =?utf-7?B?L255a2loZDliSlhWY0VwOTlqVEI0R3NGSlJzeGtEbXNlQWk4eXhSekxna1NT?=
- =?utf-7?B?d3dyNDlxdklhOUx0aEQ4d1pQdXRBQXkzYkc=?=
-Content-Type: text/plain; charset="utf-7"
-Content-Transfer-Encoding: quoted-printable
+From: "Limonciello, Mario" <mario.limonciello@amd.com>
+In-Reply-To: <BY5PR19MB392299916A85FF06387DC9C19AE02@BY5PR19MB3922.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH0PR03CA0032.namprd03.prod.outlook.com
+ (2603:10b6:610:b3::7) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|BL1PR12MB5706:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3b6254cf-4a12-4515-5bc1-08dc71ccd55d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|7416005|1800799015|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RDlWOFpWTHVNbGc1N25POXVsMkllMWhhTE8rVlVRVXVpamlHWGluT1FPZXhn?=
+ =?utf-8?B?ckRUbDh2TldpRTFUZ1RDR0hYTjVyZTFuTXNXUk43U09xTmY3blc3S3JLbXhF?=
+ =?utf-8?B?K0hxRjFIN2IrUlZvK1VmNGpGQ2RieldvSjYwZUQ4dzcwL2ZSZGw3ME1aYWJi?=
+ =?utf-8?B?Ukh1U01Ea1ZKMnhzTitHOVlFWUswMjdaeUUrdTBCWkxTbEJGZWg1N2kzRFV4?=
+ =?utf-8?B?QVRvT1o4K1lCb05sL3VOOE40dzFRQ1RCV1RDa1JkRzRWQVdONkloby9nU2xR?=
+ =?utf-8?B?S1pza1pQY3REcjVkNG0zSXJ1cHJuQzIrMmRIRmlWanlHUTdGdGZqZHBrdHZl?=
+ =?utf-8?B?Q0ludDYya3VIV0w5U2NDVCt6TTVNUkgxa2duR3dTSDd3WGRzd1RoN1lFSXdG?=
+ =?utf-8?B?bmlPc3BxcHVUemhEZWp0Mjk5SkhtU3dSU0RMOExPMkREVGNNNmg5Q2s3TlZE?=
+ =?utf-8?B?RFZWYS9yZHA3YXJiNDd5cllQYW0vdWxMNFR1WVcvb25aMFZlODhsQUo0TVI0?=
+ =?utf-8?B?aUFzU21lc1o0OGtDaFpuMTFCZW8zdEp2NzJkcENOUEI1SHhGVUdqSytVcWlh?=
+ =?utf-8?B?N0NpbDE5OVlOR1F5Q0N5ZUlvOU0rb1FaSm8yb0l1alplMUtSYytRL2ozdFVC?=
+ =?utf-8?B?cnZDWGVyZThxaXVUb21kczhjVjE3Q0JTZ0d1OXgxaEJLcHE3OEFCYnFwTVJX?=
+ =?utf-8?B?ajdzR3VCTFQ0cXpOblA4ZERsRTFMVGkva2t5cTZMY1l1azBhNXJRQzE4THJY?=
+ =?utf-8?B?Y09MZGdYRzB5eUo5OHhMSEtkUGZvdDhob1QrYW02ZU9FZ2c4NWFnYlJPZnVt?=
+ =?utf-8?B?TkZFT3FJMDY3a281aTFpT0Rrc2JWVE1Xd2FiQS9QUlFvb25XOVFXRlY2aVJo?=
+ =?utf-8?B?d3krV1g0NnhmRmpmL0lmUUF3Q0p0djJCZ0V3b0hJRDBzbm5Qc0lPcVIrbGl4?=
+ =?utf-8?B?K08yMjZZdFFtelNuZ2Q0a3FERVA3SlpsNFEzMEpIdjRaMDd1OFN6UUsrbGZF?=
+ =?utf-8?B?Ukp5RVBUMlQ2cGNDbStCTStJajRUcmptZEQrbzJLV3ZHZitwYWtpMk1RV1BS?=
+ =?utf-8?B?b2g1Y1pMSjhWQ0JpWk1obnhaVlM2ckgvWUg0MFE2dEJJNEUxZDR4U01tTW1y?=
+ =?utf-8?B?N2FlQVd3cENQaVY4TjYvMjJhQjlkeUc1RXk1WUVVb3RyQ21yRUlpeHljQUVW?=
+ =?utf-8?B?Zmk5VzM0T051N3ltSHBUR250akVFQnBRTVhTZEQ0YW0vN2x3R0h2a1YzVkZr?=
+ =?utf-8?B?TmlrVlVpeUF5bHBUQ2NMeDZiT2JHZ1BheWpDYW1jTytaTnV1UFpScUpzWmdo?=
+ =?utf-8?B?WjV1ZGduMHhnaEp2dVE3OEZ0bm1YZWVPMGhZaWh3Ykd1dlpndzRybFB4TFU4?=
+ =?utf-8?B?cEl0RDdvMG10c3AwMzVXc3JpNDR2SVdINkZ2UDAyZlREZnI3RENuLzhDMjVa?=
+ =?utf-8?B?OSttM2xWcXVHU0gzdTE3VkZoOHdSMlM0b3g3WkQ2RWkydmV5b1V5RlVCMmpF?=
+ =?utf-8?B?OHg3WWlpT1UyanhQUTcxWGw0Z050YU1oVlR2NVJOWXlCRWZLV1kyZ3gvK3J6?=
+ =?utf-8?B?R09kUUlDY2xOZjBHcWtBUXVUVjdQSXpEeHF5eEg2cGg1U29nNnlrcHQzV0Rk?=
+ =?utf-8?B?Ung2eXpXdzNITVhhVEw5bFVWZ2lDWDNSclMzQ0wrN0tXbjJ2ZnVHa21ESE12?=
+ =?utf-8?B?MzdUZHZqQ0wwdXJBMFR4OFQyb0MyMFo0WVlObHhBKzIvNG42RnlKcnB3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?c1h0TlRucVczc0o0MHVDblpXVzd6dlBmVG1UMDY4MFdQeUt3dDRGa1dwRkZD?=
+ =?utf-8?B?RWFPamoxR3hwQlVObWpVZmRrZzV4MitCdVFObmVmTG1TY0JZVTdsTGhPbUFS?=
+ =?utf-8?B?YXgxUWZvcmR0SEFZL1ZXQzgyUC9JdmJTaW90cUplK1JzNDJDOXN5SVpGdkZI?=
+ =?utf-8?B?VHI0NUhqR1RZSlJXR25iR0N4U2pGL1FPc0dXNnZ1SWpzZlFBY3VqYU1SU0Zz?=
+ =?utf-8?B?WmxGRlZ0TG5qaUt4VVIvWHhEY01nZzBmbnkrK09pRTB1VHp4VE9aQldGRktx?=
+ =?utf-8?B?Vk11bGhIdkJBYk5PY05OWXJUQ25DQzcrR3NIbzFTb3EwYWJTd2FOY3B5SU1S?=
+ =?utf-8?B?VmlRNnlKLzlEMmtOK0VtMVhaaHU4ZXZZNk9HZlhVdlA0TWlmalIrandJYklQ?=
+ =?utf-8?B?NU9kTzkzSkExaCs0RHQ1SkJibnVqSDk4U1BqVnJ3MkNhWHlabGE5djF6cUg3?=
+ =?utf-8?B?QklyVlpIengrYnFnVEtzV0lUanovQTY4VG1zamk3L0F5ODJwVHFnNDYxQ2p1?=
+ =?utf-8?B?VldaekQ3cG5EOHlHUjNHWWJ5SWVVZDNmd0NFRmFUbFNKalZzdTJXby8vS2JY?=
+ =?utf-8?B?SkdFN2pibFpPUjZFRE4zRTBVcEN5cGc3UU9iS1hUVm41VzRnelB5dkJKaWdQ?=
+ =?utf-8?B?S1JaMXQwL1AzeDlxZC9oUEFrNFBpc0YyanNMb0ErUDAzQmozcXpWMTVmaXpL?=
+ =?utf-8?B?NDVQZGlTcGVET3pRbWNPLzJ6bkZ1cDR4RzZ5S3NCT2pSYlgzT1Vzd3kyczEw?=
+ =?utf-8?B?N0FTcTBDa1dDdFdPRENFdXp1Z21Ed3VKcFZRMGgyUVYyYnZGRTh2akIwcVVQ?=
+ =?utf-8?B?aDd5VTR0OUd3TlQwbzB4bGlFOEt1ZklIcXl5UkJEeGExWHlZY0J3WlV1RmVV?=
+ =?utf-8?B?NGgzdzhlM04rbDZINk5ZdDJScFk4Zm1IVVBuaUNpbWtrbFF2WDJxQkYzSXNT?=
+ =?utf-8?B?b29rcVIzRWNXRGZzbC9VNE1ndkgrUEpVSHlHZDF6UjdIV1Q3RVVLRTdRcS9t?=
+ =?utf-8?B?NEUwbkdNQi90cXExNDhOVUFJUjJtamFxYTZqV2dzNDlLZHVTQ3dLZS9nUGo1?=
+ =?utf-8?B?VUF2OGRHY3RWWWtKY3VZbFJSamJDQlNkeFZMb3FwaVo4Y0dLWnNhN2Z2ZkVB?=
+ =?utf-8?B?R1RCTW1XSllQcXdNa3NhL21HOWVZUTdONENxMk10QnhQbHdSS3BtRHFYQUhm?=
+ =?utf-8?B?SUJ1emNnTHBLSzRGdG1XLyt5WHlkNUp0ZU1YVjNQU2JuQnU3VDl0WGJreEo5?=
+ =?utf-8?B?ZzNFVnh5UFpzWmxhSmhFcEtVRG5GRC9GZEEwNGgwY2FhRkttQndHZURwcDRh?=
+ =?utf-8?B?Mm1RdUpMVTdxUGFuUGZueTVQb0NmbEh2bjNUZFBqeEJsdlRFQVlwQ0R0UFhQ?=
+ =?utf-8?B?c1BRekM4bk9ZenhZNVB0TFhtMFh1QS81UEI5QytuZGl5MlU4ekpsZUlmbUdD?=
+ =?utf-8?B?VXNvUHJnVUlSZjU3RzlWZThDQXNUYkZvd3FXL2tBeXpXTytOd3VhNENHTW5S?=
+ =?utf-8?B?dGZtWkxJVi9vbWl2dTcvNjBEOXpoNnRUOE9OTW96dUljZlFXeHpXYUxCajdG?=
+ =?utf-8?B?WGFrZEU0WDFFQjZlaDg5REJ6bEhTRTdBelR5bG5aZUpHQ0ZjcGx3SnR6WjJU?=
+ =?utf-8?B?WjN0NzQ0YWFLUUlNTWtMRGJqZHVZbzk1ankxUng0cFEwMmNnVGdCaC9sbG00?=
+ =?utf-8?B?YVowRjlVckxxWUNMaEJKRWVBRDJkaG1rMVFZYWdYc043N2dZT2xhQWVHN0ZM?=
+ =?utf-8?B?VklQNWUrNmFGYUpPS3pCaTVmV0trTTlncGRHMWRwZGZmK0gxTXQxQVI5eVRN?=
+ =?utf-8?B?eVdseWpLZzlpRnhaVWNCRzZKaWV1SmRMeXNKMGpQV29la3BIN2FqVVVQd2pm?=
+ =?utf-8?B?b0FDMndhcStaVTBRQ1Y5QzBjcWVML1owd3J1am5mc29IOTh1UFRvYVlidzJs?=
+ =?utf-8?B?T2swNmd0NmQ5dEozVTZsWDBlSTdIMkJhYnlPbEtzYzZHemtHQ04yY2xsbnRI?=
+ =?utf-8?B?Vkh1bDB1bnF6WjA2RmdGOWdjNXB6UWwyd05FTlJwbVpjWFRLbVdTcm4rcWhk?=
+ =?utf-8?B?TUlrNlZieCsxZkpDU0VwQnhNWkU0QWVqZWJvYXg0SHp2dWk4R0hMUCtXd2M2?=
+ =?utf-8?Q?DzwyH2CG0SRAhghoAu/RgVbBM?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b6254cf-4a12-4515-5bc1-08dc71ccd55d
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR19MB3922.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ffdb32e-5489-4172-572c-08dc71cbc3fd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2024 15:05:15.9742
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2024 15:12:54.7651
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: C2FBhma8YBaPiYKw1Y5wMrsn+Dq/U7906ji2W6xcomBv13QS/KqjBhNsC+znbGS+1VuZJDrfgjBmdFkZUkxTAQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR19MB7389
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-11_06,2024-05-10_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- lowpriorityscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
- adultscore=0 phishscore=0 bulkscore=0 mlxscore=0 clxscore=1015
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405110113
-X-Proofpoint-GUID: 06hVqXfjXr73vXejilmXgf47AjLUXFZc
-X-Proofpoint-ORIG-GUID: 06hVqXfjXr73vXejilmXgf47AjLUXFZc
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 suspectscore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501 impostorscore=0
- adultscore=0 lowpriorityscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
- definitions=main-2405110113
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hiephPb6cpc7cxd3d3biA2FQRXpcZBr/R3pitc/m6NWOx00u2s8zfyL1kEebTIP1e326u8dh9VzOi/+jJPv0SQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5706
 
 
-Internal Use - Confidential
-+AD4- -----Original Message-----
-+AD4- From: Mario Limonciello +ADw-mario.limonciello+AEA-amd.com+AD4-
-+AD4- Sent: Wednesday, May 8, 2024 11:53 PM
-+AD4- To: Shen, Yijun +ADw-Yijun+AF8-Shen+AEA-Dell.com+AD4AOw- Lyndon Sanch=
-e
-+AD4- +ADw-lsanche+AEA-lyndeno.ca+AD4-
-+AD4- Cc: pali+AEA-kernel.org+ADs- W+AF8-Armin+AEA-gmx.de+ADs-
-+AD4- srinivas.pandruvada+AEA-linux.intel.com+ADs- ilpo.jarvinen+AEA-linux.=
-intel.com+ADs-
-+AD4- lkp+AEA-intel.com+ADs- Hans de Goede +ADw-hdegoede+AEA-redhat.com+AD4=
-AOw- Matthew Garrett
-+AD4- +ADw-mjg59+AEA-srcf.ucam.org+AD4AOw- Jonathan Corbet +ADw-corbet+AEA-=
-lwn.net+AD4AOw- Heiner Kallweit
-+AD4- +ADw-hkallweit1+AEA-gmail.com+AD4AOw- Vegard Nossum +ADw-vegard.nossu=
-m+AEA-oracle.com+AD4AOw-
-+AD4- platform-driver-x86+AEA-vger.kernel.org+ADs- linux-kernel+AEA-vger.ke=
-rnel.org+ADs- Dell Client
-+AD4- Kernel +ADw-Dell.Client.Kernel+AEA-dell.com+AD4-
-+AD4- Subject: Re: RE: +AFs-PATCH v5+AF0- platform/x86: dell-laptop: Implem=
-ent
-+AD4- platform+AF8-profile
-+AD4-
-+AD4-
-+AD4- +AFs-EXTERNAL EMAIL+AF0-
-+AD4-
-+AD4- On 5/8/2024 09:24, Shen, Yijun wrote:
-+AD4- +AD4- Hi Lyndon,
-+AD4- +AD4-
-+AD4- +AD4-   Thanks for working on this patch.
-+AD4- +AD4-
-+AD4- +AD4APg-
-+AD4- +AD4-   Dell side has an initial testing with this patch on some lapt=
-ops, it looks
-+AD4- good. While changing the platform profile:
-+AD4- +AD4- 1. The corresponding USTT option in BIOS will be changed.
-+AD4- +AD4- 2. thermald will not be impacted. The related PSVT and ITMT wil=
-l be loaded.
-+AD4- +AD4-   Some Dell DTs does not have the USTT, Dell'll have a check if=
- nothing is
-+AD4- broken.
-+AD4-
-+AD4- Hi Alex+ACE-
-+AD4-
-+AD4- Have you had a check both on both your AMD laptops and workstations t=
-oo,
-+AD4- or just the Intel ones?  I think it would be good to make sure it's g=
-etting the
-+AD4- correct experience in both cases.
-+AD4-
-Hi Mario,
 
- I've a check for this, for both laptop and workstation, the dell+AF8-lapto=
-p module will not be loaded. So, AMD platform will not be impacted by this =
-patch series.
-Follow is one example output with workstation.
- +ACM-lsmod +AHw- grep dell
-   dell+AF8-wmi               28672  0
-   dell+AF8-smbios            32768  1 dell+AF8-wmi
-   dcdbas                 20480  1 dell+AF8-smbios
-   dell+AF8-wmi+AF8-descriptor    20480  2 dell+AF8-wmi,dell+AF8-smbios
-   sparse+AF8-keymap          12288  1 dell+AF8-wmi
-   ledtrig+AF8-audio          12288  3 snd+AF8-ctl+AF8-led,snd+AF8-hda+AF8-=
-codec+AF8-generic,dell+AF8-wmi
-   video                  73728  2 dell+AF8-wmi,nvidia+AF8-modeset
-   wmi                    40960  5 video,dell+AF8-wmi,wmi+AF8-bmof,dell+AF8=
--smbios,dell+AF8-wmi+AF8-descriptor
+On 5/11/2024 10:05 AM, Shen, Yijun wrote:
+> 
+> Internal Use - Confidential
+>> -----Original Message-----
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>> Sent: Wednesday, May 8, 2024 11:53 PM
+>> To: Shen, Yijun <Yijun_Shen@Dell.com>; Lyndon Sanche
+>> <lsanche@lyndeno.ca>
+>> Cc: pali@kernel.org; W_Armin@gmx.de;
+>> srinivas.pandruvada@linux.intel.com; ilpo.jarvinen@linux.intel.com;
+>> lkp@intel.com; Hans de Goede <hdegoede@redhat.com>; Matthew Garrett
+>> <mjg59@srcf.ucam.org>; Jonathan Corbet <corbet@lwn.net>; Heiner Kallweit
+>> <hkallweit1@gmail.com>; Vegard Nossum <vegard.nossum@oracle.com>;
+>> platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org; Dell Client
+>> Kernel <Dell.Client.Kernel@dell.com>
+>> Subject: Re: RE: [PATCH v5] platform/x86: dell-laptop: Implement
+>> platform_profile
+>>
+>>
+>> [EXTERNAL EMAIL]
+>>
+>> On 5/8/2024 09:24, Shen, Yijun wrote:
+>>> Hi Lyndon,
+>>>
+>>>    Thanks for working on this patch.
+>>>
+>>>>
+>>>    Dell side has an initial testing with this patch on some laptops, it looks
+>> good. While changing the platform profile:
+>>> 1. The corresponding USTT option in BIOS will be changed.
+>>> 2. thermald will not be impacted. The related PSVT and ITMT will be loaded.
+>>>    Some Dell DTs does not have the USTT, Dell'll have a check if nothing is
+>> broken.
+>>
+>> Hi Alex!
+>>
+>> Have you had a check both on both your AMD laptops and workstations too,
+>> or just the Intel ones?  I think it would be good to make sure it's getting the
+>> correct experience in both cases.
+>>
+> Hi Mario,
+> 
+>   I've a check for this, for both laptop and workstation, the dell_laptop module will not be loaded. So, AMD platform will not be impacted by this patch series.
+> Follow is one example output with workstation.
+>   #lsmod | grep dell
+>     dell_wmi               28672  0
+>     dell_smbios            32768  1 dell_wmi
+>     dcdbas                 20480  1 dell_smbios
+>     dell_wmi_descriptor    20480  2 dell_wmi,dell_smbios
+>     sparse_keymap          12288  1 dell_wmi
+>     ledtrig_audio          12288  3 snd_ctl_led,snd_hda_codec_generic,dell_wmi
+>     video                  73728  2 dell_wmi,nvidia_modeset
+>     wmi                    40960  5 video,dell_wmi,wmi_bmof,dell_smbios,dell_wmi_descriptor
+> 
 
-+AD4- +AD4-
-+AD4- +AD4-    Additional, with this patch, follow behavior is found:
-+AD4- +AD4-   1. For example, the platform profile is quiet.
-+AD4- +AD4-   2. Reboot the system and change the USTT to performance.
-+AD4- +AD4-   3. Boot to desktop, the platform profile is +ACI-quiet+ACI-, =
-the USTT will be
-+AD4- changed back to +ACI-quiet+ACI-.
-+AD4- +AD4-   This looks like not a proper user experience. The platform pr=
-ofile should
-+AD4- honor the BIOS setting, aka, the platform profile should be switched =
-to
-+AD4- +ACI-performance+ACI-.
-+AD4- +AD4-
-+AD4-
-+AD4- I agree, this sounds like the initial profile needs to be read from t=
-he BIOS
-+AD4- settings too.
-+AD4-
-+AD4- Furthermore I wanted to ask is there also a WMI setting that correspo=
-nds to
-+AD4- this that dell-wmi-sysman offers?
- Yes, Mario, you're right. This thermal setting could also be toggled by de=
-ll-wmi-sysman.
-But, for the Dell consumer AMD laptops, like Alienware, the BIOS is another=
- variant which is different with the workstation one.
-With this variant BIOS, there is no USTT and also no dell+AF8-wmi/dell-wmi-=
-sysman.
+Ah; right that makes sense.  In that case, is dell-laptop even the right 
+place for this patch series?  I would think the same policies for the 
+platform profile should be able to apply to desktop/workstation.
 
-+AD4- I'm wondering if both should be probed in case the SMBIOS one goes aw=
-ay one day.
- Yep, I think this is a good suggestion.
+The v6 of this series would block smbios-thermal-ctl from working on a 
+workstation too.
 
-+AD4-
-+AD4- It seems like maybe ThermalManagement corresponds.  There was some te=
-st
-+AD4- data in fwupd for it:
-+AD4-
-+AD4- https://urldefense.com/v3/+AF8AXw-https://github.com/fwupd/fwupd/tree=
-/main/lib
-+AD4- fwupdplugin/tests/bios-attrs/dell-xps13-9310/dell-wmi-
-+AD4- sysman/attributes/ThermalManagement+AF8AXwA7ACEAIQ-LpKI+ACE-iyfGSyfnG=
-xLymc-
-+AD4- cEg93dfcnBIOtTJbfmCckZlj46eGqvJ+AF8-pHJ7WqFZ7-
-+AD4- zrklKWKkZifqNgJ13LFm6wuz2UlzYqMPXciVw+ACQ- +AFs-github+AFs-.+AF0-com+=
-AF0-
+>>>
+>>>     Additional, with this patch, follow behavior is found:
+>>>    1. For example, the platform profile is quiet.
+>>>    2. Reboot the system and change the USTT to performance.
+>>>    3. Boot to desktop, the platform profile is "quiet", the USTT will be
+>> changed back to "quiet".
+>>>    This looks like not a proper user experience. The platform profile should
+>> honor the BIOS setting, aka, the platform profile should be switched to
+>> "performance".
+>>>
+>>
+>> I agree, this sounds like the initial profile needs to be read from the BIOS
+>> settings too.
+>>
+>> Furthermore I wanted to ask is there also a WMI setting that corresponds to
+>> this that dell-wmi-sysman offers?
+>   Yes, Mario, you're right. This thermal setting could also be toggled by dell-wmi-sysman.
+> But, for the Dell consumer AMD laptops, like Alienware, the BIOS is another variant which is different with the workstation one.
+> With this variant BIOS, there is no USTT and also no dell_wmi/dell-wmi-sysman.
+> 
+>> I'm wondering if both should be probed in case the SMBIOS one goes away one day.
+>   Yep, I think this is a good suggestion.
+> 
+
+Great! Although something I wonder is if the policy when changed with 
+dell-wmi-sysman is immediate or requires a reboot.  A lot of the 
+settings in there aren't effective until after a reboot.
+
+If this is one of them then it might not be a good idea to make it work 
+for both.
