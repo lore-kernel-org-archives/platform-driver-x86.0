@@ -1,193 +1,150 @@
-Received: from wfout8-smtp.messagingengine.com (wfout8-smtp.messagingengine.com [64.147.123.151])
+Received: from wfhigh3-smtp.messagingengine.com (wfhigh3-smtp.messagingengine.com [64.147.123.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46AE11184;
-	Sat, 11 May 2024 01:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9424E125C0;
+	Sat, 11 May 2024 02:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715392168; cv=none; b=HRK2XC/+ziSMrkp7Qq8XcdPWMWe3zTGsB7U5Yw07OlVPwwq4mh0xAQcqyOzA8yNrIYIXLkAKF68+7zEy7vaPnF5i+QvrlCmh/hl3Qm/fpL8kSVAIlppYeDDt6/eO3VyXJUdhexK/lUOfEdth1J7HN3L1xH0N0fhCJZUGPLuQMCw=
+	t=1715395121; cv=none; b=s2SsPQaXz/g0PIB9Ij89MUPhKcIjB7LcL7U6dISwp5S6N81H7UjgIVYIJ4Qd7j5jyOMd2R+seLnTygW2atc1cg1Ep+xboEXfeb5pg4jH0W86ezKPgBCOLDZm7HNpu/yY/gfpq3znKL1us6fBI9BFWRsVgotW+eF5QHEkhszFkZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715392168; c=relaxed/simple;
-	bh=S7WwEQQOLsNIt17Nax//c7rebtZYboLt0RIkp+0V6qU=;
-	h=Date:From:Subject:To:Cc:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=moPf+nHvWsAKzNy0L2h3EmP+BqP8vwBEVjdYTN3S0bhaKBuFMmJ+CcyIfDdHw9HtiYWy/XtYPRc9tCdw3jeEA2t2rmgdKt+b3MMKQO79BwuzeaE96n+bM+oifF16sSUWtrLMOxkD9mBGrgn3204c6ijIlHPf47kl3EbH6DFSoLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=Jo4bop5j; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ct/TTj0a; arc=none smtp.client-ip=64.147.123.151
+	s=arc-20240116; t=1715395121; c=relaxed/simple;
+	bh=vt+CBkRTpChhguZmAsmOJ+xaJIA+507ew6mlrucxVGA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TmJmQLfZXmyjTK0S3YFCLuvdrpYYdj6M8zKXDzfTgIRlVWujX4XlVr1/XErODvPtTmpFEEcUkUBx6KaKmWvrwAm5UB/8NPk4nHyv9igZ5em9A+aDwNTkDl1llegGGmPjSkP86oombwQfsFRjVDQPaiXsOjSmlosL32LLhsRchu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=B6o8E9vm; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VWENNb7y; arc=none smtp.client-ip=64.147.123.154
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="Jo4bop5j";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ct/TTj0a"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfout.west.internal (Postfix) with ESMTP id 873261C000E7;
-	Fri, 10 May 2024 21:49:24 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Fri, 10 May 2024 21:49:25 -0400
+	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="B6o8E9vm";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VWENNb7y"
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailfhigh.west.internal (Postfix) with ESMTP id 9D91B18000A9;
+	Fri, 10 May 2024 22:38:37 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 10 May 2024 22:38:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1715392163; x=1715478563; bh=ocGjqcakjU
-	5+Ytvyo0/yI73nxxOTe7gkTsRT02X55Ls=; b=Jo4bop5jUsRKcgqfYDiYcIv1ag
-	KPHdKi9434vRBrW58z0GQiLd0qjMdMHQkfElB2DbhcrPZ6ZGq4bASfgO2s7tK3uL
-	70hG/0yewzM2zFz54KICy/hs0OBnewydn1Em0PeEDzlXbvSCIkyAGI5nSSCq2atQ
-	4bl8xvK6xiFhXW0hHqQLZifpCyQ9AGv81Mjgd+xjuShzZr5SXblt+2uBR2fM/AMj
-	eQ0qoT+VqOt3WtxDxHpAWBt+mcqYm/TanTrttczRr+Kb1q5hDuTrO8J4pYLfdSeR
-	dKaKEsyWqghRR4cdP5Pe8dp3zzY8hufWl0CaVP392d7DgF70khZrpWioOsOQ==
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1715395117; x=
+	1715481517; bh=vz1erGw23082AM7aJVdhF7aJINrmP0eysxVIQ7I0X9A=; b=B
+	6o8E9vmIAyNPlW3Z+rN9kh7BiDzQ22V6Ovz4y7snrC2fQr//DcVPp/5SOdQIKkwc
+	S0Oc1W2+bVka9XphF1XSY3VEfZU6S/8kEA7zmLBXsSxd7Tot4fsNCGidT3Hr7pXQ
+	ifP6USv3rRb2rHze7LYCJMvHkRR2RK9ZbOlxOELHDRODHlq3tYlyMD0ulaMWfWhu
+	hkMUT4AKxcdAGBpISNrYS3UQfQHgsAm64qdhL8Rf+1ZRMAcOjAWUHrWWFnZyl2zl
+	Vxtr2gDTbpFTajQld/+f9w+/Xit8VUkTobexRHTqqF/dzkkUSv31fhcKYaPYvXQG
+	W5GWtNTDemBpETh2coR1g==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1715392163; x=1715478563; bh=ocGjqcakjU5+Ytvyo0/yI73nxxOT
-	e7gkTsRT02X55Ls=; b=ct/TTj0aL6y1O9TeNI6yoCk45tfTG/OhPni3PEMPGBTe
-	87ec6Y0CMQWUnnP/nPnJD/O/RiO4/dyvwPaXvl+VJBCXvbiSpEiljLj7YGLdYWeg
-	k/pNdcTCCjS8G0FkN/rc8TTXASWxVZvGf4QkFwra913OYZUbMdfsjLvVSBR2I4e6
-	UNVNZAsKnEP2khlY9vdeNG645kdNHVZb8kxoy+DQAWj2hgjLBje/o/eL6TbgFKPn
-	4WAy337rVfsBrPh/oKzbFuZBikic7vFs3HxqboXsGP9lTUjG4AAKRFCPQKlByFcj
-	iW3t5hlCaOaVw54BwFmjtOweNg0713mYYhiyzlbRbw==
-X-ME-Sender: <xms:os4-Zh0h1vYY954Lz10tQMrJtPeLQdWUVl1qcK5fHpmPWCjSI2aNFg>
-    <xme:os4-ZoFDnm85wEB5TDnEjw00UaS7T2BOQkTjVdYI4GjEKFWWh-QMPuOekVQNGn9fP
-    eksLa_yPdqnm3hNeLU>
-X-ME-Received: <xmr:os4-Zh78VMdHn6a2aYg8Zpkgv9z7sOe0jeNMQeMothIhPK1sJSBbrRtuW2Je8vQjbnJsk46-MCdh7h_J4Z5KdWXlbSjQfX82iVDsNRs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdefledghedtucetufdoteggodetrfdotf
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1715395117; x=
+	1715481517; bh=vz1erGw23082AM7aJVdhF7aJINrmP0eysxVIQ7I0X9A=; b=V
+	WENNb7y70GmG+tSlbe9ZAI4JZfw8015djn23giIqTN/q9CNdug9A6oJMl6X2HnkC
+	Zc1qkzxNr6dEeRBTTIt5iQIHKXWfdhuQWHBIvlwrTUS8E+LWBQWGtfO/2UQmTXh1
+	I8+UisqAWJGsw+eRi5kILKGavmx8Nff6jd1mzzgMuK+2z33jkUUKX8VP0vT30sLD
+	Yt6f5cAdfzURxRZs8Yx7lDausRKasY1GpC5/N1UCWya2thLdvLKgeewT3Ws96ggq
+	F7447iAJR6Dy3ZBX7fVNBWOn3TmC5wzbvFj8A7yyLPP2iZFIMxDm1ldBUKCjkiUE
+	WYYvq6Y3ZxLcdrMGDO4iQ==
+X-ME-Sender: <xms:LNo-ZoJ0z89qW08_q2d7jqn2Zb0CpslGWKGfB5Pz3_SU-d4yjOLKUg>
+    <xme:LNo-ZoKDz0lOs3jNNISmr3ePxjSPF5muGRopc86SbClGGYCZFEe3QHT2qi9PbY52Q
+    K6MVHyRFeGEMl-18c0>
+X-ME-Received: <xmr:LNo-Zosiusyfo6JldwdJz-rGVpBV4_6HMFERkath8wBZSrDc0zS0hieCg_0W89v7s6Q9pnPLTtb5_AprtQXIY_z4OAPTmjf->
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdefledgieduucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhuffvvefkjghfofggtgesthdtredtredtvdenucfhrhhomhepnfihnhgu
-    ohhnucfurghntghhvgcuoehlshgrnhgthhgvsehlhihnuggvnhhordgtrgeqnecuggftrf
-    grthhtvghrnhepfefgheevfeeugedtjedugfeitedvuddvjeegffegfefhtefgvedutdfh
-    geekueehnecuffhomhgrihhnpehfrhgvvgguvghskhhtohhprdhorhhgnecuvehluhhsth
-    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhsrghntghhvgeslhih
-    nhguvghnohdrtggr
-X-ME-Proxy: <xmx:os4-Zu24Pe4ZjCSILB3YreEGVguABFLqyJXh-uhJaa-TRqgcKnqTbg>
-    <xmx:os4-ZkFvLCFW_6IAd_Dhbas-Jga-pA_xkrvjY7bmRbn1xrwIthUk5g>
-    <xmx:os4-Zv9gsnoSjQQEeP2rBLcN2FM_G20iZyxX3Bszzn-l_7crkwSWVg>
-    <xmx:os4-Zhn4yYCVROVX4nMZMHuJP-IYNbTvRQpve9_cCUwKp_iQEgoH_g>
-    <xmx:o84-ZqHexmMhD4v0fL5buPiqFfTlbc4f3Wlp6_OxqjeWJ2ddwpYbkZmL>
+    goteeftdduqddtudculdduhedmnecujfgurhephffvvefufffkofgjfhgggfestdekredt
+    redttdenucfhrhhomhepnfihnhguohhnucfurghntghhvgcuoehlshgrnhgthhgvsehlhi
+    hnuggvnhhordgtrgeqnecuggftrfgrthhtvghrnheplefhieffkedtledugfetgfegfeeh
+    hfethffhffeuvefhtdekvdeikeehleejieetnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomheplhhsrghntghhvgeslhihnhguvghnohdrtggr
+X-ME-Proxy: <xmx:LNo-ZlYDUQ32vD1DJ2AgR5nGcf79cZ-7ISiEB5mWzASHVJjkDp9now>
+    <xmx:LNo-ZvZzCVjJm2r-WNxCd0stuOE_tVvwMroxjRR4-TaF8JWbjXDsGg>
+    <xmx:LNo-ZhAA5LXW5y-fJk4rz-PxkTtsjU0uiKQiBhlpX4s9WQvJnCL0sQ>
+    <xmx:LNo-Zlb4f6uGA3qrFsAd2-XxlCLRKUxQpEWs6f2wPfeRbyB_L1rKlQ>
+    <xmx:Ldo-ZnK1UHjvsAkBzLjJ754zhNi_rYMSUjhkiYJllZqlTJFpxq8AUTxB>
 Feedback-ID: i1719461a:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 10 May 2024 21:49:17 -0400 (EDT)
-Date: Fri, 10 May 2024 19:49:09 -0600
+ 10 May 2024 22:38:36 -0400 (EDT)
 From: Lyndon Sanche <lsanche@lyndeno.ca>
-Subject: Re: [PATCH v5] platform/x86: dell-laptop: Implement platform_profile
-To: "Shen, Yijun" <Yijun.Shen@dell.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Pali =?iso-8859-1?b?Um9o4XI=?= <pali@kernel.org>, Armin Wolf
-	<W_Armin@gmx.de>, srinivas.pandruvada@linux.intel.com,
-	Ilpo =?iso-8859-1?q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	kernel test robot <lkp@intel.com>, Hans de Goede <hdegoede@redhat.com>,
-	Matthew Garrett <mjg59@srcf.ucam.org>, Jonathan Corbet <corbet@lwn.net>,
-	Heiner Kallweit <hkallweit1@gmail.com>, Vegard Nossum
-	<vegard.nossum@oracle.com>, platform-driver-x86@vger.kernel.org, LKML
-	<linux-kernel@vger.kernel.org>, Dell Client Kernel
-	<Dell.Client.Kernel@dell.com>
-Message-Id: <X1TADS.8PTII3LXSHHX1@lyndeno.ca>
-In-Reply-To: <aaa1ebb5-3e0a-40ef-b53d-d8adc1589085@app.fastmail.com>
+To: lsanche@lyndeno.ca
+Cc: mario.limonciello@amd.com,
+	pali@kernel.org,
+	W_Armin@gmx.de,
+	srinivas.pandruvada@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	lkp@intel.com,
+	hdegoede@redhat.com,
+	Yijun.Shen@dell.com,
+	Matthew Garrett <mjg59@srcf.ucam.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dell.Client.Kernel@dell.com
+Subject: [PATCH v6 0/2] platform/x86: dell-laptop: Implement platform_profile
+Date: Fri, 10 May 2024 20:36:50 -0600
+Message-ID: <20240511023726.7408-2-lsanche@lyndeno.ca>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240425172758.67831-1-lsanche@lyndeno.ca>
 References: <20240425172758.67831-1-lsanche@lyndeno.ca>
-	<20240501215829.4991-2-lsanche@lyndeno.ca>
-	<BY5PR19MB392256C65661E76FC292C0889AE52@BY5PR19MB3922.namprd19.prod.outlook.com>
-	<aaa1ebb5-3e0a-40ef-b53d-d8adc1589085@app.fastmail.com>
-X-Mailer: geary/44.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 8bit
 
+Some Dell laptops support configuration of preset fan modes through
+smbios tables.
 
+If the platform supports these fan modes, set up platform_profile to
+change these modes. If not supported, skip enabling platform_profile.
 
-On Thu, May 9 2024 at 09:10:51 AM -06:00:00, Lyndon Sanche 
-<lsanche@lyndeno.ca> wrote:
-> On Wed, May 8, 2024, at 8:24 AM, Shen, Yijun wrote:
->>  Hi Lyndon,
->> 
->>   Thanks for working on this patch.
->> 
->> 
->>   Dell side has an initial testing with this patch on some laptops, 
->> it
->>  looks good. While changing the platform profile:
->>  1. The corresponding USTT option in BIOS will be changed.
->>  2. thermald will not be impacted. The related PSVT and ITMT will be
->>  loaded.
->>   Some Dell DTs does not have the USTT, Dell'll have a check if 
->> nothing
->>  is broken.
->> 
->>    Additional, with this patch, follow behavior is found:
->>   1. For example, the platform profile is quiet.
->>   2. Reboot the system and change the USTT to performance.
->>   3. Boot to desktop, the platform profile is "quiet", the USTT will 
->> be
->>  changed back to "quiet".
->>   This looks like not a proper user experience. The platform profile
->>  should honor the BIOS setting, aka, the platform profile should be
->>  switched to "performance".
-> 
-> Hello:
-> 
-> Thank you for your email. This is definitely undesirable behaviour, I 
-> will have a look at the code to see why this is happening. Does it 
-> always revert to quiet on boot, or always the mode that you had 
-> switched to prior to reboot?
-> 
-> Do you happen to have power-profiles-daemon or something similar 
-> running? My understanding is it remembers profiles across reboots, 
-> this could potentially also revert the profile back to what it was. 
-> See this release for details:
-> https://gitlab.freedesktop.org/upower/power-profiles-daemon/-/releases/0.9.0
-> 
-> I will assume there is a bug in my code at this point. I will test 
-> with and without ppd running on my system to see if it changes across 
-> reboots.
-> 
-> Are USTT settings exposed in your BIOS configuration menu? On my 
-> laptop they are not and I have to use smbios-thermal-ctl.
-> 
-> Thank you,
-> 
-> Lyndon
+v6:
+ - Add ACPI dependency for dell-laptop
+ - Add and use helper symbol for checking supported commands
+v5:
+ - Fix indent in smbios-thermal-ctl comment
+ - Remove linux/wmi.h include
+ - Add 'select ACPI_PLATFORM_PROFILE' to Dell KConfig
+v4:
+ - Make thermal_init and thermal_cleanup static
+ - Rearrange order of added includes, did not edit current includes
+ - Include bits.h
+ - Switch comment style
+ - Return error if platform_profile registering failed
+ - Add thermal calls to call_blacklist
+ - Align defines with tabs
+ - Correct separation of function and error handling
+ - Propagate error codes up
+v3:
+ - Convert smbios-thermal-ctl docs to multiline comment and wrap
+ - Change thermal_mode_bits enum to directly be BIT() values
+	- Convert related code to use this
+ - Use FIELD_GET/PREP and GENNMASK for getting/setting thermal modes
+	- Correct offset for getting current ACC mode, setting offset
+		unchanged
+ - Check if thermal_handler is allocated before freeing and
+	 unregistering platform_profile
+v2:
+ - Wrap smbios-thermal-ctl comment
+ - Return proper error code when invalid state returned
+ - Simplify platform_profile_get returns
+ - Propogate ENOMEM error
 
-Hi Yijun:
+Lyndon Sanche (2):
+  platform/x86: dell-smbios: Add helper for checking supported commands
+  platform/x86: dell-laptop: Implement platform_profile
 
-I tested this on my computer (XPS 9560). I do not have access to the 
-USTT settings in the BIOS screen so to substitute that, I booted 
-without the patch and set the USTT manually using smbios-thermal-ctl. 
-Here are my findings:
+ drivers/platform/x86/dell/Kconfig            |   2 +
+ drivers/platform/x86/dell/dell-laptop.c      | 242 +++++++++++++++++++
+ drivers/platform/x86/dell/dell-smbios-base.c |   7 +
+ drivers/platform/x86/dell/dell-smbios.h      |   2 +
+ 4 files changed, 253 insertions(+)
 
-Scenario #1: Without power-profiles-daemon (ppd) running
-
-1. Boot with patch, set platform_profile to quiet
-2. Boot without patch applied (no platform_profile)
- - smbios-thermal-ctl confirms USTT is set to quiet
- - use smbios-thermal-ctl to set USTT to performance
- - confirm set to performance
-3. Boot with patch again
- - platform_profile is set to performance
-
-Scenario #2: With ppd running
-1. Boot with patch, set platform_profile to performance with ppd
- - Confirm platform_profile is performance
-2. Boot without patch applied (no platform_profile)
- - smbios-thermal-ctl confirms USTT is set to performance
- - ppd reverts to balanced (only controlling intel_pstate in this case)
- - use smbios-thermal-ctl to set USTT to quiet
- - confirm set to quiet
-3. Boot with patch again
- - platform_profile and ppd is set to performance
-
-In my case, the setting in the smbios is honored if it was switched 
-with another method. When using a userspace program that manipulates 
-the platform_profile, the program seems to remember the previous state 
-and switch to that.
-
-So I do not think there is a bug in this patch related to this issue, 
-at least in my case. Please let me know if you have any questions.
-
-Thanks,
-
-Lyndon
-
-
-
+-- 
+2.42.0
 
