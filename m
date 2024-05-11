@@ -1,387 +1,270 @@
-Received: from mx0b-00154904.pphosted.com (mx0b-00154904.pphosted.com [148.163.137.20])
+Received: from wfout1-smtp.messagingengine.com (wfout1-smtp.messagingengine.com [64.147.123.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA225336F;
-	Sat, 11 May 2024 15:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.137.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715440989; cv=fail; b=DcKjRu0bktAItt9ewlVrhhuI2T8X6H/R3yHRioja8T77a/nL0Oa3zykVYsohGkTekChXeecad7L6c+VeVOzBBWays2kYfTABypLKbjf+v5AyWZ0q5+zeBFq/x8psxIlbBdfy5FFJOZjZk5FRJXI/pTGFvGIQaOz6L48MdGgGYso=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715440989; c=relaxed/simple;
-	bh=rMOcstgZAh4LyALhigRqJkSOEmqjhdaWqY1vxHDbyuM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=fbkoO472YlvQKIjkGpkNCFwX6fBiEbIeUrf6yBsYNFF+w1HoGx6UgVXQhM0gaMPCSLejotor8NRDk9yy3FSKcmFN1EY3nsk7k3q94IvkYccqWbHLWtADx0+l+SRgrCnzX5JpMjoeom9/phst3futAz2FG6k2ud7wd96gGG+FQ3M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dell.com; spf=pass smtp.mailfrom=dell.com; dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b=kQQgq5EP; arc=fail smtp.client-ip=148.163.137.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD4B56759;
+	Sat, 11 May 2024 15:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.144
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715442865; cv=none; b=uQ2CgMjb/WAcDW4zlWDkjn4bhhOcGLrtEOU7Camlpu8x0GaCYwuDfEUlwlQtQz0D2UmgwoxJ2gy2AwR853gL4us+UT4KxpgEQmyEItY+vrJjHQWB4Zh7pMsLs8P9IsDxRq313BCADHmJ5ADw4AMZyL/apYdS0PtnA3fFOK6/eGw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715442865; c=relaxed/simple;
+	bh=/OoK6nS9kWRDr55rLtjnaDygu68ANF3fzQzTvLbCUa0=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=CgVrSBUIKdoeom/LIU0RIq8RQw8orMoQ1ViYPkhbK065UiAWkzx5NSRz0BgiS4iyyC2u2WJc8G9+o6SKiuJwRNLcQx0CX4lKnHPhXjZe2ZoSkutrvePDPPO8tsKnMyaV444SHhi+rEHquYbuY8Wg39e5ZvAIJu3LhMgmlmxbgIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=Ou8m4B77; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=g9ysxKx1; arc=none smtp.client-ip=64.147.123.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="kQQgq5EP"
-Received: from pps.filterd (m0170396.ppops.net [127.0.0.1])
-	by mx0b-00154904.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44B7g8jj014028;
-	Sat, 11 May 2024 11:22:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=Zu+FFrKMxRBF/FLsiSkVSgdQA7C04s0EdVota/JOGn0=;
- b=kQQgq5EPvLX1Pu8tdt0ojR5GbdLQgDIA5uofq8h9v00K3T37e+XvdgpJg+6XcFQn5MMd
- 9k2F1ZTuiAdKRrWoIKAn6DgUWCs1J+8oFopcOO4hC4Ad37ztWsus81ZcpaVJ/ggmGqgz
- pFyKUkDQOYtwzuB5wXVVzKOMOg9YIaySmsJwxGnWFwvM4VQNLFbO6BAuz5mFaovxYnzb
- BZjihf/SnqVlZdcW2pmgsGwZO8zg7DntR2/20C8Hej3CtDqE935isBqGFmpWkU0fgy/h
- +WwkildEWteAqVUg0tlYJXPhDicR3LHPu2Yj1F8w3f3ZTzudUXaLCoOMdRbWg4ds4gNX mg== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-	by mx0b-00154904.pphosted.com (PPS) with ESMTPS id 3y24gy8tcu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 11 May 2024 11:22:29 -0400
-Received: from pps.filterd (m0134746.ppops.net [127.0.0.1])
-	by mx0a-00154901.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44BEXKBI036528;
-	Sat, 11 May 2024 11:22:28 -0400
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
-	by mx0a-00154901.pphosted.com (PPS) with ESMTPS id 3y2ahjgcw1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 11 May 2024 11:22:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Nmb3d67aBDnC50/+b05cAnEDLVom3xl19HmTJXI+eWpNI0xvQW7qGg/BUpMSIvb9ulwrzeNJKoMh0T1t+lOfq25I/ziR7rhcJ8p87cNuAlmQ8PPPmQuKBdTJu3sCsb6Wkknihaxn4SM/eQxmzV85Yf/ySXz3F+Lt9oB9h7m6y+KQzCAk7lwIsbd107ujHHQqVgB8Deyz0P/LjMxfNC0353H4MCh9v8tmgU/g8kOJlo3teww6i/NvoLPx54E8uWLNV+yaJ+4nR/L2pACYXNK7T9ADrU641MS5jA+bPFp/KaCA5oTNrgCfOFQGq8udznS5G2Bt57qeZb7dvEizmF9cRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Zu+FFrKMxRBF/FLsiSkVSgdQA7C04s0EdVota/JOGn0=;
- b=k+ywI/oTYejM7xUj+Fug0aqgwye1vNUyZ6RlZ5dYZt22TMiEATJuI6pgGuo4JuX+7SQBZBZNDHaaaU3XFe9uBc4GGGr/ln7ldOQY5IZfph5uNW3bup5QxXVw8F651aTbLtJdGaVrtmLihEavTA1yCmn3Xq9vJSNTnsoQbuiLvozwIGMZt0cD5kYe2c6jC64hrZAHhjflGtgDnbTIKN3iIrUr+zm9ogrsOq//GWOin2lhmeb4HNi9A93bWkjUxq6QfarJw4/OfmzOvcZ/o03Y7P6dGeS7+Lb8NqLvEep6BMvftaDMpC1q0Ytt0SPQ0zdQ1ZnTPU3UGmyF8LlyAHwKgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-Received: from BY5PR19MB3922.namprd19.prod.outlook.com (2603:10b6:a03:228::23)
- by MN0PR19MB5754.namprd19.prod.outlook.com (2603:10b6:208:375::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Sat, 11 May
- 2024 15:22:24 +0000
-Received: from BY5PR19MB3922.namprd19.prod.outlook.com
- ([fe80::afc3:5bb2:37fb:2f9d]) by BY5PR19MB3922.namprd19.prod.outlook.com
- ([fe80::afc3:5bb2:37fb:2f9d%2]) with mapi id 15.20.7544.052; Sat, 11 May 2024
- 15:22:23 +0000
-From: "Shen, Yijun" <Yijun.Shen@dell.com>
-To: Lyndon Sanche <lsanche@lyndeno.ca>
+	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="Ou8m4B77";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="g9ysxKx1"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.west.internal (Postfix) with ESMTP id 927C11C00072;
+	Sat, 11 May 2024 11:54:21 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Sat, 11 May 2024 11:54:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1715442861;
+	 x=1715529261; bh=r2YwxeN0+AisPuVtRNZ5b9SrAK/2b5bZvbKwS1n6QOw=; b=
+	Ou8m4B77KcS8NFxcDCRTKeyuCEBytw76dmOutj4WEVAT8EFAzTiRKB11oelvx/FN
+	AjuGFgb7kXp3hQSi1nAY9DlZ3Oppnzc66Bw3cKI97u5dKQh5/7OOs3nXyZY6/kHG
+	27Rh8QwM+ChBuDcBR0NYHqr6W9OHAwVJLm/Wo6vM6QaKd3TIpywhMqjpvkIZQ445
+	jNQXytNryXzu4PLK5spbDoZ/y2XFW1W1/04zAHdKQrZmIy6ekvZDffwO7092Lurg
+	+yqsW3vyXvrkXXpD8KFtrFL8XXptBOthh8IZlVaGh4IEcHctKzqDyiAIAmpm3WeN
+	0vaIVqZTYEVP1FfUqQbZ8w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1715442861; x=
+	1715529261; bh=r2YwxeN0+AisPuVtRNZ5b9SrAK/2b5bZvbKwS1n6QOw=; b=g
+	9ysxKx1s/Y9PHR7uvGkdP5t6dwKBLWd2nSXufUGGaum00aVzNRrTH9YcnHAaRES0
+	/IfwrELU2Ge+/ilyn07bMTxfIUhb9hPi6dguIyuDTgSHqCq3fvJHJLFKlNwZsgAd
+	KtQeU6iqhvM4O8WhVf0Wyupp1IeDwmQlVv/f7lKpK+WgFMYdoYgpMN3oT/G1B24k
+	bcvj9wKdRwiN5SDOKNmchbBJrrGPxkp6NrLrAMl3KnKuQUvocYLeKeMrMGVuOKE9
+	+1qugexWGXUR3Jqi6BMyzA+8x2Gb+QRY/dQ5qPXrhWYRfBYbFqceKfSPNNLMCC6C
+	WPEQDMhbLxVU4TVcFTgmA==
+X-ME-Sender: <xms:qpQ_ZjsgjcEdMYMPNenqvIxJTTqQYzU9OJDMVXLBGbNFnGZuOlbi1g>
+    <xme:qpQ_ZkfXZVz54TK8qpF3tcIBdxwlnqKqj-TEQ1yCAmOjqyLO-r0-UaDICoCpHxKlq
+    COFyD4dPi-0S_LLgmI>
+X-ME-Received: <xmr:qpQ_ZmzLmtV0Ostu11hpSdh0-YqGznpr9AK_8jqNrCAMUOXMZG_7-9e04SksSrncvXTainBeYlaX0rYV6SWGqVkdcU_xFTbycgQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdegtddgleegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    goufhushhpvggtthffohhmrghinhculdegledmnecujfgurhepfffhvfevufgfjghfkfgg
+    tgfgsehtqhhmtddtreejnecuhfhrohhmpefnhihnughonhcuufgrnhgthhgvuceolhhsrg
+    hntghhvgeslhihnhguvghnohdrtggrqeenucggtffrrghtthgvrhhnpeetgffhffeuheeg
+    gedvlefhgfeuheetgeehffefleffgefhffffhedtfeelteevfeenucffohhmrghinhepuh
+    hrlhguvghfvghnshgvrdgtohhmpdhfrhgvvgguvghskhhtohhprdhorhhgpdgsohigrdgt
+    ohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplh
+    hsrghntghhvgeslhihnhguvghnohdrtggr
+X-ME-Proxy: <xmx:qpQ_ZiMRH3rESb2Ve7PoO4Te-t-BKCJPpbnUBe30mw83wcTJd8SALA>
+    <xmx:qpQ_Zj-CJ0s6AKT6QszipofQCjxpe_seWrJX4Yf7z062o0mQvwuf_A>
+    <xmx:qpQ_ZiWr0bNXVXXSQIIv2lZHWqdDWq6o-LpMNfWIekuoAmp7kzL3dw>
+    <xmx:qpQ_Zkeuwj6kklMv6gF4TjzgklHkZnTZkoCBppEJ9vEXFtj-R-jNfg>
+    <xmx:rZQ_ZqeSrbDKJ7U2sSzXX2mDHSsxz4m5uooXLX26wJojgmdkUAAKPaSz>
+Feedback-ID: i1719461a:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 11 May 2024 11:54:17 -0400 (EDT)
+Date: Sat, 11 May 2024 09:54:15 -0600
+From: Lyndon Sanche <lsanche@lyndeno.ca>
+To: "Shen, Yijun" <Yijun.Shen@dell.com>
 CC: Mario Limonciello <mario.limonciello@amd.com>,
-        =?utf-7?B?UGFsaSBSb2grQU9FLXI=?= <pali@kernel.org>,
-        Armin Wolf
-	<W_Armin@gmx.de>,
-        "srinivas.pandruvada@linux.intel.com"
-	<srinivas.pandruvada@linux.intel.com>,
-        =?utf-7?B?SWxwbyBKK0FPUS1ydmluZW4=?=
-	<ilpo.jarvinen@linux.intel.com>,
-        kernel test robot <lkp@intel.com>,
-        Hans de
- Goede <hdegoede@redhat.com>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Jonathan
- Corbet <corbet@lwn.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Vegard
- Nossum <vegard.nossum@oracle.com>,
-        "platform-driver-x86@vger.kernel.org"
-	<platform-driver-x86@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dell Client Kernel <Dell.Client.Kernel@dell.com>
+ =?ISO-8859-1?Q?Pali_Roh=E1r?= <pali@kernel.org>, Armin Wolf <W_Armin@gmx.de>,
+ "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>,
+ =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ kernel test robot <lkp@intel.com>, Hans de Goede <hdegoede@redhat.com>,
+ Matthew Garrett <mjg59@srcf.ucam.org>, Jonathan Corbet <corbet@lwn.net>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Vegard Nossum <vegard.nossum@oracle.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Dell Client Kernel <Dell.Client.Kernel@dell.com>
 Subject: RE: [PATCH v5] platform/x86: dell-laptop: Implement platform_profile
-Thread-Topic: [PATCH v5] platform/x86: dell-laptop: Implement platform_profile
-Thread-Index: AQHanBLh5VIydjU6UEi/YU1qu3GPk7GNIdqggAHsKICAAkSsgIAA3t+A
-Date: Sat, 11 May 2024 15:22:23 +0000
-Message-ID: 
- <BY5PR19MB39223A0977CE393BA6833DB29AE02@BY5PR19MB3922.namprd19.prod.outlook.com>
-References: <20240425172758.67831-1-lsanche@lyndeno.ca>
-	<20240501215829.4991-2-lsanche@lyndeno.ca>
-	<BY5PR19MB392256C65661E76FC292C0889AE52@BY5PR19MB3922.namprd19.prod.outlook.com>
-	<aaa1ebb5-3e0a-40ef-b53d-d8adc1589085@app.fastmail.com>
- <X1TADS.8PTII3LXSHHX1@lyndeno.ca>
-In-Reply-To: <X1TADS.8PTII3LXSHHX1@lyndeno.ca>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
- MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_ActionId=a1a3c732-02e8-4bab-9e0a-526dfbf6b6dd;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_ContentBits=0;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_Enabled=true;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_Method=Standard;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_Name=No
- Protection (Label Only) - Internal
- Use;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_SetDate=2024-05-11T15:06:50Z;MSIP_Label_73dd1fcc-24d7-4f55-9dc2-c1518f171327_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BY5PR19MB3922:EE_|MN0PR19MB5754:EE_
-x-ms-office365-filtering-correlation-id: 51152483-7636-4e24-aad1-08dc71ce289c
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: 
- BCL:0;ARA:13230031|366007|1800799015|7416005|376005|38070700009;
-x-microsoft-antispam-message-info: 
- =?utf-7?B?eUJyNUZXVlZxVzVqeVh4cCstOENELzNHRUNvTEtDT3NMQXMvRnYvL2xXOWgv?=
- =?utf-7?B?MG0vdFlrVDdNbi8zaWNXVWhxcUE5d0R6cUl3eHlLU05HTkx0NHhDbmlLZDZQ?=
- =?utf-7?B?emtBS0J4c1B1WTF6L2tzclppVWR5b1RQRlB2ejVrNkZoWWtBeW1ucjNGSGh1?=
- =?utf-7?B?cnZxeFlGd3FEamh6ODB1Ky1ZUCstRi9ocTJUZHBXeHBrMjk5ek5lenEwdVBk?=
- =?utf-7?B?d2FvVm9LTERHdXIzaHJGUnpVWXhPL2hmYWFNMHVta3d6d05CdXhibm42Vk40?=
- =?utf-7?B?WHVNVnNUZzF5VER4VGI1cHBkRWNWU3AvbGFaWk9xVEtuQUpHMXFCUGkzSEI1?=
- =?utf-7?B?VTRkWTJCMnppSElQYVpKYm8rLSstVVBCVk5sZ09XemRjd1cvRmFRVzQ4Mms5?=
- =?utf-7?B?ZmNSRCsteko4dWpxVktINVVMa01tS0tkMVZkNllmdGZCRk8zdGlnUVVIalVO?=
- =?utf-7?B?STdLeFZkZ1o5Sm1vSEgrLW1iTDltSGVmZ2kvMDJHcDFPWk5LNW9rOW1HYzZs?=
- =?utf-7?B?eVFJN1hkUDZHR3YzSlhQMDZaMWhPSHZTNWZkNEdaaHQzeHNXQVRqZXl5a1ls?=
- =?utf-7?B?eVFHdU5zY3EzaDJrVXVqTFF6UGErLVBhVjZEUXdEaW01TERTUUpXeTJReGNa?=
- =?utf-7?B?ZnhoM0xnNUJDMzNZT1VtU2tJMzVmNDdZKy15cElMT3hJRjh3T3M4eWxYbmZT?=
- =?utf-7?B?cEd2VnYrLVozbjJ3bHg5MVV2Z1ArLUdjdWExWEQ0L3BTWVdENEsyYkwzamlK?=
- =?utf-7?B?MTR4eEdXWFFqdG10ZlhhUGhWNjlvWFRUNmtUUVRuWW5ycG1VVHh5L0h3eFVI?=
- =?utf-7?B?NnZpdWtkamd6WXVjOXB6SXJGUGEyVk1ZY25Jd3VwQ0tNN1o5RW5hM1BGYVZ1?=
- =?utf-7?B?eEJBR3dDNmY3OGNSL2RWVlZMVystSUJBdnRIYnhHbURSNHZjNFZ2NHYwVlg0?=
- =?utf-7?B?czlvVm8vVHNnSjhBbVJleFp3RmdNU0JDZ1JGQWxsbldXVXZSeDZ0T09wY3Ew?=
- =?utf-7?B?a0ZGcFNSaXFNRjhUWlVGS0k3Ky05VXExMGNkUE5ZYmlLUmtKUVV1VVY5NkVP?=
- =?utf-7?B?ZUFaaVl2dVNiYmNZNURtSDlDSXZEMGg0SGV3Mk9HTEJuTU8rLU0xb0hpdFIz?=
- =?utf-7?B?T0VpQlJ5NVVkbUwveUR0YW9kcm4vdXJPVFluOWZaei8vRkp5MWFkai9jWGp0?=
- =?utf-7?B?TmpaN1RpbmxuOXN3VEZlTEg0dzVFclAzL21mKy01S2ZHQ2c2dXpGTTg5RS9L?=
- =?utf-7?B?Z1lEUExjNFJILzhUMWdUSHNTOTJLb1VFa294ajJSNE1PbkFGelpnYktUeDBI?=
- =?utf-7?B?MW5jRVRpZEVzT0xMbUhycENFQnhEUnFnU1QyckE4Ky1YQnVud09oakt2OExz?=
- =?utf-7?B?R01GWXRoa29mZ3FrdzJxcXZXb0I0YzhNcnBnKy1OaFpuYjQ4T2U1Ky1NWG5o?=
- =?utf-7?B?dEREcFg3U2dWblR2T1lUV0FjWVl1ek5JTW5SaHdDRkFaZUxadm5IZjQ3V1U5?=
- =?utf-7?B?TXF2amEyU3l3cW11RUk0Rnl0N2xDRDNxY0llKy0zQWp6VmJWbEFLYWlGdTJx?=
- =?utf-7?B?cmZyaTk4MTk1TVV5V1pkUVh6b0NYQ1k3TlNkcElTVWxYT3ZBVzU2NEVsNUdR?=
- =?utf-7?B?alVrYnUxVnI0ekV3czFqNXlEQjVycEdFeVF2c2RvcFpPTkpDaU10a3RyT3kw?=
- =?utf-7?B?Q2hPWDJRNmhYYWtZaGJTZlNpa0VEZS9oZHE5NVdQdldVeEMyaDd5bjBVWWJj?=
- =?utf-7?B?bGtMNDd2Z1Z1UVRLS3RPUStBRDBBUFEt?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR19MB3922.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(7416005)(376005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?utf-7?B?VFFSOG5zQ0lQVVpOYkllRjF2RE5DRFozV044M1dRYWZ0Q3UrLTJCRU5IVE9j?=
- =?utf-7?B?UHViMVEvVUs5bUd2d0k0NjdLRzNSL1NMYjJjQnU1Zm5wNXdvaFRsd0tITllp?=
- =?utf-7?B?dWpkOVBXYWcxQXZzUVRNTi9RNWVHdUxza0xRODNzdkhySFRvOW1INU1pdVps?=
- =?utf-7?B?MGVoVWVGS0w1U3czWXVVZ0I3cGZqcFhhQ2lodjB0NDBMUistZU80UVo4bWxK?=
- =?utf-7?B?ZHRYT0JWZjErLU5BZXZWU2xpUWZhSHdVOXZkNTVkWTZpNHBLbC9yOTlmYUtU?=
- =?utf-7?B?TU5OZ05kN1R0bnBqa1F4aTNVQ2RKeSstWTVxZ2IwZUJFZUk3OHNwWW1ERExm?=
- =?utf-7?B?cXlMZVY1VmNIeXJnUTNjMjhrL3dBbmZhZFdrWlFxeEVpbUYwWjZVU2o3ek02?=
- =?utf-7?B?Y2pyb0VsTHlLbGZudlN3SFVoUEtuOEt4d2lBSW93OXgwQmJERTQ2VzhTSG5J?=
- =?utf-7?B?V0lXNUxZRG5oanB2VEFvZHdXNEoxTjIwQUdkN25zNUN0eTRuU01PaGFjdFda?=
- =?utf-7?B?aGhuMDV6VjZVTUhzT0JMNlI4eGFmSEdaWFNheXNvOTZBNC9KRnJGdXdtVU93?=
- =?utf-7?B?eFVqUHN4eHZ2dEs5RG5YYXYzN2RtWnhhaVpjZEMrLXl3Wk83eWkwSS93MmNJ?=
- =?utf-7?B?VzNabDJnaHNreWVnbnlkM0VVSjFHeVZVKy1hQWpNMXUxaDh1c0JLY2pHU0lY?=
- =?utf-7?B?YS9iQjBTN05mNGQrLWd5NWVid3FaRVpWQ1FZbUtEZFRLTmFrSjF2aVZaM04=?=
- =?utf-7?B?RCstKy1iS0U3YlI5dmRycnh1VVB4TFBZNS9lU0xUeTA4VUp6MC80UVVvVFpt?=
- =?utf-7?B?U3lSbUhIRGxQSUhwRWNpVzArLVZiOWU3TWZvRFpRN0lwdzlMejdXbUVoUThM?=
- =?utf-7?B?MGZJU01VZWhNV2J5VnRNckxOV3ViWW9RYklWdzZhSUpHZkRCbVBoS2JXOTQz?=
- =?utf-7?B?ZnJMM0p6VFlVWi9SYWFYdGUvL0VPbHRkL2RrTmk0WlVINS9EandkTmVaVTFW?=
- =?utf-7?B?dFdtUzZmZk85Y3NiTGtQanJUSjA4d2VHQ0RZRjNhaWJCRmJTNTl1UzRXcVV0?=
- =?utf-7?B?NjFWWHBra1hWZlMzWlZ5d0I1dWxxTUNTZldUaTk4VzZ1azk5eUFvWHhwVEIz?=
- =?utf-7?B?Z2VVOHhMakt5QzJDY0hJSkFaY3IySmJOMS91M0p5ZjY0NTArLVhjdTFETkpx?=
- =?utf-7?B?OFNBSE5RR3dRQ3gxUnNSRGRGOGR3ZjBTUXFSY0l0cUVBMmlQYThWSXRMU2sv?=
- =?utf-7?B?MlBXTTk0T20xZnY1WnpkNFJjeFJLZHdaRDR3TzF5S1NPVDF4cy9sa1BuaTBj?=
- =?utf-7?B?ZDFPSk8xalpNUUpLKy16ZTlCYzMvT1NXeFdFdGxGdExsamFXOW1lZHp5YUZM?=
- =?utf-7?B?WVkrLUNoYzRtTHRpY1pPOFhBRTQvVktqUkk3Ky1tRjFSRistKy1OdWNQZHVl?=
- =?utf-7?B?TEJaWHBZRFRwUjFBd2t3RkxUNTN5Um1SV2oyQXhLdnkwT2J4aUpxWjY4MU9B?=
- =?utf-7?B?WnNEKy1ybTZsMDlEOXlEWVVzdGFUN2ZKQ01EWGFKVHlWTmVhcWR4blE1TTdz?=
- =?utf-7?B?Qy93Z1ZqMkl0V0JVV2xkTkRPc3hraFBIVzh6YTM2VXhsUFpJbUNmMW5td29R?=
- =?utf-7?B?cGNscGZleG01RWhYeHFWbVpweHdXYWs3ZWUzeTZoQ29Vd2I2N2dxMUlkcFQ3?=
- =?utf-7?B?TTJGaFU1cGthKy10Z1JnUnZBcG5mQUs0aGNsQmRHTWowNTVZSDcxSXJaNDA=?=
- =?utf-7?B?Ky1ZbWVCTSstdEI1b2NuME9hM1lDMUxDVG1WKy0vVVhOeU8vQW9wb1JRYmto?=
- =?utf-7?B?SXRaZ0s0cWVoWGVHbHhYMU95YmNJVk9pUUNZakR5Y0dtdWFFQkFIU29ORlp3?=
- =?utf-7?B?R0hPb1A4elJKSTdRNG1uZTdOQ2dOUVE2WnhzMXUwTVpxME0rLUt6a3hKME9R?=
- =?utf-7?B?N2VrdUQwWEZSQWhKZENGSFIyMmJGYUd0SWdlUExPNEtUMistNUU5Q1MvN1lW?=
- =?utf-7?B?d1p2WWFHVjFVL0J3ZThLWjNqbHE4ZlpKYkF6WWFCWWFzVVVrRnhqKy1aZzJO?=
- =?utf-7?B?dGFQQUNtM2c4ZzNjY0tKMFZUdFZZNm5WU2hUc2ZVQ2haZ0hIOVVYdnljS1dC?=
- =?utf-7?B?TEU0dk5iN0JzbnBtdnh1UFEycDAyTDlWTTRwcTZzWlI5VDZ2aGJZUGZuSENw?=
- =?utf-7?B?ZHdQN00vSEtmaistL09taXdiZGZ3QmU1UVpTRHU0VHQwMTlrMUI5UkljMDJ1?=
- =?utf-7?B?OHpYV2hmODhONGVNUWhtWjJjMTE3ajkwTnU=?=
-Content-Type: text/plain; charset="utf-7"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: K-9 Mail for Android
+In-Reply-To: <BY5PR19MB39223A0977CE393BA6833DB29AE02@BY5PR19MB3922.namprd19.prod.outlook.com>
+References: <20240425172758.67831-1-lsanche@lyndeno.ca> <20240501215829.4991-2-lsanche@lyndeno.ca> <BY5PR19MB392256C65661E76FC292C0889AE52@BY5PR19MB3922.namprd19.prod.outlook.com> <aaa1ebb5-3e0a-40ef-b53d-d8adc1589085@app.fastmail.com> <X1TADS.8PTII3LXSHHX1@lyndeno.ca> <BY5PR19MB39223A0977CE393BA6833DB29AE02@BY5PR19MB3922.namprd19.prod.outlook.com>
+Message-ID: <5D1A41F2-8740-45E5-9A86-396A9B615BDB@lyndeno.ca>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR19MB3922.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 51152483-7636-4e24-aad1-08dc71ce289c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2024 15:22:23.8131
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nGPTRnEJ9OY9FHSbI+dJpeCuvpMZLmOhD0iGBALb+04KqtJUGez7wDOg6f89V0bF4WdIdZgEgz/KjFVDLPimpg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR19MB5754
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-11_06,2024-05-10_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 priorityscore=1501 suspectscore=0 clxscore=1015 mlxscore=0
- spamscore=0 mlxlogscore=999 impostorscore=0 phishscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405110114
-X-Proofpoint-GUID: yKIMY_qrG9S0rptQn585tnlDT3Yfmzm6
-X-Proofpoint-ORIG-GUID: yKIMY_qrG9S0rptQn585tnlDT3Yfmzm6
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 suspectscore=0
- mlxscore=0 phishscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 mlxlogscore=999 adultscore=0 spamscore=0 bulkscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405110115
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
 
-
-Internal Use - Confidential
-+AD4- -----Original Message-----
-+AD4- From: Lyndon Sanche +ADw-lsanche+AEA-lyndeno.ca+AD4-
-+AD4- Sent: Saturday, May 11, 2024 9:49 AM
-+AD4- To: Shen, Yijun +ADw-Yijun+AF8-Shen+AEA-Dell.com+AD4-
-+AD4- Cc: Mario Limonciello +ADw-mario.limonciello+AEA-amd.com+AD4AOw- Pali=
- Roh+AOE-r
-+AD4- +ADw-pali+AEA-kernel.org+AD4AOw- Armin Wolf +ADw-W+AF8-Armin+AEA-gmx.=
-de+AD4AOw-
-+AD4- srinivas.pandruvada+AEA-linux.intel.com+ADs- Ilpo J+AOQ-rvinen
-+AD4- +ADw-ilpo.jarvinen+AEA-linux.intel.com+AD4AOw- kernel test robot +ADw=
--lkp+AEA-intel.com+AD4AOw- Hans de
-+AD4- Goede +ADw-hdegoede+AEA-redhat.com+AD4AOw- Matthew Garrett +ADw-mjg59=
-+AEA-srcf.ucam.org+AD4AOw-
-+AD4- Jonathan Corbet +ADw-corbet+AEA-lwn.net+AD4AOw- Heiner Kallweit
-+AD4- +ADw-hkallweit1+AEA-gmail.com+AD4AOw- Vegard Nossum +ADw-vegard.nossu=
-m+AEA-oracle.com+AD4AOw-
-+AD4- platform-driver-x86+AEA-vger.kernel.org+ADs- LKML +ADw-linux-kernel+A=
-EA-vger.kernel.org+AD4AOw-
-+AD4- Dell Client Kernel +ADw-Dell.Client.Kernel+AEA-dell.com+AD4-
-+AD4- Subject: Re: +AFs-PATCH v5+AF0- platform/x86: dell-laptop: Implement =
-platform+AF8-profile
-+AD4-
-+AD4-
-+AD4- +AFs-EXTERNAL EMAIL+AF0-
-+AD4-
-+AD4-
-+AD4-
-+AD4- On Thu, May 9 2024 at 09:10:51 AM -06:00:00, Lyndon Sanche
-+AD4- +ADw-lsanche+AEA-lyndeno.ca+AD4- wrote:
-+AD4- +AD4- On Wed, May 8, 2024, at 8:24 AM, Shen, Yijun wrote:
-+AD4- +AD4APg-  Hi Lyndon,
-+AD4- +AD4APg-
-+AD4- +AD4APg-   Thanks for working on this patch.
-+AD4- +AD4APg-
-+AD4- +AD4APg-
-+AD4- +AD4APg-   Dell side has an initial testing with this patch on some l=
-aptops,
-+AD4- +AD4APg- it  looks good. While changing the platform profile:
-+AD4- +AD4APg-  1. The corresponding USTT option in BIOS will be changed.
-+AD4- +AD4APg-  2. thermald will not be impacted. The related PSVT and ITMT=
- will be
-+AD4- +AD4APg- loaded.
-+AD4- +AD4APg-   Some Dell DTs does not have the USTT, Dell'll have a check=
- if
-+AD4- +AD4APg- nothing  is broken.
-+AD4- +AD4APg-
-+AD4- +AD4APg-    Additional, with this patch, follow behavior is found:
-+AD4- +AD4APg-   1. For example, the platform profile is quiet.
-+AD4- +AD4APg-   2. Reboot the system and change the USTT to performance.
-+AD4- +AD4APg-   3. Boot to desktop, the platform profile is +ACI-quiet+ACI=
--, the USTT will
-+AD4- +AD4APg- be  changed back to +ACI-quiet+ACI-.
-+AD4- +AD4APg-   This looks like not a proper user experience. The platform=
- profile
-+AD4- +AD4APg- should honor the BIOS setting, aka, the platform profile sho=
-uld be
-+AD4- +AD4APg- switched to +ACI-performance+ACI-.
-+AD4- +AD4-
-+AD4- +AD4- Hello:
-+AD4- +AD4-
-+AD4- +AD4- Thank you for your email. This is definitely undesirable behavi=
-our, I
-+AD4- +AD4- will have a look at the code to see why this is happening. Does=
- it
-+AD4- +AD4- always revert to quiet on boot, or always the mode that you had
-+AD4- +AD4- switched to prior to reboot?
-+AD4- +AD4-
-+AD4- +AD4- Do you happen to have power-profiles-daemon or something simila=
-r
-+AD4- +AD4- running? My understanding is it remembers profiles across reboo=
-ts,
-+AD4- +AD4- this could potentially also revert the profile back to what it =
-was.
-+AD4- +AD4- See this release for details:
-+AD4- +AD4- https://urldefense.com/v3/+AF8AXw-https://gitlab.freedesktop.or=
-g/upower/powe
-+AD4- +AD4- r-profiles-daemon/-/releases/0.9.0+AF8AXwA7ACEAIQ-LpKI+ACE-jUAE=
-Hb-9foumkcmPlEKD6tnQrZ
-+AD4- +AD4- sqjB1sXdPDsYvH2fJ-gPV6G35MUtDW4q3xhlJ4IeLcIgmVpb3ztXqaOg8+ACQ-
-+AD4- +AD4- +AFs-gitlab+AFs-.+AF0-freedesktop+AFs-.+AF0-org+AF0-
-+AD4- +AD4-
-+AD4- +AD4- I will assume there is a bug in my code at this point. I will t=
-est
-+AD4- +AD4- with and without ppd running on my system to see if it changes =
-across
-+AD4- +AD4- reboots.
-+AD4- +AD4-
-+AD4- +AD4- Are USTT settings exposed in your BIOS configuration menu? On m=
-y
-+AD4- +AD4- laptop they are not and I have to use smbios-thermal-ctl.
-+AD4- +AD4-
-+AD4- +AD4- Thank you,
-+AD4- +AD4-
-+AD4- +AD4- Lyndon
-+AD4-
-+AD4- Hi Yijun:
-+AD4-
-+AD4- I tested this on my computer (XPS 9560). I do not have access to the =
+On May 11, 2024 9:22:23=E2=80=AFa=2Em=2E MDT, "Shen, Yijun" <Yijun=2EShen@=
+dell=2Ecom> wrote:
+>
+>
+>
+>Internal Use - Confidential
+>> -----Original Message-----
+>> From: Lyndon Sanche <lsanche@lyndeno=2Eca>
+>> Sent: Saturday, May 11, 2024 9:49 AM
+>> To: Shen, Yijun <Yijun_Shen@Dell=2Ecom>
+>> Cc: Mario Limonciello <mario=2Elimonciello@amd=2Ecom>; Pali Roh=C3=A1r
+>> <pali@kernel=2Eorg>; Armin Wolf <W_Armin@gmx=2Ede>;
+>> srinivas=2Epandruvada@linux=2Eintel=2Ecom; Ilpo J=C3=A4rvinen
+>> <ilpo=2Ejarvinen@linux=2Eintel=2Ecom>; kernel test robot <lkp@intel=2Ec=
+om>; Hans de
+>> Goede <hdegoede@redhat=2Ecom>; Matthew Garrett <mjg59@srcf=2Eucam=2Eorg=
+>;
+>> Jonathan Corbet <corbet@lwn=2Enet>; Heiner Kallweit
+>> <hkallweit1@gmail=2Ecom>; Vegard Nossum <vegard=2Enossum@oracle=2Ecom>;
+>> platform-driver-x86@vger=2Ekernel=2Eorg; LKML <linux-kernel@vger=2Ekern=
+el=2Eorg>;
+>> Dell Client Kernel <Dell=2EClient=2EKernel@dell=2Ecom>
+>> Subject: Re: [PATCH v5] platform/x86: dell-laptop: Implement platform_p=
+rofile
+>>
+>>
+>> [EXTERNAL EMAIL]
+>>
+>>
+>>
+>> On Thu, May 9 2024 at 09:10:51 AM -06:00:00, Lyndon Sanche
+>> <lsanche@lyndeno=2Eca> wrote:
+>> > On Wed, May 8, 2024, at 8:24 AM, Shen, Yijun wrote:
+>> >>  Hi Lyndon,
+>> >>
+>> >>   Thanks for working on this patch=2E
+>> >>
+>> >>
+>> >>   Dell side has an initial testing with this patch on some laptops,
+>> >> it  looks good=2E While changing the platform profile:
+>> >>  1=2E The corresponding USTT option in BIOS will be changed=2E
+>> >>  2=2E thermald will not be impacted=2E The related PSVT and ITMT wil=
+l be
+>> >> loaded=2E
+>> >>   Some Dell DTs does not have the USTT, Dell'll have a check if
+>> >> nothing  is broken=2E
+>> >>
+>> >>    Additional, with this patch, follow behavior is found:
+>> >>   1=2E For example, the platform profile is quiet=2E
+>> >>   2=2E Reboot the system and change the USTT to performance=2E
+>> >>   3=2E Boot to desktop, the platform profile is "quiet", the USTT wi=
+ll
+>> >> be  changed back to "quiet"=2E
+>> >>   This looks like not a proper user experience=2E The platform profi=
+le
+>> >> should honor the BIOS setting, aka, the platform profile should be
+>> >> switched to "performance"=2E
+>> >
+>> > Hello:
+>> >
+>> > Thank you for your email=2E This is definitely undesirable behaviour,=
+ I
+>> > will have a look at the code to see why this is happening=2E Does it
+>> > always revert to quiet on boot, or always the mode that you had
+>> > switched to prior to reboot?
+>> >
+>> > Do you happen to have power-profiles-daemon or something similar
+>> > running? My understanding is it remembers profiles across reboots,
+>> > this could potentially also revert the profile back to what it was=2E
+>> > See this release for details:
+>> > https://urldefense=2Ecom/v3/__https://gitlab=2Efreedesktop=2Eorg/upow=
+er/powe
+>> > r-profiles-daemon/-/releases/0=2E9=2E0__;!!LpKI!jUAEHb-9foumkcmPlEKD6=
+tnQrZ
+>> > sqjB1sXdPDsYvH2fJ-gPV6G35MUtDW4q3xhlJ4IeLcIgmVpb3ztXqaOg8$
+>> > [gitlab[=2E]freedesktop[=2E]org]
+>> >
+>> > I will assume there is a bug in my code at this point=2E I will test
+>> > with and without ppd running on my system to see if it changes across
+>> > reboots=2E
+>> >
+>> > Are USTT settings exposed in your BIOS configuration menu? On my
+>> > laptop they are not and I have to use smbios-thermal-ctl=2E
+>> >
+>> > Thank you,
+>> >
+>> > Lyndon
+>>
+>> Hi Yijun:
+>>
+>> I tested this on my computer (XPS 9560)=2E I do not have access to the =
 USTT
-+AD4- settings in the BIOS screen so to substitute that, I booted without t=
-he patch
-+AD4- and set the USTT manually using smbios-thermal-ctl.
-+AD4- Here are my findings:
-+AD4-
-+AD4- Scenario +ACM-1: Without power-profiles-daemon (ppd) running
-+AD4-
-+AD4- 1. Boot with patch, set platform+AF8-profile to quiet 2. Boot without=
- patch applied
-+AD4- (no platform+AF8-profile)
-+AD4-  - smbios-thermal-ctl confirms USTT is set to quiet
-+AD4-  - use smbios-thermal-ctl to set USTT to performance
-+AD4-  - confirm set to performance
-+AD4- 3. Boot with patch again
-+AD4-  - platform+AF8-profile is set to performance
-+AD4-
-+AD4- Scenario +ACM-2: With ppd running
-+AD4- 1. Boot with patch, set platform+AF8-profile to performance with ppd
-+AD4-  - Confirm platform+AF8-profile is performance 2. Boot without patch =
-applied (no
-+AD4- platform+AF8-profile)
-+AD4-  - smbios-thermal-ctl confirms USTT is set to performance
-+AD4-  - ppd reverts to balanced (only controlling intel+AF8-pstate in this=
- case)
-+AD4-  - use smbios-thermal-ctl to set USTT to quiet
-+AD4-  - confirm set to quiet
-+AD4- 3. Boot with patch again
-+AD4-  - platform+AF8-profile and ppd is set to performance
-+AD4-
-+AD4- In my case, the setting in the smbios is honored if it was switched w=
-ith
-+AD4- another method. When using a userspace program that manipulates the
-+AD4- platform+AF8-profile, the program seems to remember the previous stat=
-e and
-+AD4- switch to that.
-+AD4-
-+AD4- So I do not think there is a bug in this patch related to this issue,=
- at least in my
-+AD4- case. Please let me know if you have any questions.
-+AD4-
-+AD4- Thanks,
-+AD4-
-+AD4- Lyndon
-+AD4-
-+AD4-
-+AD4-
-Hi Lyndon,
+>> settings in the BIOS screen so to substitute that, I booted without the=
+ patch
+>> and set the USTT manually using smbios-thermal-ctl=2E
+>> Here are my findings:
+>>
+>> Scenario #1: Without power-profiles-daemon (ppd) running
+>>
+>> 1=2E Boot with patch, set platform_profile to quiet 2=2E Boot without p=
+atch applied
+>> (no platform_profile)
+>>  - smbios-thermal-ctl confirms USTT is set to quiet
+>>  - use smbios-thermal-ctl to set USTT to performance
+>>  - confirm set to performance
+>> 3=2E Boot with patch again
+>>  - platform_profile is set to performance
+>>
+>> Scenario #2: With ppd running
+>> 1=2E Boot with patch, set platform_profile to performance with ppd
+>>  - Confirm platform_profile is performance 2=2E Boot without patch appl=
+ied (no
+>> platform_profile)
+>>  - smbios-thermal-ctl confirms USTT is set to performance
+>>  - ppd reverts to balanced (only controlling intel_pstate in this case)
+>>  - use smbios-thermal-ctl to set USTT to quiet
+>>  - confirm set to quiet
+>> 3=2E Boot with patch again
+>>  - platform_profile and ppd is set to performance
+>>
+>> In my case, the setting in the smbios is honored if it was switched wit=
+h
+>> another method=2E When using a userspace program that manipulates the
+>> platform_profile, the program seems to remember the previous state and
+>> switch to that=2E
+>>
+>> So I do not think there is a bug in this patch related to this issue, a=
+t least in my
+>> case=2E Please let me know if you have any questions=2E
+>>
+>> Thanks,
+>>
+>> Lyndon
+>>
+>>
+>>
+>Hi Lyndon,
+>
+> I've made a video recorder of the issue: https://dell=2Ebox=2Ecom/s/3f3z=
+nz1z8c6htbcll9juj6tyyu0zvvut
+> My test environment is that I freshly installed the Fedora 40 and will n=
+ot do any online updates=2E Then install the kernel with the v5 patch appli=
+ed=2E
+>
+> XPS 9560 is a pretty old system which is RTS with 2017=2E No USTT settin=
+g in the BIOS is expected=2E
+> I've a check that the Dell system, at least shipped from 2022, the USTT =
+setting will be valid in the BIOS=2E The system used in above link, it is L=
+atitude 7350 which is shipped by 2024 April=2E
+>
+> I think the key point to duplicate of this issue that, the USTT needs to=
+ be changed under BIOS but not under the Linux OS=2E
+>
+>Thanks
+>
+>
 
- I've made a video recorder of the issue: https://dell.box.com/s/3f3znz1z8c=
-6htbcll9juj6tyyu0zvvut
- My test environment is that I freshly installed the Fedora 40 and will not=
- do any online updates. Then install the kernel with the v5 patch applied.
 
- XPS 9560 is a pretty old system which is RTS with 2017. No USTT setting in=
- the BIOS is expected.
- I've a check that the Dell system, at least shipped from 2022, the USTT se=
-tting will be valid in the BIOS. The system used in above link, it is Latit=
-ude 7350 which is shipped by 2024 April.
+Thanks for the video=2E
 
- I think the key point to duplicate of this issue that, the USTT needs to b=
-e changed under BIOS but not under the Linux OS.
+Fedora 40 has power-profiles-daemon enabled by default AFAIK=2E This would=
+ be changing the platform profile at load to match the last known state=2E
 
-Thanks
+Are you able to rerun this test with PPD disabled? Just in case it is a di=
+fference between setting it in BIOS and smbios-thermal-ctl=2E
 
+Thanks,
 
+Lyndon
