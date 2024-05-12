@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124B825634;
-	Sun, 12 May 2024 18:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA5DF510;
+	Sun, 12 May 2024 18:48:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715537190; cv=none; b=irdIE3iX7xQp1MuA9pTrWdVW5//p0rAH2874ZjbKr7Q7Ttpdgs9dL3uyjG5ZxCOe69dhi3b0Zc/o5V+TYRx/AOoZM/X43qnPyKkSa8tkDt4TTGenN5lLDCLoRX+Hhzbe/cll3SWFUAICRYpUdfWCjoLSF2RloXTrD3z4spQlPzw=
+	t=1715539716; cv=none; b=r91oyiQK2sN6TSuC4pUnTqvvDCekWa2S0OKfD/blJ3ZF2/DNrE1Y+E8rBWvA8mwgU12uGCWPESYpMTHGOm3MVPnkLFucmbIAZRomSfcSLIjocym/F5jTapS/5AtHPlbQXg6xaS3LfTpt5vKKTfZz8vdkIgETjQLobnY2bGrhW3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715537190; c=relaxed/simple;
-	bh=BfBg8wgewlAxwp506CTOAf/grQaZWzRhFJ+64vBcR0A=;
+	s=arc-20240116; t=1715539716; c=relaxed/simple;
+	bh=lkb7RsDU4hipYYXRUKzjxf8mSYCs3vJ54tdgYhn8+KA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iciHWythNr96flIC2Yw+ySIPS8RG0zR6N3sMKfV3OiCDBDZe14bysRCXnuFfHnNPVradyMrh+f/lnYE7o9SLlOaHD6X2IdQMIJ9O4QBmwobumi6TGdU2zxPVr9/M7qsw2v16UEel6gD8fpMsxP0ZoNS8/amYO5t3NQxbcJd9Vig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=iXPko/+U; arc=none smtp.client-ip=212.227.15.19
+	 In-Reply-To:Content-Type; b=gVrG57nubE//QIiw75bTEHQKzsVX1Hhta3LYFU/RYFD6MSlHWPG3xzxkvFvuJnyhQ9QeMkwSkYIx+0jL5nUj94oooso9qIjlH225ZQxqZgOxk8imdrSA05ElegfOeOGzSy2CjSumXAxMBHjVBcd30rYA09dMsQGxkQ1cCJmlLKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=MqsURCuu; arc=none smtp.client-ip=212.227.15.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="iXPko/+U"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="MqsURCuu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1715537120; x=1716141920; i=w_armin@gmx.de;
-	bh=Zyj0C+md8Eq5PSNbbaw9fSYsl1pnf4fC4Xvg7b8BeqE=;
+	s=s31663417; t=1715539680; x=1716144480; i=w_armin@gmx.de;
+	bh=lkb7RsDU4hipYYXRUKzjxf8mSYCs3vJ54tdgYhn8+KA=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=iXPko/+UaOhaJk7ymQk7AZeuyn5kkdK738kTVYjVjS58sOTYtCGM+45oa3vRY03G
-	 LKen0xu8rkMqg9kmk2lZ2jTn9D/YyaMBqmXaDV2LG++ij1zKEwQyKa6ZjneaZXQSI
-	 QOHkOFokGiqu96VWXurL9so/eF79YHfZPhNzFULdeKZPz+fgocYJk8NfYjV1XYH2M
-	 G6tWMZu3/gMbCAu6NYCWm6pobC/KbLNiyDbOaQNrNsMBsvefZnizipTaPr7Yyufqq
-	 5wvGaFN4eAi3TwwqszYdv7KKZdNoKTD6XbrHvBVsr56xv9FI4ae/joVbZEHxQMD7z
-	 mxzJtS4mhLb+5HPrrw==
+	b=MqsURCuuOIA5xncfoJEDH/MvhYqfoVWuwrsY/QY88ALW74pTOnqR/1i29jFf+SJi
+	 Io3ReU3mjwPYV4Z4JMLwB4ormqHznoqqUtunMxpY9lUlBvig83o7JWGmfHz4wqLj3
+	 YZbdYjRot7QEhFVULgrdypocn4djcriwoTcL+NfczUnUwmEUC1oNGEw3f7vyD6lvb
+	 Uy9WdOj7dFI36KSxtuuhoi0ilppaX37bO8EJHYwgvtdDu/Im5WG8Y5kB7Y8eFPBmW
+	 XE2ecc69MyqHTe8FD0Fv7hziP+QUl0npevljOt4bodZ0AYNtIWeUP7sHJQkpY6nJz
+	 3oSFUFzhHjbO1OcKwg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MFsZ3-1sN3Dc3DXb-00E7vb; Sun, 12
- May 2024 20:05:19 +0200
-Message-ID: <c927c490-bc22-45d9-87e4-4156746547f9@gmx.de>
-Date: Sun, 12 May 2024 20:05:17 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N7R1T-1seISD1cE9-014RsA; Sun, 12
+ May 2024 20:48:00 +0200
+Message-ID: <e583ccb0-b0be-4fb6-8e70-e4cd6921d77d@gmx.de>
+Date: Sun, 12 May 2024 20:47:53 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,425 +43,260 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] platform/x86: dell-laptop: Implement
- platform_profile
-To: Lyndon Sanche <lsanche@lyndeno.ca>
-Cc: mario.limonciello@amd.com, pali@kernel.org,
- srinivas.pandruvada@linux.intel.com, ilpo.jarvinen@linux.intel.com,
- lkp@intel.com, hdegoede@redhat.com, Yijun.Shen@dell.com,
- Matthew Garrett <mjg59@srcf.ucam.org>, Heiner Kallweit
- <hkallweit1@gmail.com>, Randy Dunlap <rdunlap@infradead.org>,
- Jonathan Corbet <corbet@lwn.net>, Vegard Nossum <vegard.nossum@oracle.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Dell.Client.Kernel@dell.com
+Subject: Re: [PATCH v5] platform/x86: dell-laptop: Implement platform_profile
+To: "Limonciello, Mario" <mario.limonciello@amd.com>,
+ "Shen, Yijun" <Yijun.Shen@dell.com>, Lyndon Sanche <lsanche@lyndeno.ca>
+Cc: "pali@kernel.org" <pali@kernel.org>,
+ "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>,
+ "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
+ "lkp@intel.com" <lkp@intel.com>, Hans de Goede <hdegoede@redhat.com>,
+ Matthew Garrett <mjg59@srcf.ucam.org>, Jonathan Corbet <corbet@lwn.net>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Vegard Nossum <vegard.nossum@oracle.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Dell Client Kernel <Dell.Client.Kernel@dell.com>
 References: <20240425172758.67831-1-lsanche@lyndeno.ca>
- <20240511023726.7408-4-lsanche@lyndeno.ca>
+ <20240501215829.4991-2-lsanche@lyndeno.ca>
+ <BY5PR19MB392256C65661E76FC292C0889AE52@BY5PR19MB3922.namprd19.prod.outlook.com>
+ <63894ef1-c482-4646-8351-4d6cfc6c528f@amd.com>
+ <BY5PR19MB392299916A85FF06387DC9C19AE02@BY5PR19MB3922.namprd19.prod.outlook.com>
+ <a1306ffa-c0ea-4ce6-8692-76bf37850e8a@amd.com>
+ <BY5PR19MB3922A117E489A55C3C7FAC789AE02@BY5PR19MB3922.namprd19.prod.outlook.com>
+ <4d8de625-9018-4926-9519-37f5a90a96e5@gmx.de>
+ <d38043cd-7fc2-4255-a795-23e64ee4a8c2@amd.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20240511023726.7408-4-lsanche@lyndeno.ca>
+In-Reply-To: <d38043cd-7fc2-4255-a795-23e64ee4a8c2@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:mcZpi5ghIDqfjv96Z29bP5CqJu8FgBe2BUFvpL88vE0+ThkKuJw
- 1rNoDERsVoU/tUxofU5J9wSIPi0gHFYo0KtctGXhGns90JEYtbY6z2R/Vc4Puo12iPKchPz
- zNwn3Xo2SFSDuWabliJQB7anMh9JOdFdX9eiwVv/U/aSJHFaeqHlmQFVKBh9OxtP0IRN0Qo
- poRJVtF2Qs9ujpWuQagig==
+X-Provags-ID: V03:K1:CkL1BEDOMO6DojLjzd7txmE6jyfcZ0r8RvJ+3Wm2YBQ/uKfVDII
+ B04nC/c9rLdFj5U4OSCjxsTkN8vd7So+BaHYAeY7g9ahUst2/+ClPXhhGEn0PlOArGGUjag
+ MP5S11nMtyRc2QZVaj6S7RMvgPJ1tI/6ZYSOl7Jn+0VQ1PrhToS9aGiD469Ac+pegB/bv9o
+ rLJYysBHqnKpBGSvjA7Eg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:746OVGxSbZE=;g/4WeSEtzDvPOuHnUO9biBaaI8d
- WniFzk7wbOao8qb2TWYoUXAUCqCaHIf9v/MX/HM9gxLoIjkRkxhzbYG6Oeq1kYlDqp6XuwiiL
- ycudMwPipaqt8uq0fjveFMfg9y7MzDkut+g0iTODyqGZH8xugaUnDni7kA8fXPyW71QcoFTHX
- m9/CkiKhspTaoM7/23oWhPVcTO9iJ9iP62dwp02Cyd4nzPrAx88lRayHtUHfIagH+FVqeZz1V
- GjJRA7g1h7A8fxqWF/wR5J+JCBMkXTAJhuDhPzMSUOBIgEJX3eR1gyqa1czLY4hiTAawkcshE
- Yw3UIoEuyXRrnT08L4Rgo2q8Xfc2ZP2M14nZAerZ0YtRGnGvMFS5OdS2+Oy3JYrKIYi+XSm6n
- zIVUGtSfCjc0ZN2inHL25oSBOL8tirlkos+2zTX2zvrtAMlOf9rrz1V2b47ojRvXFp8EPtzIo
- dDT5yHjmYVj4w9pH4ezqlVJ6xHKC8cXR6P4ztxf6E0vvExquX8xUfJ8iMbpHOwTwICi4e9Ywt
- flA5Mopc1Pj41gJhsjDCaZOhP/UaNl8NrPvZXUwbsMIQZINa6So7foTK2CuPCQKAn6/JzKCBV
- /RCM7qDQWWquLTgOD9YEDvp3Ftn+78A+BE3m6gV/y7jpeuUF1CkZPpTT5fCra2J3SEN8ZOX56
- GBEhTfVLkvrwIXIH9i1i+Hykjkndtzei3rcEUfdw9rm6EJX61k2e8Dcp7rTkx+1e3zH7X1p+N
- wh1+X337/MmuXBbFUuaJ1kwpBcuZa/RBg4QV8QLBO8figsXIiMc/qLBDc4EXs70D4FjwnRAB/
- xKpQrQG4xORDBtdpW4l/ib2ABtsCgMY6IBU2CI23b1Das=
+UI-OutboundReport: notjunk:1;M01:P0:32doWJtV08w=;nNkHNMhFZmu2M8TJPJsHjOQorcZ
+ Yihj2CBzfPWkoLvrrmZ6r8bp/3koFk5Et5e//pqh86S+L95TiP2gyt9vS9NtxJrEUuTAJB0iA
+ yK4ZTi47zxVWQ1rxyw8uEqXh9feCw6B+Gy23RY9gGjgWZJTWp+YfcCny+1IPEGhqAJUpDXxP2
+ FPYrkDbhe00p70sqdJDATYeFx5dIVPnuqE73z0NvQcu5gbJuth7Si7W0HnbwQ1h37qrnIN+Ly
+ ZPrDgVmNxxN5k4UOjZS0e1jBugy3GpT+SN3tYdIDeYrIMobAOe5aiEVv4C2lYzyuUR57yxHlA
+ OVkhpKxglWMV+MyYdkLavSWXK1VQOZ+nLJuhhk7hlN+5/TqjH9vY9Kuui1+gzJw1BoVjschNF
+ mfQi6YZkKL/327jM52+wIzHOs3TTvT63JxuiEL0GiIm5nrJwRGdx4P7WtBZk87U8v1NpNyYJf
+ zN1LZyb1bDYObyU80v35cl0UvUcQc5J+aGaaW+oPAuyp8YZqa63mOAuka0r3ah9ipHqbMEvY2
+ ldfYYEYF5D8orhaGhq71amgxmZzL03/KLi+CfUe6bekSuXEpl4JskLish7/bCWF3wVRbgRwvc
+ DFU7qKIE4rusqQqWwOq4KqK1Nxev7Hw23fQRnGqQ9jbhr7Wj+449Dv2bzF/y5ZD0NkwTndTYR
+ S7t6Fy3l9I6UyinGfmW+ixSoXnV7RHXptuvuqyeYbKXLRPXmcOLDFOYIWcoI0Eb9qYvlmNn4E
+ di2m8TGij1X2xDCPN1O+rzSdPKHGs0X+GXN3I061rbrEdL5QQWT32LHRoQAm7Q4Lxry5/78FP
+ rzpQfCQq/Gr9LGynKc9mk52x/ksBAR8ejGoRS5rpVCLCU=
 
-Am 11.05.24 um 04:36 schrieb Lyndon Sanche:
+Am 12.05.24 um 19:58 schrieb Limonciello, Mario:
 
-> Some Dell laptops support configuration of preset fan modes through
-> smbios tables.
 >
-> If the platform supports these fan modes, set up platform_profile to
-> change these modes. If not supported, skip enabling platform_profile.
 >
-> Signed-off-by: Lyndon Sanche <lsanche@lyndeno.ca>
-> ---
->   drivers/platform/x86/dell/Kconfig            |   2 +
->   drivers/platform/x86/dell/dell-laptop.c      | 242 +++++++++++++++++++
->   drivers/platform/x86/dell/dell-smbios-base.c |   1 +
->   drivers/platform/x86/dell/dell-smbios.h      |   1 +
->   4 files changed, 246 insertions(+)
->
-> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/de=
-ll/Kconfig
-> index bd9f445974cc..26679f22733c 100644
-> --- a/drivers/platform/x86/dell/Kconfig
-> +++ b/drivers/platform/x86/dell/Kconfig
-> @@ -47,6 +47,7 @@ config DCDBAS
->   config DELL_LAPTOP
->   	tristate "Dell Laptop Extras"
->   	default m
-> +	depends on ACPI
->   	depends on DMI
->   	depends on BACKLIGHT_CLASS_DEVICE
->   	depends on ACPI_VIDEO || ACPI_VIDEO =3D n
-> @@ -57,6 +58,7 @@ config DELL_LAPTOP
->   	select POWER_SUPPLY
->   	select LEDS_CLASS
->   	select NEW_LEDS
-> +	select ACPI_PLATFORM_PROFILE
->   	help
->   	This driver adds support for rfkill and backlight control to Dell
->   	laptops (except for some models covered by the Compal driver).
-> diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/=
-x86/dell/dell-laptop.c
-> index 42f7de2b4522..07f54f1cbac5 100644
-> --- a/drivers/platform/x86/dell/dell-laptop.c
-> +++ b/drivers/platform/x86/dell/dell-laptop.c
-> @@ -27,6 +27,9 @@
->   #include <linux/i8042.h>
->   #include <linux/debugfs.h>
->   #include <linux/seq_file.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/bits.h>
-> +#include <linux/platform_profile.h>
->   #include <acpi/video.h>
->   #include "dell-rbtn.h"
->   #include "dell-smbios.h"
-> @@ -95,6 +98,7 @@ static struct backlight_device *dell_backlight_device;
->   static struct rfkill *wifi_rfkill;
->   static struct rfkill *bluetooth_rfkill;
->   static struct rfkill *wwan_rfkill;
-> +static struct platform_profile_handler *thermal_handler;
->   static bool force_rfkill;
->   static bool micmute_led_registered;
->   static bool mute_led_registered;
-> @@ -2199,6 +2203,236 @@ static int mute_led_set(struct led_classdev *led=
-_cdev,
->   	return 0;
->   }
->
-> +/* Derived from smbios-thermal-ctl
-> + *
-> + * cbClass 17
-> + * cbSelect 19
-> + * User Selectable Thermal Tables(USTT)
-> + * cbArg1 determines the function to be performed
-> + * cbArg1 0x0 =3D Get Thermal Information
-> + *  cbRES1         Standard return codes (0, -1, -2)
-> + *  cbRES2, byte 0  Bitmap of supported thermal modes. A mode is suppor=
-ted if
-> + *                  its bit is set to 1
-> + *     Bit 0 Balanced
-> + *     Bit 1 Cool Bottom
-> + *     Bit 2 Quiet
-> + *     Bit 3 Performance
-> + *  cbRES2, byte 1 Bitmap of supported Active Acoustic Controller (AAC)=
- modes.
-> + *                 Each mode corresponds to the supported thermal modes=
- in
-> + *                  byte 0. A mode is supported if its bit is set to 1.
-> + *     Bit 0 AAC (Balanced)
-> + *     Bit 1 AAC (Cool Bottom
-> + *     Bit 2 AAC (Quiet)
-> + *     Bit 3 AAC (Performance)
-> + *  cbRes3, byte 0 Current Thermal Mode
-> + *     Bit 0 Balanced
-> + *     Bit 1 Cool Bottom
-> + *     Bit 2 Quiet
-> + *     Bit 3 Performanc
-> + *  cbRes3, byte 1  AAC Configuration type
-> + *          0       Global (AAC enable/disable applies to all supported=
- USTT modes)
-> + *          1       USTT mode specific
-> + *  cbRes3, byte 2  Current Active Acoustic Controller (AAC) Mode
-> + *     If AAC Configuration Type is Global,
-> + *          0       AAC mode disabled
-> + *          1       AAC mode enabled
-> + *     If AAC Configuration Type is USTT mode specific (multiple bits m=
-ay be set),
-> + *          Bit 0 AAC (Balanced)
-> + *          Bit 1 AAC (Cool Bottom
-> + *          Bit 2 AAC (Quiet)
-> + *          Bit 3 AAC (Performance)
-> + *  cbRes3, byte 3  Current Fan Failure Mode
-> + *     Bit 0 Minimal Fan Failure (at least one fan has failed, one fan =
-working)
-> + *     Bit 1 Catastrophic Fan Failure (all fans have failed)
-> + *
-> + * cbArg1 0x1   (Set Thermal Information), both desired thermal mode an=
+> On 5/12/2024 12:53 PM, Armin Wolf wrote:
+>> Am 11.05.24 um 17:56 schrieb Shen, Yijun:
+>>
+>>> Internal Use - Confidential
+>>>> -----Original Message-----
+>>>> From: Limonciello, Mario <mario.limonciello@amd.com>
+>>>> Sent: Saturday, May 11, 2024 11:13 PM
+>>>> To: Shen, Yijun <Yijun_Shen@Dell.com>; Lyndon Sanche
+>>>> <lsanche@lyndeno.ca>
+>>>> Cc: pali@kernel.org; W_Armin@gmx.de;
+>>>> srinivas.pandruvada@linux.intel.com; ilpo.jarvinen@linux.intel.com;
+>>>> lkp@intel.com; Hans de Goede <hdegoede@redhat.com>; Matthew Garrett
+>>>> <mjg59@srcf.ucam.org>; Jonathan Corbet <corbet@lwn.net>; Heiner
+>>>> Kallweit
+>>>> <hkallweit1@gmail.com>; Vegard Nossum <vegard.nossum@oracle.com>;
+>>>> platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org;
+>>>> Dell Client
+>>>> Kernel <Dell.Client.Kernel@dell.com>
+>>>> Subject: Re: [PATCH v5] platform/x86: dell-laptop: Implement
+>>>> platform_profile
+>>>>
+>>>>
+>>>> [EXTERNAL EMAIL]
+>>>>
+>>>>
+>>>>
+>>>> On 5/11/2024 10:05 AM, Shen, Yijun wrote:
+>>>>> Internal Use - Confidential
+>>>>>> -----Original Message-----
+>>>>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>>>> Sent: Wednesday, May 8, 2024 11:53 PM
+>>>>>> To: Shen, Yijun <Yijun_Shen@Dell.com>; Lyndon Sanche
+>>>>>> <lsanche@lyndeno.ca>
+>>>>>> Cc: pali@kernel.org; W_Armin@gmx.de;
+>>>>>> srinivas.pandruvada@linux.intel.com; ilpo.jarvinen@linux.intel.com;
+>>>>>> lkp@intel.com; Hans de Goede <hdegoede@redhat.com>; Matthew
+>>>> Garrett
+>>>>>> <mjg59@srcf.ucam.org>; Jonathan Corbet <corbet@lwn.net>; Heiner
+>>>>>> Kallweit <hkallweit1@gmail.com>; Vegard Nossum
+>>>>>> <vegard.nossum@oracle.com>; platform-driver-x86@vger.kernel.org;
+>>>>>> linux-kernel@vger.kernel.org; Dell Client Kernel
+>>>>>> <Dell.Client.Kernel@dell.com>
+>>>>>> Subject: Re: RE: [PATCH v5] platform/x86: dell-laptop: Implement
+>>>>>> platform_profile
+>>>>>>
+>>>>>>
+>>>>>> [EXTERNAL EMAIL]
+>>>>>>
+>>>>>> On 5/8/2024 09:24, Shen, Yijun wrote:
+>>>>>>> Hi Lyndon,
+>>>>>>>
+>>>>>>> =C2=A0=C2=A0=C2=A0 Thanks for working on this patch.
+>>>>>>>
+>>>>>>> =C2=A0=C2=A0=C2=A0 Dell side has an initial testing with this patc=
+h on some
+>>>>>>> laptops,
+>>>>>>> it looks
+>>>>>> good. While changing the platform profile:
+>>>>>>> 1. The corresponding USTT option in BIOS will be changed.
+>>>>>>> 2. thermald will not be impacted. The related PSVT and ITMT will b=
+e
+>>>> loaded.
+>>>>>>> =C2=A0=C2=A0=C2=A0 Some Dell DTs does not have the USTT, Dell'll h=
+ave a check if
+>>>>>>> nothing is
+>>>>>> broken.
+>>>>>>
+>>>>>> Hi Alex!
+>>>>>>
+>>>>>> Have you had a check both on both your AMD laptops and workstations
+>>>>>> too, or just the Intel ones?=C2=A0 I think it would be good to make=
+ sure
+>>>>>> it's getting the correct experience in both cases.
+>>>>>>
+>>>>> Hi Mario,
+>>>>>
+>>>>> =C2=A0=C2=A0 I've a check for this, for both laptop and workstation,=
+ the
+>>>>> dell_laptop
+>>>> module will not be loaded. So, AMD platform will not be impacted by
+>>>> this
+>>>> patch series.
+>>>>> Follow is one example output with workstation.
+>>>>> =C2=A0=C2=A0 #lsmod | grep dell
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 dell_wmi=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 28672=C2=A0 0
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 dell_smbios=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 32768=C2=A0 1 dell_wmi
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 dcdbas=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 20480=C2=A0 1=
+ dell_smbios
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 dell_wmi_descriptor=C2=A0=C2=A0=C2=A0 20480=
+=C2=A0 2 dell_wmi,dell_smbios
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 sparse_keymap=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 12288=C2=A0 1 dell_wmi
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 ledtrig_audio=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 12288=C2=A0 3
+>>>>> snd_ctl_led,snd_hda_codec_generic,dell_wmi
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 video=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 73728=
+=C2=A0 2 dell_wmi,nvidia_modeset
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 wmi=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 40960=C2=A0 5
+>>>> video,dell_wmi,wmi_bmof,dell_smbios,dell_wmi_descriptor
+>>>> Ah; right that makes sense.=C2=A0 In that case, is dell-laptop even t=
+he
+>>>> right place for
+>>>> this patch series?=C2=A0 I would think the same policies for the
+>>>> platform profile
+>>>> should be able to apply to desktop/workstation.
+>>>>
+>>>> The v6 of this series would block smbios-thermal-ctl from working on =
+a
+>>>> workstation too.
+>>>>
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 Additional, with this patch, follow behav=
+ior is found:
+>>>>>>> =C2=A0=C2=A0=C2=A0 1. For example, the platform profile is quiet.
+>>>>>>> =C2=A0=C2=A0=C2=A0 2. Reboot the system and change the USTT to per=
+formance.
+>>>>>>> =C2=A0=C2=A0=C2=A0 3. Boot to desktop, the platform profile is "qu=
+iet", the USTT
+>>>>>>> will be
+>>>>>> changed back to "quiet".
+>>>>>>> =C2=A0=C2=A0=C2=A0 This looks like not a proper user experience. T=
+he platform
+>>>>>>> profile should
+>>>>>> honor the BIOS setting, aka, the platform profile should be switche=
 d
-> + *               desired AAC mode shall be applied
-> + * cbArg2, byte 0  Desired Thermal Mode to set
-> + *                  (only one bit may be set for this parameter)
-> + *     Bit 0 Balanced
-> + *     Bit 1 Cool Bottom
-> + *     Bit 2 Quiet
-> + *     Bit 3 Performance
-> + * cbArg2, byte 1  Desired Active Acoustic Controller (AAC) Mode to set
-> + *     If AAC Configuration Type is Global,
-> + *         0  AAC mode disabled
-> + *         1  AAC mode enabled
-> + *     If AAC Configuration Type is USTT mode specific
-> + *     (multiple bits may be set for this parameter),
-> + *         Bit 0 AAC (Balanced)
-> + *         Bit 1 AAC (Cool Bottom
-> + *         Bit 2 AAC (Quiet)
-> + *         Bit 3 AAC (Performance)
-> + */
-> +
-> +#define DELL_ACC_GET_FIELD		GENMASK(19, 16)
-> +#define DELL_ACC_SET_FIELD		GENMASK(11, 8)
-> +#define DELL_THERMAL_SUPPORTED	GENMASK(3, 0)
-> +
-> +enum thermal_mode_bits {
-> +	DELL_BALANCED =3D BIT(0),
-> +	DELL_COOL_BOTTOM =3D BIT(1),
-> +	DELL_QUIET =3D BIT(2),
-> +	DELL_PERFORMANCE =3D BIT(3),
-> +};
-> +
-> +static int thermal_get_mode(void)
-> +{
-> +	struct calling_interface_buffer buffer;
-> +	int state;
-> +	int ret;
-> +
-> +	dell_fill_request(&buffer, 0x0, 0, 0, 0);
-> +	ret =3D dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAGEME=
-NT);
-> +	if (ret)
-> +		return ret;
-> +	state =3D buffer.output[2];
-> +	if (state & DELL_BALANCED)
-> +		return DELL_BALANCED;
-> +	else if (state & DELL_COOL_BOTTOM)
-> +		return DELL_COOL_BOTTOM;
-> +	else if (state & DELL_QUIET)
-> +		return DELL_QUIET;
-> +	else if (state & DELL_PERFORMANCE)
-> +		return DELL_PERFORMANCE;
-> +	else
-> +		return -ENXIO;
-> +}
-> +
-> +static int thermal_get_supported_modes(int *supported_bits)
-> +{
-> +	struct calling_interface_buffer buffer;
-> +	int ret;
-> +
-> +	dell_fill_request(&buffer, 0x0, 0, 0, 0);
-> +	ret =3D dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAGEME=
-NT);
-> +	if (ret)
-> +		return ret;
-> +	*supported_bits =3D FIELD_GET(DELL_THERMAL_SUPPORTED, buffer.output[1]=
-);
-> +	return 0;
-> +}
-> +
-> +static int thermal_get_acc_mode(int *acc_mode)
-> +{
-> +	struct calling_interface_buffer buffer;
-> +	int ret;
-> +
-> +	dell_fill_request(&buffer, 0x0, 0, 0, 0);
-> +	ret =3D dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAGEME=
-NT);
-> +	if (ret)
-> +		return ret;
-> +	*acc_mode =3D FIELD_GET(DELL_ACC_GET_FIELD, buffer.output[3]);
-> +	return 0;
-> +}
-> +
-> +static int thermal_set_mode(enum thermal_mode_bits state)
-> +{
-> +	struct calling_interface_buffer buffer;
-> +	int ret;
-> +	int acc_mode;
-> +
-> +	ret =3D thermal_get_acc_mode(&acc_mode);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dell_fill_request(&buffer, 0x1, FIELD_PREP(DELL_ACC_SET_FIELD, acc_mod=
-e) | state, 0, 0);
-> +	ret =3D dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAGEME=
-NT);
-> +	return ret;
-> +}
-> +
-> +static int thermal_platform_profile_set(struct platform_profile_handler=
- *pprof,
-> +					enum platform_profile_option profile)
-> +{
-> +	switch (profile) {
-> +	case PLATFORM_PROFILE_BALANCED:
-> +		return thermal_set_mode(DELL_BALANCED);
-> +	case PLATFORM_PROFILE_PERFORMANCE:
-> +		return thermal_set_mode(DELL_PERFORMANCE);
-> +	case PLATFORM_PROFILE_QUIET:
-> +		return thermal_set_mode(DELL_QUIET);
-> +	case PLATFORM_PROFILE_COOL:
-> +		return thermal_set_mode(DELL_COOL_BOTTOM);
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +}
-> +
-> +static int thermal_platform_profile_get(struct platform_profile_handler=
- *pprof,
-> +					enum platform_profile_option *profile)
-> +{
-> +	int ret;
-> +
-> +	ret =3D thermal_get_mode();
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	switch (ret) {
-> +	case DELL_BALANCED:
-> +		*profile =3D PLATFORM_PROFILE_BALANCED;
-> +		break;
-> +	case DELL_PERFORMANCE:
-> +		*profile =3D PLATFORM_PROFILE_PERFORMANCE;
-> +		break;
-> +	case DELL_COOL_BOTTOM:
-> +		*profile =3D PLATFORM_PROFILE_COOL;
-> +		break;
-> +	case DELL_QUIET:
-> +		*profile =3D PLATFORM_PROFILE_QUIET;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int thermal_init(void)
-> +{
-> +	int ret;
-> +	int supported_modes;
-> +
-> +	/* If thermal commands not supported, exit without error */
-> +	if (!dell_laptop_check_supported_cmds(CLASS_INFO))
-> +		return 0;
-> +
-> +	/* If thermal modes not supported, exit without error */
-> +	ret =3D thermal_get_supported_modes(&supported_modes);
-> +	if (ret < 0)
-> +		return ret;
+>>>>>> to "performance".
+>>>>>> I agree, this sounds like the initial profile needs to be read from
+>>>>>> the BIOS settings too.
+>>>>>>
+>>>>>> Furthermore I wanted to ask is there also a WMI setting that
+>>>>>> corresponds to this that dell-wmi-sysman offers?
+>>>>> =C2=A0=C2=A0 Yes, Mario, you're right. This thermal setting could al=
+so be
+>>>>> toggled by dell-
+>>>> wmi-sysman.
+>>>>> But, for the Dell consumer AMD laptops, like Alienware, the BIOS
+>>>>> is another
+>>>> variant which is different with the workstation one.
+>>>>> With this variant BIOS, there is no USTT and also no
+>>>>> dell_wmi/dell-wmi-
+>>>> sysman.
+>>>>>> I'm wondering if both should be probed in case the SMBIOS one goes
+>>>> away one day.
+>>>>> =C2=A0=C2=A0 Yep, I think this is a good suggestion.
+>>>>>
+>>>> Great! Although something I wonder is if the policy when changed
+>>>> with dell-
+>>>> wmi-sysman is immediate or requires a reboot.=C2=A0 A lot of the
+>>>> settings in there
+>>>> aren't effective until after a reboot.
+>>>>
+>>>> If this is one of them then it might not be a good idea to make it
+>>>> work for
+>>>> both.
+>>> Hi Mario,
+>>>
+>>> =C2=A0 Just have a check, the check steps are:
+>>> 1. stop the thermald
+>>> 2. run the stress test
+>>> 3. Toggle the thermal setting between UltraPerformance and Quiet via
+>>> dell-wmi-sysman
+>>> 4. Check the CPU FAN speed
+>>> =C2=A0 The system reboot is not needed, the CPU fan speed changes
+>>> immediately.
+>>> =C2=A0 A screen recorder here:
+>>> https://dell.box.com/s/p2bhd2b6cv8z5buk9eao3bosgrrp1lf9
+>>>
+>>> Thanks
+>>>
+>> Hi,
+>>
+>> i believe it should be the responsibility of the manufacturer (in
+>> this case Dell) that
+>> the thermal state remains consistent across both interfaces.
+>>
+>> I think that the official Windows utility only checks the thermal
+>> state reported by
+>> the USTT interface, so we should match this behavior.
+>>
+>> Thanks,
+>> Armin Wolf
+>>
+>
+> Why?=C2=A0 Windows also does ACPI-WMI differently than Linux.=C2=A0 It's=
+ not as
+> easy to check both from a Windows utility due to that.
 
-Hi,
+Actually, it is quite easy to check both interfaces from a Windows utility=
+. Both ACPI-WMI objects can be accessed by
+Windows applications, the utility just has to interact with an additional =
+WMI object, but they decided to not do it.
 
-the function dell_smbios_error() says that when a specific functionality i=
-s
-not supported, -ENXIO is returned.
+Also the original smbios-thermal-ctl utility was created by Dell itself (i=
+ think?), so they likely would have implemented this
+if it really was necessary.
 
-Please treat this as "no thermal modes supported", since checking if CLASS=
-_INFO
-is supported is not enough (CLASS_INFO is also used by other functionality=
- like
-rfkill, so machines might support CLASS_INFO but not USTT).
+As Dell likely only tests their machines with Windows (if at all), i propo=
+se that we try to match the Windows behavior.
 
 Thanks,
 Armin Wolf
 
-> +	if (!supported_modes)
-> +		return 0;
-> +
-> +	thermal_handler =3D kzalloc(sizeof(*thermal_handler), GFP_KERNEL);
-> +	if (!thermal_handler)
-> +		return -ENOMEM;
-> +	thermal_handler->profile_get =3D thermal_platform_profile_get;
-> +	thermal_handler->profile_set =3D thermal_platform_profile_set;
-> +
-> +	if (supported_modes & DELL_QUIET)
-> +		set_bit(PLATFORM_PROFILE_QUIET, thermal_handler->choices);
-> +	if (supported_modes & DELL_COOL_BOTTOM)
-> +		set_bit(PLATFORM_PROFILE_COOL, thermal_handler->choices);
-> +	if (supported_modes & DELL_BALANCED)
-> +		set_bit(PLATFORM_PROFILE_BALANCED, thermal_handler->choices);
-> +	if (supported_modes & DELL_PERFORMANCE)
-> +		set_bit(PLATFORM_PROFILE_PERFORMANCE, thermal_handler->choices);
-> +
-> +	/* Clean up if failed */
-> +	ret =3D platform_profile_register(thermal_handler);
-> +	if (ret)
-> +		kfree(thermal_handler);
-> +
-> +	return ret;
-> +}
-> +
-> +static void thermal_cleanup(void)
-> +{
-> +	if (thermal_handler) {
-> +		platform_profile_remove();
-> +		kfree(thermal_handler);
-> +	}
-> +}
-> +
->   static struct led_classdev mute_led_cdev =3D {
->   	.name =3D "platform::mute",
->   	.max_brightness =3D 1,
-> @@ -2238,6 +2472,11 @@ static int __init dell_init(void)
->   		goto fail_rfkill;
->   	}
->
-> +	/* Do not fail module if thermal modes not supported, just skip */
-> +	ret =3D thermal_init();
-> +	if (ret)
-> +		goto fail_thermal;
-> +
->   	if (quirks && quirks->touchpad_led)
->   		touchpad_led_init(&platform_device->dev);
->
-> @@ -2317,6 +2556,8 @@ static int __init dell_init(void)
->   		led_classdev_unregister(&mute_led_cdev);
->   fail_led:
->   	dell_cleanup_rfkill();
-> +fail_thermal:
-> +	thermal_cleanup();
->   fail_rfkill:
->   	platform_device_del(platform_device);
->   fail_platform_device2:
-> @@ -2344,6 +2585,7 @@ static void __exit dell_exit(void)
->   		platform_device_unregister(platform_device);
->   		platform_driver_unregister(&platform_driver);
->   	}
-> +	thermal_cleanup();
->   }
->
->   /* dell-rbtn.c driver export functions which will not work correctly (=
-and could
-> diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/plat=
-form/x86/dell/dell-smbios-base.c
-> index 6ae09d7f76fb..387fa5618f7a 100644
-> --- a/drivers/platform/x86/dell/dell-smbios-base.c
-> +++ b/drivers/platform/x86/dell/dell-smbios-base.c
-> @@ -71,6 +71,7 @@ static struct smbios_call call_blacklist[] =3D {
->   	/* handled by kernel: dell-laptop */
->   	{0x0000, CLASS_INFO, SELECT_RFKILL},
->   	{0x0000, CLASS_KBD_BACKLIGHT, SELECT_KBD_BACKLIGHT},
-> +	{0x0000, CLASS_INFO, SELECT_THERMAL_MANAGEMENT},
->   };
->
->   struct token_range {
-> diff --git a/drivers/platform/x86/dell/dell-smbios.h b/drivers/platform/=
-x86/dell/dell-smbios.h
-> index 63116671eada..5d7178df80c6 100644
-> --- a/drivers/platform/x86/dell/dell-smbios.h
-> +++ b/drivers/platform/x86/dell/dell-smbios.h
-> @@ -19,6 +19,7 @@
->   /* Classes and selects used only in kernel drivers */
->   #define CLASS_KBD_BACKLIGHT 4
->   #define SELECT_KBD_BACKLIGHT 11
-> +#define SELECT_THERMAL_MANAGEMENT 19
->
->   /* Tokens used in kernel drivers, any of these
->    * should be filtered from userspace access
