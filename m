@@ -1,185 +1,202 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2064.outbound.protection.outlook.com [40.107.236.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF73F4D5BD
-	for <platform-driver-x86@vger.kernel.org>; Sun, 12 May 2024 19:47:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715543248; cv=none; b=e/kXW/UKprWXPnEJ7Mx5Mdn34+cn6m/ljvAzANKcCELTMCGMimhixKnvbkjdjPQueY2Gjs3j29wdNJSzFyo+3NZvGLYwErfRHogQz1TN7r7LkG3sU8avaHhuiHhlLN8vGQLkLbvEBDyx8xwJYlry+2ObkfrS17QX6Bb3e0zmH0U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715543248; c=relaxed/simple;
-	bh=5AiGpkqU+isZ1rSCxr2Ap1gJEg4sPUIJfVelv8dEGNU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lpupecib09osn65nMwq1K5uejwoIn62/S0yr9oIQAxvxT2qlFyZACfQoKf23IhW/KQgqu3hjIWF3RnNcPEULrbTIj2jBUoN8ROZDuQtXKhkSOfT3CARB67vm2L6SkGZxB+o71SSzK9VYkrsfp3x6v5ZGu0WUqjJ96RMWuVHqud4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JWLg50lT; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9880B381DA;
+	Sun, 12 May 2024 22:14:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715552088; cv=fail; b=V1FAC6q62S8PtfQL3Dcsfz1IxmI2oNeN5iM7/7uqBG1QziH9D4SKTLcs4ASxDdyV3WiUXuaOnGz+IeSzTxCkG2ety3/ul0ohaQlGwCCALC9Id86IJ+XnwpO4jPy31TFL7u4aL6FaEzj8z+vs4XbmC/4JeLAnsbYBDblfCwNG0eE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715552088; c=relaxed/simple;
+	bh=Ch8ssiVIffVEGHVT9pyoYkudr4PqYXQ0zpBwZBbEfS0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=bTkRzZ03A8k9czxRs56epKAxxnopGgHWwY4+lcPme1hvvbAMhccrkn3tQSP4wO7nFkPmDARZ1IOvtaVrUrfhEPd28GqmipBt9bbZ2WfQfTlJqmkhLogNCgCVZxVNIGhial6qhihe1kASen+kiDzDGWD0i1Hqu8k8MI+jQ8PWLdg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=exAZ4nR/; arc=fail smtp.client-ip=40.107.236.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JWLg50lT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715543244;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CE7u7uIxgYcyylLEBqk2QgmaXCLwtIX8dPUDleBVYrQ=;
-	b=JWLg50lTYHu+onXXMT/9vCCpgnwAFQt/5q1XLjNy5K2Vj7qBzCiZb8lc7tLA43LXuzVIWm
-	Zc7PQVuIad64V9dPJ4f8AGzk9NqgtL2bYQKThIX0umdNYxnNMwp7AAPaQf3yysk2xwD1I5
-	FiQpOHC7iDcXk4SXgXrcc/PTJkJqTaA=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-170-q0RkpeYpP3GpDLe31doKTg-1; Sun, 12 May 2024 15:47:22 -0400
-X-MC-Unique: q0RkpeYpP3GpDLe31doKTg-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a59ad2436f8so223616366b.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 12 May 2024 12:47:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715543241; x=1716148041;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CE7u7uIxgYcyylLEBqk2QgmaXCLwtIX8dPUDleBVYrQ=;
-        b=rgSw6os8f9yCe1jwvApvvLyL+VOww5zFTzK//m1TjegIoUCZB0RTjDHUx0dyGHsrxc
-         4No7ooDN74Q5f9SfY4By/8wSmvEcCSGWTnMqbg+0h7tebtBl4jq65eTiz9/H5lEW2uga
-         3Ah+6Hd/hdQ4yFYQbZEvaKxcIjHw3sDrteu7GKlpSPNeAMRVGVP8LAEHAoEz3kDptUsU
-         Pe6napoqXuYkHJlMGaS6kpOLHNXB68rllRebH9sBQJZEOaesUbSyT5L9Vw/5vdiPw2zy
-         0GiyFtGezN7UeXgUKNM+CaovNQ4vCol6v1FPjHGXW3l+kakJyeu98cuIQB/FWj0NIyER
-         dwVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXpa22XgfC/rUDwbfsxv2/HBvNUXHjHWnXTeseppO2x70twIfl346gnJaHZk5R+G56MUulrDiQwYCGEB/Sv+dBZIVHFx+lh73VOoUyzqfIrsRqsrw==
-X-Gm-Message-State: AOJu0YwaJnC7MKFhKodBWgCDHvLb6IYsYEwv5rueQCtv5bh6z54Ytu+j
-	Jny3g/15b8Y7bN+Actdi8trj3sGKjWgOwb31X4XtvWZZhiIpOqjL4uqLrUQoq8jJhz3UUuvGLl6
-	PSsr6+ottQkY2eONJbtnygTqnJ2SQg0DQ3rw49GDbyfP3XDwns5l8jO0C0h2rplk7++FJZe8=
-X-Received: by 2002:a17:906:2298:b0:a5a:3579:b908 with SMTP id a640c23a62f3a-a5a3579bb63mr439383966b.38.1715543240855;
-        Sun, 12 May 2024 12:47:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFvICpmQ4pD8hgqQPkZ6FdctCTO6NIy9ExknQMeYqrOOwtH57/OmXRPWNXyufSABNi1TZ/4Zg==
-X-Received: by 2002:a17:906:2298:b0:a5a:3579:b908 with SMTP id a640c23a62f3a-a5a3579bb63mr439382966b.38.1715543240515;
-        Sun, 12 May 2024 12:47:20 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a178a9f0fsm489436066b.69.2024.05.12.12.47.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 May 2024 12:47:20 -0700 (PDT)
-Message-ID: <ebd60bb3-fb6b-4f01-a513-5b3ee7d81b45@redhat.com>
-Date: Sun, 12 May 2024 21:47:19 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="exAZ4nR/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gsrnWG3dRFinzh0A3F4ePWgD1pHeMZjPwFJyuqJ4ukDk4ta2Lvj49dNJz9UH1bbY6y5syTwMokHDNFUNMEtqNeLKC/8HAHyh2ho3HKe5ieFoOZ8Eqv5AL1g63VIgp0xgF9SPkTNpjnonODkZzZV3e6BW3juDKGXjlupgFNXboBNxz/qejBxXIyPw0gd2aqJdAG0/0rxYgE8YcMNsJly6FL29ZyTKuMasy6upslIr0+cjXe/qlxip4W6P8fVrjzahOxNMZ2mDdAVQgV8A8IB2Y3XhtFkeh6RVjg5E0ZbeHmFIWSCcQPdvf3jbQq6KCG5RDTKzeUlpl6+hd44So1zuMQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+OHREHkZu/9FryuqS8AdNnC3XpDCeSBwJ3aRdpCqegA=;
+ b=V/OP7buQoIowMhbEjjJX+P0gZ15++NWd9e6E6GIg07lF8Hre6uMfqDaauXHdteY0AsR/xRi4Jad3yFenqjcW3lGI3qsjDb0CDDlCbOiwVyzHczJZ3+mx7QMiklFvdU/pqieNZb1I4QpgjObtvO6f/FV0YBMn4BuPj989sFbDTTOzVckZt3vFrQHdIBprtMthQXoCpImwcRTiY3vqRtrjFm8BeZkMXkhu+8KtJ9bBVASIDzxkSkI4SGiPETjWrTYpAMioEU0fzWH+NPzedKXtyeYE9XL3Z+mT/jKDc3amwVe7mmHNgmTf0RxIlHwZE0C4zfJSFwZjSIbdnf6Csnxt7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+OHREHkZu/9FryuqS8AdNnC3XpDCeSBwJ3aRdpCqegA=;
+ b=exAZ4nR/qAcmxwwoSEnRLLN0f3Wg/H9LKP8na1nw3WSv0CyZztyG8yUxLmIrCDVOm2doLM6EMBrPBzPr897pTQUB6gDGoGMnjRBoxsVM9ZB5EKVqxXo/P7W8KQcxWkbql2r/FshEbMKL04xbA7RRwS58BkcZM2rCa6pIby0iB5o=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by LV8PR12MB9406.namprd12.prod.outlook.com (2603:10b6:408:20b::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Sun, 12 May
+ 2024 22:14:44 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.7544.052; Sun, 12 May 2024
+ 22:14:44 +0000
+Message-ID: <24fa8cdd-4c7b-4ec2-bffd-ff80e190f5fa@amd.com>
+Date: Sun, 12 May 2024 17:14:40 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] platform/x86: dell-laptop: Implement platform_profile
+To: Armin Wolf <W_Armin@gmx.de>, "Shen, Yijun" <Yijun.Shen@dell.com>,
+ Lyndon Sanche <lsanche@lyndeno.ca>
+Cc: "pali@kernel.org" <pali@kernel.org>,
+ "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>,
+ "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
+ "lkp@intel.com" <lkp@intel.com>, Hans de Goede <hdegoede@redhat.com>,
+ Matthew Garrett <mjg59@srcf.ucam.org>, Jonathan Corbet <corbet@lwn.net>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Vegard Nossum <vegard.nossum@oracle.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Dell Client Kernel <Dell.Client.Kernel@dell.com>
+References: <20240425172758.67831-1-lsanche@lyndeno.ca>
+ <20240501215829.4991-2-lsanche@lyndeno.ca>
+ <BY5PR19MB392256C65661E76FC292C0889AE52@BY5PR19MB3922.namprd19.prod.outlook.com>
+ <63894ef1-c482-4646-8351-4d6cfc6c528f@amd.com>
+ <BY5PR19MB392299916A85FF06387DC9C19AE02@BY5PR19MB3922.namprd19.prod.outlook.com>
+ <a1306ffa-c0ea-4ce6-8692-76bf37850e8a@amd.com>
+ <BY5PR19MB3922A117E489A55C3C7FAC789AE02@BY5PR19MB3922.namprd19.prod.outlook.com>
+ <4d8de625-9018-4926-9519-37f5a90a96e5@gmx.de>
+ <d38043cd-7fc2-4255-a795-23e64ee4a8c2@amd.com>
+ <e583ccb0-b0be-4fb6-8e70-e4cd6921d77d@gmx.de>
+Content-Language: en-US
+From: "Limonciello, Mario" <mario.limonciello@amd.com>
+In-Reply-To: <e583ccb0-b0be-4fb6-8e70-e4cd6921d77d@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CH0PR03CA0213.namprd03.prod.outlook.com
+ (2603:10b6:610:e7::8) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] tools arch x86: Add dell-uart-backlight-emulator
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, AceLan Kao <acelan.kao@canonical.com>,
- Kai-Heng Feng <kai.heng.feng@canonical.com>,
- platform-driver-x86@vger.kernel.org
-References: <20240512162353.46693-1-hdegoede@redhat.com>
- <20240512162353.46693-3-hdegoede@redhat.com>
- <CAHp75Vccu8gse93ZcYGq08eoMtJ5+vGTWOs2yvBkSSit783bzw@mail.gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75Vccu8gse93ZcYGq08eoMtJ5+vGTWOs2yvBkSSit783bzw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|LV8PR12MB9406:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5e1083d9-b5a3-46f7-2c02-08dc72d0ed33
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|7416005|366007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dkx2TnJydjF1RWJac3lTdk1kc3JDazhxd1ROM0p3RjlBUVlvSzNhaDloeFo1?=
+ =?utf-8?B?V2lQT0MraTVlVGRhcml5RVo1N2FaRWpDUDJ5N0k5RmtSK1dVYkRwKzRxUXpq?=
+ =?utf-8?B?SUZPYTc0eDlhQnc2b1ZlMG1rTmlrSXJUb1lhRmgyRm1zSE5PWE5HMU5ZclMr?=
+ =?utf-8?B?b1VVVHlQS3g0M1k0dEJMMHBoZ3ozSTA2T1dhSFRmWWNFcU1qcVpzelFUMWJa?=
+ =?utf-8?B?RmQvVmtEbFkvSVhZeTVyZ1JaMlYvRmY3eVhoSTE2WHBUNUd3K3lsTDkrTXhn?=
+ =?utf-8?B?L1hYLzl6L0VMSTFDUklsNDBKVkFOajZ5bktnWlNEQkc3djdWcTRIWmEzOHZh?=
+ =?utf-8?B?eVEybXZGZDI5MGVtMCtkb3pnWUduN3dGamZzVU5XcEVWUXlKNTRVdTROeTBC?=
+ =?utf-8?B?YW8yS1lMdEo0ZFVtT2pLSlZHVG5NcjdVUFFUd1d5aWZ4QzRBMlFEbC9RVjl2?=
+ =?utf-8?B?SFFIMGNjU2JmOUd2amFTN1dUcmdDbHRXb2VqWkY1TnJ0ZlRyUWtna2tSYTFY?=
+ =?utf-8?B?V291bS9sWEx3a29ZT1BwSGNzR0Z3YzI1anJEaE91V29DYlpkck0yOGFrL1RX?=
+ =?utf-8?B?c2pxOXc3VWEzR2ZNODNpVjVtUFo2a0JhWDdlSXdzdis5bGg1Q1h3dlMyKzNJ?=
+ =?utf-8?B?MHV6MWpXNWlsRFJQZThpcnIzSzM3aVpaOUxtZlY2UXRzREF3NnJoWDNrUnI1?=
+ =?utf-8?B?cG1obmRTVVE4R0wzOEJDQ1NueWZMZDdPZmNiSEgxbXUyOVgxYThiUkphSGtM?=
+ =?utf-8?B?OWxFVlFQL2VETnlqTklEZEtZeHFvZGNDSnJNZ3pLWDVERWczYjZPeEF3U04y?=
+ =?utf-8?B?a0lxakZQeTYxRHA5RkpXQ0RBMHhXTXFUdGlYbmg3a1UyY2VNdlJDelQ4ZlZr?=
+ =?utf-8?B?YW1Cd3VyZVZqSkJnV1RFSlo0OS9xS3R5TjBKKzEwVTUxc0JyYW8va2FHZVZP?=
+ =?utf-8?B?ZFJNeW5BMVgxbS9jbW1BcXdSWkZ0RjZlRDNqbzBWUTQxRUlQc2pzdnVlbjIw?=
+ =?utf-8?B?MW5FdDcyMG83ZS9qeTVuV2JWK05XRi92Wk1MeE5leWV2SUUwLzEvWFJvNkVy?=
+ =?utf-8?B?bmMwaFFacTE4dEp5NDVYeW81QVhIcmJpVVhXQVcwN090QXlrL1l5ZXlTSEFq?=
+ =?utf-8?B?ZnBQWGdiVGh3Ym5WeEMyZGRmRDVXSGFhZThJOHVHUEQvSXFya2hZQnd0MENC?=
+ =?utf-8?B?YkRndXFpYlhiRjVYaUV5QW94VXRscWV2dUZqZ1F1R0R2Y1FsYnVkcTBBbFA5?=
+ =?utf-8?B?REthS1dqOUZFeEF6OThMRmpUcUMrK0dCR3QzZmgrYjZVY3F1a2paNk5BU09n?=
+ =?utf-8?B?T01YYm5SUmtsSXZxc2FjaWpPVE5IMDg2cDhwWTFYd3lEdXgrbTZsMW00UG5T?=
+ =?utf-8?B?M0RZVTExU0k4WUtRTXYyUmdoTXdOZW1jUmdlMU80aXFJeGoya3NKVVlKeWRS?=
+ =?utf-8?B?dEtEWk1GVmJoTTRtR0lOUmFSc2Z4NlJ4YXMrRFRGZXN4VzU2OGY5RUg2SFFm?=
+ =?utf-8?B?OGZwUjhMV1lCUURGNTZRcmlRcDZtTnlWK1NBaTB0bTA3bVRGMi9MV1l5dVBz?=
+ =?utf-8?B?M3pTZFB5Rk51TDNRSndTUjZaQ0NkRFhFMk02OTJCd2pkQlBuNmJXWEZVNjUx?=
+ =?utf-8?B?d0F3QnoxV1BBZ2hoMGFtQUVMczZOaStUT05WZFlxZGxjSHBRR2RWaDd0ODAv?=
+ =?utf-8?B?SCtjYzN5ZkVxTnJTOG40WEJnYzVCNzZZNWIyaThpQW5CUm0vVFVaZWJ3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RXFYSVJZN1RGcCsxTzF1Qy9ralhtb0RtVzJhYjNuK3c2K0p0bGhadkhCUlg1?=
+ =?utf-8?B?QjBTNUJkWW5MWW5XV2VTTkN1ME9odS9xdHJ1TWhXYmtWdERnTzRwVTBRTkpX?=
+ =?utf-8?B?OE56WlRkbzBVR1FXVmFTOCtaU1ZMdXFlSGJDNkRyWndDa01YTFpySk00alJp?=
+ =?utf-8?B?Z2o1ekZ2ay9WSnpydlFkUzcxa2ZaZ2lEQ2c0N2dpZ2VRZjdWb2p6V1lGT0Rm?=
+ =?utf-8?B?aG5pSjBqWkZFTVN1QkRhbHFHdnkwZituMG9neG1jYlltbTJFSXNJa3BrdFRC?=
+ =?utf-8?B?TmZESmp4bmJkcUl5QzQzd2lsOHBCM1c1R1B2T1BKZm9aNlpGai9oUEwveUxk?=
+ =?utf-8?B?dzdtUlQ3N1ZLcDNXMEtHOVV5RkFaaDc5bEQ4aG9XSmFxT0h0NzhsQkRiZVB2?=
+ =?utf-8?B?d0lxN0pmdEw0Q3U1TnBBVUFadVduWE1VK0FCUE9xOVRucTlWbVJsQWpnQysr?=
+ =?utf-8?B?K1hEWHpHQkNMc2l2NVp5Ylp6bmNVY3lSWUllUklZZ0x6anEyOUd6VDdPMlgz?=
+ =?utf-8?B?RFdvYVU4TFQyV3I5ZFd0emxNV1BWV2NuMkdlaWFOV09rZUVQZVJrOW9xbnRH?=
+ =?utf-8?B?QkUwZVJqRzlBcFcwRVZBMkJHOXVGUzNsM2ozclFFZnU1K3JWT1kyU0pkVDZx?=
+ =?utf-8?B?RVp4RVUzdjBIaGlpMEFmNVdZeUZoUGtHTGJvcUsrWHl2TUhVQ3R2a3Bia09l?=
+ =?utf-8?B?czJwYmUrTFp2dmZtdS9IaTFBU1EvZmx3TUVPbm8zOVlGV0JONXQ5TFhnOERn?=
+ =?utf-8?B?SHZGempXVDJzdGpmcWtsVFE2bkhQWXRjdnFNalNsU0ZmWVJLQ1N2eTF2aUlT?=
+ =?utf-8?B?VnYxVGNlVk83cGVZaXYxcys2a2JzaWhCQkhIRUJuRGMvYUV2TkdMeFNQYjFT?=
+ =?utf-8?B?RXN5MXFPMUt3Y29pM3poRmZZVGNSQVNJWWs3bHR5RGErZjhvMUMxSnNLT1Jh?=
+ =?utf-8?B?RHdpRDJwakdNT1V1Q3F1aGd2dExuQmN1RndqTEUyVDY1WDhNSk92MjQ3bGpk?=
+ =?utf-8?B?RGdXYU9hL0ZLb2FrNzBNOGJlSHhBZjBpU0JJOUZhY3hXaUZ2RnQ1K04vcjJM?=
+ =?utf-8?B?ZW5SQ3JrU09SbUI2MWd6bnNtNm5UNjdLQjlNYm1kSnY1Y254d1RaVlAzc1lO?=
+ =?utf-8?B?MnBzV1J1dUNBb0YvTTlXbnJseWxqWCtEWnZLRE00dnJwVVNCM2JGazFXSWlr?=
+ =?utf-8?B?TWQxWmdxYUp1ZTFFQWI4SGZ5VXBOQlA5TkdkanBxK1VLRWV6RVRPcm5UUjM5?=
+ =?utf-8?B?eWRpS2hlV1krMmFTVmVlTSt3dkxiRDVIQ2ZVcnIvOGlUSFlnVlg1ZnptcGpH?=
+ =?utf-8?B?M3dvMjJJOFZHYjAra0UwKysyaWowVEVneHRCOUhvTWhUWEVJRUtIQVk0TVlw?=
+ =?utf-8?B?NGJkRHRwdnFha2FZWktmTVU1RnVLaGtrY2wzdzlmalVqQXNxUHY2RWRWZ3l2?=
+ =?utf-8?B?UlIwc0xEai9Vd2k2ZktzSFFzcENaYXo3ak9jdXNtdVg5WCt4ZVlRSGxqVG12?=
+ =?utf-8?B?dFFjN2hFZkNIZWNHMmdsajM2QXBVVnhPN3llendsYzZqdzRpZzROZy9SZG5E?=
+ =?utf-8?B?bHd3SGhGWVkvdzNXQWw2dXA3czVBQmNwMm5mb0hxZG95cFNsU0dMOGcvTXRP?=
+ =?utf-8?B?T3hhbFFXbks1RERzd1RBNE5JdmhMU3BYa2xWQ0hZN1hBMFpXbnBIQVFxKzBh?=
+ =?utf-8?B?ZGhtMHRCdnhUT0hUVDI0aVUxUGpDVkQvdU1tVUtleUVWM3hhd1YrNFF0Zkt3?=
+ =?utf-8?B?M1BvNVpySE1NN2xUK2NXRmsxVXQ2Uy9tODZYb05weE5ydmxRKzFZdHR5bHJt?=
+ =?utf-8?B?MnZHeUxsMTliY1pzVENZUnBFYm5DNVdDZEJCejU2Sm9JZUhjWVI2VVZCdGxU?=
+ =?utf-8?B?SjZOMWRVczBQcnpjY0RiR3hNc0xodktMeTFMN3BTUHZwMHNiUUttRjFwR1d0?=
+ =?utf-8?B?eHZ1NFdhMmd1REd6RkZ2cnpiMm5VelROTVZJMHFObjBENktmY0crOEdtdXN0?=
+ =?utf-8?B?dm8rNjF4K0dvcnpXQy9wa3B6d1BMMjlxQjRIREhaVUsyNExtUHN6ak5rRHZN?=
+ =?utf-8?B?Vjc3SDcxYXBrY3B0eFdDcnhIaGFVS2QyU0RXV1B3OWVRUTFtYXlMUWt0cG0w?=
+ =?utf-8?Q?bsRX0yduXy3DBMTWWRJfaFuxw?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e1083d9-b5a3-46f7-2c02-08dc72d0ed33
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2024 22:14:43.9569
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HkW0enjMDpkv1rWqgfTTwrKaRlmAhTsagK/hDpA7DxdlGm1wUBPILhvQNwYzOoJ+dhCh+7YocVhnOE9MB2VxeQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9406
 
-Hi,
+On 5/12/2024 1:47 PM, Armin Wolf wrote:
+>> Why?  Windows also does ACPI-WMI differently than Linux.  It's not as
+>> easy to check both from a Windows utility due to that.
+> 
+> Actually, it is quite easy to check both interfaces from a Windows 
+> utility. Both ACPI-WMI objects can be accessed by
+> Windows applications, the utility just has to interact with an 
+> additional WMI object, but they decided to not do it.
+> 
 
-On 5/12/24 9:32 PM, Andy Shevchenko wrote:
-> On Sun, May 12, 2024 at 7:24 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Dell All In One (AIO) models released after 2017 use a backlight controller
->> board connected to an UART.
->>
->> Add a small emulator to allow development and testing of
->> the drivers/platform/x86/dell/dell-uart-backlight.c driver for
->> this board, without requiring access to an actual Dell All In One.
-> 
-> ...
-> 
->> +++ b/tools/arch/x86/dell-uart-backlight-emulator/Makefile
->> @@ -0,0 +1,19 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +# Makefile for Intel Software Defined Silicon provisioning tool
->> +
->> +dell-uart-backlight-emulator: dell-uart-backlight-emulator.c
->> +
->> +BINDIR ?= /usr/bin
->> +
->> +override CFLAGS += -O2 -Wall
->> +
->> +%: %.c
->> +       $(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
->> +
->> +.PHONY : clean
->> +clean :
->> +       @rm -f dell-uart-backlight-emulator
->> +
->> +install : dell-uart-backlight-emulator
->> +       install -d $(DESTDIR)$(BINDIR)
->> +       install -m 755 -p dell-uart-backlight-emulator $(DESTDIR)$(BINDIR)/dell-uart-backlight-emulator
-> 
-> Is it possible to fix this to (at least) honour `make O=...` cases?
-> (See, e.g., tools/gpio.)
+Ah I didn't realize that they're actually instanciable from the WMI 
+repository in an application, but that makes perfect sense with how easy 
+it is to do from PowerShell.
 
-I'll take a look at what the tools/gpio Makefile is doing.
+> Also the original smbios-thermal-ctl utility was created by Dell itself 
+> (i think?), so they likely would have implemented this
+> if it really was necessary.
+> 
 
-> 
-> ...
-> 
->> +/* read() will return -1 on SIGINT / SIGTERM causing the mainloop to cleanly exit */
-> 
-> Interesting...  usually we handle error codes, such as EAGAIN and
-> EINTR from read() syscall separately.
+It was created at a time that the ACPI WMI BIOS attributes interface 
+didn't exist.  I've understood that the general direction is to use the 
+WMI BIOS attributes interface in the future.
 
-EAGAIN cannot happen since the fd is kept in its default blocking
-mode. Other errors are also not expected to happen and would likely
-lead to aborting the program anyway.
+That's why I was suggesting using both, if such a transition happens 
+then this driver would be ready for it.
 
-So just having an empty signal handler and then exit on the
-EINTR error from read() is a nice KISS way to exit the main loop.
+> As Dell likely only tests their machines with Windows (if at all), i 
+> propose that we try to match the Windows behavior.
 
-> 
->> +void signalhdlr(int signum)
->> +{
->> +}
-> 
-> ...
-> 
->> +               fprintf(stderr, "Error opening %s: %s\n", argv[1], strerror(errno));
-> 
->> +               fprintf(stderr, "Error getting tcattr: %s\n", strerror(errno));
-> 
-> (and so on)
-> 
-> Wouldn't perror() call be better?
-
-perror() takes a fixed string, so for your first example it won't work since that
-requires printf style formatted string support and once I made the choice there
-to use fprintf(stderr, ) I used it everywhere for consistency.
-
-> 
-> ...
-> 
->> +               switch ((buf[0] << 8) | buf[1]) {
-> 
-> byteorder.h is part of UAPI, you can use it, but OTOH it might be too
-> complicated for the small thing like this.
-> 
->> +               }
-> 
-> ...
-> 
->> +       return ret;
-> 
-> Hmm... Hopefully you checked the possible returned codes, in user
-> space it's only a positive 8-bit value used.
-
-That is a good point, actually in normal use ret will be (len + 3)
-from the last write() call done in the loop. So you're right that
-needs some work.
-
-Regards,
-
-Hans
-
-
+I don't have a strong horse in this game, but I see what you mean in 
+terms of general compatibility.
