@@ -1,102 +1,232 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D119536122;
-	Sun, 12 May 2024 17:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2D717BA8;
+	Sun, 12 May 2024 17:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715534511; cv=none; b=VX8932SKFSZu2joUT3GSYdkad+YEPGf8AUlKWaUKSfKZQuw5OU/oVJvwIRl16d3qoJKG+YMImPbrsVUP66S4TYDYKlYwAO2EjiLfzPU4pUDb5SBXqH529z1Dd1sUp/+9xrq6Oy4DKzVbOjgjXVmFVU6ZB7pD1vKMLOCI0Kz53fs=
+	t=1715536454; cv=none; b=N5r/sUFDTkYIV4at+UJWm8flB2YmByEJ3aP5YugDKBHgB7EpoMgEHzGwZZFZAqlxbMuVP3vs1By8FOcz5JQbGsIPekdd6X1us5R6OH18W3+zf+ohumqMcDPsq3gaGLExgNTMIW4GQR0PT/Zzo0/QLfwMv98h83xbfXBPnThMhd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715534511; c=relaxed/simple;
-	bh=AzTKSxgZVEnj54sywuMCGiBVCgI5nJS8dtdSqzzX/Ic=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q6GFxWMtK/n/OKumQ4RkyUSuPMWgeCDiWEaUteIinsKoHwsK2EJoN/rfTTET8Ztp2f6XC12PleTlDdo+SYCPpm6ZNHAxCuxcXlZU1PPAs7jG0IwFW2HX/PAdMTg5WBXv0jI4OVlxGiMKaeXg12yiJP1nCt0c6tswOQZPvAMto0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=no3Kvyg1; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715536454; c=relaxed/simple;
+	bh=Rz8h5SH/vN5ljEqAG22wkeEZTE2i7FqMBwTIfRf/ScE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B9di90Q8SKvEqHUST4OdfCjQ2Y6UsU2niH5g4JIZmWYkIaTlRHn9+kL0IICqEojBXoob8vXqWNcGLlCs5vBIdBHB9kOCPwUHpBA1F5yvwmANh4vzKZ0EjqjH0O/nevysFCA5ah+TSufd1JsRSnL5njhjEy467szIcj6mBvHnzGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=F3vy2ex8; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="no3Kvyg1"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-deb99fa47b6so4166827276.0;
-        Sun, 12 May 2024 10:21:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715534509; x=1716139309; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AzTKSxgZVEnj54sywuMCGiBVCgI5nJS8dtdSqzzX/Ic=;
-        b=no3Kvyg1CQZhWZxrgSh6Ytndmc4XJIoJSW7Yp/TrX7J06OIWAkiQlRhkS9BPvhrSdK
-         Ek8OqiCTBmmliNeS/RhrewjIQus/o4051Bbyox45mlZVms7D283QPzdV5MHSLWI2rH6m
-         7rw30FUwH8Wh9UShHhHGHLUc59dBCbLCC0AVh1IB1RV9bjR6bQtF2swiA8VlhI8+yHMC
-         hDhrPUXuel9V5K2fNmu76AM+YWOWIjVMS5EuTWJbNaXisRdyiPsb9Hwn7c+AwseU8vQ6
-         fbeBPWPrjvCCk+mn+ZEJ3c9xXZItN60zXUI6IRKXXp35olKsKqyjvsBvRD42vymqsESw
-         boHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715534509; x=1716139309;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AzTKSxgZVEnj54sywuMCGiBVCgI5nJS8dtdSqzzX/Ic=;
-        b=WAWUEYLXbAgL6YddPWhLgRzhrzQWpmVEOCV9jUpn0p7UBTp8zZwJWCIkTjvVJAcOeB
-         8qOO5wwqI7XRj/blRoRPIMxyL1qCPa11UTo1eCE5qakImOYD0cMeom13YEZbM4FrdHXO
-         xX0dwkvDYOg/ScD3FOEeASplL05kYtKl/88/WCpikpj/gWD3l1mTeAPEFHxcrTbwkClb
-         j+waVLnaS/3gEpG+NrVMEhcKYMyW7wk0KZJu+hoYpM7ZXWGmgrqm4jdcXXvyGXd76dtu
-         5ByJTtp94TCpVWZTyaLLZyZW9SUOeQ0rbpuBMW3x2XT+bEyvYqGlfBWA280GFko6GB7z
-         fU2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU2ei42BaeCukkAFeZHCEOfRW0eYyg58aadiKm5qWekoQEfJo+5Vevqb5sZt7h+xKjFcjtIWTTjfFC4TobnzkrllSbzWxc0CXveMO42Le+6Ous+qZQ5b3QFCJQt3TkESacY4iYDL9M5p32atYQolKNLcb7QCQLm5olcyT6RV32VX8yWhx/aaTKy/RdsvPGP
-X-Gm-Message-State: AOJu0YzZQW8L9B/+ALGyqqvVByMl+Sa6Gwn93BHMEiqUSff53YL2964R
-	HrsN3GMbtnTMCxlcKVsO8i3YkNcrfZIz7xog91RPoFr/kKGgxd1oPlmIsZr20rzRNXN2A9imyOx
-	I1mxomM9V4aTr+7XM6EQ4W+is2io=
-X-Google-Smtp-Source: AGHT+IE6H8iYCQF2oK1tjjJ8FOCWPzoLa8cSyA3zmCSivazmxF7tcQJ5Vfr3v/FJuQ9QClm62kvb8NcT/B+PQyThz0A=
-X-Received: by 2002:a05:690c:112:b0:618:8390:341f with SMTP id
- 00721157ae682-622aff42b9amr76381837b3.1.1715534508852; Sun, 12 May 2024
- 10:21:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="F3vy2ex8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1715536418; x=1716141218; i=w_armin@gmx.de;
+	bh=ZxnIQ0JAXKitnZtKLLipAa7b2YIbxgaE1tOrjgHQ9Nc=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=F3vy2ex8um7+h3ZfhpjN2qbhsWGtPqWKZs70EhDSYcOS/eqq4bRmAcyBt2sNJZMp
+	 i3Bx3Jh4Ov2FnwqooCRLTWyN8O7hdJv6Ne9LygaNxZcVN0PMWPNy2017JSGveERgZ
+	 LQuec3uPfO6ySR5BLOp8aM1AXoKyXRdTf2P4O0p9WocON+s6b9171MLpc8RNq3Pd+
+	 A6zlMqIdxlbK5CeeafBdbjAuCVDVY/FwV60gqiZKJEHhWB8dHx+Z1+IO2SWwzQGsl
+	 y3szQb73I5y8ikEG54h2Dh0vOA868h3lEJLQH2BR1HIuT/oSrEEZUMbgs6ROLdMYb
+	 xtTJXALuyUcRz+L3FQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MWAOW-1s4gyB452A-00WTup; Sun, 12
+ May 2024 19:53:38 +0200
+Message-ID: <4d8de625-9018-4926-9519-37f5a90a96e5@gmx.de>
+Date: Sun, 12 May 2024 19:53:28 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20220206022023.376142-1-andrew.smirnov@gmail.com>
- <YgIu+Lrt0p85yog1@kroah.com> <CAHQ1cqE_iA0gKmqxS21JMAoFpz-ebhG+axVuUT9P62_JTB9kZQ@mail.gmail.com>
- <20240424084024.GC5670@craftyguy.net>
-In-Reply-To: <20240424084024.GC5670@craftyguy.net>
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Date: Sun, 12 May 2024 10:21:37 -0700
-Message-ID: <CAHQ1cqEbc9kQOanHs=0Vir=yJpY_PnjUvAWV5LdeDoJn5XrXJQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: Add Steam Deck driver
-To: Clayton Craft <clayton@craftyguy.net>
-Cc: Greg KH <gregkh@linuxfoundation.org>, platform-driver-x86@vger.kernel.org, 
-	Hans de Goede <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>, 
-	Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org, 
-	gpiccoli@igalia.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] platform/x86: dell-laptop: Implement platform_profile
+To: "Shen, Yijun" <Yijun.Shen@dell.com>,
+ "Limonciello, Mario" <mario.limonciello@amd.com>,
+ Lyndon Sanche <lsanche@lyndeno.ca>
+Cc: "pali@kernel.org" <pali@kernel.org>,
+ "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>,
+ "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
+ "lkp@intel.com" <lkp@intel.com>, Hans de Goede <hdegoede@redhat.com>,
+ Matthew Garrett <mjg59@srcf.ucam.org>, Jonathan Corbet <corbet@lwn.net>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Vegard Nossum <vegard.nossum@oracle.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Dell Client Kernel <Dell.Client.Kernel@dell.com>
+References: <20240425172758.67831-1-lsanche@lyndeno.ca>
+ <20240501215829.4991-2-lsanche@lyndeno.ca>
+ <BY5PR19MB392256C65661E76FC292C0889AE52@BY5PR19MB3922.namprd19.prod.outlook.com>
+ <63894ef1-c482-4646-8351-4d6cfc6c528f@amd.com>
+ <BY5PR19MB392299916A85FF06387DC9C19AE02@BY5PR19MB3922.namprd19.prod.outlook.com>
+ <a1306ffa-c0ea-4ce6-8692-76bf37850e8a@amd.com>
+ <BY5PR19MB3922A117E489A55C3C7FAC789AE02@BY5PR19MB3922.namprd19.prod.outlook.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <BY5PR19MB3922A117E489A55C3C7FAC789AE02@BY5PR19MB3922.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:m4SokKj7X8YDhHxwhCPLBxRpWnhRpNOV++recXzvERsMSfkrZRb
+ MvhVxWP+80xvUKiWIax2PhYo9fHKD/F3gX0o7HZTCqLKridsg99GedMXDH9aCxuTgBy9wVy
+ Z2otpqS9GyagrMU5trSuWH4AMU+mGrskULE4+WUHghEqYqcdxHw1H3/PNp8J7daannK88+C
+ mb5jw6rb67n5ucqaa5EIA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:YAwosBsfRDE=;pTCzJ2jHl+MG1RaFSsOoJXTazOr
+ L5cxjiyzlOFCaNeejoWU0KW2F/zxd37ulMYHhCxBSsAfS0cH3Iv26xcQuVjyVB5OqlL0zbaqu
+ 8L9ugBa2xjxhCjn7PUvlTE3+ElismA1EIfgOrgU9lHVf8u64KX0QR7V8tA5HYvmsHneoYjgCH
+ ZsfJHGM2ttQfxE3adwDb7sSqVA0rN9rGBbRVn+y+5/O1kWuJNQL9vCHgjLUUNOWJ5ggdcwcPD
+ DKJfYmume/9dH4bRHG4DjlgOS0nIvNuVettrXceKgkxDvTri8+wjB7cF90UNG/Y4Cra6Pp/eP
+ jGClWJv4iCwX5dOfnE6YkApyF1lKpDJXaJWsLKImXUnX3AXZeeXkTwZxlZ8XCY/fYxiIT0n9F
+ VJvZxX4UBiCtPiTwxkTDtzeaI8/+OiUODjZlJ1OtlQkHKycdO6a5lKNE2LFuM1y/1x9VGAqVS
+ Nvt79I7C7+PQDcZS1VrJWHdRLWvVEWs9Iwr1IOxgXuqBpEwcWMSEgTAYS2si4ZL5it5oeLiJ1
+ 6sIJwnmeNpb+2M2xnFb0bBuGTzLBRxMVSxYHOp6dy959Jen4zaI+LDBMYSWRhKD/73DM4la9G
+ L8bogI2cqH6Jxs3xznhNkhUlmYsOJIssMu02KOnjgWf0qeOpLk5rkJYmm/TcWpKLSxcFEKPOg
+ ycs1shIYaT8TLsyTRXwY0EnoRZrREMiRk/vaACfKOVABlgDAixCfPKWhDamnVoGuwzgknCWSt
+ CF3awzaDFAiWgnQ6ID4yDS6B/CoPmY0Ja5JSRpOuVUHOydFclgm4qvoC0w++ADAP3MuG/8r15
+ /4ejaA4nVuLItJeo/blNdotimOL/LH//eCmcDcNrYHNdo=
 
-On Wed, Apr 24, 2024 at 8:40=E2=80=AFAM Clayton Craft <clayton@craftyguy.ne=
-t> wrote:
+Am 11.05.24 um 17:56 schrieb Shen, Yijun:
+
+> Internal Use - Confidential
+>> -----Original Message-----
+>> From: Limonciello, Mario <mario.limonciello@amd.com>
+>> Sent: Saturday, May 11, 2024 11:13 PM
+>> To: Shen, Yijun <Yijun_Shen@Dell.com>; Lyndon Sanche
+>> <lsanche@lyndeno.ca>
+>> Cc: pali@kernel.org; W_Armin@gmx.de;
+>> srinivas.pandruvada@linux.intel.com; ilpo.jarvinen@linux.intel.com;
+>> lkp@intel.com; Hans de Goede <hdegoede@redhat.com>; Matthew Garrett
+>> <mjg59@srcf.ucam.org>; Jonathan Corbet <corbet@lwn.net>; Heiner Kallweit
+>> <hkallweit1@gmail.com>; Vegard Nossum <vegard.nossum@oracle.com>;
+>> platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org; Dell Client
+>> Kernel <Dell.Client.Kernel@dell.com>
+>> Subject: Re: [PATCH v5] platform/x86: dell-laptop: Implement platform_profile
+>>
+>>
+>> [EXTERNAL EMAIL]
+>>
+>>
+>>
+>> On 5/11/2024 10:05 AM, Shen, Yijun wrote:
+>>> Internal Use - Confidential
+>>>> -----Original Message-----
+>>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>> Sent: Wednesday, May 8, 2024 11:53 PM
+>>>> To: Shen, Yijun <Yijun_Shen@Dell.com>; Lyndon Sanche
+>>>> <lsanche@lyndeno.ca>
+>>>> Cc: pali@kernel.org; W_Armin@gmx.de;
+>>>> srinivas.pandruvada@linux.intel.com; ilpo.jarvinen@linux.intel.com;
+>>>> lkp@intel.com; Hans de Goede <hdegoede@redhat.com>; Matthew
+>> Garrett
+>>>> <mjg59@srcf.ucam.org>; Jonathan Corbet <corbet@lwn.net>; Heiner
+>>>> Kallweit <hkallweit1@gmail.com>; Vegard Nossum
+>>>> <vegard.nossum@oracle.com>; platform-driver-x86@vger.kernel.org;
+>>>> linux-kernel@vger.kernel.org; Dell Client Kernel
+>>>> <Dell.Client.Kernel@dell.com>
+>>>> Subject: Re: RE: [PATCH v5] platform/x86: dell-laptop: Implement
+>>>> platform_profile
+>>>>
+>>>>
+>>>> [EXTERNAL EMAIL]
+>>>>
+>>>> On 5/8/2024 09:24, Shen, Yijun wrote:
+>>>>> Hi Lyndon,
+>>>>>
+>>>>>     Thanks for working on this patch.
+>>>>>
+>>>>>     Dell side has an initial testing with this patch on some laptops,
+>>>>> it looks
+>>>> good. While changing the platform profile:
+>>>>> 1. The corresponding USTT option in BIOS will be changed.
+>>>>> 2. thermald will not be impacted. The related PSVT and ITMT will be
+>> loaded.
+>>>>>     Some Dell DTs does not have the USTT, Dell'll have a check if
+>>>>> nothing is
+>>>> broken.
+>>>>
+>>>> Hi Alex!
+>>>>
+>>>> Have you had a check both on both your AMD laptops and workstations
+>>>> too, or just the Intel ones?  I think it would be good to make sure
+>>>> it's getting the correct experience in both cases.
+>>>>
+>>> Hi Mario,
+>>>
+>>>    I've a check for this, for both laptop and workstation, the dell_laptop
+>> module will not be loaded. So, AMD platform will not be impacted by this
+>> patch series.
+>>> Follow is one example output with workstation.
+>>>    #lsmod | grep dell
+>>>      dell_wmi               28672  0
+>>>      dell_smbios            32768  1 dell_wmi
+>>>      dcdbas                 20480  1 dell_smbios
+>>>      dell_wmi_descriptor    20480  2 dell_wmi,dell_smbios
+>>>      sparse_keymap          12288  1 dell_wmi
+>>>      ledtrig_audio          12288  3 snd_ctl_led,snd_hda_codec_generic,dell_wmi
+>>>      video                  73728  2 dell_wmi,nvidia_modeset
+>>>      wmi                    40960  5
+>> video,dell_wmi,wmi_bmof,dell_smbios,dell_wmi_descriptor
+>> Ah; right that makes sense.  In that case, is dell-laptop even the right place for
+>> this patch series?  I would think the same policies for the platform profile
+>> should be able to apply to desktop/workstation.
+>>
+>> The v6 of this series would block smbios-thermal-ctl from working on a
+>> workstation too.
+>>
+>>>>>      Additional, with this patch, follow behavior is found:
+>>>>>     1. For example, the platform profile is quiet.
+>>>>>     2. Reboot the system and change the USTT to performance.
+>>>>>     3. Boot to desktop, the platform profile is "quiet", the USTT
+>>>>> will be
+>>>> changed back to "quiet".
+>>>>>     This looks like not a proper user experience. The platform
+>>>>> profile should
+>>>> honor the BIOS setting, aka, the platform profile should be switched
+>>>> to "performance".
+>>>> I agree, this sounds like the initial profile needs to be read from
+>>>> the BIOS settings too.
+>>>>
+>>>> Furthermore I wanted to ask is there also a WMI setting that
+>>>> corresponds to this that dell-wmi-sysman offers?
+>>>    Yes, Mario, you're right. This thermal setting could also be toggled by dell-
+>> wmi-sysman.
+>>> But, for the Dell consumer AMD laptops, like Alienware, the BIOS is another
+>> variant which is different with the workstation one.
+>>> With this variant BIOS, there is no USTT and also no dell_wmi/dell-wmi-
+>> sysman.
+>>>> I'm wondering if both should be probed in case the SMBIOS one goes
+>> away one day.
+>>>    Yep, I think this is a good suggestion.
+>>>
+>> Great! Although something I wonder is if the policy when changed with dell-
+>> wmi-sysman is immediate or requires a reboot.  A lot of the settings in there
+>> aren't effective until after a reboot.
+>>
+>> If this is one of them then it might not be a good idea to make it work for
+>> both.
+> Hi Mario,
 >
-> On Sat, 12 Feb 2022 15:37:19 -0800 Andrey Smirnov <andrew.smirnov@gmail.c=
-om> wrote:
-> >
-> > Yeah, my bad, will add in v2.
+>   Just have a check, the check steps are:
+> 1. stop the thermald
+> 2. run the stress test
+> 3. Toggle the thermal setting between UltraPerformance and Quiet via dell-wmi-sysman
+> 4. Check the CPU FAN speed
+>   The system reboot is not needed, the CPU fan speed changes immediately.
+>   A screen recorder here: https://dell.box.com/s/p2bhd2b6cv8z5buk9eao3bosgrrp1lf9
 >
-> Hi Andrey,
+> Thanks
 >
-> I want to run the latest mainline kernels on the Steam Deck and came acro=
-ss some
-> newer patches of yours (and others) in Valve's steamOS kernel that may(?)
-> replace the ones from this thread. They seem to be required for properly
-> handling input, thermals, etc on this device.
+Hi,
 
-Thermals yes, but I don't think any of _my_ patches would be needed
-for anything input related.
+i believe it should be the responsibility of the manufacturer (in this case Dell) that
+the thermal state remains consistent across both interfaces.
 
-> I rebased and used them
-> successfully on 6.9-rc5[1], and was curious what the status is of upstrea=
-ming
-> these (e.g. as a V2 here)?
+I think that the official Windows utility only checks the thermal state reported by
+the USTT interface, so we should match this behavior.
 
-There's no particular timeline I can give you. I'll probably try to
-push a new version of the driver in the next couple of months, but
-that's as committal as I can be.
+Thanks,
+Armin Wolf
+
