@@ -1,65 +1,64 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0D814D2B2
-	for <platform-driver-x86@vger.kernel.org>; Mon, 13 May 2024 12:03:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E11714F105
+	for <platform-driver-x86@vger.kernel.org>; Mon, 13 May 2024 12:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715601808; cv=none; b=movCdX4loivJBA12Z8eeJnX3F6KLb3cMDMagAFKnwiIxEZZKro2vO9ef74hQy18XVCaW6UpGCQCrV7Inzv9i3FKEAVCO3WVGCQio8OfUIO4yonfOWkGFQyTwT1ZTr2boqShPH2x4QnDi1wlQgokqkWtOCURNVDNJkK/hoEv/UD4=
+	t=1715601933; cv=none; b=PXHhEUcOE4Ard8Che7mXAESTXfCAKmjztNNDm2IvI38E76XGri92lf4chUcKf5P9q8FUZRnXgaCbekGbFKW4MAeT8TDmSfpZY3+XkH6N3nAtmGAvKp8L6PIt85yvNHTLJbu9Ea8kx8lp1/rGMMb0yzcgGNVk7Z5R6aaDrIWeRDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715601808; c=relaxed/simple;
-	bh=9v46DOtoCtPx3deO2gpdg8ipRFMAGh1txJKl+pUtw8s=;
+	s=arc-20240116; t=1715601933; c=relaxed/simple;
+	bh=i65ssyYayF9FH8BUBfnKW3K5EK1hWnLcMWLPFVcToMc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NfAg9+gcRYZVbyTch33mg+QkHFv8yUoudGT5iOP/cHPaELxhK8KVfVt1yQ9Uqocow53Zf+LUf2vHF4B1Ygxn7sr04cRRS8NX3omHAF/zFe5dJbxIUHFsDvPPUHfo8l2QnInFu4L9sPfhp+5H5uyTRnmKeDL23OlbE3GJsUJrUfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G95b4L9H; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=orQluMzr4X45FcAjG2gsFI1Wy3xX9Q5C3qK603R8A52EFFWnNs+NIhWo+xe+jEDlLtXm34j8g+wur7qchGUpbnnS4+IkZ7ZLLkGsGDUtFJsgV8vTaRtiiebtQBete9qaqyTnoAL+cJum8j0czq4aumg7gJJdp2h0gz+kLqiyk2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VEiGmUcJ; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G95b4L9H"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VEiGmUcJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715601805;
+	s=mimecast20190719; t=1715601929;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bmXU/OebYF8kESlWqWUxls9X3mxoHXPcTWE7A16L9IE=;
-	b=G95b4L9HXhG3iOw7xb1vsvNBJGtdaE+QlCRxBK6+eQ4SsQ3tdWneOr7JFv0v2IgVi+AlkR
-	UYRymQQH/f8Kx4ptoxjNn/EWTjpdW2BC4f9P6RKiGPvuIKymLQG7BUlo4WDEoUBgIegCV3
-	8Q6J1bZmjmTTdUUE+ti7TAZLAHYawnE=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=1Cj2/My5ysuOGViM2gywYUzFnwDdaE1cr2+t6L65cLw=;
+	b=VEiGmUcJPO5FvUZSs9GWLsFXxtLJxIT91/AcilPuwhN/zEzgBAzlmpchetuPYSoSUBHNLV
+	2z0xZeR/E4j5J9L6Zq+mlkaleN+62f6XJ5M1Saj6IGh95FGT9+dZlJip4wDjAdYik1qwFd
+	azOCO1JpxgCiAjPFKBtrm92hdJO7d6M=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-586-YTjZ4yYEMtyBPTTfyzu6KA-1; Mon, 13 May 2024 08:03:23 -0400
-X-MC-Unique: YTjZ4yYEMtyBPTTfyzu6KA-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a599b55056bso261215066b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 May 2024 05:03:23 -0700 (PDT)
+ us-mta-541-r_yxwxCJM2GRmUpjcIgMwg-1; Mon, 13 May 2024 08:05:18 -0400
+X-MC-Unique: r_yxwxCJM2GRmUpjcIgMwg-1
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-5222c9b6fd4so2250243e87.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 May 2024 05:05:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715601802; x=1716206602;
+        d=1e100.net; s=20230601; t=1715601917; x=1716206717;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bmXU/OebYF8kESlWqWUxls9X3mxoHXPcTWE7A16L9IE=;
-        b=kmdKFdxT1HWC2XcMNWDFu/ghcACgZbE5pxJYjxPHg+wB1T13Vg5yui2T8gT2V2Fz9H
-         WnNbHIHmbLGIECV2c17EWsonhpo49tiP1YmRd2gKTCmO5V/esDF7wFSq3K+VAwd8DjTa
-         G4pzzA/ZrPrz7p8sWCvzpvL0bh4KpGc1CTQz2K05TftPJctYE6YNWlXK7wNbPm3LTbJV
-         NxhDe5OoklxfoE96Xj3BKN2TjWtZNwuqNdAfpNGQ2ImNquIgi9201qEHdZDPMxDOd37I
-         u5lCY1N5CPWsdUdOW3FKb7Th8rk10dMoip1UzP+v0yv0zWsC4+gTMa1SNNjP1U31Vae+
-         bmZA==
-X-Forwarded-Encrypted: i=1; AJvYcCWKm5Nkcz0SIfsE6pkz0wU7fMiEIU3ywAZOJ5K8hkh5Z05kppn4Egt8rwOKmyf3ljhxP7InU0yH1eePBhXfSFbk4QaVg3LAqvPzfWEi0I+LQQgckQ==
-X-Gm-Message-State: AOJu0Yxlll+LYg8VBTwUgjhRojj16YvoqJxTMeR66ATQOvDExeXOB0UN
-	UK+k96/74O8SBrd5GJYsAGnm0aaYe9tGXMy13PRJQneV142wlltZDTeUbOJRKCbaOanH+p5/5Pr
-	8w6Dhd8Xtvmmix2d+FOK/WAtSAUnlViT9jfnMXTX6808apZhEfnjdUUDQTO8TOL9nxMyTsS0=
-X-Received: by 2002:a17:906:aad0:b0:a59:cfab:50d with SMTP id a640c23a62f3a-a5a2d536daemr632207366b.2.1715601802734;
-        Mon, 13 May 2024 05:03:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGOSYLzF/c1ldnDEBTul+Z4tWR29hhou430+Bl6cslc7jUse5ojohz8EKDIm2rZfXZU31xO5A==
-X-Received: by 2002:a17:906:aad0:b0:a59:cfab:50d with SMTP id a640c23a62f3a-a5a2d536daemr632205866b.2.1715601802334;
-        Mon, 13 May 2024 05:03:22 -0700 (PDT)
+        bh=1Cj2/My5ysuOGViM2gywYUzFnwDdaE1cr2+t6L65cLw=;
+        b=aJCBqeo05rNevhnNlYYkEpUyDcmWVGqEmhlW0I+TOCbrE+yeimKSoX8MO6q7ywVwI1
+         oZm0E5iJCgRKZmfMZLuYYQ5Ls9YegsLiDJVk6JFzsagpwUSIP5WLxCcaEAwZ0jgdbGL+
+         oSYH3x+1opeVHxWJmkqwIpLBCwZaeoVbNJilQOSwO3vEgjol6sywv1In5nccYRX+/wo9
+         McMlDMsfyZsj0Ofmnd1t6GbVuODCKwIqJLIBa8KAOldN2T80ccczgQKa/4zRiZYQLHe5
+         cPrfjVhCEZIaD8UN8/r3Zw8/XRaxZJSGOzIfBYj+WRruKys2TXYYM/VYblB2BuPZAxPi
+         naNA==
+X-Gm-Message-State: AOJu0Yy2ytDO3OVGL5I/3hqatJTZ890aOfp8DIpv3Bu5YoFK3U7K2YaH
+	4LoKG/ZceeLMXltrMCkQFki10jiwuu/BIf5DTistEXJEfUrksDcpmq9Yrc+apYxAYb1yzsKaUKT
+	l4GHMQQoRnmcPN1kBYx871W44FhnKGJCdS2OwgS42FssOInqXjdCuAuIgY4w5xJPIPYMQcCM=
+X-Received: by 2002:ac2:5149:0:b0:51d:1d32:c676 with SMTP id 2adb3069b0e04-5220fe7a018mr7277749e87.37.1715601916899;
+        Mon, 13 May 2024 05:05:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGGJ3dnAJxJIVW0dqxce7SqZEWRvO18ednZlPgf3c/20kgdCAsq0DTHNSpNOwE65GmiHIkNeg==
+X-Received: by 2002:ac2:5149:0:b0:51d:1d32:c676 with SMTP id 2adb3069b0e04-5220fe7a018mr7277719e87.37.1715601916441;
+        Mon, 13 May 2024 05:05:16 -0700 (PDT)
 Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b01785sm587479566b.164.2024.05.13.05.03.21
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a179c7ddfsm591134766b.121.2024.05.13.05.05.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 May 2024 05:03:21 -0700 (PDT)
-Message-ID: <7867b308-7cea-4282-82e8-551d88fe70c4@redhat.com>
-Date: Mon, 13 May 2024 14:03:20 +0200
+        Mon, 13 May 2024 05:05:15 -0700 (PDT)
+Message-ID: <e6151a47-3c8c-4875-afbf-15fcf5857079@redhat.com>
+Date: Mon, 13 May 2024 14:05:14 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,39 +66,23 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] p2sb: Don't init until unassigned resources have been
- assigned.
-To: bcfradella@proton.me, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Ben Fradella <bfradell@netapp.com>, Ranjan Dutta
- <ranjan.dutta@intel.com>, Yifan2 Li <yifan2.li@intel.com>,
- Jonathan Yong <jonathan.yong@intel.com>
-References: <20240509164905.41016-1-bcfradella@proton.me>
+Subject: Re: [PATCH] platform/x86/amd: pmf: Add new ACPI ID AMDI0105
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
+References: <20240510103519.876646-1-Shyam-sundar.S-k@amd.com>
 Content-Language: en-US
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240509164905.41016-1-bcfradella@proton.me>
+In-Reply-To: <20240510103519.876646-1-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On 5/9/24 6:49 PM, bcfradella@proton.me wrote:
-> From: Ben Fradella <bfradell@netapp.com>
+On 5/10/24 12:35 PM, Shyam Sundar S K wrote:
+> Add new ACPI ID AMDI0105 used by upcoming AMD platform to the PMF
+> supported list of devices.
 > 
-> The P2SB could get an invalid BAR from the BIOS, and that won't be fixed
-> up until pcibios_assign_resources(), which is an fs_initcall().
-> 
-> - Move p2sb_fs_init() to an fs_initcall_sync(). This is still early
->   enough to avoid a race with any dependent drivers.
-> 
-> - Add a check for IORESOURCE_UNSET in p2sb_valid_resource() to catch
->   unset BARs going forward.
-> 
-> - Return error values from p2sb_fs_init() so that the 'initcall_debug'
->   cmdline arg provides useful data.
-> 
-> Signed-off-by: Ben Fradella <bfradell@netapp.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -120,56 +103,19 @@ Hans
 
 
 > ---
->  drivers/platform/x86/p2sb.c | 29 +++++++++++++++--------------
->  1 file changed, 15 insertions(+), 14 deletions(-)
+>  drivers/platform/x86/amd/pmf/core.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
-> index 3d66e1d4eb1f..1938a3ef9480 100644
-> --- a/drivers/platform/x86/p2sb.c
-> +++ b/drivers/platform/x86/p2sb.c
-> @@ -56,12 +56,9 @@ static int p2sb_get_devfn(unsigned int *devfn)
->  	return 0;
->  }
->  
-> -static bool p2sb_valid_resource(struct resource *res)
-> +static bool p2sb_valid_resource(const struct resource *res)
->  {
-> -	if (res->flags)
-> -		return true;
-> -
-> -	return false;
-> +	return res->flags & ~IORESOURCE_UNSET;
->  }
->  
->  /* Copy resource from the first BAR of the device in question */
-> @@ -220,16 +217,20 @@ EXPORT_SYMBOL_GPL(p2sb_bar);
->  
->  static int __init p2sb_fs_init(void)
->  {
-> -	p2sb_cache_resources();
-> -	return 0;
-> +	return p2sb_cache_resources();
->  }
->  
->  /*
-> - * pci_rescan_remove_lock to avoid access to unhidden P2SB devices can
-> - * not be locked in sysfs pci bus rescan path because of deadlock. To
-> - * avoid the deadlock, access to P2SB devices with the lock at an early
-> - * step in kernel initialization and cache required resources. This
-> - * should happen after subsys_initcall which initializes PCI subsystem
-> - * and before device_initcall which requires P2SB resources.
-> + * pci_rescan_remove_lock() can not be locked in sysfs pci bus rescan path
-> + * because of deadlock. To avoid the deadlock, access P2SB devices with the lock
-> + * at an early step in kernel initialization and cache required resources.
-> + *
-> + * We want to run as early as possible. If the P2SB was assigned a bad BAR,
-> + * we'll need to wait on pcibios_assign_resources() to fix it. So, our list of
-> + * initcall dependencies looks something like this:
-> + *
-> + * ...
-> + * subsys_initcall (pci_subsys_init)
-> + * fs_initcall     (pcibios_assign_resources)
->   */
-> -fs_initcall(p2sb_fs_init);
-> +fs_initcall_sync(p2sb_fs_init);
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index 64e6e34a2a9a..2d6e2558863c 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -381,6 +381,7 @@ static const struct acpi_device_id amd_pmf_acpi_ids[] = {
+>  	{"AMDI0100", 0x100},
+>  	{"AMDI0102", 0},
+>  	{"AMDI0103", 0},
+> +	{"AMDI0105", 0},
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(acpi, amd_pmf_acpi_ids);
 
