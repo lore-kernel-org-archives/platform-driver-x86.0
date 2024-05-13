@@ -1,347 +1,232 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB17146A8B
-	for <platform-driver-x86@vger.kernel.org>; Mon, 13 May 2024 11:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A048F14B949
+	for <platform-driver-x86@vger.kernel.org>; Mon, 13 May 2024 11:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715599324; cv=none; b=jHUF4Tij2Lz8u8T8W5QzjwokwZwarw8LmAxExwGXhOkYgKaPF6pRuJsn2vX5M7D2yaBFox71zUUxa/szdjhEaPQ/ZRHxC3ypRoSupwm66FqXX3vSxKSURu5drO6VjtzkVb4a+2Zu62tHWwvL5lGKHoJApA7LGwaJ2W/lU//wreI=
+	t=1715601314; cv=none; b=jzbffw6AoLAKaZENJMVD5+UsYfHlZuWs6b7ssOahs0A8Qt+//hsxHrL54JZUuhl9H76zC34cXDpckchMoRch0u9HBE8OPgmpf7DO/1+x/KTAoq5gv4XulpO+DGBNYUuM3u4F2IspAyyMetUNqlDmz1MVZmq6jRp62tzcq+ssgdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715599324; c=relaxed/simple;
-	bh=PHBFyQ6arB7jBFDdzXXIgh1TsFETyFlzElD/xJQPPdE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H/fj855UMLqzKNafh7SvLJK0mOvWGmdDaCJRd/ukHS0TGVoipD35HeBUmqcNdNFDxSIppWUhVIrOvqQSxDA8pTqjbUUwaPwkIE+YbeaCXjlPDPy+4rM0atV0Nad0oVxh+DOb9njn4ca3/7mv/KvVNIeRuIcSHD/DchFcxR8BWiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KoHUBc4D; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1715601314; c=relaxed/simple;
+	bh=KQlIODRIAwhfMkF+svGRoQjGBP7F6iuEOCJQ2nj9DDo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U2mLfLMkHF/gfYPgbhR1Yu/EMc2rDbMkuIhApp6Ze8Hy9lgJo8XhBW73Rf0hQKCKfltj8ZwSH/ujZPofxjghvzLv8hFYana5SliKBetQSCOByOCSUffRpEIKaiUQvgrBHoBkSMOwjhvBjhAAeHSjFoi0KukYHBH/KXaedTAW7ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Mplv78Lu; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KoHUBc4D"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mplv78Lu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715599321;
+	s=mimecast20190719; t=1715601310;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NDxXXRwTk6YojPDfnjrFnonCNRcND4v3mkNv95pb4f4=;
-	b=KoHUBc4DzY9p2IyL5BUYzaifWH7J/CLfdWm4hXJnq8VYFtRNV106SMBVUjnoGZREqQfbBH
-	aLJDHm1kdmaPQJHzajWtAiaTYYvcIwPZolWr/EQFN33qZfq7J/dFfnp4Ls3Y30IOuQI9JD
-	Qb1vaRl2Mg8Rde7qnh1TlW99Xx4My5M=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=t/Fae/1ym0klvsKzuPgGEHvQ9spkHPkxZncwd90WiW4=;
+	b=Mplv78LuXlpOi1DIrTdc6j9IlzQeUmuqgbS8nrQUOA0h8NPz8Mf90Q9ZYffX7BAyH/abTJ
+	0CUNDFsm9NaMm08tzF4Q7RNtu4yzZUy/xzvB5ltvgt43Fz4fKi+L7ZCqO2E8DyNL+JvHQH
+	UaJW752f8OChsoUciefCMqjwkB5YcNw=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-658-oLimnBVuMKOJ1vpouN5uDg-1; Mon, 13 May 2024 07:15:59 -0400
-X-MC-Unique: oLimnBVuMKOJ1vpouN5uDg-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9BFF5185A780;
-	Mon, 13 May 2024 11:15:58 +0000 (UTC)
-Received: from x1.localdomain.com (unknown [10.39.193.190])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 414C8491032;
-	Mon, 13 May 2024 11:15:57 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	AceLan Kao <acelan.kao@canonical.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Roman Bogoyev <roman@computercheck.com.au>,
-	Kai Heng Feng <kai.heng.feng@canonical.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 2/2] tools arch x86: Add dell-uart-backlight-emulator
-Date: Mon, 13 May 2024 13:15:51 +0200
-Message-ID: <20240513111552.44880-3-hdegoede@redhat.com>
-In-Reply-To: <20240513111552.44880-1-hdegoede@redhat.com>
-References: <20240513111552.44880-1-hdegoede@redhat.com>
+ us-mta-296-fCSLjjHWPv63ZT7vH1oMIw-1; Mon, 13 May 2024 07:55:09 -0400
+X-MC-Unique: fCSLjjHWPv63ZT7vH1oMIw-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a51fdbd06c8so318687866b.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 May 2024 04:55:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715601308; x=1716206108;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=t/Fae/1ym0klvsKzuPgGEHvQ9spkHPkxZncwd90WiW4=;
+        b=DNqGyWOfCb9saAijcABmI9SGKGF2RluZ8sMxKL4cj8fPBx0Jb+sYyWz51M3HJKr9Wi
+         tHT9NC91jnQIcolevKkyLY2/ntw2lDAz1dt0LVoC7cNVRz+BYG+0Brf8cwFabSim/hoU
+         Hu1PlOg9fiJXJcHlHT/32dNldyYLDOQgHiHDmjIXkQT9Xdebl9JnXulwZBT8nNfheoPk
+         xAb29mCNnPg6GzTJ45FAlBG+v1kNOKUozuEx96CRXBAgYe2wqwgYh3ClScXWvFgZK3xj
+         Tc45J90RXIUBls9nChJiidO3KEIpn7tOq5cmRS85mpgyO/Zhund7fZXa8cYapW0yA4gD
+         nWvA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpEhRZlfYvlGL+tM/u/zQZr6VQ+DALtNOlI/BTk55f7olNYo8TWmoW7VCdI8Zbc1BwbT0yKupVsGCr/P8MUJC8dFjt7QR6XPPIirZbU3Yuuu7iew==
+X-Gm-Message-State: AOJu0Yy77VMoqIop/qr92ygvJc3PQyPFKBR8cx/ku0grc3LEte0/m3xp
+	lwTMLok/CqsDpjHVRM2CTzt8CzIda7niGadQRqiR8HxsNtFrCz+NnQ2qxC1uiTLhGS7jJpYqHYz
+	HuAWr6xUpZlC1nvbLHv5hzw1rmFa7TdPVQzrl4nyhBAYd01lc2u9qNzyiZMT8jOG+WcB4ZD8=
+X-Received: by 2002:a17:907:31c2:b0:a58:eba0:6716 with SMTP id a640c23a62f3a-a5a2d66a40bmr849997966b.60.1715601308069;
+        Mon, 13 May 2024 04:55:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFpKpjCc1JrU+4s9UcPB4u3qnTfouEBsIyb1FpN4T+xuY9y1xonGwdJDL7WqOesSOg/Ya4hLw==
+X-Received: by 2002:a17:907:31c2:b0:a58:eba0:6716 with SMTP id a640c23a62f3a-a5a2d66a40bmr849996966b.60.1715601307707;
+        Mon, 13 May 2024 04:55:07 -0700 (PDT)
+Received: from [10.40.98.157] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b17754sm585084566b.192.2024.05.13.04.55.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 May 2024 04:55:07 -0700 (PDT)
+Message-ID: <1ca0f892-72be-44d2-9a57-2bf27de305a0@redhat.com>
+Date: Mon, 13 May 2024 13:55:06 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] platform/surface: aggregator: Log critical errors
+ during SAM probing
+To: Weifeng Liu <weifeng.liu.z@gmail.com>,
+ platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
+ Maximilian Luz <luzmaximilian@gmail.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20240505130800.2546640-1-weifeng.liu.z@gmail.com>
+ <20240505130800.2546640-3-weifeng.liu.z@gmail.com>
+Content-Language: en-US
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240505130800.2546640-3-weifeng.liu.z@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+Content-Transfer-Encoding: 7bit
 
-Dell All In One (AIO) models released after 2017 use a backlight controller
-board connected to an UART.
+Hi,
 
-Add a small emulator to allow development and testing of
-the drivers/platform/x86/dell/dell-uart-backlight.c driver for
-this board, without requiring access to an actual Dell All In One.
+On 5/5/24 3:07 PM, Weifeng Liu wrote:
+> Emits messages upon errors during probing of SAM.  Hopefully this could
+> provide useful context to user for the purpose of diagnosis when
+> something miserable happen.
+> 
+> Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Weifeng Liu <weifeng.liu.z@gmail.com>
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
-- Ensure clean exit (return 0) when the emulator is quit by Ctrl+C
----
- .../dell-uart-backlight-emulator/.gitignore   |   1 +
- .../x86/dell-uart-backlight-emulator/Makefile |  19 ++
- .../x86/dell-uart-backlight-emulator/README   |  46 +++++
- .../dell-uart-backlight-emulator.c            | 167 ++++++++++++++++++
- 4 files changed, 233 insertions(+)
- create mode 100644 tools/arch/x86/dell-uart-backlight-emulator/.gitignore
- create mode 100644 tools/arch/x86/dell-uart-backlight-emulator/Makefile
- create mode 100644 tools/arch/x86/dell-uart-backlight-emulator/README
- create mode 100644 tools/arch/x86/dell-uart-backlight-emulator/dell-uart-backlight-emulator.c
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-diff --git a/tools/arch/x86/dell-uart-backlight-emulator/.gitignore b/tools/arch/x86/dell-uart-backlight-emulator/.gitignore
-new file mode 100644
-index 000000000000..5c8cad8d72b9
---- /dev/null
-+++ b/tools/arch/x86/dell-uart-backlight-emulator/.gitignore
-@@ -0,0 +1 @@
-+dell-uart-backlight-emulator
-diff --git a/tools/arch/x86/dell-uart-backlight-emulator/Makefile b/tools/arch/x86/dell-uart-backlight-emulator/Makefile
-new file mode 100644
-index 000000000000..6ea1d9fd534b
---- /dev/null
-+++ b/tools/arch/x86/dell-uart-backlight-emulator/Makefile
-@@ -0,0 +1,19 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Makefile for Intel Software Defined Silicon provisioning tool
-+
-+dell-uart-backlight-emulator: dell-uart-backlight-emulator.c
-+
-+BINDIR ?= /usr/bin
-+
-+override CFLAGS += -O2 -Wall
-+
-+%: %.c
-+	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
-+
-+.PHONY : clean
-+clean :
-+	@rm -f dell-uart-backlight-emulator
-+
-+install : dell-uart-backlight-emulator
-+	install -d $(DESTDIR)$(BINDIR)
-+	install -m 755 -p dell-uart-backlight-emulator $(DESTDIR)$(BINDIR)/dell-uart-backlight-emulator
-diff --git a/tools/arch/x86/dell-uart-backlight-emulator/README b/tools/arch/x86/dell-uart-backlight-emulator/README
-new file mode 100644
-index 000000000000..c0d8e52046ee
---- /dev/null
-+++ b/tools/arch/x86/dell-uart-backlight-emulator/README
-@@ -0,0 +1,46 @@
-+Emulator for DELL0501 UART attached backlight controller
-+--------------------------------------------------------
-+
-+Dell All In One (AIO) models released after 2017 use a backlight controller
-+board connected to an UART.
-+
-+In DSDT this uart port will be defined as:
-+
-+   Name (_HID, "DELL0501")
-+   Name (_CID, EisaId ("PNP0501")
-+
-+With the DELL0501 indicating that we are dealing with an UART with
-+the backlight controller board attached.
-+
-+This small emulator allows testing
-+the drivers/platform/x86/dell/dell-uart-backlight.c driver without access
-+to an actual Dell All In One.
-+
-+This requires:
-+1. A (desktop) PC with a 16550 UART on the motherboard and a standard DB9
-+   connector connected to this UART.
-+2. A DB9 NULL modem cable.
-+3. A second DB9 serial port, this can e.g. be a USB to serial converter
-+   with a DB9 connector plugged into the same desktop PC.
-+4. A DSDT overlay for the desktop PC replacing the _HID of the 16550 UART
-+   ACPI Device() with "DELL0501" and adding a _CID of "PNP0501", see
-+   DSDT.patch for an example of the necessary DSDT changes.
-+
-+With everything setup and the NULL modem cable connected between
-+the 2 serial ports run:
-+
-+./dell-uart-backlight-emulator <path-to-/dev/tty*S#-for-second-port>
-+
-+For example when using an USB to serial converter for the second port:
-+
-+./dell-uart-backlight-emulator /dev/ttyUSB0
-+
-+And then (re)load the dell-uart-backlight driver:
-+
-+sudo rmmod dell-uart-backlight; sudo modprobe dell-uart-backlight dyndbg
-+
-+After this check "dmesg" to see if the driver correctly received
-+the firmware version string from the emulator. If this works there
-+should be a /sys/class/backlight/dell_uart_backlight/ directory now
-+and writes to the brightness or bl_power files should be reflected
-+by matching output from the emulator.
-diff --git a/tools/arch/x86/dell-uart-backlight-emulator/dell-uart-backlight-emulator.c b/tools/arch/x86/dell-uart-backlight-emulator/dell-uart-backlight-emulator.c
-new file mode 100644
-index 000000000000..1cd264631a8f
---- /dev/null
-+++ b/tools/arch/x86/dell-uart-backlight-emulator/dell-uart-backlight-emulator.c
-@@ -0,0 +1,167 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Dell AIO Serial Backlight board emulator for testing
-+ * the Linux dell-uart-backlight driver.
-+ *
-+ * Copyright (C) 2024 Hans de Goede <hansg@kernel.org>
-+ */
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <signal.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/ioctl.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <sys/un.h>
-+#include <termios.h>
-+#include <unistd.h>
-+
-+int serial_fd;
-+int brightness = 50;
-+
-+static unsigned char dell_uart_checksum(unsigned char *buf, int len)
-+{
-+	unsigned char val = 0;
-+
-+	while (len-- > 0)
-+		val += buf[len];
-+
-+	return val ^ 0xff;
-+}
-+
-+/* read() will return -1 on SIGINT / SIGTERM causing the mainloop to cleanly exit */
-+void signalhdlr(int signum)
-+{
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	struct sigaction sigact = { .sa_handler = signalhdlr };
-+	unsigned char buf[4], csum, response[32];
-+	const char *version_str = "PHI23-V321";
-+	struct termios tty, saved_tty;
-+	int ret, idx, len = 0;
-+
-+	if (argc != 2) {
-+		fprintf(stderr, "Invalid or missing arguments\n");
-+		fprintf(stderr, "Usage: %s <serial-port>\n", argv[0]);
-+		return 1;
-+	}
-+
-+	serial_fd = open(argv[1], O_RDWR | O_NOCTTY);
-+	if (serial_fd == -1) {
-+		fprintf(stderr, "Error opening %s: %s\n", argv[1], strerror(errno));
-+		return 1;
-+	}
-+
-+	ret = tcgetattr(serial_fd, &tty);
-+	if (ret == -1) {
-+		fprintf(stderr, "Error getting tcattr: %s\n", strerror(errno));
-+		goto out_close;
-+	}
-+	saved_tty = tty;
-+
-+	cfsetspeed(&tty, 9600);
-+	cfmakeraw(&tty);
-+	tty.c_cflag &= ~CSTOPB;
-+	tty.c_cflag &= ~CRTSCTS;
-+	tty.c_cflag |= CLOCAL | CREAD;
-+
-+	ret = tcsetattr(serial_fd, TCSANOW, &tty);
-+	if (ret == -1) {
-+		fprintf(stderr, "Error setting tcattr: %s\n", strerror(errno));
-+		goto out_restore;
-+	}
-+
-+	sigaction(SIGINT, &sigact, 0);
-+	sigaction(SIGTERM, &sigact, 0);
-+
-+	idx = 0;
-+	while (read(serial_fd, &buf[idx], 1) == 1) {
-+		if (idx == 0) {
-+			switch (buf[0]) {
-+			/* 3 MSB bits: cmd-len + 01010 SOF marker */
-+			case 0x6a: len = 3; break;
-+			case 0x8a: len = 4; break;
-+			default:
-+				fprintf(stderr, "Error unexpected first byte: 0x%02x\n", buf[0]);
-+				continue; /* Try to sync up with sender */
-+			}
-+		}
-+
-+		/* Process msg when len bytes have been received */
-+		if (idx != (len - 1)) {
-+			idx++;
-+			continue;
-+		}
-+
-+		/* Reset idx for next command */
-+		idx = 0;
-+
-+		csum = dell_uart_checksum(buf, len - 1);
-+		if (buf[len - 1] != csum) {
-+			fprintf(stderr, "Error checksum mismatch got 0x%02x expected 0x%02x\n",
-+				buf[len - 1], csum);
-+			continue;
-+		}
-+
-+		switch ((buf[0] << 8) | buf[1]) {
-+		case 0x6a06:
-+			/* cmd = 0x06, get version */
-+			len = strlen(version_str);
-+			strcpy((char *)&response[2], version_str);
-+			printf("Get version, reply: %s\n", version_str);
-+			break;
-+		case 0x8a0b: /* 3 MSB bits: cmd-len + 01010 SOF marker */
-+			/* cmd = 0x0b, set brightness */
-+			if (buf[2] > 100) {
-+				fprintf(stderr, "Error invalid brightness param: %d\n", buf[2]);
-+				continue;
-+			}
-+
-+			len = 0;
-+			brightness = buf[2];
-+			printf("Set brightness %d\n", brightness);
-+			break;
-+		case 0x6a0c:
-+			/* cmd = 0x0c, get brightness */
-+			len = 1;
-+			response[2] = brightness;
-+			printf("Get brightness, reply: %d\n", brightness);
-+			break;
-+		case 0x8a0e:
-+			/* cmd = 0x0e, set backlight power */
-+			if (buf[2] != 0 && buf[2] != 1) {
-+				fprintf(stderr, "Error invalid set power param: %d\n", buf[2]);
-+				continue;
-+			}
-+
-+			len = 0;
-+			printf("Set power %d\n", buf[2]);
-+			break;
-+		default:
-+			fprintf(stderr, "Error unknown cmd 0x%04x\n",
-+				(buf[0] << 8) | buf[1]);
-+			continue;
-+		}
-+
-+		/* Respond with <total-len> <cmd> <data...> <csum> */
-+		response[0] = len + 3; /* response length in bytes */
-+		response[1] = buf[1];  /* ack cmd */
-+		csum = dell_uart_checksum(response, len + 2);
-+		response[len + 2] = csum;
-+		ret = write(serial_fd, response, len + 3);
-+		if (ret != (len + 3))
-+			fprintf(stderr, "Error writing %d bytes: %d\n",
-+				len + 3, ret);
-+	}
-+
-+	ret = 0;
-+out_restore:
-+	tcsetattr(serial_fd, TCSANOW, &saved_tty);
-+out_close:
-+	close(serial_fd);
-+	return ret;
-+}
--- 
-2.44.0
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+
+
+> ---
+>  drivers/platform/surface/aggregator/core.c | 42 ++++++++++++++--------
+>  1 file changed, 27 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/platform/surface/aggregator/core.c b/drivers/platform/surface/aggregator/core.c
+> index 7b1871eb7a6f..046fa63446bf 100644
+> --- a/drivers/platform/surface/aggregator/core.c
+> +++ b/drivers/platform/surface/aggregator/core.c
+> @@ -618,15 +618,17 @@ static const struct acpi_gpio_mapping ssam_acpi_gpios[] = {
+>  
+>  static int ssam_serial_hub_probe(struct serdev_device *serdev)
+>  {
+> -	struct acpi_device *ssh = ACPI_COMPANION(&serdev->dev);
+> +	struct device *dev = &serdev->dev;
+> +	struct acpi_device *ssh = ACPI_COMPANION(dev);
+>  	struct ssam_controller *ctrl;
+>  	acpi_status astatus;
+>  	int status;
+>  
+> -	if (gpiod_count(&serdev->dev, NULL) < 0)
+> -		return -ENODEV;
+> +	status = gpiod_count(dev, NULL);
+> +	if (status < 0)
+> +		return dev_err_probe(dev, status, "no GPIO found\n");
+>  
+> -	status = devm_acpi_dev_add_driver_gpios(&serdev->dev, ssam_acpi_gpios);
+> +	status = devm_acpi_dev_add_driver_gpios(dev, ssam_acpi_gpios);
+>  	if (status)
+>  		return status;
+>  
+> @@ -637,8 +639,11 @@ static int ssam_serial_hub_probe(struct serdev_device *serdev)
+>  
+>  	/* Initialize controller. */
+>  	status = ssam_controller_init(ctrl, serdev);
+> -	if (status)
+> +	if (status) {
+> +		dev_err_probe(dev, status,
+> +			      "failed to initialize ssam controller\n");
+>  		goto err_ctrl_init;
+> +	}
+>  
+>  	ssam_controller_lock(ctrl);
+>  
+> @@ -657,14 +662,13 @@ static int ssam_serial_hub_probe(struct serdev_device *serdev)
+>  	if (status == -ENXIO)
+>  		status = -EPROBE_DEFER;
+>  	if (status) {
+> -		dev_err_probe(&serdev->dev, status,
+> -			      "failed to open serdev device\n");
+> +		dev_err_probe(dev, status, "failed to open serdev device\n");
+>  		goto err_devopen;
+>  	}
+>  
+>  	astatus = ssam_serdev_setup_via_acpi(ssh->handle, serdev);
+>  	if (ACPI_FAILURE(astatus)) {
+> -		status = -ENXIO;
+> +		status = dev_err_probe(dev, -ENXIO, "failed to setup serdev\n");
+>  		goto err_devinit;
+>  	}
+>  
+> @@ -680,25 +684,33 @@ static int ssam_serial_hub_probe(struct serdev_device *serdev)
+>  	 * states.
+>  	 */
+>  	status = ssam_log_firmware_version(ctrl);
+> -	if (status)
+> +	if (status) {
+> +		dev_err_probe(dev, status, "failed to get firmware version\n");
+>  		goto err_initrq;
+> +	}
+>  
+>  	status = ssam_ctrl_notif_d0_entry(ctrl);
+> -	if (status)
+> +	if (status) {
+> +		dev_err_probe(dev, status, "D0-entry notification failed\n");
+>  		goto err_initrq;
+> +	}
+>  
+>  	status = ssam_ctrl_notif_display_on(ctrl);
+> -	if (status)
+> +	if (status) {
+> +		dev_err_probe(dev, status, "display-on notification failed\n");
+>  		goto err_initrq;
+> +	}
+>  
+> -	status = sysfs_create_group(&serdev->dev.kobj, &ssam_sam_group);
+> +	status = sysfs_create_group(&dev->kobj, &ssam_sam_group);
+>  	if (status)
+>  		goto err_initrq;
+>  
+>  	/* Set up IRQ. */
+>  	status = ssam_irq_setup(ctrl);
+> -	if (status)
+> +	if (status) {
+> +		dev_err_probe(dev, status, "failed to setup IRQ\n");
+>  		goto err_irq;
+> +	}
+>  
+>  	/* Finally, set main controller reference. */
+>  	status = ssam_try_set_controller(ctrl);
+> @@ -715,7 +727,7 @@ static int ssam_serial_hub_probe(struct serdev_device *serdev)
+>  	 *       resumed. In short, this causes some spurious unwanted wake-ups.
+>  	 *       For now let's thus default power/wakeup to false.
+>  	 */
+> -	device_set_wakeup_capable(&serdev->dev, true);
+> +	device_set_wakeup_capable(dev, true);
+>  	acpi_dev_clear_dependencies(ssh);
+>  
+>  	return 0;
+> @@ -723,7 +735,7 @@ static int ssam_serial_hub_probe(struct serdev_device *serdev)
+>  err_mainref:
+>  	ssam_irq_free(ctrl);
+>  err_irq:
+> -	sysfs_remove_group(&serdev->dev.kobj, &ssam_sam_group);
+> +	sysfs_remove_group(&dev->kobj, &ssam_sam_group);
+>  err_initrq:
+>  	ssam_controller_lock(ctrl);
+>  	ssam_controller_shutdown(ctrl);
 
