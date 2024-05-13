@@ -1,217 +1,227 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D70150980
-	for <platform-driver-x86@vger.kernel.org>; Mon, 13 May 2024 13:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B5859164
+	for <platform-driver-x86@vger.kernel.org>; Mon, 13 May 2024 13:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715606296; cv=none; b=csU2CLSob2GBizrvNY3DAGe+gUPQ5bRYrHLT4kSZjU7fSMxrwMw9Mnx+epwM5swoZ1Tgpy5L5jWS30lZK4sz9fdqzY3ZIOZel7j1VVXFvg2DBYiS1i6WFzN6ywTnHxdsqrf+ujQWgELAYcWWb4iQTMwLAfp4UF6EWKojoR0FSaE=
+	t=1715606309; cv=none; b=RqEkfIDy91o9EPzgQRf5pUfspQj83Loqz3l+rdBBJLtiOiTnudDZVpUCTt4HQJ2EX/BCdrKHqczgqk4BG3YZIP8zPGg0hQ+EcC2kaQ/Vz6D9rV1QG3UdAir93KrgP1JxkKsdPVz7cTIctOZnrmjPscMD9jdCYYa3lPGPeUQA2/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715606296; c=relaxed/simple;
-	bh=LIKMtrjVIwsLzJt8Z+fCf2950sEkCs0coNDS09hv1CI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ud6rZQklD6vPFh+3ZxyhjsoK0wKqHXkxLePYETTOTj/NnIBQZpEYqAssn3iz4qngLd8f3L9msiQebttEk0rGcEnO7dZMuNp46cKIrlMmsqit5uW3k1haH/2wSe1B6ZlQxn7uTbjuynqIBAGpUdd8iQI0BRQdVQMrLkt8TkGffH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K00GLo7K; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715606309; c=relaxed/simple;
+	bh=H21Zt6xnTBAYYWHFQ4L2K9PIl1xHd5fRbQ5xs9F5rPQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G4zPSB6WfkbdCvBuEeWgbTI/Rt5sHKf0i3PkG21Sg0vSn+Y7UgECWh+7ESR6Y+0Lp61Y5S1znJua6ZhdLqQfUFPcRHoKDtj0xD0qJ1WIpppciijHkJ2tCEu7tFprjzCCNJByN8dcbFjwNITkVSZeM4H7RJfrLD5UFclmR4qkhAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UfMBRy0w; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K00GLo7K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715606295; x=1747142295;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=LIKMtrjVIwsLzJt8Z+fCf2950sEkCs0coNDS09hv1CI=;
-  b=K00GLo7KrXwh1+yrNYw+g0S2y8gwIPF7j8i1kKa1jR5j3aqQUMQLBdpi
-   yBX0d8/x7fzRrR2A4Co59fEs0Eh4TiW/B/0nYdowBlrFprSq3uIQDA4WI
-   hl87aWESRsNu31xzoNWCHtpMVKhZDbDiZ3JTV91nr/WLBAQBtAGnm38QS
-   FZHvtDFzac+ccmuB7Q5DxKZVNe37XIZjmj5Jbpe6d/E/IvANL2nhK52Hz
-   1rR3+HwLIqplRaGb8xVu9+ex7JOkoXJXN12Me7GHbuR8Nji30/9q5Ru3Q
-   ma8ZwAP/YxbKTKCkv0tTjfiPJeRpXrBZl3hrJCTuHueB/etT2nB4HnL0t
-   g==;
-X-CSE-ConnectionGUID: G2VeSzWETZuQ5c6B4/8OTQ==
-X-CSE-MsgGUID: EHXfb93wTgu6AAC5hNOY2g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11071"; a="11481037"
-X-IronPort-AV: E=Sophos;i="6.08,158,1712646000"; 
-   d="scan'208";a="11481037"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 06:14:57 -0700
-X-CSE-ConnectionGUID: isGnHqLZSOmYR6Uu5u/s1g==
-X-CSE-MsgGUID: 0840lbymRmGc3GP+8cltIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,158,1712646000"; 
-   d="scan'208";a="30744041"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.89])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 06:14:55 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 13 May 2024 16:14:50 +0300 (EEST)
-To: Hans de Goede <hdegoede@redhat.com>
-cc: Andy Shevchenko <andy@kernel.org>, AceLan Kao <acelan.kao@canonical.com>, 
-    Kai-Heng Feng <kai.heng.feng@canonical.com>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 1/2] platform/x86: Add new Dell UART backlight driver
-In-Reply-To: <7c535f53-5cca-4ac5-bcaa-f2f89d40f97d@redhat.com>
-Message-ID: <1c14872e-7b7d-b67f-9557-bd14fbe604d8@linux.intel.com>
-References: <20240512162353.46693-1-hdegoede@redhat.com> <20240512162353.46693-2-hdegoede@redhat.com> <106aa14e-b621-84db-f5da-89bf29ed0999@linux.intel.com> <b1187314-35f2-4a10-80be-156f6f645a7e@redhat.com> <ab5c3c46-a438-0ad8-3d67-78261eb3a8d1@linux.intel.com>
- <7c535f53-5cca-4ac5-bcaa-f2f89d40f97d@redhat.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UfMBRy0w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715606306;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q1T3XDT+7jNPsbuy8HrepgCrpAVg/jsS6UMy8hR57f4=;
+	b=UfMBRy0w3PPznQHHk4oPpTn9gIjBHm55MevOm2oGGIpoKeptGJW4mUQPCIbv9s4nlO3Y4d
+	jfaFGyjE6ra/L1UhfXOzUbMCcMB1UPkx+sX+XvgOle2gGKbyQAiZO8df/gaDcinuU7kKRF
+	Yd3jUllvtT2NqOhvD7UnZXVAW62tXPQ=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-638-R3giOLQ5OAS_RQZ2gIx2dg-1; Mon, 13 May 2024 09:18:15 -0400
+X-MC-Unique: R3giOLQ5OAS_RQZ2gIx2dg-1
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2e3003fae2dso28582831fa.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 May 2024 06:18:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715606293; x=1716211093;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q1T3XDT+7jNPsbuy8HrepgCrpAVg/jsS6UMy8hR57f4=;
+        b=t6Fsg2t1GnfG82AMoTSSRna3iaqNIoviGflEOkHMdeiLReW+EHXf0gGdDknqTFdbms
+         JoS9qBaYK00rN7OQ9viZl4l9zNcQfoKLEQrCpA+6wM46f73YhP0K0BVpxTxh5QKLqB4N
+         2k6z1v4FMiCpm2dTUX2+1gq/usXZq5rzkb6rKVAX9UGdsO2VAxApDzWHIXN32N8e/ugb
+         DJrnnl9Jowi/DvVXWJ78A0pvAjZPb7o9PDb6hSYtwxIvfwvodLseEiFV+3dB3oXYxkpT
+         FEX5FAxLAZ2+O8L0NCME12b5DJVtbZaDBZfC8UWd8vRbsauviswANS4lUSXo1IgWyWV2
+         GJHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVScys9Bx/VQbYWluMIIjDt+9M4mti3nOKRpSCxVInnFPjx8RQLqOwEoJ97EAMJLPExbMiTXIZa905zO7S35srJOVWthgLdqF9ShjNSUU6vqV0m+g==
+X-Gm-Message-State: AOJu0Yzl4uCZugpmIez/0iS0Rn4gkaHHq1NjlLW8HTpXFqZkVRsAsadi
+	Gkbi5ukttXuSmwOqUombbBFs09QQDEq7EOcOqUaidpO6RrNfgBwMy3DJzKs0QSiFKjjG44SRNn8
+	ll1Ci3tkxZV0MFR+oTe8NKy6j1QpCkygcUn2+tkw89Bbuh3i5fC84XoKbq44/D00HoVXrqu0yUV
+	noxHc=
+X-Received: by 2002:a05:6512:3117:b0:51e:1bed:13b3 with SMTP id 2adb3069b0e04-52210174834mr6704888e87.32.1715606293468;
+        Mon, 13 May 2024 06:18:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEx/o6G9Y218kup3klm7ZpP5L0Ecxqu9VNcT+p17L5Ubsk8kLSO3UW49x+gmcBj7KbTzy7+PA==
+X-Received: by 2002:a05:6512:3117:b0:51e:1bed:13b3 with SMTP id 2adb3069b0e04-52210174834mr6704872e87.32.1715606293062;
+        Mon, 13 May 2024 06:18:13 -0700 (PDT)
+Received: from [10.40.98.157] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f35ad5fdsm1765883e87.24.2024.05.13.06.18.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 May 2024 06:18:12 -0700 (PDT)
+Message-ID: <d4c9a9c6-da94-4e65-b8b6-80f5618d15d4@redhat.com>
+Date: Mon, 13 May 2024 15:18:10 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1072740572-1715606090=:1286"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1072740572-1715606090=:1286
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] platform/x86: Add new Dell UART backlight driver
+To: Andy Shevchenko <andy@kernel.org>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ AceLan Kao <acelan.kao@canonical.com>,
+ Roman Bogoyev <roman@computercheck.com.au>,
+ Kai Heng Feng <kai.heng.feng@canonical.com>,
+ platform-driver-x86@vger.kernel.org
+References: <20240513111552.44880-1-hdegoede@redhat.com>
+ <20240513111552.44880-2-hdegoede@redhat.com>
+ <ZkIOa6jo47CqgxGK@smile.fi.intel.com>
+Content-Language: en-US
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <ZkIOa6jo47CqgxGK@smile.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 7bit
 
-On Mon, 13 May 2024, Hans de Goede wrote:
-> On 5/13/24 2:12 PM, Ilpo J=C3=A4rvinen wrote:
-> > On Mon, 13 May 2024, Hans de Goede wrote:
-> >> On 5/13/24 10:34 AM, Ilpo J=C3=A4rvinen wrote:
-> >>> On Sun, 12 May 2024, Hans de Goede wrote:
+Hi,
 
-> >>>> +
-> >>>> +=09=09dell_bl->resp_idx++;
-> >>>> +=09=09if (dell_bl->resp_idx < dell_bl->resp_len)
-> >>>> +=09=09=09continue;
-> >>>> +
-> >>>> +=09=09csum =3D dell_uart_checksum(dell_bl->resp, dell_bl->resp_len =
-- 1);
-> >>>> +=09=09if (dell_bl->resp[dell_bl->resp_len - 1] !=3D csum) {
-> >>>> +=09=09=09dev_err(dell_bl->dev, "Checksum mismatch got 0x%02x expect=
-ed 0x%02x\n",
-> >>>> +=09=09=09=09dell_bl->resp[dell_bl->resp_len - 1], csum);
-> >>>> +=09=09=09dell_bl->status =3D -EIO;
-> >>>> +=09=09=09goto wakeup;
-> >>>> +=09=09}
-> >>>
-> >>> Why is the checksum calculation and check inside the loop??
-> >>
-> >> The loop iterates over received bytes, which may contain extra data=20
-> >> after the response, the:=20
-> >>
-> >> =09=09dell_bl->resp_idx++;
-> >> =09=09if (dell_bl->resp_idx < dell_bl->resp_len)
-> >> =09=09=09continue;
-> >>
-> >> continues looping until we have received all the expected bytes. So he=
-re, past this
-> >> check, we are are at the point where we have a complete response and t=
-hen we verify it.
-> >>
-> >> And on successful verification wake-up any waiters.
-> >=20
-> > So effectively you want to terminate the loop on two conditions here:
-> >=20
-> > a) dell_bl->resp_idx =3D=3D dell_bl->resp_len (complete frame)
-> > a) if i =3D=3D len (not yet received a full frame)
-> >=20
-> > Why not code those rather than the current goto & continue madness?
-> >=20
-> > Then, after the loop, you can test:
-> >=20
-> > =09if (dell_bl->resp_idx =3D=3D dell_bl->resp_len) {
-> > =09=09// calc checksum, etc.
-> > =09}
-> >=20
-> > ?
->=20
-> Ok, I've added the following change for v3:
->=20
-> diff --git a/drivers/platform/x86/dell/dell-uart-backlight.c b/drivers/pl=
-atform/x86/dell/dell-uart-backlight.c
-> index bf5b12efcb19..66d8c6ddcb83 100644
-> --- a/drivers/platform/x86/dell/dell-uart-backlight.c
-> +++ b/drivers/platform/x86/dell/dell-uart-backlight.c
-> @@ -87,6 +87,7 @@ static int dell_uart_bl_command(struct dell_uart_backli=
-ght *dell_bl,
->  =09dell_bl->status =3D -EBUSY;
->  =09dell_bl->resp =3D resp;
->  =09dell_bl->resp_idx =3D 0;
-> +=09dell_bl->resp_len =3D -1; /* Invalid / unset */
->  =09dell_bl->resp_max_len =3D resp_max_len;
->  =09dell_bl->pending_cmd =3D cmd[1];
-> =20
-> @@ -219,7 +219,7 @@ static size_t dell_uart_bl_receive(struct serdev_devi=
-ce *serdev, const u8 *data,
->  =09=09return len;
->  =09}
-> =20
-> -=09for (i =3D 0; i < len; i++) {
-> +=09for (i =3D 0; i < len && dell_bl->resp_idx !=3D dell_bl->resp_len; i+=
-+, dell_bl->resp_idx++) {
->  =09=09dell_bl->resp[dell_bl->resp_idx] =3D data[i];
-> =20
->  =09=09switch (dell_bl->resp_idx) {
-> @@ -228,46 +228,41 @@ static size_t dell_uart_bl_receive(struct serdev_de=
-vice *serdev, const u8 *data,
->  =09=09=09if (dell_bl->resp_len < MIN_RESP_LEN) {
->  =09=09=09=09dev_err(dell_bl->dev, "Response length too small %d < %d\n",
->  =09=09=09=09=09dell_bl->resp_len, MIN_RESP_LEN);
-> -=09=09=09=09dell_bl->status =3D -EIO;
-> -=09=09=09=09goto wakeup;
-> +=09=09=09=09goto error;
->  =09=09=09}
-> =20
->  =09=09=09if (dell_bl->resp_len > dell_bl->resp_max_len) {
->  =09=09=09=09dev_err(dell_bl->dev, "Response length too big %d > %d\n",
->  =09=09=09=09=09dell_bl->resp_len, dell_bl->resp_max_len);
-> -=09=09=09=09dell_bl->status =3D -EIO;
-> -=09=09=09=09goto wakeup;
-> +=09=09=09=09goto error;
->  =09=09=09}
->  =09=09=09break;
->  =09=09case RESP_CMD: /* CMD byte */
->  =09=09=09if (dell_bl->resp[RESP_CMD] !=3D dell_bl->pending_cmd) {
->  =09=09=09=09dev_err(dell_bl->dev, "Response cmd 0x%02x !=3D pending 0x%0=
-2x\n",
->  =09=09=09=09=09dell_bl->resp[RESP_CMD], dell_bl->pending_cmd);
-> -=09=09=09=09dell_bl->status =3D -EIO;
-> -=09=09=09=09goto wakeup;
-> +=09=09=09=09goto error;
->  =09=09=09}
->  =09=09=09break;
->  =09=09}
-> +=09}
-> =20
-> -=09=09dell_bl->resp_idx++;
-> -=09=09if (dell_bl->resp_idx < dell_bl->resp_len)
-> -=09=09=09continue;
-> -
-> +=09if (dell_bl->resp_idx =3D=3D dell_bl->resp_len) {
->  =09=09csum =3D dell_uart_checksum(dell_bl->resp, dell_bl->resp_len - 1);
->  =09=09if (dell_bl->resp[dell_bl->resp_len - 1] !=3D csum) {
->  =09=09=09dev_err(dell_bl->dev, "Checksum mismatch got 0x%02x expected 0x=
-%02x\n",
->  =09=09=09=09dell_bl->resp[dell_bl->resp_len - 1], csum);
-> -=09=09=09dell_bl->status =3D -EIO;
-> -=09=09=09goto wakeup;
-> +=09=09=09goto error;
->  =09=09}
-> -
->  =09=09dell_bl->status =3D 0; /* Success */
-> -=09=09goto wakeup;
-> +=09=09wake_up(&dell_bl->wait_queue);
-> +=09=09return i;
->  =09}
-> =20
->  =09return len;
-> =20
-> -wakeup:
-> +error:
-> +=09dell_bl->status =3D -EIO;
->  =09wake_up(&dell_bl->wait_queue);
->  =09return i + 1;
->  }
+On 5/13/24 2:58 PM, Andy Shevchenko wrote:
+> On Mon, May 13, 2024 at 01:15:50PM +0200, Hans de Goede wrote:
+>> Dell All In One (AIO) models released after 2017 use a backlight controller
+>> board connected to an UART.
+>>
+>> In DSDT this uart port will be defined as:
+>>
+>>    Name (_HID, "DELL0501")
+>>    Name (_CID, EisaId ("PNP0501")
+>>
+>> Instead of having a separate ACPI device with an UartSerialBusV2() resource
+>> to model the backlight-controller, which would be the standard way to do
+>> this.
+>>
+>> The acpi_quirk_skip_serdev_enumeration() has special handling for this
+>> and it will make the serial port code create a serdev controller device
+>> for the UART instead of a /dev/ttyS0 char-dev. It will also create
+>> a dell-uart-backlight driver platform device for this driver to bind too.
+>>
+>> This new kernel module contains 2 drivers for this:
+>>
+>> 1. A simple platform driver which creates the actual serdev device
+>>    (with the serdev controller device as parent)
+>>
+>> 2. A serdev driver for the created serdev device which exports
+>>    the backlight functionality uses a standard backlight class device.
+> 
+> ...
+> 
+>> Reported-by: Roman Bogoyev <roman@computercheck.com.au>
+> 
+> Privately? I mean no links to the report?
 
-Thanks, this is way easier to follow.
+Yes by private email.
+ 
+<snip>
 
---=20
- i.
 
---8323328-1072740572-1715606090=:1286--
+>> +/* 1st byte Start Of Frame 3 MSB bits: cmd-len + 01010 SOF marker */
+>> +#define SOF(len)			(((len) << 5) | 0x0a)
+> 
+> This kinda too short to be somehow unique, potential collision might be if
+> somebody introduces this in the header which somehow will be chain-included
+> here. Perhaps a namespace? DELL_SOF?
+
+Ack will fix for v3.
+
+> 
+> ...
+> 
+>> +static int dell_uart_bl_command(struct dell_uart_backlight *dell_bl,
+>> +				const u8 *cmd, int cmd_len,
+>> +				u8 *resp, int resp_max_len)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = mutex_lock_killable(&dell_bl->mutex);
+> 
+> Can't be called via cleanup.h?
+
+I prefer to have the locking explicit rather then use cleanup.h .
+
+<snip>
+
+>> +static int dell_uart_get_brightness(struct dell_uart_backlight *dell_bl)
+>> +{
+> 
+> 	struct device *dev = dell_bl->dev;
+> 
+>> +	u8 get_brightness[GET_CMD_LEN], resp[GET_RESP_LEN];
+>> +	int ret;
+>> +
+>> +	get_brightness[0] = SOF(GET_CMD_LEN);
+>> +	get_brightness[1] = CMD_GET_BRIGHTNESS;
+>> +	get_brightness[2] = dell_uart_checksum(get_brightness, 2);
+> 
+>> +	ret = dell_uart_bl_command(dell_bl, get_brightness, GET_CMD_LEN, resp, GET_RESP_LEN);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (resp[RESP_LEN] != GET_RESP_LEN) {
+>> +		dev_err(dell_bl->dev, "Unexpected get brightness response length: %d\n",
+>> +			resp[RESP_LEN]);
+> 
+> 		dev_err(dev, "Unexpected get brightness response length: %d\n", resp[RESP_LEN]);
+> 
+>> +		return -EIO;
+>> +	}
+>> +
+>> +	if (resp[RESP_DATA] > DELL_BL_MAX_BRIGHTNESS) {
+>> +		dev_err(dell_bl->dev, "Unexpected get brightness response: %d\n",
+>> +			resp[RESP_DATA]);
+> 
+> 		dev_err(dev, "Unexpected get brightness response: %d\n", resp[RESP_DATA]);
+> 
+
+Ack will fix for v3.
+
+>> +		return -EIO;
+>> +	}
+>> +
+>> +	return resp[RESP_DATA];
+>> +}
+> 
+> ...
+> 
+>> +		case RESP_CMD: /* CMD byte */
+>> +			if (dell_bl->resp[RESP_CMD] != dell_bl->pending_cmd) {
+>> +				dev_err(dell_bl->dev, "Response cmd 0x%02x != pending 0x%02x\n",
+>> +					dell_bl->resp[RESP_CMD], dell_bl->pending_cmd);
+>> +				dell_bl->status = -EIO;
+>> +				goto wakeup;
+>> +			}
+>> +			break;
+> 
+> No default case?
+
+Nope, this checks the validity of the first 2 bytes / the header. The data is not checked.
+
+> 
+> ...
+> 
+>> +	dev_dbg(dev, "Firmware version: %.*s\n", resp[RESP_LEN] - 3, resp + RESP_DATA);
+> 
+> I would be on the safest side, i.e. not trusting that it will be NUL-terminated
+> string, hence something like %*pE?
+
+Right, this is why the existing dev_dbg() already passes a precision and we do
+want to actually stop if there is a 0 there, which %pE does not do.
+
+Regards,
+
+Hans
+
+
+
+> 
+> 
+
