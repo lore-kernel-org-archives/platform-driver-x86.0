@@ -1,168 +1,106 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2086.outbound.protection.outlook.com [40.107.93.86])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7971715443D;
-	Mon, 13 May 2024 15:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715615613; cv=fail; b=PQuwKQijxI4lddAj+Na1dzmuoVj88Q/Eef1d/1TJcSn0BOeRxhqBiuglGPWz4jtgwmiyTuGrhrY0JAukvi05pklXYFQK34guNv5VWUbZ+q0rnBpbn8ipeKRr/V9E14SYaB9846AHjEBZ+tQqiBzby6fBGfjPE6q7N/U2YP4ctAE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715615613; c=relaxed/simple;
-	bh=qQ0YEAZ8MiJPWIFj/Sf2nn4aY8jOFSbAaifsON9jzD0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=WuMnKrou63Y9fggoiV03u/5mFnT8RprMceuIKvqc/ytzZ7A/mgz0h9G5bViFT+L8s9ZRTWdnv4HhLqr+dM1VSmq/ehsflHuIfZ4APT+y4YDzipsfZ8UjVrK4cV0HZBSurT7JzX3kqGL5+A8hdqIiKpp7LTu3txoF951ITUOPaWc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=netapp.com; spf=pass smtp.mailfrom=netapp.com; dkim=pass (2048-bit key) header.d=netapp.com header.i=@netapp.com header.b=BjxeXUmJ; arc=fail smtp.client-ip=40.107.93.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=netapp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netapp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553775674B
+	for <platform-driver-x86@vger.kernel.org>; Mon, 13 May 2024 15:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715615675; cv=none; b=qQi1e8iqGp6Ys67CX91Sm6XdHGuPDNKHyoXZelhDJcZi1c5zMhrRa/n8k1fzN8n7HOaQ4QGkSUO2fkpgDdHD12keZ/iL72ED0DlZyVu8uou7nD4ZPj6LeSCUvytT0ASjHzT7Ch5NXQMGCev2U6J7xD9f6ELrhmPOSgWi9tMQhbM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715615675; c=relaxed/simple;
+	bh=BMZMOR/Hdl5gY7OVG4Dp6b3vdeZrlH5GdtmtWx0xy84=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=GjYOhW3tIxWL4SsC9T1QaMzYSWgbIJqnn9NcvUt1eso9pMpemKHlqewMT97IfH9y55Tz5WJc3Wg8nyX5xRCcUwNiD4NV05+7fbHwrLcylxQZqYmTcfGKJs8GjEZUF0XEpsDwty/Qf08nKpckouYUCC9pHjCiJ3rpi+HZQWUPGqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rd6sbgTF; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=netapp.com header.i=@netapp.com header.b="BjxeXUmJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C9qhTrM2b7G85jDXU4tDMpTpGzlJkMY9A4p3zicnkOLa8QV+3axFII/DGAtflOEnBRFDx/ATJ6QdAK6lN+crfsjHBvQKJM40h14hnmnszTMqjteY1GdSzYZPVsMzVjwB/rOB/3f7C4edwhIwCFKREWsmlU5ZQ+H5ejz0ypZAqR046KPU1nEBKQLaWK/bogZNd5g90F+a44M10oaCZYqSEj2LiQ5KZDqkKnuX05KRMKkpDjoQXBZ1Yy+Pgw33AJ/Sl1LzrdKcSAH1UH5O3Oc4MiS8iqirSmnSP6U3AUcoIS1Vh1BJpx+66xHr9AOqAYUgim3fE66yzyDVXowwdwb/BA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qQ0YEAZ8MiJPWIFj/Sf2nn4aY8jOFSbAaifsON9jzD0=;
- b=fCyIshUcan2o4xWINCgXXcQf7WlWgvgNK06EI987droUxC4vWUsd7HpVXpGZ3zHNNgNTBHDZPFLxXk4UYDhGLLIXYbigkl9sUvPeolEmwm0svLKpksoZ/hXZnVDI3DDhk+xhYe2+XOcs1Wy4kCCMczvdpeeBtsR8YvX+alGVmuKLtjXtvdOeV8gJxLhrwokUcOIBwn3b2dF1sNVkSmTSO+qKqXlgYXIU9brCuX0Xy30HAXXS5Zvea4GJj9FEgmuPkFf7xdMs6QbcUuJNuE1OiP9Fjfa4jhcsNkSlGH4WQT4MbAB6PgnuKcLVRvs1Obszp+nIGNjjcytmKkDEA8ESFg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=netapp.com; dmarc=pass action=none header.from=netapp.com;
- dkim=pass header.d=netapp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netapp.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qQ0YEAZ8MiJPWIFj/Sf2nn4aY8jOFSbAaifsON9jzD0=;
- b=BjxeXUmJBaFexH0nDu0ACfgGIY/2idqM68o8wn4vHeQo40m2dTSgRwPDCFrvbRCqxoLtJpTdAvB7jgXamHfcCq1v0s6y3ss80GZoojGsohkilPSwC9vwZtBh0EI0yh2wrb2iBqA+4doXLsVbsz6Rf3I/PBgP2vvWpL3i3cFByy7zXuzuybR6S9J/ecp7J2QY8h6lmoTMcet/JasNe1bUKQs9GOvcu468+BDHc+5MQd/CXgW2/rb4hd85a0DKmXQ8/IRSHLVO+QZj8qa5Kq2390bTHhQ69NfL9YnJ8v+QbjWJc4VvRAfFpT2oEEFY2tQV3kK9azQqfccs3g4xg0eCmg==
-Received: from MW5PR06MB8930.namprd06.prod.outlook.com (2603:10b6:303:1cc::5)
- by CH2PR06MB6726.namprd06.prod.outlook.com (2603:10b6:610:82::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Mon, 13 May
- 2024 15:53:27 +0000
-Received: from MW5PR06MB8930.namprd06.prod.outlook.com
- ([fe80::f01e:ba25:47a7:6d7f]) by MW5PR06MB8930.namprd06.prod.outlook.com
- ([fe80::f01e:ba25:47a7:6d7f%6]) with mapi id 15.20.7544.052; Mon, 13 May 2024
- 15:53:27 +0000
-From: "Fradella, Ben" <Ben.Fradella@netapp.com>
-To: Hans de Goede <hdegoede@redhat.com>, "bcfradella@proton.me"
-	<bcfradella@proton.me>, =?iso-8859-1?Q?Ilpo_J=E4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>, "platform-driver-x86@vger.kernel.org"
-	<platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: Ranjan Dutta <ranjan.dutta@intel.com>, Yifan2 Li <yifan2.li@intel.com>,
-	Jonathan Yong <jonathan.yong@intel.com>
-Subject: Re: [PATCH] p2sb: Don't init until unassigned resources have been
- assigned.
-Thread-Topic: [PATCH] p2sb: Don't init until unassigned resources have been
- assigned.
-Thread-Index: AQHaojDmTWyh9P8UA0GScbgcToO9wbGVFrUAgAA647g=
-Date: Mon, 13 May 2024 15:53:27 +0000
-Message-ID:
- <MW5PR06MB893057D6D58E498EBE16A8B0F9E22@MW5PR06MB8930.namprd06.prod.outlook.com>
-References: <20240509164905.41016-1-bcfradella@proton.me>
- <7867b308-7cea-4282-82e8-551d88fe70c4@redhat.com>
-In-Reply-To: <7867b308-7cea-4282-82e8-551d88fe70c4@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=netapp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MW5PR06MB8930:EE_|CH2PR06MB6726:EE_
-x-ms-office365-filtering-correlation-id: 491bec59-961b-4c1b-71d8-08dc7364d411
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230031|376005|366007|1800799015|38070700009;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?7cwa7+fVxP03jJHbm+5zWXZKmuBswxIVYJl1VOJa0eXtohUxnFbBWZBreF?=
- =?iso-8859-1?Q?n+df/7VvVdypM43Gldyqqc7momxGOCo0iIR/cLh/DR8ea23NZ0ElQ3Xtlf?=
- =?iso-8859-1?Q?aOuHdNI7sD+zG12o/AeO/BV2uVAZad6wZ8V4SkZyW5MsGLQO1GrqCBL2ej?=
- =?iso-8859-1?Q?yxp3M5ulmf+pW9XqwKo7Brg9xB2xYIVlTclfyr8e8wHW4Kot48BVIb+0lz?=
- =?iso-8859-1?Q?agppMkNr2LHufiojeIZ1nHdc+i82dTaJfvWSdyPyk0kTrJ9dPNXrm6Ii7s?=
- =?iso-8859-1?Q?lvY8eSZ9ym11Vh8Nc3mH00Eo3fQkn3NaJ5WJV1+XAZ9j0O0oDUfnMp934t?=
- =?iso-8859-1?Q?7W2xG5tj8gyuCslFE2hYXKfwjduXkbk1S/58crzJc9tETSKfmmqMXnQBQk?=
- =?iso-8859-1?Q?JiFU2iveq7W7NFms98D70yBEy60xC7cDziJ+S59qu5Vlr66jT7cw5xzFsi?=
- =?iso-8859-1?Q?A4tuq9f0Y530uin1U6dVnYBPU0uVAhmH0LQKwDGJqa6K90Q8bkQyzbnVfJ?=
- =?iso-8859-1?Q?ex3ag1gcYt2maoBaYHOX0ZwPEjk++SjHBEvJXxEBdTWbozrSxQar2ZAF9m?=
- =?iso-8859-1?Q?I6C6KowXW4f6qyR7d93N0kQcvLR+YWA4S3s7Is/1tryPbf0/XBWDtCkMs2?=
- =?iso-8859-1?Q?wvcH/HUZW68kSMT6r5vAHrNERYnfFamZ3cYHAcOzhSdzV66gKH8crdV9Ww?=
- =?iso-8859-1?Q?Ln+eJCXnOFJQXMjEBDdl+eiKX3U4d5SVfK8rtEEeD2OwTF0a7jHWls/9fy?=
- =?iso-8859-1?Q?hF5owJdHnVsgM/VGBfHD9OPLkDGhtJNjHbVbxIVYcsvpdGma0fiSAvCU35?=
- =?iso-8859-1?Q?82hjlgGtTlgjlsy2KpGv2td8PfEmSEjsPFmn2229+sboiqnPBKdDRtkMlH?=
- =?iso-8859-1?Q?D1lX0yXNlJv+cG2GJQmbUB7/Zuij5SpBV1Fd/MykZ9V/XwOr7eFyaKZ9Td?=
- =?iso-8859-1?Q?bLZykbI+c1ZwI5r8zR8GF/8IM9L2TUttWi2EsFgi6i19bLOLY5CPu7iFO8?=
- =?iso-8859-1?Q?k7N3z7aakCC2aLB5Wtn7ggyZnFo2k/RDPaAAaTCu/ZtYkyPXRZzjBUs2m9?=
- =?iso-8859-1?Q?4XtGTlpX5zJ3LPwpua/fnKmNO/BLMcf4zpzY/D1HtAG4MpfxUvXc6dEzlu?=
- =?iso-8859-1?Q?thzxh+Ofey2OXb2l9SScVJbQuJPNgYLI96mBu9pfgpVx0keSuz4Xftwtah?=
- =?iso-8859-1?Q?2BBVmtsV4vdy11+AxnhQqjULvBZUWC1twx3xplGzzZH+NZZMi6uwMcr7tq?=
- =?iso-8859-1?Q?2CaSSzmOR9aLCbUFWMNOgSmB8lQfpOUjGWL2nMDsONqnc5V9KC0VeFHpae?=
- =?iso-8859-1?Q?aOgcBioDXTYZ2tYW8r7U+ExP+Q=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR06MB8930.namprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?y3nQvpHzu5ZcT/C+Ckr0lOPZ443FLyMPdsxwYDH7bmQeK1d/5+1hoCQZer?=
- =?iso-8859-1?Q?gciO0lj4K6PdPn7ONn6S+/uNOfvXHIP0KhmPm7avn8QEwwqRJ0Yf9udFao?=
- =?iso-8859-1?Q?qjN+BzrSjXGNSjoKzQHnwUEDlwNdHfZj+JsCD4xi6nPCJDUiAMRtnXoZyp?=
- =?iso-8859-1?Q?xTqZaHJ0yXwTDDB4UAIHhBriR9jTQ20b+6sC3BVMLLii8zzcy0QpsQV+z1?=
- =?iso-8859-1?Q?KPCqd8FRAr4nDDaznTo6DwNvDpSFtClSsG43axsipQFntBvWZcU57+kJjW?=
- =?iso-8859-1?Q?1gNAMYWXN+A/H5CSCaVS80VAiuKBoDB01P/7/5XPFqb3zsVXSJQK5Jk4P8?=
- =?iso-8859-1?Q?ek3WTaca5VtfP6F3l7oMOOCL94bn60ShWmh9wtuz/ryNuhjQQN1m/9AcG5?=
- =?iso-8859-1?Q?if6MzAJz2o7gC4+HQay6ZxOZJm5/ICiw1FIddxI06RIfQFpQ8EBmUAMMG6?=
- =?iso-8859-1?Q?PcrpBpNAfo+YrEA/3cMT+5N0oK6u/9rmtCWk3eK1APQm8p7LrJE+nX0fRq?=
- =?iso-8859-1?Q?d7PCb0VgrCeWkaJrQ7J9GTFZIPmw1hSN+oZiQOkW/6MyEk1rOud+X1YSCw?=
- =?iso-8859-1?Q?0nco9zDIXo5tLhYJhusoLoJApNlpJJVSoPL4vXVQzJwfOwBDPCOA88PMEG?=
- =?iso-8859-1?Q?ipJ9O2x92gT8MuR1jpbYymEqgOOz4angmLmphnhqbTHTId04mcX7jHlEGW?=
- =?iso-8859-1?Q?mk9pVg/sc29SyL4jdhkR91wyH4PKaKbdAwDAfT1mvABfDA4x25aSDIJNGj?=
- =?iso-8859-1?Q?5wnmFvVLo16Yx0jf2QpFKwHM+oyMyAUpFxd1bpU8mfBNSvCWORuLelaMRR?=
- =?iso-8859-1?Q?meTKpYqcVZtnBlLNLyd35fWZmK5aSTy6XpTuJjdtR6JRbmSzyQp0UaZ7a6?=
- =?iso-8859-1?Q?7h+GaguUP/rM3smGKwfmsAWPagOhdvfUSRB0hfrbtIwwaOi9mTUmdnwXsj?=
- =?iso-8859-1?Q?9D7KGYQ99OH13GIa/u9oEkfXrdoTlvpW1LgiwGrWITtbL9r0NVwxRJByE/?=
- =?iso-8859-1?Q?LuvZH9NQ4uBUaPYay22uMJ3e75QtVBNIyGQWKfabeBTN770adlPrFS3jPV?=
- =?iso-8859-1?Q?BomAfc2m34T0kYM4yQzqfNAEwZoiz7zxwc4A14m2J3554X1LlGEgOkXa3i?=
- =?iso-8859-1?Q?sz1z/DkymHhvTltxmb6BdmDFZlRHA0Zi8uacar9fGBgveU5oySmUtm+0Zw?=
- =?iso-8859-1?Q?NVuLUBYm8iqWyh0QUoRLiQ8gBfLyMjcrja06hqRoShtb4bIcB+NxiIWrR+?=
- =?iso-8859-1?Q?2zNnRAGwimxMM9OVLWhQoYeOyNlazEXUEo7ugcSE1JB2+trOp4YydB+9Vd?=
- =?iso-8859-1?Q?JZejTyVNOWHuOZ67C8ndOlVGBvVZ6tadxefO6aphrx3KaB2snV+ZBHV3U7?=
- =?iso-8859-1?Q?eLxfmmOOitgSW+muqEr+iUjzyvXT6sEV0AU5xHc1lcwJiUI+ApE1ZWCGQ7?=
- =?iso-8859-1?Q?P4iif+5ouaLCsGT5N10n7fNLIHvz6P6PhXGLiVz0BR5mRNTVYIUHjEF7ye?=
- =?iso-8859-1?Q?xHc3WA82AEWL9eSAMrhPbUiD3Wf1pq+NsETZ2c4xavAH8lvAG/GMn4u7cQ?=
- =?iso-8859-1?Q?dhhSCcy0bQuY2UXQI+fsUiufIhufxVlr3KiHvSBuiduW/QBBQvDy5MhYWb?=
- =?iso-8859-1?Q?VckqX44MUf2II=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rd6sbgTF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715615673; x=1747151673;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=BMZMOR/Hdl5gY7OVG4Dp6b3vdeZrlH5GdtmtWx0xy84=;
+  b=Rd6sbgTFlShPhssCnqr4JSVuA+Z+FCBPUUE6DO3+ZgflidvQB2X6ACYm
+   NuZB8raAT2m3pGbvmVjq7W/UR939LHLDTCG4/FKSPj8+0f2Z7yBus4tl3
+   jgjvnxRTF5yWs6NjFXU/ZwCC++ogoIuzJJ1qeOcHo48LH8lwcAnq8ILDb
+   MVUB5L0Qd/yluLzZnghNXXMobzIZq07OvTar7djqRiWx3D5dZXb0ce3H4
+   jGrLvd4q2re4HWhZiCwvuWSV5QJkm4+1CYq7OZw5957KwiHg+0U7T03Jn
+   FYtwvqvxmQxMpCIQeNlcEbhFluOuVecJtZ+xv+n+WE98tUnTX3sGLMdFu
+   w==;
+X-CSE-ConnectionGUID: iayCUJG2SQCvewBh6qNHiw==
+X-CSE-MsgGUID: 0Aub9qY9QV6XKNHh2W/WEw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11072"; a="34070892"
+X-IronPort-AV: E=Sophos;i="6.08,158,1712646000"; 
+   d="scan'208";a="34070892"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 08:54:32 -0700
+X-CSE-ConnectionGUID: ykKUH/4+Q5u+XBBN2n/WpQ==
+X-CSE-MsgGUID: vCTQNksXTfy3LJH/4v8v3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,158,1712646000"; 
+   d="scan'208";a="30495806"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.89])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 08:54:30 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 13 May 2024 18:54:25 +0300 (EEST)
+To: Andy Shevchenko <andy@kernel.org>
+cc: Hans de Goede <hdegoede@redhat.com>, AceLan Kao <acelan.kao@canonical.com>, 
+    Roman Bogoyev <roman@computercheck.com.au>, 
+    Kai Heng Feng <kai.heng.feng@canonical.com>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] platform/x86: Add new Dell UART backlight
+ driver
+In-Reply-To: <ZkI1ZecXG0kqzak5@smile.fi.intel.com>
+Message-ID: <7c134976-d70b-9703-c295-4c89c4c07070@linux.intel.com>
+References: <20240513111552.44880-1-hdegoede@redhat.com> <20240513111552.44880-2-hdegoede@redhat.com> <ZkIOa6jo47CqgxGK@smile.fi.intel.com> <d4c9a9c6-da94-4e65-b8b6-80f5618d15d4@redhat.com> <ZkIvdZ9Xhs-HiZn0@smile.fi.intel.com> <b1880f73-c8f5-4076-bb62-6c9ea620e99e@redhat.com>
+ <ZkI1ZecXG0kqzak5@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: netapp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW5PR06MB8930.namprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 491bec59-961b-4c1b-71d8-08dc7364d411
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2024 15:53:27.1019
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FAhDpvJ/lDzPS1cfkTYgH46FaXvIp4qiL9mvckiWYoyZET1ibeQvhvqfj53s2dxg7zhR2m7mfErUYy0nrdeDWA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR06MB6726
+Content-Type: text/plain; charset=US-ASCII
 
-> On 2024-05-13 07:03, hdegoede@redhat.com wrote:
->
-> Thank you for your patch, I've applied this patch to my review-hans branc=
-h: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x=
-86.git/log/?h=3Dreview-hans
->
-> Note it will show up in my review-hans branch once I've pushed my local b=
-ranch there, which might take a while.
->
-> Once I've run some tests on this branch the patches there will be added t=
-o the platform-drivers-x86/for-next branch and eventually will be included =
-in the pdx86 pull-request to Linus for the next merge-window.
->
->Regards,
->
->Hans
+On Mon, 13 May 2024, Andy Shevchenko wrote:
 
-Thank you!
+> On Mon, May 13, 2024 at 05:33:10PM +0200, Hans de Goede wrote:
+> > On 5/13/24 5:19 PM, Andy Shevchenko wrote:
+> > > On Mon, May 13, 2024 at 03:18:10PM +0200, Hans de Goede wrote:
+> > >> On 5/13/24 2:58 PM, Andy Shevchenko wrote:
+> > >>> On Mon, May 13, 2024 at 01:15:50PM +0200, Hans de Goede wrote:
+> 
+> > >>>> +static int dell_uart_bl_command(struct dell_uart_backlight *dell_bl,
+> > >>>> +				const u8 *cmd, int cmd_len,
+> > >>>> +				u8 *resp, int resp_max_len)
+> > >>>> +{
+> > >>>> +	int ret;
+> > >>>> +
+> > >>>> +	ret = mutex_lock_killable(&dell_bl->mutex);
+> > >>>
+> > >>> Can't be called via cleanup.h?
+> > >>
+> > >> I prefer to have the locking explicit rather then use cleanup.h .
+> > > 
+> > > Hmm... interesting, so you push-back the cleanup.h usage?
+> > 
+> > I'm in favor of the guard(mutex)(&smne_mutex); syntax, but this
+> > is a mutex_lock_killable() for which that does not work AFAIK.
+> > 
+> > So in this case AFAICT we would need to use the cleanup stuff manually
+> > and in that case I believe that in that case just sticking with
+> > the current code is better.
+> 
+> There is scoped_cond_guard().
+> But there is no DEFINE_GUARD_COND() for mutex_lock_killable().
+
+Is there a way to return the original error code with scoped_cond_guard() 
+or does that it force overriding the original return value with a 
+hard-coded one provided by the caller which seems a step backwards?
+
+
+-- 
+ i.
+
