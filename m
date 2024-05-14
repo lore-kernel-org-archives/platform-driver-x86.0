@@ -1,244 +1,289 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A2B1E480
-	for <platform-driver-x86@vger.kernel.org>; Tue, 14 May 2024 15:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E841E487
+	for <platform-driver-x86@vger.kernel.org>; Tue, 14 May 2024 18:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715699428; cv=none; b=rftl/GZ+Ek8Hgb/ctiuJDETOVdO8sVXgCRUz1JehptL0sPPgTaTRBFwawOnegitiwq27DWQ5xgegJi2wnunQ6hPoo2dCu61w4Pp84rC3ZWhsxPUqFauWP+WXZusChcn8b4K1/4NZCfHlmJS8I843mUg4ZDBgIhGGupHe/GrAJck=
+	t=1715709835; cv=none; b=Lirg37wYZKxa02a2znk9A3SEVTO4bWLC+ws3DFdcGdj+I5m/PIIklziqWAaJ7OmzIwEL9EXZ36YMszcBqgoKrpqGUguyBOd9k9guLrd0roDl/TIC4k8b02mIBxJUMCT96HRUm0NRe1ItpbZEY1ZTRHiie6GAfNpG75TD5QPBgrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715699428; c=relaxed/simple;
-	bh=YlvfgrWecR/BVHEZ9dXK0OemgjO8ca0eRw95vMoW9Ss=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MJwRksXEn5vnESiPzmETvFoG4a1IlxCEPPPP314M8igGPLbA9ikijEhqHblnz35KXUamajPsqV6eBwm3X6iOXqPTIWsdnKGCdk5KcPFfgbRGjHq2NALpaq2PJ6p8ytXT8XYuM8f3+U5JUxqNrjPcK//H+nPceHghmxBZM4JxXDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Mfj42Qy7; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1715709835; c=relaxed/simple;
+	bh=MiJHje1le3t6tOJuJ5ZPnHiXYKgl5d7CiYdH1FRHdWs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TSCaXwmM4UVXXJ9oAg/ShHyzcc+j3Hl6lfCO4//H8KEpiU14AaVErVHL0XqzaaChdGzftZwOJkwePCCS/9pPj4qfkALc1iSzzI4zCeZXZqp2eFGqgz0JdYr14ZRpzI0LBB5Um63Cgc3fsPGmOrF0oewTsjeCIDacvg8zdZNIH+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VLyowHKA; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mfj42Qy7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VLyowHKA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715699425;
+	s=mimecast20190719; t=1715709832;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kvO0cxgHO+nsSHAdHeN0TV0zj1R+uYeQ/4oU4vqqMEg=;
-	b=Mfj42Qy7piZlRKFM+XdEhdbEACVJ8wck+vi47NTlr8tsLdPesfQ2sqRv7yxLQ8sfbTbDvC
-	UBv6aAALiyAlZ2xHBlyYg0600fsWrf9JIMkSHmbeZPQ2lN1cQoHTmAjFzrnK22imCqHfFn
-	GRiauTy4w9Df6OkoxsUyz/sxKJk6RF8=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-582-Bz-3Mf00NTqtvDpVTMpj_A-1; Tue, 14 May 2024 11:10:08 -0400
-X-MC-Unique: Bz-3Mf00NTqtvDpVTMpj_A-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-52047ad4c79so4550560e87.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 14 May 2024 08:10:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715699407; x=1716304207;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kvO0cxgHO+nsSHAdHeN0TV0zj1R+uYeQ/4oU4vqqMEg=;
-        b=VAByvjuSEND4wNo99wlhKtRUyWaa0TwtOrceZYSaHq/zMooBDuGL9DMh9UGyG5Rnba
-         87lzsznc6JsBLJd69d7qcM0+dKAraSJp/zPCUQJ3qSuEFgHd9Mhnz4T2e1NYKobE3RHd
-         CJKTkgHork3k5bk14cEqA+LnuyM0K0vockb6j7Aa3roP5sy9TfL+luFJ4SMyvtE+9Ha2
-         HWWtr4sdt214e7un1kKRzAO5kjMf95YgjcUBwzl4aroQEp0zIlA4boplZe+984Pj0BEJ
-         J/8HcqRWsM/ecU2LEMa6yrMbeP1kDlgOCEFKvAakuqY6azPM6W1hmgb6sGqRYfDz1GNI
-         uI1g==
-X-Forwarded-Encrypted: i=1; AJvYcCXJGu2homn4O7tQI9rpGQQ9kBTXocmt15+nwSLSJpMhENSvtOVd7Cq+baQdL91HXF5QRi1/dSZimcX0VY1dR2Kug8HlQGT8huKlwLeQX0Ac44x97A==
-X-Gm-Message-State: AOJu0YyJq6upIYqm3Lv/nGpc5NkByQrCSRBNrWJ6gHL24ky3RjI9HTpV
-	4hPZJzaLLh+tCxszm760rPNAGA1+ddrg6i6b2e/oeBugovj/QMA/HIfSLTizZBavSFxZ8qjuaBV
-	mvTmlPJZOrWyEynSOpnCrWZlTzPTiJyoXRAarFOzZ7W7B09+I5Lr0le0mIHfSWpeMY/L7zvg=
-X-Received: by 2002:a19:6454:0:b0:523:87b6:917d with SMTP id 2adb3069b0e04-52387b691d6mr124676e87.69.1715699406927;
-        Tue, 14 May 2024 08:10:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF4F3fHZbZdFrZKrm4Nyer9AlKUoTo2X/QSWY8wl1hVlMQzf4lZMcvxOy1vA2xtq85hXQ4Fxw==
-X-Received: by 2002:a19:6454:0:b0:523:87b6:917d with SMTP id 2adb3069b0e04-52387b691d6mr124647e87.69.1715699406404;
-        Tue, 14 May 2024 08:10:06 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1787c715sm732538566b.46.2024.05.14.08.10.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 May 2024 08:10:05 -0700 (PDT)
-Message-ID: <51cd4b4f-a658-406f-b76c-500231e3ec7d@redhat.com>
-Date: Tue, 14 May 2024 17:10:05 +0200
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=s9zqsUqe4RK+s23+dQkFVxUflCPodfOSRJFlVpGkZcI=;
+	b=VLyowHKAZMFwtw/xH+9GN70rUexjh14u0V71J3yLI6T5rN6RRmgbxFDzPCx+HvqMhuUEKl
+	2uy8TXBKa21uPmnlbyRFW53yaAZAuHJFzDaw7LUrEUIkQC9TPmUzAYBChgtzfNzcOk7yfa
+	drts74n0iJKS810TcZ3EvlSJh9LfmhU=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-413-Pz0vyU93Mz2bZDGzBVDcYQ-1; Tue,
+ 14 May 2024 14:03:49 -0400
+X-MC-Unique: Pz0vyU93Mz2bZDGzBVDcYQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 657DA3C025AC;
+	Tue, 14 May 2024 18:03:49 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.194.14])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id B82EA3C27;
+	Tue, 14 May 2024 18:03:48 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2] platform/x86: Add new MeeGoPad ANX7428 Type-C Cross Switch driver
+Date: Tue, 14 May 2024 20:03:43 +0200
+Message-ID: <20240514180343.70795-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: Add new MeeGoPad ANX7428 Type-C Cross
- Switch driver
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20240211195307.158956-1-hdegoede@redhat.com>
- <CAHp75VdSWwntsEh5xBz3jzXGi_QRuaRhcSs1-MwG3QYHW=wMtQ@mail.gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75VdSWwntsEh5xBz3jzXGi_QRuaRhcSs1-MwG3QYHW=wMtQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-Hi Andy,
+Some MeeGoPad top-set boxes have an ANX7428 Type-C Switch for USB3.1 Gen 1
+and DisplayPort over Type-C alternate mode support.
 
-Thank you for the review.
+The ANX7428 has a microcontroller which takes care of the PD negotiation
+and automatically sets the builtin Crosspoint Switch to send the right
+signal to the 4 highspeed pairs of the Type-C connector. It also takes
+care of HPD and AUX channel routing for DP alternate mode.
 
-I agree with all your review comments below and I have fixed them all
-for v2 of the patch which I'm about to post.
+IOW the ANX7428 operates fully autonomous and to the x5-Z8350 SoC
+things look like there simple is a USB-3 Type-A connector and a
+separate DisplayPort connector. Except that the BIOS does not
+power on the ANX7428 at boot (meh).
 
-Regards,
+Add a driver to power on the ANX7428. This driver is added under
+drivers/platform/x86 rather than under drivers/usb/typec for 2 reasons:
 
-Hans
+1. This driver is specifically written to work with how the ANX7428 is
+described in the ACPI tables of the MeeGoPad x86 (Cherry Trail) devices.
 
+2. This driver only powers on the ANX7428 and does not do anything wrt
+its Type-C functionality. It should be possible to tell the controller
+which data- and/or power-role to negotiate and to swap the role(s) after
+negotiation but the MeeGoPad top-set boxes always draw their power from
+a separate power-connector and they only support USB host-mode. So this
+functionality is unnecessary and due to lack of documentation this is
+tricky to support.
 
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v2:
+- Switch to read_poll_timeout() for waiting for the microcontroller to boot
+- Address a few other small review remarks from Andy
+---
+ drivers/platform/x86/Kconfig            |  11 ++
+ drivers/platform/x86/Makefile           |   3 +
+ drivers/platform/x86/meegopad_anx7428.c | 148 ++++++++++++++++++++++++
+ 3 files changed, 162 insertions(+)
+ create mode 100644 drivers/platform/x86/meegopad_anx7428.c
 
-On 2/11/24 9:50 PM, Andy Shevchenko wrote:
-> On Sun, Feb 11, 2024 at 9:53 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Some MeeGoPad top-set boxes have an ANX7428 Type-C Switch for USB3.1 Gen 1
->> and DisplayPort over Type-C alternate mode support.
->>
->> The ANX7428 has a microcontroller which takes care of the PD negotiation
->> and automatically sets the builtin Crosspoint Switch to send the right
->> signal to the 4 highspeed pairs of the Type-C connector. It also takes
->> care of HPD and AUX channel routing for DP alternate mode.
->>
->> IOW the ANX7428 operates fully autonomous and to the x5-Z8350 SoC
->> things look like there simple is a USB-3 Type-A connector and a
->> separate DipslayPort connector. Except that the BIOS does not
-> 
-> DisplayPort
-> 
->> power on the ANX7428 at boot (meh).
->>
->> Add a driver to power on the ANX7428. This driver is added under
->> drivers/platform/x86 rather then under drivers/usb/typec for 2 reasons:
-> 
-> than
-> 
->> 1. This driver is specificly written to work with how the ANX7428 is
-> 
-> specifically
-> 
->> described in the ACPI tables of the MeeGoPad x86 (Cherry Trail) devices.
->>
->> 2. This driver only powers on the ANX7428 and does not do anything wrt
->> its Type-C functionality. It should be possible to tell the controller
->> which data- and/or power-role to negotiate and to swap the role(s) after
->> negotiation but the MeeGoPad top-set boxes always draw their power from
->> a separate power-connector and they only support USB host-mode. So this
->> functionality is unnecessary and due to lack of documenation this
-> 
-> documentation
-> 
->> is tricky to support.
-> 
-> ...
-> 
->> +/*
->> + * meegopad_anx7428.c - Driver to power on the Analogix ANX7428
-> 
-> Keeping a filename inside the file is a burden in case the file gets
-> renamed in the future.
-> 
->> + * USB Type-C crosspoint switch on MeeGoPad top-set boxes.
->> + *
->> + * The MeeGoPad T8 and T9 are Cherry Trail top-set boxes which
->> + * use an ANX7428 to provide a Type-C port with USB3.1 Gen 1 and
->> + * DisplayPort over Type-C alternate mode support.
->> + *
->> + * The ANX7428 has a microcontroller which takes care of the PD
->> + * negotiation and automatically sets the builtin Crosspoint Switch
->> + * to send the right signal to the 4 highspeed pairs of the Type-C
->> + * connector. It also takes care of HPD and AUX channel routing for
->> + * DP alternate mode.
->> + *
->> + * IOW the ANX7428 operates fully autonomous and to the x5-Z8350 SoC
->> + * things look like there simple is a USB-3 Type-A connector and a
->> + * separate DipslayPort connector. Except that the BIOS does not
-> 
-> DisplayPort
-> 
->> + * power on the ANX7428 at boot. This driver takes care of powering
->> + * on the ANX7428.
->> + *
->> + * It should be possible to tell the micro-controller which data- and/or
->> + * power-role to negotiate and to swap the role(s) after negotiation
->> + * but the MeeGoPad top-set boxes always draw their power from a separate
->> + * power-connector and they only support USB host-mode. So this functionality
->> + * is unnecessary and due to lack of documenation this is tricky to support.
-> 
-> documentation
-> 
->> + * For a more complete ANX7428 driver see drivers/usb/misc/anx7418/ of
->> + * the LineageOS kernel for the LG G5 (International) aka the LG H850:
->> + * https://github.com/LineageOS/android_kernel_lge_msm8996/
->> + *
->> + * (C) Copyright 2024 Hans de Goede <hansg@kernel.org>
->> + */
->> +
->> +#include <linux/acpi.h>
-> 
-> + bits.h
-> 
->> +#include <linux/delay.h>
->> +#include <linux/dmi.h>
->> +#include <linux/gpio/consumer.h>
->> +#include <linux/i2c.h>
->> +#include <linux/module.h>
-> 
-> ...
-> 
->> +#define VENDOR_ID_L                    0x00
->> +#define VENDOR_ID_H                    0x01
->> +#define DEVICE_ID_L                    0x02
->> +#define DEVICE_ID_H                    0x03
-> 
-> You use word (16-bit) access, why do we need to know these?
-> Just define them without suffixes (and if you want add a comment that
-> they are 16-bit LE).
-> 
-> ...
-> 
->> +       usleep_range(10000, 15000);
-> 
-> fsleep() ?
-> 
-> ...
-> 
->> +       /* Wait for the OCM (On Chip Microcontroller) to start */
->> +       for (i = 0; i < max_tries; i++) {
->> +               usleep_range(5000, 10000);
->> +
->> +               ret = i2c_smbus_read_byte_data(client, TX_STATUS);
->> +               if (ret < 0)
->> +                       dev_err_probe(dev, ret, "reading status register\n");
->> +               else if (ret & OCM_STARTUP)
->> +                       break;
->> +       }
->> +       if (i == max_tries)
->> +               return dev_err_probe(dev, -EIO,
->> +                                    "On Chip Microcontroller did not start, status: 0x%02x\n",
->> +                                    ret);
-> 
-> Why not use read_poll_timeout() / readx_poll_timeout() (whichever suits better)?
-> 
-> ...
-> 
->> +static struct i2c_driver anx7428_driver = {
->> +       .driver = {
->> +               .name = KBUILD_MODNAME,
-> 
-> Strictly speaking this is an ABI and we don't want it to be changed in
-> case of filename change. Personally I _always_ prefer it be open
-> coded.
-> 
->> +               .acpi_match_table = anx7428_acpi_match,
->> +       },
->> +       .probe = anx7428_probe,
->> +};
-> 
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index e5601d8fba68..0ec952b5d03e 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -666,6 +666,17 @@ config ACPI_QUICKSTART
+ 	  To compile this driver as a module, choose M here: the module will be
+ 	  called quickstart.
+ 
++config MEEGOPAD_ANX7428
++	tristate "MeeGoPad ANX7428 Type-C Switch"
++	depends on ACPI && GPIOLIB && I2C
++	help
++	  Some MeeGoPad top-set boxes have an ANX7428 Type-C Switch for
++	  USB3.1 Gen 1 and DisplayPort over Type-C alternate mode support.
++
++	  This driver takes care of powering on the ANX7428 on supported
++	  MeeGoPad top-set boxes. After this the ANX7428 takes care of Type-C
++	  connector orientation and PD alternate mode switching autonomously.
++
+ config MSI_EC
+ 	tristate "MSI EC Extras"
+ 	depends on ACPI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index cf3032e4e27f..e1b142947067 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -75,6 +75,9 @@ obj-y				+= intel/
+ # Microsoft
+ obj-$(CONFIG_ACPI_QUICKSTART)  += quickstart.o
+ 
++# MeeGoPad
++obj-$(CONFIG_MEEGOPAD_ANX7428)	+= meegopad_anx7428.o
++
+ # MSI
+ obj-$(CONFIG_MSI_EC)		+= msi-ec.o
+ obj-$(CONFIG_MSI_LAPTOP)	+= msi-laptop.o
+diff --git a/drivers/platform/x86/meegopad_anx7428.c b/drivers/platform/x86/meegopad_anx7428.c
+new file mode 100644
+index 000000000000..8c025e39f3f1
+--- /dev/null
++++ b/drivers/platform/x86/meegopad_anx7428.c
+@@ -0,0 +1,148 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Driver to power on the Analogix ANX7428 USB Type-C crosspoint switch
++ * on MeeGoPad top-set boxes.
++ *
++ * The MeeGoPad T8 and T9 are Cherry Trail top-set boxes which
++ * use an ANX7428 to provide a Type-C port with USB3.1 Gen 1 and
++ * DisplayPort over Type-C alternate mode support.
++ *
++ * The ANX7428 has a microcontroller which takes care of the PD
++ * negotiation and automatically sets the builtin Crosspoint Switch
++ * to send the right signal to the 4 highspeed pairs of the Type-C
++ * connector. It also takes care of HPD and AUX channel routing for
++ * DP alternate mode.
++ *
++ * IOW the ANX7428 operates fully autonomous and to the x5-Z8350 SoC
++ * things look like there simple is a USB-3 Type-A connector and a
++ * separate DisplayPort connector. Except that the BIOS does not
++ * power on the ANX7428 at boot. This driver takes care of powering
++ * on the ANX7428.
++ *
++ * It should be possible to tell the micro-controller which data- and/or
++ * power-role to negotiate and to swap the role(s) after negotiation
++ * but the MeeGoPad top-set boxes always draw their power from a separate
++ * power-connector and they only support USB host-mode. So this functionality
++ * is unnecessary and due to lack of documentation this is tricky to support.
++ *
++ * For a more complete ANX7428 driver see drivers/usb/misc/anx7418/ of
++ * the LineageOS kernel for the LG G5 (International) aka the LG H850:
++ * https://github.com/LineageOS/android_kernel_lge_msm8996/
++ *
++ * (C) Copyright 2024 Hans de Goede <hansg@kernel.org>
++ */
++
++#include <linux/acpi.h>
++#include <linux/bits.h>
++#include <linux/delay.h>
++#include <linux/dmi.h>
++#include <linux/gpio/consumer.h>
++#include <linux/i2c.h>
++#include <linux/iopoll.h>
++#include <linux/module.h>
++
++/* Register addresses and fields */
++#define VENDOR_ID			0x00
++#define DEVICE_ID			0x02
++
++#define TX_STATUS			0x16
++#define STATUS_SUCCESS			BIT(0)
++#define STATUS_ERROR			BIT(1)
++#define OCM_STARTUP			BIT(7)
++
++static bool force;
++module_param(force, bool, 0444);
++MODULE_PARM_DESC(force, "Force the driver to probe on unknown boards");
++
++static const struct acpi_gpio_params enable_gpio = { 0, 0, false };
++static const struct acpi_gpio_params reset_gpio = { 1, 0, true };
++
++static const struct acpi_gpio_mapping meegopad_anx7428_gpios[] = {
++	{ "enable-gpios", &enable_gpio, 1 },
++	{ "reset-gpios", &reset_gpio, 1 },
++	{ }
++};
++
++static const struct dmi_system_id meegopad_anx7428_ids[] = {
++	{
++		/* Meegopad T08 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Default string"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Default string"),
++			DMI_MATCH(DMI_BOARD_NAME, "T3 MRD"),
++			DMI_MATCH(DMI_BOARD_VERSION, "V1.1"),
++		},
++	},
++	{ }
++};
++
++static int anx7428_probe(struct i2c_client *client)
++{
++	struct device *dev = &client->dev;
++	struct gpio_desc *gpio;
++	int ret, val;
++
++	if (!dmi_check_system(meegopad_anx7428_ids) && !force) {
++		dev_warn(dev, "Not probing unknown board, pass meegopad_anx7428.force=1 to probe");
++		return -ENODEV;
++	}
++
++	ret = devm_acpi_dev_add_driver_gpios(dev, meegopad_anx7428_gpios);
++	if (ret)
++		return ret;
++
++	/*
++	 * Set GPIOs to desired values while getting them, they are not needed
++	 * afterwards. Ordering and delays come from android_kernel_lge_msm8996.
++	 */
++	gpio = devm_gpiod_get(dev, "enable", GPIOD_OUT_HIGH);
++	if (IS_ERR(gpio))
++		return dev_err_probe(dev, PTR_ERR(gpio), "getting enable GPIO\n");
++
++	fsleep(10000);
++
++	gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
++	if (IS_ERR(gpio))
++		return dev_err_probe(dev, PTR_ERR(gpio), "getting reset GPIO\n");
++
++	/* Wait for the OCM (On Chip Microcontroller) to start */
++	ret = read_poll_timeout(i2c_smbus_read_byte_data, val,
++				val >= 0 && (val & OCM_STARTUP),
++				5000, 50000, true, client, TX_STATUS);
++	if (ret)
++		return dev_err_probe(dev, ret,
++				     "On Chip Microcontroller did not start, status: 0x%02x\n",
++				     val);
++
++	ret = i2c_smbus_read_word_data(client, VENDOR_ID);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "reading vendor-id register\n");
++	val = ret;
++
++	ret = i2c_smbus_read_word_data(client, DEVICE_ID);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "reading device-id register\n");
++
++	dev_dbg(dev, "Powered on ANX7428 id %04x:%04x\n", val, ret);
++	return 0;
++}
++
++static const struct acpi_device_id anx7428_acpi_match[] = {
++	{ "ANXO7418" }, /* ACPI says 7418 (max 2 DP lanes version) but HW is 7428 */
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, anx7428_acpi_match);
++
++static struct i2c_driver anx7428_driver = {
++	.driver = {
++		.name = "meegopad_anx7428",
++		.acpi_match_table = anx7428_acpi_match,
++	},
++	.probe = anx7428_probe,
++};
++
++module_i2c_driver(anx7428_driver);
++
++MODULE_AUTHOR("Hans de Goede <hansg@kernel.org>");
++MODULE_DESCRIPTION("MeeGoPad ANX7428 driver");
++MODULE_LICENSE("GPL");
+-- 
+2.44.0
 
