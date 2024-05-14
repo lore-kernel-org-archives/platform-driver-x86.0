@@ -1,151 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157BF7BB12;
-	Mon, 13 May 2024 20:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA97D136A
+	for <platform-driver-x86@vger.kernel.org>; Tue, 14 May 2024 00:58:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715631000; cv=none; b=amxF9NssC5fes0uw7EV4NCf52wxQBtEQc0UuqEZpn6eZ49uZAc+/J0vXjCMQo3NZCzr9X4imT9x5KurfY3NcL82981Ovrl6ubmIbUXkVbhVgTq0cWix8SyOc1o8JvAngZKtd6bQiLObb298vxl/fLFoLw7ItIjcXWh1pLvvV8nI=
+	t=1715648324; cv=none; b=iU39kXBtPjccgI8oPLRUVNdUFw31HwbsSz3wUmIm+bPFkjFPHXuf2VgKSVCcnUfunPfVMMS3cb76N5O2LGp2htihtbWiTIM04d61BAK+0Lkn1ZgkWC78mPX4Ns5ag1CHTarYdba7QETaGuCHwF6ItjTb5xe60xdhH7L0mnO26Io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715631000; c=relaxed/simple;
-	bh=5srbF7A/r6ZZVZ38QlSzulTr02juUo3FmLj9M76HhZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TtG0ZAV0P/qVZqLEJSQ6Mp9YjzBF31cu5X/KoqTebatRaW6KV/Fhh4Z9i/jnEhYRUngsxlqZ+HxggerQBS8XiF+kmu4GfdMjN8Mh09RtBow11xmZ80AE78wma612pedfUtYR4w0X65XuGprVXGYTmBxE7dF9V5RzwVopgfuPjgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mvsk0Kjm; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715648324; c=relaxed/simple;
+	bh=SL0/VGJDt/DL3mQL9csiimokyerIGMQGoc0PFDLB9zw=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tlRhRqba23XiwO1DE971/CP1+XTzbSrcgD+hJp5eBnLJVx9iHioDUI6IT76lj0bWoAGR1O4gyxt24Z2J4qr3iS9MO8gfA5FR/KbrHGNRCPgi9D3plNxeRjo6l1i8IVJletIdjPLrKAYcyHTtoUmoPVqWxsMrUEtmVOVf24LYWK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a9FXfPMw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mvsk0Kjm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715630998; x=1747166998;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5srbF7A/r6ZZVZ38QlSzulTr02juUo3FmLj9M76HhZ8=;
-  b=mvsk0KjmLA8fgXx5JvqX52VVbAuMSkhC4k+84nOO6Va+L8AzycnryfsV
-   VnooiIrWjAX9YJtNNs8RvYVbTVWT1h+xOScc2eQU/zT+tB2n2CpfVcZ81
-   Uun7kxF1wmCghtYEo6kfg7owRc7fMjx4qvcy/4Kp1xKp3sQBqHRg+YWx5
-   7AgX1ypzbhQT7fKPOI2CkWROo1tJWPrfYIsG6MFRBQg6l588V88vGh+ba
-   NC/E7hBY1tVE/CDet+KCYvHfeWtfiYMHiJ8Q1XteUsfcvT9JmNsSM9Nc4
-   QxdevDI53P+srAe+TD0xCET/RT9jzgrTRRsKLaSJX2lGVhuk5WDUBPuvF
-   Q==;
-X-CSE-ConnectionGUID: C0MNPuq6SYe3yJkh8RICxQ==
-X-CSE-MsgGUID: GN7ao2MNQ32Jzhip8+N35A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11072"; a="14530865"
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="14530865"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 13:09:57 -0700
-X-CSE-ConnectionGUID: +aadTLrMRYyEcp7OimqdlQ==
-X-CSE-MsgGUID: zFsui8dvRbKCxU0Ftvz+/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="61266228"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 13 May 2024 13:09:55 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s6bzb-000Afp-1j;
-	Mon, 13 May 2024 20:09:51 +0000
-Date: Tue, 14 May 2024 04:09:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: Lyndon Sanche <lsanche@lyndeno.ca>
-Cc: oe-kbuild-all@lists.linux.dev, mario.limonciello@amd.com,
-	pali@kernel.org, W_Armin@gmx.de,
-	srinivas.pandruvada@linux.intel.com,
-	Matthew Garrett <mjg59@srcf.ucam.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Dell.Client.Kernel@dell.com
-Subject: Re: [PATCH v2] platform/x86: dell-laptop: Implement platform_profile
-Message-ID: <202405140348.Wz7gOmdP-lkp@intel.com>
-References: <20240426020448.10862-1-lsanche@lyndeno.ca>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a9FXfPMw"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 69904C32782
+	for <platform-driver-x86@vger.kernel.org>; Tue, 14 May 2024 00:58:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715648324;
+	bh=SL0/VGJDt/DL3mQL9csiimokyerIGMQGoc0PFDLB9zw=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=a9FXfPMwlW1cGo0zKHsvFh+uElyCOyEXU6Il8jsDLdbYTWeIU2eEwURg3u6Lv0HUF
+	 iFbACDzhnBRm65wLazkiRxxg4Rw9VrCHTGh+X2BjGc7vTa8mwTAVMY4zVE6wBZIdT1
+	 BoIdEHhhh/wwPXxMJZYkqmZc30NloLhmE+p95/bemzYU3fhIlluyahvpQWm66T0Jou
+	 B3Ps0wd7C23H2iif5MwiQaS+wYD49lkq6uyVuLebNGiRaq4hEMyGOaVu9UCKVAvoUy
+	 9S6sf/X2OYCO2Bt6h83BC0k0p/59n5CvZ3vUSHwSjFGC7FrLphVxQ/C/Lz8daBHxWU
+	 NatEkAUMB1gOA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 552D4C433DE; Tue, 14 May 2024 00:58:44 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218696] DYTC frequency scaling deterioration and event spam
+Date: Tue, 14 May 2024 00:58:44 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: lmulling@proton.me
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218696-215701-o7AsMI3Kd9@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218696-215701@https.bugzilla.kernel.org/>
+References: <bug-218696-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240426020448.10862-1-lsanche@lyndeno.ca>
 
-Hi Lyndon,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218696
 
-kernel test robot noticed the following build errors:
+--- Comment #9 from Lucas M=C3=BClling (lmulling@proton.me) ---
+Under 6.9, from initial testing, it seems that the frequency scaling issue =
+was
+fixed, possible by a change in amd-pstate? my guess.
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.9 next-20240513]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I've also tested this:
+https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/patch/?=
+id=3Dc7e29dcef9ca4a93eed092e6739277a92a64fbe3.
+Seems to be the same as 6.9, tho a degree more conservative.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Lyndon-Sanche/platform-x86-dell-laptop-Implement-platform_profile/20240511-144534
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240426020448.10862-1-lsanche%40lyndeno.ca
-patch subject: [PATCH v2] platform/x86: dell-laptop: Implement platform_profile
-config: i386-randconfig-005-20240513 (https://download.01.org/0day-ci/archive/20240514/202405140348.Wz7gOmdP-lkp@intel.com/config)
-compiler: gcc-8 (Ubuntu 8.4.0-3ubuntu2) 8.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240514/202405140348.Wz7gOmdP-lkp@intel.com/reproduce)
+6032 event spam still happens.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405140348.Wz7gOmdP-lkp@intel.com/
+--=20
+You may reply to this email to add a comment.
 
-All errors (new ones prefixed by >>):
-
-   ld: drivers/platform/x86/dell/dell-laptop.o: in function `thermal_init':
->> drivers/platform/x86/dell/dell-laptop.c:2404:(.text+0x21a3): undefined reference to `platform_profile_register'
-   ld: drivers/platform/x86/dell/dell-laptop.o: in function `thermal_cleanup':
->> drivers/platform/x86/dell/dell-laptop.c:2412:(.text+0x21cc): undefined reference to `platform_profile_remove'
->> ld: drivers/platform/x86/dell/dell-laptop.c:2412:(.init.text+0xb44): undefined reference to `platform_profile_remove'
->> ld: drivers/platform/x86/dell/dell-laptop.c:2412:(.exit.text+0x7c): undefined reference to `platform_profile_remove'
-
-
-vim +2404 drivers/platform/x86/dell/dell-laptop.c
-
-  2377	
-  2378	int thermal_init(void)
-  2379	{
-  2380		int ret;
-  2381		int supported_modes;
-  2382	
-  2383		ret = thermal_get_supported_modes(&supported_modes);
-  2384	
-  2385		if (ret || !supported_modes)
-  2386			return 0;
-  2387	
-  2388		thermal_handler = kzalloc(sizeof(*thermal_handler), GFP_KERNEL);
-  2389		if (!thermal_handler)
-  2390			return -ENOMEM;
-  2391		thermal_handler->profile_get = thermal_platform_profile_get;
-  2392		thermal_handler->profile_set = thermal_platform_profile_set;
-  2393	
-  2394		if ((supported_modes >> DELL_QUIET) & 1)
-  2395			set_bit(PLATFORM_PROFILE_QUIET, thermal_handler->choices);
-  2396		if ((supported_modes >> DELL_COOL_BOTTOM) & 1)
-  2397			set_bit(PLATFORM_PROFILE_COOL, thermal_handler->choices);
-  2398		if ((supported_modes >> DELL_BALANCED) & 1)
-  2399			set_bit(PLATFORM_PROFILE_BALANCED, thermal_handler->choices);
-  2400		if ((supported_modes >> DELL_PERFORMANCE) & 1)
-  2401			set_bit(PLATFORM_PROFILE_PERFORMANCE, thermal_handler->choices);
-  2402	
-  2403		// Clean up but do not fail
-> 2404		if (platform_profile_register(thermal_handler))
-  2405			kfree(thermal_handler);
-  2406	
-  2407		return 0;
-  2408	}
-  2409	
-  2410	void thermal_cleanup(void)
-  2411	{
-> 2412		platform_profile_remove();
-  2413		kfree(thermal_handler);
-  2414	}
-  2415	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+You are receiving this mail because:
+You are watching the assignee of the bug.=
