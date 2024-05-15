@@ -1,191 +1,135 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fhigh8-smtp.messagingengine.com (fhigh8-smtp.messagingengine.com [103.168.172.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2404F3BB4D
-	for <platform-driver-x86@vger.kernel.org>; Wed, 15 May 2024 13:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F4136AF2;
+	Wed, 15 May 2024 17:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715778907; cv=none; b=R06ZQSZUATq6IcjeXG6Z/jN4PcGQSktAGn7mwnV3A/6Qa9+cC8+v5gXzC93+cR0nau6F8rbor2bW/cNsX8U/oEGoStTLkaMEmyCw5AGRwhxnOMiVVSppuYfuWhFiBKn7XtchZafn7PCdFx4Yju956Vwqy0CGmhwmo6qFS0VqL2E=
+	t=1715792829; cv=none; b=pEwVuBFtZdoW6jJ7fluocvqc4tPxK/d6RI7k9+iGM2Qu/rrUhIQKejrti18W5GZhksiBnvVv3oyXbVJyzCx9gr2ZsQKArPXNhyEeUHmOlE8qyMGUCHG0zbLpf2Gh75F/+dpxOkI1ywhLsDblUB169RlT1qgCMavj+bOLzMz8EFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715778907; c=relaxed/simple;
-	bh=VFAPR4dGRlWWzdN4elkjEIPoB8oat2C+d92N8ve8YOk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G/maWyb8aEBYaOiP1UpLtWqD7Pd7c+XzYwJG9pX+R7T7xuvqx1/OsIKh4t28jQFAJ/eb/fqOj1lznsTkt5awPYgDJVeftl8/eZtDNHbUJcwN0eUZe0DIGu1xJ2XzkfVTCaxnHPgPXx+jA4j1MI3I34EXuAPSChn0tNJOL1jWiXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qfvay7WS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715792829; c=relaxed/simple;
+	bh=qrQZyAZgVUPNCUW1pRjCklM+vCSso8Xl/qKciw6A6yI=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=Ypq+sZcK6XX0zGTCS83WQddEd+bQLOPxBAutFjXzyj9F62ZbcLWkau1OH5hpNOeuEkYSVme6AAdEQjwxEBGxFqDl7PU2w6Tq0DS5bNr80LEtnc97rSc7PAaA/8asQT/Ut8giHLOY/hf/GaIfoe8SRetc9WKYYPUhlbDZegTy5Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=g8RggYc6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gEJmMGqI; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qfvay7WS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715778904;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xh7CpTSy8nr/YyU/5Wk1KHdIIcUDZXXmSnLScAwK89w=;
-	b=Qfvay7WSh5+Wz6CtHMwBmpDCFrSbYxdpI1hFDnScdK+A7dGJIToEX/Q8JlbK/BeqniMPBg
-	xrE1w4MFnyCdgpmV87rJZse+u5SgsvpTEFL02n/JslatVRkwJ/GZTA8evBiLH6dcvHyZa6
-	QpcP7p54+vGywIoBHczRpE/iVy9GnoU=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-191-g9vgMmSMOXix7HnwvolBEw-1; Wed, 15 May 2024 09:15:03 -0400
-X-MC-Unique: g9vgMmSMOXix7HnwvolBEw-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-56c1ac93679so1763280a12.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 15 May 2024 06:15:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715778902; x=1716383702;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xh7CpTSy8nr/YyU/5Wk1KHdIIcUDZXXmSnLScAwK89w=;
-        b=EtXKNUrAqMbWBj0Jb62FdkIJ5paKzgCcH1SIPI9eWid9mnWk5etCdnIQpazf8ZNPAr
-         bz7RDiy2kjvT942vgE/O/JDHDSMn7uDMUqhATMm1fqS4fDsuNsKgND3G58E1Drc3yCsT
-         kuywipCCWRHetkCvGsev2l8oe5Gc3jWYcY8vAytdbDiokJAgVbnpwliQYQjuOnwsCLfj
-         djUovk0pVF8WWsnjxfeXzhnUc4dsbIHLUlhcyX2NVNIpAJ3TjRPCiEsUN5XWyxFa0KML
-         +mXhelrT5kmc0toV+YDV10/yb6AWsDxnv4L97Iy8bjvlxEj+pUPoL1KAQgyy67eDi9g+
-         R0Sg==
-X-Forwarded-Encrypted: i=1; AJvYcCVjVfrUsMZq4hSbkR6MNSza8+8Js2JvMr3NzDGqmTjwZVX45E92VQc6zKBlyytBPxAtW/48wYY6o6tY80qSn7YU4wdEjHMeG9QdwHxcv8HlyRXJJg==
-X-Gm-Message-State: AOJu0Yyx74v1ubnvWmSqL1JMgpj8Axn39z2siOKf/bteYeClGrTvcI6C
-	6oltoT8vdjHG4PMm3vw2DaDhpLJB6twdStrnu6FDdGbilCq1jP4+vcJx5aMQWZsAYLEiL2DfcRA
-	CJYPZfHr8L9dtXNm9PfECQz6QyzGiJ1xO1WfYH7AQCXriYxUIUcir9rPmfKAXh/r/BibjD+A=
-X-Received: by 2002:a50:9f44:0:b0:572:72ff:da35 with SMTP id 4fb4d7f45d1cf-5734d5cc9b8mr9798289a12.12.1715778902106;
-        Wed, 15 May 2024 06:15:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEEklQ4gSJ2h8tkobO52OortbYFZMIHTH3VR1HwWSyDD/UCPdSyzBgmoo80AypS3YbCMOansA==
-X-Received: by 2002:a50:9f44:0:b0:572:72ff:da35 with SMTP id 4fb4d7f45d1cf-5734d5cc9b8mr9798270a12.12.1715778901691;
-        Wed, 15 May 2024 06:15:01 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-574bcad0362sm5740270a12.20.2024.05.15.06.15.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 May 2024 06:15:01 -0700 (PDT)
-Message-ID: <a2074a60-1d95-4366-9868-9bda4503f9d4@redhat.com>
-Date: Wed, 15 May 2024 15:15:00 +0200
+	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="g8RggYc6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gEJmMGqI"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id D24D0114009B;
+	Wed, 15 May 2024 13:07:05 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute5.internal (MEProxy); Wed, 15 May 2024 13:07:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1715792825; x=1715879225; bh=HKJnf18XpQ
+	XKeOps2EokRjX0aTuUxsmfspin9xKrYJ4=; b=g8RggYc683ErxmYGBSnT+1TSbg
+	62L7reQ6vrBgaG3zc7XQ8TSmSVpE26e9xtnEplG7mbpv72DU+Z5pBT1Zk5FnZdwJ
+	kXaRUhMlmWWPVMabMLbzQTgFT0a4BpPhSXgkFXaChEKsoZDNsRK++Zn0c+zUFLDB
+	uXXP1HNmoE52Qsyzl/bHORFzpJKltXCmSM3iHRyoH3jJSH0wBhT/u8azMuyHconl
+	dDxNAM76HRir08I68Czux94bkzVD33Iry14JR83f9wEfJZVxEC1OSFdEGAt0e1yV
+	39DYBACQ6cfA+Gi//yetv+KbfZCp57OV4AGB9pXNt2zr/YxZktffbyY5MTQw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1715792825; x=1715879225; bh=HKJnf18XpQXKeOps2EokRjX0aTuU
+	xsmfspin9xKrYJ4=; b=gEJmMGqIzymlt1Mqii6T1fe4NHLrxfF14/db6NYPFALb
+	5gyvxwtFeQkRME7FUhwIvJhQNOWcpkRc/Kj4SUU7+oUQFHBHL4SXkPPYAy+KTN6W
+	Z3QdO1TcgjioR4Dj8Zigfe+w59MIFW9iyt7e6rxy0z+J2yMUenfgonbHLvKiwYS1
+	MQyAKVjAaGCjMIKDEgLb9XBkY0zbmOfFqSa54bW3p0OJUGPJlcLNRXWsRw+DlFjx
+	FOg1lqBAvWTCL0TNIkjZbAUEnnsPL70tceeU0CYzniUvzEq7x1rCvjiYQuPBwKId
+	zwA9DwVacsRDRcaDAD6VRoBxiyiifBG0Fv1qpVbUIQ==
+X-ME-Sender: <xms:uOtEZsP6IrdcEd_QZB2V7Nmx0WGkbCPHQUC8BoDWOPXLPlqwD_x7SA>
+    <xme:uOtEZi8T6vTT4Z1JAAUuNGzxHK2U9rCJJwH0vI0_F2ZdbsjbXvtkeRExK8RJu6tUn
+    gucXa4xzUjaRBbfl0Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdegkedguddtgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdfn
+    hihnughonhcuufgrnhgthhgvfdcuoehlshgrnhgthhgvsehlhihnuggvnhhordgtrgeqne
+    cuggftrfgrthhtvghrnhepfeekieeggedvuedtjeelffetgeelgeeludffjefhkedvudeh
+    gefffeehtefftdetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomheplhhsrghntghhvgeslhihnhguvghnohdrtggr
+X-ME-Proxy: <xmx:uOtEZjS9mv1AbjhKoDIacsZrxYfa5Csl1BpPXbSiU51uS7K1IaRU1g>
+    <xmx:uOtEZkuzssn7KkGMrON6YTv1IUp9rpE9vvv14PtvKEeA_xyHyszrJg>
+    <xmx:uOtEZkd9k_2i_zXvnru75XFSWAr2mCgypnuWGSmeYYTBre0gYdE_oA>
+    <xmx:uOtEZo29tArsmLFZq5M_f3sFmJmFCI1LKId6aksU6xpcMz6vQV0PVA>
+    <xmx:uetEZo9tbCjTiqnkqQYPQDaid74lluakjbi_UnFrNC34jgj9dc3aEGVq>
+Feedback-ID: i1719461a:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 1D106C60097; Wed, 15 May 2024 13:07:04 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-456-gcd147058c-fm-hotfix-20240509.001-g0aad06e4
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86: Add new MeeGoPad ANX7428 Type-C Cross
- Switch driver
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org
-References: <20240514180343.70795-1-hdegoede@redhat.com>
- <CAHp75Vdb3_yHmS1A0cixKGRXHu_aUg0a7+cXLvtQFT-DumDQgA@mail.gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75Vdb3_yHmS1A0cixKGRXHu_aUg0a7+cXLvtQFT-DumDQgA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-Id: <2419538f-199c-4404-9af4-e17259e09cf4@app.fastmail.com>
+In-Reply-To: <c927c490-bc22-45d9-87e4-4156746547f9@gmx.de>
+References: <20240425172758.67831-1-lsanche@lyndeno.ca>
+ <20240511023726.7408-4-lsanche@lyndeno.ca>
+ <c927c490-bc22-45d9-87e4-4156746547f9@gmx.de>
+Date: Wed, 15 May 2024 11:06:43 -0600
+From: "Lyndon Sanche" <lsanche@lyndeno.ca>
+To: "Armin Wolf" <W_Armin@gmx.de>
+Cc: "Mario Limonciello" <mario.limonciello@amd.com>,
+ =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+ srinivas.pandruvada@linux.intel.com,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "kernel test robot" <lkp@intel.com>, "Hans de Goede" <hdegoede@redhat.com>,
+ "Yijun Shen" <Yijun.Shen@dell.com>, "Matthew Garrett" <mjg59@srcf.ucam.org>,
+ "Heiner Kallweit" <hkallweit1@gmail.com>,
+ "Randy Dunlap" <rdunlap@infradead.org>, "Jonathan Corbet" <corbet@lwn.net>,
+ "Vegard Nossum" <vegard.nossum@oracle.com>,
+ platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Dell.Client.Kernel@dell.com
+Subject: Re: [PATCH v6 2/2] platform/x86: dell-laptop: Implement platform_profile
+Content-Type: text/plain
 
-Hi,
 
-On 5/15/24 6:53 AM, Andy Shevchenko wrote:
-> On Tue, May 14, 2024 at 9:03 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Some MeeGoPad top-set boxes have an ANX7428 Type-C Switch for USB3.1 Gen 1
->> and DisplayPort over Type-C alternate mode support.
->>
->> The ANX7428 has a microcontroller which takes care of the PD negotiation
->> and automatically sets the builtin Crosspoint Switch to send the right
->> signal to the 4 highspeed pairs of the Type-C connector. It also takes
->> care of HPD and AUX channel routing for DP alternate mode.
->>
->> IOW the ANX7428 operates fully autonomous and to the x5-Z8350 SoC
->> things look like there simple is a USB-3 Type-A connector and a
->> separate DisplayPort connector. Except that the BIOS does not
->> power on the ANX7428 at boot (meh).
->>
->> Add a driver to power on the ANX7428. This driver is added under
->> drivers/platform/x86 rather than under drivers/usb/typec for 2 reasons:
->>
->> 1. This driver is specifically written to work with how the ANX7428 is
->> described in the ACPI tables of the MeeGoPad x86 (Cherry Trail) devices.
->>
->> 2. This driver only powers on the ANX7428 and does not do anything wrt
->> its Type-C functionality. It should be possible to tell the controller
->> which data- and/or power-role to negotiate and to swap the role(s) after
->> negotiation but the MeeGoPad top-set boxes always draw their power from
->> a separate power-connector and they only support USB host-mode. So this
->> functionality is unnecessary and due to lack of documentation this is
->> tricky to support.
-> 
-> ...
-> 
->> + * DisplayPort over Type-C alternate mode support.
->> + *
->> + * The ANX7428 has a microcontroller which takes care of the PD
->> + * negotiation and automatically sets the builtin Crosspoint Switch
->> + * to send the right signal to the 4 highspeed pairs of the Type-C
->> + * connector. It also takes care of HPD and AUX channel routing for
->> + * DP alternate mode.
->> + *
->> + * IOW the ANX7428 operates fully autonomous and to the x5-Z8350 SoC
->> + * things look like there simple is a USB-3 Type-A connector and a
-> 
-> simply
-> 
->> + * separate DisplayPort connector. Except that the BIOS does not
->> + * power on the ANX7428 at boot. This driver takes care of powering
->> + * on the ANX7428.
->> + *
->> + * It should be possible to tell the micro-controller which data- and/or
->> + * power-role to negotiate and to swap the role(s) after negotiation
->> + * but the MeeGoPad top-set boxes always draw their power from a separate
->> + * power-connector and they only support USB host-mode. So this functionality
->> + * is unnecessary and due to lack of documentation this is tricky to support.
->> + *
->> + * For a more complete ANX7428 driver see drivers/usb/misc/anx7418/ of
->> + * the LineageOS kernel for the LG G5 (International) aka the LG H850:
->> + * https://github.com/LineageOS/android_kernel_lge_msm8996/
-> 
-> ...
-> 
->> +#include <linux/acpi.h>
->> +#include <linux/bits.h>
->> +#include <linux/delay.h>
-> 
-> + dev_printk.h
-> 
->> +#include <linux/dmi.h>
-> 
-> + err.h
-> 
->> +#include <linux/gpio/consumer.h>
->> +#include <linux/i2c.h>
->> +#include <linux/iopoll.h>
->> +#include <linux/module.h>
-> 
-> + types.h
-> 
-> ...
-> 
->> +static struct i2c_driver anx7428_driver = {
->> +       .driver = {
->> +               .name = "meegopad_anx7428",
->> +               .acpi_match_table = anx7428_acpi_match,
->> +       },
->> +       .probe = anx7428_probe,
->> +};
-> 
+
+On Sun, May 12, 2024, at 12:05 PM, Armin Wolf wrote:
+> Am 11.05.24 um 04:36 schrieb Lyndon Sanche:
+>
+
+>> +static int thermal_init(void)
+>> +{
+>> +	int ret;
+>> +	int supported_modes;
 >> +
-> 
-> Unneeded blank line.
-> 
->> +module_i2c_driver(anx7428_driver);
-> 
-> ...
-> 
-> You can fold the above into the current one, no need to resend.
+>> +	/* If thermal commands not supported, exit without error */
+>> +	if (!dell_laptop_check_supported_cmds(CLASS_INFO))
+>> +		return 0;
+>> +
+>> +	/* If thermal modes not supported, exit without error */
+>> +	ret = thermal_get_supported_modes(&supported_modes);
+>> +	if (ret < 0)
+>> +		return ret;
+>
+> Hi,
+>
+> the function dell_smbios_error() says that when a specific functionality is
+> not supported, -ENXIO is returned.
+>
+> Please treat this as "no thermal modes supported", since checking if CLASS_INFO
+> is supported is not enough (CLASS_INFO is also used by other functionality like
+> rfkill, so machines might support CLASS_INFO but not USTT).
+>
+> Thanks,
+> Armin Wolf
+>
 
-Thank you for the review.
+Armin:
 
-I've squashed fixes for all of these into the existing commit.
+Thank you for this. I will include this in the next revision.
 
-Regards,
+Thanks,
 
-Hans
-
-
+Lyndon
