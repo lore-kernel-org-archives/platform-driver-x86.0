@@ -1,114 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from wfout7-smtp.messagingengine.com (wfout7-smtp.messagingengine.com [64.147.123.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA4E1F93E;
-	Fri, 17 May 2024 15:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A0F1A269;
+	Fri, 17 May 2024 22:43:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715958962; cv=none; b=dLTaEkQzIImfvaXAjUURISVbUzvWfLTaNMbGhVc7u3smi9ZNurNcTgVwv/YGKOeh4ru+KcVayLNzaAcK8VLruCpbKI3PZk1LHo9g5LmxvaBl4EAdpsb4AHbLXkn+/MU2ktjijamP6/FwYtuaNqpgUryKJ0vPUU/fRaDX2Au+lnM=
+	t=1715985826; cv=none; b=Pp9PzX5rSHc5Y8bTlP6rKQxQbiI89W+FgkQnSrIWPpnJ2MAV1IJvpX6Lh75dnPj8RFy9uyCHp7mHhEvVU8/84rkZF6Zh86HnDwj5fLkE/61fAdym6mCkH5UqwmB6UPhuD5wVwkINvvgMBd/c/vtfTK0pfv4oMt7Chgz0gq/bdLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715958962; c=relaxed/simple;
-	bh=6SGRzemzE222vlrc/5jANNd2vwMs0qyJ0hvxeF436QA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dWBk58dCBrAOckYUmMlrKZ9C5nTwfDf5sIpQibDZLVu4ghMT2iabG9S5zQE3u1Yu6lOSEz3zsG/4MD6TUgCe6kRG8BNXMD/WVo9v6zYuMFLZDfTpMl8tMDMu16AhzZZ6FjhZGCaA50pzg06rDXoNRsyiSCYycpWh2K8O70IXpzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gx2NzsEH; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715985826; c=relaxed/simple;
+	bh=C/6DG8QZ29mW+NZyIt25/Dz4OgGRWVwLPr8Q6/fpqnA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hUXx1n7HoAVyVRc4fV3yMZnGrKvq5gW1fbw1UDcJb7zB6zse+TGt/07sUBQhtuVWkP8ZKgNBltXAlur54NgAVkRkPid7eG9yAS4zVdZz6BOsGvRRYGrWyjFWNNSLnUpGUXZNaBSiURGgW5qpw4G7mn7XKJBV8nhlGjCJCewlzVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=m4ar44u0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Qqe9lZaj; arc=none smtp.client-ip=64.147.123.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gx2NzsEH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715958960; x=1747494960;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=6SGRzemzE222vlrc/5jANNd2vwMs0qyJ0hvxeF436QA=;
-  b=Gx2NzsEHBwqaqqkpa1B63TuzUcem3cJCbWOHPZuq5lRgAkxvwA5pUHy1
-   5eVFIL88CkwlpvqCj9mn4ATu0aE+jIeOwSZ8E42r55KgSf2nGAZop2gaC
-   qzKzZZhag9rQVKgYz++bh0Ea4l8zZn1+ZEGxhzCqlkiFAiuryGHhWMkTl
-   pcNbhOp2jzgK9KUu6TvZ+NOB/+0E3EhQSYj9mKlqe94VuewxXQdiopff9
-   AxV6j+zX9vg9xDUURVdqxJ5G0wB6gBCP8J6JV+p8xEPhfWU1F5rEUn/Xp
-   onUFcdroO1bGSKk2A5Sw07cqgh4O7V0m0GcuXFnr55HPYKkFg5pX3ZoWf
-   g==;
-X-CSE-ConnectionGUID: FQrkQWcVSCmaTr1yWS4YJQ==
-X-CSE-MsgGUID: tfjDikL/Q9WrGHzas6TmGA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="23279378"
-X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
-   d="scan'208";a="23279378"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 08:15:59 -0700
-X-CSE-ConnectionGUID: Tb8kRrpgRgSE/FtMnbu54w==
-X-CSE-MsgGUID: 1WreihPMQVOPVhn5DjrZag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,168,1712646000"; 
-   d="scan'208";a="31743028"
-Received: from velpulaa-mobl3.amr.corp.intel.com (HELO spandruv-desk1.amr.corp.intel.com) ([10.212.227.54])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 08:15:59 -0700
-Message-ID: <9293c51c7d502843bfff90c5664be00bfe112e8d.camel@linux.intel.com>
-Subject: Re: [PATCH v2] platform/x86: ISST: fix use-after-free in
- tpmi_sst_dev_remove()
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>, Hans de Goede
-	 <hdegoede@redhat.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
-	 <ilpo.jarvinen@linux.intel.com>, Zhang Rui <rui.zhang@intel.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: dan.carpenter@linaro.org, kernel-janitors@vger.kernel.org, 
-	error27@gmail.com
-Date: Fri, 17 May 2024 08:15:58 -0700
-In-Reply-To: <20240517144946.289615-1-harshit.m.mogalapalli@oracle.com>
-References: <20240517144946.289615-1-harshit.m.mogalapalli@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="m4ar44u0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Qqe9lZaj"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfout.west.internal (Postfix) with ESMTP id F37A91C00091;
+	Fri, 17 May 2024 18:43:41 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Fri, 17 May 2024 18:43:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1715985821; x=
+	1716072221; bh=sNyymYYOnpwLX9FE6wcDoJfmc9JAPoEulgCf2uboo7I=; b=m
+	4ar44u0IQ6mN/2/5kjXJg+F63oX6AoeQ0nDOOmxvkCm4/DsI92iv7GTvJmbLMOUx
+	dMo1gkb9FXlb4hDdM71nt5ef5lj68eX7afTrgoTdmRkfVgaiXIwuULDQpVUqthV0
+	64Yf6G9Aq4b6HXsYdpjgznGfHP6PS0o4ykiOx793DZ/1Bq7UG40o1HQaSdwE8LyE
+	mX5SPUfXi2jNJ12OH+Er3b5KzeSNhAOAseA3XhH2bOF2IVNO/A36eAjmx4X82mS/
+	/mti/O6iTJX3S10Aqeg+mNZalyidMyqpvZ+8C7rM6cXJzG9ZGRm15WU4nUwabayr
+	eC5vI7gPFW/isbEAWmuBQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1715985821; x=
+	1716072221; bh=sNyymYYOnpwLX9FE6wcDoJfmc9JAPoEulgCf2uboo7I=; b=Q
+	qe9lZajmTpcxwTRr6PsN0jaK1Fw0mzTY9krWo3D04MMUwjHqKFkhcspjSUMSP9oh
+	frp3ejaDEIt8Nq0+bEJQ3R9K/OKmf6GCT4fZg7t6LNfLzvzOnngIwELnEhzAaLkW
+	+cA2wwdQnbNKoee6CJ6h4EZedUTVqwrjEVZFBsTbNXTS+FBqzfIsGDOAGRhzDkAs
+	U3hGXb9Y9SUFQoreuCtme5zqRhEL3rthPct7GTZ/GwhcxEvpwjs1h6h/KvP9McvF
+	7I6rsr5ECn7WfwsgbjAMlhHWcOvBBQ1Hix3pRfk5p8TFJkzD8sdT2Fn4d+xUszP9
+	3TOnAl7HGqqgks8t75cNw==
+X-ME-Sender: <xms:nN1HZib-Cv6sUMQTSOaw5NWXFTHXg2QqHkXAE_ZJsGKkuAhrBF0oqw>
+    <xme:nN1HZlZ2ApLhrYGRKA0A1GEwTvm_nlABbYcYEyhm53clYMLAgLtXsKfFdFTEJLEA3
+    JHWGgoTMiJlgM4vW1I>
+X-ME-Received: <xmr:nN1HZs_-BQQBiP0ZGiDlqTvnIMuhFkNFD7vucSTd46hmjaXu7whilkX9Ng7lbi7inO9tOrICnEekhYtzxkwKtzzzv9HQxWtt>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdehhedgudefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    goteeftdduqddtudculdduhedmnecujfgurhephffvvefufffkofgjfhgggfestdekredt
+    redttdenucfhrhhomhepnfihnhguohhnucfurghntghhvgcuoehlshgrnhgthhgvsehlhi
+    hnuggvnhhordgtrgeqnecuggftrfgrthhtvghrnheplefhieffkedtledugfetgfegfeeh
+    hfethffhffeuvefhtdekvdeikeehleejieetnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomheplhhsrghntghhvgeslhihnhguvghnohdrtggr
+X-ME-Proxy: <xmx:nN1HZkrkMscc-a7d0x-AEbDl9b-BndxdR7lqeZhaDLnw_Wovh4Gn-Q>
+    <xmx:nN1HZtpzQWY5mHsz6aWnHRr2MQUHhBxf5dGnqd8h0UYaEP2vkzPvrg>
+    <xmx:nN1HZiTM0rHMKdUrlRrvGQ_OGLNlx8Xi6fQ7_hDmPrLewPuRK_PT2w>
+    <xmx:nN1HZtrU9vWphzK8YECDgMdjaS0yt-ziQwnpQitBvoOawZWD_ZrDQQ>
+    <xmx:nd1HZs8Lh4ZtLowyLMnD5Yy4Hqmrb1Ah9Z9h0lVxKo9UxtyWucK745V1>
+Feedback-ID: i1719461a:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 17 May 2024 18:43:40 -0400 (EDT)
+From: Lyndon Sanche <lsanche@lyndeno.ca>
+To: lsanche@lyndeno.ca
+Cc: mario.limonciello@amd.com,
+	pali@kernel.org,
+	W_Armin@gmx.de,
+	srinivas.pandruvada@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	lkp@intel.com,
+	hdegoede@redhat.com,
+	Yijun.Shen@dell.com,
+	Matthew Garrett <mjg59@srcf.ucam.org>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Dell.Client.Kernel@dell.com
+Subject: [PATCH v7 0/3] platform/x86: dell: Implement platform_profile
+Date: Fri, 17 May 2024 16:42:33 -0600
+Message-ID: <20240517224323.10045-1-lsanche@lyndeno.ca>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240425172758.67831-1-lsanche@lyndeno.ca>
+References: <20240425172758.67831-1-lsanche@lyndeno.ca>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2024-05-17 at 07:49 -0700, Harshit Mogalapalli wrote:
-> In tpmi_sst_dev_remove(), tpmi_sst is dereferenced after being freed.
-> Fix this by reordering the kfree() post the dereference.
->=20
-> Fixes: 9d1d36268f3d ("platform/x86: ISST: Support partitioned
-> systems")
-> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+v7:
+ - Move platform_profile into new dell-pc module
+ - Add myself as maintainer of dell-pc
+ - Move smbios call and fill functions to dell-smbios-base
+ - Check for classes above 30 and return as not supported
+ - Rename dell_laptop_check_supported_cmds to
+	 dell_smbios_class_is_supported
+ - Check for ENXIO and treat as no thermal modes supported
+v6:
+ - Add ACPI dependency for dell-laptop
+ - Add and use helper symbol for checking supported commands
+v5:
+ - Fix indent in smbios-thermal-ctl comment
+ - Remove linux/wmi.h include
+ - Add 'select ACPI_PLATFORM_PROFILE' to Dell KConfig
+v4:
+ - Make thermal_init and thermal_cleanup static
+ - Rearrange order of added includes, did not edit current includes
+ - Include bits.h
+ - Switch comment style
+ - Return error if platform_profile registering failed
+ - Add thermal calls to call_blacklist
+ - Align defines with tabs
+ - Correct separation of function and error handling
+ - Propagate error codes up
+v3:
+ - Convert smbios-thermal-ctl docs to multiline comment and wrap
+ - Change thermal_mode_bits enum to directly be BIT() values
+	- Convert related code to use this
+ - Use FIELD_GET/PREP and GENNMASK for getting/setting thermal modes
+	- Correct offset for getting current ACC mode, setting offset
+		unchanged
+ - Check if thermal_handler is allocated before freeing and
+	 unregistering platform_profile
+v2:
+ - Wrap smbios-thermal-ctl comment
+ - Return proper error code when invalid state returned
+ - Simplify platform_profile_get returns
+ - Propogate ENOMEM error
 
-> ---
-> v1->v2: Add R.B from Hans and fix commit message wrapping to 75
-> chars.
-> This is found by smatch and only compile tested.
-> ---
-> =C2=A0drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git
-> a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> index 7bac7841ff0a..7fa360073f6e 100644
-> --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> @@ -1610,8 +1610,8 @@ void tpmi_sst_dev_remove(struct
-> auxiliary_device *auxdev)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0tpmi_sst->partition_mask_=
-current &=3D ~BIT(plat_info-
-> >partition);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Free the package insta=
-nce when the all partitions are
-> removed */
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!tpmi_sst->partition_=
-mask_current) {
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0kfree(tpmi_sst);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0isst_common.sst_inst[tpmi_sst->package_id] =3D NULL=
-;
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0kfree(tpmi_sst);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mutex_unlock(&isst_tpmi_d=
-ev_lock);
-> =C2=A0}
+Lyndon Sanche (3):
+  platform/x86: dell-smbios: Add helper for checking supported class
+  platform/x86: dell-smbios: Move request functions for reuse
+  platform/x86: dell-pc: Implement platform_profile
+
+ MAINTAINERS                                  |   6 +
+ drivers/platform/x86/dell/Kconfig            |  13 +
+ drivers/platform/x86/dell/Makefile           |   1 +
+ drivers/platform/x86/dell/dell-laptop.c      |  23 --
+ drivers/platform/x86/dell/dell-pc.c          | 310 +++++++++++++++++++
+ drivers/platform/x86/dell/dell-smbios-base.c |  35 +++
+ drivers/platform/x86/dell/dell-smbios.h      |   7 +
+ 7 files changed, 372 insertions(+), 23 deletions(-)
+ create mode 100644 drivers/platform/x86/dell/dell-pc.c
+
+-- 
+2.42.0
 
