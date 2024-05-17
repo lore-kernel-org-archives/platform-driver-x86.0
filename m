@@ -1,90 +1,111 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADF86A039;
-	Fri, 17 May 2024 14:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E0C384;
+	Fri, 17 May 2024 14:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715955519; cv=none; b=XVEsbi0zh90cr1ZNxzidPbZz2Ke/OajeXQFJhSwpForzQ5OHEX847nhFLIPhQ8yzJErm9cmEgO8WfuN4bW/HJyk50GCqQiFFe3OhA1Uq2a2eiXwWGipUGdL1VjaI1ygitCnY/dDUHcu3/AD9qJZALy9CImz12H9ccM+vuj8sQB0=
+	t=1715956278; cv=none; b=Tp55HCF/GxBzmKHl24cjD/BjBn8UE50usKC1a3VI65wsjIXp+mksJFajOHEv1wzu4+/LLv72aS1f432EHuUu7vRdtzzK7vLh3wyZfE0o7PEW94LU6niJaw2jB8iqoCFNZCRICrDVNCow1AWapXv1PSrLXOC9CHIpxsLFQ0lpAPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715955519; c=relaxed/simple;
-	bh=0MyMW8f2yRiwRYOL0mM92snyp6FS/EYPmtOXgJsGijQ=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=crOrc49y/MqKUH6jTYkHJSsU3wXg95ECoSNYOd6ieIWJahewZFilBz9XrNyCUIpcNKxqwjeVr2LHI+MZjqtTY07CyAqGvww4lKJVKAtF59T41LGAggyLB80+Z1mVq1KKMoTUVohf/12c3gJsRKF6rRqP68qVveqGueFzbR9N7zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=QtcX2HJH; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1715956278; c=relaxed/simple;
+	bh=+XVwr27g6xpRhArVMCmv1QypsuQvE/ONQgMImM0GOuQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HHgzynU7fmPsiHwwvUwbMvKh02F9xT74vgp6R5rtrpkkKsqPnAls9Uy1ILrERLz8unrlfLKCSb1YKwLEICwEq8eLeJax947bEAcIAqUrQr3mTC0K7HmyOmMLbxHGd3gZysZxuGkinTlVvJoFcE4L6BIDEDwN8kYKUJzk/63ixfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gQcIhi8R; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="QtcX2HJH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1715955491; x=1716560291; i=markus.elfring@web.de;
-	bh=MwR8LNQW+IMvspEyi0NBIl4LSDNfg/OLDJRvmnbFCoA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=QtcX2HJHV2KmujFtpsgapQ65G+rGFP9J4ToVT89CzDXBiZiOs7cAWs+QGt7n+j8P
-	 nOd5mewiZV19AUgb7iiEQpO2qiweI5sMDqM5aZZY48nTJNHDLEPXV0b7DE0OhOpkF
-	 1RQUZf2kLmvg1S1Uk67l+cHS2ONB/46RGK8ZTLJnhE8GQ75sd7gfGv8c85zPvmLny
-	 MLD4Vk6QRd6bLuVnvJJw0wmF5AWr6d4i5o1/pLLwzjOWpL/k3rHuCuoEvEa1YPCGQ
-	 qrbgWj7geSMR01mp6vcWtEP/X7E4SgnBWtf2AqH3L6eDwCe4ElvAGlrkqZFzb3bRY
-	 37HpYSTIEhYST3YmZg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MuVGC-1sP5cX0fH0-015rih; Fri, 17
- May 2024 16:18:11 +0200
-Message-ID: <1d470a85-dd92-44d6-9900-db4c581b68c4@web.de>
-Date: Fri, 17 May 2024 16:18:06 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gQcIhi8R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715956277; x=1747492277;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=+XVwr27g6xpRhArVMCmv1QypsuQvE/ONQgMImM0GOuQ=;
+  b=gQcIhi8RehN+R62F8jBJCcUywWwhcUvquZP/DawFRtTcH6/X5ddL56Wh
+   4gki50wDPwizRotdTER/sf+vrprQLK0YifuUlZsqnZMBRCQtDs+6lATvy
+   tbVb24ZCSLXpPN2HtyjnKRgQe/rZzYq5Ty9GnOax6wOxgbTR7pSZO6T7Q
+   T+sEuiqlH806lojEh2oLRgeBnSzrCqsy+26AweBroFb5fgquKc8AXtMGx
+   lxazGMSqUuRR/VsMs03a+XEheAvcio5N2Fwmky/B4GVtkaaEwn7aqJOXg
+   o2hfhfaokynkPT8jIn+1CxcZFG++pff+4h3zWRUZKyE5f/jUmX3zHsk45
+   Q==;
+X-CSE-ConnectionGUID: tF0M2h9yS1K0bGv7X8SASA==
+X-CSE-MsgGUID: H75z8426QtqNI1OMxDf/3g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11075"; a="15083948"
+X-IronPort-AV: E=Sophos;i="6.08,167,1712646000"; 
+   d="scan'208";a="15083948"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 07:31:16 -0700
+X-CSE-ConnectionGUID: W4xs4OT+QE6hymWIEef/RA==
+X-CSE-MsgGUID: aSvBzR9gT6mi0Ue4OpWj8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,167,1712646000"; 
+   d="scan'208";a="32359554"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.212.227.54])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2024 07:31:15 -0700
+Message-ID: <48377484a8a9e479b301e9a9772653a3bc6ccf81.camel@linux.intel.com>
+Subject: Re: [PATCH] platform/x86: ISST: fix use-after-free in
+ tpmi_sst_dev_remove()
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>, Hans de Goede
+	 <hdegoede@redhat.com>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+	 <ilpo.jarvinen@linux.intel.com>, Zhang Rui <rui.zhang@intel.com>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: dan.carpenter@linaro.org, kernel-janitors@vger.kernel.org, 
+	error27@gmail.com
+Date: Fri, 17 May 2024 07:31:14 -0700
+In-Reply-To: <20240514092656.3462832-1-harshit.m.mogalapalli@oracle.com>
+References: <20240514092656.3462832-1-harshit.m.mogalapalli@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
- platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Zhang Rui <rui.zhang@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Dan Carpenter <dan.carpenter@linaro.org>, Dan Carpenter <error27@gmail.com>
-References: <20240514092656.3462832-1-harshit.m.mogalapalli@oracle.com>
-Subject: Re: [PATCH] platform/x86: ISST: fix use-after-free in
- tpmi_sst_dev_remove()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240514092656.3462832-1-harshit.m.mogalapalli@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:uoqGK2Tqhp1g9qS8V6PXvJShn/edR8b0iG4aBWJ0nSzYKCsBBw3
- TDQO5fJP6GObkdfkU6MRPbJ+MI5ysZnP5svtFTg3ShY5Ogk5p5hH9wL84NgiBORdbXyy65a
- J67YrwG3yvMVYkRnm3B+nwQD4iW3gevx4yOH39Is5xETu2ez92obeL6coU0Ln4Q95G19XtZ
- dR/N/ZPqatSL3eD4mbSMQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:r7kbR0dVTzg=;uXbK75gC63Hvf2FC2E7M99KA3uF
- Trf1ixyVNxqsSUXKLqrl1cdpd40u9DvlH+Zk7vVOFqLDY6hcAv9om7vhkDB2N2YvfvmNXCkH9
- nwyAQ8+CmaBG2+pSAGTcWmrjB0kSi64ZJmqMpdd1M/fjwNuOVN4EQ1nYcenLFw4QS76f9EB8m
- sc0JHaSA/GB+YcMx5EwO0f0+HUn6skSx4/pxO8kuYZB38wThvIoJq5r4tELQR6Sr0WBV2hI6C
- c6dIwGPeHa7GjkiuLEOZ+wNoiV2e22e3BkEEUPVGnPRZ56hu8m4Hl1yBAesPvJ7UvU889ByUy
- Nm5dY8G2PIhmrQmorhN1CMIIoV9JjCGxyOUc6YLeIJEEGkmAsQpuBavAj9np/MAIGdiylD3Ka
- JM3S2mlpw3mokFQnUj+uctXnns8xyOvp7Xwva+0/VkkE7SuBbd2NllCgzvw04ziyjHzkKqj7R
- ZE8JjvOhdSqRSdYy3pw6W3b4nln3MnTgPmrG6IvndZYUxJuprUQhYZ3AZet8JXQYESOgS5JxN
- dEuMlp+7+GLASUY7KM8713ox7SramMifOaf6yqTcKZoSSHXIMvQ0qPAV8rq9yqKMTelRT0Ci5
- Hz6oIRiC+D5LWsk5faTSqrhZN1fbqHgmBCwfLuyZ0+J4tL8/udrJefVGI1IMWzx2TW939l0t3
- kbVbbjANOVqE7G7OonP4ar+gO9ff+iSkVazwOAK9F4mlpmelP9PttZ/sVkP6C/r3u6Y3La73e
- BobdJD0ENqi3zRf4cZxsoL1WVCRiokMd37tYd5gMpV4xhgaMga1VbCsfKOE7VWEk6V0c6vSSM
- hge1d6mtd0IsQn+OWUQMvItT/mMylAR3NyqmIV9PnjBMU=
 
-> In tpmi_sst_dev_remove(), tpmi_sst is dereferenced after being freed. Fix this by reordering the kfree() post the dereference.
+On Tue, 2024-05-14 at 02:26 -0700, Harshit Mogalapalli wrote:
+> In tpmi_sst_dev_remove(), tpmi_sst is dereferenced after being freed.
+> Fix this by reordering the kfree() post the dereference.
+>=20
+> Fixes: 9d1d36268f3d ("platform/x86: ISST: Support partitioned
+> systems")
+> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-I suggest to take preferred line lengths better into account
-also for such a change description.
-Thus the second sentence should be put into a subsequent line.
-How do you think about the following wording approach?
+> ---
+> This is found by smatch and only compile tested.
+> ---
+> =C2=A0drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git
+> a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> index 7bac7841ff0a..7fa360073f6e 100644
+> --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> @@ -1610,8 +1610,8 @@ void tpmi_sst_dev_remove(struct
+> auxiliary_device *auxdev)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0tpmi_sst->partition_mask_=
+current &=3D ~BIT(plat_info-
+> >partition);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Free the package insta=
+nce when the all partitions are
+> removed */
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!tpmi_sst->partition_=
+mask_current) {
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0kfree(tpmi_sst);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0isst_common.sst_inst[tpmi_sst->package_id] =3D NULL=
+;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0kfree(tpmi_sst);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mutex_unlock(&isst_tpmi_d=
+ev_lock);
+> =C2=A0}
 
-   Move a kfree() call behind an assignment statement in the affected if branch.
-
-Regards,
-Markus
