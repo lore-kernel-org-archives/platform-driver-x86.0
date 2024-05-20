@@ -1,229 +1,116 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2050.outbound.protection.outlook.com [40.107.94.50])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD715676F;
-	Mon, 20 May 2024 11:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716206235; cv=fail; b=XIWF7nzvWcguNfmgg0uYxcVJxhK1hhglOcnkU4lYqmPM2JUah68EcE/u0CuJaBVz5ZRVaL+zz033DoVAvvhDqKH8f5syVdt97u20+ZJd8v0sMgNLgvTnAOhq+ZLA/Gv43UN6nTWUiZCLo0pVRlWLdBKexhDOYvWT3IzcE/MWsuc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716206235; c=relaxed/simple;
-	bh=tu+l9oOPO1ViZIzn530t9nkb4u6RJMZaMufBUT+0eg0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pZmPcWqjuyrpncfTK+YO6dEBWJlckDhqX9EpiP3D52OclwnF2NY4emarSmdKUHF3fMpkcvxSscaEn8qsNa77rdu0wZIJS3Xq5uBDS9VVJXCGBWNVxN8JYVU28J2hVffLpDJz6L1QFOqz1pvbg/f+kk/OGaki8xkfotiMWJ3JicQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dKhb6Yji; arc=fail smtp.client-ip=40.107.94.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B60913791E
+	for <platform-driver-x86@vger.kernel.org>; Mon, 20 May 2024 17:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716227361; cv=none; b=Xf7+TV3CWjdtSYLsll1LVF01MqSDLVk+sDhi/klgOcq0RXTkjTWIUdSgtx0DYBhjXHSaG6s48TIgxiOLzD3JHaXvxTK73TSpnszeklRRUBGLOGD41L1cJzAuBvHfTR6sKoUVmyRggYophgzYW54LrxKzGl/D64WaWwO101HIfRE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716227361; c=relaxed/simple;
+	bh=MJpuSgcxvqV4UwKfTH3b1ou3TMAnP03pjUJAZgV5i6k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B2SFpw3vqpjRD6xXrOUjcewAMWAKMraVUK0wgwl8KkvbiQ8NwtRfetdGA2lmIiAXKEgd6HpRc6diAl2/GxXK3nxwVKTzSXlOEf6XW9rUri1sabw/uiPyoXt2h7uhfF2F2dGlfX1If4pnCNXDh7gnR1uzthZvHEGn+Qo7gcNgcPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FMmF8BN5; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dKhb6Yji"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZyZvJQY67yYmcmw9K8CsCsg/6gsFFIdj+mZcgV/yDHwlUaWnxw7Ft6kv/neDR6wowltrR+FOBeah7as6GJMgtiSI2ko7kSJViQhVBwS7THrjM7IDtOXBdSMJ0smIaSH302FPzRSneFBTCNMh36XEcqyN3s61hettYrMJhxRUXOSa/epmfSvZuhQ2+wEm3NHr6A67+CJCaLZWJD4th2SUBjBGMVgbQ2qu3zA1rp2vpg89c+dOeOtYHhSIMckJzPH0+wl6rcfGn5tQYFYbRA4n8Nyjlw43uqNef+7AujCSsmsf7SK6Ty1JMI/2rvgLrlnlGxCT4F+hb6AcGD9ndLMoNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k3G9hGj4HQSEaeMOnQ/xjz2Mzid1MG0kFCIbFwKAaOo=;
- b=MwuHqHZWF+osd9anX9/02rndKYksSe5OLceTs/OYrvWSaXo2dVpdBQb0kpJr7a/TJ3haVAKHJwy7c6FCdWoP+TFPskg4Ibk4eXAOFT/pDIEL1ydAtI+ba4mZeDbw5gmiOxQHysTKr/nIuwcIkUsOlvANow3Qo4TBQX4+vnQfTWl+zC0tlQ+vtZ+YCAyIkaKNfSqeQd7HEqgZ9o6L7lx+jrAw3rk2ye3nNiYrQrw9BWexJRnlC32Wjg6VjLP3GtHkZLdp3ql8k6tgrTAr7YtDuG5sI3/cEzyUN6lkjCljWUTgrqS5uxzy2MKdkq5qnk4aWCPUBAYq0rrTkA98WX3O6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k3G9hGj4HQSEaeMOnQ/xjz2Mzid1MG0kFCIbFwKAaOo=;
- b=dKhb6Yji5O/LhZsHaWRbGlSBXsVzamKP0iYe3xFJJNw5nMcnbFGNKAcHqK9dp40g9Ph3HeevOeBbHvR4Qep2KFp80uz056eLu02LcDeLgpMl0o4aNGK54zMLQeZ7RuHrPU1zEy1ElLeN5atthI0VD994qtOtmmRwteJRfWyNA0W/F9BPB/M00RUm3cseujAzDAVUUIqTqsJic0S3YyXdriP7a6UjAwnocUbpF0QMAt1T1+zCU8aATGgeLxarZUJ8E12F+c3/U0TL9qWnkPyU9vhbgWFGowTTovo56rYdSGgvS9GFfpWzeLnUSDlnggrOtwzUxxYNNsG+Azvjyo3lsA==
-Received: from BN9PR03CA0145.namprd03.prod.outlook.com (2603:10b6:408:fe::30)
- by PH7PR12MB7379.namprd12.prod.outlook.com (2603:10b6:510:20e::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.30; Mon, 20 May
- 2024 11:57:04 +0000
-Received: from BN1PEPF00004682.namprd03.prod.outlook.com
- (2603:10b6:408:fe:cafe::f0) by BN9PR03CA0145.outlook.office365.com
- (2603:10b6:408:fe::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35 via Frontend
- Transport; Mon, 20 May 2024 11:57:04 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- BN1PEPF00004682.mail.protection.outlook.com (10.167.243.88) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7611.14 via Frontend Transport; Mon, 20 May 2024 11:57:03 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 20 May
- 2024 04:56:50 -0700
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 20 May
- 2024 04:56:49 -0700
-Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com (10.129.68.10)
- with Microsoft SMTP Server id 15.2.1544.4 via Frontend Transport; Mon, 20 May
- 2024 04:56:48 -0700
-From: Shravan Kumar Ramani <shravankr@nvidia.com>
-To: Hans de Goede <hdegoede@redhat.com>, Ilpo Jarvinen
-	<ilpo.jarvinen@linux.intel.com>, Vadim Pasternak <vadimp@nvidia.com>, "David
- Thompson" <davthompson@nvidia.com>
-CC: Shravan Kumar Ramani <shravankr@nvidia.com>,
-	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 3/4] platform/mellanox: mlxbf-pmc: Add support for clock_measure performance block
-Date: Mon, 20 May 2024 07:56:35 -0400
-Message-ID: <9a2c59a17314d1449a43d13ac0cf51b807de09c8.1716205838.git.shravankr@nvidia.com>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <cover.1716205838.git.shravankr@nvidia.com>
-References: <cover.1716205838.git.shravankr@nvidia.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FMmF8BN5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716227359;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZZrUbAm2R7943JoyNmgrw2MQcGZgNrzrbVs07vVMy1k=;
+	b=FMmF8BN5Pr1xGKijwYllV9aaWIxxz0ASGIX7j8mfBHqO8sHcHwPptXRUEonUsDN9mQVt/T
+	cQ0RK5t8tAuZdstJxA4pu26RVyyRlYlus/byPOOtA1VCIEnwmetlfZwhi15HZ+ZendQ26X
+	cB8I+Q2ff8IPBR8/V5p3DvjOQGVVx78=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-394-PUAjN431Mi-15Ivi0UcU8A-1; Mon, 20 May 2024 13:49:17 -0400
+X-MC-Unique: PUAjN431Mi-15Ivi0UcU8A-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a51fdbd06c8so778821766b.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 May 2024 10:49:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716227357; x=1716832157;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZZrUbAm2R7943JoyNmgrw2MQcGZgNrzrbVs07vVMy1k=;
+        b=w2oGa4upQ9QF2D1ErzkXQYwlEKcziMrNcGj3MWEFRJ0gdfkiZuWdt4dQ1YmcppvObg
+         9HKk5SZjM0lATFKSsUNQfQg/9dvxqFgYQDYL2WRslP1ZEHFmUWytEs+3sfQSBnxQqkGH
+         pRHx2Fk5QTVqtzCtdxAdeSd07d4sBsYXgHuTxj0bolkbFYutMi+P+aRRX5aeSFt5lYRF
+         EXqbmSYZvRsjbZy6j7NiCHmRF7wWOvHdXkjYumZqumpyI8OxAST2VRtssMx/fKZVzgtD
+         cgTzbCCBFSsJW7txAp0SRD9M2PpBwL3y8VDKghzjloQSsiOjBxLwFyqrJ4+z70OlF8iN
+         KYDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZukQn4z4YWzpC93qKWzArBuvsupXmhafXmknt/Is/1TbncTyYgLhp9BBz9Zh/aXfUTwJP612MQfyLm5NfDsU/wn/fxxKRsPCsG3R64jldxoqXyw==
+X-Gm-Message-State: AOJu0YzWsxrAxUZ3lSm1Tz6x1lYvS4vr9BdUc4nR+9mwqUg97spYPhFY
+	tLBhGh/Sk4G8TXbysBTOo00F2q1eAzTEnSxFR5ffmcdae05V1AHdUe031wN9yGmYBgzEdeNiDjW
+	FUuWdch6/m1FHsY8fFSqaDrye3pCXABBxTTl+kwJyVE3yh3lCaptyi+5ZtnXJ5IxtrGyqLwc=
+X-Received: by 2002:a17:907:da4:b0:a59:9e01:e788 with SMTP id a640c23a62f3a-a5a2d5d0228mr2025038166b.34.1716227356817;
+        Mon, 20 May 2024 10:49:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEgYGJtNUxZr1d8EH1WwxVSjgBenIzpG3s1njnGCUReQnYbY3i4NHmZt7xWOF9IUrJVori1jA==
+X-Received: by 2002:a17:907:da4:b0:a59:9e01:e788 with SMTP id a640c23a62f3a-a5a2d5d0228mr2025036466b.34.1716227356442;
+        Mon, 20 May 2024 10:49:16 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b0163csm1486276766b.163.2024.05.20.10.49.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 May 2024 10:49:15 -0700 (PDT)
+Message-ID: <5287fc2e-91c5-442b-b66c-6eb1fe334ce4@redhat.com>
+Date: Mon, 20 May 2024 19:49:14 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2] platform/x86: ISST: fix use-after-free in
+ tpmi_sst_dev_remove()
+To: Markus Elfring <Markus.Elfring@web.de>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+ platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Zhang Rui <rui.zhang@intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Dan Carpenter <error27@gmail.com>
+References: <20240517144946.289615-1-harshit.m.mogalapalli@oracle.com>
+ <d5203ff5-8ed4-48ea-8e58-a2e6680b0542@web.de>
+ <6d1bf351-77cc-7fe9-2d62-8bd99789e4f1@linux.intel.com>
+ <d73fe99b-dea3-4792-aa1c-c3317f296003@web.de>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <d73fe99b-dea3-4792-aa1c-c3317f296003@web.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00004682:EE_|PH7PR12MB7379:EE_
-X-MS-Office365-Filtering-Correlation-Id: 86e314e5-703a-430c-186f-08dc78c3f742
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|36860700004|376005|82310400017;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?CDDw9pvEMT4R4ZLynfQJWaXwzqPrbEZr217ypM3XszWWyY1ACF0Z/b9kw7/9?=
- =?us-ascii?Q?Qxhsq/BrW3vWd8IkkML/GhZi958J1uLiS1x8twX8CVbfuOZWGzwP/ops7b1j?=
- =?us-ascii?Q?nB+tHiNVoZ9aZbv06xTQsAy6Ay21+yZy2FFQt7oZC31cFnzpsVMADk9Lq+t0?=
- =?us-ascii?Q?syk5UwUtRWfjoyAeqO28MycIRCcjGkcWu3Rmee9VLNIWelDOTNr6NgcJJiqK?=
- =?us-ascii?Q?mFE/hdFx+kJDKaC/0VsYvxCaZsuw07FNHw+Ox5wGVv5zFSVawlFWscEFn6oD?=
- =?us-ascii?Q?hLvAgE1mET5ATZgnFifwiIISJ7iHWZ/QsphCFef4yyRCL1cNMqSCWPSE0YVP?=
- =?us-ascii?Q?HZT+BrSNwppu6xetg2nfz18As5serz/frZBd0/VSniGu2g2NDo6gMsJHLyi3?=
- =?us-ascii?Q?8k6IzuAaJOrSIl/w61laM3gVKmsL3685T3+BVgBkmrFVZUkprZaLXiTN7YnO?=
- =?us-ascii?Q?nnhdqOvNbjFyi9g29EeWPDtEryywyVVZ23AADDq56jxcrOCZWsrlItmuk34Q?=
- =?us-ascii?Q?qmiqYwiduYvNHNZ+N9NoRphD03JurreY8w6yokK4KB6od2C/nX/LuHY16FgB?=
- =?us-ascii?Q?e23ocNec/36JeTJwkFQ3GQUPRr9Ck9+2sWXh3VrwS+RlIk41+vIaLk3V0JVw?=
- =?us-ascii?Q?wshC3ssLWwVszRl0Ii5pS8UCZnmpVLcusSzMXyrkdmfDvArrA7lanURwIaav?=
- =?us-ascii?Q?7n5p5Iy5JZlU/bKVcHhwU2O6X3nciAnT9yGp5S2UNhGu+DfNRuJFiuXDU9n0?=
- =?us-ascii?Q?ElU05LCC3hJrrDq88g5PwcnCMqcICxSstq9yaA4Q+WqCO+ZKnvHCsUhwgyhu?=
- =?us-ascii?Q?oTt1bspK/1Jf7ovJq2TzquC/pFDngKXSkpOuFBec/Qz7j+smVQeSC08fjbZy?=
- =?us-ascii?Q?rkmW0aOaQEeJs21T4w9q1z8t7atkoJ83LYyeCXkRPVUDbWo/tni5DITt1XDH?=
- =?us-ascii?Q?LGoKE0e8uX/RsLv45Zqb0VWKNlGQJB8+ILrFK401LH6VxrF6MSwQFuG1CNO+?=
- =?us-ascii?Q?HePGRsRHNMHyyofT5wX1m0fSZD+0w60TjEHeci6iX7UnpERARwSZhtIloyxs?=
- =?us-ascii?Q?RSZY8Ivf+YCyEdBR0RYO37TpmxSQEX54UO+P+0e5P80GXRaBKZ2ZptOCu2pC?=
- =?us-ascii?Q?+rUTv1jSqoS+sO7dEyQUrhBEpNugnmX7xNBJjMgJEkskXLMs9XeNnoByDkq2?=
- =?us-ascii?Q?bfkfzKM7X9u0FF8oLkCwOHqyUxJZcmpahbbEKK9DiigRIIS/KpJtrfD0LF7e?=
- =?us-ascii?Q?GtS2587wuBT4R2SfKHEC0vzui+arMUrHaXqUYjl7gxBuuImgk1DqUcpwbGvb?=
- =?us-ascii?Q?7XHDNrIy1mBtgl55TRmve2Rf3pr/peEsYJDnMTLr/8rXAZx8pJ/+8x31BWqp?=
- =?us-ascii?Q?NLFFCK48X2jR0RUcgr9lygZgfm6J?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(1800799015)(36860700004)(376005)(82310400017);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2024 11:57:03.9996
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86e314e5-703a-430c-186f-08dc78c3f742
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00004682.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7379
 
-The HW clock_measure counter info is passed to the driver from ACPI.
-Create a new sub-directory for clock_measure events and provide
-read access to the user. Writes are blocked since the fields are RO.
+Hi Markus,
 
-Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
-Reviewed-by: David Thompson <davthompson@nvidia.com>
-Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
----
- drivers/platform/mellanox/mlxbf-pmc.c | 46 ++++++++++++++++++++++++---
- 1 file changed, 42 insertions(+), 4 deletions(-)
+On 5/20/24 12:56 PM, Markus Elfring wrote:
+>>> …
+>>>> Fix this by reordering the kfree() post the dereference.
+>>>
+>>> Would a wording approach (like the following) be a bit nicer?
+>>>
+>>>    Move a kfree() call behind an assignment statement in the affected if branch.
+>>
+>> No, the suggested wording would make it less precise ("post the
+>> dereference" -> "behind an assignment") and also tries to tell pointless
+>> things about the location in the codei that is visible in the patch itself.
+> 
+> Would you eventually like another wording variant a bit more?
+> 
+>     Thus move a kfree() call behind a dereference of an invalid pointer.
 
-diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
-index 635ecc3b3845..1212a96fb3eb 100644
---- a/drivers/platform/mellanox/mlxbf-pmc.c
-+++ b/drivers/platform/mellanox/mlxbf-pmc.c
-@@ -865,6 +865,37 @@ static const struct mlxbf_pmc_events mlxbf_pmc_llt_miss_events[] = {
- 	{75, "HISTOGRAM_HISTOGRAM_BIN9"},
- };
- 
-+static const struct mlxbf_pmc_events mlxbf_pmc_clock_events[] = {
-+	{ 0x0, "FMON_CLK_LAST_COUNT_PLL_D1_INST0" },
-+	{ 0x4, "REFERENCE_WINDOW_WIDTH_PLL_D1_INST0" },
-+	{ 0x8, "FMON_CLK_LAST_COUNT_PLL_D1_INST1" },
-+	{ 0xc, "REFERENCE_WINDOW_WIDTH_PLL_D1_INST1" },
-+	{ 0x10, "FMON_CLK_LAST_COUNT_PLL_G1" },
-+	{ 0x14, "REFERENCE_WINDOW_WIDTH_PLL_G1" },
-+	{ 0x18, "FMON_CLK_LAST_COUNT_PLL_W1" },
-+	{ 0x1c, "REFERENCE_WINDOW_WIDTH_PLL_W1" },
-+	{ 0x20, "FMON_CLK_LAST_COUNT_PLL_T1" },
-+	{ 0x24, "REFERENCE_WINDOW_WIDTH_PLL_T1" },
-+	{ 0x28, "FMON_CLK_LAST_COUNT_PLL_A0" },
-+	{ 0x2c, "REFERENCE_WINDOW_WIDTH_PLL_A0" },
-+	{ 0x30, "FMON_CLK_LAST_COUNT_PLL_C0" },
-+	{ 0x34, "REFERENCE_WINDOW_WIDTH_PLL_C0" },
-+	{ 0x38, "FMON_CLK_LAST_COUNT_PLL_N1" },
-+	{ 0x3c, "REFERENCE_WINDOW_WIDTH_PLL_N1" },
-+	{ 0x40, "FMON_CLK_LAST_COUNT_PLL_I1" },
-+	{ 0x44, "REFERENCE_WINDOW_WIDTH_PLL_I1" },
-+	{ 0x48, "FMON_CLK_LAST_COUNT_PLL_R1" },
-+	{ 0x4c, "REFERENCE_WINDOW_WIDTH_PLL_R1" },
-+	{ 0x50, "FMON_CLK_LAST_COUNT_PLL_P1" },
-+	{ 0x54, "REFERENCE_WINDOW_WIDTH_PLL_P1" },
-+	{ 0x58, "FMON_CLK_LAST_COUNT_REF_100_INST0" },
-+	{ 0x5c, "REFERENCE_WINDOW_WIDTH_REF_100_INST0" },
-+	{ 0x60, "FMON_CLK_LAST_COUNT_REF_100_INST1" },
-+	{ 0x64, "REFERENCE_WINDOW_WIDTH_REF_100_INST1" },
-+	{ 0x68, "FMON_CLK_LAST_COUNT_REF_156" },
-+	{ 0x6c, "REFERENCE_WINDOW_WIDTH_REF_156" },
-+};
-+
- static struct mlxbf_pmc_context *pmc;
- 
- /* UUID used to probe ATF service. */
-@@ -1038,6 +1069,9 @@ static const struct mlxbf_pmc_events *mlxbf_pmc_event_list(const char *blk, size
- 	} else if (strstr(blk, "llt")) {
- 		events = mlxbf_pmc_llt_events;
- 		size = ARRAY_SIZE(mlxbf_pmc_llt_events);
-+	} else if (strstr(blk, "clock_measure")) {
-+		events = mlxbf_pmc_clock_events;
-+		size = ARRAY_SIZE(mlxbf_pmc_clock_events);
- 	} else {
- 		events = NULL;
- 		size = 0;
-@@ -1472,14 +1506,15 @@ static int mlxbf_pmc_read_event(unsigned int blk_num, u32 cnt_num, bool is_l3, u
- /* Method to read a register */
- static int mlxbf_pmc_read_reg(unsigned int blk_num, u32 offset, u64 *result)
- {
--	u32 ecc_out;
-+	u32 reg;
- 
--	if (strstr(pmc->block_name[blk_num], "ecc")) {
-+	if ((strstr(pmc->block_name[blk_num], "ecc")) ||
-+	    (strstr(pmc->block_name[blk_num], "clock_measure"))) {
- 		if (mlxbf_pmc_readl(pmc->block[blk_num].mmio_base + offset,
--				    &ecc_out))
-+				    &reg))
- 			return -EFAULT;
- 
--		*result = ecc_out;
-+		*result = reg;
- 		return 0;
- 	}
- 
-@@ -1493,6 +1528,9 @@ static int mlxbf_pmc_read_reg(unsigned int blk_num, u32 offset, u64 *result)
- /* Method to write to a register */
- static int mlxbf_pmc_write_reg(unsigned int blk_num, u32 offset, u64 data)
- {
-+	if (strstr(pmc->block_name[blk_num], "clock_measure"))
-+		return -EINVAL;
-+
- 	if (strstr(pmc->block_name[blk_num], "ecc")) {
- 		return mlxbf_pmc_write(pmc->block[blk_num].mmio_base + offset,
- 				       MLXBF_PMC_WRITE_REG_32, data);
--- 
-2.30.1
+The original wording of the commit message really is fine as is,
+I see no need for Harshit to send a new version and I plan to
+merge this as is.
+
+Regards,
+
+Hans
+
 
