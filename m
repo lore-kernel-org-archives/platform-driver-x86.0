@@ -1,107 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177E974402;
-	Tue, 21 May 2024 10:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994BF62A02;
+	Tue, 21 May 2024 11:10:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716288970; cv=none; b=irHChsYWtl/38LbL4Lw38cQMGcU79pWiCJmrcUsrMB6vVOC7szf/CLflz+U+6qUyXTC6zKVovOOP7gTLlVQkd9lrcA/7gaiZ4Hshk2D392hlLmCcRCgn5tD5n0fZRnKats7mvk37dddNpx1T4sbX0LxLQft16gMYA1OODp9Gm2M=
+	t=1716289811; cv=none; b=pKS9Vf/aYq90mRDNlYB9Hp2iVYGtN8T2KRenRsNN5KwoI/0JH/oFoa2QA7WSYTPpUA/FFQje/UFI70c2DTdjnNuHO8TVTSl8deQvzcU3FtPg24gRdlYJt6GvkCQCbmCto+CqoI81fV1sNMRn0+336GaGb18dnTMLFF+r5/uvooM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716288970; c=relaxed/simple;
-	bh=wVuYdeC4Ir6GXXZS576h08C/Bb0grRWIq46QA/Pmszc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ZkCP5TPthl2kBMSWTIgbGPban2w5i1SHs2PSPs5J5921FQEJtnKJun9GigFPNBycnthbXUciqLTSIUab7pqHyOj7DHxbG4L35ZHU7Ke4FYAn9Xul+U/8iNhNDd5c0vaqqhNNL5xfqtAG7HSlzacp2EWE1SFwZOGj8FuEcuALuJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=km2BiTOO; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716289811; c=relaxed/simple;
+	bh=DJGVySxDcaA0qqbl1dW0CsQ+3WLDEGkEAiY4DqJErHI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U8XL7ZY1dl1n6Zx0aoIVoyA69jjUN9QTPuz5FUkaWiHZOdfOITjMYJ6TLQW62Ul2/sOjxjth9AmeWF/8vA766Kvy2oY83YDQLfTRrbeTO3ySKtkNiI4ZBAsFJz7JZch8j76wYw0i57Dsjsrf3WYw/aM+4JlqyS9+fDxsMVR+yLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=wgsCrfJT; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="km2BiTOO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716288967; x=1747824967;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=wVuYdeC4Ir6GXXZS576h08C/Bb0grRWIq46QA/Pmszc=;
-  b=km2BiTOOa01ALYbebh2bwoZU/AsPr2g9G+f+586rmNHt1H0lngSsYHN3
-   vEBMNN3/5TwTj3JzkRZvEti0Zl3vZyp/d7EO1IZ+kdpThJc3XyP540+PX
-   oG0CWhoUbsqufBhWCBUX2zqWvwxxrUGNWC8HWPv1ZGDQi+PsXRntXveCV
-   Br533NrIsxPaHkq0BAueWtroBYB5Z9jSKURRPL1cx1sIOAVd4p+voM0G/
-   5zUyG2HyRhTLIXhVepHg4J6fk6Psg9Zg9/OF1HJCIgzD/hgXfcFEzajAA
-   UsPzYYjSZL5SAIBIJ8wU2lctVoIMFlgb25wmFugBVjUAyOSLXGg5siET8
-   w==;
-X-CSE-ConnectionGUID: E6qua12gSP2xIwrikJn3Yg==
-X-CSE-MsgGUID: s1FH0m3TRBmUNiufCiYxww==
-X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="12645135"
-X-IronPort-AV: E=Sophos;i="6.08,177,1712646000"; 
-   d="scan'208";a="12645135"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 03:56:06 -0700
-X-CSE-ConnectionGUID: mVS7OFJwQMqOcxoAJBwMMA==
-X-CSE-MsgGUID: dMEbn2OWSMeXkebbPXPCCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,177,1712646000"; 
-   d="scan'208";a="64106452"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.117])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 03:56:03 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 21 May 2024 13:56:00 +0300 (EEST)
-To: Markus Elfring <Markus.Elfring@web.de>
-cc: Hans de Goede <hdegoede@redhat.com>, 
-    Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>, 
-    platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org, 
-    Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-    Zhang Rui <rui.zhang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
-    Dan Carpenter <dan.carpenter@linaro.org>, 
-    Dan Carpenter <error27@gmail.com>
-Subject: Re: [v2] platform/x86: ISST: fix use-after-free in
- tpmi_sst_dev_remove()
-In-Reply-To: <7b903568-d8e8-4a06-b501-8d49f3f0fffa@web.de>
-Message-ID: <c158e0f4-fcbd-13a6-ee98-adc26160c3c2@linux.intel.com>
-References: <20240517144946.289615-1-harshit.m.mogalapalli@oracle.com> <d5203ff5-8ed4-48ea-8e58-a2e6680b0542@web.de> <6d1bf351-77cc-7fe9-2d62-8bd99789e4f1@linux.intel.com> <d73fe99b-dea3-4792-aa1c-c3317f296003@web.de> <5287fc2e-91c5-442b-b66c-6eb1fe334ce4@redhat.com>
- <51368bcf-d2e3-42cc-a112-a1a485f29c73@web.de> <a8eb3ba6-eeab-6c0c-7b57-4fde508853ed@linux.intel.com> <7b903568-d8e8-4a06-b501-8d49f3f0fffa@web.de>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="wgsCrfJT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1716289787; x=1716894587; i=markus.elfring@web.de;
+	bh=DJGVySxDcaA0qqbl1dW0CsQ+3WLDEGkEAiY4DqJErHI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=wgsCrfJTTavBxx9Sg6FkNoMiafg72ui66vNF6MAB6EQQw8SLhafnrzg4nNuSzxMh
+	 6umuitYSCqLkreBRiBJLekfcKhsKWAVgVuPrgq6Nontcp5Y1aeAqL8ao+m7R5qF1F
+	 JGiS7qZsIBQUOTvbEwsfEeEb2KMlpyDWO/D73xd8XcH14lSgXtyUOSPoHdnxZIOa4
+	 6N8U1KS+vAEOdy8jftK52UJy/1Rojpd8eqeT5ZJfTXE8HZU5yoPrk6a6ypmLypFZr
+	 ZhLjYNboKOlmyCHtZ4TcbUMX8eFq/Ea9irbWot2/FaHKO2y8Cg1T1aJz3EKpqnFB0
+	 VEY4b1K+1Onfcd2qcA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MRk4s-1rz2Y440hW-00TPnH; Tue, 21
+ May 2024 13:09:47 +0200
+Message-ID: <9c179632-a7d7-4dcd-ac2f-89ef77d362b2@web.de>
+Date: Tue, 21 May 2024 13:09:44 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1083109358-1716288960=:1027"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1083109358-1716288960=:1027
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2] platform/x86: ISST: fix use-after-free in
+ tpmi_sst_dev_remove()
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+ platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Zhang Rui <rui.zhang@intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Dan Carpenter <error27@gmail.com>
+References: <20240517144946.289615-1-harshit.m.mogalapalli@oracle.com>
+ <d5203ff5-8ed4-48ea-8e58-a2e6680b0542@web.de>
+ <6d1bf351-77cc-7fe9-2d62-8bd99789e4f1@linux.intel.com>
+ <d73fe99b-dea3-4792-aa1c-c3317f296003@web.de>
+ <5287fc2e-91c5-442b-b66c-6eb1fe334ce4@redhat.com>
+ <51368bcf-d2e3-42cc-a112-a1a485f29c73@web.de>
+ <a8eb3ba6-eeab-6c0c-7b57-4fde508853ed@linux.intel.com>
+ <7b903568-d8e8-4a06-b501-8d49f3f0fffa@web.de>
+ <c158e0f4-fcbd-13a6-ee98-adc26160c3c2@linux.intel.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <c158e0f4-fcbd-13a6-ee98-adc26160c3c2@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:wEems1hmqOzz9DGcszFJEgRyBidNWmoaMZGZ6NA0tFjE3qroV//
+ 5eNN8GGaBAGZ972bGP39WxoNy98nNqJf/n1QeosexAtIcvndhBPKlTKlpY/cd8azQz0l6rF
+ yj9y0/HmxvJ7oa++xjmKGwleypoDrvD1BBaZKF11DUis647ZjhMNM29HYn1c4SYspW8SHHk
+ vzQb6C7k7sghtPj9elchw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ZuRWjz0ist4=;uxK+tgwHMLpx0uNa0iRenQCQCoU
+ jTqTHzGT1pk6V6YD5Te7NMnQMK624sWiaC7p1PqIEZbgmnpOTLiGYPsSnr/8Y2+LQihtO74PH
+ orBfEbqWNLCPNUFRjZghKDtggZZFDOwDrs9Sc+YRqUsPYue9j6o+cqi5JFEOE3K4xe7BgXle5
+ sUhDoH/wAT3NKhhz48mFUvHywhdal9d1fj+QOpJaKd7FaIqYpBwkB7YPhBLdTwBeT/XSUersG
+ LU1MA5eyCGNABddhxkcb/CjLncJhRirRaue/MbT3id7koxHsOyhxfnOr+PukmOOuiICldLKZ0
+ QLRNvPIYYqf6h9wx7+gdILumyGeILwT3+YA30Lm7DNz52Pne63tYUfUqGjb/2HLYxjAuG5qV5
+ LId6Mpn6yoLoBS3sQ6VtHKronctaAYfj4+niExE9WIpAXy/1vKJAw9yxokrVObBM2vdqx8Alv
+ lsq5nvS0qTlpJBnwGDv2kGDp7hdcKv4K/Rme6D7qzgJXV6HXaOJ/89ZHcE3RRRDKkLEc6vti5
+ gLzR7qK2mCvcsBlU3NERiV4sjqLjeDvHGR0zTPf2Pkt12RhneNJoLNbxICoaG5d7xdhudVLeQ
+ SpR9SmW0bPuv2PCoksH21j8nMyG5x+L9qFKQzJ/O+allrDpeH+O1Cp0xvzG33IaUnOYmTkloX
+ QsUFhy/IEtpuarE9qIgUGmJCkdtSubW0V/mxHis4erXNfbmTjm2f0dttZsVIhJwk/opdry2L7
+ o0lsxT5MZp8HkNtnSBG2UBCrgwF/jKsnaOr/KaBLtUjgB2TwQL/e5AgU82VzWQB7a03g5/gkB
+ bWR6JUXljESPh80c7VZno+JJJrxmodRt308ae95SpEB7U=
 
-On Tue, 21 May 2024, Markus Elfring wrote:
+>>> We'll not waste our time in wordsmithing commit messages to perfection=
+,
+>>
+>> I hope that you would also like to avoid typos in change descriptions.
+>
+> Now you start derailing this with off-topic references to hypothetical "=
+typos".
 
-> >>>>>> =E2=80=A6
-> >>>>>>> Fix this by reordering the kfree() post the dereference.
-> =E2=80=A6
-> > We'll not waste our time in wordsmithing commit messages to perfection,
->=20
-> I hope that you would also like to avoid typos in change descriptions.
+Which alternative term would you prefer for the word combination =E2=80=9C=
+the kfree() post=E2=80=9D
+(for example) instead?
 
-Now you start derailing this with off-topic references to hypothetical=20
-"typos".
-
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/D=
-ocumentation/process/submitting-patches.rst?h=3Dv6.9#n45
->=20
->=20
-> > the current one is good enough as was stated to you already.
->=20
-> I dared to present some wording concerns according to the running patch r=
-eview.
-
-No, your latest replies were not anymore about wording concerns but=20
-complaining about process.
-
-Your wording concerns were already replied but after that you kept on=20
-arguing.
-
---=20
- i.
-
---8323328-1083109358-1716288960=:1027--
+Regards,
+Markus
