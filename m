@@ -1,38 +1,38 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1C72B9C3
-	for <platform-driver-x86@vger.kernel.org>; Wed, 22 May 2024 17:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2382B9C3
+	for <platform-driver-x86@vger.kernel.org>; Wed, 22 May 2024 17:20:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716398353; cv=none; b=OeoZ8iEmGJzNwy4NGjqq20irXUeKL9QR6zel2/UcUc8p2IOEofE5/9mIP4V5NPxDfljH9M+WvRSikSAgPQWY+gO3W2nih4m0jROVE7ZGC9+2wsojpn9Hnd8j8FtMUswOBflLn6Gn6hftFTI/Qk0afJl9LQ94SWIPrDcl+5naEj0=
+	t=1716398453; cv=none; b=UQz5NVyNVywWTtMd72KyX+iC5k1id522DfmnIDlLzzIhSOFGKtx+94bBMjFO2WhTnV96O3+oIP5cF95rarl3qcCWAowns6NOqIclj0rXwdOeWpPu+WteKqAkGk6Nc+plNBEpt9pJhtSFnN8AY2E7XK+s7yNzbwZxxhItIRjZK9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716398353; c=relaxed/simple;
-	bh=3LXJ1V8wLIo6Scr+2D8aUyJXKV2K/7MujpcGOrU09Vg=;
+	s=arc-20240116; t=1716398453; c=relaxed/simple;
+	bh=rjIklaQ9jNqKmt7Ql3DVeOzhg6T4lsy/QOr6yn1zp2M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jpbri/eutvmy5sstIQY/figFeE+LrirUQUFN1gljELAZuyqDuzAxXUjIeUVDcH05KDS0Z4l5HyE5m8wlxOP9RdxopDIUIwen3W+xVb/hiLigxXEU0RB4AlRg9hrlD3ihYDDy2zyfekFlD8SsWsHc9iwWYSpv0/DuchmY+kxazRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.21
+	 Content-Type:Content-Disposition:In-Reply-To; b=oWPT7L4C26s/aP16VrdBoWQv9REphHWRxyQbNHAwAPpQkllaR0kSXib7XZ4GSzl4iyHk2uREA7ebNQCjbZENAB2d3poqpOb6XE05bqgqHjf5oNs7J7uEHYSY3Z5+MGLQeonporU9e0Lk1xWcxZLFdxDGT06d7APTheITZzFi0Xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: Zq5amy9dSZSdDNlTcq43Bw==
-X-CSE-MsgGUID: TmPz9HpGT0G/yY3DImVjZg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11080"; a="12609288"
+X-CSE-ConnectionGUID: 7T2AuugWTxGTzQob/h1Lkg==
+X-CSE-MsgGUID: rKzkJCFKR5KppQd1PKPytQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11080"; a="12786463"
 X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
-   d="scan'208";a="12609288"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 10:19:12 -0700
-X-CSE-ConnectionGUID: l4GeEZScR123bqIX+vhRVQ==
-X-CSE-MsgGUID: XmBZaTaHRQaH2HMpYY/iBQ==
+   d="scan'208";a="12786463"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 10:20:51 -0700
+X-CSE-ConnectionGUID: ajQCYjFhSH6kUEktQdYDvw==
+X-CSE-MsgGUID: XgDRPOVjTo66VxyxP5YgpA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,181,1712646000"; 
-   d="scan'208";a="33222531"
+   d="scan'208";a="33824070"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 10:19:09 -0700
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2024 10:20:50 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
 	(envelope-from <andy@kernel.org>)
-	id 1s9pcJ-0000000A3Li-1QCL;
-	Wed, 22 May 2024 20:19:07 +0300
-Date: Wed, 22 May 2024 20:19:07 +0300
+	id 1s9pdv-0000000A3Mp-3z54;
+	Wed, 22 May 2024 20:20:47 +0300
+Date: Wed, 22 May 2024 20:20:47 +0300
 From: Andy Shevchenko <andy@kernel.org>
 To: Hans de Goede <hdegoede@redhat.com>
 Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
@@ -40,8 +40,9 @@ Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Gregor Riepl <onitake@gmail.com>
 Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add support for setting
  touchscreen properties from cmdline
-Message-ID: <Zk4pC0dkmTEcS_qA@smile.fi.intel.com>
+Message-ID: <Zk4pbyKX7yDNPjgf@smile.fi.intel.com>
 References: <20240522164807.28936-1-hdegoede@redhat.com>
+ <Zk4pC0dkmTEcS_qA@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -50,104 +51,22 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240522164807.28936-1-hdegoede@redhat.com>
+In-Reply-To: <Zk4pC0dkmTEcS_qA@smile.fi.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, May 22, 2024 at 06:48:07PM +0200, Hans de Goede wrote:
-> On x86/ACPI platforms touchscreens mostly just work without needing any
-> device/model specific configuration. But in some cases (mostly with Silead
-> and Goodix touchscreens) it is still necessary to manually specify various
-> touchscreen-properties on a per model basis.
-> 
-> touchscreen_dmi is a special place for DMI quirks for this, but it can be
-> challeging for users to figure out the right property values, especially
-> for Silead touchscreens where non of these can be read back from the ctrl.
-> 
-> ATM users can only test touchscreen properties by editing touchscreen_dmi.c
-> and then building a completely new kernel which makes it unnecessary
-> difficult for users to test and submit properties when necessary for their
-> laptop / tablet model.
-> 
-> Add support for specifying properties on the kernel commandline to allow
-> users to easily figure out the right settings. See the added documentation
-> in kernel-parameters.txt for the commandline syntax.
+On Wed, May 22, 2024 at 08:19:07PM +0300, Andy Shevchenko wrote:
+> On Wed, May 22, 2024 at 06:48:07PM +0200, Hans de Goede wrote:
 
 ...
 
-> +	/*
-> +	 * str is part of the static_command_line from init/main.c and poking
-> +	 * holes in that by writing 0 to it is allowed, as is taking long
-> +	 * lasting references to it.
-> +	 */
-> +	ts_cmdline_data.acpi_name = strsep(&str, ",");
-> +
-> +	for (i = 0; i < MAX_CMDLINE_PROPS; i++) {
-> +		name = strsep(&str, ",");
-> +		if (!name)
-> +			break;
-> +
-> +		/* Replace '=' with 0 and make value point past '=' or NULL */
-> +		value = name;
-> +		strsep(&value, "=");
-> +		if (!value) {
-> +			ts_cmdline_props[i] = PROPERTY_ENTRY_BOOL(name);
-> +		} else if (isdigit(value[0])) {
-> +			ret = kstrtou32(value, 10, &u32val);
-> +			if (ret)
-> +				return ret;
-> +
-> +			ts_cmdline_props[i] = PROPERTY_ENTRY_U32(name, u32val);
-> +		} else {
-> +			ts_cmdline_props[i] = PROPERTY_ENTRY_STRING(name, value);
-> +		}
-> +	}
+> > +			ret = kstrtou32(value, 10, &u32val);
 
-This reminds me a lot from the next_arg(), can we not reinvent a wheel?
+One more thing, why to limit to the decimal only?
+Should be up to user to choose. And some properties (now or in the future)
+actually might benefit from being able to be entered in hexadecimal form.
 
-> +
-> +	if (!i)
-> +		return -EINVAL; /* No properties specified */
-> +
-> +	if (str)
-> +		return -ENOSPC; /* More then MAX_CMDLINE_PROPS properties specified */
-> +
-> +	ts_data = &ts_cmdline_data;
-> +	return 0;
-> +}
-
-...
-
-> +	struct ts_dmi_data *ts_data_dmi = NULL;
-
-I prefer to see 'else' branch closer to the 'if' which will avoid a need to
-look somewhere else in the code to answer the question "what if condition is
-false".
-
-...
-
-> +	if (!ts_data && !ts_data_dmi)
->  		return 0; /* Not an error */
-
-This is basically a part of the below now:
-
-> -	ts_data = dmi_id->driver_data;
-> +	if (ts_data) {
-> +		/*
-> +		 * Kernel cmdline provided data takes precedence, copy over
-> +		 * DMI efi_embedded_fw info if available.
-> +		 */
-> +		if (ts_data_dmi)
-> +			ts_data->embedded_fw = ts_data_dmi->embedded_fw;
-
-> +	} else {
-> +		ts_data = ts_data_dmi;
-> +	}
-
-	} else if (ts_data_dmi) {
-		ts_data = ts_data_dmi;
-	} else {
-		return 0; /* Not an error */
-	}
+> > +			if (ret)
+> > +				return ret;
 
 -- 
 With Best Regards,
