@@ -1,105 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D6F126F06;
-	Fri, 24 May 2024 14:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61C912C498
+	for <platform-driver-x86@vger.kernel.org>; Fri, 24 May 2024 14:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716561589; cv=none; b=bHTdiPReZB6lSlsDUjcYb4rbGXY9cIdN00NazB4Blb40tdQs7VuBvjt5Lcd2BiLIwzCAUQJ/zrFUizT5LyQKja3eeTdBwXQSsHD6fMIZTPxcQIoHfvbbi0+UVLb4BPL95hmTTlkbnx8XjLWyXR9n3gFj4RPoisuu0yZeQ4251QA=
+	t=1716562481; cv=none; b=LVe0ISz+rdnosnN3ARyyX81Mcsu0yfp0ee0AgTU9w3x/2TPstZs8Bs6CTOtYny+alQDVWN+tjM7w8xGuOpeg7c4o3aPf7H6+mnhSvxA408Iciz3YknwN1CF9+xO7x0SCfx1aIbrjHwOIzxbAf2lgs86xZrioJ+ejHhyqXG/Ua7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716561589; c=relaxed/simple;
-	bh=WnxLNupJVJOryf7l5yLGWQgD6VwnyCE/cZW/EX1xubA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jIiOs3np1N86zYdefiFTZPv3kG537VY7u8mtW7DcgWY5ZJw2MzpAQlViSaxubMZFAkqF0dmMyyOsnnLfx343L/Ii5dH2+G/rYsngj5K2CKXevCurDCItcmeuQcM3Vgb4lYgvn9Zrk8lrkAmjjUJKoe6CGjaM2Fl/ol1ZGwFDgmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wb1kE5LK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716562481; c=relaxed/simple;
+	bh=PNdFcLTU0qQHyPogVRs7FQWkzRXlSIlN8NHiGrpMPYI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=IpJrD0MXbcY89Exvugw9Y04oxirjlhkUMf0yLBF4j4yQWUVFBadzeO1FC4MtixcRs61ewn87x9IaoVsZYJ68gS+HCWZ2bsAYEkbgGqzthcnds2tefjfkzgT76hxnSrUjOTnAdGQ/1b5HEsCxXmXc7N48XsIf//r2X6LvbrYTE0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lISWqdgT; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wb1kE5LK"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6532BC2BBFC;
-	Fri, 24 May 2024 14:39:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716561589;
-	bh=WnxLNupJVJOryf7l5yLGWQgD6VwnyCE/cZW/EX1xubA=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=Wb1kE5LKILnkmLBG+wDmvOJDqaTj4+pJxrBEOlUcZKtTEwk3KYVBam7IEY3YwAnws
-	 yUKP5NraFi+PVrXZMvlfFuQR47P15RDqrn/0TD4m1zLDYmWsCAT9t72ukt/FTfVw5b
-	 e6a9EumNQucWW4BVQG6UwGiwqO8KoieJeK3p2u/cEI9NqBqbzZzFZRz4cra73rn4hw
-	 lYBtH1GY+Y44nayz6nj2SKbm8WBKptiM0fvlEi2erbS2JdTPQsUkchER2xYUJsRCm1
-	 DajB82XHirqaiu9IYuTguaKdtZTTgIqBBKdfIU/DgXqHgQQC+HVey1Wcm+az/cSlQo
-	 ER6GooD+B+7Iw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB9BC25B74;
-	Fri, 24 May 2024 14:39:49 +0000 (UTC)
-From: Joel Selvaraj via B4 Relay <devnull+joelselvaraj.oss.gmail.com@kernel.org>
-Subject: [PATCH v2 0/3] novatek-nvt-ts: add support for NT36672A
- touchscreen
-Date: Fri, 24 May 2024 09:39:17 -0500
-Message-Id: <20240524-nvt-ts-devicetree-regulator-support-v2-0-b74947038c44@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lISWqdgT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716562480; x=1748098480;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=PNdFcLTU0qQHyPogVRs7FQWkzRXlSIlN8NHiGrpMPYI=;
+  b=lISWqdgT+jHQwr7Nd5Js0wvTYYh0MAOcFQINldhSPePRvNz8Mjr4rWsn
+   TQN5/YHjvR95NcEUQDJYFE3PDB2ki9eepQrUOFZMYmNxEoSy1eTNC7A29
+   1DE6KcgoupV0DYMZpYGYu7mhigLzlI6ny3HIjmWVFDyo7Vt2B1kaWHa9U
+   tCWkUZu7qHmLLU2Oh1pRMtZt8d0aM3Bj8uDtXjgJSygkTMZqjskyCSFVq
+   86As6wQqBzks2iLtPSXefBAcid02Chs59DPHCXZTeoRnalo9R53cygjHg
+   48E5esc0ANEHoDnTV/5wvN/6iFS8GrPcZa54W2CoReDbT2eKKzdSVl+d6
+   Q==;
+X-CSE-ConnectionGUID: 5RhaQT8TTwS393u8pzDKbg==
+X-CSE-MsgGUID: tTaTUqwvQH+pKKKDXbnSNg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11082"; a="24070238"
+X-IronPort-AV: E=Sophos;i="6.08,185,1712646000"; 
+   d="scan'208";a="24070238"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2024 07:54:40 -0700
+X-CSE-ConnectionGUID: XdJpz91bQPmRs+/KxlVU0g==
+X-CSE-MsgGUID: /JjxfPnmSWehmFlUOeAo/Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,185,1712646000"; 
+   d="scan'208";a="38456319"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.127])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2024 07:54:37 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 24 May 2024 17:54:34 +0300 (EEST)
+To: Hans de Goede <hdegoede@redhat.com>
+cc: Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    Gregor Riepl <onitake@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: touchscreen_dmi: Add support for setting
+ touchscreen properties from cmdline
+In-Reply-To: <792e7722-8e93-4414-9665-2bddd888173c@redhat.com>
+Message-ID: <348c270a-cbd0-55ab-63ac-11afb2eebe91@linux.intel.com>
+References: <20240523143601.47555-1-hdegoede@redhat.com> <792e7722-8e93-4414-9665-2bddd888173c@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJWmUGYC/42NQQ6CMBBFr0Jm7RhasYAr72FY1HaESZCStjQaw
- t2txAO4fD8/760QyDMFuBQreEoc2E0Z5KEAM+ipJ2SbGWQpq/IsGpxSxBjQ5q+h6InQU7+MOjq
- PYZln5yNq01LV3utGCwXZNHt68Guv3LrMA4d8f+/RJL7rzy/FX/4ksMTG1koZdWqt0df+qXk8G
- veEbtu2DyHSnqzWAAAA
-To: Hans de Goede <hdegoede@redhat.com>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- Joel Selvaraj <joelselvaraj.oss@gmail.com>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716561588; l=1668;
- i=joelselvaraj.oss@gmail.com; s=20240420; h=from:subject:message-id;
- bh=WnxLNupJVJOryf7l5yLGWQgD6VwnyCE/cZW/EX1xubA=;
- b=yhyitQNPtgrT0jWpsno8N21dVyiLPhcYAPHd0sGgXsFN0PMSiHuIVxO2SpEOiZDro2D/VTryf
- 9SdJ10nCtx2BpX/bW3ao1+v3Ng4dIejkaASvEqXOIGJOU/rbrPQ3aTk
-X-Developer-Key: i=joelselvaraj.oss@gmail.com; a=ed25519;
- pk=qT4gsuVtlPE0Dpr+tQA/Fumm7wzVP6qfeVaY+6pX04s=
-X-Endpoint-Received: by B4 Relay for joelselvaraj.oss@gmail.com/20240420
- with auth_id=165
-X-Original-From: Joel Selvaraj <joelselvaraj.oss@gmail.com>
-Reply-To: joelselvaraj.oss@gmail.com
+Content-Type: text/plain; charset=US-ASCII
 
-Extend the novatek touchscreen driver to support NT36672A chip which
-is found in phones like Xiaomi Poco F1 [1]. Added devicetree support for
-the driver and used i2c chip data to handle the variation in chip id and
-wake type. Also added vcc and iovcc regulators which are used to power
-the touchscreen hardware. 
+On Fri, 24 May 2024, Hans de Goede wrote:
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-tianma.dts?h=v6.9
+> Hi All,
+> 
+> On 5/23/24 4:36 PM, Hans de Goede wrote:
+> > On x86/ACPI platforms touchscreens mostly just work without needing any
+> > device/model specific configuration. But in some cases (mostly with Silead
+> > and Goodix touchscreens) it is still necessary to manually specify various
+> > touchscreen-properties on a per model basis.
+> > 
+> > touchscreen_dmi is a special place for DMI quirks for this, but it can be
+> > challenging for users to figure out the right property values, especially
+> > for Silead touchscreens where non of these can be read back from
+> > the touchscreen-controller.
+> > 
+> > ATM users can only test touchscreen properties by editing touchscreen_dmi.c
+> > and then building a completely new kernel which makes it unnecessary
+> > difficult for users to test and submit properties when necessary for their
+> > laptop / tablet model.
+> > 
+> > Add support for specifying properties on the kernel commandline to allow
+> > users to easily figure out the right settings. See the added documentation
+> > in kernel-parameters.txt for the commandline syntax.
+> > 
+> > Cc: Gregor Riepl <onitake@gmail.com>
+> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > ---
+> > Changes in v2:
+> > - Refactor ts_data / ts_data_dmi handling a bit (addressing Andy's review)
+> > - Accept hex/octal numbers (addressing Andy's review)
+> > - Fix ts_parse_props return value (addressing Randy's review)
+> > - Use ':' as separator instead of ',', ',' is used in "vendor,option" style
+> >   property names, e.g. "silead,home-button"
+> > - pr_warn() on invalid syntax since init/main.c does not do this
+> > ---
+> > Note assuming this gets favourable review(s) in a reasonable timeframe
+> > I'm thinking about maybe even adding this to 6.10 as a fix since users
+> > not being able to easily test Silead touchscreen settings has been an
+> > issue for quite a while now. Without the cmdline option being used this
+> > is a no-op so the chance of this causing regressions is close to 0.
+> 
+> Ok, so here is the other half of this in the form of documentation how
+> to use this to figure out the right configuration parameters for Silead
+> touchscreens on laptop/tablet models which are not supported yet:
+> 
+> https://github.com/jwrdegoede/gsl-firmware/blob/master/README.md#determining-the-touchscreens-parameters
+> 
+> As mentioned above I would like to merge this through the fixes branch
+> since this resolves a long standing issue with users not being able to
+> use Silead touchscreens on unknown models.
+> 
+> Ilpo, do you have any objections against me merging this through
+> the fixes branch ?
 
-Signed-off-by: Joel Selvaraj <joelselvaraj.oss@gmail.com>
----
-Changes in v2:
-- The generic i2c device id is now replaced with the correct IC variant
-  provided by Hans de Goede
-- Updated the bindings to reflect the latest changes and also incorporated
-  the suggestions provided by Krzysztof Kozlowski
-- Link to v1: https://lore.kernel.org/r/20240521-nvt-ts-devicetree-regulator-support-v1-0-8d766c639dca@gmail.com
+It's fine to take it through fixes I think, especially this early into the 
+cycle.
 
----
-Joel Selvaraj (3):
-      Input: novatek-nvt-ts: replace generic i2c device id with specific IC variant
-      dt-bindings: input: document Novatek NVT touchscreen controller
-      Input: novatek-nvt-ts: add support for NT36672A touchscreen
-
- .../bindings/input/touchscreen/novatek,nvt-ts.yaml | 62 +++++++++++++++++
- MAINTAINERS                                        |  1 +
- drivers/input/touchscreen/novatek-nvt-ts.c         | 78 ++++++++++++++++++++--
- drivers/platform/x86/x86-android-tablets/other.c   |  2 +-
- 4 files changed, 136 insertions(+), 7 deletions(-)
----
-base-commit: 6578aac6a270bd6deb9f9319b991dd430de263dd
-change-id: 20240518-nvt-ts-devicetree-regulator-support-ac9e49b78a16
-
-Best regards,
 -- 
-Joel Selvaraj <joelselvaraj.oss@gmail.com>
-
+ i.
 
