@@ -1,123 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61C912C498
-	for <platform-driver-x86@vger.kernel.org>; Fri, 24 May 2024 14:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349A610E3
+	for <platform-driver-x86@vger.kernel.org>; Sat, 25 May 2024 14:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716562481; cv=none; b=LVe0ISz+rdnosnN3ARyyX81Mcsu0yfp0ee0AgTU9w3x/2TPstZs8Bs6CTOtYny+alQDVWN+tjM7w8xGuOpeg7c4o3aPf7H6+mnhSvxA408Iciz3YknwN1CF9+xO7x0SCfx1aIbrjHwOIzxbAf2lgs86xZrioJ+ejHhyqXG/Ua7s=
+	t=1716646118; cv=none; b=P1UdaK+k5GwQQI3QMkVq4wshuFmkySPghGOXo9+UXWcREcU+ETKb/aAn6DdkRjUrfIHngnaP6nITKAr5wF4F3Ilfmtu1+CSv9uSuqXlW9ToX9Pgt07KJbXKot1aLX0pwDt1jVsqLuu+78NcprlQv1AXN7KUH7yh1+igmtuNt/eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716562481; c=relaxed/simple;
-	bh=PNdFcLTU0qQHyPogVRs7FQWkzRXlSIlN8NHiGrpMPYI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=IpJrD0MXbcY89Exvugw9Y04oxirjlhkUMf0yLBF4j4yQWUVFBadzeO1FC4MtixcRs61ewn87x9IaoVsZYJ68gS+HCWZ2bsAYEkbgGqzthcnds2tefjfkzgT76hxnSrUjOTnAdGQ/1b5HEsCxXmXc7N48XsIf//r2X6LvbrYTE0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lISWqdgT; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716646118; c=relaxed/simple;
+	bh=C3Qxhk4zL2ppmGowEwlPqQKeMa11jhzeeYYdM3LKjX4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=raY3YrVSnfYx4Oj5AzzhfI90Dhfvm5BY/ryqB4wQzzTJUYk6r8SbO4ypMGFZxuVNBiFgY84QPX8J3mzPZeATwR5wuqK0QApmsBlmFL6U0g+ArVkEi3FI/Ro9dcmP40JeCKGiMjBAvijrOAfMzIMB70TT5+g1p0m+GClzGV1CKYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aJxd4kim; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lISWqdgT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716562480; x=1748098480;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=PNdFcLTU0qQHyPogVRs7FQWkzRXlSIlN8NHiGrpMPYI=;
-  b=lISWqdgT+jHQwr7Nd5Js0wvTYYh0MAOcFQINldhSPePRvNz8Mjr4rWsn
-   TQN5/YHjvR95NcEUQDJYFE3PDB2ki9eepQrUOFZMYmNxEoSy1eTNC7A29
-   1DE6KcgoupV0DYMZpYGYu7mhigLzlI6ny3HIjmWVFDyo7Vt2B1kaWHa9U
-   tCWkUZu7qHmLLU2Oh1pRMtZt8d0aM3Bj8uDtXjgJSygkTMZqjskyCSFVq
-   86As6wQqBzks2iLtPSXefBAcid02Chs59DPHCXZTeoRnalo9R53cygjHg
-   48E5esc0ANEHoDnTV/5wvN/6iFS8GrPcZa54W2CoReDbT2eKKzdSVl+d6
-   Q==;
-X-CSE-ConnectionGUID: 5RhaQT8TTwS393u8pzDKbg==
-X-CSE-MsgGUID: tTaTUqwvQH+pKKKDXbnSNg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11082"; a="24070238"
-X-IronPort-AV: E=Sophos;i="6.08,185,1712646000"; 
-   d="scan'208";a="24070238"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2024 07:54:40 -0700
-X-CSE-ConnectionGUID: XdJpz91bQPmRs+/KxlVU0g==
-X-CSE-MsgGUID: /JjxfPnmSWehmFlUOeAo/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,185,1712646000"; 
-   d="scan'208";a="38456319"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.127])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2024 07:54:37 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 24 May 2024 17:54:34 +0300 (EEST)
-To: Hans de Goede <hdegoede@redhat.com>
-cc: Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    Gregor Riepl <onitake@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: touchscreen_dmi: Add support for setting
- touchscreen properties from cmdline
-In-Reply-To: <792e7722-8e93-4414-9665-2bddd888173c@redhat.com>
-Message-ID: <348c270a-cbd0-55ab-63ac-11afb2eebe91@linux.intel.com>
-References: <20240523143601.47555-1-hdegoede@redhat.com> <792e7722-8e93-4414-9665-2bddd888173c@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJxd4kim"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52962423ed8so2011561e87.2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 25 May 2024 07:08:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716646115; x=1717250915; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x0XLVXbRgK1HEyYIGx5pu2tryrkqz2xzrotiZJrBFNY=;
+        b=aJxd4kimfywRoOtkPomb/61k0DPMzSXrHSInHS7lImW3Cnm1Er+pDTIeI1Mje2Nwvh
+         Gjv/oW4QF90DZf3Ab2Lui9lUAHFuqOSCwj0ZhMRG1dQun0Kkvq3Ys7JXV2bw8e4V7vjP
+         p4g8qav3+N+SBlVMl+BHLHsiN6Q6jNvGENN1jV2b5i++83VjPgn4G8VNBbDagg5baLAp
+         MH5NUM0l8jClivbyK6Nhy0s8MYHc3RELpJjdkpMm/KvmALdYxCrw/JNK2WkR74sRpIOU
+         oHctLkyG1gl3tonyYM20VzutKkB5W5yOHa9xK2+4TLpzJt/pazmdxt1bVYatHhbwp9N0
+         WHQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716646115; x=1717250915;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x0XLVXbRgK1HEyYIGx5pu2tryrkqz2xzrotiZJrBFNY=;
+        b=GT0sxJFdIQzHUarA/ztTlUk735zFr0xRQr/loyFlUa99VGoR1SRqV4iK1Kzw3mOFNd
+         5zuRNNvU1zQR6g2DXjx6BLOj6CxuSVBGcrEy3SQOCsVTxisZgiR6b5+ALaCZPSTmjnBr
+         tDvyThzZ0ZpmclRxJySBxloL1gkFJQ0DHZIgYqcm5cqsa5PEcaS1WHdxFopGw34xUkKn
+         Q32P8Rs7VCzEc6Bn2GoND0zq6I6uDVvQYlSiXCdInexIXiR+IEn1V3fHEE6zEsgcULZz
+         h8KHu0CRtAVrxLZvXfVWMm12/dY3HZ8Dw6o8AwRhEvLlbbt5gMTUQ/LmdwumrBj0RY2Q
+         pRfw==
+X-Forwarded-Encrypted: i=1; AJvYcCXltiV+AdJBHkoL2gwfX8OMDHHkuMHUpFFvZQ4+P4dUhPC+OLVnbfk3kH9mrEJMAZPLOIcP2M99c9YHw7DVbejfuW58qKj1R4RZul+Oif9qIzFu+A==
+X-Gm-Message-State: AOJu0Ywev2lRXOQZ1c49x6lV0015hdrC3Rl4Q3N6ux/Cr566lGB/pMHG
+	8dDt/mXD6R9lsdLtaBEr214o6SlButFLBz7NBYJXawqXTbDDBA9Lbji9DGuMBfnqC+7C+yjTVQ4
+	erICmPa9TM0tgL3KbiqdVu8Co2EZOELd1
+X-Google-Smtp-Source: AGHT+IFgVVlVTmb2INBd2sJJe/Ib30SzPWSiclxXsAEi24bAl2478Ed4tjD/tVihBy4fP+fdu12xcJKjNSaMtpt3QWk=
+X-Received: by 2002:a05:6512:526:b0:51b:567e:7ea4 with SMTP id
+ 2adb3069b0e04-52964bb2673mr2614900e87.26.1716646115101; Sat, 25 May 2024
+ 07:08:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20240522164807.28936-1-hdegoede@redhat.com> <Zk4pC0dkmTEcS_qA@smile.fi.intel.com>
+ <4c14d61f-dc0c-4495-a74c-fa0cef4362d5@redhat.com> <CAHp75Vex78gE+e8kaUvvNjVUtkv-3GGgcMFZ3tFFqK49WRQDrA@mail.gmail.com>
+ <376bd875-e4ab-403d-9265-e6833ccb31d9@redhat.com>
+In-Reply-To: <376bd875-e4ab-403d-9265-e6833ccb31d9@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sat, 25 May 2024 17:07:58 +0300
+Message-ID: <CAHp75VdTJbZru5M4d81dU2Wbu4=G26OAgVksFF8H8vRBWHeDfw@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add support for setting
+ touchscreen properties from cmdline
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	platform-driver-x86@vger.kernel.org, Gregor Riepl <onitake@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 24 May 2024, Hans de Goede wrote:
+On Thu, May 23, 2024 at 11:47=E2=80=AFAM Hans de Goede <hdegoede@redhat.com=
+> wrote:
+> On 5/22/24 9:32 PM, Andy Shevchenko wrote:
+> > On Wed, May 22, 2024 at 9:40=E2=80=AFPM Hans de Goede <hdegoede@redhat.=
+com> wrote:
+> >> On 5/22/24 7:19 PM, Andy Shevchenko wrote:
+> >>> On Wed, May 22, 2024 at 06:48:07PM +0200, Hans de Goede wrote:
 
-> Hi All,
-> 
-> On 5/23/24 4:36 PM, Hans de Goede wrote:
-> > On x86/ACPI platforms touchscreens mostly just work without needing any
-> > device/model specific configuration. But in some cases (mostly with Silead
-> > and Goodix touchscreens) it is still necessary to manually specify various
-> > touchscreen-properties on a per model basis.
-> > 
-> > touchscreen_dmi is a special place for DMI quirks for this, but it can be
-> > challenging for users to figure out the right property values, especially
-> > for Silead touchscreens where non of these can be read back from
-> > the touchscreen-controller.
-> > 
-> > ATM users can only test touchscreen properties by editing touchscreen_dmi.c
-> > and then building a completely new kernel which makes it unnecessary
-> > difficult for users to test and submit properties when necessary for their
-> > laptop / tablet model.
-> > 
-> > Add support for specifying properties on the kernel commandline to allow
-> > users to easily figure out the right settings. See the added documentation
-> > in kernel-parameters.txt for the commandline syntax.
-> > 
-> > Cc: Gregor Riepl <onitake@gmail.com>
-> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > ---
-> > Changes in v2:
-> > - Refactor ts_data / ts_data_dmi handling a bit (addressing Andy's review)
-> > - Accept hex/octal numbers (addressing Andy's review)
-> > - Fix ts_parse_props return value (addressing Randy's review)
-> > - Use ':' as separator instead of ',', ',' is used in "vendor,option" style
-> >   property names, e.g. "silead,home-button"
-> > - pr_warn() on invalid syntax since init/main.c does not do this
-> > ---
-> > Note assuming this gets favourable review(s) in a reasonable timeframe
-> > I'm thinking about maybe even adding this to 6.10 as a fix since users
-> > not being able to easily test Silead touchscreen settings has been an
-> > issue for quite a while now. Without the cmdline option being used this
-> > is a no-op so the chance of this causing regressions is close to 0.
-> 
-> Ok, so here is the other half of this in the form of documentation how
-> to use this to figure out the right configuration parameters for Silead
-> touchscreens on laptop/tablet models which are not supported yet:
-> 
-> https://github.com/jwrdegoede/gsl-firmware/blob/master/README.md#determining-the-touchscreens-parameters
-> 
-> As mentioned above I would like to merge this through the fixes branch
-> since this resolves a long standing issue with users not being able to
-> use Silead touchscreens on unknown models.
-> 
-> Ilpo, do you have any objections against me merging this through
-> the fixes branch ?
+...
 
-It's fine to take it through fixes I think, especially this early into the 
-cycle.
+> >>>> +    /*
+> >>>> +     * str is part of the static_command_line from init/main.c and =
+poking
+> >>>> +     * holes in that by writing 0 to it is allowed, as is taking lo=
+ng
+> >>>> +     * lasting references to it.
+> >>>> +     */
+> >>>> +    ts_cmdline_data.acpi_name =3D strsep(&str, ",");
+> >>>> +
+> >>>> +    for (i =3D 0; i < MAX_CMDLINE_PROPS; i++) {
+> >>>> +            name =3D strsep(&str, ",");
+> >>>> +            if (!name)
+> >>>> +                    break;
+> >>>> +
+> >>>> +            /* Replace '=3D' with 0 and make value point past '=3D'=
+ or NULL */
+> >>>> +            value =3D name;
+> >>>> +            strsep(&value, "=3D");
+> >>>> +            if (!value) {
+> >>>> +                    ts_cmdline_props[i] =3D PROPERTY_ENTRY_BOOL(nam=
+e);
+> >>>> +            } else if (isdigit(value[0])) {
+> >>>> +                    ret =3D kstrtou32(value, 10, &u32val);
+> >>>> +                    if (ret)
+> >>>> +                            return ret;
+> >>>> +
+> >>>> +                    ts_cmdline_props[i] =3D PROPERTY_ENTRY_U32(name=
+, u32val);
+> >>>> +            } else {
+> >>>> +                    ts_cmdline_props[i] =3D PROPERTY_ENTRY_STRING(n=
+ame, value);
+> >>>> +            }
+> >>>> +    }
+> >>>
+> >>> This reminds me a lot from the next_arg(), can we not reinvent a whee=
+l?
+> >>
+> >> next_arg is meant for parsing different arguments on the kernel cmdlin=
+e
+> >> split by spaces. It has space as separator hardcoded so it cannot be
+> >> used here.
+> >
+> > I believe it's not the first time I hear such an excuse for
+> > duplicating Yet Another (Same) Parser.
+> > If you think you really need another separator, we may patch
+> > next_arg() or add next_arg_any(is_separator_fn *fn) and make
+> > next_arg() to be a wrapper of the other one.
+>
+> The kernel already has a generic parser for most things in the form of
+> include/linux/parser.h but that will not work here since that assumes
+> a list of fixed keywords while in this case I want to allow any keyword
+> and change it into a device-property with that name.
 
--- 
- i.
+I know about that and that's why I haven't suggested it.
 
+> Also the actual splitting into key=3Dvalue code here is maybe 5 lines,
+> the whole patch itself is not that big and most of the parsing is
+> figuring out if value represents a bool, uint or string.
+
+Yeah, 5 strings here, 5 bugs there and duplicating all over in the
+kernel in zillions copies. This is not good. We should not duplicate
+things, we should deduplicate them. And as I said, your excuse is
+being repeated not the first time. This is also not good.
+
+> And the kind of refactoring of next_arg() you are asking for here
+> is way out of scope,
+
+Of course, of course, but why introduce Yet Another Parser to begin with?
+
+> so sorry but I don't plan to change this part
+> of the patch.
+
+This is not good.
+But I have no power to stop it, while being very sad about this attitude.
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
