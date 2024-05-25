@@ -1,33 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1553F9F8;
-	Sat, 25 May 2024 17:01:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FAB3A29F
+	for <platform-driver-x86@vger.kernel.org>; Sat, 25 May 2024 17:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716656484; cv=none; b=cZ6pIU5TrwQ8JcGEfkgcxO7K0KKM2RHxxCCdSiZzoJaGLiMgiZ0/MYDu25YG3UuQzPed3OJXpU05IDwiOdTNhkjJ7+cBpbovFTS//86oIxME6aecJm743Q75f7G+gJwdoqwmLQSw5dUes2Qc/q/+4cpESS7g6plOdOxNMZb6cEw=
+	t=1716658917; cv=none; b=iCW+K/c1vBaHJMOnHAt0W0Z2bhNI0clTTHeWleYq3OLAIo17RaZIRi5VdqdpVHcUft+VV9jQCwwhKEiDIMvs6joZN5y+l3YoKABcm82VzxIy2wiq0GhsKHDonqwz8M7GNe8VxV4IZyENRh7T076hH33/go+JBCFpBjdo2XVfH98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716656484; c=relaxed/simple;
-	bh=/XhqLlNFPdwYGW6GA2lsso7cTXnh8Mkx+G2m3EcCAHg=;
+	s=arc-20240116; t=1716658917; c=relaxed/simple;
+	bh=mCXCdTK4JqtWMdWvUjE2mj6KEBCD/n734XXHVSbPopU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b+S9grzjmHG9//BN23Q5uUxaJbLCTMQNcU6DFXu13pyGyh9GyA3Lj9wsMwngquEueQn/lI651k7tZD6yfOXgrNn86PSPf2sywdv1cBaksRP3hNjNtVBrpr2fNewrqEASL/7r0+iAZpeGFs+K9qIuOZ6HYIA0kb47zqiAbZuVbkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fmqWjl/I; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=sxbIAcA2ZnePe7wc0IMvL9HsR5gaivxWDOZgNWXF8rZFBAHNVyUqywT0FNJXE//FNlBBBLrSHDp+6mfyfSUtJGyliTkyIkWVoAcFFzFPSut7dAIWclRnH4/aRc1lwNcZWyjnMh/Z5VJ3F9hrkcktwKT0ZLoCzrrWxATAL16zlSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jGh7daXY; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fmqWjl/I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7717DC2BD11;
-	Sat, 25 May 2024 17:01:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716656484;
-	bh=/XhqLlNFPdwYGW6GA2lsso7cTXnh8Mkx+G2m3EcCAHg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fmqWjl/I+NtBC1KYIrkwoj3esGfEV9ItfowymhioSGC7tlq5AxS7vIdiRi8IKXYHL
-	 kYDSY5cn4fr2JrEdDNrRQTdTG81dMGJ9ECSCa4pUL4ZerKpYEXY50R7JENHpZFsJfl
-	 P98gCtz0RD+JIeZ7RW8utVc1Wq8plQFHfhSx/UISJTt92cihR+A5nBaQlfM0f7G68W
-	 7OcJPrxN7s5FAeS6qrQhnNvE17jrXAn0Gnb2N+2fDTor8dUrXUCdOWmwVP8Fo63mny
-	 MQyksepHnVIdyQ6dPCMa3OIKe/56q+HAnaz56Vw7SYoeiHmgKU1yNwAUilRzD+Uabl
-	 oKAReJOizLKrA==
-Message-ID: <bd01676e-edf2-42e2-a689-d9a89819c490@kernel.org>
-Date: Sat, 25 May 2024 19:01:18 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jGh7daXY"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-42108739ed8so20913935e9.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 25 May 2024 10:41:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716658914; x=1717263714; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=DzAeW/gylIRl0xQo/Ch3npQg+Ema0K/2Ppl6GS4tzjs=;
+        b=jGh7daXYu5iOSQzMc2zSCiwKDyV6m9CnJvS8D7IjJjDwX4qLWEpKpp25W6II48XW/m
+         ss9AjWZr3VfcSXCsWXMOV34LKh693p5DendMISJWqt3TCH64ykJ6nh/I68kWgYlXl0Ca
+         F8g9xv5E2Wevt91d0Q91vK8NNbHtKO/428bkb/nD8Kz84z784KZkd4UQJePcyONyo19d
+         6bz9LgZSJmmy/iMonymHuKiGxiTdk2VcXtcvT9qrF2cOkRNv1e44/HPF6KS1ek2EEntB
+         txTavULKJgeH53kyfh0Vo8mNhBzv4Fo6SGr/GurhOrF+x4LCrPAzTiJdPtyp1KWKm4QE
+         lpOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716658914; x=1717263714;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DzAeW/gylIRl0xQo/Ch3npQg+Ema0K/2Ppl6GS4tzjs=;
+        b=KO/UaRqX6erixccfCHTsKQ11lHnqfvOWpD/lh/l8xUemaWPA1LH4i26Rr3+TNJtEMF
+         PAQ0GRAaj/WoMa0cWILaWitsETSt0CJ3iI0OkaEojRqcKgjxYhTMBpm/wgyn0Lnedhky
+         i9fLmp31FYatwpU7N+hhnbunZjUR+UsHUXFvm8WLhg5lgcx5XtlUA8KmWeCoDnDeN1rA
+         /+345Rbg30tXdFlzlKaD/Ki8oRTdzeJkbOkDwhiLUV7Q565jX8HsZVAA1QpwHjx78M0u
+         lVX2Dz7dfuGMxm6gBXnlmESb1wHnZVGx6UH9wn8vYTptXZZy+QPEJkxkcJ81jz3pUwli
+         JHxw==
+X-Forwarded-Encrypted: i=1; AJvYcCVGle8l1PC9XQKslVq6ob1P0rgAO+0+fyfrhhE/Db8K3V+0jiHhRhV+58RJiZt/xjpUYbbGOcXESDt9+s3GD2xmsoZXpQyFSDUxSV1FL/rYcy4DUA==
+X-Gm-Message-State: AOJu0YxZUpQX4FGgwg9zFmrgUGJqGBOk/zXsjBgcpPnEI9ZJZVTv05Sp
+	r13kK8Dq4OErsKH2pnzvOgz/aZwogBv7Y4hPgnYbH9jkxKQqrgBo
+X-Google-Smtp-Source: AGHT+IFYUKitWojCHNZfdu+6cZlHsnxze8zanfSJilBllTRM4zNc9cl7JTK9EbGhqZIBFYHNe47U8Q==
+X-Received: by 2002:a05:600c:68cf:b0:419:a3f:f4f6 with SMTP id 5b1f17b1804b1-42108a3a6c0mr56529465e9.8.1716658914423;
+        Sat, 25 May 2024 10:41:54 -0700 (PDT)
+Received: from [10.156.116.203] ([213.55.225.157])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-42100fad7ecsm87374345e9.36.2024.05.25.10.41.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 May 2024 10:41:53 -0700 (PDT)
+Message-ID: <f6d5675c-7215-45a1-a99b-f811ca0c4e27@gmail.com>
+Date: Sat, 25 May 2024 19:41:52 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,108 +62,81 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] dt-bindings: input: document Novatek NVT
- touchscreen controller
-To: joelselvaraj.oss@gmail.com, Hans de Goede <hdegoede@redhat.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20240524-nvt-ts-devicetree-regulator-support-v2-0-b74947038c44@gmail.com>
- <20240524-nvt-ts-devicetree-regulator-support-v2-2-b74947038c44@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240524-nvt-ts-devicetree-regulator-support-v2-2-b74947038c44@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add support for setting
+ touchscreen properties from cmdline
+To: Andy Shevchenko <andy.shevchenko@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org
+References: <20240522164807.28936-1-hdegoede@redhat.com>
+ <Zk4pC0dkmTEcS_qA@smile.fi.intel.com>
+ <4c14d61f-dc0c-4495-a74c-fa0cef4362d5@redhat.com>
+ <CAHp75Vex78gE+e8kaUvvNjVUtkv-3GGgcMFZ3tFFqK49WRQDrA@mail.gmail.com>
+ <376bd875-e4ab-403d-9265-e6833ccb31d9@redhat.com>
+ <CAHp75VdTJbZru5M4d81dU2Wbu4=G26OAgVksFF8H8vRBWHeDfw@mail.gmail.com>
+Content-Language: en-US, de-CH, fr-CH
+From: Gregor Riepl <onitake@gmail.com>
+Autocrypt: addr=onitake@gmail.com; keydata=
+ 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
+ DMcsQA==
+In-Reply-To: <CAHp75VdTJbZru5M4d81dU2Wbu4=G26OAgVksFF8H8vRBWHeDfw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 24/05/2024 16:39, Joel Selvaraj via B4 Relay wrote:
-> From: Joel Selvaraj <joelselvaraj.oss@gmail.com>
+>> And the kind of refactoring of next_arg() you are asking for here
+>> is way out of scope,
 > 
-> Document the Novatek NVT touchscreen controller present in devices like
-> the Xiaomi Poco F1 [1]. Also, include the devictree binding file in the
-
-Just name the DTS, no need for external link.
-
-> MAINTAINERS file.
+> Of course, of course, but why introduce Yet Another Parser to begin with?
 > 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-tianma.dts?h=v6.9
+>> so sorry but I don't plan to change this part
+>> of the patch.
 > 
+> This is not good.
+> But I have no power to stop it, while being very sad about this attitude.
 
+Andy, I do agree with you, but what would you suggest we can do about the situation?
 
-> +
-> +  vcc-supply: true
-> +  iovcc-supply: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        touchscreen@1 {
-> +          compatible = "novatek,nt36672a-ts";
-
-Messed indentation. Use 4 spaces for example indentation.
-
-With above fixes:
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-
-Best regards,
-Krzysztof
+Write a generic parser that everyone should use from now on, and then migrate all usage to this parser?
 
