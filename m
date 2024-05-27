@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A4E13A25E;
-	Mon, 27 May 2024 15:51:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A6513AD30;
+	Mon, 27 May 2024 15:52:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716825110; cv=none; b=hIRFPhOopTqt1uZ/GUy4UIcEuzM4lLoxgzjqyyXVfm9DZiWYMPPWMqmFKsiVty4Gp1JABGg1chId0QNsqWWnOQ+SAF0xjTh2I1F2eAvS+KJcfVUdXpFkPEi5BOMtoEP03lpQQpDJ3HQXv/XHA7kd550eLZkbtG2BKaXBaHTNz50=
+	t=1716825139; cv=none; b=fnUirEOLrD7K/FdWjx7WilRL5xEjXpXeq0XhTY5bPabAltHFquMoP7EXf7G6ygTRGgKTwMXadFKs8tfDulNjrHpziAXoj+NPQLx/KRPirOxbRPdgKdxH5+PEvtiibYVMbiLh9KmvQHNppfy5sS7oBhnO2KQ6aOK8ffoAYsJ2pU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716825110; c=relaxed/simple;
-	bh=p8iA8ABT9zdtLAmLSCybmQKTdVYMmkBazzCW/exp4Ik=;
+	s=arc-20240116; t=1716825139; c=relaxed/simple;
+	bh=GL/YyZxx6BMIEvrWqNV8jDJEZ68VHY39gC1UA0WX4rY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AFUbRz6LA117rwuUXpYnc/PdKucFi+1b025RR4/QM929RgAOWCf35vcwXxvAxvoNU7dMGf2xz5ST1NDtdWP8OaKtEFcu5puSLCV0ivELZ0Scjj+AqkgJvH+8yocUoimrNHbt7BbcFrtSbJbAOYzNFJ+Xqc0eiAsYNtYWQsj871k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZDjSaKo; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=iyN0l2drrdwlcpY2RHVjBUgEoy1cdKRuVy+JBylzY9IGzUR7cRdYhK11dEZVGIZ8CAcbNcI8ZCSJRU/0dVnnospud5SxNBnbpnL1oIqaBPs8+CkYspefQSMHClN2RIq3LNuNjOR9TPWXWfUb5uO6H4hSI+WegH951mqTEh4EzG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=czkf/IJR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZDjSaKo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEB33C4AF07;
-	Mon, 27 May 2024 15:51:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="czkf/IJR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4607C2BBFC;
+	Mon, 27 May 2024 15:52:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716825109;
-	bh=p8iA8ABT9zdtLAmLSCybmQKTdVYMmkBazzCW/exp4Ik=;
+	s=k20201202; t=1716825138;
+	bh=GL/YyZxx6BMIEvrWqNV8jDJEZ68VHY39gC1UA0WX4rY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QZDjSaKo6nhxpwhUZ9sKXKAIsfRSn4ktazLzpVpG+HAOSXwYuY3GvO9SH0HiG7s6a
-	 A8qs7JOQKmrXqMWrR6nuDtO39VISEGEoP4R4JwYrSgT7vrq42ovwbUCRSkk4LaOo5q
-	 fk5hZQKeFpwLY9hYhlEYKNJUXyrspk5YJQdmpvH8dEToeFn3mmd0umkjhFSSveqXHn
-	 4uGbU2gtSmvMlppdpWq+AYYT02RuAYBm1v7LtbThHgNA+ix2BFYe0v85FA+miP7Y5e
-	 s8ojI8weHP897ebypgtNITkHeLANPGGdRf5qzdIjBu1p6+WqroGK4ne1lEG25QV34S
-	 c+6xxorz9NBaA==
+	b=czkf/IJRDpsCPPU/JdP5T2Yhk+ccJzHE6VVa4nxD1IrdVhDaIxgKGNvR0M8xEoV/0
+	 91HWqNG414cgloDgkN7PqS+B9ix8Z1Cny61NRp44CZK73FTp8z0tq5cfWpdhpzv8yP
+	 mBHePMe1WzopF3ZhsEIy1DZtsMMiRCkSvPnM0RvA9Wc/CLQUVwv4Y06hs+yni0mKY7
+	 u6t86EC7KbyLJ1ZsVP8iwUooTaUCnQnbjW2sG8jPHxqUhLqHTZUOqxy5ECmZCEIgvm
+	 PVLvgveOje0EbUvgI0a8Ae2tP8GWT/U7kExl9Fb35cNz3iffbHBiXfm9VDNy6k8gry
+	 yXVosO/ZyMwyg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arvid Norlander <lkml@vorpal.se>,
-	Hans de Goede <hdegoede@redhat.com>,
+Cc: Hans de Goede <hdegoede@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	coproscefalo@gmail.com,
 	ilpo.jarvinen@linux.intel.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.9 05/23] platform/x86: toshiba_acpi: Add quirk for buttons on Z830
-Date: Mon, 27 May 2024 11:50:06 -0400
-Message-ID: <20240527155123.3863983-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.9 13/23] platform/x86: x86-android-tablets: Unregister devices in reverse order
+Date: Mon, 27 May 2024 11:50:14 -0400
+Message-ID: <20240527155123.3863983-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240527155123.3863983-1-sashal@kernel.org>
 References: <20240527155123.3863983-1-sashal@kernel.org>
@@ -50,139 +48,98 @@ MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.9.2
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Arvid Norlander <lkml@vorpal.se>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 23f1d8b47d125dcd8c1ec62a91164e6bc5d691d0 ]
+[ Upstream commit 3de0f2627ef849735f155c1818247f58404dddfe ]
 
-The Z830 has some buttons that will only work properly as "quickstart"
-buttons. To enable them in that mode, a value between 1 and 7 must be
-used for HCI_HOTKEY_EVENT. Windows uses 0x5 on this laptop so use that for
-maximum predictability and compatibility.
+Not all subsystems support a device getting removed while there are
+still consumers of the device with a reference to the device.
 
-As there is not yet a known way of auto detection, this patch uses a DMI
-quirk table. A module parameter is exposed to allow setting this on other
-models for testing.
+One example of this is the regulator subsystem. If a regulator gets
+unregistered while there are still drivers holding a reference
+a WARN() at drivers/regulator/core.c:5829 triggers, e.g.:
 
-Signed-off-by: Arvid Norlander <lkml@vorpal.se>
-Tested-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20240131111641.4418-3-W_Armin@gmx.de
+ WARNING: CPU: 1 PID: 1587 at drivers/regulator/core.c:5829 regulator_unregister
+ Hardware name: Intel Corp. VALLEYVIEW C0 PLATFORM/BYT-T FFD8, BIOS BLADE_21.X64.0005.R00.1504101516 FFD8_X64_R_2015_04_10_1516 04/10/2015
+ RIP: 0010:regulator_unregister
+ Call Trace:
+  <TASK>
+  regulator_unregister
+  devres_release_group
+  i2c_device_remove
+  device_release_driver_internal
+  bus_remove_device
+  device_del
+  device_unregister
+  x86_android_tablet_remove
+
+On the Lenovo Yoga Tablet 2 series the bq24190 charger chip also provides
+a 5V boost converter output for powering USB devices connected to the micro
+USB port, the bq24190-charger driver exports this as a Vbus regulator.
+
+On the 830 (8") and 1050 ("10") models this regulator is controlled by
+a platform_device and x86_android_tablet_remove() removes platform_device-s
+before i2c_clients so the consumer gets removed first.
+
+But on the 1380 (13") model there is a lc824206xa micro-USB switch
+connected over I2C and the extcon driver for that controls the regulator.
+The bq24190 i2c-client *must* be registered first, because that creates
+the regulator with the lc824206xa listed as its consumer. If the regulator
+has not been registered yet the lc824206xa driver will end up getting
+a dummy regulator.
+
+Since in this case both the regulator provider and consumer are I2C
+devices, the only way to ensure that the consumer is unregistered first
+is to unregister the I2C devices in reverse order of in which they were
+created.
+
+For consistency and to avoid similar problems in the future change
+x86_android_tablet_remove() to unregister all device types in reverse
+order.
+
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20240406125058.13624-1-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/toshiba_acpi.c | 36 ++++++++++++++++++++++++++---
- 1 file changed, 33 insertions(+), 3 deletions(-)
+ drivers/platform/x86/x86-android-tablets/core.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 77244c9aa60d2..16e941449b144 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -57,6 +57,11 @@ module_param(turn_on_panel_on_resume, int, 0644);
- MODULE_PARM_DESC(turn_on_panel_on_resume,
- 	"Call HCI_PANEL_POWER_ON on resume (-1 = auto, 0 = no, 1 = yes");
+diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/platform/x86/x86-android-tablets/core.c
+index a3415f1c0b5f8..6559bb4ea7305 100644
+--- a/drivers/platform/x86/x86-android-tablets/core.c
++++ b/drivers/platform/x86/x86-android-tablets/core.c
+@@ -278,25 +278,25 @@ static void x86_android_tablet_remove(struct platform_device *pdev)
+ {
+ 	int i;
  
-+static int hci_hotkey_quickstart = -1;
-+module_param(hci_hotkey_quickstart, int, 0644);
-+MODULE_PARM_DESC(hci_hotkey_quickstart,
-+		 "Call HCI_HOTKEY_EVENT with value 0x5 for quickstart button support (-1 = auto, 0 = no, 1 = yes");
-+
- #define TOSHIBA_WMI_EVENT_GUID "59142400-C6A3-40FA-BADB-8A2652834100"
- 
- /* Scan code for Fn key on TOS1900 models */
-@@ -136,6 +141,7 @@ MODULE_PARM_DESC(turn_on_panel_on_resume,
- #define HCI_ACCEL_MASK			0x7fff
- #define HCI_ACCEL_DIRECTION_MASK	0x8000
- #define HCI_HOTKEY_DISABLE		0x0b
-+#define HCI_HOTKEY_ENABLE_QUICKSTART	0x05
- #define HCI_HOTKEY_ENABLE		0x09
- #define HCI_HOTKEY_SPECIAL_FUNCTIONS	0x10
- #define HCI_LCD_BRIGHTNESS_BITS		3
-@@ -2731,10 +2737,15 @@ static int toshiba_acpi_enable_hotkeys(struct toshiba_acpi_dev *dev)
- 		return -ENODEV;
- 
- 	/*
-+	 * Enable quickstart buttons if supported.
-+	 *
- 	 * Enable the "Special Functions" mode only if they are
- 	 * supported and if they are activated.
- 	 */
--	if (dev->kbd_function_keys_supported && dev->special_functions)
-+	if (hci_hotkey_quickstart)
-+		result = hci_write(dev, HCI_HOTKEY_EVENT,
-+				   HCI_HOTKEY_ENABLE_QUICKSTART);
-+	else if (dev->kbd_function_keys_supported && dev->special_functions)
- 		result = hci_write(dev, HCI_HOTKEY_EVENT,
- 				   HCI_HOTKEY_SPECIAL_FUNCTIONS);
- 	else
-@@ -3258,7 +3269,14 @@ static const char *find_hci_method(acpi_handle handle)
-  * works. toshiba_acpi_resume() uses HCI_PANEL_POWER_ON to avoid changing
-  * the configured brightness level.
-  */
--static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] = {
-+#define QUIRK_TURN_ON_PANEL_ON_RESUME		BIT(0)
-+/*
-+ * Some Toshibas use "quickstart" keys. On these, HCI_HOTKEY_EVENT must use
-+ * the value HCI_HOTKEY_ENABLE_QUICKSTART.
-+ */
-+#define QUIRK_HCI_HOTKEY_QUICKSTART		BIT(1)
-+
-+static const struct dmi_system_id toshiba_dmi_quirks[] = {
- 	{
- 	 /* Toshiba Portégé R700 */
- 	 /* https://bugzilla.kernel.org/show_bug.cgi?id=21012 */
-@@ -3266,6 +3284,7 @@ static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] = {
- 		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
- 		DMI_MATCH(DMI_PRODUCT_NAME, "PORTEGE R700"),
- 		},
-+	 .driver_data = (void *)QUIRK_TURN_ON_PANEL_ON_RESUME,
- 	},
- 	{
- 	 /* Toshiba Satellite/Portégé R830 */
-@@ -3275,6 +3294,7 @@ static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] = {
- 		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
- 		DMI_MATCH(DMI_PRODUCT_NAME, "R830"),
- 		},
-+	 .driver_data = (void *)QUIRK_TURN_ON_PANEL_ON_RESUME,
- 	},
- 	{
- 	 /* Toshiba Satellite/Portégé Z830 */
-@@ -3282,6 +3302,7 @@ static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] = {
- 		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
- 		DMI_MATCH(DMI_PRODUCT_NAME, "Z830"),
- 		},
-+	 .driver_data = (void *)(QUIRK_TURN_ON_PANEL_ON_RESUME | QUIRK_HCI_HOTKEY_QUICKSTART),
- 	},
- };
- 
-@@ -3290,6 +3311,8 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 	struct toshiba_acpi_dev *dev;
- 	const char *hci_method;
- 	u32 dummy;
-+	const struct dmi_system_id *dmi_id;
-+	long quirks = 0;
- 	int ret = 0;
- 
- 	if (toshiba_acpi)
-@@ -3442,8 +3465,15 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+-	for (i = 0; i < serdev_count; i++) {
++	for (i = serdev_count - 1; i >= 0; i--) {
+ 		if (serdevs[i])
+ 			serdev_device_remove(serdevs[i]);
  	}
- #endif
  
-+	dmi_id = dmi_first_match(toshiba_dmi_quirks);
-+	if (dmi_id)
-+		quirks = (long)dmi_id->driver_data;
-+
- 	if (turn_on_panel_on_resume == -1)
--		turn_on_panel_on_resume = dmi_check_system(turn_on_panel_on_resume_dmi_ids);
-+		turn_on_panel_on_resume = !!(quirks & QUIRK_TURN_ON_PANEL_ON_RESUME);
-+
-+	if (hci_hotkey_quickstart == -1)
-+		hci_hotkey_quickstart = !!(quirks & QUIRK_HCI_HOTKEY_QUICKSTART);
+ 	kfree(serdevs);
  
- 	toshiba_wwan_available(dev);
- 	if (dev->wwan_supported)
+-	for (i = 0; i < pdev_count; i++)
++	for (i = pdev_count - 1; i >= 0; i--)
+ 		platform_device_unregister(pdevs[i]);
+ 
+ 	kfree(pdevs);
+ 	kfree(buttons);
+ 
+-	for (i = 0; i < spi_dev_count; i++)
++	for (i = spi_dev_count - 1; i >= 0; i--)
+ 		spi_unregister_device(spi_devs[i]);
+ 
+ 	kfree(spi_devs);
+ 
+-	for (i = 0; i < i2c_client_count; i++)
++	for (i = i2c_client_count - 1; i >= 0; i--)
+ 		i2c_unregister_device(i2c_clients[i]);
+ 
+ 	kfree(i2c_clients);
 -- 
 2.43.0
 
