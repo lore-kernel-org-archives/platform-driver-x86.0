@@ -1,274 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C6826AFA;
-	Mon, 27 May 2024 09:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FCF2232A
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 09:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716802803; cv=none; b=ggUoYlkuvAEXV6EI8Ozo1REew4MtACr5K1bNbH6xSpLU+X0x8c33yujjTmnjZZ3tDiXElxiAu/Acxzqct6gxKAc5goVifFy1h8FTqebXQvqokzwvGHXJwWUFRn45wqqPOPuxtJzEGflJ93wt/28yj1JpFunC8LRsOyQDbI+lECw=
+	t=1716803106; cv=none; b=EAIPKHTFINNMAeOybK3LU2cdjscR3dxyxyewyVFM0BPB0rGrg2E+2MmTvqeW9QYbAuTVLRs75lfWxEwYoAbFEtPQMN4BLUphI3UfdaK95ykfa1s+WzjASbJ4SSy4GWlT5hCmJXzBLUBUmYqjJvK/3YZZmWYY0bKEG06qJiW4sj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716802803; c=relaxed/simple;
-	bh=HnVmm+698RUzmkUl4MnUgvQ39GhxmP5FLl9/9HZ7s/4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=XVaHXF2QfHhduVEkQwiVYPqM8LW4b/+/t2aTSTD/TENm1fai+ZkziUAy+oy/TANQxEsyyZmr/mE19RWF9W6pztfE5uvW+giyTtbmLTbh4eZpGidTR64tBHaI7pbmfrNmYAE3jbgbcWhFcWYxSSio/5Uukos/hNbORCft4J8nr1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QA1B3iuM; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716803106; c=relaxed/simple;
+	bh=ajIlVARNWFBS45rgoX8SBynNBGEBYEQIChuIB2GNy3I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S8QnSzSX3QbECJcjLcKTobjl55MrC0WVF5kUCKSGf+BauHyOBZ7CwTLiMXMzq4CtPjjkT3TOOqeUAuZGUCHlP2LR/WSWy2HwUyIG55irobkh8tozp4wBA3krvcAx1gyP05NecebHd3G9G8Hr9fyVQIcNfVA6q24pxHp7fE4WM+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fvY+JR2H; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QA1B3iuM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716802800; x=1748338800;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=HnVmm+698RUzmkUl4MnUgvQ39GhxmP5FLl9/9HZ7s/4=;
-  b=QA1B3iuM6oTpYFqzkR8XPHKZJTNy1E9KCdg9h2uqLIsuQsimbq/EmUym
-   beDfR0Dp8Zx2tX4LlEw1+OtV8dTsHEbuU0ELWh5sJ69fyIeiHzmyeD9KC
-   oh5H55jGauwNxdjJt7cFqaBB3uzdUlvkoEyltR8WvPth7mIF0fr9ePFk2
-   AdMU2bdVZ3PtMur01zQsq3QLopLMPKrcGpY+ZGZsgCwExOvOFOypvKJf2
-   /jyFZjms38d3dOgZ0ughpvsBJWHL7WtHm839tErl4ROTts8MF4eiuOWB7
-   8XlgwlmIzIy8Us2hl4J0+NP+qKfdmym/dxtSocN4I/tgl6STaL7Z/e9sY
-   w==;
-X-CSE-ConnectionGUID: k8jmGt2ZQGKQAuJOEE0MTQ==
-X-CSE-MsgGUID: ijG2ks9GSoi5A/Gf/ECLRQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11084"; a="23676539"
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="23676539"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 02:39:59 -0700
-X-CSE-ConnectionGUID: +BLEuM0CSn6AYBs8YehL4g==
-X-CSE-MsgGUID: A5dAA6iXSfSxBtmb2GpLZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="34792827"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.138])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 02:39:55 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 27 May 2024 12:39:51 +0300 (EEST)
-To: Lyndon Sanche <lsanche@lyndeno.ca>
-cc: mario.limonciello@amd.com, pali@kernel.org, W_Armin@gmx.de, 
-    srinivas.pandruvada@linux.intel.com, lkp@intel.com, 
-    Hans de Goede <hdegoede@redhat.com>, Yijun.Shen@dell.com, 
-    Matthew Garrett <mjg59@srcf.ucam.org>, 
-    Vegard Nossum <vegard.nossum@oracle.com>, Jonathan Corbet <corbet@lwn.net>, 
-    Heiner Kallweit <hkallweit1@gmail.com>, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    Dell.Client.Kernel@dell.com
-Subject: Re: [PATCH v7 3/3] platform/x86: dell-pc: Implement
- platform_profile
-In-Reply-To: <20240517224323.10045-4-lsanche@lyndeno.ca>
-Message-ID: <c971cfae-e7d5-fbde-f77b-1a936c6e1ee7@linux.intel.com>
-References: <20240425172758.67831-1-lsanche@lyndeno.ca> <20240517224323.10045-1-lsanche@lyndeno.ca> <20240517224323.10045-4-lsanche@lyndeno.ca>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fvY+JR2H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716803103;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WhjE/S57Z+nhCN0PTums6H3VahAvTgzu5AGhzz61ShY=;
+	b=fvY+JR2HieBDG9xEeVT8Cv55Q7uTZ3w7L8Qgf+WNXY0uPtxZvwL30r6ivrr90AVA6LM1lo
+	gpMfE3pPOPWdp0qXSiOokPiTFSCliAVxsBCuhPZTfygiIh7ImAjpiEumja7RJhSa8dmCMx
+	S25r/h9IjTXoD3ghw/zNMY2s98q70pk=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-687-TvYG4oK9Poq5mvK39L-JkQ-1; Mon, 27 May 2024 05:45:00 -0400
+X-MC-Unique: TvYG4oK9Poq5mvK39L-JkQ-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5785fc97facso1547692a12.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 02:44:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716803099; x=1717407899;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WhjE/S57Z+nhCN0PTums6H3VahAvTgzu5AGhzz61ShY=;
+        b=bSaO9HahHLffJiyDW04RQ9HtNv0maIk55nzs/ULB6eGEQuG+/pGSb/yKddKao7KdpS
+         Ee6QdX9Mib7myd9HUYaRVQNWBSepUcoBpAAlWd5NpamGaYiGWmPvpGkn5CJyNe/dDCme
+         XbRlHfsgvhkBsGxnOYYVMuvdUGUjURcjc+7ZNH1dAEWburDdtDn/XCWSJ5j+NeOn2T+q
+         SPGR0PSSlFbZhSattIoCzsYM4FN6YpswOiKvRuTKgTUfiaU/ZDpWrOMNe0CETGaSBOLs
+         msIfCWWoFHtd6OCXQmrm1HzWum6HqjwF+bk+ifahi7ijxdBu7+RMf/1SgIofuh72u3y9
+         tNfQ==
+X-Gm-Message-State: AOJu0YwoJB0BHgEhkG1zcju4VM9Iim18X8IcPQKK38SEP4DKRfiOOqse
+	BCYK00ZDqI5QNEO64eaTv3LWIikevEbcAkL+URgyWk7z7AdHOAxNaVuCIzL9K05R+zMeAg/VhAX
+	pFVvaGuKJl1IkTno9ohl6lKzlocZrS/j79ByB0TgryZqRZIBY40Nu8n4jtMEsD6AsAS9dflM=
+X-Received: by 2002:a50:d498:0:b0:578:6c3e:3b8f with SMTP id 4fb4d7f45d1cf-5786c3e4351mr3550648a12.2.1716803098936;
+        Mon, 27 May 2024 02:44:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFrA2Chz1TPbwyve6XSpKizwgKD3vnKanmWXLbkys51kGEJAX4y0bd9l8Y90ySjtlGPqkjSDQ==
+X-Received: by 2002:a50:d498:0:b0:578:6c3e:3b8f with SMTP id 4fb4d7f45d1cf-5786c3e4351mr3550633a12.2.1716803098573;
+        Mon, 27 May 2024 02:44:58 -0700 (PDT)
+Received: from [10.40.98.157] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5785238dbd7sm5563312a12.32.2024.05.27.02.44.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 May 2024 02:44:58 -0700 (PDT)
+Message-ID: <87d6550c-e66a-4787-8351-df0e840d7936@redhat.com>
+Date: Mon, 27 May 2024 11:44:57 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] platform/x86: touchscreen_dmi: Add support for setting
+ touchscreen properties from cmdline
+To: Randy Dunlap <rdunlap@infradead.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Andy Shevchenko <andy@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org, Gregor Riepl <onitake@gmail.com>
+References: <20240523143601.47555-1-hdegoede@redhat.com>
+ <613dfc89-a849-4ae4-9396-4eb631c96fb4@infradead.org>
+Content-Language: en-US
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <613dfc89-a849-4ae4-9396-4eb631c96fb4@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 17 May 2024, Lyndon Sanche wrote:
+Hi,
 
-> Some Dell laptops support configuration of preset fan modes through
-> smbios tables.
+On 5/23/24 8:58 PM, Randy Dunlap wrote:
+> Hi Hans,
 > 
-> If the platform supports these fan modes, set up platform_profile to
-> change these modes. If not supported, skip enabling platform_profile.
+> On 5/23/24 7:36 AM, Hans de Goede wrote:
+>>
+>> Cc: Gregor Riepl <onitake@gmail.com>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> Changes in v2:
+>> - Refactor ts_data / ts_data_dmi handling a bit (addressing Andy's review)
+>> - Accept hex/octal numbers (addressing Andy's review)
+>> - Fix ts_parse_props return value (addressing Randy's review)
+>> - Use ':' as separator instead of ',', ',' is used in "vendor,option" style
+>>   property names, e.g. "silead,home-button"
+>> - pr_warn() on invalid syntax since init/main.c does not do this
+>> ---
+>> Note assuming this gets favourable review(s) in a reasonable timeframe
+>> I'm thinking about maybe even adding this to 6.10 as a fix since users
+>> not being able to easily test Silead touchscreen settings has been an
+>> issue for quite a while now. Without the cmdline option being used this
+>> is a no-op so the chance of this causing regressions is close to 0.
+>> ---
+>>  .../admin-guide/kernel-parameters.txt         | 22 +++++
+>>  drivers/platform/x86/touchscreen_dmi.c        | 81 ++++++++++++++++++-
+>>  2 files changed, 99 insertions(+), 4 deletions(-)
 > 
-> Signed-off-by: Lyndon Sanche <lsanche@lyndeno.ca>
-> ---
->  MAINTAINERS                                  |   6 +
->  drivers/platform/x86/dell/Kconfig            |  13 +
->  drivers/platform/x86/dell/Makefile           |   1 +
->  drivers/platform/x86/dell/dell-pc.c          | 310 +++++++++++++++++++
->  drivers/platform/x86/dell/dell-smbios-base.c |   1 +
->  drivers/platform/x86/dell/dell-smbios.h      |   1 +
->  6 files changed, 332 insertions(+)
->  create mode 100644 drivers/platform/x86/dell/dell-pc.c
+> The __setup() function return value and the documentation look good (well, a couple of nits
+> in the documentation, but no big deal).
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ebf03f5f0619..69c582b72a08 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5961,6 +5961,12 @@ F:	Documentation/ABI/obsolete/procfs-i8k
->  F:	drivers/hwmon/dell-smm-hwmon.c
->  F:	include/uapi/linux/i8k.h
->  
-> +DELL PC DRIVER
-> +M:	Lyndon Sanche <lsanche@lyndeno.ca>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/platform/x86/dell/dell-pc.c
-> +
->  DELL REMOTE BIOS UPDATE DRIVER
->  M:	Stuart Hayes <stuart.w.hayes@gmail.com>
->  L:	platform-driver-x86@vger.kernel.org
-> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
-> index bd9f445974cc..0732850a3dd6 100644
-> --- a/drivers/platform/x86/dell/Kconfig
-> +++ b/drivers/platform/x86/dell/Kconfig
-> @@ -91,6 +91,19 @@ config DELL_RBTN
->  	  To compile this driver as a module, choose M here: the module will
->  	  be called dell-rbtn.
->  
-> +config DELL_PC
-> +	tristate "Dell PC Extras"
-> +	default m
-> +	depends on ACPI
-> +	depends on DMI
-> +	depends on DELL_SMBIOS
-> +	select ACPI_PLATFORM_PROFILE
-> +	help
-> +	This driver adds support for controlling the fan modes via platform_profile
-> +	on supported Dell systems regardless of formfactor.
-> +	Module will simply do nothing if thermal management commands are not
-> +	supported.
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index 396137ee018d..7ac315a7c0c7 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -1899,6 +1899,28 @@
+>>  				Format:
+>>  				<bus_id>,<clkrate>
+>>  
+> 
+> I would use:
+> 
+>> +	i2c_touchscreen_props= [HW,ACPI,X86]
+>> +			Set device-properties for ACPI enumerated I2C attached
+> 
+> 			                          ACPI-enumerated I2C-attached
+
+Thank you, I have squashed in this suggestion while merging the patch into
+my review-hans branch.
+
+Regards,
+
+Hans
 
 
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/init.h>
-> +#include <linux/err.h>
-> +#include <linux/dmi.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/bits.h>
-> +#include <linux/platform_profile.h>
-> +#include <linux/slab.h>
-> +#include "dell-smbios.h"
+> 
+>> +			touchscreen, to e.g. fix coordinates of upside-down
+>> +			mounted touchscreens. If you need this option please
+>> +			submit a drivers/platform/x86/touchscreen_dmi.c patch
+>> +			adding a DMI quirk for this.
+>> +
+>> +			Format:
+>> +			<ACPI_HW_ID>:<prop_name>=<val>[:prop_name=val][:...]
+>> +			Where <val> is one of:
+>> +			Omit "=<val>" entirely	Set a boolean device-property
+>> +			Unsigned number		Set a u32 device-property
+>> +			Anything else		Set a string device-property
+>> +
+>> +			Examples (split over multiple lines):
+>> +			i2c_touchscreen_props=GDIX1001:touchscreen-inverted-x:
+>> +			touchscreen-inverted-y
+>> +
+>> +			i2c_touchscreen_props=MSSL1680:touchscreen-size-x=1920:
+>> +			touchscreen-size-y=1080:touchscreen-inverted-y:
+>> +			firmware-name=gsl1680-vendor-model.fw:silead,home-button
+>> +
+>>  	i8042.debug	[HW] Toggle i8042 debug mode
+>>  	i8042.unmask_kbd_data
+>>  			[HW] Enable printing of interrupt data from the KBD port
+> 
+> Thanks.
 
-Add empty line between <> and "" includes.
-
-> +static const struct dmi_system_id dell_device_table[] __initconst = {
-> +	{
-> +		.ident = "Dell Inc.",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +		},
-> +	},
-> +	{
-> +		.ident = "Dell Computer Corporation",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Computer Corporation"),
-> +		},
-> +	},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(dmi, dell_device_table);
-
-> +enum thermal_mode_bits {
-> +	DELL_BALANCED = BIT(0),
-> +	DELL_COOL_BOTTOM = BIT(1),
-> +	DELL_QUIET = BIT(2),
-> +	DELL_PERFORMANCE = BIT(3),
-
-A few nits still to address.
-
-Can you please align these so that the values align (IIRC, I asked this 
-earlier but perhaps my request was too unclear):
-
-	DELL_XX			= BIT(X),
-	DELL_YYYYYYYYY		= BIT(Y),
-
-> +static int thermal_get_supported_modes(int *supported_bits)
-> +{
-> +	struct calling_interface_buffer buffer;
-> +	int ret;
-> +
-> +	dell_fill_request(&buffer, 0x0, 0, 0, 0);
-> +	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAGEMENT);
-> +	if (ret) {
-> +		/* Thermal function not supported */
-> +		if (ret == -ENXIO) {
-> +			*supported_bits = 0;
-> +			return 0;
-> +		} else {
-
-Drop else because the previous block ends into return.
-
-> +			return ret;
-> +		}
-> +	}
-
-Remove the outer if (ret) block and put the inner ones directly on the 
-main level as two if () conditions.
-
-> +	*supported_bits = FIELD_GET(DELL_THERMAL_SUPPORTED, buffer.output[1]);
-> +	return 0;
-> +}
-> +
-> +static int thermal_get_acc_mode(int *acc_mode)
-> +{
-> +	struct calling_interface_buffer buffer;
-> +	int ret;
-> +
-> +	dell_fill_request(&buffer, 0x0, 0, 0, 0);
-> +	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAGEMENT);
-> +	if (ret)
-> +		return ret;
-> +	*acc_mode = FIELD_GET(DELL_ACC_GET_FIELD, buffer.output[3]);
-> +	return 0;
-> +}
-> +
-> +static int thermal_set_mode(enum thermal_mode_bits state)
-> +{
-> +	struct calling_interface_buffer buffer;
-> +	int ret;
-> +	int acc_mode;
-> +
-> +	ret = thermal_get_acc_mode(&acc_mode);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dell_fill_request(&buffer, 0x1, FIELD_PREP(DELL_ACC_SET_FIELD, acc_mode) | state, 0, 0);
-> +	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAGEMENT);
-> +	return ret;
-
-Return directly on the previous line.
-
-> +static int thermal_platform_profile_get(struct platform_profile_handler *pprof,
-> +					enum platform_profile_option *profile)
-> +{
-> +	int ret;
-> +
-> +	ret = thermal_get_mode();
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	switch (ret) {
-> +	case DELL_BALANCED:
-> +		*profile = PLATFORM_PROFILE_BALANCED;
-> +		break;
-> +	case DELL_PERFORMANCE:
-> +		*profile = PLATFORM_PROFILE_PERFORMANCE;
-> +		break;
-> +	case DELL_COOL_BOTTOM:
-> +		*profile = PLATFORM_PROFILE_COOL;
-> +		break;
-> +	case DELL_QUIET:
-> +		*profile = PLATFORM_PROFILE_QUIET;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int thermal_init(void)
-> +{
-> +	int ret;
-> +	int supported_modes;
-> +
-> +	/* If thermal commands not supported, exit without error */
-
-Fix grammar, you're perhaps missing "are".
-
-> +	if (!dell_smbios_class_is_supported(CLASS_INFO))
-> +		return 0;
-> +
-> +	/* If thermal modes not supported, exit without error */
-
-Ditto.
-
--- 
- i.
