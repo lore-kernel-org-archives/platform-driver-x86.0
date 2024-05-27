@@ -1,136 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14BDF16E893;
-	Mon, 27 May 2024 15:57:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3441E4BF
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 16:48:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716825476; cv=none; b=bY8Lwtgug0oCEQTCs6cGKQhiR8yq6zihxJ3+ZgQxX32RYjDzxstj/Rh9V1gIW5dqORcM4wZKIfyeUwZO6jvhUX/Y2X1FNtmOYk8ecFfJ0q0Nu80mxjOxfnkjnBk9eouw4F7lntS70SM1MHIn9sFpCb2JDOv4N2XF8tbvqLwMVrU=
+	t=1716828484; cv=none; b=nls8v8OagengClOMhwsDTx5QLivEAsOE1Mbs/+EXw3owWcCH63/qQ/i1I7Fwp+5b2pgbqnws6F75pQoxiWsephaOyJouD+BmQfypX1YQHbZl8CzhBrEdsYX/o8gC3uSCGQAEU4D8YCAAYXuvHqUSuw30cGYbzgnvqNh+OfnWj8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716825476; c=relaxed/simple;
-	bh=RXItawyunSKwgW8TbTmkLjm06IxAaMojUWhmDVD+9Iw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TTBr7V9X7fE0ziuVyX049hDHoEeGCsx3yGyXBNAivQcm66OibuzKJZ8UdC3RsjQpR2Z/zDlTLvOE3X0TLWWN68W9qLyYL4HkfKpEr3s7+8QjCKN8nWupu6QqHeDcCUW/FJAFUd/Q0GB1rbDKQ4gfyzz/4vqZ2ssFUzxoyN2hBJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sHUo5g9M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716828484; c=relaxed/simple;
+	bh=q9VngkeJi4+BVVjEnb+zkwN8oWelf9BbrzaytXMAMoU=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=V7kVYng1tmoWy8TjcT64luo4TbrbdxL6KCA7H2yvBuWQ2d9ks2GaUJmbfKzEUR3nOKrHROD1GmBYPgkGwWtqJ/uio2MIjx05IRLmfKvfGcfrZONWiHIzKNR6HnyBgPDEg9YPpUAqiIEI7j2N0nLvgQKXqWXClH7afQdjrYzTKJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ILZb6xgi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sHUo5g9M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F78EC32789;
-	Mon, 27 May 2024 15:57:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ILZb6xgi"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B756DC2BBFC
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 16:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716825475;
-	bh=RXItawyunSKwgW8TbTmkLjm06IxAaMojUWhmDVD+9Iw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sHUo5g9MP+KTBnMJMrgxOAE2AjaCWw8SmL+hV/h/DpvxUGq/mSvdDTdYks2osJMic
-	 GT54tCzAipodM/TT2+bVn0Jq9YXSRs96+Ml8p1vkJUT9qRrkLIeMVZRcLL1WKW+Yi7
-	 y3++sIlpHGqJC8gV5P/rJpu7XSpqE9YR4hYU0ZUNRYIRCjZrg73oAo5AICMXIoxwhl
-	 GC4o/AvInjxqyFNOiiHfh8LVY9sV1zjq7qWslRwNY3OsJFoGNoH0EHHuANgXI4W236
-	 43YhnfYkFnEcFtoONVD7rtpZR9F6q9i4AvkWe5g6iizo9vN7nmHrJqmI0pi4XsUUhT
-	 39gMWjG2otwyA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Ben Fradella <bfradell@netapp.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Klara Modin <klarasmodin@gmail.com>,
-	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Sasha Levin <sashal@kernel.org>,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 11/11] platform/x86: p2sb: Don't init until unassigned resources have been assigned
-Date: Mon, 27 May 2024 11:56:48 -0400
-Message-ID: <20240527155710.3865826-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240527155710.3865826-1-sashal@kernel.org>
-References: <20240527155710.3865826-1-sashal@kernel.org>
+	s=k20201202; t=1716828482;
+	bh=q9VngkeJi4+BVVjEnb+zkwN8oWelf9BbrzaytXMAMoU=;
+	h=From:To:Subject:Date:From;
+	b=ILZb6xgiRFLHHVLUdIEcjDk/VhMPyuhtJnFq8ebLsh7SDqTpLyHTzipOiUwZnrrEH
+	 uCpsNyKDZ7TUZOXxhT8WKMRNQK/jkHdrhLYfcJQyyZAHqBDHWsdWvNptk9WEmXA0Bg
+	 b8oMFmCBdB9AOPzwMtQ3lixVoMPcv+UJiwxtX2k6jVZykFOx9jncwQ8Nsl+k/fX8Xn
+	 x4D5K5cHsL0JhTcn3q3XHs0UNZhTuWxiTqQ6h8HPRT66xFi6jBsSLX8hG39toxZSPb
+	 mb2Aa/mZPOZl6rK3dZSZTAaEbV/GtdDIcVJxPqRR+p2jzPyfLb3YFOzE5vuCV17Xa7
+	 Fq8sJj26fbU+w==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id A430CC53B73; Mon, 27 May 2024 16:48:02 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218901] New: LG Gram Laptop Extra Features not working on 2024
+ models (16Z90S)
+Date: Mon, 27 May 2024 16:48:02 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: agathe@boutmy.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version
+ cf_kernel_version rep_platform op_sys bug_status bug_severity priority
+ component assigned_to reporter cf_regression
+Message-ID: <bug-218901-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.92
-Content-Transfer-Encoding: 8bit
 
-From: Ben Fradella <bfradell@netapp.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
 
-[ Upstream commit 2c6370e6607663fc5fa0fd9ed58e2e01014898c7 ]
+            Bug ID: 218901
+           Summary: LG Gram Laptop Extra Features not working on 2024
+                    models (16Z90S)
+           Product: Drivers
+           Version: 2.5
+    Kernel Version: 6.9,6.9.2,6.10-rc1
+          Hardware: All
+                OS: Linux
+            Status: NEW
+          Severity: normal
+          Priority: P3
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: agathe@boutmy.com
+        Regression: No
 
-The P2SB could get an invalid BAR from the BIOS, and that won't be fixed
-up until pcibios_assign_resources(), which is an fs_initcall().
+On a 2024 LG Gram laptop, while the year is correctly identified by lg-lapt=
+op:
+`[   12.865584] [    T528] lg_laptop: product: 16Z90S-G.AD7BF  year: 2022
+`
+some functionnalities such as battery charge limit and reader mode do not w=
+ork.
+The only error I have found so far is in dmesg: ```[   26.841164] [    T837]
+lg_laptop: Cannot get handle
+[   26.865830] [   T1167] lg_laptop: Cannot get handle
+```
+it seems to be related to ACPI as this is what is returned here:
+https://github.com/torvalds/linux/blob/master/drivers/platform/x86/lg-lapto=
+p.c#L106
+(among other emplacements in the code)
 
-- Move p2sb_fs_init() to an fs_initcall_sync(). This is still early
-  enough to avoid a race with any dependent drivers.
+Trying to read the value in
+`/sys/devices/platform/lg-laptop/battery_care_limit` or
+`/sys/class/power_supply/BAT0/charge_control_end_threshold` results in a `c=
+at:
+/sys/class/power_supply/BAT0/charge_control_end_threshold: Input/output err=
+or
+` in both cases and trying to write 80 or 100 returns the same error.
+this also happens for `reader_mode`, `fan_mode`, `usb_charge` and `fn_lock`.
+I have not tried the other variables but the keyboard lightning does not se=
+em
+to be impacted by this.
 
-- Add a check for IORESOURCE_UNSET in p2sb_valid_resource() to catch
-  unset BARs going forward.
+I have tried on both new installations of Manjaro and Fedora as well as Fed=
+ora
+Rawhide and Manjaro with a 6.9.2 kernel and 6.10-rc1 kernel freshly compile=
+d.
 
-- Return error values from p2sb_fs_init() so that the 'initcall_debug'
-  cmdline arg provides useful data.
+A colleague has the 2023 version of the laptop and the issue is not present=
+ on
+kernel 6.9.1.
 
-Signed-off-by: Ben Fradella <bfradell@netapp.com>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Klara Modin <klarasmodin@gmail.com>
-Reviewed-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Link: https://lore.kernel.org/r/20240509164905.41016-1-bcfradella@proton.me
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/p2sb.c | 29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+--=20
+You may reply to this email to add a comment.
 
-diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
-index a64f56ddd4a44..053be5c5e0cad 100644
---- a/drivers/platform/x86/p2sb.c
-+++ b/drivers/platform/x86/p2sb.c
-@@ -56,12 +56,9 @@ static int p2sb_get_devfn(unsigned int *devfn)
- 	return 0;
- }
- 
--static bool p2sb_valid_resource(struct resource *res)
-+static bool p2sb_valid_resource(const struct resource *res)
- {
--	if (res->flags)
--		return true;
--
--	return false;
-+	return res->flags & ~IORESOURCE_UNSET;
- }
- 
- /* Copy resource from the first BAR of the device in question */
-@@ -220,16 +217,20 @@ EXPORT_SYMBOL_GPL(p2sb_bar);
- 
- static int __init p2sb_fs_init(void)
- {
--	p2sb_cache_resources();
--	return 0;
-+	return p2sb_cache_resources();
- }
- 
- /*
-- * pci_rescan_remove_lock to avoid access to unhidden P2SB devices can
-- * not be locked in sysfs pci bus rescan path because of deadlock. To
-- * avoid the deadlock, access to P2SB devices with the lock at an early
-- * step in kernel initialization and cache required resources. This
-- * should happen after subsys_initcall which initializes PCI subsystem
-- * and before device_initcall which requires P2SB resources.
-+ * pci_rescan_remove_lock() can not be locked in sysfs PCI bus rescan path
-+ * because of deadlock. To avoid the deadlock, access P2SB devices with the lock
-+ * at an early step in kernel initialization and cache required resources.
-+ *
-+ * We want to run as early as possible. If the P2SB was assigned a bad BAR,
-+ * we'll need to wait on pcibios_assign_resources() to fix it. So, our list of
-+ * initcall dependencies looks something like this:
-+ *
-+ * ...
-+ * subsys_initcall (pci_subsys_init)
-+ * fs_initcall     (pcibios_assign_resources)
-  */
--fs_initcall(p2sb_fs_init);
-+fs_initcall_sync(p2sb_fs_init);
--- 
-2.43.0
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
