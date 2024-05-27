@@ -1,350 +1,272 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CFC13C3D7
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 11:19:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D6C131E41;
+	Mon, 27 May 2024 11:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716808770; cv=none; b=cuXHdCC1tp9KODaMVhIKqkG2M41Q7KiWU0DpyB95Av5S9X2tj+C29UZJr58jAwY1t4tIUykfootU7CzxoyoztlokWUp/+qi7QalsCTIjKWjbKHSszqt0Of/e4P9NveB2yrSVACorxAd3Wi371DMUuvMx1o+iPTZWnirQX3dt+1k=
+	t=1716809950; cv=none; b=NFkkWg2F7g6D4I8crHhiFamDQzvK3ESXoi6j4WxKkIYbHkkB04pQCG/M7cZz1+Ss0RPFxnLNsMQb+6J9ClZa+3fO0LnGTaBKhGmCZxOCRKT4d229do4lRSdszhN3pRZKu0LAWg8N5pJ50j4HMbE//fpDuloOSaOoz/4xhar8tYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716808770; c=relaxed/simple;
-	bh=Gif6fa0MsQHzsCJ/VOlaXfVoUhcm3dK+8cBJ/sFaZrI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EmKptmKRBxXTZ4dROqoiARSTJRkoQJHjr5aj9Vo7PkVlHuGqxHCwp2ULtcgloTdL/fOoFj4uul/WVjBbsAbJfjBH31PiB9ZdV5DBv50JvXs9v+KvrVcba0DxxcuIkZzSvZjX4xwvTwL//teqhyE3kWTsEsp4eOk89dvW5+3ootA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cbUepe9a; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716809950; c=relaxed/simple;
+	bh=xW+z/AkpQjZ9ITMKsYLns576tz7bCeAiXff1OYqvzbA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=QBbNz3mZh1+zHQ4LmFH2OrOeIeODOxi/HePSL+lTda1B7VR24IFBcb5mT7R/TfLTM0g2Ay2pmdAfnWLnFR8+3nYpm+Jl8gJMSkDpZxy8CfaxK3uY+n4s3aLExuttLt48zyoewQkAKCaYc07ZggaU7Fl8duK93kt3CI0P2Lns0+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fJMkaYJ1; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cbUepe9a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716808767;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BdA/b+tw1blJIaO7mJL6nTF1r5QtrHfdOb74Ea/gdaE=;
-	b=cbUepe9aFXspqFuRP4b3swvPxuAY4vnBMNGe8l783jfbY59XNgzIbGuU/KnVNjKiIhtMMK
-	GGXyUqcAclTQKCjdh1xjPPBQ3VDVGzrqWrDwudql43WEMxPzorQ5y3/hL6BnblB34cl5ZB
-	76iL62516swAGJm7oNFqVJa9Z8LkTFg=
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
- [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-361-vvcmh23NM8yk5UU3HoWqgQ-1; Mon, 27 May 2024 07:19:25 -0400
-X-MC-Unique: vvcmh23NM8yk5UU3HoWqgQ-1
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7e8e558d366so358293139f.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 04:19:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716808765; x=1717413565;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BdA/b+tw1blJIaO7mJL6nTF1r5QtrHfdOb74Ea/gdaE=;
-        b=E5iCtrNvEKUqS/bw1+sU0tFh6jzZdj/YcezuTFHBIaPfaehGqTyfe9y+BzSyA/1Q1S
-         sz4M5Vx6c2B5d4LlqFwGTTkek1dF2dgoQEK2LpSJtrGfbi9B8F8m9kXZWAoMGW1E9s6D
-         2Q6rdti9K7hEhholrGuUtqEIR0z2G4Y7i8H/FyNa7BYvhT/hl3ZA/ePSyC6xG4XyFrgZ
-         JT1vQg0Vr9OhBnAGJ/oLql76lgbJmjBqcSJEJHmU1jergk0PnlTw4/tD4ZsrSoDyYcJ+
-         bfrN7FNA4lwv6xcL5kjGh9FnzUbto3i6xEXjgzaA4DgYTd7WT+VSy8S7eYknV2TwyOwR
-         KW7Q==
-X-Gm-Message-State: AOJu0YzTaOLo0rtPaa54nEX4HvfSMpioTVPTX9JYHenX+mgJ85hqxfVK
-	4QRlyfSg632racRyR7GVdF3qV9Xw11cAenZcKKzpyDHxzzfuHB6pomuNV6H1ijVugQ88WuBHZ1i
-	mQu6fJ+aQwcNzLvb31z7WLvol2yr6gL+tMSif27W0+0Ndv3sLRT+GQe7O57i8URkPNUOcNsM=
-X-Received: by 2002:a5d:8d0a:0:b0:7de:a9d1:1cfa with SMTP id ca18e2360f4ac-7e8c19e4a55mr1233480539f.0.1716808764923;
-        Mon, 27 May 2024 04:19:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHLsNtctR1RS5lFQuJN1Gaa8Q2sCs48tsrvPbgptAn9DOO01ligw2osQKxjz5KDGuNhUxVu+A==
-X-Received: by 2002:a5d:8d0a:0:b0:7de:a9d1:1cfa with SMTP id ca18e2360f4ac-7e8c19e4a55mr1233477239f.0.1716808764186;
-        Mon, 27 May 2024 04:19:24 -0700 (PDT)
-Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b03ecd0535sm2053249173.149.2024.05.27.04.19.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 May 2024 04:19:23 -0700 (PDT)
-Message-ID: <e32fa7ed-be51-44d5-b849-6649da8a8e27@redhat.com>
-Date: Mon, 27 May 2024 13:19:21 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fJMkaYJ1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716809949; x=1748345949;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=xW+z/AkpQjZ9ITMKsYLns576tz7bCeAiXff1OYqvzbA=;
+  b=fJMkaYJ1v7Crw5xhz/4iH55YhWsVj7xY/PwO9suYwYw8HEgoy8MaTRxt
+   WoxDrEage0zaP5Gba85mIC15lxlN5eVmDx4FfoByM97fB31DrxsoAv6DE
+   13bXgXNlbS3s4taJZ+Lg+7FuCDw6Qiw/mFtDElM3tWhBlxOOQ5wZ3Ge3p
+   9bNcRvrVtkjPb+C4pVx46c0NFtLYoLx6xyVVBLaT/kXYFPN9qqq/grwMr
+   zJAzjlecOmmTcynXowbi5jiGpfrE3RR+P5+DSgA0TCOWKqiNzM85wBoSn
+   v5a2SE4IeL0ql9CnNMQgWggF5wih29gsbC1hw5xabicjHxceauIASSjAy
+   Q==;
+X-CSE-ConnectionGUID: c5YLo0D9TjmbVEVs7n0HyQ==
+X-CSE-MsgGUID: 1JpiMYB1RWOH8illHAQV5A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11084"; a="13310552"
+X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
+   d="scan'208";a="13310552"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 04:39:08 -0700
+X-CSE-ConnectionGUID: /wfKKJk9TcSfCTcqvnGZSA==
+X-CSE-MsgGUID: c79UWj7mShGAZT/maFCTIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
+   d="scan'208";a="34626514"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.138])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 04:39:06 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 27 May 2024 14:39:02 +0300 (EEST)
+To: Shravan Kumar Ramani <shravankr@nvidia.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
+    David Thompson <davthompson@nvidia.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/4] platform/mellanox: mlxbf-pmc: Add support for
+ 64-bit counters and cycle count
+In-Reply-To: <ce077a0db5d4afdbcc63a635fece9793aaae055f.1716205838.git.shravankr@nvidia.com>
+Message-ID: <70d3c0af-8bf6-2e33-074d-5b1719a5674f@linux.intel.com>
+References: <cover.1716205838.git.shravankr@nvidia.com> <ce077a0db5d4afdbcc63a635fece9793aaae055f.1716205838.git.shravankr@nvidia.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: dell-smbios: Fix wrong token data in sysfs
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Armin Wolf <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <20240518234744.144484-1-W_Armin@gmx.de>
- <23e67b5e-8e24-0fa4-42bb-e20cb1596601@linux.intel.com>
-Content-Language: en-US
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <23e67b5e-8e24-0fa4-42bb-e20cb1596601@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi,
+On Mon, 20 May 2024, Shravan Kumar Ramani wrote:
 
-On 5/27/24 12:25 PM, Ilpo Järvinen wrote:
-> On Sun, 19 May 2024, Armin Wolf wrote:
-> 
->> When reading token data from sysfs on my Inspiron 3505, the token
->> locations and values are wrong. This happens because match_attribute()
->> blindly assumes that all entries in da_tokens have an associated
->> entry in token_attrs.
->>
->> This however is not true as soon as da_tokens[] contains zeroed
->> token entries. Those entries are being skipped when initialising
->> token_attrs, breaking the core assumption of match_attribute().
->>
->> Fix this by defining an extra struct for each pair of token attributes
->> and use container_of() to retrieve token information.
->>
->> Tested on a Dell Inspiron 3050.
->>
->> Fixes: 33b9ca1e53b4 ("platform/x86: dell-smbios: Add a sysfs interface for SMBIOS tokens")
->> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->> ---
->>  drivers/platform/x86/dell/dell-smbios-base.c | 127 ++++++++-----------
->>  1 file changed, 50 insertions(+), 77 deletions(-)
->>
->> diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platform/x86/dell/dell-smbios-base.c
->> index e61bfaf8b5c4..bc1bc02820d7 100644
->> --- a/drivers/platform/x86/dell/dell-smbios-base.c
->> +++ b/drivers/platform/x86/dell/dell-smbios-base.c
->> @@ -11,6 +11,7 @@
->>   */
->>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->>
->> +#include <linux/container_of.h>
->>  #include <linux/kernel.h>
->>  #include <linux/module.h>
->>  #include <linux/capability.h>
->> @@ -25,11 +26,16 @@ static u32 da_supported_commands;
->>  static int da_num_tokens;
->>  static struct platform_device *platform_device;
->>  static struct calling_interface_token *da_tokens;
->> -static struct device_attribute *token_location_attrs;
->> -static struct device_attribute *token_value_attrs;
->> +static struct token_sysfs_data *token_entries;
->>  static struct attribute **token_attrs;
->>  static DEFINE_MUTEX(smbios_mutex);
->>
->> +struct token_sysfs_data {
->> +	struct device_attribute location_attr;
->> +	struct device_attribute value_attr;
->> +	struct calling_interface_token *token;
->> +};
->> +
->>  struct smbios_device {
->>  	struct list_head list;
->>  	struct device *device;
->> @@ -416,47 +422,24 @@ static void __init find_tokens(const struct dmi_header *dm, void *dummy)
->>  	}
->>  }
->>
->> -static int match_attribute(struct device *dev,
->> -			   struct device_attribute *attr)
->> +static ssize_t location_show(struct device *dev, struct device_attribute *attr, char *buf)
->>  {
->> -	int i;
->> -
->> -	for (i = 0; i < da_num_tokens * 2; i++) {
->> -		if (!token_attrs[i])
->> -			continue;
->> -		if (strcmp(token_attrs[i]->name, attr->attr.name) == 0)
->> -			return i/2;
->> -	}
->> -	dev_dbg(dev, "couldn't match: %s\n", attr->attr.name);
->> -	return -EINVAL;
->> -}
->> -
->> -static ssize_t location_show(struct device *dev,
->> -			     struct device_attribute *attr, char *buf)
-> 
-> This change is littered with just style fixes which are good but do not 
-> belong to this patch, such as here to remove the newline. I think it makes 
-> this patch noticeably messier to include those extra style changes so 
-> please separate them out of this patch.
+> Add support for programming any counter to monitor the cycle count.
+> Since counting of cycles using 32-bit ocunters would result in frequent
 
-I agree with Ilpo's remarks that the style changes should be split out,
-either pre or post the patch fixing the actual issue.
+counters
 
-After that + addressing Ilpo's other review remarks I can merge this
-as a fix for 6.10-rc#
+> wraparounds, add the ability to combine 2 adjacent 32-bit counters to
+> form 1 64-bit counter.
+> Both these features are supported by BlueField-3 PMC hardware, hence
+> the required bit-fields are exposed by the driver via sysfs to allow
+> the user to configure as needed.
 
-Regards,
+I'm trying to understand what happens for the other counter, when the 
+use_odd_counter is enabled? This change also doesn't add code that would 
+make the other counter -EBUSY, should that be done?
 
-Hans
+For 64-bit counter, I suppose the userspace is expected to read the full 
+counter from two sysfs files and combine the value (your documentation 
+doesn't explain this)? That seems non-optimal, why cannot kernel just 
+return the full combined 64-value directly in kernel?
 
+Similarly, are these cycle counters occupying the same space as non-cycle 
+counters (so both can/cannot be used that the same time)? I'm asking this 
+because you're adding a parallel interface to read the value and if it's 
+either-or, I don't understand why the value needs to be read from 
+different file depending on the counter counting in cycles or not.
 
+-- 
+ i.
 
+> Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
+> Reviewed-by: David Thompson <davthompson@nvidia.com>
+> Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
+> ---
+>  drivers/platform/mellanox/mlxbf-pmc.c | 134 ++++++++++++++++++++++++++
+>  1 file changed, 134 insertions(+)
 > 
->> -{
->> -	int i;
->> +	struct token_sysfs_data *data = container_of(attr, struct token_sysfs_data, location_attr);
->>
->>  	if (!capable(CAP_SYS_ADMIN))
->>  		return -EPERM;
->>
->> -	i = match_attribute(dev, attr);
->> -	if (i > 0)
->> -		return sysfs_emit(buf, "%08x", da_tokens[i].location);
->> -	return 0;
->> +	return sysfs_emit(buf, "%08x", data->token->location);
->>  }
->>
->> -static ssize_t value_show(struct device *dev,
->> -			  struct device_attribute *attr, char *buf)
->> +static ssize_t value_show(struct device *dev, struct device_attribute *attr, char *buf)
-> 
-> Another style fix.
-> 
->>  {
->> -	int i;
->> +	struct token_sysfs_data *data = container_of(attr, struct token_sysfs_data, value_attr);
->>
->>  	if (!capable(CAP_SYS_ADMIN))
->>  		return -EPERM;
->>
->> -	i = match_attribute(dev, attr);
->> -	if (i > 0)
->> -		return sysfs_emit(buf, "%08x", da_tokens[i].value);
->> -	return 0;
->> +	return sysfs_emit(buf, "%08x", data->token->value);
->>  }
->>
->>  static struct attribute_group smbios_attribute_group = {
->> @@ -473,73 +456,65 @@ static int build_tokens_sysfs(struct platform_device *dev)
->>  {
->>  	char *location_name;
->>  	char *value_name;
->> -	size_t size;
->>  	int ret;
->>  	int i, j;
->>
->> -	/* (number of tokens  + 1 for null terminated */
->> -	size = sizeof(struct device_attribute) * (da_num_tokens + 1);
->> -	token_location_attrs = kzalloc(size, GFP_KERNEL);
->> -	if (!token_location_attrs)
->> +	token_entries = kcalloc(da_num_tokens, sizeof(struct token_sysfs_data), GFP_KERNEL);
-> 
-> sizeof(*token_entries)
-> 
->> +	if (!token_entries)
->>  		return -ENOMEM;
->> -	token_value_attrs = kzalloc(size, GFP_KERNEL);
->> -	if (!token_value_attrs)
->> -		goto out_allocate_value;
->>
->> -	/* need to store both location and value + terminator*/
->> -	size = sizeof(struct attribute *) * ((2 * da_num_tokens) + 1);
->> -	token_attrs = kzalloc(size, GFP_KERNEL);
->> +	/* We need to store both location and value + terminator */
->> +	token_attrs = kcalloc((2 * da_num_tokens) + 1, sizeof(struct attribute *), GFP_KERNEL);
-> 
-> sizeof(*token_attrs)
-> 
->>  	if (!token_attrs)
->>  		goto out_allocate_attrs;
->>
->>  	for (i = 0, j = 0; i < da_num_tokens; i++) {
->> -		/* skip empty */
->> +		/* Skip empty */
-> 
-> Style change.
-> 
->>  		if (da_tokens[i].tokenID == 0)
->>  			continue;
->> -		/* add location */
->> -		location_name = kasprintf(GFP_KERNEL, "%04x_location",
->> -					  da_tokens[i].tokenID);
->> -		if (location_name == NULL)
->> +
->> +		token_entries[i].token = &da_tokens[i];
->> +
-> 
->> +		/* Add location */
->> +		location_name = kasprintf(GFP_KERNEL, "%04x_location", da_tokens[i].tokenID);
->> +		if (!location_name)
-> 
-> Style change x3.
-> 
->>  			goto out_unwind_strings;
->> -		sysfs_attr_init(&token_location_attrs[i].attr);
->> -		token_location_attrs[i].attr.name = location_name;
->> -		token_location_attrs[i].attr.mode = 0444;
->> -		token_location_attrs[i].show = location_show;
->> -		token_attrs[j++] = &token_location_attrs[i].attr;
->> +
->> +		sysfs_attr_init(&token_entries[i].location_attr.attr);
->> +		token_entries[i].location_attr.attr.name = location_name;
->> +		token_entries[i].location_attr.attr.mode = 0444;
->> +		token_entries[i].location_attr.show = location_show;
->> +		token_attrs[j++] = &token_entries[i].location_attr.attr;
->>
->>  		/* add value */
->> -		value_name = kasprintf(GFP_KERNEL, "%04x_value",
->> -				       da_tokens[i].tokenID);
->> -		if (value_name == NULL)
->> -			goto loop_fail_create_value;
->> -		sysfs_attr_init(&token_value_attrs[i].attr);
->> -		token_value_attrs[i].attr.name = value_name;
->> -		token_value_attrs[i].attr.mode = 0444;
->> -		token_value_attrs[i].show = value_show;
->> -		token_attrs[j++] = &token_value_attrs[i].attr;
->> -		continue;
->> -
->> -loop_fail_create_value:
->> -		kfree(location_name);
->> -		goto out_unwind_strings;
-> 
->> +		value_name = kasprintf(GFP_KERNEL, "%04x_value", da_tokens[i].tokenID);
->> +		if (!value_name) {
-> 
-> Style change x2.
-> 
->> +			kfree(location_name);
->> +			goto out_unwind_strings;
->> +		}
->> +
->> +		sysfs_attr_init(&token_entries[i].value_attr.attr);
->> +		token_entries[i].value_attr.attr.name = value_name;
->> +		token_entries[i].value_attr.attr.mode = 0444;
->> +		token_entries[i].value_attr.show = value_show;
->> +		token_attrs[j++] = &token_entries[i].value_attr.attr;
->>  	}
->>  	smbios_attribute_group.attrs = token_attrs;
->>
->>  	ret = sysfs_create_group(&dev->dev.kobj, &smbios_attribute_group);
->>  	if (ret)
->>  		goto out_unwind_strings;
->> +
-> 
-> Style change.
-> 
->>  	return 0;
->>
->>  out_unwind_strings:
->>  	while (i--) {
->> -		kfree(token_location_attrs[i].attr.name);
->> -		kfree(token_value_attrs[i].attr.name);
->> +		kfree(token_entries[i].location_attr.attr.name);
->> +		kfree(token_entries[i].value_attr.attr.name);
->>  	}
->>  	kfree(token_attrs);
->>  out_allocate_attrs:
->> -	kfree(token_value_attrs);
->> -out_allocate_value:
->> -	kfree(token_location_attrs);
->> +	kfree(token_entries);
->>
->>  	return -ENOMEM;
->>  }
->> @@ -548,15 +523,13 @@ static void free_group(struct platform_device *pdev)
->>  {
->>  	int i;
->>
->> -	sysfs_remove_group(&pdev->dev.kobj,
->> -				&smbios_attribute_group);
->> +	sysfs_remove_group(&pdev->dev.kobj, &smbios_attribute_group);
-> 
-> Style change.
-> 
-> 
+> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+> index 4ed9c7fd2b62..635ecc3b3845 100644
+> --- a/drivers/platform/mellanox/mlxbf-pmc.c
+> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
+> @@ -88,6 +88,8 @@
+>  #define MLXBF_PMC_CRSPACE_PERFMON_CTL(n) (n * MLXBF_PMC_CRSPACE_PERFMON_REG0_SZ)
+>  #define MLXBF_PMC_CRSPACE_PERFMON_EN BIT(30)
+>  #define MLXBF_PMC_CRSPACE_PERFMON_CLR BIT(28)
+> +#define MLXBF_PMC_CRSPACE_PERFMON_UOC GENMASK(15, 0)
+> +#define MLXBF_PMC_CRSPACE_PERFMON_COUNT_CLOCK(n) (MLXBF_PMC_CRSPACE_PERFMON_CTL(n) + 0x4)
+>  #define MLXBF_PMC_CRSPACE_PERFMON_VAL0(n) (MLXBF_PMC_CRSPACE_PERFMON_CTL(n) + 0xc)
+>  
+>  /**
+> @@ -114,6 +116,8 @@ struct mlxbf_pmc_attribute {
+>   * @attr_event: Attributes for "event" sysfs files
+>   * @attr_event_list: Attributes for "event_list" sysfs files
+>   * @attr_enable: Attributes for "enable" sysfs files
+> + * @attr_use_odd_counter: Attributes for "use_odd_counter" sysfs files
+> + * @attr_count_clock: Attributes for "count_clock" sysfs files
+>   * @block_attr: All attributes needed for the block
+>   * @block_attr_grp: Attribute group for the block
+>   */
+> @@ -126,6 +130,8 @@ struct mlxbf_pmc_block_info {
+>  	struct mlxbf_pmc_attribute *attr_event;
+>  	struct mlxbf_pmc_attribute attr_event_list;
+>  	struct mlxbf_pmc_attribute attr_enable;
+> +	struct mlxbf_pmc_attribute attr_use_odd_counter;
+> +	struct mlxbf_pmc_attribute attr_count_clock;
+>  	struct attribute *block_attr[MLXBF_PMC_MAX_ATTRS];
+>  	struct attribute_group block_attr_grp;
+>  };
+> @@ -1763,6 +1769,103 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
+>  	return count;
+>  }
+>  
+> +/* Show function for "use_odd_counter" sysfs files - only for crspace */
+> +static ssize_t mlxbf_pmc_use_odd_counter_show(struct device *dev,
+> +					      struct device_attribute *attr, char *buf)
+> +{
+> +	struct mlxbf_pmc_attribute *attr_use_odd_counter = container_of(
+> +		attr, struct mlxbf_pmc_attribute, dev_attr);
+> +	unsigned int blk_num;
+> +	u32 value, reg;
+> +
+> +	blk_num = attr_use_odd_counter->nr;
+> +
+> +	if (mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
+> +			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
+> +			&reg))
+> +		return -EINVAL;
+> +
+> +	value = FIELD_GET(MLXBF_PMC_CRSPACE_PERFMON_UOC, reg);
+> +
+> +	return sysfs_emit(buf, "%u\n", value);
+> +}
+> +
+> +/* Store function for "use_odd_counter" sysfs files - only for crspace */
+> +static ssize_t mlxbf_pmc_use_odd_counter_store(struct device *dev,
+> +					       struct device_attribute *attr,
+> +					       const char *buf, size_t count)
+> +{
+> +	struct mlxbf_pmc_attribute *attr_use_odd_counter = container_of(
+> +		attr, struct mlxbf_pmc_attribute, dev_attr);
+> +	unsigned int blk_num;
+> +	u32 uoc, reg;
+> +	int err;
+> +
+> +	blk_num = attr_use_odd_counter->nr;
+> +
+> +	err = kstrtouint(buf, 0, &uoc);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	err = mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
+> +		MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
+> +		&reg);
+> +	if (err)
+> +		return -EINVAL;
+> +
+> +	reg &= ~MLXBF_PMC_CRSPACE_PERFMON_UOC;
+> +	reg |= FIELD_PREP(MLXBF_PMC_CRSPACE_PERFMON_UOC, uoc);
+> +
+> +	mlxbf_pmc_write(pmc->block[blk_num].mmio_base +
+> +		MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
+> +		MLXBF_PMC_WRITE_REG_32, reg);
+> +
+> +	return count;
+> +}
+> +
+> +/* Show function for "count_clock" sysfs files - only for crspace */
+> +static ssize_t mlxbf_pmc_count_clock_show(struct device *dev,
+> +					  struct device_attribute *attr, char *buf)
+> +{
+> +	struct mlxbf_pmc_attribute *attr_count_clock = container_of(
+> +		attr, struct mlxbf_pmc_attribute, dev_attr);
+> +	unsigned int blk_num;
+> +	u32 reg;
+> +
+> +	blk_num = attr_count_clock->nr;
+> +
+> +	if (mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
+> +			MLXBF_PMC_CRSPACE_PERFMON_COUNT_CLOCK(pmc->block[blk_num].counters),
+> +			&reg))
+> +		return -EINVAL;
+> +
+> +	return sysfs_emit(buf, "%u\n", reg);
+> +}
+> +
+> +/* Store function for "count_clock" sysfs files - only for crspace */
+> +static ssize_t mlxbf_pmc_count_clock_store(struct device *dev,
+> +					   struct device_attribute *attr,
+> +					   const char *buf, size_t count)
+> +{
+> +	struct mlxbf_pmc_attribute *attr_count_clock = container_of(
+> +		attr, struct mlxbf_pmc_attribute, dev_attr);
+> +	unsigned int blk_num;
+> +	u32 reg;
+> +	int err;
+> +
+> +	blk_num = attr_count_clock->nr;
+> +
+> +	err = kstrtouint(buf, 0, &reg);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	mlxbf_pmc_write(pmc->block[blk_num].mmio_base +
+> +		MLXBF_PMC_CRSPACE_PERFMON_COUNT_CLOCK(pmc->block[blk_num].counters),
+> +		MLXBF_PMC_WRITE_REG_32, reg);
+> +
+> +	return count;
+> +}
+> +
+>  /* Populate attributes for blocks with counters to monitor performance */
+>  static int mlxbf_pmc_init_perftype_counter(struct device *dev, unsigned int blk_num)
+>  {
+> @@ -1799,6 +1902,37 @@ static int mlxbf_pmc_init_perftype_counter(struct device *dev, unsigned int blk_
+>  		attr = NULL;
+>  	}
+>  
+> +	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE) {
+> +		/*
+> +		 * Couple adjacent odd and even 32-bit counters to form 64-bit counters
+> +		 * using "use_odd_counter" sysfs which has one bit per even counter.
+> +		 */
+> +		attr = &pmc->block[blk_num].attr_use_odd_counter;
+> +		attr->dev_attr.attr.mode = 0644;
+> +		attr->dev_attr.show = mlxbf_pmc_use_odd_counter_show;
+> +		attr->dev_attr.store = mlxbf_pmc_use_odd_counter_store;
+> +		attr->nr = blk_num;
+> +		attr->dev_attr.attr.name = devm_kasprintf(dev, GFP_KERNEL,
+> +							  "use_odd_counter");
+> +		if (!attr->dev_attr.attr.name)
+> +			return -ENOMEM;
+> +		pmc->block[blk_num].block_attr[++i] = &attr->dev_attr.attr;
+> +		attr = NULL;
+> +
+> +		/* Program crspace counters to count clock cycles using "count_clock" sysfs */
+> +		attr = &pmc->block[blk_num].attr_count_clock;
+> +		attr->dev_attr.attr.mode = 0644;
+> +		attr->dev_attr.show = mlxbf_pmc_count_clock_show;
+> +		attr->dev_attr.store = mlxbf_pmc_count_clock_store;
+> +		attr->nr = blk_num;
+> +		attr->dev_attr.attr.name = devm_kasprintf(dev, GFP_KERNEL,
+> +							  "count_clock");
+> +		if (!attr->dev_attr.attr.name)
+> +			return -ENOMEM;
+> +		pmc->block[blk_num].block_attr[++i] = &attr->dev_attr.attr;
+> +		attr = NULL;
+> +	}
 
