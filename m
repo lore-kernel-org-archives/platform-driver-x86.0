@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D1D16088F;
-	Mon, 27 May 2024 15:55:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A354616B75C;
+	Mon, 27 May 2024 15:56:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716825360; cv=none; b=GmeLvTlkgfgXWedk0N5CZumcEHgQAD9aXqasO+LML/zE2IVxCaXi1Nwj999z5Y6pHnyMAv4iwM1/Kxs5617cvaj6E63BWXlExM95yM1wSqPpwom1BnUlUkaN1BF0CpAiEnkDDAUyrsf6YU8kvVHwgSTovh6ivGQKr9nwZc6tvCo=
+	t=1716825372; cv=none; b=sKqP8HWm9l1kHwagIbOnrfcHXy+NpR5OJL5Vo2cHaea/OFhkNFawegtRoGVtfkmfa3xYheEmnWj5XnsrIrJ48pQrQpKW7q9yynM+DPrwUoyh0LLDupxPrcsi3cl7my5qi9Nf1jHdlAxnYBCCuK4upHuW7oEvt5qXCisIPUt4V2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716825360; c=relaxed/simple;
-	bh=usPfH4pL6CzqFQBNmbw6aRWHYqXftvOZaHjenx3H2iE=;
+	s=arc-20240116; t=1716825372; c=relaxed/simple;
+	bh=nAB1AY5pLwxASoQc+U9OyagLxu/vrLWdvrYD0hIJqAw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tYzNNRSu0Q0xD5jJHTfS0PeZwN9cqd+qaSV+O4pD+BG/mnepRlkBdtM/z0uK7RhwGWhexcUTAEOUCvAkhDwfppWftGTigW56lFz4+OmVdYiuQmVJtT7EU7vgyhP3TE3+A/+LLGW4cndN/H5r2QCq5e0GGNXfqJtt3RWhl8qTTG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AypJ7b7D; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HqpiJ+T1WcewKjnUv3ZoGkwBSrc1ZBBLQ4UaTA0AINf7iQmzRIecr6T7wjYxrdf4oo8mzxXSS5LO7fif5eZPeUWfGIV3OpxqcwobcFP9GoAlm+oxSqyzMPRG5OjAVNk70BNOPxl3T2LPBfpACICuodPGPOYqnuql/eMnlAXydLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cLfMQZBm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AypJ7b7D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C0EBC32789;
-	Mon, 27 May 2024 15:55:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cLfMQZBm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 661CAC2BBFC;
+	Mon, 27 May 2024 15:56:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716825359;
-	bh=usPfH4pL6CzqFQBNmbw6aRWHYqXftvOZaHjenx3H2iE=;
+	s=k20201202; t=1716825372;
+	bh=nAB1AY5pLwxASoQc+U9OyagLxu/vrLWdvrYD0hIJqAw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AypJ7b7DBJPxdjLTUGOl9fRc7gRDGqLSaF30Yo73Txp2jobLYGbAOUKuHB2EVWHSF
-	 4miFuc9K5j4gTLXVe5zBTEOTKuvdMhTRltL1HK7dx/a9ffhmmrrL05THK8MbL68Hbt
-	 7tPCGD+SwapyJYDbKch1DxbGU+aqVDW2dRwcnnV2hEPoxH+nCldpsMUudNY7kz0WCl
-	 ojSMivNtNoL2NKESDnewufies38BYFj6mG4NtoZBJMDCSrvja4BBLacpTprdTtI7L1
-	 XTpWt5QDM/cShnRNzyJgizihiv/ATlraHo6aK7bOYC1gIHvzxtl2a2RydcVavTqHFS
-	 uDHAcCNOfWbCA==
+	b=cLfMQZBmSsIl1no6wOWpYoJrbZcDNAK9QY036CyouHXMYjeNqBJfOvKjYL0eW+b9C
+	 BdrGIfv2EcDkDwsRroB11Iui57iz1snGC3BUhCVHwKWhRsL3X+RY1FBVj4kUumf3wC
+	 Ya1WLgobUqeh/u2P4O4RB5DNHVP+yetjpCVMdVE4Vyysjw3PgM38Q9eCKr6oC+FmLX
+	 6wmLTug7Rba7+os205QLfkh2hD0nVkUx9kG8sNNsNa4Wz8QvpNwSrgZ+PzcM4W8W9u
+	 C+r0zsEYs7bqE/YcT5OD6ZmTbWNULBmLyO5BgswCctNgXVU0VyhZp2/unpWby7aZrs
+	 4WQYjlXVq0yhQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arvid Norlander <lkml@vorpal.se>,
-	Hans de Goede <hdegoede@redhat.com>,
+Cc: Hans de Goede <hdegoede@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	coproscefalo@gmail.com,
 	ilpo.jarvinen@linux.intel.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 03/16] platform/x86: toshiba_acpi: Add quirk for buttons on Z830
-Date: Mon, 27 May 2024 11:54:54 -0400
-Message-ID: <20240527155541.3865428-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 08/16] platform/x86: x86-android-tablets: Add Lenovo Yoga Tablet 2 Pro 1380F/L data
+Date: Mon, 27 May 2024 11:54:59 -0400
+Message-ID: <20240527155541.3865428-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240527155541.3865428-1-sashal@kernel.org>
 References: <20240527155541.3865428-1-sashal@kernel.org>
@@ -50,139 +48,305 @@ MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.32
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Arvid Norlander <lkml@vorpal.se>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 23f1d8b47d125dcd8c1ec62a91164e6bc5d691d0 ]
+[ Upstream commit 3eee73ad42c3899d97e073bf2c41e7670a3c575c ]
 
-The Z830 has some buttons that will only work properly as "quickstart"
-buttons. To enable them in that mode, a value between 1 and 7 must be
-used for HCI_HOTKEY_EVENT. Windows uses 0x5 on this laptop so use that for
-maximum predictability and compatibility.
+The Lenovo Yoga Tablet 2 Pro 1380F/L is a x86 ACPI tablet which ships with
+Android x86 as factory OS. Its DSDT contains a bunch of I2C devices which
+are not actually there, causing various resource conflicts. Enumeration of
+these is skipped through the acpi_quirk_skip_i2c_client_enumeration().
 
-As there is not yet a known way of auto detection, this patch uses a DMI
-quirk table. A module parameter is exposed to allow setting this on other
-models for testing.
+Add support for manually instantiating the I2C + other devices which are
+actually present on this tablet by adding the necessary device info to
+the x86-android-tablets module.
 
-Signed-off-by: Arvid Norlander <lkml@vorpal.se>
-Tested-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20240131111641.4418-3-W_Armin@gmx.de
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20240406125058.13624-2-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/toshiba_acpi.c | 36 ++++++++++++++++++++++++++---
- 1 file changed, 33 insertions(+), 3 deletions(-)
+ .../platform/x86/x86-android-tablets/dmi.c    |  18 ++
+ .../platform/x86/x86-android-tablets/lenovo.c | 216 ++++++++++++++++++
+ .../x86-android-tablets/x86-android-tablets.h |   1 +
+ 3 files changed, 235 insertions(+)
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 291f14ef67024..2a5a651235fe6 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -57,6 +57,11 @@ module_param(turn_on_panel_on_resume, int, 0644);
- MODULE_PARM_DESC(turn_on_panel_on_resume,
- 	"Call HCI_PANEL_POWER_ON on resume (-1 = auto, 0 = no, 1 = yes");
- 
-+static int hci_hotkey_quickstart = -1;
-+module_param(hci_hotkey_quickstart, int, 0644);
-+MODULE_PARM_DESC(hci_hotkey_quickstart,
-+		 "Call HCI_HOTKEY_EVENT with value 0x5 for quickstart button support (-1 = auto, 0 = no, 1 = yes");
-+
- #define TOSHIBA_WMI_EVENT_GUID "59142400-C6A3-40FA-BADB-8A2652834100"
- 
- /* Scan code for Fn key on TOS1900 models */
-@@ -136,6 +141,7 @@ MODULE_PARM_DESC(turn_on_panel_on_resume,
- #define HCI_ACCEL_MASK			0x7fff
- #define HCI_ACCEL_DIRECTION_MASK	0x8000
- #define HCI_HOTKEY_DISABLE		0x0b
-+#define HCI_HOTKEY_ENABLE_QUICKSTART	0x05
- #define HCI_HOTKEY_ENABLE		0x09
- #define HCI_HOTKEY_SPECIAL_FUNCTIONS	0x10
- #define HCI_LCD_BRIGHTNESS_BITS		3
-@@ -2730,10 +2736,15 @@ static int toshiba_acpi_enable_hotkeys(struct toshiba_acpi_dev *dev)
- 		return -ENODEV;
- 
- 	/*
-+	 * Enable quickstart buttons if supported.
-+	 *
- 	 * Enable the "Special Functions" mode only if they are
- 	 * supported and if they are activated.
- 	 */
--	if (dev->kbd_function_keys_supported && dev->special_functions)
-+	if (hci_hotkey_quickstart)
-+		result = hci_write(dev, HCI_HOTKEY_EVENT,
-+				   HCI_HOTKEY_ENABLE_QUICKSTART);
-+	else if (dev->kbd_function_keys_supported && dev->special_functions)
- 		result = hci_write(dev, HCI_HOTKEY_EVENT,
- 				   HCI_HOTKEY_SPECIAL_FUNCTIONS);
- 	else
-@@ -3257,7 +3268,14 @@ static const char *find_hci_method(acpi_handle handle)
-  * works. toshiba_acpi_resume() uses HCI_PANEL_POWER_ON to avoid changing
-  * the configured brightness level.
-  */
--static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] = {
-+#define QUIRK_TURN_ON_PANEL_ON_RESUME		BIT(0)
-+/*
-+ * Some Toshibas use "quickstart" keys. On these, HCI_HOTKEY_EVENT must use
-+ * the value HCI_HOTKEY_ENABLE_QUICKSTART.
-+ */
-+#define QUIRK_HCI_HOTKEY_QUICKSTART		BIT(1)
-+
-+static const struct dmi_system_id toshiba_dmi_quirks[] = {
- 	{
- 	 /* Toshiba Portégé R700 */
- 	 /* https://bugzilla.kernel.org/show_bug.cgi?id=21012 */
-@@ -3265,6 +3283,7 @@ static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] = {
- 		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
- 		DMI_MATCH(DMI_PRODUCT_NAME, "PORTEGE R700"),
+diff --git a/drivers/platform/x86/x86-android-tablets/dmi.c b/drivers/platform/x86/x86-android-tablets/dmi.c
+index 5d6c12494f082..141a2d25e83be 100644
+--- a/drivers/platform/x86/x86-android-tablets/dmi.c
++++ b/drivers/platform/x86/x86-android-tablets/dmi.c
+@@ -104,6 +104,24 @@ const struct dmi_system_id x86_android_tablet_ids[] __initconst = {
  		},
-+	 .driver_data = (void *)QUIRK_TURN_ON_PANEL_ON_RESUME,
+ 		.driver_data = (void *)&lenovo_yogabook_x91_info,
  	},
++	{
++		/*
++		 * Lenovo Yoga Tablet 2 Pro 1380F/L (13") This has more or less
++		 * the same BIOS as the 830F/L or 1050F/L (8" and 10") below,
++		 * but unlike the 8" / 10" models which share the same mainboard
++		 * this model has a different mainboard.
++		 * This match for the 13" model MUST come before the 8" + 10"
++		 * match since that one will also match the 13" model!
++		 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corp."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "VALLEYVIEW C0 PLATFORM"),
++			DMI_MATCH(DMI_BOARD_NAME, "BYT-T FFD8"),
++			/* Full match so as to NOT match the 830/1050 BIOS */
++			DMI_MATCH(DMI_BIOS_VERSION, "BLADE_21.X64.0005.R00.1504101516"),
++		},
++		.driver_data = (void *)&lenovo_yoga_tab2_1380_info,
++	},
  	{
- 	 /* Toshiba Satellite/Portégé R830 */
-@@ -3274,6 +3293,7 @@ static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] = {
- 		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
- 		DMI_MATCH(DMI_PRODUCT_NAME, "R830"),
- 		},
-+	 .driver_data = (void *)QUIRK_TURN_ON_PANEL_ON_RESUME,
- 	},
- 	{
- 	 /* Toshiba Satellite/Portégé Z830 */
-@@ -3281,6 +3301,7 @@ static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] = {
- 		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
- 		DMI_MATCH(DMI_PRODUCT_NAME, "Z830"),
- 		},
-+	 .driver_data = (void *)(QUIRK_TURN_ON_PANEL_ON_RESUME | QUIRK_HCI_HOTKEY_QUICKSTART),
- 	},
- };
- 
-@@ -3289,6 +3310,8 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 	struct toshiba_acpi_dev *dev;
- 	const char *hci_method;
- 	u32 dummy;
-+	const struct dmi_system_id *dmi_id;
-+	long quirks = 0;
- 	int ret = 0;
- 
- 	if (toshiba_acpi)
-@@ -3441,8 +3464,15 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+ 		/*
+ 		 * Lenovo Yoga Tablet 2 830F/L or 1050F/L (The 8" and 10"
+diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
+index 26a4ef670ad7c..56fdc384e800f 100644
+--- a/drivers/platform/x86/x86-android-tablets/lenovo.c
++++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
+@@ -17,6 +17,7 @@
+ #include <linux/pinctrl/machine.h>
+ #include <linux/platform_data/lp855x.h>
+ #include <linux/platform_device.h>
++#include <linux/power/bq24190_charger.h>
+ #include <linux/reboot.h>
+ #include <linux/rmi.h>
+ #include <linux/spi/spi.h>
+@@ -539,6 +540,221 @@ static void lenovo_yoga_tab2_830_1050_exit(void)
  	}
- #endif
+ }
  
-+	dmi_id = dmi_first_match(toshiba_dmi_quirks);
-+	if (dmi_id)
-+		quirks = (long)dmi_id->driver_data;
++/*
++ * Lenovo Yoga Tablet 2 Pro 1380F/L
++ *
++ * The Lenovo Yoga Tablet 2 Pro 1380F/L mostly has the same design as the 830F/L
++ * and the 1050F/L so this re-uses some of the handling for that from above.
++ */
++static const char * const lc824206xa_chg_det_psy[] = { "lc824206xa-charger-detect" };
 +
- 	if (turn_on_panel_on_resume == -1)
--		turn_on_panel_on_resume = dmi_check_system(turn_on_panel_on_resume_dmi_ids);
-+		turn_on_panel_on_resume = !!(quirks & QUIRK_TURN_ON_PANEL_ON_RESUME);
++static const struct property_entry lenovo_yoga_tab2_1380_bq24190_props[] = {
++	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", lc824206xa_chg_det_psy),
++	PROPERTY_ENTRY_REF("monitored-battery", &generic_lipo_hv_4v35_battery_node),
++	PROPERTY_ENTRY_BOOL("omit-battery-class"),
++	PROPERTY_ENTRY_BOOL("disable-reset"),
++	{ }
++};
 +
-+	if (hci_hotkey_quickstart == -1)
-+		hci_hotkey_quickstart = !!(quirks & QUIRK_HCI_HOTKEY_QUICKSTART);
++static const struct software_node lenovo_yoga_tab2_1380_bq24190_node = {
++	.properties = lenovo_yoga_tab2_1380_bq24190_props,
++};
++
++/* For enabling the bq24190 5V boost based on id-pin */
++static struct regulator_consumer_supply lc824206xa_consumer = {
++	.supply = "vbus",
++	.dev_name = "i2c-lc824206xa",
++};
++
++static const struct regulator_init_data lenovo_yoga_tab2_1380_bq24190_vbus_init_data = {
++	.constraints = {
++		.name = "bq24190_vbus",
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++	},
++	.consumer_supplies = &lc824206xa_consumer,
++	.num_consumer_supplies = 1,
++};
++
++struct bq24190_platform_data lenovo_yoga_tab2_1380_bq24190_pdata = {
++	.regulator_init_data = &lenovo_yoga_tab2_1380_bq24190_vbus_init_data,
++};
++
++static const struct property_entry lenovo_yoga_tab2_1380_lc824206xa_props[] = {
++	PROPERTY_ENTRY_BOOL("onnn,enable-miclr-for-dcp"),
++	{ }
++};
++
++static const struct software_node lenovo_yoga_tab2_1380_lc824206xa_node = {
++	.properties = lenovo_yoga_tab2_1380_lc824206xa_props,
++};
++
++static const char * const lenovo_yoga_tab2_1380_lms303d_mount_matrix[] = {
++	"0", "-1", "0",
++	"-1", "0", "0",
++	"0", "0", "1"
++};
++
++static const struct property_entry lenovo_yoga_tab2_1380_lms303d_props[] = {
++	PROPERTY_ENTRY_STRING_ARRAY("mount-matrix", lenovo_yoga_tab2_1380_lms303d_mount_matrix),
++	{ }
++};
++
++static const struct software_node lenovo_yoga_tab2_1380_lms303d_node = {
++	.properties = lenovo_yoga_tab2_1380_lms303d_props,
++};
++
++static const struct x86_i2c_client_info lenovo_yoga_tab2_1380_i2c_clients[] __initconst = {
++	{
++		/* BQ27541 fuel-gauge */
++		.board_info = {
++			.type = "bq27541",
++			.addr = 0x55,
++			.dev_name = "bq27541",
++			.swnode = &fg_bq24190_supply_node,
++		},
++		.adapter_path = "\\_SB_.I2C1",
++	}, {
++		/* bq24292i battery charger */
++		.board_info = {
++			.type = "bq24190",
++			.addr = 0x6b,
++			.dev_name = "bq24292i",
++			.swnode = &lenovo_yoga_tab2_1380_bq24190_node,
++			.platform_data = &lenovo_yoga_tab2_1380_bq24190_pdata,
++		},
++		.adapter_path = "\\_SB_.I2C1",
++		.irq_data = {
++			.type = X86_ACPI_IRQ_TYPE_GPIOINT,
++			.chip = "INT33FC:02",
++			.index = 2,
++			.trigger = ACPI_EDGE_SENSITIVE,
++			.polarity = ACPI_ACTIVE_HIGH,
++			.con_id = "bq24292i_irq",
++		},
++	}, {
++		/* LP8557 Backlight controller */
++		.board_info = {
++			.type = "lp8557",
++			.addr = 0x2c,
++			.dev_name = "lp8557",
++			.platform_data = &lenovo_lp8557_pwm_and_reg_pdata,
++		},
++		.adapter_path = "\\_SB_.I2C3",
++	}, {
++		/* LC824206XA Micro USB Switch */
++		.board_info = {
++			.type = "lc824206xa",
++			.addr = 0x48,
++			.dev_name = "lc824206xa",
++			.swnode = &lenovo_yoga_tab2_1380_lc824206xa_node,
++		},
++		.adapter_path = "\\_SB_.I2C3",
++		.irq_data = {
++			.type = X86_ACPI_IRQ_TYPE_GPIOINT,
++			.chip = "INT33FC:02",
++			.index = 1,
++			.trigger = ACPI_LEVEL_SENSITIVE,
++			.polarity = ACPI_ACTIVE_LOW,
++			.con_id = "lc824206xa_irq",
++		},
++	}, {
++		/* AL3320A ambient light sensor */
++		.board_info = {
++			.type = "al3320a",
++			.addr = 0x1c,
++			.dev_name = "al3320a",
++		},
++		.adapter_path = "\\_SB_.I2C5",
++	}, {
++		/* LSM303DA accelerometer + magnetometer */
++		.board_info = {
++			.type = "lsm303d",
++			.addr = 0x1d,
++			.dev_name = "lsm303d",
++			.swnode = &lenovo_yoga_tab2_1380_lms303d_node,
++		},
++		.adapter_path = "\\_SB_.I2C5",
++	}, {
++		/* Synaptics RMI touchscreen */
++		.board_info = {
++			.type = "rmi4_i2c",
++			.addr = 0x38,
++			.dev_name = "rmi4_i2c",
++			.platform_data = &lenovo_yoga_tab2_830_1050_rmi_pdata,
++		},
++		.adapter_path = "\\_SB_.I2C6",
++		.irq_data = {
++			.type = X86_ACPI_IRQ_TYPE_APIC,
++			.index = 0x45,
++			.trigger = ACPI_EDGE_SENSITIVE,
++			.polarity = ACPI_ACTIVE_HIGH,
++		},
++	}
++};
++
++static const struct platform_device_info lenovo_yoga_tab2_1380_pdevs[] __initconst = {
++	{
++		/* For the Tablet 2 Pro 1380's custom fast charging driver */
++		.name = "lenovo-yoga-tab2-pro-1380-fastcharger",
++		.id = PLATFORM_DEVID_NONE,
++	},
++};
++
++const char * const lenovo_yoga_tab2_1380_modules[] __initconst = {
++	"bq24190_charger",            /* For the Vbus regulator for lc824206xa */
++	NULL
++};
++
++static int __init lenovo_yoga_tab2_1380_init(void)
++{
++	int ret;
++
++	/* To verify that the DMI matching works vs the 830 / 1050 models */
++	pr_info("detected Lenovo Yoga Tablet 2 Pro 1380F/L\n");
++
++	ret = lenovo_yoga_tab2_830_1050_init_codec();
++	if (ret)
++		return ret;
++
++	/* SYS_OFF_PRIO_FIRMWARE + 1 so that it runs before acpi_power_off */
++	lenovo_yoga_tab2_830_1050_sys_off_handler =
++		register_sys_off_handler(SYS_OFF_MODE_POWER_OFF, SYS_OFF_PRIO_FIRMWARE + 1,
++					 lenovo_yoga_tab2_830_1050_power_off, NULL);
++	if (IS_ERR(lenovo_yoga_tab2_830_1050_sys_off_handler))
++		return PTR_ERR(lenovo_yoga_tab2_830_1050_sys_off_handler);
++
++	return 0;
++}
++
++static struct gpiod_lookup_table lenovo_yoga_tab2_1380_fc_gpios = {
++	.dev_id = "serial0-0",
++	.table = {
++		GPIO_LOOKUP("INT33FC:00", 57, "uart3_txd", GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP("INT33FC:00", 61, "uart3_rxd", GPIO_ACTIVE_HIGH),
++		{ }
++	},
++};
++
++static struct gpiod_lookup_table * const lenovo_yoga_tab2_1380_gpios[] = {
++	&lenovo_yoga_tab2_830_1050_codec_gpios,
++	&lenovo_yoga_tab2_1380_fc_gpios,
++	NULL
++};
++
++const struct x86_dev_info lenovo_yoga_tab2_1380_info __initconst = {
++	.i2c_client_info = lenovo_yoga_tab2_1380_i2c_clients,
++	.i2c_client_count = ARRAY_SIZE(lenovo_yoga_tab2_1380_i2c_clients),
++	.pdev_info = lenovo_yoga_tab2_1380_pdevs,
++	.pdev_count = ARRAY_SIZE(lenovo_yoga_tab2_1380_pdevs),
++	.gpio_button = &lenovo_yoga_tab2_830_1050_lid,
++	.gpio_button_count = 1,
++	.gpiod_lookup_tables = lenovo_yoga_tab2_1380_gpios,
++	.bat_swnode = &generic_lipo_hv_4v35_battery_node,
++	.modules = lenovo_yoga_tab2_1380_modules,
++	.init = lenovo_yoga_tab2_1380_init,
++	.exit = lenovo_yoga_tab2_830_1050_exit,
++};
++
+ /* Lenovo Yoga Tab 3 Pro YT3-X90F */
  
- 	toshiba_wwan_available(dev);
- 	if (dev->wwan_supported)
+ /*
+diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+index e46e1128acc81..3613152aaf86c 100644
+--- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
++++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+@@ -99,6 +99,7 @@ extern const struct x86_dev_info czc_p10t;
+ extern const struct x86_dev_info lenovo_yogabook_x90_info;
+ extern const struct x86_dev_info lenovo_yogabook_x91_info;
+ extern const struct x86_dev_info lenovo_yoga_tab2_830_1050_info;
++extern const struct x86_dev_info lenovo_yoga_tab2_1380_info;
+ extern const struct x86_dev_info lenovo_yt3_info;
+ extern const struct x86_dev_info medion_lifetab_s10346_info;
+ extern const struct x86_dev_info nextbook_ares8_info;
 -- 
 2.43.0
 
