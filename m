@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232CF7345D;
-	Mon, 27 May 2024 15:57:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14BDF16E893;
+	Mon, 27 May 2024 15:57:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716825446; cv=none; b=M3KlV282AM/FPPQKTDLV62d9VBSux4F+ohHexAU9Ztn/KgqAUW3vFvjHp/hdzcW4i84b8xFZv9rS14T4RmX1QO16mGQwXs50bgRJVkBoijNrxjnrKY8Rxw8fjj8Rm1P2O7e+djpcHJWEQ2Ekt4poDw7TwQC4MDXfpkiUqqaPINo=
+	t=1716825476; cv=none; b=bY8Lwtgug0oCEQTCs6cGKQhiR8yq6zihxJ3+ZgQxX32RYjDzxstj/Rh9V1gIW5dqORcM4wZKIfyeUwZO6jvhUX/Y2X1FNtmOYk8ecFfJ0q0Nu80mxjOxfnkjnBk9eouw4F7lntS70SM1MHIn9sFpCb2JDOv4N2XF8tbvqLwMVrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716825446; c=relaxed/simple;
-	bh=hwWz4M3sdJzgMXMrwL8+5/r9HkwgDXkopIzrPGtZK/o=;
+	s=arc-20240116; t=1716825476; c=relaxed/simple;
+	bh=RXItawyunSKwgW8TbTmkLjm06IxAaMojUWhmDVD+9Iw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Pgx5v1K8GabvnapMRvHijq72qYb+kfUTVUqT16JWe87mJp6OBMQfuSj7P2r7xNCHy93RMrO2r2xvHCGiHMNNhC1baHHZSyDGDx4NeXQJnuAWhQ+h2TkxGNtdMlBpMtSPfpJvbxO853srl75E74uEmKBA8KdyWRxH9i2u5pSlbXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YCRULQg4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TTBr7V9X7fE0ziuVyX049hDHoEeGCsx3yGyXBNAivQcm66OibuzKJZ8UdC3RsjQpR2Z/zDlTLvOE3X0TLWWN68W9qLyYL4HkfKpEr3s7+8QjCKN8nWupu6QqHeDcCUW/FJAFUd/Q0GB1rbDKQ4gfyzz/4vqZ2ssFUzxoyN2hBJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sHUo5g9M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YCRULQg4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 143F3C32781;
-	Mon, 27 May 2024 15:57:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sHUo5g9M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F78EC32789;
+	Mon, 27 May 2024 15:57:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716825446;
-	bh=hwWz4M3sdJzgMXMrwL8+5/r9HkwgDXkopIzrPGtZK/o=;
+	s=k20201202; t=1716825475;
+	bh=RXItawyunSKwgW8TbTmkLjm06IxAaMojUWhmDVD+9Iw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YCRULQg4WvZNY2q+1ewD7g/TEECEhZ/Yn/zOFQ0J87JT1IoSmN/JlFAVW1qwjNyCo
-	 n5W/yRtBKuP2LeL2Ck9vg3czlytoiQ4m17eOrPUFxgP9fXRIEb236+KV1a043qE/AI
-	 PoMJZmGA6MQbRrQ/PZmH0vlfxU59TvA9Sx67xgO3KbdlOGVnMVosXuLR48a4a6Xal7
-	 B/NYpaPG7tMQLM5igz/LsAXNiZIWbiBBrlLWbKNVay/ZF75e6Q5ng1YHsczAvMlACH
-	 h8X/az701PRGstrV8/teDuDbjVyYeXpco/hSMHCJWTpnDZxkgMETztglzLmxfWiEbm
-	 BhHvUZ/xbg8Pg==
+	b=sHUo5g9MP+KTBnMJMrgxOAE2AjaCWw8SmL+hV/h/DpvxUGq/mSvdDTdYks2osJMic
+	 GT54tCzAipodM/TT2+bVn0Jq9YXSRs96+Ml8p1vkJUT9qRrkLIeMVZRcLL1WKW+Yi7
+	 y3++sIlpHGqJC8gV5P/rJpu7XSpqE9YR4hYU0ZUNRYIRCjZrg73oAo5AICMXIoxwhl
+	 GC4o/AvInjxqyFNOiiHfh8LVY9sV1zjq7qWslRwNY3OsJFoGNoH0EHHuANgXI4W236
+	 43YhnfYkFnEcFtoONVD7rtpZR9F6q9i4AvkWe5g6iizo9vN7nmHrJqmI0pi4XsUUhT
+	 39gMWjG2otwyA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arvid Norlander <lkml@vorpal.se>,
+Cc: Ben Fradella <bfradell@netapp.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Klara Modin <klarasmodin@gmail.com>,
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
 	Hans de Goede <hdegoede@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	coproscefalo@gmail.com,
 	ilpo.jarvinen@linux.intel.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 02/11] platform/x86: toshiba_acpi: Add quirk for buttons on Z830
-Date: Mon, 27 May 2024 11:56:39 -0400
-Message-ID: <20240527155710.3865826-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 11/11] platform/x86: p2sb: Don't init until unassigned resources have been assigned
+Date: Mon, 27 May 2024 11:56:48 -0400
+Message-ID: <20240527155710.3865826-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240527155710.3865826-1-sashal@kernel.org>
 References: <20240527155710.3865826-1-sashal@kernel.org>
@@ -50,139 +52,85 @@ MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.92
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Arvid Norlander <lkml@vorpal.se>
+From: Ben Fradella <bfradell@netapp.com>
 
-[ Upstream commit 23f1d8b47d125dcd8c1ec62a91164e6bc5d691d0 ]
+[ Upstream commit 2c6370e6607663fc5fa0fd9ed58e2e01014898c7 ]
 
-The Z830 has some buttons that will only work properly as "quickstart"
-buttons. To enable them in that mode, a value between 1 and 7 must be
-used for HCI_HOTKEY_EVENT. Windows uses 0x5 on this laptop so use that for
-maximum predictability and compatibility.
+The P2SB could get an invalid BAR from the BIOS, and that won't be fixed
+up until pcibios_assign_resources(), which is an fs_initcall().
 
-As there is not yet a known way of auto detection, this patch uses a DMI
-quirk table. A module parameter is exposed to allow setting this on other
-models for testing.
+- Move p2sb_fs_init() to an fs_initcall_sync(). This is still early
+  enough to avoid a race with any dependent drivers.
 
-Signed-off-by: Arvid Norlander <lkml@vorpal.se>
-Tested-by: Hans de Goede <hdegoede@redhat.com>
+- Add a check for IORESOURCE_UNSET in p2sb_valid_resource() to catch
+  unset BARs going forward.
+
+- Return error values from p2sb_fs_init() so that the 'initcall_debug'
+  cmdline arg provides useful data.
+
+Signed-off-by: Ben Fradella <bfradell@netapp.com>
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Klara Modin <klarasmodin@gmail.com>
+Reviewed-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Link: https://lore.kernel.org/r/20240509164905.41016-1-bcfradella@proton.me
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20240131111641.4418-3-W_Armin@gmx.de
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/toshiba_acpi.c | 36 ++++++++++++++++++++++++++---
- 1 file changed, 33 insertions(+), 3 deletions(-)
+ drivers/platform/x86/p2sb.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 160abd3b3af8b..f10994b94a33a 100644
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -57,6 +57,11 @@ module_param(turn_on_panel_on_resume, int, 0644);
- MODULE_PARM_DESC(turn_on_panel_on_resume,
- 	"Call HCI_PANEL_POWER_ON on resume (-1 = auto, 0 = no, 1 = yes");
+diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
+index a64f56ddd4a44..053be5c5e0cad 100644
+--- a/drivers/platform/x86/p2sb.c
++++ b/drivers/platform/x86/p2sb.c
+@@ -56,12 +56,9 @@ static int p2sb_get_devfn(unsigned int *devfn)
+ 	return 0;
+ }
  
-+static int hci_hotkey_quickstart = -1;
-+module_param(hci_hotkey_quickstart, int, 0644);
-+MODULE_PARM_DESC(hci_hotkey_quickstart,
-+		 "Call HCI_HOTKEY_EVENT with value 0x5 for quickstart button support (-1 = auto, 0 = no, 1 = yes");
-+
- #define TOSHIBA_WMI_EVENT_GUID "59142400-C6A3-40FA-BADB-8A2652834100"
+-static bool p2sb_valid_resource(struct resource *res)
++static bool p2sb_valid_resource(const struct resource *res)
+ {
+-	if (res->flags)
+-		return true;
+-
+-	return false;
++	return res->flags & ~IORESOURCE_UNSET;
+ }
  
- /* Scan code for Fn key on TOS1900 models */
-@@ -136,6 +141,7 @@ MODULE_PARM_DESC(turn_on_panel_on_resume,
- #define HCI_ACCEL_MASK			0x7fff
- #define HCI_ACCEL_DIRECTION_MASK	0x8000
- #define HCI_HOTKEY_DISABLE		0x0b
-+#define HCI_HOTKEY_ENABLE_QUICKSTART	0x05
- #define HCI_HOTKEY_ENABLE		0x09
- #define HCI_HOTKEY_SPECIAL_FUNCTIONS	0x10
- #define HCI_LCD_BRIGHTNESS_BITS		3
-@@ -2730,10 +2736,15 @@ static int toshiba_acpi_enable_hotkeys(struct toshiba_acpi_dev *dev)
- 		return -ENODEV;
+ /* Copy resource from the first BAR of the device in question */
+@@ -220,16 +217,20 @@ EXPORT_SYMBOL_GPL(p2sb_bar);
  
- 	/*
-+	 * Enable quickstart buttons if supported.
-+	 *
- 	 * Enable the "Special Functions" mode only if they are
- 	 * supported and if they are activated.
- 	 */
--	if (dev->kbd_function_keys_supported && dev->special_functions)
-+	if (hci_hotkey_quickstart)
-+		result = hci_write(dev, HCI_HOTKEY_EVENT,
-+				   HCI_HOTKEY_ENABLE_QUICKSTART);
-+	else if (dev->kbd_function_keys_supported && dev->special_functions)
- 		result = hci_write(dev, HCI_HOTKEY_EVENT,
- 				   HCI_HOTKEY_SPECIAL_FUNCTIONS);
- 	else
-@@ -3259,7 +3270,14 @@ static const char *find_hci_method(acpi_handle handle)
-  * works. toshiba_acpi_resume() uses HCI_PANEL_POWER_ON to avoid changing
-  * the configured brightness level.
+ static int __init p2sb_fs_init(void)
+ {
+-	p2sb_cache_resources();
+-	return 0;
++	return p2sb_cache_resources();
+ }
+ 
+ /*
+- * pci_rescan_remove_lock to avoid access to unhidden P2SB devices can
+- * not be locked in sysfs pci bus rescan path because of deadlock. To
+- * avoid the deadlock, access to P2SB devices with the lock at an early
+- * step in kernel initialization and cache required resources. This
+- * should happen after subsys_initcall which initializes PCI subsystem
+- * and before device_initcall which requires P2SB resources.
++ * pci_rescan_remove_lock() can not be locked in sysfs PCI bus rescan path
++ * because of deadlock. To avoid the deadlock, access P2SB devices with the lock
++ * at an early step in kernel initialization and cache required resources.
++ *
++ * We want to run as early as possible. If the P2SB was assigned a bad BAR,
++ * we'll need to wait on pcibios_assign_resources() to fix it. So, our list of
++ * initcall dependencies looks something like this:
++ *
++ * ...
++ * subsys_initcall (pci_subsys_init)
++ * fs_initcall     (pcibios_assign_resources)
   */
--static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] = {
-+#define QUIRK_TURN_ON_PANEL_ON_RESUME		BIT(0)
-+/*
-+ * Some Toshibas use "quickstart" keys. On these, HCI_HOTKEY_EVENT must use
-+ * the value HCI_HOTKEY_ENABLE_QUICKSTART.
-+ */
-+#define QUIRK_HCI_HOTKEY_QUICKSTART		BIT(1)
-+
-+static const struct dmi_system_id toshiba_dmi_quirks[] = {
- 	{
- 	 /* Toshiba Portégé R700 */
- 	 /* https://bugzilla.kernel.org/show_bug.cgi?id=21012 */
-@@ -3267,6 +3285,7 @@ static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] = {
- 		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
- 		DMI_MATCH(DMI_PRODUCT_NAME, "PORTEGE R700"),
- 		},
-+	 .driver_data = (void *)QUIRK_TURN_ON_PANEL_ON_RESUME,
- 	},
- 	{
- 	 /* Toshiba Satellite/Portégé R830 */
-@@ -3276,6 +3295,7 @@ static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] = {
- 		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
- 		DMI_MATCH(DMI_PRODUCT_NAME, "R830"),
- 		},
-+	 .driver_data = (void *)QUIRK_TURN_ON_PANEL_ON_RESUME,
- 	},
- 	{
- 	 /* Toshiba Satellite/Portégé Z830 */
-@@ -3283,6 +3303,7 @@ static const struct dmi_system_id turn_on_panel_on_resume_dmi_ids[] = {
- 		DMI_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
- 		DMI_MATCH(DMI_PRODUCT_NAME, "Z830"),
- 		},
-+	 .driver_data = (void *)(QUIRK_TURN_ON_PANEL_ON_RESUME | QUIRK_HCI_HOTKEY_QUICKSTART),
- 	},
- };
- 
-@@ -3291,6 +3312,8 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 	struct toshiba_acpi_dev *dev;
- 	const char *hci_method;
- 	u32 dummy;
-+	const struct dmi_system_id *dmi_id;
-+	long quirks = 0;
- 	int ret = 0;
- 
- 	if (toshiba_acpi)
-@@ -3443,8 +3466,15 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 	}
- #endif
- 
-+	dmi_id = dmi_first_match(toshiba_dmi_quirks);
-+	if (dmi_id)
-+		quirks = (long)dmi_id->driver_data;
-+
- 	if (turn_on_panel_on_resume == -1)
--		turn_on_panel_on_resume = dmi_check_system(turn_on_panel_on_resume_dmi_ids);
-+		turn_on_panel_on_resume = !!(quirks & QUIRK_TURN_ON_PANEL_ON_RESUME);
-+
-+	if (hci_hotkey_quickstart == -1)
-+		hci_hotkey_quickstart = !!(quirks & QUIRK_HCI_HOTKEY_QUICKSTART);
- 
- 	toshiba_wwan_available(dev);
- 	if (dev->wwan_supported)
+-fs_initcall(p2sb_fs_init);
++fs_initcall_sync(p2sb_fs_init);
 -- 
 2.43.0
 
