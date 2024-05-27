@@ -1,119 +1,302 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD5D5FEE6
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 08:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8809B13D509
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 08:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716799027; cv=none; b=FPX3DuwX9ZfbEYaZWCmIJNrk/xK+qFoq0EgBBe3wsZMPLS55Zf5ElLaZJ9pIDHn1k2Hb8lsFCfYq+Sj/pZz3o+gkNcObYpf+E4E4/9xlV1196wERDvb4V8qeo5HT3j0bS83Fts2y8l1k5uoEIjy1yZY51JvPwucEFBV3pbnsdiA=
+	t=1716799380; cv=none; b=MAg8Xb5HKFqrW6AVSp8WRYVoLFr1m0xmKubK2z1Ov6D72qamQK9YfovHEHI97YnCdhsKXC8Xc1wnq0VI4tZH0HL6x7cCLWUxo7B2v1brfXLtzQQn/t1/gm8CssFtMzgRltD8KdXelqf2yN3MznyI7NvQC70x35/mLNgWYbj9sbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716799027; c=relaxed/simple;
-	bh=RbipRVg2tNyaG/cNib+sJw6bO31urPkoIZPQqa/oGQk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ayYkETkOcd85cjXio5rMZxY4RslUq0jcRzfb+7jsRtgwNjnbe50ejlBhHYnbRDNdTHk2J0VNwK9rKivC1JdvQ9e6JHBK2h257GFQ2CVHGcfPIIGz8rcinEKJRJa+ec4ZwiVFoJuq8fPnNW7gBC9c/hfR8HjeI9A1SBArhRK1+VU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=DOoj805X; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1716799380; c=relaxed/simple;
+	bh=fEUmSDxzFqNpouuhiooeqZxDVandAYpnE9D3je2aBVE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BXB2YW95yOzOKQJWTmnP6GvMIuA0Lgf7QXhHE8yA1qCdsJfe5XSIhmjirigKByT3XSh/6fudHKGBbdTIrafK6r9uJbO8TemWt9E086nvi5VnDwW7IAifA9BoexPfoAiMbKI8+QV66qe8b32lZ/pKpYbdj2A6dz/pbS6XJt/yoZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O9ogm76/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="DOoj805X"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6265d3ccf7so350108066b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 01:37:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1716799024; x=1717403824; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6ewc2LUQ94iYhmeL+MlQNu0aDN9jkcSs6LpUL6X+zlA=;
-        b=DOoj805XSVFbKD3bZVlHXVl8s32C7iAYJCcCknY/L3SNIeVgbM5YvY9q6fuOkl4N0S
-         Ia/23DbBjbuhibIq0rAadV99BO2SMFXQaD7sL1CrI8h7n8d+2H8Amm/3Bw2oInRoxMKu
-         8f+l83vPRHrjaBDT1x3ceLWHPSXhy8U4zXb1Freno6koiRkPG9ryFTnScaIMO0kNOi7W
-         yx0vU6cifcDLlUW/Nd45FT/QycyQcbFgtVwmhXdEia0zN8wofoB7G2PXP7PX6L/4Mjbh
-         Ebc5riB/8hqyq7JzhzcIsVe2dyElc/T6879XDZNChMhDSvWV89O0qmCSnmbDgLGmX+3t
-         UggA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O9ogm76/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716799377;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/zPmbWagXjt3BK5DMO+Xlc4098nzNpgG/Un3zJBJG8U=;
+	b=O9ogm76/UYBud5aDpfbdWeIT+MXaeXgjy638m9bBi7guO8CXzZw+nbVniltHceitOOud8S
+	c5Bpo708HASjqFNNQLV39GeLWVz0tN7PklWXRTCn+cBIsle9DHFUbJSTIt9wwyd9hzj4tD
+	mYpoVKwX4GojQP/1QuCiQjhaluwKWgM=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-517-NTm2zsgmMfiGuRO4DDypCA-1; Mon, 27 May 2024 04:42:56 -0400
+X-MC-Unique: NTm2zsgmMfiGuRO4DDypCA-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-574f933ad35so3120272a12.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 01:42:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716799024; x=1717403824;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6ewc2LUQ94iYhmeL+MlQNu0aDN9jkcSs6LpUL6X+zlA=;
-        b=AFfHxdHHXUj4lo7IwcN3nGwjosfqL8zjhfaiRqq+12qTQYXyUn2LDpO8J9J3GtI0kv
-         2GOZ4HV/x2xSmErCedepelRmBNkzz4UZYsuhRrtxUBD05VTOWjhOggQb+NjKT/1H8iOW
-         TFY0dNVZ7KCWANVeFg1WZeK3zhyai7AB6Q+1KQlfJTYXWM4xzRabTZXdlVmkvWkwxA+d
-         Bv03KqOZil0A0aJvzzsqZR1oK9a4LoHO9LacFGcknbNEBk6LIpQyctPVYC82NX9JOk6I
-         ap/FFyY4O3UEw/rscbw7RvKyl9WuWKTytgjS8AO6zINlu6durUb2YFq1GOPSKUJR6kkJ
-         xBYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUAu6qzj+9044q+oE8eRz7uYAZLy5aWjKTB4hO8igo3I3MK+mSoigJGJQfxeH8+WD7iQx6r8tKmawdhmlxie1pjlDfat9u+P8Q8h8a+6HU+adqRQQ==
-X-Gm-Message-State: AOJu0YyXBzStmMBRZEbm2HYemRkBbLax8GkXsXcXuy8f0EVcM52B73+U
-	Xb/MbbdmozS1KW0uZvQII5Bzi44fe4nOU4MbsVpEBMfIVhLPxpl7PVeo1AY8vNU=
-X-Google-Smtp-Source: AGHT+IGZ58gmMolIHMHhK1a1HogNCuIa2Saz0HAtP5KiJLECmvcEN4FxWyc89b3s9DUSyiyQJ3gt8w==
-X-Received: by 2002:a17:906:2a8b:b0:a59:9b8e:aa61 with SMTP id a640c23a62f3a-a62643e1448mr582253266b.35.1716799024362;
-        Mon, 27 May 2024 01:37:04 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-62-216-208-100.dynamic.mnet-online.de. [62.216.208.100])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a62f546025esm91292366b.56.2024.05.27.01.37.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 01:37:04 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: markus.elfring@web.de
-Cc: Shyam-sundar.S-k@amd.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	thorsten.blum@toblux.com
-Subject: [PATCH v2] platform/x86/amd/pmf: Use memdup_user()
-Date: Mon, 27 May 2024 10:36:29 +0200
-Message-ID: <20240527083628.210491-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <50d10f0b-d108-4057-be9c-a90e2398e810@web.de>
-References: <50d10f0b-d108-4057-be9c-a90e2398e810@web.de>
+        d=1e100.net; s=20230601; t=1716799375; x=1717404175;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/zPmbWagXjt3BK5DMO+Xlc4098nzNpgG/Un3zJBJG8U=;
+        b=nAtnG80jUx1hPI3Xt26xSIyQ2CAFoXgGFzg6Enwz3hod6qj+FgenHOf9LmvPmUFJtb
+         LZvE0VcHBRzUteQc7mHV/nDr3ZKsuot7eOXSITsWLIHBBWlcUeIhCTDBQDdGRv1R75r9
+         JoWnKnVJjds/S2vzD3mi1TTeX1OrkhZfCM61xXiEKLf5BgUaDXm2Rcz4CNWtSsPMUHpC
+         J3eXXYK1PLG71qowbnOV54pmZ13ERZE6QtvcBttkcbrQxe57X1GobewMzUKW/ZI4muW2
+         cqfqmjmefw786CSWSMYJSZ8W6iMQX5Hqqxf4yS44lb8DaEcryAZstZncyh6r95qCXIN7
+         fhfw==
+X-Forwarded-Encrypted: i=1; AJvYcCXLf4QLT5O42xKNsps1NyCO5HjgOSaTtArmYhcR/yHiGECLQQ6PWe4ERVHz7T82GPD6Qwr+WTzoSz/7Sr6ZDtktIiGPtgbkZgnuby/5UKLhTA9Fqg==
+X-Gm-Message-State: AOJu0YyjFXAxLLS/MRUUhOyMXCFLytCVBw4Ij1xgz/1+55yNwhfzqCun
+	lH/eLxoEAONpWP+XhUjRiK9KRVuRL2WdWNH3ihZtQLO9aOTwzYi8YojCpkz5cns3RLh5OTR3cB/
+	7owlVwbdjuZm0g9DdRjHJUlov3/z+6XXwyS6c09NQyWYtRHHe0Rn/4+Z2xhE6sEZUVYvzxss=
+X-Received: by 2002:a50:a447:0:b0:566:4aa9:7143 with SMTP id 4fb4d7f45d1cf-5785192c696mr5318273a12.14.1716799374642;
+        Mon, 27 May 2024 01:42:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHltn0qKEpPENkXILcgIlMp40NApRdKkl1amsi53GNMMEowowPh/ShWqCKsWBcarI3+5QpXng==
+X-Received: by 2002:a50:a447:0:b0:566:4aa9:7143 with SMTP id 4fb4d7f45d1cf-5785192c696mr5318250a12.14.1716799373216;
+        Mon, 27 May 2024 01:42:53 -0700 (PDT)
+Received: from [10.40.98.157] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-579d65934ddsm853631a12.38.2024.05.27.01.42.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 May 2024 01:42:52 -0700 (PDT)
+Message-ID: <55272a3b-575d-4212-a40b-7245beed5d80@redhat.com>
+Date: Mon, 27 May 2024 10:42:52 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] Input: novatek-nvt-ts: add support for NT36672A
+ touchscreen
+To: joelselvaraj.oss@gmail.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20240526-nvt-ts-devicetree-regulator-support-v3-0-aa88d10ccd9a@gmail.com>
+ <20240526-nvt-ts-devicetree-regulator-support-v3-3-aa88d10ccd9a@gmail.com>
+Content-Language: en-US
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240526-nvt-ts-devicetree-regulator-support-v3-3-aa88d10ccd9a@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Switch to memdup_user() to overwrite the allocated memory only once
-instead of initializing the allocated memory to zero with kzalloc() and
-then immediately overwriting it with copy_from_user().
+Hi Joel,
 
-Fix the following Coccinelle/coccicheck warning reported by
-memdup_user.cocci:
+On 5/27/24 5:26 AM, Joel Selvaraj via B4 Relay wrote:
+> From: Joel Selvaraj <joelselvaraj.oss@gmail.com>
+> 
+> Extend the novatek touchscreen driver to support NT36672A chip which
+> is found in phones like qcom/sdm845-xiaomi-beryllium-tianma.dts.
+> Added devicetree support for the driver and used i2c chip data to handle
+> the variation in chip id and wake type. Also added vcc and iovcc
+> regulators which are used to power the touchscreen hardware.
+> 
+> Signed-off-by: Joel Selvaraj <joelselvaraj.oss@gmail.com>
+> ---
+>  drivers/input/touchscreen/novatek-nvt-ts.c | 78 +++++++++++++++++++++++++++---
+>  1 file changed, 72 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/novatek-nvt-ts.c b/drivers/input/touchscreen/novatek-nvt-ts.c
+> index 224fd112b25a9..7a82a1b09f9d5 100644
+> --- a/drivers/input/touchscreen/novatek-nvt-ts.c
+> +++ b/drivers/input/touchscreen/novatek-nvt-ts.c
+> @@ -31,9 +31,6 @@
+>  #define NVT_TS_PARAMS_CHIP_ID		0x0e
+>  #define NVT_TS_PARAMS_SIZE		0x0f
+>  
+> -#define NVT_TS_SUPPORTED_WAKE_TYPE	0x05
+> -#define NVT_TS_SUPPORTED_CHIP_ID	0x05
+> -
+>  #define NVT_TS_MAX_TOUCHES		10
+>  #define NVT_TS_MAX_SIZE			4096
+>  
+> @@ -51,11 +48,18 @@ static const int nvt_ts_irq_type[4] = {
+>  	IRQF_TRIGGER_HIGH
+>  };
+>  
+> +struct nvt_ts_i2c_chip_data {
+> +	u8 wake_type;
+> +	u8 chip_id;
+> +};
+> +
+>  struct nvt_ts_data {
+>  	struct i2c_client *client;
+>  	struct input_dev *input;
+>  	struct gpio_desc *reset_gpio;
+> +	struct regulator_bulk_data regulators[2];
+>  	struct touchscreen_properties prop;
+> +	const struct nvt_ts_i2c_chip_data *chip;
+>  	int max_touches;
+>  	u8 buf[NVT_TS_TOUCH_SIZE * NVT_TS_MAX_TOUCHES];
+>  };
+> @@ -139,9 +143,23 @@ static irqreturn_t nvt_ts_irq(int irq, void *dev_id)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static void nvt_ts_disable_regulators(void *_data)
+> +{
+> +	struct nvt_ts_data *data = _data;
+> +
+> +	regulator_bulk_disable(ARRAY_SIZE(data->regulators), data->regulators);
+> +}
+> +
+>  static int nvt_ts_start(struct input_dev *dev)
+>  {
+>  	struct nvt_ts_data *data = input_get_drvdata(dev);
+> +	int error;
+> +
+> +	error = regulator_bulk_enable(ARRAY_SIZE(data->regulators), data->regulators);
+> +	if (error) {
+> +		dev_err(&data->client->dev, "failed to enable regulators\n");
+> +		return error;
+> +	}
+>  
 
-	WARNING opportunity for memdup_user
+This is weird, you already enable the regulators in probe() and
+those get disabled again on remove() by the devm action you add.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
-Changes in v2:
-- Update patch description after feedback from Markus Elfring
----
- drivers/platform/x86/amd/pmf/tee-if.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+So there is no need to enable / disable the regulators on start/stop .
 
-diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-index b438de4d6bfc..1b53cabc9aa2 100644
---- a/drivers/platform/x86/amd/pmf/tee-if.c
-+++ b/drivers/platform/x86/amd/pmf/tee-if.c
-@@ -301,14 +301,9 @@ static ssize_t amd_pmf_get_pb_data(struct file *filp, const char __user *buf,
- 		return -EINVAL;
+If you want the regulators to only be enabled when the touchscreen
+is on then you should disable the regulators again in probe()
+after the nvt_ts_read_data() call there (and drop the devm action).
+
+Or if you want to leave the regulators on all the time then you can
+drop the enable + disable calls here.
+
  
- 	/* re-alloc to the new buffer length of the policy binary */
--	new_policy_buf = kzalloc(length, GFP_KERNEL);
--	if (!new_policy_buf)
--		return -ENOMEM;
--
--	if (copy_from_user(new_policy_buf, buf, length)) {
--		kfree(new_policy_buf);
--		return -EFAULT;
--	}
-+	new_policy_buf = memdup_user(buf, length);
-+	if (IS_ERR(new_policy_buf))
-+		return PTR_ERR(new_policy_buf);
+>  	enable_irq(data->client->irq);
+>  	gpiod_set_value_cansleep(data->reset_gpio, 0);
+> @@ -155,6 +173,7 @@ static void nvt_ts_stop(struct input_dev *dev)
+>  
+>  	disable_irq(data->client->irq);
+>  	gpiod_set_value_cansleep(data->reset_gpio, 1);
+> +	nvt_ts_disable_regulators(data);
+>  }
+>  
+>  static int nvt_ts_suspend(struct device *dev)
+> @@ -199,9 +218,37 @@ static int nvt_ts_probe(struct i2c_client *client)
+>  	if (!data)
+>  		return -ENOMEM;
+>  
+> +	data->chip = device_get_match_data(&client->dev);
+> +	if (!data->chip)
+> +		return -EINVAL;
+> +
+>  	data->client = client;
+>  	i2c_set_clientdata(client, data);
+>  
+> +	/*
+> +	 * VCC is the analog voltage supply
+> +	 * IOVCC is the digital voltage supply
+> +	 */
+> +	data->regulators[0].supply = "vcc";
+> +	data->regulators[1].supply = "iovcc";
+> +	error = devm_regulator_bulk_get(dev, ARRAY_SIZE(data->regulators), data->regulators);
+> +	if (error) {
+> +		dev_err(dev, "cannot get regulators: %d\n", error);
+> +		return error;
+> +	}
+> +
+> +	error = regulator_bulk_enable(ARRAY_SIZE(data->regulators), data->regulators);
+> +	if (error) {
+> +		dev_err(dev, "failed to enable regulators\n");
+> +		return error;
+> +	}
+> +
+> +	error = devm_add_action_or_reset(dev, nvt_ts_disable_regulators, data);
+> +	if (error) {
+> +		dev_err(dev, "failed to install regulator disable handler\n");
+> +		return error;
+> +	}
+> +
+
+If you are going to keep this devm action (see discussion above) then please
+switch from devm_regulator_bulk_get() + regulator_bulk_enable() to
+devm_regulator_bulk_get_enable() which gets and enables the regulators for
+you in one call.
+
+You can then drop the regulator_bulk_enable() + devm_add_action_or_reset()
+calls since devm_regulator_bulk_get_enable() takes care of both for you.
+
+>  	data->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+>  	error = PTR_ERR_OR_ZERO(data->reset_gpio);
+>  	if (error) {
+> @@ -225,8 +272,8 @@ static int nvt_ts_probe(struct i2c_client *client)
+>  	if (width > NVT_TS_MAX_SIZE || height >= NVT_TS_MAX_SIZE ||
+>  	    data->max_touches > NVT_TS_MAX_TOUCHES ||
+>  	    irq_type >= ARRAY_SIZE(nvt_ts_irq_type) ||
+> -	    data->buf[NVT_TS_PARAMS_WAKE_TYPE] != NVT_TS_SUPPORTED_WAKE_TYPE ||
+> -	    data->buf[NVT_TS_PARAMS_CHIP_ID] != NVT_TS_SUPPORTED_CHIP_ID) {
+> +	    data->buf[NVT_TS_PARAMS_WAKE_TYPE] != data->chip->wake_type ||
+> +	    data->buf[NVT_TS_PARAMS_CHIP_ID] != data->chip->chip_id) {
+>  		dev_err(dev, "Unsupported touchscreen parameters: %*ph\n",
+>  			NVT_TS_PARAMS_SIZE, data->buf);
+>  		return -EIO;
+> @@ -277,8 +324,26 @@ static int nvt_ts_probe(struct i2c_client *client)
+>  	return 0;
+>  }
+>  
+> +static const struct nvt_ts_i2c_chip_data nvt_nt11205_ts_data = {
+> +	.wake_type = 0x05,
+> +	.chip_id = 0x05,
+> +};
+> +
+> +static const struct nvt_ts_i2c_chip_data nvt_nt36672a_ts_data = {
+> +	.wake_type = 0x01,
+> +	.chip_id = 0x08,
+> +};
+> +
+> +static const struct of_device_id nvt_ts_of_match[] = {
+> +	{ .compatible = "novatek,nt11205-ts", .data = &nvt_nt11205_ts_data },
+> +	{ .compatible = "novatek,nt36672a-ts", .data = &nvt_nt36672a_ts_data },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, nvt_ts_of_match);
+> +
+>  static const struct i2c_device_id nvt_ts_i2c_id[] = {
+> -	{ "NT11205-ts" },
+> +	{ "NT11205-ts", (unsigned long) &nvt_nt11205_ts_data },
+> +	{ "NT36672A-ts", (unsigned long) &nvt_nt36672a_ts_data },
+
+The i2c-subsystem will also match of compatible strings to i2c_device_ids
+by looking at the partof the compatible after the ',', so for a compatible
+of e.g. "novatek,nt36672a-ts" will match an i2c_device_id of "nt36672a-ts".
+
+So if you change these to lower-case:
+
+	{ "nt11205-ts", (unsigned long) &nvt_nt11205_ts_data },
+	{ "nt36672a-ts", (unsigned long) &nvt_nt36672a_ts_data },
+
+Then you can drop the nvt_ts_of_match table since that is not necessary
+then.
+
+Hmm I just realized that this will break module auto-loading though since that
+does require of modaliases .
  
- 	kfree(dev->policy_buf);
- 	dev->policy_buf = new_policy_buf;
--- 
-2.45.1
+So maybe this is not such a good idea after all. Still switching to lowercase
+i2c_device_id-s would be good for consistency and you need to respin
+the patch-set for the regulator issue anyways.
+
+Regards,
+
+Hans
+
+
+
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(i2c, nvt_ts_i2c_id);
+> @@ -287,6 +352,7 @@ static struct i2c_driver nvt_ts_driver = {
+>  	.driver = {
+>  		.name	= "novatek-nvt-ts",
+>  		.pm	= pm_sleep_ptr(&nvt_ts_pm_ops),
+> +		.of_match_table = nvt_ts_of_match,
+>  	},
+>  	.probe = nvt_ts_probe,
+>  	.id_table = nvt_ts_i2c_id,
+> 
 
