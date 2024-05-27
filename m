@@ -1,119 +1,197 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E766C79E1
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 10:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC73613B5B9
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 11:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716806341; cv=none; b=Ec1tg4ecR3hMq7Lu0AQhIbh80F6Lbf0FTU++RMS1qFfK60/oX2GZ59R+8Dex4E0/4G+C/s28A01957O40Hrd55ECAucePWzrMwFmXcxvs89ReoZNz796Y1KKUwvj2ndTABMhwuGyMWcP9h7ilTgSPfWovJ28s2aMFp8a/kM6zCY=
+	t=1716807854; cv=none; b=h1UBl0do22ZwE8axON+EOpG9NjpEZ/8rvjen8otMbqF2dE0lCy6Y/ONbpQVwOZSDCLhNq7wJ5x9bqGK28MAr1RyhEmgkiGPu7nZ1eHpcoUrcuDIBGm299zsdTe+LyD+fR0utyopcLOaLmLOo9LDe5RP5oYYtigdx2ShpVpIMJJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716806341; c=relaxed/simple;
-	bh=IkwzgdfTNU+klIMnbkfTrq2KFgzEpaYiBSPhQKWeC18=;
+	s=arc-20240116; t=1716807854; c=relaxed/simple;
+	bh=yuX+wFP7fMTWfpbVBFssj2MGbALckEkCiS/YZH6S6Ns=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gg44HWJlTM3mkaeHeUTqvd3nFmw5HXSVQ1u14r0jO35OV7rOGl4H9TbiQUzUctD4p98ixEAJIyOzTnwC+K9kmyBqPqjc0GhSn7Rc6/zmDEA1LPrUrJAN3o/eanBHIBWfym9bhyNvfvqmcHP1wIYe52/PCll+fxHmtQIjfPHEdGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S3dAV3UR; arc=none smtp.client-ip=209.85.208.52
+	 Content-Type:Content-Disposition:In-Reply-To; b=DVz2ojR6lFD8p71mLC7v5ik0X1SHl0pK3nHHYxqAfR0GZrxKFN4XkbqQLYUDhQnBkvRAE2hg90jqd32hoQE3UPU+7fK1GGkkfSqsRJ9NSr8yCp4s+xd4rAYF7CaOn7DHhStPy0XHoK4vhWdC223lr+vVImnGmeL+ZDZoOXPNNcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S/CGlSq2; arc=none smtp.client-ip=209.85.208.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S3dAV3UR"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-57857e0f45cso2977037a12.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 03:38:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S/CGlSq2"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2e95a1d5ee2so59627311fa.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 04:04:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716806338; x=1717411138; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kcLzu4LJ9QZeVn/MsZTmbDQWrB/tBNmh+KmvIiHdD0g=;
-        b=S3dAV3URpEeeh+kAK28/WStp5EO2XRakJ4DD2Jo+s4fm+ABsEjVsiga7+hSK36DSCh
-         Ve+e9r/doqHufS73QoGmQ1+uEWF/RKXV2J9rDS8z3Rx5Zm8X151ibFgbiLOGMFLYc52J
-         TU8TZkN3sMWKOFFURfOtX2ZnOr6Hqa9soRjl8SWxGUhnJfzLS8Zb0GM2CX3afXic0OXm
-         /bun8zvVcfBEjO9CHkF6L0Dg6I1t/cYWVheVfYDaLeMR1d9T0LZCSDEkxlmDdzq5BnFE
-         503SwuH3DeC4MY/v+FgIWVfjLSOGtAX/K6KHvjP8dD93cBx4ODiJVnxB65YC70DOgnAI
-         LkaA==
+        d=linaro.org; s=google; t=1716807850; x=1717412650; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Ikk0MTqK6vpn61sKB0R5HgfSO+QOYsjG/QHNlCN938c=;
+        b=S/CGlSq2Gu6GLkF+nsvyeOZcm9yVP7NU2T4WfSBq9q3aKcAoDbP2rwnBYr5DRq9jxY
+         BGRITp02iYr/u8Kc2nBjUCy7Dg8VcHKjamwfktw8Whu+/KsYOhZeZ5ourKfZ8Kbt6B/U
+         R17yhjtP6inoyfyu9KQkxYDuUp1ygvkNMpT5KKarvN9K3+lzf1EAEZWHGfFJIU1PbT0/
+         etHady4QiTKtBoxtiIcqTDzRrWiAkGHkCLkTKUFv+dQiozwz50Zc+EYGF7W7a9VN0DAN
+         mRdEFCe8Uzpjay2SwUx+hfq1V8yUf2L5BK5/i2ihehEWJB+YVJDCc9C2HlDwbJQZPKc1
+         qK3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716806338; x=1717411138;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kcLzu4LJ9QZeVn/MsZTmbDQWrB/tBNmh+KmvIiHdD0g=;
-        b=nBGcbLZlq7E35YnJ2FyVXKgjWJo51FT7EmMs3ft0OJ0MvN27gdEb8CR0htr6CPr519
-         7lcX5kDB7RiGXGiWNe2E0Fqh0Kw7Bs5ngJgTOwXxP9+jsx0741YeHA72/b7AQNV/KNTj
-         lWXr2CpwGFmtS6FNHfaDGU8a3xcJzD1PbYxhTXJsj3eOMUX9SbwA/uPLfY3ZxJETM9eF
-         dUIhD68p2JnPYHxp8zUcip2Yd6g+bqNxRkfYxFvAO7ZVtTKaMrSNolm2LV+lMbtI0zFs
-         /Xd1/vCdlYcVhRZ4n4lN1PI/Eb6pfNbLtJia7pNGFIYycW9ApnU+mzBitERNOHQucJ08
-         4Sjw==
-X-Forwarded-Encrypted: i=1; AJvYcCXshDhn+4Ui/nXPrDPi61K1C9MTFRVZmg9KUSB9MzkWP4D94ue9/h6RfKXERsfsBDp0tKrQeQ+wOS5yODybWrfy5gTkd/e9ZNoG/NKAWm3VJ0RjVQ==
-X-Gm-Message-State: AOJu0YwUaxheYsgUsItc9ARBE1JFp6r0r/kp4M7WanXY0DaRzJyXCHqR
-	7rYp7bG7R6hdPVUYOEeuupv8VCPImyDgFPeC18Rl42BsJhVW7jIXGpagCmvDZBI=
-X-Google-Smtp-Source: AGHT+IFvBQngBXOPW4ETq9VVybyALDmbeyIBaNOM9Vy8P40JUkXq/WTpcP2GigRERW9VwEVl6tOalg==
-X-Received: by 2002:a50:bb41:0:b0:578:3336:92b with SMTP id 4fb4d7f45d1cf-57851796edbmr5061953a12.0.1716806338089;
-        Mon, 27 May 2024 03:38:58 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5785238d355sm5635915a12.31.2024.05.27.03.38.57
+        d=1e100.net; s=20230601; t=1716807850; x=1717412650;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ikk0MTqK6vpn61sKB0R5HgfSO+QOYsjG/QHNlCN938c=;
+        b=DYsWx4h66iaKHt7aP04GPrC47FXa6SPQGMoRpzBoA9LLEGJlEwQ44rgqJpIZ0wF6nr
+         n6iKvv+dJJT3kmilKccChcyhUCh4VaaBkzYh2Ix8CL7Iz6WABmAPDpZMMa73rXYcD6FP
+         NkhcNeEJPJuyhsqzVyOmXx80SdasdLM+NzW5rgiCqtiWtfDcjT6+MAju1H14p6q1dMhV
+         KVnqf//SixA58NtMEJ3ua/M0Wjcs0fcsO29SwjJR1Ow5N3kMPrOBoS0S3xH+qM7idWuO
+         0xYRBnoijDdvCfHWsymV6LT/rQ1vt38yoHHudvVWsaDJgseZRobq4X8Cb5gR2gytpem7
+         Ygaw==
+X-Forwarded-Encrypted: i=1; AJvYcCWxD5wznQAtsL7HCMvOtgav+OAHnbaaTz8QE5F3jlNw8QR35ZIuqAtB+c9AMzsvLlJWyjQHRgGq8MqKizboH6Y5wDAIJQ8xJu3F5WQLOLcY/55m6A==
+X-Gm-Message-State: AOJu0YyzknV5xt/dQTKPwYNFIFg9Rn3bx3qSS8JibqicTggPiEGvVmAL
+	9KUNWT6zWFROqJnhZ2LASCH6gmsV8RH93f0FRAN2s9ujQzAHlFdAb/g55+KZYIo=
+X-Google-Smtp-Source: AGHT+IGElvPB6h5Dsq7+RN2HrAz4iulgHd8bLdU9hxq/60HzPeIZmMqN72sL2LTUtDSF+/HXazY/+g==
+X-Received: by 2002:a2e:9899:0:b0:2e5:685a:85b5 with SMTP id 38308e7fff4ca-2e95b041622mr74590631fa.1.1716807849899;
+        Mon, 27 May 2024 04:04:09 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e95bcd7bbcsm19087591fa.32.2024.05.27.04.04.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 03:38:57 -0700 (PDT)
-Date: Mon, 27 May 2024 13:38:53 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: markus.elfring@web.de, Shyam-sundar.S-k@amd.com, hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com, kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86/amd/pmf: Use memdup_user()
-Message-ID: <4c2c8a76-17c7-4dbb-96ff-8488c8e953ff@moroto.mountain>
-References: <50d10f0b-d108-4057-be9c-a90e2398e810@web.de>
- <20240527083628.210491-2-thorsten.blum@toblux.com>
+        Mon, 27 May 2024 04:04:09 -0700 (PDT)
+Date: Mon, 27 May 2024 14:04:07 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Nikita Travkin <nikita@trvn.ru>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v3 1/6] dt-bindings: power: supply: Add Lenovo Yoga C630
+ EC
+Message-ID: <yy6llkseusmg2rzyt2iytb6pjelqycsfgawt2g24gccujqkxxb@yzdari2gq6rt>
+References: <20240527-yoga-ec-driver-v3-0-327a9851dad5@linaro.org>
+ <20240527-yoga-ec-driver-v3-1-327a9851dad5@linaro.org>
+ <f05953c74f2bf58256306eb3d554ae0b@trvn.ru>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240527083628.210491-2-thorsten.blum@toblux.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f05953c74f2bf58256306eb3d554ae0b@trvn.ru>
 
-On Mon, May 27, 2024 at 10:36:29AM +0200, Thorsten Blum wrote:
-> Switch to memdup_user() to overwrite the allocated memory only once
-> instead of initializing the allocated memory to zero with kzalloc() and
-> then immediately overwriting it with copy_from_user().
+On Mon, May 27, 2024 at 03:21:27PM +0500, Nikita Travkin wrote:
+> Dmitry Baryshkov писал(а) 27.05.2024 15:03:
+> > From: Bjorn Andersson <andersson@kernel.org>
+> > 
+> > Add binding for the Embedded Controller found in the Qualcomm
+> > Snapdragon-based Lenovo Yoga C630.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > ---
+> >  .../bindings/power/supply/lenovo,yoga-c630-ec.yaml | 83 ++++++++++++++++++++++
+> >  1 file changed, 83 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/power/supply/lenovo,yoga-c630-ec.yaml b/Documentation/devicetree/bindings/power/supply/lenovo,yoga-c630-ec.yaml
+> > new file mode 100644
+> > index 000000000000..52a302850743
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/power/supply/lenovo,yoga-c630-ec.yaml
+> > @@ -0,0 +1,83 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/power/supply/lenovo,yoga-c630-ec.yaml#
 > 
-> Fix the following Coccinelle/coccicheck warning reported by
-> memdup_user.cocci:
+> Should this binding join aspire1 one in bindings/platform ?
+
+Good idea
+
 > 
-> 	WARNING opportunity for memdup_user
+> Nikita
 > 
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
-> ---
-> Changes in v2:
-> - Update patch description after feedback from Markus Elfring
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Lenovo Yoga C630 Embedded Controller.
+> > +
+> > +maintainers:
+> > +  - Bjorn Andersson <andersson@kernel.org>
+> > +
+> > +description:
+> > +  The Qualcomm Snapdragon-based Lenovo Yoga C630 has an Embedded Controller
+> > +  (EC) which handles things such as battery and USB Type-C. This binding
+> > +  describes the interface, on an I2C bus, to this EC.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: lenovo,yoga-c630-ec
+> > +
+> > +  reg:
+> > +    const: 0x70
+> > +
+> > +  '#address-cells':
+> > +    const: 1
+> > +
+> > +  '#size-cells':
+> > +    const: 0
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +patternProperties:
+> > +  '^connector@[01]$':
+> > +    $ref: /schemas/connector/usb-connector.yaml#
+> > +
+> > +    properties:
+> > +      reg:
+> > +        maxItems: 1
+> > +
+> > +    unevaluatedProperties: false
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |+
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +    i2c1 {
+> > +        clock-frequency = <400000>;
+> > +
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        embedded-controller@70 {
+> > +            compatible = "lenovo,yoga-c630-ec";
+> > +            reg = <0x70>;
+> > +
+> > +            interrupts-extended = <&tlmm 20 IRQ_TYPE_LEVEL_HIGH>;
+> > +
+> > +            #address-cells = <1>;
+> > +            #size-cells = <0>;
+> > +
+> > +            connector@0 {
+> > +                compatible = "usb-c-connector";
+> > +                reg = <0>;
+> > +                power-role = "source";
+> > +                data-role = "host";
+> > +            };
+> > +
+> > +            connector@1 {
+> > +                compatible = "usb-c-connector";
+> > +                reg = <1>;
+> > +                power-role = "source";
+> > +                data-role = "host";
+> > +            };
+> > +        };
+> > +    };
+> > +...
 
-Markus always CC's kernel-janitors even though I have asked him not to.
-:(
-
-> ---
->  drivers/platform/x86/amd/pmf/tee-if.c | 11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-> index b438de4d6bfc..1b53cabc9aa2 100644
-> --- a/drivers/platform/x86/amd/pmf/tee-if.c
-> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
-> @@ -301,14 +301,9 @@ static ssize_t amd_pmf_get_pb_data(struct file *filp, const char __user *buf,
->  		return -EINVAL;
-
-This -EINVAL check could be made stricter.  Instead of checking for
-zero it could check for the limit from amd_pmf_start_policy_engine():
-
-	if (dev->policy_sz < POLICY_COOKIE_OFFSET + sizeof(*header))
-		return -EINVAL;
-
-Also this check isn't great:
-
-	if (dev->policy_sz < header->length + 512)
-
-header->length is a u32 that comes from the user, so the addition can
-overflow.  I can't immediately see how to exploit this though since we
-don't seem to use header->length after this (by itself).
-
-regards,
-dan carpenter
-
+-- 
+With best wishes
+Dmitry
