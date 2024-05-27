@@ -1,65 +1,64 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1AF613A24D
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 09:29:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91DD713A3FD
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 09:31:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716802190; cv=none; b=fOEtbtVvq9hZMX2lH6m+LJaY1upHtBcHC4OvRe4/V/zqjGWkK7I/g8P3pv90OtE093GR5k9gO4dD/I6pyHn51GLwDXQKilU3U6TbTi3km8eZDwNsA1rM+1sVAZwxbeGAXSu84h9vT5Zag04m3sUhWP6tcHEg10l3zlc1YE1uNO8=
+	t=1716802314; cv=none; b=iJeHYOS4O7c0x04uXqNTa5Yl6hchrKfvZWw6XLcgtTwRmvvWzFaFWWDPabYx/kqek7luqX63VbbQ6bMPrtQUyk6ihsyixJ1Avq3VTiwNlG0S+XjiBTmcUAZR8oO7af3QYQ1zDBMR4V0MYGfu33KowcxPkrAfiDraSEdFg/mRITo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716802190; c=relaxed/simple;
-	bh=GVk5OV/h2v884ljEBZx1wxeGLOe6kBRIDF8Asd89Iyk=;
+	s=arc-20240116; t=1716802314; c=relaxed/simple;
+	bh=0Y40vscXA8zyiEaciAXJwfIIClujthuORyaMn6J/Jk4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SG9+mprkm2qEoW/iNZ1NVD3zp3ENOfnU54QrloTgPEdfhqVoXJDLo32zQdzQ+XdnKOgQJiPHwjmLrMjAeqF9JMOwaMKMBLAfFPYtXqxmQQbNyo9H5jU69hBbe2wsHuHkLtxp12YWcXKfVPHqcKOT3thkcShXvqj/uwSoWExn/P8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qt+TIp/X; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=j/1afwX8zZJRE9+6br1gLSFZqy9/mkcbDE1928Hr5AFUyK+sj+TVqj5ez9ZHNqMjgF57tKHOZ+22GgQehyfiF0cAsjPgohZHmDfOe47Bdfbhrvy/f4ZHtVUEAQg3+xBaMb2EzS7iaYGdzgV0FUQWXCQa1v232BF1f6185wHFSfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Afm3KjEy; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qt+TIp/X"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Afm3KjEy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716802187;
+	s=mimecast20190719; t=1716802311;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=a2KHdQxlr+nCK+72i7BoiThRuJXfjIGAcKBIGrSIL78=;
-	b=Qt+TIp/Xaivkay4KjM0URuYWq6SsiRecSq3TGBWjstDG2cWTkfC7VJt6Q6JlFh01hh1eK8
-	oLv0cXBir9xW8y7bREWGx7qWbmFNMFCF+VxbGT6igKx22yOuQubiMhhfDbetBKDZsigY7W
-	mnU7rftnBVLrAlBeQuiSnRFAyGnjAZo=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=M2CcOPoqdig3YSceblW+UAvqqtvVMjenKvenHarS8sw=;
+	b=Afm3KjEyvAFZslZjrLann2o07tc+D5/GMQSMVYC+W9d5+I3D4oYumDE+ESp/khXGT9tN3f
+	XQ+0qb1IndJ9gVSvocmsmxo+5nYZJJhJDvoU4gIcipME7Uu+RTndD2c2+lhfG1ZP22csER
+	y9KB85gyXQZ+QysmDR/ByLd+Jder1i8=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-592-nyE134VwN5mD507MbfPaug-1; Mon, 27 May 2024 05:29:46 -0400
-X-MC-Unique: nyE134VwN5mD507MbfPaug-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a5a84e7c884so286549166b.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 02:29:45 -0700 (PDT)
+ us-mta-220-gqNMim85P-CML8SP9B0BOg-1; Mon, 27 May 2024 05:31:49 -0400
+X-MC-Unique: gqNMim85P-CML8SP9B0BOg-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a6265d3cb34so121347766b.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 02:31:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716802185; x=1717406985;
+        d=1e100.net; s=20230601; t=1716802308; x=1717407108;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a2KHdQxlr+nCK+72i7BoiThRuJXfjIGAcKBIGrSIL78=;
-        b=wN92SviQ5l4jY5rD2foXRClevKV5Mb6+rg4if4JyqlDl8Qww0i/EMB1krNVswzUMs0
-         XQT1NJYfhSqETmV2nM+TctMQWmz5fhHmvNV6TgqBGy6ZrSGrybMvmXxD5qmyFTKFJsg9
-         teESNw9ggHmPPfRpcPwuP0WfFxWtGDxIRCnYGATYIjj0m81UzLQiqBEdCriIB35THweO
-         ckWub1VJlhTBcnpDPqMy5AHj9mFQiQbXZL1God0Wuy78yaXDAUQYb8k1x0nAwJvjQwIe
-         FU5nKnUdXkAmz8Qgky6NAo+8yXDGcE7Kd1OdzEqvhck1u47tJYK4n/VJl8ySacADSHme
-         ylzA==
-X-Forwarded-Encrypted: i=1; AJvYcCWrgSnvo2NPWgYJCEnyIz4W29lMLG8/FyllC+txPWL3AwcNbBDIsgxIGnQyT+7QcmgOIoC819F5rZ9aEmG+uJpW50jwo6Y+6OO19fw524+GOXZLuQ==
-X-Gm-Message-State: AOJu0YyNptxMn8nNgf9Yf/2Fa8d3SGlPy/uv7BYrCmaygvUWi2G5YPh5
-	/mkqh8Z/YIKufwuzmSNIgrKg/913quF6y2nWCJFOi3mrymjhw4YyLPt+yReZyDzxsTKaw5aIChk
-	xByqZRoSRyJjUwN0d4QCCDfmy6n+RbO8KE3XPSEust/pZBVRPws6uFbXLrgqLYWN6KmcKZJA=
-X-Received: by 2002:a17:906:b15:b0:a5a:15f6:157f with SMTP id a640c23a62f3a-a62641b42fcmr573358266b.14.1716802185024;
-        Mon, 27 May 2024 02:29:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEY7hYRzJQt/K0T3Xo6dt+GVQ6bfmi9PMBGZAhv1A5DH1gxbNqtbSUlQN9ac3tQ+gdHgt1I2Q==
-X-Received: by 2002:a17:906:b15:b0:a5a:15f6:157f with SMTP id a640c23a62f3a-a62641b42fcmr573356966b.14.1716802184553;
-        Mon, 27 May 2024 02:29:44 -0700 (PDT)
+        bh=M2CcOPoqdig3YSceblW+UAvqqtvVMjenKvenHarS8sw=;
+        b=sf60SA3NSJBfNUG8Hnh8MG4ixbwo7vMhOXe0SCR0EyYrb9ALsUJwSOyaVpxDU9A6fP
+         4hmUUet4dku9pYq1eP577KhpQn0pjOS9zqSFkQzxFtEe9kGKaA6AYi2dt5mSRl8YlPVa
+         PTaa2J5L8LIfQrzYxjgQ6zTyDKZG0fkQ0VKj/TODEnTSARsiqDl4KYvo4fqsoOs4Kzkg
+         Enm8BMUB9Y6uSYPpEsVG3fbsOFVT7ZmtA1iacnDckJa02vOjem068in6nXzU28ye9sVx
+         Hi8UDJRdU0J4JKtBVbuTVoZiXKGlNZKTnmBg0YHg6PtYVwJ5rSXXnN21rK9hAapFbrce
+         qDhQ==
+X-Gm-Message-State: AOJu0YygLdnKoVUfmCPNT7w9Mx+r9TKsoYqp9vb5ZEBXpxYBIJJByXWc
+	i+oG6TYQVfJDbPbTmt9TwXlEOUx35lefOXrVAW1btnHFdjhZ9KbMR6RwF34kgo4zCY/VMGrLf6Y
+	uct9XxrLZCgjTqKzqgn3LgpGSllWr9Z5zisdQBbHWEuRVnl8kIAi8lTDBuCrAv/e8RxcUHOI=
+X-Received: by 2002:a17:906:46d4:b0:a5d:15ec:7793 with SMTP id a640c23a62f3a-a62649bdecamr652882966b.35.1716802308357;
+        Mon, 27 May 2024 02:31:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEfgM0zAmvnvjtU4SlgWxNJ8nEJyr1KtRmMz0QpB8hPj8W/fQP6opn7VZ6I7rijDoYTa6mrXA==
+X-Received: by 2002:a17:906:46d4:b0:a5d:15ec:7793 with SMTP id a640c23a62f3a-a62649bdecamr652881666b.35.1716802308031;
+        Mon, 27 May 2024 02:31:48 -0700 (PDT)
 Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626c9376edsm466532366b.59.2024.05.27.02.29.43
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626c97a41esm472061866b.96.2024.05.27.02.31.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 May 2024 02:29:44 -0700 (PDT)
-Message-ID: <e6db0add-e290-4fac-b90c-da264939693d@redhat.com>
-Date: Mon, 27 May 2024 11:29:43 +0200
+        Mon, 27 May 2024 02:31:47 -0700 (PDT)
+Message-ID: <0babdbe2-1d10-4bc9-9393-f9735dae1140@redhat.com>
+Date: Mon, 27 May 2024 11:31:45 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,68 +66,49 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86: ISST: fix use-after-free in
- tpmi_sst_dev_remove()
-To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Zhang Rui <rui.zhang@intel.com>, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: dan.carpenter@linaro.org, kernel-janitors@vger.kernel.org,
- error27@gmail.com
-References: <20240517144946.289615-1-harshit.m.mogalapalli@oracle.com>
+Subject: Re: [PATCH] platform/x86: x86-android-tablets: Add "select
+ LEDS_CLASS"
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Andy Shevchenko <andy@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org, kernel test robot <lkp@intel.com>
+References: <20240521094741.273397-1-hdegoede@redhat.com>
 Content-Language: en-US
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240517144946.289615-1-harshit.m.mogalapalli@oracle.com>
+In-Reply-To: <20240521094741.273397-1-hdegoede@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On 5/17/24 4:49 PM, Harshit Mogalapalli wrote:
-> In tpmi_sst_dev_remove(), tpmi_sst is dereferenced after being freed.
-> Fix this by reordering the kfree() post the dereference.
+On 5/21/24 11:47 AM, Hans de Goede wrote:
+> Since the x86-android-tablets now calls devm_led_classdev_register_ext()
+> it needs to select LEDS_CLASS as well as LEDS_CLASS' NEW_LEDS dependency.
 > 
-> Fixes: 9d1d36268f3d ("platform/x86: ISST: Support partitioned systems")
-> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202405182256.FsKBjIzG-lkp@intel.com/
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
+I've added this to my review-hans (soon to be fixes) branch now.
 
 Regards,
 
 Hans
 
-
-
-
 > ---
-> v1->v2: Add R.B from Hans and fix commit message wrapping to 75 chars.
-> This is found by smatch and only compile tested.
-> ---
->  drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/platform/x86/x86-android-tablets/Kconfig | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> index 7bac7841ff0a..7fa360073f6e 100644
-> --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> @@ -1610,8 +1610,8 @@ void tpmi_sst_dev_remove(struct auxiliary_device *auxdev)
->  	tpmi_sst->partition_mask_current &= ~BIT(plat_info->partition);
->  	/* Free the package instance when the all partitions are removed */
->  	if (!tpmi_sst->partition_mask_current) {
-> -		kfree(tpmi_sst);
->  		isst_common.sst_inst[tpmi_sst->package_id] = NULL;
-> +		kfree(tpmi_sst);
->  	}
->  	mutex_unlock(&isst_tpmi_dev_lock);
->  }
+> diff --git a/drivers/platform/x86/x86-android-tablets/Kconfig b/drivers/platform/x86/x86-android-tablets/Kconfig
+> index 6603461d4273..b591419de80c 100644
+> --- a/drivers/platform/x86/x86-android-tablets/Kconfig
+> +++ b/drivers/platform/x86/x86-android-tablets/Kconfig
+> @@ -6,6 +6,8 @@
+>  config X86_ANDROID_TABLETS
+>  	tristate "X86 Android tablet support"
+>  	depends on I2C && SPI && SERIAL_DEV_BUS && ACPI && EFI && GPIOLIB && PMIC_OPREGION
+> +	select NEW_LEDS
+> +	select LEDS_CLASS
+>  	help
+>  	  X86 tablets which ship with Android as (part of) the factory image
+>  	  typically have various problems with their DSDTs. The factory kernels
 
