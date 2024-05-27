@@ -1,146 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CCB79E1;
-	Mon, 27 May 2024 10:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E766C79E1
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 10:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716806037; cv=none; b=PbCRzYcAF1A+eytYv8if5cH4VQx/lnkrfhkHRh0QhFRx02kzl00VVqxvrIR1wIyNui633R6AwQsn6v1oACCtHb55BBcTZJhKrqAGzNRpagcke2/rO5rUrqto90KsNfjvQrHb0eXfdtv0DkhRL9bfAQ84cVHjcjmqwvYjXvcGgsA=
+	t=1716806341; cv=none; b=Ec1tg4ecR3hMq7Lu0AQhIbh80F6Lbf0FTU++RMS1qFfK60/oX2GZ59R+8Dex4E0/4G+C/s28A01957O40Hrd55ECAucePWzrMwFmXcxvs89ReoZNz796Y1KKUwvj2ndTABMhwuGyMWcP9h7ilTgSPfWovJ28s2aMFp8a/kM6zCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716806037; c=relaxed/simple;
-	bh=kh7zExYsU5NSwXABQCpfwbxqjGDH1gafzF+5b2SbwQE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=oMASn0EEWFDzS6fUN8Hu+AsPfQxJ56/4C217/VljAX8DprMIVZ3bGakKFcfSdIwc30JtLy2dTfvv5SCrN7ksjUSq1ngrSh1GYN96HMTnRZuamRaceQDZVajfklXe+FN/ngfs8mqOyHRPa399L5zdg8OmYxgrXCdGYnX0QRan0s8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M1d/0CU5; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716806341; c=relaxed/simple;
+	bh=IkwzgdfTNU+klIMnbkfTrq2KFgzEpaYiBSPhQKWeC18=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gg44HWJlTM3mkaeHeUTqvd3nFmw5HXSVQ1u14r0jO35OV7rOGl4H9TbiQUzUctD4p98ixEAJIyOzTnwC+K9kmyBqPqjc0GhSn7Rc6/zmDEA1LPrUrJAN3o/eanBHIBWfym9bhyNvfvqmcHP1wIYe52/PCll+fxHmtQIjfPHEdGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S3dAV3UR; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M1d/0CU5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716806036; x=1748342036;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=kh7zExYsU5NSwXABQCpfwbxqjGDH1gafzF+5b2SbwQE=;
-  b=M1d/0CU5Jl1WDFFNgOggf/l1eR/LazbvBpCbHKrnhwoOBeBf0N3yWZO3
-   a4k1edQsywF5ygQUd7wJfFyAzlDu4kdf/dcVGBEaNXEgw5O4Hdcei2HBZ
-   9d6SLJdQi2EbDfNDkhfw+QwLhklRfofxW9/IptI/gYuxugn/RrNwf29ZU
-   CpIYF+nxNOeTvMzExp2jc1hM2r68BLZc3p6CEPanQTtzxHX6It8UKzGv4
-   8gC9N9ccCmxzY8tuw/c1M7lVQ/0WhC6vk4FAYw5JXdbLWjvrGdjmVkc3h
-   98HUbmUKYTudwGQT8swFEYQkeNj+mm7yxfBHnSK114C/+DLk7JKH45m8D
-   w==;
-X-CSE-ConnectionGUID: 3+35JX/UStu7lRHCpVePqA==
-X-CSE-MsgGUID: zIA2NkDwQeixMUACzOez3Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11084"; a="13239124"
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="13239124"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 03:33:55 -0700
-X-CSE-ConnectionGUID: SExCQypaS/y8JBy/H0Ut8w==
-X-CSE-MsgGUID: N+FtcBA1RaetMv4BazM3MA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
-   d="scan'208";a="39154551"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.138])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 03:33:54 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 27 May 2024 13:33:49 +0300 (EEST)
-To: Shravan Kumar Ramani <shravankr@nvidia.com>
-cc: Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
-    David Thompson <davthompson@nvidia.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/4] Documentation/ABI: Add document for Mellanox PMC
- driver
-In-Reply-To: <d8f86ffc4a8a93f13a278ac9c95e0f95b4dd3fb9.1716205838.git.shravankr@nvidia.com>
-Message-ID: <23406905-4c1a-5fb3-1bb4-8a3475536977@linux.intel.com>
-References: <cover.1716205838.git.shravankr@nvidia.com> <d8f86ffc4a8a93f13a278ac9c95e0f95b4dd3fb9.1716205838.git.shravankr@nvidia.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S3dAV3UR"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-57857e0f45cso2977037a12.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 03:38:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716806338; x=1717411138; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kcLzu4LJ9QZeVn/MsZTmbDQWrB/tBNmh+KmvIiHdD0g=;
+        b=S3dAV3URpEeeh+kAK28/WStp5EO2XRakJ4DD2Jo+s4fm+ABsEjVsiga7+hSK36DSCh
+         Ve+e9r/doqHufS73QoGmQ1+uEWF/RKXV2J9rDS8z3Rx5Zm8X151ibFgbiLOGMFLYc52J
+         TU8TZkN3sMWKOFFURfOtX2ZnOr6Hqa9soRjl8SWxGUhnJfzLS8Zb0GM2CX3afXic0OXm
+         /bun8zvVcfBEjO9CHkF6L0Dg6I1t/cYWVheVfYDaLeMR1d9T0LZCSDEkxlmDdzq5BnFE
+         503SwuH3DeC4MY/v+FgIWVfjLSOGtAX/K6KHvjP8dD93cBx4ODiJVnxB65YC70DOgnAI
+         LkaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716806338; x=1717411138;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kcLzu4LJ9QZeVn/MsZTmbDQWrB/tBNmh+KmvIiHdD0g=;
+        b=nBGcbLZlq7E35YnJ2FyVXKgjWJo51FT7EmMs3ft0OJ0MvN27gdEb8CR0htr6CPr519
+         7lcX5kDB7RiGXGiWNe2E0Fqh0Kw7Bs5ngJgTOwXxP9+jsx0741YeHA72/b7AQNV/KNTj
+         lWXr2CpwGFmtS6FNHfaDGU8a3xcJzD1PbYxhTXJsj3eOMUX9SbwA/uPLfY3ZxJETM9eF
+         dUIhD68p2JnPYHxp8zUcip2Yd6g+bqNxRkfYxFvAO7ZVtTKaMrSNolm2LV+lMbtI0zFs
+         /Xd1/vCdlYcVhRZ4n4lN1PI/Eb6pfNbLtJia7pNGFIYycW9ApnU+mzBitERNOHQucJ08
+         4Sjw==
+X-Forwarded-Encrypted: i=1; AJvYcCXshDhn+4Ui/nXPrDPi61K1C9MTFRVZmg9KUSB9MzkWP4D94ue9/h6RfKXERsfsBDp0tKrQeQ+wOS5yODybWrfy5gTkd/e9ZNoG/NKAWm3VJ0RjVQ==
+X-Gm-Message-State: AOJu0YwUaxheYsgUsItc9ARBE1JFp6r0r/kp4M7WanXY0DaRzJyXCHqR
+	7rYp7bG7R6hdPVUYOEeuupv8VCPImyDgFPeC18Rl42BsJhVW7jIXGpagCmvDZBI=
+X-Google-Smtp-Source: AGHT+IFvBQngBXOPW4ETq9VVybyALDmbeyIBaNOM9Vy8P40JUkXq/WTpcP2GigRERW9VwEVl6tOalg==
+X-Received: by 2002:a50:bb41:0:b0:578:3336:92b with SMTP id 4fb4d7f45d1cf-57851796edbmr5061953a12.0.1716806338089;
+        Mon, 27 May 2024 03:38:58 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5785238d355sm5635915a12.31.2024.05.27.03.38.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 May 2024 03:38:57 -0700 (PDT)
+Date: Mon, 27 May 2024 13:38:53 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: markus.elfring@web.de, Shyam-sundar.S-k@amd.com, hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com, kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86/amd/pmf: Use memdup_user()
+Message-ID: <4c2c8a76-17c7-4dbb-96ff-8488c8e953ff@moroto.mountain>
+References: <50d10f0b-d108-4057-be9c-a90e2398e810@web.de>
+ <20240527083628.210491-2-thorsten.blum@toblux.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240527083628.210491-2-thorsten.blum@toblux.com>
 
-On Mon, 20 May 2024, Shravan Kumar Ramani wrote:
-
-> The sysfs interface is created for programming and monitoring the
-
-This patch is not creating interface. I suggest you change the wording to:
-
-"Document the sysfs interface for ...
-
-> performance counters in various HW blocks of Mellanox BlueField-1,
-> BlueField-2 and BlueField-3.
+On Mon, May 27, 2024 at 10:36:29AM +0200, Thorsten Blum wrote:
+> Switch to memdup_user() to overwrite the allocated memory only once
+> instead of initializing the allocated memory to zero with kzalloc() and
+> then immediately overwriting it with copy_from_user().
 > 
-> Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
-> Reviewed-by: David Thompson <davthompson@nvidia.com>
+> Fix the following Coccinelle/coccicheck warning reported by
+> memdup_user.cocci:
+> 
+> 	WARNING opportunity for memdup_user
+> 
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
 > ---
->  .../ABI/testing/sysfs-platform-mellanox-pmc   | 49 +++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-platform-mellanox-pmc
+> Changes in v2:
+> - Update patch description after feedback from Markus Elfring
+
+Markus always CC's kernel-janitors even though I have asked him not to.
+:(
+
+> ---
+>  drivers/platform/x86/amd/pmf/tee-if.c | 11 +++--------
+>  1 file changed, 3 insertions(+), 8 deletions(-)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-mellanox-pmc b/Documentation/ABI/testing/sysfs-platform-mellanox-pmc
-> new file mode 100644
-> index 000000000000..47094024dbeb
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-platform-mellanox-pmc
-> @@ -0,0 +1,49 @@
-> +HID           Driver         Description
-> +MLNXBFD0      mlxbf-pmc      Performance counters (BlueField-1)
-> +MLNXBFD1      mlxbf-pmc      Performance counters (BlueField-2)
-> +MLNXBFD2      mlxbf-pmc      Performance counters (BlueField-3)
-> +
-> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/event_list
-> +Date:		Dec 2020
-> +KernelVersion:	5.10
-> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
-> +Description:
-> +		List of events supported by the counters in the specific block.
-> +		It is used to extract the event number or ID associated with
-> +		each event.
-> +
-> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/event<N>
-> +Date:		Dec 2020
-> +KernelVersion:	5.10
-> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
-> +Description:
-> +		Event monitored by corresponding counter. This is used to
-> +		program or read back the event that should be or is currently
-> +		being monitored by counter<N>.
-> +
-> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/counter<N>
-> +Date:		Dec 2020
-> +KernelVersion:	5.10
-> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
-> +Description:
-> +		Counter value of the event being monitored. This is used to
-> +		read the counter value of the event which was programmed using
-> +		event<N>. This is also used to clear or reset the counter value.
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> index b438de4d6bfc..1b53cabc9aa2 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -301,14 +301,9 @@ static ssize_t amd_pmf_get_pb_data(struct file *filp, const char __user *buf,
+>  		return -EINVAL;
 
-Please document how to clear/reset it in more concrete terms (I didn't 
-check the code but my guess would one writes zero there to reset the 
-counter?).
+This -EINVAL check could be made stricter.  Instead of checking for
+zero it could check for the limit from amd_pmf_start_policy_engine():
 
-> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/enable
-> +Date:		Dec 2020
-> +KernelVersion:	5.10
-> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
-> +Description:
-> +		Start or stop counters. This is used to start the counters
-> +		for monitoring the programmed events and also to stop the
-> +		counters after the desired duration.
-> +
-> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/<reg>
-> +Date:		Dec 2020
-> +KernelVersion:	5.10
-> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
-> +Description:
-> +		Value of register. This is used to read or reset the registers
-> +		where various performance statistics are counted for each block.
+	if (dev->policy_sz < POLICY_COOKIE_OFFSET + sizeof(*header))
+		return -EINVAL;
 
-Ditto for the reset part.
+Also this check isn't great:
 
--- 
- i.
+	if (dev->policy_sz < header->length + 512)
+
+header->length is a u32 that comes from the user, so the addition can
+overflow.  I can't immediately see how to exploit this though since we
+don't seem to use header->length after this (by itself).
+
+regards,
+dan carpenter
 
