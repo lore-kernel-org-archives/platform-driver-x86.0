@@ -1,100 +1,103 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E042043AC1
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 09:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630DB8BF0
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 09:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716801299; cv=none; b=NaA6Htt7Zr8ZZbDqE1a2Yg7I/R4KWoCYHzsgYBmBmzclc0kwN+nsIcEsL/lhf7nBdIMYEU1FBWCJ5FkYplOLtQ2HD0EylvlfGDXW9/1Ip+nTQln0f7nlfTmlsr5GLTtGTVrdpQJtLkn56ZuMSBodwt1iEN0JxeGV21R0wVrP9hM=
+	t=1716801719; cv=none; b=ZcCuCXrPOW5s7HOBeAUcZgjCgiRNTcTipyfgnxIOHGtoOx+Jyt55K5Hmn/ShYMbC/ZVG3tKKDNYxfWcOPXvd0Fvd0TKAzUAQg3JSQdZtlYC+W+/BuvQgAy8KJeRvGoCYHoRHMjsTy91+/P5nynOi8O5ui3gzvINrj/YrwvSTWpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716801299; c=relaxed/simple;
-	bh=aS4rmBjL2bpb+bpR14hz56d5bcLkLnGqKlGu3OlGm3k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aRqbaQIvirRvcyCbRjxu+jyXJ5eFD4ieKPKPtOeEQ/o6qeDF3ADpi7kTj79pS+KkHN65fizMV88orgT8hG1fQyLYa361iuVJMbKt6W1n0+0zVoxG+4d8pNkcAPrzpAOsM5x54A3EH/v0G5R6/xJTvqS/GDG++8UxcMxAS67wiwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BSSdJ5Px; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1716801719; c=relaxed/simple;
+	bh=pMa6PSJyLeiQSq7qwQzAzUnBKJb9SOL7VJDSxWsBbpI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=T/8W7VPi84KhRCYjI1yit3OztUBJ9lNPJWJ7Ly3L5iM8JRuHBeM8DMqe7FRILnBdZEHoDOZRzEoJQ+xZ+K0vHAIktmeDUT9g42oD+E64gAHWjASVbgQTiACLxqMMuUczMOYmajFzFywxJul5s6aJd3uyQ8nmHB89xZxmajo2Gss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CFtbAJmi; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BSSdJ5Px"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716801296;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gZn9LTGnyhU9iY4qdW91DQMBDJ0IKw5HpGSl0T+HHu0=;
-	b=BSSdJ5PxXEDKIMUR+yRpGAV6rFnncvs/jLrzJnjewyT/MRbcJcMonjfOMj4GrOsd8rzmkm
-	GwoQrJY05kMQo8FWFsFUz1k6upntnjpMeck9s91NzK8g22gLDAMolcsOv61Y0FFvqGFH5N
-	Dj2S6trbjEdHnNOpZTs7TIlNAeBLVmA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-465-eIkS-itIMXaQSlz-OKmWLw-1; Mon, 27 May 2024 05:14:53 -0400
-X-MC-Unique: eIkS-itIMXaQSlz-OKmWLw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A70BB8016FA;
-	Mon, 27 May 2024 09:14:52 +0000 (UTC)
-Received: from x1.localdomain.com (unknown [10.39.194.78])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id BD716200A381;
-	Mon, 27 May 2024 09:14:50 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	hmtheboy154 <buingoc67@gmail.com>,
-	Gregor Riepl <onitake@gmail.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH 2/2] platform/x86: touchscreen_dmi: Add info for the EZpad 6s Pro
-Date: Mon, 27 May 2024 11:14:47 +0200
-Message-ID: <20240527091447.248849-3-hdegoede@redhat.com>
-In-Reply-To: <20240527091447.248849-1-hdegoede@redhat.com>
-References: <20240527091447.248849-1-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CFtbAJmi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716801719; x=1748337719;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=pMa6PSJyLeiQSq7qwQzAzUnBKJb9SOL7VJDSxWsBbpI=;
+  b=CFtbAJmit1ZvCgcgaTbYYXwT69oRwIOiNCSK2sx+PoaRRFbiHkIvlHV4
+   TWtOPTf2vCpI00fylco20phSEjjmWaUBJoaq/Oy2unhc6shTOQUAYhsfw
+   veepbj3YyXjx4oARk6kuUthIOZoD3QoKnEAn58IFt9Zp0WQq7csi9V77x
+   mFetzZ5Er1eeG023iMo2wJEjJaRGfzqdNUGbTZ1i9vitoaQfk9vvkLARb
+   JFGji4nSK70jgtQlu/OVNCd4i41EQ492pzRws8aTDz1MWuxHZVVxg1UoU
+   5T2Sw2jMwzcqaQGQi9aa+QdMn9aqEuxxqPufMKb/JjOWUMa0RPX+V16+8
+   g==;
+X-CSE-ConnectionGUID: uMN4rMTCTXKPs13JepZppg==
+X-CSE-MsgGUID: oPJRA4y6SXGEb1WjzjqVng==
+X-IronPort-AV: E=McAfee;i="6600,9927,11084"; a="30620109"
+X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
+   d="scan'208";a="30620109"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 02:21:58 -0700
+X-CSE-ConnectionGUID: N8KGPYnoT0GY9XkjAzh3GQ==
+X-CSE-MsgGUID: k05Hj4fxRXqRWrvI86vbgw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,192,1712646000"; 
+   d="scan'208";a="57899679"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.138])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2024 02:21:55 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 27 May 2024 12:21:51 +0300 (EEST)
+To: Hans de Goede <hdegoede@redhat.com>
+cc: Andy Shevchenko <andy@kernel.org>, hmtheboy154 <buingoc67@gmail.com>, 
+    Gregor Riepl <onitake@gmail.com>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 1/2] platform/x86: touchscreen_dmi: Add info for GlobalSpace
+ SolT IVW 11.6" tablet
+In-Reply-To: <20240527091447.248849-2-hdegoede@redhat.com>
+Message-ID: <ef8a614b-3079-13a4-b223-23e1ef2bec7e@linux.intel.com>
+References: <20240527091447.248849-1-hdegoede@redhat.com> <20240527091447.248849-2-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+Content-Type: text/plain; charset=US-ASCII
 
-From: hmtheboy154 <buingoc67@gmail.com>
+On Mon, 27 May 2024, Hans de Goede wrote:
 
-The "EZpad 6s Pro" uses the same touchscreen as the "EZpad 6 Pro B",
-unlike the "Ezpad 6 Pro" which has its own touchscreen.
+> From: hmtheboy154 <buingoc67@gmail.com>
+> 
+> This is a tablet created by GlobalSpace Technologies Limited
+> which uses an Intel Atom x5-Z8300, 4GB of RAM & 64GB of storage.
+> 
+> Link: https://web.archive.org/web/20171102141952/http://globalspace.in/11.6-device.html
+> Signed-off-by: hmtheboy154 <buingoc67@gmail.com>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index b021fb9e579e..6c03e7daadd4 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -900,6 +900,22 @@ static const struct ts_dmi_data schneider_sct101ctm_data = {
+>  	.properties	= schneider_sct101ctm_props,
+>  };
+>  
+> +static const struct property_entry globalspace_solt_ivw116_props[] = {
+> +	PROPERTY_ENTRY_U32("touchscreen-min-x", 7),
+> +	PROPERTY_ENTRY_U32("touchscreen-min-y", 22),
+> +	PROPERTY_ENTRY_U32("touchscreen-size-x", 1723),
+> +	PROPERTY_ENTRY_U32("touchscreen-size-y", 1077),
+> +	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-globalspace-solt-ivw116.fw"),
+> +	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
 
-Signed-off-by: hmtheboy154 <buingoc67@gmail.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/touchscreen_dmi.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+So you're planning to route these through fixes branch?
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 6c03e7daadd4..2d9ca2292ea1 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -1404,6 +1404,17 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_BIOS_DATE, "04/24/2018"),
- 		},
- 	},
-+	{
-+		/* Jumper EZpad 6s Pro */
-+		.driver_data = (void *)&jumper_ezpad_6_pro_b_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Jumper"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Ezpad"),
-+			/* Above matches are too generic, add bios match */
-+			DMI_MATCH(DMI_BIOS_VERSION, "E.WSA116_8.E1.042.bin"),
-+			DMI_MATCH(DMI_BIOS_DATE, "01/08/2020"),
-+		},
-+	},
- 	{
- 		/* Jumper EZpad 6 m4 */
- 		.driver_data = (void *)&jumper_ezpad_6_m4_data,
+Just asking this because you've the other patch in flight which removes 
+these max-fingers entries (I know it's not harmful to have an extra entry 
+but just trying to synch on the intent).
+
 -- 
-2.45.1
+ i.
 
