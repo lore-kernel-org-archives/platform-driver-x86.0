@@ -1,204 +1,307 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2041.outbound.protection.outlook.com [40.107.94.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88D917BB3C;
-	Tue, 28 May 2024 21:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716932282; cv=fail; b=W79fiP4TC+1JbUwgpSPz8RxIL+PQBggy+akxoQpPNY6z8lPZ9EnXbMwDpC9Y6ef06o19qdZ8r235yqvVe1hNsosf/jGJi22sxptIuz8+++2SlbD1AaLItr7fcdnMkRpmd9sxRG0fdCLxyNX5FHuCbf/QZyx2q16rSjnVDbIVoaM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716932282; c=relaxed/simple;
-	bh=CWIrxfqnk3E/Hp0MiBK8AkBHAD4VZcyPmI4qZmNumE8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=BMRABNhYNVXdxxowDWt14ktBW0KlKDo8i1azj9M7NAkOZ/NqHDqS77I3yuLaFov1zYPm5KJQmglab/V4aSYuwOi3+gOLSZCeWsON3Df+5UILHaQVSS6Xx1PP/3T2E3MEZMsJEKhOpPj6DAjAp4ggkEoe3N+bU22RZH1s9ZEOJ5k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Xffkibkd; arc=fail smtp.client-ip=40.107.94.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D3813E029
+	for <platform-driver-x86@vger.kernel.org>; Tue, 28 May 2024 23:51:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716940271; cv=none; b=u6XHQEK3yWKET6sc/+bqBzEY+nZW5vETu42ReYFT8lgHCCcFfrAM1lefjfjlJWtcPonAlClNeCWwP71eTe+OeHFH4semwPin9k3IOWK9gUAKdL3EjrBmynlB/ELcxT2MEotmBwUEgNmRAFnw8z6/tXUhQEhQr52PjKNmHqNfZps=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716940271; c=relaxed/simple;
+	bh=U6rd2u/yCnU0MQ4VXeRi1hcrtx+O94VJz7DpKLJXgOg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OOeURW2I5Q1RJrB/fT2f08v3DZwrpZDaP/vu7EmO7DLQwkI9Y/EbUsYoU284ayuJP554F+j7Ynof59vlgJewrCTA3UX1K12fOVOmJLrHkmiV9Mfv9DXoaUrt3mejnad9R0NTRsp2Xe2VDbI982IE2h9wu0829nuUUhiFw/iVy+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V+jw15C8; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Xffkibkd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MtqW5hFlIrj4HMJeRxghe987FCYtdkpZ0iT4w5DGINSvztY/YWDSaODmWQCEiC/rpJUNBp9L4XRrf5XGZCL9q5ug0A+GXyDzATaa+Q7ooZbSklFp21PTySuKzsMpcjF410CuSE3fmOvEaW81qaiOUPkE8ZGLmrYAcgqad1WihTMWsocytRAM5MKOYP90+TC4h5bkWM9O/oNHM5kvm1j+ScNiSZWSywIBbL/hMyIjKfmohReV+11a3r3tJrK9crVADcOjI8gmQy2JBAdl5SoK20h937vJ9gss5SRqr+Ec228kg5czV2uCVXR4rzFXI1+1IFU11DkVnXVx1ql+pluhFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xEWL/cSvlQ6Qy6U2X4FW5FNKCUXON89uZtVTgjyjT+0=;
- b=ITVSwZAsDPOYYvKV012spDLAi3NtUe2EKY8H3SLsmmS/aVAIvlOQTLdKR11Vb2cpHyBOlCt544FX2Fnm+XwY0kIeu9Fs7fckv0mZB82mwsKyEXK+XiOlH1AmZs+OT+zVbw+zB2S8xFTPsouOuXK257mnZKSDUOlqKFBLbewWr1jmxzEjMOz+5+8A7YdZaVlDzBjZw8mvQOWeBJNE27+bQmppmC/aWP5N4OjFHYKVlooMmrJN1eH86lTkN7EdqzGmECdynN9YJiibymAdPupiY3mqITCOETbrJS6fS7TcFuqOVooFt/z62WMsbD83DqMciIDLptfVP2rjGcnTmXsa0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xEWL/cSvlQ6Qy6U2X4FW5FNKCUXON89uZtVTgjyjT+0=;
- b=Xffkibkdac/efeOhdqbtmSkeECrnEyUPHfqlwYgOYhDSO8imveQxENRuourUPtKZj97CfrbMpSoGNvfPWIp5kwvoi4+m/YN/2ml6hGtJYEAtiOWtzsPKEzVVGauLBpdjCXFvJidwgtb6At6Fzk/c3dF7bdiNWINDL9JlGts/z40=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SJ1PR12MB6220.namprd12.prod.outlook.com (2603:10b6:a03:455::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.36; Tue, 28 May
- 2024 21:37:58 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.7611.030; Tue, 28 May 2024
- 21:37:58 +0000
-Message-ID: <1a33c7a6-a04d-4c53-b8f2-02431a1073b3@amd.com>
-Date: Tue, 28 May 2024 16:37:56 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 8/9] platform/x86: asus-wmi: add apu_mem setting
-To: Luke Jones <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org, richard@hughsie.com
-References: <20240528013626.14066-1-luke@ljones.dev>
- <20240528013626.14066-9-luke@ljones.dev>
- <6f4bc109-00d0-47b0-a581-b96a6152545c@amd.com>
- <4d6b9171-7248-4937-87de-7e921ed8e507@app.fastmail.com>
- <5f4799b1-0606-46a9-a347-5a03738db341@amd.com>
- <ac597520-fb5b-40e5-ae1f-de825450d2db@app.fastmail.com>
- <371d4109-a3bb-4c3b-802f-4ec27a945c99@amd.com>
- <6d4e7f1e-ccd0-4ac5-b450-f9c5f8d5c90e@app.fastmail.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <6d4e7f1e-ccd0-4ac5-b450-f9c5f8d5c90e@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0116.namprd13.prod.outlook.com
- (2603:10b6:806:24::31) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V+jw15C8"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42120e3911eso9621815e9.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 May 2024 16:51:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716940267; x=1717545067; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dnSBP1y73hXcLVKI9OFBOJOQjY/3gyc0Iux1Jkwjjpo=;
+        b=V+jw15C8+aar+vke7hh19d3HSdFtotGesTwDabLAiIWPpsYkyOmbqFNVoK1LTc6ski
+         8ONRe5Qv5OnVBg6Ci/T2Esy6t3OiQLX/ugXiHJDzLeiIE2ebVDSElwjQ3EfpYwnUZ1re
+         dpkYlTrWCaO34j8keqaXwCZKx7iqMRsIUt5QhvGXFbAfJLejjXlY0baSaHpNUn34Jc5m
+         ctAeevP8knFXDO4ZDVgwnKdzdqmmJl+W0+qrNXXhBr50UAqIOmQfrPLksTvM5M6a3zyE
+         VzakXif8U9hpDuX2lsPRoXHKGdQOwOHScUWQxr9Rc9RCrnwaymXVh2VF3LD3yiVQENix
+         /z2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716940267; x=1717545067;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dnSBP1y73hXcLVKI9OFBOJOQjY/3gyc0Iux1Jkwjjpo=;
+        b=J9WUj5A/Dj9GFyZawiPMUqXLrqWLSOVYaPqTDQTATxZLN/EqQIMAEFMuyQ+1xaNgLe
+         mA2VnWQYxU2I8jy08RD5fqc8FMSt7eA+YT/X3yj92rLL0Nge8mPrTg6jCUu3GxYgk+Sb
+         8f4kDjg1QItyLVm2wvmdWakR8h7bEpgw8vXYUpegLTFQqhoHA9p/wMlEu9HiYTJKqDF8
+         26fbtHrTO8U3cUfO8iahFIb0BQKZo3PGv/GYcti96Qi0kaXEPRxnmP0mz42vdQqBPSHs
+         IVtJVEmZTzeNkvuNc6Uud7OqY0JR+Pq1wiQtkb4x+VvpBRPpeIC9MwBnkMsGtSxke2kQ
+         ffHA==
+X-Forwarded-Encrypted: i=1; AJvYcCV9TCEvxWSoTHz3CLkcR27ERilc1Nq+YFqUvBRYmdF0zrCKgVtpieC7HT/+PgDMUWWmSz6JJxHWj7d1tCMQNlfjGKAcww194++mD5vVEs7pOQyN2Q==
+X-Gm-Message-State: AOJu0YxuAUCwB9gCi+AaQ51PLvtmPqAyFZo71eRePkxNkevGZuAR5jqZ
+	ZVIFBc2eoVCuVSXh30hlC7LcnjlOIl36kJflx0fuLFfz9cEyTC2QYDEmuX0saio=
+X-Google-Smtp-Source: AGHT+IGW+PMxhqpCnMYFAJtAcLClSa/LPe6M4D7yxH9tVsegfjt88HkF3gmo6+nhSpDmBiJRq2Ux+g==
+X-Received: by 2002:a05:600c:3595:b0:41a:c170:701f with SMTP id 5b1f17b1804b1-421089f9828mr115015805e9.38.1716940266996;
+        Tue, 28 May 2024 16:51:06 -0700 (PDT)
+Received: from [192.168.0.23] ([176.61.106.227])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42100eeb962sm193040335e9.1.2024.05.28.16.51.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 May 2024 16:51:06 -0700 (PDT)
+Message-ID: <2b76f27e-f223-4ff9-880e-9e232ce9ddc6@linaro.org>
+Date: Wed, 29 May 2024 00:51:04 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ1PR12MB6220:EE_
-X-MS-Office365-Filtering-Correlation-Id: 32a3a304-d821-463d-9251-08dc7f5e7113
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NUpRK3crNHpIZG1la2p5ckFnUlZpeDZDUWVYdVhqNkJnVnF3TGlGSUhJTGx5?=
- =?utf-8?B?YlhJQzdaMWxrK0VqNHpESnVNRUt0b1d6R3VtNnRxL2I1b2QydUFMb2tXUGVN?=
- =?utf-8?B?QWVSY1R0aW1xNGx6Qk5aKzJSTlY2enBQeE05UXU3OHEzdmYrSmlMc3ErdHds?=
- =?utf-8?B?MXBUTjBzZE5YM3NpMEFhc25QY0J2RVJvdU1IRmo5Y2xzQmVibUc5d3JPSVhN?=
- =?utf-8?B?U09zcHlLM0t4aWE3YW82WC9VdTVVdzIwUy9TcVVja1RobGFYYzN6d0tiZjg5?=
- =?utf-8?B?empDanEwTnZUMHh4bkU1cmZIbDV2S0ErOFkreXM4ZjZqbkJLKy91NnhybGl4?=
- =?utf-8?B?NnU4NGhsa1k4S29pSXY4VXNEVU42NVRoK1ZYNXR1WWZCTTNEN1VXdnJhVE1v?=
- =?utf-8?B?QmcwREo1MFk1enhYRzd4RzI5YnA3aGhVSVgxaDlDeFF5VmJXR2tMazdzUEl2?=
- =?utf-8?B?dHRrOTVYam1KMmwvRkpwM1VyRGRWeCtNNnBNc0hyYm9nVTF1V0dwWDMzQmMx?=
- =?utf-8?B?YzBFbEM1ajRXRmdDMGZYV1F0bkZ0U2U4eXV0SjFoMkdCS0VabG5KaXkwbkdW?=
- =?utf-8?B?cjFnMHBnWmxpa1pUOEVrWi9mSUtQRFZuWHU2RzlTZG50dVFydjBrNXl3c0Zq?=
- =?utf-8?B?eHdRa1NUa3pOOTRpTFg2Q3RMUFQwcTVqc2NmNTZHNG1ib0gzZmlONlo4TWlL?=
- =?utf-8?B?YSthaVM5cUsra2hMTUV4RDkySlBYa2R1YnZWSFZPaXY0emVYTTNzSFFycXV4?=
- =?utf-8?B?dkRTZXpBd05NVHNsZ0ZXYWpwQkVFeTFjWHpoNnRLVkNpclBiMWtnZGZHQWZH?=
- =?utf-8?B?TXFHZTVGVzVCQ2ZhVlJoQWFxWExsU2k4cnFZVzZUNUVqcVZGWlFHc2tsbTc1?=
- =?utf-8?B?SFNWWERnK2FrRUttS2pGR09zYk9sT0kzQkhNaFhPM1VCYlZuYnZnZGY5UXlY?=
- =?utf-8?B?TlNSNS91Z3FwWWljcGVXTm1aTlMzSkltblpSYzFyVk1keTVtSTd6VUV6TTAz?=
- =?utf-8?B?TlNxT0ZDMElMUXo3VS9XV05PTTFNZkFMVW9qdVhudEFOUXVON0ZsaFQ1dkgy?=
- =?utf-8?B?dlE2bHVTVzNPZTZHSVkzQkxHNHdmRFM5VFZoc3lGYjZXTDZFUElDQzNJcUF6?=
- =?utf-8?B?MHZZcVZ0UHFnU0srYjdIanN4NDQ3WWhVWGZtbTJQekxvUU9xc1FhNElyRVVp?=
- =?utf-8?B?ZzZYWEVZWDArUldoYnFHWlVSaWVGNHpRWGowNmxUdk1pdWF2ajgwaUZQbUp5?=
- =?utf-8?B?L0Jva2xWeThkbElRQTVGU0R3ci9aMUs3blkwdGR0cFV2MlhGR3JHMUlyZjFS?=
- =?utf-8?B?d2xSbmpyMlRCNnVPTWZOeFhPQUFPdEttendUcEZ6UFptNEs5ckRFVnl3ZmhV?=
- =?utf-8?B?NWhjdzdDdXJLSGE5SS9ObjFDd2lHWXVqOFViY2x1RDlTdFpSSmVMMnZpU1p0?=
- =?utf-8?B?d0ZSOHR3NlErMTZzV0xBbFp4OG8zcWtiTEtuRUhYOGxaSlRGZkpNNzdUSml0?=
- =?utf-8?B?NysxdkFLd053UUhLRmZ6VGlXcndqU01BK0dQalZkUXZ3U2NCcTFWQlNHUUg2?=
- =?utf-8?B?SzQvS3NaQTdaU0J1bDZYSkJ0bkJEVnBINmFKUDhjcFUwL1RlUUphaUpFR05O?=
- =?utf-8?B?alNSMkQwWm1SWEdPSkh4S1g2UU1tN0s5bUNxWVJrWS9LYzA5Q2sxWU1PbDBy?=
- =?utf-8?B?WXFJMG5rRFNmd21yL3VKM3ZVcmVERVVHdy94SGJDSlk4cysrQ04wMnRRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZmM3NmNDcmZhTDZnZlZXVlNsYiswVWV3YzFRUHJjMWlYWUlWdkpvWVhiT0k5?=
- =?utf-8?B?eWxlZDBqZHZscS9JZzJCZlMwWGhMVTYvTmhZVGRobGRDRy9VUWtKUzlVUGQw?=
- =?utf-8?B?a2I5d1doeHB1RGRNVEN1UFhHWWVrMzhucW9tUVNpOG5mNEg2S2VQeFIwV1J5?=
- =?utf-8?B?K3VUMmVsWXprdVpnR1pzZnpramZ0MnZWUWU3ZkZIeXpVbDNTRk5SWFNxKzNm?=
- =?utf-8?B?SWp3Q1RaWklSMktWNGNhVFhicXB0WmdGcGpva29TVDdQam5xUDUveVlNSURn?=
- =?utf-8?B?cjd4a0N2TWZYdTZ2dUFjc0UwdlJUL1lyRDFkNnoycW40cmxpcjVWZVppd2JJ?=
- =?utf-8?B?VW01cFhvMGlHZWdMWVVQYXI5NTZkMVRKTzUvUmRjOFZVRHlSVzJlUWJRZzlr?=
- =?utf-8?B?MTVvNk5KNzZmQzZhYlk3aXV2L0dyWnFWU0hvV3d5UjNvNW9ycTcyNWR4clpq?=
- =?utf-8?B?Nzl3OWRWYko0RVI3VnRZUmRqdFlnU3gyMExZd3NZTUVRMi9sWFhTSHdrZU1u?=
- =?utf-8?B?Z1NqdXRFR05xTWRiNWw2MzJHUGViZnFBQ1d4c284TEdLbzk4ZUZ3SGZ5Q0pB?=
- =?utf-8?B?dlpvM3kybnhZKzFzdFpTY25meHp0MkFuRVMvbHJybExNL0VTOVZOV3JCbS8y?=
- =?utf-8?B?WkxFUnBlWDFyaC9BRGxySFRLcXo2NFI1YTlOYkdRcjBISW1nd1dRdThzZXRz?=
- =?utf-8?B?dEJUVG9VYzJqbWhkYk1GZE5DUkNaMkVSYnhBNWFPQnN3V3VkeFhSeU5RWXRi?=
- =?utf-8?B?a0VaUndaQjh6NGNwM2lJdGo1em1KWkV6aUpHTWFGYlB5bFE4WFlSdW1LTzVB?=
- =?utf-8?B?azUwMUphRExtWW1QSjVERGsrZXpDR2txTG4xSitIQUhHK3ljcnlobGVzeEFC?=
- =?utf-8?B?ZEVSbktVSDVLOTA5S2JhNy9JYXBaL0JhUXBoaFZVNFAyUXlnd1NqK0lmSUU0?=
- =?utf-8?B?U3dQc0UyZDZuVHA4dGNMTkUyaFgvME1CNU9lT2lOTVVQMlgwQ21CR2FwbGJ2?=
- =?utf-8?B?MVIyVTJBUVpyQTgwUDBiWjJNUE8yOTE1cStKdnk0SkpuSlVHdDVCdHFPU0Fn?=
- =?utf-8?B?ZWpzbWlqZEJaRUV1bHcwcEFMZHpqdm1Xelo3T0wyWTUwdW5tQnlkRjltWGhP?=
- =?utf-8?B?Z1QxSkhRL1lyYkRHaDBqQ2pPZWY1ZnFhZlpRbkpOT2xHcDZ5NlovdW4zQkZZ?=
- =?utf-8?B?SFNlaGJWaGU3UEUwa2d1T21WZzRYWTZDSldXdWdqTFNvazBJYzVUSXV0QXk1?=
- =?utf-8?B?OEVyYko5V2JIYkVmcXQ3RDdXZXp1QnNiSS9ZVUs2bmNUcmo5OG10M1B0UUlu?=
- =?utf-8?B?cjBhcUd1VVNVVWt1STlONjlpek8xMXNDQ0FZRytZcUhiS3QwaEZ2WHMvd2JM?=
- =?utf-8?B?YWtuL0l3VFJ4MEhZNjVSTUZNbnFnbnFFWDJFSmUrMkRkQXRkQ3ZoNnV2L3g3?=
- =?utf-8?B?WGswelg5aVVIR2k5b3ZEK05oNDJlNEtqUS9nUFcxMlgwWjNpT3hrZkRwUThv?=
- =?utf-8?B?RDhoSGFVOURJNUZuL2piM2o1YVVlTkRkM0VEVG9PSXZzcVpRMXVlMDlINWV6?=
- =?utf-8?B?QkVnZ1BuUUx6cTlBcEJUejZuMGMrTlRpeEFWQUVpOG43akhwekFVMENDMVpt?=
- =?utf-8?B?OGs5MUZjUkh4V3d3VU9xd0lJVVFrSWVNT1pSWVZ5ZXNwTGptVXpzczZ5QnAx?=
- =?utf-8?B?elZObHlZWWdrelZOdlVjMjl5c0hZeUFxaGliQlRXcGFxdkhaZHdJeWhIcVBh?=
- =?utf-8?B?QlR4Tm95b0h0OGg5b3cxZUV5Qkt6MUN6NW5sb2YzV3JtemZYQi9NSlYzNnJY?=
- =?utf-8?B?NmNjb1QyNG9yY1lzZndqV2lyZDcxR1ptN0JEN25hdTcrSFpKek5LemhiUkxa?=
- =?utf-8?B?SDREZHA3TmZ5Yk1JaVR0aVJJTmpSSEJzbHoxdCttdUFPVkxGMEdtbWVCcSsx?=
- =?utf-8?B?MW1JeG1tcFQ0V0tXcDRiQWtMTHViQWpzckNUb210L3Y4TWc1Z2dVcTYrdzBH?=
- =?utf-8?B?Y3VQWHNPcFN3NVJhZ3JlRlMvS0lIZmxjVjFreGlPNUhuaWM2SFphdWcyMkVY?=
- =?utf-8?B?SjhSUWpRVXN3VkhvU0I0b1ZGTWE0ek9aSFV1QmFKYTk1MzdjVEVKNUVUSXRh?=
- =?utf-8?Q?ouP/wqgZmRAF99zspn3JW6R9c?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32a3a304-d821-463d-9251-08dc7f5e7113
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2024 21:37:58.1571
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9+30OgjTZDCEsx1GqtPZB6lAyMPXD6qJy+0lmOLjuk2Vjdi9Lt14SBzIESivsg0wSQ4MORc6dchUq00o4MYZUQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6220
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/6] platform: arm64: add Lenovo Yoga C630 WOS EC
+ driver
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ Nikita Travkin <nikita@trvn.ru>
+References: <20240528-yoga-ec-driver-v4-0-4fa8dfaae7b6@linaro.org>
+ <20240528-yoga-ec-driver-v4-2-4fa8dfaae7b6@linaro.org>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20240528-yoga-ec-driver-v4-2-4fa8dfaae7b6@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 5/28/2024 16:34, Luke Jones wrote:
-> 
-> 
-> On Wed, 29 May 2024, at 9:16 AM, Mario Limonciello wrote:
->>>> For any "new" attributes it's better to put them in that API than code
->>>> duplication of the BIOS attributes API as well as a random sysfs file
->>>> API that you can never discard.
->>>
->>> Do you mean the firmware_attributes API? If so, I'm not opposed to adding all the existing ROG attributes to it also.
->>>
->>> If I'm understanding the docs correctly, for example this apu_mem attr would then become:
->>> - /sys/class/firmware-attributes/asus-bios/attributes/apu_mem/type
->>> - /sys/class/firmware-attributes/*/attributes/apu_mem/current_value
->>> - /sys/class/firmware-attributes/*/attributes/apu_mem/default_value
->>> - /sys/class/firmware-attributes/*/attributes/apu_mem/display_name
->>> - /sys/class/firmware-attributes/*/attributes/apu_mem/possible_values
->>> - ..etc
->>>
->>> That's absolutely much better than what I've been doing and I wish I'd known about it sooner.
->>
->> Yup!  And even better "fwupdmgr get-bios-setting" and "fwupdmgr
->> set-bios-setting" [1] will work with bash completion too.
->>
->> If you want to build a GUI around it, it could use the fwupd dbus
->> interface for getting those settings and manipulating them.
-> 
-> My existing GUI effort revolves around me adding these attrs to both kernel and a dbus interface. So if I can drop that then all the better
+On 28/05/2024 21:44, Dmitry Baryshkov wrote:
+> Lenovo Yoga C630 WOS is a laptop using Snapdragon 850 SoC. Like many
+> laptops it uses embedded controller (EC) to perform various platform
 
-Awesome!  You can either use libfwupd or the dbus interface.  After 
-you're done with the kernel work ping me or Richard if you have problems.
+an embedded controller
 
+> operations, including, but not limited, to Type-C port control or power
+> supply handlng.
 > 
->> The dbus
->> interface policy is protected by PK.
+> Add the driver for the EC, that creates devices for UCSI and power
+> supply devices.
 > 
-> What is PK? And I'm guessing this restricts users to requiring permissions to change settings?
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>   drivers/platform/arm64/Kconfig                 |  14 ++
+>   drivers/platform/arm64/Makefile                |   1 +
+>   drivers/platform/arm64/lenovo-yoga-c630.c      | 279 +++++++++++++++++++++++++
+>   include/linux/platform_data/lenovo-yoga-c630.h |  42 ++++
+>   4 files changed, 336 insertions(+)
+> 
+> diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
+> index 8fdca0f8e909..8c103b3150d1 100644
+> --- a/drivers/platform/arm64/Kconfig
+> +++ b/drivers/platform/arm64/Kconfig
+> @@ -32,4 +32,18 @@ config EC_ACER_ASPIRE1
+>   	  laptop where this information is not properly exposed via the
+>   	  standard ACPI devices.
 >   
+> +config EC_LENOVO_YOGA_C630
+> +	tristate "Lenovo Yoga C630 Embedded Controller driver"
+> +	depends on I2C
+> +	help
+> +	  Driver for the Embedded Controller in the Qualcomm Snapdragon-based
+> +	  Lenovo Yoga C630, which provides battery and power adapter
+> +	  information.
+> +
+> +	  This driver provides battery and AC status support for the mentioned
+> +	  laptop where this information is not properly exposed via the
+> +	  standard ACPI devices.
+> +
+> +	  Say M or Y here to include this support.
+> +
+>   endif # ARM64_PLATFORM_DEVICES
+> diff --git a/drivers/platform/arm64/Makefile b/drivers/platform/arm64/Makefile
+> index 4fcc9855579b..b2ae9114fdd8 100644
+> --- a/drivers/platform/arm64/Makefile
+> +++ b/drivers/platform/arm64/Makefile
+> @@ -6,3 +6,4 @@
+>   #
+>   
+>   obj-$(CONFIG_EC_ACER_ASPIRE1)	+= acer-aspire1-ec.o
+> +obj-$(CONFIG_EC_LENOVO_YOGA_C630) += lenovo-yoga-c630.o
+> diff --git a/drivers/platform/arm64/lenovo-yoga-c630.c b/drivers/platform/arm64/lenovo-yoga-c630.c
+> new file mode 100644
+> index 000000000000..3d1d5acde807
+> --- /dev/null
+> +++ b/drivers/platform/arm64/lenovo-yoga-c630.c
+> @@ -0,0 +1,279 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2022-2024, Linaro Ltd
+> + * Authors:
+> + *    Bjorn Andersson
+> + *    Dmitry Baryshkov
+> + */
+> +#include <linux/auxiliary_bus.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/notifier.h>
+> +#include <linux/platform_data/lenovo-yoga-c630.h>
+> +
+> +#define LENOVO_EC_RESPONSE_REG		0x01
+> +#define LENOVO_EC_REQUEST_REG		0x02
+> +
+> +#define LENOVO_EC_UCSI_WRITE		0x20
+> +#define LENOVO_EC_UCSI_READ		0x21
+> +
+> +#define LENOVO_EC_READ_REG		0xb0
+> +#define LENOVO_EC_REQUEST_NEXT_EVENT	0x84
+> +
+> +struct yoga_c630_ec {
+> +	struct i2c_client *client;
+> +	struct mutex lock;
+> +	struct blocking_notifier_head notifier_list;
+> +};
+> +
+> +static int yoga_c630_ec_request(struct yoga_c630_ec *ec, u8 *req, size_t req_len,
+> +				u8 *resp, size_t resp_len)
+> +{
+> +	int ret;
+> +
+> +	WARN_ON(!mutex_is_locked(&ec->lock));
+> +
+> +	ret = i2c_smbus_write_i2c_block_data(ec->client, LENOVO_EC_REQUEST_REG,
+> +					     req_len, req);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return i2c_smbus_read_i2c_block_data(ec->client, LENOVO_EC_RESPONSE_REG,
+> +					     resp_len, resp);
+> +}
+> +
+> +int yoga_c630_ec_read8(struct yoga_c630_ec *ec, u8 addr)
+> +{
+> +	u8 req[2] = { LENOVO_EC_READ_REG, };
+> +	int ret;
+> +	u8 val;
+> +
+> +	mutex_lock(&ec->lock);
+> +	req[1] = addr;
+> +	ret = yoga_c630_ec_request(ec, req, sizeof(req), &val, 1);
+> +	mutex_unlock(&ec->lock);
+> +
+> +	return ret < 0 ? ret : val;
+> +}
+> +EXPORT_SYMBOL_GPL(yoga_c630_ec_read8);
+> +
+> +int yoga_c630_ec_read16(struct yoga_c630_ec *ec, u8 addr)
+> +{
+> +	u8 req[2] = { LENOVO_EC_READ_REG, };
+> +	int ret;
+> +	u8 msb;
+> +	u8 lsb;
+> +
+> +	mutex_lock(&ec->lock);
+> +
+> +	req[1] = addr;
+> +	ret = yoga_c630_ec_request(ec, req, sizeof(req), &lsb, 1);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	req[1] = addr + 1;
+> +	ret = yoga_c630_ec_request(ec, req, sizeof(req), &msb, 1);
+> +
+> +out:
+> +	mutex_unlock(&ec->lock);
+> +
+> +	return ret < 0 ? ret : msb << 8 | lsb;
+> +}
+> +EXPORT_SYMBOL_GPL(yoga_c630_ec_read16);
+> +
+> +u16 yoga_c630_ec_ucsi_get_version(struct yoga_c630_ec *ec)
+> +{
+> +	u8 req[3] = { 0xb3, 0xf2, 0x20};
 
-Whoops forgot to respond to these.
+You have a define above for the read_reg and write_reg commands, could 
+you not define 0xb3 as LENOVO_EC_GET_VERSION ?
 
-PK = PolicyKit.
+All of the other commands here seem to have a named define.
 
+> +	int ret;
+> +	u8 msb;
+> +	u8 lsb;
+> +
+> +	mutex_lock(&ec->lock);
+> +	ret = yoga_c630_ec_request(ec, req, sizeof(req), &lsb, 1);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	req[2]++;
 
+why not set reg[2] = 0x21;
+
+also is req[2] some kind of address ?
+
+> +	ret = yoga_c630_ec_request(ec, req, sizeof(req), &msb, 1);
+> +
+> +out:
+> +	mutex_unlock(&ec->lock);
+> +
+> +	return ret < 0 ? ret : msb << 8 | lsb;
+> +}
+> +EXPORT_SYMBOL_GPL(yoga_c630_ec_ucsi_get_version);
+> +
+> +int yoga_c630_ec_ucsi_write(struct yoga_c630_ec *ec,
+> +			    const u8 req[YOGA_C630_UCSI_WRITE_SIZE])
+> +{
+> +	int ret;
+> +
+> +	mutex_lock(&ec->lock);
+> +	ret = i2c_smbus_write_i2c_block_data(ec->client, LENOVO_EC_UCSI_WRITE,
+> +					     YOGA_C630_UCSI_WRITE_SIZE, req);
+> +	mutex_unlock(&ec->lock);
+> +
+> +	return ret < 0 ? ret : 0;
+> +}
+> +EXPORT_SYMBOL_GPL(yoga_c630_ec_ucsi_write);
+> +
+> +int yoga_c630_ec_ucsi_read(struct yoga_c630_ec *ec,
+> +			   u8 resp[YOGA_C630_UCSI_READ_SIZE])
+> +{
+> +	int ret;
+> +
+> +	mutex_lock(&ec->lock);
+> +	ret = i2c_smbus_read_i2c_block_data(ec->client, LENOVO_EC_UCSI_READ,
+> +					    YOGA_C630_UCSI_READ_SIZE, resp);
+> +	mutex_unlock(&ec->lock);
+> +
+> +	return ret < 0 ? ret : 0;
+> +}
+> +EXPORT_SYMBOL_GPL(yoga_c630_ec_ucsi_read);
+> +
+> +static irqreturn_t yoga_c630_ec_intr(int irq, void *data)
+> +{
+> +	u8 req[] = { LENOVO_EC_REQUEST_NEXT_EVENT };
+> +	struct yoga_c630_ec *ec = data;
+> +	u8 event;
+> +	int ret;
+> +
+> +	mutex_lock(&ec->lock);
+> +	ret = yoga_c630_ec_request(ec, req, sizeof(req), &event, 1);
+> +	mutex_unlock(&ec->lock);
+> +	if (ret < 0)
+> +		return IRQ_HANDLED;
+> +
+> +	pr_info("NOTIFY %x\n", event);
+
+why not dev_info() ?
+
+---
+bod
