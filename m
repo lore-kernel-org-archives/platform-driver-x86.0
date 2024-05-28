@@ -1,409 +1,251 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778F72629C;
-	Tue, 28 May 2024 07:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5641F13C906
+	for <platform-driver-x86@vger.kernel.org>; Tue, 28 May 2024 08:26:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716881705; cv=none; b=jKvyBO3NYTMXASZZOn8120tNzIYlmxY7DslXE+xmr3J1GVSXo4g1kfMmiuKBbytezZBm8b4fU5zCELKmRO6UvCKxZe2p5fj2DEwbKuzW1z2GJKQ+IxE3pxKdtWMwveVACmIY5H5p0R94a++JxBCpQHqzLcwH+vMa+53tdWavBk8=
+	t=1716884785; cv=none; b=lad8zopS1Z08tZwkl7SjstnmdSjGh7b4ihGfTq+opGVChCarG9ciomiVMKWXn/6FaKZ/OD0EpFlS+JitKmR0BJTCLnlUiAAJ2v4tWkyoCncbk6d5VK6avZGW4ZiOBgFmBmQLFwvU+qF/silt4zsTOpAwY4x0DQl6XJv7TfMgPN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716881705; c=relaxed/simple;
-	bh=s6qnSW6vp/4i6InFGffbcZnBPPUNvyGESVuwQ9Ny6i4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bGZGxGrQJWOfiwKiTnsC4WoFTM/CiIuR7U7TMbl/pb+b/BDMUj9EuGWO/0NfEuwvsaSEOys5SPrykBoUuMGEPY/H1wmUi+sUOeZVFfHYWpYfyPGajXA6nMe+hoQPXcIkSPioPuc83SE491WGDJ+f084iHveAwqpbWjy0PsQqu1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RXgWJVYZ; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716884785; c=relaxed/simple;
+	bh=4X1w2Z4sXtDos1E7KsuOTl8b2Ag/TAWDOHN0yGMtuKE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RMswC6YCJdIYGywQrSLzBQzQWwdv3lvbsWLy8BWm/lPcjCEJUA5BM4mHzl5OesbNenXnT5ZTeDLLwWNbJooNExd7iu5+/s3bKfFCZiucm1+8ICi8Br4H3YwY3DwGQ4Jlh4FrapmBQtQHpF2boQvC7M+u4s8I4+TNj8q1z7e84QM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WcCRKJCr; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RXgWJVYZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716881704; x=1748417704;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=s6qnSW6vp/4i6InFGffbcZnBPPUNvyGESVuwQ9Ny6i4=;
-  b=RXgWJVYZKMpNqC/wV6OOsKf0MRYVuPXbFLW14O2AqDLBYxCfQTZUY+OL
-   neoBkg3hH4s6D36wt5x7WD7JK4KlI/5q7JyZLMJ+q2xWoMVkAR/xxcLxT
-   R7qT3g1zNksy4dFoBB7L4LG7QuB9g7cVE6vitbjg3k9KqCK/ZxJVpyM1G
-   /BisW1CAqEjgKYxg+KFHM7G9VNXtgobNOox8Ct5RQ1PUNk3Xeoqm0bBTr
-   Y3TqJsPEt6LSFrzmDzidRIuHn88RpOb2c8rbl5iEjyyJu8QxXEcFFcHDj
-   hRE04fFhl4TZEFhI3TEpeSPdv+NcSrigGJ9MIldFnmbm/pCxrmRWpyzQE
-   g==;
-X-CSE-ConnectionGUID: bWvyYimWSMuGDDvqxGvwOg==
-X-CSE-MsgGUID: e+h6IAuUTxyrhajuVg3dWw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="16158477"
-X-IronPort-AV: E=Sophos;i="6.08,194,1712646000"; 
-   d="scan'208";a="16158477"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 00:35:03 -0700
-X-CSE-ConnectionGUID: kEVC+aXPSkGsl2XBpk66dw==
-X-CSE-MsgGUID: 9NSQHNCvR56kqwRiHidxEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,194,1712646000"; 
-   d="scan'208";a="39414390"
-Received: from jeriksso-desk.ger.corp.intel.com (HELO tkristo-desk.intel.com) ([10.245.246.251])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 00:35:00 -0700
-From: Tero Kristo <tero.kristo@linux.intel.com>
-To: ilpo.jarvinen@linux.intel.com,
-	srinivas.pandruvada@linux.intel.com,
-	hdegoede@redhat.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 3/6] platform/x86/intel: TPMI domain id and CPU mapping
-Date: Tue, 28 May 2024 10:34:57 +0300
-Message-ID: <20240528073457.497816-1-tero.kristo@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <8646d7dbeb507ce28b6ddca1222ee3c9892d61cc.camel@linux.intel.com>
-References: <8646d7dbeb507ce28b6ddca1222ee3c9892d61cc.camel@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WcCRKJCr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716884782;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/ywwFqFKE+W7hqEwp1bV+PdXb6Hq1Lf2enfltgy19l4=;
+	b=WcCRKJCraeLGCKCZbAzZeXu5Qws6OJkC84dzXH2m85mk/KKPjJWPBAOapwAQYhr0PY7FVQ
+	AcgJMgw1MYO/AjnbB5DhQJPZ7/UWoP3cOGwXQs1Ag69e4oAMfZr2u7dlpwkBoJgTgu4Gtm
+	WMw2wC0VDPNJ490y0SLBr65VoKEE3jk=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-296-cFz11G0VMrSCmg6CefZIGg-1; Tue, 28 May 2024 04:26:15 -0400
+X-MC-Unique: cFz11G0VMrSCmg6CefZIGg-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a6270b93d0dso34475266b.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 May 2024 01:26:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716884774; x=1717489574;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/ywwFqFKE+W7hqEwp1bV+PdXb6Hq1Lf2enfltgy19l4=;
+        b=hZmunFvk7Xocl//ANrzgCPwl7agXhc7nIBdGVzeSxhjjrVQ/SxGIUu3fEkna4M/lnB
+         YUOD3s/lKuqhd5eRkfpAZKX/TjJbXzWNW3wMh8DPydtaGqgWj9BuaiFapdRGuoMH8Qf6
+         qq/SrpKrNUqOqNv2aohF52+C11zyko0r5ZYX2Dgeyb1Re9+E3oZ5gfZKwXHYrGYWwvtm
+         4Ck3aP2NMEttL7E2EaKnznuTfMnAWbgOqtGHvo6NZoq1tzpe7TPLwA5H7FebQr6b3OXF
+         Tsal0g3bMT2yRtsRbhHq1AfJCMrRX3kqgCtJ1f2yO4yjc/buLZWrIYfliUHalCATBkGr
+         Q+LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/lDaJnIPjT51wD2JJUeEVWH4npVeYXXXG5zAM9eil1AmBtot/ub4haIyUyENTpBbzl1YEi07lcvTcPFE/zLhxSu6+O4x2LPRq44qhi4YPnLNGvw==
+X-Gm-Message-State: AOJu0YwZz5Gckdk6WB18Wbb58Enzz43hGkBh4oJwtzISFv1FjyuaB0nW
+	a0FJ/veWrAfPaStseGhIj7YmAKa1wJZfgZ+gsl9cmdd5OUqPITo6Ie+3SOuozz0HKDp7CkXc2e4
+	RCJfFtElX7Kevx2xQwbhKi4VdUpb3G27a5HJ+Bi2tN+uNbJKsGzT07GSrT5FfCNi0satvGh1UA7
+	u25eA=
+X-Received: by 2002:a17:906:a450:b0:a59:cd00:dafb with SMTP id a640c23a62f3a-a626501c67fmr777532766b.64.1716884774084;
+        Tue, 28 May 2024 01:26:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFqtvSVXjyl+IG8JOfqayUWxkmZwin4to2IpgheMjpXnwe8JvfGOoeWVd7R451ZNw+qPP0Hdg==
+X-Received: by 2002:a17:906:a450:b0:a59:cd00:dafb with SMTP id a640c23a62f3a-a626501c67fmr777530466b.64.1716884773533;
+        Tue, 28 May 2024 01:26:13 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626c817afcsm586947266b.22.2024.05.28.01.26.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 May 2024 01:26:13 -0700 (PDT)
+Message-ID: <49d3ed29-b542-483b-969c-6b674a8ab0ca@redhat.com>
+Date: Tue, 28 May 2024 10:26:12 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] hid-asus: use hid for brightness control on keyboard
+To: "Luke D. Jones" <luke@ljones.dev>, jikos@kernel.org
+Cc: ilpo.jarvinen@linux.intel.com, corentin.chary@gmail.com,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-input@vger.kernel.org, bentiss@kernel.org
+References: <20240528013959.14661-1-luke@ljones.dev>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240528013959.14661-1-luke@ljones.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Hi Luke,
 
-Each TPMI power domain includes a group of CPUs. Several power
-management settings in this case applicable to a group of CPUs.
-There can be several power domains in a CPU package. So, provide
-interfaces for:
-- Get power domain id for a Linux CPU
-- Get mask of Linux CPUs in a power domain
+Thank you for the patch.
 
-Hardware Punit uses different CPU numbering, which is not based on
-APIC (Advanced Programmable Interrupt Controller) CPU numbering.
-The Linux CPU numbering is based on APIC CPU numbering. Some PM features
-like Intel Speed Select, the CPU core mask provided by the hardware is
-based on the Punit CPU numbering. To use the core mask, this mask
-needs to be converted to a Linux CPUs mask. So, provide interfaces for:
-- Convert to a Linux CPU number from a Punit CPU number
-- Convert to a Punit CPU number from a Linux CPU number
+On 5/28/24 3:39 AM, Luke D. Jones wrote:
+> On almost all ASUS ROG series laptops the MCU used for the USB keyboard
+> also has a HID packet used for setting the brightness. This is usually
+> the same as the WMI method. But in some laptops the WMI method either
+> is missing or doesn't work, so we should default to the HID control.
 
-On each CPU online, MSR 0x54 is used to read the mapping and stores in
-a per cpu array. Create a hash for faster searching of a Linux CPU number
-from a Punit CPU number.
+It looks like you are doing 2 different things in 1 patch here,
+please split this into 2 patches:
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-[tero.kristo: minor updates]
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
----
-v2:
-  * changed to use X86_MATCH_VFM() instead of X86_MATCH_INTEL_FAM6_MODEL()
+1. Use a different report_id for HID kbd backlight brightness control
+on some models.
 
- drivers/platform/x86/intel/Kconfig            |   4 +
- drivers/platform/x86/intel/Makefile           |   3 +
- .../platform/x86/intel/tpmi_power_domains.c   | 236 ++++++++++++++++++
- .../platform/x86/intel/tpmi_power_domains.h   |  19 ++
- 4 files changed, 262 insertions(+)
- create mode 100644 drivers/platform/x86/intel/tpmi_power_domains.c
- create mode 100644 drivers/platform/x86/intel/tpmi_power_domains.h
+2. Skip registering the HID kbd backlight LED class device on some
+models.
 
-diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index e9dc0c021029..e97a97355d5a 100644
---- a/drivers/platform/x86/intel/Kconfig
-+++ b/drivers/platform/x86/intel/Kconfig
-@@ -192,10 +192,14 @@ config INTEL_SMARTCONNECT
- 	  This driver checks to determine whether the device has Intel Smart
- 	  Connect enabled, and if so disables it.
- 
-+config INTEL_TPMI_POWER_DOMAINS
-+	tristate
-+
- config INTEL_TPMI
- 	tristate "Intel Topology Aware Register and PM Capsule Interface (TPMI)"
- 	depends on INTEL_VSEC
- 	depends on X86_64
-+	select INTEL_TPMI_POWER_DOMAINS
- 	help
- 	  The Intel Topology Aware Register and PM Capsule Interface (TPMI),
- 	  provides enumerable MMIO interface for power management features.
-diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index c1d5fe05e3f3..10437e56027d 100644
---- a/drivers/platform/x86/intel/Makefile
-+++ b/drivers/platform/x86/intel/Makefile
-@@ -53,6 +53,9 @@ obj-$(CONFIG_INTEL_PUNIT_IPC)		+= intel_punit_ipc.o
- intel_vsec_tpmi-y			:= tpmi.o
- obj-$(CONFIG_INTEL_TPMI)		+= intel_vsec_tpmi.o
- 
-+intel_tpmi_power_domains-y		:= tpmi_power_domains.o
-+obj-$(CONFIG_INTEL_TPMI_POWER_DOMAINS)	+= intel_tpmi_power_domains.o
-+
- # Intel Uncore drivers
- intel-rst-y				:= rst.o
- obj-$(CONFIG_INTEL_RST)			+= intel-rst.o
-diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c b/drivers/platform/x86/intel/tpmi_power_domains.c
-new file mode 100644
-index 000000000000..40f994814248
---- /dev/null
-+++ b/drivers/platform/x86/intel/tpmi_power_domains.c
-@@ -0,0 +1,236 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Mapping of TPMI power domains CPU mapping
-+ *
-+ * Copyright (c) 2024, Intel Corporation.
-+ * All Rights Reserved.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/cleanup.h>
-+#include <linux/cpuhotplug.h>
-+#include <linux/cpumask.h>
-+#include <linux/errno.h>
-+#include <linux/export.h>
-+#include <linux/hashtable.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/overflow.h>
-+#include <linux/slab.h>
-+#include <linux/topology.h>
-+#include <linux/types.h>
-+
-+#include <asm/cpu_device_id.h>
-+#include <asm/intel-family.h>
-+#include <asm/msr.h>
-+
-+#include "tpmi_power_domains.h"
-+
-+#define MSR_PM_LOGICAL_ID       0x54
-+
-+/*
-+ * Struct of MSR 0x54
-+ * [15:11] PM_DOMAIN_ID
-+ * [10:3] MODULE_ID (aka IDI_AGENT_ID)
-+ * [2:0] LP_ID
-+ * For Atom:
-+ *   [2] Always 0
-+ *   [1:0] core ID within module
-+ * For Core
-+ *   [2:1] Always 0
-+ *   [0] thread ID
-+ */
-+
-+#define LP_ID_MASK		GENMASK_ULL(2, 0)
-+#define MODULE_ID_MASK		GENMASK_ULL(10, 3)
-+#define PM_DOMAIN_ID_MASK	GENMASK_ULL(15, 11)
-+
-+/**
-+ * struct tpmi_cpu_info - Mapping information for a CPU
-+ * @hnode: Used to add mapping information to hash list
-+ * @linux_cpu:	Linux CPU number
-+ * @pkg_id: Package ID of this CPU
-+ * @punit_thread_id: Punit thread id of this CPU
-+ * @punit_core_id: Punit core id
-+ * @punit_domain_id: Power domain id from Punit
-+ *
-+ * Structure to store mapping information for a Linux CPU
-+ * to a Punit core, thread and power domain.
-+ */
-+struct tpmi_cpu_info {
-+	struct hlist_node hnode;
-+	int linux_cpu;
-+	u8 pkg_id;
-+	u8 punit_thread_id;
-+	u8 punit_core_id;
-+	u8 punit_domain_id;
-+};
-+
-+static DEFINE_PER_CPU(struct tpmi_cpu_info, tpmi_cpu_info);
-+
-+/* The dynamically assigned cpu hotplug state to free later */
-+static enum cpuhp_state tpmi_hp_state __read_mostly;
-+
-+#define MAX_POWER_DOMAINS	8
-+
-+static cpumask_t *tpmi_power_domain_mask;
-+
-+/* Lock to protect tpmi_power_domain_mask and tpmi_cpu_hash */
-+static DEFINE_MUTEX(tpmi_lock);
-+
-+static const struct x86_cpu_id tpmi_cpu_ids[] = {
-+	X86_MATCH_VFM(INTEL_GRANITERAPIDS_X,	NULL),
-+	X86_MATCH_VFM(INTEL_ATOM_CRESTMONT_X,	NULL),
-+	X86_MATCH_VFM(INTEL_ATOM_CRESTMONT,	NULL),
-+	X86_MATCH_VFM(INTEL_GRANITERAPIDS_D,	NULL),
-+	{}
-+};
-+MODULE_DEVICE_TABLE(x86cpu, tpmi_cpu_ids);
-+
-+static DECLARE_HASHTABLE(tpmi_cpu_hash, 8);
-+
-+static bool tpmi_domain_is_valid(struct tpmi_cpu_info *info)
-+{
-+	return info->pkg_id < topology_max_packages() &&
-+		info->punit_domain_id < MAX_POWER_DOMAINS;
-+}
-+
-+int tpmi_get_linux_cpu_number(int package_id, int domain_id, int punit_core_id)
-+{
-+	struct tpmi_cpu_info *info;
-+	int ret = -EINVAL;
-+
-+	guard(mutex)(&tpmi_lock);
-+	hash_for_each_possible(tpmi_cpu_hash, info, hnode, punit_core_id) {
-+		if (info->punit_domain_id == domain_id && info->pkg_id == package_id) {
-+			ret = info->linux_cpu;
-+			break;
-+		}
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_NS_GPL(tpmi_get_linux_cpu_number, INTEL_TPMI_POWER_DOMAIN);
-+
-+int tpmi_get_punit_core_number(int cpu_no)
-+{
-+	if (cpu_no >= num_possible_cpus())
-+		return -EINVAL;
-+
-+	return per_cpu(tpmi_cpu_info, cpu_no).punit_core_id;
-+}
-+EXPORT_SYMBOL_NS_GPL(tpmi_get_punit_core_number, INTEL_TPMI_POWER_DOMAIN);
-+
-+int tpmi_get_power_domain_id(int cpu_no)
-+{
-+	if (cpu_no >= num_possible_cpus())
-+		return -EINVAL;
-+
-+	return per_cpu(tpmi_cpu_info, cpu_no).punit_domain_id;
-+}
-+EXPORT_SYMBOL_NS_GPL(tpmi_get_power_domain_id, INTEL_TPMI_POWER_DOMAIN);
-+
-+cpumask_t *tpmi_get_power_domain_mask(int cpu_no)
-+{
-+	struct tpmi_cpu_info *info;
-+	cpumask_t *mask;
-+	int index;
-+
-+	if (cpu_no >= num_possible_cpus())
-+		return NULL;
-+
-+	info = &per_cpu(tpmi_cpu_info, cpu_no);
-+	if (!tpmi_domain_is_valid(info))
-+		return NULL;
-+
-+	index = info->pkg_id * MAX_POWER_DOMAINS + info->punit_domain_id;
-+	guard(mutex)(&tpmi_lock);
-+	mask = &tpmi_power_domain_mask[index];
-+
-+	return mask;
-+}
-+EXPORT_SYMBOL_NS_GPL(tpmi_get_power_domain_mask, INTEL_TPMI_POWER_DOMAIN);
-+
-+static int tpmi_get_logical_id(unsigned int cpu, struct tpmi_cpu_info *info)
-+{
-+	u64 data;
-+	int ret;
-+
-+	ret = rdmsrl_safe(MSR_PM_LOGICAL_ID, &data);
-+	if (ret)
-+		return ret;
-+
-+	info->punit_domain_id = FIELD_GET(PM_DOMAIN_ID_MASK, data);
-+	if (info->punit_domain_id >= MAX_POWER_DOMAINS)
-+		return -EINVAL;
-+
-+	info->punit_thread_id = FIELD_GET(LP_ID_MASK, data);
-+	info->punit_core_id = FIELD_GET(MODULE_ID_MASK, data);
-+	info->pkg_id = topology_physical_package_id(cpu);
-+	info->linux_cpu = cpu;
-+
-+	return 0;
-+}
-+
-+static int tpmi_cpu_online(unsigned int cpu)
-+{
-+	struct tpmi_cpu_info *info = &per_cpu(tpmi_cpu_info, cpu);
-+	int ret, index;
-+
-+	/* Don't fail CPU online for some bad mapping of CPUs */
-+	ret = tpmi_get_logical_id(cpu, info);
-+	if (ret)
-+		return 0;
-+
-+	index = info->pkg_id * MAX_POWER_DOMAINS + info->punit_domain_id;
-+
-+	guard(mutex)(&tpmi_lock);
-+	cpumask_set_cpu(cpu, &tpmi_power_domain_mask[index]);
-+	hash_add(tpmi_cpu_hash, &info->hnode, info->punit_core_id);
-+
-+	return 0;
-+}
-+
-+static int __init tpmi_init(void)
-+{
-+	const struct x86_cpu_id *id;
-+	u64 data;
-+	int ret;
-+
-+	id = x86_match_cpu(tpmi_cpu_ids);
-+	if (!id)
-+		return -ENODEV;
-+
-+	/* Check for MSR 0x54 presence */
-+	ret = rdmsrl_safe(MSR_PM_LOGICAL_ID, &data);
-+	if (ret)
-+		return ret;
-+
-+	tpmi_power_domain_mask = kcalloc(size_mul(topology_max_packages(), MAX_POWER_DOMAINS),
-+					 sizeof(*tpmi_power_domain_mask), GFP_KERNEL);
-+	if (!tpmi_power_domain_mask)
-+		return -ENOMEM;
-+
-+	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
-+				"platform/x86/tpmi_power_domains:online",
-+				tpmi_cpu_online, NULL);
-+	if (ret < 0) {
-+		kfree(tpmi_power_domain_mask);
-+		return ret;
-+	}
-+
-+	tpmi_hp_state = ret;
-+
-+	return 0;
-+}
-+module_init(tpmi_init)
-+
-+static void __exit tpmi_exit(void)
-+{
-+	cpuhp_remove_state(tpmi_hp_state);
-+	kfree(tpmi_power_domain_mask);
-+}
-+module_exit(tpmi_exit)
-+
-+MODULE_DESCRIPTION("TPMI Power Domains Mapping");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/platform/x86/intel/tpmi_power_domains.h b/drivers/platform/x86/intel/tpmi_power_domains.h
-new file mode 100644
-index 000000000000..0c2154bd941f
---- /dev/null
-+++ b/drivers/platform/x86/intel/tpmi_power_domains.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Mapping of TPMI power domain and CPUs
-+ *
-+ * Copyright (c) 2024, Intel Corporation.
-+ * All rights reserved.
-+ */
-+
-+#ifndef _TPMI_POWER_DOMAINS_H_
-+#define _TPMI_POWER_DOMAINS_H_
-+
-+#include <linux/cpumask.h>
-+
-+int tpmi_get_linux_cpu_number(int package_id, int die_id, int punit_core_id);
-+int tpmi_get_punit_core_number(int cpu_no);
-+int tpmi_get_power_domain_id(int cpu_no);
-+cpumask_t *tpmi_get_power_domain_mask(int cpu_no);
-+
-+#endif
--- 
-2.43.1
+2 more remarks inline (below):
+
+> 
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> ---
+>  drivers/hid/hid-asus.c                     | 19 ++++++++++++-
+>  drivers/platform/x86/asus-wmi.c            |  3 ++-
+>  include/linux/platform_data/x86/asus-wmi.h | 31 ++++++++++++++++++++++
+>  3 files changed, 51 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+> index 02de2bf4f790..9389a3e733e3 100644
+> --- a/drivers/hid/hid-asus.c
+> +++ b/drivers/hid/hid-asus.c
+> @@ -101,6 +101,7 @@ struct asus_kbd_leds {
+>  	unsigned int brightness;
+>  	spinlock_t lock;
+>  	bool removed;
+> +	int report_id;
+>  };
+>  
+>  struct asus_touchpad_info {
+> @@ -473,7 +474,7 @@ static enum led_brightness asus_kbd_backlight_get(struct led_classdev *led_cdev)
+>  static void asus_kbd_backlight_work(struct work_struct *work)
+>  {
+>  	struct asus_kbd_leds *led = container_of(work, struct asus_kbd_leds, work);
+> -	u8 buf[] = { FEATURE_KBD_REPORT_ID, 0xba, 0xc5, 0xc4, 0x00 };
+> +	u8 buf[] = { led->report_id, 0xba, 0xc5, 0xc4, 0x00 };
+>  	int ret;
+>  	unsigned long flags;
+>  
+> @@ -492,12 +493,18 @@ static void asus_kbd_backlight_work(struct work_struct *work)
+>   */
+>  static bool asus_kbd_wmi_led_control_present(struct hid_device *hdev)
+>  {
+> +	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
+>  	u32 value;
+>  	int ret;
+>  
+>  	if (!IS_ENABLED(CONFIG_ASUS_WMI))
+>  		return false;
+>  
+> +	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD && asus_use_hidraw_led()) {
+> +		hid_info(hdev, "using hidraw for asus::kbd_backlight\n");
+> +		return false;
+> +	}
+> +
+
+You call the helper for this asus_use_hidraw_led() but to me that suggests
+that when the function returns true then userspace will control the brightness
+to /dev/hidraw# where as what you mean is that the in kernel HID driver will
+control the brightness. So please rename the helper to asus_use_hid_led()
+and for the message use:
+
+		hid_info(hdev, "using HID for asus::kbd_backlight\n");
+
+
+>  	ret = asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS,
+>  				       ASUS_WMI_DEVID_KBD_BACKLIGHT, 0, &value);
+>  	hid_dbg(hdev, "WMI backlight check: rc %d value %x", ret, value);
+> @@ -507,6 +514,12 @@ static bool asus_kbd_wmi_led_control_present(struct hid_device *hdev)
+>  	return !!(value & ASUS_WMI_DSTS_PRESENCE_BIT);
+>  }
+>  
+> +static bool asus_kbd_is_input_led(void)
+> +{
+> +	return dmi_match(DMI_PRODUCT_NAME, "GU605")
+> +	    || dmi_match(DMI_PRODUCT_NAME, "GA403");
+> +}
+> +
+>  static int asus_kbd_register_leds(struct hid_device *hdev)
+>  {
+>  	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
+> @@ -549,6 +562,10 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
+>  	if (!drvdata->kbd_backlight)
+>  		return -ENOMEM;
+>  
+> +	drvdata->kbd_backlight->report_id = FEATURE_KBD_REPORT_ID;
+> +	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD && asus_kbd_is_input_led())
+> +		drvdata->kbd_backlight->report_id = FEATURE_KBD_LED_REPORT_ID1;
+> +
+>  	drvdata->kbd_backlight->removed = false;
+>  	drvdata->kbd_backlight->brightness = 0;
+>  	drvdata->kbd_backlight->hdev = hdev;
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 3f9b6285c9a6..a58df18a70ad 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -1681,7 +1681,8 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+>  			goto error;
+>  	}
+>  
+> -	if (!kbd_led_read(asus, &led_val, NULL)) {
+> +	if (!kbd_led_read(asus, &led_val, NULL) && !asus_use_hidraw_led()) {
+> +		pr_info("using asus-wmi for asus::kbd_backlight\n");
+>  		asus->kbd_led_wk = led_val;
+>  		asus->kbd_led.name = "asus::kbd_backlight";
+>  		asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> index 3eb5cd6773ad..79a50102440d 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -160,4 +160,35 @@ static inline int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1,
+>  }
+>  #endif
+>  
+> +/* To be used by both hid-asus and asus-wmi to determine which controls kbd_brightness */
+> +#if IS_REACHABLE(CONFIG_ASUS_WMI)
+
+This should be IS_ENABLED() otherwise if hid-asus is builtin and
+asus-wmi is a module then this will go to the #else when included
+from hid-asus.c and thus always return true causing hid-asus to
+always register the kbd_backlight LED class device.
+
+> +static bool asus_use_hidraw_led(void)
+> +{
+> +	const char *product, *board;
+> +
+> +	product = dmi_get_system_info(DMI_PRODUCT_FAMILY);
+> +	if (!product)
+> +		return false;
+> +
+> +	/* These product ranges should all be using HID for keyboard LED */
+> +	if (strstr(product, "ROG Zephyrus")
+> +	|| strstr(product, "ROG Strix")
+> +	|| strstr(product, "ROG Flow")
+> +	|| strstr(product, "GA403")
+> +	|| strstr(product, "GU605"))
+> +		return true;
+> +
+> +	board = dmi_get_system_info(DMI_BOARD_NAME);
+> +	if (!board)
+> +		return false;
+> +
+> +	return strstr(board, "RC71L"); /* ROG Ally specific */
+> +}
+> +#else
+> +static inline bool asus_use_hidraw_led(void)
+> +{
+> +	return true;
+> +}
+> +#endif
+> +
+>  #endif	/* __PLATFORM_DATA_X86_ASUS_WMI_H */
+
+Regards,
+
+Hans
+
 
