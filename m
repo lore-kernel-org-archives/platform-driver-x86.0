@@ -1,193 +1,84 @@
-Received: from fhigh1-smtp.messagingengine.com (fhigh1-smtp.messagingengine.com [103.168.172.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE6A171E7F;
-	Tue, 28 May 2024 16:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F414673445
+	for <platform-driver-x86@vger.kernel.org>; Tue, 28 May 2024 16:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716913001; cv=none; b=WZnbUfYPXe5n9Ur1V5cDaVbtFgb4pjy+Ocig/s4JRnGpYytR9Hl+M6DN7RottICypEoKC8ZB5SZqx/x0klHNLqoKxZwAAC1x+IE5NGw6ob+HAtAwnYFdrf+N9+Pg+rvrQJlyNmdLACG0ruw/SCsJRTIzstOgjgp5uVHO+NsDcO4=
+	t=1716913040; cv=none; b=eJCKg2YykUDRFJWtBX/iVKX+QOPyf7oJ0ZeOlmyLkgRRgIhe+aRM/d0KrhfY4BFE9Rpf77GcsHErRZHAqQXH5gOg4+pGfmRcXbybdFjtJnGIRTbgAfW6lbfTgblf48oiSZLK14A+wP91kBSFYWx4VS9c1CWzdRCjH0H7mTkUTCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716913001; c=relaxed/simple;
-	bh=S10rG6mlr+NDn0HsHECqbGz8o1H4jH3VB+W8t8GEaUo=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=EbizizVeZHBddOgkBFYfdZT13/+F2vzahVYqqgQoRsdLodEqBgzGvIzUErIBAF5hY5xo/ecB1GYu0I6xjwh/G+apihh0exbj/X5tLvmaEKbKQ4rftjFxgWLWhL+8afwLPtFtvb/Ikq5IEVaUiLGMmoxgNyltxP0x00/SmkNEqFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=cxsWPc6c; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=H1wE11MA; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
+	s=arc-20240116; t=1716913040; c=relaxed/simple;
+	bh=Y5+BjY+TmQBqjR72KfOrM20oUoBSNUDIP8m4mxA3ZVY=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=k6B2Dy+g0EMCdoD9IfS4Lunkfun15aMiCepDAc+2IhIn0O81A3eXWQDsv1n4nG8xIJgP/L/3EoeNsTQinExCet445IR1KpdH8aDjkvLbr5+x8ymdrwThs4DiUZ+HA7zOuabIMqOj3CSILtD3Co4C1vWjOnR9JTpFgs2WpBnWnQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=to7J1iTB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="cxsWPc6c";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="H1wE11MA"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 78DD51140102;
-	Tue, 28 May 2024 12:16:38 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute5.internal (MEProxy); Tue, 28 May 2024 12:16:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1716912998;
-	 x=1716999398; bh=lDIKV5b9lJEhOkbgV2SZ046ruGjEWbYwtHAeMzm8oo0=; b=
-	cxsWPc6cm/Fs7mtvbOuStenoMkrKc5M3WR3TyAjN9Yd6B7cJgWAcELHVpK1PTtd/
-	OnIFW+pTTGBsMyhs07A+hDBG2GCh2Mp/mcDpjBVH/stfxCpf1rtF3VICZi3Zfsk+
-	OJ7xF6pNa19gFKhnCDiUXXWoxjOg5P1oZSYihHWaD9DH6gWQY6nfPpL8aDk1y3qK
-	+kk6yDEMZT0qZ5W5d3snjCf/EYUAZ5GSvHnLm7Go320MAgazoT3Nv4PmjjSowJVH
-	DgAIXa0zTHypMbm6TcW/u7zzjz4LHFMDFHhCD7HegItuR48A3G6rmizRhDTwS0b1
-	cEBEXRuvgNDiZMfGSMtvSg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1716912998; x=
-	1716999398; bh=lDIKV5b9lJEhOkbgV2SZ046ruGjEWbYwtHAeMzm8oo0=; b=H
-	1wE11MAo/Av7Et3LS7H1DDtoYuH/f4YUC+C5eagsXPYcWlZBc7A+Hy+O24pX68S+
-	O9oUdB9A68gXIXt0w5OIEOUXpQgh6V0iUT0JP8HERbaon8i87vRfSRpmPYSYAz25
-	gwZTJkiM74dyUfQEaEG9SOQuYq7d3zsTeAxPbA2nFA9RZxhjC4LK+nYHnsu5t3fi
-	NJXYAfa3EpV4byDaNFf+ROq9loMEomnm34wVEkEuI478Al9AiYu7W/JqGGqZjoOl
-	h1iLLSzzMmZbFzeDe2HfHbItItcMKP4fT8ZjgjQEj7bPf6u/LMvH+ZSxBTO29ndS
-	Xpa8iW8zc44l32dFHfahQ==
-X-ME-Sender: <xms:ZQNWZo8T-c91nalFuQ4EfFz13Q9EjVAzQCDxJxLCKiF_5oPELlQ7fA>
-    <xme:ZQNWZgvqaabOfGwt3HapFMSMvbOh2qJf9XWeGHqfA8L8poXlISx52-ZcvLB7XSw6X
-    ywsOBQbAZPMbzElq20>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdejkedgjeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfn
-    hihnughonhcuufgrnhgthhgvfdcuoehlshgrnhgthhgvsehlhihnuggvnhhordgtrgeqne
-    cuggftrfgrthhtvghrnhepheefgfevjeeivedvkefgfedtudfgtefgteeuleeiudffteei
-    leehteeivedvfeeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomheplhhsrghntghhvgeslhihnhguvghnohdrtggr
-X-ME-Proxy: <xmx:ZgNWZuDg4kbi15O_hI_6MKxSeWOBvk0m4WTngpteFPRd1G8o2CoyFg>
-    <xmx:ZgNWZodrBtiwIVtrFPR6GzO0qPIKye1Wxfb7fbwpTRxOYAnZec6f0w>
-    <xmx:ZgNWZtPWDi7HSCq2O_Apk2XTdiBy4hWFQxj5bbFVuWmuaEV4t1YLOA>
-    <xmx:ZgNWZimmvXZ-nJq1vjZ5wTfrDu6V6KbM9kj6VKrbk282YAeOLB1viA>
-    <xmx:ZgNWZkkkUL-XTeVwCrAv8IRwi4O7jQIeGXQZGEvPox-3AZw9T02yPWWq>
-Feedback-ID: i1719461a:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id DBDBEC60097; Tue, 28 May 2024 12:16:37 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-491-g033e30d24-fm-20240520.001-g033e30d2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="to7J1iTB"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CCA39C32782
+	for <platform-driver-x86@vger.kernel.org>; Tue, 28 May 2024 16:17:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716913039;
+	bh=Y5+BjY+TmQBqjR72KfOrM20oUoBSNUDIP8m4mxA3ZVY=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=to7J1iTBcSJWSgnvl7IW4+YA6zNJgIGkqKYhjIw3o4mFuKWvA3D0bcsGaxRFJIZQ4
+	 auedw1QoJ0HYslciEhKC8RblCZgoU0LZI9EWQqHaegoVAFUBjkC3Jjszvxl2q5vWGu
+	 a4erxTMF2FMw1/p/q3r9RQRBK8rN0jRTv8kBX3TjWomyO6FaIOdQsvokPNLs1CTuOh
+	 Ann+4nMPZO+DQM9qIg4WTloiyk3gvecC6uFTTbLB3nkUVzcAOPVq08pzBkCC8F/g6B
+	 tDXyGjMpzlglDQI4rD4sqhEoYAIKpIaVJeq/BtCTnvCSt+DXYUj3vdSJOnR3ClyREE
+	 lV/bv5EIucl9w==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id BA72AC53B50; Tue, 28 May 2024 16:17:19 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
+ models (16Z90S)
+Date: Tue, 28 May 2024 16:17:19 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: agathe@boutmy.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218901-215701-zSzLPd6e0q@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
+References: <bug-218901-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <a0322878-eb27-45e4-9545-136f5ade6a0e@app.fastmail.com>
-In-Reply-To: <c971cfae-e7d5-fbde-f77b-1a936c6e1ee7@linux.intel.com>
-References: <20240425172758.67831-1-lsanche@lyndeno.ca>
- <20240517224323.10045-1-lsanche@lyndeno.ca>
- <20240517224323.10045-4-lsanche@lyndeno.ca>
- <c971cfae-e7d5-fbde-f77b-1a936c6e1ee7@linux.intel.com>
-Date: Tue, 28 May 2024 10:16:17 -0600
-From: "Lyndon Sanche" <lsanche@lyndeno.ca>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Mario Limonciello" <mario.limonciello@amd.com>,
- =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, "Armin Wolf" <W_Armin@gmx.de>,
- srinivas.pandruvada@linux.intel.com, "kernel test robot" <lkp@intel.com>,
- "Hans de Goede" <hdegoede@redhat.com>, "Yijun Shen" <Yijun.Shen@dell.com>,
- "Matthew Garrett" <mjg59@srcf.ucam.org>,
- "Vegard Nossum" <vegard.nossum@oracle.com>,
- "Jonathan Corbet" <corbet@lwn.net>, "Heiner Kallweit" <hkallweit1@gmail.com>,
- LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
- Dell.Client.Kernel@dell.com
-Subject: Re: [PATCH v7 3/3] platform/x86: dell-pc: Implement platform_profile
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 27, 2024, at 3:39 AM, Ilpo J=C3=A4rvinen wrote:
-> On Fri, 17 May 2024, Lyndon Sanche wrote:
->
->> +#include <linux/platform_profile.h>
->> +#include <linux/slab.h>
->> +#include "dell-smbios.h"
->
-> Add empty line between <> and "" includes.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
 
-Agreed.
+--- Comment #5 from Agathe Boutmy (agathe@boutmy.com) ---
+(In reply to Armin Wolf from comment #4)
+> It seems that the LGEX0820 device used by this driver is not mapped at
+> \XINI, but rather at \_SB.XINI. This should normally cause no problems, b=
+ut
+> it seems that the driver is not using the ACPI driver model.
+>=20
+> Can you compile and load kernel modules on this device?
 
->> +enum thermal_mode_bits {
->> +	DELL_BALANCED =3D BIT(0),
->> +	DELL_COOL_BOTTOM =3D BIT(1),
->> +	DELL_QUIET =3D BIT(2),
->> +	DELL_PERFORMANCE =3D BIT(3),
->
-> A few nits still to address.
->
-> Can you please align these so that the values align (IIRC, I asked thi=
-s=20
-> earlier but perhaps my request was too unclear):
->
-> 	DELL_XX			=3D BIT(X),
-> 	DELL_YYYYYYYYY		=3D BIT(Y),
->
+Yes, it's basically a new installation, if something breaks I can reinstall=
+ it
+completely with no issue so I can test whatever is needed on it.
 
-I must have missed this, I will get this corrected.
+--=20
+You may reply to this email to add a comment.
 
->> +static int thermal_get_supported_modes(int *supported_bits)
->> +{
->> +	struct calling_interface_buffer buffer;
->> +	int ret;
->> +
->> +	dell_fill_request(&buffer, 0x0, 0, 0, 0);
->> +	ret =3D dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAG=
-EMENT);
->> +	if (ret) {
->> +		/* Thermal function not supported */
->> +		if (ret =3D=3D -ENXIO) {
->> +			*supported_bits =3D 0;
->> +			return 0;
->> +		} else {
->
-> Drop else because the previous block ends into return.
->
-
-Agreed.
-
->> +			return ret;
->> +		}
->> +	}
->
-> Remove the outer if (ret) block and put the inner ones directly on the=20
-> main level as two if () conditions.
->
-
-Agreed.
-
->> +	dell_fill_request(&buffer, 0x1, FIELD_PREP(DELL_ACC_SET_FIELD, acc_=
-mode) | state, 0, 0);
->> +	ret =3D dell_send_request(&buffer, CLASS_INFO, SELECT_THERMAL_MANAG=
-EMENT);
->> +	return ret;
->
-> Return directly on the previous line.
->
-
-Agreed.
-
->> +	int ret;
->> +	int supported_modes;
->> +
->> +	/* If thermal commands not supported, exit without error */
->
-> Fix grammar, you're perhaps missing "are".
->
-
-Agreed.
-
->> +	if (!dell_smbios_class_is_supported(CLASS_INFO))
->> +		return 0;
->> +
->> +	/* If thermal modes not supported, exit without error */
->
-> Ditto.
->
-> --=20
->  i.
-
-Thank you for your feedback. I will include this in the next patch serie=
-s.
-
-Thanks,
-
-Lyndon
+You are receiving this mail because:
+You are watching the assignee of the bug.=
