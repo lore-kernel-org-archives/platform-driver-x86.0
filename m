@@ -1,233 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DC723BF;
-	Tue, 28 May 2024 19:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB0317966C
+	for <platform-driver-x86@vger.kernel.org>; Tue, 28 May 2024 20:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716925971; cv=none; b=HehpqcypmkKEHdFEzdGSeyzZCv3dbtvRfieI/s/MfmD///iPr7QdS0o+iAOoCbOf/iBZbW+5feIlwb0MQbb6P8PHP+FZ9yKegroT/ifRfwVAATCAUWr9QaSRem9v28RIjiYYiMF2oQFGAJub4u2ciHMKbKj9TtF9GfMAZNIvtlk=
+	t=1716929098; cv=none; b=SlD/HWcKzVG3p/WzIuc407Iy26l6y+xSHbI7WxyhUPR3hRFaQ7AKnt3D4PWjaXMeOdaJigaQW9Xsd910ESk5bBUeiscirX5FGp0FICXnhsM+KfQMDKSAreK9rbCbf80YVpxNvNnj5xpoDrjtE4jFKNCMDbOBVRh4aw4Ify0/2tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716925971; c=relaxed/simple;
-	bh=2rE+lKrC2cS6x32lg8GfCW7VB+hGia9MQvA1fyHT52w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q6BdV2p0ROO2ZUjLPvO0MUF/Ty9V/Y/TI8u3G9za2hFAL2SMy64toe5wZUJv1g7MsfAw1Do1ec2p0t8hedZ+Ae48xcDT3chiAl+HEF8azOkdx0MpxRom9aypuYINPddPc8vwamWMmUn39Yw5G+ziZVJF2bpADPI22R2jKneIq/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jtvtadSa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716929098; c=relaxed/simple;
+	bh=Ort2/caZVUYwVthaQyqzi46Ex/gklHG9yBV76k5aP2E=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eyMl2u5qYVsKpDPM0oZ14k6Msr8sM1siWL8XuPMNTWKSGKvSIuLbuwo9BcZKlyKLOJtF1wDbRDC7R7tDG+7RcmogVjSdz7mFd1yYpvBu/mnamB5chsKwDuMYCV0NHsEkvtO6GofVP0RpE4WKOyhCcY7cSoOb82zo9gU4CdK/GZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gEUEogse; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jtvtadSa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 622B2C4AF0D;
-	Tue, 28 May 2024 19:52:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716925970;
-	bh=2rE+lKrC2cS6x32lg8GfCW7VB+hGia9MQvA1fyHT52w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=jtvtadSah/DUsRjW2L+ZN28387g6sHS7xxWab/j4+NLdrh21yV3GIb/lgxxx05cg+
-	 Cil9YBBxY7ZYoeIvJWp1jYldhnHuEaVRNGaQ3R41LOQYxnZgM0DZHS3dbTXacbtpeR
-	 1L2feMz6wRSACAtNAI9xcbfFa0gxyzXtzfNeETXJt+sMvTMcQLC/4LN5jK/nvzU+0z
-	 lIOnSHL8QdIPGstQmpZziQthUg668FLbGnpJaTKXBiOlTfoaCXMtD1iB0fdSIoXaSr
-	 wVv6LLEnn8BWhdGbtErOctWI9zdl1KjE49egcymHxRvWmY0L8n5aHS7ZVRbeuWhJv1
-	 61saiWnXriDWw==
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5b96a587d79so77960eaf.0;
-        Tue, 28 May 2024 12:52:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUA6CAEvXDrcdawbCsqrJoWSMKmquzx40kPFAaJZTgMh3StQqicXrXEXCHSH8vd2VMg9YX59DIUxknUoi9mckNGo1/s0sBY7UTixfEundJpGt2SWc1ONWMsjWqleZrUPNxgWGVcskA3fC/2Cp4W2DF7DdDLaRZqw3CcNmJMGyEe2Qy0g5K7YJxeqV//2X1XreCT11HODO43+NFb9+EZs/Kn69dSVG36cDODpw==
-X-Gm-Message-State: AOJu0Ywfz2QqaJ2lm9inp7clhaHMV2QvJPaYoG4ZDWh+mL68E5halkGi
-	hek5Tb6p5JbWFD/zBeAAhk0xOPIm0jclg+r8BI2gKCuhm2+3/knFMQMI9rTO/pfarXx81Z4SrN+
-	cHv9YI2OyrRZfdXx0FSMd0/CKDEc=
-X-Google-Smtp-Source: AGHT+IGnYKb/NKYpWDWiLrDI+pojlbT5VGeR3HVdpe1f5QZ5p+LPLue1yFCYgOwjFvGILYE5/bLzY9T3vt5p752HIcI=
-X-Received: by 2002:a4a:4b06:0:b0:5b2:f29:93f0 with SMTP id
- 006d021491bc7-5b95cceba96mr14248384eaf.0.1716925969529; Tue, 28 May 2024
- 12:52:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gEUEogse"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2e96f29884dso14023361fa.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 May 2024 13:44:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1716929094; x=1717533894; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KzZhxdvPLE6mLIqgxvohaJdPdDCKtRQaOpGQeC6Iw60=;
+        b=gEUEogse2a6pvTcim852+up1CtuqHIkXK+kjmSoP6JVYMjb5mkSqGJa/xzJ0JzeKbv
+         toDO6kOxMj6BEfIlyK0tsC7o/KSdmdS6bpj0XPs3lJygFVXR50CUa57WsSVp5Yq8/O9D
+         268VGqiZQFWvhSdf9Km5gVaIInu3KjDn/K54eIsARffpVzU+ngIPYUMiLEQ/r6y3gaIp
+         88JNhNEI11UX9RWjwepKEFOR/4Jl2QwoZmoHcnVqLng2iE1Wu5p5Zr807MbQUoivPZfE
+         Q09vtSTDuehhGoAE6B99XfM95TuR/kdkNEhWniDaxn/F6I62d+vs/y5BSfpe4DARM6QH
+         4Yhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716929094; x=1717533894;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KzZhxdvPLE6mLIqgxvohaJdPdDCKtRQaOpGQeC6Iw60=;
+        b=G+bKnsq0BChJoCgKgv6fno08IW1mqp39nrxA2ZLLQ3xF0ft0Rcjt3oRoOPQuJ9D/Yh
+         C73HtqqvzIg32xdlpBqeBjHmQiB/yBoapwQLDi5v2BeMB9Ck+M77Jz+UGOD9ZKDwEn70
+         Hz82XL7mxt6BmUK+aIqxJr4HeSXOBmxSpVDfNTofvi1JG+2GIUEjzlAUUVyfppHK+zdO
+         2p+jHOOxqAifW9k+emoMyyau4yyKxD6/AJ97Ymbi8ZkI/rTOosLxdvi2WZ4b4iQs3ra0
+         zFF7tTcbnGMn9w1XaBZB7on1sa6HWCJDbSitbFOdA+B6ImtcA4g8dMmvN/ryFcP5uSze
+         lgqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUdXu+r61w/CDp+yVodhLq9KHX4PHYmWjBDqhwbfKcpbogVROILf9/l8eGVyicvJu5kqB7f0D0Q5uM/kHlGh9PTH9asRLlLLIwtDg46DoZvn0S3pg==
+X-Gm-Message-State: AOJu0Yy2Q8jBBEL5uLZA1kH2AxqzIkjy2c8Ovk6wrMKz60IZkuYJZzxm
+	E9qX1jQ2lJzfmji0A0cCu8L+iSfKCFLiAx6kYkby+pzQvIIHW+c00Ml6UkBYyRo=
+X-Google-Smtp-Source: AGHT+IFTNyH3pP9dDhWyNzNcnITON78FAZ8IwLzhdnouwqB9V1tT8j4dkc1idJoVA0AlJzFnYtxDBQ==
+X-Received: by 2002:a2e:8ec4:0:b0:2e9:87f7:caa with SMTP id 38308e7fff4ca-2e987f70d11mr17203611fa.41.1716929094332;
+        Tue, 28 May 2024 13:44:54 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e95bdcd21esm22759431fa.100.2024.05.28.13.44.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 May 2024 13:44:53 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: [PATCH v4 0/6] power: supply: Lenovo Yoga C630 EC
+Date: Tue, 28 May 2024 23:44:45 +0300
+Message-Id: <20240528-yoga-ec-driver-v4-0-4fa8dfaae7b6@linaro.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240510201242.3886-1-W_Armin@gmx.de> <CAJZ5v0gu=yvFeXH4uwHeAQZ8p1JyCs8uuiKzr6F+yNkD2E1ZAA@mail.gmail.com>
- <92415bd8-4231-4c68-8034-e4f7a0ea5651@gmx.de>
-In-Reply-To: <92415bd8-4231-4c68-8034-e4f7a0ea5651@gmx.de>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 28 May 2024 21:52:38 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iLNZT4jU1QV=HTbAv76s6Ay3tx93_K_QoM0XbvSgZF1w@mail.gmail.com>
-Message-ID: <CAJZ5v0iLNZT4jU1QV=HTbAv76s6Ay3tx93_K_QoM0XbvSgZF1w@mail.gmail.com>
-Subject: Re: [PATCH v8] ACPI: fan: Add hwmon support
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, mlj@danelec.com, rafael.j.wysocki@intel.com, 
-	lenb@kernel.org, jdelvare@suse.com, andy.shevchenko@gmail.com, 
-	linux@roeck-us.net, linux@weissschuh.net, ilpo.jarvinen@linux.intel.com, 
-	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAD1CVmYC/3XOyw6CMBCF4VchXTuktJSLK9/DsKh0gIlKzZQ0E
+ sK7CyQmblz+i/PlLCIgEwZxThbBGCmQH7fIT4loBzv2COS2FkqqXBpVwux7C9iCY4rIUBadKzv
+ jnMVKbKMXY0fvA7w2W3fsnzANjPbLaKmkyYyqZJ0qpXWuC8jAPWniOb1ZnsNw9/HyoNGyTz33O
+ ztQmDzPx82od/zvo6hBglalrSuTOevML9Ws6/oBlMuyoPQAAAA=
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Nikita Travkin <nikita@trvn.ru>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3634;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=Ort2/caZVUYwVthaQyqzi46Ex/gklHG9yBV76k5aP2E=;
+ b=owGbwMvMwMXYbdNlx6SpcZXxtFoSQ1qYk8uBHNmJot+3S8w8Pfc2n7pSvLJijOn0Z+/a3Vxbe
+ 69z/cnsZDRmYWDkYpAVU2TxKWiZGrMpOezDjqn1MINYmUCmMHBxCsBELC04GFbmyeZrfXbg8/rH
+ 4Vxkarnt2L6GufafdX93WG6XWvVnloLaVpETV9gk7Xxi3cL1L5ncueqV3rgpZsX3C3qBMt6/Y++
+ 8P3b3/LPiJpW6EA373ZwvlKvntzT6Pwp8ePTsF8eZ28U4Qu8wFGkKpu2RbBUSXr7tzZbdghZ7c1
+ oL39z8x+Os9lDm05XeNO3Uo9rpC+ZtZmQI+99WL8Rx93nvAY6JnWwL5tV8Om8Uc47znv9Zg7pZ3
+ jW9P+/VGFf4VzddY+wKenWPz3SB0bVZWXKt56LO/64rTM+1fNOrwf0oK5rX7FDhVtXzu6fO3brj
+ tbH02ceHuiQDj+p+aNDZdsDnpLyQ75KtTuUZSg1MvZM6AA==
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-On Tue, May 28, 2024 at 12:31=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote:
->
-> Am 27.05.24 um 19:29 schrieb Rafael J. Wysocki:
->
-> > On Fri, May 10, 2024 at 10:13=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wr=
-ote:
-> >> Currently, the driver does only support a custom sysfs
-> >> interface to allow userspace to read the fan speed.
-> >> Add support for the standard hwmon interface so users
-> >> can read the fan speed with standard tools like "sensors".
-> >>
-> >> Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> >> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> >> ---
-> >> Tested witha custom ACPI SSDT, available here:
-> >> https://github.com/Wer-Wolf/acpi-fan-ssdt
-> >>
-> >> Changes since v7:
-> >> - add Reviewed-by tag
-> >> - spelling fixes
-> >> - add missing types.h include
-> >>
-> >> Changes since v6:
-> >> - add "hwmon" to the names of functions and variables
-> >> related to hwmon
-> >> - replace -ENODATA with -EIO/-ENODEV
-> >>
-> >> Changes since v5:
-> >> - fix coding style issues
-> >> - replace double break with return
-> >> - add missing includes
-> >>
-> >> Changes since v4:
-> >> - fix spelling issues
-> >> - check power values for overflow condition too
-> >>
-> >> Changes since v3:
-> >> - drop fault attrs
-> >> - rework initialization
-> >>
-> >> Changes since v2:
-> >> - add support for fanX_target and power attrs
-> >>
-> >> Changes since v1:
-> >> - fix undefined reference error
-> >> - fix fan speed validation
-> >> - coding style fixes
-> >> - clarify that the changes are compile-tested only
-> >> - add hwmon maintainers to cc list
-> >> ---
-> >>   drivers/acpi/Makefile    |   1 +
-> >>   drivers/acpi/fan.h       |   9 +++
-> >>   drivers/acpi/fan_core.c  |   4 +
-> >>   drivers/acpi/fan_hwmon.c | 170 +++++++++++++++++++++++++++++++++++++=
-++
-> >>   4 files changed, 184 insertions(+)
-> >>   create mode 100644 drivers/acpi/fan_hwmon.c
-> >>
-> >> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
-> >> index 39ea5cfa8326..61ca4afe83dc 100644
-> >> --- a/drivers/acpi/Makefile
-> >> +++ b/drivers/acpi/Makefile
-> >> @@ -77,6 +77,7 @@ obj-$(CONFIG_ACPI_TINY_POWER_BUTTON)  +=3D tiny-powe=
-r-button.o
-> >>   obj-$(CONFIG_ACPI_FAN)         +=3D fan.o
-> >>   fan-objs                       :=3D fan_core.o
-> >>   fan-objs                       +=3D fan_attr.o
-> >> +fan-$(CONFIG_HWMON)            +=3D fan_hwmon.o
-> >>
-> >>   obj-$(CONFIG_ACPI_VIDEO)       +=3D video.o
-> >>   obj-$(CONFIG_ACPI_TAD)         +=3D acpi_tad.o
-> >> diff --git a/drivers/acpi/fan.h b/drivers/acpi/fan.h
-> >> index f89d19c922dc..db25a3898af7 100644
-> >> --- a/drivers/acpi/fan.h
-> >> +++ b/drivers/acpi/fan.h
-> >> @@ -10,6 +10,8 @@
-> >>   #ifndef _ACPI_FAN_H_
-> >>   #define _ACPI_FAN_H_
-> >>
-> >> +#include <linux/kconfig.h>
-> >> +
-> >>   #define ACPI_FAN_DEVICE_IDS    \
-> >>          {"INT3404", }, /* Fan */ \
-> >>          {"INTC1044", }, /* Fan for Tiger Lake generation */ \
-> >> @@ -57,4 +59,11 @@ struct acpi_fan {
-> >>   int acpi_fan_get_fst(struct acpi_device *device, struct acpi_fan_fst=
- *fst);
-> >>   int acpi_fan_create_attributes(struct acpi_device *device);
-> >>   void acpi_fan_delete_attributes(struct acpi_device *device);
-> >> +
-> >> +#if IS_REACHABLE(CONFIG_HWMON)
-> >> +int devm_acpi_fan_create_hwmon(struct acpi_device *device);
-> >> +#else
-> >> +static inline int devm_acpi_fan_create_hwmon(struct acpi_device *devi=
-ce) { return 0; };
-> >> +#endif
-> >> +
-> >>   #endif
-> >> diff --git a/drivers/acpi/fan_core.c b/drivers/acpi/fan_core.c
-> >> index ff72e4ef8738..7cea4495f19b 100644
-> >> --- a/drivers/acpi/fan_core.c
-> >> +++ b/drivers/acpi/fan_core.c
-> >> @@ -336,6 +336,10 @@ static int acpi_fan_probe(struct platform_device =
-*pdev)
-> >>                  if (result)
-> >>                          return result;
-> >>
-> >> +               result =3D devm_acpi_fan_create_hwmon(device);
-> >> +               if (result)
-> >> +                       return result;
-> >> +
-> >>                  result =3D acpi_fan_create_attributes(device);
-> >>                  if (result)
-> >>                          return result;
-> >> diff --git a/drivers/acpi/fan_hwmon.c b/drivers/acpi/fan_hwmon.c
-> >> new file mode 100644
-> >> index 000000000000..bd0d31a398fa
-> >> --- /dev/null
-> >> +++ b/drivers/acpi/fan_hwmon.c
-> >> @@ -0,0 +1,170 @@
-> >> +// SPDX-License-Identifier: GPL-2.0-or-later
-> >> +/*
-> >> + * hwmon interface for the ACPI Fan driver.
-> >> + *
-> >> + * Copyright (C) 2024 Armin Wolf <W_Armin@gmx.de>
-> >> + */
-> >> +
-> >> +#include <linux/acpi.h>
-> >> +#include <linux/device.h>
-> >> +#include <linux/err.h>
-> >> +#include <linux/hwmon.h>
-> >> +#include <linux/limits.h>
-> >> +#include <linux/types.h>
-> >> +#include <linux/units.h>
-> >> +
-> >> +#include "fan.h"
-> >> +
-> >> +/* Returned when the ACPI fan does not support speed reporting */
-> >> +#define FAN_SPEED_UNAVAILABLE  U32_MAX
-> >> +#define FAN_POWER_UNAVAILABLE  U32_MAX
-> >> +
-> >> +static struct acpi_fan_fps *acpi_fan_get_current_fps(struct acpi_fan =
-*fan, u64 control)
-> >> +{
-> >> +       unsigned int i;
-> >> +
-> >> +       for (i =3D 0; i < fan->fps_count; i++) {
-> >> +               if (fan->fps[i].control =3D=3D control)
-> >> +                       return &fan->fps[i];
-> >> +       }
-> >> +
-> >> +       return NULL;
-> >> +}
-> >> +
-> >> +static umode_t acpi_fan_hwmon_is_visible(const void *drvdata, enum hw=
-mon_sensor_types type,
-> >> +                                        u32 attr, int channel)
-> >> +{
-> >> +       const struct acpi_fan *fan =3D drvdata;
-> >> +       unsigned int i;
-> > AFAICS, the code below can be rewritten as follows:
-> >
-> > if (fan->fif.fine_grain_ctrl)
-> >           return 0;
->
-> Hi,
->
-> this would break hwmon_fan_input.
+This adds binding, driver and the DT support for the Lenovo Yoga C630
+Embedded Controller, to provide battery information.
 
-Ah, I overlooked the first branch.  Fair enough.
+Support for this EC was implemented by Bjorn, who later could not work
+on this driver. I've picked this patchset up and updated it following
+the pending review comments.
 
-Applied as 6.11 material, thanks!
+DisplayPort support is still not a part of this patchset. It uses EC
+messages to provide AltMode information rather than implementing
+corresponding UCSI commands. However to have a cleaner uAPI story, the
+AltMode should be handled via the same Type-C port.
+
+Merge strategy: the driver bits depend on the platform/arm64 patch,
+which adds interface for the subdrivers. I'd either ask to get that
+patch merged to the immutable branch, which then can be picked up by
+power/supply and USB trees or, to make life simpler, ack merging all
+driver bits e.g. through USB subsystem (I'm biased here since I plan to
+send more cleanups for the UCSI subsystem, which would otherwise result
+in cross-subsystem conflicts).
+
+---
+Changes in v4:
+- Moved bindings to platform/ to follow example of other Acer Aspire1 EC
+  (Nikita Travkin)
+- Fixed dt validation for EC interrupt pin (Rob Herring)
+- Dropped separate 'scale' property (Oliver Neukum)
+- Link to v3: https://lore.kernel.org/r/20240527-yoga-ec-driver-v3-0-327a9851dad5@linaro.org
+
+Changes in v3:
+- Split the driver into core and power supply drivers,
+- Added UCSI driver part, handling USB connections,
+- Fixed Bjorn's address in DT bindings (Brian Masney)
+- Changed power-role for both ports to be "dual" per UCSI
+- Link to v2: https://lore.kernel.org/linux-arm-msm/20230205152809.2233436-1-dmitry.baryshkov@linaro.org/
+
+Changes in v2:
+- Dropped DP support for now, as the bindings are in process of being
+  discussed separately,
+- Merged dt patch into the same patchseries,
+- Removed the fixed serial number battery property,
+- Fixed indentation of dt bindings example,
+- Added property: reg and unevaluatedProperties to the connector
+  bindings.
+- Link to v1: https://lore.kernel.org/linux-arm-msm/20220810035424.2796777-1-bjorn.andersson@linaro.org/
+
+---
+Bjorn Andersson (2):
+      dt-bindings: platform: Add Lenovo Yoga C630 EC
+      arm64: dts: qcom: c630: Add Embedded Controller node
+
+Dmitry Baryshkov (4):
+      platform: arm64: add Lenovo Yoga C630 WOS EC driver
+      usb: typec: ucsi: add Lenovo Yoga C630 glue driver
+      power: supply: lenovo_yoga_c630_battery: add Lenovo C630 driver
+      arm64: dts: qcom: sdm845: describe connections of USB/DP port
+
+ .../bindings/platform/lenovo,yoga-c630-ec.yaml     |  83 ++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               |  53 ++-
+ .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts      |  75 ++++
+ drivers/platform/arm64/Kconfig                     |  14 +
+ drivers/platform/arm64/Makefile                    |   1 +
+ drivers/platform/arm64/lenovo-yoga-c630.c          | 279 ++++++++++++
+ drivers/power/supply/Kconfig                       |   9 +
+ drivers/power/supply/Makefile                      |   1 +
+ drivers/power/supply/lenovo_yoga_c630_battery.c    | 479 +++++++++++++++++++++
+ drivers/usb/typec/ucsi/Kconfig                     |   9 +
+ drivers/usb/typec/ucsi/Makefile                    |   1 +
+ drivers/usb/typec/ucsi/ucsi_yoga_c630.c            | 189 ++++++++
+ include/linux/platform_data/lenovo-yoga-c630.h     |  42 ++
+ 13 files changed, 1234 insertions(+), 1 deletion(-)
+---
+base-commit: 6dc544b66971c7f9909ff038b62149105272d26a
+change-id: 20240527-yoga-ec-driver-76fd7f5ddae8
+
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+
