@@ -1,129 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BC817333F;
-	Tue, 28 May 2024 17:13:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA32A47F60;
+	Tue, 28 May 2024 17:41:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716916439; cv=none; b=LSBWWlYEVK6pIpvh7M/Vr7rci9b7yCBHIZGV2fjE4pWULQ/W4awiyljjBxKrRkls8LNYSHrLozbJNHHTBsofqQlYbzihPVWqLzEDPbaA9e78R5MZg78a8Y3EsJqgUUwp6ucVB3f6iTFniSbyYzZiESFKzZqtve82KJv4uM3u6j0=
+	t=1716918106; cv=none; b=DfPtZk7f2FpMs2XZFAHU1CZsaHn5PKXjaY+sSOVA0JVN2nlGTwxye7XDxDMv3aDkfHOJpqwWbesN1098YJ1k+darZvk6H79S7Y5QWOWp6pdepg/+TiY56/p8El8rSc4PXlsqlRKWwKJYPpjHQTFRM3b3gBrwJ4w5CfsZp+tEF6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716916439; c=relaxed/simple;
-	bh=BF+bAtAxxwKCW4DJkeefBZDu0K+wuFNxBHFCPnA8enU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rtXAs8aDfiVjAwkGMxjkvt/L1fnsFpPTjH3QEWc1zqp/q47QQzelGEUHXOT9R2vLBEBAucDmpd4ff+pqNdjKDgRSfet4rzle9ZejgDOOtkRZjvH4lQc1f2NftksbOreyjlJPuT7xBcdL42ElgKSDfgVlDtuhJA0wYOMFI23IlTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMFZs+x7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716918106; c=relaxed/simple;
+	bh=RLYbWmtB1JSsSqTY7dPzl/obl0aq3fUopxD+P3sLiE8=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=I01LRYJOUO4uqDTLrGj9TbFBsc8BSL3M4J7QaQuTDzOvW/NRX499p6PrUMgNsGJ1w5ACLwNeReNmBEaSbmKDJTdnAoi4hft2yIAtF7gHy1plaekBeUzZNZhfao0r/hy/fbhv590ZHcwxi2o25ddxglF/VYkJi26tkCBvz3tU8cI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I/Xp5bRw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMFZs+x7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1717C3277B;
-	Tue, 28 May 2024 17:13:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I/Xp5bRw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F78EC32782;
+	Tue, 28 May 2024 17:41:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716916439;
-	bh=BF+bAtAxxwKCW4DJkeefBZDu0K+wuFNxBHFCPnA8enU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bMFZs+x7bluwgOhDpFWlsScecIjnUIpA8wwy44nKxYfhDp21ArJ9EGTXYy1VxEqF1
-	 x9TXpM9QxBZGm4o1v1LqS9mcped9va6UK0lmdFFjkVQ9ubrudgoiehZ3Lz7aYPrcDS
-	 CZcV2KWPGVRc9MF9lJzhe3nDHeJLsvlpYexFNRC/2rCxoOXnChmiFs16/e7IXF/nqt
-	 F+AaJqFSCY3pOPE41ePOAPSLd5WO3qXFyNJl/Bc8i7b3U3AI+tfMNrgblQ08Yw03i1
-	 ZEfdCsCbwqcPqzrlId7esYThtQvQQznFeYTPpondJK/woStogcP0VwGFHXeCNnFk87
-	 kQ0K44ux1N8jg==
-Date: Tue, 28 May 2024 12:13:56 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Hans de Goede <hdegoede@redhat.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Nikita Travkin <nikita@trvn.ru>
-Subject: Re: [PATCH v3 6/6] arm64: dts: qcom: c630: Add Embedded Controller
- node
-Message-ID: <njgvpbk4b26qs7zp675xdlmh3pcha6pm2vvvhyrxvrimtltgfx@slyweemaxmhs>
-References: <20240527-yoga-ec-driver-v3-0-327a9851dad5@linaro.org>
- <20240527-yoga-ec-driver-v3-6-327a9851dad5@linaro.org>
- <bbsdvqjo2ikljnuvupolpdfstsaegfqyg2ct7bt24evcorcfjt@3fw5eicxxuik>
- <CAA8EJpr9i=+uJGqxeeVYKwJeMqzQFg6FvqnChKNQqXLLVcB66w@mail.gmail.com>
+	s=k20201202; t=1716918105;
+	bh=RLYbWmtB1JSsSqTY7dPzl/obl0aq3fUopxD+P3sLiE8=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=I/Xp5bRwm2CmB1DjEPopS7cv+o9A3G5woq4FBaf3o60k1PKxJ9QSoeWj3e9TfOpxC
+	 vwNP6Ne0lfNrOp1cetrrdIDRMIvHzK9GfEJurIMsSsqZEZkEq274cNH6vLRfsQs82B
+	 2QnrAO5gtjo+YZoG+W91mS1EdgX2f6Pnmwai/k28Rnof9n/GAdHnVen9Vq3WRCDaex
+	 rXB77GDTMq8CIRDIsPzkbzVDxaLdrwAWbCXH9OPXWLVX7Qh22I2tMRePCP6PmHRQ6L
+	 Wb1dKsMEDxQ2vrPyGNaWyn47q0MCzC1h8vXIOj2E8w50nFiy7ECKKr83zgXJaPhf5G
+	 Abxys47sO/qRw==
+Date: Tue, 28 May 2024 12:41:44 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA8EJpr9i=+uJGqxeeVYKwJeMqzQFg6FvqnChKNQqXLLVcB66w@mail.gmail.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+ Sebastian Reichel <sre@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, 
+ linux-pm@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ linux-usb@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org
+In-Reply-To: <20240527-yoga-ec-driver-v3-0-327a9851dad5@linaro.org>
+References: <20240527-yoga-ec-driver-v3-0-327a9851dad5@linaro.org>
+Message-Id: <171691793418.1180687.12564348124831502092.robh@kernel.org>
+Subject: Re: [PATCH v3 0/6] power: supply: Lenovo Yoga C630 EC
 
-On Tue, May 28, 2024 at 06:12:58PM GMT, Dmitry Baryshkov wrote:
-> On Tue, 28 May 2024 at 18:06, Bjorn Andersson <andersson@kernel.org> wrote:
-> >
-> > On Mon, May 27, 2024 at 01:03:51PM GMT, Dmitry Baryshkov wrote:
-> > > From: Bjorn Andersson <andersson@kernel.org>
-> >
-> > Please align this with the S-o-b - feel free to use either form.
+
+On Mon, 27 May 2024 13:03:45 +0300, Dmitry Baryshkov wrote:
+> This adds binding, driver and the DT support for the Lenovo Yoga C630
+> Embedded Controller, to provide battery information.
 > 
-> Ack. I'll check what went wrong.
+> Support for this EC was implemented by Bjorn, who later could not work
+> on this driver. I've picked this patchset up and updated it following
+> the pending review comments.
 > 
-> >
-> > >
-> > > The Embedded Controller in the Lenovo Yoga C630 is accessible on &i2c1
-> > > and provides battery and adapter status, as well as altmode
-> > > notifications for the second USB Type-C port.
-> > >
-> > > Add a definition for the EC.
-> > >
-> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > ---
-> > >  .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts      | 76 ++++++++++++++++++++++
-> > >  1 file changed, 76 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> > > index 47dc42f6e936..d975f78eb3ab 100644
-> > > --- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> > > +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> > > @@ -370,6 +370,66 @@ zap-shader {
-> > >  &i2c1 {
-> > >       status = "okay";
-> > >       clock-frequency = <400000>;
-> > > +
-> > > +     embedded-controller@70 {
-> > > +             compatible = "lenovo,yoga-c630-ec";
-> > > +             reg = <0x70>;
-> > > +
-> > > +             interrupts-extended = <&tlmm 20 IRQ_TYPE_LEVEL_HIGH>;
-> > > +
-> > > +             pinctrl-names = "default";
-> > > +             pinctrl-0 = <&ec_int_state>;
-> > > +
-> > > +             #address-cells = <1>;
-> > > +             #size-cells = <0>;
-> > > +
-> > > +             connector@0 {
-> > > +                     compatible = "usb-c-connector";
-> > > +                     reg = <0>;
-> > > +                     power-role = "dual";
-> > > +                     data-role = "host";
-> >
-> > I was under the impression that this port is wired directly to the SoC
-> > and as such this would support data role switching as well.
-> >
-> > No concern with that, but just out of curiosity, is this not the case?
+> DisplayPort support is still not a part of this patchset. It uses EC
+> messages to provide AltMode information rather than implementing
+> corresponding UCSI commands. However to have a cleaner uAPI story, the
+> AltMode should be handled via the same Type-C port.
 > 
-> It is wired through the external Type-C port controller RTS5437, which
-> also controls the vbus pins, etc. The UCSI firmware reports both ports
-> as host-only and doesn't implement data role switching. So, having it
-> as "host" is a safe bet.
+> Merge strategy: the driver bits depend on the platform/arm64 patch,
+> which adds interface for the subdrivers. I'd either ask to get that
+> patch merged to the immutable branch, which then can be picked up by
+> power/supply and USB trees or, to make life simpler, ack merging all
+> driver bits e.g. through USB subsystem (I'm biased here since I plan to
+> send more cleanups for the UCSI subsystem, which would otherwise result
+> in cross-subsystem conflicts).
+> 
+> ---
+> Changes in v3:
+> - Split the driver into core and power supply drivers,
+> - Added UCSI driver part, handling USB connections,
+> - Fixed Bjorn's address in DT bindings (Brian Masney)
+> - Changed power-role for both ports to be "dual" per UCSI
+> - Link to v2: https://lore.kernel.org/linux-arm-msm/20230205152809.2233436-1-dmitry.baryshkov@linaro.org/
+> 
+> Changes in v2:
+> - Dropped DP support for now, as the bindings are in process of being
+>   discussed separately,
+> - Merged dt patch into the same patchseries,
+> - Removed the fixed serial number battery property,
+> - Fixed indentation of dt bindings example,
+> - Added property: reg and unevaluatedProperties to the connector
+>   bindings.
+> - Link to v1: https://lore.kernel.org/linux-arm-msm/20220810035424.2796777-1-bjorn.andersson@linaro.org/
+> 
+> ---
+> Bjorn Andersson (2):
+>       dt-bindings: power: supply: Add Lenovo Yoga C630 EC
+>       arm64: dts: qcom: c630: Add Embedded Controller node
+> 
+> Dmitry Baryshkov (4):
+>       platform: arm64: add Lenovo Yoga C630 WOS EC driver
+>       usb: typec: ucsi: add Lenovo Yoga C630 glue driver
+>       power: supply: lenovo_yoga_c630_battery: add Lenovo C630 driver
+>       arm64: dts: qcom: sdm845: describe connections of USB/DP port
+> 
+>  .../bindings/power/supply/lenovo,yoga-c630-ec.yaml |  83 ++++
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi               |  53 ++-
+>  .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts      |  76 ++++
+>  drivers/platform/arm64/Kconfig                     |  14 +
+>  drivers/platform/arm64/Makefile                    |   1 +
+>  drivers/platform/arm64/lenovo-yoga-c630.c          | 279 ++++++++++++
+>  drivers/power/supply/Kconfig                       |   9 +
+>  drivers/power/supply/Makefile                      |   1 +
+>  drivers/power/supply/lenovo_yoga_c630_battery.c    | 476 +++++++++++++++++++++
+>  drivers/usb/typec/ucsi/Kconfig                     |   9 +
+>  drivers/usb/typec/ucsi/Makefile                    |   1 +
+>  drivers/usb/typec/ucsi/ucsi_yoga_c630.c            | 189 ++++++++
+>  include/linux/platform_data/lenovo-yoga-c630.h     |  42 ++
+>  13 files changed, 1232 insertions(+), 1 deletion(-)
+> ---
+> base-commit: 8314289a8d50a4e05d8ece1ae0445a3b57bb4d3b
+> change-id: 20240527-yoga-ec-driver-76fd7f5ddae8
+> 
+> Best regards,
+> --
+> Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> 
+> 
 > 
 
-Thanks for the explanation, that makes sense.
 
-> I must admit, I also hoped to be able to use this port in gadget mode,
-> but it seems to be nearly impossible.
-> 
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-Someone must have managed to use the device in peripheral mode to get
-the firmware on there originally...just saying... ;)
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
 
-Regards,
-Bjorn
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y qcom/sdm850-lenovo-yoga-c630.dtb' for 20240527-yoga-ec-driver-v3-0-327a9851dad5@linaro.org:
+
+arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dtb: pinctrl@3400000: ec-int-state: 'oneOf' conditional failed, one must be fixed:
+	'bias-disable', 'function', 'input-enable', 'pins' do not match any of the regexes: '-pins$', 'pinctrl-[0-9]+'
+	False schema does not allow True
+	from schema $id: http://devicetree.org/schemas/pinctrl/qcom,sdm845-pinctrl.yaml#
+
+
+
+
+
