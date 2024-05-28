@@ -1,114 +1,128 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout2-smtp.messagingengine.com (fout2-smtp.messagingengine.com [103.168.172.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3437D13A26E
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 23:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7A32907;
+	Tue, 28 May 2024 01:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716851764; cv=none; b=exsMEmY4mbEZcpVWJJhgPAxlvYXY3cch2JDpA7xcUAi44xS+Jkl7Bh7NrSX9OixlW5X28H/TBRnknBi1FbvV2trbeDhLdr2lFC6qSFV+yi+eWyy+/xOIlyMAbwBXl42VVIhkMotJH6XlyVrWdRzhmIPZUVwPIQIml0K5gQJR7N0=
+	t=1716860198; cv=none; b=GYaqzuBmyzXiTeoY7dGveCjVyI82+Hw9exojy0Fwg0CQr4x9NIRshNdzhhlzPvKHL7waSk9kT5xNVuJkF+hFqEPIWU6+UfiMv0chHBUpdVL1futoT+41Srv/yxvKp3GV9BtxvS96vZ1OqBbEnQNQbk2KOCE2w9aFBDnlLwW4CoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716851764; c=relaxed/simple;
-	bh=mybrqCieBXpDyCN3cGK2kFHGCjeNghf5MU60VbNyxDE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bhypABiDxANCwXLoDR+M5aFk/dQT27Ns4ynJe7e+iIoORf128nfspPozqW4V3Gf0Uag1v+lQR6Fd5uVlAUoZFPrBNS4ZOyl/tLd37zHjop1PUNQzo/v+gfh7Iq9HHXZzjZYhNCHRcz83p11dD5qPLT6jNdgCRaQIKeLZ2zQFWm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mXxfFzZw; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716860198; c=relaxed/simple;
+	bh=prI9lKmxW1c+u+ZG4KNb5zcRk2wqgpYTWmwJk77js1c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OIx63uWJsW3kvj//1UgjslhW1JdCiaB3+dvPutu4PGlRwTlS3i9nXXiwU0Xy4D7jnt00W9cUUU7SX/IbExW7WXjnVzbNYNXG6DX6PXUnrabkwS4munTLDCg/YlVRpw5hRVSe70A1H/n2GIO3Yy8fvLgTDY5G07S1j1B8GoJmqNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=KMCwpYPK; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DBYu6q8S; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mXxfFzZw"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2e95a1d5ee2so3425621fa.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 May 2024 16:16:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716851761; x=1717456561; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iKTdzlNEkZJDeB62d/owKD2BDh8/+OHG29/inxAJauQ=;
-        b=mXxfFzZwi8EWpPU01Y4tCV3+FjiQ6G5NaNqRvBfsWppolxdw799XQaaFBqDnKbgnZm
-         /ViCIghYeECnNTYHo6ymRuxDJ5QAr2QWNiJkHhIzyIUgxBTUFoIYxp/w9p30cB6/xeCa
-         b8FoS7OLtDz/hmmofag83inAQQQa/c+UN6JOAATjJ/bTsS+buUK5Pq22SAvrQ1dHv/yP
-         qvCskzPz2QZo/hOqLrL7qB5EuupW4UesEFGCt1zoseD7N7C5iTapGqKh1jh62sL6hXZu
-         cHb7we9qTkjwOHuy9ZIogfYyXwPvsmmHdyiARwC+herRJICF58J5M3S2b3JdRcirLy28
-         p2RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716851761; x=1717456561;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iKTdzlNEkZJDeB62d/owKD2BDh8/+OHG29/inxAJauQ=;
-        b=e04l2vWHUKB4E6X/Cce9CJRv74RgOR0DieqVGhbd11YgOPsKM0gk/WEpM+rMo/6WYO
-         38qNj3m8MKlQcvNj2TeqgPR5vcvP5JsAd9smfc/NUajoZZY8ix9o+Ry9gPl74Mh32LyN
-         6DNzcGWz8+i7rnyPYiLdMojvY+MGuvIfQXn8YKd91UhshGjd/Jg4kbQhwjgCPr7uW7qU
-         RU0oHRxTuoeWaz1tCJne7dy5JtxlN8FLdkEqD/0oswrCVdpr7mnwNOAzBtp0qQTUF7rX
-         MdG/noDqqMbUD8N6FFYMqaeU+jJdi/xMGbNYjpGAlpAhZgt3Rah8BGzhldH5KmQRicDX
-         dvgw==
-X-Forwarded-Encrypted: i=1; AJvYcCVjIQJQmFKnOvsPBYrGRNTdbB6o4eZISzHyhU23loxZSIKCQ0tfRyopHUfOoVybPnU2IWKGA1uVOt4Xp5l+rxvHIwQqjB8pwgCOpbrA4SIN130N3A==
-X-Gm-Message-State: AOJu0YyEtpEA6SOf2bjcyPPIgb8W9hYQouLocS2cdbEiFV+T1dN5352p
-	zFNDd7VzqSwquQ0stB33wKVnCiB69N01rVpHa4YNq6D34HOWQrF+Z1vvOaKzTZE=
-X-Google-Smtp-Source: AGHT+IEWVatLF+5naW8YkmI1hAhzC+vhZ9ZQCcUWgdC4pifDYGED0voaGL6OUZPFwOrBa6fECwLtOA==
-X-Received: by 2002:a05:651c:504:b0:2de:8697:e08b with SMTP id 38308e7fff4ca-2e95b0c1620mr106716491fa.26.1716851761425;
-        Mon, 27 May 2024 16:16:01 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2e9866d87c5sm956961fa.95.2024.05.27.16.16.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 16:16:00 -0700 (PDT)
-Date: Tue, 28 May 2024 02:15:59 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Oliver Neukum <oneukum@suse.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>
-Subject: Re: [PATCH v3 4/6] power: supply: lenovo_yoga_c630_battery: add
- Lenovo C630 driver
-Message-ID: <vc5nd5dl4czkuxzikazn7ndy6wghlchqsrcgxf7n5w53w3o3m2@spyfgp5pwy4y>
-References: <20240527-yoga-ec-driver-v3-0-327a9851dad5@linaro.org>
- <20240527-yoga-ec-driver-v3-4-327a9851dad5@linaro.org>
- <ceb1f7b3-2787-4166-846f-2427b44b3e62@suse.com>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="KMCwpYPK";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DBYu6q8S"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailfout.nyi.internal (Postfix) with ESMTP id C8E70138013F;
+	Mon, 27 May 2024 21:36:35 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Mon, 27 May 2024 21:36:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1716860195; x=1716946595; bh=jmIL5KKIKWqEFoPAOUm/b
+	kcZ2E8tX7cZYVkE26Q5IA8=; b=KMCwpYPKyuWYAOOYJwC0+IWuoEiZ+plIbTVme
+	232MhWitFqYYzF+LlMS/E9ckkcVJjuDi9u8qhSZ/41JTcO38KJMB56abbhevUyTF
+	O+kc/BTN3ivI2/Ko6YfSmmVV6q6kdCbrk7XvKkHBYVOqM2Mu573QbUmyxDKEPDCE
+	1PdgQnYJP1oXBa+0L62uG5Iq7iiChdY8aw4bT53mpBjfDCmN8CvKhLariw1fyQDN
+	juJKQrBkaV4Nt5DinKm26YsA92Kj7JIjqS6K0DDdPn5K4UxyjmUzgu6vlqOVvED/
+	UoC0s/dSoRI5UW9SmNORl5NdjKzvVJ9RIL7dQRxDGgbAQfvcw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1716860195; x=1716946595; bh=jmIL5KKIKWqEFoPAOUm/bkcZ2E8t
+	X7cZYVkE26Q5IA8=; b=DBYu6q8Skwb9WfCNwVzwMKGN7xIH3XL5fVnOFviprcwQ
+	O4XbxszCV1P2nV6fGwrHe8erIS1v84WiAGC8BxkxsuJPNmlpx6ms22D6HxeayyXT
+	D2gTB74wDsGKS4BsOCI88MXpG9VFAgHslPu09C/s/eByJ5HWev6auCvgc1hPTgjf
+	2UquORVjLU2ybTcRql71pvfhKDaLZPb1BlDDYqkACR1n5l5PPGeYg7guYfB/x7oC
+	iu6Bf3XTMDhfIUHRNlGzjn2D5b+ldWmgzOf3Cg+4usE32PLyEWn2gpX8JW1Wct7+
+	DXBq7sGuZp9VYIBNIoxL+19PvI3AagqdEhEcplCrmQ==
+X-ME-Sender: <xms:IzVVZsSBji3StZF4r7vZps6Aa8C2oeHks4eah-G_XpTlFYz7rummsw>
+    <xme:IzVVZpx06U7rufmfhRCegUEhGI5znsTyDbQBE5jvPOpsYWpoXGntgZf_UoQ_JDYVU
+    QXbSBMcuAKvetA8R8A>
+X-ME-Received: <xmr:IzVVZp0mWxcBBkyIt_emIXGX3qpKLMTlAfeZfXthWc1CUlPAUZ7rnj6ki-Hc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdejhedggeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhho
+    nhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfdujedthfduudekffefkeeiffdttd
+    dvhfegudduueffuefhfefggeefteevvdegnecuvehluhhsthgvrhfuihiivgeptdenucfr
+    rghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:IzVVZgDrH9ou4pufU6QRMqnOXC04myl52mYAXT-UQfoPbH6mm0UHDg>
+    <xmx:IzVVZljT_GypSlWH-XcuA-6JklsSrhIb02opCU92oGnwmZcp_Uzdmw>
+    <xmx:IzVVZsqojTO3YahQTzp20v7HEwSaDVotuzgyhYR474GM1OdR7b-lCg>
+    <xmx:IzVVZojry3Frp8_xHUG37DDc56Af2lQ1MlQc-iQPzdUR0yZjBaOuWw>
+    <xmx:IzVVZjZsoxAuEINJueh3QnALApNUvA2Wrj6DwzXh3szApOA1EyaJcGrY>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 27 May 2024 21:36:32 -0400 (EDT)
+From: "Luke D. Jones" <luke@ljones.dev>
+To: hdegoede@redhat.com
+Cc: ilpo.jarvinen@linux.intel.com,
+	corentin.chary@gmail.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH 0/9] platform-x86-asus-wmi: multiple fixes, improvements, features
+Date: Tue, 28 May 2024 13:36:17 +1200
+Message-ID: <20240528013626.14066-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ceb1f7b3-2787-4166-846f-2427b44b3e62@suse.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 27, 2024 at 02:26:36PM +0200, Oliver Neukum wrote:
-> On 27.05.24 12:03, Dmitry Baryshkov wrote:
-> 
-> Hi,
-> 
-> > +struct yoga_c630_psy {
-> > +	struct yoga_c630_ec *ec;
-> > +	struct device *dev;
-> > +	struct device_node *of_node;
-> > +	struct notifier_block nb;
-> > +	struct mutex lock;
-> > +
-> > +	struct power_supply *adp_psy;
-> > +	struct power_supply *bat_psy;
-> > +
-> > +	unsigned long last_status_update;
-> > +
-> > +	bool adapter_online;
-> > +
-> > +	bool unit_mA;
-> > +
-> > +	unsigned int scale;
-> 
-> why do you store unit_mA and scale? This looks redundant and like a source
-> of confusion to me.
+This is a series of patches containing either fixes, improvements, or new features.
 
-Here we just followed the AML code in ACPI tables. The unit_mA is a
-returned from the_BIX method, the 'scale' is used internally in the DSDT.
-If you think that it's better, I can change all '* scale * 1000' to
-'if unit_mA then foo = bar * 10000 else foo = bar * 1000'.
+Most of it is vary straightforward and I'd hope quick and easy to review.
+However patch 0003 does a fair bit of work in reducing a series of common
+patterns down to a few macros and a more generic store function. This ends
+up unifying a lot of things to and making the end result much cleaner to read
+plus add future features of the same pattern.
+
+I am unsure if I've got the macros correct. Everything compiles, all is tested
+and working correctly - but maybe I could use some guidance on formatting and
+style there? Should they be in a header?
+
+The debug statement patch was invaluable for debugging some issues on another
+users machine. I will likely add some more debug in future.
+
+The platform_profile issue.. It seems there is a race bewteen asus-wmi and an
+AMD driver to register the platform_profile on boot on some laptops. The
+asus-wmi driver can live without platform_profile quite fine as the feature
+is really just a wrapper around throttle_thermal_policy. But it does raise
+the question of "what's going on here?".
+
+Many thanks,
+Luke.
+
+Luke D. Jones (9):
+  platform/x86: asus-wmi: add debug print in more key places
+  platform/x86: asus-wmi: don't fail if platform_profile already
+    registered
+  platform/x86: asus-wmi: add macros and expose min/max sysfs for ppt
+    tunables
+  platform/x86: asus-wmi: reduce code duplication with macros
+  platform/x86: asus-wmi: use WMI_SIMPLE_SHOW in more places
+  platform/x86: asus-wmi: add panel-fhd functionality
+  platform/x86: asus-wmi: add enable/disable CPU cores
+  platform/x86: asus-wmi: add apu_mem setting
+  platform/x86: asus-wmi: add setting dGPU TGP
+
+ .../ABI/testing/sysfs-platform-asus-wmi       |   78 +-
+ drivers/platform/x86/asus-wmi.c               | 1248 ++++++++---------
+ include/linux/platform_data/x86/asus-wmi.h    |   12 +
+ 3 files changed, 688 insertions(+), 650 deletions(-)
 
 -- 
-With best wishes
-Dmitry
+2.45.1
+
