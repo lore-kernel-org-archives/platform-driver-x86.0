@@ -1,172 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97552154450;
-	Tue, 28 May 2024 09:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD48E4C97;
+	Tue, 28 May 2024 11:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716888454; cv=none; b=SRb1Fh0csp0kgzEg+cQtoRdt0p6fe0J1cNgORFGQaZhylWQrl4XfKX4TuB27PZsqmaLOr2vUe3JAM0wOuHNXNOeKxWAvZ4tlcWGQZTm4WHRLAiU5qgeMASOmGSRDXSjeLiw/TLpuLl8dXSTsrZvaenGfecENsid6ZkW6tQIVECo=
+	t=1716897585; cv=none; b=NjXZQcbfroR8K55f0XT6bvzgInRMELDnjPLrtCvzCwLlMaeUkR4CP6BT8nxUH/BOjlU+COb7oqd9XiSbhA8lZk1G8NhNVZIfL1DNTDDKzRakLalfi5jFNnZQZN2UG+TT7TLgAsObA6IC7w6u0Hv8LJvNkSoKw/pApKWcdlRfFos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716888454; c=relaxed/simple;
-	bh=Ox5OkVtIPeoJlCBHYNB1yqDcFh8GZpA14ru1JHkYhE4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=TS8NE0I9j0C5o02MrqPWgh7/BlXc2+QMsA3ypDYgTQGZJTwjryyVNsgfqfRzo3iWlL4FfsujYMIPgCDQuaAtAKFch6ACWQ4q7wsrCoRZ7XU4iuNXnnEKj6RYrLyxCD++gZa/1c75OB3Zu+LM4CZWFdW9LWebzu4pLlp2W5rMVqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aTXnT+O3; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716897585; c=relaxed/simple;
+	bh=PJ6dm+ojt4tB8KatVUHmNd4ox8+zoZGcn/Tu/Vumpvg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dbLnErrhZaoh3eU9/VfKrr1Zxa/pisvbnj6Mn+02J2K3qlxpSCBxU3fs0+sipLiek0TmxLiKK8BUcDdcan8L2LTBGgtxKetyeQG9ytpEAgCJaQe1m351/Y1rKWsDHnzHtcgq+kuZMSTXqlo8FLe97NJKD2E50L3A/rWAeWx2GoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fSw92NH1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aTXnT+O3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716888453; x=1748424453;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Ox5OkVtIPeoJlCBHYNB1yqDcFh8GZpA14ru1JHkYhE4=;
-  b=aTXnT+O3oTFuPWaACP2BeM4uWY1StPmYlMjEummbtKD5nT1i/7nSWxQr
-   tvR6NEXhHIN9+FY4leycnI47CmK7TWScNXevElr3dj6RdwjhoXmI4uoXi
-   tjo2Gs8L6r8ZEUaXuSbls7OlAMdMw0pvQYQuvS+VJ6I1O6Pg3pTaOoPga
-   ov3I2hy15ZSt7X7odHWQ45keDqg2zb1NJZy0Qz978/QkP5i4Y6Eb7dAYG
-   XIDxY/KnevmroyKUyyB7o4wkoy+LzblP1On62zCSglh/z8VEfrfAO/8+C
-   Ytx/Q2Gs+zXbQdaONf+X056bxjH9Y66+L85QBxoWbyB34NtXOLqlpVGoi
-   g==;
-X-CSE-ConnectionGUID: ptrLDzK/RCmP4Cvhv3iQ7Q==
-X-CSE-MsgGUID: 4u7Qj8ULSBiYy+teADGmyQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="24634586"
-X-IronPort-AV: E=Sophos;i="6.08,194,1712646000"; 
-   d="scan'208";a="24634586"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 02:27:33 -0700
-X-CSE-ConnectionGUID: cddHyDsoSQi6j3vX3R0stw==
-X-CSE-MsgGUID: yjivfThfSLaom1C40XMl8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,194,1712646000"; 
-   d="scan'208";a="66217238"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.144])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 02:27:30 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 28 May 2024 12:27:26 +0300 (EEST)
-To: "Luke D. Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>
-cc: corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 7/9] platform/x86: asus-wmi: add enable/disable CPU
- cores
-In-Reply-To: <20240528013626.14066-8-luke@ljones.dev>
-Message-ID: <4660daf1-f42f-9b65-eaf5-30daf2931058@linux.intel.com>
-References: <20240528013626.14066-1-luke@ljones.dev> <20240528013626.14066-8-luke@ljones.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fSw92NH1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F9F9C3277B;
+	Tue, 28 May 2024 11:59:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716897585;
+	bh=PJ6dm+ojt4tB8KatVUHmNd4ox8+zoZGcn/Tu/Vumpvg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fSw92NH1+IcaGXB0/E0EVitFVJAe5MUKtDUk5DgyUoNRo9eTzpU4uZeji57srdptp
+	 Ef4rEKITaSAdxJjddldsfiqdw5n0/Nm2dtbiAIb/Zyan8txG45YavEwGtua76O0beX
+	 31wSslTX2Tz42exe4ZWoDeRYdEioaxRhXMAkwm1iih54n/6y71QpqXlKixcyzondFw
+	 2D471jjJ54e09DZf2aw2LVYTBDzF57xIpftc5GcT1dkkLDV1cdWauKqbTWmG4hz+BK
+	 dhac6CYFGxEloxMRni/G95Cga+XRbkkPPJKbjdxS0Wk+DdfqnhDpilsvqQrby+/ssG
+	 ZwCLl7SvRmfOA==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Armin Wolf <W_Armin@gmx.de>,
+	SungHwan Jung <onenowy@gmail.com>,
+	Henning Schild <henning.schild@siemens.com>,
+	Ai Chao <aichao@kylinos.cn>,
+	Robert Joslyn <robert.joslyn@redrectangle.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: yt2-1380: add CONFIG_EXTCON dependency
+Date: Tue, 28 May 2024 13:59:33 +0200
+Message-Id: <20240528115940.3169455-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Arnd Bergmann <arnd@arndb.de>
 
-Hans, please check my question below.
+This driver uses the extcon subsystem and fails to build
+when it cannot call into that subsystem:
 
-On Tue, 28 May 2024, Luke D. Jones wrote:
+x86_64-linux-ld: vmlinux.o: in function `yt2_1380_fc_worker':
+lenovo-yoga-tab2-pro-1380-fastcharger.c:(.text+0xa9d819): undefined reference to `extcon_get_state'
+x86_64-linux-ld: lenovo-yoga-tab2-pro-1380-fastcharger.c:(.text+0xa9d853): undefined reference to `extcon_get_state'
+x86_64-linux-ld: vmlinux.o: in function `yt2_1380_fc_serdev_probe':
+lenovo-yoga-tab2-pro-1380-fastcharger.c:(.text+0xa9da22): undefined reference to `extcon_get_extcon_dev'
+x86_64-linux-ld: lenovo-yoga-tab2-pro-1380-fastcharger.c:(.text+0xa9dc0c): undefined reference to `devm_extcon_register_notifier_all'
 
-> Exposes the WMI functions for enable/disable of performance and
-> efficiency cores on some laptop models (largely Intel only).
-> 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> ---
+Add a Kconfig dependency to make it it always builds correctly.
 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> index 3b4eeea75b7b..ac881e72e374 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> @@ -226,3 +226,22 @@ Description:
->  		Set panel to UHD or FHD mode
->  			* 0 - UHD,
->  			* 1 - FHD
-> +
-> +What:		/sys/devices/platform/<platform>/cores_enabled
-> +Date:		Jun 2024
-> +KernelVersion:	6.11
-> +Contact:	"Luke Jones" <luke@ljones.dev>
-> +Description:
-> +		Enable/disable efficiency and performance cores. The format is
-> +		0x[E][P] where [E] is the efficiency core count, and [P] is
-> +		the perfromance core count. If the core count is a single digit
+Fixes: b2ed33e8d486 ("platform/x86: Add lenovo-yoga-tab2-pro-1380-fastcharger driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/platform/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-performance
-
-> +		it is preceded by a 0 such as 0x0406; E=4, P=6, 0x1006; E=10, P=6
-> +
-> +What:		/sys/devices/platform/<platform>/cores_max
-> +Date:		Jun 2024
-> +KernelVersion:	6.11
-> +Contact:	"Luke Jones" <luke@ljones.dev>
-> +Description:
-> +		Show the maximum performance and efficiency core countin format
-> +		0x[E][P] where [E] is the efficiency core count, and [P] is
-> +		the perfromance core count.
-
-performance
-
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 4b045f1828f1..f62a36dfcd4b 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -815,6 +815,46 @@ static ssize_t panel_fhd_store(struct device *dev,
->  WMI_SIMPLE_SHOW(panel_fhd, "%d\n", ASUS_WMI_DEVID_PANEL_FHD);
->  static DEVICE_ATTR_RW(panel_fhd);
->  
-> +/* Efficiency and Performance core control **********************************/
-> +static ssize_t cores_enabled_store(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    const char *buf, size_t count)
-> +{
-> +	struct asus_wmi *asus = dev_get_drvdata(dev);
-> +	int result, err;
-> +	u32 cores, max;
-> +
-> +	result = kstrtou32(buf, 16, &cores);
-> +	if (result)
-> +		return result;
-> +
-> +	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_CORES_MAX, &max);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (cores > max) {
-
-This only checks one part of it and the P part can contain whatever 
-garbage as long as E is small enough?
-
-But I'm not sure if it's good idea to have these two changed through the 
-same sysfs file, I'm leaning more on that it would be better to split the 
-interface for P and E.
-
-Hans, what you think about this?
-
-> +		pr_warn("Core count 0x%x exceeds max: 0x%x\n", cores, max);
-> +		return -EIO;
-> +	}
-> +
-> +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_CORES_SET, cores, &result);
-> +	if (err) {
-> +		pr_warn("Failed to set cores_enabled: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	pr_info("Enabled core count changed, reboot required\n");
-> +	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "cores_enabled");
-> +
-> +	return count;
-> +}
-
-> @@ -4131,6 +4173,9 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
->  		devid = ASUS_WMI_DEVID_PANEL_OD;
->  	else if (attr == &dev_attr_panel_fhd.attr)
->  		devid = ASUS_WMI_DEVID_PANEL_FHD;
-> +	else if (attr == &dev_attr_cores_enabled.attr
-> +		|| attr == &dev_attr_cores_max.attr)
-
-Wrong alignment.
-
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 809888e4c1e7..9f850e4617bf 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -136,6 +136,7 @@ config YOGABOOK
+ config YT2_1380
+ 	tristate "Lenovo Yoga Tablet 2 1380 fast charge driver"
+ 	depends on SERIAL_DEV_BUS
++	depends on EXTCON
+ 	depends on ACPI
+ 	help
+ 	  Say Y here to enable support for the custom fast charging protocol
 -- 
- i.
+2.39.2
 
