@@ -1,120 +1,301 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from wfout2-smtp.messagingengine.com (wfout2-smtp.messagingengine.com [64.147.123.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6B671753;
-	Tue, 28 May 2024 20:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B551802DB;
+	Tue, 28 May 2024 21:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716929363; cv=none; b=SHHoXR6YkyMrQnZFaujOMHCc3Zw3ZqEWQrn7cgNbRX/2BVE2fuI5rIHeD2CIjNjOb61xLLDuMvFInH2zb1ZbD93w5ea0W2WzycBx+lPNd4TAjz3X2JPujjL53+FTom9Uz1SiRia7u0FpGk/yE/dTPFN4SsBca64EbyLGhFij3QI=
+	t=1716930495; cv=none; b=GwkzzOVAC39HsPygBCG1Ht78czRXFFQ9RDZOHtvTjFG70PRH4zfPwE3kbYQuxNhifk/9mY0Fbsm3QFUlA4D6smBSDiymEizfe0uNMFVCNYnyRI41l/yoFVsXmn5JQos9Z0optBG2X6pMY+ixSdAtRRmmKy4LClkxIkvuYUZ5kUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716929363; c=relaxed/simple;
-	bh=cd/SbaQnWmAq08MyAtXZ8t1qjAc7VyezJTSklhCEWbI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BFa1HAacjk033FiJXH94pIg+8SxfIMlWAQ/oUW3112wF8FVFvC03Wi/tojskG5AErvpTVtC3Ndv6sFAI6n4MLlhbQOa2FCEtnCKfb62ZLlOO73IcLNATQgwABEwKwpTxAiOEfTbmOSJqS4ZCc716Z94W1AztNMaSscuCEbILGDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=SZC3uMbY; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1716930495; c=relaxed/simple;
+	bh=WwlSHp73GWxFCSZh32w7K5y9ojQ9lghuxJzr9X2rk1k=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=W8e66b0vMeeVYfF9E5zrt/miqJRUiDTXA+//n9J+IafBnN9ncoq/dDqguISFBQQL5P1IbqSv0XIWumkWQWjrzoGV6/3rP4DqqlpgyBCdATsHkaVvl2pPiVC/GHmniVreyBFvIqOc2WFyBsh06nbjAMm6KmZnSLcydCOMVTBdFg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=U7ORo8WJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=h0azVv8S; arc=none smtp.client-ip=64.147.123.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="SZC3uMbY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1716929350; x=1717534150; i=w_armin@gmx.de;
-	bh=Hpk5WF3fBlOFgzw+1dpUyIelI8tfyqNS40822E06XGM=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=SZC3uMbYBs6x5oiXHLHfM0iwLrzsRr8ZG8oMDaFhWIb5fiwokvvJeZ1w7auYSGDW
-	 BaexouWpjObywthVDMN9FExkOcJBFePrO+0JoNhNZQcr0VjBSeRH0pK5tL76kQnQS
-	 xZhAbroe69b2ja7m3rdo4qTofwCiyAQXfGLVXcv+J1xHig7vagH/keOdPamq86qJI
-	 S6Oiuuvm6B+FYpI+LhFqxyK8RPqFi9s6XF1c8bj6bPxk4iw1kJQEW8eujZGR1/Hxu
-	 EN5ilQwh3yUGcvVgjEC5n/5FDLlq9v8ySI3VKeB0y45BRYqpPAXyYSwb9Bbw15bsi
-	 gAlD6jsBKl7xq6xpcw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MTiTt-1s4c1r39tF-00QT5R; Tue, 28 May 2024 22:49:10 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] platform/x86: dell-smbios: Simplify error handling
-Date: Tue, 28 May 2024 22:49:03 +0200
-Message-Id: <20240528204903.445546-2-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240528204903.445546-1-W_Armin@gmx.de>
-References: <20240528204903.445546-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="U7ORo8WJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="h0azVv8S"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfout.west.internal (Postfix) with ESMTP id 4234A1C0012A;
+	Tue, 28 May 2024 17:08:12 -0400 (EDT)
+Received: from imap41 ([10.202.2.91])
+  by compute2.internal (MEProxy); Tue, 28 May 2024 17:08:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1716930491; x=1717016891; bh=Tw0Md652eL
+	cdfBVfRxR5aYzBHh4vFiLjMRfFI3sLkTM=; b=U7ORo8WJPslFbXdpcew/hpDeUN
+	tUambX69+49DVpPQweAvvUEnpRFjL698YN4Dn6r00IVbz5bVUtUd5ysVsg6hONn9
+	jx24MdmV+I1WsIGy/cfI2pCz+mU9D4NjjI4fsYjB2P7OnQMLhFp3ZLmwZEaCmYN3
+	A2qAs6eeCqvxf25CZre75A7/+C6rIbzafgID83eKdEtQSzt+tUZC4HJuE7j/Y8yL
+	FYTCwe7HiiAllAzUZNqvIIifXQvOewk7VMF8ukgRxjddAbA12jUpOPVkY69Cdi7Z
+	Sf2xjv6Rej7eXKgW+BQ1fdVbbD6T929li9669p7jUkzZpezdsjZYgBlA4XAQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1716930491; x=1717016891; bh=Tw0Md652eLcdfBVfRxR5aYzBHh4v
+	FiLjMRfFI3sLkTM=; b=h0azVv8SWmDtSZ6e2gvPTSTsiRinEDpClLCb7C2FBUU1
+	YHofTJI+3m9Bcs39GoA13GYxjWo+cO5zHabaUu20V2oGSJgEpEu6s/HEOULXtmXx
+	m2N1dC4a6iZoEd9euSoGPgtikFwBsOuQAA0KMcG2ajJinzpAsrsv4C26r7GSd8BJ
+	yPIzFhICn0cHEziiUUwjvjtdbxt6nxI2s5mT80AoSlQ/hnMNQZGUo/5zLD4re6MW
+	PNP9oCBvvyug6c9ZoI7RGHsrnOMBZIAU+kk4BhGvTH5AKrPucsr9lWC62T2mpSlW
+	o7UF+82sbKARH8gkIZnyjYw3OZsWZyDoyGiIpGqi8Q==
+X-ME-Sender: <xms:u0dWZlCHU3usqf_x-oj8ZMacc3kOiryySqil_INRt-6VIicw1K-VxA>
+    <xme:u0dWZjiZ2PNvFKB9nIBB66aGV4upS1GPXlxsKODyAm4YBcPjivCcsD18rwBmyElOc
+    skyb8iQPbRv4Ky5Ans>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdejkedguddvlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdfn
+    uhhkvgculfhonhgvshdfuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrth
+    htvghrnhepuddtlefgvdegkeeuueetveffleefudekieetudfgvddtuedtteejudduuedv
+    gefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplh
+    hukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:u0dWZgnl4TOHVVz54FphdQwHQalDz5re2iAgVMBPPmN-KyI3swn_kg>
+    <xmx:u0dWZvwGJEIVAoAs0G3GlLrOaZuGumPfjT4OKB_Hp6qHulxEpePF3w>
+    <xmx:u0dWZqQlMbzzkQPltE4ASA2mbP1gEQK-K3Vpb5Q2UuPgTaEHSn2nMQ>
+    <xmx:u0dWZib71LR4d5PkSJhUcH50Q9aCLQz2cUlpepn2tjEACRx6f5e9ug>
+    <xmx:u0dWZgOWTmL5PlVEza4_avBtZTJBojW9jLmnp20fxE9CUlAvdPJxlAmg>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 5B4F92340080; Tue, 28 May 2024 17:08:11 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-491-g033e30d24-fm-20240520.001-g033e30d2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:+UIIXA77L1iidDRteJr97oG5jSONXoEfxxwv8Sc7Sqyg2sOT6bK
- +CDe82mMUFq1flfWdR6Z9xrDhji4iQjLCvqsWVTIZ6HeLnlwnt9dZeZg7u91M8gJcznlcTS
- FTFDpSKNf9ZGho/2FoWVF1KI94FWINvg+yyNqR460N2rOo7TbvZsSYlez7Vhed/cMRZUjqC
- WvMTzTc2gXyyRtKlL0SYQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:FogjPxr2wa8=;hd8yRzrswIPSCQ+KJkOZU38R25L
- X0r3J75YxvTyvuzR7DBPYpf4umYmpAUhOjQW9i1FP8n5ROJ15+dlwgNbmrQT1qmqIvQrzVmGb
- LbBGj+P8coJdKZPLzZ0Xjyga3QoWBuVWcftz91pihotC3W9H0hfsolfjgJF4bGDFgc2JbbINS
- G4dUjziG1VHUQyBvU1BV4vbAOnlWMDTJuWNX44qzwZ1FWG8kftVQbSX0s6/hsSCyr0V6ll0uB
- zTzAerIaQF2j6qP+0VZz0ELzDRHlIdrGGuKBZkPIwLqtQK6BCPu5hBMnQwhyOCuaePQceiclP
- DWPb9PzWEVejZGJgql5TNivqGzRV0D7FtVM2enw23fML8NzBNNCrnoKEpOhaE824rjRijqBVy
- wq8sRinYJdjusXfRkdE8mpN+1fPc+K3jhVS4vwmAjpzVSKcqS/lYK1c7OGinToNQRheTvwTJ/
- ZA0AtusQ5HQy1P+6+p3HOZemZ9hwtb0CWsn0uJ5mKE7ObNIRDijv4qOWHLQ1y3z6l52j516RT
- JR4tiAYdk5HMyM/bnrkm5DBLaGFiJ6fPGLBy1vMFAuW7YyZiajaa95xfjhSlzT+7piXe8sUsl
- uJV0LTgXNkW9Xxpoa8L7hITpRiHfXDEvo2Ur6hjC56PjczD0pcDeqfRkJw/0SusMFUBIAoIz0
- X8gig856l0EqPWXDVEo9YjYuNWcdF0LOsS9OGogTu2P6ia/OFVDuBzvoxpQMyio746K37VH0i
- otjJn4yHQMzGtIAuVQAvPuf6jiUXeXqoq5oK9tEgduirzqF4bZvvPlf7M5uTzEfafwnBue4eb
- KkeQ2RwNmhv8aIWeZY9HAo12gwd7vQ4yV7uHsO4jjWjNA=
+Message-Id: <ac597520-fb5b-40e5-ae1f-de825450d2db@app.fastmail.com>
+In-Reply-To: <5f4799b1-0606-46a9-a347-5a03738db341@amd.com>
+References: <20240528013626.14066-1-luke@ljones.dev>
+ <20240528013626.14066-9-luke@ljones.dev>
+ <6f4bc109-00d0-47b0-a581-b96a6152545c@amd.com>
+ <4d6b9171-7248-4937-87de-7e921ed8e507@app.fastmail.com>
+ <5f4799b1-0606-46a9-a347-5a03738db341@amd.com>
+Date: Wed, 29 May 2024 09:04:11 +1200
+From: "Luke Jones" <luke@ljones.dev>
+To: "Mario Limonciello" <mario.limonciello@amd.com>,
+ "Hans de Goede" <hdegoede@redhat.com>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 8/9] platform/x86: asus-wmi: add apu_mem setting
+Content-Type: text/plain
 
-When the allocation of value_name fails, the error handling code
-uses two gotos for error handling, which is not necessary.
 
-Simplify the error handling in this case by only using a single goto.
 
-Tested on a Dell Inspiron 3505.
+On Wed, 29 May 2024, at 1:27 AM, Mario Limonciello wrote:
+> >>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> >>> index f62a36dfcd4b..4b5fbae8c563 100644
+> >>> --- a/drivers/platform/x86/asus-wmi.c
+> >>> +++ b/drivers/platform/x86/asus-wmi.c
+> >>> @@ -855,6 +855,112 @@ static DEVICE_ATTR_RW(cores_enabled);
+> >>>    WMI_SIMPLE_SHOW(cores_max, "0x%x\n", ASUS_WMI_DEVID_CORES_MAX);
+> >>>    static DEVICE_ATTR_RO(cores_max);
+> >>>    
+> >>> +/* Device memory available to APU */
+> >>> +
+> >>> +static ssize_t apu_mem_show(struct device *dev,
+> >>> + struct device_attribute *attr, char *buf)
+> >>> +{
+> >>> + struct asus_wmi *asus = dev_get_drvdata(dev);
+> >>> + int err;
+> >>> + u32 mem;
+> >>> +
+> >>> + err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_APU_MEM, &mem);
+> >>> + if (err < 0)
+> >>> + return err;
+> >>> +
+> >>> + switch (mem) {
+> >>> + case 256:
+> >>> + mem = 0;
+> >>> + break;
+> >>> + case 258:
+> >>> + mem = 1;
+> >>> + break;
+> >>> + case 259:
+> >>> + mem = 2;
+> >>> + break;
+> >>> + case 260:
+> >>> + mem = 3;
+> >>> + break;
+> >>> + case 261:
+> >>> + mem = 4;
+> >>> + break;
+> >>> + case 262:
+> >>> + mem = 8;
+> >>> + break;
+> >>> + case 263:
+> >>> + mem = 5;
+> >>> + break;
+> >>> + case 264:
+> >>> + mem = 6;
+> >>> + break;
+> >>> + case 265:
+> >>> + mem = 7;
+> >>> + break;
+> >>> + default:
+> >>> + mem = 4;
+> >>> + break;
+> >>> + }
+> >>> +
+> >>> + return sysfs_emit(buf, "%d\n", mem);
+> >>> +}
+> >>> +
+> >>> +static ssize_t apu_mem_store(struct device *dev,
+> >>> +     struct device_attribute *attr,
+> >>> +     const char *buf, size_t count)
+> >>> +{
+> >>> + struct asus_wmi *asus = dev_get_drvdata(dev);
+> >>> + int result, err;
+> >>> + u32 mem;
+> >>> +
+> >>> + result = kstrtou32(buf, 10, &mem);
+> >>> + if (result)
+> >>> + return result;
+> >>> +
+> >>> + switch (mem) {
+> >>> + case 0:
+> >>> + mem = 0;
+> >>> + break;
+> >>> + case 1:
+> >>> + mem = 258;
+> >>> + break;
+> >>> + case 2:
+> >>> + mem = 259;
+> >>> + break;
+> >>> + case 3:
+> >>> + mem = 260;
+> >>> + break;
+> >>> + case 4:
+> >>> + mem = 261;
+> >>> + break;
+> >>> + case 5:
+> >>> + mem = 263;
+> >>> + break;
+> >>> + case 6:
+> >>> + mem = 264;
+> >>> + break;
+> >>> + case 7:
+> >>> + mem = 265;
+> >>> + break;
+> >>> + case 8:
+> >>> + mem = 262;
+> >>
+> >> Is case 8 a mistake, or intentionally out of order?
+> > 
+> > Do you mean the `mem = <val>`? Those aren't in order, and I thought it was easier to read if the switch was ordered.
+> > 
+> 
+> I'm wondering if case 5 should be 262, case 6 263, case 7 264 and case 8 
+> 265.  It just stood out to me.
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
-Changes since v1:
-- add patch
-=2D--
- drivers/platform/x86/dell/dell-smbios-base.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+Yeah it's weird but that is what it is. Also verified in ghelper which calls the same WMI interfaces in Windows.
 
-diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platfo=
-rm/x86/dell/dell-smbios-base.c
-index 86b95206cb1b..b562ed99ec4e 100644
-=2D-- a/drivers/platform/x86/dell/dell-smbios-base.c
-+++ b/drivers/platform/x86/dell/dell-smbios-base.c
-@@ -492,19 +492,16 @@ static int build_tokens_sysfs(struct platform_device=
- *dev)
- 		/* add value */
- 		value_name =3D kasprintf(GFP_KERNEL, "%04x_value",
- 				       da_tokens[i].tokenID);
--		if (value_name =3D=3D NULL)
--			goto loop_fail_create_value;
-+		if (!value_name) {
-+			kfree(location_name);
-+			goto out_unwind_strings;
-+		}
+> 
+> If that's all intended then no concerns and I agree sorting the case is 
+> better.
+> 
+> >>
+> >>> + break;
+> >>> + default:
+> >>> + return -EIO;
+> >>> + }
+> >>> +
+> >>> + err = asus_wmi_set_devstate(ASUS_WMI_DEVID_APU_MEM, mem, &result);
+> >>> + if (err) {
+> >>> + pr_warn("Failed to set apu_mem: %d\n", err);
+> >>> + return err;
+> >>> + }
+> >>> +
+> >>> + pr_info("APU memory changed, reboot required\n");
+> >>
+> >> If you're logging something into the logs for this, I'd say make it more
+> >> useful.
+> >>
+> >> "APU memory changed to %d MB"
+> > 
+> > Agreed. There's probably a few other spots I can do this also.
+> > 
+> >>
+> >>> + sysfs_notify(&asus->platform_device->dev.kobj, NULL, "apu_mem");
+> >>
+> >> So this is a case that the BIOS attributes API I mentioned before would
+> >> be REALLY useful.  There is a pending_reboot sysfs file that userspace
+> >> can query to know if a given setting requires a reboot or not.
+> >>
+> >> Fwupd also uses this attribute to know to delay BIOS updates until the
+> >> system has been rebooted.
+> > 
+> > Oh! Yes I'll queue that as an additional patch. There's at least 2 or 3 other spots where that would be good to have.
+> > 
+> 
+> For any "new" attributes it's better to put them in that API than code 
+> duplication of the BIOS attributes API as well as a random sysfs file 
+> API that you can never discard.
 
- 		sysfs_attr_init(&token_entries[i].value_attr.attr);
- 		token_entries[i].value_attr.attr.name =3D value_name;
- 		token_entries[i].value_attr.attr.mode =3D 0444;
- 		token_entries[i].value_attr.show =3D value_show;
- 		token_attrs[j++] =3D &token_entries[i].value_attr.attr;
--		continue;
--
--loop_fail_create_value:
--		kfree(location_name);
--		goto out_unwind_strings;
- 	}
- 	smbios_attribute_group.attrs =3D token_attrs;
+Do you mean the firmware_attributes API? If so, I'm not opposed to adding all the existing ROG attributes to it also.
 
-=2D-
-2.39.2
+If I'm understanding the docs correctly, for example this apu_mem attr would then become:
+- /sys/class/firmware-attributes/asus-bios/attributes/apu_mem/type
+- /sys/class/firmware-attributes/*/attributes/apu_mem/current_value
+- /sys/class/firmware-attributes/*/attributes/apu_mem/default_value
+- /sys/class/firmware-attributes/*/attributes/apu_mem/display_name
+- /sys/class/firmware-attributes/*/attributes/apu_mem/possible_values
+- ..etc
 
+That's absolutely much better than what I've been doing and I wish I'd known about it sooner.
+
+So if I go ahead and convert all the new attr to this are there any issues with also converting much of the previous attr? And I'm aware of "don't break userspace" so really I'm a bit unsure how best to manage that (would a new module be better here also? "asus-bios.c" perhaps).
+
+What I don't want is a split between platform and firmware_attributes.
+
+> 
+> >>> +
+> >>> + return count;
+> >>> +}
+> >>> +static DEVICE_ATTR_RW(apu_mem);
+> >>> +
+> >>>    /* Tablet mode ****************************************************************/
+> >>>    
+> >>>    static void asus_wmi_tablet_mode_get_state(struct asus_wmi *asus)
+> >>> @@ -4100,6 +4206,7 @@ static struct attribute *platform_attributes[] = {
+> >>>    &dev_attr_panel_fhd.attr,
+> >>>    &dev_attr_cores_enabled.attr,
+> >>>    &dev_attr_cores_max.attr,
+> >>> + &dev_attr_apu_mem.attr,
+> >>>    &dev_attr_mini_led_mode.attr,
+> >>>    &dev_attr_available_mini_led_mode.attr,
+> >>>    NULL
+> >>> @@ -4176,6 +4283,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+> >>>    else if (attr == &dev_attr_cores_enabled.attr
+> >>>    || attr == &dev_attr_cores_max.attr)
+> >>>    ok = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CORES_SET);
+> >>> + else if (attr == &dev_attr_apu_mem.attr)
+> >>> + ok = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_APU_MEM);
+> >>>    else if (attr == &dev_attr_mini_led_mode.attr)
+> >>>    ok = asus->mini_led_dev_id != 0;
+> >>>    else if (attr == &dev_attr_available_mini_led_mode.attr)
+> >>> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> >>> index 5a56e7e97785..efe608861e55 100644
+> >>> --- a/include/linux/platform_data/x86/asus-wmi.h
+> >>> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> >>> @@ -121,6 +121,9 @@
+> >>>     /* Maximum Intel E-core and P-core availability */
+> >>>    #define ASUS_WMI_DEVID_CORES_MAX 0x001200D3
+> >>>    
+> >>> +/* Set the memory available to the APU */
+> >>> +#define ASUS_WMI_DEVID_APU_MEM 0x000600C1
+> >>> +
+> >>>    /* MCU powersave mode */
+> >>>    #define ASUS_WMI_DEVID_MCU_POWERSAVE   0x001200E2
+> >>>    
+> >>
+> 
+> 
