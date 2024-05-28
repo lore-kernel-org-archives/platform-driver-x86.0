@@ -1,209 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B466EB64;
-	Tue, 28 May 2024 08:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A586915E96
+	for <platform-driver-x86@vger.kernel.org>; Tue, 28 May 2024 08:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716885381; cv=none; b=Nhu179HwKmjo+qqCtEtsm6HfM0xPySFnpLaTk/SNjZ+nsTEM/cz5CXuHccr+x8kLHGmnQJM6ipDp5/IHlrWmBELJKbxwjLNTA9UYMxq1y9HZSkkJpj1da5NSIKPmP5bQeJ17JMuoXNQF1FCNtXsXaROulP1jrhgE1Bpt1VQc7BU=
+	t=1716885783; cv=none; b=LCdz9u5QWw+LmNhEkLsgXDHwQUGXdvEcKiSgeVO/DBfQcyiH1e/Z9wtlM/VExJ4Sp+QV4Cbvfm4Bni7hy79Yl7TOFrtHbnEZtX2gWHHhRzpHH5U4CAcEVN6jVaRNMUyiKyFlHunAi/lJEY3XjM7Z041ayE/dVl+bTZ8XskcQdeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716885381; c=relaxed/simple;
-	bh=WKJi3oA49761Rs6or8jvRD1SSYdP62DWREY3kVLAuFg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=JBPH2Q/BZdkVj2Xqd9zkvXM9FHCRl0YQuF2NorJ+ZOsqALhCrOSQ0bpkHW+8DgDJKGWrLDNfDpXuT6Yc+DmxW8EfuiTwyi5D34jDNzrMjGro/Brqm9U1XgOFwyMAsdnPHpJVg69e8kr/K9Ta+11iVlsPv0F3bMQPvMSd4SuWzJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X0HE6wbZ; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716885783; c=relaxed/simple;
+	bh=Y6f9O1rB7bAdaik8Ya5stBAwGWAwYs7mHE+WNyPAEOo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fLh5mLsTGXJQgfSWIU42nzpGaSzBwilJtVbKkEwYKeI/d7zucb/tAh5GOCBqZuCyIUVZSRjvbvHxHpZnXURqkqCHzUssrAfZdSaapa336oKJuOboV8CKJ+Y9jpmiGHwfEid9UccBNTMxxKgCVEy2PSTox2VDEcfWYr9jZov63I0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Sa/sbfRd; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X0HE6wbZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716885381; x=1748421381;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=WKJi3oA49761Rs6or8jvRD1SSYdP62DWREY3kVLAuFg=;
-  b=X0HE6wbZDwDd18U4/FMvcukIJ81TUNSjygi8sCsXZX5ifrSq8iHVfIi5
-   GzIPZle5hSU5jmBrFakMCo/aR2cTc8ORbfyfz4znVac99OhF5zdosGcGY
-   oNDARFB350P0Cm7ZsEUybx4ZYrC9qqiELP8ymqpBhY/75ZBTEVvqt0Oib
-   P5JpjEXfovIQqnNbPDi3rRxw+yiFLO/lNefK3tgY8r6oXf265xb0MBdOu
-   JGDYws2JIYzGSMG/S4kmKFhLikgjB0IR+nMYtbS0AzCYpTsB75EmHKi29
-   TzYFjTMRYr6nmwiEQvQmdhYnvEBEPRQG0odJiiZdeYTVFHnllV9SegL8I
-   A==;
-X-CSE-ConnectionGUID: f3VSfyU+QHujl74jZtuSug==
-X-CSE-MsgGUID: GtFMZDAwQXaF5ZsOIuP6Nw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11085"; a="35731203"
-X-IronPort-AV: E=Sophos;i="6.08,194,1712646000"; 
-   d="scan'208";a="35731203"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 01:36:20 -0700
-X-CSE-ConnectionGUID: kIHFHnZ8Rhq8tJomY2ooXw==
-X-CSE-MsgGUID: 4ob9eVpSQ6Oc1R9erU1ioQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,194,1712646000"; 
-   d="scan'208";a="39395409"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.144])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2024 01:36:16 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 28 May 2024 11:36:12 +0300 (EEST)
-To: "Luke D. Jones" <luke@ljones.dev>
-cc: jikos@kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-    corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-input@vger.kernel.org, 
-    bentiss@kernel.org
-Subject: Re: [PATCH] hid-asus: use hid for brightness control on keyboard
-In-Reply-To: <20240528013959.14661-1-luke@ljones.dev>
-Message-ID: <17aa68e2-4af6-68ad-e81a-abc714517f6b@linux.intel.com>
-References: <20240528013959.14661-1-luke@ljones.dev>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Sa/sbfRd"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a6265d47c61so56665866b.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 May 2024 01:43:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1716885780; x=1717490580; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BDOzOVJxnG+3KEM1LGz7y97uf9duOTHpiqETF8V1CyI=;
+        b=Sa/sbfRdKnz8/QMS+xeYM3nSHA4bJisg2W0l25IlBxTxty4NiXGvKntownbMHodJzp
+         tITa4FnuRTwj/iW57gW2YpY1FtzaZsh2cZBy3u7j9+1DoH0do0vzwd5zeh28ty/BYNd1
+         wq7I7CvDy/HpeR5LSdeCPZF1OIwueGV55tCuYXt76fGjPc5a3kVlIr7C48gVI67C3K+W
+         oVsUUdRPpTdKUw1u9NXqw5pPv3JoMavC98Sr0y8XLJpcaNUDcB5XhJeDBu0b1aCHl5Pc
+         7smTUTEtiJbRY9fdWSEjbWUT2ob75jgy8fKva8xkFqI7/zUnZ+S/SJV3q/jTt3CVKkuX
+         F+vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716885780; x=1717490580;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BDOzOVJxnG+3KEM1LGz7y97uf9duOTHpiqETF8V1CyI=;
+        b=wANHA0YYhxqyGtIjKBiFavfObmLqAg6emPS0YTyC64BCVSxMjIgePiWld9kEVsuULU
+         2zbS8HbBtwa06RPrKbMzoq/TRPBu8zaS+8/0Ly/CvCBe9duqkHOXrt/dGZeQUKkdRgJi
+         JA04mhL37kUdQLPBBfnKYzLRNus3gcrnkVDhe8KPwdtAEX/viU8Et/VIZiRmWh8IiSnD
+         UgLCB5nyf3TVUWoXBOlXMSJPPSeXznvSmqI2XhG/DQSfg7nGqPV4RvGdUeCVwsy6Bei/
+         ZBdtWIFcQUqGMq91qXusw+cFgSg69MPzyextxoMD3rRsJ+QI0ErtXmVUTdkbdu7pwXT6
+         OPyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVzcwIF3jcVxYyE/dLBCRwtG1SG27OwpoY5S+1yeZjFa4Um5jsA0ySLuevesYGGLM1plj/xDPe2z+EznAZBA9Zotg0NTwM5KCJA4yQpqeALFx8giA==
+X-Gm-Message-State: AOJu0YwySPJcrcbPwKuPmU3RlqXHQhnrr67i5/P8dmKCTh/ZpgVj3DBU
+	DOkOsFcYhVBRavi//LeZ7NTibtXu8IW1Mc/hqTLCz83bYjc/UP11wPsOjOauMzA=
+X-Google-Smtp-Source: AGHT+IFnwFpVgBPbSYYelUXVLbDbkXbUh2jkTNCogIsjRLaryTZNhcVpgseQGExAcVHtIzwZZr7icw==
+X-Received: by 2002:a17:906:69d0:b0:a59:9c4d:da3c with SMTP id a640c23a62f3a-a62643ec91cmr716821266b.40.1716885780045;
+        Tue, 28 May 2024 01:43:00 -0700 (PDT)
+Received: from ?IPV6:2001:a61:139b:bf01:e8eb:4d8f:8770:df82? ([2001:a61:139b:bf01:e8eb:4d8f:8770:df82])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626c8170cbsm585860666b.20.2024.05.28.01.42.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 May 2024 01:42:59 -0700 (PDT)
+Message-ID: <9a0073a0-d598-4c1a-bb32-328d0a279152@suse.com>
+Date: Tue, 28 May 2024 10:42:58 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/6] power: supply: lenovo_yoga_c630_battery: add
+ Lenovo C630 driver
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Oliver Neukum <oneukum@suse.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>
+References: <20240527-yoga-ec-driver-v3-0-327a9851dad5@linaro.org>
+ <20240527-yoga-ec-driver-v3-4-327a9851dad5@linaro.org>
+ <ceb1f7b3-2787-4166-846f-2427b44b3e62@suse.com>
+ <vc5nd5dl4czkuxzikazn7ndy6wghlchqsrcgxf7n5w53w3o3m2@spyfgp5pwy4y>
+Content-Language: en-US
+From: Oliver Neukum <oneukum@suse.com>
+In-Reply-To: <vc5nd5dl4czkuxzikazn7ndy6wghlchqsrcgxf7n5w53w3o3m2@spyfgp5pwy4y>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 28 May 2024, Luke D. Jones wrote:
+On 28.05.24 01:15, Dmitry Baryshkov wrote:
+> On Mon, May 27, 2024 at 02:26:36PM +0200, Oliver Neukum wrote:
+>> On 27.05.24 12:03, Dmitry Baryshkov wrote:
 
-> On almost all ASUS ROG series laptops the MCU used for the USB keyboard
-> also has a HID packet used for setting the brightness. This is usually
-> the same as the WMI method. But in some laptops the WMI method either
-> is missing or doesn't work, so we should default to the HID control.
+Hi,
+
+>>> +struct yoga_c630_psy {
+>>> +	struct yoga_c630_ec *ec;
+>>> +	struct device *dev;
+>>> +	struct device_node *of_node;
+>>> +	struct notifier_block nb;
+>>> +	struct mutex lock;
+>>> +
+>>> +	struct power_supply *adp_psy;
+>>> +	struct power_supply *bat_psy;
+>>> +
+>>> +	unsigned long last_status_update;
+>>> +
+>>> +	bool adapter_online;
+>>> +
+>>> +	bool unit_mA;
+>>> +
+>>> +	unsigned int scale;
+>>
+>> why do you store unit_mA and scale? This looks redundant and like a source
+>> of confusion to me.
 > 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> ---
->  drivers/hid/hid-asus.c                     | 19 ++++++++++++-
->  drivers/platform/x86/asus-wmi.c            |  3 ++-
->  include/linux/platform_data/x86/asus-wmi.h | 31 ++++++++++++++++++++++
->  3 files changed, 51 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> index 02de2bf4f790..9389a3e733e3 100644
-> --- a/drivers/hid/hid-asus.c
-> +++ b/drivers/hid/hid-asus.c
-> @@ -101,6 +101,7 @@ struct asus_kbd_leds {
->  	unsigned int brightness;
->  	spinlock_t lock;
->  	bool removed;
-> +	int report_id;
->  };
->  
->  struct asus_touchpad_info {
-> @@ -473,7 +474,7 @@ static enum led_brightness asus_kbd_backlight_get(struct led_classdev *led_cdev)
->  static void asus_kbd_backlight_work(struct work_struct *work)
->  {
->  	struct asus_kbd_leds *led = container_of(work, struct asus_kbd_leds, work);
-> -	u8 buf[] = { FEATURE_KBD_REPORT_ID, 0xba, 0xc5, 0xc4, 0x00 };
-> +	u8 buf[] = { led->report_id, 0xba, 0xc5, 0xc4, 0x00 };
->  	int ret;
->  	unsigned long flags;
->  
-> @@ -492,12 +493,18 @@ static void asus_kbd_backlight_work(struct work_struct *work)
->   */
->  static bool asus_kbd_wmi_led_control_present(struct hid_device *hdev)
->  {
-> +	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
->  	u32 value;
->  	int ret;
->  
->  	if (!IS_ENABLED(CONFIG_ASUS_WMI))
->  		return false;
->  
-> +	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD && asus_use_hidraw_led()) {
-> +		hid_info(hdev, "using hidraw for asus::kbd_backlight\n");
-> +		return false;
-> +	}
-> +
->  	ret = asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS,
->  				       ASUS_WMI_DEVID_KBD_BACKLIGHT, 0, &value);
->  	hid_dbg(hdev, "WMI backlight check: rc %d value %x", ret, value);
-> @@ -507,6 +514,12 @@ static bool asus_kbd_wmi_led_control_present(struct hid_device *hdev)
->  	return !!(value & ASUS_WMI_DSTS_PRESENCE_BIT);
->  }
->  
-> +static bool asus_kbd_is_input_led(void)
-> +{
-> +	return dmi_match(DMI_PRODUCT_NAME, "GU605")
-> +	    || dmi_match(DMI_PRODUCT_NAME, "GA403");
-> +}
-> +
->  static int asus_kbd_register_leds(struct hid_device *hdev)
->  {
->  	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
-> @@ -549,6 +562,10 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
->  	if (!drvdata->kbd_backlight)
->  		return -ENOMEM;
->  
-> +	drvdata->kbd_backlight->report_id = FEATURE_KBD_REPORT_ID;
-> +	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD && asus_kbd_is_input_led())
-> +		drvdata->kbd_backlight->report_id = FEATURE_KBD_LED_REPORT_ID1;
-> +
->  	drvdata->kbd_backlight->removed = false;
->  	drvdata->kbd_backlight->brightness = 0;
->  	drvdata->kbd_backlight->hdev = hdev;
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 3f9b6285c9a6..a58df18a70ad 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -1681,7 +1681,8 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
->  			goto error;
->  	}
->  
-> -	if (!kbd_led_read(asus, &led_val, NULL)) {
-> +	if (!kbd_led_read(asus, &led_val, NULL) && !asus_use_hidraw_led()) {
-> +		pr_info("using asus-wmi for asus::kbd_backlight\n");
->  		asus->kbd_led_wk = led_val;
->  		asus->kbd_led.name = "asus::kbd_backlight";
->  		asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index 3eb5cd6773ad..79a50102440d 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -160,4 +160,35 @@ static inline int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1,
->  }
->  #endif
->  
-> +/* To be used by both hid-asus and asus-wmi to determine which controls kbd_brightness */
-> +#if IS_REACHABLE(CONFIG_ASUS_WMI)
-> +static bool asus_use_hidraw_led(void)
+> Here we just followed the AML code in ACPI tables. The unit_mA is a
+> returned from the_BIX method, the 'scale' is used internally in the DSDT.
+> If you think that it's better, I can change all '* scale * 1000' to
+> 'if unit_mA then foo = bar * 10000 else foo = bar * 1000'.
 
-Since it's in a header, it's missing inline. However, this function looks 
-quite complicated so putting it into a header file is questionable to 
-begin with so I'd prefer it to be in a .c file.
+I think that would indeed be better. Implementation details of the DSDT
+should not dictate data structures in a kernel driver.
 
-> +{
-> +	const char *product, *board;
-> +
-> +	product = dmi_get_system_info(DMI_PRODUCT_FAMILY);
-> +	if (!product)
-> +		return false;
-> +
-> +	/* These product ranges should all be using HID for keyboard LED */
-> +	if (strstr(product, "ROG Zephyrus")
-> +	|| strstr(product, "ROG Strix")
-> +	|| strstr(product, "ROG Flow")
-> +	|| strstr(product, "GA403")
-> +	|| strstr(product, "GU605"))
-
-Please align these properly but consider using array and loop.
-
-> +		return true;
-> +
-> +	board = dmi_get_system_info(DMI_BOARD_NAME);
-> +	if (!board)
-> +		return false;
-> +
-> +	return strstr(board, "RC71L"); /* ROG Ally specific */
-> +}
-> +#else
-> +static inline bool asus_use_hidraw_led(void)
-> +{
-> +	return true;
-> +}
-> +#endif
-> +
->  #endif	/* __PLATFORM_DATA_X86_ASUS_WMI_H */
-> 
-
--- 
- i.
+	Regards
+		Oliver
 
