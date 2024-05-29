@@ -1,314 +1,260 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wfhigh7-smtp.messagingengine.com (wfhigh7-smtp.messagingengine.com [64.147.123.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2A814373A
-	for <platform-driver-x86@vger.kernel.org>; Tue, 28 May 2024 23:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE74A17E8E4;
+	Wed, 29 May 2024 00:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716940575; cv=none; b=Tlr1W/JSYiqe7o6jTKUOvm4Y37mAKwIiHhFI4A7uIk6vwY+G8YA4+aTD5pvWTo5P7u3GtxGw6T24blARbXsJWSrxeDLAzQ1yqp3Hg1fVHtFhNjeL8A/gdhElL67FNO7KWKmNcYXrVN1e2F2LBbUhfJM2t8Kd2i0Q9HSTLQp+bLM=
+	t=1716943096; cv=none; b=LmdBXpomhEOh9uxmOOvRByIlpfZ712iwJPy/26J9+bcJa2WoubYBek+87yuYA77WzJN35sh9PtZNgAFcmUB5LpVOCLyV2VIBACthqtHIWd5dRp7LSNljjTTIyFN/FZ1c4B0W9uSEh7qMxlJ8a62q6B4OPSg8SH4K+6M/sV/LyUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716940575; c=relaxed/simple;
-	bh=UFnUo5et2nu4ZTLwron8KcsxSOqZm4uccIMJ4BvQ3XM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EvnndGdOZ11YrcZP+F5ZKA6zacj7bitRNbynNL3/JeiuSkK6B3lu0L7QArEO8W/grVtw7M7/8Cjd24ZJ2GflsGT4SQTlMOe648MSWXTVKqf8q2k1CJF9PeC+w/6PDbLNUg9a27f9FkgMOzdE+EXLQOOfeE7q0uMOM/Bs84yM2JE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xKbW0B7x; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1716943096; c=relaxed/simple;
+	bh=6e5LyDX4ws9lAD5qNZ6NI7Us1d194wOLh7n8KUxOZFM=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=M2VYRw1L5WPwCAbl3RhTZNUZNPVisXyVdGxyZGFMoph3OlDFSxMrZLqzstD/Qts1/7qw1nzOttJCWUf2IiO2FzqDZkLtGJ1qNI4+nCexfQm82vdSuDom6BJrThowfuSvjSL9cNqCjnxQWvqbY39BXDCX56AQvixHZxD9NHeQSPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=U5G2+ryE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iz2ctrKz; arc=none smtp.client-ip=64.147.123.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xKbW0B7x"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-529661f2552so1838261e87.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 28 May 2024 16:56:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1716940571; x=1717545371; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=M4MYPVYNdfA6ot8nLghsVUlr6HtvllgPwAgd9kwmapI=;
-        b=xKbW0B7xa5y17J4mBWrTWCGlZhTKY4tR2rihFm72ghs+tsf2wWEg5VqM624kh4kgw3
-         06T2Jyzn4iahn/7r8zM3wzZ0B8iirM/sPfjSekaXANmChmFRTQvYF2myfM0jsoDyDSrS
-         lGADs0ZZMSLyJDwUrANS2LVrKxFQ34WgPyAC1b8xDqUpboFdLoBjWNSg+RwCY//hc1XI
-         7Z6Wx4/YkRiXccK6gpJq7TYHHOvbI7nNyvGdgImON6Y2ruSo/dfd3py4j4P+y3Je6AM7
-         E6DdVnMnJQ+9oIjNrfwoHQm/1cseV+fL4w7lgTppBDWgZNDB+0KHOEf/ldpbQ4HQSr7B
-         Donw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716940571; x=1717545371;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M4MYPVYNdfA6ot8nLghsVUlr6HtvllgPwAgd9kwmapI=;
-        b=fA2N1aKWMKXgaynFDI/ut39FFO1FEvzqGnb435Q6rYtmrP8SkOvZkXXHW4K4DjDXjr
-         QvdWZHDjd/bxcn1UkYAei2To55ZcX9Xwt2ieY7xJwYmYzJsCsxL838TNrw6SLKx/Kw9/
-         KSjOMqOB8iPlOu8SVlABGRrjt3JawfT9YMaI46VW5zBKrtTQpxjBo9n8OqOUdv1frULK
-         fE1qj86X7S0GY9wNWBCWJO0KJctHGtmUaI6/2AL8EiL/FEF89CpoafuZdiAzJLtE/ask
-         RsKGNYfozwQAhKVnzJnojVczbpPoDdXW3USXtOA9Ct8Lh3da0tOqMNhRuTPVbQuFuJ9B
-         6Xjg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ978zu2o0GgBjutHsJXj1FdjBgTAA+CgJohNsZO+w0xy1seSuceHvWQnfbqw7YGVahlVJf2Zzm+fyyEj4gPy2sAY264DJhr6ByJ7wA2fJ5UO+Rg==
-X-Gm-Message-State: AOJu0Yw/FF323lvHD7QZKnlct+G0hcZ1p6Y5JpnsM/TWq9vTGIA6oMbf
-	AkxHpXWgA8YuyvkHUbgSehYbzSpbM50/8VTPlmNqkwUUOio7bySrJ6Y6SS8Ja8Q=
-X-Google-Smtp-Source: AGHT+IGTsD1dM3WwZD2UJs8zbC72VrfPx0lRpZvezsImS9eOLf7B6kz3Z1AJOBQKD9VVsfodx+D6aA==
-X-Received: by 2002:ac2:494e:0:b0:524:3177:8e45 with SMTP id 2adb3069b0e04-52966f8f6bcmr8360832e87.68.1716940571039;
-        Tue, 28 May 2024 16:56:11 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-529a7fb982esm815183e87.265.2024.05.28.16.56.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 May 2024 16:56:10 -0700 (PDT)
-Date: Wed, 29 May 2024 02:56:09 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Nikita Travkin <nikita@trvn.ru>
-Subject: Re: [PATCH v4 2/6] platform: arm64: add Lenovo Yoga C630 WOS EC
- driver
-Message-ID: <3gbjbuav5l2td5xrfj46krhgdew42medhfrnkd47iahdv4fm3x@qv6jadf6tkol>
-References: <20240528-yoga-ec-driver-v4-0-4fa8dfaae7b6@linaro.org>
- <20240528-yoga-ec-driver-v4-2-4fa8dfaae7b6@linaro.org>
- <2b76f27e-f223-4ff9-880e-9e232ce9ddc6@linaro.org>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="U5G2+ryE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iz2ctrKz"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfhigh.west.internal (Postfix) with ESMTP id 843E418000E8;
+	Tue, 28 May 2024 20:38:13 -0400 (EDT)
+Received: from imap41 ([10.202.2.91])
+  by compute2.internal (MEProxy); Tue, 28 May 2024 20:38:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1716943093;
+	 x=1717029493; bh=yOSdYu9TZvyv91nLknKSw3S/vqamkIsje7Xm5pDqaOQ=; b=
+	U5G2+ryEBe8iQutVtk6Z/Te6TMhJ51uE024SWqrYYSdfGY29n6URgPyiwn/dYxsT
+	WL+0bvJtgR37Dk1NLKxJJ8l3UPhYkEjlnSuxv4XKGFlbRu+qxtz5PlJ2Ol7tKkNe
+	2imFCjpXN/u25NIuzTRWiFkbzOQneLTp7n4Si49kgppagVowwuyTJtvSzn3H3fvX
+	p22CK5klINEbPhptKDZYQ/HkCHTUNesI/ikB3eT+HpdtQqB3/95dq8OUQcSIK/QM
+	yAaJOhdVeOtSkoGNmX8hEpvT9feKEXYKH+mKrQe150UvdPnWooGLk5Qn4Jb9wPYM
+	t4xu8TaJLDK2Y2w3jAG+Dw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1716943093; x=
+	1717029493; bh=yOSdYu9TZvyv91nLknKSw3S/vqamkIsje7Xm5pDqaOQ=; b=i
+	z2ctrKzOgsrShWAtpUrw+klhdksI9TS47vqzbKlyLNhs67siwtDBPHGexMX/BZhW
+	kF2dcvaMin9wkAzGyPXLyfYiUQPvi3Ycp3cXLPh5ZGheXtNStJMW3JlqdXGVY5c0
+	XMsqjb57ofEfsXva5enbTnnKX6xtIPODw+itKw8AkvRiSLJMxABGgBpJTsEidRe0
+	DJmvHwx4bfuGjac+Rf75n7LaxMZpwpmSl5gY8rcLwzLF0F7H1yOfRJOYfgNm7tWk
+	OzLjcAkPvUDMGclrJk/sR8PwGE7JjlZsYpjW8pKAAhfZPf8fRYeKh0mnev4ySuHe
+	AGA+bLqI4YHAKV+LvEN5A==
+X-ME-Sender: <xms:9HhWZkniop2zYrmTALttKKB2NVoQZeaZAfb1Frk_fFBSE3cWkkYrVg>
+    <xme:9HhWZj0L6qZGbICV2ykJ1FrTyBUlt0jdjJCrIam7xwTRRGkl3JZ4ZM1H6QEi-nXNI
+    oM3bWgiUtGLt6HS1nk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdejledgfeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfn
+    uhhkvgculfhonhgvshdfuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrth
+    htvghrnhepfeeugffhvdeufeehieelvdegfeffveegleehtddvheegkeetueegtdegueeh
+    vdelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplh
+    hukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:9HhWZirvW5Fe4hUG7eZ07r7kR6JR_hF3Qq2CssapME1e4OOTZ43kFw>
+    <xmx:9HhWZgn9n6hlmVKVARNOweUCD12qSZi0N2fbAUhJ1tigq-P-jbx7rg>
+    <xmx:9HhWZi2XBNiQNu2ypnQgr9ZnbDx4kj5zTrWozhpODHoiXxg8AtYrpQ>
+    <xmx:9HhWZntoKf4yUdldq1gyv49kjx-TWYlcSRdgSmeMcRIn1f7_biQVGw>
+    <xmx:9XhWZsproeA7V0mXt1xo9Kr-xBMWOywiUgVPbBEya22JeZsTmfXgi_KR>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id D49C52340080; Tue, 28 May 2024 20:38:12 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-491-g033e30d24-fm-20240520.001-g033e30d2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2b76f27e-f223-4ff9-880e-9e232ce9ddc6@linaro.org>
+Message-Id: <80aacd65-d5e1-40ac-9d8d-3bb9582d1687@app.fastmail.com>
+In-Reply-To: <17aa68e2-4af6-68ad-e81a-abc714517f6b@linux.intel.com>
+References: <20240528013959.14661-1-luke@ljones.dev>
+ <17aa68e2-4af6-68ad-e81a-abc714517f6b@linux.intel.com>
+Date: Wed, 29 May 2024 12:37:47 +1200
+From: "Luke Jones" <luke@ljones.dev>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Jiri Kosina" <jikos@kernel.org>, "Hans de Goede" <hdegoede@redhat.com>,
+ corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, linux-input@vger.kernel.org,
+ bentiss@kernel.org
+Subject: Re: [PATCH] hid-asus: use hid for brightness control on keyboard
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 29, 2024 at 12:51:04AM +0100, Bryan O'Donoghue wrote:
-> On 28/05/2024 21:44, Dmitry Baryshkov wrote:
-> > Lenovo Yoga C630 WOS is a laptop using Snapdragon 850 SoC. Like many
-> > laptops it uses embedded controller (EC) to perform various platform
-> 
-> an embedded controller
-> 
-> > operations, including, but not limited, to Type-C port control or power
-> > supply handlng.
-> > 
-> > Add the driver for the EC, that creates devices for UCSI and power
-> > supply devices.
-> > 
-> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+
+
+On Tue, 28 May 2024, at 8:36 PM, Ilpo J=C3=A4rvinen wrote:
+> On Tue, 28 May 2024, Luke D. Jones wrote:
+>=20
+> > On almost all ASUS ROG series laptops the MCU used for the USB keybo=
+ard
+> > also has a HID packet used for setting the brightness. This is usual=
+ly
+> > the same as the WMI method. But in some laptops the WMI method either
+> > is missing or doesn't work, so we should default to the HID control.
+> >=20
+> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
 > > ---
-> >   drivers/platform/arm64/Kconfig                 |  14 ++
-> >   drivers/platform/arm64/Makefile                |   1 +
-> >   drivers/platform/arm64/lenovo-yoga-c630.c      | 279 +++++++++++++++++++++++++
-> >   include/linux/platform_data/lenovo-yoga-c630.h |  42 ++++
-> >   4 files changed, 336 insertions(+)
-> > 
-> > diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
-> > index 8fdca0f8e909..8c103b3150d1 100644
-> > --- a/drivers/platform/arm64/Kconfig
-> > +++ b/drivers/platform/arm64/Kconfig
-> > @@ -32,4 +32,18 @@ config EC_ACER_ASPIRE1
-> >   	  laptop where this information is not properly exposed via the
-> >   	  standard ACPI devices.
-> > +config EC_LENOVO_YOGA_C630
-> > +	tristate "Lenovo Yoga C630 Embedded Controller driver"
-> > +	depends on I2C
-> > +	help
-> > +	  Driver for the Embedded Controller in the Qualcomm Snapdragon-based
-> > +	  Lenovo Yoga C630, which provides battery and power adapter
-> > +	  information.
+> >  drivers/hid/hid-asus.c                     | 19 ++++++++++++-
+> >  drivers/platform/x86/asus-wmi.c            |  3 ++-
+> >  include/linux/platform_data/x86/asus-wmi.h | 31 +++++++++++++++++++=
++++
+> >  3 files changed, 51 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+> > index 02de2bf4f790..9389a3e733e3 100644
+> > --- a/drivers/hid/hid-asus.c
+> > +++ b/drivers/hid/hid-asus.c
+> > @@ -101,6 +101,7 @@ struct asus_kbd_leds {
+> >  unsigned int brightness;
+> >  spinlock_t lock;
+> >  bool removed;
+> > + int report_id;
+> >  };
+> > =20
+> >  struct asus_touchpad_info {
+> > @@ -473,7 +474,7 @@ static enum led_brightness asus_kbd_backlight_ge=
+t(struct led_classdev *led_cdev)
+> >  static void asus_kbd_backlight_work(struct work_struct *work)
+> >  {
+> >  struct asus_kbd_leds *led =3D container_of(work, struct asus_kbd_le=
+ds, work);
+> > - u8 buf[] =3D { FEATURE_KBD_REPORT_ID, 0xba, 0xc5, 0xc4, 0x00 };
+> > + u8 buf[] =3D { led->report_id, 0xba, 0xc5, 0xc4, 0x00 };
+> >  int ret;
+> >  unsigned long flags;
+> > =20
+> > @@ -492,12 +493,18 @@ static void asus_kbd_backlight_work(struct wor=
+k_struct *work)
+> >   */
+> >  static bool asus_kbd_wmi_led_control_present(struct hid_device *hde=
+v)
+> >  {
+> > + struct asus_drvdata *drvdata =3D hid_get_drvdata(hdev);
+> >  u32 value;
+> >  int ret;
+> > =20
+> >  if (!IS_ENABLED(CONFIG_ASUS_WMI))
+> >  return false;
+> > =20
+> > + if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD && asus_use_hidraw_l=
+ed()) {
+> > + hid_info(hdev, "using hidraw for asus::kbd_backlight\n");
+> > + return false;
+> > + }
 > > +
-> > +	  This driver provides battery and AC status support for the mentioned
-> > +	  laptop where this information is not properly exposed via the
-> > +	  standard ACPI devices.
-> > +
-> > +	  Say M or Y here to include this support.
-> > +
-> >   endif # ARM64_PLATFORM_DEVICES
-> > diff --git a/drivers/platform/arm64/Makefile b/drivers/platform/arm64/Makefile
-> > index 4fcc9855579b..b2ae9114fdd8 100644
-> > --- a/drivers/platform/arm64/Makefile
-> > +++ b/drivers/platform/arm64/Makefile
-> > @@ -6,3 +6,4 @@
-> >   #
-> >   obj-$(CONFIG_EC_ACER_ASPIRE1)	+= acer-aspire1-ec.o
-> > +obj-$(CONFIG_EC_LENOVO_YOGA_C630) += lenovo-yoga-c630.o
-> > diff --git a/drivers/platform/arm64/lenovo-yoga-c630.c b/drivers/platform/arm64/lenovo-yoga-c630.c
-> > new file mode 100644
-> > index 000000000000..3d1d5acde807
-> > --- /dev/null
-> > +++ b/drivers/platform/arm64/lenovo-yoga-c630.c
-> > @@ -0,0 +1,279 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright (c) 2022-2024, Linaro Ltd
-> > + * Authors:
-> > + *    Bjorn Andersson
-> > + *    Dmitry Baryshkov
-> > + */
-> > +#include <linux/auxiliary_bus.h>
-> > +#include <linux/i2c.h>
-> > +#include <linux/module.h>
-> > +#include <linux/notifier.h>
-> > +#include <linux/platform_data/lenovo-yoga-c630.h>
-> > +
-> > +#define LENOVO_EC_RESPONSE_REG		0x01
-> > +#define LENOVO_EC_REQUEST_REG		0x02
-> > +
-> > +#define LENOVO_EC_UCSI_WRITE		0x20
-> > +#define LENOVO_EC_UCSI_READ		0x21
-> > +
-> > +#define LENOVO_EC_READ_REG		0xb0
-> > +#define LENOVO_EC_REQUEST_NEXT_EVENT	0x84
-> > +
-> > +struct yoga_c630_ec {
-> > +	struct i2c_client *client;
-> > +	struct mutex lock;
-> > +	struct blocking_notifier_head notifier_list;
-> > +};
-> > +
-> > +static int yoga_c630_ec_request(struct yoga_c630_ec *ec, u8 *req, size_t req_len,
-> > +				u8 *resp, size_t resp_len)
+> >  ret =3D asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS,
+> >         ASUS_WMI_DEVID_KBD_BACKLIGHT, 0, &value);
+> >  hid_dbg(hdev, "WMI backlight check: rc %d value %x", ret, value);
+> > @@ -507,6 +514,12 @@ static bool asus_kbd_wmi_led_control_present(st=
+ruct hid_device *hdev)
+> >  return !!(value & ASUS_WMI_DSTS_PRESENCE_BIT);
+> >  }
+> > =20
+> > +static bool asus_kbd_is_input_led(void)
 > > +{
-> > +	int ret;
-> > +
-> > +	WARN_ON(!mutex_is_locked(&ec->lock));
-> > +
-> > +	ret = i2c_smbus_write_i2c_block_data(ec->client, LENOVO_EC_REQUEST_REG,
-> > +					     req_len, req);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return i2c_smbus_read_i2c_block_data(ec->client, LENOVO_EC_RESPONSE_REG,
-> > +					     resp_len, resp);
+> > + return dmi_match(DMI_PRODUCT_NAME, "GU605")
+> > +     || dmi_match(DMI_PRODUCT_NAME, "GA403");
 > > +}
 > > +
-> > +int yoga_c630_ec_read8(struct yoga_c630_ec *ec, u8 addr)
+> >  static int asus_kbd_register_leds(struct hid_device *hdev)
+> >  {
+> >  struct asus_drvdata *drvdata =3D hid_get_drvdata(hdev);
+> > @@ -549,6 +562,10 @@ static int asus_kbd_register_leds(struct hid_de=
+vice *hdev)
+> >  if (!drvdata->kbd_backlight)
+> >  return -ENOMEM;
+> > =20
+> > + drvdata->kbd_backlight->report_id =3D FEATURE_KBD_REPORT_ID;
+> > + if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD && asus_kbd_is_input=
+_led())
+> > + drvdata->kbd_backlight->report_id =3D FEATURE_KBD_LED_REPORT_ID1;
+> > +
+> >  drvdata->kbd_backlight->removed =3D false;
+> >  drvdata->kbd_backlight->brightness =3D 0;
+> >  drvdata->kbd_backlight->hdev =3D hdev;
+> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/=
+asus-wmi.c
+> > index 3f9b6285c9a6..a58df18a70ad 100644
+> > --- a/drivers/platform/x86/asus-wmi.c
+> > +++ b/drivers/platform/x86/asus-wmi.c
+> > @@ -1681,7 +1681,8 @@ static int asus_wmi_led_init(struct asus_wmi *=
+asus)
+> >  goto error;
+> >  }
+> > =20
+> > - if (!kbd_led_read(asus, &led_val, NULL)) {
+> > + if (!kbd_led_read(asus, &led_val, NULL) && !asus_use_hidraw_led())=
+ {
+> > + pr_info("using asus-wmi for asus::kbd_backlight\n");
+> >  asus->kbd_led_wk =3D led_val;
+> >  asus->kbd_led.name =3D "asus::kbd_backlight";
+> >  asus->kbd_led.flags =3D LED_BRIGHT_HW_CHANGED;
+> > diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/li=
+nux/platform_data/x86/asus-wmi.h
+> > index 3eb5cd6773ad..79a50102440d 100644
+> > --- a/include/linux/platform_data/x86/asus-wmi.h
+> > +++ b/include/linux/platform_data/x86/asus-wmi.h
+> > @@ -160,4 +160,35 @@ static inline int asus_wmi_evaluate_method(u32 =
+method_id, u32 arg0, u32 arg1,
+> >  }
+> >  #endif
+> > =20
+> > +/* To be used by both hid-asus and asus-wmi to determine which cont=
+rols kbd_brightness */
+> > +#if IS_REACHABLE(CONFIG_ASUS_WMI)
+> > +static bool asus_use_hidraw_led(void)
+>=20
+> Since it's in a header, it's missing inline. However, this function lo=
+oks=20
+> quite complicated so putting it into a header file is questionable to=20
+> begin with so I'd prefer it to be in a .c file.
+
+Thanks for the review y'all. All recommendations implemented including t=
+his and splitting to two commits.
+
 > > +{
-> > +	u8 req[2] = { LENOVO_EC_READ_REG, };
-> > +	int ret;
-> > +	u8 val;
+> > + const char *product, *board;
 > > +
-> > +	mutex_lock(&ec->lock);
-> > +	req[1] = addr;
-> > +	ret = yoga_c630_ec_request(ec, req, sizeof(req), &val, 1);
-> > +	mutex_unlock(&ec->lock);
+> > + product =3D dmi_get_system_info(DMI_PRODUCT_FAMILY);
+> > + if (!product)
+> > + return false;
 > > +
-> > +	return ret < 0 ? ret : val;
+> > + /* These product ranges should all be using HID for keyboard LED */
+> > + if (strstr(product, "ROG Zephyrus")
+> > + || strstr(product, "ROG Strix")
+> > + || strstr(product, "ROG Flow")
+> > + || strstr(product, "GA403")
+> > + || strstr(product, "GU605"))
+>=20
+> Please align these properly but consider using array and loop.
+>=20
+> > + return true;
+> > +
+> > + board =3D dmi_get_system_info(DMI_BOARD_NAME);
+> > + if (!board)
+> > + return false;
+> > +
+> > + return strstr(board, "RC71L"); /* ROG Ally specific */
 > > +}
-> > +EXPORT_SYMBOL_GPL(yoga_c630_ec_read8);
-> > +
-> > +int yoga_c630_ec_read16(struct yoga_c630_ec *ec, u8 addr)
+> > +#else
+> > +static inline bool asus_use_hidraw_led(void)
 > > +{
-> > +	u8 req[2] = { LENOVO_EC_READ_REG, };
-> > +	int ret;
-> > +	u8 msb;
-> > +	u8 lsb;
-> > +
-> > +	mutex_lock(&ec->lock);
-> > +
-> > +	req[1] = addr;
-> > +	ret = yoga_c630_ec_request(ec, req, sizeof(req), &lsb, 1);
-> > +	if (ret < 0)
-> > +		goto out;
-> > +
-> > +	req[1] = addr + 1;
-> > +	ret = yoga_c630_ec_request(ec, req, sizeof(req), &msb, 1);
-> > +
-> > +out:
-> > +	mutex_unlock(&ec->lock);
-> > +
-> > +	return ret < 0 ? ret : msb << 8 | lsb;
+> > + return true;
 > > +}
-> > +EXPORT_SYMBOL_GPL(yoga_c630_ec_read16);
+> > +#endif
 > > +
-> > +u16 yoga_c630_ec_ucsi_get_version(struct yoga_c630_ec *ec)
-> > +{
-> > +	u8 req[3] = { 0xb3, 0xf2, 0x20};
-> 
-> You have a define above for the read_reg and write_reg commands, could you
-> not define 0xb3 as LENOVO_EC_GET_VERSION ?
-> 
-> All of the other commands here seem to have a named define.
-
-Because unlike other registers it is not clear what other use cases does
-0xb3 support
-
-> 
-> > +	int ret;
-> > +	u8 msb;
-> > +	u8 lsb;
-> > +
-> > +	mutex_lock(&ec->lock);
-> > +	ret = yoga_c630_ec_request(ec, req, sizeof(req), &lsb, 1);
-> > +	if (ret < 0)
-> > +		goto out;
-> > +
-> > +	req[2]++;
-> 
-> why not set reg[2] = 0x21;
-
-ack
-
-> 
-> also is req[2] some kind of address ?
-
-Unfortunately no idea. This is totally based on the AML code in DSDT. I
-have no documentation on the EC or its programming interface.
-
-> 
-> > +	ret = yoga_c630_ec_request(ec, req, sizeof(req), &msb, 1);
-> > +
-> > +out:
-> > +	mutex_unlock(&ec->lock);
-> > +
-> > +	return ret < 0 ? ret : msb << 8 | lsb;
-> > +}
-> > +EXPORT_SYMBOL_GPL(yoga_c630_ec_ucsi_get_version);
-> > +
-> > +int yoga_c630_ec_ucsi_write(struct yoga_c630_ec *ec,
-> > +			    const u8 req[YOGA_C630_UCSI_WRITE_SIZE])
-> > +{
-> > +	int ret;
-> > +
-> > +	mutex_lock(&ec->lock);
-> > +	ret = i2c_smbus_write_i2c_block_data(ec->client, LENOVO_EC_UCSI_WRITE,
-> > +					     YOGA_C630_UCSI_WRITE_SIZE, req);
-> > +	mutex_unlock(&ec->lock);
-> > +
-> > +	return ret < 0 ? ret : 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(yoga_c630_ec_ucsi_write);
-> > +
-> > +int yoga_c630_ec_ucsi_read(struct yoga_c630_ec *ec,
-> > +			   u8 resp[YOGA_C630_UCSI_READ_SIZE])
-> > +{
-> > +	int ret;
-> > +
-> > +	mutex_lock(&ec->lock);
-> > +	ret = i2c_smbus_read_i2c_block_data(ec->client, LENOVO_EC_UCSI_READ,
-> > +					    YOGA_C630_UCSI_READ_SIZE, resp);
-> > +	mutex_unlock(&ec->lock);
-> > +
-> > +	return ret < 0 ? ret : 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(yoga_c630_ec_ucsi_read);
-> > +
-> > +static irqreturn_t yoga_c630_ec_intr(int irq, void *data)
-> > +{
-> > +	u8 req[] = { LENOVO_EC_REQUEST_NEXT_EVENT };
-> > +	struct yoga_c630_ec *ec = data;
-> > +	u8 event;
-> > +	int ret;
-> > +
-> > +	mutex_lock(&ec->lock);
-> > +	ret = yoga_c630_ec_request(ec, req, sizeof(req), &event, 1);
-> > +	mutex_unlock(&ec->lock);
-> > +	if (ret < 0)
-> > +		return IRQ_HANDLED;
-> > +
-> > +	pr_info("NOTIFY %x\n", event);
-> 
-> why not dev_info() ?
-
-Argh, debugging code. I should drop it.
-
--- 
-With best wishes
-Dmitry
+> >  #endif /* __PLATFORM_DATA_X86_ASUS_WMI_H */
+> >=20
+>=20
+> --=20
+> i.
+>=20
+>=20
