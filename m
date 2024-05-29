@@ -1,143 +1,127 @@
-Received: from wfhigh7-smtp.messagingengine.com (wfhigh7-smtp.messagingengine.com [64.147.123.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078121384BF;
-	Wed, 29 May 2024 14:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF76157E9E;
+	Wed, 29 May 2024 14:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716992066; cv=none; b=OfaSZExTG1inXzlksJkqHrlTUdxsMLueKC5Hk8twzSJ3cKODY8CgLrhyjKNVq938RPSgX2SFiqucrP2QPuWBNpq4F00A9+258jOQ4c/ooTxFfVdlMWOQ0wrau+PJR2KbAJnth/02HCw5BEe5yFBaE1UTFrtyLFhXEug9htJfcJQ=
+	t=1716992925; cv=none; b=lG5Wf64G0OWSa50SYfQph0ZxKeCl8/hzR4dTrdaph6SlPmCJF3id9gNmlgY8W7yn5zCwKb6mEzoV9nO8M/NpvktBaSKi4OAOpdmV6BlCSZ/tHuzuKMo2Cyo9POCs/8SITow4SMieus5c7XsXv3IH1d3qU2qDBDsvGo23aVZyVug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716992066; c=relaxed/simple;
-	bh=W22hC2Zv+Foa0qgUlAk4AdngF7rx6T8UVXQlXFr2Ybw=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=FlJkQjbMUCBIVqoglC29OSfv0sI1BM+yC/o0Q8r2yxPIN3Hhl8BdiGuPxPCtPu3sZTOWhEbzKcqYo+Xjmj1QvCpjMU5CmZIGZeqJUXFlViouSI+p5k6gV/FHxy3zQlrHhfw16voQ+oZegmcqoVIw8V/YHDHpkTBlL1eIx3LUjoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=bI1zbr1E; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IVmMjRdp; arc=none smtp.client-ip=64.147.123.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1716992925; c=relaxed/simple;
+	bh=HuG35zW4Cif4/8q3V8npkUZQOn+01GHHL+f9PDDz84w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PPpSiCjFvmfWP+vYLYap5uXZZVuKt1TeHYF4Ly1w8uN1clnUf+pOET8O525tsNGclFAr1rbQDO2wvROgFtBg5AWqQarT2m55K+i74wouLmo8n7qN9JAmt/iFP7vQbJPhnulCDRxfZmODnX/Bgv3yT1uDzE29b8/DUY9t1hwIJYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NMp7bNM8; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="bI1zbr1E";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IVmMjRdp"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id C56691800110;
-	Wed, 29 May 2024 10:14:23 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 29 May 2024 10:14:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1716992063;
-	 x=1717078463; bh=eY7afOORxV4hOLeuj409JKFKJJHZi+ceauiiRURn6p0=; b=
-	bI1zbr1Eb+X1iMahPtzHX/yHgNrHIdjzD3VaSIgED2LkcqzEANSnJ1go5m3UqMGT
-	9+vkPva0paWhLAtf0nXq3Pc1WKmN07H5Z4refYIiZhCCJoT5DBwdtElPP4tI03cY
-	DxnQhbEPjGLZT/nHLk6w7HCIf/9FOeU3W6v13BrJL/0KLnFd+/inGqYqzdLCNsdv
-	wgC+paVBRdzqtdkIuyTiruJPSJ/UGWDTzS2nGFpuZrugrlAn2J0WFGFGQDha5Owu
-	IDKLp3G1NyUVyWI1i9aoosARcXRHiFe/GyCioZcx8TB923OyUTbWIWCwjWNIdGnk
-	+GyU3nf2OIjOEGRzCKOPFQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1716992063; x=
-	1717078463; bh=eY7afOORxV4hOLeuj409JKFKJJHZi+ceauiiRURn6p0=; b=I
-	VmMjRdp6zSIXUpPEqQWlVXQCwmiB0e1D1LTqDIN46bb1VsgHQB5z2mLLcF67KwO+
-	SGxniaTxoon8DUR0w7TqGud/g8yqHeHZEP9MLcICCR/YFWIRpZfN2N1RJ40qjE4u
-	KqfD6Mttdvk0F586BCTmac/P2GWRY+LUSsCv3Gkt920hci1zHDv3nl9SHGueBxj/
-	8fd86otV4tdKL5ci3AWhLtbyCYToLgU4Ycp3xPd+pOtrCDs0ebBta+jXICuMElYt
-	2XBkZZhnnOcZORUsJRiyBCFKReDIiYgDSUliNH1ARERcxGY7bZcpuQp5H8jOqSIH
-	kKX2/i6UjldcQp2kHmo2A==
-X-ME-Sender: <xms:PzhXZjZ_xcl8Quhl_JiO65RwGo7KYNl0IBFQh2FFtDlRZ_JRAVTfFg>
-    <xme:PzhXZibKH7u9T7SLRNvYuf4XLG6Bqq5TwPZP0lQIS6v0jLVWZKcH2qYrPbcfqrKXl
-    jxAjuOnl_vZTfbQpVY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdekuddgjeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
-    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:PzhXZl-Oj4JxwLGV06iFYzauzjMooXMBN45ZIQ5H5DbqtqjVt9Nlyw>
-    <xmx:PzhXZppkgHf-kuSBZSpBmACSe3hSYaMiJwzw8WTMDNqPOJKMCkHdDw>
-    <xmx:PzhXZur1SMKx1xj9mrxPLO0LosZlpwziV2r858lVjq0kohwLebeqeA>
-    <xmx:PzhXZvSMn2YPUWmnEbUBKwAQGD7XWLq1Ce5jIezdu180kdhTw0ch1Q>
-    <xmx:PzhXZvcdCVZPDoVPlmz0R0duefKXkhr4ZgfmvdWbvwHrxdPWFvI02mBx>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id D4196B6008D; Wed, 29 May 2024 10:14:22 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-491-g033e30d24-fm-20240520.001-g033e30d2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NMp7bNM8"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5789733769dso16062a12.1;
+        Wed, 29 May 2024 07:28:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716992922; x=1717597722; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LqEY5U9mWqFpY7LFrJzI8LrdDM4tYViPg9IrN0Az+O4=;
+        b=NMp7bNM8LTIRb4Y07AieHhdnOZvg7znDuGU5wpVRAjtf2Yinxw+mfjT2vUsgN4EBiC
+         HVDpXCitl4PtRMxwkIDzNUp0KrI/kHCfl9ZVU1+BCyEFxczSV1+gGvlAZJmtU5/wj4F7
+         bVF4WadP4Pw1csXD9BE3qXSv0DtcsUIdJHh8GwCui++ge5J4agkARhFCq0UX5Np693Dh
+         X096P0OCKENHKL0FcOBDUSxcCSgLH+YUbZbyV6oNbJomkRaD5NHlapebsuS+zp3IKe/j
+         dGrkjoOSBbZEb72O1pzF9aVsImDTHc5RQBgBOqDARGmQJzQNRvsq/k4yJqSdTKD2majx
+         oEvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716992922; x=1717597722;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LqEY5U9mWqFpY7LFrJzI8LrdDM4tYViPg9IrN0Az+O4=;
+        b=qFWalxigHv6khL/rd2UmmioXHS7SqW5KmZcJWVAXvYdg1pyhf/jtOi89qXyhTFf6lI
+         XlHijUGiptVtb54sWG7MNbHwwxhYuZzJ5+n6AAFhsWqC4PMjq68Zyr0EbXPGrNT8WmfH
+         p4TZRbdP4gQXfbz1fa086cXhg0tp8G2Z8+/blpzPBp0TIn85akKwnWFnKkGuGym8MrcQ
+         1b5gVjeYVL6nG06uz96l9eK+vL+4LfjDwvY4VE0O5MSPcWxU/pcgY++XwumSsaRphj3i
+         qxaErQqJyKEJdVBnId1uzaTWP2tztKQRlOTehdiTA91o8ktbCt8q7z45MUU+sfelooc9
+         a8+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWv84TIn/UVSese9oT28c/BdyLT2YWpW/A+XsnXGm5VpYUox76zIvTJ9t/gc/KJHgmobiUU2LqvaHTBp7lmrKKgprKc4zgLG5UUpDLkOlhFbi3KJAt7bAhG9iLgczcUdyXY0E7DdTdbNnvrft4XYav8qg==
+X-Gm-Message-State: AOJu0Ywc3Vf1hmRp56O5+jaBEDb4+XOb/TLNN7eMDL0oX641ZKLI/cii
+	rxwS/9j/Gyrdiqd0YNvwGaaoBKEHflTbSLXIWwk5Jqntua/0KLzcg3Gp3amonk0UxLtcKJa/iHO
+	lF0RXVvZA9/hXBq53F/loP/5L0ZHyttd5
+X-Google-Smtp-Source: AGHT+IH9/qKwYyx5RhmP9F/H4tmfTr5GvPSYrRfdhTUQsmMUkwyQWqdd9fHZEjaf/TWJ6Quvdxzf/Jl/H44quOT9Y3M=
+X-Received: by 2002:a17:906:7013:b0:a62:5094:817 with SMTP id
+ a640c23a62f3a-a642d37e944mr191016366b.11.1716992921772; Wed, 29 May 2024
+ 07:28:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <436667b5-308a-4a0b-b66e-230667ce0cc3@app.fastmail.com>
-In-Reply-To: 
- <CAHp75VdRuK_sOF=25xP0azp8sOJ8DY_SRpLq9mUSaNEmWj5EAg@mail.gmail.com>
-References: <20240529095009.1895618-1-arnd@kernel.org>
- <CAHp75VdRuK_sOF=25xP0azp8sOJ8DY_SRpLq9mUSaNEmWj5EAg@mail.gmail.com>
-Date: Wed, 29 May 2024 16:13:57 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Andy Shevchenko" <andy.shevchenko@gmail.com>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Daniel Scally" <djrscally@gmail.com>,
- "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240529095009.1895618-1-arnd@kernel.org> <CAHp75VdRuK_sOF=25xP0azp8sOJ8DY_SRpLq9mUSaNEmWj5EAg@mail.gmail.com>
+ <436667b5-308a-4a0b-b66e-230667ce0cc3@app.fastmail.com>
+In-Reply-To: <436667b5-308a-4a0b-b66e-230667ce0cc3@app.fastmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 29 May 2024 17:28:05 +0300
+Message-ID: <CAHp75VcVdwxv5Mm3GEv7SmsCiN3ZACpejNb7V_Ld1NBTxcXixQ@mail.gmail.com>
 Subject: Re: [PATCH] platform/x86: int3472: make common part a separate module
-Content-Type: text/plain;charset=utf-8
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Arnd Bergmann <arnd@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
+	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 29, 2024, at 15:41, Andy Shevchenko wrote:
-> On Wed, May 29, 2024 at 12:50=E2=80=AFPM Arnd Bergmann <arnd@kernel.or=
-g> wrote:
->>
->> From: Arnd Bergmann <arnd@arndb.de>
->>
->> Linking an object file into multiple modules is not supported
->> and causes a W=3D1 warning:
->>
->> scripts/Makefile.build:236: drivers/platform/x86/intel/int3472/Makefi=
-le: common.o is added to multiple modules: intel_skl_int3472_discrete in=
-tel_skl_int3472_tps68470
->>
->> Split out the common part here into a separate module to make it
->> more reliable.
+On Wed, May 29, 2024 at 5:14=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
+:
+> On Wed, May 29, 2024, at 15:41, Andy Shevchenko wrote:
+> > On Wed, May 29, 2024 at 12:50=E2=80=AFPM Arnd Bergmann <arnd@kernel.org=
+> wrote:
+
+...
+
+> >>  obj-$(CONFIG_INTEL_SKL_INT3472)                +=3D intel_skl_int3472=
+_discrete.o \
+> >> -                                          intel_skl_int3472_tps68470.=
+o
+> >
+> >> +                                          intel_skl_int3472_tps68470.=
+o \
+> >> +                                          intel_skl_int3472_common.o
+> >
+> > A nit: Can this be put above instead?
 >
-> ...
+> I've changed it like this now, is that what you meant?
 >
->>  obj-$(CONFIG_INTEL_SKL_INT3472)                +=3D intel_skl_int347=
-2_discrete.o \
->> -                                          intel_skl_int3472_tps68470=
-.o
 >
->> +                                          intel_skl_int3472_tps68470=
-.o \
->> +                                          intel_skl_int3472_common.o
+> obj-$(CONFIG_INTEL_SKL_INT3472)         +=3D intel_skl_int3472_common.o \
+>                                            intel_skl_int3472_discrete.o \
+>                                            intel_skl_int3472_tps68470.o \
+
+Without the last trailing \, but yes.
+
+> intel_skl_int3472_common-y      +=3D common.o
+> intel_skl_int3472_discrete-y    :=3D discrete.o clk_and_regulator.o led.o
+> intel_skl_int3472_tps68470-y    :=3D tps68470.o tps68470_board_data.o
+
+...
+
+> >> +EXPORT_SYMBOL_GPL(skl_int3472_get_sensor_adev_and_name);
+> >
+> > Are these namespaced?
 >
-> A nit: Can this be put above instead?
+> No, is there any advantage to making them namespaced?
 
-I've changed it like this now, is that what you meant?
+Yes, to clean up the global namespace.
 
+> It's only a few symbols and they have proper prefixes.
 
-obj-$(CONFIG_INTEL_SKL_INT3472)         +=3D intel_skl_int3472_common.o \
-                                           intel_skl_int3472_discrete.o \
-                                           intel_skl_int3472_tps68470.o \
+It's different from the exported namespace.
+The function prefixes are needed due to C language, as we can't have
+two functions named the same. The export OTOH is what used for linking
+modules and if there is no need to have it exported globally, if, for
+example, compiling in this one.
 
-intel_skl_int3472_common-y      +=3D common.o
-intel_skl_int3472_discrete-y    :=3D discrete.o clk_and_regulator.o led.o
-intel_skl_int3472_tps68470-y    :=3D tps68470.o tps68470_board_data.o
+So, can we move to the exported namespace at the same time?
 
-> ...
->
->> +EXPORT_SYMBOL_GPL(skl_int3472_get_sensor_adev_and_name);
->
-> Are these namespaced?
-
-No, is there any advantage to making them namespaced?
-
-It's only a few symbols and they have proper prefixes.
-
-     Arnd
+--=20
+With Best Regards,
+Andy Shevchenko
