@@ -1,186 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7C017DE0F;
-	Wed, 29 May 2024 15:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36190746E
+	for <platform-driver-x86@vger.kernel.org>; Wed, 29 May 2024 15:29:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716996394; cv=none; b=q2qCZ0wffEzFGcp/I8JoHVSpzkBcJ0X90CPW5ocCgTO1fwnvMk8t6DS+RpSCjU0gZZ3SX6C7YcVfZrhYqtJujPGojxwWUBf9oIHjj3UWtddAMUUj5ARmvw1Eo3iMtClis34HIFIx80DMprz1LjfTPqmoqzlI0pQQMTd+3UDzMgg=
+	t=1716996544; cv=none; b=eGuof/4DvHk0PpHftqAenrzMY1re6peXFStqkndygQAzQUrdcO6gdPl1mI79ln1FrjWyp4M7BVIqsi+UtTAUCatd5slTH7HVVeCZr2Z151H+saBx2CjTFnFluK47bpBDz1xzvUmFGawcx5m/1qHEyA6fzmA4DI3XkEuzrcpIdA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716996394; c=relaxed/simple;
-	bh=wo336CkD1y3kvT7y2cjNBDeC4dlb8iXbUrJSZN/WcXw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=k6Eh2py9qBKteHNuldKXRUltpb1Ja04kZEdW/QJ4l7mYuXAkuq96/TscFBfIQBBA0H9R4buyCOB1bNBOfckb5/QdGDmfp9IgfrIMwoDz1G0zfu6KicM6nGsZBySOaLMDQwCmMibpp3RsuLecW4/EJ3QgaSi+MM3bWBLLwxZyFCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ChGCLx22; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1716996544; c=relaxed/simple;
+	bh=8TSpQpuVN6z+ZuZk68PMhyHU89nHlEi7bQ43I1w48bQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D8Dmnd9Ceri4yE2gbWf+WeAlATtqCcmrGlg0fFPMBoFyUnUO1K4wRfZcyYDXjgnx5VO2j62NFNttZh+8uhvlL67e6qiGdm1c8JP3xY1RViOMuYY49GQWjnjyijC1ARb7B9V9fMKr1Ps08jTPwEeyRf9refJQFHDghA3Sb7aEPJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d560bNoH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ChGCLx22"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716996393; x=1748532393;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=wo336CkD1y3kvT7y2cjNBDeC4dlb8iXbUrJSZN/WcXw=;
-  b=ChGCLx2258aBNZscjFfzVD8MU+ajUsD5TveRR/mLD9uOAz5li0WCbu8O
-   0dJePwhEzujPXfPTq2CH0fLDvzbCJTJieeDK5j/jWhalnduK954OSCfjW
-   tDrXpWOMgcM8MD0NcZWsacrEjgQ4xuIzvrH9Adesaz+wuDJQLNi+UDU8S
-   fjUadPIqP30u1JBxWfkfWafUbt6FisgVcWl4iU+9d1sxqLFU2nCQtCkJx
-   RMqbV8gtNdbxbyZ816T03btnMsKlav/fYL8zbi1yohw3smClxD3/MyBrh
-   JbTc3UCl4lUrKFfy32bISdu1FhRcogTTgYD4nLfjY2sM3udk55461UG95
-   A==;
-X-CSE-ConnectionGUID: /MTqi3cSTn6zBorId+rASw==
-X-CSE-MsgGUID: aW9qEvI9QGKjFdf6pYNUhw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="16357618"
-X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
-   d="scan'208";a="16357618"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 08:26:16 -0700
-X-CSE-ConnectionGUID: tFxFCcgbRZanUkkNBCx9rg==
-X-CSE-MsgGUID: QvoOnNOCTS+PgaWckhHpqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,198,1712646000"; 
-   d="scan'208";a="35533515"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.149])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 08:26:11 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 29 May 2024 18:26:07 +0300 (EEST)
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
-    Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-    Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-    Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Konrad Dybcio <konrad.dybcio@linaro.org>, linux-pm@vger.kernel.org, 
-    devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, 
-    linux-arm-msm@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>
-Subject: Re: [PATCH v4 3/6] usb: typec: ucsi: add Lenovo Yoga C630 glue
- driver
-In-Reply-To: <CAA8EJproC_mW4pZ_C-BUUm73xfqja0EKVLvCZ+C_1dhW3xoEnw@mail.gmail.com>
-Message-ID: <97448807-e567-05a4-9361-efcc84b5f07f@linux.intel.com>
-References: <20240528-yoga-ec-driver-v4-0-4fa8dfaae7b6@linaro.org> <20240528-yoga-ec-driver-v4-3-4fa8dfaae7b6@linaro.org> <ce6cbe69-f1de-1224-2a6e-3c7b07203d84@linux.intel.com> <CAA8EJproC_mW4pZ_C-BUUm73xfqja0EKVLvCZ+C_1dhW3xoEnw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d560bNoH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716996542;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mFHpztQhwU5HG7lA94/ryMM368oC6ZMtci9dOyduPBc=;
+	b=d560bNoHhvyGhyRkAMbL62elWnPbGw5OTgtprwHhX23FE1PFCqo1rmhKPGilo/4fIJtGTb
+	5RCNjdqhODjcxXIUopT5g/ubc5aPhUIECLxzi66HQPYQ5eoAIZaeRTR8FVFuCcDyL1q7sn
+	wOYS1ipyyytri7E7MQeyYao2kVinP8k=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-125--PMfWI3TNYW7eyz6lEo9lw-1; Wed, 29 May 2024 11:29:00 -0400
+X-MC-Unique: -PMfWI3TNYW7eyz6lEo9lw-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a62dfb30712so140263366b.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 29 May 2024 08:29:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716996539; x=1717601339;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mFHpztQhwU5HG7lA94/ryMM368oC6ZMtci9dOyduPBc=;
+        b=pysCwA3TQPTF9N80rtiJQZDQ2gGjPDKOFEsuib8rz2mUGzAFtnjJ14lFRY63vMNIdk
+         GWZ/kRiUbIhjbTwIhg+xZTZWVEob8VzunzkfptQHel/ngIz8K49EQmtXbKKLMISrq4d3
+         tSzUh4gNK69FpWyOg+qspgLaXY+d4F8tSEHTMB2SmK4WVNPwIOAM1z0n768FuHgqnPaz
+         4zX0Ifpo/8zodcm+fylqxu4z0x5+JHqmABmUWVLia/FN4A6Ur/3/feNIldC5C2lE+uQv
+         0PZnUJVJJ3U8di/YPzkEi3n5gupkHVueyN4YamEfTrqFKQ3lRzm64fVrovote9eCL140
+         MrzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVNppw2ExqLNL1zTaaIBwtxGonVaJ+G3I3Cl0PvI20mLH//ZR2eygc1RL0lY+Jrum0svUJC8PFgRpAxBf3GmrEqCivXhD857l+IDsm8AT5lCggn+g==
+X-Gm-Message-State: AOJu0YweJBDR0SW5gMrXgDuxYNTq1KLUyzV+ueKaMSCKGUKD3Fg9MQyA
+	YauyT9s8nlOBi0V3M9OsmGUFLHnVRoNCFyk6iNY0B1wp0zIcCHnNvUdv2ZnKHxXroILBQnnCc4S
+	+XS9fZ08rU0UMmlA4ukVTl3CuDJ3PKncbGfjbpPSFb7uOrXNk04zpK4izE+3CQh4O93iaxkw=
+X-Received: by 2002:a17:906:6d95:b0:a59:bbd6:bb39 with SMTP id a640c23a62f3a-a6264f0ebfamr1092763366b.55.1716996539690;
+        Wed, 29 May 2024 08:28:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFHMNDZWVKqgo3ZdTUnkxjQybulw1cBwoyxNnQ5p2eVfu24cekgVLMgE/SKbIjgInYFIJtxtA==
+X-Received: by 2002:a17:906:6d95:b0:a59:bbd6:bb39 with SMTP id a640c23a62f3a-a6264f0ebfamr1092760466b.55.1716996539217;
+        Wed, 29 May 2024 08:28:59 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626c8182edsm734297466b.9.2024.05.29.08.28.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 May 2024 08:28:58 -0700 (PDT)
+Message-ID: <b0d8eebc-5abb-4ec0-898c-af7eedc730d9@redhat.com>
+Date: Wed, 29 May 2024 17:28:57 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-268320193-1716996253=:1108"
-Content-ID: <a301cc47-942d-3661-b1ec-5130087bf169@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/2] asus wmi and hid: use HID LED for brightness
+To: "Luke D. Jones" <luke@ljones.dev>, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>
+Cc: ilpo.jarvinen@linux.intel.com, corentin.chary@gmail.com,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-input@vger.kernel.org
+References: <20240529012827.146005-1-luke@ljones.dev>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240529012827.146005-1-luke@ljones.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi all,
 
---8323328-268320193-1716996253=:1108
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <6d420af6-f53c-8618-6400-2923bec3ea61@linux.intel.com>
+On 5/29/24 3:28 AM, Luke D. Jones wrote:
+> Changelog:
+> - v1
+>   - Split the patch in two
+>   - Move function body to asus-wmi and export
+>   - Use array of names and for loops
+> 
+> History:
+> - https://lore.kernel.org/linux-input/20240528013959.14661-1-luke@ljones.dev/T/#u
+> 
+> Luke D. Jones (2):
+>   hid-asus: use hid for brightness control on keyboard
+>   hid-asus: change the report_id used for HID LED control
+> 
+>  drivers/hid/hid-asus.c                     | 32 +++++++++++++++++++-
+>  drivers/platform/x86/asus-wmi.c            | 35 +++++++++++++++++++++-
+>  include/linux/platform_data/x86/asus-wmi.h | 10 +++++++
+>  3 files changed, 75 insertions(+), 2 deletions(-)
 
-On Wed, 29 May 2024, Dmitry Baryshkov wrote:
+Jiri, Benjamin since the first patch now also touches pdx86 files
+we need to coordinate merging this.
 
-> On Wed, 29 May 2024 at 17:20, Ilpo J=E4rvinen
-> <ilpo.jarvinen@linux.intel.com> wrote:
-> >
-> > On Tue, 28 May 2024, Dmitry Baryshkov wrote:
-> >
-> > > The Lenovo Yoga C630 WOS laptop provides implements UCSI interface in
-> > > the onboard EC. Add glue driver to interface the platform's UCSI
-> > > implementation.
-> > >
-> > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > ---
-> > >  drivers/usb/typec/ucsi/Kconfig          |   9 ++
-> > >  drivers/usb/typec/ucsi/Makefile         |   1 +
-> > >  drivers/usb/typec/ucsi/ucsi_yoga_c630.c | 189 ++++++++++++++++++++++=
-++++++++++
-> > >  3 files changed, 199 insertions(+)
-> > >
-> > > diff --git a/drivers/usb/typec/ucsi/Kconfig b/drivers/usb/typec/ucsi/=
-Kconfig
-> > > index bdcb1764cfae..680e1b87b152 100644
-> > > --- a/drivers/usb/typec/ucsi/Kconfig
-> > > +++ b/drivers/usb/typec/ucsi/Kconfig
-> > > @@ -69,4 +69,13 @@ config UCSI_PMIC_GLINK
-> > >         To compile the driver as a module, choose M here: the module =
-will be
-> > >         called ucsi_glink.
-> > >
-> > > +config UCSI_LENOVO_YOGA_C630
-> > > +     tristate "UCSI Interface Driver for Lenovo Yoga C630"
-> > > +     depends on EC_LENOVO_YOGA_C630
-> > > +     help
-> > > +       This driver enables UCSI support on the Lenovo Yoga C630 lapt=
-op.
-> > > +
-> > > +       To compile the driver as a module, choose M here: the module =
-will be
-> > > +       called ucsi_yoga_c630.
-> > > +
-> > >  endif
-> > > diff --git a/drivers/usb/typec/ucsi/Makefile b/drivers/usb/typec/ucsi=
-/Makefile
-> > > index b4679f94696b..aed41d23887b 100644
-> > > --- a/drivers/usb/typec/ucsi/Makefile
-> > > +++ b/drivers/usb/typec/ucsi/Makefile
-> > > @@ -21,3 +21,4 @@ obj-$(CONFIG_UCSI_ACPI)                     +=3D uc=
-si_acpi.o
-> > >  obj-$(CONFIG_UCSI_CCG)                       +=3D ucsi_ccg.o
-> > >  obj-$(CONFIG_UCSI_STM32G0)           +=3D ucsi_stm32g0.o
-> > >  obj-$(CONFIG_UCSI_PMIC_GLINK)                +=3D ucsi_glink.o
-> > > +obj-$(CONFIG_UCSI_LENOVO_YOGA_C630)  +=3D ucsi_yoga_c630.o
-> > > diff --git a/drivers/usb/typec/ucsi/ucsi_yoga_c630.c b/drivers/usb/ty=
-pec/ucsi/ucsi_yoga_c630.c
-> > > new file mode 100644
-> > > index 000000000000..ca1ab5c81b87
-> > > --- /dev/null
-> > > +++ b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
-> > > @@ -0,0 +1,189 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +/*
-> > > + * Copyright (c) 2022-2024, Linaro Ltd
-> > > + * Authors:
-> > > + *    Bjorn Andersson
-> > > + *    Dmitry Baryshkov
-> > > + */
-> > > +#include <linux/auxiliary_bus.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/platform_data/lenovo-yoga-c630.h>
-> > > +
-> > > +#include "ucsi.h"
-> > > +
-> > > +struct yoga_c630_ucsi {
-> > > +     struct yoga_c630_ec *ec;
-> > > +     struct ucsi *ucsi;
-> > > +     struct notifier_block nb;
-> > > +     struct completion complete;
-> >
-> > Add includes for what you used here.
-> >
-> > > +     unsigned long flags;
-> > > +#define UCSI_C630_COMMAND_PENDING    0
-> > > +#define UCSI_C630_ACK_PENDING                1
-> > > +     u16 version;
-> > > +};
-> > > +
-> > > +static  int yoga_c630_ucsi_read(struct ucsi *ucsi, unsigned int offs=
-et,
-> >
-> > extra space
-> >
-> > > +                             void *val, size_t val_len)
-> > > +{
-> > > +     struct yoga_c630_ucsi *uec =3D ucsi_get_drvdata(ucsi);
-> >
-> > Missing include for ucsi_get_drvdata
->=20
-> I'll review my includes, but this comment and the comment for
-> ucsi_operations are clearly wrong. There is a corresponding include.
+There also is a long list of patches pending for
+drivers/platform/x86/asus-wmi.c
 
-Ah, sorry about that. I completely missed there was that local include.
+So I would prefer to take this series (both patches) upstream through
+the pdx86 tree to avoid conflicts.
 
---=20
- i.
---8323328-268320193-1716996253=:1108--
+May we have an ack from one of you for merging this through pdx86/for-next ?
+
+Regards,
+
+Hans
+
+
+
+
