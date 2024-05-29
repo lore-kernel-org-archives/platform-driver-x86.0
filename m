@@ -1,185 +1,111 @@
-Received: from wfhigh4-smtp.messagingengine.com (wfhigh4-smtp.messagingengine.com [64.147.123.155])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F33039FD6;
-	Wed, 29 May 2024 09:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C829416F0DC;
+	Wed, 29 May 2024 09:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716974897; cv=none; b=RV1mbgGMey4XPO+DRw3+gf3sRMC6yfi2CZs0pOzK9bTGC09izjcuUFtE0cnUN8IvGdx1ckPRSwG7vl3EdK7EUtv3saP+HYCHlvx2JJXAkbHG+km8EPGf2G4rPzDC4WkNu5FIVxmUbSGgHMMseuYEkSqq47kR6bu6wlBqx19o8s0=
+	t=1716976214; cv=none; b=rdAEJXQ/Y6aZccGDik0MS+nGRy8VSOoN4yqOxA4cDjxBCuMxMJlzbiVsqPAj1l//O27W2dGfVs6NJDpIfbM2ygoGa/zqcz2stW4B6gIi0cvlBOvtNoGleu7y6zNfxaQZrIGzWHaIFN3NhgXYcct9xuyvpUpe/64w9bh7YJzsTDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716974897; c=relaxed/simple;
-	bh=Fxy6nPjwcvo0790dgPQleUfz1YfV4rRLl+LfuHSPsos=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=EGq3S1vxIhAOHxc8Suf+hLFkcUih0EezGYUsemfspwC8jU3exBkZqAYlYTE/jYEIZeSrD5vOO7zqxt5IdV5V40c+rO0cmB+WwQZBhgp6FUbsTMfKbNdX1N/1M+wxSSOHyXj6aBm8sjULPidIgRtS/rvxPg96KclKji+bQMeAves=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=H2CJ+GkO; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bt3YND7e; arc=none smtp.client-ip=64.147.123.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1716976214; c=relaxed/simple;
+	bh=XDTCDKbgbSdFikKLYa4k25CQJsfLSgfbo73V66b6G+U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X1dLD1ToQbuUF8MgszNHEigqci6jlpbmbrBh5yA2SpghfPuBeSbI4jzW+HhZh4y0V73v7PFh/L7/BsbQ8xMPvaOiruJSahZZo5cd4eL2kCh2sgJ0cxb2Gybn4jh9GGVgx92DN/QG6nFlVLhtTUShdJQ9OnGsdGnqxYvOKXMvCy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qn9mLs/h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="H2CJ+GkO";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bt3YND7e"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfhigh.west.internal (Postfix) with ESMTP id CCD99180009E;
-	Wed, 29 May 2024 05:28:13 -0400 (EDT)
-Received: from imap41 ([10.202.2.91])
-  by compute2.internal (MEProxy); Wed, 29 May 2024 05:28:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1716974893; x=1717061293; bh=OHTgLSr14Z
-	6UcDGeqo2Na6jF5x1uXQBwvVchxSidF8A=; b=H2CJ+GkOLxaBy8Zxvtx5lDEUn8
-	Deh/bs7vMhBYVsQQMvaJ5ZMPGzqRDRJ4qlUTKCZpHNX3gMx2QMSX4tZZA6cxUk1D
-	bBSKICv4/LWXnk2kAMSyymrN11vFtgyKli7QUQnrjNXz+uO1Qa1knSsm9DuSyp2I
-	yXQcBN5Aqzh9ohg3T8GY62c/WlKVPVeUAA+TijBWQejhLxOFKfiD3R5D0FH1P8Tj
-	Y3xvb3rcO94HbwrhQ0s1NUCP4VaB7oshLILxN/WJe+e09CuxMStCDngN/JrmdGg3
-	A2Hw2jMYKEyF5h/VALOPlOB4HHh4YvQLgsn9VLjXet3kZCUboEAyI4jtlr+Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1716974893; x=1717061293; bh=OHTgLSr14Z6UcDGeqo2Na6jF5x1u
-	XQBwvVchxSidF8A=; b=bt3YND7eJLss3ATpjGVeCRt0Yf3nF8b236V/4rkgy/GA
-	tJ+ukeeaXxJdhRFw2apW3x6NQQWZtzi4ieznBFXMUPXSPP+UMB2BGztr/qLQQaLO
-	C+lAgUHNkPAbLJPX0geHxnRJVa3zBr89W0d+aR/tCcyMH7Bw9OG7WOjEV6ZpqmQQ
-	afwWkpNeM5ZK0Kmx9RBMJq/LAoDmqMaG2qfCXvV7Dig3Ei+Gx1jfwZLq4q6XfRWc
-	CHSPlRwC6vsfZNTldQcb2gCDon0G7Njo6JCZi9T69IV18sLCBQezsYaQQYn+1pzL
-	9lMSnYrUiH/3Oa0x3ROQK3qIZd//9e+JTb6k7jXnJw==
-X-ME-Sender: <xms:LfVWZij0QDue_HQEnXKtSJHZAGisujyJn327rlhWdArXNLrnNyEZgw>
-    <xme:LfVWZjAB2qJgBXuwZxXBc_O6zTF5xGsO-dgcysOzZCvy5R9brQfFOKjVfrmYwJgwP
-    vrAmDGzD_YxWu3-ANo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdekuddgudehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfnfhu
-    khgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtth
-    gvrhhnpedutdelgfdvgeekueeuteevffelfedukeeitedugfdvtdeutdetjeduudeuvdeg
-    gfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluh
-    hkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:LfVWZqH5g-Pi6E1CbFAOgVSvpQloFHPTqoXM6sX3uQHuXQV8fOvBzw>
-    <xmx:LfVWZrRbx3QVuXRcjdrKy-ushItT2vdBkZkXhLClOQlEzPorkE4jJQ>
-    <xmx:LfVWZvyHebNMc7ccTgPAHTNmoo8PdrZdDT64G6pXHiPWrcvSQOb_nA>
-    <xmx:LfVWZp7qIQDfdUFYfQtXfKDrMUEPSe6bKiNa4_Ln3sUQPzzZ1MLcug>
-    <xmx:LfVWZmmz89qcbuz2H8iCdf3SLlvDjkrjo4oQWmcpW9NMnj3LrUE8y4SW>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 231482340080; Wed, 29 May 2024 05:28:13 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-491-g033e30d24-fm-20240520.001-g033e30d2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qn9mLs/h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD39CC4AF09;
+	Wed, 29 May 2024 09:50:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716976214;
+	bh=XDTCDKbgbSdFikKLYa4k25CQJsfLSgfbo73V66b6G+U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Qn9mLs/hbrBsdMC+8aNznAml0LfQq1U38SCiFU/dmfyoYUwPKkAXKVDe18wXDM34B
+	 WeoM2NapLrOS/zszVUrQMBzsT2WFvIDaWlvT1nwfT2rvmVXt8Ml3FiLVJiMV7dgBRP
+	 5aD8cIKTYmoOKDc/GgfUnhupXtkPpWLJX5c6rpk6/GeDxQP4Kk8520Q3/IGoQTT7Wc
+	 2TnTAbUjavVbq4frUscC0R0ecvAUWxYiyYV4MvZHIRzEDKj3ZrU8efYVjCAUUDNIu2
+	 QjIzVegNX8cDD3lJpB7KUj5Zj7gcMh/xK5hXSTWCdfFZhvtML8Gw79Jms/ubWeYvUo
+	 51QDJ6SN49gSQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Daniel Scally <djrscally@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: int3472: make common part a separate module
+Date: Wed, 29 May 2024 11:49:55 +0200
+Message-Id: <20240529095009.1895618-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <ac50e89e-b0e9-48f8-a4e5-074c19f684e6@app.fastmail.com>
-In-Reply-To: <ea85df16-53b4-4e25-b7c7-3f74486cdcf9@redhat.com>
-References: <20240529012827.146005-1-luke@ljones.dev>
- <20240529012827.146005-3-luke@ljones.dev>
- <ea85df16-53b4-4e25-b7c7-3f74486cdcf9@redhat.com>
-Date: Wed, 29 May 2024 21:27:52 +1200
-From: "Luke Jones" <luke@ljones.dev>
-To: "Hans de Goede" <hdegoede@redhat.com>, "Jiri Kosina" <jikos@kernel.org>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, bentiss@kernel.org
-Subject: Re: [PATCH v1 2/2] hid-asus: change the report_id used for HID LED control
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
+From: Arnd Bergmann <arnd@arndb.de>
 
+Linking an object file into multiple modules is not supported
+and causes a W=1 warning:
 
-On Wed, 29 May 2024, at 8:25 PM, Hans de Goede wrote:
-> Hi,
-> 
-> On 5/29/24 3:28 AM, Luke D. Jones wrote:
-> > On some laptops the report_id used for LED brightness control must be
-> > 0x5D instead of 0x5A.
-> > 
-> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> > ---
-> >  drivers/hid/hid-asus.c | 26 +++++++++++++++++++++++++-
-> >  1 file changed, 25 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> > index 4cba8e143031..ec3556cc4eef 100644
-> > --- a/drivers/hid/hid-asus.c
-> > +++ b/drivers/hid/hid-asus.c
-> > @@ -94,6 +94,8 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
-> >  
-> >  #define TRKID_SGN       ((TRKID_MAX + 1) >> 1)
-> >  
-> > +static const char * const use_alt_led_report_id[] = { "GU605", "GA403" };
-> > +
-> >  struct asus_kbd_leds {
-> >  struct led_classdev cdev;
-> >  struct hid_device *hdev;
-> > @@ -101,6 +103,7 @@ struct asus_kbd_leds {
-> >  unsigned int brightness;
-> >  spinlock_t lock;
-> >  bool removed;
-> > + int report_id;
-> >  };
-> >  
-> >  struct asus_touchpad_info {
-> > @@ -473,7 +476,7 @@ static enum led_brightness asus_kbd_backlight_get(struct led_classdev *led_cdev)
-> >  static void asus_kbd_backlight_work(struct work_struct *work)
-> >  {
-> >  struct asus_kbd_leds *led = container_of(work, struct asus_kbd_leds, work);
-> > - u8 buf[] = { FEATURE_KBD_REPORT_ID, 0xba, 0xc5, 0xc4, 0x00 };
-> > + u8 buf[] = { led->report_id, 0xba, 0xc5, 0xc4, 0x00 };
-> >  int ret;
-> >  unsigned long flags;
-> >  
-> > @@ -513,6 +516,23 @@ static bool asus_kbd_wmi_led_control_present(struct hid_device *hdev)
-> >  return !!(value & ASUS_WMI_DSTS_PRESENCE_BIT);
-> >  }
-> >  
-> > +static bool asus_kbd_is_input_led(void)
-> > +{
-> > + const char *product;
-> > + int i;
-> > +
-> > + product = dmi_get_system_info(DMI_PRODUCT_NAME);
-> > + if (!product)
-> > + return false;
-> > +
-> > + for (i = 0; i < ARRAY_SIZE(use_alt_led_report_id); i++) {
-> > + if (strstr(product, use_alt_led_report_id[i]))
-> > + return true;
-> > + }
-> > +
-> > + return false;
-> > +}
-> > +
-> 
-> 
-> This again feels like you are re-inventing dmi_check_system() please
-> change use_alt_led_report_id to a dmi_system_id array and drop this
-> function (you can directly call dmi_check_system(use_alt_led_report_id)
-> instead).
+scripts/Makefile.build:236: drivers/platform/x86/intel/int3472/Makefile: common.o is added to multiple modules: intel_skl_int3472_discrete intel_skl_int3472_tps68470
 
-I wasn't actually aware of that, so i guess I've learned a whole lot of new stuff today :)
+Split out the common part here into a separate module to make it
+more reliable.
 
-Thanks mate, I'll get round to a v2 in the next few days.
+Fixes: a2f9fbc247ee ("platform/x86: int3472: Split into 2 drivers")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/platform/x86/intel/int3472/Makefile | 9 ++++++---
+ drivers/platform/x86/intel/int3472/common.c | 7 +++++++
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
-> 
-> >  static int asus_kbd_register_leds(struct hid_device *hdev)
-> >  {
-> >  struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
-> > @@ -555,6 +575,10 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
-> >  if (!drvdata->kbd_backlight)
-> >  return -ENOMEM;
-> >  
-> > + drvdata->kbd_backlight->report_id = FEATURE_KBD_REPORT_ID;
-> > + if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD && asus_kbd_is_input_led())
-> > + drvdata->kbd_backlight->report_id = FEATURE_KBD_LED_REPORT_ID1;
-> > +
-> >  drvdata->kbd_backlight->removed = false;
-> >  drvdata->kbd_backlight->brightness = 0;
-> >  drvdata->kbd_backlight->hdev = hdev;
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
+diff --git a/drivers/platform/x86/intel/int3472/Makefile b/drivers/platform/x86/intel/int3472/Makefile
+index 9f16cb514397..a8aba07bf1dc 100644
+--- a/drivers/platform/x86/intel/int3472/Makefile
++++ b/drivers/platform/x86/intel/int3472/Makefile
+@@ -1,4 +1,7 @@
+ obj-$(CONFIG_INTEL_SKL_INT3472)		+= intel_skl_int3472_discrete.o \
+-					   intel_skl_int3472_tps68470.o
+-intel_skl_int3472_discrete-y		:= discrete.o clk_and_regulator.o led.o common.o
+-intel_skl_int3472_tps68470-y		:= tps68470.o tps68470_board_data.o common.o
++					   intel_skl_int3472_tps68470.o \
++					   intel_skl_int3472_common.o
++intel_skl_int3472_discrete-y		:= discrete.o clk_and_regulator.o led.o
++intel_skl_int3472_tps68470-y		:= tps68470.o tps68470_board_data.o
++
++intel_skl_int3472_common-y		+= common.o
+diff --git a/drivers/platform/x86/intel/int3472/common.c b/drivers/platform/x86/intel/int3472/common.c
+index 9db2bb0bbba4..8e4a782b2c35 100644
+--- a/drivers/platform/x86/intel/int3472/common.c
++++ b/drivers/platform/x86/intel/int3472/common.c
+@@ -29,6 +29,7 @@ union acpi_object *skl_int3472_get_acpi_buffer(struct acpi_device *adev, char *i
+ 
+ 	return obj;
+ }
++EXPORT_SYMBOL_GPL(skl_int3472_get_acpi_buffer);
+ 
+ int skl_int3472_fill_cldb(struct acpi_device *adev, struct int3472_cldb *cldb)
+ {
+@@ -52,6 +53,7 @@ int skl_int3472_fill_cldb(struct acpi_device *adev, struct int3472_cldb *cldb)
+ 	kfree(obj);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(skl_int3472_fill_cldb);
+ 
+ /* sensor_adev_ret may be NULL, name_ret must not be NULL */
+ int skl_int3472_get_sensor_adev_and_name(struct device *dev,
+@@ -80,3 +82,8 @@ int skl_int3472_get_sensor_adev_and_name(struct device *dev,
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(skl_int3472_get_sensor_adev_and_name);
++
++MODULE_DESCRIPTION("Intel SkyLake INT3472 ACPI Device Driver library");
++MODULE_AUTHOR("Daniel Scally <djrscally@gmail.com>");
++MODULE_LICENSE("GPL v2");
+-- 
+2.39.2
+
