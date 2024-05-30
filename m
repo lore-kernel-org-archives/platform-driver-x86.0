@@ -1,75 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9DA918396D
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 May 2024 09:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC51717C20E
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 May 2024 14:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717062538; cv=none; b=hZ7hZeHAcLMV8FOJ1qG0Td1LFdljB5q0XRLoWYqNiOw1nBYOmD17oNWVyAj6U6GytUNVSd4QT6uCfRoQWarLlwXblfrO1wk9u+Wfr9bFYq+K+b5YEq7uycQG7CoXmEqY009gsbqVzkbLVOLc/tahZddT7nmjUMQJ9hdEm3k6hkw=
+	t=1717078567; cv=none; b=VQiNveLW0g79xTF7nhHAtB3TJgMo6v10ICisKuAUWjpp9U+e/NsmhbEP3Vz2YvFP1EPgaNqttGG6cvqbGYUph3RITYyJ8I3qUPRbdTubO64UirpwFoIi3OqAUM2LxPlFaBgCIPAzSUU7f5vsu36Y8MrvGH7763BnlrOSIzb8VUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717062538; c=relaxed/simple;
-	bh=dbpzIMTHbhIB1d7B/cx+xSpx0EKu6d85uaiOforr20c=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fEV7AogOUaKQlnxsaOXbxMkr62yWtXkCBKI73rwqrOWz+jIaV1+m8KCfcikn80QvQLVl9mDB/TSaIask0Csyhlkg0tWH3hCTJ8WkKlL+KwxeHtK/a1fN3kN+6wZWMYwe5flONYdVKm0SwZu4shkJoSDSt4CtLp1TPCqveOuzC1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U8L+a9bz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717078567; c=relaxed/simple;
+	bh=bvIAGvRXMNpdUhPoETcyOi3cHSAfWQnCfagkxpAFajQ=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=Y4NXHeTaVu7rR2f/cYmsXFVkxtM/qU4PANXSPtJw47M2p6gqHLfP4fo6bil/f8/UXRoj95ZbIOSUdwA3ZxGshsVDFu9s4Mx+5lrz6QooYA+O19IA5J6mNxt0EqIqAhpQsUmJC+cgRSkLWZuANFyR74fGU5KmSLUT9NsnroXiHxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=pP25FJ/m; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U8L+a9bz"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 44CA1C2BBFC
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 May 2024 09:48:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717062538;
-	bh=dbpzIMTHbhIB1d7B/cx+xSpx0EKu6d85uaiOforr20c=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=U8L+a9bzGn+63WESp0dIw2pzVZrZvHWrFGXY0CtnzSySulnq5iYIwUkQXO6nJmJfI
-	 BWvKy0tXI68n5yteiTdUkbnMn8BxI77rVFtsZsaFrQndSnP88K8HXcV7zDTK/LWfHa
-	 obdrH6TE9dsHRseHD4NRPXEgqNz+iXh4y+sZDYWFK+c5AjzTyQSGVNqctfRUDo/GpV
-	 xvxxh2v4P80Zad6t6KUaR4Rrje238j9anSrZP97oSwoCmvU7u1e3SgZ7YQ9s1B1ivl
-	 UzhPD+8qte+ihu78vZyncs+sVjkFN+m9YlZNiSlGVGEj0h+OyJ1m9Uv2DrkHqhrWXW
-	 d21jSKUUPNfAQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 2C7E6C53B7E; Thu, 30 May 2024 09:48:58 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
- models (16Z90S)
-Date: Thu, 30 May 2024 09:48:57 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: agathe@boutmy.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218901-215701-5Rnh6UDP3n@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
-References: <bug-218901-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="pP25FJ/m"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-57a1fe639a5so798891a12.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 30 May 2024 07:16:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1717078564; x=1717683364; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1SrOn7yUVC9kN8SKaYqmUwEiVGnDGl9gohY+ONwqgl0=;
+        b=pP25FJ/m3PjicCvNhBooY1AcR2dt+/Zffxz3S1fffXNO/L9FVfTLTOrqYMpXmAxAVf
+         XXHyRs4pYWBHOfZWTSdPu3hUZ2poHjh8xZqX3A9iC+pUxtMD4XG433fC8OljZWgP+Wd3
+         xR4rFbPqjcUL1/Q9gqZCUylShgqkvXQhuTQ//hD9AnoDHvHKV/4GVpGO9XMq/lPVHTki
+         YjdyKYmv0GPXDoUhe1wMw1PKDN5vd0zI2kLx6FjwGtzLZAt+yk7DYhRYKajhl1vscXFt
+         j+KSonwV+lxCrThrZrkVGG4tGAKQPfsirGROct+jlVibaAu6zuvxPncodZixwdbtiJIy
+         2r2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717078564; x=1717683364;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1SrOn7yUVC9kN8SKaYqmUwEiVGnDGl9gohY+ONwqgl0=;
+        b=TUAbVMwlPn3QSVUab8tppkAazpZdjl8lAz2KMGbRhP43JKCo7BBuZOaby0kRxSW8hr
+         b7Zh7YYKj5ORBPFF4D/No3oN6Sp9fCDEMO6TbW9B8HwO4GzgfVrXixuTBA+0m6SGuGaS
+         q5hQcgtlLcB5zKvQGw4bkD/EjBzrL1MKYZHetH5ZCN32AZAMgtDk3mlhnEhSICa6x7tM
+         vkYin29V23MGToPfv8bc4vTRLm4yCETb707o+wGKazNUq1nwUA+5jkHqLOUrq0cH54UV
+         iqduI7kT9GSQaN3JNPJFSSQqUMKkNdQMlYIoYqpa6fiiLDbazn+ykDeW0BrBf6IVHo3u
+         EpDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCskBrC2KkzZ+w2FQxGIaEHLAi7CIsYxlJco13kcf3+3cx9fHdmZz/BuWjoRN7izIYRcmvRP2i9P6XBbeocU25XEmo6Alh9H5/JWVkpYgirFLEvQ==
+X-Gm-Message-State: AOJu0YzP1xNMU6+33MqbIcuv6VJMQb1escOSXi4jZn5ZEI8i+NNgdHxv
+	IdOnzpp/dSnpCZ2rJg7dOFE2c8HFQ0H0VHoBVlFYuNAO/aGQtsSUf3zourrZbos=
+X-Google-Smtp-Source: AGHT+IE1Gxt4e7p05tnSjb/uvvdgi7YH2rrBA2tf2xKHkqxV2osqZET9Lhq+RcPBHLK9qZGK1rnznQ==
+X-Received: by 2002:a17:906:6d0f:b0:a59:b359:3e14 with SMTP id a640c23a62f3a-a65e8d12314mr168664366b.10.1717078563585;
+        Thu, 30 May 2024 07:16:03 -0700 (PDT)
+Received: from smtpclient.apple ([2001:a61:1083:f101:c1e2:c2f3:b010:383c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a660947c20fsm56515766b.175.2024.05.30.07.16.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 30 May 2024 07:16:03 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: [PATCH v2] platform/x86/amd/pmf: Use memdup_user()
+From: Thorsten Blum <thorsten.blum@toblux.com>
+In-Reply-To: <4c2c8a76-17c7-4dbb-96ff-8488c8e953ff@moroto.mountain>
+Date: Thu, 30 May 2024 16:15:51 +0200
+Cc: markus.elfring@web.de,
+ Shyam-sundar.S-k@amd.com,
+ hdegoede@redhat.com,
+ ilpo.jarvinen@linux.intel.com,
+ kernel-janitors@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <1D5BDE66-ABB3-41D9-ACB0-FBAC207D55DC@toblux.com>
+References: <50d10f0b-d108-4057-be9c-a90e2398e810@web.de>
+ <20240527083628.210491-2-thorsten.blum@toblux.com>
+ <4c2c8a76-17c7-4dbb-96ff-8488c8e953ff@moroto.mountain>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+X-Mailer: Apple Mail (2.3774.600.62)
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
+Hi Dan,
 
---- Comment #6 from Agathe Boutmy (agathe@boutmy.com) ---
-(In reply to Armin Wolf from comment #4)
-Did you have a specific kernel module in mind?
+On 27. May 2024, at 12:38, Dan Carpenter <dan.carpenter@linaro.org> wrote:
+> Also this check isn't great:
+> 
+> if (dev->policy_sz < header->length + 512)
+> 
+> header->length is a u32 that comes from the user, so the addition can
+> overflow.  I can't immediately see how to exploit this though since we
+> don't seem to use header->length after this (by itself).
 
---=20
-You may reply to this email to add a comment.
+How about
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+	if (header->length > U32_MAX - 512 || dev->policy_sz < header->length + 512)
+		return -EINVAL;
+
+to prevent a possible overflow?
+
+header->length is used in the next line
+
+	dev->policy_sz = header->length + 512;
+
+and if the addition overflows, we end up setting dev->policy_sz to an 
+invalid value.
+
+Thanks,
+Thorsten
