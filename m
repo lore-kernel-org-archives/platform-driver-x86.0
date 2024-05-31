@@ -1,127 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F17158DD3;
-	Fri, 31 May 2024 16:19:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47302135B;
+	Fri, 31 May 2024 16:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717172360; cv=none; b=OChN8/gfezcQdcBxN4KWeNTx6is3G5dav7G9UwFn84QIl3qQ9o/g/h81t/ebbSIFJDJSQe6q5dwOLdMCl8nw6y8Zaj5qdj5TexDpGVXde4zoR8r4GNvn9W2a/YLw8Uvtb/7gv5ybnC5ggaEqsk6jDN19WL4EvEoXHeJW6sbxrAo=
+	t=1717174036; cv=none; b=HADCIWRJ1rLh1eWV7GFC9/TsIwQ71B+33ANYzD7FEe6X5hJuOQ++0/rPbZsHQsdv+zlI70nAbI0TbhDh26Xgs3qETTAgcFQfIEBX+ndWJFVThZcLF5NYMv3UclQ60/j1l5Jpo8a6hgngqExJPYium7+6iA4tK/a7NlCdM/S+ezA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717172360; c=relaxed/simple;
-	bh=aG7/jcewM8OFtTtVBndt67BCf3fYwlgZkSDr9Umy1oA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BKFcvSe1u9iReLR0fErl3G9nKm1Sx+2H3V3WewpymK8dNAIlfo/Zkfy/GM77RYpgPZGE4h2WAruWAbx+fJcRehr+gqjXaS2Btc1v2hwmTCKKIdMKH9DhdbOUsWC0PC0B51KtdbZmL7ziCXahIsVA63f53ACCyrCWA81mTH/lHG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XWdnD4LA; arc=none smtp.client-ip=192.198.163.15
+	s=arc-20240116; t=1717174036; c=relaxed/simple;
+	bh=2SgEjOmuNFBLLe0+7SAyTs4SGWcjz9Pq67jh9WJ2Fts=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HlagHx1ztqAnarSpW5YeB2XfBbNTv62CAu9tfm/vpt6t4bIPePnsiRFBekcN6hKHJ6/vMabwvQIg34U9bap8ooY3AE1uEazH0GMecqDYQTA19mxqaw9gPkgwGoSX/sQasoS2ZTUdzdkhOnaw+MY5y/GJLuVG2JFwUmZK0niqi2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AO8JJnSN; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XWdnD4LA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AO8JJnSN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717172359; x=1748708359;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=aG7/jcewM8OFtTtVBndt67BCf3fYwlgZkSDr9Umy1oA=;
-  b=XWdnD4LAaf4A7KKIprI1n8iU8WD8P/A2gXlW5lglHsrqSIjNqP8KHO/t
-   OPMYPPYStLSX0oEtHNhCHno3qzva895mvka/+oxCLq4VSbQ5+vrsd9FTg
-   KauPfpqllr3DREkGIsEeTFlTEQSeugJcsss9zh65DDgvav9tjPg7JJHtI
-   C1l8jnO9ITM1TW9BYBdysR98MmyxDr7FXBTeA1P1sCaH1rUr4WAuycxe7
-   qZ3O821EAMu+wCgVIUYUVV7AH1g1KLNlQUenjXJt8RA8ra+fz+NTHKU/v
-   U6aqLQOJ5X7hhpYudjkQE2lsQHuSi/X+Ar5OALyVpfhKjaSFcwz+vzjwp
-   g==;
-X-CSE-ConnectionGUID: Y7rbXHlVTzqWXToZsyzkVA==
-X-CSE-MsgGUID: xTg6s/bKQSiBFAHq4E+8ig==
-X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="13917234"
+  t=1717174035; x=1748710035;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=2SgEjOmuNFBLLe0+7SAyTs4SGWcjz9Pq67jh9WJ2Fts=;
+  b=AO8JJnSNh0fRZIFgWRMPugHIFT/4Mv7xfwOdN+vFTsY+X7xl+jifm5K/
+   yYVZ+QfeHVADG0uRbpAW5vmMaZnAvz6TiS15mVAzjqUeyNwYNzh+bMSVU
+   +lE36bh4ohXotjWUHrloax+SLjG6E5meh0PG2dpaHc+ys02qnTldsTdU8
+   VH5fLjAcrZ17aoPkHUSsqawZdw5HL0tlRJ1NzFduP1jSfvntdS/C/1mqw
+   N/nyJfeWiSwV0o9JkGFQEys4wFLZhhsKiExps5JfOHXPO3DGvwNg92ky+
+   JgqMVMqMXpWHdeKVqSnR/IcuM/AA1/ozeBgqF5EbEF0XQX5SpI7dyvMHi
+   A==;
+X-CSE-ConnectionGUID: SC9SZymLSNuqO08Shf/Q5A==
+X-CSE-MsgGUID: iXkBcWBGSV6XpTZIjMOXmQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="24358154"
 X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
-   d="scan'208";a="13917234"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 09:19:18 -0700
-X-CSE-ConnectionGUID: oO43TFx9QlijRuLnBNoxFw==
-X-CSE-MsgGUID: 5Ji/2YY4RCGej7BRwnaaKQ==
+   d="scan'208";a="24358154"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 09:47:14 -0700
+X-CSE-ConnectionGUID: cCaAQX5DSi6Q4UTMRDa0tw==
+X-CSE-MsgGUID: 6hS50wyWTPSehV0W41e76w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
-   d="scan'208";a="36790294"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.152])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 09:19:16 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 31 May 2024 19:19:12 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] platform/x86: dell-smbios: Simplify error
- handling
-In-Reply-To: <20240528204903.445546-2-W_Armin@gmx.de>
-Message-ID: <8353e3d0-7553-50f9-160b-fa8b6df2f067@linux.intel.com>
-References: <20240528204903.445546-1-W_Armin@gmx.de> <20240528204903.445546-2-W_Armin@gmx.de>
+   d="scan'208";a="67060896"
+Received: from lfiedoro-mobl.ger.corp.intel.com ([10.245.246.178])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 09:47:12 -0700
+Message-ID: <e2ff917300939bb017b8f587a66a93022f3d1eeb.camel@linux.intel.com>
+Subject: Re: [PATCH v2 3/6] platform/x86/intel: TPMI domain id and CPU
+ mapping
+From: Tero Kristo <tero.kristo@linux.intel.com>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: srinivas.pandruvada@linux.intel.com, Hans de Goede
+ <hdegoede@redhat.com>,  platform-driver-x86@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>,  Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>
+Date: Fri, 31 May 2024 19:47:08 +0300
+In-Reply-To: <e56885a4-3344-b9f9-92d5-33c9af00636d@linux.intel.com>
+References: <8646d7dbeb507ce28b6ddca1222ee3c9892d61cc.camel@linux.intel.com>
+	 <20240528073457.497816-1-tero.kristo@linux.intel.com>
+	 <e56885a4-3344-b9f9-92d5-33c9af00636d@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.0-1build2 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1046594730-1717172352=:8458"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1046594730-1717172352=:8458
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Tue, 28 May 2024, Armin Wolf wrote:
-
-> When the allocation of value_name fails, the error handling code
-> uses two gotos for error handling, which is not necessary.
+On Fri, 2024-05-31 at 16:45 +0300, Ilpo J=C3=A4rvinen wrote:
+> On Tue, 28 May 2024, Tero Kristo wrote:
 >=20
-> Simplify the error handling in this case by only using a single goto.
+> > From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> >=20
+> > Each TPMI power domain includes a group of CPUs. Several power
+> > management settings in this case applicable to a group of CPUs.
+> > There can be several power domains in a CPU package. So, provide
+> > interfaces for:
+> > - Get power domain id for a Linux CPU
+> > - Get mask of Linux CPUs in a power domain
+> >=20
+> > Hardware Punit uses different CPU numbering, which is not based on
+> > APIC (Advanced Programmable Interrupt Controller) CPU numbering.
+> > The Linux CPU numbering is based on APIC CPU numbering. Some PM
+> > features
+> > like Intel Speed Select, the CPU core mask provided by the hardware
+> > is
+> > based on the Punit CPU numbering. To use the core mask, this mask
+> > needs to be converted to a Linux CPUs mask. So, provide interfaces
+> > for:
+> > - Convert to a Linux CPU number from a Punit CPU number
+> > - Convert to a Punit CPU number from a Linux CPU number
+> >=20
+> > On each CPU online, MSR 0x54 is used to read the mapping and stores
+> > in
+> > a per cpu array. Create a hash for faster searching of a Linux CPU
+> > number
+> > from a Punit CPU number.
+> >=20
+> > Signed-off-by: Srinivas Pandruvada
+> > <srinivas.pandruvada@linux.intel.com>
+> > [tero.kristo: minor updates]
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> > Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
+> > ---
+> > v2:
+> > =C2=A0 * changed to use X86_MATCH_VFM() instead of
+> > X86_MATCH_INTEL_FAM6_MODEL()
 >=20
-> Tested on a Dell Inspiron 3505.
+> I've applied this v2 + the other patches from v1 series now to
+> review-ilpo=20
+> branch.
 >=20
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
-> Changes since v1:
-> - add patch
-> ---
->  drivers/platform/x86/dell/dell-smbios-base.c | 11 ++++-------
->  1 file changed, 4 insertions(+), 7 deletions(-)
+> For the record, I removed "All rights reserved." lines from the
+> patches=20
+> while applying. I asking first (privately) a permission from Tero
+> whether=20
+> it's okay with him I remove those lines.
 >=20
-> diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platf=
-orm/x86/dell/dell-smbios-base.c
-> index 86b95206cb1b..b562ed99ec4e 100644
-> --- a/drivers/platform/x86/dell/dell-smbios-base.c
-> +++ b/drivers/platform/x86/dell/dell-smbios-base.c
-> @@ -492,19 +492,16 @@ static int build_tokens_sysfs(struct platform_devic=
-e *dev)
->  =09=09/* add value */
->  =09=09value_name =3D kasprintf(GFP_KERNEL, "%04x_value",
->  =09=09=09=09       da_tokens[i].tokenID);
-> -=09=09if (value_name =3D=3D NULL)
-> -=09=09=09goto loop_fail_create_value;
-> +=09=09if (!value_name) {
-> +=09=09=09kfree(location_name);
-> +=09=09=09goto out_unwind_strings;
-> +=09=09}
->=20
->  =09=09sysfs_attr_init(&token_entries[i].value_attr.attr);
->  =09=09token_entries[i].value_attr.attr.name =3D value_name;
->  =09=09token_entries[i].value_attr.attr.mode =3D 0444;
->  =09=09token_entries[i].value_attr.show =3D value_show;
->  =09=09token_attrs[j++] =3D &token_entries[i].value_attr.attr;
-> -=09=09continue;
-> -
-> -loop_fail_create_value:
-> -=09=09kfree(location_name);
-> -=09=09goto out_unwind_strings;
->  =09}
->  =09smbios_attribute_group.attrs =3D token_attrs;
 
-Good cleanup. Using continue on the main level of a loop is almost never a=
-=20
-good idea.
+Thanks Ilpo!
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
-
---8323328-1046594730-1717172352=:8458--
+-Tero
