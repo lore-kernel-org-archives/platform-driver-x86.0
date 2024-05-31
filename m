@@ -1,45 +1,45 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44434142642
-	for <platform-driver-x86@vger.kernel.org>; Fri, 31 May 2024 11:41:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F76157A68
+	for <platform-driver-x86@vger.kernel.org>; Fri, 31 May 2024 11:41:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717155703; cv=none; b=h3FKXGunKIfW716pdUdAO7wVxzos2xHc0QpywkPG0tqr1Jp/bk5LCDsBNYwjtQOH4ziS0RrKyMey6GmPm3UtbaaAkE9Us38VJie9IjF11XA9QtKwakjKe+SEhb4zcMBNV2L3h2RFFLgn4b8YTPcvPkBJctHem8UbaR+5epiaFIE=
+	t=1717155707; cv=none; b=NtbMKMYWDyIfVzMPFr94OqcujPr9ypUKb7cV/k31kulaGI6XXg304N1dz0cTCmgrQSqtnHlek0ttSk9e/krelVfO+9ILzF3HJHMtO++Qr8ZPkEQ+nf0VF2P5BL6dBF80F4i4Vr2xcxJWGUv3oCaDVflvlOqvFUiX+xsNn5zl3BA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717155703; c=relaxed/simple;
-	bh=Sp2fk/LWKEXy8T7aNKWh8TAuPw3EfqS0eI2YVI2d8m8=;
+	s=arc-20240116; t=1717155707; c=relaxed/simple;
+	bh=LpExwi6vV2rGAseBU/PdbE/XsaB6Mzr2CStwDo2xOfg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t7ksE+uaS9V68D9BuooHWNDmazd9xmUO7bqMfSgcFhxn7/LaiESs929twERBaRwASJupSaqUOK2zf6vJ3/CSmqVmtVYOBhUjxPj0AG9MhOMRgMB1HqUkhd22rrWlEC1dy/T4EpN1Rd8jB+u86vziq+S/6oMIyTxV7BcjFhwIUko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TPy6wv0S; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=moh+S/HROvKKk36R0Bmhuvl1kMoaWqDL1J2IATQJJzZWoV4lqugVxrh92SRtuaJaXNLTCoYr/Jax0jk+tPmVueJLG6dEYdb1lXohub2HCQeRXHfCQgh3koZ93hey888wBVCalUhSVKe4IlsiYJ4OXzDaqyWjgQmnJ9jgY/iU3qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KfA9celn; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TPy6wv0S"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KfA9celn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717155701;
+	s=mimecast20190719; t=1717155704;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6v8hUtIyOm2WJgq154hZETop1FlsLE+UFbP2MSs3ok4=;
-	b=TPy6wv0SQlckdNUCIuRMSNvVk0Am8/Aq8NG7gb2v/4nlyOhEM3kUGCVRKlyjY+Yra/3vE+
-	eHHUMzS3YkFRCaVPPfSzmeEXu+wHucRbV/6fyxV0/DaE8YEhZXxqAQleXxy8BDiTADpd9x
-	JfzL9xx/VY+o96nhwmSOoeyKEytuRP8=
+	bh=BKgaiBXZdKF+QsVJkzPpLkGgiqkdVGWEJmWGY1Lbhy0=;
+	b=KfA9celnjiXEfE0wzN0BrzHknHx12n6TaKrFnYPUZ7NXoVOSH2WAkvFgBzQ8++JUrXwAME
+	C4AbHwWI2c9Df7KR89uLNakeHwzjO3vHIu4SBN5BdNf1QithFuuwVIX9FtJ2m/GGYIR6SW
+	t87J0eV7tUHLeb1n9rBIyK1iXZMWvWg=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-196-Tu1JxxD2Myqd1x3eYoW-Cg-1; Fri,
- 31 May 2024 07:41:36 -0400
-X-MC-Unique: Tu1JxxD2Myqd1x3eYoW-Cg-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-32-CgNfExtbPI2pRpa56B3u6A-1; Fri,
+ 31 May 2024 07:41:40 -0400
+X-MC-Unique: CgNfExtbPI2pRpa56B3u6A-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 53E8529AA385;
-	Fri, 31 May 2024 11:41:36 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 91FA63C025B4;
+	Fri, 31 May 2024 11:41:39 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.192.76])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 04F47740F;
-	Fri, 31 May 2024 11:41:34 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 28FC051BF;
+	Fri, 31 May 2024 11:41:38 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Andy Shevchenko <andy@kernel.org>,
@@ -51,10 +51,11 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	platform-driver-x86@vger.kernel.org,
 	=?UTF-8?q?Andr=C3=A9=20Apitzsch?= <git@apitzsch.eu>,
 	linux-leds@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v10 3/6] leds: rgb: leds-ktd202x: Initialize mutex earlier
-Date: Fri, 31 May 2024 13:41:21 +0200
-Message-ID: <20240531114124.45346-4-hdegoede@redhat.com>
+	linux-pm@vger.kernel.org,
+	Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: [PATCH v10 5/6] leds: trigger: Add led_mc_trigger_event() function
+Date: Fri, 31 May 2024 13:41:23 +0200
+Message-ID: <20240531114124.45346-6-hdegoede@redhat.com>
 In-Reply-To: <20240531114124.45346-1-hdegoede@redhat.com>
 References: <20240531114124.45346-1-hdegoede@redhat.com>
 Precedence: bulk
@@ -66,67 +67,72 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-The mutex must be initialized before the LED class device is registered
-otherwise there is a race where it may get used before it is initialized:
+Add a new led_mc_trigger_event() function for triggers which want to
+change the color of a multi-color LED based on their trigger conditions.
 
- DEBUG_LOCKS_WARN_ON(lock->magic != lock)
- WARNING: CPU: 2 PID: 2045 at kernel/locking/mutex.c:587 __mutex_lock
- ...
- RIP: 0010:__mutex_lock+0x7db/0xc10
- ...
- set_brightness_delayed_set_brightness.part.0+0x17/0x60
- set_brightness_delayed+0xf1/0x100
- process_one_work+0x222/0x5a0
-
-Move the mutex_init() call earlier to avoid this race condition and
-switch to devm_mutex_init() to avoid the need to add error-exit
-cleanup to probe() if probe() fails later on.
-
+Reviewed-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Reviewed-by: Andy Shevchenko <andy@kernel.org>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v9:
-- Use devm_mutex_init() instead of plain mutex_init()
+ drivers/leds/led-triggers.c | 20 ++++++++++++++++++++
+ include/linux/leds.h        |  6 ++++++
+ 2 files changed, 26 insertions(+)
 
-Changes in v8:
-- New patch in v8 of this series
----
- drivers/leds/rgb/leds-ktd202x.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/leds/rgb/leds-ktd202x.c b/drivers/leds/rgb/leds-ktd202x.c
-index 60ca6ec34336..d5c442163c46 100644
---- a/drivers/leds/rgb/leds-ktd202x.c
-+++ b/drivers/leds/rgb/leds-ktd202x.c
-@@ -556,6 +556,10 @@ static int ktd202x_probe(struct i2c_client *client)
- 		return ret;
- 	}
+diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+index b1b323b19301..638aa6591092 100644
+--- a/drivers/leds/led-triggers.c
++++ b/drivers/leds/led-triggers.c
+@@ -396,6 +396,26 @@ void led_trigger_event(struct led_trigger *trig,
+ }
+ EXPORT_SYMBOL_GPL(led_trigger_event);
  
-+	ret = devm_mutex_init(dev, &chip->mutex);
-+	if (ret)
-+		return ret;
++void led_mc_trigger_event(struct led_trigger *trig,
++			  unsigned int *intensity_value, unsigned int num_colors,
++			  enum led_brightness brightness)
++{
++	struct led_classdev *led_cdev;
 +
- 	chip->num_leds = (unsigned long)i2c_get_match_data(client);
- 
- 	chip->regulators[0].supply = "vin";
-@@ -584,8 +588,6 @@ static int ktd202x_probe(struct i2c_client *client)
- 		return ret;
- 	}
- 
--	mutex_init(&chip->mutex);
--
- 	return 0;
- }
- 
-@@ -594,8 +596,6 @@ static void ktd202x_remove(struct i2c_client *client)
- 	struct ktd202x *chip = i2c_get_clientdata(client);
- 
- 	ktd202x_chip_disable(chip);
--
--	mutex_destroy(&chip->mutex);
- }
- 
- static void ktd202x_shutdown(struct i2c_client *client)
++	if (!trig)
++		return;
++
++	rcu_read_lock();
++	list_for_each_entry_rcu(led_cdev, &trig->led_cdevs, trig_list) {
++		if (!(led_cdev->flags & LED_MULTI_COLOR))
++			continue;
++
++		led_mc_set_brightness(led_cdev, intensity_value, num_colors, brightness);
++	}
++	rcu_read_unlock();
++}
++EXPORT_SYMBOL_GPL(led_mc_trigger_event);
++
+ static void led_trigger_blink_setup(struct led_trigger *trig,
+ 			     unsigned long delay_on,
+ 			     unsigned long delay_off,
+diff --git a/include/linux/leds.h b/include/linux/leds.h
+index ae07e44f1dcb..517b6198df07 100644
+--- a/include/linux/leds.h
++++ b/include/linux/leds.h
+@@ -510,6 +510,9 @@ void led_trigger_register_simple(const char *name,
+ 				struct led_trigger **trigger);
+ void led_trigger_unregister_simple(struct led_trigger *trigger);
+ void led_trigger_event(struct led_trigger *trigger,  enum led_brightness event);
++void led_mc_trigger_event(struct led_trigger *trig,
++			  unsigned int *intensity_value, unsigned int num_colors,
++			  enum led_brightness brightness);
+ void led_trigger_blink(struct led_trigger *trigger, unsigned long delay_on,
+ 		       unsigned long delay_off);
+ void led_trigger_blink_oneshot(struct led_trigger *trigger,
+@@ -552,6 +555,9 @@ static inline void led_trigger_register_simple(const char *name,
+ static inline void led_trigger_unregister_simple(struct led_trigger *trigger) {}
+ static inline void led_trigger_event(struct led_trigger *trigger,
+ 				enum led_brightness event) {}
++static inline void led_mc_trigger_event(struct led_trigger *trig,
++				unsigned int *intensity_value, unsigned int num_colors,
++				enum led_brightness brightness) {}
+ static inline void led_trigger_blink(struct led_trigger *trigger,
+ 				      unsigned long delay_on,
+ 				      unsigned long delay_off) {}
 -- 
 2.45.1
 
