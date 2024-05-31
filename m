@@ -1,63 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA6617E44C;
-	Fri, 31 May 2024 19:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7797B7D40E;
+	Fri, 31 May 2024 20:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717183208; cv=none; b=ot+Jie1Ey+J+KSaeFPVA6mMd+Bnm7yUKD7LYPsr6aADePNGTYLnBxce3GlG+GvUjxHw5JH6OSfjAeB16egXl4M2Cw4tIDlfH0FNokBVVOWgS9qeKn8Vu0h3Scb2bsgJbAEGiHJipezXo+N+5C96ECWRWda9e4UILrQXKsgvZCok=
+	t=1717187832; cv=none; b=DHFdTYEtSRjWWRIz/V62YiQfQZnrzt9ZItobLtzzsaNzr0QhNc86iYHSfqWnoAYITtwRa0Hh0kD96zMKQGI6Bu8Hz6AUzF+KIItypQTypBW0GssBNkxqAqFMVYPwhdvh6061hUFQaxKHGvEkZnAdQzhIGID2UcnPVyGPc5t9rGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717183208; c=relaxed/simple;
-	bh=J8FQo1tD2MtenJNJs241o4Pw54sYknqOQ8u6QGHLPbc=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=nAd2w8va/tEol/c5+jVnNdTte5No8lkVcEalQFm4479xp3sW/JEX/mEYKGqz7a/iBJ+qvQ59pycOmAEUvBMoxGAGI1jQ1fgpLK1uujrGA4ZoioWMAoeoJdHsNMCvvTQ7EXiBYyLrvyAYpOUx97BekC0tsS8cQQCfm6u7i7G3N5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JIxb6XOn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717187832; c=relaxed/simple;
+	bh=geUk9QqAqwdlj+xo+azEieXJI7qruG0IFBgwbdK8oXA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZF9O+uij0F34j35H5ShoHHKWvXgzkce1gAPOqggLVk0WqQK4mFm7g056cxNz7b2F4nd3Qtnl5JueKHSaZFL6TC6bGI4M6QaBx4HS36bIHwNmRHIlP9Lf4XNpDhcR+bA9KRWVLDeWKsUuQBBMB1f2y080JkabBYlf4x+UMnz8zvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IBenSTy+; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JIxb6XOn"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CA146C4AF08;
-	Fri, 31 May 2024 19:20:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717183207;
-	bh=J8FQo1tD2MtenJNJs241o4Pw54sYknqOQ8u6QGHLPbc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=JIxb6XOn8Nh8DOUTyiujsF7VcT7DgTU5APRirkjUTzoMTz0MWAM31X3ABTX8HTaYB
-	 rLjr8BVZupaWpCwGtjZ4samtknWT9QDIyArhZKF//hPeNQarkMRFIcAAR9MjJ35mQK
-	 o47OeRYyYn9GGptwMJwEa3k/ipK+eU/6shU2Ps9JHzUBguR+/koGyU0i3rYES1imfg
-	 /vToNDnIbnaoKKWQf/7IcTKA0jT36bUphWtihHwWXJhk2W8A6JzBnNb2699ZOM30tQ
-	 t+epdVUPjQtsRjETiLBwMQH3/vbjE8O+yiQTyA7MYuIMwUAUbmb9z41AOCqRfA3sZi
-	 fV+GzhOPtl8Zw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B0C6ECF21D8;
-	Fri, 31 May 2024 19:20:07 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for 6.10-2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <470d8b3d-1c9a-475e-a6fb-4fcc4b9ef98e@redhat.com>
-References: <470d8b3d-1c9a-475e-a6fb-4fcc4b9ef98e@redhat.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <470d8b3d-1c9a-475e-a6fb-4fcc4b9ef98e@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.10-2
-X-PR-Tracked-Commit-Id: 3050052613790e75b5e4a8536930426b0a8b0774
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 87895a6402604f7a2b55a62e8afd7889b8ec72e4
-Message-Id: <171718320771.20247.4683747140139024139.pr-tracker-bot@kernel.org>
-Date: Fri, 31 May 2024 19:20:07 +0000
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IBenSTy+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717187831; x=1748723831;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=geUk9QqAqwdlj+xo+azEieXJI7qruG0IFBgwbdK8oXA=;
+  b=IBenSTy+JtsR/3cJc7DjXhXXQpgSywrleZF3Tqy4eAcDVkj9cjrwVpji
+   Ilb4TYj4Q3opZ9R6f4igfm9dQpM9tO2JxRgcbJk07z53d0Aq71NARkzju
+   mC8Ny0jpw+h92VrLn2ROtzueDYMpyNzvsQvLvnPGakGT/HA8ypPoD2HbP
+   GsC1hxPcz1DNqBmazY1HxWF7U8v33qsQwVF0LssgcPBlAC/CE+EovWKtD
+   NMabTviFTtIO+i1O9OeTy1Hv3AkTaM3l4qkNNwmzWc20uM2e0PcRwNcZq
+   nnMC2asiGWemLATQYfwmuxPX+JQ6hztHPwSoiZ2/a5g/yKyiuXQZq2uyo
+   Q==;
+X-CSE-ConnectionGUID: rFn6DQGZTUOGvDXsuaHvzg==
+X-CSE-MsgGUID: zmX3yzaHRAG/Y1rgqHMJZg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="13871818"
+X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
+   d="scan'208";a="13871818"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 13:37:11 -0700
+X-CSE-ConnectionGUID: hklv9mXdTW6bg5dHxhtUkg==
+X-CSE-MsgGUID: 3ppO/1SoRwKVKqp7VUakQQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
+   d="scan'208";a="36355361"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 13:37:11 -0700
+From: Tony Luck <tony.luck@intel.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev,
+	Tony Luck <tony.luck@intel.com>
+Subject: [PATCH 00/11] New Intel CPU model defines for x86/platform
+Date: Fri, 31 May 2024 13:36:56 -0700
+Message-ID: <20240531203706.233365-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Thu, 30 May 2024 20:30:44 +0200:
+These patches were part of the v6 patch bomb converting everything.
+Link: https://lore.kernel.org/all/20240520224620.9480-1-tony.luck@intel.com/
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.10-2
+This reposting as requested by maintainer to make it easier to
+pick up and apply.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/87895a6402604f7a2b55a62e8afd7889b8ec72e4
+Changes since that post:
 
-Thank you!
+Combined two telemetry patches into one and fixed shorlog tag
+Combined two pmc patches into one and fixed shorlog tag
 
+The ISST patch may now be irrelevant as Srinivas has done
+the conversion. I put it as the last patch to make it easy
+to skip.
+
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+
+
+Tony Luck (11):
+  platform/x86/intel/pmc: Switch to new Intel CPU model defines
+  platform/x86: intel_telemetry: Switch to new Intel CPU model defines
+  x86/platform/atom: Switch to new Intel CPU model defines
+  platform/x86: p2sb: Switch to new Intel CPU model defines
+  platform/x86: intel_turbo_max_3: Switch to new Intel CPU model defines
+  platform/x86: intel_ips: Switch to new Intel CPU model defines
+  platform/x86: intel-uncore-freq: Switch to new Intel CPU model defines
+  platform/x86: intel_speed_select_if: Switch to new Intel CPU model
+    defines
+  platform/x86: intel_scu_wdt: Switch to new Intel CPU model defines
+  platform/x86/intel/ifs: Switch to new Intel CPU model defines
+  platform/x86: ISST: Switch to new Intel CPU model defines
+
+ arch/x86/platform/atom/punit_atom_debug.c     | 11 ++--
+ drivers/platform/x86/intel/ifs/core.c         | 15 +++--
+ drivers/platform/x86/intel/pmc/core.c         | 46 +++++++--------
+ drivers/platform/x86/intel/pmc/pltdrv.c       | 16 +++---
+ .../intel/speed_select_if/isst_if_common.c    |  8 +--
+ .../intel/speed_select_if/isst_if_mbox_msr.c  |  2 +-
+ .../platform/x86/intel/telemetry/debugfs.c    |  4 +-
+ drivers/platform/x86/intel/telemetry/pltdrv.c |  4 +-
+ drivers/platform/x86/intel/turbo_max_3.c      |  4 +-
+ .../intel/uncore-frequency/uncore-frequency.c | 56 +++++++++----------
+ drivers/platform/x86/intel_ips.c              |  3 +-
+ drivers/platform/x86/intel_scu_wdt.c          |  2 +-
+ drivers/platform/x86/p2sb.c                   |  2 +-
+ 13 files changed, 86 insertions(+), 87 deletions(-)
+
+
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.45.0
+
