@@ -1,102 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86041514DB;
-	Fri, 31 May 2024 08:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845FA558A5;
+	Fri, 31 May 2024 10:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717144565; cv=none; b=CL+QQysemsn0H6aTB7Jpakv0aGwiySXYfjqAE7L9eo5kMKYZTOKD/sx/Joo4rMdGLUnAs5sg+h9eyrCGtsjqzY4YzAdhGN0PQ7q5wpKJoE1mSdfTEXBk4exDHbXybxLYDhooS6iSz5RsFIdVlEkFEFAlHYAtE8zwHl1ixT1lIzY=
+	t=1717149823; cv=none; b=NX8vnY0dFHCr/Za/EbwQDWsG0b0an0AymuGEzvRGQljH0VJELydHjVQdXSlR0Pf0TxDz9lnU2v6I/0TIqMh8StWXShEzxlfaSYRDKv8xZ/25fHNY+GMwngDjrHtPOi1DJ9iUdklNd52xRArZJ3vin4sjBD5fGB2wLBaOG5Ge+Y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717144565; c=relaxed/simple;
-	bh=AjD0KgKUTNk/qht295XZG6rAGKTm2KqnG8awsW8O1ow=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pYqOxRODuJvqJy/W6HCyauXUK1z5lsdaWNEWJCaOHSNoUrgnzinSwkAKZe6fOofriI9Z1tdojfY+ed8slI6vR3SThHKpyowJpgMx1IZWTfZJuOX6BIuJdKAzGHnWKPIE2f4CT+QVcy1u9rAaw4+NtyPU1wNbdeHX0ffBqeOiIg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mGHiXMM3; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717149823; c=relaxed/simple;
+	bh=zzwoazfnjgwqW/4OiNo7KvkuF2KIVKIBzXDfwVrAiO0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SPFOGtK+URgrD8DluYGYVXFiUjnAELMZap2khm54Uj85RWq1AkxwFF34SvdnoOvGPnt7I8dr4hjtsTYpdOt8fHI10M0F6DXLdSuLstIOPVO3lOg9HhXem0rMV62wnjFBd0+oxEYrT55Tcpkg2UWP51Yg9GaPsQ8E2I8oT0z1HKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VvojpVt5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mGHiXMM3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717144564; x=1748680564;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AjD0KgKUTNk/qht295XZG6rAGKTm2KqnG8awsW8O1ow=;
-  b=mGHiXMM3uItbSmdmn5R+Fm9hxLlriJUf0jc3S0H+FwFEX6U2T77wE+VH
-   xb9Pqhswipw5rJPeIoz/aDYTkBp8mDcGVoiyCUxUdIkiv0CuqiReSeSE+
-   yfcwC7BL1jH+i+FQAI+OBxia5PfzTxhQqV/EprJbMwg7GqMCrMFHtfn6h
-   /GuP1OVcdBQkTC8tH6qvXHbmVKIcvQuSsmv3znwnypJBLGbfv8uR9TGTg
-   6BEGrGFQt4JKq3In2x6DQDkbX8P2i7axGOU2BbiSTliqpAE18TTy6ziK1
-   IOyjZ8ZD4LZYAX51fn+Vk9mP/2t6ZK/7UUmqGNnTzC/0v6PJnxCJpnY9e
-   g==;
-X-CSE-ConnectionGUID: lc/f5RZ5QKKq/osUW5FWjw==
-X-CSE-MsgGUID: C1nU6ZZIQjSwkykIltOvuw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="13495954"
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="13495954"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 01:36:00 -0700
-X-CSE-ConnectionGUID: qjIXNYGLS7muvdOWx6t1XQ==
-X-CSE-MsgGUID: 8xIiutGhSgO7Onbd+mLuhA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="36193455"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.19])
-  by fmviesa009.fm.intel.com with ESMTP; 31 May 2024 01:36:00 -0700
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	andriy.shevchenko@linux.intel.com,
-	rui.zhang@intel.com,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v2 3/3] platform/x86: ISST: Use only TPMI interface when present
-Date: Fri, 31 May 2024 01:35:48 -0700
-Message-ID: <20240531083554.1313110-4-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240531083554.1313110-1-srinivas.pandruvada@linux.intel.com>
-References: <20240531083554.1313110-1-srinivas.pandruvada@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VvojpVt5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07D82C116B1;
+	Fri, 31 May 2024 10:03:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717149823;
+	bh=zzwoazfnjgwqW/4OiNo7KvkuF2KIVKIBzXDfwVrAiO0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VvojpVt5qwv811tWdMtR0b+ufRhUuYUrlwckgUu6oFqpq/doi2lSuqmt0FgRsVnqg
+	 H2Gy5M8SQVbRS/H61nC1hKuEXqbpokT4ywceLzFqGLsMRonzP7xhRCzjNvu4TiIUbx
+	 ej/ZvBi9iB/qY9UWsSqppBSjp/dRnMJPiKiC2sZlHjt6GwekIZTHLdAoxIJRwmSKjP
+	 uhAh1/Y6z8UX0vM936yQWYtVmbh/zerR41yJX7fkvVz/YQY6S55cKuJr9XbaisgWBs
+	 adhkQbYfyVBo3k2BX7V6vfCJ6lV7raCVBL8qDajz0cBcaNBv3qg90xa9ykwNn8QDJY
+	 yebSG1MlZRGrQ==
+Date: Fri, 31 May 2024 11:03:37 +0100
+From: Lee Jones <lee@kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+	Kate Hsuan <hpa@redhat.com>, Sebastian Reichel <sre@kernel.org>,
+	platform-driver-x86@vger.kernel.org,
+	=?iso-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>,
+	linux-leds@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v9 0/7] KTD2026 indicator LED for X86 Xiaomi Pad2
+Message-ID: <20240531100337.GA1005600@google.com>
+References: <20240504164105.114017-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240504164105.114017-1-hdegoede@redhat.com>
 
-When the TPMI interface is present, use this interface instead of legacy.
-On some systems legacy IO device is also present. Using both interfaces
-together is confusing and may set the hardware in inconsistent state.
+On Sat, 04 May 2024, Hans de Goede wrote:
 
-When TPMI interface is present, don't load legacy drivers.
+> Hi All,
+> 
+> Here is v9 of Kate's series to add support for Xiaomi Pad2 indicator LED.
+> 
+> I believe this is ready for merging now. Patch 6/7 has an Acked-by from
+> Sebastien for merging this patch through the leds tree since it depends
+> on the earlier patches. LEDs tree maintainers please merge patches 1-6,
+> then patch 7 can be merged through the pdx86 tree independently.
+> 
+> This applies on top of:
+> git://git.kernel.org/pub/scm/linux/kernel/git/lee/leds.git ib-leds-locking-v6.10
+> 
+> This work includes:
+> 1. Added the KTD2026 swnode description to describe the LED controller.
+> 2. Migrated the original driver to fwnode to support x86 platform.
+> 3. Support for multi-color LED trigger events.
+> 4. The LED shows orange when charging and the LED shows green when the
+>    battery is full.
+> 
+> Moreover, the LED trigger is set to the new trigger, called
+> "bq27520-0-charging-orange-full-green" for Xiaomi Pad2 so the LED shows
+> orange when charging and the LED shows green when the battery is full.
+> 
+> --
+> Changes in v9:
+> 1. Switch to devm_mutex_init()
+> 2. Add Andy's Reviewed-by to the series
+> 
+> Changes in v8:
+> 1. New bugfix: "leds: rgb: leds-ktd202x: Initialize mutex earlier"
+> 2. Make charging_orange_full_green triggers set the colors in RGB order
+> 3. Modify the Pad2 ktd202x fwnode to have the colors in RGB order
+> 
+> Changes in v7:
+> 1. Platform: x86-android-tablets: other: Add swnode for Xiaomi pad2
+>    indicator LED was included in Hans' branch.
+> 2. Included the tags from the previous version in the commit message.
+> 3. Fixed the comma issue for the structure initialiser.
+> 
+> Changes in v6:
+> 1. The I2C ID table was moved to a separate patch.
+> 2. The LED shows orange when charging.
+> 3. The trigger name was renamed to charging-orange-full-green.
+> 4. The default trigger of Xiaomi Pad2 is
+>    "bq27520-0-charging-orange-full-green".
+> 
+> Changes in v5:
+> 1. Fix swnode LED color settings.
+> 2. Improve the driver based on the comments.
+> 3. Introduce a LED new API- led_mc_trigger_event() to make the LED
+>    color can be changed according to the trigger.
+> 4. Introduced a new trigger "charging-red-full-green". The LED will be
+>    red when charging and the LED will be green when the battery is full.
+> 5. Set the default trigger to "bq27520-0-charging-red-full-green" for
+>    Xiaomi Pad2.
+> 
+> Changes in v4:
+> 1. Fix double casting.
+> 2. Since force casting a pointer value to int will trigger a compiler
+>    warning, the type of num_leds was changed to unsigned long.
+> 
+> Changes in v3:
+> 1. Drop the patch "leds-ktd202x: Skip regulator settings for Xiaomi
+>    pad2"
+> 
+> Changes in v2:
+> 1. Typo and style fixes.
+> 2. The patch 0003 skips all the regulator setup for Xiaomi pad2 since
+>    KTD2026 on Xiaomi pad2 is already powered by BP25890RTWR. So, the
+>    sleep can be removed when removing the module.
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> Hans de Goede (3):
+>   leds: rgb: leds-ktd202x: Initialize mutex earlier
+>   leds: core: Add led_mc_set_brightness() function
+>   leds: trigger: Add led_mc_trigger_event() function
+> 
+> Kate Hsuan (4):
+>   leds: rgb: leds-ktd202x: Get device properties through fwnode to
+>     support ACPI
+>   leds: rgb: leds-ktd202x: I2C ID tables for KTD2026 and 2027
+>   power: supply: power-supply-leds: Add charging_orange_full_green
+>     trigger for RGB LED
+>   platform: x86-android-tablets: Xiaomi pad2 RGB LED fwnode updates
+> 
+>  drivers/leds/led-class-multicolor.c           |  1 +
+>  drivers/leds/led-core.c                       | 31 +++++++
+>  drivers/leds/led-triggers.c                   | 20 +++++
+>  drivers/leds/rgb/Kconfig                      |  1 -
+>  drivers/leds/rgb/leds-ktd202x.c               | 80 +++++++++++--------
+>  .../platform/x86/x86-android-tablets/other.c  |  6 +-
+>  drivers/power/supply/power_supply_leds.c      | 23 ++++++
+>  include/linux/leds.h                          | 26 ++++++
+>  include/linux/power_supply.h                  |  2 +
+>  9 files changed, 152 insertions(+), 38 deletions(-)
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Zhang Rui <rui.zhang@intel.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
-Previously 2/2, now 3/3
-No change except reviewed-by Ilpo.
+Set is ready to go, but does not apply.
 
- drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 3 +++
- 1 file changed, 3 insertions(+)
+Please rebase and resubmit, thanks.
 
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-index 7ea058571ab5..10e21563fa46 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-@@ -775,6 +775,9 @@ int isst_if_cdev_register(int device_type, struct isst_if_cmd_cb *cb)
- 	if (device_type >= ISST_IF_DEV_MAX)
- 		return -EINVAL;
- 
-+	if (device_type < ISST_IF_DEV_TPMI && isst_hpm_support)
-+		return -ENODEV;
-+
- 	mutex_lock(&punit_misc_dev_open_lock);
- 	/* Device is already open, we don't want to add new callbacks */
- 	if (misc_device_open) {
 -- 
-2.40.1
-
+Lee Jones [李琼斯]
