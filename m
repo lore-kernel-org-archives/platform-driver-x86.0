@@ -1,124 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47302135B;
-	Fri, 31 May 2024 16:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA6617E44C;
+	Fri, 31 May 2024 19:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717174036; cv=none; b=HADCIWRJ1rLh1eWV7GFC9/TsIwQ71B+33ANYzD7FEe6X5hJuOQ++0/rPbZsHQsdv+zlI70nAbI0TbhDh26Xgs3qETTAgcFQfIEBX+ndWJFVThZcLF5NYMv3UclQ60/j1l5Jpo8a6hgngqExJPYium7+6iA4tK/a7NlCdM/S+ezA=
+	t=1717183208; cv=none; b=ot+Jie1Ey+J+KSaeFPVA6mMd+Bnm7yUKD7LYPsr6aADePNGTYLnBxce3GlG+GvUjxHw5JH6OSfjAeB16egXl4M2Cw4tIDlfH0FNokBVVOWgS9qeKn8Vu0h3Scb2bsgJbAEGiHJipezXo+N+5C96ECWRWda9e4UILrQXKsgvZCok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717174036; c=relaxed/simple;
-	bh=2SgEjOmuNFBLLe0+7SAyTs4SGWcjz9Pq67jh9WJ2Fts=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HlagHx1ztqAnarSpW5YeB2XfBbNTv62CAu9tfm/vpt6t4bIPePnsiRFBekcN6hKHJ6/vMabwvQIg34U9bap8ooY3AE1uEazH0GMecqDYQTA19mxqaw9gPkgwGoSX/sQasoS2ZTUdzdkhOnaw+MY5y/GJLuVG2JFwUmZK0niqi2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AO8JJnSN; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717183208; c=relaxed/simple;
+	bh=J8FQo1tD2MtenJNJs241o4Pw54sYknqOQ8u6QGHLPbc=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=nAd2w8va/tEol/c5+jVnNdTte5No8lkVcEalQFm4479xp3sW/JEX/mEYKGqz7a/iBJ+qvQ59pycOmAEUvBMoxGAGI1jQ1fgpLK1uujrGA4ZoioWMAoeoJdHsNMCvvTQ7EXiBYyLrvyAYpOUx97BekC0tsS8cQQCfm6u7i7G3N5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JIxb6XOn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AO8JJnSN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717174035; x=1748710035;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=2SgEjOmuNFBLLe0+7SAyTs4SGWcjz9Pq67jh9WJ2Fts=;
-  b=AO8JJnSNh0fRZIFgWRMPugHIFT/4Mv7xfwOdN+vFTsY+X7xl+jifm5K/
-   yYVZ+QfeHVADG0uRbpAW5vmMaZnAvz6TiS15mVAzjqUeyNwYNzh+bMSVU
-   +lE36bh4ohXotjWUHrloax+SLjG6E5meh0PG2dpaHc+ys02qnTldsTdU8
-   VH5fLjAcrZ17aoPkHUSsqawZdw5HL0tlRJ1NzFduP1jSfvntdS/C/1mqw
-   N/nyJfeWiSwV0o9JkGFQEys4wFLZhhsKiExps5JfOHXPO3DGvwNg92ky+
-   JgqMVMqMXpWHdeKVqSnR/IcuM/AA1/ozeBgqF5EbEF0XQX5SpI7dyvMHi
-   A==;
-X-CSE-ConnectionGUID: SC9SZymLSNuqO08Shf/Q5A==
-X-CSE-MsgGUID: iXkBcWBGSV6XpTZIjMOXmQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="24358154"
-X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
-   d="scan'208";a="24358154"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 09:47:14 -0700
-X-CSE-ConnectionGUID: cCaAQX5DSi6Q4UTMRDa0tw==
-X-CSE-MsgGUID: 6hS50wyWTPSehV0W41e76w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
-   d="scan'208";a="67060896"
-Received: from lfiedoro-mobl.ger.corp.intel.com ([10.245.246.178])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 09:47:12 -0700
-Message-ID: <e2ff917300939bb017b8f587a66a93022f3d1eeb.camel@linux.intel.com>
-Subject: Re: [PATCH v2 3/6] platform/x86/intel: TPMI domain id and CPU
- mapping
-From: Tero Kristo <tero.kristo@linux.intel.com>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: srinivas.pandruvada@linux.intel.com, Hans de Goede
- <hdegoede@redhat.com>,  platform-driver-x86@vger.kernel.org, LKML
- <linux-kernel@vger.kernel.org>,  Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>
-Date: Fri, 31 May 2024 19:47:08 +0300
-In-Reply-To: <e56885a4-3344-b9f9-92d5-33c9af00636d@linux.intel.com>
-References: <8646d7dbeb507ce28b6ddca1222ee3c9892d61cc.camel@linux.intel.com>
-	 <20240528073457.497816-1-tero.kristo@linux.intel.com>
-	 <e56885a4-3344-b9f9-92d5-33c9af00636d@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.0-1build2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JIxb6XOn"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CA146C4AF08;
+	Fri, 31 May 2024 19:20:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717183207;
+	bh=J8FQo1tD2MtenJNJs241o4Pw54sYknqOQ8u6QGHLPbc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=JIxb6XOn8Nh8DOUTyiujsF7VcT7DgTU5APRirkjUTzoMTz0MWAM31X3ABTX8HTaYB
+	 rLjr8BVZupaWpCwGtjZ4samtknWT9QDIyArhZKF//hPeNQarkMRFIcAAR9MjJ35mQK
+	 o47OeRYyYn9GGptwMJwEa3k/ipK+eU/6shU2Ps9JHzUBguR+/koGyU0i3rYES1imfg
+	 /vToNDnIbnaoKKWQf/7IcTKA0jT36bUphWtihHwWXJhk2W8A6JzBnNb2699ZOM30tQ
+	 t+epdVUPjQtsRjETiLBwMQH3/vbjE8O+yiQTyA7MYuIMwUAUbmb9z41AOCqRfA3sZi
+	 fV+GzhOPtl8Zw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B0C6ECF21D8;
+	Fri, 31 May 2024 19:20:07 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for 6.10-2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <470d8b3d-1c9a-475e-a6fb-4fcc4b9ef98e@redhat.com>
+References: <470d8b3d-1c9a-475e-a6fb-4fcc4b9ef98e@redhat.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <470d8b3d-1c9a-475e-a6fb-4fcc4b9ef98e@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.10-2
+X-PR-Tracked-Commit-Id: 3050052613790e75b5e4a8536930426b0a8b0774
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 87895a6402604f7a2b55a62e8afd7889b8ec72e4
+Message-Id: <171718320771.20247.4683747140139024139.pr-tracker-bot@kernel.org>
+Date: Fri, 31 May 2024 19:20:07 +0000
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
 
-On Fri, 2024-05-31 at 16:45 +0300, Ilpo J=C3=A4rvinen wrote:
-> On Tue, 28 May 2024, Tero Kristo wrote:
->=20
-> > From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> >=20
-> > Each TPMI power domain includes a group of CPUs. Several power
-> > management settings in this case applicable to a group of CPUs.
-> > There can be several power domains in a CPU package. So, provide
-> > interfaces for:
-> > - Get power domain id for a Linux CPU
-> > - Get mask of Linux CPUs in a power domain
-> >=20
-> > Hardware Punit uses different CPU numbering, which is not based on
-> > APIC (Advanced Programmable Interrupt Controller) CPU numbering.
-> > The Linux CPU numbering is based on APIC CPU numbering. Some PM
-> > features
-> > like Intel Speed Select, the CPU core mask provided by the hardware
-> > is
-> > based on the Punit CPU numbering. To use the core mask, this mask
-> > needs to be converted to a Linux CPUs mask. So, provide interfaces
-> > for:
-> > - Convert to a Linux CPU number from a Punit CPU number
-> > - Convert to a Punit CPU number from a Linux CPU number
-> >=20
-> > On each CPU online, MSR 0x54 is used to read the mapping and stores
-> > in
-> > a per cpu array. Create a hash for faster searching of a Linux CPU
-> > number
-> > from a Punit CPU number.
-> >=20
-> > Signed-off-by: Srinivas Pandruvada
-> > <srinivas.pandruvada@linux.intel.com>
-> > [tero.kristo: minor updates]
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> > Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
-> > ---
-> > v2:
-> > =C2=A0 * changed to use X86_MATCH_VFM() instead of
-> > X86_MATCH_INTEL_FAM6_MODEL()
->=20
-> I've applied this v2 + the other patches from v1 series now to
-> review-ilpo=20
-> branch.
->=20
-> For the record, I removed "All rights reserved." lines from the
-> patches=20
-> while applying. I asking first (privately) a permission from Tero
-> whether=20
-> it's okay with him I remove those lines.
->=20
+The pull request you sent on Thu, 30 May 2024 20:30:44 +0200:
 
-Thanks Ilpo!
+> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.10-2
 
--Tero
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/87895a6402604f7a2b55a62e8afd7889b8ec72e4
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
