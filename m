@@ -1,290 +1,117 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh5-smtp.messagingengine.com (fhigh5-smtp.messagingengine.com [103.168.172.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F611C8E9
-	for <platform-driver-x86@vger.kernel.org>; Fri, 31 May 2024 01:05:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC2163C7;
+	Fri, 31 May 2024 01:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717117514; cv=none; b=SBaL73JZt9PoqwFAqUSZQ9wYran9r+0+mdu5ib8te7GlH52nAa/EaS9pFUX9PshEYreBniqPziiJfVyuaIIsHQ8HeupRq7sblwsWvhL/+Xtj3qY0eXF+VnM1dvIa99ThQIrau38zbQ08oPVrs2+/ug1+fJwEhzx3YVGUyRELV28=
+	t=1717118390; cv=none; b=jPj8bH4wIEMF0ubQdklTI2zFOoaLPkZpBkjyzFXRr7IEjTjPAwZqsj6QF28IaAonSM+3cLKgd5EIUNhgkcLGS8iv8M0z9K+mkAnrtyKoSmzxOKOiT/ys5ebghbE6X+dWfaxXAk7/Mw8GaElOX5bk98ONrCfxsqnKGMxPcJa+PgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717117514; c=relaxed/simple;
-	bh=uXfDEOjLv+ehvyI9BLqFEZ08MZc+Pu/2A0MFNLqubJw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SgQEVvCWcaAOriDIMBOt6K1ZP6SKqfCyE4pEjT9dPaP4/HyCnFwXfl4VMDidKIwNlnpHHu/4C0nG1ErU82qyTlKAPCUyQYGHpSUdX+HAwX6rZh79GhnwUnx7ArFP6EIwXG71Vb1aJ8IEnZhDFsp94CtF47yO5ZxzFDTlEbOmGfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PZ2imBoO; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717118390; c=relaxed/simple;
+	bh=e5/NKjsM5ULYOYhot/Kcrf0uXGGr7Q2ErMsxZ8AbhNg=;
+	h=Date:From:Subject:To:Cc:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eSH09g6xHRB+UmglkbjgROtsciolwWNZuJpKBP7a1bIy5sU4QsjD49TVH/ctrn5dVi+9HOoGxRbtAgLcK7lBfIfTvz/uEkbug/mrPDBUn0i/IBNazILk2pXhmOGDI6Qv2+UlQnbM8CB2gzXOaKoP1PYteXhMf+gdrGkCGDFvJko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=t7LL0MZv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=X3q6euZd; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PZ2imBoO"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52b0d25b54eso2171951e87.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 30 May 2024 18:05:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717117510; x=1717722310; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LVbzQgiFaGguV//d78RBj3pAHXG3P0yCT4npYfngP5s=;
-        b=PZ2imBoOD/Gla9oPGISBS5VRkqhq4CUqBmcLJRO2cnQe+5z/wQ7vLCAr6t+0LFL9GI
-         JZviynR6AAOPVyaqj9w7lN4wf+ydNABI/O3xrrMGDrOcjpWUJXpj0gHVMqpJ0cuM3d2e
-         r9MOwBMb5aNcMx9vfb32/ldlfY0Tqr4p89tmWHXJqTe1rtaCuHecSWKLz/CK+lIf8uni
-         3/VcSepRvfxq0lMeH/O4+A8Xf4XZDVYdLlytmnnmVV3oR4Js986SJKnHvScJSdb5nHQU
-         1lK7D6kjEId1n5NiojZar5VxtGWC35D2tcPmWAG31+dAryUD1fEtG1UBcgjFon0Sbf/m
-         43wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717117510; x=1717722310;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LVbzQgiFaGguV//d78RBj3pAHXG3P0yCT4npYfngP5s=;
-        b=pNpudQ0997wE1eY5mnxwjiUfkczMNvQzZX0v+ck3HUbRi6SMZwr2HCzjDMlgm4PykB
-         rnirBWheK7SMUBzo1+og7kNl0+RkIumU2CKpDIfzk4Vy9/ywQAEK3zZEJKAHZqMiAyIA
-         RcYCpYuroxWyBV83SDvGp77+BxKOyM+Mo1fsXfWzrzeURANCHHJSUcIc6XcTV3urqUEV
-         rDYH1fyk5vfMZkm9zAoGgHpi2ZHVEB8qebV5d9kc7OA/aeDFJtS/+zgoY4D7otKVg35b
-         qdZxbYhiZcgESIcpMGAOOwdJRjdVFYQmQl1f5tByORGzk+GCp9iqeLfUptglqB/CTgNG
-         UD9A==
-X-Forwarded-Encrypted: i=1; AJvYcCWwcyV2xo58NUURCYEsMwmzwM+R1qjAVTzEhVafoKf+ktEEyTx5+1fp83Bm3D60DyM4mxUrGrLsL3gGtNnu1k8y2N4r5bIKHPocQzxj9YW68TkVRw==
-X-Gm-Message-State: AOJu0YyGkeZyTQi5BAW4+4h13tXeO9wtFVGYSHTECZr/cDp+F+C6mNyG
-	OqdiXSzrDRGOmgpair2PwLEIQfX0YintbPfZurv9i0Zfk8OnqNT43ehCUgPLwT8=
-X-Google-Smtp-Source: AGHT+IHomuQLV/a1+46r2/bjrhxItgrwS1B7Si5a5leUogKwVcxPn4v1vNxtZhU6lKWRVAcVsxarfw==
-X-Received: by 2002:ac2:5548:0:b0:52b:88e8:1c82 with SMTP id 2adb3069b0e04-52b895a385fmr190738e87.47.1717117510049;
-        Thu, 30 May 2024 18:05:10 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52b84d75fd6sm142407e87.157.2024.05.30.18.05.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 May 2024 18:05:09 -0700 (PDT)
-Date: Fri, 31 May 2024 04:05:08 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Nikita Travkin <nikita@trvn.ru>
-Subject: Re: [PATCH v4 4/6] power: supply: lenovo_yoga_c630_battery: add
- Lenovo C630 driver
-Message-ID: <ndrp6ghnoibfm3t7qk7zuwfcukixh6uzqykj7vitobtiqntin6@ud242mjaivfl>
-References: <20240528-yoga-ec-driver-v4-0-4fa8dfaae7b6@linaro.org>
- <20240528-yoga-ec-driver-v4-4-4fa8dfaae7b6@linaro.org>
- <6d957019-ccec-4129-9e6d-33204de88dd5@linaro.org>
+	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="t7LL0MZv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X3q6euZd"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 450861140183;
+	Thu, 30 May 2024 21:19:47 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Thu, 30 May 2024 21:19:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1717118387;
+	 x=1717204787; bh=5yJmV879YPZ2+qzVIS5sOrVKm0uZoMEEXgLMCx1poD4=; b=
+	t7LL0MZvW1jNfL47fgQk0BtOskjZFYY4xsj2o4QysAQA6CxHmsSn3Qp8sraA31Wm
+	82rJTaX0BmsADgS4jjebsMOsW2oWyZc6z/mVYDpbTu6s0Ius6l2xryFtDdh1vERG
+	/oE5MGMcI+n4dGqcxbQVEewkASakh0Lz/gsvRaSFg17gTX9gnCvUZQFD1qOOnt9G
+	1PVQjYy5yKTb0UghisAqYAkjzATCz3Hu67degCdAeoPTNr1fN0xdHUlKxJ/VvP1s
+	4KodTbTh2l2THRoWuDgMqi1YrH5HJMHw2SfuXjuzujL5X6YIS1CxigYb6tF88TY9
+	HMsqi2h9bIvfyrvmLMSn2Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1717118387; x=
+	1717204787; bh=5yJmV879YPZ2+qzVIS5sOrVKm0uZoMEEXgLMCx1poD4=; b=X
+	3q6euZdRcSJ9L82NWcjjmlvOUHNeTNGeUlCTiYlv+aYkSY1CgNmNKulQ1J42aKWT
+	tfJnEoMkvCFWCeOLYrgddNoj5zQQzrkh91H/O6hk7Th+Xaioq/bJHnjjl0yRQXzA
+	cYdHSOrnrtnJFiAGmRAPKG+Uum6/qcqj8cCZRNsw0VINH8cYkzMlD2DhH2sfqRVu
+	x3XVbm/1J5ddIO/D5dk2jWm/gZ4Cuxh/m3m3WzrwnDVgu9H7oHo57ncXtsUlcm1+
+	KVOISrZPxADh/7uI1Pw37iMsJWoVlFyNhlFc0A/oCzPTCMP+KWdfkhwY217VVy0s
+	OCJEfh58wwBW0wfj4ps7w==
+X-ME-Sender: <xms:siVZZjWxe6P1aqiXVIfF48_IZTo2a1YXZCvgrj-paahP-42B4K0KfA>
+    <xme:siVZZrktsld1OtgJjDSqZJ_B94rytQkIHHROpI2xs1UTa9ZQSlZmpHuoxu6e3Qpxg
+    7Z3QjRYypiB5H5_mRA>
+X-ME-Received: <xmr:siVZZvYF3vdW9lRkyRnjAu68DMX79zJEgJIO1HShsHEpPyPUdtvJKQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdekhedggeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhuffvvefkjghfofggtgfgsehtqhertdertddunecuhfhrohhmpefnhihn
+    ughonhcuufgrnhgthhgvuceolhhsrghntghhvgeslhihnhguvghnohdrtggrqeenucggtf
+    frrghtthgvrhhnpedtvdefvdetfeeggeejgeejvdevteejvdehhedtueeugfelhfeuieff
+    ieehffetheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehlshgrnhgthhgvsehlhihnuggvnhhordgtrg
+X-ME-Proxy: <xmx:siVZZuX5jhqfQLr1QqWzbt7Ah025Pmtag-r-O9UaKe1UB_LQ_wvb9g>
+    <xmx:siVZZtnow_TRZRrhr1sWLuMDeLzqH5Jqsx_KdhWHMctQEXqs54PkUQ>
+    <xmx:siVZZre2j5ECAOlqWuWgd_9gGuHKphodRk687MOR9eVQiQGsJ3KsYg>
+    <xmx:siVZZnHHqq3CADkutlUm9FeNh6oaJrtPFQHanlupiWdcv-ckhDljdw>
+    <xmx:syVZZtmVuUgtuHs-7GMhWRF36Cf_-lkiT-rQ7sIWkuBGknk4Wl3o7DAh>
+Feedback-ID: i1719461a:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 30 May 2024 21:19:44 -0400 (EDT)
+Date: Thu, 30 May 2024 19:19:36 -0600
+From: Lyndon Sanche <lsanche@lyndeno.ca>
+Subject: Re: [PATCH v8 3/3] platform/x86: dell-pc: Implement platform_profile
+To: Ilpo =?iso-8859-1?q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: mario.limonciello@amd.com, pali@kernel.org, W_Armin@gmx.de,
+	srinivas.pandruvada@linux.intel.com, lkp@intel.com, Hans de Goede
+	<hdegoede@redhat.com>, Yijun.Shen@dell.com, Matthew Garrett
+	<mjg59@srcf.ucam.org>, Vegard Nossum <vegard.nossum@oracle.com>, AceLan Kao
+	<acelan.kao@canonical.com>, Heiner Kallweit <hkallweit1@gmail.com>, LKML
+	<linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
+	Dell.Client.Kernel@dell.com
+Message-Id: <O0TBES.JKXVC38VSDID@lyndeno.ca>
+In-Reply-To: <db3191b5-2f42-5075-a493-dedb34e578ad@linux.intel.com>
+References: <20240425172758.67831-1-lsanche@lyndeno.ca>
+	<20240529174843.13226-1-lsanche@lyndeno.ca>
+	<20240529174843.13226-4-lsanche@lyndeno.ca>
+	<db3191b5-2f42-5075-a493-dedb34e578ad@linux.intel.com>
+X-Mailer: geary/44.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6d957019-ccec-4129-9e6d-33204de88dd5@linaro.org>
-
-On Wed, May 29, 2024 at 04:51:54PM +0100, Bryan O'Donoghue wrote:
-> On 28/05/2024 21:44, Dmitry Baryshkov wrote:
-> > On the Lenovo Yoga C630 WOS laptop the EC provides access to the adapter
-> > and battery status. Add the driver to read power supply status on the
-> > laptop.
-> > 
-> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > ---
-> >   drivers/power/supply/Kconfig                    |   9 +
-> >   drivers/power/supply/Makefile                   |   1 +
-> >   drivers/power/supply/lenovo_yoga_c630_battery.c | 479 ++++++++++++++++++++++++
-> >   3 files changed, 489 insertions(+)
-> > 
-> > diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> > index 3e31375491d5..55ab8e90747d 100644
-> > --- a/drivers/power/supply/Kconfig
-> > +++ b/drivers/power/supply/Kconfig
-> > @@ -167,6 +167,15 @@ config BATTERY_LEGO_EV3
-> >   	help
-> >   	  Say Y here to enable support for the LEGO MINDSTORMS EV3 battery.
-> > +config BATTERY_LENOVO_YOGA_C630
-> > +	tristate "Lenovo Yoga C630 battery"
-> > +	depends on OF && EC_LENOVO_YOGA_C630
-> > +	help
-> > +	  This driver enables battery support on the Lenovo Yoga C630 laptop.
-> > +
-> > +	  To compile the driver as a module, choose M here: the module will be
-> > +	  called lenovo_yoga_c630_battery.
-> > +
-> >   config BATTERY_PMU
-> >   	tristate "Apple PMU battery"
-> >   	depends on PPC32 && ADB_PMU
-> > diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-> > index 58b567278034..8ebbdcf92dac 100644
-> > --- a/drivers/power/supply/Makefile
-> > +++ b/drivers/power/supply/Makefile
-> > @@ -32,6 +32,7 @@ obj-$(CONFIG_BATTERY_DS2782)	+= ds2782_battery.o
-> >   obj-$(CONFIG_BATTERY_GAUGE_LTC2941)	+= ltc2941-battery-gauge.o
-> >   obj-$(CONFIG_BATTERY_GOLDFISH)	+= goldfish_battery.o
-> >   obj-$(CONFIG_BATTERY_LEGO_EV3)	+= lego_ev3_battery.o
-> > +obj-$(CONFIG_BATTERY_LENOVO_YOGA_C630) += lenovo_yoga_c630_battery.o
-> >   obj-$(CONFIG_BATTERY_PMU)	+= pmu_battery.o
-> >   obj-$(CONFIG_BATTERY_QCOM_BATTMGR)	+= qcom_battmgr.o
-> >   obj-$(CONFIG_BATTERY_OLPC)	+= olpc_battery.o
-> > diff --git a/drivers/power/supply/lenovo_yoga_c630_battery.c b/drivers/power/supply/lenovo_yoga_c630_battery.c
-> > new file mode 100644
-> > index 000000000000..76152ad38d46
-> > --- /dev/null
-> > +++ b/drivers/power/supply/lenovo_yoga_c630_battery.c
-> > @@ -0,0 +1,479 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright (c) 2022-2024, Linaro Ltd
-> > + * Authors:
-> > + *    Bjorn Andersson
-> > + *    Dmitry Baryshkov
-> > + */
-> > +#include <linux/auxiliary_bus.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/module.h>
-> > +#include <linux/platform_data/lenovo-yoga-c630.h>
-> > +#include <linux/power_supply.h>
-> > +
-> > +struct yoga_c630_psy {
-> > +	struct yoga_c630_ec *ec;
-> > +	struct device *dev;
-> > +	struct device_node *of_node;
-> > +	struct notifier_block nb;
-> > +	struct mutex lock;
-> 
-> Do locks still not require a
-> 
-> struct mutex lock; /* this mutex locks this thing */
-
-Not required, but let me add the doc.
-
-> 
-> > +
-> > +	struct power_supply *adp_psy;
-> > +	struct power_supply *bat_psy;
-> > +
-> > +	unsigned long last_status_update;
-> > +
-> > +	bool adapter_online;
-> > +
-> > +	bool unit_mA;
-> > +
-> > +	bool bat_present;
-> > +	unsigned int bat_status;
-> > +	unsigned int design_capacity;
-> > +	unsigned int design_voltage;
-> > +	unsigned int full_charge_capacity;
-> > +
-> > +	unsigned int capacity_now;
-> > +	unsigned int voltage_now;
-> > +
-> > +	int current_now;
-> > +	int rate_now;
-> > +};
-> > +
-> > +#define LENOVO_EC_CACHE_TIME		(10 * HZ)
-> > +
-> > +#define LENOVO_EC_ADPT_STATUS		0xa3
-> > +#define LENOVO_EC_ADPT_PRESENT		BIT(7)
-> > +#define LENOVO_EC_BAT_ATTRIBUTES	0xc0
-> > +#define LENOVO_EC_BAT_ATTR_UNIT_IS_MA	BIT(1)
-> > +#define LENOVO_EC_BAT_STATUS		0xc1
-> > +#define LENOVO_EC_BAT_REMAIN_CAPACITY	0xc2
-> > +#define LENOVO_EC_BAT_VOLTAGE		0xc6
-> > +#define LENOVO_EC_BAT_DESIGN_VOLTAGE	0xc8
-> > +#define LENOVO_EC_BAT_DESIGN_CAPACITY	0xca
-> > +#define LENOVO_EC_BAT_FULL_CAPACITY	0xcc
-> > +#define LENOVO_EC_BAT_CURRENT		0xd2
-> > +#define LENOVO_EC_BAT_FULL_FACTORY	0xd6
-> > +#define LENOVO_EC_BAT_PRESENT		0xda
-> > +#define LENOVO_EC_BAT_FULL_REGISTER	0xdb
-> > +#define LENOVO_EC_BAT_FULL_IS_FACTORY	BIT(0)
-> > +
-> > +/* the mutex should already be locked */
-> > +static int yoga_c630_psy_update_bat_info(struct yoga_c630_psy *ecbat)
-> > +{
-> > +	struct yoga_c630_ec *ec = ecbat->ec;
-> > +	int val;
-> > +
-> > +	val = yoga_c630_ec_read8(ec, LENOVO_EC_BAT_PRESENT);
-> > +	if (val < 0)
-> > +		return val;
-> > +	ecbat->bat_present = !!(val & BIT(0));
-> > +	if (!ecbat->bat_present)
-> > +		return val;
-> > +
-> > +	val = yoga_c630_ec_read8(ec, LENOVO_EC_BAT_ATTRIBUTES);
-> > +	if (val < 0)
-> > +		return val;
-> > +	ecbat->unit_mA = val & LENOVO_EC_BAT_ATTR_UNIT_IS_MA;
-> > +
-> > +	val = yoga_c630_ec_read16(ec, LENOVO_EC_BAT_DESIGN_CAPACITY);
-> > +	if (val < 0)
-> > +		return val;
-> > +	ecbat->design_capacity = val * 1000;
-> > +
-> > +	msleep(50);
-> 
-> What's this for ? Also do you really want to hold a mutex for 50
-> milliseconds ?
-
-DSDT has these delays after each read, so I can only assume it is required.
-Sleeping outside of the mutex() would mean that a concurrent thread
-might break into this delay and query the EC.
-
-[skipped]
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
 
-> > +static int yoga_c630_psy_probe(struct auxiliary_device *adev,
-> > +				   const struct auxiliary_device_id *id)
-> > +{
-> > +	struct yoga_c630_ec *ec = adev->dev.platform_data;
-> > +	struct power_supply_config adp_cfg = {};
-> > +	struct device *dev = &adev->dev;
-> > +	struct yoga_c630_psy *ecbat;
-> > +	int ret;
-> > +
-> > +	ecbat = devm_kzalloc(&adev->dev, sizeof(*ecbat), GFP_KERNEL);
-> > +	if (!ecbat)
-> > +		return -ENOMEM;
-> > +
-> > +	ecbat->ec = ec;
-> > +	ecbat->dev = dev;
-> > +	mutex_init(&ecbat->lock);
-> > +	ecbat->of_node = adev->dev.parent->of_node;
-> > +	ecbat->nb.notifier_call = yoga_c630_psy_notify;
-> > +
-> > +	auxiliary_set_drvdata(adev, ecbat);
-> > +
-> > +	adp_cfg.drv_data = ecbat;
-> > +	adp_cfg.of_node = ecbat->of_node;
-> > +	adp_cfg.supplied_to = (char **)&yoga_c630_psy_bat_psy_desc_mA.name;
-> > +	adp_cfg.num_supplicants = 1;
-> > +	ecbat->adp_psy = devm_power_supply_register_no_ws(dev, &yoga_c630_psy_adpt_psy_desc, &adp_cfg);
-> > +	if (IS_ERR(ecbat->adp_psy)) {
-> > +		dev_err(dev, "failed to register AC adapter supply\n");
-> > +		return PTR_ERR(ecbat->adp_psy);
-> > +	}
-> > +
-> > +	mutex_lock(&ecbat->lock);
-> 
-> Do you really need this lock here in your probe() function ? What's the
-> parallel path of execution you are mitigating against here ?
 
-Notifications from the battery driver can already happen at this point.
-Also once the fist power supply is registered, userspace can potentially
-access it, triggering EC access and updates of the PSY registration.
+On Thu, May 30 2024 at 11:39:27 AM +03:00:00, Ilpo J=E4rvinen=20
+<ilpo.jarvinen@linux.intel.com> wrote:
+> Thanks for the update. I've now applied this into review-ilpo branch.
+>=20
+> I reordered those headers into alphabetical order while applying. In
+> future, when adding new headers, try adhere to the alphabetical order.
+>=20
+> --
+>  i.
 
-> 
-> > +
-> > +	ret = yoga_c630_psy_update_bat_info(ecbat);
-> > +	if (ret)
-> > +		goto err_unlock;
-> > +
-> > +	ret = yoga_c630_psy_register_bat_psy(ecbat);
-> > +	if (ret)
-> > +		goto err_unlock;
-> > +
-> > +	mutex_unlock(&ecbat->lock);
-> > +
+Thank you for taking the time to review. Also thank you for letting me=20
+know about the header order, I will note that for next time.
+
+Please let me know if you need anything else on my end.
+
+Thank you,
+
+Lyndon Sanche
 
 
--- 
-With best wishes
-Dmitry
