@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC18944C81
-	for <platform-driver-x86@vger.kernel.org>; Sun,  2 Jun 2024 15:04:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4241DDEE
+	for <platform-driver-x86@vger.kernel.org>; Sun,  2 Jun 2024 15:06:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717340648; cv=none; b=CYpQmwAWWCPlDYfNBt01U22GmX5oTILUKXe1ptdm+py2lr0fN/QfFs8xVRAIcXDGpnvaFIQ4PIDqrIL0xToHoznYVQHpI0UwQzOvOkr0wEq7xpv9wT7j4BIuwWq4zHR677rMqAVWDhb8Hx6SX93De/WxlrUviA5vbBH1tGR+pho=
+	t=1717340793; cv=none; b=EIMhsrTXJOBkcnUx/qz6UptR81JaodHar9ydiCqoL4EBvqBYlvVlRrJR4CQj1bXS3nCzh2qvyUrO9gMq4ktgSMB210jEC4X91drKRflck1ujp397q1parM2Z466KCb7bWn32SCnh7Z7n9ziSlbfV4cd8bSmyRuyBk22Ek1zoyMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717340648; c=relaxed/simple;
-	bh=C5OSNQYdYCjArSc6RKzs/AcZiLaSJR8ZshcmYXF9lK0=;
+	s=arc-20240116; t=1717340793; c=relaxed/simple;
+	bh=oxnDlY6XtwR2TsE4qW3YRFxQZ51eeF0mGzhhJplbHZg=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LX173Z6ZnmQR0aX1ULkH21c9PhHtfmEwIWnkdo1i6IcSLn4oSA1TfesFwVnooY3FT4N+DUFv7tLZ59xjFTmNgTwWfkZ+fNYDvAT0PJgiJ4BdeDWLFiXVeR8Cm/pZhZgOoGg5eEWQQudYXmsqzbFjlVbBSToxPZ2MZ/vNnVXwaNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NhW/d7B3; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=DyYY9Q3bwexkubvM5rMFqeIcIs/P7BGnLM51wL1XmJALf/0ZLMHuamaYzHutCoK5Iw1VNpuevBQbNzZUDRiSSXo20DilmHr3Gj7x+lIXPN2WPsIHlw7tcx54/McU+ZnEAN2X6byAUCEcUGUoj4HOvDytZuxeMxIWn0BHCC5rBhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XoP8JfUQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NhW/d7B3"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6C0B8C2BBFC
-	for <platform-driver-x86@vger.kernel.org>; Sun,  2 Jun 2024 15:04:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XoP8JfUQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EEE5AC2BBFC
+	for <platform-driver-x86@vger.kernel.org>; Sun,  2 Jun 2024 15:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717340648;
-	bh=C5OSNQYdYCjArSc6RKzs/AcZiLaSJR8ZshcmYXF9lK0=;
+	s=k20201202; t=1717340792;
+	bh=oxnDlY6XtwR2TsE4qW3YRFxQZ51eeF0mGzhhJplbHZg=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=NhW/d7B3nYFOA+5IK0UEaWyx+WpAvzx7s9/webnmdq5cTGviyzl/WDRnJ7vOsJEjq
-	 wNFVHWJYmXyJZfCh574fIp48Es7ZAsEAGH1Q1t04owosXULqMCmx9tgmQ4D3xcKgwb
-	 dnX4K3hLG2Oszwq9quuE1VCXkBZWo9wIVZhI7kZBUuUWThh8ya1K+vSZf0yrVgL1PW
-	 bFzMZZPAltnktKnyy/Ant+pbvBKIu0tCHW/HSWp6btka0/WxEWFjDIskBOu1QUAjzD
-	 YpXTwPeAjT7nU9A8nhZT7ph8UkA2DYJswqmgr2HEbD27L+O+PIwJDPnD8l7tXwRcQd
-	 dpi7eqJh+/SFw==
+	b=XoP8JfUQ/oAx6uZD1lYzd2okkVK0CY5/c/Jsux0Hf+MiWRir2Gxw1CSy9C2BtAvmN
+	 YkyJPmOn9DzKX+V7DEFskr7dGX4GYOme9UzK/2TXfiwsyLxXxpsQxmI2b9F1mBl3u8
+	 G3Ov4UBOW3Us7rSGBwyPlsPsSAe16XjZNeEEDovA/b4+RhWhJp6wPQaFQWINtgrrbc
+	 RxHf2nYORP+h/lhXLrA4nODWiPBTwrBdZjfcL06g5dhG672DPY1R3QHaw6sECpMgxk
+	 Q0ioaiMO9XYzV0NMiKdsQHOLliTCh3TLa7k1pYCKJprLWyTcAJR71Yhmf+mm2/13Wy
+	 BKDiffMHqI1YQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 57CC1C53B73; Sun,  2 Jun 2024 15:04:08 +0000 (UTC)
+	id E0681C53B73; Sun,  2 Jun 2024 15:06:31 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
  models (16Z90S)
-Date: Sun, 02 Jun 2024 15:04:08 +0000
+Date: Sun, 02 Jun 2024 15:06:31 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,7 +48,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218901-215701-RGgojzrGZN@https.bugzilla.kernel.org/>
+Message-ID: <bug-218901-215701-jerxfuvRk8@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
 References: <bug-218901-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,42 +64,9 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
 
---- Comment #15 from Agathe Boutmy (agathe@boutmy.com) ---
-(In reply to Armin Wolf from comment #12)
-> Did you unload the old module first?
-
-yes
-
-> Or does dmesg show any ACPI errors?
-
-There is one that was already present before that I didn't mention because
-after a little research it seemed to be unrelated, I'll post it here just in
-case:
-
-[   10.843998] ACPI Error: No handler for Region [XIN1] (00000000f9e347f6)
-[UserDefinedRegion] (20240322/evregion-130)
-[   10.844003] ACPI Error: Region UserDefinedRegion (ID=3D143) has no handl=
-er
-(20240322/exfldio-261)
-[   10.844007] ACPI Error: Aborting method \_SB.PC00.LPCB.H_EC.DPTF.SNRD du=
-e to
-previous error (AE_NOT_EXIST) (20240322/psparse-529)
-[   10.844010] ACPI Error: Aborting method \_SB.IETM.SEN2._TMP due to previ=
-ous
-error (AE_NOT_EXIST) (20240322/psparse-529)
-
-
-> I made a mistake when calling the ACPI methods, can you try again?
-
-It works!
-(I think, I now longer have an input output error on battery care limit and=
- I
-have been able to set it to 80% and it seems to stop properly charging if I
-believe what the power management service included with Manjaro is saying)
-The other files are also correctly readable.
-The 3 FN keys FN-F1, FN-F6, FN-F9 don't seem to do anything but strangely F=
-N-F5
-works (which it did before) maybe it's handled differently by the driver.
+--- Comment #16 from Agathe Boutmy (agathe@boutmy.com) ---
+I just rebooted to check if the bios was now correctly saving the 80% charge
+max value and it does, so it seems to be good on that end.
 
 --=20
 You may reply to this email to add a comment.
