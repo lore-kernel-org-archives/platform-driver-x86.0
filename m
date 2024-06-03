@@ -1,116 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBAF7FBA3;
-	Mon,  3 Jun 2024 10:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E25681AC7;
+	Mon,  3 Jun 2024 10:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717409486; cv=none; b=Csw0LVM0R04wrk6f8X+wuHvYoUjp+X/2a2jglnv6w51wIBaMZVYOfF7pNWpQjdtfASlfpR5B1dPW5Ahv3EMirL7Eq5ZkD5jsBQNwXxmDGPO4IvPko/qu/C2NoCZKm0y/Noh5Pw4/KrWhsEwuaXjv9+Vt6GvKBxoYOuqvLTHt8pg=
+	t=1717410568; cv=none; b=nuQ8gTwR2QB7BKRG2LCbFQHMsJcjEo84JSZrlhR6aTjLjF4M+7wH27bSDhASZNjBi7kmxGmECXAoPHm+vs9bv6IgQn5NZ+hMJhaSGhpEbD5CfdElFAA6tuZ7p1Lsb+IRWC9JBzPrAkzslI4F85Bebaf7k5a81SKVsfyabAGsKwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717409486; c=relaxed/simple;
-	bh=LXJ5YB9dO8bdDQzIQLLZk5NeS3HkpILHWFU/5/MlRzI=;
+	s=arc-20240116; t=1717410568; c=relaxed/simple;
+	bh=lmQSpG866RDUv94ehHXXWcKpiRDbWNJ6TkCY2XcYrz4=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tsOO0iLk3wvBKgTD5q9dJU4AAGA32wW9XJTPQYGQ3XYsHO7+CM0L8hqrhlSl2FswotJpRR0DQ6I/AXmUCwHcGnWslIQhXteo/hRCgo/0hj6SkTl1uNMq0ftzooJGS/Nb2xLEeR8urptC9OogqjQBNcsOHe9hT144YmZeC4BnPLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XwSwei1s; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version:Content-Type; b=qn8LVS/ASoKDpjYHZcTNLGOCCcQWuhYTzp81U8mjGfWl8mxdQlpJD0rCimjOJ7R+WG4otxu4iDaBpimM9rS05KAAMVzHbsseJIzVpJEOAeVa5/BOJu5NHDzRXEAW1ZH1f/aXWAmYRJO5E3MNNzIgBk0/UMai6+NUWcws2bvGhm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a7iReV3H; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XwSwei1s"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a7iReV3H"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717409485; x=1748945485;
+  t=1717410566; x=1748946566;
   h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=LXJ5YB9dO8bdDQzIQLLZk5NeS3HkpILHWFU/5/MlRzI=;
-  b=XwSwei1s/O8UgiK7HiYXa8OzmINZAv8oBKDcw2SJLFsHA0KBhVg+GVeR
-   j9kcNPiGVYhSNvA1dnkDq2LFQyMCvIJhDv6Kpez5bWr6eetEK8xMS6rl1
-   /CcYZor/EQgWmxuFndOFdb65fdLIYuLkxLuqDA8CNMryAUos6sM5i3LyL
-   EDbUdI55K5O4FFDIUziN52EVOXxseM2JQCQVE7kRRImZsNqSysU+L3J4y
-   gD2fhGtsCsUydCyPBBBlvT8i43gcbXWdS/RtCZGDFwL02VTcSmCyqTJ3F
-   k/gbLHptIaVKjY/ZKvDaRY52XejVfXjO92l/O1mIflJuPR0fctR3VcflS
-   Q==;
-X-CSE-ConnectionGUID: ro3fiQByT4GrsZr3nnc5Cw==
-X-CSE-MsgGUID: ZuWRFJn+SBqpQzIrSwFj0Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11091"; a="36417814"
+   references:mime-version;
+  bh=lmQSpG866RDUv94ehHXXWcKpiRDbWNJ6TkCY2XcYrz4=;
+  b=a7iReV3HpR5Cwcp+Mn8WQ/JxpyehFkWiuiPy6EgQV6wWAUbkp+RzF4P2
+   HKQ4IhQILqbz0JCr8nORelKweq/lAUTUCKfWT0/1ma2ZXXFIn42JOg9v8
+   j08SPXkH+pMue+pMjkSY0XWiTEtpEg8w37izzCtKE5Jl4RUZoxKg0MiYt
+   hUR/+xNeG42zDZhGEPe5NpdKB9VeWZcg/fp6ZOnSVhNj7HHzUVNCZbxKu
+   QNIuAt92Fc2jUh7LBczeotRBBQUQczjBDkk22W/TiXt3f6NdToc3CfHtb
+   bWygao+TFLmfa7fBvWZ0iFugSM3Yuh28KwS8jCb8yD7dIg5nSilF00qlj
+   A==;
+X-CSE-ConnectionGUID: KQ2J0k6DQeGs0LrjKMUZxw==
+X-CSE-MsgGUID: M5fOQSlKS2++yGNo5Pz0cQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11091"; a="13734665"
 X-IronPort-AV: E=Sophos;i="6.08,211,1712646000"; 
-   d="scan'208";a="36417814"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 03:11:24 -0700
-X-CSE-ConnectionGUID: UxAv791oS8mk3WmdWhwBxQ==
-X-CSE-MsgGUID: B85axv69RP2GwBoopIV9lg==
+   d="scan'208";a="13734665"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 03:29:26 -0700
+X-CSE-ConnectionGUID: WWKN+cppSTKCP5Fiaz05fA==
+X-CSE-MsgGUID: Vv5gi2rOSESSThHm3aYwLQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,211,1712646000"; 
-   d="scan'208";a="36915625"
+   d="scan'208";a="68003982"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.161])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 03:11:20 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 03:29:24 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 3 Jun 2024 13:11:16 +0300 (EEST)
-To: "Chang S. Bae" <chang.seok.bae@intel.com>
-cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org, 
-    platform-driver-x86@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, 
-    bp@alien8.de, dave.hansen@linux.intel.com, 
-    Hans de Goede <hdegoede@redhat.com>, tony.luck@intel.com, 
-    ashok.raj@intel.com, jithu.joseph@intel.com, 
-    sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v3 0/3] x86/fpu: Allow the In-Field Scan driver to
- initialize FPU state
-In-Reply-To: <20240530192739.172566-1-chang.seok.bae@intel.com>
-Message-ID: <676bfc09-c1f4-9272-a198-3fb865868c10@linux.intel.com>
-References: <20240530192739.172566-1-chang.seok.bae@intel.com>
+Date: Mon, 3 Jun 2024 13:29:21 +0300 (EEST)
+To: Luke Jones <luke@ljones.dev>
+cc: Hans de Goede <hdegoede@redhat.com>, 
+    Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>, corentin.chary@gmail.com, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/1] platform/x86: asus-wmi: add support for vivobook
+ fan profiles
+In-Reply-To: <aee09e9f-6269-43ef-b509-a9a7b5e1752f@app.fastmail.com>
+Message-ID: <f126562f-54c8-de58-3f98-7375c129f66a@linux.intel.com>
+References: <20240421194320.48258-1-mohamed.ghanmi@supcom.tn> <20240421194320.48258-2-mohamed.ghanmi@supcom.tn> <de8fcb82-3e08-41e6-b099-75df27c6df23@redhat.com> <aee09e9f-6269-43ef-b509-a9a7b5e1752f@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-81316292-1717409305=:1529"
-Content-ID: <afc06685-6e39-74d5-a470-df656471d706@linux.intel.com>
+Content-Type: multipart/mixed; boundary="8323328-2015242583-1717410561=:1529"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-81316292-1717409305=:1529
-Content-Type: text/plain; CHARSET=ISO-8859-15
+--8323328-2015242583-1717410561=:1529
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <0a16be6f-9c4b-800e-b144-cd96f45b85a3@linux.intel.com>
 
-On Thu, 30 May 2024, Chang S. Bae wrote:
+On Mon, 3 Jun 2024, Luke Jones wrote:
+> On Mon, 29 Apr 2024, at 10:20 PM, Hans de Goede wrote:
+> > On 4/21/24 9:43 PM, Mohamed Ghanmi wrote:
+> > > Add support for vivobook fan profiles wmi call on the ASUS VIVOBOOK
+> > > to adjust power limits.
+> > >=20
+> > > These fan profiles have a different device id than the ROG series
+> > > and different order. This reorders the existing modes and adds a new
+> > > full speed mode available on these laptops.
+> > >=20
+> > > As part of keeping the patch clean the throttle_thermal_policy_availa=
+ble
+> > > boolean stored in the driver struct is removed and
+> > > throttle_thermal_policy_dev is used in place (as on init it is zeroed=
+).
+> > >=20
+> > > Signed-off-by: Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
+> > > Co-developed-by: Luke D. Jones <luke@ljones.dev>
+> > > Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> > > Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> > > ---
+> > >  drivers/platform/x86/asus-wmi.c            | 93 ++++++++++++--------=
+--
+> > >  include/linux/platform_data/x86/asus-wmi.h |  1 +
+> > >  2 files changed, 51 insertions(+), 43 deletions(-)
+> > >=20
+> > > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/a=
+sus-wmi.c
+> > > index 3c61d75a3..1f54596ca 100644
+> > > --- a/drivers/platform/x86/asus-wmi.c
+> > > +++ b/drivers/platform/x86/asus-wmi.c
 
-> This revision switches to a new approach by providing a helper to
-> initialize user FPU states for the driver, which is considerably simpler.
-> This approach could serve as an example for addressing similar situations
-> from a non-critical path.
+> > > @@ -3747,7 +3753,10 @@ static ssize_t throttle_thermal_policy_store(s=
+truct device *dev,
+> > >  return count;
+> > >  }
+> > > =20
+> > > -// Throttle thermal policy: 0 - default, 1 - overboost, 2 - silent
+> > > +/*
+> > > + * Throttle thermal policy: 0 - default, 1 - overboost, 2 - silent
+> > > + * Throttle thermal policy vivobook : 0 - default, 1 - silent, 2 - o=
+verboost, 3 - fullspeed
+> > > + */
+> >=20
+> > throttle_thermal_policy_write() always expects normal (non vivobook) va=
+lues and
+> > then translates those to vivo values, so this comment is not correct.
+> >=20
+> > The only difference is that vivobook also has fullspeed, but the way us=
+erspace
+> > sees it 1/2 or silent/overspeed are not swapped, since the swapping is =
+taking
+> > care of in throttle_thermal_policy_write().
+> >=20
+> > Also the new fullspeed is not exported through the platform_profile int=
+erface,
+> > for setting values this is somewhat ok, but fullspeed can be set throug=
+h
+> > sysfs, and this will then cause asus_wmi_platform_profile_get() to fail
+> > with -EINVAL, so this need to be fixed. Either map fullspeed to
+> > PLATFORM_PROFILE_PERFORMANCE in asus_wmi_platform_profile_get(), or add
+> > a new platform_profile value for this.
+> >
 >=20
-> I thought fpu_reset_fpregs() as the helper name. There is already one
-> with this name. Then, I realized the existing one is a bit misaligned, so
-> renamed it first here.
+> I would much prefer if "fullspeed" was not included at all unless it was=
+=20
+> an individual setting. It very rarely contributes anything good to the=20
+> driver, and most certainly won't be of value in the platform_profile.
 >=20
-> Thanks to Dave for the reviews and the suggestion.
->=20
-> Thanks,
-> Chang
->=20
-> The previous postings:
-> V2: https://lore.kernel.org/all/20240507235344.249103-1-chang.seok.bae@in=
-tel.com
-> V1: https://lore.kernel.org/all/20240430212508.105117-1-chang.seok.bae@in=
-tel.com
->=20
-> Chang S. Bae (3):
->   x86/fpu: Rename fpu_reset_fpregs() to fpu_reset_fpstate_regs()
->   x86/fpu: Allow FPU users to initialize FPU state
->   platform/x86/intel/ifs: Initialize FPU states for the scan test
->=20
->  arch/x86/include/asm/fpu/api.h           |  2 ++
->  arch/x86/kernel/fpu/core.c               | 17 ++++++++++++++---
->  drivers/platform/x86/intel/ifs/ifs.h     |  1 +
->  drivers/platform/x86/intel/ifs/runtest.c |  7 +++++++
->  4 files changed, 24 insertions(+), 3 deletions(-)
+> Otherwise, what is the status on this?=20
 
-Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+Hi,
 
-Do x86 maintainers plan to take these through their tree?
+I was expecting an update that addresses Hans' review comment.
+
+Luke, are you arguing that his comment is not valid and v3 is fine?
+
+(In any case, I've summoned v3 back from archive into active patches in=20
+patchwork so this doesn't get forgotten if v4 is not needed).
 
 --=20
  i.
---8323328-81316292-1717409305=:1529--
+--8323328-2015242583-1717410561=:1529--
