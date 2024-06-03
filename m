@@ -1,196 +1,116 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF893BBE0
-	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Jun 2024 09:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBAF7FBA3;
+	Mon,  3 Jun 2024 10:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717408700; cv=none; b=I8maIYiaPKSQnVSgEGhFZlGEmT9pUBIRyC6KaZ6WyLHvCEkwOo2CRZxngEoJ5MQ0zeaACqMxMSOtThsUtXrOu5VsmW4A2x89PwdZWq4gFAs+dD1Ycv0DX8sLsIlAQnhpYOp4AXxv9hCqDN3sFQzGCIZ0YEIH+uvU7YvIk5dLCDA=
+	t=1717409486; cv=none; b=Csw0LVM0R04wrk6f8X+wuHvYoUjp+X/2a2jglnv6w51wIBaMZVYOfF7pNWpQjdtfASlfpR5B1dPW5Ahv3EMirL7Eq5ZkD5jsBQNwXxmDGPO4IvPko/qu/C2NoCZKm0y/Noh5Pw4/KrWhsEwuaXjv9+Vt6GvKBxoYOuqvLTHt8pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717408700; c=relaxed/simple;
-	bh=gWfG9WiKpBg0KHi5fNj7HbYviopiLko6B/DfMRUF53E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZAqx+WF+9c9J+zdz8AN0kepTMeWovJnC23VNFxbcTN9psaBlBf+yds+PRlr7FBDuJosHxG3wLiWEt+eUNv4OzCYnqZ9lyVe455VWCsGS7zR9GAU15Kq5zaJ9w2N81P0NiymAGsLxnzMlSPnuuRA3cMg4u3a9n5t7GwJJ3Ao14wY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dwX+HGfl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717409486; c=relaxed/simple;
+	bh=LXJ5YB9dO8bdDQzIQLLZk5NeS3HkpILHWFU/5/MlRzI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=tsOO0iLk3wvBKgTD5q9dJU4AAGA32wW9XJTPQYGQ3XYsHO7+CM0L8hqrhlSl2FswotJpRR0DQ6I/AXmUCwHcGnWslIQhXteo/hRCgo/0hj6SkTl1uNMq0ftzooJGS/Nb2xLEeR8urptC9OogqjQBNcsOHe9hT144YmZeC4BnPLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XwSwei1s; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dwX+HGfl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717408697;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k7A9A2iKad8mQwPOX0FQg8osO/lnETE0CpWourAiVp4=;
-	b=dwX+HGflIxBDRcq54YvvLXW+O6eWr12n/oGGWk1BY2cgQ0EuP8mP2DmghZmlmPEkMimLmF
-	vg+t7AewO8EO7i6AUIpGp6XjfAB42iwLo2ZqB5bgEaB3BT6A0iwwX1dO+o8vDMgBPSNo8r
-	4mGMh1+1j74spDxJe5GPJ5XN3/kmulM=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-311-EbX2DCmHNbu3ofk598njYQ-1; Mon, 03 Jun 2024 05:58:12 -0400
-X-MC-Unique: EbX2DCmHNbu3ofk598njYQ-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a6900c7ce42so49048466b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Jun 2024 02:58:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717408691; x=1718013491;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=k7A9A2iKad8mQwPOX0FQg8osO/lnETE0CpWourAiVp4=;
-        b=MucfBoVtpzZ5Q8UvEvGgO/Kl3D8Zo6PEyZbX19Aqw0zl6P/hGjynDOGLrrG/+p2dGn
-         BUbevVxo1ZIcaV3B+d2pRWJaP0wNEC1DgptpWtBzD1gHnOtoZx800n5w3Ic8iGiJB5T2
-         Q2k5ocB3OYbxwmnowO9Ys5wtM7kc62nbtkWUfmybxoif4+fLFB1WYHtvwwLN9852EGz+
-         ZFsmDHW9nBcgXOfCeQHqmUJ74oXmh/Ybx7BoscdUoXjn1i3Rt1MgbnA4OXP46giNI0wR
-         QSxi5qC47N2Prl4Wozo3WHJgeBNIkSdSP96y5B7GDsDx+o5FhEzSi2vnAedxvz0l+af7
-         atsw==
-X-Forwarded-Encrypted: i=1; AJvYcCUHuQCEGcbSl0iXnF27jCyClfVZrmr+m0csYYI14z75F3HsRgIiu4NxSoMPEqY1RpFQnDuW3tXYR9Y3ZrT0l/TvkbBO9nfqgdRBm74u2JccZIET2w==
-X-Gm-Message-State: AOJu0YwhuPntrKJH85cSvW8ov9Y8JZfqhXuDAX5eO0Tlaw5cPwaycEGg
-	B8EFh9tzrzWNiL6bDZ4Cv5DZOc8szsGVMVL4Lx/HxCC25FTC8hgciJw0wBlq1EyRHDxXy02tpW6
-	Qb8TTEjk2cIrhnRtetLGWzmHLaMbC+3TJX5iEK0JnO3Q1mI0gUqgbph0gx0Ad6ZlMMTgJd+g=
-X-Received: by 2002:a17:906:3656:b0:a68:b8cc:842f with SMTP id a640c23a62f3a-a68b8cc861dmr378710366b.56.1717408691191;
-        Mon, 03 Jun 2024 02:58:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHGeyocekgaCMrtBLpywx34WtmpSfqsvwgEkWIzcy5WXYJvPclWJGW49BM5saMVfuWrPOBvLw==
-X-Received: by 2002:a17:906:3656:b0:a68:b8cc:842f with SMTP id a640c23a62f3a-a68b8cc861dmr378709066b.56.1717408690666;
-        Mon, 03 Jun 2024 02:58:10 -0700 (PDT)
-Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a689e8ecd3asm373493666b.19.2024.06.03.02.58.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Jun 2024 02:58:10 -0700 (PDT)
-Message-ID: <fddc3bcb-1c96-4ea3-9919-72352b12e2e7@redhat.com>
-Date: Mon, 3 Jun 2024 11:58:09 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XwSwei1s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717409485; x=1748945485;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=LXJ5YB9dO8bdDQzIQLLZk5NeS3HkpILHWFU/5/MlRzI=;
+  b=XwSwei1s/O8UgiK7HiYXa8OzmINZAv8oBKDcw2SJLFsHA0KBhVg+GVeR
+   j9kcNPiGVYhSNvA1dnkDq2LFQyMCvIJhDv6Kpez5bWr6eetEK8xMS6rl1
+   /CcYZor/EQgWmxuFndOFdb65fdLIYuLkxLuqDA8CNMryAUos6sM5i3LyL
+   EDbUdI55K5O4FFDIUziN52EVOXxseM2JQCQVE7kRRImZsNqSysU+L3J4y
+   gD2fhGtsCsUydCyPBBBlvT8i43gcbXWdS/RtCZGDFwL02VTcSmCyqTJ3F
+   k/gbLHptIaVKjY/ZKvDaRY52XejVfXjO92l/O1mIflJuPR0fctR3VcflS
+   Q==;
+X-CSE-ConnectionGUID: ro3fiQByT4GrsZr3nnc5Cw==
+X-CSE-MsgGUID: ZuWRFJn+SBqpQzIrSwFj0Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11091"; a="36417814"
+X-IronPort-AV: E=Sophos;i="6.08,211,1712646000"; 
+   d="scan'208";a="36417814"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 03:11:24 -0700
+X-CSE-ConnectionGUID: UxAv791oS8mk3WmdWhwBxQ==
+X-CSE-MsgGUID: B85axv69RP2GwBoopIV9lg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,211,1712646000"; 
+   d="scan'208";a="36915625"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.161])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 03:11:20 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 3 Jun 2024 13:11:16 +0300 (EEST)
+To: "Chang S. Bae" <chang.seok.bae@intel.com>
+cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org, 
+    platform-driver-x86@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, 
+    bp@alien8.de, dave.hansen@linux.intel.com, 
+    Hans de Goede <hdegoede@redhat.com>, tony.luck@intel.com, 
+    ashok.raj@intel.com, jithu.joseph@intel.com, 
+    sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v3 0/3] x86/fpu: Allow the In-Field Scan driver to
+ initialize FPU state
+In-Reply-To: <20240530192739.172566-1-chang.seok.bae@intel.com>
+Message-ID: <676bfc09-c1f4-9272-a198-3fb865868c10@linux.intel.com>
+References: <20240530192739.172566-1-chang.seok.bae@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86/amd/hsmp: Check HSMP support on AMD family
- of processors
-To: Suma Hegde <suma.hegde@amd.com>, platform-driver-x86@vger.kernel.org
-Cc: ilpo.jarvinen@linux.intel.com,
- Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-References: <20240603081512.142909-1-suma.hegde@amd.com>
-Content-Language: en-US
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240603081512.142909-1-suma.hegde@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-81316292-1717409305=:1529"
+Content-ID: <afc06685-6e39-74d5-a470-df656471d706@linux.intel.com>
 
-Hi,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 6/3/24 10:15 AM, Suma Hegde wrote:
-> HSMP interface is supported only on few x86 processors from AMD.
-> Accessing HSMP registers on rest of the platforms might cause
-> unexpected behaviour. So add a check.
-> 
-> Also unavailability of this interface on rest of the processors
-> is not an error. Hence, use pr_info() instead of the pr_err() to
-> log the message.
-> 
-> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
-> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+--8323328-81316292-1717409305=:1529
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <0a16be6f-9c4b-800e-b144-cd96f45b85a3@linux.intel.com>
 
-Thanks, patch looks good to me:
+On Thu, 30 May 2024, Chang S. Bae wrote:
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> This revision switches to a new approach by providing a helper to
+> initialize user FPU states for the driver, which is considerably simpler.
+> This approach could serve as an example for addressing similar situations
+> from a non-critical path.
+>=20
+> I thought fpu_reset_fpregs() as the helper name. There is already one
+> with this name. Then, I realized the existing one is a bit misaligned, so
+> renamed it first here.
+>=20
+> Thanks to Dave for the reviews and the suggestion.
+>=20
+> Thanks,
+> Chang
+>=20
+> The previous postings:
+> V2: https://lore.kernel.org/all/20240507235344.249103-1-chang.seok.bae@in=
+tel.com
+> V1: https://lore.kernel.org/all/20240430212508.105117-1-chang.seok.bae@in=
+tel.com
+>=20
+> Chang S. Bae (3):
+>   x86/fpu: Rename fpu_reset_fpregs() to fpu_reset_fpstate_regs()
+>   x86/fpu: Allow FPU users to initialize FPU state
+>   platform/x86/intel/ifs: Initialize FPU states for the scan test
+>=20
+>  arch/x86/include/asm/fpu/api.h           |  2 ++
+>  arch/x86/kernel/fpu/core.c               | 17 ++++++++++++++---
+>  drivers/platform/x86/intel/ifs/ifs.h     |  1 +
+>  drivers/platform/x86/intel/ifs/runtest.c |  7 +++++++
+>  4 files changed, 24 insertions(+), 3 deletions(-)
 
-I've applied this patch to my review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-I will include this patch in my next fixes pull-req to Linus
-for the current kernel development cycle.
+Do x86 maintainers plan to take these through their tree?
 
-Regards,
-
-Hans
-
-
-> ---
-> This patch addresses review comments from Mario Limonciello for 
-> "Check HSMP support on AMD family of processors" patch at
-> <https://lore.kernel.org/platform-driver-x86/20240423091434.2063246-2-suma.hegde@amd.com/>
-> Please ignore the patch "platform/x86/amd/hsmp: Split the ACPI and non-ACPI code" in the above series.
-> <https://lore.kernel.org/platform-driver-x86/20240423091434.2063246-3-suma.hegde@amd.com/>
-> 
-> We are working on addressing Hans comments on sysfs patch "Remove devm_* call for sysfs and use dev_groups"
-> <https://lore.kernel.org/platform-driver-x86/20240410121746.1955500-1-suma.hegde@amd.com/>
-> 
->  drivers/platform/x86/amd/hsmp.c | 50 ++++++++++++++++++++++++++++-----
->  1 file changed, 43 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp.c
-> index d84ea66eecc6..8fcf38eed7f0 100644
-> --- a/drivers/platform/x86/amd/hsmp.c
-> +++ b/drivers/platform/x86/amd/hsmp.c
-> @@ -907,16 +907,44 @@ static int hsmp_plat_dev_register(void)
->  	return ret;
->  }
->  
-> +/*
-> + * This check is only needed for backward compatibility of previous platforms.
-> + * All new platforms are expected to support ACPI based probing.
-> + */
-> +static bool legacy_hsmp_support(void)
-> +{
-> +	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD)
-> +		return false;
-> +
-> +	switch (boot_cpu_data.x86) {
-> +	case 0x19:
-> +		switch (boot_cpu_data.x86_model) {
-> +		case 0x00 ... 0x1F:
-> +		case 0x30 ... 0x3F:
-> +		case 0x90 ... 0x9F:
-> +		case 0xA0 ... 0xAF:
-> +			return true;
-> +		default:
-> +			return false;
-> +		}
-> +	case 0x1A:
-> +		switch (boot_cpu_data.x86_model) {
-> +		case 0x00 ... 0x1F:
-> +			return true;
-> +		default:
-> +			return false;
-> +		}
-> +	default:
-> +		return false;
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  static int __init hsmp_plt_init(void)
->  {
->  	int ret = -ENODEV;
->  
-> -	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD || boot_cpu_data.x86 < 0x19) {
-> -		pr_err("HSMP is not supported on Family:%x model:%x\n",
-> -		       boot_cpu_data.x86, boot_cpu_data.x86_model);
-> -		return ret;
-> -	}
-> -
->  	/*
->  	 * amd_nb_num() returns number of SMN/DF interfaces present in the system
->  	 * if we have N SMN/DF interfaces that ideally means N sockets
-> @@ -930,7 +958,15 @@ static int __init hsmp_plt_init(void)
->  		return ret;
->  
->  	if (!plat_dev.is_acpi_device) {
-> -		ret = hsmp_plat_dev_register();
-> +		if (legacy_hsmp_support()) {
-> +			/* Not ACPI device, but supports HSMP, register a plat_dev */
-> +			ret = hsmp_plat_dev_register();
-> +		} else {
-> +			/* Not ACPI, Does not support HSMP */
-> +			pr_info("HSMP is not supported on Family:%x model:%x\n",
-> +				boot_cpu_data.x86, boot_cpu_data.x86_model);
-> +			ret = -ENODEV;
-> +		}
->  		if (ret)
->  			platform_driver_unregister(&amd_hsmp_driver);
->  	}
-
+--=20
+ i.
+--8323328-81316292-1717409305=:1529--
