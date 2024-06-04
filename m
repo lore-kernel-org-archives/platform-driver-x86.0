@@ -1,196 +1,274 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21040137C48;
-	Tue,  4 Jun 2024 01:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7837A2F30;
+	Tue,  4 Jun 2024 05:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717465101; cv=none; b=U57bWztd6FVrp5RoHGqcyK+zVf7R8+R42DNV0K0/MeuoUDKbO5xa++I2ZAoFBNf8ps6cg8r1Z2NsF0QBaTbzwtt3B3rSzA98JVY7UN+4A1gtBCa+lUYw7kyEzDSQxOgYETXbTwsIA0pPa6sFl0hVJ6TIzVxVIY7FqN7PSFkXso0=
+	t=1717478122; cv=none; b=dBceCGwEv92BxLPItgBXf9KNW0sQfQ6dl/rhMUl97pDZuOGLs+7xkgte7+g5K6GG5H+zB3TWKEGR4FmnceP6jMUv8fsYFGW0Cg1JPhED9gVeyVXm8xs/yHSfzGKi40aHRtk4FYc+6vF6TerUd6Kppxc0nSZdebhaGaGTs3S7oZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717465101; c=relaxed/simple;
-	bh=AJSz8KJObMMDxhywmduW5EuoLxLL09BUaUxOa9QUubw=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=W76wPOqJhcfdB6bDI384qYWr5It8IGNtsF7P3ZiEf2do4DteNys1XNAEj5j60+v6mm0u/CGqeb0nwGs+414yqQsMpnESMXIbwZneeb0x7Kbi/vtHxEGiYG4HQPZLqgd0UOu3U5f8c5+SFb6zgHHWbikoW93g8IYO0vRmjfGZQu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VtY9H1DnBzcc6M;
-	Tue,  4 Jun 2024 09:36:51 +0800 (CST)
-Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7C016180069;
-	Tue,  4 Jun 2024 09:38:14 +0800 (CST)
-Received: from [10.174.178.46] (10.174.178.46) by
- kwepemm600013.china.huawei.com (7.193.23.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 4 Jun 2024 09:38:02 +0800
-Subject: Re: [PATCH v1 1/1] treewide: Align match_string() with
- sysfs_match_string()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Rafael J. Wysocki"
-	<rafael.j.wysocki@intel.com>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Corey Minyard <minyard@acm.org>, Allen Pais
-	<apais@linux.microsoft.com>, Sebastian Reichel
-	<sebastian.reichel@collabora.com>, Perry Yuan <perry.yuan@amd.com>, Giovanni
- Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu
-	<herbert@gondor.apana.org.au>, Nuno Sa <nuno.sa@analog.com>, Guenter Roeck
-	<linux@roeck-us.net>, Randy Dunlap <rdunlap@infradead.org>, Andi Shyti
-	<andi.shyti@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Lee Jones
-	<lee@kernel.org>, Samuel Holland <samuel@sholland.org>, Elad Nachman
-	<enachman@marvell.com>, Arseniy Krasnov <AVKrasnov@sberdevices.ru>, Johannes
- Berg <johannes.berg@intel.com>, Gregory Greenman
-	<gregory.greenman@intel.com>, Benjamin Berg <benjamin.berg@intel.com>, Bjorn
- Helgaas <bhelgaas@google.com>, Robert Richter <rrichter@amd.com>, Vinod Koul
-	<vkoul@kernel.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Linus Walleij
-	<linus.walleij@linaro.org>, Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>, Nikita
- Kravets <teackot@gmail.com>, Jiri Slaby <jirislaby@kernel.org>, Srinivas
- Pandruvada <srinivas.pandruvada@linux.intel.com>, Stanley Chang
-	<stanley_chang@realtek.com>, Heikki Krogerus
-	<heikki.krogerus@linux.intel.com>, Abdel Alkuor <abdelalkuor@geotab.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>, Eric Biggers
-	<ebiggers@google.com>, Kees Cook <keescook@chromium.org>, Ingo Molnar
-	<mingo@kernel.org>, "Steven Rostedt (Google)" <rostedt@goodmis.org>, Daniel
- Bristot de Oliveira <bristot@kernel.org>, Andrew Morton
-	<akpm@linux-foundation.org>, Hugh Dickins <hughd@google.com>, Abel Wu
-	<wuyun.abel@bytedance.com>, John Johansen <john.johansen@canonical.com>, Mimi
- Zohar <zohar@linux.ibm.com>, Stefan Berger <stefanb@linux.ibm.com>, Roberto
- Sassu <roberto.sassu@huawei.com>, Eric Snowberg <eric.snowberg@oracle.com>,
-	Takashi Iwai <tiwai@suse.de>, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, Mark Brown
-	<broonie@kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-	<keyrings@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-	<linux-acpi@vger.kernel.org>, <linux-ide@vger.kernel.org>,
-	<openipmi-developer@lists.sourceforge.net>, <linux-clk@vger.kernel.org>,
-	<linux-rpi-kernel@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-rockchip@lists.infradead.org>,
-	<linux-tegra@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-	<qat-linux@intel.com>, <dri-devel@lists.freedesktop.org>,
-	<intel-gfx@lists.freedesktop.org>, <intel-xe@lists.freedesktop.org>,
-	<nouveau@lists.freedesktop.org>, <linux-hwmon@vger.kernel.org>,
-	<linux-i2c@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-	<linux-sunxi@lists.linux.dev>, <linux-omap@vger.kernel.org>,
-	<linux-mmc@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-	<netdev@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-	<linux-phy@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-	<platform-driver-x86@vger.kernel.org>, <linux-staging@lists.linux.dev>,
-	<linux-usb@vger.kernel.org>, <linux-fbdev@vger.kernel.org>,
-	<linux-bcachefs@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-	<cgroups@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <apparmor@lists.ubuntu.com>,
-	<linux-security-module@vger.kernel.org>, <linux-integrity@vger.kernel.org>,
-	<alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>
-CC: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
-	<npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, "Naveen
- N. Rao" <naveen.n.rao@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
-	<hpa@zytor.com>, David Howells <dhowells@redhat.com>, "David S. Miller"
-	<davem@davemloft.net>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
-	<lenb@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, Damien Le Moal
-	<dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, Daniel Scally
-	<djrscally@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Florian
- Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, Scott
- Branden <sbranden@broadcom.com>, Broadcom internal kernel review list
-	<bcm-kernel-feedback-list@broadcom.com>, Heiko Stuebner <heiko@sntech.de>,
-	Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad
-	<pgaikwad@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan
- Hunter <jonathanh@nvidia.com>, Huang Rui <ray.huang@amd.com>, "Gautham R.
- Shenoy" <gautham.shenoy@amd.com>, Mario Limonciello
-	<mario.limonciello@amd.com>, Viresh Kumar <viresh.kumar@linaro.org>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Jani Nikula
-	<jani.nikula@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Joonas
- Lahtinen <joonas.lahtinen@linux.intel.com>, Tvrtko Ursulin
-	<tursulin@ursulin.net>, Karol Herbst <kherbst@redhat.com>, Lyude Paul
-	<lyude@redhat.com>, Danilo Krummrich <dakr@redhat.com>, Jean Delvare
-	<jdelvare@suse.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Pavel Machek <pavel@ucw.cz>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
-	<jernej.skrabec@gmail.com>, Tony Lindgren <tony@atomide.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, Hu Ziji <huziji@marvell.com>, Ulf Hansson
-	<ulf.hansson@linaro.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Richard
- Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Potnuri
- Bharat Teja <bharat@chelsio.com>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Miri Korenblit
-	<miriam.rachel.korenblit@intel.com>, Kalle Valo <kvalo@kernel.org>, Mahesh J
- Salgaonkar <mahesh@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>, Matthias Brugger
-	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, JC Kuo <jckuo@nvidia.com>, Andrew
- Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Sebastian Reichel
-	<sre@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui
-	<rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Thinh Nguyen
-	<Thinh.Nguyen@synopsys.com>, Helge Deller <deller@gmx.de>, Brian Foster
-	<bfoster@redhat.com>, Tejun Heo <tj@kernel.org>, Zefan Li
-	<lizefan.x@bytedance.com>, Johannes Weiner <hannes@cmpxchg.org>, Peter
- Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent
- Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
-	<dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
-	<mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin
- Schneider <vschneid@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jason Baron
-	<jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>, Paul Moore
-	<paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn"
-	<serge@hallyn.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Clemens
- Ladisch <clemens@ladisch.de>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
-	<tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Linus Torvalds
-	<torvalds@linux-foundation.org>
-References: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com>
-From: Zhihao Cheng <chengzhihao1@huawei.com>
-Message-ID: <a6cff4d3-821a-3723-b261-3699053b5a51@huawei.com>
-Date: Tue, 4 Jun 2024 09:37:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+	s=arc-20240116; t=1717478122; c=relaxed/simple;
+	bh=lUmoE2h7on96Ze4BJEmx9oqYgA+3okzfnG7hd7pvlEo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HH/BwPjhLC2CNYFVlEKnJkztBYKxN7ZUeiNPzRFZ/sX9MlkAKPoghbmM1hjkGgPWZ2KVLPZ4s1p9VLCnR5xmIz1xrl3C9kQ094L7SVECOOqWuJQN2jkrJm+wAlGhyQQJ5yUP7fplAQ9atsFg8qclD2SjjG5JQBBLlngT/3zYWAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OMX24+bz; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OMX24+bz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717478119; x=1749014119;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lUmoE2h7on96Ze4BJEmx9oqYgA+3okzfnG7hd7pvlEo=;
+  b=OMX24+bzD5t1FG9TYd5tpcNitSZ5V0i7Wc3z1NwNohB8BY2w454bi2Q1
+   TiGvWet0WnIIQ0RfFHIGCuyRH32v5KujXVpvll7ICbX7e86cIWODaVv9O
+   5kxxASA7LMXpJbmvRsnVPH8yVLzduJAag9mCVZUAVtsMAy67BLKtj3RGZ
+   10chY8m2D7QJ3rTp6slXC13LOZ+2pP1ZzGhI4s/QLQh0W7znFmHp3R/1J
+   AlrRu2/Va4wlVTGD8xDHaEN6jW8EPzyyjrlFs/h8pDGeBciaK00dVTlwO
+   3HlCxkoTm+NFCVV6Yr08FpWhefZ1DxKcyDjPZWp0vJYBJAbB93gBd5PO5
+   w==;
+X-CSE-ConnectionGUID: ASQ7DeiwSr6TMtC0aSW3AA==
+X-CSE-MsgGUID: xxgdSHOXRLqb+dvHCoPjCw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="16936935"
+X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
+   d="scan'208";a="16936935"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 22:15:19 -0700
+X-CSE-ConnectionGUID: 1ts3JVyVRJm6LjGspCaPNw==
+X-CSE-MsgGUID: XKQy4maXTESA/roqU8kpEw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
+   d="scan'208";a="37172721"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa009.jf.intel.com with ESMTP; 03 Jun 2024 22:15:17 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sEMVu-000MbD-0B;
+	Tue, 04 Jun 2024 05:15:14 +0000
+Date: Tue, 4 Jun 2024 13:14:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Luke D. Jones" <luke@ljones.dev>, hdegoede@redhat.com
+Cc: oe-kbuild-all@lists.linux.dev, ilpo.jarvinen@linux.intel.com,
+	corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org, "Luke D. Jones" <luke@ljones.dev>
+Subject: Re: [PATCH 3/9] platform/x86: asus-wmi: add macros and expose
+ min/max sysfs for ppt tunables
+Message-ID: <202406041330.25g44UcT-lkp@intel.com>
+References: <20240528013626.14066-4-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600013.china.huawei.com (7.193.23.68)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240528013626.14066-4-luke@ljones.dev>
 
-ÔÚ 2024/6/2 23:57, Andy Shevchenko Ð´µÀ:
-> Make two APIs look similar. Hence convert match_string() to be
-> a 2-argument macro. In order to avoid unneeded churn, convert
-> all users as well. There is no functional change intended.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> 
-> Compile tested with `make allyesconfig` and `make allmodconfig`
-> on x86_64, arm, aarch64, powerpc64 (8 builds total).
-> 
+Hi Luke,
 
-[...]
-> diff --git a/fs/ubifs/auth.c b/fs/ubifs/auth.c
-> index a4a0158f712d..fc0da18bfa65 100644
-> --- a/fs/ubifs/auth.c
-> +++ b/fs/ubifs/auth.c
-> @@ -264,13 +264,13 @@ int ubifs_init_authentication(struct ubifs_info *c)
->   		return -EINVAL;
->   	}
->   
-> -	c->auth_hash_algo = match_string(hash_algo_name, HASH_ALGO__LAST,
-> -					 c->auth_hash_name);
-> -	if ((int)c->auth_hash_algo < 0) {
-> +	err = __match_string(hash_algo_name, HASH_ALGO__LAST, c->auth_hash_name);
-> +	if (err < 0) {
->   		ubifs_err(c, "Unknown hash algo %s specified",
->   			  c->auth_hash_name);
-> -		return -EINVAL;
-> +		return err;
->   	}
-> +	c->auth_hash_algo = err;
->   
->   	snprintf(hmac_name, CRYPTO_MAX_ALG_NAME, "hmac(%s)",
->   		 c->auth_hash_name);
+kernel test robot noticed the following build warnings:
 
-Reviewed-by: Zhihao Cheng <chengzhihao1@huawei.com>  # fs/ubifs
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.10-rc2 next-20240603]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Luke-D-Jones/platform-x86-asus-wmi-add-debug-print-in-more-key-places/20240528-094139
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20240528013626.14066-4-luke%40ljones.dev
+patch subject: [PATCH 3/9] platform/x86: asus-wmi: add macros and expose min/max sysfs for ppt tunables
+config: x86_64-randconfig-006-20240604 (https://download.01.org/0day-ci/archive/20240604/202406041330.25g44UcT-lkp@intel.com/config)
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240604/202406041330.25g44UcT-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406041330.25g44UcT-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/platform/x86/asus-wmi.c: In function 'init_rog_tunables':
+>> drivers/platform/x86/asus-wmi.c:4508:13: warning: argument 1 null where non-null expected [-Wnonnull]
+    4508 |         if (strstr(product, "GA402R")) {
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~
+   In file included from include/linux/bitmap.h:13,
+                    from include/linux/cpumask.h:13,
+                    from include/linux/smp.h:13,
+                    from include/linux/lockdep.h:14,
+                    from include/linux/spinlock.h:63,
+                    from include/linux/mmzone.h:8,
+                    from include/linux/gfp.h:7,
+                    from include/linux/slab.h:16,
+                    from include/linux/resource_ext.h:11,
+                    from include/linux/acpi.h:13,
+                    from drivers/platform/x86/asus-wmi.c:16:
+   include/linux/string.h:190:15: note: in a call to function 'strstr' declared 'nonnull'
+     190 | extern char * strstr(const char *, const char *);
+         |               ^~~~~~
+   drivers/platform/x86/asus-wmi.c:4510:20: warning: argument 1 null where non-null expected [-Wnonnull]
+    4510 |         } else if (strstr(product, "13QY")) {
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/string.h:190:15: note: in a call to function 'strstr' declared 'nonnull'
+     190 | extern char * strstr(const char *, const char *);
+         |               ^~~~~~
+   drivers/platform/x86/asus-wmi.c:4512:20: warning: argument 1 null where non-null expected [-Wnonnull]
+    4512 |         } else if (strstr(product, "X13")) {
+         |                    ^~~~~~~~~~~~~~~~~~~~~~
+   include/linux/string.h:190:15: note: in a call to function 'strstr' declared 'nonnull'
+     190 | extern char * strstr(const char *, const char *);
+         |               ^~~~~~
+   drivers/platform/x86/asus-wmi.c:4515:20: warning: argument 1 null where non-null expected [-Wnonnull]
+    4515 |         } else if (strstr(product, "RC71")) {
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/string.h:190:15: note: in a call to function 'strstr' declared 'nonnull'
+     190 | extern char * strstr(const char *, const char *);
+         |               ^~~~~~
+   drivers/platform/x86/asus-wmi.c:4518:20: warning: argument 1 null where non-null expected [-Wnonnull]
+    4518 |         } else if (strstr(product, "G814")
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/string.h:190:15: note: in a call to function 'strstr' declared 'nonnull'
+     190 | extern char * strstr(const char *, const char *);
+         |               ^~~~~~
+   drivers/platform/x86/asus-wmi.c:4519:20: warning: argument 1 null where non-null expected [-Wnonnull]
+    4519 |                 || strstr(product, "G614")
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/string.h:190:15: note: in a call to function 'strstr' declared 'nonnull'
+     190 | extern char * strstr(const char *, const char *);
+         |               ^~~~~~
+   drivers/platform/x86/asus-wmi.c:4520:20: warning: argument 1 null where non-null expected [-Wnonnull]
+    4520 |                 || strstr(product, "G834")
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/string.h:190:15: note: in a call to function 'strstr' declared 'nonnull'
+     190 | extern char * strstr(const char *, const char *);
+         |               ^~~~~~
+   drivers/platform/x86/asus-wmi.c:4521:20: warning: argument 1 null where non-null expected [-Wnonnull]
+    4521 |                 || strstr(product, "G634")) {
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/string.h:190:15: note: in a call to function 'strstr' declared 'nonnull'
+     190 | extern char * strstr(const char *, const char *);
+         |               ^~~~~~
+   drivers/platform/x86/asus-wmi.c:4523:20: warning: argument 1 null where non-null expected [-Wnonnull]
+    4523 |         } else if (strstr(product, "GA402X")
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/string.h:190:15: note: in a call to function 'strstr' declared 'nonnull'
+     190 | extern char * strstr(const char *, const char *);
+         |               ^~~~~~
+   drivers/platform/x86/asus-wmi.c:4524:20: warning: argument 1 null where non-null expected [-Wnonnull]
+    4524 |                 || strstr(product, "GA403")
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/string.h:190:15: note: in a call to function 'strstr' declared 'nonnull'
+     190 | extern char * strstr(const char *, const char *);
+         |               ^~~~~~
+   drivers/platform/x86/asus-wmi.c:4525:20: warning: argument 1 null where non-null expected [-Wnonnull]
+    4525 |                 || strstr(product, "FA507N")
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/string.h:190:15: note: in a call to function 'strstr' declared 'nonnull'
+     190 | extern char * strstr(const char *, const char *);
+         |               ^~~~~~
+   drivers/platform/x86/asus-wmi.c:4526:20: warning: argument 1 null where non-null expected [-Wnonnull]
+    4526 |                 || strstr(product, "FA507X")
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/string.h:190:15: note: in a call to function 'strstr' declared 'nonnull'
+     190 | extern char * strstr(const char *, const char *);
+         |               ^~~~~~
+   drivers/platform/x86/asus-wmi.c:4527:20: warning: argument 1 null where non-null expected [-Wnonnull]
+    4527 |                 || strstr(product, "FA707N")
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/string.h:190:15: note: in a call to function 'strstr' declared 'nonnull'
+     190 | extern char * strstr(const char *, const char *);
+         |               ^~~~~~
+   drivers/platform/x86/asus-wmi.c:4528:20: warning: argument 1 null where non-null expected [-Wnonnull]
+    4528 |                 || strstr(product, "FA707X")) {
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/string.h:190:15: note: in a call to function 'strstr' declared 'nonnull'
+     190 | extern char * strstr(const char *, const char *);
+         |               ^~~~~~
+   drivers/platform/x86/asus-wmi.c:4532:13: warning: argument 1 null where non-null expected [-Wnonnull]
+    4532 |         if (strstr(product, "GZ301ZE"))
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/string.h:190:15: note: in a call to function 'strstr' declared 'nonnull'
+     190 | extern char * strstr(const char *, const char *);
+         |               ^~~~~~
+
+
+vim +4508 drivers/platform/x86/asus-wmi.c
+
+  4491	
+  4492	/* Set up the min/max and defaults for ROG tunables */
+  4493	static void init_rog_tunables(struct asus_wmi *asus)
+  4494	{
+  4495		const char *product;
+  4496		u32 max_boost = NVIDIA_BOOST_MAX;
+  4497		u32 cpu_default = PPT_CPU_LIMIT_DEFAULT;
+  4498		u32 cpu_max = PPT_CPU_LIMIT_MAX;
+  4499		u32 platform_default = PPT_PLATFORM_DEFAULT;
+  4500		u32 platform_max = PPT_PLATFORM_MAX;
+  4501	
+  4502		/*
+  4503		 * ASUS product_name contains everything required, e.g,
+  4504		 * "ROG Flow X16 GV601VV_GV601VV_00185149B"
+  4505		 */
+  4506		product = dmi_get_system_info(DMI_PRODUCT_NAME);
+  4507	
+> 4508		if (strstr(product, "GA402R")) {
+  4509			cpu_default = 125;
+  4510		} else if (strstr(product, "13QY")) {
+  4511			cpu_max = 250;
+  4512		} else if (strstr(product, "X13")) {
+  4513			cpu_max = 75;
+  4514			cpu_default = 50;
+  4515		} else if (strstr(product, "RC71")) {
+  4516			cpu_max = 50;
+  4517			cpu_default = 30;
+  4518		} else if (strstr(product, "G814")
+  4519			|| strstr(product, "G614")
+  4520			|| strstr(product, "G834")
+  4521			|| strstr(product, "G634")) {
+  4522			cpu_max = 175;
+  4523		} else if (strstr(product, "GA402X")
+  4524			|| strstr(product, "GA403")
+  4525			|| strstr(product, "FA507N")
+  4526			|| strstr(product, "FA507X")
+  4527			|| strstr(product, "FA707N")
+  4528			|| strstr(product, "FA707X")) {
+  4529			cpu_max = 90;
+  4530		}
+  4531	
+  4532		if (strstr(product, "GZ301ZE"))
+  4533			max_boost = 5;
+  4534		else if (strstr(product, "FX507ZC4"))
+  4535			max_boost = 15;
+  4536		else if (strstr(product, "GU605"))
+  4537			max_boost = 20;
+  4538	
+  4539		/* ensure defaults for tunables */
+  4540		asus->rog_tunables.cpu_default = cpu_default;
+  4541		asus->rog_tunables.cpu_max = cpu_max;
+  4542	
+  4543		asus->rog_tunables.platform_default = platform_default;
+  4544		asus->rog_tunables.platform_max = platform_max;
+  4545	
+  4546		asus->rog_tunables.ppt_pl1_spl = cpu_default;
+  4547		asus->rog_tunables.ppt_pl2_sppt = cpu_default;
+  4548		asus->rog_tunables.ppt_apu_sppt = cpu_default;
+  4549	
+  4550		asus->rog_tunables.ppt_platform_sppt = platform_default;
+  4551		asus->rog_tunables.ppt_fppt = platform_default;
+  4552	
+  4553		asus->rog_tunables.nv_boost_default = NVIDIA_BOOST_MAX;
+  4554		asus->rog_tunables.nv_boost_max = max_boost;
+  4555		asus->rog_tunables.nv_dynamic_boost = NVIDIA_BOOST_MIN;
+  4556	
+  4557		asus->rog_tunables.nv_temp_default = NVIDIA_TEMP_MAX;
+  4558		asus->rog_tunables.nv_temp_max = NVIDIA_TEMP_MAX;
+  4559		asus->rog_tunables.nv_temp_target = NVIDIA_TEMP_MIN;
+  4560	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
