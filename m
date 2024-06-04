@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2587144D23
-	for <platform-driver-x86@vger.kernel.org>; Tue,  4 Jun 2024 13:24:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9982146D62
+	for <platform-driver-x86@vger.kernel.org>; Tue,  4 Jun 2024 13:25:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717507459; cv=none; b=fhbZKfCsbA8Jg0y7q04kKF0ZSKZ6Yiery1YanlRfc7RCcjpicw6QJXH4QwjFNjAVv3fnF6VN6/vQWDD+YAg7Q3vbBBVZWJJro16FIWad+wlSqYQcnJUsCSDZZUWGRSZLn4jytuasvVZlvsJgjRPnavF1lnYlXsGM/nDqQgs82YU=
+	t=1717507509; cv=none; b=NwPZYhkOJFLVbqNsi4klPGqJzTakpWGoPiS+MAL5G/bnBi5zxEc7DIUpAb1IUVIqmiAVdol6y4R0rvxa8lD3cdi4pIFRNdZIQAn5pLBnE0EC7FfQB6Fq7SkIB2w8tq2aqvUp1bqFy3zHYjripAKOgjLx5eaPQ1W02Gynz99rlHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717507459; c=relaxed/simple;
-	bh=ovitGQtKYtqdqw55fFI6Kl/5+hT2FMFRH4ZE5c916yI=;
+	s=arc-20240116; t=1717507509; c=relaxed/simple;
+	bh=iW9SHQOBv2ymZklAr3AcNKaVNeWjn7OQZYcVDO2/+ag=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tlqqN0hwpFU99o97981qPL6kKvPZz0tl4zaD/etzrXtZfKS84cwRgnSrkcItepIbqFpVqK/bm8/Z5hCiwUOrVUUERbKgBwD1H/YjfQV1Qc+MTZYH8PBlqdY5+Su/UE6WV1rPKglm1pbdEGVqGV3m/NdXppHomRhNXlGkbTtXJbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vf4Xe7gZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=Yjpj6n2/SRefoJcteKOHVtsqKvhcSLGN5OnyAHmkstPmowPJsGj0DOecnbhPV9zE7EVF5VPVN5EPwBBu19QD28qQ5KRw4qW0LF1uJNz9D2jSDr+PfqB4h5MG/8aCeIU8FYX4wU1rrIFwn+q/92wYotWBsmJGPEGix0UcZh1U+PE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XOxeMNvy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vf4Xe7gZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8472DC3277B
-	for <platform-driver-x86@vger.kernel.org>; Tue,  4 Jun 2024 13:24:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XOxeMNvy"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4C5F0C3277B
+	for <platform-driver-x86@vger.kernel.org>; Tue,  4 Jun 2024 13:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717507458;
-	bh=ovitGQtKYtqdqw55fFI6Kl/5+hT2FMFRH4ZE5c916yI=;
+	s=k20201202; t=1717507509;
+	bh=iW9SHQOBv2ymZklAr3AcNKaVNeWjn7OQZYcVDO2/+ag=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Vf4Xe7gZldUpDvg0+gkLZsMEUwYdDdEf9mXqxXP3ghyNNzqazedbZ59t1mOMOcQ6Q
-	 x6EKPMwHJjOhMEFv4GOd6/N8aK1hDPH8/pdOC8Cxm5Af02cJZwvP6gjKNJKlE1RUiA
-	 CpuBxlxmNTkB+LmAjkZUGE89wq0x3UmLDpUe6V6BxqDgqY4N2/g97Ufovcv6pJqZIh
-	 s/9HgWcRAcTAyLzmgbY37K/NiwmcgMK7imj50feuPIHH3kGqWkMqdecH+5gxcx59E+
-	 0OqQ6X/3sdL8iABrZDgMwiGuTfNCJIA6Lxc1PI9E6uI1goru7dXlyM48F+tBZUIwWs
-	 JQC7v+f/OipCg==
+	b=XOxeMNvyuHryFc2boWiit+C0TGm3OOg9dfU7t++iymv/GYXrxl/NiVwYtLLSqh6Ul
+	 CbDUuaIwp29GljG+hOY3VwTHyjmGy1KLOJ0rDL40XN2/50zdQqmPyKyuIKeAUHMOxG
+	 JQXeY4yIZfHqheeYbOzMNnM6W6lq3Elw0aKRdZupl+L8ljyk0Pivqj9XOj4Aidy1CI
+	 PPt3XfrdJy5Wj6Fvz4+0VrgM7Elxao89VH1bkTdkarQBfD9zuIuny2+VfR+AmdpK/+
+	 duzuuOOzI+eKOkbsqrrJaH4V+QCfy/6TPfKaoK7A1mZSdknujvMhYg1eWBn9inXqhy
+	 eYJli6tNpEaXQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 6DD8DC53B50; Tue,  4 Jun 2024 13:24:18 +0000 (UTC)
+	id 4509AC53B50; Tue,  4 Jun 2024 13:25:09 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
  models (16Z90S)
-Date: Tue, 04 Jun 2024 13:24:18 +0000
+Date: Tue, 04 Jun 2024 13:25:09 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,7 +48,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218901-215701-f5x14EGuGn@https.bugzilla.kernel.org/>
+Message-ID: <bug-218901-215701-cOx91sfgiM@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
 References: <bug-218901-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,39 +64,9 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
 
---- Comment #30 from Agathe Boutmy (agathe@boutmy.com) ---
-(In reply to Armin Wolf from comment #29)
-> Created attachment 306408 [details]
-> Prototype kernel module v4
->=20
-> I have removed the airplane mode hotkey handling from the driver, can you
-> test again if the wifi issues are resolved now?
-
-Yes, it no longers deactivate the wifi.
-
-> Can you also send me the output of dmesg after pressing FN+F8? I am curio=
-us
-> if the strange ACPI events are still happening.
-
-it is still happening: here is the output once I press FN+F8:
-
-[26146.735205] lg_laptop: event guid 2
-[26146.735305] lg_laptop: Type: 1    Eventcode: 0x30010000
-[26148.031450] lg_laptop: event guid 2
-[26148.031517] lg_laptop: Type: 1    Eventcode: 0x30010001
-[26148.054930] lg_laptop: event guid 2
-[26148.058063] lg_laptop: Type: 1    Eventcode: 0x10000000
-[26148.141362] lg_laptop: event guid 2
-[26148.141429] lg_laptop: Type: 1    Eventcode: 0x30010001
-[26148.301453] lg_laptop: event guid 2
-[26148.301518] lg_laptop: Type: 1    Eventcode: 0x30010001
-[26148.324300] ACPI: \_SB_.XINI: notify: 192
-[26150.350874] ACPI: \_SB_.XINI: notify: 192
-[26151.363858] ACPI: \_SB_.XINI: notify: 192
-[26152.380376] ACPI: \_SB_.XINI: notify: 192
-
-
-it keeps sending the acpi event with any key press.
+--- Comment #31 from Agathe Boutmy (agathe@boutmy.com) ---
+It also doesn't look like the FN+F8 is able to change the keyboard lightning
+anymore.
 
 --=20
 You may reply to this email to add a comment.
