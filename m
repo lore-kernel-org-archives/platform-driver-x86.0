@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6524C13B
-	for <platform-driver-x86@vger.kernel.org>; Tue,  4 Jun 2024 15:08:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248FC13D50E
+	for <platform-driver-x86@vger.kernel.org>; Tue,  4 Jun 2024 15:10:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717513702; cv=none; b=lh/jRg4hZzr6QnrKFEnwkDeH18Sd7UpIwDm/D/Gmy7Yp3J7BfabUnd3g85yZlWWpiT6pgTdXWGOM+ZDV87PhFNplkMF7LK5W2wKlHuS1TPwHSlGhtfph742MoTPkYGKv20C20SgH8AWLhTrAUc3lRm1xA8ghtYl0IDJ12YBYngo=
+	t=1717513801; cv=none; b=VQ8TuesySPnfTUAQUv8LY9qTC6ul8oLhB2/foe9GgdKoElkZZCyHMPI+dZ4zxVJd/lxUYkqnMqCWs7yQurcRmYzQV8yjziPwTkUax5e22KrimJTs9ZQh7/gvcHHLmVPuIA2FmdpB5KuCn8g0ZC5ghGR+AkdZnYaoqI3bdxp4OFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717513702; c=relaxed/simple;
-	bh=fnssSPCdB8Mm8jkalSl4AiSAkln9UFsAoznQSdYYLF0=;
+	s=arc-20240116; t=1717513801; c=relaxed/simple;
+	bh=JkUSeiFunRxHOTWfDcGmh9AFt8gR05QkmrOrw39y61w=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=atkiIJN2cngz8b6CMP9KeybiuQC8uAamj27qhKFIHuiyYw7ZgnNE5ByYyeYjQqiuSUnKsy/jDnhrY9+1LMVMPPvtMVrMjwcdlJpFJaJ2dhivqAFGXEvWPOU/QXKkQJ3I3vRZHpr+Jq5/b9oIg/pKNmV4JHb6C4Z30oiEdj6Qv30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gcsd+APA; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=mDab/ryfBq8Kqlxb1OXDkSNvwAP6H6fyKpxW8ntVXrHHQLfgRVKyQUtu4M4wJZj8eHMtcthrtR4osHxd7JGFX4caqWyzxv+U3Yo6RbYhjdnIHaXncAV73tvY6cJaAURz60y1zt8+XWP0HBoeBksjwF/+d3NXt3WcoXUpd7duijI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lncSVRAT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gcsd+APA"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4EBAAC32786
-	for <platform-driver-x86@vger.kernel.org>; Tue,  4 Jun 2024 15:08:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lncSVRAT"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BDA15C4AF08
+	for <platform-driver-x86@vger.kernel.org>; Tue,  4 Jun 2024 15:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717513702;
-	bh=fnssSPCdB8Mm8jkalSl4AiSAkln9UFsAoznQSdYYLF0=;
+	s=k20201202; t=1717513800;
+	bh=JkUSeiFunRxHOTWfDcGmh9AFt8gR05QkmrOrw39y61w=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=gcsd+APAsQ6VjWM52/PxXrVIs3vY1lY2OsWNVttp2jXFT0IOX7X4B35HzTslozQ8J
-	 KCMv1q7rCfFXlrcgRGACq0KuKGiTXwK8jx7c1U1eixhduWItep+ULULUFx//wtUK63
-	 herXuon3ohbGB42LwSqBZBxY7bfrGnobmgVKoTbQsH8yXRxOo89cQewxGSURp+wyIq
-	 rkUv2GjHDp7RSue0N5jVq8CSMILGS9lckLQWsMAcV4/DvZF2A0EAi6Q5ceNPKo1CbS
-	 LR/t/dL8zpU2MhQ/GA1mp+YpdMZ7/bH7qtKZXsehNrcxGz9F0t5s6+cz/rVrA1DF7k
-	 NmI299DCX9woA==
+	b=lncSVRATwax7b/lGsO9wFR0KLoSiXRxgooS6UPaLTA35KO/gdpQVQm5sak6fMFtEh
+	 B36YB2JHTsE6l/LkJjK+cQxzTP5sdzpo/3OLabEOObakBmnUi3BP8596228btavZw4
+	 zlBdyf4eNkUHWPY0iAVM8FDDOG3goDhWWKRY3kfXjaRbhu3OJJkgJO9W+ggsVf1s7W
+	 jUJ3cxHVw3xpxodXoN9GXQIfGAZzkJvv8ugDu3zTn0VI5ggINVXOfyQ9uugT2R07eu
+	 z9e5VIGUM4xiSxEnf8Ljc+56Nj9aQ5sHD/gdeBVI2y1aoUSsrBDIaxwMkByygGCnS2
+	 BCpaw0IhIO98A==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 38896C53B50; Tue,  4 Jun 2024 15:08:22 +0000 (UTC)
+	id B32E5C53B73; Tue,  4 Jun 2024 15:10:00 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
  models (16Z90S)
-Date: Tue, 04 Jun 2024 15:08:21 +0000
+Date: Tue, 04 Jun 2024 15:10:00 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: agathe@boutmy.com
+X-Bugzilla-Who: W_Armin@gmx.de
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218901-215701-SWbnYYKxoX@https.bugzilla.kernel.org/>
+Message-ID: <bug-218901-215701-QMO50PYM3o@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
 References: <bug-218901-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,14 +64,12 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
 
---- Comment #37 from Agathe Boutmy (agathe@boutmy.com) ---
-(In reply to Armin Wolf from comment #36)
-> Which HUD you are referring to exactly?
+--- Comment #38 from Armin Wolf (W_Armin@gmx.de) ---
+Ok, in this case i will prepare the necessary patches for upstreaming lg-la=
+ptop
+support for your device.
 
-The KDE (i think it's part of it anyway) on screen display. I thought it mi=
-ght
-have been an event not being sent but I think it's just hibernation messing
-some things up in that case so it's unrelated.
+Does you device have an airplane mode/rfkill button?
 
 --=20
 You may reply to this email to add a comment.
