@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63126C13B
-	for <platform-driver-x86@vger.kernel.org>; Tue,  4 Jun 2024 14:59:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960A013D24C
+	for <platform-driver-x86@vger.kernel.org>; Tue,  4 Jun 2024 15:04:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717513146; cv=none; b=pXBhUyxOqmQKdyWf0Bp6CFKoU4RdZtAz0M8baCaSQubxMJOY5QAlS2YgFjvqoVckO+r9Hk3AX0N+UEHDTXFQXKJkUoFwcBMhUN+zPttxSL0R38XuB6AswwOI8Hcbp3YC/3p2csB6qUTuAw3SFUCtTBF9Hy+D/ypcE+cWvKa5ejg=
+	t=1717513488; cv=none; b=Jhk6ZDr0l7sVCFtrGVdHM3d4t1td/QvnrD7MaQSJurqYrTY5TZxnLZPrutleFKDAKgp/OAT6HTV9KNengWlylazgAaRO784qHAGLbMWDULl9S2HAfa4MN2cGED+W0NibVvhWy3S2CX4Khuse6Bq8JmOg7XySHh0ALk6MvK0QBbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717513146; c=relaxed/simple;
-	bh=1b33iUs4cdezdOylrE9KgpCl8WGS/dxbXz4aO0dQvbI=;
+	s=arc-20240116; t=1717513488; c=relaxed/simple;
+	bh=5Kzi5rQ7RURUVInlN7PBkstcEguVGZAi0hGDvcxZB7A=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=k/wiKEDIne5or1qyiBESqGUZJADl7pw8EBXtid9c2JwWtwS4gifqJ0haXwVKktl2b27ARWjIC+hePtE9sTTVlMwrcSLsdVwLhFyguK7341L1hFmqLV9LwnRx/QC43E9QXgm/xCViFYgKUhZeOegjB9O3BYrtuKGVX7KDn8gseQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QU27AwwD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=Kb2s8TDa0tanfo3sIfbbJxyEKf/M+oTBGJ47j+t+6thaC30chefGEpUfvb/8laKbrFskxTrvRMJEL+5NCnYohixhgmTtVBQnFyS4ilJBaTrPPmuttf+WNcwDLt8v1qnkcK3q9loGquYiYQSBWj7Hdri+e5iX7Ovi7KKpupIQD/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QCKF5QXa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QU27AwwD"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3B9D7C2BBFC
-	for <platform-driver-x86@vger.kernel.org>; Tue,  4 Jun 2024 14:59:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QCKF5QXa"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 79340C4AF07
+	for <platform-driver-x86@vger.kernel.org>; Tue,  4 Jun 2024 15:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717513146;
-	bh=1b33iUs4cdezdOylrE9KgpCl8WGS/dxbXz4aO0dQvbI=;
+	s=k20201202; t=1717513488;
+	bh=5Kzi5rQ7RURUVInlN7PBkstcEguVGZAi0hGDvcxZB7A=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=QU27AwwDw+nsKLl0PbddYV2kLTUrdqYFQjRdFVTc7r8tOd9kb3hqjHn5aRyr0PTpt
-	 TwsAL6XaPnSfWmnoSsqfAN6w2as0Q3eM/+h/1Y+4liyb3MnOMXraBNVR+7yqNply6r
-	 R4hxavZzv7z40UJMncnurrBpUGLMaiKUwG8B+eb5Fjyg5jxJh4Tz9DODS/KGxvr2Lo
-	 eJP5snv/TqRmQP+ZNUj83jEl6R4XNyFODUcDyL2ziv4mv1kfYVC/GTnzy+jtadeC/s
-	 OCpuMmX31AhPjj65zkBRNTLAZgbUlBHhe3HCV/eshgfHKlCvMJ1+qUAwdpaUuKJzqZ
-	 8ruUbgcmEE76g==
+	b=QCKF5QXaKytS1lrfk9OD64+JNH/3EojhnGSqVaGXMPFFz/tWRDBUBy+O8BgjofCaG
+	 ZUi2g4ordMzhdbe+b5eziGGF4Mh9sKwq2dODbHnUaeEqWp3rsqK6aQX4C/z74NQs1D
+	 oH0piX2GPmsrUcNnXx+KP01BAKdq4Ep6w2GqIZr5nyoyhUILn3enRqBkX/h3tfMlTH
+	 fKQpwXoQAoc71n/jX9/3co9V2DmNLCoE3y9BXMIa9C1shk7x3DKo5+R8z7L19NhALl
+	 UtO7zFYY5aMj2/E9//MCG6/8EajCay5u5Je53EvcWvcoj1YhogAJqI2XAjEpmLT643
+	 P4nvQOou3mwfg==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 2AB5BC53B50; Tue,  4 Jun 2024 14:59:06 +0000 (UTC)
+	id 552C8C53B50; Tue,  4 Jun 2024 15:04:48 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
  models (16Z90S)
-Date: Tue, 04 Jun 2024 14:59:05 +0000
+Date: Tue, 04 Jun 2024 15:04:48 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: agathe@boutmy.com
+X-Bugzilla-Who: W_Armin@gmx.de
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218901-215701-taghvxHS2c@https.bugzilla.kernel.org/>
+Message-ID: <bug-218901-215701-kZb9DjaMd0@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
 References: <bug-218901-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,13 +64,8 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
 
---- Comment #35 from Agathe Boutmy (agathe@boutmy.com) ---
-(In reply to Armin Wolf from comment #34)
-> So when you disable the keyboard backlight, the ACPI 192 events stop?
-
-Yes. And I think the hud issue might have been because the laptop was in
-hibernation before I tried, after a reboot it seems to work properly
-(hibernation seems to break sound as well but I think I found a workaround).
+--- Comment #36 from Armin Wolf (W_Armin@gmx.de) ---
+Which HUD you are referring to exactly?
 
 --=20
 You may reply to this email to add a comment.
