@@ -1,95 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0EF1AC428;
-	Wed,  5 Jun 2024 12:06:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF916152793
+	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Jun 2024 20:20:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717589166; cv=none; b=ZUe6WasNDKt/4wsSsAcbgfJ9d1zMdn8he/eRk/2yl/oTyhbv2akmp4ItGX0nH1gmxtfUfOrbwYKa4mGJ8AtWtj84Hnw0cWuIYrksf3gtI+x6cq7x/ODs6OJam2z5VqIzPLs0Y6//QvDks1/Cdrcav1NarPl1YUyU6VSJEgo100c=
+	t=1717618827; cv=none; b=JtzLZAm3OhOKi+mmCuImHN7bWcHURADuAcihqbbpGZB3JZ2Erso6Iq27MTlT+x2rOIvYjZWhmx0DPenRYpy+7m5D+oa0TJ1i2WQAsp+X5tRjzoOxZvFOGT+UnJSU8J9mZQIX0yx1pQhzvZfjZDa0kJ9U9ai+k2tWWkQtHYgZVuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717589166; c=relaxed/simple;
-	bh=ESOnc9fBjgjxMNcRQQtZ45fN9raXYVr1D+fYfaUJ/lw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jvfvlVc8qi3kMfmj5xgOGP32wjtOzp9h6U28gRTc/LIr/0ik+773E10Xljo4J4q+d6RP0Ao673oP8d+qAlBm3r0DBF2ix7k+NfT4b4stS5XOFfkbncNBxDFcFc8D3qrn//Dj92XRV9R//dnEG2NJb8F9Cc1odIM0ERWNwLyMTow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MulSHZ6G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717618827; c=relaxed/simple;
+	bh=P7fdAmM7Mk+XqnpTvvPn3AnonWcOsJ7CyxrNPF+WGeU=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KZeszsMT+pKyWgNXkPb1dej3BDigejXGWa+MiuGukZ3nlitMern5C6qL+D0q53d3o4xUtp1CyUK0Euhc/wvVyerUMNgJiv1xou0eykXWaGh3mxp6bxaKFPPjlA1d8JWi23ImSJdcSJI8+X++9Twb6B6CEEWa7nnURmfgnkN9B7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MHt6WnJa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MulSHZ6G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A3AC4AF08;
-	Wed,  5 Jun 2024 12:06:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MHt6WnJa"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3C83AC32781
+	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Jun 2024 20:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717589165;
-	bh=ESOnc9fBjgjxMNcRQQtZ45fN9raXYVr1D+fYfaUJ/lw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MulSHZ6Ge0SAIwuYabF9hMscyepsCnaWoShh5vZAsNK3Ij1wb7vZKOACR/NBnL1JP
-	 lcyIIgHdgzMs2fUBH1MJoL7MTkmH49aWeFr8nnrie3RqUUArPN9RArWMOBWV8LyE1a
-	 H6rnyAxkjCVzatuKKXl1fWlFZogu6gngEhf0eAG9Zx7CunY0NDXR5NT43c2VwSnANs
-	 mXNtge2w89xgAiyH+SBmTYEYjhM1sTZmm4q2skEH+tFCqazthzFGFf0Fx+3XZlQx5o
-	 xgMvjogsJspGitXOiYoTEkEpFIvbK7tKDo7JBj03h3XsJwJL5sqBjF6imDxK2yUBho
-	 wQyuRVFZyUL6w==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: hmtheboy154 <buingoc67@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Sasha Levin <sashal@kernel.org>,
-	ilpo.jarvinen@linux.intel.com,
-	linux-input@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 6/8] platform/x86: touchscreen_dmi: Add info for the EZpad 6s Pro
-Date: Wed,  5 Jun 2024 08:05:49 -0400
-Message-ID: <20240605120554.2968012-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240605120554.2968012-1-sashal@kernel.org>
-References: <20240605120554.2968012-1-sashal@kernel.org>
+	s=k20201202; t=1717618826;
+	bh=P7fdAmM7Mk+XqnpTvvPn3AnonWcOsJ7CyxrNPF+WGeU=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=MHt6WnJaEosbTZQhn5XEe96vIN0eLjfUsfnF84C0K9bRC2JTgEGqBV4JjcitdTeo8
+	 U3NHVvv+00UDjgB5J3a6S127t4fqiAXtpiKNfG45BR6f58/zj6qH4FiNmsUQ83DzBj
+	 5DOcC+QT6uWiUw3+FupARLZC5lYcJhkSfidV/L1CpkWGRhJ5Owua96OwQPXIuHxD3R
+	 nPzn8FwV3KBcE8x3pNhUct+RmNs8FUdt6VBYDhpP3DFt2/ieZmOaPUUkqGuGs0BAQR
+	 3MLTE+aqlaFGBABEbvQYksoM/4987Xi6529hqfKuXUZyk3huq5XHvAQIa1RHZxF8O/
+	 YLYisYR8JIdmA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 35201C433E5; Wed,  5 Jun 2024 20:20:26 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218771] Lenovo Thinkbook - turning off after closing lid or
+ (dis)connecting charger
+Date: Wed, 05 Jun 2024 20:20:26 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: component assigned_to product
+Message-ID: <bug-218771-215701-fLQDXdV0YI@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218771-215701@https.bugzilla.kernel.org/>
+References: <bug-218771-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.218
-Content-Transfer-Encoding: 8bit
 
-From: hmtheboy154 <buingoc67@gmail.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218771
 
-[ Upstream commit 3050052613790e75b5e4a8536930426b0a8b0774 ]
+Mario Limonciello (AMD) (mario.limonciello@amd.com) changed:
 
-The "EZpad 6s Pro" uses the same touchscreen as the "EZpad 6 Pro B",
-unlike the "Ezpad 6 Pro" which has its own touchscreen.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+          Component|Hibernation/Suspend         |Platform_x86
+           Assignee|rjw@rjwysocki.net           |drivers_platform_x86@kernel
+                   |                            |-bugs.osdl.org
+            Product|Power Management            |Drivers
 
-Signed-off-by: hmtheboy154 <buingoc67@gmail.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20240527091447.248849-3-hdegoede@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/touchscreen_dmi.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+--=20
+You may reply to this email to add a comment.
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 30ad533b92914..7fb2603acc06a 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -1280,6 +1280,17 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_BIOS_DATE, "04/24/2018"),
- 		},
- 	},
-+	{
-+		/* Jumper EZpad 6s Pro */
-+		.driver_data = (void *)&jumper_ezpad_6_pro_b_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Jumper"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Ezpad"),
-+			/* Above matches are too generic, add bios match */
-+			DMI_MATCH(DMI_BIOS_VERSION, "E.WSA116_8.E1.042.bin"),
-+			DMI_MATCH(DMI_BIOS_DATE, "01/08/2020"),
-+		},
-+	},
- 	{
- 		/* Jumper EZpad 6 m4 */
- 		.driver_data = (void *)&jumper_ezpad_6_m4_data,
--- 
-2.43.0
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
