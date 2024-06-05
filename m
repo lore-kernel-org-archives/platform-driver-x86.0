@@ -1,154 +1,89 @@
-Received: from wfhigh8-smtp.messagingengine.com (wfhigh8-smtp.messagingengine.com [64.147.123.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6FD910E5;
-	Wed,  5 Jun 2024 02:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590C579DE;
+	Wed,  5 Jun 2024 03:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717555604; cv=none; b=PllEjRk3EUzK4aKaH0zlJ/M10nTjxkBNzStoUD4SQXsO2sTp3WSBdOQPCpsJcEs0+J4li0Jfc1l3GQvwf7ym9HFF6RbvdAZCgWl1zzxh3lwUoeYp1FM/5FeWaP5La0p0sJEWfW+2t5exWYGnVuRnY40MmEc7ZvhwR5hovuM42Ps=
+	t=1717558100; cv=none; b=jspLuDEAciHReVVeWU/vr6wR2TxxMq6rZoFkrCZbaO46KncNmlwGYExGD5Cp0M5njpGZytjCU8M92XxNW0a4vDR890nEWz4l1z5be1Q+xzlXrUxTrZps1ajxYABsleWk51jKysvGSGQ5oozT7rmJSfkI7M58vDrFtz2MNZyLVKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717555604; c=relaxed/simple;
-	bh=mx5oQQDIpZKnQTteAnPD38LpR3Tu7KLeNebCCfqid4s=;
-	h=Date:From:Subject:To:Cc:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b2WzpIEUBM0HHsi0Plo4y+Ep02IvcFgRHw1qJ/Dtu4w2KmYOTgJUsOb0FdIqXlg3oYUWGXyCOm+NAhXHuB9oz95G31bCPpvB48mJkRWWSkAxMdDOZnxIOzB3jltghYY81II01nEdr/aWjo/oDDzOoCvSr0VYSJMm8GGxMFpcFrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=ftyHEgjD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RlcvAH0K; arc=none smtp.client-ip=64.147.123.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="ftyHEgjD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RlcvAH0K"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 90CBA18000BD;
-	Tue,  4 Jun 2024 22:46:40 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Tue, 04 Jun 2024 22:46:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1717555600;
-	 x=1717642000; bh=ZDEaMGjAyUtEyp/oo01G3wTVNw0AXLOJqKr0ugk6K3A=; b=
-	ftyHEgjD2ZiPR2W+LuW6uyhoN3ih1KNKq6KeCs6ihbsXP0oouj1OUqjPsahRUghC
-	ACD7jYDy7/J7N7xXCE06aQLQSPWEesfXroPJE1PAgxBSVxxcAP8sWG/vIdqCvXnL
-	y1rVzkXAS2JW2a+SnX0QBAysZ2eJOFu8qFJhLi2qYVsjRUIpYxyNewRPms+EdGT4
-	Z6d8Mpgj23i6yYIJ9Bel8I0hq5+4Jiy4bl9otmyqiJZxm8gtJqWSglfbxmjy0M0g
-	P5TKXObJS8C3wYCz8kG3qde9WZlSiycXQ/JMyVqTEXA4AiipZNa25UNCu0LOYyPn
-	ILDZienr3E5mqfjuVvUWeA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1717555600; x=
-	1717642000; bh=ZDEaMGjAyUtEyp/oo01G3wTVNw0AXLOJqKr0ugk6K3A=; b=R
-	lcvAH0K17eyIFiMyTHoJFTwKxG2/zhmnBJ10Ztax4uSwPzG9vFceqk+PYEdpJsJp
-	tsKKY2tjPM+4apt22QNULJHUsm9wry5Q0edJKsktDCVbdkPYVMt0D5NTNDPqgW3k
-	czyMIjKISqbRDqnrJO4Wgfh1LUrCxx0FD5cdIl7nCCs7X4CrYxTlWG1uiVsSI3rY
-	Cs2vp+vWJ7V/j38lIclY85cKoMuiXcNxKjiDQ7r1jwpCr9CXXECDpRRgPzFg/pBN
-	KPGn/s7LbmmMFOE1BtlBImmKnndYxyoP9jMBN3x6ByB8vE7XMJFqhYcfWvc7G+XZ
-	ABzJWn881+pMNRA7kWl7A==
-X-ME-Sender: <xms:j9FfZllVVIqrKEBdXAAItgavtyW_X9brkQbBx5mIuJTYbmyUdfWtXw>
-    <xme:j9FfZg1pmM7_E2YBDwR7Hl2DNjCiHnqdNiB6plz05LkvXMn4kckNIcX29iDFB88fp
-    2rrJsa80kzkDriFo74>
-X-ME-Received: <xmr:j9FfZrrAovrLgFVfwO-Df4a_QrxY5s5BqXzKcepgUwyDr2w_jIytSoTOXI1bSLV0u7cP27--O3toby_QhoYewCta_Vw19WznKq5AtbHUCxc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdelhedgiedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhuffvvefkjghfofggtgfgsehtqhertdertddunecuhfhrohhmpefnhihn
-    ughonhcuufgrnhgthhgvuceolhhsrghntghhvgeslhihnhguvghnohdrtggrqeenucggtf
-    frrghtthgvrhhnpedtvdefvdetfeeggeejgeejvdevteejvdehhedtueeugfelhfeuieff
-    ieehffetheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehlshgrnhgthhgvsehlhihnuggvnhhordgtrg
-X-ME-Proxy: <xmx:j9FfZlmXzixD8FI0CrUqyQ2AlGQqQ0Q-MpUeZQ-1qh_KuO7e2AHUVw>
-    <xmx:j9FfZj0rQKDSIjksGoc6IpW72vrrYz4e204zY2Lez0NKki_k2qmtCQ>
-    <xmx:j9FfZkvTTSWrBG_uK_t5wah8VYu9H3HO4A1yZghCs-MTcITfKS3iwA>
-    <xmx:j9FfZnXquROSU1Ut8ZmEZ2Lxm6Gtoxt_oefWK5x3QxkP5o6MqKX0gA>
-    <xmx:kNFfZj-5kvvr5You9fLpVayeJJEohuQgqvIGBySOZoR3Q_5C7JxdsPoX>
-Feedback-ID: i1719461a:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 4 Jun 2024 22:46:37 -0400 (EDT)
-Date: Tue, 04 Jun 2024 20:46:29 -0600
-From: Lyndon Sanche <lsanche@lyndeno.ca>
-Subject: Re: [PATCH] platform/x86: dell-pc: avoid double free and invalid
- unregistration
-To: Thomas =?iso-8859-1?q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Hans de Goede <hdegoede@redhat.com>, Ilpo =?iso-8859-1?q?J=E4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Message-Id: <HD6LES.A9HJVAFECS8L3@lyndeno.ca>
-In-Reply-To: <20240604-dell-pc-double-free-v1-1-6d81255b2a44@weissschuh.net>
-References: <20240604-dell-pc-double-free-v1-1-6d81255b2a44@weissschuh.net>
-X-Mailer: geary/46.0
+	s=arc-20240116; t=1717558100; c=relaxed/simple;
+	bh=AhHaZSHnGtq79rWfWTN2pKgAlYSGLJ0mpECqHrYgChc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Hqd4hAPLCqm0oNkQP4C7huzeuJYnL5SSnt8yuD+l7oBBgbTi/fj7J7yBYXzMFkT3xJ6/Hr8PVBmt/Nd/MSnsERJl6JuBjyhQTM0bHOUHsPZxo5OKiqbppQYZhViW8hJqTcwNbhOSKDR9JBN6AnOLvvtWTe6aAM9x51Ygocpv0zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-03 (Coremail) with SMTP id rQCowAB3mSZF219mfk9CDw--.26228S2;
+	Wed, 05 Jun 2024 11:28:06 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	vadimp@nvidia.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] platform/mellanox: nvsw-sn2201: Add check for platform_device_add_resources
+Date: Wed,  5 Jun 2024 11:27:45 +0800
+Message-Id: <20240605032745.2916183-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowAB3mSZF219mfk9CDw--.26228S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kw15KFyfZw15Ww4rGw4UArb_yoW8GFWDpr
+	yxua92kry7Gr4q93y7Ary3ZF15CayYvFWYqay3Aws3Zas8WFWDAr95tFyayrn2qryUGr18
+	Aw1xtr45ZFs3JaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkv14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8
+	GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
+	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUxb18UUUUU=
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
+Add check for the return value of platform_device_add_resources() and
+return the error if it fails in order to catch the error.
 
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/platform/mellanox/nvsw-sn2201.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-On Tue, Jun 4 2024 at 11:41:24 PM +02:00:00, Thomas Wei=DFschuh=20
-<linux@weissschuh.net> wrote:
-> If platform_profile_register() fails it does kfree(thermal_handler)=20
-> and
-> leaves the pointer value around.
-> Any call to thermal_cleanup() will try to kfree(thermal_handler)=20
-> again.
-> This will happen right away in dell_init().
-> In addition, platform_profile_remove() will be called although no
-> profile is registered.
->=20
-> NULL out the thermal_handler, so thermal_cleanup() avoids the double=20
-> free.
->=20
-> Fixes: 996ad4129810 ("platform/x86: dell-pc: Implement=20
-> platform_profile")
-> Signed-off-by: Thomas Wei=DFschuh <linux@weissschuh.net>
-> ---
-> Currently the call to thermal_cleanup() in dell_init() is completely
-> unnecessary. But I guess more functionality will be handled by the
-> driver and then this structure makes sense.
->=20
-> This is untested.
-> ---
->  drivers/platform/x86/dell/dell-pc.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/dell/dell-pc.c=20
-> b/drivers/platform/x86/dell/dell-pc.c
-> index dfe09c463d03..972385ca1990 100644
-> --- a/drivers/platform/x86/dell/dell-pc.c
-> +++ b/drivers/platform/x86/dell/dell-pc.c
-> @@ -261,8 +261,10 @@ static int thermal_init(void)
->=20
->  	/* Clean up if failed */
->  	ret =3D platform_profile_register(thermal_handler);
-> -	if (ret)
-> +	if (ret) {
->  		kfree(thermal_handler);
-> +		thermal_handler =3D NULL;
-> +	}
->=20
->  	return ret;
->  }
->=20
-> ---
-> base-commit: 0da7a954480cc99978e3570c991e3779e56fc736
-> change-id: 20240604-dell-pc-double-free-e8cf2aa9b2fb
->=20
-> Best regards,
-> --
-> Thomas Wei=DFschuh <linux@weissschuh.net>
-
-Thank you for this patch. I was able to apply your patch and compile=20
-successfully. I have not had a chance to try it on my hardware.
-
-I agree with the change, and it looks good to me.
-
-Thanks,
-
-Reviewed-by: Lyndon Sanche <lsanche@lyndeno.ca>
-
+diff --git a/drivers/platform/mellanox/nvsw-sn2201.c b/drivers/platform/mellanox/nvsw-sn2201.c
+index 3ef655591424..abe7be602f84 100644
+--- a/drivers/platform/mellanox/nvsw-sn2201.c
++++ b/drivers/platform/mellanox/nvsw-sn2201.c
+@@ -1198,6 +1198,7 @@ static int nvsw_sn2201_config_pre_init(struct nvsw_sn2201 *nvsw_sn2201)
+ static int nvsw_sn2201_probe(struct platform_device *pdev)
+ {
+ 	struct nvsw_sn2201 *nvsw_sn2201;
++	int ret;
+ 
+ 	nvsw_sn2201 = devm_kzalloc(&pdev->dev, sizeof(*nvsw_sn2201), GFP_KERNEL);
+ 	if (!nvsw_sn2201)
+@@ -1205,8 +1206,10 @@ static int nvsw_sn2201_probe(struct platform_device *pdev)
+ 
+ 	nvsw_sn2201->dev = &pdev->dev;
+ 	platform_set_drvdata(pdev, nvsw_sn2201);
+-	platform_device_add_resources(pdev, nvsw_sn2201_lpc_io_resources,
++	ret = platform_device_add_resources(pdev, nvsw_sn2201_lpc_io_resources,
+ 				      ARRAY_SIZE(nvsw_sn2201_lpc_io_resources));
++	if (ret)
++		return ret;
+ 
+ 	nvsw_sn2201->main_mux_deferred_nr = NVSW_SN2201_MAIN_MUX_DEFER_NR;
+ 	nvsw_sn2201->main_mux_devs = nvsw_sn2201_main_mux_brdinfo;
+-- 
+2.25.1
 
