@@ -1,142 +1,189 @@
-Received: from wfout8-smtp.messagingengine.com (wfout8-smtp.messagingengine.com [64.147.123.151])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7791BDEF;
-	Thu,  6 Jun 2024 21:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351A2535C8;
+	Thu,  6 Jun 2024 23:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717707757; cv=none; b=JnmHgp4Tyog090bQwb+Qzm/dWnMkDF1eINDa5Bi/qzSMf2heHu3hRKjZ2Jv1qwGwtD7480mkKWBAFe4wbcVIJBy/BmgNrcKQHxxTrGiVVDJt54Zpr+2R0wJ6DlJlWsNfkFaPl0jO4nCmKhr40QhTB2lNH4Xf1YnZ4MAxeyWh6zM=
+	t=1717715423; cv=none; b=RsIivA2gUSgbHWSHVw4IwafTsquJMFEBha4nhBokWB6FyZdoHFNOlJOebH8xAzIB7adLqWPGsovW7Vo/zCQmUX6YhQJEx91B+guogYrZct0cAZBNVBkvFEdJ5igdx/LJ+qa3HJcDmtMIv6NTiJ8l4ca+8RB6IN7LhCsO62+ACww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717707757; c=relaxed/simple;
-	bh=bDsqxRooWCdjWyPTzlHhrZfhWaMUAvMVQ5/shWIiog0=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=UDP0oTCVRu9Q+Z+e6g6uT9LkbZvdwDh6JlyzDRunQAViSxlyC8gKijY7q1mOpczeeQOMi3Wc9qPmO9ckSIv8ahB1ky5iUoLUMRTwCeRYm+kLyGtIXtlY9avZUD3x/jkpGynazdTPHxnLGpCg9hz/hGyidmzZ0axiZ+Qxbig1JyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=FoPvpfdD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=X9cEbXp2; arc=none smtp.client-ip=64.147.123.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1717715423; c=relaxed/simple;
+	bh=uZpkgoX0ZHSHKRvOkliopYBpBqKI54AIsFmuJuGonpM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TgDST6D1mQq9GJW7ZE5uaJKiUmKhvW0CjqfwYy/oQQjSninrC9+iVV68zx/RP2ShTNIK7EhRxcopr3VC6igpqClXa2Bzy92dValULIkZ2/sd4R6YaCWLIivJwy0oCVPHDLr4JzLXQ77ycgnAh5bDpePSH3EwCIUGy52JCyKeCAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=q6gQnW5b; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="FoPvpfdD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X9cEbXp2"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfout.west.internal (Postfix) with ESMTP id AA6AA1C00086;
-	Thu,  6 Jun 2024 17:02:33 -0400 (EDT)
-Received: from imap41 ([10.202.2.91])
-  by compute2.internal (MEProxy); Thu, 06 Jun 2024 17:02:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1717707753; x=1717794153; bh=CvM2CbIlZy
-	6Nocsmf11iGttvJDsTsVmYcfalRdHcefo=; b=FoPvpfdDEJceh7wl4ca5elp9x2
-	aaIBmZMiTpKC4QcdDIpY+ZBdk7ay1MMrtebFBLHKM9yAD0+CvKUF7x5eXiyu+rMF
-	uS83v5O2oCldNtV2BuK9g+bc3KTiR5jvzlJjcxE4+C8ZT6zxZ8hjv8s+YqyjxOOF
-	FEgdfXsZzB1QfM1t4u245/1h0WQW0pfhlviwSIHgSVh1O+k7VQYGb1MyY73wF43M
-	KLueMC6YHojg0yAtURbL/kRQI6ekj+2nIkNEBat02P4nDYm1rexDUzVLbwLvmDnB
-	8UrEZRUPYwxS/UPf+s385817kCdwZPZuRBFCCYnJKVtK8XNO4VrXsuPowRwQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1717707753; x=1717794153; bh=CvM2CbIlZy6Nocsmf11iGttvJDsT
-	sVmYcfalRdHcefo=; b=X9cEbXp2MWv1P56ooJnmrX0EQHZ5k88ALW5Mrh1zm5t/
-	v1Y94oOuTV8nD/FAu8AbdMXNhrJtO7KaykhuK1FWHbEO0RahT5Dnud/oJDgf44Q8
-	a+CI6worLpt+s7kGc18GSSmtMvTpU0HGbwvWAUsmLnpAcapacvFrojKNjryeEVt+
-	GehMRQEPjLp2SHr2Pd+x6ma8stBhFtrofh50IhZBbe7AcJY8v4+vXWuV97z/M/xY
-	ZaVBcVFRPXuLczS2kj4btiS/W8/u/j05nyYnfQtRA+Zww3W8LPF2WRmHAzm1PF5l
-	56/4yrPN5hNvD5eVzOrc2eepwjJYEFihjRJnvNYWdA==
-X-ME-Sender: <xms:6SNiZm4bQpoZ5IoLBUQXW3WCtlVA-1v0folEiit4V6iaaHxXuNivtg>
-    <xme:6SNiZv6dKAjvmTHAk04it4HPGNlTYrrK9TGZQ28MUEhsWdArze4QE_h7uJwfo2D5m
-    y6GL2-nsLnFHtyxZDE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdelkedgudehhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdfn
-    uhhkvgculfhonhgvshdfuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrth
-    htvghrnhepleffveevfffhueetteetveetleetuddugfejvdeljeetteelhfeiiedugfev
-    leefnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:6SNiZlfRxdgZ3Sua2V8JKPsNyiJfx1nN5GiaBGacI7pF76sxlkEj-Q>
-    <xmx:6SNiZjK4ZblDDQU8e_l06QhgL3C87yUnoSOXf01IRP8rZ-o8aNn2_A>
-    <xmx:6SNiZqIdKLqGsYqwHi4s10xIFkpUFnEeRSZXF7_DiNfjJi0aBR82JQ>
-    <xmx:6SNiZkzG8pvSo6SEJlWngutOiiyiQ6lESkiQgfGiokPGSjaXaqaDrg>
-    <xmx:6SNiZi84RQg278NuUhjnxzayMLL_toLufwK-cqgNHrURN2iMHE5zLcjE>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 02DD82340080; Thu,  6 Jun 2024 17:02:33 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-497-g97f96844c-fm-20240526.001-g97f96844
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="q6gQnW5b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1717715406; x=1718320206; i=w_armin@gmx.de;
+	bh=r3UGZP34pSdCmuoOJgMLTbyJg868znqcxvx43HN2viE=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=q6gQnW5bOtCEi1nVGIYxOcAaBidptP7+BrLsnZg9avgowE50UZV9iwyKRFNjrDuC
+	 x5Y0TiClPTp+sddKKPgODlZ790UGsU+aVV2TGG4o5Zww1fH6lCbix2AxEnWeIZMCt
+	 JY4nHotNpQUA23uJK5tU2kKIw2eg5MIeFJuVyreff19Sva3k4fM0LOPDMBukW8nE7
+	 BO1P4Dt7cqa5HQPAR31+kVIM00epm8dvvF7OKoW060xftdQjcU5Gp2H9f0r33tgQV
+	 7lR249t/jW8yoaijCJWSNSEWwr1eYcvyjI0dgNABx6mTsxh+B+tVmgUmcXjiTL0UG
+	 4yt91Htsroe3Ss6ScQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M5wPb-1sLi2I3U79-004ZsM; Fri, 07
+ Jun 2024 01:10:06 +0200
+Message-ID: <41964782-222c-45fa-846e-3656eff5b3a9@gmx.de>
+Date: Fri, 7 Jun 2024 01:10:02 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <01808eec-29e4-4901-a5bf-396ec2eff3fe@app.fastmail.com>
-In-Reply-To: <fc03506c-210f-4d79-9a99-8bc9b0587d25@redhat.com>
-References: <20240529012827.146005-1-luke@ljones.dev>
- <b0d8eebc-5abb-4ec0-898c-af7eedc730d9@redhat.com>
- <dflqwdl4fo3wv4zjj4jl6sbot6cotscksgpyrbiu3j77lyrwal@s6nomonx4gv6>
- <fc03506c-210f-4d79-9a99-8bc9b0587d25@redhat.com>
-Date: Fri, 07 Jun 2024 09:02:12 +1200
-From: "Luke Jones" <luke@ljones.dev>
-To: "Hans de Goede" <hdegoede@redhat.com>,
- "Benjamin Tissoires" <bentiss@kernel.org>
-Cc: "Jiri Kosina" <jikos@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH v1 0/2] asus wmi and hid: use HID LED for brightness
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 0/6] power: supply: extension API
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Sebastian Reichel <sre@kernel.org>, Jeremy Soller <jeremy@system76.com>,
+ System76 Product Development <productdev@system76.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <20240606-power-supply-extensions-v1-0-b45669290bdc@weissschuh.net>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20240606-power-supply-extensions-v1-0-b45669290bdc@weissschuh.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:XnmGkXgamiaRxbeD1IgTCuqVk0j44qy6FU4T+qzoOk8JwvhHzkv
+ YWoTQXvyvgvBhvD0ChNHo3jLStW1ghBT4BArjhDhFTXAiknsDMFIabIuzXgqb/UH9lCTOTw
+ cMXs0pWkNAMPFWgEYcuTVfw5y05Xw7LKcuwBXKIjhWCP2RNmXKbELwxw5yAw9phpqJDugsL
+ YlWXebXi0sAXHDnHVWzZg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:8wTKlJo3rsU=;SqIwOCNJCMxsa8ebkdNaNyBqs8Q
+ zoSwcJsNH5kreIpL5om/BP5kCqirGqrg6lkcwNqMgO0i118AI8cTU30HRAcrTIRxoE/TpV4I5
+ gWniWCYXI4lpIu+KdUS/WRF9wc3HrMDe4hWRHTeNCWRviGX9mr7MpuLi0ZcxbiRkmHxDmuA8F
+ n/T5Pw0TeaIclOV9P9dIzcbud4dsZMQqwlkAFnlQgxYOSw/9V1LCIDbfKumyVBxvQ+TVTdWyS
+ daFu0MwdnZ6oTCrA0H/Pz7u2ggPTmavD535yKYhyQ3O+kGaKbR6ZlqWsG+xUFKuBupQiBgFx8
+ pyGfD1CZPiSNunQORGpVyr7K/5LBIprPNLJXUTiP2gsWf0IoaHOelsco2G6ISsCOBrlco7+45
+ WNrOA2rij2E8PeemO4Z4PdVKMsxj5cPvu/C8co9rQtlvGAa2JW/0U9SKIi67d/AVoBDxz+nn0
+ VemW/lhxkY65QC0tm1xe62c2tABLdJBysEAmmB/esq9nlUkReM+tuNAp/8iD60AXskPqk4bly
+ +eYtgFWdNBmm9LtPfNFsf6Ch3t/OsK5IozgHtKKQ+2WgP2bU8LwJVEYgCB/+IdSmW2o32ymvx
+ x8N7BLea37/9c0zaBvEL0t2f5yEFV6QgDB81MTfzqQz6OW55YGCGgJi/WwytwP7kJYiDYW9X4
+ EUve18pVY1YTgNJHMD4T9tqs0HwB8xQthn7zfF/WBIEQGyKEQON9nKGagMy/fV/9bblcUFmXB
+ ItjPIh4UBwGmfE/c3BCI333wHnAvUpc7DGkTTsu1RgOn+PwMZBPItZ7m6HO9oH5mWqM/pqzkT
+ Mfyvwh4NgRP0JoRaUnaSTShUJm+8araJLJ/lN8m87WYuY=
 
-On Thu, 6 Jun 2024, at 9:53 PM, Hans de Goede wrote:
-> Hi Benjamin,
-> 
-> On 6/6/24 10:49 AM, Benjamin Tissoires wrote:
-> > On May 29 2024, Hans de Goede wrote:
-> >> Hi all,
-> >>
-> >> On 5/29/24 3:28 AM, Luke D. Jones wrote:
-> >>> Changelog:
-> >>> - v1
-> >>>   - Split the patch in two
-> >>>   - Move function body to asus-wmi and export
-> >>>   - Use array of names and for loops
-> >>>
-> >>> History:
-> >>> - https://lore.kernel.org/linux-input/20240528013959.14661-1-luke@ljones.dev/T/#u
-> >>>
-> >>> Luke D. Jones (2):
-> >>>   hid-asus: use hid for brightness control on keyboard
-> >>>   hid-asus: change the report_id used for HID LED control
-> >>>
-> >>>  drivers/hid/hid-asus.c                     | 32 +++++++++++++++++++-
-> >>>  drivers/platform/x86/asus-wmi.c            | 35 +++++++++++++++++++++-
-> >>>  include/linux/platform_data/x86/asus-wmi.h | 10 +++++++
-> >>>  3 files changed, 75 insertions(+), 2 deletions(-)
-> >>
-> >> Jiri, Benjamin since the first patch now also touches pdx86 files
-> >> we need to coordinate merging this.
-> >>
-> >> There also is a long list of patches pending for
-> >> drivers/platform/x86/asus-wmi.c
-> >>
-> >> So I would prefer to take this series (both patches) upstream through
-> >> the pdx86 tree to avoid conflicts.
-> >>
-> >> May we have an ack from one of you for merging this through pdx86/for-next ?
-> > 
-> > Sure:
-> > Acked-by: Benjamin Tissoires <bentiss@kernel.org>
-> 
-> Thank you for the ack.
-> 
-> > But I haven't seen the v2. Are you sure you want to take this series as
-> > it is?
-> 
-> No I plan to wait for v2, I just thought it would be good to have
-> an ack to merge this through the pdx86 tree beforehand.
+Am 06.06.24 um 16:50 schrieb Thomas Wei=C3=9Fschuh:
 
-My apologies for the delay, I have v2 prepped, but I'm waiting on feedback from a few folks regarding the 2024 G16 and G14, plus the TUF laptops - these are possibly affected by the patch. Shouldn't be more than a day or two now.
+> Introduce a mechanism for drivers to extend the properties implemented
+> by a power supply.
+>
+> Motivation
+> ----------
+>
+> Various drivers, mostly in platform/x86 extend the ACPI battery driver
+> with additional sysfs attributes to implement more UAPIs than are
+> exposed through ACPI by using various side-channels, like WMI,
+> nonstandard ACPI or EC communication.
+>
+> While the created sysfs attributes look similar to the attributes
+> provided by the powersupply core, there are various deficiencies:
+>
+> * They don't show up in uevent payload.
+> * They can't be queried with the standard in-kernel APIs.
+> * They don't work with triggers.
+> * The extending driver has to reimplement all of the parsing,
+>    formatting and sysfs display logic.
+> * Writing a extension driver is completely different from writing a
+>    normal power supply driver.
+> * Properties can not be properly overriden.
+>
+> The proposed extension API avoids all of these issues.
+> An extension is just a "struct power_supply_ext" with the same kind of
+> callbacks as in a normal "struct power_supply_desc".
+>
+> The API is meant to be used via battery_hook_register(), the same way as
+> the current extensions.
+>
+> For example my upcoming cros_ec charge control driver[0] saves 80 lines
+> of code with this patchset.
+>
+> Contents
+> --------
+>
+> * Patch 1 and 2 are generic preparation patches, that probably make
+>    sense without this series.
+> * Patch 3 implements the extension API itself.
+> * Patch 4 implements a PoC locking scheme for the extension API.
+> * Patch 5 adds extension support to test_power.c
+> * Patch 6 converts the in-tree platform/x86/system76 driver to the
+>    extension API.
+>
+> Open issues
+> -----------
+>
+> * Newly registered properties will not show up in hwmon.
+>    To do that properly would require some changes in the hwmon core.
+>    As far as I know, no current driver would extend the hwmon properties=
+ anyways.
+> * As this is only useful with the hooks of CONFIG_ACPI_BATTERY, should
+>    it also be gated behind this or another config?
+> * Only one extension can be used at a time.
+>    So far this should be enough, having more would complicate the
+>    implementation.
+> * Is an rw_semaphore acceptable?
+>
+> [0] https://lore.kernel.org/lkml/20240528-cros_ec-charge-control-v2-0-81=
+fb27e1cff4@weissschuh.net/
 
-Regards,
-Luke.
+Nice, i love this proposal!
+
+I agree that the hwmon update functionality will need some changes in the =
+hwmon core to work,
+but there would be at least one driver benefiting from this (dell-wmi-ddv)=
+. Maybe we can add
+support for this at a later point in time.
+
+The possibility of registering multiple power supply extensions on a singl=
+e power supply will
+be necessary to support battery charge control on Dell notebooks in the fu=
+ture. This is because
+there will be two drivers on Dell notebooks which register battery extensi=
+ons: dell-wmi-ddv and
+dell-laptop (when support for battery charge control is supported someday)=
+.
+
+How difficult would it be to support such scenarios? If its very difficult=
+, then maybe we can implement
+this later when the need arises.
+
+Thanks,
+Armin Wolf
+
+> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+> ---
+> Thomas Wei=C3=9Fschuh (6):
+>        power: supply: sysfs: use power_supply_property_is_writeable()
+>        power: supply: core: avoid iterating properties directly
+>        power: supply: core: implement extension API
+>        power: supply: core: add locking around extension access
+>        power: supply: test-power: implement a power supply extension
+>        platform/x86: system76: Use power_supply extension API
+>
+>   drivers/platform/x86/system76_acpi.c      |  83 +++++++++---------
+>   drivers/power/supply/power_supply.h       |   9 ++
+>   drivers/power/supply/power_supply_core.c  | 136 ++++++++++++++++++++++=
+++++++--
+>   drivers/power/supply/power_supply_hwmon.c |  48 +++++------
+>   drivers/power/supply/power_supply_sysfs.c |  39 ++++++---
+>   drivers/power/supply/test_power.c         | 102 ++++++++++++++++++++++
+>   include/linux/power_supply.h              |  25 ++++++
+>   7 files changed, 357 insertions(+), 85 deletions(-)
+> ---
+> base-commit: 2df0193e62cf887f373995fb8a91068562784adc
+> change-id: 20240602-power-supply-extensions-07d949f509d9
+>
+> Best regards,
