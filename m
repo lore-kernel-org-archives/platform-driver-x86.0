@@ -1,104 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674BD1940AA;
-	Fri,  7 Jun 2024 13:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F2E15DBC1;
+	Fri,  7 Jun 2024 13:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717766081; cv=none; b=JJIJpdZSYsM1oO5kLuHDP0sa0ybjCiPnMRqTSS2LhEKssKb2yffv8zno/sRaRROz7AV2mDuQKtlTEMqDbZUspCR+oVKnntxZX+09lTmNPoH+P+ILV2GpxXEgIOUQth8SuR6kvxVImMY70nNE1y277BQtSwIdnLYkYs2svn/kNDI=
+	t=1717766574; cv=none; b=pmuskYLnt14vC8+wQlVwGPeePiN/ypd3kh1NIAca2gHtSmJyDmeFHGP1ta50qQNIQiZuPjzmc/KirioBYc1t+/XsqAzl6O6JL8oIOLQ5i5t/bxMK698/JhXieCxjtvgd5881Z6ko7vYngszohFKFYwe6VuIkZ6R3pWhNgVGewqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717766081; c=relaxed/simple;
-	bh=ABua8CX7aHFShIRy1tF0NN3EsSEVeFn4ti8y8bQ86LI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=DT472yQ/NxTuez/fguHtBt/JkkLBlFKD1kDXap+6XZLRBdLgfqI3ppCdoB5ocsKtWQ4xKtIOXFYYHo3GnZ9vEbJ2j+M6HEiq+HKtSHCrrsIaHqxyFLdGxWqChWGo7sCCpoS/sqZzuCodmYCPeiENJFCyolMAGDiqZCqWl4KHAuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PgHxPZt2; arc=none smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1717766574; c=relaxed/simple;
+	bh=HA7k21McxCzM1Wd5tina4b9xJX2yCPad3KU7yAY27LI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=TRL1l4YR09UnyfNQtnG2it70wL8fFVJcryq61HCIzOIMSMZhjsa9W5sL7g5cpJV3GIqF22BvreyV54NQCjBTSGJvEONTUuQ9Ncu+4YFgvO+D2dWBCxyhe2q0/6xn5RojsA+BzWGsU212U1/QnJnbfl+rqcVbVtm/Vwi4bbdrxgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IbNHu0uU; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PgHxPZt2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IbNHu0uU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717766080; x=1749302080;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ABua8CX7aHFShIRy1tF0NN3EsSEVeFn4ti8y8bQ86LI=;
-  b=PgHxPZt22JXZugfVwlbzaIYTId4dCKy3xecpLaqRw5fiY8o3nYzjHu9c
-   rwndPRfsuk2DZ6RlH179VPouCOHPe77rm7tBpoNEAc7D1NWD5b6eSE5Sz
-   jIRigo7OV/yA1gHs4V5j6GvwP3vxsz8u6ztve/1IZ9+NeWd4vd6CP9Iao
-   BZqDUw8ULjEm0rfTdzgeZsSk3v2j9xAisET8jDYW1urkjxuCBGqtu08zV
-   7+J3Zhqr2dPhgrZJkTsqOs83uiTmsZD3f/vQbYs9+g5DIRIVE2jW7Mxs+
-   +36KI7w6jPvMGl68FK0DaP1SqlKeBs5FE4VEUKX1Q453qPo3FgsnC2MJO
-   Q==;
-X-CSE-ConnectionGUID: uFKubQRRSYW8kvT8L38SLQ==
-X-CSE-MsgGUID: c5hfHB+ST1WXu42ZT1Lleg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="14439371"
+  t=1717766572; x=1749302572;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=HA7k21McxCzM1Wd5tina4b9xJX2yCPad3KU7yAY27LI=;
+  b=IbNHu0uU4aStn8jEiJQK9gVfngAuBh3xBF7JMLc6fWHySlBmBLC0tSDY
+   sT2jeLV9NyY8ZoCYGkZ6Ql8+XMI/2HrOqYG5DWsziA9FmG2BhJ/UPRrme
+   oHBI+Bl5KC7slVICRJEKVfPqXML7lTexlWxSaGjEJ9jPEh6e7hz5iq1lD
+   8gHY7UlmiZeq0dNlYxg0jguTn7+VfNQx/Zbo7jZ4E50QNa2yYN8+CNCOA
+   vIeaIJp5RCGZUdw7GHByXU8FK5Zbau+r464IrIS79xwtQp360qtgg21B2
+   /+ccr2YL896LVuB6QXYUPppZK726eVjGKTEdraKKZk4+DmxjFWlAGUFLp
+   g==;
+X-CSE-ConnectionGUID: G4NkuM9IT4u/Ni/22LDVgA==
+X-CSE-MsgGUID: /MwOVzQbR7eZW+FJwnEi2Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="14290983"
 X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
-   d="scan'208";a="14439371"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 06:14:39 -0700
-X-CSE-ConnectionGUID: bZNr/o6LQJeUN3T2eDzpfA==
-X-CSE-MsgGUID: i+N3Z6ggQ2+Wz4+Q7tsZkA==
+   d="scan'208";a="14290983"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 06:22:52 -0700
+X-CSE-ConnectionGUID: KIY+D643RKSGlC9J2katxA==
+X-CSE-MsgGUID: qkTb7GKBRJqJFt9ioBHCtg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
-   d="scan'208";a="38440144"
+   d="scan'208";a="42741001"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.184])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 06:14:36 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 06:22:50 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 7 Jun 2024 16:14:33 +0300 (EEST)
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: linux-doc@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH V3 1/3] platform/x86/intel/sdsi: Add ioctl SPDM
- transport
-In-Reply-To: <20240606011617.557264-1-david.e.box@linux.intel.com>
-Message-ID: <b32cd809-7aed-62ed-1b6e-550221a3acbb@linux.intel.com>
-References: <20240606011617.557264-1-david.e.box@linux.intel.com>
+To: Lyndon Sanche <lsanche@lyndeno.ca>, Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240604-dell-pc-double-free-v1-1-6d81255b2a44@weissschuh.net>
+References: <20240604-dell-pc-double-free-v1-1-6d81255b2a44@weissschuh.net>
+Subject: Re: [PATCH] platform/x86: dell-pc: avoid double free and invalid
+ unregistration
+Message-Id: <171776656561.2612.17760986388744096307.b4-ty@linux.intel.com>
+Date: Fri, 07 Jun 2024 16:22:45 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.13.0
 
-On Wed, 5 Jun 2024, David E. Box wrote:
+On Tue, 04 Jun 2024 23:41:24 +0200, Thomas Weißschuh wrote:
 
-> Intel On Demand adds attestation and firmware measurement retrieval
-> services through use of the protocols defined the Security Protocols and
-> Data Measurement (SPDM) specification. SPDM messages exchanges are used to
-> authenticate On Demand hardware and to retrieve signed measurements of the
-> NVRAM state used to track feature provisioning and the NVRAM state used for
-> metering services. These allow software to verify the authenticity of the
-> On Demand hardware as well as the integrity of the reported silicon
-> configuration.
+> If platform_profile_register() fails it does kfree(thermal_handler) and
+> leaves the pointer value around.
+> Any call to thermal_cleanup() will try to kfree(thermal_handler) again.
+> This will happen right away in dell_init().
+> In addition, platform_profile_remove() will be called although no
+> profile is registered.
 > 
-> Add an ioctl interface for sending SPDM messages through the On Demand
-> mailbox. Provides commands to get a list of SPDM enabled devices, get the
-> message size limits for SPDM Requesters and Responders, and perform an SPDM
-> message exchange.
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Link: https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.1.pdf [1]
-> ---
-
-> +static int sdsi_spdm_do_command(struct sdsi_priv *priv,
-> +				struct sdsi_spdm_command __user *argp)
-> +{
-> +	u32 req_size, rsp_size;
-> +
-> +	if (get_user(req_size, &argp->size))
-> +		return -EFAULT;
-> +
-> +	if (req_size < 4 || req_size > sizeof(struct sdsi_spdm_message))
-
-Hi David,
-
-Is that 4 actually SPDM_HEADER_SIZE?
-
-If my guess is correct, no need to send an updated version, I'll just fix 
-it while applying.
+> [...]
 
 
--- 
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/1] platform/x86: dell-pc: avoid double free and invalid unregistration
+      commit: dd637f5cd5f334d2d014872544470031415cec3b
+
+--
  i.
 
