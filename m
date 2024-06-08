@@ -1,63 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E0420EB;
-	Sat,  8 Jun 2024 03:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077EB79EF
+	for <platform-driver-x86@vger.kernel.org>; Sat,  8 Jun 2024 07:02:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717818293; cv=none; b=JhzLkDFftDk2kR9voOV3iWrDA7ZV/bqilrqrKXUxdvaoX+HGg3DwAn9E/GsXWOSCCzO2MfES8BZe7sUj+rDtPv7FBe2mgjPnbwzrvY8o3wMpE7tdZO5EYDY16t/Luz/RvnRutOKbv4R7U1c4ZfL7kEneU+Xdep9F0f2Cjirmo4c=
+	t=1717830144; cv=none; b=evvc7Zsv/tEf4y+2aDZ+jPEUh/ZpyKIYgj0lfzxvlQs5Aa3Ie/+t1CBjgJ+XhfOjGFvd6fMX8hATZFOycXf/chATvQEvGYrnCQEHu/44BNbi5nuSiGzzreCPskM60+vAAXK9hxmUbQK7lmkUJ2cLVGgxfrVzQuGof7KbzZkcv5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717818293; c=relaxed/simple;
-	bh=h3nmL7t5Wz+TTNjk2K/5BGwjV18TbLQal4X7ok/8ei8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OknhalJ+cmSeqS/6Sh80fJbzBtyCKVpJ4lUqxXEbHlEfK37QMTemI65SkutpX2PpbPgADtR/9PyFnmm/+09ELraaVDrSGUYl2BsV01rptZhTyZg3F+8dtYy2NPGhfoPsbD7pX4viEB94rC4ipkikqxN7zeGN8AQnxZlzZSyDTIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dwoGk2k2; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717830144; c=relaxed/simple;
+	bh=65GJ4pE9eE1Y9sBHUsOVeOgo6qaT1yItZfjBioIRvkI=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FJttFsZQtGIhPBWU21c8Igf9TJ6KayFJGdsBRbQnX4tsi+tduBUSuRcvYQ9D9mATS9DQW7dDAq8h2OGY6YamPZRiOi4lY9EYeCh4O6qEHl7PCNYtD4tVaXhQOC45hHsvl1JSCWzeFUBKy3TsbQDQlnC/3GPPFojlAUDdZ/hlwxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q6dG742Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dwoGk2k2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717818290; x=1749354290;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=h3nmL7t5Wz+TTNjk2K/5BGwjV18TbLQal4X7ok/8ei8=;
-  b=dwoGk2k2m5kHZXTX7Vh1rF37jbyPJg1Z4YODAAooXMG0/oL+moEpowUz
-   Lruj6Wkp/zlHoIi6J2jzyporO9ShGpMrhBDxCn/mwvkrVZ3no/yN/zrw2
-   lMSWid+pfjbAJ4PM1c8wHYZt4YiyKSOK+SGcc2FnSIjrJfhMGOTbK7ugP
-   y0eHZnv9L5vSB1lqeigntdoIGl5jEd/PJ1NauSX9e1MgDNrtSwfb///Zu
-   lI5AOL6gjFsd9Gfs13S2Bt9N0eVxHboCEZDxpkDN9QeaqjcW1MU8OawMd
-   8T1P6dhqa2tDu/98mMpp0bdVBuGv0bUMNFkeJBvWLZDehKJ3cedet7cXK
-   A==;
-X-CSE-ConnectionGUID: M0Fw0+i4SPGv/kqEb6+urw==
-X-CSE-MsgGUID: QfmUnxdNQBSWm7PlYGpykQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="17483362"
-X-IronPort-AV: E=Sophos;i="6.08,222,1712646000"; 
-   d="scan'208";a="17483362"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 20:44:49 -0700
-X-CSE-ConnectionGUID: AM9XMo+QR3yQlzn2cne3gA==
-X-CSE-MsgGUID: DEJS3iTrTqOidWVvvSpE4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,222,1712646000"; 
-   d="scan'208";a="38600234"
-Received: from lbattagl-mobl1.amr.corp.intel.com ([10.209.70.26])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 20:44:48 -0700
-Message-ID: <b23fadac815f137ad93fa3bb90149e52956b3c62.camel@linux.intel.com>
-Subject: Re: [PATCH V3 1/3] platform/x86/intel/sdsi: Add ioctl SPDM transport
-From: "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux-doc@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, LKML
-	 <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Date: Fri, 07 Jun 2024 20:44:47 -0700
-In-Reply-To: <b32cd809-7aed-62ed-1b6e-550221a3acbb@linux.intel.com>
-References: <20240606011617.557264-1-david.e.box@linux.intel.com>
-	 <b32cd809-7aed-62ed-1b6e-550221a3acbb@linux.intel.com>
-Organization: David E. Box
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q6dG742Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 606B8C2BD11
+	for <platform-driver-x86@vger.kernel.org>; Sat,  8 Jun 2024 07:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717830143;
+	bh=65GJ4pE9eE1Y9sBHUsOVeOgo6qaT1yItZfjBioIRvkI=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=q6dG742YxdCZqtpdT1iBRTkr6iw7aM6484M8BWOOfYGYCdJ0fqcOZaJ5cnue1oWHM
+	 ocKpQf2b6WyN/5YsrPN3dGSTSG3Du2caZydb+AJ11ltF+PYtHpRZbgDgW1bSewEUOP
+	 GCGkiBt6XbSC56It9dKFpcpx4AcLBWW98IZlCKqCdrO+6N3e+DEe7UCIMkWPktUkTT
+	 /2+KDTLzPZctZceLiuizJdhD3GtB0s4V8UuJa/iHnqrQTfq5l6oUHmaKTWasZNMRxT
+	 RHuLTu9FDpB5o/pOe4/FjnfJvFbLnGI3YmW1EFVELZDg0zmcXYTOMF69pprbJSXV+X
+	 ah5boV6zYjlGw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 4B169C53B50; Sat,  8 Jun 2024 07:02:23 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218696] DYTC frequency scaling deterioration and event spam
+Date: Sat, 08 Jun 2024 07:02:23 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: lmulling@proton.me
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218696-215701-LiNUnrG2yp@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218696-215701@https.bugzilla.kernel.org/>
+References: <bug-218696-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -65,67 +61,22 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2024-06-07 at 16:14 +0300, Ilpo J=C3=A4rvinen wrote:
-> On Wed, 5 Jun 2024, David E. Box wrote:
->=20
-> > Intel On Demand adds attestation and firmware measurement retrieval
-> > services through use of the protocols defined the Security Protocols an=
-d
-> > Data Measurement (SPDM) specification. SPDM messages exchanges are used=
- to
-> > authenticate On Demand hardware and to retrieve signed measurements of =
-the
-> > NVRAM state used to track feature provisioning and the NVRAM state used=
- for
-> > metering services. These allow software to verify the authenticity of t=
-he
-> > On Demand hardware as well as the integrity of the reported silicon
-> > configuration.
-> >=20
-> > Add an ioctl interface for sending SPDM messages through the On Demand
-> > mailbox. Provides commands to get a list of SPDM enabled devices, get t=
-he
-> > message size limits for SPDM Requesters and Responders, and perform an =
-SPDM
-> > message exchange.
-> >=20
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > Link:
-> > https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.=
-0.1.pdf
-> > =C2=A0[1]
-> > ---
->=20
-> > +static int sdsi_spdm_do_command(struct sdsi_priv *priv,
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct sdsi_spdm_command __user *=
-argp)
-> > +{
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32 req_size, rsp_size;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (get_user(req_size, &argp=
-->size))
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0return -EFAULT;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (req_size < 4 || req_size=
- > sizeof(struct sdsi_spdm_message))
->=20
-> Hi David,
->=20
-> Is that 4 actually SPDM_HEADER_SIZE?
->=20
-> If my guess is correct, no need to send an updated version, I'll just fix=
-=20
-> it while applying.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218696
 
-It is SPDM_HEADER_SIZE but I already fixed it in V4 since I had to address =
-an
-LKP report.
+--- Comment #13 from Lucas M=C3=BClling (lmulling@proton.me) ---
+Thanks, I'm out of ideas, so anything is appreciated (even opening this thi=
+ng
+and probing it). I've tried the kernel ACPI debugging stuff, but it was just
+noise to me.
 
-David
+One thing i forgot to mention, the machine does make a weird coil-wine sound
+under certain loads, the kernel instruction decoding sanity test seems to
+trigger it 100%. Happens both on AC and battery. I Will try and get a video=
+ of
+it tomorrow.
 
->=20
->=20
+--=20
+You may reply to this email to add a comment.
 
+You are receiving this mail because:
+You are watching the assignee of the bug.=
