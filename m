@@ -1,447 +1,203 @@
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2134.outbound.protection.outlook.com [40.107.13.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6586141C69;
-	Sun,  9 Jun 2024 14:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.13.134
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717944574; cv=fail; b=jU1wB9doYmrjLeakFCB2dzYwfSFNN/yEYbHVFyq5yRle7byQezn7QYiihSHI7Rx8GqCciwAnhxNtHbSWzzJNSV5dnjac3+LFVmJYscvdMqmxRmWAG5p8xoaxvR7toHilaJ/TNaUzvMuxFwgLbLibARLte/B/orYEn289eQ/me4Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717944574; c=relaxed/simple;
-	bh=M973e6qEWFOAs9Wo7H1yiEGs8W1/JqPMsLGsHD7S1og=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RvBMa/dr3QCxWLyqusFZ+ioEz39zQcta9Wgc22oV1WcJNHqf+nWoHuF7af3jGqgAGNSzD/Jpfix2xZybLUQImZ2pF5Uc0iFI7z2sxR7WSs9G4o/q4qLHAaPC7c24vneq4QamtHqgNMewNn0NFkr2eLSPTq3n/SMBqE+z7m/3uJU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=supcom.tn; spf=pass smtp.mailfrom=supcom.tn; dkim=pass (1024-bit key) header.d=supcom.onmicrosoft.com header.i=@supcom.onmicrosoft.com header.b=h1ozhQb1; arc=fail smtp.client-ip=40.107.13.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=supcom.tn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=supcom.tn
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B156BB5B
+	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Jun 2024 08:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718006896; cv=none; b=dj8tYBwprLvaTcfZk5VHCntU+Fqox2rd6TIOYjJfxqeCrTMZMkc5SJNh73DkjF39yKydeuqq4am7ViTNfnTLunK1ls3GTNb84SL/hjowHggYB3SzvuUA4rWG7aPdwELaecptFnLqqK0t2jkI3/vHVPABIbCE18ED2NoEsK0K5Hg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718006896; c=relaxed/simple;
+	bh=/L5y1Dv6ivY3eszYnYmdXRYc401x9YYY2yBAmmyUG/k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qkqrXwqKYLlEyi3tVNnUgBRGwYp67DNApdXC7s9xjE5vYoHs4jWqeRpBNALI9i7B8hSblO44aBS0MOnEwL/UllRVb73NADwC5n6I4d7z5TnGtjqTCAPGTXLTbcVln7k2nGTJgLYDadZKo9pzZaaCNRfvWNwNOo67SJTv2tltS+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SSdm1Yf7; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=supcom.onmicrosoft.com header.i=@supcom.onmicrosoft.com header.b="h1ozhQb1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=l/KQ42QlafB+30s7rRWiepbVJaie/0dTtEbGlaMd+nybC8Kg05N5BwJQQaEVGHmicbrIcC/JkAwhdN2I9yBfAl59/9D/YSssv3JcFrwpiCfCUWO1zF0jLYZvjJwgjOMAOl+W8zDaTUnp4XvVeGTcrmc4q8/+Fjukrs1zl40ZwLIaUBVQA5zZbbUk9t9GdLdZHJajJiUAKAYEW3APCj8xaKRUph/ETxp3qa7CFFPlRGyRwKueuMLoQEAt26jP0IYMT75w9BFgAyQTuLtl142jsFIrjF/QdIUbDNKil8fxOqHh0DImWlLsOeR7LWEqBa4qxyG086fhJAj5BiAmjGLAnw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qTNklBGn0dcAl2MaJbVY3f9iV9um6DRVa8fbAGvmYQ4=;
- b=Fw+gfoU2agB+SV4uhaTEihRRAO5PgFSZ1hBMF6rsV8TTC3SxWkkPxznLvw3ThhR8TAr7e2oSEbxlY2ESQ261J/wjUhBp9H/iNR3vAHXVxm1ehyLV3ujSA9y8fXZaVeg3/g+J/EWIBMX95P5urG+On9OEBMMLcU22PiD06zcGIiNiJaRLcVA8ek5kwzKNC8YKVVX0f4qgeRxWW1/jaH/7OK4QUa7uGZZ/VQJI9VoZUCioRY9jicVPjynkJJ59BOCX3t7O/8V8X/fSPHMidnzSgG4QCSRcsmm/iFX6tZp15elqq8XCTgOxRSecxocj+7Gw8p/PhqRhvcHr6MnzsL5R6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=supcom.tn; dmarc=pass action=none header.from=supcom.tn;
- dkim=pass header.d=supcom.tn; arc=none
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SSdm1Yf7"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52c525257feso2195149e87.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 10 Jun 2024 01:08:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=supcom.onmicrosoft.com; s=selector2-supcom-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qTNklBGn0dcAl2MaJbVY3f9iV9um6DRVa8fbAGvmYQ4=;
- b=h1ozhQb1gtJyPKbX1EOwaUylBBLAlOoiSHSNjfKb8Q1TZvVChxq/pJ8KTgtUxU3Mza1jWEC/YV8Xv+u3yfqe9TOCsgtU6E7EPIfNmlEgu+bYiVMu2a9FYt/dQzvTJOkLIsPRlDSLfUDUbW/MKBSeTofN6DjmiqQjPpuyQGwbBcE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=supcom.tn;
-Received: from AM8PR04MB7908.eurprd04.prod.outlook.com (2603:10a6:20b:24c::18)
- by AM9PR04MB8131.eurprd04.prod.outlook.com (2603:10a6:20b:3ed::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.36; Sun, 9 Jun
- 2024 14:49:27 +0000
-Received: from AM8PR04MB7908.eurprd04.prod.outlook.com
- ([fe80::eb8c:cdd5:a0a:757f]) by AM8PR04MB7908.eurprd04.prod.outlook.com
- ([fe80::eb8c:cdd5:a0a:757f%5]) with mapi id 15.20.7633.036; Sun, 9 Jun 2024
- 14:49:27 +0000
-From: Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
-To: hdegoede@redhat.com
-Cc: corentin.chary@gmail.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Luke D . Jones" <luke@ljones.dev>,
-	Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
-Subject: [PATCH v4 1/1] platform/x86: asus-wmi: add support for vivobook fan profiles
-Date: Sun,  9 Jun 2024 15:48:49 +0100
-Message-ID: <20240609144849.2532-2-mohamed.ghanmi@supcom.tn>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240609144849.2532-1-mohamed.ghanmi@supcom.tn>
-References: <20240609144849.2532-1-mohamed.ghanmi@supcom.tn>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MI0P293CA0013.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:44::18) To AM8PR04MB7908.eurprd04.prod.outlook.com
- (2603:10a6:20b:24c::18)
+        d=linaro.org; s=google; t=1718006892; x=1718611692; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/L5y1Dv6ivY3eszYnYmdXRYc401x9YYY2yBAmmyUG/k=;
+        b=SSdm1Yf7Ra0G4T+e1Uib9M+gpZrMF9N8k3TFc0cVz1F5pABZzdduYWAgb/AYK6aN5U
+         uGRb/9C4DKJ1MAyhzNdKqtcLtbbSe8pWQRtjbEXBTFYju2cMxL2Ljf60A9rhzibs/z9k
+         58QLu/Go6rD3ZcOU2IPsm9uBcLwH6W8ua/ujy6yuJ5oy7dAijMMVBbsXY4yd4XeI8BMF
+         tBO40weDDLMTfnvv7w8kEWecrxwMfi5uAXCD7QK5dcWAdVEgifdMXyQiRMcm7v1g27Rl
+         Fpd3yivenYWJYij2nMGl+Ls46Hekj1+LChnFu8YHVJOJbKSpUse8j4k2fpw4j2G2Sdq2
+         vB0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718006893; x=1718611693;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/L5y1Dv6ivY3eszYnYmdXRYc401x9YYY2yBAmmyUG/k=;
+        b=COVUkpX/1CcMkviRqEltDZC2V/Gm7DTpPV5jlHuzRxJj0teUNJQTil5G6KBHQu3l2+
+         FVyegy4zhf69nhIqAIUNY+/ji/u+30pvw3eeifSDi0BnF9sRy7nOJN9lxHQpZB6tLOGZ
+         Z7p8FSMatQuSN03fuX1HrotMKxWjlF0nMyfc1P+2bxCmLl1BHcR82ZehBtATqCAWK9zA
+         QET/+urSmuTKsCp4GqUlkXb0/6ZB6327RSMxrP84xC3N33qPIVn/aADPHaMtD6Zp0ZKy
+         oD+fhHI5AfHr7/JxVmJxdBNauum9l/srMiifHmGYdfaeE+saidYzkdCDirZM0INFLFG0
+         HiyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWmuYKhC0uqLx67NyyR0FZzlK7TIoexb9tclnWZ/gLGwLy7NXlUeoNQ6Q2IieCIdfgypao9q2oNUmsyKomIze/XuK4vDek/2CE875tksXy8XNRjaQ==
+X-Gm-Message-State: AOJu0YyRBy3s0FC0XQXiA/YXsQvfGvpL8Uhw774QYkyXMIC8/KHgP2ol
+	r1NmTCJqnyuRfgsyz1vMwX8I46WUEBFNeU9TjqFIX43zF8XVg3QTMDzjnA7ic24aEYyykg8WhXL
+	joa3NoGeBld1ITj//SdFR/WYvOK0a3KaaXByWQQ==
+X-Google-Smtp-Source: AGHT+IEoIIaopVbMhKiBzu+ZFeFG117iZrYhuaSy1PLsnicMvCE0nAaF1iUL9hhnUeVtUHqe9i20V059/u6XmSWe6yI=
+X-Received: by 2002:a05:6512:234d:b0:52b:be9b:cafe with SMTP id
+ 2adb3069b0e04-52bbe9bcbadmr5940256e87.21.1718006892189; Mon, 10 Jun 2024
+ 01:08:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM8PR04MB7908:EE_|AM9PR04MB8131:EE_
-X-MS-Office365-Filtering-Correlation-Id: d88cbd80-a434-4a25-9b22-08dc88935c4a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|41320700004|1800799015|376005|52116005|366007|38350700005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?44xuivk8yKfCfZzzCHfTFOXbUN+J57AvhpM+oi5L2CSbBugXPeNycjOamKlQ?=
- =?us-ascii?Q?objOyPqFRyXfMbSPAtM/JTuyHKc978U3cWVluLvdVO8aA2ZKTjRCmB9puEb7?=
- =?us-ascii?Q?OMkNJR1E3AFOIBOUp9gMTYE2H+ut5JLC/9aZDcf8E60Jfz11sfenuG7lQMpd?=
- =?us-ascii?Q?bVVvqrLAWUJzjX2Ras3jfRTe3ZRKRbX2PVsIKJ/fDdB83t3KfD645dzSo0zO?=
- =?us-ascii?Q?UuEiKGCmnMzhKWXgdNeMv47PUbLnbpAb2Bu5ZXk4lncvToqMT7V+9JcdHtbY?=
- =?us-ascii?Q?9H9Hj4N5bHvpiKqJ8XojmWzQgGOWP+9EofxQgLkcl38ZTGd3ndCl+7ON2DzV?=
- =?us-ascii?Q?8yQouf+RBZrC0C1bllEWFjJVd7eDNOIV94u5z9hoOfhVe4rZ7/8EGNKl+ux2?=
- =?us-ascii?Q?3iF79DcpK8r3tCsUsj3enmVfaavILwcxEK55LzcGimY3J3XA9MOEAhfqv38/?=
- =?us-ascii?Q?CSRVJ9wt/wJxHdA4DuyrMGvG+n3shJbDURKNCc5zaangowDNJhSQJNby2eL5?=
- =?us-ascii?Q?a8CUeqZQpxe30ZjW3ATOJHxwdMmD9usNEWTdoYonoeP0JTfL6BBpIQebGzb3?=
- =?us-ascii?Q?WC3zdF7mqKwwWxiw3hA9hWuAPZ/GGNl6eC7dLa2fI/BBuv3gGkbSfP6dYyXG?=
- =?us-ascii?Q?KK48vyqeX1ZTpD1gSyXm8K2W2tEdQn2C8zCgki4tDLr/PNOlP4hn2ovPi6+O?=
- =?us-ascii?Q?AE3OQGVq/SaEsMZiAFt23l/dgN2mdXUHKbaNE08F4XGEvLH+61jvNErQFMFC?=
- =?us-ascii?Q?Eau9XnP4dpIbA9xlkLhH9s3zEWlOcnXzDMnnVZDjMkRx+k7ZNkO/rlL12dHI?=
- =?us-ascii?Q?VbZDDsp0DS2Nk5lvEYPpBhVqtjMxLFoWd/TOAze8tlT2ZRuHu0SnPk8r5GF0?=
- =?us-ascii?Q?y2gAvos1qAC0CPfWc7MHfQ+h+VhGv4jRrysYEQ6Gp6XLp9hQ+LRNLm16a4QP?=
- =?us-ascii?Q?3q7t4O8ZbRWPuDFjohseNcufWphQ1lEcbO9ccP6XHGc+9alQKbEVtVSOdCNq?=
- =?us-ascii?Q?dwQZN/XR1CWYCvtUNoVpKHJd3/Xya1tVHzOABFEmcWjj413D7z2RRoQkOajx?=
- =?us-ascii?Q?KUmlOjMb18F+K1UNmCWS8slXifpM3bHG/1Z0JPow8voBnSwGvXUaRkGhkZwt?=
- =?us-ascii?Q?32Vm7km1jaGIftKgze0JrlvZsx1dhAy/4assXOYIZwE19nCh54GLDSoKmgEU?=
- =?us-ascii?Q?/oKsdPuF7eNu1aiDG6r7LHl7ph/Fpy3tbxz2d5CcmEaEVJROovy6bhJUIwlk?=
- =?us-ascii?Q?PptkCTd6UHNTTi9AELDOHYyhwxiU7yfArkDdx7rCoz/H0YYQaILi7taiQGKq?=
- =?us-ascii?Q?oBF21hXwYqgQi9Tlu+4d2+/tmNJy1K8hUKtPvQQoiZiUwc3fMok5VOC/LR0j?=
- =?us-ascii?Q?98fM0oE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7908.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(41320700004)(1800799015)(376005)(52116005)(366007)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/x/fV4DzQ/8f1kZNGtv9D0fkUFdkg/L/4fsLnb3TRzC1QJl7eDcsgDYl1RGl?=
- =?us-ascii?Q?HgJrRQ2PUjgE03iQNYw634WJ/+1roADzq7FWWq3+BSaq3h3KCwklhDsFdSLk?=
- =?us-ascii?Q?NrE3W9fVRI8Z+dEZvX8P2kuBpJShvwafVmEiPfz+RusJetzkqro8DD4FaaUq?=
- =?us-ascii?Q?TgH6sOJHXa+olIklg3d9I0bwjVHwozif/cIPROoGAYx295IY+uRVu5yr12Ru?=
- =?us-ascii?Q?kJIbx8glNSK5greiaiBc8FUGq9pgW/NySyTn3lSBcdwnh1tial7wUaDgMFyr?=
- =?us-ascii?Q?cL/hA5ym+JlJfne+nWAB6w501mqbbRbJvoy7sbfVwSrN6smcOP/7p847LxY6?=
- =?us-ascii?Q?qoY17yZDai2AZG9ISppnP8NVL8RUv7RnhQdkREuSyQjD5HcL7qgcmZs4XOdQ?=
- =?us-ascii?Q?yVp+xq3bIN8ch5jWhIc3+ldW/Fk8U5hOXG2pFDO8dDfvhfADBhMJPlpfcV9T?=
- =?us-ascii?Q?JuA9l7T8sjDEEf89gFlxT+DVrF7jZnNoawKedUFtJSrOdjCWswQFJ8h1clEP?=
- =?us-ascii?Q?CEOyWY96FiH/gsUgWWuOSQ97+8as2sMZaiUlInMe2D1EAtYtU+AHUX/xQfs0?=
- =?us-ascii?Q?Wu/8ckaQLgjXuZCV0EPrS+rM9cFhBM85BDQUEqd0ZdDZm9HfNWg/cq827kp7?=
- =?us-ascii?Q?LkOiw1wtQgkQVxMGto+rxgTT8zXKCtM9g3+mkm7QddEqj9BNcpnISXQR2S1E?=
- =?us-ascii?Q?BRYpOmVRGDU5NRUMM9Q8+GeqEsGcJze62jh0Ob1gRa8mbF/Gey0kr8JmJOjh?=
- =?us-ascii?Q?Butx0X6b7T8tqcC9r92TcTOLaLvj2hozPKX9HpeBUb1UVbqo4eVdrTCQvMwz?=
- =?us-ascii?Q?Ll5LTEaFiboZ0xsB18j4xFUxPkrhhne3g4eTdebqz/7e9bukTc+crfWpGC6J?=
- =?us-ascii?Q?55yNN0wMYKpIXHn7dSc2Zlol9Bxzx36ggw5wovSgRz58JILUJqRzS6LZybPE?=
- =?us-ascii?Q?PzC89U8pQWYAOFiFskyBMBSMJuP71dPbXpngbhsn9Q5ix+bFftS883darpzV?=
- =?us-ascii?Q?Jph9EceKdEjx03JSk0Yb1LKC9ou4JDlOUaMV2K4QYG1njS51fBdGviU9jBRB?=
- =?us-ascii?Q?B6gA8aKU/pkBic4NhA3S9wclsZZQCboj2F6Z3MWYRlRFuC0OMUI/tADj9xXl?=
- =?us-ascii?Q?SF07rK/Vqp44uddic/geaSEChDXyKz/GADVQmm1X9We/awrUXUX/USSXEFUe?=
- =?us-ascii?Q?6/zsgWxYpn6EnNthudeGfOusUZlgYmdHCCJ6jx8GrbDNCbIm4GS48AHZWFY/?=
- =?us-ascii?Q?OqJROIOt6JyVrmYbmNBk+XKFo+KG+957smo3NEWDUXvV/oLNpn+TJ1jQCo4E?=
- =?us-ascii?Q?yCBky57Yp1uGzzMFJ2ws3AQBPJZhMxs70uDTXmtvxqGwo/ehBzL+ug6N1k9i?=
- =?us-ascii?Q?zsjr6bxZ6+CrWkt/+ezs0YDAZnF1gZAAAFwiVnB61UoMU6PY3zRFATJ3gq2f?=
- =?us-ascii?Q?FP9f3Gt1CMNdXFGwLiw1jmqPD67hFAsp3/DGY4zyRZiz/8bFZdp9K2p03Hvm?=
- =?us-ascii?Q?aD0v3to4aqR15SMLMh83gajrXsICDY+ANRDSZQlhsgTZJI58iiA+Be35XrnQ?=
- =?us-ascii?Q?hhVis9T4KE+tbVQUfAV4GXHuL2dayfzd9LjvasDax3axRvaDAmCttCzZAbHp?=
- =?us-ascii?Q?gg=3D=3D?=
-X-OriginatorOrg: supcom.tn
-X-MS-Exchange-CrossTenant-Network-Message-Id: d88cbd80-a434-4a25-9b22-08dc88935c4a
-X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7908.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2024 14:49:27.4583
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8f85f528-6195-4e97-8e41-f5a9ad3bed4a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PVLza7U74J3uTt0ubmnrF6o3cEsHgLgpG6npxyMwSEuBWPLs0X4e0vIVjQI8d44WE5q6mRUmiJM02Iogq/mz2OeggMgBqrFkI8ktC8KWhYQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8131
+References: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com> <87tti9cfry.fsf@intel.com>
+In-Reply-To: <87tti9cfry.fsf@intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 10 Jun 2024 10:08:00 +0200
+Message-ID: <CACRpkdZFPG_YLici-BmYfk9HZ36f4WavCN3JNotkk8cPgCODCg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] treewide: Align match_string() with sysfs_match_string()
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Corey Minyard <minyard@acm.org>, 
+	Allen Pais <apais@linux.microsoft.com>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, Perry Yuan <perry.yuan@amd.com>, 
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Nuno Sa <nuno.sa@analog.com>, Guenter Roeck <linux@roeck-us.net>, 
+	Randy Dunlap <rdunlap@infradead.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Lee Jones <lee@kernel.org>, 
+	Samuel Holland <samuel@sholland.org>, Elad Nachman <enachman@marvell.com>, 
+	Arseniy Krasnov <AVKrasnov@sberdevices.ru>, Johannes Berg <johannes.berg@intel.com>, 
+	Gregory Greenman <gregory.greenman@intel.com>, Benjamin Berg <benjamin.berg@intel.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Robert Richter <rrichter@amd.com>, Vinod Koul <vkoul@kernel.org>, 
+	Chunfeng Yun <chunfeng.yun@mediatek.com>, Hans de Goede <hdegoede@redhat.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Nikita Kravets <teackot@gmail.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Stanley Chang <stanley_chang@realtek.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Abdel Alkuor <abdelalkuor@geotab.com>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, Eric Biggers <ebiggers@google.com>, 
+	Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>, 
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>, Daniel Bristot de Oliveira <bristot@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins <hughd@google.com>, 
+	Abel Wu <wuyun.abel@bytedance.com>, John Johansen <john.johansen@canonical.com>, 
+	Mimi Zohar <zohar@linux.ibm.com>, Stefan Berger <stefanb@linux.ibm.com>, 
+	Roberto Sassu <roberto.sassu@huawei.com>, Eric Snowberg <eric.snowberg@oracle.com>, 
+	Takashi Iwai <tiwai@suse.de>, Takashi Sakamoto <o-takashi@sakamocchi.jp>, 
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, Mark Brown <broonie@kernel.org>, 
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linuxppc-dev@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org, keyrings@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-ide@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
+	linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, qat-linux@intel.com, 
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
+	intel-xe@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
+	linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-leds@vger.kernel.org, linux-sunxi@lists.linux.dev, 
+	linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, netdev@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	linux-staging@lists.linux.dev, linux-usb@vger.kernel.org, 
+	linux-fbdev@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, cgroups@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
+	linux-integrity@vger.kernel.org, alsa-devel@alsa-project.org, 
+	linux-sound@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, David Howells <dhowells@redhat.com>, 
+	"David S. Miller" <davem@davemloft.net>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Sergey Shtylyov <s.shtylyov@omp.ru>, Damien Le Moal <dlemoal@kernel.org>, 
+	Niklas Cassel <cassel@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Huang Rui <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, 
+	Danilo Krummrich <dakr@redhat.com>, Jean Delvare <jdelvare@suse.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Pavel Machek <pavel@ucw.cz>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Tony Lindgren <tony@atomide.com>, Adrian Hunter <adrian.hunter@intel.com>, Hu Ziji <huziji@marvell.com>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+	Potnuri Bharat Teja <bharat@chelsio.com>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>, Kalle Valo <kvalo@kernel.org>, 
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Oliver O'Halloran" <oohall@gmail.com>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, JC Kuo <jckuo@nvidia.com>, 
+	Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, 
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Sebastian Reichel <sre@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+	Helge Deller <deller@gmx.de>, Brian Foster <bfoster@redhat.com>, 
+	Zhihao Cheng <chengzhihao1@huawei.com>, Tejun Heo <tj@kernel.org>, 
+	Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jason Baron <jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>, 
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
+	Clemens Ladisch <clemens@ladisch.de>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add support for vivobook fan profiles wmi call on the ASUS VIVOBOOK
-to adjust power limits.
+On Tue, Jun 4, 2024 at 9:46=E2=80=AFAM Jani Nikula <jani.nikula@linux.intel=
+.com> wrote:
 
-These fan profiles have a different device id than the ROG series
-and different order. This reorders the existing modes.
+[Maybe slightly off-topic, ranty]
 
-As part of keeping the patch clean the throttle_thermal_policy_available
-boolean stored in the driver struct is removed and
-throttle_thermal_policy_dev is used in place (as on init it is zeroed).
+> Why do we think it's a good idea to increase and normalize the use of
+> double-underscore function names across the kernel, like
+> __match_string() in this case? It should mean "reserved for the
+> implementation, not to be called directly".
+>
+> If it's to be used directly, it should be named accordingly, right?
 
-Signed-off-by: Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
-Co-developed-by: Luke D. Jones <luke@ljones.dev>
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
----
- drivers/platform/x86/asus-wmi.c            | 125 ++++++++++++---------
- include/linux/platform_data/x86/asus-wmi.h |   1 +
- 2 files changed, 76 insertions(+), 50 deletions(-)
+It's a huge mess. "__" prefix is just so ambiguous I think it just
+shouldn't be used or prolifierated, and it usually breaks Rusty Russells
+API rules times over.
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 3c61d75a3..2e3d8d8fb 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -97,6 +97,12 @@ module_param(fnlock_default, bool, 0444);
- #define ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST	1
- #define ASUS_THROTTLE_THERMAL_POLICY_SILENT	2
- 
-+#define ASUS_THROTTLE_THERMAL_POLICY_DEFAULT_VIVO	0
-+#define ASUS_THROTTLE_THERMAL_POLICY_SILENT_VIVO	1
-+#define ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST_VIVO	2
-+
-+#define PLATFORM_PROFILE_MAX 2
-+
- #define USB_INTEL_XUSB2PR		0xD0
- #define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI	0x9c31
- 
-@@ -293,8 +299,8 @@ struct asus_wmi {
- 	u32 kbd_rgb_dev;
- 	bool kbd_rgb_state_available;
- 
--	bool throttle_thermal_policy_available;
- 	u8 throttle_thermal_policy_mode;
-+	u32 throttle_thermal_policy_dev;
- 
- 	bool cpu_fan_curve_available;
- 	bool gpu_fan_curve_available;
-@@ -3152,7 +3158,7 @@ static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
- 	int err, fan_idx;
- 	u8 mode = 0;
- 
--	if (asus->throttle_thermal_policy_available)
-+	if (asus->throttle_thermal_policy_dev)
- 		mode = asus->throttle_thermal_policy_mode;
- 	/* DEVID_<C/G>PU_FAN_CURVE is switched for OVERBOOST vs SILENT */
- 	if (mode == 2)
-@@ -3359,7 +3365,7 @@ static ssize_t fan_curve_enable_store(struct device *dev,
- 		 * For machines with throttle this is the only way to reset fans
- 		 * to default mode of operation (does not erase curve data).
- 		 */
--		if (asus->throttle_thermal_policy_available) {
-+		if (asus->throttle_thermal_policy_dev) {
- 			err = throttle_thermal_policy_write(asus);
- 			if (err)
- 				return err;
-@@ -3576,8 +3582,8 @@ static const struct attribute_group asus_fan_curve_attr_group = {
- __ATTRIBUTE_GROUPS(asus_fan_curve_attr);
- 
- /*
-- * Must be initialised after throttle_thermal_policy_check_present() as
-- * we check the status of throttle_thermal_policy_available during init.
-+ * Must be initialised after throttle_thermal_policy_dev is set as
-+ * we check the status of throttle_thermal_policy_dev during init.
-  */
- static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
- {
-@@ -3618,38 +3624,13 @@ static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
- }
- 
- /* Throttle thermal policy ****************************************************/
--
--static int throttle_thermal_policy_check_present(struct asus_wmi *asus)
--{
--	u32 result;
--	int err;
--
--	asus->throttle_thermal_policy_available = false;
--
--	err = asus_wmi_get_devstate(asus,
--				    ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
--				    &result);
--	if (err) {
--		if (err == -ENODEV)
--			return 0;
--		return err;
--	}
--
--	if (result & ASUS_WMI_DSTS_PRESENCE_BIT)
--		asus->throttle_thermal_policy_available = true;
--
--	return 0;
--}
--
- static int throttle_thermal_policy_write(struct asus_wmi *asus)
- {
--	int err;
--	u8 value;
-+	u8 value = asus->throttle_thermal_policy_mode;
- 	u32 retval;
-+	int err;
- 
--	value = asus->throttle_thermal_policy_mode;
--
--	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
-+	err = asus_wmi_set_devstate(asus->throttle_thermal_policy_dev,
- 				    value, &retval);
- 
- 	sysfs_notify(&asus->platform_device->dev.kobj, NULL,
-@@ -3679,7 +3660,7 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
- 
- static int throttle_thermal_policy_set_default(struct asus_wmi *asus)
- {
--	if (!asus->throttle_thermal_policy_available)
-+	if (!asus->throttle_thermal_policy_dev)
- 		return 0;
- 
- 	asus->throttle_thermal_policy_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
-@@ -3691,7 +3672,7 @@ static int throttle_thermal_policy_switch_next(struct asus_wmi *asus)
- 	u8 new_mode = asus->throttle_thermal_policy_mode + 1;
- 	int err;
- 
--	if (new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
-+	if (new_mode > PLATFORM_PROFILE_MAX)
- 		new_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
- 
- 	asus->throttle_thermal_policy_mode = new_mode;
-@@ -3730,7 +3711,7 @@ static ssize_t throttle_thermal_policy_store(struct device *dev,
- 	if (result < 0)
- 		return result;
- 
--	if (new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
-+	if (new_mode > PLATFORM_PROFILE_MAX)
- 		return -EINVAL;
- 
- 	asus->throttle_thermal_policy_mode = new_mode;
-@@ -3747,10 +3728,56 @@ static ssize_t throttle_thermal_policy_store(struct device *dev,
- 	return count;
- }
- 
--// Throttle thermal policy: 0 - default, 1 - overboost, 2 - silent
-+/*
-+ * Throttle thermal policy: 0 - default, 1 - overboost, 2 - silent
-+ */
- static DEVICE_ATTR_RW(throttle_thermal_policy);
- 
- /* Platform profile ***********************************************************/
-+static int asus_wmi_platform_profile_to_vivo(struct asus_wmi *asus,
-+						  int mode)
-+{
-+	bool vivo;
-+
-+	vivo = asus->throttle_thermal_policy_dev == ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
-+
-+	if (vivo) {
-+		switch (mode) {
-+		case ASUS_THROTTLE_THERMAL_POLICY_DEFAULT:
-+			return ASUS_THROTTLE_THERMAL_POLICY_DEFAULT_VIVO;
-+		case ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST:
-+			return ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST_VIVO;
-+		case ASUS_THROTTLE_THERMAL_POLICY_SILENT:
-+			return ASUS_THROTTLE_THERMAL_POLICY_SILENT_VIVO;
-+		}
-+	}
-+
-+	return mode;
-+
-+}
-+
-+static int asus_wmi_platform_profile_mode_from_vivo(struct asus_wmi *asus,
-+						  int mode)
-+{
-+	bool vivo;
-+
-+	vivo = asus->throttle_thermal_policy_dev == ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
-+
-+	if (vivo) {
-+		switch (mode) {
-+		case ASUS_THROTTLE_THERMAL_POLICY_DEFAULT_VIVO:
-+			return ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
-+		case ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST_VIVO:
-+			return ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST;
-+		case ASUS_THROTTLE_THERMAL_POLICY_SILENT_VIVO:
-+			return ASUS_THROTTLE_THERMAL_POLICY_SILENT;
-+		}
-+	}
-+
-+	return mode;
-+
-+}
-+
- static int asus_wmi_platform_profile_get(struct platform_profile_handler *pprof,
- 					enum platform_profile_option *profile)
- {
-@@ -3758,10 +3785,9 @@ static int asus_wmi_platform_profile_get(struct platform_profile_handler *pprof,
- 	int tp;
- 
- 	asus = container_of(pprof, struct asus_wmi, platform_profile_handler);
--
- 	tp = asus->throttle_thermal_policy_mode;
- 
--	switch (tp) {
-+	switch (asus_wmi_platform_profile_mode_from_vivo(asus, tp)) {
- 	case ASUS_THROTTLE_THERMAL_POLICY_DEFAULT:
- 		*profile = PLATFORM_PROFILE_BALANCED;
- 		break;
-@@ -3775,6 +3801,7 @@ static int asus_wmi_platform_profile_get(struct platform_profile_handler *pprof,
- 		return -EINVAL;
- 	}
- 
-+
- 	return 0;
- }
- 
-@@ -3800,7 +3827,7 @@ static int asus_wmi_platform_profile_set(struct platform_profile_handler *pprof,
- 		return -EOPNOTSUPP;
- 	}
- 
--	asus->throttle_thermal_policy_mode = tp;
-+	asus->throttle_thermal_policy_mode = asus_wmi_platform_profile_to_vivo(asus, tp);
- 	return throttle_thermal_policy_write(asus);
- }
- 
-@@ -3813,7 +3840,7 @@ static int platform_profile_setup(struct asus_wmi *asus)
- 	 * Not an error if a component platform_profile relies on is unavailable
- 	 * so early return, skipping the setup of platform_profile.
- 	 */
--	if (!asus->throttle_thermal_policy_available)
-+	if (!asus->throttle_thermal_policy_dev)
- 		return 0;
- 
- 	dev_info(dev, "Using throttle_thermal_policy for platform_profile support\n");
-@@ -4228,7 +4255,7 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
- 	if (code == NOTIFY_KBD_FBM || code == NOTIFY_KBD_TTP) {
- 		if (asus->fan_boost_mode_available)
- 			fan_boost_mode_switch_next(asus);
--		if (asus->throttle_thermal_policy_available)
-+		if (asus->throttle_thermal_policy_dev)
- 			throttle_thermal_policy_switch_next(asus);
- 		return;
- 
-@@ -4436,7 +4463,7 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 	else if (attr == &dev_attr_fan_boost_mode.attr)
- 		ok = asus->fan_boost_mode_available;
- 	else if (attr == &dev_attr_throttle_thermal_policy.attr)
--		ok = asus->throttle_thermal_policy_available;
-+		ok = asus->throttle_thermal_policy_dev != 0;
- 	else if (attr == &dev_attr_ppt_pl2_sppt.attr)
- 		devid = ASUS_WMI_DEVID_PPT_PL2_SPPT;
- 	else if (attr == &dev_attr_ppt_pl1_spl.attr)
-@@ -4745,16 +4772,15 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE2))
- 		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE2;
- 
-+	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY))
-+		asus->throttle_thermal_policy_dev = ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY;
-+	else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO))
-+		asus->throttle_thermal_policy_dev = ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
-+
- 	err = fan_boost_mode_check_present(asus);
- 	if (err)
- 		goto fail_fan_boost_mode;
- 
--	err = throttle_thermal_policy_check_present(asus);
--	if (err)
--		goto fail_throttle_thermal_policy;
--	else
--		throttle_thermal_policy_set_default(asus);
--
- 	err = platform_profile_setup(asus);
- 	if (err)
- 		goto fail_platform_profile_setup;
-@@ -4849,7 +4875,6 @@ static int asus_wmi_add(struct platform_device *pdev)
- fail_input:
- 	asus_wmi_sysfs_exit(asus->platform_device);
- fail_sysfs:
--fail_throttle_thermal_policy:
- fail_custom_fan_curve:
- fail_platform_profile_setup:
- 	if (asus->platform_profile_support)
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index 3eb5cd677..982a63774 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -64,6 +64,7 @@
- #define ASUS_WMI_DEVID_SCREENPAD_LIGHT	0x00050032
- #define ASUS_WMI_DEVID_FAN_BOOST_MODE	0x00110018
- #define ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY 0x00120075
-+#define ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO 0x00110019
- 
- /* Misc */
- #define ASUS_WMI_DEVID_PANEL_OD		0x00050019
--- 
-2.44.0
+Consider __set_bit() from <linux/bitops.h>, used all over the place,
+in contrast with set_bit() for example, what does "__" represent in
+this context that makes __set_bit() different from set_bit()?
 
+It means "non-atomic"...
+
+How does a random contributor know this?
+
+Yeah, you guess it. By the token of "everybody knows that".
+(Grep, google, repeat for the number of contributors to the kernel.)
+
+I was considering to send a script to Torvalds to just change all
+this to set_bit_nonatomic() (etc) but was hesitating because that
+makes the name unambiguous but long. I think I stayed off it
+because changing stuff like that all over the place creates churn
+and churn is bad.
+
+Yours,
+Linus Walleij
