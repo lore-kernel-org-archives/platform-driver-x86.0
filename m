@@ -1,404 +1,111 @@
-Received: from fout4-smtp.messagingengine.com (fout4-smtp.messagingengine.com [103.168.172.147])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D556433C4;
-	Tue, 11 Jun 2024 05:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6F413D8BA;
+	Tue, 11 Jun 2024 07:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718083932; cv=none; b=Qi0MxykqKZPbABkmUzy1LFz//mIFSd6Y1M+0gUPVJLXsbwYZQPtOyhg47lhu4Iir5scQwW4qIleBX7ZsLAXOKG4JhKZ3eSeM6fSD3XZpuUGc3ZQm/yAcDiQ4VyaqRXRURkA3LGZuUXonz5MNcNfIXJ/R/tvJANSwohhh+m5/Ed4=
+	t=1718090204; cv=none; b=q2b1i/f6hAUs3CkdKCzlQQRkM1AWpzlAbhFxw2dINfSAuMjNh51kJEk0ep1sPzovxwd+bZk1wt86sN4XsBC8RMM/f4ugp6JNf2mCABogYB/Lu1MZOg6uLarbeotznWLItuXjopNzv5/Xdm0f24aXesuuLHU4X2zqNM+bs0bm0iQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718083932; c=relaxed/simple;
-	bh=u2U/nIsQXihsnyQpm+gt2EBSNlUi/HjRQ5mYzQEGbfQ=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=FJJFQpIfg+ze3uE7GgK1vn7ZMQaqjo1xYyZZxDqYPxn29CPRvMyhuDbyNzRht6SbuJCqqKyL3xVkw/xrbWVYzg4UlyMScgcudWWSPCWq0VcF4hlK9dXKO3fcaJdAd760oIPl9PkktibatkkSN6QneRu4Jh3HBjpza9TEkSbu8CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=MxAgL5J7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZLPgDZSw; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1718090204; c=relaxed/simple;
+	bh=vpbX0gUUB2VGt9N7waW0P4LN2HbIaCAwhRuNuAENwSw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=aIlRWGPEkm9eJFJO7McgpLHyrkAAhhRG/Zaoyx2/otCTbE/QetHxSzHInvhQnmEx+HoP34m78HE4nRABRUWgajaFwU2Y3jmcHUfVDuBDFB8wuzHHcsJF5M23Gyd5CX6P0Ft0JCOwlVA17KnWKMxXTtrIL46sV48EXuPDb6fv91w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U3B0XqZz; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="MxAgL5J7";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZLPgDZSw"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 6901613800F1;
-	Tue, 11 Jun 2024 01:32:08 -0400 (EDT)
-Received: from imap41 ([10.202.2.91])
-  by compute2.internal (MEProxy); Tue, 11 Jun 2024 01:32:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1718083928; x=1718170328; bh=EY2KLqHw7h
-	7zEwaWpg4jQ9kWyeLRsbn8gKaf04sD43U=; b=MxAgL5J7BqKfXenzWNzdVTGDXf
-	frWnYBRYum9fTTYxpkB33E3eRw+/J4wmZsRrNGgZU88hWOsuoCxoM+JXkqWE6tNG
-	6Ti2/32s4yzlbxie2/t2Qfy7tPgXDfGEizKBdRtSV1oKqo2c7yBe/qL5zgce53dq
-	hSE3pJd+rNJTgSTnA+VYkApbxcJq6Sj3wUCOPwwNJQmnFQhMIWf3u6NaSG1jbyum
-	j7vTDCeEd/WYFAnce6mlJewo2rhxed4lpmnITuHyFHLVQUoQ/vFL7jw1fmQM6RWe
-	Ofi96Shr3HnlIhX23tu/xBk94EIJ8khEaeqMEJ5so+BWXl4JK20vDUXH/CLA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1718083928; x=1718170328; bh=EY2KLqHw7h7zEwaWpg4jQ9kWyeLR
-	sbn8gKaf04sD43U=; b=ZLPgDZSw6pLEoCaUgJ3J24ujoyyBX8a/uGBK9i8pQf7q
-	6cm6JlftTfCb5DgXNpjbNaFtq+QSwzZkBr1N1VoISYXWdMMLE/li99mQJVVyyi+n
-	V8QSz39ksIQWnrWypzFXhqKwY65x7dMa49sgtCo7Rp4HUakdvN9D9n+DIoqE5uk6
-	rHOYrD5/IPykgWOeiPkBRI6SJS68KiXsrLHMx6toV6f2dGU52POXzJ7qOwEP+JS+
-	1V5sU7c3BHZgKWDCcQGwa2i3PV54TrgUElnPi4IyRyIlhJTESWieNom+2sRFXQyj
-	vUUZVhhn2jd4q7OgyNGC3/WFtjaBljUeXHefcrXHeA==
-X-ME-Sender: <xms:V-FnZgzPR_FvWqSPFLeiHSHunLzeiFQ705lCaynu6QOK4d87IdDfQQ>
-    <xme:V-FnZkQMns67w5xTYKTetmr-czu_RxXjTN_E55_CBryN3kTsfmMAZfry97BABLD3Q
-    qDoj-C-ho85rBEdFFE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeduuddgleefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfnfhu
-    khgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtth
-    gvrhhnpedutdelgfdvgeekueeuteevffelfedukeeitedugfdvtdeutdetjeduudeuvdeg
-    gfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluh
-    hkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:V-FnZiWpYDbGcrzh19yL7f_s8YfrzaYQ1oTHvHFb0qC32xWR5N9Opg>
-    <xmx:V-FnZuiuHkiQ0jRmBwYPBmA9voSEOCysIVa0fOdo7EjsZ7tBLc0urg>
-    <xmx:V-FnZiCtWPCTEb8fYwmtJ8P_sI3lDPvwFIyyV_CRzR1xELmZTWF9yA>
-    <xmx:V-FnZvISs9s7iLOukJh2WzTl9RxEgcT3tt7ecTZYthOe2118hTAZaA>
-    <xmx:WOFnZl_fCOJZ5dw_pzZwTqyjtWboH8VU8eqzmBDjQASgkFlvtjvmBwRK>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 30E3B2340080; Tue, 11 Jun 2024 01:32:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-515-g87b2bad5a-fm-20240604.001-g87b2bad5
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U3B0XqZz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718090203; x=1749626203;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=vpbX0gUUB2VGt9N7waW0P4LN2HbIaCAwhRuNuAENwSw=;
+  b=U3B0XqZzxw0I06A0UUlGNWnolqkWdZWU59XRh4nqi9ttFTgt1xsjpD9m
+   Xlqu0usZM7cWgqHebftkgasqHTfi+zbnKPGnBlJAN/e9lYX1MFBwFLyIH
+   AaBTA3f29bRIQsT2ZhtQMzsag1cGQAQV/CcqQHp2wxZKCtHqHYP3HhhR3
+   cQ0LjdZjbKqlv3QlGP9je0azZzuowOX+/7Be5hAdUoFeqdLYFDhR3sJFl
+   MQL3S6sl8Dn/0QpAZ2RiPfx50ka5BbKY3jG5dA8/8F+aulHvnKk+LR7sn
+   3LjfPtyQN9gv35tiEZzV99C3vclYMAUnGXD5BfWHnT06dJzadPgXlk7wV
+   g==;
+X-CSE-ConnectionGUID: 2I6I94oWS02U5aqmoLvFPw==
+X-CSE-MsgGUID: Q3Xld98rR6uD3pW7uInmTg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="14909144"
+X-IronPort-AV: E=Sophos;i="6.08,229,1712646000"; 
+   d="scan'208";a="14909144"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 00:15:04 -0700
+X-CSE-ConnectionGUID: 586XrpUBQsyNXuiGnTDHKg==
+X-CSE-MsgGUID: OpFeabnwQdmx7UZqW6dHRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,229,1712646000"; 
+   d="scan'208";a="70505559"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.197])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 00:15:01 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 11 Jun 2024 10:14:59 +0300 (EEST)
+To: Shravan Ramani <shravankr@nvidia.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
+    David Thompson <davthompson@nvidia.com>, 
+    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/4] platform/mellanox: mlxbf-pmc: Add support for
+ 64-bit counters and cycle count
+In-Reply-To: <DM4PR12MB513695D2BE98AA46A95B4C60C0FF2@DM4PR12MB5136.namprd12.prod.outlook.com>
+Message-ID: <33f25d4f-386c-6df6-344d-8b7aa011e69c@linux.intel.com>
+References: <cover.1716205838.git.shravankr@nvidia.com> <ce077a0db5d4afdbcc63a635fece9793aaae055f.1716205838.git.shravankr@nvidia.com> <70d3c0af-8bf6-2e33-074d-5b1719a5674f@linux.intel.com>
+ <DM4PR12MB513695D2BE98AA46A95B4C60C0FF2@DM4PR12MB5136.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <9daef2c6-6df4-4f61-966c-239450de7b4e@app.fastmail.com>
-In-Reply-To: <20240609144849.2532-2-mohamed.ghanmi@supcom.tn>
-References: <20240609144849.2532-1-mohamed.ghanmi@supcom.tn>
- <20240609144849.2532-2-mohamed.ghanmi@supcom.tn>
-Date: Tue, 11 Jun 2024 17:31:46 +1200
-From: "Luke Jones" <luke@ljones.dev>
-To: "Mohamed Ghanmi" <mohamed.ghanmi@supcom.tn>,
- "Hans de Goede" <hdegoede@redhat.com>
-Cc: corentin.chary@gmail.com,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] platform/x86: asus-wmi: add support for vivobook fan
- profiles
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 
+On Mon, 3 Jun 2024, Shravan Ramani wrote:
 
-
-On Mon, 10 Jun 2024, at 2:48 AM, Mohamed Ghanmi wrote:
-> Add support for vivobook fan profiles wmi call on the ASUS VIVOBOOK
-> to adjust power limits.
+> > > Both these features are supported by BlueField-3 PMC hardware, hence
+> > > the required bit-fields are exposed by the driver via sysfs to allow
+> > > the user to configure as needed.
+> > 
+> > I'm trying to understand what happens for the other counter, when the
+> > use_odd_counter is enabled? This change also doesn't add code that would
+> > make the other counter -EBUSY, should that be done?
 > 
-> These fan profiles have a different device id than the ROG series
-> and different order. This reorders the existing modes.
+> When 2 32-bit counters are coupled to form a 64-bit counter using this setting,
+> one counter will hold the lower 32 bits while the other will hold the upper 32.
+> So the other counter (or syses corresponding to it) also needs to be accessed.
 > 
-> As part of keeping the patch clean the throttle_thermal_policy_available
-> boolean stored in the driver struct is removed and
-> throttle_thermal_policy_dev is used in place (as on init it is zeroed).
+> > For 64-bit counter, I suppose the userspace is expected to read the full
+> > counter from two sysfs files and combine the value (your documentation
+> > doesn't explain this)? That seems non-optimal, why cannot kernel just
+> > return the full combined 64-value directly in kernel?
 > 
-> Signed-off-by: Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
-> Co-developed-by: Luke D. Jones <luke@ljones.dev>
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> ---
-> drivers/platform/x86/asus-wmi.c            | 125 ++++++++++++---------
-> include/linux/platform_data/x86/asus-wmi.h |   1 +
-> 2 files changed, 76 insertions(+), 50 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 3c61d75a3..2e3d8d8fb 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -97,6 +97,12 @@ module_param(fnlock_default, bool, 0444);
-> #define ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST 1
-> #define ASUS_THROTTLE_THERMAL_POLICY_SILENT 2
->  
-> +#define ASUS_THROTTLE_THERMAL_POLICY_DEFAULT_VIVO 0
-> +#define ASUS_THROTTLE_THERMAL_POLICY_SILENT_VIVO 1
-> +#define ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST_VIVO 2
-> +
-> +#define PLATFORM_PROFILE_MAX 2
-> +
-> #define USB_INTEL_XUSB2PR 0xD0
-> #define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI 0x9c31
->  
-> @@ -293,8 +299,8 @@ struct asus_wmi {
-> u32 kbd_rgb_dev;
-> bool kbd_rgb_state_available;
->  
-> - bool throttle_thermal_policy_available;
-> u8 throttle_thermal_policy_mode;
-> + u32 throttle_thermal_policy_dev;
->  
-> bool cpu_fan_curve_available;
-> bool gpu_fan_curve_available;
-> @@ -3152,7 +3158,7 @@ static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
-> int err, fan_idx;
-> u8 mode = 0;
->  
-> - if (asus->throttle_thermal_policy_available)
-> + if (asus->throttle_thermal_policy_dev)
-> mode = asus->throttle_thermal_policy_mode;
-> /* DEVID_<C/G>PU_FAN_CURVE is switched for OVERBOOST vs SILENT */
-> if (mode == 2)
-> @@ -3359,7 +3365,7 @@ static ssize_t fan_curve_enable_store(struct device *dev,
-> * For machines with throttle this is the only way to reset fans
-> * to default mode of operation (does not erase curve data).
-> */
-> - if (asus->throttle_thermal_policy_available) {
-> + if (asus->throttle_thermal_policy_dev) {
-> err = throttle_thermal_policy_write(asus);
-> if (err)
-> return err;
-> @@ -3576,8 +3582,8 @@ static const struct attribute_group asus_fan_curve_attr_group = {
-> __ATTRIBUTE_GROUPS(asus_fan_curve_attr);
->  
-> /*
-> - * Must be initialised after throttle_thermal_policy_check_present() as
-> - * we check the status of throttle_thermal_policy_available during init.
-> + * Must be initialised after throttle_thermal_policy_dev is set as
-> + * we check the status of throttle_thermal_policy_dev during init.
->   */
-> static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
-> {
-> @@ -3618,38 +3624,13 @@ static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
-> }
->  
-> /* Throttle thermal policy ****************************************************/
-> -
-> -static int throttle_thermal_policy_check_present(struct asus_wmi *asus)
-> -{
-> - u32 result;
-> - int err;
-> -
-> - asus->throttle_thermal_policy_available = false;
-> -
-> - err = asus_wmi_get_devstate(asus,
-> -     ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
-> -     &result);
-> - if (err) {
-> - if (err == -ENODEV)
-> - return 0;
-> - return err;
-> - }
-> -
-> - if (result & ASUS_WMI_DSTS_PRESENCE_BIT)
-> - asus->throttle_thermal_policy_available = true;
-> -
-> - return 0;
-> -}
-> -
-> static int throttle_thermal_policy_write(struct asus_wmi *asus)
-> {
-> - int err;
-> - u8 value;
-> + u8 value = asus->throttle_thermal_policy_mode;
-> u32 retval;
-> + int err;
->  
-> - value = asus->throttle_thermal_policy_mode;
-> -
-> - err = asus_wmi_set_devstate(ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
-> + err = asus_wmi_set_devstate(asus->throttle_thermal_policy_dev,
->     value, &retval);
->  
-> sysfs_notify(&asus->platform_device->dev.kobj, NULL,
-> @@ -3679,7 +3660,7 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
->  
-> static int throttle_thermal_policy_set_default(struct asus_wmi *asus)
-> {
-> - if (!asus->throttle_thermal_policy_available)
-> + if (!asus->throttle_thermal_policy_dev)
-> return 0;
->  
-> asus->throttle_thermal_policy_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
-> @@ -3691,7 +3672,7 @@ static int throttle_thermal_policy_switch_next(struct asus_wmi *asus)
-> u8 new_mode = asus->throttle_thermal_policy_mode + 1;
-> int err;
->  
-> - if (new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
-> + if (new_mode > PLATFORM_PROFILE_MAX)
-> new_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
->  
-> asus->throttle_thermal_policy_mode = new_mode;
-> @@ -3730,7 +3711,7 @@ static ssize_t throttle_thermal_policy_store(struct device *dev,
-> if (result < 0)
-> return result;
->  
-> - if (new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
-> + if (new_mode > PLATFORM_PROFILE_MAX)
-> return -EINVAL;
->  
-> asus->throttle_thermal_policy_mode = new_mode;
-> @@ -3747,10 +3728,56 @@ static ssize_t throttle_thermal_policy_store(struct device *dev,
-> return count;
-> }
->  
-> -// Throttle thermal policy: 0 - default, 1 - overboost, 2 - silent
-> +/*
-> + * Throttle thermal policy: 0 - default, 1 - overboost, 2 - silent
-> + */
-> static DEVICE_ATTR_RW(throttle_thermal_policy);
->  
-> /* Platform profile ***********************************************************/
-> +static int asus_wmi_platform_profile_to_vivo(struct asus_wmi *asus,
-> +   int mode)
+> I will add more clear comments for this.
+> While it is true that the driver could combine the 2 fields and present a
+> 64-bit value via one of the sysfs, the reason for the current approach is that
+> there are other interfaces which expose the same counters for our platform
+> and there are tools that are expected to work on top of both interfaces for
+> the purpose of collecting performance stats.
 
-Given the internals of this function I'm still not sure if this naming makes sense. Perhaps "maybe_platform_profile_to_vivo()"
+> The other interfaces follow this
+> approach of having lower and upper 32-bits separately in each counter, and
+> the tools expect the same. Hence the driver follows this approach to keep
+> things consistent across the BlueField platform.
 
-> +{
-> + bool vivo;
-> +
-> + vivo = asus->throttle_thermal_policy_dev == ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
-> +
-> + if (vivo) {
-> + switch (mode) {
-> + case ASUS_THROTTLE_THERMAL_POLICY_DEFAULT:
-> + return ASUS_THROTTLE_THERMAL_POLICY_DEFAULT_VIVO;
-> + case ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST:
-> + return ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST_VIVO;
-> + case ASUS_THROTTLE_THERMAL_POLICY_SILENT:
-> + return ASUS_THROTTLE_THERMAL_POLICY_SILENT_VIVO;
-> + }
-> + }
-> +
-> + return mode;
-> +
-> +}
-> +
-> +static int asus_wmi_platform_profile_mode_from_vivo(struct asus_wmi *asus,
-> +   int mode)
+Hi,
 
-Same as the last function.
+I went to look through the existing arrays in mlxbf-pmc.c but did not find 
+any entries that would have clearly indicated the counters being hi/lo 
+parts of the same counter. There were a few 0/1 ones which could be the 
+same counter although I suspect even they are not parts of the same 
+counter but two separate entities called 0 and 1 having the same counter.
 
-> +{
-> + bool vivo;
-> +
-> + vivo = asus->throttle_thermal_policy_dev == ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
-> +
-> + if (vivo) {
-> + switch (mode) {
-> + case ASUS_THROTTLE_THERMAL_POLICY_DEFAULT_VIVO:
-> + return ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
-> + case ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST_VIVO:
-> + return ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST;
-> + case ASUS_THROTTLE_THERMAL_POLICY_SILENT_VIVO:
-> + return ASUS_THROTTLE_THERMAL_POLICY_SILENT;
-> + }
-> + }
-> +
-> + return mode;
-> +
-> +}
-> +
-> static int asus_wmi_platform_profile_get(struct platform_profile_handler *pprof,
-> enum platform_profile_option *profile)
-> {
-> @@ -3758,10 +3785,9 @@ static int asus_wmi_platform_profile_get(struct platform_profile_handler *pprof,
-> int tp;
->  
-> asus = container_of(pprof, struct asus_wmi, platform_profile_handler);
-> -
-> tp = asus->throttle_thermal_policy_mode;
->  
-> - switch (tp) {
-> + switch (asus_wmi_platform_profile_mode_from_vivo(asus, tp)) {
-> case ASUS_THROTTLE_THERMAL_POLICY_DEFAULT:
-> *profile = PLATFORM_PROFILE_BALANCED;
-> break;
-> @@ -3775,6 +3801,7 @@ static int asus_wmi_platform_profile_get(struct platform_profile_handler *pprof,
-> return -EINVAL;
-> }
->  
-> +
-> return 0;
-> }
->  
-> @@ -3800,7 +3827,7 @@ static int asus_wmi_platform_profile_set(struct platform_profile_handler *pprof,
-> return -EOPNOTSUPP;
-> }
->  
-> - asus->throttle_thermal_policy_mode = tp;
-> + asus->throttle_thermal_policy_mode = asus_wmi_platform_profile_to_vivo(asus, tp);
-> return throttle_thermal_policy_write(asus);
-> }
->  
-> @@ -3813,7 +3840,7 @@ static int platform_profile_setup(struct asus_wmi *asus)
-> * Not an error if a component platform_profile relies on is unavailable
-> * so early return, skipping the setup of platform_profile.
-> */
-> - if (!asus->throttle_thermal_policy_available)
-> + if (!asus->throttle_thermal_policy_dev)
-> return 0;
->  
-> dev_info(dev, "Using throttle_thermal_policy for platform_profile support\n");
-> @@ -4228,7 +4255,7 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
-> if (code == NOTIFY_KBD_FBM || code == NOTIFY_KBD_TTP) {
-> if (asus->fan_boost_mode_available)
-> fan_boost_mode_switch_next(asus);
-> - if (asus->throttle_thermal_policy_available)
-> + if (asus->throttle_thermal_policy_dev)
-> throttle_thermal_policy_switch_next(asus);
-> return;
->  
-> @@ -4436,7 +4463,7 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
-> else if (attr == &dev_attr_fan_boost_mode.attr)
-> ok = asus->fan_boost_mode_available;
-> else if (attr == &dev_attr_throttle_thermal_policy.attr)
-> - ok = asus->throttle_thermal_policy_available;
-> + ok = asus->throttle_thermal_policy_dev != 0;
-> else if (attr == &dev_attr_ppt_pl2_sppt.attr)
-> devid = ASUS_WMI_DEVID_PPT_PL2_SPPT;
-> else if (attr == &dev_attr_ppt_pl1_spl.attr)
-> @@ -4745,16 +4772,15 @@ static int asus_wmi_add(struct platform_device *pdev)
-> else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE2))
-> asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE2;
->  
-> + if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY))
-> + asus->throttle_thermal_policy_dev = ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY;
-> + else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO))
-> + asus->throttle_thermal_policy_dev = ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
-> +
-> err = fan_boost_mode_check_present(asus);
-> if (err)
-> goto fail_fan_boost_mode;
->  
-> - err = throttle_thermal_policy_check_present(asus);
-> - if (err)
-> - goto fail_throttle_thermal_policy;
-> - else
-> - throttle_thermal_policy_set_default(asus);
-> -
-> err = platform_profile_setup(asus);
-> if (err)
-> goto fail_platform_profile_setup;
-> @@ -4849,7 +4875,6 @@ static int asus_wmi_add(struct platform_device *pdev)
-> fail_input:
-> asus_wmi_sysfs_exit(asus->platform_device);
-> fail_sysfs:
-> -fail_throttle_thermal_policy:
-> fail_custom_fan_curve:
-> fail_platform_profile_setup:
-> if (asus->platform_profile_support)
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index 3eb5cd677..982a63774 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -64,6 +64,7 @@
-> #define ASUS_WMI_DEVID_SCREENPAD_LIGHT 0x00050032
-> #define ASUS_WMI_DEVID_FAN_BOOST_MODE 0x00110018
-> #define ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY 0x00120075
-> +#define ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO 0x00110019
->  
-> /* Misc */
-> #define ASUS_WMI_DEVID_PANEL_OD 0x00050019
-> -- 
-> 2.44.0
-> 
- 
-If Hans and Ilpo don't have any requirements then:
+Could you please elaborate further what you meant with the note about 
+other interfaces above so I can better assess the claim?
 
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
+-- 
+ i.
 
