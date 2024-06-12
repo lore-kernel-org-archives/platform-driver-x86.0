@@ -1,174 +1,142 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D1D17C77;
-	Wed, 12 Jun 2024 05:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09892167270;
+	Wed, 12 Jun 2024 07:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718169689; cv=none; b=ERw4vnRCOhI8kKqYMYTkgG3rXEjfhJ6R4dLlb7GobkO+uwBWKzhzhgu00jQZcRF+Izt+yVyJukwn8y8vnHEHAjGsx2sXo9g5yD3THxOWGxEXIxDaKDD850TP4DuOiLjR4QfjlyKm0QD+wQ0E/beBapRt17vMs3IPPsFtH3R5kAk=
+	t=1718177296; cv=none; b=iElQ3+4syZPYOngv423kyTgWXo/YVLI7IJR/KSg6AwvS0IhpkkqQEPMiYxzo6a/rSwZI2gqQgVbIe33B4pe9aR/QhUqSzPfFACOgUw4mfOuSdzSoSU4NavkhyyHPiaJ3fDc8QVhrufh98w8/oKV13r2+WXkUz1LdlXTNr/d0rWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718169689; c=relaxed/simple;
-	bh=4mkGo9OXoaEwGBVqvDJO298UkslxWHdGdGifnUeG6a0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=UpXVYuw2EE8qrNx7SnyQMqnTgm6ZPwYSqrMDGGTaOavfhEl0KujHUFz/k2O7uS7TBJQ4N+0h2GEBZ4UOE9yJt39iU+lCZccZqHNxo3TdY8/RMCbjSsniRPFIghVtbQLRdYypPcv+JEHz9aUy1SrpFl6t5QV4GwOEmsN2qNSEfm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IzbvRK58; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718177296; c=relaxed/simple;
+	bh=OINFqR0m9qTBB2evRLkOh/KF43W/Ig7Ub6ACgHyZnCw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=GuNXjjRjMReN8PUg5bUI9OtgK+ajSm7BBDQ7MF8iqXU6u/0ghZcbEjXUn3b+/HISWSPITS03Ziqc0sYWWmq+q2Uo0tS0Nv436pfIAVuez+/Q9O026YstILXRK802XX0KQA0e2uMa8lUF4X9/9mDiniW4nXh11hdcLtdceWf0pyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZAtkH9f4; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IzbvRK58"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45C5BleE025787;
-	Wed, 12 Jun 2024 05:21:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=q1cUHs5b56/GKnz57ZOrMs
-	p6LpP35/QWVMEWh9vbuNg=; b=IzbvRK58mJpq6Y/WEiBqZLqSzP0yUjP0zuD9zS
-	iboKLphkve+iGdaDZA9zn2EUuXL+y46crn8w/zZjpfabXI4zNWCbJwsEfeWkpr4p
-	iMvt4id/WFaBSzA+Jp5JUcQW8W+ozOin2RZMEq3T1/6urqr1F/rEFozSjxn6m+ov
-	04Zqh9+Vj+Q1mo2yayBLLEwvCvJozQ7KGa3ZXr/Ywnlft1hd1ArcP0Tcluzhdjwg
-	PHdGhFrvjKSRiSJr4RMLu6y48B1xco8wIWYV5azZyShsr/79tkTZw/WZjudtGtUA
-	1WkHOZOu4BpXsmHTe5utSTn04ZptBmjGRHhuDBRf/kvf/Png==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yps5x9jfk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 05:21:22 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45C5L1xO020174
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 05:21:01 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Jun
- 2024 22:21:00 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Tue, 11 Jun 2024 22:20:59 -0700
-Subject: [PATCH] platform/x86: add missing MODULE_DESCRIPTION() macros
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZAtkH9f4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718177295; x=1749713295;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=OINFqR0m9qTBB2evRLkOh/KF43W/Ig7Ub6ACgHyZnCw=;
+  b=ZAtkH9f4XLCatNKGB6E1KtwqdqUSTDoDv1fQFauWUNYMBlASyvgnzdeu
+   K23rusFCzLC6xXTpcKFH6y2a312jW3am7BnF19Nz3X+KNYU9amn1GA306
+   WO4p2H0Sgeh9x1UH7offnjnQDBNaYSNWWlAW1LypZaoZNhR1Nc6lydEWv
+   G5pmoO1CvC6Yuj5iC8gVuoTRGP1Uqg1nfFVVL58JPbS6rGOOqOvzm05Vh
+   GXLDPpaLxUnkhv+XPduteItRmAKZhpi0cEcVKuy5HlTOwdxu+QO4w8s60
+   ZGN4yXaLKIhNJBeLd8vQnwxUoqFjXO7+FveJ75IZgu7ygg3jbw6w03x4h
+   Q==;
+X-CSE-ConnectionGUID: ekdBCSkPRk+9li5Nfmak0Q==
+X-CSE-MsgGUID: H49Uyl6iQuOZ0a1XyeKSOg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="14649308"
+X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
+   d="scan'208";a="14649308"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 00:28:14 -0700
+X-CSE-ConnectionGUID: fq3kvE2WR7uapVrS4pFk4g==
+X-CSE-MsgGUID: 8hrHmmwDRzO2V+ClaDy/aQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
+   d="scan'208";a="39806557"
+Received: from unknown (HELO localhost) ([10.245.247.204])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 00:28:11 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 12 Jun 2024 10:28:06 +0300 (EEST)
+To: Shravan Ramani <shravankr@nvidia.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
+    David Thompson <davthompson@nvidia.com>, 
+    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/4] platform/mellanox: mlxbf-pmc: Add support for
+ 64-bit counters and cycle count
+In-Reply-To: <DM4PR12MB5136EAD83A50869388E96FF3C0C72@DM4PR12MB5136.namprd12.prod.outlook.com>
+Message-ID: <370b5e44-cf92-21af-8c01-dbb208bf323f@linux.intel.com>
+References: <cover.1716205838.git.shravankr@nvidia.com> <ce077a0db5d4afdbcc63a635fece9793aaae055f.1716205838.git.shravankr@nvidia.com> <70d3c0af-8bf6-2e33-074d-5b1719a5674f@linux.intel.com> <DM4PR12MB513695D2BE98AA46A95B4C60C0FF2@DM4PR12MB5136.namprd12.prod.outlook.com>
+ <33f25d4f-386c-6df6-344d-8b7aa011e69c@linux.intel.com> <DM4PR12MB5136EAD83A50869388E96FF3C0C72@DM4PR12MB5136.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240611-md-drivers-platform-x86-v1-1-d850e53619ee@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIADowaWYC/x3MQQqDMBBA0avIrDuQGAmlVyldjMlYB0yUiZWAe
- PemXb7F/ycUVuECj+4E5UOKrLnB3joIM+U3o8Rm6E0/GG8tpohR5WAtuC20T6smrHeP5Mj43g3
- RuQCt3pQnqf/z89U8UmEclXKYf79F8qdiorKzwnV9AdrJciuIAAAA
-To: Hans de Goede <hdegoede@redhat.com>,
-        =?utf-8?q?Ilpo_J=C3=A4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>,
-        Justin Ernst <justin.ernst@hpe.com>
-CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: HgIMLBW91dznE7LdXGdpJM2in-X0IuoV
-X-Proofpoint-ORIG-GUID: HgIMLBW91dznE7LdXGdpJM2in-X0IuoV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-12_02,2024-06-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 clxscore=1011 malwarescore=0 mlxlogscore=999
- spamscore=0 suspectscore=0 adultscore=0 bulkscore=0 mlxscore=0
- phishscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2405170001 definitions=main-2406120036
+Content-Type: text/plain; charset=US-ASCII
 
-With ARCH=x86, make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/x86/amilo-rfkill.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/x86/uv_sysfs.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/x86/ibm_rtl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/x86/xo1-rfkill.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/x86/firmware_attributes_class.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/x86/wireless-hotkey.o
+On Tue, 11 Jun 2024, Shravan Ramani wrote:
 
-Add the missing invocations of the MODULE_DESCRIPTION() macro.
+> > > When 2 32-bit counters are coupled to form a 64-bit counter using this setting,
+> > > one counter will hold the lower 32 bits while the other will hold the upper 32.
+> > > So the other counter (or syses corresponding to it) also needs to be accessed.
+> > >
+> > > > For 64-bit counter, I suppose the userspace is expected to read the full
+> > > > counter from two sysfs files and combine the value (your documentation
+> > > > doesn't explain this)? That seems non-optimal, why cannot kernel just
+> > > > return the full combined 64-value directly in kernel?
+> > > 
+> > > I will add more clear comments for this.
+> > > While it is true that the driver could combine the 2 fields and present a
+> > > 64-bit value via one of the sysfs, the reason for the current approach is that
+> > > there are other interfaces which expose the same counters for our platform
+> > > and there are tools that are expected to work on top of both interfaces for
+> > > the purpose of collecting performance stats.
+> >
+> > > The other interfaces follow this
+> > > approach of having lower and upper 32-bits separately in each counter, and
+> > > the tools expect the same. Hence the driver follows this approach to keep
+> > > things consistent across the BlueField platform.
+> >
+> > Hi,
+> >
+> > I went to look through the existing arrays in mlxbf-pmc.c but did not find
+> > any entries that would have clearly indicated the counters being hi/lo
+> > parts of the same counter. There were a few 0/1 ones which could be the
+> > same counter although I suspect even they are not parts of the same
+> > counter but two separate entities called 0 and 1 having the same counter.
+> >
+> > Could you please elaborate further what you meant with the note about
+> > other interfaces above so I can better assess the claim?
+> 
+> When combining 2 counters using the "use_odd_counter" setting, the mechanism
+> of joining them or assigning upper or lower 32 bits to a counter is handled in HW
+> and not by the driver. For example, if bit0 of "use_odd_counter" is set, counter0
+> and counter1 (which were originally separate counters) automatically become
+> the lower and upper bits of one 64-bit value. The user needs to read both these
+> sysfs separately to get the full 64-bit value. The driver does not do any special
+> handling for such cases, merely provides access to both counter0 and counter1.
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
-This is the last of the issues present (that I'm aware of) in
-drivers/platform/x86
----
- drivers/platform/x86/amilo-rfkill.c              | 1 +
- drivers/platform/x86/firmware_attributes_class.c | 1 +
- drivers/platform/x86/ibm_rtl.c                   | 1 +
- drivers/platform/x86/uv_sysfs.c                  | 1 +
- drivers/platform/x86/wireless-hotkey.c           | 1 +
- drivers/platform/x86/xo1-rfkill.c                | 1 +
- 6 files changed, 6 insertions(+)
+I know all this by now, but we're discussion here is whether kernel should 
+do "special handling". Although, it's not really correct to depict 
+representing 64-bit counter in its entirety as "special handling".
 
-diff --git a/drivers/platform/x86/amilo-rfkill.c b/drivers/platform/x86/amilo-rfkill.c
-index efcf909786a5..2423dc91debb 100644
---- a/drivers/platform/x86/amilo-rfkill.c
-+++ b/drivers/platform/x86/amilo-rfkill.c
-@@ -171,6 +171,7 @@ static void __exit amilo_rfkill_exit(void)
- }
- 
- MODULE_AUTHOR("Ben Hutchings <ben@decadent.org.uk>");
-+MODULE_DESCRIPTION("Fujitsu-Siemens Amilo rfkill support");
- MODULE_LICENSE("GPL");
- MODULE_DEVICE_TABLE(dmi, amilo_rfkill_id_table);
- 
-diff --git a/drivers/platform/x86/firmware_attributes_class.c b/drivers/platform/x86/firmware_attributes_class.c
-index dd8240009565..182a07d8ae3d 100644
---- a/drivers/platform/x86/firmware_attributes_class.c
-+++ b/drivers/platform/x86/firmware_attributes_class.c
-@@ -49,4 +49,5 @@ int fw_attributes_class_put(void)
- EXPORT_SYMBOL_GPL(fw_attributes_class_put);
- 
- MODULE_AUTHOR("Mark Pearson <markpearson@lenovo.com>");
-+MODULE_DESCRIPTION("Firmware attributes class helper module");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/platform/x86/ibm_rtl.c b/drivers/platform/x86/ibm_rtl.c
-index 1d4bbae115f1..231b37909801 100644
---- a/drivers/platform/x86/ibm_rtl.c
-+++ b/drivers/platform/x86/ibm_rtl.c
-@@ -29,6 +29,7 @@ static bool debug;
- module_param(debug, bool, 0644);
- MODULE_PARM_DESC(debug, "Show debug output");
- 
-+MODULE_DESCRIPTION("IBM Premium Real Time Mode (PRTM) driver");
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Keith Mannthey <kmmanth@us.ibm.com>");
- MODULE_AUTHOR("Vernon Mauery <vernux@us.ibm.com>");
-diff --git a/drivers/platform/x86/uv_sysfs.c b/drivers/platform/x86/uv_sysfs.c
-index 37372d7cc54a..f6a0627f36db 100644
---- a/drivers/platform/x86/uv_sysfs.c
-+++ b/drivers/platform/x86/uv_sysfs.c
-@@ -929,4 +929,5 @@ module_init(uv_sysfs_init);
- module_exit(uv_sysfs_exit);
- 
- MODULE_AUTHOR("Hewlett Packard Enterprise");
-+MODULE_DESCRIPTION("Sysfs structure for HPE UV systems");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/platform/x86/wireless-hotkey.c b/drivers/platform/x86/wireless-hotkey.c
-index e95cdbbfb708..459e20f7e161 100644
---- a/drivers/platform/x86/wireless-hotkey.c
-+++ b/drivers/platform/x86/wireless-hotkey.c
-@@ -14,6 +14,7 @@
- #include <linux/acpi.h>
- #include <acpi/acpi_bus.h>
- 
-+MODULE_DESCRIPTION("Airplane mode button for AMD, HP & Xiaomi laptops");
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Alex Hung");
- MODULE_ALIAS("acpi*:HPQ6001:*");
-diff --git a/drivers/platform/x86/xo1-rfkill.c b/drivers/platform/x86/xo1-rfkill.c
-index e64d5646b4c7..5fe68296501c 100644
---- a/drivers/platform/x86/xo1-rfkill.c
-+++ b/drivers/platform/x86/xo1-rfkill.c
-@@ -74,5 +74,6 @@ static struct platform_driver xo1_rfkill_driver = {
- module_platform_driver(xo1_rfkill_driver);
- 
- MODULE_AUTHOR("Daniel Drake <dsd@laptop.org>");
-+MODULE_DESCRIPTION("OLPC XO-1 software RF kill switch");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS("platform:xo1-rfkill");
+I think the kernel should combine the 64-bit halved and you argumented 
+it shouldn't. When I went to confirm the claim your argument was based 
+on, I couldn't find on what basis the claim was made.
 
----
-base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-change-id: 20240611-md-drivers-platform-x86-a3a06234d33c
+> Since the events supported by the blocks are quite HW centric and low-level in
+> nature, the driver is generally used alongside various tools which work on top of
+> this driver to collect telemetry info and provide more readable statistics to the
+> end-user. Similar to this driver, there are other FW interfaces providing access to
+> these counters (same and other additional ones as well that belong to other HW
+> blocks). For the sake of consistency and to allow the tools to be compatible with
+> all interfaces, the counter data needs to be accessible in the same way, ie, as 32-bit
+> upper and lower values in counter0 and counter1 sysfs as in the above case.
+
+This does nothing to answer my question. Where in the kernel, there's an 
+example where a 64-bit counter for BlueField platform is presented as 2 
+32-bit counters? If there isn't any examples in the kernel, your statement 
+about consistency within the platform doesn't hold water, quoted (again) 
+here for clarity what I'm refering to:
+
+"The other interfaces follow this approach of having lower and upper 
+32-bits separately in each counter, and the tools expect the same.
+Hence the driver follows this approach to keep things consistent across 
+the BlueField platform."
+
+Where I can find those "other interfaces" that already follow this 
+convention?
+
+-- 
+ i.
 
