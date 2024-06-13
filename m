@@ -1,321 +1,282 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAB413CFBB;
-	Thu, 13 Jun 2024 07:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF6513D8A1
+	for <platform-driver-x86@vger.kernel.org>; Thu, 13 Jun 2024 08:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718265472; cv=none; b=dH1hK6xTUc1ZBoupIAoGJos8LEYkCN5AqDoe/EoJDexl68EFgDbrIA0rehH8QHl/7Tj7phV02qtnl9W20At2mAXvvYg7yCsEjRzGIKX/ECljWfJpSuMoD9qVr2WMC9wK7KNkXgx+etJcujsdP37lxswiftt4NFh4lOZP8P9rM6w=
+	t=1718267212; cv=none; b=e/b2cPEKRGh54GVLmqaGqVWc0XKNUg6vjqshBGqDlVl2ykrtwNLAt4Vq7BAZccdUQUxHH3uTyQ3aeO9ELN/3OaoEsm6cEF6gl1Ae8FxJpLMg1/zdDY5hWUtGpKbVyGtXKQN//lsMdLf2BMgYZrSUzwDNNpGtbss24uF8NnG1za4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718265472; c=relaxed/simple;
-	bh=e0NxTlF2iD4qbRcwJ7BIXq/PGgNblesDkARtB5e6oSo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=rc5Cer/Y7uv0GM0A6z1Sb2JNVC26YT28FPnq2oxzOtKoJ6GZt+6ZL9HoIUOj6NMKo0eJ0beFsMOrpf1d4MFh81VkYcOK3jiQy2XJ3limqrd0eTAjyM6+27nfC3dQm/bTYnLLPX8wOX5DhtXxb1BtJbDwGCmti3ak+BdXx3zuypw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gTjnPvBA; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718267212; c=relaxed/simple;
+	bh=+/Cd54M7taimSwzXrHgDVYRSG+71hfapAIJPbLSt9Hs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I3k7em9xvx9XQFxTCvFhBDDglljkg22f4n+55zKUAsJx1VLAr9GRH9IifTvem6OwF5FfhBPHzo4Z8789fTaUITcqSpzjWT5Ins4Qj6qYIU/yncX9IR8hzt44iQls52XEkLrGnm8savZVfydTms15P8ysKIYBaPFPk6KwFV5N6nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DGyjKQdt; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gTjnPvBA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718265470; x=1749801470;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=e0NxTlF2iD4qbRcwJ7BIXq/PGgNblesDkARtB5e6oSo=;
-  b=gTjnPvBAMx+GTdq5rnCfJIBJ7Hnac9JXGQVe2251qErTg9NvzrNdNl2T
-   StVworITY3MNq0Wx/2EXjaSfOLbJsoF2pZrpiEj8ErQ41JpczasLrrLyR
-   +cZy9no2MEOaZiXkdrRZuBTXb3noE6j8sDvmDa3JlcTMEJNTet8/BfoDP
-   OO9ivdMeNsLP5reVwDFnsaHHsFYE0w8QpkkZTbVo0Qi5Ao1iNVfm3YZ5p
-   puqshw7RHY57YynkWYFsyRhyBAlwWp4cIQQXLKZcYJKiaMIUv2N+q7WYI
-   aSxeLhcJvVBM27aikmKpc60hVPCE2qaPTjId0U/mVuMjMa3t1niHuWlmb
-   w==;
-X-CSE-ConnectionGUID: 1jVAoXHWT2aVyDodDj5Rjg==
-X-CSE-MsgGUID: xrp2OwTiT8688un+pEz+vw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="26182325"
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="26182325"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 00:57:50 -0700
-X-CSE-ConnectionGUID: M8wZ9vsRT3enWARScp26kw==
-X-CSE-MsgGUID: d2kYW95NT4uLxwd8VzG9/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="40022628"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.209])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2024 00:57:45 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 13 Jun 2024 10:57:41 +0300 (EEST)
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-    Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
-cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-    Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-    Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Konrad Dybcio <konrad.dybcio@linaro.org>, devicetree@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-    Nikita Travkin <nikita@trvn.ru>
-Subject: Re: [PATCH v6 4/6] power: supply: lenovo_yoga_c630_battery: add
- Lenovo C630 driver
-In-Reply-To: <20240612-yoga-ec-driver-v6-4-8e76ba060439@linaro.org>
-Message-ID: <4fc43c56-f801-909a-9178-166d275a5fee@linux.intel.com>
-References: <20240612-yoga-ec-driver-v6-0-8e76ba060439@linaro.org> <20240612-yoga-ec-driver-v6-4-8e76ba060439@linaro.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DGyjKQdt"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-62f86eaffbeso7952947b3.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 13 Jun 2024 01:26:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718267208; x=1718872008; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j2Im9dGKZIt0RrtNSRiS+mo63+EnUh986UQ1mB7bgEE=;
+        b=DGyjKQdtRPt725gon6zKX0CDMb/4SvXXbz+a8ucF6xToOi9oHXx0jfJB0kLzln8ZHy
+         foujg175BB+uqQqzck0FOaofgxOmwiFmLBpsBsHilK9lAjLAqxGA/wlOIfbc68OAmzry
+         XzntPyUrT66JoS8Sgm6mn0BJsFE9OiqBxqgDwam76TR0IYX5biAJbXBf/F3EudhUJ3jV
+         jwZk9eiJFBPjMxd7eBpS4abwutKnug+p8yyDXDIyBVWaeigeej/uv97fjGx+xgCEkt/O
+         UODESD3/L4nVVUFpu1J1AQCIq+ZGa/VBIlHUVhr3xD742PvMvp1w1BNCmWuODGAhchgU
+         lC3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718267208; x=1718872008;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j2Im9dGKZIt0RrtNSRiS+mo63+EnUh986UQ1mB7bgEE=;
+        b=F0q2Z9PKVHtoLAMLUfWCoMFr3kmhbBKElGc+NWEQ2MmkizkF6RdrBegG0PviFkCYkV
+         yusjxR9q8g4wy7im74i/u8SOj9RM0xk9O1fQoxsF2fd9ZvmE4D8XN5OXTFuC8wYgAVth
+         bfpHnjaJdKo4lf9oV0mr8XSokVlM2EyONuEI897iRzmiq1rfa+vIQ1IcFCYiPOBtpVZU
+         bKJ7xGpPAV0wNVqHEAhVjb4HH+gZQ/vJiGOYEwNs0ou3xweDR4+RaAta6P9CNJsoLvW8
+         76EvrNsDw4gpEDuwO9I/NgTOATNSKzt1RQmRiQ4OK4YXXidzsND74eyIkSxPegIWkDFw
+         ZXaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUsNTqCwDJvTiHdD1kPy05xiHlrFwMlZQwPc2g/+SEKrNL/ztUWQ8URcg1dmleG7Fzem9qnqHWQORf00h05iu5ya7U6EpZxBYeEwZR8CgByUYMaVw==
+X-Gm-Message-State: AOJu0Ywg3JNI1cDRa9sOzW9R8iGRQz8b1xk84RAWzubg02x4CN22+YPm
+	oEPcjINKelToaLd1M282J7rhLndGhEQuxz7gHLKwuu8O3HAUP5NZNB1mVqh8FAT4B6zi5VRXT9j
+	iAu7QYlQmE57Sm3n8CcA/d960XC7NNA2epckDxQ==
+X-Google-Smtp-Source: AGHT+IHynYXydLpvtfOmPpRsO5mf9ev0xqivYqbFIR+VnCUnBShW3FDhzEU1UZGYrqeqwOfV4ZIl0+6KVHd1YV43qv8=
+X-Received: by 2002:a0d:e6cf:0:b0:62c:e62d:561d with SMTP id
+ 00721157ae682-62fbb7f5e6fmr40080067b3.1.1718267208393; Thu, 13 Jun 2024
+ 01:26:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20240612-yoga-ec-driver-v6-0-8e76ba060439@linaro.org>
+ <20240612-yoga-ec-driver-v6-3-8e76ba060439@linaro.org> <c8c81617-4391-2c4c-1009-4a8a667a14dc@linux.intel.com>
+In-Reply-To: <c8c81617-4391-2c4c-1009-4a8a667a14dc@linux.intel.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 13 Jun 2024 11:26:37 +0300
+Message-ID: <CAA8EJpqONpegTa-svxhF-2YW8eabCBoiQo5aKEzBC-SxPxSEEQ@mail.gmail.com>
+Subject: Re: [PATCH v6 3/6] usb: typec: ucsi: add Lenovo Yoga C630 glue driver
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+	linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	Nikita Travkin <nikita@trvn.ru>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 12 Jun 2024, Dmitry Baryshkov wrote:
+On Thu, 13 Jun 2024 at 10:30, Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Wed, 12 Jun 2024, Dmitry Baryshkov wrote:
+>
+> > The Lenovo Yoga C630 WOS laptop provides implements UCSI interface in
+> > the onboard EC. Add glue driver to interface the platform's UCSI
+> > implementation.
+> >
+> > Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> > Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > ---
+>
+> > +static int yoga_c630_ucsi_read(struct ucsi *ucsi, unsigned int offset,
+> > +                            void *val, size_t val_len)
+> > +{
+> > +     struct yoga_c630_ucsi *uec =3D ucsi_get_drvdata(ucsi);
+> > +     u8 buf[YOGA_C630_UCSI_READ_SIZE];
+> > +     int ret;
+> > +
+> > +     ret =3D yoga_c630_ec_ucsi_read(uec->ec, buf);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     if (offset =3D=3D UCSI_VERSION) {
+> > +             memcpy(val, &uec->version, min(val_len, sizeof(uec->versi=
+on)));
+> > +             return 0;
+> > +     }
+> > +
+> > +     if (offset =3D=3D UCSI_CCI)
+> > +             memcpy(val, buf, min(val_len, YOGA_C630_UCSI_CCI_SIZE));
+> > +     else if (offset =3D=3D UCSI_MESSAGE_IN)
+> > +             memcpy(val, buf + YOGA_C630_UCSI_CCI_SIZE,
+> > +                    min(val_len, YOGA_C630_UCSI_DATA_SIZE));
+> > +     else
+> > +             return -EINVAL;
+> > +
+> > +     return 0;
+>
+> Hmm, the inconsistency when to do return 0 is a bit odd. Also, using
+> switch (offset) would probably be better here anyway to replace all the
+> ifs.
 
-> On the Lenovo Yoga C630 WOS laptop the EC provides access to the adapter
-> and battery status. Add the driver to read power supply status on the
-> laptop.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
+I'll see if I can improve this bit.
 
-> +/* the mutex should already be locked */
+>
+> > +}
+> > +
+> > +static int yoga_c630_ucsi_async_write(struct ucsi *ucsi, unsigned int =
+offset,
+> > +                                   const void *val, size_t val_len)
+> > +{
+> > +     struct yoga_c630_ucsi *uec =3D ucsi_get_drvdata(ucsi);
+> > +
+> > +     if (offset !=3D UCSI_CONTROL ||
+> > +         val_len !=3D YOGA_C630_UCSI_WRITE_SIZE)
+> > +             return -EINVAL;
+> > +
+> > +     return yoga_c630_ec_ucsi_write(uec->ec, val);
+> > +}
+> > +
+> > +static int yoga_c630_ucsi_sync_write(struct ucsi *ucsi, unsigned int o=
+ffset,
+> > +                                  const void *val, size_t val_len)
+> > +{
+> > +     struct yoga_c630_ucsi *uec =3D ucsi_get_drvdata(ucsi);
+> > +     bool ack =3D UCSI_COMMAND(*(u64 *)val) =3D=3D UCSI_ACK_CC_CI;
+> > +     int ret;
+> > +
+> > +     if (ack)
+> > +             set_bit(UCSI_C630_ACK_PENDING, &uec->flags);
+> > +     else
+> > +             set_bit(UCSI_C630_COMMAND_PENDING, &uec->flags);
+> > +
+> > +     reinit_completion(&uec->complete);
+> > +
+> > +     ret =3D yoga_c630_ucsi_async_write(ucsi, offset, val, val_len);
+> > +     if (ret)
+> > +             goto out_clear_bit;
+> > +
+> > +     if (!wait_for_completion_timeout(&uec->complete, 5 * HZ))
+> > +             ret =3D -ETIMEDOUT;
+> > +
+> > +out_clear_bit:
+> > +     if (ack)
+> > +             clear_bit(UCSI_C630_ACK_PENDING, &uec->flags);
+> > +     else
+> > +             clear_bit(UCSI_C630_COMMAND_PENDING, &uec->flags);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +const struct ucsi_operations yoga_c630_ucsi_ops =3D {
+> > +     .read =3D yoga_c630_ucsi_read,
+> > +     .sync_write =3D yoga_c630_ucsi_sync_write,
+> > +     .async_write =3D yoga_c630_ucsi_async_write,
+> > +};
+> > +
+> > +static void yoga_c630_ucsi_notify_ucsi(struct yoga_c630_ucsi *uec, u32=
+ cci)
+> > +{
+> > +     if (UCSI_CCI_CONNECTOR(cci))
+> > +             ucsi_connector_change(uec->ucsi, UCSI_CCI_CONNECTOR(cci))=
+;
+> > +
+> > +     if (cci & UCSI_CCI_ACK_COMPLETE &&
+> > +         test_bit(UCSI_C630_ACK_PENDING, &uec->flags))
+> > +             complete(&uec->complete);
+> > +
+> > +     if (cci & UCSI_CCI_COMMAND_COMPLETE &&
+> > +         test_bit(UCSI_C630_COMMAND_PENDING, &uec->flags))
+> > +             complete(&uec->complete);
+>
+> Is this racy? Can another command start after an ACK in between these two
+> ifs and complete() is called prematurely for the new command? (Or will
+> different value in cci protect against that?)
 
-Enforce this with lockdep_assert_held() (and remove the comment).
+No, there is no race. The UCSI is locked for the duration of the command.
 
-> +static int yoga_c630_psy_update_bat_info(struct yoga_c630_psy *ecbat)
-> +{
-> +	struct yoga_c630_ec *ec = ecbat->ec;
-> +	int val;
-> +
-> +	val = yoga_c630_ec_read8(ec, LENOVO_EC_BAT_PRESENT);
-> +	if (val < 0)
-> +		return val;
-> +	ecbat->bat_present = !!(val & LENOVO_EC_BAT_PRESENT_IS_PRESENT);
-> +	if (!ecbat->bat_present)
-> +		return val;
-> +
-> +	val = yoga_c630_ec_read8(ec, LENOVO_EC_BAT_ATTRIBUTES);
-> +	if (val < 0)
-> +		return val;
-> +	ecbat->unit_mA = val & LENOVO_EC_BAT_ATTRIBUTES_UNIT_IS_MA;
-> +
-> +	val = yoga_c630_ec_read16(ec, LENOVO_EC_BAT_DESIGN_CAPACITY);
-> +	if (val < 0)
-> +		return val;
-> +	ecbat->design_capacity = val * 1000;
-> +
-> +	/*
-> +	 * DSDT has delays after most of EC reads in these methods.
-> +	 * Having no documentation for the EC we have to follow and sleep here.
-> +	 */
-> +	msleep(50);
-> +
-> +	val = yoga_c630_ec_read16(ec, LENOVO_EC_BAT_DESIGN_VOLTAGE);
-> +	if (val < 0)
-> +		return val;
-> +	ecbat->design_voltage = val;
-> +
-> +	msleep(50);
-> +
-> +	val = yoga_c630_ec_read8(ec, LENOVO_EC_BAT_FULL_REGISTER);
-> +	if (val < 0)
-> +		return val;
-> +	val = yoga_c630_ec_read16(ec,
-> +				  val & LENOVO_EC_BAT_FULL_REGISTER_IS_FACTORY ?
-> +				  LENOVO_EC_BAT_FULL_FACTORY :
-> +				  LENOVO_EC_BAT_FULL_CAPACITY);
-> +	if (val < 0)
-> +		return val;
-> +
-> +	ecbat->full_charge_capacity = val * 1000;
-> +
-> +	if (!ecbat->unit_mA) {
-> +		ecbat->design_capacity *= 10;
-> +		ecbat->full_charge_capacity *= 10;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int yoga_c630_psy_maybe_update_bat_status(struct yoga_c630_psy *ecbat)
-> +{
-> +	struct yoga_c630_ec *ec = ecbat->ec;
-> +	int current_mA;
-> +	int val;
-> +
-> +	scoped_guard(mutex, &ecbat->lock) {
+>
+> > +}
+> > +
+> > +static int yoga_c630_ucsi_notify(struct notifier_block *nb,
+> > +                              unsigned long action, void *data)
+> > +{
+> > +     struct yoga_c630_ucsi *uec =3D container_of(nb, struct yoga_c630_=
+ucsi, nb);
+> > +     u32 cci;
+> > +     int ret;
+> > +
+> > +     switch (action) {
+> > +     case LENOVO_EC_EVENT_USB:
+> > +     case LENOVO_EC_EVENT_HPD:
+> > +             ucsi_connector_change(uec->ucsi, 1);
+> > +             return NOTIFY_OK;
+> > +
+> > +     case LENOVO_EC_EVENT_UCSI:
+> > +             ret =3D uec->ucsi->ops->read(uec->ucsi, UCSI_CCI, &cci, s=
+izeof(cci));
+> > +             if (ret)
+> > +                     return NOTIFY_DONE;
+> > +
+> > +             yoga_c630_ucsi_notify_ucsi(uec, cci);
+> > +
+> > +             return NOTIFY_OK;
+> > +
+> > +     default:
+> > +             return NOTIFY_DONE;
+> > +     }
+> > +}
+> > +
+> > +static int yoga_c630_ucsi_probe(struct auxiliary_device *adev,
+> > +                             const struct auxiliary_device_id *id)
+> > +{
+> > +     struct yoga_c630_ec *ec =3D adev->dev.platform_data;
+> > +     struct yoga_c630_ucsi *uec;
+> > +     int ret;
+> > +
+> > +     uec =3D devm_kzalloc(&adev->dev, sizeof(*uec), GFP_KERNEL);
+> > +     if (!uec)
+> > +             return -ENOMEM;
+> > +
+> > +     uec->ec =3D ec;
+> > +     init_completion(&uec->complete);
+> > +     uec->nb.notifier_call =3D yoga_c630_ucsi_notify;
+> > +
+> > +     uec->ucsi =3D ucsi_create(&adev->dev, &yoga_c630_ucsi_ops);
+> > +     if (IS_ERR(uec->ucsi))
+> > +             return PTR_ERR(uec->ucsi);
+> > +
+> > +     ucsi_set_drvdata(uec->ucsi, uec);
+> > +
+> > +     uec->version =3D yoga_c630_ec_ucsi_get_version(uec->ec);
+> > +
+> > +     auxiliary_set_drvdata(adev, uec);
+> > +
+> > +     ret =3D yoga_c630_ec_register_notify(ec, &uec->nb);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     return ucsi_register(uec->ucsi);
+> > +}
+> > +
+> > +static void yoga_c630_ucsi_remove(struct auxiliary_device *adev)
+> > +{
+> > +     struct yoga_c630_ucsi *uec =3D auxiliary_get_drvdata(adev);
+> > +
+> > +     yoga_c630_ec_unregister_notify(uec->ec, &uec->nb);
+> > +     ucsi_unregister(uec->ucsi);
+>
+> Usually, the remove should tear down in reverse order than the probe side=
+.
+> Is the divergence from that here intentional?
 
-This too could be simply guard() to bring down the indentation level.
+Yes, it's intentional, so that the driver doesn't get a notification
+while UCSI is being torn down. Consider it to be paired with
+ucsi_create().
 
-> +		if (time_before(jiffies, ecbat->last_status_update + LENOVO_EC_CACHE_TIME))
-> +			return 0;
-> +
-> +		val = yoga_c630_ec_read8(ec, LENOVO_EC_BAT_STATUS);
-> +		if (val < 0)
-> +			return val;
-> +		ecbat->bat_status = val;
-> +
-> +		msleep(50);
-> +
-> +		val = yoga_c630_ec_read16(ec, LENOVO_EC_BAT_REMAIN_CAPACITY);
-> +		if (val < 0)
-> +			return val;
-> +		ecbat->capacity_now = val * 1000;
-> +
-> +		msleep(50);
-> +
-> +		val = yoga_c630_ec_read16(ec, LENOVO_EC_BAT_VOLTAGE);
-> +		if (val < 0)
-> +			return val;
-> +		ecbat->voltage_now = val * 1000;
-> +
-> +		msleep(50);
-> +
-> +		val = yoga_c630_ec_read16(ec, LENOVO_EC_BAT_CURRENT);
-> +		if (val < 0)
-> +			return val;
-> +		current_mA = sign_extend32(val, 15);
-> +		ecbat->current_now = current_mA * 1000;
-> +		ecbat->rate_now = current_mA * (ecbat->voltage_now / 1000);
-> +
-> +		msleep(50);
-> +
-> +		if (!ecbat->unit_mA)
-> +			ecbat->capacity_now *= 10;
-> +
-> +		ecbat->last_status_update = jiffies;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int yoga_c630_psy_update_adapter_status(struct yoga_c630_psy *ecbat)
-> +{
-> +	struct yoga_c630_ec *ec = ecbat->ec;
-> +	int val;
-> +
-> +	scoped_guard(mutex, &ecbat->lock) {
-
-Ditto.
-
-> +		val = yoga_c630_ec_read8(ec, LENOVO_EC_ADPT_STATUS);
-> +		if (val < 0)
-> +			return val;
-> +
-> +		ecbat->adapter_online = !!(val & LENOVO_EC_ADPT_STATUS_PRESENT);
-> +	}
-> +
-> +	return 0;
-> +}
-
-
-> +static const struct power_supply_desc yoga_c630_psy_bat_psy_desc_mA = {
-> +	.name = "yoga-c630-battery",
-> +	.type = POWER_SUPPLY_TYPE_BATTERY,
-> +	.properties = yoga_c630_psy_bat_mA_properties,
-> +	.num_properties = ARRAY_SIZE(yoga_c630_psy_bat_mA_properties),
-> +	.get_property = yoga_c630_psy_bat_get_property,
-> +};
-> +
-> +static const struct power_supply_desc yoga_c630_psy_bat_psy_desc_mWh = {
-> +	.name = "yoga-c630-battery",
-> +	.type = POWER_SUPPLY_TYPE_BATTERY,
-> +	.properties = yoga_c630_psy_bat_mWh_properties,
-> +	.num_properties = ARRAY_SIZE(yoga_c630_psy_bat_mWh_properties),
-> +	.get_property = yoga_c630_psy_bat_get_property,
-> +};
-> +
-> +static int yoga_c630_psy_adpt_get_property(struct power_supply *psy,
-> +					  enum power_supply_property psp,
-> +					  union power_supply_propval *val)
-> +{
-> +	struct yoga_c630_psy *ecbat = power_supply_get_drvdata(psy);
-> +	int ret = 0;
-> +
-> +	ret = yoga_c630_psy_update_adapter_status(ecbat);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_ONLINE:
-> +		val->intval = ecbat->adapter_online;
-> +		break;
-> +	case POWER_SUPPLY_PROP_USB_TYPE:
-> +		val->intval = POWER_SUPPLY_USB_TYPE_C;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static enum power_supply_property yoga_c630_psy_adpt_properties[] = {
-> +	POWER_SUPPLY_PROP_ONLINE,
-> +	POWER_SUPPLY_PROP_USB_TYPE,
-> +};
-> +
-> +static const enum power_supply_usb_type yoga_c630_psy_adpt_usb_type[] = {
-> +	POWER_SUPPLY_USB_TYPE_C,
-> +};
-> +
-> +static const struct power_supply_desc yoga_c630_psy_adpt_psy_desc = {
-> +	.name = "yoga-c630-adapter",
-> +	.type = POWER_SUPPLY_TYPE_USB,
-> +	.usb_types = yoga_c630_psy_adpt_usb_type,
-> +	.num_usb_types = ARRAY_SIZE(yoga_c630_psy_adpt_usb_type),
-> +	.properties = yoga_c630_psy_adpt_properties,
-> +	.num_properties = ARRAY_SIZE(yoga_c630_psy_adpt_properties),
-> +	.get_property = yoga_c630_psy_adpt_get_property,
-> +};
-> +
-> +static int yoga_c630_psy_register_bat_psy(struct yoga_c630_psy *ecbat)
-> +{
-> +	struct power_supply_config bat_cfg = {};
-> +
-> +	bat_cfg.drv_data = ecbat;
-> +	bat_cfg.fwnode = ecbat->fwnode;
-> +	ecbat->bat_psy = power_supply_register_no_ws(ecbat->dev,
-> +						     ecbat->unit_mA ?
-> +						     &yoga_c630_psy_bat_psy_desc_mA :
-> +						     &yoga_c630_psy_bat_psy_desc_mWh,
-> +						     &bat_cfg);
-> +	if (IS_ERR(ecbat->bat_psy)) {
-> +		dev_err(ecbat->dev, "failed to register battery supply\n");
-> +		return PTR_ERR(ecbat->bat_psy);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void yoga_c630_ec_refresh_bat_info(struct yoga_c630_psy *ecbat)
-> +{
-> +	bool current_unit;
-> +
-> +	scoped_guard(mutex, &ecbat->lock) {
-
-guard()
-
-> +		current_unit = ecbat->unit_mA;
-> +
-> +		yoga_c630_psy_update_bat_info(ecbat);
-> +
-> +		if (current_unit != ecbat->unit_mA) {
-> +			power_supply_unregister(ecbat->bat_psy);
-> +			yoga_c630_psy_register_bat_psy(ecbat);
-> +		}
-> +	}
-> +}
-
-
-> +	adp_cfg.supplied_to = (char **)&yoga_c630_psy_bat_psy_desc_mA.name;
-
-This is not problem with your patch but I'm wondering why supplied_to 
-needs to be non-const char *. Are those strings expected to be altered by 
-something, I couldn't find anything to that effect (the pointer itself 
-does not become const if supplied_to is changed to const char **)?
-
---
- i.
-
+--=20
+With best wishes
+Dmitry
