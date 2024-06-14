@@ -1,28 +1,58 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075F563B
-	for <platform-driver-x86@vger.kernel.org>; Fri, 14 Jun 2024 13:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C599319B5BA
+	for <platform-driver-x86@vger.kernel.org>; Fri, 14 Jun 2024 15:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718372260; cv=none; b=SCXuABxb7ZTIIiBJX+AdFG1eUW3sM3Wb4LANwjbyZesAjg206ulzidJye1oosJrl/3MW7XigX90ZF4uJim9+Ay3AuFBPVwpVLiFxjm8OcbnsK0nNzfP61A4JKIfnYS8XeFhO0TzdDjNWQBbsYGqbQgHwoDWCWlvJuoXi9CIpE7I=
+	t=1718377621; cv=none; b=hMKEImKnaif2X32NdCuyTAbUF5nNyNSg3qt0E5mN+KfHWCiCyqKI+3OJWKhv9lOgPe5Mbqg9ebWrbVPBTy1pBa879F9pdTvsmY1of0UoJm176mZwf/H20GwE7WjTR6vrdAKXnhW0dv55dji2pyzrV941ruR3Ls1Cghcsd7P6U9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718372260; c=relaxed/simple;
-	bh=dmlZYoWNTbZ9LdgL5GLUh81jFPlGKRiq6pOwkIyzzLI=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=dnC1G8gCjXa//LSU0WBeQhAE7iJOI7VxFRVoL53EiPWQxrW1zt37wVLz1C1kfAmbWo968tLgzB7tBggtDUIVl24Yca/pTmqjMZG0Wyewnhx+I02sAw55prLOZR4Qcjugt8qe1sUezxhdsZOBRPMJt5m9Mdy07R7jJN67MsTKXGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 180FF61E5FE01;
-	Fri, 14 Jun 2024 15:36:53 +0200 (CEST)
-Message-ID: <0ae5aef7-f65f-492b-86d6-ab8a3a3e2a54@molgen.mpg.de>
-Date: Fri, 14 Jun 2024 15:36:52 +0200
+	s=arc-20240116; t=1718377621; c=relaxed/simple;
+	bh=5ZZM7j7iL/DBgaxMjtPGC5cdDjHYV357NqZZZjsz7t8=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=DMpoWxqJSvpfY7N4KXfhNiK9hY5MIyAS8i8D8j+4N7h8RTDj9E+o7Evc23s/rf1jQRO7IHevAnhZCCKXi38lUd+3ThW9rWLWwXQaQGYpyZDTzwuHa+kWFDEnO+uIRJELqt/EGTPw1Zb7r9phK+F50a5X4br7Z1PNYeBvv3GPt+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HUW+diSE; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HUW+diSE"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57c75464e77so2734527a12.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Jun 2024 08:06:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718377618; x=1718982418; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:content-language:to
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A+pDkGRqKyAR0ML3T2V+u8oO7Ipe0KL4TQo7eIi2gH8=;
+        b=HUW+diSEOGhO834X8BztFXnODpoMQbs+sl3KMugf9/+uK1eyiol1hpKgtVdYGbIh9I
+         +fPu+dQDOInkre2Msay3ahIIlv+DUhJDMJPkU8ITpvpMK2IzEjZ4GOdriw4VYYC+Dqcc
+         h38h6pPab5pXFHqSV7d+YLtMKoPheektQBGUPmRQVcUzkUg91XuiWsMHSra9FOOh6Bhj
+         UR85LF0lepuySahnZp/6YrhBneaWSFYuueDvMtKO7Z8zay1zTgbovby0mAVd/NzWLMa6
+         DtlHqJfoBH+tR8xx7li69194zq4FIGwVEpUu7srAxsAQwVpXjHZiuu3/8RWDUR6euTly
+         H0CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718377618; x=1718982418;
+        h=content-transfer-encoding:subject:from:content-language:to
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=A+pDkGRqKyAR0ML3T2V+u8oO7Ipe0KL4TQo7eIi2gH8=;
+        b=F/3JksNpscKwJE24pW/oRXTUJuIafmGlFjn+XM+5S+b4wrDGJ8slJzhw+s2iOyOXLr
+         JM/q4W6JnicGbJ9CrjKGtYp/ZypMffpuQ5B+E5a8o6y25BPrn/icoQ6TDbPUQpZoywzV
+         RsCc8ppQNVkhNxKxnNO9d8pdsZdB63XP8TgQbJguWIIDg5tAyR3UcCVJnRh9XXRHtGAP
+         WaFgdvV903NML6/hdHehh6auYFlRJ+NG8MhihO9Pd8PUle9QKxB7e+HzZHo5PH3KhzG6
+         7lJFRfVmGASv57qHNEPSznEYIvos/UvdA/zMgTYIOHcABc+fPFUORMYFAjL+OwZNKK8x
+         Zepw==
+X-Gm-Message-State: AOJu0Yxb7OnDnTRNWqZ9XmzldgzETs5HYZvamSzaLcbZH1RZdS5UD/Xs
+	aD1bXkFZP0l7NCsnOm0XagHmixcbVvqro4xKs5L4cd9UB38K3c5dmWFpyA==
+X-Google-Smtp-Source: AGHT+IGZMHEArGIBHu8cUaWnaI/s2+cED2ZkQWWKUzzgWQyRL0/H7DCoIi/cw4nLRrYbQJfLvlby6A==
+X-Received: by 2002:a17:906:3859:b0:a6f:2206:99ae with SMTP id a640c23a62f3a-a6f60d4144cmr215594366b.41.1718377617837;
+        Fri, 14 Jun 2024 08:06:57 -0700 (PDT)
+Received: from [192.168.69.3] ([91.189.216.255])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56db67e5sm193549166b.66.2024.06.14.08.06.57
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Jun 2024 08:06:57 -0700 (PDT)
+Message-ID: <50d7eef9-17c4-4be2-bb25-37d7b74048cc@gmail.com>
+Date: Fri, 14 Jun 2024 17:06:56 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -30,213 +60,27 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: Re: Dell XPS 13 9360: `slp_s0_residency_usec` stays 0
-To: "David E. Box" <david.e.box@linux.intel.com>
-Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- David E Box <david.e.box@intel.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org
-References: <38fc334a-7c8c-4e43-bf63-6ac9aa882a2f@molgen.mpg.de>
- <c73a9072-27eb-4d42-b74a-52619a81837e@molgen.mpg.de>
- <81e937f0-df95-4e07-8d0f-3e20fce8481f@amd.com>
- <36a91aa1-84e3-4ad5-8384-1bd999c15675@molgen.mpg.de>
- <49bd6fea5a77a2b419e5c808e400f02fe275d9b1.camel@linux.intel.com>
- <0e25d09e-ca8a-407c-8a6e-8955fea765b5@molgen.mpg.de>
-Content-Language: en-US
-In-Reply-To: <0e25d09e-ca8a-407c-8a6e-8955fea765b5@molgen.mpg.de>
+To: platform-driver-x86@vger.kernel.org
+Content-Language: en-US, pl, pl-PL
+From: =?UTF-8?Q?Micha=C5=82_Szczepaniak?= <m.szczepaniak.000@gmail.com>
+Subject: [sony-laptop] Hardware keys are not properly mapped on Sony VAIO UX
+ VGN-UX390N
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Dear David,
+Hello,
 
+I have Sony VAIO VGN-UX390N and it has 3 miscellaneous buttons on the 
+front. Zoom in/out and third that I'm not sure what it does. Both third 
+and zoom out register as XF86Launch1 and zoom in is not being 
+registered. After some looking into it, using evtest /dev/input/event5 
+I've established that zoom in reports as "KEY_ZOOMIN" but because the 
+keycode is above 255 it doesn't register, but from documentation I've 
+established that I can remap it to XF86ZoomIn via udev.
 
-Am 31.05.24 um 05:52 schrieb Paul Menzel:
+That's all fine but both zoom out and the third button register as 
+KEY_PROG1 and fixing that is not as simple as remapping so here I am 
+asking for help with debugging that. I'll be fast to respond and provide 
+everything that's needed.
 
-> Am 30.05.24 um 23:24 schrieb David E. Box:
-> 
->> On Fri, 2024-05-24 at 06:53 +0200, Paul Menzel wrote:
-> 
->>> Am 22.05.24 um 18:37 schrieb Mario Limonciello:
->>>> On 5/22/2024 10:52, Paul Menzel wrote:
->>>
->>>>> On the Intel Kaby Lake laptop Dell XPS 13 9360,
->>>>> `/sys/kernel/debug/pmc_core/slp_s0_residency_usec` does stay 0 even
->>>>> after a s2idle suspend/resume cycle.
->>>>
->>>> It won't change your numbers but FWIW you can also read from
->>>>
->>>> $ cat /sys/power/suspend_stats/last_hw_sleep
->>>>
->>>> which is also accessible under kernel lockdown.
->>>>
->>>>>       $ sudo dmesg
->>>>>       […]
->>>>>       [    0.000000] DMI: Dell Inc. XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022
->>>>>       […]
->>>>>       [10176.745124] PM: suspend entry (s2idle)
->>>>>       [10176.757275] Filesystems sync: 0.012 seconds
->>>>>       [10176.769118] Freezing user space processes
->>>>>       [10176.771693] Freezing user space processes completed (elapsed 0.002 seconds)
->>>>>       [10176.771710] OOM killer disabled.
->>>>>       [10176.771714] Freezing remaining freezable tasks
->>>>>       [10176.773487] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
->>>>>       [10176.773504] printk: Suspending console(s) (use no_console_suspend to debug)
->>>>>       [10176.948337] ACPI: EC: interrupt blocked
->>>>>       [10176.951016] intel_pch_thermal 0000:00:14.2: CPU-PCH is cool [48C]
->>>>>       [10181.281827] ACPI: EC: interrupt unblocked
->>>>>       $ sudo more /sys/kernel/debug/pmc_core/slp_s0_residency_usec
->>>>>       0
->>>>>
->>>>> Is that expected?
->>>>
->>>> Is it a regression?  If so; probably it's worth bisecting.
->>>
->>> Sorry, I do not know. It’s the first time [1] I heard about this file,
->>> and that fwts [2] checks it. Do you remember, if Dell has any public
->>> logs from testing, containing `slp_s0_residency_usec`?
->>>
->>>> If it's not a regression IIUC you should probably run
->>>> https://github.com/intel/S0ixSelftestTool for assistance in next steps
->>>> on debugging why this is happening.
->>>
->>> Thank you for the pointer. Please find the log file from `sudo
->>> ./s0ix-selftest-tool.sh -s` attached. Some PCIe ports are flagged.
-> 
->> The report suggests checking the kernel log for any error loading drm 
->> firmware.
-> 
-> Did you conclude that from the lines below?
-> 
->     GFX DC5 after S2idle: 59
->     GFX DC6 after S2idle: 0
-> 
->     Your system CPU Model ID is: 142, and the graphics DC6 value is not expected to enter DC9,
->     please check the latest display DMC FW load status:
-> 
->     Your system Intel graphics DMC FW loaded status is:yes
-> 
->> If the firmware is loaded properly, you should see a message similar to the
->> following:
->>
->>      [drm] Finished loading DMC firmware i915/kbl_dmc_ver1_04.bin (v1.4)
-> 
-> The firmware is loaded:
-> 
->      [  124.536942] i915 0000:00:02.0: [drm] Finished loading DMC firmware i915/kbl_dmc_ver1_04.bin (v1.4)
-
-Further tries show, the system does not reach PC10 state without 
-ignoring LTR 8 (PMC0:SOUTHPORT_C). With that LTR ignored, I think there 
-are sometimes problems regarding suspend/resume ACPI S3, but I have to 
-test that further. But even if with PC10 states being reached, after 
-S0ix suspend/resume, `slp_s0_residency_usec` remains 0.
-
-Newly booted with nothing attached:
-
-```
-$ sudo turbostat --quiet --show 
-CPU%c1,CPU%c6,CPU%c7,GFX%rc6,Pkg%pc2,Pkg%pc3,Pkg%pc6,Pkg%pc7,Pkg%pc8,Pkg%pc9,Pk%pc10,SYS%LPI 
-rtcwake -m freeze -s 10
-rtcwake: assuming RTC uses UTC ...
-rtcwake: wakeup from "freeze" using /dev/rtc0 at Fri Jun 14 09:05:12 2024
-
-10.931644 sec
-CPU%c1	CPU%c6	CPU%c7	GFX%rc6	Pkg%pc2	Pkg%pc3	Pkg%pc6	Pkg%pc7	Pkg%pc8 
-Pkg%pc9	Pk%pc10	SYS%LPI
-1.40	0.56	96.21	589.96	2.83	0.44	0.13	0.01	92.07	0.00	0.00	0.00
-0.84	0.24	96.89	589.96	2.83	0.44	0.13	0.01	92.07	0.00	0.00	0.00
-1.40
-1.94	0.89	95.53
-1.41
-```
-
-Disable LTR 8:
-
-```
-$ sudo cat /sys/kernel/debug/pmc_core/ltr_show
-0	PMC0:SOUTHPORT_A                     	LTR: RAW: 0x8460846 
-Non-Snoop(ns): 0               	Snoop(ns): 0
-1	PMC0:SOUTHPORT_B                     	LTR: RAW: 0x0 
-Non-Snoop(ns): 0               	Snoop(ns): 0
-2	PMC0:SATA                            	LTR: RAW: 0x0 
-Non-Snoop(ns): 0               	Snoop(ns): 0
-3	PMC0:GIGABIT_ETHERNET                	LTR: RAW: 0x0 
-Non-Snoop(ns): 0               	Snoop(ns): 0
-4	PMC0:XHCI                            	LTR: RAW: 0x88a0 
-Non-Snoop(ns): 0               	Snoop(ns): 163840
-5	PMC0:Reserved                        	LTR: RAW: 0x0 
-Non-Snoop(ns): 0               	Snoop(ns): 0
-6	PMC0:ME                              	LTR: RAW: 0xc000c00 
-Non-Snoop(ns): 0               	Snoop(ns): 0
-7	PMC0:EVA                             	LTR: RAW: 0x0 
-Non-Snoop(ns): 0               	Snoop(ns): 0
-8	PMC0:SOUTHPORT_C                     	LTR: RAW: 0x89f489f4 
-Non-Snoop(ns): 512000          	Snoop(ns): 512000
-9	PMC0:HD_AUDIO                        	LTR: RAW: 0x0 
-Non-Snoop(ns): 0               	Snoop(ns): 0
-10	PMC0:LPSS                            	LTR: RAW: 0x0 
-Non-Snoop(ns): 0               	Snoop(ns): 0
-11	PMC0:SOUTHPORT_D                     	LTR: RAW: 0x0 
-Non-Snoop(ns): 0               	Snoop(ns): 0
-12	PMC0:SOUTHPORT_E                     	LTR: RAW: 0x0 
-Non-Snoop(ns): 0               	Snoop(ns): 0
-13	PMC0:CAMERA                          	LTR: RAW: 0x0 
-Non-Snoop(ns): 0               	Snoop(ns): 0
-14	PMC0:ESPI                            	LTR: RAW: 0x0 
-Non-Snoop(ns): 0               	Snoop(ns): 0
-15	PMC0:SCC                             	LTR: RAW: 0x0 
-Non-Snoop(ns): 0               	Snoop(ns): 0
-16	PMC0:ISH                             	LTR: RAW: 0x0 
-Non-Snoop(ns): 0               	Snoop(ns): 0
-17	PMC0:CURRENT_PLATFORM                	LTR: RAW: 0x40201 
-Non-Snoop(ns): 0               	Snoop(ns): 0
-18	PMC0:AGGREGATED_SYSTEM               	LTR: RAW: 0x3eca251 
-Non-Snoop(ns): 0               	Snoop(ns): 593
-$ echo 8 | sudo tee /sys/kernel/debug/pmc_core/ltr_ignore
-8
-```
-
-and test again:
-
-```
-$ sudo turbostat --quiet --show 
-CPU%c1,CPU%c6,CPU%c7,GFX%rc6,Pkg%pc2,Pkg%pc3,Pkg%pc6,Pkg%pc7,Pkg%pc8,Pkg%pc9,Pk%pc10,SYS%LPI 
-rtcwake -m freeze -s 10
-rtcwake: assuming RTC uses UTC ...
-rtcwake: wakeup from "freeze" using /dev/rtc0 at Fri Jun 14 09:06:29 2024
-11.025682 sec
-CPU%c1	CPU%c6	CPU%c7	GFX%rc6	Pkg%pc2	Pkg%pc3	Pkg%pc6	Pkg%pc7	Pkg%pc8 
-Pkg%pc9	Pk%pc10	SYS%LPI
-1.45	0.57	96.39	1273.23	3.08	0.31	0.08	0.01	1.54	0.00	90.76	0.00
-1.25	0.39	96.47	1273.21	3.08	0.31	0.08	0.01	1.54	0.00	90.76	0.00
-1.90
-1.48	0.75	96.31
-1.16
-```
-
-Daniel Holz (Bcc) with a similar Dell XPS 13 9365 (also Kaby Lake) 
-reports similar issues [3].
-
-Does somebody have an idea?
-
-
-Kind regards,
-
-Paul
-
-
->>> [1]: https://review.coreboot.org/c/coreboot/+/81595/10/src/mainboard/cwwk/adl/Kconfig#9
->>> [2]: https://wiki.ubuntu.com/FirmwareTestSuite/
-[3]: https://bugzilla.kernel.org/show_bug.cgi?id=207893
->>>>> PS: Some system details:
->>>>>
->>>>> ```
->>>>> $ LANG= lspci -nn
->>>>> 00:00.0 Host bridge [0600]: Intel Corporation Xeon E3-1200 v6/7th Gen Core Processor Host Bridge/DRAM Registers [8086:5904] (rev 02)
->>>>> 00:02.0 VGA compatible controller [0300]: Intel Corporation HD Graphics 620 [8086:5916] (rev 02)
->>>>> 00:04.0 Signal processing controller [1180]: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem 
->>>>> [8086:1903] (rev 02) 00:14.0 USB controller [0c03]: Intel Corporation Sunrise Point-LP USB 3.0 xHCI Controller [8086:9d2f] (rev 21)
->>>
->>> […]
+Thanks!
