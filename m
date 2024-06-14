@@ -1,109 +1,186 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF841EEE0;
-	Fri, 14 Jun 2024 01:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A41192B87;
+	Fri, 14 Jun 2024 09:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718329633; cv=none; b=MvCZhyFEHiAfpKxxoZ6aOi9oSTA+68bK+gGOMDtlo7rH1kWEeMD2R2zoytioMC6XIAKIK/tIGa40CDj0KND1+hTFp3rJzj1KRu3cUZenW1idGyqijWJoAhlj+AUi4I8exkAAIJDXMUTWP4omEvuX9ivSiFoNBwM+11OBfsTj60Q=
+	t=1718358599; cv=none; b=h6TH6VPd3l2855wYT5IUrP1ytwskxWOQukydNXgWy2yIJ/zqZg55R3CdM8Z9p5SgeK2UNvlTUo41lfC6YjpKJVRUdV80pL0dfN/Me58dK4XaIIqnR9RO+HjAAvaQrNcm81u39DVzEMWPHHQsziTtQrgPfbrIvI8vjUnRvKYZkE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718329633; c=relaxed/simple;
-	bh=e6x2Udov0z0jRMGzv0LZfs+zVlznnJAxrLeH7tE+OpI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HcmTXCmGYFMh1uR6i5ArwZZYjSgKt5ArAghsJ88WZ8kM/IMbrIaAGJVE6+nINdJ1m8kvfBUOc2UVZdIwPaBjZ2iwO2qJYEsCDykW6v9rkufUOdl83ro6uhBRgIh3Sg4FXJtEkJZkw8piiweLD1n+C6JPHqNSHiHfXE/J+GwtGJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=rsdlC1zC; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1718358599; c=relaxed/simple;
+	bh=2OZ3L7NQnRMDE7VXZmO25GoZOXA0atjNt18Kc5M8loQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=sig6um4VhUh5hUXDlYnwqd2rB/IuSpNYdtPbAriq7TEFRcwy6KHQe8NBvNSUgGeq5rN47B77bcPfea9iBavzLqhrZ1u7cDy30PVxx+Jag/5SN1s1+sgnb8IHIZITbXHhL2YNas0Nb9IXf9aM+lZ8t9wqo+48OWEg+egMxX4ovBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EMJsBj8+; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="rsdlC1zC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718329630;
-	bh=e6x2Udov0z0jRMGzv0LZfs+zVlznnJAxrLeH7tE+OpI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rsdlC1zCDtjj9NNQJqwh10IMZV2lXH+lj0o5X3YUhEcglxqQNXjpeIDcSTIKJ4X6a
-	 nW/20ZT2cYSdZ2XRsfnzpSA10Yi+KK8kmmKWL6muFOuuf/w6wGth9aNzuY9CptZqlM
-	 8QgUVJreO3LgOlcw9RrvdZDSFEY0udY6WEK0XBOwW0TERpF9jz+FuW3C3qsjINrrIm
-	 VJb+5eBW+OfRH2YeneuIPflsMwlZ5s6UlgC/A0KkDdQknsyaMd/iaFkOsKG+qJ2wl6
-	 ck6VA796TJuPdWkFRYMI6pXN68NG6mjQsZ8Mjm8XI+pkKj00djb5G/fd9NhIjmaZH5
-	 2HWfi5EfYdp5A==
-Received: from mercury (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: sre)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 40313378107D;
-	Fri, 14 Jun 2024 01:47:10 +0000 (UTC)
-Received: by mercury (Postfix, from userid 1000)
-	id C9A8710608F7; Fri, 14 Jun 2024 03:47:09 +0200 (CEST)
-Date: Fri, 14 Jun 2024 03:47:09 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	linux-pm@vger.kernel.org, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Nikita Travkin <nikita@trvn.ru>
-Subject: Re: [PATCH v6 4/6] power: supply: lenovo_yoga_c630_battery: add
- Lenovo C630 driver
-Message-ID: <yrysv4c2xeazfi2w3g35qsyoz6b4k3uunzpgj3cdtbyussufqn@5fnuoeubwjnr>
-References: <20240612-yoga-ec-driver-v6-0-8e76ba060439@linaro.org>
- <20240612-yoga-ec-driver-v6-4-8e76ba060439@linaro.org>
- <4fc43c56-f801-909a-9178-166d275a5fee@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EMJsBj8+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718358598; x=1749894598;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=2OZ3L7NQnRMDE7VXZmO25GoZOXA0atjNt18Kc5M8loQ=;
+  b=EMJsBj8+WfmQj4DPrNh+kGsAgRGAxt91QId9Uxecl9R0X+HYiWLxLfq8
+   zG/4cvJBLMzNTNjwU+gQJdlWILMvEONiAb7kHMLxw7N/HqSFnHU55Vgj7
+   cHRdcD3SG786MeEEqRYOKQbDSXN9KvNgUG5vCCvUCV1LVBkzrr96UWWYX
+   VNb7bsZ2+26i3LgFBVI8r1Ri5v+zEUSCltHDl3IJeGGLyzLba/NKTbtxY
+   Jl1pQIK82c38CiYX//RnGI3T+IebHwuTqzlsd8/sLVesUozeWZp3Ya9Ar
+   3qibClJno497Do0Joyg42CdwP5lnlfwkj+jDj3zk42FhK+DorsSQBV0Qi
+   g==;
+X-CSE-ConnectionGUID: cYFCeWBqQcOx1nu9D/pdQg==
+X-CSE-MsgGUID: AAkocf0HSESftyQDtXK5mQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11102"; a="37760681"
+X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
+   d="scan'208";a="37760681"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 02:49:57 -0700
+X-CSE-ConnectionGUID: ICK1xWFqRlWMZGnakqtFzA==
+X-CSE-MsgGUID: +AgR8c+2QZKzx1jIe+fLGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,237,1712646000"; 
+   d="scan'208";a="40551884"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.222])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 02:49:50 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 14 Jun 2024 12:49:46 +0300 (EEST)
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+    Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+    Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+    Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Konrad Dybcio <konrad.dybcio@linaro.org>, linux-pm@vger.kernel.org, 
+    devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, 
+    linux-arm-msm@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>, 
+    Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v7 0/6] power: supply: Lenovo Yoga C630 EC
+In-Reply-To: <20240614-yoga-ec-driver-v7-0-9f0b9b40ae76@linaro.org>
+Message-ID: <0cf0e301-2caf-bcfb-33db-355ac89f5a2d@linux.intel.com>
+References: <20240614-yoga-ec-driver-v7-0-9f0b9b40ae76@linaro.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="tqsq4jiejojoj7cg"
-Content-Disposition: inline
-In-Reply-To: <4fc43c56-f801-909a-9178-166d275a5fee@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
+
+On Fri, 14 Jun 2024, Dmitry Baryshkov wrote:
+
+> This adds binding, driver and the DT support for the Lenovo Yoga C630
+> Embedded Controller, to provide battery information.
+> 
+> Support for this EC was implemented by Bjorn, who later could not work
+> on this driver. I've picked this patchset up and updated it following
+> the pending review comments.
+> 
+> DisplayPort support is still not a part of this patchset. It uses EC
+> messages to provide AltMode information rather than implementing
+> corresponding UCSI commands. However to have a cleaner uAPI story, the
+> AltMode should be handled via the same Type-C port.
+> 
+> Merge strategy: the driver bits depend on the platform/arm64 patch,
+> which adds interface for the subdrivers. I'd either ask to get that
+> patch merged to the immutable branch, which then can be picked up by
+> power/supply and USB trees or, to make life simpler, ack merging all
+> driver bits e.g. through USB subsystem (I'm biased here since I plan to
+> send more cleanups for the UCSI subsystem, which would otherwise result
+> in cross-subsystem conflicts).
+
+In preparation for making an IB, I took patch 1-2 into 
+platform-drivers-x86-lenovo-c630 branch. I'll tag it once LKP has 
+built tested the branch.
+
+-- 
+ i.
 
 
---tqsq4jiejojoj7cg
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Thu, Jun 13, 2024 at 10:57:41AM GMT, Ilpo J=E4rvinen wrote:
-> > +	adp_cfg.supplied_to =3D (char **)&yoga_c630_psy_bat_psy_desc_mA.name;
->=20
-> This is not problem with your patch but I'm wondering why supplied_to=20
-> needs to be non-const char *. Are those strings expected to be altered by=
-=20
-> something, I couldn't find anything to that effect (the pointer itself=20
-> does not become const if supplied_to is changed to const char **)?
-
-No, they are not supposed to be modified. It should be fine to make
-the struct member const char **, patches are welcome :)
-
--- Sebastian
-
---tqsq4jiejojoj7cg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmZroRkACgkQ2O7X88g7
-+ppBkg/9H0Vh77I1df6YmgtH3Dc3JT3L5qfTx7EDy6jHu7ihZ6qWM7UoWR6UbThB
-eM9iqWs+qw9CbO+oiHX4TwHItM8ua6CjwOTJaXN3LRvQ86tZ1S3oYFYQRz3cqHSy
-guEdkIELM9rKsTguKre5bJrXNcfQ5T6jjrAJx+60/Y+pJGzJD7SimNGRmBU9erSp
-HBMQ548Ct5roKoNqzauPnGRCXslMVSGAk9vmGu3dv4C1VFr30ndPeRnK4YfPLl50
-cjEu8x8MenIvkNSA7mpIFZem4NBnmQVWVtfi6sMuvfH230pnKi6SvNKr4daPrYMI
-atHouDXhMUMcMg6/p+ARuk/1BcW3kBl3H+2piHY1qj6Riuv+zch4Ah0Wz3SZQmdA
-GiKlfLZVk4LPx5e3EIUR8cNXUrNOVwj7GnH8D+OIgnPIoMQNufNPYFvCCFWipqjP
-OnrfAXz1ebAFpREjHm9rfLk7PvYmWnTLS2F19cfmTbC+bQqulgvclLOITdOQxr3V
-okhD1SjFC6Wm+SkwnNFOsNSf1aEwOnpOJkhvdKS0dRAY5AkCH1H5baTAZal+hGdg
-GA3qo6hCZTjGGofYSp302ltyJQ9Nn61PI48gBa79+7ovYMkrZsYmWnHJibxnFcQI
-SnHurPxpcCALPl8osrReAKV8CUVAsP4KL6+NbdgcQdyF1UxEH3w=
-=xOfT
------END PGP SIGNATURE-----
-
---tqsq4jiejojoj7cg--
+> 
+> ---
+> Changes in v7:
+> - In PSY driver use guard() instead of scoped_guard() (Ilpo)
+> - Use switch/case rather than ifs in yoga_c630_ucsi_read() (Ilpo)
+> - Link to v6: https://lore.kernel.org/r/20240612-yoga-ec-driver-v6-0-8e76ba060439@linaro.org
+> 
+> Changes in v6:
+> - Use guard() instead of scoped_guard() (Ilpo)
+> - Add a define for UCSI version register (Ilpo)
+> - Added a check to prevent overflowing the address in reg16 read (Ilpo)
+> - Link to v5: https://lore.kernel.org/r/20240607-yoga-ec-driver-v5-0-1ac91a0b4326@linaro.org
+> 
+> Changes in v5:
+> - Added missing article in the commit message (Bryan)
+> - Changed yoga_c630_ec_ucsi_get_version() to explicitly set the register
+>   instead of just incrementing it (Bryan)
+> - Dropped spurious debugging pr_info (Bryan)
+> - Added missing includes all over the place (Ilpo)
+> - Switched to scoped_guard() where it's suitable (Ilpo)
+> - Defined register bits (Ilpo, Bryan)
+> - Whitespace cleanup (Ilpo, Bryan)
+> - Reworked yoga_c630_ucsi_notify() to use switch-case (Bryan)
+> - Use ternary operators instead of if()s (Ilpo)
+> - Switched power supply driver to use fwnode (Sebastian)
+> - Fixed handling of the adapter's type vs usb_type (Sebastian)
+> - Added SCOPE property to the battery (Sebastian)
+> - Link to v4: https://lore.kernel.org/r/20240528-yoga-ec-driver-v4-0-4fa8dfaae7b6@linaro.org
+> 
+> Changes in v4:
+> - Moved bindings to platform/ to follow example of other Acer Aspire1 EC
+>   (Nikita Travkin)
+> - Fixed dt validation for EC interrupt pin (Rob Herring)
+> - Dropped separate 'scale' property (Oliver Neukum)
+> - Link to v3: https://lore.kernel.org/r/20240527-yoga-ec-driver-v3-0-327a9851dad5@linaro.org
+> 
+> Changes in v3:
+> - Split the driver into core and power supply drivers,
+> - Added UCSI driver part, handling USB connections,
+> - Fixed Bjorn's address in DT bindings (Brian Masney)
+> - Changed power-role for both ports to be "dual" per UCSI
+> - Link to v2: https://lore.kernel.org/linux-arm-msm/20230205152809.2233436-1-dmitry.baryshkov@linaro.org/
+> 
+> Changes in v2:
+> - Dropped DP support for now, as the bindings are in process of being
+>   discussed separately,
+> - Merged dt patch into the same patchseries,
+> - Removed the fixed serial number battery property,
+> - Fixed indentation of dt bindings example,
+> - Added property: reg and unevaluatedProperties to the connector
+>   bindings.
+> - Link to v1: https://lore.kernel.org/linux-arm-msm/20220810035424.2796777-1-bjorn.andersson@linaro.org/
+> 
+> ---
+> Bjorn Andersson (2):
+>       dt-bindings: platform: Add Lenovo Yoga C630 EC
+>       arm64: dts: qcom: c630: Add Embedded Controller node
+> 
+> Dmitry Baryshkov (4):
+>       platform: arm64: add Lenovo Yoga C630 WOS EC driver
+>       usb: typec: ucsi: add Lenovo Yoga C630 glue driver
+>       power: supply: lenovo_yoga_c630_battery: add Lenovo C630 driver
+>       arm64: dts: qcom: sdm845: describe connections of USB/DP port
+> 
+>  .../bindings/platform/lenovo,yoga-c630-ec.yaml     |  83 ++++
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi               |  53 ++-
+>  .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts      |  75 ++++
+>  drivers/platform/arm64/Kconfig                     |  14 +
+>  drivers/platform/arm64/Makefile                    |   1 +
+>  drivers/platform/arm64/lenovo-yoga-c630.c          | 290 ++++++++++++
+>  drivers/power/supply/Kconfig                       |   9 +
+>  drivers/power/supply/Makefile                      |   1 +
+>  drivers/power/supply/lenovo_yoga_c630_battery.c    | 500 +++++++++++++++++++++
+>  drivers/usb/typec/ucsi/Kconfig                     |   9 +
+>  drivers/usb/typec/ucsi/Makefile                    |   1 +
+>  drivers/usb/typec/ucsi/ucsi_yoga_c630.c            | 204 +++++++++
+>  include/linux/platform_data/lenovo-yoga-c630.h     |  44 ++
+>  13 files changed, 1283 insertions(+), 1 deletion(-)
+> ---
+> base-commit: 6906a84c482f098d31486df8dc98cead21cce2d0
+> change-id: 20240527-yoga-ec-driver-76fd7f5ddae8
+> 
+> Best regards,
+> 
