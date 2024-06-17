@@ -1,85 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36E0374D9;
-	Mon, 17 Jun 2024 09:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BEA01AED41;
+	Mon, 17 Jun 2024 13:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718615208; cv=none; b=EEET0+eIN5zTKAQeyWUipfN/AASfcvPumgIsINXD7YzYL+u8y49y8fwawDANmjQYyfjdSl5oogZ3P6wxU7PSk5+itgKIJCF//7nIyHwuTJ90nVnxAcUrhpZb0vpjGYjm8xyRcrkKnaw3/6AbYWPTc0g4VN4PzjCvMXWccUbgU0g=
+	t=1718630526; cv=none; b=Q6z+iA/1+wx+22dRpLQJpX6wO23fWseXHbg2uwPDZc7i3GSERFIwFv/XV65Td08oDxwacHZtPkmYvQAl0x+BNEbuEehGDrdL7+KaaRKLTqbt2puG+imTL82mSx/lwVRTmfp1IwtvdpwGP3845MuWilh2lz+LphVlJdCzNbc2ttk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718615208; c=relaxed/simple;
-	bh=CurM/NrcmpXdr/4ms/NPV8dFAF1+JdNNE86NGWrSYmo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=r8jHFxpHdFUEmR/HoUiTwKefkYnA7t3WvCJsWkHuACw42BhScGp3UYbPRAlcIldua1kw6EXklA9Sk1TBa3Lug0Wmd274foh+TFJpbh9sQTvMw1Mi+ny9lxKMXU2MlepBjRocMlRGDn7WPoA3josFV/sQ0ltVhSi6NzUirryU/CY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z6T3R6Yo; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718630526; c=relaxed/simple;
+	bh=hrFQYKSoSedno6t/TMSRyd6Lxlx09BkJvdjqaOsR+cQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pW2yfLmxugoXcipB1eeYzcpLxooA7t2uasB7ls5b4yAVE31MouX3pz53A68EQasC11Mf8uBO+IOuENZOdRv9yv8V6Zl48wxfRt5cNpt62DEXzgGflRQMghiO/9senPQbfeneOiyngRxDxfXvv0Cq3mTOv5NxZWDVHhuZ8xR11lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cbxkO72c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z6T3R6Yo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718615207; x=1750151207;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=CurM/NrcmpXdr/4ms/NPV8dFAF1+JdNNE86NGWrSYmo=;
-  b=Z6T3R6YoufdpH27vFCJylNggSNyYIpSRzcz38xO86yqOF3v9bpm8lqTn
-   DzF2X6ug8Xta1SDxx1ZubZ3NbqMtXO7np9OJPXBr5X1cm0196LWJC2Ph6
-   l4Lxvr3xArfsIDf1+zs38TMPuLC6J7hTK9gz3qIrmrX9wG64DwrSKYnHC
-   pAoo4PBLZt0Owj633YIPn+VMxx1WWhqZU0u1qPMZkwBTyp/FXLMszCZz0
-   07E5OP7QKXin1bbA4cMOILIQlGYsZPYvDs3R07n1ThQBHCIVefU2zkcst
-   +2xnNFBCyB6meRY1ITeteTxQgpCvFdSo6t25PEzOpZOtIJHMvynMDzBmq
-   Q==;
-X-CSE-ConnectionGUID: ib6MDXizQQSofUdaGAVmtw==
-X-CSE-MsgGUID: bT1rvJNFRI+0QWWFONv21A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="15268987"
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="15268987"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 02:06:47 -0700
-X-CSE-ConnectionGUID: +lHs/llcRum3KYa+3szbbg==
-X-CSE-MsgGUID: CgaJisbJR0qnu2tVgJ6jkg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="45584975"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.19])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 02:06:46 -0700
-Message-ID: <4a6888aa8e4c6e49e094b4340ecdbfe6c4934b95.camel@linux.intel.com>
-Subject: Re: [PATCH 0/7] platform/x86/inte-uncore-freq: Cleanups
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Tero Kristo <tero.kristo@linux.intel.com>, hdegoede@redhat.com, 
-	ilpo.jarvinen@linux.intel.com
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Date: Mon, 17 Jun 2024 02:06:45 -0700
-In-Reply-To: <20240617060708.892981-1-tero.kristo@linux.intel.com>
-References: <20240617060708.892981-1-tero.kristo@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cbxkO72c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 758CCC4AF49;
+	Mon, 17 Jun 2024 13:22:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718630526;
+	bh=hrFQYKSoSedno6t/TMSRyd6Lxlx09BkJvdjqaOsR+cQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cbxkO72cYbLevNrSHoe7JacwYEJSDsRQKo2nHQVFxtd7WmtDqdnEmy4DWHTjNU12/
+	 NtXv2/1eiPcCNej1pQNB7BE3FwX2tB5OBydK9UlOHyvVnfeXhpcvQSjkrD6s/hq3E1
+	 +2AA7Sw+aFUzRlrzUgTLjx7XikGJe9EGDZK2N4sC+aZcoGLTXcfMW2gqJOLYFnzsPd
+	 UboCAtUVhZx8LvGQqGy6/senO/4CEMFwLH2KcGWuSJSCWGTnLgDbciOuzQwthU5+e+
+	 bVzZzRg5g4D8GD7y6QHzeaJp8Nvwf5PaWmQQ6C7Dsok1vVur+nCNSiC8s37C4CB8Sz
+	 nYcbz6D/hUg7A==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-input@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.9 32/44] Input: silead - Always support 10 fingers
+Date: Mon, 17 Jun 2024 09:19:45 -0400
+Message-ID: <20240617132046.2587008-32-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240617132046.2587008-1-sashal@kernel.org>
+References: <20240617132046.2587008-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.9.5
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2024-06-17 at 09:04 +0300, Tero Kristo wrote:
-> Hi,
->=20
-> This series introduces some cleanups for the code and driver level
-> APIs.
-> The purpose is to improve the maintainability of the code and make it
-> easier to add new features in future.
->=20
-> No functional changes expected from any of the patches in this
-> series.
+From: Hans de Goede <hdegoede@redhat.com>
 
-    Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+[ Upstream commit 38a38f5a36da9820680d413972cb733349400532 ]
 
-Thanks,
-Srinivas
+When support for Silead touchscreens was orginal added some touchscreens
+with older firmware versions only supported 5 fingers and this was made
+the default requiring the setting of a "silead,max-fingers=10" uint32
+device-property for all touchscreen models which do support 10 fingers.
 
->=20
+There are very few models with the old 5 finger fw, so in practice the
+setting of the "silead,max-fingers=10" is boilerplate which needs to
+be copy and pasted to every touchscreen config.
 
-> -Tero
->=20
+Reporting that 10 fingers are supported on devices which only support
+5 fingers doesn't cause any problems for userspace in practice, since
+at max 4 finger gestures are supported anyways. Drop the max_fingers
+configuration and simply always assume 10 fingers.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: https://lore.kernel.org/r/20240525193854.39130-2-hdegoede@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/input/touchscreen/silead.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+index 62f562ad50263..050fa9ca4ec94 100644
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -71,7 +71,6 @@ struct silead_ts_data {
+ 	struct regulator_bulk_data regulators[2];
+ 	char fw_name[64];
+ 	struct touchscreen_properties prop;
+-	u32 max_fingers;
+ 	u32 chip_id;
+ 	struct input_mt_pos pos[SILEAD_MAX_FINGERS];
+ 	int slots[SILEAD_MAX_FINGERS];
+@@ -136,7 +135,7 @@ static int silead_ts_request_input_dev(struct silead_ts_data *data)
+ 	touchscreen_parse_properties(data->input, true, &data->prop);
+ 	silead_apply_efi_fw_min_max(data);
+ 
+-	input_mt_init_slots(data->input, data->max_fingers,
++	input_mt_init_slots(data->input, SILEAD_MAX_FINGERS,
+ 			    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED |
+ 			    INPUT_MT_TRACK);
+ 
+@@ -256,10 +255,10 @@ static void silead_ts_read_data(struct i2c_client *client)
+ 		return;
+ 	}
+ 
+-	if (buf[0] > data->max_fingers) {
++	if (buf[0] > SILEAD_MAX_FINGERS) {
+ 		dev_warn(dev, "More touches reported then supported %d > %d\n",
+-			 buf[0], data->max_fingers);
+-		buf[0] = data->max_fingers;
++			 buf[0], SILEAD_MAX_FINGERS);
++		buf[0] = SILEAD_MAX_FINGERS;
+ 	}
+ 
+ 	if (silead_ts_handle_pen_data(data, buf))
+@@ -315,7 +314,6 @@ static void silead_ts_read_data(struct i2c_client *client)
+ 
+ static int silead_ts_init(struct i2c_client *client)
+ {
+-	struct silead_ts_data *data = i2c_get_clientdata(client);
+ 	int error;
+ 
+ 	error = i2c_smbus_write_byte_data(client, SILEAD_REG_RESET,
+@@ -325,7 +323,7 @@ static int silead_ts_init(struct i2c_client *client)
+ 	usleep_range(SILEAD_CMD_SLEEP_MIN, SILEAD_CMD_SLEEP_MAX);
+ 
+ 	error = i2c_smbus_write_byte_data(client, SILEAD_REG_TOUCH_NR,
+-					data->max_fingers);
++					  SILEAD_MAX_FINGERS);
+ 	if (error)
+ 		goto i2c_write_err;
+ 	usleep_range(SILEAD_CMD_SLEEP_MIN, SILEAD_CMD_SLEEP_MAX);
+@@ -591,13 +589,6 @@ static void silead_ts_read_props(struct i2c_client *client)
+ 	const char *str;
+ 	int error;
+ 
+-	error = device_property_read_u32(dev, "silead,max-fingers",
+-					 &data->max_fingers);
+-	if (error) {
+-		dev_dbg(dev, "Max fingers read error %d\n", error);
+-		data->max_fingers = 5; /* Most devices handle up-to 5 fingers */
+-	}
+-
+ 	error = device_property_read_string(dev, "firmware-name", &str);
+ 	if (!error)
+ 		snprintf(data->fw_name, sizeof(data->fw_name),
+-- 
+2.43.0
 
