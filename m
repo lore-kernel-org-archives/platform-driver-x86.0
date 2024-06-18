@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F301C18E776;
-	Tue, 18 Jun 2024 12:39:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076341AAE29;
+	Tue, 18 Jun 2024 12:41:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718714377; cv=none; b=gxmWOk7S4TxvAQ4n5l2Jcvs9I4zstgJ8VD0LPbPQj+iqjApSu2uSg9G1L5WOQNBsS4YRbY418vyKzsqax7gi4XWpk/lLioF94vBUzbbHSTXEg+mKNFU4NQVWmpjj5+PEEzCJ8YEgTi49y52ETr8uLhQNJ9nzd/up38SRfcNINoY=
+	t=1718714468; cv=none; b=kMM5yNz2QIcX8ZKCrCqUDU9kbcZqmXdSvTEorLNqAJP9VkJoQrzgcigALczOaCCkUIY0W3QJWtMAbKkjPgBNoejKtPsyVmB5ejjIutE94uAY88SD6p395ROmR0Ne+bLqnPm4MwgVR4C6M9GaFRteu99a8COH/+PbXl7f+BLGq0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718714377; c=relaxed/simple;
-	bh=hrFQYKSoSedno6t/TMSRyd6Lxlx09BkJvdjqaOsR+cQ=;
+	s=arc-20240116; t=1718714468; c=relaxed/simple;
+	bh=7mpqN72nmQYbqkoHQDnypAYa/RZDGpRaZ0+DRZfej10=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W3aaVXKeXt2ncG+d8PvAuiBJ3ja3yx9T3F5YQu1HZrTbCF1ECZ2NjA7x0IGej1qtdfmnYC1/wYGqYyVO4rtD8jHfIiqUjdXL0+gHmC1Cwu1Pn7NlidSHi1OIbUAonAO2WB2OY2bhLgcd5kpAXxfuEfrMvzqP1hOy1FZ0kBPCxTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mCgEcBDh; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kMLQNv5AOBopexBKqbYjkXfToRRKP2sOE7L/k+fMaN93CMbgh2VIny8NJ+KmYM9oklMQcBAT/vsZLKxHNhKazanFbRSNuurzROmLo/QeG1c1I+6ewXNrh2gJma+urqlNGjV7SvRZZdVlpyfgpzkvsIIijLFpfUYTRPUKsP3VVAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hxjx+QGC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mCgEcBDh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06C2BC4AF1D;
-	Tue, 18 Jun 2024 12:39:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hxjx+QGC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 144DCC4AF1D;
+	Tue, 18 Jun 2024 12:41:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718714376;
-	bh=hrFQYKSoSedno6t/TMSRyd6Lxlx09BkJvdjqaOsR+cQ=;
+	s=k20201202; t=1718714467;
+	bh=7mpqN72nmQYbqkoHQDnypAYa/RZDGpRaZ0+DRZfej10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mCgEcBDhpGd5xvYzmU2fGTvuxLPfWrRdxabk4vUPCsI+2oPMMXt33rfaP6wilR1fc
-	 oAJ6I+c3Sk6axrQqGmaqcTNpRxHbydIuxiAkBE0EWdrhYYqrK2/8ACsS3H0KWpNxXB
-	 03Y93tveQzHM5ySm8YcS0PVpnwUBc5bXZUqyhow9KYoVFD2OsoPvTr/B+tsPcWf+t3
-	 xb2m7KcV3fBK5FDBOY+hDdcCO4ucWFPoThpf5vsRdkLhwSXUvZgC6DAVFdUYyrScCm
-	 uxr7LBlpra50XDQUyMly6NXzesXKf5/y0M22U3HaMnWX85ovj6IvkGfv/MMpsjEv5E
-	 xCHvHwILR402A==
+	b=hxjx+QGCB+TYDqtYT0U+SqitnvyUPiGxJEF7Mjo76EeUHB664/gGFjN1/XQou7WfY
+	 2nKCXFos6gq2RBoOO4WQ3KGvQwQjksxPCEEmdgxkl2CvUXCKIAtOoi5Ek99F5rIHfq
+	 Hf+OZnW4+vGK5tjxE42ORSsp1ZwYe/mVx7FzsOgnwU/QygnU4KGKvj3lgpWSp17naf
+	 t9qDnlMc1eVtOJYXJUwIeFrfi9HsxYANDrDph7B8vHdBNFFG/l9hnjPFwcB+sRgD+w
+	 9wvHae0v+Tb8X9x+3nWtg1AdGIL8yljAnhtbQEZP6rJhUf6pSxITxV45XUkn1cuaGF
+	 gaZLGaJn9r5dw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -34,12 +34,12 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-input@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 26/35] Input: silead - Always support 10 fingers
-Date: Tue, 18 Jun 2024 08:37:46 -0400
-Message-ID: <20240618123831.3302346-26-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 23/29] Input: silead - Always support 10 fingers
+Date: Tue, 18 Jun 2024 08:39:49 -0400
+Message-ID: <20240618124018.3303162-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240618123831.3302346-1-sashal@kernel.org>
-References: <20240618123831.3302346-1-sashal@kernel.org>
+In-Reply-To: <20240618124018.3303162-1-sashal@kernel.org>
+References: <20240618124018.3303162-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -48,7 +48,7 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.34
+X-stable-base: Linux 6.1.94
 Content-Transfer-Encoding: 8bit
 
 From: Hans de Goede <hdegoede@redhat.com>
@@ -78,7 +78,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
-index 62f562ad50263..050fa9ca4ec94 100644
+index 3eef8c01090fd..30e15b6a93574 100644
 --- a/drivers/input/touchscreen/silead.c
 +++ b/drivers/input/touchscreen/silead.c
 @@ -71,7 +71,6 @@ struct silead_ts_data {
