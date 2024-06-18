@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076341AAE29;
-	Tue, 18 Jun 2024 12:41:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27887158D8C;
+	Tue, 18 Jun 2024 12:42:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718714468; cv=none; b=kMM5yNz2QIcX8ZKCrCqUDU9kbcZqmXdSvTEorLNqAJP9VkJoQrzgcigALczOaCCkUIY0W3QJWtMAbKkjPgBNoejKtPsyVmB5ejjIutE94uAY88SD6p395ROmR0Ne+bLqnPm4MwgVR4C6M9GaFRteu99a8COH/+PbXl7f+BLGq0A=
+	t=1718714531; cv=none; b=f/eYPNNHA1lOs1PaKXH8unQQf7eNSmfZ0QcgdbxGhFwp0VEv3Kn/6rmWWR5lnf6vjkFVMcl7E7QwtYbxuXA2jnPtSrFl2MqPfqkS77Z/tmjCIOhrsiK5inyowmma4w/nfinQB8V6OxTN5ndKhmr6KrSPyuB5gY6MQDx1cBvNcWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718714468; c=relaxed/simple;
-	bh=7mpqN72nmQYbqkoHQDnypAYa/RZDGpRaZ0+DRZfej10=;
+	s=arc-20240116; t=1718714531; c=relaxed/simple;
+	bh=IU617syQ/pX9gd8p68yE9AAOFj5PoYwd1axOeCawEm4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kMLQNv5AOBopexBKqbYjkXfToRRKP2sOE7L/k+fMaN93CMbgh2VIny8NJ+KmYM9oklMQcBAT/vsZLKxHNhKazanFbRSNuurzROmLo/QeG1c1I+6ewXNrh2gJma+urqlNGjV7SvRZZdVlpyfgpzkvsIIijLFpfUYTRPUKsP3VVAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hxjx+QGC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=U07ajUN5v82VmljMr5eXw59yVkvpaM/ZFUIh/4XlB7gR13oeNmNtJ+XymRqsyXFZB5tc/OlavQTA74BM0pm5zXn9H9lf0yB+v7/ADr7b5MNe+kW8mMTUforXG+73Qqrc6dUgL/S0DokOcHSVc5s4MzaDyhAJZmLW3xu+FW0AmOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NyXNFj15; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hxjx+QGC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 144DCC4AF1D;
-	Tue, 18 Jun 2024 12:41:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NyXNFj15"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33958C32786;
+	Tue, 18 Jun 2024 12:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718714467;
-	bh=7mpqN72nmQYbqkoHQDnypAYa/RZDGpRaZ0+DRZfej10=;
+	s=k20201202; t=1718714531;
+	bh=IU617syQ/pX9gd8p68yE9AAOFj5PoYwd1axOeCawEm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hxjx+QGCB+TYDqtYT0U+SqitnvyUPiGxJEF7Mjo76EeUHB664/gGFjN1/XQou7WfY
-	 2nKCXFos6gq2RBoOO4WQ3KGvQwQjksxPCEEmdgxkl2CvUXCKIAtOoi5Ek99F5rIHfq
-	 Hf+OZnW4+vGK5tjxE42ORSsp1ZwYe/mVx7FzsOgnwU/QygnU4KGKvj3lgpWSp17naf
-	 t9qDnlMc1eVtOJYXJUwIeFrfi9HsxYANDrDph7B8vHdBNFFG/l9hnjPFwcB+sRgD+w
-	 9wvHae0v+Tb8X9x+3nWtg1AdGIL8yljAnhtbQEZP6rJhUf6pSxITxV45XUkn1cuaGF
-	 gaZLGaJn9r5dw==
+	b=NyXNFj159tfxDxGbpb40LUwhgwQ9NrKZeVgtql0YhdvUv01gvflnKN3Uz2aWdXaWi
+	 BiWA1xr4y3E9/xPJjikWuebWh7UyHX4mX1tJw2xj/Vl5K4sGt/ROySzj04gGJsfe/x
+	 arRAn5FWrl7f9Gr8l12kJTUjLw1KyK2JBBqbq75QG0xlKwq8WpT7dS76Jtz9WpamhT
+	 Hnq1j4YvHN07YU7t679Ci+brKBopokO/FfMqbqPxCJ2XphmbvqZcLxLFwXu7t61Lcy
+	 csT85egS1H2WqmNW5xPyuDBdP8sgOQClnskanIX+eu4WjnDr5297y4ZQmEWOjZtdyy
+	 CCQE93KRVVl0w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -34,12 +34,12 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-input@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 23/29] Input: silead - Always support 10 fingers
-Date: Tue, 18 Jun 2024 08:39:49 -0400
-Message-ID: <20240618124018.3303162-23-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 15/21] Input: silead - Always support 10 fingers
+Date: Tue, 18 Jun 2024 08:41:14 -0400
+Message-ID: <20240618124139.3303801-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240618124018.3303162-1-sashal@kernel.org>
-References: <20240618124018.3303162-1-sashal@kernel.org>
+In-Reply-To: <20240618124139.3303801-1-sashal@kernel.org>
+References: <20240618124139.3303801-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -48,7 +48,7 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.94
+X-stable-base: Linux 5.15.161
 Content-Transfer-Encoding: 8bit
 
 From: Hans de Goede <hdegoede@redhat.com>
@@ -78,10 +78,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
-index 3eef8c01090fd..30e15b6a93574 100644
+index 1ee760bac0cfa..3be59b7239a68 100644
 --- a/drivers/input/touchscreen/silead.c
 +++ b/drivers/input/touchscreen/silead.c
-@@ -71,7 +71,6 @@ struct silead_ts_data {
+@@ -70,7 +70,6 @@ struct silead_ts_data {
  	struct regulator_bulk_data regulators[2];
  	char fw_name[64];
  	struct touchscreen_properties prop;
@@ -89,16 +89,16 @@ index 3eef8c01090fd..30e15b6a93574 100644
  	u32 chip_id;
  	struct input_mt_pos pos[SILEAD_MAX_FINGERS];
  	int slots[SILEAD_MAX_FINGERS];
-@@ -136,7 +135,7 @@ static int silead_ts_request_input_dev(struct silead_ts_data *data)
+@@ -98,7 +97,7 @@ static int silead_ts_request_input_dev(struct silead_ts_data *data)
+ 	input_set_abs_params(data->input, ABS_MT_POSITION_Y, 0, 4095, 0, 0);
  	touchscreen_parse_properties(data->input, true, &data->prop);
- 	silead_apply_efi_fw_min_max(data);
  
 -	input_mt_init_slots(data->input, data->max_fingers,
 +	input_mt_init_slots(data->input, SILEAD_MAX_FINGERS,
  			    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED |
  			    INPUT_MT_TRACK);
  
-@@ -256,10 +255,10 @@ static void silead_ts_read_data(struct i2c_client *client)
+@@ -145,10 +144,10 @@ static void silead_ts_read_data(struct i2c_client *client)
  		return;
  	}
  
@@ -111,8 +111,8 @@ index 3eef8c01090fd..30e15b6a93574 100644
 +		buf[0] = SILEAD_MAX_FINGERS;
  	}
  
- 	if (silead_ts_handle_pen_data(data, buf))
-@@ -315,7 +314,6 @@ static void silead_ts_read_data(struct i2c_client *client)
+ 	touch_nr = 0;
+@@ -200,7 +199,6 @@ static void silead_ts_read_data(struct i2c_client *client)
  
  static int silead_ts_init(struct i2c_client *client)
  {
@@ -120,7 +120,7 @@ index 3eef8c01090fd..30e15b6a93574 100644
  	int error;
  
  	error = i2c_smbus_write_byte_data(client, SILEAD_REG_RESET,
-@@ -325,7 +323,7 @@ static int silead_ts_init(struct i2c_client *client)
+@@ -210,7 +208,7 @@ static int silead_ts_init(struct i2c_client *client)
  	usleep_range(SILEAD_CMD_SLEEP_MIN, SILEAD_CMD_SLEEP_MAX);
  
  	error = i2c_smbus_write_byte_data(client, SILEAD_REG_TOUCH_NR,
@@ -129,7 +129,7 @@ index 3eef8c01090fd..30e15b6a93574 100644
  	if (error)
  		goto i2c_write_err;
  	usleep_range(SILEAD_CMD_SLEEP_MIN, SILEAD_CMD_SLEEP_MAX);
-@@ -591,13 +589,6 @@ static void silead_ts_read_props(struct i2c_client *client)
+@@ -437,13 +435,6 @@ static void silead_ts_read_props(struct i2c_client *client)
  	const char *str;
  	int error;
  
