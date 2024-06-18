@@ -1,104 +1,96 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40B215278B
-	for <platform-driver-x86@vger.kernel.org>; Tue, 18 Jun 2024 11:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C092415688F;
+	Tue, 18 Jun 2024 11:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718711772; cv=none; b=FNCC9rnfZfVAVajwe4EZO6hOoQq2097NaG4y1XJeENEDpkn6LlnyFUoGO9s6zoC0cSGd59fbxDUpGh49R8bLGQn8p7lIA9C/hB03ECg4qsObD+zgw8LOGbDEradEYiNvCqm/XBdsfSjCvXk+GO0bro0bMtU8rtceqaMgiZv4F5E=
+	t=1718711943; cv=none; b=uT/4ZHTzI7GC0AN99ghp1aXjTyGY/WH/2ubFoMlp5nqj80hvMjQ3IFWiXc09POtWUT17xeiAPS78jH/+zD6AUpURVYkAQ1g/u0/ndRrsrt9TXjhJIPdlO2JtP2e365Sym5Ov/CZcqyHRraFwOKgNGmv2wuFU7oyNf9axeY/YDa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718711772; c=relaxed/simple;
-	bh=jpPEB/6YZTPYLy3RYj7LOJsKZCfOADwF3vloVsYeags=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NbGgy/2Nq8BlIQZf6mhxOyN5c/ZSJszWY0Qi8Bi3PPQI/ZVCv7tlyXXhpS5/KNk9JKfraLt4PZ/BWjgNKlFYJdTL1hBkjjMRb4GgU1dgzA5/NQ4v098Qo0jjxy9wzEWm4KGwwrGREVbQxIPXy7+qS0v4bq60nE5kUAp+mmGqvi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KW1i0k9q; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718711943; c=relaxed/simple;
+	bh=PeQStbUscq8oKm2W8Tdn0/cT+IIXSaLj/fuD/VTRdN0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=OExXOthS0o8JYoWnKSG8UzhQTZ451mDFAiXFjhkMADmoeHC/AWRGnBXreGWIhgw+O3E2+sJgo+exOMUwrji6p//mbC9kTtDku42VyBBECfQg+329hJ2ifcXnhgvqAal/WmR8inZFrUSzCsZcoizatc5NAj0Y2tHkfauvpIjsweY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dvbmmilm; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KW1i0k9q"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5295eb47b48so6338340e87.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Jun 2024 04:56:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718711768; x=1719316568; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mq75lZPvciVQwZ7mi6K5o2q0ASdayZBfX3qCcW8QAuE=;
-        b=KW1i0k9qj0DskKaCd1uV1Dlm3Ignkxrap9uKQr1wHBUc6iiPcmYL4bQAjj1qoJJmk0
-         c6F4rsmFO2rpCbPJimWUuw3b/2paE4eA1VjbNXnPDQtPl4UwRx8hltyorbVoKUQsJR0F
-         F5N3l6JCZdON/lrLnQnFxr0O+AuQGi8nW6B9hLXQ6JGfv+hcEBf2OZMcsrJEc17WwShE
-         VhQOy856Ii6Jj0/DukJJ1KLdp3cD2uqKrRQKt6tJwm9VfyxAihYjcScdd3RsBApNUT1Y
-         kEjNdXJ7LfXm4prHCAVvJRbmRTzOuEaRYWPLFINadyXml5OMfkCXffUwg0hqUf08wYw+
-         5Vig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718711768; x=1719316568;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mq75lZPvciVQwZ7mi6K5o2q0ASdayZBfX3qCcW8QAuE=;
-        b=Y+Gq4sOGIUVLkyZKZgW6gNLLSgHCj77zAx4csiPlFvTIYO9xxncZczen6cJX9qGlmZ
-         rjic5KtPlzxws361goBUvMJm8uRR8dYgTk2shwh2FKIUfQi5aSf6xBDool4RRK/SvJT6
-         j90o8JUdZjjdJI0mjRi2ot91374kynqTZcqJUCOs3RH4uWveYkHiwHOhuyUqCNFy9JVU
-         WyN8xH7Eb7NRhGHo+Jz9WnTXUdVEwl4CQ87tfj7eVNofphD5csHslL2ZEgeJCegqU0rr
-         d9NqmTf/BLwwschrdppb2huIYIuDuD8nqN8kBvwai/nqg4PWaxjYzeji8M7UDtagXmus
-         XgKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWULJdFnsSsub8YfQrzkRcslHhdEGejMgx1iP7OXhbifAOk390AVR29BBaCr6sk1IjcpXhC57zpVbl1cZKT8Q0WvfqvpxYn2doJUKm6f69hURPk5g==
-X-Gm-Message-State: AOJu0YwWHs7ckHRXXw8zB7MiuoadwwBuwx0HhTXVca+C8z5xdUZBmD49
-	t1/k4GbcCw6XUtj3QQd/nP7AaUugiZIGIodyHmvpVJxPlUtqQlBJY79WOJTp0o4=
-X-Google-Smtp-Source: AGHT+IEYh8t5Lf/IT2gzYEj9aUFut5HJwk0C+UH8HgqmpV5pG3oPCZTtmSV1TDxS2pKMtIogxvp+lQ==
-X-Received: by 2002:a05:6512:3b93:b0:52c:8206:b986 with SMTP id 2adb3069b0e04-52cb621b577mr6055207e87.56.1718711767941;
-        Tue, 18 Jun 2024 04:56:07 -0700 (PDT)
-Received: from ?IPV6:2a00:f41:9028:9df3:4fb7:492b:2c94:7283? ([2a00:f41:9028:9df3:4fb7:492b:2c94:7283])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ca28870f5sm1487968e87.249.2024.06.18.04.56.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 04:56:07 -0700 (PDT)
-Message-ID: <c807a7c6-ac17-454d-9a99-1a221038774e@linaro.org>
-Date: Tue, 18 Jun 2024 13:56:04 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dvbmmilm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718711941; x=1750247941;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=PeQStbUscq8oKm2W8Tdn0/cT+IIXSaLj/fuD/VTRdN0=;
+  b=DvbmmilmbflD/nCa54LGQWP10xGx00eLxdf906mcizWBUW8veR1fyS1g
+   +mZS/woJuvJt+6ObKsc4kTKN6lObW7FSAY08fJQTSovEOlLbiBRXGMOfd
+   8XPIxtGanITGAhLbE49q2FcDY7hTwc+MVkEtnP87YYjcnoIogkusBfFPl
+   90j/j22omGv+58Ng5dorGVZZbowZ0ugjtbAYFBDcUjX22TUvyII8SRBGQ
+   qI+jwKemK/gXwjF50dQ8GtDm8zWDzib2sblYhyNBgntcdfqIr+YL+czjA
+   NK1yj3BFmTwqH50xdYODKtdggyt3cNmn/lZurAxCIkNRyiYUryBrAsW2a
+   A==;
+X-CSE-ConnectionGUID: RWTA3JEpTCiebxhG70obzA==
+X-CSE-MsgGUID: /y2cA7+TTyWk2TNbwJ6gDA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="15727539"
+X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
+   d="scan'208";a="15727539"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 04:59:01 -0700
+X-CSE-ConnectionGUID: /z9uheBwQuyd3nSf6XhO+A==
+X-CSE-MsgGUID: cNtcuSBEQryH3bVbtDzW2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
+   d="scan'208";a="64765533"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.7])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 04:58:58 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 18 Jun 2024 14:58:54 +0300 (EEST)
+To: Armin Wolf <W_Armin@gmx.de>
+cc: matan@svgalib.org, agathe@boutmy.com, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/4] platform/x86: lg-laptop: Use ACPI device handle when
+ evaluating WMAB/WMBB
+In-Reply-To: <20240606233540.9774-5-W_Armin@gmx.de>
+Message-ID: <60dfc0ce-ff3c-afd4-46e8-c0458e2db8d1@linux.intel.com>
+References: <20240606233540.9774-1-W_Armin@gmx.de> <20240606233540.9774-5-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 6/6] arm64: dts: qcom: c630: Add Embedded Controller
- node
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- Nikita Travkin <nikita@trvn.ru>
-References: <20240614-yoga-ec-driver-v7-0-9f0b9b40ae76@linaro.org>
- <20240614-yoga-ec-driver-v7-6-9f0b9b40ae76@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240614-yoga-ec-driver-v7-6-9f0b9b40ae76@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323328-1937100483-1718711934=:1400"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1937100483-1718711934=:1400
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Fri, 7 Jun 2024, Armin Wolf wrote:
+
+> On the LG Gram 16Z90S, the WMAB and WMBB ACPI methods are not mapped
+> under \XINI, but instead are mapped under \_SB.XINI.
+>=20
+> The reason for this is that the LGEX0820 ACPI device used by this
+> driver is mapped at \_SB.XINI, so the ACPI methods where moved as well
+> to appear below the LGEX0820 ACPI device.
+>=20
+> Fix this by using the ACPI handle from the ACPI device when evaluating
+> both methods.
+>=20
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
+> Tested-by: Agathe Boutmy <agathe@boutmy.com>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+
+I remember looking this through earlier but it seems I never gave a tag=20
+for it...
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
 
+--=20
+ i.
 
-On 6/14/24 01:43, Dmitry Baryshkov wrote:
-> From: Bjorn Andersson <andersson@kernel.org>
-> 
-> The Embedded Controller in the Lenovo Yoga C630 is accessible on &i2c1
-> and provides battery and adapter status, as well as altmode
-> notifications for the second USB Type-C port.
-> 
-> Add a definition for the EC.
-> 
-> Signed-off-by: Bjorn Andersson <andersson@kernel.org>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
-
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-
-Konrad
+--8323328-1937100483-1718711934=:1400--
