@@ -1,111 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3490813B5B5;
-	Tue, 18 Jun 2024 08:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A88A13A401;
+	Tue, 18 Jun 2024 09:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718699752; cv=none; b=onywxCu3/sCpjdiLVE4EyONQkL6faK+ySsBbgPTTZ8EevH4PMslqIdFJ+3T/qZti4X3rcdyTZ2p5fGw7dTpfp3BWKs3tNYkKESOyRpH83cCk19t7GOPWgfHsyACltpgYFokVDcgrE7erAf1QiX/T7jFFR+/aJ8E+VCgTnormwb8=
+	t=1718701594; cv=none; b=F89o/nxjS303Y1RCaO1+tVkHQoimOyErRrBg5JGu1v1tZUisyawAM+qMhfcJ9eVAx+qAslwrfmhXE2SujVNqnJUMNBIsjZnkvg3Yzq1DLybVMALsLUFphs/LOgrFBm6rPbKajGgiPA9D8VQ7LGslKq8yURTSKRFLn2UwdUpz8k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718699752; c=relaxed/simple;
-	bh=nYvoxFAcUSVYJxLnDXRVnyZjqM6DX0X3xxOLqPkbgB4=;
-	h=From:Date:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=H/5VSqBHAeuRagf1DmAxxGGQua2AT109VLX8P2A244nI7cC/Wo2P+Bw3fUHMBWwNO3avE65lozJRdTsQRZlAYJUHUOU2RXZT2YfUTLKCkntNC0AzUgqz2if8LnHRNloilhmpLtZ2POaPGaGqYLnOXGO3lgrvp0OH3xPxVy0vKms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B1u1g1qO; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718701594; c=relaxed/simple;
+	bh=1xvnTLcwUC/wXSbK0hHWiovGjdpeba1dJ2R9GFpGru0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ERvK3TloFw0mjH7IbyT+RLi2iC2hKqvl3nqTwmxJONGQu2k4j2TDQbr9WId626N3MqilumQM7QJQe4Qfq7tZfm7Ph+x4/0Y8MEBfBjr8kcRggL7IwdI4MCN/u/pm8XBK7NfZmZxvqZjfJHRXwScmAdKdYERVKe6SgrSzCdTazSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=eKYT/zhq; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B1u1g1qO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718699750; x=1750235750;
-  h=from:date:to:cc:subject:message-id:mime-version;
-  bh=nYvoxFAcUSVYJxLnDXRVnyZjqM6DX0X3xxOLqPkbgB4=;
-  b=B1u1g1qOfU+BjU3qOiM6+bWo0tow7hIwNOrtCToAky8KQQInbiP0OBL6
-   3U9XggqgUOnY/FR8Q4pRdSImZSkUsarSfsXgWgV/JhHsRokjtMqgepLjR
-   xPvZvtInNSuq0sVuviXRTlFqymnCx2yXZvg6bV/SJruf++bbY62p2G1bf
-   UtWnwR4k0+oC97i/6U20Els5dKhiwT9Ixz+MaeODXcYXYoqXN3bz+gQjV
-   SHRRY4R7k6aWZ6J0oPOripP8CVROuFYNgSNBRsbdRwBNnqyx8K5GcN0Q7
-   ADpZm7W07a2fiQOqjueOvYhMIdyD0fQ9bOVnd+9XJnqSwKTsegc2lvoeE
-   g==;
-X-CSE-ConnectionGUID: p/ZJXP0hQ1W61Ok03odo4A==
-X-CSE-MsgGUID: X9tizdnxQLS6gzzKI7a7ig==
-X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="38082591"
-X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
-   d="scan'208";a="38082591"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 01:35:50 -0700
-X-CSE-ConnectionGUID: CmK7bRVETQ6TvX+2UQKiDw==
-X-CSE-MsgGUID: mhYCFdATQl62EEBY3AIHHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
-   d="scan'208";a="64700456"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.7])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 01:35:44 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 18 Jun 2024 11:35:40 +0300 (EEST)
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-    Sebastian Reichel <sre@kernel.org>, 
-    Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-    Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-    Konrad Dybcio <konrad.dybcio@linaro.org>, linux-pm@vger.kernel.org, 
-    devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, 
-    linux-arm-msm@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>, 
-    Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [GIT PULL] Immutable branch between pdx86 lenovo c630 branch,
- power/supply and USB
-Message-ID: <e999261e-cba8-740e-430b-4a4e702fd609@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="eKYT/zhq"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 6499A1C0082; Tue, 18 Jun 2024 11:06:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1718701588;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xtv9e/zean9YtwVbvYLt9HowqzS0Av+9M4FJjz/aoWY=;
+	b=eKYT/zhqu3DOr0M3GNkrbWzbrhYnGE/w0ZNoD0esRMh4xs7MUkkMRHJU4mshDx+jVxGa2+
+	2+E/k2oxlwylVe5v0+X2v/zl+zOkorCPrGyJsD8RClnTEEf/6nER+7qmK4/RaftY/1cSb3
+	y93jcBKfIDQOxvqXgFm3yjIhCQ8xT80=
+Date: Tue, 18 Jun 2024 11:06:27 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	Gregor Riepl <onitake@gmail.com>, corbet@lwn.net,
+	ilpo.jarvinen@linux.intel.com, paulmck@kernel.org,
+	jpoimboe@kernel.org, tglx@linutronix.de, bp@alien8.de,
+	xiongwei.song@windriver.com, linux-doc@vger.kernel.org,
+	linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.10 4/8] platform/x86: touchscreen_dmi: Add
+ support for setting touchscreen properties from cmdline
+Message-ID: <ZnFOE5LcN2R9/zXc@duo.ucw.cz>
+References: <20240605120554.2968012-1-sashal@kernel.org>
+ <20240605120554.2968012-4-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="S/N03PCznFK76NlG"
+Content-Disposition: inline
+In-Reply-To: <20240605120554.2968012-4-sashal@kernel.org>
 
-Hi,
 
-Here is the IB containing the platform patches (1-2) the other patches in 
-the Lenovo C630 series depend on (Dmitry was going to do a minor update on 
-the remaining patches before they are ready to be merged).
+--S/N03PCznFK76NlG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
+Hi!
 
-  Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
+> [ Upstream commit 0b178b02673998f5acca5a0365a8858ca45beedb ]
+>=20
+> On x86/ACPI platforms touchscreens mostly just work without needing any
+> device/model specific configuration. But in some cases (mostly with Silead
+> and Goodix touchscreens) it is still necessary to manually specify various
+> touchscreen-properties on a per model basis.
+>=20
+> touchscreen_dmi is a special place for DMI quirks for this, but it can be
+> challenging for users to figure out the right property values, especially
+> for Silead touchscreens where non of these can be read back from
+> the touchscreen-controller.
+>=20
+> ATM users can only test touchscreen properties by editing touchscreen_dmi=
+=2Ec
+> and then building a completely new kernel which makes it unnecessary
+> difficult for users to test and submit properties when necessary for their
+> laptop / tablet model.
+>=20
+> Add support for specifying properties on the kernel commandline to allow
+> users to easily figure out the right settings. See the added documentation
+> in kernel-parameters.txt for the commandline syntax.
 
-are available in the Git repository at:
+I don't believe this is suitable for stable.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-ib-lenovo-c630-v6.11
+Best regards,
+								Pavel
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
 
-for you to fetch changes up to 5e5f2f92cccc29f356422d3cbc104f7f42430f22:
+--S/N03PCznFK76NlG
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  platform: arm64: add Lenovo Yoga C630 WOS EC driver (2024-06-14 12:51:30 +0300)
+-----BEGIN PGP SIGNATURE-----
 
-----------------------------------------------------------------
-Immutable branch between pdx86 lenovo c630 branch, power/supply and USB
-subsystems due for the v6.11 merge window.
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZnFOEwAKCRAw5/Bqldv6
+8uj9AKCsdtNtMZUOkf6ks4neub3NXKRZfACfcuiNamMXquKiK+ws/iD2l1txxRM=
+=HPHn
+-----END PGP SIGNATURE-----
 
-platform-drivers-x86-ib-lenovo-c630-v6.11:
-  v6.10-rc1 + platform-drivers-x86-lenovo-c630
-for merging into the power/supply and USB subsystems for v6.11.
-
-----------------------------------------------------------------
-Bjorn Andersson (1):
-      dt-bindings: platform: Add Lenovo Yoga C630 EC
-
-Dmitry Baryshkov (1):
-      platform: arm64: add Lenovo Yoga C630 WOS EC driver
-
- .../bindings/platform/lenovo,yoga-c630-ec.yaml     |  83 ++++++
- drivers/platform/arm64/Kconfig                     |  14 +
- drivers/platform/arm64/Makefile                    |   1 +
- drivers/platform/arm64/lenovo-yoga-c630.c          | 291 +++++++++++++++++++++
- include/linux/platform_data/lenovo-yoga-c630.h     |  44 ++++
- 5 files changed, 433 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/platform/lenovo,yoga-c630-ec.yaml
- create mode 100644 drivers/platform/arm64/lenovo-yoga-c630.c
- create mode 100644 include/linux/platform_data/lenovo-yoga-c630.h
+--S/N03PCznFK76NlG--
