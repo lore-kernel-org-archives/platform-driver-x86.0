@@ -1,280 +1,175 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 697271AD3E7
-	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Jun 2024 13:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6990B1B47B0;
+	Thu, 20 Jun 2024 19:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718891537; cv=none; b=LupPbZO8JVxMyy3LsG/fP3tBMInYyZL1wtAIwXds7BMJ0+/deCWn/njtoaBdYriLFFfAYo2XvvB4+CVQ57wfNG8rBUwmJpAlxwC33l1Q1CJpwTrYhNP9nTwAbYroaY2YgsRE6R4I7j847EflwzGop0UwNk5pABAvjDezs+8gWlc=
+	t=1718912555; cv=none; b=jzw3lcV0+/TBp1iv/yqgkZPD74jHWGSXoj8TzdOivniugCIsRLPRiD8DSlWDtWSvPkt6gKqlwDSsrri0zF4iBW5qnSNjEJgJ2164D6jR9G7MEuK6d/uP5Fwte5517Vsk8liR4VG2CL4HkUx34cJn3byntPn5g4EJc8ehPC6O2ZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718891537; c=relaxed/simple;
-	bh=kZFzGdFBvUz4Gg6I42gew9txHyVBgSQU2rWpWdCqIqw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yyse5cKzaV96T6q32AfoNE53FVoUlJU9N4+1VEu+C4xUbmLIGOOkxw+xnwoePN8fjNLx/fJo9BVJXzR5K9Jg4/3rAFrlLIOor7aOinjLRbvSPgKptL+Yw3wa21xWNQScosKd7rwek+AJ+ebW6/QX0Axmc9yWvZW4L96Q6CZ9kP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FHXIc83i; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718912555; c=relaxed/simple;
+	bh=mYmnt4GK2dGIOCIs5anX3G58REvbWfiaZ0srsiFxdnA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=S4UjgsU2gadLgXYObVvEIPwsIxfvpF9sgoqGL4lUJhD0vYJMUh2uojkjUjgiYUFh+z462ithITGIuNRbeBK8v/PRnDEtA/khHpZnPMbVefA59FNvYap+nw+yXlsgiKXeZa1LvAjQ3FhGJdgxk9gwGq+ZbKIn7RAkkrA8pYai41A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=NkZOgw6t; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FHXIc83i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718891534;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CNpcAjabNj7U5Kjrejmg/ilwXEXZseiB+OI7rnWLE5Q=;
-	b=FHXIc83i1IFWAuvZ7bO1DC+WKv5kV+miQ9+UeFzbllGG7IQGwEqhEEpG5b7My3VBZLCRwE
-	vGv4l6uxgC43fjtyqXPlfwu4TFkoZzWg32rmnDSGoY18Ri2n3Vsn6gHGTvibppJ4mU6o4N
-	4Ak8M9xODdGIz2cae0ZdVPJVzUGHUU4=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-410-GIIZnXOOPx2PDHVPuEEvfA-1; Thu, 20 Jun 2024 09:52:12 -0400
-X-MC-Unique: GIIZnXOOPx2PDHVPuEEvfA-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-57a306c4b1eso623847a12.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Jun 2024 06:52:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718891531; x=1719496331;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CNpcAjabNj7U5Kjrejmg/ilwXEXZseiB+OI7rnWLE5Q=;
-        b=k4kD9rljQ5oP5LaMEPU1lIQFUPjaszOoprNjmYjJmA8UJP1QsCDSG/4cme0Uld1xLx
-         lqLzUZ/H6WUicZmm9YrqCUAWkVgukpmD7eM+jlGraFu3TX0UBh7fnU8ZbVCd/OzpYQq3
-         JUmWu2zKVlj3oN9RdvJS7yHJNrUyVT8x2LwUxE/kaRscSRCQ1ztHIoPlCsb9y4TneiMH
-         NSITkHPQjnjLb8y7al15ySn2XSfVK84LXdZQvbD0qrzecqbXCkrLxOGrH949Kt1lPhFm
-         x4ha802zR6Gy+7Woo1q1waDQ1jdq0RYeb7GMbIiwdqoAezGIVqJG/zey3PW01MCvPAmJ
-         wi3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUSavxepJyPmOYw6zEBypiAI3jDubqqkhKQ68A7EQBjPXZpymIS0/CsovRi9yXwwKgUl1VxI/k3Cmp6A01KyzGBb44fxKVD4x0tP3k4v9gPhelS8A==
-X-Gm-Message-State: AOJu0Yx1RtTS3dj3vE1YCipJq+KnYfPpxnHFL39bqeXtetvnIndWV3EZ
-	C+gdAkeLALrJ2Y4Tw0SVprpTmwcGa/GbF+yk2BK6UkaCs6h6YWUmeAAH3QhrYOeyl7E9zQ5ofdE
-	Uqv8neyxzXEcx7O/GQdltm+fVchKHIeCfKc9qWX5pUEbp9PRs+925YXC93VrqivkSrFiumWc=
-X-Received: by 2002:a50:aad7:0:b0:578:3335:6e88 with SMTP id 4fb4d7f45d1cf-57d07c59ce6mr3503147a12.0.1718891531434;
-        Thu, 20 Jun 2024 06:52:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF90OFOGv2ZZVHJ5dm1EVg30XUQltEQfgDt90ACAE1nuPoxRvgkNZnMIK5JtmqXjWOLvdB0xw==
-X-Received: by 2002:a50:aad7:0:b0:578:3335:6e88 with SMTP id 4fb4d7f45d1cf-57d07c59ce6mr3503106a12.0.1718891530819;
-        Thu, 20 Jun 2024 06:52:10 -0700 (PDT)
-Received: from redhat.com ([2.52.146.100])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb743b026sm9630648a12.97.2024.06.20.06.52.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jun 2024 06:52:10 -0700 (PDT)
-Date: Thu, 20 Jun 2024 09:51:58 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Cc: virtualization@lists.linux.dev, Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Vadim Pasternak <vadimp@nvidia.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Cornelia Huck <cohuck@redhat.com>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	David Hildenbrand <david@redhat.com>,
-	Jason Wang <jasowang@redhat.com>, linux-um@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="NkZOgw6t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1718912544; x=1719517344; i=w_armin@gmx.de;
+	bh=PYp2lv5xv22R9q1sDIOv7IbibTAKBTU+eiSHljr5q0c=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=NkZOgw6tF+AkUT4jtkoWL/LIbofS0AZAqX8mbEXBXblsByhzrwp26DZ1Df063+T0
+	 tNvBXqX63TyQ6/yUukg0RRzu7Sh5/xa6w1+JZ8mlxBLVQ9dMs06jYkglP/70bsbcX
+	 KlUdkTzK+dEm5tHoasbKTU4LTB13INsMgr5LBNhRpMSXVdJv4EssvJXGvghhWzLY1
+	 mSfjivNUseq+oRDo4JfAUue3U2wKlKLpC7DmM1X3TivMcvhHb1dT6/+DXPxgFWcbz
+	 OOY29APTOyD2Q8i+myb83yPUjwz5L34mfGUXSvqLj+EqyWuWUWTFBMxO1ZOvB+K4z
+	 CMuKEDkhSyX+qDvKSA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MiJZE-1soVDt3XXi-00lUcl; Thu, 20 Jun 2024 21:42:23 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: corbet@lwn.net,
 	platform-driver-x86@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-	kvm@vger.kernel.org, Wei Wang <wei.w.wang@intel.com>
-Subject: Re: [PATCH vhost v9 2/6] virtio: remove support for names array
- entries being null.
-Message-ID: <20240620070717-mutt-send-email-mst@kernel.org>
-References: <20240424091533.86949-1-xuanzhuo@linux.alibaba.com>
- <20240424091533.86949-3-xuanzhuo@linux.alibaba.com>
- <20240620035749-mutt-send-email-mst@kernel.org>
- <1718872778.4831812-1-xuanzhuo@linux.alibaba.com>
- <20240620044839-mutt-send-email-mst@kernel.org>
- <1718874293.698573-2-xuanzhuo@linux.alibaba.com>
- <20240620054548-mutt-send-email-mst@kernel.org>
- <1718880548.281809-3-xuanzhuo@linux.alibaba.com>
- <20240620065602-mutt-send-email-mst@kernel.org>
- <1718881448.8979208-6-xuanzhuo@linux.alibaba.com>
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] platform/x86: wmi: Add driver_override support
+Date: Thu, 20 Jun 2024 21:42:13 +0200
+Message-Id: <20240620194214.3071-2-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240620194214.3071-1-W_Armin@gmx.de>
+References: <20240620194214.3071-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1718881448.8979208-6-xuanzhuo@linux.alibaba.com>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:nDT5ve5bn/1zdhwo1EqKkZGy8kV47xYEIMkcetYfJy8IkM8oynS
+ oBk51ViQKdsyuiqrZH5sBzN5HBciQWJcDvtrv6XBIgUjATSF/CvCdkTJUE6G5X8m0Gt0VS3
+ 02U9aglRbC5Tc4qN8hKcCNzgBz5lJ/iK0PmFlycKUrESsytsgSJleTkFhRG4CVNCflvnBxM
+ f2s7TKVAS+1Mo2EQPDCVQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:qaWDuPhjJdM=;kAoxaNUUSO8vx5KKcsFvMaM9OCk
+ Fb8db+URy3LhuxhoHPqlyDUChbfLXV9bnG0ERehbH+Z/tQB/feNroLWHPzU2vFszJd0+ZB1xu
+ Hfo/9SxGmJtkvWjSg0Xq9XlraoyQUHs55GlxcBu9ihVRR/WIptLei+EJGsBXaJ2K/MRFePsFz
+ pd41ygVntfagvdfc5HBk8+NhNe0ODu/6+VcJ5oSgxFql/tqndbFyTk+ulHWKhcptu0vGBrS/r
+ 6KtZDUlT2PNL+HSqDHAsTidJi4nnkAhr33qB/GdHJ1BhkwepoPda+cySOZwx+WYLovRQeDLsG
+ jrXE8uI+r6PX+t1DxUh4L/ApYExSgtnX+TtckN8a3pdxG4iRfjbN3zfN4/YXc+epqcuykI4Mm
+ nWCD41i4yfIwBkdi82aQ6un6KTyMvQIH7z2u4Vnk/Sb+hGDbGCNtvuL4eB/fG9QewnwQAS8nP
+ U7sfkVazKTyoWvMyT0f9JMfK/X0GFj0szp/USiTx2NGZRkXljIt4CtgM8ns4GEyKo5FRl1L3O
+ R7Jxk2WcUZJbCC1XTD3zBcCsfECTHpl7K2R+xwHz9H+0vksxQo2uAwds6he5DImpHjZaMFO+1
+ vYUjyJJx33zWJNoNn12Q45j42QWbHUT9PFrNwMvPadCoHfft+64Fk7FoJmajcUw6BXPQSiA2x
+ Dd3y29g8kGKxVIhrzQlPM50UKB27VItW1HabEYM9pcRSTwLyzuwDwVGY6BHZfPNEgH43RyhPP
+ DgfAmbChCSD76ulqgXMclCKe2piVXv+fQBoNf6zv3YB9iMp50qDOzyLxThkTtMQM5f8vDBCx6
+ QrWMWjPJPdkMqbtgEj26P0+x6K3kkFGgxNssZjiQUZXFM=
 
-On Thu, Jun 20, 2024 at 07:04:08PM +0800, Xuan Zhuo wrote:
-> On Thu, 20 Jun 2024 07:02:42 -0400, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> > On Thu, Jun 20, 2024 at 06:49:08PM +0800, Xuan Zhuo wrote:
-> > > On Thu, 20 Jun 2024 06:01:54 -0400, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> > > > On Thu, Jun 20, 2024 at 05:04:53PM +0800, Xuan Zhuo wrote:
-> > > > > On Thu, 20 Jun 2024 05:01:08 -0400, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> > > > > > On Thu, Jun 20, 2024 at 04:39:38PM +0800, Xuan Zhuo wrote:
-> > > > > > > On Thu, 20 Jun 2024 04:02:45 -0400, "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> > > > > > > > On Wed, Apr 24, 2024 at 05:15:29PM +0800, Xuan Zhuo wrote:
-> > > > > > > > > commit 6457f126c888 ("virtio: support reserved vqs") introduced this
-> > > > > > > > > support. Multiqueue virtio-net use 2N as ctrl vq finally, so the logic
-> > > > > > > > > doesn't apply. And not one uses this.
-> > > > > > > > >
-> > > > > > > > > On the other side, that makes some trouble for us to refactor the
-> > > > > > > > > find_vqs() params.
-> > > > > > > > >
-> > > > > > > > > So I remove this support.
-> > > > > > > > >
-> > > > > > > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > > > > > > > > Acked-by: Jason Wang <jasowang@redhat.com>
-> > > > > > > > > Acked-by: Eric Farman <farman@linux.ibm.com> # s390
-> > > > > > > > > Acked-by: Halil Pasic <pasic@linux.ibm.com>
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > I don't mind, but this patchset is too big already.
-> > > > > > > > Why do we need to make this part of this patchset?
-> > > > > > >
-> > > > > > >
-> > > > > > > If some the pointers of the names is NULL, then in the virtio ring,
-> > > > > > > we will have a trouble to index from the arrays(names, callbacks...).
-> > > > > > > Becasue that the idx of the vq is not the index of these arrays.
-> > > > > > >
-> > > > > > > If the names is [NULL, "rx", "tx"], the first vq is the "rx", but index of the
-> > > > > > > vq is zero, but the index of the info of this vq inside the arrays is 1.
-> > > > > >
-> > > > > >
-> > > > > > Ah. So actually, it used to work.
-> > > > > >
-> > > > > > What this should refer to is
-> > > > > >
-> > > > > > commit ddbeac07a39a81d82331a312d0578fab94fccbf1
-> > > > > > Author: Wei Wang <wei.w.wang@intel.com>
-> > > > > > Date:   Fri Dec 28 10:26:25 2018 +0800
-> > > > > >
-> > > > > >     virtio_pci: use queue idx instead of array idx to set up the vq
-> > > > > >
-> > > > > >     When find_vqs, there will be no vq[i] allocation if its corresponding
-> > > > > >     names[i] is NULL. For example, the caller may pass in names[i] (i=4)
-> > > > > >     with names[2] being NULL because the related feature bit is turned off,
-> > > > > >     so technically there are 3 queues on the device, and name[4] should
-> > > > > >     correspond to the 3rd queue on the device.
-> > > > > >
-> > > > > >     So we use queue_idx as the queue index, which is increased only when the
-> > > > > >     queue exists.
-> > > > > >
-> > > > > >     Signed-off-by: Wei Wang <wei.w.wang@intel.com>
-> > > > > >     Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > > > > >
-> > > > >
-> > > > > That just work for PCI.
-> > > > >
-> > > > > The trouble I described is that we can not index in the virtio ring.
-> > > > >
-> > > > > In virtio ring, we may like to use the vq.index that do not increase
-> > > > > for the NULL.
-> > > > >
-> > > > >
-> > > > > >
-> > > > > > Which made it so setting names NULL actually does not reserve a vq.
-> > > > > >
-> > > > > > But I worry about non pci transports - there's a chance they used
-> > > > > > a different index with the balloon. Did you test some of these?
-> > > > > >
-> > > > >
-> > > > > Balloon is out of spec.
-> > > > >
-> > > > > The vq.index does not increase for the name NULL. So the Balloon use the
-> > > > > continuous id. That is out of spec.
-> > > >
-> > > >
-> > > > I see. And apparently the QEMU implementation is out of spec, too,
-> > > > so they work fine. And STATS is always on in QEMU.
-> > > >
-> > > > That change by Wei broke the theoretical config which has
-> > > > !STATS but does have FREE_PAGE. We never noticed - not many people
-> > > > ever bothered with FREE_PAGE.
-> > > >
-> > > > However QEMU really is broken in a weird way.
-> > > > In particular if it exposes STATS but driver does not
-> > > > configure STATS then QEMU still has the stats vq.
-> > > > Things will break then.
-> > > >
-> > > >
-> > > > In short, it's a mess, and it needs thought.
-> > > > At this point I suggest we keep the ability to set
-> > > > names to NULL in case we want to just revert Wei's patch.
-> > > >
-> > > >
-> > > >
-> > > > > That does not matter for this patchset.
-> > > > > The name NULL is always skipped.
-> > > > >
-> > > > > Thanks.
-> > > >
-> > > >
-> > > > Let's keep this patchset as small as possible.
-> > > > Keep the existing functionality, we'll do cleanups
-> > > > later.
-> > >
-> > >
-> > > I am ok. But we need a idx to index the info of the vq.
-> > >
-> > > How about a new element "cfg_idx" to virtio_vq_config.
-> > >
-> > > struct virtio_vq_config {
-> > > 	unsigned int nvqs;
-> > > ->	unsigned int cfg_idx;
-> > >
-> > > 	struct virtqueue   **vqs;
-> > > 	vq_callback_t      **callbacks;
-> > > 	const char         **names;
-> > > 	const bool          *ctx;
-> > > 	struct irq_affinity *desc;
-> > > };
-> > >
-> > >
-> > > That is setted by transport. The virtio ring can use this to index the info
-> > > of the vq. Then the #1 #2 commits can be dropped.
-> > >
-> > >
-> > > Thanks.
-> > >
-> >
-> > I'm not sure why you need this in the API.
-> >
-> >
-> > Actually now I think about it, the whole struct is weird.
-> > I think nvqs etc should be outside the struct.
-> > All arrays are the same size, why not:
-> >
-> > struct virtio_vq_config {
-> >  	vq_callback_t      callback;
-> >  	const char         *name;
-> >  	const bool          ctx;
-> > };
-> >
-> > And find_vqs should get an array of these.
-> > Leave the rest of params alone.
-> 
-> 
-> YES, this is great.
-> 
-> I thought about this.
-> 
-> The trouble is that all the callers need to be changed.
-> That are too many.
-> 
-> Thanks.
-> 
+Add support for forcing the WMI driver core to bind
+a certain WMI driver to a WMI device. This will be
+necessary to support generic WMI drivers without an
+ID table
 
-Not too many.
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/wmi.c | 33 +++++++++++++++++++++++++++++++++
+ include/linux/wmi.h        |  4 ++++
+ 2 files changed, 37 insertions(+)
 
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index d21f3fa25823..6bfae28b962a 100644
+=2D-- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -772,11 +772,39 @@ static ssize_t expensive_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(expensive);
 
-> >
-> >
-> > >
-> > > >
-> > > >
-> > > > > > --
-> > > > > > MST
-> > > > > >
-> > > >
-> >
++static ssize_t driver_override_show(struct device *dev, struct device_att=
+ribute *attr,
++				    char *buf)
++{
++	struct wmi_device *wdev =3D to_wmi_device(dev);
++	ssize_t ret;
++
++	device_lock(dev);
++	ret =3D sysfs_emit(buf, "%s\n", wdev->driver_override);
++	device_unlock(dev);
++
++	return ret;
++}
++
++static ssize_t driver_override_store(struct device *dev, struct device_at=
+tribute *attr,
++				     const char *buf, size_t count)
++{
++	struct wmi_device *wdev =3D to_wmi_device(dev);
++	int ret;
++
++	ret =3D driver_set_override(dev, &wdev->driver_override, buf, count);
++	if (ret < 0)
++		return ret;
++
++	return count;
++}
++static DEVICE_ATTR_RW(driver_override);
++
+ static struct attribute *wmi_attrs[] =3D {
+ 	&dev_attr_modalias.attr,
+ 	&dev_attr_guid.attr,
+ 	&dev_attr_instance_count.attr,
+ 	&dev_attr_expensive.attr,
++	&dev_attr_driver_override.attr,
+ 	NULL
+ };
+ ATTRIBUTE_GROUPS(wmi);
+@@ -845,6 +873,7 @@ static void wmi_dev_release(struct device *dev)
+ {
+ 	struct wmi_block *wblock =3D dev_to_wblock(dev);
+
++	kfree(wblock->dev.driver_override);
+ 	kfree(wblock);
+ }
+
+@@ -854,6 +883,10 @@ static int wmi_dev_match(struct device *dev, struct d=
+evice_driver *driver)
+ 	struct wmi_block *wblock =3D dev_to_wblock(dev);
+ 	const struct wmi_device_id *id =3D wmi_driver->id_table;
+
++	/* When driver_override is set, only bind to the matching driver */
++	if (wblock->dev.driver_override)
++		return !strcmp(wblock->dev.driver_override, driver->name);
++
+ 	if (id =3D=3D NULL)
+ 		return 0;
+
+diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+index 63cca3b58d6d..3275470b5531 100644
+=2D-- a/include/linux/wmi.h
++++ b/include/linux/wmi.h
+@@ -16,12 +16,16 @@
+  * struct wmi_device - WMI device structure
+  * @dev: Device associated with this WMI device
+  * @setable: True for devices implementing the Set Control Method
++ * @driver_override: Driver name to force a match; do not set directly,
++ *		     because core frees it; use driver_set_override() to
++ *		     set or clear it.
+  *
+  * This represents WMI devices discovered by the WMI driver core.
+  */
+ struct wmi_device {
+ 	struct device dev;
+ 	bool setable;
++	const char *driver_override;
+ };
+
+ /**
+=2D-
+2.39.2
 
