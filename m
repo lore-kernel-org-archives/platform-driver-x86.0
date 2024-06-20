@@ -1,532 +1,980 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9E1135A6D
-	for <platform-driver-x86@vger.kernel.org>; Wed, 19 Jun 2024 12:02:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F07A41746
+	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Jun 2024 07:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718798564; cv=none; b=ZF5M3bV1+koB1NH8YaAPSDcTemdinhEBcc4t5eR8UVixZRq+bZG5sFBI0dZldnDu64/6zik5iIO+DQZRglL+aMlu6Zku+9QzRHg6rsAu03LqGrIjiFzToVLiEo64Fh42L3OohxRvc+3nvPXGK+FVgm860fqaAzdIIEoxv7slQGI=
+	t=1718870210; cv=none; b=cmtWCrCU6QMk2cd4jG4kkECeR4uAXegBf8kVoratSDVwuY96rgMjk3t4zH5aO7qONxQoTJMmVlfNYc+Wk3HN+Sw75U1747uPmqdwNGZSoIogUHJZFsTBl4dYWrYOrgOecPRGOQP/hAQUDIde1SEHeAAp7ncPa8L88kiU453qz+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718798564; c=relaxed/simple;
-	bh=Lnrn9VEr8A8q5pgoabC2+Vcg93wI9HwtqUZR5ATI7qY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=phCvcW63G1EQnMaVhr9Lxla6periJHcsnaaEhuz2GBGndm/unLvjin8D5iEXy5rrucA3QfiAgoF0ONTvKEkfKUlUUFwCFjgZga8RKzsKshM4nOfu50DAxHnIJo9kE3d2i4Ua63h0RAIXidbpf8WmG/a5gPWAWy83wbt1eEb/ZIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=quWp/jfC; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1718870210; c=relaxed/simple;
+	bh=/ZzR+mp1E5jYSallaMlozViPoqIvEFpiJ9zeV2PysJE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mPxX78oDZcnd5GF4jQwNoBd7SQ7wXXz6VC3oGE3jbOgpGkmVWOASXU4aH8jMsn2D5xDlL8hGLzjUCJcCUbPLTbaaA+wnmLgC3llsgbJYB8ZbSZhOF+ACGn6coM9zN2OHzCtu0jf1HQvxmwHr+yiI2JUSqI9gGm5RiEANOn789dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JZ7TW/0R; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="quWp/jfC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1718798556; x=1719403356; i=w_armin@gmx.de;
-	bh=4zqNwOMgrNxP2a8w8GOTzgvnkfIaggbHP5ppYUsqOP8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=quWp/jfCgJki3MA1g80Pk0HOFfRa4u9IwTqkOl9fd21BDHcIT9tGShPKFEAwdoTH
-	 LVWVvDse/Uf4vEqwzo41jN4Mo80mZI7YzMZpV5NjXTXiDxi4iBwTGO2jQG138ALaQ
-	 74MuORetRCaha7DA5y39VCdzmJ/ZC2hzVBxxFbjOhQfXHN7zfbtXe/fRAvYxXiugN
-	 SieHCV/Uy4Rt+CwrP9ytD3JIDvIXrWxTOx072FEgm50SlWVE8DRA2TKxRWmztLCT7
-	 /p6ybebSXs0B/AxS90HXBEUUVGydzf4BYrFHfmHo2gYANZ62MnT7GB/R84cIt1E0j
-	 qjnHaqy4q7e9HgCqbA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MxDou-1sZ6Rv3Ohc-011LY8; Wed, 19
- Jun 2024 14:02:36 +0200
-Message-ID: <dac93fe5-a72d-43dc-a7b2-c203f4c3156c@gmx.de>
-Date: Wed, 19 Jun 2024 14:02:34 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JZ7TW/0R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718870206;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oH37TBCV1D/t9VDgvR3K/O1Cx2iySHMcs08B6+o72ag=;
+	b=JZ7TW/0RDFGJBuTk26wQ8DZk0hvf0Q/TWfmzjukrGGdh8qjoFEwvGrNSXV+FtiLhln2cSN
+	hNeLXfv9tPIDf8SDpJG7mMB9rPdXj0eNUGlrx/WJQyT5kDrjEPQk15LSAKnRKFDSYXwaQz
+	vDEUDupMvnyTtzmHJMkayycA+n/2cPk=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-292-P8ECjF95PjCgvJtDA5dzhw-1; Thu, 20 Jun 2024 03:56:45 -0400
+X-MC-Unique: P8ECjF95PjCgvJtDA5dzhw-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a6f0da6cd62so65297266b.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 20 Jun 2024 00:56:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718870204; x=1719475004;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oH37TBCV1D/t9VDgvR3K/O1Cx2iySHMcs08B6+o72ag=;
+        b=uyyR06e5TFKG/zeTWGjNHjMrZMFIltREZKHzEAdltRAXRBjefY4PwOINb5iZBH98Yt
+         rPLLUiRxbXiPAEJrq1FlEr5mgRW3KD8ls2Ai3Bvt/5Pa+0WOSpcK+MLtEllEFprg3Zic
+         GT1mb5n/Yt4xDJifVvZVnA4fiTYn6TfoUDjPy7GPitkl0yS8aLbR+ST3zFD1B6A8A8qj
+         CafAH+Gltn91jusAkd4PNyd+hhi+tVSa0YflVgbfd3PUEtgEZXThN1PwhjoLHLUtvuXP
+         HgdBUfR/FFzgTSr/QY4GeIrQUUz2JOR7n6iK9acPY0qmbO2iu1UlknEH1y6ikp4vitMJ
+         afcw==
+X-Forwarded-Encrypted: i=1; AJvYcCUF8xAWMX9u6bDLosq2o3qlMR/uH5MVG8pXTmupnKWoiAz2HlAv9BVJqdNAVTzrAQfRO5stPETHjO9NW6xn2Gi0489iXajqGp30ps0UcjWdl8hw/Q==
+X-Gm-Message-State: AOJu0Yw5tAx7q6rsl+rNb4sd9ek+00I0Xz+3sNjyTm72K3TsOYOd9TBA
+	z6JBHv6QWW+rw4dlY8MDVOca61p2bu8UqzYAlz92cyW+VrXVCYhxIoszkHqBhVLKaQhHfXZNBSH
+	qOLQbw6XwB8SS25/pH3SmNtdkpDSMnJdd7Nq/PU2vDZvOWFKXgMBpjXawHMDI/o1a2dj9O6M=
+X-Received: by 2002:a17:907:c783:b0:a6f:4746:4ee7 with SMTP id a640c23a62f3a-a6fa410a2f5mr331890266b.11.1718870203377;
+        Thu, 20 Jun 2024 00:56:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG0rlQVH21M7bLdVyia2rKRn4MZ5qKoMZsoauOQQSeMCkMorbXHXbxMIC+xQuJXt5ih6y9iZg==
+X-Received: by 2002:a17:907:c783:b0:a6f:4746:4ee7 with SMTP id a640c23a62f3a-a6fa410a2f5mr331885566b.11.1718870202350;
+        Thu, 20 Jun 2024 00:56:42 -0700 (PDT)
+Received: from redhat.com ([2.52.146.100])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f56fa416asm746376266b.224.2024.06.20.00.56.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 00:56:41 -0700 (PDT)
+Date: Thu, 20 Jun 2024 03:56:34 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc: virtualization@lists.linux.dev, Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Vadim Pasternak <vadimp@nvidia.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Cornelia Huck <cohuck@redhat.com>,
+	Halil Pasic <pasic@linux.ibm.com>,
+	Eric Farman <farman@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	David Hildenbrand <david@redhat.com>,
+	Jason Wang <jasowang@redhat.com>, linux-um@lists.infradead.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH vhost v9 3/6] virtio: find_vqs: pass struct instead of
+ multi parameters
+Message-ID: <20240620034823-mutt-send-email-mst@kernel.org>
+References: <20240424091533.86949-1-xuanzhuo@linux.alibaba.com>
+ <20240424091533.86949-4-xuanzhuo@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [sony-laptop] Hardware keys are not properly mapped on Sony VAIO
- UX VGN-UX390N
-To: Mattia Dongili <malattia@linux.it>,
- =?UTF-8?Q?Micha=C5=82_Szczepaniak?= <m.szczepaniak.000@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
-References: <686d3c56-b95e-4081-bde2-d36a7c7ab2e9@gmx.de>
- <11bb0fe3-a252-4cdc-9903-dc35af794ddb@gmail.com>
- <694c5973-8f27-4f9a-9da3-829482884ab2@gmx.de> <ZnDhk4YvczQV0JhW@taihen.jp>
- <2c7aeda6-40a5-43e8-ad7d-c1ba4e8ee0c0@gmail.com>
- <617b732c-f044-46ca-a7eb-cade979386c7@gmx.de>
- <bb8ddd94-53e7-4824-94c6-f2ebff7d93ea@gmail.com>
- <c6f4cbb7-ced0-4dfd-8d58-42878a47329c@gmx.de> <ZnKOpP0sSklJh53i@taihen.jp>
- <3f3b63a3-7d6b-4f84-929c-41c9998f256d@gmail.com> <ZnKT6E5_bFdOa1bt@taihen.jp>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <ZnKT6E5_bFdOa1bt@taihen.jp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:BssBhG9X3BSX6QLl3/pgJdnavUVQW8uy4CBCiAyZdiDB3i7PUeX
- jelATsKrH2zH0AwFBDforNyVq4SKKMTw4vzHuAniDw2ZrZv3inbsS4h2MroUgx5x0rUKsKN
- dDi4IhhXksRNFJAeeWGiA+uTeD5Uo9fdYwZ0xAxqtrp3gpig81RtUyEESB5orFpWtazrrIR
- 1aoRv0dbVUbVIxhBSLZ1A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:WyrCwVyYvSY=;82478yNjwvjhkUf/smn7asRxDic
- dLwSVI/ZjSfXa8xx7MaU2S9Uaa7lhiM7dAK1scegO8m7EDjPwAaMmSmbw2KcpzdwBsLtEtzQr
- O5jg93ke6xEOp9mBSIgBaWU+EPyKrzu/mP0YSWxG4cFlqJJLckphA4cO35Ncts4XecEm/aMhi
- q4xn8EI4qdWWnG4fOuSl74WM7ixWCpyotdgMRAMasoyGpQwdWeIUv1LmUW5VVY2Hvh0q+cMf9
- V+r/x8nEfuQzBte62XM1rdWUrePSkdH+pb4ifpxAVxnthRJ5wop7JHQPyrwwYZt+W/SZUkmmX
- f6seon37oNXHWdYNzlduIoPKxGEWl+vAjPz7l2By12tcy3VqTeXxtpPQ8WQbtvjmM9bA7qWAc
- 02dtEvwBj+lzNfay9GHFKooQRyW1cWU9VRF5zP1VXQnpKD2VpeWgbfr8+j9/gBxws1wa/f7vx
- jp4gJt+gp3mZT6CzMV8cojSJNcuYmMQeBbQ8mnNpFH/JNlV/854k5xgEU8YxVGkHX/5CuFo6B
- SmaVB1+EjDCccXQfcOTm8/nayiMn4I6lRgWPr2U3p9v7QWTA3D/yvXz1rw+ssqLiuJbuUK6eX
- 5/xvskJsT5+KsNkH3ge62Av/usglD2lqsNOWoIxeF6HDqfn3Weh0ulltBiFGG4ZURAgHkTgjo
- zNL19VOaEuEvW7LSdapj3xnlZtiASMS9wFxiy2pemJZvrCMVI68LmZ8Pda0bjMemPnlnHio4F
- NmwnNKF9qT0c58RJzF3H+sJLL3GmHE2gv/VgKz8RZzK/JFjI/mKMGUKao/A8afT7I0/2SLWQ3
- S7Jzs2AVOXt2SVp/QYCL7Fh1iORF9T+9DaD28YI/vg2Jc=
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240424091533.86949-4-xuanzhuo@linux.alibaba.com>
 
-Am 19.06.24 um 10:16 schrieb Mattia Dongili:
+On Wed, Apr 24, 2024 at 05:15:30PM +0800, Xuan Zhuo wrote:
+> Now, we pass multi parameters to find_vqs. These parameters
+> may work for transport or work for vring.
+> 
+> And find_vqs has multi implements in many places:
+> 
+>  arch/um/drivers/virtio_uml.c
+>  drivers/platform/mellanox/mlxbf-tmfifo.c
+>  drivers/remoteproc/remoteproc_virtio.c
+>  drivers/s390/virtio/virtio_ccw.c
+>  drivers/virtio/virtio_mmio.c
+>  drivers/virtio/virtio_pci_legacy.c
+>  drivers/virtio/virtio_pci_modern.c
+>  drivers/virtio/virtio_vdpa.c
+> 
+> Every time, we try to add a new parameter, that is difficult.
+> We must change every find_vqs implement.
+> 
+> One the other side, if we want to pass a parameter to vring,
+> we must change the call path from transport to vring.
+> Too many functions need to be changed.
+> 
+> So it is time to refactor the find_vqs. We pass a structure
+> cfg to find_vqs(), that will be passed to vring by transport.
+> 
+> Because the vp_modern_create_avq() use the "const char *names[]",
+> and the virtio_uml.c changes the name in the subsequent commit, so
+> change the "names" inside the virtio_vq_config from "const char *const
+> *names" to "const char **names".
+> 
+> Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> Acked-by: Johannes Berg <johannes@sipsolutions.net>
+> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Acked-by: Jason Wang <jasowang@redhat.com>
+> Acked-by: Eric Farman <farman@linux.ibm.com> # s390
+> Acked-by: Halil Pasic <pasic@linux.ibm.com>
+> ---
+>  arch/um/drivers/virtio_uml.c             | 22 +++----
+>  drivers/platform/mellanox/mlxbf-tmfifo.c | 13 ++--
+>  drivers/remoteproc/remoteproc_virtio.c   | 25 ++++----
+>  drivers/s390/virtio/virtio_ccw.c         | 28 ++++-----
+>  drivers/virtio/virtio_mmio.c             | 23 ++++---
+>  drivers/virtio/virtio_pci_common.c       | 57 ++++++++----------
+>  drivers/virtio/virtio_pci_common.h       |  9 +--
+>  drivers/virtio/virtio_pci_legacy.c       | 11 ++--
+>  drivers/virtio/virtio_pci_modern.c       | 32 ++++++----
+>  drivers/virtio/virtio_vdpa.c             | 33 +++++-----
+>  include/linux/virtio_config.h            | 76 ++++++++++++++++++------
+>  11 files changed, 175 insertions(+), 154 deletions(-)
+> 
+> diff --git a/arch/um/drivers/virtio_uml.c b/arch/um/drivers/virtio_uml.c
+> index 773f9fc4d582..adc619362cc0 100644
+> --- a/arch/um/drivers/virtio_uml.c
+> +++ b/arch/um/drivers/virtio_uml.c
+> @@ -937,8 +937,8 @@ static int vu_setup_vq_call_fd(struct virtio_uml_device *vu_dev,
+>  }
+>  
+>  static struct virtqueue *vu_setup_vq(struct virtio_device *vdev,
+> -				     unsigned index, vq_callback_t *callback,
+> -				     const char *name, bool ctx)
+> +				     unsigned index,
+> +				     struct virtio_vq_config *cfg)
+>  {
+>  	struct virtio_uml_device *vu_dev = to_virtio_uml_device(vdev);
+>  	struct platform_device *pdev = vu_dev->pdev;
+> @@ -953,10 +953,12 @@ static struct virtqueue *vu_setup_vq(struct virtio_device *vdev,
+>  		goto error_kzalloc;
+>  	}
+>  	snprintf(info->name, sizeof(info->name), "%s.%d-%s", pdev->name,
+> -		 pdev->id, name);
+> +		 pdev->id, cfg->names[index]);
+>  
+>  	vq = vring_create_virtqueue(index, num, PAGE_SIZE, vdev, true, true,
+> -				    ctx, vu_notify, callback, info->name);
+> +				    cfg->ctx ? cfg->ctx[index] : false,
+> +				    vu_notify,
+> +				    cfg->callbacks[index], info->name);
+>  	if (!vq) {
+>  		rc = -ENOMEM;
+>  		goto error_create;
+> @@ -1013,12 +1015,11 @@ static struct virtqueue *vu_setup_vq(struct virtio_device *vdev,
+>  	return ERR_PTR(rc);
+>  }
+>  
+> -static int vu_find_vqs(struct virtio_device *vdev, unsigned nvqs,
+> -		       struct virtqueue *vqs[], vq_callback_t *callbacks[],
+> -		       const char * const names[], const bool *ctx,
+> -		       struct irq_affinity *desc)
+> +static int vu_find_vqs(struct virtio_device *vdev, struct virtio_vq_config *cfg)
+>  {
+>  	struct virtio_uml_device *vu_dev = to_virtio_uml_device(vdev);
+> +	struct virtqueue **vqs = cfg->vqs;
+> +	unsigned int nvqs = cfg->nvqs;
+>  	struct virtqueue *vq;
+>  	int i, rc;
+>  
+> @@ -1031,13 +1032,12 @@ static int vu_find_vqs(struct virtio_device *vdev, unsigned nvqs,
+>  		return rc;
+>  
+>  	for (i = 0; i < nvqs; ++i) {
+> -		if (!names[i]) {
+> +		if (!cfg->names[i]) {
+>  			rc = -EINVAL;
+>  			goto error_setup;
+>  		}
+>  
+> -		vqs[i] = vu_setup_vq(vdev, i, callbacks[i], names[i],
+> -				     ctx ? ctx[i] : false);
+> +		vqs[i] = vu_setup_vq(vdev, i, cfg);
+>  		if (IS_ERR(vqs[i])) {
+>  			rc = PTR_ERR(vqs[i]);
+>  			goto error_setup;
+> diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+> index b8d1e32e97eb..4252388f52a2 100644
+> --- a/drivers/platform/mellanox/mlxbf-tmfifo.c
+> +++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+> @@ -1056,15 +1056,12 @@ static void mlxbf_tmfifo_virtio_del_vqs(struct virtio_device *vdev)
+>  
+>  /* Create and initialize the virtual queues. */
+>  static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
+> -					unsigned int nvqs,
+> -					struct virtqueue *vqs[],
+> -					vq_callback_t *callbacks[],
+> -					const char * const names[],
+> -					const bool *ctx,
+> -					struct irq_affinity *desc)
+> +					struct virtio_vq_config *cfg)
+>  {
+>  	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
+> +	struct virtqueue **vqs = cfg->vqs;
+>  	struct mlxbf_tmfifo_vring *vring;
+> +	unsigned int nvqs = cfg->nvqs;
+>  	struct virtqueue *vq;
+>  	int i, ret, size;
+>  
+> @@ -1072,7 +1069,7 @@ static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
+>  		return -EINVAL;
+>  
+>  	for (i = 0; i < nvqs; ++i) {
+> -		if (!names[i]) {
+> +		if (!cfg->names[i]) {
+>  			ret = -EINVAL;
+>  			goto error;
+>  		}
+> @@ -1084,7 +1081,7 @@ static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
+>  		vq = vring_new_virtqueue(i, vring->num, vring->align, vdev,
+>  					 false, false, vring->va,
+>  					 mlxbf_tmfifo_virtio_notify,
+> -					 callbacks[i], names[i]);
+> +					 cfg->callbacks[i], cfg->names[i]);
+>  		if (!vq) {
+>  			dev_err(&vdev->dev, "vring_new_virtqueue failed\n");
+>  			ret = -ENOMEM;
+> diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
+> index 7f58634fcc41..bbde11287f8a 100644
+> --- a/drivers/remoteproc/remoteproc_virtio.c
+> +++ b/drivers/remoteproc/remoteproc_virtio.c
+> @@ -102,8 +102,7 @@ EXPORT_SYMBOL(rproc_vq_interrupt);
+>  
+>  static struct virtqueue *rp_find_vq(struct virtio_device *vdev,
+>  				    unsigned int id,
+> -				    void (*callback)(struct virtqueue *vq),
+> -				    const char *name, bool ctx)
+> +				    struct virtio_vq_config *cfg)
+>  {
+>  	struct rproc_vdev *rvdev = vdev_to_rvdev(vdev);
+>  	struct rproc *rproc = vdev_to_rproc(vdev);
+> @@ -140,10 +139,12 @@ static struct virtqueue *rp_find_vq(struct virtio_device *vdev,
+>  	 * Create the new vq, and tell virtio we're not interested in
+>  	 * the 'weak' smp barriers, since we're talking with a real device.
+>  	 */
+> -	vq = vring_new_virtqueue(id, num, rvring->align, vdev, false, ctx,
+> -				 addr, rproc_virtio_notify, callback, name);
+> +	vq = vring_new_virtqueue(id, num, rvring->align, vdev, false,
+> +				 cfg->ctx ? cfg->ctx[id] : false,
+> +				 addr, rproc_virtio_notify, cfg->callbacks[id],
+> +				 cfg->names[id]);
+>  	if (!vq) {
+> -		dev_err(dev, "vring_new_virtqueue %s failed\n", name);
+> +		dev_err(dev, "vring_new_virtqueue %s failed\n", cfg->names[id]);
+>  		rproc_free_vring(rvring);
+>  		return ERR_PTR(-ENOMEM);
+>  	}
+> @@ -177,23 +178,19 @@ static void rproc_virtio_del_vqs(struct virtio_device *vdev)
+>  	__rproc_virtio_del_vqs(vdev);
+>  }
+>  
+> -static int rproc_virtio_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
+> -				 struct virtqueue *vqs[],
+> -				 vq_callback_t *callbacks[],
+> -				 const char * const names[],
+> -				 const bool * ctx,
+> -				 struct irq_affinity *desc)
+> +static int rproc_virtio_find_vqs(struct virtio_device *vdev, struct virtio_vq_config *cfg)
+>  {
+> +	struct virtqueue **vqs = cfg->vqs;
+> +	unsigned int nvqs = cfg->nvqs;
+>  	int i, ret;
+>  
+>  	for (i = 0; i < nvqs; ++i) {
+> -		if (!names[i]) {
+> +		if (!cfg->names[i]) {
+>  			ret = -EINVAL;
+>  			goto error;
+>  		}
+>  
+> -		vqs[i] = rp_find_vq(vdev, i, callbacks[i], names[i],
+> -				    ctx ? ctx[i] : false);
+> +		vqs[i] = rp_find_vq(vdev, i, cfg);
+>  		if (IS_ERR(vqs[i])) {
+>  			ret = PTR_ERR(vqs[i]);
+>  			goto error;
+> diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
+> index 6cdd29952bc0..4d94d20b253a 100644
+> --- a/drivers/s390/virtio/virtio_ccw.c
+> +++ b/drivers/s390/virtio/virtio_ccw.c
+> @@ -536,9 +536,8 @@ static void virtio_ccw_del_vqs(struct virtio_device *vdev)
+>  }
+>  
+>  static struct virtqueue *virtio_ccw_setup_vq(struct virtio_device *vdev,
+> -					     int i, vq_callback_t *callback,
+> -					     const char *name, bool ctx,
+> -					     struct ccw1 *ccw)
+> +					     int i, struct ccw1 *ccw,
+> +					     struct virtio_vq_config *cfg)
+>  {
+>  	struct virtio_ccw_device *vcdev = to_vc_device(vdev);
+>  	bool (*notify)(struct virtqueue *vq);
+> @@ -576,8 +575,11 @@ static struct virtqueue *virtio_ccw_setup_vq(struct virtio_device *vdev,
+>  	}
+>  	may_reduce = vcdev->revision > 0;
+>  	vq = vring_create_virtqueue(i, info->num, KVM_VIRTIO_CCW_RING_ALIGN,
+> -				    vdev, true, may_reduce, ctx,
+> -				    notify, callback, name);
+> +				    vdev, true, may_reduce,
+> +				    cfg->ctx ? cfg->ctx[i] : false,
+> +				    notify,
+> +				    cfg->callbacks[i],
+> +				    cfg->names[i]);
+>  
+>  	if (!vq) {
+>  		/* For now, we fail if we can't get the requested size. */
+> @@ -687,14 +689,12 @@ static int virtio_ccw_register_adapter_ind(struct virtio_ccw_device *vcdev,
+>  	return ret;
+>  }
+>  
+> -static int virtio_ccw_find_vqs(struct virtio_device *vdev, unsigned nvqs,
+> -			       struct virtqueue *vqs[],
+> -			       vq_callback_t *callbacks[],
+> -			       const char * const names[],
+> -			       const bool *ctx,
+> -			       struct irq_affinity *desc)
+> +static int virtio_ccw_find_vqs(struct virtio_device *vdev,
+> +			       struct virtio_vq_config *cfg)
+>  {
+>  	struct virtio_ccw_device *vcdev = to_vc_device(vdev);
+> +	struct virtqueue **vqs = cfg->vqs;
+> +	unsigned int nvqs = cfg->nvqs;
+>  	dma64_t *indicatorp = NULL;
+>  	int ret, i;
+>  	struct ccw1 *ccw;
+> @@ -704,14 +704,12 @@ static int virtio_ccw_find_vqs(struct virtio_device *vdev, unsigned nvqs,
+>  		return -ENOMEM;
+>  
+>  	for (i = 0; i < nvqs; ++i) {
+> -		if (!names[i]) {
+> +		if (!cfg->names[i]) {
+>  			ret = -EINVAL;
+>  			goto out;
+>  		}
+>  
+> -		vqs[i] = virtio_ccw_setup_vq(vdev, i, callbacks[i],
+> -					     names[i], ctx ? ctx[i] : false,
+> -					     ccw);
+> +		vqs[i] = virtio_ccw_setup_vq(vdev, i, ccw, cfg);
+>  		if (IS_ERR(vqs[i])) {
+>  			ret = PTR_ERR(vqs[i]);
+>  			vqs[i] = NULL;
+> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+> index c3c8dd282952..4ebb28b6b0ec 100644
+> --- a/drivers/virtio/virtio_mmio.c
+> +++ b/drivers/virtio/virtio_mmio.c
+> @@ -370,8 +370,7 @@ static void vm_synchronize_cbs(struct virtio_device *vdev)
+>  }
+>  
+>  static struct virtqueue *vm_setup_vq(struct virtio_device *vdev, unsigned int index,
+> -				  void (*callback)(struct virtqueue *vq),
+> -				  const char *name, bool ctx)
+> +				     struct virtio_vq_config *cfg)
+>  {
+>  	struct virtio_mmio_device *vm_dev = to_virtio_mmio_device(vdev);
+>  	bool (*notify)(struct virtqueue *vq);
+> @@ -411,7 +410,11 @@ static struct virtqueue *vm_setup_vq(struct virtio_device *vdev, unsigned int in
+>  
+>  	/* Create the vring */
+>  	vq = vring_create_virtqueue(index, num, VIRTIO_MMIO_VRING_ALIGN, vdev,
+> -				 true, true, ctx, notify, callback, name);
+> +				    true, true,
+> +				    cfg->ctx ? cfg->ctx[index] : false,
+> +				    notify,
+> +				    cfg->callbacks[index],
+> +				    cfg->names[index]);
+>  	if (!vq) {
+>  		err = -ENOMEM;
+>  		goto error_new_virtqueue;
+> @@ -484,15 +487,12 @@ static struct virtqueue *vm_setup_vq(struct virtio_device *vdev, unsigned int in
+>  	return ERR_PTR(err);
+>  }
+>  
+> -static int vm_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
+> -		       struct virtqueue *vqs[],
+> -		       vq_callback_t *callbacks[],
+> -		       const char * const names[],
+> -		       const bool *ctx,
+> -		       struct irq_affinity *desc)
+> +static int vm_find_vqs(struct virtio_device *vdev, struct virtio_vq_config *cfg)
+>  {
+>  	struct virtio_mmio_device *vm_dev = to_virtio_mmio_device(vdev);
+>  	int irq = platform_get_irq(vm_dev->pdev, 0);
+> +	struct virtqueue **vqs = cfg->vqs;
+> +	unsigned int nvqs = cfg->nvqs;
+>  	int i, err;
+>  
+>  	if (irq < 0)
+> @@ -507,13 +507,12 @@ static int vm_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
+>  		enable_irq_wake(irq);
+>  
+>  	for (i = 0; i < nvqs; ++i) {
+> -		if (!names[i]) {
+> +		if (!cfg->names[i]) {
+>  			vm_del_vqs(vdev);
+>  			return -EINVAL;
+>  		}
+>  
+> -		vqs[i] = vm_setup_vq(vdev, i, callbacks[i], names[i],
+> -				     ctx ? ctx[i] : false);
+> +		vqs[i] = vm_setup_vq(vdev, i, cfg);
+>  		if (IS_ERR(vqs[i])) {
+>  			vm_del_vqs(vdev);
+>  			return PTR_ERR(vqs[i]);
+> diff --git a/drivers/virtio/virtio_pci_common.c b/drivers/virtio/virtio_pci_common.c
+> index eda71c6e87ee..cb2776e3d0e1 100644
+> --- a/drivers/virtio/virtio_pci_common.c
+> +++ b/drivers/virtio/virtio_pci_common.c
+> @@ -172,9 +172,7 @@ static int vp_request_msix_vectors(struct virtio_device *vdev, int nvectors,
+>  }
+>  
+>  static struct virtqueue *vp_setup_vq(struct virtio_device *vdev, unsigned int index,
+> -				     void (*callback)(struct virtqueue *vq),
+> -				     const char *name,
+> -				     bool ctx,
+> +				     struct virtio_vq_config *cfg,
+>  				     u16 msix_vec)
+>  {
+>  	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
+> @@ -186,13 +184,12 @@ static struct virtqueue *vp_setup_vq(struct virtio_device *vdev, unsigned int in
+>  	if (!info)
+>  		return ERR_PTR(-ENOMEM);
+>  
+> -	vq = vp_dev->setup_vq(vp_dev, info, index, callback, name, ctx,
+> -			      msix_vec);
+> +	vq = vp_dev->setup_vq(vp_dev, info, index, cfg, msix_vec);
+>  	if (IS_ERR(vq))
+>  		goto out_info;
+>  
+>  	info->vq = vq;
+> -	if (callback) {
+> +	if (cfg->callbacks[index]) {
+>  		spin_lock_irqsave(&vp_dev->lock, flags);
+>  		list_add(&info->node, &vp_dev->virtqueues);
+>  		spin_unlock_irqrestore(&vp_dev->lock, flags);
+> @@ -284,15 +281,15 @@ void vp_del_vqs(struct virtio_device *vdev)
+>  	vp_dev->vqs = NULL;
+>  }
+>  
+> -static int vp_find_vqs_msix(struct virtio_device *vdev, unsigned int nvqs,
+> -		struct virtqueue *vqs[], vq_callback_t *callbacks[],
+> -		const char * const names[], bool per_vq_vectors,
+> -		const bool *ctx,
+> -		struct irq_affinity *desc)
+> +static int vp_find_vqs_msix(struct virtio_device *vdev,
+> +			    struct virtio_vq_config *cfg,
+> +			    bool per_vq_vectors)
+>  {
+>  	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
+>  	u16 msix_vec;
+>  	int i, err, nvectors, allocated_vectors;
+> +	struct virtqueue **vqs = cfg->vqs;
+> +	unsigned int nvqs = cfg->nvqs;
+>  
+>  	vp_dev->vqs = kcalloc(nvqs, sizeof(*vp_dev->vqs), GFP_KERNEL);
+>  	if (!vp_dev->vqs)
+> @@ -302,7 +299,7 @@ static int vp_find_vqs_msix(struct virtio_device *vdev, unsigned int nvqs,
+>  		/* Best option: one for change interrupt, one per vq. */
+>  		nvectors = 1;
+>  		for (i = 0; i < nvqs; ++i)
+> -			if (callbacks[i])
+> +			if (cfg->callbacks[i])
+>  				++nvectors;
+>  	} else {
+>  		/* Second best: one for change, shared for all vqs. */
+> @@ -310,27 +307,26 @@ static int vp_find_vqs_msix(struct virtio_device *vdev, unsigned int nvqs,
+>  	}
+>  
+>  	err = vp_request_msix_vectors(vdev, nvectors, per_vq_vectors,
+> -				      per_vq_vectors ? desc : NULL);
+> +				      per_vq_vectors ? cfg->desc : NULL);
+>  	if (err)
+>  		goto error_find;
+>  
+>  	vp_dev->per_vq_vectors = per_vq_vectors;
+>  	allocated_vectors = vp_dev->msix_used_vectors;
+>  	for (i = 0; i < nvqs; ++i) {
+> -		if (!names[i]) {
+> +		if (!cfg->names[i]) {
+>  			err = -EINVAL;
+>  			goto error_find;
+>  		}
+>  
+> -		if (!callbacks[i])
+> +		if (!cfg->callbacks[i])
+>  			msix_vec = VIRTIO_MSI_NO_VECTOR;
+>  		else if (vp_dev->per_vq_vectors)
+>  			msix_vec = allocated_vectors++;
+>  		else
+>  			msix_vec = VP_MSIX_VQ_VECTOR;
+> -		vqs[i] = vp_setup_vq(vdev, i, callbacks[i], names[i],
+> -				     ctx ? ctx[i] : false,
+> -				     msix_vec);
+> +
+> +		vqs[i] = vp_setup_vq(vdev, i, cfg, msix_vec);
+>  		if (IS_ERR(vqs[i])) {
+>  			err = PTR_ERR(vqs[i]);
+>  			goto error_find;
+> @@ -343,7 +339,7 @@ static int vp_find_vqs_msix(struct virtio_device *vdev, unsigned int nvqs,
+>  		snprintf(vp_dev->msix_names[msix_vec],
+>  			 sizeof *vp_dev->msix_names,
+>  			 "%s-%s",
+> -			 dev_name(&vp_dev->vdev.dev), names[i]);
+> +			 dev_name(&vp_dev->vdev.dev), cfg->names[i]);
+>  		err = request_irq(pci_irq_vector(vp_dev->pci_dev, msix_vec),
+>  				  vring_interrupt, 0,
+>  				  vp_dev->msix_names[msix_vec],
+> @@ -358,11 +354,11 @@ static int vp_find_vqs_msix(struct virtio_device *vdev, unsigned int nvqs,
+>  	return err;
+>  }
+>  
+> -static int vp_find_vqs_intx(struct virtio_device *vdev, unsigned int nvqs,
+> -		struct virtqueue *vqs[], vq_callback_t *callbacks[],
+> -		const char * const names[], const bool *ctx)
+> +static int vp_find_vqs_intx(struct virtio_device *vdev, struct virtio_vq_config *cfg)
+>  {
+>  	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
+> +	struct virtqueue **vqs = cfg->vqs;
+> +	unsigned int nvqs = cfg->nvqs;
+>  	int i, err;
+>  
+>  	vp_dev->vqs = kcalloc(nvqs, sizeof(*vp_dev->vqs), GFP_KERNEL);
+> @@ -377,13 +373,11 @@ static int vp_find_vqs_intx(struct virtio_device *vdev, unsigned int nvqs,
+>  	vp_dev->intx_enabled = 1;
+>  	vp_dev->per_vq_vectors = false;
+>  	for (i = 0; i < nvqs; ++i) {
+> -		if (!names[i]) {
+> +		if (!cfg->names[i]) {
+>  			err = -EINVAL;
+>  			goto out_del_vqs;
+>  		}
+> -		vqs[i] = vp_setup_vq(vdev, i, callbacks[i], names[i],
+> -				     ctx ? ctx[i] : false,
+> -				     VIRTIO_MSI_NO_VECTOR);
+> +		vqs[i] = vp_setup_vq(vdev, i, cfg, VIRTIO_MSI_NO_VECTOR);
+>  		if (IS_ERR(vqs[i])) {
+>  			err = PTR_ERR(vqs[i]);
+>  			goto out_del_vqs;
+> @@ -397,26 +391,23 @@ static int vp_find_vqs_intx(struct virtio_device *vdev, unsigned int nvqs,
+>  }
+>  
+>  /* the config->find_vqs() implementation */
+> -int vp_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
+> -		struct virtqueue *vqs[], vq_callback_t *callbacks[],
+> -		const char * const names[], const bool *ctx,
+> -		struct irq_affinity *desc)
+> +int vp_find_vqs(struct virtio_device *vdev, struct virtio_vq_config *cfg)
+>  {
+>  	int err;
+>  
+>  	/* Try MSI-X with one vector per queue. */
+> -	err = vp_find_vqs_msix(vdev, nvqs, vqs, callbacks, names, true, ctx, desc);
+> +	err = vp_find_vqs_msix(vdev, cfg, true);
+>  	if (!err)
+>  		return 0;
+>  	/* Fallback: MSI-X with one vector for config, one shared for queues. */
+> -	err = vp_find_vqs_msix(vdev, nvqs, vqs, callbacks, names, false, ctx, desc);
+> +	err = vp_find_vqs_msix(vdev, cfg, false);
+>  	if (!err)
+>  		return 0;
+>  	/* Is there an interrupt? If not give up. */
+>  	if (!(to_vp_device(vdev)->pci_dev->irq))
+>  		return err;
+>  	/* Finally fall back to regular interrupts. */
+> -	return vp_find_vqs_intx(vdev, nvqs, vqs, callbacks, names, ctx);
+> +	return vp_find_vqs_intx(vdev, cfg);
+>  }
+>  
+>  const char *vp_bus_name(struct virtio_device *vdev)
+> diff --git a/drivers/virtio/virtio_pci_common.h b/drivers/virtio/virtio_pci_common.h
+> index 7fef52bee455..5ba8b82fb765 100644
+> --- a/drivers/virtio/virtio_pci_common.h
+> +++ b/drivers/virtio/virtio_pci_common.h
+> @@ -95,9 +95,7 @@ struct virtio_pci_device {
+>  	struct virtqueue *(*setup_vq)(struct virtio_pci_device *vp_dev,
+>  				      struct virtio_pci_vq_info *info,
+>  				      unsigned int idx,
+> -				      void (*callback)(struct virtqueue *vq),
+> -				      const char *name,
+> -				      bool ctx,
+> +				      struct virtio_vq_config *vq_cfg,
+>  				      u16 msix_vec);
+>  	void (*del_vq)(struct virtio_pci_vq_info *info);
+>  
+> @@ -126,10 +124,7 @@ bool vp_notify(struct virtqueue *vq);
+>  /* the config->del_vqs() implementation */
+>  void vp_del_vqs(struct virtio_device *vdev);
+>  /* the config->find_vqs() implementation */
+> -int vp_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
+> -		struct virtqueue *vqs[], vq_callback_t *callbacks[],
+> -		const char * const names[], const bool *ctx,
+> -		struct irq_affinity *desc);
+> +int vp_find_vqs(struct virtio_device *vdev, struct virtio_vq_config *cfg);
+>  const char *vp_bus_name(struct virtio_device *vdev);
+>  
+>  /* Setup the affinity for a virtqueue:
+> diff --git a/drivers/virtio/virtio_pci_legacy.c b/drivers/virtio/virtio_pci_legacy.c
+> index d9cbb02b35a1..a8de653dd7a7 100644
+> --- a/drivers/virtio/virtio_pci_legacy.c
+> +++ b/drivers/virtio/virtio_pci_legacy.c
+> @@ -110,9 +110,7 @@ static u16 vp_config_vector(struct virtio_pci_device *vp_dev, u16 vector)
+>  static struct virtqueue *setup_vq(struct virtio_pci_device *vp_dev,
+>  				  struct virtio_pci_vq_info *info,
+>  				  unsigned int index,
+> -				  void (*callback)(struct virtqueue *vq),
+> -				  const char *name,
+> -				  bool ctx,
+> +				  struct virtio_vq_config *cfg,
+>  				  u16 msix_vec)
+>  {
+>  	struct virtqueue *vq;
+> @@ -130,8 +128,11 @@ static struct virtqueue *setup_vq(struct virtio_pci_device *vp_dev,
+>  	/* create the vring */
+>  	vq = vring_create_virtqueue(index, num,
+>  				    VIRTIO_PCI_VRING_ALIGN, &vp_dev->vdev,
+> -				    true, false, ctx,
+> -				    vp_notify, callback, name);
+> +				    true, false,
+> +				    cfg->ctx ? cfg->ctx[index] : false,
+> +				    vp_notify,
+> +				    cfg->callbacks[index],
+> +				    cfg->names[index]);
+>  	if (!vq)
+>  		return ERR_PTR(-ENOMEM);
+>  
+> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
+> index f62b530aa3b5..bcb829ffec64 100644
+> --- a/drivers/virtio/virtio_pci_modern.c
+> +++ b/drivers/virtio/virtio_pci_modern.c
+> @@ -530,9 +530,7 @@ static bool vp_notify_with_data(struct virtqueue *vq)
+>  static struct virtqueue *setup_vq(struct virtio_pci_device *vp_dev,
+>  				  struct virtio_pci_vq_info *info,
+>  				  unsigned int index,
+> -				  void (*callback)(struct virtqueue *vq),
+> -				  const char *name,
+> -				  bool ctx,
+> +				  struct virtio_vq_config *cfg,
+>  				  u16 msix_vec)
+>  {
+>  
+> @@ -563,8 +561,11 @@ static struct virtqueue *setup_vq(struct virtio_pci_device *vp_dev,
+>  	/* create the vring */
+>  	vq = vring_create_virtqueue(index, num,
+>  				    SMP_CACHE_BYTES, &vp_dev->vdev,
+> -				    true, true, ctx,
+> -				    notify, callback, name);
+> +				    true, true,
+> +				    cfg->ctx ? cfg->ctx[index] : false,
+> +				    notify,
+> +				    cfg->callbacks[index],
+> +				    cfg->names[index]);
+>  	if (!vq)
+>  		return ERR_PTR(-ENOMEM);
+>  
+> @@ -593,15 +594,11 @@ static struct virtqueue *setup_vq(struct virtio_pci_device *vp_dev,
+>  	return ERR_PTR(err);
+>  }
+>  
+> -static int vp_modern_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
+> -			      struct virtqueue *vqs[],
+> -			      vq_callback_t *callbacks[],
+> -			      const char * const names[], const bool *ctx,
+> -			      struct irq_affinity *desc)
+> +static int vp_modern_find_vqs(struct virtio_device *vdev, struct virtio_vq_config *cfg)
+>  {
+>  	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
+>  	struct virtqueue *vq;
+> -	int rc = vp_find_vqs(vdev, nvqs, vqs, callbacks, names, ctx, desc);
+> +	int rc = vp_find_vqs(vdev, cfg);
+>  
+>  	if (rc)
+>  		return rc;
+> @@ -739,10 +736,17 @@ static bool vp_get_shm_region(struct virtio_device *vdev,
+>  static int vp_modern_create_avq(struct virtio_device *vdev)
+>  {
+>  	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
+> +	vq_callback_t *callbacks[] = { NULL };
+> +	struct virtio_vq_config cfg = {};
+>  	struct virtio_pci_admin_vq *avq;
+>  	struct virtqueue *vq;
+> +	const char *names[1];
+>  	u16 admin_q_num;
+>  
+> +	cfg.nvqs = 1;
+> +	cfg.callbacks = callbacks;
+> +	cfg.names = names;
+> +
+>  	if (!virtio_has_feature(vdev, VIRTIO_F_ADMIN_VQ))
+>  		return 0;
+>  
 
-> On Wed, Jun 19, 2024 at 10:00:18AM +0200, Micha=C5=82 Szczepaniak wrote:
->> On 19/06/2024 09:54, Mattia Dongili wrote:
->>> On Tue, Jun 18, 2024 at 11:18:12PM +0200, Armin Wolf wrote:
->>>> Am 18.06.24 um 15:08 schrieb Micha=C5=82 Szczepaniak:
->>>>
->>>>> On 18/06/2024 13:47, Armin Wolf wrote:
->>>>>> Am 18.06.24 um 09:09 schrieb Micha=C5=82 Szczepaniak:
->>>>>>
->>>>>>> On 18/06/2024 03:24, Mattia Dongili wrote:
->>>>>>>> On Mon, Jun 17, 2024 at 12:48:13AM +0200, Armin Wolf wrote:
->>>>>>>>> Am 16.06.24 um 22:34 schrieb Micha=C5=82 Szczepaniak:
->>>>>>>>>
->>>>>>>>>> On 16/06/2024 20:18, Armin Wolf wrote:
->>>>>>>>>>> Hi,
->>>>>>>>>>>
->>>>>>>>>>> can you share the output of "acpidump"? The zoom-out button sh=
-ould
->>>>>>>>>>> report KEY_ZOOMOUT, can you also share the output of dmesg
->>>>>>>>>>> after loading the driver with the module parameter "debug=3D1"=
- and
->>>>>>>>>>> pressing the buttons?
->>>>>>>> [...]
->>>>>>>>>> dmesg:
->>>>>>>>>> [=C2=A0=C2=A0 19.108393] [=C2=A0 T475] sony_laptop: detected Ty=
-pe3 model
->>>>>>>>>> [=C2=A0=C2=A0 19.108407] [=C2=A0 T475] sony_laptop: Evaluating =
-_STA
->>>>>>>>>> [=C2=A0=C2=A0 19.115105] [=C2=A0 T475] sony_laptop: Device disa=
-bled
->>>>>>>>>> [=C2=A0=C2=A0 19.115115] [=C2=A0 T475] sony_laptop: Evaluating =
-_PRS
->>>>>>>>>> [=C2=A0=C2=A0 19.115145] [=C2=A0 T475] sony_laptop: IO1 at 0xc0=
-00 (0x20)
->>>>>>>>>> [=C2=A0=C2=A0 19.115150] [=C2=A0 T475] sony_laptop: IO1 at 0xc8=
-00 (0x20)
->>>>>>>>>> [=C2=A0=C2=A0 19.115154] [=C2=A0 T475] sony_laptop: IO1 at 0xd0=
-00 (0x20)
->>>>>>>>>> [=C2=A0=C2=A0 19.115157] [=C2=A0 T475] sony_laptop: IO1 at 0xd8=
-00 (0x20)
->>>>>>>>>> [=C2=A0=C2=A0 19.115294] [=C2=A0 T475] input: Sony Vaio Keys as
->>>>>>>>>> /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:1c/SNY6001:0=
-0/input/input6
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> [=C2=A0=C2=A0 19.115631] [=C2=A0 T475] input: Sony Vaio Jogdial=
- as
->>>>>>>>>> /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:1c/SNY6001:0=
-0/input/input7
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> [=C2=A0=C2=A0 19.118777] [=C2=A0 T475] sony_laptop: device allo=
-cated minor is 123
->>>>>>>>>> [=C2=A0=C2=A0 19.118791] [=C2=A0 T475] sony_laptop: I/O port1: =
-0xc000 (0xc000) +
->>>>>>>>>> 0x20
->>>>>>>>>> [=C2=A0=C2=A0 19.118826] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: e=
-vent ([ff] [ff]) at port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>>> [=C2=A0=C2=A0 19.118839] [=C2=A0 T475] sony_laptop: IRQ: 6 - tr=
-iggering: 1 -
->>>>>>>>>> polarity: 0 - shr: 0
->>>>>>>>>> [=C2=A0=C2=A0 19.118844] [=C2=A0 T475] sony_laptop: Evaluating =
-_SRS
->>>>>>>>>> [=C2=A0=C2=A0 19.128310] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: e=
-vent ([ff] [ff]) at port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>>> [=C2=A0=C2=A0 19.130430] [=C2=A0 T474] input: Power Button as
->>>>>>>>>> /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0C:00/input/input8
->>>>>>>>>> [=C2=A0=C2=A0 19.136861] [=C2=A0 T475] sony_laptop: sony_pic_ca=
-ll1(0x82): 0x0e0a
->>>>>>>>>> [=C2=A0=C2=A0 19.136899] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: e=
-vent ([0e] [05]) at port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>>> [=C2=A0=C2=A0 19.136905] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: u=
-nknown event ([0e] [05]) at
->>>>>>>>>> port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>>> [=C2=A0=C2=A0 19.136927] [=C2=A0 T475] sony_laptop: sony_pic_ca=
-ll2(0x81 - 0xff):
->>>>>>>>>> 0x000e
->>>>>>>>>> [=C2=A0=C2=A0 19.136949] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: e=
-vent ([00] [05]) at port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>>> [=C2=A0=C2=A0 19.136961] [=C2=A0 T475] sony_laptop: sony_pic_ca=
-ll1(0x82): 0x000b
->>>>>>>>>> [=C2=A0=C2=A0 19.136988] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: e=
-vent ([0e] [05]) at port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>>> [=C2=A0=C2=A0 19.136993] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: u=
-nknown event ([0e] [05]) at
->>>>>>>>>> port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>>> [=C2=A0=C2=A0 19.137161] [=C2=A0 T475] sony_laptop: SPIC setup =
-done.
->>>>>>>>>> [=C2=A0=C2=A0 19.137261] [=C2=A0 T475] sony_laptop: method: nam=
-e: GBRT, args 0
->>>>>>>>>> [=C2=A0=C2=A0 19.137268] [=C2=A0 T475] sony_laptop: method: nam=
-e: SBRT, args 1
->>>>>>>>>> [=C2=A0=C2=A0 19.137272] [=C2=A0 T475] sony_laptop: method: nam=
-e: GPBR, args 0
->>>>>>>>>> [=C2=A0=C2=A0 19.137276] [=C2=A0 T475] sony_laptop: method: nam=
-e: SPBR, args 1
->>>>>>>>>> [=C2=A0=C2=A0 19.137281] [=C2=A0 T475] sony_laptop: method: nam=
-e: PWAK, args 0
->>>>>>>>>> [=C2=A0=C2=A0 19.137285] [=C2=A0 T475] sony_laptop: method: nam=
-e: PWRN, args 0
->>>>>>>>>> [=C2=A0=C2=A0 19.137289] [=C2=A0 T475] sony_laptop: method: nam=
-e: CSXB, args 1
->>>>>>>>>> [=C2=A0=C2=A0 19.137293] [=C2=A0 T475] sony_laptop: method: nam=
-e: GWDP, args 0
->>>>>>>>>> [=C2=A0=C2=A0 19.137298] [=C2=A0 T475] sony_laptop: method: nam=
-e: SLRS, args 1
->>>>>>>>>> [=C2=A0=C2=A0 19.137302] [=C2=A0 T475] sony_laptop: method: nam=
-e: RBMF, args 1
->>>>>>>>>> [=C2=A0=C2=A0 19.137306] [=C2=A0 T475] sony_laptop: method: nam=
-e: RSBI, args 1
->>>>>>>>>> [=C2=A0=C2=A0 19.137310] [=C2=A0 T475] sony_laptop: method: nam=
-e: CBMF, args 1
->>>>>>>>>> [=C2=A0=C2=A0 19.137314] [=C2=A0 T475] sony_laptop: method: nam=
-e: LNPW, args 1
->>>>>>>>>> [=C2=A0=C2=A0 19.137319] [=C2=A0 T475] sony_laptop: method: nam=
-e: GLNP, args 0
->>>>>>>>>> [=C2=A0=C2=A0 19.137323] [=C2=A0 T475] sony_laptop: method: nam=
-e: SCAM, args 1
->>>>>>>>>> [=C2=A0=C2=A0 19.137327] [=C2=A0 T475] sony_laptop: method: nam=
-e: GCAM, args 0
->>>>>>>>>> [=C2=A0=C2=A0 19.137340] [=C2=A0 T475] sony_laptop: Found brigh=
-tness_default
->>>>>>>>>> getter:
->>>>>>>>>> GPBR
->>>>>>>>>> [=C2=A0=C2=A0 19.137388] [=C2=A0 T475] sony_laptop: Found brigh=
-tness_default
->>>>>>>>>> setter:
->>>>>>>>>> SPBR
->>>>>>>>>> [=C2=A0=C2=A0 19.137402] [=C2=A0 T475] sony_laptop: Found lanpo=
-wer getter: GLNP
->>>>>>>>>> [=C2=A0=C2=A0 19.137406] [=C2=A0 T475] sony_laptop: Found lanpo=
-wer setter: LNPW
->>>>>>>>>> [=C2=A0=C2=A0 19.137423] [=C2=A0 T475] sony_laptop: SNC setup d=
-one.
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> and the 3 buttons zoomin, zoom out, the third one
->>>>>>>>>> [=C2=A0 161.975552] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: event =
-([5c] [31]) at port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>>> [=C2=A0 161.975596] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: sony_p=
-ic_call1(0xa0): 0x5c0a
->>>>>>>>>> [=C2=A0 161.975681] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: event =
-([10] [05]) at port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>> Zoom in
->>>>>>>>>
->>>>>>>>>> [ 162.154768] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: event ([5c] =
-[31]) at port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>>> [=C2=A0 162.154814] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: sony_p=
-ic_call1(0xa0): 0x5c0a
->>>>>>>>>> [=C2=A0 162.154880] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: event =
-([00] [05]) at port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>> Ignored
->>>>>>>>>
->>>>>>>>>> [ 163.327457] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: event ([5c] =
-[31]) at port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>>> [=C2=A0 163.327511] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: sony_p=
-ic_call1(0xa0): 0x5c0a
->>>>>>>>>> [=C2=A0 163.327563] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: event =
-([20] [05]) at port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>> Zoom out
->>>>>>>>>
->>>>>>>>>> [ 163.516819] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: event ([5c] =
-[31]) at port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>>> [=C2=A0 163.516856] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: sony_p=
-ic_call1(0xa0): 0x5c0a
->>>>>>>>>> [=C2=A0 163.517008] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: event =
-([00] [05]) at port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>> ignored
->>>>>>>>>
->>>>>>>>>> [ 165.206657] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: event ([5c] =
-[31]) at port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>>> [=C2=A0 165.206700] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: sony_p=
-ic_call1(0xa0): 0x5c0a
->>>>>>>>>> [=C2=A0 165.206805] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: event =
-([01] [05]) at port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>> Prog 1
->>>>>>>>>
->>>>>>>>>> [ 165.365447] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: event ([5c] =
-[31]) at port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>>> [=C2=A0 165.365491] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: sony_p=
-ic_call1(0xa0): 0x5c0a
->>>>>>>>>> [=C2=A0 165.365548] [=C2=A0=C2=A0=C2=A0 C0] sony_laptop: event =
-([00] [05]) at port
->>>>>>>>>> 0xc000(+0x12)
->>>>>>>>>>
->>>>>>>>> ignored
->>>>>>>>>
->>>>>>>>>> Sorry i messed up and didn't use reply all, Im still quite new =
-to
->>>>>>>>>> this
->>>>>>>>>>
->>>>>>>>> That ok, mistakes happen :)
->>>>>>>>>
->>>>>>>>> I think the reason for you problem with the zoom-out key is that
->>>>>>>>> when sony-laptop
->>>>>>>>> iterates through the list of possible key responses, it first
->>>>>>>>> matches the definition
->>>>>>>>> for SONYPI_EVENT_PKEY_P1 (0x20), which has the same key data as
->>>>>>>>> SONYPI_EVENT_ZOOM_OUT_PRESSED (also 0x20).
->>>>>>>>>
->>>>>>>>> This causes SONYPI_EVENT_PKEY_P1 to be picked instead of
->>>>>>>>> SONYPI_EVENT_ZOOM_OUT_PRESSED.
->>>>>>>> That's right. The event mask is the same for programmable and zoo=
-m
->>>>>>>> keys,
->>>>>>>> thus the conflict.
->>>>>>>>
->>>>>>>> { 0x05, SONYPI_PKEY_MASK, sonypi_pkeyev },
->>>>>>>> { 0x05, SONYPI_ZOOM_MASK, sonypi_zoomev },
->>>>>>>>
->>>>>>>>> I am sending this mail to the maintainer of the sony-laptop driv=
-er,
->>>>>>>>> maybe he can help us in this case.
->>>>>>>> Heh... I actually have a UX ultra portable laptop somewhere (a UX=
-50
->>>>>>>> IIRC) but I'm not sure it'll even turn on. Those things are like =
-15~20
->>>>>>>> years old now.
->>>>>>>>
->>>>>>>> I don't quite remember the idiosyncrasies of this particular mode=
-l v/s
->>>>>>>> other models to be quite frank. On the other hand the module has =
-a
->>>>>>>> 'mask' option that you can use to allow-list only certain sets of
->>>>>>>> events.
->>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/=
-tree/drivers/platform/x86/sony-laptop.c?h=3Dv6.9.5#n94
->>>>>>>>
->>>>>>>>
->>>>>>>> (I'm glad the help text says "see doc" because I don't see this o=
-ption
->>>>>>>> mentioned in the doc...)
->>>>>>>>
->>>>>>>> The bitmasks are here:
->>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/=
-tree/drivers/platform/x86/sony-laptop.c?h=3Dv6.9.5#n3365
->>>>>>>>
->>>>>>>>
->>>>>>>>
->>>>>>> Thanks for response but I'm bit confused now, since they have same
->>>>>>> event, and i only allow the zoom in/out keys, won't I lose the thi=
-rd
->>>>>>> key? Am I missing something?
->>>>>>>
->>>>>> When using the "mask" module param, you will lose the third key.
->>>>>>
->>>>>> I think the underlying issue could be that support for the
->>>>>> problematic 0x20 SONYPI_EVENT_PKEY_P1 was
->>>>>> added in commit 1cae71032183 ("sony-laptop: VGN-A317M hotkey
->>>>>> support"), while support for you VIAO model
->>>>>> was added in commit 3eb8749a3799 ("sony-laptop: add Type4 model").
->>>>>>
->>>>>> Commit 1cae71032183 was added after commit 3eb8749a3799, so i think
->>>>>> it will be enough to introduce a
->>>>>> separate copy of sonypi_pkeyev[] without the conflicting 0x20
->>>>>> SONYPI_EVENT_PKEY_P1 definition.
->>>>>> This separate copy can then be used by the type3_events[] definitio=
-n
->>>>>> (which is used on you model).
->>>>>>
->>>>>> If the maintainer agrees with this approach, i can create a patch f=
-or
->>>>>> you to test. Are you able to
->>>>>> compile kernel modules on your device?
->>>>>>
->>>>>> Thanks,
->>>>>> Armin Wolf
->>>>>>
->>>>> I am using opensuse on the device, I can just add patch in the obs s=
-o
->>>>> yeah rebuilding kernel is no issue, I could do the patch myself but =
-I
->>>>> don't know how to make it device-specific.
->>>>>
->>>>> Thanks for help!
->>>> Nice, can you test the attached patch and report back if it works?
->>>>
->>>> Thanks,
->>>> Armin Wolf
->>>>   From 7c44c1d15f859647f19e5e2d9874432bb3a5cb92 Mon Sep 17 00:00:00 2=
-001
->>>> From: Armin Wolf <W_Armin@gmx.de>
->>>> Date: Tue, 18 Jun 2024 23:09:36 +0200
->>>> Subject: [PATCH] platform/x86: sony-laptop: Fix SONYPI_EVENT_ZOOM_OUT=
-_PRESSED
->>>>    on Sony VAIO UX VGN-UX390N
->>>>
->>>> It turns out that on type 3 models, the definitions for the programma=
-ble
->>>> keys partially conflict with the definitions for the zoom keys.
->>>>
->>>> This causes SONYPI_EVENT_ZOOM_OUT_PRESSED on the Sony VAIO UX VGN-UX3=
-90N
->>>> to be reported as SONYPI_EVENT_PKEY_P1. Fix this by providing a separ=
-ate
->>>> definition for type3 models without the conflicting key entry.
->>>>
->>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->>>> ---
->>>>    drivers/platform/x86/sony-laptop.c | 9 ++++++++-
->>>>    1 file changed, 8 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x8=
-6/sony-laptop.c
->>>> index 3e94fdd1ea52..0e1d099ac06a 100644
->>>> --- a/drivers/platform/x86/sony-laptop.c
->>>> +++ b/drivers/platform/x86/sony-laptop.c
->>>> @@ -3451,6 +3451,13 @@ static struct sonypi_event sonypi_pkeyev[] =3D=
- {
->>>>    	{ 0, 0 }
->>>>    };
->>>> +static struct sonypi_event sonypi_pkeyev_type3[] =3D {
->>>> +	{ 0x01, SONYPI_EVENT_PKEY_P1 },
->>>> +	{ 0x02, SONYPI_EVENT_PKEY_P2 },
->>>> +	{ 0x04, SONYPI_EVENT_PKEY_P3 },
->>>> +	{ 0, 0 }
->>>> +};
->>>> +
->>>>    /* The set of possible bluetooth events */
->>>>    static struct sonypi_event sonypi_blueev[] =3D {
->>>>    	{ 0x55, SONYPI_EVENT_BLUETOOTH_PRESSED },
->>>> @@ -3572,7 +3579,7 @@ static struct sonypi_eventtypes type3_events[] =
-=3D {
->>>>    	{ 0x31, SONYPI_MEMORYSTICK_MASK, sonypi_memorystickev },
->>>>    	{ 0x41, SONYPI_BATTERY_MASK, sonypi_batteryev },
->>>>    	{ 0x31, SONYPI_PKEY_MASK, sonypi_pkeyev },
->>>> -	{ 0x05, SONYPI_PKEY_MASK, sonypi_pkeyev },
->>>> +	{ 0x05, SONYPI_PKEY_MASK, sonypi_pkeyev_type3 },
->>> Based on the commits you found, the conflicting event was added for th=
-e
->>> VGN-A series (a Type3 model). This change is effectively removing the =
-P1
->>> button handling for them.
->>>
->>> See 3eb8749a37990b505ab94466038c067444bbd7eb and later
->>> e93c8a6819b217f4f4a490f67f26e02ff6b23b44: there used to be a Type4 mod=
-el
->>> that was meant to keep some of the events separate from Type3 models.
->>> Perhaps reintroducing the distinction is going to serve us better in
->>> this case?
->>> The IRQ handler can be shared between Type3/4, but the events
->>> can be in separate arrays, one for type3 and one for type4.
->>>
->>> What do you think?
+init things where you declare them. Named initializers are a thing, too.
 
-Sounds good, however there seem to be even more conflicting key entries in=
-side the type 3 key definitions.
-Since you are the maintainer of the driver, i would prefer if you would ha=
-ndle this.
 
-Thanks,
-Armin Wolf
+> @@ -753,8 +757,10 @@ static int vp_modern_create_avq(struct virtio_device *vdev)
+>  	avq = &vp_dev->admin_vq;
+>  	avq->vq_index = vp_modern_avq_index(&vp_dev->mdev);
+>  	sprintf(avq->name, "avq.%u", avq->vq_index);
+> -	vq = vp_dev->setup_vq(vp_dev, &vp_dev->admin_vq.info, avq->vq_index, NULL,
+> -			      avq->name, NULL, VIRTIO_MSI_NO_VECTOR);
+> +
+> +	cfg.names[0] = avq->name;
+> +	vq = vp_dev->setup_vq(vp_dev, &vp_dev->admin_vq.info, avq->vq_index,
+> +			      &cfg, VIRTIO_MSI_NO_VECTOR);
+>  	if (IS_ERR(vq)) {
+>  		dev_err(&vdev->dev, "failed to setup admin virtqueue, err=%ld",
+>  			PTR_ERR(vq));
+> diff --git a/drivers/virtio/virtio_vdpa.c b/drivers/virtio/virtio_vdpa.c
+> index e82cca24d6e6..6e7aafb42100 100644
+> --- a/drivers/virtio/virtio_vdpa.c
+> +++ b/drivers/virtio/virtio_vdpa.c
+> @@ -142,8 +142,7 @@ static irqreturn_t virtio_vdpa_virtqueue_cb(void *private)
+>  
+>  static struct virtqueue *
+>  virtio_vdpa_setup_vq(struct virtio_device *vdev, unsigned int index,
+> -		     void (*callback)(struct virtqueue *vq),
+> -		     const char *name, bool ctx)
+> +		     struct virtio_vq_config *cfg)
+>  {
+>  	struct virtio_vdpa_device *vd_dev = to_virtio_vdpa_device(vdev);
+>  	struct vdpa_device *vdpa = vd_get_vdpa(vdev);
+> @@ -203,8 +202,12 @@ virtio_vdpa_setup_vq(struct virtio_device *vdev, unsigned int index,
+>  	else
+>  		dma_dev = vdpa_get_dma_dev(vdpa);
+>  	vq = vring_create_virtqueue_dma(index, max_num, align, vdev,
+> -					true, may_reduce_num, ctx,
+> -					notify, callback, name, dma_dev);
+> +					true, may_reduce_num,
+> +					cfg->ctx ? cfg->ctx[index] : false,
+> +					notify,
+> +					cfg->callbacks[index],
+> +					cfg->names[index],
+> +					dma_dev);
+>  	if (!vq) {
+>  		err = -ENOMEM;
+>  		goto error_new_virtqueue;
+> @@ -213,7 +216,7 @@ virtio_vdpa_setup_vq(struct virtio_device *vdev, unsigned int index,
+>  	vq->num_max = max_num;
+>  
+>  	/* Setup virtqueue callback */
+> -	cb.callback = callback ? virtio_vdpa_virtqueue_cb : NULL;
+> +	cb.callback = cfg->callbacks[index] ? virtio_vdpa_virtqueue_cb : NULL;
+>  	cb.private = info;
+>  	cb.trigger = NULL;
+>  	ops->set_vq_cb(vdpa, index, &cb);
+> @@ -353,12 +356,8 @@ create_affinity_masks(unsigned int nvecs, struct irq_affinity *affd)
+>  	return masks;
+>  }
+>  
+> -static int virtio_vdpa_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
+> -				struct virtqueue *vqs[],
+> -				vq_callback_t *callbacks[],
+> -				const char * const names[],
+> -				const bool *ctx,
+> -				struct irq_affinity *desc)
+> +static int virtio_vdpa_find_vqs(struct virtio_device *vdev,
+> +				struct virtio_vq_config *cfg)
+>  {
+>  	struct virtio_vdpa_device *vd_dev = to_virtio_vdpa_device(vdev);
+>  	struct vdpa_device *vdpa = vd_get_vdpa(vdev);
+> @@ -366,24 +365,24 @@ static int virtio_vdpa_find_vqs(struct virtio_device *vdev, unsigned int nvqs,
+>  	struct irq_affinity default_affd = { 0 };
+>  	struct cpumask *masks;
+>  	struct vdpa_callback cb;
+> -	bool has_affinity = desc && ops->set_vq_affinity;
+> +	bool has_affinity = cfg->desc && ops->set_vq_affinity;
+> +	struct virtqueue **vqs = cfg->vqs;
+> +	unsigned int nvqs = cfg->nvqs;
+>  	int i, err;
+>  
+>  	if (has_affinity) {
+> -		masks = create_affinity_masks(nvqs, desc ? desc : &default_affd);
+> +		masks = create_affinity_masks(nvqs, cfg->desc ? cfg->desc : &default_affd);
+>  		if (!masks)
+>  			return -ENOMEM;
+>  	}
+>  
+>  	for (i = 0; i < nvqs; ++i) {
+> -		if (!names[i]) {
+> +		if (!cfg->names[i]) {
+>  			err = -EINVAL;
+>  			goto err_setup_vq;
+>  		}
+>  
+> -		vqs[i] = virtio_vdpa_setup_vq(vdev, i,
+> -					      callbacks[i], names[i], ctx ?
+> -					      ctx[i] : false);
+> +		vqs[i] = virtio_vdpa_setup_vq(vdev, i, cfg);
+>  		if (IS_ERR(vqs[i])) {
+>  			err = PTR_ERR(vqs[i]);
+>  			goto err_setup_vq;
+> diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
+> index 1c79cec258f4..370e79df50c4 100644
+> --- a/include/linux/virtio_config.h
+> +++ b/include/linux/virtio_config.h
+> @@ -18,6 +18,29 @@ struct virtio_shm_region {
+>  
+>  typedef void vq_callback_t(struct virtqueue *);
+>  
+> +/**
+> + * struct virtio_vq_config - configure for find_vqs()
 
->>> Alternatively you could just swap the pkeysev lists based on the forme=
-r
->>> type3/4 distinction, i.e.
->>>
->>> +       pcidev =3D pci_get_device(PCI_VENDOR_ID_INTEL,
->>> +                       PCI_DEVICE_ID_INTEL_ICH6_1, NULL);
->>> +       if (pcidev) {
->>> +               dev->control =3D &spic_types[2];
->>> +               goto out;
->>> +       }
->>> +
->>> +       pcidev =3D pci_get_device(PCI_VENDOR_ID_INTEL,
->>> +                       PCI_DEVICE_ID_INTEL_ICH7_1, NULL);
->>> +       if (pcidev) {
->>> +               dev->control =3D &spic_types[3];
->>> +               goto out;
->>> +       }
->>> +
->>> +       pcidev =3D pci_get_device(PCI_VENDOR_ID_INTEL,
->>> +                       PCI_DEVICE_ID_INTEL_ICH8_4, NULL);
->>> +       if (pcidev) {
->>> +               dev->control =3D &spic_types[3];
->>> +               goto out;
->>> +       }
->>>
->>> (and maybe include also ICH9 as type4).
->>>
->>> The output of `lspci` from the UX390 could also help making sure we ge=
-t
->>> the right distinction.
->>>
->>>>    	{ 0x05, SONYPI_ZOOM_MASK, sonypi_zoomev },
->>>>    	{ 0x05, SONYPI_CAPTURE_MASK, sonypi_captureev },
->>>>    	{ 0x05, SONYPI_PKEY_MASK, sonypi_volumeev },
->> I am here to deliver!
->>
->> Not sure which one you need so here are the main internal ones (minus w=
-ifi
->> etc)
->>
->> 00:00.0 Host bridge: Intel Corporation Mobile 945GM/PM/GMS, 943/940GML =
-and
->> 945GT Express Memory Controller Hub (rev 03)
->> 00:02.0 VGA compatible controller: Intel Corporation Mobile 945GM/GMS,
->> 943/940GML Express Integrated Graphics Controller (rev 03)
->> 00:02.1 Display controller: Intel Corporation Mobile 945GM/GMS/GME,
->> 943/940GML Express Integrated Graphics Controller (rev 03)
->> 00:1b.0 Audio device: Intel Corporation NM10/ICH7 Family High Definitio=
-n
->> Audio Controller (rev 02)
->> 00:1c.0 PCI bridge: Intel Corporation NM10/ICH7 Family PCI Express Port=
- 1
->> (rev 02)
->> 00:1c.1 PCI bridge: Intel Corporation NM10/ICH7 Family PCI Express Port=
- 2
->> (rev 02)
->> 00:1d.0 USB controller: Intel Corporation NM10/ICH7 Family USB UHCI
->> Controller #1 (rev 02)
->> 00:1d.1 USB controller: Intel Corporation NM10/ICH7 Family USB UHCI
->> Controller #2 (rev 02)
->> 00:1d.2 USB controller: Intel Corporation NM10/ICH7 Family USB UHCI
->> Controller #3 (rev 02)
->> 00:1d.3 USB controller: Intel Corporation NM10/ICH7 Family USB UHCI
->> Controller #4 (rev 02)
->> 00:1d.7 USB controller: Intel Corporation NM10/ICH7 Family USB2 EHCI
->> Controller (rev 02)
->> 00:1e.0 PCI bridge: Intel Corporation 82801 Mobile PCI Bridge (rev e2)
->> 00:1f.0 ISA bridge: Intel Corporation 82801GBM (ICH7-M) LPC Interface B=
-ridge
->> (rev 02)
->> 00:1f.1 IDE interface: Intel Corporation 82801G (ICH7 Family) IDE Contr=
-oller
->> (rev 02)
->> 00:1f.3 SMBus: Intel Corporation NM10/ICH7 Family SMBus Controller (rev=
- 02)
-> This is good. So ICH7, ICH8 and ICH9 would be type4, while ICH6 remains
-> as type3.
->
+configure -> configuration
+
+
+> + * @nvqs: the number of virtqueues to find
+> + * @vqs: on success, includes new virtqueues
+> + * @callbacks: array of callbacks, for each virtqueue
+> + *	include a NULL entry for vqs that do not need a callback
+> + * @names: array of virtqueue names (mainly for debugging)
+> + *		MUST NOT be NULL
+> + * @ctx: (optional) array of context.
+
+must be a plural. E.g. 
+
+	of context pointers
+
+> If the value of the vq in the array
+> + *	is true, the driver can pass ctx to virtio core when adding bufs to
+> + *	virtqueue.
+> + * @desc: desc for interrupts
+
+does not really describe it.
+
+> + */
+> +struct virtio_vq_config {
+> +	unsigned int nvqs;
+> +
+> +	struct virtqueue   **vqs;
+> +	vq_callback_t      **callbacks;
+> +	const char         **names;
+> +	const bool          *ctx;
+> +	struct irq_affinity *desc;
+> +};
+> +
+>  /**
+>   * struct virtio_config_ops - operations for configuring a virtio device
+>   * Note: Do not assume that a transport implements all of the operations
+> @@ -51,12 +74,7 @@ typedef void vq_callback_t(struct virtqueue *);
+>   *	parallel with being added/removed.
+>   * @find_vqs: find virtqueues and instantiate them.
+>   *	vdev: the virtio_device
+> - *	nvqs: the number of virtqueues to find
+> - *	vqs: on success, includes new virtqueues
+> - *	callbacks: array of callbacks, for each virtqueue
+> - *		include a NULL entry for vqs that do not need a callback
+> - *	names: array of virtqueue names (mainly for debugging)
+> - *		MUST NOT be NULL
+> + *	cfg: the config from the driver
+>   *	Returns 0 on success or error status
+>   * @del_vqs: free virtqueues found by find_vqs().
+>   * @synchronize_cbs: synchronize with the virtqueue callbacks (optional)
+> @@ -96,6 +114,7 @@ typedef void vq_callback_t(struct virtqueue *);
+>   * @create_avq: create admin virtqueue resource.
+>   * @destroy_avq: destroy admin virtqueue resource.
+>   */
+> +
+>  struct virtio_config_ops {
+>  	void (*get)(struct virtio_device *vdev, unsigned offset,
+>  		    void *buf, unsigned len);
+> @@ -105,10 +124,7 @@ struct virtio_config_ops {
+>  	u8 (*get_status)(struct virtio_device *vdev);
+>  	void (*set_status)(struct virtio_device *vdev, u8 status);
+>  	void (*reset)(struct virtio_device *vdev);
+> -	int (*find_vqs)(struct virtio_device *, unsigned nvqs,
+> -			struct virtqueue *vqs[], vq_callback_t *callbacks[],
+> -			const char * const names[], const bool *ctx,
+> -			struct irq_affinity *desc);
+> +	int (*find_vqs)(struct virtio_device *vdev, struct virtio_vq_config *cfg);
+>  	void (*del_vqs)(struct virtio_device *);
+>  	void (*synchronize_cbs)(struct virtio_device *);
+>  	u64 (*get_features)(struct virtio_device *vdev);
+> @@ -217,8 +233,14 @@ struct virtqueue *virtio_find_single_vq(struct virtio_device *vdev,
+>  	vq_callback_t *callbacks[] = { c };
+>  	const char *names[] = { n };
+>  	struct virtqueue *vq;
+> -	int err = vdev->config->find_vqs(vdev, 1, &vq, callbacks, names, NULL,
+> -					 NULL);
+> +	struct virtio_vq_config cfg = {};
+> +
+> +	cfg.nvqs = 1;
+> +	cfg.vqs = &vq;
+> +	cfg.callbacks = callbacks;
+> +	cfg.names = names;
+> +
+> +	int err = vdev->config->find_vqs(vdev, &cfg);
+>  	if (err < 0)
+>  		return ERR_PTR(err);
+>  	return vq;
+> @@ -226,21 +248,37 @@ struct virtqueue *virtio_find_single_vq(struct virtio_device *vdev,
+>  
+>  static inline
+>  int virtio_find_vqs(struct virtio_device *vdev, unsigned nvqs,
+> -			struct virtqueue *vqs[], vq_callback_t *callbacks[],
+> -			const char * const names[],
+> -			struct irq_affinity *desc)
+> +		    struct virtqueue *vqs[], vq_callback_t *callbacks[],
+> +		    const char * const names[],
+> +		    struct irq_affinity *desc)
+>  {
+> -	return vdev->config->find_vqs(vdev, nvqs, vqs, callbacks, names, NULL, desc);
+> +	struct virtio_vq_config cfg = {};
+> +
+> +	cfg.nvqs = nvqs;
+> +	cfg.vqs = vqs;
+> +	cfg.callbacks = callbacks;
+> +	cfg.names = (const char **)names;
+
+
+Casting const away? Not safe.
+
+> +	cfg.desc = desc;
+> +
+> +	return vdev->config->find_vqs(vdev, &cfg);
+>  }
+>  
+>  static inline
+>  int virtio_find_vqs_ctx(struct virtio_device *vdev, unsigned nvqs,
+>  			struct virtqueue *vqs[], vq_callback_t *callbacks[],
+> -			const char * const names[], const bool *ctx,
+> +			const char *names[], const bool *ctx,
+>  			struct irq_affinity *desc)
+>  {
+> -	return vdev->config->find_vqs(vdev, nvqs, vqs, callbacks, names, ctx,
+> -				      desc);
+> +	struct virtio_vq_config cfg = {};
+> +
+> +	cfg.nvqs = nvqs;
+> +	cfg.vqs = vqs;
+> +	cfg.callbacks = callbacks;
+> +	cfg.names = names;
+> +	cfg.ctx = ctx;
+> +	cfg.desc = desc;
+> +
+
+The fields should be set up with named initializers, insidef {}
+
+> +	return vdev->config->find_vqs(vdev, &cfg);
+>  }
+>  
+>  /**
+> -- 
+> 2.32.0.3.g01195cf9f
+
