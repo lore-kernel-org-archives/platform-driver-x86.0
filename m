@@ -1,217 +1,192 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from fhigh1-smtp.messagingengine.com (fhigh1-smtp.messagingengine.com [103.168.172.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D100377119
-	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Jun 2024 21:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958A47711C;
+	Thu, 20 Jun 2024 21:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718918481; cv=none; b=sbqIIhcQWGt8ISDqgkuDcLbW90N8Ef+pJOBdwpxiBgDF4R27c+Fqi7etIlGFBP/64e24+qNXKDJNDrKtwBs8mxY1lyyWRupQpnVEj6ApTWlsoLSr/WhvVAh0xwaEtI5of1RKvE2BDzeXowHthXKsuiDjF0WcIJ/X0EtIxU3m2X8=
+	t=1718919669; cv=none; b=ObMnPntmVGsG2ZolQ4g/6poRJoaKxy7JSHoM5hZbrD7qVobT7hhwgb4QjJ3LJI/XkA1GoPeqZpxA5Bdoe2Zx5ajyaeR6hxjVig/dpDQ5i4RaxhrleFM5qwyF+ZGjzpooWXzDhcNUKonllkjTRqvNaf+b7/bvgbfKOOSK3HJud2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718918481; c=relaxed/simple;
-	bh=2/V0+eg6RbZGazyrpMTfIkCUbzLzr9C9iNcfwfdec7o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NUX/6krVZBj3PQxic09u/0vrx2mks+EEU0fh3aCffylGsMnW0yvxKkUNKbx7E1K3DvagqX5/Ry8TdOsyC5rGYodDCT9cPVDV8ezdcgcexcEKUuIWdBRejXUXG07/lTtBKx050jMKXxB+z1Cfe1KUgLvImBZ0WnyugDxkDsptUHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iDIMq+rh; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718919669; c=relaxed/simple;
+	bh=WpuU19vmTKbofK2gQplueUgolsFBx2pt9q8yJbUln0s=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=PFwpj+H1tMnidRdkcOK1kcraO/lQuB4qfZ3VcJf8l7NVAmvtMdPgoQoEHHvvVEHZD70oCgonUuUpocmzTEIIhU7XJNggoocFIk7n+6T53iWd6mqxIHHAj6ft1qLn/ssOGvC/xoJw6WiAQZsg1FhfM7BuST/0Kzip6+XHVTnOUMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=pVEHlSzw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UY+YRFuP; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iDIMq+rh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718918480; x=1750454480;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2/V0+eg6RbZGazyrpMTfIkCUbzLzr9C9iNcfwfdec7o=;
-  b=iDIMq+rhR9TDAj0BQC0nNDKPoaxUYXyOA+waF9xkS9y2BJezDp4ZSprn
-   b+3Z/y38XJ78jObMs0ZeFA9rNIyP3RebNqJzl/MeQm6Sr3CKL3uSGJTIJ
-   gObIN3p0jgRxhW0wWmPQbO8tgAw0fO2bAy6XqPFXuJQe/UNl5czffaM5K
-   PThhY3xXAnl3U0FlOrQ4fociuQGYpmQCTl4+593LO/IEnnxrW0uT9VKV7
-   VD4qjNJeFQO1am3JT0nL1WJlnEGWO7bmXrd+Xu5PVvfXWOA8pSZPNvosE
-   zh9tKdCniTtFzMNORxJQWoBqgA4jIetjWa4/cVBXTldw+Qkr7ZZHBKpCX
-   A==;
-X-CSE-ConnectionGUID: /4/Pfi1ZR1qrqxmJiottZQ==
-X-CSE-MsgGUID: x9zaLlIoQaCyfmIKzPQfPA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11109"; a="19811234"
-X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="19811234"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 14:21:20 -0700
-X-CSE-ConnectionGUID: i1QSU+2ETO+j/uHyfOB+CA==
-X-CSE-MsgGUID: JtOIJARjQAW82pRsEYgiKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
-   d="scan'208";a="79883697"
-Received: from awvttdev-05.aw.intel.com ([10.228.212.156])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 14:21:19 -0700
-From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-To: intel-xe@lists.freedesktop.org,
-	platform-driver-x86@vger.kernel.org,
-	david.e.box@linux.intel.com,
-	pavel.e.popov@intel.com
-Cc: michael.j.ruhl@intel.com
-Subject: [PATCH v2 6/6] drm/xe/vsec: Add support for DG2
-Date: Thu, 20 Jun 2024 17:20:50 -0400
-Message-ID: <20240620212055.3314064-7-michael.j.ruhl@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240620212055.3314064-1-michael.j.ruhl@intel.com>
-References: <20240620212055.3314064-1-michael.j.ruhl@intel.com>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="pVEHlSzw";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UY+YRFuP"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 90C801140185;
+	Thu, 20 Jun 2024 17:41:06 -0400 (EDT)
+Received: from imap41 ([10.202.2.91])
+  by compute2.internal (MEProxy); Thu, 20 Jun 2024 17:41:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1718919666; x=1719006066; bh=zCnYiIjAkA
+	sr6vmZnoznJvVH6yAn3CfED7lE05yJcBU=; b=pVEHlSzwLXoiO66HAPQAOLBzIy
+	SIOhM0gaW+8CgOagQiYqYeS0QU1n/Xf6tDNlVe8hPeUBTuR6QP6tHs5MmtsBDWzn
+	NqvvK+8oL+YFdTdUFy8F71MvMUASk21XZkTGx4LCWZOo0mmw/rXEq6qqklaKl0SB
+	tjqZjNrA5v/qxPD+VpEDDHSpxSgvqt4RbqXCuzadH2JBgXjbMajljZPBpmoYI3jF
+	vFUg0LrHxDtWXovcJ/8G1l4dmMUK0FUa3UVXs36bm7IKsBeHsMd2oDZ8GfASohte
+	+xnRb9LazezXdrZ6kJbP4NKj97hmX+ECzn+Uj7zM0Q4qcm3Idcg45SmSBBXw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1718919666; x=1719006066; bh=zCnYiIjAkAsr6vmZnoznJvVH6yAn
+	3CfED7lE05yJcBU=; b=UY+YRFuPInKuSX2AgEJqyGLGpGKHt4ffqpf/HDx2RkR+
+	W2TeoJiPByYSjIv7siFzuKIRlu4tEVB1SmiFYv28cz7zDkbcS+DHsKbxuqqBkPPY
+	PIGb9eYY9ydVnZMMwEVnBl/SYnyK2N6yjTc14mTk6QKjd439EzlNGhbENj71KzUz
+	FJ1kZSnad343Uczbv9nAR1HYDnY1uVMNv4WoZxoiGlXQVMjeH0MSXTQ2IdXwgjGz
+	X7qT+Xmw6ucZ/hmfDa7X6cfAmNQGjDoiZfHOOqkZB6O6ZPNoDEMHLIOXnksVWntw
+	stHEG2qqh6sI/uNsuKn6tqndslzLmMbU6b3bEsUQDw==
+X-ME-Sender: <xms:8aF0ZkC-ezlRi_rO5EbkMRKrF9EbmOU9hzADB6tcWoHu11d-BqTcvQ>
+    <xme:8aF0Zmidk9FDp31QKIZaWzXYP4cla8D2eNXy7CionmnXzkpiM51nm0G9eCdoMW0Tn
+    k9STZB6dbitAuBOhJ4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeeffedgtddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfnfhu
+    khgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtth
+    gvrhhnpedutdelgfdvgeekueeuteevffelfedukeeitedugfdvtdeutdetjeduudeuvdeg
+    gfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluh
+    hkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:8aF0ZnnNhR5JfdkqWVEwZNztwByosnXyuPwizIeNiEO9lwKP8PBKIw>
+    <xmx:8aF0ZqyeAtRTWhvLD-QX3Inj0hBw4uKk-C9xtx_yTim3O_fkri0A1w>
+    <xmx:8aF0ZpTbf0oaLvkA1xAoTdtC0I2ko3jDh24pQeN5ASkYdEtxKup46Q>
+    <xmx:8aF0ZlYSDt0yiGkt6BTaTprWSZ69NfQUmAXq_VgmDlkUKWr3JYlZDw>
+    <xmx:8qF0ZiKQowSrKxFjEI7A7muK-jBjeQMeGzUNkxq1oB53yNxTFzz6RpHY>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id A954A2340080; Thu, 20 Jun 2024 17:41:05 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-522-ga39cca1d5-fm-20240610.002-ga39cca1d
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <ede8505f-bcf6-403e-bda2-6848cd4ff4c7@app.fastmail.com>
+In-Reply-To: <20240620082223.20178-2-dev@doubly.so>
+References: <20240620082223.20178-1-dev@doubly.so>
+ <20240620082223.20178-2-dev@doubly.so>
+Date: Fri, 21 Jun 2024 09:40:45 +1200
+From: "Luke Jones" <luke@ljones.dev>
+To: "Devin Bayer" <dev@doubly.so>, corentin.chary@gmail.com
+Cc: "Hans de Goede" <hdegoede@redhat.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-api@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCH 1/2] platform/x86: asus-wmi: support camera disable LED
+Content-Type: text/plain
 
-DG2 needs to adjust the discovery offset WRT the GT BAR not the
-P2SB bar so add the base_adjust value to allow for the difference
-to be used.
+On Thu, 20 Jun 2024, at 8:22 PM, Devin Bayer wrote:
+> Support the LED on F10 above the crossed out camera icon.
+> 
+> Signed-off-by: Devin Bayer <dev@doubly.so>
+> ---
+> drivers/platform/x86/asus-wmi.c            | 36 ++++++++++++++++++++++
+> include/linux/platform_data/x86/asus-wmi.h |  2 ++
+> 2 files changed, 38 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 3f9b6285c9a6..5585f15e7920 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -73,6 +73,7 @@ module_param(fnlock_default, bool, 0444);
+> #define NOTIFY_LID_FLIP_ROG 0xbd
+>  
+> #define ASUS_WMI_FNLOCK_BIOS_DISABLED BIT(0)
+> +#define ASUS_WMI_DEVID_CAMERA_LED 0x00060079
+>  
+> #define ASUS_MID_FAN_DESC "mid_fan"
+> #define ASUS_GPU_FAN_DESC "gpu_fan"
+> @@ -238,6 +239,7 @@ struct asus_wmi {
+> struct led_classdev lightbar_led;
+> int lightbar_led_wk;
+> struct led_classdev micmute_led;
+> + struct led_classdev camera_led;
+> struct workqueue_struct *led_workqueue;
+> struct work_struct tpd_led_work;
+> struct work_struct wlan_led_work;
+> @@ -1642,6 +1644,27 @@ static int micmute_led_set(struct led_classdev *led_cdev,
+> return err < 0 ? err : 0;
+> }
+>  
+> +static enum led_brightness camera_led_get(struct led_classdev *led_cdev)
+> +{
+> + struct asus_wmi *asus;
+> + u32 result;
+> +
+> + asus = container_of(led_cdev, struct asus_wmi, camera_led);
+> + asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_CAMERA_LED, &result);
+> +
+> + return result & ASUS_WMI_DSTS_BRIGHTNESS_MASK;
+> +}
+> +
+> +static int camera_led_set(struct led_classdev *led_cdev,
+> +    enum led_brightness brightness)
+> +{
+> + int state = brightness != LED_OFF;
+> + int err;
+> +
+> + err = asus_wmi_set_devstate(ASUS_WMI_DEVID_CAMERA_LED, state, NULL);
+> + return err < 0 ? err : 0;
+> +}
+> +
+> static void asus_wmi_led_exit(struct asus_wmi *asus)
+> {
+> led_classdev_unregister(&asus->kbd_led);
+> @@ -1649,6 +1672,7 @@ static void asus_wmi_led_exit(struct asus_wmi *asus)
+> led_classdev_unregister(&asus->wlan_led);
+> led_classdev_unregister(&asus->lightbar_led);
+> led_classdev_unregister(&asus->micmute_led);
+> + led_classdev_unregister(&asus->camera_led);
+>  
+> if (asus->led_workqueue)
+> destroy_workqueue(asus->led_workqueue);
+> @@ -1740,6 +1764,18 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+> goto error;
+> }
+>  
+> + if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED)) {
+> + asus->camera_led.name = "platform::camera";
 
-Update xe_vsec.c to include DG2 header information.
+What do other devices label their camera LED as? The one I could find appears to use `<vendor>::camera`. So maybe `asus::camera` would be better? This also keeps in line with `asus::kbd_backlight`.
 
-Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
----
- drivers/gpu/drm/xe/xe_vsec.c | 81 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+> + asus->camera_led.max_brightness = 1;
+> + asus->camera_led.brightness_get = camera_led_get;
+> + asus->camera_led.brightness_set_blocking = camera_led_set;
+> +
+> + rv = led_classdev_register(&asus->platform_device->dev,
+> + &asus->camera_led);
+> + if (rv)
+> + goto error;
+> + }
+> +
+> error:
+> if (rv)
+> asus_wmi_led_exit(asus);
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> index 3eb5cd6773ad..b3c35e33f1e7 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -50,6 +50,8 @@
+> #define ASUS_WMI_DEVID_LED5 0x00020015
+> #define ASUS_WMI_DEVID_LED6 0x00020016
+> #define ASUS_WMI_DEVID_MICMUTE_LED 0x00040017
+> +#define ASUS_WMI_DEVID_CAMERA_LED_NEG 0x00060078
+> +#define ASUS_WMI_DEVID_CAMERA_LED 0x00060079
+>  
+> /* Backlight and Brightness */
+> #define ASUS_WMI_DEVID_ALS_ENABLE 0x00050001 /* Ambient Light Sensor */
+> -- 
+> 2.45.2
+> 
 
-diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
-index a8afef731379..a0a154657816 100644
---- a/drivers/gpu/drm/xe/xe_vsec.c
-+++ b/drivers/gpu/drm/xe/xe_vsec.c
-@@ -15,6 +15,16 @@
- 
- #define SOC_BASE		0x280000
- 
-+/* from drivers/platform/x86/intel/pmt/telemetry.c */
-+#define TELEM_BASE_OFFSET	0x8
-+
-+#define DG2_PMT_BASE		0xE8000
-+#define DG2_DISCOVERY_START	0x6000
-+#define DG2_TELEM_START		0x4000
-+
-+#define DG2_DISCOVERY_OFFSET	(SOC_BASE + DG2_PMT_BASE + DG2_DISCOVERY_START)
-+#define DG2_TELEM_OFFSET	(SOC_BASE + DG2_PMT_BASE + DG2_TELEM_START)
-+
- #define BMG_PMT_BASE		0xDB000
- #define BMG_DISCOVERY_OFFSET	(SOC_BASE + BMG_PMT_BASE)
- 
-@@ -27,6 +37,20 @@
- #define SG_REMAP_ACCESS(_mem)	((_mem) << 24)
- #define SG_REMAP_BITS		GENMASK(31, 24)
- 
-+static struct intel_vsec_header dg2_telemetry = {
-+	.length = 0x10,
-+	.id = VSEC_ID_TELEMETRY,
-+	.num_entries = 1,
-+	.entry_size = 3,
-+	.tbir = GFX_BAR,
-+	.offset = DG2_DISCOVERY_OFFSET,
-+};
-+
-+static struct intel_vsec_header *dg2_capabilities[] = {
-+	&dg2_telemetry,
-+	NULL
-+};
-+
- static struct intel_vsec_header bmg_telemetry = {
- 	.length = 0x10,
- 	.id = VSEC_ID_TELEMETRY,
-@@ -43,10 +67,16 @@ static struct intel_vsec_header *bmg_capabilities[] = {
- 
- enum xe_vsec {
- 	XE_VSEC_UNKNOWN = 0,
-+	XE_VSEC_DG2,
- 	XE_VSEC_BMG,
- };
- 
- static struct intel_vsec_platform_info xe_vsec_info[] = {
-+	[XE_VSEC_DG2] = {
-+		.caps = VSEC_CAP_TELEMETRY,
-+		.headers = dg2_capabilities,
-+		.quirks = VSEC_QUIRK_EARLY_HW,
-+	},
- 	[XE_VSEC_BMG] = {
- 		.caps = VSEC_CAP_TELEMETRY,
- 		.headers = bmg_capabilities,
-@@ -166,6 +196,7 @@ struct pmt_callbacks xe_pmt_cb = {
- };
- 
- static const int vsec_platforms[] = {
-+	[XE_DG2] = XE_VSEC_DG2,
- 	[XE_BATTLEMAGE] = XE_VSEC_BMG,
- };
- 
-@@ -177,6 +208,49 @@ static enum xe_vsec get_platform_info(struct xe_device *xe)
- 	return vsec_platforms[xe->info.platform];
- }
- 
-+/*
-+ * Access the DG2 PMT MMIO discovery table
-+ *
-+ * The intel_vsec driver does not typically access the discovery table.
-+ * Instead, it creates a memory resource for the table and passes it
-+ * to the PMT telemetry driver. Each discovery table contains 3 items,
-+ *    - GUID
-+ *    - Telemetry size
-+ *    - Telemetry offset (offset from P2SB BAR, not GT)
-+ *
-+ * For DG2 we know what the telemetry offset is, but we still need to
-+ * use the discovery table to pass the GUID and the size. So figure
-+ * out the difference between the P2SB offset and the GT offset and
-+ * save this so that the telemetry driver can use it to adjust the
-+ * value.
-+ */
-+static int dg2_adjust_offset(struct pci_dev *pdev, struct device *dev,
-+			     struct intel_vsec_platform_info *info)
-+{
-+	void __iomem *base;
-+	u32 telem_offset;
-+	u64 addr;
-+
-+	/* compile check to verify that quirk has P2SB quirk added */
-+
-+	addr = pci_resource_start(pdev, GFX_BAR) + info->headers[0]->offset;
-+	base = ioremap_wc(addr, 16);
-+	if (!base)
-+		return -ENOMEM;
-+
-+	telem_offset = readl(base + TELEM_BASE_OFFSET);
-+
-+	/* Use the base_addr + P2SB quirk to pass this info */
-+	if (telem_offset < DG2_TELEM_OFFSET)
-+		info->base_adjust = -(DG2_TELEM_OFFSET - telem_offset);
-+	else
-+		info->base_adjust = -(telem_offset - DG2_TELEM_OFFSET);
-+
-+	iounmap(base);
-+
-+	return 0;
-+}
-+
- /**
-  * intel_vsec_init - Initialize resources and add intel_vsec auxiliary
-  * interface
-@@ -188,6 +262,7 @@ void xe_vsec_init(struct xe_device *xe)
- 	struct device *dev = xe->drm.dev;
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	enum xe_vsec platform;
-+	u32 ret;
- 
- 	platform = get_platform_info(xe);
- 	if (platform == XE_VSEC_UNKNOWN)
-@@ -198,6 +273,12 @@ void xe_vsec_init(struct xe_device *xe)
- 		return;
- 
- 	switch (platform) {
-+	case XE_VSEC_DG2:
-+		ret = dg2_adjust_offset(pdev, dev, info);
-+		if (ret)
-+			return;
-+		break;
-+
- 	case XE_VSEC_BMG:
- 		info->priv_data = &xe_pmt_cb;
- 		break;
--- 
-2.44.0
-
+I'll defer final review to Hans and Ilpo to be sure I've not missed anything, otherwise it LGTM pending the one comment above.
