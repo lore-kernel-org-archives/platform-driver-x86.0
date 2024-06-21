@@ -1,46 +1,46 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53901152780
-	for <platform-driver-x86@vger.kernel.org>; Fri, 21 Jun 2024 12:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0709714F9EF
+	for <platform-driver-x86@vger.kernel.org>; Fri, 21 Jun 2024 12:26:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718972763; cv=none; b=iPsCfo2+sNzJyh20v+1DQak8auzdo/KKTBnUS4n3gXQ/lXE9XKtM+nc8Hj1/dR83sejCDBL3EzJ4wMehZnHytQXGuCYZlJoSocpNm8zZmg3THHj2/U9xQeVqPzAQTFZcW38buT9wq/nchhO5xXMlEN4KSXVZRuiCmAQPcdYudl8=
+	t=1718972785; cv=none; b=RvbSUrOwhUDt989+qRJgDwmA8Xd/vhGjwXXF0n3JxKLCh2w4AhYYfMMawdfFahS9E9eLs6q7hGdKCjWTJlmRa+yfR4nRQnMDPaooEakKHJCIjRHBvXxJ402pgzkGJ/6uDpzY76zCy+59i16Si95t0Z6BBAXCX76bLuWBp9SeM9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718972763; c=relaxed/simple;
-	bh=5zQtHHEySJrpIHG82D6ki2OwG6KBFQm58fIYJBGhuVY=;
+	s=arc-20240116; t=1718972785; c=relaxed/simple;
+	bh=GqCJUEu6HvllrEv6mt7zNui7VJwFT5x1A/AE8OsFp+I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YVVyLzE87xqo87s6SiKgVObmRvLDxFbSK4qKkWfnsPEa8kIqaKK4IR987w/L42FpegOkHpbZxQzHwO+BCQnFirOFlQS2v4QIA7T0QGY2avCRdMPZoq8dcWs6ID51pbZL89VfWd8pV6rSGS0jQkVSMUuHaI5wfE8NHcV085xE9ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O5+ydSOw; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=RrpzsoAB2s7QRuZgY5QfxcjzT0Pffk4xlsajvQq3teSUwx2noJ6FyFgYLw5oidBhioP7OL6PuxjiWtxKbN0MwZ1ECK6tr7vHKsmtmyvXmP5AVRq2AWMPYTz5Tmhw01DdQmxP8A5lutLvvDdoI14CWofGNSKbxMqbgdPPken3tsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QARMIf/W; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O5+ydSOw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QARMIf/W"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718972761;
+	s=mimecast20190719; t=1718972783;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xZgONObBZJffcLWVJq2vpGlbmD97vuv/2ZnFqkIiFGQ=;
-	b=O5+ydSOwmf4toy3eQq/X7wxqZacJCcghE0v0SxjeimpCDMb2sFj2H+ySZb4QPyK5/gGOrK
-	n1qxqivAKAS0ZgWj7Njt4RN76ARtc08oZU2mMnY7ipA/k84/GY9cyai5UT+YAdyLXiiiVZ
-	I3Woe5gxA6Y9L2gchCxkxhcrho2pQgw=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	bh=6vIlGIjnZaRmqlGYYwh9589os9i1avVj+5PIgcozfw4=;
+	b=QARMIf/WTC8y3NCKct/JnObHIgTJdNV0YKTIv6TyvEbxhdfNX1RmkZmHNpEga0nOdTsWmT
+	rtm+EeTwngP2DIo3xBbo/KeQ/gHVSxwZuyl+PkD/d5J89ITJnc27F2LxbD7rC+U5RhBCdK
+	nLYYSanBHsKTG1J5IW+BZNw/nUL5Tm4=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-616-n771SOZxPHicxhsxLcz6ew-1; Fri,
- 21 Jun 2024 08:25:53 -0400
-X-MC-Unique: n771SOZxPHicxhsxLcz6ew-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-217-IkT0cEbvPgCDX_HyHi4ZVg-1; Fri,
+ 21 Jun 2024 08:26:19 -0400
+X-MC-Unique: IkT0cEbvPgCDX_HyHi4ZVg-1
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7960F1953976;
-	Fri, 21 Jun 2024 12:25:49 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 84F601955D89;
+	Fri, 21 Jun 2024 12:26:06 +0000 (UTC)
 Received: from shalem.redhat.com (unknown [10.39.194.69])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C31103000603;
-	Fri, 21 Jun 2024 12:25:45 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E7965300144C;
+	Fri, 21 Jun 2024 12:25:49 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
 To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
@@ -56,9 +56,9 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	Jean Delvare <jdelvare@suse.com>,
 	Andi Shyti <andi.shyti@kernel.org>,
 	linux-i2c@vger.kernel.org
-Subject: [PATCH v3 4/6] platform/x86: dell-smo8800: Allow lis3lv02d i2c_client instantiation without IRQ
-Date: Fri, 21 Jun 2024 14:24:59 +0200
-Message-ID: <20240621122503.10034-5-hdegoede@redhat.com>
+Subject: [PATCH v3 5/6] platform/x86: dell-smo8800: Add a couple more models to dell_lis3lv02d_devices[]
+Date: Fri, 21 Jun 2024 14:25:00 +0200
+Message-ID: <20240621122503.10034-6-hdegoede@redhat.com>
 In-Reply-To: <20240621122503.10034-1-hdegoede@redhat.com>
 References: <20240621122503.10034-1-hdegoede@redhat.com>
 Precedence: bulk
@@ -70,125 +70,58 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-The Dell XPS 15 9550 can have a 60Wh battery, leaving space for a 2.5"
-sata disk; or a 90Wh battery in which case the battery occupies the space
-for the optional 2.5" sata disk.
+Add the accelerometer address for the following laptop models
+to dell_lis3lv02d_devices[]:
 
-On models with the 90Wh battery and thus without a 2.5" sata disk, the BIOS
-does not add an IRQ resource to the SMO8810 ACPI device.
+Dell Latitude E6330
+Dell Latitude E6430
+Dell XPS 15 9550
 
-Make the misc-device registration and the requesting of the IRQ optional
-and instantiate a lis3lv02d i2c_client independent of the IRQ being there,
-so that the non freefall lis3lv02d functionality can still be used.
-
-Note that IRQ 0 is not a valid IRQ number for platform IRQs
-and this patch relies on that.
-
+Tested-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/dell/dell-smo8800.c | 67 +++++++++++++-----------
- 1 file changed, 37 insertions(+), 30 deletions(-)
+ drivers/platform/x86/dell/dell-smo8800.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/drivers/platform/x86/dell/dell-smo8800.c b/drivers/platform/x86/dell/dell-smo8800.c
-index cd2e48405859..2e49bbb569c6 100644
+index 2e49bbb569c6..4c79b2599d96 100644
 --- a/drivers/platform/x86/dell/dell-smo8800.c
 +++ b/drivers/platform/x86/dell/dell-smo8800.c
-@@ -310,33 +310,32 @@ static int smo8800_probe(struct platform_device *device)
- 	init_waitqueue_head(&smo8800->misc_wait);
- 	INIT_WORK(&smo8800->i2c_work, smo8800_instantiate_i2c_client);
- 
--	err = misc_register(&smo8800->miscdev);
--	if (err) {
--		dev_err(&device->dev, "failed to register misc dev: %d\n", err);
--		return err;
-+	err = platform_get_irq_optional(device, 0);
-+	if (err > 0)
-+		smo8800->irq = err;
-+
-+	if (smo8800->irq) {
-+		err = misc_register(&smo8800->miscdev);
-+		if (err) {
-+			dev_err(&device->dev, "failed to register misc dev: %d\n", err);
-+			return err;
-+		}
-+
-+		err = request_threaded_irq(smo8800->irq, smo8800_interrupt_quick,
-+					   smo8800_interrupt_thread,
-+					   IRQF_TRIGGER_RISING | IRQF_ONESHOT,
-+					   DRIVER_NAME, smo8800);
-+		if (err) {
-+			dev_err(&device->dev,
-+				"failed to request thread for IRQ %d: %d\n",
-+				smo8800->irq, err);
-+			goto error;
-+		}
-+
-+		dev_dbg(&device->dev, "device /dev/freefall registered with IRQ %d\n",
-+			 smo8800->irq);
- 	}
- 
--	platform_set_drvdata(device, smo8800);
--
--	err = platform_get_irq(device, 0);
--	if (err < 0)
--		goto error;
--	smo8800->irq = err;
--
--	err = request_threaded_irq(smo8800->irq, smo8800_interrupt_quick,
--				   smo8800_interrupt_thread,
--				   IRQF_TRIGGER_RISING | IRQF_ONESHOT,
--				   DRIVER_NAME, smo8800);
--	if (err) {
--		dev_err(&device->dev,
--			"failed to request thread for IRQ %d: %d\n",
--			smo8800->irq, err);
--		goto error;
--	}
--
--	dev_dbg(&device->dev, "device /dev/freefall registered with IRQ %d\n",
--		 smo8800->irq);
--
- 	if (dmi_check_system(smo8800_lis3lv02d_devices)) {
- 		/*
- 		 * Register i2c-bus notifier + queue initial scan for lis3lv02d
-@@ -350,14 +349,20 @@ static int smo8800_probe(struct platform_device *device)
- 	} else {
- 		dev_warn(&device->dev,
- 			 "lis3lv02d accelerometer is present on SMBus but its address is unknown, skipping registration\n");
-+		if (!smo8800->irq)
-+			return -ENODEV;
- 	}
- 
-+	platform_set_drvdata(device, smo8800);
- 	return 0;
- 
- error_free_irq:
--	free_irq(smo8800->irq, smo8800);
-+	if (smo8800->irq) {
-+		free_irq(smo8800->irq, smo8800);
- error:
--	misc_deregister(&smo8800->miscdev);
-+		misc_deregister(&smo8800->miscdev);
-+	}
-+
- 	return err;
- }
- 
-@@ -371,9 +376,11 @@ static void smo8800_remove(struct platform_device *device)
- 		i2c_unregister_device(smo8800->i2c_dev);
- 	}
- 
--	free_irq(smo8800->irq, smo8800);
--	misc_deregister(&smo8800->miscdev);
--	dev_dbg(&device->dev, "device /dev/freefall unregistered\n");
-+	if (smo8800->irq) {
-+		free_irq(smo8800->irq, smo8800);
-+		misc_deregister(&smo8800->miscdev);
-+		dev_dbg(&device->dev, "device /dev/freefall unregistered\n");
-+	}
- }
- 
- static const struct acpi_device_id smo8800_ids[] = {
+@@ -173,6 +173,20 @@ static const struct dmi_system_id smo8800_lis3lv02d_devices[] = {
+ 		},
+ 		.driver_data = (void *)0x29L,
+ 	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Latitude E6330"),
++		},
++		.driver_data = (void *)0x29L,
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Latitude E6430"),
++		},
++		.driver_data = (void *)0x29L,
++	},
+ 	{
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+@@ -194,6 +208,13 @@ static const struct dmi_system_id smo8800_lis3lv02d_devices[] = {
+ 		},
+ 		.driver_data = (void *)0x29L,
+ 	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "XPS 15 9550"),
++		},
++		.driver_data = (void *)0x29L,
++	},
+ 	{
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
 -- 
 2.45.1
 
