@@ -1,44 +1,46 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A4C14E2ED
-	for <platform-driver-x86@vger.kernel.org>; Fri, 21 Jun 2024 12:25:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC451514CB
+	for <platform-driver-x86@vger.kernel.org>; Fri, 21 Jun 2024 12:25:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718972740; cv=none; b=TGlVFt2Iyx/wlbHnZgRxf0pjHdJ/PO0DzZI7TntoKyiJadktbNydtRSgOxu/BzKYNC8tAri4ePUR1WwPmHVx0s0arS2oB7aC9lL4gdLB2mmlF9w82g75DYMze1MfaE01NkMPyt024xctOQf6E9dOCSvIq3M9mBcg2YwZeYyr2ac=
+	t=1718972745; cv=none; b=tfufv66i0NB8qabMxitm0NKAO0FP25NdyHRUozEuOZSh3f/+AEHp3kS+ye/uzhZ+WVONj3vVDMhYSnt4mcTTEF7z5Py0IaT6IfMx/cEgso7FrZtzSF2EdSrQcb/Xt6GrkmLFkz0jk81k6tPN6b56A3PpC5N1BrjmbHo7eOiDvP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718972740; c=relaxed/simple;
-	bh=IEkrubddanHbp9WgkVb/7Vl4ND7a6llRo+67E5KyWxs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DHJK2V/7g5UZq8PHdQTU93MzOsRxvwKTUw0FWJTHpYSvRTLnRr/Rb0j/Jzs4Ky5eBobyyw+F8iZg2g0pgMVxmZAk+tdh6ozoxfnUd0ZQ6POPtXf8yyxPFNPyphfspoN1jZPrY2ch8xfpiJH+ysXyUz9UajP+KCENNcKm5UQQ7rY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TpRsl99s; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1718972745; c=relaxed/simple;
+	bh=3QU6ZyVaBkkmIiBEFdsmiq53YAbradVpP/7O0qV7DGU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=d0kSSyu/EVBkPP7wqb4vfpqh8x1G45P+gPxp6CtLfiZVlhVG+SBOrMrL+Dg01TrvSm+fKuIro+j5mK+xGNFNxThwy2pN9ChqxUaj+nEWqpouslfetCXpynXCFq4Pdyijgntboc30biM3kNtWq+xbvHzclnhjTVe+OPQ98Vr+3YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PYqyG5x0; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TpRsl99s"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PYqyG5x0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718972737;
+	s=mimecast20190719; t=1718972743;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Eo6coHb5pN6we0+M0McVJzW8Eeeu5yZPUM4trXcbBEI=;
-	b=TpRsl99sQx9hlqDSSMYbp2l9Lknj7XcMAzhBORxAS7SdVeN8Kst+HgMZv2oanbqobRBqVo
-	0reQWV+iXU7kcck9/7PJm+6FKmpR1NCWlgdlv5D3yc42bMi0sshoTKAHijUushZ5rBUvya
-	GpGgjZQfIclo3u2IKCWZ1E4CH8swY1E=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TtoIiYy272+KWaweSsE43k7xo44wbDfLPE8VNpELdg4=;
+	b=PYqyG5x0aPqjO4Tsm6oltarnjM1eRg+o+4Q3gjY66UtUxt6We9MeToUh/Q7FJmFQAXZAKa
+	f1RxXg6zG4057Vbp1PPhWAFNObLg6AUSmCI28QsXYaaOW46NxSxgwJbKpxYp3Synt1tgv+
+	g4xEXq+CpQ/4MCk+YyhKi7AkalQ6weo=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-228-Q43UJTL9PCCx0cO3Tk4AeQ-1; Fri,
- 21 Jun 2024 08:25:36 -0400
-X-MC-Unique: Q43UJTL9PCCx0cO3Tk4AeQ-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-328-6kgrN5tvOnyuFgB0DfJUpQ-1; Fri,
+ 21 Jun 2024 08:25:39 -0400
+X-MC-Unique: 6kgrN5tvOnyuFgB0DfJUpQ-1
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C36B3196E071;
-	Fri, 21 Jun 2024 12:25:10 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 538A81937A99;
+	Fri, 21 Jun 2024 12:25:25 +0000 (UTC)
 Received: from shalem.redhat.com (unknown [10.39.194.69])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B136C3000218;
-	Fri, 21 Jun 2024 12:25:04 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9DBFD3000F04;
+	Fri, 21 Jun 2024 12:25:10 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
 To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
@@ -54,9 +56,11 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	Jean Delvare <jdelvare@suse.com>,
 	Andi Shyti <andi.shyti@kernel.org>,
 	linux-i2c@vger.kernel.org
-Subject: [PATCH v3 0/6] i2c-i801 / dell-smo8800: Move instantiation of lis3lv02d i2c_client from i2c-i801 to dell-smo8800
-Date: Fri, 21 Jun 2024 14:24:55 +0200
-Message-ID: <20240621122503.10034-1-hdegoede@redhat.com>
+Subject: [PATCH v3 1/6] i2c: core: Setup i2c_adapter runtime-pm before calling device_add()
+Date: Fri, 21 Jun 2024 14:24:56 +0200
+Message-ID: <20240621122503.10034-2-hdegoede@redhat.com>
+In-Reply-To: <20240621122503.10034-1-hdegoede@redhat.com>
+References: <20240621122503.10034-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,81 +70,69 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Hi All,
+Platform glue code, which is not build into the kernel and thus cannot
+use i2c_register_board_info() may want to use bus_register_notifier()
+to listen for i2c-adapters to show up on which the platform code needs
+to manually instantiate platform specific i2c_clients.
 
-Here is v3 of my patch series to move the manual instantation of lis3lv02d
-i2c_client-s for SMO88xx ACPI device from the generic i2c-i801.c code to
-the SMO88xx specific dell-smo8800 driver.
+This results in calling i2c_new_client_device() from the bus notifier
+which happens near the device_add() call.
 
-Moving the i2c_client instantiation there has the following advantages:
+If the i2c-core has not yet setup runtime-pm (specifically the
+no-callbacks and ignore-children flags) for the device embedded
+inside struct i2c_adapter and the driver for the i2c_client
+calls pm_runtime_set_active() this will trigger the following
+error inside __pm_runtime_set_status():
 
-1. This moves the SMO88xx ACPI device quirk handling away from the generic
-i2c-i801 module which is loaded on all Intel x86 machines to the SMO88xx
-specific dell-smo8800 module where it belongs.
+"runtime PM trying to activate child device %s but parent (%s) is not active\n"
 
-2. This removes the duplication of the SMO88xx ACPI Hardware ID (HID) table
-between the i2c-i801 and dell-smo8800 drivers.
+and the i2c_client's runtime-status will not be updated.
 
-3. This allows extending the quirk handling by adding new code and related
-module parameters to the dell-smo8800 driver, without needing to modify
-the i2c-i801 code.
+Split the device_register() call for the adapter into device_initialize()
+and device_add() and move the pm-runtime init calls inbetween these 2 calls
+so that the runtime-status can be correctly set when a driver binds from
+the bus-notifier.
 
-This series also extends the i2c_client instantiation with support for
-probing for the i2c-address of the lis3lv02d chip on devices which
-are not yet listed in the DMI table with i2c-addresses for known models.
-This probing is only done when requested through a module parameter.
+Note the moved pm-runtime init calls just override the initial value of
+some flags in struct device set by device_initialize() and calling these
+before device_add() is safe.
 
-The probing support adds quite a bit of code which shows why it is good
-to move the handling out of the generic i2c-i801 code.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/i2c/i2c-core-base.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-Changes in v3:
-- Use an i2c bus notifier so that the i2c_client will still be instantiated if
-  the i801 i2c_adapter shows up later or is re-probed (removed + added again).
-  This addresses the main concern / review-comments made during review of v2.
-- Add 2 prep patches to the i2c-core / the i2c-i801 driver to allow bus-notifier
-  use / to avoid the need to duplicate the PCI-ids of IDF i2c-i801 adapters.
-- Switch to standard dmi_system_id matching to check both sys-vendor +
-  product-name DMI fields
-- Drop the patch to alternatively use the st_accel IIO driver instead of
-  drivers/misc/lis3lv02d/lis3lv02d.c
-
-Changes in v2:
-- Drop "[PATCH 1/6] platform/x86: dell-smo8800: Only load on Dell laptops"
-- Use a pci_device_id table to check for IDF (non main) i2c-i801 SMBusses
-- Add a comment documenting the IDF PCI device ids
-- Keep using drivers/misc/lis3lv02d/lis3lv02d.c by default
-- Rename the module-parameter to use_iio_driver which can be set to
-  use the IIO st_accel driver instead
-- Add a new patch adding the accelerometer address for the 2 models
-  I have tested this on to dell_lis3lv02d_devices[]
-
-Since this touches files under both drivers/i2c and drivers/platform/x86
-some subsystem coordination is necessary. I think it would be best to just
-merge the entire series through the i2c subsystem since this touches some
-core i2c files. As pdx86 subsys co-maintainer I'm fine with doing so.
-
-Regards,
-
-Hans
-
-
-Hans de Goede (6):
-  i2c: core: Setup i2c_adapter runtime-pm before calling device_add()
-  i2c: i801: Use a different adapter-name for IDF adapters
-  platform/x86: dell-smo8800: Move instantiation of lis3lv02d i2c_client
-    from i2c-i801 to dell-smo8800
-  platform/x86: dell-smo8800: Allow lis3lv02d i2c_client instantiation
-    without IRQ
-  platform/x86: dell-smo8800: Add a couple more models to
-    dell_lis3lv02d_devices[]
-  platform/x86: dell-smo8800: Add support for probing for the
-    accelerometer i2c address
-
- drivers/i2c/busses/i2c-i801.c            | 133 +------
- drivers/i2c/i2c-core-base.c              |  13 +-
- drivers/platform/x86/dell/dell-smo8800.c | 438 +++++++++++++++++++++--
- 3 files changed, 424 insertions(+), 160 deletions(-)
-
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index db0d1ac82910..fcb4696f1f93 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -1521,7 +1521,13 @@ static int i2c_register_adapter(struct i2c_adapter *adap)
+ 	dev_set_name(&adap->dev, "i2c-%d", adap->nr);
+ 	adap->dev.bus = &i2c_bus_type;
+ 	adap->dev.type = &i2c_adapter_type;
+-	res = device_register(&adap->dev);
++	device_initialize(&adap->dev);
++	device_enable_async_suspend(&adap->dev);
++	pm_runtime_no_callbacks(&adap->dev);
++	pm_suspend_ignore_children(&adap->dev, true);
++	pm_runtime_enable(&adap->dev);
++
++	res = device_add(&adap->dev);
+ 	if (res) {
+ 		pr_err("adapter '%s': can't register device (%d)\n", adap->name, res);
+ 		goto out_list;
+@@ -1533,11 +1539,6 @@ static int i2c_register_adapter(struct i2c_adapter *adap)
+ 	if (res)
+ 		goto out_reg;
+ 
+-	device_enable_async_suspend(&adap->dev);
+-	pm_runtime_no_callbacks(&adap->dev);
+-	pm_suspend_ignore_children(&adap->dev, true);
+-	pm_runtime_enable(&adap->dev);
+-
+ 	res = i2c_init_recovery(adap);
+ 	if (res == -EPROBE_DEFER)
+ 		goto out_reg;
 -- 
 2.45.1
 
