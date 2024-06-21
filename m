@@ -1,84 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C44C1649A8;
-	Fri, 21 Jun 2024 06:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52867E58D;
+	Fri, 21 Jun 2024 07:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718950297; cv=none; b=rFaBth7bwJ2c+1Yb01eBLIYyLA0hcMYcaNW94N2EdCRMD+1galiMWel3Ntgoi6FQuAx4/tuOYCTriEi4RaZC9hE9y4I3YzU1EJMFPMtY2wuDLZJy5DtUlZDV7l/rlU8b/rAkvwvqhqTANPKvC9AFfB3UlyISCGOogQFQrMrWXH8=
+	t=1718956266; cv=none; b=AqrZd8JCir8YjUKHtDzIMprhoQQKxZfPW25KF06qoZ9+TbRoDD+x2MbMSU2vqwZ78EOFNZYq0yJOVaMZrGlFb+EUKOD5+Fruo/HnQI+HRE6BW5e3kCXkt2MXDMtzY/PDeZmp2bv78N+7u9Hd2PfjZ1qiM9GKz3PGZgNulmgzLPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718950297; c=relaxed/simple;
-	bh=qfGcRqMiu9FQBxvn+pv49tvvllvHEGuZK1OY/bR0D4s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GT+/uu8yo09sO8lsFJ0KZrJjXlsVa1CKfMGt95eN+yLKHNrlu1fSCVkM/2QQgT0YhjkdiEJq4oenPN76aRJ0HN8WcxctnwVSbnfZqEINy4VHts3/FO0UWilABI/mN8kN0uEliDCda+gVKa0QvhcxKoieKOtN0BrawsKK4NzLZgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XGDULRak; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718956266; c=relaxed/simple;
+	bh=Pxmox1WHzNqLNTjRZ+wfFdPf6PN5Od+20NDoOX4LdIk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZKy2cLR2+qzz2aJU61a+kes1NxbQSqg72JdWnslkVZVNrozSVA8VxSyXjLtGImbkzsqQsk9DDU/VtnFoGtBf79QE+cLYjz1pexzR/aBMS2JcTLRcJJ+zDAGMtnU2nEgxQXxvwoWGjzGDM4NewVGjrRagR5v5p28i88zQNP7HeXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=doubly.so; spf=pass smtp.mailfrom=doubly.so; dkim=pass (2048-bit key) header.d=doubly.so header.i=@doubly.so header.b=kEsmgYjW; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=doubly.so
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=doubly.so
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XGDULRak"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77582C4AF08;
-	Fri, 21 Jun 2024 06:11:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718950296;
-	bh=qfGcRqMiu9FQBxvn+pv49tvvllvHEGuZK1OY/bR0D4s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XGDULRakYf5AfYBT6ercKX47nyi1BiSYUHa8r6m0zZZ2xwKARmDUYXA7zuNjxi7bn
-	 unZVKSyNxKhvVq4f4Exo8FrYwk/hSd0pKQDz8OdvSLPevkd38fXWQ8Mpyu4yLqNytn
-	 811voikjZFsMZIPByOitlJZQ610UCWk++q7OFR35adGzQYT70wghd7ZW1HYZje8s7s
-	 Gx4vmZpXiU/rqjho8Tvjs/MCd+3AbB/sPJHKUV9HW9cQmcM11hw/el0kvU17y0FiWV
-	 mlSvKJcySZ+b/7ozSVCQrCrJ7cGpw1yeulvqwScrpIHZs4biggD+UQo8ivNYG2YB+7
-	 Zo9h4On62kNEw==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Sebastian Reichel <sre@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	Nikita Travkin <nikita@trvn.ru>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: (subset) [PATCH v7 0/6] power: supply: Lenovo Yoga C630 EC
-Date: Fri, 21 Jun 2024 01:11:18 -0500
-Message-ID: <171895028796.12506.1483771807923414434.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240614-yoga-ec-driver-v7-0-9f0b9b40ae76@linaro.org>
-References: <20240614-yoga-ec-driver-v7-0-9f0b9b40ae76@linaro.org>
+	dkim=pass (2048-bit key) header.d=doubly.so header.i=@doubly.so header.b="kEsmgYjW"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4W58g055qkz9stw;
+	Fri, 21 Jun 2024 09:50:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=doubly.so; s=MBO0001;
+	t=1718956252;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/ocU6Wb9xrrpo54+K+ErVA2DXeKsDSMwyOOGzzhERa0=;
+	b=kEsmgYjW01NiKeqVOCiKs34hrGQt8owhWaNrxG+CWMlixF7QDGMEaI/T4CgydztYlu6FIp
+	YX3CIoDTbpTF1sHOd5hBgU+RQDEx/ai4e90conDdXUdOjnv7vA04Xxb4b/4G0ScCdqmTQu
+	2ueKThlCYp138fUKHPJkMCAs+W4/2K8Ch+6AoWrdXtpTBcC2Wju4StWyTzZ6zFTpfMNdF2
+	AJlOXMt75AmcFoBulpBQLlLQEoUitPM9U/thEYQ+e9avBMriCkqeHKNA5b179wkaogVQka
+	Oyxwb9FDk2CI+Cv6Oa7cjkMih0Xh5haYdUdGtdnEqdYZ7dIWF5wdsp6Zfz/EVA==
+Message-ID: <a18c8b3a-90b0-47a7-aff6-a289ecddc2c0@doubly.so>
+Date: Fri, 21 Jun 2024 09:50:50 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 1/2] platform/x86: asus-wmi: support camera disable LED
+To: Luke Jones <luke@ljones.dev>, corentin.chary@gmail.com
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20240620082223.20178-1-dev@doubly.so>
+ <20240620082223.20178-2-dev@doubly.so>
+ <ede8505f-bcf6-403e-bda2-6848cd4ff4c7@app.fastmail.com>
+Content-Language: en-US
+From: Devin Bayer <dev@doubly.so>
+In-Reply-To: <ede8505f-bcf6-403e-bda2-6848cd4ff4c7@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-On Fri, 14 Jun 2024 02:43:37 +0300, Dmitry Baryshkov wrote:
-> This adds binding, driver and the DT support for the Lenovo Yoga C630
-> Embedded Controller, to provide battery information.
+Thanks for the review, Luke.
+
+On 20/06/2024 23.40, Luke Jones wrote:
+>>   
+>> + if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED)) {
+>> + asus->camera_led.name = "platform::camera";
 > 
-> Support for this EC was implemented by Bjorn, who later could not work
-> on this driver. I've picked this patchset up and updated it following
-> the pending review comments.
-> 
-> [...]
+> What do other devices label their camera LED as? The one I could find appears to use `<vendor>::camera`. So maybe `asus::camera` would be better? This also keeps in line with `asus::kbd_backlight`.
 
-Applied, thanks!
+I reasoned it would be better to keep the name generic is so out of the 
+box desktops could toggle the camera and the LED when KEY_CAMERA is 
+pressed, just like with micmute and mute.
 
-[5/6] arm64: dts: qcom: sdm845: describe connections of USB/DP port
-      commit: 1ef3a30f4dc953a8da7aa68ee4658dc7c3710aac
-[6/6] arm64: dts: qcom: c630: Add Embedded Controller node
-      commit: 060a1ebd91c1f1bdce8433d559f214204b835add
+But I'll submit a new version with just this patch and the name change.
 
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+~ Dev
