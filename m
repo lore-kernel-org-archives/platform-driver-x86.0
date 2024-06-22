@@ -1,65 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF821514DE
-	for <platform-driver-x86@vger.kernel.org>; Sat, 22 Jun 2024 13:56:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F331514DE
+	for <platform-driver-x86@vger.kernel.org>; Sat, 22 Jun 2024 13:59:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719064573; cv=none; b=WKndjSr7N4CVQIBIqJ5lhZflEzzi6V1rzKjw+C2xjlk2mYgGgflv5roLjRs73s/DRvno5RDYRBNfBKGDuvzRc4R9xWGEi5eWhcFp9JJl0PDPeCNMYZOWjNs/U0xZkPPWvn/UD/7+dO+PsoKuPQ74sRxXWBnljRcrMY+DCllo79c=
+	t=1719064752; cv=none; b=XKY3ymjKzQnb6lrof2N2b4/GuFCqhZ/3OOcFxpeCUEzAfSPa0xr1a6erWWhoQBO0+S9ipOWzb34HY3QQYpcZYfEJUieUATEWWa/KPcY2AWbltpSiLDUQOpG9rNzsnCD7iBSoREKPUHFfjbXD3VqTEnrDXwYkZLVIPgD0mao/11s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719064573; c=relaxed/simple;
-	bh=PghcEPuZ3T4nU92bbiup9DUwT//ssGBUXV8nMFGxKE4=;
+	s=arc-20240116; t=1719064752; c=relaxed/simple;
+	bh=Hlncw3D0np0NO7WdEKuXDozD6V+UiHGgPNvAKMVaGUc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g4GjB65ByxJ5ke4BHx0raJ4+GKKJVTqiv3JEIWEsVJNhCyVToUaXc9iR76k0uzCOH+8c1ztT7vZAT3O+YketSVb59315rxYmmr6K6MDKfRJpogBTm950SjYb0zupwWoccagk/9nAtTW0huFiMimVr7W0ColYUu9iVZxcMw2rrro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hXWMOEeY; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=Yap6Gd//zw35DM5mLoifsF3J7hTqVOOwYK0HdEXuKWBJGg8wZCcwnZosYcLMggGk+mGBYg8zifPmBo5AD6f9NJ4zYLzzZaVUkbPX7+vOH7KCynHcQxbZNBup6u6NntEsz5Ts2KIgmcaDPx1w/q1b5Deuk+sfQu0QMQuazD6LsOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Nu2qdadx; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hXWMOEeY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nu2qdadx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719064570;
+	s=mimecast20190719; t=1719064749;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GUVwfHEkM7gqsu8oDdsML+qBRX6RggkpKKDG0pmSM3Y=;
-	b=hXWMOEeYzp3Em0vAao/TQ9E4jEIRprGisaEwG8tCGb9wyux1iXqGVicoRaM4ep++LOQxD8
-	4y12gWLoZhnchuR97GDh3ZXILJXr3OjkHncg30Kh8t/GsEpnBYxwC7rQUuD9AZ+n49WyGf
-	PjBvjjumsRkBc/YqeieZFwawFRnfpPU=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=gPYbXApe3OM15mkD3VSRDUdygVNd6ij8zbxEegihFXY=;
+	b=Nu2qdadxg2IBeuBXrVhssq3mNAff2B5E3cQcgN9+b8ZIGSzQcsB/mLQBrCK9v4k5FYMMFg
+	z1h56td3sn1Ee/dL2y9tndwTDYivJ6aOzczVpr4GKgM7iu1hAsHC1k7vWABntyXuK2u8bS
+	7FdenEh72WUNB2/716GbPwAsr9lIoHA=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-192-YBxAAVrvNtaSmozoMJCA4w-1; Sat, 22 Jun 2024 09:56:06 -0400
-X-MC-Unique: YBxAAVrvNtaSmozoMJCA4w-1
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-52cd67973e0so1372525e87.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 22 Jun 2024 06:56:06 -0700 (PDT)
+ us-mta-150-e2ZHiJZBM2iaVjCNPDrMPQ-1; Sat, 22 Jun 2024 09:59:08 -0400
+X-MC-Unique: e2ZHiJZBM2iaVjCNPDrMPQ-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2ec5a297b48so745211fa.2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 22 Jun 2024 06:59:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719064565; x=1719669365;
+        d=1e100.net; s=20230601; t=1719064746; x=1719669546;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GUVwfHEkM7gqsu8oDdsML+qBRX6RggkpKKDG0pmSM3Y=;
-        b=XfU/m0bf8VhyJ1QVqLTsFF89ys9y2Tk3MIQ7J3UCza1k+03erGqr/JcSo8SekrpxFF
-         Oixf9dDvS/WeJhb7VejP3mks4NxFvmm1BHLwXvIvtX/MjXZ13UM1bBE80IVLzycUTiRt
-         C54BNOU+77VMvL7/QhjU1bcXPWd/LBk4unGKmCre6R7XvkaxVk30jE3lggPX8u2UhiPS
-         bqnCsNxIOzuSchl+0/nDIFewxD4xu3tD2ujO2gNXrdMlPuTbu5N+wjvV8tmhQW5kzEcu
-         zZl9Q/WrRWiAdOYPT6Ik/ZzhOzGE2iC0M/0PHrrDoWmnbF/3EMzOLXRUfIZTRj/8e/hE
-         ayqw==
-X-Forwarded-Encrypted: i=1; AJvYcCWT/tQvKJAVGlN3xNlZci9wjo5l/tjSev0c9CkRV6IvMIMwnoD+nFXRiBpRqtktJ63r7mboNAXuQ1zwfGr4xLcA+phgHrYUcq1zaknE3Gx0ZKPdBw==
-X-Gm-Message-State: AOJu0YykFl6UlOPRiNZFnrkbryhBBSXroj5c5Zv8TOPIph/8+chxwx64
-	QxHRXDjTsHbQGbNezZat6aIMmhIA69uJoRCFNqdlDkfl4T69PdRTG/YHgrFrn8PG8cHqs0V+GeY
-	sJRyH0heU9xfjWKim+HcDXRnslljWpJnn1FqKxbue9m7wd0dg1qSsXJi62+9qzFfZ31CzqRY=
-X-Received: by 2002:a05:6512:34da:b0:52c:dba2:4f1 with SMTP id 2adb3069b0e04-52cdba2057dmr2327440e87.48.1719064564916;
-        Sat, 22 Jun 2024 06:56:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFg7Y/CkWsSPCRxmQpnXN/KE6mAyBWO/lyyB1jVqQdwo2pviDX36pPTZpFD1Y3Bt98bI1pPYg==
-X-Received: by 2002:a05:6512:34da:b0:52c:dba2:4f1 with SMTP id 2adb3069b0e04-52cdba2057dmr2327427e87.48.1719064564440;
-        Sat, 22 Jun 2024 06:56:04 -0700 (PDT)
+        bh=gPYbXApe3OM15mkD3VSRDUdygVNd6ij8zbxEegihFXY=;
+        b=GJiUF5vbD8s99hjf3j9Rn2AGi4M3acxKTCennZYWwlhZTx6dMZkgbM/SX3nxrXMIjc
+         3jiBFyvfWszCx9p/pioPZ1AvKQ7dS97yjXgf7qcx7N+PaOIH5CRlf0JRBuxiOyfTQDgy
+         Po1+B/KAe4kOwll/bvPFsbA9HdL7eogD1MPCjFwsDx/0v+YMC7I517BOBbmhNKaDOnFu
+         MoWNDW67chGZ0qvrdhW6gSjlq8F1YnYNNhl9QXsyd4S6DSayElRHQvsG7vGsr0m7Pw8Q
+         y+q0TI0gy6T2VJBWpGveboKs7bmufAqPCKEebu1aLY2L0aiWwrdmrppDg+AAaS4LoK6R
+         dMsw==
+X-Forwarded-Encrypted: i=1; AJvYcCUiCsTGwle/zVIFcewrBugMa0fU3+rMnA9uRwHTtEmZOKrAbA/w17ZzwVkWMeF/Q+tmnDb2f1eW2yl0+egKV5eT6cVPIP0mpaQx+l9Ld8xTtZY5ZA==
+X-Gm-Message-State: AOJu0YzegiwNitTHl8tVKraNg0ueHmUZD7YlMSaf+Q5tJ9UTm+x8DzQW
+	Mia1WMJtLZuAnMG8oY/ihLm55APzs0pviZKaqkxWwgu1BrGUC7zwQjHUssGoyYqWnIuEHQlZtwr
+	FFmid+J7kIFuX7WG+DPHLK86/1qg6VLyRgsgGmepa7tNgw0KRwGCLjXnO0+KyRK4/DN43a80=
+X-Received: by 2002:a2e:998c:0:b0:2ec:543e:909e with SMTP id 38308e7fff4ca-2ec543e92cfmr11253041fa.15.1719064746651;
+        Sat, 22 Jun 2024 06:59:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGq/Q0IipgcOSifv55wfdDD3wsLG6VhYCQeFdZ+AzWYdUNiSgyfCDKx7GXFE+bjm/sgw+qAKw==
+X-Received: by 2002:a2e:998c:0:b0:2ec:543e:909e with SMTP id 38308e7fff4ca-2ec543e92cfmr11252871fa.15.1719064746216;
+        Sat, 22 Jun 2024 06:59:06 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a724377a1c3sm16330966b.19.2024.06.22.06.56.03
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d3041208esm2373429a12.30.2024.06.22.06.59.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 22 Jun 2024 06:56:03 -0700 (PDT)
-Message-ID: <8c45cc19-2164-46ea-a388-de23885c3323@redhat.com>
-Date: Sat, 22 Jun 2024 15:56:03 +0200
+        Sat, 22 Jun 2024 06:59:05 -0700 (PDT)
+Message-ID: <178ccb23-36cb-4f83-8cd5-caa35c37de63@redhat.com>
+Date: Sat, 22 Jun 2024 15:59:05 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,10 +67,11 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/6] i2c: i801: Use a different adapter-name for IDF
- adapters
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+Subject: Re: [PATCH v3 3/6] platform/x86: dell-smo8800: Move instantiation of
+ lis3lv02d i2c_client from i2c-i801 to dell-smo8800
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
  Andy Shevchenko <andy@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>,
  Wolfram Sang <wsa@kernel.org>, eric.piel@tremplin-utc.net,
  Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com,
@@ -78,92 +79,86 @@ Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
  platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
  Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org
 References: <20240621122503.10034-1-hdegoede@redhat.com>
- <20240621122503.10034-3-hdegoede@redhat.com>
- <20240622124644.hndwwp44sfbiiq7o@pali>
+ <20240621122503.10034-4-hdegoede@redhat.com>
+ <CAHp75VewivTXEfzdH=cE-HUtDq9RdpzVkBsUqQPTTksF9fJDDg@mail.gmail.com>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240622124644.hndwwp44sfbiiq7o@pali>
+In-Reply-To: <CAHp75VewivTXEfzdH=cE-HUtDq9RdpzVkBsUqQPTTksF9fJDDg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Hi Andy,
 
-On 6/22/24 2:46 PM, Pali Rohár wrote:
-> On Friday 21 June 2024 14:24:57 Hans de Goede wrote:
->> On chipsets with a second 'Integrated Device Function' SMBus controller use
->> a different adapter-name for the second IDF adapter.
+On 6/21/24 5:24 PM, Andy Shevchenko wrote:
+> On Fri, Jun 21, 2024 at 2:25 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >>
->> This allows platform glue code which is looking for the primary i801
->> adapter to manually instantiate i2c_clients on to differentiate
->> between the 2.
+>> It is not necessary to handle the Dell specific instantiation of
+>> i2c_client-s for SMO88xx ACPI devices without an ACPI I2cResource
+>> inside the generic i801 I2C adapter driver.
 >>
->> This allows such code to find the primary i801 adapter by name, without
->> needing to duplicate the PCI-ids to feature-flags mapping from i2c-i801.c.
+>> The kernel already instantiates platform_device-s for these ACPI devices
+>> and the drivers/platform/x86/dell/dell-smo8800.c driver binds to these
+>> platform drivers.
 >>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>  drivers/i2c/busses/i2c-i801.c | 9 +++++++--
->>  1 file changed, 7 insertions(+), 2 deletions(-)
+>> Move the i2c_client instantiation from the generic i2c-i801 driver to
+>> the SMO88xx specific dell-smo8800 driver.
 >>
->> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
->> index d2d2a6dbe29f..5ac5bbd60d45 100644
->> --- a/drivers/i2c/busses/i2c-i801.c
->> +++ b/drivers/i2c/busses/i2c-i801.c
->> @@ -1760,8 +1760,13 @@ static int i801_probe(struct pci_dev *dev, const struct pci_device_id *id)
->>  
->>  	i801_add_tco(priv);
->>  
->> -	snprintf(priv->adapter.name, sizeof(priv->adapter.name),
->> -		"SMBus I801 adapter at %04lx", priv->smba);
->> +	if (priv->features & FEATURE_IDF)
->> +		snprintf(priv->adapter.name, sizeof(priv->adapter.name),
->> +			"SMBus I801 IDF adapter at %04lx", priv->smba);
->> +	else
->> +		snprintf(priv->adapter.name, sizeof(priv->adapter.name),
->> +			"SMBus I801 adapter at %04lx", priv->smba);
+>> Moving the i2c_client instantiation here has the following advantages:
+>>
+>> 1. This moves the SMO88xx ACPI device quirk handling away from the generic
+>> i2c-i801 module which is loaded on all Intel x86 machines to the SMO88xx
+>> specific dell-smo8800 module where it belongs.
+>>
+>> 2. This removes the duplication of the SMO88xx ACPI Hardware ID (HID) table
+>> between the i2c-i801 and dell-smo8800 drivers.
+>>
+>> 3. This allows extending the quirk handling by adding new code and related
+>> module parameters to the dell-smo8800 driver, without needing to modify
+>> the i2c-i801 code.
+> 
+> ...
+> 
+> 
+>> +static int smo8800_find_i801(struct device *dev, void *data)
+>> +{
+>> +       struct i2c_adapter *adap, **adap_ret = data;
 >> +
+>> +       adap = i2c_verify_adapter(dev);
+>> +       if (!adap)
+>> +               return 0;
+>> +
+>> +       if (!strstarts(adap->name, "SMBus I801 adapter"))
 > 
-> User visible name is identifier for user / human.
+> With the comment on the previous patch I'm wondering if it makes sense
+> to have this to be as simple as strstr("I801") or strstr("I801 IDF")?
+
+We want the non IDF one, strstr("I801") would match both and
+strstr("I801 IDF") would match the one we don't want.
+
 > 
-> If somebody is going to read this code in next 10 years then can ask
-> question why to have different name for IDF FEATURE and not also for
-> other features? And can come to conclusion to unify all names to be
-> same (why not? it is user identifier).
+>> +               return 0;
+>> +
+>> +       *adap_ret = i2c_get_adapter(adap->nr);
+>> +       return 1;
+>> +}
+> 
+> ...
+> 
+>> +       info.addr = (long)lis3lv02d_dmi_id->driver_data;
+> 
+> Hmm... Usually we use uintptr_t, but okay.
+> 
+> ...
+> 
+>> +               if (strstarts(adap->name, "SMBus I801 adapter"))
+> 
+> A dup? Is there a possibility it may go desynchronized?
 
-That is a good point, I'll add a comment about this for the next
-version.
-
-> Depending on user names between different kernel subsystem is fragile,
-> specially for future as rename can happen.
-
-Relying no devices names to find devices is standard practice. E.g.
-this is how 99% of the platform drivers bind to platform devices
-by the driver and the device having the same name.
-
-> If you are depending on FEATURE_IDF flag then check for the flag
-> directly, and not hiding the flag by serializing it into the user
-> visible name (char[] variable) and then de-serializing it in different
-> kernel subsystem. If the flag is not exported yet then export it via
-> some function or other API.
-
-Exporting this through some new function is non trivial and adds
-extra dependencies between modules, causing issues when one is builtin
-and the other is build as a module.
-
-The name check OTOH allows the modules to be less tightly coupled
-and there is plenty of precedence for using a name check here.
+That is a good point I'll add a small i2c_adapter_is_main_i801(adap)
+helper for this for the next version.
 
 Regards,
 
 Hans
 
-
-
->>  	err = i2c_add_adapter(&priv->adapter);
->>  	if (err) {
->>  		platform_device_unregister(priv->tco_pdev);
->> -- 
->> 2.45.1
->>
-> 
 
