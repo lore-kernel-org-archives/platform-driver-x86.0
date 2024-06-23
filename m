@@ -1,190 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935D57442F
-	for <platform-driver-x86@vger.kernel.org>; Sun, 23 Jun 2024 10:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15EB119AA53
+	for <platform-driver-x86@vger.kernel.org>; Sun, 23 Jun 2024 13:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719137708; cv=none; b=JQ1Pb6Vxbpyq62ntsf2kCYEgBporlKUCr9tv9EAbQtDUbLp9mp0AWpkSYzkDR0D/rfAsiZiekb0apA/4/nwH0SP814IQTlTsE747LrwS6IT04Rn00Bd9UwU8tGgr5+pcSlX7jYHowZ/VZS+EUp+YJd7zazde9jzxNlI/JK8bDEI=
+	t=1719150335; cv=none; b=Iw9TOxQpHCKJTU2k5cw4KsfzYtSSYfmBDToLOZ3li4SEtyvMBERlX+b0tTeKEjha71x4R3gbsnRsypJJmSDvmHYq2YsgbvT+RMHQ5DEYe55yQckg280nWZ6Lt0aXut9Jx7LRLVIpellb5Udf/JHUtKHzq8OjeYp2xs2Vo1ogqGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719137708; c=relaxed/simple;
-	bh=OuR2sYZAr2eBHxaMxpLs26oNyCGBj4JLZvUZ0k+VmS8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OHEbMMgnb92G241FnyByIK8fecpWrsFj0TUSY532I5qWywpJ9K4Cm+9bsWYZBlZBnwTyEMMIKmkyIvFpBkAfz8iY16RBSZArm0LHctLkJp1fjCPpymrfextRZaN0TCsliz31Yvr0tdbNo633wSCFOGWwXjaEPJS+Y0SqAp0HmIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aZBIjQUe; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1719150335; c=relaxed/simple;
+	bh=MpAc++c+m47Jic3K7YqmbjVe+SJS4IdaFj6KE+Q7SZY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hqt9TuP7OpZ+rW+1Bv+cL66sgrPHvK6BYsbHnF0itkjy3BeBfZdlk+PsNYnQ2BMjFe+FZlrDkmKNszxhSp1rBM92CEaxd6WgpFexlwbARNOcEKyQtX4dKUGg83eq9K1TioyixdnfTCVsR4nh0j+wPmBi+uLhNYGAUF6GbundHFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xh1NOM0E; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aZBIjQUe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xh1NOM0E"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719137704;
+	s=mimecast20190719; t=1719150333;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sOci2B9Gr4WI6Fbop3cV6xh51JciMNHVROXI0Qgvuqs=;
-	b=aZBIjQUeGKIO1FQp5W1oNjRQpDASA35eq+HF3GawsyzUVDEO3hYoZZED111KafQWNjv/y7
-	DVzLW34wQFtazkjRa9sri9bPFgt6D7zd5Pby/9s3TdSXxwnWUzVf6s644W/pq0D3a3Pf2P
-	qBV3i3vIMUFD36/XdQaMV83GsJhUJJo=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=e1V/luBKanM2MdbsO+c33o4el8NIsRhD3mo7fwNnwRA=;
+	b=Xh1NOM0E/a3tElpuKOKWV/1ZVhVoniV8c8V86nVWIfshge2k+rV8ocAZWhDEE9zsL0uloF
+	9WHHW9ubdfKi9FTfUnkepDTAqoHj4MrFHrQLTSUvI5RIATf0hUr9wFbZCeC4umqTLZWPY3
+	34J9bbVkLebse9yaQUUTturiQStRzZo=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-633-29OSjOA0POqwN1_c8hbRZQ-1; Sun, 23 Jun 2024 06:15:03 -0400
-X-MC-Unique: 29OSjOA0POqwN1_c8hbRZQ-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3634a634f8aso1543649f8f.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 23 Jun 2024 03:15:02 -0700 (PDT)
+ us-mta-668-k14p_3JwOiOXnujANVOPKg-1; Sun, 23 Jun 2024 09:45:30 -0400
+X-MC-Unique: k14p_3JwOiOXnujANVOPKg-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a7240b92b4dso42129766b.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 23 Jun 2024 06:45:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719137702; x=1719742502;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sOci2B9Gr4WI6Fbop3cV6xh51JciMNHVROXI0Qgvuqs=;
-        b=U+botmdeBNNrKGR+BJgpL59ColWlXSOaviEqU3HIjag0dNdWCiMVJz3gAaDpHLE3Ex
-         J+WhwOGvFl8+Ld5RCYjdqyl0qgXQHcBSB5YqnFxLoQ7ZtG7UonvYNVYSkaaqouaBgYIC
-         ADlQ79uOK680VOseWt/4kN3FM1bMGpnGTO22ZozJ4n6FCRU/Itts0s3M8Mb9hgXnxtcH
-         VhqmO6z9nsJYADVmVuJLTrrwNVVGSkiRl6OmyWKSb0BhSc/6p6yNmg5TMMvFtZPdXm2b
-         PSvDwOIgUAi5dbQIF/DKaSfXxTs2zpCbqmGgGeg4fnvpVvPld3Rl4YkYNfaJfocuQtA4
-         1VSA==
-X-Forwarded-Encrypted: i=1; AJvYcCWAc00HyXByJ40IPnDcuMREP7uGWq+RvOiqlzW7xNlV69w9hES5IP7wxAmHwTXUt7dlRTMaik27HJeid38x0K5XnQN+T0cNhBQpGNvT/2Z3YT5qIg==
-X-Gm-Message-State: AOJu0YxZZHg005JAFOhQdySNh9ewc9B8pfgCwRROg0AVNsSQ88sePlz/
-	DpcI28SgPMLdJtaG3224li5yFozqjHFchNswO9XhYbulZsBBHivSqjMEU7R3RU2PDeTIpphpyVN
-	RhTFolTYZtHlKyDWXLmHb73nN4zPKhyWmOqxDAuohn8c+u6QIG0EbYjPolvn/1tG1rEFw32g=
-X-Received: by 2002:a05:6000:dcd:b0:35f:1c34:adfc with SMTP id ffacd0b85a97d-366e96bf06bmr1002440f8f.67.1719137701822;
-        Sun, 23 Jun 2024 03:15:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFPPDC3HI60pWL+wtMB9iK/gooIH7i9Iz/3lSKlTGUXQzR11017FM83y2VnixVMSw+lIyxO0Q==
-X-Received: by 2002:a05:6000:dcd:b0:35f:1c34:adfc with SMTP id ffacd0b85a97d-366e96bf06bmr1002414f8f.67.1719137701075;
-        Sun, 23 Jun 2024 03:15:01 -0700 (PDT)
-Received: from redhat.com ([2.52.146.100])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-366389b861bsm6874269f8f.29.2024.06.23.03.14.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Jun 2024 03:15:00 -0700 (PDT)
-Date: Sun, 23 Jun 2024 06:14:53 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: "Wang, Wei W" <wei.w.wang@intel.com>
-Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Vadim Pasternak <vadimp@nvidia.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Cornelia Huck <cohuck@redhat.com>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	David Hildenbrand <david@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	"linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH vhost v9 2/6] virtio: remove support for names array
- entries being null.
-Message-ID: <20240623061141-mutt-send-email-mst@kernel.org>
-References: <20240424091533.86949-1-xuanzhuo@linux.alibaba.com>
- <20240424091533.86949-3-xuanzhuo@linux.alibaba.com>
- <20240620035749-mutt-send-email-mst@kernel.org>
- <1718872778.4831812-1-xuanzhuo@linux.alibaba.com>
- <20240620044839-mutt-send-email-mst@kernel.org>
- <DS0PR11MB6373310FBF95058B8FE8CD95DCCA2@DS0PR11MB6373.namprd11.prod.outlook.com>
+        d=1e100.net; s=20230601; t=1719150329; x=1719755129;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e1V/luBKanM2MdbsO+c33o4el8NIsRhD3mo7fwNnwRA=;
+        b=EBO81mkDVIgAWyVcaORyoFHYenYjpmjZD1kUF/rFVo+h86zbd0ODUmm2VdRogcLoB4
+         +CqEUDxuxm10HaxEYgo997Mf+mmXOZQXkMmya75TYXVTHYxtcEEzbwLCTg3uXZn6NAul
+         vA09pMa2KJTTYeRzG7jjlxnGMp3x3FccdhZLCS0mK7g/kU/6zckRsMgHsYyp5zopWoOk
+         TcxT7RQaRQ5wi2IIbWStLOlQ+KRRirfv7755oGDgDhqtBpP7AwMawmSXxarl9M5x0G0R
+         4EEebG9hvw3x4A0XB9trGGXa73RlL4s6FYgD/7mIrDqV3eRacg4mOqdrElTWvYxkUjTk
+         Gt+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUcmUh3cWMc7QcgTXfpsQDicSAS+ijhfB6dquTdNyp3qJ+TXlGPLjPudS7WH/kXezsICh82bwYLT9dzDbv8hod56jpmQn1B2EeNy+x2wzIWLYJYgg==
+X-Gm-Message-State: AOJu0Yw789KPyu9KVlbneyDezJSh1iOE0GQKxfhozclTR6H8gNDpr1QM
+	8Hwbvyx4ni6GyXOgzFK3i5qK1ou7Q8bc6KmzZZVw5Bnyw9QjruauPGwX4WU7wM2iG3PbRzKjWNM
+	UlDVoSeTsONtuSQs7mH40Jlu0oowirVnSPc7sNrRjwvLZvlUYTA9os2VRz5A0apwJtchRwJ4=
+X-Received: by 2002:a17:906:1153:b0:a6f:e2a3:cd0 with SMTP id a640c23a62f3a-a7242c4df85mr168754366b.9.1719150329419;
+        Sun, 23 Jun 2024 06:45:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFuCBRE7ce/FfYZOlEeQ/3BV94W6sQX8Z/TNy2ExKEsFaWIoWR9A3pCvsWv04xvp/a7DzdqVA==
+X-Received: by 2002:a17:906:1153:b0:a6f:e2a3:cd0 with SMTP id a640c23a62f3a-a7242c4df85mr168753166b.9.1719150328913;
+        Sun, 23 Jun 2024 06:45:28 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7245c37d9esm103381466b.154.2024.06.23.06.45.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 23 Jun 2024 06:45:28 -0700 (PDT)
+Message-ID: <cbb89baf-7c22-4c1e-93dd-fadf475792f3@redhat.com>
+Date: Sun, 23 Jun 2024 15:45:27 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DS0PR11MB6373310FBF95058B8FE8CD95DCCA2@DS0PR11MB6373.namprd11.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/6] platform/x86: dell-smo8800: Move instantiation of
+ lis3lv02d i2c_client from i2c-i801 to dell-smo8800
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Andy Shevchenko <andy@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>,
+ Wolfram Sang <wsa@kernel.org>, eric.piel@tremplin-utc.net,
+ Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com,
+ Kai Heng Feng <kai.heng.feng@canonical.com>,
+ platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+ Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org
+References: <20240621122503.10034-1-hdegoede@redhat.com>
+ <20240621122503.10034-4-hdegoede@redhat.com>
+ <20240622153541.6mqmgyqtexjtxhda@pali>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240622153541.6mqmgyqtexjtxhda@pali>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 22, 2024 at 06:07:35AM +0000, Wang, Wei W wrote:
-> On Thursday, June 20, 2024 5:01 PM, Michael S. Tsirkin wrote:
-> > On Thu, Jun 20, 2024 at 04:39:38PM +0800, Xuan Zhuo wrote:
-> > > On Thu, 20 Jun 2024 04:02:45 -0400, "Michael S. Tsirkin" <mst@redhat.com>
-> > wrote:
-> > > > On Wed, Apr 24, 2024 at 05:15:29PM +0800, Xuan Zhuo wrote:
-> > > > > commit 6457f126c888 ("virtio: support reserved vqs") introduced
-> > > > > this support. Multiqueue virtio-net use 2N as ctrl vq finally, so
-> > > > > the logic doesn't apply. And not one uses this.
-> > > > >
-> > > > > On the other side, that makes some trouble for us to refactor the
-> > > > > find_vqs() params.
-> > > > >
-> > > > > So I remove this support.
-> > > > >
-> > > > > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > > > > Acked-by: Jason Wang <jasowang@redhat.com>
-> > > > > Acked-by: Eric Farman <farman@linux.ibm.com> # s390
-> > > > > Acked-by: Halil Pasic <pasic@linux.ibm.com>
-> > > >
-> > > >
-> > > > I don't mind, but this patchset is too big already.
-> > > > Why do we need to make this part of this patchset?
-> > >
-> > >
-> > > If some the pointers of the names is NULL, then in the virtio ring, we
-> > > will have a trouble to index from the arrays(names, callbacks...).
-> > > Becasue that the idx of the vq is not the index of these arrays.
-> > >
-> > > If the names is [NULL, "rx", "tx"], the first vq is the "rx", but
-> > > index of the vq is zero, but the index of the info of this vq inside the arrays is
-> > 1.
-> > 
-> > 
-> > Ah. So actually, it used to work.
-> > 
-> > What this should refer to is
-> > 
-> > commit ddbeac07a39a81d82331a312d0578fab94fccbf1
-> > Author: Wei Wang <wei.w.wang@intel.com>
-> > Date:   Fri Dec 28 10:26:25 2018 +0800
-> > 
-> >     virtio_pci: use queue idx instead of array idx to set up the vq
-> > 
-> >     When find_vqs, there will be no vq[i] allocation if its corresponding
-> >     names[i] is NULL. For example, the caller may pass in names[i] (i=4)
-> >     with names[2] being NULL because the related feature bit is turned off,
-> >     so technically there are 3 queues on the device, and name[4] should
-> >     correspond to the 3rd queue on the device.
-> > 
-> >     So we use queue_idx as the queue index, which is increased only when the
-> >     queue exists.
-> > 
-> >     Signed-off-by: Wei Wang <wei.w.wang@intel.com>
-> >     Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > 
+Hi,
+
+On 6/22/24 5:35 PM, Pali Rohár wrote:
+> On Friday 21 June 2024 14:24:58 Hans de Goede wrote:
+>> +static void smo8800_instantiate_i2c_client(struct work_struct *work)
+>> +{
+>> +	struct smo8800_device *smo8800 =
+>> +		container_of(work, struct smo8800_device, i2c_work);
+>> +	const struct dmi_system_id *lis3lv02d_dmi_id;
+>> +	struct i2c_board_info info = { };
+>> +	struct i2c_adapter *adap = NULL;
+>> +
+>> +	if (smo8800->i2c_dev)
+>> +		return;
+>> +
+>> +	bus_for_each_dev(&i2c_bus_type, NULL, &adap, smo8800_find_i801);
+>> +	if (!adap)
+>> +		return;
+>> +
+>> +	lis3lv02d_dmi_id = dmi_first_match(smo8800_lis3lv02d_devices);
 > 
-> The approach was taken to prevent the creation (by the device) of unnecessary
-> queues that would remain unused when the feature bit is turned off. Otherwise,
-> the device is required to create all conditional queues regardless of their necessity.
+> Result of this function call is always same. You can call it just once,
+> e.g. in module __init section and store cached result.
+
+This function will only run when a new main i2c-i801 adapter shows up.
+Which normally only happens once per boot, so there is no need to
+make things more complex to optimize this.
+
+Regards,
+
+Hans
+
+
 > 
-> > 
-> > Which made it so setting names NULL actually does not reserve a vq.
+>> +	if (!lis3lv02d_dmi_id)
+>> +		goto out_put_adapter;
+>> +
+>> +	info.addr = (long)lis3lv02d_dmi_id->driver_data;
+>> +	strscpy(info.type, "lis3lv02d", I2C_NAME_SIZE);
+>> +
+>> +	smo8800->i2c_dev = i2c_new_client_device(adap, &info);
+>> +	if (IS_ERR(smo8800->i2c_dev)) {
+>> +		dev_err(smo8800->dev, "error %ld registering %s i2c_client\n",
+>> +			PTR_ERR(smo8800->i2c_dev), info.type);
+>> +		smo8800->i2c_dev = NULL;
+>> +	} else {
+>> +		dev_dbg(smo8800->dev, "registered %s i2c_client on address 0x%02x\n",
+>> +			info.type, info.addr);
+>> +	}
+>> +
+>> +out_put_adapter:
+>> +	i2c_put_adapter(adap);
+>> +}
 > 
-> If there is a need for an explicit queue reservation, it might be feasible to assign
-> a specific name to the queue(e.g. "reserved")?
-> This will require the device to have the reserved queue added.
-
-That's quite a hack, NULL as a special value is much more
-idiomatic.
-
-Given driver and qemu are both non spec compliant but *in splightly
-different ways* I think we should just fix both the driver and qemu to
-be spec compliant.
-
-
-> > 
-> > But I worry about non pci transports - there's a chance they used a different
-> > index with the balloon. Did you test some of these?
-> > 
-> > --
-> > MST
-> > 
 
