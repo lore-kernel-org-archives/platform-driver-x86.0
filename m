@@ -1,91 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8A819FA8C;
-	Mon, 24 Jun 2024 17:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C7819FA78
+	for <platform-driver-x86@vger.kernel.org>; Mon, 24 Jun 2024 17:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719250835; cv=none; b=A5K7XE+NyZ1m4ORU8QioNxSUYd9UT7UBHrWMlpbsBmXGTxaFTgWwpGxnvhpYs5f4Y2ZX4fepQ6SM9XfDN/FNwUFnFPbemsivR4ZgPkp53l22mGfiwfLw4n/1K9d7zX9mMuiUCXSgkD7PxiU4dgx6PGaScj8ikhAnaDTMGGJ5kWk=
+	t=1719251267; cv=none; b=rwb0ewupjD3Au902y8hmjtur54kAcNE0iS56/OjFWrZ+iYZUV3GNybxnSRHAWT+YznjuAaHg10FMwc2CGHbVRKX9M1JPcs76aYhkvQGc8OUVE2TqA1cq5nTjpSTaNQX32GwMXgp3vgh19K23s/WMh8WiBOZryv0PTENGYZ6gOEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719250835; c=relaxed/simple;
-	bh=z1Kf5EeWUndBUk5AnId/gIfRD4oVKv2FV9xR1dZLOIw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=GQ2LVAcUWaaFf4x26dNFYcnLa0JDElS3tzh9zLbCf2yvgD8jYI4hMDGlNqhGE+lqROmaE9lhtRo3UKKExBhypuUxGxe+kGMkeIMZAdhgGrmaNTA93oIVDejRoBqGsJa9Nz+VZwQU8ADZh6lsJ2D+G/cKtNZGl2Q3s0pAfTUot7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=htW79obl; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719251267; c=relaxed/simple;
+	bh=ohdxU8Fz2mDeaBiw2qfvNxp2pYsWpiZOLLaWbZEbBXY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fByfeecShVA1dlqNt/h6xeap6sR5hO33fXwcJWFN05Hjr8xyMHxlYqQ8hTwj+F4i9UVKYJN1T/efUqRNlj6lyHmpJt2HfAADVHlyoGg8U6ZLhcrYX3ArqwGx89ncgBn2USAYuuNVGbfvZla3U1OucjDhCv2Wk4AGXWH9ykyneQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rnNGkniw; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="htW79obl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719250834; x=1750786834;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=z1Kf5EeWUndBUk5AnId/gIfRD4oVKv2FV9xR1dZLOIw=;
-  b=htW79obldMqarSEjDgDvrRJo6aI1SEopNboKjcju+UC61Kg+2uuj79T/
-   6qnWQvndw2uDrgIFx0VlDN5OAP9wHJ42wea4o2pZlR8BCP88searE7aaW
-   Uy144pxud5h5F+hJ61X552H4/TwI+bFErAw1xQby0+OGmaeIw2ns5mNFv
-   sdNUBR0tTQSp5DGVPoISdIYeWYPJ4fPju8XkNG015HCgvCq1HZiiSEhk9
-   6/6Pzcq+y31lgCsF3eaClyabEyoKfNgP33T94D2VQ4RYB9rvJmT/NuVqm
-   H/GMiq6i8/zMG3QmSKLNkUwcTjLnYqb9T+ZVn60MjJkM8CoyB8aLttSaU
-   Q==;
-X-CSE-ConnectionGUID: 0fQj4BcaRZiptyj0Fhjbeg==
-X-CSE-MsgGUID: eMWXuGo9RDmAW73wuXmQhg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="16112068"
-X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
-   d="scan'208";a="16112068"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 10:40:31 -0700
-X-CSE-ConnectionGUID: kUyIY7jNQJmOglPawkpxNg==
-X-CSE-MsgGUID: P7YvPGmYRt2/E50zsz1kDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
-   d="scan'208";a="43457395"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.61])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 10:40:27 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hdegoede@redhat.com, Armin Wolf <W_Armin@gmx.de>
-Cc: corbet@lwn.net, platform-driver-x86@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240624173116.31314-1-W_Armin@gmx.de>
-References: <20240624173116.31314-1-W_Armin@gmx.de>
-Subject: Re: [PATCH v2 0/2] platform/x86: wmi: Add driver_override support
-Message-Id: <171925082256.3544.1603018074608040428.b4-ty@linux.intel.com>
-Date: Mon, 24 Jun 2024 20:40:22 +0300
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rnNGkniw"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ec5779b423so23588691fa.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Jun 2024 10:47:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719251263; x=1719856063; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=19dor3frlktKucc3yoQbNWT6473/8aB2is7dibOXrAc=;
+        b=rnNGkniwqrQmWnEfMMxHlEba8HAQldw5lTblKG8ZJ5fARVVNZYnNpuHxY6P52BcL8X
+         stj71Qtf5kvK+6kjolKM0I6cWr1o12hSeW9YD2OtZPp930xfOb0uj9mzZipG52BnTc0G
+         bw26LiYwTPljGbi3csdjjWfdXvXM7FcASDDWEkVLAwwvYm2LCTmZJar3Ktyp93+L8Tqu
+         tJGTLs7ZQ/j6RcnNC58wpgk1K2VtYzsbKhZxXdwT29e0ikDTRN3lYCGSTYAa+eKXr1xl
+         UfyXxcHSC2NNvbdR8GQjJIMJAjJVgI4Qj6yDGV0k3n598dvpoU6qdel2SW8/ijQBDV1C
+         BYkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719251263; x=1719856063;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=19dor3frlktKucc3yoQbNWT6473/8aB2is7dibOXrAc=;
+        b=o8jn1I7OKTP7kTNg+zv7Lk/ikuGoQEiR+fJ2rc0XYuRJPteJEv9hilO919msgsauBd
+         0r/Fsq00swFlL4o3K92yALxELiEXl6GB6e21GdaOooughI/MA8sdsdmhq9O4PJ2K+0jy
+         B0+tzNPV0NxQMlhpWjU1h0LYTzILCVjtlcqgYnFXYi0a5Gd33hY7DcZIp1Z1OphrNBPA
+         drPYo+ImSMn3iwRgdBShOIX6MILFne5DigNypQyfUA8pRMe1ej8P6WIDMKkDGhFmAgD8
+         v5FoErpu8DXHMScFuah3P7HskcRxaT4VhZNKGr3ltxt32dPv4WbQp1vcJC+DDZk9fqBQ
+         Anhw==
+X-Forwarded-Encrypted: i=1; AJvYcCXFA6Ll0YegvtSPgCT/OsADa2/thuCLORawPc+vm/fmk/TTTeK1sCvNMaN6Z36y6JWyEKtiFaDECHgiSk7hT3XjFIiXu6btl7v1qRSksvTtbBezaQ==
+X-Gm-Message-State: AOJu0YwtQErUTAYW9Pnbk13H0IRplUEcIfe+9a4V8boIjM5IjYqaAwq9
+	mQEotS1DypRVg04qyGqxYhofXcXA2+AqHlKz9WsGsn/vzy3mN4crMoYO9Sa34Gs=
+X-Google-Smtp-Source: AGHT+IF8CTA6Pf5r+RZJ3Engm2T2PxiUfFSoo1ekVgw+8UlquVeQoifd/SwdniSFe07K8tIcUz5OFQ==
+X-Received: by 2002:a2e:9c88:0:b0:2ec:5364:c790 with SMTP id 38308e7fff4ca-2ec5931d8cemr48224931fa.22.1719251262910;
+        Mon, 24 Jun 2024 10:47:42 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec64af4afdsm1753071fa.55.2024.06.24.10.47.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jun 2024 10:47:42 -0700 (PDT)
+Date: Mon, 24 Jun 2024 20:47:40 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>
+Subject: Re: [PATCH v9 1/2] platform/arm64: build drivers even on non-ARM64
+ platforms
+Message-ID: <jtrwgljegbiebihr3d5ccbhlokqxe5ovasg5xxxh4mrrw2ccux@24iebp7zkqqi>
+References: <20240624-ucsi-yoga-ec-driver-v9-0-53af411a9bd6@linaro.org>
+ <20240624-ucsi-yoga-ec-driver-v9-1-53af411a9bd6@linaro.org>
+ <645b8ae6-10ad-11f9-eb18-a931f258bfd2@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <645b8ae6-10ad-11f9-eb18-a931f258bfd2@linux.intel.com>
 
-On Mon, 24 Jun 2024 19:31:14 +0200, Armin Wolf wrote:
-
-> This patch series add support for using the driver_override sysfs
-> attribute with WMI devices. The reason for this is that there will
-> exist a couple of generic WMI drivers in the future for allowing
-> driver developers to directly access the underlying WMI device.
+On Mon, Jun 24, 2024 at 07:27:41PM GMT, Ilpo Järvinen wrote:
+> On Mon, 24 Jun 2024, Dmitry Baryshkov wrote:
 > 
-> Since those generic WMI drivers do not have an ID table, the
-> driver_override mechanism is used to bind them to WMI devices.
+> > The Kconfig for platforms/arm64 has 'depends on ARM64 || COMPILE_TEST'.
+> > However due to Makefile having just obj-$(CONFIG_ARM64) the subdir will
+> > not be descended for !ARM64 platforms and thus the drivers won't get
+> > built. This breaks modular builds of other driver drivers which depend
+> > on arm64 platform drivers.
+> > 
+> > Reported-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Fixes: 363c8aea2572 ("platform: Add ARM64 platform directory")
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > ---
+> >  drivers/platform/Makefile | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/platform/Makefile b/drivers/platform/Makefile
+> > index fbbe4f77aa5d..837202842a6f 100644
+> > --- a/drivers/platform/Makefile
+> > +++ b/drivers/platform/Makefile
+> > @@ -11,4 +11,4 @@ obj-$(CONFIG_OLPC_EC)		+= olpc/
+> >  obj-$(CONFIG_GOLDFISH)		+= goldfish/
+> >  obj-$(CONFIG_CHROME_PLATFORMS)	+= chrome/
+> >  obj-$(CONFIG_SURFACE_PLATFORMS)	+= surface/
+> > -obj-$(CONFIG_ARM64)		+= arm64/
+> > +obj-$(CONFIG_ARM64_PLATFORM_DEVICES)	+= arm64/
 > 
-> [...]
+> I made a second ib tag with this patch.
 
+Thank you!
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
-local branch there, which might take a while.
+> I'm a bit disappointed that LKP didn't catch this in the patch stage, it 
+> feels almost as if it never built any of the versions.
 
-The list of commits applied:
-[1/2] platform/x86: wmi: Add driver_override support
-      commit: 12046f8c77e0ed6d41beabde0edbb729499c970b
-[2/2] platform/x86: wmi: Add bus ABI documentation
-      commit: 618ba6abfc57bde2c2cea7c2b23e4c27fd5a04b4
+Yes, I had this feeling for several other patchsets. We started getting
+build errors, despite having the patch on the maling list for quite a
+while. I've just got the modpost build error for drm/msm driver, for the
+patchset that was on the ML for weeks.
 
---
- i.
-
+-- 
+With best wishes
+Dmitry
