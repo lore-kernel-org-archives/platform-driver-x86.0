@@ -1,190 +1,91 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8A119CD0B;
-	Mon, 24 Jun 2024 17:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8A819FA8C;
+	Mon, 24 Jun 2024 17:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719250300; cv=none; b=hGnfPdq9ttit27JOMTNkNY9a0akwP8ggjfDH2ZGhCCoLJdCqvUslys+Bexd4S5QRBZx4tcG6r3yQwd+SHWHe3nC+cfH1lPL/ATsI3OLQAqMU8T7wt9QMyvqH4mjd30k0ZPnTrFDVIz8Yknp1VJqnaVUIWg0hTdEKANYhj/BErEY=
+	t=1719250835; cv=none; b=A5K7XE+NyZ1m4ORU8QioNxSUYd9UT7UBHrWMlpbsBmXGTxaFTgWwpGxnvhpYs5f4Y2ZX4fepQ6SM9XfDN/FNwUFnFPbemsivR4ZgPkp53l22mGfiwfLw4n/1K9d7zX9mMuiUCXSgkD7PxiU4dgx6PGaScj8ikhAnaDTMGGJ5kWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719250300; c=relaxed/simple;
-	bh=PKfC1wyJ0jC9WuWVPUlkKkRao8tanlKUXrZrk9kTYiQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R0MjLaRnNeSoh+57Ry4M/UHGlCLW18ikhrr+CWvlJUMqBv41H3I/BwNvhOW9meHEDwz4s+sMga7Wm20UW69L/Sv9eJPUIqitiE7beVz/AvSCJiE4JrsBodaYvXDkwzd41oTva8CU9U6H4pz8NSMmjo1BzUUx8lk7dLUAHp0q8tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=QgU1SMyW; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1719250835; c=relaxed/simple;
+	bh=z1Kf5EeWUndBUk5AnId/gIfRD4oVKv2FV9xR1dZLOIw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=GQ2LVAcUWaaFf4x26dNFYcnLa0JDElS3tzh9zLbCf2yvgD8jYI4hMDGlNqhGE+lqROmaE9lhtRo3UKKExBhypuUxGxe+kGMkeIMZAdhgGrmaNTA93oIVDejRoBqGsJa9Nz+VZwQU8ADZh6lsJ2D+G/cKtNZGl2Q3s0pAfTUot7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=htW79obl; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="QgU1SMyW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1719250289; x=1719855089; i=w_armin@gmx.de;
-	bh=IDaxS/x326fXcXmy8hZ1dWgd7Z/z9xvhU0lQQS1fboA=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=QgU1SMyW3kEPsuDx7Xsq3cxFsA7HUrT7yX87jbYAvPhU8IBItq3F7ugz1B+bFiAQ
-	 hA5Cq+l8jIouJ9FyGpsJfuWmcUKSsrMVzfAS0qmcpnvIGkl2KM01BXVwOkNztjRGJ
-	 L6jbzjTUyqbOHrgFLSIGzNB3lpbCN4a8lXQQn6N1INOkA3glIGPrmimt2XalMRnoR
-	 3DDnnVCp0ElLkz70rr9mM8FYJROcxp6TEazOKLrfwXz6uhpV+zHzzco+UcjRTsLLX
-	 uq/lWqBRVwyxbLSNy1ptvS/nlYxLFkuPP1IVuV7e2ea7hHSeIlM3ieLcwuAHVhRjg
-	 KIZoEY/OMCuirKyIGg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MQMuR-1rzboe1ELB-00TXqG; Mon, 24 Jun 2024 19:31:29 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: corbet@lwn.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] platform/x86: wmi: Add bus ABI documentation
-Date: Mon, 24 Jun 2024 19:31:16 +0200
-Message-Id: <20240624173116.31314-3-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="htW79obl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719250834; x=1750786834;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=z1Kf5EeWUndBUk5AnId/gIfRD4oVKv2FV9xR1dZLOIw=;
+  b=htW79obldMqarSEjDgDvrRJo6aI1SEopNboKjcju+UC61Kg+2uuj79T/
+   6qnWQvndw2uDrgIFx0VlDN5OAP9wHJ42wea4o2pZlR8BCP88searE7aaW
+   Uy144pxud5h5F+hJ61X552H4/TwI+bFErAw1xQby0+OGmaeIw2ns5mNFv
+   sdNUBR0tTQSp5DGVPoISdIYeWYPJ4fPju8XkNG015HCgvCq1HZiiSEhk9
+   6/6Pzcq+y31lgCsF3eaClyabEyoKfNgP33T94D2VQ4RYB9rvJmT/NuVqm
+   H/GMiq6i8/zMG3QmSKLNkUwcTjLnYqb9T+ZVn60MjJkM8CoyB8aLttSaU
+   Q==;
+X-CSE-ConnectionGUID: 0fQj4BcaRZiptyj0Fhjbeg==
+X-CSE-MsgGUID: eMWXuGo9RDmAW73wuXmQhg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="16112068"
+X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
+   d="scan'208";a="16112068"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 10:40:31 -0700
+X-CSE-ConnectionGUID: kUyIY7jNQJmOglPawkpxNg==
+X-CSE-MsgGUID: P7YvPGmYRt2/E50zsz1kDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
+   d="scan'208";a="43457395"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.61])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 10:40:27 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: hdegoede@redhat.com, Armin Wolf <W_Armin@gmx.de>
+Cc: corbet@lwn.net, platform-driver-x86@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 In-Reply-To: <20240624173116.31314-1-W_Armin@gmx.de>
 References: <20240624173116.31314-1-W_Armin@gmx.de>
+Subject: Re: [PATCH v2 0/2] platform/x86: wmi: Add driver_override support
+Message-Id: <171925082256.3544.1603018074608040428.b4-ty@linux.intel.com>
+Date: Mon, 24 Jun 2024 20:40:22 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6CGvYmV5GLtPBdwMI2/Ey6YGTQf9ZC5AxrDYHO17to/M0/BxY/8
- 830ZgtdlH5RWuzkRMhsK/SqyRynMNJu/9UFR+tWlyv7L9gnFvM8NXMKO16wQOPb6I9Lzqtq
- PkYcSxaFXfAbUJOJXnIx9yMlMrKXfohhW6TQQ3GroCO9RksUCyqIPIBVL6nOmf9lfQ5iC7a
- +jjj90G1r4+4+CpnsT8IQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:LIqM02drmFI=;Mms0gEyqRCGaD+OKlkRhScXnbOC
- siE2V6eXuc7eOQQLEirJnv1Bhi+ezJ3B4RBz6aHBDKf4Olzt78VLEXdVgvLM7/O4t591yVi1b
- Fm7yQ+9TXYrkpiGclsaOeBBWnUJD0Sldp6EsXNxgOR8ofGKaIKQ+E3KLBSVYz5dSEK80Ns5PQ
- NwMd2v8vuEx+2hVsHef73gIuHP8SkmZ3LLppqYQXVPpDY4R3hS31jEVpKOhnmnFamMNemJE1Q
- vBKH8Ax32MtL5fcrwZp2KVG4k7y7E2SF2B+b15Ced6NS0LFMV/TQ5U4dJ2Lx/LhQf74ZiggM8
- a2NX8IV9dtsp6p4d5iD+JkBHpnroJ2pM/9fHGpAiA7jDQliO6X0ycIYLmUSDEQukM1JYha0Fw
- LcbdCSg3jhgzziwBw1ZcYuXKn1PpO10UWQv7HhCPBWZFvmylV9o5w5jMIWX8rV3hzpEriLl8x
- e6npQ5Cm7v2JYNSangzK/VsvHl1PeCUxISPmsfSuHb15AERmCa95/wWkMzCAn8NhkYw8FX3AJ
- 062ni03yYFMcL+qiwfrzAGy//+ZPx8t1YnOMARrWRrJ5uNyRAm83AYyBdXrIdSmfSJYFkSmfJ
- nwbnAM083ut2Li3q2avGEbcBfrEAkxbMRX/uEYfxwtqJU3bb9I7Qm/aEFqIj4UhJ7g7uYoADZ
- PnwKTd2QbCZg3PTrQH+q5fXARgS6gEuHQpggNnEnQvc0tH8NyxawwmQChSekrWTH2rleJ15C1
- /UZWo8KeiDHaUjjoOTUFQdD63vzpBmIVXKdkMuhM8ocPVOJpKIj8qqRUt83xlnCe7at0yHmAy
- YaJQfi/KAblw3WaJe1Z83AJ0rbxajcfbmN6Rzox/wbxAc=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-Add documentation for the WMI bus sysfs interface so userspace
-applications can use it to access additional data about WMI devices.
+On Mon, 24 Jun 2024 19:31:14 +0200, Armin Wolf wrote:
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- Documentation/ABI/testing/sysfs-bus-wmi | 81 +++++++++++++++++++++++++
- MAINTAINERS                             |  1 +
- 2 files changed, 82 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-wmi
+> This patch series add support for using the driver_override sysfs
+> attribute with WMI devices. The reason for this is that there will
+> exist a couple of generic WMI drivers in the future for allowing
+> driver developers to directly access the underlying WMI device.
+> 
+> Since those generic WMI drivers do not have an ID table, the
+> driver_override mechanism is used to bind them to WMI devices.
+> 
+> [...]
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-wmi b/Documentation/ABI/t=
-esting/sysfs-bus-wmi
-new file mode 100644
-index 000000000000..aadb35b82198
-=2D-- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-wmi
-@@ -0,0 +1,81 @@
-+What:		/sys/bus/wmi/devices/.../driver_override
-+Date:		February 2024
-+Contact:	Armin Wolf <W_Armin@gmx.de>
-+Description:
-+		This file allows the driver for a device to be specified which
-+		will override standard ID table matching.
-+		When specified, only a driver with a name matching the value
-+		written to driver_override will have an opportunity to bind
-+		to the device.
-+		The override is specified by writing a string to the
-+		driver_override file (echo wmi-event-dummy > driver_override).
-+		The override may be cleared with an empty string (echo > \
-+		driver_override) which returns the device to standard matching
-+		rules binding.
-+		Writing to driver_override does not automatically unbind the
-+		device from its current driver or make any attempt to automatically
-+		load the specified driver. If no driver with a matching name is
-+		currently loaded in the kernel, the device will not bind to any
-+		driver.
-+		This also allows devices to opt-out of driver binding using a
-+		driver_override name such as "none". Only a single driver may be
-+		specified in the override, there is no support for parsing delimiters.
-+
-+What:		/sys/bus/wmi/devices/.../modalias
-+Date:		November 20:15
-+Contact:	Andy Lutomirski <luto@kernel.org>
-+Description:
-+		This file contains the MODALIAS value emitted by uevent for a
-+		given WMI device.
-+
-+		Format: wmi:XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX.
-+
-+What:		/sys/bus/wmi/devices/.../guid
-+Date:		November 2015
-+Contact:	Andy Lutomirski <luto@kernel.org>
-+Description:
-+		This file contains the GUID used to match WMI devices to
-+		compatible WMI drivers. This GUID is not necessarily unique
-+		inside a given machine, it is solely used to identify the
-+		interface exposed by a given WMI device.
-+
-+What:		/sys/bus/wmi/devices/.../object_id
-+Date:		November 2015
-+Contact:	Andy Lutomirski <luto@kernel.org>
-+Description:
-+		This file contains the WMI object ID used internally to construct
-+		the ACPI method names used by non-event WMI devices. It contains
-+		two ASCII letters.
-+
-+What:		/sys/bus/wmi/devices/.../notify_id
-+Date:		November 2015
-+Contact:	Andy Lutomirski <luto@kernel.org>
-+Description:
-+		This file contains the WMI notify ID used internally to map ACPI
-+		events to WMI event devices. It contains two ASCII letters.
-+
-+What:		/sys/bus/wmi/devices/.../instance_count
-+Date:		November 2015
-+Contact:	Andy Lutomirski <luto@kernel.org>
-+Description:
-+		This file contains the number of WMI object instances being
-+		present on a given WMI device. It contains a non-negative
-+		number.
-+
-+What:		/sys/bus/wmi/devices/.../expensive
-+Date:		November 2015
-+Contact:	Andy Lutomirski <luto@kernel.org>
-+Description:
-+		This file contains a boolean flag signaling if interacting with
-+		the given WMI device will consume significant CPU resources.
-+		The WMI driver core will take care of enabling/disabling such
-+		WMI devices.
-+
-+What:		/sys/bus/wmi/devices/.../setable
-+Date:		May 2017
-+Contact:	Darren Hart (VMware) <dvhart@infradead.org>
-+Description:
-+		This file contains a boolean flags signaling the data block
-+		aassociated with the given WMI device is writable. If the
-+		given WMI device is not associated with a data block, then
-+		this file will not exist.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 09ff0dfd65cb..4f76d6a5d348 100644
-=2D-- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -392,6 +392,7 @@ ACPI WMI DRIVER
- M:	Armin Wolf <W_Armin@gmx.de>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
-+F:	Documentation/ABI/testing/sysfs-bus-wmi
- F:	Documentation/driver-api/wmi.rst
- F:	Documentation/wmi/
- F:	drivers/platform/x86/wmi.c
-=2D-
-2.39.2
+
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/2] platform/x86: wmi: Add driver_override support
+      commit: 12046f8c77e0ed6d41beabde0edbb729499c970b
+[2/2] platform/x86: wmi: Add bus ABI documentation
+      commit: 618ba6abfc57bde2c2cea7c2b23e4c27fd5a04b4
+
+--
+ i.
 
