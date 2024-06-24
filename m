@@ -1,46 +1,46 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64ED013667F
-	for <platform-driver-x86@vger.kernel.org>; Mon, 24 Jun 2024 11:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B42442C
+	for <platform-driver-x86@vger.kernel.org>; Mon, 24 Jun 2024 11:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719227753; cv=none; b=vFxm8Al1IZwf5sPBYt9Yvaboj4gUxYmAveiTPfY4Qds5UP7ZjH//vUJZR9eBuy2esrgJHpXRxubfpl+vE7fZf0XnEtgUiAQpua9E0YE4STNzR8J71Ge3ADbg9oNrd5gCB2rrjP+f15ydN3aF1QYakoMr92dHz+X6U6VDkToJw3c=
+	t=1719227760; cv=none; b=G/FZqFbjmKOA1sJ1QwATojAv19gP/xHi2Y1N1Nq9JiNIzYn7nyQ5b4IRFkbp5Ai8RL2+BF2/BA6hC5h3mCusgXMJZty0PoBHNqhts3F2Qi4hCrcwqVDIrZJ+8zhMn9unzeKaWKi++xgB4oIaJojwqggPskxNKnfyoP+kjY/XQ7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719227753; c=relaxed/simple;
-	bh=uOuuW2OCu5jkYs6A1PDaW9HIyGbV+hcSC8SvAFwfnhI=;
+	s=arc-20240116; t=1719227760; c=relaxed/simple;
+	bh=siDLK3+fd5aEGNwsKFUm15akOnuuWqRdyexlbGpejLQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A2GsTFEOVkIL0C7uf8+uAYW4hHUgfkLNBIDMwTSrxl11WOvG74IIoUCCsfdcXHNiW8IO6DLHzQ0ePLPo/ZaZ+xxlMN2LTTly6rGfPh9+dcaiKw43/BEa+SJN9Gy399240rwvj0MWe4lf/gdZOFv6W7TTOvoSf0qaoYxUoc3CgmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OaQGthHw; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=lcCU9levF883IJHylck+r7CBlgrm2xHVcPq8zWNfC3pW6OPLJCvd38oYccLPjllvUprVUQcII30oaORWxDdhrwqlScv5tp6+eeZdtC3G7LJtvt6BAI804V9q17v3yNC3PYEgq0yDEDjy25Vsa6ViUhFNfKFE8nApqibILmuZWXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SD5QPJbZ; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OaQGthHw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SD5QPJbZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719227751;
+	s=mimecast20190719; t=1719227758;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0Yl0P6+Gwgq9w+JZ87JIdLfe2VhvU4gKannNDjDrbVQ=;
-	b=OaQGthHwxHW9Cqj6CuEWHy7fIDK3O6LbeAIDdQdlCp5UiTLIFXsZfd/pVYqH+3hjVDPA4M
-	VE8d5FaWqXJG46tE7tY6+Ipb577nl36GH9UvuGwMNPgES9jVHLz1rJHeHIMmJhaH6Ru/Ro
-	w+/XeF1BuGH5sdJUxntFuAV2CMypr90=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=QzS7aq8VZgaAswwmoXOD+ZSywoFB/n4ePNCxStLsEZE=;
+	b=SD5QPJbZhgGaBRfxa6OgNJe1QG03pv6t6zxyeDi5W1Ke4rh1lm1V2vaQQnA0hj4oEeSLeX
+	SVulKS+wVPk50PL/Y5NzAuyqADBtZXebSLRRXrb9FjG70pFYHD0y5LE2RUcxK32VXE6WSB
+	vq+jObjo6qmCXasW/BOreDsHNkHk0Eo=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-553-HD31-dimOHaA3K7CPT4iJA-1; Mon,
- 24 Jun 2024 07:15:47 -0400
-X-MC-Unique: HD31-dimOHaA3K7CPT4iJA-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-312-KhnIE9D2NcaBQRgRFvc_eg-1; Mon,
+ 24 Jun 2024 07:15:52 -0400
+X-MC-Unique: KhnIE9D2NcaBQRgRFvc_eg-1
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 27FE91956080;
-	Mon, 24 Jun 2024 11:15:44 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EF97C19560A7;
+	Mon, 24 Jun 2024 11:15:49 +0000 (UTC)
 Received: from x1.localdomain.com (unknown [10.39.193.82])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 521CA19560AB;
-	Mon, 24 Jun 2024 11:15:38 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C3B4A1956087;
+	Mon, 24 Jun 2024 11:15:44 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
 To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
@@ -56,9 +56,9 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	Jean Delvare <jdelvare@suse.com>,
 	Andi Shyti <andi.shyti@kernel.org>,
 	linux-i2c@vger.kernel.org
-Subject: [PATCH v4 2/6] i2c: i801: Use a different adapter-name for IDF adapters
-Date: Mon, 24 Jun 2024 13:15:14 +0200
-Message-ID: <20240624111519.15652-3-hdegoede@redhat.com>
+Subject: [PATCH v4 3/6] platform/x86: dell-smo8800: Move SMO88xx acpi_device_ids to dell-smo8800-ids.h
+Date: Mon, 24 Jun 2024 13:15:15 +0200
+Message-ID: <20240624111519.15652-4-hdegoede@redhat.com>
 In-Reply-To: <20240624111519.15652-1-hdegoede@redhat.com>
 References: <20240624111519.15652-1-hdegoede@redhat.com>
 Precedence: bulk
@@ -67,52 +67,92 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On chipsets with a second 'Integrated Device Function' SMBus controller use
-a different adapter-name for the second IDF adapter.
-
-This allows platform glue code which is looking for the primary i801
-adapter to manually instantiate i2c_clients on to differentiate
-between the 2.
-
-This allows such code to find the primary i801 adapter by name, without
-needing to duplicate the PCI-ids to feature-flags mapping from i2c-i801.c.
+Move the SMO88xx acpi_device_ids to a new dell-smo8800-ids.h header,
+so that these can be shared with the new dell-lis3lv02d code.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
 Changes in v4:
-- Use a single snprintf() with a conditional argument for the 2 names
-- Add a comment that the adapter-name is used by platform code
-
-Changes in v3:
 - This is a new patch in v3 of this patch-set
 ---
- drivers/i2c/busses/i2c-i801.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/platform/x86/dell/dell-smo8800-ids.h | 26 ++++++++++++++++++++
+ drivers/platform/x86/dell/dell-smo8800.c     | 16 +-----------
+ 2 files changed, 27 insertions(+), 15 deletions(-)
+ create mode 100644 drivers/platform/x86/dell/dell-smo8800-ids.h
 
-diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-index d2d2a6dbe29f..94265ee300c0 100644
---- a/drivers/i2c/busses/i2c-i801.c
-+++ b/drivers/i2c/busses/i2c-i801.c
-@@ -1760,8 +1760,15 @@ static int i801_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 
- 	i801_add_tco(priv);
- 
-+	/*
-+	 * adapter.name is used by platform code to find the main I801 adapter
-+	 * to instantiante i2c_clients, do not change.
-+	 */
- 	snprintf(priv->adapter.name, sizeof(priv->adapter.name),
--		"SMBus I801 adapter at %04lx", priv->smba);
-+		 "SMBus %s adapter at %04lx",
-+		 (priv->features & FEATURE_IDF) ? "I801 IDF" : "I801",
-+		 priv->smba);
+diff --git a/drivers/platform/x86/dell/dell-smo8800-ids.h b/drivers/platform/x86/dell/dell-smo8800-ids.h
+new file mode 100644
+index 000000000000..f85d8b707d85
+--- /dev/null
++++ b/drivers/platform/x86/dell/dell-smo8800-ids.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ *  ACPI SMO88XX lis3lv02d freefall / accelerometer device-ids.
++ *
++ *  Copyright (C) 2012 Sonal Santan <sonal.santan@gmail.com>
++ *  Copyright (C) 2014 Pali Rohár <pali@kernel.org>
++ */
++#ifndef _DELL_SMO8800_IDS_H_
++#define _DELL_SMO8800_IDS_H_
 +
- 	err = i2c_add_adapter(&priv->adapter);
- 	if (err) {
- 		platform_device_unregister(priv->tco_pdev);
++#include <linux/mod_devicetable.h>
++
++static const struct acpi_device_id smo8800_ids[] = {
++	{ "SMO8800" },
++	{ "SMO8801" },
++	{ "SMO8810" },
++	{ "SMO8811" },
++	{ "SMO8820" },
++	{ "SMO8821" },
++	{ "SMO8830" },
++	{ "SMO8831" },
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, smo8800_ids);
++
++#endif
+diff --git a/drivers/platform/x86/dell/dell-smo8800.c b/drivers/platform/x86/dell/dell-smo8800.c
+index f7ec17c56833..f9119ed2bd92 100644
+--- a/drivers/platform/x86/dell/dell-smo8800.c
++++ b/drivers/platform/x86/dell/dell-smo8800.c
+@@ -14,10 +14,10 @@
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/miscdevice.h>
+-#include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/uaccess.h>
++#include "dell-smo8800-ids.h"
+ 
+ struct smo8800_device {
+ 	u32 irq;                     /* acpi device irq */
+@@ -163,20 +163,6 @@ static void smo8800_remove(struct platform_device *device)
+ 	dev_dbg(&device->dev, "device /dev/freefall unregistered\n");
+ }
+ 
+-/* NOTE: Keep this list in sync with drivers/i2c/busses/i2c-i801.c */
+-static const struct acpi_device_id smo8800_ids[] = {
+-	{ "SMO8800", 0 },
+-	{ "SMO8801", 0 },
+-	{ "SMO8810", 0 },
+-	{ "SMO8811", 0 },
+-	{ "SMO8820", 0 },
+-	{ "SMO8821", 0 },
+-	{ "SMO8830", 0 },
+-	{ "SMO8831", 0 },
+-	{ "", 0 },
+-};
+-MODULE_DEVICE_TABLE(acpi, smo8800_ids);
+-
+ static struct platform_driver smo8800_driver = {
+ 	.probe = smo8800_probe,
+ 	.remove_new = smo8800_remove,
 -- 
 2.45.1
 
