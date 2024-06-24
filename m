@@ -1,94 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA49182B2;
-	Mon, 24 Jun 2024 18:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A922233B;
+	Mon, 24 Jun 2024 20:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719253696; cv=none; b=h7lZxzx6Ly7YbXqltVAFpXDEoSJM2sKXUf9wJnoyKyggDFlil3mPYqLyIBz6WqVBF9POJB9BP/NRhmijGMp+rJJq/Co7He1odqqhHo/UguvlIIhpznf3IYarT8M+B/RpR1yp3MPQodq2v6flTl7mpX7heCh5dwFaAYaeRf8syXw=
+	t=1719261144; cv=none; b=ZTO+lkvYZqVYOUk8qkobV3Y5O0Y2YD5KzN7ybFSljwuC9aUi7I/Q9xpXoXEfYj8ZOImxHhwexcQX1pauGxjUuij/hODXejMMAvk56ZcbELifv+nNNawPCTkEshWtpnjy5f4+2OsXKLr6AjwvO5ryghaGQPNMSpAYH1i/qmVhokw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719253696; c=relaxed/simple;
-	bh=regM0VHOUBmv8YjzRnnwayJDxfTnaV5iiOMcdP0U9qo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kV1n+ylSMA/fkfhUSyY/t37j1+Cax3/+90thvXBAedZE2U+o/SqdNBNEFf1NJJn1vjGbka4SW6HGKJIZ9DVbkn+LgAWyFClwOmHvKe+dvH0A6ugFAsv95mPWwiKDtgQ8ki9NtxriYeoKIqcHA/Wi8YDUe2wKinOj5OYmMNt4HkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kSnnvSLt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719261144; c=relaxed/simple;
+	bh=fuO4OwbXABi3s5sBggMwImCzAJF7yoChOhtO/9EqYF8=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=t7ldOKbAQ3ohACExpHT/c+dKvMu+GUqcarEenW+FCSk/FVtu7XagCEzcqABHcT7RKX3ZlQFOx/+OExPADkZSHDxottkbPItrwYxOD5qR4oFo04BPyMU9P8rLXa4d9F8yY40xQGF4QzZJHfnT1dfKJGQtXf7hh7N0InN4H7TGjj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G9KcJQ4M; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kSnnvSLt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6A4FC2BBFC;
-	Mon, 24 Jun 2024 18:28:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719253695;
-	bh=regM0VHOUBmv8YjzRnnwayJDxfTnaV5iiOMcdP0U9qo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kSnnvSLtbygR7pSLpcZmrZZE4AuhU823fOCm3hcIeaD5k3aRtqoch9cjzuDHKa91K
-	 yrgl2R6OgNZJ44huLxsBMGe3SL8kEYXxr3luXT0sDi8/pHz+JG2JCHeizOJTYTs5ws
-	 9VwxlB7jmX4A0s261dHZ7LFKpG2EubVeY5nRf35U4lLli+e6SqzZKEY6b11N9EiVUR
-	 QMxnYAVoyD7nRsIR5aAxVxDZU3CjUMx2ccmyDZyONp69P+nIpZct6Uoq+afFFXJqsF
-	 0E05nlN9+GA65kJyoCYIVlz6jQK2OlYruM0nMCoUbfU6S0zQWFwFt1mDfowTTMxWyZ
-	 nF/g087ihk9bw==
-Received: by pali.im (Postfix)
-	id 8F277BF4; Mon, 24 Jun 2024 20:28:12 +0200 (CEST)
-Date: Mon, 24 Jun 2024 20:28:12 +0200
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>, Wolfram Sang <wsa@kernel.org>,
-	eric.piel@tremplin-utc.net, Marius Hoch <mail@mariushoch.de>,
-	Dell.Client.Kernel@dell.com,
-	Kai Heng Feng <kai.heng.feng@canonical.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G9KcJQ4M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719261143; x=1750797143;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=fuO4OwbXABi3s5sBggMwImCzAJF7yoChOhtO/9EqYF8=;
+  b=G9KcJQ4MG8tWw3+vLENS2eRlQw2fgn2rRp4tPMomhS4NI7kzMWGQ34tC
+   TTsR/VXdWWWfKuEaPORLJG/W7jzeiH8ur7i2gbf8HQGRaUNxfzXv6Xdl7
+   4OX93TP2J4rMAAGQJg3EciLD5L17/QTmG1+PfVbg0gGXY416Eqy50odUa
+   XVmUHdBDvx6pzMtTUMCkbnRRQddwbpcUBli5+37uHrOdWqIxD3jG+q3TS
+   yj1mqTwhXhbuDYviLXvL/lEwWHhufABoujfXw0HqTB8D/2CByrkx4nBTt
+   ZGQ9PrqOVLCcZMSt8MlMX52sNmeURrbj0OqV6TyQzzOCJGkknB2O/UWOq
+   Q==;
+X-CSE-ConnectionGUID: rlluUfKDTU2OTtyPOGDTNg==
+X-CSE-MsgGUID: o9U8AcVxTGScWmt1h0Soig==
+X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="33792322"
+X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
+   d="scan'208";a="33792322"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 13:32:22 -0700
+X-CSE-ConnectionGUID: t/FZ04zATRGk0IVW6md0bQ==
+X-CSE-MsgGUID: OWb9ziIuR1qIAmg9o4Xahw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
+   d="scan'208";a="47949129"
+Received: from ticela-or-265.amr.corp.intel.com (HELO xpardee-test1.amr.corp.intel.com) ([10.209.54.237])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 13:32:22 -0700
+From: Xi Pardee <xi.pardee@linux.intel.com>
+To: xi.pardee@linux.intel.com,
+	irenic.rajneesh@gmail.com,
+	david.e.box@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
 	platform-driver-x86@vger.kernel.org,
-	Jean Delvare <jdelvare@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v4 0/6] i2c-i801 / dell-lis3lv02d: Move instantiation of
- lis3lv02d i2c_client from i2c-i801 to dell-lis3lv02d
-Message-ID: <20240624182812.fa6akymygv3qolug@pali>
-References: <20240624111519.15652-1-hdegoede@redhat.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/9] LTR ignore feature improvement
+Date: Mon, 24 Jun 2024 13:32:09 -0700
+Message-Id: <20240624203218.2428475-1-xi.pardee@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240624111519.15652-1-hdegoede@redhat.com>
-User-Agent: NeoMutt/20180716
 
-On Monday 24 June 2024 13:15:12 Hans de Goede wrote:
-> Hans de Goede (6):
->   i2c: core: Setup i2c_adapter runtime-pm before calling device_add()
->   i2c: i801: Use a different adapter-name for IDF adapters
->   platform/x86: dell-smo8800: Move SMO88xx acpi_device_ids to
->     dell-smo8800-ids.h
->   platform/x86: dell-smo8800: Move instantiation of lis3lv02d i2c_client
->     from i2c-i801 to dell-lis3lv02d
->   platform/x86: dell-smo8800: Add a couple more models to
->     lis3lv02d_devices[]
->   platform/x86: dell-smo8800: Add support for probing for the
->     accelerometer i2c address
+This patch series contains six patches to improve LTR ignore
+feature, one patch to modify the usage of pmc_core_send_msg and
+two patches to improve PMC Core driver in general.
 
-Patches 1-5 looks good. There are just a few minor things, but you can add
-Reviewed-by: Pali Rohár <pali@kernel.org>
+Improve LTR ignore feature:
+platform/x86:intel/pmc: Add support to undo ltr_ignore
+platform/x86:intel/pmc: Use the Elvis operator
+platform/x86:intel/pmc: Use DEFINE_SHOW_STORE_ATTRIBUTE macro
+platform/x86:intel/pmc: Remove unneeded min_t check
+platform/x86:intel/pmc: Add support to show ltr_ignore value
+platform/x86:intel/pmc: Move pmc assignment closer to first usage
 
-For patch 6 as I mentioned previously I'm strictly against this change
-until somebody goes and politely ask Dell about the current situation of
-the discovering of accelerometer's i2c address. And if there is no other
-option than start discussion if Dell can include this information into
-DMI / ACPI / WMI or other part of firmware data which they can send from
-BIOS/UEFI to operating system.
+Modify the usage of pmc_core_send_msg:
+platform/x86:intel/pmc: Use the return value of pmc_core_send_msg
 
->  drivers/i2c/busses/i2c-i801.c                | 133 +-------
->  drivers/i2c/i2c-core-base.c                  |  18 +-
->  drivers/platform/x86/dell/Makefile           |   1 +
->  drivers/platform/x86/dell/dell-lis3lv02d.c   | 331 +++++++++++++++++++
->  drivers/platform/x86/dell/dell-smo8800-ids.h |  26 ++
->  drivers/platform/x86/dell/dell-smo8800.c     |  16 +-
->  6 files changed, 379 insertions(+), 146 deletions(-)
->  create mode 100644 drivers/platform/x86/dell/dell-lis3lv02d.c
->  create mode 100644 drivers/platform/x86/dell/dell-smo8800-ids.h
-> 
-> -- 
-> 2.45.1
-> 
+Improve PMC Core driver:
+platform/x86:intel/pmc: Convert index variables to be unsigned
+platform/x86:intel/pmc: Simplify mutex usage with cleanup helpers
+
+Xi Pardee (9):
+  platform/x86:intel/pmc: Use the return value of pmc_core_send_msg
+  platform/x86:intel/pmc: Simplify mutex usage with cleanup helpers
+  platform/x86:intel/pmc: Convert index variables to be unsigned
+  platform/x86:intel/pmc: Move pmc assignment closer to first usage
+  platform/x86:intel/pmc: Add support to show ltr_ignore value
+  platform/x86:intel/pmc: Remove unneeded min_t check
+  platform/x86:intel/pmc: Use DEFINE_SHOW_STORE_ATTRIBUTE macro
+  platform/x86:intel/pmc: Use the Elvis operator
+  platform/x86:intel/pmc: Add support to undo ltr_ignore
+
+ drivers/platform/x86/intel/pmc/core.c | 214 +++++++++++++-------------
+ 1 file changed, 109 insertions(+), 105 deletions(-)
+
+-- 
+2.34.1
+
