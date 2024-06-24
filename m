@@ -1,147 +1,111 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD75D19D082
-	for <platform-driver-x86@vger.kernel.org>; Mon, 24 Jun 2024 15:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394A119DF63;
+	Mon, 24 Jun 2024 16:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719241778; cv=none; b=RXUAtsrXpMQI7gkUwWiBDXSxy7SkgTiIKhMlNrVOeUv+skpYJIbSkRsIbtUIcp6432qR+A9sX9uHrPfpLDrzWHw9SwGjX64vlnsyW3l0ornL9Mv34OAfK7DA5pt6KYHWgVX5P1R1rEe4buR/OsYdottieaemnvykJRvcJTa8c6w=
+	t=1719246142; cv=none; b=gqi7fvyXdJfLUYsMl7xl3DI0qVyVtazZ4qix4isDZ7CkIXw9mWC64f0bVHM/QLTmrqB0mzaC08dyJePjDlo+tUxu7jHX0Nx2ZJOPmKCSv9inCI9iwbP4Vt1c9Gw10iJko02O/XmAiGugPqirON8ez+Fr+QtOvLCB7MsTDwGOfCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719241778; c=relaxed/simple;
-	bh=Ibi8sYn7ylQL5y3VEu7Upgb5wJZ1JdA3xJL82aIZMfs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CxO45oV1oP7F5JN/ork+hwFT9CVLQpA619hnQVpmhnfSjhSijo5U7GkPmkV+LoKC2AG7yPrupRIY6J/k7pPyHWZTbuSGtGIDCkSos+MuE6aJd2WrTA3RBjrfNAIhhTn3atloFx1+wVzEUHzb/cyxrO2jCOmQng814apKY80bYsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FHQJBe4H; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1719246142; c=relaxed/simple;
+	bh=F4+Y3cxc/O7I9mHF0Tndy0UmovZrdLKD0A9V49BygtI=;
+	h=From:Date:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=nXuhygwfx39l/+x6EXaXsu9NiDpgW/cMVlwcgNSdCs0BLg2UTUhyjYOTdHJpgt5S7SmYu7VDib7+3qkZOHxmnDaeWqrt99RCmo2wEyTnzZjuNM2gmnMvfASUoSbDkgVghPeLKuek2q2p2jJNAEqxKWyWwUHjOAk6qNIN8ywPV5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eM1bwwsT; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FHQJBe4H"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-63bca6db118so42119577b3.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Jun 2024 08:09:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1719241775; x=1719846575; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ASZd4wKEAiwtqiPptjvJp63/aDvJWAQ0c9DP1WpI4QM=;
-        b=FHQJBe4HVSxW5+hmTn3nNtqFZ5VwhPHZ6oHGd0mf52Rrn1zUo7VUwMSLIlqO1NAHmO
-         skhz7W6ar00UG2QskuxJoLr5GZlmH/dAoHeA+aM9t+zRF+k+uJUfZZttUzBtr0TEwJwe
-         z5VkB80/CMgkLPnCKRbBZvU0ZZolRjX6UeB3vo4ubE+SttK+a+H+ZndLIovGyofYMDZE
-         sfZfOiMbLJq0Ewqv2g5MHPTTpUqvyBsL+2QjDgqzCv/BQmlzMENUbkrfukYS34wU7DMu
-         FWAKjk7RMT2A0zMAwli6ULGhsAiTp82PUi+Qvzf3kcw3n2aoiQtaBrErbZGsQvLaUslC
-         Qt4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719241775; x=1719846575;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ASZd4wKEAiwtqiPptjvJp63/aDvJWAQ0c9DP1WpI4QM=;
-        b=Vy4aI2XP2ZzRSJl1FwDFdTJR7Tc9uL+OVVyaLvrNgoEJj0LOqy/zcX8DmHona5PJar
-         2G2VRTcB1RcaLzASfq6A5RR79qc+KZu30lznxTecv2C9oPTMCFQP7s/FiAoWGNinDiCw
-         tQLqM+TSq8fNK03jZ2t+InrarpNcYaaQx/gsdE6ESYcOls+UbSxwwbc+t9T2Z+WKgqXY
-         T+BS+NZK5ATyWX4jUzZiUqngecS9i/cTDv1++5X5Wvvwp677FIbd/mbm/V31X30G3zs8
-         WG5CcpAB90KecASPbPeiZjCdgT1uTX9XKUHfupUy4AoeH4VCT3ctzYWX2Jyr1rV8LCPq
-         WvxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW7ZW8LPE+/g83AjaPkIL1PZFK2QKRi8EuPQ+ZbwqEqXLlthpvmZguP2HYJe+69J0ES0JPeNe8sYPksGQrGGww2TTBwZ1nW/Vst8jKk1803QMSbNg==
-X-Gm-Message-State: AOJu0Yw4N1zFWnhyBlIGzqJto39ZqTSSazXgVJFvOfwehPHspfu1WX8Z
-	IP1UqDO0/peVTfGNdTjmNt0IEeA64KF7q3UxVMOW6xjlXpMYRDRKGLOKa+snXGhPXHcQrcZZTmM
-	WmjCyphR4P6HSHQqixrRymjhVvUjQbdgJTzVJNizmv7OTtpr9KBw=
-X-Google-Smtp-Source: AGHT+IFk7ZptCfvr3I0bCaSAgeH41ekniw2KW5iMHWyieVMoyZ19l2fUERsJJEo6b9A6UwAFeBQR0LS33DKM2r3otCI=
-X-Received: by 2002:a81:6e54:0:b0:63c:486a:289e with SMTP id
- 00721157ae682-643abf3cbd5mr46006067b3.32.1719241774654; Mon, 24 Jun 2024
- 08:09:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eM1bwwsT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719246142; x=1750782142;
+  h=from:date:to:cc:subject:message-id:mime-version;
+  bh=F4+Y3cxc/O7I9mHF0Tndy0UmovZrdLKD0A9V49BygtI=;
+  b=eM1bwwsTyLz961F2i2fWFMs5Hb7hpZ9n4YTirz3ZQh6RIYb0fU3ksSum
+   yDbVs2hm0ICAIhyADK8r5BmuVdz0S4NxRlzhbMBijqMfkOkJFyNgvw/Qq
+   5j5romH4MvkBS2vNpqXHeCT5CoFbdOyxemb3E4LbiRoDkt9f6NZ8WofOw
+   8ewXKJikSv0OWIpF6fUgMZzkarYbxq/JWfeOuLZ72GppjLMOOccpuWfxf
+   t6SgnsErOJxOT5oyUTfG93coGsOLtOYQJr+9CRBwIZya7+R8sESG4MY99
+   I4eNumFEid/GhJVURymVoxQ10/glSZaUjry0GY2UQ6cvP9ig9RzPe6EEs
+   Q==;
+X-CSE-ConnectionGUID: JA7CPWkbRBaIRtwIdsSpUg==
+X-CSE-MsgGUID: psOO9gwFS72skdqjCSkJLQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="27637272"
+X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
+   d="scan'208";a="27637272"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 09:22:21 -0700
+X-CSE-ConnectionGUID: BYOU9KmYQaW5pzZiTrNtkw==
+X-CSE-MsgGUID: 0uzXkmujTjyvFcGh+4A4Pg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
+   d="scan'208";a="47721812"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.61])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 09:22:14 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 24 Jun 2024 19:22:10 +0300 (EEST)
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+    Sebastian Reichel <sre@kernel.org>, 
+    Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+    Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+    Konrad Dybcio <konrad.dybcio@linaro.org>, linux-pm@vger.kernel.org, 
+    devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, 
+    linux-arm-msm@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>, 
+    Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: branch between pdx86 lenovo c630 branch, power/supply and USB
+Message-ID: <0986fbac-7fba-56ea-cabb-c040ae12a795@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240621-ucsi-yoga-ec-driver-v8-1-e03f3536b8c6@linaro.org>
- <2024062411-neutron-striving-f16c@gregkh> <CAA8EJppDtmNxfjc-f9MA1Za=jvZFqahKtM+FA66jG6Dg=zp1Cw@mail.gmail.com>
- <2024062400-stimulant-barn-2daa@gregkh>
-In-Reply-To: <2024062400-stimulant-barn-2daa@gregkh>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Mon, 24 Jun 2024 18:09:19 +0300
-Message-ID: <CAA8EJpqNd45CF+hw-fqXzUT51+6wmxYy3R8UBxzH+9C3AcgO+g@mail.gmail.com>
-Subject: Re: [PATCH v8] usb: typec: ucsi: add Lenovo Yoga C630 glue driver
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Nikita Travkin <nikita@trvn.ru>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, 24 Jun 2024 at 17:43, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Jun 24, 2024 at 05:37:05PM +0300, Dmitry Baryshkov wrote:
-> > On Mon, 24 Jun 2024 at 17:25, Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Fri, Jun 21, 2024 at 01:21:26AM +0300, Dmitry Baryshkov wrote:
-> > > > The Lenovo Yoga C630 WOS laptop provides implements UCSI interface =
-in
-> > > > the onboard EC. Add glue driver to interface the platform's UCSI
-> > > > implementation.
-> > > >
-> > > > Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> > > > Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > > > Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> > > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > > ---
-> > > > Add driver for the UCSI on the Lenovo Yoga C630 laptop, as implemen=
-ted
-> > > > by the Embedded Controlller of the laptop.
-> > > >
-> > > > Support for this EC was implemented by Bjorn, who later could not w=
-ork
-> > > > on this driver. I've picked this patchset up and updated it followi=
-ng
-> > > > the pending review comments.
-> > > >
-> > > > NOTE: the patch depends on the header from the platform driver. Ilp=
-o
-> > > > J=C3=A4rvinen has created an immutable branch based on v6.10-rc1, p=
-lease pull
-> > > > it before merging the patches:
-> > > >
-> > > >   https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-dr=
-ivers-x86.git tags/platform-drivers-x86-ib-lenovo-c630-v6.11
-> > > >
-> > > >   platform: arm64: add Lenovo Yoga C630 WOS EC driver (2024-06-14 1=
-2:51:30 +0300)
-> > >
-> > > I have that branch, yet when building this driver as a module I get t=
-he
-> > > following errors:
-> > > ERROR: modpost: "yoga_c630_ec_unregister_notify" [drivers/usb/typec/u=
-csi/ucsi_yoga_c630.ko] undefined!
-> > > ERROR: modpost: "yoga_c630_ec_ucsi_get_version" [drivers/usb/typec/uc=
-si/ucsi_yoga_c630.ko] undefined!
-> > > ERROR: modpost: "yoga_c630_ec_register_notify" [drivers/usb/typec/ucs=
-i/ucsi_yoga_c630.ko] undefined!
-> > > ERROR: modpost: "yoga_c630_ec_ucsi_write" [drivers/usb/typec/ucsi/ucs=
-i_yoga_c630.ko] undefined!
-> > > ERROR: modpost: "yoga_c630_ec_ucsi_read" [drivers/usb/typec/ucsi/ucsi=
-_yoga_c630.ko] undefined!
-> > >
-> > > So something went wrong :(
-> > >
-> > > I'll unwind that branch pull now as well and wait for a fixed up vers=
-ion
-> > > to be sent.
-> >
-> > Could you please share your .config? I could not reproduce the issue
-> > here. The EC driver has all the necessary EXPORT_SYMBOL_GPL()
-> > declarations.
->
-> Sure, attached.
+Hi,
 
-Thanks! Fixed in v9, drivers/platform/Kconfig issue.
+This is v2 of the lenovo c630 IB branch with the build fix for non-ARM64 
+platforms (built on top of the commits in the previous IB PR).
 
---=20
-With best wishes
-Dmitry
+The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
+
+  Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-ib-lenovo-c630-v6.11-2
+
+for you to fetch changes up to 13bbe1c83bc401c2538c758228d27b4042b08341:
+
+  platform/arm64: build drivers even on non-ARM64 platforms (2024-06-24 18:22:15 +0300)
+
+----------------------------------------------------------------
+Immutable branch between pdx86 lenovo c630 branch, power/supply and USB
+subsystems due for the v6.11 merge window.
+
+platform-drivers-x86-ib-lenovo-c630-v6.11-2:
+  v6.10-rc1 + platform-drivers-x86-lenovo-c630
+for merging into the power/supply and USB subsystems for v6.11.
+
+----------------------------------------------------------------
+Bjorn Andersson (1):
+      dt-bindings: platform: Add Lenovo Yoga C630 EC
+
+Dmitry Baryshkov (2):
+      platform: arm64: add Lenovo Yoga C630 WOS EC driver
+      platform/arm64: build drivers even on non-ARM64 platforms
+
+ .../bindings/platform/lenovo,yoga-c630-ec.yaml     |  83 ++++++
+ drivers/platform/Makefile                          |   2 +-
+ drivers/platform/arm64/Kconfig                     |  14 +
+ drivers/platform/arm64/Makefile                    |   1 +
+ drivers/platform/arm64/lenovo-yoga-c630.c          | 291 +++++++++++++++++++++
+ include/linux/platform_data/lenovo-yoga-c630.h     |  44 ++++
+ 6 files changed, 434 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/platform/lenovo,yoga-c630-ec.yaml
+ create mode 100644 drivers/platform/arm64/lenovo-yoga-c630.c
+ create mode 100644 include/linux/platform_data/lenovo-yoga-c630.h
