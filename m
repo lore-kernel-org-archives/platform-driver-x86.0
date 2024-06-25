@@ -1,216 +1,420 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A7E1581E0
-	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Jun 2024 12:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF012177991
+	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Jun 2024 18:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719319588; cv=none; b=u9BBxcRja0zqNS0bUDi0MPk4rIhQuGeESXGjz5aLMAEXyx6Hf94FhUa4M5EU8vzttvJiivRMW0QGEorhsCJ+qCazBYg8pIrin7Djt0z3PXAqKzmNXwQ43xtaRiXntVyCo6uezKr99kViiqGKhXKfMi6yarSqiY72rSbywZngVWE=
+	t=1719338821; cv=none; b=h4GzDzfDRIlxSpwJExR3dmOkWUXa8zRMo07Wb9XtSTAwS2joXC0HM8SnTVoogcTVzkEMZUBW28hL7JlVJRUhYISaN5q3EDQHqjQ6W35tw+Ny+XyJ1x/bXcZbih8doA46jP2ASTp0S/uftmkOFehdeZu37Q1SFg9luImIevt2Wmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719319588; c=relaxed/simple;
-	bh=2/V0+eg6RbZGazyrpMTfIkCUbzLzr9C9iNcfwfdec7o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h4x9pcH3zV+Rtpb6KmjyCP92YOzQDJ9fyszCv2bJXJvLG1kBoxa/TcnheeQKVm0BseaNkiO0O/VHgqYKOQyptvHKMugBbGwZy14XrkjwaUt00rO89BcoAxyDV5SqDvDf90OmBgDeLNgbkzhuk9UfctgknDDs11wu1Ywfh/h8ofg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SaejKL68; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719338821; c=relaxed/simple;
+	bh=awNh57NTJ2FbYu7vJ12R8hEqsdEDzz7buS4GgN81+Rk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Jz/DVjeqg2LkLhd6xfEWdFb50SSMuGbcSSjhfRNv+Ex5GlCagKgep8lRUevReH+nY4Sjc481A7/ouG9fjD/C5nCpV6EpYdo50g+X0u3gVfdNcr3pTZvpLXxjKhDr2TzWCS2nCBDLOLosfGAXwXccxQFuOkHXCAH27ik56NkJIXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B3u9j2u3; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SaejKL68"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719319586; x=1750855586;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2/V0+eg6RbZGazyrpMTfIkCUbzLzr9C9iNcfwfdec7o=;
-  b=SaejKL68JFkF5Srj3298zF06uGG+slpVp6MHl2X2u4bvHj4vFKyxhce9
-   2BvIreiY7mXMsv8ooHrq1PT0J7q2Gd/9hAzlDZhbKZLUni0/OVrdEf5qW
-   hTyzJMlB6sV2OcplvyhC6mcC8Uimm3YY/XQnA/yV2HVU6KTMTbfTTIrA5
-   9X18L7m8T74fdyb41heZu1xdOfw+It07t1NwPuZ9+/uAGqVpqc8FXICcP
-   Zqg4rVeNG1D6pkWEma/hkysP3Y3blTbAX3hJgzUzPTrk6ZqjzJ/sq8ZzU
-   ZggbLygjqcLFzthIckJKad38VWFDgFudkuBCXjh5y9XzQEhGagATEpGUn
-   Q==;
-X-CSE-ConnectionGUID: bwrNev5UQFukb7y858WmiQ==
-X-CSE-MsgGUID: kdiPq976T2y6gvhqSU7Lyw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="26955349"
-X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
-   d="scan'208";a="26955349"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 05:46:25 -0700
-X-CSE-ConnectionGUID: i2d/NfzhTPyaAcyZXs2f8g==
-X-CSE-MsgGUID: Xecy6owqTUq+VRjokrmzQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,264,1712646000"; 
-   d="scan'208";a="48547093"
-Received: from awvttdev-05.aw.intel.com ([10.228.212.156])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 05:46:23 -0700
-From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-To: intel-xe@lists.freedesktop.org,
-	platform-driver-x86@vger.kernel.org,
-	david.e.box@linux.intel.com
-Cc: michael.j.ruhl@intel.com
-Subject: [PATCH v3 6/6] drm/xe/vsec: Add support for DG2
-Date: Tue, 25 Jun 2024 08:45:52 -0400
-Message-ID: <20240625124554.3358460-7-michael.j.ruhl@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240625124554.3358460-1-michael.j.ruhl@intel.com>
-References: <20240625124554.3358460-1-michael.j.ruhl@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B3u9j2u3"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3621ac606e1so4125342f8f.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Jun 2024 11:06:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719338818; x=1719943618; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oZDyMtzEOR9FFQ4a9LuHSBT+sNwh3uKqiqGGTvyUdQU=;
+        b=B3u9j2u3Kyw/lamQ+yxKGl+3yTy+jfVR9nSLkFsQ9ipgo6QsKh0u5N1wtbK9KEC7mv
+         92fA0lGjZQbjPGmrkwBmkoTOSDXYvhlBEQDODLlaDkGBI8/fiqjlN1F2zthTum2YPNRv
+         GntqCD+qv+Ie36jzMeGqVyhRePNEEt6eFIIh4kjIADHwXswSYX73zsQTfHKgrOPYIGXI
+         Eg/7e3gdtANfyf0gWuSWzbzLlHmOBdBGAr7jypyg4o01V6+zsO1ktgeJgMBFnSgZ/5c+
+         U5kHLrmnU0rT0121hTHUcjo1gOYn2J6yi6nos/CzbuESUCDfO0NrdoMbJpGwBq7X2DpL
+         aISw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719338818; x=1719943618;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oZDyMtzEOR9FFQ4a9LuHSBT+sNwh3uKqiqGGTvyUdQU=;
+        b=rxYEejEVXVBO/rLA6V+NeziTEDOSX1FmAR6ejU+3zb0pIPnwM/qNK3FP28E/qhkWvw
+         mdkNjeHD0wGclnDykIVa/z/h5LqvERDv+UIZkiah5L//NDI2gmZdt3DIL+Y+Xm9hxx1a
+         y8F2nBFLGYrGI2V9vv6RcrzWqsIkzD8/vo0VFoLtNpQmz7zH2uhxKt2vX/GK2cH5eFy5
+         c/1g02wuq/g6x9e55ygcx6r7tNp7gSjk3AqOqkxsWwJuWAM808E9qxxi731zu46TRxbu
+         OwdnmTWznRA7jkICk09AQK9nM0hjC9bo+51i2xRNs0GOlkTfOrHxaK94IWZ6ll7G5lyq
+         mlvg==
+X-Gm-Message-State: AOJu0YxUlFB8q1nKw5aVqIRcy6Ugnw7Og0AL+Zid1WGpX9o44bf3XoGw
+	k+FvZuVAy+SSOPbzlgpEgdWADwaeHWee8Jq4GyiQ8W+MlnIfPRuhA4IpKczC6/wMyQ==
+X-Google-Smtp-Source: AGHT+IEtwW8kW29YuojKTicVDxz87usJ6L7dBLtr9Or3uQ3GPgln7DQEI2Kh57ANvC3QEBDCWWibLw==
+X-Received: by 2002:a5d:6c68:0:b0:366:ebf6:116b with SMTP id ffacd0b85a97d-366ebf612ddmr8924946f8f.33.1719338817856;
+        Tue, 25 Jun 2024 11:06:57 -0700 (PDT)
+Received: from alexis-pc (cust-west-par-46-193-0-235.cust.wifirst.net. [46.193.0.235])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-366389b8597sm13557562f8f.36.2024.06.25.11.06.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jun 2024 11:06:57 -0700 (PDT)
+Date: Tue, 25 Jun 2024 20:06:55 +0200
+From: Alexis Belmonte <alexbelm48@gmail.com>
+To: W_Armin@gmx.de, ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com
+Cc: platform-driver-x86@vger.kernel.org
+Subject: [PATCHv3] platform/x86: hp-wmi: Fix platform profile option switch
+ bug on Omen and Victus laptops
+Message-ID: <ZnsHP9p2Iwf2mPvC@alexis-pc>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-DG2 needs to adjust the discovery offset WRT the GT BAR not the
-P2SB bar so add the base_adjust value to allow for the difference
-to be used.
+Fix a platform profile option switch/getter bug on some Omen and Victus laptops
+dismissing userspace choice when selecting performance mode in inadequate
+conditions (e.g. by being disconnected from the AC power plug) by
 
-Update xe_vsec.c to include DG2 header information.
+   -  hooking an ACPI notify handler through the
+      omen_register_powersource_notifier_handler method that listens to AC
+      power source changes (plugging in/out the AC power plug)
 
-Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+   -  keeping an intermediate active_platform_profile variable that is
+      set when userspace changes the platform profile setting
+
+   -  restoring the selected platform profile kept in
+      active_platform_profile when AC power is plugged back into the
+      laptop, unless if the user decided to alter the platform profile mid-way
+
+This ensures that the driver follows the principles defined in the Platform
+Profile Selection page of the Kernel documentation on those kind of laptops;
+which is to not "(...) let userspace know about any sub-optimal conditions
+which are impeding reaching the requested performance level".
+
+Since the Omen and Victus laptops share the same embedded controller system,
+the fix is applicable to both categories of laptops.
+
+Signed-off-by: Alexis Belmonte <alexbelm48@gmail.com>
 ---
- drivers/gpu/drm/xe/xe_vsec.c | 81 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+V1 -> V2: - Use register_acpi_notifier and unregister_acpi_notifier instead of
+            hooking straight through ACPI node \\_SB.ADP1 to listen for
+            AC power source changes
+V2 -> V3: - Rely on power_supply_is_system_supplied() instead of an EC-specific
+            field to determine if the laptop is plugged in
+          - Refactor omen_powersource_notify_handler to omen_powersource_event
+          - Refactor omen_powersource_register_notifier_handler to
+            omen_register_powersource_event_handler
+          - Refactor omen_powersource_unregister_notifier_handler to
+            omen_unregister_powersource_event_handler
+          - Use a mutex to protect the active_platform_profile variable from
+            being altered while the handler is executed
+---
+ drivers/platform/x86/hp/hp-wmi.c | 189 +++++++++++++++++++++++++++++--
+ 1 file changed, 177 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
-index a8afef731379..a0a154657816 100644
---- a/drivers/gpu/drm/xe/xe_vsec.c
-+++ b/drivers/gpu/drm/xe/xe_vsec.c
-@@ -15,6 +15,16 @@
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 5fa553023842..f682bdef95a2 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -24,6 +24,7 @@
+ #include <linux/platform_profile.h>
+ #include <linux/hwmon.h>
+ #include <linux/acpi.h>
++#include <linux/power_supply.h>
+ #include <linux/rfkill.h>
+ #include <linux/string.h>
+ #include <linux/dmi.h>
+@@ -83,6 +84,11 @@ static const char * const victus_thermal_profile_boards[] = {
+ 	"8A25"
+ };
  
- #define SOC_BASE		0x280000
- 
-+/* from drivers/platform/x86/intel/pmt/telemetry.c */
-+#define TELEM_BASE_OFFSET	0x8
-+
-+#define DG2_PMT_BASE		0xE8000
-+#define DG2_DISCOVERY_START	0x6000
-+#define DG2_TELEM_START		0x4000
-+
-+#define DG2_DISCOVERY_OFFSET	(SOC_BASE + DG2_PMT_BASE + DG2_DISCOVERY_START)
-+#define DG2_TELEM_OFFSET	(SOC_BASE + DG2_PMT_BASE + DG2_TELEM_START)
-+
- #define BMG_PMT_BASE		0xDB000
- #define BMG_DISCOVERY_OFFSET	(SOC_BASE + BMG_PMT_BASE)
- 
-@@ -27,6 +37,20 @@
- #define SG_REMAP_ACCESS(_mem)	((_mem) << 24)
- #define SG_REMAP_BITS		GENMASK(31, 24)
- 
-+static struct intel_vsec_header dg2_telemetry = {
-+	.length = 0x10,
-+	.id = VSEC_ID_TELEMETRY,
-+	.num_entries = 1,
-+	.entry_size = 3,
-+	.tbir = GFX_BAR,
-+	.offset = DG2_DISCOVERY_OFFSET,
++enum hp_wmi_powersource_flags {
++	HPWMI_POWERSOURCE_AC_OFFLINE	= 0x02,
++	HPWMI_POWERSOURCE_AC_ONLINE	= 0x0b
 +};
 +
-+static struct intel_vsec_header *dg2_capabilities[] = {
-+	&dg2_telemetry,
-+	NULL
-+};
+ enum hp_wmi_radio {
+ 	HPWMI_WIFI	= 0x0,
+ 	HPWMI_BLUETOOTH	= 0x1,
+@@ -261,8 +267,12 @@ static const struct key_entry hp_wmi_keymap[] = {
+ 
+ static struct input_dev *hp_wmi_input_dev;
+ static struct input_dev *camera_shutter_input_dev;
 +
- static struct intel_vsec_header bmg_telemetry = {
- 	.length = 0x10,
- 	.id = VSEC_ID_TELEMETRY,
-@@ -43,10 +67,16 @@ static struct intel_vsec_header *bmg_capabilities[] = {
+ static struct platform_device *hp_wmi_platform_dev;
+ static struct platform_profile_handler platform_profile_handler;
++static struct notifier_block platform_power_source_nb;
++DEFINE_MUTEX(active_platform_profile_lock);
++static enum platform_profile_option active_platform_profile;
+ static bool platform_profile_support;
+ static bool zero_insize_support;
  
- enum xe_vsec {
- 	XE_VSEC_UNKNOWN = 0,
-+	XE_VSEC_DG2,
- 	XE_VSEC_BMG,
- };
- 
- static struct intel_vsec_platform_info xe_vsec_info[] = {
-+	[XE_VSEC_DG2] = {
-+		.caps = VSEC_CAP_TELEMETRY,
-+		.headers = dg2_capabilities,
-+		.quirks = VSEC_QUIRK_EARLY_HW,
-+	},
- 	[XE_VSEC_BMG] = {
- 		.caps = VSEC_CAP_TELEMETRY,
- 		.headers = bmg_capabilities,
-@@ -166,6 +196,7 @@ struct pmt_callbacks xe_pmt_cb = {
- };
- 
- static const int vsec_platforms[] = {
-+	[XE_DG2] = XE_VSEC_DG2,
- 	[XE_BATTLEMAGE] = XE_VSEC_BMG,
- };
- 
-@@ -177,6 +208,49 @@ static enum xe_vsec get_platform_info(struct xe_device *xe)
- 	return vsec_platforms[xe->info.platform];
+@@ -1194,8 +1204,7 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+ 	return err;
  }
  
-+/*
-+ * Access the DG2 PMT MMIO discovery table
-+ *
-+ * The intel_vsec driver does not typically access the discovery table.
-+ * Instead, it creates a memory resource for the table and passes it
-+ * to the PMT telemetry driver. Each discovery table contains 3 items,
-+ *    - GUID
-+ *    - Telemetry size
-+ *    - Telemetry offset (offset from P2SB BAR, not GT)
-+ *
-+ * For DG2 we know what the telemetry offset is, but we still need to
-+ * use the discovery table to pass the GUID and the size. So figure
-+ * out the difference between the P2SB offset and the GT offset and
-+ * save this so that the telemetry driver can use it to adjust the
-+ * value.
-+ */
-+static int dg2_adjust_offset(struct pci_dev *pdev, struct device *dev,
-+			     struct intel_vsec_platform_info *info)
+-static int platform_profile_omen_get(struct platform_profile_handler *pprof,
+-				     enum platform_profile_option *profile)
++static int platform_profile_omen_get_ec(enum platform_profile_option *profile)
+ {
+ 	int tp;
+ 
+@@ -1223,6 +1232,30 @@ static int platform_profile_omen_get(struct platform_profile_handler *pprof,
+ 	return 0;
+ }
+ 
++static int platform_profile_omen_get(struct platform_profile_handler *pprof,
++				     enum platform_profile_option *profile)
 +{
-+	void __iomem *base;
-+	u32 telem_offset;
-+	u64 addr;
++	enum platform_profile_option selected_platform_profile;
 +
-+	/* compile check to verify that quirk has P2SB quirk added */
++	/*
++	 * We directly return the stored platform profile, as the embedded
++	 * controller will not accept switching to the performance option when
++	 * the conditions are not met (e.g. the laptop is not plugged in).
++	 *
++	 * If we directly return what the EC reports, the platform profile will
++	 * immediately "switch back" to normal mode, which is against the
++	 * expected behaviour from a userspace point of view, as described in
++	 * the Platform Profile Section page of the kernel documentation.
++	 *
++	 * See also omen_powersource_event.
++	 */
++	mutex_lock(&active_platform_profile_lock);
++	selected_platform_profile = active_platform_profile;
++	mutex_unlock(&active_platform_profile_lock);
 +
-+	addr = pci_resource_start(pdev, GFX_BAR) + info->headers[0]->offset;
-+	base = ioremap_wc(addr, 16);
-+	if (!base)
-+		return -ENOMEM;
-+
-+	telem_offset = readl(base + TELEM_BASE_OFFSET);
-+
-+	/* Use the base_addr + P2SB quirk to pass this info */
-+	if (telem_offset < DG2_TELEM_OFFSET)
-+		info->base_adjust = -(DG2_TELEM_OFFSET - telem_offset);
-+	else
-+		info->base_adjust = -(telem_offset - DG2_TELEM_OFFSET);
-+
-+	iounmap(base);
-+
-+	return 0;
++	return selected_platform_profile;
 +}
 +
- /**
-  * intel_vsec_init - Initialize resources and add intel_vsec auxiliary
-  * interface
-@@ -188,6 +262,7 @@ void xe_vsec_init(struct xe_device *xe)
- 	struct device *dev = xe->drm.dev;
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	enum xe_vsec platform;
-+	u32 ret;
+ static bool has_omen_thermal_profile_ec_timer(void)
+ {
+ 	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
+@@ -1248,7 +1281,7 @@ inline int omen_thermal_profile_ec_timer_set(u8 value)
+ static int platform_profile_omen_set(struct platform_profile_handler *pprof,
+ 				     enum platform_profile_option profile)
+ {
+-	int err, tp, tp_version;
++	int err = 0, tp, tp_version;
+ 	enum hp_thermal_profile_omen_flags flags = 0;
  
- 	platform = get_platform_info(xe);
- 	if (platform == XE_VSEC_UNKNOWN)
-@@ -198,6 +273,12 @@ void xe_vsec_init(struct xe_device *xe)
- 		return;
+ 	tp_version = omen_get_thermal_policy_version();
+@@ -1279,14 +1312,16 @@ static int platform_profile_omen_set(struct platform_profile_handler *pprof,
+ 		return -EOPNOTSUPP;
+ 	}
  
- 	switch (platform) {
-+	case XE_VSEC_DG2:
-+		ret = dg2_adjust_offset(pdev, dev, info);
-+		if (ret)
-+			return;
-+		break;
++	mutex_lock(&active_platform_profile_lock);
 +
- 	case XE_VSEC_BMG:
- 		info->priv_data = &xe_pmt_cb;
- 		break;
+ 	err = omen_thermal_profile_set(tp);
+ 	if (err < 0)
+-		return err;
++		goto unlock_and_return;
+ 
+ 	if (has_omen_thermal_profile_ec_timer()) {
+ 		err = omen_thermal_profile_ec_timer_set(0);
+ 		if (err < 0)
+-			return err;
++			goto unlock_and_return;
+ 
+ 		if (profile == PLATFORM_PROFILE_PERFORMANCE)
+ 			flags = HP_OMEN_EC_FLAGS_NOTIMER |
+@@ -1294,10 +1329,15 @@ static int platform_profile_omen_set(struct platform_profile_handler *pprof,
+ 
+ 		err = omen_thermal_profile_ec_flags_set(flags);
+ 		if (err < 0)
+-			return err;
++			goto unlock_and_return;
+ 	}
+ 
+-	return 0;
++	active_platform_profile = profile;
++
++unlock_and_return:
++	mutex_unlock(&active_platform_profile_lock);
++
++	return err;
+ }
+ 
+ static int thermal_profile_get(void)
+@@ -1381,8 +1421,8 @@ static bool is_victus_thermal_profile(void)
+ 			    board_name) >= 0;
+ }
+ 
+-static int platform_profile_victus_get(struct platform_profile_handler *pprof,
+-				     enum platform_profile_option *profile)
++static int platform_profile_victus_get_ec(
++	enum platform_profile_option *profile)
+ {
+ 	int tp;
+ 
+@@ -1407,10 +1447,27 @@ static int platform_profile_victus_get(struct platform_profile_handler *pprof,
+ 	return 0;
+ }
+ 
++static int platform_profile_victus_get(struct platform_profile_handler *pprof,
++				       enum platform_profile_option *profile)
++{
++	enum platform_profile_option selected_platform_profile;
++
++	/*
++	 * Same as for platform_profile_omen_get -- I still decided to keep
++	 * it as a separate implementation if we need to add Victus-specific
++	 * behaviour/logic in the future
++	 */
++	mutex_lock(&active_platform_profile_lock);
++	selected_platform_profile = active_platform_profile;
++	mutex_unlock(&active_platform_profile_lock);
++
++	return selected_platform_profile;
++}
++
+ static int platform_profile_victus_set(struct platform_profile_handler *pprof,
+-				     enum platform_profile_option profile)
++				       enum platform_profile_option profile)
+ {
+-	int err, tp;
++	int err = 0, tp;
+ 
+ 	switch (profile) {
+ 	case PLATFORM_PROFILE_PERFORMANCE:
+@@ -1426,13 +1483,106 @@ static int platform_profile_victus_set(struct platform_profile_handler *pprof,
+ 		return -EOPNOTSUPP;
+ 	}
+ 
++	mutex_lock(&active_platform_profile_lock);
++
+ 	err = omen_thermal_profile_set(tp);
+ 	if (err < 0)
+-		return err;
++		goto unlock_and_return;
++
++	active_platform_profile = profile;
++
++unlock_and_return:
++	mutex_unlock(&active_platform_profile_lock);
+ 
+ 	return 0;
+ }
+ 
++static int omen_powersource_event(struct notifier_block *nb,
++					   unsigned long value,
++					   void *data)
++{
++	struct acpi_bus_event *event_entry = data;
++	enum platform_profile_option selected_platform_profile;
++	enum platform_profile_option actual_profile;
++	int err;
++
++	if (strcmp(event_entry->device_class, "ac_adapter") != 0)
++		return NOTIFY_DONE;
++
++	pr_debug("Received power source device event\n");
++
++	if (is_omen_thermal_profile())
++		err = platform_profile_omen_get_ec(&actual_profile);
++	else if (is_victus_thermal_profile())
++		err = platform_profile_victus_get_ec(&actual_profile);
++
++	if (err < 0) {
++		pr_warn("Failed to read current platform profile (%d)\n", err);
++		return NOTIFY_BAD;
++	}
++
++	/*
++	 * We don't want the handler to overwrite the newly set platform
++	 * profile if the user has changed it in the meantime (thanks Armin!)
++	 */
++	if (!mutex_trylock(&active_platform_profile_lock))
++		return NOTIFY_DONE;
++
++	selected_platform_profile = active_platform_profile;
++	mutex_unlock(&active_platform_profile_lock);
++
++	/*
++	 * If we're back on AC and that the user-chosen power profile is
++	 * different from what the EC reports, we restore the user-chosen
++	 * one.
++	 */
++	if (power_supply_is_system_supplied() >= 0 ||
++	    selected_platform_profile == actual_profile)
++		return NOTIFY_DONE;
++
++	err = platform_profile_handler.profile_set(&platform_profile_handler,
++						   active_platform_profile);
++	if (err < 0) {
++		pr_warn("Failed to restore platform profile (%d)\n", err);
++		return NOTIFY_BAD;
++	}
++
++	return NOTIFY_OK;
++}
++
++static void omen_register_powersource_event_handler(void)
++{
++	int err;
++	acpi_status status;
++
++	if (is_omen_thermal_profile())
++		err = platform_profile_omen_get_ec(&active_platform_profile);
++	else if (is_victus_thermal_profile())
++		err = platform_profile_victus_get_ec(&active_platform_profile);
++
++	if (err < 0) {
++		pr_warn("Failed to retrieve active platform profile (%d)\n",
++			err);
++		active_platform_profile = PLATFORM_PROFILE_BALANCED;
++	}
++
++	platform_power_source_nb.notifier_call = omen_powersource_event;
++	status = register_acpi_notifier(&platform_power_source_nb);
++
++	if (ACPI_FAILURE(status))
++		pr_warn("Failed to install ACPI power source notify handler\n");
++}
++
++static void omen_unregister_powersource_event_handler(void)
++{
++	acpi_status status;
++
++	status = unregister_acpi_notifier(&platform_power_source_nb);
++
++	if (ACPI_FAILURE(status))
++		pr_err("Failed to remove ACPI power source notify handler\n");
++}
++
+ static int thermal_profile_setup(void)
+ {
+ 	int err, tp;
+@@ -1534,6 +1684,15 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+ 
+ 	thermal_profile_setup();
+ 
++	/*
++	 * Query the platform profile once to know which last power profile
++	 * was set.
++	 */
++	err = platform_profile_handler.profile_get(&platform_profile_handler,
++						   &active_platform_profile);
++	if (err < 0)
++		return err;
++
+ 	return 0;
+ }
+ 
+@@ -1758,6 +1917,9 @@ static int __init hp_wmi_init(void)
+ 			goto err_unregister_device;
+ 	}
+ 
++	if (is_omen_thermal_profile() || is_victus_thermal_profile())
++		omen_register_powersource_event_handler();
++
+ 	return 0;
+ 
+ err_unregister_device:
+@@ -1772,6 +1934,9 @@ module_init(hp_wmi_init);
+ 
+ static void __exit hp_wmi_exit(void)
+ {
++	if (is_omen_thermal_profile() || is_victus_thermal_profile())
++		omen_unregister_powersource_event_handler();
++
+ 	if (wmi_has_guid(HPWMI_EVENT_GUID))
+ 		hp_wmi_input_destroy();
+ 
 -- 
-2.44.0
+2.45.2
 
