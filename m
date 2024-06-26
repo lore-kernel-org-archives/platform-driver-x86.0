@@ -1,62 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452EE172BC6;
-	Wed, 26 Jun 2024 13:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9735E1836F5
+	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jun 2024 14:07:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719410097; cv=none; b=X77XuqFeKivg73l2fmlR4EUe8gIjeG+60P17Edc2FO6JiybD6ipCIjRuYpIxLIBIBnH+CC/2PEElM+a6+3edI7cZ6iSkUUKM5FJPkcEHUkMHQ4yCRbxvPmM+l7bNR/40nwq3jKOHQnUGvJW6mL1w4zRXfWzEQ3Tm6lE0AQk9UhI=
+	t=1719410859; cv=none; b=hGb9mcKqKo0kSQ9Hn3wt/EsVZ5MLmZWYfhQgCpTt1VmOgLzeO80L3waOM7n6OMpq7UDOlZapEuJvWtXm1hTJj4oCW2qHj8Uxb9PFpnr4R1Y2e9wbxZV5fIUjtq2lMYiW8SPcjPbDOslHC5/R9DJ/a4dxHupaygCscyYivUoApBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719410097; c=relaxed/simple;
-	bh=illcVS1LrOEXY7ndoClkkVJaDfRukdDd1qOy0AN4TVg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=EAIful98Td8ycguy3qTpyzy+uR/ZBbavcJzEFUckTvKIaxm/MH+ZR/LWFNC+0q+z+7d6//rMRZQ4BzVN3ecB+oRcGOboluVv1fqDEqOt2S4/YjHu+p0ACEpPJTdvbO1MV5JwQQNiZkt1gbcd84E4BBuv2Gtx9XEBPdTkjvk8jqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5740C2BD10;
-	Wed, 26 Jun 2024 13:54:56 +0000 (UTC)
-Received: by mercury (Postfix, from userid 1000)
-	id B04F2106093E; Wed, 26 Jun 2024 15:54:54 +0200 (CEST)
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org
-In-Reply-To: <20240621-yoga-ec-driver-v8-1-daae67d0233d@linaro.org>
-References: <20240621-yoga-ec-driver-v8-1-daae67d0233d@linaro.org>
-Subject: Re: [PATCH v8] power: supply: lenovo_yoga_c630_battery: add Lenovo
- C630 driver
-Message-Id: <171941009471.143534.10357402533490651564.b4-ty@collabora.com>
-Date: Wed, 26 Jun 2024 15:54:54 +0200
+	s=arc-20240116; t=1719410859; c=relaxed/simple;
+	bh=kqOofbQgnnL1ySOdbbXIYqpZNCs0vu7Yr1N+twig9E4=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=eCKAttBy5qvBjFQwGvJF5J44hsZoEHzGeBJDE1k7Zl4tUJweM9OzMievDpb1D5NEGid1bdoqnOeqb25wInX+4SDap0+DWM3ZNaBr8NQlM7LjjyWVXufLNWiIRpCqeyN8VWW/a/GUzOaHwj0B1is01/1/yYpQVqKL7dCNqqskHR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qGNhV1mg; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qGNhV1mg"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1131BC116B1
+	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jun 2024 14:07:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719410859;
+	bh=kqOofbQgnnL1ySOdbbXIYqpZNCs0vu7Yr1N+twig9E4=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=qGNhV1mgtxt9XCPlDiV4YligDwtZUFkOuP1ZtSeWqUDofzbgr2TPJvwUQNAiAE++C
+	 JKSeWXl91urQ2BVZHk/oXuATDT9cZEcdfrdO0KlRGKl7jzoT6g4De9uQrblIy92q1B
+	 q1bUAbmFvwYscIfvz/0X5BSEznw9Q2dbTRwqhglNsbKLnV+MNy1T6FqcVBeZOUf1Qz
+	 gjX1uXZss/CjZa1MACTpM3Ij3+0JYZDiwTEtrnV01WUcx5qNYiAj+v/kGd7+0jgmkU
+	 4N2qC2Ojy+cm7X55+5dwkKe7u3n1mRWiiMWyFGoATSFGzq+URCtj9mrDDeuz43lsnt
+	 kqv0BionATpdA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id E6363C53B73; Wed, 26 Jun 2024 14:07:38 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218771] Lenovo Thinkbook - turning off after closing lid or
+ (dis)connecting charger
+Date: Wed, 26 Jun 2024 14:07:38 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218771-215701-SYN0Q7oGO5@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218771-215701@https.bugzilla.kernel.org/>
+References: <bug-218771-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218771
 
-On Fri, 21 Jun 2024 01:23:51 +0300, Dmitry Baryshkov wrote:
-> On the Lenovo Yoga C630 WOS laptop the EC provides access to the adapter
-> and battery status. Add the driver to read power supply status on the
-> laptop.
-> 
-> 
+--- Comment #8 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+Conversely; I do want to point out upstream kernel bug trackers are for
+upstream kernels.
 
-Applied, thanks!
+Distros sometimes pick up patches that cause problems and so they're "usual=
+ly"
+the best first triage. If they confirm it's not their patch they will gener=
+ally
+suggest an upstream kernel and reporting it upstream.
 
-[1/1] power: supply: lenovo_yoga_c630_battery: add Lenovo C630 driver
-      commit: db9cc848128eb174b24a5dff82fc3e7589a3bf25
+--=20
+You may reply to this email to add a comment.
 
-Best regards,
--- 
-Sebastian Reichel <sebastian.reichel@collabora.com>
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
