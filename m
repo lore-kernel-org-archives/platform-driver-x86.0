@@ -1,407 +1,124 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9127E18FC9D
-	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jun 2024 22:04:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5CEBE71;
+	Thu, 27 Jun 2024 02:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719439446; cv=none; b=lBm0ASgRIjBhcjOipiE4PrbpBNtlSzFCDAF9pJwMWwLCOpFv5Tv4J+dBzzd4zsZ2tdudn1icOI6V22cpkfhsjBrgrMng9ptBBJjt5up3wjeScWWSaLt+rwB0kgBPJYHUjAHgNk9qJwR7nfakuMAzEsS0Ga779sSnXiUyIA6g2qY=
+	t=1719455866; cv=none; b=aLQPOksZd6iBvMpHZD5itSWxDkkznjXF6Tyqhbb5dPOFXquNepTm1zv9Ugo49iBDE+p1vRCf/jcA01MrfU+QEu3jQwkCHEJBpo5dExMUhSoLhsykHFgAQDKFlW0pq2HNwGYAGT1HXfUr/u/TjUASHUw3iDAyU8s5P7t/phv4Hrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719439446; c=relaxed/simple;
-	bh=WBGlwk47Fi+VMDTGl5DXwHJAsQZH6mdsd/Yw4qSLoRM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=NVEM5s3sxNQ1M1I7wAzSwCMUYKG4VWNXglsPd82RiL62sqL+Kq+sYiLlZNnaC8mkHVOouxwUivWkUKhRomXi5biwu/RmJjWpNYuS66eus0dNCHPsc5DQpIBEg7zzq5vmf9fLj1+8DemCwrHNHg5sETjfZxUDzwxooC2Z836Oquw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cmd4bTBF; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719455866; c=relaxed/simple;
+	bh=IuCcbDB/n+U5EiqNgwFpeQz2q2hxzUvCkkb5mw99iII=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZXhX05zbc3bkxQ9E1gUECm3KP1nJfaspxcYy+4O9/ZkQX0PvqCMGlJ/c6QvFnroBhYUfzqX16Ipm9Fiodek/GSKEBxg0tyT7b7TTYplLtHLIeKY+dQydaLrJcIsCttFj+Z1bKGiY33dp0BYJ95m8z1ySIuOjVl7ArgVyj7hKQIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E6j7ITdv; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cmd4bTBF"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-361785bfa71so5498833f8f.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Jun 2024 15:04:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719439443; x=1720044243; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B5YOhQt6DIo6l4yTwCxidkmhvxk18DENRAWyosnYRDk=;
-        b=Cmd4bTBFGCD61lqjXmNuHvjR9Llewnztfv3rZ9YlbBosY11WrkKlCmf1LPEjK4DyFs
-         Zzg0Mig/sQT9W6GACXQwlP0sMZrStsmFUYZGdsVf1KN8xCv5f433U1FMCoB7SAgpZhX1
-         4BY0ISgoPpDmySGnSs0qubHqOB9uS7L7oM6zggd5lX8eiNIP4KlDkNaWG49Sg+EYxuHJ
-         9QBgEBpu1s4fPsMMluRBqnFJG2QYOeEyyand0jpcGirmtfDTUB1HmtjgGqvs1zdoUt1z
-         pcMkuGc6N/QiuCMPC90w43POklUoQUuiHpUr2Why5afU3cn0lYQjFzAV6W6VXzJTJCsJ
-         28/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719439443; x=1720044243;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B5YOhQt6DIo6l4yTwCxidkmhvxk18DENRAWyosnYRDk=;
-        b=XJlq2cD2C6JHrdKVFBdBnit5GYqJTDgqlpVy7XoV2JmB+3ZqkTbld/e3doMQTBOLe8
-         qqYJ5y3iudaFgEWlwhhrDtf28fZc51gIQvVqSl+pt9UYS2U2PSjgHUa8icCa008lOoBg
-         +rKZV+HD8LSGdrzb2XOOacBsn8D4AwfpsTxnNLOolqgK7hXKeGsGS+ewn9Y4vdYZSuG5
-         UA6gE/Re1Hanp4VGmdJHhR0V9RdtofJG291D8wCDjfoQ1pIoj9ihhxQ9qfix/2ApMoKr
-         QMXDVI7t2GDOvelabG+2TXxDxvzyUYkUI2GXLSY1iga5CU4DqCqtS/cD1FcwJvz02668
-         Qewg==
-X-Gm-Message-State: AOJu0YxvrKWjheopz2N0kHV5Zq1s0kwzBRBg15idHQEsvosiiS7ZOotY
-	KSNLd6Y8jOcSIV7Rd6jlIczHUILUDvHlhKf9S8DJlnl8ArdmPpeP
-X-Google-Smtp-Source: AGHT+IGppF0G8dYaz3O4sTvS8TdzNq7qzo5S5J6XtQRr6cX3jdK6cxx+RqE+MN5jmXCY8lts0rL2KQ==
-X-Received: by 2002:a05:6000:1ac7:b0:366:e838:f5d4 with SMTP id ffacd0b85a97d-366e8390b2dmr10501572f8f.3.1719439442392;
-        Wed, 26 Jun 2024 15:04:02 -0700 (PDT)
-Received: from alexis-pc (cust-west-par-46-193-0-235.cust.wifirst.net. [46.193.0.235])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3674357c1d8sm21526f8f.8.2024.06.26.15.04.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jun 2024 15:04:02 -0700 (PDT)
-Date: Thu, 27 Jun 2024 00:04:00 +0200
-From: Alexis Belmonte <alexbelm48@gmail.com>
-To: W_Armin@gmx.de, ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com
-Cc: platform-driver-x86@vger.kernel.org
-Subject: [PATCHv4] platform/x86: hp-wmi: Fix platform profile option switch
- bug on Omen and Victus laptops
-Message-ID: <ZnyQUCcVOCAfRypJ@alexis-pc>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E6j7ITdv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719455865; x=1750991865;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=IuCcbDB/n+U5EiqNgwFpeQz2q2hxzUvCkkb5mw99iII=;
+  b=E6j7ITdvIu+fkzi1QUQWcQz713Fol3kNMwiaUgs1nBNIH6kbeRNwCbcs
+   03hv9N7guNTfGKGe5iFxvF50Sa5K340GFJV/foorvZR/LrxtVsmFhj8l0
+   VZ7OcqfJzu/zmMAjGaRO3Gba0GETPREauq1HGH5VTR8Ugj4dFuDWPLzp+
+   ZZm8thl2kvOD4jNL8GbRugy7czVyeE2wVVvRoI0uLzXD5EogIpdt0U1UW
+   UyPf9VuLB4nqYwIK1uiDaNJ+dMYTNkGcGqIklbgG6giouAEr+yBrNVkoH
+   wg3WMFMUmn8IiK1z1BgKN2MlaNk3fyr+TsRzIZUvW6cMcrpnKRr0t+rNW
+   A==;
+X-CSE-ConnectionGUID: H7DNCzksQK2bzLVfiMBs5Q==
+X-CSE-MsgGUID: De+8ZzYsRa688Y44VO/w2Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11115"; a="27959485"
+X-IronPort-AV: E=Sophos;i="6.08,268,1712646000"; 
+   d="scan'208";a="27959485"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 19:37:45 -0700
+X-CSE-ConnectionGUID: ZDNEhOR9Sc2P0cYVlonUCA==
+X-CSE-MsgGUID: +8zQGLyeQ3qaRvZ9Ak7bmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,268,1712646000"; 
+   d="scan'208";a="44052386"
+Received: from skuppusw-desk2.jf.intel.com ([10.165.154.101])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 19:37:44 -0700
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+To: Jithu Joseph <jithu.joseph@intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ashok Raj <ashok.raj@intel.com>,
+	Tony Luck <tony.luck@intel.com>,
+	linux-trace-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Shankar Ravi V <ravi.v.shankar@intel.com>
+Subject: [PATCH v1 0/4] Add SBAF test to IFS
+Date: Thu, 27 Jun 2024 02:35:12 +0000
+Message-Id: <20240627023516.3783454-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Fix a platform profile option switch/getter bug on some Omen and Victus laptops
-dismissing userspace choice when selecting performance mode in inadequate
-conditions (e.g. by being disconnected from the AC power plug) by
+This patch series adds support for Structural Based Functional Test at
+Field (SBAF) in the IFS driver. SBAF is a new type of testing that
+provides comprehensive core test coverage, complementing existing IFS
+tests like Scan at Field (SAF) and ArrayBist. Granite Rapids (GNR) is
+the first platform that supports SBAF.
 
-   -  hooking an ACPI notify handler through the
-      omen_register_powersource_notifier_handler method that listens to AC
-      power source changes (plugging in/out the AC power plug)
+SBAF mimics the manufacturing screening environment and leverages the
+same test suite. It makes use of Design For Test (DFT) observation
+sites and features to maximize coverage in minimum time.
 
-   -  keeping an intermediate active_platform_profile variable that is
-      set when userspace changes the platform profile setting
+Similar to the SAF test, SBAF isolates the core under test from the
+rest of the system during execution. Upon completion, the core
+seamlessly resets to its pre-test state and resumes normal operation.
+Any machine checks or hangs encountered during the test are confined to
+the isolated core, preventing disruption to the overall system. Like
+SAF test, the SBAF test is also divided into multiple batches, and each
+batch test can take hundreds of milliseconds (100-200 ms) to complete.
+If such a lengthy interruption is undesirable, it is recommended to
+relocate the time-sensitive applications to other cores for the
+duration of the test.
 
-   -  restoring the selected platform profile kept in
-      active_platform_profile when AC power is plugged back into the
-      laptop, unless if the user decided to alter the platform profile mid-way
+Patch Details:
 
-This ensures that the driver follows the principles defined in the Platform
-Profile Selection page of the Kernel documentation on those kind of laptops;
-which is to not "(...) let userspace know about any sub-optimal conditions
-which are impeding reaching the requested performance level".
+Patch 1/4: Refactors MSR usage in IFS image loading code to share the
+           code between SBAF and SAF tests.
+Patch 2/4: Leverages SAF image loading logic and adds SBAF image loading support.
+Patch 3/4: Adds support for user to trigger SBAF test.
+Patch 4/4: Adds trace support for SBAF tests.
 
-Since the Omen and Victus laptops share the same embedded controller system,
-the fix is applicable to both categories of laptops.
+This series is originally authored by Jithu Joseph. I have made cleanups
+related to code reuse between the SBAF and SAF tests and resubmitting it for
+review.
 
-Signed-off-by: Alexis Belmonte <alexbelm48@gmail.com>
----
-V1 -> V2: - Use register_acpi_notifier and unregister_acpi_notifier instead of
-            hooking straight through ACPI node \\_SB.ADP1
-V2 -> V3: - Rely on power_supply_is_system_supplied() instead of an EC-specific
-            field to determine if the laptop is plugged in
-          - Refactor omen_powersource_notify_handler to omen_powersource_event
-          - Refactor omen_powersource_register_notifier_handler to
-            omen_register_powersource_event_handler
-          - Use a mutex to protect the active_platform_profile variable from
-            being altered while the handler is executed
-V3 -> V4: - Remove the unnecessary enum declaration remains from the initial
-            implementation
----
- drivers/platform/x86/hp/hp-wmi.c | 184 +++++++++++++++++++++++++++++--
- 1 file changed, 172 insertions(+), 12 deletions(-)
+Jithu Joseph (3):
+  platform/x86/intel/ifs: Add SBAF test image loading support
+  platform/x86/intel/ifs: Add SBAF test support
+  trace: platform/x86/intel/ifs: Add SBAF trace support
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 5fa553023842..2f57dfe6ab9c 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -24,6 +24,7 @@
- #include <linux/platform_profile.h>
- #include <linux/hwmon.h>
- #include <linux/acpi.h>
-+#include <linux/power_supply.h>
- #include <linux/rfkill.h>
- #include <linux/string.h>
- #include <linux/dmi.h>
-@@ -261,8 +262,12 @@ static const struct key_entry hp_wmi_keymap[] = {
- 
- static struct input_dev *hp_wmi_input_dev;
- static struct input_dev *camera_shutter_input_dev;
-+
- static struct platform_device *hp_wmi_platform_dev;
- static struct platform_profile_handler platform_profile_handler;
-+static struct notifier_block platform_power_source_nb;
-+DEFINE_MUTEX(active_platform_profile_lock);
-+static enum platform_profile_option active_platform_profile;
- static bool platform_profile_support;
- static bool zero_insize_support;
- 
-@@ -1194,8 +1199,7 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
- 	return err;
- }
- 
--static int platform_profile_omen_get(struct platform_profile_handler *pprof,
--				     enum platform_profile_option *profile)
-+static int platform_profile_omen_get_ec(enum platform_profile_option *profile)
- {
- 	int tp;
- 
-@@ -1223,6 +1227,30 @@ static int platform_profile_omen_get(struct platform_profile_handler *pprof,
- 	return 0;
- }
- 
-+static int platform_profile_omen_get(struct platform_profile_handler *pprof,
-+				     enum platform_profile_option *profile)
-+{
-+	enum platform_profile_option selected_platform_profile;
-+
-+	/*
-+	 * We directly return the stored platform profile, as the embedded
-+	 * controller will not accept switching to the performance option when
-+	 * the conditions are not met (e.g. the laptop is not plugged in).
-+	 *
-+	 * If we directly return what the EC reports, the platform profile will
-+	 * immediately "switch back" to normal mode, which is against the
-+	 * expected behaviour from a userspace point of view, as described in
-+	 * the Platform Profile Section page of the kernel documentation.
-+	 *
-+	 * See also omen_powersource_event.
-+	 */
-+	mutex_lock(&active_platform_profile_lock);
-+	selected_platform_profile = active_platform_profile;
-+	mutex_unlock(&active_platform_profile_lock);
-+
-+	return selected_platform_profile;
-+}
-+
- static bool has_omen_thermal_profile_ec_timer(void)
- {
- 	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
-@@ -1248,7 +1276,7 @@ inline int omen_thermal_profile_ec_timer_set(u8 value)
- static int platform_profile_omen_set(struct platform_profile_handler *pprof,
- 				     enum platform_profile_option profile)
- {
--	int err, tp, tp_version;
-+	int err = 0, tp, tp_version;
- 	enum hp_thermal_profile_omen_flags flags = 0;
- 
- 	tp_version = omen_get_thermal_policy_version();
-@@ -1279,14 +1307,16 @@ static int platform_profile_omen_set(struct platform_profile_handler *pprof,
- 		return -EOPNOTSUPP;
- 	}
- 
-+	mutex_lock(&active_platform_profile_lock);
-+
- 	err = omen_thermal_profile_set(tp);
- 	if (err < 0)
--		return err;
-+		goto unlock_and_return;
- 
- 	if (has_omen_thermal_profile_ec_timer()) {
- 		err = omen_thermal_profile_ec_timer_set(0);
- 		if (err < 0)
--			return err;
-+			goto unlock_and_return;
- 
- 		if (profile == PLATFORM_PROFILE_PERFORMANCE)
- 			flags = HP_OMEN_EC_FLAGS_NOTIMER |
-@@ -1294,10 +1324,15 @@ static int platform_profile_omen_set(struct platform_profile_handler *pprof,
- 
- 		err = omen_thermal_profile_ec_flags_set(flags);
- 		if (err < 0)
--			return err;
-+			goto unlock_and_return;
- 	}
- 
--	return 0;
-+	active_platform_profile = profile;
-+
-+unlock_and_return:
-+	mutex_unlock(&active_platform_profile_lock);
-+
-+	return err;
- }
- 
- static int thermal_profile_get(void)
-@@ -1381,8 +1416,8 @@ static bool is_victus_thermal_profile(void)
- 			    board_name) >= 0;
- }
- 
--static int platform_profile_victus_get(struct platform_profile_handler *pprof,
--				     enum platform_profile_option *profile)
-+static int platform_profile_victus_get_ec(
-+	enum platform_profile_option *profile)
- {
- 	int tp;
- 
-@@ -1407,10 +1442,27 @@ static int platform_profile_victus_get(struct platform_profile_handler *pprof,
- 	return 0;
- }
- 
-+static int platform_profile_victus_get(struct platform_profile_handler *pprof,
-+				       enum platform_profile_option *profile)
-+{
-+	enum platform_profile_option selected_platform_profile;
-+
-+	/*
-+	 * Same as for platform_profile_omen_get -- I still decided to keep
-+	 * it as a separate implementation if we need to add Victus-specific
-+	 * behaviour/logic in the future
-+	 */
-+	mutex_lock(&active_platform_profile_lock);
-+	selected_platform_profile = active_platform_profile;
-+	mutex_unlock(&active_platform_profile_lock);
-+
-+	return selected_platform_profile;
-+}
-+
- static int platform_profile_victus_set(struct platform_profile_handler *pprof,
--				     enum platform_profile_option profile)
-+				       enum platform_profile_option profile)
- {
--	int err, tp;
-+	int err = 0, tp;
- 
- 	switch (profile) {
- 	case PLATFORM_PROFILE_PERFORMANCE:
-@@ -1426,13 +1478,106 @@ static int platform_profile_victus_set(struct platform_profile_handler *pprof,
- 		return -EOPNOTSUPP;
- 	}
- 
-+	mutex_lock(&active_platform_profile_lock);
-+
- 	err = omen_thermal_profile_set(tp);
- 	if (err < 0)
--		return err;
-+		goto unlock_and_return;
-+
-+	active_platform_profile = profile;
-+
-+unlock_and_return:
-+	mutex_unlock(&active_platform_profile_lock);
- 
- 	return 0;
- }
- 
-+static int omen_powersource_event(struct notifier_block *nb,
-+					   unsigned long value,
-+					   void *data)
-+{
-+	struct acpi_bus_event *event_entry = data;
-+	enum platform_profile_option selected_platform_profile;
-+	enum platform_profile_option actual_profile;
-+	int err;
-+
-+	if (strcmp(event_entry->device_class, "ac_adapter") != 0)
-+		return NOTIFY_DONE;
-+
-+	pr_debug("Received power source device event\n");
-+
-+	if (is_omen_thermal_profile())
-+		err = platform_profile_omen_get_ec(&actual_profile);
-+	else if (is_victus_thermal_profile())
-+		err = platform_profile_victus_get_ec(&actual_profile);
-+
-+	if (err < 0) {
-+		pr_warn("Failed to read current platform profile (%d)\n", err);
-+		return NOTIFY_BAD;
-+	}
-+
-+	/*
-+	 * We don't want the handler to overwrite the newly set platform
-+	 * profile if the user has changed it in the meantime (thanks Armin!)
-+	 */
-+	if (!mutex_trylock(&active_platform_profile_lock))
-+		return NOTIFY_DONE;
-+
-+	selected_platform_profile = active_platform_profile;
-+	mutex_unlock(&active_platform_profile_lock);
-+
-+	/*
-+	 * If we're back on AC and that the user-chosen power profile is
-+	 * different from what the EC reports, we restore the user-chosen
-+	 * one.
-+	 */
-+	if (power_supply_is_system_supplied() >= 0 ||
-+	    selected_platform_profile == actual_profile)
-+		return NOTIFY_DONE;
-+
-+	err = platform_profile_handler.profile_set(&platform_profile_handler,
-+						   active_platform_profile);
-+	if (err < 0) {
-+		pr_warn("Failed to restore platform profile (%d)\n", err);
-+		return NOTIFY_BAD;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static void omen_register_powersource_event_handler(void)
-+{
-+	int err;
-+	acpi_status status;
-+
-+	if (is_omen_thermal_profile())
-+		err = platform_profile_omen_get_ec(&active_platform_profile);
-+	else if (is_victus_thermal_profile())
-+		err = platform_profile_victus_get_ec(&active_platform_profile);
-+
-+	if (err < 0) {
-+		pr_warn("Failed to retrieve active platform profile (%d)\n",
-+			err);
-+		active_platform_profile = PLATFORM_PROFILE_BALANCED;
-+	}
-+
-+	platform_power_source_nb.notifier_call = omen_powersource_event;
-+	status = register_acpi_notifier(&platform_power_source_nb);
-+
-+	if (ACPI_FAILURE(status))
-+		pr_warn("Failed to install ACPI power source notify handler\n");
-+}
-+
-+static void omen_unregister_powersource_event_handler(void)
-+{
-+	acpi_status status;
-+
-+	status = unregister_acpi_notifier(&platform_power_source_nb);
-+
-+	if (ACPI_FAILURE(status))
-+		pr_err("Failed to remove ACPI power source notify handler\n");
-+}
-+
- static int thermal_profile_setup(void)
- {
- 	int err, tp;
-@@ -1534,6 +1679,15 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
- 
- 	thermal_profile_setup();
- 
-+	/*
-+	 * Query the platform profile once to know which last power profile
-+	 * was set.
-+	 */
-+	err = platform_profile_handler.profile_get(&platform_profile_handler,
-+						   &active_platform_profile);
-+	if (err < 0)
-+		return err;
-+
- 	return 0;
- }
- 
-@@ -1758,6 +1912,9 @@ static int __init hp_wmi_init(void)
- 			goto err_unregister_device;
- 	}
- 
-+	if (is_omen_thermal_profile() || is_victus_thermal_profile())
-+		omen_register_powersource_event_handler();
-+
- 	return 0;
- 
- err_unregister_device:
-@@ -1772,6 +1929,9 @@ module_init(hp_wmi_init);
- 
- static void __exit hp_wmi_exit(void)
- {
-+	if (is_omen_thermal_profile() || is_victus_thermal_profile())
-+		omen_unregister_powersource_event_handler();
-+
- 	if (wmi_has_guid(HPWMI_EVENT_GUID))
- 		hp_wmi_input_destroy();
- 
+Kuppuswamy Sathyanarayanan (1):
+  platform/x86/intel/ifs: Refactor MSR usage in IFS test code
+
+ arch/x86/include/asm/msr-index.h         |   2 +
+ drivers/platform/x86/intel/ifs/ifs.h     |  92 ++++++++-
+ include/trace/events/intel_ifs.h         |  27 +++
+ drivers/platform/x86/intel/ifs/core.c    |  33 ++++
+ drivers/platform/x86/intel/ifs/load.c    |  39 ++--
+ drivers/platform/x86/intel/ifs/runtest.c | 235 +++++++++++++++++++++++
+ 6 files changed, 413 insertions(+), 15 deletions(-)
+
 -- 
-2.45.2
+2.25.1
 
