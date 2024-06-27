@@ -1,70 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2053.outbound.protection.outlook.com [40.107.236.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2486EE57D;
-	Thu, 27 Jun 2024 02:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719455869; cv=none; b=VUvraqEd5x0/JwvTBqidpz24KVzrGUEchk+fH0rHKn4Xe+P3DvLMI9v1aWDoywP2pRnnH3BJ9SwYpXNZW2581nr8ah5D2CL/YTI1CMuhFTXRmr/RJpLJ6iFFCHhzsbEzgcheOlyYxo7NmVGecL+Pl6dTrZLZgsx8uVghhcw7HGI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719455869; c=relaxed/simple;
-	bh=f9ksulllz9Whvoack1P59db8I8PzWveewB4WmQHnQ9w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ch7lOZay2yxAZIF7X0qVndIw29THK17ht+d+iO07yXALDz46VATfbNt5kGkdA1biyr3cixr/BOHS+kpspdFzDpVZPKUNLQD2Ri0VoVFlvJ8H+g32jo81WmQXHwSF+lo2U8UDqbjC3ZtUJj+jZOpQaHp6ULHZRJXrpuiTk0lcVdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=md6n3YPF; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9C71C2AD
+	for <platform-driver-x86@vger.kernel.org>; Thu, 27 Jun 2024 05:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719466824; cv=fail; b=HDjIkEMfkpZf8DTziTY6ATiONJIlKggaKEARgq8cKwSq25NqyhRmS+tetONMcD/ZGQu33Fj5qWSbbKPW20EB8dmNxD097wDqa42mVWVMJ+0Rd5gi5bUNcu2adypWFWpni9KSPMCn6Jna4FiBcLG2+t7iw8iAsIlD+QX2jZXaTlo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719466824; c=relaxed/simple;
+	bh=o6dLqVuG3/cquyqeBYmjB1/P/Ew6aEqD/OIb3fKWzA0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I+4M3O7nfSbrKcD2QP4bPxO9Iq1vQq+GBSl0NTtnIo/NqgLepwEc46F/7PpVcW0MheTgY1mV2r4g6o0AjrLfVePvtbwh+fT8Ead1DiZZ6w+YLt31uKNkQ5k/oHqQqTDcVBZqhEg9WN/LCuQRnNDoZvnrQ+5V/fyxXDiM9ikQFBo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=W2xnQzUy; arc=fail smtp.client-ip=40.107.236.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="md6n3YPF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719455868; x=1750991868;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=f9ksulllz9Whvoack1P59db8I8PzWveewB4WmQHnQ9w=;
-  b=md6n3YPFKvBT2fdvpcnugSF2aicC7NFTNnYu+r+1a9zt/BmHRy1xHm7Y
-   4/KlDFrkda+ZoHvfvwt4jHWapazsgwv3d+kcATFuawaIm1jnzY04Zta/W
-   GVG5OgVY3oGjbqoipaveov4umpVgJq+mWlxg1NTQpKpfJ/B2ok+pEFfir
-   Zf61K1tL+qgWEhbDqqEyxPOx1xkXJKey50F6tM2MG8fmuMEGRsx/GBwzW
-   4zaYib9I1uYG/CwkKnW6b8HNHHatRorRjpm/Y2Xi+QQvIksm5rdMWCvQM
-   0IxhULrtHss8YJaOoHkPXMS2IFz5fb+AZLhW2ThuSwZavRpEnQwYe25QF
-   A==;
-X-CSE-ConnectionGUID: KekiA+8tQDuLW5nGtTrtdg==
-X-CSE-MsgGUID: X1XpzGBaSBKZrqYCE/gwvg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11115"; a="27959504"
-X-IronPort-AV: E=Sophos;i="6.08,268,1712646000"; 
-   d="scan'208";a="27959504"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 19:37:46 -0700
-X-CSE-ConnectionGUID: N2zy6o+gQve42Vxja4hs4w==
-X-CSE-MsgGUID: cFZu4SJ9RIGY3dpoKXvPig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,268,1712646000"; 
-   d="scan'208";a="44052404"
-Received: from skuppusw-desk2.jf.intel.com ([10.165.154.101])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 19:37:45 -0700
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-To: Jithu Joseph <jithu.joseph@intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ashok Raj <ashok.raj@intel.com>,
-	Tony Luck <tony.luck@intel.com>,
-	linux-trace-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Shankar Ravi V <ravi.v.shankar@intel.com>
-Subject: [PATCH v1 3/4] platform/x86/intel/ifs: Add SBAF test support
-Date: Thu, 27 Jun 2024 02:35:15 +0000
-Message-Id: <20240627023516.3783454-4-sathyanarayanan.kuppuswamy@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="W2xnQzUy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zx67eE8+ZsO9knVC3lteS9vt9Rr41P5ZgesFJD8tG33b+SV7W+PFU6yZkkhYqyFv72M+Ay/jhnJSCNqaKJ8Nf9454TXXc3ZyoSc8vHRjo/h49KBVdQJQ6kR37FXevO7adwuZxMQ4hRDlyx4WfuUucUzq1tm381WSqtIR1nD5ZSCSQkFc8DJ+OPi+QMcoKpqBwkMqnoimZlQqbPvW2bEx9IVtlua5tlFYH3nyUtePFqONWpDiNzIqu7HWgMhOEMGzjrRxAcT1jCZ8b+0TQIQXATpb6DMga36eTtnx4aQI49tdqi6qto8H6v3ouyd0K1TwvLz0BUj47GQFGqSjOE5KrA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hGAxJKCRmlBcQhw86hOakoOKKnHIfuYTSeUBM6/F0wE=;
+ b=WPju8BE3TgaUZWRWB9EATmlQgc6cQo+HXdOnzLo8OJ8Ux3uGarzLZiOacG9rXxJZx/i1H1CL6zSyZu4iKpHFK91kHSfW2hv7RrbfiRaZp6h65DryEo8K0NdvMpc9tCX0XxP67mz0dkl+HzjeuRxNezgYVe5tMUE1gKJcWl5kEJjp284nz6IoBnLRakvqawrfK13w4H4sfdclHeMm44q7jV9dIuRESJkFYSKu0hU9iutax6AgkrgvCFRZuKgvuVj2P7QdAhFNMSKAI+RNWE6qb5Tec+/uqhrIUm69cwxo+jQ8Rfx2HhZeoWAZ8iEkTWnUeGfcAF7U2QeaKb5a8z+U5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hGAxJKCRmlBcQhw86hOakoOKKnHIfuYTSeUBM6/F0wE=;
+ b=W2xnQzUyPkgVPrHmSli6PtCBcg0xSyYwP9THMQdECOznW7tJgdWZTwdurTTe6v7YxDwMOCXOTraHxYKt6wNFhg+5tqQngGyasYqb8JGbcB3KGLSsDuK6gYKS/PFGI2XuiskE0ecaBmw0kM1OCxabmTmh7o7ZaeNSLRIF+TLqR0o=
+Received: from SA1PR02CA0015.namprd02.prod.outlook.com (2603:10b6:806:2cf::19)
+ by DS7PR12MB8204.namprd12.prod.outlook.com (2603:10b6:8:e1::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7698.32; Thu, 27 Jun 2024 05:40:19 +0000
+Received: from SN1PEPF000397B5.namprd05.prod.outlook.com
+ (2603:10b6:806:2cf:cafe::e6) by SA1PR02CA0015.outlook.office365.com
+ (2603:10b6:806:2cf::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.23 via Frontend
+ Transport; Thu, 27 Jun 2024 05:40:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF000397B5.mail.protection.outlook.com (10.167.248.59) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Thu, 27 Jun 2024 05:40:19 +0000
+Received: from amd.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 27 Jun
+ 2024 00:40:17 -0500
+From: Suma Hegde <suma.hegde@amd.com>
+To: <platform-driver-x86@vger.kernel.org>
+CC: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>, Suma Hegde
+	<suma.hegde@amd.com>
+Subject: [PATCH 00/10] platform/x86/amd/hsmp: Split ACPI and plat device driver
+Date: Thu, 27 Jun 2024 05:39:48 +0000
+Message-ID: <20240627053958.2533860-1-suma.hegde@amd.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240627023516.3783454-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <20240627023516.3783454-1-sathyanarayanan.kuppuswamy@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -72,347 +68,108 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF000397B5:EE_|DS7PR12MB8204:EE_
+X-MS-Office365-Filtering-Correlation-Id: b6c4e815-9b2b-4463-2b4c-08dc966ba1ae
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ntSFRSMdh8z7DxI/Fa9uInpgmTdPFF9BStrA3nfJYNfijzqg2ZAcYfb2opf1?=
+ =?us-ascii?Q?uf+J+4vFIQq888L41lQ52DwX2RSx6ZijfN0iuc2WQeyzukhzAaMepWRmSD9V?=
+ =?us-ascii?Q?NjNEWGeeyEKLOLXxJ8TFBBDVdJAgxTWyheHfWTrtQ/9I5/nppbg6LsyAeoOu?=
+ =?us-ascii?Q?cUhKe723mqoSToaAG5nZgHom1FR8GHaKSnSNht38tYS1KpkGqHNqLskcGSGm?=
+ =?us-ascii?Q?qg0iVAVrsnFZAwwUrwUMaxqbiP9CVcPxACtxWRYVWczXh9Zr1FxDpr+xTeA2?=
+ =?us-ascii?Q?k9vt22Q8DelNX+IY4pl1Kvfe0RnFpo1q/SmR1Gmfh3kYh+DlDkgtjIf5x5Oj?=
+ =?us-ascii?Q?y70c3HV7mBd6EbkYgSwzLgyhevExGON0LZl+uEhQpMauAS0we8Dmx2t2EZT1?=
+ =?us-ascii?Q?XzSO6CjxUvL8UmtSZS0Gcv/aQ/4g79C43GNysHXbcR4h8g8ZsKaTc2MMH7z3?=
+ =?us-ascii?Q?q7mCK+FcJeN5WmMLya5qojvnHQ7/mYJ9BXFRJykcHHwOJaa3vzmSWhoinz97?=
+ =?us-ascii?Q?LKhNn7XkmN0aUwMjCWJe9mzgVIPZqdsBIj7mNas3pdgYBh+e6AL2yhYoojD5?=
+ =?us-ascii?Q?ZiyTYpF8st5ymYExuTpAnEIMmd8IvpYsV6rUw59vUOIkXwTU9viWT4wcdGiX?=
+ =?us-ascii?Q?1L32HhaVoMvJeGwvHVApmenFFW3pyyOltQxl8F3YbWdB3Gbmr8V3ac1pfqqR?=
+ =?us-ascii?Q?yO7AkXMXfCCXSYzBvZ426jffsUz9fTo8v16uwr/PcxFFHA2CjTdGjLBFAjwE?=
+ =?us-ascii?Q?X3dC+UBIAcPkPvh1tnTxv0cBXl9QCfgyuNryG+dmTNO5wHdR9lPvGr+/foqG?=
+ =?us-ascii?Q?yTtrXgBEJcTmPkWe7uDgUPrgiV4BJVG2UdW6OqIz4Fe6D8tO8x0X39v2S4tj?=
+ =?us-ascii?Q?WMZFPash01a5SPlzdVUHkMc6xY9ZL8wPYN8rnGORgGRq7eG4447g7xZQNrHT?=
+ =?us-ascii?Q?LNoy6JHJm9KY5xqYZoAHE+1fbM8xmIGRguv8vrEkGI8m37mYF5AKLtIlgxsv?=
+ =?us-ascii?Q?uPO7TRlzwzXOtrq/Sm6oQ8Qmq6pKFmmCsnWc+M8i0tS6+cEoi8AnOEYj0fdt?=
+ =?us-ascii?Q?RUblv1XYXVDxdq8S64w8pI0BYlkUm+hYnN9xrErALJImsGosHltpwERxHdjn?=
+ =?us-ascii?Q?EEHVvyltYDzkYrABOnfCcHEAfv1hHhOZUafaCViwkPc4qWVAdUl9TILXol59?=
+ =?us-ascii?Q?wMvb1CJ0UDRyLOPgljNVpSDGa3atAkK8elwsfh5ifsjTwmgF/wY2RyeoqEUS?=
+ =?us-ascii?Q?ewbsTmND0OtmufgMFoSrUsVghw80AOUNXsXAbwrJKfJSfWfVL0+D3Bu5XNGU?=
+ =?us-ascii?Q?NQRwuYEgDNd7mong/tcGZW3j9IXGTd1qvoFsCrypUHq7xCG830RaV7YTkqrC?=
+ =?us-ascii?Q?2ixQlZA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2024 05:40:19.6730
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6c4e815-9b2b-4463-2b4c-08dc966ba1ae
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF000397B5.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8204
 
-From: Jithu Joseph <jithu.joseph@intel.com>
+This patch series splits the ACPI and platform device probing
+in hsmp driver based on suggestion by Ilpo Jarvinen
+https://lore.kernel.org/platform-driver-x86/20240607133405.1211929-1-suma.hegde@amd.com/T/#t
 
-In a core, the SBAF test engine is shared between sibling CPUs.
+This change will help: 
+ - Keep the probes clean of the if else ladder
+ - use dev_groups in platform driver structure, instead of using
+   devm_device_add_group()
+ - use is_visible() to enable only the necessary sysfs entries.
 
-An SBAF test image contains multiple bundles. Each bundle is further
-composed of subunits called programs. When a SBAF test (for a particular
-core) is triggered by the user, each SBAF bundle from the loaded test
-image is executed sequentially on all the threads on the core using
-the stop_core_cpuslocked mechanism. Each bundle execution is initiated by
-writing to MSR_ACTIVATE_SBAF.
+Patch1-5 : Add smaller functions in preparation for the split
+	   no logical change, code is re-structured to ease the
+	   driver split.
+Patch6   : Split ACPI and platform device based drivers as 2
+           mutually exclusive drivers, only one of them can be enabled.
+           Make Kconfig and Makefile changes to support this.
+Patch7   : Add namespace to exported symbol hsmp_send_messag()
+Patch8-9 : Remove dynamic creation and use dev_groups instead.
+Patch 10 : Fix smatch error
 
-SBAF test bundle execution may be aborted when an interrupt occurs or
-if the CPU does not have enough power budget for the test. In these
-cases the kernel restarts the test from the aborted bundle. SBAF
-execution is not retried if the test fails or if the test makes no
-forward progress after 5 retries.
+Suma Hegde (10):
+  platform/x86/amd/hsmp: Create hsmp/ directory
+  platform/x86/amd/hsmp: Create wrapper function init_acpi()
+  platform/x86/amd/hsmp: Move strcuture and macros to header file
+  platform/x86/amd/hsmp: Move platform device specific code to plat.c
+  platform/x86/amd/hsmp: Move ACPI code to acpi.c
+  platform/x86/amd/hsmp: Create mutually exclusive ACPI and plat drivers
+  platform/x86/amd/hsmp: Use name space while exporting module symbols
+  platform/x86/amd/hsmp: Move read and is_visible to respective files
+  platform/x86/amd/hsmp: Use dev_groups in the driver structure
+  platform/x86/amd/hsmp: Fix potential spectre issue
 
-Reviewed-by: Ashok Raj <ashok.raj@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- drivers/platform/x86/intel/ifs/ifs.h     |  30 +++
- drivers/platform/x86/intel/ifs/runtest.c | 234 +++++++++++++++++++++++
- 2 files changed, 264 insertions(+)
+ MAINTAINERS                            |   2 +-
+ arch/x86/include/asm/amd_hsmp.h        |   2 +-
+ drivers/platform/x86/amd/Kconfig       |  14 +-
+ drivers/platform/x86/amd/Makefile      |   3 +-
+ drivers/platform/x86/amd/hsmp.c        | 988 -------------------------
+ drivers/platform/x86/amd/hsmp/Kconfig  |  40 +
+ drivers/platform/x86/amd/hsmp/Makefile |  14 +
+ drivers/platform/x86/amd/hsmp/acpi.c   | 410 ++++++++++
+ drivers/platform/x86/amd/hsmp/hsmp.c   | 323 ++++++++
+ drivers/platform/x86/amd/hsmp/hsmp.h   |  61 ++
+ drivers/platform/x86/amd/hsmp/plat.c   | 368 +++++++++
+ 11 files changed, 1220 insertions(+), 1005 deletions(-)
+ delete mode 100644 drivers/platform/x86/amd/hsmp.c
+ create mode 100644 drivers/platform/x86/amd/hsmp/Kconfig
+ create mode 100644 drivers/platform/x86/amd/hsmp/Makefile
+ create mode 100644 drivers/platform/x86/amd/hsmp/acpi.c
+ create mode 100644 drivers/platform/x86/amd/hsmp/hsmp.c
+ create mode 100644 drivers/platform/x86/amd/hsmp/hsmp.h
+ create mode 100644 drivers/platform/x86/amd/hsmp/plat.c
 
-diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-index 600bb8a1b285..b261be46bce8 100644
---- a/drivers/platform/x86/intel/ifs/ifs.h
-+++ b/drivers/platform/x86/intel/ifs/ifs.h
-@@ -157,6 +157,8 @@
- #define MSR_SBAF_HASHES_STATUS			0x000002b9
- #define MSR_AUTHENTICATE_AND_COPY_SBAF_CHUNK	0x000002ba
- #define MSR_SBAF_CHUNKS_AUTHENTICATION_STATUS	0x000002bb
-+#define MSR_ACTIVATE_SBAF			0x000002bc
-+#define MSR_SBAF_STATUS				0x000002bd
- 
- #define MSR_COPY_SCAN_HASHES			0x000002c2
- #define MSR_SCAN_HASHES_STATUS			0x000002c3
-@@ -283,6 +285,34 @@ union ifs_array {
- 	};
- };
- 
-+/* MSR_ACTIVATE_SBAF bit fields */
-+union ifs_sbaf {
-+	u64	data;
-+	struct {
-+		u32	bundle_idx	:9;
-+		u32	rsvd1		:5;
-+		u32	pgm_idx		:2;
-+		u32	rsvd2		:16;
-+		u32	delay		:31;
-+		u32	sigmce		:1;
-+	};
-+};
-+
-+/* MSR_SBAF_STATUS bit fields */
-+union ifs_sbaf_status {
-+	u64	data;
-+	struct {
-+		u32	bundle_idx	:9;
-+		u32	rsvd1		:5;
-+		u32	pgm_idx		:2;
-+		u32	rsvd2		:16;
-+		u32	error_code	:8;
-+		u32	rsvd3		:21;
-+		u32	test_fail	:1;
-+		u32	sbaf_status	:2;
-+	};
-+};
-+
- /*
-  * Driver populated error-codes
-  * 0xFD: Test timed out before completing all the chunks.
-diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
-index 282e4bfe30da..bdb31b2f45b4 100644
---- a/drivers/platform/x86/intel/ifs/runtest.c
-+++ b/drivers/platform/x86/intel/ifs/runtest.c
-@@ -29,6 +29,13 @@ struct run_params {
- 	union ifs_status status;
- };
- 
-+struct sbaf_run_params {
-+	struct ifs_data *ifsd;
-+	int *retry_cnt;
-+	union ifs_sbaf *activate;
-+	union ifs_sbaf_status status;
-+};
-+
- /*
-  * Number of TSC cycles that a logical CPU will wait for the other
-  * logical CPU on the core in the WRMSR(ACTIVATE_SCAN).
-@@ -146,6 +153,7 @@ static bool can_restart(union ifs_status status)
- #define SPINUNIT 100 /* 100 nsec */
- static atomic_t array_cpus_in;
- static atomic_t scan_cpus_in;
-+static atomic_t sbaf_cpus_in;
- 
- /*
-  * Simplified cpu sibling rendezvous loop based on microcode loader __wait_for_cpus()
-@@ -387,6 +395,226 @@ static void ifs_array_test_gen1(int cpu, struct device *dev)
- 		ifsd->status = SCAN_TEST_PASS;
- }
- 
-+#define SBAF_STATUS_PASS			0
-+#define SBAF_STATUS_SIGN_FAIL			1
-+#define SBAF_STATUS_INTR			2
-+#define SBAF_STATUS_TEST_FAIL			3
-+
-+enum sbaf_status_err_code {
-+	IFS_SBAF_NO_ERROR				= 0,
-+	IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN		= 1,
-+	IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS		= 2,
-+	IFS_SBAF_UNASSIGNED_ERROR_CODE3			= 3,
-+	IFS_SBAF_INVALID_BUNDLE_INDEX			= 4,
-+	IFS_SBAF_MISMATCH_ARGS_BETWEEN_THREADS		= 5,
-+	IFS_SBAF_CORE_NOT_CAPABLE_CURRENTLY		= 6,
-+	IFS_SBAF_UNASSIGNED_ERROR_CODE7			= 7,
-+	IFS_SBAF_EXCEED_NUMBER_OF_THREADS_CONCURRENT	= 8,
-+	IFS_SBAF_INTERRUPTED_DURING_EXECUTION		= 9,
-+	IFS_SBAF_INVALID_PROGRAM_INDEX			= 0xA,
-+	IFS_SBAF_CORRUPTED_CHUNK			= 0xB,
-+	IFS_SBAF_DID_NOT_START				= 0xC,
-+};
-+
-+static const char * const sbaf_test_status[] = {
-+	[IFS_SBAF_NO_ERROR] = "SBAF no error",
-+	[IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN] = "Other thread could not join.",
-+	[IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS] = "Interrupt occurred prior to SBAF coordination.",
-+	[IFS_SBAF_UNASSIGNED_ERROR_CODE3] = "Unassigned error code 0x3",
-+	[IFS_SBAF_INVALID_BUNDLE_INDEX] = "Non valid sbaf bundles. Reload test image",
-+	[IFS_SBAF_MISMATCH_ARGS_BETWEEN_THREADS] = "Mismatch in arguments between threads T0/T1.",
-+	[IFS_SBAF_CORE_NOT_CAPABLE_CURRENTLY] = "Core not capable of performing SBAF currently",
-+	[IFS_SBAF_UNASSIGNED_ERROR_CODE7] = "Unassigned error code 0x7",
-+	[IFS_SBAF_EXCEED_NUMBER_OF_THREADS_CONCURRENT] = "Exceeded number of Logical Processors (LP) allowed to run Scan-At-Field concurrently",
-+	[IFS_SBAF_INTERRUPTED_DURING_EXECUTION] = "Interrupt occurred prior to SBAF start",
-+	[IFS_SBAF_INVALID_PROGRAM_INDEX] = "SBAF program index not valid",
-+	[IFS_SBAF_CORRUPTED_CHUNK] = "SBAF operation aborted due to corrupted chunk",
-+	[IFS_SBAF_DID_NOT_START] = "SBAF operation did not start",
-+};
-+
-+static void sbaf_message_not_tested(struct device *dev, int cpu, u64 status_data)
-+{
-+	union ifs_sbaf_status status = (union ifs_sbaf_status)status_data;
-+
-+	if (status.error_code < ARRAY_SIZE(sbaf_test_status)) {
-+		dev_info(dev, "CPU(s) %*pbl: SBAF operation did not start. %s\n",
-+			 cpumask_pr_args(cpu_smt_mask(cpu)),
-+			 sbaf_test_status[status.error_code]);
-+	} else if (status.error_code == IFS_SW_TIMEOUT) {
-+		dev_info(dev, "CPU(s) %*pbl: software timeout during scan\n",
-+			 cpumask_pr_args(cpu_smt_mask(cpu)));
-+	} else if (status.error_code == IFS_SW_PARTIAL_COMPLETION) {
-+		dev_info(dev, "CPU(s) %*pbl: %s\n",
-+			 cpumask_pr_args(cpu_smt_mask(cpu)),
-+			 "Not all SBAF bundles executed. Maximum forward progress retries exceeded");
-+	} else {
-+		dev_info(dev, "CPU(s) %*pbl: SBAF unknown status %llx\n",
-+			 cpumask_pr_args(cpu_smt_mask(cpu)), status.data);
-+	}
-+}
-+
-+static void sbaf_message_fail(struct device *dev, int cpu, union ifs_sbaf_status status)
-+{
-+	/* Failed signature check is set when SBAF signature did not match the expected value */
-+	if (status.sbaf_status == SBAF_STATUS_SIGN_FAIL) {
-+		dev_err(dev, "CPU(s) %*pbl: Failed signature check\n",
-+			cpumask_pr_args(cpu_smt_mask(cpu)));
-+	}
-+
-+	/* Failed to reach end of test */
-+	if (status.sbaf_status == SBAF_STATUS_TEST_FAIL) {
-+		dev_err(dev, "CPU(s) %*pbl: Failed to complete test\n",
-+			cpumask_pr_args(cpu_smt_mask(cpu)));
-+	}
-+}
-+
-+static bool sbaf_bundle_completed(union ifs_sbaf_status status)
-+{
-+	if (status.sbaf_status || status.error_code)
-+		return false;
-+	return true;
-+}
-+
-+static bool sbaf_can_restart(union ifs_sbaf_status status)
-+{
-+	enum sbaf_status_err_code err_code = status.error_code;
-+
-+	/* Signature for chunk is bad, or scan test failed */
-+	if (status.sbaf_status == SBAF_STATUS_SIGN_FAIL ||
-+	    status.sbaf_status == SBAF_STATUS_TEST_FAIL)
-+		return false;
-+
-+	switch (err_code) {
-+	case IFS_SBAF_NO_ERROR:
-+	case IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN:
-+	case IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS:
-+	case IFS_SBAF_EXCEED_NUMBER_OF_THREADS_CONCURRENT:
-+	case IFS_SBAF_INTERRUPTED_DURING_EXECUTION:
-+		return true;
-+	case IFS_SBAF_UNASSIGNED_ERROR_CODE3:
-+	case IFS_SBAF_INVALID_BUNDLE_INDEX:
-+	case IFS_SBAF_MISMATCH_ARGS_BETWEEN_THREADS:
-+	case IFS_SBAF_CORE_NOT_CAPABLE_CURRENTLY:
-+	case IFS_SBAF_UNASSIGNED_ERROR_CODE7:
-+	case IFS_SBAF_INVALID_PROGRAM_INDEX:
-+	case IFS_SBAF_CORRUPTED_CHUNK:
-+	case IFS_SBAF_DID_NOT_START:
-+		break;
-+	}
-+	return false;
-+}
-+
-+/*
-+ * Execute the SBAF test. Called "simultaneously" on all threads of a core
-+ * at high priority using the stop_cpus mechanism.
-+ */
-+static int dosbaf(void *data)
-+{
-+	struct sbaf_run_params *run_params = data;
-+	int cpu = smp_processor_id();
-+	union ifs_sbaf_status status;
-+	struct ifs_data *ifsd;
-+	int first;
-+
-+	ifsd = run_params->ifsd;
-+
-+	/* Only the first logical CPU on a core reports result */
-+	first = cpumask_first(cpu_smt_mask(cpu));
-+	wait_for_sibling_cpu(&sbaf_cpus_in, NSEC_PER_SEC);
-+
-+	/*
-+	 * This WRMSR will wait for other HT threads to also write
-+	 * to this MSR (at most for activate.delay cycles). Then it
-+	 * starts scan of each requested bundle. The core test happens
-+	 * during the "execution" of the WRMSR.
-+	 */
-+	wrmsrl(MSR_ACTIVATE_SBAF, run_params->activate->data);
-+	rdmsrl(MSR_SBAF_STATUS, status.data);
-+
-+	/* Pass back the result of the test */
-+	if (cpu == first)
-+		run_params->status = status;
-+
-+	return 0;
-+}
-+
-+static void ifs_sbaf_test_core(int cpu, struct device *dev)
-+{
-+	struct sbaf_run_params run_params;
-+	union ifs_sbaf_status status;
-+	union ifs_sbaf activate;
-+	unsigned long timeout;
-+	struct ifs_data *ifsd;
-+	int stop_bundle;
-+	int retries;
-+
-+	ifsd = ifs_get_data(dev);
-+
-+	activate.data = 0;
-+	activate.delay = IFS_THREAD_WAIT;
-+
-+	timeout = jiffies + (2 * HZ);
-+	retries = MAX_IFS_RETRIES;
-+	activate.bundle_idx = 0;
-+	stop_bundle = ifsd->max_bundle;
-+
-+	while (activate.bundle_idx <= stop_bundle) {
-+		if (time_after(jiffies, timeout)) {
-+			status.error_code = IFS_SW_TIMEOUT;
-+			break;
-+		}
-+
-+		atomic_set(&sbaf_cpus_in, 0);
-+
-+		run_params.ifsd = ifsd;
-+		run_params.activate = &activate;
-+		run_params.retry_cnt = &retries;
-+		stop_core_cpuslocked(cpu, dosbaf, &run_params);
-+
-+		status = run_params.status;
-+
-+		if (sbaf_bundle_completed(status)) {
-+			activate.bundle_idx = status.bundle_idx + 1;
-+			activate.pgm_idx = 0;
-+			retries = MAX_IFS_RETRIES;
-+			continue;
-+		}
-+
-+		/* Some cases can be retried, give up for others */
-+		if (!sbaf_can_restart(status))
-+			break;
-+
-+		if (status.pgm_idx == activate.pgm_idx) {
-+			/* If no progress retry */
-+			if (--retries == 0) {
-+				if (status.error_code == IFS_NO_ERROR)
-+					status.error_code = IFS_SW_PARTIAL_COMPLETION;
-+				break;
-+			}
-+		} else {
-+			/* if some progress, more pgms remaining in bundle, reset retries */
-+			retries = MAX_IFS_RETRIES;
-+			activate.bundle_idx = status.bundle_idx;
-+			activate.pgm_idx = status.pgm_idx;
-+		}
-+	}
-+
-+	/* Update status for this core */
-+	ifsd->scan_details = status.data;
-+
-+	if (status.sbaf_status == SBAF_STATUS_SIGN_FAIL ||
-+	    status.sbaf_status == SBAF_STATUS_TEST_FAIL) {
-+		ifsd->status = SCAN_TEST_FAIL;
-+		sbaf_message_fail(dev, cpu, status);
-+	} else if (status.error_code || status.sbaf_status == SBAF_STATUS_INTR ||
-+		   (activate.bundle_idx < stop_bundle)) {
-+		ifsd->status = SCAN_NOT_TESTED;
-+		sbaf_message_not_tested(dev, cpu, status.data);
-+	} else {
-+		ifsd->status = SCAN_TEST_PASS;
-+	}
-+}
-+
- /*
-  * Initiate per core test. It wakes up work queue threads on the target cpu and
-  * its sibling cpu. Once all sibling threads wake up, the scan test gets executed and
-@@ -420,6 +648,12 @@ int do_core_test(int cpu, struct device *dev)
- 		else
- 			ifs_array_test_gen1(cpu, dev);
- 		break;
-+	case IFS_TYPE_SBAF:
-+		if (!ifsd->loaded)
-+			ret = -EPERM;
-+		else
-+			ifs_sbaf_test_core(cpu, dev);
-+		break;
- 	default:
- 		ret = -EINVAL;
- 	}
 -- 
 2.25.1
 
