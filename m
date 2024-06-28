@@ -1,215 +1,390 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2073.outbound.protection.outlook.com [40.107.95.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D3917C6D;
-	Fri, 28 Jun 2024 01:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719538982; cv=none; b=tjBv7ohJAC7Mm2XPnkulcH/h52mbXS+zr0NU1t6s6EqSKFrb2kxeHSvEdCweb0LP6DeVkP5MGKAV/Au8YIRaXBXumiROr2pcIBI6ZZWG9i8RMm/n7bJk/YU9uxOL7IFjchyxVcwFJgfvMMopf5j4vauL9U+ZQWu6zJ+fqaD/ntA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719538982; c=relaxed/simple;
-	bh=bp2PdThNVVMPh/csioX4DjTBq0GQ+svFI4F+j1dbcv8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iEJxV9k6gx+v4U8JNWxNj1CajR/opJ19XKxJUDJIGvbz7+6sgQynzXsC86UcGNcVS04vcw3SzC/ihpu09wpCohAdo0NB72dmpHZRf7EJGb3DK4ABqWgiYeAPFIyk/fuSFklwCOkD0QVxHf8a0+JAo4Xh5YbkLzv6tHSoWWQHjBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TfOSTgRJ; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41CF920B0F
+	for <platform-driver-x86@vger.kernel.org>; Fri, 28 Jun 2024 03:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719546649; cv=fail; b=VXmHB8qpeYnQuhCe1bPz7yoXRZxSITWg//CE7Va2sv3C2foqvuoRRWXpnS7Np4Z0MxyGLW+DUkUEqsc3pogvRoGVz8BQWgXtsdaIIMEGNkeo9PQEUAHKmhdoVxdHDmzkf99tL1C4q4Us2I+FNOPFFws4GXVR9TYtShVYVZCvm8g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719546649; c=relaxed/simple;
+	bh=fhOUR9iVRdEUtI6bjSpqqD5wog4yNqVvVfRO9svTXso=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ogpqoeOhhz37XRspIZ4j0Qf7k/5DDeQtgMxt45u6j5wZHy4TgS0JoCN0jSx/k4kB6gtt/r1JVdaXduzZXgxYC006ZR0MgNOezUa1uc8+cpgI1IZHv93CMAeI+SKek+whR1B/FH2my+gshXQT4jV3CbC+YF3pIw9oJ77X82J5S5Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=I2RXmXG1; arc=fail smtp.client-ip=40.107.95.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TfOSTgRJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719538981; x=1751074981;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bp2PdThNVVMPh/csioX4DjTBq0GQ+svFI4F+j1dbcv8=;
-  b=TfOSTgRJl20WuaZTyRzf6YYamBwcq2QZo7vIukztN20naUhBeO4CnXSV
-   Da3Aup3Lbs6rTaipe3FiAw2ZjlZ3bd7z1Qs8sRPgoDY0g8i+OyuxMlKWe
-   ddXp6aRrWHo9pvOw7PZzHfWrazKP7j+s4hZd32jDRJAhgNbQaBYYa5YYh
-   r8lsw5h21sij40hj2Mf/hbCdl671r8Lw3cKZ6TwoK3xf0+RK2M9SiUKU6
-   1qxBWExxUynXK063AkxtLjwS5pZPYW6f0X0frqz+qoZ7yPSzIfN9+G+di
-   8fbxfj7y5b4sr4tlHuLSjFMEIYVADvPpTvU2/WNmLoCT+vs2hQ0C/2gIZ
-   g==;
-X-CSE-ConnectionGUID: Rx0Rj7WhTyS3M3frMMHgxA==
-X-CSE-MsgGUID: zSfErXWAQI+6GbPSHnTfTA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16836695"
-X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
-   d="scan'208";a="16836695"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 18:43:00 -0700
-X-CSE-ConnectionGUID: REq/Bj2+R/eajqS5tr45Uw==
-X-CSE-MsgGUID: GZAr+djJTSqs/gQhv9SEZg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
-   d="scan'208";a="49173037"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 27 Jun 2024 18:42:56 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sN0da-000GhL-0I;
-	Fri, 28 Jun 2024 01:42:54 +0000
-Date: Fri, 28 Jun 2024 09:42:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hans de Goede <hdegoede@redhat.com>,
-	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Wolfram Sang <wsa-dev@sang-engineering.com>
-Cc: oe-kbuild-all@lists.linux.dev, Hans de Goede <hdegoede@redhat.com>,
-	eric.piel@tremplin-utc.net, Marius Hoch <mail@mariushoch.de>,
-	Dell.Client.Kernel@dell.com,
-	Kai Heng Feng <kai.heng.feng@canonical.com>,
-	platform-driver-x86@vger.kernel.org,
-	Jean Delvare <jdelvare@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v4 6/6] platform/x86: dell-smo8800: Add support for
- probing for the accelerometer i2c address
-Message-ID: <202406280954.PwlEGWfP-lkp@intel.com>
-References: <20240624111519.15652-7-hdegoede@redhat.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="I2RXmXG1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O99zxz2vB0CF81WFrfoy6LuWArqPmrN2H8iPY7LnVpJiYnwl19bRVXqmOgq+I88A7+kaJcL+7cjgztvrtxSNYzQiNW3MK9hSsWZrgFfeaDbWDiEGHLPaLRVfA/N7Y0v2qYtBsmSXm+4WfOCO1nbsfQh5UT2PPvMsqAeUuICwSTsuwA14tFMZVxuBtVXEXUiir8k5ipcpJCmtKKpVaXQ0uGLjwze5NkCVNqZ1YZYBJaLTh6ob//YHolFTY2eV5ZmaZRbT8QUhUU0uLEAXkOQj3iORdN5QzW5rtGX7NSK9GkZpv1HYVELyXFLgK8Ekqmc1t0bgBw6mg+YXgve70C/cdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4ldcsEB/dYWIhcrIebdmHfu+hvOpMEsaK+61D5In6OY=;
+ b=lHn76vOTifOIr1d+hpVfMTDR7ecqsMKmNZ0L7gUEIt6HUo6uf3Yx9TMyCcQx3KUXPfqs7v2A4kHmnVpW3DPMop+H3Gh4HxyYblFdUvNIL1ZfZbLqClL/2UIvqKh76ib32S9JhjSL657+dECBRTAgg5MZjHK94rjIXol+7LbYYWRym4FZKY8OSJwsvwgD9ciMP9qpzoXuNGnsdnD5GxkDuf5JJvD4iPlBeUUzkTJKwisb7WJYZjG8axm4sEznwlZ3EqV541dlM0IclxOnK5AGhCCv+SRPZ/EJwOLDlohf+yaJLC3Sfpk5HfdbVPVCJXsiN7YaIFz4g7sEINQiHjmYEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4ldcsEB/dYWIhcrIebdmHfu+hvOpMEsaK+61D5In6OY=;
+ b=I2RXmXG1th4QU5asZDByVUjs8XChM/1gKfF/0tIRC1YSqgvIOMvdRzfqnYVYxn8fWqbonkHJwhoRN1SQG6HuF6CtwNJJSMp7VMFH6klPCsKktDrRBGzQcPxgpWcktZn54LpFL3M9EeHC8MAScQlDB2XJ2w9Yqx24sNov8rAmAFY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from LV2PR12MB5966.namprd12.prod.outlook.com (2603:10b6:408:171::21)
+ by CY8PR12MB7564.namprd12.prod.outlook.com (2603:10b6:930:97::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.32; Fri, 28 Jun
+ 2024 03:50:44 +0000
+Received: from LV2PR12MB5966.namprd12.prod.outlook.com
+ ([fe80::7c1b:5fa1:7929:fd81]) by LV2PR12MB5966.namprd12.prod.outlook.com
+ ([fe80::7c1b:5fa1:7929:fd81%4]) with mapi id 15.20.7719.022; Fri, 28 Jun 2024
+ 03:50:44 +0000
+Message-ID: <27aa9e58-4dea-42f0-901a-0c9ee696fe2e@amd.com>
+Date: Fri, 28 Jun 2024 09:20:38 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 08/10] platform/x86/amd/hsmp: Move read and is_visible to
+ respective files
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ platform-driver-x86@vger.kernel.org
+Cc: ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com,
+ Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+References: <20240627053958.2533860-1-suma.hegde@amd.com>
+ <20240627053958.2533860-9-suma.hegde@amd.com>
+ <24f48c77-42bf-48f7-8e79-a97285bf4fc3@amd.com>
+Content-Language: en-US
+From: Suma Hegde <Suma.Hegde@amd.com>
+In-Reply-To: <24f48c77-42bf-48f7-8e79-a97285bf4fc3@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN2PR01CA0062.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:23::7) To LV2PR12MB5966.namprd12.prod.outlook.com
+ (2603:10b6:408:171::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240624111519.15652-7-hdegoede@redhat.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5966:EE_|CY8PR12MB7564:EE_
+X-MS-Office365-Filtering-Correlation-Id: 345580f9-3836-4538-173d-08dc97257d07
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NTFoaE10YUtmV2VTY1UwbkF4MTZxK3l4SzB4UzZOZUtQZ2pPTDMyMEVDOS9Q?=
+ =?utf-8?B?REdHV00vcWxZc0RsaVFwVDExVFV2YXF6Y3JrR3QrTU1pRFdOWTByZ2RCb3VY?=
+ =?utf-8?B?UU5VTDE0R0JWTWEwaGJLcmk3NGovK0VFb1ZkY3B0dmo4Z25peW4zaHhpMHU3?=
+ =?utf-8?B?ZnZGNUxVaFl3dE1CakhobUZXamNydlF1NG4yYWFUUTdsVUVIdTg3RVZLSG94?=
+ =?utf-8?B?THpqK0wyNkxGa21lSk04UC9zdG1ZN1JnREtXTExnVHlDNExGRWVnQmxIZGsr?=
+ =?utf-8?B?dUJVc1Zpc0ZWdHpLenFJZm1zK2lkd3VTamw4YzFyRGdtdVZKb0M4cUxWNm5Q?=
+ =?utf-8?B?TkZYb2FWcklIcWpXY010VUl0NGRLZ0FEYmNObkQvZ1JzckE3NXdqbjV0ODBU?=
+ =?utf-8?B?UTY0RlFCaFpHbGtVblVZQjAySDljUVZZeWhoVlhaWE9WaS9zQmxsdmNLUWww?=
+ =?utf-8?B?YlhLV0FSQTNBSHljT0hoRVB4cUJNbzdCVDU0TGJSUDJ3TWp4cWVNNWxRYUdN?=
+ =?utf-8?B?ZUwyaEdzQ1ZtdVI5YVVJejBkVkc0cDF6SGtVaDBsZ2xrbkdialEwZW9kcm5F?=
+ =?utf-8?B?aGI3akh1QndtNHF5d1dPaHhKSm5uZWdkTlpudVd1S1hyWDBmSVJFRngzVmVZ?=
+ =?utf-8?B?dGFUSkJ6SHplRzNHTlFNRnN0cGdpRGVCM0xlK0JCd2pUNHFuRG5PS09tRFp3?=
+ =?utf-8?B?bTNJZlowbUkrNitIRlpWbDAzY0VkTHVzbXd0R0gvdkRoYjZ6ZFpZZkp2OVo2?=
+ =?utf-8?B?cG92S2FsSTR2NnBXVkN5dnZ2Mzg2RExIakRqbjUwSlZzcEI0aUtNZForMGE2?=
+ =?utf-8?B?TVhESnBMYU1DeVNOaElYYUFzL1Zmb0tLMU1LZU5sMHdjWTFVOGU0U21TT2ta?=
+ =?utf-8?B?K1ZxYW1RTWx5Mk5pUHZhWWcrWGJLbWRhYTArL2FtOUtOaVB2K2ZyTFFVckNW?=
+ =?utf-8?B?WXArR0dPRzNjNmVYaStJMXBTeCsvb0JRVCtpVzlJV25IUGU4d1lRdXNmc2t3?=
+ =?utf-8?B?elcyeDR6VUNnUlVWTko5ZytURDFIOE5qZmpoN255MmVDQVg1d1BhajNJM1NG?=
+ =?utf-8?B?cjhVMW1sY1pQTzdXTDU4V25OSGdkMlNYNjFNVzlCK1I2RmdEWThFS1M3L1N4?=
+ =?utf-8?B?L2lkZzRjSVNXQjdyczg5RVhYU2YyWGl3R2RHS0kzU3Vya3JUMXhKTC9WYytp?=
+ =?utf-8?B?Q091VXZyMXpyL01ReHZickFRN2wwbVZvbVdvREp0R2RuZEg0cElaL3FYaG1n?=
+ =?utf-8?B?cERvZEZnUTBjNW5WcEZNS2xKcXI4TkxnalVJZTRXdE9LSS9VUEdHTjNYbnJr?=
+ =?utf-8?B?eDJyWlJyK2x5MzAvUjMzR1RSQXlWMTVFWG02WmJHS3NvNkdIczFrcTZLa3pI?=
+ =?utf-8?B?TTArNjFnL2l1VTVLWTB1TndObmdCMHpiS0FwRGJMVkpYemlyZ2w4c2FvQWtu?=
+ =?utf-8?B?b2s4WXZ3NXNUdHIrSU5DTkM5SkRBMEQzeXkwblJiN0E0dVFGUG95aThsYVQ5?=
+ =?utf-8?B?aC9TUGhJNTZNRzJRcmRMWnlYLy9pWVQ3ZlVtSUhFS2VvTStHblhBbFBDeFpS?=
+ =?utf-8?B?YjBvUlk0c1V5QlVvc3YwckNuTG1kLy9rZ0RCWUlpM2l4eXB6K1FwT0xSdWhE?=
+ =?utf-8?B?Q3pGT2lBNmlTL1BGVHU3eWhoV3NNd1E0aG9Id1d0cTM0NFFuZVhZMUFqWEVl?=
+ =?utf-8?B?amJWUlJkRTgyRlBGK3pNY3pUNkNNV3BsWktEZUlYcVVzais3TlNnV050YVgv?=
+ =?utf-8?B?dFZSZGo1anVhTnJFSS9pSkk0a1BkRS84UU16M3U3ZUh0bVpCVk1LOXZWRkRl?=
+ =?utf-8?B?UmwzV002QzlqN2xYdml6QT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5966.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NVJzZXJRZk50ZlZNUDQxRkNKN09NR1p3anA2VGNyRUF5UEVXZXVTei9wV2FR?=
+ =?utf-8?B?V2ZqUm1VWjE5b0FHMWsxak1jRkdWRXJmamxXc1Uyck9lTktUVlBQcWhxZWFM?=
+ =?utf-8?B?MVhVQ3lxN2ZmdC9FM3BDeThubk1qL0IzdGlJcVdvTFVMT2FnZm5aeFBlamE1?=
+ =?utf-8?B?RXRPMGhtNko0RGFrUTBGdmdoTVdXL2x3WURjdjhaVHNvU3JWUThaODZJbmpx?=
+ =?utf-8?B?cnNHcHVIbGoySXB6ZWN6dzB0VUhsUW1JTWxraVZLVFF5azVPM2p1cFY3NzV3?=
+ =?utf-8?B?MnczYW9rTkc2VzBBZ2lSWUI5WWo3clhRb2pyZUQzYXBXeUtRTEtJMEgzL0t4?=
+ =?utf-8?B?QWR5VlBvb2dEbi9CdXFORVVBNVk0SGtCeGNoblRrUkJBd2Z4bEIwWUNRSjFy?=
+ =?utf-8?B?YTdrWjFkelBnQVk4VnJveEhzcUN5ditqVC9DM0VwWDlDcEd6Z09VV0lheGFI?=
+ =?utf-8?B?R1hxS3doZU8zMHNvYlk0RmVRVE81Sk1JZWdRWklSeGdWdUd6ZXJITjRyR3RP?=
+ =?utf-8?B?VzF3THhNTkRxTk5LeWoyWHZIVmRyYzZGZ3NkTXhLYzBRL3cxRUtjK2lYNkNH?=
+ =?utf-8?B?VStjVnF0NXl3VzFwTkVxV3p0cndoQmM4UWdHdjd4RTVhNUYyQnlvUjFuSDFL?=
+ =?utf-8?B?OWRmOVR5Q1c2SEJVRkNYMEwyRmVNRGNyQmJEem5qOGl6bW5CZ3cvaXJhYUQ2?=
+ =?utf-8?B?RitBSVhPT09ONXdBeUNHNEluV1pMVHI4TVRwL1dxQk1hOFRselg2RFZOQkJ3?=
+ =?utf-8?B?RjJabFdHZWgxb1lrTVJYa0gwVkRGOGhMZFBoRmR2ZFBqWnV5VHd3M0RiV1pi?=
+ =?utf-8?B?RG1FaHZUR1RSRkkvV1ZkeXlFVWJZdTArMjVWOVF3N2plMnVHZkJCTXBNMm1U?=
+ =?utf-8?B?V0N1Y3NzOFkyTGIvMkdHZUx5aVFRaUsrbmFqcU92K1J6b2UyZ1o4WGJDQVFT?=
+ =?utf-8?B?RmxLd3NGMEpEYlcxUjFDVTdaTUJPMlFQS1ZQY1FNK041dmp0NXpHMTh4Q2E1?=
+ =?utf-8?B?SkhNd3RETHFxVDU2VC95amhncWJIZmpQODQ1ck52ZzZZdkJpbHhTRmtzT3Zr?=
+ =?utf-8?B?UmtiQTZPMlQyQ2NDbUFQR09OTlRqbnJEbXRFYnQ5M1JsQWRZbzM1TGFDb04y?=
+ =?utf-8?B?bGpQcTZXN1NudlUxQmMwQjZBYUlPTGxkYzhJc0llcXRvQytFQnNtZ01pUkdm?=
+ =?utf-8?B?amo1RXpkTTdqNHRJRDBCa0ViZXU1bkFqRmszZVZTRDAyWm9ZZTVVTFRWS0Qr?=
+ =?utf-8?B?TWJJSWZPaFlQbDZEbWdOZUpiNGJzdW53bjN3L3Vndm42TnY1UHFqN0JPV0sr?=
+ =?utf-8?B?RmsyTzhqbXBjbWE3WHk1bC9JRm1nek5GSGF1bm9MbTJhOTV2czlFVWNVaWZR?=
+ =?utf-8?B?K2wySGNLTUwzM2dNeGdlQ3ZVTGhjZlhTWFh4bEhiaTk1M3ZNcWIzSUNQRlAx?=
+ =?utf-8?B?YjNCNUhvbUo3UVlpMDJQaUlTM3h3cjQvbS9ZM2M4SnJhaHVLUWE2M2s0SlZL?=
+ =?utf-8?B?NktBS3RGcVlOSU9hMXJ5NmZKSEtGaUxSZHQxdzRvQnlRelBiei8yZm1ZdmpI?=
+ =?utf-8?B?NnBpSUI2dlZEZEtHNTQ3L2wvQVVYakJtbUtXOGVKSUNHSXVWRWJVd0ttYWFJ?=
+ =?utf-8?B?bzExem00OW5UaHNnRnNscDFuQi9TT2VUTXhpc3hUTTM0WFI0bldrUklac3dw?=
+ =?utf-8?B?QU9zdWZCYU94TThjc0J6MWd0ZkQxQUJ0aytlSGdBZkRGTGtxcGlGUk1OTjdm?=
+ =?utf-8?B?K0J1Z0QxL2t4bTRxa0hNa1JsUFR4VVVYajBPc3JIWkNKZ0JGdWlnK1FWSm5N?=
+ =?utf-8?B?UjRoSytZMmdtZDFoZ3lXc0tlWUU4MytxLzNrTDFQT05CbEJmcmV3WmthUXVt?=
+ =?utf-8?B?TjU5bVVwYVdPcW5WV3ZlS00ycXVhcStMdWtibUhQVks1Zi9yUWhEQWtza01x?=
+ =?utf-8?B?MkxnbDFTWUFFeTVOeWpRL3FVS1VzaHFJTzZDMjdXVVFYejRROUpyZVQrbW43?=
+ =?utf-8?B?MTJ4UTJGL1pKR3VNdzdiR1hkUDRvZUJKa3hhT0t1eVVrTDUvMjBKbG41TGJh?=
+ =?utf-8?B?TnhyK2xmaCtKNi9sZjFSV2h4NHZXcCttZ1k0ejVxRVRFY1dZSnE3QjRLSFh3?=
+ =?utf-8?Q?Ff6zGJWSolYwuJFi5RFmazrcw?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 345580f9-3836-4538-173d-08dc97257d07
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5966.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2024 03:50:44.8323
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: khuWJ0uP5mzpNSnxh2oJkSzDSp8zX2BWtzsvJxSkoaVu10L7JsbfhB6MAnfFFKiMnF4RkOM/G3mssD48RVuw8Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7564
 
-Hi Hans,
+Hi Mario,
 
-kernel test robot noticed the following build errors:
+Thank you for your review. I will address these review comments in v2.
 
-[auto build test ERROR on andi-shyti/i2c/i2c-host]
-[also build test ERROR on wsa/i2c/for-next linus/master v6.10-rc5 next-20240627]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On 6/28/2024 1:18 AM, Mario Limonciello wrote:
+> On 6/27/2024 00:39, Suma Hegde wrote:
+>> The .read() and .is_visibile() needs to be handled differently in 
+>> acpi and
+>
+> is_visible()
+>
+>> platform drivers, due to the way the sysfs files are created.
+>>
+>> This is in preparation to using .dev_groups instead of dynamic sysfs
+>> creation. The sysfs at this point is not functional, it will be 
+>> enabled in
+>> the next patch.
+>>
+>> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+>> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+>> ---
+>>   drivers/platform/x86/amd/hsmp/acpi.c | 41 ++++++++++++++++++++
+>>   drivers/platform/x86/amd/hsmp/hsmp.c | 37 ------------------
+>>   drivers/platform/x86/amd/hsmp/plat.c | 57 ++++++++++++++++++++++++++++
+>>   3 files changed, 98 insertions(+), 37 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c 
+>> b/drivers/platform/x86/amd/hsmp/acpi.c
+>> index 0307f4e7176d..1ea17aa296c7 100644
+>> --- a/drivers/platform/x86/amd/hsmp/acpi.c
+>> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
+>> @@ -12,6 +12,7 @@
+>>   #include "hsmp.h"
+>>     #include <linux/acpi.h>
+>> +#include <asm/amd_hsmp.h>
+>>   #include <asm/amd_nb.h>
+>>   #include <linux/platform_device.h>
+>>   @@ -206,6 +207,8 @@ static int hsmp_parse_acpi_table(struct device 
+>> *dev, u16 sock_ind)
+>>         sema_init(&sock->hsmp_sem, 1);
+>>   +    dev_set_drvdata(dev, sock);
+>> +
+>>       /* Read MP1 base address from CRS method */
+>>       ret = hsmp_read_acpi_crs(sock);
+>>       if (ret)
+>> @@ -238,6 +241,44 @@ static int hsmp_create_acpi_sysfs_if(struct 
+>> device *dev)
+>>       return devm_device_add_group(dev, attr_grp);
+>>   }
+>>   +ssize_t hsmp_metric_tbl_read(struct file *filp, struct kobject *kobj,
+>> +                 struct bin_attribute *bin_attr, char *buf,
+>> +                 loff_t off, size_t count)
+>> +{
+>> +    struct device *dev = container_of(kobj, struct device, kobj);
+>> +    struct hsmp_socket *sock = dev_get_drvdata(dev);
+>> +    struct hsmp_message msg = { 0 };
+>> +    int ret;
+>> +
+>> +    if (!sock)
+>> +        return -EINVAL;
+>> +
+>> +    /* Do not support lseek(), reads entire metric table */
+>> +    if (count < bin_attr->size) {
+>> +        dev_err(sock->dev, "Wrong buffer size\n");
+>> +        return -EINVAL;
+>> +    }
+>> +
+>> +    msg.msg_id      = HSMP_GET_METRIC_TABLE;
+>> +    msg.sock_ind    = sock->sock_ind;
+>> +
+>> +    ret = hsmp_send_message(&msg);
+>> +    if (ret)
+>> +        return ret;
+>> +    memcpy_fromio(buf, sock->metric_tbl_addr, bin_attr->size);
+>> +
+>> +    return bin_attr->size;
+>> +}
+>> +
+>> +umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
+>> +                  struct bin_attribute *battr, int id)
+>> +{
+>> +    if (plat_dev.proto_ver == HSMP_PROTO_VER6)
+>> +        return battr->attr.mode;
+>> +    else
+>
+> Since your only path in the "if" returns this else is redundant.
+>
+>> +        return 0;
+>> +}
+>> +
+>>   static int init_acpi(struct device *dev)
+>>   {
+>>       u16 sock_ind;
+>> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c 
+>> b/drivers/platform/x86/amd/hsmp/hsmp.c
+>> index 4bf598021f4a..c199a0ff457d 100644
+>> --- a/drivers/platform/x86/amd/hsmp/hsmp.c
+>> +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
+>> @@ -273,34 +273,6 @@ long hsmp_ioctl(struct file *fp, unsigned int 
+>> cmd, unsigned long arg)
+>>       return 0;
+>>   }
+>>   -ssize_t hsmp_metric_tbl_read(struct file *filp, struct kobject *kobj,
+>> -                 struct bin_attribute *bin_attr, char *buf,
+>> -                 loff_t off, size_t count)
+>> -{
+>> -    struct hsmp_socket *sock = bin_attr->private;
+>> -    struct hsmp_message msg = { 0 };
+>> -    int ret;
+>> -
+>> -    if (!sock)
+>> -        return -EINVAL;
+>> -
+>> -    /* Do not support lseek(), reads entire metric table */
+>> -    if (count < bin_attr->size) {
+>> -        dev_err(sock->dev, "Wrong buffer size\n");
+>> -        return -EINVAL;
+>> -    }
+>> -
+>> -    msg.msg_id    = HSMP_GET_METRIC_TABLE;
+>> -    msg.sock_ind    = sock->sock_ind;
+>> -
+>> -    ret = hsmp_send_message(&msg);
+>> -    if (ret)
+>> -        return ret;
+>> -    memcpy_fromio(buf, sock->metric_tbl_addr, bin_attr->size);
+>> -
+>> -    return bin_attr->size;
+>> -}
+>> -
+>>   static int hsmp_get_tbl_dram_base(u16 sock_ind)
+>>   {
+>>       struct hsmp_socket *sock = &plat_dev.sock[sock_ind];
+>> @@ -334,15 +306,6 @@ static int hsmp_get_tbl_dram_base(u16 sock_ind)
+>>       return 0;
+>>   }
+>>   -umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
+>> -                  struct bin_attribute *battr, int id)
+>> -{
+>> -    if (plat_dev.proto_ver == HSMP_PROTO_VER6)
+>> -        return battr->attr.mode;
+>> -    else
+>> -        return 0;
+>> -}
+>> -
+>>   static int hsmp_init_metric_tbl_bin_attr(struct bin_attribute 
+>> **hattrs, u16 sock_ind)
+>>   {
+>>       struct bin_attribute *hattr = &plat_dev.sock[sock_ind].hsmp_attr;
+>> diff --git a/drivers/platform/x86/amd/hsmp/plat.c 
+>> b/drivers/platform/x86/amd/hsmp/plat.c
+>> index 62423581d839..57aa64b18e0d 100644
+>> --- a/drivers/platform/x86/amd/hsmp/plat.c
+>> +++ b/drivers/platform/x86/amd/hsmp/plat.c
+>> @@ -11,6 +11,7 @@
+>>     #include "hsmp.h"
+>>   +#include <asm/amd_hsmp.h>
+>>   #include <asm/amd_nb.h>
+>>   #include <linux/module.h>
+>>   #include <linux/pci.h>
+>> @@ -88,6 +89,62 @@ static int hsmp_create_non_acpi_sysfs_if(struct 
+>> device *dev)
+>>       return device_add_groups(dev, hsmp_attr_grps);
+>>   }
+>>   +ssize_t hsmp_metric_tbl_read(struct file *filp, struct kobject *kobj,
+>> +                 struct bin_attribute *bin_attr, char *buf,
+>> +                 loff_t off, size_t count)
+>> +{
+>> +    struct hsmp_message msg = { 0 };
+>> +    struct hsmp_socket *sock;
+>> +    u8 sock_ind;
+>> +    int ret;
+>> +
+>> +    ret = kstrtou8(bin_attr->private, 10, &sock_ind);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    if (sock_ind >= plat_dev.num_sockets)
+>> +        return -EINVAL;
+>> +
+>> +    sock = &plat_dev.sock[sock_ind];
+>> +    if (!sock)
+>> +        return -EINVAL;
+>> +
+>> +    /* Do not support lseek(), reads entire metric table */
+>> +    if (count < bin_attr->size) {
+>> +        dev_err(sock->dev, "Wrong buffer size\n");
+>> +        return -EINVAL;
+>> +    }
+>> +
+>> +    msg.msg_id    = HSMP_GET_METRIC_TABLE;
+>> +    msg.sock_ind    = sock_ind;
+>> +
+>> +    ret = hsmp_send_message(&msg);
+>> +    if (ret)
+>> +        return ret;
+>> +    memcpy_fromio(buf, sock->metric_tbl_addr, bin_attr->size);
+>> +
+>> +    return bin_attr->size;
+>> +}
+>> +
+>> +umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
+>> +                  struct bin_attribute *battr, int id)
+>> +{
+>> +    u8 sock_ind;
+>> +    int ret;
+>> +
+>> +    ret = kstrtou8(battr->private, 10, &sock_ind);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    if (id == 0 && sock_ind >= plat_dev.num_sockets)
+>> +        return SYSFS_GROUP_INVISIBLE;
+>> +
+>> +    if (plat_dev.proto_ver == HSMP_PROTO_VER6)
+>> +        return battr->attr.mode;
+>> +    else
+>> +        return 0;
+>
+> Since your only path in the "if" returns this else is redundant.
+>
+>> +}
+>> +
+>>   static inline bool is_f1a_m0h(void)
+>>   {
+>>       if (boot_cpu_data.x86 == 0x1A && boot_cpu_data.x86_model <= 0x0F)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Hans-de-Goede/i2c-core-Setup-i2c_adapter-runtime-pm-before-calling-device_add/20240626-053449
-base:   git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git i2c/i2c-host
-patch link:    https://lore.kernel.org/r/20240624111519.15652-7-hdegoede%40redhat.com
-patch subject: [PATCH v4 6/6] platform/x86: dell-smo8800: Add support for probing for the accelerometer i2c address
-config: i386-randconfig-002-20240628 (https://download.01.org/0day-ci/archive/20240628/202406280954.PwlEGWfP-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240628/202406280954.PwlEGWfP-lkp@intel.com/reproduce)
+Thanks and Regards,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406280954.PwlEGWfP-lkp@intel.com/
+Suma
 
-All errors (new ones prefixed by >>):
-
-   drivers/platform/x86/dell/dell-lis3lv02d.c: In function 'i2c_safety_check':
->> drivers/platform/x86/dell/dell-lis3lv02d.c:88:15: error: implicit declaration of function 'i2c_smbus_xfer' [-Werror=implicit-function-declaration]
-      88 |         err = i2c_smbus_xfer(adap, addr, 0, I2C_SMBUS_READ, 0,
-         |               ^~~~~~~~~~~~~~
-   drivers/platform/x86/dell/dell-lis3lv02d.c: In function 'find_i801':
-   drivers/platform/x86/dell/dell-lis3lv02d.c:197:21: error: implicit declaration of function 'i2c_get_adapter'; did you mean 'i2c_get_adapdata'? [-Werror=implicit-function-declaration]
-     197 |         *adap_ret = i2c_get_adapter(adap->nr);
-         |                     ^~~~~~~~~~~~~~~
-         |                     i2c_get_adapdata
-   drivers/platform/x86/dell/dell-lis3lv02d.c:197:19: warning: assignment to 'struct i2c_adapter *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-     197 |         *adap_ret = i2c_get_adapter(adap->nr);
-         |                   ^
-   drivers/platform/x86/dell/dell-lis3lv02d.c: In function 'instantiate_i2c_client':
-   drivers/platform/x86/dell/dell-lis3lv02d.c:226:19: error: implicit declaration of function 'i2c_new_client_device' [-Werror=implicit-function-declaration]
-     226 |         i2c_dev = i2c_new_client_device(adap, &info);
-         |                   ^~~~~~~~~~~~~~~~~~~~~
-   drivers/platform/x86/dell/dell-lis3lv02d.c:226:17: warning: assignment to 'struct i2c_client *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-     226 |         i2c_dev = i2c_new_client_device(adap, &info);
-         |                 ^
-   drivers/platform/x86/dell/dell-lis3lv02d.c:235:9: error: implicit declaration of function 'i2c_put_adapter' [-Werror=implicit-function-declaration]
-     235 |         i2c_put_adapter(adap);
-         |         ^~~~~~~~~~~~~~~
-   drivers/platform/x86/dell/dell-lis3lv02d.c: In function 'dell_lis3lv02d_module_exit':
-   drivers/platform/x86/dell/dell-lis3lv02d.c:325:9: error: implicit declaration of function 'i2c_unregister_device' [-Werror=implicit-function-declaration]
-     325 |         i2c_unregister_device(i2c_dev);
-         |         ^~~~~~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +/i2c_smbus_xfer +88 drivers/platform/x86/dell/dell-lis3lv02d.c
-
-    65	
-    66	/*
-    67	 * This is the kernel version of the single register device sanity checks from
-    68	 * the i2c_safety_check function from lm_sensors sensor-detect script:
-    69	 * This is meant to prevent access to 1-register-only devices,
-    70	 * which are designed to be accessed with SMBus receive byte and SMBus send
-    71	 * byte transactions (i.e. short reads and short writes) and treat SMBus
-    72	 * read byte as a real write followed by a read. The device detection
-    73	 * routines would write random values to the chip with possibly very nasty
-    74	 * results for the hardware. Note that this function won't catch all such
-    75	 * chips, as it assumes that reads and writes relate to the same register,
-    76	 * but that's the best we can do.
-    77	 */
-    78	static int i2c_safety_check(struct i2c_adapter *adap, u8 addr)
-    79	{
-    80		union i2c_smbus_data smbus_data;
-    81		int err;
-    82		u8 data;
-    83	
-    84		/*
-    85		 * First receive a byte from the chip, and remember it. This
-    86		 * also checks if there is a device at the address at all.
-    87		 */
-  > 88		err = i2c_smbus_xfer(adap, addr, 0, I2C_SMBUS_READ, 0,
-    89				     I2C_SMBUS_BYTE, &smbus_data);
-    90		if (err < 0)
-    91			return err;
-    92	
-    93		data = smbus_data.byte;
-    94	
-    95		/*
-    96		 * Receive a byte again; very likely to be the same for
-    97		 * 1-register-only devices.
-    98		 */
-    99		err = i2c_smbus_xfer(adap, addr, 0, I2C_SMBUS_READ, 0,
-   100				     I2C_SMBUS_BYTE, &smbus_data);
-   101		if (err < 0)
-   102			return err;
-   103	
-   104		if (smbus_data.byte != data)
-   105			return 0; /* Not a 1-register-only device. */
-   106	
-   107		/*
-   108		 * Then try a standard byte read, with a register offset equal to
-   109		 * the read byte; for 1-register-only device this should read
-   110		 * the same byte value in return.
-   111		 */
-   112		err = i2c_smbus_xfer(adap, addr, 0, I2C_SMBUS_READ, data,
-   113				     I2C_SMBUS_BYTE_DATA, &smbus_data);
-   114		if (err < 0)
-   115			return err;
-   116	
-   117		if (smbus_data.byte != data)
-   118			return 0; /* Not a 1-register-only device. */
-   119	
-   120		/*
-   121		 * Then try a standard byte read, with a slightly different register
-   122		 * offset; this should again read the register offset in return.
-   123		 */
-   124		err = i2c_smbus_xfer(adap, addr, 0, I2C_SMBUS_READ, data ^ 0x01,
-   125				     I2C_SMBUS_BYTE_DATA, &smbus_data);
-   126		if (err < 0)
-   127			return err;
-   128	
-   129		if (smbus_data.byte != (data ^ 0x01))
-   130			return 0; /* Not a 1-register-only device. */
-   131	
-   132		/*
-   133		 * Apparently this is a 1-register-only device, restore the original
-   134		 * register value and leave it alone.
-   135		 */
-   136		i2c_smbus_xfer(adap, addr, 0, I2C_SMBUS_WRITE, data,
-   137			       I2C_SMBUS_BYTE, NULL);
-   138		pr_warn("I2C safety check for address 0x%02x failed, skipping\n", addr);
-   139		return -ENODEV;
-   140	}
-   141	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
