@@ -1,141 +1,365 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F161CCCA2
-	for <platform-driver-x86@vger.kernel.org>; Tue,  2 Jul 2024 19:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9311E6A342
+	for <platform-driver-x86@vger.kernel.org>; Tue,  2 Jul 2024 22:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719947758; cv=none; b=OLynAmyiG5ltl0Dp2JgE+MO7HznVg8dsVqAXChFxe/UOBgxya5KXFJ24jyjgVwfNsrxhEvT0ht2zs/UhMqxN+St6pWUF2SOCsEISTIt97H5aP/38CTe7lJy4ndtIWQv8Zhk5uAuDbm56imWlKfSd/UbnUUcfJeOS40HGqJj7Ofg=
+	t=1719960102; cv=none; b=lSno6dkDgBpQUKM3Xa4o7nJ12YTRU6c+nzHituTdB8yT+Vdug1ti40/nHbNwAamDeKshDsnz2Y6X6/FgKu+T5EXr6mtbIOJXLrZEbGsbtMYRxryB2UXOy3XnptEsmYu56Zpt7HpE6nszB8hBlumsykbrdvpQnh1vdD5lWzbNc7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719947758; c=relaxed/simple;
-	bh=XVYgl7stxuApEvQU/C547hFtmCZvyIV7HG0E7UpAXus=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W9szTbmsG28zyowx5/eDVRxn/9laMRWvX8L+EiMpboBgzCahjPv+8YmawCdR6HEe+248rZ0Z0TtxafikB3AcQHmTigxFQMTh5SlMNXQSuYgNg9xcGeFTOCu3sBHzyg5uL1JrNd+zDR08uzUnyFbgWQXWqitfSn24VltLQPzlOkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FobwSvBB; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719960102; c=relaxed/simple;
+	bh=WwmCP4yWBUuYDJXI8BO59+v6R2ohok84k65c1Ooi1pU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H1mk23LqBhBu/D6i/PeVt4tzQinXPW3oVLN0jfdoJy5WjeOzeBlDrGmb1o3BLgaqZdDUxDGi7NUKRpPwLiAWeuqqQtUEvQho2ehqGhjQO3MkG6juSMVE4Zq5if2TDPfQxhKSFCBu2rT7+HGrGCv9SMmbSn/sj+22MVWm9Xynj2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xa/SdsRd; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FobwSvBB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719947755;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2Hf4Hn8E9sYvRywOdnCFtlcglvdvtce0hhg7HQwgfjY=;
-	b=FobwSvBBjMkygsjoX4A4S9wkXYK/sI+evX+3QjiBPPVCNdeAOX8u40vd+7JgD8Jcur7z4Q
-	dmFXWo+gP9W2+n22ovEqPBY9EmNVuoOZV1Md9TUi4ZjwMvGAqQo1uj/cRv6KpRFmf+5QO7
-	orDlYYtNsN93FIkYp5z+X4xefM2Jg1k=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-175-p00ni3UDMg-iMipc0iYpMw-1; Tue, 02 Jul 2024 15:15:52 -0400
-X-MC-Unique: p00ni3UDMg-iMipc0iYpMw-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-57851ae6090so1453089a12.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Jul 2024 12:15:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xa/SdsRd"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1fb10519ae3so33415ad.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Jul 2024 15:41:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719960099; x=1720564899; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B9puiPQoNYWjSHsTzNFQQtyTm738ElAqP8Fm6xVoFMc=;
+        b=xa/SdsRdFGoLOlQg5jnqWoUWEDGyr9uXRbwlnmhdP2XJ2EU1TPvQtMILZOPtXLN6rW
+         JoKYgCwnCnTNQ0Khdv+M10mOQRpLNX7ULmw7BTHi0MlhcErO5ZWdamCZYVRe4BDP8YbN
+         hheB9LqDxNwbJn9m27JiwsWJE7FL56p7sWpZIKmMiRSLqoUspqoqNEbJ9YR0wSqHrhpF
+         Y+/JsF5B8GY/gNy+3m7lY2wUoPpoxZ9UnCcDmf7O9zeEzf3NIQSmYqv5b+97P7x36jJU
+         nSmj8pAxFaOfAL03P+hiiqpjs6epcuGhnxiLvFXS1v93p7oKH7uuOw83BNMqsMat9pcK
+         a3yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719947751; x=1720552551;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Hf4Hn8E9sYvRywOdnCFtlcglvdvtce0hhg7HQwgfjY=;
-        b=ZSM+7nH/vaRzx6cKxC8zzFZwYrb2wctMaJhV77gniab3IOW8sMOHEqIEhls63yHwWf
-         OMoRtaafGl6PegWr9bGbt840/iWcOORPzO5nV+icM7+jKpnUVPWHFQ9JEj8dMts4oBsr
-         b6n6iq6RzYG4Zbs+zrzPB89rytgsrGWYuCfPvmDfAQYKREQOUHHPdB9Zz08QlSfGKjqc
-         QCca/AyzRBjNtVnsnwrJy//QQO8u/rF4tqZhgZRFGUQcXvnZHjOYdVwwcfLVWz0aHRHc
-         ATN77taXG6OI0IZcfmJqXA2iDong76U2TRcnwWfdilT9DrW9uAFPsvvlGdtKt9MRfW3Y
-         3v2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVgak3zxs6sLkT8IVcjYqRkuH4MhQbt7qwcaikQq0VHDEliYUeyeXhwy6X9S27rx1ciskM/DROnyHMAkzjekUJPy9UjYBj2zizB/WpzHZ8vISrEzQ==
-X-Gm-Message-State: AOJu0Yw+wThl9jJ3rwqchPULMV1D2emu9Pt02Da8RFuiVv+n41AVSpRm
-	FlsMpwxpmuZ9Mk0v3QY6HsKJaaWvC4jWDrVs7CB3W4dbtqbqlAN8duZCk8ja7ox0moASGahlAPR
-	tWlXiUF4IJlfkD1f7TkF2bCVFZ1y0T9Fl87VjN7wblpqH5ROW/6cC+RvAfKSMKQ4Y81IQw7U=
-X-Received: by 2002:a05:6402:11c9:b0:57d:46f4:7df5 with SMTP id 4fb4d7f45d1cf-5879f59bbc2mr7325305a12.23.1719947751027;
-        Tue, 02 Jul 2024 12:15:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEPgNAvIl+uKPMrCm/+he16pQATca+s9p+IoIeAaWVXVH074kRYoqFuRlKUkXNT5j41pHQEHg==
-X-Received: by 2002:a05:6402:11c9:b0:57d:46f4:7df5 with SMTP id 4fb4d7f45d1cf-5879f59bbc2mr7325290a12.23.1719947750623;
-        Tue, 02 Jul 2024 12:15:50 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:2a07:3a01:e7a9:b143:57e6:261b? (2001-1c00-2a07-3a01-e7a9-b143-57e6-261b.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:e7a9:b143:57e6:261b])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58613815e1csm6098873a12.44.2024.07.02.12.15.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jul 2024 12:15:50 -0700 (PDT)
-Message-ID: <c980f524-1259-4a3e-9326-5f533e62bb25@redhat.com>
-Date: Tue, 2 Jul 2024 21:15:49 +0200
+        d=1e100.net; s=20230601; t=1719960099; x=1720564899;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B9puiPQoNYWjSHsTzNFQQtyTm738ElAqP8Fm6xVoFMc=;
+        b=ILvXDiPhwg/pOtcmqC9uI9GjVR27Ihm+l2j2JM4ra84z0WeWddVX5BnZGtY640LNo/
+         uqT8AqNp1XBvPRrVQfN6CCeUAIXG4OxpXP48py+kJmh96PEpUw9D+T4EJdkruXJM5YJa
+         zHi+Vo3ya8/49dBp8sx6KWz93ntMFksxE6wguacPjNg3SHQw+/VI5M63iKG7C8U+2zk4
+         hMO/TXHbATj+tUGLWdxomGdX75GIVsNc0LSJu8ylMPuPWGxxBTYNC3E6Sp5b60Yr1WDC
+         hM3m2CMkU073zhhWleKAqE7LW+1IWv9EPpoGWYrfRYZ6k3TFo9yLuAPblR827Dxi9lIr
+         rd2A==
+X-Forwarded-Encrypted: i=1; AJvYcCXmPmCnH14YYskuRjSgAv4x0tZiqJQ+Xop0201w8ehFFFKoek+Pcmqo4LHfh64V5F/Ov5QVoUbVIUqvjRvpnBiArcnhkNThWJgKz19kqhQ/SyDGVg==
+X-Gm-Message-State: AOJu0YxQOKq+xrwos1qln5CpU6FfablZpMYXOTO4EdMUWLUEfoZ/jxMt
+	l3Ld5ja8EWGWkim3vb/9mjPciSj64NxZXcN765ymb1DW3z/sP599BEUUd7Elub7PgZSGZ7PoCvH
+	1MJ1D0sWlVylBG1udSic63Ady9XGRjaXU+ql0
+X-Google-Smtp-Source: AGHT+IEC1Q1F/v6X7G8CxtK3fnJsiiYTaAJAOHrT34l/0++cv5s8Krtl9Emmk1CsMKzRP7G3hlTnjWXlHJDJMyD6jis=
+X-Received: by 2002:a17:902:bd89:b0:1f6:7fce:5684 with SMTP id
+ d9443c01a7336-1fb150ce66bmr449465ad.3.1719960098426; Tue, 02 Jul 2024
+ 15:41:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/6] platform/x86: dell-smo8800: Add a couple more
- models to lis3lv02d_devices[]
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>,
- Wolfram Sang <wsa@kernel.org>, eric.piel@tremplin-utc.net,
- Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com,
- Kai Heng Feng <kai.heng.feng@canonical.com>,
- platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
- Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org
-References: <20240624111519.15652-1-hdegoede@redhat.com>
- <20240624111519.15652-6-hdegoede@redhat.com>
- <20240624181456.k7ikngwy2dohoqnw@pali>
-Content-Language: en-US
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240624181456.k7ikngwy2dohoqnw@pali>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240701222508.1.I872f9412fdb7cdc20d7c6e98b93daa014f3616dc@changeid>
+ <6c4a7fab-6ee8-4a61-b790-7402cc107807@redhat.com>
+In-Reply-To: <6c4a7fab-6ee8-4a61-b790-7402cc107807@redhat.com>
+From: =?UTF-8?Q?Marek_Ma=C5=9Blanka?= <mmaslanka@google.com>
+Date: Wed, 3 Jul 2024 00:41:26 +0200
+Message-ID: <CAGcaFA3c_rc6HVVqc2=UqOgu2c7zX_XTWNx7Yf-KL7W8LgEi7A@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86:intel/pmc: Enable the ACPI PM Timer to be
+ turned off when suspended
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, David E Box <david.e.box@intel.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Hans,
 
-On 6/24/24 8:14 PM, Pali Rohár wrote:
-> On Monday 24 June 2024 13:15:17 Hans de Goede wrote:
->> Add the accelerometer address for the following laptop models
->> to lis3lv02d_devices[]:
->>
->> Dell Latitude E6330
->> Dell Latitude E6430
->> Dell XPS 15 9550
->>
->> Tested-by: Hans de Goede <hdegoede@redhat.com>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> q# Please enter the commit message for your changes. Lines starting
-> 
-> Garbage at the end of commit message.
+On Tue, Jul 2, 2024 at 10:02=E2=80=AFAM Hans de Goede <hdegoede@redhat.com>=
+ wrote:
+>
+> Hi Marek,
+>
+> On 7/2/24 12:25 AM, Marek Maslanka wrote:
+> > Allow to disable ACPI PM Timer on suspend and enable on resume. A
+> > disabled timer helps optimise power consumption when the system is
+> > suspended. On resume the timer is only reactivated if it was activated
+> > prior to suspend, so unless the ACPI PM timer is enabled in the BIOS,
+> > this won't change anything.
+> >
+> > Signed-off-by: Marek Maslanka <mmaslanka@google.com>
+>
+> Thank you for your patch. I have not looked into it into too much
+> detail (I expect the Intel maintainers of the driver will do that)
+> but why is there a Kconfig option for this ?
+>
+> It seems to me that this is something which we simply always want
+> to do and we don't need all the #ifdef-s ?
 
-Thanks, fixed for v5.
+Yes, you're right, ifdef-s are not needed as there are conditions that chec=
+k if
+CPU support disables the timer. I'll remove it in the next patch.
 
-Regards,
+Best,
+Marek
 
-Hans
-
-
-
-> 
->> ---
->>  drivers/platform/x86/dell/dell-lis3lv02d.c | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/platform/x86/dell/dell-lis3lv02d.c b/drivers/platform/x86/dell/dell-lis3lv02d.c
->> index e581b8e2a603..a7409db0505b 100644
->> --- a/drivers/platform/x86/dell/dell-lis3lv02d.c
->> +++ b/drivers/platform/x86/dell/dell-lis3lv02d.c
->> @@ -43,10 +43,13 @@ static const struct dmi_system_id lis3lv02d_devices[] = {
->>  	 * Additional individual entries were added after verification.
->>  	 */
->>  	DELL_LIS3LV02D_DMI_ENTRY("Latitude 5480",      0x29),
->> +	DELL_LIS3LV02D_DMI_ENTRY("Latitude E6330",     0x29),
->> +	DELL_LIS3LV02D_DMI_ENTRY("Latitude E6430",     0x29),
->>  	DELL_LIS3LV02D_DMI_ENTRY("Precision 3540",     0x29),
->>  	DELL_LIS3LV02D_DMI_ENTRY("Vostro V131",        0x1d),
->>  	DELL_LIS3LV02D_DMI_ENTRY("Vostro 5568",        0x29),
->>  	DELL_LIS3LV02D_DMI_ENTRY("XPS 15 7590",        0x29),
->> +	DELL_LIS3LV02D_DMI_ENTRY("XPS 15 9550",        0x29),
->>  	{ }
->>  };
->>  
->> -- 
->> 2.45.1
->>
-> 
-
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+> > ---
+> >
+> >  drivers/platform/x86/intel/pmc/Kconfig | 13 ++++++++
+> >  drivers/platform/x86/intel/pmc/adl.c   |  4 +++
+> >  drivers/platform/x86/intel/pmc/cnp.c   |  4 +++
+> >  drivers/platform/x86/intel/pmc/core.c  | 43 ++++++++++++++++++++++++++
+> >  drivers/platform/x86/intel/pmc/core.h  | 14 +++++++++
+> >  drivers/platform/x86/intel/pmc/icl.c   |  4 +++
+> >  drivers/platform/x86/intel/pmc/mtl.c   |  4 +++
+> >  drivers/platform/x86/intel/pmc/spt.c   |  4 +++
+> >  drivers/platform/x86/intel/pmc/tgl.c   |  4 +++
+> >  9 files changed, 94 insertions(+)
+> >
+> > diff --git a/drivers/platform/x86/intel/pmc/Kconfig b/drivers/platform/=
+x86/intel/pmc/Kconfig
+> > index d2f651fbec2cf..3a563db8eba6a 100644
+> > --- a/drivers/platform/x86/intel/pmc/Kconfig
+> > +++ b/drivers/platform/x86/intel/pmc/Kconfig
+> > @@ -24,3 +24,16 @@ config INTEL_PMC_CORE
+> >               - SLPS0 Debug registers (Cannonlake/Icelake PCH)
+> >               - Low Power Mode registers (Tigerlake and beyond)
+> >               - PMC quirks as needed to enable SLPS0/S0ix
+> > +
+> > +config DISABLE_ACPI_PM_TIMER_ON_SUSPEND
+> > +     bool "Disable ACPI PM Timer on suspend"
+> > +     default n
+> > +     depends on INTEL_PMC_CORE
+> > +     help
+> > +       Disable ACPI Power Management Timer on entering to suspend and =
+enable it
+> > +       on resume. This helps optimize energy consumption while the sys=
+tem is
+> > +       suspend.
+> > +
+> > +       This is only applicable if the ACPI PM timer is enabled by the =
+BIOS.
+> > +
+> > +       Say N if unsure.
+> > diff --git a/drivers/platform/x86/intel/pmc/adl.c b/drivers/platform/x8=
+6/intel/pmc/adl.c
+> > index e7878558fd909..8859e0d275288 100644
+> > --- a/drivers/platform/x86/intel/pmc/adl.c
+> > +++ b/drivers/platform/x86/intel/pmc/adl.c
+> > @@ -295,6 +295,10 @@ const struct pmc_reg_map adl_reg_map =3D {
+> >       .ppfear_buckets =3D CNP_PPFEAR_NUM_ENTRIES,
+> >       .pm_cfg_offset =3D CNP_PMC_PM_CFG_OFFSET,
+> >       .pm_read_disable_bit =3D CNP_PMC_READ_DISABLE_BIT,
+> > +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
+> > +     .acpi_pm_tmr_ctl_offset =3D SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
+> > +     .acpi_pm_tmr_disable_bit =3D SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+> > +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
+> >       .ltr_ignore_max =3D ADL_NUM_IP_IGN_ALLOWED,
+> >       .lpm_num_modes =3D ADL_LPM_NUM_MODES,
+> >       .lpm_num_maps =3D ADL_LPM_NUM_MAPS,
+> > diff --git a/drivers/platform/x86/intel/pmc/cnp.c b/drivers/platform/x8=
+6/intel/pmc/cnp.c
+> > index dd72974bf71e2..e92157aa3c9f1 100644
+> > --- a/drivers/platform/x86/intel/pmc/cnp.c
+> > +++ b/drivers/platform/x86/intel/pmc/cnp.c
+> > @@ -200,6 +200,10 @@ const struct pmc_reg_map cnp_reg_map =3D {
+> >       .ppfear_buckets =3D CNP_PPFEAR_NUM_ENTRIES,
+> >       .pm_cfg_offset =3D CNP_PMC_PM_CFG_OFFSET,
+> >       .pm_read_disable_bit =3D CNP_PMC_READ_DISABLE_BIT,
+> > +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
+> > +     .acpi_pm_tmr_ctl_offset =3D SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
+> > +     .acpi_pm_tmr_disable_bit =3D SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+> > +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
+> >       .ltr_ignore_max =3D CNP_NUM_IP_IGN_ALLOWED,
+> >       .etr3_offset =3D ETR3_OFFSET,
+> >  };
+> > diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x=
+86/intel/pmc/core.c
+> > index 10c96c1a850af..a3e56c524308f 100644
+> > --- a/drivers/platform/x86/intel/pmc/core.c
+> > +++ b/drivers/platform/x86/intel/pmc/core.c
+> > @@ -1171,6 +1171,37 @@ static bool pmc_core_is_pson_residency_enabled(s=
+truct pmc_dev *pmcdev)
+> >       return val =3D=3D 1;
+> >  }
+> >
+> > +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
+> > +/*
+> > + * Enable or disable APCI PM Timer
+> > + *
+> > + * @return: Previous APCI PM Timer enabled state
+> > + */
+> > +static bool pmc_core_enable_apci_pm_timer(struct pmc_dev *pmcdev, bool=
+ enable)
+> > +{
+> > +     struct pmc *pmc =3D pmcdev->pmcs[PMC_IDX_MAIN];
+> > +     const struct pmc_reg_map *map =3D pmc->map;
+> > +     bool state;
+> > +     u32 reg;
+> > +
+> > +     if (!map->acpi_pm_tmr_ctl_offset)
+> > +             return false;
+> > +
+> > +     mutex_lock(&pmcdev->lock);
+> > +
+> > +     reg =3D pmc_core_reg_read(pmc, map->acpi_pm_tmr_ctl_offset);
+> > +     state =3D !(reg & map->acpi_pm_tmr_disable_bit);
+> > +     if (enable)
+> > +             reg &=3D ~map->acpi_pm_tmr_disable_bit;
+> > +     else
+> > +             reg |=3D map->acpi_pm_tmr_disable_bit;
+> > +     pmc_core_reg_write(pmc, map->acpi_pm_tmr_ctl_offset, reg);
+> > +
+> > +     mutex_unlock(&pmcdev->lock);
+> > +
+> > +     return state;
+> > +}
+> > +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
+> >
+> >  static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+> >  {
+> > @@ -1446,6 +1477,12 @@ static __maybe_unused int pmc_core_suspend(struc=
+t device *dev)
+> >       if (pmcdev->suspend)
+> >               pmcdev->suspend(pmcdev);
+> >
+> > +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
+> > +     /* Disable APCI PM Timer */
+> > +     pmcdev->enable_acpi_pm_timer_on_resume =3D
+> > +             pmc_core_enable_apci_pm_timer(pmcdev, false);
+> > +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
+> > +
+> >       /* Check if the syspend will actually use S0ix */
+> >       if (pm_suspend_via_firmware())
+> >               return 0;
+> > @@ -1500,6 +1537,12 @@ int pmc_core_resume_common(struct pmc_dev *pmcde=
+v)
+> >       int offset =3D pmc->map->lpm_status_offset;
+> >       int i;
+> >
+> > +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
+> > +     /* Enable APCI PM Timer */
+> > +     if (pmcdev->enable_acpi_pm_timer_on_resume)
+> > +             pmc_core_enable_apci_pm_timer(pmcdev, true);
+> > +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
+> > +
+> >       /* Check if the syspend used S0ix */
+> >       if (pm_suspend_via_firmware())
+> >               return 0;
+> > diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x=
+86/intel/pmc/core.h
+> > index 83504c49a0e31..4d5983d741433 100644
+> > --- a/drivers/platform/x86/intel/pmc/core.h
+> > +++ b/drivers/platform/x86/intel/pmc/core.h
+> > @@ -67,6 +67,10 @@ struct telem_endpoint;
+> >  #define SPT_PMC_LTR_SCC                              0x3A0
+> >  #define SPT_PMC_LTR_ISH                              0x3A4
+> >
+> > +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
+> > +#define SPT_PMC_ACPI_PM_TMR_CTL_OFFSET               0x18FC
+> > +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
+> > +
+> >  /* Sunrise Point: PGD PFET Enable Ack Status Registers */
+> >  enum ppfear_regs {
+> >       SPT_PMC_XRAM_PPFEAR0A =3D 0x590,
+> > @@ -147,6 +151,10 @@ enum ppfear_regs {
+> >  #define SPT_PMC_VRIC1_SLPS0LVEN                      BIT(13)
+> >  #define SPT_PMC_VRIC1_XTALSDQDIS             BIT(22)
+> >
+> > +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
+> > +#define SPT_PMC_BIT_ACPI_PM_TMR_DISABLE              BIT(1)
+> > +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
+> > +
+> >  /* Cannonlake Power Management Controller register offsets */
+> >  #define CNP_PMC_SLPS0_DBG_OFFSET             0x10B4
+> >  #define CNP_PMC_PM_CFG_OFFSET                        0x1818
+> > @@ -344,6 +352,8 @@ struct pmc_reg_map {
+> >       const u8  *lpm_reg_index;
+> >       const u32 pson_residency_offset;
+> >       const u32 pson_residency_counter_step;
+> > +     const u32 acpi_pm_tmr_ctl_offset;
+> > +     const u32 acpi_pm_tmr_disable_bit;
+> >  };
+> >
+> >  /**
+> > @@ -417,6 +427,10 @@ struct pmc_dev {
+> >       u32 die_c6_offset;
+> >       struct telem_endpoint *punit_ep;
+> >       struct pmc_info *regmap_list;
+> > +
+> > +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
+> > +     bool enable_acpi_pm_timer_on_resume;
+> > +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
+> >  };
+> >
+> >  enum pmc_index {
+> > diff --git a/drivers/platform/x86/intel/pmc/icl.c b/drivers/platform/x8=
+6/intel/pmc/icl.c
+> > index 71b0fd6cb7d84..8b5c782e71ebd 100644
+> > --- a/drivers/platform/x86/intel/pmc/icl.c
+> > +++ b/drivers/platform/x86/intel/pmc/icl.c
+> > @@ -46,6 +46,10 @@ const struct pmc_reg_map icl_reg_map =3D {
+> >       .ppfear_buckets =3D ICL_PPFEAR_NUM_ENTRIES,
+> >       .pm_cfg_offset =3D CNP_PMC_PM_CFG_OFFSET,
+> >       .pm_read_disable_bit =3D CNP_PMC_READ_DISABLE_BIT,
+> > +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
+> > +     .acpi_pm_tmr_ctl_offset =3D SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
+> > +     .acpi_pm_tmr_disable_bit =3D SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+> > +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
+> >       .ltr_ignore_max =3D ICL_NUM_IP_IGN_ALLOWED,
+> >       .etr3_offset =3D ETR3_OFFSET,
+> >  };
+> > diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x8=
+6/intel/pmc/mtl.c
+> > index c7d15d864039d..c726ef8f1d5a9 100644
+> > --- a/drivers/platform/x86/intel/pmc/mtl.c
+> > +++ b/drivers/platform/x86/intel/pmc/mtl.c
+> > @@ -462,6 +462,10 @@ const struct pmc_reg_map mtl_socm_reg_map =3D {
+> >       .ppfear_buckets =3D MTL_SOCM_PPFEAR_NUM_ENTRIES,
+> >       .pm_cfg_offset =3D CNP_PMC_PM_CFG_OFFSET,
+> >       .pm_read_disable_bit =3D CNP_PMC_READ_DISABLE_BIT,
+> > +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
+> > +     .acpi_pm_tmr_ctl_offset =3D SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
+> > +     .acpi_pm_tmr_disable_bit =3D SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+> > +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
+> >       .lpm_num_maps =3D ADL_LPM_NUM_MAPS,
+> >       .ltr_ignore_max =3D MTL_SOCM_NUM_IP_IGN_ALLOWED,
+> >       .lpm_res_counter_step_x2 =3D TGL_PMC_LPM_RES_COUNTER_STEP_X2,
+> > diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x8=
+6/intel/pmc/spt.c
+> > index ab993a69e33ee..4832e953d0403 100644
+> > --- a/drivers/platform/x86/intel/pmc/spt.c
+> > +++ b/drivers/platform/x86/intel/pmc/spt.c
+> > @@ -130,6 +130,10 @@ const struct pmc_reg_map spt_reg_map =3D {
+> >       .ppfear_buckets =3D SPT_PPFEAR_NUM_ENTRIES,
+> >       .pm_cfg_offset =3D SPT_PMC_PM_CFG_OFFSET,
+> >       .pm_read_disable_bit =3D SPT_PMC_READ_DISABLE_BIT,
+> > +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
+> > +     .acpi_pm_tmr_ctl_offset =3D SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
+> > +     .acpi_pm_tmr_disable_bit =3D SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+> > +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
+> >       .ltr_ignore_max =3D SPT_NUM_IP_IGN_ALLOWED,
+> >       .pm_vric1_offset =3D SPT_PMC_VRIC1_OFFSET,
+> >  };
+> > diff --git a/drivers/platform/x86/intel/pmc/tgl.c b/drivers/platform/x8=
+6/intel/pmc/tgl.c
+> > index e0580de180773..4742b84fe226e 100644
+> > --- a/drivers/platform/x86/intel/pmc/tgl.c
+> > +++ b/drivers/platform/x86/intel/pmc/tgl.c
+> > @@ -197,6 +197,10 @@ const struct pmc_reg_map tgl_reg_map =3D {
+> >       .ppfear_buckets =3D ICL_PPFEAR_NUM_ENTRIES,
+> >       .pm_cfg_offset =3D CNP_PMC_PM_CFG_OFFSET,
+> >       .pm_read_disable_bit =3D CNP_PMC_READ_DISABLE_BIT,
+> > +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
+> > +     .acpi_pm_tmr_ctl_offset =3D SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
+> > +     .acpi_pm_tmr_disable_bit =3D SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+> > +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
+> >       .ltr_ignore_max =3D TGL_NUM_IP_IGN_ALLOWED,
+> >       .lpm_num_maps =3D TGL_LPM_NUM_MAPS,
+> >       .lpm_res_counter_step_x2 =3D TGL_PMC_LPM_RES_COUNTER_STEP_X2,
+>
