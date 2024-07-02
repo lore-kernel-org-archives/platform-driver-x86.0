@@ -1,346 +1,260 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2052.outbound.protection.outlook.com [40.107.93.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8BB14885D
-	for <platform-driver-x86@vger.kernel.org>; Tue,  2 Jul 2024 08:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719907338; cv=none; b=N6/ZsKisBR/KVsvvD6G6F/nbDaAYc/WwhqCGpqswLerqf51K/7AJaoQMdeFbmggOBS8403IDXJoSfP3IirRMt/+qhAQmnvxetaKI+NPNuumyJ6EWSDd0KIGgT0W92BlkGfzQzI1qzr5aK4pye7YzKExfh6qEL4Mf2YXEsBbhMqQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719907338; c=relaxed/simple;
-	bh=1a3mQn+a3ZNHqAHP5bLU59t/TTsim9mi3m3ENzny7Zs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RdVxmV+S+bSnycLZ20c4ezApgVA1WYx+LM1LBl+IfLjiVutkngHQBhXWyC9/AakotiExkKCRPigl2mC4nP5SwPk06irY/jfKTJJ3pv6bVS+HcPK8e231Tnl1DP7Kfda02iGtUvI+KGtQQJXP468iwMCWTRmMy25o//pHY+6F0r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SlffUMmT; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC665146D57
+	for <platform-driver-x86@vger.kernel.org>; Tue,  2 Jul 2024 08:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719907627; cv=fail; b=R1uRUyvJy5Ej/jU0UGv/1uOBWU/HyJ6oLKBjqBjJ3LvG1FENyQwzefR48bGWUJtcLSvXS5s61fKwBrkoiLlx/GdAjm6MR3MlsjQ6H3x2x1MgoKwAB+IJF4pGYwLptRG1peq1EOqwVVUQ3reYD2r+yaEWbTAONlOwFODWZOMYHAU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719907627; c=relaxed/simple;
+	bh=xdXFpung390obwxo7am31VGqjbVnyx1L4yNieVR3lbo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=N9X664jHIiILUHlhRam+CjRiyAIhWmpiIS9FYEVZKX0fvFowwzLFlBlw1RlhHYB/gsRYJhuHGqK2kyk78aFdXl8txJ3cQa/Fd9BcvJ0i1HkKn8Hlz4GoMgBsXQQjWkYuu/3MYV7zPdTGABwHN+PrWGeLamPPhYpphAVcQ0seRlk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zAS2juj8; arc=fail smtp.client-ip=40.107.93.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SlffUMmT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719907335;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RVoYN59vTDrQa1C1UzEOGTsULL6beRfTFki0TsL/jCE=;
-	b=SlffUMmTKVCqieNMmnMXtRrB/vyrHQpo8pD7BMeTEvK1pMszTc5ava2YUkvEF8i6mJytVz
-	NhZte2YWQNewE0wMxS6KBw8x1KRqh6YmkVG/U7VKfQvWxCmoonxB+CGcQKLLHilYzfYii7
-	VDiZzm6/MatroDsrbpr7lK2nq65gPV8=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-32-u8g6-1ZtPk2ThHL0IVUROQ-1; Tue, 02 Jul 2024 04:02:09 -0400
-X-MC-Unique: u8g6-1ZtPk2ThHL0IVUROQ-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a75101512aeso199990866b.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Jul 2024 01:02:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719907328; x=1720512128;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RVoYN59vTDrQa1C1UzEOGTsULL6beRfTFki0TsL/jCE=;
-        b=UOZLS+RklWueuV3loadvEwL07OkpYuBbXYx5ywrMnQ8lXCh0iLE8NHSBLHAI84mq2r
-         mjryxz23B0uOKtclBWPOtAQP+UOOm2vMugr6Uy5N+iGsr4bdV3+WOJzkQwHTALO4Wzp5
-         i5Z0oF7pCYWGBlkQ3MWZUSZKw5KPdHk3EcTm1m40QRE9w8SVKc5xaUyF1HqTHxHreGaj
-         GM/Bg4VXXfO10HaK1L7fdwIhYbovAHoeIyK8QqVkYeXN5GCyizygdvACo6uGd76TaID2
-         tUOh90PoeE94ljuXnjvywekG+XD2F26Wl9XiG/Cl9SSaQt9Wk2xhHYjzEBXhQesS1JP3
-         XZtw==
-X-Forwarded-Encrypted: i=1; AJvYcCXtrxhzVi3glZa6/62CcZNKvjEUR9PneqhDR7YfCvZDpkt7oozcKJdIxGo4uyEdN8hGeNmssXOLpY02Q067rk74wV44GkbKIZChSzkHrvkx0yQNpQ==
-X-Gm-Message-State: AOJu0Yzv2LPFJGD+t9/24y1sDAoeKVSPVognOfSG0GNBtgYsbXI4j3Io
-	QNXC83Vl/T0Iay82A8T5nm/vggvRjd9obZz/ffDR18tXrU3gIefyF3VuBTagzh2cl0hK5HOQrvZ
-	u/iH4100WIXzmdmiatf3qv13bq/86Fz2sOghOWjByw9xsPzrk6qtqu/aQACqVytYh/0SCMTM=
-X-Received: by 2002:a17:907:7211:b0:a6f:e456:4207 with SMTP id a640c23a62f3a-a75144a2799mr675472666b.61.1719907328439;
-        Tue, 02 Jul 2024 01:02:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHppy5meknVw2v17i0GvHYjTex6nZS94cmfpNA2gHsI3SwkJuxYbfijT8/K4FbkBJ0+UzEwrA==
-X-Received: by 2002:a17:907:7211:b0:a6f:e456:4207 with SMTP id a640c23a62f3a-a75144a2799mr675468966b.61.1719907327896;
-        Tue, 02 Jul 2024 01:02:07 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72aaf1bbcbsm396641966b.36.2024.07.02.01.02.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jul 2024 01:02:07 -0700 (PDT)
-Message-ID: <6c4a7fab-6ee8-4a61-b790-7402cc107807@redhat.com>
-Date: Tue, 2 Jul 2024 10:02:06 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zAS2juj8"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hKbVUukMUhzsxopM8D0nvaR9XbHGlYPP8jNrC/zUzc9Qh+XZuk9pi2IR0+VG1A3V46PqnccKkgmpjAegHYG6os+JAN/7ZNkRh9BBqtY5cWWLJP6TiprRyKXCQ8cYvc7TdYkJYdY8OFzlq6b6Sh22DGrYlPzUE2TKJouzGXUeUGWzqW5cvpgBPr3BsWug1yhTSAxceq7oW6DN+nmlX7TOMg5bP2YypK1vyoY4+fYQ0JWLn97dReADVgqeNV7mzdafPXaq4Bj4WVpKCQLCwcRldky3DMnJh3Lq1XRH8ltdiKhETd/DHZSrR1xDHjRlGAUIo+75EnEFs/Pu+ZjlC71TVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tkckvFtej4OgM+RR3Os0la9uTUfr6uknFKVwWr/DIMw=;
+ b=bwFn6sZzZNI0CjWKv2ZaWU1iLtmK5xwMPtKSEvRoynKMwUbh0VaoD3/G28z1xrLzB04a1OC+xYdO5VjBdWynz9odONRN2MAItCI5deCaAWrrQSWzp4EZsFFI9YQb0XZq20cG3DLoNcaMEcWKpTyvyMXXCSYyjHMvE9KXsLCJpK/C62cyST/0s46fqvkLPX0i0wBhZGZNmK2vOBloiNLyitAn98KJ/f3cfgtE7fLGA4DJ0BQsBz2KEHKfEoujT0iwZbtBHW+dhW+iwr3B4S0cLfEBZGKHKgkAeE0V6T2pqngOdndqgumrV7CApTRHXKVqA5bw6tiCmmhyCmt9gQbNRw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tkckvFtej4OgM+RR3Os0la9uTUfr6uknFKVwWr/DIMw=;
+ b=zAS2juj8MrApe7SRdRO+su9YY0R4p37fE3S8Ycs3Us0Dwm0jQzAtTKy0emYx36JLehrQhxuWYUsDnUHw/ujiJe819u5yQgLiaeqCDiqzkBiKuZa1pAUzzzT1UxQy15Exo5278zOSzDeLLNtY7612RVPvfeXbylKdQSHBDzutmeE=
+Received: from SN1PR12CA0083.namprd12.prod.outlook.com (2603:10b6:802:21::18)
+ by MW6PR12MB8834.namprd12.prod.outlook.com (2603:10b6:303:23c::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.29; Tue, 2 Jul
+ 2024 08:07:02 +0000
+Received: from SN1PEPF00026367.namprd02.prod.outlook.com
+ (2603:10b6:802:21:cafe::ce) by SN1PR12CA0083.outlook.office365.com
+ (2603:10b6:802:21::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.33 via Frontend
+ Transport; Tue, 2 Jul 2024 08:07:00 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF00026367.mail.protection.outlook.com (10.167.241.132) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7741.18 via Frontend Transport; Tue, 2 Jul 2024 08:07:00 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 2 Jul
+ 2024 03:06:57 -0500
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
+	<mario.limonciello@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Subject: [PATCH v1 1/2] platform/x86/amd/pmf: Use existing input event codes to update system states
+Date: Tue, 2 Jul 2024 13:36:25 +0530
+Message-ID: <20240702080626.2902171-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86:intel/pmc: Enable the ACPI PM Timer to be
- turned off when suspended
-To: Marek Maslanka <mmaslanka@google.com>, LKML <linux-kernel@vger.kernel.org>
-Cc: David E Box <david.e.box@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- platform-driver-x86@vger.kernel.org
-References: <20240701222508.1.I872f9412fdb7cdc20d7c6e98b93daa014f3616dc@changeid>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240701222508.1.I872f9412fdb7cdc20d7c6e98b93daa014f3616dc@changeid>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF00026367:EE_|MW6PR12MB8834:EE_
+X-MS-Office365-Filtering-Correlation-Id: e271358a-f2b4-40fb-2727-08dc9a6df363
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?2aJhIWi3EPngqIJuCvXXEWTfbnTKGzulH3NLPbULDcVs+r3bHK8PTB2qv3VN?=
+ =?us-ascii?Q?rSHOC3YeeFNf+tKlTxiLWcrwyGjyVXVVMgkua5n3Yvr2CzRtDPIT6nx1hRuB?=
+ =?us-ascii?Q?ajI5TgwhjcXhVfA5sAngQeddMn2zpIXQ4IAw9TBepZvAds93f7NvbJysNBJU?=
+ =?us-ascii?Q?ok1ENsVWphfEkDEz3kY/wK+DQUOqDwtAYxdim9ZCv5YM6VATlFTxwVwrM7RW?=
+ =?us-ascii?Q?WYPzw9AQiVbjjRNaVKdLhgmSBHo4P+ZgViTvGJCF6uBmY5QpmuW509lz/e8/?=
+ =?us-ascii?Q?p9UiJ1/qPRkb67tHKRcbfZFdmcCM0ImjwchXDYaGkAugVq/j5ICVq16iZbRE?=
+ =?us-ascii?Q?ZWaWnBcBMtg0tT0VkzY5WjQexMW/fg91hWHRvVL6HCnKgpfmX2yFkUFp7kw9?=
+ =?us-ascii?Q?sqBU0EqwYJVqEcHCSkfW9yYjIQLPuZsAkkFBFpoUe4zN4uq7l6uGbKdhI8u7?=
+ =?us-ascii?Q?MUEqdlsFR4o/Jp7l5c45sf1SH9h8Q2V4i1CtPRkRZyI3yxgx1xU26pkn6ML0?=
+ =?us-ascii?Q?kNiXXwHmANkZL1Gb9rBh6iUIplAXfbQ0J8jZe14wjbYWVT7BtNV0QIvbZN9H?=
+ =?us-ascii?Q?aXeco4Kw+DPDD8du+2LjDGtB5BgDetCSUu7O/WX3gqKR/5J98/yovlQngveg?=
+ =?us-ascii?Q?+R7WW9XmnJKPTrHJV0uk44jqQ9orUKJchEX22JNJAdMbBYpIv8mYsQHQRIR3?=
+ =?us-ascii?Q?UjuO01zRhH7joRa1PaK2UTF3IzlA8tN0FVAB1+xS+8XWQEa7/8cOXCvrbU4h?=
+ =?us-ascii?Q?Hn9kfBQuX1ywo2WLRLu0A74VNaVhRtW68RRqlvaPSall2Nkf1pGhRzLp7Xv+?=
+ =?us-ascii?Q?VdQUVeGYoF/Nu4fyWe9iU414SgbBsUXc2e/cC6j5gS4N3fvKJWbSTRdhLRY/?=
+ =?us-ascii?Q?uGGqKgiiTEaQNG5Rsrbo2CaUNeUUO8NRGfaifljB2sHX81Au2d/15YvppPQq?=
+ =?us-ascii?Q?wL2/eGJzVfXrS6DK1Ryt2XDQzqujp+QBLRWRiJ9vOqKdai0uEx0hQfvBeZJ3?=
+ =?us-ascii?Q?ZePLL3aXNVH3olEiCXx2QqNwCSRLuVn8ZWP748teEy0AWIYi2QiDV+NBlJUI?=
+ =?us-ascii?Q?3rmk8x1mM/zrt7Lb3lx6ryMsCFufWK8yaX/5eHw9AOpbJAp7KReP8WUxq9tq?=
+ =?us-ascii?Q?qIDJluKhuAO6GFtiG/MlUzMU/x8x11GbPhGxLdeVgNEEUuTGRzA6bI4k+s7M?=
+ =?us-ascii?Q?fz46uYF0JwjNJqi5ScEfRyGS5oK3M3Yx2KofffxIM2/60FjI/2FkkRyWmYc6?=
+ =?us-ascii?Q?Gf5yupmy0zq0CApG5x6NP74DZsX+J0uCBCbu9OPs4DvtgufW1RnUqmbfeGyz?=
+ =?us-ascii?Q?LZjkQX8EidH1/nDfKLzQcEAWPmmZ3HeeCMAqVC4bPRYkBqVVoAnjyE4IeZCr?=
+ =?us-ascii?Q?DnQ5Zw0BIrBD40Ho6v20Wqj6w65ESIllXU/2nzEylxLmiTYlhS3DoEWfSsKM?=
+ =?us-ascii?Q?bEigC/vdVw3tLwdvSDl1MFb9nKllJs/2?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2024 08:07:00.4304
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e271358a-f2b4-40fb-2727-08dc9a6df363
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF00026367.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8834
 
-Hi Marek,
+At present, the PMF driver employs custom system state codes to update
+system states. It is recommended to replace these with existing input
+event codes (KEY_SLEEP, KEY_SUSPEND, and KEY_SCREENLOCK) to align system
+updates with the PMF-TA output actions.
 
-On 7/2/24 12:25 AM, Marek Maslanka wrote:
-> Allow to disable ACPI PM Timer on suspend and enable on resume. A
-> disabled timer helps optimise power consumption when the system is
-> suspended. On resume the timer is only reactivated if it was activated
-> prior to suspend, so unless the ACPI PM timer is enabled in the BIOS,
-> this won't change anything.
-> 
-> Signed-off-by: Marek Maslanka <mmaslanka@google.com>
+Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+---
+ drivers/platform/x86/amd/pmf/pmf.h    |  2 +
+ drivers/platform/x86/amd/pmf/tee-if.c | 62 +++++++++++++++++++++------
+ 2 files changed, 52 insertions(+), 12 deletions(-)
 
-Thank you for your patch. I have not looked into it into too much
-detail (I expect the Intel maintainers of the driver will do that)
-but why is there a Kconfig option for this ?
-
-It seems to me that this is something which we simply always want
-to do and we don't need all the #ifdef-s ?
-
-Regards,
-
-Hans
-
-
-
-> ---
-> 
->  drivers/platform/x86/intel/pmc/Kconfig | 13 ++++++++
->  drivers/platform/x86/intel/pmc/adl.c   |  4 +++
->  drivers/platform/x86/intel/pmc/cnp.c   |  4 +++
->  drivers/platform/x86/intel/pmc/core.c  | 43 ++++++++++++++++++++++++++
->  drivers/platform/x86/intel/pmc/core.h  | 14 +++++++++
->  drivers/platform/x86/intel/pmc/icl.c   |  4 +++
->  drivers/platform/x86/intel/pmc/mtl.c   |  4 +++
->  drivers/platform/x86/intel/pmc/spt.c   |  4 +++
->  drivers/platform/x86/intel/pmc/tgl.c   |  4 +++
->  9 files changed, 94 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/intel/pmc/Kconfig b/drivers/platform/x86/intel/pmc/Kconfig
-> index d2f651fbec2cf..3a563db8eba6a 100644
-> --- a/drivers/platform/x86/intel/pmc/Kconfig
-> +++ b/drivers/platform/x86/intel/pmc/Kconfig
-> @@ -24,3 +24,16 @@ config INTEL_PMC_CORE
->  		- SLPS0 Debug registers (Cannonlake/Icelake PCH)
->  		- Low Power Mode registers (Tigerlake and beyond)
->  		- PMC quirks as needed to enable SLPS0/S0ix
-> +
-> +config DISABLE_ACPI_PM_TIMER_ON_SUSPEND
-> +	bool "Disable ACPI PM Timer on suspend"
-> +	default n
-> +	depends on INTEL_PMC_CORE
-> +	help
-> +	  Disable ACPI Power Management Timer on entering to suspend and enable it
-> +	  on resume. This helps optimize energy consumption while the system is
-> +	  suspend.
-> +
-> +	  This is only applicable if the ACPI PM timer is enabled by the BIOS.
-> +
-> +	  Say N if unsure.
-> diff --git a/drivers/platform/x86/intel/pmc/adl.c b/drivers/platform/x86/intel/pmc/adl.c
-> index e7878558fd909..8859e0d275288 100644
-> --- a/drivers/platform/x86/intel/pmc/adl.c
-> +++ b/drivers/platform/x86/intel/pmc/adl.c
-> @@ -295,6 +295,10 @@ const struct pmc_reg_map adl_reg_map = {
->  	.ppfear_buckets = CNP_PPFEAR_NUM_ENTRIES,
->  	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
->  	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
-> +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
-> +	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
-> +	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
-> +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
->  	.ltr_ignore_max = ADL_NUM_IP_IGN_ALLOWED,
->  	.lpm_num_modes = ADL_LPM_NUM_MODES,
->  	.lpm_num_maps = ADL_LPM_NUM_MAPS,
-> diff --git a/drivers/platform/x86/intel/pmc/cnp.c b/drivers/platform/x86/intel/pmc/cnp.c
-> index dd72974bf71e2..e92157aa3c9f1 100644
-> --- a/drivers/platform/x86/intel/pmc/cnp.c
-> +++ b/drivers/platform/x86/intel/pmc/cnp.c
-> @@ -200,6 +200,10 @@ const struct pmc_reg_map cnp_reg_map = {
->  	.ppfear_buckets = CNP_PPFEAR_NUM_ENTRIES,
->  	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
->  	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
-> +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
-> +	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
-> +	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
-> +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
->  	.ltr_ignore_max = CNP_NUM_IP_IGN_ALLOWED,
->  	.etr3_offset = ETR3_OFFSET,
->  };
-> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-> index 10c96c1a850af..a3e56c524308f 100644
-> --- a/drivers/platform/x86/intel/pmc/core.c
-> +++ b/drivers/platform/x86/intel/pmc/core.c
-> @@ -1171,6 +1171,37 @@ static bool pmc_core_is_pson_residency_enabled(struct pmc_dev *pmcdev)
->  	return val == 1;
->  }
->  
-> +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
-> +/*
-> + * Enable or disable APCI PM Timer
-> + *
-> + * @return: Previous APCI PM Timer enabled state
-> + */
-> +static bool pmc_core_enable_apci_pm_timer(struct pmc_dev *pmcdev, bool enable)
-> +{
-> +	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
-> +	const struct pmc_reg_map *map = pmc->map;
-> +	bool state;
-> +	u32 reg;
-> +
-> +	if (!map->acpi_pm_tmr_ctl_offset)
-> +		return false;
-> +
-> +	mutex_lock(&pmcdev->lock);
-> +
-> +	reg = pmc_core_reg_read(pmc, map->acpi_pm_tmr_ctl_offset);
-> +	state = !(reg & map->acpi_pm_tmr_disable_bit);
-> +	if (enable)
-> +		reg &= ~map->acpi_pm_tmr_disable_bit;
-> +	else
-> +		reg |= map->acpi_pm_tmr_disable_bit;
-> +	pmc_core_reg_write(pmc, map->acpi_pm_tmr_ctl_offset, reg);
-> +
-> +	mutex_unlock(&pmcdev->lock);
-> +
-> +	return state;
-> +}
-> +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
->  
->  static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
->  {
-> @@ -1446,6 +1477,12 @@ static __maybe_unused int pmc_core_suspend(struct device *dev)
->  	if (pmcdev->suspend)
->  		pmcdev->suspend(pmcdev);
->  
-> +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
-> +	/* Disable APCI PM Timer */
-> +	pmcdev->enable_acpi_pm_timer_on_resume =
-> +		pmc_core_enable_apci_pm_timer(pmcdev, false);
-> +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
-> +
->  	/* Check if the syspend will actually use S0ix */
->  	if (pm_suspend_via_firmware())
->  		return 0;
-> @@ -1500,6 +1537,12 @@ int pmc_core_resume_common(struct pmc_dev *pmcdev)
->  	int offset = pmc->map->lpm_status_offset;
->  	int i;
->  
-> +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
-> +	/* Enable APCI PM Timer */
-> +	if (pmcdev->enable_acpi_pm_timer_on_resume)
-> +		pmc_core_enable_apci_pm_timer(pmcdev, true);
-> +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
-> +
->  	/* Check if the syspend used S0ix */
->  	if (pm_suspend_via_firmware())
->  		return 0;
-> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-> index 83504c49a0e31..4d5983d741433 100644
-> --- a/drivers/platform/x86/intel/pmc/core.h
-> +++ b/drivers/platform/x86/intel/pmc/core.h
-> @@ -67,6 +67,10 @@ struct telem_endpoint;
->  #define SPT_PMC_LTR_SCC				0x3A0
->  #define SPT_PMC_LTR_ISH				0x3A4
->  
-> +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
-> +#define SPT_PMC_ACPI_PM_TMR_CTL_OFFSET		0x18FC
-> +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
-> +
->  /* Sunrise Point: PGD PFET Enable Ack Status Registers */
->  enum ppfear_regs {
->  	SPT_PMC_XRAM_PPFEAR0A = 0x590,
-> @@ -147,6 +151,10 @@ enum ppfear_regs {
->  #define SPT_PMC_VRIC1_SLPS0LVEN			BIT(13)
->  #define SPT_PMC_VRIC1_XTALSDQDIS		BIT(22)
->  
-> +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
-> +#define SPT_PMC_BIT_ACPI_PM_TMR_DISABLE		BIT(1)
-> +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
-> +
->  /* Cannonlake Power Management Controller register offsets */
->  #define CNP_PMC_SLPS0_DBG_OFFSET		0x10B4
->  #define CNP_PMC_PM_CFG_OFFSET			0x1818
-> @@ -344,6 +352,8 @@ struct pmc_reg_map {
->  	const u8  *lpm_reg_index;
->  	const u32 pson_residency_offset;
->  	const u32 pson_residency_counter_step;
-> +	const u32 acpi_pm_tmr_ctl_offset;
-> +	const u32 acpi_pm_tmr_disable_bit;
->  };
->  
->  /**
-> @@ -417,6 +427,10 @@ struct pmc_dev {
->  	u32 die_c6_offset;
->  	struct telem_endpoint *punit_ep;
->  	struct pmc_info *regmap_list;
-> +
-> +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
-> +	bool enable_acpi_pm_timer_on_resume;
-> +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
->  };
->  
->  enum pmc_index {
-> diff --git a/drivers/platform/x86/intel/pmc/icl.c b/drivers/platform/x86/intel/pmc/icl.c
-> index 71b0fd6cb7d84..8b5c782e71ebd 100644
-> --- a/drivers/platform/x86/intel/pmc/icl.c
-> +++ b/drivers/platform/x86/intel/pmc/icl.c
-> @@ -46,6 +46,10 @@ const struct pmc_reg_map icl_reg_map = {
->  	.ppfear_buckets = ICL_PPFEAR_NUM_ENTRIES,
->  	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
->  	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
-> +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
-> +	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
-> +	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
-> +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
->  	.ltr_ignore_max = ICL_NUM_IP_IGN_ALLOWED,
->  	.etr3_offset = ETR3_OFFSET,
->  };
-> diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
-> index c7d15d864039d..c726ef8f1d5a9 100644
-> --- a/drivers/platform/x86/intel/pmc/mtl.c
-> +++ b/drivers/platform/x86/intel/pmc/mtl.c
-> @@ -462,6 +462,10 @@ const struct pmc_reg_map mtl_socm_reg_map = {
->  	.ppfear_buckets = MTL_SOCM_PPFEAR_NUM_ENTRIES,
->  	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
->  	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
-> +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
-> +	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
-> +	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
-> +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
->  	.lpm_num_maps = ADL_LPM_NUM_MAPS,
->  	.ltr_ignore_max = MTL_SOCM_NUM_IP_IGN_ALLOWED,
->  	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
-> diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
-> index ab993a69e33ee..4832e953d0403 100644
-> --- a/drivers/platform/x86/intel/pmc/spt.c
-> +++ b/drivers/platform/x86/intel/pmc/spt.c
-> @@ -130,6 +130,10 @@ const struct pmc_reg_map spt_reg_map = {
->  	.ppfear_buckets = SPT_PPFEAR_NUM_ENTRIES,
->  	.pm_cfg_offset = SPT_PMC_PM_CFG_OFFSET,
->  	.pm_read_disable_bit = SPT_PMC_READ_DISABLE_BIT,
-> +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
-> +	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
-> +	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
-> +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
->  	.ltr_ignore_max = SPT_NUM_IP_IGN_ALLOWED,
->  	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
->  };
-> diff --git a/drivers/platform/x86/intel/pmc/tgl.c b/drivers/platform/x86/intel/pmc/tgl.c
-> index e0580de180773..4742b84fe226e 100644
-> --- a/drivers/platform/x86/intel/pmc/tgl.c
-> +++ b/drivers/platform/x86/intel/pmc/tgl.c
-> @@ -197,6 +197,10 @@ const struct pmc_reg_map tgl_reg_map = {
->  	.ppfear_buckets = ICL_PPFEAR_NUM_ENTRIES,
->  	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
->  	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
-> +#ifdef CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND
-> +	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
-> +	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
-> +#endif /* CONFIG_DISABLE_ACPI_PM_TIMER_ON_SUSPEND */
->  	.ltr_ignore_max = TGL_NUM_IP_IGN_ALLOWED,
->  	.lpm_num_maps = TGL_LPM_NUM_MAPS,
->  	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
+diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+index eeedd0c0395a..753d5662c080 100644
+--- a/drivers/platform/x86/amd/pmf/pmf.h
++++ b/drivers/platform/x86/amd/pmf/pmf.h
+@@ -12,6 +12,7 @@
+ #define PMF_H
+ 
+ #include <linux/acpi.h>
++#include <linux/input.h>
+ #include <linux/platform_profile.h>
+ 
+ #define POLICY_BUF_MAX_SZ		0x4b000
+@@ -300,6 +301,7 @@ struct amd_pmf_dev {
+ 	void __iomem *policy_base;
+ 	bool smart_pc_enabled;
+ 	u16 pmf_if_version;
++	struct input_dev *pmf_idev;
+ };
+ 
+ struct apmf_sps_prop_granular_v2 {
+diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+index b438de4d6bfc..b0449f912048 100644
+--- a/drivers/platform/x86/amd/pmf/tee-if.c
++++ b/drivers/platform/x86/amd/pmf/tee-if.c
+@@ -62,18 +62,12 @@ static void amd_pmf_prepare_args(struct amd_pmf_dev *dev, int cmd,
+ 	param[0].u.memref.shm_offs = 0;
+ }
+ 
+-static int amd_pmf_update_uevents(struct amd_pmf_dev *dev, u16 event)
++static void amd_pmf_update_uevents(struct amd_pmf_dev *dev, u16 event)
+ {
+-	char *envp[2] = {};
+-
+-	envp[0] = kasprintf(GFP_KERNEL, "EVENT_ID=%d", event);
+-	if (!envp[0])
+-		return -EINVAL;
+-
+-	kobject_uevent_env(&dev->dev->kobj, KOBJ_CHANGE, envp);
+-
+-	kfree(envp[0]);
+-	return 0;
++	input_report_key(dev->pmf_idev, event, 1); /* key press */
++	input_sync(dev->pmf_idev);
++	input_report_key(dev->pmf_idev, event, 0); /* key release */
++	input_sync(dev->pmf_idev);
+ }
+ 
+ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_result *out)
+@@ -149,7 +143,20 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+ 			break;
+ 
+ 		case PMF_POLICY_SYSTEM_STATE:
+-			amd_pmf_update_uevents(dev, val);
++			switch (val) {
++			case 0:
++				amd_pmf_update_uevents(dev, KEY_SLEEP);
++				break;
++			case 1:
++				amd_pmf_update_uevents(dev, KEY_SUSPEND);
++				break;
++			case 2:
++				amd_pmf_update_uevents(dev, KEY_SCREENLOCK);
++				break;
++			default:
++				dev_err(dev->dev, "Invalid PMF policy system state: %d\n", val);
++			}
++
+ 			dev_dbg(dev->dev, "update SYSTEM_STATE: %s\n",
+ 				amd_pmf_uevent_as_str(val));
+ 			break;
+@@ -368,6 +375,30 @@ static int amd_pmf_ta_open_session(struct tee_context *ctx, u32 *id)
+ 	return rc;
+ }
+ 
++static int amd_pmf_register_input_device(struct amd_pmf_dev *dev)
++{
++	int err;
++
++	dev->pmf_idev = devm_input_allocate_device(dev->dev);
++	if (!dev->pmf_idev)
++		return -ENOMEM;
++
++	dev->pmf_idev->name = "PMF-TA output events";
++	dev->pmf_idev->phys = "amd-pmf/input0";
++
++	input_set_capability(dev->pmf_idev, EV_KEY, KEY_SLEEP);
++	input_set_capability(dev->pmf_idev, EV_KEY, KEY_SCREENLOCK);
++	input_set_capability(dev->pmf_idev, EV_KEY, KEY_SUSPEND);
++
++	err = input_register_device(dev->pmf_idev);
++	if (err) {
++		dev_err(dev->dev, "Failed to register input device: %d\n", err);
++		return err;
++	}
++
++	return 0;
++}
++
+ static int amd_pmf_tee_init(struct amd_pmf_dev *dev)
+ {
+ 	u32 size;
+@@ -475,6 +506,10 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+ 	if (pb_side_load)
+ 		amd_pmf_open_pb(dev, dev->dbgfs_dir);
+ 
++	ret = amd_pmf_register_input_device(dev);
++	if (ret)
++		goto error;
++
+ 	return 0;
+ 
+ error:
+@@ -488,6 +523,9 @@ void amd_pmf_deinit_smart_pc(struct amd_pmf_dev *dev)
+ 	if (pb_side_load && dev->esbin)
+ 		amd_pmf_remove_pb(dev);
+ 
++	if (dev->pmf_idev)
++		input_unregister_device(dev->pmf_idev);
++
+ 	cancel_delayed_work_sync(&dev->pb_work);
+ 	kfree(dev->prev_data);
+ 	dev->prev_data = NULL;
+-- 
+2.25.1
 
