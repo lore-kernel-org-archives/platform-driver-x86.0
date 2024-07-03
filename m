@@ -1,46 +1,46 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9E317D8BB
-	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Jul 2024 11:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7934717736
+	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Jul 2024 11:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720004743; cv=none; b=SMdVRpl7e7IU+3e3WahmR82rPYrwHLCV3mJopcOFTXkOAvzVK2+VDXoC7nt5XQKV4YwjpmmTr18WMLEVQW8h7rAxmjsdQAMavuRcDL/wxfd+D28I2qKBx+MCjp0SGSZrHOkpPCQpFeh5HIfY/tnsYGa2kNjP/DJUD5yadqWoPtQ=
+	t=1720004745; cv=none; b=oZLb7WDVbUIyuxuLucc/ReGfr7f6Nby1vqYLtP5gC868Wp5I0Uc5qX/CtMhFS5UN4/nAYzGCYXf8txdRbP1mG45kStZCdpOD88enl9uY2NWT3x5GfO3nK8EiEqSnqWP3r+Z0lLdnWQ4GxJMyTlf+Hug8KPerqAybOAbGnZQuZ4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720004743; c=relaxed/simple;
-	bh=efEmJWiaWLXEySbthcLrBmZ7OFoTbsAv0GexXllP328=;
+	s=arc-20240116; t=1720004745; c=relaxed/simple;
+	bh=0mEs4BU68gJ28wCe45JidDTzgcyO6Ydm/chObUojCcU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Vh79xyhYfA+aA1facOhO1agfUa4Xzpm5LUw2bgNR6iHX9rHOJ1kcd8uWQR8V0KuaM5DYNJLb3l9Om3NzcwnD659HmIRL171Mv2v21jl1P9iv753SqzHMGYUzIl/pBHVN7blaEA0YRPOGOxw6GWY9DCB4uxUFB2cqOA6N1pABbL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MhrHHSMX; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=QewKC22GjliTnmBpKhVjfRNQ1/9YQW+gB6wdQOvFoA81Dfc1NGGtD8qg4Iv3VvB4yy6+Bwsj1Je2iMnNoqpTWa1/XMBIFkqNCLMrlzRTz3uoaYFWUpq8CZ/PN4kJa6KUhu2fjy3TxkmFPpcQHhioCkoa1sJM0GTfozGCDJ26q/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GcKCMMUy; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MhrHHSMX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GcKCMMUy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720004741;
+	s=mimecast20190719; t=1720004740;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Z/RoJuACAYXdPvVIHs2RyA6Fqb36Bl8RlhlvG114vS0=;
-	b=MhrHHSMXnnYhsddFpUgtM1/SpliBpBDmpF1/q6+YAaEMIvNJ5pZmTaPtvILNBsRVkyiIyQ
-	rRMB0XtN6MLEdgBBE1lMkYYgNqz/8UfYKyQ4/kTLgWgtkWwlc/dm4FHeVhXXTcXd6Lv9sR
-	U02A1EZK5/Ts++tePMSISwdJNDfUPq4=
+	bh=89wLpmPV3lxBUNuf84YR9vVcTcztXoRQAVBv8fyNtps=;
+	b=GcKCMMUy+LTU13uzq9mvxtRKcmJ0fk78xtq+hQS0L9DBAfPgdxK3iGZAkUrMrOdT9By90r
+	O87yPe6YPU8nJyvZNRn09gWy5/A0rn/kNpE6AZnpdPQ9D+ydrNVAl2FldNYkmeUnFuU/yI
+	d2QTdDFC3ovov0lEm3V1SK2bI5OzR6c=
 Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-607-5w3kCebNMiCIwouqxplfPg-1; Wed,
- 03 Jul 2024 07:05:36 -0400
-X-MC-Unique: 5w3kCebNMiCIwouqxplfPg-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-344-3Iqf7wtZPF6t7Wa-yLLsbg-1; Wed,
+ 03 Jul 2024 07:05:33 -0400
+X-MC-Unique: 3Iqf7wtZPF6t7Wa-yLLsbg-1
 Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2A0C619560AF;
-	Wed,  3 Jul 2024 11:05:33 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.199])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3700A1955BD2;
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D2CE419560AB;
 	Wed,  3 Jul 2024 11:05:28 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.192.199])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8E9F4195607C;
+	Wed,  3 Jul 2024 11:05:24 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
 To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
@@ -56,9 +56,9 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	Jean Delvare <jdelvare@suse.com>,
 	Andi Shyti <andi.shyti@kernel.org>,
 	linux-i2c@vger.kernel.org
-Subject: [PATCH v5 2/6] i2c: i801: Use a different adapter-name for IDF adapters
-Date: Wed,  3 Jul 2024 13:05:08 +0200
-Message-ID: <20240703110512.21401-3-hdegoede@redhat.com>
+Subject: [PATCH v5 1/6] i2c: core: Setup i2c_adapter runtime-pm before calling device_add()
+Date: Wed,  3 Jul 2024 13:05:07 +0200
+Message-ID: <20240703110512.21401-2-hdegoede@redhat.com>
 In-Reply-To: <20240703110512.21401-1-hdegoede@redhat.com>
 References: <20240703110512.21401-1-hdegoede@redhat.com>
 Precedence: bulk
@@ -71,50 +71,82 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On chipsets with a second 'Integrated Device Function' SMBus controller use
-a different adapter-name for the second IDF adapter.
+Platform glue code, which is not build into the kernel and thus cannot
+use i2c_register_board_info() may want to use bus_register_notifier()
+to listen for i2c-adapters to show up on which the platform code needs
+to manually instantiate platform specific i2c_clients.
 
-This allows platform glue code which is looking for the primary i801
-adapter to manually instantiate i2c_clients on to differentiate
-between the 2.
+This results in calling i2c_new_client_device() from the bus notifier
+which happens near the device_add() call.
 
-This allows such code to find the primary i801 adapter by name, without
-needing to duplicate the PCI-ids to feature-flags mapping from i2c-i801.c.
+If the i2c-core has not yet setup runtime-pm (specifically the
+no-callbacks and ignore-children flags) for the device embedded
+inside struct i2c_adapter and the driver for the i2c_client
+calls pm_runtime_set_active() this will trigger the following
+error inside __pm_runtime_set_status():
+
+"runtime PM trying to activate child device %s but parent (%s) is not active\n"
+
+and the i2c_client's runtime-status will not be updated.
+
+Split the device_register() call for the adapter into device_initialize()
+and device_add() and move the pm-runtime init calls inbetween these 2 calls
+so that the runtime-status can be correctly set when a driver binds from
+the bus-notifier.
+
+Note the moved pm-runtime init calls just override the initial value of
+some flags in struct device set by device_initialize() and calling these
+before device_add() is safe.
 
 Reviewed-by: Pali Rohár <pali@kernel.org>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
 Changes in v4:
-- Use a single snprintf() with a conditional argument for the 2 names
-- Add a comment that the adapter-name is used by platform code
+- Add a comment explaining why runtime-pm needs to be setup before
+  the device_add()
 
 Changes in v3:
 - This is a new patch in v3 of this patch-set
 ---
- drivers/i2c/busses/i2c-i801.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/i2c/i2c-core-base.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-index d2d2a6dbe29f..94265ee300c0 100644
---- a/drivers/i2c/busses/i2c-i801.c
-+++ b/drivers/i2c/busses/i2c-i801.c
-@@ -1760,8 +1760,15 @@ static int i801_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 
- 	i801_add_tco(priv);
- 
-+	/*
-+	 * adapter.name is used by platform code to find the main I801 adapter
-+	 * to instantiante i2c_clients, do not change.
-+	 */
- 	snprintf(priv->adapter.name, sizeof(priv->adapter.name),
--		"SMBus I801 adapter at %04lx", priv->smba);
-+		 "SMBus %s adapter at %04lx",
-+		 (priv->features & FEATURE_IDF) ? "I801 IDF" : "I801",
-+		 priv->smba);
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index db0d1ac82910..c4517d97a49f 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -1521,7 +1521,18 @@ static int i2c_register_adapter(struct i2c_adapter *adap)
+ 	dev_set_name(&adap->dev, "i2c-%d", adap->nr);
+ 	adap->dev.bus = &i2c_bus_type;
+ 	adap->dev.type = &i2c_adapter_type;
+-	res = device_register(&adap->dev);
++	device_initialize(&adap->dev);
 +
- 	err = i2c_add_adapter(&priv->adapter);
- 	if (err) {
- 		platform_device_unregister(priv->tco_pdev);
++	/*
++	 * This adapter can be used as a parent immediately after device_add(),
++	 * setup runtime-pm (especially ignore-children) before hand.
++	 */
++	device_enable_async_suspend(&adap->dev);
++	pm_runtime_no_callbacks(&adap->dev);
++	pm_suspend_ignore_children(&adap->dev, true);
++	pm_runtime_enable(&adap->dev);
++
++	res = device_add(&adap->dev);
+ 	if (res) {
+ 		pr_err("adapter '%s': can't register device (%d)\n", adap->name, res);
+ 		goto out_list;
+@@ -1533,11 +1544,6 @@ static int i2c_register_adapter(struct i2c_adapter *adap)
+ 	if (res)
+ 		goto out_reg;
+ 
+-	device_enable_async_suspend(&adap->dev);
+-	pm_runtime_no_callbacks(&adap->dev);
+-	pm_suspend_ignore_children(&adap->dev, true);
+-	pm_runtime_enable(&adap->dev);
+-
+ 	res = i2c_init_recovery(adap);
+ 	if (res == -EPROBE_DEFER)
+ 		goto out_reg;
 -- 
 2.45.1
 
