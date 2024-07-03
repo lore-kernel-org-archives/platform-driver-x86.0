@@ -1,46 +1,46 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7934717736
-	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Jul 2024 11:05:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17FA17DA39
+	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Jul 2024 11:05:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720004745; cv=none; b=oZLb7WDVbUIyuxuLucc/ReGfr7f6Nby1vqYLtP5gC868Wp5I0Uc5qX/CtMhFS5UN4/nAYzGCYXf8txdRbP1mG45kStZCdpOD88enl9uY2NWT3x5GfO3nK8EiEqSnqWP3r+Z0lLdnWQ4GxJMyTlf+Hug8KPerqAybOAbGnZQuZ4k=
+	t=1720004749; cv=none; b=ExV17XwVuoFmLpHzZDvmtijxAZCXxqdOALoOoCWNJnylRL9dJDTx10Lj6GjtSJ75sfSp20KH0VdTP+FYdoCi31/jK0RHSiEPRaSpvCJlCbAT3q/ShfFnGVCWbC3/ymTr3+RnH7Uch619u3DINe6Pvd7Kjfb3lKXVWItUglu5Hgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720004745; c=relaxed/simple;
-	bh=0mEs4BU68gJ28wCe45JidDTzgcyO6Ydm/chObUojCcU=;
+	s=arc-20240116; t=1720004749; c=relaxed/simple;
+	bh=9+5ijawvv6OCXAtYMN7exU9MzHfcU7rH6D4NZaW5bEc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QewKC22GjliTnmBpKhVjfRNQ1/9YQW+gB6wdQOvFoA81Dfc1NGGtD8qg4Iv3VvB4yy6+Bwsj1Je2iMnNoqpTWa1/XMBIFkqNCLMrlzRTz3uoaYFWUpq8CZ/PN4kJa6KUhu2fjy3TxkmFPpcQHhioCkoa1sJM0GTfozGCDJ26q/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GcKCMMUy; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=emI10edaztbR3ktvaRlyxOIufNABhdEY1aRoan2Zxie9wo5StMM+i0H2dP3bQ7T8NaXS50k2PjYj2C9JQwIrgzeF04LitW6SCzCaLAq7ZpKRbtahHXIw7b7nXP6W0T5fEWAbPR527n6Js37m1c6VPJeRhPLV1AXafH/RDi7Cpzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P9rW0agV; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GcKCMMUy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P9rW0agV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720004740;
+	s=mimecast20190719; t=1720004746;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=89wLpmPV3lxBUNuf84YR9vVcTcztXoRQAVBv8fyNtps=;
-	b=GcKCMMUy+LTU13uzq9mvxtRKcmJ0fk78xtq+hQS0L9DBAfPgdxK3iGZAkUrMrOdT9By90r
-	O87yPe6YPU8nJyvZNRn09gWy5/A0rn/kNpE6AZnpdPQ9D+ydrNVAl2FldNYkmeUnFuU/yI
-	d2QTdDFC3ovov0lEm3V1SK2bI5OzR6c=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+	bh=eyJ1dtPmMc1CBJtThTe3+L5azwDxbWybN3OCGIWy9go=;
+	b=P9rW0agVeIJsaLB5cu1oovQ7fnIpsYEyJW3WWnzVfhlR4NXCpaRL1yUEJnFSlQWucNSeiF
+	4U89wf9zsMeTxBYBi1mtoqS/B7glHuRElPclicPde7csKHrWIJTmnfObXS+bW4YrZNz+Gk
+	bzDO6uKQwhXh/yuZHE1cpx9UPM1yjZ0=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-344-3Iqf7wtZPF6t7Wa-yLLsbg-1; Wed,
- 03 Jul 2024 07:05:33 -0400
-X-MC-Unique: 3Iqf7wtZPF6t7Wa-yLLsbg-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-288-IGyer6KHO4yDxWq6L5zBlg-1; Wed,
+ 03 Jul 2024 07:05:43 -0400
+X-MC-Unique: IGyer6KHO4yDxWq6L5zBlg-1
 Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D2CE419560AB;
-	Wed,  3 Jul 2024 11:05:28 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 50E82195608C;
+	Wed,  3 Jul 2024 11:05:38 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.192.199])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8E9F4195607C;
-	Wed,  3 Jul 2024 11:05:24 +0000 (UTC)
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 82E8A1955F4B;
+	Wed,  3 Jul 2024 11:05:33 +0000 (UTC)
 From: Hans de Goede <hdegoede@redhat.com>
 To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
@@ -56,9 +56,9 @@ Cc: Hans de Goede <hdegoede@redhat.com>,
 	Jean Delvare <jdelvare@suse.com>,
 	Andi Shyti <andi.shyti@kernel.org>,
 	linux-i2c@vger.kernel.org
-Subject: [PATCH v5 1/6] i2c: core: Setup i2c_adapter runtime-pm before calling device_add()
-Date: Wed,  3 Jul 2024 13:05:07 +0200
-Message-ID: <20240703110512.21401-2-hdegoede@redhat.com>
+Subject: [PATCH v5 3/6] platform/x86: dell-smo8800: Move SMO88xx acpi_device_ids to dell-smo8800-ids.h
+Date: Wed,  3 Jul 2024 13:05:09 +0200
+Message-ID: <20240703110512.21401-4-hdegoede@redhat.com>
 In-Reply-To: <20240703110512.21401-1-hdegoede@redhat.com>
 References: <20240703110512.21401-1-hdegoede@redhat.com>
 Precedence: bulk
@@ -71,82 +71,89 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Platform glue code, which is not build into the kernel and thus cannot
-use i2c_register_board_info() may want to use bus_register_notifier()
-to listen for i2c-adapters to show up on which the platform code needs
-to manually instantiate platform specific i2c_clients.
-
-This results in calling i2c_new_client_device() from the bus notifier
-which happens near the device_add() call.
-
-If the i2c-core has not yet setup runtime-pm (specifically the
-no-callbacks and ignore-children flags) for the device embedded
-inside struct i2c_adapter and the driver for the i2c_client
-calls pm_runtime_set_active() this will trigger the following
-error inside __pm_runtime_set_status():
-
-"runtime PM trying to activate child device %s but parent (%s) is not active\n"
-
-and the i2c_client's runtime-status will not be updated.
-
-Split the device_register() call for the adapter into device_initialize()
-and device_add() and move the pm-runtime init calls inbetween these 2 calls
-so that the runtime-status can be correctly set when a driver binds from
-the bus-notifier.
-
-Note the moved pm-runtime init calls just override the initial value of
-some flags in struct device set by device_initialize() and calling these
-before device_add() is safe.
+Move the SMO88xx acpi_device_ids to a new dell-smo8800-ids.h header,
+so that these can be shared with the new dell-lis3lv02d code.
 
 Reviewed-by: Pali Rohár <pali@kernel.org>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
 Changes in v4:
-- Add a comment explaining why runtime-pm needs to be setup before
-  the device_add()
-
-Changes in v3:
 - This is a new patch in v3 of this patch-set
 ---
- drivers/i2c/i2c-core-base.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/platform/x86/dell/dell-smo8800-ids.h | 26 ++++++++++++++++++++
+ drivers/platform/x86/dell/dell-smo8800.c     | 16 +-----------
+ 2 files changed, 27 insertions(+), 15 deletions(-)
+ create mode 100644 drivers/platform/x86/dell/dell-smo8800-ids.h
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index db0d1ac82910..c4517d97a49f 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -1521,7 +1521,18 @@ static int i2c_register_adapter(struct i2c_adapter *adap)
- 	dev_set_name(&adap->dev, "i2c-%d", adap->nr);
- 	adap->dev.bus = &i2c_bus_type;
- 	adap->dev.type = &i2c_adapter_type;
--	res = device_register(&adap->dev);
-+	device_initialize(&adap->dev);
+diff --git a/drivers/platform/x86/dell/dell-smo8800-ids.h b/drivers/platform/x86/dell/dell-smo8800-ids.h
+new file mode 100644
+index 000000000000..f85d8b707d85
+--- /dev/null
++++ b/drivers/platform/x86/dell/dell-smo8800-ids.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ *  ACPI SMO88XX lis3lv02d freefall / accelerometer device-ids.
++ *
++ *  Copyright (C) 2012 Sonal Santan <sonal.santan@gmail.com>
++ *  Copyright (C) 2014 Pali Rohár <pali@kernel.org>
++ */
++#ifndef _DELL_SMO8800_IDS_H_
++#define _DELL_SMO8800_IDS_H_
 +
-+	/*
-+	 * This adapter can be used as a parent immediately after device_add(),
-+	 * setup runtime-pm (especially ignore-children) before hand.
-+	 */
-+	device_enable_async_suspend(&adap->dev);
-+	pm_runtime_no_callbacks(&adap->dev);
-+	pm_suspend_ignore_children(&adap->dev, true);
-+	pm_runtime_enable(&adap->dev);
++#include <linux/mod_devicetable.h>
 +
-+	res = device_add(&adap->dev);
- 	if (res) {
- 		pr_err("adapter '%s': can't register device (%d)\n", adap->name, res);
- 		goto out_list;
-@@ -1533,11 +1544,6 @@ static int i2c_register_adapter(struct i2c_adapter *adap)
- 	if (res)
- 		goto out_reg;
++static const struct acpi_device_id smo8800_ids[] = {
++	{ "SMO8800" },
++	{ "SMO8801" },
++	{ "SMO8810" },
++	{ "SMO8811" },
++	{ "SMO8820" },
++	{ "SMO8821" },
++	{ "SMO8830" },
++	{ "SMO8831" },
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, smo8800_ids);
++
++#endif
+diff --git a/drivers/platform/x86/dell/dell-smo8800.c b/drivers/platform/x86/dell/dell-smo8800.c
+index f7ec17c56833..f9119ed2bd92 100644
+--- a/drivers/platform/x86/dell/dell-smo8800.c
++++ b/drivers/platform/x86/dell/dell-smo8800.c
+@@ -14,10 +14,10 @@
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/miscdevice.h>
+-#include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/uaccess.h>
++#include "dell-smo8800-ids.h"
  
--	device_enable_async_suspend(&adap->dev);
--	pm_runtime_no_callbacks(&adap->dev);
--	pm_suspend_ignore_children(&adap->dev, true);
--	pm_runtime_enable(&adap->dev);
+ struct smo8800_device {
+ 	u32 irq;                     /* acpi device irq */
+@@ -163,20 +163,6 @@ static void smo8800_remove(struct platform_device *device)
+ 	dev_dbg(&device->dev, "device /dev/freefall unregistered\n");
+ }
+ 
+-/* NOTE: Keep this list in sync with drivers/i2c/busses/i2c-i801.c */
+-static const struct acpi_device_id smo8800_ids[] = {
+-	{ "SMO8800", 0 },
+-	{ "SMO8801", 0 },
+-	{ "SMO8810", 0 },
+-	{ "SMO8811", 0 },
+-	{ "SMO8820", 0 },
+-	{ "SMO8821", 0 },
+-	{ "SMO8830", 0 },
+-	{ "SMO8831", 0 },
+-	{ "", 0 },
+-};
+-MODULE_DEVICE_TABLE(acpi, smo8800_ids);
 -
- 	res = i2c_init_recovery(adap);
- 	if (res == -EPROBE_DEFER)
- 		goto out_reg;
+ static struct platform_driver smo8800_driver = {
+ 	.probe = smo8800_probe,
+ 	.remove_new = smo8800_remove,
 -- 
 2.45.1
 
