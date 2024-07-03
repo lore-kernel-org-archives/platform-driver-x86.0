@@ -1,270 +1,272 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4FE18133B
-	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Jul 2024 11:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919D91DA327
+	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Jul 2024 11:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720004762; cv=none; b=j1ctM/EB01Umv7Zdwz1gwkRY97P1ELwWrCZy5yA0AkHzwgYYm1ENcPEy6OSD6fhhmUgwkQb0wZLOwB20PePJyeZFZgBTEvFl871EptGy6HglAziVK+CFx+PEb7/05qJpc96Z7Fo5kB8jxOrL2NfY0hvWE5BDjR6+BQnLK0HrGP8=
+	t=1720006743; cv=none; b=V+vcKilQO6KyS3gvUuy4tlIMBvZh1GTyl31efOll+A3FcmQ1OkZomu7ySXCCtgLtiQ1y2sRK9QW++dJaUJ3DZ2O8y7rgaC53Ar7qxpcbVgiR/Biq4mrXpq3ZgoKUUUx/mcbSqWzNtT52sh2B8L8h9ydoAN4pJ8qj2nLpUXUvbqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720004762; c=relaxed/simple;
-	bh=kh6ignzFHbFFaq8M2f7Rk/Uaspq6eoqKDH1yx/VFAUI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J2DALetu7gORH4I3Z5EtWDv6Rz2+sfvDwwg3Q7IeqHY0tXgaLhuLFYW9HGutYwczTLmfott+JuXcImIPnQtlLNNi5TfLRYxv5vKdTWEZA0FMHWDYJGmlwVNUUM5y38PDKIwZNM8g7989u/gGmj7JgaKE9dG9LBKzU5PGFNMsap8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M7hXqMue; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720006743; c=relaxed/simple;
+	bh=MJooJ3APQfv7qGYC27a7K4ufNq7wbf14uUFNF1Y2mk8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=VGCbSZyV3AmTwT4bR3LbG1mGimYvU+wusbFEU9l73Fi3C8RE+btz6ques0D2Mf8lrmwXSqpHuWgO+bWTh4RMrVHl6niSGeCldI3tVCHANiDnhVIcKKBnpPBce3ZVhckAcUenvmMRbHQj1Ppt9ASBYS6w5/Wb0Yz3ZWpGgz6LOlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mmaslanka.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hvE26SOg; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mmaslanka.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M7hXqMue"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720004760;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2eRZAShgS4yPTizlURa9rC0IGhgz/WCg7hRp7K7JYOA=;
-	b=M7hXqMueL5XVgncahKXoAkNksn/89G0Si6PZCyVuQkaVBBYCcJP6N9RXjyhwXrlgogUlKp
-	/yXpF7lXQfhb3m+bOG1cPcALbQ5DM3HEp7kb9m7z4wsmhb/DZmFEMu1U+7X8mf9vIkg2hJ
-	cR7HHpy13cgl1DUtAbzUHtQMkXoSjQo=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-634-1HRmBVoxN0-Etr_v-i_-sQ-1; Wed,
- 03 Jul 2024 07:05:54 -0400
-X-MC-Unique: 1HRmBVoxN0-Etr_v-i_-sQ-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A42691955BCD;
-	Wed,  3 Jul 2024 11:05:51 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.199])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 38C53195607C;
-	Wed,  3 Jul 2024 11:05:47 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Wolfram Sang <wsa@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	eric.piel@tremplin-utc.net,
-	Marius Hoch <mail@mariushoch.de>,
-	Dell.Client.Kernel@dell.com,
-	Kai Heng Feng <kai.heng.feng@canonical.com>,
-	platform-driver-x86@vger.kernel.org,
-	Jean Delvare <jdelvare@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	linux-i2c@vger.kernel.org
-Subject: [PATCH v5 6/6] platform/x86: dell-smo8800: Add support for probing for the accelerometer i2c address
-Date: Wed,  3 Jul 2024 13:05:12 +0200
-Message-ID: <20240703110512.21401-7-hdegoede@redhat.com>
-In-Reply-To: <20240703110512.21401-1-hdegoede@redhat.com>
-References: <20240703110512.21401-1-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hvE26SOg"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62d054b1ceeso87314097b3.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 03 Jul 2024 04:39:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720006740; x=1720611540; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=g5NUOcnqSgFTC0cjvcAJs2CTu1IFaCLpTQoJfYnl3NA=;
+        b=hvE26SOgd3G33gh2/Rl2+OxAisHbuWfaKsfft+u5MrXTSX4qGlbRnpjapfH00/Unq9
+         nYdXYUY/OPyN3wlU1bubbxaaqHCIvjqzu9cBuxuLApVqL84zFaGXd1u1qd4bacCCLeMa
+         r7fT/i91f8g6y1yJICs+r8X7NLFA00OFSxJXrqB001x+4eGvCnWopXUWY/DqjhGw0cRr
+         IcdfYpPhsOqOMmjJpc0qcJl/bU5xqGRqDYJr4K/DEVBP8jxrfbrCMehzhvWilzDTJObC
+         EZy37fuwxbADb3QOI4ny1m2+ULrOHfR9Id6C3/rb5d2PEbm4qURL9uZO5i3vWwKCUJUv
+         GZrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720006740; x=1720611540;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g5NUOcnqSgFTC0cjvcAJs2CTu1IFaCLpTQoJfYnl3NA=;
+        b=WGNG2SP940PVxyIiDnrsTcREbIIN4o2BCRYRN9pJxNMbfbannSCxXzEtbJfg6rBh5m
+         cs+UXa5BwLbwVfO+280SXSXA0tPerVvfpnbrNKjqVD1DzCCsDHiFMPtf0WntarzFz6eM
+         W/l0x+jUeSs+/EnyJSlhl4BhJ1h55vMzFw78oqtlKKUer09KSqii4y+6lHnDGKR4tHc4
+         o3K6RlmMbBMLOc8+E9Rl31JVDHpkzRqgCTdAgDXxUomqH3n9w8jDnlNgINSRvvJ5sTqG
+         BWgmIRSs05EvxNonVMTgZbtXh/az8d+qpmmmbeUiNnNhP0tGl09+tcXsOZG9wusPLbcK
+         Urwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUx+T7+Ivo89pBWTHD375Yk9iQulXuDMwTp8FvWVfOvvaU8hnDbM9Hk8pT19Whz8SeX/VlybXZhDSB6rY85yNlXvqOQHcn6yl4Qc9bV76Issa7Bag==
+X-Gm-Message-State: AOJu0YxT9kwb0HmLZUPt6NNV8xTiDtI2gCpt25W1HzcJFlB5vsyujGmf
+	3XaMthivJxtSmS0FZ9iAPft9zwwLU4F7mizlvtU4fKJVr/7HZpkfAEh2P8GWbazJeAaKC7cIAKT
+	Jmse9pF05+DWvFg==
+X-Google-Smtp-Source: AGHT+IH1fn2NyleiBE/Y99h9fhkrjRMMh3G9qTAfGpFmRIc1JHDSPiUoqZwI5zM5wzWi3W6XVrH1GB8mJGLV3c4=
+X-Received: from mmaslanka2.c.googlers.com ([fda3:e722:ac3:cc00:31:98fb:c0a8:b8d])
+ (user=mmaslanka job=sendgmr) by 2002:a0d:eb08:0:b0:648:afcb:a7d1 with SMTP id
+ 00721157ae682-64c768608edmr364957b3.6.1720006740519; Wed, 03 Jul 2024
+ 04:39:00 -0700 (PDT)
+Date: Wed,  3 Jul 2024 11:38:49 +0000
+In-Reply-To: <CAGcaFA3c_rc6HVVqc2=UqOgu2c7zX_XTWNx7Yf-KL7W8LgEi7A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Mime-Version: 1.0
+References: <CAGcaFA3c_rc6HVVqc2=UqOgu2c7zX_XTWNx7Yf-KL7W8LgEi7A@mail.gmail.com>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+Message-ID: <20240703113850.2726539-1-mmaslanka@google.com>
+Subject: [PATCH v2] platform/x86:intel/pmc: Enable the ACPI PM Timer to be
+ turned off when suspended
+From: Marek Maslanka <mmaslanka@google.com>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Marek Maslanka <mmaslanka@google.com>, Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, 
+	David E Box <david.e.box@intel.com>, Hans de Goede <hdegoede@redhat.com>, 
+	"=?UTF-8?q?Ilpo=20J=C3=A4rvinen?=" <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Unfortunately the SMOxxxx ACPI device does not contain the i2c-address
-of the accelerometer. So a DMI product-name to address mapping table
-is used.
+Allow to disable ACPI PM Timer on suspend and enable on resume. A
+disabled timer helps optimise power consumption when the system is
+suspended. On resume the timer is only reactivated if it was activated
+prior to suspend, so unless the ACPI PM timer is enabled in the BIOS,
+this won't change anything.
 
-At support to have the kernel probe for the i2c-address for modesl
-which are not on the list.
-
-The new probing code sits behind a new probe_i2c_addr module parameter,
-which is disabled by default because probing might be dangerous.
-
-Link: https://lore.kernel.org/linux-i2c/4820e280-9ca4-4d97-9d21-059626161bfc@molgen.mpg.de/
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Marek Maslanka <mmaslanka@google.com>
 ---
- drivers/platform/x86/dell/dell-lis3lv02d.c | 136 ++++++++++++++++++++-
- 1 file changed, 133 insertions(+), 3 deletions(-)
+ drivers/platform/x86/intel/pmc/adl.c  |  2 ++
+ drivers/platform/x86/intel/pmc/cnp.c  |  2 ++
+ drivers/platform/x86/intel/pmc/core.c | 37 +++++++++++++++++++++++++++
+ drivers/platform/x86/intel/pmc/core.h |  8 ++++++
+ drivers/platform/x86/intel/pmc/icl.c  |  2 ++
+ drivers/platform/x86/intel/pmc/mtl.c  |  2 ++
+ drivers/platform/x86/intel/pmc/spt.c  |  2 ++
+ drivers/platform/x86/intel/pmc/tgl.c  |  2 ++
+ 8 files changed, 57 insertions(+)
 
-diff --git a/drivers/platform/x86/dell/dell-lis3lv02d.c b/drivers/platform/x86/dell/dell-lis3lv02d.c
-index ab02ad93758a..5e4b24ec02f1 100644
---- a/drivers/platform/x86/dell/dell-lis3lv02d.c
-+++ b/drivers/platform/x86/dell/dell-lis3lv02d.c
-@@ -15,6 +15,8 @@
- #include <linux/workqueue.h>
- #include "dell-smo8800-ids.h"
- 
-+#define LIS3_WHO_AM_I 0x0f
-+
- #define DELL_LIS3LV02D_DMI_ENTRY(product_name, i2c_addr)                 \
- 	{                                                                \
- 		.matches = {                                             \
-@@ -57,6 +59,121 @@ static u8 i2c_addr;
- static struct i2c_client *i2c_dev;
- static bool notifier_registered;
- 
-+static bool probe_i2c_addr;
-+module_param(probe_i2c_addr, bool, 0444);
-+MODULE_PARM_DESC(probe_i2c_addr, "Probe the i801 I2C bus for the accelerometer on models where the address is unknown, this may be dangerous.");
-+
-+/*
-+ * This is the kernel version of the single register device sanity checks from
-+ * the i2c_safety_check function from lm_sensors sensor-detect script:
-+ * This is meant to prevent access to 1-register-only devices,
-+ * which are designed to be accessed with SMBus receive byte and SMBus send
-+ * byte transactions (i.e. short reads and short writes) and treat SMBus
-+ * read byte as a real write followed by a read. The device detection
-+ * routines would write random values to the chip with possibly very nasty
-+ * results for the hardware. Note that this function won't catch all such
-+ * chips, as it assumes that reads and writes relate to the same register,
-+ * but that's the best we can do.
-+ */
-+static int i2c_safety_check(struct i2c_adapter *adap, u8 addr)
-+{
-+	union i2c_smbus_data smbus_data;
-+	int err;
-+	u8 data;
-+
-+	/*
-+	 * First receive a byte from the chip, and remember it. This
-+	 * also checks if there is a device at the address at all.
-+	 */
-+	err = i2c_smbus_xfer(adap, addr, 0, I2C_SMBUS_READ, 0,
-+			     I2C_SMBUS_BYTE, &smbus_data);
-+	if (err < 0)
-+		return err;
-+
-+	data = smbus_data.byte;
-+
-+	/*
-+	 * Receive a byte again; very likely to be the same for
-+	 * 1-register-only devices.
-+	 */
-+	err = i2c_smbus_xfer(adap, addr, 0, I2C_SMBUS_READ, 0,
-+			     I2C_SMBUS_BYTE, &smbus_data);
-+	if (err < 0)
-+		return err;
-+
-+	if (smbus_data.byte != data)
-+		return 0; /* Not a 1-register-only device. */
-+
-+	/*
-+	 * Then try a standard byte read, with a register offset equal to
-+	 * the read byte; for 1-register-only device this should read
-+	 * the same byte value in return.
-+	 */
-+	err = i2c_smbus_xfer(adap, addr, 0, I2C_SMBUS_READ, data,
-+			     I2C_SMBUS_BYTE_DATA, &smbus_data);
-+	if (err < 0)
-+		return err;
-+
-+	if (smbus_data.byte != data)
-+		return 0; /* Not a 1-register-only device. */
-+
-+	/*
-+	 * Then try a standard byte read, with a slightly different register
-+	 * offset; this should again read the register offset in return.
-+	 */
-+	err = i2c_smbus_xfer(adap, addr, 0, I2C_SMBUS_READ, data ^ 0x01,
-+			     I2C_SMBUS_BYTE_DATA, &smbus_data);
-+	if (err < 0)
-+		return err;
-+
-+	if (smbus_data.byte != (data ^ 0x01))
-+		return 0; /* Not a 1-register-only device. */
-+
-+	/*
-+	 * Apparently this is a 1-register-only device, restore the original
-+	 * register value and leave it alone.
-+	 */
-+	i2c_smbus_xfer(adap, addr, 0, I2C_SMBUS_WRITE, data,
-+		       I2C_SMBUS_BYTE, NULL);
-+	pr_warn("I2C safety check for address 0x%02x failed, skipping\n", addr);
-+	return -ENODEV;
-+}
-+
-+static int detect_lis3lv02d(struct i2c_adapter *adap, u8 addr,
-+			    struct i2c_board_info *info)
-+{
-+	union i2c_smbus_data smbus_data;
-+	int err;
-+
-+	pr_info("Probing for lis3lv02d on address 0x%02x\n", addr);
-+	err = i2c_safety_check(adap, addr);
-+	if (err < 0)
-+		return err;
-+
-+	err = i2c_smbus_xfer(adap, addr, 0, I2C_SMBUS_READ, LIS3_WHO_AM_I,
-+			     I2C_SMBUS_BYTE_DATA, &smbus_data);
-+	if (err < 0) {
-+		pr_warn("Failed to read who-am-i register: %d\n", err);
-+		return err;
-+	}
-+
-+	/* valid who-am-i values are from drivers/misc/lis3lv02d/lis3lv02d.c */
-+	switch (smbus_data.byte) {
-+	case 0x32:
-+	case 0x33:
-+	case 0x3a:
-+	case 0x3b:
-+		break;
-+	default:
-+		pr_warn("Unknown who-am-i register value 0x%02x\n", smbus_data.byte);
-+		return -ENODEV;
-+	}
-+
-+	pr_debug("Detected lis3lv02d on address 0x%02x\n", addr);
-+	info->addr = addr;
-+	return 0;
-+}
-+
- static bool i2c_adapter_is_main_i801(struct i2c_adapter *adap)
- {
- 	/*
-@@ -93,7 +210,17 @@ static void instantiate_i2c_client(struct work_struct *work)
- 	if (!adap)
- 		return;
- 
--	info.addr = i2c_addr;
-+	if (i2c_addr) {
-+		info.addr = i2c_addr;
-+	} else {
-+		/* First try address 0x29 (most used) and then try 0x1d */
-+		if (detect_lis3lv02d(adap, 0x29, &info) != 0 &&
-+		    detect_lis3lv02d(adap, 0x1d, &info) != 0) {
-+			pr_warn("failed to probe for lis3lv02d I2C address\n");
-+			goto out_put_adapter;
-+		}
-+	}
-+
- 	strscpy(info.type, "lis3lv02d", I2C_NAME_SIZE);
- 
- 	i2c_dev = i2c_new_client_device(adap, &info);
-@@ -104,6 +231,7 @@ static void instantiate_i2c_client(struct work_struct *work)
- 		pr_debug("registered lis3lv02d on address 0x%02x\n", info.addr);
- 	}
- 
-+out_put_adapter:
- 	i2c_put_adapter(adap);
+diff --git a/drivers/platform/x86/intel/pmc/adl.c b/drivers/platform/x86/intel/pmc/adl.c
+index e7878558fd909..9d9c07f44ff61 100644
+--- a/drivers/platform/x86/intel/pmc/adl.c
++++ b/drivers/platform/x86/intel/pmc/adl.c
+@@ -295,6 +295,8 @@ const struct pmc_reg_map adl_reg_map = {
+ 	.ppfear_buckets = CNP_PPFEAR_NUM_ENTRIES,
+ 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
++	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
++	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+ 	.ltr_ignore_max = ADL_NUM_IP_IGN_ALLOWED,
+ 	.lpm_num_modes = ADL_LPM_NUM_MODES,
+ 	.lpm_num_maps = ADL_LPM_NUM_MAPS,
+diff --git a/drivers/platform/x86/intel/pmc/cnp.c b/drivers/platform/x86/intel/pmc/cnp.c
+index dd72974bf71e2..513c02670c5aa 100644
+--- a/drivers/platform/x86/intel/pmc/cnp.c
++++ b/drivers/platform/x86/intel/pmc/cnp.c
+@@ -200,6 +200,8 @@ const struct pmc_reg_map cnp_reg_map = {
+ 	.ppfear_buckets = CNP_PPFEAR_NUM_ENTRIES,
+ 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
++	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
++	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+ 	.ltr_ignore_max = CNP_NUM_IP_IGN_ALLOWED,
+ 	.etr3_offset = ETR3_OFFSET,
+ };
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index 10c96c1a850af..e97ac7a8a18bc 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -1171,6 +1171,35 @@ static bool pmc_core_is_pson_residency_enabled(struct pmc_dev *pmcdev)
+ 	return val == 1;
  }
- static DECLARE_WORK(i2c_work, instantiate_i2c_client);
-@@ -167,12 +295,14 @@ static int __init dell_lis3lv02d_init(void)
- 	put_device(dev);
  
- 	lis3lv02d_dmi_id = dmi_first_match(lis3lv02d_devices);
--	if (!lis3lv02d_dmi_id) {
-+	if (!lis3lv02d_dmi_id && !probe_i2c_addr) {
- 		pr_warn("accelerometer is present on SMBus but its address is unknown, skipping registration\n");
-+		pr_info("Pass dell_lis3lv02d.probe_i2c_addr=1 on the kernel commandline to probe, this may be dangerous!\n");
++/*
++ * Enable or disable APCI PM Timer
++ *
++ * @return: Previous APCI PM Timer enabled state
++ */
++static bool pmc_core_enable_apci_pm_timer(struct pmc_dev *pmcdev, bool enable)
++{
++	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
++	const struct pmc_reg_map *map = pmc->map;
++	bool state;
++	u32 reg;
++
++	if (!map->acpi_pm_tmr_ctl_offset)
++		return false;
++
++	mutex_lock(&pmcdev->lock);
++
++	reg = pmc_core_reg_read(pmc, map->acpi_pm_tmr_ctl_offset);
++	state = !(reg & map->acpi_pm_tmr_disable_bit);
++	if (enable)
++		reg &= ~map->acpi_pm_tmr_disable_bit;
++	else
++		reg |= map->acpi_pm_tmr_disable_bit;
++	pmc_core_reg_write(pmc, map->acpi_pm_tmr_ctl_offset, reg);
++
++	mutex_unlock(&pmcdev->lock);
++
++	return state;
++}
+ 
+ static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+ {
+@@ -1446,6 +1475,10 @@ static __maybe_unused int pmc_core_suspend(struct device *dev)
+ 	if (pmcdev->suspend)
+ 		pmcdev->suspend(pmcdev);
+ 
++	/* Disable APCI PM Timer */
++	pmcdev->enable_acpi_pm_timer_on_resume =
++		pmc_core_enable_apci_pm_timer(pmcdev, false);
++
+ 	/* Check if the syspend will actually use S0ix */
+ 	if (pm_suspend_via_firmware())
  		return 0;
- 	}
+@@ -1500,6 +1533,10 @@ int pmc_core_resume_common(struct pmc_dev *pmcdev)
+ 	int offset = pmc->map->lpm_status_offset;
+ 	int i;
  
--	i2c_addr = (long)lis3lv02d_dmi_id->driver_data;
-+	if (lis3lv02d_dmi_id)
-+		i2c_addr = (long)lis3lv02d_dmi_id->driver_data;
++	/* Enable APCI PM Timer */
++	if (pmcdev->enable_acpi_pm_timer_on_resume)
++		pmc_core_enable_apci_pm_timer(pmcdev, true);
++
+ 	/* Check if the syspend used S0ix */
+ 	if (pm_suspend_via_firmware())
+ 		return 0;
+diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+index 83504c49a0e31..fe1a94f693b63 100644
+--- a/drivers/platform/x86/intel/pmc/core.h
++++ b/drivers/platform/x86/intel/pmc/core.h
+@@ -67,6 +67,8 @@ struct telem_endpoint;
+ #define SPT_PMC_LTR_SCC				0x3A0
+ #define SPT_PMC_LTR_ISH				0x3A4
  
- 	/*
- 	 * Register i2c-bus notifier + queue initial scan for lis3lv02d
++#define SPT_PMC_ACPI_PM_TMR_CTL_OFFSET		0x18FC
++
+ /* Sunrise Point: PGD PFET Enable Ack Status Registers */
+ enum ppfear_regs {
+ 	SPT_PMC_XRAM_PPFEAR0A = 0x590,
+@@ -147,6 +149,8 @@ enum ppfear_regs {
+ #define SPT_PMC_VRIC1_SLPS0LVEN			BIT(13)
+ #define SPT_PMC_VRIC1_XTALSDQDIS		BIT(22)
+ 
++#define SPT_PMC_BIT_ACPI_PM_TMR_DISABLE		BIT(1)
++
+ /* Cannonlake Power Management Controller register offsets */
+ #define CNP_PMC_SLPS0_DBG_OFFSET		0x10B4
+ #define CNP_PMC_PM_CFG_OFFSET			0x1818
+@@ -344,6 +348,8 @@ struct pmc_reg_map {
+ 	const u8  *lpm_reg_index;
+ 	const u32 pson_residency_offset;
+ 	const u32 pson_residency_counter_step;
++	const u32 acpi_pm_tmr_ctl_offset;
++	const u32 acpi_pm_tmr_disable_bit;
+ };
+ 
+ /**
+@@ -417,6 +423,8 @@ struct pmc_dev {
+ 	u32 die_c6_offset;
+ 	struct telem_endpoint *punit_ep;
+ 	struct pmc_info *regmap_list;
++
++	bool enable_acpi_pm_timer_on_resume;
+ };
+ 
+ enum pmc_index {
+diff --git a/drivers/platform/x86/intel/pmc/icl.c b/drivers/platform/x86/intel/pmc/icl.c
+index 71b0fd6cb7d84..cbbd440544688 100644
+--- a/drivers/platform/x86/intel/pmc/icl.c
++++ b/drivers/platform/x86/intel/pmc/icl.c
+@@ -46,6 +46,8 @@ const struct pmc_reg_map icl_reg_map = {
+ 	.ppfear_buckets = ICL_PPFEAR_NUM_ENTRIES,
+ 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
++	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
++	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+ 	.ltr_ignore_max = ICL_NUM_IP_IGN_ALLOWED,
+ 	.etr3_offset = ETR3_OFFSET,
+ };
+diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
+index c7d15d864039d..91f2fa728f5c8 100644
+--- a/drivers/platform/x86/intel/pmc/mtl.c
++++ b/drivers/platform/x86/intel/pmc/mtl.c
+@@ -462,6 +462,8 @@ const struct pmc_reg_map mtl_socm_reg_map = {
+ 	.ppfear_buckets = MTL_SOCM_PPFEAR_NUM_ENTRIES,
+ 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
++	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
++	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+ 	.lpm_num_maps = ADL_LPM_NUM_MAPS,
+ 	.ltr_ignore_max = MTL_SOCM_NUM_IP_IGN_ALLOWED,
+ 	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
+diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
+index ab993a69e33ee..2cd2b3c68e468 100644
+--- a/drivers/platform/x86/intel/pmc/spt.c
++++ b/drivers/platform/x86/intel/pmc/spt.c
+@@ -130,6 +130,8 @@ const struct pmc_reg_map spt_reg_map = {
+ 	.ppfear_buckets = SPT_PPFEAR_NUM_ENTRIES,
+ 	.pm_cfg_offset = SPT_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = SPT_PMC_READ_DISABLE_BIT,
++	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
++	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+ 	.ltr_ignore_max = SPT_NUM_IP_IGN_ALLOWED,
+ 	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
+ };
+diff --git a/drivers/platform/x86/intel/pmc/tgl.c b/drivers/platform/x86/intel/pmc/tgl.c
+index e0580de180773..371b4e30f1426 100644
+--- a/drivers/platform/x86/intel/pmc/tgl.c
++++ b/drivers/platform/x86/intel/pmc/tgl.c
+@@ -197,6 +197,8 @@ const struct pmc_reg_map tgl_reg_map = {
+ 	.ppfear_buckets = ICL_PPFEAR_NUM_ENTRIES,
+ 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
++	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
++	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+ 	.ltr_ignore_max = TGL_NUM_IP_IGN_ALLOWED,
+ 	.lpm_num_maps = TGL_LPM_NUM_MAPS,
+ 	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
 -- 
-2.45.1
+2.45.2.803.g4e1b14247a-goog
 
