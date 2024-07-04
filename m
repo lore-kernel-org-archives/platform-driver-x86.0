@@ -1,63 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7011AE849
-	for <platform-driver-x86@vger.kernel.org>; Thu,  4 Jul 2024 13:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2148E13BADF
+	for <platform-driver-x86@vger.kernel.org>; Thu,  4 Jul 2024 13:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720098323; cv=none; b=EbmM/dFAR2IZZIvJBCz0tHHm+ZllhMupo3GIlNVYicoj5ZS3JXn0f9xz/u1EXdynt5kjQjGOLS4OoTF58fXsPZVnhvlemqg3tyDyml+v1W/6HdYcpf5B2neTcUoP4oyBNm0vFJrnDhaGV+36O7gqH2eE+6Sde2gxnm6Tuhea0aI=
+	t=1720098437; cv=none; b=q72+9bDrJL02BOiSqY07nFX/yjVQYjH1Ei6KQWuOj+gs3qJt2RHDODWauLCSRplma6OYtokCQIYhVE5fJswdWBwTczSumuaIw2X5VnOVmPHIMrNbwbozI9GPVqkBpfGchX2za+Hg675tMkYkKq4rbYnxyQC8rw9gf68Vn9CXMZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720098323; c=relaxed/simple;
-	bh=kEgHvrKkP/JmOKG/+VNDIUUpwZumLitFBjNUA3WIU0g=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=H6zlwKR1FB6GgVTc3H7v5ovBZmsVkEVttAM0Zzf6r8HlP100or/Ksw1rgQl2LMjDZCj+jAohLVdTi4qFYxdPxJaOmDu/d/D7FRfeVJggSX8l9RF24Ee7c7tThjh4p08sANDP7Xy+1XYIaOUdEb4UTyXNMCqkksUGhn0Sf5VKVKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IKx10rfU; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1720098437; c=relaxed/simple;
+	bh=SctyzHhEpvQYkpqbYkYxNspdRRbz4yH9gYPXXglV6Ns=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=acDA5UnweGC7b9bcNaXcv5dHVMu6wKKSDRhZ0gQMPTQJcatXN4zEAnE2Lak/B2VUWzQaytsnUtkvhDK+/LKP0nwuJVYjlpqsEaxjMWE6qgYW2wC+d8XDJr7tSuyoZW6kQq2xcd68Hspo90smor7t1cZlW6/0gxPoAhELBzxMcPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q/2sqAdu; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IKx10rfU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q/2sqAdu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720098321;
+	s=mimecast20190719; t=1720098434;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=K0LIkgFk3FChOL7eIhbF4O+FeLzO9NmnpeAt7yD+xlo=;
-	b=IKx10rfUn2RZMhnFoB4cq/GXLhsKH8bcYHZYzLI3Wf6qpwruVZ+MoJPoUlaLAKhDwKfpGS
-	xusRcxZN0UpK48twizn55Tt9cYrdQo+8CGHY6PxOjENoBp5mFrQzxgsdETBvjCvkA9QXlx
-	AAWT8tOR5vMC8xGVEtkB4I49R7azwfk=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rr5UKMrUGkjJYiUKKYb5e8+Q4alDGlhVFcwMM1toc3Y=;
+	b=Q/2sqAdutQ+NorqxOUXMyRYMKSR3Rfd0i5jlyw06QDn3N+fKLCXqWjOw0FyHOirVhTRLvw
+	CWeqDYO/f6mbndP/6BfJJrZjyHaRwLm/718rcF7Bh5eqrhgqCoZB72mFq0ethBX+yCskTv
+	JKyskRV9LxzajEYnLnZelUCBd2vEFnY=
 Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
  [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-628-SwXdF6VtMwWXdg60U8vLeg-1; Thu, 04 Jul 2024 09:05:19 -0400
-X-MC-Unique: SwXdF6VtMwWXdg60U8vLeg-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-584ef6c00c0so2647465a12.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Jul 2024 06:05:19 -0700 (PDT)
+ us-mta-77-aYNVK4jMMPOdCVzFz-j4nw-1; Thu, 04 Jul 2024 09:07:13 -0400
+X-MC-Unique: aYNVK4jMMPOdCVzFz-j4nw-1
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-57d5467c427so603733a12.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Jul 2024 06:07:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720098318; x=1720703118;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=K0LIkgFk3FChOL7eIhbF4O+FeLzO9NmnpeAt7yD+xlo=;
-        b=l3uRvSCsdLMpIJOGKBPgjWGtASTqiNVXaVpsLFMTS8a2EFK1quV01CtknV/BkrC2Qa
-         AaQntcB5ZQ1FjokMXk0VnYoUyp2RdiM08mE8bWn920LwNLNWjUswk9qPc8+FoYQ9xhbw
-         ZBOPYfCMYTX5qZqE2SrHxPHZK7EKNH5lSe3x6s4E4QI4PcvM/i89DB8Dz0X0aoYAwhfk
-         kT1paIWA4mAw+AYD/bYPXNyKYaBM0H4hlTvDlyHm127Nz3vexb03sqqoIwJ9OhIEX+lr
-         BF9+gBCW5gzEV0a35uEwvVVdbD9Ktp3owYVJ7kOMzpDKQhA4uXZADK1WrP9nLIqr/j+3
-         w7Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCXJPCRS5aDPeR6riDobCMyVpJvv40Nz+YEbemxZuTHD13bK7BvYi2G9DQc7vircaaD4SLE8SLIwF5dIwC9CEueDTJDFnnbTwhfaj8dNzx2SyKssJg==
-X-Gm-Message-State: AOJu0YwZ8ZXwyu0Z6p78SElrf401sZ0yXrMKKOdnBqmQy5J5T9Ey1z3z
-	s1ayHSd1aQytrWk83kmJ2iUM8xIDhMQNU2y1hdgMderNQ/wuU+QeeryBAR1X+/JTl9Rf5eBgwlC
-	wWtJtwWMKBX5nv+jCZ51YxwVIsXSdn/R6nAD61TQlPq2AxhhZ3qmGWUPpLOPy94wuJVtinIc=
-X-Received: by 2002:a05:6402:2692:b0:57d:5442:a709 with SMTP id 4fb4d7f45d1cf-58e7744e613mr1449073a12.0.1720098318671;
-        Thu, 04 Jul 2024 06:05:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFaDxYn9Pqu6TsWtxIem2XZpMIKWwXHc7vlrDGTnHQPn/nhfDycg9sSKf42JvwhrYxeAfSSZw==
-X-Received: by 2002:a05:6402:2692:b0:57d:5442:a709 with SMTP id 4fb4d7f45d1cf-58e7744e613mr1449047a12.0.1720098318211;
-        Thu, 04 Jul 2024 06:05:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720098432; x=1720703232;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rr5UKMrUGkjJYiUKKYb5e8+Q4alDGlhVFcwMM1toc3Y=;
+        b=nnetvr5pm/I1cmWUxmbj68sdjhx/qFlFWTz58YvjIcN4T9ZnXkY1zBQtJteD7coG3c
+         RIDXRsMJh+Xi7KAVS2tpjjt69nwPyQbwxvSryxeiP5P6TiwtybFrVtDc6Wx7eQUjY7ro
+         WvccwE42wOYInwv72RLkVdOdITr1dbqVjiKgC+xc5ePuKp//NvvAtAT+OuGH3bgDfmdH
+         YDWth1RfPHTl6wXWb9CSs7IfhgCx+qtfprkAYTGf8keMjj0PJFEwllGY3CVmRf33cT7G
+         DmTB3EMdxS+W4b12c6vRouUjjQm8ZRbdIXdhNi5nXvXcaBRh+rYLi0gfaCHAjYFNZS9z
+         lS9A==
+X-Forwarded-Encrypted: i=1; AJvYcCX1RySZagLGA2nFzXLGvLHvDd8i+EC3Sj5kTsUcbNkp5ALzNma19Xl9rOpCX7zMMUCzjprJtUakrZHQkwdzi7Lw6VA9H1F6HVPKQRi5NmU2fWm3kQ==
+X-Gm-Message-State: AOJu0YzSMoP7mRnnrpfrC5mAnuL6g+4FmEqOcAeyZDWSd51irZ7On5s1
+	895iAbWjC41rRhupMAY6BpP7TvLPERkkbKCwjVah8vcs+SKfTCxlmY4bnyQtfE3mQJqn6xp7UVE
+	SC/DEsqihR+gY4khXmbJWKH6uOk9OzZBZcq5zaRrg9qwT7zbm3BVpbasbZU4ijihtA1uU/Z8=
+X-Received: by 2002:a17:907:3f1d:b0:a6f:bae6:f56c with SMTP id a640c23a62f3a-a77ba460b68mr119136866b.3.1720098432276;
+        Thu, 04 Jul 2024 06:07:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFLaQAe30WMvfZKaAWc99XjUUuw3odz3gTOq/73LF5X0dy2EwygPq+G0nwt2hNVYycpwy9afg==
+X-Received: by 2002:a17:907:3f1d:b0:a6f:bae6:f56c with SMTP id a640c23a62f3a-a77ba460b68mr119134666b.3.1720098431820;
+        Thu, 04 Jul 2024 06:07:11 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58614d50580sm8454972a12.72.2024.07.04.06.05.17
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72ab065187sm599306866b.139.2024.07.04.06.07.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jul 2024 06:05:17 -0700 (PDT)
-Message-ID: <1cf4578a-3499-47e2-85de-03887de1f05f@redhat.com>
-Date: Thu, 4 Jul 2024 15:05:16 +0200
+        Thu, 04 Jul 2024 06:07:11 -0700 (PDT)
+Message-ID: <acea1e0e-995c-4aae-aefd-e8fc11d20d80@redhat.com>
+Date: Thu, 4 Jul 2024 15:07:10 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -65,62 +67,73 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: [GIT PULL] platform-drivers-x86 for 6.10-5
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] platform-drivers-x86 for 6.10-5
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
  platform-driver-x86@vger.kernel.org,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
  Armin Wolf <W_Armin@gmx.de>
+References: <1cf4578a-3499-47e2-85de-03887de1f05f@redhat.com>
 Content-Language: en-US, nl
+In-Reply-To: <1cf4578a-3499-47e2-85de-03887de1f05f@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Linus,
+Hi,
 
-Here is (hopefully) the last platform-drivers-x86 fixes pull-request
-for 6.10.
+On 7/4/24 3:05 PM, Hans de Goede wrote:
+> Hi Linus,
+> 
+> Here is (hopefully) the last platform-drivers-x86 fixes pull-request
+> for 6.10.
+> 
+> This contains a single fix for a regression in toshiba_acpi introduced
+> in 6.10-rc1.
+> 
+> Highlights:
+>  -  Fix lg-laptop driver not working with 2024 LG laptop models
+>  -  Add missing MODULE_DESCRIPTION() macros to various modules
+>  -  nvsw-sn2201: Add check for platform_device_add_resources
 
-This contains a single fix for a regression in toshiba_acpi introduced
-in 6.10-rc1.
-
-Highlights:
- -  Fix lg-laptop driver not working with 2024 LG laptop models
- -  Add missing MODULE_DESCRIPTION() macros to various modules
- -  nvsw-sn2201: Add check for platform_device_add_resources
+Ugh, these highlights are from the previous platform-drivers-x86-v6.10-4
+pull-request and I forgot to delete them, please ignore.
 
 Regards,
-
+ 
 Hans
 
 
-The following changes since commit 7add1ee34692aabd146b86a8e88abad843ed6659:
 
-  platform/x86: add missing MODULE_DESCRIPTION() macros (2024-06-24 13:33:20 +0200)
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.10-5
-
-for you to fetch changes up to e527a6127223b644e0a27b44f4b16e16eb6c7f0a:
-
-  platform/x86: toshiba_acpi: Fix quickstart quirk handling (2024-07-02 16:01:45 +0200)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.10-5
-
-Highlights:
- -  Fix regression in toshiba_acpi introduced in 6.10-rc1
-
-The following is an automated git shortlog grouped by driver:
-
-toshiba_acpi:
- -  Fix quickstart quirk handling
-
-----------------------------------------------------------------
-Armin Wolf (1):
-      platform/x86: toshiba_acpi: Fix quickstart quirk handling
-
- drivers/platform/x86/toshiba_acpi.c | 31 ++++++++++++++++++-------------
- 1 file changed, 18 insertions(+), 13 deletions(-)
+> The following changes since commit 7add1ee34692aabd146b86a8e88abad843ed6659:
+> 
+>   platform/x86: add missing MODULE_DESCRIPTION() macros (2024-06-24 13:33:20 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.10-5
+> 
+> for you to fetch changes up to e527a6127223b644e0a27b44f4b16e16eb6c7f0a:
+> 
+>   platform/x86: toshiba_acpi: Fix quickstart quirk handling (2024-07-02 16:01:45 +0200)
+> 
+> ----------------------------------------------------------------
+> platform-drivers-x86 for v6.10-5
+> 
+> Highlights:
+>  -  Fix regression in toshiba_acpi introduced in 6.10-rc1
+> 
+> The following is an automated git shortlog grouped by driver:
+> 
+> toshiba_acpi:
+>  -  Fix quickstart quirk handling
+> 
+> ----------------------------------------------------------------
+> Armin Wolf (1):
+>       platform/x86: toshiba_acpi: Fix quickstart quirk handling
+> 
+>  drivers/platform/x86/toshiba_acpi.c | 31 ++++++++++++++++++-------------
+>  1 file changed, 18 insertions(+), 13 deletions(-)
+> 
 
