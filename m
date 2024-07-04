@@ -1,139 +1,170 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2148E13BADF
-	for <platform-driver-x86@vger.kernel.org>; Thu,  4 Jul 2024 13:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F98B1AC25A;
+	Thu,  4 Jul 2024 15:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720098437; cv=none; b=q72+9bDrJL02BOiSqY07nFX/yjVQYjH1Ei6KQWuOj+gs3qJt2RHDODWauLCSRplma6OYtokCQIYhVE5fJswdWBwTczSumuaIw2X5VnOVmPHIMrNbwbozI9GPVqkBpfGchX2za+Hg675tMkYkKq4rbYnxyQC8rw9gf68Vn9CXMZ0=
+	t=1720108477; cv=none; b=YaSuZ+f/xmx7LY7ZrjJyK5Mi7VeiMJaMX1Madudp9nC66R21OsDMa2sVgqZvyBlyGq02tgG/+H8wLFTCnLcCGoXnrTk/BoZg9ZkGR8jmJUXTvgl+fy5yXNHzCAx/t1O0bhLvgpGwcCL1z9cEwvH2GIegS0VFn88WYAl+0QEccb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720098437; c=relaxed/simple;
-	bh=SctyzHhEpvQYkpqbYkYxNspdRRbz4yH9gYPXXglV6Ns=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=acDA5UnweGC7b9bcNaXcv5dHVMu6wKKSDRhZ0gQMPTQJcatXN4zEAnE2Lak/B2VUWzQaytsnUtkvhDK+/LKP0nwuJVYjlpqsEaxjMWE6qgYW2wC+d8XDJr7tSuyoZW6kQq2xcd68Hspo90smor7t1cZlW6/0gxPoAhELBzxMcPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q/2sqAdu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720108477; c=relaxed/simple;
+	bh=oAPLBuaHGfBG4ySH8Pf7W7dRQ9t3+2lb9AMrAf4PxGA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P8A5Sjfw1SU/Ne269VLrxc0Sv7N/NVV9BvQHLXrYvt/Um2N1XRzqj1rjButbqp2n0O03gFiuEPfAPMWL0wcCmocJNfJ1AGUqeoltLyP/eb8FumG5JlXVEom9vTYyQSNPTDOH/PSotgtGPYlYDU/Tl4HKlVIyrEdKgPLcf1TcTNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ajtzsszZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q/2sqAdu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720098434;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Rr5UKMrUGkjJYiUKKYb5e8+Q4alDGlhVFcwMM1toc3Y=;
-	b=Q/2sqAdutQ+NorqxOUXMyRYMKSR3Rfd0i5jlyw06QDn3N+fKLCXqWjOw0FyHOirVhTRLvw
-	CWeqDYO/f6mbndP/6BfJJrZjyHaRwLm/718rcF7Bh5eqrhgqCoZB72mFq0ethBX+yCskTv
-	JKyskRV9LxzajEYnLnZelUCBd2vEFnY=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-77-aYNVK4jMMPOdCVzFz-j4nw-1; Thu, 04 Jul 2024 09:07:13 -0400
-X-MC-Unique: aYNVK4jMMPOdCVzFz-j4nw-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-57d5467c427so603733a12.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Jul 2024 06:07:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720098432; x=1720703232;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rr5UKMrUGkjJYiUKKYb5e8+Q4alDGlhVFcwMM1toc3Y=;
-        b=nnetvr5pm/I1cmWUxmbj68sdjhx/qFlFWTz58YvjIcN4T9ZnXkY1zBQtJteD7coG3c
-         RIDXRsMJh+Xi7KAVS2tpjjt69nwPyQbwxvSryxeiP5P6TiwtybFrVtDc6Wx7eQUjY7ro
-         WvccwE42wOYInwv72RLkVdOdITr1dbqVjiKgC+xc5ePuKp//NvvAtAT+OuGH3bgDfmdH
-         YDWth1RfPHTl6wXWb9CSs7IfhgCx+qtfprkAYTGf8keMjj0PJFEwllGY3CVmRf33cT7G
-         DmTB3EMdxS+W4b12c6vRouUjjQm8ZRbdIXdhNi5nXvXcaBRh+rYLi0gfaCHAjYFNZS9z
-         lS9A==
-X-Forwarded-Encrypted: i=1; AJvYcCX1RySZagLGA2nFzXLGvLHvDd8i+EC3Sj5kTsUcbNkp5ALzNma19Xl9rOpCX7zMMUCzjprJtUakrZHQkwdzi7Lw6VA9H1F6HVPKQRi5NmU2fWm3kQ==
-X-Gm-Message-State: AOJu0YzSMoP7mRnnrpfrC5mAnuL6g+4FmEqOcAeyZDWSd51irZ7On5s1
-	895iAbWjC41rRhupMAY6BpP7TvLPERkkbKCwjVah8vcs+SKfTCxlmY4bnyQtfE3mQJqn6xp7UVE
-	SC/DEsqihR+gY4khXmbJWKH6uOk9OzZBZcq5zaRrg9qwT7zbm3BVpbasbZU4ijihtA1uU/Z8=
-X-Received: by 2002:a17:907:3f1d:b0:a6f:bae6:f56c with SMTP id a640c23a62f3a-a77ba460b68mr119136866b.3.1720098432276;
-        Thu, 04 Jul 2024 06:07:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFLaQAe30WMvfZKaAWc99XjUUuw3odz3gTOq/73LF5X0dy2EwygPq+G0nwt2hNVYycpwy9afg==
-X-Received: by 2002:a17:907:3f1d:b0:a6f:bae6:f56c with SMTP id a640c23a62f3a-a77ba460b68mr119134666b.3.1720098431820;
-        Thu, 04 Jul 2024 06:07:11 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a72ab065187sm599306866b.139.2024.07.04.06.07.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jul 2024 06:07:11 -0700 (PDT)
-Message-ID: <acea1e0e-995c-4aae-aefd-e8fc11d20d80@redhat.com>
-Date: Thu, 4 Jul 2024 15:07:10 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ajtzsszZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89548C4AF0D;
+	Thu,  4 Jul 2024 15:54:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720108476;
+	bh=oAPLBuaHGfBG4ySH8Pf7W7dRQ9t3+2lb9AMrAf4PxGA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ajtzsszZ0sD14waUFHzSX4EOv9kORx2z+IVmmxE7sl6qKN/311gFGIfuvRUIhbN0+
+	 EBFmca7LJ686IXBAjB8antplENDNhEwpZ5yu1G/SXEQ13UvgnQk2oHXYrNowJETXhJ
+	 TA9w/x18Jeigt1yCP9e1lXfxtlQrZQaSMEAbfo2j23BwB8Tlo9Ljr7T0QVmsdl75LB
+	 q/xjW1uwpaHVjgnr3RX3Ef2cGSz4IJqcqYRQH4OdU9t+5eA9q+ecWAHgaMvmphUD81
+	 HsEnlTCZcLkCsCunN7ar2RkmTQzrAaG+glWOnVJdq4jKpnsJ0eGrnOWwocsRGQscPK
+	 oAPFcy6PHk5Mg==
+Received: by pali.im (Postfix)
+	id 44F9BA5B; Thu,  4 Jul 2024 17:54:33 +0200 (CEST)
+Date: Thu, 4 Jul 2024 17:54:33 +0200
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>, Wolfram Sang <wsa@kernel.org>,
+	eric.piel@tremplin-utc.net, Marius Hoch <mail@mariushoch.de>,
+	Dell.Client.Kernel@dell.com,
+	Kai Heng Feng <kai.heng.feng@canonical.com>,
+	platform-driver-x86@vger.kernel.org,
+	Jean Delvare <jdelvare@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v4 0/6] i2c-i801 / dell-lis3lv02d: Move instantiation of
+ lis3lv02d i2c_client from i2c-i801 to dell-lis3lv02d
+Message-ID: <20240704155433.pe3j3bclr3ukn2w5@pali>
+References: <20240624111519.15652-1-hdegoede@redhat.com>
+ <20240624182812.fa6akymygv3qolug@pali>
+ <a6a554d1-2cdb-4e34-ac07-2778d534b558@redhat.com>
+ <20240703184121.t2wh5sb5ki2kwots@pali>
+ <991b1de6-10fc-4917-8e1c-442a71adf04e@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] platform-drivers-x86 for 6.10-5
-From: Hans de Goede <hdegoede@redhat.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- platform-driver-x86@vger.kernel.org,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Armin Wolf <W_Armin@gmx.de>
-References: <1cf4578a-3499-47e2-85de-03887de1f05f@redhat.com>
-Content-Language: en-US, nl
-In-Reply-To: <1cf4578a-3499-47e2-85de-03887de1f05f@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <991b1de6-10fc-4917-8e1c-442a71adf04e@redhat.com>
+User-Agent: NeoMutt/20180716
 
-Hi,
+On Thursday 04 July 2024 12:17:27 Hans de Goede wrote:
+> Hi Pali,
+> 
+> On 7/3/24 8:41 PM, Pali Rohár wrote:
+> > On Wednesday 03 July 2024 12:58:01 Hans de Goede wrote:
+> >> Hi,
+> >>
+> >> On 6/24/24 8:28 PM, Pali Rohár wrote:
+> >>> On Monday 24 June 2024 13:15:12 Hans de Goede wrote:
+> >>>> Hans de Goede (6):
+> >>>>   i2c: core: Setup i2c_adapter runtime-pm before calling device_add()
+> >>>>   i2c: i801: Use a different adapter-name for IDF adapters
+> >>>>   platform/x86: dell-smo8800: Move SMO88xx acpi_device_ids to
+> >>>>     dell-smo8800-ids.h
+> >>>>   platform/x86: dell-smo8800: Move instantiation of lis3lv02d i2c_client
+> >>>>     from i2c-i801 to dell-lis3lv02d
+> >>>>   platform/x86: dell-smo8800: Add a couple more models to
+> >>>>     lis3lv02d_devices[]
+> >>>>   platform/x86: dell-smo8800: Add support for probing for the
+> >>>>     accelerometer i2c address
+> >>>
+> >>> Patches 1-5 looks good. There are just a few minor things, but you can add
+> >>> Reviewed-by: Pali Rohár <pali@kernel.org>
+> >>
+> >> Thank you.
+> >>
+> >>> For patch 6 as I mentioned previously I'm strictly against this change
+> >>> until somebody goes and politely ask Dell about the current situation of
+> >>> the discovering of accelerometer's i2c address.
+> >>
+> >> Dell is on the Cc and not responding...
+> > 
+> > And what do you expecting here? That somebody on the group address
+> > specified in CC list would react to all your tons of messages? Not
+> > mentioning the fact that you did not even ask anything.
+> 
+> You keep on repeating this since I first posted this patch
+> in December last year, but as I already wrote back then:
 
-On 7/4/24 3:05 PM, Hans de Goede wrote:
-> Hi Linus,
-> 
-> Here is (hopefully) the last platform-drivers-x86 fixes pull-request
-> for 6.10.
-> 
-> This contains a single fix for a regression in toshiba_acpi introduced
-> in 6.10-rc1.
-> 
-> Highlights:
->  -  Fix lg-laptop driver not working with 2024 LG laptop models
->  -  Add missing MODULE_DESCRIPTION() macros to various modules
->  -  nvsw-sn2201: Add check for platform_device_add_resources
+Yes, because you have not done anything and you are just repeating those
+nonsenses. What are you expecting? You are either doing all this on
+purpose or you are just lazy and think that somebody (e.g. me) would do
+this stuff.
 
-Ugh, these highlights are from the previous platform-drivers-x86-v6.10-4
-pull-request and I forgot to delete them, please ignore.
+> https://lore.kernel.org/platform-driver-x86/8b3946e0-7eb5-4e1f-9708-1f6cfda95e1a@redhat.com/
+> 
+> "Unfortunately I no longer have any contacts inside Dell"
+> 
+> And Paul Menzel reached out back to gkh back then asking
+> if Greg had any contacts in he did not have any contacts
+> either.
+> 
+> Dell.Client.Kernel@dell.com is the official address listed
+> for Dell drivers under drivers/platform/x86 .
 
-Regards,
- 
-Hans
+Perfect. And may you explain why you have not tried to contact them with
+addressed requests of exact information of what you need and ask for
+help? You wrote tons of emails with zero value.
 
+> > This is not how things works.
+> 
+> The email address which I'm using is *THE* one which Dell has
+> provided for contacting about Dell pdx86 drivers. I really
+> don't know what else you expect me to do here.
+> 
+> You just keep repeating that Dell should be contacted about
+> this and multiple people (me and Andy) have already pointed
+> out that Dell does not have any other contact info. Repeating
+> the same remark over and over does not change things.
+> 
+> As I mentioned in my other email too, if you think you can do
+> better feel free to try and contact Dell your self, something
 
+I'm not your servant and I'm not going to play role of your secretary.
 
+> which you could already have done the first time you mentioned
+> this in December 2023, back when I already said I don't have
+> any other contact info for Dell.
 
-> The following changes since commit 7add1ee34692aabd146b86a8e88abad843ed6659:
-> 
->   platform/x86: add missing MODULE_DESCRIPTION() macros (2024-06-24 13:33:20 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.10-5
-> 
-> for you to fetch changes up to e527a6127223b644e0a27b44f4b16e16eb6c7f0a:
-> 
->   platform/x86: toshiba_acpi: Fix quickstart quirk handling (2024-07-02 16:01:45 +0200)
-> 
-> ----------------------------------------------------------------
-> platform-drivers-x86 for v6.10-5
-> 
-> Highlights:
->  -  Fix regression in toshiba_acpi introduced in 6.10-rc1
-> 
-> The following is an automated git shortlog grouped by driver:
-> 
-> toshiba_acpi:
->  -  Fix quickstart quirk handling
-> 
-> ----------------------------------------------------------------
-> Armin Wolf (1):
->       platform/x86: toshiba_acpi: Fix quickstart quirk handling
-> 
->  drivers/platform/x86/toshiba_acpi.c | 31 ++++++++++++++++++-------------
->  1 file changed, 18 insertions(+), 13 deletions(-)
-> 
+Could you stop complaining? I'm really not interested in your stories
+why you are not wanted to do anything.
 
+> > If you do not change your attitude here then I highly doubt that
+> > somebody will respond to you.
+> > 
+> > I have feeling that you are doing it on purpose just because you do not
+> > want to do anything, and trying to find some kind of proof that nobody
+> > is responding to you, to convince others for merge your last hack change.
+> 
+> This is just plain hurtful I do not believe I have ever done
+> anything to earn this level of distrust from you.
+
+Then read your message again. Now it is more clear that you are doing
+it on purpose.
+
+> I am hurt that you cannot at least show the common decency to
+> assume good intentions from my side.
+
+I hope that I do not have to explain you how to find contact address in
+MAINTAINERS file, how to write an addressed email for target audience,
+how to formulate questions and how to ask for information. And how to do
+it in _one_ message.
+
+> Regards,
+> 
+> Hans
+> 
+> 
