@@ -1,279 +1,490 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBBCA1F61C
-	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Jul 2024 07:10:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153A2147C76
+	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Jul 2024 10:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720163435; cv=none; b=Fre+Cet4cYtgfTuAj1j5/vsV8nZhP3BjBXf4Ee//RdBB5OlDwffCFrp1VOVF60/39fxU8qgrZ7VtVXeve495h9dcmc89M5rfBjBF7hMmGyI3sr1/wVmgn4KPPlgPxuwkOGJIYVMVI7Lfw/yjBRMIzvoVUB/h77LDuhI6N3nlvVk=
+	t=1720177099; cv=none; b=ZXBjjGk+rIKwYQXLwx+xWGRV/7jlUuMAL4zljXZcpHUZYqtjTIH3RfntPNSDztCaJ2v/dYTIA8W5tUFsVGjEp77b3c67//sNQS1MRwf6F2uoF4ofF5PyQ3wzGpH6bty2+jwwuk63wVmD36nlM8uUlXbupT/O9iZ5DeioIjwlw0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720163435; c=relaxed/simple;
-	bh=1nMddftKdpnDP0X7aCCH1ArTl3o3jqzVnCTw6hOORN4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=oiN3sCfWwVjql6zOOODjtPXvSx9owZhU/aueUls9KYkLlqik0MxyuPYhkOskkoaIrNL8pD08R9RD2ZuOpoGI97JKwlaTnnEacil/tXcH0cidVdLbNupvmTcwv6JgqbgbB3HysnwamAwD1jKZW5rgr7pk62f9IV7eUzG4sPVwjnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aHKqwxaV; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720177099; c=relaxed/simple;
+	bh=KZTGflbwU2LcKX3WFLiE9V7Ru5F8qfisPvzHGig0mBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jTMFjrLM1AIQxsZRpcfRc6UrPjuP79SX1mMZiGx4qdPxXktE9PXCrtbvP6ioCeeSuUwT5blPV1c6XBad8Y9pI8VGIxSEvkOi/3w+ZlVpMWuDY69ePDkG1JJ9lAzBwyQv4KOCh+pOaXqy2bPF9D7K42xl+Y9MB+B8mb3Uywh9nRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q0lZW+k/; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aHKqwxaV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720163432;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sqiFgHsVqj2MOxTGHjtVg9cbGDLNX96hL+N/xqbD5gE=;
-	b=aHKqwxaVVrCamuBh3SPRkfuqjvLvibzA+ytUXfbEZNJKSFiLcWfjzVy7ey7AHGs2oHl7lI
-	SiO3eU4qpJknlJg3BOgZbXdwnWRVcSAkE5ungMSxaSGDIVdTQ5M3DmwLK/yeaQIBSuTKDN
-	V9F1Gh4XsUpd1zNGUO1QktNxD0Vx+us=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-677-tWMlcUebNqqMX1pIDm0hFg-1; Fri, 05 Jul 2024 03:10:31 -0400
-X-MC-Unique: tWMlcUebNqqMX1pIDm0hFg-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-586c45fc092so1255753a12.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 05 Jul 2024 00:10:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q0lZW+k/"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52ea5dc3c79so845189e87.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 05 Jul 2024 03:58:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720177095; x=1720781895; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qtrnVRJXBUhHXpn4ff4oCsLzzEe9JHeNRY1NhHBoWPg=;
+        b=Q0lZW+k/LBFlkCUODdq2DR04Kkxhjw5hKdCh17X2r5bIegHhqmfB69Gqq0osy8Hlt4
+         Vu3ZRgux31q/1qvImMnEt704TKTljD0s0DzDCMis77kvEJUyQI46tuF1tq00Z5g/AC9M
+         qmnwZvQ6WP3GCHB5aeV9LLCoUidFVc/pwZ9dn0zT/lGPdMHZX/GbVqhVFgR/l2LxljFL
+         6Es9PBJhmmooakur6Rden9l4lgP+kOQKMveRbZPLPY5AhNXG3s2XHvB9nwxqxecGH8Os
+         GGps1NkYPYdr/d14ziggmh/9zMwwzwFYycfW/QibP8i0YOXaWENZYydh6eQEPhHCooZq
+         BFYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720163430; x=1720768230;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1720177095; x=1720781895;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sqiFgHsVqj2MOxTGHjtVg9cbGDLNX96hL+N/xqbD5gE=;
-        b=J9FgNZn7JJXx5BjKFCt5EQcV8SSa0gO9MhXLyN1JEvL2GPBEVBDPhSEcOT1Ja/sBWa
-         D/m7JquKQx5H66k9Ie3oSUrNB0+HeaZv7MOyDZJKp21kDYOpEMx3GJ2ozsLd/2FDsyl4
-         BPLOkwE8WxzxHw3rreDs6t4BRj2oupMxDNIPH5ZsYWH5ZBlbFwTwh7WonFefaT5Z3N2D
-         CCqLdA6sHAXI2kYqY2RoT3WtdtO9Gnth0UWt+vRqZFYVO49JyjzbndRZbr9Hz+m+7VLg
-         2asmQXtN2xnxIojzUmHPSxSZYvEpSM9nQdyr/anNiXCcADXlWsqFTR2D5/5D++Mxfxv+
-         bb7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVdH8PemSQeIozfZaqY4eSV88OHWkaItsoKJIYf2T/wJgThaDxValVto6enmQ6UxvbX5LhWYHP7ZJB15/vgzfz9bc/LXLUxymdUGqyWB8xd9t1orQ==
-X-Gm-Message-State: AOJu0Ywg3OkunthuCQpzDyMU52W0/uUVivj5c+Y1Tn3ziBmnr5lxmxsY
-	k3jlEoqmCdS2+6G4WKZQE4YLMEsy7jcwlkzfbRZ30xn9i+rsiF+xNwQtHhMT4wap8bfiMt0J+3b
-	DL6L6Chm1ZAezFigweHsQ05p+iJbxt7TwkIESppILX7cLI0mF55JuGp/OOXGaO1xSNgeeURM=
-X-Received: by 2002:aa7:c889:0:b0:58b:db7c:93cd with SMTP id 4fb4d7f45d1cf-58e5cd17427mr2204817a12.36.1720163429747;
-        Fri, 05 Jul 2024 00:10:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFwq2AR24siofhy5MW/93mW8jKB7HwcHUqwiMZzZ0uidPzWQLvoe7V3iaiBeLX65mqbe1CbPA==
-X-Received: by 2002:aa7:c889:0:b0:58b:db7c:93cd with SMTP id 4fb4d7f45d1cf-58e5cd17427mr2204791a12.36.1720163429164;
-        Fri, 05 Jul 2024 00:10:29 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58fefca76d0sm225005a12.2.2024.07.05.00.10.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jul 2024 00:10:28 -0700 (PDT)
-Message-ID: <a5d98a55-c014-4019-b40e-c832500bcf5a@redhat.com>
-Date: Fri, 5 Jul 2024 09:10:27 +0200
+        bh=qtrnVRJXBUhHXpn4ff4oCsLzzEe9JHeNRY1NhHBoWPg=;
+        b=NuCA4oWnW0ryalsA3bSs0FvsPUZfR7Kpeg/6KKHoNeSn5B8BdXipJBpytOyt+8RIDT
+         k34ZLchx6MoAk2SYBvyNcSAmBYrQfaKuEYSBFSzy3kqjWoIFppMhrnJ1k/h+NSAzZTBb
+         mBqcNRfgZUvMsJw68vYFONisKgMo1EF1Y+kxSJxjV+7qLGQTzIaL7ccAzkcFt3d0q8Zz
+         oI36yueFqrTF13jjBuR3CPqZeJvZwXYq831YTQAhOwg5ldvUYDEA6B9UB38oL2NvkE7O
+         IYcH+jKRoE9BXJQTfw1FVmPnhxj4K+TLsnD/YBnREO6Z6nUpEAllAe6U2rZYAG8ZzxnD
+         kmdA==
+X-Gm-Message-State: AOJu0Yz1uQHTxfUtXN5E1WHhcFJzZJx8cJQtEVHXY+HYrT8OaEZ5Es+0
+	X3fg3WmHGuDFvtS6id75Bu2y+fzkmcjZiyim2r5io9a6E8KxNiU4
+X-Google-Smtp-Source: AGHT+IGbjJUBMRFrvhCkMm2UyZKwhRdGHeU9eFr955FuYi52wSBDcOpT5Ev9bquVW/fI9pwPSYd9jQ==
+X-Received: by 2002:ac2:5490:0:b0:52e:9d6b:2691 with SMTP id 2adb3069b0e04-52ea064c1d2mr2808910e87.20.1720177094838;
+        Fri, 05 Jul 2024 03:58:14 -0700 (PDT)
+Received: from alexis-pc ([163.5.23.101])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a188edasm56761985e9.0.2024.07.05.03.58.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jul 2024 03:58:14 -0700 (PDT)
+Date: Fri, 5 Jul 2024 12:58:12 +0200
+From: Alexis Belmonte <alexbelm48@gmail.com>
+To: W_Armin@gmx.de, ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com
+Cc: platform-driver-x86@vger.kernel.org
+Subject: [PATCHv9] platform/x86: hp-wmi: Fix platform profile option switch
+ bug on Omen and Victus laptops
+Message-ID: <ZofRxNfk-ExL5VnN@alexis-pc>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 6/6] platform/x86: dell-smo8800: Add support for
- probing for the accelerometer i2c address
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>,
- Wolfram Sang <wsa@kernel.org>, eric.piel@tremplin-utc.net,
- Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com,
- Kai Heng Feng <kai.heng.feng@canonical.com>,
- platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
- Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org
-References: <20240704125643.22946-1-hdegoede@redhat.com>
- <20240704125643.22946-7-hdegoede@redhat.com>
- <20240704213701.gtkgfnmahgeridir@pali>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240704213701.gtkgfnmahgeridir@pali>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi,
+Fix a platform profile option switch/getter bug on some Omen and Victus
+laptops dismissing userspace choice when selecting performance mode in
+inadequate conditions (e.g. by being disconnected from the AC power plug)
+by
 
-On 7/4/24 11:37 PM, Pali Rohár wrote:
-> On Thursday 04 July 2024 14:56:43 Hans de Goede wrote:
->> Unfortunately the SMOxxxx ACPI device does not contain the i2c-address
->> of the accelerometer. So a DMI product-name to address mapping table
->> is used.
->>
->> At support to have the kernel probe for the i2c-address for modesl
->> which are not on the list.
->>
->> The new probing code sits behind a new probe_i2c_addr module parameter,
->> which is disabled by default because probing might be dangerous.
->>
->> Link: https://lore.kernel.org/linux-i2c/4820e280-9ca4-4d97-9d21-059626161bfc@molgen.mpg.de/
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> NAK.
-> 
-> This is a hack
+   -  hooking an ACPI notify handler through the
+      omen_register_powersource_notifier_handler method that listens to AC
+      power source changes (plugging in/out the AC power plug)
 
-This is not a hack, notice the existing i2c_new_scanned_device() i2c-core
-function exists for a reason. As I have tried to explain before scanning
-for i2c-devices if we don't know the address is something which the kernel
-has been doing for a long time already.
+   -  keeping an intermediate active_platform_profile variable that is
+      set when userspace changes the platform profile setting
 
-Current kernels scan for i2c devices on pretty much any Intel PC in the form
-of i2c_register_spd() running.
+   -  restoring the selected platform profile kept in
+      active_platform_profile when AC power is plugged back into the
+      laptop, unless if the user decided to alter the platform profile
+      mid-way
 
->, which should be avoided as specified in previous
-> discussions (e.g. it can cause regression for future or also existing
-> products).
+This patch thus introduces a new dependency to the POWER_SUPPLY subsystem
+for this module.
 
-You have provided 0 proof or even any hypothesis / speculations how this can
-cause regressions. Al you have done is said this may cause regressions
-without providing any details as to how you believe this would cause
-regressions please provide details.
+This ensures that the driver follows the principles defined in the
+Platform Profile Selection page of the Kernel documentation on those kind
+of laptops; which is to not "(...) let userspace know about any
+sub-optimal conditions which are impeding reaching the requested
+performance level".
 
-Also the new code is only activated if a new module option is st. By default
-this options is not set, so this cannot cause any regressions since it
-does not change anything for end users unless they explicitly enable it.
+Since the Omen and Victus laptops share the same embedded controller
+system, the fix is applicable to both categories of laptops.
 
-You have made it plenty clear that you don't like this approach, but
-claiming it can cause regressions when by default it does not do anything
-is just dishonest.
+This patch also provides improvements to how the driver sets/gets the
+platform profile through the embedded controller, by introducing
+intermediary functions to leverage code from platform_profile_omen_set and
+callers.
 
-> Author refused to improve the code,
+Signed-off-by: Alexis Belmonte <alexbelm48@gmail.com>
+---
+V1 -> V2: - Use register_acpi_notifier and unregister_acpi_notifier instead of
+            hooking straight through ACPI node \\_SB.ADP1
+V2 -> V3: - Rely on power_supply_is_system_supplied() instead of an EC-specific
+            field to determine if the laptop is plugged in
+          - Refactor omen_powersource_notify_handler to omen_powersource_event
+          - Refactor omen_powersource_register_notifier_handler to
+            omen_register_powersource_event_handler
+          - Use a mutex to protect the active_platform_profile variable from
+            being altered while the handler is executed
+V3 -> V4: - Remove the unnecessary enum declaration remains from the initial
+            implementation
+V4 -> V5: - Drop unnecessary modifications from the patch
+          - Call platform_profile_omen_get in platform_profile_victus_get to
+            avoid code duplication
+          - Give-up module initialization if we fail to register the ACPI
+            notifier handler
+          - Fix code style issues reported by checkpatch.pl --strict
+          - Add intermediary/helper platform_profile_omen_set_ec and
+            platform_profile_victus_set_ec functions to leverage code from
+            platform_profile_omen_set and callers, thus simplifying
+            omen_powersource_event
+          - Fix dead-lock when restoring active_platform_profile when the AC
+            power is plugged back into the laptop
+V5 -> V6: - Drop unnecessary modifications from the patch
+V6 -> V7: - Drop EC platform profile readback after set
+          - Lock the active_platform_profile mutex unconditionally
+          - Drop the usage of ACPI_FAILURE in favor of a simpler error check
+            when registering/unregistering the ACPI notifier
+          - Initialize active_platform_profile in thermal_profile_setup
+V7 -> V8: - Pass profile as a value instead of a pointer for
+            platform_profile_omen_set & platform_profile_victus_set as these
+            functions no longer alter the parameter
+          - Initialize active_platform_profile during
+            thermal_profile_setup by reading the current platform profile from
+            the embedded controller
+          - Drop vestigial active_platform_profile initialization code
+          - Add module dependency (select) to POWER_SUPPLY in Kconfig
+          - Simplify thermal profile getter check in omen_powersource_event
+          - Substitute omen_thermal_profile_get/omen_thermal_profile_set
+            with platform_profile_omen_get_ec/platform_profile_omen_set_ec and
+            platform_profile_victus_get_ec/platform_profile_victus_set_ec to
+            simplify thermal_profile_setup
+V8 -> V9: - Add missing mutex_lock call in omen_powersource_event read
+            failure code branch
+---
+ drivers/platform/x86/hp/Kconfig  |   1 +
+ drivers/platform/x86/hp/hp-wmi.c | 209 ++++++++++++++++++++++++++++---
+ 2 files changed, 193 insertions(+), 17 deletions(-)
 
-Really? I have gone out of my way to please you, I've moved all of the i2c
-handling to a separate file because you asked for this, adding a text to
-both the kernel message informing users about the module-parameter to
-probe and the module-param help text that this may be dangerous.
-
-Also after I last discussion I moved to i2c_new_scanned_device() instead
-of DIY code. There is a reason why this patch-set is at v6 and it is not
-because I'm refusing to improve it.
-
-> also refused to ask vendor about the
-> details and proper implementation and author also refused to do any
-> future discussion about it.
-
-As I have explained countless times I have no contacts inside Dell
-to ask about this. If e.g. Mario was still at Dell I would have asked
-Mario about this immediately back when the discussion started.
-
-Besides the Dell.Client.Kernel@dell.com which no-one seems to be
-reading, there is only one other @dell.com address in all of MAINTAINERS:
-Prasanth Ksr <prasanth.ksr@dell.com>
-
-To put an end to this whole discussion about contacting Dell I'll email
-them with you (Pali) in the Cc. I don't expect much to come from this
-but we will see.
-
-> Based on this state, this patch 6/6 should not be merged at all.
-
-Lets move forward with merging patches 1-5 and wait to see if we get
-any response from Dell. But I do very much want to move forward
-with this if contacting Dell does not result in another solution
-to allow users to easily find out what the i2c-address is.
-
-Regards,
-
-Hans
-
-
-> 
->> ---
->> Changes in v6:
->> - Use i2c_new_scanned_device() instead of re-inventing it
->>
->> Changes in v5:
->> - Add "this may be dangerous warning" to MODULE_PARM_DESC(probe_i2c_addr)
->> ---
->>  drivers/platform/x86/dell/dell-lis3lv02d.c | 52 ++++++++++++++++++++--
->>  1 file changed, 48 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/platform/x86/dell/dell-lis3lv02d.c b/drivers/platform/x86/dell/dell-lis3lv02d.c
->> index ab02ad93758a..21390e6302a0 100644
->> --- a/drivers/platform/x86/dell/dell-lis3lv02d.c
->> +++ b/drivers/platform/x86/dell/dell-lis3lv02d.c
->> @@ -15,6 +15,8 @@
->>  #include <linux/workqueue.h>
->>  #include "dell-smo8800-ids.h"
->>  
->> +#define LIS3_WHO_AM_I 0x0f
->> +
->>  #define DELL_LIS3LV02D_DMI_ENTRY(product_name, i2c_addr)                 \
->>  	{                                                                \
->>  		.matches = {                                             \
->> @@ -57,6 +59,38 @@ static u8 i2c_addr;
->>  static struct i2c_client *i2c_dev;
->>  static bool notifier_registered;
->>  
->> +static bool probe_i2c_addr;
->> +module_param(probe_i2c_addr, bool, 0444);
->> +MODULE_PARM_DESC(probe_i2c_addr, "Probe the i801 I2C bus for the accelerometer on models where the address is unknown, this may be dangerous.");
->> +
->> +static int detect_lis3lv02d(struct i2c_adapter *adap, unsigned short addr)
->> +{
->> +	union i2c_smbus_data smbus_data;
->> +	int err;
->> +
->> +	pr_info("Probing for lis3lv02d on address 0x%02x\n", addr);
->> +
->> +	err = i2c_smbus_xfer(adap, addr, 0, I2C_SMBUS_READ, LIS3_WHO_AM_I,
->> +			     I2C_SMBUS_BYTE_DATA, &smbus_data);
->> +	if (err < 0)
->> +		return 0; /* Not found */
->> +
->> +	/* valid who-am-i values are from drivers/misc/lis3lv02d/lis3lv02d.c */
->> +	switch (smbus_data.byte) {
->> +	case 0x32:
->> +	case 0x33:
->> +	case 0x3a:
->> +	case 0x3b:
->> +		break;
->> +	default:
->> +		pr_warn("Unknown who-am-i register value 0x%02x\n", smbus_data.byte);
->> +		return 0; /* Not found */
->> +	}
->> +
->> +	pr_debug("Detected lis3lv02d on address 0x%02x\n", addr);
->> +	return 1; /* Found */
->> +}
->> +
->>  static bool i2c_adapter_is_main_i801(struct i2c_adapter *adap)
->>  {
->>  	/*
->> @@ -93,10 +127,18 @@ static void instantiate_i2c_client(struct work_struct *work)
->>  	if (!adap)
->>  		return;
->>  
->> -	info.addr = i2c_addr;
->>  	strscpy(info.type, "lis3lv02d", I2C_NAME_SIZE);
->>  
->> -	i2c_dev = i2c_new_client_device(adap, &info);
->> +	if (i2c_addr) {
->> +		info.addr = i2c_addr;
->> +		i2c_dev = i2c_new_client_device(adap, &info);
->> +	} else {
->> +		/* First try address 0x29 (most used) and then try 0x1d */
->> +		static const unsigned short addr_list[] = { 0x29, 0x1d, I2C_CLIENT_END };
->> +
->> +		i2c_dev = i2c_new_scanned_device(adap, &info, addr_list, detect_lis3lv02d);
->> +	}
->> +
->>  	if (IS_ERR(i2c_dev)) {
->>  		pr_err("error %ld registering i2c_client\n", PTR_ERR(i2c_dev));
->>  		i2c_dev = NULL;
->> @@ -167,12 +209,14 @@ static int __init dell_lis3lv02d_init(void)
->>  	put_device(dev);
->>  
->>  	lis3lv02d_dmi_id = dmi_first_match(lis3lv02d_devices);
->> -	if (!lis3lv02d_dmi_id) {
->> +	if (!lis3lv02d_dmi_id && !probe_i2c_addr) {
->>  		pr_warn("accelerometer is present on SMBus but its address is unknown, skipping registration\n");
->> +		pr_info("Pass dell_lis3lv02d.probe_i2c_addr=1 on the kernel commandline to probe, this may be dangerous!\n");
->>  		return 0;
->>  	}
->>  
->> -	i2c_addr = (long)lis3lv02d_dmi_id->driver_data;
->> +	if (lis3lv02d_dmi_id)
->> +		i2c_addr = (long)lis3lv02d_dmi_id->driver_data;
->>  
->>  	/*
->>  	 * Register i2c-bus notifier + queue initial scan for lis3lv02d
->> -- 
->> 2.45.1
->>
-> 
+diff --git a/drivers/platform/x86/hp/Kconfig b/drivers/platform/x86/hp/Kconfig
+index 7fef4f12e498..d776761cd5fd 100644
+--- a/drivers/platform/x86/hp/Kconfig
++++ b/drivers/platform/x86/hp/Kconfig
+@@ -40,6 +40,7 @@ config HP_WMI
+ 	depends on ACPI_WMI
+ 	depends on INPUT
+ 	depends on RFKILL || RFKILL = n
++	select POWER_SUPPLY
+ 	select INPUT_SPARSEKMAP
+ 	select ACPI_PLATFORM_PROFILE
+ 	select HWMON
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 5fa553023842..910bc5195f8f 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -24,6 +24,7 @@
+ #include <linux/platform_profile.h>
+ #include <linux/hwmon.h>
+ #include <linux/acpi.h>
++#include <linux/power_supply.h>
+ #include <linux/rfkill.h>
+ #include <linux/string.h>
+ #include <linux/dmi.h>
+@@ -42,6 +43,8 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45E9-BE91-3D44E2C707E4");
+ #define HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET 0x63
+ #define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
+ 
++#define ACPI_AC_CLASS "ac_adapter"
++
+ #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
+ 
+ /* DMI board names of devices that should use the omen specific path for
+@@ -259,10 +262,18 @@ static const struct key_entry hp_wmi_keymap[] = {
+ 	{ KE_END, 0 }
+ };
+ 
++/*
++ * Mutex for the active_platform_profile variable,
++ * see omen_powersource_event.
++ */
++DEFINE_MUTEX(active_platform_profile_lock);
++
+ static struct input_dev *hp_wmi_input_dev;
+ static struct input_dev *camera_shutter_input_dev;
+ static struct platform_device *hp_wmi_platform_dev;
+ static struct platform_profile_handler platform_profile_handler;
++static struct notifier_block platform_power_source_nb;
++static enum platform_profile_option active_platform_profile;
+ static bool platform_profile_support;
+ static bool zero_insize_support;
+ 
+@@ -1194,8 +1205,7 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+ 	return err;
+ }
+ 
+-static int platform_profile_omen_get(struct platform_profile_handler *pprof,
+-				     enum platform_profile_option *profile)
++static int platform_profile_omen_get_ec(enum platform_profile_option *profile)
+ {
+ 	int tp;
+ 
+@@ -1223,6 +1233,30 @@ static int platform_profile_omen_get(struct platform_profile_handler *pprof,
+ 	return 0;
+ }
+ 
++static int platform_profile_omen_get(struct platform_profile_handler *pprof,
++				     enum platform_profile_option *profile)
++{
++	enum platform_profile_option selected_platform_profile;
++
++	/*
++	 * We directly return the stored platform profile, as the embedded
++	 * controller will not accept switching to the performance option when
++	 * the conditions are not met (e.g. the laptop is not plugged in).
++	 *
++	 * If we directly return what the EC reports, the platform profile will
++	 * immediately "switch back" to normal mode, which is against the
++	 * expected behaviour from a userspace point of view, as described in
++	 * the Platform Profile Section page of the kernel documentation.
++	 *
++	 * See also omen_powersource_event.
++	 */
++	mutex_lock(&active_platform_profile_lock);
++	selected_platform_profile = active_platform_profile;
++	mutex_unlock(&active_platform_profile_lock);
++
++	return selected_platform_profile;
++}
++
+ static bool has_omen_thermal_profile_ec_timer(void)
+ {
+ 	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
+@@ -1245,8 +1279,7 @@ inline int omen_thermal_profile_ec_timer_set(u8 value)
+ 	return ec_write(HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET, value);
+ }
+ 
+-static int platform_profile_omen_set(struct platform_profile_handler *pprof,
+-				     enum platform_profile_option profile)
++static int platform_profile_omen_set_ec(enum platform_profile_option profile)
+ {
+ 	int err, tp, tp_version;
+ 	enum hp_thermal_profile_omen_flags flags = 0;
+@@ -1300,6 +1333,25 @@ static int platform_profile_omen_set(struct platform_profile_handler *pprof,
+ 	return 0;
+ }
+ 
++static int platform_profile_omen_set(struct platform_profile_handler *pprof,
++				     enum platform_profile_option profile)
++{
++	int err;
++
++	mutex_lock(&active_platform_profile_lock);
++
++	err = platform_profile_omen_set_ec(profile);
++	if (err < 0) {
++		mutex_unlock(&active_platform_profile_lock);
++		return err;
++	}
++
++	active_platform_profile = profile;
++	mutex_unlock(&active_platform_profile_lock);
++
++	return 0;
++}
++
+ static int thermal_profile_get(void)
+ {
+ 	return hp_wmi_read_int(HPWMI_THERMAL_PROFILE_QUERY);
+@@ -1381,8 +1433,7 @@ static bool is_victus_thermal_profile(void)
+ 			    board_name) >= 0;
+ }
+ 
+-static int platform_profile_victus_get(struct platform_profile_handler *pprof,
+-				     enum platform_profile_option *profile)
++static int platform_profile_victus_get_ec(enum platform_profile_option *profile)
+ {
+ 	int tp;
+ 
+@@ -1407,8 +1458,14 @@ static int platform_profile_victus_get(struct platform_profile_handler *pprof,
+ 	return 0;
+ }
+ 
+-static int platform_profile_victus_set(struct platform_profile_handler *pprof,
+-				     enum platform_profile_option profile)
++static int platform_profile_victus_get(struct platform_profile_handler *pprof,
++				       enum platform_profile_option *profile)
++{
++	/* Same behaviour as platform_profile_omen_get */
++	return platform_profile_omen_get(pprof, profile);
++}
++
++static int platform_profile_victus_set_ec(enum platform_profile_option profile)
+ {
+ 	int err, tp;
+ 
+@@ -1433,21 +1490,130 @@ static int platform_profile_victus_set(struct platform_profile_handler *pprof,
+ 	return 0;
+ }
+ 
++static int platform_profile_victus_set(struct platform_profile_handler *pprof,
++				       enum platform_profile_option profile)
++{
++	int err;
++
++	mutex_lock(&active_platform_profile_lock);
++
++	err = platform_profile_victus_set_ec(profile);
++	if (err < 0) {
++		mutex_unlock(&active_platform_profile_lock);
++		return err;
++	}
++
++	active_platform_profile = profile;
++	mutex_unlock(&active_platform_profile_lock);
++
++	return 0;
++}
++
++static int omen_powersource_event(struct notifier_block *nb,
++				  unsigned long value,
++				  void *data)
++{
++	struct acpi_bus_event *event_entry = data;
++	enum platform_profile_option actual_profile;
++	int err;
++
++	if (strcmp(event_entry->device_class, ACPI_AC_CLASS) != 0)
++		return NOTIFY_DONE;
++
++	pr_debug("Received power source device event\n");
++
++	mutex_lock(&active_platform_profile_lock);
++
++	/*
++	 * This handler can only be called on Omen and Victus models, so
++	 * there's no need to call is_victus_thermal_profile() here.
++	 */
++	if (is_omen_thermal_profile())
++		err = platform_profile_omen_get_ec(&actual_profile);
++	else
++		err = platform_profile_victus_get_ec(&actual_profile);
++
++	if (err < 0) {
++		pr_warn("Failed to read current platform profile (%d)\n", err);
++
++		mutex_unlock(&active_platform_profile_lock);
++
++		/*
++		 * Although we failed to get the current platform profile, we
++		 * still want the other event consumers to process it.
++		 */
++		return NOTIFY_DONE;
++	}
++
++	/*
++	 * If we're back on AC and that the user-chosen power profile is
++	 * different from what the EC reports, we restore the user-chosen
++	 * one.
++	 */
++	if (power_supply_is_system_supplied() >= 0 ||
++	    active_platform_profile != actual_profile) {
++		mutex_unlock(&active_platform_profile_lock);
++
++		pr_debug("EC reports same platform profile, no platform profile update required\n");
++		return NOTIFY_DONE;
++	}
++
++	if (is_omen_thermal_profile())
++		err = platform_profile_omen_set_ec(active_platform_profile);
++	else
++		err = platform_profile_victus_set_ec(active_platform_profile);
++
++	if (err < 0) {
++		mutex_unlock(&active_platform_profile_lock);
++
++		pr_warn("Failed to restore platform profile (%d)\n", err);
++		return NOTIFY_DONE;
++	}
++
++	mutex_unlock(&active_platform_profile_lock);
++
++	return NOTIFY_OK;
++}
++
++static int omen_register_powersource_event_handler(void)
++{
++	int err;
++
++	platform_power_source_nb.notifier_call = omen_powersource_event;
++	err = register_acpi_notifier(&platform_power_source_nb);
++
++	if (err < 0) {
++		pr_warn("Failed to install ACPI power source notify handler\n");
++		return err;
++	}
++
++	return 0;
++}
++
++static void omen_unregister_powersource_event_handler(void)
++{
++	int err;
++
++	err = unregister_acpi_notifier(&platform_power_source_nb);
++
++	if (err < 0)
++		pr_err("Failed to remove ACPI power source notify handler\n");
++}
++
+ static int thermal_profile_setup(void)
+ {
+ 	int err, tp;
+ 
+ 	if (is_omen_thermal_profile()) {
+-		tp = omen_thermal_profile_get();
+-		if (tp < 0)
+-			return tp;
++		err = platform_profile_omen_get_ec(&active_platform_profile);
++		if (err < 0)
++			return err;
+ 
+ 		/*
+ 		 * call thermal profile write command to ensure that the
+ 		 * firmware correctly sets the OEM variables
+ 		 */
+-
+-		err = omen_thermal_profile_set(tp);
++		err = platform_profile_omen_set_ec(active_platform_profile);
+ 		if (err < 0)
+ 			return err;
+ 
+@@ -1456,15 +1622,15 @@ static int thermal_profile_setup(void)
+ 
+ 		set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
+ 	} else if (is_victus_thermal_profile()) {
+-		tp = omen_thermal_profile_get();
+-		if (tp < 0)
+-			return tp;
++		err = platform_profile_victus_get_ec(&active_platform_profile);
++		if (err < 0)
++			return err;
+ 
+ 		/*
+ 		 * call thermal profile write command to ensure that the
+ 		 * firmware correctly sets the OEM variables
+ 		 */
+-		err = omen_thermal_profile_set(tp);
++		err = platform_profile_victus_set_ec(active_platform_profile);
+ 		if (err < 0)
+ 			return err;
+ 
+@@ -1758,6 +1924,12 @@ static int __init hp_wmi_init(void)
+ 			goto err_unregister_device;
+ 	}
+ 
++	if (is_omen_thermal_profile() || is_victus_thermal_profile()) {
++		err = omen_register_powersource_event_handler();
++		if (err)
++			goto err_unregister_device;
++	}
++
+ 	return 0;
+ 
+ err_unregister_device:
+@@ -1772,6 +1944,9 @@ module_init(hp_wmi_init);
+ 
+ static void __exit hp_wmi_exit(void)
+ {
++	if (is_omen_thermal_profile() || is_victus_thermal_profile())
++		omen_unregister_powersource_event_handler();
++
+ 	if (wmi_has_guid(HPWMI_EVENT_GUID))
+ 		hp_wmi_input_destroy();
+ 
+-- 
+2.45.2
 
