@@ -1,59 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFC71CA9E;
-	Sat,  6 Jul 2024 13:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2BE74070;
+	Sat,  6 Jul 2024 14:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720273454; cv=none; b=PvU8He+Fo1MnN8dMwU2a7XHMgqhB7oQ+F9kbNGKPT+0tHY6ykuhkU/aTwbfEaVgOFLQV1aVW7tUuQ1+Dz02wBfSWkVb18KIrY00CbgH09m7wmkt2g/mbn2/2Bck1j/jo6vUB1N8piSo8f04z3kkXzHXZQVOogEkRzn4GX7wa0XQ=
+	t=1720274621; cv=none; b=EFFbqLxB6LSPYSJoTtksVVOTtarJXFvdRMpl6hhQ4L0KEY1Y9YXK/cnmje1i80CXne8LA8nkPPS/ctQFCH1+GcmpcB/l/9Yctq/It4s8Kn2AWw2FqMW4Ks6l8/SYOKoSP+mNmZSByZYV7saxFaumPpWFU9bQafB/0+niur2yyiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720273454; c=relaxed/simple;
-	bh=QJcHcX/QvZow96GFmJaUaP8YM+2ojba68Fwc4yozaBQ=;
+	s=arc-20240116; t=1720274621; c=relaxed/simple;
+	bh=CaJj4a2hkJ8XkHv9OyV8QGNBDNfocv2VKU+HWs5oG/U=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BISwhfzP2pzLm8ggHRWMDvFo/66Ne0RqEMrhHzjYiDGAAoe8fGTOulxAwZTdwCOs7yXON8xYeK7gEt6aEgFAVhC9RXEBHUqoJ/tsU48yWTfoEtlA7QTOd+GxLpI43VgkwKnjlaHbYPgVjoEhozOcwOM4bMGjDrTZIQFcfqZCdzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LYLEM4PD; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version:Content-Type; b=ilMYG45eZrV0hkEH7ccmDugxJwN4cVW8wm0OlJn7Y0AA0dta2MQnpfJ/9MlcOqKg07ueLAB0ikpRTL7VW6CzaTM0QkujMq+stO7b1Sm2nvebdGkbi1cAQshyW0Ysdyg8EjgHaWbDkkL9zB2zQmKJKTiiJQX8L21wAiEMFnLqIfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D/WkLFEL; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LYLEM4PD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D/WkLFEL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720273453; x=1751809453;
+  t=1720274619; x=1751810619;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=QJcHcX/QvZow96GFmJaUaP8YM+2ojba68Fwc4yozaBQ=;
-  b=LYLEM4PD+fwi/ZDST9qzFij6EWEPcrGelO9L/VIwunOU9tHLGEsAQeDT
-   Z+eba1lx+RfqBvRTcJIMV3b0UVhWR20BicOPr6oNhNz9HXxHydThR/WLN
-   KH8/HXgLmVlv8utE8eVljMe8IIihX6ByygmaXel9gNnex13u39/dKrOic
-   aPQd624W7b8bOb85YhzvLinI+JD+LOqfIzsoXQKgfI/8TE0pN0VW6fJvq
-   vfDspIrSY7dT47N3CxYyT+71cnwguCDGcZTAhZy0LiRmxQxd1t1YqR41u
-   +0JtVo5f5+PbDY9f8MMwgv4EoydUIWi91QxmnNETBo/1UoQ6JoM1ScMtm
-   w==;
-X-CSE-ConnectionGUID: lfhqSrj/S8O/tmZJTqu89A==
-X-CSE-MsgGUID: IBELD3d4RBGw5USD1IDeMg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11125"; a="17742038"
+  bh=CaJj4a2hkJ8XkHv9OyV8QGNBDNfocv2VKU+HWs5oG/U=;
+  b=D/WkLFELdCjj431+TAm5KZAbn3NOFgAiUOVPfBOvrKXH+MJJdTtAqH3n
+   5GnPxEB0yylzVbqZq4XoFWc44/7pi+NIjQBhgtwPIjfkLYHvSNj4xt27g
+   6wjmopVWWj2K3FzYkg2ayd/66kfKNP6sl4ykDc79ypNJEiNoCUBUC1NYl
+   YhU+cDuHyF4qnG6YzFR/shvEoJOctPuc7+V/zYLZN1J9ZEXd8cixopxmX
+   ptHLfvFnUPvB+TJAyTQChG7Brz/rUL/HnDAf/HwJvMPkywKbJeyXpC8ED
+   6exLoLrLJxk21/hMlxmFKMca/jcn75C+PYqQk/7HGHbWIWtv5i6wl/eoo
+   g==;
+X-CSE-ConnectionGUID: i4lU+A05TCOcCCsPPaLt8A==
+X-CSE-MsgGUID: lx7wyst8Rh2iIXTGlIyBYg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11125"; a="21303381"
 X-IronPort-AV: E=Sophos;i="6.09,187,1716274800"; 
-   d="scan'208";a="17742038"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 06:44:12 -0700
-X-CSE-ConnectionGUID: z/7+llWNTZ+XX1teFo7oIQ==
-X-CSE-MsgGUID: 5sJMXAkoRoWjTnepczNaRg==
+   d="scan'208";a="21303381"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 07:03:38 -0700
+X-CSE-ConnectionGUID: GIlTlh5dSdCBt4o/htKkfQ==
+X-CSE-MsgGUID: Xyax3z0bSEu0502984e00Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,187,1716274800"; 
-   d="scan'208";a="47512408"
+   d="scan'208";a="46857918"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.111])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 06:44:09 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 07:03:36 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Sat, 6 Jul 2024 16:44:05 +0300 (EEST)
-To: Devin Bayer <dev@doubly.so>
-cc: corentin.chary@gmail.com, luke@ljones.dev, 
-    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org
-Subject: Re: [PATCH v3] platform/x86: asus-wmi: support the disable camera
- LED on F10 of Zenbook 2023
-In-Reply-To: <20240628084603.217106-1-dev@doubly.so>
-Message-ID: <7e8ada6c-83b9-aa44-d5ca-70827ca1a363@linux.intel.com>
-References: <20240628084603.217106-1-dev@doubly.so>
+Date: Sat, 6 Jul 2024 17:03:32 +0300 (EEST)
+To: "David E. Box" <david.e.box@linux.intel.com>
+cc: linux-doc@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH V4 3/3] tools/arch/x86/intel_sdsi: Add attestation
+ support
+In-Reply-To: <20240608034247.181843-3-david.e.box@linux.intel.com>
+Message-ID: <93ff0003-817c-a424-df05-b05b42eaebff@linux.intel.com>
+References: <20240608034247.181843-1-david.e.box@linux.intel.com> <20240608034247.181843-3-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,120 +61,140 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Fri, 28 Jun 2024, Devin Bayer wrote:
+On Fri, 7 Jun 2024, David E. Box wrote:
 
-> Adds a sysfs entry for the LED on F10 above the crossed out camera icon on 2023 Zenbooks.
+> Add support in the intel_sdsi tool to perform SPDM GET_DIGESTS and
+> GET_CERTIFICATE commands. Output is sent to stdout.
+> 
+> Example reading the certificate chain from socket 0:
+> 
+> intel_sdsi -d 1 -attest get_certificate | openssl x509 -inform DER -nout -text
+> 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+> V4 - No change
+> 
+> V3 - No change
+> 
+> V2 - Remove unnecessary struct packing
+>    - Remove newline from perror()
+>    - Add message options in --help output
+>    - Use new SDSI_SPDM_BUF_SIZE from uapi header
+>    - In spdm_get_certificate:
+>         - Initialize remainder length to the minimum of the actual size
+>           or the maximum buffer size.
+>         - Add old_remainder to test that the remaining certificate
+>           length is less than the previous length
+> 
+>  tools/arch/x86/intel_sdsi/Makefile     |  11 +-
+>  tools/arch/x86/intel_sdsi/intel_sdsi.c |  72 +++-
+>  tools/arch/x86/intel_sdsi/spdm.c       | 476 +++++++++++++++++++++++++
+>  tools/arch/x86/intel_sdsi/spdm.h       |  13 +
+>  4 files changed, 567 insertions(+), 5 deletions(-)
+>  create mode 100644 tools/arch/x86/intel_sdsi/spdm.c
+>  create mode 100644 tools/arch/x86/intel_sdsi/spdm.h
+> 
 
-Thanks for the update, I've applied this into review-ilpo branch with 
-small (non-code) edits.
+> +++ b/tools/arch/x86/intel_sdsi/spdm.c
+> @@ -0,0 +1,476 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * spdm: Lightweight Security Protocol and Data Model (SPDM) specification
+> + * support code for performing attestation commands using the Intel On
+> + * Demand driver ioctl interface. Intel On Demand currently supports
+> + * SPDM version 1.0
+> + *
+> + * See the SPDM v1.0 specification at:
+> + * https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.1.pdf
+> + *
+> + * Copyright (C) 2024 Intel Corporation. All rights reserved.
+> + */
+> +
+> +#include<linux/bits.h>
+> +
+> +#include<fcntl.h>
+> +#include<stdio.h>
+> +#include<stdlib.h>
+> +#include<stdint.h>
+> +#include<string.h>
+> +#include<unistd.h>
+> +#include<sys/ioctl.h>
 
-In future, please fold the changelog to 72 characters and include patch 
-history only after the first --- line so tools don't put it into the 
-commit message. I've handled these for you this time around so there's no 
-need to send another version because of those problems.
+All missing spaces. :-(
+
+> +static int sdsi_process_ioctl(int ioctl_no, void *info, uint8_t dev_no)
+> +{
+> +	char pathname[14];
+> +	int fd, ret;
+> +
+> +	ret = snprintf(pathname, 14, "%s%d", SDSI_DEV_PATH, dev_no);
+
+sizeof(pathname)
+
+> +	remainder_length = size < SDSI_SPDM_BUF_SIZE ? size : SDSI_SPDM_BUF_SIZE;
+> +	old_remainder = remainder_length;
+> +
+> +	while (remainder_length) {
+> +		uint16_t length;
+> +
+> +		length = remainder_length < SDSI_SPDM_BUF_SIZE ?
+> +				remainder_length : SDSI_SPDM_BUF_SIZE;
+> +		offset += portion_length;
+
+The way bound check interplay with old_remainder and remainder_length in 
+this code is quite convoluted and could contain some problems.
+
+Would it work if old_remainder is set only here and the bound check 
+before the loop is replaced with a plain remainder_length = size 
+assignment?
+
+> +
+> +		ret = get_certificate_portion(dev_no, offset, length,
+> +					      &portion_length,
+> +					      &remainder_length,
+> +					      c->chain);
+> +		if (ret < 0)
+> +			goto free_cert_chain;
+> +
+> +		if (!(remainder_length < old_remainder)) {
+> +			fprintf(stderr, "Bad GET_CERTIFICATE length\n");
+> +			ret = -1;
+> +			goto free_cert_chain;
+> +		}
+> +
+> +		old_remainder = remainder_length;
+> +	}
+> +
+> +	c->len = offset + portion_length;
+> +	return 0;
+> +
+> +free_cert_chain:
+> +	free(c->chain);
+> +	c->chain = NULL;
+> +	return ret;
+> +}
+> diff --git a/tools/arch/x86/intel_sdsi/spdm.h b/tools/arch/x86/intel_sdsi/spdm.h
+> new file mode 100644
+> index 000000000000..aa7e08ffb872
+> --- /dev/null
+> +++ b/tools/arch/x86/intel_sdsi/spdm.h
+> @@ -0,0 +1,13 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#include <stdint.h>
+> +
+> +#define TPM_ALG_SHA_384_SIZE 48
+> +
+> +struct cert_chain {
+> +	void *chain;
+> +	size_t len;
+> +};
+> +
+> +int spdm_get_digests(int dev_no, uint8_t digest[TPM_ALG_SHA_384_SIZE]);
+> +int spdm_get_certificate(int dev_no, struct cert_chain *c);
+> +
+
+Trailing newline.
 
 -- 
  i.
- 
-> v3
-> - add docs for WMI devices
-> - remove duplicate #define
-> 
-> v2
-> - Changed name from `platform::camera` to `asus::camera`
-> - Separated patch from patchset
-> 
-> v1
-> - https://lore.kernel.org/platform-driver-x86/20240620082223.20178-1-dev@doubly.so/
-> 
-> Signed-off-by: Devin Bayer <dev@doubly.so>
-> ---
->  drivers/platform/x86/asus-wmi.c            | 35 ++++++++++++++++++++++
->  include/linux/platform_data/x86/asus-wmi.h |  4 +++
->  2 files changed, 39 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 3f07bbf809ef..4a9ad8b313e6 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -227,6 +227,7 @@ struct asus_wmi {
->  	struct led_classdev lightbar_led;
->  	int lightbar_led_wk;
->  	struct led_classdev micmute_led;
-> +	struct led_classdev camera_led;
->  	struct workqueue_struct *led_workqueue;
->  	struct work_struct tpd_led_work;
->  	struct work_struct wlan_led_work;
-> @@ -1533,6 +1534,27 @@ static int micmute_led_set(struct led_classdev *led_cdev,
->  	return err < 0 ? err : 0;
->  }
->  
-> +static enum led_brightness camera_led_get(struct led_classdev *led_cdev)
-> +{
-> +	struct asus_wmi *asus;
-> +	u32 result;
-> +
-> +	asus = container_of(led_cdev, struct asus_wmi, camera_led);
-> +	asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_CAMERA_LED, &result);
-> +
-> +	return result & ASUS_WMI_DSTS_BRIGHTNESS_MASK;
-> +}
-> +
-> +static int camera_led_set(struct led_classdev *led_cdev,
-> +			   enum led_brightness brightness)
-> +{
-> +	int state = brightness != LED_OFF;
-> +	int err;
-> +
-> +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_CAMERA_LED, state, NULL);
-> +	return err < 0 ? err : 0;
-> +}
-> +
->  static void asus_wmi_led_exit(struct asus_wmi *asus)
->  {
->  	led_classdev_unregister(&asus->kbd_led);
-> @@ -1540,6 +1562,7 @@ static void asus_wmi_led_exit(struct asus_wmi *asus)
->  	led_classdev_unregister(&asus->wlan_led);
->  	led_classdev_unregister(&asus->lightbar_led);
->  	led_classdev_unregister(&asus->micmute_led);
-> +	led_classdev_unregister(&asus->camera_led);
->  
->  	if (asus->led_workqueue)
->  		destroy_workqueue(asus->led_workqueue);
-> @@ -1631,6 +1654,18 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
->  			goto error;
->  	}
->  
-> +	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CAMERA_LED)) {
-> +		asus->camera_led.name = "asus::camera";
-> +		asus->camera_led.max_brightness = 1;
-> +		asus->camera_led.brightness_get = camera_led_get;
-> +		asus->camera_led.brightness_set_blocking = camera_led_set;
-> +
-> +		rv = led_classdev_register(&asus->platform_device->dev,
-> +						&asus->camera_led);
-> +		if (rv)
-> +			goto error;
-> +	}
-> +
->  error:
->  	if (rv)
->  		asus_wmi_led_exit(asus);
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index ab1c7deff118..d020fcbbcfb7 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -51,6 +51,10 @@
->  #define ASUS_WMI_DEVID_LED6		0x00020016
->  #define ASUS_WMI_DEVID_MICMUTE_LED		0x00040017
->  
-> +/* Disable Camera LED */
-> +#define ASUS_WMI_DEVID_CAMERA_LED_NEG	0x00060078 /* 0 = on (unused) */
-> +#define ASUS_WMI_DEVID_CAMERA_LED	0x00060079 /* 1 = on */
-> +
->  /* Backlight and Brightness */
->  #define ASUS_WMI_DEVID_ALS_ENABLE	0x00050001 /* Ambient Light Sensor */
->  #define ASUS_WMI_DEVID_BACKLIGHT	0x00050011
-> 
-> base-commit: 103a4e4a4351d3d5214c4f54fdf89f0f81b692ef
-> 
+
