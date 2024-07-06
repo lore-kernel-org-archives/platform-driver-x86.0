@@ -1,63 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689A223BE;
-	Sat,  6 Jul 2024 12:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38B742AB6
+	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jul 2024 13:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720270157; cv=none; b=eTM9LXBAdJo4HdtO8qbswnYIfEgEXYkjCOJswUvrqpu2tlO4qxYMheXn+2vx2rq/OPxy1CzEwR4JfoLwfZkEG+OFickQ43OSiSbIwkDCbR3Ijozw3sc9eQOesDl/DJCALFGjYitTYTXtt04ohnYh1Jt5DTPbgjm5oW1GQ+MIWbE=
+	t=1720270938; cv=none; b=nAsCC+CF6hufDqvehXhJ+aXaGvi6EM7e7Kg70P5qFV71wWeZhYHJ4dkvUIBtFZvlC/4lXFieZdRbfj/ZJVtbEtVRhPOwVMlU9PpQwXLCnzagFg/eIjFu6vNzrg4LqtRr7b+rkWa2CY6rC0Wx7R6QR9dYVWCZJMTZv4RxbeKxoMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720270157; c=relaxed/simple;
-	bh=1aoH0I1MM6I87QP9PAA6bTe1pwPm1PRUO3OnOKqvX9c=;
+	s=arc-20240116; t=1720270938; c=relaxed/simple;
+	bh=/7dRQDDiZOji2i63gPQiGsKBlo/aYRWvYYo8XpEokgQ=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=NobOvUoHRSlq6Rk0J8ZmZ5OcYZJ8iBDUZpsdO5hMdZhfU2DLu2BiwyhdgjQnjdI+wa+BUMC/9DUtn3jl1CbQgDmZu9qTjYeoQqDjmb6QMFzuJmrMTW/i0rAWiphlWzxfCYeo3h1aDegqiw92+n1VMia0VL6Je7QGT9T94b3vFsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P4TG+jG8; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version:Content-Type; b=XhdlX/Aj+0N+sDJ6RaVICfZdKq04Jdi6nAti4KiLDUxE44e9pBSmhfeCYdFlsYp5A4Ses1whEUwhCulY1UQnXr0OTfdMSxaFa46KqkalGE6CjkIdfNa2Csy4I7mEDGa/r9i347kOrIsZV/2wO/YoVux2RDQX5GDgWawMQeUWlnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bWYc8quU; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P4TG+jG8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bWYc8quU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720270155; x=1751806155;
+  t=1720270936; x=1751806936;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=1aoH0I1MM6I87QP9PAA6bTe1pwPm1PRUO3OnOKqvX9c=;
-  b=P4TG+jG8TiX9jFfHoPWoMSfMr5arYimR9Xw4kAEWBKNkoW8a6JjZ4g9l
-   RCvBzIZPc6ORDWXg244CbkRlQYpZhnvBDkbLV0vRRLNRAJBO1Ms6OCRJB
-   ygw9C3LiCtJbjUI2lOMMD8ERiIekPu3dyNBQA30GoHpJtAzLu9dlMkXPe
-   RZ8Uy3TFS34ffw0Y0g9fDfKkI+BsRu08mWtNO7Ydip6DNCit53u7zascp
-   J2TOakdB3aRYwW6p7oIhN/FNb5BagJusyhKeJJtpI+AMmDDsmAO/ciNLk
-   wtlMarSv8Y4b28bBaRq2+DWk5j7scnvbCyNUoO7r2xoTMts72PVySMdjA
-   w==;
-X-CSE-ConnectionGUID: 5RSgFheyQhWwyXuRnazt5A==
-X-CSE-MsgGUID: 4xPTsRCgSgWFRAnRCQQnyw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="28923283"
+  bh=/7dRQDDiZOji2i63gPQiGsKBlo/aYRWvYYo8XpEokgQ=;
+  b=bWYc8quURW2mmsMbXK8nYdaywU1cfP8H17j0hJQuoA0rz+Rtg5AwqPWU
+   FVmpnu/CGVvbZbpZ9dJs/K3S8t+2NG9Zyx8ypgLnJNE78VxfVmilRv1sk
+   2MOu+GWNGAOZGNYVzBQpvxZfaofdZZ2Eo5tmg9zUayJnn5eXn9yPvPTjM
+   hMezbf7bNH7iVOC4tbDaQG9MpvI803J5j6Pxxvp+sWYN3g+NvuKphHdPp
+   V+6Y+2FGmz/15SoU/8e40rN289tBQRKDPV5y3Sdrgrmgw1UqrCRL0UuFR
+   7Ygdd/dNmVO/wdqAv5gulAOZkk2KCztZAOuw6EvIxV2R8u5ofQEp1OSGE
+   Q==;
+X-CSE-ConnectionGUID: khArXVKPQ4iVqF62RG2ZTg==
+X-CSE-MsgGUID: logueqTNQda3H2zUlCJ3nw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11125"; a="21301869"
 X-IronPort-AV: E=Sophos;i="6.09,187,1716274800"; 
-   d="scan'208";a="28923283"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 05:49:14 -0700
-X-CSE-ConnectionGUID: TMhAcz5FT9WvcDgYBmeRhg==
-X-CSE-MsgGUID: Nc2amK4/THi6tuMZCTVkZQ==
+   d="scan'208";a="21301869"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 06:02:16 -0700
+X-CSE-ConnectionGUID: Lf0k86MYR8inWDP7/Ic3UA==
+X-CSE-MsgGUID: ssbWMB9bQvyvNZ1HvyFQUg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,187,1716274800"; 
-   d="scan'208";a="47815598"
+   d="scan'208";a="52270107"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.111])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 05:49:09 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 06:02:14 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Sat, 6 Jul 2024 15:49:04 +0300 (EEST)
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-cc: Jithu Joseph <jithu.joseph@intel.com>, Hans de Goede <hdegoede@redhat.com>, 
-    Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-    x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
-    Masami Hiramatsu <mhiramat@kernel.org>, Ashok Raj <ashok.raj@intel.com>, 
-    Tony Luck <tony.luck@intel.com>, linux-trace-kernel@vger.kernel.org, 
-    platform-driver-x86@vger.kernel.org, 
-    Shankar Ravi V <ravi.v.shankar@intel.com>
-Subject: Re: [PATCH v1 3/4] platform/x86/intel/ifs: Add SBAF test support
-In-Reply-To: <20240627023516.3783454-4-sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <62fd0e6b-7155-1393-ce18-f3a4ec25e63d@linux.intel.com>
-References: <20240627023516.3783454-1-sathyanarayanan.kuppuswamy@linux.intel.com> <20240627023516.3783454-4-sathyanarayanan.kuppuswamy@linux.intel.com>
+Date: Sat, 6 Jul 2024 16:02:10 +0300 (EEST)
+To: Alexis Belmonte <alexbelm48@gmail.com>
+cc: W_Armin@gmx.de, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCHv9] platform/x86: hp-wmi: Fix platform profile option
+ switch bug on Omen and Victus laptops
+In-Reply-To: <ZofRxNfk-ExL5VnN@alexis-pc>
+Message-ID: <75b64561-db2b-9fa2-ecdd-d0b573f9b67e@linux.intel.com>
+References: <ZofRxNfk-ExL5VnN@alexis-pc>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,360 +61,449 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 27 Jun 2024, Kuppuswamy Sathyanarayanan wrote:
+On Fri, 5 Jul 2024, Alexis Belmonte wrote:
 
-> From: Jithu Joseph <jithu.joseph@intel.com>
+> Fix a platform profile option switch/getter bug on some Omen and Victus
+> laptops dismissing userspace choice when selecting performance mode in
+> inadequate conditions (e.g. by being disconnected from the AC power plug)
+> by
 > 
-> In a core, the SBAF test engine is shared between sibling CPUs.
+>    -  hooking an ACPI notify handler through the
+>       omen_register_powersource_notifier_handler method that listens to AC
+>       power source changes (plugging in/out the AC power plug)
 > 
-> An SBAF test image contains multiple bundles. Each bundle is further
-> composed of subunits called programs. When a SBAF test (for a particular
-> core) is triggered by the user, each SBAF bundle from the loaded test
-> image is executed sequentially on all the threads on the core using
-> the stop_core_cpuslocked mechanism. Each bundle execution is initiated by
-> writing to MSR_ACTIVATE_SBAF.
+>    -  keeping an intermediate active_platform_profile variable that is
+>       set when userspace changes the platform profile setting
 > 
-> SBAF test bundle execution may be aborted when an interrupt occurs or
-> if the CPU does not have enough power budget for the test. In these
-> cases the kernel restarts the test from the aborted bundle. SBAF
-> execution is not retried if the test fails or if the test makes no
-> forward progress after 5 retries.
+>    -  restoring the selected platform profile kept in
+>       active_platform_profile when AC power is plugged back into the
+>       laptop, unless if the user decided to alter the platform profile
+>       mid-way
 > 
-> Reviewed-by: Ashok Raj <ashok.raj@intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> This patch thus introduces a new dependency to the POWER_SUPPLY subsystem
+
+Don't use "This patch ..." in commit message but use imperative tone.
+
+> for this module.
+> 
+> This ensures that the driver follows the principles defined in the
+
+Ambiguous "This", I don't know what ensures.
+
+> Platform Profile Selection page of the Kernel documentation on those kind
+> of laptops; which is to not "(...) let userspace know about any
+> sub-optimal conditions which are impeding reaching the requested
+> performance level".
+> 
+> Since the Omen and Victus laptops share the same embedded controller
+> system, the fix is applicable to both categories of laptops.
+> 
+> This patch also provides improvements to how the driver sets/gets the
+> platform profile through the embedded controller, by introducing
+> intermediary functions to leverage code from platform_profile_omen_set and
+> callers.
+> 
+> Signed-off-by: Alexis Belmonte <alexbelm48@gmail.com>
 > ---
->  drivers/platform/x86/intel/ifs/ifs.h     |  30 +++
->  drivers/platform/x86/intel/ifs/runtest.c | 234 +++++++++++++++++++++++
->  2 files changed, 264 insertions(+)
+> V1 -> V2: - Use register_acpi_notifier and unregister_acpi_notifier instead of
+>             hooking straight through ACPI node \\_SB.ADP1
+> V2 -> V3: - Rely on power_supply_is_system_supplied() instead of an EC-specific
+>             field to determine if the laptop is plugged in
+>           - Refactor omen_powersource_notify_handler to omen_powersource_event
+>           - Refactor omen_powersource_register_notifier_handler to
+>             omen_register_powersource_event_handler
+>           - Use a mutex to protect the active_platform_profile variable from
+>             being altered while the handler is executed
+> V3 -> V4: - Remove the unnecessary enum declaration remains from the initial
+>             implementation
+> V4 -> V5: - Drop unnecessary modifications from the patch
+>           - Call platform_profile_omen_get in platform_profile_victus_get to
+>             avoid code duplication
+>           - Give-up module initialization if we fail to register the ACPI
+>             notifier handler
+>           - Fix code style issues reported by checkpatch.pl --strict
+>           - Add intermediary/helper platform_profile_omen_set_ec and
+>             platform_profile_victus_set_ec functions to leverage code from
+>             platform_profile_omen_set and callers, thus simplifying
+>             omen_powersource_event
+>           - Fix dead-lock when restoring active_platform_profile when the AC
+>             power is plugged back into the laptop
+> V5 -> V6: - Drop unnecessary modifications from the patch
+> V6 -> V7: - Drop EC platform profile readback after set
+>           - Lock the active_platform_profile mutex unconditionally
+>           - Drop the usage of ACPI_FAILURE in favor of a simpler error check
+>             when registering/unregistering the ACPI notifier
+>           - Initialize active_platform_profile in thermal_profile_setup
+> V7 -> V8: - Pass profile as a value instead of a pointer for
+>             platform_profile_omen_set & platform_profile_victus_set as these
+>             functions no longer alter the parameter
+>           - Initialize active_platform_profile during
+>             thermal_profile_setup by reading the current platform profile from
+>             the embedded controller
+>           - Drop vestigial active_platform_profile initialization code
+>           - Add module dependency (select) to POWER_SUPPLY in Kconfig
+>           - Simplify thermal profile getter check in omen_powersource_event
+>           - Substitute omen_thermal_profile_get/omen_thermal_profile_set
+>             with platform_profile_omen_get_ec/platform_profile_omen_set_ec and
+>             platform_profile_victus_get_ec/platform_profile_victus_set_ec to
+>             simplify thermal_profile_setup
+> V8 -> V9: - Add missing mutex_lock call in omen_powersource_event read
+>             failure code branch
+> ---
+>  drivers/platform/x86/hp/Kconfig  |   1 +
+>  drivers/platform/x86/hp/hp-wmi.c | 209 ++++++++++++++++++++++++++++---
+>  2 files changed, 193 insertions(+), 17 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-> index 600bb8a1b285..b261be46bce8 100644
-> --- a/drivers/platform/x86/intel/ifs/ifs.h
-> +++ b/drivers/platform/x86/intel/ifs/ifs.h
-> @@ -157,6 +157,8 @@
->  #define MSR_SBAF_HASHES_STATUS			0x000002b9
->  #define MSR_AUTHENTICATE_AND_COPY_SBAF_CHUNK	0x000002ba
->  #define MSR_SBAF_CHUNKS_AUTHENTICATION_STATUS	0x000002bb
-> +#define MSR_ACTIVATE_SBAF			0x000002bc
-> +#define MSR_SBAF_STATUS				0x000002bd
+> diff --git a/drivers/platform/x86/hp/Kconfig b/drivers/platform/x86/hp/Kconfig
+> index 7fef4f12e498..d776761cd5fd 100644
+> --- a/drivers/platform/x86/hp/Kconfig
+> +++ b/drivers/platform/x86/hp/Kconfig
+> @@ -40,6 +40,7 @@ config HP_WMI
+>  	depends on ACPI_WMI
+>  	depends on INPUT
+>  	depends on RFKILL || RFKILL = n
+> +	select POWER_SUPPLY
+>  	select INPUT_SPARSEKMAP
+>  	select ACPI_PLATFORM_PROFILE
+>  	select HWMON
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index 5fa553023842..910bc5195f8f 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/platform_profile.h>
+>  #include <linux/hwmon.h>
+>  #include <linux/acpi.h>
+> +#include <linux/power_supply.h>
+>  #include <linux/rfkill.h>
+>  #include <linux/string.h>
+>  #include <linux/dmi.h>
+> @@ -42,6 +43,8 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45E9-BE91-3D44E2C707E4");
+>  #define HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET 0x63
+>  #define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
 >  
->  #define MSR_COPY_SCAN_HASHES			0x000002c2
->  #define MSR_SCAN_HASHES_STATUS			0x000002c3
-> @@ -283,6 +285,34 @@ union ifs_array {
->  	};
+> +#define ACPI_AC_CLASS "ac_adapter"
+> +
+>  #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
+>  
+>  /* DMI board names of devices that should use the omen specific path for
+> @@ -259,10 +262,18 @@ static const struct key_entry hp_wmi_keymap[] = {
+>  	{ KE_END, 0 }
 >  };
 >  
-> +/* MSR_ACTIVATE_SBAF bit fields */
-> +union ifs_sbaf {
-> +	u64	data;
-> +	struct {
-> +		u32	bundle_idx	:9;
-> +		u32	rsvd1		:5;
-> +		u32	pgm_idx		:2;
-> +		u32	rsvd2		:16;
-> +		u32	delay		:31;
-> +		u32	sigmce		:1;
-> +	};
-> +};
+> +/*
+> + * Mutex for the active_platform_profile variable,
+> + * see omen_powersource_event.
+> + */
+> +DEFINE_MUTEX(active_platform_profile_lock);
 > +
-> +/* MSR_SBAF_STATUS bit fields */
-> +union ifs_sbaf_status {
-> +	u64	data;
-> +	struct {
-> +		u32	bundle_idx	:9;
-> +		u32	rsvd1		:5;
-> +		u32	pgm_idx		:2;
-> +		u32	rsvd2		:16;
-> +		u32	error_code	:8;
-> +		u32	rsvd3		:21;
-> +		u32	test_fail	:1;
-> +		u32	sbaf_status	:2;
-> +	};
-> +};
-> +
->  /*
->   * Driver populated error-codes
->   * 0xFD: Test timed out before completing all the chunks.
-> diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
-> index 282e4bfe30da..bdb31b2f45b4 100644
-> --- a/drivers/platform/x86/intel/ifs/runtest.c
-> +++ b/drivers/platform/x86/intel/ifs/runtest.c
-> @@ -29,6 +29,13 @@ struct run_params {
->  	union ifs_status status;
->  };
+>  static struct input_dev *hp_wmi_input_dev;
+>  static struct input_dev *camera_shutter_input_dev;
+>  static struct platform_device *hp_wmi_platform_dev;
+>  static struct platform_profile_handler platform_profile_handler;
+> +static struct notifier_block platform_power_source_nb;
+> +static enum platform_profile_option active_platform_profile;
+>  static bool platform_profile_support;
+>  static bool zero_insize_support;
 >  
-> +struct sbaf_run_params {
-> +	struct ifs_data *ifsd;
-> +	int *retry_cnt;
-> +	union ifs_sbaf *activate;
-> +	union ifs_sbaf_status status;
-> +};
-> +
->  /*
->   * Number of TSC cycles that a logical CPU will wait for the other
->   * logical CPU on the core in the WRMSR(ACTIVATE_SCAN).
-> @@ -146,6 +153,7 @@ static bool can_restart(union ifs_status status)
->  #define SPINUNIT 100 /* 100 nsec */
->  static atomic_t array_cpus_in;
->  static atomic_t scan_cpus_in;
-> +static atomic_t sbaf_cpus_in;
->  
->  /*
->   * Simplified cpu sibling rendezvous loop based on microcode loader __wait_for_cpus()
-> @@ -387,6 +395,226 @@ static void ifs_array_test_gen1(int cpu, struct device *dev)
->  		ifsd->status = SCAN_TEST_PASS;
+> @@ -1194,8 +1205,7 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+>  	return err;
 >  }
 >  
-> +#define SBAF_STATUS_PASS			0
-> +#define SBAF_STATUS_SIGN_FAIL			1
-> +#define SBAF_STATUS_INTR			2
-> +#define SBAF_STATUS_TEST_FAIL			3
-> +
-> +enum sbaf_status_err_code {
-> +	IFS_SBAF_NO_ERROR				= 0,
-> +	IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN		= 1,
-> +	IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS		= 2,
-> +	IFS_SBAF_UNASSIGNED_ERROR_CODE3			= 3,
-> +	IFS_SBAF_INVALID_BUNDLE_INDEX			= 4,
-> +	IFS_SBAF_MISMATCH_ARGS_BETWEEN_THREADS		= 5,
-> +	IFS_SBAF_CORE_NOT_CAPABLE_CURRENTLY		= 6,
-> +	IFS_SBAF_UNASSIGNED_ERROR_CODE7			= 7,
-> +	IFS_SBAF_EXCEED_NUMBER_OF_THREADS_CONCURRENT	= 8,
-> +	IFS_SBAF_INTERRUPTED_DURING_EXECUTION		= 9,
-> +	IFS_SBAF_INVALID_PROGRAM_INDEX			= 0xA,
-> +	IFS_SBAF_CORRUPTED_CHUNK			= 0xB,
-> +	IFS_SBAF_DID_NOT_START				= 0xC,
-> +};
-> +
-> +static const char * const sbaf_test_status[] = {
-> +	[IFS_SBAF_NO_ERROR] = "SBAF no error",
-> +	[IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN] = "Other thread could not join.",
-> +	[IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS] = "Interrupt occurred prior to SBAF coordination.",
-> +	[IFS_SBAF_UNASSIGNED_ERROR_CODE3] = "Unassigned error code 0x3",
-> +	[IFS_SBAF_INVALID_BUNDLE_INDEX] = "Non valid sbaf bundles. Reload test image",
-> +	[IFS_SBAF_MISMATCH_ARGS_BETWEEN_THREADS] = "Mismatch in arguments between threads T0/T1.",
-> +	[IFS_SBAF_CORE_NOT_CAPABLE_CURRENTLY] = "Core not capable of performing SBAF currently",
-> +	[IFS_SBAF_UNASSIGNED_ERROR_CODE7] = "Unassigned error code 0x7",
-> +	[IFS_SBAF_EXCEED_NUMBER_OF_THREADS_CONCURRENT] = "Exceeded number of Logical Processors (LP) allowed to run Scan-At-Field concurrently",
-> +	[IFS_SBAF_INTERRUPTED_DURING_EXECUTION] = "Interrupt occurred prior to SBAF start",
-> +	[IFS_SBAF_INVALID_PROGRAM_INDEX] = "SBAF program index not valid",
-> +	[IFS_SBAF_CORRUPTED_CHUNK] = "SBAF operation aborted due to corrupted chunk",
-> +	[IFS_SBAF_DID_NOT_START] = "SBAF operation did not start",
-> +};
-> +
-> +static void sbaf_message_not_tested(struct device *dev, int cpu, u64 status_data)
+> -static int platform_profile_omen_get(struct platform_profile_handler *pprof,
+> -				     enum platform_profile_option *profile)
+> +static int platform_profile_omen_get_ec(enum platform_profile_option *profile)
+>  {
+>  	int tp;
+>  
+> @@ -1223,6 +1233,30 @@ static int platform_profile_omen_get(struct platform_profile_handler *pprof,
+>  	return 0;
+>  }
+>  
+> +static int platform_profile_omen_get(struct platform_profile_handler *pprof,
+> +				     enum platform_profile_option *profile)
 > +{
-> +	union ifs_sbaf_status status = (union ifs_sbaf_status)status_data;
-> +
-> +	if (status.error_code < ARRAY_SIZE(sbaf_test_status)) {
-> +		dev_info(dev, "CPU(s) %*pbl: SBAF operation did not start. %s\n",
-> +			 cpumask_pr_args(cpu_smt_mask(cpu)),
-> +			 sbaf_test_status[status.error_code]);
-> +	} else if (status.error_code == IFS_SW_TIMEOUT) {
-> +		dev_info(dev, "CPU(s) %*pbl: software timeout during scan\n",
-> +			 cpumask_pr_args(cpu_smt_mask(cpu)));
-> +	} else if (status.error_code == IFS_SW_PARTIAL_COMPLETION) {
-> +		dev_info(dev, "CPU(s) %*pbl: %s\n",
-> +			 cpumask_pr_args(cpu_smt_mask(cpu)),
-> +			 "Not all SBAF bundles executed. Maximum forward progress retries exceeded");
-> +	} else {
-> +		dev_info(dev, "CPU(s) %*pbl: SBAF unknown status %llx\n",
-> +			 cpumask_pr_args(cpu_smt_mask(cpu)), status.data);
-> +	}
-> +}
-> +
-> +static void sbaf_message_fail(struct device *dev, int cpu, union ifs_sbaf_status status)
-> +{
-> +	/* Failed signature check is set when SBAF signature did not match the expected value */
-> +	if (status.sbaf_status == SBAF_STATUS_SIGN_FAIL) {
-> +		dev_err(dev, "CPU(s) %*pbl: Failed signature check\n",
-> +			cpumask_pr_args(cpu_smt_mask(cpu)));
-> +	}
-> +
-> +	/* Failed to reach end of test */
-> +	if (status.sbaf_status == SBAF_STATUS_TEST_FAIL) {
-> +		dev_err(dev, "CPU(s) %*pbl: Failed to complete test\n",
-> +			cpumask_pr_args(cpu_smt_mask(cpu)));
-> +	}
-> +}
-> +
-> +static bool sbaf_bundle_completed(union ifs_sbaf_status status)
-> +{
-> +	if (status.sbaf_status || status.error_code)
-> +		return false;
-> +	return true;
-> +}
-> +
-> +static bool sbaf_can_restart(union ifs_sbaf_status status)
-> +{
-> +	enum sbaf_status_err_code err_code = status.error_code;
-> +
-> +	/* Signature for chunk is bad, or scan test failed */
-> +	if (status.sbaf_status == SBAF_STATUS_SIGN_FAIL ||
-> +	    status.sbaf_status == SBAF_STATUS_TEST_FAIL)
-> +		return false;
-> +
-> +	switch (err_code) {
-> +	case IFS_SBAF_NO_ERROR:
-> +	case IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN:
-> +	case IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS:
-> +	case IFS_SBAF_EXCEED_NUMBER_OF_THREADS_CONCURRENT:
-> +	case IFS_SBAF_INTERRUPTED_DURING_EXECUTION:
-> +		return true;
-> +	case IFS_SBAF_UNASSIGNED_ERROR_CODE3:
-> +	case IFS_SBAF_INVALID_BUNDLE_INDEX:
-> +	case IFS_SBAF_MISMATCH_ARGS_BETWEEN_THREADS:
-> +	case IFS_SBAF_CORE_NOT_CAPABLE_CURRENTLY:
-> +	case IFS_SBAF_UNASSIGNED_ERROR_CODE7:
-> +	case IFS_SBAF_INVALID_PROGRAM_INDEX:
-> +	case IFS_SBAF_CORRUPTED_CHUNK:
-> +	case IFS_SBAF_DID_NOT_START:
-> +		break;
-> +	}
-> +	return false;
-> +}
-> +
-> +/*
-> + * Execute the SBAF test. Called "simultaneously" on all threads of a core
-> + * at high priority using the stop_cpus mechanism.
-> + */
-> +static int dosbaf(void *data)
-> +{
-> +	struct sbaf_run_params *run_params = data;
-> +	int cpu = smp_processor_id();
-> +	union ifs_sbaf_status status;
-> +	struct ifs_data *ifsd;
-> +	int first;
-> +
-> +	ifsd = run_params->ifsd;
-> +
-> +	/* Only the first logical CPU on a core reports result */
-> +	first = cpumask_first(cpu_smt_mask(cpu));
-> +	wait_for_sibling_cpu(&sbaf_cpus_in, NSEC_PER_SEC);
+> +	enum platform_profile_option selected_platform_profile;
 > +
 > +	/*
-> +	 * This WRMSR will wait for other HT threads to also write
-> +	 * to this MSR (at most for activate.delay cycles). Then it
-> +	 * starts scan of each requested bundle. The core test happens
-> +	 * during the "execution" of the WRMSR.
+> +	 * We directly return the stored platform profile, as the embedded
+> +	 * controller will not accept switching to the performance option when
+> +	 * the conditions are not met (e.g. the laptop is not plugged in).
+> +	 *
+> +	 * If we directly return what the EC reports, the platform profile will
+> +	 * immediately "switch back" to normal mode, which is against the
+> +	 * expected behaviour from a userspace point of view, as described in
+> +	 * the Platform Profile Section page of the kernel documentation.
+> +	 *
+> +	 * See also omen_powersource_event.
 > +	 */
-> +	wrmsrl(MSR_ACTIVATE_SBAF, run_params->activate->data);
-> +	rdmsrl(MSR_SBAF_STATUS, status.data);
+> +	mutex_lock(&active_platform_profile_lock);
+> +	selected_platform_profile = active_platform_profile;
+> +	mutex_unlock(&active_platform_profile_lock);
 > +
-> +	/* Pass back the result of the test */
-> +	if (cpu == first)
-> +		run_params->status = status;
+> +	return selected_platform_profile;
+> +}
+> +
+>  static bool has_omen_thermal_profile_ec_timer(void)
+>  {
+>  	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
+> @@ -1245,8 +1279,7 @@ inline int omen_thermal_profile_ec_timer_set(u8 value)
+>  	return ec_write(HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET, value);
+>  }
+>  
+> -static int platform_profile_omen_set(struct platform_profile_handler *pprof,
+> -				     enum platform_profile_option profile)
+> +static int platform_profile_omen_set_ec(enum platform_profile_option profile)
+>  {
+>  	int err, tp, tp_version;
+>  	enum hp_thermal_profile_omen_flags flags = 0;
+> @@ -1300,6 +1333,25 @@ static int platform_profile_omen_set(struct platform_profile_handler *pprof,
+>  	return 0;
+>  }
+>  
+> +static int platform_profile_omen_set(struct platform_profile_handler *pprof,
+> +				     enum platform_profile_option profile)
+> +{
+> +	int err;
+> +
+> +	mutex_lock(&active_platform_profile_lock);
+> +
+> +	err = platform_profile_omen_set_ec(profile);
+> +	if (err < 0) {
+> +		mutex_unlock(&active_platform_profile_lock);
+
+Please use guard() from linux/cleanup.h so unlock is handled automatically 
+for you on error paths (+add the include if not yet there).
+
+> +		return err;
+> +	}
+> +
+> +	active_platform_profile = profile;
+> +	mutex_unlock(&active_platform_profile_lock);
 > +
 > +	return 0;
 > +}
 > +
-> +static void ifs_sbaf_test_core(int cpu, struct device *dev)
+>  static int thermal_profile_get(void)
+>  {
+>  	return hp_wmi_read_int(HPWMI_THERMAL_PROFILE_QUERY);
+> @@ -1381,8 +1433,7 @@ static bool is_victus_thermal_profile(void)
+>  			    board_name) >= 0;
+>  }
+>  
+> -static int platform_profile_victus_get(struct platform_profile_handler *pprof,
+> -				     enum platform_profile_option *profile)
+> +static int platform_profile_victus_get_ec(enum platform_profile_option *profile)
+>  {
+>  	int tp;
+>  
+> @@ -1407,8 +1458,14 @@ static int platform_profile_victus_get(struct platform_profile_handler *pprof,
+>  	return 0;
+>  }
+>  
+> -static int platform_profile_victus_set(struct platform_profile_handler *pprof,
+> -				     enum platform_profile_option profile)
+> +static int platform_profile_victus_get(struct platform_profile_handler *pprof,
+> +				       enum platform_profile_option *profile)
 > +{
-> +	struct sbaf_run_params run_params;
-> +	union ifs_sbaf_status status;
-> +	union ifs_sbaf activate;
-> +	unsigned long timeout;
-> +	struct ifs_data *ifsd;
-> +	int stop_bundle;
-> +	int retries;
+> +	/* Same behaviour as platform_profile_omen_get */
+> +	return platform_profile_omen_get(pprof, profile);
+> +}
 > +
-> +	ifsd = ifs_get_data(dev);
+> +static int platform_profile_victus_set_ec(enum platform_profile_option profile)
+>  {
+>  	int err, tp;
+>  
+> @@ -1433,21 +1490,130 @@ static int platform_profile_victus_set(struct platform_profile_handler *pprof,
+>  	return 0;
+>  }
+>  
+> +static int platform_profile_victus_set(struct platform_profile_handler *pprof,
+> +				       enum platform_profile_option profile)
+> +{
+> +	int err;
 > +
-> +	activate.data = 0;
-> +	activate.delay = IFS_THREAD_WAIT;
+> +	mutex_lock(&active_platform_profile_lock);
 > +
-> +	timeout = jiffies + (2 * HZ);
-> +	retries = MAX_IFS_RETRIES;
-> +	activate.bundle_idx = 0;
-> +	stop_bundle = ifsd->max_bundle;
-> +
-> +	while (activate.bundle_idx <= stop_bundle) {
-> +		if (time_after(jiffies, timeout)) {
-> +			status.error_code = IFS_SW_TIMEOUT;
-> +			break;
+> +	err = platform_profile_victus_set_ec(profile);
+> +	if (err < 0) {
+> +		mutex_unlock(&active_platform_profile_lock);
 
-If we take this branch on the first iteration...
+Ditto.
 
-> +		}
-> +
-> +		atomic_set(&sbaf_cpus_in, 0);
-> +
-> +		run_params.ifsd = ifsd;
-> +		run_params.activate = &activate;
-> +		run_params.retry_cnt = &retries;
-> +		stop_core_cpuslocked(cpu, dosbaf, &run_params);
-> +
-> +		status = run_params.status;
-> +
-> +		if (sbaf_bundle_completed(status)) {
-> +			activate.bundle_idx = status.bundle_idx + 1;
-> +			activate.pgm_idx = 0;
-> +			retries = MAX_IFS_RETRIES;
-> +			continue;
-> +		}
-> +
-> +		/* Some cases can be retried, give up for others */
-> +		if (!sbaf_can_restart(status))
-> +			break;
-> +
-> +		if (status.pgm_idx == activate.pgm_idx) {
-> +			/* If no progress retry */
-> +			if (--retries == 0) {
-> +				if (status.error_code == IFS_NO_ERROR)
-> +					status.error_code = IFS_SW_PARTIAL_COMPLETION;
-> +				break;
-> +			}
-> +		} else {
-> +			/* if some progress, more pgms remaining in bundle, reset retries */
-> +			retries = MAX_IFS_RETRIES;
-> +			activate.bundle_idx = status.bundle_idx;
-> +			activate.pgm_idx = status.pgm_idx;
-> +		}
+> +		return err;
 > +	}
 > +
-> +	/* Update status for this core */
-> +	ifsd->scan_details = status.data;
+> +	active_platform_profile = profile;
+> +	mutex_unlock(&active_platform_profile_lock);
 > +
-> +	if (status.sbaf_status == SBAF_STATUS_SIGN_FAIL ||
-> +	    status.sbaf_status == SBAF_STATUS_TEST_FAIL) {
+> +	return 0;
+> +}
+> +
+> +static int omen_powersource_event(struct notifier_block *nb,
+> +				  unsigned long value,
+> +				  void *data)
+> +{
+> +	struct acpi_bus_event *event_entry = data;
+> +	enum platform_profile_option actual_profile;
+> +	int err;
+> +
+> +	if (strcmp(event_entry->device_class, ACPI_AC_CLASS) != 0)
+> +		return NOTIFY_DONE;
+> +
+> +	pr_debug("Received power source device event\n");
+> +
+> +	mutex_lock(&active_platform_profile_lock);
+> +
+> +	/*
+> +	 * This handler can only be called on Omen and Victus models, so
+> +	 * there's no need to call is_victus_thermal_profile() here.
+> +	 */
+> +	if (is_omen_thermal_profile())
+> +		err = platform_profile_omen_get_ec(&actual_profile);
+> +	else
+> +		err = platform_profile_victus_get_ec(&actual_profile);
+> +
+> +	if (err < 0) {
+> +		pr_warn("Failed to read current platform profile (%d)\n", err);
+> +
+> +		mutex_unlock(&active_platform_profile_lock);
+> +
+> +		/*
+> +		 * Although we failed to get the current platform profile, we
+> +		 * still want the other event consumers to process it.
+> +		 */
+> +		return NOTIFY_DONE;
+> +	}
+> +
+> +	/*
+> +	 * If we're back on AC and that the user-chosen power profile is
+> +	 * different from what the EC reports, we restore the user-chosen
+> +	 * one.
+> +	 */
+> +	if (power_supply_is_system_supplied() >= 0 ||
+> +	    active_platform_profile != actual_profile) {
+> +		mutex_unlock(&active_platform_profile_lock);
+> +
+> +		pr_debug("EC reports same platform profile, no platform profile update required\n");
+> +		return NOTIFY_DONE;
+> +	}
+> +
+> +	if (is_omen_thermal_profile())
+> +		err = platform_profile_omen_set_ec(active_platform_profile);
+> +	else
+> +		err = platform_profile_victus_set_ec(active_platform_profile);
+> +
+> +	if (err < 0) {
+> +		mutex_unlock(&active_platform_profile_lock);
+> +
+> +		pr_warn("Failed to restore platform profile (%d)\n", err);
 
-...is status.sbar_status uninitialized? (And perhaps other fields too 
-that are used after the loop?).
+Why some prints are inside the mutex and some are not?
 
-It could also be that the timeout check shouldn't be before the first real 
-iteration inside the loop to ensure that kind of shortcut cannot occur?
+> +		return NOTIFY_DONE;
+> +	}
+> +
+> +	mutex_unlock(&active_platform_profile_lock);
+> +
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static int omen_register_powersource_event_handler(void)
+> +{
+> +	int err;
+> +
+> +	platform_power_source_nb.notifier_call = omen_powersource_event;
+> +	err = register_acpi_notifier(&platform_power_source_nb);
+> +
+> +	if (err < 0) {
+> +		pr_warn("Failed to install ACPI power source notify handler\n");
+> +		return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void omen_unregister_powersource_event_handler(void)
+> +{
+> +	int err;
+> +
+> +	err = unregister_acpi_notifier(&platform_power_source_nb);
+> +
+> +	if (err < 0)
+> +		pr_err("Failed to remove ACPI power source notify handler\n");
+
+Do we really need this? I don't think deinit paths in general log errors 
+(or handle them either).
 
 -- 
  i.
 
-> +		ifsd->status = SCAN_TEST_FAIL;
-> +		sbaf_message_fail(dev, cpu, status);
-> +	} else if (status.error_code || status.sbaf_status == SBAF_STATUS_INTR ||
-> +		   (activate.bundle_idx < stop_bundle)) {
-> +		ifsd->status = SCAN_NOT_TESTED;
-> +		sbaf_message_not_tested(dev, cpu, status.data);
-> +	} else {
-> +		ifsd->status = SCAN_TEST_PASS;
-> +	}
 > +}
 > +
->  /*
->   * Initiate per core test. It wakes up work queue threads on the target cpu and
->   * its sibling cpu. Once all sibling threads wake up, the scan test gets executed and
-> @@ -420,6 +648,12 @@ int do_core_test(int cpu, struct device *dev)
->  		else
->  			ifs_array_test_gen1(cpu, dev);
->  		break;
-> +	case IFS_TYPE_SBAF:
-> +		if (!ifsd->loaded)
-> +			ret = -EPERM;
-> +		else
-> +			ifs_sbaf_test_core(cpu, dev);
-> +		break;
->  	default:
->  		ret = -EINVAL;
+>  static int thermal_profile_setup(void)
+>  {
+>  	int err, tp;
+>  
+>  	if (is_omen_thermal_profile()) {
+> -		tp = omen_thermal_profile_get();
+> -		if (tp < 0)
+> -			return tp;
+> +		err = platform_profile_omen_get_ec(&active_platform_profile);
+> +		if (err < 0)
+> +			return err;
+>  
+>  		/*
+>  		 * call thermal profile write command to ensure that the
+>  		 * firmware correctly sets the OEM variables
+>  		 */
+> -
+> -		err = omen_thermal_profile_set(tp);
+> +		err = platform_profile_omen_set_ec(active_platform_profile);
+>  		if (err < 0)
+>  			return err;
+>  
+> @@ -1456,15 +1622,15 @@ static int thermal_profile_setup(void)
+>  
+>  		set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
+>  	} else if (is_victus_thermal_profile()) {
+> -		tp = omen_thermal_profile_get();
+> -		if (tp < 0)
+> -			return tp;
+> +		err = platform_profile_victus_get_ec(&active_platform_profile);
+> +		if (err < 0)
+> +			return err;
+>  
+>  		/*
+>  		 * call thermal profile write command to ensure that the
+>  		 * firmware correctly sets the OEM variables
+>  		 */
+> -		err = omen_thermal_profile_set(tp);
+> +		err = platform_profile_victus_set_ec(active_platform_profile);
+>  		if (err < 0)
+>  			return err;
+>  
+> @@ -1758,6 +1924,12 @@ static int __init hp_wmi_init(void)
+>  			goto err_unregister_device;
 >  	}
+>  
+> +	if (is_omen_thermal_profile() || is_victus_thermal_profile()) {
+> +		err = omen_register_powersource_event_handler();
+> +		if (err)
+> +			goto err_unregister_device;
+> +	}
+> +
+>  	return 0;
+>  
+>  err_unregister_device:
+> @@ -1772,6 +1944,9 @@ module_init(hp_wmi_init);
+>  
+>  static void __exit hp_wmi_exit(void)
+>  {
+> +	if (is_omen_thermal_profile() || is_victus_thermal_profile())
+> +		omen_unregister_powersource_event_handler();
+> +
+>  	if (wmi_has_guid(HPWMI_EVENT_GUID))
+>  		hp_wmi_input_destroy();
+>  
 > 
-
