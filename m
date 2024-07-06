@@ -1,74 +1,96 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A2C147C76
-	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Jul 2024 11:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51A32837F;
+	Sat,  6 Jul 2024 08:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720177212; cv=none; b=H779cFkITa8Qms1wiiE32WW6ZPHoGJADwjDAgQVB2MCB3ZHjySVlHWyw8ecTMp2x5N2OG9C/vXUKhYkJGWjQ3s2dOoCVDKbdm02GClrkcTWIP07bI3biZvfuTnGwEms3QfEDnEdVbIzkauBM8V8Y8heTcgL4jBYsADaUfCMEEcI=
+	t=1720255385; cv=none; b=ILNWfn4EjsT2syQY0POlpFPQz4aV+IIG6yV0WEMsmNnntO8gjrPlul4s3L27f/uzmy9oc1uvurXfts3NDldyT+mAFrTB0oQW3ylL17v0WyFJa0jHDDNSBCRxSFV9fw+OpRLe7fxyUEmfUaXjPMYuNSejyGVQI5zGpgJmyVn1N0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720177212; c=relaxed/simple;
-	bh=Be32wocSmDK2mfCG4qebEeh0MDvWQqLi/XkQ0U/ojHI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EaykJ/DGt/fsAu0DOSEr+x5PNxNvRI9h4uDvx8P8BNmROJ6zhRRapvulq4ZYGMrttjyn1kORjnn6MtbIRha/e8BlIKqEYvZ0VaIoI8//6TDmffBglNma42qviIZ2FxLvZqHkHMK3zIOQ3Wso+YqEzYJLNNX8bX7HRFSr5Wha1iI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PI8e0ooR; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720255385; c=relaxed/simple;
+	bh=zealATdd/by23EUllnb0nD8gvGCX7tmsTFaN4kL2Ys8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=P+3BJBuo9wolexlTr/0c+4UvBOc51JejqNQL1LudGVEjKEtsLfAtN84PklrF+qyt8x+BDYblXba69ThoGiLeDX+N8HJWGaBxli+bZsiS44yJ/GPB9OnpDgo2BksJmTMsJ3AR9R82QvWffn9SiBd3vwPTJmbuQ/kePAzXPuhzsM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kc/JnFYM; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PI8e0ooR"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-425809eef0eso10068135e9.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 05 Jul 2024 04:00:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720177209; x=1720782009; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Be32wocSmDK2mfCG4qebEeh0MDvWQqLi/XkQ0U/ojHI=;
-        b=PI8e0ooRk7QpeBaB2/MUbXYJxInb5husKT8xh6DyQxAHFknhlaHxmSe3m0LOLq3T1a
-         mupOMCTGUjbKoCZgidv5qmSqJic/xRD4cPEfzmsl8ffNKi9UH3i4TEoM+ttQADpCAo78
-         orhJSOXzl3V5rMW/cZD5acQz99ex5yxVdsD5uT+VogTICo9rQGZES2sm88/mzdwkojyS
-         tTntpCm4Nh48ID2gCU2flM7WWRLTAn8bhXXc/wrIV0twzeUE+8DF8o7aSnLUCoHSrfWm
-         WPVHn5VoPDVB2Feh+jVGp3Lf5lFDbaTBOK+KHv3/8t43EfjiWHtPZf/9oekQwAOGLx37
-         WvoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720177209; x=1720782009;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Be32wocSmDK2mfCG4qebEeh0MDvWQqLi/XkQ0U/ojHI=;
-        b=C7UVH7wCXRCxBCSXous/FVTYBOtAHfP3Tl/L7hU93vxmjfr+y+o5o6dkFm2zfj5RKm
-         PEphOUjtK1lChOrnrcwM4vwkYsLPMFxr+HgaWWCYqWBtEIiKxUWDQmTATfqoHhkhmhFY
-         oFuuMRWN6xQFXvPVqMsB6+ls3nTst6TU6v2+mnIRW+Gjb7QuBMBvY3AMs2kJJ4ozCNAS
-         w9rSAJ8DQ7y2jOe8HPyehv+sCPi2yB2VQkyfJlzC23vyCTZYWkD6hx0lQTUMF6A1nALZ
-         vOENbGwW1cz+kiMgPSMCHikqzXiaF0N9P5NiI85w3nz56h2Yfmo8I8kGPZnGGo6E7jvm
-         FCEg==
-X-Gm-Message-State: AOJu0Yz2TxdgbhoFXdy4g2NmcrxzpjXPTzt5Xl0GGFAVTeX2CTkERPx5
-	t2aE0y2GwHEFiijwbGQ5yfIJD+vA6c5vWRA2i/bgsWUXZh0/89QIVUg1Tw==
-X-Google-Smtp-Source: AGHT+IEXKAHgi47tl+f22RzYWktVytbdzQlPNyFO39yzX5Xqx9DUD2vpuCMWPbKz1nJ/7/Aq/8MZ1g==
-X-Received: by 2002:a05:600c:25a:b0:425:8cc5:b3c1 with SMTP id 5b1f17b1804b1-4264a3e1abcmr29577745e9.11.1720177208605;
-        Fri, 05 Jul 2024 04:00:08 -0700 (PDT)
-Received: from alexis-pc ([163.5.23.101])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4264a1dda61sm57182795e9.19.2024.07.05.04.00.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 04:00:08 -0700 (PDT)
-Date: Fri, 5 Jul 2024 13:00:06 +0200
-From: Alexis Belmonte <alexbelm48@gmail.com>
-To: W_Armin@gmx.de
-Cc: platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCHv9] platform/x86: hp-wmi: Fix platform profile option
- switch bug on Omen and Victus laptops
-Message-ID: <ZofSNlEH6E6L00dy@alexis-pc>
-References: <ZofRxNfk-ExL5VnN@alexis-pc>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kc/JnFYM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720255384; x=1751791384;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=zealATdd/by23EUllnb0nD8gvGCX7tmsTFaN4kL2Ys8=;
+  b=kc/JnFYMR0nZsKWyUy3ex+bw68buG6f5ak8n5Vyt1zpk55tyI/05wj7O
+   7mGAykjF0L0JQKQeeKB7+jgXxYJYMo6KbeoIN7LWAB6Gw/YJXFHqX4ADv
+   d9FoHznMUUMR+T3UVJHgcYMqbf8padVRf8FtJJEsWxjuZ5yhz9DUaBG9F
+   lY1jttUSfSvP1Zmbsuwyg9o3pFbDpx7m3SEL0hX03+BeSjE3Gbxu/VypB
+   BfOowo2wwrlGmYYCOarDnFRU9EVZJa0Llg94EyTWPXSMpo4dyVkf5Qshu
+   5+Blqehd2UJrTaSuxwVDiefEF8+yZqOr9u6UtuavG1IgxAkU/rzN6uRTy
+   g==;
+X-CSE-ConnectionGUID: 4HpTBraxS9u4aj++svL6YQ==
+X-CSE-MsgGUID: dWGBrlnkR6SikFhJOIqG8A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="34967181"
+X-IronPort-AV: E=Sophos;i="6.09,187,1716274800"; 
+   d="scan'208";a="34967181"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 01:43:04 -0700
+X-CSE-ConnectionGUID: cjUSCeYxRo+oYokUD4zgrA==
+X-CSE-MsgGUID: p/CLed3hSrOzPsmTFyV7bA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,187,1716274800"; 
+   d="scan'208";a="47011783"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.111])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 01:43:00 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Sat, 6 Jul 2024 11:42:56 +0300 (EEST)
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+cc: Hans de Goede <hdegoede@redhat.com>, 
+    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+    platform-driver-x86@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] platform: arm64: lenovo-yoga-c630: select
+ AUXILIARY_BUS
+In-Reply-To: <20240626-yoga-fix-aux-v1-1-6aaf9099b18e@linaro.org>
+Message-ID: <15cf1f84-992b-59dc-d888-7a8972b0e0f4@linux.intel.com>
+References: <20240626-yoga-fix-aux-v1-1-6aaf9099b18e@linaro.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZofRxNfk-ExL5VnN@alexis-pc>
+Content-Type: text/plain; charset=US-ASCII
 
-Thanks again for your involvement in the review of my patch. I appreciate your
-time and effort, and have learned a lot from your comments! :]
+On Wed, 26 Jun 2024, Dmitry Baryshkov wrote:
 
-Alexis
+> Add missing selection of AUXILIARY_BUS as the driver uses aux bus to
+> create subdevices.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202406260704.roVRkyPi-lkp@intel.com/
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  drivers/platform/arm64/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
+> index 8c103b3150d1..e612cbe06aec 100644
+> --- a/drivers/platform/arm64/Kconfig
+> +++ b/drivers/platform/arm64/Kconfig
+> @@ -35,6 +35,7 @@ config EC_ACER_ASPIRE1
+>  config EC_LENOVO_YOGA_C630
+>  	tristate "Lenovo Yoga C630 Embedded Controller driver"
+>  	depends on I2C
+> +	select AUXILIARY_BUS
+>  	help
+>  	  Driver for the Embedded Controller in the Qualcomm Snapdragon-based
+>  	  Lenovo Yoga C630, which provides battery and power adapter
+
+Applied to platform-drivers-x86-lenovo-c630 branch and merged it into 
+for-next.
+
+-- 
+ i.
+
