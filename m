@@ -1,59 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9612E39AEB;
-	Mon,  8 Jul 2024 07:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F23E10A1C
+	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Jul 2024 08:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720425412; cv=none; b=ubqxrCh9wLQfv+bDVhZxg8NFoJtKOvHUyYriIp8uRA2+KBsyrWvXsIr+gv+leTk8akf/xmffRAFOmf6+n9m4IDrPXIlr1ZAYBYFg+sFtsUJCwQx3CDn9DUtwRnV/B2fxwncYhGqhDJXg0MGm3WC+2hFBfxNvOK48WA2MzIWslCA=
+	t=1720425793; cv=none; b=kWRTCWH4K/qpJHwmRR+Qi5X8VWrAuqnJ+LWayraInh/I9eclMnrQ6w5mOXOSznRfbzHXYTMF31b25FDkroD8Luk7cARHvRFO/y4qt1Hw+srN9qqHMO2WDRWvD7ou1GvMspjWdpgT+PaLK3pH/13ZI6bscaonGqB5mExl916HtYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720425412; c=relaxed/simple;
-	bh=xQIJDnKzG/pmp1osbfArOuhYkmP/jZwxB3eVrcMED7k=;
+	s=arc-20240116; t=1720425793; c=relaxed/simple;
+	bh=4cne2lt4t1jIzX97DGRqn7knGV8jGcAuCADTlKeJtvo=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=StiL0cr9ScMsYFDquIQLXrR8Q1e891csTZOa6ixlsC42M6y/mxLuU1SMcc8KBMfnzd+054qCejXbFlkySGRkGlY2OBg4bhBaGNYORyZVubimJEqxi8ulaAuXSlivAp1Hilx6AHF6WGoCM6QvMQctdJKlccLZNEu37kMkiieyVaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PdGiSxna; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version:Content-Type; b=f0+F56gu3Wx4C/gXz54DSji1Y3jm0EasT4tldS2Chf/CUGjAVIlOgQ2T18bNw+u4qE+4FG9HFj6E+SYkWhSSeWvKJAvAYw8Fw/Q0DxSycyrq3UplCHIIoOWXb5MjVjkzX6kkN1J9faa2WQYVGHvJ+/9d44jvBneomfsMmu/pm28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X8uN8ruP; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PdGiSxna"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X8uN8ruP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720425411; x=1751961411;
+  t=1720425792; x=1751961792;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=xQIJDnKzG/pmp1osbfArOuhYkmP/jZwxB3eVrcMED7k=;
-  b=PdGiSxnaz4NrO8Fxgs21udNU7Ta9Pvl/ijJqm0oCs4QJqikFSCkpPYg0
-   Kc34b4AIGxb0hyDOD1X25sbx+6wOwsOIrHBhl3c9WRaNes/pntvEA56jw
-   Wi7Z2NNkJPYaq+ODBAP+rRMoS893VrRpZxSNBS1XSsZtF0N0tFzZZwMQ5
-   AlB0joiEadJrfZ3+0QLptIaPkKLVZ4TaK+MnHEhwo1gUAUNsY942zAY43
-   VByhbrgsYs3UhgftDh/RsFRI+YlM/PGyab8yltQdGHaGcUF7/jqsSYQem
-   GvAgWnVAbbk/tM4iO3gyb42E9MXjxZB3bzOUNQqZM6viQHECT60labE7g
-   A==;
-X-CSE-ConnectionGUID: zZ5RJX/ETe668umSksMZ/Q==
-X-CSE-MsgGUID: 9s1MH9aTSfqwB0ndvDMM3Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11126"; a="28216830"
+  bh=4cne2lt4t1jIzX97DGRqn7knGV8jGcAuCADTlKeJtvo=;
+  b=X8uN8ruPCxTsnMEKouprjbXTUxjmLbGE6OyONZb8ccTPzvvvxuG0nbH5
+   7OGQi249Gw1wbbsqKDzFfCklJ3dwW7e+WJNnDRiSpMrJqoSMmDRB9cZve
+   PLbQHUZ1+P5PL1AmMPUHusdlT+i/JORZYtXR4CfFE0ZmU/cqA1311mLBQ
+   A2tocFc6xDji3rditqxyizoAck5H4qqPrhbcGRALklRzaQax74gR5Gtzr
+   LWKUzf+TOBVREwvJztS4qOR7TfEZc1CeHMNqTFaFDzDgMWpBCCZeTDuRd
+   p9kXQ4WDujjADwzDkotxKk5U267UNAIzhN9Y24A0lQFodcYa5oUYJzGYV
+   Q==;
+X-CSE-ConnectionGUID: JJMDPuS2QwiWm/rvtRUGyw==
+X-CSE-MsgGUID: kZQ2AYP3SuG6gZ3OdV+MwA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11126"; a="17254076"
 X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
-   d="scan'208";a="28216830"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 00:56:50 -0700
-X-CSE-ConnectionGUID: MpU4q5AvR+u8MXy46m853A==
-X-CSE-MsgGUID: FCqibOSORcWB32N6wXe7+w==
+   d="scan'208";a="17254076"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 01:03:11 -0700
+X-CSE-ConnectionGUID: utY94MhJR5+Ohdzz63mEMQ==
+X-CSE-MsgGUID: VuVe8gnRRVWiKqs8rQp6uQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
-   d="scan'208";a="47859566"
+   d="scan'208";a="52254565"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.115])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 00:56:47 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 01:03:07 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 8 Jul 2024 10:56:43 +0300 (EEST)
-To: Xi Pardee <xi.pardee@linux.intel.com>
-cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
-    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/9] platform/x86:intel/pmc: Convert index variables to
- be unsigned
-In-Reply-To: <20240624203218.2428475-4-xi.pardee@linux.intel.com>
-Message-ID: <f65374fd-1bdd-f6e2-4c9e-9ce5d9f7fd9e@linux.intel.com>
-References: <20240624203218.2428475-1-xi.pardee@linux.intel.com> <20240624203218.2428475-4-xi.pardee@linux.intel.com>
+Date: Mon, 8 Jul 2024 11:03:03 +0300 (EEST)
+To: "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
+cc: "hdegoede@redhat.com" <hdegoede@redhat.com>, 
+    "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>, 
+    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
+ 6.11-rc1
+In-Reply-To: <0aff117b7688cc4c844773600813600b7e58af6b.camel@intel.com>
+Message-ID: <22c13bbe-a615-b6a4-b379-e3abdfa4607f@linux.intel.com>
+References: <0aff117b7688cc4c844773600813600b7e58af6b.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,49 +62,48 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Mon, 24 Jun 2024, Xi Pardee wrote:
+On Sun, 7 Jul 2024, Pandruvada, Srinivas wrote:
 
-> From: Xi Pardee <xi.pardee@intel.com>
+> Hi Hans/Ilpo,
 > 
-> Convert the index variables type to unsigned to avoid confusion and
-> errors.
+> One issue was found in last 2 days, which requires update to intel-
+> speed-select tool.
+>  
+> Pull request for Intel Speed Select version v1.20
+> Summary of change:
+> - Fix setting of TRL MSR after SST-TF is disabled in auto mode. Use
+> correct units.
 > 
-> Signed-off-by: Xi Pardee <xi.pardee@intel.com>
-> ---
->  drivers/platform/x86/intel/pmc/core.c | 51 ++++++++++++++++-----------
->  1 file changed, 30 insertions(+), 21 deletions(-)
+> The base branch for these changes
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git
+> branch: for-next
 > 
-> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-> index b524b74293ca..cbdcbf288f67 100644
-> --- a/drivers/platform/x86/intel/pmc/core.c
-> +++ b/drivers/platform/x86/intel/pmc/core.c
-> @@ -247,7 +247,7 @@ static void pmc_core_slps0_display(struct pmc *pmc, struct device *dev,
->  
->  static int pmc_core_lpm_get_arr_size(const struct pmc_bit_map **maps)
->  {
-> -	int idx;
-> +	unsigned int idx;
->  
->  	for (idx = 0; maps[idx]; idx++)
->  		;/* Nothing */
-> @@ -260,8 +260,8 @@ static void pmc_core_lpm_display(struct pmc *pmc, struct device *dev,
->  				 const char *str,
->  				 const struct pmc_bit_map **maps)
->  {
-> -	int index, idx, len = 32, bit_mask, arr_size;
-> -	u32 *lpm_regs;
-> +	unsigned int index, idx, len = 32, arr_size;
-> +	u32 bit_mask, *lpm_regs;
->  
->  	arr_size = pmc_core_lpm_get_arr_size(maps);
+> The following changes since commit
+> cf25477c52123fd18373ea43336e44185f4744c0:
+> 
+>   Merge branch 'pdx86/platform-drivers-x86-lenovo-c630' into review-
+> ilpo (2024-07-06 11:40:29 +0300)
+> 
+> are available in the Git repository at:
+> 
+>   https://github.com/spandruvada/linux-kernel.git intel-sst
+> 
+> for you to fetch changes up to
+> 5631717d3ccb569783ccf7e35e478f59f423f90f:
+> 
+>   tools/power/x86/intel-speed-select: v1.20 release (2024-07-07
+> 00:10:36 -0700)
+> 
+> ----------------------------------------------------------------
+> Srinivas Pandruvada (2):
+>       tools/power/x86/intel-speed-select: Set TRL MSR in 100MHz units
+>       tools/power/x86/intel-speed-select: v1.20 release
+> 
+>  tools/power/x86/intel-speed-select/isst-config.c | 2 +-
+>  tools/power/x86/intel-speed-select/isst-core.c   | 6 ++++++
+>  2 files changed, 7 insertions(+), 1 deletion(-)
 
-Hi,
-
-Thanks for these patches. I've applied them into review-ilpo branch.
-
-While applying, I altered the return type of pmc_core_lpm_get_arr_size() 
-to unsigned int as it seemed the right thing to do after everything 
-around it is already unsigned.
+Pulled to review-ilpo branch. Thanks.
 
 -- 
  i.
