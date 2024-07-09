@@ -1,65 +1,98 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2082.outbound.protection.outlook.com [40.107.102.82])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 402CD12F37F
-	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Jul 2024 06:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC0A142E7C;
+	Tue,  9 Jul 2024 07:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720507289; cv=fail; b=b8oiVAQS7mwI9TEWnwqr9oet/joGGsW2coMf+4G097m13QZ2IlkxnWoc0wSszVP0MFI4tYWEY/PozQTOrzLQCvubaVT3ovqsryPW8KTm49sw1xX3b9GubuB2yRBJ+be4Ud6O7BySKw9AyhWcD7PNfAJGuHLJUsDSdNaA5j3gFrs=
+	t=1720510825; cv=fail; b=UYv38+sNtdnk4mlK/ZTMPJv2U3MO1ks4TOxz5Oi8AvG1efaeiBBvo0NvXsCPTKhsQXiBZ8VBCyieYI98HFqZT5vn0Xe6sissn1XtalkTBvB84ZFSgn2okqeL3oJq0yXM8JcYvMfCKXiN78dCAXowXZdjWHt9fd7eg1jEZo48PJI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720507289; c=relaxed/simple;
-	bh=wlOsTGIp3IYZqUsdAR5ANnDsrV6lgi5aCuvEr5/Fhos=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=If7CA3aX9tVKmIPp4d+xq+zV3mCggon6hP7gDQBzKiuIqzwobRXJXxvsJpgjvXW+ZiR/fOGC09TiItikOxdrBzby9T7ZQXKcoRLPgkDhaEDcrJ76Eb8jk3MNEVTJnjYUV9x8sr6+wuDhUh4uE4xFpOTLenPTjVd1M5kcBLZrI2k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TCzxDT1c; arc=fail smtp.client-ip=40.107.102.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1720510825; c=relaxed/simple;
+	bh=wj+OJX5hoUIcaJUFnJlm+GaYI1Nr/asUbx79zkJKIls=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=bAW2tabLJxxbk1GoM2JcqZLpnGostBnvtDbfLKzBKKXbPsbxN2CBH4dTCf2PcVKFVKDpi5A86ccmnRo6h1ljdPO6sbY6qbWBsZRiXtuFEnmUBDrN1494M6a8g95wwU5Gy9q4s0gRryDMjI83huUeKlYBc1vpunp5QxXYbR+KbDI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fWBVG0Ci; arc=fail smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TCzxDT1c"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fWBVG0Ci"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720510823; x=1752046823;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=wj+OJX5hoUIcaJUFnJlm+GaYI1Nr/asUbx79zkJKIls=;
+  b=fWBVG0Ci/QGlwf4bRW3mN9PuPo5TRPTOsMXhcLRJQ2zcabjuhz9bMqBs
+   2v0F0HFOogI333bHXjZ/xoV3nlFeM2Dm13aB2MwviPm/LUbTLARvJk7ah
+   nccDxb7eXIFdbGDU/piMDc3fGTfTv1YrsM5blEBEdYNGcv0E6JHTHryLo
+   vny3+1cYiXOXJ8ctXgHbpyoO18I8FkcIPVjn+Vyv1csMNymREN5AKt1SF
+   qGXVOR51E5r/IDA+84Hxy91yhekUFbDqaxTS3f8ZiEaCWD05e3lM/DRlg
+   WH5s+dsS6xo21VY2ra6fDvVFXtOx+XizW+QWn+QnC5cz8nBUV+N5pUczv
+   Q==;
+X-CSE-ConnectionGUID: SCG/LfcrTJe+P/LOC3RZig==
+X-CSE-MsgGUID: 6uTnuuU9RnOZtpvkuHyqgA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="40255283"
+X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
+   d="scan'208";a="40255283"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 00:40:19 -0700
+X-CSE-ConnectionGUID: ukj83bdCRseclElsfFdGBw==
+X-CSE-MsgGUID: mH2SUpwkTMia+WNnOqrGdQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
+   d="scan'208";a="78502307"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Jul 2024 00:40:19 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 9 Jul 2024 00:40:18 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 9 Jul 2024 00:40:17 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Tue, 9 Jul 2024 00:40:17 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 9 Jul 2024 00:40:17 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VVzMpbLcIkGJy/MF7jmfv/L7Quj8jnnFHVxQVSdswH6xQIIl518AyRy8yuwwxngPDWuOt33bnKvocc7HlRV0voFrt+htikthVB+DaHTW1xi3HdG4p+hsJ9jpl+MwOk4r8DvQBrq5eOVai+prE6mENqo9thqi4feq++gG/CgnKQHaDwgS61upmqv3rzNqdSiwjJdbXMm1WmJW3KXfjNQgwYDtH+tGtLzqFSOFwQdSuSRVrWq4FZZh1FG5ExbVt+iDoE2IuXUwE91osXdubpLGAa/vSLccA7kF/wbiHVD1VyFXoeEGMK/iwuw802FhEC28T/jRSUsrXXVZYvWB/gwNWQ==
+ b=Bxo5bGo16EK11fS+aF0QYRVL/ZmqvNI6i+imMtzXiZPo3CRaPwUbh1OjNNdAiHRXU2uCisuf1E87M2S3AOAxDTaGk8O/9M79OA6rqfKgxdTiwpINS1w0urAT48YZdLetoGR4rVVN/vBAz921VwAC+T3WRuCFHOtXHJ+kaPvl9p9azIQcefhrmG31pUgZN80UknZp1F1z8+2/cMOpZVZdeY/BlH5u+tfvaqDhfSNp33p3ivH0XgZ9U4xOv/iERSBDEGB7n6epSZbGKZY03PAhYWo5+RqQH095JbbXZ1GojphMPcJK6JVXssjtdv7KTRJNPl5Uu5I4r0O0jDqmECTheQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bRFsGHxwqdVPuFrcoXk+T/bfraP00NcfvaJzE6HGH60=;
- b=age5HlrVJCiJgF9TeO9XUavidSHexYkrq24WkP0+5pkuL7qkfQu7AOVBLlQxz0hJkiHtl1FVUhAZkuhOpfmTcEAeDluO1qKw5i4+14lYpCGPvHNTu2a5n35vZLUL5eGXa79DVKugR0/YKjiyurrkopsmx0QMmvT6NneTUcZxG7xRPiPaizYG88iq/8J9Wim9axjkp6f0g61m1K5vKo2gsxSUcn63XA4MoShAycaN5sZ9xXVhMuuZzSov80JNNOi7HKlkvtdJE6A1EXX5G1UrQjJjL1HFjiVtkibGpvos/1xAR/+iXDpZ0d/SHdsKnEs+545UfiyTFQcOzwzTMyr7xQ==
+ bh=V8quClF7gWucU+eATTmPfkQl07gtvobtlPEMS2ImdoU=;
+ b=mBVc3w6KxN0VKsI+XmrfNp4+e9vted9etJbKWoYzL/YtDaoxpEO0kZRFwBT+rRT+HpafkeVtyyQeNMuYmy/Obb3CII6Wc8+UZHUEL5NbxdToNMkSqJqywKw1n8qkG9SdaCC9Ur8bEsLqM9PRnXoFgI75NfZT6EQhglj9YT4U4SdplWKhn5FitRYydjkJnQ7PJbgZ6zuXx6FBrVa/3s2HUlkFxzBYZCJd4MineejXXNe2ZXaVDZmz2jjPehXQGbZViDSZMUwlqmZg2Qd5J9tOWwqbqjFOtngi+PsFm7gzVU7VK+rOS1fit7xclAoa+NyjTFPetzpyicdVGg2kiEIRaQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bRFsGHxwqdVPuFrcoXk+T/bfraP00NcfvaJzE6HGH60=;
- b=TCzxDT1cfWhhPBTCV5phDdzGcML/sPAshCUqdD0lSrEdpCQSRjTx8xxHNlzQoO9L1axx04FdFWdEym8XE7a6+ef5APqWZvTq9timkvy+CCU5Qyc3pRUlNsXvAN0NDCUhYJS7N63ijDTCoxCn5FOk6shI00nLj4aw3DpCIwKb/Qk=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from LV2PR12MB5966.namprd12.prod.outlook.com (2603:10b6:408:171::21)
- by DM4PR12MB6157.namprd12.prod.outlook.com (2603:10b6:8:ac::11) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by PH7PR11MB7025.namprd11.prod.outlook.com (2603:10b6:510:208::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.19; Tue, 9 Jul
- 2024 06:41:23 +0000
-Received: from LV2PR12MB5966.namprd12.prod.outlook.com
- ([fe80::7c1b:5fa1:7929:fd81]) by LV2PR12MB5966.namprd12.prod.outlook.com
- ([fe80::7c1b:5fa1:7929:fd81%4]) with mapi id 15.20.7741.033; Tue, 9 Jul 2024
- 06:41:23 +0000
-Message-ID: <9490acd2-f1c6-4636-9b58-eb25d3dc314b@amd.com>
-Date: Tue, 9 Jul 2024 12:11:15 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/10] platform/x86/amd/hsmp: Create mutually exclusive
- ACPI and plat drivers
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
- Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-References: <20240627053958.2533860-1-suma.hegde@amd.com>
- <20240627053958.2533860-7-suma.hegde@amd.com>
- <61f51c56-a378-8649-c165-f6b4fcdf54cc@linux.intel.com>
-Content-Language: en-US
-From: Suma Hegde <Suma.Hegde@amd.com>
-In-Reply-To: <61f51c56-a378-8649-c165-f6b4fcdf54cc@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MA1PR01CA0182.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:d::8) To LV2PR12MB5966.namprd12.prod.outlook.com
- (2603:10b6:408:171::21)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.36; Tue, 9 Jul
+ 2024 07:40:15 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%4]) with mapi id 15.20.7741.033; Tue, 9 Jul 2024
+ 07:40:15 +0000
+Date: Tue, 9 Jul 2024 15:40:04 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Armin Wolf <W_Armin@gmx.de>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>, kemal <kmal@cock.li>,
+	<platform-driver-x86@vger.kernel.org>, <oliver.sang@intel.com>
+Subject: [linus:master] [platform/x86]  e527a61272:
+ UBSAN:array-index-out-of-bounds_in_drivers/firmware/dmi_scan.c
+Message-ID: <202407091536.8b116b3d-lkp@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: SI2PR01CA0013.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::9) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,385 +100,153 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5966:EE_|DM4PR12MB6157:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3ccc35f2-d2be-4603-ce8e-08dc9fe2260b
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|PH7PR11MB7025:EE_
+X-MS-Office365-Filtering-Correlation-Id: a95acbee-d451-4ddf-5a59-08dc9fea5f71
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?K1pBL0MxUExnajM1TGcveDhBRkgyUStmN2p2Nnc1REFFcSt3TTkrM0cyQW9U?=
- =?utf-8?B?UlFJOHlrbHFaa0ZnalNnM0JFMHU4N3BVRWFRenQxN3BnZWkreVMvNTJUOEQ1?=
- =?utf-8?B?Sndhc2RmL25FV2VEY01Fd0UwSFFlb1pDZmF1RmsvcVhsSkhvcnpDZ0x3MmMr?=
- =?utf-8?B?K3lzclU0eDZtTEFyK1Ayd0cxaHZVbUJOUi9iZVJVQUZrZkhUZk41NDJFaWsy?=
- =?utf-8?B?MDJVcW9jU0g0dHVVWnRiWWZuQjBvS3lLZWxUU1Y1MGU0dHF6T1FJeityNXVp?=
- =?utf-8?B?NU9sODdjS2JJNTRSaTd2U0t0bmgyL1BmRXNIQXZzTTByb0x4czJVRVNmM3NQ?=
- =?utf-8?B?NjFJbVBhVnRnU1EzelkxNm1DVGQ5ZS9XenNSVVROYUJKVHJpWmM0ejdrQVlq?=
- =?utf-8?B?TGFIalVZNVVINElDMnUzNEwrYTBJMjlNZ2FRem1lbWl5YjdLbzJ2dTkvYlMr?=
- =?utf-8?B?QkdjQWpLWHp4Kyt0YkdkdXA0cmhBMEJyNERUQjVtVU1sckwxcE5RSVg4NjJl?=
- =?utf-8?B?NWVCSmNiQU5HOGRjcnRDaVBsVUpWajk2Zngydmk1V3RGaEtnc3FyVFZ5cndt?=
- =?utf-8?B?TWRvS1hrM3U4SEIwc3R4OXJTNVJ0WHVYOTNIUXRYRkNNV1RtR1UyYnJ1R2hO?=
- =?utf-8?B?eDV0cWN6OEJQYzZHT095c0tFMmVZUnBGd0lxM0E5bjRPejhkTHBGRzlsUjcr?=
- =?utf-8?B?VktmazgrKzdLa1EyY2tqaWdobWkvVTRyeFVXakduNDE1MDN3a2tpaVY5TzRh?=
- =?utf-8?B?OWVRVjZwVGdCVlpOeGVTZmtVaEl5RHo0NU0xMEZVaU0wanhiclppMU1YN0pH?=
- =?utf-8?B?VU5uRGdJcE45Yk1HbnRrb3BLREJVSUVhY0NtN3VZWWJvaFMrcnhDUWpya2xF?=
- =?utf-8?B?azlNa1RqZEl6QjhsazU3WWg4eE9HejZhWXVMOEwvKzZGcVU1WjBHcGVKYzNP?=
- =?utf-8?B?NUo4NVJuSVE0MGpJWDRFS0JlczdlUldBRXlCQWkrcjk1Mzd2NDRReEJsM1lo?=
- =?utf-8?B?dWZPQ2l6ais3UmE5WWVldmd2WkE2RlA1TzVmSWJlRVNCNGVxcU9EYWhyb29q?=
- =?utf-8?B?am0wNmVYMnREdldaRFA3aWl3MTU0MEpaU1N3R1ZDV3BQc0pSYzZ5U1VITUxJ?=
- =?utf-8?B?YlI0dXptWUdIeERLVWlVMkFmRWFBamRBMFp6dDlYM1ljYUtHWk44ZmhaTHlm?=
- =?utf-8?B?WE04ekpqZTZFVDV5VGdYU3UzeFRKMGdMeHZHWkllZUlGSTRuRWE5S3Y2ZVdl?=
- =?utf-8?B?N1JXaXJUWUVNdjMxU21UNDBLUmYwVXdXb2RnTFpDV2RJWWwvbjV2UHVTb2Ri?=
- =?utf-8?B?UG41Zkl6UFVrMHJ6V3AxK3R0Rit1VFNhSm1rWEN2WE9SelN6cittU1haWjVk?=
- =?utf-8?B?LzdMeHVVallXTE9XdHZvSXh1eEJrL3ZINnkxa2xHL0tkUEF4Zll2ODh4K1dE?=
- =?utf-8?B?ODlVMXo2OXlZeFQwV1VPcVgrcWdMVjVJbHdZUk9IeEtBb1YzYUFCbzdJMyt2?=
- =?utf-8?B?RThSeG1vY1NPRkZ3MkJiVE1vbUdMVXpRSFZBY1dPVjFPUHdkb29HTnNFRUV0?=
- =?utf-8?B?WUxFcU1kU29zOVhzazA2VEdJL3JJUnkyc0hLYkxzaGxyRXhrd1BjeUdHYlZY?=
- =?utf-8?B?MlB2R1F6QlJ6bjNQU0dJTU5aRkhVU1BsUHRsYlRzU0RBQWFPd0IvcHBCKzlE?=
- =?utf-8?B?MUF4N2FxT2xaNVhzYVp2cU0wQ0NoK290TkJxRWVhc25EVjJNTmgxRmtQUzNX?=
- =?utf-8?B?RGNTZks0cDUzYjByRzNtMW10aE1VNGNtZ3kzREJSU01XdFR1Z0lDcVVzVFdM?=
- =?utf-8?B?N1BlYytIWjk4NDhGVWxKQT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5966.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?LaJQPZBqq7V5QUjlZTq5PbIAEg9BFYUbUvES1Mky99+z9ojCX8LGZPyD9r28?=
+ =?us-ascii?Q?Eh8Ju+grhJzyt0IWLd+e8DyKOO/11Pbpgi5Zc4OnDaHIgPVMNiLK0H2w7O/V?=
+ =?us-ascii?Q?5vvIWsT0hNrkmt6E77moIOY01VRx91u0WRhMJazeRXfJPDW6JmG5Cly8l1S+?=
+ =?us-ascii?Q?tMTyu3YgbpGsaB+ZTJRrnMsctNKkWp3cj1C3IONphQAON/EAJXCauDUxQ1Mm?=
+ =?us-ascii?Q?ZXt7nReicYumEp/d4V9yFSZTlf0SB1d0YD+gk4KxbiuKpR1llpqj0VcgdkqG?=
+ =?us-ascii?Q?2/3imKUfr4iNOJsG/Xr1kqei2npyTfLplkposvNve9+2KRUUOBXTYXCoIG0t?=
+ =?us-ascii?Q?lvhnomXNGdN8P69m5AMxP3wo24OWVsqNmWtx4oZ/TNiW1FyDF0UDY3saKtvs?=
+ =?us-ascii?Q?U2oIyDNrpzZ+eu/XrP3JnlCvus4Jo168JWMx77bm7uhS5ISDo3etKHKlqOdI?=
+ =?us-ascii?Q?xJBvn44ZBGdD+iAziVeNp9PH6S762a6Xs7oyheiToMlycwplGT5+1unxml+y?=
+ =?us-ascii?Q?m0h+zt/BJDq8JZ6dT2HTX8tXb7hoRz/yikGipyiXM2cIGLRKoIErEoblN8AT?=
+ =?us-ascii?Q?b/NUYN0w846xHw1AxVS57c+hpYJ6j0MbWjs62jLkeDi3UGEX7L5G/jq7iRQp?=
+ =?us-ascii?Q?o5GJTrzWcm7adiyNbPiY5jBN4KNZ/2Xg4vgxbctBOj1IiiMYKbbded75VOPG?=
+ =?us-ascii?Q?ldelrO5CMbuTOzRBsKF3IHSlqfzruIc9egk65MewSVmblInIL6KNsuyk1HEZ?=
+ =?us-ascii?Q?pE5XYCL4+lT4C+0k4o/46bbFvBHbcB+gEUtT0neaKPqQKdyqQrW/6tfeu0l9?=
+ =?us-ascii?Q?dvyDVGkDorqJErUZXkBwrRa4GbBgYguSzx9Ue5TX9k1swqRXrh0Sv/nL7sRN?=
+ =?us-ascii?Q?SyGg7Wxkd5IxU7kAt+/KOqpf0QU/nzMfkT5040jEdVqHiyZ3hysuLh/P7ks+?=
+ =?us-ascii?Q?E8jtB2tSXM5bj64C5A0pXFnmZrM4cFavs2EmaAciPzdC7Gt4IUoUWRmtZP4V?=
+ =?us-ascii?Q?Z+TrgDj9ZfEqM61vNuJ/krFDjZ26tclrzrrRqBNPt+aa3T5vZd8aWX44/dPa?=
+ =?us-ascii?Q?wdv0aE15XviQG2XhUDeQmWw9L8XQ4Jp/PFsneoptXuRnRmEUpz33FPROqeOJ?=
+ =?us-ascii?Q?FTnFSrp3kvhr3b8ymBJZnaA1PCNWbTUHBavxpNXnq/NL5MjLzHaOzSU9vxv7?=
+ =?us-ascii?Q?T0rUjzY0FOVEKK0ZcVPgFiPp7XtZd+LDtefOK7IcwyIwSc8gPBrWwB79oWB9?=
+ =?us-ascii?Q?7K1SOnC+fNRAftMQ3ZJhEMPRJLyulqd38vAF6N2PU0bZor4Ivatp2oSAruq/?=
+ =?us-ascii?Q?3f4qlXUe3fsw4EoX8mC+mSMB?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?c21DY3pCZ3dVZEVsVmU3S2VXMnRHOHVtdjVnenhmTkx1RDI4Ujc2ajUwcU9o?=
- =?utf-8?B?S0xSdDBibVpXbml0L2tvUGNPbW8vdmx4WEIxaGxMUXVMRmhJTzdSbE1oRVNn?=
- =?utf-8?B?bFRMUitpMFNnZ1c0a3I1c0pvWk1icGJ3VHM2VG9CT2FMN0c1cVZ3amR1N3g5?=
- =?utf-8?B?L0Fya2V4MzRGMkFSdDlHZENxVUNSVG53Z2I5S2Q0cDBDbUJ2QVg1UE1PZTQr?=
- =?utf-8?B?NnJoUVJMeng2dHlFNW9lZjRwUSsva2o3a3J3Ly83QWFMRkFIV05nRXJ1ekxF?=
- =?utf-8?B?LzliUTdadkFlYU9wcDdNS2tTbm1Cd2lTK3lISnhYSzllL2NpcXl4eGxLNEtn?=
- =?utf-8?B?UXNUTDk2Y1hsK2x6V1lUUEs2N1l4VjZabGppciszLy9jSTdJbERpaVZTRVhj?=
- =?utf-8?B?Q2ptVjRnM1FQVkhlaGlNT0R5SVVaQ25aaUNRc2NCdG9JNEFLYXg3OXdVMTM2?=
- =?utf-8?B?ZlNNTXUzeG4zbWFBVTJQUEJsZm9JMUh3bExOZkpjYkxibXBlUmpZUWtESUlj?=
- =?utf-8?B?aEFkS1FndTE2WGNrUUdtT052NGpNLzBEN1NmSUxvbzBqUlErdE1yUm0raUh1?=
- =?utf-8?B?UlYyT1B4WEpiTVRyQ0ZTcXVyTHRzQllPKy9wc1p2RTlnUllxUlcxZ2NKMkZi?=
- =?utf-8?B?Smg3YlZEWlZkSjVvM1pWbEVsSmMySVdmTTNYL0ZVY0pIZzBBTzJDRXNUN2xr?=
- =?utf-8?B?aSsvTk1DTlBuVU5ZTzBSbFFHRml1NnNaZUMyZ1JlKzVEMWk3S1ZJSTE0MENV?=
- =?utf-8?B?aEJkUVBITXcwOUpPNkxnQytwSlBrdzZldE9iT2M3YU9MbzhkUVNnMXJrT3NN?=
- =?utf-8?B?ZnJnQ3U2UDVoT2k5VUh6MFZWSklGeGMxcU1vOS9Pa2NpVFVyRmFpTUNURE5B?=
- =?utf-8?B?WXRtRUNET0wyY2FGS214TEVrdStQRXZYZmhNQmZjd3dSNEV1NkpBcVY0bWxw?=
- =?utf-8?B?YXBNcC8vK1JadXQyVVd6Rm9VVGZLUDdZKytlMzBpN3NoeWYwdXdBdTJQMC90?=
- =?utf-8?B?S1VoRDhkWWJkRlh6VXdHQ3hPMFNpZnA5YUJiR21RcnBWNmpYT0tSYmVVaG8x?=
- =?utf-8?B?OWJtaW1vMTJWSnl1Si81RmNGbmNwSEpwbDVUaENZQnJVaXpRbGtpUmNHM1BM?=
- =?utf-8?B?QmNobzJ4VWMxdklIZVpXWWJTdVBqejEyTG5iYkpneTNuMlBIVjZMRXorRFVp?=
- =?utf-8?B?b0grNE41eHJyVUE1VnMvT1NqU20xVWxpNjlSY05VQmpIaTBGZ0x1NlE2WmVS?=
- =?utf-8?B?V0g4Y3JUK3lWNktEcE5SYkZBMnU3MEdRWWhDVmtFVFRoMGpHbnpVZVRsTEMx?=
- =?utf-8?B?WXo1THgzNFhzalhSdW9PeHFpSWlkc2UrNHVQQUh3cFZqTUJRZ0NUZ3d1TUZl?=
- =?utf-8?B?T1NzWGdzNWF0eDh3OE1ycFN6OVpUc3RpeUFLTlUrVDh1d3ZaTS82VFc3YSti?=
- =?utf-8?B?dW1Gd0tNb0hDdWhCN2JhVUdYVVNlcTQ0RUM4QWVMZnAxVFozdVAvSjNaTDA1?=
- =?utf-8?B?cDNCL2JYYTM3TWVhRTdwb2xCTDVqaTlhMUdiRklKUC9Xa3RIbEczMFhQdmhr?=
- =?utf-8?B?ejUycVRkdU1BZVJTRUFTUFZHQXNPNGtpNkp6ZDFBR09ycENZbXFjMjd6ajZy?=
- =?utf-8?B?MGp0dUNPdUh1cDNFcGtmYVZRa3p4YjJPLzNXSWNRNmZpZGFCcldSU0dBOTAr?=
- =?utf-8?B?dmw4QlVGTlNjZ0p3OTBSN1ptc3VSRXRMWFYvazd5SG8wYXhDTzhuN3VIUDdS?=
- =?utf-8?B?M1FzcXFyT3RCcm5lN1FjSkFWdjhEL0dRaU15RHlEZmcxM2h2aWZMVjhoRzRB?=
- =?utf-8?B?WUlYS1BXQ0N5TERzYkJobXh1RmtzVXdOQW05OGpsbVE5NDd3TU1YQTNOZ3VQ?=
- =?utf-8?B?UTF2UW12ZEpvYlo1MTNYUGVVU1djSVQwc3dkME01VDJXMUV2ZEZHTGFHaHZW?=
- =?utf-8?B?Y2c4WENRWWpTZWEwME9XaTFQUEpnT0xXNVlEcmtxUU9mUmRXMjBoU25KVkR2?=
- =?utf-8?B?VWcrWE1Mb09CYWNQcERQd2xKTStNaDNqQ1lYdnhObGVHNEkzMFArWGRqOGpH?=
- =?utf-8?B?TXB0MENEWVZBSFhTT0ZJbTN6MlRpMUFsdUpMSlI0TWZLN2Y4WG1SOVh5UThI?=
- =?utf-8?Q?siEDOmJC2dbNtJj2Rs5bpqUUv?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ccc35f2-d2be-4603-ce8e-08dc9fe2260b
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5966.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?c0hcoWf4OhSivsggJLxG7qXd6+k6t6hkqhWvf+k1t0PQdYzvK/0xyLZYsRc9?=
+ =?us-ascii?Q?oKAzHe9wewJKPFVuOvb+w19A8ugSH+eDPDR443+nkNZmRbbNLgb2ze+gtrOs?=
+ =?us-ascii?Q?gQO387pICNtBkh5MQOxo5obHj8qTmGUo2Ah5vnxNfDDVV887GwEgPliW8C6w?=
+ =?us-ascii?Q?3idp9wJoCRWQQcoudRZ3nQpnIe9NkJS5lN8vmeWs3dZOdJTL4Kbe/y3A64de?=
+ =?us-ascii?Q?hMEm/L4BOba010/x2CqBO6dYJxN69Pa9IzKGjIaXDhYzxQ9ukvP8aqQwfkVI?=
+ =?us-ascii?Q?pdkqUAL9OIT7WtNzXABHQZYQ2ye04sd1T8KrJsNjp/+4IXVZmSTE+ncip8Nu?=
+ =?us-ascii?Q?Ei31DCwehuUrchYTnfzLsVMQi9x9CDyzjDXRbwmEZ/OcUdtbDSKalyZK2VIr?=
+ =?us-ascii?Q?sqoHxLl4x6NnxQZfxhSZb7l37nbMcbZmJk5+xgnS/MqlJhKdMW3TWw3obZUB?=
+ =?us-ascii?Q?taJ9hXZpfN5+VTRDmbv0QzAxSlmMPVQWgCm5HE1682sVfZXjs8zdtbTREn5P?=
+ =?us-ascii?Q?TAjGX0y/5D0k986H5ZSfFfoX8xynKS/MX/G910u6hU7ZBrMKNxSA0YjIDus4?=
+ =?us-ascii?Q?9huVBL4vJGfW17QO0EkiHHYikvfJsfatApNCF9n+ZE5iqm4epA7EQPMA3d6n?=
+ =?us-ascii?Q?l5hBBcuk7+IacyoHUI7C/7v/p9vYne7DIGSh+rpIKa41okRKB3pqfB0aYyAw?=
+ =?us-ascii?Q?LNyiN9hljeO4rER05vcaYB8k2tl5CkCXFfXU+SqR2mxiCe8J1p9+0jtn/GHE?=
+ =?us-ascii?Q?hVW3xByFH/eNCJRZTyC+XAbqNGGvKUcNpPpHElt6boJRgPR04M7sgyQ/FGZz?=
+ =?us-ascii?Q?GVgt/Aa1yfJeTWndZkBHsuc2kGqpF2fuelokPwk4dAVUMP1+aREURV41qAw2?=
+ =?us-ascii?Q?gFkJfPpOQ+d2wu1NwWDlu3lY0BadpFJQZ2E35nSkcDp5iAfznPpusJVgi+ST?=
+ =?us-ascii?Q?mOUukzd3aHtyl39zpflZ927eD4UrXGe97/ZNAZPugwO/fCS1wHalfMlV+TQl?=
+ =?us-ascii?Q?FYaLCRPPd9apC/Qj5H4WtUQiRRlcCZI6N3LIjtyg/sTpWeFdTwfIaTJKf04K?=
+ =?us-ascii?Q?T5b/c3MGEwSxPVZdyh6l3FBmM4gc6u+NQBaZXkPvA6L4t1Kn6l9Vtp1qz53h?=
+ =?us-ascii?Q?x/jirjoy9DZUYFuH2W+omAbQqK29dqakDDhdRbek4luGoVcHmA/7RU5Jdmrf?=
+ =?us-ascii?Q?jaHAMfNlOHLfATb+f/y4/F5KrcMmH/CVxmZ+E4ykluYfYKw1jg4imsxO7KF8?=
+ =?us-ascii?Q?F70gQmz9ysZmsJ8jSonkIK6inUDBEXi1gyeV36JiJKqvMcJeeCwtL6p9A0DQ?=
+ =?us-ascii?Q?KMu/LPL1hDi4BMf66goViW+r8AjEZQHKA2gzGXWt6JQTagNUefOnYov0P0JW?=
+ =?us-ascii?Q?qMUZP8c/UYL6gT3/x36dOox16Xz/ddXE4w0iouGNH7ciHpHfl+T3QWpD4Rcn?=
+ =?us-ascii?Q?1Ac81SYDAqEt2R78ILNhHGfKe0D434ZZgxshV4ciS37TqP6mdSQYoMPRav7M?=
+ =?us-ascii?Q?26gd/CvTTDXC9AyPTEsz37wG1ZjfkOOpBbSmManATJcChnPTo6PAnJ+SiEdC?=
+ =?us-ascii?Q?ZfR06pXHSWkIrwWzJqbmZQOQ5LqAuCvYok0pG2RAu37sMFRaBgu+AWsjwCnD?=
+ =?us-ascii?Q?9Q=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a95acbee-d451-4ddf-5a59-08dc9fea5f71
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2024 06:41:23.2973
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2024 07:40:15.3124
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MsPyU1a+QMI3RBMthdzqW8+5fpwoEBFklFDLEcmfK7HlUAcKbdHpY5glTGtIMC0cG/xZr4yLrejQvqSz3vTGAA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6157
+X-MS-Exchange-CrossTenant-UserPrincipalName: HkJrMn93CdtizjQZMe5FZ81bl1M3ew1V4dNO9guNZDT9cC+8djorJ1QqkeDBAqa8MVcF11qNo/pbflOYDFhncw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7025
+X-OriginatorOrg: intel.com
 
-Hi Ilpo,
 
-Thank you for your review.
 
-On 7/8/2024 3:45 PM, Ilpo Järvinen wrote:
-> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
->
->
-> On Thu, 27 Jun 2024, Suma Hegde wrote:
->
->> Separate the probes for ACPI and platform device drivers.
->> Provide a Kconfig option to select either the
->> ACPI or the platform device based driver.
->>
->> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
->> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
->> ---
->>   arch/x86/include/asm/amd_hsmp.h        |   2 +-
->>   drivers/platform/x86/amd/hsmp/Kconfig  |  25 ++++-
->>   drivers/platform/x86/amd/hsmp/Makefile |  10 +-
->>   drivers/platform/x86/amd/hsmp/acpi.c   | 114 ++++++++++++++++++++++-
->>   drivers/platform/x86/amd/hsmp/hsmp.c   |  25 ++---
->>   drivers/platform/x86/amd/hsmp/hsmp.h   |   8 +-
->>   drivers/platform/x86/amd/hsmp/plat.c   | 122 +++++++------------------
->>   7 files changed, 183 insertions(+), 123 deletions(-)
->>
->> diff --git a/arch/x86/include/asm/amd_hsmp.h b/arch/x86/include/asm/amd_hsmp.h
->> index 03c2ce3edaf5..ada14e55f9f4 100644
->> --- a/arch/x86/include/asm/amd_hsmp.h
->> +++ b/arch/x86/include/asm/amd_hsmp.h
->> @@ -5,7 +5,7 @@
->>
->>   #include <uapi/asm/amd_hsmp.h>
->>
->> -#if IS_ENABLED(CONFIG_AMD_HSMP)
->> +#if IS_ENABLED(CONFIG_AMD_HSMP) || IS_ENABLED(CONFIG_AMD_HSMP_ACPI)
->>   int hsmp_send_message(struct hsmp_message *msg);
->>   #else
->>   static inline int hsmp_send_message(struct hsmp_message *msg)
->> diff --git a/drivers/platform/x86/amd/hsmp/Kconfig b/drivers/platform/x86/amd/hsmp/Kconfig
->> index b55d4ed9bceb..1cb10d2aac77 100644
->> --- a/drivers/platform/x86/amd/hsmp/Kconfig
->> +++ b/drivers/platform/x86/amd/hsmp/Kconfig
->> @@ -3,9 +3,30 @@
->>   # AMD HSMP Driver
->>   #
->>
->> +menu "AMD Host System Management Port driver"
->> +     depends on AMD_NB
->> +
->> +config AMD_HSMP_ACPI
->> +     tristate "AMD HSMP ACPI driver"
->> +     depends on ACPI
->> +     help
->> +       The driver provides a way for user space tools to monitor and manage
->> +       system management functionality on EPYC server CPUs from AMD.
->> +
->> +       Host System Management Port (HSMP) interface is a mailbox interface
->> +       between the x86 core and the System Management Unit (SMU) firmware.
->> +
->> +       This driver supports ACPI based probing.
->> +
->> +       You  may enable this, if your platform bios provides an ACPI object
->> +       as described in the documentation.
->> +
->> +       If you choose to compile this driver as a module the module will be
->> +       called amd_hsmp.
->> +
->>   config AMD_HSMP
->>        tristate "AMD HSMP Driver"
->> -     depends on AMD_NB && X86_64 && ACPI
->> +     depends on !(AMD_HSMP_ACPI || AMD_HSMP_ACPI=m)
-> depends on AMD_HSMP_ACPI=n is simpler.
-ok, will change it to AMD_HSMP_ACPI=n.
->
->>        help
->>          The driver provides a way for user space tools to monitor and manage
->>          system management functionality on EPYC server CPUs from AMD.
->> @@ -15,3 +36,5 @@ config AMD_HSMP
->>
->>          If you choose to compile this driver as a module the module will be
->>          called amd_hsmp.
->> +
->> +endmenu
->> diff --git a/drivers/platform/x86/amd/hsmp/Makefile b/drivers/platform/x86/amd/hsmp/Makefile
->> index 0cc92865c0a2..53ebc462b0f9 100644
->> --- a/drivers/platform/x86/amd/hsmp/Makefile
->> +++ b/drivers/platform/x86/amd/hsmp/Makefile
->> @@ -4,5 +4,11 @@
->>   # AMD HSMP Driver
->>   #
->>
->> -obj-$(CONFIG_AMD_HSMP)               += amd_hsmp.o
->> -amd_hsmp-objs                        := hsmp.o plat.o acpi.o
->> +ifneq ($(CONFIG_AMD_HSMP), )
->> +obj-$(CONFIG_AMD_HSMP)          += amd_hsmp.o
->> +amd_hsmp-objs = hsmp.o plat.o
->> +endif
->> +ifneq ($(CONFIG_AMD_HSMP_ACPI), )
->> +obj-$(CONFIG_AMD_HSMP_ACPI)     += amd_hsmp.o
->> +amd_hsmp-objs = hsmp.o acpi.o
->> +endif
-> You should add a third symbol for the core that is selected to make
-> the Makefile side less convoluted.
->
-> The build system might work with something as simple as this (I'm not sure
-> if ...-m postfix works for composite objects, ...-y is documented to
-> work):
->
-> obj-$(CONFIG_xx)                        += amd_hsmp.o
-> amd_hsmp-$(CONFIG_xx)                   = hsmp.o
-> amd_hsmp-$(CONFIG_AMD_HSMP)             += plat.o
-> amd_hsmp-$(CONFIG_AMD_HSMP_ACPI)        += acpi.o
-I'm trying to keep the config symbols changes minimal. Existing users 
-need not change their build setup. New ACPI users can include the ACPI 
-one instead.
->> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
->> index 90bfa1ddadbf..0307f4e7176d 100644
->> --- a/drivers/platform/x86/amd/hsmp/acpi.c
->> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
->> @@ -12,21 +12,34 @@
->>   #include "hsmp.h"
->>
->>   #include <linux/acpi.h>
->> +#include <asm/amd_nb.h>
->> +#include <linux/platform_device.h>
->> +
->> +#define DRIVER_NAME          "amd_hsmp"
->> +#define DRIVER_VERSION               "2.3"
->> +#define ACPI_HSMP_DEVICE_HID "AMDI0097"
->>
->>   /* These are the strings specified in ACPI table */
->>   #define MSG_IDOFF_STR                "MsgIdOffset"
->>   #define MSG_ARGOFF_STR               "MsgArgOffset"
->>   #define MSG_RESPOFF_STR              "MsgRspOffset"
->>
->> -void amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
->> -                     u32 *value, bool write)
->> +static int amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
->> +                           u32 *value, bool write)
->>   {
->>        if (write)
->>                iowrite32(*value, sock->virt_base_addr + offset);
->>        else
->>                *value = ioread32(sock->virt_base_addr + offset);
->> +     return 0;
->>   }
->>
->> +static const struct file_operations hsmp_fops = {
->> +     .owner          = THIS_MODULE,
->> +     .unlocked_ioctl = hsmp_ioctl,
->> +     .compat_ioctl   = hsmp_ioctl,
->> +};
->> +
->>   /* This is the UUID used for HSMP */
->>   static const guid_t acpi_hsmp_uuid = GUID_INIT(0xb74d619d, 0x5707, 0x48bd,
->>                                                0xa6, 0x9f, 0x4e, 0xa2,
->> @@ -189,7 +202,7 @@ static int hsmp_parse_acpi_table(struct device *dev, u16 sock_ind)
->>
->>        sock->sock_ind          = sock_ind;
->>        sock->dev               = dev;
->> -     plat_dev.is_acpi_device = true;
->> +     sock->amd_hsmp_rdwr     = amd_hsmp_acpi_rdwr;
->>
->>        sema_init(&sock->hsmp_sem, 1);
->>
->> @@ -202,7 +215,7 @@ static int hsmp_parse_acpi_table(struct device *dev, u16 sock_ind)
->>        return hsmp_read_acpi_dsd(sock);
->>   }
->>
->> -int hsmp_create_acpi_sysfs_if(struct device *dev)
->> +static int hsmp_create_acpi_sysfs_if(struct device *dev)
->>   {
->>        struct attribute_group *attr_grp;
->>        u16 sock_ind;
->> @@ -225,7 +238,7 @@ int hsmp_create_acpi_sysfs_if(struct device *dev)
->>        return devm_device_add_group(dev, attr_grp);
->>   }
->>
->> -int init_acpi(struct device *dev)
->> +static int init_acpi(struct device *dev)
->>   {
->>        u16 sock_ind;
->>        int ret;
->> @@ -259,3 +272,94 @@ int init_acpi(struct device *dev)
->>
->>        return ret;
->>   }
->> +
->> +static const struct acpi_device_id amd_hsmp_acpi_ids[] = {
->> +     {ACPI_HSMP_DEVICE_HID, 0},
->> +     {}
->> +};
->> +MODULE_DEVICE_TABLE(acpi, amd_hsmp_acpi_ids);
->> +
->> +static bool check_acpi_support(struct device *dev)
->> +{
->> +     struct acpi_device *adev = ACPI_COMPANION(dev);
->> +
->> +     if (adev && !acpi_match_device_ids(adev, amd_hsmp_acpi_ids))
->> +             return true;
->> +
->> +     return false;
->> +}
->> +
->> +static int hsmp_acpi_probe(struct platform_device *pdev)
->> +{
->> +     int ret;
->> +
->> +     if (!plat_dev.is_probed) {
->> +             plat_dev.num_sockets = amd_nb_num();
->> +             if (plat_dev.num_sockets == 0 || plat_dev.num_sockets > MAX_AMD_SOCKETS)
->> +                     return -ENODEV;
->> +
->> +             plat_dev.sock = devm_kcalloc(&pdev->dev, plat_dev.num_sockets,
->> +                                          sizeof(*plat_dev.sock),
->> +                                          GFP_KERNEL);
->> +             if (!plat_dev.sock)
->> +                     return -ENOMEM;
->> +     }
->> +
->> +     if (!check_acpi_support(&pdev->dev)) {
->> +             dev_err(&pdev->dev, "Not ACPI device?\n");
->> +             return -ENODEV;
->> +     }
->> +
->> +     ret = init_acpi(&pdev->dev);
->> +     if (ret) {
->> +             dev_err(&pdev->dev, "Failed to initialize HSMP interface.\n");
->> +             return ret;
->> +     }
->> +
->> +     ret = hsmp_create_acpi_sysfs_if(&pdev->dev);
->> +     if (ret)
->> +             dev_err(&pdev->dev, "Failed to create HSMP sysfs interface\n");
->> +
->> +     if (!plat_dev.is_probed) {
->> +             plat_dev.hsmp_device.name       = HSMP_CDEV_NAME;
->> +             plat_dev.hsmp_device.minor      = MISC_DYNAMIC_MINOR;
->> +             plat_dev.hsmp_device.fops       = &hsmp_fops;
->> +             plat_dev.hsmp_device.parent     = &pdev->dev;
->> +             plat_dev.hsmp_device.nodename   = HSMP_DEVNODE_NAME;
->> +             plat_dev.hsmp_device.mode       = 0644;
->> +
->> +             ret = misc_register(&plat_dev.hsmp_device);
->> +             if (ret)
->> +                     return ret;
->> +             plat_dev.is_probed = true;
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +static void hsmp_acpi_remove(struct platform_device *pdev)
->> +{
->> +     /*
->> +      * We register only one misc_device even on multi socket system.
-> multi-socket
+Hello,
 
-will correct it.
+kernel test robot noticed "UBSAN:array-index-out-of-bounds_in_drivers/firmware/dmi_scan.c" on:
 
-Could you please also review the other patches in this patch series?
+commit: e527a6127223b644e0a27b44f4b16e16eb6c7f0a ("platform/x86: toshiba_acpi: Fix quickstart quirk handling")
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
 
->
->> +      * So, deregister should happen only once.
->> +      */
->> +     if (plat_dev.is_probed) {
->> +             misc_deregister(&plat_dev.hsmp_device);
->> +             plat_dev.is_probed = false;
->> +     }
->> +}
->> +
->> +static struct platform_driver amd_hsmp_driver = {
->> +     .probe          = hsmp_acpi_probe,
->> +     .remove_new     = hsmp_acpi_remove,
->> +     .driver         = {
->> +             .name   = DRIVER_NAME,
->> +             .acpi_match_table = amd_hsmp_acpi_ids,
->> +     },
->> +};
->> +
->> +module_platform_driver(amd_hsmp_driver);
->> +
->> +MODULE_DESCRIPTION("AMD HSMP Platform Interface Driver");
->> +MODULE_VERSION(DRIVER_VERSION);
->> +MODULE_LICENSE("GPL v2");
-> --
->   i.
+[test failed on linus/master      1dd28064d4164a4dc9096fd1a7990d2de15f2bb6]
+[test failed on linux-next/master 0b58e108042b0ed28a71cd7edf5175999955b233]
 
-Thanks and Regards,
+in testcase: rcutorture
+version: 
+with following parameters:
 
-Suma
+	runtime: 300s
+	test: default
+	torture_type: tasks
+
+
+
+compiler: gcc-13
+test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+
+(please refer to attached dmesg/kmsg for entire log/backtrace)
+
+
++----------------------------------------------------------------+------------+------------+
+|                                                                | 7add1ee346 | e527a61272 |
++----------------------------------------------------------------+------------+------------+
+| UBSAN:array-index-out-of-bounds_in_drivers/firmware/dmi_scan.c | 0          | 12         |
++----------------------------------------------------------------+------------+------------+
+
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <oliver.sang@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202407091536.8b116b3d-lkp@intel.com
+
+
+[   29.706379][    T1] ------------[ cut here ]------------
+[   29.707252][    T1] UBSAN: array-index-out-of-bounds in drivers/firmware/dmi_scan.c:859:23
+[   29.708541][    T1] index 116 is out of range for type 'char *[23]'
+[   29.709456][    T1] CPU: 0 PID: 1 Comm: swapper Not tainted 6.10.0-rc1-00022-ge527a6127223 #1 ab67a70a695d4c6254fd8ecc241ff23c9c365cc4
+[   29.711170][    T1] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+[   29.711230][    T1] Call Trace:
+[   29.711230][    T1]  <TASK>
+[ 29.711230][ T1] dump_stack_lvl (lib/dump_stack.c:117 (discriminator 1)) 
+[ 29.711230][ T1] dump_stack (lib/dump_stack.c:124) 
+[ 29.711230][ T1] ubsan_epilogue (lib/ubsan.c:232) 
+[ 29.711230][ T1] __ubsan_handle_out_of_bounds (lib/ubsan.c:429) 
+[ 29.711230][ T1] dmi_matches (drivers/firmware/dmi_scan.c:859) 
+[ 29.711230][ T1] dmi_first_match (drivers/firmware/dmi_scan.c:936 (discriminator 1)) 
+[ 29.711230][ T1] toshiba_acpi_init (drivers/platform/x86/toshiba_acpi.c:3615 drivers/platform/x86/toshiba_acpi.c:3629) 
+[ 29.711230][ T1] ? toshiba_wmi_init (drivers/platform/x86/toshiba_acpi.c:3626) 
+[ 29.711230][ T1] do_one_initcall (init/main.c:1267) 
+[ 29.711230][ T1] ? trace_event_raw_event_initcall_level (init/main.c:1258) 
+[ 29.711230][ T1] ? do_initcalls (include/linux/slab.h:664 include/linux/slab.h:778 init/main.c:1338) 
+[ 29.711230][ T1] do_initcalls (init/main.c:1328 (discriminator 1) init/main.c:1345 (discriminator 1)) 
+[ 29.711230][ T1] kernel_init_freeable (init/main.c:1580) 
+[ 29.711230][ T1] ? rest_init (init/main.c:1459) 
+[ 29.711230][ T1] kernel_init (init/main.c:1469) 
+[ 29.711230][ T1] ? __switch_to (arch/x86/kernel/process_64.c:713) 
+[ 29.711230][ T1] ret_from_fork (arch/x86/kernel/process.c:153) 
+[ 29.711230][ T1] ? rest_init (init/main.c:1459) 
+[ 29.711230][ T1] ret_from_fork_asm (arch/x86/entry/entry_64.S:257) 
+[   29.711230][    T1]  </TASK>
+[   29.726986][    T1] ---[ end trace ]---
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20240709/202407091536.8b116b3d-lkp@intel.com
+
+
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
