@@ -1,254 +1,677 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F380215573D;
-	Tue,  9 Jul 2024 09:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6582C38FB0
+	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Jul 2024 10:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720517915; cv=none; b=XPOAWsJ5c0x1l143FsH7JQ8IEvUuqOVNKxg7nXonyUkllCVN+V1NV9+WbCaMdEqT3ZaUa1JqBeykvhFb/ZpF9o7Eay9xMRiy40V8jSyiQ9Luy38hdYS8D4PRSU5qYYjmaUdv2U2RRD1cC/pJLAFv7dvKeVIf00N/Y+vMK1rVj08=
+	t=1720519777; cv=none; b=ZvebwuVLFQs3aT2iAmZg/0Nyt55kKWufKUsXX07pptvuvq9lLd82ugotryP1Bkl//S4mtSovt0bszmBgyGP+LiTt46ZBoqJO4sR5k5dYWhvY3L5u0g8MBVajG+VQY9Zd7pkmMqsezcluU5LvwN0QdWPof52cpdFaYONfJZnU93Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720517915; c=relaxed/simple;
-	bh=ggH5j6ezVRCW6nQAc+Go7OHQYsjY7gwlTULr/jco9jY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Q2gOEmR4Zk9Th8oKrofUobz+XithniGNUjiEy+UzPzshLlvaDfeDRlCjzp0YnoDmXw1JpJou3kg5x8N9qMgEnK9qC/GPgk2M7oMguylCMVkHry6ZEJmWz6PKBvpnv305ka8ef9aWumblLlvZ7rhChMhU6wVVGui1978S0eYPYhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from fedori.lan (51b693a1.dsl.pool.telekom.hu [::ffff:81.182.147.161])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 0000000000071E8C.00000000668D03E4.0016EC7E; Tue, 09 Jul 2024 11:33:24 +0200
-From: Gergo Koteles <soyer@irl.hu>
-To: Hans de Goede <hdegoede@redhat.com>,
-  =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-  Ike Panhc <ike.pan@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org,
-  linux-kernel@vger.kernel.org, Gergo Koteles <soyer@irl.hu>
-Subject: [PATCH 2/4] platform/x86: ideapad-laptop: add a mutex to synchronize VPC commands
-Date: Tue,  9 Jul 2024 11:33:06 +0200
-Message-ID: <d18138c88fbe5e6c98317135433b89f4f09647c1.1720515666.git.soyer@irl.hu>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1720515666.git.soyer@irl.hu>
-References: <cover.1720515666.git.soyer@irl.hu>
+	s=arc-20240116; t=1720519777; c=relaxed/simple;
+	bh=IHIm+3wXPoXR1uvzwdP7Ojk1ADvyg3yUXBGLaFfUPN0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=IkTnqkNpvbihv/NJa5+HZQOmaoGvllmM2YJSkQYCgVwaQy/M3evKz7+SijMPdNpv4ibYgZqqimIU5o4gLDiewDR8fm5ke3Fkb8dRn0hhn8meaaeFVnH1lMvpdCPirNn70+PpL5Awhz6zNQQcYHNM8ZNh7W6FrJuP6FuV3BW5bEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rz/eUTIv; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rz/eUTIv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720519775; x=1752055775;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=IHIm+3wXPoXR1uvzwdP7Ojk1ADvyg3yUXBGLaFfUPN0=;
+  b=Rz/eUTIv/gb5jkqYpY7NwLQpf1UYb6sITSAASPN76VrXx0J3V2fKHVnB
+   Dd0P1xO8vyJZxzEcHDf0gJE9MtKYaK9h1dURmHdtDp8M4qvYulSfIicTD
+   lt3EYzVquaBYG/ZCXby1JnonkVam6Y23Y5qMMA694LOpZnubpx+eaa0v7
+   JtPqIbEGVgO/TuQaWkRjZDbwSmytOVmxJCUT2J+wOUrr4coFmBF0RjbkP
+   V0fMT6y91xQehLNFCqnN/MLenvDqp/84s+cQpGMIQwntAYzzsAOmcZQVL
+   tulVq444i7zEYo8Hq1wqGiYXbYRdQH1Qg5Dy0C2jsIINCISMX4BRmg61L
+   g==;
+X-CSE-ConnectionGUID: b2PgJQx/QkGe5zvfha2Iow==
+X-CSE-MsgGUID: QQJP+wJBRD6lAMW1JvFVHA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="12449180"
+X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
+   d="scan'208";a="12449180"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 03:09:34 -0700
+X-CSE-ConnectionGUID: 8awQV09CRnm9SLk/G6/1eQ==
+X-CSE-MsgGUID: IUNp2ERAQae/LKaECQ80dg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,194,1716274800"; 
+   d="scan'208";a="48530801"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.123])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 03:09:33 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 9 Jul 2024 13:09:26 +0300 (EEST)
+To: Suma Hegde <suma.hegde@amd.com>
+cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+    Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+Subject: Re: [PATCH 05/10] platform/x86/amd/hsmp: Move ACPI code to acpi.c
+In-Reply-To: <20240627053958.2533860-6-suma.hegde@amd.com>
+Message-ID: <40c43c62-6666-573f-e0cc-a86bfbff12db@linux.intel.com>
+References: <20240627053958.2533860-1-suma.hegde@amd.com> <20240627053958.2533860-6-suma.hegde@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-Calling VPC commands consists of several VPCW and VPCR ACPI calls.
-These calls and their results can get mixed up if they are called
-simultaneously from different threads, like acpi notify handler,
-sysfs, debugfs, lenovo-ymc.
+On Thu, 27 Jun 2024, Suma Hegde wrote:
 
-Add a mutex to synchronize VPC commands.
+> Move ACPI related code to acpi.c from hsmp.c.
+> We still have one driver, the driver probe will be split in the next patch.
+> 
+> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+> ---
+>  drivers/platform/x86/amd/hsmp/Makefile |   2 +-
+>  drivers/platform/x86/amd/hsmp/acpi.c   | 261 +++++++++++++++++++++++++
+>  drivers/platform/x86/amd/hsmp/hsmp.c   | 247 -----------------------
+>  drivers/platform/x86/amd/hsmp/hsmp.h   |   2 +
+>  4 files changed, 264 insertions(+), 248 deletions(-)
+>  create mode 100644 drivers/platform/x86/amd/hsmp/acpi.c
+> 
+> diff --git a/drivers/platform/x86/amd/hsmp/Makefile b/drivers/platform/x86/amd/hsmp/Makefile
+> index fb8ba04b2f0d..0cc92865c0a2 100644
+> --- a/drivers/platform/x86/amd/hsmp/Makefile
+> +++ b/drivers/platform/x86/amd/hsmp/Makefile
+> @@ -5,4 +5,4 @@
+>  #
+>  
+>  obj-$(CONFIG_AMD_HSMP)		+= amd_hsmp.o
+> -amd_hsmp-objs			:= hsmp.o plat.o
+> +amd_hsmp-objs			:= hsmp.o plat.o acpi.o
+> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
+> new file mode 100644
+> index 000000000000..90bfa1ddadbf
+> --- /dev/null
+> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
+> @@ -0,0 +1,261 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * AMD HSMP Platform Driver
+> + * Copyright (c) 2024, AMD.
+> + * All Rights Reserved.
+> + *
+> + * This file provides a device implementation for HSMP interface
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include "hsmp.h"
+> +
+> +#include <linux/acpi.h>
+> +
+> +/* These are the strings specified in ACPI table */
+> +#define MSG_IDOFF_STR		"MsgIdOffset"
+> +#define MSG_ARGOFF_STR		"MsgArgOffset"
+> +#define MSG_RESPOFF_STR		"MsgRspOffset"
+> +
+> +void amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
+> +			u32 *value, bool write)
+> +{
+> +	if (write)
+> +		iowrite32(*value, sock->virt_base_addr + offset);
+> +	else
+> +		*value = ioread32(sock->virt_base_addr + offset);
+> +}
+> +
+> +/* This is the UUID used for HSMP */
+> +static const guid_t acpi_hsmp_uuid = GUID_INIT(0xb74d619d, 0x5707, 0x48bd,
+> +						0xa6, 0x9f, 0x4e, 0xa2,
+> +						0x87, 0x1f, 0xc2, 0xf6);
+> +
+> +static inline bool is_acpi_hsmp_uuid(union acpi_object *obj)
+> +{
+> +	if (obj->type == ACPI_TYPE_BUFFER && obj->buffer.length == UUID_SIZE)
+> +		return guid_equal((guid_t *)obj->buffer.pointer, &acpi_hsmp_uuid);
 
-Signed-off-by: Gergo Koteles <soyer@irl.hu>
----
- drivers/platform/x86/ideapad-laptop.c | 59 +++++++++++++++++++--------
- 1 file changed, 43 insertions(+), 16 deletions(-)
+#include for GUID_INIT() and guid_equal().
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 1ace711f7442..464cc5fd0088 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -126,6 +126,7 @@ struct ideapad_rfk_priv {
- 
- struct ideapad_private {
- 	struct acpi_device *adev;
-+	struct mutex vpc_mutex; /* protects the VPC calls */
- 	struct rfkill *rfk[IDEAPAD_RFKILL_DEV_NUM];
- 	struct ideapad_rfk_priv rfk_priv[IDEAPAD_RFKILL_DEV_NUM];
- 	struct platform_device *platform_device;
-@@ -294,6 +295,8 @@ static int debugfs_status_show(struct seq_file *s, void *data)
- 	struct ideapad_private *priv = s->private;
- 	unsigned long value;
- 
-+	guard(mutex)(&priv->vpc_mutex);
-+
- 	if (!read_ec_data(priv->adev->handle, VPCCMD_R_BL_MAX, &value))
- 		seq_printf(s, "Backlight max:  %lu\n", value);
- 	if (!read_ec_data(priv->adev->handle, VPCCMD_R_BL, &value))
-@@ -412,7 +415,8 @@ static ssize_t camera_power_show(struct device *dev,
- 	unsigned long result;
- 	int err;
- 
--	err = read_ec_data(priv->adev->handle, VPCCMD_R_CAMERA, &result);
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		err = read_ec_data(priv->adev->handle, VPCCMD_R_CAMERA, &result);
- 	if (err)
- 		return err;
- 
-@@ -431,7 +435,8 @@ static ssize_t camera_power_store(struct device *dev,
- 	if (err)
- 		return err;
- 
--	err = write_ec_cmd(priv->adev->handle, VPCCMD_W_CAMERA, state);
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		err = write_ec_cmd(priv->adev->handle, VPCCMD_W_CAMERA, state);
- 	if (err)
- 		return err;
- 
-@@ -484,7 +489,8 @@ static ssize_t fan_mode_show(struct device *dev,
- 	unsigned long result;
- 	int err;
- 
--	err = read_ec_data(priv->adev->handle, VPCCMD_R_FAN, &result);
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		err = read_ec_data(priv->adev->handle, VPCCMD_R_FAN, &result);
- 	if (err)
- 		return err;
- 
-@@ -506,7 +512,8 @@ static ssize_t fan_mode_store(struct device *dev,
- 	if (state > 4 || state == 3)
- 		return -EINVAL;
- 
--	err = write_ec_cmd(priv->adev->handle, VPCCMD_W_FAN, state);
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		err = write_ec_cmd(priv->adev->handle, VPCCMD_W_FAN, state);
- 	if (err)
- 		return err;
- 
-@@ -591,7 +598,8 @@ static ssize_t touchpad_show(struct device *dev,
- 	unsigned long result;
- 	int err;
- 
--	err = read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &result);
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		err = read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &result);
- 	if (err)
- 		return err;
- 
-@@ -612,7 +620,8 @@ static ssize_t touchpad_store(struct device *dev,
- 	if (err)
- 		return err;
- 
--	err = write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, state);
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		err = write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, state);
- 	if (err)
- 		return err;
- 
-@@ -1005,6 +1014,8 @@ static int ideapad_rfk_set(void *data, bool blocked)
- 	struct ideapad_rfk_priv *priv = data;
- 	int opcode = ideapad_rfk_data[priv->dev].opcode;
- 
-+	guard(mutex)(&priv->priv->vpc_mutex);
-+
- 	return write_ec_cmd(priv->priv->adev->handle, opcode, !blocked);
- }
- 
-@@ -1018,6 +1029,8 @@ static void ideapad_sync_rfk_state(struct ideapad_private *priv)
- 	int i;
- 
- 	if (priv->features.hw_rfkill_switch) {
-+		guard(mutex)(&priv->vpc_mutex);
-+
- 		if (read_ec_data(priv->adev->handle, VPCCMD_R_RF, &hw_blocked))
- 			return;
- 		hw_blocked = !hw_blocked;
-@@ -1191,8 +1204,9 @@ static void ideapad_input_novokey(struct ideapad_private *priv)
- {
- 	unsigned long long_pressed;
- 
--	if (read_ec_data(priv->adev->handle, VPCCMD_R_NOVO, &long_pressed))
--		return;
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		if (read_ec_data(priv->adev->handle, VPCCMD_R_NOVO, &long_pressed))
-+			return;
- 
- 	if (long_pressed)
- 		ideapad_input_report(priv, 17);
-@@ -1204,8 +1218,9 @@ static void ideapad_check_special_buttons(struct ideapad_private *priv)
- {
- 	unsigned long bit, value;
- 
--	if (read_ec_data(priv->adev->handle, VPCCMD_R_SPECIAL_BUTTONS, &value))
--		return;
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		if (read_ec_data(priv->adev->handle, VPCCMD_R_SPECIAL_BUTTONS, &value))
-+			return;
- 
- 	for_each_set_bit (bit, &value, 16) {
- 		switch (bit) {
-@@ -1238,6 +1253,8 @@ static int ideapad_backlight_get_brightness(struct backlight_device *blightdev)
- 	unsigned long now;
- 	int err;
- 
-+	guard(mutex)(&priv->vpc_mutex);
-+
- 	err = read_ec_data(priv->adev->handle, VPCCMD_R_BL, &now);
- 	if (err)
- 		return err;
-@@ -1250,6 +1267,8 @@ static int ideapad_backlight_update_status(struct backlight_device *blightdev)
- 	struct ideapad_private *priv = bl_get_data(blightdev);
- 	int err;
- 
-+	guard(mutex)(&priv->vpc_mutex);
-+
- 	err = write_ec_cmd(priv->adev->handle, VPCCMD_W_BL,
- 			   blightdev->props.brightness);
- 	if (err)
-@@ -1327,6 +1346,8 @@ static void ideapad_backlight_notify_power(struct ideapad_private *priv)
- 	if (!blightdev)
- 		return;
- 
-+	guard(mutex)(&priv->vpc_mutex);
-+
- 	if (read_ec_data(priv->adev->handle, VPCCMD_R_BL_POWER, &power))
- 		return;
- 
-@@ -1339,7 +1360,8 @@ static void ideapad_backlight_notify_brightness(struct ideapad_private *priv)
- 
- 	/* if we control brightness via acpi video driver */
- 	if (!priv->blightdev)
--		read_ec_data(priv->adev->handle, VPCCMD_R_BL, &now);
-+		scoped_guard(mutex, &priv->vpc_mutex)
-+			read_ec_data(priv->adev->handle, VPCCMD_R_BL, &now);
- 	else
- 		backlight_force_update(priv->blightdev, BACKLIGHT_UPDATE_HOTKEY);
- }
-@@ -1564,7 +1586,8 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
- 	int ret;
- 
- 	/* Without reading from EC touchpad LED doesn't switch state */
--	ret = read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value);
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		ret = read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value);
- 	if (ret)
- 		return;
- 
-@@ -1597,11 +1620,13 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
- 	struct ideapad_private *priv = data;
- 	unsigned long vpc1, vpc2, bit;
- 
--	if (read_ec_data(handle, VPCCMD_R_VPC1, &vpc1))
--		return;
-+	scoped_guard(mutex, &priv->vpc_mutex) {
-+		if (read_ec_data(handle, VPCCMD_R_VPC1, &vpc1))
-+			return;
- 
--	if (read_ec_data(handle, VPCCMD_R_VPC2, &vpc2))
--		return;
-+		if (read_ec_data(handle, VPCCMD_R_VPC2, &vpc2))
-+			return;
-+	}
- 
- 	vpc1 = (vpc2 << 8) | vpc1;
- 
-@@ -1906,6 +1931,8 @@ static int ideapad_acpi_add(struct platform_device *pdev)
- 	priv->adev = adev;
- 	priv->platform_device = pdev;
- 
-+	mutex_init(&priv->vpc_mutex);
-+
- 	ideapad_check_features(priv);
- 
- 	err = ideapad_sysfs_init(priv);
+> +	return false;
+> +}
+> +
+> +static inline int hsmp_get_uid(struct device *dev, u16 *sock_ind)
+> +{
+> +	char *uid;
+> +
+> +	/*
+> +	 * UID (ID00, ID01..IDXX) is used for differentiating sockets,
+> +	 * read it and strip the "ID" part of it and convert the remaining
+> +	 * bytes to integer.
+> +	 */
+> +	uid = acpi_device_uid(ACPI_COMPANION(dev));
+> +
+> +	return kstrtou16(uid + 2, 10, sock_ind);
+
+#include for kstrtou16().
+
+I think I mentioned already earlier that each file should include what 
+they use, but it seems that not even the original hsmp.c contained these 
+so they came from somewhere deeper in the include chain.
+
+> +}
+> +
+> +static acpi_status hsmp_resource(struct acpi_resource *res, void *data)
+> +{
+> +	struct hsmp_socket *sock = data;
+> +	struct resource r;
+
+#include for struct resource
+
+> +
+> +	switch (res->type) {
+> +	case ACPI_RESOURCE_TYPE_FIXED_MEMORY32:
+> +		if (!acpi_dev_resource_memory(res, &r))
+> +			return AE_ERROR;
+> +		if (!r.start || r.end < r.start || !(r.flags & IORESOURCE_MEM_WRITEABLE))
+> +			return AE_ERROR;
+> +		sock->mbinfo.base_addr = r.start;
+> +		sock->mbinfo.size = resource_size(&r);
+
+#include for resource_size()
+
+> +		break;
+> +	case ACPI_RESOURCE_TYPE_END_TAG:
+> +		break;
+> +	default:
+> +		return AE_ERROR;
+> +	}
+> +
+> +	return AE_OK;
+> +}
+> +
+> +static int hsmp_read_acpi_dsd(struct hsmp_socket *sock)
+> +{
+> +	struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER, NULL };
+> +	union acpi_object *guid, *mailbox_package;
+> +	union acpi_object *dsd;
+> +	acpi_status status;
+> +	int ret = 0;
+> +	int j;
+> +
+> +	status = acpi_evaluate_object_typed(ACPI_HANDLE(sock->dev), "_DSD", NULL,
+> +					    &buf, ACPI_TYPE_PACKAGE);
+> +	if (ACPI_FAILURE(status)) {
+> +		dev_err(sock->dev, "Failed to read mailbox reg offsets from DSD table, err: %s\n",
+> +			acpi_format_exception(status));
+
+#include for dev_err()
+
+> +		return -ENODEV;
+
+#include for -Exx codes.
+
+> +	}
+> +
+> +	dsd = buf.pointer;
+> +
+> +	/* HSMP _DSD property should contain 2 objects.
+> +	 * 1. guid which is an acpi object of type ACPI_TYPE_BUFFER
+> +	 * 2. mailbox which is an acpi object of type ACPI_TYPE_PACKAGE
+> +	 *    This mailbox object contains 3 more acpi objects of type
+> +	 *    ACPI_TYPE_PACKAGE for holding msgid, msgresp, msgarg offsets
+> +	 *    these packages inturn contain 2 acpi objects of type
+> +	 *    ACPI_TYPE_STRING and ACPI_TYPE_INTEGER
+> +	 */
+> +	if (!dsd || dsd->type != ACPI_TYPE_PACKAGE || dsd->package.count != 2) {
+> +		ret = -EINVAL;
+> +		goto free_buf;
+> +	}
+> +
+> +	guid = &dsd->package.elements[0];
+> +	mailbox_package = &dsd->package.elements[1];
+> +	if (!is_acpi_hsmp_uuid(guid) || mailbox_package->type != ACPI_TYPE_PACKAGE) {
+> +		dev_err(sock->dev, "Invalid hsmp _DSD table data\n");
+> +		ret = -EINVAL;
+> +		goto free_buf;
+> +	}
+> +
+> +	for (j = 0; j < mailbox_package->package.count; j++) {
+> +		union acpi_object *msgobj, *msgstr, *msgint;
+> +
+> +		msgobj	= &mailbox_package->package.elements[j];
+> +		msgstr	= &msgobj->package.elements[0];
+> +		msgint	= &msgobj->package.elements[1];
+> +
+> +		/* package should have 1 string and 1 integer object */
+> +		if (msgobj->type != ACPI_TYPE_PACKAGE ||
+> +		    msgstr->type != ACPI_TYPE_STRING ||
+> +		    msgint->type != ACPI_TYPE_INTEGER) {
+> +			ret = -EINVAL;
+> +			goto free_buf;
+> +		}
+> +
+> +		if (!strncmp(msgstr->string.pointer, MSG_IDOFF_STR,
+> +			     msgstr->string.length)) {
+> +			sock->mbinfo.msg_id_off = msgint->integer.value;
+> +		} else if (!strncmp(msgstr->string.pointer, MSG_RESPOFF_STR,
+> +				    msgstr->string.length)) {
+> +			sock->mbinfo.msg_resp_off =  msgint->integer.value;
+> +		} else if (!strncmp(msgstr->string.pointer, MSG_ARGOFF_STR,
+> +				    msgstr->string.length)) {
+> +			sock->mbinfo.msg_arg_off = msgint->integer.value;
+> +		} else {
+> +			ret = -ENOENT;
+> +			goto free_buf;
+> +		}
+> +	}
+> +
+> +	if (!sock->mbinfo.msg_id_off || !sock->mbinfo.msg_resp_off ||
+> +	    !sock->mbinfo.msg_arg_off)
+> +		ret = -EINVAL;
+> +
+> +free_buf:
+> +	ACPI_FREE(buf.pointer);
+> +	return ret;
+> +}
+> +
+> +static int hsmp_read_acpi_crs(struct hsmp_socket *sock)
+> +{
+> +	acpi_status status;
+> +
+> +	status = acpi_walk_resources(ACPI_HANDLE(sock->dev), METHOD_NAME__CRS,
+> +				     hsmp_resource, sock);
+> +	if (ACPI_FAILURE(status)) {
+> +		dev_err(sock->dev, "Failed to look up MP1 base address from CRS method, err: %s\n",
+> +			acpi_format_exception(status));
+> +		return -EINVAL;
+> +	}
+> +	if (!sock->mbinfo.base_addr || !sock->mbinfo.size)
+> +		return -EINVAL;
+> +
+> +	/* The mapped region should be un cached */
+
+uncached
+
+> +	sock->virt_base_addr = devm_ioremap_uc(sock->dev, sock->mbinfo.base_addr,
+> +					       sock->mbinfo.size);
+> +	if (!sock->virt_base_addr) {
+> +		dev_err(sock->dev, "Failed to ioremap MP1 base address\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/* Parse the ACPI table to read the data */
+> +static int hsmp_parse_acpi_table(struct device *dev, u16 sock_ind)
+> +{
+> +	struct hsmp_socket *sock = &plat_dev.sock[sock_ind];
+> +	int ret;
+> +
+> +	sock->sock_ind		= sock_ind;
+> +	sock->dev		= dev;
+> +	plat_dev.is_acpi_device	= true;
+> +
+> +	sema_init(&sock->hsmp_sem, 1);
+> +
+> +	/* Read MP1 base address from CRS method */
+> +	ret = hsmp_read_acpi_crs(sock);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Read mailbox offsets from DSD table */
+> +	return hsmp_read_acpi_dsd(sock);
+> +}
+> +
+> +int hsmp_create_acpi_sysfs_if(struct device *dev)
+> +{
+> +	struct attribute_group *attr_grp;
+> +	u16 sock_ind;
+> +	int ret;
+> +
+> +	attr_grp = devm_kzalloc(dev, sizeof(struct attribute_group), GFP_KERNEL);
+
+#include for devm_kzalloc()
+
+> +	if (!attr_grp)
+> +		return -ENOMEM;
+> +
+> +	attr_grp->is_bin_visible = hsmp_is_sock_attr_visible;
+> +
+> +	ret = hsmp_get_uid(dev, &sock_ind);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = hsmp_create_attr_list(attr_grp, dev, sock_ind);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return devm_device_add_group(dev, attr_grp);
+
+#include for devm_device_add_group()
+
 -- 
-2.45.2
+ i.
 
+> +}
+> +
+> +int init_acpi(struct device *dev)
+> +{
+> +	u16 sock_ind;
+> +	int ret;
+> +
+> +	ret = hsmp_get_uid(dev, &sock_ind);
+> +	if (ret)
+> +		return ret;
+> +	if (sock_ind >= plat_dev.num_sockets)
+> +		return -EINVAL;
+> +
+> +	ret = hsmp_parse_acpi_table(dev, sock_ind);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to parse ACPI table\n");
+> +		return ret;
+> +	}
+> +
+> +	/* Test the hsmp interface */
+> +	ret = hsmp_test(sock_ind, 0xDEADBEEF);
+> +	if (ret) {
+> +		dev_err(dev, "HSMP test message failed on Fam:%x model:%x\n",
+> +			boot_cpu_data.x86, boot_cpu_data.x86_model);
+> +		dev_err(dev, "Is HSMP disabled in BIOS ?\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = hsmp_cache_proto_ver(sock_ind);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to read HSMP protocol version\n");
+> +		return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
+> index cd4de107a470..d3f0f08cebf7 100644
+> --- a/drivers/platform/x86/amd/hsmp/hsmp.c
+> +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
+> @@ -28,22 +28,8 @@
+>  #define HSMP_WR			true
+>  #define HSMP_RD			false
+>  
+> -/* These are the strings specified in ACPI table */
+> -#define MSG_IDOFF_STR		"MsgIdOffset"
+> -#define MSG_ARGOFF_STR		"MsgArgOffset"
+> -#define MSG_RESPOFF_STR		"MsgRspOffset"
+> -
+>  struct hsmp_plat_device plat_dev;
+>  
+> -static void amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
+> -			       u32 *value, bool write)
+> -{
+> -	if (write)
+> -		iowrite32(*value, sock->virt_base_addr + offset);
+> -	else
+> -		*value = ioread32(sock->virt_base_addr + offset);
+> -}
+> -
+>  static int amd_hsmp_rdwr(struct hsmp_socket *sock, u32 offset,
+>  			 u32 *value, bool write)
+>  {
+> @@ -298,181 +284,6 @@ long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
+>  	return 0;
+>  }
+>  
+> -/* This is the UUID used for HSMP */
+> -static const guid_t acpi_hsmp_uuid = GUID_INIT(0xb74d619d, 0x5707, 0x48bd,
+> -						0xa6, 0x9f, 0x4e, 0xa2,
+> -						0x87, 0x1f, 0xc2, 0xf6);
+> -
+> -static inline bool is_acpi_hsmp_uuid(union acpi_object *obj)
+> -{
+> -	if (obj->type == ACPI_TYPE_BUFFER && obj->buffer.length == UUID_SIZE)
+> -		return guid_equal((guid_t *)obj->buffer.pointer, &acpi_hsmp_uuid);
+> -
+> -	return false;
+> -}
+> -
+> -static inline int hsmp_get_uid(struct device *dev, u16 *sock_ind)
+> -{
+> -	char *uid;
+> -
+> -	/*
+> -	 * UID (ID00, ID01..IDXX) is used for differentiating sockets,
+> -	 * read it and strip the "ID" part of it and convert the remaining
+> -	 * bytes to integer.
+> -	 */
+> -	uid = acpi_device_uid(ACPI_COMPANION(dev));
+> -
+> -	return kstrtou16(uid + 2, 10, sock_ind);
+> -}
+> -
+> -static acpi_status hsmp_resource(struct acpi_resource *res, void *data)
+> -{
+> -	struct hsmp_socket *sock = data;
+> -	struct resource r;
+> -
+> -	switch (res->type) {
+> -	case ACPI_RESOURCE_TYPE_FIXED_MEMORY32:
+> -		if (!acpi_dev_resource_memory(res, &r))
+> -			return AE_ERROR;
+> -		if (!r.start || r.end < r.start || !(r.flags & IORESOURCE_MEM_WRITEABLE))
+> -			return AE_ERROR;
+> -		sock->mbinfo.base_addr = r.start;
+> -		sock->mbinfo.size = resource_size(&r);
+> -		break;
+> -	case ACPI_RESOURCE_TYPE_END_TAG:
+> -		break;
+> -	default:
+> -		return AE_ERROR;
+> -	}
+> -
+> -	return AE_OK;
+> -}
+> -
+> -static int hsmp_read_acpi_dsd(struct hsmp_socket *sock)
+> -{
+> -	struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER, NULL };
+> -	union acpi_object *guid, *mailbox_package;
+> -	union acpi_object *dsd;
+> -	acpi_status status;
+> -	int ret = 0;
+> -	int j;
+> -
+> -	status = acpi_evaluate_object_typed(ACPI_HANDLE(sock->dev), "_DSD", NULL,
+> -					    &buf, ACPI_TYPE_PACKAGE);
+> -	if (ACPI_FAILURE(status)) {
+> -		dev_err(sock->dev, "Failed to read mailbox reg offsets from DSD table, err: %s\n",
+> -			acpi_format_exception(status));
+> -		return -ENODEV;
+> -	}
+> -
+> -	dsd = buf.pointer;
+> -
+> -	/* HSMP _DSD property should contain 2 objects.
+> -	 * 1. guid which is an acpi object of type ACPI_TYPE_BUFFER
+> -	 * 2. mailbox which is an acpi object of type ACPI_TYPE_PACKAGE
+> -	 *    This mailbox object contains 3 more acpi objects of type
+> -	 *    ACPI_TYPE_PACKAGE for holding msgid, msgresp, msgarg offsets
+> -	 *    these packages inturn contain 2 acpi objects of type
+> -	 *    ACPI_TYPE_STRING and ACPI_TYPE_INTEGER
+> -	 */
+> -	if (!dsd || dsd->type != ACPI_TYPE_PACKAGE || dsd->package.count != 2) {
+> -		ret = -EINVAL;
+> -		goto free_buf;
+> -	}
+> -
+> -	guid = &dsd->package.elements[0];
+> -	mailbox_package = &dsd->package.elements[1];
+> -	if (!is_acpi_hsmp_uuid(guid) || mailbox_package->type != ACPI_TYPE_PACKAGE) {
+> -		dev_err(sock->dev, "Invalid hsmp _DSD table data\n");
+> -		ret = -EINVAL;
+> -		goto free_buf;
+> -	}
+> -
+> -	for (j = 0; j < mailbox_package->package.count; j++) {
+> -		union acpi_object *msgobj, *msgstr, *msgint;
+> -
+> -		msgobj	= &mailbox_package->package.elements[j];
+> -		msgstr	= &msgobj->package.elements[0];
+> -		msgint	= &msgobj->package.elements[1];
+> -
+> -		/* package should have 1 string and 1 integer object */
+> -		if (msgobj->type != ACPI_TYPE_PACKAGE ||
+> -		    msgstr->type != ACPI_TYPE_STRING ||
+> -		    msgint->type != ACPI_TYPE_INTEGER) {
+> -			ret = -EINVAL;
+> -			goto free_buf;
+> -		}
+> -
+> -		if (!strncmp(msgstr->string.pointer, MSG_IDOFF_STR,
+> -			     msgstr->string.length)) {
+> -			sock->mbinfo.msg_id_off = msgint->integer.value;
+> -		} else if (!strncmp(msgstr->string.pointer, MSG_RESPOFF_STR,
+> -				    msgstr->string.length)) {
+> -			sock->mbinfo.msg_resp_off =  msgint->integer.value;
+> -		} else if (!strncmp(msgstr->string.pointer, MSG_ARGOFF_STR,
+> -				    msgstr->string.length)) {
+> -			sock->mbinfo.msg_arg_off = msgint->integer.value;
+> -		} else {
+> -			ret = -ENOENT;
+> -			goto free_buf;
+> -		}
+> -	}
+> -
+> -	if (!sock->mbinfo.msg_id_off || !sock->mbinfo.msg_resp_off ||
+> -	    !sock->mbinfo.msg_arg_off)
+> -		ret = -EINVAL;
+> -
+> -free_buf:
+> -	ACPI_FREE(buf.pointer);
+> -	return ret;
+> -}
+> -
+> -static int hsmp_read_acpi_crs(struct hsmp_socket *sock)
+> -{
+> -	acpi_status status;
+> -
+> -	status = acpi_walk_resources(ACPI_HANDLE(sock->dev), METHOD_NAME__CRS,
+> -				     hsmp_resource, sock);
+> -	if (ACPI_FAILURE(status)) {
+> -		dev_err(sock->dev, "Failed to look up MP1 base address from CRS method, err: %s\n",
+> -			acpi_format_exception(status));
+> -		return -EINVAL;
+> -	}
+> -	if (!sock->mbinfo.base_addr || !sock->mbinfo.size)
+> -		return -EINVAL;
+> -
+> -	/* The mapped region should be un cached */
+> -	sock->virt_base_addr = devm_ioremap_uc(sock->dev, sock->mbinfo.base_addr,
+> -					       sock->mbinfo.size);
+> -	if (!sock->virt_base_addr) {
+> -		dev_err(sock->dev, "Failed to ioremap MP1 base address\n");
+> -		return -ENOMEM;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+> -/* Parse the ACPI table to read the data */
+> -static int hsmp_parse_acpi_table(struct device *dev, u16 sock_ind)
+> -{
+> -	struct hsmp_socket *sock = &plat_dev.sock[sock_ind];
+> -	int ret;
+> -
+> -	sock->sock_ind		= sock_ind;
+> -	sock->dev		= dev;
+> -	plat_dev.is_acpi_device	= true;
+> -
+> -	sema_init(&sock->hsmp_sem, 1);
+> -
+> -	/* Read MP1 base address from CRS method */
+> -	ret = hsmp_read_acpi_crs(sock);
+> -	if (ret)
+> -		return ret;
+> -
+> -	/* Read mailbox offsets from DSD table */
+> -	return hsmp_read_acpi_dsd(sock);
+> -}
+> -
+>  ssize_t hsmp_metric_tbl_read(struct file *filp, struct kobject *kobj,
+>  			     struct bin_attribute *bin_attr, char *buf,
+>  			     loff_t off, size_t count)
+> @@ -581,29 +392,6 @@ int hsmp_create_attr_list(struct attribute_group *attr_grp,
+>  	return hsmp_init_metric_tbl_bin_attr(hsmp_bin_attrs, sock_ind);
+>  }
+>  
+> -int hsmp_create_acpi_sysfs_if(struct device *dev)
+> -{
+> -	struct attribute_group *attr_grp;
+> -	u16 sock_ind;
+> -	int ret;
+> -
+> -	attr_grp = devm_kzalloc(dev, sizeof(struct attribute_group), GFP_KERNEL);
+> -	if (!attr_grp)
+> -		return -ENOMEM;
+> -
+> -	attr_grp->is_bin_visible = hsmp_is_sock_attr_visible;
+> -
+> -	ret = hsmp_get_uid(dev, &sock_ind);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret = hsmp_create_attr_list(attr_grp, dev, sock_ind);
+> -	if (ret)
+> -		return ret;
+> -
+> -	return devm_device_add_group(dev, attr_grp);
+> -}
+> -
+>  int hsmp_cache_proto_ver(u16 sock_ind)
+>  {
+>  	struct hsmp_message msg = { 0 };
+> @@ -619,38 +407,3 @@ int hsmp_cache_proto_ver(u16 sock_ind)
+>  
+>  	return ret;
+>  }
+> -
+> -int init_acpi(struct device *dev)
+> -{
+> -	u16 sock_ind;
+> -	int ret;
+> -
+> -	ret = hsmp_get_uid(dev, &sock_ind);
+> -	if (ret)
+> -		return ret;
+> -	if (sock_ind >= plat_dev.num_sockets)
+> -		return -EINVAL;
+> -
+> -	ret = hsmp_parse_acpi_table(dev, sock_ind);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to parse ACPI table\n");
+> -		return ret;
+> -	}
+> -
+> -	/* Test the hsmp interface */
+> -	ret = hsmp_test(sock_ind, 0xDEADBEEF);
+> -	if (ret) {
+> -		dev_err(dev, "HSMP test message failed on Fam:%x model:%x\n",
+> -			boot_cpu_data.x86, boot_cpu_data.x86_model);
+> -		dev_err(dev, "Is HSMP disabled in BIOS ?\n");
+> -		return ret;
+> -	}
+> -
+> -	ret = hsmp_cache_proto_ver(sock_ind);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to read HSMP protocol version\n");
+> -		return ret;
+> -	}
+> -
+> -	return ret;
+> -}
+> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
+> index d65ff2acdf3d..2baeef57ca54 100644
+> --- a/drivers/platform/x86/amd/hsmp/hsmp.h
+> +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
+> @@ -68,4 +68,6 @@ umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
+>  int hsmp_create_attr_list(struct attribute_group *attr_grp,
+>  			  struct device *dev, u16 sock_ind);
+>  int hsmp_test(u16 sock_ind, u32 value);
+> +void amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
+> +			u32 *value, bool write);
+>  #endif /* HSMP_H */
+> 
