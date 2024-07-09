@@ -1,105 +1,97 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B0A1684AE;
-	Tue,  9 Jul 2024 14:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1431AD408;
+	Tue,  9 Jul 2024 16:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720535947; cv=none; b=LFL/rkGjT24h+C5NxxQ0Xc7tIgZQo3vifNok+yws4wX6DcBMCcETtKf6YBb0sEctG7rbXB4JDPJNcSPBSnE5HH/+yCn1T2kiE3SKitxa6L/tD71RBO2AHP7Ct8EbO94953Icv7GGhOTA6OmNPSZvE+c/MuOWtX72dzq3/8r85wc=
+	t=1720542068; cv=none; b=tMOP7ibOOHVJKXZ/vCAequUrsDPT+StM0evxg7axoT3aWUnDmDY8tMedZ3Lx0FEB27C4stZL0njGVOyEQ65YW/Bh75YW0nbC+mS56m5oC4DHgdCUCEDSoavpCOw23KmVRGdtVNlXNWGkzkwcchJLS3aeq3HZ7Mrpv+MFadsreE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720535947; c=relaxed/simple;
-	bh=0GE8MNSDH3Sj6P3Cex4jOCXxsjFoMGMyscdKZsmrqA0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=djy4rdMTdJt5GWilWbX9EixY5W3gSAKcRnqfeV6zrPHVvvWkwFqtmO2i0yYTC6f/yMdlnzdTuW4zEdIGFC0DDk+P3u13XwRfEu+YxGNOmYR7Og3FA5pRsqnaX5TBIja+TjUnCPo1YRBMtRdLX7IZgU3s6jWcec9IFF4w15ns830=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=OIaf+5Eb; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1720542068; c=relaxed/simple;
+	bh=ukUgCDXHGwZvVXxT9f4IygtQrungzLiummqd2TfuMmQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Qi7AREK4npKKobZPMzGB/mhCh3vD2Ub49wbxrutaChBeVQKpLbUSwfnvenyDAP3k98Lgl11XjyAip3EimrQzp6qI6aCXrHX5eN/3McmV8DnKQOtPASsXYTkWJEWLwf2bz3DROkPKdW2XfPNqTflJM7PQddYG9XpeIzNJ5HAfruI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qcqJf/12; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="OIaf+5Eb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1720535936; x=1721140736; i=w_armin@gmx.de;
-	bh=FbCtUYHofHcGA8NLgniQK4sixnIWhvRfomMMUvQXIRE=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=OIaf+5EbfOuW45XiChM32gc0DGtuDN8oTu+6hrXnl//R+QlcDsgbUfddGk55WkzG
-	 V/rJoIX9ttqzCnCuvusj8LR2xKw0OoG9ul+2/DcJjNmfWlDR5i/Y9dLd2CmUuU0ps
-	 jQvr14jtDJMTsqTGn1wY4t3zhHTbR/6SA0VGH3CAQvHs3rvCpmnT++oTRPniNIRZh
-	 +9TjqmC6IyK8Ir+qOWfB0uKzIbWy4WffvOM5TUbwji1wiIRKLtOuo/EY+NKDDGv+W
-	 ziidRzklHmGSnbTkPGbV6jld2ykj48YmsdsfXzAF+B5xqvo7Kx38p4wRtV1H/5kxV
-	 dBdIlqGRuQhdncn5Xw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MFbRm-1sbgfG0TFe-009Hts; Tue, 09 Jul 2024 16:38:56 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: coproscefalo@gmail.com
-Cc: hdegoede@redhat.com,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qcqJf/12"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1480FC4AF0A;
+	Tue,  9 Jul 2024 16:21:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720542068;
+	bh=ukUgCDXHGwZvVXxT9f4IygtQrungzLiummqd2TfuMmQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qcqJf/12YqJrwq0LkFH1sUWHQUwfQ4Lqua5BUq16piMwxxP0GoslHRtoSa2e6UDwc
+	 OLkqtZgDlOlDn2u9wBFeRbBnGCu/fAoOXMP/qGR5ZHjaaFuxfJWgo0+zWSzwX0Q1MD
+	 yXlkM8ozv+sAryadB3ynsufikGANZZSocP+V0uuH3620uk6+lGRk/u0vpAt5Abs3ng
+	 7qlVkrIhryR3bH52K2EBf7wbVbLer++fG6sUeUHBs8VRC5wC0CtmFgl/32JHRQ1Ee5
+	 sYMp0lTsvmLMY7VW8kd/d1f9Pgj4U1FmD3LRLUPGNzj4mgRPKaomwcfG6mSFRZVJV0
+	 A6nEG94wR1qUQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Chen Ni <nichen@iscas.ac.cn>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Sasha Levin <sashal@kernel.org>,
 	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drivers/platform: toshiba_acpi: Fix array out-of-bounds access
-Date: Tue,  9 Jul 2024 16:38:51 +0200
-Message-Id: <20240709143851.10097-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
+	vadimp@nvidia.com,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.9 26/40] platform/mellanox: nvsw-sn2201: Add check for platform_device_add_resources
+Date: Tue,  9 Jul 2024 12:19:06 -0400
+Message-ID: <20240709162007.30160-26-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240709162007.30160-1-sashal@kernel.org>
+References: <20240709162007.30160-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:OQNN1zf+g4cYRhcc+QfQSNU7CivJHtMDWnsmS/yDRgQ8aLWBA1D
- K4ffr+ySx1lcn6uQRD0nUWqqPQnC5TE89hQnnPWqaTKfX9NSeOKHgEd5n0HRF9YklS0DlvI
- rDJBJ8u3JsuKuXZsV5QTtbxsJBDlPOaJvV9TXo9iEaRpRS3yyKyTNpYpWpQvZJtkmbFEWbe
- 9fRhE+mT+Dv4raqObHtLQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:pHZy82Z+vs4=;p+6L3xOdMtRcW1/F5s8XqyY1kol
- leSMuxy3B+aI46T9ZwKHXexpFB84bLn3mFdw5I+/LUubge76o63PIS30/7sCEhgXQRM8tWZUU
- G+ge+H/ATKQugTIPZDZokJtzCaBNpGxXTyKO6fDe2eRsDT/Wp51YGpjJ2DkLXgY4BIJkQJ1JH
- pmVMzviK6y4+21fXic6LJhRtfx00PuWpKu1+ZAnx8a89oZm5jghgEPkj4gPQkmrF4wKlmQQQR
- oNUfTLio1QEixZWOA1M2Zv8gMCB9sHPJG2Gjrl0v1xCfDkTS76gQFhiTBGmY52cl/nivyc5Ll
- cLa/D6QD6c5j6noXvs/5/N8bnavjyL5jeEebbDE79EJUdhHcq8vk8oxoRzO7PIEa1CtrL65oi
- AUseMeoyHlG9qDAJna0JlpSiCsnXl0BOgrQdm7J3x/pjpSD667dvv+4nDkQj1xpkNhnFPXg8I
- l5KUoAcyRmG75XhOf6DnRhtYKYau1WRbaLQ0z5if4asKUYtdN19bvNmlCG8NG4Ibq/W/cgIt5
- cg0hm5iwCxqYiD5lARu5WLZtfuoWb+m+HKikWwKHdHb69qeObN33Z7RBV+WGELTmvWbT0i1T0
- wHm7BrQuVueRaxcc5NjvdZzmhh6d3wu1AuVeH9UZ0ehTGQLxzMv4IKHETBpfK53rXDRLT6jpC
- LNn/c6lwj6U/bACb40skHmu8HEK5BWHXQEK9o2/diLB32J3dE5AbI6MH44gJPyHh7xhsp95up
- HdShfOSweS+VzkB/IHAVVwzAoRsgPXtwY89qBHnd+91Y5X9ml/3jlMVO7//AI2sR0MU2o6/j0
- ENmsduYo8Q1QuGlloBHVOXezzI36OeBEEYrzHob/umwGM=
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.9.8
+Content-Transfer-Encoding: 8bit
 
-In order to use toshiba_dmi_quirks[] together with the standard DMI
-matching functions, it must be terminated by a empty entry.
+From: Chen Ni <nichen@iscas.ac.cn>
 
-Since this entry is missing, an array out-of-bounds access occurs
-every time the quirk list is processed.
+[ Upstream commit d56fbfbaf592a115b2e11c1044829afba34069d2 ]
 
-Fix this by adding the terminating empty entry.
+Add check for the return value of platform_device_add_resources() and
+return the error if it fails in order to catch the error.
 
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202407091536.8b116b3d-lkp@intel.com
-Fixes: 3cb1f40dfdc3 ("drivers/platform: toshiba_acpi: Call HCI_PANEL_POWER=
-_ON on resume on some models")
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/toshiba_acpi.c | 1 +
- 1 file changed, 1 insertion(+)
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+Link: https://lore.kernel.org/r/20240605032745.2916183-1-nichen@iscas.ac.cn
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/mellanox/nvsw-sn2201.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/to=
-shiba_acpi.c
-index 3a8d8df89186..d54bccec6ad6 100644
-=2D-- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -3299,6 +3299,7 @@ static const struct dmi_system_id toshiba_dmi_quirks=
-[] =3D {
- 		},
- 	 .driver_data =3D (void *)(QUIRK_TURN_ON_PANEL_ON_RESUME | QUIRK_HCI_HOT=
-KEY_QUICKSTART),
- 	},
-+	{ }
- };
-
- static int toshiba_acpi_add(struct acpi_device *acpi_dev)
-=2D-
-2.39.2
+diff --git a/drivers/platform/mellanox/nvsw-sn2201.c b/drivers/platform/mellanox/nvsw-sn2201.c
+index 3ef655591424c..abe7be602f846 100644
+--- a/drivers/platform/mellanox/nvsw-sn2201.c
++++ b/drivers/platform/mellanox/nvsw-sn2201.c
+@@ -1198,6 +1198,7 @@ static int nvsw_sn2201_config_pre_init(struct nvsw_sn2201 *nvsw_sn2201)
+ static int nvsw_sn2201_probe(struct platform_device *pdev)
+ {
+ 	struct nvsw_sn2201 *nvsw_sn2201;
++	int ret;
+ 
+ 	nvsw_sn2201 = devm_kzalloc(&pdev->dev, sizeof(*nvsw_sn2201), GFP_KERNEL);
+ 	if (!nvsw_sn2201)
+@@ -1205,8 +1206,10 @@ static int nvsw_sn2201_probe(struct platform_device *pdev)
+ 
+ 	nvsw_sn2201->dev = &pdev->dev;
+ 	platform_set_drvdata(pdev, nvsw_sn2201);
+-	platform_device_add_resources(pdev, nvsw_sn2201_lpc_io_resources,
++	ret = platform_device_add_resources(pdev, nvsw_sn2201_lpc_io_resources,
+ 				      ARRAY_SIZE(nvsw_sn2201_lpc_io_resources));
++	if (ret)
++		return ret;
+ 
+ 	nvsw_sn2201->main_mux_deferred_nr = NVSW_SN2201_MAIN_MUX_DEFER_NR;
+ 	nvsw_sn2201->main_mux_devs = nvsw_sn2201_main_mux_brdinfo;
+-- 
+2.43.0
 
