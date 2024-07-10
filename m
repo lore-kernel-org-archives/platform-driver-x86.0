@@ -1,104 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C111B86ED
-	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Jul 2024 11:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E189190688;
+	Wed, 10 Jul 2024 11:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720609612; cv=none; b=tJqFQsd6Rpt8tPxPzpgCUB9gUxwS/AFNjLrhAqkeMdpRiktsFn2IDKAIU93jL5cjbURmS8mEz4Mj1lkSt9g1pl3+H7+sd0XNFXEg4zmFZuMgDSOTi9zha4OXbsNHXaBFrmiTeUxFqopeXr6beHCf3yVFiL1y0XMilW9K/vnr5jw=
+	t=1720612511; cv=none; b=SS317B7JNOP7r9J0LuyvfFm+Hb3xqxmD8KwkZ4ys1/cH6yrZmh4wCCGtKMgoY67FwaohzxMZyhNy1WoG7ADug0bLI2AFkviGjmXagpq3SA0zsKe/UOhZx8pagb80jjPAKvI3XWhQ9ndO95tp4DYXnsOMZ2bjhUdb74UgUz8iWR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720609612; c=relaxed/simple;
-	bh=DoYUQJqtuvjo27x5YV5oIxKFexHAg9ka3RbE1Ba6lJs=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ff04iPScwlkx0Lsy0+qthSwAksBxDTuqXwMVFD4ZCtOergl2b1a6N6ATdb7fuGvaH4QOHCmuw1LsO+ilFgK8JG8aEl1HVSKXQCwzh9JNSOJISVWQs+l2lDijElTAhsQ+cedI5Cd5QwehgqDGwsYShHSpCP3HR2nQZAsVcwuLRCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XAz6i9iI; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720612511; c=relaxed/simple;
+	bh=rg5ASVGRrj0CbRfB6zWhQi1ZSfmq2w18dOiDw1+SAk4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cxEU1ah8wmGPKMiueMsCeHKJNM+Ds4KTQ/0AKE3/uPN9LJV8sC0eWQ8lt5own8YQZpMFzBk5xl2fuf321cGINZVAmMgT/wmm4bExQIuB8yBGMbfeLZGSEqpzVqsBebaZhDRaBqFn+lMq3ex7dmzeo8GYmXQmK/g8FjZZkiaj1aM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=JNBOyG+V; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XAz6i9iI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720609611; x=1752145611;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=DoYUQJqtuvjo27x5YV5oIxKFexHAg9ka3RbE1Ba6lJs=;
-  b=XAz6i9iIBD0PROer6/R6ROvfof/P0xGQkFLo02rLJmS3UvKhIDpSWfOm
-   +tzdUim7GnaWVfIqpmDR//LxJ6Bbrgr73QVar+3ebEGU0W2ptWTk+iTM/
-   jDS0Gc9RLGfmM94FhziJODzB89gnIRJEW8o76A/Ge7K5fr6/Iw+Pf+YXL
-   qiwb6vSWhfzczGxA/RPR3WZ+0kJJNZMoINFyhegcbDw2wor9i7BoOqzIC
-   PV6d7l4Cl/ROFGolNXB8tiBKLMt5maqex3xB0VNXQqVEPFsMk+2iAdFp4
-   Qdj9s4azUqY3V1jSfQY/vBpUtf4LZHNxEje9Zg5vDDJiUjhWFMu+HvvwQ
-   Q==;
-X-CSE-ConnectionGUID: Lz52YMNOSCCQO1AsbWtFMA==
-X-CSE-MsgGUID: XgDn0uSOR5mGWctxcmft5A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="17758074"
-X-IronPort-AV: E=Sophos;i="6.09,197,1716274800"; 
-   d="scan'208";a="17758074"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 04:06:50 -0700
-X-CSE-ConnectionGUID: aIU+0MGLT4OoCzGdnQ29vA==
-X-CSE-MsgGUID: G9SpV1z3RzynargdnDD8Rg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,197,1716274800"; 
-   d="scan'208";a="52775236"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.125])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 04:06:47 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 10 Jul 2024 14:06:44 +0300 (EEST)
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    Patil.Reddy@amd.com, mario.limonciello@amd.com
-Subject: Re: [PATCH v1 1/2] platform/x86/amd/pmf: Use existing input event
- codes to update system states
-In-Reply-To: <20240702080626.2902171-1-Shyam-sundar.S-k@amd.com>
-Message-ID: <1af52145-bc2c-4406-9564-dccd3da3664d@linux.intel.com>
-References: <20240702080626.2902171-1-Shyam-sundar.S-k@amd.com>
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="JNBOyG+V"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 8010A1C0082; Wed, 10 Jul 2024 13:55:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1720612507;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C/o5re6zdBSaQzgNUxv5d+aQxD1Iy3QC/+L83tjX/gU=;
+	b=JNBOyG+VygboICYNcmYPUmRv1sazBKGzZwl8n3/258ZYUjQPd328AQhNmeg6epqRUApyVx
+	bA2e1qt8T9b3emMgqDdeG5OXe/MjemJkUr0WwbFTnXCMHpV+Vizq4BOGT1jN+WWspD2c6T
+	b2CwRF/jw4Jqj6vq31rcEWPVwa3mlzk=
+Date: Wed, 10 Jul 2024 13:55:07 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.1 23/29] Input: silead - Always support 10
+ fingers
+Message-ID: <Zo52mxIlrZmeeAzP@duo.ucw.cz>
+References: <20240618124018.3303162-1-sashal@kernel.org>
+ <20240618124018.3303162-23-sashal@kernel.org>
+ <Zo5bML7Q2ke/CsG/@duo.ucw.cz>
+ <3fece177-f6b4-41e4-a781-7c4c923ff7d9@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-
-On Tue, 2 Jul 2024, Shyam Sundar S K wrote:
-
-> At present, the PMF driver employs custom system state codes to update
-> system states. It is recommended to replace these with existing input
-> event codes (KEY_SLEEP, KEY_SUSPEND, and KEY_SCREENLOCK) to align system
-> updates with the PMF-TA output actions.
-> 
-> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
-
-> @@ -475,6 +506,10 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
->  	if (pb_side_load)
->  		amd_pmf_open_pb(dev, dev->dbgfs_dir);
->  
-> +	ret = amd_pmf_register_input_device(dev);
-> +	if (ret)
-> +		goto error;
-> +
->  	return 0;
->  
->  error:
-> @@ -488,6 +523,9 @@ void amd_pmf_deinit_smart_pc(struct amd_pmf_dev *dev)
->  	if (pb_side_load && dev->esbin)
->  		amd_pmf_remove_pb(dev);
->  
-> +	if (dev->pmf_idev)
-> +		input_unregister_device(dev->pmf_idev);
-> +
-
-Why is the ordering in the init and deinit asymmetric? Is that 
-intentional?
-
--- 
- i.
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="107I8a1RkMZoKLQL"
+Content-Disposition: inline
+In-Reply-To: <3fece177-f6b4-41e4-a781-7c4c923ff7d9@redhat.com>
 
 
->  	cancel_delayed_work_sync(&dev->pb_work);
->  	kfree(dev->prev_data);
->  	dev->prev_data = NULL;
+--107I8a1RkMZoKLQL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed 2024-07-10 11:59:48, Hans de Goede wrote:
+> Hi Pavel,
+>=20
+> On 7/10/24 11:58 AM, Pavel Machek wrote:
+> > Hi!
+> >=20
+> >> From: Hans de Goede <hdegoede@redhat.com>
+> >>
+> >> [ Upstream commit 38a38f5a36da9820680d413972cb733349400532 ]
+> >>
+> >> When support for Silead touchscreens was orginal added some touchscree=
+ns
+> >> with older firmware versions only supported 5 fingers and this was made
+> >> the default requiring the setting of a "silead,max-fingers=3D10" uint32
+> >> device-property for all touchscreen models which do support 10 fingers.
+> >>
+> >> There are very few models with the old 5 finger fw, so in practice the
+> >> setting of the "silead,max-fingers=3D10" is boilerplate which needs to
+> >> be copy and pasted to every touchscreen config.
+> >>
+> >> Reporting that 10 fingers are supported on devices which only support
+> >> 5 fingers doesn't cause any problems for userspace in practice, since
+> >> at max 4 finger gestures are supported anyways. Drop the max_fingers
+> >> configuration and simply always assume 10 fingers.
+> >=20
+> > This does not fix a serious bug, should not be in stable.
+>=20
+> This patch is necessary for clean backporting of new DMI quirks added
+> to drivers/platform/x86/touchscreen_dmi.c, so IMHO it does make sense
+> as a stable series patch.
+
+That's likely not reason it ended up it autosel, but why
+not. "Stable-dep-of" tag would be nice in that case.
+
+Best regards,
+								Pavel
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
+
+--107I8a1RkMZoKLQL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZo52mwAKCRAw5/Bqldv6
+8mHwAJ9crQzmyi9a6Ne43Y5DaOS3Pm8k0gCdHd55sQIf/XIWf5wSiZS2PsFxpZs=
+=reBZ
+-----END PGP SIGNATURE-----
+
+--107I8a1RkMZoKLQL--
