@@ -1,109 +1,123 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E189190688;
-	Wed, 10 Jul 2024 11:55:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCA9193461
+	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Jul 2024 14:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720612511; cv=none; b=SS317B7JNOP7r9J0LuyvfFm+Hb3xqxmD8KwkZ4ys1/cH6yrZmh4wCCGtKMgoY67FwaohzxMZyhNy1WoG7ADug0bLI2AFkviGjmXagpq3SA0zsKe/UOhZx8pagb80jjPAKvI3XWhQ9ndO95tp4DYXnsOMZ2bjhUdb74UgUz8iWR4=
+	t=1720621384; cv=none; b=KLU7RTlEfPCix3Wv8185q4GNFB0F0+G0CObEC3E3glcFdlK2MvWzQsCTE38IhEFw6gQfLHRDClZaf+/X548WkxiJ9tlGFz/d0nl1Ucj2CHCVHn/krUKLx04EquxhBKXQU5MVbUC2loOz/o/dCTbLfgXmRd5/L8jSiKBPpGHLHng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720612511; c=relaxed/simple;
-	bh=rg5ASVGRrj0CbRfB6zWhQi1ZSfmq2w18dOiDw1+SAk4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cxEU1ah8wmGPKMiueMsCeHKJNM+Ds4KTQ/0AKE3/uPN9LJV8sC0eWQ8lt5own8YQZpMFzBk5xl2fuf321cGINZVAmMgT/wmm4bExQIuB8yBGMbfeLZGSEqpzVqsBebaZhDRaBqFn+lMq3ex7dmzeo8GYmXQmK/g8FjZZkiaj1aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=JNBOyG+V; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	s=arc-20240116; t=1720621384; c=relaxed/simple;
+	bh=p0+EoZLb+ZwsOTVF8E7aiOGT0pHxopGnpdy4Sf0UvpM=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=Nj1Jh80aPkKAiDxYD/hCuYNdu0y/WHqaM5JBOG6g6LAiJr/HVdYQb8sQlpjAb78Hhq8t1E6XkOKYOFAD0jDOwO38vMb6b2hX30wWzcLt0i70lS/RV2cBzuQeOp5NL9LtFybDm97ITgz7muKmSh5q8mWCnLhsFcpDhRtNKjqr8ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZDDll7Kx; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="JNBOyG+V"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 8010A1C0082; Wed, 10 Jul 2024 13:55:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1720612507;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZDDll7Kx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720621381;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C/o5re6zdBSaQzgNUxv5d+aQxD1Iy3QC/+L83tjX/gU=;
-	b=JNBOyG+VygboICYNcmYPUmRv1sazBKGzZwl8n3/258ZYUjQPd328AQhNmeg6epqRUApyVx
-	bA2e1qt8T9b3emMgqDdeG5OXe/MjemJkUr0WwbFTnXCMHpV+Vizq4BOGT1jN+WWspD2c6T
-	b2CwRF/jw4Jqj6vq31rcEWPVwa3mlzk=
-Date: Wed, 10 Jul 2024 13:55:07 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.1 23/29] Input: silead - Always support 10
- fingers
-Message-ID: <Zo52mxIlrZmeeAzP@duo.ucw.cz>
-References: <20240618124018.3303162-1-sashal@kernel.org>
- <20240618124018.3303162-23-sashal@kernel.org>
- <Zo5bML7Q2ke/CsG/@duo.ucw.cz>
- <3fece177-f6b4-41e4-a781-7c4c923ff7d9@redhat.com>
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0aeBWS3AAsVoK9IvRxT7ZLtZehhCNS8N1P662U6sOik=;
+	b=ZDDll7KxnXSEINoYSGTUwkK+qSTk2VPmFgvoK5CVdpiWT3Mf+OhqxrONO8P6Ad90ufNfiS
+	+0iBVNrtlob22QKGsMAM4LYngClrTn6JArc+46S1yjb0wsMUHmstXMK/k/uyxIoHq0AAWm
+	XwYxAtK/eUczdzbF4If4D2lSd/zQE20=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-426-e7m5rMVFNnaIjNi2YeU3jg-1; Wed, 10 Jul 2024 10:22:58 -0400
+X-MC-Unique: e7m5rMVFNnaIjNi2YeU3jg-1
+Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-52ea96518beso6155937e87.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Jul 2024 07:22:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720621376; x=1721226176;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=0aeBWS3AAsVoK9IvRxT7ZLtZehhCNS8N1P662U6sOik=;
+        b=TIH8omU2HRbKWBlKa3hzcBuYoqDvIrMLHLM6Y4JuXnym3SzV9vqW1e7b8Miz0C1tO/
+         U31fWYFdNF+YCcaDMXVHWdbXyYgZAb76G9kwp47odLazL0kRbCTsKGWcvcNpcpMmwIMr
+         vvaM1+TExMTKydI8gBCRzZR4A1F9oznbbJhYvyzpaWX8XrQBMb6tg2PfQRwrEaJ5RW6s
+         s2mZBG+YKxVKgxypBVD/yFpVbR7xrwYl2N0FUv56D8m9jqin75fZ4VawhbSOyKWZoBHg
+         f4tlNwDsDl+FL2BYzCzo/lCOVNSFxFc2Z2H/zvLV9WkjpzALMwMAGz27GJ+lMb74tIhY
+         RojQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXmx54BoPc0Wc1IZ0z0p6m4oVQSzMFPqt/FVaRLaCj83tBDSkTEURwcZu9qJuzmJuoY/sTURI4XMejwu0nnlFpWl2+QjS6Fk/1s646MrssmAg6QJg==
+X-Gm-Message-State: AOJu0Yx0i/VvC7qq/GvemFpUwoMzeWq0L/MZVZOJkxLcEI9kL/p2Niao
+	10bU0t1RBRHn1V4duUwaoAk6SYyZDfQSvOrWLGDgv7pE6etKxsoG5I1C5VNJ9zilC8VWxySEQC4
+	OTl5J0N02r0Ie7zIk1pFjI0WT6A+NErSqtPuVENDPFQ1CSR5IUY4ueY8NZJsX0Bsy8PcuihA=
+X-Received: by 2002:a05:6512:2349:b0:52c:a20e:4da4 with SMTP id 2adb3069b0e04-52eb99d6033mr5542874e87.57.1720621376654;
+        Wed, 10 Jul 2024 07:22:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFOf2cWFowYkkgGMGqSxA/m5lpqwUkfnLlyd2jqlVEYpWrczj89+qz7lKFVt10/WOFCvZ85Tw==
+X-Received: by 2002:a05:6512:2349:b0:52c:a20e:4da4 with SMTP id 2adb3069b0e04-52eb99d6033mr5542854e87.57.1720621376273;
+        Wed, 10 Jul 2024 07:22:56 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a6bc876sm163398366b.5.2024.07.10.07.22.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jul 2024 07:22:55 -0700 (PDT)
+Message-ID: <4f4c8c2a-c7ae-46bc-babb-7c6df4501df5@redhat.com>
+Date: Wed, 10 Jul 2024 16:22:55 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="107I8a1RkMZoKLQL"
-Content-Disposition: inline
-In-Reply-To: <3fece177-f6b4-41e4-a781-7c4c923ff7d9@redhat.com>
+User-Agent: Mozilla Thunderbird
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [GIT PULL] platform-drivers-x86 for 6.10-6
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ platform-driver-x86@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Armin Wolf <W_Armin@gmx.de>
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Hi Linus,
+
+Obviously I should not have jinxed things by saying that my previous pull-
+request would be the last one for 6.10.
+
+So here is one more 6.10 fixes pull-request with a 1 liner fix for
+a dmi_system_id array in the toshiba_acpi driver not being terminated
+properly. Something which somehow has escaped detection since being
+introduced in 2022 until now.
+
+Regards,
+
+Hans
 
 
---107I8a1RkMZoKLQL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The following changes since commit e527a6127223b644e0a27b44f4b16e16eb6c7f0a:
 
-On Wed 2024-07-10 11:59:48, Hans de Goede wrote:
-> Hi Pavel,
->=20
-> On 7/10/24 11:58 AM, Pavel Machek wrote:
-> > Hi!
-> >=20
-> >> From: Hans de Goede <hdegoede@redhat.com>
-> >>
-> >> [ Upstream commit 38a38f5a36da9820680d413972cb733349400532 ]
-> >>
-> >> When support for Silead touchscreens was orginal added some touchscree=
-ns
-> >> with older firmware versions only supported 5 fingers and this was made
-> >> the default requiring the setting of a "silead,max-fingers=3D10" uint32
-> >> device-property for all touchscreen models which do support 10 fingers.
-> >>
-> >> There are very few models with the old 5 finger fw, so in practice the
-> >> setting of the "silead,max-fingers=3D10" is boilerplate which needs to
-> >> be copy and pasted to every touchscreen config.
-> >>
-> >> Reporting that 10 fingers are supported on devices which only support
-> >> 5 fingers doesn't cause any problems for userspace in practice, since
-> >> at max 4 finger gestures are supported anyways. Drop the max_fingers
-> >> configuration and simply always assume 10 fingers.
-> >=20
-> > This does not fix a serious bug, should not be in stable.
->=20
-> This patch is necessary for clean backporting of new DMI quirks added
-> to drivers/platform/x86/touchscreen_dmi.c, so IMHO it does make sense
-> as a stable series patch.
+  platform/x86: toshiba_acpi: Fix quickstart quirk handling (2024-07-02 16:01:45 +0200)
 
-That's likely not reason it ended up it autosel, but why
-not. "Stable-dep-of" tag would be nice in that case.
+are available in the Git repository at:
 
-Best regards,
-								Pavel
---=20
-People of Russia, stop Putin before his war on Ukraine escalates.
+  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.10-6
 
---107I8a1RkMZoKLQL
-Content-Type: application/pgp-signature; name="signature.asc"
+for you to fetch changes up to b6e02c6b0377d4339986e07aeb696c632cd392aa:
 
------BEGIN PGP SIGNATURE-----
+  platform/x86: toshiba_acpi: Fix array out-of-bounds access (2024-07-10 16:12:12 +0200)
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZo52mwAKCRAw5/Bqldv6
-8mHwAJ9crQzmyi9a6Ne43Y5DaOS3Pm8k0gCdHd55sQIf/XIWf5wSiZS2PsFxpZs=
-=reBZ
------END PGP SIGNATURE-----
+----------------------------------------------------------------
+platform-drivers-x86 for v6.10-6
 
---107I8a1RkMZoKLQL--
+Highlights:
+ -  Fix missing dmi_system_id array termination in toshiba_acpi introduced in 2022
+
+The following is an automated git shortlog grouped by driver:
+
+toshiba_acpi:
+ -  Fix array out-of-bounds access
+
+----------------------------------------------------------------
+Armin Wolf (1):
+      platform/x86: toshiba_acpi: Fix array out-of-bounds access
+
+ drivers/platform/x86/toshiba_acpi.c | 1 +
+ 1 file changed, 1 insertion(+)
+
