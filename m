@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14D5653;
-	Thu, 11 Jul 2024 09:01:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5D276034;
+	Thu, 11 Jul 2024 09:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720688496; cv=none; b=hB84B1nmNGNi2nZ2Gx28Q2BnPjHfK4/UelnGQZkefm49mz86Kx4Jweh5Z8mm8wlA9zRSJUmujqa+wstMmt3g3qN8aaySjd4fjafwoufDjMjg7SxYOyPtEIP6RznLmYXO8h7tVXasfy9Q7y3NaUGyyY+dFNDMbez9JDMekXOVshs=
+	t=1720691077; cv=none; b=muUDY5RjQzylNnKZSjwSUqglHaUALSo7ibc811uTr1YNqRntztPRF0BhADt61k8lf/5rK2BEGsTiYKqWl8YL7dxjfaCKzoT0t7zOZJj91nT6kNOL8wxksVHxBRsZlno3g+YRF2Wr5ASMNS3ULQvh+nLCC3iD+nfVNN/QJaWeJBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720688496; c=relaxed/simple;
-	bh=q0Tb+aVh0TKZSUQY8hXHBvnciYKsGTszf4TQaRw8hMY=;
+	s=arc-20240116; t=1720691077; c=relaxed/simple;
+	bh=MPRFlC/lzcTXvd4rJ3rg6WFvBrN6JyCgnjhQG3EeYso=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tiGDpuwX+NaygPolCcWSOjsEZw7VKMPpZ1b8OwtHSaM1XNbtYh0Y/ubWxOYmSKfrbNxPyAoTf6zF99KhdX56hdmMOrm08baFpokhreVe3UuGlXJfGmgyspcUuX9auHENb/4VthBJXkIg9decbmzlk7VcagrXe2THxiF0VxCzHAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iVqErNEK; arc=none smtp.client-ip=192.198.163.12
+	 MIME-Version:Content-Type; b=F92IdmCGghENqeV42wF+benFwK/yv+4y6M8fFBSgE4cEP4wiaG3rcDxCbJST4Ya+2J5SvddsACarM1OnHSPjNIjomevEBts/peMTjI/N6OEzev+WzGdnPW5ksEM5XPflmNsXWxguZZH0sPWNNAoA443G7lWljdZ0Wt8k2+vDVH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X4Ef8iJR; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iVqErNEK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X4Ef8iJR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720688495; x=1752224495;
+  t=1720691076; x=1752227076;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=q0Tb+aVh0TKZSUQY8hXHBvnciYKsGTszf4TQaRw8hMY=;
-  b=iVqErNEKQ3jMdYNDpzympyswONCejUBWgJRuzUcbeEH25lAAn+JXiUwm
-   yeKJ23CiLXApYhBg4esMsycyT+0Vi9H73mSVZ3JR0W+umjZBUiVEgMHu2
-   GkCQ4xkK+eyXdVfUu52eDZfzTmkK3kkYJn7lSwgoRrgeXL5TUjs4KMegZ
-   VO/YEfJFnpaqkNSDfdjbvExWbnUfPGkEHkGfOpNWkGIKjuIhHjfaDUPPl
-   OKD2aIO0qVY/WHifRP6mu6e4N0/MfE2GGwkxkmc6j+ZPWsHoThnMRymwR
-   PRFwA0jmocwjAxPklfo5Chg7w7AxaHPOXJpOT+x+mIeDyEknUkvk5MKsZ
-   g==;
-X-CSE-ConnectionGUID: 5hdInVk/Tc++LfRn1QbVNQ==
-X-CSE-MsgGUID: chv4380oQMCxVRJc8UVifQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="21926713"
+  bh=MPRFlC/lzcTXvd4rJ3rg6WFvBrN6JyCgnjhQG3EeYso=;
+  b=X4Ef8iJRArkYcFfV4mBKCR7q/J/EwAY4vDz7B3YWAW/O7kqYrux2wd1B
+   iKE/OGMctRv9liDiA/9oZdk8LcYztcQZEZqetm+sR+uqEC8bq6zGOCu8X
+   02ouzvEMbwlmwuW+tDrcRZiti4wuA8NW510YZxKJ3fGsFXjIqkxW5tv9H
+   pveF/Cq6nTgiiBcGNAqEoe4wiiC/8kcrjkES7iI0FXFFryQ46nmJplrZA
+   BufuNgN+Nl5CWCYW1Bo2/FXrYVPeLovrqF0IgaWaGIdVt7lT5GbuD9An/
+   3iZQzD5iYhkVpfZc9+y1yvWIeYmHzz63HWTrPi/TsQkjuvAVHHNWqIxSp
+   A==;
+X-CSE-ConnectionGUID: 8fy58bfkSzW4toyertgqhw==
+X-CSE-MsgGUID: Nu9I+9ERRsyILfmg5HJp2w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="29211111"
 X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
-   d="scan'208";a="21926713"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 02:01:15 -0700
-X-CSE-ConnectionGUID: RZbLQWhFSPG9sUDPgYy+qQ==
-X-CSE-MsgGUID: hQGpTQy3QCOL3dNIJlGxag==
+   d="scan'208";a="29211111"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 02:44:33 -0700
+X-CSE-ConnectionGUID: 3ku592bsTLSHusUDiKlubw==
+X-CSE-MsgGUID: lu5FYwIARtOa5K2pDwyNSg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
-   d="scan'208";a="79207963"
+   d="scan'208";a="53444224"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.127])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 02:01:10 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 02:44:28 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 11 Jul 2024 12:01:06 +0300 (EEST)
+Date: Thu, 11 Jul 2024 12:44:23 +0300 (EEST)
 To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 cc: Jithu Joseph <jithu.joseph@intel.com>, Hans de Goede <hdegoede@redhat.com>, 
     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
@@ -54,23 +54,22 @@ cc: Jithu Joseph <jithu.joseph@intel.com>, Hans de Goede <hdegoede@redhat.com>,
     Tony Luck <tony.luck@intel.com>, linux-trace-kernel@vger.kernel.org, 
     platform-driver-x86@vger.kernel.org, 
     Shankar Ravi V <ravi.v.shankar@intel.com>
-Subject: Re: [PATCH v2 2/4] platform/x86/intel/ifs: Add SBAF test image
- loading support
-In-Reply-To: <20240711000233.684642-3-sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <ac7acff0-828e-d0d1-1f42-0c3f5494dd5c@linux.intel.com>
-References: <20240711000233.684642-1-sathyanarayanan.kuppuswamy@linux.intel.com> <20240711000233.684642-3-sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v2 3/4] platform/x86/intel/ifs: Add SBAF test support
+In-Reply-To: <20240711000233.684642-4-sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <6f445c03-21b9-87bc-1bc1-ca211c56eaa0@linux.intel.com>
+References: <20240711000233.684642-1-sathyanarayanan.kuppuswamy@linux.intel.com> <20240711000233.684642-4-sathyanarayanan.kuppuswamy@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1959870306-1720688466=:6262"
+Content-Type: multipart/mixed; boundary="8323328-311337465-1720691063=:6262"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1959870306-1720688466=:6262
+--8323328-311337465-1720691063=:6262
 Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 
@@ -78,279 +77,305 @@ On Wed, 10 Jul 2024, Kuppuswamy Sathyanarayanan wrote:
 
 > From: Jithu Joseph <jithu.joseph@intel.com>
 >=20
-> Structural Based Functional Test at Field (SBAF) is a new type of
-> testing that provides comprehensive core test coverage complementing
-> existing IFS tests like Scan at Field (SAF) or ArrayBist.
+> In a core, the SBAF test engine is shared between sibling CPUs.
 >=20
-> SBAF device will appear as a new device instance (intel_ifs_2) under
-> /sys/devices/virtual/misc. The user interaction necessary to load the
-> test image and test a particular core is the same as the existing scan
-> test (intel_ifs_0).
+> An SBAF test image contains multiple bundles. Each bundle is further
+> composed of subunits called programs. When a SBAF test (for a particular
+> core) is triggered by the user, each SBAF bundle from the loaded test
+> image is executed sequentially on all the threads on the core using
+> the stop_core_cpuslocked mechanism. Each bundle execution is initiated by
+> writing to MSR_ACTIVATE_SBAF.
 >=20
-> During the loading stage, the driver will look for a file named
-> ff-mm-ss-<batch02x>.sbft in the /lib/firmware/intel/ifs_2 directory.
-> The hardware interaction needed for loading the image is similar to
-> SAF, with the only difference being the MSR addresses used. Reuse the
-> SAF image loading code, passing the SBAF-specific MSR addresses via
-> struct ifs_test_msrs in the driver device data.
->=20
-> Unlike SAF, the SBAF test image chunks are further divided into smaller
-> logical entities called bundles. Since the SBAF test is initiated per
-> bundle, cache the maximum number of bundles in the current image, which
-> is used for iterating through bundles during SBAF test execution.
+> SBAF test bundle execution may be aborted when an interrupt occurs or
+> if the CPU does not have enough power budget for the test. In these
+> cases the kernel restarts the test from the aborted bundle. SBAF
+> execution is not retried if the test fails or if the test makes no
+> forward progress after 5 retries.
 >=20
 > Reviewed-by: Ashok Raj <ashok.raj@intel.com>
 > Reviewed-by: Tony Luck <tony.luck@intel.com>
 > Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
-> Co-developed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@l=
-inux.intel.com>
 > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@lin=
 ux.intel.com>
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
-Although the image_suffix change to the existing code could have been in=20
-own patch but this is simple enough change it doesn't hurt that much.
-
 > ---
->  arch/x86/include/asm/msr-index.h      |  2 ++
->  drivers/platform/x86/intel/ifs/ifs.h  | 37 ++++++++++++++++++++++++++-
->  drivers/platform/x86/intel/ifs/core.c | 24 +++++++++++++++++
->  drivers/platform/x86/intel/ifs/load.c | 15 ++++++++---
->  4 files changed, 73 insertions(+), 5 deletions(-)
+>  drivers/platform/x86/intel/ifs/ifs.h     |  30 +++
+>  drivers/platform/x86/intel/ifs/runtest.c | 234 +++++++++++++++++++++++
+>  2 files changed, 264 insertions(+)
 >=20
-> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-=
-index.h
-> index e022e6eb766c..503d7acdda3f 100644
-> --- a/arch/x86/include/asm/msr-index.h
-> +++ b/arch/x86/include/asm/msr-index.h
-> @@ -247,6 +247,8 @@
->  #define MSR_INTEGRITY_CAPS_ARRAY_BIST          BIT(MSR_INTEGRITY_CAPS_AR=
-RAY_BIST_BIT)
->  #define MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT=094
->  #define MSR_INTEGRITY_CAPS_PERIODIC_BIST=09BIT(MSR_INTEGRITY_CAPS_PERIOD=
-IC_BIST_BIT)
-> +#define MSR_INTEGRITY_CAPS_SBAF_BIT=09=098
-> +#define MSR_INTEGRITY_CAPS_SBAF=09=09=09BIT(MSR_INTEGRITY_CAPS_SBAF_BIT)
->  #define MSR_INTEGRITY_CAPS_SAF_GEN_MASK=09GENMASK_ULL(10, 9)
-> =20
->  #define MSR_LBR_NHM_FROM=09=090x00000680
 > diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/=
 intel/ifs/ifs.h
-> index 738cbc7a5d00..600bb8a1b285 100644
+> index 600bb8a1b285..b261be46bce8 100644
 > --- a/drivers/platform/x86/intel/ifs/ifs.h
 > +++ b/drivers/platform/x86/intel/ifs/ifs.h
-> @@ -126,11 +126,38 @@
->   * The driver does not make use of this, it only tests one core at a tim=
-e.
->   *
->   * .. [#f1] https://github.com/intel/TBD
-> + *
-> + *
-> + * Structural Based Functional Test at Field (SBAF):
-> + * ------------------------------------------------
-> + *
-> + * SBAF is a new type of testing that provides comprehensive core test
-> + * coverage complementing Scan at Field (SAF) testing. SBAF mimics the
-> + * manufacturing screening environment and leverages the same test suite=
-=2E
-> + * It makes use of Design For Test (DFT) observation sites and features
-> + * to maximize coverage in minimum time.
-> + *
-> + * Similar to the SAF test, SBAF isolates the core under test from the
-> + * rest of the system during execution. Upon completion, the core
-> + * seamlessly resets to its pre-test state and resumes normal operation.
-> + * Any machine checks or hangs encountered during the test are confined =
-to
-> + * the isolated core, preventing disruption to the overall system.
-> + *
-> + * Like the SAF test, the SBAF test is also divided into multiple batche=
-s,
-> + * and each batch test can take hundreds of milliseconds (100-200 ms) to
-> + * complete. If such a lengthy interruption is undesirable, it is
-> + * recommended to relocate the time-sensitive applications to other core=
-s.
->   */
->  #include <linux/device.h>
->  #include <linux/miscdevice.h>
+> @@ -157,6 +157,8 @@
+>  #define MSR_SBAF_HASHES_STATUS=09=09=090x000002b9
+>  #define MSR_AUTHENTICATE_AND_COPY_SBAF_CHUNK=090x000002ba
+>  #define MSR_SBAF_CHUNKS_AUTHENTICATION_STATUS=090x000002bb
+> +#define MSR_ACTIVATE_SBAF=09=09=090x000002bc
+> +#define MSR_SBAF_STATUS=09=09=09=090x000002bd
 > =20
->  #define MSR_ARRAY_BIST=09=09=09=090x00000105
-> +
-> +#define MSR_COPY_SBAF_HASHES=09=09=090x000002b8
-> +#define MSR_SBAF_HASHES_STATUS=09=09=090x000002b9
-> +#define MSR_AUTHENTICATE_AND_COPY_SBAF_CHUNK=090x000002ba
-> +#define MSR_SBAF_CHUNKS_AUTHENTICATION_STATUS=090x000002bb
-> +
 >  #define MSR_COPY_SCAN_HASHES=09=09=090x000002c2
 >  #define MSR_SCAN_HASHES_STATUS=09=09=090x000002c3
->  #define MSR_AUTHENTICATE_AND_COPY_CHUNK=09=090x000002c4
-> @@ -140,6 +167,7 @@
->  #define MSR_ARRAY_TRIGGER=09=09=090x000002d6
->  #define MSR_ARRAY_STATUS=09=09=090x000002d7
->  #define MSR_SAF_CTRL=09=09=09=090x000004f0
-> +#define MSR_SBAF_CTRL=09=09=09=090x000004f8
-> =20
->  #define SCAN_NOT_TESTED=09=09=09=090
->  #define SCAN_TEST_PASS=09=09=09=091
-> @@ -147,6 +175,7 @@
-> =20
->  #define IFS_TYPE_SAF=09=09=090
->  #define IFS_TYPE_ARRAY_BIST=09=091
-> +#define IFS_TYPE_SBAF=09=09=092
-> =20
->  #define ARRAY_GEN0=09=09=090
->  #define ARRAY_GEN1=09=09=091
-> @@ -196,7 +225,8 @@ union ifs_chunks_auth_status_gen2 {
->  =09=09u16=09valid_chunks;
->  =09=09u16=09total_chunks;
->  =09=09u32=09error_code=09:8;
-> -=09=09u32=09rsvd2=09=09:24;
-> +=09=09u32=09rsvd2=09=09:8;
-> +=09=09u32=09max_bundle=09:16;
+> @@ -283,6 +285,34 @@ union ifs_array {
 >  =09};
 >  };
 > =20
-> @@ -261,9 +291,12 @@ union ifs_array {
->  #define IFS_SW_TIMEOUT=09=09=09=090xFD
->  #define IFS_SW_PARTIAL_COMPLETION=09=090xFE
-> =20
-> +#define IFS_SUFFIX_SZ=09=095
-> +
->  struct ifs_test_caps {
->  =09int=09integrity_cap_bit;
->  =09int=09test_num;
-> +=09char=09image_suffix[IFS_SUFFIX_SZ];
->  };
-> =20
->  /**
-> @@ -294,6 +327,7 @@ struct ifs_test_msrs {
->   * @generation: IFS test generation enumerated by hardware
->   * @chunk_size: size of a test chunk
->   * @array_gen: test generation of array test
-> + * @max_bundle: maximum bundle index
->   */
->  struct ifs_data {
->  =09int=09loaded_version;
-> @@ -306,6 +340,7 @@ struct ifs_data {
->  =09u32=09generation;
->  =09u32=09chunk_size;
->  =09u32=09array_gen;
-> +=09u32=09max_bundle;
->  };
-> =20
->  struct ifs_work {
-> diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86=
-/intel/ifs/core.c
-> index 1a7ca74abb61..4f571b79f028 100644
-> --- a/drivers/platform/x86/intel/ifs/core.c
-> +++ b/drivers/platform/x86/intel/ifs/core.c
-> @@ -33,6 +33,7 @@ bool *ifs_pkg_auth;
->  static const struct ifs_test_caps scan_test =3D {
->  =09.integrity_cap_bit =3D MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT,
->  =09.test_num =3D IFS_TYPE_SAF,
-> +=09.image_suffix =3D "scan",
->  };
-> =20
->  static const struct ifs_test_caps array_test =3D {
-> @@ -48,6 +49,20 @@ static const struct ifs_test_msrs scan_msrs =3D {
->  =09.test_ctrl =3D MSR_SAF_CTRL,
->  };
-> =20
-> +static const struct ifs_test_msrs sbaf_msrs =3D {
-> +=09.copy_hashes =3D MSR_COPY_SBAF_HASHES,
-> +=09.copy_hashes_status =3D MSR_SBAF_HASHES_STATUS,
-> +=09.copy_chunks =3D MSR_AUTHENTICATE_AND_COPY_SBAF_CHUNK,
-> +=09.copy_chunks_status =3D MSR_SBAF_CHUNKS_AUTHENTICATION_STATUS,
-> +=09.test_ctrl =3D MSR_SBAF_CTRL,
+> +/* MSR_ACTIVATE_SBAF bit fields */
+> +union ifs_sbaf {
+> +=09u64=09data;
+> +=09struct {
+> +=09=09u32=09bundle_idx=09:9;
+> +=09=09u32=09rsvd1=09=09:5;
+> +=09=09u32=09pgm_idx=09=09:2;
+> +=09=09u32=09rsvd2=09=09:16;
+> +=09=09u32=09delay=09=09:31;
+> +=09=09u32=09sigmce=09=09:1;
+> +=09};
 > +};
 > +
-> +static const struct ifs_test_caps sbaf_test =3D {
-> +=09.integrity_cap_bit =3D MSR_INTEGRITY_CAPS_SBAF_BIT,
-> +=09.test_num =3D IFS_TYPE_SBAF,
-> +=09.image_suffix =3D "sbft",
+> +/* MSR_SBAF_STATUS bit fields */
+> +union ifs_sbaf_status {
+> +=09u64=09data;
+> +=09struct {
+> +=09=09u32=09bundle_idx=09:9;
+> +=09=09u32=09rsvd1=09=09:5;
+> +=09=09u32=09pgm_idx=09=09:2;
+> +=09=09u32=09rsvd2=09=09:16;
+> +=09=09u32=09error_code=09:8;
+> +=09=09u32=09rsvd3=09=09:21;
+> +=09=09u32=09test_fail=09:1;
+> +=09=09u32=09sbaf_status=09:2;
+> +=09};
 > +};
 > +
->  static struct ifs_device ifs_devices[] =3D {
->  =09[IFS_TYPE_SAF] =3D {
->  =09=09.test_caps =3D &scan_test,
-> @@ -66,6 +81,15 @@ static struct ifs_device ifs_devices[] =3D {
->  =09=09=09.groups =3D plat_ifs_array_groups,
->  =09=09},
->  =09},
-> +=09[IFS_TYPE_SBAF] =3D {
-> +=09=09.test_caps =3D &sbaf_test,
-> +=09=09.test_msrs =3D &sbaf_msrs,
-> +=09=09.misc =3D {
-> +=09=09=09.name =3D "intel_ifs_2",
-> +=09=09=09.minor =3D MISC_DYNAMIC_MINOR,
-> +=09=09=09.groups =3D plat_ifs_groups,
-> +=09=09},
-> +=09},
+>  /*
+>   * Driver populated error-codes
+>   * 0xFD: Test timed out before completing all the chunks.
+> diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/=
+x86/intel/ifs/runtest.c
+> index 282e4bfe30da..a812ec7761b9 100644
+> --- a/drivers/platform/x86/intel/ifs/runtest.c
+> +++ b/drivers/platform/x86/intel/ifs/runtest.c
+> @@ -29,6 +29,13 @@ struct run_params {
+>  =09union ifs_status status;
 >  };
 > =20
->  #define IFS_NUMTESTS ARRAY_SIZE(ifs_devices)
-> diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86=
-/intel/ifs/load.c
-> index ad0c107f0922..8f2aded38f1c 100644
-> --- a/drivers/platform/x86/intel/ifs/load.c
-> +++ b/drivers/platform/x86/intel/ifs/load.c
-> @@ -261,20 +261,22 @@ static int copy_hashes_authenticate_chunks_gen2(str=
-uct device *dev)
->  =09=09return -EIO;
->  =09}
->  =09ifsd->valid_chunks =3D valid_chunks;
-> +=09ifsd->max_bundle =3D chunk_status.max_bundle;
+> +struct sbaf_run_params {
+> +=09struct ifs_data *ifsd;
+> +=09int *retry_cnt;
+> +=09union ifs_sbaf *activate;
+> +=09union ifs_sbaf_status status;
+> +};
+> +
+>  /*
+>   * Number of TSC cycles that a logical CPU will wait for the other
+>   * logical CPU on the core in the WRMSR(ACTIVATE_SCAN).
+> @@ -146,6 +153,7 @@ static bool can_restart(union ifs_status status)
+>  #define SPINUNIT 100 /* 100 nsec */
+>  static atomic_t array_cpus_in;
+>  static atomic_t scan_cpus_in;
+> +static atomic_t sbaf_cpus_in;
 > =20
->  =09return 0;
+>  /*
+>   * Simplified cpu sibling rendezvous loop based on microcode loader __wa=
+it_for_cpus()
+> @@ -387,6 +395,226 @@ static void ifs_array_test_gen1(int cpu, struct dev=
+ice *dev)
+>  =09=09ifsd->status =3D SCAN_TEST_PASS;
 >  }
 > =20
->  static int validate_ifs_metadata(struct device *dev)
->  {
-> +=09const struct ifs_test_caps *test =3D ifs_get_test_caps(dev);
->  =09struct ifs_data *ifsd =3D ifs_get_data(dev);
->  =09union meta_data *ifs_meta;
->  =09char test_file[64];
->  =09int ret =3D -EINVAL;
-> =20
-> -=09snprintf(test_file, sizeof(test_file), "%02x-%02x-%02x-%02x.scan",
-> +=09snprintf(test_file, sizeof(test_file), "%02x-%02x-%02x-%02x.%s",
->  =09=09 boot_cpu_data.x86, boot_cpu_data.x86_model,
-> -=09=09 boot_cpu_data.x86_stepping, ifsd->cur_batch);
-> +=09=09 boot_cpu_data.x86_stepping, ifsd->cur_batch, test->image_suffix);
-> =20
->  =09ifs_meta =3D (union meta_data *)find_meta_data(ifs_header_ptr, META_T=
-YPE_IFS);
->  =09if (!ifs_meta) {
-> @@ -304,6 +306,11 @@ static int validate_ifs_metadata(struct device *dev)
->  =09=09return ret;
->  =09}
-> =20
-> +=09if (ifs_meta->test_type !=3D test->test_num) {
-> +=09=09dev_warn(dev, "Metadata test_type %d mismatches with device type\n=
-",
-> +=09=09=09 ifs_meta->test_type);
+> +#define SBAF_STATUS_PASS=09=09=090
+> +#define SBAF_STATUS_SIGN_FAIL=09=09=091
+> +#define SBAF_STATUS_INTR=09=09=092
+> +#define SBAF_STATUS_TEST_FAIL=09=09=093
+> +
+> +enum sbaf_status_err_code {
+> +=09IFS_SBAF_NO_ERROR=09=09=09=09=3D 0,
+> +=09IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN=09=09=3D 1,
+> +=09IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS=09=09=3D 2,
+> +=09IFS_SBAF_UNASSIGNED_ERROR_CODE3=09=09=09=3D 3,
+> +=09IFS_SBAF_INVALID_BUNDLE_INDEX=09=09=09=3D 4,
+> +=09IFS_SBAF_MISMATCH_ARGS_BETWEEN_THREADS=09=09=3D 5,
+> +=09IFS_SBAF_CORE_NOT_CAPABLE_CURRENTLY=09=09=3D 6,
+> +=09IFS_SBAF_UNASSIGNED_ERROR_CODE7=09=09=09=3D 7,
+> +=09IFS_SBAF_EXCEED_NUMBER_OF_THREADS_CONCURRENT=09=3D 8,
+> +=09IFS_SBAF_INTERRUPTED_DURING_EXECUTION=09=09=3D 9,
+> +=09IFS_SBAF_INVALID_PROGRAM_INDEX=09=09=09=3D 0xA,
+> +=09IFS_SBAF_CORRUPTED_CHUNK=09=09=09=3D 0xB,
+> +=09IFS_SBAF_DID_NOT_START=09=09=09=09=3D 0xC,
+> +};
+> +
+> +static const char * const sbaf_test_status[] =3D {
+> +=09[IFS_SBAF_NO_ERROR] =3D "SBAF no error",
+> +=09[IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN] =3D "Other thread could not jo=
+in.",
+> +=09[IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS] =3D "Interrupt occurred prio=
+r to SBAF coordination.",
+> +=09[IFS_SBAF_UNASSIGNED_ERROR_CODE3] =3D "Unassigned error code 0x3",
+> +=09[IFS_SBAF_INVALID_BUNDLE_INDEX] =3D "Non valid sbaf bundles. Reload t=
+est image",
+
+Non-valid SBAF
+
+=2E..but given your define is named "INVALID", why not use just Invalid=20
+SBAF?
+
+> +=09[IFS_SBAF_MISMATCH_ARGS_BETWEEN_THREADS] =3D "Mismatch in arguments b=
+etween threads T0/T1.",
+> +=09[IFS_SBAF_CORE_NOT_CAPABLE_CURRENTLY] =3D "Core not capable of perfor=
+ming SBAF currently",
+> +=09[IFS_SBAF_UNASSIGNED_ERROR_CODE7] =3D "Unassigned error code 0x7",
+> +=09[IFS_SBAF_EXCEED_NUMBER_OF_THREADS_CONCURRENT] =3D "Exceeded number o=
+f Logical Processors (LP) allowed to run Scan-At-Field concurrently",
+> +=09[IFS_SBAF_INTERRUPTED_DURING_EXECUTION] =3D "Interrupt occurred prior=
+ to SBAF start",
+> +=09[IFS_SBAF_INVALID_PROGRAM_INDEX] =3D "SBAF program index not valid",
+> +=09[IFS_SBAF_CORRUPTED_CHUNK] =3D "SBAF operation aborted due to corrupt=
+ed chunk",
+> +=09[IFS_SBAF_DID_NOT_START] =3D "SBAF operation did not start",
+> +};
+> +
+> +static void sbaf_message_not_tested(struct device *dev, int cpu, u64 sta=
+tus_data)
+> +{
+> +=09union ifs_sbaf_status status =3D (union ifs_sbaf_status)status_data;
+> +
+> +=09if (status.error_code < ARRAY_SIZE(sbaf_test_status)) {
+> +=09=09dev_info(dev, "CPU(s) %*pbl: SBAF operation did not start. %s\n",
+> +=09=09=09 cpumask_pr_args(cpu_smt_mask(cpu)),
+> +=09=09=09 sbaf_test_status[status.error_code]);
+> +=09} else if (status.error_code =3D=3D IFS_SW_TIMEOUT) {
+> +=09=09dev_info(dev, "CPU(s) %*pbl: software timeout during scan\n",
+> +=09=09=09 cpumask_pr_args(cpu_smt_mask(cpu)));
+> +=09} else if (status.error_code =3D=3D IFS_SW_PARTIAL_COMPLETION) {
+> +=09=09dev_info(dev, "CPU(s) %*pbl: %s\n",
+> +=09=09=09 cpumask_pr_args(cpu_smt_mask(cpu)),
+> +=09=09=09 "Not all SBAF bundles executed. Maximum forward progress retri=
+es exceeded");
+> +=09} else {
+> +=09=09dev_info(dev, "CPU(s) %*pbl: SBAF unknown status %llx\n",
+> +=09=09=09 cpumask_pr_args(cpu_smt_mask(cpu)), status.data);
+> +=09}
+> +}
+> +
+> +static void sbaf_message_fail(struct device *dev, int cpu, union ifs_sba=
+f_status status)
+> +{
+> +=09/* Failed signature check is set when SBAF signature did not match th=
+e expected value */
+> +=09if (status.sbaf_status =3D=3D SBAF_STATUS_SIGN_FAIL) {
+> +=09=09dev_err(dev, "CPU(s) %*pbl: Failed signature check\n",
+> +=09=09=09cpumask_pr_args(cpu_smt_mask(cpu)));
 > +=09}
 > +
->  =09return 0;
->  }
-> =20
-> @@ -391,9 +398,9 @@ int ifs_load_firmware(struct device *dev)
->  =09char scan_path[64];
->  =09int ret;
-> =20
-> -=09snprintf(scan_path, sizeof(scan_path), "intel/ifs_%d/%02x-%02x-%02x-%=
-02x.scan",
-> +=09snprintf(scan_path, sizeof(scan_path), "intel/ifs_%d/%02x-%02x-%02x-%=
-02x.%s",
->  =09=09 test->test_num, boot_cpu_data.x86, boot_cpu_data.x86_model,
-> -=09=09 boot_cpu_data.x86_stepping, ifsd->cur_batch);
-> +=09=09 boot_cpu_data.x86_stepping, ifsd->cur_batch, test->image_suffix);
-> =20
->  =09ret =3D request_firmware_direct(&fw, scan_path, dev);
->  =09if (ret) {
->=20
+> +=09/* Failed to reach end of test */
+> +=09if (status.sbaf_status =3D=3D SBAF_STATUS_TEST_FAIL) {
+> +=09=09dev_err(dev, "CPU(s) %*pbl: Failed to complete test\n",
+> +=09=09=09cpumask_pr_args(cpu_smt_mask(cpu)));
+> +=09}
+> +}
+> +
+> +static bool sbaf_bundle_completed(union ifs_sbaf_status status)
+> +{
+> +=09if (status.sbaf_status || status.error_code)
+> +=09=09return false;
+> +=09return true;
+
+This is same as:
+
+=09return !status.sbaf_status && !status.error_code;
+
+> +}
+> +
+> +static bool sbaf_can_restart(union ifs_sbaf_status status)
+> +{
+> +=09enum sbaf_status_err_code err_code =3D status.error_code;
+> +
+> +=09/* Signature for chunk is bad, or scan test failed */
+> +=09if (status.sbaf_status =3D=3D SBAF_STATUS_SIGN_FAIL ||
+> +=09    status.sbaf_status =3D=3D SBAF_STATUS_TEST_FAIL)
+> +=09=09return false;
+> +
+> +=09switch (err_code) {
+> +=09case IFS_SBAF_NO_ERROR:
+> +=09case IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN:
+> +=09case IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS:
+> +=09case IFS_SBAF_EXCEED_NUMBER_OF_THREADS_CONCURRENT:
+> +=09case IFS_SBAF_INTERRUPTED_DURING_EXECUTION:
+> +=09=09return true;
+> +=09case IFS_SBAF_UNASSIGNED_ERROR_CODE3:
+> +=09case IFS_SBAF_INVALID_BUNDLE_INDEX:
+> +=09case IFS_SBAF_MISMATCH_ARGS_BETWEEN_THREADS:
+> +=09case IFS_SBAF_CORE_NOT_CAPABLE_CURRENTLY:
+> +=09case IFS_SBAF_UNASSIGNED_ERROR_CODE7:
+> +=09case IFS_SBAF_INVALID_PROGRAM_INDEX:
+> +=09case IFS_SBAF_CORRUPTED_CHUNK:
+> +=09case IFS_SBAF_DID_NOT_START:
+> +=09=09break;
+> +=09}
+> +=09return false;
+> +}
+> +
+> +/*
+> + * Execute the SBAF test. Called "simultaneously" on all threads of a co=
+re
+> + * at high priority using the stop_cpus mechanism.
+> + */
+> +static int dosbaf(void *data)
+> +{
+> +=09struct sbaf_run_params *run_params =3D data;
+> +=09int cpu =3D smp_processor_id();
+> +=09union ifs_sbaf_status status;
+> +=09struct ifs_data *ifsd;
+> +=09int first;
+> +
+> +=09ifsd =3D run_params->ifsd;
+> +
+> +=09/* Only the first logical CPU on a core reports result */
+> +=09first =3D cpumask_first(cpu_smt_mask(cpu));
+> +=09wait_for_sibling_cpu(&sbaf_cpus_in, NSEC_PER_SEC);
+> +
+> +=09/*
+> +=09 * This WRMSR will wait for other HT threads to also write
+> +=09 * to this MSR (at most for activate.delay cycles). Then it
+> +=09 * starts scan of each requested bundle. The core test happens
+> +=09 * during the "execution" of the WRMSR.
+> +=09 */
+> +=09wrmsrl(MSR_ACTIVATE_SBAF, run_params->activate->data);
+> +=09rdmsrl(MSR_SBAF_STATUS, status.data);
+> +
+> +=09/* Pass back the result of the test */
+> +=09if (cpu =3D=3D first)
+> +=09=09run_params->status =3D status;
+> +
+> +=09return 0;
+> +}
+> +
+> +static void ifs_sbaf_test_core(int cpu, struct device *dev)
+> +{
+> +=09struct sbaf_run_params run_params;
+> +=09union ifs_sbaf_status status =3D {};
+> +=09union ifs_sbaf activate;
+> +=09unsigned long timeout;
+> +=09struct ifs_data *ifsd;
+> +=09int stop_bundle;
+> +=09int retries;
+> +
+> +=09ifsd =3D ifs_get_data(dev);
+> +
+> +=09activate.data =3D 0;
+> +=09activate.delay =3D IFS_THREAD_WAIT;
+> +
+> +=09timeout =3D jiffies + (2 * HZ);
+
+Unnecessary parenthesis.
+
+Other than those things mentioned above,
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
 
 --=20
  i.
 
---8323328-1959870306-1720688466=:6262--
+--8323328-311337465-1720691063=:6262--
