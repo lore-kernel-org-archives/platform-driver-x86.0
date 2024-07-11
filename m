@@ -1,50 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12FD916D31D;
-	Thu, 11 Jul 2024 15:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B6D47F7F
+	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Jul 2024 17:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720713531; cv=none; b=hHqUVhIQmAijaaQux2CpP95rWF3OqoMrCN96MVEct9opre/qz1BJ+uGsPJ/epS4L6zRrvaffAJHcfvheUbhxNUxyW0j571FUeAaJ2rUVFrYe07Fog4HrxrYpZgTTkLLZqbKNxCNqSB8QG7I/MaBAT8DY/ETySZP2XKEg+oYU97g=
+	t=1720719441; cv=none; b=tC8mUPkbePF96o2E7leo3HIf19XebnFdNYvyzeF7xVV//Q31APjUS0XdmvxZt6QWxuY2dQ4XYK28vwZKRyyfQUTUOB5cuVExKc5QKGa2+rZ23UYxzvpu4dYTvv7Ya+RsgS7x8JynkjGsAPGGYfJfFzkXpTcBH9G/WzC5z1sMVLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720713531; c=relaxed/simple;
-	bh=/Zkrnqj3Lqd9X1BOC6DYomk6gVS9TS6an3c/CYRKMMs=;
+	s=arc-20240116; t=1720719441; c=relaxed/simple;
+	bh=TxCH2gIyixEgXHU40Xt6NLlR1D+1qFP3Oji/9pdzwVw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T1TP0BPlZSAiX0BmchIAcIThHDY51nOMdcvNHmNhXhEB+b05g0eA6pdWutZhvew9F6i1d3dYzNcV+tca2OK6OPQ9wZ4p68IJWeOMI53v3UNyC6Tq5JV3EK7hg5HHqx6kmjvyHfGyB8ssiUKn/0TArl1QThREGkVkEosQHr+BvjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SHClfChx; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=FG/qOXT8j5c5+LWj76HMMpcWuLvhA/swIrPSh8+51tF5ELLtZkv5kqJRXRRCDS+yhF6pGS4EtrxERxwdWqafPjxiUX0vWRuC0dk9mqq+k+bo5yj9RslCpoxE0XOqPDwBayNSXZr85DrHXRtJdVfSy2opHOBF+NQBOs2FkON6t5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LXpXdmGr; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SHClfChx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720713529; x=1752249529;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/Zkrnqj3Lqd9X1BOC6DYomk6gVS9TS6an3c/CYRKMMs=;
-  b=SHClfChxKmQGkeddHQeUygO/MJlDDMndCd2pup+DLdeCfp2mzS1vfA4g
-   2g8/PmFjNvnsX0nyjncGYJCUv9O1Ojv8ccmNvrjHt/GmKEX6eEj7GiaFd
-   RRvTCDMYa5EmnuOKdalSAEUSA9jppljUZaLm9IFeRGJ0/yMNCP433fvjy
-   8LI/YctYNALuNlz86HJDAWhsGjl8tqfNPk3DErK05lHBZtPD8ONclbABK
-   wsxdSpgur+c1TUfw8ws/6m0MVvvBe29Nc+iu2Fuk/aBvshWKDfrqXeAxA
-   1hPOLPk+7LXQ54PIoBhriR4m7RTgTUSK0EIniEtZJDMprV8jCouFvtMkW
-   Q==;
-X-CSE-ConnectionGUID: M+5eZRlrTQeHp/braZwq/A==
-X-CSE-MsgGUID: /UNS3NYkTwGkmUuhjn4M1g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="17815330"
-X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
-   d="scan'208";a="17815330"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 08:58:48 -0700
-X-CSE-ConnectionGUID: 63tcTAldTZ67Xy4Qgrr/Ww==
-X-CSE-MsgGUID: 6ffhYOVmRmiyQydRcflAAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
-   d="scan'208";a="48494761"
-Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.221.134]) ([10.124.221.134])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 08:58:48 -0700
-Message-ID: <7e1e86b9-9578-441f-9f4a-23c274234344@linux.intel.com>
-Date: Thu, 11 Jul 2024 08:58:46 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LXpXdmGr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1720719437;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eK0crMJCyH9BGAdXpCG3oh3BvCuMI0Va4aHOhL3u5dU=;
+	b=LXpXdmGrEcB+wmnsnD0dFNqSaPZjr+5hw27vL0lBvQ2ewgfqIBx87PDWrZCclz+pbuxqcB
+	cep4EgRkCWmANmujWNctL9klojE+WVkXU3P/jyRlHucL8OeClGnyv75+x7SlIfIpTtFC4y
+	DQDIWoOhhWysofVGHbHbli3bREE3p84=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-281-SdZaI3m7N32L34vDWpofew-1; Thu, 11 Jul 2024 13:37:16 -0400
+X-MC-Unique: SdZaI3m7N32L34vDWpofew-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a77f48f2118so162269466b.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Jul 2024 10:37:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720719432; x=1721324232;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eK0crMJCyH9BGAdXpCG3oh3BvCuMI0Va4aHOhL3u5dU=;
+        b=Fa5VWCoz3+ZccWHiW017Kab+gUa0snlen/GyAm2O6ov1pWVq/UBFowuz0WKit4ASST
+         AIXDa7DGZxz5MapzRCzmQ51wMap/A5rNYgKXAqqlDYAhhd5RUacvq5VIqubuhlZt5Qbe
+         RH/oi7w6viN11yO74Q4zQzK2K0jp66AzstgjN8o5LDXSmi3NfwkTz/BVwSAY3Ok2frGt
+         kTKlmrj+Fly+MamlZ9Nye2cZXKpyqRbdZ3OFYWkXUtkjK13WY+ap1a4ywGRancJhQ1rU
+         p4jHUpSt7vuYHjoB8+i9ptgHqSX4CZSzDMkpvm/ZlFIh6jhK81ifiiENTKXJGJ99IxOF
+         4OdA==
+X-Gm-Message-State: AOJu0YxLXwuxuURqjGVaBMbIJ+GxZgjaGQ3h2eUF4g8ZTCclSo02XtII
+	b0QCt9METAxBuT22J8lYwHxz0oIxHlZaYpN4DO3z3RYvLAB4C1VKY3DvbVjnuksDwE+Js41FriI
+	z+aDSuxbvx1LKvHpmqfsb9/1smkLcPuUScFt9cnll1fdwxK37Pml5MKYvf4ihfQomgvs3qFc=
+X-Received: by 2002:a17:907:846:b0:a77:f5fc:cb61 with SMTP id a640c23a62f3a-a799cd67784mr31769866b.0.1720719432212;
+        Thu, 11 Jul 2024 10:37:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFPqd8SAGunOtVTcd5K+8FOIWtOBN/SWBPztP4efqlrYFibDmCdqppEoTIsfKL8L7t5aIpVig==
+X-Received: by 2002:a17:907:846:b0:a77:f5fc:cb61 with SMTP id a640c23a62f3a-a799cd67784mr31767566b.0.1720719431588;
+        Thu, 11 Jul 2024 10:37:11 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a6bc701sm274340166b.34.2024.07.11.10.37.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Jul 2024 10:37:10 -0700 (PDT)
+Message-ID: <acbdb469-f6a4-4180-9d68-9724b3ffe9e2@redhat.com>
+Date: Thu, 11 Jul 2024 19:37:10 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -52,318 +66,501 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] platform/x86/intel/ifs: Add SBAF test support
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Jithu Joseph <jithu.joseph@intel.com>, Hans de Goede
- <hdegoede@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
- Tony Luck <tony.luck@intel.com>, linux-trace-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org,
- Shankar Ravi V <ravi.v.shankar@intel.com>
-References: <20240711000233.684642-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20240711000233.684642-4-sathyanarayanan.kuppuswamy@linux.intel.com>
- <6f445c03-21b9-87bc-1bc1-ca211c56eaa0@linux.intel.com>
-Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <6f445c03-21b9-87bc-1bc1-ca211c56eaa0@linux.intel.com>
+Subject: Re: [PATCH v3 1/1] HP: wmi: added support for 4 zone keyboard rgb
+To: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240707175613.27529-1-carlosmiguelferreira.2003@gmail.com>
+ <20240707175613.27529-2-carlosmiguelferreira.2003@gmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240707175613.27529-2-carlosmiguelferreira.2003@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+
+Hi Carlos,
+
+On 7/7/24 7:54 PM, Carlos Ferreira wrote:
+> This driver adds supports for 4 zone keyboard rgb on omen laptops
+> and maps the wmi backlight toggle event to KEY_KBDILLUMTOGGLE.
+> For the backlight, it uses the multicolor led api.
+> 
+> Tested on the HP Omen 15-en1001np.
+> 
+> Signed-off-by: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
+> ---
+> Changes in v3:
+>  - Moved to the multicolor led api
+>  - Mapped the wmi backlight toggle event to KEY_KBDILLUMTOGGLE
+>  - Some other minor changes
+> Changes in v2:
+>  - Rearranged code to remove forward declarations
+>  - Changed from sprintf() to sysfs_emit()
+>  - Fixed some identation and coding style problems
+>  - Switched from manual bit manipulation to GENMASK(x, y) + FIELD_PREP(XX, )
+>  - #define'ed magic constants
+> ---
+>  drivers/platform/x86/hp/hp-wmi.c | 248 +++++++++++++++++++++++++++++--
+>  1 file changed, 239 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index 5fa553023842..5eae47961f76 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -14,6 +14,8 @@
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+>  #include <linux/kernel.h>
+> +#include <linux/led-class-multicolor.h>
+> +#include <linux/leds.h>
+
+This means that you now also need to update Kconfig to depend on
+LEDS_CLASS_MULTICOLOR, so add the following line to the existing
+Kconfig entry for the HP WMI driver:
+
+	depends on LEDS_CLASS_MULTICOLOR
+
+Adding this should fix the following errors reported by
+the kernel test robot:
+
+ERROR: modpost: "devm_led_classdev_multicolor_unregister" [drivers/platform/x86/hp/hp-wmi.ko] undefined!
+ERROR: modpost: "devm_led_classdev_multicolor_register_ext" [drivers/platform/x86/hp/hp-wmi.ko] undefined!
 
 
-On 7/11/24 2:44 AM, Ilpo Järvinen wrote:
-> On Wed, 10 Jul 2024, Kuppuswamy Sathyanarayanan wrote:
->
->> From: Jithu Joseph <jithu.joseph@intel.com>
->>
->> In a core, the SBAF test engine is shared between sibling CPUs.
->>
->> An SBAF test image contains multiple bundles. Each bundle is further
->> composed of subunits called programs. When a SBAF test (for a particular
->> core) is triggered by the user, each SBAF bundle from the loaded test
->> image is executed sequentially on all the threads on the core using
->> the stop_core_cpuslocked mechanism. Each bundle execution is initiated by
->> writing to MSR_ACTIVATE_SBAF.
->>
->> SBAF test bundle execution may be aborted when an interrupt occurs or
->> if the CPU does not have enough power budget for the test. In these
->> cases the kernel restarts the test from the aborted bundle. SBAF
->> execution is not retried if the test fails or if the test makes no
->> forward progress after 5 retries.
->>
->> Reviewed-by: Ashok Raj <ashok.raj@intel.com>
->> Reviewed-by: Tony Luck <tony.luck@intel.com>
->> Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> ---
->>  drivers/platform/x86/intel/ifs/ifs.h     |  30 +++
->>  drivers/platform/x86/intel/ifs/runtest.c | 234 +++++++++++++++++++++++
->>  2 files changed, 264 insertions(+)
->>
->> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
->> index 600bb8a1b285..b261be46bce8 100644
->> --- a/drivers/platform/x86/intel/ifs/ifs.h
->> +++ b/drivers/platform/x86/intel/ifs/ifs.h
->> @@ -157,6 +157,8 @@
->>  #define MSR_SBAF_HASHES_STATUS			0x000002b9
->>  #define MSR_AUTHENTICATE_AND_COPY_SBAF_CHUNK	0x000002ba
->>  #define MSR_SBAF_CHUNKS_AUTHENTICATION_STATUS	0x000002bb
->> +#define MSR_ACTIVATE_SBAF			0x000002bc
->> +#define MSR_SBAF_STATUS				0x000002bd
->>  
->>  #define MSR_COPY_SCAN_HASHES			0x000002c2
->>  #define MSR_SCAN_HASHES_STATUS			0x000002c3
->> @@ -283,6 +285,34 @@ union ifs_array {
->>  	};
->>  };
->>  
->> +/* MSR_ACTIVATE_SBAF bit fields */
->> +union ifs_sbaf {
->> +	u64	data;
->> +	struct {
->> +		u32	bundle_idx	:9;
->> +		u32	rsvd1		:5;
->> +		u32	pgm_idx		:2;
->> +		u32	rsvd2		:16;
->> +		u32	delay		:31;
->> +		u32	sigmce		:1;
->> +	};
->> +};
->> +
->> +/* MSR_SBAF_STATUS bit fields */
->> +union ifs_sbaf_status {
->> +	u64	data;
->> +	struct {
->> +		u32	bundle_idx	:9;
->> +		u32	rsvd1		:5;
->> +		u32	pgm_idx		:2;
->> +		u32	rsvd2		:16;
->> +		u32	error_code	:8;
->> +		u32	rsvd3		:21;
->> +		u32	test_fail	:1;
->> +		u32	sbaf_status	:2;
->> +	};
->> +};
->> +
->>  /*
->>   * Driver populated error-codes
->>   * 0xFD: Test timed out before completing all the chunks.
->> diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
->> index 282e4bfe30da..a812ec7761b9 100644
->> --- a/drivers/platform/x86/intel/ifs/runtest.c
->> +++ b/drivers/platform/x86/intel/ifs/runtest.c
->> @@ -29,6 +29,13 @@ struct run_params {
->>  	union ifs_status status;
->>  };
->>  
->> +struct sbaf_run_params {
->> +	struct ifs_data *ifsd;
->> +	int *retry_cnt;
->> +	union ifs_sbaf *activate;
->> +	union ifs_sbaf_status status;
->> +};
->> +
->>  /*
->>   * Number of TSC cycles that a logical CPU will wait for the other
->>   * logical CPU on the core in the WRMSR(ACTIVATE_SCAN).
->> @@ -146,6 +153,7 @@ static bool can_restart(union ifs_status status)
->>  #define SPINUNIT 100 /* 100 nsec */
->>  static atomic_t array_cpus_in;
->>  static atomic_t scan_cpus_in;
->> +static atomic_t sbaf_cpus_in;
->>  
->>  /*
->>   * Simplified cpu sibling rendezvous loop based on microcode loader __wait_for_cpus()
->> @@ -387,6 +395,226 @@ static void ifs_array_test_gen1(int cpu, struct device *dev)
->>  		ifsd->status = SCAN_TEST_PASS;
->>  }
->>  
->> +#define SBAF_STATUS_PASS			0
->> +#define SBAF_STATUS_SIGN_FAIL			1
->> +#define SBAF_STATUS_INTR			2
->> +#define SBAF_STATUS_TEST_FAIL			3
->> +
->> +enum sbaf_status_err_code {
->> +	IFS_SBAF_NO_ERROR				= 0,
->> +	IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN		= 1,
->> +	IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS		= 2,
->> +	IFS_SBAF_UNASSIGNED_ERROR_CODE3			= 3,
->> +	IFS_SBAF_INVALID_BUNDLE_INDEX			= 4,
->> +	IFS_SBAF_MISMATCH_ARGS_BETWEEN_THREADS		= 5,
->> +	IFS_SBAF_CORE_NOT_CAPABLE_CURRENTLY		= 6,
->> +	IFS_SBAF_UNASSIGNED_ERROR_CODE7			= 7,
->> +	IFS_SBAF_EXCEED_NUMBER_OF_THREADS_CONCURRENT	= 8,
->> +	IFS_SBAF_INTERRUPTED_DURING_EXECUTION		= 9,
->> +	IFS_SBAF_INVALID_PROGRAM_INDEX			= 0xA,
->> +	IFS_SBAF_CORRUPTED_CHUNK			= 0xB,
->> +	IFS_SBAF_DID_NOT_START				= 0xC,
->> +};
->> +
->> +static const char * const sbaf_test_status[] = {
->> +	[IFS_SBAF_NO_ERROR] = "SBAF no error",
->> +	[IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN] = "Other thread could not join.",
->> +	[IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS] = "Interrupt occurred prior to SBAF coordination.",
->> +	[IFS_SBAF_UNASSIGNED_ERROR_CODE3] = "Unassigned error code 0x3",
->> +	[IFS_SBAF_INVALID_BUNDLE_INDEX] = "Non valid sbaf bundles. Reload test image",
-> Non-valid SBAF
->
-> ...but given your define is named "INVALID", why not use just Invalid 
-> SBAF?
 
-Above string is from the specification document.But I think it is ok to use
-"Invalid" or "Non-valid".
+>  #include <linux/module.h>
+>  #include <linux/init.h>
+>  #include <linux/slab.h>
+> @@ -24,6 +26,7 @@
+>  #include <linux/platform_profile.h>
+>  #include <linux/hwmon.h>
+>  #include <linux/acpi.h>
+> +#include <linux/bits.h>
+>  #include <linux/rfkill.h>
+>  #include <linux/string.h>
+>  #include <linux/dmi.h>
 
-Jithu, any concerns?
+As Ilpo mentioned you need to add a:
 
->> +	[IFS_SBAF_MISMATCH_ARGS_BETWEEN_THREADS] = "Mismatch in arguments between threads T0/T1.",
->> +	[IFS_SBAF_CORE_NOT_CAPABLE_CURRENTLY] = "Core not capable of performing SBAF currently",
->> +	[IFS_SBAF_UNASSIGNED_ERROR_CODE7] = "Unassigned error code 0x7",
->> +	[IFS_SBAF_EXCEED_NUMBER_OF_THREADS_CONCURRENT] = "Exceeded number of Logical Processors (LP) allowed to run Scan-At-Field concurrently",
->> +	[IFS_SBAF_INTERRUPTED_DURING_EXECUTION] = "Interrupt occurred prior to SBAF start",
->> +	[IFS_SBAF_INVALID_PROGRAM_INDEX] = "SBAF program index not valid",
->> +	[IFS_SBAF_CORRUPTED_CHUNK] = "SBAF operation aborted due to corrupted chunk",
->> +	[IFS_SBAF_DID_NOT_START] = "SBAF operation did not start",
->> +};
->> +
->> +static void sbaf_message_not_tested(struct device *dev, int cpu, u64 status_data)
->> +{
->> +	union ifs_sbaf_status status = (union ifs_sbaf_status)status_data;
->> +
->> +	if (status.error_code < ARRAY_SIZE(sbaf_test_status)) {
->> +		dev_info(dev, "CPU(s) %*pbl: SBAF operation did not start. %s\n",
->> +			 cpumask_pr_args(cpu_smt_mask(cpu)),
->> +			 sbaf_test_status[status.error_code]);
->> +	} else if (status.error_code == IFS_SW_TIMEOUT) {
->> +		dev_info(dev, "CPU(s) %*pbl: software timeout during scan\n",
->> +			 cpumask_pr_args(cpu_smt_mask(cpu)));
->> +	} else if (status.error_code == IFS_SW_PARTIAL_COMPLETION) {
->> +		dev_info(dev, "CPU(s) %*pbl: %s\n",
->> +			 cpumask_pr_args(cpu_smt_mask(cpu)),
->> +			 "Not all SBAF bundles executed. Maximum forward progress retries exceeded");
->> +	} else {
->> +		dev_info(dev, "CPU(s) %*pbl: SBAF unknown status %llx\n",
->> +			 cpumask_pr_args(cpu_smt_mask(cpu)), status.data);
->> +	}
->> +}
->> +
->> +static void sbaf_message_fail(struct device *dev, int cpu, union ifs_sbaf_status status)
->> +{
->> +	/* Failed signature check is set when SBAF signature did not match the expected value */
->> +	if (status.sbaf_status == SBAF_STATUS_SIGN_FAIL) {
->> +		dev_err(dev, "CPU(s) %*pbl: Failed signature check\n",
->> +			cpumask_pr_args(cpu_smt_mask(cpu)));
->> +	}
->> +
->> +	/* Failed to reach end of test */
->> +	if (status.sbaf_status == SBAF_STATUS_TEST_FAIL) {
->> +		dev_err(dev, "CPU(s) %*pbl: Failed to complete test\n",
->> +			cpumask_pr_args(cpu_smt_mask(cpu)));
->> +	}
->> +}
->> +
->> +static bool sbaf_bundle_completed(union ifs_sbaf_status status)
->> +{
->> +	if (status.sbaf_status || status.error_code)
->> +		return false;
->> +	return true;
-> This is same as:
->
-> 	return !status.sbaf_status && !status.error_code;
+#include <linux/bitfield.h>
 
-Yes. Your version looks good. Do you want me to send a version with
-this change or you can include it when merging it?
+here.
 
->> +}
->> +
->> +static bool sbaf_can_restart(union ifs_sbaf_status status)
->> +{
->> +	enum sbaf_status_err_code err_code = status.error_code;
->> +
->> +	/* Signature for chunk is bad, or scan test failed */
->> +	if (status.sbaf_status == SBAF_STATUS_SIGN_FAIL ||
->> +	    status.sbaf_status == SBAF_STATUS_TEST_FAIL)
->> +		return false;
->> +
->> +	switch (err_code) {
->> +	case IFS_SBAF_NO_ERROR:
->> +	case IFS_SBAF_OTHER_THREAD_COULD_NOT_JOIN:
->> +	case IFS_SBAF_INTERRUPTED_BEFORE_RENDEZVOUS:
->> +	case IFS_SBAF_EXCEED_NUMBER_OF_THREADS_CONCURRENT:
->> +	case IFS_SBAF_INTERRUPTED_DURING_EXECUTION:
->> +		return true;
->> +	case IFS_SBAF_UNASSIGNED_ERROR_CODE3:
->> +	case IFS_SBAF_INVALID_BUNDLE_INDEX:
->> +	case IFS_SBAF_MISMATCH_ARGS_BETWEEN_THREADS:
->> +	case IFS_SBAF_CORE_NOT_CAPABLE_CURRENTLY:
->> +	case IFS_SBAF_UNASSIGNED_ERROR_CODE7:
->> +	case IFS_SBAF_INVALID_PROGRAM_INDEX:
->> +	case IFS_SBAF_CORRUPTED_CHUNK:
->> +	case IFS_SBAF_DID_NOT_START:
->> +		break;
->> +	}
->> +	return false;
->> +}
->> +
->> +/*
->> + * Execute the SBAF test. Called "simultaneously" on all threads of a core
->> + * at high priority using the stop_cpus mechanism.
->> + */
->> +static int dosbaf(void *data)
->> +{
->> +	struct sbaf_run_params *run_params = data;
->> +	int cpu = smp_processor_id();
->> +	union ifs_sbaf_status status;
->> +	struct ifs_data *ifsd;
->> +	int first;
->> +
->> +	ifsd = run_params->ifsd;
->> +
->> +	/* Only the first logical CPU on a core reports result */
->> +	first = cpumask_first(cpu_smt_mask(cpu));
->> +	wait_for_sibling_cpu(&sbaf_cpus_in, NSEC_PER_SEC);
->> +
->> +	/*
->> +	 * This WRMSR will wait for other HT threads to also write
->> +	 * to this MSR (at most for activate.delay cycles). Then it
->> +	 * starts scan of each requested bundle. The core test happens
->> +	 * during the "execution" of the WRMSR.
->> +	 */
->> +	wrmsrl(MSR_ACTIVATE_SBAF, run_params->activate->data);
->> +	rdmsrl(MSR_SBAF_STATUS, status.data);
->> +
->> +	/* Pass back the result of the test */
->> +	if (cpu == first)
->> +		run_params->status = status;
->> +
->> +	return 0;
->> +}
->> +
->> +static void ifs_sbaf_test_core(int cpu, struct device *dev)
->> +{
->> +	struct sbaf_run_params run_params;
->> +	union ifs_sbaf_status status = {};
->> +	union ifs_sbaf activate;
->> +	unsigned long timeout;
->> +	struct ifs_data *ifsd;
->> +	int stop_bundle;
->> +	int retries;
->> +
->> +	ifsd = ifs_get_data(dev);
->> +
->> +	activate.data = 0;
->> +	activate.delay = IFS_THREAD_WAIT;
->> +
->> +	timeout = jiffies + (2 * HZ);
-> Unnecessary parenthesis.
->
-> Other than those things mentioned above,
->
-> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->
->
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+> @@ -44,6 +47,14 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45E9-BE91-3D44E2C707E4");
+>  
+>  #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
+>  
+> +#define FOURZONE_LIGHTING_SUPPORTED_BIT	0x01
+> +#define FOURZONE_LIGHTING_ON		228
+> +#define FOURZONE_LIGHTING_OFF		100
+> +
+> +#define FOURZONE_COLOR_R		GENMASK(23, 16)
+> +#define FOURZONE_COLOR_G		GENMASK(15, 8)
+> +#define FOURZONE_COLOR_B		GENMASK(7, 0)
+
+I see here and below that you are encoding all 3 color components in
+a single 24bit intensity / brightness value, that is not how you
+are supposed to use the multi-color LED API. More about this below.
+
+> +
+>  /* DMI board names of devices that should use the omen specific path for
+>   * thermal profiles.
+>   * This was obtained by taking a look in the windows omen command center
+> @@ -143,18 +154,36 @@ enum hp_wmi_commandtype {
+>  };
+>  
+>  enum hp_wmi_gm_commandtype {
+> -	HPWMI_FAN_SPEED_GET_QUERY = 0x11,
+> -	HPWMI_SET_PERFORMANCE_MODE = 0x1A,
+> -	HPWMI_FAN_SPEED_MAX_GET_QUERY = 0x26,
+> -	HPWMI_FAN_SPEED_MAX_SET_QUERY = 0x27,
+> -	HPWMI_GET_SYSTEM_DESIGN_DATA = 0x28,
+> +	HPWMI_FAN_SPEED_GET_QUERY	= 0x11,
+> +	HPWMI_SET_PERFORMANCE_MODE	= 0x1A,
+> +	HPWMI_FAN_SPEED_MAX_GET_QUERY	= 0x26,
+> +	HPWMI_FAN_SPEED_MAX_SET_QUERY	= 0x27,
+> +	HPWMI_GET_SYSTEM_DESIGN_DATA	= 0x28,
+> +	HPWMI_GET_KEYBOARD_TYPE		= 0x2B,
+> +};
+> +
+> +enum hp_wmi_fourzone_commandtype {
+> +	HPWMI_SUPPORTS_LIGHTNING	= 0x01,
+> +	HPWMI_FOURZONE_COLOR_GET	= 0x02,
+> +	HPWMI_FOURZONE_COLOR_SET	= 0x03,
+> +	HPWMI_LED_BRIGHTNESS_GET	= 0x04,
+> +	HPWMI_LED_BRIGHTNESS_SET	= 0x05,
+> +};
+> +
+> +enum hp_wmi_keyboardtype {
+> +	HPWMI_KEYBOARD_INVALID        = 0x00,
+> +	HPWMI_KEYBOARD_NORMAL         = 0x01,
+> +	HPWMI_KEYBOARD_WITH_NUMPAD    = 0x02,
+> +	HPWMI_KEYBOARD_WITHOUT_NUMPAD = 0x03,
+> +	HPWMI_KEYBOARD_RGB	      = 0x04,
+>  };
+>  
+>  enum hp_wmi_command {
+> -	HPWMI_READ	= 0x01,
+> -	HPWMI_WRITE	= 0x02,
+> -	HPWMI_ODM	= 0x03,
+> -	HPWMI_GM	= 0x20008,
+> +	HPWMI_READ     = 0x01,
+> +	HPWMI_WRITE    = 0x02,
+> +	HPWMI_ODM      = 0x03,
+> +	HPWMI_GM       = 0x20008,
+> +	HPWMI_FOURZONE = 0x20009,
+>  };
+>  
+>  enum hp_wmi_hardware_mask {
+> @@ -265,6 +294,7 @@ static struct platform_device *hp_wmi_platform_dev;
+>  static struct platform_profile_handler platform_profile_handler;
+>  static bool platform_profile_support;
+>  static bool zero_insize_support;
+> +static bool fourzone_lightning_support;
+>  
+>  static struct rfkill *wifi_rfkill;
+>  static struct rfkill *bluetooth_rfkill;
+> @@ -821,6 +851,40 @@ static struct attribute *hp_wmi_attrs[] = {
+>  };
+>  ATTRIBUTE_GROUPS(hp_wmi);
+>  
+> +static const char * const fourzone_zone_names[4] = {
+> +	"hp:rgb:kbd_zoned_backlight-right",
+> +	"hp:rgb:kbd_zoned_backlight-middle",
+> +	"hp:rgb:kbd_zoned_backlight-left",
+> +	"hp:rgb:kbd_zoned_backlight-wasd"
+> +};
+> +
+> +struct hp_fourzone_leds {
+> +	struct led_classdev_mc leds[4];
+> +	struct mc_subled subleds[4];
+
+The idea with the multi-color API and subleds is that
+a RGB LED really are 3 seperate LEDs (R + G + B) in one.
+This is alsohow they are actually phyiscally made.
+So for 4 zones you need 12 subleds.
+
+I think it would be best to to have a single struct per zone:
+
+struct hp_fourzone_led {
+	struct led_classdev_mc mc_led;
+	struct mc_subled subleds[3];
+	u32 cache; /* Not sure if you still want this */
+};
+
+And then declare an array of 4 of these:
+
+static struct hp_fourzone_led hp_fourzone_leds[4];
+
+
+
+> +	u32 color_cache[4];
+> +};
+> +static struct hp_fourzone_leds fourzone_leds;
+> +
+> +static enum led_brightness get_fourzone_brightness(struct led_classdev *led_cdev)
+> +{
+> +	u8 buff[4];
+> +
+> +	hp_wmi_perform_query(HPWMI_LED_BRIGHTNESS_GET, HPWMI_FOURZONE,
+> +		&buff, sizeof(buff), sizeof(buff));
+> +
+> +	return buff[0] == FOURZONE_LIGHTING_ON ? LED_ON : LED_OFF;
+> +}
+> +
+> +static void fourzone_update_brightness(void)
+> +{
+> +	unsigned int br;
+> +
+> +	/* synchronize the brightness level on all zones */
+> +	br = get_fourzone_brightness(NULL);
+> +	for (size_t i = 0; i < 4; i++)
+> +		fourzone_leds.leds[i].led_cdev.brightness = br;
+> +}
+> +
+>  static void hp_wmi_notify(u32 value, void *context)
+>  {
+>  	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
+> @@ -932,6 +996,14 @@ static void hp_wmi_notify(u32 value, void *context)
+>  	case HPWMI_PROXIMITY_SENSOR:
+>  		break;
+>  	case HPWMI_BACKLIT_KB_BRIGHTNESS:
+> +		if (fourzone_lightning_support) {
+> +			input_report_key(hp_wmi_input_dev, KEY_KBDILLUMTOGGLE, true);
+> +			input_sync(hp_wmi_input_dev);
+> +			input_report_key(hp_wmi_input_dev, KEY_KBDILLUMTOGGLE, false);
+> +			input_sync(hp_wmi_input_dev);
+> +
+> +			fourzone_update_brightness();
+
+Does you calling fourzone_update_brightness() here mean that the embedded
+controller (EC) if the laptop toggles the kbd backlight on/off itself when
+you press the Fn + key combo for this on the kbd ? In that case you
+should not be sending a KEY_KBDILLUMTOGGLE key press event. That event
+is telling userspace that it should toggle the brightness, which you
+should only do if this is not done by the EC itself.
+
+If the EC does indeed toggle the brightness on/off (or even cycles it
+between various brightness levels) then the right thing to do is to
+call led_classdev_notify_brightness_hw_changed() on mc_led.led_cdev for
+each of the 4 zones when receiving this event.
+
+> +		}
+>  		break;
+>  	case HPWMI_PEAKSHIFT_PERIOD:
+>  		break;
+> @@ -1505,6 +1577,154 @@ static int thermal_profile_setup(void)
+>  	return 0;
+>  }
+>  
+> +static int fourzone_set_colors(u32 color, size_t zone)
+> +{
+> +	u8 buff[128];
+> +	int ret;
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_FOURZONE_COLOR_GET, HPWMI_FOURZONE,
+> +		&buff, sizeof(buff), sizeof(buff));
+> +	if (ret != 0)
+> +		return -EINVAL;
+
+You are doing a read + modify + write of the kbd settings here.
+
+This is fine, but to avoid racing against another r/m/w cycle
+done at the same time if userspace writes 2 zones at the same
+time you need to take a mutex here.
+
+> +
+> +	buff[25 + zone * 3]     = FIELD_GET(FOURZONE_COLOR_R, color);
+> +	buff[25 + zone * 3 + 1] = FIELD_GET(FOURZONE_COLOR_G, color);
+> +	buff[25 + zone * 3 + 2] = FIELD_GET(FOURZONE_COLOR_B, color);
+
+As mentioned above this is wrong. You should have a separate mc_subled
+struct for each color for each zone (so 3 mc_subled-s per zone,
+one for each of R, G and B; and the you take subled.brightness field
+from the 3 subleds for the 3 different values.
+
+> +
+> +	return hp_wmi_perform_query(HPWMI_FOURZONE_COLOR_SET, HPWMI_FOURZONE,
+> +		&buff, sizeof(buff), sizeof(buff));
+> +}
+> +
+> +static int fourzone_get_colors(u32 *colors)
+> +{
+> +	u8 buff[128];
+> +	int ret;
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_FOURZONE_COLOR_GET, HPWMI_FOURZONE,
+> +		&buff, sizeof(buff), sizeof(buff));
+> +	if (ret != 0)
+> +		return -EINVAL;
+> +
+> +	for (int i = 0; i < 4; i++) {
+> +		colors[i] = FIELD_PREP(FOURZONE_COLOR_R, buff[25 + i * 3])
+> +			  | FIELD_PREP(FOURZONE_COLOR_G, buff[25 + i * 3 + 1])
+> +			  | FIELD_PREP(FOURZONE_COLOR_B, buff[25 + i * 3 + 2]);
+> +	}
+
+same here.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static void set_fourzone_brightness(struct led_classdev *led_cdev, enum led_brightness brightness)
+> +{
+> +	size_t zone;
+> +
+> +	for (size_t i = 0; i < 4; i++)
+> +		if (strcmp(led_cdev->name, fourzone_zone_names[i]) == 0)
+> +			zone = i;
+> +
+
+So the way how the multicolor LED class devices work is that they have 2
+brightness controls:
+
+/sys/class/leds/hp:rgb:kbd_zoned_backlight-right/brightness 
+/sys/class/leds/hp:rgb:kbd_zoned_backlight-right/multi_intensity
+
+Where brightness is a single integer value for overall brightness
+control and multi_intensity is a per channel brightness control, also see
+Documentation/leds/leds-class-multicolor.rst
+
+Now most hw does not have a main/overall brightness control only
+per channel controls (like this hp code) so there is a helper which
+you pass the overall brightness value and which then calculates the
+per channel brightnesses for you.
+
+The LED core code caches the last multi_intensity values for you
+and there is a helper you can call from the (this) brightness_set()
+callback:
+
+	led_mc_calc_color_components(&fourzone_leds[i].mc_led, brightness);
+
+which will then update the fourzone_leds[i].subleds[0 - 2].brightness
+values with the desired per channel brightness values and then you can
+use those 3 brightness values in fourzone_set_colors() to send to
+the keyboard.
+
+
+> +	if (fourzone_leds.leds[zone].subled_info->intensity == fourzone_leds.color_cache[zone]) {
+> +		u8 buff[4] = {
+> +			brightness == LED_ON ? FOURZONE_LIGHTING_ON : FOURZONE_LIGHTING_OFF,
+> +			0, 0, 0
+> +		};
+> +
+> +		hp_wmi_perform_query(HPWMI_LED_BRIGHTNESS_SET, HPWMI_FOURZONE, &buff,
+> +			sizeof(buff), 0);
+> +
+> +		fourzone_update_brightness();
+> +	} else {
+> +		fourzone_set_colors(fourzone_leds.leds[zone].subled_info->intensity, zone);
+> +		fourzone_leds.color_cache[zone] = fourzone_leds.leds[zone].subled_info->intensity;
+> +	}
+
+And this weird cahce thing can be removed then too, just always send the newly calculated
+3 brightness values to the kbd.
+
+
+> +}
+> +
+> +static int __init fourzone_leds_init(struct platform_device *device)
+> +{
+> +	enum led_brightness brightness;
+> +	u32 colors[4];
+> +	int ret;
+> +
+> +	ret = fourzone_get_colors(colors);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	memcpy(fourzone_leds.color_cache, colors, sizeof(colors));
+> +
+> +	brightness = get_fourzone_brightness(NULL);
+> +
+> +	for (size_t i = 0; i < 4; i++) {
+> +		fourzone_leds.subleds[i] = (struct mc_subled) {
+> +			.color_index = LED_COLOR_ID_RGB,
+> +			.brightness = 1,
+> +			.intensity = colors[i]
+> +		};
+
+So over here you need to have a nested for loop to initialize
+all 3 subleds for each zone.
+
+
+> +
+> +		fourzone_leds.leds[i] = (struct led_classdev_mc) {
+> +			.led_cdev = {
+> +				.name = fourzone_zone_names[i],
+> +				.brightness = brightness,
+> +				.max_brightness = 1,
+
+This should be 255 now.
+
+> +				.brightness_set = set_fourzone_brightness,
+> +			`	.brightness_get = get_fourzone_brightness,
+> +				.color = LED_COLOR_ID_RGB,
+> +				.flags = LED_BRIGHT_HW_CHANGED
+> +			},
+> +			.num_colors = 1,
+
+This should be 3.
+
+> +			.subled_info = &fourzone_leds.subleds[i]
+
+And this points to fourzone_leds[i].subleds now.
+
+> +		};
+> +
+> +		ret = devm_led_classdev_multicolor_register(&device->dev, &fourzone_leds.leds[i]);
+> +		if (ret)
+> +			return -ENODEV;
+> +	}
+
+
+> +
+> +	return 0;
+> +}
+> +
+> +static enum hp_wmi_keyboardtype fourzone_get_keyboard_type(void)
+> +{
+> +	u8 buff[128];
+> +	int ret;
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_GET_KEYBOARD_TYPE, HPWMI_GM,
+> +		&buff, sizeof(buff), sizeof(buff));
+> +	if (ret != 0)
+> +		return HPWMI_KEYBOARD_INVALID;
+> +
+> +	/* the first byte in the response represents the keyboard type */
+> +	return (enum hp_wmi_keyboardtype)(buff[0] + 1);
+> +}
+> +
+> +static bool fourzone_supports_lighting(void)
+> +{
+> +	u8 buff[128];
+> +	int ret;
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_SUPPORTS_LIGHTNING, HPWMI_FOURZONE,
+> +		&buff, sizeof(buff), sizeof(buff));
+> +	if (ret != 0)
+> +		return false;
+> +
+> +	return buff[0] & FOURZONE_LIGHTING_SUPPORTED_BIT;
+> +}
+> +
+> +static int fourzone_setup(struct platform_device *device)
+> +{
+> +	if (!fourzone_supports_lighting())
+> +		return -ENODEV;
+> +
+> +	if (fourzone_get_keyboard_type() != HPWMI_KEYBOARD_WITHOUT_NUMPAD)
+> +		return -ENODEV;
+> +
+> +	/* register leds */
+> +	if (fourzone_leds_init(device) < 0)
+> +		return -ENODEV;
+> +
+> +	input_set_capability(hp_wmi_input_dev, KE_KEY, KEY_KBDILLUMTOGGLE);
+> +
+> +	return 0;
+> +}
+> +
+>  static int hp_wmi_hwmon_init(void);
+>  
+>  static int __init hp_wmi_bios_setup(struct platform_device *device)
+> @@ -1534,6 +1754,10 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+>  
+>  	thermal_profile_setup();
+>  
+> +	/* setup 4 zone rgb */
+> +	if (!fourzone_setup(device))
+> +		fourzone_lightning_support = true;
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1561,6 +1785,12 @@ static void __exit hp_wmi_bios_remove(struct platform_device *device)
+>  
+>  	if (platform_profile_support)
+>  		platform_profile_remove();
+> +
+> +	if (fourzone_lightning_support)
+> +		for (size_t i = 0; i < 4; i++) {
+> +			devm_led_classdev_multicolor_unregister(&device->dev,
+> +				&fourzone_leds.leds[i]);
+> +		}
+
+The whole idea behind devm_register_foo() functions is that they get automatically
+removed when the driver is unbound from the device. So this code and
+the fourzone_lightning_support flag are not necessary.
+
+Regards,
+
+Hans
+
+
+
+>  }
+>  
+>  static int hp_wmi_resume_handler(struct device *device)
 
