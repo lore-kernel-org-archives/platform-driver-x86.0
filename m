@@ -1,58 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2EE14F9EA;
-	Thu, 11 Jul 2024 08:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3E412D1E9;
+	Thu, 11 Jul 2024 08:41:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720685896; cv=none; b=TJbLZV0TytWXPGHCNcPx8BsDlFo2NRSgFOCdCY4NCJc8yjxYmIiakEI3KNV/ySeaVff4TM/sVOkRaWInPOChZyersRcRr9/k9PqO4eH8YZVmR8zZMfTwAjc4xdQWRQ6awZxKZvq/WkJKyCUwW+9S9h5Y8GPw3mhJyG8er+3pnA0=
+	t=1720687311; cv=none; b=UGeDnGiwF3KwM/DNlSDak2QBjt/A4/FUqLdzMj2LYMFNjA7jvMXrB5S3wHa2AmNMbyQ8nWYQYhG3XlB+Bqp7aK1WqhzQdYuPlPvTq665zE+7o8Bv1BWI3dbsO/uy6h5ggEZXH9Dg+o1husYERBMK0kZrYmBwZ7jQZogIvdxII7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720685896; c=relaxed/simple;
-	bh=hZ5aBRIk6w1Xb/vi90JXT8G+yOEd1bCt1HTZvEBYk8I=;
+	s=arc-20240116; t=1720687311; c=relaxed/simple;
+	bh=8TeAmHSOHfrhxxuafFc3tzdvy3GGVjcQIxB7dVt1X6o=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=DMcs5k9sEqDiDVFg56ZeKJQOzU0qO6OJKMR+RD4Q6mojbwvYEVDmIjGBuP67Y2Bk5nnjB2NNTIalbNYvNxjcpBT/PqvCaP5uncBJZxZIWXtpzeAtUQ97JUPshQCTAUOhRFQlGUaGzNgE4Vlbn5cLHWGhdpB3QyE1FWn09JcTJk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KD6XpLIo; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version:Content-Type; b=VldHrc2Bs9c2XXlh+494HIpm4yf2CS2+gneeZ1rQRygDNNrEv9McCnCgjSNCeGHE2H+Kzkil/JEJ751p9FNRdW2XbSuFP1Y4kgkioBUOviTVLrprcdFEcCWlkU4cM38zGcWtc0pJKxOpaAc4aytzU+wYVFAnFZ5flKCTkv9qdZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QAjUYCn5; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KD6XpLIo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QAjUYCn5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720685895; x=1752221895;
+  t=1720687309; x=1752223309;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=hZ5aBRIk6w1Xb/vi90JXT8G+yOEd1bCt1HTZvEBYk8I=;
-  b=KD6XpLIoqY7PcWZq/15XDGAZTTVHkMVVfxYdJYWuF3mn2aEWaxEeGIE5
-   frNRjvnAppS2NzlbeC/uT5Gjd/X6/qb7e7oxuxkp3krDevHbVlEZ67UXx
-   2Mrc2sgnlAtao4UHq02gVrHi0tkxMZYqtlCT51fF/Mv4jUPI/avthHgmt
-   05WnlR+OiQqNGKozNvqQcgHJCY4KB0LEklbmoH0TcKMNivtGCLVvS5arI
-   5Z6rgMrl/glkt4Pdf/K5vOSgMUDvO+BqLXW2DK3RrxvINXftbKZ/NR6sK
-   yBiapvGnu0V4a6w0oaf4tqyMqpJOk3zdGpBcYgeWB0tffBCbfno6CdMnY
+  bh=8TeAmHSOHfrhxxuafFc3tzdvy3GGVjcQIxB7dVt1X6o=;
+  b=QAjUYCn5msBBLLTmbt8h1WBTOGTYvKuUXoM3LOJs5wIlik8kGhDWjHqm
+   b2bqCOEvPYRJMmRMLYO8CJnCV9cGJwrBD8v93GujLnGda2COGjTQGR6Sf
+   MvQC5D3RhY9KlAfO/Qt39rNRPr905LjFe4UqQ+cZbvhikYN+ffzrTy3/L
+   IzAzSCpFTFfzIttZv1PIhpx31YhXiGUzx9mbqKfiaW9/c6B7Zltg70ewu
+   2oah1S9CBHjLrgt08VNdajQqF7opHBODHOW8Qx0UbQFdzRfC5vJirIqrj
+   GkOTOwKTdyaLojGO/qDMBuGLqlkSoZ37zEVDuuySpjDN7nEwzXBszyIoI
    w==;
-X-CSE-ConnectionGUID: hdj13rKpQ7iuRSQoj+ON8Q==
-X-CSE-MsgGUID: lEal/3S2TCGQg+wnXV9fUw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="18185567"
+X-CSE-ConnectionGUID: G+v4WgI3QF2Wlh8oZlRB+Q==
+X-CSE-MsgGUID: AmyOX0/CQHiKFI5Gpz4McA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="17665860"
 X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
-   d="scan'208";a="18185567"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 01:18:14 -0700
-X-CSE-ConnectionGUID: KnCuWWB9TMOXEKuc/B/AzQ==
-X-CSE-MsgGUID: jSKVOxgZRjim/5y9+s5xow==
+   d="scan'208";a="17665860"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 01:41:49 -0700
+X-CSE-ConnectionGUID: eA1KWiGyR6+0lhr+lnLWRA==
+X-CSE-MsgGUID: Cnt29IZURIWvdp6HBN0h6w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
-   d="scan'208";a="71705902"
+   d="scan'208";a="48560936"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.127])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 01:18:12 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 01:41:46 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 11 Jul 2024 11:18:07 +0300 (EEST)
-To: Gergo Koteles <soyer@irl.hu>
-cc: Hans de Goede <hdegoede@redhat.com>, Ike Panhc <ike.pan@canonical.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/4] platform/x86: ideapad-laptop: move ymc_trigger_ec
- from lenovo-ymc
-In-Reply-To: <44f63dfa758c811ae941216874fbb1ec77f4a293.1720515666.git.soyer@irl.hu>
-Message-ID: <828057ef-b941-879e-170e-f4e769d4b77a@linux.intel.com>
-References: <cover.1720515666.git.soyer@irl.hu> <44f63dfa758c811ae941216874fbb1ec77f4a293.1720515666.git.soyer@irl.hu>
+Date: Thu, 11 Jul 2024 11:41:43 +0300 (EEST)
+To: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/1] HP: wmi: added support for 4 zone keyboard rgb
+In-Reply-To: <20240707175613.27529-2-carlosmiguelferreira.2003@gmail.com>
+Message-ID: <71874c5e-b6d0-d05c-3b07-d1add491dbb6@linux.intel.com>
+References: <20240707175613.27529-1-carlosmiguelferreira.2003@gmail.com> <20240707175613.27529-2-carlosmiguelferreira.2003@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,162 +60,148 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Tue, 9 Jul 2024, Gergo Koteles wrote:
+On Sun, 7 Jul 2024, Carlos Ferreira wrote:
 
-> Some models need to trigger the EC for the yoga mode control to work
-> properly. EC triggering consists of a VPC call that needs to be
-> synchronized. The vpc_mutex is in the ideapad-laptop module, so
-> synchronization is easier there.
+> This driver adds supports for 4 zone keyboard rgb on omen laptops
+> and maps the wmi backlight toggle event to KEY_KBDILLUMTOGGLE.
+> For the backlight, it uses the multicolor led api.
 > 
-> Move the ymc_trigger_ec function to the ideapad-laptop module.
+> Tested on the HP Omen 15-en1001np.
 > 
-> Signed-off-by: Gergo Koteles <soyer@irl.hu>
+> Signed-off-by: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
 > ---
->  drivers/platform/x86/Kconfig          |  1 +
->  drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++
->  drivers/platform/x86/ideapad-laptop.h |  2 ++
->  drivers/platform/x86/lenovo-ymc.c     | 34 ++++-----------------------
->  4 files changed, 26 insertions(+), 29 deletions(-)
+> Changes in v3:
+>  - Moved to the multicolor led api
+>  - Mapped the wmi backlight toggle event to KEY_KBDILLUMTOGGLE
+>  - Some other minor changes
+> Changes in v2:
+>  - Rearranged code to remove forward declarations
+>  - Changed from sprintf() to sysfs_emit()
+>  - Fixed some identation and coding style problems
+>  - Switched from manual bit manipulation to GENMASK(x, y) + FIELD_PREP(XX, )
+>  - #define'ed magic constants
+> ---
+>  drivers/platform/x86/hp/hp-wmi.c | 248 +++++++++++++++++++++++++++++--
+>  1 file changed, 239 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 665fa9524986..ddfccc226751 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -477,6 +477,7 @@ config LENOVO_YMC
->  	tristate "Lenovo Yoga Tablet Mode Control"
->  	depends on ACPI_WMI
->  	depends on INPUT
-> +	depends on IDEAPAD_LAPTOP
->  	select INPUT_SPARSEKMAP
->  	help
->  	  This driver maps the Tablet Mode Control switch to SW_TABLET_MODE input
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index 464cc5fd0088..4dcdbb153dda 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -1615,6 +1615,24 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
->  	priv->r_touchpad_val = value;
->  }
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index 5fa553023842..5eae47961f76 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -14,6 +14,8 @@
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 >  
-> +void ideapad_ymc_trigger_ec(void)
+>  #include <linux/kernel.h>
+> +#include <linux/led-class-multicolor.h>
+> +#include <linux/leds.h>
+>  #include <linux/module.h>
+>  #include <linux/init.h>
+>  #include <linux/slab.h>
+> @@ -24,6 +26,7 @@
+>  #include <linux/platform_profile.h>
+>  #include <linux/hwmon.h>
+>  #include <linux/acpi.h>
+> +#include <linux/bits.h>
+
+You need to add #include <linux/bitfield.h> as LKP found out. The 
+MODULE_DESCRIPTION() ones you can ignore as LKP unfortunately spams some 
+kernel-wide problems to all patches even if they're entirely unrelated
+to the patch in question.
+
+> +	for (size_t i = 0; i < 4; i++)
+> +		fourzone_leds.leds[i].led_cdev.brightness = br;
+
+> +	for (int i = 0; i < 4; i++) {
+> +		colors[i] = FIELD_PREP(FOURZONE_COLOR_R, buff[25 + i * 3])
+> +			  | FIELD_PREP(FOURZONE_COLOR_G, buff[25 + i * 3 + 1])
+> +			  | FIELD_PREP(FOURZONE_COLOR_B, buff[25 + i * 3 + 2]);
+
+The loop variables are not particularly consistent... I'd prefer them to 
+be declared in the normal function variable declaration block.
+
+> +
+> +	for (size_t i = 0; i < 4; i++)
+> +		if (strcmp(led_cdev->name, fourzone_zone_names[i]) == 0)
+
+!strcmp()
+
+> +	ret = fourzone_get_colors(colors);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	memcpy(fourzone_leds.color_cache, colors, sizeof(colors));
+> +
+> +	brightness = get_fourzone_brightness(NULL);
+> +
+> +	for (size_t i = 0; i < 4; i++) {
+> +		fourzone_leds.subleds[i] = (struct mc_subled) {
+> +			.color_index = LED_COLOR_ID_RGB,
+> +			.brightness = 1,
+> +			.intensity = colors[i]
+
+Please add comma to the last line because if this is ever extended, this 
+line doesn't need to be touched.
+
+> +		};
+> +
+> +		fourzone_leds.leds[i] = (struct led_classdev_mc) {
+> +			.led_cdev = {
+> +				.name = fourzone_zone_names[i],
+> +				.brightness = brightness,
+> +				.max_brightness = 1,
+> +				.brightness_set = set_fourzone_brightness,
+> +				.brightness_get = get_fourzone_brightness,
+> +				.color = LED_COLOR_ID_RGB,
+> +				.flags = LED_BRIGHT_HW_CHANGED
+
+Ditto.
+
+> +			},
+> +			.num_colors = 1,
+> +			.subled_info = &fourzone_leds.subleds[i]
+
+Ditto.
+
+> +	return 0;
+> +}
+> +
+> +static enum hp_wmi_keyboardtype fourzone_get_keyboard_type(void)
 > +{
-> +	struct ideapad_private *priv;
+> +	u8 buff[128];
 > +	int ret;
 > +
-> +	guard(mutex)(&ideapad_shared_mutex);
-> +
-> +	priv = ideapad_shared;
-> +	if (!priv)
-> +		return;
-> +
-> +	scoped_guard(mutex, &priv->vpc_mutex)
+> +	ret = hp_wmi_perform_query(HPWMI_GET_KEYBOARD_TYPE, HPWMI_GM,
+> +		&buff, sizeof(buff), sizeof(buff));
 
-It feels the ordering in this series is off because patch 2 add the 
-mutex and here you add it into yet another function. If this patch 
-would be before the other, the mutex changes could all go into the same 
-patch.
+Align the continuation of parameters to the opening (.
 
-> +		ret = write_ec_cmd(priv->adev->handle, VPCCMD_W_YMC, 1);
-> +	if (ret)
-> +		dev_warn(&priv->platform_device->dev, "Could not write YMC: %d\n", ret);
+> +	if (ret != 0)
+> +		return HPWMI_KEYBOARD_INVALID;
+> +
+> +	/* the first byte in the response represents the keyboard type */
+> +	return (enum hp_wmi_keyboardtype)(buff[0] + 1);
 > +}
-> +EXPORT_SYMBOL_GPL(ideapad_ymc_trigger_ec);
+> +
+> +static bool fourzone_supports_lighting(void)
+> +{
+> +	u8 buff[128];
+> +	int ret;
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_SUPPORTS_LIGHTNING, HPWMI_FOURZONE,
+> +		&buff, sizeof(buff), sizeof(buff));
 
-This export should be namespaced.
+Ditto.
 
-I'll have to say I can accept this approach only grudgingly... it feels 
-off even if I understand why you have to do this cross driver thing.
+I probably missed a few similar cases as mentioned above so please go 
+through your patch and correct them all.
+
+I'm left unsure if a mutex would be necessary to protect the brightness
+updates. Probably.
+
+
+Hans might have more to say about the approach.
+
 
 -- 
  i.
 
->  static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
->  {
->  	struct ideapad_private *priv = data;
-> diff --git a/drivers/platform/x86/ideapad-laptop.h b/drivers/platform/x86/ideapad-laptop.h
-> index 4498a96de597..4dcbed842b0b 100644
-> --- a/drivers/platform/x86/ideapad-laptop.h
-> +++ b/drivers/platform/x86/ideapad-laptop.h
-> @@ -13,6 +13,8 @@
->  #include <linux/jiffies.h>
->  #include <linux/errno.h>
->  
-> +void ideapad_ymc_trigger_ec(void);
-> +
->  enum {
->  	VPCCMD_R_VPC1 = 0x10,
->  	VPCCMD_R_BL_MAX,
-> diff --git a/drivers/platform/x86/lenovo-ymc.c b/drivers/platform/x86/lenovo-ymc.c
-> index e1fbc35504d4..0819e9823ca9 100644
-> --- a/drivers/platform/x86/lenovo-ymc.c
-> +++ b/drivers/platform/x86/lenovo-ymc.c
-> @@ -62,19 +62,14 @@ static const struct dmi_system_id allowed_chasis_types_dmi_table[] = {
->  
->  struct lenovo_ymc_private {
->  	struct input_dev *input_dev;
-> -	struct acpi_device *ec_acpi_dev;
->  };
->  
-> -static void lenovo_ymc_trigger_ec(struct wmi_device *wdev, struct lenovo_ymc_private *priv)
-> +static void lenovo_ymc_trigger_ec(void)
->  {
-> -	int err;
-> -
-> -	if (!priv->ec_acpi_dev)
-> +	if (!ec_trigger)
->  		return;
->  
-> -	err = write_ec_cmd(priv->ec_acpi_dev->handle, VPCCMD_W_YMC, 1);
-> -	if (err)
-> -		dev_warn(&wdev->dev, "Could not write YMC: %d\n", err);
-> +	ideapad_ymc_trigger_ec();
->  }
->  
->  static const struct key_entry lenovo_ymc_keymap[] = {
-> @@ -125,11 +120,9 @@ static void lenovo_ymc_notify(struct wmi_device *wdev, union acpi_object *data)
->  
->  free_obj:
->  	kfree(obj);
-> -	lenovo_ymc_trigger_ec(wdev, priv);
-> +	lenovo_ymc_trigger_ec();
->  }
->  
-> -static void acpi_dev_put_helper(void *p) { acpi_dev_put(p); }
-> -
->  static int lenovo_ymc_probe(struct wmi_device *wdev, const void *ctx)
->  {
->  	struct lenovo_ymc_private *priv;
-> @@ -149,23 +142,6 @@ static int lenovo_ymc_probe(struct wmi_device *wdev, const void *ctx)
->  	if (!priv)
->  		return -ENOMEM;
->  
-> -	if (ec_trigger) {
-> -		pr_debug("Lenovo YMC enable EC triggering.\n");
-> -		priv->ec_acpi_dev = acpi_dev_get_first_match_dev("VPC2004", NULL, -1);
-> -
-> -		if (!priv->ec_acpi_dev) {
-> -			dev_err(&wdev->dev, "Could not find EC ACPI device.\n");
-> -			return -ENODEV;
-> -		}
-> -		err = devm_add_action_or_reset(&wdev->dev,
-> -				acpi_dev_put_helper, priv->ec_acpi_dev);
-> -		if (err) {
-> -			dev_err(&wdev->dev,
-> -				"Could not clean up EC ACPI device: %d\n", err);
-> -			return err;
-> -		}
-> -	}
-> -
->  	input_dev = devm_input_allocate_device(&wdev->dev);
->  	if (!input_dev)
->  		return -ENOMEM;
-> @@ -192,7 +168,7 @@ static int lenovo_ymc_probe(struct wmi_device *wdev, const void *ctx)
->  	dev_set_drvdata(&wdev->dev, priv);
->  
->  	/* Report the state for the first time on probe */
-> -	lenovo_ymc_trigger_ec(wdev, priv);
-> +	lenovo_ymc_trigger_ec();
->  	lenovo_ymc_notify(wdev, NULL);
->  	return 0;
->  }
-> 
