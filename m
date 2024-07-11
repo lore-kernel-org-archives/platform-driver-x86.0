@@ -1,566 +1,375 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B6D47F7F
-	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Jul 2024 17:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720719441; cv=none; b=tC8mUPkbePF96o2E7leo3HIf19XebnFdNYvyzeF7xVV//Q31APjUS0XdmvxZt6QWxuY2dQ4XYK28vwZKRyyfQUTUOB5cuVExKc5QKGa2+rZ23UYxzvpu4dYTvv7Ya+RsgS7x8JynkjGsAPGGYfJfFzkXpTcBH9G/WzC5z1sMVLU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720719441; c=relaxed/simple;
-	bh=TxCH2gIyixEgXHU40Xt6NLlR1D+1qFP3Oji/9pdzwVw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FG/qOXT8j5c5+LWj76HMMpcWuLvhA/swIrPSh8+51tF5ELLtZkv5kqJRXRRCDS+yhF6pGS4EtrxERxwdWqafPjxiUX0vWRuC0dk9mqq+k+bo5yj9RslCpoxE0XOqPDwBayNSXZr85DrHXRtJdVfSy2opHOBF+NQBOs2FkON6t5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LXpXdmGr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6F747F7F
+	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Jul 2024 17:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720719891; cv=fail; b=uxjxChDjYdA9EKj1x8EaUzSc4S6E02MGMNWnbN5YJZMOsO9hMXp7lSOFoYknoY7enS3oiPg5BUIZl8qRgMg2Br44WIouzeSI8QcSxCS3DBZdyOzUlQ7q4wcFPcr4MdaOuncvEV9n5nDxESllPqY4WSliQiHxGCjHprZa2WEsu4I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720719891; c=relaxed/simple;
+	bh=OypnqTpQ03kgKgfuvU1zMLQPLcptMAo4Ai4Z1JYtfjQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=gSJQpq/Dr/88g1pALgCexx4+/AP72oJVEsWK6LFZb3EJr3SaalR+2uXnZ6bya+pCMJCQOWu265GFf6HgoBDgK6Bn7JXyFxNJ9g0zp76hCOgGOizTAmz2VariSRVJDwDZXs3vECubHZrjm8+mTJ02GeUz68rw8p5XdGI7Rvg2eRg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I7rM33iM; arc=fail smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LXpXdmGr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720719437;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eK0crMJCyH9BGAdXpCG3oh3BvCuMI0Va4aHOhL3u5dU=;
-	b=LXpXdmGrEcB+wmnsnD0dFNqSaPZjr+5hw27vL0lBvQ2ewgfqIBx87PDWrZCclz+pbuxqcB
-	cep4EgRkCWmANmujWNctL9klojE+WVkXU3P/jyRlHucL8OeClGnyv75+x7SlIfIpTtFC4y
-	DQDIWoOhhWysofVGHbHbli3bREE3p84=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-281-SdZaI3m7N32L34vDWpofew-1; Thu, 11 Jul 2024 13:37:16 -0400
-X-MC-Unique: SdZaI3m7N32L34vDWpofew-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a77f48f2118so162269466b.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Jul 2024 10:37:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720719432; x=1721324232;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eK0crMJCyH9BGAdXpCG3oh3BvCuMI0Va4aHOhL3u5dU=;
-        b=Fa5VWCoz3+ZccWHiW017Kab+gUa0snlen/GyAm2O6ov1pWVq/UBFowuz0WKit4ASST
-         AIXDa7DGZxz5MapzRCzmQ51wMap/A5rNYgKXAqqlDYAhhd5RUacvq5VIqubuhlZt5Qbe
-         RH/oi7w6viN11yO74Q4zQzK2K0jp66AzstgjN8o5LDXSmi3NfwkTz/BVwSAY3Ok2frGt
-         kTKlmrj+Fly+MamlZ9Nye2cZXKpyqRbdZ3OFYWkXUtkjK13WY+ap1a4ywGRancJhQ1rU
-         p4jHUpSt7vuYHjoB8+i9ptgHqSX4CZSzDMkpvm/ZlFIh6jhK81ifiiENTKXJGJ99IxOF
-         4OdA==
-X-Gm-Message-State: AOJu0YxLXwuxuURqjGVaBMbIJ+GxZgjaGQ3h2eUF4g8ZTCclSo02XtII
-	b0QCt9METAxBuT22J8lYwHxz0oIxHlZaYpN4DO3z3RYvLAB4C1VKY3DvbVjnuksDwE+Js41FriI
-	z+aDSuxbvx1LKvHpmqfsb9/1smkLcPuUScFt9cnll1fdwxK37Pml5MKYvf4ihfQomgvs3qFc=
-X-Received: by 2002:a17:907:846:b0:a77:f5fc:cb61 with SMTP id a640c23a62f3a-a799cd67784mr31769866b.0.1720719432212;
-        Thu, 11 Jul 2024 10:37:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFPqd8SAGunOtVTcd5K+8FOIWtOBN/SWBPztP4efqlrYFibDmCdqppEoTIsfKL8L7t5aIpVig==
-X-Received: by 2002:a17:907:846:b0:a77:f5fc:cb61 with SMTP id a640c23a62f3a-a799cd67784mr31767566b.0.1720719431588;
-        Thu, 11 Jul 2024 10:37:11 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a780a6bc701sm274340166b.34.2024.07.11.10.37.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jul 2024 10:37:10 -0700 (PDT)
-Message-ID: <acbdb469-f6a4-4180-9d68-9724b3ffe9e2@redhat.com>
-Date: Thu, 11 Jul 2024 19:37:10 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I7rM33iM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720719889; x=1752255889;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=OypnqTpQ03kgKgfuvU1zMLQPLcptMAo4Ai4Z1JYtfjQ=;
+  b=I7rM33iMhW5ep4RmcAFv4sOLq5Hme5yxq1ZkVlwpKaFamGpHH+0xiQrY
+   RlPFvrwEuIk1M70I5j7CUtlys2R9i8a2w5X8guYyeaHKArmGY0e8FzmQ/
+   UuOZls8i7TvWcp/Qmv872p69h0Rl1Lj9LWDvofrbWVxBT3jHFtz5wvNdc
+   VblONztq/3Vl7eDs3K69Vawmeui5GEKl8msV/XdVMKPRTKghbi/B3Hn4F
+   ZKBFpTp77De8SlthRMxyUSSg9hxm/YLYIYCPRMFAluv4nbHraSKeAn06V
+   i5lJGfTLfmMV50j44qKbOQr9ezDGbDhF4gPfqfU2i8q513RrFOl/T8xyZ
+   Q==;
+X-CSE-ConnectionGUID: hjNhFWh+QZq2HbwIQlQxNw==
+X-CSE-MsgGUID: jr8ilNPOTUmFefHh9zCqcw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="28716706"
+X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
+   d="scan'208";a="28716706"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 10:44:48 -0700
+X-CSE-ConnectionGUID: N6tTcqk8T7+SnEi5HzLJYQ==
+X-CSE-MsgGUID: p7/poolITCukNYitHhxV/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
+   d="scan'208";a="53458851"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Jul 2024 10:44:48 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 11 Jul 2024 10:44:47 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 11 Jul 2024 10:44:47 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Thu, 11 Jul 2024 10:44:47 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 11 Jul 2024 10:44:47 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xcn9Sd4Gu9HTd8askUgcOUcBJChXidfqz+5Fb0o5mDtL5BNYj2TeGqrvR2cc4wDEUW38YV3i1vNh7udd7iiZxm/gCZz9MKD+3wLEDxZbKpkFEFmT5e7aLQsrAh0Q846cq+4EemLBpyIK2c4TMUSY+yC0OfG3BSyLaztXeVElDcSj2vizqCj1Nw0DEXWC0AcKpWMh0SQdYRzueNNrBlBralwcZzbpdzfVQtvBfd0z9T3kk1RBWSsgos4iJDJwyCEERHAjOKg6zDeUmbEq01Jf6Jh38a+r/1eAsgspb1mTu1jetuK1rTeiyFmC21WRRJNtEO5OzKTXPwON6RuE2FMXXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0qQncrx5OrP1DRkEOi+I98YeD2K1EeFHA3Dm81Zz9Uk=;
+ b=Y8O7a6NVpUxFjwiew3N4LUjSq/uZLKfN7dZMZi7Srvrjko3CtE7aSzrcvJ24OXFq/r299X8qnIssPeEc1wGx9QRSTwqudqCitJhZH8wLUAu/NRHnibrCs9eU6JgCOZiLQjCh+sa/bdxI/7sW4+SihuMqLWkc88TuzqrD+ztrfJESYMlNfFpAdquWuTT5vR10pwIzUOpeyjt4jI+67Aj0cMzbdQAYlkMgxQbO8zgMlwJD15fXd37PK4X+y4/TNNGS+bXmJpkm3Za2oDYhA8E51WciNQpF1wnkxoLvTg3SkWXZB6Se4rCax73Nt6j+9BCk+E01r3gmrSctnz6FEZPmkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from IA1PR11MB6418.namprd11.prod.outlook.com (2603:10b6:208:3aa::18)
+ by MW3PR11MB4553.namprd11.prod.outlook.com (2603:10b6:303:2c::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.21; Thu, 11 Jul
+ 2024 17:44:45 +0000
+Received: from IA1PR11MB6418.namprd11.prod.outlook.com
+ ([fe80::68b8:5391:865e:a83]) by IA1PR11MB6418.namprd11.prod.outlook.com
+ ([fe80::68b8:5391:865e:a83%4]) with mapi id 15.20.7762.016; Thu, 11 Jul 2024
+ 17:44:44 +0000
+From: "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+To: =?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	"david.e.box@linux.intel.com" <david.e.box@linux.intel.com>, "Brost, Matthew"
+	<matthew.brost@intel.com>
+Subject: RE: [PATCH v6 6/6] drm/xe/vsec: Add support for DG2
+Thread-Topic: [PATCH v6 6/6] drm/xe/vsec: Add support for DG2
+Thread-Index: AQHa0v6lXeZvdNTpnES1O02cWhrEGrHxaWeAgABkTcA=
+Date: Thu, 11 Jul 2024 17:44:44 +0000
+Message-ID: <IA1PR11MB641896955FCADBA7B19CE222C1A52@IA1PR11MB6418.namprd11.prod.outlook.com>
+References: <20240710192249.3915396-1-michael.j.ruhl@intel.com>
+ <20240710192249.3915396-7-michael.j.ruhl@intel.com>
+ <c3a26fdd-ebb7-a5d1-38b3-0832c7e92652@linux.intel.com>
+In-Reply-To: <c3a26fdd-ebb7-a5d1-38b3-0832c7e92652@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA1PR11MB6418:EE_|MW3PR11MB4553:EE_
+x-ms-office365-filtering-correlation-id: b261e732-2e04-4380-84d1-08dca1d126aa
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
+x-microsoft-antispam-message-info: =?iso-8859-1?Q?vooO8QKs1Knc1nMMtAy5i3udpwYyoCOXfovOxcUSSfv3Q232+bClff7LBJ?=
+ =?iso-8859-1?Q?KExns39WJy3iBBD8ezDaOtbZzr2ZljIQNHvz8zOG8tplSLT57TbTzY644B?=
+ =?iso-8859-1?Q?U2gwfbOKTurpd5pS8ljP38w2A4XVbn7Zty1SgFFW7O3JkESMWjlu4p0tTR?=
+ =?iso-8859-1?Q?cvnPTcA0IK5U7YoHJy0kcwVVdXU8YfLeaalEsr0ugo/tp05SsKHWeUM0Q7?=
+ =?iso-8859-1?Q?n212AxorR5sGlN3a3yBzwmUMeJpnRQ3iwNN1zfv+YhwV0hV7zdgx9lNbDr?=
+ =?iso-8859-1?Q?LebYRzpFflgPMYy9HL9NQaHf+zkE1VM6HzapJY9UsCEYhcfpXBvtqr2Kif?=
+ =?iso-8859-1?Q?DwAya2YXzfocozpasGXb0SyH7wKTdXaPerw02gM0s6YB6nh10ZPmkBYs35?=
+ =?iso-8859-1?Q?kA5++d3k0P0ak45lyjlk0C6yuqCqvXsjXG/I8IHhWwHz4Vp13woJPkYz6h?=
+ =?iso-8859-1?Q?iBHelREft1BxkzyRwJnbcNZSnej2hsR0/FADFhyNKf2hPA829gv9gs7LjO?=
+ =?iso-8859-1?Q?Sf3UynhE2iob9OmInYKMiH2diTfeyZlopNrJPhPgXapXvU1gXL6UPEMDcJ?=
+ =?iso-8859-1?Q?vYJCr/0J1SzoIJGqMJyCWQDZ1ZARVb85/99PFpDNDF0NqlitAUJU4QwXDy?=
+ =?iso-8859-1?Q?He6NcXjT1gqgA5qvc98mPtRDFwkHCVGKIaADSVMbmbQbtGRnAsLOMI23E9?=
+ =?iso-8859-1?Q?XgNdv4uhBHlBdjGtGyKnuOIVra5U5VyN2Le9G+Mh304LcNt+O6ew8NsXme?=
+ =?iso-8859-1?Q?uVjEFtsrfck9bwGZq7z8PgP6XhEZDFZfNmdAIltBrp9rlHMhN8OYpNqYFK?=
+ =?iso-8859-1?Q?uoKjpxz28VjCJfBABJVohi4jtIoj+KX9qqkw6fSqw89wDHDAIkpKZjvDPC?=
+ =?iso-8859-1?Q?pPFiVdJetWX2VBO69eos/kmnBpaKs1Igq9EJEEQtj+KEAyi3wQXgEginTN?=
+ =?iso-8859-1?Q?0WigPZVXBoeVD1D00g3RYpmcVHFSbyRwFgMKVPXtGH4LLACOiD9tEmD6hj?=
+ =?iso-8859-1?Q?1klolt1vvrYgd3mRUsLPtR07Joyy78WDpIf8k6WA1CBD7RH1xv8WekB4Wy?=
+ =?iso-8859-1?Q?jswmeiy/rkbCifhxtgu47I0mFBa5+C/KXiQWoNh9DiRNSUZpc1XGrizEMx?=
+ =?iso-8859-1?Q?cc8kqCikUZTcuYrkij5AcFTHe1/JFPx/uijEcc/Hm6rCqOvt3/bNW6OrZ7?=
+ =?iso-8859-1?Q?Yc7L/2HXj4P2m8x3WZVdECYJG3RhskWFKIxYldyxfEKbhG3zqRCJU1+bwU?=
+ =?iso-8859-1?Q?fXewxBjxpGxlDNUrH0GfILg1lcr/GhSWA7tvTtfxP654U+FBJHUCtBdNEB?=
+ =?iso-8859-1?Q?avEu5Lkg515zT2K2HOPiDF1H6biushUv0OrICPguqZfLR8kMhATa/SOfsP?=
+ =?iso-8859-1?Q?ipx5CLVVoBArrV2TazqoTS+dRE3sVuZFyX+J9ikGplpmOEJaCDo1T2BFd7?=
+ =?iso-8859-1?Q?+/4LAvQ2R0PjRPEkqWoZC632VoDaD8THBEyUTg=3D=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB6418.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?s+INyMgR9MNHUj03nTS5v3OBHeYICPjCPAplNi0Hi0eupecGmYdFbaMy90?=
+ =?iso-8859-1?Q?TyW96v9hr672oRdfDo6kiQtrwVHper4ITGFMWhLdKuvWpy9GQetCGTEEju?=
+ =?iso-8859-1?Q?0E8NH3gHIKSz03CHsOvaC/IIsuzAGDZyEl25MUXgKF1zLlw0AwSd81nYhc?=
+ =?iso-8859-1?Q?22t1R4z5MVAuqCpNkjwxEFOgVqXT9d0AazLAO7hTK81rG6iiFce8GRgojn?=
+ =?iso-8859-1?Q?yC4qJSeY3tgkFjEyq5zq04gLMR2krqtp6Hu71a3pBME6egFg8L2p5hTB3V?=
+ =?iso-8859-1?Q?2saV2MYgpa5yKgjvSi5BvZvRbHSs8t8ZY8XXCnBIRP3q0l5Tjwkk2hsafV?=
+ =?iso-8859-1?Q?eSIT2m5QqzQ6MIa/fm3lyHKPm3YiDvOEFhNz1xXu5HruJ+WmFUvNqVgZby?=
+ =?iso-8859-1?Q?lzmVfCi8K4C1UBFDH7nRHWbmw2B7wrwkqQFdwdQKH03m5c2p1slsY+tCSB?=
+ =?iso-8859-1?Q?5odhiyUkvbOAiSOINdtnB+hL6BvR9fYUf9Vw2xvB+6e7AgB+GyOTtZyOaI?=
+ =?iso-8859-1?Q?VCa+SQhzLKgGHbwI7tOGO7ZyCLLGo2Ij7VJZJm/o9YzBz3tivQwDjbjNhh?=
+ =?iso-8859-1?Q?m75d4QgHlEuV2DkL4RaYIsmg9+Rcb8OQA38oIK0wixmYLDgs4n9AxjTRZU?=
+ =?iso-8859-1?Q?p3F21GWLi3bZdKQbPdIkMct2wZS7eFJLIUKKvv+8YWbFAFOQtTrWfG6faO?=
+ =?iso-8859-1?Q?RieLwpsaVZjyr7wDI0oOUJVGaudzWEXYlsouoqkm3LXJTWLI4tfNaryvz1?=
+ =?iso-8859-1?Q?lv4yq+d54mb8hzYWILQwjjpmO5mxpNCBeqXw3Ibd47e0pQrlPF5lZT21rD?=
+ =?iso-8859-1?Q?nHDnuKe/PvgGmyNK8RD7iLGwCsHrxAkndZzdOIdiwLxrS2keYC+uy+9J35?=
+ =?iso-8859-1?Q?Gh6E6OHHRZLBbes6k1Fs73GSuc2mOo3Jsjn41vQwIPUrv4zHftwmeRPBEM?=
+ =?iso-8859-1?Q?FQMes34EIdcxphmV+vSvj4+VwJ891FSh1Sf/9paLJpKU97kvTEI7U79DPF?=
+ =?iso-8859-1?Q?JsF8uFy97+47arTOF/1anSnVL3eEmYydZPdklFDrYMYFSAG33lyUVFhD03?=
+ =?iso-8859-1?Q?K1D8fuX4wxrkWUtNikklJPTa/t2YK+b6XhPPUDbmceoLAV1E+q+KOux6WD?=
+ =?iso-8859-1?Q?dInIgUMx6pPKdhCw8wGejXqFEnIKdlDNIu+/61ve9kHL4Y4v8QaH19Uhls?=
+ =?iso-8859-1?Q?8zAPqQwp9twdVPxSPpiUp7IiXZhiboVKKDM7nIU3hJuUYsUEA8rUQjQWgk?=
+ =?iso-8859-1?Q?SuHa2l0FxHlC/w/WNI8/b2rRuWW6Ii5F4wLL6VUfOSnyepFFspAuQJPrRT?=
+ =?iso-8859-1?Q?w3+DFT2hVMtvBP170vmoKtv67YePXbEwd0mJNCl59qnV0fHGkwkkJHe3ef?=
+ =?iso-8859-1?Q?BtHh4Uqw/wa+NQeFhcyXN7SnrGRvMaaERY/H3Ikw9beB/m4q7SYwHhO/pw?=
+ =?iso-8859-1?Q?fjTk2AXsEauTPQotguKU+tqbC9Zrw3Vyhz3vSjWDORN6iLsq5e2xFGUZxP?=
+ =?iso-8859-1?Q?HLDsVAcja82HKmoTHTTHzYmR7NEHAOM2byYIuG0yx68BDqn6Wq2Ur5Z9Kw?=
+ =?iso-8859-1?Q?tf5VvX2XQNcEPwz584DnPtUKsOVj4tl0TbWitK1nokBXsRA6Ch62Ygeu7t?=
+ =?iso-8859-1?Q?WRwCmgDllu1U6yGh8rdMYfPLjYobKzqWs6?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] HP: wmi: added support for 4 zone keyboard rgb
-To: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240707175613.27529-1-carlosmiguelferreira.2003@gmail.com>
- <20240707175613.27529-2-carlosmiguelferreira.2003@gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240707175613.27529-2-carlosmiguelferreira.2003@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB6418.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b261e732-2e04-4380-84d1-08dca1d126aa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2024 17:44:44.6038
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nAzWHm/N5nyR1c6HgNeA4N7Mdd8LA3mcetVzNDsiyr1/7HknfSf0bDqm8JD/ZtAjtD/j/cWCSGBDAm2fi7Om5XB7y1a2Tq4JTl/NiyPKBks=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4553
+X-OriginatorOrg: intel.com
 
-Hi Carlos,
+>-----Original Message-----
+>From: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+>Sent: Thursday, July 11, 2024 7:45 AM
+>To: Ruhl, Michael J <michael.j.ruhl@intel.com>
+>Cc: intel-xe@lists.freedesktop.org; platform-driver-x86@vger.kernel.org;
+>david.e.box@linux.intel.com; Brost, Matthew <matthew.brost@intel.com>
+>Subject: Re: [PATCH v6 6/6] drm/xe/vsec: Add support for DG2
+>
+>On Wed, 10 Jul 2024, Michael J. Ruhl wrote:
+>
+>> DG2 needs to adjust the discovery offset WRT the GT BAR not the
+>
+>WRT =3D w.r.t. ?
+>
+>> P2SB bar so add the base_adjust value to allow for the difference
+>> to be used.
+>
+>Could you please try to write out the problem in clearer terms. Currently
+>the reasonale given in patch 5 doesn't even match the one given here or
+>it is written in so unclear terms I cannot make the connection.
 
-On 7/7/24 7:54 PM, Carlos Ferreira wrote:
-> This driver adds supports for 4 zone keyboard rgb on omen laptops
-> and maps the wmi backlight toggle event to KEY_KBDILLUMTOGGLE.
-> For the backlight, it uses the multicolor led api.
-> 
-> Tested on the HP Omen 15-en1001np.
-> 
-> Signed-off-by: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
-> ---
-> Changes in v3:
->  - Moved to the multicolor led api
->  - Mapped the wmi backlight toggle event to KEY_KBDILLUMTOGGLE
->  - Some other minor changes
-> Changes in v2:
->  - Rearranged code to remove forward declarations
->  - Changed from sprintf() to sysfs_emit()
->  - Fixed some identation and coding style problems
->  - Switched from manual bit manipulation to GENMASK(x, y) + FIELD_PREP(XX, )
->  - #define'ed magic constants
-> ---
->  drivers/platform/x86/hp/hp-wmi.c | 248 +++++++++++++++++++++++++++++--
->  1 file changed, 239 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-> index 5fa553023842..5eae47961f76 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -14,6 +14,8 @@
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
->  #include <linux/kernel.h>
-> +#include <linux/led-class-multicolor.h>
-> +#include <linux/leds.h>
+Yes.  I will right this up better.
 
-This means that you now also need to update Kconfig to depend on
-LEDS_CLASS_MULTICOLOR, so add the following line to the existing
-Kconfig entry for the HP WMI driver:
+>> Update xe_vsec.c to include DG2 header information.
+>>
+>> Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+>> ---
+>>  drivers/gpu/drm/xe/xe_vsec.c | 81
+>++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 81 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
+>> index 98999d467db1..531ddd32a1a6 100644
+>> --- a/drivers/gpu/drm/xe/xe_vsec.c
+>> +++ b/drivers/gpu/drm/xe/xe_vsec.c
+>> @@ -19,6 +19,16 @@
+>>
+>>  #define SOC_BASE		0x280000
+>>
+>> +/* from drivers/platform/x86/intel/pmt/telemetry.c */
+>> +#define TELEM_BASE_OFFSET	0x8
+>> +
+>> +#define DG2_PMT_BASE		0xE8000
+>> +#define DG2_DISCOVERY_START	0x6000
+>> +#define DG2_TELEM_START		0x4000
+>> +
+>> +#define DG2_DISCOVERY_OFFSET	(SOC_BASE + DG2_PMT_BASE +
+>DG2_DISCOVERY_START)
+>> +#define DG2_TELEM_OFFSET	(SOC_BASE + DG2_PMT_BASE +
+>DG2_TELEM_START)
+>> +
+>>  #define BMG_PMT_BASE		0xDB000
+>>  #define BMG_DISCOVERY_OFFSET	(SOC_BASE + BMG_PMT_BASE)
+>>
+>> @@ -32,6 +42,20 @@
+>>  #define SG_REMAP_INDEX1		XE_REG(SOC_BASE + 0x08)
+>>  #define SG_REMAP_BITS		GENMASK(31, 24)
+>>
+>> +static struct intel_vsec_header dg2_telemetry =3D {
+>> +	.length =3D 0x10,
+>> +	.id =3D VSEC_ID_TELEMETRY,
+>> +	.num_entries =3D 1,
+>> +	.entry_size =3D 3,
+>> +	.tbir =3D GFX_BAR,
+>> +	.offset =3D DG2_DISCOVERY_OFFSET,
+>> +};
+>> +
+>> +static struct intel_vsec_header *dg2_capabilities[] =3D {
+>> +	&dg2_telemetry,
+>> +	NULL
+>> +};
+>> +
+>>  static struct intel_vsec_header bmg_telemetry =3D {
+>>  	.length =3D 0x10,
+>>  	.id =3D VSEC_ID_TELEMETRY,
+>> @@ -48,10 +72,16 @@ static struct intel_vsec_header *bmg_capabilities[] =
+=3D
+>{
+>>
+>>  enum xe_vsec {
+>>  	XE_VSEC_UNKNOWN =3D 0,
+>> +	XE_VSEC_DG2,
+>>  	XE_VSEC_BMG,
+>>  };
+>>
+>>  static struct intel_vsec_platform_info xe_vsec_info[] =3D {
+>> +	[XE_VSEC_DG2] =3D {
+>> +		.caps =3D VSEC_CAP_TELEMETRY,
+>> +		.headers =3D dg2_capabilities,
+>> +		.quirks =3D VSEC_QUIRK_EARLY_HW,
+>> +	},
+>>  	[XE_VSEC_BMG] =3D {
+>>  		.caps =3D VSEC_CAP_TELEMETRY,
+>>  		.headers =3D bmg_capabilities,
+>> @@ -174,6 +204,7 @@ struct pmt_callbacks xe_pmt_cb =3D {
+>>  };
+>>
+>>  static const int vsec_platforms[] =3D {
+>> +	[XE_DG2] =3D XE_VSEC_DG2,
+>>  	[XE_BATTLEMAGE] =3D XE_VSEC_BMG,
+>>  };
+>>
+>> @@ -185,6 +216,49 @@ static enum xe_vsec get_platform_info(struct
+>xe_device *xe)
+>>  	return vsec_platforms[xe->info.platform];
+>>  }
+>>
+>> +/*
+>> + * Access the DG2 PMT MMIO discovery table
+>> + *
+>> + * The intel_vsec driver does not typically access the discovery table.
+>> + * Instead, it creates a memory resource for the table and passes it
+>> + * to the PMT telemetry driver. Each discovery table contains 3 items,
+>> + *    - GUID
+>> + *    - Telemetry size
+>> + *    - Telemetry offset (offset from P2SB BAR, not GT)
+>> + *
+>> + * For DG2 we know what the telemetry offset is, but we still need to
+>> + * use the discovery table to pass the GUID and the size. So figure
+>> + * out the difference between the P2SB offset and the GT offset and
+>> + * save this so that the telemetry driver can use it to adjust the
+>> + * value.
+>> + */
+>> +static int dg2_adjust_offset(struct pci_dev *pdev, struct device *dev,
+>> +			     struct intel_vsec_platform_info *info)
+>> +{
+>> +	void __iomem *base;
+>> +	u32 telem_offset;
+>> +	u64 addr;
+>> +
+>> +	/* compile check to verify that quirk has P2SB quirk added */
+>
+>I don't know what "quirk" the first instance refers to (I think I
+>probably know what the P2SB quirk is).
+>
+>What is the purpose/meaning of this comment? Is it some leftover for
+>code that no longer exists as it talks about "compile check"??
 
-	depends on LEDS_CLASS_MULTICOLOR
+Artifact from my first attempt.
 
-Adding this should fix the following errors reported by
-the kernel test robot:
+I will remove this and update the comment below (another quirk reference).
 
-ERROR: modpost: "devm_led_classdev_multicolor_unregister" [drivers/platform/x86/hp/hp-wmi.ko] undefined!
-ERROR: modpost: "devm_led_classdev_multicolor_register_ext" [drivers/platform/x86/hp/hp-wmi.ko] undefined!
+Thanks!
 
+M
 
-
->  #include <linux/module.h>
->  #include <linux/init.h>
->  #include <linux/slab.h>
-> @@ -24,6 +26,7 @@
->  #include <linux/platform_profile.h>
->  #include <linux/hwmon.h>
->  #include <linux/acpi.h>
-> +#include <linux/bits.h>
->  #include <linux/rfkill.h>
->  #include <linux/string.h>
->  #include <linux/dmi.h>
-
-As Ilpo mentioned you need to add a:
-
-#include <linux/bitfield.h>
-
-here.
-
-> @@ -44,6 +47,14 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45E9-BE91-3D44E2C707E4");
->  
->  #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
->  
-> +#define FOURZONE_LIGHTING_SUPPORTED_BIT	0x01
-> +#define FOURZONE_LIGHTING_ON		228
-> +#define FOURZONE_LIGHTING_OFF		100
-> +
-> +#define FOURZONE_COLOR_R		GENMASK(23, 16)
-> +#define FOURZONE_COLOR_G		GENMASK(15, 8)
-> +#define FOURZONE_COLOR_B		GENMASK(7, 0)
-
-I see here and below that you are encoding all 3 color components in
-a single 24bit intensity / brightness value, that is not how you
-are supposed to use the multi-color LED API. More about this below.
-
-> +
->  /* DMI board names of devices that should use the omen specific path for
->   * thermal profiles.
->   * This was obtained by taking a look in the windows omen command center
-> @@ -143,18 +154,36 @@ enum hp_wmi_commandtype {
->  };
->  
->  enum hp_wmi_gm_commandtype {
-> -	HPWMI_FAN_SPEED_GET_QUERY = 0x11,
-> -	HPWMI_SET_PERFORMANCE_MODE = 0x1A,
-> -	HPWMI_FAN_SPEED_MAX_GET_QUERY = 0x26,
-> -	HPWMI_FAN_SPEED_MAX_SET_QUERY = 0x27,
-> -	HPWMI_GET_SYSTEM_DESIGN_DATA = 0x28,
-> +	HPWMI_FAN_SPEED_GET_QUERY	= 0x11,
-> +	HPWMI_SET_PERFORMANCE_MODE	= 0x1A,
-> +	HPWMI_FAN_SPEED_MAX_GET_QUERY	= 0x26,
-> +	HPWMI_FAN_SPEED_MAX_SET_QUERY	= 0x27,
-> +	HPWMI_GET_SYSTEM_DESIGN_DATA	= 0x28,
-> +	HPWMI_GET_KEYBOARD_TYPE		= 0x2B,
-> +};
-> +
-> +enum hp_wmi_fourzone_commandtype {
-> +	HPWMI_SUPPORTS_LIGHTNING	= 0x01,
-> +	HPWMI_FOURZONE_COLOR_GET	= 0x02,
-> +	HPWMI_FOURZONE_COLOR_SET	= 0x03,
-> +	HPWMI_LED_BRIGHTNESS_GET	= 0x04,
-> +	HPWMI_LED_BRIGHTNESS_SET	= 0x05,
-> +};
-> +
-> +enum hp_wmi_keyboardtype {
-> +	HPWMI_KEYBOARD_INVALID        = 0x00,
-> +	HPWMI_KEYBOARD_NORMAL         = 0x01,
-> +	HPWMI_KEYBOARD_WITH_NUMPAD    = 0x02,
-> +	HPWMI_KEYBOARD_WITHOUT_NUMPAD = 0x03,
-> +	HPWMI_KEYBOARD_RGB	      = 0x04,
->  };
->  
->  enum hp_wmi_command {
-> -	HPWMI_READ	= 0x01,
-> -	HPWMI_WRITE	= 0x02,
-> -	HPWMI_ODM	= 0x03,
-> -	HPWMI_GM	= 0x20008,
-> +	HPWMI_READ     = 0x01,
-> +	HPWMI_WRITE    = 0x02,
-> +	HPWMI_ODM      = 0x03,
-> +	HPWMI_GM       = 0x20008,
-> +	HPWMI_FOURZONE = 0x20009,
->  };
->  
->  enum hp_wmi_hardware_mask {
-> @@ -265,6 +294,7 @@ static struct platform_device *hp_wmi_platform_dev;
->  static struct platform_profile_handler platform_profile_handler;
->  static bool platform_profile_support;
->  static bool zero_insize_support;
-> +static bool fourzone_lightning_support;
->  
->  static struct rfkill *wifi_rfkill;
->  static struct rfkill *bluetooth_rfkill;
-> @@ -821,6 +851,40 @@ static struct attribute *hp_wmi_attrs[] = {
->  };
->  ATTRIBUTE_GROUPS(hp_wmi);
->  
-> +static const char * const fourzone_zone_names[4] = {
-> +	"hp:rgb:kbd_zoned_backlight-right",
-> +	"hp:rgb:kbd_zoned_backlight-middle",
-> +	"hp:rgb:kbd_zoned_backlight-left",
-> +	"hp:rgb:kbd_zoned_backlight-wasd"
-> +};
-> +
-> +struct hp_fourzone_leds {
-> +	struct led_classdev_mc leds[4];
-> +	struct mc_subled subleds[4];
-
-The idea with the multi-color API and subleds is that
-a RGB LED really are 3 seperate LEDs (R + G + B) in one.
-This is alsohow they are actually phyiscally made.
-So for 4 zones you need 12 subleds.
-
-I think it would be best to to have a single struct per zone:
-
-struct hp_fourzone_led {
-	struct led_classdev_mc mc_led;
-	struct mc_subled subleds[3];
-	u32 cache; /* Not sure if you still want this */
-};
-
-And then declare an array of 4 of these:
-
-static struct hp_fourzone_led hp_fourzone_leds[4];
-
-
-
-> +	u32 color_cache[4];
-> +};
-> +static struct hp_fourzone_leds fourzone_leds;
-> +
-> +static enum led_brightness get_fourzone_brightness(struct led_classdev *led_cdev)
-> +{
-> +	u8 buff[4];
-> +
-> +	hp_wmi_perform_query(HPWMI_LED_BRIGHTNESS_GET, HPWMI_FOURZONE,
-> +		&buff, sizeof(buff), sizeof(buff));
-> +
-> +	return buff[0] == FOURZONE_LIGHTING_ON ? LED_ON : LED_OFF;
-> +}
-> +
-> +static void fourzone_update_brightness(void)
-> +{
-> +	unsigned int br;
-> +
-> +	/* synchronize the brightness level on all zones */
-> +	br = get_fourzone_brightness(NULL);
-> +	for (size_t i = 0; i < 4; i++)
-> +		fourzone_leds.leds[i].led_cdev.brightness = br;
-> +}
-> +
->  static void hp_wmi_notify(u32 value, void *context)
->  {
->  	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
-> @@ -932,6 +996,14 @@ static void hp_wmi_notify(u32 value, void *context)
->  	case HPWMI_PROXIMITY_SENSOR:
->  		break;
->  	case HPWMI_BACKLIT_KB_BRIGHTNESS:
-> +		if (fourzone_lightning_support) {
-> +			input_report_key(hp_wmi_input_dev, KEY_KBDILLUMTOGGLE, true);
-> +			input_sync(hp_wmi_input_dev);
-> +			input_report_key(hp_wmi_input_dev, KEY_KBDILLUMTOGGLE, false);
-> +			input_sync(hp_wmi_input_dev);
-> +
-> +			fourzone_update_brightness();
-
-Does you calling fourzone_update_brightness() here mean that the embedded
-controller (EC) if the laptop toggles the kbd backlight on/off itself when
-you press the Fn + key combo for this on the kbd ? In that case you
-should not be sending a KEY_KBDILLUMTOGGLE key press event. That event
-is telling userspace that it should toggle the brightness, which you
-should only do if this is not done by the EC itself.
-
-If the EC does indeed toggle the brightness on/off (or even cycles it
-between various brightness levels) then the right thing to do is to
-call led_classdev_notify_brightness_hw_changed() on mc_led.led_cdev for
-each of the 4 zones when receiving this event.
-
-> +		}
->  		break;
->  	case HPWMI_PEAKSHIFT_PERIOD:
->  		break;
-> @@ -1505,6 +1577,154 @@ static int thermal_profile_setup(void)
->  	return 0;
->  }
->  
-> +static int fourzone_set_colors(u32 color, size_t zone)
-> +{
-> +	u8 buff[128];
-> +	int ret;
-> +
-> +	ret = hp_wmi_perform_query(HPWMI_FOURZONE_COLOR_GET, HPWMI_FOURZONE,
-> +		&buff, sizeof(buff), sizeof(buff));
-> +	if (ret != 0)
-> +		return -EINVAL;
-
-You are doing a read + modify + write of the kbd settings here.
-
-This is fine, but to avoid racing against another r/m/w cycle
-done at the same time if userspace writes 2 zones at the same
-time you need to take a mutex here.
-
-> +
-> +	buff[25 + zone * 3]     = FIELD_GET(FOURZONE_COLOR_R, color);
-> +	buff[25 + zone * 3 + 1] = FIELD_GET(FOURZONE_COLOR_G, color);
-> +	buff[25 + zone * 3 + 2] = FIELD_GET(FOURZONE_COLOR_B, color);
-
-As mentioned above this is wrong. You should have a separate mc_subled
-struct for each color for each zone (so 3 mc_subled-s per zone,
-one for each of R, G and B; and the you take subled.brightness field
-from the 3 subleds for the 3 different values.
-
-> +
-> +	return hp_wmi_perform_query(HPWMI_FOURZONE_COLOR_SET, HPWMI_FOURZONE,
-> +		&buff, sizeof(buff), sizeof(buff));
-> +}
-> +
-> +static int fourzone_get_colors(u32 *colors)
-> +{
-> +	u8 buff[128];
-> +	int ret;
-> +
-> +	ret = hp_wmi_perform_query(HPWMI_FOURZONE_COLOR_GET, HPWMI_FOURZONE,
-> +		&buff, sizeof(buff), sizeof(buff));
-> +	if (ret != 0)
-> +		return -EINVAL;
-> +
-> +	for (int i = 0; i < 4; i++) {
-> +		colors[i] = FIELD_PREP(FOURZONE_COLOR_R, buff[25 + i * 3])
-> +			  | FIELD_PREP(FOURZONE_COLOR_G, buff[25 + i * 3 + 1])
-> +			  | FIELD_PREP(FOURZONE_COLOR_B, buff[25 + i * 3 + 2]);
-> +	}
-
-same here.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void set_fourzone_brightness(struct led_classdev *led_cdev, enum led_brightness brightness)
-> +{
-> +	size_t zone;
-> +
-> +	for (size_t i = 0; i < 4; i++)
-> +		if (strcmp(led_cdev->name, fourzone_zone_names[i]) == 0)
-> +			zone = i;
-> +
-
-So the way how the multicolor LED class devices work is that they have 2
-brightness controls:
-
-/sys/class/leds/hp:rgb:kbd_zoned_backlight-right/brightness 
-/sys/class/leds/hp:rgb:kbd_zoned_backlight-right/multi_intensity
-
-Where brightness is a single integer value for overall brightness
-control and multi_intensity is a per channel brightness control, also see
-Documentation/leds/leds-class-multicolor.rst
-
-Now most hw does not have a main/overall brightness control only
-per channel controls (like this hp code) so there is a helper which
-you pass the overall brightness value and which then calculates the
-per channel brightnesses for you.
-
-The LED core code caches the last multi_intensity values for you
-and there is a helper you can call from the (this) brightness_set()
-callback:
-
-	led_mc_calc_color_components(&fourzone_leds[i].mc_led, brightness);
-
-which will then update the fourzone_leds[i].subleds[0 - 2].brightness
-values with the desired per channel brightness values and then you can
-use those 3 brightness values in fourzone_set_colors() to send to
-the keyboard.
-
-
-> +	if (fourzone_leds.leds[zone].subled_info->intensity == fourzone_leds.color_cache[zone]) {
-> +		u8 buff[4] = {
-> +			brightness == LED_ON ? FOURZONE_LIGHTING_ON : FOURZONE_LIGHTING_OFF,
-> +			0, 0, 0
-> +		};
-> +
-> +		hp_wmi_perform_query(HPWMI_LED_BRIGHTNESS_SET, HPWMI_FOURZONE, &buff,
-> +			sizeof(buff), 0);
-> +
-> +		fourzone_update_brightness();
-> +	} else {
-> +		fourzone_set_colors(fourzone_leds.leds[zone].subled_info->intensity, zone);
-> +		fourzone_leds.color_cache[zone] = fourzone_leds.leds[zone].subled_info->intensity;
-> +	}
-
-And this weird cahce thing can be removed then too, just always send the newly calculated
-3 brightness values to the kbd.
-
-
-> +}
-> +
-> +static int __init fourzone_leds_init(struct platform_device *device)
-> +{
-> +	enum led_brightness brightness;
-> +	u32 colors[4];
-> +	int ret;
-> +
-> +	ret = fourzone_get_colors(colors);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	memcpy(fourzone_leds.color_cache, colors, sizeof(colors));
-> +
-> +	brightness = get_fourzone_brightness(NULL);
-> +
-> +	for (size_t i = 0; i < 4; i++) {
-> +		fourzone_leds.subleds[i] = (struct mc_subled) {
-> +			.color_index = LED_COLOR_ID_RGB,
-> +			.brightness = 1,
-> +			.intensity = colors[i]
-> +		};
-
-So over here you need to have a nested for loop to initialize
-all 3 subleds for each zone.
-
-
-> +
-> +		fourzone_leds.leds[i] = (struct led_classdev_mc) {
-> +			.led_cdev = {
-> +				.name = fourzone_zone_names[i],
-> +				.brightness = brightness,
-> +				.max_brightness = 1,
-
-This should be 255 now.
-
-> +				.brightness_set = set_fourzone_brightness,
-> +			`	.brightness_get = get_fourzone_brightness,
-> +				.color = LED_COLOR_ID_RGB,
-> +				.flags = LED_BRIGHT_HW_CHANGED
-> +			},
-> +			.num_colors = 1,
-
-This should be 3.
-
-> +			.subled_info = &fourzone_leds.subleds[i]
-
-And this points to fourzone_leds[i].subleds now.
-
-> +		};
-> +
-> +		ret = devm_led_classdev_multicolor_register(&device->dev, &fourzone_leds.leds[i]);
-> +		if (ret)
-> +			return -ENODEV;
-> +	}
-
-
-> +
-> +	return 0;
-> +}
-> +
-> +static enum hp_wmi_keyboardtype fourzone_get_keyboard_type(void)
-> +{
-> +	u8 buff[128];
-> +	int ret;
-> +
-> +	ret = hp_wmi_perform_query(HPWMI_GET_KEYBOARD_TYPE, HPWMI_GM,
-> +		&buff, sizeof(buff), sizeof(buff));
-> +	if (ret != 0)
-> +		return HPWMI_KEYBOARD_INVALID;
-> +
-> +	/* the first byte in the response represents the keyboard type */
-> +	return (enum hp_wmi_keyboardtype)(buff[0] + 1);
-> +}
-> +
-> +static bool fourzone_supports_lighting(void)
-> +{
-> +	u8 buff[128];
-> +	int ret;
-> +
-> +	ret = hp_wmi_perform_query(HPWMI_SUPPORTS_LIGHTNING, HPWMI_FOURZONE,
-> +		&buff, sizeof(buff), sizeof(buff));
-> +	if (ret != 0)
-> +		return false;
-> +
-> +	return buff[0] & FOURZONE_LIGHTING_SUPPORTED_BIT;
-> +}
-> +
-> +static int fourzone_setup(struct platform_device *device)
-> +{
-> +	if (!fourzone_supports_lighting())
-> +		return -ENODEV;
-> +
-> +	if (fourzone_get_keyboard_type() != HPWMI_KEYBOARD_WITHOUT_NUMPAD)
-> +		return -ENODEV;
-> +
-> +	/* register leds */
-> +	if (fourzone_leds_init(device) < 0)
-> +		return -ENODEV;
-> +
-> +	input_set_capability(hp_wmi_input_dev, KE_KEY, KEY_KBDILLUMTOGGLE);
-> +
-> +	return 0;
-> +}
-> +
->  static int hp_wmi_hwmon_init(void);
->  
->  static int __init hp_wmi_bios_setup(struct platform_device *device)
-> @@ -1534,6 +1754,10 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
->  
->  	thermal_profile_setup();
->  
-> +	/* setup 4 zone rgb */
-> +	if (!fourzone_setup(device))
-> +		fourzone_lightning_support = true;
-> +
->  	return 0;
->  }
->  
-> @@ -1561,6 +1785,12 @@ static void __exit hp_wmi_bios_remove(struct platform_device *device)
->  
->  	if (platform_profile_support)
->  		platform_profile_remove();
-> +
-> +	if (fourzone_lightning_support)
-> +		for (size_t i = 0; i < 4; i++) {
-> +			devm_led_classdev_multicolor_unregister(&device->dev,
-> +				&fourzone_leds.leds[i]);
-> +		}
-
-The whole idea behind devm_register_foo() functions is that they get automatically
-removed when the driver is unbound from the device. So this code and
-the fourzone_lightning_support flag are not necessary.
-
-Regards,
-
-Hans
-
-
-
->  }
->  
->  static int hp_wmi_resume_handler(struct device *device)
-
+>--
+> i.
+>
+>> +
+>> +	addr =3D pci_resource_start(pdev, GFX_BAR) + info->headers[0]->offset;
+>> +	base =3D ioremap_wc(addr, 16);
+>> +	if (!base)
+>> +		return -ENOMEM;
+>> +
+>> +	telem_offset =3D readl(base + TELEM_BASE_OFFSET);
+>> +
+>> +	/* Use the base_addr + P2SB quirk to pass this info */
+>> +	if (telem_offset < DG2_TELEM_OFFSET)
+>> +		info->base_adjust =3D -(DG2_TELEM_OFFSET - telem_offset);
+>> +	else
+>> +		info->base_adjust =3D -(telem_offset - DG2_TELEM_OFFSET);
+>> +
+>> +	iounmap(base);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  /**
+>>   * xe_vsec_init - Initialize resources and add intel_vsec auxiliary
+>>   * interface
+>> @@ -196,6 +270,7 @@ void xe_vsec_init(struct xe_device *xe)
+>>  	struct device *dev =3D xe->drm.dev;
+>>  	struct pci_dev *pdev =3D to_pci_dev(dev);
+>>  	enum xe_vsec platform;
+>> +	u32 ret;
+>>
+>>  	platform =3D get_platform_info(xe);
+>>  	if (platform =3D=3D XE_VSEC_UNKNOWN)
+>> @@ -206,6 +281,12 @@ void xe_vsec_init(struct xe_device *xe)
+>>  		return;
+>>
+>>  	switch (platform) {
+>> +	case XE_VSEC_DG2:
+>> +		ret =3D dg2_adjust_offset(pdev, dev, info);
+>> +		if (ret)
+>> +			return;
+>> +		break;
+>> +
+>>  	case XE_VSEC_BMG:
+>>  		info->priv_data =3D &xe_pmt_cb;
+>>  		break;
+>>
