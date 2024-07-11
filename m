@@ -1,166 +1,342 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33BC5CDE9
-	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Jul 2024 10:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A337A15F3FB
+	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Jul 2024 11:09:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720692231; cv=none; b=A6jzK2BGOs96uZ2faI1kQ5XREdZdvr2qs8DXUZuiO8GtkqwQJokcPTMWu6+yyHeKL4R0RY+A0KpIJEIOl44GiAPw/uwPEYkdxZDCYpMjxqoxMIe4kGuTZUWdwAvZVjumythi2jKpC9vUkgiAVUxSRoLFwcHLuSqb3+O/LxiefTg=
+	t=1720696170; cv=none; b=IyUBHDIXW/yy5jWOg8GX6fnWEz1smRLKJ6Mrp+zcocqSjPAG/llOjESr5fF1fYmpuMdOadfy9JtQKLwCBtWw8KqYsBiKK9Elv32L7qWMQ/XwL+cX5QekMal04DaAAnP8Ok3fnUI30T0r9go7dS1+/XwyDhI/uWfXwHn/iPAov/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720692231; c=relaxed/simple;
-	bh=QONdmRWAEeFIWi3mVvPO3BBfbhRybmvkj2i03hP42x8=;
+	s=arc-20240116; t=1720696170; c=relaxed/simple;
+	bh=pUsjHmdpeGyR+jyakS29x0bMaPCEoglr9gBKFV1Xtv8=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=mKd8waV1rva21ljxxZM9rqOi4VzMOEq0f0T7cUipb+fNea6+ZMHe6vkVvw1Jn2FyJaFSNz7jg1ERCHm6c361ghbvmY/jWH0muhST4ch7vPSycqBKmj0BS6qGNCO5EydA0epOoabKzeU54ipd9TEx+eBmfe7xsut13mQ4acSNbU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K/tp9qhf; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version:Content-Type; b=E4ag5Ljfc9ZYeyT/0rv+wHxmucTgupYPTA4u23Qjs22oMzyFBZ0GrsP21lNK+eSJeth6KEdL+Mxq83qnDXCcYxq7IjOJHMotyCOoNHrxPNi4vLlEhOBiCp7KDWfs2SiTuBXD9ILdKJm24jXUIYkF/NMv6v5IWSzD437SMW4kK2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kEHGmDAv; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K/tp9qhf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kEHGmDAv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720692230; x=1752228230;
+  t=1720696169; x=1752232169;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=QONdmRWAEeFIWi3mVvPO3BBfbhRybmvkj2i03hP42x8=;
-  b=K/tp9qhfN0fjyQcVQ3C5H776Uf6EZooeFGQTOyvhh6/+jV36n/h+GwAO
-   va+krBFs2w4bOvRxcvnGx1lDmlE7AaVIvCAeQuY+bdMnmmpireNqNAw6S
-   7EqdwQuJKPPkyoFeRUezIR2rN96r0aZjZBD208W33mmvhIqd4VdSVMsT4
-   FktXAKNhNLPxhSXj4c4W4kQjL76B5odDAQzFENDqnp52zTBod3cBDDHzN
-   60tBCWv7PYg39wfjXYZdRbd1n71m9VPVMYphmVJKLwfP7Ka9dbIo9TTw9
-   lcrZP1JU8PeX8o+hTl8Pnfwb1+S3VZ/ejlOn7oDNaC8GGfdUozPef9DeV
-   Q==;
-X-CSE-ConnectionGUID: nHZ2uaG8T5GTMpbaftfh+Q==
-X-CSE-MsgGUID: AXA+ZIaLRKWfqva9v1AeFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="35600037"
+  bh=pUsjHmdpeGyR+jyakS29x0bMaPCEoglr9gBKFV1Xtv8=;
+  b=kEHGmDAvstatXU0OLb2PPpL+H0YKykR95zb/7U83EzXYJ1Kai6+dZuag
+   PXwCVUiEpvrdd/LyVY1n6BEkA8qXu7j/EuP+6lHWPkkbfQphF9pqdgrgk
+   3CVS+sUL4rxTDttbqAhtiH+ap9FEa7zITDxIJDiZhcfcqBjpdqOSf5m97
+   jDM13HOyFCQMEi15LCza6RHTNkIkhi1iaA6l5meC8eDZN/mHtTQTr/ZFI
+   e3SlM0y+aKDtWTpSvreWn685T5fzRFyv6tABGzTiw6luOuptMm20P8DYD
+   ZVnam4G9wU9UBXSnykVJYWjiG03HIzmYylSyZvgIUKBcADoweolaSRrOl
+   g==;
+X-CSE-ConnectionGUID: PUuUAyJNT66K/PubU+zr0g==
+X-CSE-MsgGUID: MmUIH1/RTh6ICaIdO9uOvQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="28660923"
 X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
-   d="scan'208";a="35600037"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 03:02:36 -0700
-X-CSE-ConnectionGUID: YER5shauQLKdBX9H6vwCNA==
-X-CSE-MsgGUID: xnDYKcI/Q2C9r5aZJ6WkyQ==
+   d="scan'208";a="28660923"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 04:09:28 -0700
+X-CSE-ConnectionGUID: AC/agRDhQmqQ4kaPr9Pv8w==
+X-CSE-MsgGUID: OwJT6WYjQW67s8fvUjjhyg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
-   d="scan'208";a="79638544"
+   d="scan'208";a="53467797"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.127])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 03:02:34 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 04:09:26 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 11 Jul 2024 13:02:30 +0300 (EEST)
-To: Suma Hegde <suma.hegde@amd.com>
-cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-    Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-Subject: Re: [v2 07/11] platform/x86/amd/hsmp: Create mutually exclusive ACPI
- and plat drivers
-In-Reply-To: <20240711073314.2704871-7-suma.hegde@amd.com>
-Message-ID: <4bb0600e-06b4-5f59-7aa3-9bc65f1698b4@linux.intel.com>
-References: <20240711073314.2704871-1-suma.hegde@amd.com> <20240711073314.2704871-7-suma.hegde@amd.com>
+Date: Thu, 11 Jul 2024 14:09:22 +0300 (EEST)
+To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+cc: intel-xe@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, 
+    david.e.box@linux.intel.com, matthew.brost@intel.com
+Subject: Re: [PATCH v6 1/6] platform/x86/intel/vsec.h: Move to
+ include/linux
+In-Reply-To: <20240710192249.3915396-2-michael.j.ruhl@intel.com>
+Message-ID: <bf1a5405-e1a6-4a51-48ee-c1b694ceb59b@linux.intel.com>
+References: <20240710192249.3915396-1-michael.j.ruhl@intel.com> <20240710192249.3915396-2-michael.j.ruhl@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-1958086072-1720696162=:6262"
 
-On Thu, 11 Jul 2024, Suma Hegde wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> Separate the probes for ACPI and platform device drivers.
-> Provide a Kconfig option to select either the
-> ACPI or the platform device based driver.
-> 
-> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
-> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+--8323328-1958086072-1720696162=:6262
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Wed, 10 Jul 2024, Michael J. Ruhl wrote:
+
+> From: "David E. Box" <david.e.box@linux.intel.com>
+>=20
+> Some drivers outside of PDX86 need access to the vsec header. Move it to
+> include/linux to make it easier to include.
+>=20
+> Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 > ---
-> Changes since v1:
-> Rename "plat_dev" to "hsmp_pdev"
-> 
->  arch/x86/include/asm/amd_hsmp.h        |   2 +-
->  drivers/platform/x86/amd/hsmp/Kconfig  |  25 ++++-
->  drivers/platform/x86/amd/hsmp/Makefile |  10 +-
->  drivers/platform/x86/amd/hsmp/acpi.c   | 119 ++++++++++++++++++++++--
->  drivers/platform/x86/amd/hsmp/hsmp.c   |  25 ++---
->  drivers/platform/x86/amd/hsmp/hsmp.h   |   8 +-
->  drivers/platform/x86/amd/hsmp/plat.c   | 122 +++++++------------------
->  7 files changed, 186 insertions(+), 125 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/amd_hsmp.h b/arch/x86/include/asm/amd_hsmp.h
-> index 03c2ce3edaf5..ada14e55f9f4 100644
-> --- a/arch/x86/include/asm/amd_hsmp.h
-> +++ b/arch/x86/include/asm/amd_hsmp.h
-> @@ -5,7 +5,7 @@
->  
->  #include <uapi/asm/amd_hsmp.h>
->  
-> -#if IS_ENABLED(CONFIG_AMD_HSMP)
-> +#if IS_ENABLED(CONFIG_AMD_HSMP) || IS_ENABLED(CONFIG_AMD_HSMP_ACPI)
->  int hsmp_send_message(struct hsmp_message *msg);
->  #else
->  static inline int hsmp_send_message(struct hsmp_message *msg)
-> diff --git a/drivers/platform/x86/amd/hsmp/Kconfig b/drivers/platform/x86/amd/hsmp/Kconfig
-> index b55d4ed9bceb..15888a89581a 100644
-> --- a/drivers/platform/x86/amd/hsmp/Kconfig
-> +++ b/drivers/platform/x86/amd/hsmp/Kconfig
-> @@ -3,9 +3,30 @@
->  # AMD HSMP Driver
->  #
->  
-> +menu "AMD Host System Management Port driver"
-> +	depends on AMD_NB
-> +
-> +config AMD_HSMP_ACPI
-> +	tristate "AMD HSMP ACPI driver"
-> +	depends on ACPI
-> +	help
-> +	  The driver provides a way for user space tools to monitor and manage
-> +	  system management functionality on EPYC server CPUs from AMD.
-> +
-> +	  Host System Management Port (HSMP) interface is a mailbox interface
-> +	  between the x86 core and the System Management Unit (SMU) firmware.
-> +
-> +	  This driver supports ACPI based probing.
-> +
-> +	  You  may enable this, if your platform bios provides an ACPI object
-> +	  as described in the documentation.
-> +
-> +	  If you choose to compile this driver as a module the module will be
-> +	  called amd_hsmp.
-> +
->  config AMD_HSMP
->  	tristate "AMD HSMP Driver"
-> -	depends on AMD_NB && X86_64 && ACPI
-> +	depends on AMD_HSMP_ACPI=n
->  	help
->  	  The driver provides a way for user space tools to monitor and manage
->  	  system management functionality on EPYC server CPUs from AMD.
-> @@ -15,3 +36,5 @@ config AMD_HSMP
->  
->  	  If you choose to compile this driver as a module the module will be
->  	  called amd_hsmp.
-> +
-> +endmenu
-> diff --git a/drivers/platform/x86/amd/hsmp/Makefile b/drivers/platform/x86/amd/hsmp/Makefile
-> index 0cc92865c0a2..53ebc462b0f9 100644
-> --- a/drivers/platform/x86/amd/hsmp/Makefile
-> +++ b/drivers/platform/x86/amd/hsmp/Makefile
-> @@ -4,5 +4,11 @@
->  # AMD HSMP Driver
->  #
->  
-> -obj-$(CONFIG_AMD_HSMP)		+= amd_hsmp.o
-> -amd_hsmp-objs			:= hsmp.o plat.o acpi.o
-> +ifneq ($(CONFIG_AMD_HSMP), )
-> +obj-$(CONFIG_AMD_HSMP)          += amd_hsmp.o
-> +amd_hsmp-objs = hsmp.o plat.o
-> +endif
-> +ifneq ($(CONFIG_AMD_HSMP_ACPI), )
-> +obj-$(CONFIG_AMD_HSMP_ACPI)     += amd_hsmp.o
-> +amd_hsmp-objs = hsmp.o acpi.o
-> +endif
+>  MAINTAINERS                                   |  1 +
+>  drivers/platform/x86/intel/pmc/core_ssram.c   |  2 +-
+>  drivers/platform/x86/intel/pmt/class.c        |  2 +-
+>  drivers/platform/x86/intel/pmt/class.h        |  2 +-
+>  drivers/platform/x86/intel/pmt/crashlog.c     |  2 +-
+>  drivers/platform/x86/intel/pmt/telemetry.c    |  2 +-
+>  drivers/platform/x86/intel/sdsi.c             |  3 +-
+>  drivers/platform/x86/intel/tpmi.c             |  3 +-
+>  drivers/platform/x86/intel/vsec.c             |  7 ++--
+>  .../vsec.h =3D> include/linux/intel_vsec.h      | 32 +++++++++++++++++--
+>  10 files changed, 40 insertions(+), 16 deletions(-)
+>  rename drivers/platform/x86/intel/vsec.h =3D> include/linux/intel_vsec.h=
+ (71%)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 782fb49059e7..832ab1a0011e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11426,6 +11426,7 @@ INTEL VENDOR SPECIFIC EXTENDED CAPABILITIES DRIVE=
+R
+>  M:=09David E. Box <david.e.box@linux.intel.com>
+>  S:=09Supported
+>  F:=09drivers/platform/x86/intel/vsec.*
 
-I still don't agree with this approach. You can add another config for the 
-hsmp core and select it, and it will work with the existing configs when 
-they're properly run through make oldconfig or olddefconfig before 
-building.
+This can probably change to .c as the other file is now moved under=20
+include/.
 
--- 
+> +F:=09include/linux/intel_vsec.h
+> =20
+>  INTEL VIRTUAL BUTTON DRIVER
+>  M:=09AceLan Kao <acelan.kao@canonical.com>
+> diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platfo=
+rm/x86/intel/pmc/core_ssram.c
+> index 1bde86c54eb9..baddaaec25ee 100644
+> --- a/drivers/platform/x86/intel/pmc/core_ssram.c
+> +++ b/drivers/platform/x86/intel/pmc/core_ssram.c
+> @@ -9,11 +9,11 @@
+>   */
+> =20
+>  #include <linux/cleanup.h>
+> +#include <linux/intel_vsec.h>
+>  #include <linux/pci.h>
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+> =20
+>  #include "core.h"
+> -#include "../vsec.h"
+>  #include "../pmt/telemetry.h"
+> =20
+>  #define SSRAM_HDR_SIZE=09=090x100
+> diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x8=
+6/intel/pmt/class.c
+> index 4b53940a64e2..d7939b28e937 100644
+> --- a/drivers/platform/x86/intel/pmt/class.c
+> +++ b/drivers/platform/x86/intel/pmt/class.c
+> @@ -9,12 +9,12 @@
+>   */
+> =20
+>  #include <linux/kernel.h>
+> +#include <linux/intel_vsec.h>
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+>  #include <linux/module.h>
+>  #include <linux/mm.h>
+>  #include <linux/pci.h>
+> =20
+> -#include "../vsec.h"
+>  #include "class.h"
+> =20
+>  #define PMT_XA_START=09=091
+> diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x8=
+6/intel/pmt/class.h
+> index d23c63b73ab7..d6f9ccaf28c8 100644
+> --- a/drivers/platform/x86/intel/pmt/class.h
+> +++ b/drivers/platform/x86/intel/pmt/class.h
+> @@ -2,13 +2,13 @@
+>  #ifndef _INTEL_PMT_CLASS_H
+>  #define _INTEL_PMT_CLASS_H
+> =20
+> +#include <linux/intel_vsec.h>
+>  #include <linux/xarray.h>
+>  #include <linux/types.h>
+>  #include <linux/bits.h>
+>  #include <linux/err.h>
+>  #include <linux/io.h>
+> =20
+> -#include "../vsec.h"
+>  #include "telemetry.h"
+> =20
+>  /* PMT access types */
+> diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform=
+/x86/intel/pmt/crashlog.c
+> index 4014c02cafdb..9079d5dffc03 100644
+> --- a/drivers/platform/x86/intel/pmt/crashlog.c
+> +++ b/drivers/platform/x86/intel/pmt/crashlog.c
+> @@ -9,6 +9,7 @@
+>   */
+> =20
+>  #include <linux/auxiliary_bus.h>
+> +#include <linux/intel_vsec.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> @@ -16,7 +17,6 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/overflow.h>
+> =20
+> -#include "../vsec.h"
+>  #include "class.h"
+> =20
+>  /* Crashlog discovery header types */
+> diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platfor=
+m/x86/intel/pmt/telemetry.c
+> index 09258564dfc4..3478f891ea0b 100644
+> --- a/drivers/platform/x86/intel/pmt/telemetry.c
+> +++ b/drivers/platform/x86/intel/pmt/telemetry.c
+> @@ -9,6 +9,7 @@
+>   */
+> =20
+>  #include <linux/auxiliary_bus.h>
+> +#include <linux/intel_vsec.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> @@ -16,7 +17,6 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/overflow.h>
+> =20
+> -#include "../vsec.h"
+>  #include "class.h"
+> =20
+>  #define TELEM_SIZE_OFFSET=090x0
+> diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/int=
+el/sdsi.c
+> index 277e4f4b20ac..9d137621f0e6 100644
+> --- a/drivers/platform/x86/intel/sdsi.c
+> +++ b/drivers/platform/x86/intel/sdsi.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/bits.h>
+>  #include <linux/bitfield.h>
+>  #include <linux/device.h>
+> +#include <linux/intel_vsec.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> @@ -22,8 +23,6 @@
+>  #include <linux/types.h>
+>  #include <linux/uaccess.h>
+> =20
+> -#include "vsec.h"
+> -
+>  #define ACCESS_TYPE_BARID=09=092
+>  #define ACCESS_TYPE_LOCAL=09=093
+> =20
+> diff --git a/drivers/platform/x86/intel/tpmi.c b/drivers/platform/x86/int=
+el/tpmi.c
+> index 6c0cbccd80bb..b9fa1cbfdcf7 100644
+> --- a/drivers/platform/x86/intel/tpmi.c
+> +++ b/drivers/platform/x86/intel/tpmi.c
+> @@ -51,6 +51,7 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/delay.h>
+>  #include <linux/intel_tpmi.h>
+> +#include <linux/intel_vsec.h>
+>  #include <linux/io.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/module.h>
+> @@ -59,8 +60,6 @@
+>  #include <linux/sizes.h>
+>  #include <linux/string_helpers.h>
+> =20
+> -#include "vsec.h"
+> -
+>  /**
+>   * struct intel_tpmi_pfs_entry - TPMI PM Feature Structure (PFS) entry
+>   * @tpmi_id:=09TPMI feature identifier (what the feature is and its data=
+ format).
+> diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/int=
+el/vsec.c
+> index 0fdfaf3a4f5c..2b46807f868b 100644
+> --- a/drivers/platform/x86/intel/vsec.c
+> +++ b/drivers/platform/x86/intel/vsec.c
+> @@ -17,14 +17,13 @@
+>  #include <linux/bits.h>
+>  #include <linux/cleanup.h>
+>  #include <linux/delay.h>
+> -#include <linux/kernel.h>
+>  #include <linux/idr.h>
+> +#include <linux/intel_vsec.h>
+> +#include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+>  #include <linux/types.h>
+> =20
+> -#include "vsec.h"
+> -
+>  #define PMT_XA_START=09=09=090
+>  #define PMT_XA_MAX=09=09=09INT_MAX
+>  #define PMT_XA_LIMIT=09=09=09XA_LIMIT(PMT_XA_START, PMT_XA_MAX)
+> @@ -341,7 +340,7 @@ static bool intel_vsec_walk_vsec(struct pci_dev *pdev=
+,
+>  void intel_vsec_register(struct pci_dev *pdev,
+>  =09=09=09 struct intel_vsec_platform_info *info)
+>  {
+> -=09if (!pdev || !info)
+> +=09if (!pdev || !info || !info->headers)
+>  =09=09return;
+> =20
+>  =09intel_vsec_walk_header(pdev, info);
+> diff --git a/drivers/platform/x86/intel/vsec.h b/include/linux/intel_vsec=
+=2Eh
+> similarity index 71%
+> rename from drivers/platform/x86/intel/vsec.h
+> rename to include/linux/intel_vsec.h
+> index e23e76129691..1a287541a2f9 100644
+> --- a/drivers/platform/x86/intel/vsec.h
+> +++ b/include/linux/intel_vsec.h
+> @@ -1,6 +1,6 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+> -#ifndef _VSEC_H
+> -#define _VSEC_H
+> +#ifndef _INTEL_VSEC_H
+> +#define _INTEL_VSEC_H
+> =20
+>  #include <linux/auxiliary_bus.h>
+>  #include <linux/bits.h>
+> @@ -67,7 +67,14 @@ enum intel_vsec_quirks {
+>  =09VSEC_QUIRK_EARLY_HW     =3D BIT(4),
+>  };
+> =20
+> -/* Platform specific data */
+> +/**
+> + * struct intel_vsec_platform_info - Platform specific data
+> + * @parent:    parent device in the auxbus chain
+> + * @headers:   list of headers to define the PMT client devices to creat=
+e
+> + * @caps:      bitmask of PMT capabilities for the given headers
+> + * @quirks:    bitmask of VSEC device quirks
+> + * @base_addr: allow a base address to be specified (rather than derived=
+)
+> + */
+>  struct intel_vsec_platform_info {
+>  =09struct device *parent;
+>  =09struct intel_vsec_header **headers;
+> @@ -76,6 +83,18 @@ struct intel_vsec_platform_info {
+>  =09u64 base_addr;
+>  };
+> =20
+> +/**
+> + * struct intel_sec_device - Auxbus specific device information
+> + * @auxdev:        auxbus device struct for auxbus access
+> + * @pcidev:        pci device associated with the device
+> + * @resource:      any resources shared by the parent
+> + * @ida:           id reference
+> + * @num_resources: number of resources
+> + * @id:            xarrray id
+
+xarray
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
  i.
-
+--8323328-1958086072-1720696162=:6262--
