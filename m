@@ -1,152 +1,407 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC7E16CD1A
-	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Jul 2024 15:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72C01642B;
+	Thu, 11 Jul 2024 15:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720711051; cv=none; b=ISVytKvaZnitk+Kxu1iOwFF9WpA6mWNVcXNtkQR2eWblYlul9IwdAz9QJ4F0TViZnTnMvFGaOBwi8PRO1Axk/3sm+L2cUoRey8x/Ss8tnrRTx41JfM1lkzMOododq9MO19JRQ3megf3PZAyk7/YFwxYYxrtZ6mXCZaumpz9dXos=
+	t=1720712087; cv=none; b=Yzv3ZnB20XVDtLMBfBTrUW0ilgmGDlFuYiqgAcEdyzLuRJNnc34gINr9X6rIDXlXxKL2XV5yzXs8tuGcVK44t1j9bsk2BgK0OWlCczWf6H2QCNHVHQDYUnkkbcj6MiPrO0Y0ePnmNDGQh1bypJyq+ouUNXhQIkuJyZRX8emew6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720711051; c=relaxed/simple;
-	bh=EpZgJ8CQ9N0rfJxBFPo4GhnNPAEKGpuPfx2yb0F94CE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Up63LWxmV1/vcqOpX7wmdUH9fN+Jp1CM6+MbTg4+EVanoAoPvaPFvpQoM4ld5FAsWg7exrhEWdCzVvhyKHgwSNDCXpwjLxsdseehYqDHewMpW2ItvaOam0NzSiMbsLQA8ft8CL4GE6ix2PmbH6jy0sjkYJMuYRpuCT5Ams/Okfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PNYuCZNm; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1720712087; c=relaxed/simple;
+	bh=U5jon1rYFX1NVG83utEX/mdSih5YntDhhBFTKpbCiGQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nMGmOtv1/Jec0FHKwKhtk2uDtFTmNv/W+7SC/qyh6riZAZaQMDtZGybj225yFsyxEs0wIKqIrKy6qjIs9kviSXOG7WfvVyaFdMaeKY5K0q+9x2GDEkmoHprvt2vJAvXCxqJY7SQCfWCPFHudMBeA6qsG9S7AgjEklmngWLis6hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NyNEx3up; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PNYuCZNm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1720711049;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PvcjybqPHzlQzi++pVLDJbA6O/40LXVR87iFWMUpfmE=;
-	b=PNYuCZNmHodCiAPaY5rrEYOk0qSWvdbXK0VTbpY3Sr9v1B96D0DCwmURhbJf0qN2p3c+JL
-	51L0bmIuB4+mmWo0mPeyArF22cJj8fDLfHn8B1vMBgwMO9hzX9mu40oIrqhZpWt1kCVt5N
-	AKquRjDA9/mL58dQPIJ/sdkwa4elmSo=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-615-bDl-qJaLNpSCN35xCvJ8ng-1; Thu, 11 Jul 2024 11:17:27 -0400
-X-MC-Unique: bDl-qJaLNpSCN35xCvJ8ng-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-58c7800d03eso668945a12.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Jul 2024 08:17:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720711046; x=1721315846;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PvcjybqPHzlQzi++pVLDJbA6O/40LXVR87iFWMUpfmE=;
-        b=MrwA0pOn94QGEYj73L8t+V6VJAQjQxRrCtzBCozwIJH1QsM7FOa1+ErHIZW9w7CAyA
-         9S4qCrC6O5HJYqYauW7IB8F425XchzEg0WFMzj1bIJXidmAhceu9cqByNHIZgxcg98b0
-         DemgVw2jS1D1jFjqp5icZZdxsznXvxXyasDwdKLaaW23gF7GFKPJyCHdvo5h9hyVF4NU
-         D8XbLR8Kj1dOocwqEuA31T0vTR1Ugi6rwI5dg8Js/mt2lUfQIMaHaSLQwVhzRSs9ti7G
-         Qv2e+zW8gXlaV++1RJigjsKrK2VHKByyF3wfXIrwmZwAQzh/IXJIE5qXZPfb+z/DG0YP
-         g4dg==
-X-Gm-Message-State: AOJu0YxcvVRtT0ENb45kgwfOrAira3Yl8zV1cBc7pD7mlqnFOtkfCwBz
-	frBiFUGGn/G0rvZLaYAcYSYBWT0isVeg6QIWKtdk0kPqOxDmZ/OrnfBi+vA72bHMG98FN0/u8WY
-	DMbPpU/IB5/76wUIq90IQKTCOSzxG8+Lw6zfoLWGI1nlEoId/g+7PLXNwX/nHgAeDkntGNkA=
-X-Received: by 2002:a05:6402:354e:b0:57d:1696:fd14 with SMTP id 4fb4d7f45d1cf-594bab80ab5mr9064475a12.8.1720711046530;
-        Thu, 11 Jul 2024 08:17:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEWaholCedjUASVrq0V/4fdSiV4EtfSitNCOr5n41JWw+r2jeZ9UnIusYhu48h6RTYBsgNwlw==
-X-Received: by 2002:a05:6402:354e:b0:57d:1696:fd14 with SMTP id 4fb4d7f45d1cf-594bab80ab5mr9064448a12.8.1720711046100;
-        Thu, 11 Jul 2024 08:17:26 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-594bd45a1absm3585530a12.77.2024.07.11.08.17.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jul 2024 08:17:24 -0700 (PDT)
-Message-ID: <bb74a97e-3f25-4d56-9733-46e5325c47e7@redhat.com>
-Date: Thu, 11 Jul 2024 17:17:23 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NyNEx3up"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720712086; x=1752248086;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=U5jon1rYFX1NVG83utEX/mdSih5YntDhhBFTKpbCiGQ=;
+  b=NyNEx3upIw3C3TnklcQ9EA4FRfx3MTBdbIZ8/OL3Py7Sqy1Wnvm08Ut+
+   aObFkkpG0yyDKWVMpOKOdTJlKnHpVebZK9Yejhvkew3JvafzXGP6X0nbn
+   ZNHvEgM0l4vjqIRCiyP/j9LlZUm7YAjF078PlbVmDiGotzDz5tO1R8GfB
+   gfkjZ38o6XYNu7aXwCaJcnfc2a3qAXZqGzmQjdb7257DDS5aySEfA4IrD
+   2oeTzncuWmxhWagxDSfYq+5OrcfUZsdeMmbRGqZv26UlmPVkjwtkP6Vu5
+   8FjpV0UA5EBjZ1jnzTNpWCntr2hXMJ4zTferH7FXMXF46DfFIrVIysCFQ
+   A==;
+X-CSE-ConnectionGUID: rwcZK4rQRMijLGBzJdXY1Q==
+X-CSE-MsgGUID: RBa1OcMhSyW/UwJvnCwl/g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="17974840"
+X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
+   d="scan'208";a="17974840"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 08:34:45 -0700
+X-CSE-ConnectionGUID: gC6Y0LgAQdOKD6RHyyz8tw==
+X-CSE-MsgGUID: 0e13ganHTiCbMfQXMJE4hg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
+   d="scan'208";a="53544670"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 08:34:45 -0700
+Received: from [10.54.75.156] (debox1-desk1.jf.intel.com [10.54.75.156])
+	by linux.intel.com (Postfix) with ESMTP id E172020738FE;
+	Thu, 11 Jul 2024 08:34:44 -0700 (PDT)
+Message-ID: <0da168ef21485ee944ceedbc1b77f3141f741dfe.camel@linux.intel.com>
+Subject: Re: [PATCH v2] platform/x86:intel/pmc: Enable the ACPI PM Timer to
+ be turned off when suspended
+From: "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, Marek Maslanka
+	 <mmaslanka@google.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, David E Box
+ <david.e.box@intel.com>,  Hans de Goede <hdegoede@redhat.com>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ platform-driver-x86@vger.kernel.org, Rafael J Wysocki <rjw@rjwysocki.net>
+Date: Thu, 11 Jul 2024 08:34:44 -0700
+In-Reply-To: <CAE2upjS-hzciBNm+csXM+i-dnW1knBEyAwcGDya1WCezxD7M=Q@mail.gmail.com>
+References: 
+	<CAGcaFA3c_rc6HVVqc2=UqOgu2c7zX_XTWNx7Yf-KL7W8LgEi7A@mail.gmail.com>
+	 <20240703113850.2726539-1-mmaslanka@google.com>
+	 <CAE2upjS-hzciBNm+csXM+i-dnW1knBEyAwcGDya1WCezxD7M=Q@mail.gmail.com>
+Autocrypt: addr=david.e.box@linux.intel.com; prefer-encrypt=mutual;
+ keydata=mQENBF2w2YABCACw5TpqmFTR6SgsrNqZE8ro1q2lUgVZda26qIi8GeHmVBmu572RfPydisEpCK246rYM5YY9XAps810ZxgFlLyBqpE/rxB4Dqvh04QePD6fQNui/QCSpyZ6j9F8zl0zutOjfNTIQBkcar28hazL9I8CGnnMko21QDl4pkrq1dgLSgl2r2N1a6LJ2l8lLnQ1NJgPAev4BWo4WAwH2rZ94aukzAlkFizjZXmB/6em+lhinTR9hUeXpTwcaAvmCHmrUMxeOyhx+csO1uAPUjxL7olj2J83dv297RrpjMkDyuUOv8EJlPjvVogJF1QOd5MlkWdj+6vnVDRfO8zUwm2pqg25DABEBAAG0KkRhdmlkIEUuIEJveCA8ZGF2aWQuZS5ib3hAbGludXguaW50ZWwuY29tPokBTgQTAQgAOBYhBBFoZ8DYRC+DyeuV6X7Mry1gl3p/BQJdsNmAAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEH7Mry1gl3p/NusIAK9z1xnXphedgZMGNzifGUs2UUw/xNl91Q9qRaYGyNYATI6E7zBYmynsUL/4yNFnXK8P/I7WMffiLoMqmUvNp9pG6oYYj8ouvbCexS21jgw54I3m61M+wTokieRIO/GettVlCGhz7YHlHtGGqhzzWB3CGPSJMwsouDPvyFFE+28p5d2v9l6rXSb7T297Kh50VX9Ele8QEKngrG+Z/u2lr/bHEhvx24vI8ka22cuTaZvThYMwLTSC4kq9L9WgRv31JBSa1pcbcHLOCoUl0RaQwe6J8w9hN2uxCssHrrfhSA4YjxKNIIp3YH4IpvzuDR3AadYz1klFTnEOxIM7fvQ2iGu5AQ0EXbDZgAEIAPGbL3wvbYUDGMoBSN89GtiC6ybWo28JSiYIN5N9LhDTwfWROenkRvmTESaE5fAM24sh8S0h+F+eQ7j/E/RF3pM31gSovTKw0Pxk7GorK
+	FSa25CWemxSV97zV8fVegGkgfZkBMLUId+AYCD1d2R+tndtgjrHtVq/AeN0N09xv/d3a+Xzc4ib/SQh9mM50ksqiDY70EDe8hgPddYH80jHJtXFVA7Ar1ew24TIBF2rxYZQJGLe+Mt2zAzxOYeQTCW7WumD/ZoyMm7bg46/2rtricKnpaACM7M0r7g+1gUBowFjF4gFqY0tbLVQEB/H5e9We/C2zLG9r5/Lt22dj7I8A6kAEQEAAYkBNgQYAQgAIBYhBBFoZ8DYRC+DyeuV6X7Mry1gl3p/BQJdsNmAAhsMAAoJEH7Mry1gl3p/Z/AH/Re8YwzY5I9ByPM56B3Vkrh8qihZjsF7/WB14Ygl0HFzKSkSMTJ+fvZv19bk3lPIQi5lUBuU5rNruDNowCsnvXr+sFxFyTbXw0AQXIsnX+EkMg/JO+/V/UszZiqZPkvHsQipCFVLod/3G/yig9RUO7A/1efRi0E1iJAa6qHrPqE/kJANbz/x+9wcx1VfFwraFXbdT/P2JeOcW/USW89wzMRmOo+AiBSnTI4xvb1s/TxSfoLZvtoj2MR+2PW1zBALWYUKHOzhfFKs3cMufwIIoQUPVqGVeH+u6Asun6ZpNRxdDONop+uEXHe6q6LzI/NnczqoZQLhM8d1XqokYax/IZ4=
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] HP: wmi: added support for 4 zone keyboard rgb
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <20240707175613.27529-1-carlosmiguelferreira.2003@gmail.com>
- <20240707175613.27529-2-carlosmiguelferreira.2003@gmail.com>
- <71874c5e-b6d0-d05c-3b07-d1add491dbb6@linux.intel.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <71874c5e-b6d0-d05c-3b07-d1add491dbb6@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Hi Ilpo,
+Hi Marek. Thanks for the patch.
 
-Thank you for reviewing this.
+On Wed, 2024-07-03 at 12:30 -0400, Rajneesh Bhardwaj wrote:
+> On Wed, Jul 3, 2024 at 7:39=E2=80=AFAM Marek Maslanka <mmaslanka@google.c=
+om> wrote:
+> >=20
+> > Allow to disable ACPI PM Timer on suspend and enable on resume. A
+> > disabled timer helps optimise power consumption when the system is
+> > suspended. On resume the timer is only reactivated if it was activated
+> > prior to suspend, so unless the ACPI PM timer is enabled in the BIOS,
+> > this won't change anything.
+>=20
+> Back in the days IIRC, it was frowned upon but I am not sure anymore.
+> Maybe Rafael or David will have some opinion on this change. Is this
+> something that could be done in a platform specific manner such as in
+> coreboot?
 
-On 7/11/24 10:41 AM, Ilpo Järvinen wrote:
-> On Sun, 7 Jul 2024, Carlos Ferreira wrote:
-> 
->> This driver adds supports for 4 zone keyboard rgb on omen laptops
->> and maps the wmi backlight toggle event to KEY_KBDILLUMTOGGLE.
->> For the backlight, it uses the multicolor led api.
->>
->> Tested on the HP Omen 15-en1001np.
->>
->> Signed-off-by: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
->> ---
->> Changes in v3:
->>  - Moved to the multicolor led api
->>  - Mapped the wmi backlight toggle event to KEY_KBDILLUMTOGGLE
->>  - Some other minor changes
->> Changes in v2:
->>  - Rearranged code to remove forward declarations
->>  - Changed from sprintf() to sysfs_emit()
->>  - Fixed some identation and coding style problems
->>  - Switched from manual bit manipulation to GENMASK(x, y) + FIELD_PREP(XX, )
->>  - #define'ed magic constants
->> ---
->>  drivers/platform/x86/hp/hp-wmi.c | 248 +++++++++++++++++++++++++++++--
->>  1 file changed, 239 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
->> index 5fa553023842..5eae47961f76 100644
->> --- a/drivers/platform/x86/hp/hp-wmi.c
->> +++ b/drivers/platform/x86/hp/hp-wmi.c
->> @@ -14,6 +14,8 @@
->>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->>  
->>  #include <linux/kernel.h>
->> +#include <linux/led-class-multicolor.h>
->> +#include <linux/leds.h>
->>  #include <linux/module.h>
->>  #include <linux/init.h>
->>  #include <linux/slab.h>
->> @@ -24,6 +26,7 @@
->>  #include <linux/platform_profile.h>
->>  #include <linux/hwmon.h>
->>  #include <linux/acpi.h>
->> +#include <linux/bits.h>
-> 
-> You need to add #include <linux/bitfield.h> as LKP found out. The 
-> MODULE_DESCRIPTION() ones you can ignore as LKP unfortunately spams some 
-> kernel-wide problems to all patches even if they're entirely unrelated
-> to the patch in question.
+I discussed with Rafael. This is generally a good idea, but need to ensure =
+that
+the ACPI PM Timer isn't being used as a clock source. This could mess with =
+the
+timekeeping system. Also, maybe a better idea is to disable it altogether a=
+t
+probe time if it's not being used as a clock source. This should only be th=
+e
+case when TSC is unstable and HPET is unavailable, but need to confirm.
 
-Actually the LKP / kernel test robot email with the MODULE_DESCRIPTION()
-warnings does contain useful, new errors. The problem though is that
-the bot prefixes new (not seen on builds without this patch) messages
-with '>>' making them show up as quoted (replied-to) text making the
-actual new errors harder to spot :|   The 2 new actual errors in the
-email with all the MODULE_DESCRIPTION warnings are:
+David
 
-ERROR: modpost: "devm_led_classdev_multicolor_unregister" [drivers/platform/x86/hp/hp-wmi.ko] undefined!
-ERROR: modpost: "devm_led_classdev_multicolor_register_ext" [drivers/platform/x86/hp/hp-wmi.ko] undefined!
-
-I agree with all the other review remarks and I'll do my own review
-soon.
-
-Regards,
-
-Hans
-
+>=20
+> >=20
+> > Signed-off-by: Marek Maslanka <mmaslanka@google.com>
+> > ---
+> > =C2=A0drivers/platform/x86/intel/pmc/adl.c=C2=A0 |=C2=A0 2 ++
+> > =C2=A0drivers/platform/x86/intel/pmc/cnp.c=C2=A0 |=C2=A0 2 ++
+> > =C2=A0drivers/platform/x86/intel/pmc/core.c | 37 ++++++++++++++++++++++=
++++++
+> > =C2=A0drivers/platform/x86/intel/pmc/core.h |=C2=A0 8 ++++++
+> > =C2=A0drivers/platform/x86/intel/pmc/icl.c=C2=A0 |=C2=A0 2 ++
+> > =C2=A0drivers/platform/x86/intel/pmc/mtl.c=C2=A0 |=C2=A0 2 ++
+> > =C2=A0drivers/platform/x86/intel/pmc/spt.c=C2=A0 |=C2=A0 2 ++
+> > =C2=A0drivers/platform/x86/intel/pmc/tgl.c=C2=A0 |=C2=A0 2 ++
+> > =C2=A08 files changed, 57 insertions(+)
+> >=20
+> > diff --git a/drivers/platform/x86/intel/pmc/adl.c
+> > b/drivers/platform/x86/intel/pmc/adl.c
+> > index e7878558fd909..9d9c07f44ff61 100644
+> > --- a/drivers/platform/x86/intel/pmc/adl.c
+> > +++ b/drivers/platform/x86/intel/pmc/adl.c
+> > @@ -295,6 +295,8 @@ const struct pmc_reg_map adl_reg_map =3D {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ppfear_buckets =3D CNP_PPFE=
+AR_NUM_ENTRIES,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .pm_cfg_offset =3D CNP_PMC_P=
+M_CFG_OFFSET,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .pm_read_disable_bit =3D CNP=
+_PMC_READ_DISABLE_BIT,
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .acpi_pm_tmr_ctl_offset =3D SPT_P=
+MC_ACPI_PM_TMR_CTL_OFFSET,
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .acpi_pm_tmr_disable_bit =3D SPT_=
+PMC_BIT_ACPI_PM_TMR_DISABLE,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ltr_ignore_max =3D ADL_NUM_=
+IP_IGN_ALLOWED,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .lpm_num_modes =3D ADL_LPM_N=
+UM_MODES,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .lpm_num_maps =3D ADL_LPM_NU=
+M_MAPS,
+> > diff --git a/drivers/platform/x86/intel/pmc/cnp.c
+> > b/drivers/platform/x86/intel/pmc/cnp.c
+> > index dd72974bf71e2..513c02670c5aa 100644
+> > --- a/drivers/platform/x86/intel/pmc/cnp.c
+> > +++ b/drivers/platform/x86/intel/pmc/cnp.c
+> > @@ -200,6 +200,8 @@ const struct pmc_reg_map cnp_reg_map =3D {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ppfear_buckets =3D CNP_PPFE=
+AR_NUM_ENTRIES,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .pm_cfg_offset =3D CNP_PMC_P=
+M_CFG_OFFSET,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .pm_read_disable_bit =3D CNP=
+_PMC_READ_DISABLE_BIT,
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .acpi_pm_tmr_ctl_offset =3D SPT_P=
+MC_ACPI_PM_TMR_CTL_OFFSET,
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .acpi_pm_tmr_disable_bit =3D SPT_=
+PMC_BIT_ACPI_PM_TMR_DISABLE,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ltr_ignore_max =3D CNP_NUM_=
+IP_IGN_ALLOWED,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .etr3_offset =3D ETR3_OFFSET=
+,
+> > =C2=A0};
+> > diff --git a/drivers/platform/x86/intel/pmc/core.c
+> > b/drivers/platform/x86/intel/pmc/core.c
+> > index 10c96c1a850af..e97ac7a8a18bc 100644
+> > --- a/drivers/platform/x86/intel/pmc/core.c
+> > +++ b/drivers/platform/x86/intel/pmc/core.c
+> > @@ -1171,6 +1171,35 @@ static bool pmc_core_is_pson_residency_enabled(s=
+truct
+> > pmc_dev *pmcdev)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return val =3D=3D 1;
+> > =C2=A0}
+> >=20
+> > +/*
+> > + * Enable or disable APCI PM Timer
+> > + *
+> > + * @return: Previous APCI PM Timer enabled state
+> > + */
+> > +static bool pmc_core_enable_apci_pm_timer(struct pmc_dev *pmcdev, bool
+> > enable)
+> > +{
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pmc *pmc =3D pmcdev->pmcs[=
+PMC_IDX_MAIN];
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct pmc_reg_map *map =3D=
+ pmc->map;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool state;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 reg;
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!map->acpi_pm_tmr_ctl_offset)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 return false;
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_lock(&pmcdev->lock);
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D pmc_core_reg_read(pmc, ma=
+p->acpi_pm_tmr_ctl_offset);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state =3D !(reg & map->acpi_pm_tm=
+r_disable_bit);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (enable)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 reg &=3D ~map->acpi_pm_tmr_disable_bit;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 reg |=3D map->acpi_pm_tmr_disable_bit;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmc_core_reg_write(pmc, map->acpi=
+_pm_tmr_ctl_offset, reg);
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_unlock(&pmcdev->lock);
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return state;
+> > +}
+> >=20
+> > =C2=A0static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+> > =C2=A0{
+> > @@ -1446,6 +1475,10 @@ static __maybe_unused int pmc_core_suspend(struc=
+t
+> > device *dev)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (pmcdev->suspend)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 pmcdev->suspend(pmcdev);
+> >=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Disable APCI PM Timer */
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmcdev->enable_acpi_pm_timer_on_r=
+esume =3D
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 pmc_core_enable_apci_pm_timer(pmcdev, false);
+> > +
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Check if the syspend will=
+ actually use S0ix */
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (pm_suspend_via_firmware(=
+))
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 return 0;
+> > @@ -1500,6 +1533,10 @@ int pmc_core_resume_common(struct pmc_dev *pmcde=
+v)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int offset =3D pmc->map->lpm=
+_status_offset;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int i;
+> >=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Enable APCI PM Timer */
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (pmcdev->enable_acpi_pm_timer_=
+on_resume)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 pmc_core_enable_apci_pm_timer(pmcdev, true);
+> > +
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Check if the syspend used=
+ S0ix */
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (pm_suspend_via_firmware(=
+))
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 return 0;
+> > diff --git a/drivers/platform/x86/intel/pmc/core.h
+> > b/drivers/platform/x86/intel/pmc/core.h
+> > index 83504c49a0e31..fe1a94f693b63 100644
+> > --- a/drivers/platform/x86/intel/pmc/core.h
+> > +++ b/drivers/platform/x86/intel/pmc/core.h
+> > @@ -67,6 +67,8 @@ struct telem_endpoint;
+> > =C2=A0#define SPT_PMC_LTR_SCC=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x3A0
+> > =C2=A0#define SPT_PMC_LTR_ISH=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x3A4
+> >=20
+> > +#define SPT_PMC_ACPI_PM_TMR_CTL_OFFSET=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 0x18FC
+> > +
+> > =C2=A0/* Sunrise Point: PGD PFET Enable Ack Status Registers */
+> > =C2=A0enum ppfear_regs {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 SPT_PMC_XRAM_PPFEAR0A =3D 0x=
+590,
+> > @@ -147,6 +149,8 @@ enum ppfear_regs {
+> > =C2=A0#define SPT_PMC_VRIC1_SLPS0LVEN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(13)
+> > =C2=A0#define SPT_PMC_VRIC1_XTALSDQDIS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(22)
+> >=20
+> > +#define SPT_PMC_BIT_ACPI_PM_TMR_DISABLE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(1)
+> > +
+> > =C2=A0/* Cannonlake Power Management Controller register offsets */
+> > =C2=A0#define CNP_PMC_SLPS0_DBG_OFFSET=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x10B4
+> > =C2=A0#define CNP_PMC_PM_CFG_OFFSET=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1818
+> > @@ -344,6 +348,8 @@ struct pmc_reg_map {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const u8=C2=A0 *lpm_reg_inde=
+x;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const u32 pson_residency_off=
+set;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const u32 pson_residency_cou=
+nter_step;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const u32 acpi_pm_tmr_ctl_offset;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const u32 acpi_pm_tmr_disable_bit=
+;
+> > =C2=A0};
+> >=20
+> > =C2=A0/**
+> > @@ -417,6 +423,8 @@ struct pmc_dev {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 die_c6_offset;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct telem_endpoint *punit=
+_ep;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pmc_info *regmap_list=
+;
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool enable_acpi_pm_timer_on_resu=
+me;
+> > =C2=A0};
+> >=20
+> > =C2=A0enum pmc_index {
+> > diff --git a/drivers/platform/x86/intel/pmc/icl.c
+> > b/drivers/platform/x86/intel/pmc/icl.c
+> > index 71b0fd6cb7d84..cbbd440544688 100644
+> > --- a/drivers/platform/x86/intel/pmc/icl.c
+> > +++ b/drivers/platform/x86/intel/pmc/icl.c
+> > @@ -46,6 +46,8 @@ const struct pmc_reg_map icl_reg_map =3D {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ppfear_buckets =3D ICL_PPFE=
+AR_NUM_ENTRIES,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .pm_cfg_offset =3D CNP_PMC_P=
+M_CFG_OFFSET,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .pm_read_disable_bit =3D CNP=
+_PMC_READ_DISABLE_BIT,
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .acpi_pm_tmr_ctl_offset =3D SPT_P=
+MC_ACPI_PM_TMR_CTL_OFFSET,
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .acpi_pm_tmr_disable_bit =3D SPT_=
+PMC_BIT_ACPI_PM_TMR_DISABLE,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ltr_ignore_max =3D ICL_NUM_=
+IP_IGN_ALLOWED,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .etr3_offset =3D ETR3_OFFSET=
+,
+> > =C2=A0};
+> > diff --git a/drivers/platform/x86/intel/pmc/mtl.c
+> > b/drivers/platform/x86/intel/pmc/mtl.c
+> > index c7d15d864039d..91f2fa728f5c8 100644
+> > --- a/drivers/platform/x86/intel/pmc/mtl.c
+> > +++ b/drivers/platform/x86/intel/pmc/mtl.c
+> > @@ -462,6 +462,8 @@ const struct pmc_reg_map mtl_socm_reg_map =3D {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ppfear_buckets =3D MTL_SOCM=
+_PPFEAR_NUM_ENTRIES,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .pm_cfg_offset =3D CNP_PMC_P=
+M_CFG_OFFSET,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .pm_read_disable_bit =3D CNP=
+_PMC_READ_DISABLE_BIT,
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .acpi_pm_tmr_ctl_offset =3D SPT_P=
+MC_ACPI_PM_TMR_CTL_OFFSET,
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .acpi_pm_tmr_disable_bit =3D SPT_=
+PMC_BIT_ACPI_PM_TMR_DISABLE,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .lpm_num_maps =3D ADL_LPM_NU=
+M_MAPS,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ltr_ignore_max =3D MTL_SOCM=
+_NUM_IP_IGN_ALLOWED,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .lpm_res_counter_step_x2 =3D=
+ TGL_PMC_LPM_RES_COUNTER_STEP_X2,
+> > diff --git a/drivers/platform/x86/intel/pmc/spt.c
+> > b/drivers/platform/x86/intel/pmc/spt.c
+> > index ab993a69e33ee..2cd2b3c68e468 100644
+> > --- a/drivers/platform/x86/intel/pmc/spt.c
+> > +++ b/drivers/platform/x86/intel/pmc/spt.c
+> > @@ -130,6 +130,8 @@ const struct pmc_reg_map spt_reg_map =3D {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ppfear_buckets =3D SPT_PPFE=
+AR_NUM_ENTRIES,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .pm_cfg_offset =3D SPT_PMC_P=
+M_CFG_OFFSET,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .pm_read_disable_bit =3D SPT=
+_PMC_READ_DISABLE_BIT,
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .acpi_pm_tmr_ctl_offset =3D SPT_P=
+MC_ACPI_PM_TMR_CTL_OFFSET,
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .acpi_pm_tmr_disable_bit =3D SPT_=
+PMC_BIT_ACPI_PM_TMR_DISABLE,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ltr_ignore_max =3D SPT_NUM_=
+IP_IGN_ALLOWED,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .pm_vric1_offset =3D SPT_PMC=
+_VRIC1_OFFSET,
+> > =C2=A0};
+> > diff --git a/drivers/platform/x86/intel/pmc/tgl.c
+> > b/drivers/platform/x86/intel/pmc/tgl.c
+> > index e0580de180773..371b4e30f1426 100644
+> > --- a/drivers/platform/x86/intel/pmc/tgl.c
+> > +++ b/drivers/platform/x86/intel/pmc/tgl.c
+> > @@ -197,6 +197,8 @@ const struct pmc_reg_map tgl_reg_map =3D {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ppfear_buckets =3D ICL_PPFE=
+AR_NUM_ENTRIES,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .pm_cfg_offset =3D CNP_PMC_P=
+M_CFG_OFFSET,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .pm_read_disable_bit =3D CNP=
+_PMC_READ_DISABLE_BIT,
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .acpi_pm_tmr_ctl_offset =3D SPT_P=
+MC_ACPI_PM_TMR_CTL_OFFSET,
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .acpi_pm_tmr_disable_bit =3D SPT_=
+PMC_BIT_ACPI_PM_TMR_DISABLE,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ltr_ignore_max =3D TGL_NUM_=
+IP_IGN_ALLOWED,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .lpm_num_maps =3D TGL_LPM_NU=
+M_MAPS,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .lpm_res_counter_step_x2 =3D=
+ TGL_PMC_LPM_RES_COUNTER_STEP_X2,
+> > --
+> > 2.45.2.803.g4e1b14247a-goog
+> >=20
+>=20
+>=20
 
