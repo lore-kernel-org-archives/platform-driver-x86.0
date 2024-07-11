@@ -1,207 +1,274 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3E412D1E9;
-	Thu, 11 Jul 2024 08:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD1A12BF02;
+	Thu, 11 Jul 2024 08:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720687311; cv=none; b=UGeDnGiwF3KwM/DNlSDak2QBjt/A4/FUqLdzMj2LYMFNjA7jvMXrB5S3wHa2AmNMbyQ8nWYQYhG3XlB+Bqp7aK1WqhzQdYuPlPvTq665zE+7o8Bv1BWI3dbsO/uy6h5ggEZXH9Dg+o1husYERBMK0kZrYmBwZ7jQZogIvdxII7I=
+	t=1720687881; cv=none; b=jguk4HawblhfkiACOB7EOWZQBCJxpVpcUiC0zpZIlJXPotWIYLfcMOyLov2vgkYYI37XJ7vw49dNvfXb3M1H3fxVBjqtfYd2oinfbSXsxd24/dwoiYM0nAlltaqbWDL2jqM77Fyhx3YtF85wzaKPGoUHu8JV29GPxkmbmSVebKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720687311; c=relaxed/simple;
-	bh=8TeAmHSOHfrhxxuafFc3tzdvy3GGVjcQIxB7dVt1X6o=;
+	s=arc-20240116; t=1720687881; c=relaxed/simple;
+	bh=SaXXZZ6NfZUihrHcuGZXqnfG3tvHnwj/bWlwU85dwM0=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=VldHrc2Bs9c2XXlh+494HIpm4yf2CS2+gneeZ1rQRygDNNrEv9McCnCgjSNCeGHE2H+Kzkil/JEJ751p9FNRdW2XbSuFP1Y4kgkioBUOviTVLrprcdFEcCWlkU4cM38zGcWtc0pJKxOpaAc4aytzU+wYVFAnFZ5flKCTkv9qdZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QAjUYCn5; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version:Content-Type; b=a77AfiEbvAHQAwE5uz8/iyNMjGPymSFP2Zu1pl/QGtZm+DrAl9cKdBWKvnQig6H+hVPohSUvdHTaXOnE3begT9Y94BZpwb3g878nOUe163VE9daMp3kuOuOQ3O4FdEDc25rmYscc6ff3UKGnE3lJvqy1MaPJJG+A+6cR23rcpWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g/AKGMeV; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QAjUYCn5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g/AKGMeV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720687309; x=1752223309;
+  t=1720687879; x=1752223879;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=8TeAmHSOHfrhxxuafFc3tzdvy3GGVjcQIxB7dVt1X6o=;
-  b=QAjUYCn5msBBLLTmbt8h1WBTOGTYvKuUXoM3LOJs5wIlik8kGhDWjHqm
-   b2bqCOEvPYRJMmRMLYO8CJnCV9cGJwrBD8v93GujLnGda2COGjTQGR6Sf
-   MvQC5D3RhY9KlAfO/Qt39rNRPr905LjFe4UqQ+cZbvhikYN+ffzrTy3/L
-   IzAzSCpFTFfzIttZv1PIhpx31YhXiGUzx9mbqKfiaW9/c6B7Zltg70ewu
-   2oah1S9CBHjLrgt08VNdajQqF7opHBODHOW8Qx0UbQFdzRfC5vJirIqrj
-   GkOTOwKTdyaLojGO/qDMBuGLqlkSoZ37zEVDuuySpjDN7nEwzXBszyIoI
-   w==;
-X-CSE-ConnectionGUID: G+v4WgI3QF2Wlh8oZlRB+Q==
-X-CSE-MsgGUID: AmyOX0/CQHiKFI5Gpz4McA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="17665860"
+  bh=SaXXZZ6NfZUihrHcuGZXqnfG3tvHnwj/bWlwU85dwM0=;
+  b=g/AKGMeVHFayikdaT9El0QGFt8Kkun2jT3qPqeY56FMgpOzjSRmw6WKN
+   JaCFaUfR45TtBZy0J4owda4tcJVoT+e2z62xq0oxbAzZKfnGwTWW9HtUu
+   4AhAZpT9vPO4bdkvSdwPZ2yE5/1IubJtVLZ4ozJUIvKouweAeq1II98Mo
+   poE+gkf22yUaFhKrT8tIs/D6wnLEaV9Y0YPmr8/0UIkqNzNVVjigkaLMB
+   UmBFLwuHdAuqF5dqSZAeIycnuIy4IHB8S81pLDuDJePChy9jy6BNxlB+T
+   3pzq2Jr7njFQRZ5JXrCeTYnH0ojlz+eY4gmhctHNdWOIC4p/dMAvLSvRa
+   A==;
+X-CSE-ConnectionGUID: X+98BAbRQJ6TVyfCLSJ4vQ==
+X-CSE-MsgGUID: +s9AuHSYQQ6kxHvNxjP9TQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="21924911"
 X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
-   d="scan'208";a="17665860"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 01:41:49 -0700
-X-CSE-ConnectionGUID: eA1KWiGyR6+0lhr+lnLWRA==
-X-CSE-MsgGUID: Cnt29IZURIWvdp6HBN0h6w==
+   d="scan'208";a="21924911"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 01:51:18 -0700
+X-CSE-ConnectionGUID: XVz0kAQvQgi09MHDxBP4lQ==
+X-CSE-MsgGUID: ONB92p7oTi2G1N318k2SSg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
-   d="scan'208";a="48560936"
+   d="scan'208";a="48932031"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.127])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 01:41:46 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 01:51:14 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 11 Jul 2024 11:41:43 +0300 (EEST)
-To: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/1] HP: wmi: added support for 4 zone keyboard rgb
-In-Reply-To: <20240707175613.27529-2-carlosmiguelferreira.2003@gmail.com>
-Message-ID: <71874c5e-b6d0-d05c-3b07-d1add491dbb6@linux.intel.com>
-References: <20240707175613.27529-1-carlosmiguelferreira.2003@gmail.com> <20240707175613.27529-2-carlosmiguelferreira.2003@gmail.com>
+Date: Thu, 11 Jul 2024 11:51:10 +0300 (EEST)
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+cc: Jithu Joseph <jithu.joseph@intel.com>, Hans de Goede <hdegoede@redhat.com>, 
+    Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+    x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+    Masami Hiramatsu <mhiramat@kernel.org>, Ashok Raj <ashok.raj@intel.com>, 
+    Tony Luck <tony.luck@intel.com>, linux-trace-kernel@vger.kernel.org, 
+    platform-driver-x86@vger.kernel.org, 
+    Shankar Ravi V <ravi.v.shankar@intel.com>
+Subject: Re: [PATCH v2 1/4] platform/x86/intel/ifs: Refactor MSR usage in
+ IFS test code
+In-Reply-To: <20240711000233.684642-2-sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <c6b49d6b-0b1f-07b4-c5ad-a4afd6a39744@linux.intel.com>
+References: <20240711000233.684642-1-sathyanarayanan.kuppuswamy@linux.intel.com> <20240711000233.684642-2-sathyanarayanan.kuppuswamy@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-263407840-1720687870=:6262"
 
-On Sun, 7 Jul 2024, Carlos Ferreira wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> This driver adds supports for 4 zone keyboard rgb on omen laptops
-> and maps the wmi backlight toggle event to KEY_KBDILLUMTOGGLE.
-> For the backlight, it uses the multicolor led api.
-> 
-> Tested on the HP Omen 15-en1001np.
-> 
-> Signed-off-by: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
-> ---
-> Changes in v3:
->  - Moved to the multicolor led api
->  - Mapped the wmi backlight toggle event to KEY_KBDILLUMTOGGLE
->  - Some other minor changes
-> Changes in v2:
->  - Rearranged code to remove forward declarations
->  - Changed from sprintf() to sysfs_emit()
->  - Fixed some identation and coding style problems
->  - Switched from manual bit manipulation to GENMASK(x, y) + FIELD_PREP(XX, )
->  - #define'ed magic constants
-> ---
->  drivers/platform/x86/hp/hp-wmi.c | 248 +++++++++++++++++++++++++++++--
->  1 file changed, 239 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-> index 5fa553023842..5eae47961f76 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -14,6 +14,8 @@
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
->  #include <linux/kernel.h>
-> +#include <linux/led-class-multicolor.h>
-> +#include <linux/leds.h>
->  #include <linux/module.h>
->  #include <linux/init.h>
->  #include <linux/slab.h>
-> @@ -24,6 +26,7 @@
->  #include <linux/platform_profile.h>
->  #include <linux/hwmon.h>
->  #include <linux/acpi.h>
-> +#include <linux/bits.h>
+--8323328-263407840-1720687870=:6262
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-You need to add #include <linux/bitfield.h> as LKP found out. The 
-MODULE_DESCRIPTION() ones you can ignore as LKP unfortunately spams some 
-kernel-wide problems to all patches even if they're entirely unrelated
-to the patch in question.
+On Wed, 10 Jul 2024, Kuppuswamy Sathyanarayanan wrote:
 
-> +	for (size_t i = 0; i < 4; i++)
-> +		fourzone_leds.leds[i].led_cdev.brightness = br;
+> IFS tests such as Scan at Field (SAF) or Structural Based Functional
+> Test at Field (SBAF), require the user to load a test image. The image
+> loading process is similar across these tests, with the only difference
+> being MSR addresses used. To reuse the code between these tests, remove
+> the hard coding of MSR addresses and allow the driver to pass the MSR
+> addresses per IFS test (via driver device data).
+>=20
+> Add a new structure named "struct ifs_test_msrs" to specify the
+> test-specific MSR addresses. Each IFS test will provide this structure,
+> enabling them to reuse the common code.
+>=20
+> This is a preliminary patch in preparation for the addition of SBAF
+> support.
+>=20
+> Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@lin=
+ux.intel.com>
 
-> +	for (int i = 0; i < 4; i++) {
-> +		colors[i] = FIELD_PREP(FOURZONE_COLOR_R, buff[25 + i * 3])
-> +			  | FIELD_PREP(FOURZONE_COLOR_G, buff[25 + i * 3 + 1])
-> +			  | FIELD_PREP(FOURZONE_COLOR_B, buff[25 + i * 3 + 2]);
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-The loop variables are not particularly consistent... I'd prefer them to 
-be declared in the normal function variable declaration block.
-
-> +
-> +	for (size_t i = 0; i < 4; i++)
-> +		if (strcmp(led_cdev->name, fourzone_zone_names[i]) == 0)
-
-!strcmp()
-
-> +	ret = fourzone_get_colors(colors);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	memcpy(fourzone_leds.color_cache, colors, sizeof(colors));
-> +
-> +	brightness = get_fourzone_brightness(NULL);
-> +
-> +	for (size_t i = 0; i < 4; i++) {
-> +		fourzone_leds.subleds[i] = (struct mc_subled) {
-> +			.color_index = LED_COLOR_ID_RGB,
-> +			.brightness = 1,
-> +			.intensity = colors[i]
-
-Please add comma to the last line because if this is ever extended, this 
-line doesn't need to be touched.
-
-> +		};
-> +
-> +		fourzone_leds.leds[i] = (struct led_classdev_mc) {
-> +			.led_cdev = {
-> +				.name = fourzone_zone_names[i],
-> +				.brightness = brightness,
-> +				.max_brightness = 1,
-> +				.brightness_set = set_fourzone_brightness,
-> +				.brightness_get = get_fourzone_brightness,
-> +				.color = LED_COLOR_ID_RGB,
-> +				.flags = LED_BRIGHT_HW_CHANGED
-
-Ditto.
-
-> +			},
-> +			.num_colors = 1,
-> +			.subled_info = &fourzone_leds.subleds[i]
-
-Ditto.
-
-> +	return 0;
-> +}
-> +
-> +static enum hp_wmi_keyboardtype fourzone_get_keyboard_type(void)
-> +{
-> +	u8 buff[128];
-> +	int ret;
-> +
-> +	ret = hp_wmi_perform_query(HPWMI_GET_KEYBOARD_TYPE, HPWMI_GM,
-> +		&buff, sizeof(buff), sizeof(buff));
-
-Align the continuation of parameters to the opening (.
-
-> +	if (ret != 0)
-> +		return HPWMI_KEYBOARD_INVALID;
-> +
-> +	/* the first byte in the response represents the keyboard type */
-> +	return (enum hp_wmi_keyboardtype)(buff[0] + 1);
-> +}
-> +
-> +static bool fourzone_supports_lighting(void)
-> +{
-> +	u8 buff[128];
-> +	int ret;
-> +
-> +	ret = hp_wmi_perform_query(HPWMI_SUPPORTS_LIGHTNING, HPWMI_FOURZONE,
-> +		&buff, sizeof(buff), sizeof(buff));
-
-Ditto.
-
-I probably missed a few similar cases as mentioned above so please go 
-through your patch and correct them all.
-
-I'm left unsure if a mutex would be necessary to protect the brightness
-updates. Probably.
-
-
-Hans might have more to say about the approach.
-
-
--- 
+--=20
  i.
 
+> ---
+>  drivers/platform/x86/intel/ifs/ifs.h  | 25 +++++++++++++++++++++++++
+>  drivers/platform/x86/intel/ifs/core.c |  9 +++++++++
+>  drivers/platform/x86/intel/ifs/load.c | 24 ++++++++++++++----------
+>  3 files changed, 48 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/=
+intel/ifs/ifs.h
+> index 56b9f3e3cf76..738cbc7a5d00 100644
+> --- a/drivers/platform/x86/intel/ifs/ifs.h
+> +++ b/drivers/platform/x86/intel/ifs/ifs.h
+> @@ -266,6 +266,22 @@ struct ifs_test_caps {
+>  =09int=09test_num;
+>  };
+> =20
+> +/**
+> + * struct ifs_test_msrs - MSRs used in IFS tests
+> + * @copy_hashes: Copy test hash data
+> + * @copy_hashes_status: Status of copied test hash data
+> + * @copy_chunks: Copy chunks of the test data
+> + * @copy_chunks_status: Status of the copied test data chunks
+> + * @test_ctrl: Control the test attributes
+> + */
+> +struct ifs_test_msrs {
+> +=09u32=09copy_hashes;
+> +=09u32=09copy_hashes_status;
+> +=09u32=09copy_chunks;
+> +=09u32=09copy_chunks_status;
+> +=09u32=09test_ctrl;
+> +};
+> +
+>  /**
+>   * struct ifs_data - attributes related to intel IFS driver
+>   * @loaded_version: stores the currently loaded ifs image version.
+> @@ -299,6 +315,7 @@ struct ifs_work {
+> =20
+>  struct ifs_device {
+>  =09const struct ifs_test_caps *test_caps;
+> +=09const struct ifs_test_msrs *test_msrs;
+>  =09struct ifs_data rw_data;
+>  =09struct miscdevice misc;
+>  };
+> @@ -319,6 +336,14 @@ static inline const struct ifs_test_caps *ifs_get_te=
+st_caps(struct device *dev)
+>  =09return d->test_caps;
+>  }
+> =20
+> +static inline const struct ifs_test_msrs *ifs_get_test_msrs(struct devic=
+e *dev)
+> +{
+> +=09struct miscdevice *m =3D dev_get_drvdata(dev);
+> +=09struct ifs_device *d =3D container_of(m, struct ifs_device, misc);
+> +
+> +=09return d->test_msrs;
+> +}
+> +
+>  extern bool *ifs_pkg_auth;
+>  int ifs_load_firmware(struct device *dev);
+>  int do_core_test(int cpu, struct device *dev);
+> diff --git a/drivers/platform/x86/intel/ifs/core.c b/drivers/platform/x86=
+/intel/ifs/core.c
+> index 7b11198d85a1..1a7ca74abb61 100644
+> --- a/drivers/platform/x86/intel/ifs/core.c
+> +++ b/drivers/platform/x86/intel/ifs/core.c
+> @@ -40,9 +40,18 @@ static const struct ifs_test_caps array_test =3D {
+>  =09.test_num =3D IFS_TYPE_ARRAY_BIST,
+>  };
+> =20
+> +static const struct ifs_test_msrs scan_msrs =3D {
+> +=09.copy_hashes =3D MSR_COPY_SCAN_HASHES,
+> +=09.copy_hashes_status =3D MSR_SCAN_HASHES_STATUS,
+> +=09.copy_chunks =3D MSR_AUTHENTICATE_AND_COPY_CHUNK,
+> +=09.copy_chunks_status =3D MSR_CHUNKS_AUTHENTICATION_STATUS,
+> +=09.test_ctrl =3D MSR_SAF_CTRL,
+> +};
+> +
+>  static struct ifs_device ifs_devices[] =3D {
+>  =09[IFS_TYPE_SAF] =3D {
+>  =09=09.test_caps =3D &scan_test,
+> +=09=09.test_msrs =3D &scan_msrs,
+>  =09=09.misc =3D {
+>  =09=09=09.name =3D "intel_ifs_0",
+>  =09=09=09.minor =3D MISC_DYNAMIC_MINOR,
+> diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86=
+/intel/ifs/load.c
+> index 39f19cb51749..ad0c107f0922 100644
+> --- a/drivers/platform/x86/intel/ifs/load.c
+> +++ b/drivers/platform/x86/intel/ifs/load.c
+> @@ -118,15 +118,17 @@ static void copy_hashes_authenticate_chunks(struct =
+work_struct *work)
+>  =09union ifs_scan_hashes_status hashes_status;
+>  =09union ifs_chunks_auth_status chunk_status;
+>  =09struct device *dev =3D local_work->dev;
+> +=09const struct ifs_test_msrs *msrs;
+>  =09int i, num_chunks, chunk_size;
+>  =09struct ifs_data *ifsd;
+>  =09u64 linear_addr, base;
+>  =09u32 err_code;
+> =20
+>  =09ifsd =3D ifs_get_data(dev);
+> +=09msrs =3D ifs_get_test_msrs(dev);
+>  =09/* run scan hash copy */
+> -=09wrmsrl(MSR_COPY_SCAN_HASHES, ifs_hash_ptr);
+> -=09rdmsrl(MSR_SCAN_HASHES_STATUS, hashes_status.data);
+> +=09wrmsrl(msrs->copy_hashes, ifs_hash_ptr);
+> +=09rdmsrl(msrs->copy_hashes_status, hashes_status.data);
+> =20
+>  =09/* enumerate the scan image information */
+>  =09num_chunks =3D hashes_status.num_chunks;
+> @@ -147,8 +149,8 @@ static void copy_hashes_authenticate_chunks(struct wo=
+rk_struct *work)
+>  =09=09linear_addr =3D base + i * chunk_size;
+>  =09=09linear_addr |=3D i;
+> =20
+> -=09=09wrmsrl(MSR_AUTHENTICATE_AND_COPY_CHUNK, linear_addr);
+> -=09=09rdmsrl(MSR_CHUNKS_AUTHENTICATION_STATUS, chunk_status.data);
+> +=09=09wrmsrl(msrs->copy_chunks, linear_addr);
+> +=09=09rdmsrl(msrs->copy_chunks_status, chunk_status.data);
+> =20
+>  =09=09ifsd->valid_chunks =3D chunk_status.valid_chunks;
+>  =09=09err_code =3D chunk_status.error_code;
+> @@ -180,6 +182,7 @@ static int copy_hashes_authenticate_chunks_gen2(struc=
+t device *dev)
+>  =09union ifs_scan_hashes_status_gen2 hashes_status;
+>  =09union ifs_chunks_auth_status_gen2 chunk_status;
+>  =09u32 err_code, valid_chunks, total_chunks;
+> +=09const struct ifs_test_msrs *msrs;
+>  =09int i, num_chunks, chunk_size;
+>  =09union meta_data *ifs_meta;
+>  =09int starting_chunk_nr;
+> @@ -189,10 +192,11 @@ static int copy_hashes_authenticate_chunks_gen2(str=
+uct device *dev)
+>  =09int retry_count;
+> =20
+>  =09ifsd =3D ifs_get_data(dev);
+> +=09msrs =3D ifs_get_test_msrs(dev);
+> =20
+>  =09if (need_copy_scan_hashes(ifsd)) {
+> -=09=09wrmsrl(MSR_COPY_SCAN_HASHES, ifs_hash_ptr);
+> -=09=09rdmsrl(MSR_SCAN_HASHES_STATUS, hashes_status.data);
+> +=09=09wrmsrl(msrs->copy_hashes, ifs_hash_ptr);
+> +=09=09rdmsrl(msrs->copy_hashes_status, hashes_status.data);
+> =20
+>  =09=09/* enumerate the scan image information */
+>  =09=09chunk_size =3D hashes_status.chunk_size * SZ_1K;
+> @@ -212,8 +216,8 @@ static int copy_hashes_authenticate_chunks_gen2(struc=
+t device *dev)
+>  =09}
+> =20
+>  =09if (ifsd->generation >=3D IFS_GEN_STRIDE_AWARE) {
+> -=09=09wrmsrl(MSR_SAF_CTRL, INVALIDATE_STRIDE);
+> -=09=09rdmsrl(MSR_CHUNKS_AUTHENTICATION_STATUS, chunk_status.data);
+> +=09=09wrmsrl(msrs->test_ctrl, INVALIDATE_STRIDE);
+> +=09=09rdmsrl(msrs->copy_chunks_status, chunk_status.data);
+>  =09=09if (chunk_status.valid_chunks !=3D 0) {
+>  =09=09=09dev_err(dev, "Couldn't invalidate installed stride - %d\n",
+>  =09=09=09=09chunk_status.valid_chunks);
+> @@ -234,9 +238,9 @@ static int copy_hashes_authenticate_chunks_gen2(struc=
+t device *dev)
+>  =09=09chunk_table[1] =3D linear_addr;
+>  =09=09do {
+>  =09=09=09local_irq_disable();
+> -=09=09=09wrmsrl(MSR_AUTHENTICATE_AND_COPY_CHUNK, (u64)chunk_table);
+> +=09=09=09wrmsrl(msrs->copy_chunks, (u64)chunk_table);
+>  =09=09=09local_irq_enable();
+> -=09=09=09rdmsrl(MSR_CHUNKS_AUTHENTICATION_STATUS, chunk_status.data);
+> +=09=09=09rdmsrl(msrs->copy_chunks_status, chunk_status.data);
+>  =09=09=09err_code =3D chunk_status.error_code;
+>  =09=09} while (err_code =3D=3D AUTH_INTERRUPTED_ERROR && --retry_count);
+> =20
+>=20
+--8323328-263407840-1720687870=:6262--
