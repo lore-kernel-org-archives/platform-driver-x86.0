@@ -1,90 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E2B142904;
-	Fri, 12 Jul 2024 09:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14100155382
+	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Jul 2024 10:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720775002; cv=none; b=UuUWXZXkzE80HgKUB6EQobmZv0Yx9+2YYixiybexn9nFiCZRRp89GckPu7UPVMAYSq4UX+MlwFF9z7HK29BzT5FNcsJOQlOWRL6Pyff7cwelfNdi9zrh5/GuGcZsSaHxWpJGqxMToVwcxG9wrFB24vn8BaykrIlEj8to82gFyso=
+	t=1720779873; cv=none; b=h57n+CQ5B34/WbxdgHILOJ2BT3bof5lag6urLxi2PbToc40HZ/MIlkCMaFTKWIyTyXP3Uhm/MZ8XT85Poo1QtQxD3IqFE0EjBJPGZNxZHwSCTMtiPXpJkCY5PmiFjB3dLi/RaP7cj1SuBoAsLHnxf5ztCSKSv5nbFWoSIvJ589A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720775002; c=relaxed/simple;
-	bh=3Hsipd0VmP8oXyuyf0778po9QtJb1clkgZOD2L/FF4g=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qIrO0jz0hLX4iApQHaZdddoQS9ev9Dr+ndXg2ZKnxYn9QCWCfJypWZBTvAQ5bf7EYhGUx1yUNRlnHR2NJx/kbJWzZfi59OAZVD0QX4s00cKaV67e5FHmbrnH3TmXjwYeb/5TZTffKpSJA7s7dbcphwCf9bEGAmD5tLcJ0s8CDNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dMO7EnYl; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720779873; c=relaxed/simple;
+	bh=HqZiCRw2NLU2XKAhHPCRc0/GWvY5VzMIPC+2HkzIaLs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tLizrhKBiYy74nqFSPdQbo4yewnVfcjkiDozka2+yE+OwM0zKDaKulU6uWLpJc9rtnnCs1aOYxB0u8D/+XaOXhminBFV/VeeBQafp3Th/rfAljI2naHz0MBdJ8esyBhiCnbRQzDFs++vB4rJj5hpIb6PnUY+N6iKh/1NkwqmVW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tTIjKRqR; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dMO7EnYl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720775000; x=1752311000;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=3Hsipd0VmP8oXyuyf0778po9QtJb1clkgZOD2L/FF4g=;
-  b=dMO7EnYlfjSo82Q3pN2/noFLN00/WDE2Msm+2zISi8kE+E/QzfNXXXng
-   uQln/gfGtM6Ckm3PDUyJ1Lk4z/nx9N1koQfBwmTjEWOLrlwMmZeVEPi9H
-   rkUN2lBJEB7HEgBti8mr2IIxTy4UpWoq1s8Ay7+bS1YDSNGwdKkO2G2Jp
-   4JVthHNoo7qq7JgqIzimhvUFpa+TA8saF4TCvTG7zYDVMqnHLky6BGbdy
-   WnrLRL8RqZaPTo1lKk6vniXGBwwG9BXIeQw5lcjc1IAdqizrfpWfS9u0s
-   FIBOwDM3QNa795RJyP+wvfd4yuhgZG6Sg95kmSzuvERJzP5xJCSqyYsNJ
-   g==;
-X-CSE-ConnectionGUID: iaLvSnrvQtqE0JvA1zXCXw==
-X-CSE-MsgGUID: VTh14nMAS3O9nZO1npB5qg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="18022820"
-X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
-   d="scan'208";a="18022820"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 02:03:18 -0700
-X-CSE-ConnectionGUID: 2eTqNaolTwGq1hSiKBVoGA==
-X-CSE-MsgGUID: 7fKehRgvQxKD8ubV/VxmQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
-   d="scan'208";a="53154580"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.129])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 02:03:15 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hdegoede@redhat.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <0e4c9ffdc8a5caffcda2afb8d5480900f7adebf6.1720707932.git.geert+renesas@glider.be>
-References: <80e17dffa8f4c1d3fdedd4d82df3a722aa4044ff.1720707932.git.geert+renesas@glider.be>
- <0e4c9ffdc8a5caffcda2afb8d5480900f7adebf6.1720707932.git.geert+renesas@glider.be>
-Subject: Re: [PATCH] platform: arm64: EC_LENOVO_YOGA_C630 should depend on
- ARCH_QCOM
-Message-Id: <172077498937.2264.1630580390229940631.b4-ty@linux.intel.com>
-Date: Fri, 12 Jul 2024 12:03:09 +0300
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tTIjKRqR"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e0365588ab8so1771704276.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 12 Jul 2024 03:24:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720779871; x=1721384671; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+VRQCbcpx9R3q3II2rgwsC0Uz/Ighdl9GbELSByS5y8=;
+        b=tTIjKRqR+vuz1dMdeuIWiVQmIYtXiFlOITDNGelgfxc57jadda35UWTgJ0Q9HsCapn
+         crqsZOb4kxmTcin/grA4t4tXoHQfpEzCEiZ95ksSQx6+Ux9UIn7r2vYdA9b9esCACKie
+         Zmfrc9MdIQRXbiVfb59a1ZpYN3gIlbpMk/Ei7R95IrSGJ08ZfKUvLHWWqmhd2B7TsW5K
+         hvhaat62XpC/XqxocSgQFIGEu7H+iBlSplrf+a1vAhCvLA07biZ4RVDl8wgHRCMKDQAN
+         DHPMreqKx2YrB1LejNFwUGq6RPIf82OPzHKlaaUUIewW6zdj95YAK1aj2jY+kfUyin5Q
+         sS9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720779871; x=1721384671;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+VRQCbcpx9R3q3II2rgwsC0Uz/Ighdl9GbELSByS5y8=;
+        b=bUCbHEWID50VYeL0dRPWQj7OvN3sJJxewqFMAzpK3m6wDyBfTy7P3GsnWLvKQROibg
+         G1dJEUW8hWVxLXOtxQ9+Q+AQt/DVEExums7Cz7Aibu+hIHlclqXkGo5b4BrQHsWrr0iA
+         RVSSYAwV427K7352k/mn96dVXU1Ri8umgpUD7LVW9tzEOTrE9bGF8UORXfXEZuV3A248
+         Q+niC/kxIwLsfxInUtUne+CH6u+W+o5CCn8eiGHeOuX6nrIQlDdJ9OVgj4iWiZaevRhT
+         Ey1fvKBKjmwfMp0U72/f4xmD65f2dUCjpESRKsm7MLJJvNb7B2ct5NEQhcsbt/ynHzOk
+         tVaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVx2zd177EbNkaxG+Y+y8wD7aInJBhfJIsFilzLoY7sS6dFJRIwCUofvwqAw+uvVTNjE0oMr4K6VIjxLzRxb/dvB4ogEA2/3ln4bkZR/fbBKJXyVA==
+X-Gm-Message-State: AOJu0YyQtJ5WJINHKSnSrdEEeSyDHpKPavrM7NhMQ43F9xAXXT0wNgz2
+	ZkW9JZOoTYMU0uhmXpjXCb/cfrhAhmKyMxBMMDTPELo9A1V2a18uDIR5DExWCc4b2DAMiyIv5eY
+	hVCQjIp7m0+57NuResitJqefoWtbf5CqspY9NoQ==
+X-Google-Smtp-Source: AGHT+IG2u7oPYblciDyGiNZd4/9k+U/KQ8en3SG5yXyygHZBORuC+P7l6UYsZj1IX1HbtiJTKp1OpY8918TJtuYQ6jg=
+X-Received: by 2002:a25:ef09:0:b0:e03:a688:ab5e with SMTP id
+ 3f1490d57ef6-e041b0785b8mr12312862276.27.1720779871043; Fri, 12 Jul 2024
+ 03:24:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+References: <80e17dffa8f4c1d3fdedd4d82df3a722aa4044ff.1720707932.git.geert+renesas@glider.be>
+ <0e4c9ffdc8a5caffcda2afb8d5480900f7adebf6.1720707932.git.geert+renesas@glider.be>
+In-Reply-To: <0e4c9ffdc8a5caffcda2afb8d5480900f7adebf6.1720707932.git.geert+renesas@glider.be>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Fri, 12 Jul 2024 13:24:19 +0300
+Message-ID: <CAA8EJprLg8-BQT2OsLb5xSNVdFLf2mF6sSw_gAie0dBXawQFqQ@mail.gmail.com>
+Subject: Re: [PATCH] platform: arm64: EC_LENOVO_YOGA_C630 should depend on ARCH_QCOM
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 11 Jul 2024 16:32:35 +0200, Geert Uytterhoeven wrote:
-
+On Thu, 11 Jul 2024 at 17:32, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+>
 > The Lenovo Yoga C630 Embedded Controller is only present on the Qualcomm
 > Snapdragon-based Lenovo Yoga C630 laptop.  Hence add a dependency on
 > ARCH_QCOM, to prevent asking the user about this driver when configuring
 > a kernel without Qualcomm SoC support.
-> 
-> 
+>
+> Fixes: 5e5f2f92cccc29f3 ("platform: arm64: add Lenovo Yoga C630 WOS EC driver")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/platform/arm64/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+
+Could you please add the same condition to the Acer Aspire 1 entry?
+
+>
+> diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
+> index 058a4baa216a83b8..f7539e5419cf1616 100644
+> --- a/drivers/platform/arm64/Kconfig
+> +++ b/drivers/platform/arm64/Kconfig
+> @@ -35,6 +35,7 @@ config EC_ACER_ASPIRE1
+>
+>  config EC_LENOVO_YOGA_C630
+>         tristate "Lenovo Yoga C630 Embedded Controller driver"
+> +       depends on ARCH_QCOM || COMPILE_TEST
+>         depends on I2C
+>         select AUXILIARY_BUS
+>         help
+> --
+> 2.34.1
+>
 
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
-local branch there, which might take a while.
-
-The list of commits applied:
-[1/1] platform: arm64: EC_LENOVO_YOGA_C630 should depend on ARCH_QCOM
-      commit: 1e02e317470b1c68d5971e51e8c62967ec1bc828
-
---
- i.
-
+-- 
+With best wishes
+Dmitry
