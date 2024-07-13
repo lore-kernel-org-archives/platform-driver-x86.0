@@ -1,148 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47221FBF6;
-	Sat, 13 Jul 2024 00:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948222F2B
+	for <platform-driver-x86@vger.kernel.org>; Sat, 13 Jul 2024 01:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720831344; cv=none; b=UxkiIhb0ZCj96qNdr4FDPJYiQJz85Xp+v6eFlPvSNWLU5TwoPsuRYUJa5GmTgYXtzKxhVnfxu6sz8uZfEvpqxeL733QKS6pc/qvEZOXW3oqBnMhtPuQ9OcgYKLUwfFHiRa2OXKFvYMGvyjNoDWVSjl5f7SRpA267Qdqy+wuTId0=
+	t=1720832592; cv=none; b=M6NAR11HUTFry9NTi39AOb+6G6qAy15srQy7Fbb/fdMojfZpl9q3bmA/n/4V0HKRetmq/4UgpC8E94dryRuY1rN5DrhGbZGWFs8NbxL4b1JCLZ+ny6zBGSu0oJIP2/xDsWfi9aaIePze82XSkDiHdFhFgsWR74sZqr/WefAOZwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720831344; c=relaxed/simple;
-	bh=1ct1zzpZpQ5/mKSr4UvvDbKaJaYWHq6GH4YiIwYrPqQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HzPu9Bv+L1lyfJwx2GkTaLBAEet1zEHERtaCSgWFWK/P2vzvvmgCV4G9zcvxSNoxw/vz1iTk2Y4acNCETrLP5d8UtzBfiAaeAc7zdw5Vb9sZ+rNQa/V4hwTzzOYXj+TIcMqkm0NdWw22nXLe02vWTZK/IV2+BizIiPKyTp55IDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I+mJg+Gt; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720832592; c=relaxed/simple;
+	bh=UNBl82bWy6BK4QvIg/lANifWxpGzKBqS6jSOUjWhy2I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=kNJaL0Dlu1Bq9Zsxn5RkhlUpeKz84mGZuyCWyZy2G72JbXkoLmjwm22bJ1IbJsE3vlE7QhmO1C8u/zCP16Bob+RhKRQPGsscGz7qGXf4LdDCl6L7lG+W5miVouzsP4D6v3qwRKdy2HDnRT7/7uDAlforvDoRmJWPauGSwKSelLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZjotkBUe; arc=none smtp.client-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I+mJg+Gt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720831343; x=1752367343;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=1ct1zzpZpQ5/mKSr4UvvDbKaJaYWHq6GH4YiIwYrPqQ=;
-  b=I+mJg+GtQEjxJlpmoMzFBN4Occ7scMGv/GUKnD6h5crtH1VMtHXiKGk9
-   iVBuKIX3C6SMMJs+lpLDpQLEtC1rt0u1W1GRZ32hBo5zkAe8tDG1oqqDP
-   NdnHcZa1GXom8xR6lRgejBdIhGKhurz72/oj30pcUu2D21BR8aW1Hdg2Y
-   jvex4S4S0vs7eCdgmd6AWGrAmfm2eDapt3vgzTsKTSlye9KF1jF1OkEmF
-   IHmu+iQz0DFU4jmSC+4q/KAx3Bu0UVv8Rcl3plpjfgBJP+sXO4niCG/8c
-   k3kOI8FxRLr6huwxdftKCjiKbUYOIY1OK099gcoeWRmlajcQsDYhqLnqZ
-   Q==;
-X-CSE-ConnectionGUID: T0fqFJbGQNeb0yWtdCp/Ow==
-X-CSE-MsgGUID: EgwM6ntgTnKvXsJdPMtKzg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11131"; a="35833399"
-X-IronPort-AV: E=Sophos;i="6.09,204,1716274800"; 
-   d="scan'208";a="35833399"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 17:42:21 -0700
-X-CSE-ConnectionGUID: qvJHM3tsStqHNqjDqnl7+Q==
-X-CSE-MsgGUID: S5K6mZJnSFG0nvc2NF2Gjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,204,1716274800"; 
-   d="scan'208";a="48955791"
-Received: from skuppusw-desk2.jf.intel.com ([10.165.154.101])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 17:42:21 -0700
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-To: Jithu Joseph <jithu.joseph@intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ashok Raj <ashok.raj@intel.com>,
-	Tony Luck <tony.luck@intel.com>,
-	linux-trace-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Shankar Ravi V <ravi.v.shankar@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/4] trace: platform/x86/intel/ifs: Add SBAF trace support
-Date: Sat, 13 Jul 2024 00:40:01 +0000
-Message-Id: <20240713004001.535159-5-sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240713004001.535159-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <20240713004001.535159-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZjotkBUe"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-70445bb3811so1353018a34.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 12 Jul 2024 18:03:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720832589; x=1721437389; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CXBzGKQHzwTCLNi/QbLQ9MxDBvRYj/mrMe6mJtSFLx4=;
+        b=ZjotkBUenoi/S9I65VkyteuUmkLaZ8Lm+s/Bzt9Lt52+i/vuz71szXzpEdsx+Ln9SX
+         9sInb/YjNLygYybZ7qzNeKLn7P3OmXwN/hAIDU3LRSNpggbzZ7BXzdmYqlGhj/A0sK6O
+         mWJ1RP/1turoZNxlQjmsC5mwWR7KicSnqtDM0wnmyEAf+IUrGRA3kH63QLuvzoL1Mdmc
+         BM65ZO3ujqCS5Ru/xdLRt2pzVeQ//Le5iIQgA+SFiAZfV7YzaJFlOKXButr8DvsotLWV
+         bZvkbB34nlIYLHXH5EBLtG+DdQV/giYwWBzSvMBGWrVbXKArAlr9Pq+byan2O/WlPmjX
+         bfHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720832589; x=1721437389;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CXBzGKQHzwTCLNi/QbLQ9MxDBvRYj/mrMe6mJtSFLx4=;
+        b=m0ow/0iaVf0Ly+QITCe/dHXJWC2iGP6LncWJJrlxPPKjYE2TNCj/1nrWbjCeTrM5RF
+         9bTYviFKG9V2hDandjSjNaIOvGn2wzYhKoAMcFjluvDdnBIKHis/ugYtUKENwe4Ay3QE
+         HA+JbVS/MhzTZ0KVhV5Xl9fE2eguPLNPPNoEJKOEn0L2rOftbHWoFwWx15ei6ny5jHAX
+         ++VLXwspBLvN1e825JXeeydv1dKj7vfc8flwVPKZoK8Xue7xJ7YMa+mo6pjrrO/ZouC6
+         RtMOhX4LCdmFEiXwPGhag7i38KDK0WoJRQ5gmHwae5qtTvbojlDdOSmpmbX/YW/Lq8ni
+         fLJw==
+X-Forwarded-Encrypted: i=1; AJvYcCWI0zAkRoPmxm8HJdsThrWkQtFTkhXE2IwE3K4ybTMVzl4PDTCOxpLr7f+UaaazwVusvSs5ukrM0vC9K8r082BXqj1R/rAvTIzruyA748LI5Y/hjg==
+X-Gm-Message-State: AOJu0Yyy7fDFnKJ1CR5dS24tgU6g3thDamt3ryFj8L/i3xtzVFa47vAM
+	BMWGEOSwY3RgxcnzocT/1h183dAIRI3kjA1gBBHnYz82mHwk1P+5iH5bPvzZzkg=
+X-Google-Smtp-Source: AGHT+IHrcn916Hce1CRrEs0ecid1zN7rNG5C1ltGgNYwmbOmsJO2nacySkLmcuDxq0DTDMpveul2Gg==
+X-Received: by 2002:a05:6870:6587:b0:25e:1061:6541 with SMTP id 586e51a60fabf-25eae75e8f4mr11263510fac.7.1720832589608;
+        Fri, 12 Jul 2024 18:03:09 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700::1cb1])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2607530524asm57773fac.53.2024.07.12.18.03.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jul 2024 18:03:09 -0700 (PDT)
+Date: Fri, 12 Jul 2024 20:03:06 -0500
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Tero Kristo <tero.kristo@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH] platform/x86/intel/tpmi/plr: Uninitialized variable in
+ plr_print_bits()
+Message-ID: <8ccfab0c-3c11-4168-a383-19895ae60022@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-From: Jithu Joseph <jithu.joseph@intel.com>
+Initialize the "str" pointer to NULL.  There is a test later for if "str"
+is NULL but in the original code it was either valid or uninitialized.
 
-Add tracing support for the SBAF IFS tests, which may be useful for
-debugging systems that fail these tests. Log details like test content
-batch number, SBAF bundle ID, program index and the exact errors or
-warnings encountered by each HT thread during the test.
-
-Reviewed-by: Ashok Raj <ashok.raj@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Fixes: 9e9397a41b7b ("platform/x86/intel/tpmi/plr: Add support for the plr mailbox")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- include/trace/events/intel_ifs.h         | 27 ++++++++++++++++++++++++
- drivers/platform/x86/intel/ifs/runtest.c |  1 +
- 2 files changed, 28 insertions(+)
+Almost everyone automatically initializes stack variables to zero these days so
+bugs like this don't show up in testing and we disabled GCC's uninitialized
+variable warning so it's easy to miss.
 
-diff --git a/include/trace/events/intel_ifs.h b/include/trace/events/intel_ifs.h
-index 0d88ebf2c980..70323acde1de 100644
---- a/include/trace/events/intel_ifs.h
-+++ b/include/trace/events/intel_ifs.h
-@@ -35,6 +35,33 @@ TRACE_EVENT(ifs_status,
- 		__entry->status)
- );
+ drivers/platform/x86/intel/intel_plr_tpmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/intel/intel_plr_tpmi.c b/drivers/platform/x86/intel/intel_plr_tpmi.c
+index c1aa52c23d25..2725a1ddba92 100644
+--- a/drivers/platform/x86/intel/intel_plr_tpmi.c
++++ b/drivers/platform/x86/intel/intel_plr_tpmi.c
+@@ -162,7 +162,7 @@ static int plr_clear_cpu_status(struct tpmi_plr_die *plr_die, int cpu)
+ static void plr_print_bits(struct seq_file *s, u64 val, int bits)
+ {
+ 	const unsigned long mask[] = { BITMAP_FROM_U64(val) };
+-	const char *str;
++	const char *str = NULL;
+ 	int bit, index;
  
-+TRACE_EVENT(ifs_sbaf,
-+
-+	TP_PROTO(int batch, union ifs_sbaf activate, union ifs_sbaf_status status),
-+
-+	TP_ARGS(batch, activate, status),
-+
-+	TP_STRUCT__entry(
-+		__field(	u64,	status	)
-+		__field(	int,	batch	)
-+		__field(	u16,	bundle	)
-+		__field(	u16,	pgm	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->status	= status.data;
-+		__entry->batch	= batch;
-+		__entry->bundle	= activate.bundle_idx;
-+		__entry->pgm	= activate.pgm_idx;
-+	),
-+
-+	TP_printk("batch: 0x%.2x, bundle_idx: 0x%.4x, pgm_idx: 0x%.4x, status: 0x%.16llx",
-+		__entry->batch,
-+		__entry->bundle,
-+		__entry->pgm,
-+		__entry->status)
-+);
-+
- #endif /* _TRACE_IFS_H */
- 
- /* This part must be outside protection */
-diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
-index 2a37f009d0b3..7670fc89153d 100644
---- a/drivers/platform/x86/intel/ifs/runtest.c
-+++ b/drivers/platform/x86/intel/ifs/runtest.c
-@@ -528,6 +528,7 @@ static int dosbaf(void *data)
- 	 */
- 	wrmsrl(MSR_ACTIVATE_SBAF, run_params->activate->data);
- 	rdmsrl(MSR_SBAF_STATUS, status.data);
-+	trace_ifs_sbaf(ifsd->cur_batch, *run_params->activate, status);
- 
- 	/* Pass back the result of the test */
- 	if (cpu == first)
+ 	for_each_set_bit(bit, mask, bits) {
 -- 
-2.25.1
+2.43.0
 
