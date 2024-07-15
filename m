@@ -1,58 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3411E186E37
-	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jul 2024 09:39:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DEF6A039;
+	Mon, 15 Jul 2024 11:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721036371; cv=none; b=aOL6PTqIco9HDsrUFy/YLqdfI+Nc9HgKPauBJwMO09ziB5Y/mB8cY1LHbDXX0UVIDsBndHFDKZxbCH4YYYWxQ/Q5KVoDLf/mj5nUzYfCstVr8dKySOp7Tg4WEUyQh1t0CO6vCQzYCG0F+Ib9f+EPEHeF9ckRdsEOUlU23iXcF1k=
+	t=1721043959; cv=none; b=g4vANahHHGbYtAsT5wiiW2kwLPOuqNXQper1t4thCsHHthU66BDcaT9WCag2VmmFuweSs8vYRntlX4u6fzQ5FXtiRAWGD0fdjPbQCax2SPp2sLc1FbFMKdWoa67pX90zZWtm+JtH9mtY4CkXsIRem+JFez711zUoC8GEpMe/QB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721036371; c=relaxed/simple;
-	bh=YRHnu1OBQLmhC7SfIYBvefTame5RVN7nN2wFyO5uD+E=;
+	s=arc-20240116; t=1721043959; c=relaxed/simple;
+	bh=VvBk/IAgFfAsmh7PlPHgbGWzq7IUOENluqNLHMJlMAY=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=dRWfaDRCK7dze8zLvot0DFfzVK9hleb9H+NuUv1CgcSNaWypz3vhDr6MlPsBHjSs98wCH16TaSwvmJTYrGQ/XwgC1dYlCxYouP+HCzuvBk4pw48pb44x+eBMPy0zBfGv17ypypmAyLWDQlPMa6PHHdVTQir4pAc4zjYUf85kUh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=itpW7XQ6; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version:Content-Type; b=IJLemmQax2wkT4qGtgp9bZQedtaH/untzlFkmSpemHgmCS205rDsqTp5n/XXXxKTfWCkc1kL0sDrxMjM3d6rVf36n3c39nQq+dOUx/N89/iJd7mDWEvfVcO6BJtdiIS4pIX5szGHBbJbVzFLUhMZtVFWx7k8Mv788rZTO0bJPcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=esGwawcY; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="itpW7XQ6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="esGwawcY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721036370; x=1752572370;
+  t=1721043958; x=1752579958;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=YRHnu1OBQLmhC7SfIYBvefTame5RVN7nN2wFyO5uD+E=;
-  b=itpW7XQ6oZUWpCeO6kXkOSj/RISJsnsXTiDeF/HhbpL9VoaXCVhHM2Ap
-   5Qn08ADZUHcbAsmfd4X/2iN8YbSoOuftM7CojhBWbHb6hT3J2h3MVSQaa
-   8JVCc1H1dBlKeuCCYqP3hNLgIYkEWAGmWw5y9DLmpE26NGXKa0WdTNGn8
-   ztZofi+GXUCdJWaMR4LRajxmnbpYatZfuXPJZtT7FYNdr8NzP1Sm7/dfa
-   dMvWSZVG+YjsOQrpJcgSoLKhSjjlOC4aIsG1I4rpRpcYEyBcRoFA7UAiY
-   IEZqCHZv2wKnOlnM6kIBSeW2v9tvc+0n3mwNyqEkrVP6jq8dNspPu4gif
+  bh=VvBk/IAgFfAsmh7PlPHgbGWzq7IUOENluqNLHMJlMAY=;
+  b=esGwawcYi0RCchED2w67i02Youw/c6qeHGuH42qVD24qGlBZB07lDl/C
+   zIJB6cfDMQZw2JdPthiD52HNphRraHGIHu4qRq8asLQB+t2glk5Da+0sz
+   4M09iW703TEi3LHsJH+kQulTF3imqFvYqeKlY6tA7f7bt3WB+uuDjm7pX
+   +tmr8fxdP7Z97i6TGUTCaHnmOGfRlLGqgGo9A1OjWROJqwLYzdjsO75iW
+   ivn10yvc++ZJpUEhsK7U9o7Oh6pscPtMncg2fu0gJaTOn2RSIhlKtZknR
+   DaCDUB3joDPoogX7WDYFl1dYbYl+Xt7KpVwPb8iORpRwU14lPgadidNgr
    g==;
-X-CSE-ConnectionGUID: N3dtPKEZRIeO+iFs8LVpFQ==
-X-CSE-MsgGUID: rn8CRhiDSn+dhSkgCxOhzA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11133"; a="18118843"
+X-CSE-ConnectionGUID: /RMxbaLhQSuoAHzHiWbRuw==
+X-CSE-MsgGUID: uNgCBizLT2W1wqOFwMU5TA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11133"; a="35957106"
 X-IronPort-AV: E=Sophos;i="6.09,210,1716274800"; 
-   d="scan'208";a="18118843"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 02:39:29 -0700
-X-CSE-ConnectionGUID: BPKXBqxUSvyzhvO1MVNn6g==
-X-CSE-MsgGUID: NxIehBR7TImoewfkqtg4xw==
+   d="scan'208";a="35957106"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 04:45:57 -0700
+X-CSE-ConnectionGUID: 9LPlusrPQta5gWxEV5D5Xw==
+X-CSE-MsgGUID: pGcKie7aQc2C1LcSYEfa4Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,210,1716274800"; 
-   d="scan'208";a="49302290"
+   d="scan'208";a="49683808"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.131])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 02:39:27 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 04:45:55 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 15 Jul 2024 12:39:22 +0300 (EEST)
-To: Alexis Belmonte <alexbelm48@gmail.com>
-cc: Hans de Goede <hdegoede@redhat.com>, W_Armin@gmx.de, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: hp-wmi: Fix implementation of the
- platform_profile_omen_get function
-In-Reply-To: <ZpFnV8w1558BW7iZ@alexis-pc>
-Message-ID: <d616eb65-dd32-faff-2fb9-686305c1810b@linux.intel.com>
-References: <ZpFnV8w1558BW7iZ@alexis-pc>
+Date: Mon, 15 Jul 2024 14:45:50 +0300 (EEST)
+To: Gergo Koteles <soyer@irl.hu>
+cc: Hans de Goede <hdegoede@redhat.com>, Ike Panhc <ike.pan@canonical.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] platform/x86: ideapad-laptop: use cleanup.h
+In-Reply-To: <851d4180f1df5a10ca6e2feaf429611f1c0ccc88.1720515666.git.soyer@irl.hu>
+Message-ID: <066577bd-5d1d-bc6f-1fad-1c8011fa30cf@linux.intel.com>
+References: <cover.1720515666.git.soyer@irl.hu> <851d4180f1df5a10ca6e2feaf429611f1c0ccc88.1720515666.git.soyer@irl.hu>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,50 +60,18 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Fri, 12 Jul 2024, Alexis Belmonte wrote:
+On Tue, 9 Jul 2024, Gergo Koteles wrote:
 
-> Fix ill-formed implementation of the platform_profile_omen_get function
-> introduced by patch "platform/x86: hp-wmi: Fix platform profile option
-> switch"
+> Use cleanup.h helpers to simplify some code paths.
 > 
-> Signed-off-by: Alexis Belmonte <alexbelm48@gmail.com>
+> Signed-off-by: Gergo Koteles <soyer@irl.hu>
 
-I took this patch but there were a number of issues with it I had to fix:
+Hi,
 
-- Reported-by tag missing
-- Fixes tag missing
-- You didn't tell in the commit message what was wrong.
+I decided to take this v1 of this cleanup one in this cycle into 
+review-ilpo/for-next but left the other patches because of the outstanding 
+comments on patches 2 and 3.
 
 -- 
  i.
 
-> ---
->  drivers/platform/x86/hp/hp-wmi.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-> index c8bcb3e2b344..876e0a97cee1 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -1238,8 +1238,6 @@ static int platform_profile_omen_get_ec(enum platform_profile_option *profile)
->  static int platform_profile_omen_get(struct platform_profile_handler *pprof,
->  				     enum platform_profile_option *profile)
->  {
-> -	enum platform_profile_option selected_platform_profile;
-> -
->  	/*
->  	 * We directly return the stored platform profile, as the embedded
->  	 * controller will not accept switching to the performance option when
-> @@ -1253,9 +1251,9 @@ static int platform_profile_omen_get(struct platform_profile_handler *pprof,
->  	 * See also omen_powersource_event.
->  	 */
->  	guard(mutex)(&active_platform_profile_lock);
-> -	selected_platform_profile = active_platform_profile;
-> +	*profile = active_platform_profile;
->  
-> -	return selected_platform_profile;
-> +	return 0;
->  }
->  
->  static bool has_omen_thermal_profile_ec_timer(void)
-> 
