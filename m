@@ -1,59 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C866AC0;
-	Mon, 15 Jul 2024 09:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3411E186E37
+	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jul 2024 09:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721035676; cv=none; b=Y1a68euJF18/xC0oodU5AmiIH2I3tEiQT+XQZ5kAdWNmt/JqkAkF8ZWaBMHvRUy31cGyPzHXaVkz7W8wZEwINjfnzWml0fZ0p3nW+QmelYzZEmv29fjk4+0qhstDxlRWluaTDAZAjP7Wmo3OLewMyNitfqzqhXfMmrKWkfc62PA=
+	t=1721036371; cv=none; b=aOL6PTqIco9HDsrUFy/YLqdfI+Nc9HgKPauBJwMO09ziB5Y/mB8cY1LHbDXX0UVIDsBndHFDKZxbCH4YYYWxQ/Q5KVoDLf/mj5nUzYfCstVr8dKySOp7Tg4WEUyQh1t0CO6vCQzYCG0F+Ib9f+EPEHeF9ckRdsEOUlU23iXcF1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721035676; c=relaxed/simple;
-	bh=4HrD0MVt1a5kb0h8Uz1TwttE8DDSwiBNZBqPaE2aJCo=;
+	s=arc-20240116; t=1721036371; c=relaxed/simple;
+	bh=YRHnu1OBQLmhC7SfIYBvefTame5RVN7nN2wFyO5uD+E=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BROed/wZt8QA71s1vYybAz/ptLiKsnn7Gs8R/TQtrTxg5nOp3fE74WIvL9QDRjZ5H5fYc6UBGGZKGBqXUrl8zWbGpd1gOf6eg4PWwyJiyMU+1bRDANRhra8w5bEw3HLMXyxQj8MQFPrCKwvnnRS2QfZ+H66d+3RY4XDvi9DIDuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AEnL1L1l; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=dRWfaDRCK7dze8zLvot0DFfzVK9hleb9H+NuUv1CgcSNaWypz3vhDr6MlPsBHjSs98wCH16TaSwvmJTYrGQ/XwgC1dYlCxYouP+HCzuvBk4pw48pb44x+eBMPy0zBfGv17ypypmAyLWDQlPMa6PHHdVTQir4pAc4zjYUf85kUh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=itpW7XQ6; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AEnL1L1l"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="itpW7XQ6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721035675; x=1752571675;
+  t=1721036370; x=1752572370;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=4HrD0MVt1a5kb0h8Uz1TwttE8DDSwiBNZBqPaE2aJCo=;
-  b=AEnL1L1lZdEsfuS1QcaC2I4DQ6EscVDgcHHM4KBRkUT13p+4bXPaUqRk
-   13nvE5ztOkM3n9e+vm+jsz08DvuVg4TAtUoauNpQJJ54DYvc9bT5ayNbo
-   LZG0eDZ2wZ+FVerX9XLAABN2HCdd+MKrSSqBcmLEHrwWXC9P6XPGoUDlR
-   8wpwMj+sf883qwCNnfDxw9rPR8MnIlWv802aSfE5gbkoOkNIDx2xhtB/G
-   OTb4tNBXXRyIEb9rnwCIrO11ffbE9ocB9mkEYGYcrugbIJAxPaIBvQ7Xt
-   bulxwXz4i787SwR3K0LIeE/x5Xmk/F2l/RzCfZluFMAeel8DSD/QBEndn
-   Q==;
-X-CSE-ConnectionGUID: B6+hFjzrSPCENimVtXw3uw==
-X-CSE-MsgGUID: 8m0Hg2SRQgqGhsfzXuNMzw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11133"; a="35833910"
+  bh=YRHnu1OBQLmhC7SfIYBvefTame5RVN7nN2wFyO5uD+E=;
+  b=itpW7XQ6oZUWpCeO6kXkOSj/RISJsnsXTiDeF/HhbpL9VoaXCVhHM2Ap
+   5Qn08ADZUHcbAsmfd4X/2iN8YbSoOuftM7CojhBWbHb6hT3J2h3MVSQaa
+   8JVCc1H1dBlKeuCCYqP3hNLgIYkEWAGmWw5y9DLmpE26NGXKa0WdTNGn8
+   ztZofi+GXUCdJWaMR4LRajxmnbpYatZfuXPJZtT7FYNdr8NzP1Sm7/dfa
+   dMvWSZVG+YjsOQrpJcgSoLKhSjjlOC4aIsG1I4rpRpcYEyBcRoFA7UAiY
+   IEZqCHZv2wKnOlnM6kIBSeW2v9tvc+0n3mwNyqEkrVP6jq8dNspPu4gif
+   g==;
+X-CSE-ConnectionGUID: N3dtPKEZRIeO+iFs8LVpFQ==
+X-CSE-MsgGUID: rn8CRhiDSn+dhSkgCxOhzA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11133"; a="18118843"
 X-IronPort-AV: E=Sophos;i="6.09,210,1716274800"; 
-   d="scan'208";a="35833910"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 02:27:53 -0700
-X-CSE-ConnectionGUID: LU6z5m6xT2q9aX/CBGdoAA==
-X-CSE-MsgGUID: T/i+Ufc8Q9Go39EbnR+W7Q==
+   d="scan'208";a="18118843"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 02:39:29 -0700
+X-CSE-ConnectionGUID: BPKXBqxUSvyzhvO1MVNn6g==
+X-CSE-MsgGUID: NxIehBR7TImoewfkqtg4xw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,210,1716274800"; 
-   d="scan'208";a="54389077"
+   d="scan'208";a="49302290"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.131])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 02:27:50 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 02:39:27 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 15 Jul 2024 12:27:45 +0300 (EEST)
-To: "Luke D. Jones" <luke@ljones.dev>
-cc: platform-driver-x86@vger.kernel.org, corentin.chary@gmail.com, 
-    Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-    Denis Benato <benato.denis96@gmail.com>
-Subject: Re: [PATCH] Fixes: ae834a549ec1 ("platform/x86: asus-wmi: add support
- variant of TUF RGB")
-In-Reply-To: <20240713074005.66254-1-luke@ljones.dev>
-Message-ID: <5c4ef8d8-2806-5bb6-2946-368cf1ebbac6@linux.intel.com>
-References: <20240713074005.66254-1-luke@ljones.dev>
+Date: Mon, 15 Jul 2024 12:39:22 +0300 (EEST)
+To: Alexis Belmonte <alexbelm48@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, W_Armin@gmx.de, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: hp-wmi: Fix implementation of the
+ platform_profile_omen_get function
+In-Reply-To: <ZpFnV8w1558BW7iZ@alexis-pc>
+Message-ID: <d616eb65-dd32-faff-2fb9-686305c1810b@linux.intel.com>
+References: <ZpFnV8w1558BW7iZ@alexis-pc>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,48 +61,50 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Sat, 13 Jul 2024, Luke D. Jones wrote:
+On Fri, 12 Jul 2024, Alexis Belmonte wrote:
 
-> In kbd_rgb_mode_store the dev_get_drvdata() call was assuming the device
-> data was asus_wmi when it was actually led_classdev.
+> Fix ill-formed implementation of the platform_profile_omen_get function
+> introduced by patch "platform/x86: hp-wmi: Fix platform profile option
+> switch"
 > 
-> This patch corrects this by making the correct chain of calls to get the
-> asus_wmi driver data.
-> 
-> Tested-by: Denis Benato <benato.denis96@gmail.com>
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> Signed-off-by: Alexis Belmonte <alexbelm48@gmail.com>
 
-Your tags seem messed up, Fixes is in Subject in place of shortlog that is 
-completely missing.
+I took this patch but there were a number of issues with it I had to fix:
 
-Could you please correct these issues and resubmit, thank you.
-
+- Reported-by tag missing
+- Fixes tag missing
+- You didn't tell in the commit message what was wrong.
 
 -- 
  i.
 
 > ---
->  drivers/platform/x86/asus-wmi.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>  drivers/platform/x86/hp/hp-wmi.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 799d928c7d3d..2935af013535 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -879,10 +879,14 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
->  				 struct device_attribute *attr,
->  				 const char *buf, size_t count)
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index c8bcb3e2b344..876e0a97cee1 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -1238,8 +1238,6 @@ static int platform_profile_omen_get_ec(enum platform_profile_option *profile)
+>  static int platform_profile_omen_get(struct platform_profile_handler *pprof,
+>  				     enum platform_profile_option *profile)
 >  {
-> -	struct asus_wmi *asus = dev_get_drvdata(dev);
->  	u32 cmd, mode, r, g, b, speed;
-> +	struct led_classdev *led;
-> +	struct asus_wmi *asus;
->  	int err;
+> -	enum platform_profile_option selected_platform_profile;
+> -
+>  	/*
+>  	 * We directly return the stored platform profile, as the embedded
+>  	 * controller will not accept switching to the performance option when
+> @@ -1253,9 +1251,9 @@ static int platform_profile_omen_get(struct platform_profile_handler *pprof,
+>  	 * See also omen_powersource_event.
+>  	 */
+>  	guard(mutex)(&active_platform_profile_lock);
+> -	selected_platform_profile = active_platform_profile;
+> +	*profile = active_platform_profile;
 >  
-> +	led = dev_get_drvdata(dev);
-> +	asus = container_of(led, struct asus_wmi, kbd_led);
-> +
->  	if (sscanf(buf, "%d %d %d %d %d %d", &cmd, &mode, &r, &g, &b, &speed) != 6)
->  		return -EINVAL;
+> -	return selected_platform_profile;
+> +	return 0;
+>  }
 >  
+>  static bool has_omen_thermal_profile_ec_timer(void)
 > 
