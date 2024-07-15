@@ -1,118 +1,131 @@
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DF718C165
-	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jul 2024 15:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719F122318
+	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jul 2024 17:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721058299; cv=none; b=WiiaK1VFQN/csPhM8Nqw6XPUG9ctqtEClwFuxS9V1Wkn2lvIxNSvHSaamZXdIMWSZtVkcTCARvO+DoWA/Yg5XaXQW+7I3UeYexBaqpe9s8fRUdDeFBVqu+Jzcep/DhAthfkkPadxuYjSaXmD0qhePQewMV729XLlSPK5bG+1QgQ=
+	t=1721066111; cv=none; b=VeL961c40qPoL8uFMX069exNFlT2kQj/abeNrFR3Fp6iJiVu/CXOl6qM5xFTZSy3tMbFqeUa+aDfojQFKVYZ/qQILEg1e+7tbeo3h5Y81SNMC4wUYHagP6vivcSCQfnNeVetdDqUnUUsd4HokjvyvkepGZKn/nQxADPE3kJShpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721058299; c=relaxed/simple;
-	bh=V4i9Y72ygbi3jOnQ26pocIAnFEUoTLTrmCCoMTUYFoA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NSmQNIkF2KvdEdZvwSMympMnf50cIK3MMW6TGGeXG58Egw5ysIyob+fq7FbQmgganuE4JYkVIjrMWD7SDw3hRnNXSdaRJ50+SibiO7fyxAXCtyKi2lO5BSiZWLaE8SmmSn94sZIVv2d6DAuI17wzNRmdJH1wHlwBjZr3eO2fSeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dEI5idEK; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1721066111; c=relaxed/simple;
+	bh=DMQTGblEsiwPAvLn2WiyvbzXxTXlEOkd9IWbt9WjiuI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=R/CzojQi6HEEjdmClOvMn2mktb09tTEFXydU3f4hnSyAdBNbTAgpLTzuq+72I2ZVfVQJlpYHUkE2bz9xBk9ozxOmDS3d9KtN0TLVAs0OgrGxi9IDafOg7Jv+gnhHyjUxluxVEsRrWJCznmnJA2lDXv702da5WrYW0hkt5sN4Vdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CB9Odtc0; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dEI5idEK"
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-70448cae1e0so2542022a34.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jul 2024 08:44:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721058295; x=1721663095; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=pAuoAPVtDn5NEi6WB4DvRUg0IfWdqRt5barySy1Fzh0=;
-        b=dEI5idEKVQSrXxSqT3IIadVd4yeZKCjkmZ8ZvXI1ap+Hjs7dr9jRnKVxvkXJcV5G2m
-         duLplIlGGEqrRX2QrjRdfy++D+/0QIjE9+YCEOUukW3nan22VlFTxhEp5iJKXl0kWAXR
-         6U2wDzrHX4uY2/Ie4f7qvk1AXGN1y96SuofHSSkN4C1QcyCWCeFYK0PkhAKEHeSokKMd
-         aNaTMrfa2UJ7ulPqJS2cyXlyrj+5tXCFc92AtWEG7d5cgA6nhRwO7l1k5rBfaVFI3soj
-         Y/TVEdXVQ4QTbDJBNVSIquQNlJhIHVVe92inZ+yvZWOs3FIXxj2VaSs9nWRqrqIM0AFq
-         ac+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721058295; x=1721663095;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pAuoAPVtDn5NEi6WB4DvRUg0IfWdqRt5barySy1Fzh0=;
-        b=Rw3FatZmlxNi+uYbMg02IJ5vXUMbaiQv4UDgmQBe6vkKE46XmZ9E7xPKkLRQFWzpvn
-         EdzPpAyr5mvEiKaPcRLQZM9585bpq8uqAjdFg8kNPAZ477Moz+XuSltACswVkJ87ojbV
-         wWn9OJdFA98bUDaiCN5JZZotDFqA/68v87cyvlOkItUutAzM2BjzdeifWD4wrva00eNe
-         t37vKAnGu9WqRpaj/FidWOjRwdBA/7cLIkR2weV7rTwT/xLUtym9fsesImFTCRGVqX3C
-         ZYzI17zhJbviGDqjys5aRfY9QUvbvxyp+DDwx51uR1a+IYjBXQPIrhRwHhVk5fbJ+PKr
-         0KJg==
-X-Forwarded-Encrypted: i=1; AJvYcCULGua3UjfgTdSYVys69hbSgUefRK/oWnnC/HdqgUchinbiss+jYEF4ycCmm8pw8w2TKkGCsbfPekAmW7Sjc+4iuhQSQt3PoS3rpglbsp086GoRYQ==
-X-Gm-Message-State: AOJu0YzPdNxV7oO2OTQCz311w7ZrTycYKXejVoa9osU2/Idiks10QEd/
-	osfRPANCRluy3oatuUrBHPu/RJGKBhYlJc3hwqW/9yIvIt5q4uu4L4BIo2y+ZEA=
-X-Google-Smtp-Source: AGHT+IHv5RoP8rbG/BgCJi5p+sb+fDQFciWX94XX4Trb6B1Dt48Wwt2QAbCP9vRkfv0v5DCxmtw61w==
-X-Received: by 2002:a05:6830:280c:b0:703:6076:a47 with SMTP id 46e09a7af769-708d83927e7mr27584a34.23.1721058293674;
-        Mon, 15 Jul 2024 08:44:53 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:358f:3413:c118:4021])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-708c0c53e58sm956120a34.16.2024.07.15.08.44.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 08:44:53 -0700 (PDT)
-Date: Mon, 15 Jul 2024 10:44:51 -0500
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Tero Kristo <tero.kristo@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CB9Odtc0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721066110; x=1752602110;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=DMQTGblEsiwPAvLn2WiyvbzXxTXlEOkd9IWbt9WjiuI=;
+  b=CB9Odtc0hwydH8vjV8vkbG9J0p9lCQG0rSJXUbXxX70KIYJGEVAy8tLA
+   q1TboVUZFPQ1BcME/EycA89HKCZH+fgXH+YKMBwNk1nrcTssLPNgPuBpJ
+   HCaDDrKEyLizb6+S1xIuIRRBsEqejM9nY/gG/IZiuHf+FzcxYRmc6Cp2i
+   jOzfIZFOb3VhKO67h+laLFY+v7v+dNKwNXb7pki7S4FNiU47F7GuZ012b
+   5/NR8CjrU/GPeXsodEu4XlvhGdktAFtQvBpTUuVJ/Q35hRL0J2y/PsAPH
+   FF+7UzwIZ5YddHe4076PCSxNYXQ3HHVBejmP3ZN30pIU5tDa960jzSF3d
+   A==;
+X-CSE-ConnectionGUID: DrWs1HSSQNyAtYUdZJ7B5Q==
+X-CSE-MsgGUID: eJ3UAO0lTBeHEZAY3MUG5Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="18077427"
+X-IronPort-AV: E=Sophos;i="6.09,210,1716274800"; 
+   d="scan'208";a="18077427"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 10:55:09 -0700
+X-CSE-ConnectionGUID: /K3xsSAXRsCVc2EZNRrvrw==
+X-CSE-MsgGUID: E8g7+/oWSZGn6UAcWP0j+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,210,1716274800"; 
+   d="scan'208";a="49654306"
+Received: from awvttdev-05.aw.intel.com ([10.228.212.156])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 10:55:08 -0700
+From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+To: intel-xe@lists.freedesktop.org,
 	platform-driver-x86@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] platform/x86/intel/tpmi/plr: Uninitialized variable in
- plr_print_bits()
-Message-ID: <428d4e27-6970-45d8-a7b9-7bf6af95c91a@suswa.mountain>
-References: <8ccfab0c-3c11-4168-a383-19895ae60022@stanley.mountain>
- <1467f140-c035-cb2a-20d9-b5910971cb56@linux.intel.com>
+	david.e.box@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	matthew.brost@intel.com,
+	andriy.shevchenko@linux.intel.com
+Cc: michael.j.ruhl@intel.com
+Subject: [PATCH v7 0/6] Support PMT features in Xe
+Date: Mon, 15 Jul 2024 13:54:44 -0400
+Message-ID: <20240715175452.4010751-1-michael.j.ruhl@intel.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1467f140-c035-cb2a-20d9-b5910971cb56@linux.intel.com>
 
-On Mon, Jul 15, 2024 at 12:25:21PM +0300, Ilpo Järvinen wrote:
-> On Fri, 12 Jul 2024, Dan Carpenter wrote:
-> 
-> > Initialize the "str" pointer to NULL.  There is a test later for if "str"
-> > is NULL but in the original code it was either valid or uninitialized.
-> > 
-> > Fixes: 9e9397a41b7b ("platform/x86/intel/tpmi/plr: Add support for the plr mailbox")
-> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > ---
-> > Almost everyone automatically initializes stack variables to zero these days so
-> > bugs like this don't show up in testing and we disabled GCC's uninitialized
-> > variable warning so it's easy to miss.
-> > 
-> >  drivers/platform/x86/intel/intel_plr_tpmi.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/platform/x86/intel/intel_plr_tpmi.c b/drivers/platform/x86/intel/intel_plr_tpmi.c
-> > index c1aa52c23d25..2725a1ddba92 100644
-> > --- a/drivers/platform/x86/intel/intel_plr_tpmi.c
-> > +++ b/drivers/platform/x86/intel/intel_plr_tpmi.c
-> > @@ -162,7 +162,7 @@ static int plr_clear_cpu_status(struct tpmi_plr_die *plr_die, int cpu)
-> >  static void plr_print_bits(struct seq_file *s, u64 val, int bits)
-> >  {
-> >  	const unsigned long mask[] = { BITMAP_FROM_U64(val) };
-> > -	const char *str;
-> > +	const char *str = NULL;
-> >  	int bit, index;
-> >  
-> >  	for_each_set_bit(bit, mask, bits) {
-> 
-> This fix looks slightly incorrect.
+DG2 and Battlemage have the Intel Platform Monitoring Technology (PMT)
+feature available, but not in the "standard" (pci endpoint) way.
 
-s/slightly/totally/.
+Add support to the vsec and Xe drivers to allow access to the PMT space
+for the DG2 and BMG devices.
 
-I'll resend.
+The intel_vsec_register() function allows drivers to provide telemetry
+header information (usually found at probe time), to allow the PMT
+driver to probe the telemetry features.
 
-regards,
-dan carpenter
+Battlemage has a shared memory area (selected by index), so a callback
+function is required to access the appropriate PMT data.
+
+V2:
+  Re-worked DG2 support patches using a base_adjust rather than a
+  quirk.
+  Updated GUID decode, for correct decode.
+v3:
+  Fixed a documentation issue for the pmt struct.
+v4:
+  Fixed a documentation issue in the xe_vsec.c module
+v5:
+  Addressed review comments for patch 4 (Xe driver)
+  Add r/b for the first three patches
+v6:
+  Added kernel doc to moved data structure
+  Added required include files
+  Correct usage for FIELD_PREP()/FIELD_GET()
+  Whitespace clean up
+  Removed unnecessary type cast
+ v7:
+  Commit message updates
+
+David E. Box (3):
+  platform/x86/intel/vsec.h: Move to include/linux
+  platform/x86/intel/vsec: Add PMT read callbacks
+  platform/x86/intel/pmt: Use PMT callbacks
+
+Michael J. Ruhl (3):
+  drm/xe/vsec: Support BMG devices
+  platform/x86/intel/pmt: Add support for PMT base adjust
+  drm/xe/vsec: Add support for DG2
+
+ MAINTAINERS                                   |   3 +-
+ drivers/gpu/drm/xe/Makefile                   |   1 +
+ drivers/gpu/drm/xe/xe_device.c                |   5 +
+ drivers/gpu/drm/xe/xe_device_types.h          |   6 +
+ drivers/gpu/drm/xe/xe_vsec.c                  | 300 ++++++++++++++++++
+ drivers/gpu/drm/xe/xe_vsec.h                  |  13 +
+ drivers/platform/x86/intel/pmc/core_ssram.c   |   2 +-
+ drivers/platform/x86/intel/pmt/class.c        |  28 +-
+ drivers/platform/x86/intel/pmt/class.h        |  11 +-
+ drivers/platform/x86/intel/pmt/crashlog.c     |   2 +-
+ drivers/platform/x86/intel/pmt/telemetry.c    |  21 +-
+ drivers/platform/x86/intel/sdsi.c             |   3 +-
+ drivers/platform/x86/intel/tpmi.c             |   3 +-
+ drivers/platform/x86/intel/vsec.c             |   9 +-
+ .../vsec.h => include/linux/intel_vsec.h      |  48 ++-
+ 15 files changed, 426 insertions(+), 29 deletions(-)
+ create mode 100644 drivers/gpu/drm/xe/xe_vsec.c
+ create mode 100644 drivers/gpu/drm/xe/xe_vsec.h
+ rename drivers/platform/x86/intel/vsec.h => include/linux/intel_vsec.h (63%)
+
+-- 
+2.44.0
 
