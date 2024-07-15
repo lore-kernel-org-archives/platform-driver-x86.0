@@ -1,67 +1,71 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B32E18E777
-	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jul 2024 14:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DF718C165
+	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jul 2024 15:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721052899; cv=none; b=Ku2I5HVfij69wLdboMVGO+SFM8EhOizHAFn4SJCaJT4lvPLCqc8luj7xsA0/Fcu1upBsizKqo9ivC0YtRsaE4bedsAOZS/umtoL26mqdv4V7Tq1RvRuQB4+A4k+w/m0wxmKaRgx+WGE53gBkZygTWxm+ockXFwAeq6UOy12fM3M=
+	t=1721058299; cv=none; b=WiiaK1VFQN/csPhM8Nqw6XPUG9ctqtEClwFuxS9V1Wkn2lvIxNSvHSaamZXdIMWSZtVkcTCARvO+DoWA/Yg5XaXQW+7I3UeYexBaqpe9s8fRUdDeFBVqu+Jzcep/DhAthfkkPadxuYjSaXmD0qhePQewMV729XLlSPK5bG+1QgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721052899; c=relaxed/simple;
-	bh=PYdFvIN/t/QII3FMH7NPnQRSSlHxToHEXKzIGk3YxYE=;
+	s=arc-20240116; t=1721058299; c=relaxed/simple;
+	bh=V4i9Y72ygbi3jOnQ26pocIAnFEUoTLTrmCCoMTUYFoA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ak9fs7r2HhjszDjOMFAup445cp3JVxsohR11dDH4Phcxg9RmMEaygC1C0+q6VFhYCZscM23eTvn/abhROFbttvQoaAK4sQfu7NNBYFR9jctbaGP6F2+rimZAATOpUZ15HFTFRkdb334TABF05p5ar3pACiX6c8FlZqBtR4mvVWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mraL2h87; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=NSmQNIkF2KvdEdZvwSMympMnf50cIK3MMW6TGGeXG58Egw5ysIyob+fq7FbQmgganuE4JYkVIjrMWD7SDw3hRnNXSdaRJ50+SibiO7fyxAXCtyKi2lO5BSiZWLaE8SmmSn94sZIVv2d6DAuI17wzNRmdJH1wHlwBjZr3eO2fSeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dEI5idEK; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mraL2h87"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42660b8dd27so29226925e9.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jul 2024 07:14:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dEI5idEK"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-70448cae1e0so2542022a34.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jul 2024 08:44:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721052896; x=1721657696; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1721058295; x=1721663095; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=qgiSYy3i4APvcvJICUk8KksbWYEgdz68cMCbthcBmfY=;
-        b=mraL2h87mvzkzy1lIUEcgItXC+g7xHMEN0NDEo/jPO5gJHz6JwQUgCBR5z4p1dP5xo
-         MyQN5/ZfX5bzVY/oiPqsJzu3rsjY7L6JOlL8Z21JsDh092gSfbOs2LoQIsWHje8YDx9G
-         InON2nxpZAWT551YbIR67nC/soYnvaHo2lyjVAm9HfF6V4S3BlnEQtjcwpSUDFNsxTUZ
-         qd0GgARtItoDGFwlX0sMQi8FVOmdaZYf09aJGvbYR4ukFaqHMsz6+xJ0WBdt0G0Knjek
-         ZPqVgR0iPUIGkhb2h2dvszAVq6+wRqs0tlYH6RINx/oEcEbHs1D/HqmKY1Dm4It6kJkO
-         sNDA==
+        bh=pAuoAPVtDn5NEi6WB4DvRUg0IfWdqRt5barySy1Fzh0=;
+        b=dEI5idEKVQSrXxSqT3IIadVd4yeZKCjkmZ8ZvXI1ap+Hjs7dr9jRnKVxvkXJcV5G2m
+         duLplIlGGEqrRX2QrjRdfy++D+/0QIjE9+YCEOUukW3nan22VlFTxhEp5iJKXl0kWAXR
+         6U2wDzrHX4uY2/Ie4f7qvk1AXGN1y96SuofHSSkN4C1QcyCWCeFYK0PkhAKEHeSokKMd
+         aNaTMrfa2UJ7ulPqJS2cyXlyrj+5tXCFc92AtWEG7d5cgA6nhRwO7l1k5rBfaVFI3soj
+         Y/TVEdXVQ4QTbDJBNVSIquQNlJhIHVVe92inZ+yvZWOs3FIXxj2VaSs9nWRqrqIM0AFq
+         ac+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721052896; x=1721657696;
+        d=1e100.net; s=20230601; t=1721058295; x=1721663095;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qgiSYy3i4APvcvJICUk8KksbWYEgdz68cMCbthcBmfY=;
-        b=R6Gn8pRQyizYTEWZ4UNsX2+BSIl+zzbv25IAAoSVcc9TY122CFfgHZY2aPiCScbfVM
-         AnqUBM/1z1S6U4igIX4ZRLF5BO5QLniauzQ242i6DX9CflAVDbUi/3loI3fYvfRsD3zf
-         JGTLKU6sbfMJVMLPynQs70vGVmCQbLXUyCEJ6lwurn4eld219HW+ewEs8H60Wu6uXEjb
-         /5rGkoTYkxmzt43KRhtZFReYCUn8iEUupxQYB2U3fkpm259VOPqQMErkjZ1xz+yB79h8
-         DDWjWccX0IulpIuXcM52xzUXkjGym2SV97p6+i1BNoRaNWMwWDkaVpJZh9IvTK1hcZHL
-         I3/g==
-X-Forwarded-Encrypted: i=1; AJvYcCUhTBZUojScH0N91nAAe7jnOFZV4Q22nDSe23A6dtgnAEHunbuCaMiY3qdy5W0t35jPUH7rLt4mFgeChR4RGmideAANP/KFfUA9nuwygQ+2dcYnng==
-X-Gm-Message-State: AOJu0YxOkv16olRjfAsOUbLb/qlPJ0xtkp2wbBExQgO0cyBYJK4DxK5+
-	incTLr5kGBgezFtAfoaLDw2UY7tzAqqr3y05ynWDj2xU/I7+5rXll2qllg==
-X-Google-Smtp-Source: AGHT+IFKyq2DEWDIqyse8iACKHJG+bzXKHl8A2zq36gjZkw/CpEhxyHXCCtFL/MTzYG1UNji9ChAig==
-X-Received: by 2002:a05:600c:3013:b0:426:6320:225e with SMTP id 5b1f17b1804b1-426707ce47fmr134368085e9.6.1721052896179;
-        Mon, 15 Jul 2024 07:14:56 -0700 (PDT)
-Received: from alexis-pc (cust-west-par-46-193-0-235.cust.wifirst.net. [46.193.0.235])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427a5e7749esm89668805e9.2.2024.07.15.07.14.55
+        bh=pAuoAPVtDn5NEi6WB4DvRUg0IfWdqRt5barySy1Fzh0=;
+        b=Rw3FatZmlxNi+uYbMg02IJ5vXUMbaiQv4UDgmQBe6vkKE46XmZ9E7xPKkLRQFWzpvn
+         EdzPpAyr5mvEiKaPcRLQZM9585bpq8uqAjdFg8kNPAZ477Moz+XuSltACswVkJ87ojbV
+         wWn9OJdFA98bUDaiCN5JZZotDFqA/68v87cyvlOkItUutAzM2BjzdeifWD4wrva00eNe
+         t37vKAnGu9WqRpaj/FidWOjRwdBA/7cLIkR2weV7rTwT/xLUtym9fsesImFTCRGVqX3C
+         ZYzI17zhJbviGDqjys5aRfY9QUvbvxyp+DDwx51uR1a+IYjBXQPIrhRwHhVk5fbJ+PKr
+         0KJg==
+X-Forwarded-Encrypted: i=1; AJvYcCULGua3UjfgTdSYVys69hbSgUefRK/oWnnC/HdqgUchinbiss+jYEF4ycCmm8pw8w2TKkGCsbfPekAmW7Sjc+4iuhQSQt3PoS3rpglbsp086GoRYQ==
+X-Gm-Message-State: AOJu0YzPdNxV7oO2OTQCz311w7ZrTycYKXejVoa9osU2/Idiks10QEd/
+	osfRPANCRluy3oatuUrBHPu/RJGKBhYlJc3hwqW/9yIvIt5q4uu4L4BIo2y+ZEA=
+X-Google-Smtp-Source: AGHT+IHv5RoP8rbG/BgCJi5p+sb+fDQFciWX94XX4Trb6B1Dt48Wwt2QAbCP9vRkfv0v5DCxmtw61w==
+X-Received: by 2002:a05:6830:280c:b0:703:6076:a47 with SMTP id 46e09a7af769-708d83927e7mr27584a34.23.1721058293674;
+        Mon, 15 Jul 2024 08:44:53 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:358f:3413:c118:4021])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-708c0c53e58sm956120a34.16.2024.07.15.08.44.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 07:14:55 -0700 (PDT)
-Date: Mon, 15 Jul 2024 16:14:54 +0200
-From: Alexis Belmonte <alexbelm48@gmail.com>
-To: ilpo.jarvinen@linux.intel.com
-Cc: W_Armin@gmx.de, hdegoede@redhat.com,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: hp-wmi: Fix implementation of the
- platform_profile_omen_get function
-Message-ID: <ZpUu3o1j8FQyfWnA@alexis-pc>
-References: <ZpFnV8w1558BW7iZ@alexis-pc>
- <d616eb65-dd32-faff-2fb9-686305c1810b@linux.intel.com>
+        Mon, 15 Jul 2024 08:44:53 -0700 (PDT)
+Date: Mon, 15 Jul 2024 10:44:51 -0500
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Tero Kristo <tero.kristo@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] platform/x86/intel/tpmi/plr: Uninitialized variable in
+ plr_print_bits()
+Message-ID: <428d4e27-6970-45d8-a7b9-7bf6af95c91a@suswa.mountain>
+References: <8ccfab0c-3c11-4168-a383-19895ae60022@stanley.mountain>
+ <1467f140-c035-cb2a-20d9-b5910971cb56@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -71,25 +75,44 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d616eb65-dd32-faff-2fb9-686305c1810b@linux.intel.com>
+In-Reply-To: <1467f140-c035-cb2a-20d9-b5910971cb56@linux.intel.com>
 
-Hi Ilpo,
-
-On Mon, Jul 15, 2024 at 12:39:22PM +0300, Ilpo Järvinen wrote:
+On Mon, Jul 15, 2024 at 12:25:21PM +0300, Ilpo Järvinen wrote:
+> On Fri, 12 Jul 2024, Dan Carpenter wrote:
 > 
-> I took this patch but there were a number of issues with it I had to fix:
+> > Initialize the "str" pointer to NULL.  There is a test later for if "str"
+> > is NULL but in the original code it was either valid or uninitialized.
+> > 
+> > Fixes: 9e9397a41b7b ("platform/x86/intel/tpmi/plr: Add support for the plr mailbox")
+> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > ---
+> > Almost everyone automatically initializes stack variables to zero these days so
+> > bugs like this don't show up in testing and we disabled GCC's uninitialized
+> > variable warning so it's easy to miss.
+> > 
+> >  drivers/platform/x86/intel/intel_plr_tpmi.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/platform/x86/intel/intel_plr_tpmi.c b/drivers/platform/x86/intel/intel_plr_tpmi.c
+> > index c1aa52c23d25..2725a1ddba92 100644
+> > --- a/drivers/platform/x86/intel/intel_plr_tpmi.c
+> > +++ b/drivers/platform/x86/intel/intel_plr_tpmi.c
+> > @@ -162,7 +162,7 @@ static int plr_clear_cpu_status(struct tpmi_plr_die *plr_die, int cpu)
+> >  static void plr_print_bits(struct seq_file *s, u64 val, int bits)
+> >  {
+> >  	const unsigned long mask[] = { BITMAP_FROM_U64(val) };
+> > -	const char *str;
+> > +	const char *str = NULL;
+> >  	int bit, index;
+> >  
+> >  	for_each_set_bit(bit, mask, bits) {
 > 
+> This fix looks slightly incorrect.
 
-Thanks a lot for your attention to detail. As you can probably tell,
-it's my first time doing this kind of bug-fixing submission, so I apologize for
-that. I'll try to be more careful in the future. :]
+s/slightly/totally/.
 
-Don't hesitate to let me do the fixes myself next time -- you certainly have
-better things to do than fixing this kind of stuff, and this will help me
-remember how things are supposed to be done. :]
+I'll resend.
 
-Still, I'm very thankful for your help.
+regards,
+dan carpenter
 
-Hope you have a great afternoon!
-
-Alexis
