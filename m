@@ -1,361 +1,372 @@
-Received: from fhigh3-smtp.messagingengine.com (fhigh3-smtp.messagingengine.com [103.168.172.154])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC621C68C;
-	Tue, 16 Jul 2024 10:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049B41CFBE;
+	Tue, 16 Jul 2024 11:06:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721126922; cv=none; b=aBVcZd40yJdibD6Zgtywzo73A477wH3vlKfYmFWjbipIYr3kpDkKJt9eXkDK13yUDwBxeaEk1sYY+34sgbRKXHzd8LV9IxEXEtv+0fWiuLwvSyLk1/Vb/ffXco5og2u8xFPg2WWvZZgdjrkfAmXE8mwy+eAUd+44ZeiYhgIuZWw=
+	t=1721127971; cv=none; b=rrNvMSJ4Nf38CAvBlR5+VQiicqLuYrao58HXNxMz1wfbLsg24xPsio5MAnJP7dkXzPEs/rZYlUlEJJqkc+2UQdgyJQysBLhTeeLDNTbFuYqFrNeeDKuwhZvAf6Mz7D6SO1mewanOkSG5F14eoeLD0NrIOdlBVHc6amqMpk0eXfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721126922; c=relaxed/simple;
-	bh=vxb8fujrmulzBliMHJSFSkDTVtyU+U8eaP4eG/fhmM8=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=dnqvZoV/gFqhbTlMUxwCR9c7Y3hQeX31QprgCZvTjwkzGQz4UloJCh4nknJ3o6itSyr7+3wNE0TT5MbCbNrYxTmhz9deg3QY4NSPxypQNnpDaT8QJjSrhv5yAa4QFz0HXQO7TKTA9fb4lRMPepFIjF2xthHmQot9Cu5gGpDtLYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=brPDGIEw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Rk6tIhpX; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1721127971; c=relaxed/simple;
+	bh=iVjizggjH/Quf+RBaM03/SUpOL20rM3KHOb614Ik3dM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=WIr/ZlxX9WCKuhyc9Vg1LKPSfJVGGbFogecir2N4aDW43bvJ9jo8CtlIjCHqR+yT/LZfrDZFgLQfsmaqHDyJKnoEXtGf1SJ4WWdj/Nvi8TBHGu3m0DtNcbpVGXw/+WaWkakjjgevwQ/DzTx6add3YQ/sC/lvBC9AGkRSQcQypDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BJUOu5/R; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="brPDGIEw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Rk6tIhpX"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id CA0E911482FE;
-	Tue, 16 Jul 2024 06:48:39 -0400 (EDT)
-Received: from imap41 ([10.202.2.91])
-  by compute2.internal (MEProxy); Tue, 16 Jul 2024 06:48:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1721126919;
-	 x=1721213319; bh=eLyOA6YOUXpYdPPvWopuMfNTUy73XMV5CrsQCvSxqNA=; b=
-	brPDGIEwNHF12ggREho1/324zFOsdRrNW4gfjqzPiZaKNmqFJia9gZyi9VNGN446
-	a99k+8aVomskKKMSwVTX0W1RDlEbOi8HiW84ycha+HX3tbZK5yIjULbZ+nWPLNH5
-	GF2vv5Ji+ib2VzvKNArQzeNGgyfvFgLykUWbsBaphLJrlrab6rHx2N6UjNRzlLTH
-	IJL7NeRNN9gVGsj7w23O8CxD1tpBIoU1N44iY2h9eKOrkuwN9P+7bsGO1o1fmvUA
-	qDJJLRfSDW1aXjKhRFdg717F61G+0u0Cr195eQB05oMCMemx0PiOXdIA/ODD9v7M
-	hjI7bA059qXP6uDGaf7xqA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1721126919; x=
-	1721213319; bh=eLyOA6YOUXpYdPPvWopuMfNTUy73XMV5CrsQCvSxqNA=; b=R
-	k6tIhpX4ARciT9eyTcztS0XympFppDvXdPJjE45vqHZyPOeDqo5fqOxHsWELhRyx
-	MAhmQI84bhZk6SVsMJ3ukGt7GPs/vTMFy5BHSEK4VQnyEO0dGsHEodTLpyiprY4u
-	WuhJr9cj4/pyzK5kx754En7F34bneQgXVhAHcxF/Q/OKvzwwjp6D0MCZJt+n9PWr
-	FGqRfjKS6ydzoy/nqQS1X5O1oPVrGxzen83zoqhdHKPQMktTkHfLI2V4WbudCC9b
-	W8umdzkC0bnEX7E5LyikuMW0nYJ9KJzxmhWhDtdOWXpvpbGqYtZl9Bn8HE52cSqS
-	ZZUmI2RRNxCgkI57aYUkg==
-X-ME-Sender: <xms:BlCWZj2AeCm-M3oJ3yXFU507riH7m5EI5K5LjsoDIC8gZjl9-HhOFQ>
-    <xme:BlCWZiGEt1Ho1m5VdTw5nSVBLgNMqM4HZMNm3hdgshQdn3wWrdbZNNoHkaiOu2LKe
-    Y3Vox9WMb_3sLb_iqw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgeeggdefudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedfnfhu
-    khgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtth
-    gvrhhnpeefuefghfdvueefheeiledvgeefffevgeelhedtvdehgeekteeugedtgeeuhedv
-    leenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluh
-    hkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:BlCWZj5ApQ_6YR8RFdihr3hmO8XeHzB07afwdH-3Y47aZ5qIVDzd2g>
-    <xmx:BlCWZo16H2ODehmtJAJG0qS2seimcAkKHUGH9RkyJBx5om5zv_nmxw>
-    <xmx:BlCWZmGgwfh7IzWhH5s4ReZuOu12KHXb0wrlbsXjF1Yo9kw2VoM22A>
-    <xmx:BlCWZp8L21j8IB9iCtQbSLtKHhA1LZVe1fYFpNHTKH6O5KJbb84RzA>
-    <xmx:B1CWZigbZriKqdVd_x6EfKgvfZ4Kgd-hQn_rlVH4DAyGt2e0ZjrLrIff>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 7BB3D2340080; Tue, 16 Jul 2024 06:48:38 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BJUOu5/R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721127969; x=1752663969;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=iVjizggjH/Quf+RBaM03/SUpOL20rM3KHOb614Ik3dM=;
+  b=BJUOu5/RZqfubRQkBgEUIOvCfb9Rq0W5i0QxJW/0vhupZ2280MqU2IDy
+   tTXbT/SPG3z69YpJn28RXZqIGJwmBka+PRLQb7M9obf+lTDNt0NRPb0/Q
+   DO4iQFxXLzNVTCtwMrSR5tUT2+gPLHS6P76E5sfj8YQFbr3e6dhA09nnw
+   jvS+sncxj6mSlo9QUO1Lylh9fx0pOJq7RQueV62w8/8b4yD5MQ3ko4Qry
+   kzOnyinpg8nwzC+0wHw1j0ztm9Bqu16dd05uFYDujmoRlGQr44m0X2la4
+   pR//ky0kiM9EYauBYdNU4ekTt1GNtHZBPf1KwuMU3RlJxJio8RZj3PFn4
+   Q==;
+X-CSE-ConnectionGUID: 1FtqyydpTomrzXZuL/CO/w==
+X-CSE-MsgGUID: 66iCwi7RTg6clud7By0/NA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="18428099"
+X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
+   d="scan'208";a="18428099"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 04:06:09 -0700
+X-CSE-ConnectionGUID: ARKHl+VtTzu1aZHQMgqL6A==
+X-CSE-MsgGUID: LuAFIGJzRdyCekdmWVEK1g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
+   d="scan'208";a="50053780"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.133])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 04:06:05 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 16 Jul 2024 14:06:02 +0300 (EEST)
+To: Luke Jones <luke@ljones.dev>
+cc: platform-driver-x86@vger.kernel.org, corentin.chary@gmail.com, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    Mario Limonciello <mario.limonciello@amd.com>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/5] platform/x86 asus-bioscfg: move existing tunings to
+ asus-bioscfg module
+In-Reply-To: <65069b59-a5c8-42c5-b0e3-8a097ab14b3e@app.fastmail.com>
+Message-ID: <5c639541-0fba-276f-7b57-3f5a379c5bac@linux.intel.com>
+References: <20240716051612.64842-1-luke@ljones.dev> <20240716051612.64842-2-luke@ljones.dev> <951d3dc4-5330-2bbb-0372-8ab2761bf8f3@linux.intel.com> <65069b59-a5c8-42c5-b0e3-8a097ab14b3e@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <f401fd68-c5e6-4c97-ab82-400141c42cd7@app.fastmail.com>
-In-Reply-To: <9123108d-cb50-43bb-b7ff-0327fb760a89@redhat.com>
-References: <20240716051612.64842-1-luke@ljones.dev>
- <20240716051612.64842-2-luke@ljones.dev>
- <9123108d-cb50-43bb-b7ff-0327fb760a89@redhat.com>
-Date: Tue, 16 Jul 2024 22:48:18 +1200
-From: "Luke Jones" <luke@ljones.dev>
-To: "Hans de Goede" <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org
-Cc: corentin.chary@gmail.com,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Mario Limonciello" <mario.limonciello@amd.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] platform/x86 asus-bioscfg: move existing tunings to
- asus-bioscfg module
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323328-740309722-1721127962=:1037"
 
-On Tue, 16 Jul 2024, at 9:50 PM, Hans de Goede wrote:
-> Hi Luke,
->=20
-> On 7/16/24 7:16 AM, Luke D. Jones wrote:
-> > The fw_attributes_class provides a much cleaner interface to all of =
-the
-> > attributes introduced to asus-wmi. This patch moves all of these ext=
-ra
-> > attributes over to fw_attributes_class, and shifts the bulk of these
-> > definitions to a new kernel module to reduce the clutter of asus-wmi
-> > with the intention of deprecating the asus-wmi attributes in future.
-> >=20
-> > The work applies only to WMI methods which don't have a clearly defi=
-ned
-> > place within the sysfs and as a result ended up lumped together in
-> > /sys/devices/platform/asus-nb-wmi/ with no standard API.
-> >=20
-> > Where possible the fw attrs now implement defaults, min, max, scalar,
-> > choices, etc. As en example dgpu_disable becomes:
-> >=20
-> > /sys/class/firmware-attributes/asus-bioscfg/attributes/dgpu_disable/
-> > =E2=94=9C=E2=94=80=E2=94=80 current_value
-> > =E2=94=9C=E2=94=80=E2=94=80 display_name
-> > =E2=94=9C=E2=94=80=E2=94=80 possible_values
-> > =E2=94=94=E2=94=80=E2=94=80 type
-> >=20
-> > as do other attributes.
-> >=20
-> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
->=20
-> Interesting (also see my reply to the cover-letter).
->=20
-> Note this is not a full review, just a few small remarks
-> with things which I noticed while taking a quick look.
->=20
-> <snip>
->=20
-> > +static bool asus_bios_requires_reboot(struct kobj_attribute *attr)
-> > +{
-> > + return !strcmp(attr->attr.name, "gpu_mux_mode");
-> > + !strcmp(attr->attr.name, "panel_hd_mode");
-> > +}
->=20
-> The second statement here is never reached, I believe you want
-> a || between the 2 strcmp() calls:
->=20
-> static bool asus_bios_requires_reboot(struct kobj_attribute *attr)
-> {
-> return !strcmp(attr->attr.name, "gpu_mux_mode") ||
->        !strcmp(attr->attr.name, "panel_hd_mode");
-> }
->=20
-> <snip>
->=20
-> > +/* Simple attribute creation */
->=20
-> I think it would be good to do the following for registering
-> these "simple" attributes ... continued below.
->=20
-> > +ATTR_GROUP_ENUM_INT_RW(thermal_policy, "thermal_policy", ASUS_WMI_D=
-EVID_THROTTLE_THERMAL_POLICY,
-> > + 0, 3, "0;1;2", "Set the thermal profile: 0=3Dnormal, 1=3Dperforman=
-ce, 2=3Dquiet");
-> > +ATTR_GROUP_PPT_RW(ppt_pl2_sppt, "ppt_pl2_sppt", ASUS_WMI_DEVID_PPT_=
-PL2_SPPT,
-> > + cpu_default, 5, cpu_max, 1, "Set the CPU fast package limit");
-> > +ATTR_GROUP_PPT_RW(ppt_apu_sppt, "ppt_apu_sppt", ASUS_WMI_DEVID_PPT_=
-APU_SPPT,
-> > + platform_default, 5, platform_max, 1, "Set the CPU slow package li=
-mit");
-> > +ATTR_GROUP_PPT_RW(ppt_platform_sppt, "ppt_platform_sppt", ASUS_WMI_=
-DEVID_PPT_PLAT_SPPT,
-> > + platform_default, 5, platform_max, 1, "Set the CPU slow package li=
-mit");
-> > +ATTR_GROUP_PPT_RW(ppt_fppt, "ppt_fppt", ASUS_WMI_DEVID_PPT_FPPT,
-> > + cpu_default, 5, cpu_max, 1, "Set the CPU slow package limit");
-> > +
-> > +ATTR_GROUP_PPT_RW(nv_dynamic_boost, "nv_dynamic_boost", ASUS_WMI_DE=
-VID_NV_DYN_BOOST,
-> > + nv_boost_default, 5, nv_boost_max, 1, "Set the Nvidia dynamic boos=
-t limit");
-> > +ATTR_GROUP_PPT_RW(nv_temp_target, "nv_temp_target", ASUS_WMI_DEVID_=
-NV_THERM_TARGET,
-> > + nv_temp_default, 75, nv_temp_max, 1, "Set the Nvidia max thermal l=
-imit");
-> > +
-> > +ATTR_GROUP_ENUM_INT_RO(charge_mode, "charge_mode", ASUS_WMI_DEVID_C=
-HARGE_MODE,
-> > + "0;1;2", "Show the current mode of charging");
-> > +ATTR_GROUP_BOOL_RW(boot_sound, "boot_sound", ASUS_WMI_DEVID_BOOT_SO=
-UND,
-> > + "Set the boot POST sound");
-> > +ATTR_GROUP_BOOL_RW(mcu_powersave, "mcu_powersave", ASUS_WMI_DEVID_M=
-CU_POWERSAVE,
-> > + "Set MCU powersaving mode");
-> > +ATTR_GROUP_BOOL_RW(panel_od, "panel_overdrive", ASUS_WMI_DEVID_PANE=
-L_OD,
-> > + "Set the panel refresh overdrive");
-> > +ATTR_GROUP_BOOL_RW(panel_hd_mode, "panel_hd_mode", ASUS_WMI_DEVID_P=
-ANEL_HD,
-> > + "Set the panel HD mode to UHD<0> or FHD<1>");
-> > +ATTR_GROUP_BOOL_RO(egpu_connected, "egpu_connected", ASUS_WMI_DEVID=
-_EGPU_CONNECTED,
-> > + "Show the eGPU connection status");
->=20
-> Create an array of simple attribute groups for this
-> entire set of simple attributes:
->=20
-> struct asus_attr_group {
-> const struct attribute_group *attr_group;
-> u32 wmi_devid;
-> };
->=20
-> static const struct asus_attr_group simple_attribute_groups[] =3D {
-> { &thermal_policy_attr_group, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY },
-> { &ppt_pl2_sppt_attr_group, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY },
-> ...
-> { &egpu_connected_attr_group, ASUS_WMI_DEVID_EGPU_CONNECTED },
-> };
->=20
-> And then in asus_fw_attr_add() .. continued below:
->=20
-> > +static int asus_fw_attr_add(void)
-> > +{
-> > + int ret;
-> > +
-> > + ret =3D fw_attributes_class_get(&fw_attr_class);
-> > + if (ret)
-> > + goto fail_class_created;
-> > + else
-> > + asus_bioscfg.fw_attr_dev =3D device_create(fw_attr_class, NULL,
-> > + MKDEV(0, 0), NULL, "%s", DRIVER_NAME);
-> > +
-> > + if (IS_ERR(asus_bioscfg.fw_attr_dev)) {
-> > + ret =3D PTR_ERR(asus_bioscfg.fw_attr_dev);
-> > + goto fail_class_created;
-> > + }
-> > +
-> > + asus_bioscfg.fw_attr_kset =3D kset_create_and_add("attributes", NU=
-LL,
-> > + &asus_bioscfg.fw_attr_dev->kobj);
-> > + if (!asus_bioscfg.fw_attr_dev) {
-> > + ret =3D -ENOMEM;
-> > + pr_debug("Failed to create and add attributes\n");
-> > + goto err_destroy_classdev;
-> > + }
-> > +
-> > + /* Add any firmware_attributes required */
-> > + ret =3D sysfs_create_file(&asus_bioscfg.fw_attr_kset->kobj, &pendi=
-ng_reboot.attr);
-> > + if (ret) {
-> > + pr_warn("Failed to create sysfs level attributes\n");
-> > + goto fail_class_created;
-> > + }
-> > +
-> > + // TODO: logging
-> > + asus_bioscfg.mini_led_dev_id =3D 0;
-> > + if (asus_wmi_is_present(ASUS_WMI_DEVID_MINI_LED_MODE)) {
-> > + asus_bioscfg.mini_led_dev_id =3D ASUS_WMI_DEVID_MINI_LED_MODE;
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &mini_led_mod=
-e_attr_group);
-> > + } else if (asus_wmi_is_present(ASUS_WMI_DEVID_MINI_LED_MODE2)) {
-> > + asus_bioscfg.mini_led_dev_id =3D ASUS_WMI_DEVID_MINI_LED_MODE2;
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &mini_led_mod=
-e_attr_group);
-> > + }
-> > +
-> > + if (asus_wmi_is_present(ASUS_WMI_DEVID_GPU_MUX)) {
-> > + asus_bioscfg.gpu_mux_dev_id =3D ASUS_WMI_DEVID_GPU_MUX;
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &gpu_mux_mode=
-_attr_group);
-> > + } else if (asus_wmi_is_present(ASUS_WMI_DEVID_GPU_MUX_VIVO)) {
-> > + asus_bioscfg.gpu_mux_dev_id =3D ASUS_WMI_DEVID_GPU_MUX_VIVO;
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &gpu_mux_mode=
-_attr_group);
-> > + }
-> > +
-> > + if (asus_wmi_is_present(ASUS_WMI_DEVID_DGPU)) {
-> > + asus_bioscfg.dgpu_disable_available =3D true;
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &dgpu_disable=
-_attr_group);
-> > + }
-> > + if (asus_wmi_is_present(ASUS_WMI_DEVID_EGPU)) {
-> > + asus_bioscfg.egpu_enable_available =3D true;
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &egpu_enable_=
-attr_group);
-> > + }
->=20
-> Replace the block starting here and ending ...
->=20
-> > + if (asus_wmi_is_present(ASUS_WMI_DEVID_EGPU_CONNECTED))
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &egpu_connect=
-ed_attr_group);
-> > +
-> > + if (asus_wmi_is_present(ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY))
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &thermal_poli=
-cy_attr_group);
-> > + if (asus_wmi_is_present(ASUS_WMI_DEVID_PPT_PL1_SPL))
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &ppt_pl1_spl_=
-attr_group);
-> > + if (asus_wmi_is_present(ASUS_WMI_DEVID_PPT_PL2_SPPT))
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &ppt_pl2_sppt=
-_attr_group);
-> > + if (asus_wmi_is_present(ASUS_WMI_DEVID_PPT_APU_SPPT))
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &ppt_apu_sppt=
-_attr_group);
-> > + if (asus_wmi_is_present(ASUS_WMI_DEVID_PPT_PLAT_SPPT))
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &ppt_platform=
-_sppt_attr_group);
-> > + if (asus_wmi_is_present(ASUS_WMI_DEVID_PPT_FPPT))
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &ppt_fppt_att=
-r_group);
-> > +
-> > + if (asus_wmi_is_present(ASUS_WMI_DEVID_NV_DYN_BOOST))
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &nv_dynamic_b=
-oost_attr_group);
-> > + if (asus_wmi_is_present(ASUS_WMI_DEVID_NV_THERM_TARGET))
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &nv_temp_targ=
-et_attr_group);
-> > +
-> > + if (asus_wmi_is_present(ASUS_WMI_DEVID_CHARGE_MODE))
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &charge_mode_=
-attr_group);
-> > + if (asus_wmi_is_present(ASUS_WMI_DEVID_BOOT_SOUND))
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &boot_sound_a=
-ttr_group);
-> > + if (asus_wmi_is_present(ASUS_WMI_DEVID_MCU_POWERSAVE))
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &mcu_powersav=
-e_attr_group);
-> > + if (asus_wmi_is_present(ASUS_WMI_DEVID_PANEL_OD))
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &panel_od_att=
-r_group);
-> > + if (asus_wmi_is_present(ASUS_WMI_DEVID_PANEL_HD))
-> > + sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, &panel_hd_mod=
-e_attr_group);
->=20
-> here, with:
->=20
-> for (i =3D 0; i < ARRAY_SIZE(simple_attribute_groups); i++) {
-> if (!asus_wmi_is_present(simple_attribute_groups[i].wmi_devid))
-> continue;
->=20
-> sysfs_create_group(&asus_bioscfg.fw_attr_kset->kobj, simple_attribute_=
-groups[i].attr_group);
-> pr_dbg("Created sysfs-group for %s\n", simple_attribute_groups[i].attr=
-_group->name);
-> }
->=20
-> This will make adding new simple attributes a matter of just:
->=20
-> 1. Declaring the new attr using one of the macros
-> 2. Adding it to simple_attribute_groups[]
->=20
-> And this also takes care of you logging TODO for simple attributes
-> without needing to add a ton of pr_debug() calls.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Ah perfect, this was one problem I ws trying to figure out a better way =
-of doing. I'll have a crack at this after addressing all other concerns =
-mentioned so far.
+--8323328-740309722-1721127962=:1037
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Cheers,
-Luke.
+On Tue, 16 Jul 2024, Luke Jones wrote:
 
+> On Tue, 16 Jul 2024, at 9:45 PM, Ilpo J=C3=A4rvinen wrote:
+> > On Tue, 16 Jul 2024, Luke D. Jones wrote:
+> >=20
+> > > The fw_attributes_class provides a much cleaner interface to all of t=
+he
+> > > attributes introduced to asus-wmi. This patch moves all of these extr=
+a
+> > > attributes over to fw_attributes_class, and shifts the bulk of these
+> > > definitions to a new kernel module to reduce the clutter of asus-wmi
+> > > with the intention of deprecating the asus-wmi attributes in future.
+> > >=20
+> > > The work applies only to WMI methods which don't have a clearly defin=
+ed
+> > > place within the sysfs and as a result ended up lumped together in
+> > > /sys/devices/platform/asus-nb-wmi/ with no standard API.
+> > >=20
+> > > Where possible the fw attrs now implement defaults, min, max, scalar,
+> > > choices, etc. As en example dgpu_disable becomes:
+> > >=20
+> > > /sys/class/firmware-attributes/asus-bioscfg/attributes/dgpu_disable/
+> > > =E2=94=9C=E2=94=80=E2=94=80 current_value
+> > > =E2=94=9C=E2=94=80=E2=94=80 display_name
+> > > =E2=94=9C=E2=94=80=E2=94=80 possible_values
+> > > =E2=94=94=E2=94=80=E2=94=80 type
+> > >=20
+> > > as do other attributes.
+> > >=20
+> > > Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> > > ---
+> > >  drivers/platform/x86/Kconfig               |  14 +
+> > >  drivers/platform/x86/Makefile              |   1 +
+> > >  drivers/platform/x86/asus-bioscfg.c        | 666 +++++++++++++++++++=
+++
+> > >  drivers/platform/x86/asus-bioscfg.h        | 243 ++++++++
+> > >  drivers/platform/x86/asus-wmi.c            |  18 +-
+> > >  include/linux/platform_data/x86/asus-wmi.h |  11 +
+> > >  6 files changed, 952 insertions(+), 1 deletion(-)
+> > >  create mode 100644 drivers/platform/x86/asus-bioscfg.c
+> > >  create mode 100644 drivers/platform/x86/asus-bioscfg.h
+> > >=20
+> > > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kcon=
+fig
+> > > index 665fa9524986..b4a5a5bec7f3 100644
+> > > --- a/drivers/platform/x86/Kconfig
+> > > +++ b/drivers/platform/x86/Kconfig
+> > > @@ -265,6 +265,18 @@ config ASUS_WIRELESS
+> > >    If you choose to compile this driver as a module the module will b=
+e
+> > >    called asus-wireless.
+> > > =20
+> > > +config ASUS_BIOS
+> > > + tristate "ASUS BIOS Driver"
+> > > + depends on ACPI_WMI
+> > > + depends on ASUS_WMI
+> > > + select FW_ATTR_CLASS
+> > > + help
+> > > +   Say Y here if you have a WMI aware Asus laptop and would like to =
+use the
+> > > +   firmware_attributes API.
+> > > +
+> > > +   To compile this driver as a module, choose M here: the module wil=
+l
+> > > +   be called asus-bios.
+> > > +
+> > >  config ASUS_WMI
+> > >  tristate "ASUS WMI Driver"
+> > >  depends on ACPI_WMI
+> > > @@ -276,6 +288,8 @@ config ASUS_WMI
+> > >  depends on HOTPLUG_PCI
+> > >  depends on ACPI_VIDEO || ACPI_VIDEO =3D n
+> > >  depends on SERIO_I8042 || SERIO_I8042 =3D n
+> > > + select ASUS_BIOS
+> >=20
+> > Selecting user visible configs is not a good idea. Also, there=20
+> > seems to be circular dependency now between ASUS_BIOS & ASUS_WMI ?
 >=20
-> Regards,
+> Is "selects" the same as "depends"?
+
+It's not the same. Selects ask to enabled another symbol (with caveats)=20
+and depends only shows this symbol if the other symbol is already enabled.
+
+Select comes with many many caveats and should only be used for the=20
+config symbols which are truly library type (and not presented to user in=
+=20
+the first place).
+
+> I did just remove:
+> =09select ASUS_WMI_BIOS
+> which should not be there at all.
 >=20
-> Hans
+> ASUS_BIOS does need ASUS_WMI. And I'd like ASUS_BIOS to be selected by=20
+> defualt, is this not the right way to do that?=20
+
+Default should not be handled with either depends on / select I think,=20
+but I'm not Kconfig expert.
+
+There's also default clause but it should be used sparingly as each and=20
+every developer naturally thinks their thing is so important it must be on=
+=20
+by default so we know where that thinking ends to. :-)
+
+Distros tend enable about everything anyway so it might not be so=20
+important in the end what the default is.
+
+> > > + select ASUS_WMI_BIOS
+> > >  select INPUT_SPARSEKMAP
+> > >  select LEDS_CLASS
+> > >  select NEW_LEDS
+
+> > > + struct mutex mutex;
+> > > +} asus_bioscfg =3D {
+> > > + .mutex =3D __MUTEX_INITIALIZER(asus_bioscfg.mutex),
+> >=20
+> > Don't try to initialize it on the same go like this.
+> >=20
+> > You might want static too.
 >=20
+> Ack both
 >=20
+> >=20
+> > > +};
+> > > +
+> > > +static struct fw_attrs_group {
+> > > + u32 pending_reboot;
+> > > +} fw_attrs =3D {
+> > > + .pending_reboot =3D 0,
+> > > +};
+> >=20
+> > Same here.
 >=20
+> It was probably done like this in code I read as a reference. I'll shift=
+=20
+> to the module init function.=20
+
+???
+
+I just meant this split:
+
+struct fw_attrs_group {
+=09u32 pending_reboot;
+};
+
+static struct fw_attrs_group fw_attrs =3D {
+=09.pending_reboot =3D 0,
+};
+
+> > > +static bool asus_bios_requires_reboot(struct kobj_attribute *attr)
+> > > +{
+> > > + return !strcmp(attr->attr.name, "gpu_mux_mode");
+> > > + !strcmp(attr->attr.name, "panel_hd_mode");
+> >=20
+> > ???
+> >=20
+> > Semicolon and && confusion here?
+>=20
+> Yeah i know, bad rebase I didn't catch.
+
+For the record, || is correct here, not && but you probably know this=20
+already.
+
+> > > + if (result)
+> > > + return result;
+> > > +
+> > > + if (value < min || value > max)
+> > > + return -EINVAL;
+> > > +
+> > > + asus_wmi_set_devstate(wmi_dev, value, &result);
+> >=20
+> > Type confusion, u32 * vs int pointer being passed.
+>=20
+> I miss rust...
+
+
+
+> > > + if (result) {
+> > > + pr_err("Failed to set %s: %d\n", attr->attr.name, result);
+> > > + return result;
+> > > + }
+> > > +
+> > > + if (result > 1) {
+> >=20
+> > What's this supposed to mean given you've the type confusion to begin=
+=20
+> > with and return on the earlier line if result is non-zero?
+> >=20
+> > Did you mean to capture the return value of asus_wmi_set_devstate() and=
+=20
+> > test that in the first if ()?
+>=20
+> Yep.. this whole bit is a mess. I've fixed the type mess, and added a=20
+> comment to clarify the "if (result > 1) {"=20
+> (WMI methods return 0 =3D fail, 1 =3D success, anything else is error)
+
+Don't add these comments into everywhere in the code but document=20
+asus_wmi_set_devstate() instead with kerneldoc.
+
+> > If you make a previously internal function such as asus_wmi_set_devstat=
+e()=20
+> > EXPORTed, you should document it with kerneldoc so the interface is cle=
+ar.
+>=20
+> I'm not sure how to do this, I'll read up. Also didn't know about it so=
+=20
+> thanks for the pointer.=20
+
+It's this format:
+
+/**
+ * funcname - func short desc
+ * @param1: foo
+ * ...
+ *
+ * Func long description (IMHO, often optional if not some major API).
+ *
+ * Returns: important info about return value
+ */
+
+You'll find plenty of examples with varying quality with grep but the most=
+=20
+imporant bits are the return value and parameters, and if there are=20
+caveats the caller should know, the long desciption might be handy.
+
+
+> > > + err =3D -ENODEV;
+> > > + pr_warn("Can not switch MUX to dGPU mode when dGPU is disabled: %d\=
+n", err);
+> > > + return err;
+> > > + }
+> > > + }
+> > > +
+> > > + if (asus_bioscfg.egpu_enable_available) {
+> > > + err =3D asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_EGPU, &result);
+> > > + if (err)
+> > > + return err;
+> > > + if (result && !optimus) {
+> > > + err =3D -ENODEV;
+> > > + pr_warn("Can not switch MUX to dGPU mode when eGPU is enabled: %d\n=
+", err);
+> > > + return err;
+> > > + }
+> > > + }
+> > > +
+> > > + err =3D asus_wmi_set_devstate(asus_bioscfg.gpu_mux_dev_id, optimus,=
+ &result);
+> > > + if (err) {
+> > > + pr_err("%s Failed to set GPU MUX mode: %d\nn", __func__, err);
+> >=20
+> > Never use __func__ for messages shown to normal user.
+>=20
+> Must have been a holdover from debug. Also wasn't aware of that rule, tha=
+nks.
+
+For pr_debug() I can give some leeway but for anything info/warn/error=20
+should definitely be user readable and preferrably understandable too :-D.
+
+> > > + return err;
+> > > + }
+> > > + /* !1 is considered a fail by ASUS */
+> >=20
+> > If the interface is documented with kerneldoc, this is unnecessary=20
+> > comment. Is 0 also a failure (this differs from >1 checks elsewhere)?
+>=20
+> I've changed the other checks to match. But I'll also try and do a=20
+> deeper analysis of those particular WMI functions to see if I can find=20
+> the actual causes for other returns and their significance (0 and 2). 1=
+=20
+> is most definitely success though.=20
+
+Understood, I don't expect you to know everything about these interfaces=20
+but the difference just caught my eye so I mentioned it in case it's a=20
+mistake.
+
+> > As general feel of the readiness of this code, I suspect there were man=
+y=20
+> > more problems which I failed to notice :-(.
+>=20
+> I'd put money on it (sorry). I definitely should have cleaned up better=
+=20
+> than I did so you weren't pointing out silly little things, but I was=20
+> never expecting to get over the line on the first try and desperately=20
+> needed some insight for the overall patch series to see if what I was=20
+> doing was actually going to be acceptable or not.=20
+
+It's not problem in itself if you were just after an early review of the=20
+concept but there are little things like not maintaining consistency in=20
+variable naming which easily trips one here and there which I really=20
+recommend you change because then many patterns can be checked with grep /=
+=20
+find if things are consistent (and it helps the code reader too if the=20
+variable naming doesn't suddenly became opposite of what it was in the=20
+previous function).
+
+> As always, thanks so much for your time and review.
+
+--=20
+ i.
+
+--8323328-740309722-1721127962=:1037--
