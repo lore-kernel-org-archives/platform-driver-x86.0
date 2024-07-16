@@ -1,61 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D3F6AC0;
-	Tue, 16 Jul 2024 10:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E29844369;
+	Tue, 16 Jul 2024 10:07:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721124365; cv=none; b=OmllaC+NEpJ4ZSIPYPDcz2rbxvHjwIMcCmnOwjXQ4X/gYYPxnGqCqiuj30wLG2Twxx4E7jCOQoTM5UJqC9BGdHw+jlB39PAogqYuQUb+zF11+DRi28GqjfevBdJMIfkyuSPSdfbygsMj1pmOg0Vgafa2NH25TDvKdSNDhHTOar0=
+	t=1721124441; cv=none; b=tewJVO1dM6KuPZBfqMs5iIfrmJBYRbnmgcwYAV8fBVfsr+2i4dFiq5LjYh7JmsCyP9duqNU4jTLRSaKKLy0mzrQGLFy47UiWA4lz8s4DUVVCE0c+P8dD6hrYPK4YYiGsZ8qIhttUEPaEa+DFBQYpNhJbwSVDCL4Y3R/AysZz+10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721124365; c=relaxed/simple;
-	bh=7Je4r6J/rVt1cCSpGFSMPBTnFBFUP3kwG5lk3jKrJfA=;
+	s=arc-20240116; t=1721124441; c=relaxed/simple;
+	bh=3zE6ikIX0FQeoKFbzrnOX+xEwyLxQMGxtSsYhRQcMWQ=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=U5qvyGMDamjRwkINxYExMhw6tHb8ljenvePQdmaNMy+Rv5zftGCGr21ijc8iRyVK1dWNcqBayvqjsPNuE0mc5jN2w5l6qIWVFE2bCu7qK4rtmPNo8rTK+FHET2X3qyZdvO6MLyJcez86BCaf3JG63TW9Sl4EQYhldSSKcdK3SwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iT7XVbXh; arc=none smtp.client-ip=192.198.163.15
+	 MIME-Version:Content-Type; b=GRd/Sg+uPGoVaOY/60pe8Hx1WBWiIvT2G0g0bFfO7kD9mnINHyaoSopSpF4cGHavQqS2106jkQpEq/7GgP6AESGxU8DGgLUQL2S1t0jM9ukDuP6yAcs0EOXy67eYetlA7wy72DxnKhRIV3nn8y38CDYIwmPeVJyDzAIz0vFVF5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LVnzFSMO; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iT7XVbXh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LVnzFSMO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721124364; x=1752660364;
+  t=1721124440; x=1752660440;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=7Je4r6J/rVt1cCSpGFSMPBTnFBFUP3kwG5lk3jKrJfA=;
-  b=iT7XVbXh+qxVlXvLaF3+bAjsv050sHt4RqHteTUDi5oYFdy/XACj/7Ne
-   DdgPqYVdDuHUaGLtpq6FLSeq6g/GiQmExkqG75d7psOEX86UV04pyoN9F
-   Fc5bcTK+hyEa9dNuJQBdJjW6+pze8iQqctn7r9tTGtSUsYd98QXQu5q/+
-   MX9lm33s9tGXVozOjNhKPPpFok9Azo4wZtP96BN1aBPtFUa1EGr+J3JAx
-   eU7Sm9Zb8iSGGidtLfgsPvUgBoOSIkBqcqba3Zbv+ya+7mqkkyo72B3MF
-   +4cSQg18qlEo2xcy9UsrcgFcNC2exa1lYDNWb5WLieuVf85GJ4UghqjAA
-   A==;
-X-CSE-ConnectionGUID: nvVysU/yS76CmwG0yNSdfA==
-X-CSE-MsgGUID: 5zVIpd/bSmipVWV7lm7+zA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="18704562"
+  bh=3zE6ikIX0FQeoKFbzrnOX+xEwyLxQMGxtSsYhRQcMWQ=;
+  b=LVnzFSMOaTuBWq2d7yNwVOPAFk/VLt2TFju0hSIqnr9kP52+f2dq6ncc
+   hkKHb6crMYF5r1ok45ekfRIiOh/5kwnVVEXSaIbc7/Ht2DFjoClBafG7S
+   Gz3r4KHs3BIv5WWqUK189jQBkg6jIiGkVqv4a6I28DvnNGkG+6YDg5moo
+   QFFT/ZYfBTS4AMBaNmldxjKnheqYQJKN9FcENsZS1gMTZAqnq1x6CFSQv
+   wIoIqwsyg8g7H5M+YPlobe36zt71nH9qh7n2nH20paDtZ+cfYr7Bau0/P
+   mTtJap7VQpTudDw32A/2XztWW+74XYgcN93A7CH8+VXyGS4jj1gLhnJNm
+   w==;
+X-CSE-ConnectionGUID: gVwXFWYTR1Wv0/TRV7NMaA==
+X-CSE-MsgGUID: N4CdFr3aSrGIzdxrMKSs5Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="29699277"
 X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="18704562"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 03:06:03 -0700
-X-CSE-ConnectionGUID: /p3ltqYCT4W0EIObD9DgaA==
-X-CSE-MsgGUID: 36xaE1h/R+C70hzmtNV6Bg==
+   d="scan'208";a="29699277"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 03:07:20 -0700
+X-CSE-ConnectionGUID: 5STF6bgJTbCV+jA3Ye4Y1w==
+X-CSE-MsgGUID: l6mdr8y7S8S9IKv2RKPk5A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="54798937"
+   d="scan'208";a="49704832"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.133])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 03:06:01 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 03:07:17 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 16 Jul 2024 13:05:57 +0300 (EEST)
-To: Dan Carpenter <dan.carpenter@linaro.org>
-cc: Tero Kristo <tero.kristo@linux.intel.com>, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86/intel/tpmi/plr: Fix output in
- plr_print_bits()
-In-Reply-To: <b0084e70-4144-445a-9b89-fb19f6b8336a@stanley.mountain>
-Message-ID: <9c74d6ac-56e4-a79b-6d05-705a17561a3d@linux.intel.com>
-References: <b0084e70-4144-445a-9b89-fb19f6b8336a@stanley.mountain>
+Date: Tue, 16 Jul 2024 13:07:13 +0300 (EEST)
+To: "Luke D. Jones" <luke@ljones.dev>
+cc: platform-driver-x86@vger.kernel.org, corentin.chary@gmail.com, 
+    Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+    Denis Benato <benato.denis96@gmail.com>
+Subject: Re: [PATCH v1 1/1] platform/x86: asus-wmi: fix TUF laptop RGB
+ variant
+In-Reply-To: <20240716011130.17464-2-luke@ljones.dev>
+Message-ID: <529238c2-ec4f-1807-8cf3-1e74ca6a172c@linux.intel.com>
+References: <20240716011130.17464-1-luke@ljones.dev> <20240716011130.17464-2-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,55 +62,44 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Mon, 15 Jul 2024, Dan Carpenter wrote:
+On Tue, 16 Jul 2024, Luke D. Jones wrote:
 
-> Smatch complains that 'str' can be used without being initialized:
+> In kbd_rgb_mode_store the dev_get_drvdata() call was assuming the device
+> data was asus_wmi when it was actually led_classdev.
 > 
->     drivers/platform/x86/intel/intel_plr_tpmi.c:178 plr_print_bits()
->     error: uninitialized symbol 'str'.
+> This patch corrects this by making the correct chain of calls to get the
+> asus_wmi driver data.
 > 
-> In this loop, we iterate over all the set bits and print the name of the
-> bit.  The intention is that if there is a bit which is between 0-31 we
-> look for the name in the first array plr_coarse_reasons[] which has 10
-> elements.  If the bit is in the 32-63 range we look for it in the
-> plr_fine_reasons[] array which has 30 elements.  If the bit is in the
-> invalid ranges, 10-31 or 62-63, then we should print "UNKNOWN(%d)".
-> 
-> The problem is that 'str' needs to be initialized at the start of each
-> iteration, otherwise if we can't find the string then instead of printing
-> "UNKNOWN(%d)", we will re-print whatever the previous bit was.
-> 
-> Fixes: 9e9397a41b7b ("platform/x86/intel/tpmi/plr: Add support for the plr mailbox")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Fixes: ae834a549ec1 ("platform/x86: asus-wmi: add support variant of TUF RGB")
+> Tested-by: Denis Benato <benato.denis96@gmail.com>
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
 > ---
-> v2: initialize str at the start of each iteration
+>  drivers/platform/x86/asus-wmi.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 7d87ff68f418..2b968003cb9b 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -906,10 +906,14 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
+>  				 struct device_attribute *attr,
+>  				 const char *buf, size_t count)
+>  {
+> -	struct asus_wmi *asus = dev_get_drvdata(dev);
+>  	u32 cmd, mode, r, g, b, speed;
+> +	struct led_classdev *led;
+> +	struct asus_wmi *asus;
+>  	int err;
+>  
+> +	led = dev_get_drvdata(dev);
+> +	asus = container_of(led, struct asus_wmi, kbd_led);
+> +
+>  	if (sscanf(buf, "%d %d %d %d %d %d", &cmd, &mode, &r, &g, &b, &speed) != 6)
+>  		return -EINVAL;
 
-Thanks for the update, I've applied this fix now (will go along with the 
-for-next PR to Linus).
+Thanks. Applied to review-ilpo / for-next and will go into Linus in the 
+main PR for 6.11.
 
 -- 
  i.
-
-> 
->  drivers/platform/x86/intel/intel_plr_tpmi.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/intel/intel_plr_tpmi.c b/drivers/platform/x86/intel/intel_plr_tpmi.c
-> index c1aa52c23d25..69ace6a629bc 100644
-> --- a/drivers/platform/x86/intel/intel_plr_tpmi.c
-> +++ b/drivers/platform/x86/intel/intel_plr_tpmi.c
-> @@ -162,10 +162,11 @@ static int plr_clear_cpu_status(struct tpmi_plr_die *plr_die, int cpu)
->  static void plr_print_bits(struct seq_file *s, u64 val, int bits)
->  {
->  	const unsigned long mask[] = { BITMAP_FROM_U64(val) };
-> -	const char *str;
->  	int bit, index;
->  
->  	for_each_set_bit(bit, mask, bits) {
-> +		const char *str = NULL;
-> +
->  		if (bit < PLR_COARSE_REASON_BITS) {
->  			if (bit < ARRAY_SIZE(plr_coarse_reasons))
->  				str = plr_coarse_reasons[bit];
-> 
 
