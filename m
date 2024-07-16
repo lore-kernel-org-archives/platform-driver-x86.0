@@ -1,117 +1,145 @@
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout8-smtp.messagingengine.com (fout8-smtp.messagingengine.com [103.168.172.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE48282FD
-	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jul 2024 20:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA7A81E;
+	Tue, 16 Jul 2024 01:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721074981; cv=none; b=RR29PMgofqZlX+poinxh61qSAP2d/oZnETsLmcsiLIm5CzlBPcIYDLQ1kRRmQd3aXsrZRjwZehLKs0UntV2+IHjwE+HJgo070YmNs/NjkzlhC0Te1fiFDBZkuNceU63pNK3NLex+u7dq3KzP38QHKkRgZP+NRcOfuu1EhP0hkwM=
+	t=1721091685; cv=none; b=LsNrwltHgvvckBPPW5gzqIAjHjgJvI1H83Xd+HYuwklw/Qz5wFAgNOwzGzl7GNR1qe2ZbydNaIOTOGdHTkES0uSVGbH/5nN37W5f7DV8kTzVYj3TGHppBKx7Rta9VOFUBmHwDBHVJEExArLiW1yAZOg4gq1Zc9Xjv6G/aaS/G/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721074981; c=relaxed/simple;
-	bh=JOZ28iCKMuwJxA0hytXjgkoNBjAf0gBGWTDlMp9gjMg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=R0MNGFZ4+Dchj65EOdt9on0KJhx4Ct9wLoeAEDPbDTuoCL5I7GDQ99nZk90AKeyu4SHSSPcH+CRH4MA9RCQN4IQ1PU0RUdV3fgdRlpg3+ujF+CWAUwCFBdsaWst07FDKx39Kh9ttctXWwUfSlMEu/9GOgXmRVID1x5YhyvlTH7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TJfiXsAZ; arc=none smtp.client-ip=209.85.161.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1721091685; c=relaxed/simple;
+	bh=+kESzPcU6FYVWsCXJDMjYqtyWItPzTxVTh63Wp202l8=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=lRNxRRZCmZvDQztgdZyNC2i/ORsviLSEtoOW36T0HhhHpEaXDBnaqvCqlHJ4eUV1eBmQnhEThXsy5HMKtDIwH03tza/LGKy0rMmc3mWWdBzNgy+ISMKRDlhsMmYjIdJxccCMmgLnxOHiWUb0m/Eh+i0Dv0H9a2mbdc8IPLkqRwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=ouxfkW+B; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=sGY2JAb6; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TJfiXsAZ"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5ce74defe41so1035175eaf.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jul 2024 13:22:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721074979; x=1721679779; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PxzT0SN3KlZDqe7HSlcdVmVH8IF9jSYcZYq5mPjp6ic=;
-        b=TJfiXsAZrhiV55+8XzjVwhHX8CNF6IMxjmK6crJPfuTTBubldi3tazREeJRrehGIdk
-         Q+eTxvWGJlghIRerz0uuw7Nf3xxVfxF8sgRmO8cecj/AeHfAsusCvRV+DkfYkJSV+NW5
-         bmzhTvrziPqcZwO+q/FVa3cmi4JfIFQj9robLD5MovCPOfvoDYQ7iWWrdU6JQMVNIR+R
-         PywZl+7R24SIQMJGvwQD6HGPuIUOFeqWl3hL2zYXUV4oD3sCDyFoWyd5iLZ8EQw99+qI
-         bnywq485Z4jgoQWgwnpA7wTYsJhnUegEn81E5eDdHsG47dQwAUttyEujA9LetraJrI19
-         0wmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721074979; x=1721679779;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PxzT0SN3KlZDqe7HSlcdVmVH8IF9jSYcZYq5mPjp6ic=;
-        b=Fbfgf0wSUMi/0njArJeKDXHTHfnSnckp3czFeY0+gjf5Faivj7mm1Pp3815w7Th3i1
-         4mpcdMoyayre0pdRr8c3/xAisSvkdsLX+ZVUsfV+4EcSDM+5S+V9lfVOptCwiB+GytNg
-         CFJdwKqrCVBodeXrFHuFLHGZk2QV5zDGasTU95QoXWt4dpJvrsIv6dAui2D07KrXQCP0
-         QcCC4GOlzExj2xTA11a78g1nq15hZ07nRV9L3+4Bs//t0eNN+VbvfgZ72KP8WPyYry9L
-         68SbNKRSaJIazUrtncjzJ68z0Jb7/ODRxIHkjCXj5OsqvkHo+gPDPZdXIi7dOxLAsaum
-         3RCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWoRn2cEbdRCiWiSWt99UjVK8yuat/9ixpEucu2ewXro6uTqZThD0POvZ9nYddzQrk4ei4NrrKgOdFtoJ3BrGYYXp/Xh92FwgrABkPhmcPcE/eZzw==
-X-Gm-Message-State: AOJu0YwLISLMsTATDnEcek8zNKP8N7Y5P4gE2YY4YiQGmG0JrOnIH7Yw
-	IuS20IF253NtNVVchIX6PoI8oVtu7pQVgMr7ELGcrR4a9RE/Whiv2aRhLPtAqYM=
-X-Google-Smtp-Source: AGHT+IE6iz+VJy5pl+98qTdQOY8G87Tq38PgtWVMsTaW/ZgCE0q6Hk/6a96OkviHPSMLGWHtiWkiPw==
-X-Received: by 2002:a05:6820:983:b0:5c4:10df:c479 with SMTP id 006d021491bc7-5d286d18e83mr217369eaf.2.1721074979149;
-        Mon, 15 Jul 2024 13:22:59 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:750c:19a4:cf5:50a9])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5ce774dbde3sm898325eaf.43.2024.07.15.13.22.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jul 2024 13:22:58 -0700 (PDT)
-Date: Mon, 15 Jul 2024 15:22:55 -0500
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Tero Kristo <tero.kristo@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH v2] platform/x86/intel/tpmi/plr: Fix output in
- plr_print_bits()
-Message-ID: <b0084e70-4144-445a-9b89-fb19f6b8336a@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="ouxfkW+B";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sGY2JAb6"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 0A8641388BED;
+	Mon, 15 Jul 2024 21:01:22 -0400 (EDT)
+Received: from imap41 ([10.202.2.91])
+  by compute2.internal (MEProxy); Mon, 15 Jul 2024 21:01:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1721091682;
+	 x=1721178082; bh=LoQl1KaY9jWU8dz/m/EGWs761V1/ril2HmvUxHNSN9o=; b=
+	ouxfkW+BCNnaUnxhmK6wVTuS9iFQKSGzgmlldR+Tv5aSATkg/zZc0opzVUGOorBj
+	ZI7ZV+NLMh7XEVZ60/My6ON153t2qqEvZa+ZfR5osetug640FSaU49WNwCLNb9Da
+	62F5Gvyj4o1CyRDXOqtvuEcLA96Wv5TYalyXvUauPbgENUVL+dKzTZygxq76uqBZ
+	URY4aOZIgvWok5uDDmPTTZeb1xS3AWUmZugm9wzIR2kFswdD/yw54UwTHUtiiuZt
+	5vQTp3yw5/AHibGd2C5Hwwumc7MYXMY1eVbtvVkOhrrVtAWG3CdCh+2O9JNd8HYV
+	kloeKfm6PZt8COTqUSPObg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1721091682; x=
+	1721178082; bh=LoQl1KaY9jWU8dz/m/EGWs761V1/ril2HmvUxHNSN9o=; b=s
+	GY2JAb6pW43KJ89gNTGgWHF4Yes11fQgP2cpj4K10fpmG5/pEkU2FUCgZyCEdGDt
+	MMv3QA0Kn/MaLsPA8LeW0Wgql1Kbs+5ZIaVhp2Ie+bnyNvv3WSl1wGfvSO9uvErH
+	cDv9P74VmbXtHF0x9DnTRoEQcKCFWdYidaLGzlbQ7Nkk/KXpQJdJpy8xH37CB+lE
+	b3B2Hh94ZuOhezCwab7nKL2J7nByT96w/bCzKccnVaUcwWxZemw+jCXPSla+qju3
+	wIxQPF1N+UakVxwX35X/L2Wi3eBUmB/3tZdMdQt0IxRgtpZxUT/EjHYtpY3S3y+k
+	3QwcafNZQ+HcKH08uosvw==
+X-ME-Sender: <xms:YMaVZuH1M7z8qCjqgDkqzK6r_7-nqkBM-VZtDXyq9ZCh-EWP2-ruiQ>
+    <xme:YMaVZvXyaeJTtNFFvEzyQrsjfvJjEsidUklidV_hLyK5egDKlFTtXwlfPokKHtfOb
+    l3q5X139OKKtbxjAug>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrgeefgdegudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedfnfhu
+    khgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtth
+    gvrhhnpeefuefghfdvueefheeiledvgeefffevgeelhedtvdehgeekteeugedtgeeuhedv
+    leenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluh
+    hkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:YMaVZoLooP6g8mNdu3eJ9Tf3zqIZQisfYQPeFdAFVMy26w5tcxQO2g>
+    <xmx:YMaVZoE3I1SOJxb7ajev-zxF7tb5HwTXiBJT5f6hFRyU6xK5kG6IJw>
+    <xmx:YMaVZkVMDLzVG0zrDmQQIg4_DArVf9cXVrQkMXMN4CGHeHcSei3XDQ>
+    <xmx:YMaVZrMTRcRnTFWfvjb-DQ0GDDuvtiLpUIMtkdl_Cr7QH05oPrRO_A>
+    <xmx:YsaVZiyQKJ4FiOHc6rIGURWdn9Shs_T6hxN5a12ZLEc8fKGJbTrJkSpu>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id A67F52340080; Mon, 15 Jul 2024 21:01:20 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-568-g843fbadbe-fm-20240701.003-g843fbadb
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Message-Id: <18eabcb8-06a6-497a-ac12-c04c9f0db70c@app.fastmail.com>
+In-Reply-To: <5c4ef8d8-2806-5bb6-2946-368cf1ebbac6@linux.intel.com>
+References: <20240713074005.66254-1-luke@ljones.dev>
+ <5c4ef8d8-2806-5bb6-2946-368cf1ebbac6@linux.intel.com>
+Date: Tue, 16 Jul 2024 13:00:59 +1200
+From: "Luke Jones" <luke@ljones.dev>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, corentin.chary@gmail.com,
+ "Hans de Goede" <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+ "Denis Benato" <benato.denis96@gmail.com>
+Subject: Re: [PATCH] Fixes: ae834a549ec1 ("platform/x86: asus-wmi: add support variant
+ of TUF RGB")
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Smatch complains that 'str' can be used without being initialized:
+On Mon, 15 Jul 2024, at 9:27 PM, Ilpo J=C3=A4rvinen wrote:
+> On Sat, 13 Jul 2024, Luke D. Jones wrote:
+>=20
+> > In kbd_rgb_mode_store the dev_get_drvdata() call was assuming the de=
+vice
+> > data was asus_wmi when it was actually led_classdev.
+> >=20
+> > This patch corrects this by making the correct chain of calls to get=
+ the
+> > asus_wmi driver data.
+> >=20
+> > Tested-by: Denis Benato <benato.denis96@gmail.com>
+> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
+>=20
+> Your tags seem messed up, Fixes is in Subject in place of shortlog tha=
+t is=20
+> completely missing.
+>=20
+> Could you please correct these issues and resubmit, thank you.
 
-    drivers/platform/x86/intel/intel_plr_tpmi.c:178 plr_print_bits()
-    error: uninitialized symbol 'str'.
+Looks like I misunderstood something somewhere. Will resubmit.
 
-In this loop, we iterate over all the set bits and print the name of the
-bit.  The intention is that if there is a bit which is between 0-31 we
-look for the name in the first array plr_coarse_reasons[] which has 10
-elements.  If the bit is in the 32-63 range we look for it in the
-plr_fine_reasons[] array which has 30 elements.  If the bit is in the
-invalid ranges, 10-31 or 62-63, then we should print "UNKNOWN(%d)".
-
-The problem is that 'str' needs to be initialized at the start of each
-iteration, otherwise if we can't find the string then instead of printing
-"UNKNOWN(%d)", we will re-print whatever the previous bit was.
-
-Fixes: 9e9397a41b7b ("platform/x86/intel/tpmi/plr: Add support for the plr mailbox")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
-v2: initialize str at the start of each iteration
-
- drivers/platform/x86/intel/intel_plr_tpmi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/intel/intel_plr_tpmi.c b/drivers/platform/x86/intel/intel_plr_tpmi.c
-index c1aa52c23d25..69ace6a629bc 100644
---- a/drivers/platform/x86/intel/intel_plr_tpmi.c
-+++ b/drivers/platform/x86/intel/intel_plr_tpmi.c
-@@ -162,10 +162,11 @@ static int plr_clear_cpu_status(struct tpmi_plr_die *plr_die, int cpu)
- static void plr_print_bits(struct seq_file *s, u64 val, int bits)
- {
- 	const unsigned long mask[] = { BITMAP_FROM_U64(val) };
--	const char *str;
- 	int bit, index;
- 
- 	for_each_set_bit(bit, mask, bits) {
-+		const char *str = NULL;
-+
- 		if (bit < PLR_COARSE_REASON_BITS) {
- 			if (bit < ARRAY_SIZE(plr_coarse_reasons))
- 				str = plr_coarse_reasons[bit];
--- 
-2.43.0
-
+>=20
+> --=20
+> i.
+>=20
+> > ---
+> >  drivers/platform/x86/asus-wmi.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/=
+asus-wmi.c
+> > index 799d928c7d3d..2935af013535 100644
+> > --- a/drivers/platform/x86/asus-wmi.c
+> > +++ b/drivers/platform/x86/asus-wmi.c
+> > @@ -879,10 +879,14 @@ static ssize_t kbd_rgb_mode_store(struct devic=
+e *dev,
+> >  struct device_attribute *attr,
+> >  const char *buf, size_t count)
+> >  {
+> > - struct asus_wmi *asus =3D dev_get_drvdata(dev);
+> >  u32 cmd, mode, r, g, b, speed;
+> > + struct led_classdev *led;
+> > + struct asus_wmi *asus;
+> >  int err;
+> > =20
+> > + led =3D dev_get_drvdata(dev);
+> > + asus =3D container_of(led, struct asus_wmi, kbd_led);
+> > +
+> >  if (sscanf(buf, "%d %d %d %d %d %d", &cmd, &mode, &r, &g, &b, &spee=
+d) !=3D 6)
+> >  return -EINVAL;
+> > =20
+> >=20
+>=20
