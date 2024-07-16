@@ -1,126 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F1554BD4;
-	Tue, 16 Jul 2024 15:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071CB55894
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Jul 2024 21:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721142715; cv=none; b=SC0/nZ4vn5szwAhqaVFbSfVxPZ2mf4bQ4i2OBmhr94ZVsi6DILKcfVXNJUdu9kqXxj1PH67gYEakfrrAN+1hr/1t9Ot69kB4Uw5tnpYJzPQ4diDA/f1ttccrjzILeDmnpeelJdib5UofZYRQpF9SHWMKKs0dmXKGYSTgM+BmRAM=
+	t=1721164096; cv=none; b=HLfS4sea7aUAO2fSB8oErPYvR9bICS1Z9Ip0kmaf4+ImN/bjmIaZuJHaNjdFp4e5Ico38l5psfF+DEZgVh8Vtet6UVXxezjNa81EqDsFuJP/kAAHxBl6LLkSRytfIM4HmJ/0fuAOwHoH4xrXLcP5ZMlyWrG5ZYYZuGCrYykqO1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721142715; c=relaxed/simple;
-	bh=PhD4NmZQezw0hWCfRGHhs0Sd0Ldr1EdOgiNxKCNQl6k=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=se0Dp5hjhE5Z1Tk8PcGTn41vOZ79824cebuIahxLVmMx6IGbmlX5NNvITYyADAHoyNT1IC0iD64RX01cJr1ekKpPvDbp5AmpJzLTBPDdTApMF7QK4OuePq/fuVekpgA10ScRWm+xubjxotHbcYUgLWZvHprysvEe0EqBtHTMzco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eRWSA3Lv; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1721164096; c=relaxed/simple;
+	bh=5KornmEAf5kl0PDvjCkHFEC9MX4Ry9jlDgg7sDF9D94=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FCStN5T2bLC9AVJdckPxZyID7tvmGoXndoKrQ9qIN5lB2V3VDDKWbltp9ebpFozti+rDAkFhQWH/4eejXPZWm9jl2KahJ7OVYgObro/l4uEtSqYsZ6ys8kHEHrAdgJizIEAdy5klVZGAoY7fhVVLodL3wRmEzG8jtxUMC9LB1w0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XmydJvXi; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eRWSA3Lv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XmydJvXi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721142713; x=1752678713;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=PhD4NmZQezw0hWCfRGHhs0Sd0Ldr1EdOgiNxKCNQl6k=;
-  b=eRWSA3Lv4YatGJvPbF9A5qkC/oZV5ayIJQ2qIMtyNBKvOK4o7tKOpQt+
-   fvK4JGC9hM9PZbE6QcRu3HnswIN+dqK9zffa93tHAT7y5bU4VG9Xi9BC7
-   5HYEc/9ukcr1OgUehb/AnJea1N4FBMktjMq+ks2bCAlkjYp3h0u1LNJXr
-   7HWfSGWtNCVnCoSrrgdRLyW1X3rvC6rWJA5dqHW8zcrYcqUvzovogPvdf
-   Lzh7aqgv1G3/8+dO2IFZhM5Cs/ojg723gIUWXiijZFgLMRQlffr86VGjv
-   RsQk50ObSGnig9WVyxLq4pLzEbwPfINEXit7tpbWOFYlwYJqLapDWAiOf
-   g==;
-X-CSE-ConnectionGUID: UxoU6gvrRlGl9rNYDFdWnQ==
-X-CSE-MsgGUID: SX4ZlTmASUOy53GWt0pb3w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11135"; a="18783887"
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="18783887"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 08:11:52 -0700
-X-CSE-ConnectionGUID: 8IzsLuEmQ0KZPB6PrbPCfw==
-X-CSE-MsgGUID: WeQpMnyqQtO6GKo5jiGK5g==
+  t=1721164093; x=1752700093;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5KornmEAf5kl0PDvjCkHFEC9MX4Ry9jlDgg7sDF9D94=;
+  b=XmydJvXiDVEO0rNHXU25pI2ZmOevPAL3GhNXDDAnwby4fie02cCa6MTC
+   K5KKR8zF2r9Lw7jHmMUB40mPpVesdqlrE5etaMVqfZ4P6oIkbOwV69/wU
+   dP04Xz+Q0b2sldxjRfBjv45ssTKmX61Euv54Cm3aYc3dsTDM+85QOp8Qs
+   rvtHke8n0HJwLv6X8FhNaE4kWaqPXC6VphiMmFVcc5s+aujZpvzEL1DId
+   vLcKYH0LT0jyZ2aNnSw6iLUKDJMwCxvteu0P9kIAhWnb0d1sWZPW1tEOE
+   ZKtmuZpUOda5VWYSWg81CdqtylL3rGj+ruBNtCGwM4WdnP9hkhkgZUecn
+   A==;
+X-CSE-ConnectionGUID: v+Qx9oCaTUKFPj1IHR86QQ==
+X-CSE-MsgGUID: tFyo/VLxSmWwoipMifzvbw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11135"; a="18772984"
+X-IronPort-AV: E=Sophos;i="6.09,212,1716274800"; 
+   d="scan'208";a="18772984"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 14:08:13 -0700
+X-CSE-ConnectionGUID: bw1M60+4QGCbwej+qNQ3Rg==
+X-CSE-MsgGUID: mOA0XeCgQc61XltGvlB4xA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="50124449"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.133])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 08:11:50 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 16 Jul 2024 18:11:46 +0300 (EEST)
-To: Hans de Goede <hdegoede@redhat.com>
-cc: "Luke D. Jones" <luke@ljones.dev>, platform-driver-x86@vger.kernel.org, 
-    corentin.chary@gmail.com, mario.limonciello@amd.com, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/5] platform/x86: introduce asus-bioscfg
-In-Reply-To: <8273ed57-4c65-41da-ad7d-907acf168c07@redhat.com>
-Message-ID: <e9f4fb37-5277-a7f0-2bec-8a6909b4e674@linux.intel.com>
-References: <20240716051612.64842-1-luke@ljones.dev> <8273ed57-4c65-41da-ad7d-907acf168c07@redhat.com>
+X-IronPort-AV: E=Sophos;i="6.09,212,1716274800"; 
+   d="scan'208";a="87638652"
+Received: from awvttdev-05.aw.intel.com ([10.228.212.156])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 14:08:13 -0700
+From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+To: intel-xe@lists.freedesktop.org,
+	platform-driver-x86@vger.kernel.org,
+	david.e.box@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	matthew.brost@intel.com,
+	andriy.shevchenko@linux.intel.com
+Cc: michael.j.ruhl@intel.com
+Subject: [PATCH v8 0/6] Support PMT features in Xe
+Date: Tue, 16 Jul 2024 17:07:57 -0400
+Message-ID: <20240716210805.4012517-1-michael.j.ruhl@intel.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 16 Jul 2024, Hans de Goede wrote:
-> On 7/16/24 7:16 AM, Luke D. Jones wrote:
-> > This is the first major patch I've ever done with the intention of
-> > introducing a new module, so it's highly likely I've made some mistakes
-> > or misunderstood something.
-> > 
-> > TL;DR:
-> > 1. introduce new module to contain bios attributes, using fw_attributes_class
-> > 2. deprecate all possible attributes from asus-wmi that were added ad-hoc
-> > 3. remove those in the next LTS cycle
-> > 
-> > The idea for this originates from a conversation with Mario Limonciello
-> > https://lore.kernel.org/platform-driver-x86/371d4109-a3bb-4c3b-802f-4ec27a945c99@amd.com/
-> > 
-> > It is without a doubt much cleaner to use, easier to discover, and the
-> > API is well defined as opposed to the random clutter of attributes I had
-> > been placing in the platform sysfs.
-> 
-> This is a bit of a novel use of the fw_attributes_class and I'm not
-> entirely sure of what to think of this.
-> 
-> The fw_attributes_class API was designed for (mostly enterprise)
-> x86 machines where it is possible to change all BIOS settings directly
-> from the OS without entering the BIOS.
-> 
-> Here some ACPI or WMI function is present to actually enumerate all
-> the BIOS options (which can be set this way) and get there type.
-> 
-> IOW there is not a static list of options inside the driver, nor
-> is there special handling in the driver other then handling differences
-> per type.
-> 
-> And if a new BIOS version has new options or a different machine model
-> has different options then these are discovered automatically.
-> 
-> This new use is quite different from this. Although I do see that
-> at least for the attributes using WMI_STORE_INT() + WMI_SHOW_INT()
-> that there is quite some commonality between some of the attributes.
-> 
-> I see how using the existing firmware-attributes class API definition
-> for this, including allow tweaking this with some of the fwupd
-> firmware-attributes class commandline util work Mario did is a useful
-> thing to have.
-> 
-> I guess using the firmware-attributes class for this is ok, but
-> this _must_ not be named bioscfg, since the existing hp-bioscfg
-> driver is a "classic" firmware-attributes drivers enumerating all
-> the options through BIOS provided enumeration functions and I want
-> the name to make it clear that this is not that. And the Dell
-> implementation is called dell-wmi-sysman so lets also avoid sysman
-> as name.
-> 
-> Maybe call it "asus-bios-tunables" ?   And then if Asus actually
-> implements some more classic firmware-attributes enumerable interface
-> we can use "asus-bioscfg" for that.
-> 
-> Mario, Ilpo what is your opinion on this ?
+DG2 and Battlemage have the Intel Platform Monitoring Technology (PMT)
+feature available, but not in the "standard" (pci endpoint) way.
 
-What you suggested sounds good to me.
+Add support to the vsec and Xe drivers to allow access to the PMT space
+for the DG2 and BMG devices.
+
+The intel_vsec_register() function allows drivers to provide telemetry
+header information (usually found at probe time), to allow the PMT
+driver to probe the telemetry features.
+
+Battlemage has a shared memory area (selected by index), so a callback
+function is required to access the appropriate PMT data.
+
+V2:
+  Re-worked DG2 support patches using a base_adjust rather than a
+  quirk.
+  Updated GUID decode, for correct decode.
+v3:
+  Fixed a documentation issue for the pmt struct.
+v4:
+  Fixed a documentation issue in the xe_vsec.c module
+v5:
+  Addressed review comments for patch 4 (Xe driver)
+  Add r/b for the first three patches
+v6:
+  Added kernel doc to moved data structure
+  Added required include files
+  Correct usage for FIELD_PREP()/FIELD_GET()
+  Whitespace clean up
+  Removed unnecessary type cast
+v7:
+  Commit message updates
+v8:
+  Added some r/b (patch 2 and 3).
+  Updated kernel doc patch 2 (priv_data) patch 5 (base_adjust)
+
+David E. Box (3):
+  platform/x86/intel/vsec.h: Move to include/linux
+  platform/x86/intel/vsec: Add PMT read callbacks
+  platform/x86/intel/pmt: Use PMT callbacks
+
+Michael J. Ruhl (3):
+  drm/xe/vsec: Support BMG devices
+  platform/x86/intel/pmt: Add support for PMT base adjust
+  drm/xe/vsec: Add support for DG2
+
+ MAINTAINERS                                   |   3 +-
+ drivers/gpu/drm/xe/Makefile                   |   1 +
+ drivers/gpu/drm/xe/xe_device.c                |   5 +
+ drivers/gpu/drm/xe/xe_device_types.h          |   6 +
+ drivers/gpu/drm/xe/xe_vsec.c                  | 300 ++++++++++++++++++
+ drivers/gpu/drm/xe/xe_vsec.h                  |  13 +
+ drivers/platform/x86/intel/pmc/core_ssram.c   |   2 +-
+ drivers/platform/x86/intel/pmt/class.c        |  28 +-
+ drivers/platform/x86/intel/pmt/class.h        |  11 +-
+ drivers/platform/x86/intel/pmt/crashlog.c     |   2 +-
+ drivers/platform/x86/intel/pmt/telemetry.c    |  21 +-
+ drivers/platform/x86/intel/sdsi.c             |   3 +-
+ drivers/platform/x86/intel/tpmi.c             |   3 +-
+ drivers/platform/x86/intel/vsec.c             |   9 +-
+ .../vsec.h => include/linux/intel_vsec.h      |  50 ++-
+ 15 files changed, 428 insertions(+), 29 deletions(-)
+ create mode 100644 drivers/gpu/drm/xe/xe_vsec.c
+ create mode 100644 drivers/gpu/drm/xe/xe_vsec.h
+ rename drivers/platform/x86/intel/vsec.h => include/linux/intel_vsec.h (61%)
 
 -- 
- i.
+2.44.0
 
