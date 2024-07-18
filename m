@@ -1,99 +1,167 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2076.outbound.protection.outlook.com [40.107.220.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA3C3B784
-	for <platform-driver-x86@vger.kernel.org>; Thu, 18 Jul 2024 08:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721292187; cv=none; b=UGxzlSLf6z1sn1GOhZgZEBUNYXEr/I89U1vpgRq05R3euXQkxR13gamzO+vWKyzokHa7nLcU0fvq0/SQ5nXo8wJF9akoyWe/Sr2qNcN70jwYoIu4pnCoOHdAJqkkroBxrv2fku5k1YYB9g/kI/u+NUZKuKlFwmaDsfuUAUGWJqo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721292187; c=relaxed/simple;
-	bh=qz51xka9cbOC0s03TK499Msdn+FMZutfOs2fmw+gT20=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=riBu5RR4arwFJr+9SIdvxTgJOXeep2C+xD6fp/VsfnOKWzJhL9V0vffPA1OFm0rjY+67OKc5ISqcWnnLsEWLw4nNs8dVVQOUi2GkJbbq3j90AFOtBJ0mK1OcyGJM0xSgBf2VelyuDoRw01LmrUR3xwc5tTs8uNZB+AVr//RD+Qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J4bT0aqD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528353BB30
+	for <platform-driver-x86@vger.kernel.org>; Thu, 18 Jul 2024 15:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721314909; cv=fail; b=e6PdDvraZJGdU8MX2ztMCKAuTKisgjYxNW+/iB3ZhnkfqShjZl3qW7ZIQl+QBnaNuBQt5Lf+Q1bEeehdmETPJY8b8+nlWcRqlC67C8j0JUH5j9kPzpXogdguYVe1rWEbp+uECrrS9twMX+sTl5mM/k+WFKXpDevl38mo0jhAyas=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721314909; c=relaxed/simple;
+	bh=ZN0xICDRWoGSyys5dHis6M0lxU4eW6TWqZQbsmhzCLY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lMqeNV/f8HWSTmt9kruas6SbltxgN29+TnROK9K+e6lq7ALDBJE82oSyaGmbQniYLIWNA/ej3E0T4ap07vRxIgcqhkTJO9I96dQ/DR1WQuO8/xuDQYfaUc9HNkCVHW7W4bqV0soJI7OnqRPgjf6rtsstd8DibQXPCAOk7/MxK2I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=XS5wpyH4; arc=fail smtp.client-ip=40.107.220.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J4bT0aqD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1721292184;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qz51xka9cbOC0s03TK499Msdn+FMZutfOs2fmw+gT20=;
-	b=J4bT0aqDjKUzYVKRwTTy3iXN2eQ9zT/EZtVyh/C9HvIuzW6cC1yIZh4i0L1KDiLh7ffO3+
-	QP/O52nSLimypzPHht/mG3KoqIynBKKxGenXOTzzR0vBO6ueBdnV5ub6oa16WPfrEh1VIY
-	ZM1kAqfCYCdDTgicL+vHg7c2OMcR7CY=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-124-s_cC0IFHMVKMTppDZeKBew-1; Thu, 18 Jul 2024 04:43:02 -0400
-X-MC-Unique: s_cC0IFHMVKMTppDZeKBew-1
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-52e98697a36so33698e87.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Jul 2024 01:43:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721292181; x=1721896981;
-        h=content-transfer-encoding:in-reply-to:cc:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qz51xka9cbOC0s03TK499Msdn+FMZutfOs2fmw+gT20=;
-        b=Kjn1XmoKUw8vPd+4ov1UGsXP6P/69rbM7eiIJFMBYkdzyMueyuwIn6qnULMILoOIIw
-         q1Mx/iYwXb0glBaH4Sm92pIu5qWoxNhFYkAHuBFEQlBQOFtMVV27nfBubHi/lHTRu7ZU
-         A+PCubff97ttutuVO5P36AgTLJhVLt3Uw66ZHZ03PSzRVCccV/dL/bcSXHHgFM+YpnD/
-         Wu8QA/7HVoCMjD6TMbXLKtzbQ2S9byJqX089jC0PPupoID6TplZDE8DeKcc9t02UHsN8
-         o7zx21oBs+KIn4pMWDdlZD4+umK+h+Jv64qrvuA2u3/pAkIC9XlZ6xtzcJmRZdcUVYS4
-         AkGw==
-X-Gm-Message-State: AOJu0YzAzZLoh37pFJ+A9Z2DWe5pRZy7qxyK3HEmgYDUX6tr2M0mD1ri
-	szLIUXlKJk6pIVZ/bv2vAaEEJXNMRT/bpdDga0xBYkFOSD6LkI9IIJK/1czFijO3sy/KYvVeK9g
-	O8ap1IZVQ2L9O/Il1gBMvhicYtmiSI8uqeRArVL8ArSZ0eedo12VY74ldE+eZqMh6CatPlDuYvQ
-	nXzrQZkw==
-X-Received: by 2002:a05:6512:3404:b0:52c:a070:944 with SMTP id 2adb3069b0e04-52ef07a6de8mr51795e87.23.1721292180781;
-        Thu, 18 Jul 2024 01:43:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGuwiAgOEtW/6pB6dct/SCs6osvcrRqZ/KrjeLcI1XGWODPvOy2uUKOeNpoi4CJMptbwfTngA==
-X-Received: by 2002:a05:6512:3404:b0:52c:a070:944 with SMTP id 2adb3069b0e04-52ef07a6de8mr51787e87.23.1721292180323;
-        Thu, 18 Jul 2024 01:43:00 -0700 (PDT)
-Received: from [172.18.228.53] (ip-185-104-138-47.ptr.icomera.net. [185.104.138.47])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52ef079f886sm15421e87.284.2024.07.18.01.42.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jul 2024 01:42:59 -0700 (PDT)
-Message-ID: <cf2af03e-d2ef-4c0d-84d6-52d01d6de180@redhat.com>
-Date: Thu, 18 Jul 2024 10:42:58 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="XS5wpyH4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hKIgj5HdfU6P8gPsHf25BBUKHG4oOkN/F11CrcZmoYHnWESOJqSEeZ1up/FJfGkT8xsT+wYFrXAuRv2i5NiG1q0H9oPcYuRGmEMhEdikaxqugco5aZl5BtI/vvqL+OL0G6eZPz1nth3+Y9LSUNWdMQEtTi6zln1cDoHKZxC+zdSHFc18s2uye+HSerjoImPUdTHDtTYRjVjCHzzBJ4CmAgk+lilokPX545/wrym4Lpgi4iU7DKpvEMiCVhgNEpdErPd883iR+KVX6XnoXucqG7lkFwB6iUW4wE+wwSdZ8GYg4HqDHeZHGqM6BZzBhbIE/fAfhb+tb6CPzbP+BGGi+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=i1qe8LZSi7Z9D7nLYpMSgmWDQ9sbvay7g1lEXAgFHhw=;
+ b=nMTHWvUGBmgirItJ7gX2+g8umTf+kVV5IfuvUtqYGHUGRCDpg9RicPYltj4jG2Dj/Zv2wQUvG7VfpYL897SFC5hjJ9l9fCa047wlgRGt2Ecqxl5usUb1YRqshQJ6YTRELJxpbfytATCVHJyNoKxnrDeAXfhjSKvU3et+GEb0SpUQn7x/sEVJRJIHNUdkkdfL1c/16yBfPyTJabZSi/zgsYxzXYM9SLszRKrD+QNgi6/wkPZyAi9QHEybM2WBlCe+pY/BZEcbxfbXnESthEzMn4MQ8RdafpMS0lDl42nDH1Y3ifetXvV4DBMCQ3uo/4pf65gPVGoDNazmhxdNnz8gFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i1qe8LZSi7Z9D7nLYpMSgmWDQ9sbvay7g1lEXAgFHhw=;
+ b=XS5wpyH4kYVckhFwnmEpL2BJhH5T/iPX71XCoJlpqIkrWuioCK2X2I9WEOLWr600gUNkHo8wBtyz8zobwB2IiqpzRFQpQZwXy9DFI5SLjXAZyTY7TaiceThDQeKWgcnWvbFp2mw1era2+x4+VY/Y9CR0+TE5EThXpZEy6LvtRtM=
+Received: from BYAPR06CA0014.namprd06.prod.outlook.com (2603:10b6:a03:d4::27)
+ by DS0PR12MB8453.namprd12.prod.outlook.com (2603:10b6:8:157::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.19; Thu, 18 Jul
+ 2024 15:01:39 +0000
+Received: from SJ5PEPF00000209.namprd05.prod.outlook.com
+ (2603:10b6:a03:d4:cafe::bd) by BYAPR06CA0014.outlook.office365.com
+ (2603:10b6:a03:d4::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.14 via Frontend
+ Transport; Thu, 18 Jul 2024 15:01:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ5PEPF00000209.mail.protection.outlook.com (10.167.244.42) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7784.11 via Frontend Transport; Thu, 18 Jul 2024 15:01:38 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 18 Jul
+ 2024 10:01:36 -0500
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
+CC: <Sanket.Goswami@amd.com>, <platform-driver-x86@vger.kernel.org>, "Shyam
+ Sundar S K" <Shyam-sundar.S-k@amd.com>
+Subject: [PATCH v1] platform/x86/amd/pmc: Send OS_HINT command for new AMD platform
+Date: Thu, 18 Jul 2024 20:31:19 +0530
+Message-ID: <20240718150119.3427190-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Hp victus hp-wmi code
-To: Matthew Blankenbehler <spectrino3d@gmail.com>
-References: <CAGRv0CguAT-vcE8AV+0egxfzmS1PZr0ukwmgvY9TqO4zzLv=FA@mail.gmail.com>
-Content-Language: en-US
-From: Hans de Goede <hdegoede@redhat.com>
-Cc: "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>
-In-Reply-To: <CAGRv0CguAT-vcE8AV+0egxfzmS1PZr0ukwmgvY9TqO4zzLv=FA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF00000209:EE_|DS0PR12MB8453:EE_
+X-MS-Office365-Filtering-Correlation-Id: 837b8b08-8496-4917-7311-08dca73a86a1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?DRdLHw2dbdRtGfhhzuEw3ULmbNyNo5x1BQ8iILWoCvkkOY/mdTDlzTA3pKxb?=
+ =?us-ascii?Q?orWB7YkSnnR6J+RKK3a7QqcbIZPKynAst1ScJAtf+jXjykHwb0hfkpQtASct?=
+ =?us-ascii?Q?8X9C+Vj/6fL3uxP9LWO+uOBdF1od41JtYq05kWowrbjt6ayoiSa2huw080A5?=
+ =?us-ascii?Q?enYkT2WV7OYEQMxmpmOHIJQ69GLhRN7u2LKnzbvOLxptAN/LcpWWOw0XuiRR?=
+ =?us-ascii?Q?cBzXLqb+mb6EVHAh55D11WjwH1YX/NvUK50/+NfHqmYaCznSCT0ip8Bacc/z?=
+ =?us-ascii?Q?/soMzczqHSLqtKYcDkU1EChlfS2orpCqVHSBwiGKYfTPkLqx2+cughMe1ELW?=
+ =?us-ascii?Q?GrWEjo6VHwrxyl0zuL9+wAb1hJi7E1DLkRSdpSKy1vhjjguhndsUdxS/1qvz?=
+ =?us-ascii?Q?Lo/ehupQim3bmEN1SISDAcqpMg+aSJqK7QyX1TEtZFI+NxlsRqjT53FPDego?=
+ =?us-ascii?Q?3b1cy9/XzOd+4wkl6yH97pgkj7NU8TZ7FpwprseNKWCFzpw83c9d4f3R0RzX?=
+ =?us-ascii?Q?+f0Xs9KaN9s0TgcYGRKFSLX8cpPFiK2WI/YfIEEubRXCrb+Xkzk/ttLCQ6lr?=
+ =?us-ascii?Q?Ac685ihlK+KLLppgFpB9iN32FcCIHAiloJSb4+dEjB0d6EJEx6viRW6k1Dty?=
+ =?us-ascii?Q?MzWWUKuuJGEGbfbnWo5wsc/irNAuPJ/BXxr9ENc3gGP5796YxLlHDIYfNss8?=
+ =?us-ascii?Q?Q6fVzl6kI1Gu5PvTkjcX13vjuXMetTQ39pXjg+UZAryNyrmQiS1C/6z4/wt5?=
+ =?us-ascii?Q?t8+epYnVYZ3MO/s5RQ4A26ENo0UaVGQB9JZ2PkEZ3fbxMGy0PAnlFFMKSnyN?=
+ =?us-ascii?Q?NiV4tZMAMB4tE4Ixx03v7GQbja7vOvqv5aIV2LQAs+uFnzoz4A3Rsp9BYL0F?=
+ =?us-ascii?Q?cEhW/v7GFV6c+Xcsdq7VoRjE3kAomU9jnkdHvW+5DJXMTd3qFiKPvIMrtoaA?=
+ =?us-ascii?Q?Kxq+150N3WYnwYIGtW+neIIohNSCOnLvnLdmDudyh+nWilh4wyKbt6xf98rG?=
+ =?us-ascii?Q?jjHrsRzFVqq2gyUxkY+XXl2x+cEZwsIB/DgSr3dfv2P8ZWsPeORrpE0cmSBA?=
+ =?us-ascii?Q?YJm2el3DB8prQ//E/g6pCu07EFJasIvy2jJoiW6yQeqAshmGzVU8IVXJBHJO?=
+ =?us-ascii?Q?v/yoJM2i52Y8rgt5WYSprEMfaDZwhjUWWUNTvzoaA5XvZpY9B0Y3th8M2agb?=
+ =?us-ascii?Q?hqd4ZMeHHEmo9q1fgxu67TVOXe0IGMHySyxw90dWuYbZjFYkZEGxNiGa0iaV?=
+ =?us-ascii?Q?s9wpsMZrgR2BsIwjlTy7u0gPvdYozhqxypZ6HszwckdV4X1C56jgWNHUXXaZ?=
+ =?us-ascii?Q?Zr3993GabmrPtTIdEgnfp7uLLE/zYmHxddX3iTqWWBtAA+Dg5f+Np5+rQrNQ?=
+ =?us-ascii?Q?EpVtFjOJ3IF47vScAQZtoWsPeGA7+gBQmPpcmVNGtcsEN/7SrPhQ0+bBnVQV?=
+ =?us-ascii?Q?zL36LkzXZSA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2024 15:01:38.7031
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 837b8b08-8496-4917-7311-08dca73a86a1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF00000209.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8453
 
-Hi Matthew,
+To initiate the HW deep state transistion the OS_HINT command has to be
+sent to the PMFW. Add this support to the platforms that belong to family
+1Ah model 60h series.
 
-On 6/17/24 4:23 AM, Matthew Blankenbehler wrote:
-> Dear Mr. Goede,
-> I noticed you committed code relating to the hp victus laptop performance drivers for the hp-wmi driver. I am not too familiar with kernel code but I have a different model not listed in the driver its 8BBE. I am wondering if the board needs to be added to this driver to get the full potential of my victus laptop. Model is r0085cl
+Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+---
+ drivers/platform/x86/amd/pmc/pmc.c | 2 ++
+ drivers/platform/x86/amd/pmc/pmc.h | 1 +
+ 2 files changed, 3 insertions(+)
 
-That question is hard to answer without anyone familiar with the existing
-HP WMI Victus support (which I am not) taking a look at your laptop's
-ACPI tables.
-
-I think it would be best for you to email the author of the existing Victus
-support: SungHwan Jung <onenowy@gmail.com> about this and put the pdx86
-mailinglist: platform-driver-x86@vger.kernel.org in the Cc so that people
-on the list can also chime in on this.
-
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+index a3d881f6e5d9..c3e51f0a5c33 100644
+--- a/drivers/platform/x86/amd/pmc/pmc.c
++++ b/drivers/platform/x86/amd/pmc/pmc.c
+@@ -764,6 +764,7 @@ static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
+ 	case AMD_CPU_ID_CB:
+ 	case AMD_CPU_ID_PS:
+ 	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
++	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
+ 		return MSG_OS_HINT_RN;
+ 	}
+ 	return -EINVAL;
+@@ -967,6 +968,7 @@ static const struct pci_device_id pmc_pci_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RV) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_SP) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M20H_ROOT) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M60H_ROOT) },
+ 	{ }
+ };
+ 
+diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
+index 9e32d3128c3a..f1166d15c856 100644
+--- a/drivers/platform/x86/amd/pmc/pmc.h
++++ b/drivers/platform/x86/amd/pmc/pmc.h
+@@ -67,6 +67,7 @@ void amd_mp2_stb_deinit(struct amd_pmc_dev *dev);
+ #define AMD_CPU_ID_PS			0x14E8
+ #define AMD_CPU_ID_SP			0x14A4
+ #define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT 0x1507
++#define PCI_DEVICE_ID_AMD_1AH_M60H_ROOT 0x1122
+ #define PCI_DEVICE_ID_AMD_MP2_STB	0x172c
+ 
+ #endif /* PMC_H */
+-- 
+2.25.1
 
