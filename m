@@ -1,63 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD05C42052;
-	Thu, 18 Jul 2024 01:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1EE02CCA3;
+	Thu, 18 Jul 2024 07:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721266038; cv=none; b=gl7o8VfBwwXb87wZwcic0MNIi5ZQlMiznQXSY/3vpeTFaJmXfp46pJlSmdrEMed1Fzug1GzUaBfHQql4Acxdah7kqvHAd2vSdyZvoBxBknE4pU9E8maZG+ZAvr0/UW5cBS1avoX6lpIwQDDf4qxV/LvnZplUn5zCVIhIp/2NOuk=
+	t=1721287683; cv=none; b=E63wViizIzlcNUUZny7WcA0CJPi+fnVBE2zQpjRXBOZ4TzwOIOdBbXe4OA6R2nUFWlVmAxLtXdx6gRAG4sCRkIX/qTVck6+HZRk/g80QtA3u6SRp9MPuP0kbI5gOlIv9B7k3JFbTCAVtKbbYlnsETehYhJ1N4epUKPyCXcFy5fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721266038; c=relaxed/simple;
-	bh=P0WL2gTNHZVwy74zCJoBg2e197Tztu461C2tZavqREE=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=KyysCtrpYlXvXDBjJew+XpP/wP0tX8yi1XNVazdbXuqRz2fwtpFVBh4i0u0e98jOX4tgJdupUa7hjLU92fgRkYGSYqGjYSLziWhPXx3+khyW71CpRe+zghejzDspTy+WeWIZBJi6o3KbMS6DPeb3r7qMmEtJlYeBx4JlvNj0tHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LHcsy1U/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LHcsy1U/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 909AEC2BD10;
-	Thu, 18 Jul 2024 01:27:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721266038;
-	bh=P0WL2gTNHZVwy74zCJoBg2e197Tztu461C2tZavqREE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=LHcsy1U/WQ5foOfX0RdiH62B+i6aJqXvlmAfvYhE6i8GzSZ6+maRFjbjjuqabAuph
-	 KkbAbsk6+99Z5puWHPEPfQSZL3Gbkm7AzHlQ0CZrE8T9gIUpvVJokfRkTF621pkDpy
-	 vGjoTChjHNjFfbbiOvxf0K3rDwgVVJW8mFhim6zQblSm51XXRPxQDq1mcVTFBstGX+
-	 85HHgvgnKobj567Gp0askxOG+fKvrwBYkga2HiKEa0V923ogk0YyQZLtvBNElb39iE
-	 qHdIpnsAbVkCLIV4FxXOcpI15fp1p6fBuGr6eHwFSUcxGBFray6UmLmdo5L0eupT74
-	 RRvzg06bCFqeg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 828EAC433E9;
-	Thu, 18 Jul 2024 01:27:18 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for v6.11-1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <pdx86-pr-20240716131410-2360330733@linux.intel.com>
-References: <pdx86-pr-20240716131410-2360330733@linux.intel.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <pdx86-pr-20240716131410-2360330733@linux.intel.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.11-1
-X-PR-Tracked-Commit-Id: d8b17a364ec48239fccb65efe74bb485e79e6743
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a5cb6b2bbff9cdd32aab635ad464a1ee299a63bd
-Message-Id: <172126603853.24030.11803407645034082507.pr-tracker-bot@kernel.org>
-Date: Thu, 18 Jul 2024 01:27:18 +0000
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+	s=arc-20240116; t=1721287683; c=relaxed/simple;
+	bh=gHcKbXQeJUtqj8PsttSiotzt+RzsgFPOEOQgP/h40hE=;
+	h=From:To:Cc:Subject:Date:Message-ID:Mime-Version:Content-Type; b=NfrvH90SbQcsKx9iax0Reg6If/1skZsQf3Jb3xq0XbJ/lA6fcqTvmHQTtqf3g0wLZPMw+U+EVQb3Dw/Ztd3uD0Yld3ajmHPtIp6q53pOWd5yOHjxX6HyRgNKZNIoHsshA5iwYAev+JvyT3+4DBMYYsl3AiDTjL9OFe/eW4kQXXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from fedori.. (netacc-gpn-104-115-214.pool.yettel.hu [::ffff:91.104.115.214])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 0000000000072DAD.000000006698C3FE.00180BA5; Thu, 18 Jul 2024 09:27:57 +0200
+From: Gergo Koteles <soyer@irl.hu>
+To: Hans de Goede <hdegoede@redhat.com>,
+  =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+  Ike Panhc <ike.pan@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org,
+  linux-kernel@vger.kernel.org, Gergo Koteles <soyer@irl.hu>
+Subject: [PATCH v2 0/4] platform/x86: ideapad-laptop: synchronize VPC commands
+Date: Thu, 18 Jul 2024 09:27:12 +0200
+Message-ID: <cover.1721258854.git.soyer@irl.hu>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
 
-The pull request you sent on Tue, 16 Jul 2024 13:14:10 +0300:
+Hi,
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.11-1
+Sometimes the Yoga mode control switch did not work properly on my 
+laptop, and sometimes even caused a platform profile switch. It turned 
+out that it was caused by a race situation, the lenovo-ymc wmi notify 
+handler was running at the same time as the ideapad-laptop acpi notify 
+handler, and the partial results of the VPC calls in the two were mixed 
+up.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a5cb6b2bbff9cdd32aab635ad464a1ee299a63bd
+This series introduces a notification chain to receive YMC or other 
+events, moves the EC triggering into ideapad-laptop, and then introduces 
+a mutex to eliminate the problem.
 
-Thank you!
+Best regards,
+Gergo Koteles
+
+---
+Changes in v2:
+- Skip the already merged "platform/x86: ideapad-laptop: use cleanup.h" commit
+- Based on the WMI driver development guide and the dell drivers,
+  introduce a generic notification chain
+- Use the notification chain to send the YMC event from lenovo-ymc to
+  the ideapad-laptop module
+- Move the ec_trigger module parameter to the ideapad-laptop as well
+- Mutex changes go into one patch
+- Link to v1: https://lore.kernel.org/all/cover.1720515666.git.soyer@irl.hu/
+---
+
+Gergo Koteles (4):
+  platform/x86: ideapad-laptop: introduce a generic notification chain
+  platform/x86: ideapad-laptop: move ymc_trigger_ec from lenovo-ymc
+  platform/x86: ideapad-laptop: move ACPI helpers from header to source
+    file
+  platform/x86: ideapad-laptop: add a mutex to synchronize VPC commands
+
+ drivers/platform/x86/Kconfig          |   1 +
+ drivers/platform/x86/ideapad-laptop.c | 282 ++++++++++++++++++++++++--
+ drivers/platform/x86/ideapad-laptop.h | 142 +------------
+ drivers/platform/x86/lenovo-ymc.c     |  60 +-----
+ 4 files changed, 275 insertions(+), 210 deletions(-)
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.45.2
+
