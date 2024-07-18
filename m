@@ -1,167 +1,126 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2076.outbound.protection.outlook.com [40.107.220.76])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528353BB30
-	for <platform-driver-x86@vger.kernel.org>; Thu, 18 Jul 2024 15:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721314909; cv=fail; b=e6PdDvraZJGdU8MX2ztMCKAuTKisgjYxNW+/iB3ZhnkfqShjZl3qW7ZIQl+QBnaNuBQt5Lf+Q1bEeehdmETPJY8b8+nlWcRqlC67C8j0JUH5j9kPzpXogdguYVe1rWEbp+uECrrS9twMX+sTl5mM/k+WFKXpDevl38mo0jhAyas=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721314909; c=relaxed/simple;
-	bh=ZN0xICDRWoGSyys5dHis6M0lxU4eW6TWqZQbsmhzCLY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lMqeNV/f8HWSTmt9kruas6SbltxgN29+TnROK9K+e6lq7ALDBJE82oSyaGmbQniYLIWNA/ej3E0T4ap07vRxIgcqhkTJO9I96dQ/DR1WQuO8/xuDQYfaUc9HNkCVHW7W4bqV0soJI7OnqRPgjf6rtsstd8DibQXPCAOk7/MxK2I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=XS5wpyH4; arc=fail smtp.client-ip=40.107.220.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B9D2A8FE
+	for <platform-driver-x86@vger.kernel.org>; Thu, 18 Jul 2024 15:03:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721315029; cv=none; b=kyxd9e63NNYK7spKivhmTwIJ4MU3mRR8BAxU142zEXqKE8/j0oJb+S48/vNQafWoHoGEVpY/O7l3brHfbyDrtmqZzg7NNPeCPmLq9Yy5+H4Kqc9Mat3B18KJKC/GZZ3Mhco5TjJb40i97K+Z/toJuqoLyYoAUY54mYdxV2LeDj4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721315029; c=relaxed/simple;
+	bh=OsFbb5qAFaq0j2BLRUvkYCPDhHoPBHIacrSLrDciKWw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=nVnL9c3VTgaoGSQNS4NhYdOrNh+l7B/Q08VAyAbKxaze5MO+vv/Gi+fWzHKSszf6U+vwy9Ox9fGO46J5heRHKXShDZaYO0JI9lYHQDF8YSo3XGDT8M5gQ/vk4k4pfv7f+GcP7wJoKeb3muqUMYz6z+iDHf1SF+elet/Qj6hjlnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WjMh0PIH; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="XS5wpyH4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hKIgj5HdfU6P8gPsHf25BBUKHG4oOkN/F11CrcZmoYHnWESOJqSEeZ1up/FJfGkT8xsT+wYFrXAuRv2i5NiG1q0H9oPcYuRGmEMhEdikaxqugco5aZl5BtI/vvqL+OL0G6eZPz1nth3+Y9LSUNWdMQEtTi6zln1cDoHKZxC+zdSHFc18s2uye+HSerjoImPUdTHDtTYRjVjCHzzBJ4CmAgk+lilokPX545/wrym4Lpgi4iU7DKpvEMiCVhgNEpdErPd883iR+KVX6XnoXucqG7lkFwB6iUW4wE+wwSdZ8GYg4HqDHeZHGqM6BZzBhbIE/fAfhb+tb6CPzbP+BGGi+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=i1qe8LZSi7Z9D7nLYpMSgmWDQ9sbvay7g1lEXAgFHhw=;
- b=nMTHWvUGBmgirItJ7gX2+g8umTf+kVV5IfuvUtqYGHUGRCDpg9RicPYltj4jG2Dj/Zv2wQUvG7VfpYL897SFC5hjJ9l9fCa047wlgRGt2Ecqxl5usUb1YRqshQJ6YTRELJxpbfytATCVHJyNoKxnrDeAXfhjSKvU3et+GEb0SpUQn7x/sEVJRJIHNUdkkdfL1c/16yBfPyTJabZSi/zgsYxzXYM9SLszRKrD+QNgi6/wkPZyAi9QHEybM2WBlCe+pY/BZEcbxfbXnESthEzMn4MQ8RdafpMS0lDl42nDH1Y3ifetXvV4DBMCQ3uo/4pf65gPVGoDNazmhxdNnz8gFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i1qe8LZSi7Z9D7nLYpMSgmWDQ9sbvay7g1lEXAgFHhw=;
- b=XS5wpyH4kYVckhFwnmEpL2BJhH5T/iPX71XCoJlpqIkrWuioCK2X2I9WEOLWr600gUNkHo8wBtyz8zobwB2IiqpzRFQpQZwXy9DFI5SLjXAZyTY7TaiceThDQeKWgcnWvbFp2mw1era2+x4+VY/Y9CR0+TE5EThXpZEy6LvtRtM=
-Received: from BYAPR06CA0014.namprd06.prod.outlook.com (2603:10b6:a03:d4::27)
- by DS0PR12MB8453.namprd12.prod.outlook.com (2603:10b6:8:157::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.19; Thu, 18 Jul
- 2024 15:01:39 +0000
-Received: from SJ5PEPF00000209.namprd05.prod.outlook.com
- (2603:10b6:a03:d4:cafe::bd) by BYAPR06CA0014.outlook.office365.com
- (2603:10b6:a03:d4::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.14 via Frontend
- Transport; Thu, 18 Jul 2024 15:01:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF00000209.mail.protection.outlook.com (10.167.244.42) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7784.11 via Frontend Transport; Thu, 18 Jul 2024 15:01:38 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 18 Jul
- 2024 10:01:36 -0500
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
-CC: <Sanket.Goswami@amd.com>, <platform-driver-x86@vger.kernel.org>, "Shyam
- Sundar S K" <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH v1] platform/x86/amd/pmc: Send OS_HINT command for new AMD platform
-Date: Thu, 18 Jul 2024 20:31:19 +0530
-Message-ID: <20240718150119.3427190-1-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WjMh0PIH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721315027; x=1752851027;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=OsFbb5qAFaq0j2BLRUvkYCPDhHoPBHIacrSLrDciKWw=;
+  b=WjMh0PIH60G3/d1XDpmo7OmQrxMyXWydpNx1GBrW+UBsdMZo38WSli70
+   LhoarsvW73aEG5np9T4xLJL5IJvb+iRGcCcc7oUdGG3rSOVHwo3oXpbLj
+   Ob4aKYwN9Xp+jSuEeUMuQoFpORrxXQ7rHrvLsrD/VBewiYTxJ36F3UCUC
+   084ddlrQKN8n6dzKsC9bsYXUBBPV2NEQ407FiP7BdmO67ANnfeaj/iek4
+   hzj+mXkFvjFnD5nUVoRGRJVwWlXGAoZZ0lzORvPxLfSVyrAs90TZ12Rfn
+   F56miqi46tUrmDR8TdPi2lC7lHaoZ9ZZXT3M6pt68gyFlWCV7tWvdBxC4
+   A==;
+X-CSE-ConnectionGUID: hKD5fkjNRsyusNIKU/UjCg==
+X-CSE-MsgGUID: UfxzzBpnR1uJ95rSGdKrdA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11137"; a="44304908"
+X-IronPort-AV: E=Sophos;i="6.09,218,1716274800"; 
+   d="scan'208";a="44304908"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 08:03:31 -0700
+X-CSE-ConnectionGUID: ksRXK2fhQneXolssfy4uiA==
+X-CSE-MsgGUID: T//9/le6T129/GsGxUQAjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,218,1716274800"; 
+   d="scan'208";a="50858873"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.144])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 08:03:30 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 18 Jul 2024 18:03:27 +0300 (EEST)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Sanket.Goswami@amd.com, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v1] platform/x86/amd/pmc: Send OS_HINT command for new
+ AMD platform
+In-Reply-To: <20240718150119.3427190-1-Shyam-sundar.S-k@amd.com>
+Message-ID: <80e7091e-443f-6c2d-bbd8-4831eef1bfc9@linux.intel.com>
+References: <20240718150119.3427190-1-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF00000209:EE_|DS0PR12MB8453:EE_
-X-MS-Office365-Filtering-Correlation-Id: 837b8b08-8496-4917-7311-08dca73a86a1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?DRdLHw2dbdRtGfhhzuEw3ULmbNyNo5x1BQ8iILWoCvkkOY/mdTDlzTA3pKxb?=
- =?us-ascii?Q?orWB7YkSnnR6J+RKK3a7QqcbIZPKynAst1ScJAtf+jXjykHwb0hfkpQtASct?=
- =?us-ascii?Q?8X9C+Vj/6fL3uxP9LWO+uOBdF1od41JtYq05kWowrbjt6ayoiSa2huw080A5?=
- =?us-ascii?Q?enYkT2WV7OYEQMxmpmOHIJQ69GLhRN7u2LKnzbvOLxptAN/LcpWWOw0XuiRR?=
- =?us-ascii?Q?cBzXLqb+mb6EVHAh55D11WjwH1YX/NvUK50/+NfHqmYaCznSCT0ip8Bacc/z?=
- =?us-ascii?Q?/soMzczqHSLqtKYcDkU1EChlfS2orpCqVHSBwiGKYfTPkLqx2+cughMe1ELW?=
- =?us-ascii?Q?GrWEjo6VHwrxyl0zuL9+wAb1hJi7E1DLkRSdpSKy1vhjjguhndsUdxS/1qvz?=
- =?us-ascii?Q?Lo/ehupQim3bmEN1SISDAcqpMg+aSJqK7QyX1TEtZFI+NxlsRqjT53FPDego?=
- =?us-ascii?Q?3b1cy9/XzOd+4wkl6yH97pgkj7NU8TZ7FpwprseNKWCFzpw83c9d4f3R0RzX?=
- =?us-ascii?Q?+f0Xs9KaN9s0TgcYGRKFSLX8cpPFiK2WI/YfIEEubRXCrb+Xkzk/ttLCQ6lr?=
- =?us-ascii?Q?Ac685ihlK+KLLppgFpB9iN32FcCIHAiloJSb4+dEjB0d6EJEx6viRW6k1Dty?=
- =?us-ascii?Q?MzWWUKuuJGEGbfbnWo5wsc/irNAuPJ/BXxr9ENc3gGP5796YxLlHDIYfNss8?=
- =?us-ascii?Q?Q6fVzl6kI1Gu5PvTkjcX13vjuXMetTQ39pXjg+UZAryNyrmQiS1C/6z4/wt5?=
- =?us-ascii?Q?t8+epYnVYZ3MO/s5RQ4A26ENo0UaVGQB9JZ2PkEZ3fbxMGy0PAnlFFMKSnyN?=
- =?us-ascii?Q?NiV4tZMAMB4tE4Ixx03v7GQbja7vOvqv5aIV2LQAs+uFnzoz4A3Rsp9BYL0F?=
- =?us-ascii?Q?cEhW/v7GFV6c+Xcsdq7VoRjE3kAomU9jnkdHvW+5DJXMTd3qFiKPvIMrtoaA?=
- =?us-ascii?Q?Kxq+150N3WYnwYIGtW+neIIohNSCOnLvnLdmDudyh+nWilh4wyKbt6xf98rG?=
- =?us-ascii?Q?jjHrsRzFVqq2gyUxkY+XXl2x+cEZwsIB/DgSr3dfv2P8ZWsPeORrpE0cmSBA?=
- =?us-ascii?Q?YJm2el3DB8prQ//E/g6pCu07EFJasIvy2jJoiW6yQeqAshmGzVU8IVXJBHJO?=
- =?us-ascii?Q?v/yoJM2i52Y8rgt5WYSprEMfaDZwhjUWWUNTvzoaA5XvZpY9B0Y3th8M2agb?=
- =?us-ascii?Q?hqd4ZMeHHEmo9q1fgxu67TVOXe0IGMHySyxw90dWuYbZjFYkZEGxNiGa0iaV?=
- =?us-ascii?Q?s9wpsMZrgR2BsIwjlTy7u0gPvdYozhqxypZ6HszwckdV4X1C56jgWNHUXXaZ?=
- =?us-ascii?Q?Zr3993GabmrPtTIdEgnfp7uLLE/zYmHxddX3iTqWWBtAA+Dg5f+Np5+rQrNQ?=
- =?us-ascii?Q?EpVtFjOJ3IF47vScAQZtoWsPeGA7+gBQmPpcmVNGtcsEN/7SrPhQ0+bBnVQV?=
- =?us-ascii?Q?zL36LkzXZSA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2024 15:01:38.7031
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 837b8b08-8496-4917-7311-08dca73a86a1
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF00000209.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8453
+Content-Type: multipart/mixed; boundary="8323328-1958994358-1721315007=:1055"
 
-To initiate the HW deep state transistion the OS_HINT command has to be
-sent to the PMFW. Add this support to the platforms that belong to family
-1Ah model 60h series.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
- drivers/platform/x86/amd/pmc/pmc.c | 2 ++
- drivers/platform/x86/amd/pmc/pmc.h | 1 +
- 2 files changed, 3 insertions(+)
+--8323328-1958994358-1721315007=:1055
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index a3d881f6e5d9..c3e51f0a5c33 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -764,6 +764,7 @@ static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
- 	case AMD_CPU_ID_CB:
- 	case AMD_CPU_ID_PS:
- 	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
-+	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
- 		return MSG_OS_HINT_RN;
- 	}
- 	return -EINVAL;
-@@ -967,6 +968,7 @@ static const struct pci_device_id pmc_pci_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RV) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_SP) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M20H_ROOT) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M60H_ROOT) },
- 	{ }
- };
- 
-diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
-index 9e32d3128c3a..f1166d15c856 100644
---- a/drivers/platform/x86/amd/pmc/pmc.h
-+++ b/drivers/platform/x86/amd/pmc/pmc.h
-@@ -67,6 +67,7 @@ void amd_mp2_stb_deinit(struct amd_pmc_dev *dev);
- #define AMD_CPU_ID_PS			0x14E8
- #define AMD_CPU_ID_SP			0x14A4
- #define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT 0x1507
-+#define PCI_DEVICE_ID_AMD_1AH_M60H_ROOT 0x1122
- #define PCI_DEVICE_ID_AMD_MP2_STB	0x172c
- 
- #endif /* PMC_H */
--- 
-2.25.1
+On Thu, 18 Jul 2024, Shyam Sundar S K wrote:
 
+> To initiate the HW deep state transistion the OS_HINT command has to be
+> sent to the PMFW. Add this support to the platforms that belong to family
+> 1Ah model 60h series.
+>=20
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+
+> ---
+>  drivers/platform/x86/amd/pmc/pmc.c | 2 ++
+>  drivers/platform/x86/amd/pmc/pmc.h | 1 +
+>  2 files changed, 3 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/am=
+d/pmc/pmc.c
+> index a3d881f6e5d9..c3e51f0a5c33 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc.c
+> +++ b/drivers/platform/x86/amd/pmc/pmc.c
+> @@ -764,6 +764,7 @@ static int amd_pmc_get_os_hint(struct amd_pmc_dev *de=
+v)
+>  =09case AMD_CPU_ID_CB:
+>  =09case AMD_CPU_ID_PS:
+>  =09case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
+> +=09case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
+>  =09=09return MSG_OS_HINT_RN;
+>  =09}
+>  =09return -EINVAL;
+> @@ -967,6 +968,7 @@ static const struct pci_device_id pmc_pci_ids[] =3D {
+>  =09{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RV) },
+>  =09{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_SP) },
+>  =09{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M20H_ROOT) },
+> +=09{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M60H_ROOT) },
+>  =09{ }
+>  };
+> =20
+> diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/am=
+d/pmc/pmc.h
+> index 9e32d3128c3a..f1166d15c856 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc.h
+> +++ b/drivers/platform/x86/amd/pmc/pmc.h
+> @@ -67,6 +67,7 @@ void amd_mp2_stb_deinit(struct amd_pmc_dev *dev);
+>  #define AMD_CPU_ID_PS=09=09=090x14E8
+>  #define AMD_CPU_ID_SP=09=09=090x14A4
+>  #define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT 0x1507
+> +#define PCI_DEVICE_ID_AMD_1AH_M60H_ROOT 0x1122
+>  #define PCI_DEVICE_ID_AMD_MP2_STB=090x172c
+> =20
+>  #endif /* PMC_H */
+>=20
+--8323328-1958994358-1721315007=:1055--
