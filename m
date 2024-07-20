@@ -1,438 +1,244 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2083.outbound.protection.outlook.com [40.107.223.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CEF5474A;
-	Sat, 20 Jul 2024 09:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721469312; cv=none; b=XURfxpXHSNJgHcMZ8HKJxW6QDM3mszabFzN6pE9abomoeK2ocQt2kZ1g1KH3Y8xwLcWtjr4HXluI5AyRg/ymSeYNCat2LHfJNmTYxJJYGH1XIR5hWUN1RdpZRKP6OPiP9oKtj5pW1xydR4Tvs7M46165m3rQfdlToHTFKuDLwFM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721469312; c=relaxed/simple;
-	bh=Wu5UFeumOWtWcFpQjS3yFFfzrB2TMfTN7C1LyRPLT8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BTb1yD4xZLL2a5MVwsx3MFEzHdLt/C7LKB4welhjmh5F0w/fBaYnFpiFeLcU3oE6KAj2z5RNdNjwa9ELWZWCY3GQDngG/yURz1+/9w3NHZUV9VEW/jSKcp4SBjpgEKDsuqGpEDynAJvXSBlHor954cAsoPd+8HcRDOyBshEs/Wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m2YLhcuz; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272101EB40
+	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Jul 2024 17:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721497589; cv=fail; b=IB0jAeZ8qDE6KeQx02OEwMLFw/jm0budiBbMzCjaUlBY6goMpmDODMLBdD+sXU3CNvP0R1W+DBZCgS3ieHmDelGGhWZo8N+rdRd9cafTjju9C+1mhCwqNKbv/6gEKrPY3wAdFA+YrWKDZqzCVNvG61TtxpMbLnG90FnKemB5/kk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721497589; c=relaxed/simple;
+	bh=wRGoYZraYYSdUFcKWyKQTz2nqWTygemGTWS++xQzNgs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IY8OHSOLvbKIxcy3fUhyg4nx0NEP/NnkYAQpnYRqA4Ad61QLo2Wp8sUb9AoBFZkfDx6MbsVqlhvMa7rjmZs8MCx//q3UJ0/69wa1P9th+WWmzkhtWQolcCW7ZDcUkGPvMegIygKUccuW9hKvjeKraImww7bMopVWG6EYL+gs6Cg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jsXnd9xg; arc=fail smtp.client-ip=40.107.223.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m2YLhcuz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E727BC2BD10;
-	Sat, 20 Jul 2024 09:55:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721469312;
-	bh=Wu5UFeumOWtWcFpQjS3yFFfzrB2TMfTN7C1LyRPLT8M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m2YLhcuzuvpG5Gmb6hnvUQYlRuoWmj+rC3ymrDjbv+3Q4d1Yo2kPaG6aisR+jz/Da
-	 HHLfX8Ktt8uGZpZ+nD3NbYKU1jHj4R0UDCFJP0YY3nRlvR2CSRx229Mr0hxKMI5Dcx
-	 N4n8eCznvVhRE9e3eRlui4O9yc6hg12xsrtfHUpAUY6qJd97i5W5O9WxiaYTFbAvc8
-	 jr40fIkjooG0YTr9jqwEG7HZJdACGtfWExO6WQA6Xru6DM0JkKC4UlBPi3FZPtRC7h
-	 7Qnk/cs4MkuCEST2blPWfY5Vix2Vni8RSPke/Mh8q2TCJBra2A5RIXWw8ylqSuDUl7
-	 YzigxlXhQTo2Q==
-Received: by pali.im (Postfix)
-	id 020258A0; Sat, 20 Jul 2024 11:55:07 +0200 (CEST)
-Date: Sat, 20 Jul 2024 11:55:07 +0200
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Andres Salomon <dilinger@queued.net>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	Matthew Garrett <mjg59@srcf.ucam.org>,
-	Sebastian Reichel <sre@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	linux-pm@vger.kernel.org, Dell.Client.Kernel@dell.com,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH] platform/x86:dell-laptop: Add knobs to change battery
- charge settings
-Message-ID: <20240720095507.uyaotkofkyasdgbd@pali>
-References: <20240720012220.26d62a54@5400>
- <20240720084019.hrnd4wgt4muorydp@pali>
- <20240720052419.73b1415a@5400>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jsXnd9xg"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wcDyAHFfovFcqCKcDDbxcGBbJfhgmI825DymSx93ZV0UvHTFfXbeUenjl1zSRGbXrQCTm/Sl+Od/iFHtBC0NOVxwJlmSXr4hcS4d+P7wLpc5BYa/e2IWEBXOEKxYBY6HXfhSpe3KSY1o3AR22gBWwKIMdxHjfOIILbOx45Z5PuT8h0jcyjZepkI8MOfgUSF3vbtudRLCQyera+2FxJt0mSCYeU8FkznuF6kUFWjl5z/wiEuumaApMQP9yPCjc3KN29aTJLddbZXPKySEEN7xociWw9o+0A3x9SCe5xOh8Yp7DzAkwdtIf2GeJ5wwqzglEXeU6EBStUQZA0c9C2eyWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UVws/B3GnJ9ASsu2GOgnh8U+NaZKPytyKWjlV2XxKYc=;
+ b=NDsAZYMbkZxW4+wRiqJj+Aen+/3a7yKGm/8dUJiLFjf57s2OQTbLGXGQO0y3WzqDBsQT0OYmE9VhE3xWumAgej7Y0dWG56Psh7W+XtnqD12F3+wRTDE08nm5AOtM3ocjv3q/bEHjTu5tE3VL3pFf7LiLpQGgiP0GinOxoSyqbakGL0wLoE7asbQd/1wwzyhxOJF5fYxz1DvJYJksUUPiY35YF0hoK3PswPHMYb1ye5UvE7pRkZLFjat60JRpf6doRAZYQYhCOIuDgRDdAiUuBXwSk7AdQBk2A8fdW//kLVZZsrPSlIp71tGINd8pPp5NLRfbNppZcJjOzsAmipB+fw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UVws/B3GnJ9ASsu2GOgnh8U+NaZKPytyKWjlV2XxKYc=;
+ b=jsXnd9xgPW9Nyc5jfjkxMdu0XjBOJaCsKXHMZf1J5XihfCdUMKQv0zB0iSCer83539FaIHM4dLpotva57eM+qs5l/F+6v2boCUxY2QOq5vTseZ3htrY4zKprfXHQc334bw5lTdQUDbHlQatHV7JcPgx3bOTRfMFNr2nwHn1IXLQ=
+Received: from DM5PR07CA0051.namprd07.prod.outlook.com (2603:10b6:4:ad::16) by
+ PH7PR12MB6635.namprd12.prod.outlook.com (2603:10b6:510:210::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.17; Sat, 20 Jul
+ 2024 17:46:24 +0000
+Received: from DS1PEPF00017090.namprd03.prod.outlook.com
+ (2603:10b6:4:ad:cafe::53) by DM5PR07CA0051.outlook.office365.com
+ (2603:10b6:4:ad::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.29 via Frontend
+ Transport; Sat, 20 Jul 2024 17:46:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS1PEPF00017090.mail.protection.outlook.com (10.167.17.132) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7784.11 via Frontend Transport; Sat, 20 Jul 2024 17:46:24 +0000
+Received: from amd.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sat, 20 Jul
+ 2024 12:46:22 -0500
+From: Suma Hegde <suma.hegde@amd.com>
+To: <platform-driver-x86@vger.kernel.org>
+CC: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>, Suma Hegde
+	<suma.hegde@amd.com>, Naveen Krishna Chatradhi
+	<naveenkrishna.chatradhi@amd.com>
+Subject: [v3 01/11] platform/x86/amd/hsmp: Create hsmp/ directory
+Date: Sat, 20 Jul 2024 17:45:42 +0000
+Message-ID: <20240720174552.946255-1-suma.hegde@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240720052419.73b1415a@5400>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF00017090:EE_|PH7PR12MB6635:EE_
+X-MS-Office365-Filtering-Correlation-Id: bc8da700-be4f-4671-0c8a-08dca8e3dfe1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?SH0I/cNi4U/2Slm96ezWNbri99Reg4jvjB1yAaWmoaD8EDCiInCWLjfTJhNV?=
+ =?us-ascii?Q?dBerT7hreWfeqfVQtjW3D31KCOxtktxOZjF5ffCMi2pwVQuNtiidxa/c+tp6?=
+ =?us-ascii?Q?C8BWpQCC/IcqiPEL6wXpUfzCmz4qB5a+MgcdRFEg4MrYB0pQM+cEyjGKseoZ?=
+ =?us-ascii?Q?hyzBccvHyvCirhAwGtqlK1+K9exnMYfJsATQildyCFGt3rdWTYv7l/zGaqeU?=
+ =?us-ascii?Q?gEbI85Td4fT8jbRXqLVJS6vSHGcCvD2AAZXQ+JO2H8yfgvde+LI1ofyr9ocs?=
+ =?us-ascii?Q?d78sGwl/RHIuJ6Ea9tpdFu+MKmv6LSeJA7DMph6Twu5rH7itT5Tf5dxL7s2c?=
+ =?us-ascii?Q?prBAJF72urrGsNAFXSo0bb2jjPFlCuax26FjiviDYjDPfWnlgwQD+XgGzznm?=
+ =?us-ascii?Q?sdvYa+bhMo9bLFITbri+C9juYm80+6FfXKVXU9e5xAB3e2/iEl8G+a2fd4Fk?=
+ =?us-ascii?Q?RDWisBrIIvL7M99HVwzDATEQOFxYFwuCKPJEaZx1ZWuuGmEJJCi40H474OSQ?=
+ =?us-ascii?Q?9aUg1t8bD3ERRc0tIyhr017YjF25NPAQD36HxDAyiUG652RQ/B/qxMdWF3WK?=
+ =?us-ascii?Q?Lvia8yxIKQb+Ri6Hx6dMgTG/AOrVQap1co7o89la2Ei8pXCGd3NjToaSXtTl?=
+ =?us-ascii?Q?3XPwqOLQ4sm5+X610NaDmFAQk3Ko1owvG3FIycdYZ748VJ8I7KlyVeRrW07b?=
+ =?us-ascii?Q?y3vKSlyG1v8ChAy8SbiMdPkzpH7ABvXynGH8XBEX+eBD5qlGvCTkys/xSLoq?=
+ =?us-ascii?Q?fypwAW1r6BkV1TJHgplXDxnpoVYhCEiODtxIE/rbjJtJlr4Z+grl4REWOnTG?=
+ =?us-ascii?Q?ARIVYwsvm3kpcionNLiU58ToZolIusu9cGegYcxchNZMmLAA7b8BHTNY0i3F?=
+ =?us-ascii?Q?1R2ZQX45m+frasqv9+jDs9Jl4G0noy0mgiBP+UpBBxxnbI4GJIiBI8d8lgkj?=
+ =?us-ascii?Q?f9X2ERmkcpriuLSdRNETScm6ZJPVY+gMXCby/5OB++DuC2LnC6/4hsuYrsUF?=
+ =?us-ascii?Q?hbchQnx/Xa45ach5hEJA5B1+atuPROIsWqfWbNNMJBmP3QS4v5dn4VCpEjKP?=
+ =?us-ascii?Q?r4q8UvNuAxYDMgY13F2o1qOkGAdR5FTqEVaR0O9OxzLUIrYhHg8B8XVEUX3k?=
+ =?us-ascii?Q?4FZaodmHula9DxhrEmaBOx/QITRPjTeDdpm0X0WzVTFshLouw3C6NkiWl9x2?=
+ =?us-ascii?Q?NXEpm5V/PzDDLVOVJ1sxmWCh9OXz9XChETha9Ge/JPcl4lnmcLMlvSahYTc4?=
+ =?us-ascii?Q?viA93sHpmsGYu9/D+4WB4c0TJiyTYSVsnY59boWonbDdu6eWGQfsm7LkkLPe?=
+ =?us-ascii?Q?9c7zqGQ4P9j9eCFhEs0yYJ8bVBFEXrjY0ImpkVzU1WmAYvlHhK1aY2Dr1Wig?=
+ =?us-ascii?Q?NsLa8bSj+pYnq0LorG4vkMVMdhGl9GGTvfT1VS+INDhlow44ld4WT+s7Q3xm?=
+ =?us-ascii?Q?JS9OvErRu33gHpaNKp5GWS7WD+MVtCUL?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2024 17:46:24.5784
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc8da700-be4f-4671-0c8a-08dca8e3dfe1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF00017090.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6635
 
-On Saturday 20 July 2024 05:24:19 Andres Salomon wrote:
-> Thanks for the quick feedback! Responses below.
-> 
-> On Sat, 20 Jul 2024 10:40:19 +0200
-> Pali Rohár <pali@kernel.org> wrote:
-> 
-> > Hello,
-> > 
-> > I looked at your patch. I wrote some comments below. The main issue is
-> > how to correctly interpret read token values.
-> >
-> [...]
-> 
-> > 
-> > dell_send_request() returns negative value on error. As the read value
-> > seems to be always non-negative number, you can change API of the
-> > dell_battery_read_req() function to have read value in the return value
-> > (instead of in *val pointer). E.g.
-> > 
-> > static int dell_battery_read_req(const int type)
-> > {
-> > 	...
-> > 	err = dell_send_request(&buffer, CLASS_TOKEN_READ, SELECT_TOKEN_STD);
-> > 	if (err)
-> > 		return err;
-> > 
-> > 	return buffer.output[1];
-> > }
-> > 
-> 
-> Good call, I'll change that.
-> 
-> 
-> > > +
-> > > +static int dell_battery_write_req(const int type, int val)
-> > > +{
-> > > +	struct calling_interface_buffer buffer;
-> > > +	struct calling_interface_token *token;
-> > > +
-> > > +	token = dell_smbios_find_token(type);
-> > > +	if (!token)
-> > > +		return -ENODEV;
-> > > +
-> > > +	dell_fill_request(&buffer, token->location, val, 0, 0);
-> > > +	return dell_send_request(&buffer,
-> > > +			CLASS_TOKEN_WRITE, SELECT_TOKEN_STD);
-> > > +}
-> > > +
-> > > +/* The rules: the minimum start charging value is 50%. The maximum
-> > > + * start charging value is 95%. The minimum end charging value is
-> > > + * 55%. The maximum end charging value is 100%. And finally, there
-> > > + * has to be at least a 5% difference between start & end values.
-> > > + */
-> > > +#define CHARGE_START_MIN	50
-> > > +#define CHARGE_START_MAX	95
-> > > +#define CHARGE_END_MIN		55
-> > > +#define CHARGE_END_MAX		100
-> > > +#define CHARGE_MIN_DIFF		5
-> > > +
-> > > +static int dell_battery_custom_set(const int type, int val)
-> > > +{
-> > > +	if (type == BAT_CUSTOM_CHARGE_START) {
-> > > +		int end = CHARGE_END_MAX;
-> > > +
-> > > +		if (val < CHARGE_START_MIN)
-> > > +			val = CHARGE_START_MIN;
-> > > +		else if (val > CHARGE_START_MAX)
-> > > +			val = CHARGE_START_MAX;
-> > > +
-> > > +		dell_battery_read_req(BAT_CUSTOM_CHARGE_END, &end);  
-> > 
-> > Missing check for failure of dell_battery_read_req.
-> 
-> This is intentional; it's just a sanity check, we don't need to bail
-> if we hit a failure. I'll change the code to make that explicit
-> though, as it's not currently clear.
-> 
-> 
-> 
-> > 
-> > > +		if ((end - val) < CHARGE_MIN_DIFF)
-> > > +			val = end - CHARGE_MIN_DIFF;
-> > > +	} else if (type == BAT_CUSTOM_CHARGE_END) {
-> > > +		int start = CHARGE_START_MIN;
-> > > +
-> > > +		if (val < CHARGE_END_MIN)
-> > > +			val = CHARGE_END_MIN;
-> > > +		else if (val > CHARGE_END_MAX)
-> > > +			val = CHARGE_END_MAX;
-> > > +
-> > > +		dell_battery_read_req(BAT_CUSTOM_CHARGE_START, &start);  
-> > 
-> > Missing check for failure of dell_battery_read_req.
-> > 
-> 
-> Ditto.
-> 
-> 
-> > > +		if ((val - start) < CHARGE_MIN_DIFF)
-> > > +			val = start + CHARGE_MIN_DIFF;
-> > > +	}
-> > > +
-> > > +	return dell_battery_write_req(type, val);
-> > > +}
-> > > +
-> > > +static int battery_charging_mode_set(enum battery_charging_mode mode)
-> > > +{
-> > > +	int err;
-> > > +
-> > > +	switch (mode) {
-> > > +	case DELL_BAT_MODE_STANDARD:
-> > > +		err = dell_battery_write_req(BAT_STANDARD_MODE_TOKEN, mode);
-> > > +		break;
-> > > +	case DELL_BAT_MODE_EXPRESS:
-> > > +		err = dell_battery_write_req(BAT_EXPRESS_MODE_TOKEN, mode);
-> > > +		break;
-> > > +	case DELL_BAT_MODE_PRIMARILY_AC:
-> > > +		err = dell_battery_write_req(BAT_PRI_AC_MODE_TOKEN, mode);
-> > > +		break;
-> > > +	case DELL_BAT_MODE_ADAPTIVE:
-> > > +		err = dell_battery_write_req(BAT_ADAPTIVE_MODE_TOKEN, mode);
-> > > +		break;
-> > > +	case DELL_BAT_MODE_CUSTOM:
-> > > +		err = dell_battery_write_req(BAT_CUSTOM_MODE_TOKEN, mode);
-> > > +		break;
-> > > +	default:
-> > > +		err = -EINVAL;
-> > > +	}
-> > > +
-> > > +	return err;
-> > > +}  
-> > 
-> > You can make whole function smaller by avoiding err variable:
-> > 
-> > static int battery_charging_mode_set(enum battery_charging_mode mode)
-> > {
-> > 	switch (mode) {
-> > 	case DELL_BAT_MODE_STANDARD:
-> > 		return dell_battery_write_req(BAT_STANDARD_MODE_TOKEN, mode);
-> > 	case DELL_BAT_MODE_EXPRESS:
-> > 		return dell_battery_write_req(BAT_EXPRESS_MODE_TOKEN, mode);
-> > 	case DELL_BAT_MODE_PRIMARILY_AC:
-> > 		return dell_battery_write_req(BAT_PRI_AC_MODE_TOKEN, mode);
-> > 	case DELL_BAT_MODE_ADAPTIVE:
-> > 		return dell_battery_write_req(BAT_ADAPTIVE_MODE_TOKEN, mode);
-> > 	case DELL_BAT_MODE_CUSTOM:
-> > 		return dell_battery_write_req(BAT_CUSTOM_MODE_TOKEN, mode);
-> > 	default:
-> > 		return -EINVAL;
-> > 	}
-> > }
-> >
-> 
-> Okay, I'll change it.
-> 
->  
-> > > +
-> > > +static ssize_t charge_type_show(struct device *dev,
-> > > +		struct device_attribute *attr,
-> > > +		char *buf)
-> > > +{
-> > > +	enum battery_charging_mode mode;
-> > > +	ssize_t count = 0;
-> > > +
-> > > +	for (mode = DELL_BAT_MODE_STANDARD; mode < DELL_BAT_MODE_MAX; mode++) {
-> > > +		if (battery_state[mode]) {
-> > > +			count += sysfs_emit_at(buf, count,
-> > > +				mode == bat_chg_current ? "[%s] " : "%s ",
-> > > +				battery_state[mode]);
-> > > +		}
-> > > +	}
-> > > +
-> > > +	/* convert the last space to a newline */
-> > > +	count--;
-> > > +	count += sysfs_emit_at(buf, count, "\n");  
-> > 
-> > Here is missing protection in the case when number of valid modes is
-> > zero, so count is 0 and buf was untouched.
-> > 
-> 
-> This will never be zero (based on the hardcoded value of DELL_BAT_MODE_MAX),
+This is in preparation to splitting ACPI and platform device drivers.
+Create and move hsmp specific code into its own directory,
+no logical changes.
 
-Now I see. You are iterating over members of constant array battery_state[].
-I overlooked it and I thought that this iteration over mode values.
+Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+---
+Changes since v2:
+None
+Changes since v1:
+None
 
-What about writing the for- conditions to be visible that you are
-iterating over the array? E.g.
+ MAINTAINERS                                |  2 +-
+ drivers/platform/x86/amd/Kconfig           | 14 +-------------
+ drivers/platform/x86/amd/Makefile          |  3 +--
+ drivers/platform/x86/amd/hsmp/Kconfig      | 17 +++++++++++++++++
+ drivers/platform/x86/amd/hsmp/Makefile     |  8 ++++++++
+ drivers/platform/x86/amd/{ => hsmp}/hsmp.c |  0
+ 6 files changed, 28 insertions(+), 16 deletions(-)
+ create mode 100644 drivers/platform/x86/amd/hsmp/Kconfig
+ create mode 100644 drivers/platform/x86/amd/hsmp/Makefile
+ rename drivers/platform/x86/amd/{ => hsmp}/hsmp.c (100%)
 
-	size_t i;
-	...
-	for (i = 0; i < ARRAY_SIZE(battery_state); i++) {
-		if (!battery_state[i])
-			continue;
-		count += sysfs_emit_at(buf, count, i == bat_chg_current ? "[%s] " : "%s ", battery_state[i]);
-	}
-	...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d6c90161c7bf..a7d79d1f7ec1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1037,7 +1037,7 @@ S:	Maintained
+ F:	Documentation/arch/x86/amd_hsmp.rst
+ F:	arch/x86/include/asm/amd_hsmp.h
+ F:	arch/x86/include/uapi/asm/amd_hsmp.h
+-F:	drivers/platform/x86/amd/hsmp.c
++F:	drivers/platform/x86/amd/hsmp/
+ 
+ AMD IOMMU (AMD-VI)
+ M:	Joerg Roedel <joro@8bytes.org>
+diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+index f88682d36447..2c671cc17d63 100644
+--- a/drivers/platform/x86/amd/Kconfig
++++ b/drivers/platform/x86/amd/Kconfig
+@@ -3,22 +3,10 @@
+ # AMD x86 Platform Specific Drivers
+ #
+ 
++source "drivers/platform/x86/amd/hsmp/Kconfig"
+ source "drivers/platform/x86/amd/pmf/Kconfig"
+ source "drivers/platform/x86/amd/pmc/Kconfig"
+ 
+-config AMD_HSMP
+-	tristate "AMD HSMP Driver"
+-	depends on AMD_NB && X86_64 && ACPI
+-	help
+-	  The driver provides a way for user space tools to monitor and manage
+-	  system management functionality on EPYC server CPUs from AMD.
+-
+-	  Host System Management Port (HSMP) interface is a mailbox interface
+-	  between the x86 core and the System Management Unit (SMU) firmware.
+-
+-	  If you choose to compile this driver as a module the module will be
+-	  called amd_hsmp.
+-
+ config AMD_WBRF
+ 	bool "AMD Wifi RF Band mitigations (WBRF)"
+ 	depends on ACPI
+diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
+index dcec0a46f8af..96ec24c8701b 100644
+--- a/drivers/platform/x86/amd/Makefile
++++ b/drivers/platform/x86/amd/Makefile
+@@ -5,7 +5,6 @@
+ #
+ 
+ obj-$(CONFIG_AMD_PMC)		+= pmc/
+-amd_hsmp-y			:= hsmp.o
+-obj-$(CONFIG_AMD_HSMP)		+= amd_hsmp.o
++obj-y				+= hsmp/
+ obj-$(CONFIG_AMD_PMF)		+= pmf/
+ obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
+diff --git a/drivers/platform/x86/amd/hsmp/Kconfig b/drivers/platform/x86/amd/hsmp/Kconfig
+new file mode 100644
+index 000000000000..b55d4ed9bceb
+--- /dev/null
++++ b/drivers/platform/x86/amd/hsmp/Kconfig
+@@ -0,0 +1,17 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# AMD HSMP Driver
++#
++
++config AMD_HSMP
++	tristate "AMD HSMP Driver"
++	depends on AMD_NB && X86_64 && ACPI
++	help
++	  The driver provides a way for user space tools to monitor and manage
++	  system management functionality on EPYC server CPUs from AMD.
++
++	  Host System Management Port (HSMP) interface is a mailbox interface
++	  between the x86 core and the System Management Unit (SMU) firmware.
++
++	  If you choose to compile this driver as a module the module will be
++	  called amd_hsmp.
+diff --git a/drivers/platform/x86/amd/hsmp/Makefile b/drivers/platform/x86/amd/hsmp/Makefile
+new file mode 100644
+index 000000000000..fda64906a5e8
+--- /dev/null
++++ b/drivers/platform/x86/amd/hsmp/Makefile
+@@ -0,0 +1,8 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Makefile for drivers/platform/x86/amd/hsmp
++# AMD HSMP Driver
++#
++
++obj-$(CONFIG_AMD_HSMP)		+= amd_hsmp.o
++amd_hsmp-objs			:= hsmp.o
+diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
+similarity index 100%
+rename from drivers/platform/x86/amd/hsmp.c
+rename to drivers/platform/x86/amd/hsmp/hsmp.c
+-- 
+2.25.1
 
-This has an advantage that you do not depend on DELL_BAT_MODE_MAX value,
-compiler will calculate upper bound automatically.
-
-Or another way. You can define array of tokens, like it is done for
-keyboard backlight. See how the array kbd_tokens[] is used.
-
-With this approach you can completely get rid of the DELL_BAT_MODE_MAX.
-
-> but perhaps a static_assert or BUILD_BUG_ON to verify that the number of
-> modes > 0?
-
-I think it is not needed.
-
->   
-> > > +
-> > > +	return count;
-> > > +}
-> > > +
-> > > +static ssize_t charge_type_store(struct device *dev,
-> > > +		struct device_attribute *attr,
-> > > +		const char *buf, size_t size)
-> > > +{
-> > > +	enum battery_charging_mode mode;
-> > > +	const char *label;
-> > > +	int ret = -EINVAL;
-> > > +
-> > > +	for (mode = DELL_BAT_MODE_STANDARD; mode < DELL_BAT_MODE_MAX; mode++) {
-> > > +		label = battery_state[mode];
-> > > +		if (label && sysfs_streq(label, buf))
-> > > +			break;
-> > > +	}
-> > > +
-> > > +	if (mode > DELL_BAT_MODE_NONE && mode < DELL_BAT_MODE_MAX) {
-> > > +		ret = battery_charging_mode_set(mode);
-> > > +		if (!ret) {
-> > > +			bat_chg_current = mode;
-> > > +			ret = size;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static ssize_t charge_control_start_threshold_show(struct device *dev,
-> > > +		struct device_attribute *attr,
-> > > +		char *buf)
-> > > +{
-> > > +	int ret, start;
-> > > +
-> > > +	ret = dell_battery_read_req(BAT_CUSTOM_CHARGE_START, &start);
-> > > +	if (!ret)
-> > > +		ret = sysfs_emit(buf, "%d\n", start);
-> > > +
-> > > +	return ret;
-> > > +}  
-> > 
-> > This function and also following 3 functions have unusual error
-> > handling. Normally error handling is done by early return, as:
-> > 
-> >     ret = func1();
-> >     if (ret)
-> >         return ret;
-> > 
-> >     ret = func2();
-> >     if (ret)
-> >         return ret;
-> > 
-> >     return 0;
-> > 
-> > You can change it something like:
-> > 
-> > {
-> > 	int ret, start;
-> > 
-> > 	ret = dell_battery_read_req(BAT_CUSTOM_CHARGE_START, &start);
-> > 	if (ret)
-> > 		return ret;
-> > 
-> > 	return sysfs_emit(buf, "%d\n", start);
-> > }
-> > 
-> 
-> Okay.
-> 
-> 
-> > > +static ssize_t charge_control_start_threshold_store(struct device *dev,
-> > > +		struct device_attribute *attr,
-> > > +		const char *buf, size_t size)
-> > > +{
-> [...]
-> 
-> > > +
-> > > +static void __init dell_battery_init(struct device *dev)
-> > > +{
-> > > +	enum battery_charging_mode current_mode = DELL_BAT_MODE_NONE;
-> > > +
-> > > +	dell_battery_read_req(BAT_CUSTOM_MODE_TOKEN, (int *) &current_mode);
-> > > +	if (current_mode != DELL_BAT_MODE_NONE) {  
-> > 
-> > I quite do not understand how is this code suppose to work.
-> > 
-> > Why is there mix of custom kernel enum battery_charging_mode and return
-> > value from Dell's API?
-> 
-> This is from the original patch from Dell; tbh, I'm not sure. It does
-> work, though. That is, current_mode ends up holding the correct value
-> based on what was previously set, even if the charging mode is set from
-> the BIOS.
-> 
-> I just scanned through the libsmbios code to see what it's doing, and
-> it appears to loop through every charging mode to check if its active.
-> I'm not really sure that makes much more sense, so I'll try some more
-> tests.
-
-Keyboard backlight code (kbd_get_first_active_token_bit) is doing also
-this type scan. If I remember correctly, for every keyboard backlight
-token we just know the boolean value - if the token is set or not.
-
-It would really nice to see what (raw) value is returned by the
-dell_battery_read_req(token) function for every battery token and for
-every initial state.
-
-Because it is really suspicious if dell_battery_read_req() would return
-value of the enum battery_charging_mode (as this is kernel enum).
-
-
-Also another important thing. In past it was possible to buy from Dell
-special batteries with long warranty (3+ years). I'm not sure if these
-batteries are still available for end-user customers. With this type of
-battery, it was not possible to change charging mode to ExpressCharge
-(bios option was fade-out). I do not have such battery anymore, but I
-would expect that the firmware disabled BAT_EXPRESS_MODE_TOKEN as mark
-it as unavailable.
-
-I think that we should scan list of available tokens, like it is done
-for keyboard backlight in kbd_init_tokens(). And export via sysfs only
-those battery modes for which there is available token.
-
-> 
-> > 
-> > My feeling is that dell_battery_read_req(BAT_CUSTOM_MODE_TOKEN) checks
-> > if the token BAT_CUSTOM_MODE_TOKEN is set or not.
-> > 
-> > Could you please check what is stored in every BAT_*_MODE_TOKEN token at
-> > this init stage?
-> > 
-> > I think it should work similarly, like keyboard backlight tokens as
-> > implemented in functions: kbd_set_token_bit, kbd_get_token_bit,
-> > kbd_get_first_active_token_bit.
-> > 
-> > > +		bat_chg_current = current_mode;
-> > > +		battery_hook_register(&dell_battery_hook);
-> > > +	}
-> > > +}
-> > > +
-> [...]
-> 
-> > >  #define GLOBAL_MUTE_ENABLE	0x058C
-> > >  #define GLOBAL_MUTE_DISABLE	0x058D
-> > >  
-> > > +enum battery_charging_mode {
-> > > +	DELL_BAT_MODE_NONE = 0,
-> > > +	DELL_BAT_MODE_STANDARD,
-> > > +	DELL_BAT_MODE_EXPRESS,
-> > > +	DELL_BAT_MODE_PRIMARILY_AC,
-> > > +	DELL_BAT_MODE_ADAPTIVE,
-> > > +	DELL_BAT_MODE_CUSTOM,
-> > > +	DELL_BAT_MODE_MAX,
-> > > +};
-> > > +  
-> > 
-> > I think that this is just an internal driver enum, not Dell API. So this
-> > enum should be in the dell-laptop.c file.
-> > 
-> 
-> Agreed, I'll change it.
-> 
-> 
-> 
-> 
-> -- 
-> I'm available for contract & employment work, see:
-> https://spindle.queued.net/~dilinger/resume-tech.pdf
