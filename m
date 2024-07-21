@@ -1,254 +1,224 @@
-Received: from spindle.queued.net (spindle.queued.net [45.33.49.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A0001396;
-	Sun, 21 Jul 2024 02:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.33.49.30
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167B83D66;
+	Sun, 21 Jul 2024 06:51:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721527576; cv=none; b=Dmrkjth9YIJ9oyoifjipo5ctWewdltu99yUr3wzITeNF4QDLQrsXONTFFzekz5na+KFnLBGNu4ZjIOGJstqXnawexYPCtwEw4fbbTEbiW5LhlKsz1F+fQQlfHksPy1eM6mxG047kjGlGo8jvvIDNTzoL6zMjc8R4pI8DMRUJPBI=
+	t=1721544697; cv=none; b=DqhZ1NLkI+x8mI8lT0Jwsa5NLCKp6eRovAUGhdtsugReTzZmfEp3cvNs7TRQkV109loYXXgJ8a3m0z+024Vrzaq8gFwBmCbtv16XN918waJtTMaAVg6SxES/0X7MWtQVuPhfY4sKCMze31l1jliI72lV7UwqJflQt4iTH7fg54k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721527576; c=relaxed/simple;
-	bh=j6wDrTm4fG5Noo6HKl4B9hE3bi5WT6wHqEMyqQNgyCI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G2ShFcyBWQpAzNI7tVggt2nHfba/ehDYT+yvF5aEmyV9g+SreeEE/5454XmhppTNabM+7pqK/At9lDfcMf86kRPgUoN9ae+SHXYCFhPdrouEcAUoEwIaMgjzMfytDwQA7ceJ0Q8WUgIoxoh6YdYoIbAheM9AQ9SDuGVDac9pwEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=queued.net; spf=pass smtp.mailfrom=queued.net; arc=none smtp.client-ip=45.33.49.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=queued.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queued.net
-Received: by spindle.queued.net (Postfix, from userid 1001)
-	id E9C1B11594C; Sat, 20 Jul 2024 22:06:13 -0400 (EDT)
-Received: from 5400 (unknown [172.56.164.186])
-	by spindle.queued.net (Postfix) with ESMTPSA id 75D4011593F;
-	Sat, 20 Jul 2024 22:06:10 -0400 (EDT)
-Date: Sat, 20 Jul 2024 22:06:06 -0400
-From: Andres Salomon <dilinger@queued.net>
-To: Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- Matthew Garrett <mjg59@srcf.ucam.org>, Sebastian Reichel <sre@kernel.org>,
- Hans de Goede <hdegoede@redhat.com>, Ilpo =?UTF-8?B?SsOkcnZpbmVu?=
- <ilpo.jarvinen@linux.intel.com>, linux-pm@vger.kernel.org,
- Dell.Client.Kernel@dell.com, Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH] platform/x86:dell-laptop: Add knobs to change battery
- charge settings
-Message-ID: <20240720220606.1934df43@5400>
-In-Reply-To: <20240720095507.uyaotkofkyasdgbd@pali>
-References: <20240720012220.26d62a54@5400>
-	<20240720084019.hrnd4wgt4muorydp@pali>
-	<20240720052419.73b1415a@5400>
-	<20240720095507.uyaotkofkyasdgbd@pali>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1721544697; c=relaxed/simple;
+	bh=nBGbb3a+TRLLJqXXb6EAjC1BPjyzbQsVsCf6QyMMqQ4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=i4ly+ymjhpr5QKvnF8n9PD/13SBeJKqL1AxKPzHpaL84KFHqsRbndf3PXzggX8EB2f0PduN15WkdVM47SZDd1eNL3HzwqQAdhi6NNpMjAv9ri+O21Q6slk222wvwEkhftVoDVw2R6lIGj34IM5emckTBUMkBJIz3WBVRGScLWxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.4] (ip5f5af54b.dynamic.kabel-deutschland.de [95.90.245.75])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 46A1C61E5FE05;
+	Sun, 21 Jul 2024 08:50:43 +0200 (CEST)
+Message-ID: <6e967a85-09c6-4230-9e73-b0710444def4@molgen.mpg.de>
+Date: Sun, 21 Jul 2024 08:50:39 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Bogosity: Ham, tests=bogofilter, spamicity=0.000000, version=1.2.5
+User-Agent: Mozilla Thunderbird
+Subject: Re: Dell XPS 13 9360: `slp_s0_residency_usec` stays 0
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+To: "David E. Box" <david.e.box@linux.intel.com>,
+ Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+Cc: David E Box <david.e.box@intel.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
+References: <38fc334a-7c8c-4e43-bf63-6ac9aa882a2f@molgen.mpg.de>
+ <c73a9072-27eb-4d42-b74a-52619a81837e@molgen.mpg.de>
+ <81e937f0-df95-4e07-8d0f-3e20fce8481f@amd.com>
+ <36a91aa1-84e3-4ad5-8384-1bd999c15675@molgen.mpg.de>
+ <49bd6fea5a77a2b419e5c808e400f02fe275d9b1.camel@linux.intel.com>
+ <0e25d09e-ca8a-407c-8a6e-8955fea765b5@molgen.mpg.de>
+ <0ae5aef7-f65f-492b-86d6-ab8a3a3e2a54@molgen.mpg.de>
+Content-Language: en-US
+In-Reply-To: <0ae5aef7-f65f-492b-86d6-ab8a3a3e2a54@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, 20 Jul 2024 11:55:07 +0200
-Pali Roh=C3=A1r <pali@kernel.org> wrote:
-
-> On Saturday 20 July 2024 05:24:19 Andres Salomon wrote:
-> > Thanks for the quick feedback! Responses below.
-> >=20
-> > On Sat, 20 Jul 2024 10:40:19 +0200
-> > Pali Roh=C3=A1r <pali@kernel.org> wrote:
-> >  =20
-> > > Hello,
-> > >=20
-> > > I looked at your patch. I wrote some comments below. The main issue is
-> > > how to correctly interpret read token values.
-> > > =20
-[...]
-> > > > +
-> > > > +static ssize_t charge_type_show(struct device *dev,
-> > > > +		struct device_attribute *attr,
-> > > > +		char *buf)
-> > > > +{
-> > > > +	enum battery_charging_mode mode;
-> > > > +	ssize_t count =3D 0;
-> > > > +
-> > > > +	for (mode =3D DELL_BAT_MODE_STANDARD; mode < DELL_BAT_MODE_MAX; m=
-ode++) {
-> > > > +		if (battery_state[mode]) {
-> > > > +			count +=3D sysfs_emit_at(buf, count,
-> > > > +				mode =3D=3D bat_chg_current ? "[%s] " : "%s ",
-> > > > +				battery_state[mode]);
-> > > > +		}
-> > > > +	}
-> > > > +
-> > > > +	/* convert the last space to a newline */
-> > > > +	count--;
-> > > > +	count +=3D sysfs_emit_at(buf, count, "\n");   =20
-> > >=20
-> > > Here is missing protection in the case when number of valid modes is
-> > > zero, so count is 0 and buf was untouched.
-> > >  =20
-> >=20
-> > This will never be zero (based on the hardcoded value of DELL_BAT_MODE_=
-MAX), =20
->=20
-> Now I see. You are iterating over members of constant array battery_state=
-[].
-> I overlooked it and I thought that this iteration over mode values.
->=20
-> What about writing the for- conditions to be visible that you are
-> iterating over the array? E.g.
->=20
-> 	size_t i;
-> 	...
-> 	for (i =3D 0; i < ARRAY_SIZE(battery_state); i++) {
-> 		if (!battery_state[i])
-> 			continue;
-> 		count +=3D sysfs_emit_at(buf, count, i =3D=3D bat_chg_current ? "[%s] "=
- : "%s ", battery_state[i]);
-> 	}
-> 	...
->=20
-> This has an advantage that you do not depend on DELL_BAT_MODE_MAX value,
-> compiler will calculate upper bound automatically.
->=20
-> Or another way. You can define array of tokens, like it is done for
-> keyboard backlight. See how the array kbd_tokens[] is used.
->=20
-> With this approach you can completely get rid of the DELL_BAT_MODE_MAX.
->=20
-
-See below for a question about charge_type_store() if we get rid of
-DELL_BAT_MODE_MAX.
-
-> > but perhaps a static_assert or BUILD_BUG_ON to verify that the number of
-> > modes > 0? =20
->=20
-> I think it is not needed.
->=20
-> >    =20
-> > > > +
-> > > > +	return count;
-> > > > +}
-> > > > +
-> > > > +static ssize_t charge_type_store(struct device *dev,
-> > > > +		struct device_attribute *attr,
-> > > > +		const char *buf, size_t size)
-> > > > +{
-> > > > +	enum battery_charging_mode mode;
-> > > > +	const char *label;
-> > > > +	int ret =3D -EINVAL;
-> > > > +
-> > > > +	for (mode =3D DELL_BAT_MODE_STANDARD; mode < DELL_BAT_MODE_MAX; m=
-ode++) {
-> > > > +		label =3D battery_state[mode];
-> > > > +		if (label && sysfs_streq(label, buf))
-> > > > +			break;
-> > > > +	}
-> > > > +
-> > > > +	if (mode > DELL_BAT_MODE_NONE && mode < DELL_BAT_MODE_MAX) {
-> > > > +		ret =3D battery_charging_mode_set(mode);
-> > > > +		if (!ret) {
-> > > > +			bat_chg_current =3D mode;
-> > > > +			ret =3D size;
-> > > > +		}
-> > > > +	}
-> > > > +
-> > > > +	return ret;
-> > > > +}
-
-Here we're using DELL_BAT_MODE_MAX to determine if we failed to match
-any mode strings sent from the user. If we get rid of that, we're either
-going to have to use a separate variable (eg, 'bool matched =3D false;' and
-set it to true in case of a match), or iterate backwards (eg,
-for (mode =3D ARRAY_SIZE(battery_state); mode >=3D DELL_BAT_MODE_NONE; mode=
---) {
-	...
-}
-if (mode !=3D DELL_BAT_MODE_NONE) {
-	ret =3D battery_charging_mode_set(mode);
+Dear David, dear Rajneesh,
 
 
-Do you have a preference?
+Am 14.06.24 um 15:36 schrieb Paul Menzel:
+
+> Am 31.05.24 um 05:52 schrieb Paul Menzel:
+> 
+>> Am 30.05.24 um 23:24 schrieb David E. Box:
+>>
+>>> On Fri, 2024-05-24 at 06:53 +0200, Paul Menzel wrote:
+>>
+>>>> Am 22.05.24 um 18:37 schrieb Mario Limonciello:
+>>>>> On 5/22/2024 10:52, Paul Menzel wrote:
+>>>>
+>>>>>> On the Intel Kaby Lake laptop Dell XPS 13 9360,
+>>>>>> `/sys/kernel/debug/pmc_core/slp_s0_residency_usec` does stay 0 even
+>>>>>> after a s2idle suspend/resume cycle.
+>>>>>
+>>>>> It won't change your numbers but FWIW you can also read from
+>>>>>
+>>>>> $ cat /sys/power/suspend_stats/last_hw_sleep
+>>>>>
+>>>>> which is also accessible under kernel lockdown.
+>>>>>
+>>>>>>       $ sudo dmesg
+>>>>>>       […]
+>>>>>>       [    0.000000] DMI: Dell Inc. XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022
+>>>>>>       […]
+>>>>>>       [10176.745124] PM: suspend entry (s2idle)
+>>>>>>       [10176.757275] Filesystems sync: 0.012 seconds
+>>>>>>       [10176.769118] Freezing user space processes
+>>>>>>       [10176.771693] Freezing user space processes completed (elapsed 0.002 seconds)
+>>>>>>       [10176.771710] OOM killer disabled.
+>>>>>>       [10176.771714] Freezing remaining freezable tasks
+>>>>>>       [10176.773487] Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+>>>>>>       [10176.773504] printk: Suspending console(s) (use no_console_suspend to debug)
+>>>>>>       [10176.948337] ACPI: EC: interrupt blocked
+>>>>>>       [10176.951016] intel_pch_thermal 0000:00:14.2: CPU-PCH is cool [48C]
+>>>>>>       [10181.281827] ACPI: EC: interrupt unblocked
+>>>>>>       $ sudo more /sys/kernel/debug/pmc_core/slp_s0_residency_usec
+>>>>>>       0
+>>>>>>
+>>>>>> Is that expected?
+>>>>>
+>>>>> Is it a regression?  If so; probably it's worth bisecting.
+>>>>
+>>>> Sorry, I do not know. It’s the first time [1] I heard about this file,
+>>>> and that fwts [2] checks it. Do you remember, if Dell has any public
+>>>> logs from testing, containing `slp_s0_residency_usec`?
+>>>>
+>>>>> If it's not a regression IIUC you should probably run
+>>>>> https://github.com/intel/S0ixSelftestTool for assistance in next steps
+>>>>> on debugging why this is happening.
+>>>>
+>>>> Thank you for the pointer. Please find the log file from `sudo
+>>>> ./s0ix-selftest-tool.sh -s` attached. Some PCIe ports are flagged.
+>>
+>>> The report suggests checking the kernel log for any error loading drm 
+>>> firmware.
+>>
+>> Did you conclude that from the lines below?
+>>
+>>     GFX DC5 after S2idle: 59
+>>     GFX DC6 after S2idle: 0
+>>
+>>     Your system CPU Model ID is: 142, and the graphics DC6 value is not expected to enter DC9,
+>>     please check the latest display DMC FW load status:
+>>
+>>     Your system Intel graphics DMC FW loaded status is:yes
+>>
+>>> If the firmware is loaded properly, you should see a message similar to the
+>>> following:
+>>>
+>>>      [drm] Finished loading DMC firmware i915/kbl_dmc_ver1_04.bin (v1.4)
+>>
+>> The firmware is loaded:
+>>
+>>      [  124.536942] i915 0000:00:02.0: [drm] Finished loading DMC firmware i915/kbl_dmc_ver1_04.bin (v1.4)
+> 
+> Further tries show, the system does not reach PC10 state without 
+> ignoring LTR 8 (PMC0:SOUTHPORT_C). With that LTR ignored, I think there 
+> are sometimes problems regarding suspend/resume ACPI S3, but I have to 
+> test that further. But even if with PC10 states being reached, after 
+> S0ix suspend/resume, `slp_s0_residency_usec` remains 0.
+> 
+> Newly booted with nothing attached:
+> 
+> ```
+> $ sudo turbostat --quiet --show 
+> CPU%c1,CPU%c6,CPU%c7,GFX%rc6,Pkg%pc2,Pkg%pc3,Pkg%pc6,Pkg%pc7,Pkg%pc8,Pkg%pc9,Pk%pc10,SYS%LPI rtcwake -m freeze -s 10
+> rtcwake: assuming RTC uses UTC ...
+> rtcwake: wakeup from "freeze" using /dev/rtc0 at Fri Jun 14 09:05:12 2024
+> 
+> 10.931644 sec
+> CPU%c1    CPU%c6    CPU%c7    GFX%rc6    Pkg%pc2    Pkg%pc3    Pkg%pc6    Pkg%pc7    Pkg%pc8 Pkg%pc9    Pk%pc10    SYS%LPI
+> 1.40    0.56    96.21    589.96    2.83    0.44    0.13    0.01 92.07    0.00    0.00    0.00
+> 0.84    0.24    96.89    589.96    2.83    0.44    0.13    0.01 92.07    0.00    0.00    0.00
+> 1.40
+> 1.94    0.89    95.53
+> 1.41
+> ```
+> 
+> Disable LTR 8:
+> 
+> ```
+> $ sudo cat /sys/kernel/debug/pmc_core/ltr_show
+> 0    PMC0:SOUTHPORT_A                         LTR: RAW: 0x8460846 Non-Snoop(ns): 0                   Snoop(ns): 0
+> 1    PMC0:SOUTHPORT_B                         LTR: RAW: 0x0 Non-Snoop(ns): 0                   Snoop(ns): 0
+> 2    PMC0:SATA                                LTR: RAW: 0x0 Non-Snoop(ns): 0                   Snoop(ns): 0
+> 3    PMC0:GIGABIT_ETHERNET                    LTR: RAW: 0x0 Non-Snoop(ns): 0                   Snoop(ns): 0
+> 4    PMC0:XHCI                                LTR: RAW: 0x88a0 Non-Snoop(ns): 0                   Snoop(ns): 163840
+> 5    PMC0:Reserved                            LTR: RAW: 0x0 Non-Snoop(ns): 0                   Snoop(ns): 0
+> 6    PMC0:ME                                  LTR: RAW: 0xc000c00 Non-Snoop(ns): 0                   Snoop(ns): 0
+> 7    PMC0:EVA                                 LTR: RAW: 0x0 Non-Snoop(ns): 0                   Snoop(ns): 0
+> 8    PMC0:SOUTHPORT_C                         LTR: RAW: 0x89f489f4 Non-Snoop(ns): 512000              Snoop(ns): 512000
+> 9    PMC0:HD_AUDIO                            LTR: RAW: 0x0 Non-Snoop(ns): 0                   Snoop(ns): 0
+> 10    PMC0:LPSS                                LTR: RAW: 0x0 Non-Snoop(ns): 0                   Snoop(ns): 0
+> 11    PMC0:SOUTHPORT_D                         LTR: RAW: 0x0 Non-Snoop(ns): 0                   Snoop(ns): 0
+> 12    PMC0:SOUTHPORT_E                         LTR: RAW: 0x0 Non-Snoop(ns): 0                   Snoop(ns): 0
+> 13    PMC0:CAMERA                              LTR: RAW: 0x0 Non-Snoop(ns): 0                   Snoop(ns): 0
+> 14    PMC0:ESPI                                LTR: RAW: 0x0 Non-Snoop(ns): 0                   Snoop(ns): 0
+> 15    PMC0:SCC                                 LTR: RAW: 0x0 Non-Snoop(ns): 0                   Snoop(ns): 0
+> 16    PMC0:ISH                                 LTR: RAW: 0x0 Non-Snoop(ns): 0                   Snoop(ns): 0
+> 17    PMC0:CURRENT_PLATFORM                    LTR: RAW: 0x40201 Non-Snoop(ns): 0                   Snoop(ns): 0
+> 18    PMC0:AGGREGATED_SYSTEM                   LTR: RAW: 0x3eca251 Non-Snoop(ns): 0                   Snoop(ns): 593
+> $ echo 8 | sudo tee /sys/kernel/debug/pmc_core/ltr_ignore
+> 8
+> ```
+> 
+> and test again:
+> 
+> ```
+> $ sudo turbostat --quiet --show CPU%c1,CPU%c6,CPU%c7,GFX%rc6,Pkg%pc2,Pkg%pc3,Pkg%pc6,Pkg%pc7,Pkg%pc8,Pkg%pc9,Pk%pc10,SYS%LPI rtcwake -m freeze -s 10
+> rtcwake: assuming RTC uses UTC ...
+> rtcwake: wakeup from "freeze" using /dev/rtc0 at Fri Jun 14 09:06:29 2024
+> 11.025682 sec
+> CPU%c1    CPU%c6    CPU%c7    GFX%rc6    Pkg%pc2    Pkg%pc3    Pkg%pc6    Pkg%pc7    Pkg%pc8 Pkg%pc9    Pk%pc10    SYS%LPI
+> 1.45    0.57    96.39    1273.23    3.08    0.31    0.08    0.01    1.54    0.00    90.76    0.00
+> 1.25    0.39    96.47    1273.21    3.08    0.31    0.08    0.01    1.54    0.00    90.76    0.00
+> 1.90
+> 1.48    0.75    96.31
+> 1.16
+> ```
+> 
+> Daniel Holz (Bcc) with a similar Dell XPS 13 9365 (also Kaby Lake) 
+> reports similar issues [3].
+> 
+> Does somebody have an idea?
+
+The problem persists with Linux 6.10-09675-g12cc3d5389f3.
 
 
-[...]
-> > > > +static ssize_t charge_control_start_threshold_store(struct device =
-*dev,
-> > > > +		struct device_attribute *attr,
-> > > > +		const char *buf, size_t size)
-> > > > +{ =20
-> > [...]
-> >  =20
-> > > > +
-> > > > +static void __init dell_battery_init(struct device *dev)
-> > > > +{
-> > > > +	enum battery_charging_mode current_mode =3D DELL_BAT_MODE_NONE;
-> > > > +
-> > > > +	dell_battery_read_req(BAT_CUSTOM_MODE_TOKEN, (int *) &current_mod=
-e);
-> > > > +	if (current_mode !=3D DELL_BAT_MODE_NONE) {   =20
-> > >=20
-> > > I quite do not understand how is this code suppose to work.
-> > >=20
-> > > Why is there mix of custom kernel enum battery_charging_mode and retu=
-rn
-> > > value from Dell's API? =20
-> >=20
-> > This is from the original patch from Dell; tbh, I'm not sure. It does
-> > work, though. That is, current_mode ends up holding the correct value
-> > based on what was previously set, even if the charging mode is set from
-> > the BIOS.
-> >=20
-> > I just scanned through the libsmbios code to see what it's doing, and
-> > it appears to loop through every charging mode to check if its active.
-> > I'm not really sure that makes much more sense, so I'll try some more
-> > tests. =20
->=20
-> Keyboard backlight code (kbd_get_first_active_token_bit) is doing also
-> this type scan. If I remember correctly, for every keyboard backlight
-> token we just know the boolean value - if the token is set or not.
->=20
-> It would really nice to see what (raw) value is returned by the
-> dell_battery_read_req(token) function for every battery token and for
-> every initial state.
+Kind regards,
 
-I checked this. The BIOS sets the mode value in every related token
-location. I'm still not really sure what libsmbios is doing, but the
-kernel code seems to arbitrarily choose one of the token locations
-to read from. This makes sense to me now.
-
-In the BIOS when I set the mode to "ExpressCharge",
-this what I pulled for each token location:
-
-[    5.704651] dell-laptop dell-laptop: BAT_CUSTOM_MODE_TOKEN value: 2
-[    5.707015] dell-laptop dell-laptop: BAT_PRI_AC_MODE_TOKEN value: 2
-[    5.709114] dell-laptop dell-laptop: BAT_ADAPTIVE_MODE_TOKEN value: 2
-[    5.711041] dell-laptop dell-laptop: BAT_STANDARD_MODE_TOKEN value: 2
-[    5.713705] dell-laptop dell-laptop: BAT_EXPRESS_MODE_TOKEN value: 2
-
-Similar story when I set it to Custom (all were '5'), or Standard ('1').
-When I set it from linux as well, it changed all location values.
-
->=20
-> Because it is really suspicious if dell_battery_read_req() would return
-> value of the enum battery_charging_mode (as this is kernel enum).
->=20
->=20
-> Also another important thing. In past it was possible to buy from Dell
-> special batteries with long warranty (3+ years). I'm not sure if these
-> batteries are still available for end-user customers. With this type of
-> battery, it was not possible to change charging mode to ExpressCharge
-> (bios option was fade-out). I do not have such battery anymore, but I
-> would expect that the firmware disabled BAT_EXPRESS_MODE_TOKEN as mark
-> it as unavailable.
->=20
-> I think that we should scan list of available tokens, like it is done
-> for keyboard backlight in kbd_init_tokens(). And export via sysfs only
-> those battery modes for which there is available token.
-
-I agree, but I'm not seeing a way to do that right now given how the
-BIOS sets the mode. Maybe libsmbios has some clues...
+Paul
 
 
+>>>> [1]: https://review.coreboot.org/c/coreboot/+/81595/10/src/mainboard/cwwk/adl/Kconfig#9
+>>>> [2]: https://wiki.ubuntu.com/FirmwareTestSuite/
+> [3]: https://bugzilla.kernel.org/show_bug.cgi?id=207893
 
-
-
---=20
-I'm available for contract & employment work, see:
-https://spindle.queued.net/~dilinger/resume-tech.pdf
+>>>>>> PS: Some system details:
+>>>>>>
+>>>>>> ```
+>>>>>> $ LANG= lspci -nn
+>>>>>> 00:00.0 Host bridge [0600]: Intel Corporation Xeon E3-1200 v6/7th Gen Core Processor Host Bridge/DRAM Registers [8086:5904] (rev 02)
+>>>>>> 00:02.0 VGA compatible controller [0300]: Intel Corporation HD Graphics 620 [8086:5916] (rev 02)
+>>>>>> 00:04.0 Signal processing controller [1180]: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem [8086:1903] (rev 02) 
+>>>>>> 00:14.0 USB controller [0c03]: Intel Corporation Sunrise Point-LP USB 3.0 xHCI Controller [8086:9d2f] (rev 21)
+>>>>
+>>>> […]
