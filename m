@@ -1,234 +1,803 @@
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6692C2C9D
-	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jul 2024 03:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
+Received: from spindle.queued.net (spindle.queued.net [45.33.49.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA892137748;
+	Tue, 23 Jul 2024 04:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.33.49.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721705465; cv=none; b=n3lzhwJh4b76lAgZn5gOzhgSjAmFc5RAdNkvM+GcThdXiANsMruDumSAiD86DftvZpFo6rUJMKU2r4an6k+n0KjUD4ei3a9/2Pi+Hafqz+Q1KpI22NVNr3VhszZlDX9c2bgml7JcmVEoMtAfMQl8jO1R/YxFA5SnUNgWrbD1oZM=
+	t=1721709388; cv=none; b=aP1jvbM2qjpbXwM/p6VI+Zm0hZ8d4Ap0NZ/AxTlkcEWM4dEoXifMrJik3F0Y77wX/igDc7wdyOX1KfsRzmp3X1hJ36K258dRthRaMWQEXJrlHflH9OwdNNC8b6/sb61OsoPJ/DFIza5YXtKy5ylH+nnSFK3IWLv/22DwI5sh2iE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721705465; c=relaxed/simple;
-	bh=rxku4/q4wTVaKvlKBsZKsW9Ct9wlupoodXJgtAwlI84=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ByQmFhcTZ58cGR+msbTV8WqlRU5Yn+bjpzrO0e6J0h6jCCnjrc4dB4/rr1bj98kpDZP5uHT+d7RV41o0Okfar0Td3C8+m2DJf3RTdOWM+1gEGnZNUAUjYjJoc5FMb/iRiNNRwfvCgTfze7bHQwwjdbLwpjjn3LDN3ERqMua0W0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TsG4jojO; arc=none smtp.client-ip=209.85.221.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TsG4jojO"
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-4f51c1f9372so823090e0c.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Jul 2024 20:31:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721705463; x=1722310263; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ynD1F0ztxLzSgRVecWFwgfDC7E2nZeypjxkRlRsEsIg=;
-        b=TsG4jojOaPSQ7k25y29BtFsXRoG1ksLJq4MBynuJW4UB0oP1Bmn08FNFiEDyYbzh7h
-         ZNpQgwNQxqM3mLBCGGL3wzfDy9QknjwuLiyoc+N337v+mLfJ6VFQZ18zCrkflDXlr7c7
-         Cs/GrlEYHVG+/RCqDyiE+j4aGNJpLaUXcP2ycSv3966pbTn0p4aKTGbvz6WEKH85FVYR
-         fvAtxO2e7bQTHeEhN7rwxWnpG1izuedCWQR5ENp0tj88EYmD1xM1IfVyqXRGyU4gOFyJ
-         0C0vRkHpBq6iA/YXmNw6h2d7c/jZH1NNcWDenNPBvK4BekDUxf8SoUgBmnvcHv/yYWUR
-         PFww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721705463; x=1722310263;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ynD1F0ztxLzSgRVecWFwgfDC7E2nZeypjxkRlRsEsIg=;
-        b=tKSqqakSIK18bcbWOluX7aI2aN3/bFEOK7v3GzNyfKeMqCSXEHz5zDmafvUDtRW0Wj
-         buGGTxN7rkV8hzynL+16E84SYF8ax/opAsfVokcc5M09bftCvxlboQ7Rh1yMS5sxN/F4
-         bi+KIIm9PCTVD+pWZULawM4mMWPw1Jg3dwrzGQhCfZWVmBh7k6TQqBtQ3/Ma9TfElx7K
-         TYPTUY6UITqh9VyMpZpAnUYUvgmnorAYFZ2NMjXaFSjJ937/WqObC1KxIggdjdS87XIJ
-         kCB5MR7wM0sjVs6rfNhbR9xG1qUYob5Y7D4lECx+K1ZnSStzL1WlxEo7mGeZN/lNhSzH
-         Zidw==
-X-Gm-Message-State: AOJu0YzIGrJq0f/pmDeoG5lvRHY36HISV1uH2UI3x1qMTJ1fs4s0brtW
-	E5i3OF2stgMIljBWssGPceks5S02MpR2M5OPWAuSONyhL9g3iJhXMZfKcai+NRCtfbCB9eZEQ3V
-	AH0h9UYBwqXT0SRSROrf0eJgUWu/QXQ5q
-X-Google-Smtp-Source: AGHT+IHVH9td/V9iUY8v7xJpOBfvPahcSVpMbe14O2+vubBgo7uhdN3REeKeHb8VcPmp1yVmFafo4+G3/VCtTnGV3wo=
-X-Received: by 2002:a05:6122:181b:b0:4ed:12b:ec99 with SMTP id
- 71dfb90a1353d-4f5066645efmr11780354e0c.3.1721705463055; Mon, 22 Jul 2024
- 20:31:03 -0700 (PDT)
+	s=arc-20240116; t=1721709388; c=relaxed/simple;
+	bh=EIMttMdOYaRuy+MsBjIIRcGpbufBUizrRmYLYev1yHk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZwUdECHH1/r3l6kcp8eGOTxITpSAViLMfDv8h419GSpBhG3W1orsYT4LTmuZVswkuk1Up8k4xQKpPD9QecJsaALVuaT/nJ9AF6LtXfuZhIfO7UUA2+/cxjzJ1BYh4Ov1xEpI7FRAcgZ6bWMmojVc6m74s/tjuDmrQIHpdrzl6Ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=queued.net; spf=pass smtp.mailfrom=queued.net; arc=none smtp.client-ip=45.33.49.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=queued.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queued.net
+Received: by spindle.queued.net (Postfix, from userid 1001)
+	id 6CB3B10F687; Tue, 23 Jul 2024 00:36:19 -0400 (EDT)
+Received: from 5400 (unknown [172.56.164.186])
+	by spindle.queued.net (Postfix) with ESMTPSA id 1647E10F63A;
+	Tue, 23 Jul 2024 00:36:14 -0400 (EDT)
+Date: Tue, 23 Jul 2024 00:36:10 -0400
+From: Andres Salomon <dilinger@queued.net>
+To: Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ Matthew Garrett <mjg59@srcf.ucam.org>, Sebastian Reichel <sre@kernel.org>,
+ Hans de Goede <hdegoede@redhat.com>, Ilpo =?UTF-8?B?SsOkcnZpbmVu?=
+ <ilpo.jarvinen@linux.intel.com>, linux-pm@vger.kernel.org,
+ Dell.Client.Kernel@dell.com, Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH] platform/x86:dell-laptop: Add knobs to change battery
+ charge settings
+Message-ID: <20240723003610.765d28e4@5400>
+In-Reply-To: <20240722202504.jgz6tcc247mjxq4f@pali>
+References: <20240720052419.73b1415a@5400>
+	<20240720095507.uyaotkofkyasdgbd@pali>
+	<20240720220606.1934df43@5400>
+	<20240721090238.wrei5nu6y3awujws@pali>
+	<20240721193716.3156050f@5400>
+	<20240721234037.nxthfeqdjl3z74oc@pali>
+	<20240721195851.76e2b220@5400>
+	<20240722071845.w7v23ixu5wujrpol@pali>
+	<20240722143432.35c356b1@5400>
+	<20240722184132.l6nibqkpna2wkszo@pali>
+	<20240722202504.jgz6tcc247mjxq4f@pali>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Liam Howlett <howlett@gmail.com>
-Date: Mon, 22 Jul 2024 23:30:52 -0400
-Message-ID: <CAHfPaQt_ZkJ=LghsuNg98X+HmXcbDbPvT2QyB9sDQLX5+KkU4Q@mail.gmail.com>
-Subject: Tablet mode on L13 Yoga Gen 3
-To: hmh@hmh.eng.br, hdegoede@redhat.com, ibm-acpi-devel@lists.sourceforge.net
-Cc: platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Bogosity: Ham, tests=bogofilter, spamicity=0.000000, version=1.2.5
 
-..resend in plaintext, apologies if this is the second copy you are reading.
+On Mon, 22 Jul 2024 22:25:04 +0200
+Pali Roh=C3=A1r <pali@kernel.org> wrote:
 
-Hello,
+> On Monday 22 July 2024 20:41:32 Pali Roh=C3=A1r wrote:
+> > On Monday 22 July 2024 14:34:32 Andres Salomon wrote: =20
+> > > On Mon, 22 Jul 2024 09:18:45 +0200
+> > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> > >  =20
+> > > > On Sunday 21 July 2024 19:58:51 Andres Salomon wrote: =20
+> > > > > On Mon, 22 Jul 2024 01:40:37 +0200
+> > > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> > > > >    =20
+> > > > > > On Sunday 21 July 2024 19:37:16 Andres Salomon wrote:   =20
+> > > > > > > On Sun, 21 Jul 2024 11:02:38 +0200
+> > > > > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> > > > > > >      =20
+> > > > > > > > On Saturday 20 July 2024 22:06:06 Andres Salomon wrote:    =
+ =20
+> > > > > > > > > On Sat, 20 Jul 2024 11:55:07 +0200
+> > > > > > > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> > > > > > > > >        =20
+> > > > > > > > > > On Saturday 20 July 2024 05:24:19 Andres Salomon wrote:=
+       =20
+> > > > > > > > > > > Thanks for the quick feedback! Responses below.
+> > > > > > > > > > >=20
+> > > > > > > > > > > On Sat, 20 Jul 2024 10:40:19 +0200
+> > > > > > > > > > > Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> > > > > > > > > > >          =20
+> > > > > > >=20
+> > > > > > > [...]
+> > > > > > >      =20
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +static void __init dell_battery_init(struct devi=
+ce *dev)
+> > > > > > > > > > > > > +{
+> > > > > > > > > > > > > +	enum battery_charging_mode current_mode =3D DEL=
+L_BAT_MODE_NONE;
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +	dell_battery_read_req(BAT_CUSTOM_MODE_TOKEN, (i=
+nt *) &current_mode);
+> > > > > > > > > > > > > +	if (current_mode !=3D DELL_BAT_MODE_NONE) {    =
+       =20
+> > > > > > > > > > > >=20
+> > > > > > > > > > > > I quite do not understand how is this code suppose =
+to work.
+> > > > > > > > > > > >=20
+> > > > > > > > > > > > Why is there mix of custom kernel enum battery_char=
+ging_mode and return
+> > > > > > > > > > > > value from Dell's API?         =20
+> > > > > > > > > > >=20
+> > > > > > > > > > > This is from the original patch from Dell; tbh, I'm n=
+ot sure. It does
+> > > > > > > > > > > work, though. That is, current_mode ends up holding t=
+he correct value
+> > > > > > > > > > > based on what was previously set, even if the chargin=
+g mode is set from
+> > > > > > > > > > > the BIOS.
+> > > > > > > > > > >=20
+> > > > > > > > > > > I just scanned through the libsmbios code to see what=
+ it's doing, and
+> > > > > > > > > > > it appears to loop through every charging mode to che=
+ck if its active.
+> > > > > > > > > > > I'm not really sure that makes much more sense, so I'=
+ll try some more
+> > > > > > > > > > > tests.         =20
+> > > > > > > > > >=20
+> > > > > > > > > > Keyboard backlight code (kbd_get_first_active_token_bit=
+) is doing also
+> > > > > > > > > > this type scan. If I remember correctly, for every keyb=
+oard backlight
+> > > > > > > > > > token we just know the boolean value - if the token is =
+set or not.
+> > > > > > > > > >=20
+> > > > > > > > > > It would really nice to see what (raw) value is returne=
+d by the
+> > > > > > > > > > dell_battery_read_req(token) function for every battery=
+ token and for
+> > > > > > > > > > every initial state.       =20
+> > > > > > > > >=20
+> > > > > > > > > I checked this. The BIOS sets the mode value in every rel=
+ated token
+> > > > > > > > > location. I'm still not really sure what libsmbios is doi=
+ng, but the
+> > > > > > > > > kernel code seems to arbitrarily choose one of the token =
+locations
+> > > > > > > > > to read from. This makes sense to me now.
+> > > > > > > > >=20
+> > > > > > > > > In the BIOS when I set the mode to "ExpressCharge",
+> > > > > > > > > this what I pulled for each token location:
+> > > > > > > > >=20
+> > > > > > > > > [    5.704651] dell-laptop dell-laptop: BAT_CUSTOM_MODE_T=
+OKEN value: 2
+> > > > > > > > > [    5.707015] dell-laptop dell-laptop: BAT_PRI_AC_MODE_T=
+OKEN value: 2
+> > > > > > > > > [    5.709114] dell-laptop dell-laptop: BAT_ADAPTIVE_MODE=
+_TOKEN value: 2
+> > > > > > > > > [    5.711041] dell-laptop dell-laptop: BAT_STANDARD_MODE=
+_TOKEN value: 2
+> > > > > > > > > [    5.713705] dell-laptop dell-laptop: BAT_EXPRESS_MODE_=
+TOKEN value: 2
+> > > > > > > > >=20
+> > > > > > > > > Similar story when I set it to Custom (all were '5'), or =
+Standard ('1').
+> > > > > > > > > When I set it from linux as well, it changed all location=
+ values.       =20
+> > > > > > > >=20
+> > > > > > > > Interesting... Anyway, I still think that the API could be =
+similar to
+> > > > > > > > what is used in keyboard backlight.
+> > > > > > > >=20
+> > > > > > > > Could you please dump all information about each token? The=
+y are in
+> > > > > > > > struct calling_interface_token returned by dell_smbios_find=
+_token.
+> > > > > > > >=20
+> > > > > > > > I'm interesting in tokenID, location and value.
+> > > > > > > >=20
+> > > > > > > > Ideally to compare what is in token->value and then in buff=
+er.output[1]
+> > > > > > > > (in case dell_send_request does not fail).     =20
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > Alright, here's what I see:
+> > > > > > >=20
+> > > > > > > [    5.904775] dell_laptop: dell_battery_read_req: token requ=
+ested: 0x343, tokenID=3D0x343, location=3D0x343, value=3D5
+> > > > > > > [    5.908675] dell_laptop: dell_battery_read_req: buffer.out=
+put[1]=3D3
+> > > > > > > [    5.908680] dell_laptop: dell_battery_init: BAT_CUSTOM_MOD=
+E_TOKEN value: 3
+> > > > > > > [    5.908682] dell_laptop: dell_battery_read_req: token requ=
+ested: 0x341, tokenID=3D0x341, location=3D0x341, value=3D3
+> > > > > > > [    5.910922] dell_laptop: dell_battery_read_req: buffer.out=
+put[1]=3D3
+> > > > > > > [    5.910926] dell_laptop: dell_battery_init: BAT_PRI_AC_MOD=
+E_TOKEN value: 3
+> > > > > > > [    5.910928] dell_laptop: dell_battery_read_req: token requ=
+ested: 0x342, tokenID=3D0x342, location=3D0x342, value=3D4
+> > > > > > > [    5.913042] dell_laptop: dell_battery_read_req: buffer.out=
+put[1]=3D3
+> > > > > > > [    5.913046] dell_laptop: dell_battery_init: BAT_ADAPTIVE_M=
+ODE_TOKEN value: 3
+> > > > > > > [    5.913048] dell_laptop: dell_battery_read_req: token requ=
+ested: 0x346, tokenID=3D0x346, location=3D0x346, value=3D1
+> > > > > > > [    5.914996] dell_laptop: dell_battery_read_req: buffer.out=
+put[1]=3D3
+> > > > > > > [    5.914999] dell_laptop: dell_battery_init: BAT_STANDARD_M=
+ODE_TOKEN value: 3
+> > > > > > > [    5.915000] dell_laptop: dell_battery_read_req: token requ=
+ested: 0x347, tokenID=3D0x347, location=3D0x347, value=3D2
+> > > > > > > [    5.916723] dell_laptop: dell_battery_read_req: buffer.out=
+put[1]=3D3
+> > > > > > > [    5.916724] dell_laptop: dell_battery_init: BAT_EXPRESS_MO=
+DE_TOKEN value: 3
+> > > > > > > [    5.916725] dell_laptop: dell_battery_read_req: token requ=
+ested: 0x349, tokenID=3D0x349, location=3D0x349, value=3D65535
+> > > > > > > [    5.918727] dell_laptop: dell_battery_read_req: buffer.out=
+put[1]=3D65
+> > > > > > > [    5.918731] dell_laptop: dell_battery_init: BAT_CUSTOM_CHA=
+RGE_START value: 65
+> > > > > > > [    5.918734] dell_laptop: dell_battery_read_req: token requ=
+ested: 0x34a, tokenID=3D0x34a, location=3D0x34a, value=3D65535
+> > > > > > > [    5.920864] dell_laptop: dell_battery_read_req: buffer.out=
+put[1]=3D85
+> > > > > > > [    5.920867] dell_laptop: dell_battery_init: BAT_CUSTOM_CHA=
+RGE_END value: 85     =20
+> > > > > >=20
+> > > > > > Perfect. And can you check dumps when the mode is set to some o=
+ther than BAT_PRI_AC_MODE_TOKEN?   =20
+> > > > >=20
+> > > > > Here's Express:
+> > > > >=20
+> > > > > [    5.880090] dell_laptop: dell_battery_read_req: token requeste=
+d: 0x343, tokenID=3D0x343, location=3D0x343, value=3D5
+> > > > > [    5.882011] dell_laptop: dell_battery_read_req: buffer.output[=
+1]=3D2
+> > > > > [    5.882014] dell_laptop: dell_battery_init: BAT_CUSTOM_MODE_TO=
+KEN value: 2
+> > > > > [    5.882016] dell_laptop: dell_battery_read_req: token requeste=
+d: 0x341, tokenID=3D0x341, location=3D0x341, value=3D3
+> > > > > [    5.894513] dell_laptop: dell_battery_read_req: buffer.output[=
+1]=3D2
+> > > > > [    5.894518] dell_laptop: dell_battery_init: BAT_PRI_AC_MODE_TO=
+KEN value: 2
+> > > > > [    5.894520] dell_laptop: dell_battery_read_req: token requeste=
+d: 0x342, tokenID=3D0x342, location=3D0x342, value=3D4
+> > > > > [    5.913870] dell_laptop: dell_battery_read_req: buffer.output[=
+1]=3D2
+> > > > > [    5.913874] dell_laptop: dell_battery_init: BAT_ADAPTIVE_MODE_=
+TOKEN value: 2
+> > > > > [    5.913875] dell_laptop: dell_battery_read_req: token requeste=
+d: 0x346, tokenID=3D0x346, location=3D0x346, value=3D1
+> > > > > [    5.915622] dell_laptop: dell_battery_read_req: buffer.output[=
+1]=3D2
+> > > > > [    5.915625] dell_laptop: dell_battery_init: BAT_STANDARD_MODE_=
+TOKEN value: 2
+> > > > > [    5.915626] dell_laptop: dell_battery_read_req: token requeste=
+d: 0x347, tokenID=3D0x347, location=3D0x347, value=3D2
+> > > > > [    5.917349] dell_laptop: dell_battery_read_req: buffer.output[=
+1]=3D2
+> > > > > [    5.917351] dell_laptop: dell_battery_init: BAT_EXPRESS_MODE_T=
+OKEN value: 2
+> > > > > [    5.917352] dell_laptop: dell_battery_read_req: token requeste=
+d: 0x349, tokenID=3D0x349, location=3D0x349, value=3D65535
+> > > > > [    5.919068] dell_laptop: dell_battery_read_req: buffer.output[=
+1]=3D65
+> > > > > [    5.919070] dell_laptop: dell_battery_init: BAT_CUSTOM_CHARGE_=
+START value: 65
+> > > > > [    5.919071] dell_laptop: dell_battery_read_req: token requeste=
+d: 0x34a, tokenID=3D0x34a, location=3D0x34a, value=3D65535
+> > > > > [    5.920780] dell_laptop: dell_battery_read_req: buffer.output[=
+1]=3D85
+> > > > > [    5.920782] dell_laptop: dell_battery_init: BAT_CUSTOM_CHARGE_=
+END value: 85
+> > > > >=20
+> > > > > And here's Adaptive:
+> > > > >=20
+> > > > > [    5.945319] dell_laptop: dell_battery_read_req: token requeste=
+d: 0x343, tokenID=3D0x343, location=3D0x343, value=3D5
+> > > > > [    5.973685] dell_laptop: dell_battery_read_req: buffer.output[=
+1]=3D4
+> > > > > [    5.973690] dell_laptop: dell_battery_init: BAT_CUSTOM_MODE_TO=
+KEN value: 4
+> > > > > [    5.973692] dell_laptop: dell_battery_read_req: token requeste=
+d: 0x341, tokenID=3D0x341, location=3D0x341, value=3D3
+> > > > > [    5.976533] dell_laptop: dell_battery_read_req: buffer.output[=
+1]=3D4
+> > > > > [    5.976538] dell_laptop: dell_battery_init: BAT_PRI_AC_MODE_TO=
+KEN value: 4
+> > > > > [    5.976540] dell_laptop: dell_battery_read_req: token requeste=
+d: 0x342, tokenID=3D0x342, location=3D0x342, value=3D4
+> > > > > [    5.981013] dell_laptop: dell_battery_read_req: buffer.output[=
+1]=3D4
+> > > > > [    5.981018] dell_laptop: dell_battery_init: BAT_ADAPTIVE_MODE_=
+TOKEN value: 4
+> > > > > [    5.981020] dell_laptop: dell_battery_read_req: token requeste=
+d: 0x346, tokenID=3D0x346, location=3D0x346, value=3D1
+> > > > > [    5.983474] dell_laptop: dell_battery_read_req: buffer.output[=
+1]=3D4
+> > > > > [    5.983479] dell_laptop: dell_battery_init: BAT_STANDARD_MODE_=
+TOKEN value: 4
+> > > > > [    5.983481] dell_laptop: dell_battery_read_req: token requeste=
+d: 0x347, tokenID=3D0x347, location=3D0x347, value=3D2
+> > > > > [    5.985881] dell_laptop: dell_battery_read_req: buffer.output[=
+1]=3D4
+> > > > > [    5.985885] dell_laptop: dell_battery_init: BAT_EXPRESS_MODE_T=
+OKEN value: 4
+> > > > > [    5.985887] dell_laptop: dell_battery_read_req: token requeste=
+d: 0x349, tokenID=3D0x349, location=3D0x349, value=3D65535
+> > > > > [    5.988332] dell_laptop: dell_battery_read_req: buffer.output[=
+1]=3D65
+> > > > > [    5.988337] dell_laptop: dell_battery_init: BAT_CUSTOM_CHARGE_=
+START value: 65
+> > > > > [    5.988339] dell_laptop: dell_battery_read_req: token requeste=
+d: 0x34a, tokenID=3D0x34a, location=3D0x34a, value=3D65535
+> > > > > [    5.990769] dell_laptop: dell_battery_read_req: buffer.output[=
+1]=3D85
+> > > > > [    5.990774] dell_laptop: dell_battery_init: BAT_CUSTOM_CHARGE_=
+END value: 85
+> > > > >=20
+> > > > >=20
+> > > > >=20
+> > > > > --=20
+> > > > > I'm available for contract & employment work, see:
+> > > > > https://spindle.queued.net/~dilinger/resume-tech.pdf   =20
+> > > >=20
+> > > > Nice! So it is exactly same as API of keyboard backlight tokens. Th=
+anks.
+> > > >=20
+> > > > In dell_battery_write_req function you can drop second "val" argume=
+nt
+> > > > and replace it by token->value. So the dell_fill_request call in th=
+at
+> > > > function would look like:
+> > > >=20
+> > > >     dell_fill_request(&buffer, token->location, token->value, 0, 0)=
+; =20
+> > >=20
+> > >=20
+> > > Well, except that we use dell_battery_write_req for writing the charge
+> > > start/end values as well (in dell_battery_custom_set). Those can't be
+> > > obtained from token->value.
+> > >=20
+> > > We could have two separate functions for that, or set 'val' to a
+> > > sentinel value (0) that, if detected, we set val=3Dtoken->value. I'm
+> > > still not really understanding the point, though. =20
+> >=20
+> > I think that two separate functions would be needed. One which set
+> > battery mode (enum) and which set custom thresholds.
+> >  =20
+> > > >=20
+> > > > And then you can mimic the usage as it is done in keyboard backlight
+> > > > functions (kbd_get_first_active_token_bit).
+> > > >=20
+> > > > If you do not know what I mean then later (today or tomorrow) I can
+> > > > write code example of the functionality. =20
+> > >=20
+> > > Sorry, I still don't understand what the goal is here. Is the goal to
+> > > not pull from a random location to determine the current charging mod=
+e?
+> > > Is the goal to determine what charging modes are currently supported
+> > > (and if so, I don't see how)? Is the goal to avoid having the kernel
+> > > hardcode a list of enums that the BIOS might have different values
+> > > for? Is the goal to merge the keyboard backlight and battery setting
+> > > functions? =20
+> >=20
+> > Avoid having the kernel hardcoded values for enums which SMBIOS
+> > provides. Future (or maybe also older) modes may have different enum
+> > values. So we should use what SMBIOS provides to us.
+> >=20
+> > Also to determinate which charging modes are supported by the current HW
+> > configuration. If BIOS does not support some mode or does not allow to
+> > set some mode, kernel should not export this as supported option.
+> >=20
+> > If you do not see how to do it, please give me some time, I will send
+> > you an example. Going to look at it right now.
+> >=20
+> > Merging keyboard backlight and battery code is bonus, not required.
+> > But I thought that it would be easier to build a new code from common
+> > blocks. =20
+>=20
+> Here is very quick & hacky example of what I mean (completely untested):
+>=20
+> --- dell-laptop.c
+> +++ dell-laptop.c
+> @@ -353,6 +353,105 @@ static const struct dmi_system_id dell_q
+>  	{ }
+>  };
+> =20
+> +static int dell_read_token_value(u16 tokenid, u32 *value)
+> +{
+> +	struct calling_interface_buffer buffer;
+> +	struct calling_interface_token *token;
+> +	int ret;
+> +
+> +	token =3D dell_smbios_find_token(tokenid);
+> +	if (!token)
+> +		return -ENODEV;
+> +
+> +	dell_fill_request(&buffer, token->location, 0, 0, 0);
+> +	ret =3D dell_send_request(&buffer, CLASS_TOKEN_READ, SELECT_TOKEN_STD);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*value =3D buffer.output[1];
+> +	return 0;
+> +}
+> +
+> +static int dell_write_token_value(u16 tokenid, u32 value)
+> +{
+> +	struct calling_interface_buffer buffer;
+> +	struct calling_interface_token *token;
+> +
+> +	token =3D dell_smbios_find_token(type);
+> +	if (!token)
+> +		return -ENODEV;
+> +
+> +	dell_fill_request(&buffer, token->location, value, 0, 0);
+> +	return dell_send_request(&buffer, CLASS_TOKEN_WRITE, SELECT_TOKEN_STD);
+> +}
+> +
 
-I'd like to say first, thanks for the support of thinkpads in linux.
-As a kernel maintainer, I understand this is a lot of work and I
-appreciate you doing a fine job with supporting the hardware.
+I did things a bit differently here. I created a function
+dell_send_request_by_token_loc() that is available to be reused by all
+the code that sends packets to token->location. This is available for
+kbd_{g,s}et_token_bit(), micmute_led_set(), and mute_led_set() to use,
+but I'd rather do that in a separate patch.
 
-I am working on patching the thinkpad_acpi driver to support the
-keyboard rotation and keyboard lock-out in tablet mode for the L13
-Yoga Gen 3.  I believe it needs just one bit extra to get working and
-I'm struggling to figure out how to do what I believe is necessary.
++static int dell_send_request_by_token_loc(struct calling_interface_buffer =
+*buffer,
++                                         u16 class, u16 select, int type,
++                                         int val)
++{
++       struct calling_interface_token *token;
++
++       token =3D dell_smbios_find_token(type);
++       if (!token)
++               return -ENODEV;
++
++       if (val <=3D 0)
++               val =3D token->value;
++
++       dell_fill_request(buffer, token->location, val, 0, 0);
++       return dell_send_request(buffer, class, select);
++}
++
++static int dell_battery_set_mode(const int type)
++{
++       struct calling_interface_buffer buffer;
++
++       /* 0 means use the value from the token */
++       return dell_send_request_by_token_loc(&buffer, CLASS_TOKEN_WRITE,
++                       SELECT_TOKEN_STD, type, 0);
++}
++
++static int dell_battery_read(const int type)
++{
++       struct calling_interface_buffer buffer;
++       int err;
++
++       err =3D dell_send_request_by_token_loc(&buffer, CLASS_TOKEN_READ,
++                       SELECT_TOKEN_STD, type, 0);
++       if (err)
++               return err;
++
++       return buffer.output[1];
++}
 
-It looks like _SB.PCI0.LPC0.EC0.CMMD needs an initial value of 0x01 to
-0x06, but I don't see a way to trigger this to happen.  Alternatively,
-is there a way to write PMMD?
 
-Right now, I get the following message on boot:
-thinkpad_acpi: Unknown/reserved multi mode value 0x0000 for type 4,
-please report this to ibm-acpi-devel@lists.sourceforge.net
 
-It looks like the value of 0 indicates that the keyboard rotate
-monitoring is disabled, but I cannot seem to find an ACPI table way of
-modifying EC0's contents (or set CMMD/PMMD)
+> +static int dell_is_enum_token_active(u16 tokenid)
+> +{
+> +	struct calling_interface_buffer buffer;
+> +	struct calling_interface_token *token;
+> +	int ret;
+> +
+> +	token =3D dell_smbios_find_token(tokenid);
+> +	if (!token)
+> +		return -EINVAL;
+> +
+> +	if (token->value =3D=3D (u16)-1)
+> +		return -EINVAL;
+> +
+> +	dell_fill_request(&buffer, token->location, 0, 0, 0);
+> +	ret =3D dell_send_request(&buffer, CLASS_TOKEN_READ, SELECT_TOKEN_STD);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return (buffer.output[1] =3D=3D token->value);
+> +}
+> +
 
-The functions of interest seem to be as follows:
-                    Method (_Q2E, 0, NotSerialized)  // _Qxx: EC
-Query, xx=0x00-0xFF
-                    {
-                        Local0 = CMMD /* \_SB_.PCI0.LPC0.EC0_.CMMD */
-                        If (((Local0 != 0x00) && (Local0 <= 0x06)))
-                        {
-                            If ((Local0 != PMMD))
-                            {
-                                PMMD = Local0
-                                ^HKEY.MHKQ (0x60C0)
-                                If ((PMMD >= 0x04))
-                                {
-                                    WFIO (0x0B, 0x01)
-                                }
-                                ElseIf (CPLS)
-                                {
-                                    WFIO (0x0B, 0x00)
-                                }
-                                Else
-                                {
-                                    WFIO (0x0B, 0x01)
-                                }
-                            }
-                        }
+Okay, I incorporated this, but using the above helper functions:
 
-                        If (((Local0 == 0x00) || (Local0 >= 0x07)))
-                        {
-                            Local1 = 0x01
-                        }
-                        ElseIf (((Local0 == 0x02) || (Local0 ==
-0x03)))
-                        {
-                            Local1 = 0x02
-                        }
-                        Else
-                        {
-                            Local1 = 0x03
-                        }
++static bool dell_battery_mode_is_active(const int type)
++{
++       struct calling_interface_token *token;
++
++       token =3D dell_smbios_find_token(type);
++       if (!token)
++               return false;
++
++       return token->value =3D=3D dell_battery_read(type);
++}
 
-                        If ((Local1 != LVMD))
-                        {
-                            LVMD = Local1
-                            Sleep (0x0A)
-                            ^HKEY.MHKQ (0x60F0)
-                        }
-                    }
-... and ...
-                        Method (GMMS, 1, NotSerialized)
-                        {
-                            Local0 = 0x00040000
-                            Local1 = PMMD /* \PMMD */
-                            If ((Local1 >= 0x06))
-                            {
-                                Local0 |= 0x03
-                            }
-                            ElseIf ((Local1 >= 0x05))
-                            {
-                                Local0 |= 0x05
-                            }
-                            ElseIf ((Local1 >= 0x04))
-                            {
-                                Local0 |= 0x04
-                            }
-                            ElseIf ((Local1 >= 0x03))
-                            {
-                                Local0 |= 0x02
-                            }
-                            ElseIf ((Local1 >= 0x01))
-                            {
-                                Local0 |= 0x01
-                            }
+It will look up the token twice, but this only happens once on it
+(and I'm realizing now that it can be marked __init).
 
-                            Return (Local0)
-                        }
-...
-and this portion of the _WAK code:
-        PMMD = \_SB.PCI0.LPC0.EC0.CMMD
-        If ((PMMD >= 0x07))
-        {
-            PMMD = 0x00
-        }
 
-        LVMD = \_SB.PCI0.LPC0.EC0.CMMD
-        If (((LVMD == 0x00) || (LVMD >= 0x07)))
-        {
-            LVMD = 0x01
-        }
-        ElseIf (((LVMD == 0x02) || (LVMD == 0x03)))
-        {
-            LVMD = 0x02
-        }
-        Else
-        {
-            LVMD = 0x03
-        }
+> +static int dell_activate_enum_token(u16 tokenid)
+> +{
+> +	struct calling_interface_buffer buffer;
+> +	struct calling_interface_token *token;
+> +	int ret;
+> +
+> +	token =3D dell_smbios_find_token(tokenid);
+> +	if (!token)
+> +		return -EINVAL;
+> +
+> +	if (token->value =3D=3D (u16)-1)
+> +		return -EINVAL;
+> +
+> +	dell_fill_request(&buffer, token->location, token->value, 0, 0);
+> +	return dell_send_request(&buffer, CLASS_TOKEN_WRITE, SELECT_TOKEN_STD);
+> +}
+> +
+> +static u32 dell_get_supported_enum_tokens(const u16 *tokenids, u32 count)
+> +{
+> +	u32 supported_mask =3D 0;
+> +	u32 i;
+> +
+> +	for (i =3D 0; i < count; i++) {
+> +		if (dell_smbios_find_token(tokenids[i]))
+> +			supported_mask |=3D BIT(i);
+> +	}
+> +
+> +	return supported_mask;
+> +}
+> +
+> +static int dell_get_active_enum_token(const u16 *tokenids, u32 count, u3=
+2 supported_mask)
+> +{
+> +	int ret;
+> +	u32 i;
+> +
+> +	for (i =3D 0; i < count; i++) {
+> +		if (!(supported_mask & BIT(i)))
+> +			continue;
+> +		ret =3D dell_is_enum_token_active(tokenids[i]);
+> +		if (ret =3D=3D 1)
+> +			return i;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
 
-From this, and running acpiexec on the dumped tables, I can see that
-the CMMD value is always 0.  I don't see another function that
-modifies or touches CMMD or PMMD directly, so it seems that this value
-is read but never written by the ACPI itself.  I also see that these
-are the functions that your driver often uses and is trying to
-interact with.  I tried to set the CMMD value in the acpiexec, but it
-won't set RegionField:
-- dump _SB.PCI0.LPC0.EC0.CMMD
-Object 0x55c5a3389490: Namespace Node - Pathname: \_SB.PCI0.LPC0.EC0.CMMD
-    0000: B0 D9 38 A3 C5 55 00 00 0F 11 00 00 43 4D 4D 44  // ..8..U......CMMD
-    0010: E0 3B 38 A3 C5 55 00 00 00 00 00 00 00 00 00 00  // .;8..U..........
-    0020: 00 95 38 A3 C5 55 00 00 01 00 00 00 00 00 00 00  // ..8..U..........
-                Name : CMMD
-                Type : 11 [RegionField]
-               Flags : 0000
-            Owner Id : 0001
-         Object List : 0x55c5a338d9b0 RegionField (Type 11)
-              Parent : 0x55c5a3383be0 [EC0_]
-               Child : (nil)
-                Peer : 0x55c5a3389500 [WFDK]
 
-Attached Object 0x55c5a338d9b0:
-    0000: 00 00 00 00 00 00 00 00 0E 11 01 00 00 01 00 01  // ................
-    0010: 90 94 38 A3 C5 55 00 00 08 00 00 00 C1 00 00 00  // ..8..U..........
-    0020: 00 00 00 00 00 00 00 00 10 3F 38 A3 C5 55 00 00  // .........?8..U..
-    0030: 00 00 00 00 00 00 00 00 80 00 00 00 00 00 00 00  // ................
-    0040: 00 00 00 00 00 00 00 00                          // ........
-                Type : 11 [RegionField]
-     Reference Count : 0001
-               Flags : 00
-         Object List : (nil) - No attached objects
-         Field Flags : 01
-   Access Byte Width : 01
-          Bit Length : 00000008
-    Field Bit Offset : 00
-    Base Byte Offset : 000000C1
-         Parent Node : 0x55c5a3389490 [CMMD]
-        AccessLength : 00
-       Region Object : 0x55c5a3383f10
-      ResourceBuffer : (nil)
+Thanks, I incorporated and tested this code; though it only runs once
+during init, because I'm keeping the battery_cur_mode variable (see
+next section).
 
-I am nervous about adding a call to write that region field to the
-thinkpad_acpi driver, but there does not appear to be another way to
-modify the entry.  I've searched for CMMD and PMMD in the dsdt.dsl and
-haven't found a way to modify them.
++static u32 __init battery_get_supported_modes(void)
++{
++       u32 modes =3D 0;
++       int i;
++
++       for (i =3D 0; i < ARRAY_SIZE(battery_modes); i++) {
++               if (dell_smbios_find_token(battery_modes[i].token))
++                       modes |=3D BIT(i);
++       }
++
++       return modes;
++}
++
++static int __init dell_battery_find_charging_mode(void)
++{
++       int i;
++
++       battery_supported_modes =3D battery_get_supported_modes();
++       for (i =3D 0; i < ARRAY_SIZE(battery_modes); i++) {
++               if (!(battery_supported_modes & BIT(i)))
++                       continue;
++               if (dell_battery_mode_is_active(battery_modes[i].token))
++                       return battery_modes[i].token;
++       }
++
++       return 0;
++}
 
-Any help would be appreciated.
 
-Thanks,
-Liam R. Howlett
+
+> +
+>  /*
+>   * Derived from information in smbios-wireless-ctl:
+>   *
+> @@ -2183,6 +2282,144 @@ static struct led_classdev mute_led_cdev
+>  	.default_trigger =3D "audio-mute",
+>  };
+> =20
+> +static const u16 battery_mode_tokens[] =3D {
+> +	BAT_STANDARD_MODE_TOKEN,
+> +	BAT_EXPRESS_MODE_TOKEN,
+> +	BAT_PRI_AC_MODE_TOKEN,
+> +	BAT_ADAPTIVE_MODE_TOKEN,
+> +	BAT_CUSTOM_MODE_TOKEN,
+> +};
+> +
+> +static const char * const battery_mode_names[] =3D {
+> +	"standard",
+> +	"express",
+> +	"primarily_ac",
+> +	"adaptive",
+> +	"custom",
+> +};
+> +
+> +static u32 battery_mode_token_mask;
+> +
+
+I merged the token and name lists. Also, is there any particular reason
+you dropped the current mode, preferring to read it from SMBIOS every time
+in the _show() callback?
+
++static const struct {
++       int token;
++       const char *label;
++} battery_modes[] =3D {
++       { BAT_STANDARD_MODE_TOKEN, "standard" },
++       { BAT_EXPRESS_MODE_TOKEN, "express" },
++       { BAT_PRI_AC_MODE_TOKEN, "primarily_ac" },
++       { BAT_ADAPTIVE_MODE_TOKEN, "adaptive" },
++       { BAT_CUSTOM_MODE_TOKEN, "custom" },
++};
++static u32 battery_supported_modes;
++static int battery_cur_mode;
++
+
+
+
+> +static int dell_battery_read_custom_charge(u16 token)
+> +{
+> +	u32 value;
+> +	int ret;
+> +
+> +	ret =3D dell_read_token_value(token, &value);
+> +	if (ret)
+> +		return ret;
+> +	if (value > 100)
+> +		return -EINVAL;
+> +	return value;
+> +}
+> +
+> +#define CHARGE_START_MIN	50
+> +#define CHARGE_START_MAX	95
+> +#define CHARGE_END_MIN		55
+> +#define CHARGE_END_MAX		100
+> +#define CHARGE_MIN_DIFF		5
+> +
+> +static int dell_battery_set_custom_charge_start(int val)
+> +{
+> +	int end;
+> +
+> +	if (val < CHARGE_START_MIN)
+> +		val =3D CHARGE_START_MIN;
+> +	else if (val > CHARGE_START_MAX)
+> +		val =3D CHARGE_START_MAX;
+> +
+> +	end =3D dell_battery_get_custom_charge(BAT_CUSTOM_CHARGE_END);
+> +	if (end < 0)
+> +		return end;
+> +
+> +	if (end - val < CHARGE_MIN_DIFF)
+> +		val =3D end - CHARGE_MIN_DIFF;
+> +
+> +	return dell_write_token_value(BAT_CUSTOM_CHARGE_START, val);
+> +}
+> +
+> +static int dell_battery_set_custom_charge_end(int val)
+> +{
+> +	int start;
+> +
+> +	if (val < CHARGE_END_MIN)
+> +		val =3D CHARGE_END_MIN;
+> +	else if (val > CHARGE_END_MAX)
+> +		val =3D CHARGE_END_MAX;
+> +
+> +	start =3D dell_battery_get_custom_charge(BAT_CUSTOM_CHARGE_START);
+> +	if (start < 0)
+> +		return start;
+> +
+> +	if (val - start < CHARGE_MIN_DIFF)
+> +		val =3D start + CHARGE_MIN_DIFF;
+> +
+> +	return dell_write_token_value(BAT_CUSTOM_CHARGE_END, val);
+> +}
+> +
+
+
+Good call, I split apart the start/end functions. It was originally
+much smaller and grew over time.  :)
+
+
+> +static ssize_t charge_type_show(struct device *dev,
+> +				struct device_attribute *attr,
+> +				char *buf)
+> +{
+> +	int active;
+> +	ssize_t count;
+> +
+> +	active =3D dell_get_active_enum_token(battery_mode_tokens, ARRAY_SIZE(b=
+attery_mode_tokens), battery_mode_token_mask);
+> +	if (active < 0)
+> +		return ret;
+> +
+> +	for (count =3D 0, i =3D 0; i < ARRAY_SIZE(battery_mode_names); i++) {
+> +		if (!(BIT(i) & battery_mode_token_mask))
+> +			continue;
+> +		count +=3D sysfs_emit_at(buf, count, i =3D=3D active ? "[%s] " : "%s "=
+, battery_mode_names[mode]);
+> +	}
+> +
+> +	/* convert the last space to a newline */
+> +	/* battery_mode_names is non-empty and battery_mode_token_mask is non-z=
+ero, so count is also non-zero */
+> +	count--;
+> +	count +=3D sysfs_emit_at(buf, count, "\n");
+> +
+> +	return count;
+> +}
+> +
+
+Again, I personally prefer keeping the currently active charging mode
+around as a variable:
+
+
++static ssize_t charge_type_show(struct device *dev,
++               struct device_attribute *attr,
++               char *buf)
++{
++       ssize_t count =3D 0;
++       int i;
++
++       for (i =3D 0; i < ARRAY_SIZE(battery_modes); i++) {
++               if (!(battery_supported_modes & BIT(i)))
++                       continue;
++
++               count +=3D sysfs_emit_at(buf, count,
++                               battery_modes[i].token =3D=3D battery_cur_m=
+ode ? "[%s] " : "%s ",
++                               battery_modes[i].label);
++       }
++
++       /* convert the last space to a newline */
++       if (count > 0)
++               count--;
++       count +=3D sysfs_emit_at(buf, count, "\n");
++
++       return count;
++}
+
+
+> +static ssize_t charge_type_store(struct device *dev,
+> +				struct device_attribute *attr,
+> +				const char *buf, size_t size)
+> +{
+> +	size_t i;
+> +	int ret;
+> +
+> +	for (i =3D 0; i < ARRAY_SIZE(battery_mode_names); i++) {
+> +		if (sysfs_streq(battery_mode_names[i], buf))
+> +			break;
+> +	}
+> +
+> +	if (i >=3D ARRAY_SIZE(battery_mode_names))
+> +		return -EINVAL;
+> +
+> +	if (!(BIT(i) & battery_mode_token_mask))
+> +		return -EINVAL;
+> +
+> +	ret =3D dell_activate_enum_token(battery_mode_tokens[i]);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return size;
+> +}
+> +
+> +static void __init dell_battery_init(struct device *dev)
+> +{
+> +	battery_mode_token_mask =3D dell_get_supported_enum_tokens(battery_mode=
+_tokens, ARRAY_SIZE(battery_mode_tokens));
+> +	if (battery_mode_token_mask !=3D 0)
+> +		battery_hook_register(&dell_battery_hook);
+> +}
+> +
+> +static void __exit dell_battery_exit(void)
+> +{
+> +	if (battery_mode_token_mask !=3D 0)
+> +		battery_hook_unregister(&dell_battery_hook);
+> +}
+> +
+>  static int __init dell_init(void)
+>  {
+>  	struct calling_interface_token *token;
+
+
+Let me know your thoughts, and I can send a V2 patch if you're okay
+with the code snippets I sent.
+
+--=20
+I'm available for contract & employment work, see:
+https://spindle.queued.net/~dilinger/resume-tech.pdf
