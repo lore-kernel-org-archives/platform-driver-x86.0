@@ -1,263 +1,504 @@
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A70FA13BAD5
-	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jul 2024 23:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
+Received: from spindle.queued.net (spindle.queued.net [45.33.49.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13DB9A95E;
+	Wed, 24 Jul 2024 02:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.33.49.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721777770; cv=none; b=MrYXFAjCAcMYyro6daT8C5pZkGPYu7L2vhuNhwO+VOnlgJbP8CAimq/tFFOb9u3jB3zEJO+T+fXWfqsLHcq/Hj/oLa1kf2xgD/fhZBl9ZBDkE3oMYw+FvIuvCSmdN/thochyLS78Lu3RD0HqiH7CcPsOj/nh7ahRL2NrKkbgDn0=
+	t=1721786712; cv=none; b=qDluzZfLA55Y1+W71A7yYD9wD83fUHt7EZqea59pH5TCVL/3222NHJ14iamyg1tXsWkPjkCeazWcogfZgwng6LIJP9j6JcfcLdKNxX3ncej2ydmWAbNneDOzBtlbnnes0NDeYsaoS2U9qSEUSl1rW1ehbclInVEu3vVdNvqi3gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721777770; c=relaxed/simple;
-	bh=krermHDpk7Za3GGuyA3AcrDLTdrgnETOLqQkhYryIjU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q5/lwC7cgtTgjbZ0eklKUYZrk1sr/vIct87UDTP3StbkwIwxCZjLQpMQMhp1BnoE+a1gKWas9Sybl3LX8EWWH4tdfvOKPtad8s4VwOWVgMfVvOa4SgB0BJI0sWmF0JQBSunSxDEZb/37atr5PnSuJ+vxrJaZ8aLOZ4hiEoBu6WQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XBgbCo/i; arc=none smtp.client-ip=209.85.222.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBgbCo/i"
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-80fbfeecca1so1491901241.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jul 2024 16:36:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721777767; x=1722382567; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qXfm4qLHKCWuwnmDma8j7mlD2TZUaEIeXVBvCs3OnMk=;
-        b=XBgbCo/i3UciNDL5GWWxInwQR1aqybvGZB07desWimheH8WXgRJfQ7rCBWkOQmGcli
-         ED5vpPzKFpFUBM1URHwF9kY1FkXAyVoNze+Ge9/t4BkymeMJzsGeIsVWosq0lYgMuyD4
-         HYikMqDeOSjrbiQV9bwB62qIRwjLDIYsIrhoHMCvPT0qUZs7a2u6JP8XC+U83X6anfE9
-         tkHKo6QqFnvVJYHP2qzNzNq1WmGZT/YOFEVNkUPDVS0CM/sz9yTfruSDhfjYFhOZ5OmJ
-         D2LQkxreWFOGkWI7+0aMC6zIXrNw8xp6PsbkadeFQJf4ezJIqA9vmW2OW6JiMVWJ9YXd
-         8KCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721777767; x=1722382567;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qXfm4qLHKCWuwnmDma8j7mlD2TZUaEIeXVBvCs3OnMk=;
-        b=eq3kn+bcpqmp3giq9yo4ceB0Kbkta7RJddP3pvAhqDy7BKuSMTynTp+FbYuLnW9BEM
-         shAdSzKjgmIF/+MNUlH9FHrhUd7C6Z989l/IjsZ0jdD/8EMNK39YFBA4wOidf3ETosOn
-         WCvWuqlaXYIqMcFGXXntJH0LUC9FD/Y4eqIlhywR1zPjlTa9ltb7LodzgqevUwjl1Ucp
-         SZ8mpE3ukmEGtYuSqjdUPexTGmnjs6RYvkYSseb9l9JOwPwPuhFAL7ZCy8tzDgR08ujX
-         qUPB49SH6XoCwunAguFiR/9SYIi3AnHqb0va1GjuQA18SR3KSCkKTWHWyuGLoWBJW9EP
-         q6kQ==
-X-Gm-Message-State: AOJu0YzusSUuAX5TTDnyGzyRA/3G607/UO0XnAzlU0xcuJRXoTJXRvO8
-	CciIhNt2WAJ450wOHm4SfrT8SqMb8ac3LAkgSkXIY3Dm4HmHiTX6Sv033UG+tRUf88eW6BzDy8U
-	6cd0PE/kXeOWLWsfnRUsQvBcEvW0=
-X-Google-Smtp-Source: AGHT+IGCccn0hkPABZwtfkrTufUeKJ7lC3pwRTDEO9ZTBUTHwxFNrf08LhKVRNEoW+uGzgupNNwKmFYQOpcyTSWrfnI=
-X-Received: by 2002:a05:6102:8097:b0:48f:3e91:12d5 with SMTP id
- ada2fe7eead31-493c4a3d7eamr474159137.1.1721777767451; Tue, 23 Jul 2024
- 16:36:07 -0700 (PDT)
+	s=arc-20240116; t=1721786712; c=relaxed/simple;
+	bh=DkTr0f25/Lc51xt1K2F7wxnAx+EYBYop47c9ElXUzUY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=fWExSATYHcX4ijPGyStT9S8fpi6k0lnUf7+TSfmzBJP4HW2e2tiB38VnlYfYKsp0uXCwkGJwvGJN14gFwpYe8jcuSo/TfZ9VXD09U7jQxhGwfFMYQN2XMy2WuxSUwphy7LAsyOGfy4qKa/FBGoqAqlcdf+S3PUhiJaKuAcdPJM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=queued.net; spf=pass smtp.mailfrom=queued.net; arc=none smtp.client-ip=45.33.49.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=queued.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queued.net
+Received: by spindle.queued.net (Postfix, from userid 1001)
+	id 6FA52115A18; Tue, 23 Jul 2024 22:05:09 -0400 (EDT)
+Received: from 5400 (unknown [172.56.164.186])
+	by spindle.queued.net (Postfix) with ESMTPSA id 41876115A0B;
+	Tue, 23 Jul 2024 22:05:07 -0400 (EDT)
+Date: Tue, 23 Jul 2024 22:05:02 -0400
+From: Andres Salomon <dilinger@queued.net>
+To: linux-kernel@vger.kernel.org
+Cc: Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
+ platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>,
+ Sebastian Reichel <sre@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+ "Ilpo =?UTF-8?B?SsOkcnZpbmVu?=" <ilpo.jarvinen@linux.intel.com>,
+ linux-pm@vger.kernel.org, Dell.Client.Kernel@dell.com
+Subject: [PATCH v2 1/2] platform/x86:dell-laptop: Add knobs to change
+ battery charge settings
+Message-ID: <20240723220502.77cb0401@5400>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHfPaQt_ZkJ=LghsuNg98X+HmXcbDbPvT2QyB9sDQLX5+KkU4Q@mail.gmail.com>
-In-Reply-To: <CAHfPaQt_ZkJ=LghsuNg98X+HmXcbDbPvT2QyB9sDQLX5+KkU4Q@mail.gmail.com>
-From: Liam Howlett <howlett@gmail.com>
-Date: Tue, 23 Jul 2024 19:35:56 -0400
-Message-ID: <CAHfPaQuLT1zvuRBQ9bJZ7=rxLrOXbZ9xryoGH8piWa3r5cfSPQ@mail.gmail.com>
-Subject: Re: Tablet mode on L13 Yoga Gen 3
-To: hmh@hmh.eng.br, hdegoede@redhat.com, ibm-acpi-devel@lists.sourceforge.net
-Cc: platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-
-Just to follow this up, it's not (just?) an acpi issue, the driver
-isn't doing what it needs to do - if there is a driver for the
-hardware at all.  I'm still looking into what is necessary.
-
-I did write the value to the CMMD variable, but calling the _Q2E
-function does not cause the ^HKEY.MHKQ (0x60C0) to be sent.  If I
-understand this correctly, that's what should happen.
-
-Thanks,
-Liam
+X-Bogosity: Ham, tests=bogofilter, spamicity=0.000000, version=1.2.5
 
 
-On Mon, Jul 22, 2024 at 11:30=E2=80=AFPM Liam Howlett <howlett@gmail.com> w=
-rote:
->
-> ..resend in plaintext, apologies if this is the second copy you are readi=
-ng.
->
-> Hello,
->
-> I'd like to say first, thanks for the support of thinkpads in linux.
-> As a kernel maintainer, I understand this is a lot of work and I
-> appreciate you doing a fine job with supporting the hardware.
->
-> I am working on patching the thinkpad_acpi driver to support the
-> keyboard rotation and keyboard lock-out in tablet mode for the L13
-> Yoga Gen 3.  I believe it needs just one bit extra to get working and
-> I'm struggling to figure out how to do what I believe is necessary.
->
-> It looks like _SB.PCI0.LPC0.EC0.CMMD needs an initial value of 0x01 to
-> 0x06, but I don't see a way to trigger this to happen.  Alternatively,
-> is there a way to write PMMD?
->
-> Right now, I get the following message on boot:
-> thinkpad_acpi: Unknown/reserved multi mode value 0x0000 for type 4,
-> please report this to ibm-acpi-devel@lists.sourceforge.net
->
-> It looks like the value of 0 indicates that the keyboard rotate
-> monitoring is disabled, but I cannot seem to find an ACPI table way of
-> modifying EC0's contents (or set CMMD/PMMD)
->
-> The functions of interest seem to be as follows:
->                     Method (_Q2E, 0, NotSerialized)  // _Qxx: EC
-> Query, xx=3D0x00-0xFF
->                     {
->                         Local0 =3D CMMD /* \_SB_.PCI0.LPC0.EC0_.CMMD */
->                         If (((Local0 !=3D 0x00) && (Local0 <=3D 0x06)))
->                         {
->                             If ((Local0 !=3D PMMD))
->                             {
->                                 PMMD =3D Local0
->                                 ^HKEY.MHKQ (0x60C0)
->                                 If ((PMMD >=3D 0x04))
->                                 {
->                                     WFIO (0x0B, 0x01)
->                                 }
->                                 ElseIf (CPLS)
->                                 {
->                                     WFIO (0x0B, 0x00)
->                                 }
->                                 Else
->                                 {
->                                     WFIO (0x0B, 0x01)
->                                 }
->                             }
->                         }
->
->                         If (((Local0 =3D=3D 0x00) || (Local0 >=3D 0x07)))
->                         {
->                             Local1 =3D 0x01
->                         }
->                         ElseIf (((Local0 =3D=3D 0x02) || (Local0 =3D=3D
-> 0x03)))
->                         {
->                             Local1 =3D 0x02
->                         }
->                         Else
->                         {
->                             Local1 =3D 0x03
->                         }
->
->                         If ((Local1 !=3D LVMD))
->                         {
->                             LVMD =3D Local1
->                             Sleep (0x0A)
->                             ^HKEY.MHKQ (0x60F0)
->                         }
->                     }
-> ... and ...
->                         Method (GMMS, 1, NotSerialized)
->                         {
->                             Local0 =3D 0x00040000
->                             Local1 =3D PMMD /* \PMMD */
->                             If ((Local1 >=3D 0x06))
->                             {
->                                 Local0 |=3D 0x03
->                             }
->                             ElseIf ((Local1 >=3D 0x05))
->                             {
->                                 Local0 |=3D 0x05
->                             }
->                             ElseIf ((Local1 >=3D 0x04))
->                             {
->                                 Local0 |=3D 0x04
->                             }
->                             ElseIf ((Local1 >=3D 0x03))
->                             {
->                                 Local0 |=3D 0x02
->                             }
->                             ElseIf ((Local1 >=3D 0x01))
->                             {
->                                 Local0 |=3D 0x01
->                             }
->
->                             Return (Local0)
->                         }
-> ...
-> and this portion of the _WAK code:
->         PMMD =3D \_SB.PCI0.LPC0.EC0.CMMD
->         If ((PMMD >=3D 0x07))
->         {
->             PMMD =3D 0x00
->         }
->
->         LVMD =3D \_SB.PCI0.LPC0.EC0.CMMD
->         If (((LVMD =3D=3D 0x00) || (LVMD >=3D 0x07)))
->         {
->             LVMD =3D 0x01
->         }
->         ElseIf (((LVMD =3D=3D 0x02) || (LVMD =3D=3D 0x03)))
->         {
->             LVMD =3D 0x02
->         }
->         Else
->         {
->             LVMD =3D 0x03
->         }
->
-> From this, and running acpiexec on the dumped tables, I can see that
-> the CMMD value is always 0.  I don't see another function that
-> modifies or touches CMMD or PMMD directly, so it seems that this value
-> is read but never written by the ACPI itself.  I also see that these
-> are the functions that your driver often uses and is trying to
-> interact with.  I tried to set the CMMD value in the acpiexec, but it
-> won't set RegionField:
-> - dump _SB.PCI0.LPC0.EC0.CMMD
-> Object 0x55c5a3389490: Namespace Node - Pathname: \_SB.PCI0.LPC0.EC0.CMMD
->     0000: B0 D9 38 A3 C5 55 00 00 0F 11 00 00 43 4D 4D 44  // ..8..U.....=
-.CMMD
->     0010: E0 3B 38 A3 C5 55 00 00 00 00 00 00 00 00 00 00  // .;8..U.....=
-.....
->     0020: 00 95 38 A3 C5 55 00 00 01 00 00 00 00 00 00 00  // ..8..U.....=
-.....
->                 Name : CMMD
->                 Type : 11 [RegionField]
->                Flags : 0000
->             Owner Id : 0001
->          Object List : 0x55c5a338d9b0 RegionField (Type 11)
->               Parent : 0x55c5a3383be0 [EC0_]
->                Child : (nil)
->                 Peer : 0x55c5a3389500 [WFDK]
->
-> Attached Object 0x55c5a338d9b0:
->     0000: 00 00 00 00 00 00 00 00 0E 11 01 00 00 01 00 01  // ...........=
-.....
->     0010: 90 94 38 A3 C5 55 00 00 08 00 00 00 C1 00 00 00  // ..8..U.....=
-.....
->     0020: 00 00 00 00 00 00 00 00 10 3F 38 A3 C5 55 00 00  // .........?8=
-..U..
->     0030: 00 00 00 00 00 00 00 00 80 00 00 00 00 00 00 00  // ...........=
-.....
->     0040: 00 00 00 00 00 00 00 00                          // ........
->                 Type : 11 [RegionField]
->      Reference Count : 0001
->                Flags : 00
->          Object List : (nil) - No attached objects
->          Field Flags : 01
->    Access Byte Width : 01
->           Bit Length : 00000008
->     Field Bit Offset : 00
->     Base Byte Offset : 000000C1
->          Parent Node : 0x55c5a3389490 [CMMD]
->         AccessLength : 00
->        Region Object : 0x55c5a3383f10
->       ResourceBuffer : (nil)
->
-> I am nervous about adding a call to write that region field to the
-> thinkpad_acpi driver, but there does not appear to be another way to
-> modify the entry.  I've searched for CMMD and PMMD in the dsdt.dsl and
-> haven't found a way to modify them.
->
-> Any help would be appreciated.
->
-> Thanks,
-> Liam R. Howlett
+The Dell BIOS allows you to set custom charging modes, which is useful
+in particular for extending battery life. This adds support for tweaking
+those various settings from Linux via sysfs knobs. One might, for
+example, have their laptop plugged into power at their desk the vast
+majority of the time and choose fairly aggressive battery-saving
+settings (only charging once the battery drops to 50% and only charging
+up to 80%). When leaving for a trip, they might want to switch those
+settings to charge to 100% and charge any time power is available;
+rebooting into the BIOS to change those settings is a hassle.
+
+For the Custom charging type mode, we reuse the common
+charge_control_{start,end}_threshold sysfs power_supply entries. The
+BIOS also has a bunch of other charging modes (with varying levels of
+usefulness), so this adds a new Dell-specific sysfs entry called
+'charge_type' that's documented in sysfs-class-power-dell (and looks a
+lot like sysfs-class-power-wilco).
+
+This work is based on a patch by Perry Yuan <perry_yuan@dell.com> and
+Limonciello Mario <Mario_Limonciello@Dell.com> submitted back in 2020:
+https://lore.kernel.org/all/20200729065424.12851-1-Perry_Yuan@Dell.com/
+Both of their email addresses bounce, so I'm assuming they're no longer
+with the company. I've reworked most of the patch to make it smaller and
+cleaner.
+
+Signed-off-by: Andres Salomon <dilinger@queued.net>
+---
+Changes in v2, based on extensive feedback from Pali Roh=C3=A1r <pali@kerne=
+l.org>:
+    - code style changes
+    - change battery write API to use token->value instead of passed value
+    - stop caching current mode, instead querying SMBIOS as needed
+    - drop the separate list of charging modes enum
+    - rework the list of charging mode strings
+    - query SMBIOS for supported charging modes
+    - split dell_battery_custom_set() up
+---
+ .../ABI/testing/sysfs-class-power-dell        |  31 ++
+ drivers/platform/x86/dell/Kconfig             |   1 +
+ drivers/platform/x86/dell/dell-laptop.c       | 288 ++++++++++++++++++
+ drivers/platform/x86/dell/dell-smbios.h       |   7 +
+ 4 files changed, 327 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-power-dell
+
+diff --git a/Documentation/ABI/testing/sysfs-class-power-dell b/Documentati=
+on/ABI/testing/sysfs-class-power-dell
+new file mode 100644
+index 000000000000..ef72c5f797ce
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-class-power-dell
+@@ -0,0 +1,31 @@
++What:		/sys/class/power_supply/<supply_name>/charge_type
++Date:		July 2024
++KernelVersion:	6.11
++Contact:	linux-pm@vger.kernel.org
++Description:
++		Select the charging algorithm to use for the (primary)
++		battery.
++
++		Standard:
++			Fully charge the battery at a moderate rate.
++		ExpressCharge=E2=84=A2:
++			Quickly charge the battery using fast-charge
++			technology. This is harder on the battery than
++			standard charging and may lower its lifespan.
++		Primarily AC Use:
++			Users who primarily operate the system while
++			plugged into an external power source can extend
++			battery life with this mode.
++		Adaptive:
++			Automatically optimize battery charge rate based
++			on typical usage.
++		Custom:
++			Use the charge_control_* properties to determine
++			when to start and stop charging. Advanced users
++			can use this to drastically extend battery life.
++
++		Access: Read, Write
++		Valid values:
++			      "standard", "express", "primarily_ac",
++			      "adaptive", "custom"
++
+diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/=
+Kconfig
+index 85a78ef91182..02405793163c 100644
+--- a/drivers/platform/x86/dell/Kconfig
++++ b/drivers/platform/x86/dell/Kconfig
+@@ -49,6 +49,7 @@ config DELL_LAPTOP
+ 	default m
+ 	depends on DMI
+ 	depends on BACKLIGHT_CLASS_DEVICE
++	depends on ACPI_BATTERY
+ 	depends on ACPI_VIDEO || ACPI_VIDEO =3D n
+ 	depends on RFKILL || RFKILL =3D n
+ 	depends on DELL_WMI || DELL_WMI =3D n
+diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86=
+/dell/dell-laptop.c
+index 6552dfe491c6..aae9a95fb188 100644
+--- a/drivers/platform/x86/dell/dell-laptop.c
++++ b/drivers/platform/x86/dell/dell-laptop.c
+@@ -22,11 +22,13 @@
+ #include <linux/io.h>
+ #include <linux/rfkill.h>
+ #include <linux/power_supply.h>
++#include <linux/sysfs.h>
+ #include <linux/acpi.h>
+ #include <linux/mm.h>
+ #include <linux/i8042.h>
+ #include <linux/debugfs.h>
+ #include <linux/seq_file.h>
++#include <acpi/battery.h>
+ #include <acpi/video.h>
+ #include "dell-rbtn.h"
+ #include "dell-smbios.h"
+@@ -99,6 +101,18 @@ static bool force_rfkill;
+ static bool micmute_led_registered;
+ static bool mute_led_registered;
+=20
++static const struct {
++	int token;
++	const char *label;
++} battery_modes[] =3D {
++	{ BAT_STANDARD_MODE_TOKEN, "standard" },
++	{ BAT_EXPRESS_MODE_TOKEN, "express" },
++	{ BAT_PRI_AC_MODE_TOKEN, "primarily_ac" },
++	{ BAT_ADAPTIVE_MODE_TOKEN, "adaptive" },
++	{ BAT_CUSTOM_MODE_TOKEN, "custom" },
++};
++static u32 battery_supported_modes;
++
+ module_param(force_rfkill, bool, 0444);
+ MODULE_PARM_DESC(force_rfkill, "enable rfkill on non whitelisted models");
+=20
+@@ -2183,6 +2197,277 @@ static struct led_classdev mute_led_cdev =3D {
+ 	.default_trigger =3D "audio-mute",
+ };
+=20
++static int dell_send_request_by_token_loc(struct calling_interface_buffer =
+*buffer,
++					  u16 class, u16 select, int type,
++					  u32 val)
++{
++	struct calling_interface_token *token;
++
++	token =3D dell_smbios_find_token(type);
++	if (!token)
++		return -ENODEV;
++
++	/* -1 is a sentinel value, telling us to use token->value */
++	if (val =3D=3D (u32)-1)
++		val =3D token->value;
++
++	dell_fill_request(buffer, token->location, val, 0, 0);
++	return dell_send_request(buffer, class, select);
++}
++
++static int dell_battery_set_mode(const int type)
++{
++	struct calling_interface_buffer buffer;
++
++	/* -1 means use the value from the token */
++	return dell_send_request_by_token_loc(&buffer, CLASS_TOKEN_WRITE,
++			SELECT_TOKEN_STD, type, -1);
++}
++
++static int dell_battery_read(const int type)
++{
++	struct calling_interface_buffer buffer;
++	int err;
++
++	err =3D dell_send_request_by_token_loc(&buffer, CLASS_TOKEN_READ,
++			SELECT_TOKEN_STD, type, 0);
++	if (err)
++		return err;
++
++	return buffer.output[1];
++}
++
++static bool dell_battery_mode_is_active(const int type)
++{
++	struct calling_interface_token *token;
++
++	token =3D dell_smbios_find_token(type);
++	if (!token)
++		return false;
++
++	return token->value =3D=3D dell_battery_read(type);
++}
++
++/* The rules: the minimum start charging value is 50%. The maximum
++ * start charging value is 95%. The minimum end charging value is
++ * 55%. The maximum end charging value is 100%. And finally, there
++ * has to be at least a 5% difference between start & end values.
++ */
++#define CHARGE_START_MIN	50
++#define CHARGE_START_MAX	95
++#define CHARGE_END_MIN		55
++#define CHARGE_END_MAX		100
++#define CHARGE_MIN_DIFF		5
++
++static int dell_battery_set_custom_charge_start(int start)
++{
++	struct calling_interface_buffer buffer;
++	int end;
++
++	if (start < CHARGE_START_MIN)
++		start =3D CHARGE_START_MIN;
++	else if (start > CHARGE_START_MAX)
++		start =3D CHARGE_START_MAX;
++
++	end =3D dell_battery_read(BAT_CUSTOM_CHARGE_END);
++	/* a failed read is okay */
++	if (end < 0)
++		end =3D CHARGE_END_MAX;
++	if ((end - start) < CHARGE_MIN_DIFF)
++		start =3D end - CHARGE_MIN_DIFF;
++
++	return dell_send_request_by_token_loc(&buffer, CLASS_TOKEN_WRITE,
++			SELECT_TOKEN_STD, BAT_CUSTOM_CHARGE_START, start);
++}
++
++static int dell_battery_set_custom_charge_end(int end)
++{
++	struct calling_interface_buffer buffer;
++	int start;
++
++	if (end < CHARGE_END_MIN)
++		end =3D CHARGE_END_MIN;
++	else if (end > CHARGE_END_MAX)
++		end =3D CHARGE_END_MAX;
++
++	start =3D dell_battery_read(BAT_CUSTOM_CHARGE_START);
++	/* a failed read is okay */
++	if (start < 0)
++		start =3D CHARGE_START_MIN;
++	if ((end - start) < CHARGE_MIN_DIFF)
++		end =3D start + CHARGE_MIN_DIFF;
++
++	return dell_send_request_by_token_loc(&buffer, CLASS_TOKEN_WRITE,
++			SELECT_TOKEN_STD, BAT_CUSTOM_CHARGE_END, end);
++}
++
++static ssize_t charge_type_show(struct device *dev,
++		struct device_attribute *attr,
++		char *buf)
++{
++	ssize_t count =3D 0;
++	int i;
++
++	for (i =3D 0; i < ARRAY_SIZE(battery_modes); i++) {
++		bool active;
++
++		if (!(battery_supported_modes & BIT(i)))
++			continue;
++
++		active =3D dell_battery_mode_is_active(battery_modes[i].token);
++		count +=3D sysfs_emit_at(buf, count, active ? "[%s] " : "%s ",
++				battery_modes[i].label);
++	}
++
++	/* convert the last space to a newline */
++	if (count > 0)
++		count--;
++	count +=3D sysfs_emit_at(buf, count, "\n");
++
++	return count;
++}
++
++static ssize_t charge_type_store(struct device *dev,
++		struct device_attribute *attr,
++		const char *buf, size_t size)
++{
++	bool matched =3D false;
++	int err, i;
++
++	for (i =3D 0; i < ARRAY_SIZE(battery_modes); i++) {
++		if (sysfs_streq(battery_modes[i].label, buf)) {
++			matched =3D true;
++			break;
++		}
++	}
++	if (!matched || !(battery_supported_modes & BIT(i)))
++		return -EINVAL;
++
++	err =3D dell_battery_set_mode(battery_modes[i].token);
++	if (err)
++		return err;
++
++	return size;
++}
++
++static ssize_t charge_control_start_threshold_show(struct device *dev,
++		struct device_attribute *attr,
++		char *buf)
++{
++	int start;
++
++	start =3D dell_battery_read(BAT_CUSTOM_CHARGE_START);
++	if (start < 0)
++		return start;
++
++	return sysfs_emit(buf, "%d\n", start);
++}
++
++static ssize_t charge_control_start_threshold_store(struct device *dev,
++		struct device_attribute *attr,
++		const char *buf, size_t size)
++{
++	int ret, start;
++
++	ret =3D kstrtoint(buf, 10, &start);
++	if (ret)
++		return ret;
++
++	ret =3D dell_battery_set_custom_charge_start(start);
++	if (ret)
++		return ret;
++
++	return size;
++}
++
++static ssize_t charge_control_end_threshold_show(struct device *dev,
++		struct device_attribute *attr,
++		char *buf)
++{
++	int end;
++
++	end =3D dell_battery_read(BAT_CUSTOM_CHARGE_END);
++	if (end < 0)
++		return end;
++
++	return sysfs_emit(buf, "%d\n", end);
++}
++
++static ssize_t charge_control_end_threshold_store(struct device *dev,
++		struct device_attribute *attr,
++		const char *buf, size_t size)
++{
++	int ret, end;
++
++	ret =3D kstrtouint(buf, 10, &end);
++	if (ret)
++		return ret;
++
++	ret =3D dell_battery_set_custom_charge_end(end);
++	if (ret)
++		return ret;
++
++	return size;
++}
++
++static DEVICE_ATTR_RW(charge_control_start_threshold);
++static DEVICE_ATTR_RW(charge_control_end_threshold);
++static DEVICE_ATTR_RW(charge_type);
++
++static struct attribute *dell_battery_attrs[] =3D {
++	&dev_attr_charge_control_start_threshold.attr,
++	&dev_attr_charge_control_end_threshold.attr,
++	&dev_attr_charge_type.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(dell_battery);
++
++static int dell_battery_add(struct power_supply *battery,
++		struct acpi_battery_hook *hook)
++{
++	return device_add_groups(&battery->dev, dell_battery_groups);
++}
++
++static int dell_battery_remove(struct power_supply *battery,
++		struct acpi_battery_hook *hook)
++{
++	device_remove_groups(&battery->dev, dell_battery_groups);
++	return 0;
++}
++
++static struct acpi_battery_hook dell_battery_hook =3D {
++	.add_battery =3D dell_battery_add,
++	.remove_battery =3D dell_battery_remove,
++	.name =3D "Dell Primary Battery Extension",
++};
++
++static u32 __init battery_get_supported_modes(void)
++{
++	u32 modes =3D 0;
++	int i;
++
++	for (i =3D 0; i < ARRAY_SIZE(battery_modes); i++) {
++		if (dell_smbios_find_token(battery_modes[i].token))
++			modes |=3D BIT(i);
++	}
++
++	return modes;
++}
++
++static void __init dell_battery_init(struct device *dev)
++{
++	battery_supported_modes =3D battery_get_supported_modes();
++
++	if (battery_supported_modes !=3D 0)
++		battery_hook_register(&dell_battery_hook);
++}
++
++static void __exit dell_battery_exit(void)
++{
++	if (battery_supported_modes !=3D 0)
++		battery_hook_unregister(&dell_battery_hook);
++}
++
+ static int __init dell_init(void)
+ {
+ 	struct calling_interface_token *token;
+@@ -2219,6 +2504,7 @@ static int __init dell_init(void)
+ 		touchpad_led_init(&platform_device->dev);
+=20
+ 	kbd_led_init(&platform_device->dev);
++	dell_battery_init(&platform_device->dev);
+=20
+ 	dell_laptop_dir =3D debugfs_create_dir("dell_laptop", NULL);
+ 	debugfs_create_file("rfkill", 0444, dell_laptop_dir, NULL,
+@@ -2293,6 +2579,7 @@ static int __init dell_init(void)
+ 	if (mute_led_registered)
+ 		led_classdev_unregister(&mute_led_cdev);
+ fail_led:
++	dell_battery_exit();
+ 	dell_cleanup_rfkill();
+ fail_rfkill:
+ 	platform_device_del(platform_device);
+@@ -2311,6 +2598,7 @@ static void __exit dell_exit(void)
+ 	if (quirks && quirks->touchpad_led)
+ 		touchpad_led_exit();
+ 	kbd_led_exit();
++	dell_battery_exit();
+ 	backlight_device_unregister(dell_backlight_device);
+ 	if (micmute_led_registered)
+ 		led_classdev_unregister(&micmute_led_cdev);
+diff --git a/drivers/platform/x86/dell/dell-smbios.h b/drivers/platform/x86=
+/dell/dell-smbios.h
+index ea0cc38642a2..77baa15eb523 100644
+--- a/drivers/platform/x86/dell/dell-smbios.h
++++ b/drivers/platform/x86/dell/dell-smbios.h
+@@ -33,6 +33,13 @@
+ #define KBD_LED_AUTO_50_TOKEN	0x02EB
+ #define KBD_LED_AUTO_75_TOKEN	0x02EC
+ #define KBD_LED_AUTO_100_TOKEN	0x02F6
++#define BAT_PRI_AC_MODE_TOKEN	0x0341
++#define BAT_ADAPTIVE_MODE_TOKEN	0x0342
++#define BAT_CUSTOM_MODE_TOKEN	0x0343
++#define BAT_STANDARD_MODE_TOKEN	0x0346
++#define BAT_EXPRESS_MODE_TOKEN	0x0347
++#define BAT_CUSTOM_CHARGE_START	0x0349
++#define BAT_CUSTOM_CHARGE_END	0x034A
+ #define GLOBAL_MIC_MUTE_ENABLE	0x0364
+ #define GLOBAL_MIC_MUTE_DISABLE	0x0365
+ #define GLOBAL_MUTE_ENABLE	0x058C
+--=20
+2.39.2
+
+
+
+
+--=20
+I'm available for contract & employment work, see:
+https://spindle.queued.net/~dilinger/resume-tech.pdf
