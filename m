@@ -1,154 +1,178 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3347A143C6E
-	for <platform-driver-x86@vger.kernel.org>; Wed, 24 Jul 2024 23:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623D14687
+	for <platform-driver-x86@vger.kernel.org>; Thu, 25 Jul 2024 00:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721864762; cv=none; b=UCh1zDi65ScMP3fpwF4/zR8nZfrg0CnSVjrnlA31pov/IlmbBpYsDMPQaHUrKGdL9gdHt9vkU5646m0VXG7K9MraYqeNchN/TFKRY1MN4yKz/isrAMZZMixivopOsChQkucz9SVDdgsAzsXvGO2XaNkTFrIGc36TuaoqBaBRwEM=
+	t=1721867827; cv=none; b=DV1ya+zlzfyUIlC3BSOk4mbdsGiCcPBgR9B5CtudOLa+RCwPwqPTpe5tAEVTKlccXsFNaHxnzQENEIabKIzzu6M4BLdF2Dvczofm3rbA59RoQTxb+fycSrw9dKRAc/frwCQrx1dcn6Y73qHkYEy/t5CuZbm2D+8Zl36xsh9gFjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721864762; c=relaxed/simple;
-	bh=ITqgSbvo7Q1gCVXBDuGoRpaEndAT1XKMZzV718jEhzs=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qJyk2ZPjftqkiWOiO7S0ItZJH7p8VIJm7XpBP3nrpdVPUcyHm2WfrJE+GeGhoDy/xT2hozth/lbGwAQUfVvhVhKkj/GtC1ngO4X1FyxocEC88IkkvvKYAfynJj+yBjFn7/wP4u67jU2tvHV0Ak5XANm7Mab+VmJJCoXEGQEGPsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=AnjPlNuT; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1721867827; c=relaxed/simple;
+	bh=2lRLrFFrV60S0eQxkJVml+jlR2q9iwkEtdYQHbZdq4w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fX4xBY7WjOg0kV9CtHUp05MHJxlRRdBjeCIKNWKc3CaElq0vOT0K941r2UMp20Yf2NqpBv33yWiGPBwXLdwUOYTH1yJuHCdS4Lb3C8kME6gg2PAqtZgvdMFrp8n9sXz39JdJo5plJ5SGDZbrv3Ic5yFfWExP+RmuUaHVSREX6MM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V/dxWkaA; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="AnjPlNuT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1721864758; x=1722123958;
-	bh=VTUpiKMcdneqCgWSgT9HJnjcDT4T1oja8zC2L4JITtI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=AnjPlNuToabbUgaA6eHVkPrAfW0unTKu9AqLCDZqw7/Wizd8JrbA1UGckCWi7xUEs
-	 cfV1e08vcrb9hqG3u0ujyU41rDN831/lw0I/NWfSWm+YVn5lZr0bzGtKrryBqZ1sic
-	 bMjDQIvivNISkhkW/cB3Z3fXFQhlS+tR7FmL6C6IchhzeUllUw6rcQ+R/w4+qHL5tp
-	 CoZq4r8yzvAAcUbEsCHUvFBBy8GreBQRQPELOu1Me56sYS6YRjx1fwM/wDL0n9bvmp
-	 8fP1By2yu2fpjMHzP7pAH67Jw2K/pI0P1oKl1lLUdCM12J1XdV15vhxJLuMySX4tUY
-	 +aVAsqMXm2zbg==
-Date: Wed, 24 Jul 2024 23:45:54 +0000
-To: Liam Howlett <howlett@gmail.com>
-From: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc: Armin Wolf <W_Armin@gmx.de>, hmh@hmh.eng.br, hdegoede@redhat.com, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-Subject: Re: Tablet mode on L13 Yoga Gen 3
-Message-ID: <JrI0KCYBVY2fFxGaZWHazfLIX7oZRsF41F_DnFD886nJEcq7uyegWQPOM2O7UkmvrL2FGFjwB_TNRn2FFvv_aZVnpEn14mLkLg4bHCyjV2s=@protonmail.com>
-In-Reply-To: <CAHfPaQsK5=VChWa_y1eotQQx=YfpduE13jcCyp5KwPUwbUs+0g@mail.gmail.com>
-References: <CAHfPaQt_ZkJ=LghsuNg98X+HmXcbDbPvT2QyB9sDQLX5+KkU4Q@mail.gmail.com> <CAHfPaQuLT1zvuRBQ9bJZ7=rxLrOXbZ9xryoGH8piWa3r5cfSPQ@mail.gmail.com> <1f3435c3-6006-4f6c-8e8d-d6e0ef23e42e@gmx.de> <CAHfPaQsK5=VChWa_y1eotQQx=YfpduE13jcCyp5KwPUwbUs+0g@mail.gmail.com>
-Feedback-ID: 20568564:user:proton
-X-Pm-Message-ID: 87a771ee70690c631e76582a20622684cd23d250
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/dxWkaA"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-4f50dd3eab9so139872e0c.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Jul 2024 17:37:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1721867825; x=1722472625; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bXjE3WlGUWuPAZCd3nABcDzyRWf56VWlG8GIFIIMSzk=;
+        b=V/dxWkaAto5oGLANF7Old1xs9EM4v5/3HBIArDzisDPjZ5eZ00k/xZjIB1hpYdb3Fj
+         MuC26GlEH1673RwK0xh0cdbus/SHZlzljCL4jJiKJZG4S6igoVHyOC1cmILvHeDQ57J8
+         Qc4KcbvV86XgH3JDGtZyZTP8rGZGf9TfLGTCq28YWP9CSZraKMF+pSZ7tFKdOlbxDkxP
+         /Xj5I4yzoQ3Ct05sgnyTGx0tjEACkq2HhfMIV1iZKXLpFWJo0LfhwtpV9guFnD0Mtk5s
+         E9z8AKYrXJYObwuM5djo3bl7XZsaDCfSKQmvF2gfCAdi9tHmz8V1ShHB3BuB7yTckPGi
+         wydA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721867825; x=1722472625;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bXjE3WlGUWuPAZCd3nABcDzyRWf56VWlG8GIFIIMSzk=;
+        b=i2S7gb/ai6TVXtqws+17cCYGJI5RV3Glcy72aHOmdWl0UYaBaZpUBwlI0oTt2H/Bef
+         FYzvpzZqjk7531CMiaYZPSKzBvaT3aqoykeazTD2iyaEDruGVnJtgSRTlM6nKO4qIRuJ
+         Cx6Bu7CheantLIfL3zSnGP/H7PyuOLF22zk4MSKRuviK4fkk1wrRRoYihTYaTwI9eoBl
+         groZpOtbsrfxff8dHc1mBHgL6siCW9vU4GL/3EeGdj24W9HFyqaULW1WUfm/WFpIORv/
+         nabTMI3PtmhdAeYCzfBXFPLn2I0qM6gfGiCYiqXFD7QGZQMRkbJqBkj0H5SndBo0zj0p
+         g3Cg==
+X-Forwarded-Encrypted: i=1; AJvYcCWdJYfSw249SJ681Pgz0fUTPW+QeS82SFamSmIbNfMjQ0Hrg8jOTVMrKGy6OLjaXwPevvbupZhx66iuRVcijO46q4QZcVD++YTBcgVkrW6g9QJtsA==
+X-Gm-Message-State: AOJu0Yw0GEvPUQlmMhg6/kbTjsnbPcYpugTXzc2dGkJk0zTamyGS4bGS
+	9I2Gvf1FCLxqjqe9tjmk2h62EIdyeHrfuRciY5LjeU5eI8JpR2n66Rdtrvb059ehhwYzSWF411y
+	h+01rlf1z+VL5oxp/945E/+Oh4Qk=
+X-Google-Smtp-Source: AGHT+IFdZE4pfVlHM+jWCBCXvXTzUtMaVSBh3xPczDjmq7z/6dKu4sAviA2RudXsc08Ns7TgyQPJ0qlIsKlNlMg+Xo4=
+X-Received: by 2002:a05:6122:3112:b0:4f5:1b1f:ee6e with SMTP id
+ 71dfb90a1353d-4f6c5c5229emr2018870e0c.10.1721867825135; Wed, 24 Jul 2024
+ 17:37:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <CAHfPaQt_ZkJ=LghsuNg98X+HmXcbDbPvT2QyB9sDQLX5+KkU4Q@mail.gmail.com>
+ <CAHfPaQuLT1zvuRBQ9bJZ7=rxLrOXbZ9xryoGH8piWa3r5cfSPQ@mail.gmail.com>
+ <1f3435c3-6006-4f6c-8e8d-d6e0ef23e42e@gmx.de> <CAHfPaQsK5=VChWa_y1eotQQx=YfpduE13jcCyp5KwPUwbUs+0g@mail.gmail.com>
+ <JrI0KCYBVY2fFxGaZWHazfLIX7oZRsF41F_DnFD886nJEcq7uyegWQPOM2O7UkmvrL2FGFjwB_TNRn2FFvv_aZVnpEn14mLkLg4bHCyjV2s=@protonmail.com>
+In-Reply-To: <JrI0KCYBVY2fFxGaZWHazfLIX7oZRsF41F_DnFD886nJEcq7uyegWQPOM2O7UkmvrL2FGFjwB_TNRn2FFvv_aZVnpEn14mLkLg4bHCyjV2s=@protonmail.com>
+From: Liam Howlett <howlett@gmail.com>
+Date: Wed, 24 Jul 2024 20:36:54 -0400
+Message-ID: <CAHfPaQuxWwx-Yf5RMQusP5QYB8kX+_hYeRSdCXhs0JMMusqicQ@mail.gmail.com>
+Subject: Re: Tablet mode on L13 Yoga Gen 3
+To: =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>
+Cc: Armin Wolf <W_Armin@gmx.de>, hmh@hmh.eng.br, hdegoede@redhat.com, 
+	ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-2024. j=C3=BAlius 24., szerda 4:39 keltez=C3=A9ssel, Liam Howlett <howlett@=
-gmail.com> =C3=ADrta:
-
-> On Tue, Jul 23, 2024 at 10:19=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrot=
-e:
-> >
-> > Am 24.07.24 um 01:35 schrieb Liam Howlett:
-> >
-> > > Just to follow this up, it's not (just?) an acpi issue, the driver
-> > > isn't doing what it needs to do - if there is a driver for the
-> > > hardware at all.  I'm still looking into what is necessary.
+On Wed, Jul 24, 2024 at 7:45=E2=80=AFPM Barnab=C3=A1s P=C5=91cze <pobrn@pro=
+tonmail.com> wrote:
+>
+> 2024. j=C3=BAlius 24., szerda 4:39 keltez=C3=A9ssel, Liam Howlett <howlet=
+t@gmail.com> =C3=ADrta:
+>
+> > On Tue, Jul 23, 2024 at 10:19=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wr=
+ote:
 > > >
-> > > I did write the value to the CMMD variable, but calling the _Q2E
-> > > function does not cause the ^HKEY.MHKQ (0x60C0) to be sent.  If I
-> > > understand this correctly, that's what should happen.
+> > > Am 24.07.24 um 01:35 schrieb Liam Howlett:
 > > >
-> > > Thanks,
-> > > Liam
+> > > > Just to follow this up, it's not (just?) an acpi issue, the driver
+> > > > isn't doing what it needs to do - if there is a driver for the
+> > > > hardware at all.  I'm still looking into what is necessary.
+> > > >
+> > > > I did write the value to the CMMD variable, but calling the _Q2E
+> > > > function does not cause the ^HKEY.MHKQ (0x60C0) to be sent.  If I
+> > > > understand this correctly, that's what should happen.
+> > > >
+> > > > Thanks,
+> > > > Liam
+> > > >
+> > > Hi,
 > > >
-> > Hi,
+> > > can you share the output of "acpidump"? This will make it easier to f=
+igure
+> > > out what the ACPI code is doing.
 > >
-> > can you share the output of "acpidump"? This will make it easier to fig=
-ure
-> > out what the ACPI code is doing.
->=20
-> Sure, see attached (I hope gmail doesn't mess this up on me..)
->=20
-> What makes me think it's not just an acpi issue is that the iio device
-> doesn't seem to have an indicator for the rotation of hinge angle of
-> the screen:
-> ls /sys/bus/iio/devices/iio\:device0
-> buffer  buffer0  current_timestamp_clock  dev  in_accel_hysteresis
-> in_accel_offset  in_accel_sampling_frequency  in_accel_scale
-> in_accel_x_raw  in_accel_y_raw  in_accel_z_raw  name  power
-> scan_elements  subsystem  trigger  uevent
-
-Hi
-
-
-I am not sure if this will be useful but I have a Lenovo YOGA 520-14IKB. An=
-d on that
-machine the hinge rotation angle seems to be reported via a custom HID sens=
-or based
-on reverse engineering and experimentation.
-
-You might want to check under /sys/bus/platform/drivers/hid_sensor_custom/.=
- In my
-case there is one.
-
-$ pwd
-/sys/bus/platform/drivers/hid_sensor_custom/HID-SENSOR-2000e1.3.auto
-$ cat feature-b-200306/feature-b-200306-value
-76 0 101 0 110 0 111 0 118 0 111 0 32 0 89 0 111 0 103 0 97 0
-
-The above feature (property-sensor-model) spells out "Lenovo Yoga" in UTF-1=
-6.
-As far as I remember this is how the windows service finds the correct sens=
-or.
-Under the various inputs, the sensor seems to report the hinge rotation ang=
-le,
-as well as the angles between the keyboard and screen, and the ground level=
-.
-
-If the situation is similar in your case, then there is already infrastruct=
-ure
-to expose the angles to user space in iio sensors. See hid-sensor-custom an=
-d
-hid-sensor-custom-intel-hinge.
-
-
-Regards,
-Barnab=C3=A1s P=C5=91cze
-
-
->=20
-> It is difficult to figure out if it's supposed to be the iio device
-> that is supposed to make this happen - there's some talk of intel
-> virtual buttons, but that seems wrong on an amd laptop and I don't see
-> the necessary details in the dsdt table.  Any idea on where the data
-> is supposed to come from would also be helpful.  The fact that it
-> remains 0 after boot does seem to indicate that the device isn't
-> writing anything to acpi - which fits with the missing module or
-> module logic for whatever hardware is supposed to be doing this.
->=20
-> I will say that the rotation of the display is detected and works,
-> it's just the "laptop/tablet mode" that does not (0x60c0 is never
-> emitted and so the keyboard and touchpad remain active).
->=20
-> Although, I don't have a working screen rotating laptop, so I'm not
-> entirely sure if that's necessary?
->=20
+> > Sure, see attached (I hope gmail doesn't mess this up on me..)
 > >
-> > Thanks,
-> > Armin Wolf
-> >
-> > (Also, please do not top-post, thank you).
-> >
->=20
-> Sorry, I generally don't use gmail form development and haven't set up
-> mutt for this address.  Thank you for look at this issue.
->=20
-> Thanks,
-> Liam
->=20
-> ...
+> > What makes me think it's not just an acpi issue is that the iio device
+> > doesn't seem to have an indicator for the rotation of hinge angle of
+> > the screen:
+> > ls /sys/bus/iio/devices/iio\:device0
+> > buffer  buffer0  current_timestamp_clock  dev  in_accel_hysteresis
+> > in_accel_offset  in_accel_sampling_frequency  in_accel_scale
+> > in_accel_x_raw  in_accel_y_raw  in_accel_z_raw  name  power
+> > scan_elements  subsystem  trigger  uevent
+>
+> Hi
+>
+>
+> I am not sure if this will be useful but I have a Lenovo YOGA 520-14IKB. =
+And on that
+> machine the hinge rotation angle seems to be reported via a custom HID se=
+nsor based
+> on reverse engineering and experimentation.
+>
+> You might want to check under /sys/bus/platform/drivers/hid_sensor_custom=
+/. In my
+> case there is one.
+>
+> $ pwd
+> /sys/bus/platform/drivers/hid_sensor_custom/HID-SENSOR-2000e1.3.auto
+> $ cat feature-b-200306/feature-b-200306-value
+> 76 0 101 0 110 0 111 0 118 0 111 0 32 0 89 0 111 0 103 0 97 0
+>
+
+I believe the Lenovo YOGA uses another driver for a sensor the
+Thinkpad Yogas don't have.
+
+$  ls /sys/bus/platform/drivers/
+ac          amd_pmc                byt_crystal_cove_pmic
+cht_crystal_cove_pmic    clk-pmc-atom       efi-framebuffer      i8042
+             pcspkr              soc-audio             thinkpad_hwmon
+acpi-ged    amd_sdw_manager        byt_gpio
+cht_dollar_cove_ti_pmic  coreboot_table     geminilake-pinctrl
+icelake-pinctrl    reg-dummy           sp5100-tco
+tigerlake-pinctrl
+acpi-wmi    axp288_pmic_acpi       cannonlake-pinctrl
+cht_whiskey_cove_pmic    crystal_cove_pwm   gpio-clk
+intel_rapl_msr     serial8250          sunrisepoint-pinctrl  tpm_tis
+alarmtimer  broxton-pinctrl        cedarfork-pinctrl      clk-fch
+            denverton-pinctrl  hid_sensor_accel_3d  lewisburg-pinctrl
+simple-framebuffer  syscon                ucsi_acpi
+amd_gpio    bxt_whiskey_cove_pmic  cherryview-pinctrl
+clk-lpss-atom            dw-apb-uart        i2c_designware
+parport_pc         snd-soc-dummy       thinkpad_acpi
+vesa-framebuffer
+
+So the only sensor seems to be the hid_sensor_accel_3d, and it has no
+hinge properties in my case.  Although, it might be one of the other
+items here so I will explore this area.  Thanks!
+
+> The above feature (property-sensor-model) spells out "Lenovo Yoga" in UTF=
+-16.
+> As far as I remember this is how the windows service finds the correct se=
+nsor.
+> Under the various inputs, the sensor seems to report the hinge rotation a=
+ngle,
+> as well as the angles between the keyboard and screen, and the ground lev=
+el.
+>
+> If the situation is similar in your case, then there is already infrastru=
+cture
+> to expose the angles to user space in iio sensors. See hid-sensor-custom =
+and
+> hid-sensor-custom-intel-hinge.
+
+No such lock, no hinge is returned with a find command in that directory.
+
+Thanks,
+Liam
+
+...
