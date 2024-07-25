@@ -1,104 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5AB17722;
-	Thu, 25 Jul 2024 03:40:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634BD13A884;
+	Thu, 25 Jul 2024 09:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721878853; cv=none; b=u7Q1hQp/jrDRJdgCxLCyUf1hhJ45V2K8YxhuKqP04Fqj+4sWvbPyJrzFWZxDO4TO2A99xJ2L6+2mtqruMiLAeYSBVOJ0hOw/7gkLHCMExzG5fXnla5bZtaJpeMmNPobM7+aui2PuC/BD9tJTTkEfqWe+b7kzAekefST+cyvPiVs=
+	t=1721899288; cv=none; b=JblJxiK4JyEfTmclfimLsiTwBgRz/Mh9FmICF59ftR9WXI5v4Hg6l4NNa+XIV5yynLG6kQ8gBgqQA2crS/kglAnJJ3rIK0E0ypqfjOV+UAzhLWaxVZHkrIz5pYCpk4K12i64vqodygiIhJwuow1aQ7kLAo6HwfWw7g1p2m6Wzso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721878853; c=relaxed/simple;
-	bh=+/SfHcWvZuzX5BpxFTHb0SOKVhDlmAD0pvwxtii3/9s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d1/9PKCm/7gLqnsIj+KczO9nmnnh80m3iBGHbqvn51NrQ7PDajJaknhkYs571OBJHU8FxHYgbf5PrCD8wAnUxncbSD/C3MZYKrO8YFL4q6F1His2n612frLXCgKy+3C/1X81TDQA10XRMJQCICzHcKgR8PSH68x2CpMeBE4vH4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c46Nkvyw; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c46Nkvyw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721878851; x=1753414851;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+/SfHcWvZuzX5BpxFTHb0SOKVhDlmAD0pvwxtii3/9s=;
-  b=c46NkvywEzrrW3OzAG6kl1linE543u1D/A8CK5aasu7+fHdd0SL41TBe
-   yC/EFC/IfcVGJJBGgxA3mVFKNLSY7co4/ozCvZSwK/I3UatjTqFZx/8TK
-   4BgYzLTxKHEHJvav/jAYsfh6oaWiCsZwrT4BbRNhIKBH6HQrU1VJAf+oL
-   unP+u9/4A+rurWG6befxKON7mGGpHP2B31q0evoOTjFQlotmx7Rt0/ygi
-   ttCGjLOsXucDk3TChRFAxStDdxHTsLmD1fEir+PV9AlZacw6oqFikKmlI
-   UM127QPL3/XpyQgFEqucP/MFe05eduvytiPYArHP56kFJ1rRznTlWXZ4w
-   Q==;
-X-CSE-ConnectionGUID: gIRzvfBfSvq9MMbWSQTdOQ==
-X-CSE-MsgGUID: HaKJdgM5SqWskyPFP5eDBA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11143"; a="31011505"
-X-IronPort-AV: E=Sophos;i="6.09,234,1716274800"; 
-   d="scan'208";a="31011505"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2024 20:40:51 -0700
-X-CSE-ConnectionGUID: OPYShQlcTvOHVabSwQwkdw==
-X-CSE-MsgGUID: D07xcoM9SzSpX0iEQmX2Rw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,234,1716274800"; 
-   d="scan'208";a="52817584"
-Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 24 Jul 2024 20:40:48 -0700
-Received: from kbuild by 68891e0c336b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sWpLR-000nii-1V;
-	Thu, 25 Jul 2024 03:40:45 +0000
-Date: Thu, 25 Jul 2024 11:40:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>,
-	hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, mustafa.eskieksi@gmail.com,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
-Subject: Re: [PATCH v4 1/2] HP: wmi: added support for 4 zone keyboard rgb
-Message-ID: <202407251136.aymIqEw3-lkp@intel.com>
-References: <20240719100011.16656-2-carlosmiguelferreira.2003@gmail.com>
+	s=arc-20240116; t=1721899288; c=relaxed/simple;
+	bh=VQDKFcoOxMKGDPSCKWVQ27wov+YG6LkdDqErAAwXv44=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=riNFYxDTFRZeNg9uGBCI4fO0qTHeEMllR5bBuh2kIYgtENuG42pHsVIEDwq+xyNgaXqGH9obkjkvHVL4kuKmgN+9Abfk2sPRtST5xY4lfKsST3xv1YF/oIt6UY2qIU4uRO3jt+n8SYE5G9D0AmJFdXnNBGyIJSNGZMJK4lS6SGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from fedori.lan (51b68624.dsl.pool.telekom.hu [::ffff:81.182.134.36])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 0000000000073A90.0000000066A2190E.0018F378; Thu, 25 Jul 2024 11:21:18 +0200
+From: Gergo Koteles <soyer@irl.hu>
+To: Hans de Goede <hdegoede@redhat.com>,
+  =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+  Ike Panhc <ike.pan@canonical.com>
+Cc: platform-driver-x86@vger.kernel.org,
+  linux-kernel@vger.kernel.org, Gergo Koteles <soyer@irl.hu>
+Subject: [PATCH v4 1/4] platform/x86: ideapad-laptop: introduce a generic notification chain
+Date: Thu, 25 Jul 2024 11:21:07 +0200
+Message-ID: <c5a43efae8a32bd034c3d19c0a686941347575a7.1721898747.git.soyer@irl.hu>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <cover.1721898747.git.soyer@irl.hu>
+References: <cover.1721898747.git.soyer@irl.hu>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240719100011.16656-2-carlosmiguelferreira.2003@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
 
-Hi Carlos,
+There are several cases where a notification chain can simplify Lenovo
+WMI drivers.
 
-kernel test robot noticed the following build warnings:
+Add a generic notification chain into ideapad-laptop.
 
-[auto build test WARNING on lee-leds/for-leds-next]
-[also build test WARNING on v6.10]
-[cannot apply to linus/master next-20240724]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Gergo Koteles <soyer@irl.hu>
+---
+ drivers/platform/x86/ideapad-laptop.c | 37 +++++++++++++++++++++++++++
+ drivers/platform/x86/ideapad-laptop.h |  5 ++++
+ 2 files changed, 42 insertions(+)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Carlos-Ferreira/HP-wmi-added-support-for-4-zone-keyboard-rgb/20240719-180603
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/leds.git for-leds-next
-patch link:    https://lore.kernel.org/r/20240719100011.16656-2-carlosmiguelferreira.2003%40gmail.com
-patch subject: [PATCH v4 1/2] HP: wmi: added support for 4 zone keyboard rgb
-config: i386-kismet-CONFIG_LEDS_CLASS_MULTICOLOR-CONFIG_HP_WMI-0-0 (https://download.01.org/0day-ci/archive/20240725/202407251136.aymIqEw3-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20240725/202407251136.aymIqEw3-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202407251136.aymIqEw3-lkp@intel.com/
-
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for LEDS_CLASS_MULTICOLOR when selected by HP_WMI
-   WARNING: unmet direct dependencies detected for LEDS_CLASS_MULTICOLOR
-     Depends on [n]: NEW_LEDS [=n] && LEDS_CLASS [=n]
-     Selected by [y]:
-     - HP_WMI [=y] && X86_PLATFORM_DEVICES [=y] && X86_PLATFORM_DRIVERS_HP [=y] && ACPI_WMI [=y] && INPUT [=y] && (RFKILL [=y] || RFKILL [=y]=n)
-
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 1ace711f7442..866b32bfe2c9 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -1592,6 +1592,39 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
+ 	priv->r_touchpad_val = value;
+ }
+ 
++static int ideapad_laptop_nb_notify(struct notifier_block *nb,
++				    unsigned long action, void *data)
++{
++	switch (action) {
++	}
++
++	return 0;
++}
++
++static struct notifier_block ideapad_laptop_notifier = {
++	.notifier_call = ideapad_laptop_nb_notify,
++};
++
++static BLOCKING_NOTIFIER_HEAD(ideapad_laptop_chain_head);
++
++int ideapad_laptop_register_notifier(struct notifier_block *nb)
++{
++	return blocking_notifier_chain_register(&ideapad_laptop_chain_head, nb);
++}
++EXPORT_SYMBOL_NS_GPL(ideapad_laptop_register_notifier, IDEAPAD_LAPTOP);
++
++int ideapad_laptop_unregister_notifier(struct notifier_block *nb)
++{
++	return blocking_notifier_chain_unregister(&ideapad_laptop_chain_head, nb);
++}
++EXPORT_SYMBOL_NS_GPL(ideapad_laptop_unregister_notifier, IDEAPAD_LAPTOP);
++
++void ideapad_laptop_call_notifier(unsigned long action, void *data)
++{
++	blocking_notifier_call_chain(&ideapad_laptop_chain_head, action, data);
++}
++EXPORT_SYMBOL_NS_GPL(ideapad_laptop_call_notifier, IDEAPAD_LAPTOP);
++
+ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
+ {
+ 	struct ideapad_private *priv = data;
+@@ -1974,6 +2007,8 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+ 	if (err)
+ 		goto shared_init_failed;
+ 
++	ideapad_laptop_register_notifier(&ideapad_laptop_notifier);
++
+ 	return 0;
+ 
+ shared_init_failed:
+@@ -2006,6 +2041,8 @@ static void ideapad_acpi_remove(struct platform_device *pdev)
+ 	struct ideapad_private *priv = dev_get_drvdata(&pdev->dev);
+ 	int i;
+ 
++	ideapad_laptop_unregister_notifier(&ideapad_laptop_notifier);
++
+ 	ideapad_shared_exit(priv);
+ 
+ 	acpi_remove_notify_handler(priv->adev->handle,
+diff --git a/drivers/platform/x86/ideapad-laptop.h b/drivers/platform/x86/ideapad-laptop.h
+index 4498a96de597..3eb0dcd6bf7b 100644
+--- a/drivers/platform/x86/ideapad-laptop.h
++++ b/drivers/platform/x86/ideapad-laptop.h
+@@ -12,6 +12,11 @@
+ #include <linux/acpi.h>
+ #include <linux/jiffies.h>
+ #include <linux/errno.h>
++#include <linux/notifier.h>
++
++int ideapad_laptop_register_notifier(struct notifier_block *nb);
++int ideapad_laptop_unregister_notifier(struct notifier_block *nb);
++void ideapad_laptop_call_notifier(unsigned long action, void *data);
+ 
+ enum {
+ 	VPCCMD_R_VPC1 = 0x10,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.45.2
+
