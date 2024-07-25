@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DACA199E8B
-	for <platform-driver-x86@vger.kernel.org>; Thu, 25 Jul 2024 12:22:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49830199EA7
+	for <platform-driver-x86@vger.kernel.org>; Thu, 25 Jul 2024 12:22:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721910151; cv=none; b=PtD1+gOWPa07+7XsGO/FuvAoXzpeaNQ71nycBdGq6EjMfFXsEkzYZjqZtITsJscilCMsym28J2oKPo/TNaVu0Lz0gu7Tya1Qaa8Ntpb6X09NZ4ZjojdhA36MutOk9pL4k+JAsppI07xACHhZFjWnJFqgISJdWdogXbtdrNzjxwE=
+	t=1721910152; cv=none; b=h7jIn7PLGPanJEYntds93+dXtA5Zo+WlilOnBu2EIZ8K+QpIcVJcH9PRZO1seOWmjxObCh2x0XyGzRcigapKWT6eofA6/acMJy0nweB8zjkL0AwvzFzt9pszZ6iLADPZMJLDmYeHJgGrjQ/7+k0woHPzDjUup2muDP9zOd+5As8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721910151; c=relaxed/simple;
-	bh=1FyhjEujvcHbnTpXOjI5J/XRQNsLRqw6RVYF/BcYzR4=;
+	s=arc-20240116; t=1721910152; c=relaxed/simple;
+	bh=WVKJz9jLuWJhZRq4+rVOokluWUkOLW9xPm97MZoSW8Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H0tbb0ftWsNDK0TdL+pPupWpLpApxcidrg7Ipzw4aUGVMV67ePmbkReUJ8B9Qbh+L+oed5CAPW8xaW/ApH5c1ed7Ljhax1H04j6a/9kQlVhMaV+YHaygAEa4HMY0euw9TYjZlH4YnaKq8L2FBUVnzc2tdzrZ3zf/A5MWOuvhYYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XDytqksk; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version:Content-Type; b=oSXLYU3o0N2pgu9nAw7SlD1FStkYRr8MD1qFq0mJMEm3B96j/sbua+qczFCy2+SyGD6vcfOo2h4J/9lceOaPl7qoUJxaYAOhl12B/EIziEA5u1ltg4RZRM3Rb6cRZ0EoX7dumETvcdheyZBvGA1HpJUWbkLkuOkNKAvtMxgbTk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c6HcxpqF; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XDytqksk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c6HcxpqF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721910150; x=1753446150;
+  t=1721910151; x=1753446151;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=1FyhjEujvcHbnTpXOjI5J/XRQNsLRqw6RVYF/BcYzR4=;
-  b=XDytqkskqnhqEQt8fl/H8o5VlopFFE49TRJhM2Xw69OQhD7nVD/dgleE
-   qyzaRHknSqV/gv5bh8awqkvknl9dDQs4WBW+ggWpb+/LMtia+Q0iX5zm6
-   lwBJznZJsl7jqOk+givpBIcnPEQvn5Z4NhgO+X48ylYO4ug+R+BB3Aw9N
-   xTO9quMpLx37r/invh4H1K4nOVe4oDJkgA2dco7BX/SSt51iPrrITp6Ky
-   qpdClteuCaT9+xMKxCs2Nk1se8hS+0xXk5y/nbrEHWRvBWidwW5e9+IXH
-   s1xZPh888OoO057aUlIGhTxeCQ1lqWMM1XWnm3YFbk0u33+8Wk2ZCWuan
-   A==;
-X-CSE-ConnectionGUID: LJhRuIkISdC6P+UeucG4DA==
-X-CSE-MsgGUID: jpq80HZtTAuUPs4Q8/QRWw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11143"; a="31060752"
+  bh=WVKJz9jLuWJhZRq4+rVOokluWUkOLW9xPm97MZoSW8Y=;
+  b=c6HcxpqF/WIqhRIbwJwoloiy5/84KwIzAt1CYbxxQ6Eyu86Uce6AC5up
+   +Gd7ty2IufxEeoY5P4A0TDCRD2PMmSrqeu445NqZAigGdOlA+dwB1q7a4
+   aE4zrieDhR+NAq/bUHmyLcDxRHmgFEx0BULoQq6H7MITW6O7yaP+FeLyI
+   lDraLBBQ3VRRgWoBKTbHLrY2p0qqXC4kbvFHTAPjHZV0LJ/1x/09e133O
+   +hK55VxEoJ9O7PMRN3x5+L67BzCYMPlr8n8Si7ImIkYwOnKMtqkilql3K
+   W2g6FrukXvDt1pC28sUQtjDy0FYAjIOjD3DAlhBcWpnwKxpCX97fLrtvF
+   g==;
+X-CSE-ConnectionGUID: rr7yAlnrTlmgMHETUM39Tw==
+X-CSE-MsgGUID: 1vsfK853SAek8ZdmsjnxpA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11143"; a="31060755"
 X-IronPort-AV: E=Sophos;i="6.09,235,1716274800"; 
-   d="scan'208";a="31060752"
+   d="scan'208";a="31060755"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 05:22:29 -0700
-X-CSE-ConnectionGUID: D1EAH+kQRcOrClCBjB0nQQ==
-X-CSE-MsgGUID: mCqjTdh5SeG10cWVYC8JTg==
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 05:22:31 -0700
+X-CSE-ConnectionGUID: 0iP9/LzhSXK9bIOZjyiV9A==
+X-CSE-MsgGUID: ausxuZnISKSTanTxj59IoQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,235,1716274800"; 
-   d="scan'208";a="52786161"
+   d="scan'208";a="52786168"
 Received: from awvttdev-05.aw.intel.com ([10.228.212.156])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 05:22:28 -0700
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 05:22:30 -0700
 From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
 To: intel-xe@lists.freedesktop.org,
 	platform-driver-x86@vger.kernel.org,
@@ -51,9 +51,9 @@ To: intel-xe@lists.freedesktop.org,
 	matthew.brost@intel.com,
 	andriy.shevchenko@linux.intel.com
 Cc: michael.j.ruhl@intel.com
-Subject: [PATCH v8 2/6] platform/x86/intel/vsec: Add PMT read callbacks
-Date: Thu, 25 Jul 2024 08:22:09 -0400
-Message-ID: <20240725122214.4063886-3-michael.j.ruhl@intel.com>
+Subject: [PATCH v8 3/6] platform/x86/intel/pmt: Use PMT callbacks
+Date: Thu, 25 Jul 2024 08:22:10 -0400
+Message-ID: <20240725122214.4063886-4-michael.j.ruhl@intel.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240725122214.4063886-1-michael.j.ruhl@intel.com>
 References: <20240725122214.4063886-1-michael.j.ruhl@intel.com>
@@ -68,67 +68,155 @@ Content-Transfer-Encoding: 8bit
 
 From: "David E. Box" <david.e.box@linux.intel.com>
 
-Some PMT providers require device specific actions before their telemetry
-can be read. Provide assignable PMT read callbacks to allow providers to
-perform those actions.
+PMT providers may require device specific actions before their telemetry
+may be read. If the read_telem() is assigned, call it instead of
+memcpy_fromio() and return. Since this needs to be done in multiple
+locations, add pmt_telem_read_mmio() as a wrapper function to perform this
+and any other needed checks.
 
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
- drivers/platform/x86/intel/vsec.c |  1 +
- include/linux/intel_vsec.h        | 15 +++++++++++++++
- 2 files changed, 16 insertions(+)
+ drivers/platform/x86/intel/pmt/class.c     | 26 +++++++++++++++++-----
+ drivers/platform/x86/intel/pmt/class.h     |  8 +++++--
+ drivers/platform/x86/intel/pmt/telemetry.c | 10 +++++----
+ 3 files changed, 32 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-index 2b46807f868b..7b5cc9993974 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -212,6 +212,7 @@ static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *he
- 	intel_vsec_dev->num_resources = header->num_entries;
- 	intel_vsec_dev->quirks = info->quirks;
- 	intel_vsec_dev->base_addr = info->base_addr;
-+	intel_vsec_dev->priv_data = info->priv_data;
+diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
+index d7939b28e937..c04bb7f97a4d 100644
+--- a/drivers/platform/x86/intel/pmt/class.c
++++ b/drivers/platform/x86/intel/pmt/class.c
+@@ -58,6 +58,22 @@ pmt_memcpy64_fromio(void *to, const u64 __iomem *from, size_t count)
+ 	return count;
+ }
  
- 	if (header->id == VSEC_ID_SDSI)
- 		intel_vsec_dev->ida = &intel_vsec_sdsi_ida;
-diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
-index 6495e37c9079..11ee185566c3 100644
---- a/include/linux/intel_vsec.h
-+++ b/include/linux/intel_vsec.h
-@@ -67,10 +67,24 @@ enum intel_vsec_quirks {
- 	VSEC_QUIRK_EARLY_HW     = BIT(4),
++int pmt_telem_read_mmio(struct pci_dev *pdev, struct pmt_callbacks *cb, u32 guid, void *buf,
++			void __iomem *addr, u32 count)
++{
++	if (cb && cb->read_telem)
++		return cb->read_telem(pdev, guid, buf, count);
++
++	if (guid == GUID_SPR_PUNIT)
++		/* PUNIT on SPR only supports aligned 64-bit read */
++		return pmt_memcpy64_fromio(buf, addr, count);
++
++	memcpy_fromio(buf, addr, count);
++
++	return count;
++}
++EXPORT_SYMBOL_NS_GPL(pmt_telem_read_mmio, INTEL_PMT);
++
+ /*
+  * sysfs
+  */
+@@ -79,11 +95,8 @@ intel_pmt_read(struct file *filp, struct kobject *kobj,
+ 	if (count > entry->size - off)
+ 		count = entry->size - off;
+ 
+-	if (entry->guid == GUID_SPR_PUNIT)
+-		/* PUNIT on SPR only supports aligned 64-bit read */
+-		count = pmt_memcpy64_fromio(buf, entry->base + off, count);
+-	else
+-		memcpy_fromio(buf, entry->base + off, count);
++	count = pmt_telem_read_mmio(entry->ep->pcidev, entry->cb, entry->header.guid, buf,
++				    entry->base + off, count);
+ 
+ 	return count;
+ }
+@@ -239,6 +252,7 @@ static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
+ 
+ 	entry->guid = header->guid;
+ 	entry->size = header->size;
++	entry->cb = ivdev->priv_data;
+ 
+ 	return 0;
+ }
+@@ -300,7 +314,7 @@ static int intel_pmt_dev_register(struct intel_pmt_entry *entry,
+ 		goto fail_ioremap;
+ 
+ 	if (ns->pmt_add_endpoint) {
+-		ret = ns->pmt_add_endpoint(entry, ivdev->pcidev);
++		ret = ns->pmt_add_endpoint(ivdev, entry);
+ 		if (ret)
+ 			goto fail_add_endpoint;
+ 	}
+diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/intel/pmt/class.h
+index d6f9ccaf28c8..a267ac964423 100644
+--- a/drivers/platform/x86/intel/pmt/class.h
++++ b/drivers/platform/x86/intel/pmt/class.h
+@@ -24,6 +24,7 @@ struct pci_dev;
+ struct telem_endpoint {
+ 	struct pci_dev		*pcidev;
+ 	struct telem_header	header;
++	struct pmt_callbacks	*cb;
+ 	void __iomem		*base;
+ 	bool			present;
+ 	struct kref		kref;
+@@ -43,6 +44,7 @@ struct intel_pmt_entry {
+ 	struct kobject		*kobj;
+ 	void __iomem		*disc_table;
+ 	void __iomem		*base;
++	struct pmt_callbacks	*cb;
+ 	unsigned long		base_addr;
+ 	size_t			size;
+ 	u32			guid;
+@@ -55,10 +57,12 @@ struct intel_pmt_namespace {
+ 	const struct attribute_group *attr_grp;
+ 	int (*pmt_header_decode)(struct intel_pmt_entry *entry,
+ 				 struct device *dev);
+-	int (*pmt_add_endpoint)(struct intel_pmt_entry *entry,
+-				struct pci_dev *pdev);
++	int (*pmt_add_endpoint)(struct intel_vsec_device *ivdev,
++				struct intel_pmt_entry *entry);
  };
  
-+/**
-+ * struct pmt_callbacks - Callback infrastructure for PMT devices
-+ * ->read_telem() when specified, called by client driver to access PMT data (instead
-+ * of direct copy).
-+ * @pdev:  PCI device reference for the callback's use
-+ * @guid:  ID of data to acccss
-+ * @data:  buffer for the data to be copied
-+ * @count: size of buffer
-+ */
-+struct pmt_callbacks {
-+	int (*read_telem)(struct pci_dev *pdev, u32 guid, u64 *data, u32 count);
-+};
-+
- /**
-  * struct intel_vsec_platform_info - Platform specific data
-  * @parent:    parent device in the auxbus chain
-  * @headers:   list of headers to define the PMT client devices to create
-+ * @priv_data: private data, usable by parent devices, currently a callback
-  * @caps:      bitmask of PMT capabilities for the given headers
-  * @quirks:    bitmask of VSEC device quirks
-  * @base_addr: allow a base address to be specified (rather than derived)
-@@ -78,6 +92,7 @@ enum intel_vsec_quirks {
- struct intel_vsec_platform_info {
- 	struct device *parent;
- 	struct intel_vsec_header **headers;
-+	void *priv_data;
- 	unsigned long caps;
- 	unsigned long quirks;
- 	u64 base_addr;
++int pmt_telem_read_mmio(struct pci_dev *pdev, struct pmt_callbacks *cb, u32 guid, void *buf,
++			void __iomem *addr, u32 count);
+ bool intel_pmt_is_early_client_hw(struct device *dev);
+ int intel_pmt_dev_create(struct intel_pmt_entry *entry,
+ 			 struct intel_pmt_namespace *ns,
+diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
+index 3478f891ea0b..c9feac859e57 100644
+--- a/drivers/platform/x86/intel/pmt/telemetry.c
++++ b/drivers/platform/x86/intel/pmt/telemetry.c
+@@ -93,8 +93,8 @@ static int pmt_telem_header_decode(struct intel_pmt_entry *entry,
+ 	return 0;
+ }
+ 
+-static int pmt_telem_add_endpoint(struct intel_pmt_entry *entry,
+-				  struct pci_dev *pdev)
++static int pmt_telem_add_endpoint(struct intel_vsec_device *ivdev,
++				  struct intel_pmt_entry *entry)
+ {
+ 	struct telem_endpoint *ep;
+ 
+@@ -104,13 +104,14 @@ static int pmt_telem_add_endpoint(struct intel_pmt_entry *entry,
+ 		return -ENOMEM;
+ 
+ 	ep = entry->ep;
+-	ep->pcidev = pdev;
++	ep->pcidev = ivdev->pcidev;
+ 	ep->header.access_type = entry->header.access_type;
+ 	ep->header.guid = entry->header.guid;
+ 	ep->header.base_offset = entry->header.base_offset;
+ 	ep->header.size = entry->header.size;
+ 	ep->base = entry->base;
+ 	ep->present = true;
++	ep->cb = ivdev->priv_data;
+ 
+ 	kref_init(&ep->kref);
+ 
+@@ -218,7 +219,8 @@ int pmt_telem_read(struct telem_endpoint *ep, u32 id, u64 *data, u32 count)
+ 	if (offset + NUM_BYTES_QWORD(count) > size)
+ 		return -EINVAL;
+ 
+-	memcpy_fromio(data, ep->base + offset, NUM_BYTES_QWORD(count));
++	pmt_telem_read_mmio(ep->pcidev, ep->cb, ep->header.guid, data, ep->base + offset,
++			    NUM_BYTES_QWORD(count));
+ 
+ 	return ep->present ? 0 : -EPIPE;
+ }
 -- 
 2.44.0
 
