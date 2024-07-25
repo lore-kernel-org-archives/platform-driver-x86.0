@@ -1,266 +1,134 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81335197A65;
-	Thu, 25 Jul 2024 09:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F71199EA3
+	for <platform-driver-x86@vger.kernel.org>; Thu, 25 Jul 2024 12:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721899290; cv=none; b=JpojDRkYA29IB66gskwXTw95rPBwdkwOYR1u/K4OrOfgljUxW7IPypV4M7iT+vsJlYfV4BkJO5FIEC6U1j4uctJLf4iHqEbZNFw664jJpToC/0YLjvnUNEc8CFbBShGxUfhQJS3irnn1s751Sbt65AZ8Hsq3jkagX9sNDh+m0dM=
+	t=1721910148; cv=none; b=WMj4+q+XvdHMHPDy0sK/dKlzhdkPoEFh298gjekjxkZoptAXK5NX8UXrcj2cerEbFm0wqR1rkycDWqgKG6zB/hAY8kM3l7v1vJcWqHC6COt4xMz4AK0WJJZcTuzMcXeqxMlz3q3a47PtyWL70C5Qm2MNicSeDr+WerfdHqCaCLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721899290; c=relaxed/simple;
-	bh=UCzqv/nUx4g9ifU8gURc16AQSdFjKEEhUUnxuuOee2M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=H8u4TPV0g//xUei+2EIDw0P0jMiowwfvZ+Fi3iaGMppPpNQdut5beVXXWaLiL+LLWNMpxDAf4kCWmkgEtbsFrMG3OyABAoYMV9eM0PuE/8uM+rBtDc9IXTkowi7cynhw1Cy8MvueXcPYmHEuoNOYDf98hkSGqH9ysbmenbz6zVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from fedori.lan (51b68624.dsl.pool.telekom.hu [::ffff:81.182.134.36])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 0000000000073A9A.0000000066A2190F.0018F394; Thu, 25 Jul 2024 11:21:19 +0200
-From: Gergo Koteles <soyer@irl.hu>
-To: Hans de Goede <hdegoede@redhat.com>,
-  =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-  Ike Panhc <ike.pan@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org,
-  linux-kernel@vger.kernel.org, Gergo Koteles <soyer@irl.hu>
-Subject: [PATCH v4 4/4] platform/x86: ideapad-laptop: add a mutex to synchronize VPC commands
-Date: Thu, 25 Jul 2024 11:21:10 +0200
-Message-ID: <f26782fa1194ad11ed5d9ba121a804e59b58b026.1721898747.git.soyer@irl.hu>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1721898747.git.soyer@irl.hu>
-References: <cover.1721898747.git.soyer@irl.hu>
+	s=arc-20240116; t=1721910148; c=relaxed/simple;
+	bh=5KornmEAf5kl0PDvjCkHFEC9MX4Ry9jlDgg7sDF9D94=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dvfOH8JXdoMiGPrEBszmH9SQ6U30sLnBA08NtDKHZuZcMv61X+LsJc7i/zBK5uk5Pre5MQxpGzwW6VKErjF4IfKqC+cQX92DDUYet6esb2TGXFrxn6W/kJbyvZCK1OKaziqhioxbZB62I4NSmoe/OHjpWV9EHoxecHkdrT04fWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kbho/oE2; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kbho/oE2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721910146; x=1753446146;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5KornmEAf5kl0PDvjCkHFEC9MX4Ry9jlDgg7sDF9D94=;
+  b=Kbho/oE2lHvznXT6IA3L/FY76Y5mK6ZARAeNTFo5PvLYvG6GlNd8R94c
+   7yKKBTubPTCdlVQglJ1br2kbEsEzkNTBdMnKsLQUZXtOevETih66vKpGr
+   oAslfHs1g/5I837XTsxsW2eu0ToW/bHvBSOYN6jfoh0IFCWmezJygP/rQ
+   BQdTgD8R7+92FQDNhN6Hw90ym8Zo/r7Vc20/f4W2i9Xgd+0shrgaxo1dl
+   igkn9O87461VnMVh40kVTR03tjTckWDY0BJs0sH+6iwztvTZr+br9oIIp
+   JOyRC9cazek1ocLfAhg1aOoe3gtH0Hq9wUlE0iNoC0K+1oJH6S4Zb+7gB
+   w==;
+X-CSE-ConnectionGUID: yghVFTjiSbyDXiV6hE9bsA==
+X-CSE-MsgGUID: E15BfAGgRhyiT8xDli3L5g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11143"; a="31060747"
+X-IronPort-AV: E=Sophos;i="6.09,235,1716274800"; 
+   d="scan'208";a="31060747"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 05:22:25 -0700
+X-CSE-ConnectionGUID: sdILFKTpTnW2l/3OFJcLRg==
+X-CSE-MsgGUID: tNtcVAH/QO+gbI7AF9108w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,235,1716274800"; 
+   d="scan'208";a="52786136"
+Received: from awvttdev-05.aw.intel.com ([10.228.212.156])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 05:22:24 -0700
+From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+To: intel-xe@lists.freedesktop.org,
+	platform-driver-x86@vger.kernel.org,
+	david.e.box@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	matthew.brost@intel.com,
+	andriy.shevchenko@linux.intel.com
+Cc: michael.j.ruhl@intel.com
+Subject: [PATCH v8 0/6] Support PMT features in Xe
+Date: Thu, 25 Jul 2024 08:22:07 -0400
+Message-ID: <20240725122214.4063886-1-michael.j.ruhl@intel.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Calling VPC commands consists of several VPCW and VPCR ACPI calls.
-These calls and their results can get mixed up if they are called
-simultaneously from different threads, like acpi notify handler,
-sysfs, debugfs, notification chain.
+DG2 and Battlemage have the Intel Platform Monitoring Technology (PMT)
+feature available, but not in the "standard" (pci endpoint) way.
 
-Add a mutex to synchronize VPC commands.
+Add support to the vsec and Xe drivers to allow access to the PMT space
+for the DG2 and BMG devices.
 
-Signed-off-by: Gergo Koteles <soyer@irl.hu>
----
- drivers/platform/x86/ideapad-laptop.c | 64 ++++++++++++++++++++-------
- 1 file changed, 47 insertions(+), 17 deletions(-)
+The intel_vsec_register() function allows drivers to provide telemetry
+header information (usually found at probe time), to allow the PMT
+driver to probe the telemetry features.
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 8398774cdfe2..3c24e3d99cd2 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -155,6 +155,7 @@ struct ideapad_rfk_priv {
- 
- struct ideapad_private {
- 	struct acpi_device *adev;
-+	struct mutex vpc_mutex; /* protects the VPC calls */
- 	struct rfkill *rfk[IDEAPAD_RFKILL_DEV_NUM];
- 	struct ideapad_rfk_priv rfk_priv[IDEAPAD_RFKILL_DEV_NUM];
- 	struct platform_device *platform_device;
-@@ -437,6 +438,8 @@ static int debugfs_status_show(struct seq_file *s, void *data)
- 	struct ideapad_private *priv = s->private;
- 	unsigned long value;
- 
-+	guard(mutex)(&priv->vpc_mutex);
-+
- 	if (!read_ec_data(priv->adev->handle, VPCCMD_R_BL_MAX, &value))
- 		seq_printf(s, "Backlight max:  %lu\n", value);
- 	if (!read_ec_data(priv->adev->handle, VPCCMD_R_BL, &value))
-@@ -555,7 +558,8 @@ static ssize_t camera_power_show(struct device *dev,
- 	unsigned long result;
- 	int err;
- 
--	err = read_ec_data(priv->adev->handle, VPCCMD_R_CAMERA, &result);
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		err = read_ec_data(priv->adev->handle, VPCCMD_R_CAMERA, &result);
- 	if (err)
- 		return err;
- 
-@@ -574,7 +578,8 @@ static ssize_t camera_power_store(struct device *dev,
- 	if (err)
- 		return err;
- 
--	err = write_ec_cmd(priv->adev->handle, VPCCMD_W_CAMERA, state);
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		err = write_ec_cmd(priv->adev->handle, VPCCMD_W_CAMERA, state);
- 	if (err)
- 		return err;
- 
-@@ -627,7 +632,8 @@ static ssize_t fan_mode_show(struct device *dev,
- 	unsigned long result;
- 	int err;
- 
--	err = read_ec_data(priv->adev->handle, VPCCMD_R_FAN, &result);
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		err = read_ec_data(priv->adev->handle, VPCCMD_R_FAN, &result);
- 	if (err)
- 		return err;
- 
-@@ -649,7 +655,8 @@ static ssize_t fan_mode_store(struct device *dev,
- 	if (state > 4 || state == 3)
- 		return -EINVAL;
- 
--	err = write_ec_cmd(priv->adev->handle, VPCCMD_W_FAN, state);
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		err = write_ec_cmd(priv->adev->handle, VPCCMD_W_FAN, state);
- 	if (err)
- 		return err;
- 
-@@ -734,7 +741,8 @@ static ssize_t touchpad_show(struct device *dev,
- 	unsigned long result;
- 	int err;
- 
--	err = read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &result);
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		err = read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &result);
- 	if (err)
- 		return err;
- 
-@@ -755,7 +763,8 @@ static ssize_t touchpad_store(struct device *dev,
- 	if (err)
- 		return err;
- 
--	err = write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, state);
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		err = write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, state);
- 	if (err)
- 		return err;
- 
-@@ -1148,6 +1157,8 @@ static int ideapad_rfk_set(void *data, bool blocked)
- 	struct ideapad_rfk_priv *priv = data;
- 	int opcode = ideapad_rfk_data[priv->dev].opcode;
- 
-+	guard(mutex)(&priv->priv->vpc_mutex);
-+
- 	return write_ec_cmd(priv->priv->adev->handle, opcode, !blocked);
- }
- 
-@@ -1161,6 +1172,8 @@ static void ideapad_sync_rfk_state(struct ideapad_private *priv)
- 	int i;
- 
- 	if (priv->features.hw_rfkill_switch) {
-+		guard(mutex)(&priv->vpc_mutex);
-+
- 		if (read_ec_data(priv->adev->handle, VPCCMD_R_RF, &hw_blocked))
- 			return;
- 		hw_blocked = !hw_blocked;
-@@ -1334,8 +1347,9 @@ static void ideapad_input_novokey(struct ideapad_private *priv)
- {
- 	unsigned long long_pressed;
- 
--	if (read_ec_data(priv->adev->handle, VPCCMD_R_NOVO, &long_pressed))
--		return;
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		if (read_ec_data(priv->adev->handle, VPCCMD_R_NOVO, &long_pressed))
-+			return;
- 
- 	if (long_pressed)
- 		ideapad_input_report(priv, 17);
-@@ -1347,8 +1361,9 @@ static void ideapad_check_special_buttons(struct ideapad_private *priv)
- {
- 	unsigned long bit, value;
- 
--	if (read_ec_data(priv->adev->handle, VPCCMD_R_SPECIAL_BUTTONS, &value))
--		return;
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		if (read_ec_data(priv->adev->handle, VPCCMD_R_SPECIAL_BUTTONS, &value))
-+			return;
- 
- 	for_each_set_bit (bit, &value, 16) {
- 		switch (bit) {
-@@ -1381,6 +1396,8 @@ static int ideapad_backlight_get_brightness(struct backlight_device *blightdev)
- 	unsigned long now;
- 	int err;
- 
-+	guard(mutex)(&priv->vpc_mutex);
-+
- 	err = read_ec_data(priv->adev->handle, VPCCMD_R_BL, &now);
- 	if (err)
- 		return err;
-@@ -1393,6 +1410,8 @@ static int ideapad_backlight_update_status(struct backlight_device *blightdev)
- 	struct ideapad_private *priv = bl_get_data(blightdev);
- 	int err;
- 
-+	guard(mutex)(&priv->vpc_mutex);
-+
- 	err = write_ec_cmd(priv->adev->handle, VPCCMD_W_BL,
- 			   blightdev->props.brightness);
- 	if (err)
-@@ -1470,6 +1489,8 @@ static void ideapad_backlight_notify_power(struct ideapad_private *priv)
- 	if (!blightdev)
- 		return;
- 
-+	guard(mutex)(&priv->vpc_mutex);
-+
- 	if (read_ec_data(priv->adev->handle, VPCCMD_R_BL_POWER, &power))
- 		return;
- 
-@@ -1482,7 +1503,8 @@ static void ideapad_backlight_notify_brightness(struct ideapad_private *priv)
- 
- 	/* if we control brightness via acpi video driver */
- 	if (!priv->blightdev)
--		read_ec_data(priv->adev->handle, VPCCMD_R_BL, &now);
-+		scoped_guard(mutex, &priv->vpc_mutex)
-+			read_ec_data(priv->adev->handle, VPCCMD_R_BL, &now);
- 	else
- 		backlight_force_update(priv->blightdev, BACKLIGHT_UPDATE_HOTKEY);
- }
-@@ -1707,7 +1729,8 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
- 	int ret;
- 
- 	/* Without reading from EC touchpad LED doesn't switch state */
--	ret = read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value);
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		ret = read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value);
- 	if (ret)
- 		return;
- 
-@@ -1767,7 +1790,8 @@ static void ideapad_laptop_trigger_ec(void)
- 	if (!priv->features.ymc_ec_trigger)
- 		return;
- 
--	ret = write_ec_cmd(priv->adev->handle, VPCCMD_W_YMC, 1);
-+	scoped_guard(mutex, &priv->vpc_mutex)
-+		ret = write_ec_cmd(priv->adev->handle, VPCCMD_W_YMC, 1);
- 	if (ret)
- 		dev_warn(&priv->platform_device->dev, "Could not write YMC: %d\n", ret);
- }
-@@ -1813,11 +1837,13 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
- 	struct ideapad_private *priv = data;
- 	unsigned long vpc1, vpc2, bit;
- 
--	if (read_ec_data(handle, VPCCMD_R_VPC1, &vpc1))
--		return;
-+	scoped_guard(mutex, &priv->vpc_mutex) {
-+		if (read_ec_data(handle, VPCCMD_R_VPC1, &vpc1))
-+			return;
- 
--	if (read_ec_data(handle, VPCCMD_R_VPC2, &vpc2))
--		return;
-+		if (read_ec_data(handle, VPCCMD_R_VPC2, &vpc2))
-+			return;
-+	}
- 
- 	vpc1 = (vpc2 << 8) | vpc1;
- 
-@@ -2124,6 +2150,10 @@ static int ideapad_acpi_add(struct platform_device *pdev)
- 	priv->adev = adev;
- 	priv->platform_device = pdev;
- 
-+	err = devm_mutex_init(&pdev->dev, &priv->vpc_mutex);
-+	if (err)
-+		return err;
-+
- 	ideapad_check_features(priv);
- 
- 	err = ideapad_sysfs_init(priv);
+Battlemage has a shared memory area (selected by index), so a callback
+function is required to access the appropriate PMT data.
+
+V2:
+  Re-worked DG2 support patches using a base_adjust rather than a
+  quirk.
+  Updated GUID decode, for correct decode.
+v3:
+  Fixed a documentation issue for the pmt struct.
+v4:
+  Fixed a documentation issue in the xe_vsec.c module
+v5:
+  Addressed review comments for patch 4 (Xe driver)
+  Add r/b for the first three patches
+v6:
+  Added kernel doc to moved data structure
+  Added required include files
+  Correct usage for FIELD_PREP()/FIELD_GET()
+  Whitespace clean up
+  Removed unnecessary type cast
+v7:
+  Commit message updates
+v8:
+  Added some r/b (patch 2 and 3).
+  Updated kernel doc patch 2 (priv_data) patch 5 (base_adjust)
+
+David E. Box (3):
+  platform/x86/intel/vsec.h: Move to include/linux
+  platform/x86/intel/vsec: Add PMT read callbacks
+  platform/x86/intel/pmt: Use PMT callbacks
+
+Michael J. Ruhl (3):
+  drm/xe/vsec: Support BMG devices
+  platform/x86/intel/pmt: Add support for PMT base adjust
+  drm/xe/vsec: Add support for DG2
+
+ MAINTAINERS                                   |   3 +-
+ drivers/gpu/drm/xe/Makefile                   |   1 +
+ drivers/gpu/drm/xe/xe_device.c                |   5 +
+ drivers/gpu/drm/xe/xe_device_types.h          |   6 +
+ drivers/gpu/drm/xe/xe_vsec.c                  | 300 ++++++++++++++++++
+ drivers/gpu/drm/xe/xe_vsec.h                  |  13 +
+ drivers/platform/x86/intel/pmc/core_ssram.c   |   2 +-
+ drivers/platform/x86/intel/pmt/class.c        |  28 +-
+ drivers/platform/x86/intel/pmt/class.h        |  11 +-
+ drivers/platform/x86/intel/pmt/crashlog.c     |   2 +-
+ drivers/platform/x86/intel/pmt/telemetry.c    |  21 +-
+ drivers/platform/x86/intel/sdsi.c             |   3 +-
+ drivers/platform/x86/intel/tpmi.c             |   3 +-
+ drivers/platform/x86/intel/vsec.c             |   9 +-
+ .../vsec.h => include/linux/intel_vsec.h      |  50 ++-
+ 15 files changed, 428 insertions(+), 29 deletions(-)
+ create mode 100644 drivers/gpu/drm/xe/xe_vsec.c
+ create mode 100644 drivers/gpu/drm/xe/xe_vsec.h
+ rename drivers/platform/x86/intel/vsec.h => include/linux/intel_vsec.h (61%)
+
 -- 
-2.45.2
+2.44.0
 
