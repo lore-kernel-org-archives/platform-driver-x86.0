@@ -1,41 +1,40 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CC23032A;
-	Fri, 26 Jul 2024 18:42:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 432DC3032A;
+	Fri, 26 Jul 2024 18:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722019374; cv=none; b=XK3rsacynS8nVAMT4PfdQXju2AoXrCbfU1grtDG0T9knddF/IPy1NP1EXThhoDA6DDzzYL9iphGoAN4gjR2HlPQbbDYv/vJSLnYU3APMysGk3bsZ+/J4KmaVE3+LyXYHO0mE7+8ytrw3mtNRLIRhljVx0324mog6AVMzY9l+cJY=
+	t=1722019611; cv=none; b=M/vKn1UKiVu0rN95xI2FTcwxip5pVEDyA9Y9KZrqKtgKXNRMWtDV7zknmXLpar0tiDYTEcENrJzLfKVXCjtYIhcuEFMnyMv39Ak3psoi3wuuM9+tVTX2hlmUjf2SDS0HYHvHXOAwBcto3Hypwp8pwxVfRt9ki3TzDyRWj45EGqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722019374; c=relaxed/simple;
-	bh=x5ZH7f1gyMXIZq/0/VN8//jwDAixwcpDKNRXC++wjik=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kk5khT6HMdQyGW+NkQtZNz7wxqd9Vkupr6jn2UmeezWKiOKnNPkbi8TtMkaG6HH5txXr+1p3P8h9IL4PNbWk0QbhJQvJom+C3WeiFC575Y4d9zWy0LeuaZLJofWB3bGio2PL7tHC+hHXAbU/SO1StiPltM+KWOrGmPotF9xAQoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=JW+Wax8E; arc=none smtp.client-ip=212.227.17.20
+	s=arc-20240116; t=1722019611; c=relaxed/simple;
+	bh=J+xl3Z+UAWgFBCGwIgsGabOuk/jS6OeF3g7UKaL7Ncg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ELm7/sayFsNIrlGbWr6vRb2Tws5JezZp51KDpVyOScmHVruY4MlBuDWoVmwd4EHWsR3hkJ8qwPqsSO60qqE3PSL4dE67yw8v2JXdju+RyeL4XMRAhrToWi8O0+SN77Fo0eoBKH+JqatQtkGf5L6owWWCCdUoJ6zNr+VtMnr2xpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=VVTIzdZg; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="JW+Wax8E"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="VVTIzdZg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1722019350; x=1722624150; i=w_armin@gmx.de;
-	bh=2UN0cDi25KjXv8ixqvaqlCV0jKZUH4m9tkAbl5UaWRQ=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=JW+Wax8EfGm0eYfG0GwC7sjzJbLniMJRvhKp+WrdWB+NjP79HI6474gl1a9XREo6
-	 ZyZEuvtcpZauHU2xPcnKXyDQKhpRPqlWBStRU0+ZM1Pa0YKA4otmouPIG19ks70bn
-	 lbFO6z7d6wAXlkcwynlluDSxJfjpTScbbvgtykyoBNn8a0urW2AAS33leZ6/BJYfu
-	 0EGzVPNAMYKUUgctHr/MBTWmZqYWQDNvidYg12Ex95H2S8mKBO5mWgSoj0Blwx+6q
-	 XLH9cGM4tp11SFitShoo/UwbPBxwww118Brm75nglzaUizmyjfPyXu6PcYou6tIc8
-	 Hij0AC5TmOX2MVIz5g==
+	s=s31663417; t=1722019587; x=1722624387; i=w_armin@gmx.de;
+	bh=yqAr4ZDzpG0PehiJt9d0a8FTYMRJn1THifPggGv6zkY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
+	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=VVTIzdZg2i5UFmH8ao/0AzfCbbCEVnrPo50MNA/a316JXSglvts6gi0Vi4soXvzf
+	 +FBh9maqKN3SGhY4y7HTwvIESK+aWiuKs4jQduuAJ10/BH4zpo+1rhus6WqnBmJ6H
+	 lMIp6vacaQKgmDfzjj8bp0C8FkDtjDV9NtvA7kOfo6NqvponakHyXUrtjB8g2Vm2g
+	 EH+48sN4AVC1GQYFRei+ukoZpL1gI5V2r8owPSKxNT8OIj06q17P2SrQRBgROvLDU
+	 ynq2emhgF6maigyii+IQ9Mi6DwU/Exo8jhJz2BFRDcUUKZxt0yJOxSfjWXbgxiDlW
+	 xdwuzHM7Nu426sr6hA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M3lcJ-1sWagP16zj-00Ddur; Fri, 26
- Jul 2024 20:42:30 +0200
-Message-ID: <8fde7bae-b4e3-458e-8edc-22199f8bc7e2@gmx.de>
-Date: Fri, 26 Jul 2024 20:42:26 +0200
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MGQnF-1sW0nW0p1p-004HwH; Fri, 26
+ Jul 2024 20:46:27 +0200
+Message-ID: <5cfe4c42-a003-4668-8c3a-f18fb6b7fba6@gmx.de>
+Date: Fri, 26 Jul 2024 20:46:22 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -45,6 +44,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 1/2] platform/x86:dell-laptop: Add knobs to change
  battery charge settings
+From: Armin Wolf <W_Armin@gmx.de>
 To: Andres Salomon <dilinger@queued.net>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
  <pali@kernel.org>
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
@@ -58,114 +58,139 @@ References: <20240723220502.77cb0401@5400>
  <20240725162457.34b480e1@5400> <20240725221511.mqb4tlam2r7yheoi@pali>
  <45c7c4c3-2f99-4ca0-9c85-a96a03ccfae8@gmx.de>
  <20240726000409.ejnvqkzco664q3zb@pali> <20240726002538.558a4a97@5400>
+ <8fde7bae-b4e3-458e-8edc-22199f8bc7e2@gmx.de>
 Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20240726002538.558a4a97@5400>
+In-Reply-To: <8fde7bae-b4e3-458e-8edc-22199f8bc7e2@gmx.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:CfQzfmXTSlXBiuM33eqyB2kUGSKMzHjsPHK7n2se9Cu872pQuqh
- XI0F/AC0cvxR+Uu1l8KixvtdthMFf0sjRAbAwv4V/z9ipfWX8CH8xizO5taXHWqGm5Hu1t6
- Fl5jUwaNzO+IkhQ22/32/43MNtqhSfJ+LIjxj7Rd9co1+BBPhw44IixlIR+pUyJqmSW+iEY
- sx0g8M89QyO/E/AcmaeSw==
+X-Provags-ID: V03:K1:V6J7qks7S2KQ74PO4KqnJExjptza6K7Ks/KjKXHnYQF52fz5RwY
+ 8Sb8exKUQd+LoM48tX9gx/e28cp9VPV5rLLxIleKJDXzS8joDXw1vpuRJ/RggrRf0zlSGYE
+ dsk+XEMAH3qDNBX1DRV/++fz8ga9OqtjcArVr4Zd6dP3DsCDvnA3vV8YXyFGrj6i5C2BY2G
+ ufLSkBUqRuh8ThHf3e+vw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:vdk6nTULoGc=;RwXI471Le7VA9M7Dge5uPk1M/ft
- VrCcI67j1EkrA9LmAPTRVa41wzk74rC10BkuKkp5xhIU3aEqMIBe4h146e/F7MySiAOUDKCi+
- XRe75G51zK7YXpKKRNZ3M3VKOZcckfcq7cwcmtSVqF7y0Io3vgRyr6uUuyHpEAjzICfMN/ekJ
- b4iZp81Qb8BtaO8W9q5cPlyZEyPpWFALDkmPVlwvP8BcMAzlsmRfOyIEjHc5dWoMLWI/yyzn7
- KSiP0aa1WZa7pAkwq/TcAYifG+JfDOvWsxAwxCUEiGqAk+oBTI+Jm68uxjXKiihRBXY6b8AD3
- 2ovBua6r4Gudyic0y5ZTAoJzKtSZHN4TGN/o+GgTHP1s/2uFcSaf43NGOe7s6Qa1qjDlJ/SvV
- ZoO35tV+QodF4lqMrjY+nZMgKH70UtFDxs9phxzzdi5QdXM3USPcs2YhBflXyzE+aU/74Vbu3
- cFMqnnCLwsH8IdKSVJSl4lHe22qk9xYHwgzK5Px9op6L18o6B6HWDi4l5yxBzUs1HEXAwcGjW
- D02Y/HSrEzJIO8r02mEME0N42zcWWVJh0FPaCn1kdlkBJWGh54qCc6mIhqIiWEpcik9LB+3wq
- 5Hy0CrKuczBE/LRrPz2oMmM7d4s69hxLjd49MgGqdDd7aqeGXDdG04GU4Wza85BrEf6vUawII
- wYxHs3p4IdgywNjgJMW3/Ufq3DFs+Oi19lIwhOjoh2R5PF8iTLbAY7d11CwjuNjls73U5O0wJ
- CvXxQQTnWDxFALke8wm4Y9Af3ic6E2hk3TqZjrergEUIGhPeuRit2EjxX6ccYyheq1DA4xx1q
- 9YJiHKt3eC4s0T9O5Sxhtl/g==
+UI-OutboundReport: notjunk:1;M01:P0:Mml7q4va/a0=;LCIsKFskO+aL7dbmNFWqI9FnaSH
+ U5XI7c7+ymEz10n+ElPomXhPKNgV+sw/smj2wzGogZRHrYxouMaBAlqbqJKsNe2NJ437aEXd9
+ itA8PjOaaC2YVg5yilzQvceE0TA/156z5mWxiKE9nGKDLLNUF33Ss1RgK1apYTIpsQ9nziO6h
+ oNxxIsg+w4eFcFx9v1sjetQj/HI2pkWGWkfxZduvBccbUwby1TKJ1vMTWpNykeOaGdRo/Tllp
+ WLYrvgW6fTLbOpVaYEpvJbVI2/jmwN53spM4m8YjI/CaSzT2k533BDH+lrbsBIAGaCC+cwWA+
+ 2/c6FFGtRWwKZh3cQGS+Z3GB6NwGfk5IGmxxrNuCZ8bPLyijAA4RY2jl92iOqSAmhomz/Cwuw
+ mUCleqEVuu+aQATyW/uWZnJHec08D7um0M8E0RAf0Vabz/qyvySwD2Yb1ivCVRuS+cuc2uxFe
+ YXRoxxk/xuUVwjes6x5n3SYZJmSIC5XFAWLLvffGP2Xbbr4UwnPXHEPmtdLHVexjxXhwIIF7m
+ ID4SgXNTT7MhfMEebm/E709Tb65LtuAU7NKnXyfBwKgJPvQ7QYDMZRPUNrqtAM9venceNew0e
+ iuS9//zr0YSHvV3/3GYTqZpB5j3QcUkC7WQhyMYkdsAuublZOcYJvYHbke3N9EWfRzgeHUHhu
+ B+9m9emvMtzYrB22G7iwX1GyI24LSSHx43m1zo8hlgFg4MnQg3O+cPhVW7c045nhZybie4KH6
+ za7MQjf5akzAwhWPCSuDJuxyJadoy+BA67574Jm1F2yCNzygdxJ/PFArn3W/C5bB+sOaIggyW
+ mlFp+QyYpXMNbtstLdPZEXOQ==
 
-Am 26.07.24 um 06:25 schrieb Andres Salomon:
+Am 26.07.24 um 20:42 schrieb Armin Wolf:
 
-> On Fri, 26 Jul 2024 02:04:09 +0200
-> Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> Am 26.07.24 um 06:25 schrieb Andres Salomon:
 >
->> On Friday 26 July 2024 01:48:50 Armin Wolf wrote:
->>> Am 26.07.24 um 00:15 schrieb Pali Roh=C3=A1r:
->>>
->>>> On Thursday 25 July 2024 16:24:57 Andres Salomon wrote:
->>>>> On Thu, 25 Jul 2024 01:01:58 +0200
->>>>> Pali Roh=C3=A1r <pali@kernel.org> wrote:
->>>>>
->>>>>> On Wednesday 24 July 2024 18:23:18 Andres Salomon wrote:
-> [...]
->>>>>> The issue here is: how to tell kernel that the particular
->>>>>> dell_battery_hook has to be bound with the primary battery?
->>>>>>
->>>>> So from userspace, we've got the expectation that multiple batteries
->>>>> would show up as /sys/class/power_supply/BAT0, /sys/class/power_supp=
-ly/BAT1,
->>>>> and so on.
->>>> Yes, I hope so.
->>>>
->>>>> The current BAT0 entry shows things like 'capacity' even without thi=
-s
->>>>> patch, and we're just piggybacking off of that to add charge_type an=
-d
->>>>> other entries. So there shouldn't be any confusion there, agreed?
->>>> I have not looked at the battery_hook_register() code yet (seems that=
- I
->>>> would have to properly read it and understand it). But does it mean t=
-hat
->>>> battery_hook_register() is adding hook just for "BAT0"?
->>>>
->>>> What I mean: cannot that hook be registered to "BAT1" too? Because if
->>>> yes then we should prevent it. Otherwise this hook which is for "Dell
->>>> Primary Battery" could be registered also for secondary battery "BAT1=
-".
->>>> (I hope that now it is more clear what I mean).
->>> Hi,
->>>
->>> the battery hook is being registered to all ACPI batteries present on =
-a given system,
->>> so you need to do some manual filtering when .add_battery() is called.
->> Ok. So it means that the filtering based on the primary battery in
->> add_battery callback is needed.
+>> On Fri, 26 Jul 2024 02:04:09 +0200
+>> Pali Roh=C3=A1r <pali@kernel.org> wrote:
 >>
-> Thanks for the explanations. Seems simple enough to fix that, as some of
-> the other drivers are checking battery->desc->name for "BAT0".
+>>> On Friday 26 July 2024 01:48:50 Armin Wolf wrote:
+>>>> Am 26.07.24 um 00:15 schrieb Pali Roh=C3=A1r:
+>>>>
+>>>>> On Thursday 25 July 2024 16:24:57 Andres Salomon wrote:
+>>>>>> On Thu, 25 Jul 2024 01:01:58 +0200
+>>>>>> Pali Roh=C3=A1r <pali@kernel.org> wrote:
+>>>>>>
+>>>>>>> On Wednesday 24 July 2024 18:23:18 Andres Salomon wrote:
+>> [...]
+>>>>>>> The issue here is: how to tell kernel that the particular
+>>>>>>> dell_battery_hook has to be bound with the primary battery?
+>>>>>>>
+>>>>>> So from userspace, we've got the expectation that multiple batterie=
+s
+>>>>>> would show up as /sys/class/power_supply/BAT0,
+>>>>>> /sys/class/power_supply/BAT1,
+>>>>>> and so on.
+>>>>> Yes, I hope so.
+>>>>>
+>>>>>> The current BAT0 entry shows things like 'capacity' even without
+>>>>>> this
+>>>>>> patch, and we're just piggybacking off of that to add charge_type
+>>>>>> and
+>>>>>> other entries. So there shouldn't be any confusion there, agreed?
+>>>>> I have not looked at the battery_hook_register() code yet (seems
+>>>>> that I
+>>>>> would have to properly read it and understand it). But does it
+>>>>> mean that
+>>>>> battery_hook_register() is adding hook just for "BAT0"?
+>>>>>
+>>>>> What I mean: cannot that hook be registered to "BAT1" too? Because i=
+f
+>>>>> yes then we should prevent it. Otherwise this hook which is for "Del=
+l
+>>>>> Primary Battery" could be registered also for secondary battery
+>>>>> "BAT1".
+>>>>> (I hope that now it is more clear what I mean).
+>>>> Hi,
+>>>>
+>>>> the battery hook is being registered to all ACPI batteries present
+>>>> on a given system,
+>>>> so you need to do some manual filtering when .add_battery() is called=
+.
+>>> Ok. So it means that the filtering based on the primary battery in
+>>> add_battery callback is needed.
+>>>
+>> Thanks for the explanations. Seems simple enough to fix that, as some o=
+f
+>> the other drivers are checking battery->desc->name for "BAT0".
+>>
+>>
+>> One thing that I keep coming back to, and was reinforced as I looked at
+>> include/linux/power_supply.h; the generic power supply charge_type has
+>> values that are very close to Dells, but with different names. I could
+>> shoehorn them in, though, with the following mappings:
+>>
+>> POWER_SUPPLY_CHARGE_TYPE_FAST,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 =3D> "express" (aka ExpressCharge)
+>> POWER_SUPPLY_CHARGE_TYPE_STANDARD,=C2=A0=C2=A0=C2=A0=C2=A0 =3D> "standa=
+rd"
+>> POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE,=C2=A0=C2=A0=C2=A0=C2=A0 =3D> "adapti=
+ve"
+>> POWER_SUPPLY_CHARGE_TYPE_CUSTOM,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+=3D> "custom"
+>> POWER_SUPPLY_CHARGE_TYPE_LONGLIFE,=C2=A0=C2=A0=C2=A0=C2=A0 =3D> "primar=
+ily_ac"
+>>
+>> The main difference is that Primarily AC is described and documented as
+>> slightly different than Long Life, but I suspect the result is roughly
+>> the same thing. And the naming "Fast" and "Long Life" wouldn't match th=
+e
+>> BIOS naming of "ExpressCharge" and "Primarily AC".
+>>
+>> Until now I've opted to match the BIOS naming, but I'm curious what
+>> others
+>> think before I send V3 of the patches.
 >
+> I agree that POWER_SUPPLY_CHARGE_TYPE_FAST should be mapped the
+> ExpressCharge,
+> but i think that "primarily_ac" should become a official power supply
+> charging mode.
 >
-> One thing that I keep coming back to, and was reinforced as I looked at
-> include/linux/power_supply.h; the generic power supply charge_type has
-> values that are very close to Dells, but with different names. I could
-> shoehorn them in, though, with the following mappings:
+> The reason is that for example the wilco-charger driver also supports
+> such a charging mode
+> (currently reported as POWER_SUPPLY_CHARGE_TYPE_TRICKLE) and the
+> charging mode seems to be
+> both sufficiently different from
+> POWER_SUPPLY_CHARGE_TYPE_LONGLIFE/POWER_SUPPLY_CHARGE_TYPE_TRICKLE
+> and sufficiently generic to be supported by a wide array of devices.
 >
-> POWER_SUPPLY_CHARGE_TYPE_FAST,         =3D> "express" (aka ExpressCharge=
-)
-> POWER_SUPPLY_CHARGE_TYPE_STANDARD,     =3D> "standard"
-> POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE,     =3D> "adaptive"
-> POWER_SUPPLY_CHARGE_TYPE_CUSTOM,       =3D> "custom"
-> POWER_SUPPLY_CHARGE_TYPE_LONGLIFE,     =3D> "primarily_ac"
+> Thanks,
+> Armin Wolf
 >
-> The main difference is that Primarily AC is described and documented as
-> slightly different than Long Life, but I suspect the result is roughly
-> the same thing. And the naming "Fast" and "Long Life" wouldn't match the
-> BIOS naming of "ExpressCharge" and "Primarily AC".
->
-> Until now I've opted to match the BIOS naming, but I'm curious what othe=
-rs
-> think before I send V3 of the patches.
+I just read the documentation regarding the charge_type sysfs attribute an=
+d it states that:
 
-I agree that POWER_SUPPLY_CHARGE_TYPE_FAST should be mapped the ExpressCha=
-rge,
-but i think that "primarily_ac" should become a official power supply char=
-ging mode.
+Trickle:
+	Extends battery lifespan, intended for users who
+	primarily use their Chromebook while connected to AC.
 
-The reason is that for example the wilco-charger driver also supports such=
- a charging mode
-(currently reported as POWER_SUPPLY_CHARGE_TYPE_TRICKLE) and the charging =
-mode seems to be
-both sufficiently different from POWER_SUPPLY_CHARGE_TYPE_LONGLIFE/POWER_S=
-UPPLY_CHARGE_TYPE_TRICKLE
-and sufficiently generic to be supported by a wide array of devices.
+So i think that "primarily_ac" should be mapped to POWER_SUPPLY_CHARGE_TYP=
+E_TRICKLE.
 
 Thanks,
 Armin Wolf
