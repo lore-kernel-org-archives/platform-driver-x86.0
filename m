@@ -1,57 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C457679B8E;
-	Mon, 29 Jul 2024 11:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C434D145FF4
+	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Jul 2024 11:55:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722253468; cv=none; b=V4J1G9X9bKfKaOt/pa7iM1eNXUZTfV3gONYvfu4FUHbl1JjGbtip6hSddaon53Qh7Hz1xMS/ueVfuJWSBI9AZyWTVj0EDNd8UBPh6kGIrDKCxbT0zv9rSN2ogfEZjOUBbJbjYFfdIOhiu4/Vl9fMPU3vPnUO5/a5cGGXkXU96es=
+	t=1722254108; cv=none; b=RvSWbBdKFfC+ZpOlVCX3fpCT5Grz9rPAeTIXGr/hpZvCOCWF6U65Jt31vSuKae9nqvW9oICTTa49bT8d3u58wTYWWDgOUGX11/BXDDZjOx4KgddxFwwe9V1d+Uf90eyZnR0VLA90HijW8VoG4/pxzWWLYxRY8J+1WKEhysEGB8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722253468; c=relaxed/simple;
-	bh=f/z97bYp+EMwQiuCzp5i4xhQ//NcC+Qmw5S7TSllxug=;
+	s=arc-20240116; t=1722254108; c=relaxed/simple;
+	bh=QXEoSc+2bonPy42eCJkisCt1tRxqm1LJwcCtRrWQzLY=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=DZsj+5bKuw95dXYmF5oTURdvc9lW9IW4WbFONrF6WNmHiO+TowYexy6WvKuNzi2Vni9snlYhqOg64Ai29YfTLcNCkXijYuy1GH+p47IWTGyGzp+NMx8T2gheIraToRTKX8p1z51mC/46utuZaB+R3NAaM64SFtUFmWN6b2Pp3/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n22WLO2L; arc=none smtp.client-ip=192.198.163.16
+	 MIME-Version:Content-Type; b=dDWGI3kMfeNTToAGSJiJKugA99xqRn+zAD/ro9b6xveJbslzVRpySYD52gdhDKPCPQHSe8li/q2HdAj+KhA0WZ0StZgj7i131smSRPGfxdaWpkMJY+FnEC3oDLbbXSj6pDZrBVar8VHLgrrRROW3ZIeS43DFEIwzrWMpSRpU+UU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m3raI2bu; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n22WLO2L"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m3raI2bu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722253467; x=1753789467;
+  t=1722254106; x=1753790106;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=f/z97bYp+EMwQiuCzp5i4xhQ//NcC+Qmw5S7TSllxug=;
-  b=n22WLO2LCzq/EBWgvFpZbuBVqwAhpznEOdyitWjKsjY8F/vdBBcyRbhU
-   zDFTJciM0NGJr9qQvXBWRK7HtUGHwx5LElFa1LrzqRf0YYkVBX3ZAhFT2
-   iHXgA/3HTXwglvj9paiF6Kvc+9WtLj0FOL8xZU5oim7PFKAYX1ZETEhUO
-   wwN15qsXukwZB0CCPrpldv0V3nOS4jJ3XjRIIphhQRAjv+paS7AyJnJhl
-   uOoEWNL4zey51ZD5r6OrYB6KAc8ZxXXGsv0HBTx5BQCHPOX+ym24Ys/Sk
-   v34f6p7mgC9MS6z32TRQiyDJi1acUQhiCOb8uYmEbB8SxedIvVsvCucuL
+  bh=QXEoSc+2bonPy42eCJkisCt1tRxqm1LJwcCtRrWQzLY=;
+  b=m3raI2buJ/xO2v/aHyAG7A4LTQTY6pYgzhFZpUPqm001u9oHFp29IJsn
+   wzpsulweUhbNt1WCGocWXq8GNqSzNqm2KWPiYvHfcxtkMERC3AsM2iqHo
+   25MLrgsRSfRPrhhOuHsyVySCxUe3AS/PHA7SWLYh/rEldjRczbghkm3NY
+   7q6vQCrVW/CsdpyhIehLsPLPtODCxddSyDQvhbecOjfAr/8ebnpUJjba4
+   2BXhNPd9aO+/9uoy0USfw3o5HzovQqNohTZ3gKjTlZSC+13dgeYAmkRxi
+   X4pNwTyNPmxGap1YrCffGLpPW1AYoPNes12uxjqEDbJi6lNslrUTCHagM
    w==;
-X-CSE-ConnectionGUID: 6xF9m0jySxaIzp/zXJjcWw==
-X-CSE-MsgGUID: Gv+yv1BLQ7O4nRFu8oIQtw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11147"; a="12767550"
+X-CSE-ConnectionGUID: 9W7khwl9T+awpDouUpeU0g==
+X-CSE-MsgGUID: 5sKmXhm4Rk2dCYoYWnNHew==
+X-IronPort-AV: E=McAfee;i="6700,10204,11147"; a="22912525"
 X-IronPort-AV: E=Sophos;i="6.09,245,1716274800"; 
-   d="scan'208";a="12767550"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 04:44:25 -0700
-X-CSE-ConnectionGUID: dzU/h+CNRd2ko/XJdg40RQ==
-X-CSE-MsgGUID: yRv5a/V0QUG1ElkQdtzyjA==
+   d="scan'208";a="22912525"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 04:55:06 -0700
+X-CSE-ConnectionGUID: H7dAxraoSuq/uk4Qu82N6g==
+X-CSE-MsgGUID: 2OuLiIgwRUqp99IvCGIPlw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,245,1716274800"; 
-   d="scan'208";a="77186600"
+   d="scan'208";a="53613271"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.151])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 04:44:23 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 04:55:04 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 29 Jul 2024 14:44:20 +0300 (EEST)
-To: "Luke D. Jones" <luke@ljones.dev>
-cc: platform-driver-x86@vger.kernel.org, corentin.chary@gmail.com, 
-    Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: asus-wmi: Add quirk for ROG Ally X
-In-Reply-To: <20240724222852.44378-1-luke@ljones.dev>
-Message-ID: <056b599c-4d29-a743-ad7b-055e951e9e39@linux.intel.com>
-References: <20240724222852.44378-1-luke@ljones.dev>
+Date: Mon, 29 Jul 2024 14:55:00 +0300 (EEST)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    Patil.Reddy@amd.com
+Subject: Re: [PATCH 2/2] platform/x86/amd/pmf: Fix to Update HPD Data When
+ ALS is Disabled
+In-Reply-To: <20240723132451.3488326-2-Shyam-sundar.S-k@amd.com>
+Message-ID: <cdbf07d3-1d9c-f1bc-d548-c3509d5586dd@linux.intel.com>
+References: <20240723132451.3488326-1-Shyam-sundar.S-k@amd.com> <20240723132451.3488326-2-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -60,61 +61,83 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 25 Jul 2024, Luke D. Jones wrote:
+On Tue, 23 Jul 2024, Shyam Sundar S K wrote:
 
-> The new ROG Ally X functions the same as the previus model so we can use
-> the same method to ensure the MCU USB devices wake and reconnect
-> correctly.
+> If the Ambient Light Sensor (ALS) is disabled, the current code in the PMF
+> driver does not query for Human Presence Detection (HPD) data in
+> amd_pmf_get_sensor_info(). As a result, stale HPD data is used by PMF-TA
+> to evaluate policy conditions, leading to unexpected behavior in the policy
+> output actions.
 > 
-> Given that two devices marks the start of a trend, this patch also adds
-> a quirk table to make future additions easier if the MCU is the same.
+> To resolve this issue, modify the PMF driver to query HPD data
+> independently of ALS.
 > 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> With this change, amd_pmf_get_sensor_info() now returns void instead of
+> int.
+> 
+> Fixes: cedecdba60f4 ("platform/x86/amd/pmf: Get ambient light information from AMD SFH driver")
+> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 > ---
->  drivers/platform/x86/asus-wmi.c            |  2 +-
->  include/linux/platform_data/x86/asus-wmi.h | 15 +++++++++++++++
->  2 files changed, 16 insertions(+), 1 deletion(-)
+>  drivers/platform/x86/amd/pmf/spc.c | 33 +++++++++++++++---------------
+>  1 file changed, 16 insertions(+), 17 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 2b968003cb9b..bac2945b0e48 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -4694,7 +4694,7 @@ static int asus_wmi_add(struct platform_device *pdev)
->  	asus->dgpu_disable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU);
->  	asus->kbd_rgb_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_STATE);
->  	asus->ally_mcu_usb_switch = acpi_has_method(NULL, ASUS_USB0_PWR_EC0_CSEE)
-> -						&& dmi_match(DMI_BOARD_NAME, "RC71L");
-> +						&& dmi_check_system(asus_ally_mcu_quirk);
+> diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
+> index a3dec14c3004..d9e60d63553c 100644
+> --- a/drivers/platform/x86/amd/pmf/spc.c
+> +++ b/drivers/platform/x86/amd/pmf/spc.c
+> @@ -150,7 +150,7 @@ static int amd_pmf_get_slider_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+>  	return 0;
+>  }
 >  
->  	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MINI_LED_MODE))
->  		asus->mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE;
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index 74b32e1d6735..fba9751cda5b 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -196,4 +196,19 @@ static const struct dmi_system_id asus_use_hid_led_dmi_ids[] = {
->  	{ },
->  };
+> -static int amd_pmf_get_sensor_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in)
+> +static void amd_pmf_get_sensor_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in)
+>  {
+>  	struct amd_sfh_info sfh_info;
+>  	int ret;
+> @@ -160,26 +160,25 @@ static int amd_pmf_get_sensor_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+>  	if (!ret)
+>  		in->ev_info.ambient_light = sfh_info.ambient_light;
+>  	else
+> -		return ret;
+> +		dev_dbg(dev->dev, "ALS is not enabled\n");
 >  
-> +/* To be used by both hid-asus and asus-wmi to determine which controls kbd_brightness */
-> +static const struct dmi_system_id asus_ally_mcu_quirk[] = {
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_NAME, "RC71L"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_NAME, "RC72L"),
-> +		},
-> +	},
-> +	{ },
-> +};
+>  	/* get HPD data */
+>  	ret = amd_get_sfh_info(&sfh_info, MT_HPD);
+> -	if (ret)
+> -		return ret;
+> -
+> -	switch (sfh_info.user_present) {
+> -	case SFH_NOT_DETECTED:
+> -		in->ev_info.user_present = 0xff; /* assume no sensors connected */
+> -		break;
+> -	case SFH_USER_PRESENT:
+> -		in->ev_info.user_present = 1;
+> -		break;
+> -	case SFH_USER_AWAY:
+> -		in->ev_info.user_present = 0;
+> -		break;
+> +	if (!ret) {
+> +		switch (sfh_info.user_present) {
+> +		case SFH_NOT_DETECTED:
+> +			in->ev_info.user_present = 0xff; /* assume no sensors connected */
+> +			break;
+> +		case SFH_USER_PRESENT:
+> +			in->ev_info.user_present = 1;
+> +			break;
+> +		case SFH_USER_AWAY:
+> +			in->ev_info.user_present = 0;
+> +			break;
+> +		}
+> +	} else {
+> +		dev_dbg(dev->dev, "HPD is not enabled\n");
 
-Why is this in the header? I see your comment but this means every file 
-which includes asus-wmi.h will have a duplicate copy of this array.
+Is it okay to leave in->ev_info.user_present as 0 this case? Should it be 
+set to same as with SFH_NOT_DETECTED?
 
+...I now realize your print out doesn't cover that case at all and 
+user_present is not used for anything else than debug printing.
 
 -- 
  i.
-
