@@ -1,77 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7AE215622E;
-	Mon, 29 Jul 2024 17:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782BF16B38D;
+	Mon, 29 Jul 2024 18:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722272443; cv=none; b=LVz9yvg2It6yzB2pqo9aGGmlDU2VWLV2C+G/jQGmS+UkQxRQgCG0GzItriGb7CaI5HK9LANYdB7DhAwRXDaIgLtUHRerDkZKn941+rbg0fF738OslNMvuz14XTubhkSIESvnf9pJrKGveq+jXCGwp8I5hNMt1Uq0nx1LO0QHM7M=
+	t=1722278453; cv=none; b=EGfguHzupmGkRFZtVbupyJ9apVq4B5THZm9Qt7m5Vax6dKVzQPqzhsK0htE41vuDfWVYAQYe0BgGeL/gwE438yar2DSVf4GzkFOFo1cYRsLVRdp0OcUnso+z4ZpnHsH6oS5I4JGCkKophvDltKPIp21557sQ6ZTATYdf7kWOYCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722272443; c=relaxed/simple;
-	bh=IFkGlrBeSobkW77QizdeJQdd6iLBy/wzKY7LKGO4qt0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=SLiEeAIeV0p7ndjO7928jef3r16KjfbRRPsNom81lPf5veoomjZ12byA5vm/F5U6+12oEOJGxa0BtTy7ZY11LqibmzQuwrpL1m3i2/jQh1oF7W+6GhdQmztXnkSmBqmGwSHtuEgxZJrSdwGYQ2yw8ifcY3LPtL7UZV8VQzVE89I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VWBK5J/1; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1722278453; c=relaxed/simple;
+	bh=m0WyG/aso8uzUymjHwhe7HmgW/CUfB5c/IBX9t6QXdI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FJ5YJUv/lEcVJmvWyq5dBNYORAYNefXE08wyFs8fjcNLaVABbKokz1RakssJUfW6IzmYCstaMayYumZaEQgKcm1j4XR/pspA4myIFy9ftwhSfrq8gjDdox6ClajkhAHG+r7ucSZ07VYxo868PnnV5R1EUPHufTgri0txBnhxg5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mhbgef0T; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VWBK5J/1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722272442; x=1753808442;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=IFkGlrBeSobkW77QizdeJQdd6iLBy/wzKY7LKGO4qt0=;
-  b=VWBK5J/1lPSoY1lYTwZyN77uI5Uu50jJhECd4TLQ1EE9fAzMiEZoM2J5
-   FjBqgD7+z1IeeDvsDLIu5C7m4o93ADvtBxXWzOB2aoROvLQLFAiwrsLqx
-   QjiySeE57bY5ZNqbai9fn+SlQwSxAY/WvLM7KfVLCevtbL4iympbLtpt3
-   C9sTqYhNNK/XE66BBAfwT8MDL/nDvomixzg4SfNS4Az5jHNoWrlfHjxGS
-   lEHUL0IocgUd6eyQPWPpKcOLNQ+3tu2BGyQUdN4WILISYTSv+CSm3z8OH
-   INPnfRDZBdwLN6SZVajvne2swyr4rwpjzvWle2R9A0Zvfmt2nz60rDVvN
-   g==;
-X-CSE-ConnectionGUID: sFXFJlZ/TpeoChsI36RSGg==
-X-CSE-MsgGUID: 8oV9xI59RSiCtg74WmS7sw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11148"; a="30634420"
-X-IronPort-AV: E=Sophos;i="6.09,246,1716274800"; 
-   d="scan'208";a="30634420"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 10:00:41 -0700
-X-CSE-ConnectionGUID: oMkXgV2xQoWbjW6vrWpmSA==
-X-CSE-MsgGUID: 1J557ww0SsihsETU/nwh8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,246,1716274800"; 
-   d="scan'208";a="58625745"
-Received: from fpallare-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.214])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 10:00:38 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 29 Jul 2024 20:00:34 +0300 (EEST)
-To: Luis Felipe Hernandez <luis.hernandez093@gmail.com>
-cc: W_Armin@gmx.de, corbet@lwn.net, platform-driver-x86@vger.kernel.org, 
-    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] wmi: Fix spelling
-In-Reply-To: <20240729164721.125708-1-luis.hernandez093@gmail.com>
-Message-ID: <ec63657f-93d1-919b-f87f-eebb13c8938e@linux.intel.com>
-References: <20240729164721.125708-1-luis.hernandez093@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mhbgef0T"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=iUdrC/iM7m90SNhQ6UKmv8NB4lWo9OrmVGgOw6RdPKs=; b=mhbgef0TN6TLf/9onqtaW7nHdw
+	jamuHxwi2zUrkF8iXfgdQjO+MfqaT2UUU+qwbp56/vg3rzb6SDnPiKuC4NlX3ATmrG1KLgsE+NnIU
+	9kIXX1FQPnUtQtuzSHfwBryIUngWVMrudp4egAjPKb1Qqq4NaAjYztn4+RomvS4hhoJgz7/zyrL72
+	CadDb9cr+UfkSUBoBNwyc5Zl4OBAQ06rHTcRYTxWH7Z/gmntTdTSKW4wfdaqtqNoCcirtNGWNy3u2
+	DmP5FDyikhxWMWv/4R1PSgD2JzEYTCW/SfObRaLRHOlN2hiThAmpc83rGwmyD5pMgaidpXSTAG9GV
+	cxJuCHzA==;
+Received: from [50.53.4.147] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sYVId-0000000CNOa-40oV;
+	Mon, 29 Jul 2024 18:40:49 +0000
+Message-ID: <b1e2d43f-93df-420c-a831-5ff8e33c294d@infradead.org>
+Date: Mon, 29 Jul 2024 11:40:45 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wmi: Fix spelling
+To: Luis Felipe Hernandez <luis.hernandez093@gmail.com>, W_Armin@gmx.de,
+ corbet@lwn.net
+Cc: platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linuxfoundation.org
+References: <20240729164721.125708-1-luis.hernandez093@gmail.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240729164721.125708-1-luis.hernandez093@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 29 Jul 2024, Luis Felipe Hernandez wrote:
-
-Thanks for this change but please don't leave the commit message empty, 
-it's not enough to provide just the shortlog (in subject) even if the 
-change is obvious/simple. Please resubmit this with the commit message
-included.
-
--- 
- i.
 
 
+On 7/29/24 9:47 AM, Luis Felipe Hernandez wrote:
 > Signed-off-by: Luis Felipe Hernandez <luis.hernandez093@gmail.com>
 > ---
 >  Documentation/wmi/devices/msi-wmi-platform.rst | 6 +++---
@@ -105,4 +87,11 @@ included.
 >  last bit signals if the platform is a Tigerlake platform.
 >  
 >  The MSI software seems to only use this interface when the last bit is set.
-> 
+
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+
+after you add a commit message.
+
+-- 
+~Randy
