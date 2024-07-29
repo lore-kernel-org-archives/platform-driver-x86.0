@@ -1,181 +1,202 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE61C23CE
-	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Jul 2024 11:00:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B2A1448D3
+	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Jul 2024 11:03:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722250844; cv=none; b=Bf88DyDefmQz6rO8fmfEL529wzYP4lTJmzO6cHIA8J29/WkympfFDEKyTB+hpeLnopcYNFc27TIXde2iULrwdFnGcMEPTUhvtnRdLIKTk/H/Pve0IpShoVNtUIQxhYYmEA5bKXl6VjjAjOGyEhTndyRTay71rEpOfs8jOd0wEJE=
+	t=1722251037; cv=none; b=G2JMo5cEM+tRdQUvbMmk7kyzaD9cOAru02g6uEfE6RFnd8bD13EsGQQXG31Q1DaF+8XemSbiMvABqrOOm3lrOir6b1bBb/xaIfXwMEZB+aASy4zaK1/BFZEWJoQqP06fNsdgzJ+0cUIf7wDayuF7JI75DHUlRWA31Iof2xbO3Sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722250844; c=relaxed/simple;
-	bh=z3FR62RfMmzERRAwF7mGjWPdwb9AFxjsYguF+vnUSqc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BWLhpMZTVy6KXGYn90aOe9YewXcywWltATPB8mrQqAzvZv3/21WDYh6LFfijhRsBz5Sh2dnuEGY3SRHJRBQiNkNJrlX2cK9aXI3Ktb1BFX+JoO8YS2bNIeXlg2K0/Y68aF/cMCvxMQpUUBdShnCdk2b21w/Bg04m9clmNSoGJ20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W08j+BPw; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1722251037; c=relaxed/simple;
+	bh=zJqgfzerxCxnJG4FqmGJw2xd1wgRmc3UxOf8LYT91sU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UinxekboxZj1jog9IBkXYFWFtVWLjm+XnxT2lvi4McFpOMai1jccc7Kgy+TdU0zmeVpPtxAByZ9kktxlMDgN+ie8Uq4tGc91CDheIAHcSQ+U2GZysXVarGS4EYCNhGIcMH9UWloLqWO4TnG4J/by5G7oqMzwLSvY+BcpbvTep+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bx/cyKZB; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W08j+BPw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bx/cyKZB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722250842;
+	s=mimecast20190719; t=1722251034;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=xSY1lMUUubpttoi2WlP1/dQ7XufGsZn/EWQ6vijKaLc=;
-	b=W08j+BPwWx+Z50cyQ4frMbmFg3AoMiVi1SMpa895/QIv+wDVQhggLMgz18kZbb6DrvkUoE
-	qseVBOEJqZLy7Jeru0ttYwh25jA3qcJuLqUmqArtlZFaCxokHpM1fFBXbUv44PF5mKKegy
-	x5qdqqhcaQrJIu0w0KamlhG9ROsnshA=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-516-MXzJuRxPOy24RpB_1SM2wg-1; Mon,
- 29 Jul 2024 07:00:38 -0400
-X-MC-Unique: MXzJuRxPOy24RpB_1SM2wg-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1CF021955F4A;
-	Mon, 29 Jul 2024 11:00:37 +0000 (UTC)
-Received: from x1.localdomain.com (unknown [10.39.194.43])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8CE6A1955D45;
-	Mon, 29 Jul 2024 11:00:33 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org,
-	En-Wei Wu <en-wei.wu@canonical.com>,
-	Kostadin Stoilov <kmstoilov@gmail.com>
-Subject: [PATCH] platform/x86: intel-vbtn: Protect ACPI notify handler against recursion
-Date: Mon, 29 Jul 2024 13:00:30 +0200
-Message-ID: <20240729110030.8016-1-hdegoede@redhat.com>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZVaVQKI8NcPD9cu89SoPrCy8KmYHM7i6u29K02/jUSg=;
+	b=bx/cyKZBSqMloXQFM0a8CCR/Owa2A3T8VRj7o1tZJWDx5x01ddFRVxBmEFw6Ti1EbM3I7U
+	QQUqeq/FSWRTbBCzBiXkMnyj7hwAvZhLKdoD6568Gq7MxaiDVL75TWpWF05AcpgOWbSZln
+	Ce6u6FWwr8Sj9KcO2g6j1+IpEkES+M0=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-686-bI9WDksaM9qQNIUJsomfwA-1; Mon, 29 Jul 2024 07:03:53 -0400
+X-MC-Unique: bI9WDksaM9qQNIUJsomfwA-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4280c0b3017so18062935e9.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Jul 2024 04:03:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722251032; x=1722855832;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZVaVQKI8NcPD9cu89SoPrCy8KmYHM7i6u29K02/jUSg=;
+        b=uCHweVe6x4/8rA2Ah94VJgUr6uknTCXXi+p/p+HU27RHeY5KI+GsvbctY9rScucyV4
+         hgXOYmcx3RtJztLty7buXLz10RNC6RPwjeK0giCTEvzxe64ySkFjWM97WcfVmjpjuREU
+         CaPmVGYe7x5eONZLbynhjvcWUJ6+0OdsDQ8TGEEBTG0hhdikSlmK9dXHHE93+6IPKkE5
+         poA8jFY44E0QtfHJwCAMMOnhusBMhjs/kObJBIYikfV5mqoARFl+/G9VbNnTWfqosfeD
+         FbLcdQqi6QwnN31SmvfaoYsfY+PVnHbaptN+THhxf0q/JKIlfD2IsQnMoCHXyxMSLoR/
+         0lHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV5c9WnCIq2pEji2mWHXiw++iOL8y59XEQRT5htPFh3GAyZ7aXA49tgnaspAmb/czs0CX65wZHxNtIHD4UgWFh4wUmvaAlv8k0Qw8DYWqdVphZLxw==
+X-Gm-Message-State: AOJu0YzoJpFMbxZSKcF4zF5vnJkFwDmxf2y4kz15EVXuzJ/YANTKbxDj
+	bUzlMpwoF+UU5fDg0KmWuC/lgw3KhQHuXCxolQv6cb1vIWohCL9vyEjNs5gLQuML6AT0MLuqeIL
+	+8KJGFPaOqxCR2T8G8MrpbhYy3wLAR/SKHT2XQsJmQcTNToM3RqB32rb3tQvgAUHkFQmDl3Pr3/
+	E9sA8=
+X-Received: by 2002:a05:600c:4748:b0:428:1799:35e3 with SMTP id 5b1f17b1804b1-4281799370amr36752185e9.21.1722251031194;
+        Mon, 29 Jul 2024 04:03:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFOITW6hJJyWfjFT+xRek5d5U5YKsX7IWyrsp+wKXGs6K2eT2UeptRyG0oHzNIm9NtwldRAww==
+X-Received: by 2002:a05:600c:4748:b0:428:1799:35e3 with SMTP id 5b1f17b1804b1-4281799370amr36751885e9.21.1722251030534;
+        Mon, 29 Jul 2024 04:03:50 -0700 (PDT)
+Received: from [172.18.228.53] (ip-185-104-138-47.ptr.icomera.net. [185.104.138.47])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-428057a635csm174058195e9.30.2024.07.29.04.03.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jul 2024 04:03:50 -0700 (PDT)
+Message-ID: <568f1cc9-eb79-46a7-8251-46b1d55dbf23@redhat.com>
+Date: Mon, 29 Jul 2024 13:03:46 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: intel-vbtn: Support for tablet mode on Dell
+ Venue 11 Pro 7140
+To: Kostadin Stoilov <kmstoilov@gmail.com>
+Cc: En-Wei Wu <en-wei.wu@canonical.com>, acelan.kao@canonical.com,
+ ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240722083658.54518-1-en-wei.wu@canonical.com>
+ <7b7b4d84-c4b0-4a37-ab1d-4b1266851b32@redhat.com>
+ <CA++f7SgSv9xr9BGP5Y537bkVduKL1pHgYwZ63Cr4MwW_erhQJw@mail.gmail.com>
+Content-Language: en-US
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CA++f7SgSv9xr9BGP5Y537bkVduKL1pHgYwZ63Cr4MwW_erhQJw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Since commit e2ffcda16290 ("ACPI: OSL: Allow Notify () handlers to run on
-all CPUs") ACPI notify handlers like the intel-vbtn notify_handler() may
-run on multiple CPU cores racing with themselves.
+Hi Kostadin,
 
-This race gets hit on Dell Venue 7140 tablets when undocking from
-the keyboard, causing the handler to try and register priv->switches_dev
-twice, as can be seen from the dev_info() message getting logged twice:
+On 7/25/24 8:26 PM, Kostadin Stoilov wrote:
+> Hi Hans,
+> 
+> I tested a kernel built by En-Wei with your patch and I can confirm that it resolves the issue. I tried several connect/disconnect suspend/resume cycles.
+> 
+> The kernel bug messages are not observed and the system suspend/resumes/powers off successfully.
+> 
+> The dmesg log from the test run can be found here:
+> https://launchpadlibrarian.net/740661223/6.10-maintainer-dmesg.txt <https://launchpadlibrarian.net/740661223/6.10-maintainer-dmesg.txt>
 
-[ 83.861800] intel-vbtn INT33D6:00: Registering Intel Virtual Switches input-dev after receiving a switch event
-[ 83.861858] input: Intel Virtual Switches as /devices/pci0000:00/0000:00:1f.0/PNP0C09:00/INT33D6:00/input/input17
-[ 83.861865] intel-vbtn INT33D6:00: Registering Intel Virtual Switches input-dev after receiving a switch event
+Thank you for testing. I've now done an official submission of this patch upstream:
 
-After which things go seriously wrong:
-[ 83.861872] sysfs: cannot create duplicate filename '/devices/pci0000:00/0000:00:1f.0/PNP0C09:00/INT33D6:00/input/input17'
-...
-[ 83.861967] kobject: kobject_add_internal failed for input17 with -EEXIST, don't try to register things with the same name in the same directory.
-[ 83.877338] BUG: kernel NULL pointer dereference, address: 0000000000000018
-...
+https://lore.kernel.org/platform-driver-x86/20240729110030.8016-1-hdegoede@redhat.com/
 
-Protect intel-vbtn notify_handler() from racing with itself with a mutex
-to fix this.
+This should be included in a fixes pull-req for 6.11 soon-ish and then get backported to various
+stable kernel series.
 
-Fixes: e2ffcda16290 ("ACPI: OSL: Allow Notify () handlers to run on all CPUs")
-Reported-by: En-Wei Wu <en-wei.wu@canonical.com>
-Closes: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2073001
-Tested-by: Kostadin Stoilov <kmstoilov@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/intel/vbtn.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+Regards.
 
-diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
-index 9b7ce03ba085..93deda7daac4 100644
---- a/drivers/platform/x86/intel/vbtn.c
-+++ b/drivers/platform/x86/intel/vbtn.c
-@@ -12,6 +12,7 @@
- #include <linux/input/sparse-keymap.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/mutex.h>
- #include <linux/platform_device.h>
- #include <linux/suspend.h>
- #include "../dual_accel_detect.h"
-@@ -66,6 +67,7 @@ static const struct key_entry intel_vbtn_switchmap[] = {
- };
- 
- struct intel_vbtn_priv {
-+	struct mutex mutex; /* Avoid notify_handler() racing with itself */
- 	struct input_dev *buttons_dev;
- 	struct input_dev *switches_dev;
- 	bool dual_accel;
-@@ -155,30 +157,32 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 	bool autorelease;
- 	int ret;
- 
-+	mutex_lock(&priv->mutex);
-+
- 	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
- 		if (!priv->has_buttons) {
- 			dev_warn(&device->dev, "Warning: received 0x%02x button event on a device without buttons, please report this.\n",
- 				 event);
--			return;
-+			goto out_unlock;
- 		}
- 		input_dev = priv->buttons_dev;
- 	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
- 		if (!priv->has_switches) {
- 			/* See dual_accel_detect.h for more info */
- 			if (priv->dual_accel)
--				return;
-+				goto out_unlock;
- 
- 			dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
- 			ret = input_register_device(priv->switches_dev);
- 			if (ret)
--				return;
-+				goto out_unlock;
- 
- 			priv->has_switches = true;
- 		}
- 		input_dev = priv->switches_dev;
- 	} else {
- 		dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
--		return;
-+		goto out_unlock;
- 	}
- 
- 	if (priv->wakeup_mode) {
-@@ -189,7 +193,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 		 * mirroring how the drivers/acpi/button.c code skips this too.
- 		 */
- 		if (ke->type == KE_KEY)
--			return;
-+			goto out_unlock;
- 	}
- 
- 	/*
-@@ -200,6 +204,9 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 	autorelease = val && (!ke_rel || ke_rel->type == KE_IGNORE);
- 
- 	sparse_keymap_report_event(input_dev, event, val, autorelease);
-+
-+out_unlock:
-+	mutex_unlock(&priv->mutex);
- }
- 
- /*
-@@ -290,6 +297,10 @@ static int intel_vbtn_probe(struct platform_device *device)
- 		return -ENOMEM;
- 	dev_set_drvdata(&device->dev, priv);
- 
-+	err = devm_mutex_init(&device->dev, &priv->mutex);
-+	if (err)
-+		return err;
-+
- 	priv->dual_accel = dual_accel;
- 	priv->has_buttons = has_buttons;
- 	priv->has_switches = has_switches;
--- 
-2.45.2
+Hans
+
+
+> On Mon, 22 Jul 2024 at 12:45, Hans de Goede <hdegoede@redhat.com <mailto:hdegoede@redhat.com>> wrote:
+> 
+>     Hi En-Wei,
+> 
+>     On 7/22/24 10:36 AM, En-Wei Wu wrote:
+>     > On a Dell Venue 7140 tablet with the keyboard/touchpad/battery dock, when
+>     > disconnecting the dock there is a kernel bug:
+>     >
+>     > BUG: kernel NULL pointer dereference, address: 0000000000000018
+>     >
+>     > And this causes the following things not to work:
+>     > 1. Suspend to idle - the system simply hangs
+>     > 2. Poweroff normally (the only way is forcing it via long press the power button)
+>     > 3. USB ports: both the USB port on the tablet and also plugging in the keyboard again
+>     >
+>     > The error message above (plus some crash dump) isn't so useful for debugging, but we
+>     > have noticed that there is a debug message shown before the crash dump:
+>     >
+>     > intel-vbtn INT33D6:00: Registering Intel Virtual Switches input-dev after receiving
+>     > a switch event
+>     >
+>     > The messages above is shown right after the dock is disconnected, and the message implies:
+>     >
+>     > We failed to set the priv->has_switches to true in the probe function since the
+>     > Dell Venue 11 Pro 7140 is not shown in the dmi_switches_allow_list, and this causes a problem
+>     > that no input_register_device() on the switch device is called. Afterward, When a user
+>     > disconnects the dock, intel-vbtn receives the ACPI event and finally find that there is a
+>     > switch out there. So intel-vbtn starts to register the switch device, which may be a dangerous
+>     > behavior since there might be some device-related objects/structs that has been freed (due to
+>     > the disconnection of the dock).
+>     >
+>     > To solve this problem from the root cause, simply add the Dell Venue 11 pro 7140 to the
+>     > dmi_switches_allow_list.
+>     > (The Dell Venue 11 Pro 7140 is a 2-in-1 model that has chassis-type "Portable".)
+>     >
+>     > BugLink: https://bugs.launchpad.net/bugs/2073001 <https://bugs.launchpad.net/bugs/2073001>
+>     >
+>     > Fixes: 8169bd3e6e19 ("platform/x86: intel-vbtn: Switch to an allow-list
+>     > for SW_TABLET_MODE reporting")
+>     > Reported-by: Kostadin Stoilov <kmstoilov@gmail.com <mailto:kmstoilov@gmail.com>>
+>     > Tested-by: Kostadin Stoilov <kmstoilov@gmail.com <mailto:kmstoilov@gmail.com>>
+>     > Signed-off-by: En-Wei Wu <en-wei.wu@canonical.com <mailto:en-wei.wu@canonical.com>>
+> 
+>     Thank you for your patch. Looking at the logs from the launchpad bug I noticed that
+> 
+>     intel-vbtn INT33D6:00: Registering Intel Virtual Switches input-dev after receiving a switch event
+> 
+>     is reported in the logs twice. Which strongly suggests that the intel-vbtn notify_handler()
+>     function is racing with itself.
+> 
+>     In the past ACPI notify handlers could never run more then once (at the same time)
+>     but since commit e2ffcda16290 ("ACPI: OSL: Allow Notify () handlers to run on
+>     all CPUs") ACPI notify handlers like the intel-vbtn notify_handler() may
+>     run on multiple CPU cores racing with themselves.
+> 
+>     I believe that this is the real problem here. I have attached a patch which should
+>     fix this. Can you build a test-kernel with this patch instead of your patch and
+>     ask the reported of: https://bugs.launchpad.net/bugs/2073001 <https://bugs.launchpad.net/bugs/2073001>
+> 
+>     To test a kernel with the attached patch (and without your patch) to confirm
+>     that this fixes it in a more generic manner ?
+> 
+>     Regards,
+> 
+>     Hans
+> 
+> 
+> 
+> 
+> 
+>     > ---
+>     >  drivers/platform/x86/intel/vbtn.c | 6 ++++++
+>     >  1 file changed, 6 insertions(+)
+>     >
+>     > diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
+>     > index 9b7ce03ba085..46d07d3cd34b 100644
+>     > --- a/drivers/platform/x86/intel/vbtn.c
+>     > +++ b/drivers/platform/x86/intel/vbtn.c
+>     > @@ -235,6 +235,12 @@ static const struct dmi_system_id dmi_switches_allow_list[] = {
+>     >                       DMI_MATCH(DMI_PRODUCT_NAME, "Venue 11 Pro 7130"),
+>     >               },
+>     >       },
+>     > +     {
+>     > +             .matches = {
+>     > +                     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+>     > +                     DMI_MATCH(DMI_PRODUCT_NAME, "Venue 11 Pro 7140"),
+>     > +             },
+>     > +     },
+>     >       {
+>     >               .matches = {
+>     >                       DMI_MATCH(DMI_SYS_VENDOR, "Hewlett-Packard"),
+> 
 
