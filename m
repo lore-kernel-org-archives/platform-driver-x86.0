@@ -1,159 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17956146015;
-	Mon, 29 Jul 2024 11:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C457679B8E;
+	Mon, 29 Jul 2024 11:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722253144; cv=none; b=fsyyuuCilTf1kX1pOIZick5N0WJf0yKIow9xlASSU/eHC57sSF4ME5xFgq8XuKN/H098InvLGNBxwzULQpF+rBP6zudjGvmPlFSCwDjMKbDmnuHAhapM6I81jSCpEd+M1RBlbm4PaNU2IPND/oUQ/bq5bnjeD6+QctunfHIymVw=
+	t=1722253468; cv=none; b=V4J1G9X9bKfKaOt/pa7iM1eNXUZTfV3gONYvfu4FUHbl1JjGbtip6hSddaon53Qh7Hz1xMS/ueVfuJWSBI9AZyWTVj0EDNd8UBPh6kGIrDKCxbT0zv9rSN2ogfEZjOUBbJbjYFfdIOhiu4/Vl9fMPU3vPnUO5/a5cGGXkXU96es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722253144; c=relaxed/simple;
-	bh=G2Hxq5SH6mbRM8TQwL+GQBN/WkWJKoHCUsfMqH0CoXA=;
+	s=arc-20240116; t=1722253468; c=relaxed/simple;
+	bh=f/z97bYp+EMwQiuCzp5i4xhQ//NcC+Qmw5S7TSllxug=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=F3OX5I1ys+pRcVCCCruyVI+aDrO+6GNEB+Mra8u9AfALIBtM4Iocbr/gIxJkcOAlaoC6Uqslm4Fg0Vl5TroqcTUn/NsLrBNOQtMsJuChXlboHI2zTsF03YBkkmOyJx3LGlTNCZfK0UcCx05s0gWFik/CE0jxUzWyaUlDEvMyoAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HtNa+Aft; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version:Content-Type; b=DZsj+5bKuw95dXYmF5oTURdvc9lW9IW4WbFONrF6WNmHiO+TowYexy6WvKuNzi2Vni9snlYhqOg64Ai29YfTLcNCkXijYuy1GH+p47IWTGyGzp+NMx8T2gheIraToRTKX8p1z51mC/46utuZaB+R3NAaM64SFtUFmWN6b2Pp3/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n22WLO2L; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HtNa+Aft"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n22WLO2L"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722253143; x=1753789143;
+  t=1722253467; x=1753789467;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=G2Hxq5SH6mbRM8TQwL+GQBN/WkWJKoHCUsfMqH0CoXA=;
-  b=HtNa+AftHcuSm75RtKC0R1GIYGtzscNSTeo2UvVAqJ/57U36MsVHgas8
-   AQWwwDBDPuO2H5wD5fI3wj1OHqFhnvN8PKP0XRFno5VS9JcxjEEyi1Jf9
-   mkwHZz1ekIhkDdgTqboYQXpT+Qp5MjGjEu3PZPqDMW2X59ysaCfvjaAZF
-   HeL2LJR4CyE0LpTkLKXO+zFlfmbPOYpTL66susbonlvhyZyRVWalbqrNx
-   vvHJ6optgSfgYbgSMsqm6sa+FpttP1lVDu81McefhhRvJx44JqMQ6wnZC
-   DGtc5PhL0upsDEjM8TGjRnn2lgUnDdtNzmtHnPYLxNoIXZFNpD3rVI727
-   A==;
-X-CSE-ConnectionGUID: Vj86qRKhSIiGDltFMj/+9A==
-X-CSE-MsgGUID: vIM38PbLQNe5FrUuXsKm2w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11147"; a="22911019"
+  bh=f/z97bYp+EMwQiuCzp5i4xhQ//NcC+Qmw5S7TSllxug=;
+  b=n22WLO2LCzq/EBWgvFpZbuBVqwAhpznEOdyitWjKsjY8F/vdBBcyRbhU
+   zDFTJciM0NGJr9qQvXBWRK7HtUGHwx5LElFa1LrzqRf0YYkVBX3ZAhFT2
+   iHXgA/3HTXwglvj9paiF6Kvc+9WtLj0FOL8xZU5oim7PFKAYX1ZETEhUO
+   wwN15qsXukwZB0CCPrpldv0V3nOS4jJ3XjRIIphhQRAjv+paS7AyJnJhl
+   uOoEWNL4zey51ZD5r6OrYB6KAc8ZxXXGsv0HBTx5BQCHPOX+ym24Ys/Sk
+   v34f6p7mgC9MS6z32TRQiyDJi1acUQhiCOb8uYmEbB8SxedIvVsvCucuL
+   w==;
+X-CSE-ConnectionGUID: 6xF9m0jySxaIzp/zXJjcWw==
+X-CSE-MsgGUID: Gv+yv1BLQ7O4nRFu8oIQtw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11147"; a="12767550"
 X-IronPort-AV: E=Sophos;i="6.09,245,1716274800"; 
-   d="scan'208";a="22911019"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 04:39:02 -0700
-X-CSE-ConnectionGUID: VNKbjXX0QM2GakN6lLTgSQ==
-X-CSE-MsgGUID: ga+LzIzZQN+D+Gp3TUIEcQ==
+   d="scan'208";a="12767550"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 04:44:25 -0700
+X-CSE-ConnectionGUID: dzU/h+CNRd2ko/XJdg40RQ==
+X-CSE-MsgGUID: yRv5a/V0QUG1ElkQdtzyjA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,245,1716274800"; 
-   d="scan'208";a="84593276"
+   d="scan'208";a="77186600"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.151])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 04:39:01 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2024 04:44:23 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 29 Jul 2024 14:38:57 +0300 (EEST)
-To: Kane Chen <kane.chen@intel.com>
-cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 1/1] platform/x86/intel/pmc: Show live substate
- requirements
-In-Reply-To: <20240719122807.3853292-1-kane.chen@intel.com>
-Message-ID: <edfd1b36-7532-c0ba-6d24-b3e296e1cf0b@linux.intel.com>
-References: <20240719122807.3853292-1-kane.chen@intel.com>
+Date: Mon, 29 Jul 2024 14:44:20 +0300 (EEST)
+To: "Luke D. Jones" <luke@ljones.dev>
+cc: platform-driver-x86@vger.kernel.org, corentin.chary@gmail.com, 
+    Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: asus-wmi: Add quirk for ROG Ally X
+In-Reply-To: <20240724222852.44378-1-luke@ljones.dev>
+Message-ID: <056b599c-4d29-a743-ad7b-055e951e9e39@linux.intel.com>
+References: <20240724222852.44378-1-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-713672148-1722253137=:983"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, 25 Jul 2024, Luke D. Jones wrote:
 
---8323328-713672148-1722253137=:983
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> The new ROG Ally X functions the same as the previus model so we can use
+> the same method to ensure the MCU USB devices wake and reconnect
+> correctly.
+> 
+> Given that two devices marks the start of a trend, this patch also adds
+> a quirk table to make future additions easier if the MCU is the same.
+> 
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> ---
+>  drivers/platform/x86/asus-wmi.c            |  2 +-
+>  include/linux/platform_data/x86/asus-wmi.h | 15 +++++++++++++++
+>  2 files changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 2b968003cb9b..bac2945b0e48 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -4694,7 +4694,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+>  	asus->dgpu_disable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU);
+>  	asus->kbd_rgb_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_STATE);
+>  	asus->ally_mcu_usb_switch = acpi_has_method(NULL, ASUS_USB0_PWR_EC0_CSEE)
+> -						&& dmi_match(DMI_BOARD_NAME, "RC71L");
+> +						&& dmi_check_system(asus_ally_mcu_quirk);
+>  
+>  	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MINI_LED_MODE))
+>  		asus->mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE;
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> index 74b32e1d6735..fba9751cda5b 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -196,4 +196,19 @@ static const struct dmi_system_id asus_use_hid_led_dmi_ids[] = {
+>  	{ },
+>  };
+>  
+> +/* To be used by both hid-asus and asus-wmi to determine which controls kbd_brightness */
+> +static const struct dmi_system_id asus_ally_mcu_quirk[] = {
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_NAME, "RC71L"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_NAME, "RC72L"),
+> +		},
+> +	},
+> +	{ },
+> +};
 
-On Fri, 19 Jul 2024, Kane Chen wrote:
+Why is this in the header? I see your comment but this means every file 
+which includes asus-wmi.h will have a duplicate copy of this array.
 
-> While debugging runtime s0ix, we do need to check which required IPs
-> are not power gated. This patch adds code to show live substate status
-> vs requirements in sys/kernel/debug/pmc_core/substate_requirements to
-> help runtime s0ix debug.
->=20
-> Signed-off-by: Kane Chen <kane.chen@intel.com>
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
+-- 
  i.
 
-> ---
->  drivers/platform/x86/intel/pmc/core.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86=
-/intel/pmc/core.c
-> index 2ad2f8753e5d4..b93ecc5169745 100644
-> --- a/drivers/platform/x86/intel/pmc/core.c
-> +++ b/drivers/platform/x86/intel/pmc/core.c
-> @@ -791,13 +791,15 @@ static void pmc_core_substate_req_header_show(struc=
-t seq_file *s, int pmc_index)
->  =09pmc_for_each_mode(i, mode, pmcdev)
->  =09=09seq_printf(s, " %9s |", pmc_lpm_modes[mode]);
-> =20
-> -=09seq_printf(s, " %9s |\n", "Status");
-> +=09seq_printf(s, " %9s |", "Status");
-> +=09seq_printf(s, " %11s |\n", "Live Status");
->  }
-> =20
->  static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unu=
-sed)
->  {
->  =09struct pmc_dev *pmcdev =3D s->private;
->  =09u32 sts_offset;
-> +=09u32 sts_offset_live;
->  =09u32 *lpm_req_regs;
->  =09int num_maps, mp, pmc_index;
-> =20
-> @@ -811,6 +813,7 @@ static int pmc_core_substate_req_regs_show(struct seq=
-_file *s, void *unused)
->  =09=09maps =3D pmc->map->lpm_sts;
->  =09=09num_maps =3D pmc->map->lpm_num_maps;
->  =09=09sts_offset =3D pmc->map->lpm_status_offset;
-> +=09=09sts_offset_live =3D pmc->map->lpm_live_status_offset;
->  =09=09lpm_req_regs =3D pmc->lpm_req_regs;
-> =20
->  =09=09/*
-> @@ -828,6 +831,7 @@ static int pmc_core_substate_req_regs_show(struct seq=
-_file *s, void *unused)
->  =09=09for (mp =3D 0; mp < num_maps; mp++) {
->  =09=09=09u32 req_mask =3D 0;
->  =09=09=09u32 lpm_status;
-> +=09=09=09u32 lpm_status_live;
->  =09=09=09const struct pmc_bit_map *map;
->  =09=09=09int mode, idx, i, len =3D 32;
-> =20
-> @@ -842,6 +846,9 @@ static int pmc_core_substate_req_regs_show(struct seq=
-_file *s, void *unused)
->  =09=09=09/* Get the last latched status for this map */
->  =09=09=09lpm_status =3D pmc_core_reg_read(pmc, sts_offset + (mp * 4));
-> =20
-> +=09=09=09/* Get the runtime status for this map */
-> +=09=09=09lpm_status_live =3D pmc_core_reg_read(pmc, sts_offset_live + (m=
-p * 4));
-> +
->  =09=09=09/*  Loop over elements in this map */
->  =09=09=09map =3D maps[mp];
->  =09=09=09for (i =3D 0; map[i].name && i < len; i++) {
-> @@ -868,6 +875,9 @@ static int pmc_core_substate_req_regs_show(struct seq=
-_file *s, void *unused)
->  =09=09=09=09/* In Status column, show the last captured state of this ag=
-ent */
->  =09=09=09=09seq_printf(s, " %9s |", lpm_status & bit_mask ? "Yes" : " ")=
-;
-> =20
-> +=09=09=09=09/* In Live status column, show the live state of this agent =
-*/
-> +=09=09=09=09seq_printf(s, " %11s |", lpm_status_live & bit_mask ? "Yes" =
-: " ");
-> +
->  =09=09=09=09seq_puts(s, "\n");
->  =09=09=09}
->  =09=09}
->=20
-
---8323328-713672148-1722253137=:983--
