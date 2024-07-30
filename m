@@ -1,760 +1,345 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2076.outbound.protection.outlook.com [40.107.92.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DFD1854
-	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jul 2024 06:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722320225; cv=fail; b=AS1rCDrS9LXpgPueYp9O1iWT5p6ygdetPCfuaAyVrXAAHuWABrn2zFkjwkWQ1w8yfar4urgHQl51WdqkrlQqWGqH1L1eLP/E0t6A0F/YnBoy6FlouN4AzQ5CAT2ozgkjZnHwOw7nxeiGxvMi8pC79Hm+TWUTIKmBo3yb/kffreg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722320225; c=relaxed/simple;
-	bh=BcFSosd3E9C2uSdok36OPggKAiFPz6ODQmOMCiqbmtc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qU/uTeJ1X1xF7gHXnR/eG310MjXIwgFaGJXub6p7+GKba4Ybz1UHmSDowcKIhNkubbtP4ihOxphz85PbxkGvVmV3seRZCG8gnC+tJ3nQ3R96lTZVnOFnGkhYO+1m0Py96a5h2LzMfq4VMr530i1LJHp9XLmI0REAGhUy217erO4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QOuyVJA3; arc=fail smtp.client-ip=40.107.92.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E7A18F2FF
+	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jul 2024 12:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722341153; cv=none; b=cPrDCqmEZ4Mhr7PNZJQWqnuV+DKr+eFJrB5QJHC0akUQEOXqBRMa98n6iDD8Og/5a4FGfxHYsMV3HIqcEDhotRVk0hsWSQhfdZjRo3TW08RjkyPy0GDvuFpFijhnZI/AMi+UN/6vmE6re51qq26lwGcw743dR0pevZXVbf4v8Pk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722341153; c=relaxed/simple;
+	bh=JD2cBdu9k/WO1pOJepobDhQwaeQ1SW6evxBKp1GZePY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=uBhi0EUCDZYNaZyvS/jkMrphSnM56aWVna18bm52SQswHoSyUSYeBxxouCLiVeE+q9SH/ckWlWr/mMBw9lEDF14nC5bHUuFKHsiuqCkJhGY2/BHDKaIlo82kO+nGcGj2m+tY5Akg3sU0rB1KyNA/gMg7Rh0nARTEDZovEfMuBD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mmaslanka.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NXoCrKng; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mmaslanka.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QOuyVJA3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OTkWFtL+JJtRL7hearJlq+35/KxCj+Qi9IE6yzSzDdYdS6+aeVQ7KQJPqcplJNEAoRxUmVO3NCfLj8liyF+0UT/QQnwiamgY8V/UU/y0uNyIcxn+2Vi3Xf3smArHMVtH6XebUZaUHv9T8fZZnUpXCAFih0nsUO40f2Pr+wYVLp1LP2GUIXNn4Qz8FcEPsxxpC9oZksyrhNkSpnnOUz/xR2liuHADinGc71yeP6QtCF1clEfVUIh9S38ieqcK4S3ddZREbMGjzOLFwMvMpdhwvPNEqJJ0l8cj/9i7Q1FnkT5giUIv3uSbpWCNzo0sB/5IqmY0f6+4gWHmCx7rIefUSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CXB0UqUVn0tfgwacIukAxCl6CSscRHAH3uDG/AxZ8PY=;
- b=i+SVOVDOCsyl5EM1E2GwtwfUwBxuZqVUMGftrHQ9hN0oQBbDvS5sgq9ru3YqQdcN0Sij4P3UMRguVYJr5Z2y3wSruOia3ahGxUKpUzZYcRnJK5XlbBDhFnhG8hdPKlYbi5SC4upICqPyABtWVl/mJyAAMSikJy2PZPyh/ETPyWX2SDf44ZfQ7fgcN4gMeXeDEBrdtJ9tleIdTobIj+Kss9YcZjZfKUtkR+xPWuOC7l354ezhdTGPe2vWybyW/uhE4pzaT/DmoAO2sjWRxFlkOXAkxQX9qXa2xjL5OYr0LeNLsNHuggYUmrxGSwpGt7XkcKqIGx0C22DnykJh39q/RQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CXB0UqUVn0tfgwacIukAxCl6CSscRHAH3uDG/AxZ8PY=;
- b=QOuyVJA3jH1aw3nMXQjwv8pc/95KnJMtiKemlof0JOM5GJhw2WeuxvAvUR8vsQwQ0KAHoyGcOuTcTUNRH+FIPzTDHw0fEeEogXHZSgJiQtzGIWXRikNdbnPTlH/yHE+QN2iS1U+OpS6yp8h9qnSxnBbfbX25fa23zP2uyW8wNIg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from LV2PR12MB5966.namprd12.prod.outlook.com (2603:10b6:408:171::21)
- by IA1PR12MB8287.namprd12.prod.outlook.com (2603:10b6:208:3f5::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7807.27; Tue, 30 Jul
- 2024 06:17:00 +0000
-Received: from LV2PR12MB5966.namprd12.prod.outlook.com
- ([fe80::7c1b:5fa1:7929:fd81]) by LV2PR12MB5966.namprd12.prod.outlook.com
- ([fe80::7c1b:5fa1:7929:fd81%4]) with mapi id 15.20.7807.026; Tue, 30 Jul 2024
- 06:16:59 +0000
-Message-ID: <79cf8fb7-15c5-49c6-b915-dab275510ebb@amd.com>
-Date: Tue, 30 Jul 2024 11:46:52 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v3 07/11] platform/x86/amd/hsmp: Create mutually exclusive ACPI
- and plat drivers
-To: platform-driver-x86@vger.kernel.org
-Cc: ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com,
- Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-References: <20240720174552.946255-1-suma.hegde@amd.com>
- <20240720174552.946255-7-suma.hegde@amd.com>
-Content-Language: en-US
-From: Suma Hegde <Suma.Hegde@amd.com>
-In-Reply-To: <20240720174552.946255-7-suma.hegde@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0072.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:99::19) To LV2PR12MB5966.namprd12.prod.outlook.com
- (2603:10b6:408:171::21)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NXoCrKng"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6698f11853aso76180607b3.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jul 2024 05:05:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1722341151; x=1722945951; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=G4GPJTNACJVmyvK8yCIcXTVNooYietpPwpeg6FVIOno=;
+        b=NXoCrKngyKrYgAyWjEUWD6WRAWHrNuq7SGSDLZzyHN19d1TB57DquwnWs31Yh3MXI9
+         UqrMWSN1gI2BXT6JZjy+gxJGxHIA+YVzGpmS3dE3mT2TqjX7UUHHrmnhKNRyNPFPUFtt
+         8aUIK9PBEnvkfhCgmWTpXt+T/e6XKuRDJKLJ1HsgEiHzJHaJl6NAZ1Dumk/ZM9wJqQ2w
+         e/p9FnUafCsTJ5bq9Y/RluohMaDYwsFAKl9gYUJfNA16ZZTmgj1aAfl/V5v9u4GZi8dB
+         VxKeB+K0Bcv6xFR5R0vDQQbk9oiF2yFxytGWT75iGklA+P7qhjuOwvkZy/KcIskMa7Ft
+         lAYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722341151; x=1722945951;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G4GPJTNACJVmyvK8yCIcXTVNooYietpPwpeg6FVIOno=;
+        b=iQg67yVV+odICm/hYSxBqlqa6BiHZGztVqxJIkKVyNqkaHy6Be9WtXsX1p5CD7985L
+         4q5N0UT33t/6g0/XXw/J15Wn5JnRoXnT+y2+DWLDTL5rUBKgcxqGY047BMTPwwOtjXEa
+         GYn6lRGSwAAHraII9SrTOf6HOaqmjnyt3GiC/XEonHUI4maFVYkzvR3np7zkNiGriuFy
+         h/71SAJsWKxL59eUoHeSGOK7OOcyKhRKTI9AarvsVkKLJsGWg1LBpLtbFI0iYhjKcszH
+         H1PpA1lvbPrc2oe3dY4lUufoDBV97p8uZ5OWeS7miYvvbbpYQiK2K1Zwj7cMxNTch2fJ
+         BV+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUGxhVeeEV8Wk6TEk/m/tLCZSJXPNzp/ckcZYqae8u2o0KwK27UuNqsdp8GMKwPWeiNlRFfStgnEqs4nQo7eJIlsgzl9KpuHQzwxU4J6y0K89UWcw==
+X-Gm-Message-State: AOJu0YxZGL3xX5HeKEFa6gQB6XoHqEesBWWGfNyV5ZCWilNT6VOCXtir
+	sB1S03eWWMMubl/swierxAVXynmIL3taE+SzT+sx2meHukVvresV1WUSi3N3yag2B78saMMTCoK
+	rqAX51oCyZnuJFA==
+X-Google-Smtp-Source: AGHT+IEd32rqD5qWvdku11FoYZwTC33fpk2BKn6/V45gNAyY7zwU0OV3kL4PpCOUNj473K3R4DS0dSVUGA6SI54=
+X-Received: from mmaslanka2.c.googlers.com ([fda3:e722:ac3:cc00:31:98fb:c0a8:b8d])
+ (user=mmaslanka job=sendgmr) by 2002:a05:690c:ecd:b0:650:93e3:fe73 with SMTP
+ id 00721157ae682-67a09784099mr1320817b3.5.1722341150640; Tue, 30 Jul 2024
+ 05:05:50 -0700 (PDT)
+Date: Tue, 30 Jul 2024 12:05:44 +0000
+In-Reply-To: <CAGcaFA2sQNRo9UThN-C1NOLtGUJ3sKzc=pEC9wdDWMi501iLsA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5966:EE_|IA1PR12MB8287:EE_
-X-MS-Office365-Filtering-Correlation-Id: 135b0d2f-43aa-436c-c3c8-08dcb05f389f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NlVHVGlqcm5tTU9kdjdsa0gwamE0L2xkZSt4N2hWT0ZTaVVMajRYRzUrN3Iy?=
- =?utf-8?B?Z3lZT2NRa2xoUG5QUEk3SlBMM0tlcTlIN3ZvOXNEWFpkQ2ZOSnBIbzlqeGcx?=
- =?utf-8?B?YWZBcDVrVjBFWnJUNFdmaUx3dzdEZE03bVJ6UWduVjE2YTF0Z0crdFBtVnE5?=
- =?utf-8?B?RzF1M2JFSVR6LzlnZkxCYVRZMUFLS3hXVTdtRGxVczBpakRhR0tnZFdPcnFW?=
- =?utf-8?B?TVA4WVhYbzdMWm9CNGYwTmkyaHJqQTdDKzB2L2lRNnhXaVV1bEdKWU1YSDFF?=
- =?utf-8?B?NHpyck1QNktZYjRORGlEYVB6NXRkS3U3dnpBUDdhOWlvQ2ROSEJHVHdYUHVy?=
- =?utf-8?B?VVRvTjlSdWo1N3dhWk1iNFoyamZJb2ZmUmh2R0t3VjhaYTZkUzN6cnVNcms4?=
- =?utf-8?B?OXoyQXEwL0ZYUFhsZlZBZlFBTHkyUjgvT0NZWEFPVkdKcGZ1cmhDbXVhSW9T?=
- =?utf-8?B?cCtNY0psTzN0Z2FWK0pMNDVPbnREaFNzU3RCNnE2VW1HSm01bHF6ZzBCYkxi?=
- =?utf-8?B?V2x0RW9XamJ6NEJweFBVb1VKd2tNaXl6SWt6QmJLWnprVnJTYXN1dGZNYm5v?=
- =?utf-8?B?TDVyNHRyUU5rREdvZGhQRkZJL0svNzRGR0YycWZ0OHA5NWRvU3h0WVJXbWZN?=
- =?utf-8?B?T2xPbmNBRGdzeHV2WmJJSlNxSkw2Mkdsa1NpaEE0SmJuRUhLZFJvTmhXWVlJ?=
- =?utf-8?B?YjgxQkZCS3pGeGp2ZDV6SldKZW1mTFBQNzYwYUk2a3pEcXdMaVZmbU5BaWV1?=
- =?utf-8?B?clZvUjBWVmtBNjgwZUp5SWhPZU1RV2U2SHMrK0ZyZ3hZVXM4K1dBTEY5QjBB?=
- =?utf-8?B?aENYa0IxWDlCaWkxVVVwMmtDNHlhcWVKcUtpNTErMWk0WDBiMzIrQzNlcXZ3?=
- =?utf-8?B?QzdmOWVZa0ZPeFByV2NRQ0JObGF2TWZwaW5RV1FIcnYvWTlUaktNRUtRY2Iw?=
- =?utf-8?B?b2xmMEh0Q0ZZakdDelJ2Z2tvVkF5Vit1dDNTVmV4TGtweGwwbDhETDhiUXps?=
- =?utf-8?B?cHhBWlgyNXZ5QzFpNjFja2hVemhTS2E3aWtjak0vcjc4QTdzSVRtQU5UVHN4?=
- =?utf-8?B?N0FWcFI4MVEyZGJ1bGk4SjNaSzVDSVAzNG1FRytNbThMYUFKeWNwNXFUdmhs?=
- =?utf-8?B?QlBpdFN3ait2K05rMEFrbmtKMGhsNmEzekdwdEdnOEQ3Y3FmbVppbG4yd09Y?=
- =?utf-8?B?ZjVMVzEwbFlDRU8vYXFYY1ZDWm9zT3Npc0FwM2d2cG53aEhXQWZSc3hGUG5p?=
- =?utf-8?B?RnJ1N0ppY2VQcFVQc2pXZ3ovVThDbUJWczFPeVQ0TVUwb214SHhDLzRoclpj?=
- =?utf-8?B?S0lPLzlONWlDclJZektWWUJoMWlPVjlpcGgzd1RZZ2JkYWk2N09mciszYUEz?=
- =?utf-8?B?NFp2WjJqUWVYdUc4RjJwUS9MQXp2LzZDMERGVXhWUEZiT0x3S1VMdHFQOUhP?=
- =?utf-8?B?anNaZjR4NnJMbnE3RmpVSVlmM3dzUExjQ20zWEhkbUFpaE1YeElFdlJIS01n?=
- =?utf-8?B?dHY0eXRZZ0xHOHpPN2xLN2Njc3N3emNiUjFwdEI1RkI2YThySmtlcHFUU0ow?=
- =?utf-8?B?dU94Y2FqUSsxUjFwTjREYXZITDZuSkNqVW1QZjVrNThCT1FYR05TcWVJR1Uz?=
- =?utf-8?B?L2ZZWXQ0TkVvQ1Nrak15RVRnRXFiWmhISHo0VnJSYzFNZXdlcHBBSzU3ZVh6?=
- =?utf-8?B?ZTR0K2ZzTEZJRzNHeCtYeWpIbWg2cDlNUG1MZzNmRVJrWGRsNTVldDNSdlc5?=
- =?utf-8?B?QXRITnNPbE9MR0F3YUIvTDQzRFlPRDNFNkcrT0hERVRHN0ZOYTVLRW9zQVlD?=
- =?utf-8?B?bm5TS3pERDhlTXM3azZyZz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5966.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RTZuM0Jpc2pnTUw2a1VyVDcvWjgwWXhRbjZJNlRNcmswV0g3cjNCTzM5SHpj?=
- =?utf-8?B?RjlXUHBxV09qTm9ESjZZMjF1VCtpRVBFeUJQVjBnS1hZK2hiQUR0RzNZQkUv?=
- =?utf-8?B?aTN4VTV3NXZBUnl2bFFTcitvUUk4aVg3Nitpdlk3MXQwSmJ5dkdkakZrbDE3?=
- =?utf-8?B?bjhUQXFiN2pYeGs1alJBdzNEU3ozT3NqOS84aFpxVCtKSU5VYVJWaGlnY3Y0?=
- =?utf-8?B?bCtLanBJNkV6ckh5NjgzMTZjVTg3WGF6UWtmMnBNNWtWbXgxOUhvM2luYktj?=
- =?utf-8?B?bWpKbGNQRFQwZWtsOHcwMUVQNk5RL2l2OUczWEIvMVU1MU1zM2Rsdmx4N0xr?=
- =?utf-8?B?ZE1hRkpocVRVRTlCZy82THZTeXdNNmlkUEpDSWo3STc5Y3BHZ3MyM2RNWFNZ?=
- =?utf-8?B?bHhnK1ZCMi9lTGdEa3prUTVpTElDNWF6UFMzb01wMjJKWDFiQkxhRGdVSXBt?=
- =?utf-8?B?UE5NdFg2NU1nbmdXZnE2M3hicWhUa3h3c1diUjV4NWYrRjNNalkvR3ppMFlT?=
- =?utf-8?B?OGVYSGZueFp2OFNNcFJjTzVRS3BIUFBkUDdQRVhLQTlkZ2FnQndhdnBmbjFx?=
- =?utf-8?B?d2x2cTFOVzgyZXZkVmJZdWZNVnRnYUxPVFhPR3d6T2h1Z09iaG5ldlNCajVa?=
- =?utf-8?B?NHJFOFFxR2U4b3YzVTJTUE9sNVJYMVFyYkhmbU93MkhSd1Z6ZFFhaDl3Q2p1?=
- =?utf-8?B?c3ZVc2diNU1lektEWlFTYXdJL0F4QWx0TUNZWmRjNjVpVEhydkQybng4SW5h?=
- =?utf-8?B?MWI0cEhhdHdxM3BtR2V0VkpRMVR4dFFlZ0xZNENtZzFmZ3YrOW0wNURucVhC?=
- =?utf-8?B?Q2pvOGlIMDZyTHpERS9wb21acE0wWEJudldDTXlrU2l2M3lIbkw3akxHTDIy?=
- =?utf-8?B?bFdZWWhIdllYTmhIbUEzRW50bEtKVmY2STRjZWtucGJkUUp5NTdkejV0ZlNn?=
- =?utf-8?B?QnZFNmp4cVFpOU1iSDIrdmJOQ0EvMDR0WVl3WWM2MG0zOW5ZdHVDN2JJaFpQ?=
- =?utf-8?B?ZW5adXRxUUxKdHN5akE3VUM2SkFCbnVFMmZBWThvOTVjTzRvS0FhTUdrNWx3?=
- =?utf-8?B?Qmlsa0NQYkpaU3hkTWY0NnUxWDJxUGtSUUsvanJyVWEwVDRMampmeGtnMnYr?=
- =?utf-8?B?RmdLMFp5cmpwTExhM0laMXdIejVROUhEcnVSdFZQdzJCRVZkWXlWVUo5QTlv?=
- =?utf-8?B?b0R1L2V6TFFFVmZDUXFLNWdrWmtQL1VIRVdFL2J2QmxDcGVNNndsYTRLaVNG?=
- =?utf-8?B?U0Y4S1lKSlU2b0ExVkJTMXhaYXdTemZNb0pyTEoxck9RNVhwUkNnQjJGMXBo?=
- =?utf-8?B?Nk1kTExWVnlVem5wb0NpVWR0Ukp3NDNEMDVZK0tsazh5UDBIVmNTMFVNZE9X?=
- =?utf-8?B?d0xyb3d1MjFvRTF0RS8wNUR6ajYxblk4SFcrcnc0ZWdyNWtRT1k1OFJ4Zjlk?=
- =?utf-8?B?WkIvODliT0VVWXhOUzBUSFh6WnhhVUFva3pFUGhLa1RDeVovcjlXUlhqTEZI?=
- =?utf-8?B?RFQ2TTZtUTVxcnU5aEpheG4ybk9rYWRvTjFmZnl6R3hHQnplM1JZNE9XaUpJ?=
- =?utf-8?B?T0dzNklQY0hUTnlGZFpPNWV2NHF4b0pSRVdVZ1QzRWw5VkVwZFBjOTlrMm9U?=
- =?utf-8?B?ZUIzUE03bS9FQUg3SW11SEUyclN5cWZ0QmV6MWhDZUhiTjI3TFNCR3B3dmJC?=
- =?utf-8?B?TTZJZzVjSkp2K0lTOUFESytzaUwrWXpjVGl1eE10R3V4T2JONWRsdlk0T1BP?=
- =?utf-8?B?Q1ZKVWh0SFRCVzk4Rmh4Mk1yWDQxdXlwbjVoM09vZ2lQemZ5Q1dBdEJjUXRm?=
- =?utf-8?B?ekJmc0R2THROZERQSm1BSHZvNUZVeUlvUzVaaTV0Tm5wd3JDNUgyVmZoSjdP?=
- =?utf-8?B?Zkl3UGVjQWJ2MGc0N2ZnQTAybGJUZFh1TE1DTVJQMHhCdlpoeWN0Sm55Vk5j?=
- =?utf-8?B?NnlSaEZVQkFia3NWWDdVZktObWNXclJRRzl5U0pxdTAyRWVxNlFvR2tDbnhV?=
- =?utf-8?B?OERwZFN1c3ZVSloxT0lLaDlSMml4bmZyVWsyQ0RmYmN1SlNxd3UrT3FiSmtS?=
- =?utf-8?B?b3V5Rjd5bWRBajNpaGhpbXVpSnFYeDhMV3IvdlZ5WGxSM2h2RHh5Y1RPdjli?=
- =?utf-8?Q?EF9FY5QvnbhL7KG+VsM/m9m7K?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 135b0d2f-43aa-436c-c3c8-08dcb05f389f
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5966.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2024 06:16:59.9525
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: s/KnXfYb+NKvH4nh0MKO6zyEHMoIx59ge7P2zZiDBHmgFOg35l/+Qb631oWHh3iOwldAe6zbkIJJ0OW529BwTQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8287
+Mime-Version: 1.0
+References: <CAGcaFA2sQNRo9UThN-C1NOLtGUJ3sKzc=pEC9wdDWMi501iLsA@mail.gmail.com>
+X-Mailer: git-send-email 2.46.0.rc2.264.g509ed76dc8-goog
+Message-ID: <20240730120546.1042515-1-mmaslanka@google.com>
+Subject: [PATCH v3] platform/x86:intel/pmc: Enable the ACPI PM Timer to be
+ turned off when suspended
+From: Marek Maslanka <mmaslanka@google.com>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Marek Maslanka <mmaslanka@google.com>, Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, 
+	David E Box <david.e.box@intel.com>, Hans de Goede <hdegoede@redhat.com>, 
+	"=?UTF-8?q?Ilpo=20J=C3=A4rvinen?=" <ilpo.jarvinen@linux.intel.com>, John Stultz <jstultz@google.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, 
+	platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Ilpo,
+Allow to disable ACPI PM Timer on suspend and enable on resume. A
+disabled timer helps optimise power consumption when the system is
+suspended. On resume the timer is only reactivated if it was activated
+prior to suspend, so unless the ACPI PM timer is enabled in the BIOS,
+this won't change anything.
 
-Can you please check the Kconfig and Makefile changes and provide your 
-feedback?
+Signed-off-by: Marek Maslanka <mmaslanka@google.com>
 
-Thanks and Regards,
-Suma
+---
+Changes in v3:
+- Add the clocksource_current_cs_name and clocksource_suspend_cs_name to the clocksource.c
+- Do not disable the ACPI PM timer if it's selected as the clocksource
+- Link to v2: https://lore.kernel.org/lkml/20240703113850.2726539-1-mmaslanka@google.com/
+---
+---
+ drivers/platform/x86/intel/pmc/adl.c  |  2 ++
+ drivers/platform/x86/intel/pmc/cnp.c  |  2 ++
+ drivers/platform/x86/intel/pmc/core.c | 47 +++++++++++++++++++++++++++
+ drivers/platform/x86/intel/pmc/core.h |  8 +++++
+ drivers/platform/x86/intel/pmc/icl.c  |  2 ++
+ drivers/platform/x86/intel/pmc/mtl.c  |  2 ++
+ drivers/platform/x86/intel/pmc/spt.c  |  2 ++
+ drivers/platform/x86/intel/pmc/tgl.c  |  2 ++
+ include/linux/clocksource.h           |  2 ++
+ kernel/time/clocksource.c             | 22 +++++++++++++
+ 10 files changed, 91 insertions(+)
 
-On 7/20/2024 11:15 PM, Suma Hegde wrote:
-> Separate the probes for ACPI and platform device drivers.
-> Provide a Kconfig option to select either the
-> ACPI or the platform device based driver.
->
-> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
-> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-> ---
-> Changes since v2:
-> Following files are modified to add new symbol
->   - drivers/platform/x86/amd/hsmp/Kconfig,
->   - drivers/platform/x86/amd/hsmp/Makefile
->   - drivers/platform/x86/amd/Makefile
-> AMD_HSMP is used as common symbol and new AMD_HSMP_PLAT symbol is added
->
-> Changes since v1:
-> Rename "plat_dev" to "hsmp_pdev"
->
->   arch/x86/include/asm/amd_hsmp.h        |   2 +-
->   drivers/platform/x86/amd/Makefile      |   2 +-
->   drivers/platform/x86/amd/hsmp/Kconfig  |  33 ++++++-
->   drivers/platform/x86/amd/hsmp/Makefile |   6 +-
->   drivers/platform/x86/amd/hsmp/acpi.c   | 119 ++++++++++++++++++++++--
->   drivers/platform/x86/amd/hsmp/hsmp.c   |  25 ++---
->   drivers/platform/x86/amd/hsmp/hsmp.h   |   8 +-
->   drivers/platform/x86/amd/hsmp/plat.c   | 122 +++++++------------------
->   8 files changed, 188 insertions(+), 129 deletions(-)
->
-> diff --git a/arch/x86/include/asm/amd_hsmp.h b/arch/x86/include/asm/amd_hsmp.h
-> index 03c2ce3edaf5..ada14e55f9f4 100644
-> --- a/arch/x86/include/asm/amd_hsmp.h
-> +++ b/arch/x86/include/asm/amd_hsmp.h
-> @@ -5,7 +5,7 @@
->   
->   #include <uapi/asm/amd_hsmp.h>
->   
-> -#if IS_ENABLED(CONFIG_AMD_HSMP)
-> +#if IS_ENABLED(CONFIG_AMD_HSMP) || IS_ENABLED(CONFIG_AMD_HSMP_ACPI)
->   int hsmp_send_message(struct hsmp_message *msg);
->   #else
->   static inline int hsmp_send_message(struct hsmp_message *msg)
-> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
-> index 96ec24c8701b..f0b2fe81c685 100644
-> --- a/drivers/platform/x86/amd/Makefile
-> +++ b/drivers/platform/x86/amd/Makefile
-> @@ -5,6 +5,6 @@
->   #
->   
->   obj-$(CONFIG_AMD_PMC)		+= pmc/
-> -obj-y				+= hsmp/
-> +obj-$(CONFIG_AMD_HSMP)		+= hsmp/
->   obj-$(CONFIG_AMD_PMF)		+= pmf/
->   obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
-> diff --git a/drivers/platform/x86/amd/hsmp/Kconfig b/drivers/platform/x86/amd/hsmp/Kconfig
-> index b55d4ed9bceb..23fb98066225 100644
-> --- a/drivers/platform/x86/amd/hsmp/Kconfig
-> +++ b/drivers/platform/x86/amd/hsmp/Kconfig
-> @@ -4,14 +4,39 @@
->   #
->   
->   config AMD_HSMP
-> -	tristate "AMD HSMP Driver"
-> -	depends on AMD_NB && X86_64 && ACPI
-> +	tristate "AMD Host System Management Port driver"
-> +	depends on AMD_NB
->   	help
-> +	  Host System Management Port (HSMP) interface is a mailbox interface
-> +	  between the x86 core and the System Management Unit (SMU) firmware.
->   	  The driver provides a way for user space tools to monitor and manage
->   	  system management functionality on EPYC server CPUs from AMD.
->   
-> -	  Host System Management Port (HSMP) interface is a mailbox interface
-> -	  between the x86 core and the System Management Unit (SMU) firmware.
-> +menu "AMD HSMP Probe"
-> +	depends on AMD_HSMP
-> +
-> +config AMD_HSMP_ACPI
-> +	tristate "ACPI based probe"
-> +	depends on ACPI
-> +	help
-> +	  This driver supports ACPI based probing.
-> +
-> +	  You may enable this, if your platform bios provides an ACPI object
-> +	  as described in the documentation.
->   
->   	  If you choose to compile this driver as a module the module will be
->   	  called amd_hsmp.
-> +
-> +config AMD_HSMP_PLAT
-> +	tristate "Platform device based probe"
-> +	depends on AMD_HSMP_ACPI=n
-> +	help
-> +	  This driver supports platform device based probing.
-> +
-> +	  You may enable this, if your platform bios does not provide
-> +	  HSMP ACPI object.
-> +
-> +	  If you choose to compile this driver as a module the module will be
-> +	  called amd_hsmp.
-> +
-> +endmenu
-> diff --git a/drivers/platform/x86/amd/hsmp/Makefile b/drivers/platform/x86/amd/hsmp/Makefile
-> index 0cc92865c0a2..18d9a0d1e8c5 100644
-> --- a/drivers/platform/x86/amd/hsmp/Makefile
-> +++ b/drivers/platform/x86/amd/hsmp/Makefile
-> @@ -4,5 +4,7 @@
->   # AMD HSMP Driver
->   #
->   
-> -obj-$(CONFIG_AMD_HSMP)		+= amd_hsmp.o
-> -amd_hsmp-objs			:= hsmp.o plat.o acpi.o
-> +obj-$(CONFIG_AMD_HSMP)			+= amd_hsmp.o
-> +amd_hsmp-objs				:= hsmp.o
-> +amd_hsmp-$(CONFIG_AMD_HSMP_PLAT)	+= plat.o
-> +amd_hsmp-$(CONFIG_AMD_HSMP_ACPI)	+= acpi.o
-> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-> index 46cb86d5d550..86100943aadc 100644
-> --- a/drivers/platform/x86/amd/hsmp/acpi.c
-> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
-> @@ -11,29 +11,43 @@
->   
->   #include "hsmp.h"
->   
-> +#include <asm/amd_nb.h>
-> +
->   #include <linux/acpi.h>
->   #include <linux/device.h>
->   #include <linux/dev_printk.h>
->   #include <linux/ioport.h>
->   #include <linux/kstrtox.h>
-> +#include <linux/platform_device.h>
->   #include <linux/uuid.h>
->   
->   #include <uapi/asm-generic/errno-base.h>
->   
-> +#define DRIVER_NAME		"amd_hsmp"
-> +#define DRIVER_VERSION		"2.3"
-> +#define ACPI_HSMP_DEVICE_HID	"AMDI0097"
-> +
->   /* These are the strings specified in ACPI table */
->   #define MSG_IDOFF_STR		"MsgIdOffset"
->   #define MSG_ARGOFF_STR		"MsgArgOffset"
->   #define MSG_RESPOFF_STR		"MsgRspOffset"
->   
-> -void amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
-> -			u32 *value, bool write)
-> +static int amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
-> +			      u32 *value, bool write)
->   {
->   	if (write)
->   		iowrite32(*value, sock->virt_base_addr + offset);
->   	else
->   		*value = ioread32(sock->virt_base_addr + offset);
-> +	return 0;
->   }
->   
-> +static const struct file_operations hsmp_fops = {
-> +	.owner		= THIS_MODULE,
-> +	.unlocked_ioctl	= hsmp_ioctl,
-> +	.compat_ioctl	= hsmp_ioctl,
-> +};
-> +
->   /* This is the UUID used for HSMP */
->   static const guid_t acpi_hsmp_uuid = GUID_INIT(0xb74d619d, 0x5707, 0x48bd,
->   						0xa6, 0x9f, 0x4e, 0xa2,
-> @@ -194,9 +208,9 @@ static int hsmp_parse_acpi_table(struct device *dev, u16 sock_ind)
->   	struct hsmp_socket *sock = &hsmp_pdev.sock[sock_ind];
->   	int ret;
->   
-> -	sock->sock_ind			= sock_ind;
-> -	sock->dev			= dev;
-> -	hsmp_pdev.is_acpi_device	= true;
-> +	sock->sock_ind		= sock_ind;
-> +	sock->dev		= dev;
-> +	sock->amd_hsmp_rdwr	= amd_hsmp_acpi_rdwr;
->   
->   	sema_init(&sock->hsmp_sem, 1);
->   
-> @@ -209,7 +223,7 @@ static int hsmp_parse_acpi_table(struct device *dev, u16 sock_ind)
->   	return hsmp_read_acpi_dsd(sock);
->   }
->   
-> -int hsmp_create_acpi_sysfs_if(struct device *dev)
-> +static int hsmp_create_acpi_sysfs_if(struct device *dev)
->   {
->   	struct attribute_group *attr_grp;
->   	u16 sock_ind;
-> @@ -232,7 +246,7 @@ int hsmp_create_acpi_sysfs_if(struct device *dev)
->   	return devm_device_add_group(dev, attr_grp);
->   }
->   
-> -int init_acpi(struct device *dev)
-> +static int init_acpi(struct device *dev)
->   {
->   	u16 sock_ind;
->   	int ret;
-> @@ -266,3 +280,94 @@ int init_acpi(struct device *dev)
->   
->   	return ret;
->   }
-> +
-> +static const struct acpi_device_id amd_hsmp_acpi_ids[] = {
-> +	{ACPI_HSMP_DEVICE_HID, 0},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(acpi, amd_hsmp_acpi_ids);
-> +
-> +static bool check_acpi_support(struct device *dev)
-> +{
-> +	struct acpi_device *adev = ACPI_COMPANION(dev);
-> +
-> +	if (adev && !acpi_match_device_ids(adev, amd_hsmp_acpi_ids))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +static int hsmp_acpi_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +
-> +	if (!hsmp_pdev.is_probed) {
-> +		hsmp_pdev.num_sockets = amd_nb_num();
-> +		if (hsmp_pdev.num_sockets == 0 || hsmp_pdev.num_sockets > MAX_AMD_SOCKETS)
-> +			return -ENODEV;
-> +
-> +		hsmp_pdev.sock = devm_kcalloc(&pdev->dev, hsmp_pdev.num_sockets,
-> +					      sizeof(*hsmp_pdev.sock),
-> +					      GFP_KERNEL);
-> +		if (!hsmp_pdev.sock)
-> +			return -ENOMEM;
-> +	}
-> +
-> +	if (!check_acpi_support(&pdev->dev)) {
-> +		dev_err(&pdev->dev, "Not ACPI device?\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = init_acpi(&pdev->dev);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to initialize HSMP interface.\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = hsmp_create_acpi_sysfs_if(&pdev->dev);
-> +	if (ret)
-> +		dev_err(&pdev->dev, "Failed to create HSMP sysfs interface\n");
-> +
-> +	if (!hsmp_pdev.is_probed) {
-> +		hsmp_pdev.mdev.name	= HSMP_CDEV_NAME;
-> +		hsmp_pdev.mdev.minor	= MISC_DYNAMIC_MINOR;
-> +		hsmp_pdev.mdev.fops	= &hsmp_fops;
-> +		hsmp_pdev.mdev.parent	= &pdev->dev;
-> +		hsmp_pdev.mdev.nodename	= HSMP_DEVNODE_NAME;
-> +		hsmp_pdev.mdev.mode	= 0644;
-> +
-> +		ret = misc_register(&hsmp_pdev.mdev);
-> +		if (ret)
-> +			return ret;
-> +		hsmp_pdev.is_probed = true;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void hsmp_acpi_remove(struct platform_device *pdev)
-> +{
-> +	/*
-> +	 * We register only one misc_device even on multi-socket system.
-> +	 * So, deregister should happen only once.
-> +	 */
-> +	if (hsmp_pdev.is_probed) {
-> +		misc_deregister(&hsmp_pdev.mdev);
-> +		hsmp_pdev.is_probed = false;
-> +	}
-> +}
-> +
-> +static struct platform_driver amd_hsmp_driver = {
-> +	.probe		= hsmp_acpi_probe,
-> +	.remove_new	= hsmp_acpi_remove,
-> +	.driver		= {
-> +		.name	= DRIVER_NAME,
-> +		.acpi_match_table = amd_hsmp_acpi_ids,
-> +	},
-> +};
-> +
-> +module_platform_driver(amd_hsmp_driver);
-> +
-> +MODULE_DESCRIPTION("AMD HSMP Platform Interface Driver");
-> +MODULE_VERSION(DRIVER_VERSION);
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-> index 14edaace4379..759ec1d4d60d 100644
-> --- a/drivers/platform/x86/amd/hsmp/hsmp.c
-> +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-> @@ -31,17 +31,6 @@
->   
->   struct hsmp_plat_device hsmp_pdev;
->   
-> -static int amd_hsmp_rdwr(struct hsmp_socket *sock, u32 offset,
-> -			 u32 *value, bool write)
-> -{
-> -	if (hsmp_pdev.is_acpi_device)
-> -		amd_hsmp_acpi_rdwr(sock, offset, value, write);
-> -	else
-> -		return amd_hsmp_pci_rdwr(sock, offset, value, write);
-> -
-> -	return 0;
-> -}
-> -
->   /*
->    * Send a message to the HSMP port via PCI-e config space registers
->    * or by writing to MMIO space.
-> @@ -64,7 +53,7 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
->   
->   	/* Clear the status register */
->   	mbox_status = HSMP_STATUS_NOT_READY;
-> -	ret = amd_hsmp_rdwr(sock, mbinfo->msg_resp_off, &mbox_status, HSMP_WR);
-> +	ret = sock->amd_hsmp_rdwr(sock, mbinfo->msg_resp_off, &mbox_status, HSMP_WR);
->   	if (ret) {
->   		pr_err("Error %d clearing mailbox status register\n", ret);
->   		return ret;
-> @@ -73,8 +62,8 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
->   	index = 0;
->   	/* Write any message arguments */
->   	while (index < msg->num_args) {
-> -		ret = amd_hsmp_rdwr(sock, mbinfo->msg_arg_off + (index << 2),
-> -				    &msg->args[index], HSMP_WR);
-> +		ret = sock->amd_hsmp_rdwr(sock, mbinfo->msg_arg_off + (index << 2),
-> +					  &msg->args[index], HSMP_WR);
->   		if (ret) {
->   			pr_err("Error %d writing message argument %d\n", ret, index);
->   			return ret;
-> @@ -83,7 +72,7 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
->   	}
->   
->   	/* Write the message ID which starts the operation */
-> -	ret = amd_hsmp_rdwr(sock, mbinfo->msg_id_off, &msg->msg_id, HSMP_WR);
-> +	ret = sock->amd_hsmp_rdwr(sock, mbinfo->msg_id_off, &msg->msg_id, HSMP_WR);
->   	if (ret) {
->   		pr_err("Error %d writing message ID %u\n", ret, msg->msg_id);
->   		return ret;
-> @@ -100,7 +89,7 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
->   	timeout	= jiffies + msecs_to_jiffies(HSMP_MSG_TIMEOUT);
->   
->   	while (time_before(jiffies, timeout)) {
-> -		ret = amd_hsmp_rdwr(sock, mbinfo->msg_resp_off, &mbox_status, HSMP_RD);
-> +		ret = sock->amd_hsmp_rdwr(sock, mbinfo->msg_resp_off, &mbox_status, HSMP_RD);
->   		if (ret) {
->   			pr_err("Error %d reading mailbox status\n", ret);
->   			return ret;
-> @@ -135,8 +124,8 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
->   	 */
->   	index = 0;
->   	while (index < msg->response_sz) {
-> -		ret = amd_hsmp_rdwr(sock, mbinfo->msg_arg_off + (index << 2),
-> -				    &msg->args[index], HSMP_RD);
-> +		ret = sock->amd_hsmp_rdwr(sock, mbinfo->msg_arg_off + (index << 2),
-> +					  &msg->args[index], HSMP_RD);
->   		if (ret) {
->   			pr_err("Error %d reading response %u for message ID:%u\n",
->   			       ret, index, msg->msg_id);
-> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-> index a77887d298b6..5d4fc7735a87 100644
-> --- a/drivers/platform/x86/amd/hsmp/hsmp.h
-> +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-> @@ -41,6 +41,7 @@ struct hsmp_socket {
->   	struct pci_dev *root;
->   	struct device *dev;
->   	u16 sock_ind;
-> +	int (*amd_hsmp_rdwr)(struct hsmp_socket *sock, u32 off, u32 *val, bool rw);
->   };
->   
->   struct hsmp_plat_device {
-> @@ -48,19 +49,14 @@ struct hsmp_plat_device {
->   	struct hsmp_socket *sock;
->   	u32 proto_ver;
->   	u16 num_sockets;
-> -	bool is_acpi_device;
->   	bool is_probed;
->   };
->   
->   extern struct hsmp_plat_device hsmp_pdev;
->   
-> -int init_acpi(struct device *dev);
->   ssize_t hsmp_metric_tbl_read(struct file *filp, struct kobject *kobj,
->   			     struct bin_attribute *bin_attr, char *buf,
->   			     loff_t off, size_t count);
-> -int hsmp_create_acpi_sysfs_if(struct device *dev);
-> -int amd_hsmp_pci_rdwr(struct hsmp_socket *sock, u32 offset,
-> -		      u32 *value, bool write);
->   int hsmp_cache_proto_ver(u16 sock_ind);
->   long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg);
->   umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
-> @@ -68,6 +64,4 @@ umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
->   int hsmp_create_attr_list(struct attribute_group *attr_grp,
->   			  struct device *dev, u16 sock_ind);
->   int hsmp_test(u16 sock_ind, u32 value);
-> -void amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
-> -			u32 *value, bool write);
->   #endif /* HSMP_H */
-> diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-> index c297540bb64c..3bce2c570f2b 100644
-> --- a/drivers/platform/x86/amd/hsmp/plat.c
-> +++ b/drivers/platform/x86/amd/hsmp/plat.c
-> @@ -13,15 +13,13 @@
->   
->   #include <asm/amd_nb.h>
->   
-> -#include <linux/acpi.h>
->   #include <linux/device.h>
->   #include <linux/module.h>
->   #include <linux/pci.h>
->   #include <linux/platform_device.h>
->   
->   #define DRIVER_NAME		"amd_hsmp"
-> -#define DRIVER_VERSION		"2.2"
-> -#define ACPI_HSMP_DEVICE_HID	"AMDI0097"
-> +#define DRIVER_VERSION		"2.3"
->   
->   /*
->    * To access specific HSMP mailbox register, s/w writes the SMN address of HSMP mailbox
-> @@ -37,8 +35,8 @@
->   #define HSMP_INDEX_REG		0xc4
->   #define HSMP_DATA_REG		0xc8
->   
-> -int amd_hsmp_pci_rdwr(struct hsmp_socket *sock, u32 offset,
-> -		      u32 *value, bool write)
-> +static int amd_hsmp_pci_rdwr(struct hsmp_socket *sock, u32 offset,
-> +			     u32 *value, bool write)
->   {
->   	int ret;
->   
-> @@ -113,6 +111,7 @@ static int init_platform_device(struct device *dev)
->   		sock->sock_ind			= i;
->   		sock->dev			= dev;
->   		sock->mbinfo.base_addr		= SMN_HSMP_BASE;
-> +		sock->amd_hsmp_rdwr		= amd_hsmp_pci_rdwr;
->   
->   		/*
->   		 * This is a transitional change from non-ACPI to ACPI, only
-> @@ -146,89 +145,39 @@ static int init_platform_device(struct device *dev)
->   	return 0;
->   }
->   
-> -static const struct acpi_device_id amd_hsmp_acpi_ids[] = {
-> -	{ACPI_HSMP_DEVICE_HID, 0},
-> -	{}
-> -};
-> -MODULE_DEVICE_TABLE(acpi, amd_hsmp_acpi_ids);
-> -
-> -static bool check_acpi_support(struct device *dev)
-> -{
-> -	struct acpi_device *adev = ACPI_COMPANION(dev);
-> -
-> -	if (adev && !acpi_match_device_ids(adev, amd_hsmp_acpi_ids))
-> -		return true;
-> -
-> -	return false;
-> -}
-> -
->   static int hsmp_pltdrv_probe(struct platform_device *pdev)
->   {
->   	int ret;
->   
-> -	/*
-> -	 * On ACPI supported BIOS, there is an ACPI HSMP device added for
-> -	 * each socket, so the per socket probing, but the memory allocated for
-> -	 * sockets should be contiguous to access it as an array,
-> -	 * Hence allocate memory for all the sockets at once instead of allocating
-> -	 * on each probe.
-> -	 */
-> -	if (!hsmp_pdev.is_probed) {
-> -		hsmp_pdev.sock = devm_kcalloc(&pdev->dev, hsmp_pdev.num_sockets,
-> -					      sizeof(*hsmp_pdev.sock),
-> -					      GFP_KERNEL);
-> -		if (!hsmp_pdev.sock)
-> -			return -ENOMEM;
-> -	}
-> +	hsmp_pdev.sock = devm_kcalloc(&pdev->dev, hsmp_pdev.num_sockets,
-> +				      sizeof(*hsmp_pdev.sock),
-> +				      GFP_KERNEL);
-> +	if (!hsmp_pdev.sock)
-> +		return -ENOMEM;
->   
-> -	if (check_acpi_support(&pdev->dev)) {
-> -		ret = init_acpi(&pdev->dev);
-> -		if (ret) {
-> -			dev_err(&pdev->dev, "Failed to init HSMP mailbox\n");
-> -			return ret;
-> -		}
-> -		ret = hsmp_create_acpi_sysfs_if(&pdev->dev);
-> -		if (ret)
-> -			dev_err(&pdev->dev, "Failed to create HSMP sysfs interface\n");
-> -	} else {
-> -		ret = init_platform_device(&pdev->dev);
-> -		if (ret) {
-> -			dev_err(&pdev->dev, "Failed to init HSMP mailbox\n");
-> -			return ret;
-> -		}
-> -		ret = hsmp_create_non_acpi_sysfs_if(&pdev->dev);
-> -		if (ret)
-> -			dev_err(&pdev->dev, "Failed to create HSMP sysfs interface\n");
-> +	ret = init_platform_device(&pdev->dev);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to init HSMP mailbox\n");
-> +		return ret;
->   	}
->   
-> -	if (!hsmp_pdev.is_probed) {
-> -		hsmp_pdev.mdev.name	= HSMP_CDEV_NAME;
-> -		hsmp_pdev.mdev.minor	= MISC_DYNAMIC_MINOR;
-> -		hsmp_pdev.mdev.fops	= &hsmp_fops;
-> -		hsmp_pdev.mdev.parent	= &pdev->dev;
-> -		hsmp_pdev.mdev.nodename	= HSMP_DEVNODE_NAME;
-> -		hsmp_pdev.mdev.mode	= 0644;
-> -
-> -		ret = misc_register(&hsmp_pdev.mdev);
-> -		if (ret)
-> -			return ret;
-> +	ret = hsmp_create_non_acpi_sysfs_if(&pdev->dev);
-> +	if (ret)
-> +		dev_err(&pdev->dev, "Failed to create HSMP sysfs interface\n");
->   
-> -		hsmp_pdev.is_probed = true;
-> -	}
-> +	hsmp_pdev.mdev.name	= HSMP_CDEV_NAME;
-> +	hsmp_pdev.mdev.minor	= MISC_DYNAMIC_MINOR;
-> +	hsmp_pdev.mdev.fops	= &hsmp_fops;
-> +	hsmp_pdev.mdev.parent	= &pdev->dev;
-> +	hsmp_pdev.mdev.nodename	= HSMP_DEVNODE_NAME;
-> +	hsmp_pdev.mdev.mode	= 0644;
->   
-> -	return 0;
-> +	return misc_register(&hsmp_pdev.mdev);
->   }
->   
->   static void hsmp_pltdrv_remove(struct platform_device *pdev)
->   {
-> -	/*
-> -	 * We register only one misc_device even on multi socket system.
-> -	 * So, deregister should happen only once.
-> -	 */
-> -	if (hsmp_pdev.is_probed) {
-> -		misc_deregister(&hsmp_pdev.mdev);
-> -		hsmp_pdev.is_probed = false;
-> -	}
-> +	misc_deregister(&hsmp_pdev.mdev);
->   }
->   
->   static struct platform_driver amd_hsmp_driver = {
-> @@ -236,7 +185,6 @@ static struct platform_driver amd_hsmp_driver = {
->   	.remove_new	= hsmp_pltdrv_remove,
->   	.driver		= {
->   		.name	= DRIVER_NAME,
-> -		.acpi_match_table = amd_hsmp_acpi_ids,
->   	},
->   };
->   
-> @@ -295,6 +243,12 @@ static int __init hsmp_plt_init(void)
->   {
->   	int ret = -ENODEV;
->   
-> +	if (!legacy_hsmp_support()) {
-> +		pr_info("HSMP is not supported on Family:%x model:%x\n",
-> +			boot_cpu_data.x86, boot_cpu_data.x86_model);
-> +		return ret;
-> +	}
-> +
->   	/*
->   	 * amd_nb_num() returns number of SMN/DF interfaces present in the system
->   	 * if we have N SMN/DF interfaces that ideally means N sockets
-> @@ -307,19 +261,9 @@ static int __init hsmp_plt_init(void)
->   	if (ret)
->   		return ret;
->   
-> -	if (!hsmp_pdev.is_acpi_device) {
-> -		if (legacy_hsmp_support()) {
-> -			/* Not ACPI device, but supports HSMP, register a plat_dev */
-> -			ret = hsmp_plat_dev_register();
-> -		} else {
-> -			/* Not ACPI, Does not support HSMP */
-> -			pr_info("HSMP is not supported on Family:%x model:%x\n",
-> -				boot_cpu_data.x86, boot_cpu_data.x86_model);
-> -			ret = -ENODEV;
-> -		}
-> -		if (ret)
-> -			platform_driver_unregister(&amd_hsmp_driver);
-> -	}
-> +	ret = hsmp_plat_dev_register();
-> +	if (ret)
-> +		platform_driver_unregister(&amd_hsmp_driver);
->   
->   	return ret;
->   }
+diff --git a/drivers/platform/x86/intel/pmc/adl.c b/drivers/platform/x86/intel/pmc/adl.c
+index e7878558fd909..9d9c07f44ff61 100644
+--- a/drivers/platform/x86/intel/pmc/adl.c
++++ b/drivers/platform/x86/intel/pmc/adl.c
+@@ -295,6 +295,8 @@ const struct pmc_reg_map adl_reg_map = {
+ 	.ppfear_buckets = CNP_PPFEAR_NUM_ENTRIES,
+ 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
++	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
++	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+ 	.ltr_ignore_max = ADL_NUM_IP_IGN_ALLOWED,
+ 	.lpm_num_modes = ADL_LPM_NUM_MODES,
+ 	.lpm_num_maps = ADL_LPM_NUM_MAPS,
+diff --git a/drivers/platform/x86/intel/pmc/cnp.c b/drivers/platform/x86/intel/pmc/cnp.c
+index dd72974bf71e2..513c02670c5aa 100644
+--- a/drivers/platform/x86/intel/pmc/cnp.c
++++ b/drivers/platform/x86/intel/pmc/cnp.c
+@@ -200,6 +200,8 @@ const struct pmc_reg_map cnp_reg_map = {
+ 	.ppfear_buckets = CNP_PPFEAR_NUM_ENTRIES,
+ 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
++	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
++	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+ 	.ltr_ignore_max = CNP_NUM_IP_IGN_ALLOWED,
+ 	.etr3_offset = ETR3_OFFSET,
+ };
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index 10c96c1a850af..1a435f5ca08c5 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -12,6 +12,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/bitfield.h>
++#include <linux/clocksource.h>
+ #include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/dmi.h>
+@@ -1171,6 +1172,44 @@ static bool pmc_core_is_pson_residency_enabled(struct pmc_dev *pmcdev)
+ 	return val == 1;
+ }
+ 
++/*
++ * Enable or disable APCI PM Timer
++ *
++ * @return: Previous APCI PM Timer enabled state
++ */
++static bool pmc_core_enable_apci_pm_timer(struct pmc_dev *pmcdev, bool enable)
++{
++	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
++	const struct pmc_reg_map *map = pmc->map;
++	char cs_name[32];
++	bool state;
++	u32 reg;
++
++	if (!map->acpi_pm_tmr_ctl_offset)
++		return false;
++
++	clocksource_current_cs_name(cs_name, sizeof(cs_name));
++	if (strncmp(cs_name, "acpi_pm", sizeof(cs_name)) == 0)
++		return false;
++
++	clocksource_suspend_cs_name(cs_name, sizeof(cs_name));
++	if (strncmp(cs_name, "acpi_pm", sizeof(cs_name)) == 0)
++		return false;
++
++	mutex_lock(&pmcdev->lock);
++
++	reg = pmc_core_reg_read(pmc, map->acpi_pm_tmr_ctl_offset);
++	state = !(reg & map->acpi_pm_tmr_disable_bit);
++	if (enable)
++		reg &= ~map->acpi_pm_tmr_disable_bit;
++	else
++		reg |= map->acpi_pm_tmr_disable_bit;
++	pmc_core_reg_write(pmc, map->acpi_pm_tmr_ctl_offset, reg);
++
++	mutex_unlock(&pmcdev->lock);
++
++	return state;
++}
+ 
+ static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+ {
+@@ -1446,6 +1485,10 @@ static __maybe_unused int pmc_core_suspend(struct device *dev)
+ 	if (pmcdev->suspend)
+ 		pmcdev->suspend(pmcdev);
+ 
++	/* Disable APCI PM Timer */
++	pmcdev->enable_acpi_pm_timer_on_resume =
++		pmc_core_enable_apci_pm_timer(pmcdev, false);
++
+ 	/* Check if the syspend will actually use S0ix */
+ 	if (pm_suspend_via_firmware())
+ 		return 0;
+@@ -1500,6 +1543,10 @@ int pmc_core_resume_common(struct pmc_dev *pmcdev)
+ 	int offset = pmc->map->lpm_status_offset;
+ 	int i;
+ 
++	/* Enable APCI PM Timer */
++	if (pmcdev->enable_acpi_pm_timer_on_resume)
++		pmc_core_enable_apci_pm_timer(pmcdev, true);
++
+ 	/* Check if the syspend used S0ix */
+ 	if (pm_suspend_via_firmware())
+ 		return 0;
+diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+index 83504c49a0e31..fe1a94f693b63 100644
+--- a/drivers/platform/x86/intel/pmc/core.h
++++ b/drivers/platform/x86/intel/pmc/core.h
+@@ -67,6 +67,8 @@ struct telem_endpoint;
+ #define SPT_PMC_LTR_SCC				0x3A0
+ #define SPT_PMC_LTR_ISH				0x3A4
+ 
++#define SPT_PMC_ACPI_PM_TMR_CTL_OFFSET		0x18FC
++
+ /* Sunrise Point: PGD PFET Enable Ack Status Registers */
+ enum ppfear_regs {
+ 	SPT_PMC_XRAM_PPFEAR0A = 0x590,
+@@ -147,6 +149,8 @@ enum ppfear_regs {
+ #define SPT_PMC_VRIC1_SLPS0LVEN			BIT(13)
+ #define SPT_PMC_VRIC1_XTALSDQDIS		BIT(22)
+ 
++#define SPT_PMC_BIT_ACPI_PM_TMR_DISABLE		BIT(1)
++
+ /* Cannonlake Power Management Controller register offsets */
+ #define CNP_PMC_SLPS0_DBG_OFFSET		0x10B4
+ #define CNP_PMC_PM_CFG_OFFSET			0x1818
+@@ -344,6 +348,8 @@ struct pmc_reg_map {
+ 	const u8  *lpm_reg_index;
+ 	const u32 pson_residency_offset;
+ 	const u32 pson_residency_counter_step;
++	const u32 acpi_pm_tmr_ctl_offset;
++	const u32 acpi_pm_tmr_disable_bit;
+ };
+ 
+ /**
+@@ -417,6 +423,8 @@ struct pmc_dev {
+ 	u32 die_c6_offset;
+ 	struct telem_endpoint *punit_ep;
+ 	struct pmc_info *regmap_list;
++
++	bool enable_acpi_pm_timer_on_resume;
+ };
+ 
+ enum pmc_index {
+diff --git a/drivers/platform/x86/intel/pmc/icl.c b/drivers/platform/x86/intel/pmc/icl.c
+index 71b0fd6cb7d84..cbbd440544688 100644
+--- a/drivers/platform/x86/intel/pmc/icl.c
++++ b/drivers/platform/x86/intel/pmc/icl.c
+@@ -46,6 +46,8 @@ const struct pmc_reg_map icl_reg_map = {
+ 	.ppfear_buckets = ICL_PPFEAR_NUM_ENTRIES,
+ 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
++	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
++	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+ 	.ltr_ignore_max = ICL_NUM_IP_IGN_ALLOWED,
+ 	.etr3_offset = ETR3_OFFSET,
+ };
+diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
+index c7d15d864039d..91f2fa728f5c8 100644
+--- a/drivers/platform/x86/intel/pmc/mtl.c
++++ b/drivers/platform/x86/intel/pmc/mtl.c
+@@ -462,6 +462,8 @@ const struct pmc_reg_map mtl_socm_reg_map = {
+ 	.ppfear_buckets = MTL_SOCM_PPFEAR_NUM_ENTRIES,
+ 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
++	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
++	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+ 	.lpm_num_maps = ADL_LPM_NUM_MAPS,
+ 	.ltr_ignore_max = MTL_SOCM_NUM_IP_IGN_ALLOWED,
+ 	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
+diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
+index ab993a69e33ee..2cd2b3c68e468 100644
+--- a/drivers/platform/x86/intel/pmc/spt.c
++++ b/drivers/platform/x86/intel/pmc/spt.c
+@@ -130,6 +130,8 @@ const struct pmc_reg_map spt_reg_map = {
+ 	.ppfear_buckets = SPT_PPFEAR_NUM_ENTRIES,
+ 	.pm_cfg_offset = SPT_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = SPT_PMC_READ_DISABLE_BIT,
++	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
++	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+ 	.ltr_ignore_max = SPT_NUM_IP_IGN_ALLOWED,
+ 	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
+ };
+diff --git a/drivers/platform/x86/intel/pmc/tgl.c b/drivers/platform/x86/intel/pmc/tgl.c
+index e0580de180773..371b4e30f1426 100644
+--- a/drivers/platform/x86/intel/pmc/tgl.c
++++ b/drivers/platform/x86/intel/pmc/tgl.c
+@@ -197,6 +197,8 @@ const struct pmc_reg_map tgl_reg_map = {
+ 	.ppfear_buckets = ICL_PPFEAR_NUM_ENTRIES,
+ 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
++	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
++	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+ 	.ltr_ignore_max = TGL_NUM_IP_IGN_ALLOWED,
+ 	.lpm_num_maps = TGL_LPM_NUM_MAPS,
+ 	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
+diff --git a/include/linux/clocksource.h b/include/linux/clocksource.h
+index 0ad8b550bb4b4..f1953c5687683 100644
+--- a/include/linux/clocksource.h
++++ b/include/linux/clocksource.h
+@@ -305,5 +305,7 @@ static inline unsigned int clocksource_get_max_watchdog_retry(void)
+ }
+ 
+ void clocksource_verify_percpu(struct clocksource *cs);
++void clocksource_current_cs_name(char *buf, size_t buf_size);
++void clocksource_suspend_cs_name(char *buf, size_t buf_size);
+ 
+ #endif /* _LINUX_CLOCKSOURCE_H */
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index e5b260aa0e02c..e2e2609f7f4b2 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -1320,6 +1320,28 @@ int clocksource_unregister(struct clocksource *cs)
+ }
+ EXPORT_SYMBOL(clocksource_unregister);
+ 
++void clocksource_suspend_cs_name(char *buf, size_t buf_size)
++{
++	mutex_lock(&clocksource_mutex);
++
++	buf[0] = '\0';
++	if (suspend_clocksource)
++		strscpy(buf, suspend_clocksource->name, buf_size);
++
++	mutex_unlock(&clocksource_mutex);
++}
++
++void clocksource_current_cs_name(char *buf, size_t buf_size)
++{
++	mutex_lock(&clocksource_mutex);
++
++	buf[0] = '\0';
++	if (curr_clocksource)
++		strscpy(buf, curr_clocksource->name, buf_size);
++
++	mutex_unlock(&clocksource_mutex);
++}
++
+ #ifdef CONFIG_SYSFS
+ /**
+  * current_clocksource_show - sysfs interface for current clocksource
+-- 
+2.46.0.rc2.264.g509ed76dc8-goog
+
