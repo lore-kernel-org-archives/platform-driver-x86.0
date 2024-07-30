@@ -1,345 +1,138 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E7A18F2FF
-	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jul 2024 12:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D15C1991DB;
+	Tue, 30 Jul 2024 12:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722341153; cv=none; b=cPrDCqmEZ4Mhr7PNZJQWqnuV+DKr+eFJrB5QJHC0akUQEOXqBRMa98n6iDD8Og/5a4FGfxHYsMV3HIqcEDhotRVk0hsWSQhfdZjRo3TW08RjkyPy0GDvuFpFijhnZI/AMi+UN/6vmE6re51qq26lwGcw743dR0pevZXVbf4v8Pk=
+	t=1722342340; cv=none; b=RuBOHNbYZIKtlKK4u8poWIEYKrEYzGTERZEmgToas4YnBgz4ra+KxfbOd8cZWmkJU7kZSJzAvL0iMeziC5sBfBTCxtPC1200EFxcQIDJDmq/jB44NuHSD3AjLLWSXWtZFwC2QfMinfN/kTCiN6QVsl9PbcmYWxZVfOROy6t9GKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722341153; c=relaxed/simple;
-	bh=JD2cBdu9k/WO1pOJepobDhQwaeQ1SW6evxBKp1GZePY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=uBhi0EUCDZYNaZyvS/jkMrphSnM56aWVna18bm52SQswHoSyUSYeBxxouCLiVeE+q9SH/ckWlWr/mMBw9lEDF14nC5bHUuFKHsiuqCkJhGY2/BHDKaIlo82kO+nGcGj2m+tY5Akg3sU0rB1KyNA/gMg7Rh0nARTEDZovEfMuBD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mmaslanka.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NXoCrKng; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mmaslanka.bounces.google.com
+	s=arc-20240116; t=1722342340; c=relaxed/simple;
+	bh=qdDMP7323l8v6fO21UUWMEocD4966D9stt8FVHJsOUI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uIn2a4OdkzCFPoDM41log4Y5ACVkkTtDXTFaYnhkRXIMujBkP5mjTiicuJUuaV/b7922WmPOwV2+wlYNAT2vQR77EC+ymR7Gij7evi0i5kNIdyrrxjRH+CmPPFDSKqcxfBLIp7/GX0ompjdpmYpJRFXUJFUM73H5Dlq1LAc20LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=qNLrnyDz; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NXoCrKng"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6698f11853aso76180607b3.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jul 2024 05:05:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722341151; x=1722945951; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=G4GPJTNACJVmyvK8yCIcXTVNooYietpPwpeg6FVIOno=;
-        b=NXoCrKngyKrYgAyWjEUWD6WRAWHrNuq7SGSDLZzyHN19d1TB57DquwnWs31Yh3MXI9
-         UqrMWSN1gI2BXT6JZjy+gxJGxHIA+YVzGpmS3dE3mT2TqjX7UUHHrmnhKNRyNPFPUFtt
-         8aUIK9PBEnvkfhCgmWTpXt+T/e6XKuRDJKLJ1HsgEiHzJHaJl6NAZ1Dumk/ZM9wJqQ2w
-         e/p9FnUafCsTJ5bq9Y/RluohMaDYwsFAKl9gYUJfNA16ZZTmgj1aAfl/V5v9u4GZi8dB
-         VxKeB+K0Bcv6xFR5R0vDQQbk9oiF2yFxytGWT75iGklA+P7qhjuOwvkZy/KcIskMa7Ft
-         lAYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722341151; x=1722945951;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G4GPJTNACJVmyvK8yCIcXTVNooYietpPwpeg6FVIOno=;
-        b=iQg67yVV+odICm/hYSxBqlqa6BiHZGztVqxJIkKVyNqkaHy6Be9WtXsX1p5CD7985L
-         4q5N0UT33t/6g0/XXw/J15Wn5JnRoXnT+y2+DWLDTL5rUBKgcxqGY047BMTPwwOtjXEa
-         GYn6lRGSwAAHraII9SrTOf6HOaqmjnyt3GiC/XEonHUI4maFVYkzvR3np7zkNiGriuFy
-         h/71SAJsWKxL59eUoHeSGOK7OOcyKhRKTI9AarvsVkKLJsGWg1LBpLtbFI0iYhjKcszH
-         H1PpA1lvbPrc2oe3dY4lUufoDBV97p8uZ5OWeS7miYvvbbpYQiK2K1Zwj7cMxNTch2fJ
-         BV+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUGxhVeeEV8Wk6TEk/m/tLCZSJXPNzp/ckcZYqae8u2o0KwK27UuNqsdp8GMKwPWeiNlRFfStgnEqs4nQo7eJIlsgzl9KpuHQzwxU4J6y0K89UWcw==
-X-Gm-Message-State: AOJu0YxZGL3xX5HeKEFa6gQB6XoHqEesBWWGfNyV5ZCWilNT6VOCXtir
-	sB1S03eWWMMubl/swierxAVXynmIL3taE+SzT+sx2meHukVvresV1WUSi3N3yag2B78saMMTCoK
-	rqAX51oCyZnuJFA==
-X-Google-Smtp-Source: AGHT+IEd32rqD5qWvdku11FoYZwTC33fpk2BKn6/V45gNAyY7zwU0OV3kL4PpCOUNj473K3R4DS0dSVUGA6SI54=
-X-Received: from mmaslanka2.c.googlers.com ([fda3:e722:ac3:cc00:31:98fb:c0a8:b8d])
- (user=mmaslanka job=sendgmr) by 2002:a05:690c:ecd:b0:650:93e3:fe73 with SMTP
- id 00721157ae682-67a09784099mr1320817b3.5.1722341150640; Tue, 30 Jul 2024
- 05:05:50 -0700 (PDT)
-Date: Tue, 30 Jul 2024 12:05:44 +0000
-In-Reply-To: <CAGcaFA2sQNRo9UThN-C1NOLtGUJ3sKzc=pEC9wdDWMi501iLsA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="qNLrnyDz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1722342331; x=1722947131; i=w_armin@gmx.de;
+	bh=bussN/ItGE7hyQ7qjLYxNnxcmLOLpXWhjXARu85qVog=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=qNLrnyDzulH4CN/hF55v0aev87OBUJlDIB4Mq0TtdVEikhUwFJZCNDKezANHEN5h
+	 yocU7fNnNpgT+O/qSEV772TTfV9rEPEr/Mc0fr6W2V2BqiZ85gJ83SERuX7aaiHL9
+	 3wqquhMbxMIYF45hu2295RCfkhmjVqu1IB9Cd75g+3PDR/D6TUch/yVobIZLCktEZ
+	 n0JJh9yI22zZVkJIRopZ3pN5SRrUHiACedgmXrTEscqPoyjBxuF5Y6e7e1uZ0L+P1
+	 FWzP/yT0Ed+wBHvs8z/Z1zrH0p6Xwr2ocidAgq84PO7sWiNoNkhgmc4YsufkKCohm
+	 CCWBu34iQc/qa6esag==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MG9g4-1sTHj51A4a-008mNj; Tue, 30
+ Jul 2024 14:25:31 +0200
+Message-ID: <87bfdaa2-5b94-46b1-bbf7-d81245c7d658@gmx.de>
+Date: Tue, 30 Jul 2024 14:25:30 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <CAGcaFA2sQNRo9UThN-C1NOLtGUJ3sKzc=pEC9wdDWMi501iLsA@mail.gmail.com>
-X-Mailer: git-send-email 2.46.0.rc2.264.g509ed76dc8-goog
-Message-ID: <20240730120546.1042515-1-mmaslanka@google.com>
-Subject: [PATCH v3] platform/x86:intel/pmc: Enable the ACPI PM Timer to be
- turned off when suspended
-From: Marek Maslanka <mmaslanka@google.com>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Marek Maslanka <mmaslanka@google.com>, Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, 
-	David E Box <david.e.box@intel.com>, Hans de Goede <hdegoede@redhat.com>, 
-	"=?UTF-8?q?Ilpo=20J=C3=A4rvinen?=" <ilpo.jarvinen@linux.intel.com>, John Stultz <jstultz@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, 
-	platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] [PATCH v2] wmi: Fix spelling mistakes
+To: Luis Felipe Hernandez <luis.hernandez093@gmail.com>, corbet@lwn.net
+Cc: platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linuxfoundation.org
+References: <20240729223649.135639-1-luis.hernandez093@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20240729223649.135639-1-luis.hernandez093@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:IzHrU+9R1FGoUahWzPtYbZQXRyIJcVLmyBbTiP1Yaq7sqhyYw8H
+ mjRD+L06aLbz1IS5TkiNQrAMULuXVxHdNjh325hYz2S1f6TXQxQ8dSrdmh7to+DdfhyJ8p0
+ pPj1Q+Ou+zhWoA+JJaWq6cnbBPgUranxWiUiSd+N+55ch27wSSR4EmgESjw2JYSm3o8dP+A
+ FhJ1LwnjH3COSlRDHHVgg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:9fq1H++DdOI=;MB0Yui693RYl/p+ccc3bWftwDLn
+ V/x7jTl+n4AUDQMUlvWauiJfOduFRrtN4av8a8FI38fbnHV46IDfUXGhR00gXkuXqOkDTnhFR
+ r0pzwr5FPpO8vWbsQgPHUnplHCMgNBb4Bxn8NAlsJ2LeNpDOdydazcd3plcu7Xmid+EMcuUaP
+ /3XPE8SvlOskKJj8kC5JK2FzyRXTXm+TSmfnxrEY3xXDEPw3IHtZZa4mTkLg+eb7GF5LmvDAq
+ 3/o7sUY8nKHkl4Pszsmgjsfhe1Ofn0Ohth61xgRcaHDUJmjTAsNMLfrXMLRfmQhHyf6PozVK9
+ U1RXBGszSjkNAtCPBlfqJD2FF9q+8msBPhNNKfe/sD6EELGTWq0mu8ASXPrMUq1NXSEJK5zNQ
+ a2ElU27+Nk9dw+s+K2zn/O6QPT3cj0UduHGNRdW8JZLsH6/EnGSlVtMqyT7SNBN5R/O0ybia9
+ wH/B0PwhQM+zRAVOmm0mjA44It0qK9UxPZLr5wrl7mefii3U91P05qRS4BZJIe3P5irQbXhYm
+ pU35/5EK+TnltquPD8/9tle3+IjdJE/ez/zOp61Pe3q8tcYCLuwotvVbwB9786t5KXTzycGjh
+ ChWBTGehNfHi79KZ9DX/L6SHyYTxUB/kDaptcQd1JrQ/Rn03hqbp52chTdnYzchaq8Uz+JVbK
+ Y7ExgW0y4uphd+1SCiBVeYV7oUoMg6ghsJR9z9PrtNWKI1GH4XSKvDSouMRE8kFKqZTxxVFA5
+ J+WvkXWAROt3y8dlpnPpTXaQvTLEOi3ufSo/LXgUOQGSdpFCClziflMc6mC/CDYhF5jIt/G65
+ SjfvpV7ctWz5RN591bb/M2jg==
 
-Allow to disable ACPI PM Timer on suspend and enable on resume. A
-disabled timer helps optimise power consumption when the system is
-suspended. On resume the timer is only reactivated if it was activated
-prior to suspend, so unless the ACPI PM timer is enabled in the BIOS,
-this won't change anything.
+Am 30.07.24 um 00:36 schrieb Luis Felipe Hernandez:
 
-Signed-off-by: Marek Maslanka <mmaslanka@google.com>
+> There were a few instances of typos that could lead to confusion
+> when reading. The following words have been corrected:
+> Binay -> Binary
+> singe -> single
+> chaged -> changed
 
----
-Changes in v3:
-- Add the clocksource_current_cs_name and clocksource_suspend_cs_name to the clocksource.c
-- Do not disable the ACPI PM timer if it's selected as the clocksource
-- Link to v2: https://lore.kernel.org/lkml/20240703113850.2726539-1-mmaslanka@google.com/
----
----
- drivers/platform/x86/intel/pmc/adl.c  |  2 ++
- drivers/platform/x86/intel/pmc/cnp.c  |  2 ++
- drivers/platform/x86/intel/pmc/core.c | 47 +++++++++++++++++++++++++++
- drivers/platform/x86/intel/pmc/core.h |  8 +++++
- drivers/platform/x86/intel/pmc/icl.c  |  2 ++
- drivers/platform/x86/intel/pmc/mtl.c  |  2 ++
- drivers/platform/x86/intel/pmc/spt.c  |  2 ++
- drivers/platform/x86/intel/pmc/tgl.c  |  2 ++
- include/linux/clocksource.h           |  2 ++
- kernel/time/clocksource.c             | 22 +++++++++++++
- 10 files changed, 91 insertions(+)
+Hi,
 
-diff --git a/drivers/platform/x86/intel/pmc/adl.c b/drivers/platform/x86/intel/pmc/adl.c
-index e7878558fd909..9d9c07f44ff61 100644
---- a/drivers/platform/x86/intel/pmc/adl.c
-+++ b/drivers/platform/x86/intel/pmc/adl.c
-@@ -295,6 +295,8 @@ const struct pmc_reg_map adl_reg_map = {
- 	.ppfear_buckets = CNP_PPFEAR_NUM_ENTRIES,
- 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
- 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
-+	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
-+	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
- 	.ltr_ignore_max = ADL_NUM_IP_IGN_ALLOWED,
- 	.lpm_num_modes = ADL_LPM_NUM_MODES,
- 	.lpm_num_maps = ADL_LPM_NUM_MAPS,
-diff --git a/drivers/platform/x86/intel/pmc/cnp.c b/drivers/platform/x86/intel/pmc/cnp.c
-index dd72974bf71e2..513c02670c5aa 100644
---- a/drivers/platform/x86/intel/pmc/cnp.c
-+++ b/drivers/platform/x86/intel/pmc/cnp.c
-@@ -200,6 +200,8 @@ const struct pmc_reg_map cnp_reg_map = {
- 	.ppfear_buckets = CNP_PPFEAR_NUM_ENTRIES,
- 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
- 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
-+	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
-+	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
- 	.ltr_ignore_max = CNP_NUM_IP_IGN_ALLOWED,
- 	.etr3_offset = ETR3_OFFSET,
- };
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 10c96c1a850af..1a435f5ca08c5 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -12,6 +12,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/bitfield.h>
-+#include <linux/clocksource.h>
- #include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/dmi.h>
-@@ -1171,6 +1172,44 @@ static bool pmc_core_is_pson_residency_enabled(struct pmc_dev *pmcdev)
- 	return val == 1;
- }
- 
-+/*
-+ * Enable or disable APCI PM Timer
-+ *
-+ * @return: Previous APCI PM Timer enabled state
-+ */
-+static bool pmc_core_enable_apci_pm_timer(struct pmc_dev *pmcdev, bool enable)
-+{
-+	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
-+	const struct pmc_reg_map *map = pmc->map;
-+	char cs_name[32];
-+	bool state;
-+	u32 reg;
-+
-+	if (!map->acpi_pm_tmr_ctl_offset)
-+		return false;
-+
-+	clocksource_current_cs_name(cs_name, sizeof(cs_name));
-+	if (strncmp(cs_name, "acpi_pm", sizeof(cs_name)) == 0)
-+		return false;
-+
-+	clocksource_suspend_cs_name(cs_name, sizeof(cs_name));
-+	if (strncmp(cs_name, "acpi_pm", sizeof(cs_name)) == 0)
-+		return false;
-+
-+	mutex_lock(&pmcdev->lock);
-+
-+	reg = pmc_core_reg_read(pmc, map->acpi_pm_tmr_ctl_offset);
-+	state = !(reg & map->acpi_pm_tmr_disable_bit);
-+	if (enable)
-+		reg &= ~map->acpi_pm_tmr_disable_bit;
-+	else
-+		reg |= map->acpi_pm_tmr_disable_bit;
-+	pmc_core_reg_write(pmc, map->acpi_pm_tmr_ctl_offset, reg);
-+
-+	mutex_unlock(&pmcdev->lock);
-+
-+	return state;
-+}
- 
- static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
- {
-@@ -1446,6 +1485,10 @@ static __maybe_unused int pmc_core_suspend(struct device *dev)
- 	if (pmcdev->suspend)
- 		pmcdev->suspend(pmcdev);
- 
-+	/* Disable APCI PM Timer */
-+	pmcdev->enable_acpi_pm_timer_on_resume =
-+		pmc_core_enable_apci_pm_timer(pmcdev, false);
-+
- 	/* Check if the syspend will actually use S0ix */
- 	if (pm_suspend_via_firmware())
- 		return 0;
-@@ -1500,6 +1543,10 @@ int pmc_core_resume_common(struct pmc_dev *pmcdev)
- 	int offset = pmc->map->lpm_status_offset;
- 	int i;
- 
-+	/* Enable APCI PM Timer */
-+	if (pmcdev->enable_acpi_pm_timer_on_resume)
-+		pmc_core_enable_apci_pm_timer(pmcdev, true);
-+
- 	/* Check if the syspend used S0ix */
- 	if (pm_suspend_via_firmware())
- 		return 0;
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index 83504c49a0e31..fe1a94f693b63 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -67,6 +67,8 @@ struct telem_endpoint;
- #define SPT_PMC_LTR_SCC				0x3A0
- #define SPT_PMC_LTR_ISH				0x3A4
- 
-+#define SPT_PMC_ACPI_PM_TMR_CTL_OFFSET		0x18FC
-+
- /* Sunrise Point: PGD PFET Enable Ack Status Registers */
- enum ppfear_regs {
- 	SPT_PMC_XRAM_PPFEAR0A = 0x590,
-@@ -147,6 +149,8 @@ enum ppfear_regs {
- #define SPT_PMC_VRIC1_SLPS0LVEN			BIT(13)
- #define SPT_PMC_VRIC1_XTALSDQDIS		BIT(22)
- 
-+#define SPT_PMC_BIT_ACPI_PM_TMR_DISABLE		BIT(1)
-+
- /* Cannonlake Power Management Controller register offsets */
- #define CNP_PMC_SLPS0_DBG_OFFSET		0x10B4
- #define CNP_PMC_PM_CFG_OFFSET			0x1818
-@@ -344,6 +348,8 @@ struct pmc_reg_map {
- 	const u8  *lpm_reg_index;
- 	const u32 pson_residency_offset;
- 	const u32 pson_residency_counter_step;
-+	const u32 acpi_pm_tmr_ctl_offset;
-+	const u32 acpi_pm_tmr_disable_bit;
- };
- 
- /**
-@@ -417,6 +423,8 @@ struct pmc_dev {
- 	u32 die_c6_offset;
- 	struct telem_endpoint *punit_ep;
- 	struct pmc_info *regmap_list;
-+
-+	bool enable_acpi_pm_timer_on_resume;
- };
- 
- enum pmc_index {
-diff --git a/drivers/platform/x86/intel/pmc/icl.c b/drivers/platform/x86/intel/pmc/icl.c
-index 71b0fd6cb7d84..cbbd440544688 100644
---- a/drivers/platform/x86/intel/pmc/icl.c
-+++ b/drivers/platform/x86/intel/pmc/icl.c
-@@ -46,6 +46,8 @@ const struct pmc_reg_map icl_reg_map = {
- 	.ppfear_buckets = ICL_PPFEAR_NUM_ENTRIES,
- 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
- 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
-+	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
-+	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
- 	.ltr_ignore_max = ICL_NUM_IP_IGN_ALLOWED,
- 	.etr3_offset = ETR3_OFFSET,
- };
-diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
-index c7d15d864039d..91f2fa728f5c8 100644
---- a/drivers/platform/x86/intel/pmc/mtl.c
-+++ b/drivers/platform/x86/intel/pmc/mtl.c
-@@ -462,6 +462,8 @@ const struct pmc_reg_map mtl_socm_reg_map = {
- 	.ppfear_buckets = MTL_SOCM_PPFEAR_NUM_ENTRIES,
- 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
- 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
-+	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
-+	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
- 	.lpm_num_maps = ADL_LPM_NUM_MAPS,
- 	.ltr_ignore_max = MTL_SOCM_NUM_IP_IGN_ALLOWED,
- 	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
-diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
-index ab993a69e33ee..2cd2b3c68e468 100644
---- a/drivers/platform/x86/intel/pmc/spt.c
-+++ b/drivers/platform/x86/intel/pmc/spt.c
-@@ -130,6 +130,8 @@ const struct pmc_reg_map spt_reg_map = {
- 	.ppfear_buckets = SPT_PPFEAR_NUM_ENTRIES,
- 	.pm_cfg_offset = SPT_PMC_PM_CFG_OFFSET,
- 	.pm_read_disable_bit = SPT_PMC_READ_DISABLE_BIT,
-+	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
-+	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
- 	.ltr_ignore_max = SPT_NUM_IP_IGN_ALLOWED,
- 	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
- };
-diff --git a/drivers/platform/x86/intel/pmc/tgl.c b/drivers/platform/x86/intel/pmc/tgl.c
-index e0580de180773..371b4e30f1426 100644
---- a/drivers/platform/x86/intel/pmc/tgl.c
-+++ b/drivers/platform/x86/intel/pmc/tgl.c
-@@ -197,6 +197,8 @@ const struct pmc_reg_map tgl_reg_map = {
- 	.ppfear_buckets = ICL_PPFEAR_NUM_ENTRIES,
- 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
- 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
-+	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
-+	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
- 	.ltr_ignore_max = TGL_NUM_IP_IGN_ALLOWED,
- 	.lpm_num_maps = TGL_LPM_NUM_MAPS,
- 	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
-diff --git a/include/linux/clocksource.h b/include/linux/clocksource.h
-index 0ad8b550bb4b4..f1953c5687683 100644
---- a/include/linux/clocksource.h
-+++ b/include/linux/clocksource.h
-@@ -305,5 +305,7 @@ static inline unsigned int clocksource_get_max_watchdog_retry(void)
- }
- 
- void clocksource_verify_percpu(struct clocksource *cs);
-+void clocksource_current_cs_name(char *buf, size_t buf_size);
-+void clocksource_suspend_cs_name(char *buf, size_t buf_size);
- 
- #endif /* _LINUX_CLOCKSOURCE_H */
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index e5b260aa0e02c..e2e2609f7f4b2 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -1320,6 +1320,28 @@ int clocksource_unregister(struct clocksource *cs)
- }
- EXPORT_SYMBOL(clocksource_unregister);
- 
-+void clocksource_suspend_cs_name(char *buf, size_t buf_size)
-+{
-+	mutex_lock(&clocksource_mutex);
-+
-+	buf[0] = '\0';
-+	if (suspend_clocksource)
-+		strscpy(buf, suspend_clocksource->name, buf_size);
-+
-+	mutex_unlock(&clocksource_mutex);
-+}
-+
-+void clocksource_current_cs_name(char *buf, size_t buf_size)
-+{
-+	mutex_lock(&clocksource_mutex);
-+
-+	buf[0] = '\0';
-+	if (curr_clocksource)
-+		strscpy(buf, curr_clocksource->name, buf_size);
-+
-+	mutex_unlock(&clocksource_mutex);
-+}
-+
- #ifdef CONFIG_SYSFS
- /**
-  * current_clocksource_show - sysfs interface for current clocksource
--- 
-2.46.0.rc2.264.g509ed76dc8-goog
+please change the title to "platform/x86: msi-wmi-platform: Fix spelling m=
+istakes".
+With that being addressed:
 
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+
+> Signed-off-by: Luis Felipe Hernandez <luis.hernandez093@gmail.com>
+> ---
+>   Documentation/wmi/devices/msi-wmi-platform.rst | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/wmi/devices/msi-wmi-platform.rst b/Documentat=
+ion/wmi/devices/msi-wmi-platform.rst
+> index 29b1b2e6d42c..31a136942892 100644
+> --- a/Documentation/wmi/devices/msi-wmi-platform.rst
+> +++ b/Documentation/wmi/devices/msi-wmi-platform.rst
+> @@ -130,12 +130,12 @@ data using the `bmfdec <https://github.com/pali/bm=
+fdec>`_ utility:
+>
+>   Due to a peculiarity in how Windows handles the ``CreateByteField()`` =
+ACPI operator (errors only
+>   happen when a invalid byte field is ultimately accessed), all methods =
+require a 32 byte input
+> -buffer, even if the Binay MOF says otherwise.
+> +buffer, even if the Binary MOF says otherwise.
+>
+>   The input buffer contains a single byte to select the subfeature to be=
+ accessed and 31 bytes of
+>   input data, the meaning of which depends on the subfeature being acces=
+sed.
+>
+> -The output buffer contains a singe byte which signals success or failur=
+e (``0x00`` on failure)
+> +The output buffer contains a single byte which signals success or failu=
+re (``0x00`` on failure)
+>   and 31 bytes of output data, the meaning if which depends on the subfe=
+ature being accessed.
+>
+>   WMI method Get_EC()
+> @@ -147,7 +147,7 @@ data contains a flag byte and a 28 byte controller f=
+irmware version string.
+>   The first 4 bits of the flag byte contain the minor version of the emb=
+edded controller interface,
+>   with the next 2 bits containing the major version of the embedded cont=
+roller interface.
+>
+> -The 7th bit signals if the embedded controller page chaged (exact meani=
+ng is unknown), and the
+> +The 7th bit signals if the embedded controller page changed (exact mean=
+ing is unknown), and the
+>   last bit signals if the platform is a Tigerlake platform.
+>
+>   The MSI software seems to only use this interface when the last bit is=
+ set.
