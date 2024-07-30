@@ -1,307 +1,251 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2075.outbound.protection.outlook.com [40.107.100.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0A5173;
-	Tue, 30 Jul 2024 13:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722346676; cv=none; b=r0mylDt79Yg8ZkMPbGyt+7uF0OLTCTG34WwhtMY8g1jYMmRxPkBju2nnDXlqmbMG/ALwlmVcSH0Ab8ABkZujwcdPx1b06jBkzG7QuLO4y29BU9pTYDYgJEjxdCm43X1Q2MEmpR0tHg3oJuA3ivJe4SbuOkWw0UnoFUim9qL9Wiw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722346676; c=relaxed/simple;
-	bh=Rr3vidpsu5UyMdBK7jyALJcyDuzhQ/AJBZI4kY2lJew=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=GGiGgx6CeGwTdI+zwVuARQICB5epILFRhM/iVJsQKRzs95+aXy2JLEVzaX1+8+6Fkvl/QrBfBYBY3e8dbtI4m/Aj2+1vJ4B4DLfQBMpBzxE21s7fXJ7P3rb4wWWgDkVgYgSmELeQbHchQu5sH+poyT2fTl5H9MOKDkazmd9OQj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fbV3KGiG; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDE1D529
+	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jul 2024 14:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722349682; cv=fail; b=N76GwZ84WQ+udo56R6pQ2To6mN7VwTnljNzs5Ktiz6xW/dN3DveMW8ZPprzbKvOP3Uim2BPs9lDa1jJ2oAqFwuRl156fgNM9hAmgAnS6cSHxEtVuYFbX3GTxv/1GOF//b6b8wkl0/LN2nUcBMUsO2gLdejrn82EtLH+CNzFUbs8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722349682; c=relaxed/simple;
+	bh=HCfipvYAY/9anoFoO+nKwURXb7OiRsUGULf+1ysKzMs=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=gUuTxn95abAjmSWajN5UbYqQqwDF7eHo4jp01MXQu4uR5ponLOQDWjJowKDJM8Gzvj6fUbYjlfIYIU7x5HnIX42YYjTDcV57ugtbqRSLhPeeS62rUpsFlejrZow+DVyPr0ez4/ptz95IBRA52c9G2s722U0K5iAfKVCvGfjD/8A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fa/wCVzh; arc=fail smtp.client-ip=40.107.100.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fbV3KGiG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722346674; x=1753882674;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Rr3vidpsu5UyMdBK7jyALJcyDuzhQ/AJBZI4kY2lJew=;
-  b=fbV3KGiGowPe1CLFnLo494MuZNNgvdhRhKxYuqORFSyOoRXISC696DZI
-   e/BmqPVJjiknR7nWChcsrnK+i+2ynndsb6W0Lpu8XsfnjzNcQbe//+DMT
-   9s3c9Jq/rnLApMcU+Jp0hd0eT5Nk3uaRud5xmlm+41OeMxocgE+P1Tr9M
-   ZORu6VZUyL8p9sSmU/F6FyA5SKVPyG2QdQ8PJ3kVV3tcka5sBZ4NJ6VsW
-   yhEi+5DyNX8tU9Ea5f/9m0XAYOpIs7Y+GMc1EFwuVK5d7d20fRTo8/UC/
-   oZUcSmKi30eOyDtf3PvawqyskQYeCYUIyQsBXIp8B1UyMwqD87vEppn/b
-   A==;
-X-CSE-ConnectionGUID: spF115GuT+u+9NJ73Ai+ww==
-X-CSE-MsgGUID: ze4kacEvQxSSpNHz60K2BA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11149"; a="20044749"
-X-IronPort-AV: E=Sophos;i="6.09,248,1716274800"; 
-   d="scan'208";a="20044749"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2024 06:37:53 -0700
-X-CSE-ConnectionGUID: 4WHkeHtZREG6+/6jIuWtUQ==
-X-CSE-MsgGUID: 8+ZaQ76AQ9i2YjunzuJbgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,248,1716274800"; 
-   d="scan'208";a="54382102"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.25])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2024 06:37:51 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 30 Jul 2024 16:37:45 +0300 (EEST)
-To: Gergo Koteles <soyer@irl.hu>
-cc: Hans de Goede <hdegoede@redhat.com>, Ike Panhc <ike.pan@canonical.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 4/4] platform/x86: ideapad-laptop: add a mutex to
- synchronize VPC commands
-In-Reply-To: <f26782fa1194ad11ed5d9ba121a804e59b58b026.1721898747.git.soyer@irl.hu>
-Message-ID: <29153152-79de-c637-eede-0b36ce4b5222@linux.intel.com>
-References: <cover.1721898747.git.soyer@irl.hu> <f26782fa1194ad11ed5d9ba121a804e59b58b026.1721898747.git.soyer@irl.hu>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fa/wCVzh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ewDBd13z+nDqgbJZwn+b1RWIg5xRmOEWKFY/WDbpI4VPRlkF7E3niXIpEoioTqZAM1ELoCuYcEoVNQNCiXLqQQQG1Wh1xTFOmMfUs/5gGEAHqAQ5Z8HGJKvmLDdocCgZxMcrpS+flXlVnRxtVBh735AoG9UMzYNnEqmZEc7PWaf7dXoacRlsnN8eFnKX6MnUKRpQNP8BOpUrv14XcSHMZpU0zLrUdsR0ewiQNWsimCA560bJ/fkjc1CimFafL0/lvU9TQ0zSPbF89OBepOhZlxIAKauNnJ1V4VJDFW4PkM2yWBqPnZwdyw9WXTfsnyCsvOn+izU5Y0IIUSYii+akVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9378Fvf8ugsWwMIRVqzuKsMHT2G75LBQ79a7dTF2Qxk=;
+ b=f7bQ2m4S2ughE7t3BjowB6/WGgSbj43LrlVPVzgi/FR2sF4NlenOavsoAUInpO0VLDAQt9ClXsfD844v2hvYnpJvt0xcjbdVEv52lZf/Gl2TXxT9ZIBQOfClCYemnv/vJEGStqmkvA5OyUNw+nykQ6DNKsdT9D+K+EEaqICD3hTdsThWdD2AOwazSJQbVKXyt/76O5jZA/+w4y0trDrlcATLYUoY8VyywDSTyVO5TU4LPcpnC4uFYjTr1vYh9+ViSW/fbHtrjlcbSsGqqjhGJ8sLkkYpxqfDf/f41sF2gJoqiyUQ6xu/Jlgt09zl71E0hjHRWgFxF/ljeWjdocwcrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9378Fvf8ugsWwMIRVqzuKsMHT2G75LBQ79a7dTF2Qxk=;
+ b=fa/wCVzhB1RL0eF1j8/bjEk4FIHKddZ/P3ieWvJ1FEABgzacWi3IgomC7TDNAX4lLIl5sAl9LLvPf81GfTgQq63u++KBQb1znJHPlrKgvY/NuYX0vm25Ud/zLhlRhBqcDP6vBYNmHD1bi3IHDwU3795JzcVaEC7rfVxhQZvBZPg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
+ by SA1PR12MB6726.namprd12.prod.outlook.com (2603:10b6:806:255::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7807.27; Tue, 30 Jul
+ 2024 14:27:56 +0000
+Received: from BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::ed5b:dd2f:995a:bcf4]) by BL1PR12MB5176.namprd12.prod.outlook.com
+ ([fe80::ed5b:dd2f:995a:bcf4%4]) with mapi id 15.20.7807.026; Tue, 30 Jul 2024
+ 14:27:56 +0000
+Message-ID: <5c246bad-dd27-48fd-bfdd-422e633b4288@amd.com>
+Date: Tue, 30 Jul 2024 19:57:49 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] platform/x86/amd/pmf: Fix to Update HPD Data When ALS
+ is Disabled
+Content-Language: en-US
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
+ Patil.Reddy@amd.com
+References: <20240723132451.3488326-1-Shyam-sundar.S-k@amd.com>
+ <20240723132451.3488326-2-Shyam-sundar.S-k@amd.com>
+ <cdbf07d3-1d9c-f1bc-d548-c3509d5586dd@linux.intel.com>
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+In-Reply-To: <cdbf07d3-1d9c-f1bc-d548-c3509d5586dd@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN2PR01CA0182.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:e8::6) To BL1PR12MB5176.namprd12.prod.outlook.com
+ (2603:10b6:208:311::19)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|SA1PR12MB6726:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6af4b52a-a836-4721-8d7f-08dcb0a3ce29
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UFJuUWpVSHZHT3RMdmI5c1hkSFQ5RkFoMlUyM1c0YjZ5VXlzYlhaVVFHVytU?=
+ =?utf-8?B?YS9HcWdoWXJ1R0E2TVA3cURKL3d2S1NWVENsSjd4NjBZRzZCbjFMNTNXQ2hH?=
+ =?utf-8?B?Q3dLTnphTzZES2ZTN1hSNWVwTXRsUndRNkhkZUNLOFFkMktjMzNaT3FMM2Yz?=
+ =?utf-8?B?N0M1bUZMQVY1R2dWbDFmMVhEWlQ2cFhOK3NZdFJSOS8vdzZUY012UHp2ZGp2?=
+ =?utf-8?B?RHhneHlBclp3MzI1alFHQk02WGdtSUVrYzZCSE0vZkZ2bDR0WlovT1BabTlj?=
+ =?utf-8?B?TklOVHdRNzFqc1NkZFBIckNGVjJlNTIvNFlOZ2lDWHliMW5FUmlLY0FyQW1X?=
+ =?utf-8?B?YURQWVVmcmNISHVpYXNNVXF2MlRSZmo1Z0xIckliQklIb2UvZkRuNWVHd3Av?=
+ =?utf-8?B?VC9sd1pkM2Z6OWlNRzMxUXVHSTA4REF5eGtyWFJuZ24rMktzVXJ3OUJzWEpE?=
+ =?utf-8?B?OVJweXpGZGdxZzJ2VUVrUTdGQXB0ekpESWdXNHp6VUR1bHJjZ0NHRmtlYzl4?=
+ =?utf-8?B?N0l3OWxhbFFuN2dJdjV2QkE0Q09Sa3N2QjRVdVR1YzI2QnZWNzdETEgwVGRn?=
+ =?utf-8?B?ZlFxZHltaFFIRWl0azdBdjBOcURPY2V4TnRuLzVjYmZNZlhmUVgzVTNOWno3?=
+ =?utf-8?B?S2xqaFR6RFN5a2tSeVQvQm1iMnF0ZVljMTlLRithREVqZExpMExudEQxeFF5?=
+ =?utf-8?B?MU85VEJTQ0x1QTEzeFZHSUU1SkdJVkNHSUpMMGFERUUzL0o2dmlSYkhWeWsx?=
+ =?utf-8?B?Mk5VcVRLc2hZc0U5ZWlRUHhsaHU4YTk0d3N2cEJkZ09mRm5Ja09LVmlBbEUy?=
+ =?utf-8?B?bE5SWmVxL1Y0azBQSWxJd0FnWnFaL05scktYQ1VTV2RkWW5BLzFYeFBTQVBu?=
+ =?utf-8?B?dHZkSXpWR21CaFVSRTZ6aHRhN3d6dnVWQTU4bktqM1FFNm9ZNW9SU214VHEx?=
+ =?utf-8?B?YjBQQW5uUEcwYi9wQkQrUnB5Y0E5NDdaL0l3VXF2VE55b3ZESjhVMjZHc0Vv?=
+ =?utf-8?B?aThWaHBVa3N2OFQ2bU0wUU9rdDZlRm12eHc2bEtLSDBhNGtjK1dnK29mM2s1?=
+ =?utf-8?B?Y0lheUVBUHB0TWdFd2NGdVVQN0hLeXJ1Uy9rczBZYjBIVGlzYTVrMzgxc1RX?=
+ =?utf-8?B?QnVEZzVxcHZ5eTlKQnhWbjlCc0x5MTVYMG5LV2VxTnVXeWZMd0FSQVN3eHZ2?=
+ =?utf-8?B?b2RSL0ZzZFJvTDNNMDJUaWdPTVQ2K2xYTHdUVWhEZnZFTmlVZlowbDZ6UjYr?=
+ =?utf-8?B?LzcvQnVFTlB4bGFRUkVxdFNXenZPOVVSQW9WK2lpNVRHc0FFMjdrK2wwUEhV?=
+ =?utf-8?B?U1hYWk1lbkhtcmdOYjErN1ArNkJiL1dVcS9SeGhWQlgvWm1zOW40dWVrOFZ6?=
+ =?utf-8?B?RG9BSmhKd21lYWt3MTFPM0xRSmlkNG9QcUcwNU10SXFuMXdvQ2tpZzAxMFV0?=
+ =?utf-8?B?eXFSZWFIcXh5UktpM29OTnZzVUUycldSY0Mrait2TUNIUWZyVmw1dkM0V1Jt?=
+ =?utf-8?B?dmErb3VGMFRJT3d0Smx6aExMNGtjVHhwL0pDZjExSW5VSHhNaGlCYjdZdmhK?=
+ =?utf-8?B?M295UWpXZjEvVFBkZ3lkTEJMSm9QbTVEN0h5NDY0R2IvRVJNUDE1Tm9KdktR?=
+ =?utf-8?B?dXhtNGJTNDJjWXlobnY3Y3pKd3Q3MGU1ODlDdklSNTVBSnllSWo0ME1zNUJk?=
+ =?utf-8?B?WWNaR0ZZeFQwUjNMVTJEOTNCN3MzQSs5UVBYSGxGQlVvaEpTQU9qTTlzS1Ba?=
+ =?utf-8?B?NnMweE5ZdnRuK0o0RmRkNWJUMHdwOURVeEM3Rms3ZzVOR280a3FMNjNRTWJI?=
+ =?utf-8?B?UldKWjdsV1VhaFhkcng5Zz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?b3JTMDA3ZjAwSXpzVGhXUWdQTnMrUXRSak5CbW9nOVlSNzEyTnVONFFvcUwz?=
+ =?utf-8?B?RnkzcHRUVXI0VXVkY0dlektESjJEbXJvenNmWHFuNHRVUUcweEp3YXFvOHAz?=
+ =?utf-8?B?VjFuNHRnVHVlNUttOURXYzIyOVlvcHVjd1poMkJCekFUYm9qYU5IeE5wNXpi?=
+ =?utf-8?B?NWo3T3pTOXZ1ZFAxY3luOUxmeGVPcGVwR1NsbHQxaVBGSUJPaU9aT3UzVG1C?=
+ =?utf-8?B?dmtmd1VXbEplRCsraW5jMDFLaU9oWEJhbVQzcUNNaE5TOUFxZTJxS1d0U3V4?=
+ =?utf-8?B?dzBuRUdEV0pYN3loVlVQWjV6SnYvOFdOZlRwdjFJSWpRMXR3UmMxbmttWlht?=
+ =?utf-8?B?UmI5RW5ZWUxTUUhKOTM4Vk9ZSll5Y1V5T3NCK0pTQTBUcXBtVXltT2FzUjhF?=
+ =?utf-8?B?V1BiVjZ4UzMwV040K3luT05JT255cit6MFN2Vm1DcnIxSkxhRytIdnpWa1FO?=
+ =?utf-8?B?LzFlZit6c2tHVFA3TjFhamd3RHBaZkdleW13S2VibkZueXBtd1FEM1dISm5O?=
+ =?utf-8?B?cUdjV1FIc3cwUzRwRWZwSDBDRmJvZk1OSFhTMjJtSXZpTkRrcFNMZG5Fdk4w?=
+ =?utf-8?B?ZVVQNk8wank4VXcvNXR2eDRWS1pwdi9XblZaYjMydnQ2MURMZm00QjhVZzJJ?=
+ =?utf-8?B?OHNkZis5bUlhS1krTFVPOHdBejRRWDRKM2lHcUZwRU5uR0JHMUI4Z2ZwTkcz?=
+ =?utf-8?B?LzQreTJ4THRnUjh3aVB6RWFCREdUWWVJdmR6clFEaE5vMGwrdmNkdXBMRjUw?=
+ =?utf-8?B?ZURJeU53V1NQcm9TNHJ0SlVKV1VFNDB4ekgrMXZ6T0ZQRTllT0kvbmJCOW5V?=
+ =?utf-8?B?dXcrNDUxQ1BwQjYweHE2SEQrRmtaMno2U1V1WHVYQU15SkNVTldtaFR1Wjlz?=
+ =?utf-8?B?bFVBZTR1d0FyamVmaXpwT3VWN3J3NVJKRFNpTWJlU1FTaUE2elU0aUNvM0xo?=
+ =?utf-8?B?RG8vQkFDbkVhV1pwVlA4MnRRMXpGaWJ3WFZvTmIwTzdvM2NpNzFrQy95c00z?=
+ =?utf-8?B?SGx3bFpwcW5tcFpneEVsNTBOTlJQdVUzWjFpSEYrckt2TzY1Tmk4NzZYQWtM?=
+ =?utf-8?B?UXlXYWd4aHFVeG1RNmxaVnIvM2lhRzdSS3U0MFVTNnVEWEJHemt0MlMvVmVC?=
+ =?utf-8?B?anBzU3pCbW9rNXV3VzhMS1NEZ05QTy9Xc3pXUVdsSDN0eFNuei9GejhURmls?=
+ =?utf-8?B?aVNpQVFFUURMZ2k0OHpPY3FXYnp1bjJJaVIrRGloQjVMS0RCRVhDQVE2OXJr?=
+ =?utf-8?B?WHhFd3lER1BUa3BWcWQ5andwOWQzRWNYOUdJMmd5RXJIVy9xQnBzTHp4Yit5?=
+ =?utf-8?B?WDNQcXVoWE9QNEdaZEZGb1FzUnFPcmFZK3pnSThackpOYWgwTWVOMlBkdFpK?=
+ =?utf-8?B?ckNyQmVIUkdOOTZNejRsaWhDdE12OVpsSHNVNDBsVU5PVjZSZGptVzVmazk0?=
+ =?utf-8?B?VHZvR2IyQ3RrdTN3dWI0N3hlQUU0clRIQjlGdC9DL2J2RDlWM0lkM2F0Rmwr?=
+ =?utf-8?B?U1V0U09DN0hJdVRoUndGM0hqZ1RZbkhkZ3l6TUM1ckdyMWtRTnRtVGc0U1R6?=
+ =?utf-8?B?R3dGTFFWV3MwVUQ4UEE0NkxlOXpXY2huR29YR0sxZkhCU2FBOVhySTdEUk9z?=
+ =?utf-8?B?RVQ1cWhmS0ZzaVVIRjYwREFibWFiYkd2c0Y0VzF5MFA0aDlPK004SnR2aG56?=
+ =?utf-8?B?SDRSMFNwRHY4YjlnUEtJWmQrb1UwUVZrVCtFWUVyQTVOb1R3Qmc0RzlDcWZk?=
+ =?utf-8?B?M3RvMTVsWkt0UXJjLzh5ZktVanNrdEpXa2s2L3JMbVNFWHVFcFh2OVFwdDVY?=
+ =?utf-8?B?anArTy9CQ1poeDJGWnMrelpWbENQb3Rkb1FZUVdJYWc2YXpLQ2FHOGRkVTlv?=
+ =?utf-8?B?bk1RbU1xUkNnVVhmT2lGSFVjeEFFNFZlMFFyYVRXTlcvVlNWRU1kd1FXdXdI?=
+ =?utf-8?B?dmFBeGQrTWxrWmNrQkh6MXVMNTY4eXRFNkJoaVd5ZVowcyt3RndJbTJmZUFW?=
+ =?utf-8?B?TUZCNnVFVVBQMjZFR1JsbS9VN09UdERoanFJTnR1NjNJTlZjSkNEYnFYYnpz?=
+ =?utf-8?B?UlIrUi9QZHA2QnlwcVFLZ3dBWWZTQTNHdUVOTmZOM0hYQnBnMWNGMHlOTTU0?=
+ =?utf-8?Q?LfGGh5VnAut1i+egJkImlj4jG?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6af4b52a-a836-4721-8d7f-08dcb0a3ce29
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2024 14:27:56.8399
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kMcUUY+tbJ5WNAWM8zbTqzSj48jvGMuPLyI+6Xb18QAbISCgLgaQU/MgI3ml77GGlOY0a/VJfnZ3fLRlPNpaQg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6726
 
-On Thu, 25 Jul 2024, Gergo Koteles wrote:
 
-> Calling VPC commands consists of several VPCW and VPCR ACPI calls.
-> These calls and their results can get mixed up if they are called
-> simultaneously from different threads, like acpi notify handler,
-> sysfs, debugfs, notification chain.
+
+On 7/29/2024 17:25, Ilpo Järvinen wrote:
+> On Tue, 23 Jul 2024, Shyam Sundar S K wrote:
 > 
-> Add a mutex to synchronize VPC commands.
+>> If the Ambient Light Sensor (ALS) is disabled, the current code in the PMF
+>> driver does not query for Human Presence Detection (HPD) data in
+>> amd_pmf_get_sensor_info(). As a result, stale HPD data is used by PMF-TA
+>> to evaluate policy conditions, leading to unexpected behavior in the policy
+>> output actions.
+>>
+>> To resolve this issue, modify the PMF driver to query HPD data
+>> independently of ALS.
+>>
+>> With this change, amd_pmf_get_sensor_info() now returns void instead of
+>> int.
+>>
+>> Fixes: cedecdba60f4 ("platform/x86/amd/pmf: Get ambient light information from AMD SFH driver")
+>> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+>> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>> ---
+>>  drivers/platform/x86/amd/pmf/spc.c | 33 +++++++++++++++---------------
+>>  1 file changed, 16 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
+>> index a3dec14c3004..d9e60d63553c 100644
+>> --- a/drivers/platform/x86/amd/pmf/spc.c
+>> +++ b/drivers/platform/x86/amd/pmf/spc.c
+>> @@ -150,7 +150,7 @@ static int amd_pmf_get_slider_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+>>  	return 0;
+>>  }
+>>  
+>> -static int amd_pmf_get_sensor_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in)
+>> +static void amd_pmf_get_sensor_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in)
+>>  {
+>>  	struct amd_sfh_info sfh_info;
+>>  	int ret;
+>> @@ -160,26 +160,25 @@ static int amd_pmf_get_sensor_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+>>  	if (!ret)
+>>  		in->ev_info.ambient_light = sfh_info.ambient_light;
+>>  	else
+>> -		return ret;
+>> +		dev_dbg(dev->dev, "ALS is not enabled\n");
+>>  
+>>  	/* get HPD data */
+>>  	ret = amd_get_sfh_info(&sfh_info, MT_HPD);
+>> -	if (ret)
+>> -		return ret;
+>> -
+>> -	switch (sfh_info.user_present) {
+>> -	case SFH_NOT_DETECTED:
+>> -		in->ev_info.user_present = 0xff; /* assume no sensors connected */
+>> -		break;
+>> -	case SFH_USER_PRESENT:
+>> -		in->ev_info.user_present = 1;
+>> -		break;
+>> -	case SFH_USER_AWAY:
+>> -		in->ev_info.user_present = 0;
+>> -		break;
+>> +	if (!ret) {
+>> +		switch (sfh_info.user_present) {
+>> +		case SFH_NOT_DETECTED:
+>> +			in->ev_info.user_present = 0xff; /* assume no sensors connected */
+>> +			break;
+>> +		case SFH_USER_PRESENT:
+>> +			in->ev_info.user_present = 1;
+>> +			break;
+>> +		case SFH_USER_AWAY:
+>> +			in->ev_info.user_present = 0;
+>> +			break;
+>> +		}
+>> +	} else {
+>> +		dev_dbg(dev->dev, "HPD is not enabled\n");
 > 
-> Signed-off-by: Gergo Koteles <soyer@irl.hu>
-
-What commit does this fix? I was going to add a Fixes tag myself while 
-applying this but wasn't sure if it should be the ACPI concurrency commit 
-e2ffcda16290 or the change introducing lenovo-ymc driver?
-
-Also, I'd prefer to not take the move patch (PATCH 3/4) now so I could 
-take this through fixes branch since it causes a real issue if I remember 
-the earlier discussions right? Do you think there's any issue if I take 
-only patches 1, 2, and 4? They seemed to apply without conflicts when I 
-tried to apply the entire series and then cherrypicked the last patch 
-dropping the third patch.
-
-The code movement patch could go through for-next fixes branch is then 
-merged into it (or after one kernel cycle).
-
-
--- 
- i.
-
-
-> ---
->  drivers/platform/x86/ideapad-laptop.c | 64 ++++++++++++++++++++-------
->  1 file changed, 47 insertions(+), 17 deletions(-)
+> Is it okay to leave in->ev_info.user_present as 0 this case? Should it be 
+> set to same as with SFH_NOT_DETECTED?
 > 
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index 8398774cdfe2..3c24e3d99cd2 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -155,6 +155,7 @@ struct ideapad_rfk_priv {
->  
->  struct ideapad_private {
->  	struct acpi_device *adev;
-> +	struct mutex vpc_mutex; /* protects the VPC calls */
->  	struct rfkill *rfk[IDEAPAD_RFKILL_DEV_NUM];
->  	struct ideapad_rfk_priv rfk_priv[IDEAPAD_RFKILL_DEV_NUM];
->  	struct platform_device *platform_device;
-> @@ -437,6 +438,8 @@ static int debugfs_status_show(struct seq_file *s, void *data)
->  	struct ideapad_private *priv = s->private;
->  	unsigned long value;
->  
-> +	guard(mutex)(&priv->vpc_mutex);
-> +
->  	if (!read_ec_data(priv->adev->handle, VPCCMD_R_BL_MAX, &value))
->  		seq_printf(s, "Backlight max:  %lu\n", value);
->  	if (!read_ec_data(priv->adev->handle, VPCCMD_R_BL, &value))
-> @@ -555,7 +558,8 @@ static ssize_t camera_power_show(struct device *dev,
->  	unsigned long result;
->  	int err;
->  
-> -	err = read_ec_data(priv->adev->handle, VPCCMD_R_CAMERA, &result);
-> +	scoped_guard(mutex, &priv->vpc_mutex)
-> +		err = read_ec_data(priv->adev->handle, VPCCMD_R_CAMERA, &result);
->  	if (err)
->  		return err;
->  
-> @@ -574,7 +578,8 @@ static ssize_t camera_power_store(struct device *dev,
->  	if (err)
->  		return err;
->  
-> -	err = write_ec_cmd(priv->adev->handle, VPCCMD_W_CAMERA, state);
-> +	scoped_guard(mutex, &priv->vpc_mutex)
-> +		err = write_ec_cmd(priv->adev->handle, VPCCMD_W_CAMERA, state);
->  	if (err)
->  		return err;
->  
-> @@ -627,7 +632,8 @@ static ssize_t fan_mode_show(struct device *dev,
->  	unsigned long result;
->  	int err;
->  
-> -	err = read_ec_data(priv->adev->handle, VPCCMD_R_FAN, &result);
-> +	scoped_guard(mutex, &priv->vpc_mutex)
-> +		err = read_ec_data(priv->adev->handle, VPCCMD_R_FAN, &result);
->  	if (err)
->  		return err;
->  
-> @@ -649,7 +655,8 @@ static ssize_t fan_mode_store(struct device *dev,
->  	if (state > 4 || state == 3)
->  		return -EINVAL;
->  
-> -	err = write_ec_cmd(priv->adev->handle, VPCCMD_W_FAN, state);
-> +	scoped_guard(mutex, &priv->vpc_mutex)
-> +		err = write_ec_cmd(priv->adev->handle, VPCCMD_W_FAN, state);
->  	if (err)
->  		return err;
->  
-> @@ -734,7 +741,8 @@ static ssize_t touchpad_show(struct device *dev,
->  	unsigned long result;
->  	int err;
->  
-> -	err = read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &result);
-> +	scoped_guard(mutex, &priv->vpc_mutex)
-> +		err = read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &result);
->  	if (err)
->  		return err;
->  
-> @@ -755,7 +763,8 @@ static ssize_t touchpad_store(struct device *dev,
->  	if (err)
->  		return err;
->  
-> -	err = write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, state);
-> +	scoped_guard(mutex, &priv->vpc_mutex)
-> +		err = write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, state);
->  	if (err)
->  		return err;
->  
-> @@ -1148,6 +1157,8 @@ static int ideapad_rfk_set(void *data, bool blocked)
->  	struct ideapad_rfk_priv *priv = data;
->  	int opcode = ideapad_rfk_data[priv->dev].opcode;
->  
-> +	guard(mutex)(&priv->priv->vpc_mutex);
-> +
->  	return write_ec_cmd(priv->priv->adev->handle, opcode, !blocked);
->  }
->  
-> @@ -1161,6 +1172,8 @@ static void ideapad_sync_rfk_state(struct ideapad_private *priv)
->  	int i;
->  
->  	if (priv->features.hw_rfkill_switch) {
-> +		guard(mutex)(&priv->vpc_mutex);
-> +
->  		if (read_ec_data(priv->adev->handle, VPCCMD_R_RF, &hw_blocked))
->  			return;
->  		hw_blocked = !hw_blocked;
-> @@ -1334,8 +1347,9 @@ static void ideapad_input_novokey(struct ideapad_private *priv)
->  {
->  	unsigned long long_pressed;
->  
-> -	if (read_ec_data(priv->adev->handle, VPCCMD_R_NOVO, &long_pressed))
-> -		return;
-> +	scoped_guard(mutex, &priv->vpc_mutex)
-> +		if (read_ec_data(priv->adev->handle, VPCCMD_R_NOVO, &long_pressed))
-> +			return;
->  
->  	if (long_pressed)
->  		ideapad_input_report(priv, 17);
-> @@ -1347,8 +1361,9 @@ static void ideapad_check_special_buttons(struct ideapad_private *priv)
->  {
->  	unsigned long bit, value;
->  
-> -	if (read_ec_data(priv->adev->handle, VPCCMD_R_SPECIAL_BUTTONS, &value))
-> -		return;
-> +	scoped_guard(mutex, &priv->vpc_mutex)
-> +		if (read_ec_data(priv->adev->handle, VPCCMD_R_SPECIAL_BUTTONS, &value))
-> +			return;
->  
->  	for_each_set_bit (bit, &value, 16) {
->  		switch (bit) {
-> @@ -1381,6 +1396,8 @@ static int ideapad_backlight_get_brightness(struct backlight_device *blightdev)
->  	unsigned long now;
->  	int err;
->  
-> +	guard(mutex)(&priv->vpc_mutex);
-> +
->  	err = read_ec_data(priv->adev->handle, VPCCMD_R_BL, &now);
->  	if (err)
->  		return err;
-> @@ -1393,6 +1410,8 @@ static int ideapad_backlight_update_status(struct backlight_device *blightdev)
->  	struct ideapad_private *priv = bl_get_data(blightdev);
->  	int err;
->  
-> +	guard(mutex)(&priv->vpc_mutex);
-> +
->  	err = write_ec_cmd(priv->adev->handle, VPCCMD_W_BL,
->  			   blightdev->props.brightness);
->  	if (err)
-> @@ -1470,6 +1489,8 @@ static void ideapad_backlight_notify_power(struct ideapad_private *priv)
->  	if (!blightdev)
->  		return;
->  
-> +	guard(mutex)(&priv->vpc_mutex);
-> +
->  	if (read_ec_data(priv->adev->handle, VPCCMD_R_BL_POWER, &power))
->  		return;
->  
-> @@ -1482,7 +1503,8 @@ static void ideapad_backlight_notify_brightness(struct ideapad_private *priv)
->  
->  	/* if we control brightness via acpi video driver */
->  	if (!priv->blightdev)
-> -		read_ec_data(priv->adev->handle, VPCCMD_R_BL, &now);
-> +		scoped_guard(mutex, &priv->vpc_mutex)
-> +			read_ec_data(priv->adev->handle, VPCCMD_R_BL, &now);
->  	else
->  		backlight_force_update(priv->blightdev, BACKLIGHT_UPDATE_HOTKEY);
->  }
-> @@ -1707,7 +1729,8 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
->  	int ret;
->  
->  	/* Without reading from EC touchpad LED doesn't switch state */
-> -	ret = read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value);
-> +	scoped_guard(mutex, &priv->vpc_mutex)
-> +		ret = read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value);
->  	if (ret)
->  		return;
->  
-> @@ -1767,7 +1790,8 @@ static void ideapad_laptop_trigger_ec(void)
->  	if (!priv->features.ymc_ec_trigger)
->  		return;
->  
-> -	ret = write_ec_cmd(priv->adev->handle, VPCCMD_W_YMC, 1);
-> +	scoped_guard(mutex, &priv->vpc_mutex)
-> +		ret = write_ec_cmd(priv->adev->handle, VPCCMD_W_YMC, 1);
->  	if (ret)
->  		dev_warn(&priv->platform_device->dev, "Could not write YMC: %d\n", ret);
->  }
-> @@ -1813,11 +1837,13 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
->  	struct ideapad_private *priv = data;
->  	unsigned long vpc1, vpc2, bit;
->  
-> -	if (read_ec_data(handle, VPCCMD_R_VPC1, &vpc1))
-> -		return;
-> +	scoped_guard(mutex, &priv->vpc_mutex) {
-> +		if (read_ec_data(handle, VPCCMD_R_VPC1, &vpc1))
-> +			return;
->  
-> -	if (read_ec_data(handle, VPCCMD_R_VPC2, &vpc2))
-> -		return;
-> +		if (read_ec_data(handle, VPCCMD_R_VPC2, &vpc2))
-> +			return;
-> +	}
->  
->  	vpc1 = (vpc2 << 8) | vpc1;
->  
-> @@ -2124,6 +2150,10 @@ static int ideapad_acpi_add(struct platform_device *pdev)
->  	priv->adev = adev;
->  	priv->platform_device = pdev;
->  
-> +	err = devm_mutex_init(&pdev->dev, &priv->vpc_mutex);
-> +	if (err)
-> +		return err;
-> +
->  	ideapad_check_features(priv);
->  
->  	err = ideapad_sysfs_init(priv);
+
+Valid point. Realized that the PMF TA only accepts a boolean and it
+only looks for information on if the user is present or not.
+
+I have adjusted this behavior in v2. Please take a look.
+
+> ...I now realize your print out doesn't cover that case at all and 
+> user_present is not used for anything else than debug printing.
 > 
+
+entire populated "ev_info" is passed to the PMF TA to evaluate the
+policy conditions. So, its just not limited to debug message.
+
+Thanks,
+Shyam
