@@ -1,162 +1,181 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1BC1A3031;
-	Tue, 30 Jul 2024 16:08:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B7718B484;
+	Tue, 30 Jul 2024 18:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722355737; cv=none; b=Kr2iEmvh8mQgMkbR9gm1CENHWkeEGcg/JqDcRF8WF/f8u0YiTbFnzkwwolbL6l+UuWc3w6v61fqcDoisG7bGZnsTy6lt4jWebDn5G6Tk6QNWFmtkWqPF/U4gAYEHViarTgoESYqe/0z0kBxNIju3pnjA7JFdBrL2UBeE00OMvBY=
+	t=1722363860; cv=none; b=dnNyK0Z7Eveit6HZOyhH6UPRXAWAinBU8wW6vN880iAi/D//dSqVdtdo0y7FVVfg9xJfyEDBhsFlmDX09WxKaGpXMBfChCgBh+u4djAnZj5BCDhIBhZR3Fe1vQd4ETZjnLBWpJ7VUycsaGxHOesP+YGbmhPOeORY65ID32eZmmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722355737; c=relaxed/simple;
-	bh=AUOl71qABrzeaKwaAc3dEOJLIGaxiLw7FmxehLQCeWM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Ammqlf+2X3Wu3KZ6KF667FRZyv2VQfVz+9ipHdC0V5qURW1bkz8tLRVAoxLk3ZDH6+hjDj5YyPUZliVclySuQ7BSXbboBuzvMK+WhPEGe+FbqNKY3vVxYFtNl/sr333pi9Oxw52P9s6N5IJ964C29fyMdYI2wJsb+3SuK4J+3Xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=clDeDsJF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rs9nfx7V; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1722363860; c=relaxed/simple;
+	bh=fFf/gLPTjiOVMapVRfV5F0OVItXiQ3bssFo82sxe60E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bjz4ftNLf9f8/OYUvdEqC6NNYnT6XgXeFEzwu74cZ2UIe3FOJqTQrbHylc17Lhx/1i6FvoipUX8YIWOu2jL3ukKYt9to2p0rZyfeQIlgKd06KOZ6qruMHFWjM6BLvK4SVfPK88CkUg8Ba++5cvVeDiZCIqnnKoeisWJq/Pcpfew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=W6FbsawK reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="clDeDsJF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rs9nfx7V"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1722355733;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Mf5ncwMTYgRBzu9F9xJhXESy8cHEXAFkcaiy7PaCMeM=;
-	b=clDeDsJFEAMvnzvntn4kVt77+y/2o3CF1WUBWB4vXyTALtcwltwNWn6y9IlsJ2/ukfyaNv
-	5QeNFaGYIbtE48Q7uXL0xcF5Axzt9r32hGmnKHz5sdaKnD/ICQeBGj7OlmiGz93zSkaQjy
-	LeP/0ayTEmKJF1ItN/hPq26YuoXaRtqCpEosbIBhltncWS2a66+ecNnYqcmXKNkF2ZV7E7
-	4N1NS3XwEEt4gMIX67yn2W/D46pP9LHTfUG94Yzm+X1AEpGyUpsKT5t8+ggJjlCK2wholP
-	OsBlCyVsxmaq6Ew3GjW62bVHIgtwdGfYHQ8dS3pmiRku3CKXuY+30JPgkAP14w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1722355733;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Mf5ncwMTYgRBzu9F9xJhXESy8cHEXAFkcaiy7PaCMeM=;
-	b=rs9nfx7VcbhhCaJnAEYG3iGOgnWaXyxwpsWRMp8Tsrs5eCPkqfABEOCTlo/Xs4JTyUSmTp
-	f0ISQMlk0pGlc/DA==
-To: Marek Maslanka <mmaslanka@google.com>, LKML <linux-kernel@vger.kernel.org>
-Cc: Marek Maslanka <mmaslanka@google.com>, Rajneesh Bhardwaj
- <irenic.rajneesh@gmail.com>, David E Box <david.e.box@intel.com>, Hans de
- Goede <hdegoede@redhat.com>, Ilpo =?utf-8?Q?J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, John Stultz <jstultz@google.com>, Stephen
- Boyd <sboyd@kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3] platform/x86:intel/pmc: Enable the ACPI PM Timer to
- be turned off when suspended
-In-Reply-To: <20240730120546.1042515-1-mmaslanka@google.com>
-References: <CAGcaFA2sQNRo9UThN-C1NOLtGUJ3sKzc=pEC9wdDWMi501iLsA@mail.gmail.com>
- <20240730120546.1042515-1-mmaslanka@google.com>
-Date: Tue, 30 Jul 2024 18:08:53 +0200
-Message-ID: <87cymu7tgq.ffs@tglx>
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="W6FbsawK"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.0)
+ id 9863874557fb60af; Tue, 30 Jul 2024 20:24:16 +0200
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id AED88956ED0;
+	Tue, 30 Jul 2024 20:24:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1722363856;
+	bh=fFf/gLPTjiOVMapVRfV5F0OVItXiQ3bssFo82sxe60E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=W6FbsawKt9Eiy6U3xNtsFayIFTDehAc+mR6PMlbNHZl6iyhYn8GhBKYuQ2ylTSahy
+	 lBHCAjM7oLZBzMcTOmDo7XpcdMzXD0WjR4Xty/hG1xw4T50dcfZlqosPa78veJ4qVv
+	 7dreSYecVI6eUibbeMU7GMqQ/rzUrfDt3N0ASIGBEJOtAZYeJ7g5LgYcrMVTOUqPQx
+	 tFxEVxomE71ugU1tzrkWnlDHXcMkW72yij7kq3/bUtLg98C3j5wEpzmJwJ9yjV+IIx
+	 I6W30Mjf9RSQPuZmHUYaa0cBU6n8WuROCN4xdZ4pMDeQa0qcP4IA08PxtBC0CKJ8Pk
+	 vW5TBG5P2E20w==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux ACPI <linux-acpi@vger.kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Lukasz Luba <lukasz.luba@arm.com>, Zhang Rui <rui.zhang@intel.com>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Peter Kaestle <peter@piie.net>,
+ platform-driver-x86@vger.kernel.org, Ido Schimmel <idosch@nvidia.com>,
+ Petr Machata <petrm@nvidia.com>
+Subject:
+ [PATCH v1 09/17] thermal: ACPI: Use the .should_bind() thermal zone callback
+Date: Tue, 30 Jul 2024 20:24:15 +0200
+Message-ID: <1869674.8hzESeGDPO@rjwysocki.net>
+In-Reply-To: <1922131.tdWV9SEqCh@rjwysocki.net>
+References: <1922131.tdWV9SEqCh@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: spam:low
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeftddrjeeggdduvdehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogfuphgrmhfkphculdeftddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppeduleehrddufeeirdduledrleegnecuufhprghmkfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepudegpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghlrdhlvgiitggrnhhosehlihhnrghrohdrohhrghdprhgtphhtthhopehluhhkrghsiidrlhhusggrsegrrhhmrdgtohhmpdhrtghpthhtoheprhhuihdriihhrghnghesihhnthgvlhdrtghomhdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggv
+X-DCC--Metrics: v370.home.net.pl 1024; Body=42 Fuz1=42 Fuz2=42
 
-Marek!
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-On Tue, Jul 30 2024 at 12:05, Marek Maslanka wrote:
-> Allow to disable ACPI PM Timer on suspend and enable on resume. A
-> disabled timer helps optimise power consumption when the system is
-> suspended. On resume the timer is only reactivated if it was activated
-> prior to suspend, so unless the ACPI PM timer is enabled in the BIOS,
-> this won't change anything.
->
->  include/linux/clocksource.h           |  2 ++
->  kernel/time/clocksource.c             | 22 +++++++++++++
+Make the ACPI thermal zone driver use the .should_bind() thermal zone
+callback to provide the thermal core with the information on whether or
+not to bind the given cooling device to the given trip point in the
+given thermal zone.  If it returns 'true', the thermal core will bind
+the cooling device to the trip and the corresponding unbinding will be
+taken care of automatically by the core on the removal of the involved
+thermal zone or cooling device.
 
-The changelog is completely silent about the core code change. That's
-not how it works.
+This replaces the .bind() and .unbind() thermal zone callbacks which
+allows the code to be simplified quite significantly while providing
+the same functionality.
 
-Add the core code change as a separate patch with a proper justification
-and not hide it in the pile of the PMC changes without cc'ing the
-relevant maintainers. It's documented how this works, no?
-
-> +/*
-> + * Enable or disable APCI PM Timer
-> + *
-> + * @return: Previous APCI PM Timer enabled state
-> + */
-> +static bool pmc_core_enable_apci_pm_timer(struct pmc_dev *pmcdev, bool enable)
-> +{
-> +	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
-> +	const struct pmc_reg_map *map = pmc->map;
-> +	char cs_name[32];
-> +	bool state;
-> +	u32 reg;
-> +
-> +	if (!map->acpi_pm_tmr_ctl_offset)
-> +		return false;
-> +
-> +	clocksource_current_cs_name(cs_name, sizeof(cs_name));
-> +	if (strncmp(cs_name, "acpi_pm", sizeof(cs_name)) == 0)
-> +		return false;
-> +
-> +	clocksource_suspend_cs_name(cs_name, sizeof(cs_name));
-> +	if (strncmp(cs_name, "acpi_pm", sizeof(cs_name)) == 0)
-> +		return false;
-
-How would ACPI/PM ever be selected as a suspend clocksource? It's not
-marked CLOCK_SOURCE_SUSPEND_NONSTOP.
-
-There is a reason why clocksources have suspend/resume and
-enable/disable callbacks. The latter allow you to turn it completely off
-when it is not in use.
-
-Something like the below should work. It's uncompiled, but you get the
-idea.
-
-Thanks,
-
-        tglx
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
---- a/drivers/clocksource/acpi_pm.c
-+++ b/drivers/clocksource/acpi_pm.c
-@@ -63,12 +63,40 @@ static u64 acpi_pm_read(struct clocksour
- 	return (u64)read_pmtmr();
+ drivers/acpi/thermal.c |   64 ++++++-------------------------------------------
+ 1 file changed, 9 insertions(+), 55 deletions(-)
+
+Index: linux-pm/drivers/acpi/thermal.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/thermal.c
++++ linux-pm/drivers/acpi/thermal.c
+@@ -558,77 +558,31 @@ static void acpi_thermal_zone_device_cri
+ 	thermal_zone_device_critical(thermal);
  }
  
-+static bool acpi_pm_enabled;
-+
-+static void (*enable_callback)(bool enable);
-+
-+bool acpi_pm_register_enable_callback(void (*cb)(bool enable))
-+{
-+	enable_callback = cb;
-+	if (cb)
-+		cb(acpi_pm_enabled);
-+}
-+
-+static int acpi_pm_enable(struct clocksource *cs)
-+{
-+	acpi_pm_enabled = true;
-+	if (enable_callback)
-+		enable_callback(true);
-+	return 0;
-+}
-+
-+static void acpi_pm_disable(struct clocksource *cs)
-+{
-+	acpi_pm_enabled = false;
-+	if (enable_callback)
-+		enable_callback(false);
-+}
-+
- static struct clocksource clocksource_acpi_pm = {
- 	.name		= "acpi_pm",
- 	.rating		= 200,
- 	.read		= acpi_pm_read,
- 	.mask		= (u64)ACPI_PM_MASK,
- 	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
-+	.enable		= acpi_pm_enable,
-+	.disable	= acpi_pm_disable,
- };
+-struct acpi_thermal_bind_data {
+-	struct thermal_zone_device *thermal;
+-	struct thermal_cooling_device *cdev;
+-	bool bind;
+-};
+-
+-static int bind_unbind_cdev_cb(struct thermal_trip *trip, void *arg)
++static bool acpi_thermal_should_bind_cdev(struct thermal_zone_device *thermal,
++					  const struct thermal_trip *trip,
++					  struct thermal_cooling_device *cdev,
++					  struct cooling_spec *c)
+ {
+ 	struct acpi_thermal_trip *acpi_trip = trip->priv;
+-	struct acpi_thermal_bind_data *bd = arg;
+-	struct thermal_zone_device *thermal = bd->thermal;
+-	struct thermal_cooling_device *cdev = bd->cdev;
+ 	struct acpi_device *cdev_adev = cdev->devdata;
+ 	int i;
  
+ 	/* Skip critical and hot trips. */
+ 	if (!acpi_trip)
+-		return 0;
++		return false;
  
+ 	for (i = 0; i < acpi_trip->devices.count; i++) {
+ 		acpi_handle handle = acpi_trip->devices.handles[i];
+-		struct acpi_device *adev = acpi_fetch_acpi_dev(handle);
+-
+-		if (adev != cdev_adev)
+-			continue;
+ 
+-		if (bd->bind) {
+-			int ret;
+-
+-			ret = thermal_bind_cdev_to_trip(thermal, trip, cdev,
+-							THERMAL_NO_LIMIT,
+-							THERMAL_NO_LIMIT,
+-							THERMAL_WEIGHT_DEFAULT);
+-			if (ret)
+-				return ret;
+-		} else {
+-			thermal_unbind_cdev_from_trip(thermal, trip, cdev);
+-		}
++		if (acpi_fetch_acpi_dev(handle) == cdev_adev)
++			return true;
+ 	}
+ 
+-	return 0;
+-}
+-
+-static int acpi_thermal_bind_unbind_cdev(struct thermal_zone_device *thermal,
+-					 struct thermal_cooling_device *cdev,
+-					 bool bind)
+-{
+-	struct acpi_thermal_bind_data bd = {
+-		.thermal = thermal, .cdev = cdev, .bind = bind
+-	};
+-
+-	return thermal_zone_for_each_trip(thermal, bind_unbind_cdev_cb, &bd);
+-}
+-
+-static int
+-acpi_thermal_bind_cooling_device(struct thermal_zone_device *thermal,
+-				 struct thermal_cooling_device *cdev)
+-{
+-	return acpi_thermal_bind_unbind_cdev(thermal, cdev, true);
+-}
+-
+-static int
+-acpi_thermal_unbind_cooling_device(struct thermal_zone_device *thermal,
+-				   struct thermal_cooling_device *cdev)
+-{
+-	return acpi_thermal_bind_unbind_cdev(thermal, cdev, false);
++	return false;
+ }
+ 
+ static const struct thermal_zone_device_ops acpi_thermal_zone_ops = {
+-	.bind = acpi_thermal_bind_cooling_device,
+-	.unbind	= acpi_thermal_unbind_cooling_device,
++	.should_bind = acpi_thermal_should_bind_cdev,
+ 	.get_temp = thermal_get_temp,
+ 	.get_trend = thermal_get_trend,
+ 	.hot = acpi_thermal_zone_device_hot,
+
 
 
