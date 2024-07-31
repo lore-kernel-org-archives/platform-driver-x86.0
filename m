@@ -1,96 +1,146 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A36A1773A;
-	Wed, 31 Jul 2024 16:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68857381AD;
+	Wed, 31 Jul 2024 18:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722443614; cv=none; b=uo0LEUca+3QiyYDnlqAR6JVOA7BS4Ytkxt3KkZpmed0dhSiiiEz6Lzv6iL1r7WbZ7SL778prdBBFgNDwAsP2R6QXYzAGnsdGOhGCNeeIt88qJmWrBZPFFcvTMinYyxVW+Jj4yZcTUghJx5ZS+EMJZAb8NKp84TMzxaFhhtdsPFo=
+	t=1722451381; cv=none; b=JwbaijztBH5HtRCzjnsl5+0DMfW/TBOPSPRhSnibR0itfTnjXH8PN7FrwPZgxTcfwabMQSkKX64znIhv6JK3LA5GChCe6d9iOC60ZnmT4De4yp8L8W92g4wujIzjVUE36erBbAOXUt/IM42qC4iXDlGNL4DKBV6xb9LqKkFpFJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722443614; c=relaxed/simple;
-	bh=o57cNR5ti4i4fzmDZpGvXRr0ZLTnwEv3gVMCdguFiog=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=V24AHvRKbyZVWtIwRn8Hm1R27NQ5oZB+Zl3rIhbDTzbKfDDqiCUWwivbBhq9y0tUW4caw5LokLZ71kZdlsjsFnXOG/VGzHEH9u1yCznVzFuBMrS9FAWKLJ2QoYT1wwED+Av1yhfJv58/wIFvVMItaRfsjfP8EcWHS8TRszvoh8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LRecKFH3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hqlAcB+G; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1722451381; c=relaxed/simple;
+	bh=gT1ojs+HfsdojP33vEn+OJfDKKuLIhtMiC7HnCT+qOY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=elfJXjqFN7fHQRCY7X8Ei8ttPbeTsl79ZZjt4mCnFxp80np2leQPHysCS1D9vB5tNh5RBa3oZqHXCkmRp9LXeoTnJoxusVDupyo84eesiGQvW+O1REyW/tjFfFbaeCoUP+B5u1ncRsNmLRIfeSE5AMZdkQYXEAgOJARN+xML+SU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FK8oVVlQ; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LRecKFH3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hqlAcB+G"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1722443611;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RlAFzh33b9VSrJ2A7ge/uqdPM4bNaaWEd8D1hoHNneM=;
-	b=LRecKFH3frU1Y8UxKX4QHH7B3N9DK4xDQGTtmqlwGekzL/sYnSed/21YFM4Vjcq0KGIugs
-	MT4Vafvv2oJrZwX0RjVtPVgVM3SuoxW/UzkJ/7UIhyYUhZalZ68D529av1uxc3uOfl4VuX
-	1dfcpLjzvjWrMqNN5znjUyI0O/Vz4S/jVpIqdyqcN+6tJq3QOf3lkCs+9f85Ue1C4aQhrr
-	0cNo0GVM30lqVUMx4l7opHQ5O099TW8erVX/KgyaDtnql+9FBlL1mPJ8ROz4rGUpLLxQf7
-	0C6kBT1p9NH2E5gGno7pZuNZUxxuj6y3kEgRRZWFxVE9CVZqSLqErVbc5WrJOA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1722443611;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RlAFzh33b9VSrJ2A7ge/uqdPM4bNaaWEd8D1hoHNneM=;
-	b=hqlAcB+GZY5+dICvjphzMwNgNJl9WN5bxwbSIeKi2x0zKb4DKBiRFeK/dH0iE6HLwm22M+
-	lQoawFmvBDI0TBBw==
-To: Marek =?utf-8?Q?Ma=C5=9Blanka?= <mmaslanka@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj
- <irenic.rajneesh@gmail.com>, David E Box <david.e.box@intel.com>, Hans de
- Goede <hdegoede@redhat.com>, Ilpo =?utf-8?Q?J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, John Stultz <jstultz@google.com>, Stephen
- Boyd <sboyd@kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3] platform/x86:intel/pmc: Enable the ACPI PM Timer to
- be turned off when suspended
-In-Reply-To: <CAGcaFA1HJBYacvDAkZAO9HNhT2dZO7OdgcBYb59p7OJkVqQ6Fw@mail.gmail.com>
-References: <CAGcaFA2sQNRo9UThN-C1NOLtGUJ3sKzc=pEC9wdDWMi501iLsA@mail.gmail.com>
- <20240730120546.1042515-1-mmaslanka@google.com> <87cymu7tgq.ffs@tglx>
- <CAGcaFA1HJBYacvDAkZAO9HNhT2dZO7OdgcBYb59p7OJkVqQ6Fw@mail.gmail.com>
-Date: Wed, 31 Jul 2024 18:33:30 +0200
-Message-ID: <87h6c55xnp.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FK8oVVlQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722451380; x=1753987380;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gT1ojs+HfsdojP33vEn+OJfDKKuLIhtMiC7HnCT+qOY=;
+  b=FK8oVVlQcBKVoLmMB2O1VgHs9W02e9w6b68N6Mne1M7gMkcjimqVCVKF
+   bw1SwEmXfvTKoW7DJoRw8WT8A3jZZsLH06yW9fNBG5ez2fICpFgUccST5
+   2hduhqMS8WVKEe+utl0PZj/R5YJMLDu3bonqkbL9l7ZR9jYRnz8jzsJyi
+   eRSww/+KLwV/q7+baVlFBO01QKEuJ4AZ47+Zgye6iYy1l5N2Pa2TUljG2
+   6WqFx0UVKiZOrREH4TsdssYVseI9RA6LioCBhJ4UUCcSj8jPsrGNOzkc6
+   95WTSFGjKbVlaafxDAdI70HjR9MqRe67I7rOTQcUH2b9Rxj3Ff6m7QSO0
+   w==;
+X-CSE-ConnectionGUID: AgfyOjprTxWmDJCePHdl6Q==
+X-CSE-MsgGUID: GCgwH3UXT52GU2FV8PNV1Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11150"; a="23270214"
+X-IronPort-AV: E=Sophos;i="6.09,251,1716274800"; 
+   d="scan'208";a="23270214"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 11:42:59 -0700
+X-CSE-ConnectionGUID: l4+teZzUSmaLaonzjyo7LQ==
+X-CSE-MsgGUID: uxjy+WVvR8CgcMt1r71ZDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,251,1716274800"; 
+   d="scan'208";a="85399134"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.19])
+  by orviesa002.jf.intel.com with ESMTP; 31 Jul 2024 11:42:58 -0700
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	andriy.shevchenko@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] platform/x86: ISST: Simplify isst_misc_reg() and isst_misc_unreg()
+Date: Wed, 31 Jul 2024 11:42:56 -0700
+Message-ID: <20240731184256.1852840-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Marek!
+After commit '1630dc626c87 ("platform/x86: ISST: Add model specific
+loading for common module")' isst_misc_reg() and isst_misc_unreg() can be
+simplified. Since these functions are only called during module_init()
+and module_exit() respectively, there is no contention while calling
+misc_register()/misc_deregister or isst_if_cpu_info_init()/
+isst_if_cpu_info_exit().
 
-On Wed, Jul 31 2024 at 16:44, Marek Ma=C5=9Blanka wrote:
-> On Tue, Jul 30, 2024 at 6:08=E2=80=AFPM Thomas Gleixner <tglx@linutronix.=
-de> wrote:
->> On Tue, Jul 30 2024 at 12:05, Marek Maslanka wrote:
->> +static void acpi_pm_disable(struct clocksource *cs)
->> +{
->> +       acpi_pm_enabled =3D false;
->> +       if (enable_callback)
->> +               enable_callback(false);
->> +}
->> +
->>  static struct clocksource clocksource_acpi_pm =3D {
->>         .name           =3D "acpi_pm",
->>         .rating         =3D 200,
->>         .read           =3D acpi_pm_read,
->>         .mask           =3D (u64)ACPI_PM_MASK,
->>         .flags          =3D CLOCK_SOURCE_IS_CONTINUOUS,
->> +       .enable         =3D acpi_pm_enable,
->> +       .disable        =3D acpi_pm_disable,
->>  };
->>
-> Thanks. I'll try do this in that way. But I need to disable/enable
-> ACPI PM timer only on suspend/resume, so I'll use suspend/resume
-> callbacks.
+Hence remove mutex and reference counting.
 
-Why? What's the point of keeping it running when nothing uses it?
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ .../intel/speed_select_if/isst_if_common.c    | 42 +++++--------------
+ 1 file changed, 11 insertions(+), 31 deletions(-)
 
-Thanks,
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+index 3065f149e721..febfd5eeceb4 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+@@ -651,10 +651,6 @@ static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
+ 
+ /* Lock to prevent module registration when already opened by user space */
+ static DEFINE_MUTEX(punit_misc_dev_open_lock);
+-/* Lock to allow one shared misc device for all ISST interfaces */
+-static DEFINE_MUTEX(punit_misc_dev_reg_lock);
+-static int misc_usage_count;
+-static int misc_device_ret;
+ static int misc_device_open;
+ 
+ static int isst_if_open(struct inode *inode, struct file *file)
+@@ -720,39 +716,23 @@ static struct miscdevice isst_if_char_driver = {
+ 
+ static int isst_misc_reg(void)
+ {
+-	mutex_lock(&punit_misc_dev_reg_lock);
+-	if (misc_device_ret)
+-		goto unlock_exit;
+-
+-	if (!misc_usage_count) {
+-		misc_device_ret = isst_if_cpu_info_init();
+-		if (misc_device_ret)
+-			goto unlock_exit;
+-
+-		misc_device_ret = misc_register(&isst_if_char_driver);
+-		if (misc_device_ret) {
+-			isst_if_cpu_info_exit();
+-			goto unlock_exit;
+-		}
+-	}
+-	misc_usage_count++;
++	int ret;
+ 
+-unlock_exit:
+-	mutex_unlock(&punit_misc_dev_reg_lock);
++	ret = isst_if_cpu_info_init();
++	if (ret)
++		return ret;
+ 
+-	return misc_device_ret;
++	ret = misc_register(&isst_if_char_driver);
++	if (ret)
++		isst_if_cpu_info_exit();
++
++	return ret;
+ }
+ 
+ static void isst_misc_unreg(void)
+ {
+-	mutex_lock(&punit_misc_dev_reg_lock);
+-	if (misc_usage_count)
+-		misc_usage_count--;
+-	if (!misc_usage_count && !misc_device_ret) {
+-		misc_deregister(&isst_if_char_driver);
+-		isst_if_cpu_info_exit();
+-	}
+-	mutex_unlock(&punit_misc_dev_reg_lock);
++	misc_deregister(&isst_if_char_driver);
++	isst_if_cpu_info_exit();
+ }
+ 
+ /**
+-- 
+2.43.0
 
-        tglx
