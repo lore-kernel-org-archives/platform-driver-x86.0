@@ -1,84 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9392816C86F
-	for <platform-driver-x86@vger.kernel.org>; Wed, 31 Jul 2024 13:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650541AD3FE;
+	Wed, 31 Jul 2024 13:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.101.241.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722433007; cv=none; b=Gb+ZB4zufq+UI/f/lUBi+bEj1YKjicWxxNQsD6LIGo4X8XjbPQUVd/J3qAqXCHXFjsr4nDPGmYYMdRqKFrGhOK3ti7IbphZ7B++B1wyAD0wmoc74GxZ0p7Ma1KrO3oNExB64ixUnWW85mHOFdv4EtNoD+OjL5B77GfPceU6/tU0=
+	t=1722433232; cv=none; b=PeBnbEI/bZmZeTmZalW3WaVAepV7S1QFKpXUyKWxNr1EtSkaifYVt2fSGdygsXQNCmBaAxrHlXwixEa0+/22lAY1/Kzbof9eF8xr2SNk51olgyGevATOG1fNb4nB/IqXcKCy2uADpcOUL0ilSeIJ7zrvjAk9mtMEc/d+xWhZqyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722433007; c=relaxed/simple;
-	bh=Mb/G+Rh2xKchzQ/VG4G/9wiB/BItIFrEeCtqyEECaL0=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=K6PnExsft1WTtBtxNyH8amV27g7tYtk28D3hkdoY+6sYV4Q9QpFi1bwXh+3JIs1+8i2+QnfeR2GYnE+5C3JPvBeuGs9fVUvhXXgP5cFDMXHb9sPrd4O9pYTQRaqmwXSTQj7Yh5ywkW3b5y3yMykWgXTdO8chIS2/PlxwlPWqcAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P95kC7Tz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P95kC7Tz"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 21416C116B1
-	for <platform-driver-x86@vger.kernel.org>; Wed, 31 Jul 2024 13:36:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722433007;
-	bh=Mb/G+Rh2xKchzQ/VG4G/9wiB/BItIFrEeCtqyEECaL0=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=P95kC7Tz79MLT3F4aIQoMe+uaxAWxgUdFSCa0W4o13/F0ZPdVYK0iN7139IPvwPiI
-	 gfNlRo61YX77o8Md6deU8FR4m8etu257siJt5WOpQHDH7Ek20RQstRGMsK/9syKxcM
-	 o/nfInu2pVEBYYBCS3RuLNWaF+tFH9vqaHOuL7ptpR1RQ1PlJaGQlZ7HLG/+aYqOIq
-	 xiMpZJAnlUNSi42z6HqHnq+KsjRxaKBulxh71eq/t5nn3W/krSsSSZaNuW+7xv/rPG
-	 OIyGxbPxScla5wve4OV7bcntKsusqvEYv35cywEr19F1DmH8Tr699lxNfgu5ubBiL/
-	 Rj5iK9mFZGcQQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 0B926C433E5; Wed, 31 Jul 2024 13:36:47 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218696] DYTC frequency scaling deterioration and event spam
-Date: Wed, 31 Jul 2024 13:36:46 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mpearson-lenovo@squebb.ca
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218696-215701-LWcsWwXuk5@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218696-215701@https.bugzilla.kernel.org/>
-References: <bug-218696-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	s=arc-20240116; t=1722433232; c=relaxed/simple;
+	bh=h0PF3yhyybjZDecyKpukDJch8WS+YmJcGqdqDbZnb0w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nrUQL7GlOwJNi/k/QONRQOpl0kY25XxInStsZxRHrxrmlUlR5mKybqPlBFgmn+AaQoEjYLOIbQgcefgZzGJepPuxcIVzxSO0ma7EmrRDigT2nueU2BPO6xWVRQcIBYgjZ7JMb722Nu6lgM0s6DX25GxouWe9x3nPsoOhqP2zGtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net; spf=pass smtp.mailfrom=just42.net; arc=none smtp.client-ip=150.101.241.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=just42.net
+Received: from marvin.atrad.com.au (marvin.atrad.com.au [192.168.0.2])
+	by server.atrad.com.au (8.18.1/8.18.1) with ESMTPS id 46VDLPNr028891
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Wed, 31 Jul 2024 22:51:27 +0930
+Date: Wed, 31 Jul 2024 22:51:25 +0930
+From: Jonathan Woithe <jwoithe@just42.net>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/10] platform/x86: fujitsu-laptop: Use backlight power
+ constants
+Message-ID: <Zqo6VfQGyApMdTWN@marvin.atrad.com.au>
+References: <20240731125220.1147348-1-tzimmermann@suse.de>
+ <20240731125220.1147348-8-tzimmermann@suse.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240731125220.1147348-8-tzimmermann@suse.de>
+X-MIMEDefang-action: accept
+X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218696
+On Wed, Jul 31, 2024 at 02:50:57PM +0200, Thomas Zimmermann wrote:
+> Replace FB_BLANK_ constants with their counterparts from the
+> backlight subsystem. The values are identical, so there's no
+> change in functionality or semantics.
+> 
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: Jonathan Woithe <jwoithe@just42.net>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
 
---- Comment #14 from Mark Pearson (mpearson-lenovo@squebb.ca) ---
-I have been remiss on adding updates to this bug - sorry!
+I see no issues as far as fujitsu-laptop is concerned.
 
-We found a system able to reproduce the problem, and the FW team have
-investigated and have a fix. It's related to hitting a thermal threshold and
-then the EC FW incorrectly generating events.
+Acked-by: Jonathan Woithe <jwoithe@just42.net>
 
-The fix will be in EC version R1YHT44W - expected to release 19th August (b=
-ut
-please allow for some variability - it's under testing and dates can change
-etc). I'll be monitoring for this to be released to LVFS.
+Regards
+  jonathan
 
-Mark
+> ---
+>  drivers/platform/x86/fujitsu-laptop.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index 968fc91bd5e4..ae992ac1ab4a 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -43,7 +43,6 @@
+>  #include <linux/bitops.h>
+>  #include <linux/dmi.h>
+>  #include <linux/backlight.h>
+> -#include <linux/fb.h>
+>  #include <linux/input.h>
+>  #include <linux/input/sparse-keymap.h>
+>  #include <linux/kfifo.h>
+> @@ -356,7 +355,7 @@ static int bl_get_brightness(struct backlight_device *b)
+>  {
+>  	struct acpi_device *device = bl_get_data(b);
+>  
+> -	return b->props.power == FB_BLANK_POWERDOWN ? 0 : get_lcd_level(device);
+> +	return b->props.power == BACKLIGHT_POWER_OFF ? 0 : get_lcd_level(device);
+>  }
+>  
+>  static int bl_update_status(struct backlight_device *b)
+> @@ -364,7 +363,7 @@ static int bl_update_status(struct backlight_device *b)
+>  	struct acpi_device *device = bl_get_data(b);
+>  
+>  	if (fext) {
+> -		if (b->props.power == FB_BLANK_POWERDOWN)
+> +		if (b->props.power == BACKLIGHT_POWER_OFF)
+>  			call_fext_func(fext, FUNC_BACKLIGHT, 0x1,
+>  				       BACKLIGHT_PARAM_POWER, BACKLIGHT_OFF);
+>  		else
+> @@ -933,9 +932,9 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
+>  	    acpi_video_get_backlight_type() == acpi_backlight_vendor) {
+>  		if (call_fext_func(fext, FUNC_BACKLIGHT, 0x2,
+>  				   BACKLIGHT_PARAM_POWER, 0x0) == BACKLIGHT_OFF)
+> -			fujitsu_bl->bl_device->props.power = FB_BLANK_POWERDOWN;
+> +			fujitsu_bl->bl_device->props.power = BACKLIGHT_POWER_OFF;
+>  		else
+> -			fujitsu_bl->bl_device->props.power = FB_BLANK_UNBLANK;
+> +			fujitsu_bl->bl_device->props.power = BACKLIGHT_POWER_ON;
+>  	}
+>  
+>  	ret = acpi_fujitsu_laptop_input_setup(device);
+> -- 
+> 2.45.2
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+-- 
