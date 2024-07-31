@@ -1,110 +1,186 @@
-Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650541AD3FE;
-	Wed, 31 Jul 2024 13:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.101.241.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76BD51BBBCA
+	for <platform-driver-x86@vger.kernel.org>; Wed, 31 Jul 2024 14:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722433232; cv=none; b=PeBnbEI/bZmZeTmZalW3WaVAepV7S1QFKpXUyKWxNr1EtSkaifYVt2fSGdygsXQNCmBaAxrHlXwixEa0+/22lAY1/Kzbof9eF8xr2SNk51olgyGevATOG1fNb4nB/IqXcKCy2uADpcOUL0ilSeIJ7zrvjAk9mtMEc/d+xWhZqyQ=
+	t=1722437068; cv=none; b=N8+0+eooWssg5rMzzQ3fM7fhmRPc/MJ1mQ/kEDPBZyay3/nnOsqZI/PwvCJRkJl6f3QhdSl2tH8cMVdj+uGy9tBWmdk14QLRu3fuG0Z3J3IS5INnizy7jiXOiBwIDMGk6FD2dbHVTsI9priithoyWpvCWsR1heDHZg7y4l/uQYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722433232; c=relaxed/simple;
-	bh=h0PF3yhyybjZDecyKpukDJch8WS+YmJcGqdqDbZnb0w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nrUQL7GlOwJNi/k/QONRQOpl0kY25XxInStsZxRHrxrmlUlR5mKybqPlBFgmn+AaQoEjYLOIbQgcefgZzGJepPuxcIVzxSO0ma7EmrRDigT2nueU2BPO6xWVRQcIBYgjZ7JMb722Nu6lgM0s6DX25GxouWe9x3nPsoOhqP2zGtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net; spf=pass smtp.mailfrom=just42.net; arc=none smtp.client-ip=150.101.241.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=just42.net
-Received: from marvin.atrad.com.au (marvin.atrad.com.au [192.168.0.2])
-	by server.atrad.com.au (8.18.1/8.18.1) with ESMTPS id 46VDLPNr028891
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Wed, 31 Jul 2024 22:51:27 +0930
-Date: Wed, 31 Jul 2024 22:51:25 +0930
-From: Jonathan Woithe <jwoithe@just42.net>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/10] platform/x86: fujitsu-laptop: Use backlight power
- constants
-Message-ID: <Zqo6VfQGyApMdTWN@marvin.atrad.com.au>
-References: <20240731125220.1147348-1-tzimmermann@suse.de>
- <20240731125220.1147348-8-tzimmermann@suse.de>
+	s=arc-20240116; t=1722437068; c=relaxed/simple;
+	bh=Q7aeHBvZsCyqs9gfKZrg7+fxzjku+RV4f2e4Yz3BG2o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MaMQ6w2STXuhoSL+/PnDas1UVrnvUX2iRwCdOYiut2S5BkUe0PVk8iCHLdnNXaE1L2DzD43KkEv2LiGOJVPNZNF5D7zOb1tByX+bIMfzyRzLcuaL4t/A40d13oktPOpLuS2JfotR20w+nwHDX/A3aP9saq2PVZeLTF1hA7KbdKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=24dx/BSs; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="24dx/BSs"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1fd7509397bso185255ad.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 31 Jul 2024 07:44:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1722437067; x=1723041867; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3i/UQZTZmVMHIMP8zX0Oxg+kXspxWQWqewdCI78OJ+c=;
+        b=24dx/BSsU9kx5XSe+vHTZaS4Ptq7EHe+U0VzVlrv4TjJDYCJjV2XntgJZhGLUJpcMq
+         lSwIPRJSmMx6rt+Wk9edsvuW5HWmFNV1uKf9E55klt+SI/l/+2x0qiC5Wjqjnk08b/8b
+         V8vZxXX/JZdXcyOZNBrJR/8lRweqT/rNYxMtf9QtoynRE+u3SBBmaNOsqYqqq+9K0VdX
+         HA41KI+B9KHXUbkE8NO0GSC10+wUXFwLzRrpY9gvbOLtkF4ltk2h2YUZQA+WNwpuJd+0
+         0p2BYi+zuJQjSjjNxki0x6Nrb3p1780OT1TOTigsLLAdu0mjhJvbDvDgQWd08TdTRzIX
+         Pb7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722437067; x=1723041867;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3i/UQZTZmVMHIMP8zX0Oxg+kXspxWQWqewdCI78OJ+c=;
+        b=or1R3Zz1LsTfnny1pVZalIZZ1DwUFp16gsJjrnRIxkh8BJ9KY2qYh/Wvm/Zoe0HwTA
+         WOhLa1lrZSZT9nsBsMUw32XgtMVv/OiwceaxMjfjgaNTfvojZscVxNfh15QIMPk7kXI2
+         VscxsaXraDjH3rTrI26TnsW9ekalf4cYjIuu9cjNEl17DNY/+LYnR6//nV+0fQzAjaEf
+         yvmaV+3kp2FpqDkPYchzvJKKwOtUwdaDyxDemUqyBHCEvrMmPqcRd5Pypyd59BcmE0vF
+         mtYpUqMroBJYD2NMKRijBpFTLFcPt4BeayalHyRUMVepMJo4IOIFhFM09tB5fW8pOryw
+         Q0nQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXA3P45m7cm8FRnpNlcbEgZMVVOvIcUX2u1JVQpf2g2sQmsBG+PWozFHoT+gl9AWwhN53urIGfxDRFBoTTHZLFIE50U4CkhZ/5+nu7MeTW4fmXYiw==
+X-Gm-Message-State: AOJu0YwuwfG9bEPoFjKx8FSzBvn/8ePBor7L8SMk0SVrukaJeEHXAP+2
+	kY8L419Yj3fcTiiqpOIiF6WPWPNPhtGF+4dEqLBXLzKvLi/01TTj4WR6k2L6QB63f1pupTzQ6v6
+	lvY0kuw0m13m36zl3HqydhxvXIY/01ALDo1Ky
+X-Google-Smtp-Source: AGHT+IHT6dgiybFBguyPKZHraIwjPlRf5UvjmC4H5jEDjyjyxPUNPPAswow6gAsEyy7iIb7RKn4tT54k3qSAldwwiGg=
+X-Received: by 2002:a17:903:1d2:b0:1fd:7724:c772 with SMTP id
+ d9443c01a7336-1ff425a6763mr2537055ad.3.1722437066430; Wed, 31 Jul 2024
+ 07:44:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240731125220.1147348-8-tzimmermann@suse.de>
-X-MIMEDefang-action: accept
-X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
+References: <CAGcaFA2sQNRo9UThN-C1NOLtGUJ3sKzc=pEC9wdDWMi501iLsA@mail.gmail.com>
+ <20240730120546.1042515-1-mmaslanka@google.com> <87cymu7tgq.ffs@tglx>
+In-Reply-To: <87cymu7tgq.ffs@tglx>
+From: =?UTF-8?Q?Marek_Ma=C5=9Blanka?= <mmaslanka@google.com>
+Date: Wed, 31 Jul 2024 16:44:14 +0200
+Message-ID: <CAGcaFA1HJBYacvDAkZAO9HNhT2dZO7OdgcBYb59p7OJkVqQ6Fw@mail.gmail.com>
+Subject: Re: [PATCH v3] platform/x86:intel/pmc: Enable the ACPI PM Timer to be
+ turned off when suspended
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, David E Box <david.e.box@intel.com>, 
+	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+	platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 31, 2024 at 02:50:57PM +0200, Thomas Zimmermann wrote:
-> Replace FB_BLANK_ constants with their counterparts from the
-> backlight subsystem. The values are identical, so there's no
-> change in functionality or semantics.
-> 
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: Jonathan Woithe <jwoithe@just42.net>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
+Hi Thomas
 
-I see no issues as far as fujitsu-laptop is concerned.
+On Tue, Jul 30, 2024 at 6:08=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> Marek!
+>
+> On Tue, Jul 30 2024 at 12:05, Marek Maslanka wrote:
+> > Allow to disable ACPI PM Timer on suspend and enable on resume. A
+> > disabled timer helps optimise power consumption when the system is
+> > suspended. On resume the timer is only reactivated if it was activated
+> > prior to suspend, so unless the ACPI PM timer is enabled in the BIOS,
+> > this won't change anything.
+> >
+> >  include/linux/clocksource.h           |  2 ++
+> >  kernel/time/clocksource.c             | 22 +++++++++++++
+>
+> The changelog is completely silent about the core code change. That's
+> not how it works.
+>
+> Add the core code change as a separate patch with a proper justification
+> and not hide it in the pile of the PMC changes without cc'ing the
+> relevant maintainers. It's documented how this works, no?
 
-Acked-by: Jonathan Woithe <jwoithe@just42.net>
+Ok
 
-Regards
-  jonathan
-
+>
+> > +/*
+> > + * Enable or disable APCI PM Timer
+> > + *
+> > + * @return: Previous APCI PM Timer enabled state
+> > + */
+> > +static bool pmc_core_enable_apci_pm_timer(struct pmc_dev *pmcdev, bool=
+ enable)
+> > +{
+> > +     struct pmc *pmc =3D pmcdev->pmcs[PMC_IDX_MAIN];
+> > +     const struct pmc_reg_map *map =3D pmc->map;
+> > +     char cs_name[32];
+> > +     bool state;
+> > +     u32 reg;
+> > +
+> > +     if (!map->acpi_pm_tmr_ctl_offset)
+> > +             return false;
+> > +
+> > +     clocksource_current_cs_name(cs_name, sizeof(cs_name));
+> > +     if (strncmp(cs_name, "acpi_pm", sizeof(cs_name)) =3D=3D 0)
+> > +             return false;
+> > +
+> > +     clocksource_suspend_cs_name(cs_name, sizeof(cs_name));
+> > +     if (strncmp(cs_name, "acpi_pm", sizeof(cs_name)) =3D=3D 0)
+> > +             return false;
+>
+> How would ACPI/PM ever be selected as a suspend clocksource? It's not
+> marked CLOCK_SOURCE_SUSPEND_NONSTOP.
+>
+> There is a reason why clocksources have suspend/resume and
+> enable/disable callbacks. The latter allow you to turn it completely off
+> when it is not in use.
+>
+> Something like the below should work. It's uncompiled, but you get the
+> idea.
+>
+> Thanks,
+>
+>         tglx
 > ---
->  drivers/platform/x86/fujitsu-laptop.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index 968fc91bd5e4..ae992ac1ab4a 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -43,7 +43,6 @@
->  #include <linux/bitops.h>
->  #include <linux/dmi.h>
->  #include <linux/backlight.h>
-> -#include <linux/fb.h>
->  #include <linux/input.h>
->  #include <linux/input/sparse-keymap.h>
->  #include <linux/kfifo.h>
-> @@ -356,7 +355,7 @@ static int bl_get_brightness(struct backlight_device *b)
->  {
->  	struct acpi_device *device = bl_get_data(b);
->  
-> -	return b->props.power == FB_BLANK_POWERDOWN ? 0 : get_lcd_level(device);
-> +	return b->props.power == BACKLIGHT_POWER_OFF ? 0 : get_lcd_level(device);
+> --- a/drivers/clocksource/acpi_pm.c
+> +++ b/drivers/clocksource/acpi_pm.c
+> @@ -63,12 +63,40 @@ static u64 acpi_pm_read(struct clocksour
+>         return (u64)read_pmtmr();
 >  }
->  
->  static int bl_update_status(struct backlight_device *b)
-> @@ -364,7 +363,7 @@ static int bl_update_status(struct backlight_device *b)
->  	struct acpi_device *device = bl_get_data(b);
->  
->  	if (fext) {
-> -		if (b->props.power == FB_BLANK_POWERDOWN)
-> +		if (b->props.power == BACKLIGHT_POWER_OFF)
->  			call_fext_func(fext, FUNC_BACKLIGHT, 0x1,
->  				       BACKLIGHT_PARAM_POWER, BACKLIGHT_OFF);
->  		else
-> @@ -933,9 +932,9 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
->  	    acpi_video_get_backlight_type() == acpi_backlight_vendor) {
->  		if (call_fext_func(fext, FUNC_BACKLIGHT, 0x2,
->  				   BACKLIGHT_PARAM_POWER, 0x0) == BACKLIGHT_OFF)
-> -			fujitsu_bl->bl_device->props.power = FB_BLANK_POWERDOWN;
-> +			fujitsu_bl->bl_device->props.power = BACKLIGHT_POWER_OFF;
->  		else
-> -			fujitsu_bl->bl_device->props.power = FB_BLANK_UNBLANK;
-> +			fujitsu_bl->bl_device->props.power = BACKLIGHT_POWER_ON;
->  	}
->  
->  	ret = acpi_fujitsu_laptop_input_setup(device);
-> -- 
-> 2.45.2
-
--- 
+>
+> +static bool acpi_pm_enabled;
+> +
+> +static void (*enable_callback)(bool enable);
+> +
+> +bool acpi_pm_register_enable_callback(void (*cb)(bool enable))
+> +{
+> +       enable_callback =3D cb;
+> +       if (cb)
+> +               cb(acpi_pm_enabled);
+> +}
+> +
+> +static int acpi_pm_enable(struct clocksource *cs)
+> +{
+> +       acpi_pm_enabled =3D true;
+> +       if (enable_callback)
+> +               enable_callback(true);
+> +       return 0;
+> +}
+> +
+> +static void acpi_pm_disable(struct clocksource *cs)
+> +{
+> +       acpi_pm_enabled =3D false;
+> +       if (enable_callback)
+> +               enable_callback(false);
+> +}
+> +
+>  static struct clocksource clocksource_acpi_pm =3D {
+>         .name           =3D "acpi_pm",
+>         .rating         =3D 200,
+>         .read           =3D acpi_pm_read,
+>         .mask           =3D (u64)ACPI_PM_MASK,
+>         .flags          =3D CLOCK_SOURCE_IS_CONTINUOUS,
+> +       .enable         =3D acpi_pm_enable,
+> +       .disable        =3D acpi_pm_disable,
+>  };
+>
+Thanks. I'll try do this in that way. But I need to disable/enable
+ACPI PM timer only on suspend/resume, so I'll use suspend/resume
+callbacks.
