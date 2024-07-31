@@ -1,79 +1,79 @@
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF7D1B3748;
-	Wed, 31 Jul 2024 12:52:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9E81B29B3;
+	Wed, 31 Jul 2024 12:52:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722430357; cv=none; b=Wg0iISSWnLwUE5C5jtSkTdRmzA2EVIzjeNDZiRN2+B7Kaj+csC4oJhHtD5Rdzdvi0ByHvnTvgnAseLPGEHwdeREWmYwKHdN88UzetePCeF947k6zInxIAnw/3yMY+y8BDV7QNwU2ax4C4ZkwjFTRgEovEcC7f3Ia4v1cz2O+j1s=
+	t=1722430360; cv=none; b=K9RD2SodO1DY6iYHayV6wbk8XuoBs2YgcRwrZEbAMvvgYEbLqvuSS9VRpGjdT6PJiwLxA9F9ZZ3nwV1H58uNoQIyR+3kNMyubdl5TLQttslaZX/q2gznURsmPm/06bVBG6N4vs1006FbhgbzHA9xCjNaepi35BIxVl2bHZJILME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722430357; c=relaxed/simple;
-	bh=gecRab97xdIQjGLDS/dPk+7Td0sq611oMBXCRh5sflE=;
+	s=arc-20240116; t=1722430360; c=relaxed/simple;
+	bh=ghIcj43pPmX/hrpOf6W2KGvuH1Kv6qQVduc+37OxUYs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ddsVuMDRWnq8tWLcP518fxeGk8BmjftiojhFlRK8mrHp7m68/IayTgdMhM1+rIt2OvNffzxe5QIOz0HN3Natm30sdsJkuEMqEMomZR/p9sx+SgoRTtugpsl9cgNgwPkIqvFHeZblIN9CZXZqrxA685P0zjJqm8ER499gK53AkIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ujy/MoQw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FHuHDC9E; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ujy/MoQw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FHuHDC9E; arc=none smtp.client-ip=195.135.223.130
+	 MIME-Version:Content-Type; b=HNPGgRHm9e2dbUVUWgzqPtz7ULer6goM/f6pSHvyZ/uPwWv3pYFF567u0ZcpXPydLXM/IiJi3btK/hITzUis8FnBsY36f+aVyLgRRGtFSCZp0MW8cXtQYRgNttE8eH6U+rM9GR1moQR8fN+yTLIR7sJX4boDozRqCJCtvGkX/WM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HPXSd8eb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rcCvM3Ov; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HPXSd8eb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=rcCvM3Ov; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ujy/MoQw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FHuHDC9E";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ujy/MoQw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FHuHDC9E"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HPXSd8eb";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rcCvM3Ov";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HPXSd8eb";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rcCvM3Ov"
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id F3C0621AEA;
-	Wed, 31 Jul 2024 12:52:25 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7617421B32;
+	Wed, 31 Jul 2024 12:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
 	t=1722430346; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DPJSV2OiyVR33EaM00O4ZfycCar5OaIUtMqXpZ69k/I=;
-	b=ujy/MoQwJFylg5zbPC/Jn+6ZkljjATaz+EhKX0PospAPge347NgXvYC3ZDq+obfkwddUbq
-	jNm4UK+MEhlUirAdgerysijg/rmeDsP0qmbyBRWUJ8el+x0EZJG4/1DR1aqU0Z0eWjgR0w
-	xbTZ95PIWVeJ1z5Wv3RQTxSdmxn8g+k=
+	bh=1B8vlYIUQ4JeRsr43JDhjtyxkNDxyQuUv2l0wh1KxQ8=;
+	b=HPXSd8ebz020aZMYLWrJb6atB+L3w/LlP0zSPCFLw1LvLG/nsUKBRtOYgXrY2Mj6/kGj3E
+	jwmbBen53RVjBxc541qT9i3BP9Aun4N3rxCwe8E1K7YR/H3T2OYyYk2+rdHi93/4r1kUuS
+	bd3U1HPrj+3PIeywynXBCzrWwLeXsfo=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
 	s=susede2_ed25519; t=1722430346;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DPJSV2OiyVR33EaM00O4ZfycCar5OaIUtMqXpZ69k/I=;
-	b=FHuHDC9ELs1jSYG1zYOU02amuqnRk1qI9AgBGZG1ivvKXfXIY6WAxw/eCwWJWAy6w/Svgd
-	SYKevdGWFranHLBA==
+	bh=1B8vlYIUQ4JeRsr43JDhjtyxkNDxyQuUv2l0wh1KxQ8=;
+	b=rcCvM3Ovv6tUDzBjWdmu1CEDb2BTz6hvvyzlxEfweIzHqQdUsrpXJsRH4zLgbbBW3h6Evv
+	rzPFGPzAA7OYDWAQ==
 Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="ujy/MoQw";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=FHuHDC9E
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=HPXSd8eb;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=rcCvM3Ov
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
 	t=1722430346; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DPJSV2OiyVR33EaM00O4ZfycCar5OaIUtMqXpZ69k/I=;
-	b=ujy/MoQwJFylg5zbPC/Jn+6ZkljjATaz+EhKX0PospAPge347NgXvYC3ZDq+obfkwddUbq
-	jNm4UK+MEhlUirAdgerysijg/rmeDsP0qmbyBRWUJ8el+x0EZJG4/1DR1aqU0Z0eWjgR0w
-	xbTZ95PIWVeJ1z5Wv3RQTxSdmxn8g+k=
+	bh=1B8vlYIUQ4JeRsr43JDhjtyxkNDxyQuUv2l0wh1KxQ8=;
+	b=HPXSd8ebz020aZMYLWrJb6atB+L3w/LlP0zSPCFLw1LvLG/nsUKBRtOYgXrY2Mj6/kGj3E
+	jwmbBen53RVjBxc541qT9i3BP9Aun4N3rxCwe8E1K7YR/H3T2OYyYk2+rdHi93/4r1kUuS
+	bd3U1HPrj+3PIeywynXBCzrWwLeXsfo=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
 	s=susede2_ed25519; t=1722430346;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DPJSV2OiyVR33EaM00O4ZfycCar5OaIUtMqXpZ69k/I=;
-	b=FHuHDC9ELs1jSYG1zYOU02amuqnRk1qI9AgBGZG1ivvKXfXIY6WAxw/eCwWJWAy6w/Svgd
-	SYKevdGWFranHLBA==
+	bh=1B8vlYIUQ4JeRsr43JDhjtyxkNDxyQuUv2l0wh1KxQ8=;
+	b=rcCvM3Ovv6tUDzBjWdmu1CEDb2BTz6hvvyzlxEfweIzHqQdUsrpXJsRH4zLgbbBW3h6Evv
+	rzPFGPzAA7OYDWAQ==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BD96313297;
-	Wed, 31 Jul 2024 12:52:25 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 406BF13297;
+	Wed, 31 Jul 2024 12:52:26 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id AAv/LIkzqmYzVgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 31 Jul 2024 12:52:25 +0000
+	id wHJkDoozqmYzVgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 31 Jul 2024 12:52:26 +0000
 From: Thomas Zimmermann <tzimmermann@suse.de>
 To: hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com
@@ -82,9 +82,9 @@ Cc: platform-driver-x86@vger.kernel.org,
 	Thomas Zimmermann <tzimmermann@suse.de>,
 	Corentin Chary <corentin.chary@gmail.com>,
 	"Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH 04/10] platform/x86: asus-wmi: Use backlight power constants
-Date: Wed, 31 Jul 2024 14:50:54 +0200
-Message-ID: <20240731125220.1147348-5-tzimmermann@suse.de>
+Subject: [PATCH 06/10] platform/x86: eeepc-wmi: Use backlight power constants
+Date: Wed, 31 Jul 2024 14:50:56 +0200
+Message-ID: <20240731125220.1147348-7-tzimmermann@suse.de>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240731125220.1147348-1-tzimmermann@suse.de>
 References: <20240731125220.1147348-1-tzimmermann@suse.de>
@@ -98,7 +98,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: F3C0621AEA
+X-Rspamd-Queue-Id: 7617421B32
 X-Spam-Score: -3.81
 X-Spam-Level: 
 X-Spam-Flag: NO
@@ -125,7 +125,7 @@ X-Spamd-Result: default: False [-3.81 / 50.00];
 	TO_DN_SOME(0.00)[];
 	FROM_EQ_ENVFROM(0.00)[];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,intel.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
 	RCVD_COUNT_TWO(0.00)[2];
 	DKIM_TRACE(0.00)[suse.de:+]
 
@@ -139,93 +139,37 @@ Cc: "Luke D. Jones" <luke@ljones.dev>
 Cc: Hans de Goede <hdegoede@redhat.com>
 Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/platform/x86/asus-wmi.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ drivers/platform/x86/eeepc-wmi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index cc735931f97b..39fa651fc9a2 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -18,7 +18,6 @@
- #include <linux/debugfs.h>
- #include <linux/delay.h>
+diff --git a/drivers/platform/x86/eeepc-wmi.c b/drivers/platform/x86/eeepc-wmi.c
+index 32d9f0ba6be3..37edb9ae67b8 100644
+--- a/drivers/platform/x86/eeepc-wmi.c
++++ b/drivers/platform/x86/eeepc-wmi.c
+@@ -13,13 +13,13 @@
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
++#include <linux/backlight.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/input.h>
+ #include <linux/input/sparse-keymap.h>
  #include <linux/dmi.h>
 -#include <linux/fb.h>
- #include <linux/hwmon.h>
- #include <linux/hwmon-sysfs.h>
- #include <linux/init.h>
-@@ -3860,7 +3859,7 @@ static int read_backlight_power(struct asus_wmi *asus)
- 	if (ret < 0)
- 		return ret;
+ #include <linux/acpi.h>
  
--	return ret ? FB_BLANK_UNBLANK : FB_BLANK_POWERDOWN;
-+	return ret ? BACKLIGHT_POWER_ON : BACKLIGHT_POWER_OFF;
+ #include "asus-wmi.h"
+@@ -192,7 +192,7 @@ static void eeepc_wmi_quirks(struct asus_wmi_driver *driver)
+ 
+ 	driver->quirks = quirks;
+ 	driver->quirks->wapf = -1;
+-	driver->panel_power = FB_BLANK_UNBLANK;
++	driver->panel_power = BACKLIGHT_POWER_ON;
  }
  
- static int read_brightness_max(struct asus_wmi *asus)
-@@ -3919,7 +3918,7 @@ static int update_bl_status(struct backlight_device *bd)
- 
- 	power = read_backlight_power(asus);
- 	if (power != -ENODEV && bd->props.power != power) {
--		ctrl_param = !!(bd->props.power == FB_BLANK_UNBLANK);
-+		ctrl_param = !!(bd->props.power == BACKLIGHT_POWER_ON);
- 		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT,
- 					    ctrl_param, NULL);
- 		if (asus->driver->quirks->store_backlight_power)
-@@ -3978,7 +3977,7 @@ static int asus_wmi_backlight_init(struct asus_wmi *asus)
- 
- 	power = read_backlight_power(asus);
- 	if (power == -ENODEV)
--		power = FB_BLANK_UNBLANK;
-+		power = BACKLIGHT_POWER_ON;
- 	else if (power < 0)
- 		return power;
- 
-@@ -4036,7 +4035,7 @@ static int read_screenpad_backlight_power(struct asus_wmi *asus)
- 	if (ret < 0)
- 		return ret;
- 	/* 1 == powered */
--	return ret ? FB_BLANK_UNBLANK : FB_BLANK_POWERDOWN;
-+	return ret ? BACKLIGHT_POWER_ON : BACKLIGHT_POWER_OFF;
- }
- 
- static int read_screenpad_brightness(struct backlight_device *bd)
-@@ -4049,7 +4048,7 @@ static int read_screenpad_brightness(struct backlight_device *bd)
- 	if (err < 0)
- 		return err;
- 	/* The device brightness can only be read if powered, so return stored */
--	if (err == FB_BLANK_POWERDOWN)
-+	if (err == BACKLIGHT_POWER_OFF)
- 		return asus->driver->screenpad_brightness - ASUS_SCREENPAD_BRIGHT_MIN;
- 
- 	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_SCREENPAD_LIGHT, &retval);
-@@ -4070,7 +4069,7 @@ static int update_screenpad_bl_status(struct backlight_device *bd)
- 		return power;
- 
- 	if (bd->props.power != power) {
--		if (power != FB_BLANK_UNBLANK) {
-+		if (power != BACKLIGHT_POWER_ON) {
- 			/* Only brightness > 0 can power it back on */
- 			ctrl_param = asus->driver->screenpad_brightness - ASUS_SCREENPAD_BRIGHT_MIN;
- 			err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT,
-@@ -4078,7 +4077,7 @@ static int update_screenpad_bl_status(struct backlight_device *bd)
- 		} else {
- 			err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 0, NULL);
- 		}
--	} else if (power == FB_BLANK_UNBLANK) {
-+	} else if (power == BACKLIGHT_POWER_ON) {
- 		/* Only set brightness if powered on or we get invalid/unsync state */
- 		ctrl_param = bd->props.brightness + ASUS_SCREENPAD_BRIGHT_MIN;
- 		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT, ctrl_param, NULL);
-@@ -4108,7 +4107,7 @@ static int asus_screenpad_init(struct asus_wmi *asus)
- 	if (power < 0)
- 		return power;
- 
--	if (power != FB_BLANK_POWERDOWN) {
-+	if (power != BACKLIGHT_POWER_OFF) {
- 		err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_SCREENPAD_LIGHT, &brightness);
- 		if (err < 0)
- 			return err;
+ static struct asus_wmi_driver asus_wmi_driver = {
 -- 
 2.45.2
 
