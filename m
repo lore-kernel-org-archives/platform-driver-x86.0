@@ -1,148 +1,120 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276A31662F7;
-	Tue, 30 Jul 2024 18:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28962A41;
+	Wed, 31 Jul 2024 00:16:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722364417; cv=none; b=JyGN1IAy5kP3aufvGddljFzW4tEQdm+7xny0xfZH1upnKzOxIGBySuYvdsT/waYBp4JUozouUBW+YzHVYpbj1pxbVmg7meKHCztC7sARkMDbXdzGBXv/JEuxjlnGW6vz2AJ6R9sr3ZjxnBT4DBJyB5FFXg9gufRsQvPG8fgio+c=
+	t=1722384970; cv=none; b=gqUfGknv+h4kGY0Z8OvE9e8nZvBWvDF6WueRxQzndE6EbneHG3bdjCVN7lCoFAbHVa+wXgD+TQ5KR/cXJk9pH/+VkXUK9ZnO4tm/NKdK7w1n3JY+6eNgviMIdw/KDVr6+TahyNDyL8/pYNqylNFJa2kkpXovJAz+AUJK+I+IEMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722364417; c=relaxed/simple;
-	bh=1OBo5ac7UB980Vwp9IAp/IzlYLKbqDBtnTkktrSInEY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KWCGrbrw/vqJ1JlfGspO7NMrDSOKaV8lA5uq0YczYMD+NyfrdMt5yJvxeJbLxL/m04Gmzf4MEploucTbrPwKB30zzaUcWXe1a93aayQU83kBkiIzkhAIZFAWIr0vdLkxA0w5q0FvIJb+L47n329AWIc4Jvi+jSyXiBcbhS7cXAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=kxVpww3g reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1722384970; c=relaxed/simple;
+	bh=IgqLaxo/OHEm/D75VDf/y0x0DQoL9NGxFSzNrXGPcEY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZGTpakr4hC0E6psKUoQYj9T701ulA0zBV+VOML2zBFgy4NErCXU8KI1BoORfQF3j6fUoBYRVojRwxwXeKiRXyKi91HU1VGJBGjxermR/9l8DfLR9nAM411lTs+mrYuRUIqpgU/Q0ynTow4aK7PAy2H+7Lw/eVsWPVlQ1yVGDoO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=McuzqeQq; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="kxVpww3g"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.0)
- id 3b628da5022b9dc8; Tue, 30 Jul 2024 20:33:33 +0200
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 8F388956ED0;
-	Tue, 30 Jul 2024 20:33:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1722364413;
-	bh=1OBo5ac7UB980Vwp9IAp/IzlYLKbqDBtnTkktrSInEY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=kxVpww3gkRboC5/DX5eRm0xJHayHx2aOJiphYQPpQguW7TuLOeex0kd/Uf5ny6kes
-	 VnGxuEW1HxUVvoV+XlcqYv/lw064F8H0tenzVBDEkCbgViZwm6sCqYQ90ofKHpItPu
-	 nEuUN2PFcfdeFvFgN8zmP1G9RdGjcGLpNC6YYMt/5LtHvgvAd2bkt3gM8tn8jS7MGV
-	 2LfMOqF72Aqbu0kvd58EI7Cl63oMBsyKUU6dUYCbMYJMPqVWp8axrC0TBZRThAIfHJ
-	 fuJF1DAR3aCdmJs8s9qgVMz1ohss7RcBLOJGmKhlOexbjk7hapenQQrv63ENwSBh9K
-	 f6TCBAl6Tj85g==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux ACPI <linux-acpi@vger.kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Lukasz Luba <lukasz.luba@arm.com>, Zhang Rui <rui.zhang@intel.com>,
- Peter Kaestle <peter@piie.net>, platform-driver-x86@vger.kernel.org
-Subject:
- [PATCH v1 12/17] platform/x86: acerhdf: Use the .should_bind() thermal zone
- callback
-Date: Tue, 30 Jul 2024 20:33:32 +0200
-Message-ID: <2242500.C4sosBPzcN@rjwysocki.net>
-In-Reply-To: <1922131.tdWV9SEqCh@rjwysocki.net>
-References: <1922131.tdWV9SEqCh@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="McuzqeQq"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6519528f44fso36907407b3.1;
+        Tue, 30 Jul 2024 17:16:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722384968; x=1722989768; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WwdnCsCQMNgwGC4xpVHvPeVi+xBLWUp6NbXom0FK2po=;
+        b=McuzqeQqBX3QBxnMbU+7CllPvhvbVW406a8a6DUYWUnyFjk1NX+QshE4qnPihHZkGN
+         yQSiPRFy7lzzMpFEU3H08dKOdFjyqiRi0vwnMETWzvQ9nkpuQL8Z7nLYl1fNc6R/u+dH
+         K8T63zlPJuLW5g4FqxlpMtAICwha4JAYcyjX2/1/LJBLbbnBNH+aSCDY9zTLlIjVSB57
+         jGJzfqSQzqErwSAVijCnGzOIeA21FctzKHWRLSL2V7VgHXQfKOMwAf3ry8pDUwitKFiG
+         PKM0esw/IgVgSLjFwk0TBK4uX5YZvH/Xl+tjSvt47gIfaiKHMuhpREC4Pa0tDlAfcTqM
+         yHTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722384968; x=1722989768;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WwdnCsCQMNgwGC4xpVHvPeVi+xBLWUp6NbXom0FK2po=;
+        b=eyoL+/qfzjJZEyoGLpkmMyEU1pEvGPp2gu1nfU6GhtxK2ZRfi74EfnUX6Gpo8FiAE3
+         E6IcIQeG581H9cd7NBRQhZXQFDTBE0kkbwQBQOBy10hhBeEzu7PztrIQ2Q23sLnW1+c+
+         O+1F6ZmoqWBx9CCSQ5IfDXb2sD3BNRPHPSEQuxqS7srsHwd3sUI97L5ETcvkgJYg81th
+         I0JrLEP/YgXIMXyt9EqLpJaPfOpU0DIh4Wlydz3uBXhArFOWR1/o1VwihNn5h7IyijAo
+         N0hQtqPNHCzPZl+TRXdRZj4zxW5NdZVBjfUv5ONEJPLl3Xg3IkdC8RdW2zjHm9n6A41Q
+         8ulQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXsmbZNv4ejK6uTbLJwadOJ4Tb/r6lPwOO8bctkKl++5NWvcjglUeg+Opf7oqf9xv3vWtZaLcjZSCJDoMDKRsLmW6pwyTYmB3wiy1ENGbYjXP61ZdESfSuo4FBrNNH2oXaTRK3b5evXHG+nMrQsqw==
+X-Gm-Message-State: AOJu0YxIeT/VX9/8mBmV5/0ApSJSWKL1BaqkONVOJvCST6VqnpZjh7fq
+	kehWo5WNpSEAzcbEZx71AaKgUA9zzqPaOBB1L2acJnYmSANeMO7E
+X-Google-Smtp-Source: AGHT+IGxDCZIaBjQmG19x/rKvVdHhTyCGMhA3BdgvEkyguTA/p6nT7eLwvjd542OAvXKDGX+06G6uQ==
+X-Received: by 2002:a81:a20d:0:b0:62f:aaaa:187a with SMTP id 00721157ae682-67a0672bd91mr138831297b3.14.1722384968043;
+        Tue, 30 Jul 2024 17:16:08 -0700 (PDT)
+Received: from x13.lan (2603-9001-2ff0-a230-0000-0000-0000-1896.inf6.spectrum.com. [2603:9001:2ff0:a230::1896])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6756b303ec6sm27468397b3.81.2024.07.30.17.16.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jul 2024 17:16:07 -0700 (PDT)
+From: Luis Felipe Hernandez <luis.hernandez093@gmail.com>
+To: W_Armin@gmx.de,
+	corbet@lwn.net
+Cc: Luis Felipe Hernandez <luis.hernandez093@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel-mentees@lists.linuxfoundation.org,
+	skhan@linuxfoundation.org
+Subject: [PATCH v3] platform/x86: msi-wmi-platform: Fix spelling mistakes
+Date: Tue, 30 Jul 2024 20:15:59 -0400
+Message-ID: <20240731001602.259338-1-luis.hernandez093@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: spam:low
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeftddrjeeggdduvdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogfuphgrmhfkphculdeftddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppeduleehrddufeeirdduledrleegnecuufhprghmkfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepkedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrtghpihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhukhgrshiirdhluhgsrgesrghrmhdrtghomhdprhgtphhtthhopehruhhirdiihhgrnhhgsehinhhtvghlrdgtohhmpdhrtghpthhtohepphgvthgvrhesphhiihgvrdhnvghtpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=32 Fuz1=32 Fuz2=32
+Content-Transfer-Encoding: 8bit
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+There were a few instances of typos that lead could to confusion
+when reading. The following words have been corrected:
+Binay -> Binary
+singe -> single
+chaged -> changed
 
-Make the acerhdf driver use the .should_bind() thermal zone
-callback to provide the thermal core with the information on whether or
-not to bind the given cooling device to the given trip point in the
-given thermal zone.  If it returns 'true', the thermal core will bind
-the cooling device to the trip and the corresponding unbinding will be
-taken care of automatically by the core on the removal of the involved
-thermal zone or cooling device.
-
-The previously existing acerhdf_bind() function bound cooling devices
-to thermal trip point 0 only, so the new callback needs to return 'true'
-for trip point 0.  However, it is straightforward to observe that trip
-point 0 is an active trip point and the only other trip point in the
-driver's thermal zone is a critical one, so it is sufficient to return
-'true' from that callback if the type of the given trip point is
-THERMAL_TRIP_ACTIVE.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Luis Felipe Hernandez <luis.hernandez093@gmail.com>
 ---
-
-This patch only depends on patch [09/17].
-
+Changes in v3:
+- Address review feedback regarding subject line 
+- Link to v2 https://lore.kernel.org/all/20240729223649.135639-1-luis.hernandez093@gmail.com/
+- Addres review feedback regarding empty commit message body
+- Link to v1 https://lore.kernel.org/all/20240729164721.125708-1-luis.hernandez093@gmail.com/
 ---
- drivers/platform/x86/acerhdf.c |   33 ++++++---------------------------
- 1 file changed, 6 insertions(+), 27 deletions(-)
+ Documentation/wmi/devices/msi-wmi-platform.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Index: linux-pm/drivers/platform/x86/acerhdf.c
-===================================================================
---- linux-pm.orig/drivers/platform/x86/acerhdf.c
-+++ linux-pm/drivers/platform/x86/acerhdf.c
-@@ -378,33 +378,13 @@ static int acerhdf_get_ec_temp(struct th
- 	return 0;
- }
+diff --git a/Documentation/wmi/devices/msi-wmi-platform.rst b/Documentation/wmi/devices/msi-wmi-platform.rst
+index 29b1b2e6d42c..31a136942892 100644
+--- a/Documentation/wmi/devices/msi-wmi-platform.rst
++++ b/Documentation/wmi/devices/msi-wmi-platform.rst
+@@ -130,12 +130,12 @@ data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
  
--static int acerhdf_bind(struct thermal_zone_device *thermal,
--			struct thermal_cooling_device *cdev)
-+static bool acerhdf_should_bind(struct thermal_zone_device *thermal,
-+				const struct thermal_trip *trip,
-+				struct thermal_cooling_device *cdev,
-+				struct cooling_spec *c)
- {
- 	/* if the cooling device is the one from acerhdf bind it */
--	if (cdev != cl_dev)
--		return 0;
--
--	if (thermal_zone_bind_cooling_device(thermal, 0, cdev,
--			THERMAL_NO_LIMIT, THERMAL_NO_LIMIT,
--			THERMAL_WEIGHT_DEFAULT)) {
--		pr_err("error binding cooling dev\n");
--		return -EINVAL;
--	}
--	return 0;
--}
--
--static int acerhdf_unbind(struct thermal_zone_device *thermal,
--			  struct thermal_cooling_device *cdev)
--{
--	if (cdev != cl_dev)
--		return 0;
--
--	if (thermal_zone_unbind_cooling_device(thermal, 0, cdev)) {
--		pr_err("error unbinding cooling dev\n");
--		return -EINVAL;
--	}
--	return 0;
-+	return cdev == cl_dev && trip->type == THERMAL_TRIP_ACTIVE;
- }
+ Due to a peculiarity in how Windows handles the ``CreateByteField()`` ACPI operator (errors only
+ happen when a invalid byte field is ultimately accessed), all methods require a 32 byte input
+-buffer, even if the Binay MOF says otherwise.
++buffer, even if the Binary MOF says otherwise.
  
- static inline void acerhdf_revert_to_bios_mode(void)
-@@ -447,8 +427,7 @@ static int acerhdf_get_crit_temp(struct
+ The input buffer contains a single byte to select the subfeature to be accessed and 31 bytes of
+ input data, the meaning of which depends on the subfeature being accessed.
  
- /* bind callback functions to thermalzone */
- static struct thermal_zone_device_ops acerhdf_dev_ops = {
--	.bind = acerhdf_bind,
--	.unbind = acerhdf_unbind,
-+	.should_bind = acerhdf_should_bind,
- 	.get_temp = acerhdf_get_ec_temp,
- 	.change_mode = acerhdf_change_mode,
- 	.get_crit_temp = acerhdf_get_crit_temp,
-
-
+-The output buffer contains a singe byte which signals success or failure (``0x00`` on failure)
++The output buffer contains a single byte which signals success or failure (``0x00`` on failure)
+ and 31 bytes of output data, the meaning if which depends on the subfeature being accessed.
+ 
+ WMI method Get_EC()
+@@ -147,7 +147,7 @@ data contains a flag byte and a 28 byte controller firmware version string.
+ The first 4 bits of the flag byte contain the minor version of the embedded controller interface,
+ with the next 2 bits containing the major version of the embedded controller interface.
+ 
+-The 7th bit signals if the embedded controller page chaged (exact meaning is unknown), and the
++The 7th bit signals if the embedded controller page changed (exact meaning is unknown), and the
+ last bit signals if the platform is a Tigerlake platform.
+ 
+ The MSI software seems to only use this interface when the last bit is set.
+-- 
+2.45.2
 
