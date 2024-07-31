@@ -1,47 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68857381AD;
-	Wed, 31 Jul 2024 18:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45CC1396;
+	Wed, 31 Jul 2024 18:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722451381; cv=none; b=JwbaijztBH5HtRCzjnsl5+0DMfW/TBOPSPRhSnibR0itfTnjXH8PN7FrwPZgxTcfwabMQSkKX64znIhv6JK3LA5GChCe6d9iOC60ZnmT4De4yp8L8W92g4wujIzjVUE36erBbAOXUt/IM42qC4iXDlGNL4DKBV6xb9LqKkFpFJM=
+	t=1722452282; cv=none; b=aCozGVe4OI2XZn6unAENGth+dYTgWSfmxV5Jbo4JtVVUwMZEbkwx/MhF8P10sATF9kvfCYu4UjK8rFeygQSRVKNKMzBy1IjjYYgvz4EwlTFEPRhmCu7XmNa0bqyXi3lulIji+TJ/BC5Y2PZZl7iX5r2/zpho3qTQPswIQou/ZsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722451381; c=relaxed/simple;
-	bh=gT1ojs+HfsdojP33vEn+OJfDKKuLIhtMiC7HnCT+qOY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=elfJXjqFN7fHQRCY7X8Ei8ttPbeTsl79ZZjt4mCnFxp80np2leQPHysCS1D9vB5tNh5RBa3oZqHXCkmRp9LXeoTnJoxusVDupyo84eesiGQvW+O1REyW/tjFfFbaeCoUP+B5u1ncRsNmLRIfeSE5AMZdkQYXEAgOJARN+xML+SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FK8oVVlQ; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1722452282; c=relaxed/simple;
+	bh=MGeuEpaSQDHD8qKl4h2iryP6SiEohHJXEcqm6rTILks=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=opUrKN7efcL9YTiakpbpdv1Y2wjZ+lGilGztn9XUAePwMUQ00panzjdslYuwF0KObKhoBVsABSUK4GFS09kclg+j7eN4aY/GDUustA/BCMmvtp4FUfcvKjr5NoODedCCwHLYixnkfCTsz27BjO9NmBBBO4FGNP24lhNMExRRohk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J8XEd5jX; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FK8oVVlQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J8XEd5jX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722451380; x=1753987380;
+  t=1722452281; x=1753988281;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=gT1ojs+HfsdojP33vEn+OJfDKKuLIhtMiC7HnCT+qOY=;
-  b=FK8oVVlQcBKVoLmMB2O1VgHs9W02e9w6b68N6Mne1M7gMkcjimqVCVKF
-   bw1SwEmXfvTKoW7DJoRw8WT8A3jZZsLH06yW9fNBG5ez2fICpFgUccST5
-   2hduhqMS8WVKEe+utl0PZj/R5YJMLDu3bonqkbL9l7ZR9jYRnz8jzsJyi
-   eRSww/+KLwV/q7+baVlFBO01QKEuJ4AZ47+Zgye6iYy1l5N2Pa2TUljG2
-   6WqFx0UVKiZOrREH4TsdssYVseI9RA6LioCBhJ4UUCcSj8jPsrGNOzkc6
-   95WTSFGjKbVlaafxDAdI70HjR9MqRe67I7rOTQcUH2b9Rxj3Ff6m7QSO0
-   w==;
-X-CSE-ConnectionGUID: AgfyOjprTxWmDJCePHdl6Q==
-X-CSE-MsgGUID: GCgwH3UXT52GU2FV8PNV1Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11150"; a="23270214"
+  bh=MGeuEpaSQDHD8qKl4h2iryP6SiEohHJXEcqm6rTILks=;
+  b=J8XEd5jX80j4ZxcYY8SkGbMd9CKu83E37iWInHw8AgRsWDFM82UEFfGJ
+   eeXd9GuZRmKoX6B2hZuZQtV8mWwSKHBpAAFnScD4e2tYgAh0PPrklNuNT
+   P8Y4lcnl0B3pZOSFWd34tLJ6eoCSxoFbg3IWt5tEgkIDL/PclRVfFyEk+
+   vdM+HEi4CJfN7jEe2Cg2JJv0+//vPMkQFajq53Yao9g1H54Q1883maHwf
+   xJUFpLDrnyUUfm9eCh8gxmWJNcybos6ShPcwDI4nvSWpV8tqVP+TlhWN7
+   WZs/zg302X5wm1SKGcqrdP2/zVUd+7pV9n4/JKz4cMfxvHF9SO4mau4zk
+   g==;
+X-CSE-ConnectionGUID: OIXXcneFQ3+HiR0IEiRFdw==
+X-CSE-MsgGUID: FS7reeQ2S4m4RFq0UCm/mQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11150"; a="12811992"
 X-IronPort-AV: E=Sophos;i="6.09,251,1716274800"; 
-   d="scan'208";a="23270214"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 11:42:59 -0700
-X-CSE-ConnectionGUID: l4+teZzUSmaLaonzjyo7LQ==
-X-CSE-MsgGUID: uxjy+WVvR8CgcMt1r71ZDQ==
+   d="scan'208";a="12811992"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 11:58:00 -0700
+X-CSE-ConnectionGUID: 06+RDcWcQSG8iKj27fsldA==
+X-CSE-MsgGUID: GNlyGowSQA2jxXKI//aFBg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,251,1716274800"; 
-   d="scan'208";a="85399134"
+   d="scan'208";a="54437617"
 Received: from spandruv-desk.jf.intel.com ([10.54.75.19])
-  by orviesa002.jf.intel.com with ESMTP; 31 Jul 2024 11:42:58 -0700
+  by fmviesa007.fm.intel.com with ESMTP; 31 Jul 2024 11:57:58 -0700
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 To: hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com,
@@ -49,9 +49,9 @@ To: hdegoede@redhat.com,
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] platform/x86: ISST: Simplify isst_misc_reg() and isst_misc_unreg()
-Date: Wed, 31 Jul 2024 11:42:56 -0700
-Message-ID: <20240731184256.1852840-1-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] platform/x86/intel-uncore-freq: Do not present separate package-die domain
+Date: Wed, 31 Jul 2024 11:57:56 -0700
+Message-ID: <20240731185756.1853197-1-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -61,86 +61,47 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-After commit '1630dc626c87 ("platform/x86: ISST: Add model specific
-loading for common module")' isst_misc_reg() and isst_misc_unreg() can be
-simplified. Since these functions are only called during module_init()
-and module_exit() respectively, there is no contention while calling
-misc_register()/misc_deregister or isst_if_cpu_info_init()/
-isst_if_cpu_info_exit().
+The scope of uncore control is per power domain in a package and die.
+A package-die can have multiple power domains on some processors. In this
+case package-die domain (root domain) aggregates all information from
+power domains in it.
 
-Hence remove mutex and reference counting.
+On some processors, CPUID enumerates the die number same as power domain
+ID. In this case there is one to one relationship between package-die and
+power domain ID. There is no use of aggregating information from all
+power domain IDs as the information will be duplicate and confusing. In
+this case do not create separate package-die domain.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- .../intel/speed_select_if/isst_if_common.c    | 42 +++++--------------
- 1 file changed, 11 insertions(+), 31 deletions(-)
+ .../x86/intel/uncore-frequency/uncore-frequency-tpmi.c     | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-index 3065f149e721..febfd5eeceb4 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-@@ -651,10 +651,6 @@ static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
+diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
+index 9fa3037c03d1..6c2e607968f2 100644
+--- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
++++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
+@@ -427,6 +427,9 @@ static int uncore_probe(struct auxiliary_device *auxdev, const struct auxiliary_
  
- /* Lock to prevent module registration when already opened by user space */
- static DEFINE_MUTEX(punit_misc_dev_open_lock);
--/* Lock to allow one shared misc device for all ISST interfaces */
--static DEFINE_MUTEX(punit_misc_dev_reg_lock);
--static int misc_usage_count;
--static int misc_device_ret;
- static int misc_device_open;
+ 	auxiliary_set_drvdata(auxdev, tpmi_uncore);
  
- static int isst_if_open(struct inode *inode, struct file *file)
-@@ -720,39 +716,23 @@ static struct miscdevice isst_if_char_driver = {
- 
- static int isst_misc_reg(void)
- {
--	mutex_lock(&punit_misc_dev_reg_lock);
--	if (misc_device_ret)
--		goto unlock_exit;
--
--	if (!misc_usage_count) {
--		misc_device_ret = isst_if_cpu_info_init();
--		if (misc_device_ret)
--			goto unlock_exit;
--
--		misc_device_ret = misc_register(&isst_if_char_driver);
--		if (misc_device_ret) {
--			isst_if_cpu_info_exit();
--			goto unlock_exit;
--		}
--	}
--	misc_usage_count++;
-+	int ret;
- 
--unlock_exit:
--	mutex_unlock(&punit_misc_dev_reg_lock);
-+	ret = isst_if_cpu_info_init();
-+	if (ret)
-+		return ret;
- 
--	return misc_device_ret;
-+	ret = misc_register(&isst_if_char_driver);
-+	if (ret)
-+		isst_if_cpu_info_exit();
++	if (topology_max_dies_per_package() > 1)
++		return 0;
 +
-+	return ret;
- }
+ 	tpmi_uncore->root_cluster.root_domain = true;
+ 	tpmi_uncore->root_cluster.uncore_root = tpmi_uncore;
  
- static void isst_misc_unreg(void)
+@@ -450,7 +453,9 @@ static void uncore_remove(struct auxiliary_device *auxdev)
  {
--	mutex_lock(&punit_misc_dev_reg_lock);
--	if (misc_usage_count)
--		misc_usage_count--;
--	if (!misc_usage_count && !misc_device_ret) {
--		misc_deregister(&isst_if_char_driver);
--		isst_if_cpu_info_exit();
--	}
--	mutex_unlock(&punit_misc_dev_reg_lock);
-+	misc_deregister(&isst_if_char_driver);
-+	isst_if_cpu_info_exit();
- }
+ 	struct tpmi_uncore_struct *tpmi_uncore = auxiliary_get_drvdata(auxdev);
  
- /**
+-	uncore_freq_remove_die_entry(&tpmi_uncore->root_cluster.uncore_data);
++	if (tpmi_uncore->root_cluster.root_domain)
++		uncore_freq_remove_die_entry(&tpmi_uncore->root_cluster.uncore_data);
++
+ 	remove_cluster_entries(tpmi_uncore);
+ 
+ 	uncore_freq_common_exit();
 -- 
-2.43.0
+2.39.3
 
