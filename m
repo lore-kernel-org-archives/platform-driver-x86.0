@@ -1,82 +1,138 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BECEC1AA3CC;
-	Wed, 31 Jul 2024 21:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4670132114;
+	Thu,  1 Aug 2024 05:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722462406; cv=none; b=M98ZGwk/xQfYVcW0U3GzVOMnxitSk1xQffYIcLXsErGQ0+3k0ZZScQ7QJwLuOmSAaofPaPUWFZkr8Y0Vq4QgPmvjuW3iCj5Ob+bBuU4TLTi1QbihwJhEqgrUW/QCgws3CTvN7iQLo0tLu///oxZLBwQGjGqN/8KmeDlh6Z9nRy4=
+	t=1722489649; cv=none; b=OY3z8ja+oTbVxfZ2GQ0NCDC0D34kjVywmQyxA85uVUAL3kBeBDaez37jj3d++ZZgSCcK37eqZIILTsUUDzhW+1SuNjPmELTc8ISoeJWTBjH33VPyD8uJ0XgXZ/gQ+07PVd+8rFwzTfi4q/KE6UT2tQzCVzJxU9cxgZ1hWXdbjEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722462406; c=relaxed/simple;
-	bh=jz94UU4hVC0ykhl8YwuqabuD2j+eVBJGh+9c1JpDr8Q=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=quVpB8Zv75UvY1ksT7mOVYTNK+i8E396YXqaFRNJYAuAU8xZRqbEO9Obm8QPniioyLg/C5olOcY032OD5RdS2Fqoa/afMhKQRZ6I45LNnG5VK3rIwwnnQ5/f8G8OWkghavL+S3iQPTtIUhET/uIuvBzgpA1dah0BSODW6vSR3CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZsD5LvFM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZiVLey70; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1722489649; c=relaxed/simple;
+	bh=YU/63FNruDeAFMPEDziJs8zsHHNVgZHddDQyLvPxjlU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=NElOGtziBLIkPsSBMrAxz3GEQbQeY7Qq/DKvmmnHqmxY3xezvc4IiRmaZBPfzhWA5Gr2YImhR0wVpAIxMHrEQYm80Ldy57yHDMpDhx4zKjC4llOcHtiy/XJrLmbDfwxGFAu5w+sYM50FTFNW1mKdYQKL/8hK2ogqohUTWwQ90Is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bNtAANL7; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZsD5LvFM";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZiVLey70"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1722462402;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jz94UU4hVC0ykhl8YwuqabuD2j+eVBJGh+9c1JpDr8Q=;
-	b=ZsD5LvFM1NAdmnLWVAh7SpIpqT5s5lpBVyUBZ0v6hkHcXNewCuPj/neT9tHZyejH8M3f6i
-	CGlOF7lDxTN48DsoXUu7KtPWWlQM38sdmvezPSW98HiKhqa8aPvuiAQYRJAnBcpM8N+1MB
-	v+WM+XrxZW3QJ+rwyIGL/EeL48Ye+0KfIZGYNjasTKNT8vBA+PW+YSJbu+B3EUSkfHlgK2
-	9swOKmNRrO4mez15gpSju7WZ0JPsJoR5gMXvKibGyru5uy0z0zEKWREi/ocNlkLMb8au/K
-	0y4yaela1omgPyL4itF37EgdKTAfGimTPAfeoXb1/XyX/iBgsVff/Mb1sc2ZnQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1722462402;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jz94UU4hVC0ykhl8YwuqabuD2j+eVBJGh+9c1JpDr8Q=;
-	b=ZiVLey70a7cqQeUwox1KmykYfbP/wM5Ihkz4PKcHRUv6x/zCDAGeLq60p+y7O0suVVt7h6
-	rbX/LpeZ4bMRWlDA==
-To: Marek =?utf-8?Q?Ma=C5=9Blanka?= <mmaslanka@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj
- <irenic.rajneesh@gmail.com>, David E Box <david.e.box@intel.com>, Hans de
- Goede <hdegoede@redhat.com>, Ilpo =?utf-8?Q?J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, John Stultz <jstultz@google.com>, Stephen
- Boyd <sboyd@kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3] platform/x86:intel/pmc: Enable the ACPI PM Timer to
- be turned off when suspended
-In-Reply-To: <CAGcaFA2eXzzCVqG-DSWDb1gruV4FemRC3W+dgRub7GgcOyf7yQ@mail.gmail.com>
-References: <CAGcaFA2sQNRo9UThN-C1NOLtGUJ3sKzc=pEC9wdDWMi501iLsA@mail.gmail.com>
- <20240730120546.1042515-1-mmaslanka@google.com> <87cymu7tgq.ffs@tglx>
- <CAGcaFA1HJBYacvDAkZAO9HNhT2dZO7OdgcBYb59p7OJkVqQ6Fw@mail.gmail.com>
- <87h6c55xnp.ffs@tglx>
- <CAGcaFA2eXzzCVqG-DSWDb1gruV4FemRC3W+dgRub7GgcOyf7yQ@mail.gmail.com>
-Date: Wed, 31 Jul 2024 23:46:42 +0200
-Message-ID: <87plqt44l9.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bNtAANL7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722489648; x=1754025648;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YU/63FNruDeAFMPEDziJs8zsHHNVgZHddDQyLvPxjlU=;
+  b=bNtAANL7D/qVYdAUie5WTTxuEH4P8jZk5X4nVs0axv/YYlnUrOwOkHTb
+   9VtEDScLLsCEvqF/AwgA/8PVDxu2pVKeC8o9k3htlMRAUMXgj+xqyHIV+
+   bGFJXp2hYDRE4jH4WbvRqQHwdEhmU9WewdHdCHsnBe4aP9OGtWblXWMVA
+   tj+5vHrtgAtOxvMMnJKUno2BICOywFh8t9DUtdpsS12DkTSmZY/HVrkBc
+   pHz/yl0115WiBOcEByatP7haeXb5R8+bdJB5H7PWk5fMdXXQ42AlpX59a
+   s2K8dPZcu7TmNWyiFo53EvXop/RBkk9e/r+w/6Wf0yGvki/se5xXVd9wv
+   A==;
+X-CSE-ConnectionGUID: jz/avY4oTK2SaFYqce16gA==
+X-CSE-MsgGUID: GBLJlWMwQzyyUkLFVR+74g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11150"; a="12821721"
+X-IronPort-AV: E=Sophos;i="6.09,253,1716274800"; 
+   d="scan'208";a="12821721"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 22:20:46 -0700
+X-CSE-ConnectionGUID: bOp73MO1TJKYTzo1pn40ag==
+X-CSE-MsgGUID: joynoDV1R9areN3oEVhvkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,253,1716274800"; 
+   d="scan'208";a="59951363"
+Received: from skuppusw-desk2.jf.intel.com ([10.165.154.101])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 22:20:46 -0700
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+To: Jithu Joseph <jithu.joseph@intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ashok Raj <ashok.raj@intel.com>,
+	Tony Luck <tony.luck@intel.com>,
+	linux-trace-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Shankar Ravi V <ravi.v.shankar@intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/4] Add SBAF test to IFS
+Date: Thu,  1 Aug 2024 05:18:10 +0000
+Message-Id: <20240801051814.1935149-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 31 2024 at 23:41, Marek Ma=C5=9Blanka wrote:
-> On Wed, Jul 31, 2024 at 6:33=E2=80=AFPM Thomas Gleixner <tglx@linutronix.=
-de> wrote:
->> On Wed, Jul 31 2024 at 16:44, Marek Ma=C5=9Blanka wrote:
->> > Thanks. I'll try do this in that way. But I need to disable/enable
->> > ACPI PM timer only on suspend/resume, so I'll use suspend/resume
->> > callbacks.
->>
->> Why? What's the point of keeping it running when nothing uses it?
->>
-> In case of Intel CPUs the watchdog (iTCO/wdat_wdt) is driven by ACPI PM
-> Timer. But it may also be used by others that I don't know about, so I do=
-n't
-> want to disable it.
+This patch series adds support for Structural Based Functional Test at
+Field (SBAF) in the IFS driver. SBAF is a new type of testing that
+provides comprehensive core test coverage, complementing existing IFS
+tests like Scan at Field (SAF) and ArrayBist. Granite Rapids (GNR) is
+the first platform that supports SBAF.
 
-Fair enough.
+SBAF mimics the manufacturing screening environment and leverages the
+same test suite. It makes use of Design For Test (DFT) observation
+sites and features to maximize coverage in minimum time.
+
+Similar to the SAF test, SBAF isolates the core under test from the
+rest of the system during execution. Upon completion, the core
+seamlessly resets to its pre-test state and resumes normal operation.
+Any machine checks or hangs encountered during the test are confined to
+the isolated core, preventing disruption to the overall system. Like
+SAF test, the SBAF test is also divided into multiple batches, and each
+batch test can take hundreds of milliseconds (100-200 ms) to complete.
+If such a lengthy interruption is undesirable, it is recommended to
+relocate the time-sensitive applications to other cores for the
+duration of the test.
+
+Patch Details:
+
+Patch 1/4: Refactors MSR usage in IFS image loading code to share the
+           code between SBAF and SAF tests.
+Patch 2/4: Leverages SAF image loading logic and adds SBAF image loading support.
+Patch 3/4: Adds support for user to trigger SBAF test.
+Patch 4/4: Adds trace support for SBAF tests.
+
+This series is originally authored by Jithu Joseph. I have made cleanups
+related to code reuse between the SBAF and SAF tests and resubmitting it for
+review.
+
+Changes since v3:
+ * Rebased on top of v6.11-rc1
+ * Added missing error return value in validate_ifs_metadata().
+
+Changes since v2:
+ * Added Reviewed-by tags from Ilpo and Steven.
+ * Fixed minor issues raised by Ilpo.
+
+Changes since v1:
+ * Addressed trace struct hole issue (Steven)
+ * Fixed initialization issue in ifs_sbaf_test_core() (Ilpo)
+
+Jithu Joseph (3):
+  platform/x86/intel/ifs: Add SBAF test image loading support
+  platform/x86/intel/ifs: Add SBAF test support
+  trace: platform/x86/intel/ifs: Add SBAF trace support
+
+Kuppuswamy Sathyanarayanan (1):
+  platform/x86/intel/ifs: Refactor MSR usage in IFS test code
+
+ arch/x86/include/asm/msr-index.h         |   2 +
+ drivers/platform/x86/intel/ifs/ifs.h     |  92 ++++++++-
+ include/trace/events/intel_ifs.h         |  27 +++
+ drivers/platform/x86/intel/ifs/core.c    |  33 ++++
+ drivers/platform/x86/intel/ifs/load.c    |  40 ++--
+ drivers/platform/x86/intel/ifs/runtest.c | 233 +++++++++++++++++++++++
+ 6 files changed, 412 insertions(+), 15 deletions(-)
+
+-- 
+2.25.1
+
