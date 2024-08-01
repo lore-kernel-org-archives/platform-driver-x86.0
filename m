@@ -1,104 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A086C156F3A;
-	Thu,  1 Aug 2024 10:14:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E2716CD39
+	for <platform-driver-x86@vger.kernel.org>; Thu,  1 Aug 2024 14:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722507275; cv=none; b=m6YBCgpl804JUhbHjqVuwFFyE32rlMoxyga0ZL64qPQDNv9AdLy7RimUYwYtRMPfMuuoPfm5rDn3ZI2GRRzsVm72aTFvgWKthaddVblVz4WOnMksDFnQmyUoRCPt2WjRkJi1pkLJFBvvw7L17fVPLZoOBNXyNk3Gamw8jsteFYQ=
+	t=1722520881; cv=none; b=uZu0/rzDb6AuHP50LyZ54GVCtF0Fd+rKKGEiLT6tyxf+SqtVHlW4fAB7E1qsMml6N+KRNtQLrfk7qDrwGCAUofMcrNU+GC1q2OE3r00G8dJFFwILpshqq0VYYkNq/6d1OhxUkR4PKwc84L6CnAN0SpiNdaY8Ofof5HAFOqSaVuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722507275; c=relaxed/simple;
-	bh=uVKhVRkoIrz2goRuoc79nnIsvQWUydD4PmjTmszYkxk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ED69SwR8UV9sS39vn+V3ZX3zyx9gLLvLeEJhV4jME15tVNLRKgRyVh1FGPp+yqVfJCzZ4XtVlu641xPoBdt9CueVtNkg9L3N3A6TiGAgVlIJCIqhqPHyVs8aQgGZh8tKhpIEyCAXUjqUy+0VR3iBP86St/PlfPTB7Ho97tDQ06U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jG4o7IqR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722520881; c=relaxed/simple;
+	bh=8bMRJX5Wva0XdUpS4bnRq3LDkoZbYGfLBZUwOtB3FFs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YfOfSH6D56obls4bWu0d2gvtoYn4b8RMRANv3QGbGeN0eY5eAAqSZveBeQygxnCeFAVhURJWc0TT/Ym2y1o8OmQc+Sz62R9nmxiT2ekWpRt4k10U7PSRBMsNBbWaRmw7+cCv6XEEFQlkaZe2NhzQlXuk7mm99Jvl85cKtBXCTLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eMxlEBXY; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jG4o7IqR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2558EC4AF11;
-	Thu,  1 Aug 2024 10:14:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722507275;
-	bh=uVKhVRkoIrz2goRuoc79nnIsvQWUydD4PmjTmszYkxk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=jG4o7IqRwmlwgprvom0DqaBjrhKzMWdRRRgu6cIHgs2SvXbDPFttIPfHTXA2sBP7Q
-	 iLf/RE14vKd0X1d4wM8qrm6Qd4jt1ZsqZ1dSgcBKL8nA997APWcYCfigvzeYpSfU07
-	 Ie65INfHPMFLXoQ7Pm/yzT6bl1K2DG/25roG4ofkWHqwgEpEAfK4Y70LTJeLrGQ0YK
-	 4PNpw40PBzw5dQF7SNYRZr/FerAkpJkeWh5zU2gtFBZe2RvGU+xXR3Ig7YcWXl9KYH
-	 jTQj+liH6RBi9eHuQYeIwBBFxxPrljtHTX8CWS8z9AbsP28z8q/wRRl4YVJj/d7kk+
-	 GmFj5iPTcPM4g==
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-70936124421so381626a34.0;
-        Thu, 01 Aug 2024 03:14:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXsdoWnZlCJc/fj3Tbv9XaDm6OJEDzqr7WJNH41wkwcq2eMpC29q22bBRo5lfyHehoJ5bf7A5veWNGwMTMdPLg/GItsl3Nvx4Pg3IpCXFoMBj8Eqn15B2b5U4bA3Z0pOkJmB4WjfMhqLmleU4hS5Axl85rHsxiaVfsfxYXtfa8asC73xGmnEv0Z6t8lR8WCqKpK38NJYLFD2eyVeRRA2aEOjegtdrIK6g==
-X-Gm-Message-State: AOJu0Yw4m+8/kn/g/mPzciL2aAhBiVsaaec5pFYef+i10jjX5vW4CQR3
-	rvjNw/wjNov3AdkF43rauGZn/rB1nXW2q4ZfSUiuGfssqqABhKWf4bzwZVmtZ29MVp6j+kU/F9Z
-	KVz0XjiPAITVWrWg8pP4US3dkmoI=
-X-Google-Smtp-Source: AGHT+IEU2Ehnp4WZeT8s3RNeZ8eylqxVapnWYUNwQvI230a4Ru6GtFI/HLZyuyUTuqNLHqazPuPaPKzET8b4pWUrXTs=
-X-Received: by 2002:a05:6871:3387:b0:25e:14d9:da27 with SMTP id
- 586e51a60fabf-26879d67454mr1170788fac.0.1722507274373; Thu, 01 Aug 2024
- 03:14:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eMxlEBXY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722520879;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=85tqexyUb9G9xesjtDuJjUBYMhn4OYlFpDKqijS2vtE=;
+	b=eMxlEBXYKyzkiuh84iNq9Q7fKeLxxgv41ijAfyhubExLToqsatK4QpzksrxGSFQxKgLWfJ
+	+XHeFlPTnRoyFV43O74KQv0iZqu02FZoAb+vOAG4PRugdkOMji/02Az8E/rDmUmJ1mSnTW
+	O+5pWLncqSpqjp1PzhdXGmAoQp0oQXI=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-284-R09Mm-pGOpSBjVXKUCz5Wg-1; Thu, 01 Aug 2024 10:01:17 -0400
+X-MC-Unique: R09Mm-pGOpSBjVXKUCz5Wg-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5a30be1c5cfso7593745a12.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Aug 2024 07:01:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722520876; x=1723125676;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=85tqexyUb9G9xesjtDuJjUBYMhn4OYlFpDKqijS2vtE=;
+        b=u+6RQkQcpHR4ALWYVpHaqCHWNA5WQ8dbDcHtgB16kJ63aopYgtqu1GTL6XIelkFfse
+         jDIbqMvmf5VfMhih7tNsd5KhnfzZC5fxrheJT96Yo/k4/7XL6U5WVPZpEsfW+VuzXEBt
+         N26tPIb5P6bmk4IDSuuo4SWQF+NGi72L5G57HLamzX3HUmx69KpN/PcupnNEnj0j6NuA
+         XKUYYsqKaSOXVvFP6fcD0Qo+xyko8b/45rD+A6KozYvhWPNM9UTs1DchWROR00oUjkBA
+         q6P87SahhSwXyWKnEm7/rcDi/LvBDzqMPvE5az6prSd2GQfpxA7Jl2zCJ5O95esPspDg
+         aAJA==
+X-Forwarded-Encrypted: i=1; AJvYcCV6W093k01p781JvTa5eYhkuHx/nGC3KiSc6zr1HIb7aQdyORx1Typ7vKiEc5nazcjiSGVLZQmw1ZqMGMvWMCdzmv9j6mSrTG7Dy9xvV8jyLFrS5A==
+X-Gm-Message-State: AOJu0YxPRWFr6YWc6D/8Efd1ADsbhcBNzZGLaGy8sknDr0dgXEDGGRpq
+	MHR8RLUl2kC42W++vjfTQUKQyXpTRKRpP793LxL/JhhQ1wNfmMl/6v7i5brZ1O8d460NrAwy/1E
+	5tvkvwVoh9rR7xwIIjlZBXOovAzuy7Le4WAriqP9DTUaBGkaoZMtEeVl4QGG7OcDyf5nU/tM=
+X-Received: by 2002:a05:6402:457:b0:5a2:350d:dfb9 with SMTP id 4fb4d7f45d1cf-5b7f36f56f8mr291500a12.2.1722520876162;
+        Thu, 01 Aug 2024 07:01:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH9oZedRaBpD4yRHIOSqQmwf9AUGq1ILfzXuz8c08wd3DL7M8+kU29GMpYyUDMMmaBdEgKdFA==
+X-Received: by 2002:a05:6402:457:b0:5a2:350d:dfb9 with SMTP id 4fb4d7f45d1cf-5b7f36f56f8mr291409a12.2.1722520875045;
+        Thu, 01 Aug 2024 07:01:15 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5afb9422c41sm8608972a12.82.2024.08.01.07.01.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Aug 2024 07:01:14 -0700 (PDT)
+Message-ID: <c3be1b7f-8a4c-42d8-9a5d-6a341c5beb33@redhat.com>
+Date: Thu, 1 Aug 2024 16:01:12 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1922131.tdWV9SEqCh@rjwysocki.net> <2242500.C4sosBPzcN@rjwysocki.net>
- <a0c639d1-4f21-47f1-bb66-92f185e828a9@gmail.com>
-In-Reply-To: <a0c639d1-4f21-47f1-bb66-92f185e828a9@gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 1 Aug 2024 12:14:23 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jDQLJWGCj73DXQe3+k+Zaq9Z71LJbFSvRjcuE85+J+mQ@mail.gmail.com>
-Message-ID: <CAJZ5v0jDQLJWGCj73DXQe3+k+Zaq9Z71LJbFSvRjcuE85+J+mQ@mail.gmail.com>
-Subject: Re: [PATCH v1 12/17] platform/x86: acerhdf: Use the .should_bind()
- thermal zone callback
-To: =?UTF-8?Q?Peter_K=C3=A4stle?= <xypiie@gmail.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Lukasz Luba <lukasz.luba@arm.com>, 
-	Zhang Rui <rui.zhang@intel.com>, Peter Kaestle <peter@piie.net>, 
-	platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/1] platform/x86: asus-wmi: add support for vivobook
+ fan profiles
+To: Luke Jones <luke@ljones.dev>, Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
+Cc: corentin.chary@gmail.com, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240609144849.2532-1-mohamed.ghanmi@supcom.tn>
+ <20240609144849.2532-2-mohamed.ghanmi@supcom.tn>
+ <9daef2c6-6df4-4f61-966c-239450de7b4e@app.fastmail.com>
+ <ZnlEuiP4Dgqpf51C@laptop>
+ <ebad3eec-576b-46ef-887b-6d3ce31bd5f8@app.fastmail.com>
+ <ZqopEfPCuU7-7mUR@meddabeast>
+ <d21a1be5-7589-49e4-a96b-cddf9b6c15eb@app.fastmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <d21a1be5-7589-49e4-a96b-cddf9b6c15eb@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Peter,
+Hi,
 
-On Wed, Jul 31, 2024 at 10:50=E2=80=AFPM Peter K=C3=A4stle <xypiie@gmail.co=
-m> wrote:
->
-> Hi Rafael,
->
-> On 30.07.24 20:33, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Make the acerhdf driver use the .should_bind() thermal zone
-> > callback to provide the thermal core with the information on whether or
-> > not to bind the given cooling device to the given trip point in the
-> > given thermal zone.  If it returns 'true', the thermal core will bind
-> > the cooling device to the trip and the corresponding unbinding will be
-> > taken care of automatically by the core on the removal of the involved
-> > thermal zone or cooling device.
-> >
-> > The previously existing acerhdf_bind() function bound cooling devices
-> > to thermal trip point 0 only, so the new callback needs to return 'true=
-'
-> > for trip point 0.  However, it is straightforward to observe that trip
-> > point 0 is an active trip point and the only other trip point in the
-> > driver's thermal zone is a critical one, so it is sufficient to return
-> > 'true' from that callback if the type of the given trip point is
-> > THERMAL_TRIP_ACTIVE.
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> Thanks for including me on the review.
-> I'm working on it, but unfortunately the refactoring of the thermal layer
-> around gov_bang_bang.c earlier this year broke acerhdf.
+On 7/31/24 11:06 PM, Luke Jones wrote:
 
-Well, sorry about that.
+...
 
-> This needs some debugging and refactoring.  I think I can finish it on
-> upcoming weekend.
+>>>>> If Hans and Ilpo don't have any requirements then:
+>>>>>
+>>>>> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> 
+> I have no issues with this patch and it needs to be merged before I submit a stream of work. My signed-off tag is above.
 
-Thank you!
+Reading back the comments about the function names I believe that
+the asus_wmi_platform_profile_mode_[to|from]_vivo() names are fine.
 
-I'll be offline next week, so I'll go back to this material in two
-weeks or so anyway.
+And the rest of the patch looks good to me to:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+I have merged this into my review-hans branch now with one small change,
+both asus_wmi_platform_profile_mode_[to|from]_vivo() ended in:
+
+       return mode;
+
+}
+
+I have dropped the empty line after the return mode; statement
+(in both functions) while merging this.
+
+I've also dropped a spurious whitespace change (extra empty line)
+added to asus_wmi_platform_profile_get().
+
+Luke, please base your coming work on top of pdx86/review-hans.
+
+Regards,
+
+Hans
+
+
+p.s.
+
+One thing which I noticed while reviewing is this:
+
+static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
+{
+        struct fan_curve_data *curves;
+        u8 buf[FAN_CURVE_BUF_LEN];
+        int err, fan_idx;
+        u8 mode = 0;
+
+        if (asus->throttle_thermal_policy_dev)
+                mode = asus->throttle_thermal_policy_mode;
+        /* DEVID_<C/G>PU_FAN_CURVE is switched for OVERBOOST vs SILENT */
+        if (mode == 2)
+                mode = 1;
+        else if (mode == 1)
+                mode = 2;
+
+        err = asus_wmi_evaluate_method_buf(asus->dsts_id, fan_dev, mode, buf,
+                                           FAN_CURVE_BUF_LEN);
+
+
+Since asus->throttle_thermal_policy_mode stores the raw mode, which has
+silent/overboost swapped for vivo notebooks I wonder if we should still
+do the mode 1/2 swapping here when on a vivo notebook ?
+
+I have a feeling the swapping here should not be done when one a vivo
+notebook but I'm not sure.
+
+If the swapping here should be skipped on Vivobooks please submit
+a separate follow-up patch for that.
+
+Regards,
+
+Hans
+
+
