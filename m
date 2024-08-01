@@ -1,148 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D226143758;
-	Thu,  1 Aug 2024 05:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A086C156F3A;
+	Thu,  1 Aug 2024 10:14:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722489653; cv=none; b=UW+/GNvr3XfMUgp3Cj/b7+02IyVzhRudo6IAu4o6lbt/BwZ+WXgFDYd0N8GKD11QnVrcixSUCTdVyxT+EmRjdMu63EIb05VA81n9QOxMoSDgt9SnO58Jkt9XUlGw5ui+t06bnh2YAsib77H+4OedKAbDJePhs3k9nrMB7E79jWQ=
+	t=1722507275; cv=none; b=m6YBCgpl804JUhbHjqVuwFFyE32rlMoxyga0ZL64qPQDNv9AdLy7RimUYwYtRMPfMuuoPfm5rDn3ZI2GRRzsVm72aTFvgWKthaddVblVz4WOnMksDFnQmyUoRCPt2WjRkJi1pkLJFBvvw7L17fVPLZoOBNXyNk3Gamw8jsteFYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722489653; c=relaxed/simple;
-	bh=1ct1zzpZpQ5/mKSr4UvvDbKaJaYWHq6GH4YiIwYrPqQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jPdZuXRBhM+G76Vd8NBSxXW3q69RMv0YFdPIG6tXVS4Aa9Qk3TDhNEbwshFs9bZa8g+/YpEKbSf8L1YwS7gvVgOHx3rhDmqcsk7pQ++uuxM5BtMAON5wjwSmugW4pjbf5efW1A9/wN2Isu83t8jjgRMt4vgHC3rZ+V2VKDN/WSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PjhCvo8a; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1722507275; c=relaxed/simple;
+	bh=uVKhVRkoIrz2goRuoc79nnIsvQWUydD4PmjTmszYkxk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ED69SwR8UV9sS39vn+V3ZX3zyx9gLLvLeEJhV4jME15tVNLRKgRyVh1FGPp+yqVfJCzZ4XtVlu641xPoBdt9CueVtNkg9L3N3A6TiGAgVlIJCIqhqPHyVs8aQgGZh8tKhpIEyCAXUjqUy+0VR3iBP86St/PlfPTB7Ho97tDQ06U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jG4o7IqR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PjhCvo8a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722489652; x=1754025652;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=1ct1zzpZpQ5/mKSr4UvvDbKaJaYWHq6GH4YiIwYrPqQ=;
-  b=PjhCvo8aLb3udrAY7WgdqBpqdwaeJfaTnzmtLr4LwpNpJkFeEjdqy0Wx
-   zrsVK52JtSXR9tN6julDVP6PhEF76H/9HCuHUg2vNRgVZudco/r+PHd+m
-   Q1xHOp6AEYq3UfW7C/p1QAkp+7c7TwmXis5ugJMNUPqUyI72zwT3oMHyn
-   rO5C6i3s8jHrgroB8SUVIRa8ZR1WQD1PP7dl4rDQSV0w03mw4K7HMOZr7
-   SG2RGDG1awpDE/cneWHDVf/C+WpYx/fuDVstUbKkJTgV1fRTot6WACXZE
-   1JJOBD5eP4ljJq7fJyVDrguSEHTxWACyr5otNhXotXnOAMpEhNHyQ3kRM
-   g==;
-X-CSE-ConnectionGUID: 6KrON7wYTmmORa+0viDJLw==
-X-CSE-MsgGUID: S5oG7K3bTaqu9u6o6Xp2hQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11150"; a="12821738"
-X-IronPort-AV: E=Sophos;i="6.09,253,1716274800"; 
-   d="scan'208";a="12821738"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 22:20:47 -0700
-X-CSE-ConnectionGUID: k1wdMx6bTaKrvNkSbb8vHA==
-X-CSE-MsgGUID: MYMCFPHkT6uDpbunYs04FQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,253,1716274800"; 
-   d="scan'208";a="59951375"
-Received: from skuppusw-desk2.jf.intel.com ([10.165.154.101])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 22:20:46 -0700
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-To: Jithu Joseph <jithu.joseph@intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ashok Raj <ashok.raj@intel.com>,
-	Tony Luck <tony.luck@intel.com>,
-	linux-trace-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Shankar Ravi V <ravi.v.shankar@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/4] trace: platform/x86/intel/ifs: Add SBAF trace support
-Date: Thu,  1 Aug 2024 05:18:14 +0000
-Message-Id: <20240801051814.1935149-5-sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240801051814.1935149-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <20240801051814.1935149-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jG4o7IqR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2558EC4AF11;
+	Thu,  1 Aug 2024 10:14:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722507275;
+	bh=uVKhVRkoIrz2goRuoc79nnIsvQWUydD4PmjTmszYkxk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=jG4o7IqRwmlwgprvom0DqaBjrhKzMWdRRRgu6cIHgs2SvXbDPFttIPfHTXA2sBP7Q
+	 iLf/RE14vKd0X1d4wM8qrm6Qd4jt1ZsqZ1dSgcBKL8nA997APWcYCfigvzeYpSfU07
+	 Ie65INfHPMFLXoQ7Pm/yzT6bl1K2DG/25roG4ofkWHqwgEpEAfK4Y70LTJeLrGQ0YK
+	 4PNpw40PBzw5dQF7SNYRZr/FerAkpJkeWh5zU2gtFBZe2RvGU+xXR3Ig7YcWXl9KYH
+	 jTQj+liH6RBi9eHuQYeIwBBFxxPrljtHTX8CWS8z9AbsP28z8q/wRRl4YVJj/d7kk+
+	 GmFj5iPTcPM4g==
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-70936124421so381626a34.0;
+        Thu, 01 Aug 2024 03:14:35 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXsdoWnZlCJc/fj3Tbv9XaDm6OJEDzqr7WJNH41wkwcq2eMpC29q22bBRo5lfyHehoJ5bf7A5veWNGwMTMdPLg/GItsl3Nvx4Pg3IpCXFoMBj8Eqn15B2b5U4bA3Z0pOkJmB4WjfMhqLmleU4hS5Axl85rHsxiaVfsfxYXtfa8asC73xGmnEv0Z6t8lR8WCqKpK38NJYLFD2eyVeRRA2aEOjegtdrIK6g==
+X-Gm-Message-State: AOJu0Yw4m+8/kn/g/mPzciL2aAhBiVsaaec5pFYef+i10jjX5vW4CQR3
+	rvjNw/wjNov3AdkF43rauGZn/rB1nXW2q4ZfSUiuGfssqqABhKWf4bzwZVmtZ29MVp6j+kU/F9Z
+	KVz0XjiPAITVWrWg8pP4US3dkmoI=
+X-Google-Smtp-Source: AGHT+IEU2Ehnp4WZeT8s3RNeZ8eylqxVapnWYUNwQvI230a4Ru6GtFI/HLZyuyUTuqNLHqazPuPaPKzET8b4pWUrXTs=
+X-Received: by 2002:a05:6871:3387:b0:25e:14d9:da27 with SMTP id
+ 586e51a60fabf-26879d67454mr1170788fac.0.1722507274373; Thu, 01 Aug 2024
+ 03:14:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1922131.tdWV9SEqCh@rjwysocki.net> <2242500.C4sosBPzcN@rjwysocki.net>
+ <a0c639d1-4f21-47f1-bb66-92f185e828a9@gmail.com>
+In-Reply-To: <a0c639d1-4f21-47f1-bb66-92f185e828a9@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 1 Aug 2024 12:14:23 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jDQLJWGCj73DXQe3+k+Zaq9Z71LJbFSvRjcuE85+J+mQ@mail.gmail.com>
+Message-ID: <CAJZ5v0jDQLJWGCj73DXQe3+k+Zaq9Z71LJbFSvRjcuE85+J+mQ@mail.gmail.com>
+Subject: Re: [PATCH v1 12/17] platform/x86: acerhdf: Use the .should_bind()
+ thermal zone callback
+To: =?UTF-8?Q?Peter_K=C3=A4stle?= <xypiie@gmail.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Lukasz Luba <lukasz.luba@arm.com>, 
+	Zhang Rui <rui.zhang@intel.com>, Peter Kaestle <peter@piie.net>, 
+	platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Jithu Joseph <jithu.joseph@intel.com>
+Hi Peter,
 
-Add tracing support for the SBAF IFS tests, which may be useful for
-debugging systems that fail these tests. Log details like test content
-batch number, SBAF bundle ID, program index and the exact errors or
-warnings encountered by each HT thread during the test.
+On Wed, Jul 31, 2024 at 10:50=E2=80=AFPM Peter K=C3=A4stle <xypiie@gmail.co=
+m> wrote:
+>
+> Hi Rafael,
+>
+> On 30.07.24 20:33, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > Make the acerhdf driver use the .should_bind() thermal zone
+> > callback to provide the thermal core with the information on whether or
+> > not to bind the given cooling device to the given trip point in the
+> > given thermal zone.  If it returns 'true', the thermal core will bind
+> > the cooling device to the trip and the corresponding unbinding will be
+> > taken care of automatically by the core on the removal of the involved
+> > thermal zone or cooling device.
+> >
+> > The previously existing acerhdf_bind() function bound cooling devices
+> > to thermal trip point 0 only, so the new callback needs to return 'true=
+'
+> > for trip point 0.  However, it is straightforward to observe that trip
+> > point 0 is an active trip point and the only other trip point in the
+> > driver's thermal zone is a critical one, so it is sufficient to return
+> > 'true' from that callback if the type of the given trip point is
+> > THERMAL_TRIP_ACTIVE.
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Thanks for including me on the review.
+> I'm working on it, but unfortunately the refactoring of the thermal layer
+> around gov_bang_bang.c earlier this year broke acerhdf.
 
-Reviewed-by: Ashok Raj <ashok.raj@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- include/trace/events/intel_ifs.h         | 27 ++++++++++++++++++++++++
- drivers/platform/x86/intel/ifs/runtest.c |  1 +
- 2 files changed, 28 insertions(+)
+Well, sorry about that.
 
-diff --git a/include/trace/events/intel_ifs.h b/include/trace/events/intel_ifs.h
-index 0d88ebf2c980..70323acde1de 100644
---- a/include/trace/events/intel_ifs.h
-+++ b/include/trace/events/intel_ifs.h
-@@ -35,6 +35,33 @@ TRACE_EVENT(ifs_status,
- 		__entry->status)
- );
- 
-+TRACE_EVENT(ifs_sbaf,
-+
-+	TP_PROTO(int batch, union ifs_sbaf activate, union ifs_sbaf_status status),
-+
-+	TP_ARGS(batch, activate, status),
-+
-+	TP_STRUCT__entry(
-+		__field(	u64,	status	)
-+		__field(	int,	batch	)
-+		__field(	u16,	bundle	)
-+		__field(	u16,	pgm	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->status	= status.data;
-+		__entry->batch	= batch;
-+		__entry->bundle	= activate.bundle_idx;
-+		__entry->pgm	= activate.pgm_idx;
-+	),
-+
-+	TP_printk("batch: 0x%.2x, bundle_idx: 0x%.4x, pgm_idx: 0x%.4x, status: 0x%.16llx",
-+		__entry->batch,
-+		__entry->bundle,
-+		__entry->pgm,
-+		__entry->status)
-+);
-+
- #endif /* _TRACE_IFS_H */
- 
- /* This part must be outside protection */
-diff --git a/drivers/platform/x86/intel/ifs/runtest.c b/drivers/platform/x86/intel/ifs/runtest.c
-index 2a37f009d0b3..7670fc89153d 100644
---- a/drivers/platform/x86/intel/ifs/runtest.c
-+++ b/drivers/platform/x86/intel/ifs/runtest.c
-@@ -528,6 +528,7 @@ static int dosbaf(void *data)
- 	 */
- 	wrmsrl(MSR_ACTIVATE_SBAF, run_params->activate->data);
- 	rdmsrl(MSR_SBAF_STATUS, status.data);
-+	trace_ifs_sbaf(ifsd->cur_batch, *run_params->activate, status);
- 
- 	/* Pass back the result of the test */
- 	if (cpu == first)
--- 
-2.25.1
+> This needs some debugging and refactoring.  I think I can finish it on
+> upcoming weekend.
 
+Thank you!
+
+I'll be offline next week, so I'll go back to this material in two
+weeks or so anyway.
