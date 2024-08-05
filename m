@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC56357CA6
-	for <platform-driver-x86@vger.kernel.org>; Sun,  4 Aug 2024 16:03:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1BF17C
+	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Aug 2024 13:18:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722787407; cv=none; b=NNomBiD2MYH7mMHHNzHs5Q8xNDucJoZHQ8qtZGH+oYl1m3g/usZ+gMSpo7vUNYrqxCDNHGg8G7ancXQDcYk+ZCdhE8XbBx4LC/4HfbtfLuY3SGNZmwKw7mlNNa9SY1Eik0+9v8hYUteVi/encry49TE5FJnbBpieY4+BTUmTEqM=
+	t=1722863939; cv=none; b=blBaaB1Ke3t+A5Lgr3Q/7lEUHBnLKE/TIBrSRZs/KbfwJeKJmUNMEt7c7Gc8APq/+gNwkH3Be9cosxeT5hviYPQWwJP9eYMpc223I6Md1sIbu0HvmTIf9jvB5yhUxuHhvu8xA3S0QxD92uBSxH3jZsVKTVOelQ4KT489nc92Jx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722787407; c=relaxed/simple;
-	bh=BQCathg6pie+iWs8hqvlZ8zqhevKg8YcHVdVqWtyOwk=;
+	s=arc-20240116; t=1722863939; c=relaxed/simple;
+	bh=8SdifW93HqqBaSslgZiF4wsWQHLIyZsh4RWkh8Igd+s=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=W8kA56vupGqI2seH8/Bf88wQXYwng84lYhi+Tc6VnCuvJfkSTm4cXcvuOCgr/11T0IEta/XGumnt0QYmXlH7sV1HI/F+KzeAm8jtRhe6lVS0p/iHsROYxoIFgj/X8ODfpCIawKFlHuVK0a0MbGtKGK1yYHXdRhjozIluYbRd17c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pVaD+6n0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=SMemOjvWuv2toky5XCq5r9gZzl/7lFYt5XkExqxhjhFPm8Ctqs0cxwn2JTlxTROMqeO56lIDfuayQT/IlP7ax9JiYNKUIXSNCOhAbfiCv8KheUilcyeauGY4GMojuSippevdNVhmB7ZAJRKuMfzX7uhH8JZwH+nOjUg9wuE4h2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fdo/VlD1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pVaD+6n0"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 46C7FC4AF0C
-	for <platform-driver-x86@vger.kernel.org>; Sun,  4 Aug 2024 16:03:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fdo/VlD1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0CAC2C4AF0F
+	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Aug 2024 13:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722787407;
-	bh=BQCathg6pie+iWs8hqvlZ8zqhevKg8YcHVdVqWtyOwk=;
+	s=k20201202; t=1722863939;
+	bh=8SdifW93HqqBaSslgZiF4wsWQHLIyZsh4RWkh8Igd+s=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=pVaD+6n0bCCOcZQMEBPuPDr78+WGk+IfhL/g3ERVGqL5HYrkNWEWEfGVAByMkIDdX
-	 DmeGh5lwDglLnAq8bEScZkH1t5rAiGXUdnXGhIqSzP1s1w61y49DEyZ2Y1hwl97mgN
-	 i7fc8HgBWz+AlMEUaCO0H032c324wXZI70fw4VKXA5FRBC+LiikvxQTT0rvjPyCuTe
-	 o8cVvjd31XfA6rEjjN8XESgQdfipz2BWpofm3c4bbEfjGpQFhp2D2LupvGkMS7G2bB
-	 iFmB3TYaMSkqmcE30ClF8HSmW8Bznya9xawfaPFhKr841TTu1nxTVzlufYHsWOURA6
-	 jd1AG/QUIKNjw==
+	b=Fdo/VlD1OGY2S1fNiNlop3LIIY4/MenpJUIMIg40ElNcO+HQYVHHItdnbPXrlMf1a
+	 LC5EKIzXKR6pM08NbnZ5Ah8HeyeX5ONJmqID9aQYIOPPB/rUefo/xHbRBTm1F/1tZO
+	 jLFznjzzH7hhtDJOGcWBVwxgtmzJW1+hPMphETKXv4Z/joXGrRs/GF0lVnVT141bmb
+	 dYUy1ciQtRqwMngQno2AcYkto+iEcUSLFouQ44zSf8J6LzvOwOqkbrHzAgLPb+fSER
+	 u95couB3i8AkOHq2kYKEcmHK/WWuFaxdMG52twDiUjrbNDI9qokS3ZZxuiofMug95F
+	 PHwHC5yZrJY7Q==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 22F8AC53B73; Sun,  4 Aug 2024 16:03:27 +0000 (UTC)
+	id E0546C53B73; Mon,  5 Aug 2024 13:18:58 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218696] DYTC frequency scaling deterioration and event spam
-Date: Sun, 04 Aug 2024 16:03:26 +0000
+Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
+ models (16Z90S)
+Date: Mon, 05 Aug 2024 13:18:58 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -40,16 +41,16 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: lmulling@proton.me
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
+X-Bugzilla-Who: W_Armin@gmx.de
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218696-215701-NpZtDh5mpd@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218696-215701@https.bugzilla.kernel.org/>
-References: <bug-218696-215701@https.bugzilla.kernel.org/>
+Message-ID: <bug-218901-215701-xBYXVkXNsS@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
+References: <bug-218901-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Bugzilla-URL: https://bugzilla.kernel.org/
@@ -61,10 +62,11 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218696
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
 
---- Comment #15 from Lucas M=C3=BClling (lmulling@proton.me) ---
-Thanks for the update! Good work!
+--- Comment #52 from Armin Wolf (W_Armin@gmx.de) ---
+I think i found a solution for you thermal dmesg spam problems, see
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219075 for more details.
 
 --=20
 You may reply to this email to add a comment.
