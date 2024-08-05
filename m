@@ -1,65 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3838615921D
-	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Aug 2024 15:03:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B88E2BCF7
+	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Aug 2024 15:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722870211; cv=none; b=nc0K42O5W9D909cKc7rHRodiNwHjki8IH5lHphuTpXSa8RoaTkxEdlt3JjYMlJgIS7WkFBOp6jSEss65K74nEdhNKfK5Gm5GGmBpNalj2WUekTtWEU6x1GE+KY3Rb0wDTj87ed401hQDq50nCmrCWySuCZZSF/Wq6DE4PupyiPo=
+	t=1722870869; cv=none; b=kxyj8rXAJhztc/TJyOrLryZfwx/+Ojxd5vd0mOP12D4bav2e6gKFe0FnpZHXTZn1UtCGaUdvJAnfNlBYqEhO77K+LrHtQ9PbN3a2kZLMFUCMUuwnqwuC5DgQbWZEAxrGhSj0w+rWTi5vR33aH+IrI/rg7WqBMPssmZVlfNej6lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722870211; c=relaxed/simple;
-	bh=8NCvRCPszDP770NVWQjH0bVN8l1lKGt9mQp6iLY0crY=;
+	s=arc-20240116; t=1722870869; c=relaxed/simple;
+	bh=7OvJAJgVYRx1Z/arwi9q84O1QkjILFe2oIufbyEMxq4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tFxF3aoPRpTvLvk6vjbCDadzM72xvy+pmM7+1AAfhUePYDXJi5+6fXGVgbJJq0Lf928fH096QV/L6ENGlwkCSb3JCoZ5W60mPzONoA+4R2MpowT8qtnkbbzkg9sbVuTdGXkDc994TWJU/+Ymn3bK6YYB2AKPUErycshtK5V6wao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Cnu5xh1s; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=W6WqWTgAz9GvLMr/Uxp72//xZo3jw7isXnGVrCWtDXSZOImAzVQPs1YswgBVAu4V9cEB+IGwbkx5YC5DBDVTwmnQN3McvbKSkO39O0l586ucri8O1F0nNE35n6nN4a/aSt/Pl18ATaUvYc77vg2X23OZlOLBn9lQBHF1pOf8y6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MdjpAPIS; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cnu5xh1s"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MdjpAPIS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722870209;
+	s=mimecast20190719; t=1722870865;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UFIfN5jKOq5ZhTYRJtUZ4L4CMUsrG3a4wMcH/m481CA=;
-	b=Cnu5xh1sQ/zPsYRbBkHN7fXD88LviM+kfvpBlC4sl6IOZauw8U7e4zqYzTorzkNdu6YP97
-	1nO6vHOeUQBq3jZY8oF7hOmyzLI6Rf7d8pMosvjzzKUtyJhhRGF1/PHOe+qafZ4j0VWeuJ
-	zufuRKIcmWhy1zFcnLTpDLDEltQwPBk=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=1Zs9SN3PXCVdBxc7PU119vQ+FwJ4nQwvm9D43mIbl8w=;
+	b=MdjpAPISIXjV9C5KjPqxGPyM8UHOb6ZjXuLlX3O5OYUbAIAx0eb4pBDlj9CqKy4QVU+htV
+	Nb/ek7U56fDEBeQJUcr0FSeQeD9ISJO8V/Ynte2KUu82bkzIJecBTNs1haoEiJ2xZD0zGd
+	CykOaKeg6DCFE64fkG2I4GH8HEdqfCg=
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
+ [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-202-FYGFIZAWOYGHzwZlqfUBng-1; Mon, 05 Aug 2024 11:03:25 -0400
-X-MC-Unique: FYGFIZAWOYGHzwZlqfUBng-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5a7c6a0f440so6951767a12.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 05 Aug 2024 08:03:24 -0700 (PDT)
+ us-mta-573-WLcdEFeiMp-rJ1UBbhFaGg-1; Mon, 05 Aug 2024 11:14:24 -0400
+X-MC-Unique: WLcdEFeiMp-rJ1UBbhFaGg-1
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7f6218c0d68so1657886439f.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 05 Aug 2024 08:14:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722870204; x=1723475004;
+        d=1e100.net; s=20230601; t=1722870863; x=1723475663;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UFIfN5jKOq5ZhTYRJtUZ4L4CMUsrG3a4wMcH/m481CA=;
-        b=qNLIfU7J+FwjkHuv5z7a97N713eCfc5wN3bXy1XfyHY8NSCfgISiu0SsGZg6em3mc+
-         HslvW4sE4CUV3JqYiSIzMXDFRrhLFKt/g+iL5leclqdcubZ6C7Vw7w1MwNg9PhLr7KIy
-         8schpp3oEXil6NydoeMUVT0/yoYKRSl7ySRvtgWNGG6UdaBl4vTtbpa1WgrKZrqMmrjV
-         s20FSg4iMuzJ3KmIOlMo+odVQO+4DcEh2w6SSCUlx22+dTfwC3dcoWrDPVp6ISaNuUMJ
-         k88rtWfHosntL9HLdQGziCq11x8pUod8hv33TG1nq1Z4eDRXwwXZ3rfSQ4L5x8VbtsiH
-         XYjA==
-X-Forwarded-Encrypted: i=1; AJvYcCXO2xHm81TwWqHuQlUMgGLLIL4MW1TUQF2YjtY7rg5jZyJ5E/6k5m3zd1H8q0178wHvcdLQxYEjRpOzY1mYu7OXOusYntAZsP8wa+x0gMxZVOWV+A==
-X-Gm-Message-State: AOJu0YxmltyrinpPceDsZO/Mn2E0930RmZ2SIH2xjipVqxAFK4oQXdpC
-	Gx7ek6LEyNkOQF7DlyYF8H7gXuL56zftR3Ani0tIw+VorQVPdCk2ScTlexzERJmhFU1lgQgJ1Qc
-	EMolGJwjEA+N1yt8f1xr6p2OOwf9p6EqVvQNOOFiNQ/hCnf9W0+KOyqrD0z7q6xWkZ0UBKIo=
-X-Received: by 2002:a05:6402:1617:b0:5a1:6c50:a35 with SMTP id 4fb4d7f45d1cf-5b7f59e2356mr7216109a12.37.1722870203800;
-        Mon, 05 Aug 2024 08:03:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGY4KvQ0+BJEnLI9rO5TIRdEj8vWqOtH9qDmkKXjoU3ZGyyFKD/pz1M9a/Cdq0PuEf2NFAzXg==
-X-Received: by 2002:a05:6402:1617:b0:5a1:6c50:a35 with SMTP id 4fb4d7f45d1cf-5b7f59e2356mr7216079a12.37.1722870203228;
-        Mon, 05 Aug 2024 08:03:23 -0700 (PDT)
+        bh=1Zs9SN3PXCVdBxc7PU119vQ+FwJ4nQwvm9D43mIbl8w=;
+        b=oyLOIZlKy8jKPiitx4t+XAj2VTeYIOcj/9SBoNWHclTXq25OgolrQrvNxHXB8k2uEq
+         U1jXUiuZ+XRgh1ercddTLiU1BIEgjtk2CHUiN8oasKqMO7XUd2528cGOBF4kUt4XjTn9
+         knTY0JGvgDknQqJkQAJPKr60jA7lRHfagUxReGAY4eynki3IIbwWHZARgLPIxiWMrvEp
+         12opIuVgyC1AYmb1FHLH8bsu04s6XRJCmGk5biinFj+Xo1Ag94QxxRLPU6R9NBMVB21a
+         L29kCngT/Uz4agJHdqMrvQGYB0Wdkdnz4HFltQXY3RKGVFzMEBG3FQgsDcJvhva7qEyk
+         D1aA==
+X-Gm-Message-State: AOJu0YwEkgSAe7LrOYMkCOpOQ+mwy2p+a4qYLfAtEaLqhGj/LHzcJ8Cz
+	OKAXMvDGZiY6UiJxgE4j5nI+Ew3x3doCdT8ZTySqlR7iUfFbEfeW+hHrwPzn0bJK0aJ/5rbt4Tr
+	H3z41tjpDvFdelS11AT/U6QPSRgYbBN8rPPc17a/yDSJgYCi7S0PbZDVK5d2PIydihtCGVj/qaO
+	RnV60=
+X-Received: by 2002:a05:6602:6414:b0:7f6:83da:dd12 with SMTP id ca18e2360f4ac-81fd43924d3mr1806526239f.11.1722870862897;
+        Mon, 05 Aug 2024 08:14:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEHp866FKs3N0GAgAGdS61eDS2I3H5Lna3kaCdTin0enIg/S6Ey8t4q8U4PgiqLnDyzbuWh+A==
+X-Received: by 2002:a05:6602:6414:b0:7f6:83da:dd12 with SMTP id ca18e2360f4ac-81fd43924d3mr1806523039f.11.1722870862491;
+        Mon, 05 Aug 2024 08:14:22 -0700 (PDT)
 Received: from [192.168.211.203] ([109.38.139.91])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5b83bf3b99dsm4986110a12.91.2024.08.05.08.03.22
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4c8d6a27a68sm1755135173.110.2024.08.05.08.14.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Aug 2024 08:03:22 -0700 (PDT)
-Message-ID: <0fc180ae-a5df-4199-a428-b108bff0415b@redhat.com>
-Date: Mon, 5 Aug 2024 17:03:21 +0200
+        Mon, 05 Aug 2024 08:14:22 -0700 (PDT)
+Message-ID: <ff683cf3-1b0f-4110-82b0-ed6889151bff@redhat.com>
+Date: Mon, 5 Aug 2024 17:14:18 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,143 +67,98 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] hid-asus: use hid for brightness control on
- keyboard
-To: "Luke D. Jones" <luke@ljones.dev>, platform-driver-x86@vger.kernel.org
-Cc: corentin.chary@gmail.com, ilpo.jarvinen@linux.intel.com,
- linux-kernel@vger.kernel.org, jikos@kernel.org, bentiss@kernel.org,
- linux-input@vger.kernel.org
-References: <20240713074733.77334-1-luke@ljones.dev>
- <20240713074733.77334-2-luke@ljones.dev>
+Subject: Re: [PATCH] platform/x86: asus-wmi: Add quirk for ROG Ally X
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Luke D. Jones" <luke@ljones.dev>
+Cc: platform-driver-x86@vger.kernel.org, corentin.chary@gmail.com,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20240724222852.44378-1-luke@ljones.dev>
+ <056b599c-4d29-a743-ad7b-055e951e9e39@linux.intel.com>
 Content-Language: en-US
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240713074733.77334-2-luke@ljones.dev>
+In-Reply-To: <056b599c-4d29-a743-ad7b-055e951e9e39@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi,
 
-On 7/13/24 9:47 AM, Luke D. Jones wrote:
-> On almost all ASUS ROG series laptops the MCU used for the USB keyboard
-> also has a HID packet used for setting the brightness. This is usually
-> the same as the WMI method. But in some laptops the WMI method either
-> is missing or doesn't work, so we should default to the HID control.
+On 7/29/24 1:44 PM, Ilpo Järvinen wrote:
+> On Thu, 25 Jul 2024, Luke D. Jones wrote:
 > 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+>> The new ROG Ally X functions the same as the previus model so we can use
+>> the same method to ensure the MCU USB devices wake and reconnect
+>> correctly.
+>>
+>> Given that two devices marks the start of a trend, this patch also adds
+>> a quirk table to make future additions easier if the MCU is the same.
+>>
+>> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+>> ---
+>>  drivers/platform/x86/asus-wmi.c            |  2 +-
+>>  include/linux/platform_data/x86/asus-wmi.h | 15 +++++++++++++++
+>>  2 files changed, 16 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+>> index 2b968003cb9b..bac2945b0e48 100644
+>> --- a/drivers/platform/x86/asus-wmi.c
+>> +++ b/drivers/platform/x86/asus-wmi.c
+>> @@ -4694,7 +4694,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+>>  	asus->dgpu_disable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU);
+>>  	asus->kbd_rgb_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_STATE);
+>>  	asus->ally_mcu_usb_switch = acpi_has_method(NULL, ASUS_USB0_PWR_EC0_CSEE)
+>> -						&& dmi_match(DMI_BOARD_NAME, "RC71L");
+>> +						&& dmi_check_system(asus_ally_mcu_quirk);
+>>  
+>>  	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MINI_LED_MODE))
+>>  		asus->mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE;
+>> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+>> index 74b32e1d6735..fba9751cda5b 100644
+>> --- a/include/linux/platform_data/x86/asus-wmi.h
+>> +++ b/include/linux/platform_data/x86/asus-wmi.h
+>> @@ -196,4 +196,19 @@ static const struct dmi_system_id asus_use_hid_led_dmi_ids[] = {
+>>  	{ },
+>>  };
+>>  
+>> +/* To be used by both hid-asus and asus-wmi to determine which controls kbd_brightness */
+>> +static const struct dmi_system_id asus_ally_mcu_quirk[] = {
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_BOARD_NAME, "RC71L"),
+>> +		},
+>> +	},
+>> +	{
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_BOARD_NAME, "RC72L"),
+>> +		},
+>> +	},
+>> +	{ },
+>> +};
+> 
+> Why is this in the header? I see your comment but this means every file 
+> which includes asus-wmi.h will have a duplicate copy of this array.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+You are right, although asus-wmi.h is not included that often it is only
+used in:
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+drivers/platform/x86/asus-wmi.c
+drivers/platform/x86/eeepc-wmi.c
+drivers/platform/x86/asus-nb-wmi.c
+drivers/hid/hid-asus.c
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+But all 4 of those usually get build as separate modules, so it would
+still be better to move this into a .c file.
+
+Luke, the comment says that this will be used in hid-asus.c too, but
+I think that is a copy and paste error resulting froom copying the comment
+from the asus_use_hid_led_dmi_ids[] DMI matches array.
+
+It seems that this DMI matches array will only be used inside asus-wmi.c,
+in that case it would be better to just declare it there instead of
+in the shared asus-wmi.h file ?
 
 Regards,
 
 Hans
 
 
-
-
-> ---
->  drivers/hid/hid-asus.c                     |  7 +++++
->  drivers/platform/x86/asus-wmi.c            |  3 +-
->  include/linux/platform_data/x86/asus-wmi.h | 36 ++++++++++++++++++++++
->  3 files changed, 45 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> index 37e6d25593c2..af57a5f03193 100644
-> --- a/drivers/hid/hid-asus.c
-> +++ b/drivers/hid/hid-asus.c
-> @@ -492,12 +492,19 @@ static void asus_kbd_backlight_work(struct work_struct *work)
->   */
->  static bool asus_kbd_wmi_led_control_present(struct hid_device *hdev)
->  {
-> +	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
->  	u32 value;
->  	int ret;
->  
->  	if (!IS_ENABLED(CONFIG_ASUS_WMI))
->  		return false;
->  
-> +	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD &&
-> +			dmi_check_system(asus_use_hid_led_dmi_ids)) {
-> +		hid_info(hdev, "using HID for asus::kbd_backlight\n");
-> +		return false;
-> +	}
-> +
->  	ret = asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS,
->  				       ASUS_WMI_DEVID_KBD_BACKLIGHT, 0, &value);
->  	hid_dbg(hdev, "WMI backlight check: rc %d value %x", ret, value);
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 3f9b6285c9a6..799d928c7d3d 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -1681,7 +1681,8 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
->  			goto error;
->  	}
->  
-> -	if (!kbd_led_read(asus, &led_val, NULL)) {
-> +	if (!kbd_led_read(asus, &led_val, NULL) && !dmi_check_system(asus_use_hid_led_dmi_ids)) {
-> +		pr_info("using asus-wmi for asus::kbd_backlight\n");
->  		asus->kbd_led_wk = led_val;
->  		asus->kbd_led.name = "asus::kbd_backlight";
->  		asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index 3eb5cd6773ad..74b32e1d6735 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -4,6 +4,7 @@
->  
->  #include <linux/errno.h>
->  #include <linux/types.h>
-> +#include <linux/dmi.h>
->  
->  /* WMI Methods */
->  #define ASUS_WMI_METHODID_SPEC	        0x43455053 /* BIOS SPECification */
-> @@ -160,4 +161,39 @@ static inline int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1,
->  }
->  #endif
->  
-> +/* To be used by both hid-asus and asus-wmi to determine which controls kbd_brightness */
-> +static const struct dmi_system_id asus_use_hid_led_dmi_ids[] = {
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_PRODUCT_FAMILY, "ROG Zephyrus"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_PRODUCT_FAMILY, "ROG Strix"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_PRODUCT_FAMILY, "ROG Flow"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_NAME, "GA403U"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_NAME, "GU605M"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_NAME, "RC71L"),
-> +		},
-> +	},
-> +	{ },
-> +};
-> +
->  #endif	/* __PLATFORM_DATA_X86_ASUS_WMI_H */
 
