@@ -1,132 +1,133 @@
-Received: from sxb1plsmtpa01-05.prod.sxb1.secureserver.net (sxb1plsmtpa01-05.prod.sxb1.secureserver.net [188.121.53.46])
+Received: from fout1-smtp.messagingengine.com (fout1-smtp.messagingengine.com [103.168.172.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE2C14A099
-	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Aug 2024 21:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.121.53.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D70E14F9F1;
+	Mon,  5 Aug 2024 23:46:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722894846; cv=none; b=oDsLf0XsrV5DLRfANADFl5pIku2deq6oKw0GS6ywKjBwi2pwO0R+bdABRDWtv0YAyRfl1bppJU91I0gLaetmQQaAHiqMZxkx0MBlPHkF5dyI3oL2Vf6LKWpgyLJg9bXLluRKF5+qQfUcB7cNNA4nTDtBWdrEcsnSvONYv9JKB3M=
+	t=1722901575; cv=none; b=stpa5fruC9BeNXn2UcZxznU2n7WqDyr4o+ey6a3TamB6MtfTyM0MvoUX2kqQw6yZYYlgy8KKu+7i064PzaMddWZwu3J4zuUH4rIhmXIdkYo8gnMtjW6TbBBPPV6nMNI5VTEMAA4chb567PXup6aWLgIYUrGabFke/GYqWuRonqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722894846; c=relaxed/simple;
-	bh=TtLcqYXwVhu+R2JWp+iyvK/c1zI8jIP13UtKKstNsgk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mfPEOEtg+0sShCGSoeTOmUMS+apydl8fcPFFC2V0U/H5s02jjpqmps5sUSSBcETIUWXSQn4mRL+yenWMJ0FN+CyJ0RzhtxAIIQqEGC7wAblBCfk0vfFbSNV973CzfjurUoSpu0ysqkDTyyll52YLVZdseFcLYFPdh0/3GJYGPqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=piie.net; spf=pass smtp.mailfrom=piie.net; arc=none smtp.client-ip=188.121.53.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=piie.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=piie.net
-Received: from [192.168.1.27] ([109.90.180.58])
-	by :SMTPAUTH: with ESMTPSA
-	id b5c7sufgD5nw9b5c9sKsOA; Mon, 05 Aug 2024 14:51:38 -0700
-X-CMAE-Analysis: v=2.4 cv=NqsacNdJ c=1 sm=1 tr=0 ts=66b1496b
- a=ujCVow8R4Y5jPCx6COW8WA==:117 a=ujCVow8R4Y5jPCx6COW8WA==:17
- a=IkcTkHD0fZMA:10 a=M51BFTxLslgA:10 a=pGLkceISAAAA:8 a=QyXUC8HyAAAA:8
- a=JXrB-i05ymQu8u1lf2kA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-SECURESERVER-ACCT: peter@piie.net
-Message-ID: <1bfbbae5-42b0-4c7d-9544-e98855715294@piie.net>
-Date: Mon, 5 Aug 2024 23:51:35 +0200
+	s=arc-20240116; t=1722901575; c=relaxed/simple;
+	bh=7GogOe5n9F2zHkC/WirTp89rqrdd3akHu64WR1KTE1Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FbhHZ8w23H0f2adAGVOMpkCRZ6m4rCW2kcbCCHm9znwuVAoMUu1LEbFxlBQDuCaBpFqzJ7M+pWoqRrg1Z/4g2Kyh1h4d8oS/OjA4Vq6z5WI1R159oPZIV6KaN+JoPCqdD28HMS2Ob8La3xBUPGZUNtl35NQ78rhhhRlRG5pMozI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=rWdltSbw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MhakXm17; arc=none smtp.client-ip=103.168.172.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="rWdltSbw";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MhakXm17"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 51123138DD0D;
+	Mon,  5 Aug 2024 19:46:12 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 05 Aug 2024 19:46:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm1; t=1722901572; x=1722987972; bh=gIvWdDLxWY22hhOBPE6JY
+	Foqhl5WH6m9QN6kQjoDgMY=; b=rWdltSbw651QVVznuH6ziMaxUGCHYY2+tbCTw
+	mVi7J00RuotjdYX4//SK7FZCunfkNm3b8cgyScTJ4t1ZAzXG3g6M4LKCJDUOPYOo
+	bmk5UTaJsv9Fel0gVAFeB+fmdAzR7cvBjvo/MHXB9UQea2sD+hNP2lf136KwS4dQ
+	V1vSXL5NM9Pw6QSR6rDCrZYMv88E5xaIdJQhlyh8x0708BPAsD/88pX55EjRgWUe
+	OzkTI4wFx9DpdUM2SbH+rA8ClXHMSFRMOpAziTGl9VeRIhMr/k2m/t+d1UlpjA9Z
+	QB4J0O924me8OtvLmfq6DksxflXPCWl7SxK7xAe9wRWz8J0YQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1722901572; x=1722987972; bh=gIvWdDLxWY22hhOBPE6JYFoqhl5W
+	H6m9QN6kQjoDgMY=; b=MhakXm17+uOomLrF8G3Nl+GisPyFjo4E7A7yu8Uy3bKv
+	crapWM5p6CgifwKyMB2/OJV7HoXfkdtwvfU0WR1gq4j6DzSaFRdzZCcSPaS2mdUS
+	MKuYTDtdpYVlX3IozZfhBFLD434fIF3cXOzZfmKLx/pfTdzB9n7+32f1L1cPgS5R
+	tq9ntmXUFDM+BDRnusZtsukB3jyJ5y0SC1hggt17Ax/RvF05pFCdkueNgwiIhtHh
+	OolRloPFAP6ccHASqA8EJuVaiu1etFyGLkhs4Ftw6+a2NOqwSlejy4uq/5SwJ6M1
+	T08zokWxAOqBvLV/dCP+S8hqJx/0tA7t/2u04rkcyw==
+X-ME-Sender: <xms:Q2SxZhFoeFYqOEykw2xxWFtJem87lZAP_xVeVknBBUA5RHaH1o_CfQ>
+    <xme:Q2SxZmWxZfTPnb_uzCjfnv3hM1EQM07JzyrsAk2PljDrr5fV_wIgtlaWMxEbqYMG8
+    9Bon7cR5ueVC70XSUo>
+X-ME-Received: <xmr:Q2SxZjKeKYMmBiOAI5rdq7AWnXysZfRqxgNpavrTpWEzQdW-tc9toJBMh8Hh>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrkeejgddvjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgggfestdekredtre
+    dttdenucfhrhhomhepfdfnuhhkvgcuffdrucflohhnvghsfdcuoehluhhkvgeslhhjohhn
+    vghsrdguvghvqeenucggtffrrghtthgvrhhnpefgudejtdfhuddukefffeekiefftddtvd
+    fhgeduudeuffeuhfefgfegfeetvedvgeenucevlhhushhtvghrufhiiigvpedtnecurfgr
+    rhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghvpdhnsggprhgtph
+    htthhopedt
+X-ME-Proxy: <xmx:Q2SxZnGz1LOoMdqDKT_OyAJB8nKadG38x3NrTWbcum8-8oRbWXIn6g>
+    <xmx:Q2SxZnWxN1GOjJIoInE24K6BQv3I2JfxzGCmZzY_9aLuVisj_VGr5Q>
+    <xmx:Q2SxZiNJ6CyYt3l7rwtk1vR_GFj65CyMpWMdvjvUS-1_U4e3R1uRIw>
+    <xmx:Q2SxZm0nfgl83WfFiDfC443LQHjSefc3aistL_mWIDtKverAqQtITw>
+    <xmx:RGSxZteZ0S8Aiiv6TUolNSKYSyViNCrG1M5Ax8YjIa-9veBAlnZFFcLI>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 5 Aug 2024 19:46:08 -0400 (EDT)
+From: "Luke D. Jones" <luke@ljones.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com,
+	corentin.chary@gmail.com,
+	"Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH v2] platform/x86: asus-wmi: Add quirk for ROG Ally X
+Date: Tue,  6 Aug 2024 11:46:03 +1200
+Message-ID: <20240805234603.38736-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 12/17] platform/x86: acerhdf: Use the .should_bind()
- thermal zone callback
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Linux ACPI <linux-acpi@vger.kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Lukasz Luba
- <lukasz.luba@arm.com>, Zhang Rui <rui.zhang@intel.com>,
- Peter Kaestle <peter@piie.net>, platform-driver-x86@vger.kernel.org
-References: <1922131.tdWV9SEqCh@rjwysocki.net>
- <2242500.C4sosBPzcN@rjwysocki.net>
- <a0c639d1-4f21-47f1-bb66-92f185e828a9@gmail.com>
- <CAJZ5v0jDQLJWGCj73DXQe3+k+Zaq9Z71LJbFSvRjcuE85+J+mQ@mail.gmail.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Peter_K=C3=A4stle?= <peter@piie.net>
-In-Reply-To: <CAJZ5v0jDQLJWGCj73DXQe3+k+Zaq9Z71LJbFSvRjcuE85+J+mQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfJWPR2+yiOWfZF1NN1S8YQgNKg47YkfBXB1nfxoLS0fZ3rnhmIi6a5t1zj9QzI4OACJP2WuBqRdHHFEjn4wK14uS9dO/T/x2eLlOv5L1sVMFzEhcP5IU
- hIn/yHFJYo1svGlnqYa9TkcDG55epHQmXWg36d91MYfdBW0ZLODWbvUJ94qiEMvJmNWFyeERLrmC44A4xTj3DOuWRv1dRItHK9QRicWnosSJslsxnPlXFwRw
- QUxlszm5dv0kty+bc7+WllK/j+k/mnF8gsxKOOG5GKwaqlAodwTv/8xyK5tovV5CAf5Y6AJwmr7Wt2g4BHrVNszQZTdPAwPog1sQjPbXGlMGRyQPT55LX8Up
- aPFUMcyS5fG1dCOM4C1So+FLOgx5/6WEY+MoAn493VwP941dKCVQWCOhVNEjUIiiBbtHIqa33yXUgURRMAwcoPXa+uQaqZ5vh00klOOM6wbQQNmi70oeHpKI
- 8dl8xK69f5gZ9HFWEp8DiQc3PnHuIsKdZoM1OQ==
 
-Hi Rafael,
+The new ROG Ally X functions the same as the previus model so we can use
+the same method to ensure the MCU USB devices wake and reconnect
+correctly.
 
-On 01.08.24 12:14, Rafael J. Wysocki wrote:
-> Hi Peter,
-> 
-> On Wed, Jul 31, 2024 at 10:50 PM Peter Kästle <xypiie@gmail.com> wrote:
->>
->> Hi Rafael,
->>
->> On 30.07.24 20:33, Rafael J. Wysocki wrote:
->>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>
->>> Make the acerhdf driver use the .should_bind() thermal zone
->>> callback to provide the thermal core with the information on whether or
->>> not to bind the given cooling device to the given trip point in the
->>> given thermal zone.  If it returns 'true', the thermal core will bind
->>> the cooling device to the trip and the corresponding unbinding will be
->>> taken care of automatically by the core on the removal of the involved
->>> thermal zone or cooling device.
->>>
->>> The previously existing acerhdf_bind() function bound cooling devices
->>> to thermal trip point 0 only, so the new callback needs to return 'true'
->>> for trip point 0.  However, it is straightforward to observe that trip
->>> point 0 is an active trip point and the only other trip point in the
->>> driver's thermal zone is a critical one, so it is sufficient to return
->>> 'true' from that callback if the type of the given trip point is
->>> THERMAL_TRIP_ACTIVE.
->>>
->>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>
->> Thanks for including me on the review.
->> I'm working on it, but unfortunately the refactoring of the thermal layer
->> around gov_bang_bang.c earlier this year broke acerhdf.
-> 
-> Well, sorry about that.
+Given that two devices marks the start of a trend, this patch also adds
+a quirk table to make future additions easier if the MCU is the same.
 
-I already fixed the main problem, which caused full malfunction of acerhdf:
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+---
+ drivers/platform/x86/asus-wmi.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-The new functionality of .trip_crossed in the gov_bang_bang is missing an
-initial check, whether the temperature is below the fanoff temperature
-(trip_point.temperature - hysteresis) and by that it did not turn the
-fan off.  This then caused that the system will never heat up as much to
-cross the upper temperature. As a consequence it could never cross the
-lower temperature to turn the fan off. -> Fan was locked always on.
-And that's obviously not what we want.
-As I didn't find any API call, to ask the governor doing that for me, I
-added an "acerhdf_init_fan()" functionality into acerhdf init function right
-after registering the thermal zone (and on resume from suspend) which turns
-the fan off if the temperature is lower than the fanoff parameter.
-Probably not the nicest solution, but maybe the most pragmatic one without
-touching the thermal layer.
-
->> This needs some debugging and refactoring.  I think I can finish it on
->> upcoming weekend.
-> 
-> Thank you!
-
-I'll need some more time to check why other features of acerhdf broke:
-* interval cannot be changed to longer than one second.
-   No idea yet, do you have any idea?  Maybe I'll simply drop this
-   functionality, as there's no big overhead by polling every second.
-* changing /sys/module/acerhdf/parameters/{fanon,fanoff} at runtime
-   to change the trip point settings stopped working.  This needs some
-   restructuring using module_param_cb callbacks.
-
-> I'll be offline next week, so I'll go back to this material in two
-> weeks or so anyway.
-
-I still need some time to fix the remaining part anyhow.  Once this is
-done, I'll check your latest patch series and send my acerhdf rework for
-review / submission.
-
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index f15fcb45e1aa..0c80c6b0399b 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -152,6 +152,20 @@ static const char * const ashs_ids[] = { "ATK4001", "ATK4002", NULL };
+ 
+ static int throttle_thermal_policy_write(struct asus_wmi *);
+ 
++static const struct dmi_system_id asus_ally_mcu_quirk[] = {
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "RC71L"),
++		},
++	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "RC72L"),
++		},
++	},
++	{ },
++};
++
+ static bool ashs_present(void)
+ {
+ 	int i = 0;
+@@ -4751,7 +4765,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	asus->dgpu_disable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU);
+ 	asus->kbd_rgb_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_STATE);
+ 	asus->ally_mcu_usb_switch = acpi_has_method(NULL, ASUS_USB0_PWR_EC0_CSEE)
+-						&& dmi_match(DMI_BOARD_NAME, "RC71L");
++						&& dmi_check_system(asus_ally_mcu_quirk);
+ 
+ 	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MINI_LED_MODE))
+ 		asus->mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE;
 -- 
-regards,
---peter;
+2.45.2
+
