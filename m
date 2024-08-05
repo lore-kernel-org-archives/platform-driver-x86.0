@@ -1,134 +1,207 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh4-smtp.messagingengine.com (fhigh4-smtp.messagingengine.com [103.168.172.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E5A8469;
-	Mon,  5 Aug 2024 20:51:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B7357323;
+	Mon,  5 Aug 2024 21:41:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722891102; cv=none; b=KJYMV5ROPXiSe6MZ+UARVO4Gek+THVyh/rZsdxugvKR7mabVxdiXpxT1zO/jZUUI2CYMdtuRlQNjmJ70pSFCB8BDwM6fhOrSIyyA9cnFk4/u5pUxcatiAfcyAzO29zEGcTpFzjIospP5QVDd++xKEajyazh9LitXxgH/kbb/ySA=
+	t=1722894104; cv=none; b=CjnTTx9Fofd+0/giqff3jyp61vAGYPryoahV0qMaZ1Z/xdC118rL6SaJvIlEXVSza3jw5FT0nQs/C9QnRalsUK0Oxze1Pg/qVxidUKkgpmUiETc7iJvJt8X/XXnIDBFJbp4NVhzulxS3/WAykRVVkTpwpVR40BLPr2pw6sA7RwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722891102; c=relaxed/simple;
-	bh=MrGvdsIiwNjp/hC3sZxgp1Ig213BER/Mfyt7rnIq3Wg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VU4wF3EWBWtTIw6ExD1BwMy+ireYkbVCJ6P8JVwfwJH8633v9liaygjFkErTO/rs434F/FEL6rxvitQ3I0JhPvZs6bU+c2Yc4NajeQJGpyagnz7PQkoC+s2zw4iCZJBxFLYdScD0gI0OHEXUiG8spuRPm4PXqDxBI8bChWWj+Qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b4gRQlKi; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1722894104; c=relaxed/simple;
+	bh=LxqNl93oNDBVHrlq+WL9mX2KsBWdtglfzkx5RO5LGww=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=fgovIT0a+ljOcS1sWkeV5LvwHzdgjRTIuXn2Yu/XJfBoZ/8+k39HKymglgf+f4ZR2AA+KrAo4M7lwrCw1hjbIQjQeN+1qld97Gt19wamx14Iz+P9+2V6R9lbrl2EoRhhqIMWdXISz2ykqh0SCwgh0tbMQY7+tX5WC7nJshPoCkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=haReA+r1; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=H71bNqvp; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b4gRQlKi"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2f035ae0fd1so121737841fa.2;
-        Mon, 05 Aug 2024 13:51:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722891099; x=1723495899; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C7VLm4Ac5XWQXH6FV4V7aIvlxbqJmiqLM4EcKwmyOh0=;
-        b=b4gRQlKiCAbfxQ9DXsDSGOGW5jbXXVSDe/I1RHDLvoco0BUEYkFhNqsu469IZyoc1e
-         aLey24OOqaBnxlNlEC/W1/HRWRxNj93o6xYjNJKTCYfZtKL0A7RNT/BeArwXztfr2vWr
-         IN1f3RMaBEslO8x0WkSsjXuubAPunPrZ5XIrlrhvDVrqIdWwhByMHEqrmyNXn2YPO+n7
-         t34M4/jPdWiV4L8rSp8hkAnY1IWthbn+qrAYOcPy0x2Xz4UcLHih4uwryd7wB7WtJBGQ
-         Op+cH1/VT4CrcB+hcNDmZ9BgXi+zk80QiY+9z/q1f5Qjf6+44J72zLVaanUMPKogC0ZJ
-         FVxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722891099; x=1723495899;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C7VLm4Ac5XWQXH6FV4V7aIvlxbqJmiqLM4EcKwmyOh0=;
-        b=QjQRK5cM8g+AFIoNSMmO86UYYBzR4P/Zg6CVq/bRK5Ft4mXh6/jAKV73JV+289qy+r
-         d2w95xH5WY5obCrfirN1cqVp3WWSEgmL/5HZmNsrnpVxLkK1MSkR2zuAJCePHQDKLC6J
-         uQg/Z/WVfQQcs6lF+tm68RyvTygYwBVjeneCi0K/mzg4ABe38AnNIN96WetTFK1sflJe
-         aK/x/no0irC8BjcYCYcrxnCsjs3WGaUfio7TTzQrH26Hwo7NKybZBZapkWnhZtciUxFK
-         4gW6MW3xaFebRR0ND6E+s9UrIrY/AwFeW1suaJvmSEe4JshNCLV81LeKF6ftzSVu8nOc
-         NloQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWcnrD4Q0sak+ix2V/Y1WG/Fmkkb3t49aiXsZnKKsW5pIF19lY9CyWDIcPg1usIhx9IJqOANIvBdNmppSCbiMyS1z7e9uCtoF6hJLrsI2thLg3Z11RMUG1r0DgiZDCUytVopV7FCW5FPYbtytXpwQ==
-X-Gm-Message-State: AOJu0YxbNY46huBIqDSjGdXez3K/RPJnHeI2921zKSBTAof+XHAtoZU7
-	GMe6BHyW/Ej4cO8rEvnagRizaXvUYzRnnFbjV0QCd1d76JF0ezDOCQ28uQycS4vqSlUa3ZGpL+d
-	ESznEtMbJj7J2t39wMHvbcrNEKpo=
-X-Google-Smtp-Source: AGHT+IFGxUA0O8Q1tN3x5+k05mPCu3CfYsdmjbuR42uvWvHg3gH1gwhp1XtXvu4Emq4rGc3GTBwvTzeI1lHTekofZUY=
-X-Received: by 2002:a2e:3019:0:b0:2ef:2883:2746 with SMTP id
- 38308e7fff4ca-2f15ab047dfmr88351991fa.48.1722891098543; Mon, 05 Aug 2024
- 13:51:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="haReA+r1";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="H71bNqvp"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 5B39A114AB25;
+	Mon,  5 Aug 2024 17:41:40 -0400 (EDT)
+Received: from imap41 ([10.202.2.91])
+  by compute3.internal (MEProxy); Mon, 05 Aug 2024 17:41:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1722894100;
+	 x=1722980500; bh=gY+Y0Y9pBsBrT+Hu1S5yds/9bTz/ceRETXNYGdVafCQ=; b=
+	haReA+r1/ylPhTMP6hvskrYAPxYiCgo1I1BnORe+hB0VUz8+8PtOwLLeehF8/Y3i
+	TVxgctr4sazr7jrRwd439hW3uQKmsMjhoLptjJIUbEK9SkbkUClsQyn49twQuHAu
+	gNetInDeAtlL/lK6KG66hmRGKujkJQnjNj6Uz+rgesBSxk9xLz6SbDywD4PUQFs3
+	3mlit0OSs1v/w9a6uSUYqWrvGKkrm6gFyYbJPNiLMtF3t1NvlLngm71OjN7Lpc/w
+	ilIfYJAOvIm+xoZFc4R0vkWD6iHOeIfiZG3rqJhD8n9IXzpA+gJcAG3hSDBZA7zJ
+	hkS4xGNwo7UDy8bOiTWbuw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1722894100; x=
+	1722980500; bh=gY+Y0Y9pBsBrT+Hu1S5yds/9bTz/ceRETXNYGdVafCQ=; b=H
+	71bNqvpV2411g6vndo4HCVxJAqvNWKSGfGRkb6UIlyF3RqvarG8mIK/tJB75dlHi
+	ud4d87cE7O5xORRGdmTuXxem62rgwz42BAk5wWoALH+a2icMHAOmBoatPNvMskoU
+	AUcXReztR7JMM4rpksoyiIX8SPi18UQnYx/8vqs+rWi23OsyviFUeZWQUe0950hB
+	qUR+Dnomud0TkLEksk75a36IIy09vGLPtS4ndxwoIE20ZKjGNmUJHTD+pU7GKFnI
+	Sxn+eQUPUBQdnaFCVXHxG+XLMYan7CwHP7Up7qQ64Dzbm4vR4v6Njkdh9/4wCiom
+	ghF5+aYzCdlX55RzKaMVQ==
+X-ME-Sender: <xms:E0exZvpDP-2Oi1VhqKX4cnm8JFFzWFRS0C-Tmr8mloruu9Ymh6xefw>
+    <xme:E0exZpqpcJmlRGzlu_eL5Gpq6iyL-If5aZWwoznm-d3_2ANqTmytk-M2UoOtFrbIA
+    AMQf7rqU-ZIrjin5AQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrkeejgddtvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdfnuhhk
+    vgculfhonhgvshdfuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvg
+    hrnhepkeevvdejheeihfekffeuhfdtueelkefflefgieduvddtheektefhheelheegvedu
+    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghvpdhnsggp
+    rhgtphhtthhopedt
+X-ME-Proxy: <xmx:E0exZsPqsGqRheq7crAldQ_wG6WZ5CqSchTBrCCh4r_LB1KkaR1ayQ>
+    <xmx:E0exZi6T5iqrY8xus4lAfpboFUv1R69QSfeTGi-4mwf37JoVUd8fLQ>
+    <xmx:E0exZu7CEzuG5mJM-pd56xRa60Ol4wZEJvmTRSpr8GW4wi5c71j4lA>
+    <xmx:E0exZqhv2oB3q5SyvTfI8iX3MyJQDON510Rn7BytlYex7lRwc2ZgUg>
+    <xmx:FEexZp3ORQXjbajfN64Kf7OPzAWQr_0IlGhsAQe4IETjAlvSPnpmdCV0>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id DAC5A2340080; Mon,  5 Aug 2024 17:41:39 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240805133708.160737-1-hdegoede@redhat.com> <20240805133708.160737-7-hdegoede@redhat.com>
-In-Reply-To: <20240805133708.160737-7-hdegoede@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 5 Aug 2024 22:51:01 +0200
-Message-ID: <CAHp75VenFFqtkxVjOvWcA52NV8jTcmu5usnW5fv5VSxsq74ysg@mail.gmail.com>
-Subject: Re: [PATCH v7 6/6] platform/x86: dell-smo8800: Add support for
- probing for the accelerometer i2c address
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>, Wolfram Sang <wsa@kernel.org>, 
-	eric.piel@tremplin-utc.net, Marius Hoch <mail@mariushoch.de>, 
-	Dell.Client.Kernel@dell.com, Kai Heng Feng <kai.heng.feng@canonical.com>, 
-	platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Date: Tue, 06 Aug 2024 09:41:19 +1200
+From: "Luke Jones" <luke@ljones.dev>
+To: "Hans de Goede" <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, corentin.chary@gmail.com,
+ "Mario Limonciello" <mario.limonciello@amd.com>,
+ LKML <linux-kernel@vger.kernel.org>
+Message-Id: <a35c923e-be2c-4083-8c65-c83b49fe4350@app.fastmail.com>
+In-Reply-To: <517aa9f5-00cf-4a68-b1d7-a6dc9f942e7c@redhat.com>
+References: <20240716051612.64842-1-luke@ljones.dev>
+ <8273ed57-4c65-41da-ad7d-907acf168c07@redhat.com>
+ <e9f4fb37-5277-a7f0-2bec-8a6909b4e674@linux.intel.com>
+ <1e309d39-43d3-4054-88a9-0c1da3de26eb@app.fastmail.com>
+ <517aa9f5-00cf-4a68-b1d7-a6dc9f942e7c@redhat.com>
+Subject: Re: [PATCH 0/5] platform/x86: introduce asus-bioscfg
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 5, 2024 at 3:39=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
-wrote:
->
-> Unfortunately the SMOxxxx ACPI device does not contain the i2c-address
-> of the accelerometer. So a DMI product-name to address mapping table
-> is used.
->
-> At support to have the kernel probe for the i2c-address for modesl
+On Tue, 6 Aug 2024, at 3:18 AM, Hans de Goede wrote:
+> Hi Luke,
+>=20
+> On 7/17/24 4:34 AM, Luke Jones wrote:
+> > On Wed, 17 Jul 2024, at 3:11 AM, Ilpo J=C3=A4rvinen wrote:
+> >> On Tue, 16 Jul 2024, Hans de Goede wrote:
+> >>> On 7/16/24 7:16 AM, Luke D. Jones wrote:
+> >>>> This is the first major patch I've ever done with the intention of
+> >>>> introducing a new module, so it's highly likely I've made some mi=
+stakes
+> >>>> or misunderstood something.
+> >>>>
+> >>>> TL;DR:
+> >>>> 1. introduce new module to contain bios attributes, using fw_attr=
+ibutes_class
+> >>>> 2. deprecate all possible attributes from asus-wmi that were adde=
+d ad-hoc
+> >>>> 3. remove those in the next LTS cycle
+> >>>>
+> >>>> The idea for this originates from a conversation with Mario Limon=
+ciello
+> >>>> https://lore.kernel.org/platform-driver-x86/371d4109-a3bb-4c3b-80=
+2f-4ec27a945c99@amd.com/
+> >>>>
+> >>>> It is without a doubt much cleaner to use, easier to discover, an=
+d the
+> >>>> API is well defined as opposed to the random clutter of attribute=
+s I had
+> >>>> been placing in the platform sysfs.
+> >>>
+> >>> This is a bit of a novel use of the fw_attributes_class and I'm not
+> >>> entirely sure of what to think of this.
+> >>>
+> >>> The fw_attributes_class API was designed for (mostly enterprise)
+> >>> x86 machines where it is possible to change all BIOS settings dire=
+ctly
+> >>> from the OS without entering the BIOS.
+> >>>
+> >>> Here some ACPI or WMI function is present to actually enumerate all
+> >>> the BIOS options (which can be set this way) and get there type.
+> >>>
+> >>> IOW there is not a static list of options inside the driver, nor
+> >>> is there special handling in the driver other then handling differ=
+ences
+> >>> per type.
+> >>>
+> >>> And if a new BIOS version has new options or a different machine m=
+odel
+> >>> has different options then these are discovered automatically.
+> >>>
+> >>> This new use is quite different from this. Although I do see that
+> >>> at least for the attributes using WMI_STORE_INT() + WMI_SHOW_INT()
+> >>> that there is quite some commonality between some of the attribute=
+s.
+> >>>
+> >>> I see how using the existing firmware-attributes class API definit=
+ion
+> >>> for this, including allow tweaking this with some of the fwupd
+> >>> firmware-attributes class commandline util work Mario did is a use=
+ful
+> >>> thing to have.
+> >>>
+> >>> I guess using the firmware-attributes class for this is ok, but
+> >>> this _must_ not be named bioscfg, since the existing hp-bioscfg
+> >>> driver is a "classic" firmware-attributes drivers enumerating all
+> >>> the options through BIOS provided enumeration functions and I want
+> >>> the name to make it clear that this is not that. And the Dell
+> >>> implementation is called dell-wmi-sysman so lets also avoid sysman
+> >>> as name.
+> >>>
+> >>> Maybe call it "asus-bios-tunables" ?   And then if Asus actually
+> >>> implements some more classic firmware-attributes enumerable interf=
+ace
+> >>> we can use "asus-bioscfg" for that.
+> >>>
+> >>> Mario, Ilpo what is your opinion on this ?
+> >>
+> >> What you suggested sounds good to me.
+> >=20
+> > Thanks guys. I think there might be a few names that could be suitab=
+le
+> >=20
+> > 1. asus_bios_tuning/tunables
+> > 2. asus_fw_tuning/tunables
+> > 3. asus_fw_settings
+> > 4. asus_armoury
+> >=20
+> > I'm shying away from the "tuning/tunables" label since there are als=
+o a lot of settings which are just toggles for various features rather t=
+han actual tunable things. It makes sense in some contexts at least.
+> >=20
+> > Armoury Crate is the software collection that Asus uses for the gami=
+ng laptops, and they tend to lump these settings under that label.
+> >=20
+> > Personally I'm leaning towards "asus_fw_settings" as it more accurat=
+ely describes what the module does.
+>=20
+> "asus_fw_settings" sounds good to me. I'm looking forward to v2 of thi=
+s series.
 
-models
+I've actually done a poll on my discord, folks voted overwhelmingly for =
+`asus-armoury` and I went with this before your response. The reasoning =
+here is that many of these users are coming from windows where Armoury C=
+rate is an app that exposes all the same functions and so that's what th=
+ey look for on linux.
 
-> which are not on the list.
->
-> The new probing code sits behind a new probe_i2c_addr module parameter,
-> which is disabled by default because probing might be dangerous.
+If you don't think this is suitable I'm happy to change.
 
-...
-
-> +static int detect_lis3lv02d(struct i2c_adapter *adap, unsigned short add=
-r)
-> +{
-> +       union i2c_smbus_data smbus_data;
-> +       int err;
-> +
-> +       pr_info("Probing for lis3lv02d on address 0x%02x\n", addr);
-
-Using dev_info() against an adapter device might be more useful, no?
-
-> +       err =3D i2c_smbus_xfer(adap, addr, 0, I2C_SMBUS_READ, LIS3_WHO_AM=
-_I,
-> +                            I2C_SMBUS_BYTE_DATA, &smbus_data);
-> +       if (err < 0)
-> +               return 0; /* Not found */
-> +
-> +       /* valid who-am-i values are from drivers/misc/lis3lv02d/lis3lv02=
-d.c */
-> +       switch (smbus_data.byte) {
-> +       case 0x32:
-> +       case 0x33:
-> +       case 0x3a:
-> +       case 0x3b:
-> +               break;
-> +       default:
-> +               pr_warn("Unknown who-am-i register value 0x%02x\n", smbus=
-_data.byte);
-> +               return 0; /* Not found */
-> +       }
-> +
-> +       pr_debug("Detected lis3lv02d on address 0x%02x\n", addr);
-
-Ditto for the rest of pr_*() in this function.
-
-> +       return 1; /* Found */
-> +}
-
---=20
-With Best Regards,
-Andy Shevchenko
+> Regards,
+>=20
+> Hans
+>=20
+>=20
+>=20
