@@ -1,75 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1BF17C
-	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Aug 2024 13:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E2828366
+	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Aug 2024 13:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722863939; cv=none; b=blBaaB1Ke3t+A5Lgr3Q/7lEUHBnLKE/TIBrSRZs/KbfwJeKJmUNMEt7c7Gc8APq/+gNwkH3Be9cosxeT5hviYPQWwJP9eYMpc223I6Md1sIbu0HvmTIf9jvB5yhUxuHhvu8xA3S0QxD92uBSxH3jZsVKTVOelQ4KT489nc92Jx4=
+	t=1722865051; cv=none; b=Z6xXOB158TrGGhfPe8/lHANXB53LRPkr0d0sg/Oms9atR/3fmnrqoDd6mfD5tHGIlEnUYfWsRVzZ/8oiwtWePX2OjdPt3paqbnDKwwTi9kpFTUx7pDYYfgRTRVhKJAtepDSJNx0bugYCutmwBBaX3EFhVAt+4cocndw563X+PjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722863939; c=relaxed/simple;
-	bh=8SdifW93HqqBaSslgZiF4wsWQHLIyZsh4RWkh8Igd+s=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SMemOjvWuv2toky5XCq5r9gZzl/7lFYt5XkExqxhjhFPm8Ctqs0cxwn2JTlxTROMqeO56lIDfuayQT/IlP7ax9JiYNKUIXSNCOhAbfiCv8KheUilcyeauGY4GMojuSippevdNVhmB7ZAJRKuMfzX7uhH8JZwH+nOjUg9wuE4h2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fdo/VlD1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722865051; c=relaxed/simple;
+	bh=B3iC0kPOl5erSOQF3kKwabtOuPDH7tIpaZ//x/ef2rc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TWVfgGfmPGy2ftGu9T7FEYh65bZ9D8O37L9EE/OIkwJZvmDqjx1fCLrc7Yn9NsOnArGPbzEmRpmQqPJkitmrpw+3lB7lQuLKm3w1hTZCI+VgBKYpzeDf/wz/E5xVtGh3dYwIxZm4c2+k5TT4LbBT9gkxTq610IXxC3g3hJ19jjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JhJ/x3dw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fdo/VlD1"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0CAC2C4AF0F
-	for <platform-driver-x86@vger.kernel.org>; Mon,  5 Aug 2024 13:18:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722863939;
-	bh=8SdifW93HqqBaSslgZiF4wsWQHLIyZsh4RWkh8Igd+s=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Fdo/VlD1OGY2S1fNiNlop3LIIY4/MenpJUIMIg40ElNcO+HQYVHHItdnbPXrlMf1a
-	 LC5EKIzXKR6pM08NbnZ5Ah8HeyeX5ONJmqID9aQYIOPPB/rUefo/xHbRBTm1F/1tZO
-	 jLFznjzzH7hhtDJOGcWBVwxgtmzJW1+hPMphETKXv4Z/joXGrRs/GF0lVnVT141bmb
-	 dYUy1ciQtRqwMngQno2AcYkto+iEcUSLFouQ44zSf8J6LzvOwOqkbrHzAgLPb+fSER
-	 u95couB3i8AkOHq2kYKEcmHK/WWuFaxdMG52twDiUjrbNDI9qokS3ZZxuiofMug95F
-	 PHwHC5yZrJY7Q==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id E0546C53B73; Mon,  5 Aug 2024 13:18:58 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
- models (16Z90S)
-Date: Mon, 05 Aug 2024 13:18:58 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: W_Armin@gmx.de
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218901-215701-xBYXVkXNsS@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
-References: <bug-218901-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JhJ/x3dw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722865048;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=b3zfVGLvf7sY7MWPL/FPlPyXbt81ky0u0h0/+mQ1A58=;
+	b=JhJ/x3dwZgxUzKbT3JPwSwOMdI5l+MKE7cnVsslNy8YRSPtCqWVDMaIez52o372WoutF4/
+	CCZGGQsSCh+y2ZUX3OWFJP7m6XNW0Vt+1UeTdzAaA6rvgd7UXKPepJOkezHBgPr+MYbNUt
+	SKSNouxcJcr1PWMEHqzigXRqysWhL+8=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-25-DhE6aeHkPd69GLJMo4L5lA-1; Mon,
+ 05 Aug 2024 09:37:25 -0400
+X-MC-Unique: DhE6aeHkPd69GLJMo4L5lA-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5B66D195609F;
+	Mon,  5 Aug 2024 13:37:20 +0000 (UTC)
+Received: from x1.localdomain.com (unknown [10.39.193.139])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 38ED330001A7;
+	Mon,  5 Aug 2024 13:37:12 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Wolfram Sang <wsa@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	eric.piel@tremplin-utc.net,
+	Marius Hoch <mail@mariushoch.de>,
+	Dell.Client.Kernel@dell.com,
+	Kai Heng Feng <kai.heng.feng@canonical.com>,
+	platform-driver-x86@vger.kernel.org,
+	Jean Delvare <jdelvare@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	linux-i2c@vger.kernel.org
+Subject: [PATCH v7 0/6] i2c-i801 / dell-lis3lv02d: Move instantiation of lis3lv02d i2c_client from i2c-i801 to dell-lis3lv02d
+Date: Mon,  5 Aug 2024 15:37:02 +0200
+Message-ID: <20240805133708.160737-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
+Hi All,
 
---- Comment #52 from Armin Wolf (W_Armin@gmx.de) ---
-I think i found a solution for you thermal dmesg spam problems, see
-https://bugzilla.kernel.org/show_bug.cgi?id=3D219075 for more details.
+Here is v7 (same as v6 rebased on v6.11-rc1) of my patch series to move
+the manual instantation of lis3lv02d i2c_client-s for SMO88xx ACPI device
+from the generic i2c-i801.c code to a SMO88xx specific dell-lis3lv02d
+driver.
 
---=20
-You may reply to this email to add a comment.
+Moving the i2c_client instantiation there has the following advantages:
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+1. This moves the SMO88xx ACPI device quirk handling away from the generic
+i2c-i801 module which is loaded on all Intel x86 machines to a module
+which will only be loaded when there is an ACPI SMO88xx device.
+
+2. This removes the duplication of the SMO88xx ACPI Hardware ID (HID) table
+between the i2c-i801 and dell-smo8800 drivers.
+
+3. This allows extending the quirk handling by adding new code and related
+module parameters to the dell-lis3lv02d driver, without needing to modify
+the i2c-i801 code.
+
+This series also extends the i2c_client instantiation with support for
+probing for the i2c-address of the lis3lv02d chip on devices which
+are not yet listed in the DMI table with i2c-addresses for known models.
+This probing is only done when requested through a module parameter.
+
+Changes in v7:
+- Rebase on v6.11-rc1
+
+Changes in v6:
+- Use i2c_new_scanned_device() instead of re-inventing it
+
+Changes in v5:
+- Make match_acpi_device_ids() and match_acpi_device_ids[] __init[const]
+- Add "Depends on I2C" to Kconfig (to fix kernel-test-robot reported issues)
+- Add "this may be dangerous warning" to MODULE_PARM_DESC(probe_i2c_addr)
+
+Changes in v4:
+- Move the i2c_client instantiation to a new dell-lis3lv02d driver instead
+  of adding it to the dell-smo8800 driver
+- Address a couple of other minor review comments
+
+Changes in v3:
+- Use an i2c bus notifier so that the i2c_client will still be instantiated if
+  the i801 i2c_adapter shows up later or is re-probed (removed + added again).
+  This addresses the main concern / review-comments made during review of v2.
+- Add 2 prep patches to the i2c-core / the i2c-i801 driver to allow bus-notifier
+  use / to avoid the need to duplicate the PCI-ids of IDF i2c-i801 adapters.
+- Switch to standard dmi_system_id matching to check both sys-vendor +
+  product-name DMI fields
+- Drop the patch to alternatively use the st_accel IIO driver instead of
+  drivers/misc/lis3lv02d/lis3lv02d.c
+
+Changes in v2:
+- Drop "[PATCH 1/6] platform/x86: dell-smo8800: Only load on Dell laptops"
+- Use a pci_device_id table to check for IDF (non main) i2c-i801 SMBusses
+- Add a comment documenting the IDF PCI device ids
+- Keep using drivers/misc/lis3lv02d/lis3lv02d.c by default
+- Rename the module-parameter to use_iio_driver which can be set to
+  use the IIO st_accel driver instead
+- Add a new patch adding the accelerometer address for the 2 models
+  I have tested this on to dell_lis3lv02d_devices[]
+
+Since this touches files under both drivers/i2c and drivers/platform/x86
+some subsystem coordination is necessary. I think it would be best to just
+merge the entire series through the i2c subsystem since this touches some
+core i2c files. As pdx86 subsys co-maintainer I'm fine with doing so.
+
+Regards,
+
+Hans
+
+
+Hans de Goede (6):
+  i2c: core: Setup i2c_adapter runtime-pm before calling device_add()
+  i2c: i801: Use a different adapter-name for IDF adapters
+  platform/x86: dell-smo8800: Move SMO88xx acpi_device_ids to
+    dell-smo8800-ids.h
+  platform/x86: dell-smo8800: Move instantiation of lis3lv02d i2c_client
+    from i2c-i801 to dell-lis3lv02d
+  platform/x86: dell-smo8800: Add a couple more models to
+    lis3lv02d_devices[]
+  platform/x86: dell-smo8800: Add support for probing for the
+    accelerometer i2c address
+
+ drivers/i2c/busses/i2c-i801.c                | 133 +---------
+ drivers/i2c/i2c-core-base.c                  |  18 +-
+ drivers/platform/x86/dell/Kconfig            |   1 +
+ drivers/platform/x86/dell/Makefile           |   1 +
+ drivers/platform/x86/dell/dell-lis3lv02d.c   | 249 +++++++++++++++++++
+ drivers/platform/x86/dell/dell-smo8800-ids.h |  26 ++
+ drivers/platform/x86/dell/dell-smo8800.c     |  16 +-
+ 7 files changed, 298 insertions(+), 146 deletions(-)
+ create mode 100644 drivers/platform/x86/dell/dell-lis3lv02d.c
+ create mode 100644 drivers/platform/x86/dell/dell-smo8800-ids.h
+
+-- 
+2.45.2
+
