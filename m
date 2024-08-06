@@ -1,82 +1,63 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79EB6F073
-	for <platform-driver-x86@vger.kernel.org>; Tue,  6 Aug 2024 17:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F5B136330;
+	Tue,  6 Aug 2024 18:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722966919; cv=none; b=lApLXXozfwdy4hM8GqNUnSziELFZLZj8RrO/xTtZhJIxzk2lufpuB9EbmqGMeSQHeDYit1v0S4MXTKFMLRLRWpBCdbyOgbMWLhE7MQsF2btbHeH3SYeJjZhq58eM+D1w5X95qAGaydOIJg6p2DOKxprEn7+OsGfUkcUEgG4vK00=
+	t=1722968748; cv=none; b=pe8DKK4G5tHouPeuFhxuwWUW0Js2otaufUYa1bQDBjhO4y/6kgf6eDGh3YN8gnW9ztFJLi6UrAzLv9bqmqNKl+CegTFDv60pwtiAlYL2qWv0cIaMk0Fjjl2IaTjnACzkJFKSY0iJ06cOpzO6AXeh2bgIksttY60NVs0WQJX6OXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722966919; c=relaxed/simple;
-	bh=dlKor5S4KZTtlApY8vKRh+RBVjDgqah4CvicECM1T2E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dKRVLCRzCeIUxiKfFram8NtOQ8TlmJ1e3KHe6oMbnYZubegZWQDQCw3KoajhniHDYJEQHwG9192AMWfw1JXbhiqBdRHurxWkKk59wxxGRRp46Q+axxVhjvKlylMYlmH4xZF5L80EJKQSUFm/JEi+I6Xra6rHzcnpgZfwH44YjoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XvC5bUz+; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1722968748; c=relaxed/simple;
+	bh=u92X0gQ7+Kdf32kfkOXmeNJ2gqqNbI94BerZH4lTBzY=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=SfH8t403HVZeZlq6l3M/87LeqHvyMyLOEz0Ts6OSl+2EP+0P6LI5z/XW9/NobiWmtHv+Re+H9ZwoFGQkvCMdNUvFe22O1moiReocGkHYN2yZbVW3jn29r0iouMVlhqj+dC1fDEKZOCen4rVYHTk+SKjgOWeJPHdgzrE+aPhRVrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PYgd80pm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XvC5bUz+"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2f1870c355cso10732301fa.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Aug 2024 10:55:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722966916; x=1723571716; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dlKor5S4KZTtlApY8vKRh+RBVjDgqah4CvicECM1T2E=;
-        b=XvC5bUz+J0ll/CRxXEMNOc2PzzGgKwkeLYTdvXGUWFy3qZpXwxddy0xCKqTTYTS/rT
-         W3Ly+nYpkhpO7yK+eymGw/gQHtWIbVAGcAZ1rwfRxMevfar3nGbtlaQcGBVRMXqoitpF
-         hudVe0hLLYDaZNSYzckZrT4Gd5F5PKR86lMUcBGXYQb0XLbMakBKM+VwOu9X04FONVvS
-         LSKfNkibTYYqGlDl7jSdFr+EMSCO2SIpgVK8cwqntxo4XxlvzidBQtQ7hSf8To46lBAd
-         bmljw29zCkq4Z1ES68NhlE8ec+dbRlRNi2nLryqulieO5MBc4z3vWbbfHBE3vrs/CHwE
-         FtAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722966916; x=1723571716;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dlKor5S4KZTtlApY8vKRh+RBVjDgqah4CvicECM1T2E=;
-        b=nfe7HwVYH6YkGluz/XAt0XwfccWKilEa0X6vNGrXBZeJwW+io/w8z8ft5eiOKC4HqA
-         Zb+o2CdqQ8zqJGPNlJ3xMlxTcQNR8ye5YGH+QlJkFNkLjUeczx4gA2jxY8Mqd0S9+JKu
-         T/7Dh3nhZN7muecMqHr/1TKCwwqWREl03q54R9T15BZfkD+JpJdTyIUAmm50TpEP7Vd2
-         z5gWeFVZLKroD3+P9ZALBz1aBGr/DwR81TR/LO0UZmrMtP1AmdLuwNu0QOlFsS2SzU/w
-         hs2T2RE4JJAtlEUJDcpi5moZ4AC3bhPuTxrekoxX7SgWQpKbt4qxqkyo6sp1zTUz3i/6
-         A1uw==
-X-Forwarded-Encrypted: i=1; AJvYcCWYM8eFwJMOZZsTR63utZcdTjrhQHu3+NgiJaKx1wSZqm73GsYnZxdaMwtRtzhkGxIlpYggMDKyIDOGARIl/tx5mezugqnvHqcS4UqzGu9MKnCvQg==
-X-Gm-Message-State: AOJu0Yye3Mh8gopdxMqxsMh0jfT4BVkbmzC15UAxLChlRlkVORogVGtO
-	BpZYleFS+0z8R749V+gDceYQncdglGEPCwhjTClafwPJ3i+x5vqxmGkiRA==
-X-Google-Smtp-Source: AGHT+IGslzbtBNGll023sYG20tJekoTuYzSHLMfH/zJMMs3DJvHbbhuUhDqEdxd54NQsliKDQzpvXQ==
-X-Received: by 2002:a2e:9e02:0:b0:2ec:617b:4757 with SMTP id 38308e7fff4ca-2f15aa95757mr105344631fa.13.1722966915621;
-        Tue, 06 Aug 2024 10:55:15 -0700 (PDT)
-Received: from alexis-pc ([2a01:e0a:d77:ff0:2146:fb54:fbe:f1d0])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4282bb64952sm253629025e9.37.2024.08.06.10.55.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Aug 2024 10:55:15 -0700 (PDT)
-Date: Tue, 6 Aug 2024 19:55:13 +0200
-From: Alexis Belmonte <alexbelm48@gmail.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 2/2] platform/x86: hp-wmi: Add thermal profile support
- for 8BAD boards
-Message-ID: <ZrJjgVkVO5S7ljY9@alexis-pc>
-References: <ZZFGgfsfrU2vuQoI@alexis-pc>
- <84632b31-6e97-4493-a97e-572d288b294d@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PYgd80pm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0A67C32786;
+	Tue,  6 Aug 2024 18:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722968748;
+	bh=u92X0gQ7+Kdf32kfkOXmeNJ2gqqNbI94BerZH4lTBzY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=PYgd80pmEBqCOKDhm8JJsDJYZGdiup8DKRT5T1O6bs+sHx7EFGC5OUOVSmZAGU2Pl
+	 UwaZwcfVJuodu1kEBQvfvitMTrPP0JjGwY99/hRlioR+Uj0EajSdwfa+dPejIMMvh9
+	 /Po+b4dtMxBTXlB2XHsPGyfNxrQwhMW913Gy/LVre4xIZE2vURh8l11FeoLJYdRiyp
+	 fe4cbGAEM2IwmDZUpBH3zrJd9jDc2PV6w3Qt+rwatWyLMaf3FOo1vB0CnNfI0zW8Yf
+	 UVQGYuW3RPY+gJHgJv9/vZiOXqgBmTfQDK89nEW+7EykHUo82SKmLKoj2sl9pfgafn
+	 hPDFmuTCK/K6w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE9C3822F99;
+	Tue,  6 Aug 2024 18:25:47 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for v6.11-2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <pdx86-pr-20240806094038-269710364@linux.intel.com>
+References: <pdx86-pr-20240806094038-269710364@linux.intel.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <pdx86-pr-20240806094038-269710364@linux.intel.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.11-2
+X-PR-Tracked-Commit-Id: 3114f77e9453daa292ec0906f313a715c69b5943
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: eb5e56d1491297e0881c95824e2050b7c205f0d4
+Message-Id: <172296874645.1388134.14700883905599877361.pr-tracker-bot@kernel.org>
+Date: Tue, 06 Aug 2024 18:25:46 +0000
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84632b31-6e97-4493-a97e-572d288b294d@leemhuis.info>
 
-Hi Thorsten!
+The pull request you sent on Tue, 06 Aug 2024 09:40:38 +0300:
 
-Thanks for the heads up! I've taken a look at the report and proposed a
-patch to them that I've not submitted yet to the mailing list.
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.11-2
 
-I'll wait on their feedback and see if it works for them.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/eb5e56d1491297e0881c95824e2050b7c205f0d4
 
-Thanks again and have a great day,
+Thank you!
 
-Alexis
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
