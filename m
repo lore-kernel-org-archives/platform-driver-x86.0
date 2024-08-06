@@ -1,63 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F5B136330;
-	Tue,  6 Aug 2024 18:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99EF9155CAD;
+	Tue,  6 Aug 2024 20:50:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722968748; cv=none; b=pe8DKK4G5tHouPeuFhxuwWUW0Js2otaufUYa1bQDBjhO4y/6kgf6eDGh3YN8gnW9ztFJLi6UrAzLv9bqmqNKl+CegTFDv60pwtiAlYL2qWv0cIaMk0Fjjl2IaTjnACzkJFKSY0iJ06cOpzO6AXeh2bgIksttY60NVs0WQJX6OXw=
+	t=1722977426; cv=none; b=oIKxqGPGPynEfCo5r9P4x5JtzU+UluvOJcwx1ZAxSvHqq0mGmsgs5PMfOhNDqXJl+ZKzf53SRgi2MqGIny7wpjJKFnqLIZ55G+3xTqFxfUi8MYkZFGteu2BWb65Rs0Ot6xckjiWnIV4DH4uhUAlV2GiZL4JWaR83bPgo9f4u6bI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722968748; c=relaxed/simple;
-	bh=u92X0gQ7+Kdf32kfkOXmeNJ2gqqNbI94BerZH4lTBzY=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=SfH8t403HVZeZlq6l3M/87LeqHvyMyLOEz0Ts6OSl+2EP+0P6LI5z/XW9/NobiWmtHv+Re+H9ZwoFGQkvCMdNUvFe22O1moiReocGkHYN2yZbVW3jn29r0iouMVlhqj+dC1fDEKZOCen4rVYHTk+SKjgOWeJPHdgzrE+aPhRVrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PYgd80pm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722977426; c=relaxed/simple;
+	bh=/vIo88rGxJ7Qi1zU5jtv8+n+vDDff7LpbagHpBmGLkI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o+KBpTnHctsA2f+vgUzyhrlqQq5DMOtFZJChdgpNbQpkk5DVodFd98wBXbTDGU1s+yiC8Uob5BWmdZaMJ/0n345KlnrcQqrSCaXkX7483EuVcGUFUO7nW5OmJJ9WH7f8Krq+FZTTaULfLdO8IM2FY2jNZ5hIeEM4QuAQ2wHzpTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TEHIKsWT; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PYgd80pm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0A67C32786;
-	Tue,  6 Aug 2024 18:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722968748;
-	bh=u92X0gQ7+Kdf32kfkOXmeNJ2gqqNbI94BerZH4lTBzY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=PYgd80pmEBqCOKDhm8JJsDJYZGdiup8DKRT5T1O6bs+sHx7EFGC5OUOVSmZAGU2Pl
-	 UwaZwcfVJuodu1kEBQvfvitMTrPP0JjGwY99/hRlioR+Uj0EajSdwfa+dPejIMMvh9
-	 /Po+b4dtMxBTXlB2XHsPGyfNxrQwhMW913Gy/LVre4xIZE2vURh8l11FeoLJYdRiyp
-	 fe4cbGAEM2IwmDZUpBH3zrJd9jDc2PV6w3Qt+rwatWyLMaf3FOo1vB0CnNfI0zW8Yf
-	 UVQGYuW3RPY+gJHgJv9/vZiOXqgBmTfQDK89nEW+7EykHUo82SKmLKoj2sl9pfgafn
-	 hPDFmuTCK/K6w==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE9C3822F99;
-	Tue,  6 Aug 2024 18:25:47 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for v6.11-2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <pdx86-pr-20240806094038-269710364@linux.intel.com>
-References: <pdx86-pr-20240806094038-269710364@linux.intel.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <pdx86-pr-20240806094038-269710364@linux.intel.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.11-2
-X-PR-Tracked-Commit-Id: 3114f77e9453daa292ec0906f313a715c69b5943
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: eb5e56d1491297e0881c95824e2050b7c205f0d4
-Message-Id: <172296874645.1388134.14700883905599877361.pr-tracker-bot@kernel.org>
-Date: Tue, 06 Aug 2024 18:25:46 +0000
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TEHIKsWT"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a7a9185e1c0so113364966b.1;
+        Tue, 06 Aug 2024 13:50:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722977423; x=1723582223; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SPWAqHyClCkz14eOqbyrR1m/H7AsRzTMOO2Sv00fuaA=;
+        b=TEHIKsWTxbxpiQLHCkuWnG/MCAj0nfTmURnML607pHIhdSst22cS8DOHyQ+938FFKz
+         4hZl9Q/ILhDLX+pxEuaJA+ytO15NsT5HlHlgrnwhpXTiMn/Mzp8z1S48IMOUlPWzBVE8
+         YDrQPCXy5yv5/MlN6ZO2MxTMhRHhNchFF+yQ3hdqaA/53AaxVSuaabSZLq0LW6mPHf60
+         qxoATJPLwkLJw5DszihF+JsYljAgfwJz7j4nDagNY2ceBRjPg/R9LxOyNOB1/BKeZNx+
+         evFjWmVTNbhLuFr0xwXSM32klELv19Eo/eiFnsnLCHN8/jO/wPntEiaShzX+TKU6yljj
+         ImCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722977423; x=1723582223;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SPWAqHyClCkz14eOqbyrR1m/H7AsRzTMOO2Sv00fuaA=;
+        b=uXF9DiPYWKKN7j63C8mbJPT/+6ouaabiU/n29rrlK3WP6ZEo3gmVX8+wEY6eh64Aiq
+         FgNFDI7ZQKk/o7WIba6Z8FIXJi0hxiLNG58R00z1BCEXU7ZLgQIGuEk6+ck6YnPkGeSa
+         SOkKqnBLwzdHLw2T35OZboPRZuNCXCeNw+jPDyTtPr+hD55BNQBS0NvEm9RoFx9vAQUs
+         TKXSf+uL3LXL1EruHvFKAFT061m6zUGKERV3lqq+2C5XHA5+Kzq+kmnVmuLoWs8ZihOO
+         B4qqp4uDoFJMpOWUxaqpxYi4/LJcNfrP9muFnlUy+9USoNX6L14cLX93f4eF5IakSohi
+         Kh3A==
+X-Forwarded-Encrypted: i=1; AJvYcCV3Db9yEvshhJFpZLjeLKpA+Bsr0xVlx+qY4eCgR8/pEa4dRnXnjdUT2MghXjVzz0s6Gkq6mXK/RqiVb21lNzzehHze7Y5k5DUwRHvOoSlmsNagA99S2iDEu4b4x6J6t3dn0dD1AttFQ7xPonBMs9lfwnTrO/HpPUkyvTqU4Nk0a7uqyl9tdW2LRcMMW6kqoSnEdbYDsvsrpYzwKGXwF+OKwUNMDTdAy7H4mw==
+X-Gm-Message-State: AOJu0YxbkoBRP22zPnEtw1thGtoYcFR0CGqbPIQjGnF/EXmBUXMY2XQr
+	9pT/xVnND/38kKyEIfaLL9prknrCpOx2NMrah+brke3OUo6JeyQn
+X-Google-Smtp-Source: AGHT+IEK7snqhGEt0KxcB2YfnB10pN1hdWKFMMtgDeoUtWdZlsGgynYkA8Nr/UcGh8tdKonEa33RpQ==
+X-Received: by 2002:a17:907:7e9c:b0:a72:6b08:ab24 with SMTP id a640c23a62f3a-a7dc4dc4df4mr1018771666b.14.1722977422271;
+        Tue, 06 Aug 2024 13:50:22 -0700 (PDT)
+Received: from localhost.localdomain ([94.120.87.161])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9e8674dsm588730066b.146.2024.08.06.13.50.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Aug 2024 13:50:21 -0700 (PDT)
+From: =?UTF-8?q?Mustafa=20Ek=C5=9Fi?= <mustafa.eskieksi@gmail.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: mustafa.eskieksi@gmail.com,
+	jdelvare@suse.com,
+	linux@roeck-us.net,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	pavel@ucw.cz,
+	lee@kernel.org,
+	linux-leds@vger.kernel.org,
+	rishitbansal0@gmail.com,
+	bahaku@elrant.team,
+	carlosmiguelferreira.2003@gmail.com,
+	alviro.iskandar@gnuweeb.org,
+	ammarfaizi2@gnuweeb.org,
+	bedirhan_kurt22@erdogan.edu.tr
+Subject: [PATCH v7 0/1] platform/x86: Add wmi driver for Casper Excalibur laptops
+Date: Tue,  6 Aug 2024 23:50:00 +0300
+Message-ID: <20240806205001.191551-1-mustafa.eskieksi@gmail.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Tue, 06 Aug 2024 09:40:38 +0300:
+Hi,
+I made the changes you suggested.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.11-2
+On 5.08.2024 18:31, Hans de Goede wrote:
+> So lets name it "casper:rgb:biaslight", which I admittedly is a bit
+> weird, but backlight for LEDs which are not actually a backlight for
+> displays or keys is confusing, so IMHO biaslight is best.
+I agree, biaslight fits well. Do I need to add this naming to
+Documentation/leds/leds-class.rst?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/eb5e56d1491297e0881c95824e2050b7c205f0d4
+Thanks for reviewing.
 
-Thank you!
+Mustafa Ekşi (1):
+  platform/x86: Add wmi driver for Casper Excalibur laptops
+
+ MAINTAINERS                       |   6 +
+ drivers/platform/x86/Kconfig      |  14 +
+ drivers/platform/x86/Makefile     |   1 +
+ drivers/platform/x86/casper-wmi.c | 640 ++++++++++++++++++++++++++++++
+ 4 files changed, 661 insertions(+)
+ create mode 100644 drivers/platform/x86/casper-wmi.c
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.46.0
+
