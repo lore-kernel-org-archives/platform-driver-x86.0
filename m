@@ -1,128 +1,138 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A018F62;
-	Tue,  6 Aug 2024 07:25:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77729165F1F;
+	Tue,  6 Aug 2024 07:28:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722929103; cv=none; b=I6TQnYlzL7HxxMsj0EKVeA115sZ27LiowtC864PGnsbtFLg+mlFsAq+3lWvwjhJtGChGeqUjYQ5YCvxfx5AeuO6mAOBFroXFUFBs+y1az8RZfcEN1vOUTFbwv4JYnMPATUbQOD5PPBhTuSvod4jZLb9LzCUwltaAOhRKr3rpBJw=
+	t=1722929333; cv=none; b=oCNxxWauVQL4QPmb4ELY0iJB4jqtfNfhD90Tk4rTRHlUM+02Ih8uLCChk1ibap/IRHNFFJZ7u2OcRvrY/LOgOMaZtqEhN0OGAqKWg7YDgMNt3eZWuIuXfLS8Pl+Sz+u0lBtoH8XmiKJhUf2uzbrdeVazG1bDCdZd6EtwriJBhtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722929103; c=relaxed/simple;
-	bh=CqTaLDPJu8un/Pohdg/7UWeq2jCz5bTL1pdakA2jlVI=;
+	s=arc-20240116; t=1722929333; c=relaxed/simple;
+	bh=9D+0NjOt3KntCM54yS0urPQiBIqOtAJZOIbLRRmMZ+E=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=saZJONu0xp/QVFTtpqgu44OnHfijzhnHU38jLZ3xls0x9F9II75Qen3TfaBgPkdJvI5sfUkcAaIhp7ZGvuJ2LSnEDvDHYSiT5hdMpHNlQoDxq9JyoKhImL3eMGy0/qdajrRZwjpnxW6x2F9mjaPqwsdQNH+D6u7L8nozyblZAuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H1SkLdu0; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version:Content-Type; b=FMPaerPlE1R7pqorneSiwJxdNVIsVDCq/GLaTamo+6ZVPJWezSnHleov5NB1RqbOnpccRsB7XAesw4CcLGc5GyJ7BCOd1BvzWqn1ubwvT8wl94m746Ev8UIimBk0WHMlWTshNwIr2ZxIxW0ksvrKcaA4w5QxxH2hEmKiU2D3wq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y9EA/Hhf; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H1SkLdu0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y9EA/Hhf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722929102; x=1754465102;
+  t=1722929333; x=1754465333;
   h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=CqTaLDPJu8un/Pohdg/7UWeq2jCz5bTL1pdakA2jlVI=;
-  b=H1SkLdu0iHMMrev6wHEObmnw3jsjADqv4Swr2uS7Ag7d79OcrlEWJ6pu
-   rfQbrqf85sGRfdPxH0LEnAteFI/tWgCGEGuCzcqbWr/BGJgDpi7DTh2sy
-   qxMTpiay9EkPUs5m+gB9Imz0JxIKDa8IQWKpEOeHxe8QwFkkJqj43j8b2
-   GvicUYis1yhkdn4E1DNQR3dJ/GF8kGNfWb8OfqdGY9NoknRC2K03PEAPL
-   4jrbZGVrwt+f2HGNWOGfji5NU0mnIySnIwWAPNjYp3aAk6CKsOYdRkGaD
-   Ci4EMX76mcK9zadKAsSAutbu/9mwyDmIMAH5AUKudQemsYK+qyuTs3ne4
+   references:mime-version;
+  bh=9D+0NjOt3KntCM54yS0urPQiBIqOtAJZOIbLRRmMZ+E=;
+  b=Y9EA/Hhfle1yZGKmDvvbkgj8xvOo8++g5/uwLwhC8Zer+Xi1QAzval4c
+   DNGXjgqXvrU38I72xLVUUDrqH/NZNMilLyjY2oXOVoF/WOzQrQ17QlpGw
+   Som9EmWW+VBqIehFKoLb04cPn9Fwpp2n97avX09qKZ0qi2WYn2VeVpXWL
+   Egiwgw5804WLUVUqky72pwet11jY0gZON1Wm3Wps6/xxg5l05nLSs0w90
+   Ih25sQrcL4F80nvE19H/ONIf5850NK+I4KdWbKnonKBfA4142A9HHYvmb
+   qIGYoNN4eP6wrsQ+U/uebqHpW+UFTyc6oleC+oHgyN7kQu4YI48OYOttV
    Q==;
-X-CSE-ConnectionGUID: DOQkYQz9Sum7swAz8Z7PLQ==
-X-CSE-MsgGUID: HZnKVXiOQ1G5NdTBxOiKgg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11155"; a="21075665"
+X-CSE-ConnectionGUID: QvjiRbJHQ52ALnffrShp6w==
+X-CSE-MsgGUID: iMrUwQKCQCasW0lx8zLSFA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11155"; a="21076071"
 X-IronPort-AV: E=Sophos;i="6.09,267,1716274800"; 
-   d="scan'208";a="21075665"
+   d="scan'208";a="21076071"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 00:25:01 -0700
-X-CSE-ConnectionGUID: pgQFZMDqSves7YFzk5ABag==
-X-CSE-MsgGUID: ThFGYbw+THqao/ddDP8xJg==
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 00:28:47 -0700
+X-CSE-ConnectionGUID: mfoKG3RUQ3uks+MipdEmIQ==
+X-CSE-MsgGUID: /W8TOMkxTD6ck4TWh4QctA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,267,1716274800"; 
-   d="scan'208";a="56635571"
+   d="scan'208";a="56636343"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.72])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 00:24:57 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 00:28:45 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 6 Aug 2024 10:24:54 +0300 (EEST)
-To: =?ISO-8859-2?Q?Marek_Ma=B6lanka?= <mmaslanka@google.com>
-cc: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>, 
-    Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, 
-    David E Box <david.e.box@intel.com>, Hans de Goede <hdegoede@redhat.com>, 
-    John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3] platform/x86:intel/pmc: Enable the ACPI PM Timer to
- be turned off when suspended
-In-Reply-To: <CAGcaFA2eXzzCVqG-DSWDb1gruV4FemRC3W+dgRub7GgcOyf7yQ@mail.gmail.com>
-Message-ID: <28567169-4588-002d-85b8-906d22f12f05@linux.intel.com>
-References: <CAGcaFA2sQNRo9UThN-C1NOLtGUJ3sKzc=pEC9wdDWMi501iLsA@mail.gmail.com> <20240730120546.1042515-1-mmaslanka@google.com> <87cymu7tgq.ffs@tglx> <CAGcaFA1HJBYacvDAkZAO9HNhT2dZO7OdgcBYb59p7OJkVqQ6Fw@mail.gmail.com> <87h6c55xnp.ffs@tglx>
- <CAGcaFA2eXzzCVqG-DSWDb1gruV4FemRC3W+dgRub7GgcOyf7yQ@mail.gmail.com>
+Date: Tue, 6 Aug 2024 10:28:41 +0300 (EEST)
+To: "Luke D. Jones" <luke@ljones.dev>
+cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    Hans de Goede <hdegoede@redhat.com>, corentin.chary@gmail.com
+Subject: Re: [PATCH v2 1/6] platform/x86: asus-wmi: Add quirk for ROG Ally
+ X
+In-Reply-To: <20240806020747.365042-2-luke@ljones.dev>
+Message-ID: <76178389-f99e-d625-df38-8202309310d9@linux.intel.com>
+References: <20240806020747.365042-1-luke@ljones.dev> <20240806020747.365042-2-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-830646355-1722860352=:1238"
-Content-ID: <1a49fe45-dc74-3f0a-a030-f1528479905e@linux.intel.com>
+Content-Type: multipart/mixed; boundary="8323328-361996996-1722929321=:1027"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-830646355-1722860352=:1238
-Content-Type: text/plain; CHARSET=UTF-8
+--8323328-361996996-1722929321=:1027
+Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <9307d9e8-bc81-8209-1bee-fa90891a2aa3@linux.intel.com>
 
-On Wed, 31 Jul 2024, Marek Ma=C5=9Blanka wrote:
+On Tue, 6 Aug 2024, Luke D. Jones wrote:
 
-> On Wed, Jul 31, 2024 at 6:33=E2=80=AFPM Thomas Gleixner <tglx@linutronix.=
-de> wrote:
-> >
-> > Marek!
-> >
-> > On Wed, Jul 31 2024 at 16:44, Marek Ma=C5=9Blanka wrote:
-> > > On Tue, Jul 30, 2024 at 6:08=E2=80=AFPM Thomas Gleixner <tglx@linutro=
-nix.de> wrote:
-> > >> On Tue, Jul 30 2024 at 12:05, Marek Maslanka wrote:
-> > >> +static void acpi_pm_disable(struct clocksource *cs)
-> > >> +{
-> > >> +       acpi_pm_enabled =3D false;
-> > >> +       if (enable_callback)
-> > >> +               enable_callback(false);
-> > >> +}
-> > >> +
-> > >>  static struct clocksource clocksource_acpi_pm =3D {
-> > >>         .name           =3D "acpi_pm",
-> > >>         .rating         =3D 200,
-> > >>         .read           =3D acpi_pm_read,
-> > >>         .mask           =3D (u64)ACPI_PM_MASK,
-> > >>         .flags          =3D CLOCK_SOURCE_IS_CONTINUOUS,
-> > >> +       .enable         =3D acpi_pm_enable,
-> > >> +       .disable        =3D acpi_pm_disable,
-> > >>  };
-> > >>
-> > > Thanks. I'll try do this in that way. But I need to disable/enable
-> > > ACPI PM timer only on suspend/resume, so I'll use suspend/resume
-> > > callbacks.
-> >
-> > Why? What's the point of keeping it running when nothing uses it?
-> >
-> > Thanks,
-> >
-> >         tglx
+> The new ROG Ally X functions the same as the previus model so we can use
+
+previous
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--
+ i.
+
+> the same method to ensure the MCU USB devices wake and reconnect
+> correctly.
 >=20
-> In case of Intel CPUs the watchdog (iTCO/wdat_wdt) is driven by ACPI PM
-> Timer. But it may also be used by others that I don't know about, so I do=
-n't
-> want to disable it.
-
-Hi Marek,
-
-This kind of non-obvious information should be put into the changelog=20
-because it helps if after ten years somebody is looking into this change=20
-and asks similar why questions.
+> Given that two devices marks the start of a trend, this patch also adds
+> a quirk table to make future additions easier if the MCU is the same.
+>=20
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> ---
+>  drivers/platform/x86/asus-wmi.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
+wmi.c
+> index f15fcb45e1aa..0c80c6b0399b 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -152,6 +152,20 @@ static const char * const ashs_ids[] =3D { "ATK4001"=
+, "ATK4002", NULL };
+> =20
+>  static int throttle_thermal_policy_write(struct asus_wmi *);
+> =20
+> +static const struct dmi_system_id asus_ally_mcu_quirk[] =3D {
+> +=09{
+> +=09=09.matches =3D {
+> +=09=09=09DMI_MATCH(DMI_BOARD_NAME, "RC71L"),
+> +=09=09},
+> +=09},
+> +=09{
+> +=09=09.matches =3D {
+> +=09=09=09DMI_MATCH(DMI_BOARD_NAME, "RC72L"),
+> +=09=09},
+> +=09},
+> +=09{ },
+> +};
+> +
+>  static bool ashs_present(void)
+>  {
+>  =09int i =3D 0;
+> @@ -4751,7 +4765,7 @@ static int asus_wmi_add(struct platform_device *pde=
+v)
+>  =09asus->dgpu_disable_available =3D asus_wmi_dev_is_present(asus, ASUS_W=
+MI_DEVID_DGPU);
+>  =09asus->kbd_rgb_state_available =3D asus_wmi_dev_is_present(asus, ASUS_=
+WMI_DEVID_TUF_RGB_STATE);
+>  =09asus->ally_mcu_usb_switch =3D acpi_has_method(NULL, ASUS_USB0_PWR_EC0=
+_CSEE)
+> -=09=09=09=09=09=09&& dmi_match(DMI_BOARD_NAME, "RC71L");
+> +=09=09=09=09=09=09&& dmi_check_system(asus_ally_mcu_quirk);
+> =20
+>  =09if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MINI_LED_MODE))
+>  =09=09asus->mini_led_dev_id =3D ASUS_WMI_DEVID_MINI_LED_MODE;
+>=20
 
 --=20
  i.
---8323328-830646355-1722860352=:1238--
+
+--8323328-361996996-1722929321=:1027--
