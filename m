@@ -1,219 +1,196 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A251BD4E5;
-	Tue,  6 Aug 2024 08:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33AB157A43
+	for <platform-driver-x86@vger.kernel.org>; Tue,  6 Aug 2024 09:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722933059; cv=none; b=Qfl+xqMmQjGVRq7PaWNFEH/aOe6Gey69Ze5Dw9JRKXBSq5vBcDmB7ANvsck03VXlKAnRPdSief8lTC9lUPPXwCWWmkDXSXgsROcEHvDC9L4aJxxvK4cR2rEOXQ8AWsi2kySVGgE9H1No/yn6XkKaPKZ4Dvk/1xNMHLyK1fmHGVY=
+	t=1722936869; cv=none; b=hTHxUekeBJZpd5FN5Xeay5yrCX7fjt5fn/NCNEj/d9zAxYAaxrBssWdM+hzbOLnOT8R5F2QKmarx1doD19A4DbNrgjcpwCwhGP8vvFc1Y7hDczwJGsRplcn6XIFfOBOZJZXnK1+8+HMyI9mcwGkTjR9BQ2j69WibKQkZOTt6K7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722933059; c=relaxed/simple;
-	bh=zXeKbpJ1OlI6R8Gluo/M21f4/B+Rydwt3JbrN4H78UU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=pTcGoiT2guPKxUzLvktcsys4rfddNe2rcpLorTXz05r9b6nU/vowOuacBFcIBOmpfgVCSiy4l4gSNulueG1RO54Ywvo8euTNIOqFIb/T6zXSJFt5jJ6i8/wrYItrS4pmH0J53ngqjLcWxcgT5G/yjKquyxo3U+42db3hs9Gm7OU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HIGhqMzm; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1722936869; c=relaxed/simple;
+	bh=ezIZa+SGim0HsdafsDPubDccuBC+e82Zv1jaF//tGaQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PbXFiLZ7Hi3Th4/xBJmKeJ+ZjzvBUvheQJHOw11yTtbrM3Z//ZCONiLv4tDj5xMhvSQTa5CTLiGigusQPFNDMW8fbCjRmF0HTeAwJ49j6uqDy5PHMzQlsZj31AdDPQ11moDgkPwucE3t6ArtKfeCXyYTJeaPYtPnB/DCse7VjHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z2mITSr5; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HIGhqMzm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722933058; x=1754469058;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=zXeKbpJ1OlI6R8Gluo/M21f4/B+Rydwt3JbrN4H78UU=;
-  b=HIGhqMzm7oOmCkvLPfIHnBm2mJlYuFkY5jSh4H7W9zayEDI4aWYbqRzT
-   EVRhzmEDYWyMQqaWlaN1sTIU13X8nkH+VJPfddVxVfXtyEHO/9Zg5RyD3
-   UqN/1OpFvorDK/WfsGHZFdo7nTBf9Ox5Ntusao8vy3oLVkoY++LI/keqM
-   pM2YkZD+M9AKvD2IMZRgArYL+j1uu20IDiljYqur5azYPIJQZDX4hxi6S
-   feHGEtsmxMW2vxQaPbu7vVHcD90ijkLwnWSuAmX/dWLJC5vSp9m/0Y8Az
-   2VQTbaxfuuEOXP6XuaJnfL3tCM09bXet53TmEt+0DJbaTwW5vFkH9h1jv
-   w==;
-X-CSE-ConnectionGUID: gmRmMbEsQryBJ449FVmtWA==
-X-CSE-MsgGUID: o8pZSUphTGCVsI1gwT1zRQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11155"; a="20811203"
-X-IronPort-AV: E=Sophos;i="6.09,267,1716274800"; 
-   d="scan'208";a="20811203"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 01:30:57 -0700
-X-CSE-ConnectionGUID: yoY/xXEfSwC3B+jvAARDQw==
-X-CSE-MsgGUID: Uw1OAaodSBK5JNuyBl+aHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,267,1716274800"; 
-   d="scan'208";a="61304492"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.72])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 01:30:54 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Xi Pardee <xi.pardee@linux.intel.com>,
-	Rajvi Jingar <rajvi.jingar@linux.intel.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Kane Chen <kane.chen@intel.com>,
-	=?UTF-8?q?Marek=20Ma=C5=9Blanka?= <mmaslanka@google.com>
-Subject: [PATCH 1/1] platform/x86: intel/pmc: Remove unused param idx from pmc_for_each_mode()
-Date: Tue,  6 Aug 2024 11:30:47 +0300
-Message-Id: <20240806083047.1562-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z2mITSr5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722936866;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M/mZOK2Acfhq1mHKEIENCFyI9POxKfWEgNkeRverf7Q=;
+	b=Z2mITSr5TyrgvO7i+THph/+/756z7DftpBpEYu2yfhn4ZvC32Zr43n+eY+7fYAg2QI2fkP
+	CDASBl/bWm2jgvhkpV90Kk6BRjZcodSwW0ttaWxT40FMRo3ewVpq9LIsMc7ZrhVQYWrmN7
+	0memvERiziNCx25xr4pYYc/Lmti5WIc=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-127-43OMo6K6MHmanQuFvEQH4A-1; Tue, 06 Aug 2024 05:34:25 -0400
+X-MC-Unique: 43OMo6K6MHmanQuFvEQH4A-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a7a8281dba5so25895266b.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Aug 2024 02:34:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722936864; x=1723541664;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=M/mZOK2Acfhq1mHKEIENCFyI9POxKfWEgNkeRverf7Q=;
+        b=ucweundow5W9X3l1V8aSrDN98Xfk00k0Rqynxk+Y5ybYJF32zy4Ymm6rXiJG4MTdpo
+         IHMWfENj0oMM5elKxfi+TwPdzii23+7mNqMvS6XtPr31xm59WHYZDLzgxftjji9sAw3W
+         xdCMEY+CPNt8/l32Chmc8GN3aKciJ7Y4E+0QPbWuuGkzww3y6/ysgi+18I3s2Vjznkzh
+         svJbf5lc+UdGXIS+hDqCa9ViEZTnRBAxN8DDgB6D/N9XEf5lEuckRoHj+4GzSiNJLlpR
+         y6V7S20qyv3XxhU5XBXSz94ixNZhGX1nXg9V7DBJzAt1DWVwoPVQRjXe862Ay84JXMP9
+         sGWQ==
+X-Gm-Message-State: AOJu0YysN+ZQ5ttFD2wjr/siaFEcU/K1KbMlO1kDn2xv0uC6g9q5e+on
+	yPwCaGFOgm8ROXDcjz2vQsc9qQAQ2BdL204anbh094LQFGVM461AIQPXxrWQkWYvA1Vxb4f7U1j
+	rxso0DM3lWixTBl81BkefiacckcplwGg+RrTMO+wkhOYAjOp49oJigV5/Ck+DnP1FR4qVYEXql4
+	T+bEY=
+X-Received: by 2002:a17:907:3e94:b0:a77:da14:8409 with SMTP id a640c23a62f3a-a7dc5098872mr1017509466b.48.1722936863647;
+        Tue, 06 Aug 2024 02:34:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH8RczngD6jvnwd8RGPtWVtBq5IevuWHaI5+qZSMZJouO8g2r/vOVM+ZMf/ISoJ/EPz9CZQgw==
+X-Received: by 2002:a17:907:3e94:b0:a77:da14:8409 with SMTP id a640c23a62f3a-a7dc5098872mr1017507866b.48.1722936863000;
+        Tue, 06 Aug 2024 02:34:23 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9c0f8d2sm532682966b.46.2024.08.06.02.34.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Aug 2024 02:34:22 -0700 (PDT)
+Message-ID: <55756822-4eb8-419e-ae57-655caa70edd9@redhat.com>
+Date: Tue, 6 Aug 2024 11:34:21 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/5] platform/x86: introduce asus-bioscfg
+To: Luke Jones <luke@ljones.dev>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, corentin.chary@gmail.com,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20240716051612.64842-1-luke@ljones.dev>
+ <8273ed57-4c65-41da-ad7d-907acf168c07@redhat.com>
+ <e9f4fb37-5277-a7f0-2bec-8a6909b4e674@linux.intel.com>
+ <1e309d39-43d3-4054-88a9-0c1da3de26eb@app.fastmail.com>
+ <517aa9f5-00cf-4a68-b1d7-a6dc9f942e7c@redhat.com>
+ <a35c923e-be2c-4083-8c65-c83b49fe4350@app.fastmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <a35c923e-be2c-4083-8c65-c83b49fe4350@app.fastmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-pmc_for_each_mode() takes i (index) variable name as a parameter but
-the loop index is not used by any of the callers. Make the index
-variable internal to pmc_for_each_mode().
+Hi,
 
-This also changes the loop logic such that ->lpm_en_modes[] is never
-read beyond num_lpm_modes.
+On 8/5/24 11:41 PM, Luke Jones wrote:
+> On Tue, 6 Aug 2024, at 3:18 AM, Hans de Goede wrote:
+>> Hi Luke,
+>>
+>> On 7/17/24 4:34 AM, Luke Jones wrote:
+>>> On Wed, 17 Jul 2024, at 3:11 AM, Ilpo Järvinen wrote:
+>>>> On Tue, 16 Jul 2024, Hans de Goede wrote:
+>>>>> On 7/16/24 7:16 AM, Luke D. Jones wrote:
+>>>>>> This is the first major patch I've ever done with the intention of
+>>>>>> introducing a new module, so it's highly likely I've made some mistakes
+>>>>>> or misunderstood something.
+>>>>>>
+>>>>>> TL;DR:
+>>>>>> 1. introduce new module to contain bios attributes, using fw_attributes_class
+>>>>>> 2. deprecate all possible attributes from asus-wmi that were added ad-hoc
+>>>>>> 3. remove those in the next LTS cycle
+>>>>>>
+>>>>>> The idea for this originates from a conversation with Mario Limonciello
+>>>>>> https://lore.kernel.org/platform-driver-x86/371d4109-a3bb-4c3b-802f-4ec27a945c99@amd.com/
+>>>>>>
+>>>>>> It is without a doubt much cleaner to use, easier to discover, and the
+>>>>>> API is well defined as opposed to the random clutter of attributes I had
+>>>>>> been placing in the platform sysfs.
+>>>>>
+>>>>> This is a bit of a novel use of the fw_attributes_class and I'm not
+>>>>> entirely sure of what to think of this.
+>>>>>
+>>>>> The fw_attributes_class API was designed for (mostly enterprise)
+>>>>> x86 machines where it is possible to change all BIOS settings directly
+>>>>> from the OS without entering the BIOS.
+>>>>>
+>>>>> Here some ACPI or WMI function is present to actually enumerate all
+>>>>> the BIOS options (which can be set this way) and get there type.
+>>>>>
+>>>>> IOW there is not a static list of options inside the driver, nor
+>>>>> is there special handling in the driver other then handling differences
+>>>>> per type.
+>>>>>
+>>>>> And if a new BIOS version has new options or a different machine model
+>>>>> has different options then these are discovered automatically.
+>>>>>
+>>>>> This new use is quite different from this. Although I do see that
+>>>>> at least for the attributes using WMI_STORE_INT() + WMI_SHOW_INT()
+>>>>> that there is quite some commonality between some of the attributes.
+>>>>>
+>>>>> I see how using the existing firmware-attributes class API definition
+>>>>> for this, including allow tweaking this with some of the fwupd
+>>>>> firmware-attributes class commandline util work Mario did is a useful
+>>>>> thing to have.
+>>>>>
+>>>>> I guess using the firmware-attributes class for this is ok, but
+>>>>> this _must_ not be named bioscfg, since the existing hp-bioscfg
+>>>>> driver is a "classic" firmware-attributes drivers enumerating all
+>>>>> the options through BIOS provided enumeration functions and I want
+>>>>> the name to make it clear that this is not that. And the Dell
+>>>>> implementation is called dell-wmi-sysman so lets also avoid sysman
+>>>>> as name.
+>>>>>
+>>>>> Maybe call it "asus-bios-tunables" ?   And then if Asus actually
+>>>>> implements some more classic firmware-attributes enumerable interface
+>>>>> we can use "asus-bioscfg" for that.
+>>>>>
+>>>>> Mario, Ilpo what is your opinion on this ?
+>>>>
+>>>> What you suggested sounds good to me.
+>>>
+>>> Thanks guys. I think there might be a few names that could be suitable
+>>>
+>>> 1. asus_bios_tuning/tunables
+>>> 2. asus_fw_tuning/tunables
+>>> 3. asus_fw_settings
+>>> 4. asus_armoury
+>>>
+>>> I'm shying away from the "tuning/tunables" label since there are also a lot of settings which are just toggles for various features rather than actual tunable things. It makes sense in some contexts at least.
+>>>
+>>> Armoury Crate is the software collection that Asus uses for the gaming laptops, and they tend to lump these settings under that label.
+>>>
+>>> Personally I'm leaning towards "asus_fw_settings" as it more accurately describes what the module does.
+>>
+>> "asus_fw_settings" sounds good to me. I'm looking forward to v2 of this series.
+> 
+> I've actually done a poll on my discord, folks voted overwhelmingly for `asus-armoury` and I went with this before your response. The reasoning here is that many of these users are coming from windows where Armoury Crate is an app that exposes all the same functions and so that's what they look for on linux.
+> 
+> If you don't think this is suitable I'm happy to change.
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/core.c       | 18 +++++++-----------
- drivers/platform/x86/intel/pmc/core.h       | 10 ++++++----
- drivers/platform/x86/intel/pmc/core_ssram.c |  4 ++--
- 3 files changed, 15 insertions(+), 17 deletions(-)
+asus-armoury works for me, I like that that name makes it clear that this
+is not changing BIOS settings like other firmware_attributes class devices
+are doing.
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 01ae71c6df59..0e88a89a236a 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -728,12 +728,11 @@ static int pmc_core_substate_res_show(struct seq_file *s, void *unused)
- 	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
- 	const int lpm_adj_x2 = pmc->map->lpm_res_counter_step_x2;
- 	u32 offset = pmc->map->lpm_residency_offset;
--	unsigned int i;
- 	int mode;
- 
- 	seq_printf(s, "%-10s %-15s\n", "Substate", "Residency");
- 
--	pmc_for_each_mode(i, mode, pmcdev) {
-+	pmc_for_each_mode(mode, pmcdev) {
- 		seq_printf(s, "%-10s %-15llu\n", pmc_lpm_modes[mode],
- 			   adjust_lpm_residency(pmc, offset + (4 * mode), lpm_adj_x2));
- 	}
-@@ -787,11 +786,10 @@ DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_l_sts_regs);
- static void pmc_core_substate_req_header_show(struct seq_file *s, int pmc_index)
- {
- 	struct pmc_dev *pmcdev = s->private;
--	unsigned int i;
- 	int mode;
- 
- 	seq_printf(s, "%30s |", "Element");
--	pmc_for_each_mode(i, mode, pmcdev)
-+	pmc_for_each_mode(mode, pmcdev)
- 		seq_printf(s, " %9s |", pmc_lpm_modes[mode]);
- 
- 	seq_printf(s, " %9s |\n", "Status");
-@@ -833,14 +831,14 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
- 			u32 req_mask = 0;
- 			u32 lpm_status;
- 			const struct pmc_bit_map *map;
--			int mode, idx, i, len = 32;
-+			int mode, i, len = 32;
- 
- 			/*
- 			 * Capture the requirements and create a mask so that we only
- 			 * show an element if it's required for at least one of the
- 			 * enabled low power modes
- 			 */
--			pmc_for_each_mode(idx, mode, pmcdev)
-+			pmc_for_each_mode(mode, pmcdev)
- 				req_mask |= lpm_req_regs[mp + (mode * num_maps)];
- 
- 			/* Get the last latched status for this map */
-@@ -863,7 +861,7 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
- 				seq_printf(s, "pmc%d: %26s |", pmc_index, map[i].name);
- 
- 				/* Loop over the enabled states and display if required */
--				pmc_for_each_mode(idx, mode, pmcdev) {
-+				pmc_for_each_mode(mode, pmcdev) {
- 					bool required = lpm_req_regs[mp + (mode * num_maps)] &
- 							bit_mask;
- 					seq_printf(s, " %9s |", required ? "Required" : " ");
-@@ -925,7 +923,6 @@ static int pmc_core_lpm_latch_mode_show(struct seq_file *s, void *unused)
- {
- 	struct pmc_dev *pmcdev = s->private;
- 	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
--	unsigned int idx;
- 	bool c10;
- 	u32 reg;
- 	int mode;
-@@ -939,7 +936,7 @@ static int pmc_core_lpm_latch_mode_show(struct seq_file *s, void *unused)
- 		c10 = true;
- 	}
- 
--	pmc_for_each_mode(idx, mode, pmcdev) {
-+	pmc_for_each_mode(mode, pmcdev) {
- 		if ((BIT(mode) & reg) && !c10)
- 			seq_printf(s, " [%s]", pmc_lpm_modes[mode]);
- 		else
-@@ -960,7 +957,6 @@ static ssize_t pmc_core_lpm_latch_mode_write(struct file *file,
- 	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
- 	bool clear = false, c10 = false;
- 	unsigned char buf[8];
--	unsigned int idx;
- 	int m, mode;
- 	u32 reg;
- 
-@@ -979,7 +975,7 @@ static ssize_t pmc_core_lpm_latch_mode_write(struct file *file,
- 	mode = sysfs_match_string(pmc_lpm_modes, buf);
- 
- 	/* Check string matches enabled mode */
--	pmc_for_each_mode(idx, m, pmcdev)
-+	pmc_for_each_mode(m, pmcdev)
- 		if (mode == m)
- 			break;
- 
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index ea04de7eb9e8..c8851f128adc 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -604,10 +604,12 @@ int lnl_core_init(struct pmc_dev *pmcdev);
- void cnl_suspend(struct pmc_dev *pmcdev);
- int cnl_resume(struct pmc_dev *pmcdev);
- 
--#define pmc_for_each_mode(i, mode, pmcdev)		\
--	for (i = 0, mode = pmcdev->lpm_en_modes[i];	\
--	     i < pmcdev->num_lpm_modes;			\
--	     i++, mode = pmcdev->lpm_en_modes[i])
-+#define pmc_for_each_mode(mode, pmcdev)						\
-+	for (unsigned int __i = 0, __cond;					\
-+	     __cond = __i < (pmcdev)->num_lpm_modes,				\
-+	     __cond && ((mode) = (pmcdev)->lpm_en_modes[__i]),			\
-+	     __cond;								\
-+	     __i++)
- 
- #define DEFINE_PMC_CORE_ATTR_WRITE(__name)				\
- static int __name ## _open(struct inode *inode, struct file *file)	\
-diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
-index 1bde86c54eb9..9eea5118653b 100644
---- a/drivers/platform/x86/intel/pmc/core_ssram.c
-+++ b/drivers/platform/x86/intel/pmc/core_ssram.c
-@@ -45,7 +45,7 @@ static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc)
- 	struct telem_endpoint *ep;
- 	const u8 *lpm_indices;
- 	int num_maps, mode_offset = 0;
--	int ret, mode, i;
-+	int ret, mode;
- 	int lpm_size;
- 	u32 guid;
- 
-@@ -116,7 +116,7 @@ static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc)
- 	 *
- 	 */
- 	mode_offset = LPM_HEADER_OFFSET + LPM_MODE_OFFSET;
--	pmc_for_each_mode(i, mode, pmcdev) {
-+	pmc_for_each_mode(mode, pmcdev) {
- 		u32 *req_offset = pmc->lpm_req_regs + (mode * num_maps);
- 		int m;
- 
--- 
-2.39.2
+So asus-armoury it is.
+
+Regards,
+
+Hans
+
+
+
+
+> 
+>> Regards,
+>>
+>> Hans
+>>
+>>
+>>
+> 
 
