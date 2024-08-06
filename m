@@ -1,71 +1,82 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1953F9EC
-	for <platform-driver-x86@vger.kernel.org>; Tue,  6 Aug 2024 16:44:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79EB6F073
+	for <platform-driver-x86@vger.kernel.org>; Tue,  6 Aug 2024 17:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722962645; cv=none; b=SecJRyBWNTWv0pvwRa0ttYYbAimrIwCmrYDHw81mJDtseLgDhaMOHObuwBWqaPyU/vUtewTOUn2TcoJHFLkXY+ASgMzOB/gV268u7RM7H9Z+pwU4psgd5mXH3nuxMdXRqX4D/HBi4WjGEIJfWnoSsM2kf8DCRRZcGjwdwujI4To=
+	t=1722966919; cv=none; b=lApLXXozfwdy4hM8GqNUnSziELFZLZj8RrO/xTtZhJIxzk2lufpuB9EbmqGMeSQHeDYit1v0S4MXTKFMLRLRWpBCdbyOgbMWLhE7MQsF2btbHeH3SYeJjZhq58eM+D1w5X95qAGaydOIJg6p2DOKxprEn7+OsGfUkcUEgG4vK00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722962645; c=relaxed/simple;
-	bh=vz5kq7FWfT8U2jM+rFomQsFlGPg84z3oPRfz/3LL3NU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BcJhGG3AjyeQqw2EYAedS04g97pkj0aruD5eDcTjP2k+Ff5Qp6ZdYsCowW/Rvs9jbZcelXJPsAyaFVF/WGjw9TTt5DrE3wJw9KgpbC43k3dp6/4WerNMmTIXOHn3zP+sQV18YIA8ovl2ePt5wdVZRWlBzbBqDAyNKJgcuBWgILU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=lYITqySU; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1722966919; c=relaxed/simple;
+	bh=dlKor5S4KZTtlApY8vKRh+RBVjDgqah4CvicECM1T2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dKRVLCRzCeIUxiKfFram8NtOQ8TlmJ1e3KHe6oMbnYZubegZWQDQCw3KoajhniHDYJEQHwG9192AMWfw1JXbhiqBdRHurxWkKk59wxxGRRp46Q+axxVhjvKlylMYlmH4xZF5L80EJKQSUFm/JEi+I6Xra6rHzcnpgZfwH44YjoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XvC5bUz+; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="lYITqySU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=vz5kq7FWfT8U2jM+rFomQsFlGPg84z3oPRfz/3LL3NU=;
-	t=1722962642; x=1723394642; b=lYITqySUGC3gWvzCTqFezB03nkq/Ff8BZ91L+kChyI2u6IF
-	i6aHszEblTIQnUaPzxpI0GvWL0AMRhj3TfVoqL+2BMfxArfoW6/eua7GiVQu+33ZdfFOYl56wlCUQ
-	40O2txa+xjSBz3LDsOvAPNJJNrEAhJ1+78btTEVUYrZ446wAt4HmW+iB2SU4+xwzqTdxNvVja4Tkh
-	+HLVZXvlPHQ+sGvkgS26jntqziWWtJRanM7Ga8Z+Rp+Z4si61AJhcH0Q00CctTYX3JAzikHk5WahU
-	PCMTsl2NevxD6pQC8hug6pYU8IFHgWIPiTfkfadBz+6PmgJU3d61uMy2maSgXBTw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sbNHv-0006cj-AG; Tue, 06 Aug 2024 18:43:55 +0200
-Message-ID: <84632b31-6e97-4493-a97e-572d288b294d@leemhuis.info>
-Date: Tue, 6 Aug 2024 18:43:54 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XvC5bUz+"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2f1870c355cso10732301fa.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Aug 2024 10:55:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722966916; x=1723571716; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dlKor5S4KZTtlApY8vKRh+RBVjDgqah4CvicECM1T2E=;
+        b=XvC5bUz+J0ll/CRxXEMNOc2PzzGgKwkeLYTdvXGUWFy3qZpXwxddy0xCKqTTYTS/rT
+         W3Ly+nYpkhpO7yK+eymGw/gQHtWIbVAGcAZ1rwfRxMevfar3nGbtlaQcGBVRMXqoitpF
+         hudVe0hLLYDaZNSYzckZrT4Gd5F5PKR86lMUcBGXYQb0XLbMakBKM+VwOu9X04FONVvS
+         LSKfNkibTYYqGlDl7jSdFr+EMSCO2SIpgVK8cwqntxo4XxlvzidBQtQ7hSf8To46lBAd
+         bmljw29zCkq4Z1ES68NhlE8ec+dbRlRNi2nLryqulieO5MBc4z3vWbbfHBE3vrs/CHwE
+         FtAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722966916; x=1723571716;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dlKor5S4KZTtlApY8vKRh+RBVjDgqah4CvicECM1T2E=;
+        b=nfe7HwVYH6YkGluz/XAt0XwfccWKilEa0X6vNGrXBZeJwW+io/w8z8ft5eiOKC4HqA
+         Zb+o2CdqQ8zqJGPNlJ3xMlxTcQNR8ye5YGH+QlJkFNkLjUeczx4gA2jxY8Mqd0S9+JKu
+         T/7Dh3nhZN7muecMqHr/1TKCwwqWREl03q54R9T15BZfkD+JpJdTyIUAmm50TpEP7Vd2
+         z5gWeFVZLKroD3+P9ZALBz1aBGr/DwR81TR/LO0UZmrMtP1AmdLuwNu0QOlFsS2SzU/w
+         hs2T2RE4JJAtlEUJDcpi5moZ4AC3bhPuTxrekoxX7SgWQpKbt4qxqkyo6sp1zTUz3i/6
+         A1uw==
+X-Forwarded-Encrypted: i=1; AJvYcCWYM8eFwJMOZZsTR63utZcdTjrhQHu3+NgiJaKx1wSZqm73GsYnZxdaMwtRtzhkGxIlpYggMDKyIDOGARIl/tx5mezugqnvHqcS4UqzGu9MKnCvQg==
+X-Gm-Message-State: AOJu0Yye3Mh8gopdxMqxsMh0jfT4BVkbmzC15UAxLChlRlkVORogVGtO
+	BpZYleFS+0z8R749V+gDceYQncdglGEPCwhjTClafwPJ3i+x5vqxmGkiRA==
+X-Google-Smtp-Source: AGHT+IGslzbtBNGll023sYG20tJekoTuYzSHLMfH/zJMMs3DJvHbbhuUhDqEdxd54NQsliKDQzpvXQ==
+X-Received: by 2002:a2e:9e02:0:b0:2ec:617b:4757 with SMTP id 38308e7fff4ca-2f15aa95757mr105344631fa.13.1722966915621;
+        Tue, 06 Aug 2024 10:55:15 -0700 (PDT)
+Received: from alexis-pc ([2a01:e0a:d77:ff0:2146:fb54:fbe:f1d0])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4282bb64952sm253629025e9.37.2024.08.06.10.55.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Aug 2024 10:55:15 -0700 (PDT)
+Date: Tue, 6 Aug 2024 19:55:13 +0200
+From: Alexis Belmonte <alexbelm48@gmail.com>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: hdegoede@redhat.com, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 2/2] platform/x86: hp-wmi: Add thermal profile support
+ for 8BAD boards
+Message-ID: <ZrJjgVkVO5S7ljY9@alexis-pc>
+References: <ZZFGgfsfrU2vuQoI@alexis-pc>
+ <84632b31-6e97-4493-a97e-572d288b294d@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] platform/x86: hp-wmi: Add thermal profile support for
- 8BAD boards
-To: Alexis Belmonte <alexbelm48@gmail.com>, hdegoede@redhat.com
-Cc: platform-driver-x86@vger.kernel.org
-References: <ZZFGgfsfrU2vuQoI@alexis-pc>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZZFGgfsfrU2vuQoI@alexis-pc>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1722962642;d8b72c3c;
-X-HE-SMSGID: 1sbNHv-0006cj-AG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <84632b31-6e97-4493-a97e-572d288b294d@leemhuis.info>
 
-On 31.12.23 11:46, Alexis Belmonte wrote:
-> Add 8BAD to the list of boards which have thermal profile selection
-> available. This allows the CPU to draw more power than the default TDP
-> barrier defined by the 'balanced' thermal profile (around 50W), hence
-> allowing it to perform better without being throttled by the embedded
-> controller (around 130W).
->
+Hi Thorsten!
 
-TWIMC, someone is asking to add the 8C77 to the list, too:
-https://bugzilla.kernel.org/show_bug.cgi?id=219125
+Thanks for the heads up! I've taken a look at the report and proposed a
+patch to them that I've not submitted yet to the mailing list.
 
-This is not a regression, but I saw the report and thought I share my
-find with people working in this area.
+I'll wait on their feedback and see if it works for them.
 
-Ciao, Thorsten
+Thanks again and have a great day,
+
+Alexis
