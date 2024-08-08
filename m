@@ -1,90 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B38D18C32B
-	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Aug 2024 12:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1CB1487C1;
+	Thu,  8 Aug 2024 12:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723118811; cv=none; b=cLqD7qFJFGyDpGXtOAZOKcI59Z89zhKaIwbjHtVFdb8LEO45IJ/LJCYpLuJED6AGmViLen5FBTPVxSPo1/K5Nv8WUgiFZs7I13NkNYa4t5BeeoBr+zxgbUdvIuQ9RN24XR8BZtEpcjefExk4eNpFF4r5uDBDrklTGQyWiNYjaqg=
+	t=1723119376; cv=none; b=Z3fE1zWymF4YZUPb7ugCfecjj1HqA7vA+CngWrwCoooSWuQjjEL0ITL6GWG067vnfno0veAfe4E1SdaY4IeqZjrjTxw8S8UcP8kJJA0YWLevscuel608hU6r4i+XQySegHgV+dUKBuMQyd33HKzWXjlRj5rstMfg19E9tbtZe6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723118811; c=relaxed/simple;
-	bh=pIAVZKZebxQGtZP1gYOleHnrDad9m/biW6KgYEsQ2KA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=J8kLPmWGEiWr/wWYJkGUZtIaqciDk6ORvYJaHqUxUep2rD7wiWFMxGsfbuo4CbFVWQ+d+l0QabxM7sME40ADwKQQfnAMBaE3nn0kANudjp64FCwrd5Yl6ExCURrm2b4N6Uq8KeYNpkXe8EkhMmsVCXAdBko7huET76jw0TwrDAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nuVtqyyq; arc=none smtp.client-ip=192.198.163.17
+	s=arc-20240116; t=1723119376; c=relaxed/simple;
+	bh=I120d9Ek+PytD5jYM9eoJoL/nqLmfFNwxfWNHzPOVvs=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Vh4t4sFwd3MSWyHHAIJMJFWGPRANrttqWuN0hnOWWzCxBSTHyRWWAdMv6XMDyvVoYH4R91us4ZtBn+kyfD3rfaztAaDiTpmVnu0mYYxOmgksZBd/VTG5hkLOW66Q7J5WMwgaWIi8LSLAZjHuJtOehMEsiUEKt5p4nZIuGUyo0FA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tydtybzz; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nuVtqyyq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tydtybzz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723118810; x=1754654810;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=pIAVZKZebxQGtZP1gYOleHnrDad9m/biW6KgYEsQ2KA=;
-  b=nuVtqyyq0maLYv+sXt+JXn1XLvCaPWtrMDQ9jx2qxQ7LuDu0XQW5N5I2
-   e/FUvKLnpVhgFPuwBhHJkIpDsVJ2RDCsx+Def3+F0eGgQscD3tVz4uZF+
-   fPU/QVCsDQzhX+qZhQ3nNIebRqfVmPEecSrON6kMOh6jixm1xgObMy8xI
-   gMVPhe7zD/DL45sL+urNphREAl60rWnypU/E037IXdsHBTjJnQgonbs++
-   Ho2K3yh3hR+iilkAO3bb5mROEN6rsYFkyrJ8itWcrAFpucKGvMr276apt
-   PA1ZjxXBsy/+qME0WAxg2LgDcmP+7kx0meazzeOIfsY5DHda25CCy0u/i
-   w==;
-X-CSE-ConnectionGUID: Xtgp9P1qRq+BoJXnXOpXBg==
-X-CSE-MsgGUID: N7wJihpUTiu6ru8hvZ1vTA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11157"; a="21120473"
-X-IronPort-AV: E=Sophos;i="6.09,272,1716274800"; 
-   d="scan'208";a="21120473"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 05:06:49 -0700
-X-CSE-ConnectionGUID: G3HT7uJCRkig8r/WTzQTaw==
-X-CSE-MsgGUID: ZSwa5DYSR1On/cSRA2reTw==
+  t=1723119375; x=1754655375;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=I120d9Ek+PytD5jYM9eoJoL/nqLmfFNwxfWNHzPOVvs=;
+  b=Tydtybzz5QUI6t+0BtDb3p2bkQPlrKUZezMflkmXyPgccPcMjqXgYCXu
+   Vv8iY/Oo4NKsdn5N/6Cxb0EtFd7OVz1y1XD7oYaTPosUh88GMreaNCodW
+   Zg07nLr2owigLLdeEoupM+Lo5wQTgADs41/cbuhNpVJy6foHUIWpCLx/F
+   ojLiOuSoXwXh/iZGpjspcrlthQh52QDxrUkQNoAI8W091ZPnMW/19fPrG
+   98kk7UXruyqtjBRFfAIL+l0fwJmJIg9ua8YvLUJanyLW6bV9ETSkJ6r2e
+   2TwhSGeH0kjgvTeNGwdN82IPcnoO8wia5fUUv8sDRaw7CeuWBZPhwmmWt
+   A==;
+X-CSE-ConnectionGUID: o5g3djHUSvuq4NAu3G5Cqw==
+X-CSE-MsgGUID: LkgpF9PVQVGkSBl/ZcIleA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11157"; a="25032264"
+X-IronPort-AV: E=Sophos;i="6.09,273,1716274800"; 
+   d="scan'208";a="25032264"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 05:16:14 -0700
+X-CSE-ConnectionGUID: oZoE6a/MTCS04Al3ZPa5rQ==
+X-CSE-MsgGUID: x/Kk7BDzSKuAmjjJYNGVsw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,272,1716274800"; 
-   d="scan'208";a="57290022"
+X-IronPort-AV: E=Sophos;i="6.09,273,1716274800"; 
+   d="scan'208";a="57161642"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.125.108.108])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 05:06:47 -0700
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 05:16:11 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hdegoede@redhat.com, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
-In-Reply-To: <20240730142316.3846259-1-Shyam-sundar.S-k@amd.com>
-References: <20240730142316.3846259-1-Shyam-sundar.S-k@amd.com>
-Subject: Re: [PATCH v2] platform/x86/amd/pmf: Fix to Update HPD Data When
- ALS is Disabled
-Message-Id: <172311879905.2217.9045119915314057934.b4-ty@linux.intel.com>
-Date: Thu, 08 Aug 2024 15:06:39 +0300
+Date: Thu, 8 Aug 2024 15:16:06 +0300 (EEST)
+To: Gergo Koteles <soyer@irl.hu>, Hans de Goede <hdegoede@redhat.com>
+cc: Ike Panhc <ike.pan@canonical.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 4/4] platform/x86: ideapad-laptop: add a mutex to
+ synchronize VPC commands
+In-Reply-To: <4eab134fc9b9a50c4f870f4d46ddc1415d5df465.camel@irl.hu>
+Message-ID: <256410ac-35e0-2f2f-3dcd-14b4b5c4c500@linux.intel.com>
+References: <cover.1721898747.git.soyer@irl.hu>  <f26782fa1194ad11ed5d9ba121a804e59b58b026.1721898747.git.soyer@irl.hu>  <29153152-79de-c637-eede-0b36ce4b5222@linux.intel.com> <4eab134fc9b9a50c4f870f4d46ddc1415d5df465.camel@irl.hu>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: multipart/mixed; boundary="8323328-890764578-1723119366=:1044"
 
-On Tue, 30 Jul 2024 19:53:16 +0530, Shyam Sundar S K wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> If the Ambient Light Sensor (ALS) is disabled, the current code in the PMF
-> driver does not query for Human Presence Detection (HPD) data in
-> amd_pmf_get_sensor_info(). As a result, stale HPD data is used by PMF-TA
-> to evaluate policy conditions, leading to unexpected behavior in the policy
-> output actions.
-> 
-> To resolve this issue, modify the PMF driver to query HPD data
-> independently of ALS.
-> 
-> [...]
+--8323328-890764578-1723119366=:1044
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Tue, 30 Jul 2024, Gergo Koteles wrote:
+> On Tue, 2024-07-30 at 16:37 +0300, Ilpo J=C3=A4rvinen wrote:
+> > On Thu, 25 Jul 2024, Gergo Koteles wrote:
+> >=20
+> > > Calling VPC commands consists of several VPCW and VPCR ACPI calls.
+> > > These calls and their results can get mixed up if they are called
+> > > simultaneously from different threads, like acpi notify handler,
+> > > sysfs, debugfs, notification chain.
+> > >=20
+> > > Add a mutex to synchronize VPC commands.
+> > >=20
+> > > Signed-off-by: Gergo Koteles <soyer@irl.hu>
+> >=20
+> > What commit does this fix? I was going to add a Fixes tag myself while=
+=20
+> > applying this but wasn't sure if it should be the ACPI concurrency comm=
+it=20
+> > e2ffcda16290 or the change introducing lenovo-ymc driver?
+> >=20
+>=20
+> YMC triggering works in 6.7, but not reliably in 6.8. So I assume the
+> culprit is e2ffcda16290.
+>
+> But in theory debugfs, sysfs, acpi notify handler can race with each
+> other in the same way for 10+ years. Technically, probably not.
+
+Okay, I decided to put both commits then as the ACPI thing made it much=20
+worse so it's proper to assign some "blame" to it for the additional=20
+problems it caused ;-). I also wrote an additional paragraph about it
+into the commit message.
+
+> > Also, I'd prefer to not take the move patch (PATCH 3/4) now so I could=
+=20
+> > take this through fixes branch since it causes a real issue if I rememb=
+er=20
+> > the earlier discussions right? Do you think there's any issue if I take=
+=20
+> > only patches 1, 2, and 4? They seemed to apply without conflicts when I=
+=20
+> > tried to apply the entire series and then cherrypicked the last patch=
+=20
+> > dropping the third patch.
+> >=20
+>=20
+> Yes, this is a real issue.
+>=20
+> You can skip the third patch. The series compiles and works fine
+> without it.
+>=20
+> > The code movement patch could go through for-next fixes branch is then=
+=20
+> > merged into it (or after one kernel cycle).
+> >=20
+> >=20
+>=20
+> Fine.
+
+I've taken patches 1, 2, and 4 into review-ilpo and will propagate them=20
+into fixes branch once LKP has build tested the branch.
+
+Thanks for the patches!
 
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
-local branch there, which might take a while.
+As mentioned patch 3 should go to for-next which is handled by Hans in=20
+this cycle. It requires merging the fixes branch (or the fixes PR tag)=20
+into for-next once the other commits have migrated into fixes. I'll=20
+reassign patch 3 to Hans in patchwork once I've tagged the PR to Linus.
 
-The list of commits applied:
-[1/1] platform/x86/amd/pmf: Fix to Update HPD Data When ALS is Disabled
-      commit: 78296429e20052b029211b0aca64aadc5052d581
-
---
+--=20
  i.
-
+--8323328-890764578-1723119366=:1044--
