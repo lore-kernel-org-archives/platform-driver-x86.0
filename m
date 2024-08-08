@@ -1,141 +1,367 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1CB1487C1;
-	Thu,  8 Aug 2024 12:16:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6FB263D;
+	Thu,  8 Aug 2024 13:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723119376; cv=none; b=Z3fE1zWymF4YZUPb7ugCfecjj1HqA7vA+CngWrwCoooSWuQjjEL0ITL6GWG067vnfno0veAfe4E1SdaY4IeqZjrjTxw8S8UcP8kJJA0YWLevscuel608hU6r4i+XQySegHgV+dUKBuMQyd33HKzWXjlRj5rstMfg19E9tbtZe6U=
+	t=1723122869; cv=none; b=nwA8OK09Vo5sIbcu1rj2JNNLqqHeq9gw9NQaj1Bw6bOSL8OETVNk6RRjn1pwEneDnBNsUdAhpa5TBxmSOQmgpfyQaWAcOMHKLnWBFWRfQL5uMkfyvClQ8rjfcAeXzT/LfXMNO4UdMBEAT4rCfwElM5p3PW0q2weqCh4r9uvRRwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723119376; c=relaxed/simple;
-	bh=I120d9Ek+PytD5jYM9eoJoL/nqLmfFNwxfWNHzPOVvs=;
+	s=arc-20240116; t=1723122869; c=relaxed/simple;
+	bh=mANp6lmpKbMk6O+n3GLxoSI4sbUhtmOQhXsnYHzX4HU=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Vh4t4sFwd3MSWyHHAIJMJFWGPRANrttqWuN0hnOWWzCxBSTHyRWWAdMv6XMDyvVoYH4R91us4ZtBn+kyfD3rfaztAaDiTpmVnu0mYYxOmgksZBd/VTG5hkLOW66Q7J5WMwgaWIi8LSLAZjHuJtOehMEsiUEKt5p4nZIuGUyo0FA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tydtybzz; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version:Content-Type; b=Vx3qZlsWK85MfsUfG056887dyofXmY4sIQyFDboLbWsodwhvxbW4LIPX0VUADTkrAKJmiqABiSBBeH1GAs0jo1tlPmdPM5V8N+CtUg23dc2KSrykAhavEVxCfoZpzqfQ7vZiHbcf6+yVJqEpsYzX8I6oTzz0dOWTxwhbwMrfz9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LORMl6VL; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tydtybzz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LORMl6VL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723119375; x=1754655375;
+  t=1723122867; x=1754658867;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=I120d9Ek+PytD5jYM9eoJoL/nqLmfFNwxfWNHzPOVvs=;
-  b=Tydtybzz5QUI6t+0BtDb3p2bkQPlrKUZezMflkmXyPgccPcMjqXgYCXu
-   Vv8iY/Oo4NKsdn5N/6Cxb0EtFd7OVz1y1XD7oYaTPosUh88GMreaNCodW
-   Zg07nLr2owigLLdeEoupM+Lo5wQTgADs41/cbuhNpVJy6foHUIWpCLx/F
-   ojLiOuSoXwXh/iZGpjspcrlthQh52QDxrUkQNoAI8W091ZPnMW/19fPrG
-   98kk7UXruyqtjBRFfAIL+l0fwJmJIg9ua8YvLUJanyLW6bV9ETSkJ6r2e
-   2TwhSGeH0kjgvTeNGwdN82IPcnoO8wia5fUUv8sDRaw7CeuWBZPhwmmWt
+  bh=mANp6lmpKbMk6O+n3GLxoSI4sbUhtmOQhXsnYHzX4HU=;
+  b=LORMl6VLxXTBypIvuFdaVzG83E4LPWHBi5MJCGqL5YgwbX8I9N7mFZ1w
+   1Y3c5r8HyV7xXawDVUNAv31Eprck2K5PK2e1A2Di5d0jNvcR0Iu5253//
+   fQZdiggPASuIP+0lfPcUmU6QDZnZ6lTIZhK8kFt0w7FCtHLlUIU+/K8UM
+   bz5R8ASA94PDkJijom1UW6L5KPzopJjGWsbPgjxILbMx8PJqDEnIdHfDg
+   L3Xvx1FWtILhEnG/IlHjg7ScTPpNxiaCiCyW4vrVIM9YzjQmizOp5GreU
+   lQ7gS4mYd8i6AbdZiUHuRd8GyC2Hy4a+Kx33ZAtql++ALy1fUheZ3DE0f
    A==;
-X-CSE-ConnectionGUID: o5g3djHUSvuq4NAu3G5Cqw==
-X-CSE-MsgGUID: LkgpF9PVQVGkSBl/ZcIleA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11157"; a="25032264"
+X-CSE-ConnectionGUID: TvNY+gkxTrGxLu8M+PwVtQ==
+X-CSE-MsgGUID: 2zUp2ni4R/qQb5oSasSUKQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11158"; a="43766195"
 X-IronPort-AV: E=Sophos;i="6.09,273,1716274800"; 
-   d="scan'208";a="25032264"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 05:16:14 -0700
-X-CSE-ConnectionGUID: oZoE6a/MTCS04Al3ZPa5rQ==
-X-CSE-MsgGUID: x/Kk7BDzSKuAmjjJYNGVsw==
+   d="scan'208";a="43766195"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 06:14:10 -0700
+X-CSE-ConnectionGUID: aj/3tucSRKuKzafMFlbE+Q==
+X-CSE-MsgGUID: 7QmFCw5VTqO9OZmfqrf7vA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,273,1716274800"; 
-   d="scan'208";a="57161642"
+   d="scan'208";a="61596794"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.125.108.108])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 05:16:11 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 06:14:07 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 8 Aug 2024 15:16:06 +0300 (EEST)
-To: Gergo Koteles <soyer@irl.hu>, Hans de Goede <hdegoede@redhat.com>
-cc: Ike Panhc <ike.pan@canonical.com>, platform-driver-x86@vger.kernel.org, 
+Date: Thu, 8 Aug 2024 16:14:02 +0300 (EEST)
+To: Matthias Fetzer <kontakt@matthias-fetzer.de>
+cc: hmh@hmh.eng.br, Hans de Goede <hdegoede@redhat.com>, 
+    ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, 
     LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 4/4] platform/x86: ideapad-laptop: add a mutex to
- synchronize VPC commands
-In-Reply-To: <4eab134fc9b9a50c4f870f4d46ddc1415d5df465.camel@irl.hu>
-Message-ID: <256410ac-35e0-2f2f-3dcd-14b4b5c4c500@linux.intel.com>
-References: <cover.1721898747.git.soyer@irl.hu>  <f26782fa1194ad11ed5d9ba121a804e59b58b026.1721898747.git.soyer@irl.hu>  <29153152-79de-c637-eede-0b36ce4b5222@linux.intel.com> <4eab134fc9b9a50c4f870f4d46ddc1415d5df465.camel@irl.hu>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Add Thinkpad Edge E531 fan
+ support
+In-Reply-To: <20240714165054.2261305-1-kontakt@matthias-fetzer.de>
+Message-ID: <ee9624b2-5b24-9976-4746-c622fcba21a6@linux.intel.com>
+References: <20240714165054.2261305-1-kontakt@matthias-fetzer.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-890764578-1723119366=:1044"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Sun, 14 Jul 2024, Matthias Fetzer wrote:
 
---8323328-890764578-1723119366=:1044
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> Fan control on the E531 is done using the ACPI methods FANG and
+> FANW. The correct parameters and register values were found by
+> analyzing EC firmware as well as DSDT. This has been tested on
+> my Thinkpad Edge E531 (6885CTO, BIOS HEET52WW 1.33).
+> 
+> Signed-off-by: Matthias Fetzer <kontakt@matthias-fetzer.de>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 159 +++++++++++++++++++++++++++
+>  1 file changed, 159 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 397b409064c9..a171a2b39ac9 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -7751,6 +7751,28 @@ static struct ibm_struct volume_driver_data = {
+>   * 	EC 0x2f (HFSP) might be available *for reading*, but do not use
+>   * 	it for writing.
+>   *
+> + * TPACPI_FAN_RD_ACPI_FANG:
+> + * 	ACPI FANG method: returns fan control register
+> + *
+> + *	Takes one parameter which is 0x8100 plus the offset to EC memory
+> + *	address 0xf500 and returns the byte at this address.
+> + *
+> + *	0xf500:
+> + *		When the value is less than 9 automatic mode is enabled
+> + *	0xf502:
+> + *		Contains the current fan speed from 0-100%
+> + *	0xf504:
+> + *		Bit 7 has to be set in order to enable manual control by
+> + *		writing a value >= 9 to 0xf500
+> + *
+> + * TPACPI_FAN_WR_ACPI_FANW:
+> + * 	ACPI FANG method: sets fan control registers
+> + *
+> + * 	Takes 0x8100 plus the offset to EC memory address 0xf500 and the
+> + * 	value to be written there as parameters.
+> + *
+> + *	see TPACPI_FAN_RD_ACPI_FANG
+> + *
+>   * TPACPI_FAN_WR_TPEC:
+>   * 	ThinkPad EC register 0x2f (HFSP): fan control loop mode
+>   * 	Supported on almost all ThinkPads
+> @@ -7884,6 +7906,7 @@ enum {					/* Fan control constants */
+>  enum fan_status_access_mode {
+>  	TPACPI_FAN_NONE = 0,		/* No fan status or control */
+>  	TPACPI_FAN_RD_ACPI_GFAN,	/* Use ACPI GFAN */
+> +	TPACPI_FAN_RD_ACPI_FANG,	/* Use ACPI FANG */
+>  	TPACPI_FAN_RD_TPEC,		/* Use ACPI EC regs 0x2f, 0x84-0x85 */
+>  	TPACPI_FAN_RD_TPEC_NS,		/* Use non-standard ACPI EC regs (eg: L13 Yoga gen2 etc.) */
+>  };
+> @@ -7891,6 +7914,7 @@ enum fan_status_access_mode {
+>  enum fan_control_access_mode {
+>  	TPACPI_FAN_WR_NONE = 0,		/* No fan control */
+>  	TPACPI_FAN_WR_ACPI_SFAN,	/* Use ACPI SFAN */
+> +	TPACPI_FAN_WR_ACPI_FANW,	/* Use ACPI FANW */
+>  	TPACPI_FAN_WR_TPEC,		/* Use ACPI EC reg 0x2f */
+>  	TPACPI_FAN_WR_ACPI_FANS,	/* Use ACPI FANS and EC reg 0x2f */
+>  };
+> @@ -7924,9 +7948,13 @@ TPACPI_HANDLE(fans, ec, "FANS");	/* X31, X40, X41 */
+>  TPACPI_HANDLE(gfan, ec, "GFAN",	/* 570 */
+>  	   "\\FSPD",		/* 600e/x, 770e, 770x */
+>  	   );			/* all others */
+> +TPACPI_HANDLE(fang, ec, "FANG",	/* E531 */
+> +	   );			/* all others */
+>  TPACPI_HANDLE(sfan, ec, "SFAN",	/* 570 */
+>  	   "JFNS",		/* 770x-JL */
+>  	   );			/* all others */
+> +TPACPI_HANDLE(fanw, ec, "FANW",	/* E531 */
+> +	   );			/* all others */
+>  
+>  /*
+>   * Unitialized HFSP quirk: ACPI DSDT and EC fail to initialize the
+> @@ -8033,6 +8061,23 @@ static int fan_get_status(u8 *status)
+>  
+>  		break;
+>  	}
+> +	case TPACPI_FAN_RD_ACPI_FANG: {
+> +		/* E531 */
+> +		int mode, speed;
+> +
+> +		if (unlikely(!acpi_evalf(fang_handle, &mode, NULL, "dd", 0x8100)))
+> +			return -EIO;
+> +		if (unlikely(!acpi_evalf(fang_handle, &speed, NULL, "dd", 0x8102)))
+> +			return -EIO;
+> +
+> +		if (likely(status)) {
+> +			*status = speed * 7 / 100;
+> +			if (mode < 9)
+> +				*status |= TP_EC_FAN_AUTO;
+> +		}
+> +
+> +		break;
+> +	}
+>  	case TPACPI_FAN_RD_TPEC:
+>  		/* all except 570, 600e/x, 770e, 770x */
+>  		if (unlikely(!acpi_ec_read(fan_status_offset, &s)))
+> @@ -8147,6 +8192,17 @@ static int fan2_get_speed(unsigned int *speed)
+>  		if (speed)
+>  			*speed = lo ? FAN_RPM_CAL_CONST / lo : 0;
+>  		break;
+> +	case TPACPI_FAN_RD_ACPI_FANG: {
+> +		/* E531 */
+> +		int speed_tmp;
+> +
+> +		if (unlikely(!acpi_evalf(fang_handle, &speed_tmp, NULL, "dd", 0x8102)))
+> +			return -EIO;
+> +
+> +		if (likely(speed))
+> +			*speed =  speed_tmp * 65535 / 100;
+> +		break;
+> +	}
+>  
+>  	default:
+>  		return -ENXIO;
+> @@ -8157,6 +8213,7 @@ static int fan2_get_speed(unsigned int *speed)
+>  
+>  static int fan_set_level(int level)
+>  {
+> +	int rc;
+>  	if (!fan_control_allowed)
+>  		return -EPERM;
+>  
+> @@ -8206,6 +8263,36 @@ static int fan_set_level(int level)
+>  			tp_features.fan_ctrl_status_undef = 0;
+>  		break;
+>  
+> +	case TPACPI_FAN_WR_ACPI_FANW:
+> +		if ((!(level & TP_EC_FAN_AUTO) &&
+> +		    ((level < 0) || (level > 7))) ||
+> +		    (level & TP_EC_FAN_FULLSPEED))
+> +			return -EINVAL;
 
-On Tue, 30 Jul 2024, Gergo Koteles wrote:
-> On Tue, 2024-07-30 at 16:37 +0300, Ilpo J=C3=A4rvinen wrote:
-> > On Thu, 25 Jul 2024, Gergo Koteles wrote:
-> >=20
-> > > Calling VPC commands consists of several VPCW and VPCR ACPI calls.
-> > > These calls and their results can get mixed up if they are called
-> > > simultaneously from different threads, like acpi notify handler,
-> > > sysfs, debugfs, notification chain.
-> > >=20
-> > > Add a mutex to synchronize VPC commands.
-> > >=20
-> > > Signed-off-by: Gergo Koteles <soyer@irl.hu>
-> >=20
-> > What commit does this fix? I was going to add a Fixes tag myself while=
-=20
-> > applying this but wasn't sure if it should be the ACPI concurrency comm=
-it=20
-> > e2ffcda16290 or the change introducing lenovo-ymc driver?
-> >=20
->=20
-> YMC triggering works in 6.7, but not reliably in 6.8. So I assume the
-> culprit is e2ffcda16290.
->
-> But in theory debugfs, sysfs, acpi notify handler can race with each
-> other in the same way for 10+ years. Technically, probably not.
+I'd split this into two to make it more readable:
 
-Okay, I decided to put both commits then as the ACPI thing made it much=20
-worse so it's proper to assign some "blame" to it for the additional=20
-problems it caused ;-). I also wrote an additional paragraph about it
-into the commit message.
+		if (!(level & TP_EC_FAN_AUTO) && (level < 0 || level > 7))
+			return -EINVAL;
+		if (level & TP_EC_FAN_FULLSPEED)
+			return -EINVAL;
 
-> > Also, I'd prefer to not take the move patch (PATCH 3/4) now so I could=
-=20
-> > take this through fixes branch since it causes a real issue if I rememb=
-er=20
-> > the earlier discussions right? Do you think there's any issue if I take=
-=20
-> > only patches 1, 2, and 4? They seemed to apply without conflicts when I=
-=20
-> > tried to apply the entire series and then cherrypicked the last patch=
-=20
-> > dropping the third patch.
-> >=20
->=20
-> Yes, this is a real issue.
->=20
-> You can skip the third patch. The series compiles and works fine
-> without it.
->=20
-> > The code movement patch could go through for-next fixes branch is then=
-=20
-> > merged into it (or after one kernel cycle).
-> >=20
-> >=20
->=20
-> Fine.
+I'm not sure if -EINVAL is really the right code to return though in these 
+cases.
 
-I've taken patches 1, 2, and 4 into review-ilpo and will propagate them=20
-into fixes branch once LKP has build tested the branch.
+> +		if (level & TP_EC_FAN_AUTO) {
+> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x05)) {
 
-Thanks for the patches!
+Curiously enough, the comment above doesn't cover offset 0xf506 but the 
+comment mentions 0xf504 that is never touched anywhere? Is that a typo?
 
-
-As mentioned patch 3 should go to for-next which is handled by Hans in=20
-this cycle. It requires merging the fixes branch (or the fixes PR tag)=20
-into for-next once the other commits have migrated into fixes. I'll=20
-reassign patch 3 to Hans in patchwork once I've tagged the PR to Linus.
-
---=20
+-- 
  i.
---8323328-890764578-1723119366=:1044--
+
+> +				rc = -EIO;
+> +				break;
+> +			}
+> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0x00)) {
+> +				rc = -EIO;
+> +				break;
+> +			}
+> +		} else {
+> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x45)) {
+> +				rc = -EIO;
+> +				break;
+> +			}
+> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0xff)) {
+> +				rc = -EIO;
+> +				break;
+> +			}
+> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8102, level * 100 / 7)) {
+> +				rc = -EIO;
+> +				break;
+> +			}
+> +		}
+> +		break;
+> +
+>  	default:
+>  		return -ENXIO;
+>  	}
+> @@ -8284,6 +8371,19 @@ static int fan_set_enable(void)
+>  			rc = 0;
+>  		break;
+>  
+> +	case TPACPI_FAN_WR_ACPI_FANW:
+> +		if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x05)) {
+> +			rc = -EIO;
+> +			break;
+> +		}
+> +		if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0x00)) {
+> +			rc = -EIO;
+> +			break;
+> +		}
+> +
+> +		rc = 0;
+> +		break;
+> +
+>  	default:
+>  		rc = -ENXIO;
+>  	}
+> @@ -8326,6 +8426,22 @@ static int fan_set_disable(void)
+>  			fan_control_desired_level = 0;
+>  		break;
+>  
+> +	case TPACPI_FAN_WR_ACPI_FANW:
+> +		if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x45)) {
+> +			rc = -EIO;
+> +			break;
+> +		}
+> +		if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0xff)) {
+> +			rc = -EIO;
+> +			break;
+> +		}
+> +		if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8102, 0x00)) {
+> +			rc = -EIO;
+> +			break;
+> +		}
+> +		rc = 0;
+> +		break;
+> +
+>  	default:
+>  		rc = -ENXIO;
+>  	}
+> @@ -8359,6 +8475,23 @@ static int fan_set_speed(int speed)
+>  			rc = -EINVAL;
+>  		break;
+>  
+> +	case TPACPI_FAN_WR_ACPI_FANW:
+> +		if (speed >= 0 && speed <= 65535) {
+> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x45)) {
+> +				rc = -EIO;
+> +				break;
+> +			}
+> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0xff)) {
+> +				rc = -EIO;
+> +				break;
+> +			}
+> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd",
+> +					0x8102, speed * 100 / 65535))
+> +				rc = -EIO;
+> +		} else
+> +			rc = -EINVAL;
+> +		break;
+> +
+>  	default:
+>  		rc = -ENXIO;
+>  	}
+> @@ -8701,6 +8834,10 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+>  		TPACPI_ACPIHANDLE_INIT(gfan);
+>  		TPACPI_ACPIHANDLE_INIT(sfan);
+>  	}
+> +	if (tpacpi_is_lenovo()) {
+> +		TPACPI_ACPIHANDLE_INIT(fang);
+> +		TPACPI_ACPIHANDLE_INIT(fanw);
+> +	}
+>  
+>  	quirks = tpacpi_check_quirks(fan_quirk_table,
+>  				     ARRAY_SIZE(fan_quirk_table));
+> @@ -8720,6 +8857,9 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+>  	if (gfan_handle) {
+>  		/* 570, 600e/x, 770e, 770x */
+>  		fan_status_access_mode = TPACPI_FAN_RD_ACPI_GFAN;
+> +	} else if (fang_handle) {
+> +		/* E531 */
+> +		fan_status_access_mode = TPACPI_FAN_RD_ACPI_FANG;
+>  	} else {
+>  		/* all other ThinkPads: note that even old-style
+>  		 * ThinkPad ECs supports the fan control register */
+> @@ -8766,6 +8906,11 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+>  		fan_control_access_mode = TPACPI_FAN_WR_ACPI_SFAN;
+>  		fan_control_commands |=
+>  		    TPACPI_FAN_CMD_LEVEL | TPACPI_FAN_CMD_ENABLE;
+> +	} else if (fanw_handle) {
+> +		/* E531 */
+> +		fan_control_access_mode = TPACPI_FAN_WR_ACPI_FANW;
+> +		fan_control_commands |=
+> +		    TPACPI_FAN_CMD_LEVEL | TPACPI_FAN_CMD_SPEED | TPACPI_FAN_CMD_ENABLE;
+>  	} else {
+>  		if (!gfan_handle) {
+>  			/* gfan without sfan means no fan control */
+> @@ -8915,6 +9060,20 @@ static int fan_read(struct seq_file *m)
+>  			       str_enabled_disabled(status), status);
+>  		break;
+>  
+> +	case TPACPI_FAN_RD_ACPI_FANG:
+> +		/* E531 */
+> +		rc = fan_get_status_safe(&status);
+> +		if (rc)
+> +			return rc;
+> +
+> +		seq_printf(m, "status:\t\t%s\n", str_enabled_disabled(status));
+> +
+> +		rc = fan_get_speed(&speed);
+> +		if (rc < 0)
+> +			return rc;
+> +		seq_printf(m, "speed:\t\t%d\n", speed);
+> +		break;
+> +
+>  	case TPACPI_FAN_RD_TPEC_NS:
+>  	case TPACPI_FAN_RD_TPEC:
+>  		/* all except 570, 600e/x, 770e, 770x */
+> 
+
