@@ -1,51 +1,59 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23099225D6;
-	Fri,  9 Aug 2024 21:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E23C8D1;
+	Fri,  9 Aug 2024 22:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723238212; cv=none; b=s2JJfQKfqdk526/6NE02BR3dNgCIyMpRk5/KHjxESJt7y+7JyaiwdxPokO2ORHPZ5xcPnA/RTqKyONblS99lBvixlG96IJ/EYpPweEUWXuPnGPEvk7ldkInYZEoQ8DKWfX2akwv3tQhboDzeoTPBrAnV5eYLB8msY4gAgEwL/Pw=
+	t=1723243469; cv=none; b=dS9qf7cDD9Y1loj4E74PYXgHQnVWv+eEKv2jVKvCnrFjcYmCNd5HZdMoXZJzPPvA3kA0BSfdUZAbDfPEncX1NfCMstZ3U1NuBDe2I4ZoA2fzVJD31KwbyF7OIjdd4P+1EY7s3uPEDJ3wLeAnUwk5B19L29oZETZ9XlazQOxMqhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723238212; c=relaxed/simple;
-	bh=3sHnrlgBst2vs2zoVMb7+BfNAceWGuziTRBozcPZflY=;
+	s=arc-20240116; t=1723243469; c=relaxed/simple;
+	bh=mGspTgoMGXTo858ann4ORu9Ja4B3B7PSU7tT4rkWJss=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xpsr2Yuqz5JHQc37Fr04TJB5ecbVl9s++j6FIoQwV8ntknp+0sHjVICH964DM3XAzto4jNEFzaiNCLc/ZjcWIIBidxs43ocseIDML5JvkijLogXxNN47igZ5jRwa9ag+S+AKIBtRxZ/wQftTG+8WksS1EBjlOJORLv3ZJKA6iGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=matthias-fetzer.de; spf=pass smtp.mailfrom=matthias-fetzer.de; dkim=pass (2048-bit key) header.d=matthias-fetzer.de header.i=@matthias-fetzer.de header.b=c4lOIJ2S; arc=none smtp.client-ip=188.68.63.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=matthias-fetzer.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matthias-fetzer.de
+	 In-Reply-To:Content-Type; b=rHvRq3RUQX1AyJ8A30/C469FukgE/KQjwwh4W9fDRaQBYJT86lVuk9Lt5RLoMQM/WZsKdAonDfueZ6Nk0DoJyTU8lTx9Xab9h2QeXS2GMUHmgNNKM/9loqGGs15xVrkOV7IRWr2fv8nC7Ep74OYx68DgiDyMewKhjymBPG1hoBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aY7VBeFM; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=matthias-fetzer.de header.i=@matthias-fetzer.de header.b="c4lOIJ2S"
-Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4Wgc4J4dDyz8XLf;
-	Fri,  9 Aug 2024 21:09:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=matthias-fetzer.de;
-	s=key2; t=1723237792;
-	bh=3sHnrlgBst2vs2zoVMb7+BfNAceWGuziTRBozcPZflY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=c4lOIJ2Simr6CKegbFFTHjlSveZMb9AMriy+Fl7yKXe3dC9mG3PFHJoWitGUWpWTq
-	 KJtR44YjNC3IaTf42GHyYadZ0ytxVGYD1SXqV0sPAnE+QLvTsekOeD85U/J/gXzHSi
-	 fNUs4QJ2ay/QBV9UL59cRPCfIil4ofi7Jcp/3N7B9Z8KhCsr/q9JdHjZkZhF6IaT8g
-	 6aYkl6+KGBWdJQhbyXTDoRvTbkiNsaaytdB07uIrDnkP7fLNkx3eQVvaBKVpNJqz2E
-	 i57uvBp/vfe0vOYMl6WeHuqwEvF81wV3JdEFIaZOJ/NQLvZYnbluHC+/q3wNPTo+3A
-	 lqpZqytFQNd6Q==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4Wgc4J3snyz8Zs6;
-	Fri,  9 Aug 2024 21:09:52 +0000 (UTC)
-Received: from mxf9a3.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4Wgc0c4D5Sz8sZf;
-	Fri,  9 Aug 2024 23:06:40 +0200 (CEST)
-Received: from [IPV6:2001:9e8:1a76:2600:c5f1:566f:8693:31b4] (unknown [IPv6:2001:9e8:1a76:2600:c5f1:566f:8693:31b4])
-	by mxf9a3.netcup.net (Postfix) with ESMTPSA id 67338402D7;
-	Fri,  9 Aug 2024 23:06:35 +0200 (CEST)
-Authentication-Results: mxf9a3;
-        spf=pass (sender IP is 2001:9e8:1a76:2600:c5f1:566f:8693:31b4) smtp.mailfrom=kontakt@matthias-fetzer.de smtp.helo=[IPV6:2001:9e8:1a76:2600:c5f1:566f:8693:31b4]
-Received-SPF: pass (mxf9a3: connection is authenticated)
-Message-ID: <5a22f1ff-44e9-4e1a-bdbe-cc168f718693@matthias-fetzer.de>
-Date: Fri, 9 Aug 2024 23:06:34 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aY7VBeFM"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5bd13ea7604so379820a12.1;
+        Fri, 09 Aug 2024 15:44:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723243465; x=1723848265; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OjmtgbXaIAfffQGKX1XNRnGTnXYu+U8y7QcwkcqhF5w=;
+        b=aY7VBeFMf5siV3QhQXf74FmGOooA05TZGDFRw6k7imYFUbBXSGnUlt8TXLVFJJ1CEZ
+         E6stzeNiK2P7mxL+JT9RNzy2BNzTHIEXKLc70PrkSrQVbQmQBS6dslyfGX5vX9mJ9IS8
+         VU9EkaW/dmpLnnEyTpmsIOdVafuRI15GqDXxAgIBTrzZr8RXrl18kr4cpJjIq8gGfPKr
+         DjJnaem8lEyiACa7lIsVxw5A0rnOL8ScsehlSzswOa6D4Q6qCl/zfPnOU+vmjDp74+7f
+         L3TUdJdZoLB4WTA7YGyngE/LRToZOTmRK9isEYOYtW1/qgFvEttOxvgSdrBMrbW3B1yM
+         G8ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723243465; x=1723848265;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OjmtgbXaIAfffQGKX1XNRnGTnXYu+U8y7QcwkcqhF5w=;
+        b=kDOrtYoLZbrIZyhpKBRPgkohDNaoVqaIqppbd5ekbRUxVq5bxch9hruUo+nxpVR+5Q
+         FwhyGEpKN50FB+6br/apnfEchzPTftKgU4L1Os3FCl/mV2BKABcyF9Gg8Vg5ZLj39yCl
+         WldKrlKqYVoGtLA1T4vmCQs9N8uVayaILri46WAAhfJ4v6wpfWlls+Ay/FxDcVsywWo/
+         yCCTKZrgWn2mqlyONKnEX9V44s3xlPlJtygaa3EIIS/9LMhHd8rydDuRPfyOzXK/Envi
+         AW+qxtuvCQ/XZCoe58rb/oxqpxwF14MxYLaDcZE5gCZoNalyQztRrt84oceACAsoHGSq
+         5Umw==
+X-Forwarded-Encrypted: i=1; AJvYcCVtlXbyV691rbYe8RmHU2aWZxELYhYSHZfW0MiHJOvLNdMTBHR9sCkyfBhjR1dpLnPb2rcr6i9l/CDMNrHlut2StZd9HxuQ9wdylDtmMZz6rxwImwS0aD0qfKXkCuNZtmvJjHRMv5IAnjZYmcmC0m/QU+G7ByoBGqhbmWqxD7nfDKxMOiQBW/OM6W2u2mIKYfdXJ9UFTVVbPSr4jPDvzR/cLHl0J4p3dFKag1wmnP8x3XVxShuypXRmL1nRZSLQayPBN1vFAa2p
+X-Gm-Message-State: AOJu0YwJGBYe/+kJ4LZLPdiKXPkfiBvNVIThOzW2pxkHCCsFBMoMYkdx
+	Q1PqbTa/bxNYpp4ORGsxYLr0bVp1++fq7gZChx5TLQTHHRqsqtxg
+X-Google-Smtp-Source: AGHT+IHEc06i/bxgwj6cyAZEz+TCJ7zV45O9Hht0ifyqi93/kgKJsehu+mhxqqCIHfkCa2+xYF7w8w==
+X-Received: by 2002:a17:907:f769:b0:a7a:84f8:eaef with SMTP id a640c23a62f3a-a80aa5de1d0mr228146666b.35.1723243464838;
+        Fri, 09 Aug 2024 15:44:24 -0700 (PDT)
+Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a80bb213782sm16213466b.156.2024.08.09.15.44.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 Aug 2024 15:44:24 -0700 (PDT)
+Message-ID: <ea348f62-49e9-4b5e-9041-b0a696aaa736@gmail.com>
+Date: Sat, 10 Aug 2024 00:44:21 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -53,187 +61,194 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Add Thinkpad Edge E531 fan
- support
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: hmh@hmh.eng.br, Hans de Goede <hdegoede@redhat.com>,
- ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20240714165054.2261305-1-kontakt@matthias-fetzer.de>
- <ee9624b2-5b24-9976-4746-c622fcba21a6@linux.intel.com>
-Content-Language: en-US, de-DE
-From: Matthias Fetzer <kontakt@matthias-fetzer.de>
-In-Reply-To: <ee9624b2-5b24-9976-4746-c622fcba21a6@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH 3/3] platform/surface: Add OF support
+To: Maximilian Luz <luzmaximilian@gmail.com>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <quic_kdybcio@quicinc.com>
+References: <20240809-topic-sam-v1-0-05bca1932614@quicinc.com>
+ <20240809-topic-sam-v1-3-05bca1932614@quicinc.com>
+ <9ee8eb9d-1e1c-439f-a382-c003fbd7259c@gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konradybcio@gmail.com>
+In-Reply-To: <9ee8eb9d-1e1c-439f-a382-c003fbd7259c@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <172323759583.12787.8869904824999468791@mxf9a3.netcup.net>
-X-Rspamd-Queue-Id: 67338402D7
-X-Rspamd-Server: rspamd-worker-8404
-X-NC-CID: B0rRHBtvFxq2Ah61PT2285jdKpD16c032Jkvc3Mxdm9bZH6qL+v1T8eQ
 
-
-Thanks for the review!
-
-Am 08.08.24 um 15:14 schrieb Ilpo Järvinen:
-> On Sun, 14 Jul 2024, Matthias Fetzer wrote:
+On 9.08.2024 8:09 PM, Maximilian Luz wrote:
+> Hi,
 > 
->> Fan control on the E531 is done using the ACPI methods FANG and
->> FANW. The correct parameters and register values were found by
->> analyzing EC firmware as well as DSDT. This has been tested on
->> my Thinkpad Edge E531 (6885CTO, BIOS HEET52WW 1.33).
->>
->> Signed-off-by: Matthias Fetzer <kontakt@matthias-fetzer.de>
->> ---
->>   drivers/platform/x86/thinkpad_acpi.c | 159 +++++++++++++++++++++++++++
->>   1 file changed, 159 insertions(+)
->>
->> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
->> index 397b409064c9..a171a2b39ac9 100644
->> --- a/drivers/platform/x86/thinkpad_acpi.c
->> +++ b/drivers/platform/x86/thinkpad_acpi.c
->> @@ -7751,6 +7751,28 @@ static struct ibm_struct volume_driver_data = {
->>    * 	EC 0x2f (HFSP) might be available *for reading*, but do not use
->>    * 	it for writing.
->>    *
->> + * TPACPI_FAN_RD_ACPI_FANG:
->> + * 	ACPI FANG method: returns fan control register
->> + *
->> + *	Takes one parameter which is 0x8100 plus the offset to EC memory
->> + *	address 0xf500 and returns the byte at this address.
->> + *
->> + *	0xf500:
->> + *		When the value is less than 9 automatic mode is enabled
->> + *	0xf502:
->> + *		Contains the current fan speed from 0-100%
->> + *	0xf504:
->> + *		Bit 7 has to be set in order to enable manual control by
->> + *		writing a value >= 9 to 0xf500
->> + *
->> + * TPACPI_FAN_WR_ACPI_FANW:
->> + * 	ACPI FANG method: sets fan control registers
->> + *
->> + * 	Takes 0x8100 plus the offset to EC memory address 0xf500 and the
->> + * 	value to be written there as parameters.
->> + *
->> + *	see TPACPI_FAN_RD_ACPI_FANG
->> + *
->>    * TPACPI_FAN_WR_TPEC:
->>    * 	ThinkPad EC register 0x2f (HFSP): fan control loop mode
->>    * 	Supported on almost all ThinkPads
->> @@ -7884,6 +7906,7 @@ enum {					/* Fan control constants */
->>   enum fan_status_access_mode {
->>   	TPACPI_FAN_NONE = 0,		/* No fan status or control */
->>   	TPACPI_FAN_RD_ACPI_GFAN,	/* Use ACPI GFAN */
->> +	TPACPI_FAN_RD_ACPI_FANG,	/* Use ACPI FANG */
->>   	TPACPI_FAN_RD_TPEC,		/* Use ACPI EC regs 0x2f, 0x84-0x85 */
->>   	TPACPI_FAN_RD_TPEC_NS,		/* Use non-standard ACPI EC regs (eg: L13 Yoga gen2 etc.) */
->>   };
->> @@ -7891,6 +7914,7 @@ enum fan_status_access_mode {
->>   enum fan_control_access_mode {
->>   	TPACPI_FAN_WR_NONE = 0,		/* No fan control */
->>   	TPACPI_FAN_WR_ACPI_SFAN,	/* Use ACPI SFAN */
->> +	TPACPI_FAN_WR_ACPI_FANW,	/* Use ACPI FANW */
->>   	TPACPI_FAN_WR_TPEC,		/* Use ACPI EC reg 0x2f */
->>   	TPACPI_FAN_WR_ACPI_FANS,	/* Use ACPI FANS and EC reg 0x2f */
->>   };
->> @@ -7924,9 +7948,13 @@ TPACPI_HANDLE(fans, ec, "FANS");	/* X31, X40, X41 */
->>   TPACPI_HANDLE(gfan, ec, "GFAN",	/* 570 */
->>   	   "\\FSPD",		/* 600e/x, 770e, 770x */
->>   	   );			/* all others */
->> +TPACPI_HANDLE(fang, ec, "FANG",	/* E531 */
->> +	   );			/* all others */
->>   TPACPI_HANDLE(sfan, ec, "SFAN",	/* 570 */
->>   	   "JFNS",		/* 770x-JL */
->>   	   );			/* all others */
->> +TPACPI_HANDLE(fanw, ec, "FANW",	/* E531 */
->> +	   );			/* all others */
->>   
->>   /*
->>    * Unitialized HFSP quirk: ACPI DSDT and EC fail to initialize the
->> @@ -8033,6 +8061,23 @@ static int fan_get_status(u8 *status)
->>   
->>   		break;
->>   	}
->> +	case TPACPI_FAN_RD_ACPI_FANG: {
->> +		/* E531 */
->> +		int mode, speed;
+> Thanks for taking this up! A couple of comments below:
+
+[...]
+
+
+> Doc needs updating, this is just the one copied from
+> ssam_controller_caps_load_acpi().
+
+Oops.
+
+[...]
+
+>>   };
+>>     -/* -- ACPI based device setup. ---------------------------------------------- */
+>> +/* -- Serial device setup. ---------------------------------------------- */
+> 
+> Nitpick, but could we maybe keep that at 80 columns please? :)
+
+Sure
+
+
+> 
+>>     static acpi_status ssam_serdev_setup_via_acpi_crs(struct acpi_resource *rsc,
+>>                             void *ctx)
+>> @@ -352,13 +355,28 @@ static acpi_status ssam_serdev_setup_via_acpi_crs(struct acpi_resource *rsc,
+>>       return AE_CTRL_TERMINATE;
+>>   }
+>>   -static acpi_status ssam_serdev_setup_via_acpi(acpi_handle handle,
+>> -                          struct serdev_device *serdev)
+>> +static int ssam_serdev_setup_via_acpi(struct serdev_device *serdev, acpi_handle handle)
+>>   {
+>> -    return acpi_walk_resources(handle, METHOD_NAME__CRS,
+>> -                   ssam_serdev_setup_via_acpi_crs, serdev);
+>> +    acpi_status status;
 >> +
->> +		if (unlikely(!acpi_evalf(fang_handle, &mode, NULL, "dd", 0x8100)))
->> +			return -EIO;
->> +		if (unlikely(!acpi_evalf(fang_handle, &speed, NULL, "dd", 0x8102)))
->> +			return -EIO;
+>> +    status = acpi_walk_resources(handle, METHOD_NAME__CRS,
+>> +                     ssam_serdev_setup_via_acpi_crs, serdev);
 >> +
->> +		if (likely(status)) {
->> +			*status = speed * 7 / 100;
->> +			if (mode < 9)
->> +				*status |= TP_EC_FAN_AUTO;
->> +		}
+>> +    return status ? -ENXIO : 0;
+>>   }
+>>   +static int ssam_serdev_setup(struct acpi_device *ssh, struct serdev_device *serdev)
+>> +{
+>> +    if (ssh)
+>> +        return ssam_serdev_setup_via_acpi(serdev, ssh->handle);
 >> +
->> +		break;
->> +	}
->>   	case TPACPI_FAN_RD_TPEC:
->>   		/* all except 570, 600e/x, 770e, 770x */
->>   		if (unlikely(!acpi_ec_read(fan_status_offset, &s)))
->> @@ -8147,6 +8192,17 @@ static int fan2_get_speed(unsigned int *speed)
->>   		if (speed)
->>   			*speed = lo ? FAN_RPM_CAL_CONST / lo : 0;
->>   		break;
->> +	case TPACPI_FAN_RD_ACPI_FANG: {
->> +		/* E531 */
->> +		int speed_tmp;
+>> +    /* TODO: these values may differ per board/implementation */
+>> +    serdev_device_set_baudrate(serdev, 4 * HZ_PER_MHZ);
+> 
+> Isn't this defined in the DT spec that you're adding as "current-speed"
+> in patch 2? Why not load it from there?
+
+Yeah and it's not under `required:`.. i added it for future proofing
+
+> 
+>> +    serdev_device_set_flow_control(serdev, true);
+>> +    serdev_device_set_parity(serdev, SERDEV_PARITY_NONE);
 >> +
->> +		if (unlikely(!acpi_evalf(fang_handle, &speed_tmp, NULL, "dd", 0x8102)))
->> +			return -EIO;
+>> +    return 0;
+>> +}
+>>     /* -- Power management. ----------------------------------------------------- */
+>>   @@ -624,13 +642,15 @@ static int ssam_serial_hub_probe(struct serdev_device *serdev)
+>>       acpi_status astatus;
+> 
+> This can be removed, see below.
+> 
+>>       int status;
+>>   -    status = gpiod_count(dev, NULL);
+>> -    if (status < 0)
+>> -        return dev_err_probe(dev, status, "no GPIO found\n");
+>> +    if (ssh) {
+>> +        status = gpiod_count(dev, NULL);
+>> +        if (status < 0)
+>> +            return dev_err_probe(dev, status, "no GPIO found\n");
+>>   -    status = devm_acpi_dev_add_driver_gpios(dev, ssam_acpi_gpios);
+>> -    if (status)
+>> -        return status;
+>> +        status = devm_acpi_dev_add_driver_gpios(dev, ssam_acpi_gpios);
+>> +        if (status)
+>> +            return status;
+>> +    }
+>>         /* Allocate controller. */
+>>       ctrl = kzalloc(sizeof(*ctrl), GFP_KERNEL);
+>> @@ -655,7 +675,7 @@ static int ssam_serial_hub_probe(struct serdev_device *serdev)
+>>           goto err_devopen;
+>>       }
+>>   -    astatus = ssam_serdev_setup_via_acpi(ssh->handle, serdev);
+>> +    astatus = ssam_serdev_setup(ssh, serdev);>       if (ACPI_FAILURE(astatus)) {
+> 
+> ssam_serdev_setup() returns an int, so this should now just use
+> "status".
+
+Right
+
+
+> 
+>>           status = dev_err_probe(dev, -ENXIO, "failed to setup serdev\n");
+>>           goto err_devinit;
+>> @@ -717,10 +737,31 @@ static int ssam_serial_hub_probe(struct serdev_device *serdev)
+>>        *       For now let's thus default power/wakeup to false.
+>>        */
+>>       device_set_wakeup_capable(dev, true);
 >> +
->> +		if (likely(speed))
->> +			*speed =  speed_tmp * 65535 / 100;
->> +		break;
->> +	}
->>   
->>   	default:
->>   		return -ENXIO;
->> @@ -8157,6 +8213,7 @@ static int fan2_get_speed(unsigned int *speed)
->>   
->>   static int fan_set_level(int level)
->>   {
->> +	int rc;
->>   	if (!fan_control_allowed)
->>   		return -EPERM;
->>   
->> @@ -8206,6 +8263,36 @@ static int fan_set_level(int level)
->>   			tp_features.fan_ctrl_status_undef = 0;
->>   		break;
->>   
->> +	case TPACPI_FAN_WR_ACPI_FANW:
->> +		if ((!(level & TP_EC_FAN_AUTO) &&
->> +		    ((level < 0) || (level > 7))) ||
->> +		    (level & TP_EC_FAN_FULLSPEED))
->> +			return -EINVAL;
+>> +    /*
+>> +     * When using DT, we have to register the platform hub driver manually,
+>> +     * as it can't be matched based on top-level board compatible (like it
+>> +     * does the ACPI case).
+>> +     */
+>> +    if (!ssh) {
+>> +        struct platform_device *ph_pdev =
+>> +            platform_device_register_simple("surface_aggregator_platform_hub",
+>> +                            0, NULL, 0);
+>> +        if (IS_ERR(ph_pdev))
+>> +            return dev_err_probe(dev, PTR_ERR(ph_pdev),
+>> +                         "Failed to register the platform hub driver\n");
+>> +    }
+>> +
+>> +    status = ssam_register_clients(&serdev->dev, ctrl);
+>> +    if (status)
+>> +        goto err_clients;
 > 
-> I'd split this into two to make it more readable:
+> Is the ssam_register_clients() call required or is it a remnant from a
+> previous version? We're now not adding any children to the controller
+> itself but model ACPI and do all of that with the platform hub. So
+> unless I'm missing something, I think this should not be necessary.
+
+Yeah, the platform hub driver calls it anyway
+
+[...]
+
+>> +static const struct software_node *ssam_node_group_sl7[] = {
+>> +    &ssam_node_root,
+>> +    &ssam_node_bat_ac,
+>> +    &ssam_node_bat_main,
+>> +    &ssam_node_tmp_perf_profile_with_fan,
+>> +    &ssam_node_fan_speed,
+>> +    &ssam_node_hid_sam_keyboard,
 > 
-> 		if (!(level & TP_EC_FAN_AUTO) && (level < 0 || level > 7))
-> 			return -EINVAL;
-> 		if (level & TP_EC_FAN_FULLSPEED)
-> 			return -EINVAL;
+> Did you check if there are any other HID devices connected? In the past,
+> keyboard and touchpad have been split into two separate devices, so is
+> it a combo keyboard + touchpad device this time? Some models also had
+> HID-based sensor and other devices.
 
-This is much better, thanks.
+No, touchpad is wired directly to the SoC via QSPI, same for the touch
+panel
 
 > 
-> I'm not sure if -EINVAL is really the right code to return though in these
-> cases.
+> Would just be good to know if this can be assumed to be complete or if
+> we're maybe missing something here.
 > 
-
-I thought that since those are invalid values/parameters the return code 
-of -EINVAL
-would be a good choice. What do you suggest to use instead?
-
->> +		if (level & TP_EC_FAN_AUTO) {
->> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x05)) {
+>> +    /* TODO: evaluate thermal sensors devices when we get a driver for that */
 > 
-> Curiously enough, the comment above doesn't cover offset 0xf506 but the
-> comment mentions 0xf504 that is never touched anywhere? Is that a typo?
+> FYI I've posted the driver at [1]. It needs a small Kbuild dependency
+> fix but apart from that I think it should be final, if you want to give
+> that a try.
 > 
+> [1]: https://lore.kernel.org/lkml/20240804230832.247852-1-luzmaximilian@gmail.com/T/
 
-Good catch! This indeed is a typo.
+I'll give it a shot, thanks
 
+> 
+> The rest looks fine. I'll try to find some time to update my SPX branch
+> this weekend and give it a spin.
+
+About time that thing lands upstream ;)
+
+Konrad
