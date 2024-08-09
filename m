@@ -1,173 +1,238 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A95918827
-	for <platform-driver-x86@vger.kernel.org>; Thu,  8 Aug 2024 21:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5906F1FDA
+	for <platform-driver-x86@vger.kernel.org>; Fri,  9 Aug 2024 00:57:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723153581; cv=none; b=YHF55RHtBvCzVE5jW9mkcsUBNmz3N8mR1YpYquGoET8gjZyxXk9CQWcJWLVT//4k3T5aiUg5DTKHhWTYZ7v/0hm29LRrXQ4FzMkEhnSjyrdXoP+xowj0tGadmpy0zohp0mFrbDVU1XRtiMuhWpBO+T3hJxyTMmvA9kJQ5KsZ4bc=
+	t=1723165024; cv=none; b=IUAx+YBvmlbcEyAlYMA+1nge5wMz8/9UqFPd3kareuT1DcEPLRCe3L63COitx48Usf+hkJnHYyVtKzuHNUgoGU5Bd9vo1sM2PyHwkMJ1zdlr0gh1irXPGvuxAQNFBwi2U5+IzfL72EpzNj8u+q4qgqRD2zcaQDJj1cv30302VCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723153581; c=relaxed/simple;
-	bh=tNGJs9XPPt0boaQT5JpgYFh2rBDFYacUXpN+gRvGhmc=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=eXnxSxknaGfoPxfGpVRbcwMEgEhfA6wC0Hwt6vm5l5lRLI4AE72rdC2vama4ADrkVJgFAP8kXxRVnVH7WS8gYE4krQa6C6NilfCFcbalLQ1VkcdO6ddcDEs/nGCRdwbfPaLYCGEE9Dw//yF9oxOPGOyEITXSSUoTTJiIClOMCcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=stsichler@web.de header.b=js+gBomy; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1723165024; c=relaxed/simple;
+	bh=P2iIc1K/ioKDeqQQ0aKiNhSv/C3MH2KMLSuOlXGGNjU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VSV5bbON3tAF6HZdCe03cVNc8domE2cf9zEV2rPEbMCheWrvdA1gkPaC2waE4P462hmp+nL/WR3iyQd6cn1pIKy/uDfHPxgJ/lZKEnlH8ec9GdrOyX0ng/p0Zd31/JriBsJXBd5iU5ikEA9AzDNoQe/sPuhq2CLI0gFKK8HW76g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hjSHhuis; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=stsichler@web.de header.b="js+gBomy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1723153570; x=1723758370; i=stsichler@web.de;
-	bh=zsdMECSrCujOeS9fqdc6gvw9n2N4IHNsvU7s7Ktd87s=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=js+gBomyh6Uj1EmXRNtkkMCdwLV6JCeqZM+6qJK8H4o8wWcpmwOvwa0ZG4xDL2eL
-	 5AOazHlKL9TJEczHMZkdItuxuz+R2MU/MMCcOacMuxjxajqGJN0wxOZvRqsqxyFja
-	 8KKyHCcFuQGjx3zHDpb+VMYY8T2X9+orLYeE/6sARqqrxUXaNbiYmCDau4vPd7DPy
-	 oJAcOdy+BwQ+5ED5EOTHff4dKFX17b1PX85LXHl8+UYRCt91F1CLDhTx5jM8OKv2S
-	 oiQ8FpwK7EMIvYUPyMXQCeU0WBAqwrxkIxhVmVOTkeJ15kV07AjGqnybqGqoy4l5W
-	 LAqAIflDVieMS4CJiA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.1.43] ([176.199.210.139]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M4sXj-1sbLkM3u59-002ONQ; Thu, 08
- Aug 2024 23:46:09 +0200
-Message-ID: <703cfb2e-6973-421a-9602-657e03ba6105@web.de>
-Date: Thu, 8 Aug 2024 23:46:09 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hjSHhuis"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723165022; x=1754701022;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=P2iIc1K/ioKDeqQQ0aKiNhSv/C3MH2KMLSuOlXGGNjU=;
+  b=hjSHhuisFJrNDNl+i1scmktOoAns87ev/SH50ybJrYk99auc3sgYIkbL
+   Gwz19BrYJifxDJ81CsmbDg71DO2ALykW/X8+KoIl80wowpXLCSk3Y/Jvu
+   ih98nO7eIwrObJEgA+3XJ0akESGSkdoBEoBceWifBQmnFWTppwuvZ75/K
+   dDC7uUAbip3/n5/JtxgkBNAS+kSClHRrOr7wTTrJyk8pJkfoY3YNQcjPd
+   XxsvZ5KJj2pPC9GlGDM5iNUqRFvuS4ih5BgmCMZjNXTqIqmP6u2vKkSmZ
+   2ORoB7d/8c6Enxprbe8xoAuKfAgAtqmXlLEDGu5j6zA3qAA8axSaLXY2u
+   Q==;
+X-CSE-ConnectionGUID: KVLMF+sFRo2PnQ7QISv1UA==
+X-CSE-MsgGUID: 8L2yvmrUR+WPMBaVAXSZTg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11158"; a="21497110"
+X-IronPort-AV: E=Sophos;i="6.09,274,1716274800"; 
+   d="scan'208";a="21497110"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 17:57:01 -0700
+X-CSE-ConnectionGUID: CYyjtXYaRz6QtwxgncUcUg==
+X-CSE-MsgGUID: mx2EBcrFTEaDq1kJ1/EtZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,274,1716274800"; 
+   d="scan'208";a="80636749"
+Received: from inaky-mobl1.amr.corp.intel.com ([10.125.108.179])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 17:57:01 -0700
+Message-ID: <fe23eb2ef30e4a867668a221f3f02dbe9d322edc.camel@linux.intel.com>
+Subject: Re: [PATCH v9 5/6] platform/x86/intel/pmt: Add support for PMT base
+ adjust
+From: "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: "Michael J. Ruhl" <michael.j.ruhl@intel.com>, 
+	intel-xe@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, 
+	ilpo.jarvinen@linux.intel.com, matthew.brost@intel.com, 
+	andriy.shevchenko@linux.intel.com
+Date: Thu, 08 Aug 2024 17:57:01 -0700
+In-Reply-To: <ZrUyH6vZpShdacjx@intel.com>
+References: <20240725122346.4063913-1-michael.j.ruhl@intel.com>
+	 <20240725122346.4063913-6-michael.j.ruhl@intel.com>
+	 <e70a44a24b1404a000e302a444a41c286538f3f9.camel@linux.intel.com>
+	 <ZrUyH6vZpShdacjx@intel.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.0-1build2 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: jorgealtxwork@gmail.com
-Cc: platform-driver-x86@vger.kernel.org
-References: <20220310210853.28367-3-jorge.lopez2@hp.com>
-Subject: Re: [PATCH v5 2/4] Fix SW_TABLET_MODE detection method
-Content-Language: en-US
-From: Stefan Sichler <stsichler@web.de>
-In-Reply-To: <20220310210853.28367-3-jorge.lopez2@hp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:4x8isZjVj8YkXK6kJ3F94DirEG7P+t806cIjUpUBnKU/dOrUizS
- N4XlvTHk8oTqdLnIVYXsaaWj8vpLL2+rh4yzN6ZI4EyIHZgyYLRx/2hMoJh0HXvYNUVXirg
- IyVeJYXnw0UGhdRhM+okiCznmJ7SJyeoMvPRMUKzBC4d2xc6JuuL0GhTwzTaXMjTAAai/NN
- 4xbCq0sN/AuiYOOfb1/ZA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Jrx8lZTIUBQ=;rmYZyG5pFqn9FfJS1QrJd2H5LDN
- mSO9ofXYyLA1Lx5I+O8gkrEm02P+ufkLY8/hqZzZyeKJwTSxHJ8uEj65EQkvPk7XSBUXy95fB
- pRT4qCyrhNP0jETn/KWrapvs9mCpnn21zVRhyMN8u8xxK88MHjGd2+PH5PoszqW0R6xYqN6rN
- 0pmBOyjTekL32OQRoBO71obNOo6PBPwK61qAuelWEfVnwjlEEkuWU06dWzZRWN0q9lrXABnlh
- SC3aC8I93egRY2NfBeqxcfuORR2s65hZ/ePQ08d5/2ZMlRymW3v+tEWgl+axwUe5szehqXmBo
- gXzw4ePSOmIhY4xmaCs55oho9MRFvGZtFpCxg7DPULFBd9S5v8bo3P7ZC6jYL0i5dK0hxtgn7
- YyTvz5HIqBVeeQ38eekJqpikI+iu0tU0WdFsBDQcAvrUG8qcD50YHxQNZXDWECys3hYrIl7XF
- APKfhW/YcjQfNYA4PhNAF4XNikiX73GsjWEIlYoqgMe5T2dhIPAX3Kk5z40k22EsbI5HzK3gz
- 5bZ1GHeL8H9GBM7abJhsnzmvz57RCiugP3/NTCp4w9Ht9/PfdyXcEOlxu3ypCXENhdb07OTjI
- 40bLcDe8DqW4tWVZt7Wm74n/uGKRJQfRpPgjwk+Y8R1n/fjnUAGmWmuQ1vbCnHx6x76oQEoPK
- pR8Oy5PVCG67bMPnMclWUa70YLFQn9PbPGkPndUwrqTiksRg+jGK3R7jysOuO0s553D37Z5vb
- +Yqb3t1GoRMfxhDDpXO4f35nce2l8LjDRosny32MEF4ZTvArp+WLYakTOIiC9/4jvSpkRPiYv
- boLoUmwkgQdExHNIs9E2iAw2I0YCkLdXXnIBy7JL3cIMs=
 
-
-Hi,
-this patch (which is now committed to the kernel as commit
-520ee4ea1cc60251a6e3c911cf0336278aa52634 since v5.18-rc1) unfortunately
-introduced a regression on my HP EliteBook 2760p Convertible:
-
-Tablet mode is no longer detected.
-
-It worked flawlessly before (when enable_tablet_mode_sw module param was
-set to 1).
-
-Debugging showed that on this device, two problems prevent the table
-mode detection from working:
-
-   - Chassis Type is reported as 0x10 (=3D Lunch Box)
-
-   - the query of HPWMI_SYSTEM_DEVICE_MODE does not report tablet state
-at all
-
-Note that the chassis type of this device (switch to tablet mode by
-screen *rotation*) actually differs from the newer HP models (switch to
-tablet mode by screen *flipping*).
-
-
-I suggest fixing this by re-adding the removed module parameter
-"enable_tablet_mode_sw", but change its behavior to work in the
-following way:
-
-   - when left at default -1 (auto): no change to current (new)
-implementation
-
-   - when set to 0: unconditionally disable table mode reporting at all
-
-   - when set to 1: ignore Chassis type and use old-skool
-hp_wmi_hw_state(HPWMI_TABLET_MASK) query method to determine tablet mode
-in addition to new hp_wmi_perform_query(HPWMI_SYSTEM_DEVICE_MODE...) metho=
+On Thu, 2024-08-08 at 17:01 -0400, Rodrigo Vivi wrote:
+> On Thu, Aug 08, 2024 at 12:49:58PM -0700, David E. Box wrote:
+> > Hi Mike
+> >=20
+> > On Thu, 2024-07-25 at 08:23 -0400, Michael J. Ruhl wrote:
+> > > DVSEC offsets are based on the endpoint BAR.=C2=A0 If an endpoint is
+> > > not available allow the offset information to be adjusted by the
+> > > parent driver.
+> >=20
+> > I know I wrote the original version of these patches but I no longer li=
+ke
+> > this
+> > solution. The s32 is too small for a 64 bit address and calculating the
+> > offset
+> > just to add it back in the PMT driver is unnecessary.
+>=20
+> yeap, 64bit sounds better indeed.
+>=20
+> > Instead, I sent you
+> > replacement patches for 5 and 6 that allow passing the telemetry region
+> > address
+> > directly to the PMT driver.
+>=20
+> Was these replacements sent straight to PMT list or to Mike so he can
+> adjust the series?
+>=20
+> I'm wondering if we should merge this through our drm-xe-next or through =
+PMT
+> channels. Thoughts?
+>=20
+> In any case, ack from my side to get the xe patches merged together throu=
+gh
+> PMT.
+>=20
+> But if someone prefer to get this merged through drm-xe-next, then we nee=
 d
+> to act fast and get this ready with the final patches and acked by you PM=
+T
+> maintainers,
+> in the next 2 weeks because our window under drm closes much earlier.
+>=20
+> Around 6.11-rc5 is when we close the drm window towards 6.12
+> and we are almost within 6.11-rc3.
+>=20
+> Thoughts?
 
+For me Patches 1-4 are good to go for BMG support. Patches 5 and 6 add DG2
+support but need some work. They should wait.
 
-I prepared a patch based on commit
-520ee4ea1cc60251a6e3c911cf0336278aa52634, and tested it successfully on
-my device.
-See below.
+David
 
-Regards,
-Stefan
-
-=2D-- hp-wmi.c.orig	2024-03-10 21:38:09.000000000 +0100
-+++ hp-wmi.c	2024-08-08 09:23:29.509113900 +0200
-@@ -35,6 +35,10 @@
-  MODULE_ALIAS("wmi:95F24279-4D7B-4334-9387-ACCDC67EF61C");
-  MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
-
-+static int enable_tablet_mode_sw =3D -1;
-+module_param(enable_tablet_mode_sw, int, 0444);
-+MODULE_PARM_DESC(enable_tablet_mode_sw, "Enable SW_TABLET_MODE
-reporting (-1=3Dauto, 0=3Dno, 1=3Dyes)");
-+
-  #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
-  #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
-  #define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
-@@ -428,6 +432,9 @@
-  	bool tablet_found;
-  	int ret;
-
-+	if (!enable_tablet_mode_sw)
-+		return -ENODEV;
-+
-  	chassis_type =3D dmi_get_system_info(DMI_CHASSIS_TYPE);
-  	if (!chassis_type)
-  		return -ENODEV;
-@@ -435,16 +442,24 @@
-  	tablet_found =3D match_string(tablet_chassis_types,
-  				    ARRAY_SIZE(tablet_chassis_types),
-  				    chassis_type) >=3D 0;
--	if (!tablet_found)
-+	if (!tablet_found && enable_tablet_mode_sw < 0 /*auto*/)
-  		return -ENODEV;
-
-  	ret =3D hp_wmi_perform_query(HPWMI_SYSTEM_DEVICE_MODE, HPWMI_READ,
-  				   system_device_mode, zero_if_sup(system_device_mode),
-  				   sizeof(system_device_mode));
--	if (ret < 0)
--		return ret;
-+	if (ret >=3D 0)
-+		ret =3D (system_device_mode[0] =3D=3D DEVICE_MODE_TABLET);
-+
-+	/* workaround for older convertibles */
-+	if (ret <=3D 0 && enable_tablet_mode_sw > 0)
-+	{
-+		ret =3D hp_wmi_read_int(HPWMI_HARDWARE_QUERY);
-+		if (!(ret < 0))
-+			ret =3D !!(ret & HPWMI_TABLET_MASK);
-+	}
-
--	return system_device_mode[0] =3D=3D DEVICE_MODE_TABLET;
-+	return ret;
-  }
-
-  static int omen_thermal_profile_set(int mode)
+>=20
+> Thanks,
+> Rodrigo.
+>=20
+> >=20
+> > David
+> >=20
+> > >=20
+> > > Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+> > > ---
+> > > =C2=A0drivers/platform/x86/intel/pmt/class.h=C2=A0=C2=A0=C2=A0=C2=A0 =
+| 1 +
+> > > =C2=A0drivers/platform/x86/intel/pmt/telemetry.c | 9 +++++++++
+> > > =C2=A0drivers/platform/x86/intel/vsec.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 | 1 +
+> > > =C2=A0include/linux/intel_vsec.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 3 +++
+> > > =C2=A04 files changed, 14 insertions(+)
+> > >=20
+> > > diff --git a/drivers/platform/x86/intel/pmt/class.h
+> > > b/drivers/platform/x86/intel/pmt/class.h
+> > > index a267ac964423..984cd40ee814 100644
+> > > --- a/drivers/platform/x86/intel/pmt/class.h
+> > > +++ b/drivers/platform/x86/intel/pmt/class.h
+> > > @@ -46,6 +46,7 @@ struct intel_pmt_entry {
+> > > =C2=A0	void __iomem		*base;
+> > > =C2=A0	struct pmt_callbacks	*cb;
+> > > =C2=A0	unsigned long		base_addr;
+> > > +	s32			base_adjust;
+> > > =C2=A0	size_t			size;
+> > > =C2=A0	u32			guid;
+> > > =C2=A0	int			devid;
+> > > diff --git a/drivers/platform/x86/intel/pmt/telemetry.c
+> > > b/drivers/platform/x86/intel/pmt/telemetry.c
+> > > index c9feac859e57..88e4f1315097 100644
+> > > --- a/drivers/platform/x86/intel/pmt/telemetry.c
+> > > +++ b/drivers/platform/x86/intel/pmt/telemetry.c
+> > > @@ -78,6 +78,13 @@ static int pmt_telem_header_decode(struct
+> > > intel_pmt_entry
+> > > *entry,
+> > > =C2=A0	header->access_type =3D TELEM_ACCESS(readl(disc_table));
+> > > =C2=A0	header->guid =3D readl(disc_table + TELEM_GUID_OFFSET);
+> > > =C2=A0	header->base_offset =3D readl(disc_table + TELEM_BASE_OFFSET);
+> > > +	if (entry->base_adjust) {
+> > > +		u32 new_base =3D header->base_offset + entry->base_adjust;
+> > > +
+> > > +		dev_dbg(dev, "Adjusting base offset from 0x%x to 0x%x\n",
+> > > +			header->base_offset, new_base);
+> > > +		header->base_offset =3D new_base;
+> > > +	}
+> > > =C2=A0
+> > > =C2=A0	/* Size is measured in DWORDS, but accessor returns bytes */
+> > > =C2=A0	header->size =3D TELEM_SIZE(readl(disc_table));
+> > > @@ -302,6 +309,8 @@ static int pmt_telem_probe(struct auxiliary_devic=
+e
+> > > *auxdev, const struct auxilia
+> > > =C2=A0	for (i =3D 0; i < intel_vsec_dev->num_resources; i++) {
+> > > =C2=A0		struct intel_pmt_entry *entry =3D &priv->entry[priv-
+> > > > num_entries];
+> > > =C2=A0
+> > > +		entry->base_adjust =3D intel_vsec_dev->base_adjust;
+> > > +
+> > > =C2=A0		mutex_lock(&ep_lock);
+> > > =C2=A0		ret =3D intel_pmt_dev_create(entry, &pmt_telem_ns,
+> > > intel_vsec_dev, i);
+> > > =C2=A0		mutex_unlock(&ep_lock);
+> > > diff --git a/drivers/platform/x86/intel/vsec.c
+> > > b/drivers/platform/x86/intel/vsec.c
+> > > index 7b5cc9993974..be079d62a7bc 100644
+> > > --- a/drivers/platform/x86/intel/vsec.c
+> > > +++ b/drivers/platform/x86/intel/vsec.c
+> > > @@ -212,6 +212,7 @@ static int intel_vsec_add_dev(struct pci_dev *pde=
+v,
+> > > struct
+> > > intel_vsec_header *he
+> > > =C2=A0	intel_vsec_dev->num_resources =3D header->num_entries;
+> > > =C2=A0	intel_vsec_dev->quirks =3D info->quirks;
+> > > =C2=A0	intel_vsec_dev->base_addr =3D info->base_addr;
+> > > +	intel_vsec_dev->base_adjust =3D info->base_adjust;
+> > > =C2=A0	intel_vsec_dev->priv_data =3D info->priv_data;
+> > > =C2=A0
+> > > =C2=A0	if (header->id =3D=3D VSEC_ID_SDSI)
+> > > diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
+> > > index 11ee185566c3..75d17fa10d05 100644
+> > > --- a/include/linux/intel_vsec.h
+> > > +++ b/include/linux/intel_vsec.h
+> > > @@ -88,6 +88,7 @@ struct pmt_callbacks {
+> > > =C2=A0 * @caps:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bitmask of PMT capabili=
+ties for the given headers
+> > > =C2=A0 * @quirks:=C2=A0=C2=A0=C2=A0 bitmask of VSEC device quirks
+> > > =C2=A0 * @base_addr: allow a base address to be specified (rather tha=
+n derived)
+> > > + * @base_adjust: allow adjustment to base offset information
+> > > =C2=A0 */
+> > > =C2=A0struct intel_vsec_platform_info {
+> > > =C2=A0	struct device *parent;
+> > > @@ -96,6 +97,7 @@ struct intel_vsec_platform_info {
+> > > =C2=A0	unsigned long caps;
+> > > =C2=A0	unsigned long quirks;
+> > > =C2=A0	u64 base_addr;
+> > > +	s32 base_adjust;
+> > > =C2=A0};
+> > > =C2=A0
+> > > =C2=A0/**
+> > > @@ -121,6 +123,7 @@ struct intel_vsec_device {
+> > > =C2=A0	size_t priv_data_size;
+> > > =C2=A0	unsigned long quirks;
+> > > =C2=A0	u64 base_addr;
+> > > +	s32 base_adjust;
+> > > =C2=A0};
+> > > =C2=A0
+> > > =C2=A0int intel_vsec_add_aux(struct pci_dev *pdev, struct device *par=
+ent,
+> >=20
 
