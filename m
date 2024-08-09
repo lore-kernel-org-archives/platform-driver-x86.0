@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4992168492;
-	Fri,  9 Aug 2024 20:46:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5070316A920;
+	Fri,  9 Aug 2024 20:46:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723236417; cv=none; b=kqC966Lkkdad9QLcbArLOlgQQo0McGSTsqOi3sjp6+FVM7bX44eb1ELPCOSutD9lUZ9iyanKzD6czpTenb9qZxBJGRX1NHI1Z+OG4VHW0+RGHX0gkLyuR0NJnS8pFLum+nQ79Mmiu8XHpKtwfRqojytxemdm1hER0BoxTKjxe1s=
+	t=1723236418; cv=none; b=Hp8UcxpkF9M31FuH8kS55XBEMY8fA+gzg9i9iZqWzNRbrmGF71Rbkm/bNaKLI4xxJaMal41lwILcpYfqklVjtkAdBrKG0CF5pzYDAFclg47aOAZBLIBIYMitED612b4tpOxnD+2AXJaEaU1hJD0wOiZAhmgsF3bgzqaoDo+YcU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723236417; c=relaxed/simple;
-	bh=/zE+BSZ/3HMRCl2lK2FYfTGl+XHZf+n0s5cMsL0zoDk=;
+	s=arc-20240116; t=1723236418; c=relaxed/simple;
+	bh=JNxVvv/EfzVtbKjbF0NpKVqcqD/2GnJB003zz+T1q5s=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RfBs3IvGN9/y3eubfKbiWh2ppt94Kf5NueEmjVvvDsvC8QnNNd76e7UGDHMUsAQRFk21OsqceH6c9fZ4XuhESoP+iguPh//OKrLJrLoYvUdSmBQ2jSjJeqWMQTfSrP72jZQztms+rIU3cCWLaLJRJmHkmutB4Hw1c9Pvs0tpE14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fIfsOsyY; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version; b=DoU/7AfYPBILBviyoclodeb4+wdy3/3DXfMk2XbmxppngsvF3eeRtxS6jayghnP8Obu7gGIpqSGFmikTfa6DfHIo7ugE0ozSqGePWl5bwhzMx7H0TpbQdfqR1DO77U3Q+8pZwvnUOaw3DxpEOgIF+HnMXL0H3NP1QiWCEG8VukU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dzbTR8/5; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fIfsOsyY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dzbTR8/5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723236415; x=1754772415;
+  t=1723236417; x=1754772417;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=/zE+BSZ/3HMRCl2lK2FYfTGl+XHZf+n0s5cMsL0zoDk=;
-  b=fIfsOsyYR0mjZXCp5q+6yziSZPqBEhyvzPev7i+rfPHxx7AweBulxgTH
-   G+Ats0Z3tiJmkCog31ECa4oT6uoYfGKeqmPb/Qv9RUMr80aHi0O73k+1z
-   kdkdff0s584OZpj9+5YztOttRb/Fm6Gq1kL8MfryLkA1t8h4yNczespWN
-   NeFf4PY+9b+V5C9BNqCtlx7b+qYNO9fiz2dbg4WzVfYppblpdYhRF0te1
-   drqBd3yT0D1HF9kTiGdGYZQC3uJJSM+m2KbLjZhmq2YUmlUUKJCttS83V
-   EMLhUm+ILUoLXj+cG0fsO3YF7j3SjjXJMXp22Wh1T2Gk/XNaLJC2JoWMv
-   Q==;
-X-CSE-ConnectionGUID: rqC4fBXTSvuoCn1Pv1xnNg==
-X-CSE-MsgGUID: 5E9ikdo3SA+odHRCqwc1uw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11159"; a="32819022"
+  bh=JNxVvv/EfzVtbKjbF0NpKVqcqD/2GnJB003zz+T1q5s=;
+  b=dzbTR8/5hUvT1kLtWYQzQzydT1YJ+JgXaRDTDahPGITJ9GgyIHe1Wpz+
+   rQC1WT2mrqUWfojoa2rv3DSnj9xZIojCe9jFG44nkiBHXzuwUq6YSXs7e
+   e5eiEAXV4wAVdAvabd4WCIBQWAUVllSvc1YVkUxvJBin9ioXH3qsojoWI
+   ODQlgPBmVbsn2jZ0oAm5Jm2kM6544eespsYFHQt764BHefpFXBNyB3dJn
+   ioe2jjtvpta7BZNeq3rsbgx6DA5AtwCU5Hu5VhR1ssZgC8g2CIiFrkAAL
+   BjlFb7s6B1RWiN80t4Wo1D9YkVxpbYoogXTNEDd1azot1wHP3dg48qoyr
+   g==;
+X-CSE-ConnectionGUID: nf/+TrSIQ8umYCOHtnZpjg==
+X-CSE-MsgGUID: BJzcLbu+TEqAL6eWxntJmQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11159"; a="32819030"
 X-IronPort-AV: E=Sophos;i="6.09,277,1716274800"; 
-   d="scan'208";a="32819022"
+   d="scan'208";a="32819030"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2024 13:46:54 -0700
-X-CSE-ConnectionGUID: 9gd1eR9xSOqRxlbReCCF1A==
-X-CSE-MsgGUID: bZJiWag4RjWaa2eyKEMkSQ==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2024 13:46:55 -0700
+X-CSE-ConnectionGUID: Fi5AWvU9TuakCPdJLyYfMw==
+X-CSE-MsgGUID: nPSWNRkTSDe7e++RJM6TJQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,277,1716274800"; 
-   d="scan'208";a="57650473"
+   d="scan'208";a="57650475"
 Received: from bjrankin-mobl3.amr.corp.intel.com (HELO xpardee-desk.hsd1.or.comcast.net) ([10.124.221.156])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2024 13:46:53 -0700
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2024 13:46:55 -0700
 From: Xi Pardee <xi.pardee@linux.intel.com>
 To: xi.pardee@linux.intel.com,
 	irenic.rajneesh@gmail.com,
@@ -51,9 +51,9 @@ To: xi.pardee@linux.intel.com,
 	ilpo.jarvinen@linux.intel.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/7] platform/x86:intel/pmc: Add support to get PMC information from SSRAM
-Date: Fri,  9 Aug 2024 13:46:32 -0700
-Message-ID: <20240809204648.1124545-4-xi.pardee@linux.intel.com>
+Subject: [PATCH 5/7] platform/x86:intel/pmt: Create inline version for telemetry functions
+Date: Fri,  9 Aug 2024 13:46:34 -0700
+Message-ID: <20240809204648.1124545-6-xi.pardee@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240809204648.1124545-1-xi.pardee@linux.intel.com>
 References: <20240809204648.1124545-1-xi.pardee@linux.intel.com>
@@ -65,124 +65,49 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-PWRMBASE address and devid for PMCs are available through API of
-Intel PMC SSRAM Telemetry driver. Add support to discover and achieve
-the information for each available PMC. Use PMC devid to find and
-assign the corresponding register map.
+Create inline versions of functions in Intel PMT Telemetry driver when
+config option is not set. Drivers that imports the INTEL_PMT_TELEMETRY
+namespace could compile when CONFIG_INTEL_PMT_TELEMETRY option is not set.
 
 Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
 ---
- drivers/platform/x86/intel/pmc/Kconfig |  1 +
- drivers/platform/x86/intel/pmc/core.c  | 64 ++++++++++++++++++++++++++
- drivers/platform/x86/intel/pmc/core.h  |  1 +
- 3 files changed, 66 insertions(+)
+ drivers/platform/x86/intel/pmt/telemetry.h | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel/pmc/Kconfig b/drivers/platform/x86/intel/pmc/Kconfig
-index fe33348cd7e2..56c6d3650bf7 100644
---- a/drivers/platform/x86/intel/pmc/Kconfig
-+++ b/drivers/platform/x86/intel/pmc/Kconfig
-@@ -7,6 +7,7 @@ config INTEL_PMC_CORE
- 	tristate "Intel PMC Core driver"
- 	depends on PCI
- 	depends on ACPI
-+	depends on INTEL_PMC_SSRAM_TELEMETRY || !INTEL_PMC_SSRAM_TELEMETRY
- 	depends on INTEL_PMT_TELEMETRY
- 	help
- 	  The Intel Platform Controller Hub for Intel Core SoCs provides access
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 5ecf55176734..634b4d939ed2 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -28,6 +28,7 @@
- #include <asm/tsc.h>
+diff --git a/drivers/platform/x86/intel/pmt/telemetry.h b/drivers/platform/x86/intel/pmt/telemetry.h
+index d45af5512b4e..6798a900042a 100644
+--- a/drivers/platform/x86/intel/pmt/telemetry.h
++++ b/drivers/platform/x86/intel/pmt/telemetry.h
+@@ -21,6 +21,7 @@ struct telem_endpoint_info {
+ 	struct telem_header	header;
+ };
  
- #include "core.h"
-+#include "ssram_telemetry.h"
- #include "../pmt/telemetry.h"
++#if IS_REACHABLE(CONFIG_INTEL_PMT_TELEMETRY)
+ /**
+  * pmt_telem_get_next_endpoint() - Get next device id for a telemetry endpoint
+  * @start:  starting devid to look from
+@@ -123,4 +124,20 @@ int pmt_telem_read(struct telem_endpoint *ep, u32 id, u64 *data, u32 count);
+  */
+ int pmt_telem_read32(struct telem_endpoint *ep, u32 id, u32 *data, u32 count);
  
- /* Maximum number of modes supported by platfoms that has low power mode capability */
-@@ -1146,6 +1147,69 @@ int get_primary_reg_base(struct pmc *pmc)
- 	return 0;
- }
- 
-+static const struct pmc_reg_map *pmc_core_find_regmap(struct pmc_info *list, u16 devid)
-+{
-+	for (; list->map; ++list)
-+		if (devid == list->devid)
-+			return list->map;
+-#endif
++#else /* !CONFIG_INTEL_PMT_TELEMETRY */
++static inline unsigned long pmt_telem_get_next_endpoint(unsigned long start) { return 0; }
++static inline struct telem_endpoint *pmt_telem_register_endpoint(int devid)
++{ return ERR_PTR(-ENODEV); }
++static inline void pmt_telem_unregister_endpoint(struct telem_endpoint *ep) {}
++static inline int pmt_telem_get_endpoint_info(int devid, struct telem_endpoint_info *info)
++{ return -ENODEV; }
++static inline struct telem_endpoint *pmt_telem_find_and_register_endpoint(struct pci_dev *pcidev,
++				u32 guid, u16 pos)
++{ return ERR_PTR(-ENODEV); }
++static inline int pmt_telem_read(struct telem_endpoint *ep, u32 id, u64 *data, u32 count)
++{ return -ENODEV; }
++static inline int pmt_telem_read32(struct telem_endpoint *ep, u32 id, u32 *data, u32 count)
++{ return -ENODEV; }
++#endif /* CONFIG_INTEL_PMT_TELEMETRY */
 +
-+	return NULL;
-+}
-+
-+static int pmc_core_ssram_pmc_add(struct pmc_dev *pmcdev, int pmc_idx)
-+{
-+	const struct pmc_reg_map *map;
-+	struct pmc_ssram_telemetry pmc_ssram_telemetry;
-+	struct pmc *pmc;
-+	int ret;
-+
-+	ret = pmc_ssram_telemetry_get_pmc_info(pmc_idx, &pmc_ssram_telemetry);
-+	if (ret)
-+		return ret;
-+
-+	map = pmc_core_find_regmap(pmcdev->regmap_list, pmc_ssram_telemetry.devid);
-+	if (!map)
-+		return -ENODEV;
-+
-+	pmc = pmcdev->pmcs[pmc_idx];
-+	/* Memory for primary PMC has been allocated in core.c */
-+	if (!pmc) {
-+		pmc = devm_kzalloc(&pmcdev->pdev->dev, sizeof(*pmc), GFP_KERNEL);
-+		if (!pmc)
-+			return -ENOMEM;
-+	}
-+
-+	pmc->map = map;
-+	pmc->base_addr = pmc_ssram_telemetry.base_addr;
-+	pmc->regbase = ioremap(pmc->base_addr, pmc->map->regmap_length);
-+
-+	if (!pmc->regbase) {
-+		devm_kfree(&pmcdev->pdev->dev, pmc);
-+		return -ENOMEM;
-+	}
-+
-+	pmcdev->pmcs[pmc_idx] = pmc;
-+
-+	return 0;
-+}
-+
-+int pmc_core_ssram_get_reg_base(struct pmc_dev *pmcdev)
-+{
-+	int ret;
-+
-+	if (!pmcdev->regmap_list)
-+		return -ENOENT;
-+
-+	ret = pmc_core_ssram_pmc_add(pmcdev, PMC_IDX_MAIN);
-+	if (ret)
-+		return ret;
-+
-+	pmc_core_ssram_pmc_add(pmcdev, PMC_IDX_IOE);
-+	pmc_core_ssram_pmc_add(pmcdev, PMC_IDX_PCH);
-+
-+	return 0;
-+}
-+
- void pmc_core_punit_pmt_init(struct pmc_dev *pmcdev, u32 guid)
- {
- 	struct telem_endpoint *ep;
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index 1e5726745394..890caf558307 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -591,6 +591,7 @@ int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value, int ignore);
- 
- int pmc_core_resume_common(struct pmc_dev *pmcdev);
- int get_primary_reg_base(struct pmc *pmc);
-+extern int pmc_core_ssram_get_reg_base(struct pmc_dev *pmcdev);
- extern void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev);
- extern void pmc_core_punit_pmt_init(struct pmc_dev *pmcdev, u32 guid);
- extern void pmc_core_set_device_d3(unsigned int device);
++#endif /* _TELEMETRY_H */
 -- 
 2.43.0
 
