@@ -1,65 +1,59 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36EB215854F
-	for <platform-driver-x86@vger.kernel.org>; Sat, 10 Aug 2024 12:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61EE84502F;
+	Sat, 10 Aug 2024 13:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723294775; cv=none; b=RzEfW4CCSi09Bo81YKdAyHHZ3rI4rKhjlbpf6aV89tK2qMRF8amBMAJwssWACk0tk47ppMQLmrrm69r7xXkfGoZl67X0237XRIlGffZ5KtiStuLBdr6dJY+ufX00pb/MAsPTE9B7V9Che+QRvklc92ulQfySMJ60XQiXrSUoFqs=
+	t=1723294826; cv=none; b=o11PtUwAjyI6SyCSXn+LB2/BBfVr0n31wV+0ttswB0AD+rBS6lXG9IsrcJzcw1G6bYs9YCiHJUIX7lFhF1d4TTd74ckVuRgJ4z05cvVThKT5nuQLBlQW3Oiw4/Xml406Oq91ZoMIzPAKmLjMG9mW5n/Fayc7GkbMCTMPPSVZ07Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723294775; c=relaxed/simple;
-	bh=4xMARRpxMyjYvn6zvTU8voFeT0apV/kJbjQgmxLGwnA=;
+	s=arc-20240116; t=1723294826; c=relaxed/simple;
+	bh=Y56S0sBS1zQqgakZZtSHCy7NQwyEusp9WFU6p/amnQI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rx6iW+bTne85R3GABrt9hm3KZ5ftP5kvgZ40IkyJrLbGfcfpqkJH85JfKEolLpZPMGTDg8HP3xVmalzEVSuxRCE90xUIMxbdXDIvdwTeafCYdKhcKq9KOB3VKQSBxBhUdWxghyrKTVuMiVzu8E0BcWcNANYcjBEJjcfzOxdr7DM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iydXJ78m; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=SNkbKk2tCBTREDN6PG6LA7ErZ4iwehFmimeyXc8ftZjjdWHg+WqKOR670kE7saCjn0oTbZFYMMmK4zmWFNuWU4DBgVt94jv/bBiWla4VVarvE6mYPy+/ztQRPZyDQEw1h4S5MXLqVMvXZOxIkSmELTmGyWtFFJr/2amrgUqlSEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VePmWphN; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iydXJ78m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723294772;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/SjvVUVvgAL2gERfNzI9KolPmlWkbo256Glc2DD5/Uk=;
-	b=iydXJ78m1PzNwTz6bL5kCNK7qB+NEUGbUy05tzb2dxGLXGfSXonEdX9dBlTGMGbqJrz+cf
-	VWWTEIaubNP7yt3ynDEsWFcpo16PtVVkdNsFWwhN1r9gLNgNtW9k74d1qsDJyaQrqR9tQS
-	itHWyXZGAlb6Ec6WR4qwdZO5osQPIX0=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-170-mrK-Tu_0Mkm1ZcAsc4z-Zg-1; Sat, 10 Aug 2024 08:59:30 -0400
-X-MC-Unique: mrK-Tu_0Mkm1ZcAsc4z-Zg-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-57c93227bbeso2471137a12.3
-        for <platform-driver-x86@vger.kernel.org>; Sat, 10 Aug 2024 05:59:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VePmWphN"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-368526b1333so2366050f8f.1;
+        Sat, 10 Aug 2024 06:00:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723294823; x=1723899623; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4hlcd1ZI65AoS9FRvn9neICSMrd89SuM+q6xLvHuMA8=;
+        b=VePmWphNkxfHV/gPw115IoFTK3jBEGDU/wg1+EzUx8BlNeCL3j4/6+6DHNYwEw/SQ8
+         QJFJWORyXJPSewfEm73QTlpMu3zFzXt7ON0ltZrfanuGWjLU/IKvvkCByZpCe6rLbd/F
+         gMLFSENH3sLaiJ/FB506Bb1EfySiGRQgb0BOQVwkuHDY1X67ObsLUNwHbTAMBJHZd0hV
+         8fJYSKOxjonq/NdDiy06g9ECSv3fNgtG67WQJ2FkNt1OXUxNjDDPyvSNBXWvS2o6/I/o
+         LIgF+vK+6PYSiXfi3nbVLHgASWcYtxQARVw7M2ns5j2KIaHkIY9N8FtR+4qp0rYlHX2a
+         jgtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723294769; x=1723899569;
+        d=1e100.net; s=20230601; t=1723294823; x=1723899623;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/SjvVUVvgAL2gERfNzI9KolPmlWkbo256Glc2DD5/Uk=;
-        b=o5uiWcQH1GdtiGKqvKiQi56wodVK/c6/ufqWS4Ekjj1hVJQaGjbRdNTty9af1pehYd
-         IR5WBodd5uoQTmbrrA4kdi9v2Lry03vwC96lbOndQSUlwFzpMFpr6BmRXMOr1pIuuWvu
-         v7G6YW4dl6QKvtQ3PVur9yNzzYD60B5Nkz1P/4dC0iMgYUnQfHRnKXSNyHWLFwPbB1xx
-         AxvIMnqZ/+19AXJxhqB7DkCj4d2oZo9bF+zQDzO9Fu+vus/XMtVQtiI58qvDKwLYFtBX
-         qkNT6TPBOWgsEKUpJZx74YeOzEax7wu107aWjQhzDM2CW0lOW2gFlVKuVdmukSLI0b4Y
-         vjAA==
-X-Forwarded-Encrypted: i=1; AJvYcCXE7eugl/Hfw6xzvV7coE7Bvdmk4C0tAHaGh1G3my8/9pSuXLZIEj6NPkbCfACIYFx0pWs64WFt5XgrQGg0j99gy/QiMkbml1pOX5udc/cP1mYZ8Q==
-X-Gm-Message-State: AOJu0YwFGOioI6HYOmtocCwwAdY4TXd848fAYrNAE/kOb1+46w++Xe8d
-	gKYMcTEk7XJMYEk3Z5GKzWP9Do9Fmz98sGMSbfEytI8rqh06LVHHb386OG9oqb+wQ9qCfmHnGgB
-	2rzXXj0OTUrvHiHG1cjCHyYAvi+U21zETHwAWRGzNDm3GWuy6ENtBrR4ELsy3A/klc6Uju2Y=
-X-Received: by 2002:a05:6402:354a:b0:5a1:7570:8914 with SMTP id 4fb4d7f45d1cf-5bd0a52c34emr3554851a12.11.1723294768989;
-        Sat, 10 Aug 2024 05:59:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFFvlVpIFdTgHoe/ixjssCg4o+lh9/VDy285qw2rcVy4mUhC1WJGJxA307Pi5qq3nlg/YZV1g==
-X-Received: by 2002:a05:6402:354a:b0:5a1:7570:8914 with SMTP id 4fb4d7f45d1cf-5bd0a52c34emr3554829a12.11.1723294768406;
-        Sat, 10 Aug 2024 05:59:28 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bd190ac8b9sm601641a12.23.2024.08.10.05.59.27
+        bh=4hlcd1ZI65AoS9FRvn9neICSMrd89SuM+q6xLvHuMA8=;
+        b=DXlktfMEW7eua0K217NaV8LvJIpd0imQf334H6C36TgDM4FXUtLKRsG3Q1XLQnIS9R
+         pJaxtxHAxOQvh/7ipSYi1Q/X/gXPFKHEOrwWx/LrLqbixIhEgkxSnjcPyzE023bfEAus
+         0tfhUcSh3Gyr/qGts8fSv7b2Xf5ihF/dHGGJQt07KNht4YZ7OlBhTo+3Z8b3AtwyjQ6S
+         jWYhPlwbQ8vK64mdoHiFWr0YwMiutAUqAAancPFvo/EbpjVSDYtmIODHO1xfHBldCB4d
+         gzWxLaJts9ytiGLJAhd0g6TRC0hQwN2o55ZZrAGEXlNA4XZLpnHWeDGF1438yDJSVfu9
+         7UXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUyDrOHbzYiSxj2rIIUes49k3DDcwFSfSkI1diQA2usLxNaiF44iiOla1uD3+fj5v9yvdI/KHmHKvj2@vger.kernel.org, AJvYcCWJLzk2FlgzUcB89vsJHgfSIcRVufIG6dnD5cZAwXaQjSfnYDpZ9T21Fi6T246iCdqCAcUSMegJdOOY+Cct@vger.kernel.org, AJvYcCX7Sp9HgNU8W22GmAWw/ouhjQvgjZ9KCb1qRNW9Ap2KyTa90SQwjLvytfzIQHv2QkIT4OS5DWGJPUvMcOVM@vger.kernel.org, AJvYcCXnHR7vKNfzoj16NDb74JJ+B2P9Lxm/kPO+d7ZU75bk22ElZoC9i56wjFMVMa3QHkICuLw3+uFd3d28FA==@vger.kernel.org, AJvYcCXpn29FgZHsQ7K41aMvQV94R9eX0BEsm/ahlnolN6XpXosI3a3+hKdrPOuL6Qf/g3jo6pstiyoT4YjyZUBLbI47Mood6g==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzu/7MxxBd8SoChnaYT2AO9MItOgBxEjgh+HtbsNYXebPeFJrnU
+	tV9O49BDtp0z6Xpb3vR0iuQgZbUGAM7QtyrcTEsAtsd+M0EubgLP
+X-Google-Smtp-Source: AGHT+IHrDBbl0TwMtFUoaVBCUF+rb5vjaVYOgyKQKJUvVhETJDXj15C3rNpG6T8goqOIyo6sHHzQKw==
+X-Received: by 2002:adf:fc4c:0:b0:363:ac4d:c44f with SMTP id ffacd0b85a97d-36d6907bcc5mr3253936f8f.17.1723294822404;
+        Sat, 10 Aug 2024 06:00:22 -0700 (PDT)
+Received: from ?IPV6:2a02:8071:b783:140:927c:82ba:d32d:99c1? ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36e4ebd35c8sm2234733f8f.107.2024.08.10.06.00.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 10 Aug 2024 05:59:27 -0700 (PDT)
-Message-ID: <e317fe7a-174c-4b21-abde-4452eee502be@redhat.com>
-Date: Sat, 10 Aug 2024 14:59:26 +0200
+        Sat, 10 Aug 2024 06:00:21 -0700 (PDT)
+Message-ID: <f3feeda2-81cf-44d6-8c9c-f489eebd8ebd@gmail.com>
+Date: Sat, 10 Aug 2024 15:00:21 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,144 +61,58 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Input: psmouse - add resync_on_resume dmi check
-To: Jonathan Denose <jdenose@chromium.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, jefferymiller@google.com,
- Jonathan Denose <jdenose@google.com>, Raul Rangel <rrangel@chromium.org>,
- linux-input@vger.kernel.org, Ike Panhc <ike.pan@canonical.com>,
- platform-driver-x86@vger.kernel.org
-References: <20231102075243.1.Idb37ff8043a29f607beab6440c32b9ae52525825@changeid>
- <ZcKs589qYxviC1J4@google.com>
- <CALNJtpV0KsOusPQeGv8bQ3jKy2sUj+k=mPHc172f+vMaTDYPfg@mail.gmail.com>
- <ZcZ2oG1Rls-oR593@google.com>
- <CALNJtpWNbSZdpxky9hTiSRsaGgLDUnM66QGEy213d3Lhra0hsw@mail.gmail.com>
- <ZeDLq9gPs5InBmdK@google.com>
- <CALNJtpWwhen2H9OT1-rZ4bt+huwXPOPz6qVDJ5g+emE1wRSLsw@mail.gmail.com>
- <ZeoHcH59Qsiv90b-@google.com>
- <b9f08bfb-4c1c-4d1b-9061-8a4b1013497d@redhat.com>
- <ZrEDOnxYzbJpC-pH@google.com>
- <CALNJtpUmb70zJnMfk4V6kTAhBEdzjZEch-CbRUojt26WmQFPvQ@mail.gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CALNJtpUmb70zJnMfk4V6kTAhBEdzjZEch-CbRUojt26WmQFPvQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v2 3/3] platform/surface: Add OF support
+To: Konrad Dybcio <konradybcio@gmail.com>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <quic_kdybcio@quicinc.com>
+References: <20240810-topic-sam-v2-0-8a8eb368a4f0@quicinc.com>
+ <20240810-topic-sam-v2-3-8a8eb368a4f0@quicinc.com>
+ <c4b23a43-7ff6-450a-bdc8-3348cc935145@gmail.com>
+ <d01c19a3-dc76-46f5-bca4-f5fdc7bd8798@gmail.com>
+Content-Language: en-US
+From: Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <d01c19a3-dc76-46f5-bca4-f5fdc7bd8798@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi Jonathan,
-
-On 8/9/24 5:35 PM, Jonathan Denose wrote:
-> Hello Hans and Dmitry,
+On 8/10/24 1:21 PM, Konrad Dybcio wrote:
+> On 10.08.2024 3:47 AM, Maximilian Luz wrote:
+>> On 8/10/24 3:28 AM, Konrad Dybcio wrote:
+>>> From: Konrad Dybcio <quic_kdybcio@quicinc.com>
+>>
+>> [...]
+>>
+>>> @@ -299,7 +302,7 @@ static const struct attribute_group ssam_sam_group = {
+>>>    };
+>>>      -/* -- ACPI based device setup. ---------------------------------------------- */
+>>> +/* -- Serial device setup. ------------------------------------------------- */
+>>
+>> One more :)
 > 
-> Yes, as Dmitry described that's the issue that I was seeing but it was
-> on a Lenovo N24 and not an Ideapad Z570.
-
-Ah ok, so the initial diagnosis that this was an issue with the
-ideapad-laptop module turned out to not be true ?
-
-And the a69ce592cbe0 ("Input: elantech - fix touchpad state on resume
-for Lenovo N24") commit which Dmitry mentiones has resolved this,
-correct ?
-
-IOW no changes to the ideapad-laptop module are necessary ?
-
-Regards,
-
-Hans
-
-
-
-
+> Right, cursor at 80 != 80-long :P
 > 
-> On Mon, Aug 5, 2024 at 11:52 AM Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
->>
->> Hi Hans,
->>
->> On Mon, Aug 05, 2024 at 04:18:57PM +0200, Hans de Goede wrote:
->>> Hi Dmitry,
->>>
->>> On 3/7/24 7:29 PM, Dmitry Torokhov wrote:
->>>> On Mon, Mar 04, 2024 at 11:17:31AM -0600, Jonathan Denose wrote:
->>>>> I disabled the ideapad driver by rebuilding the kernel without the
->>>>> ideapad_laptop module. That does fix the suspend/resume issue!
->>>>>
->>>>> Attached are the logs. Is there a way to make this permanent?
->>>>>
->>>>> On Thu, Feb 29, 2024 at 12:23 PM Dmitry Torokhov
->>>>> <dmitry.torokhov@gmail.com> wrote:
->>>>>>
->>>>>> On Mon, Feb 12, 2024 at 02:57:08PM -0600, Jonathan Denose wrote:
->>>>>> ...
->>>>>>> [   50.241235] ideapad_acpi VPC2004:00: PM: calling acpi_subsys_resume+0x0/0x5d @ 4492, parent: PNP0C09:00
->>>>>>> [   50.242055] snd_hda_intel 0000:00:0e.0: PM: pci_pm_resume+0x0/0xed returned 0 after 13511 usecs
->>>>>>> [   50.242120] snd_hda_codec_realtek hdaudioC0D0: PM: calling hda_codec_pm_resume+0x0/0x19 [snd_hda_codec] @ 4518, parent: 0000:00:0e.0
->>>>>>> [   50.247406] i8042: [49434] a8 -> i8042 (command)
->>>>>>> [   50.247468] ideapad_acpi VPC2004:00: PM: acpi_subsys_resume+0x0/0x5d returned 0 after 6220 usecs
->>>>>> ...
->>>>>>> [   50.247883] i8042 kbd 00:01: PM: calling pnp_bus_resume+0x0/0x9d @ 4492, parent: pnp0
->>>>>>> [   50.247894] i8042 kbd 00:01: PM: pnp_bus_resume+0x0/0x9d returned 0 after 0 usecs
->>>>>>> [   50.247906] i8042 aux 00:02: PM: calling pnp_bus_resume+0x0/0x9d @ 4492, parent: pnp0
->>>>>>> [   50.247916] i8042 aux 00:02: PM: pnp_bus_resume+0x0/0x9d returned 0 after 0 usecs
->>>>>> ...
->>>>>>> [   50.248301] i8042 i8042: PM: calling platform_pm_resume+0x0/0x41 @ 4492, parent: platform
->>>>>>> [   50.248377] i8042: [49434] 55 <- i8042 (flush, kbd)
->>>>>>> [   50.248407] i8042: [49435] aa -> i8042 (command)
->>>>>>> [   50.248601] i8042: [49435] 00 <- i8042 (return)
->>>>>>> [   50.248604] i8042: [49435] i8042 controller selftest: 0x0 != 0x55
->>>>>>
->>>>>> So here I see the ideapad-laptop driver trying to access i8042 before it
->>>>>> even starts resuming. I wonder, does it help if you disable
->>>>>> (temporarily) the ideapad driver?
->>>>
->>>> OK, so I tried to cook up a patch that would allow ideapad-laptop driver
->>>> to establish device link with i8042 so that the resume will be processed
->>>> after i8042 resumes, but the longer I think about it, the more I think
->>>> that ideapad driver should not be messing with the touchpad state
->>>> directly. The disable event may come up in a middle of the touchpad
->>>> resume transition, or when we decide to change touchpad mode for one
->>>> reason or another. It also does not respect inhibit/uninhibit controls
->>>> for input devices. I think that the proper way for ideapad driver to
->>>> handle this is to only send KEY_TOUCHPAD_OFF/KEY_TOUCHPAD_ON to
->>>> userspace and let userspace deal with toggling touchpad input (via
->>>> inhibit or by other means).
->>>>
->>>> CC-ing ideapad maintainers for their thoughts.
->>>
->>> Sorry for the very slow reply.
->>>
->>> The interesting thing is that sometime ago I already removed the i8042_command()
->>> command being done on most models now the ideapad driver already only
->>> sends KEY_TOUCHPAD_OFF/KEY_TOUCHPAD_ON except on the ideapad Z570 for
->>> which the i8042_command() call was initially added.
->>>
->>> I agree that this should probably just be removed.
->>>
->>> Jonathan, I presume that you are seeing this on an Ideapad Z570 ?
->>> (since that is the only model where this is still done by default).
->>>
->>> Since the i8042_command() call has already been disabled on all other
->>> ideapad models I agree that it would be best to just remove it entirely
->>> relying on userspace filtering out touchpad events after receiving
->>> a KEY_TOUCHPAD_OFF.
->>>
->>> I have submitted a patch to do just that:
->>>
->>> https://lore.kernel.org/platform-driver-x86/20240805141608.170844-1-hdegoede@redhat.com/
->>>
->>> Jonathan can you give this patch a try (with a kernel with
->>> the ideapad-laptop module re-enabled) and then confirm that this
->>> fixes things ?
->>
->> IIRC Jonathan observed the touchpad being stuck on resume even after
->> disabling ideapad-laptop module. So we ended up with a69ce592cbe0
->> ("Input: elantech - fix touchpad state on resume for Lenovo N24") that
->> sends disable and then enable command to the mouse/touchpad on resume
->> which makes touchpad work after resume.
->>
->> Thanks.
->>
->> --
->> Dmitry
+> [...]
 > 
+>> Are these two changes required? Surface 3 power and SAN should AFAIK be
+>> fairly "legacy" and ACPI-only drivers, which I don't expect to be used
+>> on any of the new ARM devices (apart from there probably being other
+>> changes required to make them work with DT).
+>>
+>> I think with that addressed, it should be fine. I'll give it a spin
+>> tomorrow and send in my r-b and t-b (assuming everything goes well).
+> 
+> No, I went overly defensive here. Will drop for v3 next week.
 
+Perfect, Thank you!
+
+Best regards,
+Max
