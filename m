@@ -1,102 +1,118 @@
-Received: from fout5-smtp.messagingengine.com (fout5-smtp.messagingengine.com [103.168.172.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E66C8E9;
-	Sun, 11 Aug 2024 10:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA319441F;
+	Sun, 11 Aug 2024 12:46:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723372846; cv=none; b=nEc53SrQGxaz5IbZaF4vh7xPHcaqxVxEiqX2mWI1OTz0Fey1Jy7KjgrSNTGUr+ifHZRcuPPsgCTJqIyQoDQvbQZVk7DvKWiL2298y2Qcg3kGe9bVdJujI745sDZ2IQxNIwytE5IayEpVEr9MqHGhbWwoZ83OaWQzd7GQFxDOdIE=
+	t=1723380417; cv=none; b=hW7mgtbWpqDmW+2LSaB3eErOABn8QrTG+257HOqgjzNGuBMw1g+ha6M0va2OzVRA2ubCFRR34JBcB41gw/XZ4MIXk1CvBg9wgyImifhn9pacLKKlIuR9hZsHNoUQBPaqkAcwas7NDNm4PvvSmsOuANkOQzQ7uSCc62ceJKt272o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723372846; c=relaxed/simple;
-	bh=5BY5GBS2JPVxYDq5Dfnz+Ns5AObLEPgvnHb6asXZvek=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=J+MhFP7I42tnCWyQx64FfZcH2yhcQwcIpWQ/9ZcMDSgUkgW/6cYA8BVGU2iv04R50MJ/Rd7fwbEDivMZGIojMClvW6+ZznGrqQnlhepFOE79dWKrRAh1F/xWz3G0yyEBf4ha0Fq+RoOmrbiQA4+SddvMXSvYv7EiLnMhSRdHEFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=YL49fnmc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=N7BvG/K/; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1723380417; c=relaxed/simple;
+	bh=UOTW0S88uks4HP7UMdz48xRDXQIW94fYPNKBpBibqO0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BnhYPtZybwCBLIiNK3lENgy8TeBLbI6NGWMNazZ3mRnUTaMrSzEPTnWLlyZhSjKCotNv3D2uwQ4FxNPeVuJ490ArYrB98X8WJx8l+uAX4Te4dG8zt3Tpx3bHil9ZxKkrP1zZUCveKhoVWG6+8CHphxr3cch1trL38E+hRPTuqF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k+cw2Oay; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="YL49fnmc";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="N7BvG/K/"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfout.nyi.internal (Postfix) with ESMTP id DAE2C138FCA5;
-	Sun, 11 Aug 2024 06:40:43 -0400 (EDT)
-Received: from imap41 ([10.202.2.91])
-  by compute3.internal (MEProxy); Sun, 11 Aug 2024 06:40:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1723372843;
-	 x=1723459243; bh=u7zYXiocmfhkndQ+rVNAKKdxHzSFNUhXi4QyB95dfnw=; b=
-	YL49fnmcM75sLpdvqAPTNnI8fngCgQAkcmN/e24ipcKKGtp8hQ8glU2kEAMKlHrm
-	/5eMwqi1sjTBsN/Je3MIetysbvpZIRwuFwcI7wfj2lcepYVocLIUo7Oy4g0dertl
-	ae5Yoy6HaRk/GOfjxBJNZBzC/FJv0GoMTAJeFaU5hUIo3gH/x6emVNfWcyCIFLnr
-	9eTNk5c6JxP3ota1+N5prQri/+jHB4oPm4vYstOzVzZ/6KEBGc/ObKIkkWqHe0qe
-	v8hcGJcPv5vjUl+MDKLHCCl+R6wxMHsvdrB40ngCjX34oPuLGMa2jYm5OHQpeXlx
-	zsvvrDoL1NR6dEw7M1fo9g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1723372843; x=
-	1723459243; bh=u7zYXiocmfhkndQ+rVNAKKdxHzSFNUhXi4QyB95dfnw=; b=N
-	7BvG/K/NnYnML2F/fidHljt/cPV9YQ06wK621Xrkpt8jOlV7+zWYLE8jhNDaCcGe
-	eFKy3Y1a7/y29tk/Rploiw9KdhO5h6TMyb+9LFqUbHGL2lhwk+OmXZ82HvGbyNZ4
-	u6WcpAtfqp01/6VMXKCBBYJBVhfc+iVOK0oDVwItOiEJqa2hgcI9mR4vx7k3Ddwf
-	pNy/yDpO0fBabj+v9xz0XqmlVSgr0mgjBu08WmXLPBAHDYscroxVOnKxAO83JODZ
-	V6twppIe9h6C4sTHRFhGXCAkv0CIVTC+q9txr0C0L0aQB/snCsOIFleQF6mgdsR4
-	nr5q+tV8skqbbQVR0Ln7A==
-X-ME-Sender: <xms:K5W4ZlqItvxzP-wq4RZwtkGuxdOg-k4Vi8be5e3lkBazGs1dmJZsAw>
-    <xme:K5W4ZnoGJ5_gjUxQ-aHPKK083kHSpDPFS5TpR5uI_UutWvGyBFB1jrVmfwvtQyDBw
-    w5Z5lMRF8KcNR3KLNo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrleekgdefvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
-    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
-    hsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredttden
-    ucfhrhhomhepfdfnuhhkvgculfhonhgvshdfuceolhhukhgvsehljhhonhgvshdruggvvh
-    eqnecuggftrfgrthhtvghrnhepgfeiffehtdfghfettdeiuddtfeekvdejgfevhefhffev
-    tdfhjeelgeefffekvdevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvhdpnhgspghrtghpthhtohephedp
-    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheptghorhgvnhhtihhnrdgthhgrrhihse
-    hgmhgrihhlrdgtohhmpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhu
-    gidrihhnthgvlhdrtghomhdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrd
-    gtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvg
-    hrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:K5W4ZiO2R4_QSZVhbht20MgRM-T91S_BHzk3r85-P-RuuBmVXGS7YQ>
-    <xmx:K5W4Zg5rU_atzO5rK7P5rBvtZoADO-lr7-AlxK8Fb31et_zbBjahvg>
-    <xmx:K5W4Zk7t3uTf57Xmjhya8rx9NZiYraMxOhH_PYHRy3Oday1dFcAO3w>
-    <xmx:K5W4Zoi67aQ9f8LRp6aol3VDeIB8Ok6QjttI3Km2T7N5Ns0q9Sla9Q>
-    <xmx:K5W4ZinpzzwC0FwQ9wl8wUPQ-wypy1TWIIdCNOKh0HpjHsT_0YFhTreo>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id AC19A2340081; Sun, 11 Aug 2024 06:40:43 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k+cw2Oay"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-368440b073bso2012278f8f.0;
+        Sun, 11 Aug 2024 05:46:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723380414; x=1723985214; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4o2TWP+Vhvp3od6SuhOiNbj//yyX7aMfSacjM3aiopk=;
+        b=k+cw2OayiJacm6HrolHLLO1crtccC/JnvAuyd80RYpj9FYGOrML2YUMuP7CUH2lnLF
+         dDGkpzv7yfmZswAxygddXR8GJ1uhHgz2TAGqsV57k857vS2MztqbcmnPD9RsQf1UiWp6
+         um787sjhx+0h9HYjj7UEoSQ3D1YiSTNELVAkfLI27m4oyP7xXsEz+6zDiczWNPKJnXV6
+         gdhpTrsDiUqO7WBFp6VxyPenFeflgqN1gZ5NbjFhMtrb1qd269Y4ftnRhwk0xC4bBSbH
+         RFZ+iI1o9PXqU98JhciIE0hDXdkpKfM1dtFIiM1RCQnTnPyfwhRxLOwavTd+MRS1fbOH
+         ogog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723380414; x=1723985214;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4o2TWP+Vhvp3od6SuhOiNbj//yyX7aMfSacjM3aiopk=;
+        b=ueOWwvUJvF6h4u2xzIZv5kwERI2D6DLhbC5dxvffDgOZM5ij4Gn2Sm1PxYkknry4mF
+         /ArtTz3hreQ2HHLrdQdInMJpWaFdIV5jH36pD9i+hhmaUizvvHWsJQ9qu2Kt8LEkqnXp
+         9eyhXpphY6EpBhNxNejuS4bFNguqIIfchjs48guSXz2W76h/+Lti4lNBnDperMswcaJW
+         7aycsB5bY4Y+Gwp1FoIj5S9dLiGrJot+rrCP44vLnDuDG2D8cU1IcxBUPMGrRv2XXI8n
+         KxZieIX9ivVjKj4M/dYeZQWyBpoPZr7pY1bfkR5GF09aHNA8ic354OhCiGDOoPRVjG8+
+         W3aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZUiOkrgHTCs83Dv38OMD9M3eZNAhc1sWbzJa/dQolLOFD/DxC44jEc4EVe5KjRqrXoZ63l2cmkQ1R3IvuJ0cGeLooKi30RRZcftqf8WEE8dhxVuyrHPlwjvVrLExL+HIyDRTfVsgfrZAZkxw5mDAV3Q==
+X-Gm-Message-State: AOJu0YyqNN9B8oQGfT06U5yI4Cc2cT761X1e9pywRisQADq14gv6YUVm
+	VZtoROz8nJiOyLdFjN9RWge2pudBJukddM4dpJh7ItqQyo7lOzONkzQvZw==
+X-Google-Smtp-Source: AGHT+IFbiubdkYVo25iGBEa2LO/vfULgoIQ5BI7E2vfc3y99ro3sx/UK7xuDahjUGDns1xQmvwxZfg==
+X-Received: by 2002:adf:e98a:0:b0:368:3ee9:e119 with SMTP id ffacd0b85a97d-36d282060acmr8116035f8f.29.1723380413840;
+        Sun, 11 Aug 2024 05:46:53 -0700 (PDT)
+Received: from xws.fritz.box ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4290c72d4c9sm153452945e9.8.2024.08.11.05.46.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 Aug 2024 05:46:53 -0700 (PDT)
+From: Maximilian Luz <luzmaximilian@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Maximilian Luz <luzmaximilian@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/surface: aggregator: Fix warning when controller is destroyed in probe
+Date: Sun, 11 Aug 2024 14:46:44 +0200
+Message-ID: <20240811124645.246016-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sun, 11 Aug 2024 22:40:23 +1200
-From: "Luke Jones" <luke@ljones.dev>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- "Hans de Goede" <hdegoede@redhat.com>, corentin.chary@gmail.com
-Message-Id: <e4dced3b-004d-44f8-b8cd-64a4a53965bc@app.fastmail.com>
-In-Reply-To: <bb056dee-508c-6186-324a-d45bbd1c2306@linux.intel.com>
-References: <20240806020747.365042-1-luke@ljones.dev>
- <20240806020747.365042-3-luke@ljones.dev>
- <bb056dee-508c-6186-324a-d45bbd1c2306@linux.intel.com>
-Subject: Re: [PATCH v2 2/6] platform/x86: asus-armoury: move existing tunings to
- asus-armoury module
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-> > +{
-> > + return sysfs_emit(buf, "integer\n");
-> 
-> Lukas Wunner might have done something to make emitting constant strings 
-> easier, please check out if that's already in mainline.
+There is a small window in ssam_serial_hub_probe() where the controller
+is initialized but has not been started yet. Specifically, between
+ssam_controller_init() and ssam_controller_start(). Any failure in this
+window, for example caused by a failure of serdev_device_open(),
+currently results in an incorrect warning being emitted.
 
-Found it, DEVICE_STRING_ATTR_RO is what you mean?
+In particular, any failure in this window results in the controller
+being destroyed via ssam_controller_destroy(). This function checks the
+state of the controller and, in an attempt to validate that the
+controller has been cleanly shut down before we try and deallocate any
+resources, emits a warning if that state is not SSAM_CONTROLLER_STOPPED.
+
+However, since we have only just initialized the controller and have not
+yet started it, its state is SSAM_CONTROLLER_INITIALIZED. Note that this
+is the only point at which the controller has this state, as it will
+change after we start the controller with ssam_controller_start() and
+never revert back. Further, at this point no communication has taken
+place and the sender and receiver threads have not been started yet (and
+we may not even have an open serdev device either).
+
+Therefore, it is perfectly safe to call ssam_controller_destroy() with a
+state of SSAM_CONTROLLER_INITIALIZED. This, however, means that the
+warning currently being emitted is incorrect. Fix it by extending the
+check.
+
+Fixes: c167b9c7e3d6 ("platform/surface: Add Surface Aggregator subsystem")
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
+ drivers/platform/surface/aggregator/controller.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/surface/aggregator/controller.c b/drivers/platform/surface/aggregator/controller.c
+index 7fc602e01487..7e89f547999b 100644
+--- a/drivers/platform/surface/aggregator/controller.c
++++ b/drivers/platform/surface/aggregator/controller.c
+@@ -1354,7 +1354,8 @@ void ssam_controller_destroy(struct ssam_controller *ctrl)
+ 	if (ctrl->state == SSAM_CONTROLLER_UNINITIALIZED)
+ 		return;
+ 
+-	WARN_ON(ctrl->state != SSAM_CONTROLLER_STOPPED);
++	WARN_ON(ctrl->state != SSAM_CONTROLLER_STOPPED &&
++		ctrl->state != SSAM_CONTROLLER_INITIALIZED);
+ 
+ 	/*
+ 	 * Note: New events could still have been received after the previous
+-- 
+2.46.0
+
