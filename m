@@ -1,119 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2DA22083
-	for <platform-driver-x86@vger.kernel.org>; Sat, 10 Aug 2024 20:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C944689;
+	Sun, 11 Aug 2024 00:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723321991; cv=none; b=LHBf2WxtEW9opmVcNhsWJTxcCXCCLG8MtQoaOfwdkgr1gEjTUzikFThepDTeN38O5K8w+YHHynh7j8NNALgK5Jwt48tGyAgtET+9azzBdPYOFQ6uEEm7DpbjX+R0vzEPC5PyxbXxKKdZVTsXR8iCA2naoGxKQpk++eDMxza0DWU=
+	t=1723336002; cv=none; b=mf+i2vJeP4RgbpDtWdExtLHSwu85eZ/63EoNH9LIHABKSihyD4s9J9kFqbN6ViahDNXXD4AOAOsWfVkfGBsHA43vvco13S0LS4FTYCn0gA7v/puQ+3pfiw1JTg+qV4FBT5ZX63f3mnTPrbkcF5Ualx0WYupo1xk1JhZB7Ow55RM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723321991; c=relaxed/simple;
-	bh=FWW8CpWVuRDAR0VKb9rer+nqcQ0z7CH6PWzB+Akbgwc=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lvAwzc3JNSh47TMX/6ll0rFtCWbmX3g51D08iy6/IMRKi9wVisDEPBvq+e4afjnk4qHZC6jEuqQmN2ZdrP+LrrE9Oft9KkM0v2vGcaRqkCJ6BEkVnB04zl8wtFnzeGexP4+L52BJstN2Q3QM8lRGWEZKeMca+ezkYkmr8sV4Mh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4Orv83+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723336002; c=relaxed/simple;
+	bh=4F4WrJKMMj/mzhKGOf6beBPkIcpH11FmNTcDNr7IdQs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X0/a1P8PLW4JFplNI3LWnDkgsq/hofnmCA1ssFB1tULO/YgcF7QgoJLCdpA5L9eCdBeseLPBvalxnMCBbMweJDbficwQ2d9CHO5D5+5YyyeAZSzi+RFJu8R1gNPxmEb/79t6sD00dOdivNgVBSATQeSxRoLtl9MruTAWe0BODIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G217z+xc; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4Orv83+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0439AC32781
-	for <platform-driver-x86@vger.kernel.org>; Sat, 10 Aug 2024 20:33:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723321991;
-	bh=FWW8CpWVuRDAR0VKb9rer+nqcQ0z7CH6PWzB+Akbgwc=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=U4Orv83+8yFAYL2iPvtGlR1xKURELqF0+USHbt2KRca7eb6O7h5SulC5smPiP6Pxy
-	 EacXiLiTXtcZYKYqrXymcXOWExEnb/bX8gehgjE9bnI/Cp42gYimcJq8wV9uBhuDm6
-	 p3BaQPiBLeCQmfSrnwtPlWMNDFK6TDDluvPdiEkbfJ5kw0kR3sDN2pbY1xDs7E6aHj
-	 T02RpqFsTEONGJA3gjg3CjxU1XjQD6wmN9Hkq6CaIG0yYRwNCI7ASBacJI78lnT39e
-	 Y1NXb150RPbIIuMmXJv1G9YUZYw8mwW3bFX4Xjrmva/bAKLfOnMiMIFhBjTVa3yEG0
-	 Tmpg+r78mzLzg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id F2259C53B50; Sat, 10 Aug 2024 20:33:10 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date: Sat, 10 Aug 2024 20:33:08 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: pauk.denis@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-oKDBtjaWS3@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G217z+xc"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52f01ec08d6so4431799e87.2;
+        Sat, 10 Aug 2024 17:26:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723335998; x=1723940798; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KzucCDEgUPc/knhsH0R6bnlBW2fZ6eS9QbdJKQ4MQ6s=;
+        b=G217z+xcQNw7qwAkFkmllxykzqShurDi6LxEOazzg+i2Fp1giacG38njru7EldJZef
+         ylIBNuIRYnA0NWPEGtmYszro0g1OYvIjwntoyGA0BLMLrP/uyB+W7XdxJ33OSoQtulV/
+         talu8FX0/m32HXPFS15ChdjkRl0tSZqg4I9EEEkHKdPj4J1QNI2CQFPR58PtMEmiPqRl
+         7usLQhB5bPYZM6bcRYxy8hp9XCqbmjvtzIMQa3roVnCL613cLmHctM6jf/YI/bHvrNKs
+         ECfwubXoNK9qFb15/2Rll5YWMkUEvGQEs9zowl2Thllz3miG5G/7Lh25hB5u/pqOePr3
+         jwJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723335998; x=1723940798;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KzucCDEgUPc/knhsH0R6bnlBW2fZ6eS9QbdJKQ4MQ6s=;
+        b=WME7VtE3FMJLFc+CqxavFJF8670/4haeK+hLhy0RhOcE5yGxgbnttTiNPoWkS6lsNq
+         PbOzuenovUVQA9xA8wf1PyqGNlzLB/XdeX5ULoqTja09/MJJgdua6ktJF6MX6M0itz/v
+         4sBkcmIUEaLUPqEElu4WvnGvsF0OXKipyhOc2Dx+SDDfLfC79x5tKSu/nnNKpXshpGFy
+         jfGU64UvY2g4Zf1DZsYnxTvdzHxFiKl9VS/y4NikGkbqOTGu/ZCeCuchOpGYdrFauz+2
+         vAM1Zce6ot/wiPoD/hvuLnTYQwLsoD0mKrzTt2mV7f2bsi3P24cFX/vV5c6VsZQaG4Tb
+         g9AQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV043k7jjFdkyenwyZU5gecFPCoOo+flWbKp7RgnKRECBVkyNhC55mcT3s3RzbUtV3ud7oxFipn0Yq3XmDkWzxMjuIJw6y5GcwcN5TMBbvXdbkwh7lUbxax3nZS5q88LtbU/TqYFYUJRmocpBlqe8kvTmW/UwLPfAesVAZ18aD1Rf9HtaVL6Q4TaX4reI75CFh2wQgFFkL5cDvtMO2ULP9JTCn7c5alubwdERqZiVHpC31fHPJbof18X2I5mDxQ9H3daL5/r8sp
+X-Gm-Message-State: AOJu0YzR+Ropoev0mdrhrxjkuWOp5kaPPQC5FXLk+LTpLc2OYFEtk7XA
+	X5A0Ktwq6/MiEK3xpA1Nn2mOfoqe12bZxLnMkkLV9yKH6Jr1C3v4
+X-Google-Smtp-Source: AGHT+IHGUDxTBJfpaHljrBfVqf8VHFwyZebTa6fbP6EnQs4QbnrVNUPOXxqYqfTpTIhUbCCRTtnLjw==
+X-Received: by 2002:a05:6512:3ca4:b0:52c:d905:9645 with SMTP id 2adb3069b0e04-530ee998c1fmr4413909e87.13.1723335997946;
+        Sat, 10 Aug 2024 17:26:37 -0700 (PDT)
+Received: from ?IPV6:2a02:8071:b783:140:927c:82ba:d32d:99c1? ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a80bb2136a3sm108263966b.172.2024.08.10.17.26.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 10 Aug 2024 17:26:37 -0700 (PDT)
+Message-ID: <40f3a81a-b5b9-459d-8231-25ba3dc71b68@gmail.com>
+Date: Sun, 11 Aug 2024 02:26:35 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] platform/surface: Add OF support
+To: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <quic_kdybcio@quicinc.com>
+References: <20240810-topic-sam-v2-0-8a8eb368a4f0@quicinc.com>
+ <20240810-topic-sam-v2-3-8a8eb368a4f0@quicinc.com>
+Content-Language: en-US
+From: Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <20240810-topic-sam-v2-3-8a8eb368a4f0@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+On 8/10/24 3:28 AM, Konrad Dybcio wrote:
+> From: Konrad Dybcio <quic_kdybcio@quicinc.com>
 
---- Comment #338 from Denis Pauk (pauk.denis@gmail.com) ---
-(In reply to Attila from comment #336)
-> Hello,
->=20
-> I've this board :=20
->=20
-> # grep -e ''  -n /sys/class/dmi/id/board_{name,vendor}
-> /sys/class/dmi/id/board_name:1:G15CF
-> /sys/class/dmi/id/board_vendor:1:ASUSTeK COMPUTER INC.
->=20
-> # dmidecode -t baseboard
-> Base Board Information
->       Manufacturer: ASUSTeK COMPUTER INC.
->       Product Name: G15CF
->=20
-> Can you please add my board to the supported motherboard list?
->=20
-> BTW, I added "acpi_enforce_resources=3Dlax" to GRUB_CMDLINE_LINUX and aft=
-er
-> modprobe nct6775 I can see a new section in the output of sensors command
-> with the following details:
-> nct6798-isa-0290
-> Adapter: ISA adapter
->=20
-> output of dmesg:
-> [ 3469.171468] nct6775: Found NCT6798D or compatible chip at 0x2e:0x290
-> [ 3469.171488] ACPI Warning: SystemIO range
-> 0x0000000000000295-0x0000000000000296 conflicts with OpRegion
-> 0x0000000000000290-0x0000000000000299 (\RMTW.SHWM) (20230628/utaddress-20=
-4)
-> [ 3469.171504] ACPI Warning: SystemIO range
-> 0x0000000000000295-0x0000000000000296 conflicts with OpRegion
-> 0x0000000000000290-0x0000000000000299 (\HWM) (20230628/utaddress-204)
-> [ 3469.171513] ACPI: OSL: Resource conflict; ACPI support missing from
-> driver?
-> [ 3469.171515] ACPI: OSL: Resource conflict: System may be unstable or
-> behave erratically
->=20
-> Thanks!
+[...]
 
-Could you please attach dump of bios by `acpidump -b -n DSDT`?=20
+> @@ -346,7 +359,7 @@ static const struct software_node *ssam_node_group_sp9[] = {
+>   
+>   /* -- SSAM platform/meta-hub driver. ---------------------------------------- */
+>   
+> -static const struct acpi_device_id ssam_platform_hub_match[] = {
+> +static const struct acpi_device_id ssam_platform_hub_acpi_match[] = {
+>   	/* Surface Pro 4, 5, and 6 (OMBR < 0x10) */
+>   	{ "MSHW0081", (unsigned long)ssam_node_group_gen5 },
+>   
+> @@ -402,16 +415,39 @@ static const struct acpi_device_id ssam_platform_hub_match[] = {
+>   };
+>   MODULE_DEVICE_TABLE(acpi, ssam_platform_hub_match);
 
-Or could please also try to build a kernel with add your board to
-asus_msi_boards list in
-https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git/tr=
-ee/drivers/hwmon/nct6775-platform.c?h=3Dhwmon-next#n1264
-if its possible?
+This should be
 
---=20
-You may reply to this email to add a comment.
+     MODULE_DEVICE_TABLE(acpi, ssam_platform_hub_acpi_match);
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+as it has been renamed above. In addition to this, the
+surface_aggregator_registry module currently does not auto-load. So we
+also need to add
+
+     MODULE_ALIAS("platform:surface_aggregator_platform_hub");
+
+somewhere. With that fixed, it builds and runs fine on the SPX.
+
+Best regards,
+Max
