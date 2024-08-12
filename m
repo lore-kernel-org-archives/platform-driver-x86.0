@@ -1,183 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268CD17DE16
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 14:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D586117E44F;
+	Mon, 12 Aug 2024 14:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723473178; cv=none; b=S3QcUa7IGJzZp0C2NUBxVZdH9SgZlvnHdGRgDY83ioPhj+luwYexTiERtWo5uytg6Jj83QkoUJAXBEU9u+OlX+lnk0W69DitQOSzvMf8SiVNdrWgQSYUdrAmH7H4IT/TZREIQzu1+sobyuXoWxJfn/1ze0FYQ05799DkR2ON5q8=
+	t=1723473479; cv=none; b=HGnt4j6Y5KtDv8JHfLR0uEuPYfd4X1/itoW2+oR/YOTrLtdjeavc5rOiUc6c1YSrwxbZp3QH4w4qobXDwdpnKxAEHAKvH8zwTuFkiBPNqh2yIP+C8UPoYUQ515tGZgtuQsCY/y5iIP5wUp1RZoUdl7YgRas/PE8/+A9DHMg3bGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723473178; c=relaxed/simple;
-	bh=PlanaOpMb2SRMqKdq5D8pste4LaJ8DlH07fq1hh+P0c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cuxQFeJrh2MqKt6fOZBKDDWf5P0VeshWWsrUnLGHi7h1hIsWHS5q8NxqQiS2pHEzthrdfhb/CPS5MbadATa2BokuZmkswP/snSjTWLWJQipEvDFj74lrb9exW7TYfcreaqHn1IrN4tdetgMYfi1ulahnrp5SGZkoG9c9UG/8Zds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MewLXGph; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1723473479; c=relaxed/simple;
+	bh=vYpmm6IWxvTWAp4hWXbZ/e1bWFCm6Gcb9VoeSsEQaVg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EazT5QfOq9Z0IXfQYubwZIDsAjQto4XVTYZmPlaJX4ZLsLAT1tYiELjPKjtww2oVony7e5eVU+WRkySu/Y8EEIOIC3ghWG7R7cBZoZd0GKb7D5exeTmn4eav1thVWc1Juh8VuIT1fwxSr7NT/5ZG9ViHeB6FfnozXTp+MXBAYs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZK09HQGH; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MewLXGph"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723473174;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7z/bDQPBfzLS8uye3nnDjLzeFXDO1SAM9YfCaOIrT0Q=;
-	b=MewLXGphcZryGmeDoEBkgVsuMXTjsh3jbkyLYM8SnefSKgcFLxfHHXCw9CrhZJwmwhk+Ih
-	r520kk39HW3eKbeD/BQghgX/iOOgkVawfkcTZTnK5mSKX2D+mvAe5QTNujsDi4x+PYwQDM
-	hIPSh1J1Tbrs8yMlvtFlMzv9W1HOEwM=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-691-58tEhwpIOdyCcmSuxD7m6Q-1; Mon, 12 Aug 2024 10:32:52 -0400
-X-MC-Unique: 58tEhwpIOdyCcmSuxD7m6Q-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a80c12dede1so251283766b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 07:32:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZK09HQGH"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4280ca0791bso32872795e9.1;
+        Mon, 12 Aug 2024 07:37:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723473476; x=1724078276; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BW9gtUGuTkGyTfXs/SLkCzXlPT74jyhYIpSzLHEFQhY=;
+        b=ZK09HQGHpdf4vd3Wf1UMt4M+fGLbRvI6N3DpbTdzXboHsTkBUVspw3P1P3mi272cZM
+         tLfUHqCYw1OsaZ5WrQfpVrmEE0Ta2qdyZqAR6uKrDOhYqBqmU+SajcRjyYdoqhsQ1Uj4
+         HVweOBdpJ1dQsJFKstJOMxMx48j4/5aOfDD+aznvZFFVHYrTWN1QV2u5LtYhwnyt7rBj
+         qSqg9H/q03HAdI6EMn1w8ox2QsS4iRBJttLjf6Ya+Wgh03pTl/aDAP1Z6Ni9zMmNF4NK
+         TdbL4mjT0+LBPwFLNZ40uUZjjpEKiGbUADyj5mPIB6NeW+ZTPlyHjqwK9Kqjm3z3+ooF
+         jG7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723473172; x=1724077972;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7z/bDQPBfzLS8uye3nnDjLzeFXDO1SAM9YfCaOIrT0Q=;
-        b=DTY7UfmG2uaNNtJOm1aM7NCYU5D/m0/k+9BJt7Ow55FRVTtq6VrD/vuY4HpPoi/Xo8
-         ArUdvs4BwKbncTrYMxCvvtVo2YMt7KuJ5H6REL43eabMXeNUpT50Mp8NQJMUhVHVDAIF
-         odC+WNjLnB2jf32VUnEV7DyiBm451PH6ofUvqcloNvbbWf+yMqEtHHTPoPuqgLWq5Y87
-         ylVzkC7nHaqtLQlu6C84Kyzbi4pevl7nG3JZ9WcP0UI7JFIekc84kgty6/Eaf2CoY7jT
-         /sVcu7HA3pvrA21PGdNSmfsQXDfdoRdnpla/BXNnbNMy3M7YU6+aPyTkLDA8ItMt6kPT
-         dnbw==
-X-Gm-Message-State: AOJu0YzfcgPo4bqhQhKBFMRnOgfP23OGG8iuyogEemiEu1eWZO3bnbs9
-	+9kaCcXp5HaMQ9sY18k2M6zbVdC0p9T6smVoAPshbajJOUOcL9twPlDjVthzf8uLMVSgA2sZdjm
-	QocqJgTxn+LQx8psO3pJEz0Sq5s9glFUkbFpdFLsSV/xiWvgI1QXQchNeKihrKtUKupcOoTg=
-X-Received: by 2002:a17:907:3ea8:b0:a7d:89ac:9539 with SMTP id a640c23a62f3a-a80edb9ac13mr34389366b.7.1723473171647;
-        Mon, 12 Aug 2024 07:32:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFVPdC1ynHcq2VxBs3JRJDWgWf0x+tZptDP+tcUHNCYqDT7Ou4szzQPY6Sh5vDhFLMnAX5j+g==
-X-Received: by 2002:a17:907:3ea8:b0:a7d:89ac:9539 with SMTP id a640c23a62f3a-a80edb9ac13mr34386666b.7.1723473171131;
-        Mon, 12 Aug 2024 07:32:51 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a80bb0e54a9sm233418366b.81.2024.08.12.07.32.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Aug 2024 07:32:50 -0700 (PDT)
-Message-ID: <d0eefb6e-d3ef-4bae-9b8d-07c71e0d8bce@redhat.com>
-Date: Mon, 12 Aug 2024 16:32:49 +0200
+        d=1e100.net; s=20230601; t=1723473476; x=1724078276;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BW9gtUGuTkGyTfXs/SLkCzXlPT74jyhYIpSzLHEFQhY=;
+        b=eAbLKRc6RPI3d45/zB1wvZY3Pko7qYOr6EDeJonAx5dwGzyvyN6V4iRcQLdzfOFawC
+         bIZ/XnSiDtuzZbHYuxwNavifNfBVgrc9OQQ2dmRvArvefALUALLSdwmSWs/6OzwVgiai
+         Kteq/gYVVBFmPP3tshqHnSOrJIp+sHfdE6QUjQrhJSO8lU2RvMkB2NbsWT6X+VeiSc8D
+         atI4A8EW8bVKvKnlcdh5uEc2UHMjpY9gaB0gF4ypqYht7z6FCLMxYaOCvLuA4vPOuuzc
+         h1pDLVPJgdAruaPNPAG8Pk31oYtPrxlhbJgF59HNrxHpbHQVrUWJyeqkwpu36l9vPfp3
+         bdRg==
+X-Forwarded-Encrypted: i=1; AJvYcCWJFsH2rxkOp2LgXBMieJCHLZQ5jXof1G7CP4xjl5j0lxYvxQCz0Ty61eocnv9N0sZZA+tP4YLKc92XwoFTVMplH630D2NZ242Fv6kUPf2QtGxhnIpdAMR01L3AJOqZBhisuO6oXfJ+rOifJUCKyrwfawLXIrQwnESOz1mUh/Jx6OeDOs7/bwgT
+X-Gm-Message-State: AOJu0YxfSNF3PgQFOCtFY3NFsIZvt9nlpmGsxpzSf3BHBA2RWVIoeylF
+	L0Gbpq+js0tdD5LLIXhGLc8k8cEFV4khlK4HqO8DAexNYEL3i8U+
+X-Google-Smtp-Source: AGHT+IF1X0MFC6vec6Yd5Z1mZzxtjCnVZihagDGlip6NRPmK99S8zh1AUd1KtzdLy/AdO4ckdhZgPg==
+X-Received: by 2002:a05:600c:468a:b0:427:ab29:30cf with SMTP id 5b1f17b1804b1-429d47f4acdmr5367505e9.4.1723473475811;
+        Mon, 12 Aug 2024 07:37:55 -0700 (PDT)
+Received: from localhost ([185.220.101.106])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36e4cfefe71sm7757884f8f.62.2024.08.12.07.37.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Aug 2024 07:37:55 -0700 (PDT)
+Date: Mon, 12 Aug 2024 17:37:54 +0300
+From: Maxim Mikityanskiy <maxtram95@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ike Panhc <ike.pan@canonical.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+	Jonathan Denose <jdenose@chromium.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: Stop calling
+ i8042_command()
+Message-ID: <ZroaE5Q6OdGe6ewz@mail.gmail.com>
+References: <20240805141608.170844-1-hdegoede@redhat.com>
+ <ZrDwF919M0YZTqde@mail.gmail.com>
+ <5c5120a7-4739-4d92-a5b8-9b9c60edc3b7@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: ISST: Simplify isst_misc_reg() and
- isst_misc_unreg()
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- ilpo.jarvinen@linux.intel.com, andriy.shevchenko@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240731184256.1852840-1-srinivas.pandruvada@linux.intel.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240731184256.1852840-1-srinivas.pandruvada@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5c5120a7-4739-4d92-a5b8-9b9c60edc3b7@redhat.com>
 
-Hi,
-
-On 7/31/24 8:42 PM, Srinivas Pandruvada wrote:
-> After commit '1630dc626c87 ("platform/x86: ISST: Add model specific
-> loading for common module")' isst_misc_reg() and isst_misc_unreg() can be
-> simplified. Since these functions are only called during module_init()
-> and module_exit() respectively, there is no contention while calling
-> misc_register()/misc_deregister or isst_if_cpu_info_init()/
-> isst_if_cpu_info_exit().
+On Mon, 05 Aug 2024 at 17:45:19 +0200, Hans de Goede wrote:
+> On 8/5/24 5:30 PM, Maxim Mikityanskiy wrote:
+> > That means, userspace is not filtering out events upon receiving
+> > KEY_TOUCHPAD_OFF. If we wanted to rely on that, we would need to send
+> > KEY_TOUCHPAD_TOGGLE from the driver, but we actually can't, because Z570
+> > is weird. It maintains the touchpad state in firmware to light up the
+> > status LED, but the firmware doesn't do the actual touchpad disablement.
+> > 
+> > That is, if we use TOGGLE, the LED will get out of sync. If we use
+> > ON/OFF, the touchpad won't be disabled, unless we do it in the kernel.
 > 
-> Hence remove mutex and reference counting.
+> Ack.
 > 
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-> ---
->  .../intel/speed_select_if/isst_if_common.c    | 42 +++++--------------
->  1 file changed, 11 insertions(+), 31 deletions(-)
+> So how about this instead:
 > 
-> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> index 3065f149e721..febfd5eeceb4 100644
-> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> @@ -651,10 +651,6 @@ static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index 1ace711f7442..b7fa06f793cb 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -1574,7 +1574,7 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
+>  	 * touchpad off and on. We send KEY_TOUCHPAD_OFF and
+>  	 * KEY_TOUCHPAD_ON to not to get out of sync with LED
+>  	 */
+> -	if (priv->features.ctrl_ps2_aux_port)
+> +	if (send_events && priv->features.ctrl_ps2_aux_port)
+>  		i8042_command(&param, value ? I8042_CMD_AUX_ENABLE : I8042_CMD_AUX_DISABLE);
 >  
->  /* Lock to prevent module registration when already opened by user space */
->  static DEFINE_MUTEX(punit_misc_dev_open_lock);
-> -/* Lock to allow one shared misc device for all ISST interfaces */
-> -static DEFINE_MUTEX(punit_misc_dev_reg_lock);
-> -static int misc_usage_count;
-> -static int misc_device_ret;
->  static int misc_device_open;
->  
->  static int isst_if_open(struct inode *inode, struct file *file)
-> @@ -720,39 +716,23 @@ static struct miscdevice isst_if_char_driver = {
->  
->  static int isst_misc_reg(void)
->  {
-> -	mutex_lock(&punit_misc_dev_reg_lock);
-> -	if (misc_device_ret)
-> -		goto unlock_exit;
-> -
-> -	if (!misc_usage_count) {
-> -		misc_device_ret = isst_if_cpu_info_init();
-> -		if (misc_device_ret)
-> -			goto unlock_exit;
-> -
-> -		misc_device_ret = misc_register(&isst_if_char_driver);
-> -		if (misc_device_ret) {
-> -			isst_if_cpu_info_exit();
-> -			goto unlock_exit;
-> -		}
-> -	}
-> -	misc_usage_count++;
-> +	int ret;
->  
-> -unlock_exit:
-> -	mutex_unlock(&punit_misc_dev_reg_lock);
-> +	ret = isst_if_cpu_info_init();
-> +	if (ret)
-> +		return ret;
->  
-> -	return misc_device_ret;
-> +	ret = misc_register(&isst_if_char_driver);
-> +	if (ret)
-> +		isst_if_cpu_info_exit();
-> +
-> +	return ret;
->  }
->  
->  static void isst_misc_unreg(void)
->  {
-> -	mutex_lock(&punit_misc_dev_reg_lock);
-> -	if (misc_usage_count)
-> -		misc_usage_count--;
-> -	if (!misc_usage_count && !misc_device_ret) {
-> -		misc_deregister(&isst_if_char_driver);
-> -		isst_if_cpu_info_exit();
-> -	}
-> -	mutex_unlock(&punit_misc_dev_reg_lock);
-> +	misc_deregister(&isst_if_char_driver);
-> +	isst_if_cpu_info_exit();
->  }
->  
->  /**
+>  	/*
+> 
+> Maxmime, if you still have your Z570 can you check if the touchpad state after a suspend/resume
+> correctly reflects the state before suspend/resume in both touchpad on / off states ?
 
+*Maxim
+
+Just a heads-up, my Z570 now belongs to a family member, we'll test what
+you asked, but right now there is a btrfs corruption on that laptop that
+we need to fix first, it interferes with kernel compilation =/
+
+Sorry for the delay.
