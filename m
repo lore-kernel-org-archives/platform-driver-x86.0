@@ -1,66 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23AB617A937
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 12:33:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124E117B4F6
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 12:48:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723466009; cv=none; b=NHZ8cREbDLt4v/ScmApxw+NXb3jxcxH2l7euhxXtZ7WuDypTcRwFrLg8JnfwDY/rK+aKlz8hYwXuKUwq3HWddo2pwsfUxLeT3KoVjlIcx0lON/HSCZ+DTo6jxz/YBk4+hPCHFRkz6G6SDm+BMujbCuzjebRwO47FCE7BKXfivRc=
+	t=1723466906; cv=none; b=D8ijGqjYBdy0L9DfCDcUzh2ol34isv6lIk/caiRTGOr/pNaCmRRV8vUMGe1j730/Hjs00XK76Zn6FTGIa0wtjLH1BReUieS5CzD+htai0PLCRojugDhSP0gL1hNqXGy/J349XZvrTGJDKwNV36G250pQRVcP/sCqrTubba9jml8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723466009; c=relaxed/simple;
-	bh=KAqfy5HDt0ryO88WQmcdYBqTAZ3eYIAO9amDJdHCra8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KbEYVc77I6ObXNvKzismlMmeIDKs0DsKELqYvVAFFSL1xw3gAbT/6inwncPG4BR+CSvsX9WQGT6typApbEezozQhTNfMWfWnD7EwiF0UbMvKK6ah/ImOaAQ8KqvGR83ENEa7kmiVG3tUWEYat05qVLIFYC8kHtZ3QUnakMV65Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WSwsNR3n; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1723466906; c=relaxed/simple;
+	bh=8bo8xpp/6vJwbHGAAvw+1pSQFYWA+0dCEVeKlYLVTqM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Wwss0Gqahb/+AavIIK9tVVgkFHFQxoDZ4+UZy1gwhhcPfG011Z0OkH/bQFbqOsyjOnq+VR84LJ4AcZIVaIgh1KiInLZFhALSZMWj0YPDCQueo/amyHxtdqprYNK8u5uEbjdSCgtdg6WXSNihPXrc4uul9KYbRVblvDdBqWNPp34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MUttT0Q4; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WSwsNR3n"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MUttT0Q4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723466007;
+	s=mimecast20190719; t=1723466903;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7bjWHOBJug9GKLxX1y4GcvC+tzINB11lDnF7fldSjCs=;
-	b=WSwsNR3nEkZMksunfi7T+zTe0ubo2iYbFtAXin/ZS9nHn6puaFwh6q833azgaP8lcTL4Lj
-	WISWLdGPYdmCNZ8is7SOPNqNuHQcJajarj4grQog88JgHI/so3Dzy2p6EW5YRHQnAecwc+
-	OzREw2yOumJjN/kBfAWwGd9XhheO85c=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=8d8haasheAsFVThGjhEYRKDinSaCWYMQj8ax5D0rh3A=;
+	b=MUttT0Q4v1O5iXT+JkaIS6IjaQ0KpMwofgoNw/ERGC56KddeM+uxF8mjXQUJxL4aNZqQZR
+	kpczCF5UsMVo8vyKhRSZt3WSG/U3EfW7tQ7FCOb6iRdGhJ4cSaRbevNi2tRI1F8CHX1iWK
+	qubJh61bgj+K0sWlUqgULZ3cb2juLWE=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-593-XBbaSCSxMly1n14-mnYavQ-1; Mon, 12 Aug 2024 08:33:26 -0400
-X-MC-Unique: XBbaSCSxMly1n14-mnYavQ-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5a37b858388so3706200a12.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 05:33:25 -0700 (PDT)
+ us-mta-163-3dRWg2eRM0SopIiwm8BoJQ-1; Mon, 12 Aug 2024 08:48:22 -0400
+X-MC-Unique: 3dRWg2eRM0SopIiwm8BoJQ-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-52f0258afecso5271441e87.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 05:48:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723466005; x=1724070805;
+        d=1e100.net; s=20230601; t=1723466901; x=1724071701;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7bjWHOBJug9GKLxX1y4GcvC+tzINB11lDnF7fldSjCs=;
-        b=BnhfW0JnCO9xWYCE2YT1LOxjH7s2qUnjoC8F+3zWfwP6BowsHA8o0XSUcv61Pmv+h2
-         NzBCqPmxRQ/wXcbl2QgIEEKFIT/iPib/C+NFvCBN3h08RZPiu2ANHsn5LzN/lv3PgXTF
-         QPYY7S998/iFjuLimAniLEQcwLPSR8yWCHXgeUjhrGtb8VGOYvAA8kflWVuBiMTHkukM
-         CZUpMRnVOjDSUxOtAo7yTL842r8uv/L/WTHQDERgoxPoFKvu6V7eJEB/e6b7mouV+5pj
-         W1al0BoKVA9Hp81dDKMpUrU8iqvoczbHPXrtOoqty7V1nW2BaI7Xdubsf/kWvcg5P6Nx
-         mg1A==
-X-Forwarded-Encrypted: i=1; AJvYcCUjYPdPtDGK6hOySEJsdFIiC4//hEmdXwUrygXqFPMgbquDpwyxpcvCAwK7gorzt7aj53uImmp+xwmgCWQl82vp08oDPO2KfkCbVzdNQjqeysfy7A==
-X-Gm-Message-State: AOJu0YzgEq0bVS2phAAQqU1mdLeSLF3TwekD67KB6NSw0a+yQ5uDEfFm
-	dDmIm3kEDjXru0o/om5H6uFDtPU0KdgkORcI3KJRpXy7XAarF/IDSEBUnK/ht/oG86AASJ1843+
-	JVdNKffAh117hFXN1SRBFjezkXYNb2TjRkT9nwPygJ3smBXTYg8x35WD8Cw1te0x17heKuaPdQW
-	wcs4c=
-X-Received: by 2002:a50:8dc7:0:b0:595:71c7:39dd with SMTP id 4fb4d7f45d1cf-5bd44c79eafmr68951a12.34.1723466004542;
-        Mon, 12 Aug 2024 05:33:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF0kaEU81tGKxd+wuCFMSCCh/i9KV9sH3JP6NIbph1WALywiQJfqnm2uCmvavLD/x3AKWkgnA==
-X-Received: by 2002:a50:8dc7:0:b0:595:71c7:39dd with SMTP id 4fb4d7f45d1cf-5bd44c79eafmr68930a12.34.1723466003982;
-        Mon, 12 Aug 2024 05:33:23 -0700 (PDT)
+        bh=8d8haasheAsFVThGjhEYRKDinSaCWYMQj8ax5D0rh3A=;
+        b=JT4PBpsxEKeH4EP1i64ojW4ZEaBXHBnGcZ4D0kXP0FNVkUvo1e8CaPiplsJ+yuadhm
+         4BIhxZYRYA+BPs9zGXHavNWHqtUFcV0RRbCziGQoseEz9AvBEFQ0KAKuVpmJo/XgWZYh
+         6zzZBh+6G2M2YvbZPoI3kRK+biqbH4bJX6ctVADXkYpoPc6cgh29PxnQ6l2AfQ2ZBtdh
+         1N3/fNq/Q8QuguWHQrCI+fgUSIPMUlRY/MeAuoK/pnqRkw9AAvB90eK5XgP1zYgj3rNh
+         bkf9Fscs3HqqK7ys1mqaB3JbLD/el55ifXRrw7DeokRSfvqLT+l4AYyll7js6Vh57VzW
+         5piA==
+X-Forwarded-Encrypted: i=1; AJvYcCWqkmWV2/CCouplUsOQpLwXpm1jwD3bDbcuF5qdOoKhmW7CxmsLE/93vJGntTrerUDqJDpAHr6gnN22U2MJ9jZQm9zsIRlDILgerVJYdeJVpnGGUw==
+X-Gm-Message-State: AOJu0YyYmvVdYac6RaZp9LoV/lzi4I+zQcSQL73KKCWOgBNLVj1ajnbc
+	qv3ynsY03FvVNtDe8w6nVFfga5TBevIZhrf0acWDZlU8k4t46jdmhfGqwKXnMmwr11j+6py4TYc
+	MY0r+WiW0ehIR3Sn+Jjl9XfcM+GwlFr4CKLKCfQ2kYWCWG0azEy+yQE+yrB59rj0a7dZzmLw=
+X-Received: by 2002:a05:6512:3e0c:b0:52c:e07d:229c with SMTP id 2adb3069b0e04-5321365d338mr7197e87.22.1723466900840;
+        Mon, 12 Aug 2024 05:48:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHejkkgyA0azZvDT/mX1/XOZpJaecJH2R29rXxfhob07pjKW9TXVcI9hlTBx8S42862SP10xQ==
+X-Received: by 2002:a05:6512:3e0c:b0:52c:e07d:229c with SMTP id 2adb3069b0e04-5321365d338mr7163e87.22.1723466899980;
+        Mon, 12 Aug 2024 05:48:19 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bd187f4fe2sm2086869a12.9.2024.08.12.05.33.23
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a80bb243c3dsm229614366b.225.2024.08.12.05.48.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Aug 2024 05:33:23 -0700 (PDT)
-Message-ID: <187b6058-c41a-4767-af47-ba35451f2049@redhat.com>
-Date: Mon, 12 Aug 2024 14:33:23 +0200
+        Mon, 12 Aug 2024 05:48:19 -0700 (PDT)
+Message-ID: <7bf12e39-8956-4cd3-a90a-871291d84370@redhat.com>
+Date: Mon, 12 Aug 2024 14:48:18 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -68,37 +67,101 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Add Thinkpad Edge E531 fan
- support
-To: Matthias Fetzer <kontakt@matthias-fetzer.de>, hmh@hmh.eng.br,
- ilpo.jarvinen@linux.intel.com, ibm-acpi-devel@lists.sourceforge.net,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240714165054.2261305-1-kontakt@matthias-fetzer.de>
+Subject: Re: [PATCH v4 2/2] HP: wmi: Add documentation for the LED API naming
+ scheme
+To: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>,
+ ilpo.jarvinen@linux.intel.com, Pavel Machek <pavel@ucw.cz>,
+ Lee Jones <lee@kernel.org>
+Cc: mustafa.eskieksi@gmail.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Linux LED Subsystem <linux-leds@vger.kernel.org>
+References: <20240719100011.16656-1-carlosmiguelferreira.2003@gmail.com>
+ <20240719100011.16656-3-carlosmiguelferreira.2003@gmail.com>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240714165054.2261305-1-kontakt@matthias-fetzer.de>
+In-Reply-To: <20240719100011.16656-3-carlosmiguelferreira.2003@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Matthias,
+Hi all,
 
-On 7/14/24 6:50 PM, Matthias Fetzer wrote:
-> Fan control on the E531 is done using the ACPI methods FANG and
-> FANW. The correct parameters and register values were found by
-> analyzing EC firmware as well as DSDT. This has been tested on
-> my Thinkpad Edge E531 (6885CTO, BIOS HEET52WW 1.33).
++Cc Pavel, Lee, linux-leds for review by the linux LED subsystem folks.
+
+Pavel, Lee there are 2 pdx86 drivers for control of zoned (3/4 zones)
+RGB backlit laptop keyboards pending:
+
+https://lore.kernel.org/platform-driver-x86/20240719100011.16656-2-carlosmiguelferreira.2003@gmail.com/
+https://lore.kernel.org/platform-driver-x86/20240806205001.191551-2-mustafa.eskieksi@gmail.com/
+
+both of these will use 1 multicolor LED class device per keyboard zone,
+using the naming convention documented in this patch.
+
+It would be good if we can get feedback or an ack from you for this
+userspace API before merging these drivers.
+
+Note the first part of the patch documents the already existing naming
+scheme for single zone (RGB or mono color) backlight keyboards. This
+scheme is already used by many drivers and by userspace consumers like
+upower. So this is just documenting existing userspace API which so far
+was not documented.
+
+
+Carlos, Thank you for writing this patch.
+
+For v2 please change the patch subject to:
+
+"Documentation: leds: leds-class: Add documentation for keyboard backlight LED device names"
+
+and this should also be merged through the LED subsystem tree, so for v2
+please send this to Pavel + Lee with linux-leds + platform-driver-x86
+in the Cc.
+
+
+On 7/19/24 11:59 AM, Carlos Ferreira wrote:
+> This patch adds documentation for the LED API class-device naming
+> scheme practice.
+>
+> Signed-off-by: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
+> ---
+>  Documentation/leds/leds-class.rst | 40 +++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
 > 
-> Signed-off-by: Matthias Fetzer <kontakt@matthias-fetzer.de>
+> diff --git a/Documentation/leds/leds-class.rst b/Documentation/leds/leds-class.rst
+> index 5db620ed27aa..8e74a436ca9b 100644
+> --- a/Documentation/leds/leds-class.rst
+> +++ b/Documentation/leds/leds-class.rst
+> @@ -116,6 +116,46 @@ above leaves scope for further attributes should they be needed. If sections
+>  of the name don't apply, just leave that section blank.
+>  
+>  
+> +Keyboard backlight control
+> +==========================
+> +
+> +For backlit keyboards with a single brightness / color settings a
+> +single (multicolor) LED device should be used to allow userspace
+> +to change the backlight brightness (and if possible the color).
+> +This LED device must have a name ending in ':kbd_backlight'.
+> +
+> +For RGB backlit keyboards with multiple control zones, one multicolor
+> +LED device should be used per zone. These LED devices' name
+> +must follow the following form:
+> +
+> +	"<devicename>:rgb:kbd_zoned_backlight-<zone_name>"
+> +
+> +and <devicename> must be the same for all zones of the same keyboard.
+> +
+> +Where possible <zone_name> should be a value already used by other
+> +zoned keyboards with a similar or identical zone layout, e.g.:
+> +
+> +<devicename>:rgb:kbd_zoned_backlight-right
+> +<devicename>:rgb:kbd_zoned_backlight-middle
+> +<devicename>:rgb:kbd_zoned_backlight-left
+> +<devicename>:rgb:kbd_zoned_backlight-corners
 
-Thank you for your patch.
-
-With Ilpo's remarks addressed this patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-(for v2 with remarks addressed).
-
-Please submit a v2 with Ilpo's remarks addressed.
+The -corners zone was based on a misunderstanding about
+the Excaliber laptop's functionality, please drop
+the "<devicename>:rgb:kbd_zoned_backlight-corners"
+line here as well as below.
 
 Regards,
 
@@ -106,280 +169,24 @@ Hans
 
 
 
-
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 159 +++++++++++++++++++++++++++
->  1 file changed, 159 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 397b409064c9..a171a2b39ac9 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -7751,6 +7751,28 @@ static struct ibm_struct volume_driver_data = {
->   * 	EC 0x2f (HFSP) might be available *for reading*, but do not use
->   * 	it for writing.
->   *
-> + * TPACPI_FAN_RD_ACPI_FANG:
-> + * 	ACPI FANG method: returns fan control register
-> + *
-> + *	Takes one parameter which is 0x8100 plus the offset to EC memory
-> + *	address 0xf500 and returns the byte at this address.
-> + *
-> + *	0xf500:
-> + *		When the value is less than 9 automatic mode is enabled
-> + *	0xf502:
-> + *		Contains the current fan speed from 0-100%
-> + *	0xf504:
-> + *		Bit 7 has to be set in order to enable manual control by
-> + *		writing a value >= 9 to 0xf500
-> + *
-> + * TPACPI_FAN_WR_ACPI_FANW:
-> + * 	ACPI FANG method: sets fan control registers
-> + *
-> + * 	Takes 0x8100 plus the offset to EC memory address 0xf500 and the
-> + * 	value to be written there as parameters.
-> + *
-> + *	see TPACPI_FAN_RD_ACPI_FANG
-> + *
->   * TPACPI_FAN_WR_TPEC:
->   * 	ThinkPad EC register 0x2f (HFSP): fan control loop mode
->   * 	Supported on almost all ThinkPads
-> @@ -7884,6 +7906,7 @@ enum {					/* Fan control constants */
->  enum fan_status_access_mode {
->  	TPACPI_FAN_NONE = 0,		/* No fan status or control */
->  	TPACPI_FAN_RD_ACPI_GFAN,	/* Use ACPI GFAN */
-> +	TPACPI_FAN_RD_ACPI_FANG,	/* Use ACPI FANG */
->  	TPACPI_FAN_RD_TPEC,		/* Use ACPI EC regs 0x2f, 0x84-0x85 */
->  	TPACPI_FAN_RD_TPEC_NS,		/* Use non-standard ACPI EC regs (eg: L13 Yoga gen2 etc.) */
->  };
-> @@ -7891,6 +7914,7 @@ enum fan_status_access_mode {
->  enum fan_control_access_mode {
->  	TPACPI_FAN_WR_NONE = 0,		/* No fan control */
->  	TPACPI_FAN_WR_ACPI_SFAN,	/* Use ACPI SFAN */
-> +	TPACPI_FAN_WR_ACPI_FANW,	/* Use ACPI FANW */
->  	TPACPI_FAN_WR_TPEC,		/* Use ACPI EC reg 0x2f */
->  	TPACPI_FAN_WR_ACPI_FANS,	/* Use ACPI FANS and EC reg 0x2f */
->  };
-> @@ -7924,9 +7948,13 @@ TPACPI_HANDLE(fans, ec, "FANS");	/* X31, X40, X41 */
->  TPACPI_HANDLE(gfan, ec, "GFAN",	/* 570 */
->  	   "\\FSPD",		/* 600e/x, 770e, 770x */
->  	   );			/* all others */
-> +TPACPI_HANDLE(fang, ec, "FANG",	/* E531 */
-> +	   );			/* all others */
->  TPACPI_HANDLE(sfan, ec, "SFAN",	/* 570 */
->  	   "JFNS",		/* 770x-JL */
->  	   );			/* all others */
-> +TPACPI_HANDLE(fanw, ec, "FANW",	/* E531 */
-> +	   );			/* all others */
+> +<devicename>:rgb:kbd_zoned_backlight-wasd
+> +
+> +or:
+> +
+> +<devicename>:rgb:kbd_zoned_backlight-main
+> +<devicename>:rgb:kbd_zoned_backlight-cursor
+> +<devicename>:rgb:kbd_zoned_backlight-numpad
+> +<devicename>:rgb:kbd_zoned_backlight-corners
+> +<devicename>:rgb:kbd_zoned_backlight-wasd
+> +
+> +Note that this is intended for keyboards with a limited number of zones,
+> +keyboards with per key addressable backlighting must not use LED
+> +class devices since the sysfs API is not suitable for rapidly change
+> +multiple LEDs in one "commit" as is necessary to do animations /
+> +special effects on such keyboards.
+> +
+> +
+>  Brightness setting API
+>  ======================
 >  
->  /*
->   * Unitialized HFSP quirk: ACPI DSDT and EC fail to initialize the
-> @@ -8033,6 +8061,23 @@ static int fan_get_status(u8 *status)
->  
->  		break;
->  	}
-> +	case TPACPI_FAN_RD_ACPI_FANG: {
-> +		/* E531 */
-> +		int mode, speed;
-> +
-> +		if (unlikely(!acpi_evalf(fang_handle, &mode, NULL, "dd", 0x8100)))
-> +			return -EIO;
-> +		if (unlikely(!acpi_evalf(fang_handle, &speed, NULL, "dd", 0x8102)))
-> +			return -EIO;
-> +
-> +		if (likely(status)) {
-> +			*status = speed * 7 / 100;
-> +			if (mode < 9)
-> +				*status |= TP_EC_FAN_AUTO;
-> +		}
-> +
-> +		break;
-> +	}
->  	case TPACPI_FAN_RD_TPEC:
->  		/* all except 570, 600e/x, 770e, 770x */
->  		if (unlikely(!acpi_ec_read(fan_status_offset, &s)))
-> @@ -8147,6 +8192,17 @@ static int fan2_get_speed(unsigned int *speed)
->  		if (speed)
->  			*speed = lo ? FAN_RPM_CAL_CONST / lo : 0;
->  		break;
-> +	case TPACPI_FAN_RD_ACPI_FANG: {
-> +		/* E531 */
-> +		int speed_tmp;
-> +
-> +		if (unlikely(!acpi_evalf(fang_handle, &speed_tmp, NULL, "dd", 0x8102)))
-> +			return -EIO;
-> +
-> +		if (likely(speed))
-> +			*speed =  speed_tmp * 65535 / 100;
-> +		break;
-> +	}
->  
->  	default:
->  		return -ENXIO;
-> @@ -8157,6 +8213,7 @@ static int fan2_get_speed(unsigned int *speed)
->  
->  static int fan_set_level(int level)
->  {
-> +	int rc;
->  	if (!fan_control_allowed)
->  		return -EPERM;
->  
-> @@ -8206,6 +8263,36 @@ static int fan_set_level(int level)
->  			tp_features.fan_ctrl_status_undef = 0;
->  		break;
->  
-> +	case TPACPI_FAN_WR_ACPI_FANW:
-> +		if ((!(level & TP_EC_FAN_AUTO) &&
-> +		    ((level < 0) || (level > 7))) ||
-> +		    (level & TP_EC_FAN_FULLSPEED))
-> +			return -EINVAL;
-> +		if (level & TP_EC_FAN_AUTO) {
-> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x05)) {
-> +				rc = -EIO;
-> +				break;
-> +			}
-> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0x00)) {
-> +				rc = -EIO;
-> +				break;
-> +			}
-> +		} else {
-> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x45)) {
-> +				rc = -EIO;
-> +				break;
-> +			}
-> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0xff)) {
-> +				rc = -EIO;
-> +				break;
-> +			}
-> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8102, level * 100 / 7)) {
-> +				rc = -EIO;
-> +				break;
-> +			}
-> +		}
-> +		break;
-> +
->  	default:
->  		return -ENXIO;
->  	}
-> @@ -8284,6 +8371,19 @@ static int fan_set_enable(void)
->  			rc = 0;
->  		break;
->  
-> +	case TPACPI_FAN_WR_ACPI_FANW:
-> +		if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x05)) {
-> +			rc = -EIO;
-> +			break;
-> +		}
-> +		if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0x00)) {
-> +			rc = -EIO;
-> +			break;
-> +		}
-> +
-> +		rc = 0;
-> +		break;
-> +
->  	default:
->  		rc = -ENXIO;
->  	}
-> @@ -8326,6 +8426,22 @@ static int fan_set_disable(void)
->  			fan_control_desired_level = 0;
->  		break;
->  
-> +	case TPACPI_FAN_WR_ACPI_FANW:
-> +		if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x45)) {
-> +			rc = -EIO;
-> +			break;
-> +		}
-> +		if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0xff)) {
-> +			rc = -EIO;
-> +			break;
-> +		}
-> +		if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8102, 0x00)) {
-> +			rc = -EIO;
-> +			break;
-> +		}
-> +		rc = 0;
-> +		break;
-> +
->  	default:
->  		rc = -ENXIO;
->  	}
-> @@ -8359,6 +8475,23 @@ static int fan_set_speed(int speed)
->  			rc = -EINVAL;
->  		break;
->  
-> +	case TPACPI_FAN_WR_ACPI_FANW:
-> +		if (speed >= 0 && speed <= 65535) {
-> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x45)) {
-> +				rc = -EIO;
-> +				break;
-> +			}
-> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0xff)) {
-> +				rc = -EIO;
-> +				break;
-> +			}
-> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd",
-> +					0x8102, speed * 100 / 65535))
-> +				rc = -EIO;
-> +		} else
-> +			rc = -EINVAL;
-> +		break;
-> +
->  	default:
->  		rc = -ENXIO;
->  	}
-> @@ -8701,6 +8834,10 @@ static int __init fan_init(struct ibm_init_struct *iibm)
->  		TPACPI_ACPIHANDLE_INIT(gfan);
->  		TPACPI_ACPIHANDLE_INIT(sfan);
->  	}
-> +	if (tpacpi_is_lenovo()) {
-> +		TPACPI_ACPIHANDLE_INIT(fang);
-> +		TPACPI_ACPIHANDLE_INIT(fanw);
-> +	}
->  
->  	quirks = tpacpi_check_quirks(fan_quirk_table,
->  				     ARRAY_SIZE(fan_quirk_table));
-> @@ -8720,6 +8857,9 @@ static int __init fan_init(struct ibm_init_struct *iibm)
->  	if (gfan_handle) {
->  		/* 570, 600e/x, 770e, 770x */
->  		fan_status_access_mode = TPACPI_FAN_RD_ACPI_GFAN;
-> +	} else if (fang_handle) {
-> +		/* E531 */
-> +		fan_status_access_mode = TPACPI_FAN_RD_ACPI_FANG;
->  	} else {
->  		/* all other ThinkPads: note that even old-style
->  		 * ThinkPad ECs supports the fan control register */
-> @@ -8766,6 +8906,11 @@ static int __init fan_init(struct ibm_init_struct *iibm)
->  		fan_control_access_mode = TPACPI_FAN_WR_ACPI_SFAN;
->  		fan_control_commands |=
->  		    TPACPI_FAN_CMD_LEVEL | TPACPI_FAN_CMD_ENABLE;
-> +	} else if (fanw_handle) {
-> +		/* E531 */
-> +		fan_control_access_mode = TPACPI_FAN_WR_ACPI_FANW;
-> +		fan_control_commands |=
-> +		    TPACPI_FAN_CMD_LEVEL | TPACPI_FAN_CMD_SPEED | TPACPI_FAN_CMD_ENABLE;
->  	} else {
->  		if (!gfan_handle) {
->  			/* gfan without sfan means no fan control */
-> @@ -8915,6 +9060,20 @@ static int fan_read(struct seq_file *m)
->  			       str_enabled_disabled(status), status);
->  		break;
->  
-> +	case TPACPI_FAN_RD_ACPI_FANG:
-> +		/* E531 */
-> +		rc = fan_get_status_safe(&status);
-> +		if (rc)
-> +			return rc;
-> +
-> +		seq_printf(m, "status:\t\t%s\n", str_enabled_disabled(status));
-> +
-> +		rc = fan_get_speed(&speed);
-> +		if (rc < 0)
-> +			return rc;
-> +		seq_printf(m, "speed:\t\t%d\n", speed);
-> +		break;
-> +
->  	case TPACPI_FAN_RD_TPEC_NS:
->  	case TPACPI_FAN_RD_TPEC:
->  		/* all except 570, 600e/x, 770e, 770x */
 
