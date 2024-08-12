@@ -1,47 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5453917C7CC
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 20:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E542617E8F7
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 20:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723492915; cv=none; b=dfy3QFHHM/KGJCGhEwsTYEwaYIB9Ctby+Cbl65PvppuyHEG1R7jxzed3+NNCBGkzIzYnYnV8c3Bp6sDoytTXbI6aM4MEpntqITtyqixEnZbU6Exjky36XFGQVcsdsEt3Vpz7aVZkzTMSLW5xq4cO9NRvASrwNcvW39ONiNgcIrY=
+	t=1723493075; cv=none; b=OWuM2e9a9VD7m6rhNj24/WJTFk26ZUJBZN1w5ygM4m36gdBivujC2c9RIgVRDs5h/6ojAoBA7xxOx/BP7B22UUcwnq3BJTjFgZQBkg/ZA8Lk7dfXNETf8omzVj8os1KmygxgAfDV2sIlLqMLAEil6eXhsbQtaZDxn5t9ZmeAWB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723492915; c=relaxed/simple;
-	bh=K28gxiqy2K2sM5vu8hn9XfIyjJVTyH/HuYxUYXTG42Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o/2hlLun5YO0jWzuBO1/vRn0kDnB5Iwyvf8lF6hvDZel8VxivxJ7abPsM5NP13Rjmtw9KLWv+/KZXe4N35jx0E00ZYjgTwOhTcMjciw6snz56xIdTs3oRign+iFY4oPNiv2PfkH7bI96EVGVKLQmE//pmsbK4jucm5Xy1d97CuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K6HQDkO9; arc=none smtp.client-ip=192.198.163.17
+	s=arc-20240116; t=1723493075; c=relaxed/simple;
+	bh=/zZU93oXIS/xiKwMaPoiT7SqgqK1Z+KIrCtuiA5Ku+w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sU9V/79djS3Wi72yGIhvEZwOYYT5+8ZB9dk8BMo+NMACVC0dxy8asNTijQnlAbzLZCmruWqupKnHmtAGQYGPLXdGvHmNM7Zm0hewH1djx3l5FJcNtzrY+FlgUJ2VXkt5G47kojnzVNDye72j8bfD7lB3fOuSyhyV/DVqaojYGtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VJXJ8yZV; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K6HQDkO9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VJXJ8yZV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723492912; x=1755028912;
+  t=1723493074; x=1755029074;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=K28gxiqy2K2sM5vu8hn9XfIyjJVTyH/HuYxUYXTG42Y=;
-  b=K6HQDkO91nOWw2xUob6wTKKi5sVtcn7xpjdSwAXDCjUSbY0DNctFftvm
-   fw2CmDzt0t2kgxGVMDgqSsPduE6LRd8eNFaSm9G6osX2xr1qIbvCOznSJ
-   64+hO1MCJzlO9oYQQIxeabeAa0jcbi2If7p24EajYyizCXryT2ptCvG+e
-   N/fjo09rUpC1Uf0dBjxicQUesF4F10wA2+IEu39YWnEVnKGiadsp7Ea/d
-   8omaaBizrhvcKTR7AYK4vKUalIXvLwDzr4DxhdsrAEUehyx/LQIB+itZ7
-   HYALXqO/LcD1V3J6AStuEDMUCa6XPW2Ai8FA8/i77oOtBHblC+HpwdNRT
-   w==;
-X-CSE-ConnectionGUID: +KJUV0OEQt6ncaXQgufb7w==
-X-CSE-MsgGUID: nOZS8V5vQZiPCrLscoLuWg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11162"; a="21496576"
+  bh=/zZU93oXIS/xiKwMaPoiT7SqgqK1Z+KIrCtuiA5Ku+w=;
+  b=VJXJ8yZVtJVC52U+WHtoeZkWkCAVXAyt/v3fgS77l6DROUv2FnMptHut
+   2FIR0pDrdiw4T+qX5GrCoC/Fj33w1xBHadWuG4xznY7VmIjhm7bsewbZP
+   UOWKu9wxJS3R2pUN1JbqEm9yzP5Qzup9iSEttxywscADDLVgyOqZSbmnC
+   TSPtZnTXcbterstJ0LFUPptMc4jmu+r+JuCDfEKlzYzjDIlimUcK7R1Z3
+   txDeNVLKdh3rOE1koNWnkZVyT8zjO4b1j0I8iXkwcSpxGklreHKB9J+0D
+   ywtE9g3w1Qua7I4Pc+FhYvQKgPlkJe+eym7q6ojJfQpDTPu1K5HGFCC75
+   g==;
+X-CSE-ConnectionGUID: eMqJXi3pQZGTzzKhWbzOeg==
+X-CSE-MsgGUID: LFt9uNs5RDeFDT26d6RKXw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11162"; a="21758222"
 X-IronPort-AV: E=Sophos;i="6.09,284,1716274800"; 
-   d="scan'208";a="21496576"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 13:01:52 -0700
-X-CSE-ConnectionGUID: 4xOT+/4EQ1624dYO9bNw+g==
-X-CSE-MsgGUID: Ba+d5gzFREKHoo901H57vg==
+   d="scan'208";a="21758222"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 13:04:33 -0700
+X-CSE-ConnectionGUID: tDYb2yosSxqrWhyJMdZfmQ==
+X-CSE-MsgGUID: uTVeWl5LQZePcPM/HJ+ElA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,284,1716274800"; 
-   d="scan'208";a="62773392"
+   d="scan'208";a="89035083"
 Received: from awvttdev-05.aw.intel.com ([10.228.212.156])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 13:01:51 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 13:04:32 -0700
 From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
 To: intel-xe@lists.freedesktop.org,
 	platform-driver-x86@vger.kernel.org,
@@ -52,9 +52,9 @@ To: intel-xe@lists.freedesktop.org,
 	hdegoede@redhat.com
 Cc: michael.j.ruhl@intel.com,
 	Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH v10] drm/xe/vsec: Support BMG devices
-Date: Mon, 12 Aug 2024 16:01:42 -0400
-Message-ID: <20240812200142.444063-1-michael.j.ruhl@intel.com>
+Subject: [PATCH v11] drm/xe/vsec: Support BMG devices
+Date: Mon, 12 Aug 2024 16:04:22 -0400
+Message-ID: <20240812200422.444078-1-michael.j.ruhl@intel.com>
 X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -76,12 +76,21 @@ Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 ---
+
+v10:
+  Use the mutex guard feature
+  Use the xe_pm_runtime_get_if_active() return value correctly
+  Add r/b from Ilpo
+  Deferred DG2 patches for the future
+v11:
+  add include for cleanup.h
+  
  drivers/gpu/drm/xe/Makefile          |   1 +
  drivers/gpu/drm/xe/xe_device.c       |   5 +
  drivers/gpu/drm/xe/xe_device_types.h |   6 +
- drivers/gpu/drm/xe/xe_vsec.c         | 221 +++++++++++++++++++++++++++
+ drivers/gpu/drm/xe/xe_vsec.c         | 222 +++++++++++++++++++++++++++
  drivers/gpu/drm/xe/xe_vsec.h         |  13 ++
- 5 files changed, 246 insertions(+)
+ 5 files changed, 247 insertions(+)
  create mode 100644 drivers/gpu/drm/xe/xe_vsec.c
  create mode 100644 drivers/gpu/drm/xe/xe_vsec.h
 
@@ -146,16 +155,17 @@ index 3bca6d344744..448a92148081 100644
  	 * the runtime_suspend or runtime_resume callbacks.
 diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
 new file mode 100644
-index 000000000000..a046d850da82
+index 000000000000..907203765dec
 --- /dev/null
 +++ b/drivers/gpu/drm/xe/xe_vsec.c
-@@ -0,0 +1,221 @@
+@@ -0,0 +1,222 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright © 2022 - 2024 Intel Corporation
 + */
 +#include <linux/bitfield.h>
 +#include <linux/bits.h>
++#include <linux/cleanup.h>
 +#include <linux/intel_vsec.h>
 +#include <linux/module.h>
 +#include <linux/mutex.h>
