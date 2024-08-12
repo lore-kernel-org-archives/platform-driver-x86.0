@@ -1,126 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0749E183CBF
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 15:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7576A18732E;
+	Mon, 12 Aug 2024 15:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723478115; cv=none; b=lGSIio3wDZwRn2ArObyCxE8X5GA3gN9I0hUunZNYvPcAGp1kACPmdD+/FOPtQu0iMOhx657Q0K6RpOagmKlhUHjGFPf/sCy36QEwtC0BELu92ktNmSLGo1ARRI1+ob5YqWTWzy39oFWGaORVtIwvJ6rFOZH9JGH51Ds5ZJikURk=
+	t=1723478258; cv=none; b=RaHhl+JDLTLpGnAwILjm/zPo2/hiUsV3v9R6fzW7zSw47xsIEBkQI2pTqYcWPQXL3iuovbgb5I/4+ykdNeq/EmQ0XdjFCC6k+qdLOAdbh4IaRjM/PEiUHdHhxV4oPg9NAHV/3r4iMVEXVv+PlKCXmSwBHUifx8hCgcbVkrCLZJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723478115; c=relaxed/simple;
-	bh=SRJlBYgKdbjbfkFsJdCuB6Omo8OpSx3PFgBhr5GhngI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r4l7i9fstNxAof4bl6wW0RWBA1osJ9zdcraBhmdbHeq8/qbJO8Da01stgLyOiOzeNOCP6v4CkBxyzAIlUTYY8J9aVnotYx6TRkp9NfjU8/p3tjsbS+TbRZ964LCjdE3v+VEV0PjNAB+cPKKc8AvOnwQSlcGyALeZvLq4uQGSyRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GR1Xaniq; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1723478258; c=relaxed/simple;
+	bh=oKAtC7O7pozKt9AtQSMuJW3MHkZZVJT9z7q4eY9medc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=itvVXaTTgsSbFFFNSbdKoV4mcM3Rrr+NWG1zn8n2Lz724iIOXfapefZJrv79cvd8wboN8HifgDRKgtEv+TBDB1lYEOZP+sP2YpZts1xRDO7tiMCI2IOakgMskdLhN6bBvecySipC6jBVjxu9vufD6q/DBHE2JFp1QEBJje63WWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HR+s279r; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GR1Xaniq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723478113;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cJBlz3I4RKTfnRNVjY03fZZ8bEJDc4HBraykC9tuV2o=;
-	b=GR1XaniqJT9McLudNEGw4XBzAWlua1HalNkpmTMHzX8PsYckzFvSymtS/TfYkqWbov3+uF
-	cMhKAfhegEnf/0S4ER0MnQevMFob/cRhk8jHfpLkWAzQ1JrIxDaRFKBm2uX9AO3jqCJ/Iy
-	Glmni01LczOBgvt9exVlhGh8VJ9Pr4A=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-98-0kSNBXQcNLaTeV1HleS-wQ-1; Mon, 12 Aug 2024 11:55:11 -0400
-X-MC-Unique: 0kSNBXQcNLaTeV1HleS-wQ-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5bba487c111so1724129a12.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 08:55:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723478110; x=1724082910;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cJBlz3I4RKTfnRNVjY03fZZ8bEJDc4HBraykC9tuV2o=;
-        b=we4ak/Z3eoTmqvyrtjBEwIVeCrMmj1NolC+oyS0sZcWYrzJBhsoxkV5pMVC5Itm8Pz
-         skmF/+45VB2UwzmHpGKUIIyBCBFKBHaygsIm0GEbZeHUcrPA76rQDFV3NwLzuBL3Ain/
-         rHZnrDxpFDxuHwBMt8pPR4R95QsxAK8M8wF9+CBlRGGZwX4r0H4xVs7dYe4Uihnm5p2y
-         tsOg1SCpJa6irqDvpzcTA4cpm6OAIsf5uHa0DtMoeGudWGO2SCKtTmr1vt1Tp74GFyNi
-         HskP/Qfa6s2sbCr+Wcii+PgyXGCQIKhlextK0Ne2KZN3TSp1Yox2lPLcrc9vDf81Xj/e
-         pN8A==
-X-Forwarded-Encrypted: i=1; AJvYcCXn9SR4clRMenufANZXyvPNCimnXMx0jir3tjAT4dIuNwkArYlK/jcvymo84cF+DxJ/Arb/opsmlE2U26j8on0bgvQb@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxvJya+d/9GMU8b5mYU9K8ihgXP0J0CCUZUU4JaN+xlbrfk/2M
-	DuLmFl/pzrxPrc3JMnynIPExMMJwa10qdQOCB/nvwRidicMJ1Yt/y2Wv/kgVkt2HxpmBVOcBDUZ
-	U/DD9v63oR4ZxPohSAQ6n/xa8MjCCuJsTzGW5tm9cN0OjiE0hw028xMcdqW5Z6Nbzcn1XS8U=
-X-Received: by 2002:a05:6402:50cc:b0:599:4d01:1fb6 with SMTP id 4fb4d7f45d1cf-5bd44c26d93mr592062a12.16.1723478110269;
-        Mon, 12 Aug 2024 08:55:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGJrTWXUj1gJVwGkiVTFKT2siN0axioe9Cfakkl00HL7PFN0UoW/Ze1YeGwWMz0lET9tnzNlg==
-X-Received: by 2002:a05:6402:50cc:b0:599:4d01:1fb6 with SMTP id 4fb4d7f45d1cf-5bd44c26d93mr592025a12.16.1723478109695;
-        Mon, 12 Aug 2024 08:55:09 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a80bb0e4984sm240822666b.84.2024.08.12.08.55.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Aug 2024 08:55:09 -0700 (PDT)
-Message-ID: <3e483c97-a92a-4229-ae38-2e599b0f474d@redhat.com>
-Date: Mon, 12 Aug 2024 17:55:08 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HR+s279r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723478257; x=1755014257;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=oKAtC7O7pozKt9AtQSMuJW3MHkZZVJT9z7q4eY9medc=;
+  b=HR+s279rq3M9fgKQJtK9yJAOwr4aVHcdCAbuRda8Swb176lWBYm0BVy0
+   9PwQ5IijgrwRpIgp6n1+9EEkkiBHPCg43HFKKhZuK2C9RqkFEt9qR6WVk
+   pdPAT5zM6J0n8u2oeYQhAbtDAZW4bp800wo5NFp8mRzW1RRjISfJAJMeY
+   g6uuWVJzO7LSGs17tU/iSG7jJxMmd2oRZnEaaDTbnxWxIv3biMKq3f9wb
+   4o8y6cUBb5Lw7+XephMhJxar9x3Ua1fkNSVrHnE64snNd4WoeSjkxS/KM
+   1EeJdDvcT+oHlrWp74JfsVQ1QbOb85hY4rtb+RtxVYAlVoiskB9FVJ3ua
+   A==;
+X-CSE-ConnectionGUID: JOVf8VJJRzKrd2DKDSwWlQ==
+X-CSE-MsgGUID: i8JljWEJQ+OA4xWAb7799Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11162"; a="21473454"
+X-IronPort-AV: E=Sophos;i="6.09,283,1716274800"; 
+   d="scan'208";a="21473454"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 08:57:36 -0700
+X-CSE-ConnectionGUID: FPYbT12sRhCDnpyjOKlFWQ==
+X-CSE-MsgGUID: SRzSoY6eRc2po280KtfpCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,283,1716274800"; 
+   d="scan'208";a="58372732"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.25])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 08:57:34 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 12 Aug 2024 18:57:31 +0300 (EEST)
+To: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
+cc: mustafa.eskieksi@gmail.com, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/2] HP: wmi: added support for 4 zone keyboard rgb
+In-Reply-To: <8e06b567-8471-4109-bab1-f44a8d9780da@redhat.com>
+Message-ID: <121c2aa1-c89b-49bc-c71e-73009b4e04fe@linux.intel.com>
+References: <20240719100011.16656-1-carlosmiguelferreira.2003@gmail.com> <20240719100011.16656-2-carlosmiguelferreira.2003@gmail.com> <8e06b567-8471-4109-bab1-f44a8d9780da@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 3/6] platform/x86: dell-smo8800: Move SMO88xx
- acpi_device_ids to dell-smo8800-ids.h
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>,
- Wolfram Sang <wsa@kernel.org>, eric.piel@tremplin-utc.net,
- Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com,
- Kai Heng Feng <kai.heng.feng@canonical.com>,
- platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
- Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org
-References: <20240805133708.160737-1-hdegoede@redhat.com>
- <20240805133708.160737-4-hdegoede@redhat.com>
- <CAHp75VckqF6==cJ7xoXXn3hr9kzYn7+oHqYZq01S5HEe9eK_-Q@mail.gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75VckqF6==cJ7xoXXn3hr9kzYn7+oHqYZq01S5HEe9eK_-Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi,
+On Mon, 12 Aug 2024, Hans de Goede wrote:
 
-On 8/5/24 10:27 PM, Andy Shevchenko wrote:
-> On Mon, Aug 5, 2024 at 3:38 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Move the SMO88xx acpi_device_ids to a new dell-smo8800-ids.h header,
->> so that these can be shared with the new dell-lis3lv02d code.
+> Hi,
 > 
-> ...
+> Thank you for the new version, much better, almost there I would say.
 > 
->> +#ifndef _DELL_SMO8800_IDS_H_
->> +#define _DELL_SMO8800_IDS_H_
->> +
->> +#include <linux/mod_devicetable.h>
->> +
->> +static const struct acpi_device_id smo8800_ids[] = {
->> +       { "SMO8800" },
->> +       { "SMO8801" },
->> +       { "SMO8810" },
->> +       { "SMO8811" },
->> +       { "SMO8820" },
->> +       { "SMO8821" },
->> +       { "SMO8830" },
->> +       { "SMO8831" },
->> +       { }
->> +};
->> +MODULE_DEVICE_TABLE(acpi, smo8800_ids);
+> On 7/19/24 11:59 AM, Carlos Ferreira wrote:
+> > This driver adds supports for 4 zone keyboard rgb on omen laptops
+> > using the multicolor led api.
+> > 
+> > Tested on the HP Omen 15-en1001np.
+> > 
+> > Signed-off-by: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
+
+> > +static int __init fourzone_leds_init(struct platform_device *device)
+> > +{
+> > +	enum led_brightness hw_brightness;
+> > +	u32 colors[KBD_ZONE_COUNT * 3];
+> > +	int ret, i, j;
+> > +
+> > +	ret = fourzone_get_hw_colors(colors);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	hw_brightness = fourzone_get_hw_brightness();
+> > +
+> > +	for (i = 0; i < KBD_ZONE_COUNT; i++) {
+> > +		for (j = 0; j < 3; j++)
+> > +			fourzone_leds[i].subleds[j] = (struct mc_subled) {
+> > +				.color_index = j + 1,
+> > +				.brightness = hw_brightness ? colors[i * 3 + j] : 0,
 > 
-> The macro definition is in module.h.
+> I think it would be cleaner to drop setting subled brightness here and instead
+> call led_mc_calc_color_components() below ... :
+> 
+> > +				.intensity = colors[i * 3 + j],
+> > +			};
+> > +
+> > +		fourzone_leds[i].mc_led = (struct led_classdev_mc) {
+> > +			.led_cdev = {
+> > +				.name = fourzone_zone_names[i],
+> > +				.brightness = hw_brightness ? 255 : 0,
+> > +				.max_brightness = 255,
+> > +				.brightness_set = fourzone_set_brightness,
+> > +				.color = LED_COLOR_ID_RGB,
+> > +				.flags = LED_BRIGHT_HW_CHANGED | LED_RETAIN_AT_SHUTDOWN,
+> > +			},
+> > +			.num_colors = 3,
+> > +			.subled_info = fourzone_leds[i].subleds;
+> > +		};
+> > +
+> 
+> With this all setup, you can now call:
+> 
+> 		led_mc_calc_color_components(&fourzone_leds[i].mc_led, fourzone_leds[i].mc_led.led_cdev.brightness);
 
-Ok, I've added a #include for that for v8.
+One additional thing, having a temporary variable for fourzone_leds[i] 
+would be advicable to reduce the line lengths / complexity of the 
+expressions.
 
-Regards,
+> here, this makes how the subled brightness is set here (on init) identical with
+> how it is done on set_brightness calls which is more consistent.
+> 
+> > +		fourzone_leds[i].brightness = 255;
+> > +
+> > +		ret = devm_led_classdev_multicolor_register(&device->dev, &fourzone_leds[i].mc_led);
+> > +		if (ret)
+> > +			return -ENODEV;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
 
-Hans
-
+-- 
+ i.
 
