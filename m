@@ -1,395 +1,250 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429BBC156
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 18:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F92C156;
+	Mon, 12 Aug 2024 18:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723486142; cv=none; b=BAOFCLmshwOxgcJ6iVjKMZgh2Q94jBcaEzh3AfXkVH8I4U7RtDUpDKTJTJ7jtYdMsrKxqyw6tr1lX+ARHdf77xvlFECXgDzaGKX9rq3M1DzYIs7jkzwzrMaBhyCM8nO5VGOVPSJOdQv8LXzg1/o+XyUWZlLP8imj4K5bd3r7dYM=
+	t=1723486182; cv=none; b=W50NI0va87ur3H8DCJexQsPlR6tBnkCx2uUpI8rcAKrvFIclIkwhboAHBe6iZlfqJq3mDNiEcc5LC0W3BiJwmZgD+NnH78AruvOYlMSYXeM1giEp6hfQcmcaRMPug0tMmxMDT5k566GmEQBS93J2GKwi2hav8Ntt/60H6JvwGvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723486142; c=relaxed/simple;
-	bh=K28gxiqy2K2sM5vu8hn9XfIyjJVTyH/HuYxUYXTG42Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bGFXN2wLqM37cOQafSikMZ4Vq8Z0l0Y0bqOlPoHIEhL8ORIi7ErrhpfT6laodSJUx4awHAnB2kZQMkNtmbGT22no/uRBQrv5zhE+RRvkgY5faSnWitnpi9Vgh/W7UlWHwmc/AubzaLR3dtQSpnbF63CHZ6/NkmOvrpCyQRfAKsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RVtWmkx0; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1723486182; c=relaxed/simple;
+	bh=9Nco/hon7rAdJ043GW2g5n9ph0McNClbMFtriB8yqw8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Vwc8V6rsUFhEfu/ONqum1WudqEWPhUOKxGAHkSBFI1P9f2VLTKHm4VwfhkGo/zSWOuihFpM6Bcdayo5yxRu6iq8BE6GMnZrIgP1D1aR8Ia//NUDmnmzpKQ4HzXpEAOlRfjnKAsitvmRHC1T8NaixZ6JI69oxGJELqWgcNi5QINU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lYUYq1f8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RVtWmkx0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723486140; x=1755022140;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=K28gxiqy2K2sM5vu8hn9XfIyjJVTyH/HuYxUYXTG42Y=;
-  b=RVtWmkx0K9dsieHKyxsTJlnScBOm6d+4VlOTUMCzuFHmkxvAg0GO3LY0
-   duHZDlgviq+9x8uq19DaTfQ+lafc1LAVwsAAKPk9IKbDN1Xm9voyaZRsC
-   f3woV23w0W7IzndgoqSJqycaIbFxNxeYVfJrmIzVp6i5ombhLIPpfb11V
-   h+MYNP10EUKRKKq6NmSsowRthl+RyFyWyueH8YFYOSqA17hjalcvDJiLd
-   lYl1HvO7aXvk4wR6h0TOyGLJzrBBFlFTbwsNJdnPYfvUETLT45Ff5LLi8
-   9Y4HN5TBZe7klG6NVXg/OMj7b8jUjIx2pjSKgqPYmLeRxEa+ilVFpF3e/
-   Q==;
-X-CSE-ConnectionGUID: MOFZU1+tSmOLh9CIYbV66Q==
-X-CSE-MsgGUID: KA8pNVCVTr63eOo8crd2CA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11162"; a="21775146"
-X-IronPort-AV: E=Sophos;i="6.09,283,1716274800"; 
-   d="scan'208";a="21775146"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 11:08:59 -0700
-X-CSE-ConnectionGUID: f/pCLYuORWaYxmEY1aj9zA==
-X-CSE-MsgGUID: /g4f9c09T5K4vQfeLjdsiA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,283,1716274800"; 
-   d="scan'208";a="58287617"
-Received: from awvttdev-05.aw.intel.com ([10.228.212.156])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 11:08:58 -0700
-From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-To: intel-xe@lists.freedesktop.org,
-	platform-driver-x86@vger.kernel.org,
-	david.e.box@linux.intel.com,
-	ilpo.jarvinen@linux.intel.com,
-	matthew.brost@intel.com,
-	andriy.shevchenko@linux.intel.com,
-	hdegoede@redhat.com
-Cc: michael.j.ruhl@intel.com,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH v10] drm/xe/vsec: Support BMG devices
-Date: Mon, 12 Aug 2024 14:08:36 -0400
-Message-ID: <20240812180836.227727-1-michael.j.ruhl@intel.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lYUYq1f8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A07DC4AF0C;
+	Mon, 12 Aug 2024 18:09:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723486181;
+	bh=9Nco/hon7rAdJ043GW2g5n9ph0McNClbMFtriB8yqw8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=lYUYq1f8ZFONKZn6is9q1aGTHS2vmpp0n9IZecczNC5PifTuYJstcqMe5NRzt/exn
+	 Xu0KICf6gf6MZN9cuNE9FX3S3XtBPPoCF0bZdZwkUlGu28S8zKFHGywa21cY0f9Qwy
+	 T1nEephdq8vvfsvI9OUJUeufwQvd911Favc+eqEYjIEgR0wCBCP7WN+zAw9zjIgFkC
+	 AYg/M9PwQciSx0TbIocy5HLYnEbt3IuheOX6AKDh8ku3ePDXpD706JIqa14JORpOyg
+	 snDHjlSVlJIwxiaGM7v3HKWLRH1PzU8zYUnsbHoocMNUoe6pCnL+YTHRfxEPCTqtY4
+	 hQBmg7bluZ+gg==
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-2610c095ea1so539655fac.3;
+        Mon, 12 Aug 2024 11:09:41 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUdWtTUBmGCsjFUDI9Wo3v6SyJvM6zKfYsaMAOfm7EWYAcmyBa6jlqjI/KA7fYT2r/ndORjD8NQ+4Z0y9gP@vger.kernel.org, AJvYcCVZ+llPijb8Ko0caGbynp77FPGO9bL8QgcIWHYqxEZeTlWpEwQhMqGBEPOWTEpXC1cA9BipYONKmZo=@vger.kernel.org, AJvYcCVy1R1LUtmZtt0rPHN8k9a0fbebUxHSF2akcqm5mYlw5+NAbzBgyMBG6GLd/MUksMp9JIh+ADhLlTQcu7l3M2//UrTGqQ==@vger.kernel.org, AJvYcCW6aIpRrNPr3C0G9SV5CZfUnbN1hTZKxkDzGyAA4X1IVySzzgU6Hda+OZ1y5v5sIXzKamCgBK3hgDU9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5Jk2KYh5Ro+s8+0D0lG3bXx+/nuEHXwRiD5qeMnXDO09hFK3j
+	DjsO76Fz8EPXLbcdYXMNSKW7aXWNQdeWHmkCffx4M6khY+5p4QVnaHEG/J67TIgiZcLi1/YVz+J
+	UxeFPKkRTVHDwvrEAGjxTT1odnY4=
+X-Google-Smtp-Source: AGHT+IGhuD2uyvm5vH1uhawUMhuNtW24WtkX8uoFgGppHZT9jczvg8wzgtAS05nMQfFeOK/8wn+xlni6fNotQhGs79w=
+X-Received: by 2002:a05:6871:3a22:b0:260:f1c4:2fe0 with SMTP id
+ 586e51a60fabf-26fcb91e745mr550967fac.10.1723486180715; Mon, 12 Aug 2024
+ 11:09:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1922131.tdWV9SEqCh@rjwysocki.net> <2242500.C4sosBPzcN@rjwysocki.net>
+ <a0c639d1-4f21-47f1-bb66-92f185e828a9@gmail.com> <CAJZ5v0jDQLJWGCj73DXQe3+k+Zaq9Z71LJbFSvRjcuE85+J+mQ@mail.gmail.com>
+ <1bfbbae5-42b0-4c7d-9544-e98855715294@piie.net> <CAJZ5v0h7WaBVhgvbxz1W1YX9TSY-awKJMsLm2NPkmCBsf3y0BA@mail.gmail.com>
+ <CAJZ5v0jhkWXPDpQvS+sCeSsDNsSRX3NHk0nEg+MsJ=EiUR4Rgw@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jhkWXPDpQvS+sCeSsDNsSRX3NHk0nEg+MsJ=EiUR4Rgw@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 12 Aug 2024 20:09:29 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0ji_7Z-24iCO_Xxu4Zm4jgVFmR9jVp8QNiCOxzV9gqSnA@mail.gmail.com>
+Message-ID: <CAJZ5v0ji_7Z-24iCO_Xxu4Zm4jgVFmR9jVp8QNiCOxzV9gqSnA@mail.gmail.com>
+Subject: Re: [PATCH v1 12/17] platform/x86: acerhdf: Use the .should_bind()
+ thermal zone callback
+To: =?UTF-8?Q?Peter_K=C3=A4stle?= <peter@piie.net>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Lukasz Luba <lukasz.luba@arm.com>, 
+	Zhang Rui <rui.zhang@intel.com>, platform-driver-x86@vger.kernel.org
+Content-Type: multipart/mixed; boundary="00000000000093dc97061f806562"
 
-The Battlemage (BMG) discrete graphics card supports
-the Platform, Monitoring Technology (PMT) feature
-directly on the primary PCI device.
+--00000000000093dc97061f806562
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Utilize the PMT callback API to add support for the BMG
-devices.
+Hi Peter,
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
----
- drivers/gpu/drm/xe/Makefile          |   1 +
- drivers/gpu/drm/xe/xe_device.c       |   5 +
- drivers/gpu/drm/xe/xe_device_types.h |   6 +
- drivers/gpu/drm/xe/xe_vsec.c         | 221 +++++++++++++++++++++++++++
- drivers/gpu/drm/xe/xe_vsec.h         |  13 ++
- 5 files changed, 246 insertions(+)
- create mode 100644 drivers/gpu/drm/xe/xe_vsec.c
- create mode 100644 drivers/gpu/drm/xe/xe_vsec.h
+On Mon, Aug 12, 2024 at 6:15=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
+g> wrote:
+>
+> On Mon, Aug 12, 2024 at 4:56=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.=
+org> wrote:
+> >
+> > On Tue, Aug 6, 2024 at 12:10=E2=80=AFAM Peter K=C3=A4stle <peter@piie.n=
+et> wrote:
+> > >
+> > > Hi Rafael,
+> > >
+> > > On 01.08.24 12:14, Rafael J. Wysocki wrote:
+> > > > Hi Peter,
+> > > >
+> > > > On Wed, Jul 31, 2024 at 10:50=E2=80=AFPM Peter K=C3=A4stle <xypiie@=
+gmail.com> wrote:
+> > > >>
+> > > >> Hi Rafael,
+> > > >>
+> > > >> On 30.07.24 20:33, Rafael J. Wysocki wrote:
+> > > >>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > >>>
+> > > >>> Make the acerhdf driver use the .should_bind() thermal zone
+> > > >>> callback to provide the thermal core with the information on whet=
+her or
+> > > >>> not to bind the given cooling device to the given trip point in t=
+he
+> > > >>> given thermal zone.  If it returns 'true', the thermal core will =
+bind
+> > > >>> the cooling device to the trip and the corresponding unbinding wi=
+ll be
+> > > >>> taken care of automatically by the core on the removal of the inv=
+olved
+> > > >>> thermal zone or cooling device.
+> > > >>>
+> > > >>> The previously existing acerhdf_bind() function bound cooling dev=
+ices
+> > > >>> to thermal trip point 0 only, so the new callback needs to return=
+ 'true'
+> > > >>> for trip point 0.  However, it is straightforward to observe that=
+ trip
+> > > >>> point 0 is an active trip point and the only other trip point in =
+the
+> > > >>> driver's thermal zone is a critical one, so it is sufficient to r=
+eturn
+> > > >>> 'true' from that callback if the type of the given trip point is
+> > > >>> THERMAL_TRIP_ACTIVE.
+> > > >>>
+> > > >>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > >>
+> > > >> Thanks for including me on the review.
+> > > >> I'm working on it, but unfortunately the refactoring of the therma=
+l layer
+> > > >> around gov_bang_bang.c earlier this year broke acerhdf.
+> > > >
+> > > > Well, sorry about that.
+> > >
+> > > I already fixed the main problem, which caused full malfunction of ac=
+erhdf:
+> > >
+> > > The new functionality of .trip_crossed in the gov_bang_bang is missin=
+g an
+> > > initial check, whether the temperature is below the fanoff temperatur=
+e
+> > > (trip_point.temperature - hysteresis) and by that it did not turn the
+> > > fan off.
+> >
+> > So IIUC this is when the fan starts in the "on" state and the thermal
+> > core is expected to turn it off when the zone temperature is not in
+> > fact above the trip point low temperature.
+> >
+> > > This then caused that the system will never heat up as much to
+> > > cross the upper temperature. As a consequence it could never cross th=
+e
+> > > lower temperature to turn the fan off. -> Fan was locked always on.
+> > > And that's obviously not what we want.
+> >
+> > Sure.
+> >
+> > > As I didn't find any API call, to ask the governor doing that for me,=
+ I
+> > > added an "acerhdf_init_fan()" functionality into acerhdf init functio=
+n right
+> > > after registering the thermal zone (and on resume from suspend) which=
+ turns
+> > > the fan off if the temperature is lower than the fanoff parameter.
+> > > Probably not the nicest solution, but maybe the most pragmatic one wi=
+thout
+> > > touching the thermal layer.
+> >
+> > Well, this issue may not be limited to the acerhdf case, so it may be
+> > good to address it in the thermal core.  There is kind of a
+> > chicken-and-egg situation in there, however, because the cooling
+> > device state is determined by the governor which only runs when it is
+> > called, but the core doesn't know that the governor should be invoked
+> > when there are no trip point crossing events.
+> >
+> > It may just be a matter of adding an ->update_tz() callback to the
+> > bang-bang governor, let me see.
 
-diff --git a/drivers/gpu/drm/xe/Makefile b/drivers/gpu/drm/xe/Makefile
-index 628c245c4822..f4c6761dc2e7 100644
---- a/drivers/gpu/drm/xe/Makefile
-+++ b/drivers/gpu/drm/xe/Makefile
-@@ -129,6 +129,7 @@ xe-y += xe_bb.o \
- 	xe_vm.o \
- 	xe_vram.o \
- 	xe_vram_freq.o \
-+	xe_vsec.o \
- 	xe_wait_user_fence.o \
- 	xe_wa.o \
- 	xe_wopcm.o
-diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
-index 76109415eba6..a7c759c98560 100644
---- a/drivers/gpu/drm/xe/xe_device.c
-+++ b/drivers/gpu/drm/xe/xe_device.c
-@@ -53,6 +53,7 @@
- #include "xe_ttm_sys_mgr.h"
- #include "xe_vm.h"
- #include "xe_vram.h"
-+#include "xe_vsec.h"
- #include "xe_wait_user_fence.h"
- 
- static int xe_file_open(struct drm_device *dev, struct drm_file *file)
-@@ -317,6 +318,8 @@ struct xe_device *xe_device_create(struct pci_dev *pdev,
- 		goto err;
- 	}
- 
-+	drmm_mutex_init(&xe->drm, &xe->pmt.lock);
-+
- 	err = xe_display_create(xe);
- 	if (WARN_ON(err))
- 		goto err;
-@@ -692,6 +695,8 @@ int xe_device_probe(struct xe_device *xe)
- 	for_each_gt(gt, xe, id)
- 		xe_gt_sanitize_freq(gt);
- 
-+	xe_vsec_init(xe);
-+
- 	return devm_add_action_or_reset(xe->drm.dev, xe_device_sanitize, xe);
- 
- err_fini_display:
-diff --git a/drivers/gpu/drm/xe/xe_device_types.h b/drivers/gpu/drm/xe/xe_device_types.h
-index 3bca6d344744..448a92148081 100644
---- a/drivers/gpu/drm/xe/xe_device_types.h
-+++ b/drivers/gpu/drm/xe/xe_device_types.h
-@@ -451,6 +451,12 @@ struct xe_device {
- 		struct mutex lock;
- 	} d3cold;
- 
-+	/** @pmt: Support the PMT driver callback interface */
-+	struct {
-+		/** @pmt.lock: protect access for telemetry data */
-+		struct mutex lock;
-+	} pmt;
-+
- 	/**
- 	 * @pm_callback_task: Track the active task that is running in either
- 	 * the runtime_suspend or runtime_resume callbacks.
-diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
-new file mode 100644
-index 000000000000..a046d850da82
---- /dev/null
-+++ b/drivers/gpu/drm/xe/xe_vsec.c
-@@ -0,0 +1,221 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright © 2022 - 2024 Intel Corporation
-+ */
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/intel_vsec.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/pci.h>
-+
-+#include "xe_device.h"
-+#include "xe_device_types.h"
-+#include "xe_drv.h"
-+#include "xe_mmio.h"
-+#include "xe_platform_types.h"
-+#include "xe_pm.h"
-+#include "xe_vsec.h"
-+
-+#define SOC_BASE		0x280000
-+
-+#define BMG_PMT_BASE		0xDB000
-+#define BMG_DISCOVERY_OFFSET	(SOC_BASE + BMG_PMT_BASE)
-+
-+#define BMG_TELEMETRY_BASE	0xE0000
-+#define BMG_TELEMETRY_OFFSET	(SOC_BASE + BMG_TELEMETRY_BASE)
-+
-+#define BMG_DEVICE_ID 0xE2F8
-+
-+#define GFX_BAR			0
-+
-+#define SG_REMAP_INDEX1		XE_REG(SOC_BASE + 0x08)
-+#define SG_REMAP_BITS		GENMASK(31, 24)
-+
-+static struct intel_vsec_header bmg_telemetry = {
-+	.length = 0x10,
-+	.id = VSEC_ID_TELEMETRY,
-+	.num_entries = 2,
-+	.entry_size = 4,
-+	.tbir = GFX_BAR,
-+	.offset = BMG_DISCOVERY_OFFSET,
-+};
-+
-+static struct intel_vsec_header *bmg_capabilities[] = {
-+	&bmg_telemetry,
-+	NULL
-+};
-+
-+enum xe_vsec {
-+	XE_VSEC_UNKNOWN = 0,
-+	XE_VSEC_BMG,
-+};
-+
-+static struct intel_vsec_platform_info xe_vsec_info[] = {
-+	[XE_VSEC_BMG] = {
-+		.caps = VSEC_CAP_TELEMETRY,
-+		.headers = bmg_capabilities,
-+	},
-+	{ }
-+};
-+
-+/*
-+ * The GUID will have the following bits to decode:
-+ *
-+ * X(4bits) - {Telemetry space iteration number (0,1,..)}
-+ * X(4bits) - Segment (SEGMENT_INDEPENDENT-0, Client-1, Server-2)
-+ * X(4bits) - SOC_SKU
-+ * XXXX(16bits)– Device ID – changes for each down bin SKU’s
-+ * X(2bits) - Capability Type (Crashlog-0, Telemetry Aggregator-1, Watcher-2)
-+ * X(2bits) - Record-ID (0-PUNIT, 1-OOBMSM_0, 2-OOBMSM_1)
-+ */
-+#define GUID_TELEM_ITERATION	GENMASK(3, 0)
-+#define GUID_SEGMENT		GENMASK(7, 4)
-+#define GUID_SOC_SKU		GENMASK(11, 8)
-+#define GUID_DEVICE_ID		GENMASK(27, 12)
-+#define GUID_CAP_TYPE		GENMASK(29, 28)
-+#define GUID_RECORD_ID		GENMASK(31, 30)
-+
-+#define PUNIT_TELEMETRY_OFFSET		0x0200
-+#define PUNIT_WATCHER_OFFSET		0x14A0
-+#define OOBMSM_0_WATCHER_OFFSET		0x18D8
-+#define OOBMSM_1_TELEMETRY_OFFSET	0x1000
-+
-+enum record_id {
-+	PUNIT,
-+	OOBMSM_0,
-+	OOBMSM_1
-+};
-+
-+enum capability {
-+	CRASHLOG,
-+	TELEMETRY,
-+	WATCHER
-+};
-+
-+static int guid_decode(u32 guid, int *index, u32 *offset)
-+{
-+	u32 record_id = FIELD_GET(GUID_RECORD_ID, guid);
-+	u32 cap_type  = FIELD_GET(GUID_CAP_TYPE, guid);
-+	u32 device_id = FIELD_GET(GUID_DEVICE_ID, guid);
-+
-+	if (device_id != BMG_DEVICE_ID)
-+		return -ENODEV;
-+
-+	if (record_id > OOBMSM_1 || cap_type > WATCHER)
-+		return -EINVAL;
-+
-+	*offset = 0;
-+
-+	if (cap_type == CRASHLOG) {
-+		*index = record_id == PUNIT ? 2 : 4;
-+		return 0;
-+	}
-+
-+	switch (record_id) {
-+	case PUNIT:
-+		*index = 0;
-+		if (cap_type == TELEMETRY)
-+			*offset = PUNIT_TELEMETRY_OFFSET;
-+		else
-+			*offset = PUNIT_WATCHER_OFFSET;
-+		break;
-+
-+	case OOBMSM_0:
-+		*index = 1;
-+		if (cap_type == WATCHER)
-+			*offset = OOBMSM_0_WATCHER_OFFSET;
-+		break;
-+
-+	case OOBMSM_1:
-+		*index = 1;
-+		if (cap_type == TELEMETRY)
-+			*offset = OOBMSM_1_TELEMETRY_OFFSET;
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int xe_pmt_telem_read(struct pci_dev *pdev, u32 guid, u64 *data, u32 count)
-+{
-+	struct xe_device *xe = pdev_to_xe_device(pdev);
-+	void __iomem *telem_addr = xe->mmio.regs + BMG_TELEMETRY_OFFSET;
-+	u32 mem_region;
-+	u32 offset;
-+	int ret;
-+
-+	ret = guid_decode(guid, &mem_region, &offset);
-+	if (ret)
-+		return ret;
-+
-+	telem_addr += offset;
-+
-+	guard(mutex)(&xe->pmt.lock);
-+
-+	/* indicate that we are not at an appropriate power level */
-+	if (!xe_pm_runtime_get_if_active(xe))
-+		return -ENODATA;
-+
-+	/* set SoC re-mapper index register based on GUID memory region */
-+	xe_mmio_rmw32(xe->tiles[0].primary_gt, SG_REMAP_INDEX1, SG_REMAP_BITS,
-+		      FIELD_PREP(SG_REMAP_BITS, mem_region));
-+
-+	memcpy_fromio(data, telem_addr, count);
-+	ret = count;
-+	xe_pm_runtime_put(xe);
-+
-+	return ret;
-+}
-+
-+struct pmt_callbacks xe_pmt_cb = {
-+	.read_telem = xe_pmt_telem_read,
-+};
-+
-+static const int vsec_platforms[] = {
-+	[XE_BATTLEMAGE] = XE_VSEC_BMG,
-+};
-+
-+static enum xe_vsec get_platform_info(struct xe_device *xe)
-+{
-+	if (xe->info.platform > XE_BATTLEMAGE)
-+		return XE_VSEC_UNKNOWN;
-+
-+	return vsec_platforms[xe->info.platform];
-+}
-+
-+/**
-+ * xe_vsec_init - Initialize resources and add intel_vsec auxiliary
-+ * interface
-+ * @xe: valid xe instance
-+ */
-+void xe_vsec_init(struct xe_device *xe)
-+{
-+	struct intel_vsec_platform_info *info;
-+	struct device *dev = xe->drm.dev;
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	enum xe_vsec platform;
-+
-+	platform = get_platform_info(xe);
-+	if (platform == XE_VSEC_UNKNOWN)
-+		return;
-+
-+	info = &xe_vsec_info[platform];
-+	if (!info->headers)
-+		return;
-+
-+	switch (platform) {
-+	case XE_VSEC_BMG:
-+		info->priv_data = &xe_pmt_cb;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	/*
-+	 * Register a VSEC. Cleanup is handled using device managed
-+	 * resources.
-+	 */
-+	intel_vsec_register(pdev, info);
-+}
-+MODULE_IMPORT_NS(INTEL_VSEC);
-diff --git a/drivers/gpu/drm/xe/xe_vsec.h b/drivers/gpu/drm/xe/xe_vsec.h
-new file mode 100644
-index 000000000000..3fd29a21cad6
---- /dev/null
-+++ b/drivers/gpu/drm/xe/xe_vsec.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright © 2022 - 2024 Intel Corporation
-+ */
-+
-+#ifndef _XE_VSEC_H_
-+#define _XE_VSEC_H_
-+
-+struct xe_device;
-+
-+void xe_vsec_init(struct xe_device *xe);
-+
-+#endif
--- 
-2.44.0
+This isn't the right approach because .update_tz() is called before
+checking the zone temperature for the first time, but to remedy the
+issue at hand, code needs to run when the zone temperature is known to
+the thermal core.
 
+This means that the Bang-bang governor needs a .manage() callback in
+addition to the .trip_crossed() one, but that callback will only need
+to check if the states of cooling devices bound to the trip points
+below the zone temperature need to be adjusted, and just once.
+
+So something like in the attached patch.
+
+--00000000000093dc97061f806562
+Content-Type: text/x-patch; charset="US-ASCII"; name="thermal-gov_bang_bang-manage.patch"
+Content-Disposition: attachment; 
+	filename="thermal-gov_bang_bang-manage.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lzrattnx0>
+X-Attachment-Id: f_lzrattnx0
+
+LS0tCiBkcml2ZXJzL3RoZXJtYWwvZ292X2JhbmdfYmFuZy5jIHwgICA2NCArKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKystLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgNDkgaW5zZXJ0aW9u
+cygrKSwgMTUgZGVsZXRpb25zKC0pCgpJbmRleDogbGludXgtcG0vZHJpdmVycy90aGVybWFsL2dv
+dl9iYW5nX2JhbmcuYwo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09Ci0tLSBsaW51eC1wbS5vcmlnL2RyaXZlcnMvdGhlcm1h
+bC9nb3ZfYmFuZ19iYW5nLmMKKysrIGxpbnV4LXBtL2RyaXZlcnMvdGhlcm1hbC9nb3ZfYmFuZ19i
+YW5nLmMKQEAgLTEzLDYgKzEzLDI4IEBACiAKICNpbmNsdWRlICJ0aGVybWFsX2NvcmUuaCIKIAor
+c3RhdGljIHZvaWQgYmFuZ19iYW5nX3NldF9pbnN0YW5jZV90YXJnZXQoc3RydWN0IHRoZXJtYWxf
+aW5zdGFuY2UgKmluc3RhbmNlLAorCQkJCQkgIHVuc2lnbmVkIGludCB0YXJnZXQpCit7CisJaWYg
+KGluc3RhbmNlLT50YXJnZXQgIT0gMCAmJiBpbnN0YW5jZS0+dGFyZ2V0ICE9IDEgJiYKKwkgICAg
+aW5zdGFuY2UtPnRhcmdldCAhPSBUSEVSTUFMX05PX1RBUkdFVCkKKwkJcHJfZGVidWcoIlVuZXhw
+ZWN0ZWQgc3RhdGUgJWxkIG9mIHRoZXJtYWwgaW5zdGFuY2UgJXMgaW4gYmFuZy1iYW5nXG4iLAor
+CQkJIGluc3RhbmNlLT50YXJnZXQsIGluc3RhbmNlLT5uYW1lKTsKKworCS8qCisJICogRW5hYmxl
+IHRoZSBmYW4gd2hlbiB0aGUgdHJpcCBpcyBjcm9zc2VkIG9uIHRoZSB3YXkgdXAgYW5kIGRpc2Fi
+bGUgaXQKKwkgKiB3aGVuIHRoZSB0cmlwIGlzIGNyb3NzZWQgb24gdGhlIHdheSBkb3duLgorCSAq
+LworCWluc3RhbmNlLT50YXJnZXQgPSB0YXJnZXQ7CisJaW5zdGFuY2UtPmluaXRpYWxpemVkID0g
+dHJ1ZTsKKworCWRldl9kYmcoJmluc3RhbmNlLT5jZGV2LT5kZXZpY2UsICJ0YXJnZXQ9JWxkXG4i
+LCBpbnN0YW5jZS0+dGFyZ2V0KTsKKworCW11dGV4X2xvY2soJmluc3RhbmNlLT5jZGV2LT5sb2Nr
+KTsKKwlpbnN0YW5jZS0+Y2Rldi0+dXBkYXRlZCA9IGZhbHNlOyAvKiBjZGV2IG5lZWRzIHVwZGF0
+ZSAqLworCW11dGV4X3VubG9jaygmaW5zdGFuY2UtPmNkZXYtPmxvY2spOworfQorCiAvKioKICAq
+IGJhbmdfYmFuZ19jb250cm9sIC0gY29udHJvbHMgZGV2aWNlcyBhc3NvY2lhdGVkIHdpdGggdGhl
+IGdpdmVuIHpvbmUKICAqIEB0ejogdGhlcm1hbF96b25lX2RldmljZQpAQCAtNTQsMjUgKzc2LDM2
+IEBAIHN0YXRpYyB2b2lkIGJhbmdfYmFuZ19jb250cm9sKHN0cnVjdCB0aGUKIAkJdHotPnRlbXBl
+cmF0dXJlLCB0cmlwLT5oeXN0ZXJlc2lzKTsKIAogCWxpc3RfZm9yX2VhY2hfZW50cnkoaW5zdGFu
+Y2UsICZ0ei0+dGhlcm1hbF9pbnN0YW5jZXMsIHR6X25vZGUpIHsKLQkJaWYgKGluc3RhbmNlLT50
+cmlwICE9IHRyaXApCi0JCQljb250aW51ZTsKKwkJaWYgKGluc3RhbmNlLT50cmlwID09IHRyaXAp
+CisJCQliYW5nX2Jhbmdfc2V0X2luc3RhbmNlX3RhcmdldChpbnN0YW5jZSwgY3Jvc3NlZF91cCk7
+CisJfQorfQogCi0JCWlmIChpbnN0YW5jZS0+dGFyZ2V0ICE9IDAgJiYgaW5zdGFuY2UtPnRhcmdl
+dCAhPSAxICYmCi0JCSAgICBpbnN0YW5jZS0+dGFyZ2V0ICE9IFRIRVJNQUxfTk9fVEFSR0VUKQot
+CQkJcHJfZGVidWcoIlVuZXhwZWN0ZWQgc3RhdGUgJWxkIG9mIHRoZXJtYWwgaW5zdGFuY2UgJXMg
+aW4gYmFuZy1iYW5nXG4iLAotCQkJCSBpbnN0YW5jZS0+dGFyZ2V0LCBpbnN0YW5jZS0+bmFtZSk7
+Ci0KLQkJLyoKLQkJICogRW5hYmxlIHRoZSBmYW4gd2hlbiB0aGUgdHJpcCBpcyBjcm9zc2VkIG9u
+IHRoZSB3YXkgdXAgYW5kCi0JCSAqIGRpc2FibGUgaXQgd2hlbiB0aGUgdHJpcCBpcyBjcm9zc2Vk
+IG9uIHRoZSB3YXkgZG93bi4KLQkJICovCi0JCWluc3RhbmNlLT50YXJnZXQgPSBjcm9zc2VkX3Vw
+OwotCi0JCWRldl9kYmcoJmluc3RhbmNlLT5jZGV2LT5kZXZpY2UsICJ0YXJnZXQ9JWxkXG4iLCBp
+bnN0YW5jZS0+dGFyZ2V0KTsKLQotCQltdXRleF9sb2NrKCZpbnN0YW5jZS0+Y2Rldi0+bG9jayk7
+Ci0JCWluc3RhbmNlLT5jZGV2LT51cGRhdGVkID0gZmFsc2U7IC8qIGNkZXYgbmVlZHMgdXBkYXRl
+ICovCi0JCW11dGV4X3VubG9jaygmaW5zdGFuY2UtPmNkZXYtPmxvY2spOworc3RhdGljIHZvaWQg
+YmFuZ19iYW5nX21hbmFnZShzdHJ1Y3QgdGhlcm1hbF96b25lX2RldmljZSAqdHopCit7CisJY29u
+c3Qgc3RydWN0IHRoZXJtYWxfdHJpcF9kZXNjICp0ZDsKKwlzdHJ1Y3QgdGhlcm1hbF9pbnN0YW5j
+ZSAqaW5zdGFuY2U7CisKKwlmb3JfZWFjaF90cmlwX2Rlc2ModHosIHRkKSB7CisJCWNvbnN0IHN0
+cnVjdCB0aGVybWFsX3RyaXAgKnRyaXAgPSAmdGQtPnRyaXA7CisKKwkJaWYgKHR6LT50ZW1wZXJh
+dHVyZSA+PSB0ZC0+dGhyZXNob2xkIHx8CisJCSAgICB0cmlwLT50ZW1wZXJhdHVyZSA9PSBUSEVS
+TUFMX1RFTVBfSU5WQUxJRCB8fAorCQkgICAgdHJpcC0+dHlwZSA9PSBUSEVSTUFMX1RSSVBfQ1JJ
+VElDQUwgfHwKKwkJICAgIHRyaXAtPnR5cGUgPT0gVEhFUk1BTF9UUklQX0hPVCkKKwkJCWNvbnRp
+bnVlOworCisJCS8qCisJCSAqIElmIHRoZSBpbml0aWFsIGNvb2xpbmcgZGV2aWNlIHN0YXRlIGlz
+ICJvbiIsIGJ1dCB0aGUgem9uZQorCQkgKiB0ZW1wZXJhdHVyZSBpcyBub3QgYWJvdmUgdGhlIHRy
+aXAgcG9pbnQsIHRoZSBjb3JlIHdpbGwgbm90CisJCSAqIGNhbGwgYmFuZ19iYW5nX2NvbnRyb2wo
+KSB1bnRpbCB0aGUgem9uZSB0ZW1wZXJhdHVyZSByZWFjaGVzCisJCSAqIHRoZSB0cmlwIHBvaW50
+IHRlbXBlcmF0dXJlIHdoaWNoIG1heSBiZSBuZXZlci4gIEluIHRob3NlCisJCSAqIGNhc2VzLCBz
+ZXQgdGhlIGluaXRpYWwgc3RhdGUgb2YgdGhlIGNvb2xpbmcgZGV2aWNlIHRvIDAuCisJCSAqLwor
+CQlsaXN0X2Zvcl9lYWNoX2VudHJ5KGluc3RhbmNlLCAmdHotPnRoZXJtYWxfaW5zdGFuY2VzLCB0
+el9ub2RlKSB7CisJCQlpZiAoIWluc3RhbmNlLT5pbml0aWFsaXplZCAmJiBpbnN0YW5jZS0+dHJp
+cCA9PSB0cmlwKQorCQkJCWJhbmdfYmFuZ19zZXRfaW5zdGFuY2VfdGFyZ2V0KGluc3RhbmNlLCAw
+KTsKKwkJfQogCX0KIAogCWxpc3RfZm9yX2VhY2hfZW50cnkoaW5zdGFuY2UsICZ0ei0+dGhlcm1h
+bF9pbnN0YW5jZXMsIHR6X25vZGUpCkBAIC04Miw1ICsxMTUsNiBAQCBzdGF0aWMgdm9pZCBiYW5n
+X2JhbmdfY29udHJvbChzdHJ1Y3QgdGhlCiBzdGF0aWMgc3RydWN0IHRoZXJtYWxfZ292ZXJub3Ig
+dGhlcm1hbF9nb3ZfYmFuZ19iYW5nID0gewogCS5uYW1lCQk9ICJiYW5nX2JhbmciLAogCS50cmlw
+X2Nyb3NzZWQJPSBiYW5nX2JhbmdfY29udHJvbCwKKwkubWFuYWdlCQk9IGJhbmdfYmFuZ19tYW5h
+Z2UsCiB9OwogVEhFUk1BTF9HT1ZFUk5PUl9ERUNMQVJFKHRoZXJtYWxfZ292X2JhbmdfYmFuZyk7
+Cg==
+--00000000000093dc97061f806562--
