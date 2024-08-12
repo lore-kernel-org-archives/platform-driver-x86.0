@@ -1,552 +1,170 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2064.outbound.protection.outlook.com [40.107.96.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D65EE17D366
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 13:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723470875; cv=none; b=lI2LR72nhaQaajtOovkoB8WGhp2DtmrGEpozACfYjWYQBVKbT53HnX9lnU3cifwB6q7gflVZsPK6hh95j4/HkZMUbdp3SUwJTqZ8JbRzhjTf8AySWcpt8P+ASxueLXJ2kjF8NO6pDra0sNYa+Cb6qWD1b763aDW5aB4cVYP+XAg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723470875; c=relaxed/simple;
-	bh=NfI2cZVQJs2lPLmv9E1HDiH5ze7bCYFBBtjXDWEK6Ck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZtPQviCPd7kkdKuvmSyJJX4g95VcR5gsSLQF9xsTs+i9EO/YJhwAVDIJyWCDa12M7/EsUiV0xaeu3TbTTbnF2uHGYy406IQCMV+ZAslXeptb/PpGolTNOCvrwN6mRvANldmILVotFLBheMd9x2NMFJjjytMFG9DMs8spXbcvL2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AIUbWTUj; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3A917C9E7
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 14:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723471829; cv=fail; b=rS4vMgB05QtYy53stuRueZmvMGkLY7cy/QFQR7Sx9jGTcMjg2bS51TQLyK+SUcwOdRvEEqPUEcHTH8kn+rYKFYacJX/MpBJwnrVN6/u15SGgXNtYTj9qCIslE5jFqGVrTtol73R4aIdbdO8sNPdMU/xYd/nPF/YIxMjfZIkGwHE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723471829; c=relaxed/simple;
+	bh=w9Tz6YIH/KkI1/JRXhOa8bbQuOabtmvcq1Bv23BScgI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mDPPsYspkL/jnHcFVObZJ6XePiQ9AXbUz+Wwn/QZCUbu1u9vPE9wuytXuYRD7yrM3x3FKpOaStGx0jCpnkpCplzdMbxSH0rwPBT9xz4zmhBvTxFvwt0Pv7ZI1rK8DPoKuxQOr/qxTQMhBfMhE5nNJ18YEPw4H23EP3ui2Xyme/A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=U0r/tZCD; arc=fail smtp.client-ip=40.107.96.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AIUbWTUj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723470872;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kxn6Ub9UghdUFqSVBosRd1unvPDxGVy6TppuFiN7yzo=;
-	b=AIUbWTUj8w1WyI0NRhUSLy8oZCRAYFNHVwxdlF6RId/QHdM4rH1OBJMYJ1kEw8fF2w4+vH
-	Pt5M0CudQrTC5+dIRVsWeWXWioyeV8bx9dPu7+jTcohwszpekBOtin+9KcDtWLsEy9EZIi
-	0TG0r5TloX+01WwGZdLHZIyA1UK1qvg=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-353-K-Sx7BJoNwKXgq95iT9XaA-1; Mon, 12 Aug 2024 09:54:29 -0400
-X-MC-Unique: K-Sx7BJoNwKXgq95iT9XaA-1
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2f01a8b90b6so46467001fa.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 06:54:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723470868; x=1724075668;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kxn6Ub9UghdUFqSVBosRd1unvPDxGVy6TppuFiN7yzo=;
-        b=oNvnG8gicMoR6UMa4e2QfTsmdpK9CDzt9RpClegb9PZ1fA0igemWMqVPbro3WN9KAD
-         GgAM+4zQdUklWgC8Gj625unTSQloR0+qygZakOinbnBxxXxJRhmamfwCDgl//JPwYZvK
-         KN4JzwUGgCtfBaHGcVfsnfRBUQODsGcfRL58oOcI4lz6fDRJtZosWoMXAEkOoNlOb+fk
-         T2TtMsqb6B5ZWngpR1RMLc+z5njBklafMhtxBsXxaKnPjpD7icT2/kMTDWo3x2pGePoD
-         S3skM/io2hMmKE3KQk0JaLDfKH634deUZZi6S9TASrptyTvF0u6pxFbnd2Ue0lBBUp2c
-         7fmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVtTGWi0OtftBGW0A0HcSxYp+A/KuUjMvYk/ymJlvSUEA9BT6OQHcISkG+DtsVO3QSG7IwqMNeN0d32tSlNKvGV68Ynhbdrhj64q7kmCBVY+7w9gA==
-X-Gm-Message-State: AOJu0Yynx5Sia8hh4M6N/xzs/oe7XCI4Bci/Ur0BdIrHOxypIQOcNSpP
-	V+BFa+YFQ9x9CyKmqTFPLUxrTZzwZttcwtoMVe9h48vmgojMyWoO7a+EtlBxd4lbnTFwjlB79k8
-	v5FIPoF56Uvqe47LHk2fDmSkaSpHsUlVxOrfepzWgXRWqZuf/73cQndirbHZxpTsUd0UiHG4=
-X-Received: by 2002:a2e:3216:0:b0:2f2:9df8:e64e with SMTP id 38308e7fff4ca-2f2b714e6aamr3179941fa.11.1723470867795;
-        Mon, 12 Aug 2024 06:54:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHvE3GHSY0vWl+x8pZDaXjEfu0nbV0xo/kJhZvJKuHkWe5GvW7FGgKOvwEh5ge5+7u5R27lmg==
-X-Received: by 2002:a2e:3216:0:b0:2f2:9df8:e64e with SMTP id 38308e7fff4ca-2f2b714e6aamr3179551fa.11.1723470867090;
-        Mon, 12 Aug 2024 06:54:27 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a80bb0e4af1sm233565766b.86.2024.08.12.06.54.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Aug 2024 06:54:26 -0700 (PDT)
-Message-ID: <770e2abc-7a68-448c-91ee-0dc71b9c91bf@redhat.com>
-Date: Mon, 12 Aug 2024 15:54:26 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="U0r/tZCD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hmMsNYG3kwY9bIQbQJXO4PL+YP6ALofFuGAlCaSnue1f54gEkOtcyGljCSB36peD0IWa0UkFUKMouW1re+TX2o7mJX3YJ30V4UgcpM5JJWPx0J77Jbemf8fxyisbHB+i9q9h4j+0sp6A4Xfxo7KjoI2EgjhS47mlxei1KWQT5Hx9+BT3kJY0ClkYHXqd1DLMRsHTxGfrAAF+TaACi8szcKLgV9EM5+BjoL4nujVrqOc7m2L3jNk1LIKZOlQaj9rYHMNIVgaco5SHJK2KX7GielWILQap36vZggQtn+JOIqTL3WgPXpGqViK5R/7V0HWc4DxsO0Udve6lIx0eYWSPZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LLX454EkOKlJyipfPO/aGIMEa0XG7r3pXiOddOD6kTs=;
+ b=yo0jaH4/gzkHbqwMh6UJm4B+B+oozxXKW8N4aZqbSUTol7KSTQeYqakiTpcVG8PSzEotiF2lQi99YRfPbMxaAj7shFsKI+I5kO0ZKJclkVZgsnjzcDHKgfyabVxWjG8TKy3+Z46+1k9k38crzVS57rOQtPb3H2++DdfSaWf/G5jhzZ6vJeEHLux0ZgGsgOMxm8d8KwIIw6mk3VxDYDbeLuYN9745ag7oX+h6hUMHzcNGgHvqttiXrEFaVrQQoKlwL3Z82UxhTD5CKC4invNSl0vZXyqtgLdrGRQ+9aoVe2g/pTR00++gh8SYcuJE0J2vt2zym34+xkPkBdBWZRa2rQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LLX454EkOKlJyipfPO/aGIMEa0XG7r3pXiOddOD6kTs=;
+ b=U0r/tZCDyXQHbytmND9SP07ROQqAM8nkwjYnFLuDDeYZPd3t2uMTmmtkKp00yOsP4TGiKEom7raffVeqSRKzDFvC5UhEIL8p4B4g0GvMyf2svklr0ahPVA1rWRxJ2BcCQHYIHNybhD/u3f1HOYcKpMkTfyYAzH5A85gRCUzfavc=
+Received: from SA0PR11CA0076.namprd11.prod.outlook.com (2603:10b6:806:d2::21)
+ by MW4PR12MB7030.namprd12.prod.outlook.com (2603:10b6:303:20a::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7849.17; Mon, 12 Aug
+ 2024 14:10:24 +0000
+Received: from SN1PEPF0002BA50.namprd03.prod.outlook.com
+ (2603:10b6:806:d2:cafe::8a) by SA0PR11CA0076.outlook.office365.com
+ (2603:10b6:806:d2::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.33 via Frontend
+ Transport; Mon, 12 Aug 2024 14:10:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF0002BA50.mail.protection.outlook.com (10.167.242.73) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7828.19 via Frontend Transport; Mon, 12 Aug 2024 14:10:24 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 12 Aug
+ 2024 09:10:21 -0500
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>, "Shyam
+ Sundar S K" <Shyam-sundar.S-k@amd.com>
+Subject: [PATCH 1/2] platform/x86/amd/pmf: Relocate CPU ID macros to the PMF header
+Date: Mon, 12 Aug 2024 19:39:50 +0530
+Message-ID: <20240812140951.310550-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] platform/x86:dell-laptop: Add knobs to change
- battery charge settings
-To: Andres Salomon <dilinger@queued.net>, linux-kernel@vger.kernel.org
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
- platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>,
- Sebastian Reichel <sre@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- linux-pm@vger.kernel.org, Dell.Client.Kernel@dell.com
-References: <20240723220502.77cb0401@5400>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240723220502.77cb0401@5400>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA50:EE_|MW4PR12MB7030:EE_
+X-MS-Office365-Filtering-Correlation-Id: 14c72d85-fbab-449e-05a0-08dcbad88245
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?7q5KzLyY0upGWZcUjhTYD09uGGYEJj3fVNQ/+3cSNfnmERXmnSoe8VHeZCVn?=
+ =?us-ascii?Q?RJeKYc7GWofZHZmXurF28S+6/M0aLWYm0iRBAYEvPfCxAGkCPXpBhwYDyLG7?=
+ =?us-ascii?Q?Y6In10ELx5ofu4dCqVfQICjP2cM1dWk4vrYQbGDpgd3rv2Vli3jOqJl4Q3Eo?=
+ =?us-ascii?Q?qD/fbnQgb8THKZxO9oDCFg0KFeaPqvw5UmYvyo6uDVkREa2GP/59KW1lpRhP?=
+ =?us-ascii?Q?LQUWEAUeA3DktHpN2mB/fWAGLYDxlWnb2AhwL0y69y7fZdImcIhf/eUFDomI?=
+ =?us-ascii?Q?hxpRSkeGUZcvZZgCD8WDhuQgdlbEamlusCAwPTgaS+jUg/dp3hg3qeOQvF3e?=
+ =?us-ascii?Q?pAV2tpKIicuRHraH3yISjcchxCeXQeXSYUZGbAVjtbp/iKe8sInPPulG669s?=
+ =?us-ascii?Q?Dpa8H8xe7vFlvWESpbin6WSJcLRgapP6W6Y15rCagim3DfEYfzAe7p081n9L?=
+ =?us-ascii?Q?QBaMyefHPNyra+yL6/LoIobXrkwejRgr9uSdMfd+TUe+Sb/ikQF+PW0VnQG1?=
+ =?us-ascii?Q?XCIqaOLlTXcQ8JU7jAOH2hURmuoMyaqv9C4nchczGOb+qOEueF1yLPODlIPd?=
+ =?us-ascii?Q?egA4qHM32FFuBHQk5xmGQh6/IzGZHB36hgoS/0Jnc7oYpyP9qecQAqJilbIX?=
+ =?us-ascii?Q?NBbT11iazj+3RyrSQz7F/ZGxC3t8OiV7wYXQDqmiQVyusEuuOkzGDRfpeB3/?=
+ =?us-ascii?Q?uUrjG6d7NXmYAL0QdI337c9MLgz9klrTo7QhKABD2gA7qn2hBmycUlSrjMgm?=
+ =?us-ascii?Q?tHEWGaN8PJAUFR27SENobV5OSHbgvVcmrjeDb6uT83n4J5YsQmC+w85w6Yyc?=
+ =?us-ascii?Q?iKSy7PW0bgvmekwh/x5/lrjwBkylEXKA4oEMPYPyF4EfrJmMbtouQ6M+hxAa?=
+ =?us-ascii?Q?687aDulyg4Wkzy3BPQxupHevh5HIOvdykX9ugHe40HOJvAbYGmuo8KfhjKbo?=
+ =?us-ascii?Q?zwLvVdiHTmqWd9iemYBkEBiTPz9tI5JNUsHVPx80d8sL+Bdh6vC1i8lsOIVk?=
+ =?us-ascii?Q?oljjKKFnyfm+1EC0+D5wABUxuBWnKyjT/lvYzffNDaAQwwcLbowPfzl2DGZ4?=
+ =?us-ascii?Q?865CfRMi/WJ2RZIFcuVNDMSKkh3nwRF7TQlhyDI12AgAsmVlyk+NsAWBuTZs?=
+ =?us-ascii?Q?gjNNvPjkQ7MF2eXbJW/n+FV3JiHrh7WaKA/1lfypXKSvmb6p8grVVBoLuHi2?=
+ =?us-ascii?Q?AlR+yOFOnJC9lrU+Vmf7TGoBqnN6mJLgOxBYAqpazIg2PyTGloVaB1AtuZDD?=
+ =?us-ascii?Q?FURuj8uCYpz+DgBBGlw2GysXPMfeQk1IQPcTfnuSPxtXReESGpuUqUDt1wel?=
+ =?us-ascii?Q?MUANoiPtZHR2idQFQS0wzsuyBA2kCmyT68IyvQxJ3GhSLKxO6fwly2YTY0Co?=
+ =?us-ascii?Q?LcUUxxibind0xBLXIUuz1W71t34j5jlBN9FyS1NR39sN76Cx8IVlT80CWueF?=
+ =?us-ascii?Q?ygO0CmEQ2xC396P6AsynvHIybbCH7HEM?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2024 14:10:24.0094
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 14c72d85-fbab-449e-05a0-08dcbad88245
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002BA50.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7030
 
-Hi Andres
+The CPU ID macros are needed by the Smart PC builder. Therefore, transfer
+the CPU ID macros from core.c to the common PMF header file.
 
-On 7/24/24 4:05 AM, Andres Salomon wrote:
-> 
-> The Dell BIOS allows you to set custom charging modes, which is useful
-> in particular for extending battery life. This adds support for tweaking
-> those various settings from Linux via sysfs knobs. One might, for
-> example, have their laptop plugged into power at their desk the vast
-> majority of the time and choose fairly aggressive battery-saving
-> settings (only charging once the battery drops to 50% and only charging
-> up to 80%). When leaving for a trip, they might want to switch those
-> settings to charge to 100% and charge any time power is available;
-> rebooting into the BIOS to change those settings is a hassle.
-> 
-> For the Custom charging type mode, we reuse the common
-> charge_control_{start,end}_threshold sysfs power_supply entries. The
-> BIOS also has a bunch of other charging modes (with varying levels of
-> usefulness), so this adds a new Dell-specific sysfs entry called
-> 'charge_type' that's documented in sysfs-class-power-dell (and looks a
-> lot like sysfs-class-power-wilco).
-> 
-> This work is based on a patch by Perry Yuan <perry_yuan@dell.com> and
-> Limonciello Mario <Mario_Limonciello@Dell.com> submitted back in 2020:
-> https://lore.kernel.org/all/20200729065424.12851-1-Perry_Yuan@Dell.com/
-> Both of their email addresses bounce, so I'm assuming they're no longer
-> with the company. I've reworked most of the patch to make it smaller and
-> cleaner.
-> 
-> Signed-off-by: Andres Salomon <dilinger@queued.net>
-> ---
-> Changes in v2, based on extensive feedback from Pali Rohár <pali@kernel.org>:
->     - code style changes
->     - change battery write API to use token->value instead of passed value
->     - stop caching current mode, instead querying SMBIOS as needed
->     - drop the separate list of charging modes enum
->     - rework the list of charging mode strings
->     - query SMBIOS for supported charging modes
->     - split dell_battery_custom_set() up
+Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
+Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+---
+ drivers/platform/x86/amd/pmf/core.c | 6 ------
+ drivers/platform/x86/amd/pmf/pmf.h  | 6 ++++++
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-Thank you for your contribution, it will be great to have charge threshold
-support on Dell laptops available to end users.
-
-I see that there are some review-comments on this first patch of
-the series. Please submit a v3 addressing those and then this will
-hopefully be ready for merging.
-
-Regards,
-
-Hans
-
-
-
-
-> ---
->  .../ABI/testing/sysfs-class-power-dell        |  31 ++
->  drivers/platform/x86/dell/Kconfig             |   1 +
->  drivers/platform/x86/dell/dell-laptop.c       | 288 ++++++++++++++++++
->  drivers/platform/x86/dell/dell-smbios.h       |   7 +
->  4 files changed, 327 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-power-dell
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-power-dell b/Documentation/ABI/testing/sysfs-class-power-dell
-> new file mode 100644
-> index 000000000000..ef72c5f797ce
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-power-dell
-> @@ -0,0 +1,31 @@
-> +What:		/sys/class/power_supply/<supply_name>/charge_type
-> +Date:		July 2024
-> +KernelVersion:	6.11
-> +Contact:	linux-pm@vger.kernel.org
-> +Description:
-> +		Select the charging algorithm to use for the (primary)
-> +		battery.
-> +
-> +		Standard:
-> +			Fully charge the battery at a moderate rate.
-> +		ExpressCharge™:
-> +			Quickly charge the battery using fast-charge
-> +			technology. This is harder on the battery than
-> +			standard charging and may lower its lifespan.
-> +		Primarily AC Use:
-> +			Users who primarily operate the system while
-> +			plugged into an external power source can extend
-> +			battery life with this mode.
-> +		Adaptive:
-> +			Automatically optimize battery charge rate based
-> +			on typical usage.
-> +		Custom:
-> +			Use the charge_control_* properties to determine
-> +			when to start and stop charging. Advanced users
-> +			can use this to drastically extend battery life.
-> +
-> +		Access: Read, Write
-> +		Valid values:
-> +			      "standard", "express", "primarily_ac",
-> +			      "adaptive", "custom"
-> +
-> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
-> index 85a78ef91182..02405793163c 100644
-> --- a/drivers/platform/x86/dell/Kconfig
-> +++ b/drivers/platform/x86/dell/Kconfig
-> @@ -49,6 +49,7 @@ config DELL_LAPTOP
->  	default m
->  	depends on DMI
->  	depends on BACKLIGHT_CLASS_DEVICE
-> +	depends on ACPI_BATTERY
->  	depends on ACPI_VIDEO || ACPI_VIDEO = n
->  	depends on RFKILL || RFKILL = n
->  	depends on DELL_WMI || DELL_WMI = n
-> diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
-> index 6552dfe491c6..aae9a95fb188 100644
-> --- a/drivers/platform/x86/dell/dell-laptop.c
-> +++ b/drivers/platform/x86/dell/dell-laptop.c
-> @@ -22,11 +22,13 @@
->  #include <linux/io.h>
->  #include <linux/rfkill.h>
->  #include <linux/power_supply.h>
-> +#include <linux/sysfs.h>
->  #include <linux/acpi.h>
->  #include <linux/mm.h>
->  #include <linux/i8042.h>
->  #include <linux/debugfs.h>
->  #include <linux/seq_file.h>
-> +#include <acpi/battery.h>
->  #include <acpi/video.h>
->  #include "dell-rbtn.h"
->  #include "dell-smbios.h"
-> @@ -99,6 +101,18 @@ static bool force_rfkill;
->  static bool micmute_led_registered;
->  static bool mute_led_registered;
->  
-> +static const struct {
-> +	int token;
-> +	const char *label;
-> +} battery_modes[] = {
-> +	{ BAT_STANDARD_MODE_TOKEN, "standard" },
-> +	{ BAT_EXPRESS_MODE_TOKEN, "express" },
-> +	{ BAT_PRI_AC_MODE_TOKEN, "primarily_ac" },
-> +	{ BAT_ADAPTIVE_MODE_TOKEN, "adaptive" },
-> +	{ BAT_CUSTOM_MODE_TOKEN, "custom" },
-> +};
-> +static u32 battery_supported_modes;
-> +
->  module_param(force_rfkill, bool, 0444);
->  MODULE_PARM_DESC(force_rfkill, "enable rfkill on non whitelisted models");
->  
-> @@ -2183,6 +2197,277 @@ static struct led_classdev mute_led_cdev = {
->  	.default_trigger = "audio-mute",
->  };
->  
-> +static int dell_send_request_by_token_loc(struct calling_interface_buffer *buffer,
-> +					  u16 class, u16 select, int type,
-> +					  u32 val)
-> +{
-> +	struct calling_interface_token *token;
-> +
-> +	token = dell_smbios_find_token(type);
-> +	if (!token)
-> +		return -ENODEV;
-> +
-> +	/* -1 is a sentinel value, telling us to use token->value */
-> +	if (val == (u32)-1)
-> +		val = token->value;
-> +
-> +	dell_fill_request(buffer, token->location, val, 0, 0);
-> +	return dell_send_request(buffer, class, select);
-> +}
-> +
-> +static int dell_battery_set_mode(const int type)
-> +{
-> +	struct calling_interface_buffer buffer;
-> +
-> +	/* -1 means use the value from the token */
-> +	return dell_send_request_by_token_loc(&buffer, CLASS_TOKEN_WRITE,
-> +			SELECT_TOKEN_STD, type, -1);
-> +}
-> +
-> +static int dell_battery_read(const int type)
-> +{
-> +	struct calling_interface_buffer buffer;
-> +	int err;
-> +
-> +	err = dell_send_request_by_token_loc(&buffer, CLASS_TOKEN_READ,
-> +			SELECT_TOKEN_STD, type, 0);
-> +	if (err)
-> +		return err;
-> +
-> +	return buffer.output[1];
-> +}
-> +
-> +static bool dell_battery_mode_is_active(const int type)
-> +{
-> +	struct calling_interface_token *token;
-> +
-> +	token = dell_smbios_find_token(type);
-> +	if (!token)
-> +		return false;
-> +
-> +	return token->value == dell_battery_read(type);
-> +}
-> +
-> +/* The rules: the minimum start charging value is 50%. The maximum
-> + * start charging value is 95%. The minimum end charging value is
-> + * 55%. The maximum end charging value is 100%. And finally, there
-> + * has to be at least a 5% difference between start & end values.
-> + */
-> +#define CHARGE_START_MIN	50
-> +#define CHARGE_START_MAX	95
-> +#define CHARGE_END_MIN		55
-> +#define CHARGE_END_MAX		100
-> +#define CHARGE_MIN_DIFF		5
-> +
-> +static int dell_battery_set_custom_charge_start(int start)
-> +{
-> +	struct calling_interface_buffer buffer;
-> +	int end;
-> +
-> +	if (start < CHARGE_START_MIN)
-> +		start = CHARGE_START_MIN;
-> +	else if (start > CHARGE_START_MAX)
-> +		start = CHARGE_START_MAX;
-> +
-> +	end = dell_battery_read(BAT_CUSTOM_CHARGE_END);
-> +	/* a failed read is okay */
-> +	if (end < 0)
-> +		end = CHARGE_END_MAX;
-> +	if ((end - start) < CHARGE_MIN_DIFF)
-> +		start = end - CHARGE_MIN_DIFF;
-> +
-> +	return dell_send_request_by_token_loc(&buffer, CLASS_TOKEN_WRITE,
-> +			SELECT_TOKEN_STD, BAT_CUSTOM_CHARGE_START, start);
-> +}
-> +
-> +static int dell_battery_set_custom_charge_end(int end)
-> +{
-> +	struct calling_interface_buffer buffer;
-> +	int start;
-> +
-> +	if (end < CHARGE_END_MIN)
-> +		end = CHARGE_END_MIN;
-> +	else if (end > CHARGE_END_MAX)
-> +		end = CHARGE_END_MAX;
-> +
-> +	start = dell_battery_read(BAT_CUSTOM_CHARGE_START);
-> +	/* a failed read is okay */
-> +	if (start < 0)
-> +		start = CHARGE_START_MIN;
-> +	if ((end - start) < CHARGE_MIN_DIFF)
-> +		end = start + CHARGE_MIN_DIFF;
-> +
-> +	return dell_send_request_by_token_loc(&buffer, CLASS_TOKEN_WRITE,
-> +			SELECT_TOKEN_STD, BAT_CUSTOM_CHARGE_END, end);
-> +}
-> +
-> +static ssize_t charge_type_show(struct device *dev,
-> +		struct device_attribute *attr,
-> +		char *buf)
-> +{
-> +	ssize_t count = 0;
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(battery_modes); i++) {
-> +		bool active;
-> +
-> +		if (!(battery_supported_modes & BIT(i)))
-> +			continue;
-> +
-> +		active = dell_battery_mode_is_active(battery_modes[i].token);
-> +		count += sysfs_emit_at(buf, count, active ? "[%s] " : "%s ",
-> +				battery_modes[i].label);
-> +	}
-> +
-> +	/* convert the last space to a newline */
-> +	if (count > 0)
-> +		count--;
-> +	count += sysfs_emit_at(buf, count, "\n");
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t charge_type_store(struct device *dev,
-> +		struct device_attribute *attr,
-> +		const char *buf, size_t size)
-> +{
-> +	bool matched = false;
-> +	int err, i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(battery_modes); i++) {
-> +		if (sysfs_streq(battery_modes[i].label, buf)) {
-> +			matched = true;
-> +			break;
-> +		}
-> +	}
-> +	if (!matched || !(battery_supported_modes & BIT(i)))
-> +		return -EINVAL;
-> +
-> +	err = dell_battery_set_mode(battery_modes[i].token);
-> +	if (err)
-> +		return err;
-> +
-> +	return size;
-> +}
-> +
-> +static ssize_t charge_control_start_threshold_show(struct device *dev,
-> +		struct device_attribute *attr,
-> +		char *buf)
-> +{
-> +	int start;
-> +
-> +	start = dell_battery_read(BAT_CUSTOM_CHARGE_START);
-> +	if (start < 0)
-> +		return start;
-> +
-> +	return sysfs_emit(buf, "%d\n", start);
-> +}
-> +
-> +static ssize_t charge_control_start_threshold_store(struct device *dev,
-> +		struct device_attribute *attr,
-> +		const char *buf, size_t size)
-> +{
-> +	int ret, start;
-> +
-> +	ret = kstrtoint(buf, 10, &start);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = dell_battery_set_custom_charge_start(start);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return size;
-> +}
-> +
-> +static ssize_t charge_control_end_threshold_show(struct device *dev,
-> +		struct device_attribute *attr,
-> +		char *buf)
-> +{
-> +	int end;
-> +
-> +	end = dell_battery_read(BAT_CUSTOM_CHARGE_END);
-> +	if (end < 0)
-> +		return end;
-> +
-> +	return sysfs_emit(buf, "%d\n", end);
-> +}
-> +
-> +static ssize_t charge_control_end_threshold_store(struct device *dev,
-> +		struct device_attribute *attr,
-> +		const char *buf, size_t size)
-> +{
-> +	int ret, end;
-> +
-> +	ret = kstrtouint(buf, 10, &end);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = dell_battery_set_custom_charge_end(end);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return size;
-> +}
-> +
-> +static DEVICE_ATTR_RW(charge_control_start_threshold);
-> +static DEVICE_ATTR_RW(charge_control_end_threshold);
-> +static DEVICE_ATTR_RW(charge_type);
-> +
-> +static struct attribute *dell_battery_attrs[] = {
-> +	&dev_attr_charge_control_start_threshold.attr,
-> +	&dev_attr_charge_control_end_threshold.attr,
-> +	&dev_attr_charge_type.attr,
-> +	NULL,
-> +};
-> +ATTRIBUTE_GROUPS(dell_battery);
-> +
-> +static int dell_battery_add(struct power_supply *battery,
-> +		struct acpi_battery_hook *hook)
-> +{
-> +	return device_add_groups(&battery->dev, dell_battery_groups);
-> +}
-> +
-> +static int dell_battery_remove(struct power_supply *battery,
-> +		struct acpi_battery_hook *hook)
-> +{
-> +	device_remove_groups(&battery->dev, dell_battery_groups);
-> +	return 0;
-> +}
-> +
-> +static struct acpi_battery_hook dell_battery_hook = {
-> +	.add_battery = dell_battery_add,
-> +	.remove_battery = dell_battery_remove,
-> +	.name = "Dell Primary Battery Extension",
-> +};
-> +
-> +static u32 __init battery_get_supported_modes(void)
-> +{
-> +	u32 modes = 0;
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(battery_modes); i++) {
-> +		if (dell_smbios_find_token(battery_modes[i].token))
-> +			modes |= BIT(i);
-> +	}
-> +
-> +	return modes;
-> +}
-> +
-> +static void __init dell_battery_init(struct device *dev)
-> +{
-> +	battery_supported_modes = battery_get_supported_modes();
-> +
-> +	if (battery_supported_modes != 0)
-> +		battery_hook_register(&dell_battery_hook);
-> +}
-> +
-> +static void __exit dell_battery_exit(void)
-> +{
-> +	if (battery_supported_modes != 0)
-> +		battery_hook_unregister(&dell_battery_hook);
-> +}
-> +
->  static int __init dell_init(void)
->  {
->  	struct calling_interface_token *token;
-> @@ -2219,6 +2504,7 @@ static int __init dell_init(void)
->  		touchpad_led_init(&platform_device->dev);
->  
->  	kbd_led_init(&platform_device->dev);
-> +	dell_battery_init(&platform_device->dev);
->  
->  	dell_laptop_dir = debugfs_create_dir("dell_laptop", NULL);
->  	debugfs_create_file("rfkill", 0444, dell_laptop_dir, NULL,
-> @@ -2293,6 +2579,7 @@ static int __init dell_init(void)
->  	if (mute_led_registered)
->  		led_classdev_unregister(&mute_led_cdev);
->  fail_led:
-> +	dell_battery_exit();
->  	dell_cleanup_rfkill();
->  fail_rfkill:
->  	platform_device_del(platform_device);
-> @@ -2311,6 +2598,7 @@ static void __exit dell_exit(void)
->  	if (quirks && quirks->touchpad_led)
->  		touchpad_led_exit();
->  	kbd_led_exit();
-> +	dell_battery_exit();
->  	backlight_device_unregister(dell_backlight_device);
->  	if (micmute_led_registered)
->  		led_classdev_unregister(&micmute_led_cdev);
-> diff --git a/drivers/platform/x86/dell/dell-smbios.h b/drivers/platform/x86/dell/dell-smbios.h
-> index ea0cc38642a2..77baa15eb523 100644
-> --- a/drivers/platform/x86/dell/dell-smbios.h
-> +++ b/drivers/platform/x86/dell/dell-smbios.h
-> @@ -33,6 +33,13 @@
->  #define KBD_LED_AUTO_50_TOKEN	0x02EB
->  #define KBD_LED_AUTO_75_TOKEN	0x02EC
->  #define KBD_LED_AUTO_100_TOKEN	0x02F6
-> +#define BAT_PRI_AC_MODE_TOKEN	0x0341
-> +#define BAT_ADAPTIVE_MODE_TOKEN	0x0342
-> +#define BAT_CUSTOM_MODE_TOKEN	0x0343
-> +#define BAT_STANDARD_MODE_TOKEN	0x0346
-> +#define BAT_EXPRESS_MODE_TOKEN	0x0347
-> +#define BAT_CUSTOM_CHARGE_START	0x0349
-> +#define BAT_CUSTOM_CHARGE_END	0x034A
->  #define GLOBAL_MIC_MUTE_ENABLE	0x0364
->  #define GLOBAL_MIC_MUTE_DISABLE	0x0365
->  #define GLOBAL_MUTE_ENABLE	0x058C
+diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+index 8f1f719befa3..88314b0277a3 100644
+--- a/drivers/platform/x86/amd/pmf/core.c
++++ b/drivers/platform/x86/amd/pmf/core.c
+@@ -37,12 +37,6 @@
+ #define AMD_PMF_RESULT_CMD_UNKNOWN           0xFE
+ #define AMD_PMF_RESULT_FAILED                0xFF
+ 
+-/* List of supported CPU ids */
+-#define AMD_CPU_ID_RMB			0x14b5
+-#define AMD_CPU_ID_PS			0x14e8
+-#define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT	0x1507
+-#define PCI_DEVICE_ID_AMD_1AH_M60H_ROOT	0x1122
+-
+ #define PMF_MSG_DELAY_MIN_US		50
+ #define RESPONSE_REGISTER_LOOP_MAX	20000
+ 
+diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+index 9bf4326d06c3..9fc26f672f12 100644
+--- a/drivers/platform/x86/amd/pmf/pmf.h
++++ b/drivers/platform/x86/amd/pmf/pmf.h
+@@ -19,6 +19,12 @@
+ #define POLICY_SIGN_COOKIE		0x31535024
+ #define POLICY_COOKIE_OFFSET		0x10
+ 
++/* List of supported CPU ids */
++#define AMD_CPU_ID_RMB                  0x14b5
++#define AMD_CPU_ID_PS                   0x14e8
++#define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT 0x1507
++#define PCI_DEVICE_ID_AMD_1AH_M60H_ROOT 0x1122
++
+ struct cookie_header {
+ 	u32 sign;
+ 	u32 length;
+-- 
+2.25.1
 
