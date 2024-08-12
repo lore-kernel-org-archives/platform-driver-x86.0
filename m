@@ -1,65 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90CF49647
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 13:49:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8EAB17DE36
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 13:52:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723470577; cv=none; b=nRaAT9Wy5xc8VE/DXjpDFG9/5df/kYidLj0llYv0hbNiTrD1tTlp7CZ0CEZGPtsIBLdhEeTTYw4AwO9jVfdeVUufZLgq+c+fUNZYFMmL++C7XK6Rf/m6ON3zWd7Mj8m+gqk4el7EYzfThjCSbIzOszPOkf/YdqXL57uLWptz3ns=
+	t=1723470751; cv=none; b=pm8F30SNii8yzG0w25r7KL3IWTMOlx5V3G7s1ao4zJHpHrbFk58ObOzxouiNgPvVOc+zT4Ftpkqp98tuM1DQEw1t4aiNviy7H7rrM3Y62uOYT3Dhaq5We59hmQznBLKMd1H1brUHKP6iYW/1D3Pg2rKhn52RAO6RgPEdVRZDvUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723470577; c=relaxed/simple;
-	bh=+vX0WcMYp0ADVbGL9UAp0+5o+3Z3WsCo9EMAN7YgIkM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=NFvSvXMlKYDJyadbyNBFp+NKyvxBx01KBhghUhbS+aiMIQSDodiYm7aJHBvZfQmoHKZvoKnN0Od45amw48xBdY86NUeX6+pf2tMc2BKcGFCOqBM4/I2EXkRp8uGuD3cOKUtAc3OGoF1V0XGR8iV+tC288vmlmJ59ANkhtdMEp2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DH/OUUMH; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1723470751; c=relaxed/simple;
+	bh=U+oTwlABO4oBXd7EEjBWj1WtDC61J7PYbNmt7uiSfe4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ibq+q52x6JgVCHMj1BNr47XRlShwKVxKRY4rlR3A2TwYFqwN1H986oc0d9QaG3WznoitWzlX6lZzm/Vh9+LLhVgoikVoaou0w8lmvg/w6qaiTLhoOU44UFJiuz1ARzIO50ukyeW7EfjwSBNzjnG7+A+wP2GghZI6KDfLca9HdUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gw7Rwufo; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DH/OUUMH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gw7Rwufo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723470574;
+	s=mimecast20190719; t=1723470748;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4L2BKBldGmTgWegBX3tar5oC0/S4jMH9FREzmdYBeQM=;
-	b=DH/OUUMHTspCLsFutqJRbt0/5QmvTC3X8OykhnC34DGXg3YznmiNEpCnbRDCTqx2sYbBRu
-	9TGRoj/ROXToEh0f77dc9lovXibz4CSZJWA7W7rVmdwB7IY41btw0xRNb8uApPNZvvlyjU
-	u7ILVbSVJvyCu5GOH78bXt6yKkERnK0=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Sd85iCuzkiaHIi9ARC/ZdPTz7M5ce5CxfGu9LxDUHcU=;
+	b=Gw7RwufonbwRMA6SUcr+E827UR12iTf5Xta2n1TaEN7oFVSPQ6VuchuFLP3OkB8I4N0Rj0
+	UcDzGe7dJrcYJnpZrRDXrRpKubqWz9r0aXtGrnS0dys8rUYkw3I20z+DUBcDykdRt4sw8F
+	SyJzpyu6fVmen6KExfm2oJBb00rokg8=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-481--He7gN5mPLuI51aaBzrkjA-1; Mon, 12 Aug 2024 09:49:32 -0400
-X-MC-Unique: -He7gN5mPLuI51aaBzrkjA-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5bb88479be6so2897130a12.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 06:49:32 -0700 (PDT)
+ us-mta-395--H74DW7gNQO6i2I5uGDv7g-1; Mon, 12 Aug 2024 09:52:27 -0400
+X-MC-Unique: -H74DW7gNQO6i2I5uGDv7g-1
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5a49935bda6so3300920a12.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 06:52:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723470572; x=1724075372;
+        d=1e100.net; s=20230601; t=1723470746; x=1724075546;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4L2BKBldGmTgWegBX3tar5oC0/S4jMH9FREzmdYBeQM=;
-        b=I5qC7TAq8cLUEDjrKq94e+eJrdCj234TqlRM+GXdZBRXbR/4soX2fVXEIerfGxQ7UN
-         gy6YddaJsdwcjJuUPZSC0JCS4gq0dxomzZYFDWW+Pc9J+UIwgee+nxipPU2IGh0yr110
-         6tK4FGo+dOzbVhWDonK/CDQYcaPw1gPJM55g7ZJ3f8lAFqWga5lyJZ8J+pc34gXdLoS+
-         xaZhr+MkRG6zQ0lS/8JYt0HvLuKT8B2R4rzSLfWm+3elve8UlQwL2qDkwWEXbVroFMfi
-         4otGpPt3vYrg9AgnEAl0LRsTsm2vJEy0I4hrgTUtoeCixdLGXyvVSkGrHOrF0PVlLCGm
-         WfHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVx7i4gev4F0P/BORKpBKbCPCqHKicKrqTF+h+1lWlIdDseeXPlujF5tZhsf1shG1XnHnJHVoJ6mpa/FPYm8q0SJvim@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDgdXbFZd5W/S2Yv3YdkLdc2JslsP5B6SXGdvjPIIp3rzE5av/
-	HNQmWX+gncNXHooZ3W2coRoBRkSb0VutubZ2E4YSFkN0dQBKhKXOyEG+MGkbI39d9rLsfPO9E19
-	48mQOQ3FH0oBIY3Vf1dmA1699pGTo0mds/DJjwJeG6bh2weAMl7k4VvyTWaq+IzXC+X3pBKE=
-X-Received: by 2002:a05:6402:40cc:b0:5bb:9ae0:4a4b with SMTP id 4fb4d7f45d1cf-5bd44c10131mr316693a12.7.1723470571741;
-        Mon, 12 Aug 2024 06:49:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEjXk8VpKyXfEM+J7aLarCyM7RNef3VHKx4k31tFTSzBJt1OSgtDuCMkUf2DvrwpAxI5uLOXg==
-X-Received: by 2002:a05:6402:40cc:b0:5bb:9ae0:4a4b with SMTP id 4fb4d7f45d1cf-5bd44c10131mr316674a12.7.1723470571231;
-        Mon, 12 Aug 2024 06:49:31 -0700 (PDT)
+        bh=Sd85iCuzkiaHIi9ARC/ZdPTz7M5ce5CxfGu9LxDUHcU=;
+        b=UhlsOptcYj5DMOilJn1wRnYMiMzNIKcN0maq8MLUJxYH2dSffEMDm49nA2TQc2fnfn
+         AXGMehqs2FBiVvRBSseNV0IJ8/wUkawaPT1x6p9YIaRHLiCo367ZyZyEfdOGvVxLo652
+         zYY48HyHsVPvnHt1wlhtGO8Zgy0sBN84MeG0cbx/6W815FEAf+AgK1yIN+2aquYO6AKH
+         Wf9W6eATNmCUcT4vnerP9pQ2N0848k8wykvpZ+OOJppvytknUhiNg2jCU7ZYNyiU9YeY
+         aTVfKzKemmEOpU7cvkmt+Cxj4+azvFQh1vFVsTGBw2cEhgqKcaymcb/VoPe5WBq9DKts
+         5qvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdER1LTE0vxQjWyDVi4tiyN9ob7tvla+gjQOGvnoHsYdSB1n7S/+14QwRHfQpS1eyvsz79QLVbgLa5DzREAVVGH4CPerjLf/EMTBfFVTvmRlauHw==
+X-Gm-Message-State: AOJu0YwSBnpIQHJUg9Gs2kyaIpTbHDZffWxeT0nr1AnjoFl2af1bm3Ll
+	2845+Pud6X1wp+S817cr19gd45COUTxC7u9xwKYBznUedBLFdjTFV0UArHh1E2OkmqiWrmp8ACE
+	zvE3hWta+Gf2zD5mh+1RrmzdYvVeOiU2eaTkBpzL3KKruPZAFYkrfsdTa2gjAZMqPHLzo3zA=
+X-Received: by 2002:a05:6402:2113:b0:5a1:25a5:5dde with SMTP id 4fb4d7f45d1cf-5bd44c38786mr245161a12.17.1723470746028;
+        Mon, 12 Aug 2024 06:52:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGxC+wbLxyAluaepNv7rHIg3aENCbMAyBR986wmaPBQbxdXUVRX4wQrPV3+hHy+P3YyLGM58A==
+X-Received: by 2002:a05:6402:2113:b0:5a1:25a5:5dde with SMTP id 4fb4d7f45d1cf-5bd44c38786mr245140a12.17.1723470745478;
+        Mon, 12 Aug 2024 06:52:25 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bd187f2abasm2105719a12.8.2024.08.12.06.49.30
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bd191a1e8esm2123978a12.37.2024.08.12.06.52.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Aug 2024 06:49:30 -0700 (PDT)
-Message-ID: <7225c299-6086-499a-8dfd-cbc5a8fcc7b6@redhat.com>
-Date: Mon, 12 Aug 2024 15:49:30 +0200
+        Mon, 12 Aug 2024 06:52:25 -0700 (PDT)
+Message-ID: <13d93f79-1209-4071-bf4e-a70703a9a400@redhat.com>
+Date: Mon, 12 Aug 2024 15:52:24 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,104 +67,119 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] platform/x86/intel/pmc: Show live substate
- requirements
-To: Kane Chen <kane.chen@intel.com>, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com
-References: <20240719122807.3853292-1-kane.chen@intel.com>
+Subject: Re: [PATCH] platform/x86:dell-laptop: Add knobs to change battery
+ charge settings
+To: Armin Wolf <W_Armin@gmx.de>, Andres Salomon <dilinger@queued.net>,
+ linux-kernel@vger.kernel.org
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+ platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>,
+ Sebastian Reichel <sre@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ linux-pm@vger.kernel.org, Dell.Client.Kernel@dell.com
+References: <20240720012220.26d62a54@5400>
+ <148efb2f-ef26-4759-98d3-5f6687c3cf12@redhat.com>
+ <c11ba6f5-5e7d-463d-9b1a-d2e56de21af9@gmx.de>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240719122807.3853292-1-kane.chen@intel.com>
+In-Reply-To: <c11ba6f5-5e7d-463d-9b1a-d2e56de21af9@gmx.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi,
 
-On 7/19/24 2:28 PM, Kane Chen wrote:
-> While debugging runtime s0ix, we do need to check which required IPs
-> are not power gated. This patch adds code to show live substate status
-> vs requirements in sys/kernel/debug/pmc_core/substate_requirements to
-> help runtime s0ix debug.
+On 7/29/24 6:41 PM, Armin Wolf wrote:
+> Am 29.07.24 um 12:02 schrieb Hans de Goede:
 > 
-> Signed-off-by: Kane Chen <kane.chen@intel.com>
+>> Hi,
+>>
+>> On 7/20/24 7:22 AM, Andres Salomon wrote:
+>>> The Dell BIOS allows you to set custom charging modes, which is useful
+>>> in particular for extending battery life. This adds support for tweaking
+>>> those various settings from Linux via sysfs knobs. One might, for
+>>> example, have their laptop plugged into power at their desk the vast
+>>> majority of the time and choose fairly aggressive battery-saving
+>>> settings (only charging once the battery drops to 50% and only charging
+>>> up to 80%). When leaving for a trip, they might want to switch those
+>>> settings to charge to 100% and charge any time power is available;
+>>> rebooting into the BIOS to change those settings is a hassle.
+>>>
+>>> For the Custom charging type mode, we reuse the common
+>>> charge_control_{start,end}_threshold sysfs power_supply entries. The
+>>> BIOS also has a bunch of other charging modes with varying levels of
+>>> usefulness, so this adds a new Dell-specific sysfs entry called
+>>> 'charge_type' that's documented in sysfs-class-power-dell (and looks a
+>>> lot like sysfs-class-power-wilco).
+>>>
+>>> This work is based on a patch by Perry Yuan <perry_yuan@dell.com> and
+>>> Limonciello Mario <Mario_Limonciello@Dell.com> submitted back in 2020:
+>>> https://lore.kernel.org/all/20200729065424.12851-1-Perry_Yuan@Dell.com/
+>>> Both of their email addresses bounce, so I'm assuming they're no longer
+>>> with the company. I've reworked most of the patch to make it smaller and
+>>> cleaner.
+>>>
+>>> Signed-off-by: Andres Salomon <dilinger@queued.net>
+>> Thank you for working on this and it is great to see the discussion
+>> to improve the code between you and Pali going on.
+>>
+>> One concern which I have is that work is underway for both upower
+>> and GNOME to add support for
+>> /sys/class/power_supply/*/charge_[start|stop]_threshold
+>>
+>> to gnome-control-center.
+>>
+>> But if I understand things correctly then these limits will only
+>> be honored when the charging-type is set to custom.
+>>
+>> So we need to do something to avoid userspace exposing those
+>> controls when the charging-type is not custom.
+>>
+>> I think it would be best to not have the charge_[start|stop]_threshold
+>> attributes visible when the charging mode is not custom.
+>>
+>> Regards,
+>>
+>> Hans
+> 
+> Hi,
+> 
+> the documentation of the "charge_type" sysfs attribute states that:
+> 
+>     "Custom" means that the charger uses the charge_control_* properties as
+>      configuration for some different algorithm.
+> 
+> So i believe that "charge_[start|stop]_threshold" attributes should not be unregistered
+> if "charge_type" is not "Custom" because:
+> 
+> 1. The power supply subsystem does not allow that for power supplies, and i see little
+> reason to deviate from this behavior here.
+> 
+> 2. It is the responsibility of userspace to also set "charge_type" to "Custom" when using
+> the "charge_[start|stop]_threshold" attributes.
+> 
+> Maybe we could clarify what happens when "charge_[start|stop]_threshold" is written without
+> "charge_type" being "Custom". This might help userspace to correctly switch to custom charging
+> and set the charging thresholds.
+> 
+> Basically, we could define that writes to "charge_[start|stop]_threshold" will get buffered by
+> the driver if two conditions are met:
+> 
+> 1. "charge_type" is not "Custom".
+> 
+> 2. The hardware does not support setting the charging thresholds when "charge_type" is not "Custom".
+> 
+> Userspace can then first set "charge_[start|stop]_threshold" and then switch to custom charging.
+> This prevents any problems should the hardware have no default value for the charging thresholds
+> when switching to custom charging for the first time.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Ah I did not realize this was already documented in this way. Yes if this is
+already documented this way then the driver does not have to do anything.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+Instead userspace consumers of the "charge_[start|stop]_threshold" user should
+check (and if necessary / if they want to set) "charge_type" = "Custom" on
+power_supply class devices which have a charge_type.
 
 Regards,
 
 Hans
 
-
-
-> ---
->  drivers/platform/x86/intel/pmc/core.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-> index 2ad2f8753e5d4..b93ecc5169745 100644
-> --- a/drivers/platform/x86/intel/pmc/core.c
-> +++ b/drivers/platform/x86/intel/pmc/core.c
-> @@ -791,13 +791,15 @@ static void pmc_core_substate_req_header_show(struct seq_file *s, int pmc_index)
->  	pmc_for_each_mode(i, mode, pmcdev)
->  		seq_printf(s, " %9s |", pmc_lpm_modes[mode]);
->  
-> -	seq_printf(s, " %9s |\n", "Status");
-> +	seq_printf(s, " %9s |", "Status");
-> +	seq_printf(s, " %11s |\n", "Live Status");
->  }
->  
->  static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
->  {
->  	struct pmc_dev *pmcdev = s->private;
->  	u32 sts_offset;
-> +	u32 sts_offset_live;
->  	u32 *lpm_req_regs;
->  	int num_maps, mp, pmc_index;
->  
-> @@ -811,6 +813,7 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
->  		maps = pmc->map->lpm_sts;
->  		num_maps = pmc->map->lpm_num_maps;
->  		sts_offset = pmc->map->lpm_status_offset;
-> +		sts_offset_live = pmc->map->lpm_live_status_offset;
->  		lpm_req_regs = pmc->lpm_req_regs;
->  
->  		/*
-> @@ -828,6 +831,7 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
->  		for (mp = 0; mp < num_maps; mp++) {
->  			u32 req_mask = 0;
->  			u32 lpm_status;
-> +			u32 lpm_status_live;
->  			const struct pmc_bit_map *map;
->  			int mode, idx, i, len = 32;
->  
-> @@ -842,6 +846,9 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
->  			/* Get the last latched status for this map */
->  			lpm_status = pmc_core_reg_read(pmc, sts_offset + (mp * 4));
->  
-> +			/* Get the runtime status for this map */
-> +			lpm_status_live = pmc_core_reg_read(pmc, sts_offset_live + (mp * 4));
-> +
->  			/*  Loop over elements in this map */
->  			map = maps[mp];
->  			for (i = 0; map[i].name && i < len; i++) {
-> @@ -868,6 +875,9 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
->  				/* In Status column, show the last captured state of this agent */
->  				seq_printf(s, " %9s |", lpm_status & bit_mask ? "Yes" : " ");
->  
-> +				/* In Live status column, show the live state of this agent */
-> +				seq_printf(s, " %11s |", lpm_status_live & bit_mask ? "Yes" : " ");
-> +
->  				seq_puts(s, "\n");
->  			}
->  		}
 
