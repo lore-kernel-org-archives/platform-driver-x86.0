@@ -1,64 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC64183CD4
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 15:38:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14674183CD7
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 15:40:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723477138; cv=none; b=pzlcgyDqbR9eOJLhDducmT1lnOZiwt9JEZiG/Zy/fhLx1RkNavDXEgoQknp2isbJNo/I4j1Z3MUKv2W4ki4BFFfdcqBEUxnPtXQiG9WT1RF9dHy0vTNmyAKjmKSrgzn7ybCwwk9H/KRysMbe5Gg8UQTiaXuueHm7gg1RdukcdJ4=
+	t=1723477220; cv=none; b=fBv53mAyrl/3gc79g+C2rY/q8omyJSrElaSt+GkRXHG+ejn2PyhTnOUZzdeIh4tTMefjxCzMAu9wDKZI33XLTes5Z95xcT2Hi18e473I5DGQCfQec4TTztYtbo2z45ij0q8PYnp91YBhdNfTquQKvWQPIp6KjlMKUu83pQT9Ikc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723477138; c=relaxed/simple;
-	bh=dEzFRSi5Ch741+35DJL8Eme/1DKg97v9Xv0G8Drxlo4=;
+	s=arc-20240116; t=1723477220; c=relaxed/simple;
+	bh=0OYeQ2fZ3PWhJcSem+khrvGeqAFHfT8q/YAWv+E7EUI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k2cvE+XJJl32/SD3t3CDv/QVPCI8AF3hnDUrXdlTPx/2Ayk9fIu5TnuRK3t41Wu2o/UZnaqRYp4GgKY6AuvjQwhNa9TwASGcbeu/ZkeOqLFvyJgLGZ1YK9kyDn5n/haO1p0NY9yEZtnBTgrD+DjBkovFfnK/rFGr5dd49E9phpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MfD2Xb3s; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=N8oJV3S4EoiS6MDypFMzkcLaB0b60kRl9J0wyRRD6FNUilGgGDdix5R34WTohgbvXwj+wVSCZg8J+V/008OLgUdN/jsrGx2RNacMKykNDWpv8yM30Dwe25WfFy+CsxG8iw3l5E63v7oM005VTbkdSat8SbK0lGIr3+NK4gsJDmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SFQGNcf3; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MfD2Xb3s"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SFQGNcf3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723477135;
+	s=mimecast20190719; t=1723477218;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=m+NcVfxfLueCtd1XwBH1GMwF5gZvC1aWJOmQ0/8l0is=;
-	b=MfD2Xb3sNSa0eIdKYbZbb0gTbYleC4q3Lrz2aJPX9EuqTaq00QM4arM4km15h6fJyQclpm
-	sLq3HAGbcyepH+f0t28gaa0KwLxmT419CoZ8UnVSx7RTv8z5uprSVXKxGdqgF0btZdhT5m
-	LZb2e9+mWs4Jsj1ZhYS2X1hdE0AIhis=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=IsDajGJ5npBRUKxZy3yJy39+Yw8rcRxs978LRc3+/7c=;
+	b=SFQGNcf3L0ZGL4RtzSnw0HUy9iJU4liLEwMoUd/usJpKc4oatmXgrOrocaBds9ZRvPqA3j
+	lplNj4k6+DKv8UCaqCthMdTDjxz9B0y4QwDWrYVL+vC2g37Cyd6RgCZYWhqTBxb3csCGe1
+	qbKL4Ln3EDPXMsXgEoOMMoYJBM9wORY=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-319-NxDsB1bGNnixBQHqCDrHlg-1; Mon, 12 Aug 2024 11:38:54 -0400
-X-MC-Unique: NxDsB1bGNnixBQHqCDrHlg-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a7a8281dba5so380061066b.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 08:38:54 -0700 (PDT)
+ us-mta-627-ESAznQYMPIudQXT1f3oWTA-1; Mon, 12 Aug 2024 11:40:16 -0400
+X-MC-Unique: ESAznQYMPIudQXT1f3oWTA-1
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-52f0108a53dso5909843e87.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 08:40:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723477133; x=1724081933;
+        d=1e100.net; s=20230601; t=1723477215; x=1724082015;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m+NcVfxfLueCtd1XwBH1GMwF5gZvC1aWJOmQ0/8l0is=;
-        b=LivWwnuIzqStUIsmwPKgrX3KPyW5xB62b30JQy4fdx1EjIYSDYe9w64vvf5j87OX71
-         cZd10GwvlDTwCMZ0lLnXP3AbiaYSbIBsaPnmNSpaMjQBEFmoegdgCPXSD3BUfWq056JG
-         SbJGGf1oI9elV3hthGmYQms4uq9ehd/g7uBeKphJcDPuklPyHXgrYer3tqupx3lbv2UW
-         +6o1AOXnsDHcCW7ZED3Nb09ZIg8KOzXpTawoNjfPhDElB3AKs33CBJQE7jBehEyKNw4q
-         gCcai/aYHeEoPuV3MtGUxBK6qnESmgW21k8tiW4XksMCdn418mXJble4BVopxl657Kic
-         Z2xA==
-X-Gm-Message-State: AOJu0Yy7DWbIkj1aTdBoLZ1ht2TIUvHBnftM4pm+mKhhhzxCrK85SEp1
-	LztKDqZv8he9iD3pcREGkyfliKhwiYyxD4bri3sjhP8HJam91OJ5YsrZywhricu4tnWfR8H7GyC
-	V3uMTh/LffuvkKgCLTScf0gaH22Lgt2dyVeAcn+ihVuDvkI8bu+B+aBtZMqs1+/espzO5XLs=
-X-Received: by 2002:a17:906:fe43:b0:a7a:a4be:2f98 with SMTP id a640c23a62f3a-a80ed1b5a68mr66106466b.10.1723477133142;
-        Mon, 12 Aug 2024 08:38:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHUmaU61kRaK/PVW9jmUWX5NjMFSJ9CHhk/oP9zxRL3ZnCNjIwaW0Y1Ket9C14ZoR3nubr1JQ==
-X-Received: by 2002:a17:906:fe43:b0:a7a:a4be:2f98 with SMTP id a640c23a62f3a-a80ed1b5a68mr66103366b.10.1723477132509;
-        Mon, 12 Aug 2024 08:38:52 -0700 (PDT)
+        bh=IsDajGJ5npBRUKxZy3yJy39+Yw8rcRxs978LRc3+/7c=;
+        b=TzCnO6wyKGO8SOu1opfjazzfSSDoJosJ8qfzIa/jYc8zbIWKbV2HrUufwyVawyD7jH
+         zaseZUQFDVt33cugo94S3PXrbyPGVIyB4Rs95bntjEekGE9RmM/ojoLp5b1zyitaEzkb
+         SZofC9UbNUfA18+hXudHVdqOEkQEh+OMZlL6UzTPq1OzN3lbckDy7S3Y89vUXg6s2oid
+         w9Huj0DULcp/e0neBiy8I9DbrdHm6QkSjtBQyOc4tmoF8bSmoHki5xATo5m/rmWoPhyG
+         iG2UX4IVEvq90JkB9UYr8j2EjuL5eIzvbpx/CQRP0jAufi/gehRW+3RHl81mIXZc6Afv
+         TN8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVrQfR6rohD/bXisVA5FQSr44p3MKv7NPl6EUiBclxDFtrhxf7agd8pRvql8av+XOsoDNJVQ3FIBHxdooHf6BZnk/Q1feDh6yI5sVCf1YzyhpH5Bw==
+X-Gm-Message-State: AOJu0YycSAWiM+yky3kb1R84G+LdxcWR7vcqOKZQhpzlj50JAN/dLXUX
+	fFSURHxR3ygGr1yM+gNqpoRnylzh/MUugJbrd7HkMEofBjWHJ4SHyRzoyuzbUVQ4QR8VodF8Oba
+	QoL2XbX2jypR3OlOlIt5d2lthoH9n81cmser8dIgvMY3Xvio4wx2itJdiGkAND6Mgte0ORDU=
+X-Received: by 2002:a05:6512:3b87:b0:52e:7448:e137 with SMTP id 2adb3069b0e04-5321364ba0dmr418516e87.6.1723477215104;
+        Mon, 12 Aug 2024 08:40:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGHqTTm4i3yqoXwWcafjzWggvBAabRk27LvUse2Kqz/vx+0uXL/DvRLAZpeNUfxBVdHPwqM8g==
+X-Received: by 2002:a05:6512:3b87:b0:52e:7448:e137 with SMTP id 2adb3069b0e04-5321364ba0dmr418486e87.6.1723477214491;
+        Mon, 12 Aug 2024 08:40:14 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a80bb240debsm239058566b.192.2024.08.12.08.38.51
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bd190ac8b9sm2235220a12.23.2024.08.12.08.40.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Aug 2024 08:38:52 -0700 (PDT)
-Message-ID: <5aa66a74-96f1-4fcd-904d-6b5f1ecd2bd9@redhat.com>
-Date: Mon, 12 Aug 2024 17:38:51 +0200
+        Mon, 12 Aug 2024 08:40:13 -0700 (PDT)
+Message-ID: <4efba0de-bf41-4e53-899a-19a27f565249@redhat.com>
+Date: Mon, 12 Aug 2024 17:40:13 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,33 +67,50 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/4] platform/x86: ideapad-laptop: move ACPI helpers
- from header to source file
-To: Gergo Koteles <soyer@irl.hu>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Ike Panhc <ike.pan@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1721898747.git.soyer@irl.hu>
- <57a48d2582b567f6c6fbcd3b379e17aee0fb5a94.1721898747.git.soyer@irl.hu>
+Subject: Re: [PATCH v4 0/4] Add SBAF test to IFS
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ Jithu Joseph <jithu.joseph@intel.com>,
+ Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
+ Tony Luck <tony.luck@intel.com>, linux-trace-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org,
+ Shankar Ravi V <ravi.v.shankar@intel.com>, linux-kernel@vger.kernel.org
+References: <20240801051814.1935149-1-sathyanarayanan.kuppuswamy@linux.intel.com>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <57a48d2582b567f6c6fbcd3b379e17aee0fb5a94.1721898747.git.soyer@irl.hu>
+In-Reply-To: <20240801051814.1935149-1-sathyanarayanan.kuppuswamy@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On 7/25/24 11:21 AM, Gergo Koteles wrote:
-> Since moving ymc_trigger_ec from lenovo-ymc to ideapad-laptop, only the
-> latter uses these definitions and functions.
+On 8/1/24 7:18 AM, Kuppuswamy Sathyanarayanan wrote:
+> This patch series adds support for Structural Based Functional Test at
+> Field (SBAF) in the IFS driver. SBAF is a new type of testing that
+> provides comprehensive core test coverage, complementing existing IFS
+> tests like Scan at Field (SAF) and ArrayBist. Granite Rapids (GNR) is
+> the first platform that supports SBAF.
 > 
-> Move them back to source file.
+> SBAF mimics the manufacturing screening environment and leverages the
+> same test suite. It makes use of Design For Test (DFT) observation
+> sites and features to maximize coverage in minimum time.
 > 
-> Signed-off-by: Gergo Koteles <soyer@irl.hu>
-> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Similar to the SAF test, SBAF isolates the core under test from the
+> rest of the system during execution. Upon completion, the core
+> seamlessly resets to its pre-test state and resumes normal operation.
+> Any machine checks or hangs encountered during the test are confined to
+> the isolated core, preventing disruption to the overall system. Like
+> SAF test, the SBAF test is also divided into multiple batches, and each
+> batch test can take hundreds of milliseconds (100-200 ms) to complete.
+> If such a lengthy interruption is undesirable, it is recommended to
+> relocate the time-sensitive applications to other cores for the
+> duration of the test.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
 Note it will show up in my review-hans branch once I've pushed my
@@ -108,341 +126,48 @@ Regards,
 Hans
 
 
-
-
-> ---
->  drivers/platform/x86/ideapad-laptop.c | 136 +++++++++++++++++++++++++
->  drivers/platform/x86/ideapad-laptop.h | 139 --------------------------
->  2 files changed, 136 insertions(+), 139 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index 9fc1bb990e47..8398774cdfe2 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -22,6 +22,7 @@
->  #include <linux/init.h>
->  #include <linux/input.h>
->  #include <linux/input/sparse-keymap.h>
-> +#include <linux/jiffies.h>
->  #include <linux/kernel.h>
->  #include <linux/leds.h>
->  #include <linux/module.h>
-> @@ -87,6 +88,34 @@ enum {
->  	SALS_FNLOCK_OFF       = 0xf,
->  };
->  
-> +enum {
-> +	VPCCMD_R_VPC1 = 0x10,
-> +	VPCCMD_R_BL_MAX,
-> +	VPCCMD_R_BL,
-> +	VPCCMD_W_BL,
-> +	VPCCMD_R_WIFI,
-> +	VPCCMD_W_WIFI,
-> +	VPCCMD_R_BT,
-> +	VPCCMD_W_BT,
-> +	VPCCMD_R_BL_POWER,
-> +	VPCCMD_R_NOVO,
-> +	VPCCMD_R_VPC2,
-> +	VPCCMD_R_TOUCHPAD,
-> +	VPCCMD_W_TOUCHPAD,
-> +	VPCCMD_R_CAMERA,
-> +	VPCCMD_W_CAMERA,
-> +	VPCCMD_R_3G,
-> +	VPCCMD_W_3G,
-> +	VPCCMD_R_ODD, /* 0x21 */
-> +	VPCCMD_W_FAN,
-> +	VPCCMD_R_RF,
-> +	VPCCMD_W_RF,
-> +	VPCCMD_W_YMC = 0x2A,
-> +	VPCCMD_R_FAN = 0x2B,
-> +	VPCCMD_R_SPECIAL_BUTTONS = 0x31,
-> +	VPCCMD_W_BL_POWER = 0x33,
-> +};
-> +
->  /*
->   * These correspond to the number of supported states - 1
->   * Future keyboard types may need a new system, if there's a collision
-> @@ -236,6 +265,7 @@ static void ideapad_shared_exit(struct ideapad_private *priv)
->  /*
->   * ACPI Helpers
->   */
-> +#define IDEAPAD_EC_TIMEOUT 200 /* in ms */
->  
->  static int eval_int(acpi_handle handle, const char *name, unsigned long *res)
->  {
-> @@ -251,6 +281,29 @@ static int eval_int(acpi_handle handle, const char *name, unsigned long *res)
->  	return 0;
->  }
->  
-> +static int eval_int_with_arg(acpi_handle handle, const char *name, unsigned long arg,
-> +			     unsigned long *res)
-> +{
-> +	struct acpi_object_list params;
-> +	unsigned long long result;
-> +	union acpi_object in_obj;
-> +	acpi_status status;
-> +
-> +	params.count = 1;
-> +	params.pointer = &in_obj;
-> +	in_obj.type = ACPI_TYPE_INTEGER;
-> +	in_obj.integer.value = arg;
-> +
-> +	status = acpi_evaluate_integer(handle, (char *)name, &params, &result);
-> +	if (ACPI_FAILURE(status))
-> +		return -EIO;
-> +
-> +	if (res)
-> +		*res = result;
-> +
-> +	return 0;
-> +}
-> +
->  static int exec_simple_method(acpi_handle handle, const char *name, unsigned long arg)
->  {
->  	acpi_status status = acpi_execute_simple_method(handle, (char *)name, arg);
-> @@ -293,6 +346,89 @@ static int eval_dytc(acpi_handle handle, unsigned long cmd, unsigned long *res)
->  	return eval_int_with_arg(handle, "DYTC", cmd, res);
->  }
->  
-> +static int eval_vpcr(acpi_handle handle, unsigned long cmd, unsigned long *res)
-> +{
-> +	return eval_int_with_arg(handle, "VPCR", cmd, res);
-> +}
-> +
-> +static int eval_vpcw(acpi_handle handle, unsigned long cmd, unsigned long data)
-> +{
-> +	struct acpi_object_list params;
-> +	union acpi_object in_obj[2];
-> +	acpi_status status;
-> +
-> +	params.count = 2;
-> +	params.pointer = in_obj;
-> +	in_obj[0].type = ACPI_TYPE_INTEGER;
-> +	in_obj[0].integer.value = cmd;
-> +	in_obj[1].type = ACPI_TYPE_INTEGER;
-> +	in_obj[1].integer.value = data;
-> +
-> +	status = acpi_evaluate_object(handle, "VPCW", &params, NULL);
-> +	if (ACPI_FAILURE(status))
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-> +
-> +static int read_ec_data(acpi_handle handle, unsigned long cmd, unsigned long *data)
-> +{
-> +	unsigned long end_jiffies, val;
-> +	int err;
-> +
-> +	err = eval_vpcw(handle, 1, cmd);
-> +	if (err)
-> +		return err;
-> +
-> +	end_jiffies = jiffies + msecs_to_jiffies(IDEAPAD_EC_TIMEOUT) + 1;
-> +
-> +	while (time_before(jiffies, end_jiffies)) {
-> +		schedule();
-> +
-> +		err = eval_vpcr(handle, 1, &val);
-> +		if (err)
-> +			return err;
-> +
-> +		if (val == 0)
-> +			return eval_vpcr(handle, 0, data);
-> +	}
-> +
-> +	acpi_handle_err(handle, "timeout in %s\n", __func__);
-> +
-> +	return -ETIMEDOUT;
-> +}
-> +
-> +static int write_ec_cmd(acpi_handle handle, unsigned long cmd, unsigned long data)
-> +{
-> +	unsigned long end_jiffies, val;
-> +	int err;
-> +
-> +	err = eval_vpcw(handle, 0, data);
-> +	if (err)
-> +		return err;
-> +
-> +	err = eval_vpcw(handle, 1, cmd);
-> +	if (err)
-> +		return err;
-> +
-> +	end_jiffies = jiffies + msecs_to_jiffies(IDEAPAD_EC_TIMEOUT) + 1;
-> +
-> +	while (time_before(jiffies, end_jiffies)) {
-> +		schedule();
-> +
-> +		err = eval_vpcr(handle, 1, &val);
-> +		if (err)
-> +			return err;
-> +
-> +		if (val == 0)
-> +			return 0;
-> +	}
-> +
-> +	acpi_handle_err(handle, "timeout in %s\n", __func__);
-> +
-> +	return -ETIMEDOUT;
-> +}
-> +
->  /*
->   * debugfs
->   */
-> diff --git a/drivers/platform/x86/ideapad-laptop.h b/drivers/platform/x86/ideapad-laptop.h
-> index 948cc61800a9..1e52f2aa0aac 100644
-> --- a/drivers/platform/x86/ideapad-laptop.h
-> +++ b/drivers/platform/x86/ideapad-laptop.h
-> @@ -9,9 +9,6 @@
->  #ifndef _IDEAPAD_LAPTOP_H_
->  #define _IDEAPAD_LAPTOP_H_
->  
-> -#include <linux/acpi.h>
-> -#include <linux/jiffies.h>
-> -#include <linux/errno.h>
->  #include <linux/notifier.h>
->  
->  enum ideapad_laptop_notifier_actions {
-> @@ -22,140 +19,4 @@ int ideapad_laptop_register_notifier(struct notifier_block *nb);
->  int ideapad_laptop_unregister_notifier(struct notifier_block *nb);
->  void ideapad_laptop_call_notifier(unsigned long action, void *data);
->  
-> -enum {
-> -	VPCCMD_R_VPC1 = 0x10,
-> -	VPCCMD_R_BL_MAX,
-> -	VPCCMD_R_BL,
-> -	VPCCMD_W_BL,
-> -	VPCCMD_R_WIFI,
-> -	VPCCMD_W_WIFI,
-> -	VPCCMD_R_BT,
-> -	VPCCMD_W_BT,
-> -	VPCCMD_R_BL_POWER,
-> -	VPCCMD_R_NOVO,
-> -	VPCCMD_R_VPC2,
-> -	VPCCMD_R_TOUCHPAD,
-> -	VPCCMD_W_TOUCHPAD,
-> -	VPCCMD_R_CAMERA,
-> -	VPCCMD_W_CAMERA,
-> -	VPCCMD_R_3G,
-> -	VPCCMD_W_3G,
-> -	VPCCMD_R_ODD, /* 0x21 */
-> -	VPCCMD_W_FAN,
-> -	VPCCMD_R_RF,
-> -	VPCCMD_W_RF,
-> -	VPCCMD_W_YMC = 0x2A,
-> -	VPCCMD_R_FAN = 0x2B,
-> -	VPCCMD_R_SPECIAL_BUTTONS = 0x31,
-> -	VPCCMD_W_BL_POWER = 0x33,
-> -};
-> -
-> -static inline int eval_int_with_arg(acpi_handle handle, const char *name, unsigned long arg, unsigned long *res)
-> -{
-> -	struct acpi_object_list params;
-> -	unsigned long long result;
-> -	union acpi_object in_obj;
-> -	acpi_status status;
-> -
-> -	params.count = 1;
-> -	params.pointer = &in_obj;
-> -	in_obj.type = ACPI_TYPE_INTEGER;
-> -	in_obj.integer.value = arg;
-> -
-> -	status = acpi_evaluate_integer(handle, (char *)name, &params, &result);
-> -	if (ACPI_FAILURE(status))
-> -		return -EIO;
-> -
-> -	if (res)
-> -		*res = result;
-> -
-> -	return 0;
-> -}
-> -
-> -static inline int eval_vpcr(acpi_handle handle, unsigned long cmd, unsigned long *res)
-> -{
-> -	return eval_int_with_arg(handle, "VPCR", cmd, res);
-> -}
-> -
-> -static inline int eval_vpcw(acpi_handle handle, unsigned long cmd, unsigned long data)
-> -{
-> -	struct acpi_object_list params;
-> -	union acpi_object in_obj[2];
-> -	acpi_status status;
-> -
-> -	params.count = 2;
-> -	params.pointer = in_obj;
-> -	in_obj[0].type = ACPI_TYPE_INTEGER;
-> -	in_obj[0].integer.value = cmd;
-> -	in_obj[1].type = ACPI_TYPE_INTEGER;
-> -	in_obj[1].integer.value = data;
-> -
-> -	status = acpi_evaluate_object(handle, "VPCW", &params, NULL);
-> -	if (ACPI_FAILURE(status))
-> -		return -EIO;
-> -
-> -	return 0;
-> -}
-> -
-> -#define IDEAPAD_EC_TIMEOUT 200 /* in ms */
-> -
-> -static inline int read_ec_data(acpi_handle handle, unsigned long cmd, unsigned long *data)
-> -{
-> -	unsigned long end_jiffies, val;
-> -	int err;
-> -
-> -	err = eval_vpcw(handle, 1, cmd);
-> -	if (err)
-> -		return err;
-> -
-> -	end_jiffies = jiffies + msecs_to_jiffies(IDEAPAD_EC_TIMEOUT) + 1;
-> -
-> -	while (time_before(jiffies, end_jiffies)) {
-> -		schedule();
-> -
-> -		err = eval_vpcr(handle, 1, &val);
-> -		if (err)
-> -			return err;
-> -
-> -		if (val == 0)
-> -			return eval_vpcr(handle, 0, data);
-> -	}
-> -
-> -	acpi_handle_err(handle, "timeout in %s\n", __func__);
-> -
-> -	return -ETIMEDOUT;
-> -}
-> -
-> -static inline int write_ec_cmd(acpi_handle handle, unsigned long cmd, unsigned long data)
-> -{
-> -	unsigned long end_jiffies, val;
-> -	int err;
-> -
-> -	err = eval_vpcw(handle, 0, data);
-> -	if (err)
-> -		return err;
-> -
-> -	err = eval_vpcw(handle, 1, cmd);
-> -	if (err)
-> -		return err;
-> -
-> -	end_jiffies = jiffies + msecs_to_jiffies(IDEAPAD_EC_TIMEOUT) + 1;
-> -
-> -	while (time_before(jiffies, end_jiffies)) {
-> -		schedule();
-> -
-> -		err = eval_vpcr(handle, 1, &val);
-> -		if (err)
-> -			return err;
-> -
-> -		if (val == 0)
-> -			return 0;
-> -	}
-> -
-> -	acpi_handle_err(handle, "timeout in %s\n", __func__);
-> -
-> -	return -ETIMEDOUT;
-> -}
-> -
-> -#undef IDEAPAD_EC_TIMEOUT
->  #endif /* !_IDEAPAD_LAPTOP_H_ */
+> Patch Details:
+> 
+> Patch 1/4: Refactors MSR usage in IFS image loading code to share the
+>            code between SBAF and SAF tests.
+> Patch 2/4: Leverages SAF image loading logic and adds SBAF image loading support.
+> Patch 3/4: Adds support for user to trigger SBAF test.
+> Patch 4/4: Adds trace support for SBAF tests.
+> 
+> This series is originally authored by Jithu Joseph. I have made cleanups
+> related to code reuse between the SBAF and SAF tests and resubmitting it for
+> review.
+
+
+
+> 
+> Changes since v3:
+>  * Rebased on top of v6.11-rc1
+>  * Added missing error return value in validate_ifs_metadata().
+> 
+> Changes since v2:
+>  * Added Reviewed-by tags from Ilpo and Steven.
+>  * Fixed minor issues raised by Ilpo.
+> 
+> Changes since v1:
+>  * Addressed trace struct hole issue (Steven)
+>  * Fixed initialization issue in ifs_sbaf_test_core() (Ilpo)
+> 
+> Jithu Joseph (3):
+>   platform/x86/intel/ifs: Add SBAF test image loading support
+>   platform/x86/intel/ifs: Add SBAF test support
+>   trace: platform/x86/intel/ifs: Add SBAF trace support
+> 
+> Kuppuswamy Sathyanarayanan (1):
+>   platform/x86/intel/ifs: Refactor MSR usage in IFS test code
+> 
+>  arch/x86/include/asm/msr-index.h         |   2 +
+>  drivers/platform/x86/intel/ifs/ifs.h     |  92 ++++++++-
+>  include/trace/events/intel_ifs.h         |  27 +++
+>  drivers/platform/x86/intel/ifs/core.c    |  33 ++++
+>  drivers/platform/x86/intel/ifs/load.c    |  40 ++--
+>  drivers/platform/x86/intel/ifs/runtest.c | 233 +++++++++++++++++++++++
+>  6 files changed, 412 insertions(+), 15 deletions(-)
+> 
 
