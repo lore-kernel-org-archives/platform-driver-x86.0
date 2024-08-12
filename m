@@ -1,142 +1,395 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2561804F;
-	Mon, 12 Aug 2024 17:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429BBC156
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 18:09:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723483472; cv=none; b=Fg7WpgY1zKkHUbTdmewlUZLBUYDHbi9HOD0xUiqdx3jvxHMyhnhjLF7WYhliDtO+CojLiB7JuyS7zYrsKzsqK7GYHzmh1hDe8d4stwFGWGMQd+ptrOp3j6Yqyty3w+qh1G/Vd89mAZp2BdaOJP5XqdLyi4qvj5uDTdwYu2jxWv4=
+	t=1723486142; cv=none; b=BAOFCLmshwOxgcJ6iVjKMZgh2Q94jBcaEzh3AfXkVH8I4U7RtDUpDKTJTJ7jtYdMsrKxqyw6tr1lX+ARHdf77xvlFECXgDzaGKX9rq3M1DzYIs7jkzwzrMaBhyCM8nO5VGOVPSJOdQv8LXzg1/o+XyUWZlLP8imj4K5bd3r7dYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723483472; c=relaxed/simple;
-	bh=5jZeQ5eXrvFDGomDdB8EzElaHLWT/JmDT4aHgfhv/cA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KfSVxSa79c+Gmk6+PVzCbJnjgogXDsHE7D+B7Du1dpRX9Q8jZyfUk8Zr/sCBWyRB3QRB4UmBzPmXF6F0GjmDU8uWpNk+gAF4Rt8XtedwiZoY5UlGBNrZmjHVr0bd7GU/R0oggTBIWG0mnZJl4Yn9iWGbRuCeZVPNYpZumTveQww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q2Hck6pV; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1723486142; c=relaxed/simple;
+	bh=K28gxiqy2K2sM5vu8hn9XfIyjJVTyH/HuYxUYXTG42Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bGFXN2wLqM37cOQafSikMZ4Vq8Z0l0Y0bqOlPoHIEhL8ORIi7ErrhpfT6laodSJUx4awHAnB2kZQMkNtmbGT22no/uRBQrv5zhE+RRvkgY5faSnWitnpi9Vgh/W7UlWHwmc/AubzaLR3dtQSpnbF63CHZ6/NkmOvrpCyQRfAKsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RVtWmkx0; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q2Hck6pV"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7106cf5771bso3518179b3a.2;
-        Mon, 12 Aug 2024 10:24:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723483469; x=1724088269; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SPVHK86SfmYR33I8cij543XtB3addk94LL9gI/hj6q8=;
-        b=Q2Hck6pVp6t0w2BW9ZvNF4AZWNWXToyCJG2w3N0shbcOmQj6kHJjMcyTKBE+cpPVF9
-         duSlvwXLAPc4Ix0VuCHdvkUtg01FBUM33BMxm/81nb/OS4k7RsiiHbETZA5OBNFSdkm0
-         zSazhZMHZkS4oBYOdAnFauxMSawzFG6XEaOYNgF043/JCPLc/knAkWMIMpzJQ0oqsrP2
-         wzH+UjW40q5p9Ln0nNpgdAq4OxAsKN/YQRSICkL0rgaGgi4WscCQaUao47Echb4ss/AD
-         8o89Iqdm9JZSJrcCSWgVBDBuvuYv76Mgiz83k+6cQ2oSQx1CmKJ9GjsEypJ1Z3ZsY4XU
-         Imwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723483469; x=1724088269;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SPVHK86SfmYR33I8cij543XtB3addk94LL9gI/hj6q8=;
-        b=N58lPvmHh7TgaIHKvdBhU57hfWwIT0ZDDz66Fbh5jAj5FRdNbTMgCLSq++O5lRlUOL
-         yhWZ46+cGxEAZ1yrO2PVkwuZImAsqWZBnyEKSLmeDETgmXqG71JGBSdKcTugBiFqupQC
-         Rs5w44xJ/0ioaM4OM8+raXIIG8Tr1iVHRJt0yJR34D+Uknf7Ja1lE4dlx3Y6S35JUGS2
-         bzgaUUWAxDuC56F6We4HE5BWRzoyEvbDSI1Xhwgh40UGG6fQJleL6VYDDfwmWCvgl7kc
-         P/d4EM0xWa3/3R/yMdHM0kBdoUoBP3bESfE3XNpotP0nvciygXotds9YmIi3Y0ejlKHH
-         hKIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUI5BbZTzvtDBLsfX1xY70uY1foreFQfBi0AeRhEASaD9fJx/roV4LvYrn8uvfksqzl3Z5t0HS5+PZN2L4Kgd+rKhmiYw==@vger.kernel.org, AJvYcCVFVEMg5qrgqqa+5XDxmcFk4HcVIaM1vh86Jdh1mO24QdDItPPCuM6QxIs4L46JUBDY4puveQbpbMwq/A==@vger.kernel.org, AJvYcCVxP6o+Ajb9Zg6lYPS4WHNosQZmjqDNnqkl53IsbIo452njvasK0VSEEHnXCfsCi9bVSpu5DB1r@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHqNaYaKrsDBNOrl8VrHCjK0QOM09+5yYW2ZWPU+UCvZ2LVtLP
-	z7vK6uEtEYMwdLfvaQOUhpfnQpayDiFwMZCEgBhOHWoA1kN1YNuq
-X-Google-Smtp-Source: AGHT+IHLAqh7wd/7W2tSnosvyd+Ten3MOh/zNGSfalDpXsylxvzi1fXRlb6OlopSnhYDV2CG8RyBOg==
-X-Received: by 2002:a05:6a00:3a26:b0:70b:2efd:7bee with SMTP id d2e1a72fcca58-7125520be9bmr1155179b3a.21.1723483469310;
-        Mon, 12 Aug 2024 10:24:29 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:53c5:10b0:cfab:3972])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-710e5874d01sm4415366b3a.16.2024.08.12.10.24.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Aug 2024 10:24:28 -0700 (PDT)
-Date: Mon, 12 Aug 2024 10:24:26 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Maxim Mikityanskiy <maxtram95@gmail.com>,
-	Ike Panhc <ike.pan@canonical.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-	Jonathan Denose <jdenose@chromium.org>, stable@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Stop calling
- i8042_command()
-Message-ID: <ZrpFSnCQ0T4_7zAB@google.com>
-References: <20240805141608.170844-1-hdegoede@redhat.com>
- <ZrDwF919M0YZTqde@mail.gmail.com>
- <5c5120a7-4739-4d92-a5b8-9b9c60edc3b7@redhat.com>
- <ZroaE5Q6OdGe6ewz@mail.gmail.com>
- <80dc479e-33af-4d09-8177-7862c34a4882@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RVtWmkx0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723486140; x=1755022140;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=K28gxiqy2K2sM5vu8hn9XfIyjJVTyH/HuYxUYXTG42Y=;
+  b=RVtWmkx0K9dsieHKyxsTJlnScBOm6d+4VlOTUMCzuFHmkxvAg0GO3LY0
+   duHZDlgviq+9x8uq19DaTfQ+lafc1LAVwsAAKPk9IKbDN1Xm9voyaZRsC
+   f3woV23w0W7IzndgoqSJqycaIbFxNxeYVfJrmIzVp6i5ombhLIPpfb11V
+   h+MYNP10EUKRKKq6NmSsowRthl+RyFyWyueH8YFYOSqA17hjalcvDJiLd
+   lYl1HvO7aXvk4wR6h0TOyGLJzrBBFlFTbwsNJdnPYfvUETLT45Ff5LLi8
+   9Y4HN5TBZe7klG6NVXg/OMj7b8jUjIx2pjSKgqPYmLeRxEa+ilVFpF3e/
+   Q==;
+X-CSE-ConnectionGUID: MOFZU1+tSmOLh9CIYbV66Q==
+X-CSE-MsgGUID: KA8pNVCVTr63eOo8crd2CA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11162"; a="21775146"
+X-IronPort-AV: E=Sophos;i="6.09,283,1716274800"; 
+   d="scan'208";a="21775146"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 11:08:59 -0700
+X-CSE-ConnectionGUID: f/pCLYuORWaYxmEY1aj9zA==
+X-CSE-MsgGUID: /g4f9c09T5K4vQfeLjdsiA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,283,1716274800"; 
+   d="scan'208";a="58287617"
+Received: from awvttdev-05.aw.intel.com ([10.228.212.156])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 11:08:58 -0700
+From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+To: intel-xe@lists.freedesktop.org,
+	platform-driver-x86@vger.kernel.org,
+	david.e.box@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	matthew.brost@intel.com,
+	andriy.shevchenko@linux.intel.com,
+	hdegoede@redhat.com
+Cc: michael.j.ruhl@intel.com,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH v10] drm/xe/vsec: Support BMG devices
+Date: Mon, 12 Aug 2024 14:08:36 -0400
+Message-ID: <20240812180836.227727-1-michael.j.ruhl@intel.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <80dc479e-33af-4d09-8177-7862c34a4882@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Aug 12, 2024 at 04:41:50PM +0200, Hans de Goede wrote:
-> Hi Maxim,
-> 
-> On 8/12/24 4:37 PM, Maxim Mikityanskiy wrote:
-> > On Mon, 05 Aug 2024 at 17:45:19 +0200, Hans de Goede wrote:
-> >> On 8/5/24 5:30 PM, Maxim Mikityanskiy wrote:
-> >>> That means, userspace is not filtering out events upon receiving
-> >>> KEY_TOUCHPAD_OFF. If we wanted to rely on that, we would need to send
-> >>> KEY_TOUCHPAD_TOGGLE from the driver, but we actually can't, because Z570
-> >>> is weird. It maintains the touchpad state in firmware to light up the
-> >>> status LED, but the firmware doesn't do the actual touchpad disablement.
-> >>>
-> >>> That is, if we use TOGGLE, the LED will get out of sync. If we use
-> >>> ON/OFF, the touchpad won't be disabled, unless we do it in the kernel.
-> >>
-> >> Ack.
-> >>
-> >> So how about this instead:
-> >>
-> >> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> >> index 1ace711f7442..b7fa06f793cb 100644
-> >> --- a/drivers/platform/x86/ideapad-laptop.c
-> >> +++ b/drivers/platform/x86/ideapad-laptop.c
-> >> @@ -1574,7 +1574,7 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
-> >>  	 * touchpad off and on. We send KEY_TOUCHPAD_OFF and
-> >>  	 * KEY_TOUCHPAD_ON to not to get out of sync with LED
-> >>  	 */
-> >> -	if (priv->features.ctrl_ps2_aux_port)
-> >> +	if (send_events && priv->features.ctrl_ps2_aux_port)
-> >>  		i8042_command(&param, value ? I8042_CMD_AUX_ENABLE : I8042_CMD_AUX_DISABLE);
-> >>  
-> >>  	/*
-> >>
-> >> Maxmime, if you still have your Z570 can you check if the touchpad state after a suspend/resume
-> >> correctly reflects the state before suspend/resume in both touchpad on / off states ?
-> > 
-> > *Maxim
-> 
-> Oops, sorry.
-> 
-> > Just a heads-up, my Z570 now belongs to a family member, we'll test what
-> > you asked, but right now there is a btrfs corruption on that laptop that
-> > we need to fix first, it interferes with kernel compilation =/
-> 
-> Note as discussed in another part of the thread the original bug report
-> actually was not on a Z570, so the whole usage of i8042_command() on
-> suspend/resume was a bit of a red herring. And the suspend/resume issue
-> has been fixed in another way in the mean time.
-> 
-> So there really is no need to test this change anymore. At the moment
-> there are no planned changes to ideapad-laptop related to this.
+The Battlemage (BMG) discrete graphics card supports
+the Platform, Monitoring Technology (PMT) feature
+directly on the primary PCI device.
 
-I think we still need to stop ideapad-laptop poking into 8042,
-especially ahead of time. If we do not want to wait for userspace to
-handle this properly, I wonder if we could not create an
-input_handler that would attach to the touchpad device and filter out
-all events coming from the touchpad if touchpad is supposed to be off.
+Utilize the PMT callback API to add support for the BMG
+devices.
 
-Thanks.
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+---
+ drivers/gpu/drm/xe/Makefile          |   1 +
+ drivers/gpu/drm/xe/xe_device.c       |   5 +
+ drivers/gpu/drm/xe/xe_device_types.h |   6 +
+ drivers/gpu/drm/xe/xe_vsec.c         | 221 +++++++++++++++++++++++++++
+ drivers/gpu/drm/xe/xe_vsec.h         |  13 ++
+ 5 files changed, 246 insertions(+)
+ create mode 100644 drivers/gpu/drm/xe/xe_vsec.c
+ create mode 100644 drivers/gpu/drm/xe/xe_vsec.h
 
+diff --git a/drivers/gpu/drm/xe/Makefile b/drivers/gpu/drm/xe/Makefile
+index 628c245c4822..f4c6761dc2e7 100644
+--- a/drivers/gpu/drm/xe/Makefile
++++ b/drivers/gpu/drm/xe/Makefile
+@@ -129,6 +129,7 @@ xe-y += xe_bb.o \
+ 	xe_vm.o \
+ 	xe_vram.o \
+ 	xe_vram_freq.o \
++	xe_vsec.o \
+ 	xe_wait_user_fence.o \
+ 	xe_wa.o \
+ 	xe_wopcm.o
+diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
+index 76109415eba6..a7c759c98560 100644
+--- a/drivers/gpu/drm/xe/xe_device.c
++++ b/drivers/gpu/drm/xe/xe_device.c
+@@ -53,6 +53,7 @@
+ #include "xe_ttm_sys_mgr.h"
+ #include "xe_vm.h"
+ #include "xe_vram.h"
++#include "xe_vsec.h"
+ #include "xe_wait_user_fence.h"
+ 
+ static int xe_file_open(struct drm_device *dev, struct drm_file *file)
+@@ -317,6 +318,8 @@ struct xe_device *xe_device_create(struct pci_dev *pdev,
+ 		goto err;
+ 	}
+ 
++	drmm_mutex_init(&xe->drm, &xe->pmt.lock);
++
+ 	err = xe_display_create(xe);
+ 	if (WARN_ON(err))
+ 		goto err;
+@@ -692,6 +695,8 @@ int xe_device_probe(struct xe_device *xe)
+ 	for_each_gt(gt, xe, id)
+ 		xe_gt_sanitize_freq(gt);
+ 
++	xe_vsec_init(xe);
++
+ 	return devm_add_action_or_reset(xe->drm.dev, xe_device_sanitize, xe);
+ 
+ err_fini_display:
+diff --git a/drivers/gpu/drm/xe/xe_device_types.h b/drivers/gpu/drm/xe/xe_device_types.h
+index 3bca6d344744..448a92148081 100644
+--- a/drivers/gpu/drm/xe/xe_device_types.h
++++ b/drivers/gpu/drm/xe/xe_device_types.h
+@@ -451,6 +451,12 @@ struct xe_device {
+ 		struct mutex lock;
+ 	} d3cold;
+ 
++	/** @pmt: Support the PMT driver callback interface */
++	struct {
++		/** @pmt.lock: protect access for telemetry data */
++		struct mutex lock;
++	} pmt;
++
+ 	/**
+ 	 * @pm_callback_task: Track the active task that is running in either
+ 	 * the runtime_suspend or runtime_resume callbacks.
+diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
+new file mode 100644
+index 000000000000..a046d850da82
+--- /dev/null
++++ b/drivers/gpu/drm/xe/xe_vsec.c
+@@ -0,0 +1,221 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright © 2022 - 2024 Intel Corporation
++ */
++#include <linux/bitfield.h>
++#include <linux/bits.h>
++#include <linux/intel_vsec.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/pci.h>
++
++#include "xe_device.h"
++#include "xe_device_types.h"
++#include "xe_drv.h"
++#include "xe_mmio.h"
++#include "xe_platform_types.h"
++#include "xe_pm.h"
++#include "xe_vsec.h"
++
++#define SOC_BASE		0x280000
++
++#define BMG_PMT_BASE		0xDB000
++#define BMG_DISCOVERY_OFFSET	(SOC_BASE + BMG_PMT_BASE)
++
++#define BMG_TELEMETRY_BASE	0xE0000
++#define BMG_TELEMETRY_OFFSET	(SOC_BASE + BMG_TELEMETRY_BASE)
++
++#define BMG_DEVICE_ID 0xE2F8
++
++#define GFX_BAR			0
++
++#define SG_REMAP_INDEX1		XE_REG(SOC_BASE + 0x08)
++#define SG_REMAP_BITS		GENMASK(31, 24)
++
++static struct intel_vsec_header bmg_telemetry = {
++	.length = 0x10,
++	.id = VSEC_ID_TELEMETRY,
++	.num_entries = 2,
++	.entry_size = 4,
++	.tbir = GFX_BAR,
++	.offset = BMG_DISCOVERY_OFFSET,
++};
++
++static struct intel_vsec_header *bmg_capabilities[] = {
++	&bmg_telemetry,
++	NULL
++};
++
++enum xe_vsec {
++	XE_VSEC_UNKNOWN = 0,
++	XE_VSEC_BMG,
++};
++
++static struct intel_vsec_platform_info xe_vsec_info[] = {
++	[XE_VSEC_BMG] = {
++		.caps = VSEC_CAP_TELEMETRY,
++		.headers = bmg_capabilities,
++	},
++	{ }
++};
++
++/*
++ * The GUID will have the following bits to decode:
++ *
++ * X(4bits) - {Telemetry space iteration number (0,1,..)}
++ * X(4bits) - Segment (SEGMENT_INDEPENDENT-0, Client-1, Server-2)
++ * X(4bits) - SOC_SKU
++ * XXXX(16bits)– Device ID – changes for each down bin SKU’s
++ * X(2bits) - Capability Type (Crashlog-0, Telemetry Aggregator-1, Watcher-2)
++ * X(2bits) - Record-ID (0-PUNIT, 1-OOBMSM_0, 2-OOBMSM_1)
++ */
++#define GUID_TELEM_ITERATION	GENMASK(3, 0)
++#define GUID_SEGMENT		GENMASK(7, 4)
++#define GUID_SOC_SKU		GENMASK(11, 8)
++#define GUID_DEVICE_ID		GENMASK(27, 12)
++#define GUID_CAP_TYPE		GENMASK(29, 28)
++#define GUID_RECORD_ID		GENMASK(31, 30)
++
++#define PUNIT_TELEMETRY_OFFSET		0x0200
++#define PUNIT_WATCHER_OFFSET		0x14A0
++#define OOBMSM_0_WATCHER_OFFSET		0x18D8
++#define OOBMSM_1_TELEMETRY_OFFSET	0x1000
++
++enum record_id {
++	PUNIT,
++	OOBMSM_0,
++	OOBMSM_1
++};
++
++enum capability {
++	CRASHLOG,
++	TELEMETRY,
++	WATCHER
++};
++
++static int guid_decode(u32 guid, int *index, u32 *offset)
++{
++	u32 record_id = FIELD_GET(GUID_RECORD_ID, guid);
++	u32 cap_type  = FIELD_GET(GUID_CAP_TYPE, guid);
++	u32 device_id = FIELD_GET(GUID_DEVICE_ID, guid);
++
++	if (device_id != BMG_DEVICE_ID)
++		return -ENODEV;
++
++	if (record_id > OOBMSM_1 || cap_type > WATCHER)
++		return -EINVAL;
++
++	*offset = 0;
++
++	if (cap_type == CRASHLOG) {
++		*index = record_id == PUNIT ? 2 : 4;
++		return 0;
++	}
++
++	switch (record_id) {
++	case PUNIT:
++		*index = 0;
++		if (cap_type == TELEMETRY)
++			*offset = PUNIT_TELEMETRY_OFFSET;
++		else
++			*offset = PUNIT_WATCHER_OFFSET;
++		break;
++
++	case OOBMSM_0:
++		*index = 1;
++		if (cap_type == WATCHER)
++			*offset = OOBMSM_0_WATCHER_OFFSET;
++		break;
++
++	case OOBMSM_1:
++		*index = 1;
++		if (cap_type == TELEMETRY)
++			*offset = OOBMSM_1_TELEMETRY_OFFSET;
++		break;
++	}
++
++	return 0;
++}
++
++static int xe_pmt_telem_read(struct pci_dev *pdev, u32 guid, u64 *data, u32 count)
++{
++	struct xe_device *xe = pdev_to_xe_device(pdev);
++	void __iomem *telem_addr = xe->mmio.regs + BMG_TELEMETRY_OFFSET;
++	u32 mem_region;
++	u32 offset;
++	int ret;
++
++	ret = guid_decode(guid, &mem_region, &offset);
++	if (ret)
++		return ret;
++
++	telem_addr += offset;
++
++	guard(mutex)(&xe->pmt.lock);
++
++	/* indicate that we are not at an appropriate power level */
++	if (!xe_pm_runtime_get_if_active(xe))
++		return -ENODATA;
++
++	/* set SoC re-mapper index register based on GUID memory region */
++	xe_mmio_rmw32(xe->tiles[0].primary_gt, SG_REMAP_INDEX1, SG_REMAP_BITS,
++		      FIELD_PREP(SG_REMAP_BITS, mem_region));
++
++	memcpy_fromio(data, telem_addr, count);
++	ret = count;
++	xe_pm_runtime_put(xe);
++
++	return ret;
++}
++
++struct pmt_callbacks xe_pmt_cb = {
++	.read_telem = xe_pmt_telem_read,
++};
++
++static const int vsec_platforms[] = {
++	[XE_BATTLEMAGE] = XE_VSEC_BMG,
++};
++
++static enum xe_vsec get_platform_info(struct xe_device *xe)
++{
++	if (xe->info.platform > XE_BATTLEMAGE)
++		return XE_VSEC_UNKNOWN;
++
++	return vsec_platforms[xe->info.platform];
++}
++
++/**
++ * xe_vsec_init - Initialize resources and add intel_vsec auxiliary
++ * interface
++ * @xe: valid xe instance
++ */
++void xe_vsec_init(struct xe_device *xe)
++{
++	struct intel_vsec_platform_info *info;
++	struct device *dev = xe->drm.dev;
++	struct pci_dev *pdev = to_pci_dev(dev);
++	enum xe_vsec platform;
++
++	platform = get_platform_info(xe);
++	if (platform == XE_VSEC_UNKNOWN)
++		return;
++
++	info = &xe_vsec_info[platform];
++	if (!info->headers)
++		return;
++
++	switch (platform) {
++	case XE_VSEC_BMG:
++		info->priv_data = &xe_pmt_cb;
++		break;
++	default:
++		break;
++	}
++
++	/*
++	 * Register a VSEC. Cleanup is handled using device managed
++	 * resources.
++	 */
++	intel_vsec_register(pdev, info);
++}
++MODULE_IMPORT_NS(INTEL_VSEC);
+diff --git a/drivers/gpu/drm/xe/xe_vsec.h b/drivers/gpu/drm/xe/xe_vsec.h
+new file mode 100644
+index 000000000000..3fd29a21cad6
+--- /dev/null
++++ b/drivers/gpu/drm/xe/xe_vsec.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright © 2022 - 2024 Intel Corporation
++ */
++
++#ifndef _XE_VSEC_H_
++#define _XE_VSEC_H_
++
++struct xe_device;
++
++void xe_vsec_init(struct xe_device *xe);
++
++#endif
 -- 
-Dmitry
+2.44.0
+
