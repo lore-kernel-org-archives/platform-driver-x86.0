@@ -1,181 +1,171 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F6616EB7A
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 18:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89C12B9B7
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 18:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723486771; cv=none; b=LraBWcLR31rUcztRfCUg+Mbq+PBBSHa2I3ac7eAaDkXEMFIKTTnax27//zHVhvERI0KnecaARqzxHvaqNwY+MXryrV+TzF/d86fwZ3PuLZpaeKZjPHLlLvWWpTE7VRSUZZBledfpxrAPH5vkPh2T9ADKJ4Gs1PVhM8G3uhezlcM=
+	t=1723488118; cv=none; b=pkHZ4jDSVFZLxP4/qDf1KCPFbq7HTMeIdDZZwLzAYGUoiR17dHVH87xiKFJZo+oUPRKbCH6+lauFkFgaYBdbSgPJRbgehmD62ogkg5LyVWkGkTgQlYsJvGZer5LhA+axb7FAp2+1B4C14hJRjyT16j6e2GOX3pFTaz7+Cjnrvis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723486771; c=relaxed/simple;
-	bh=UNWN6v8LRr6MgLlcl1eYlm9ex07JvufVV8x0BSy0UYM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BVCdO5PyDWe8YJTtbXkLwoTq+pFHlijy+GQLliVpHhKQzYEUaQzZOmb+KRHTVRsElS1CfnGDx+YHC5Sz7o4H3ieokIUFYOqbml6pPGcFOdoRt2lLSEVpyj9Ftomr9mu0X6me8DBzVMM6Eney51Ysyu2pFXlOQrIKs91Fq6q2JF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AvOjFNRB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1723488118; c=relaxed/simple;
+	bh=AAhoSUedFQ21Pzt+ZLf5UI+xIte0RYuXGfOPV8lhJkQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=AfY52McciUwgJ+wi99TqwftCF+ZvWHGFoJoR2/CFHVIWzP5FLdI9QKHACMKmGWOqspzam20o5r+6U89IyeaZlRItVjyfR5Ys15UJxm06dfMduxPLWwMG3KY0PJl+JEWbtF3LFccXYIrj0SABz3yTAyA4M4Wy41e3GsylgCAaKFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mmaslanka.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=noSaYr/R; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mmaslanka.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AvOjFNRB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723486768;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KGjBkRdEii3MabWinJrviRdaG1B1/+RoFDK1lY7spAo=;
-	b=AvOjFNRBLLJmQdjStIUhqbmAhKeKy7LChzVx6/8UM/FcR4FErNqmiV7nKt5uG5yGgltSaA
-	pwuT+zk/fjsRd6iYxYVV4yFp6iDMGQm2T+vG3GUBMKJeAmQGW33uBbg0PfUtVquhhmrvqU
-	SmZ1gxDXQaeLMUzBqIZ5iOx3/z8lM+4=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-448-wjguT0deOwaLLQBRcJr6CQ-1; Mon, 12 Aug 2024 14:18:27 -0400
-X-MC-Unique: wjguT0deOwaLLQBRcJr6CQ-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a7aa5885be3so350555466b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 11:18:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="noSaYr/R"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-66890dbb7b8so108302187b3.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 11:41:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1723488116; x=1724092916; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nI7HvxsW6/J3qlupAqXzePRp1xg6T40uW8wUoGhn2xg=;
+        b=noSaYr/RV8h//OC8Ml5d4jnyUYR/nfw+dhI8xPmK31/2A2i/3mXf16KeNcgMGkqUCg
+         C45ErjiBkKvQEQjLH1iOKm5bkHu2w8egQe7QfcIaVXFJpL6DdasjtFfc9gsWAvLUFLXd
+         qmB+hhVyfqpsvh+aznlRZbe/qGRYtErOLIYhh2yTGaNk+EHYC+d7W7N1/SmlRfgxpDtX
+         1up9vKqUvrdPMXMMuZQMO0+y8oKdM/28odd3lTz4lm3nQdVQxPzW6zb19B168eRbFf4t
+         s+JGIigQdZP94kPOrPMEDxTJRL0jL3fl+G6Ux1YgHUhJmW0N1sq46PmaPvFMGmKNsg+b
+         zwMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723486706; x=1724091506;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KGjBkRdEii3MabWinJrviRdaG1B1/+RoFDK1lY7spAo=;
-        b=FkO1jAV1c9VyRbNLcu756zsDbFQMvg3rT6RPjQEcC+o9F+/5WimNYUkEHii0Bow2D3
-         A9ksPJeLKyjLRkg8GspPogOVs8GEkCsduNhEtW1G+3iLN0XlZ1rPxn/K/k+wRPMpF6fR
-         q0nFJAvmCqgYH76mUhERtTuBizQA5n7fMSoUyEnWtVZJULnGNlcvXe16h7KuDPjcyAug
-         HQ5v5Rr+NqB8N1uukv9FpO7LPjaEMkaFqSLfcz/1HPEup/dGsxwCVf3XxXnQEYEFNdvw
-         I7cx9zA0y1uTCQFtPYJv6urwPasLiW/QDPmBx5pxSbJd40CTijwrTxen/91E86KSN+Id
-         LHZg==
-X-Forwarded-Encrypted: i=1; AJvYcCXMg51OukEJvBMmqyPBgSIl52+vc80TY30SZEb7bQBP6/OAk1ycpy6zjipJW5F/xZQ6d8RyEprj92k1HrDSmoijHgmWStEwUV59xVhRrRx+mN9QVw==
-X-Gm-Message-State: AOJu0YzZT4tPx3rROV+gYKcHvuKTJ8QTCzaYbxijyhBQDQsHp/jWnFUL
-	2tZNki/ZsBnAdv3hksRwUmmSTWGXVkPOSJx9Scfr5K+udZvs6ln2XeBlR204S2U0f9qsjhZptsY
-	xw+CIvCUHLFUgykYpxVKWZSc6QWkTv6WLgcl3VIU+qqjmSS3lWK10GDMHmcLZ87Z/aO/WsgY=
-X-Received: by 2002:a17:906:bc24:b0:a7a:9447:3e8c with SMTP id a640c23a62f3a-a80ed1bcd95mr84952766b.3.1723486705911;
-        Mon, 12 Aug 2024 11:18:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGyHtWszbYS7sCVbmsLaL3jKmkKeaLYh4FWst/8luFI92uXffwAUs+BR9bxDLdqCQzKMgW68Q==
-X-Received: by 2002:a17:906:bc24:b0:a7a:9447:3e8c with SMTP id a640c23a62f3a-a80ed1bcd95mr84950566b.3.1723486705371;
-        Mon, 12 Aug 2024 11:18:25 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a80bb212fd9sm247516866b.151.2024.08.12.11.18.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Aug 2024 11:18:25 -0700 (PDT)
-Message-ID: <2d5be262-3bfd-4b66-bee4-97c89a9a4707@redhat.com>
-Date: Mon, 12 Aug 2024 20:18:24 +0200
+        d=1e100.net; s=20230601; t=1723488116; x=1724092916;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nI7HvxsW6/J3qlupAqXzePRp1xg6T40uW8wUoGhn2xg=;
+        b=TKtdO/qtal8YAaWdG1GGDGtTmE+R+yyD73/J2qFquhYHJaDpG/fi0EF1KcOCJxpJFw
+         62vJ3Gc+3aKxCRRe97Qm5nTxYWtt00+b60T1Q6DMPpy+4WtS5BOghRF0aEPwyWH2Ynjk
+         Iddg8y1FMJpx/0N3u/yGxDNb8rkJx2+rt/zO0qVsEdBfKK1kfGh8Q+e4YiZKCq9/jwNu
+         UnP9gtrvtUduQFP2b6TZhHY1iqwMqbar4FLOKwBHDTQkB98dPp4LZDMOMjndhsHG0g5a
+         rPxXkFcEQASvk9Ycgoomk1OJXTZufxqNDgirjkYe3JzY2WV+lsGnElYvuDHPen2522VO
+         MUoA==
+X-Forwarded-Encrypted: i=1; AJvYcCV0HDcYMIYAB/dWYGlDh2q4mAucs6SIkPOCVLG+qpM5peiGuaQ9WVrF/I5KxIpVkVsL5kvsCrNpJnKsnb0Lu6J7pFEWJ6BG9BCWLWKTTcbw2f5xvA==
+X-Gm-Message-State: AOJu0Yz7r14i0OZ0GTgT+dQwJU1RxJgw1pZKmHMKyux8zDiN0xaAeX7f
+	2X2W64fUmhBKEvpOSa1pVJktFMAqSF+mI/dKLNCSeSJsTPgQvvHJVX2EeLjym/umsYrUYLZjHjM
+	AiNJfvJ5ktmfDCg==
+X-Google-Smtp-Source: AGHT+IHyX7O3OMhj0SimuYiJ6Gy10rgLPqYfuUi/gIFhYUEZSR1qaftT6St/zesxOuoSti285RBcVCrSUaKbXJo=
+X-Received: from mmaslanka2.c.googlers.com ([fda3:e722:ac3:cc00:31:98fb:c0a8:b8d])
+ (user=mmaslanka job=sendgmr) by 2002:a05:690c:d8c:b0:667:8a45:d0f9 with SMTP
+ id 00721157ae682-6a96c03e52dmr114577b3.0.1723488115781; Mon, 12 Aug 2024
+ 11:41:55 -0700 (PDT)
+Date: Mon, 12 Aug 2024 18:41:42 +0000
+In-Reply-To: <935e8c82-3c91-4c9a-8e43-e6045b28279d@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Stop calling
- i8042_command()
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Maxim Mikityanskiy <maxtram95@gmail.com>,
- Ike Panhc <ike.pan@canonical.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>, platform-driver-x86@vger.kernel.org,
- linux-input@vger.kernel.org, Jonathan Denose <jdenose@chromium.org>,
- stable@vger.kernel.org
-References: <20240805141608.170844-1-hdegoede@redhat.com>
- <ZrDwF919M0YZTqde@mail.gmail.com>
- <5c5120a7-4739-4d92-a5b8-9b9c60edc3b7@redhat.com>
- <ZroaE5Q6OdGe6ewz@mail.gmail.com>
- <80dc479e-33af-4d09-8177-7862c34a4882@redhat.com>
- <ZrpFSnCQ0T4_7zAB@google.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <ZrpFSnCQ0T4_7zAB@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <935e8c82-3c91-4c9a-8e43-e6045b28279d@redhat.com>
+X-Mailer: git-send-email 2.46.0.76.ge559c4bf1a-goog
+Message-ID: <20240812184150.1079924-1-mmaslanka@google.com>
+Subject: [PATCH v6 1/2] clocksource: acpi_pm: Add external callback for suspend/resume
+From: Marek Maslanka <mmaslanka@google.com>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Marek Maslanka <mmaslanka@google.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, 
+	David E Box <david.e.box@intel.com>, Hans de Goede <hdegoede@redhat.com>, 
+	"=?UTF-8?q?Ilpo=20J=C3=A4rvinen?=" <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Dmitry,
+Provides the capability to register an external callback for the ACPI PM
+timer, which is called during the suspend and resume processes.
 
-On 8/12/24 7:24 PM, Dmitry Torokhov wrote:
-> On Mon, Aug 12, 2024 at 04:41:50PM +0200, Hans de Goede wrote:
->> Hi Maxim,
->>
->> On 8/12/24 4:37 PM, Maxim Mikityanskiy wrote:
->>> On Mon, 05 Aug 2024 at 17:45:19 +0200, Hans de Goede wrote:
->>>> On 8/5/24 5:30 PM, Maxim Mikityanskiy wrote:
->>>>> That means, userspace is not filtering out events upon receiving
->>>>> KEY_TOUCHPAD_OFF. If we wanted to rely on that, we would need to send
->>>>> KEY_TOUCHPAD_TOGGLE from the driver, but we actually can't, because Z570
->>>>> is weird. It maintains the touchpad state in firmware to light up the
->>>>> status LED, but the firmware doesn't do the actual touchpad disablement.
->>>>>
->>>>> That is, if we use TOGGLE, the LED will get out of sync. If we use
->>>>> ON/OFF, the touchpad won't be disabled, unless we do it in the kernel.
->>>>
->>>> Ack.
->>>>
->>>> So how about this instead:
->>>>
->>>> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
->>>> index 1ace711f7442..b7fa06f793cb 100644
->>>> --- a/drivers/platform/x86/ideapad-laptop.c
->>>> +++ b/drivers/platform/x86/ideapad-laptop.c
->>>> @@ -1574,7 +1574,7 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
->>>>  	 * touchpad off and on. We send KEY_TOUCHPAD_OFF and
->>>>  	 * KEY_TOUCHPAD_ON to not to get out of sync with LED
->>>>  	 */
->>>> -	if (priv->features.ctrl_ps2_aux_port)
->>>> +	if (send_events && priv->features.ctrl_ps2_aux_port)
->>>>  		i8042_command(&param, value ? I8042_CMD_AUX_ENABLE : I8042_CMD_AUX_DISABLE);
->>>>  
->>>>  	/*
->>>>
->>>> Maxmime, if you still have your Z570 can you check if the touchpad state after a suspend/resume
->>>> correctly reflects the state before suspend/resume in both touchpad on / off states ?
->>>
->>> *Maxim
->>
->> Oops, sorry.
->>
->>> Just a heads-up, my Z570 now belongs to a family member, we'll test what
->>> you asked, but right now there is a btrfs corruption on that laptop that
->>> we need to fix first, it interferes with kernel compilation =/
->>
->> Note as discussed in another part of the thread the original bug report
->> actually was not on a Z570, so the whole usage of i8042_command() on
->> suspend/resume was a bit of a red herring. And the suspend/resume issue
->> has been fixed in another way in the mean time.
->>
->> So there really is no need to test this change anymore. At the moment
->> there are no planned changes to ideapad-laptop related to this.
-> 
-> I think we still need to stop ideapad-laptop poking into 8042,
-> especially ahead of time.
+Signed-off-by: Marek Maslanka <mmaslanka@google.com>
 
-I agree. I think your suggestion of using the new(ish) [un]inhibit
-support in the input subsystem for this instead of poking at the i8042
-is a good idea.
+---
+Changes in v6:
+- Add the acpi_pmtmr_unregister_suspend_resume_callback function to remove callback
+- Add EXPORT_SYMBOL_GPL to the added functions
+- Link to v5: https://lore.kernel.org/lkml/20240812043741.3434744-1-mmaslanka@google.com/
+---
+---
+ drivers/clocksource/acpi_pm.c | 32 ++++++++++++++++++++++++++++++++
+ include/linux/acpi_pmtmr.h    | 13 +++++++++++++
+ 2 files changed, 45 insertions(+)
 
-As I mentioned when you first suggested this, I guess this requires 2 things:
-
-1. Some helper to find the struct input_dev for the input_dev related
-   to the ps/2 aux port
-2. In kernel API / functions to do inhibit/uninhibit
-   (maybe these already exist?)
-
-> If we do not want to wait for userspace to
-> handle this properly, I wonder if we could not create an
-> input_handler that would attach to the touchpad device and filter out
-> all events coming from the touchpad if touchpad is supposed to be off.
-
-I think using the inhibit stuff would be better no?
-
-The biggest problems with trying to fix this are:
-
-1. Finding time to work on this
-2. Finding someone willing to test the patches
-
-Finding the time is going to be an issue for me since the i8042_command()
-calls are only still done on a single model laptop (using a DMI quirk)
-inside ideapad-laptop now, so this is pretty low priority IMHO. Which
-in practice means that I will simply never get around to this, sorry...
-
-Regards,
-
-Hans
-
+diff --git a/drivers/clocksource/acpi_pm.c b/drivers/clocksource/acpi_pm.c
+index 82338773602ca..b4330a01a566b 100644
+--- a/drivers/clocksource/acpi_pm.c
++++ b/drivers/clocksource/acpi_pm.c
+@@ -25,6 +25,10 @@
+ #include <asm/io.h>
+ #include <asm/time.h>
+ 
++static void *suspend_resume_cb_data;
++
++static void (*suspend_resume_callback)(void *data, bool suspend);
++
+ /*
+  * The I/O port the PMTMR resides at.
+  * The location is detected during setup_arch(),
+@@ -58,6 +62,32 @@ u32 acpi_pm_read_verified(void)
+ 	return v2;
+ }
+ 
++void acpi_pmtmr_register_suspend_resume_callback(void (*cb)(void *data, bool suspend), void *data)
++{
++	suspend_resume_callback = cb;
++	suspend_resume_cb_data = data;
++}
++EXPORT_SYMBOL_GPL(acpi_pmtmr_register_suspend_resume_callback);
++
++void acpi_pmtmr_unregister_suspend_resume_callback(void)
++{
++	suspend_resume_callback = NULL;
++	suspend_resume_cb_data = NULL;
++}
++EXPORT_SYMBOL_GPL(acpi_pmtmr_unregister_suspend_resume_callback);
++
++static void acpi_pm_suspend(struct clocksource *cs)
++{
++	if (suspend_resume_callback)
++		suspend_resume_callback(suspend_resume_cb_data, true);
++}
++
++static void acpi_pm_resume(struct clocksource *cs)
++{
++	if (suspend_resume_callback)
++		suspend_resume_callback(suspend_resume_cb_data, false);
++}
++
+ static u64 acpi_pm_read(struct clocksource *cs)
+ {
+ 	return (u64)read_pmtmr();
+@@ -69,6 +99,8 @@ static struct clocksource clocksource_acpi_pm = {
+ 	.read		= acpi_pm_read,
+ 	.mask		= (u64)ACPI_PM_MASK,
+ 	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
++	.suspend	= acpi_pm_suspend,
++	.resume		= acpi_pm_resume,
+ };
+ 
+ 
+diff --git a/include/linux/acpi_pmtmr.h b/include/linux/acpi_pmtmr.h
+index 50d88bf1498d7..0ded9220d379c 100644
+--- a/include/linux/acpi_pmtmr.h
++++ b/include/linux/acpi_pmtmr.h
+@@ -26,6 +26,19 @@ static inline u32 acpi_pm_read_early(void)
+ 	return acpi_pm_read_verified() & ACPI_PM_MASK;
+ }
+ 
++/**
++ * Register callback for suspend and resume event
++ *
++ * @cb Callback triggered on suspend and resume
++ * @data Data passed with the callback
++ */
++void acpi_pmtmr_register_suspend_resume_callback(void (*cb)(void *data, bool suspend), void *data);
++
++/**
++ * Remove registered callback for suspend and resume event
++ */
++void acpi_pmtmr_unregister_suspend_resume_callback(void);
++
+ #else
+ 
+ static inline u32 acpi_pm_read_early(void)
+-- 
+2.46.0.76.ge559c4bf1a-goog
 
