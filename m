@@ -1,113 +1,182 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CCE1474D3;
-	Mon, 12 Aug 2024 07:39:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1063513E40F;
+	Mon, 12 Aug 2024 07:49:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723448394; cv=none; b=Y1j/kcizzGQSabVdcVQtoadKb/QgBDXxkwBEMcLddFpp11mDZXJrKqmfkvpyVkxchLyNUXNp2xTllL8PjzkkbFg3eS2GRwdR8WrLT+5xaYxnC8he5JdE1K9eAd/veZCNBRjEYWkDvz9r5LrzuyAWfc+/UbXBlmUENDGQPyrG1mA=
+	t=1723448961; cv=none; b=rIyFBwUZUat33u0LXP7+xGwSpyztM6dGE6NXD2KjaGc3uTMGVVgoTWfymPV+034LXgZF7gonzgRDepMYUusaYD+8VCp9XZI2DZE5gy3ves0FQWd+8zt7caYT4KLl/lG2ag4H5y6ILR94Earsn3RG9U4s0A4iWOrkVQpHdOGmHSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723448394; c=relaxed/simple;
-	bh=oU11PdIre5arnF8MGb073WE4WSJr4KFuJCxaMI+iV1A=;
+	s=arc-20240116; t=1723448961; c=relaxed/simple;
+	bh=hBbWq0pUcJsqyBWdRORYpfohprEsOoWjIkv9bSIYT6U=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=jt7s+VPbmToB5IcEhG1C5ka3Jj+80P8Ul4ZNWodeQLAuY16kav8ARol1O0JdRBdwJFJhE9cEZV7/eym4rOO77d5DQk2sex92SS4zTVzRoMsLt2w+p0Hf0NclktZ0GM7+ruIUxAyryz/11z6VOdK3PBNvF6MureO5D32AgfkfvMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K8xdQljV; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version:Content-Type; b=S6411FMpP1p2owNZT3ptdJ8TP3oqV+Fdz3h6D+Q+56XDpkJxJr0akJJjtF3r5Xjca2dcJvT0zpfohbkRvJV91OqxyffpSQsSIVs5EC4PvWGn/tNEHJw+6wS1xqD0eSjgrHw9XktEqcih9zzUnz/s0j8qsHwYV7r2TwaMVSnzqy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KsrbiMGZ; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K8xdQljV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KsrbiMGZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723448394; x=1754984394;
+  t=1723448959; x=1754984959;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=oU11PdIre5arnF8MGb073WE4WSJr4KFuJCxaMI+iV1A=;
-  b=K8xdQljVnOhZfh7XfOpMMDNgx8KpR2Ve3DdcOy26bm1MyR5uJYxSOm7k
-   iwHoBH9sxUZ2V6VKauSofOMc1i1h3AtrYFrgJsrywFg6RBO2LMxCT/rwS
-   iOMy71HDkw96Ebzc4YulfRJq+n93Ijrfetn26dEFjQDijSoE/GWHXjChA
-   mzhmAzXYEkrwC9N6oQ0t6+8n/a51SqWvi96XpOyJsh4Z2ezndhDhIpYpb
-   eYlyaMXHBVlIIPpeRBq7QV/vZSr2K0hbZ9Rf7www3rIKxCVfCpn70pTVE
-   YVKgRP5GATE3KSoobPWhauIv9TQcPTliFyHMTvjCfUl9J2pNXj4hsESWr
-   w==;
-X-CSE-ConnectionGUID: qGti/0wwTU262hyREDivgQ==
-X-CSE-MsgGUID: Zr4oDnLLRTWa2qe3LIrvwQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11161"; a="32935836"
+  bh=hBbWq0pUcJsqyBWdRORYpfohprEsOoWjIkv9bSIYT6U=;
+  b=KsrbiMGZ3hUBcDd1g/C0vNNAPA4dtiX8x4qoVIOuFOip2Lf8v3rIk9uL
+   WmYqqQLnxN9HXwrUUjAgxJVX/gG5jcMgBLViXCyv50L8ZPHpGjoOojGuv
+   7Ep0fRYMZwMo0auDnueuLi8qQIPX47dZM9cX6NKTQcPKDJbLVLnyvrX8S
+   57TmtyO3OxCc6J/iLc7O4CLQwVUgZ1zouJnEl5tSQfflkPEXVPqPvMSes
+   2EDz8ZTmfZvTmL9/3xIHt9ATVsthWZaoj+sno5MI/CvWHczoynBlxi2Jj
+   oEojRslz6rKF3fLJkuQdMA8SrO6FN/uGLovOIBN4bvmc3GFwNfYRqhrvL
+   g==;
+X-CSE-ConnectionGUID: lBK2H0LJTNWs1RwPGMYdeg==
+X-CSE-MsgGUID: Gy7EBzTPSN6q0MTsXrAZpQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11161"; a="32936592"
 X-IronPort-AV: E=Sophos;i="6.09,282,1716274800"; 
-   d="scan'208";a="32935836"
+   d="scan'208";a="32936592"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 00:39:53 -0700
-X-CSE-ConnectionGUID: Uc8fu43mQYuNJNob2KQKkw==
-X-CSE-MsgGUID: kIubpFpJScmYB6YLzEOhlw==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 00:49:18 -0700
+X-CSE-ConnectionGUID: 6h5a9p3OSy6M1BHHLeEuhg==
+X-CSE-MsgGUID: ADFjhJZ6QbGDQ8Ow6YbrLg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,282,1716274800"; 
-   d="scan'208";a="89016132"
+   d="scan'208";a="89019703"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.25])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 00:39:50 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 00:49:16 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 12 Aug 2024 10:39:47 +0300 (EEST)
-To: Luke Jones <luke@ljones.dev>
-cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Hans de Goede <hdegoede@redhat.com>, corentin.chary@gmail.com
-Subject: Re: [PATCH v2 4/6] platform/x86: asus-armoury: add apu-mem control
- support
-In-Reply-To: <d3577748-14b6-4aa4-9f51-069ae9ccff49@app.fastmail.com>
-Message-ID: <a663ee3e-1c8b-5e7d-503f-e46641039f16@linux.intel.com>
-References: <20240806020747.365042-1-luke@ljones.dev> <20240806020747.365042-5-luke@ljones.dev> <c7080912-7772-96df-0ae0-07903edbba1a@linux.intel.com> <d3577748-14b6-4aa4-9f51-069ae9ccff49@app.fastmail.com>
+Date: Mon, 12 Aug 2024 10:49:13 +0300 (EEST)
+To: Marek Maslanka <mmaslanka@google.com>
+cc: LKML <linux-kernel@vger.kernel.org>, 
+    Daniel Lezcano <daniel.lezcano@linaro.org>, 
+    Thomas Gleixner <tglx@linutronix.de>, 
+    Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, 
+    David E Box <david.e.box@intel.com>, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] platform/x86:intel/pmc: Enable the ACPI PM Timer
+ to be turned off when suspended
+In-Reply-To: <20240812044028.3439329-1-mmaslanka@google.com>
+Message-ID: <f5f758f9-bf6f-57dd-179e-475a6b65e903@linux.intel.com>
+References: <87h6bttzzh.ffs@tglx> <20240812044028.3439329-1-mmaslanka@google.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1776797564-1723448387=:1039"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, 12 Aug 2024, Marek Maslanka wrote:
 
---8323328-1776797564-1723448387=:1039
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> Allow to disable ACPI PM Timer on suspend and enable on resume. A
+> disabled timer helps optimise power consumption when the system is
+> suspended. On resume the timer is only reactivated if it was activated
+> prior to suspend, so unless the ACPI PM timer is enabled in the BIOS,
+> this won't change anything.
+> 
+> The ACPI PM timer is used by Intel's iTCO/wdat_wdt watchdog to drive the
+> watchdog, so it doesn't need to run during suspend.
+> 
+> Signed-off-by: Marek Maslanka <mmaslanka@google.com>
+> 
+> ---
+> Changes in v5:
+> - Use renamed acpi_pmtmr_register_suspend_resume_callback instead of
+>   acpi_pm_register_suspend_resume_callback
+> - Link to v4: https://lore.kernel.org/lkml/20240809131343.1173369-2-mmaslanka@google.com/
+> ---
+> ---
+>  drivers/platform/x86/intel/pmc/adl.c  |  2 ++
+>  drivers/platform/x86/intel/pmc/cnp.c  |  2 ++
+>  drivers/platform/x86/intel/pmc/core.c | 49 +++++++++++++++++++++++++++
+>  drivers/platform/x86/intel/pmc/core.h |  8 +++++
+>  drivers/platform/x86/intel/pmc/icl.c  |  2 ++
+>  drivers/platform/x86/intel/pmc/mtl.c  |  2 ++
+>  drivers/platform/x86/intel/pmc/spt.c  |  2 ++
+>  drivers/platform/x86/intel/pmc/tgl.c  |  2 ++
+>  8 files changed, 69 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/adl.c b/drivers/platform/x86/intel/pmc/adl.c
+> index e7878558fd909..9d9c07f44ff61 100644
+> --- a/drivers/platform/x86/intel/pmc/adl.c
+> +++ b/drivers/platform/x86/intel/pmc/adl.c
+> @@ -295,6 +295,8 @@ const struct pmc_reg_map adl_reg_map = {
+>  	.ppfear_buckets = CNP_PPFEAR_NUM_ENTRIES,
+>  	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+>  	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
+> +	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
+> +	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+>  	.ltr_ignore_max = ADL_NUM_IP_IGN_ALLOWED,
+>  	.lpm_num_modes = ADL_LPM_NUM_MODES,
+>  	.lpm_num_maps = ADL_LPM_NUM_MAPS,
+> diff --git a/drivers/platform/x86/intel/pmc/cnp.c b/drivers/platform/x86/intel/pmc/cnp.c
+> index dd72974bf71e2..513c02670c5aa 100644
+> --- a/drivers/platform/x86/intel/pmc/cnp.c
+> +++ b/drivers/platform/x86/intel/pmc/cnp.c
+> @@ -200,6 +200,8 @@ const struct pmc_reg_map cnp_reg_map = {
+>  	.ppfear_buckets = CNP_PPFEAR_NUM_ENTRIES,
+>  	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+>  	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
+> +	.acpi_pm_tmr_ctl_offset = SPT_PMC_ACPI_PM_TMR_CTL_OFFSET,
+> +	.acpi_pm_tmr_disable_bit = SPT_PMC_BIT_ACPI_PM_TMR_DISABLE,
+>  	.ltr_ignore_max = CNP_NUM_IP_IGN_ALLOWED,
+>  	.etr3_offset = ETR3_OFFSET,
+>  };
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index 10c96c1a850af..d65e3e77ec2ca 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -11,6 +11,7 @@
+>  
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+> +#include <linux/acpi_pmtmr.h>
+>  #include <linux/bitfield.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/delay.h>
+> @@ -1171,6 +1172,42 @@ static bool pmc_core_is_pson_residency_enabled(struct pmc_dev *pmcdev)
+>  	return val == 1;
+>  }
+>  
+> +/**
+> + * Enable or disable ACPI PM Timer
+> + *
+> + * This function is intended to be a callback for ACPI PM suspend/resume event.
+> + * The ACPI PM Timer is enabled on resume only if it was enabled during suspend.
+> + */
+> +static void pmc_core_acpi_pm_timer_suspend_resume(void *data, bool suspend)
+> +{
+> +	struct pmc_dev *pmcdev = data;
+> +	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+> +	const struct pmc_reg_map *map = pmc->map;
+> +	bool enabled;
+> +	u32 reg;
+> +
+> +	if (!map->acpi_pm_tmr_ctl_offset)
+> +		return;
+> +
+> +	mutex_lock(&pmcdev->lock);
+> +
+> +	if (!suspend && !pmcdev->enable_acpi_pm_timer_on_resume) {
+> +		mutex_unlock(&pmcdev->lock);
 
-On Sun, 11 Aug 2024, Luke Jones wrote:
+Use guard() in this function so you don't need to manually unlock.
 
-> On Tue, 6 Aug 2024, at 10:20 PM, Ilpo J=C3=A4rvinen wrote:
-> > On Tue, 6 Aug 2024, Luke D. Jones wrote:
-> >=20
-> > > Implement the APU memory size control under the asus-armoury module u=
-sing
-> > > the fw_attributes class.
-> > >=20
-> > > This allows the APU allocated memory size to be adjusted depending on
-> > > the users priority. A reboot is required after change.
-> > >=20
-> > > Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> > > ---
-
-> > > + sysfs_notify(kobj, NULL, attr->attr.name);
-> > > +
-> > > + asus_set_reboot_and_signal_event();
-> > > +
-> > > + return count;
-> > > +}
-> > > +
-> > > +static ssize_t apu_mem_possible_values_show(struct kobject *kobj,
-> > > + struct kobj_attribute *attr, char *buf)
-> > > +{
-> > > + return sysfs_emit(buf, "0;1;2;3;4;5;6;7;8\n");
->=20
-> Ack all
->=20
-> > IIRC, space or newline is the usual separator for possible values sysfs=
-=20
-> > files. I don't think I've ever seen ; used.
->=20
-> The docs specify this format. https://github.com/torvalds/linux/blob/5189=
-dafa4cf950e675f02ee04b577dfbbad0d9b1/Documentation/ABI/testing/sysfs-class-=
-firmware-attributes#L56
-
-Okay, I didn't know. Please use what's documented then.
-
---=20
+-- 
  i.
 
---8323328-1776797564-1723448387=:1039--
+
+> +		return;
+> +	}
+> +
+> +	reg = pmc_core_reg_read(pmc, map->acpi_pm_tmr_ctl_offset);
+> +	enabled = !(reg & map->acpi_pm_tmr_disable_bit);
+> +	if (suspend)
+> +		reg |= map->acpi_pm_tmr_disable_bit;
+> +	else
+> +		reg &= ~map->acpi_pm_tmr_disable_bit;
+> +	pmc_core_reg_write(pmc, map->acpi_pm_tmr_ctl_offset, reg);
+> +
+> +	pmcdev->enable_acpi_pm_timer_on_resume = suspend && enabled;
+> +
+> +	mutex_unlock(&pmcdev->lock);
+> +}
