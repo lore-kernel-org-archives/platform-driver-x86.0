@@ -1,93 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541C4187860;
-	Mon, 12 Aug 2024 17:03:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3381804F;
+	Mon, 12 Aug 2024 17:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723482199; cv=none; b=rxHsUYEzGRt4qt/sK3wQMCKazMka0Kfnf792uCNo9fsNuF5faLi4ahuT2MQhehQnlv9fdfcqVxSJv0MchBopGU1V+M3r1fs++d9H5nJ/4PrlsDApKfTFm4EAjLeeLYz6BNuIL4qmp0Ag2Iop3ivPoibVjjCmUELmBN+X7baTtAM=
+	t=1723482560; cv=none; b=heqYDZJRIvw7snfB0BKmA3PRC2RMOVuug4zXmaMs9LsWEMh57G6TeRHpLHXeH1h7lOdaaRC/mE38fEAeUOdiI4zxH1yVLByZP2Aogb+hjeqMMuEvV1BXj5eTkDnEpFnQ3PRgN7/rXwK80gpC2MyXi2TXYx9uOr+1a/f4CgLiJbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723482199; c=relaxed/simple;
-	bh=JhRTp3NRHRjOw6zptJBbm9jny/skXEWjkzaVIAdIksY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TsJwlAX1tOD/isBLfSFp0JrSl0vsNMFXsuNiJMlV335BnTXi7wD7OarK3Lwv0A5b4ZzAo10LppwdCu85/C3fuXl+OfdKMZTliwfe3dBuzqTs+9864578RDPnUdmWNU/55zlBHhAzznOnhTGx7QBRTSav9t4uxQIKB5XL5SGjICI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: oFbILWGISFiY2ysrCTEqig==
-X-CSE-MsgGUID: F1ry5oOqTH+jVDFSHbQrkg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11162"; a="47008125"
+	s=arc-20240116; t=1723482560; c=relaxed/simple;
+	bh=hASvAeBZCNnpBDx7OVpK3WqY6MuUHhTqFBeCgrUo6p4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Mfn6T6hezho4Ufh0yC0HJGN50SucAPzJ1e/Wl1KK6FfvflKgG0t0N/vlm/O2zYNBqHOyrrW8eo8Run+On44UsG3k2foMKrmjVoz7CCJeHNgM1ZAFh90+WzTVmPSXXD1sdpqU8ouIehS29h5WhURFJ/U1m7slSpR0WVY7L94A2hQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S5YrvzbP; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S5YrvzbP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723482559; x=1755018559;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=hASvAeBZCNnpBDx7OVpK3WqY6MuUHhTqFBeCgrUo6p4=;
+  b=S5YrvzbP+KNHce4XJ5Rqrk3esxm0WgL6pi8tbxNxCSsogu+2fgjsmCf1
+   siYHJjWb/I1hvzN9lbikgTf5+tZMZ3DvhxXrptyAUaP3J67U2PoD8suvi
+   dcs6BmaQshVSKr4nPg1addC1p5r9Yi6EsMmvb87rhIxS8oohxkmvhTME+
+   CVtmsZiTfJEGH62xlgSQEt9+wWkSwlHCyAhQAz/rUnyQr7E1n71vPQoDu
+   NpsnhAE1tyFuyt9HROPTR+1A/KrFX1GSU2QQmrwubznysMrVQ5EJk6pAM
+   0jyg7s5wCo0AbAvqj5rUNm2QPPf/2R/P6ubF/40bU7HcwSwZlCTEvz6c7
+   g==;
+X-CSE-ConnectionGUID: 9TCWpzSOSlKyz5P1KmhAqw==
+X-CSE-MsgGUID: iAR0uqHYTlGfZoeNszQhlg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11162"; a="21771758"
 X-IronPort-AV: E=Sophos;i="6.09,283,1716274800"; 
-   d="scan'208";a="47008125"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 10:03:16 -0700
-X-CSE-ConnectionGUID: DlJx2uTUTjSVo3oBlm+K4w==
-X-CSE-MsgGUID: gn3wCSqVS9etxLzgjQb23w==
+   d="scan'208";a="21771758"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 10:09:18 -0700
+X-CSE-ConnectionGUID: g8pv7Za3T8CFOQ8G0HFtYA==
+X-CSE-MsgGUID: FgiFMMUxSVCv2NNn29nViQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,283,1716274800"; 
-   d="scan'208";a="63257245"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 10:03:13 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1sdYRq-0000000EQDO-17va;
-	Mon, 12 Aug 2024 20:03:10 +0300
-Date: Mon, 12 Aug 2024 20:03:09 +0300
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Paul Menzel <pmenzel@molgen.mpg.de>, Wolfram Sang <wsa@kernel.org>,
-	eric.piel@tremplin-utc.net, Marius Hoch <mail@mariushoch.de>,
-	Dell.Client.Kernel@dell.com,
-	Kai Heng Feng <kai.heng.feng@canonical.com>,
-	platform-driver-x86@vger.kernel.org,
-	Jean Delvare <jdelvare@suse.com>,
-	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v7 4/6] platform/x86: dell-smo8800: Move instantiation of
- lis3lv02d i2c_client from i2c-i801 to dell-lis3lv02d
-Message-ID: <ZrpATebaOpSJyBca@smile.fi.intel.com>
-References: <20240805133708.160737-1-hdegoede@redhat.com>
- <20240805133708.160737-5-hdegoede@redhat.com>
- <CAHp75VeCVCqmG0Px8_EyztS6ZeBbhU0Nbtru5mkQxKNeR6pynQ@mail.gmail.com>
- <3a4f4c6c-3069-412e-9c71-b4e0308fccd4@redhat.com>
+   d="scan'208";a="81583640"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.125.109.83])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 10:09:18 -0700
+Message-ID: <d21c069438cc9c314e29fe9b75a97cf15ab6e087.camel@linux.intel.com>
+Subject: Re: [PATCH] platform/x86/intel-uncore-freq: Do not present separate
+ package-die domain
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+Date: Mon, 12 Aug 2024 10:09:10 -0700
+In-Reply-To: <cd7cc6b8-4993-937b-072b-8fbc1e309a4d@linux.intel.com>
+References: <20240731185756.1853197-1-srinivas.pandruvada@linux.intel.com>
+	 <cd7cc6b8-4993-937b-072b-8fbc1e309a4d@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3a4f4c6c-3069-412e-9c71-b4e0308fccd4@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Aug 12, 2024 at 06:00:20PM +0200, Hans de Goede wrote:
-> On 8/5/24 10:48 PM, Andy Shevchenko wrote:
-> > On Mon, Aug 5, 2024 at 3:38 PM Hans de Goede <hdegoede@redhat.com> wrote:
+Hi Ilpo,
 
-...
+On Mon, 2024-08-12 at 14:16 +0300, Ilpo J=C3=A4rvinen wrote:
+> On Wed, 31 Jul 2024, Srinivas Pandruvada wrote:
+>=20
+> > The scope of uncore control is per power domain in a package and
+> > die.
+> > A package-die can have multiple power domains on some processors.
+> > In this
+> > case package-die domain (root domain) aggregates all information
+> > from
+> > power domains in it.
+> >=20
+> > On some processors, CPUID enumerates the die number same as power
+> > domain
+> > ID. In this case there is one to one relationship between package-
+> > die and
+> > power domain ID. There is no use of aggregating information from
+> > all
+> > power domain IDs as the information will be duplicate and
+> > confusing. In
+> > this case do not create separate package-die domain.
+>=20
+> Hi Srinivas,
+>=20
+> I got confused by this changelog because its order is quite
+> illogical.
+>=20
+> First paragraph talks about case A. When you say "all information"=20
+> is "aggregated", I immediately make the assumption that the
+> aggregated=20
+> information is what is wanted because, well, you normally want "all=20
+> information" and nothing else is being told here.
+>=20
+> Second paragraph starts to talk about case B and then suddenly
+> switches to=20
+> talk what should have been done in case A (that aggregated
+> information is=20
+> useless/confusing).
+>=20
+Is this any better:
 
-> >> +       bus_for_each_dev(&i2c_bus_type, NULL, &adap, find_i801);
-> >> +       if (!adap)
-> >> +               return;
-> > 
-> > May i2c_for_each_dev() be used here?
-> 
-> The main difference between i2c_for_each_dev() and
-> bus_for_each_dev() is that i2c_for_each_dev() holds
-> the i2c core mutex while it is calling the passed
-> in callback.
-> 
-> And find_i801() calls i2c_get_adapter() which also
-> takes the i2c core mutex, so i2c_for_each_dev()
-> cannot be used here since then things deadlock.
+"
+The scope of uncore control is per power domain in a package and die
+with TPMI.
 
-+ A comment to prevent "clever" cleanupers from breaking the things?
+There are two types of processor configurations possible:
+1. A compute die is not enumerated in CPUID. In this case there is only
+one die in a package. In this case there will be multiple power domains
+in a single die.
+2. A power domain in a package is enumerated as a compute die in CPUID.
+So there is one to one relationship between a die and power domain.
 
--- 
-With Best Regards,
-Andy Shevchenko
+To allow die level controls, the current implementation creates a root
+domain and aggregates all information from power domains in it. This
+is well suited for configuration 1 above.
 
+But when newer processors use configuration 2 above, this will present
+redundant information, So no use of aggregating. In this case do not
+create separate root domain.
+"
+
+Thanks,
+Srinivas
+
+> So I think some reorganization of the sentences would be useful to
+> not=20
+> jump between cases mid-paragraph without any hints.
+>=20
+> (I hope my explanation is enough to highlight why it was hard to
+> follow).
+>=20
+> When I finally understood what the changelog was saying, I found out
+> the=20
+> code change is fine too but it first looked like it was doing exactly
+> the=20
+> opposite to my expectations/reasonale given in the changelog.
+>=20
 
