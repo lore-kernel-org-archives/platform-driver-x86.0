@@ -1,154 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92D213BC02
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 09:22:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FDE17276D;
+	Mon, 12 Aug 2024 10:55:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723454564; cv=none; b=DSZXJLxHfgYdvYUG5Mkh1E3VS/xuZL+H6Nw8wM/TfFf3Y1erEwu/vXfVbtLvhR25ohyIc3aAsEMGgvbWJaBu85LNUTqA4nvhxuv9S0s1zjC6CdckJARs9zM+JPLpX5Xxx0OX67eNs9o210sZbxNKkyWSfCXlRGQtGct05KUlpMs=
+	t=1723460158; cv=none; b=PtQ2wZ8E7gLN8YixoMc1fbcQj1DN4xmWrQ8pQ7HhdadkIy7bvkgvLR9dF7j/zjaqjZfZSKWT4W2qHfDWlSu+6PJGSskZuBmsz9CYyJz7w8MRy80DiHWm+tRN/N45nQVWLtWBanN6vRD2uq3y9pnClcykoge9nEOQ/LWLIFTCd0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723454564; c=relaxed/simple;
-	bh=5kOWTQs9LkDBQ3UAPdkHffzhhqcHmgIW+dmYbpmZagI=;
+	s=arc-20240116; t=1723460158; c=relaxed/simple;
+	bh=xmEeYdtNuW+3cnR/EzmNjnBz/EcZvKiGmJvgSfY+js8=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=D7vVzqLByS+8c0TnHoMChuNEv9zgfIIDOe7m9v/jo2WvmH+DPFUW5HadBeJowXfO7ASU9splplpVLYFCX0pIm9FRiLaokNOfGfwYb6n/s0LjvZbbYmqyqNgdmMs+O/hNHMZr8gDn9h0AKA+JSlnJBBJ/oPtU9buIHiXEud+Abok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AzNrEKxv; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version:Content-Type; b=SkaKRLH0PO9IxqlpzK+/RdbrD0G2Y4xnnB1oDBw50mMEStY8ZuO4ohZu2o/nkD64R3o3Kqp24bNe2ANivyJk74l/SZKoslRsnUvkheOeEgDYyXUyJR5hcE3yy5qsRH9wHIiOllaydAKCqXcJG3XEZ4K+RkyqkkJHGSENvPqJ/eY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M71H/EgT; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AzNrEKxv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M71H/EgT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723454563; x=1754990563;
+  t=1723460157; x=1754996157;
   h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=5kOWTQs9LkDBQ3UAPdkHffzhhqcHmgIW+dmYbpmZagI=;
-  b=AzNrEKxvYfqyjh/ZFlmxSF2OQuOtxTS07+D6QE6GqL3Lv/ksyuxIiwTR
-   bq3nccWd3XbLHN+eR8yxtCpdQxwvTLsUxrhUPi+DkB3a1R1SKMA715vv5
-   p34cQNC4FfN+iIo5FO3o71AhQRem+i2en46RpfCrhrmhLNW1VUGOJtH7A
-   6smWIc/1O0dWTEvuu5DLncg/tcADA0CtSz3fdSGkwgShocS3VsnnGsNeM
-   kaEJFt6DM9uObmO6CalqSVfO3MxrOZoWMSp28GwY2s6L0/kxZil3lsdJs
-   uNnPKtchN2i1FhCQd9kUurx1sgZ+ruRAhBnIxBMt5mHbEkuTSRrqj1F3X
-   Q==;
-X-CSE-ConnectionGUID: CxC1YYNpTEWvhAa7118aTQ==
-X-CSE-MsgGUID: YHo6q9hnQ++++z2J738zhA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11161"; a="21404587"
+   references:mime-version;
+  bh=xmEeYdtNuW+3cnR/EzmNjnBz/EcZvKiGmJvgSfY+js8=;
+  b=M71H/EgTP+46hbhsPU+hhtH2NvaQ04eAqSOnmwSTmNsjbd8u5GtcFdqw
+   JcUvfr2LTMbNzHI5Sx73C3BxVYiPw9Bo2TPdCkF7O/nUKrJnCM0960HQK
+   KJw1h1FgmMdF7k3XYNF/DX8iBVLAgYp6VtU3AfYySV1lgqa+ujeZv+hDk
+   aMaMc9IZ9rhr+XBiQGfTgVqVWU0R7DWOtC1mb3d4oqgAQYbb8zhLa1Ttz
+   s6Hq3nycqenTuPE/HPCw6lD8qSwAG9LjM4GnROEB73iJf3pBvwdxGzsuq
+   rIpJFJggz0SYD2KBP1GnkCzQSYyrdWL9/W8fHSACjYmjtTmcqapLDhcdl
+   w==;
+X-CSE-ConnectionGUID: 2aqigP5fR5GjHUIWTnkYdg==
+X-CSE-MsgGUID: XdpeXcqjTcuTdXiv/1GPGg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11161"; a="32713770"
 X-IronPort-AV: E=Sophos;i="6.09,282,1716274800"; 
-   d="scan'208";a="21404587"
+   d="scan'208";a="32713770"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 02:22:43 -0700
-X-CSE-ConnectionGUID: ZtqKSWqJRLG5RHbdsyb1vg==
-X-CSE-MsgGUID: 0q04ll+zSQ+JtOOp6NxV1Q==
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 03:55:56 -0700
+X-CSE-ConnectionGUID: 0GqZU1jMTLGV4mu+Q094Ew==
+X-CSE-MsgGUID: GDlU6+cSRB+PkB26h8+/Cw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,282,1716274800"; 
-   d="scan'208";a="58915208"
+   d="scan'208";a="58939258"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.25])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 02:22:39 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 03:55:54 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 12 Aug 2024 12:22:36 +0300 (EEST)
-To: "Ruhl, Michael J" <michael.j.ruhl@intel.com>, 
-    Hans de Goede <hdegoede@redhat.com>
-cc: "david.e.box@linux.intel.com" <david.e.box@linux.intel.com>, 
-    "Vivi, Rodrigo" <rodrigo.vivi@intel.com>, 
-    "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>, 
-    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
-    "Brost, Matthew" <matthew.brost@intel.com>, 
-    "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
-Subject: RE: [PATCH v9 5/6] platform/x86/intel/pmt: Add support for PMT base
- adjust
-In-Reply-To: <IA1PR11MB64188E3342EB3C26BC30EDD5C1BA2@IA1PR11MB6418.namprd11.prod.outlook.com>
-Message-ID: <ed0c857f-9224-4495-bd24-4ad9bc0e7aee@linux.intel.com>
-References: <20240725122346.4063913-1-michael.j.ruhl@intel.com>  <20240725122346.4063913-6-michael.j.ruhl@intel.com>  <e70a44a24b1404a000e302a444a41c286538f3f9.camel@linux.intel.com>  <ZrUyH6vZpShdacjx@intel.com> <fe23eb2ef30e4a867668a221f3f02dbe9d322edc.camel@linux.intel.com>
- <IA1PR11MB64188E3342EB3C26BC30EDD5C1BA2@IA1PR11MB6418.namprd11.prod.outlook.com>
+Date: Mon, 12 Aug 2024 13:55:50 +0300 (EEST)
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: ISST: Simplify isst_misc_reg() and
+ isst_misc_unreg()
+In-Reply-To: <20240731184256.1852840-1-srinivas.pandruvada@linux.intel.com>
+Message-ID: <f6f3ca5a-8179-e678-aa8d-aeeacdcddb31@linux.intel.com>
+References: <20240731184256.1852840-1-srinivas.pandruvada@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1485091447-1723454000=:1039"
-Content-ID: <19b16c69-62a7-f94f-b37e-cf45a213db60@linux.intel.com>
+Content-Type: multipart/mixed; boundary="8323328-1021919508-1723460150=:1039"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1485091447-1723454000=:1039
-Content-Type: text/plain; CHARSET=ISO-8859-15
+--8323328-1021919508-1723460150=:1039
+Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <372539f3-34b3-e16c-1959-42a940a20859@linux.intel.com>
 
-On Fri, 9 Aug 2024, Ruhl, Michael J wrote:
+On Wed, 31 Jul 2024, Srinivas Pandruvada wrote:
 
-> > -----Original Message-----
-> > From: David E. Box <david.e.box@linux.intel.com>
-> > Sent: Thursday, August 8, 2024 8:57 PM
-> > To: Vivi, Rodrigo <rodrigo.vivi@intel.com>
-> > Cc: Ruhl, Michael J <michael.j.ruhl@intel.com>; intel-xe@lists.freedesk=
-top.org;
-> > platform-driver-x86@vger.kernel.org; ilpo.jarvinen@linux.intel.com; Bro=
-st,
-> > Matthew <matthew.brost@intel.com>; andriy.shevchenko@linux.intel.com
-> > Subject: Re: [PATCH v9 5/6] platform/x86/intel/pmt: Add support for PMT
-> > base adjust
-> >=20
-> > On Thu, 2024-08-08 at 17:01 -0400, Rodrigo Vivi wrote:
-> > > On Thu, Aug 08, 2024 at 12:49:58PM -0700, David E. Box wrote:
-> > > > Hi Mike
-> > > >
-> > > > On Thu, 2024-07-25 at 08:23 -0400, Michael J. Ruhl wrote:
-> > > > > DVSEC offsets are based on the endpoint BAR.=A0 If an endpoint is
-> > > > > not available allow the offset information to be adjusted by the
-> > > > > parent driver.
-> > > >
-> > > > I know I wrote the original version of these patches but I no longe=
-r
-> > > > like this solution. The s32 is too small for a 64 bit address and
-> > > > calculating the offset just to add it back in the PMT driver is
-> > > > unnecessary.
-> > >
-> > > yeap, 64bit sounds better indeed.
-> > >
-> > > > Instead, I sent you
-> > > > replacement patches for 5 and 6 that allow passing the telemetry
-> > > > region address directly to the PMT driver.
-> > >
-> > > Was these replacements sent straight to PMT list or to Mike so he can
-> > > adjust the series?
-> > >
-> > > I'm wondering if we should merge this through our drm-xe-next or
-> > > through PMT channels. Thoughts?
-> > >
-> > > In any case, ack from my side to get the xe patches merged together
-> > > through PMT.
-> > >
-> > > But if someone prefer to get this merged through drm-xe-next, then we
-> > > need to act fast and get this ready with the final patches and acked
-> > > by you PMT maintainers, in the next 2 weeks because our window under
-> > > drm closes much earlier.
-> > >
-> > > Around 6.11-rc5 is when we close the drm window towards 6.12 and we
-> > > are almost within 6.11-rc3.
-> > >
-> > > Thoughts?
-> >=20
-> > For me Patches 1-4 are good to go for BMG support. Patches 5 and 6 add =
-DG2
-> > support but need some work. They should wait.
+> After commit '1630dc626c87 ("platform/x86: ISST: Add model specific
+> loading for common module")' isst_misc_reg() and isst_misc_unreg() can be
+> simplified. Since these functions are only called during module_init()
+> and module_exit() respectively, there is no contention while calling
+> misc_register()/misc_deregister or isst_if_cpu_info_init()/
+> isst_if_cpu_info_exit().
 >=20
+> Hence remove mutex and reference counting.
 >=20
-> David, Ilpo,
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+>  .../intel/speed_select_if/isst_if_common.c    | 42 +++++--------------
+>  1 file changed, 11 insertions(+), 31 deletions(-)
 >=20
-> The DG2 patches are a nice to have.
+> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c =
+b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> index 3065f149e721..febfd5eeceb4 100644
+> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> @@ -651,10 +651,6 @@ static long isst_if_def_ioctl(struct file *file, uns=
+igned int cmd,
+> =20
+>  /* Lock to prevent module registration when already opened by user space=
+ */
+>  static DEFINE_MUTEX(punit_misc_dev_open_lock);
+> -/* Lock to allow one shared misc device for all ISST interfaces */
+> -static DEFINE_MUTEX(punit_misc_dev_reg_lock);
+> -static int misc_usage_count;
+> -static int misc_device_ret;
+>  static int misc_device_open;
+> =20
+>  static int isst_if_open(struct inode *inode, struct file *file)
+> @@ -720,39 +716,23 @@ static struct miscdevice isst_if_char_driver =3D {
+> =20
+>  static int isst_misc_reg(void)
+>  {
+> -=09mutex_lock(&punit_misc_dev_reg_lock);
+> -=09if (misc_device_ret)
+> -=09=09goto unlock_exit;
+> -
+> -=09if (!misc_usage_count) {
+> -=09=09misc_device_ret =3D isst_if_cpu_info_init();
+> -=09=09if (misc_device_ret)
+> -=09=09=09goto unlock_exit;
+> -
+> -=09=09misc_device_ret =3D misc_register(&isst_if_char_driver);
+> -=09=09if (misc_device_ret) {
+> -=09=09=09isst_if_cpu_info_exit();
+> -=09=09=09goto unlock_exit;
+> -=09=09}
+> -=09}
+> -=09misc_usage_count++;
+> +=09int ret;
+> =20
+> -unlock_exit:
+> -=09mutex_unlock(&punit_misc_dev_reg_lock);
+> +=09ret =3D isst_if_cpu_info_init();
+> +=09if (ret)
+> +=09=09return ret;
+> =20
+> -=09return misc_device_ret;
+> +=09ret =3D misc_register(&isst_if_char_driver);
+> +=09if (ret)
+> +=09=09isst_if_cpu_info_exit();
+> +
+> +=09return ret;
+>  }
+> =20
+>  static void isst_misc_unreg(void)
+>  {
+> -=09mutex_lock(&punit_misc_dev_reg_lock);
+> -=09if (misc_usage_count)
+> -=09=09misc_usage_count--;
+> -=09if (!misc_usage_count && !misc_device_ret) {
+> -=09=09misc_deregister(&isst_if_char_driver);
+> -=09=09isst_if_cpu_info_exit();
+> -=09}
+> -=09mutex_unlock(&punit_misc_dev_reg_lock);
+> +=09misc_deregister(&isst_if_char_driver);
+> +=09isst_if_cpu_info_exit();
+>  }
+> =20
+>  /**
 >=20
-> Please take patch 1 - 4.
->=20
-> I will revisit 5 and 6 (with David's suggested changes) in the future.
 
-Hans is the one handling pdx86 for-next patches in this cycle (we as the=20
-pdx86 maintainers alternate it on every other kernel release). Please=20
-remember to add him into receipient list when you send the next version
-with my comments on 4th patch addressed (always include all relevant=20
-maintainers when sending patches).
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
 --=20
  i.
---8323328-1485091447-1723454000=:1039--
+
+--8323328-1021919508-1723460150=:1039--
