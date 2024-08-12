@@ -1,290 +1,468 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2054.outbound.protection.outlook.com [40.107.220.54])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36431D699
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 13:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723468771; cv=fail; b=gNQpitj90JUEaJGBntMjthxgrrEgI5+ZOs2aky/SwkVtCBgOzdoAZX9YRrsyPY5lXQiM98Y3sZOCSIaSiNaSxnMeDfRkdweDpeNuWnJUSpuh0KX4jBBnla47aMJYcGqBzD3kOXJmgCnZcR05ws9Zyfy4hA3TI7dmMU68f3Si478=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723468771; c=relaxed/simple;
-	bh=ID8kEnRSKuZPienLV3MhgD4SUTGmuktbX0VNsHaEYJQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q4SU9U9oyOUxb9ImUji8TVDuflIgU8JQxN7F/v4bNmtuWcbbkFuHOWYnDirAa9I4Omrt4YBLfWJIsmr+aeFqsBvz5J2ZO2k0SR7wRZGmJtlic5n4LhfMyrf83UTCFMYNX+QQKjl5Lpkh5ERyJ+8kF25M+xk7QmvdpkQUqILN+58=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=e1+QUB0N; arc=fail smtp.client-ip=40.107.220.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5690F1802AB
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 13:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723470291; cv=none; b=GEia8Ft8v+tV3FvqZkEsOZGo90f4ATxX8YFnqe/isqxXOYFNDfQaewWrM/MreLKDrMJr1nxvFL6k02rbO093sAroAsZeWAw8urryfQpkPYwClXhgbp5ZRyRZfDDjmsEudnzgZji52ChYgwTQnitp9/ZJcXIhQdKCSIGU4YPUC4c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723470291; c=relaxed/simple;
+	bh=HL0FtmisuuNqO7FqgUIGTWQsywczyKqjEsc+bCocJKI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sbq7isOPLq1/Tah5lAWkayu7ZnL4Z0h7MIadd1RUKyFVSStoBg0jjw5mzPFFPNhGW03LDZl1BroBU0VmdrIAmcpGZdL5rXAWOpQ4JGj6fPRba0/CHdll5akFCyTcJbzri99QQFSRI8uJzd1vMJuUekHWmkC40xavKKOsoUgzj0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IM0gim5g; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="e1+QUB0N"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Xh354uYj3b563eosDvEGeB9xep+OvS8v9jUdFrM2bV0/biltvSPsvbEtvk57WUfHziS+LL4Z7ain9j6IHMBwzex3uvlOwwSQeSAMIEt9JKGepPQf2gwcduMxOD0D00WYdjshkgyaoICjd/iL2V8eaELRO8kGiAuo92R1RmcYwuqQNd/AuJMWJuITQ37NO3HNlZBXn8nvbZlkSxr0GnC9I4LZcS542tyXqQ21i2rGECJry2rKuNhYNQM3rU6v1GYmcgoMarqZk6lrmcTNe1P4eqf0tphhtkDwMw7u5ALyylLq8Iva7hXrfJEkqEedpoIPRMb1vwb7wxH4tUOq3LCNbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AbN3HdO1xdjX1GUAUk9hpR2AJLY+OsYjjhtXmYK5XV4=;
- b=axaUfmnlxmm3bp0ko1qxFZpIVfsGfYvVsuZr/vQBLUkwir08YyMolrq3d/Zr1Ow7G8rD+2NHlxLPCaP+IOhQwJ4oweNHOE90bXuJFaN3j7FkJwxfuDyDcwWhywyC4vBTzi4Vgyq3mRzqi4OabVuGhmAKR5rJD3rmY4aBdp2/D11O8+dpB4PO9hjjrnU28ohRiwwfA+IEYdKp5WRAKLyp9lwoQAoV0UG/fW7PvlY1wquN9JPG9mlh571+z1fD/+gqIk2J6YFH7WQ82M9/jG3STpDNvKwFABDRmh93lVKJlE1rCHi1lBTTjPHI9jMTnSGb0faeIkBZ8ZKgtYe6MeLPMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AbN3HdO1xdjX1GUAUk9hpR2AJLY+OsYjjhtXmYK5XV4=;
- b=e1+QUB0N0ex/O6S42qwW4OPGK+kcLdV23F9oVzOMFiMoBzT+ks1gbC7EdY4gaq8UHs8FEBvb+65j3G/sH5EKQ7apLywUeQFm//9GCQURG33SdeSZ4aCAxEOxX5OjNyTPln/BkbmcP62yjMF1gRPpgYsjeVRcNj0zZGJIPhko1W0=
-Received: from CH2PR18CA0040.namprd18.prod.outlook.com (2603:10b6:610:55::20)
- by MW4PR12MB6976.namprd12.prod.outlook.com (2603:10b6:303:20a::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7849.22; Mon, 12 Aug
- 2024 13:19:25 +0000
-Received: from CH3PEPF00000011.namprd21.prod.outlook.com
- (2603:10b6:610:55:cafe::e8) by CH2PR18CA0040.outlook.office365.com
- (2603:10b6:610:55::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7849.22 via Frontend
- Transport; Mon, 12 Aug 2024 13:19:24 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH3PEPF00000011.mail.protection.outlook.com (10.167.244.116) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7875.2 via Frontend Transport; Mon, 12 Aug 2024 13:19:24 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 12 Aug
- 2024 08:19:22 -0500
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
-CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>, "Shyam
- Sundar S K" <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH] platform/x86/amd/pmf: Add support for notifying Smart PC Solution updates
-Date: Mon, 12 Aug 2024 18:48:39 +0530
-Message-ID: <20240812131839.308768-1-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IM0gim5g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1723470288;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e8SW+Vfy0QQUZzQeqil/RhoKPfpFJfWCoCwnuswPcIk=;
+	b=IM0gim5g+yZQvJI8ms+mixQtyVdZ5PRISTru/Cf+jW9azWJ4zpcWFOxcmZlxxqy0JacXkX
+	4tcDj574+nxnLiskQ8eyZ4NEwF8DBi+ni89keU95B3Bywh8jySnL1iG0DYrl2iYoO0/LK1
+	ZTugrJleUK5fe+pe0YVlGgF9qzPvHQ8=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-428-gGUw6I2yMpq5Q5rbdQyh2A-1; Mon, 12 Aug 2024 09:44:46 -0400
+X-MC-Unique: gGUw6I2yMpq5Q5rbdQyh2A-1
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-52efc9f200aso4271294e87.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 06:44:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723470285; x=1724075085;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e8SW+Vfy0QQUZzQeqil/RhoKPfpFJfWCoCwnuswPcIk=;
+        b=dEGODbh3q5Qi5AGcqQ5hmGqjjW24G4PRxoA2oPJruCD8KceMbw8Gli6aWLqEYrLHE0
+         qX8PujLRRqner+jZZdtuoGIeNlosc9Jsv66uo65OcQxpmxbkb+lF+Qxt6usZrK3iXjVD
+         8earWV9/xk4JRzGC3SiIzaLdb+ZXcEY7yJM4mMGdZpcDLOv7fJn8E0+KdzprXFAI1k98
+         Lj3m1XmirxUTd3api6z2bj2iCc+Pzm2XxmQuefuW/rZlZVQJ1iv+TpwGGla+Zx3xW6r+
+         m3I7YN/vDWhc2Qn2fcpfzOkKQGPebmhVxga5lgJUD4Z0wZfDm+SogJdCtnavnBybQCn6
+         1VYA==
+X-Forwarded-Encrypted: i=1; AJvYcCWDaFn+IEImuUrQV5eOIufwZSMHqTI7Vcuc15MkVEGJ702sjnhruVeKr+4TIpy7CIaNOZidPmRQr+le/H5tRDQTk985T5ypRq7kz/pMgOeyp13h3Q==
+X-Gm-Message-State: AOJu0YzAuGoq5j1nlgD9Wj54NukMOx2h0Kos+sU95dsIgrPdunUCOiFw
+	qrgq8n78R82aIyZUqtNm3QuL6kqCboMZlBE/vOuE2RRb85RM810qpomJ+tQiczZM5wBi0q+Syvs
+	baOqROC4eWB+A2wYJzUQSmfDxtM/TrDzwxZKF2FrdQ61pg59zzVB0WNAqi0i1BVAlpKtxlDA=
+X-Received: by 2002:a05:6512:3048:b0:530:ad8b:de11 with SMTP id 2adb3069b0e04-5321364855bmr151145e87.9.1723470284757;
+        Mon, 12 Aug 2024 06:44:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHZvATm9Prv58gDOdp97at6XlQKABiW/aCqqtFGHW8WOX3goLea6Ix+W70Pg/EmfB1jawSjrA==
+X-Received: by 2002:a05:6512:3048:b0:530:ad8b:de11 with SMTP id 2adb3069b0e04-5321364855bmr151115e87.9.1723470284073;
+        Mon, 12 Aug 2024 06:44:44 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a80bb090aadsm234892566b.14.2024.08.12.06.44.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Aug 2024 06:44:43 -0700 (PDT)
+Message-ID: <8e06b567-8471-4109-bab1-f44a8d9780da@redhat.com>
+Date: Mon, 12 Aug 2024 15:44:42 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PEPF00000011:EE_|MW4PR12MB6976:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0235bd2d-0943-4fb5-e195-08dcbad162cf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?PlOsqD44I+/BMpd9nBnthR26Z+e5/8POJgawH7F/N+MIS42F/Xyc/xMYiZEc?=
- =?us-ascii?Q?PrHJFp/S/JtWSAg8viSMunAxRpvKchOyKQmnAglJ2hhiLXlcUHiIdB5lfape?=
- =?us-ascii?Q?49D/7WT2h53OtQv0dGKlv1jNrtzksO20UUQOzNEAASjRtdSqtCOhm3S8c5PV?=
- =?us-ascii?Q?duWkQxJgaUxDV2E129Z/1aBZTLyeJNmWPTPr/vWlXZiKDnyzHsVe7E8xVhzA?=
- =?us-ascii?Q?zLx5KbX5l9Aa1LMQFeeYdPgXUzRPp4kSG3/7CeqgqhmWimeSNSmkXO/9uXBc?=
- =?us-ascii?Q?1mvFjbWpbTSCL7/AMHWYTRCpHH3k9qPQ439iIDjriDvVtaF40zquLzQyvlK6?=
- =?us-ascii?Q?O/otMzth4TFYNywIc/f6gnx9hd4fWiyelL4miWCqhMvg/RYH4XeqgJ+V4fsW?=
- =?us-ascii?Q?XUw5CTtbAH/bVfHySniBt56XRNyHEylyP9gyW0OPbFaZ7wb2dHQ9HSXVnXWf?=
- =?us-ascii?Q?xIPz4EmVvl865hFGFPCrWT7hY7jDrg6FboE6pPIZO6o5oyrK/ZFlrci7PsWW?=
- =?us-ascii?Q?O+Bg+0TZGgQL77SRhZVtRgnS8KybmQhOeuCqI/CEpaysp76BuNupYkPV1N+9?=
- =?us-ascii?Q?q4JTDDNiJfLtJMig44f7OgfKiHq7AWgOCAxNlgNDzhmufk5RNmCvfWihVTEz?=
- =?us-ascii?Q?fwMf7XW+S6aGeAJeARpEU6Hoc662oMAk45/zp1sJ2K7kfARjq9fMY+V2dDkc?=
- =?us-ascii?Q?jWcAm0l+6iKiKfbKP4ZdzZ2ZwwBLuofOBFCcrxHEOXU4mpBt1wrc+DspnybO?=
- =?us-ascii?Q?I/fD4YUSreFQ3C4eghBwijZysONrgksdDZ/ldkvrv+DNOc5e+2PlePZeptvx?=
- =?us-ascii?Q?3Xrt0yFuyzZV7vxgQGyRKH5zjiq33TR569IGgprixwnefHbg49FvhkHJ4Pt5?=
- =?us-ascii?Q?DhWoBXy0Zwi5LFrBM7Myh3tOEz+1jI0byL9fj23R816jIS1K+EbluhYaR823?=
- =?us-ascii?Q?A3cJ+4rKICTlfhOKrfWLfrk6s/L+XpMh72/vsiXfEAQfG6DplIKCZ3U/vhl5?=
- =?us-ascii?Q?MMRW54tMk1LtVJNUexd5dEQr/deKRrqInVI0xcjmaP4YA/+YPOw/jRJ18X+3?=
- =?us-ascii?Q?jgBjCt3cPLzyQjRE6tmTiaynrdhZ7kb5tb6LfW8DBmcu/o5itqB4naHnMYjL?=
- =?us-ascii?Q?93OtBpesE/qg1gzbPXhyghufLW9kK7+KqxzoAk2BA6+vsNTQ5dD/4/kxdlcK?=
- =?us-ascii?Q?+kR7YkE+CrG8lOUt1ZVwrG2z06ca1h8X4sMxw87oMCoRWFjZAh6Idm7Dp478?=
- =?us-ascii?Q?tL0cn9xd6cKmQHN8pdFmCFR+r5tXLAy5bBhktRBBhpGY7aAAXOJ+7aFEdR4w?=
- =?us-ascii?Q?84E+nTV44hc+po4y9+oeALjBuGHPwkkFb5swS3udLRboWSCGrU9QhoJo8mg3?=
- =?us-ascii?Q?7XzgyUGs47gkC9jj6eW8EkwhvsxwwsB3Q2lD7r7QIm20HHJf8cIt25w+t4oj?=
- =?us-ascii?Q?QQXl4RwZ6uBYtFw5Y3Zkj+8pLCI+hWAu?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2024 13:19:24.7239
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0235bd2d-0943-4fb5-e195-08dcbad162cf
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH3PEPF00000011.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6976
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] HP: wmi: added support for 4 zone keyboard rgb
+To: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>,
+ ilpo.jarvinen@linux.intel.com
+Cc: mustafa.eskieksi@gmail.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240719100011.16656-1-carlosmiguelferreira.2003@gmail.com>
+ <20240719100011.16656-2-carlosmiguelferreira.2003@gmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240719100011.16656-2-carlosmiguelferreira.2003@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The APMF function 14 (Notify Smart PC Solution Updates) allows the BIOS
-(AMD/OEM) to be informed about the outputs of custom Smart PC policies.
-Enhance the PMF driver to invoke APMF function 14 when these custom policy
-outputs are triggered.
+Hi,
 
-Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
- drivers/platform/x86/amd/pmf/acpi.c   | 31 +++++++++++++++++++++
- drivers/platform/x86/amd/pmf/pmf.h    | 18 ++++++++++++
- drivers/platform/x86/amd/pmf/tee-if.c | 40 +++++++++++++++++++++++++++
- 3 files changed, 89 insertions(+)
+Thank you for the new version, much better, almost there I would say.
 
-diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
-index 1157ec148880..d5b496433d69 100644
---- a/drivers/platform/x86/amd/pmf/acpi.c
-+++ b/drivers/platform/x86/amd/pmf/acpi.c
-@@ -282,6 +282,29 @@ int apmf_update_fan_idx(struct amd_pmf_dev *pdev, bool manual, u32 idx)
- 	return 0;
- }
- 
-+static int apmf_notify_smart_pc_update(struct amd_pmf_dev *pdev, u32 val, u32 preq, u32 index)
-+{
-+	struct amd_pmf_notify_smart_pc_update args;
-+	struct acpi_buffer params;
-+	union acpi_object *info;
-+
-+	args.size = sizeof(args);
-+	args.pending_req = preq;
-+	args.custom_bios[index] = val;
-+
-+	params.length = sizeof(args);
-+	params.pointer = &args;
-+
-+	info = apmf_if_call(pdev, APMF_FUNC_NOTIFY_SMART_PC_UPDATES, &params);
-+	if (!info)
-+		return -EIO;
-+
-+	kfree(info);
-+	dev_dbg(pdev->dev, "Notify smart pc update, val: %u\n", val);
-+
-+	return 0;
-+}
-+
- int apmf_get_auto_mode_def(struct amd_pmf_dev *pdev, struct apmf_auto_mode *data)
- {
- 	return apmf_if_call_store_buffer(pdev, APMF_FUNC_AUTO_MODE, data, sizeof(*data));
-@@ -447,6 +470,14 @@ int apmf_check_smart_pc(struct amd_pmf_dev *pmf_dev)
- 	return 0;
- }
- 
-+int amd_pmf_smartpc_apply_bios_output(struct amd_pmf_dev *dev, u32 val, u32 preq, u32 idx)
-+{
-+	if (!is_apmf_func_supported(dev, APMF_FUNC_NOTIFY_SMART_PC_UPDATES))
-+		return -EINVAL;
-+
-+	return apmf_notify_smart_pc_update(dev, val, preq, idx);
-+}
-+
- void apmf_acpi_deinit(struct amd_pmf_dev *pmf_dev)
- {
- 	acpi_handle ahandle = ACPI_HANDLE(pmf_dev->dev);
-diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-index 753d5662c080..9bf4326d06c3 100644
---- a/drivers/platform/x86/amd/pmf/pmf.h
-+++ b/drivers/platform/x86/amd/pmf/pmf.h
-@@ -35,6 +35,7 @@ struct cookie_header {
- #define APMF_FUNC_STATIC_SLIDER_GRANULAR       9
- #define APMF_FUNC_DYN_SLIDER_AC				11
- #define APMF_FUNC_DYN_SLIDER_DC				12
-+#define APMF_FUNC_NOTIFY_SMART_PC_UPDATES		14
- #define APMF_FUNC_SBIOS_HEARTBEAT_V2			16
- 
- /* Message Definitions */
-@@ -82,7 +83,17 @@ struct cookie_header {
- #define PMF_POLICY_STT_SKINTEMP_APU				7
- #define PMF_POLICY_STT_SKINTEMP_HS2				8
- #define PMF_POLICY_SYSTEM_STATE					9
-+#define PMF_POLICY_BIOS_OUTPUT_1				10
-+#define PMF_POLICY_BIOS_OUTPUT_2				11
- #define PMF_POLICY_P3T						38
-+#define PMF_POLICY_BIOS_OUTPUT_3				57
-+#define PMF_POLICY_BIOS_OUTPUT_4				58
-+#define PMF_POLICY_BIOS_OUTPUT_5				59
-+#define PMF_POLICY_BIOS_OUTPUT_6				60
-+#define PMF_POLICY_BIOS_OUTPUT_7				61
-+#define PMF_POLICY_BIOS_OUTPUT_8				62
-+#define PMF_POLICY_BIOS_OUTPUT_9				63
-+#define PMF_POLICY_BIOS_OUTPUT_10				64
- 
- /* TA macros */
- #define PMF_TA_IF_VERSION_MAJOR				1
-@@ -344,6 +355,12 @@ struct os_power_slider {
- 	u8 slider_event;
- } __packed;
- 
-+struct amd_pmf_notify_smart_pc_update {
-+	u16 size;
-+	u32 pending_req;
-+	u32 custom_bios[10];
-+} __packed;
-+
- struct fan_table_control {
- 	bool manual;
- 	unsigned long fan_id;
-@@ -717,6 +734,7 @@ extern const struct attribute_group cnqf_feature_attribute_group;
- int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev);
- void amd_pmf_deinit_smart_pc(struct amd_pmf_dev *dev);
- int apmf_check_smart_pc(struct amd_pmf_dev *pmf_dev);
-+int amd_pmf_smartpc_apply_bios_output(struct amd_pmf_dev *dev, u32 val, u32 preq, u32 idx);
- 
- /* Smart PC - TA interfaces */
- void amd_pmf_populate_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in);
-diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-index e246367aacee..19c27b6e4666 100644
---- a/drivers/platform/x86/amd/pmf/tee-if.c
-+++ b/drivers/platform/x86/amd/pmf/tee-if.c
-@@ -160,6 +160,46 @@ static void amd_pmf_apply_policies(struct amd_pmf_dev *dev, struct ta_pmf_enact_
- 			dev_dbg(dev->dev, "update SYSTEM_STATE: %s\n",
- 				amd_pmf_uevent_as_str(val));
- 			break;
-+
-+		case PMF_POLICY_BIOS_OUTPUT_1:
-+			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(0), 0);
-+			break;
-+
-+		case PMF_POLICY_BIOS_OUTPUT_2:
-+			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(1), 1);
-+			break;
-+
-+		case PMF_POLICY_BIOS_OUTPUT_3:
-+			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(2), 2);
-+			break;
-+
-+		case PMF_POLICY_BIOS_OUTPUT_4:
-+			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(3), 3);
-+			break;
-+
-+		case PMF_POLICY_BIOS_OUTPUT_5:
-+			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(4), 4);
-+			break;
-+
-+		case PMF_POLICY_BIOS_OUTPUT_6:
-+			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(5), 5);
-+			break;
-+
-+		case PMF_POLICY_BIOS_OUTPUT_7:
-+			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(6), 6);
-+			break;
-+
-+		case PMF_POLICY_BIOS_OUTPUT_8:
-+			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(7), 7);
-+			break;
-+
-+		case PMF_POLICY_BIOS_OUTPUT_9:
-+			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(8), 8);
-+			break;
-+
-+		case PMF_POLICY_BIOS_OUTPUT_10:
-+			amd_pmf_smartpc_apply_bios_output(dev, val, BIT(9), 9);
-+			break;
- 		}
- 	}
- }
--- 
-2.25.1
+On 7/19/24 11:59 AM, Carlos Ferreira wrote:
+> This driver adds supports for 4 zone keyboard rgb on omen laptops
+> using the multicolor led api.
+> 
+> Tested on the HP Omen 15-en1001np.
+> 
+> Signed-off-by: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
+> ---
+>  drivers/platform/x86/hp/Kconfig  |   1 +
+>  drivers/platform/x86/hp/hp-wmi.c | 282 ++++++++++++++++++++++++++++++-
+>  2 files changed, 274 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/hp/Kconfig b/drivers/platform/x86/hp/Kconfig
+> index 7fef4f12e498..6ce6d862ad05 100644
+> --- a/drivers/platform/x86/hp/Kconfig
+> +++ b/drivers/platform/x86/hp/Kconfig
+> @@ -40,6 +40,7 @@ config HP_WMI
+>  	depends on ACPI_WMI
+>  	depends on INPUT
+>  	depends on RFKILL || RFKILL = n
+> +	select LEDS_CLASS_MULTICOLOR
+
+As pointed out by the kernel test robot, LEDS_COLOR_MULTICOLOR
+is a symbol which for which you should use "depends on" not
+select. Note that in general when adding new dependencies it
+is a good idea to grep for them in the kernel tree and see
+what other consumers of the dependency are doing.
+
+Generally speaking either all existing consumers will all
+use "depends on" (which is the case here), or they will all
+use select and you should follow the example of the existing
+consumers to avoid things like circular dependency issues.
+Note sometimes exiting use unfortunately is inconsistent.
+
+>  	select INPUT_SPARSEKMAP
+>  	select ACPI_PLATFORM_PROFILE
+>  	select HWMON
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index 5fa553023842..b349f8325b93 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -14,7 +14,11 @@
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+>  #include <linux/kernel.h>
+> +#include <linux/led-class-multicolor.h>
+> +#include <linux/leds.h>
+>  #include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/mutex_types.h>
+>  #include <linux/init.h>
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+> @@ -24,6 +28,8 @@
+>  #include <linux/platform_profile.h>
+>  #include <linux/hwmon.h>
+>  #include <linux/acpi.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/bits.h>
+>  #include <linux/rfkill.h>
+>  #include <linux/string.h>
+>  #include <linux/dmi.h>
+> @@ -44,6 +50,13 @@ MODULE_ALIAS("wmi:5FB7F034-2C63-45E9-BE91-3D44E2C707E4");
+>  
+>  #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
+>  
+> +#define FOURZONE_LIGHTING_SUPPORTED_BIT	0x01
+> +#define FOURZONE_LIGHTING_ON		228
+> +#define FOURZONE_LIGHTING_OFF		100
+> +
+> +#define FOURZONE_COLOR	GENMASK(7, 0)
+> +#define KBD_ZONE_COUNT	4
+> +
+>  /* DMI board names of devices that should use the omen specific path for
+>   * thermal profiles.
+>   * This was obtained by taking a look in the windows omen command center
+> @@ -143,18 +156,36 @@ enum hp_wmi_commandtype {
+>  };
+>  
+>  enum hp_wmi_gm_commandtype {
+> -	HPWMI_FAN_SPEED_GET_QUERY = 0x11,
+> -	HPWMI_SET_PERFORMANCE_MODE = 0x1A,
+> -	HPWMI_FAN_SPEED_MAX_GET_QUERY = 0x26,
+> -	HPWMI_FAN_SPEED_MAX_SET_QUERY = 0x27,
+> -	HPWMI_GET_SYSTEM_DESIGN_DATA = 0x28,
+> +	HPWMI_FAN_SPEED_GET_QUERY	= 0x11,
+> +	HPWMI_SET_PERFORMANCE_MODE	= 0x1A,
+> +	HPWMI_FAN_SPEED_MAX_GET_QUERY	= 0x26,
+> +	HPWMI_FAN_SPEED_MAX_SET_QUERY	= 0x27,
+> +	HPWMI_GET_SYSTEM_DESIGN_DATA	= 0x28,
+> +	HPWMI_GET_KEYBOARD_TYPE		= 0x2B,
+> +};
+> +
+> +enum hp_wmi_fourzone_commandtype {
+> +	HPWMI_SUPPORTS_LIGHTNING	= 0x01,
+> +	HPWMI_FOURZONE_COLOR_GET	= 0x02,
+> +	HPWMI_FOURZONE_COLOR_SET	= 0x03,
+> +	HPWMI_LED_BRIGHTNESS_GET	= 0x04,
+> +	HPWMI_LED_BRIGHTNESS_SET	= 0x05,
+> +};
+> +
+> +enum hp_wmi_keyboardtype {
+> +	HPWMI_KEYBOARD_INVALID        = 0x00,
+> +	HPWMI_KEYBOARD_NORMAL         = 0x01,
+> +	HPWMI_KEYBOARD_WITH_NUMPAD    = 0x02,
+> +	HPWMI_KEYBOARD_WITHOUT_NUMPAD = 0x03,
+> +	HPWMI_KEYBOARD_RGB	      = 0x04,
+>  };
+>  
+>  enum hp_wmi_command {
+> -	HPWMI_READ	= 0x01,
+> -	HPWMI_WRITE	= 0x02,
+> -	HPWMI_ODM	= 0x03,
+> -	HPWMI_GM	= 0x20008,
+> +	HPWMI_READ     = 0x01,
+> +	HPWMI_WRITE    = 0x02,
+> +	HPWMI_ODM      = 0x03,
+> +	HPWMI_GM       = 0x20008,
+> +	HPWMI_FOURZONE = 0x20009,
+>  };
+>  
+>  enum hp_wmi_hardware_mask {
+> @@ -821,6 +852,86 @@ static struct attribute *hp_wmi_attrs[] = {
+>  };
+>  ATTRIBUTE_GROUPS(hp_wmi);
+>  
+> +static const char * const fourzone_zone_names[KBD_ZONE_COUNT] = {
+> +	"hp:rgb:kbd_zoned_backlight-right",
+> +	"hp:rgb:kbd_zoned_backlight-middle",
+> +	"hp:rgb:kbd_zoned_backlight-left",
+> +	"hp:rgb:kbd_zoned_backlight-wasd"
+> +};
+> +
+> +struct hp_fourzone_led {
+> +	struct led_classdev_mc mc_led;
+> +	struct mc_subled subleds[3];
+> +	/*
+> +	 * This stores the last set brightness level to restore it on off->on toggle
+> +	 * by the FN-key combo.
+> +	 */
+> +	enum led_brightness brightness;
+
+As Ilpo also just mentioned please make this a regular "int"
+since the LED subsystem is working towards replacing
+"enum led_brightness" with plain int, see:
+
+https://lore.kernel.org/all/CAM_RzfbuYYf7P2YK7H0BpUJut8hFvxa-Sm6hP1BKJe-jVFa62w@mail.gmail.com/
+
+> +};
+> +static struct hp_fourzone_led fourzone_leds[KBD_ZONE_COUNT];
+> +static struct mutex fourzone_mutex;
+> +
+> +static enum led_brightness fourzone_get_hw_brightness(void)
+> +{
+> +	u8 buff[4];
+> +
+> +	hp_wmi_perform_query(HPWMI_LED_BRIGHTNESS_GET, HPWMI_FOURZONE, &buff,
+> +			     sizeof(buff), sizeof(buff));
+> +
+> +	return buff[0] == FOURZONE_LIGHTING_ON ? LED_ON : LED_OFF;
+> +}
+
+Please make the return type a u8 and just return buff[0].
+
+and then (continued below after the mutex remark) ...
+
+> +
+> +static int fourzone_set_colors(void)
+> +{
+> +	int ret, i, j;
+> +	u8 buff[128];
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_FOURZONE_COLOR_GET, HPWMI_FOURZONE, &buff,
+> +				   sizeof(buff), sizeof(buff));
+> +	if (ret != 0)
+> +		return -EINVAL;
+> +
+> +	for (i = 0; i < KBD_ZONE_COUNT; i++)
+> +		for (j = 0; j < 3; j++)
+> +			buff[25 + i * 3 + j] = fourzone_leds[i].subleds[j].brightness;
+> +
+> +	return hp_wmi_perform_query(HPWMI_FOURZONE_COLOR_SET, HPWMI_FOURZONE, &buff,
+> +				    sizeof(buff), sizeof(buff));
+> +}
+> +
+> +static void fourzone_set_state(void)
+> +{
+> +	enum led_brightness hw_brightness;
+> +	int i;
+> +
+> +	mutex_lock(&fourzone_mutex);
+
+Please add "#include <linux/cleanup.h>" to the includes and use
+
+	guard(mutex)(&fourzone_mutex);
+
+here instead. This will auto-unlock on leaving the function,
+so you can then drop the mutex_unlock() below and if any error
+exit (early return) paths get added later those cannot forget
+to unlock the mutex since this is done automatically.
+
+
+> +
+> +	hw_brightness = fourzone_get_hw_brightness();
+> +
+
+Make the type of hw_brightness a u8 and replace this line:
+
+> +	if (hw_brightness)
+
+With:
+
+	if (hw_brightness == FOURZONE_LIGHTING_ON)
+
+this avoids the need to translate the hw specific values into
+some other range first.
+
+> +		/* restore old brightness values */
+> +		for (i = 0; i < KBD_ZONE_COUNT; i++) {
+> +			fourzone_leds[i].mc_led.led_cdev.brightness = fourzone_leds[i].brightness;
+> +			led_mc_calc_color_components(&fourzone_leds[i].mc_led,
+> +						     fourzone_leds[i].brightness);
+> +		}
+> +	else
+> +		for (i = 0; i < KBD_ZONE_COUNT; i++) {
+> +			fourzone_leds[i].brightness = fourzone_leds[i].mc_led.led_cdev.brightness;
+> +			fourzone_leds[i].mc_led.led_cdev.brightness = LED_OFF;
+> +			led_mc_calc_color_components(&fourzone_leds[i].mc_led, LED_OFF);
+> +		}
+> +
+> +	fourzone_set_colors();
+> +
+> +	/* notify userspace about the change */
+> +	for (i = 0; i < KBD_ZONE_COUNT; i++)
+> +		led_classdev_notify_brightness_hw_changed(&fourzone_leds[i].mc_led.led_cdev,
+> +							  hw_brightness);
+> +
+> +	mutex_unlock(&fourzone_mutex);
+> +}
+> +
+>  static void hp_wmi_notify(u32 value, void *context)
+>  {
+>  	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
+> @@ -932,6 +1043,7 @@ static void hp_wmi_notify(u32 value, void *context)
+>  	case HPWMI_PROXIMITY_SENSOR:
+>  		break;
+>  	case HPWMI_BACKLIT_KB_BRIGHTNESS:
+> +		fourzone_set_state();
+>  		break;
+>  	case HPWMI_PEAKSHIFT_PERIOD:
+>  		break;
+> @@ -1505,6 +1617,155 @@ static int thermal_profile_setup(void)
+>  	return 0;
+>  }
+>  
+> +static void fourzone_set_brightness(struct led_classdev *led_cdev, enum led_brightness brightness)
+> +{
+> +	u8 buff[4] = { };
+> +	int i, zone = 0;
+> +	bool on = false;
+> +
+> +	for (i = 0; i < KBD_ZONE_COUNT; i++)
+> +		if (!strcmp(led_cdev->name, fourzone_zone_names[i]))
+> +			zone = i;
+> +
+> +	mutex_lock(&fourzone_mutex);
+
+Replace this with:
+
+	guard(mutex)(&fourzone_mutex);
+
+as discussed above.
+
+> +
+> +	/* always update main and per color brightness values even when the backlight is off */
+> +	fourzone_leds[zone].mc_led.led_cdev.brightness = brightness;
+> +	led_mc_calc_color_components(&fourzone_leds[zone].mc_led, brightness);
+> +	fourzone_set_colors();
+> +
+> +	for (i = 0; i < KBD_ZONE_COUNT; i++)
+> +		if (fourzone_leds[i].mc_led.led_cdev.brightness)
+> +			on = true;
+> +
+> +	/*
+> +	 * This makes sure that when turning the kbd off with sw and back on with hw, there is a
+> +	 * zone with brightness != 0 to go back to
+> +	 */
+> +	if (on)
+> +		fourzone_leds[zone].brightness = brightness;
+> +
+> +	/* change the keyboard mode to off if all brightness values are set to 0 */
+> +	buff[0] = on ? FOURZONE_LIGHTING_ON : FOURZONE_LIGHTING_OFF;
+> +	hp_wmi_perform_query(HPWMI_LED_BRIGHTNESS_SET, HPWMI_FOURZONE, &buff, sizeof(buff), 0);
+> +
+> +	mutex_unlock(&fourzone_mutex);
+> +}
+> +
+> +static int fourzone_get_hw_colors(u32 *colors)
+> +{
+> +	u8 buff[128];
+> +	int ret, i;
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_FOURZONE_COLOR_GET, HPWMI_FOURZONE, &buff,
+> +				   sizeof(buff), sizeof(buff));
+> +	if (ret != 0)
+> +		return -EINVAL;
+> +
+> +	for (i = 0; i < KBD_ZONE_COUNT; i++) {
+> +		colors[i * 3]     = FIELD_GET(FOURZONE_COLOR, buff[25 + i * 3]);
+> +		colors[i * 3 + 1] = FIELD_GET(FOURZONE_COLOR, buff[25 + i * 3 + 1]);
+> +		colors[i * 3 + 2] = FIELD_GET(FOURZONE_COLOR, buff[25 + i * 3 + 2]);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init fourzone_leds_init(struct platform_device *device)
+> +{
+> +	enum led_brightness hw_brightness;
+> +	u32 colors[KBD_ZONE_COUNT * 3];
+> +	int ret, i, j;
+> +
+> +	ret = fourzone_get_hw_colors(colors);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	hw_brightness = fourzone_get_hw_brightness();
+> +
+> +	for (i = 0; i < KBD_ZONE_COUNT; i++) {
+> +		for (j = 0; j < 3; j++)
+> +			fourzone_leds[i].subleds[j] = (struct mc_subled) {
+> +				.color_index = j + 1,
+> +				.brightness = hw_brightness ? colors[i * 3 + j] : 0,
+
+I think it would be cleaner to drop setting subled brightness here and instead
+call led_mc_calc_color_components() below ... :
+
+> +				.intensity = colors[i * 3 + j],
+> +			};
+> +
+> +		fourzone_leds[i].mc_led = (struct led_classdev_mc) {
+> +			.led_cdev = {
+> +				.name = fourzone_zone_names[i],
+> +				.brightness = hw_brightness ? 255 : 0,
+> +				.max_brightness = 255,
+> +				.brightness_set = fourzone_set_brightness,
+> +				.color = LED_COLOR_ID_RGB,
+> +				.flags = LED_BRIGHT_HW_CHANGED | LED_RETAIN_AT_SHUTDOWN,
+> +			},
+> +			.num_colors = 3,
+> +			.subled_info = fourzone_leds[i].subleds;
+> +		};
+> +
+
+With this all setup, you can now call:
+
+		led_mc_calc_color_components(&fourzone_leds[i].mc_led, fourzone_leds[i].mc_led.led_cdev.brightness);
+
+here, this makes how the subled brightness is set here (on init) identical with
+how it is done on set_brightness calls which is more consistent.
+
+> +		fourzone_leds[i].brightness = 255;
+> +
+> +		ret = devm_led_classdev_multicolor_register(&device->dev, &fourzone_leds[i].mc_led);
+> +		if (ret)
+> +			return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+
+<snip>
+
+Regards,
+
+Hans
+
+p.s.
+
+Please also address all the comments from Ilpo's review for v5.
+
 
