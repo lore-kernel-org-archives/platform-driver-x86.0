@@ -1,338 +1,385 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CCC1E488;
-	Mon, 12 Aug 2024 12:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23AB617A937
+	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 12:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723465171; cv=none; b=u1a4lsxLuyNWpoci69p9cI3Y8hDHgDW6bLfBHtZmoqPAyP1h9/xkbRPnY3wj3mbbt2sL1h65tDmosB6bx6K5xhc85+uzXgI0FKjhCFsLWppZUUdmiN5SrqxEk2ersD6b2rUYdxYOdXYWHPOLz+k9qsyGLIoO0HzAH1vDdvKh/oM=
+	t=1723466009; cv=none; b=NHZ8cREbDLt4v/ScmApxw+NXb3jxcxH2l7euhxXtZ7WuDypTcRwFrLg8JnfwDY/rK+aKlz8hYwXuKUwq3HWddo2pwsfUxLeT3KoVjlIcx0lON/HSCZ+DTo6jxz/YBk4+hPCHFRkz6G6SDm+BMujbCuzjebRwO47FCE7BKXfivRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723465171; c=relaxed/simple;
-	bh=FDgfGSoDP9XMfPf7vo5ecBOQ5J/89MCzalVm2yaUwHA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=rpgqTBb3xQ8DDBxDHIDDlw2FJHpCnJR4ChKNH597S4Fi3i4zNSYnaK7Q9aYE2RP3lgQGClKU5m6dOyvVrarMgD6Qc2qeER6Pnp0UW5CtesShc7es6n1Kc4DEHcdZ77Lon0iN4KY0hQzRgLi3jaBLQwnbNbObGcgPTspLmdprp/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NsJTb3NF; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1723466009; c=relaxed/simple;
+	bh=KAqfy5HDt0ryO88WQmcdYBqTAZ3eYIAO9amDJdHCra8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=KbEYVc77I6ObXNvKzismlMmeIDKs0DsKELqYvVAFFSL1xw3gAbT/6inwncPG4BR+CSvsX9WQGT6typApbEezozQhTNfMWfWnD7EwiF0UbMvKK6ah/ImOaAQ8KqvGR83ENEa7kmiVG3tUWEYat05qVLIFYC8kHtZ3QUnakMV65Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WSwsNR3n; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NsJTb3NF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723465169; x=1755001169;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=FDgfGSoDP9XMfPf7vo5ecBOQ5J/89MCzalVm2yaUwHA=;
-  b=NsJTb3NFO2e83XVPwjL8nwtOsCVXixwxZWqouX3dZVrhGBtCgc3rcvPF
-   Kb7y6B52OQnjkmcimTAe1drrskieahDb/O4X2incdPbD3dUYJa86/pbyh
-   rspJyA81iXo6bfiPZG3DfwjunTmnQTFQV6RsTElj5gSd7jEaOlQtOCu7i
-   gu64HuI3wPArN+kM5W9ShYoZ9uUt7g02rhOs0Eth9TTig5LIbu9geth6r
-   YpZVgbu/BSU04+22lqsCWe/ESX4JDI5hnh1VmfpXe7/kcaC5IAbNqpK4L
-   /jQ8AP6+Rk3RvRzcCXK6KxKIb/AED8z2LVGnmG061FdOFsCgw6oOJ7VNu
-   Q==;
-X-CSE-ConnectionGUID: ICB265S4T0ab+LdypxzdRg==
-X-CSE-MsgGUID: KKDMthP8RoeSIM3U+tgeDA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11162"; a="46971249"
-X-IronPort-AV: E=Sophos;i="6.09,282,1716274800"; 
-   d="scan'208";a="46971249"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 05:19:29 -0700
-X-CSE-ConnectionGUID: lbwKucxKQsmZ8QTreqWMAA==
-X-CSE-MsgGUID: vljc+7UpSZWcAoNTLpjLVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,282,1716274800"; 
-   d="scan'208";a="63096360"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.25])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 05:19:26 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 12 Aug 2024 15:19:23 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: matan@svgalib.org, ghostwind@gmail.com, 
-    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: lg-laptop: Add operation region support
-In-Reply-To: <20240809175211.5962-1-W_Armin@gmx.de>
-Message-ID: <4cbf5396-37e5-5e66-e26f-c43186e285da@linux.intel.com>
-References: <20240809175211.5962-1-W_Armin@gmx.de>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WSwsNR3n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1723466007;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7bjWHOBJug9GKLxX1y4GcvC+tzINB11lDnF7fldSjCs=;
+	b=WSwsNR3nEkZMksunfi7T+zTe0ubo2iYbFtAXin/ZS9nHn6puaFwh6q833azgaP8lcTL4Lj
+	WISWLdGPYdmCNZ8is7SOPNqNuHQcJajarj4grQog88JgHI/so3Dzy2p6EW5YRHQnAecwc+
+	OzREw2yOumJjN/kBfAWwGd9XhheO85c=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-593-XBbaSCSxMly1n14-mnYavQ-1; Mon, 12 Aug 2024 08:33:26 -0400
+X-MC-Unique: XBbaSCSxMly1n14-mnYavQ-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5a37b858388so3706200a12.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 05:33:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723466005; x=1724070805;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7bjWHOBJug9GKLxX1y4GcvC+tzINB11lDnF7fldSjCs=;
+        b=BnhfW0JnCO9xWYCE2YT1LOxjH7s2qUnjoC8F+3zWfwP6BowsHA8o0XSUcv61Pmv+h2
+         NzBCqPmxRQ/wXcbl2QgIEEKFIT/iPib/C+NFvCBN3h08RZPiu2ANHsn5LzN/lv3PgXTF
+         QPYY7S998/iFjuLimAniLEQcwLPSR8yWCHXgeUjhrGtb8VGOYvAA8kflWVuBiMTHkukM
+         CZUpMRnVOjDSUxOtAo7yTL842r8uv/L/WTHQDERgoxPoFKvu6V7eJEB/e6b7mouV+5pj
+         W1al0BoKVA9Hp81dDKMpUrU8iqvoczbHPXrtOoqty7V1nW2BaI7Xdubsf/kWvcg5P6Nx
+         mg1A==
+X-Forwarded-Encrypted: i=1; AJvYcCUjYPdPtDGK6hOySEJsdFIiC4//hEmdXwUrygXqFPMgbquDpwyxpcvCAwK7gorzt7aj53uImmp+xwmgCWQl82vp08oDPO2KfkCbVzdNQjqeysfy7A==
+X-Gm-Message-State: AOJu0YzgEq0bVS2phAAQqU1mdLeSLF3TwekD67KB6NSw0a+yQ5uDEfFm
+	dDmIm3kEDjXru0o/om5H6uFDtPU0KdgkORcI3KJRpXy7XAarF/IDSEBUnK/ht/oG86AASJ1843+
+	JVdNKffAh117hFXN1SRBFjezkXYNb2TjRkT9nwPygJ3smBXTYg8x35WD8Cw1te0x17heKuaPdQW
+	wcs4c=
+X-Received: by 2002:a50:8dc7:0:b0:595:71c7:39dd with SMTP id 4fb4d7f45d1cf-5bd44c79eafmr68951a12.34.1723466004542;
+        Mon, 12 Aug 2024 05:33:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF0kaEU81tGKxd+wuCFMSCCh/i9KV9sH3JP6NIbph1WALywiQJfqnm2uCmvavLD/x3AKWkgnA==
+X-Received: by 2002:a50:8dc7:0:b0:595:71c7:39dd with SMTP id 4fb4d7f45d1cf-5bd44c79eafmr68930a12.34.1723466003982;
+        Mon, 12 Aug 2024 05:33:23 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bd187f4fe2sm2086869a12.9.2024.08.12.05.33.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Aug 2024 05:33:23 -0700 (PDT)
+Message-ID: <187b6058-c41a-4767-af47-ba35451f2049@redhat.com>
+Date: Mon, 12 Aug 2024 14:33:23 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2042051820-1723465163=:1039"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-2042051820-1723465163=:1039
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Add Thinkpad Edge E531 fan
+ support
+To: Matthias Fetzer <kontakt@matthias-fetzer.de>, hmh@hmh.eng.br,
+ ilpo.jarvinen@linux.intel.com, ibm-acpi-devel@lists.sourceforge.net,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240714165054.2261305-1-kontakt@matthias-fetzer.de>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240714165054.2261305-1-kontakt@matthias-fetzer.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 7bit
 
-On Fri, 9 Aug 2024, Armin Wolf wrote:
+Hi Matthias,
 
-> The LEGX0820 ACPI device is expected to provide a custom operation
-> region:
->=20
-> =09OperationRegion (XIN1, 0x8F, Zero, 0x04B0)
->         Field (XIN1, AnyAcc, Lock, Preserve)
->         {
->             DMSG,   8,
->             HDAP,   8,
->             Offset (0x03),
->             AFNM,   8,
->             Offset (0x10),
->             P80B,   8,
->             P81B,   8,
->             P82B,   8,
->             P83B,   8,
->             P84B,   8,
->             P85B,   8,
->             P86B,   8,
->             P87B,   8,
->             Offset (0x20),
->             DTTM,   8,
->             TMP1,   8,
->             LTP1,   8,
->             HTP1,   8,
->             TMP2,   8,
->             LTP2,   8,
->             HTP2,   8,
->             Offset (0x3E8),
->             PMSG,   1600
->         }
->=20
-> The PMSG field is used by AML code to log debug messages when DMSG is
-> true. Since those debug messages are already logged using the standard
-> ACPI Debug object, we set DMSG unconditionally to 0x00 and ignore any
-> writes to PMSG.
->=20
-> The TMPx, LTPx, HTPx and AFNM fields are used to inform the driver when
-> the temperature/(presumably) trip points/fan mode changes. This only
-> happens when the DTTM flag is set.
->=20
-> Unfortunately we have to implement support for this operation region
-> because the AML codes uses code constructs like this one:
->=20
-> =09If (((\_SB.XINI.PLAV !=3D Zero) && (\_SB.XINI.DTTM !=3D Zero)))
->=20
-> The PLAV field gets set to 1 when the driver registers its address space
-> handler, so by default XIN1 should not be accessed.
->=20
-> However ACPI does not use short-circuit evaluation when evaluating
-> logical conditions. This causes the DTTM field to be accessed even
-> when PLAV is 0, which results in an ACPI error.
-> Since this check happens inside various thermal-related ACPI control
-> methods, various thermal zone become unusable since any attempts to
+On 7/14/24 6:50 PM, Matthias Fetzer wrote:
+> Fan control on the E531 is done using the ACPI methods FANG and
+> FANW. The correct parameters and register values were found by
+> analyzing EC firmware as well as DSDT. This has been tested on
+> my Thinkpad Edge E531 (6885CTO, BIOS HEET52WW 1.33).
+> 
+> Signed-off-by: Matthias Fetzer <kontakt@matthias-fetzer.de>
 
-attempt
+Thank you for your patch.
 
-> read their temperature results in an ACPI error.
->=20
-> Fix this by providing support for this operation region. I suspect
-> that the problem does not happen under Windows (which seemingly does
-> not use short-circuit evaluation either) because the necessary driver
-> comes preinstalled with the machine.
->=20
-> Tested-by: Chris <ghostwind@gmail.com>
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+With Ilpo's remarks addressed this patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+(for v2 with remarks addressed).
+
+Please submit a v2 with Ilpo's remarks addressed.
+
+Regards,
+
+Hans
+
+
+
+
 > ---
->  drivers/platform/x86/lg-laptop.c | 128 +++++++++++++++++++++++++++++++
->  1 file changed, 128 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-l=
-aptop.c
-> index 9c7857842caf..6310a23f808c 100644
-> --- a/drivers/platform/x86/lg-laptop.c
-> +++ b/drivers/platform/x86/lg-laptop.c
-> @@ -8,6 +8,8 @@
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->=20
->  #include <linux/acpi.h>
-> +#include <linux/device.h>
-> +#include <linux/dev_printk.h>
->  #include <linux/dmi.h>
->  #include <linux/input.h>
->  #include <linux/input/sparse-keymap.h>
-> @@ -31,6 +33,25 @@ MODULE_AUTHOR("Matan Ziv-Av");
->  MODULE_DESCRIPTION("LG WMI Hotkey Driver");
->  MODULE_LICENSE("GPL");
->=20
-> +static bool fw_debug;
-> +module_param(fw_debug, bool, 0);
-> +MODULE_PARM_DESC(fw_debug, "Enable printing of firmware debug messages")=
-;
-> +
-> +#define LG_ADDRESS_SPACE_ID=09=09=090x8F
-> +
-> +#define LG_ADDRESS_SPACE_DEBUG_FLAG_ADR=09=090x00
-> +#define LG_ADDRESS_SPACE_DEBUG_MSG_START_ADR=090x3E8
-> +#define LG_ADDRESS_SPACE_DEBUG_MSG_END_ADR=090x5E8
-> +
-> +#define LG_ADDRESS_SPACE_DTTM_FLAG_ADR=09=090x20
-> +#define LG_ADDRESS_SPACE_FAN_MODE_ADR=09=090x03
-
-Any particular reason why there are not in numerical order?
-
-> +#define LG_ADDRESS_SPACE_CPU_TEMP_ADR=09=090x21
-> +#define LG_ADDRESS_SPACE_CPU_TRIP_LOW_ADR=090x22
-> +#define LG_ADDRESS_SPACE_CPU_TRIP_HIGH_ADR=090x23
-> +#define LG_ADDRESS_SPACE_MB_TEMP_ADR=09=090x24
-> +#define LG_ADDRESS_SPACE_MB_TRIP_LOW_ADR=090x25
-> +#define LG_ADDRESS_SPACE_MB_TRIP_HIGH_ADR=090x26
-> +
->  #define WMI_EVENT_GUID0=09"E4FB94F9-7F2B-4173-AD1A-CD1D95086248"
->  #define WMI_EVENT_GUID1=09"023B133E-49D1-4E10-B313-698220140DC2"
->  #define WMI_EVENT_GUID2=09"37BE1AC0-C3F2-4B1F-BFBE-8FDEAF2814D6"
-> @@ -646,6 +667,101 @@ static struct platform_driver pf_driver =3D {
->  =09}
+>  drivers/platform/x86/thinkpad_acpi.c | 159 +++++++++++++++++++++++++++
+>  1 file changed, 159 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 397b409064c9..a171a2b39ac9 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -7751,6 +7751,28 @@ static struct ibm_struct volume_driver_data = {
+>   * 	EC 0x2f (HFSP) might be available *for reading*, but do not use
+>   * 	it for writing.
+>   *
+> + * TPACPI_FAN_RD_ACPI_FANG:
+> + * 	ACPI FANG method: returns fan control register
+> + *
+> + *	Takes one parameter which is 0x8100 plus the offset to EC memory
+> + *	address 0xf500 and returns the byte at this address.
+> + *
+> + *	0xf500:
+> + *		When the value is less than 9 automatic mode is enabled
+> + *	0xf502:
+> + *		Contains the current fan speed from 0-100%
+> + *	0xf504:
+> + *		Bit 7 has to be set in order to enable manual control by
+> + *		writing a value >= 9 to 0xf500
+> + *
+> + * TPACPI_FAN_WR_ACPI_FANW:
+> + * 	ACPI FANG method: sets fan control registers
+> + *
+> + * 	Takes 0x8100 plus the offset to EC memory address 0xf500 and the
+> + * 	value to be written there as parameters.
+> + *
+> + *	see TPACPI_FAN_RD_ACPI_FANG
+> + *
+>   * TPACPI_FAN_WR_TPEC:
+>   * 	ThinkPad EC register 0x2f (HFSP): fan control loop mode
+>   * 	Supported on almost all ThinkPads
+> @@ -7884,6 +7906,7 @@ enum {					/* Fan control constants */
+>  enum fan_status_access_mode {
+>  	TPACPI_FAN_NONE = 0,		/* No fan status or control */
+>  	TPACPI_FAN_RD_ACPI_GFAN,	/* Use ACPI GFAN */
+> +	TPACPI_FAN_RD_ACPI_FANG,	/* Use ACPI FANG */
+>  	TPACPI_FAN_RD_TPEC,		/* Use ACPI EC regs 0x2f, 0x84-0x85 */
+>  	TPACPI_FAN_RD_TPEC_NS,		/* Use non-standard ACPI EC regs (eg: L13 Yoga gen2 etc.) */
 >  };
->=20
-> +static acpi_status lg_laptop_address_space_write(struct device *dev, acp=
-i_physical_address address,
-> +=09=09=09=09=09=09 size_t size, u64 *value)
-
-Why is this write function taking u64 _pointer_?
-
-> +{
-> +=09u8 byte;
+> @@ -7891,6 +7914,7 @@ enum fan_status_access_mode {
+>  enum fan_control_access_mode {
+>  	TPACPI_FAN_WR_NONE = 0,		/* No fan control */
+>  	TPACPI_FAN_WR_ACPI_SFAN,	/* Use ACPI SFAN */
+> +	TPACPI_FAN_WR_ACPI_FANW,	/* Use ACPI FANW */
+>  	TPACPI_FAN_WR_TPEC,		/* Use ACPI EC reg 0x2f */
+>  	TPACPI_FAN_WR_ACPI_FANS,	/* Use ACPI FANS and EC reg 0x2f */
+>  };
+> @@ -7924,9 +7948,13 @@ TPACPI_HANDLE(fans, ec, "FANS");	/* X31, X40, X41 */
+>  TPACPI_HANDLE(gfan, ec, "GFAN",	/* 570 */
+>  	   "\\FSPD",		/* 600e/x, 770e, 770x */
+>  	   );			/* all others */
+> +TPACPI_HANDLE(fang, ec, "FANG",	/* E531 */
+> +	   );			/* all others */
+>  TPACPI_HANDLE(sfan, ec, "SFAN",	/* 570 */
+>  	   "JFNS",		/* 770x-JL */
+>  	   );			/* all others */
+> +TPACPI_HANDLE(fanw, ec, "FANW",	/* E531 */
+> +	   );			/* all others */
+>  
+>  /*
+>   * Unitialized HFSP quirk: ACPI DSDT and EC fail to initialize the
+> @@ -8033,6 +8061,23 @@ static int fan_get_status(u8 *status)
+>  
+>  		break;
+>  	}
+> +	case TPACPI_FAN_RD_ACPI_FANG: {
+> +		/* E531 */
+> +		int mode, speed;
 > +
-> +=09/* Ignore any debug messages */
-> +=09if (address >=3D LG_ADDRESS_SPACE_DEBUG_MSG_START_ADR &&
-> +=09    address <=3D LG_ADDRESS_SPACE_DEBUG_MSG_END_ADR)
-> +=09=09return AE_OK;
+> +		if (unlikely(!acpi_evalf(fang_handle, &mode, NULL, "dd", 0x8100)))
+> +			return -EIO;
+> +		if (unlikely(!acpi_evalf(fang_handle, &speed, NULL, "dd", 0x8102)))
+> +			return -EIO;
 > +
-> +=09if (size !=3D sizeof(byte))
-> +=09=09return AE_BAD_PARAMETER;
+> +		if (likely(status)) {
+> +			*status = speed * 7 / 100;
+> +			if (mode < 9)
+> +				*status |= TP_EC_FAN_AUTO;
+> +		}
 > +
-> +=09byte =3D *value & 0xFF;
+> +		break;
+> +	}
+>  	case TPACPI_FAN_RD_TPEC:
+>  		/* all except 570, 600e/x, 770e, 770x */
+>  		if (unlikely(!acpi_ec_read(fan_status_offset, &s)))
+> @@ -8147,6 +8192,17 @@ static int fan2_get_speed(unsigned int *speed)
+>  		if (speed)
+>  			*speed = lo ? FAN_RPM_CAL_CONST / lo : 0;
+>  		break;
+> +	case TPACPI_FAN_RD_ACPI_FANG: {
+> +		/* E531 */
+> +		int speed_tmp;
 > +
-> +=09switch (address) {
-> +=09case LG_ADDRESS_SPACE_FAN_MODE_ADR:
-> +=09=09dev_dbg(dev, "Fan mode set to mode %u\n", byte);
-> +=09=09return AE_OK;
-> +=09case LG_ADDRESS_SPACE_CPU_TEMP_ADR:
-> +=09=09dev_dbg(dev, "CPU temperature is %u =C2=B0C\n", byte);
-> +=09=09return AE_OK;
-> +=09case LG_ADDRESS_SPACE_CPU_TRIP_LOW_ADR:
-> +=09=09dev_dbg(dev, "CPU lower trip point set to %u =C2=B0C\n", byte);
-> +=09=09return AE_OK;
-> +=09case LG_ADDRESS_SPACE_CPU_TRIP_HIGH_ADR:
-> +=09=09dev_dbg(dev, "CPU higher trip point set to %u =C2=B0C\n", byte);
-> +=09=09return AE_OK;
-> +=09case LG_ADDRESS_SPACE_MB_TEMP_ADR:
-> +=09=09dev_dbg(dev, "Motherboard temperature is %u =C2=B0C\n", byte);
-> +=09=09return AE_OK;
-> +=09case LG_ADDRESS_SPACE_MB_TRIP_LOW_ADR:
-> +=09=09dev_dbg(dev, "Motherboard lower trip point set to %u =C2=B0C\n", b=
-yte);
-> +=09=09return AE_OK;
-> +=09case LG_ADDRESS_SPACE_MB_TRIP_HIGH_ADR:
-> +=09=09dev_dbg(dev, "Motherboard higher trip point set to %u =C2=B0C\n", =
-byte);
-> +=09=09return AE_OK;
-> +=09default:
-> +=09=09dev_notice_ratelimited(dev, "Ignoring write to unknown opregion ad=
-dress %llu\n",
-> +=09=09=09=09       address);
-> +=09=09return AE_OK;
-> +=09}
-> +}
+> +		if (unlikely(!acpi_evalf(fang_handle, &speed_tmp, NULL, "dd", 0x8102)))
+> +			return -EIO;
 > +
-> +static acpi_status lg_laptop_address_space_read(struct device *dev, acpi=
-_physical_address address,
-> +=09=09=09=09=09=09size_t size, u64 *value)
-> +{
-> +=09if (size !=3D 1)
-> +=09=09return AE_BAD_PARAMETER;
-> +
-> +=09switch (address) {
-> +=09case LG_ADDRESS_SPACE_DEBUG_FLAG_ADR:
-> +=09=09/* Debug messages are already printed using the standard ACPI Debu=
-g object */
-> +=09=09*value =3D 0x00;
-> +=09=09return AE_OK;
-> +=09case LG_ADDRESS_SPACE_DTTM_FLAG_ADR:
-> +=09=09*value =3D fw_debug;
-> +=09=09return AE_OK;
-> +=09default:
-> +=09=09dev_notice_ratelimited(dev, "Attempt to read unknown opregion addr=
-ess %llu\n",
-> +=09=09=09=09       address);
-> +=09=09return AE_BAD_PARAMETER;
-> +=09}
-> +}
-> +
-> +static acpi_status lg_laptop_address_space_handler(u32 function, acpi_ph=
-ysical_address address,
-> +=09=09=09=09=09=09   u32 bits, u64 *value, void *handler_context,
-> +=09=09=09=09=09=09   void *region_context)
-> +{
-> +=09struct device *dev =3D handler_context;
-> +=09size_t size;
-> +
-> +=09if (bits % 8)
-> +=09=09return AE_BAD_PARAMETER;
-> +
-> +=09size =3D bits / 8;
-
-BITS_PER_BYTE x2
-
---=20
- i.
-
-> +
-> +=09switch (function) {
-> +=09case ACPI_READ:
-> +=09=09return lg_laptop_address_space_read(dev, address, size, value);
-> +=09case ACPI_WRITE:
-> +=09=09return lg_laptop_address_space_write(dev, address, size, value);
-> +=09default:
-> +=09=09return AE_BAD_PARAMETER;
-> +=09}
-> +}
-> +
-> +static void lg_laptop_remove_address_space_handler(void *data)
-> +{
-> +=09struct acpi_device *device =3D data;
-> +
-> +=09acpi_remove_address_space_handler(device->handle, LG_ADDRESS_SPACE_ID=
-,
-> +=09=09=09=09=09  &lg_laptop_address_space_handler);
-> +}
-> +
->  static int acpi_add(struct acpi_device *device)
+> +		if (likely(speed))
+> +			*speed =  speed_tmp * 65535 / 100;
+> +		break;
+> +	}
+>  
+>  	default:
+>  		return -ENXIO;
+> @@ -8157,6 +8213,7 @@ static int fan2_get_speed(unsigned int *speed)
+>  
+>  static int fan_set_level(int level)
 >  {
->  =09struct platform_device_info pdev_info =3D {
-> @@ -653,6 +769,7 @@ static int acpi_add(struct acpi_device *device)
->  =09=09.name =3D PLATFORM_NAME,
->  =09=09.id =3D PLATFORM_DEVID_NONE,
->  =09};
-> +=09acpi_status status;
->  =09int ret;
->  =09const char *product;
->  =09int year =3D 2017;
-> @@ -660,6 +777,17 @@ static int acpi_add(struct acpi_device *device)
->  =09if (pf_device)
->  =09=09return 0;
->=20
-> +=09status =3D acpi_install_address_space_handler(device->handle, LG_ADDR=
-ESS_SPACE_ID,
-> +=09=09=09=09=09=09    &lg_laptop_address_space_handler,
-> +=09=09=09=09=09=09    NULL, &device->dev);
-> +=09if (ACPI_FAILURE(status))
-> +=09=09return -ENODEV;
+> +	int rc;
+>  	if (!fan_control_allowed)
+>  		return -EPERM;
+>  
+> @@ -8206,6 +8263,36 @@ static int fan_set_level(int level)
+>  			tp_features.fan_ctrl_status_undef = 0;
+>  		break;
+>  
+> +	case TPACPI_FAN_WR_ACPI_FANW:
+> +		if ((!(level & TP_EC_FAN_AUTO) &&
+> +		    ((level < 0) || (level > 7))) ||
+> +		    (level & TP_EC_FAN_FULLSPEED))
+> +			return -EINVAL;
+> +		if (level & TP_EC_FAN_AUTO) {
+> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x05)) {
+> +				rc = -EIO;
+> +				break;
+> +			}
+> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0x00)) {
+> +				rc = -EIO;
+> +				break;
+> +			}
+> +		} else {
+> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x45)) {
+> +				rc = -EIO;
+> +				break;
+> +			}
+> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0xff)) {
+> +				rc = -EIO;
+> +				break;
+> +			}
+> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8102, level * 100 / 7)) {
+> +				rc = -EIO;
+> +				break;
+> +			}
+> +		}
+> +		break;
 > +
-> +=09ret =3D devm_add_action_or_reset(&device->dev, lg_laptop_remove_addre=
-ss_space_handler,
-> +=09=09=09=09       device);
-> +=09if (ret < 0)
-> +=09=09return ret;
+>  	default:
+>  		return -ENXIO;
+>  	}
+> @@ -8284,6 +8371,19 @@ static int fan_set_enable(void)
+>  			rc = 0;
+>  		break;
+>  
+> +	case TPACPI_FAN_WR_ACPI_FANW:
+> +		if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x05)) {
+> +			rc = -EIO;
+> +			break;
+> +		}
+> +		if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0x00)) {
+> +			rc = -EIO;
+> +			break;
+> +		}
 > +
->  =09ret =3D platform_driver_register(&pf_driver);
->  =09if (ret)
->  =09=09return ret;
-> --
-> 2.39.2
->=20
+> +		rc = 0;
+> +		break;
+> +
+>  	default:
+>  		rc = -ENXIO;
+>  	}
+> @@ -8326,6 +8426,22 @@ static int fan_set_disable(void)
+>  			fan_control_desired_level = 0;
+>  		break;
+>  
+> +	case TPACPI_FAN_WR_ACPI_FANW:
+> +		if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x45)) {
+> +			rc = -EIO;
+> +			break;
+> +		}
+> +		if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0xff)) {
+> +			rc = -EIO;
+> +			break;
+> +		}
+> +		if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8102, 0x00)) {
+> +			rc = -EIO;
+> +			break;
+> +		}
+> +		rc = 0;
+> +		break;
+> +
+>  	default:
+>  		rc = -ENXIO;
+>  	}
+> @@ -8359,6 +8475,23 @@ static int fan_set_speed(int speed)
+>  			rc = -EINVAL;
+>  		break;
+>  
+> +	case TPACPI_FAN_WR_ACPI_FANW:
+> +		if (speed >= 0 && speed <= 65535) {
+> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x45)) {
+> +				rc = -EIO;
+> +				break;
+> +			}
+> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0xff)) {
+> +				rc = -EIO;
+> +				break;
+> +			}
+> +			if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd",
+> +					0x8102, speed * 100 / 65535))
+> +				rc = -EIO;
+> +		} else
+> +			rc = -EINVAL;
+> +		break;
+> +
+>  	default:
+>  		rc = -ENXIO;
+>  	}
+> @@ -8701,6 +8834,10 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+>  		TPACPI_ACPIHANDLE_INIT(gfan);
+>  		TPACPI_ACPIHANDLE_INIT(sfan);
+>  	}
+> +	if (tpacpi_is_lenovo()) {
+> +		TPACPI_ACPIHANDLE_INIT(fang);
+> +		TPACPI_ACPIHANDLE_INIT(fanw);
+> +	}
+>  
+>  	quirks = tpacpi_check_quirks(fan_quirk_table,
+>  				     ARRAY_SIZE(fan_quirk_table));
+> @@ -8720,6 +8857,9 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+>  	if (gfan_handle) {
+>  		/* 570, 600e/x, 770e, 770x */
+>  		fan_status_access_mode = TPACPI_FAN_RD_ACPI_GFAN;
+> +	} else if (fang_handle) {
+> +		/* E531 */
+> +		fan_status_access_mode = TPACPI_FAN_RD_ACPI_FANG;
+>  	} else {
+>  		/* all other ThinkPads: note that even old-style
+>  		 * ThinkPad ECs supports the fan control register */
+> @@ -8766,6 +8906,11 @@ static int __init fan_init(struct ibm_init_struct *iibm)
+>  		fan_control_access_mode = TPACPI_FAN_WR_ACPI_SFAN;
+>  		fan_control_commands |=
+>  		    TPACPI_FAN_CMD_LEVEL | TPACPI_FAN_CMD_ENABLE;
+> +	} else if (fanw_handle) {
+> +		/* E531 */
+> +		fan_control_access_mode = TPACPI_FAN_WR_ACPI_FANW;
+> +		fan_control_commands |=
+> +		    TPACPI_FAN_CMD_LEVEL | TPACPI_FAN_CMD_SPEED | TPACPI_FAN_CMD_ENABLE;
+>  	} else {
+>  		if (!gfan_handle) {
+>  			/* gfan without sfan means no fan control */
+> @@ -8915,6 +9060,20 @@ static int fan_read(struct seq_file *m)
+>  			       str_enabled_disabled(status), status);
+>  		break;
+>  
+> +	case TPACPI_FAN_RD_ACPI_FANG:
+> +		/* E531 */
+> +		rc = fan_get_status_safe(&status);
+> +		if (rc)
+> +			return rc;
+> +
+> +		seq_printf(m, "status:\t\t%s\n", str_enabled_disabled(status));
+> +
+> +		rc = fan_get_speed(&speed);
+> +		if (rc < 0)
+> +			return rc;
+> +		seq_printf(m, "speed:\t\t%d\n", speed);
+> +		break;
+> +
+>  	case TPACPI_FAN_RD_TPEC_NS:
+>  	case TPACPI_FAN_RD_TPEC:
+>  		/* all except 570, 600e/x, 770e, 770x */
 
---8323328-2042051820-1723465163=:1039--
