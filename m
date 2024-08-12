@@ -1,134 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B357717E473
-	for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 14:29:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E080D17E44F;
+	Mon, 12 Aug 2024 14:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723472997; cv=none; b=UxVD4HZp9RdW0X/6tD6RCDiLBqaWyOmDg44rHpYCVprXawIoFkwvXwNsjQdlZJwPTVEC2/feS/0b+tceenoKyi8dsTmUSCSmHy66UzTXHV3YTqBC4qwilvdhjsvGuSh2HFm7VlOR28kW4ny/+3WQYIiyMfGTkTvBDnMN+IULC9c=
+	t=1723473118; cv=none; b=OwkkN3h7kvyaySSMI7f/KkrjZq23YOKaeFgzxQU/dUjUTMxzA1pKS/pmbUcwY2mm71EJ9EfBT1Pd2aLxfWO9mnJzgmrY4apRE4/6utVqoguluIPGyThwOwyEGUk5NpQ2SQAHQKwx+kax1+aeTegE2xLYhChkYbT/zmSpLkal3UY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723472997; c=relaxed/simple;
-	bh=id+cinWoh0HX1vNZVJENoaAqLpfhtEodxd9YXluVEIY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NCuc4s7c1SyscenCe0QUHjrKQiB2Na9Krn7ObmMhkvOeX6cDJdO0r3lIhVj8SFmjoOH7BbLHShgoKC0q9jWRUfjCiP6OmaTwtp6KWhJNugr0NpdKnyxuNloKcj99GWqyDY/WYYciq4hKRDTE7EwDMJz5iKWleP9IA99LEJOPLYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c+uTLQlO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1723473118; c=relaxed/simple;
+	bh=SLCV7npOSjAfEtZPfY3a4gPdLhaG1kYyg0XlHxTO7pk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TxPYMU1soIMyV3uvrDRcireRhBCppdHxSLKS089RYeRv1xBuI70004JykoagAkBRlwM+f5jL02+wGZlsIeeOmeBBZobE2xwZZgXnt6rsgyEsaJYBbeekwyw3uHTlb8HJv1iqdCCcIhRJcUHr8oRBF9vt9JfdlZBG1Ey5nOX2zPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=uTb13sjO reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c+uTLQlO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723472994;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nowmtH7b9dRQxR0SqMGGItLP2W74cRVJT97tMEoitUk=;
-	b=c+uTLQlO6fhCGofS0RZbbNDPVIBp8SAFPT08WgBQovuR0epVzwR1P1rPZ81LF2YkkAdcLg
-	7u2WQ2PfqLcFmnfik2ZdRxxLkvvSe6NyoOBB0RkEIYaO0N+vxFqoMoG/h7SIwNJw+FDApy
-	iLBSPVA266srsJVRF4C6XzSWeAf7180=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-338-weLaqu_TMLO6kKdalkVSKw-1; Mon, 12 Aug 2024 10:29:52 -0400
-X-MC-Unique: weLaqu_TMLO6kKdalkVSKw-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a7ab50e6735so203916366b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Aug 2024 07:29:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723472991; x=1724077791;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nowmtH7b9dRQxR0SqMGGItLP2W74cRVJT97tMEoitUk=;
-        b=cPGqnzLlEmEEdzPQWVvVOFOaDKLDJ3WsPK02QkJtGSNfftBGmGt+OLCjpTwfT9t3RB
-         G3kX9un50fGhGVOpGLD/KvvLnod82RQ+ZsHUIQN754Sh7suLTWtSjWQWm+J5ozVSncKz
-         QLPfllQuatmnBERPMr6uDMhVg2AzF1COU73FYpz8xFDp4e+eWS50V2Azk3/N5NRbHjjp
-         q3Z9EIntyygpa8gXqS7mt9II9blZuSa6dSnfNFTjJlsOeDWgv53MV/UX54ySSB6RbGze
-         c5lDCmRRHRg6xjbHJI8Zwtgx3d7e9EQ4ubNCvuI76ApDCNwvF4JiC+/sXiOP2M1OSvuu
-         5Ibw==
-X-Gm-Message-State: AOJu0YyJfHY79feg2rISlHSKW0w9NFX//qxHiCPA6i6NBWaSY+nb/RUg
-	bg2bAvURe5fFY9Q4DfPF5OcZm1Vuwrt3HkwTtUbrqHG6J+TVO2aCmhKcnZ03HAu9t2p9oXpqxU5
-	igh2XyobaLs4fCVaMGXAFastbotHPFkImW1akDYY2sxxBqUd5HoG6St4sRwCGykZKHMEy3uk=
-X-Received: by 2002:a17:906:6a0a:b0:a7d:edb2:220f with SMTP id a640c23a62f3a-a80ed2d617amr32927766b.59.1723472991050;
-        Mon, 12 Aug 2024 07:29:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH3ce01ffkOj4R4jJIKBNnGjeGJxL000i2dwMze7FlQ3NqttbVoJYHDOL/8zlsGcsJx7f/kRA==
-X-Received: by 2002:a17:906:6a0a:b0:a7d:edb2:220f with SMTP id a640c23a62f3a-a80ed2d617amr32925666b.59.1723472990474;
-        Mon, 12 Aug 2024 07:29:50 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a80bb2421b3sm234785666b.194.2024.08.12.07.29.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Aug 2024 07:29:50 -0700 (PDT)
-Message-ID: <3c1fad80-e0c2-4bc2-bcd5-4409ed1f0c4c@redhat.com>
-Date: Mon, 12 Aug 2024 16:29:49 +0200
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="uTb13sjO"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.0)
+ id 6a0f8b6e6c7b953e; Mon, 12 Aug 2024 16:31:54 +0200
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 7089E6F0D9D;
+	Mon, 12 Aug 2024 16:31:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1723473113;
+	bh=SLCV7npOSjAfEtZPfY3a4gPdLhaG1kYyg0XlHxTO7pk=;
+	h=From:Subject:Date;
+	b=uTb13sjOQFwdmSry/+O2BAP3n578N55unYxkNfZ8xh6Z8IxAU/FMyUK19Q8b9Jt+Z
+	 SEZwsq0SH2gzmVRMo+Yg2fLWQCG8CybGdD9OwNoQzysHkuy5zunS4OHyh9bgHkct1K
+	 Arj79Rwmfi4E0s1wiylWe5yMOQc4+5RlhyxNuDw8newAXdPdPzItHxiOCHZ6bRUxnL
+	 NNsovnk1Y71hqMWochUb/y6MNu/LP9USjER7sI8DrSySo8re1FqprxI75iHgbGxRhd
+	 arXgVopJ78HdpW+Ii3BdSCRY2PcnCPWM0SuDKAAY8Mej35QAJtRRb2HYWbtdAIMVmJ
+	 U8/GvdrVj65aA==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Lukasz Luba <lukasz.luba@arm.com>, Zhang Rui <rui.zhang@intel.com>,
+ Peter Kaestle <peter@piie.net>, platform-driver-x86@vger.kernel.org
+Subject:
+ [PATCH v2 12/17] platform/x86: acerhdf: Use the .should_bind() thermal zone
+ callback
+Date: Mon, 12 Aug 2024 16:19:55 +0200
+Message-ID: <6709311.4vTCxPXJkl@rjwysocki.net>
+In-Reply-To: <114901234.nniJfEyVGO@rjwysocki.net>
+References: <114901234.nniJfEyVGO@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/10] platform: x86: Use backlight power constants
-To: Thomas Zimmermann <tzimmermann@suse.de>, ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240731125220.1147348-1-tzimmermann@suse.de>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240731125220.1147348-1-tzimmermann@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: spam:low
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeeftddruddttddgjeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogfuphgrmhfkphculdeftddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepfeduudeutdeugfelffduieegiedtueefledvjeegffdttefhhffhtefhleejgfetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucfuphgrmhfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeejpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghlrdhlvgiitggrnhhosehlihhnrghrohdrohhrghdprhgtphhtthhopehluhhkrghsiidrlhhusggrsegrrhhmrdgtohhmpdhrtghpthhtoheprhhuihdriihhrghnghesihhnthgvlhdrtghomhdprhgtphhtthhopehpvghtvghrsehpihhivgdrnhgvthdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-DCC--Metrics: v370.home.net.pl 1024; Body=14 Fuz1=14 Fuz2=14
 
-Hi,
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-On 7/31/24 2:50 PM, Thomas Zimmermann wrote:
-> Commit a1cacb8a8e70 ("backlight: Add BACKLIGHT_POWER_ constants for
-> power states") introduced dedicated constants for backlight power states.
-> Convert X86 platform drivers to the new constants.
-> 
-> The new constants replace the fbdev constants. This is part of a larger
-> effort to make kernel subsystems more independent from fbdev code and
-> headers.
-> 
-> Thomas Zimmermann (10):
->   platform/x86: acer-wmi:  Use backlight power constants
->   platform/x86: asus-laptop: Use backlight power constants
->   platform/x86: asus-nb-wmi: Use backlight power constants
->   platform/x86: asus-wmi: Use backlight power constants
->   platform/x86: eeepc-laptop: Use backlight power constants
->   platform/x86: eeepc-wmi: Use backlight power constants
->   platform/x86: fujitsu-laptop: Use backlight power constants
->   platform/x86: ideapad-laptop: Use backlight power constants
->   platform/x86: oaktrail: Use backlight power constants
->   platform/x86: samsung-laptop: Use backlight power constants
+Make the acerhdf driver use the .should_bind() thermal zone
+callback to provide the thermal core with the information on whether or
+not to bind the given cooling device to the given trip point in the
+given thermal zone.  If it returns 'true', the thermal core will bind
+the cooling device to the trip and the corresponding unbinding will be
+taken care of automatically by the core on the removal of the involved
+thermal zone or cooling device.
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+The previously existing acerhdf_bind() function bound cooling devices
+to thermal trip point 0 only, so the new callback needs to return 'true'
+for trip point 0.  However, it is straightforward to observe that trip
+point 0 is an active trip point and the only other trip point in the
+driver's thermal zone is a critical one, so it is sufficient to return
+'true' from that callback if the type of the given trip point is
+THERMAL_TRIP_ACTIVE.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+v1 -> v2: No changes
 
-Regards,
+This patch only depends on patch [08/17] introducing .should_bind():
 
-Hans
+https://lore.kernel.org/linux-pm/2696117.X9hSmTKtgW@rjwysocki.net/
+
+---
+ drivers/platform/x86/acerhdf.c |   33 ++++++---------------------------
+ 1 file changed, 6 insertions(+), 27 deletions(-)
+
+Index: linux-pm/drivers/platform/x86/acerhdf.c
+===================================================================
+--- linux-pm.orig/drivers/platform/x86/acerhdf.c
++++ linux-pm/drivers/platform/x86/acerhdf.c
+@@ -378,33 +378,13 @@ static int acerhdf_get_ec_temp(struct th
+ 	return 0;
+ }
+ 
+-static int acerhdf_bind(struct thermal_zone_device *thermal,
+-			struct thermal_cooling_device *cdev)
++static bool acerhdf_should_bind(struct thermal_zone_device *thermal,
++				const struct thermal_trip *trip,
++				struct thermal_cooling_device *cdev,
++				struct cooling_spec *c)
+ {
+ 	/* if the cooling device is the one from acerhdf bind it */
+-	if (cdev != cl_dev)
+-		return 0;
+-
+-	if (thermal_zone_bind_cooling_device(thermal, 0, cdev,
+-			THERMAL_NO_LIMIT, THERMAL_NO_LIMIT,
+-			THERMAL_WEIGHT_DEFAULT)) {
+-		pr_err("error binding cooling dev\n");
+-		return -EINVAL;
+-	}
+-	return 0;
+-}
+-
+-static int acerhdf_unbind(struct thermal_zone_device *thermal,
+-			  struct thermal_cooling_device *cdev)
+-{
+-	if (cdev != cl_dev)
+-		return 0;
+-
+-	if (thermal_zone_unbind_cooling_device(thermal, 0, cdev)) {
+-		pr_err("error unbinding cooling dev\n");
+-		return -EINVAL;
+-	}
+-	return 0;
++	return cdev == cl_dev && trip->type == THERMAL_TRIP_ACTIVE;
+ }
+ 
+ static inline void acerhdf_revert_to_bios_mode(void)
+@@ -447,8 +427,7 @@ static int acerhdf_get_crit_temp(struct
+ 
+ /* bind callback functions to thermalzone */
+ static struct thermal_zone_device_ops acerhdf_dev_ops = {
+-	.bind = acerhdf_bind,
+-	.unbind = acerhdf_unbind,
++	.should_bind = acerhdf_should_bind,
+ 	.get_temp = acerhdf_get_ec_temp,
+ 	.change_mode = acerhdf_change_mode,
+ 	.get_crit_temp = acerhdf_get_crit_temp,
 
 
-
-
-
->  drivers/platform/x86/acer-wmi.c       |  3 +--
->  drivers/platform/x86/asus-laptop.c    |  3 +--
->  drivers/platform/x86/asus-nb-wmi.c    |  4 ++--
->  drivers/platform/x86/asus-wmi.c       | 17 ++++++++---------
->  drivers/platform/x86/eeepc-laptop.c   |  3 +--
->  drivers/platform/x86/eeepc-wmi.c      |  4 ++--
->  drivers/platform/x86/fujitsu-laptop.c |  9 ++++-----
->  drivers/platform/x86/ideapad-laptop.c |  7 +++----
->  drivers/platform/x86/intel/oaktrail.c |  3 +--
->  drivers/platform/x86/samsung-laptop.c |  5 ++---
->  10 files changed, 25 insertions(+), 33 deletions(-)
-> 
 
