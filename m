@@ -1,56 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4D319D891
-	for <platform-driver-x86@vger.kernel.org>; Tue, 13 Aug 2024 14:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD761A4F19;
+	Tue, 13 Aug 2024 16:01:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723559667; cv=none; b=fDaqXdHhfS4SjFLHKpRWX9zZlfyZ3wvHl6mnexJ5W51oXiVbCithl5rAvTd9iClkBTaUVaitLXOjLqrIytFt2qNB0ae2AI0unZBlA16LvtiUsCDxVzz/taWXsKvXPf9haEAcrKf6G48eZUbzXPmbMX4v3KXs0fOgqC/c2X/X/48=
+	t=1723564910; cv=none; b=eqF9WtYnTDBOArGeQqb7my3XhDYYrLwO2AcLmk3tu7U6E95AiSKIRE88gQXGdIoMnVI9zA8CUxHJiTWY2iu6N16vAynr1q7QvOkd03TSHypl64bu+rfLTnw2NvX5JPhSNEc9DkmGsuR8uNwY8jHqt1b4Zhw2EaMiYW7iuoqKb4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723559667; c=relaxed/simple;
-	bh=Iot9F6ZlrUA//bHRcED+J2yEHd6ujKzJ+CnCF2q43/4=;
+	s=arc-20240116; t=1723564910; c=relaxed/simple;
+	bh=e0lFy6FRF2WXlTEkhLmqv9oTDPHM2XOKmZ5WnOizTBw=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=PKjRDaRSamEuitAtU2Sa/GinjQxg0Kw1r2pqif80LdmIEkPYorQ02pzdIIQ3z7bo2PwsPKYAgl10F/SeRLmDVdsY7zMX/P1GNOjC5fG7kZmluriSanZvLx5uu+2bdPPdzND0KcUZXnb/O1BlWSW129TbYwtyf+Oraz7OVx9In2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=isF6dCKG; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version:Content-Type; b=XIsTtTsEqcwSNZ1NQIPT5wfXdNzhboSAYU3miO9JwoRkx5XMKe5IMq/PY76uOIqIsdYhpQQOmY3BxObSTUNarjfbk0+342amnIjkQeMuIKVGnjWA5Wntfi3ZSxcpXsxs9S1hE07VWdbMc7u1R28ahyhlJclHXh/QCnP3IiYqzi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WuZAGNnx; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="isF6dCKG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WuZAGNnx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723559666; x=1755095666;
+  t=1723564909; x=1755100909;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=Iot9F6ZlrUA//bHRcED+J2yEHd6ujKzJ+CnCF2q43/4=;
-  b=isF6dCKGlUrS8ZXfo7W5Y/aFL871c2Eu5/Jtef0Gn9z7dYy+rrxIKzEz
-   DJIEh1mYry6F1oSMQVVM2AbV6GJkHRRrPzvxGeou1gtPkQNe3eNqLrPbj
-   pdftw7JaoxKyYPzltsgGAojBe4Qm9UlkD/upoEvThBPOGCb3vTDIRrVRR
-   knwtTnt3I1DlzGCeFODiqXYgTwuo7WnBtRjGjOmgVmr3qEenIqI1S3l9C
-   CAHJ9SCvaR7qi3t+XULuvRQsXDPSXVU1TwEIZFSQX16E3W0vgdLWksAQT
-   yHl2N9kWNR7W8HbZVsR41VT/sYMRKymW67Wo+0AFS4rodPx2GUdklBQTj
+  bh=e0lFy6FRF2WXlTEkhLmqv9oTDPHM2XOKmZ5WnOizTBw=;
+  b=WuZAGNnxQfUiFuutQxmQRyTUdgJJ3u+vi/r2I5ekdhJF0NNJQC/TQDCC
+   wDbc7csMcIBxBNofY1tlhaPkUnyxjeaSzxcyXV0StfX9SmXLrR6KIlTxV
+   p9JSZ2eRBH0t5/LpNfl3fOER+/M1hbyr5z/ypS9XFTKpWZ4hJxKanfNvq
+   aLER3wqUu0feikLyOq9Z5DELXweeqIBdiK9SgeMbpEvjPrCr5upa4J8Xs
+   Luzp9hOUwDd2yPT5wxJcAK4x0qbrimVWpHQlrfwgxH/J3IIS3CuUqsNcv
+   38aIDb7Da7ucCOPEDfO0PtBxszdaQ1B64heyjeBIyCcmmcCn1CphboZuQ
    Q==;
-X-CSE-ConnectionGUID: fb/r+1a9Tg6PYdysbYHa6Q==
-X-CSE-MsgGUID: fY17prj7RMarmFcUBzFosQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="25490526"
+X-CSE-ConnectionGUID: mmAcKH8MSimSwvq6OzI6qw==
+X-CSE-MsgGUID: wrWp4pyHSp+Fe+OvDnz80Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="21606849"
 X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="25490526"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 07:34:23 -0700
-X-CSE-ConnectionGUID: UYk0t7DUQ4SfDmyrjTD2uQ==
-X-CSE-MsgGUID: KM1xsqdISc2iOrDV8YK/og==
+   d="scan'208";a="21606849"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 09:01:48 -0700
+X-CSE-ConnectionGUID: /ugbMIfoRCKlSjzTKc4s2A==
+X-CSE-MsgGUID: cQB2c0RMR0OXN7TEuOJXYg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="63533437"
+   d="scan'208";a="81944400"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.153])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 07:34:22 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 09:01:24 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 13 Aug 2024 17:34:19 +0300 (EEST)
-To: Stefan Sichler <stsichler@web.de>
-cc: jorgealtxwork@gmail.com, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v5 2/4] Fix SW_TABLET_MODE detection method
-In-Reply-To: <703cfb2e-6973-421a-9602-657e03ba6105@web.de>
-Message-ID: <158df220-b282-3da3-0e87-ae7a3c64d056@linux.intel.com>
-References: <20220310210853.28367-3-jorge.lopez2@hp.com> <703cfb2e-6973-421a-9602-657e03ba6105@web.de>
+Date: Tue, 13 Aug 2024 19:01:21 +0300 (EEST)
+To: Xi Pardee <xi.pardee@linux.intel.com>
+cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
+    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/7] Create Intel PMC SSRAM Telemetry driver
+In-Reply-To: <20240809204648.1124545-1-xi.pardee@linux.intel.com>
+Message-ID: <ad5e7c93-33fa-4a5e-35af-7f99150dd4be@linux.intel.com>
+References: <20240809204648.1124545-1-xi.pardee@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -59,137 +61,80 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 8 Aug 2024, Stefan Sichler wrote:
+On Fri, 9 Aug 2024, Xi Pardee wrote:
 
-> this patch (which is now committed to the kernel as commit
-> 520ee4ea1cc60251a6e3c911cf0336278aa52634 since v5.18-rc1) unfortunately
-> introduced a regression on my HP EliteBook 2760p Convertible:
-> 
-> Tablet mode is no longer detected.
-> 
-> It worked flawlessly before (when enable_tablet_mode_sw module param was
-> set to 1).
-> 
-> Debugging showed that on this device, two problems prevent the table
-> mode detection from working:
-> 
->   - Chassis Type is reported as 0x10 (= Lunch Box)
-> 
->   - the query of HPWMI_SYSTEM_DEVICE_MODE does not report tablet state
-> at all
-> 
-> Note that the chassis type of this device (switch to tablet mode by
-> screen *rotation*) actually differs from the newer HP models (switch to
-> tablet mode by screen *flipping*).
-> 
-> 
-> I suggest fixing this by re-adding the removed module parameter
-> "enable_tablet_mode_sw", but change its behavior to work in the
-> following way:
-> 
->   - when left at default -1 (auto): no change to current (new)
-> implementation
-> 
->   - when set to 0: unconditionally disable table mode reporting at all
-> 
->   - when set to 1: ignore Chassis type and use old-skool
-> hp_wmi_hw_state(HPWMI_TABLET_MASK) query method to determine tablet mode
-> in addition to new hp_wmi_perform_query(HPWMI_SYSTEM_DEVICE_MODE...) method
-> 
-> 
-> I prepared a patch based on commit
-> 520ee4ea1cc60251a6e3c911cf0336278aa52634, and tested it successfully on
-> my device.
-> See below.
-> 
-> Regards,
-> Stefan
-> 
-> --- hp-wmi.c.orig	2024-03-10 21:38:09.000000000 +0100
-> +++ hp-wmi.c	2024-08-08 09:23:29.509113900 +0200
+> This patch series removes the SSRAM support from Intel PMC Core driver
+> and creates a separate PCI driver for SSRAM device. The new Intel PMC
+> SSRAM driver provides the following functionalities:
+>  
+> 1. Search and store the PMC information in a structure, including PWRMBASE
+> address and devid for each available PMC. Then Intel PMC Core driver
+> achieves the PMC information using the API provided by the new driver.
+>  
+> 2. Search and register Intel Platform Monitoring Techology telemetry
+> regions so they would by available for read through sysfs and Intel PMT
+> API. Intel PMC Core driver can achieve Low Power Mode requirement
+> information from a telemetry region registered by the new driver.
+> The above functionalities was previously handled by Intel PMC Core
+> driver. Intel PMC Core driver returns -EPROBE_DEFER when trying to read
+> data from a telem region that is not available yet. This setup may
+> result in an infinite loop of .probe() calls as Intel PMC Core driver
+> creates child devices. Creating a separate PCI driver avoids the infinite
+> loop possibility.
+>  
+> Xi Pardee (7):
+>   platform/x86:intel/pmc: Remove SSRAM support from PMC Core
+>   platform/x86:intel/pmc: Create Intel PMC SSRAM Telemetry driver
+>   platform/x86:intel/pmc: Add support to get PMC information from SSRAM
+>   platform/x86:intel/pmt: Get PMC from SSRAM for available platforms
+>   platform/x86:intel/pmt: Create inline version for telemetry functions
+>   platform/x86:intel/pmc: Add support to Retrieve LPM information
+>   platform/x86:intel/pmc: Get LPM information for available platforms
 
-This submission does not follow the normal patch formatting guidelines,
-please see Documentation/process/submitting-patches.rst.
+Hi,
 
-> @@ -35,6 +35,10 @@
->  MODULE_ALIAS("wmi:95F24279-4D7B-4334-9387-ACCDC67EF61C");
->  MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
+I don't see why the removal first, then re-add approach would be justified 
+here. You're basically adding the same code back later in many cases with 
+only very minimal changes, and some changes are entirely pointless such as 
+pmc_idx -> pmc_index parameter rename. This is just a big pain to review.
+
+I'd suggest you move functions in first patch into core.c. Try to 
+avoid logic/code changes other than making making the necessary functions 
+non-static and adding the prototypes for them into a header (temporarily).
+
+Then rename the ssram file to its new name in the second change.
+
+Then do the rework on top of that (and make things back static again).
+
+Try to split the rework into sensible chunks, anything that can be taken 
+away from the main rework change is less lines to review in that patch.
+If you e.g. want to do pcidev -> pdev renames, put them into own separate 
+change (and do it consistently then, not just for some of the cases like
+currently :-/).
+
+The move patches are nearly trivial to review and take large chunk of 
+diff away from the actual rework itself which doesn't seem that 
+complicated to review once the 1:1 move bits and trivial rename churn is
+eliminated from the diff.
+
+>  drivers/platform/x86/intel/pmc/Kconfig        |  13 +-
+>  drivers/platform/x86/intel/pmc/Makefile       |   8 +-
+>  drivers/platform/x86/intel/pmc/arl.c          |  36 +-
+>  drivers/platform/x86/intel/pmc/core.c         | 216 +++++++++++-
+>  drivers/platform/x86/intel/pmc/core.h         |  25 +-
+>  drivers/platform/x86/intel/pmc/core_ssram.c   | 326 ------------------
+>  drivers/platform/x86/intel/pmc/lnl.c          |  36 +-
+>  drivers/platform/x86/intel/pmc/mtl.c          |  34 +-
+>  .../platform/x86/intel/pmc/ssram_telemetry.c  | 184 ++++++++++
+>  .../platform/x86/intel/pmc/ssram_telemetry.h  |  45 +++
+>  drivers/platform/x86/intel/pmt/telemetry.h    |  19 +-
+>  11 files changed, 550 insertions(+), 392 deletions(-)
+>  delete mode 100644 drivers/platform/x86/intel/pmc/core_ssram.c
+>  create mode 100644 drivers/platform/x86/intel/pmc/ssram_telemetry.c
+>  create mode 100644 drivers/platform/x86/intel/pmc/ssram_telemetry.h
 > 
-> +static int enable_tablet_mode_sw = -1;
-> +module_param(enable_tablet_mode_sw, int, 0444);
-> +MODULE_PARM_DESC(enable_tablet_mode_sw, "Enable SW_TABLET_MODE
-> reporting (-1=auto, 0=no, 1=yes)");
-> +
->  #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
->  #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
->  #define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
-> @@ -428,6 +432,9 @@
->  	bool tablet_found;
->  	int ret;
 > 
-> +	if (!enable_tablet_mode_sw)
-> +		return -ENODEV;
-> +
->  	chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
->  	if (!chassis_type)
->  		return -ENODEV;
-> @@ -435,16 +442,24 @@
->  	tablet_found = match_string(tablet_chassis_types,
->  				    ARRAY_SIZE(tablet_chassis_types),
->  				    chassis_type) >= 0;
-> -	if (!tablet_found)
-> +	if (!tablet_found && enable_tablet_mode_sw < 0 /*auto*/)
-
-Having to add a comment like that is a very strong indication you'd want 
-to have a named define instead, e.g., HPWMI_TABLET_MODE_AUTO.
-
->  		return -ENODEV;
-> 
->  	ret = hp_wmi_perform_query(HPWMI_SYSTEM_DEVICE_MODE, HPWMI_READ,
->  				   system_device_mode,
-> zero_if_sup(system_device_mode),
->  				   sizeof(system_device_mode));
-> -	if (ret < 0)
-> -		return ret;
-> +	if (ret >= 0)
-> +		ret = (system_device_mode[0] == DEVICE_MODE_TABLET);
-> +
-> +	/* workaround for older convertibles */
-> +	if (ret <= 0 && enable_tablet_mode_sw > 0)
-> +	{
-> +		ret = hp_wmi_read_int(HPWMI_HARDWARE_QUERY);
-> +		if (!(ret < 0))
-> +			ret = !!(ret & HPWMI_TABLET_MASK);
-> +	}
-> 
-> -	return system_device_mode[0] == DEVICE_MODE_TABLET;
-> +	return ret;
-
-The logic is quite hard to follow. It would be better to return 
-early.
-
-	if (ret < 0 && enable_tablet_mode_sw == HPWMI_TABLET_MODE_AUTO)
-		return ret;
-
-	if (ret >= 0 && system_device_mode[0] == DEVICE_MODE_TABLET)
-		return 1;
-
-	ret = hp_wmi_read_int(HPWMI_HARDWARE_QUERY);
-	if (ret < 0)
-		return ret;
-
-	return !!(ret & HPWMI_TABLET_MASK);
-
-
-However, automatically detecting this condition over adding the module 
-parameter would be the preferred solution.
 
 -- 
  i.
-
->  }
-> 
->  static int omen_thermal_profile_set(int mode)
-> 
-> 
 
