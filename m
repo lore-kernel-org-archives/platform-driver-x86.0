@@ -1,202 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011413A8CE
-	for <platform-driver-x86@vger.kernel.org>; Tue, 13 Aug 2024 14:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D84B19D07B;
+	Tue, 13 Aug 2024 14:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723558271; cv=none; b=U8/f6unMIwYJQMNR23//ffhREjYdGfQD4WKaAX3R8r2G7fmCC6XFwkgaMsCSiVzSWIG4YmYqqZilMcebg+B20DB4ZnfGtFT/S1BbPopvYxl3br8FO3vgYSLrB4ED2FIgUY27AlsAFRUtJFqTXnwumonEQj5flid6/0nFJepiOYo=
+	t=1723559241; cv=none; b=oGvxgeH1uVcUtO+9Aoa0b5GyEp2NiCJSckRdBgRSb2nfGbFbg3P8N/NJEjjgzTMECeg3Eqkqmyy8PpE+QutCnkC+UDmvY3aBCgGsIkdXKpe7ZzmX8c6nyjVKeMzbvwE6JAg3UigjVYEO2hTa80HS9Q2NdA+uvksywgkpU+KYoW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723558271; c=relaxed/simple;
-	bh=yP42tp1EKZIXmizeIVPPkqaLg7MrakOsR6KTQIj6Qzo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lNJTd0m4v/W5+Bl3gtDbQ1EhjZCVmzFHceAk82P+7q85xgEC9feWjFdTT6PfHRIpvmDvcAk8fHsRhsnK+FQV6AyVrespYhBCcgQ7awb281vevJ5wk4BNZYmRC0Ux+WMZiuKtuG489XfOFTCXEzc8ig+So9cblcdi+LUkn26IqlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L1Y7ZzQF; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1723559241; c=relaxed/simple;
+	bh=7o1ebO6uvNnNS0M2BIyB8SB8taid1I1qAAMAb2zKqbo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cc5qfHO2Fh8rNJPNWZwtHWYoMR0QzUEwz+tRLgkZj9XprCo2nsdUIW4fnOURx+Lox2vI8QTQiPNmkkOxrOiei6ag23a+wELxRGituPzByEfFqBSMvQc8WnYA1d99uHzv7McdvOs5v/DllPFxN0caGYVe61jJgfnDh/RwYVpl1So=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VTdoy3Wj; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L1Y7ZzQF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723558269; x=1755094269;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yP42tp1EKZIXmizeIVPPkqaLg7MrakOsR6KTQIj6Qzo=;
-  b=L1Y7ZzQF29TnS31k/B7i/T6DJyYpLDc5EXfO81oSJImPArvYB+2Xd0NH
-   ePACC4kM1AuPODlWkIcVNsAYMmfyXggn4GOSWjzKpu/x03YFLY964KAUN
-   DhARmM7D69FmH7qHRmgVJtFzEoke3qqwRnxeRi38CWoauh7VTSHpZW70M
-   5vyyWlgF1ss//RhtTXoBVT1XAUXrvqn+keG1lYji1NVerzPvcBnnaYiiD
-   mGTL8iWvCBsDp1j5SCSuIqogpq85AzY0uiqiYwI8Kt+kzy2Dv2IfZyDXp
-   MoivpT/ahDEa7HPIXabwnopyrdLIyobKmf3w7nnOA/vn0imk13C+7gyHX
-   g==;
-X-CSE-ConnectionGUID: 75C5e6VtT3GCbZrX7FbvIg==
-X-CSE-MsgGUID: 9SNoLdTNRo2S3tNSNzGuqg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="21367539"
-X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="21367539"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 07:11:08 -0700
-X-CSE-ConnectionGUID: xLvWgcslSRSHbZUN8q8ZnA==
-X-CSE-MsgGUID: CxDpHyeMR6eYZlQRBgDAXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="59237391"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 07:11:07 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1sdsEp-0000000ErHe-1I8R;
-	Tue, 13 Aug 2024 17:11:03 +0300
-Date: Tue, 13 Aug 2024 17:11:03 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-Cc: intel-xe@lists.freedesktop.org, platform-driver-x86@vger.kernel.org,
-	david.e.box@linux.intel.com, ilpo.jarvinen@linux.intel.com,
-	matthew.brost@intel.com, hdegoede@redhat.com,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: Re: [PATCH v11] drm/xe/vsec: Support BMG devices
-Message-ID: <Zrtpd_WwougszltH@smile.fi.intel.com>
-References: <20240812200422.444078-1-michael.j.ruhl@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VTdoy3Wj"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5a10835487fso7356739a12.1;
+        Tue, 13 Aug 2024 07:27:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723559237; x=1724164037; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0GZ9q735651QGDZf7rgdlCrHxFSRCY3h/YKc3A79Cc0=;
+        b=VTdoy3WjCzQiiS5Ec7e9NVoKcUQq36ZGjs11b11P3msZmfgc45fYJXth5aYQ/kc3uv
+         HPnw/aM34r77ZM+0jUajQOb7UyU4UfT/eiKRd0D9CILV+CEC9YsIFB4W5fzFH8mzRZfY
+         YOLLtarvrjmFi/9PuwxqVU1f9CCbUsNMiCWx2wyRw9LtEBGxS45/Pu8HO6H1kwPnJ8YS
+         PL8hGjhwAaGETH9NuzO4j4mz+pvlPjpl6nZbkTybzvbOKBPWhvJae5Ee4tbm/KILAv5/
+         xRK3q09kE8zd/riXtJ0X8Ueca9WcjsOaHbooTMAxAjStsOaITISU4sfuhdCOFciHN6/9
+         ds2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723559237; x=1724164037;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0GZ9q735651QGDZf7rgdlCrHxFSRCY3h/YKc3A79Cc0=;
+        b=g64BEn9uM2HHqzmSUf1MkD2xQ5E43E8SP3m7WqcfFiXjWIcGLllQY48rGWRjpYP1kC
+         qHAhwNk7C7IqDp7SxZkbGgBbA/ssmdLeCbepAQckm7DWITxNaI2519C7t8XBam2TV0Nr
+         zRgNzB1KkU1Hczid/cawSu4Nyzx7V+jpbVKdWjC4IbwQ+UMYyl1QUb+aRWPfrH0kgZiy
+         wJCQ90yvvq/ZZfTdqimPuA0LYB9r0eDIYg4PHm+VfsS/owf0TtVjFZtWjI//SUlJlZSl
+         7PzqrGtjVvC1r7LK3qKHowAKXGHll1TWgbc3ujib76OW8NLZzu9gcpPL1cJRDQSVd/8m
+         APYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUd2ef4iqyHIzEIdNQcpyFWwXKNBHo03LNPd2FnVyeRSIGiTpfeRijwOaMhocn10ksARhzRJy+n0exTOatWB4bR2MM4tn2cZ7w2sfNLuzpOGwQKIT8fWgD2atVT4Ai0tBqTakk1H3jGWwkd0ryOLSklSr9wEpUSXOuaCKsc58RX95DyW5CE2ea+XznRRvbZ2PXDvGhf5NoqSPB+7OzFA1SXatzxAUof0VuPTh4yEcPDJsdJYkZxMDo5tX48mftxVnC+ROwoIifU
+X-Gm-Message-State: AOJu0YxwAR0WppjZBmFoQozxWqdDdtpcECDVp5j9oKUjAQHpmRfEsGJl
+	kTfHVUmUhBvCHfMzv4pa5+bB19cdYXbZo6iP+zTGDHBgKme5jEJC
+X-Google-Smtp-Source: AGHT+IH6Tmd1OzGRfql2ZCp766sYz9QoQGSXIi39HApJlkOewrKUyajyK555rObaG/0QcWQbujM/0w==
+X-Received: by 2002:a05:6402:848:b0:5a7:448b:4434 with SMTP id 4fb4d7f45d1cf-5bd44c2d6f3mr2725779a12.9.1723559236558;
+        Tue, 13 Aug 2024 07:27:16 -0700 (PDT)
+Received: from [192.168.105.194] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bd196a666fsm2954540a12.46.2024.08.13.07.27.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Aug 2024 07:27:15 -0700 (PDT)
+Message-ID: <36b0ee66-3af3-40c1-86b6-b52cd826298e@gmail.com>
+Date: Tue, 13 Aug 2024 16:27:12 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240812200422.444078-1-michael.j.ruhl@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] dt-bindings: platform: Add Surface System
+ Aggregator Module
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>, Maximilian Luz <luzmaximilian@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <quic_kdybcio@quicinc.com>
+References: <20240810-topic-sam-v2-0-8a8eb368a4f0@quicinc.com>
+ <20240810-topic-sam-v2-2-8a8eb368a4f0@quicinc.com>
+ <1a6ebc27-95ca-4f56-9971-b2a8d03f270a@kernel.org>
+Content-Language: en-US
+From: Konrad Dybcio <konradybcio@gmail.com>
+In-Reply-To: <1a6ebc27-95ca-4f56-9971-b2a8d03f270a@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 12, 2024 at 04:04:22PM -0400, Michael J. Ruhl wrote:
-> The Battlemage (BMG) discrete graphics card supports
-> the Platform, Monitoring Technology (PMT) feature
-> directly on the primary PCI device.
+On 11.08.2024 4:28 PM, Krzysztof Kozlowski wrote:
+> On 10/08/2024 03:28, Konrad Dybcio wrote:
+>> From: Konrad Dybcio <quic_kdybcio@quicinc.com>
+>>
+>> Add bindings for the Surface System Aggregator Module (SAM/SSAM), the
+>> Microsoft Surface-standard Embedded Controller, used on both x86- and
+>> Qualcomm-based devices.
+>>
+>> It provides a plethora of functions, depending on what's wired up to
+>> it. That includes but is not limited to: fan control, keyboard/touchpad
+>> support, thermal sensors, power control, special buttons, tablet mode.
+>>
+>> Signed-off-by: Konrad Dybcio <quic_kdybcio@quicinc.com>
+>> ---
+>>  .../bindings/platform/microsoft,surface-sam.yaml   | 50 ++++++++++++++++++++++
+>>  1 file changed, 50 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/platform/microsoft,surface-sam.yaml b/Documentation/devicetree/bindings/platform/microsoft,surface-sam.yaml
+>> new file mode 100644
+>> index 000000000000..f613738aa31d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/platform/microsoft,surface-sam.yaml
+>> @@ -0,0 +1,50 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/platform/microsoft,surface-sam.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Surface System Aggregator Module (SAM, SSAM)
+>> +
+>> +maintainers:
+>> +  - Konrad Dybcio <konradybcio@kernel.org>
+>> +
+>> +description: |
 > 
-> Utilize the PMT callback API to add support for the BMG
-> devices.
+> No need for |
 
-...
+Apparently it's necessary because I have a :
+> 
+>> +  Surface devices use a standardized embedded controller to let the
+>> +  operating system interface with various hardware functions. The
+>> +  specific functionalities are modeled as subdevices and matched on
+>> +  five levels: domain, category, target, instance and function.
 
-> +#include <linux/bitfield.h>
-> +#include <linux/bits.h>
-> +#include <linux/cleanup.h>
-> +#include <linux/intel_vsec.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/pci.h>
+                 ^ here
 
-...
+Should I e.g. s/:/-/, or keep the |?
 
-> +#define SOC_BASE		0x280000
-> +
-> +#define BMG_PMT_BASE		0xDB000
-> +#define BMG_DISCOVERY_OFFSET	(SOC_BASE + BMG_PMT_BASE)
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: microsoft,surface-sam
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  current-speed:
+>> +    description: The baudrate in bits per second of the device as it comes
+>> +      online, current active speed.
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+> 
+> This should be just "current-speed: true", because the type will be
+> brought by serial schema. We should however have some schema with
+> peripheral properties for serial devices. I'll come with something.
 
-> +#define BMG_TELEMETRY_BASE	0xE0000
-> +#define BMG_TELEMETRY_OFFSET	(SOC_BASE + BMG_TELEMETRY_BASE)
+I suppose I should just include:
 
-This looks like double indirection.
-Wouldn't suffix _BASE_OFFSET be better for PMT and TELEMETRY cases?
+https://lore.kernel.org/linux-serial/20240811-dt-bindings-serial-peripheral-props-v1-0-1dba258b7492@linaro.org/
 
-...
-
-> +#define BMG_DEVICE_ID 0xE2F8
-
-Is this defined in any specification? I mean is the format the same as PCI device ID?
-
-...
-
-> +#define GFX_BAR			0
-
-Do you need a separate definition for this?
-
-...
-
-> +enum record_id {
-> +	PUNIT,
-> +	OOBMSM_0,
-> +	OOBMSM_1
-
-Trailing comma?
-
-> +};
-> +
-> +enum capability {
-> +	CRASHLOG,
-> +	TELEMETRY,
-> +	WATCHER
-
-Ditto?
-
-> +};
-
-...
-
-> +	switch (record_id) {
-> +	case PUNIT:
-> +		*index = 0;
-> +		if (cap_type == TELEMETRY)
-> +			*offset = PUNIT_TELEMETRY_OFFSET;
-> +		else
-> +			*offset = PUNIT_WATCHER_OFFSET;
-> +		break;
-> +
-> +	case OOBMSM_0:
-> +		*index = 1;
-> +		if (cap_type == WATCHER)
-> +			*offset = OOBMSM_0_WATCHER_OFFSET;
-> +		break;
-> +
-> +	case OOBMSM_1:
-> +		*index = 1;
-> +		if (cap_type == TELEMETRY)
-> +			*offset = OOBMSM_1_TELEMETRY_OFFSET;
-> +		break;
-
-default case?
-
-> +	}
-
-...
-
-> +static int xe_pmt_telem_read(struct pci_dev *pdev, u32 guid, u64 *data, u32 count)
-> +{
-> +	struct xe_device *xe = pdev_to_xe_device(pdev);
-> +	void __iomem *telem_addr = xe->mmio.regs + BMG_TELEMETRY_OFFSET;
-> +	u32 mem_region;
-> +	u32 offset;
-> +	int ret;
-> +
-> +	ret = guid_decode(guid, &mem_region, &offset);
-> +	if (ret)
-> +		return ret;
-> +
-> +	telem_addr += offset;
-> +
-> +	guard(mutex)(&xe->pmt.lock);
-> +
-> +	/* indicate that we are not at an appropriate power level */
-> +	if (!xe_pm_runtime_get_if_active(xe))
-> +		return -ENODATA;
-> +
-> +	/* set SoC re-mapper index register based on GUID memory region */
-> +	xe_mmio_rmw32(xe->tiles[0].primary_gt, SG_REMAP_INDEX1, SG_REMAP_BITS,
-> +		      FIELD_PREP(SG_REMAP_BITS, mem_region));
-> +
-> +	memcpy_fromio(data, telem_addr, count);
-
-> +	ret = count;
-> +	xe_pm_runtime_put(xe);
-
-Does this have a side effect on count? If yes, a comment, if no, you may return
-count directly.
-
-> +	return ret;
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Konrad
