@@ -1,109 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0E136B11;
-	Tue, 13 Aug 2024 22:55:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A8716DEA9;
+	Tue, 13 Aug 2024 23:01:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723589718; cv=none; b=bTmVWY18DBYODO+kEEJQRkYoeej+cdT45akuLirFMscseFUwKsIyomoz0A1Pu1YKfrhPpN1cJsusEPOFJp4uXXxeeJceMy593USV69jCHkrcZIW1X0UBTYPuZyMpV9x+k7yZX62E6wTY4e26QR6k5C2j2Z6ERMFg5lsMI6qX39s=
+	t=1723590110; cv=none; b=KPUyJ1NT/S4B6DvSfHI/s72lqi/IlfSqKuvy6DyNNkNPzdu2D7BqIHhwtw9xF9bOO8lBkKoI6zS8+1YJSmXhsFPVbHl80aEBY8zVu7QWiLw8hLsQeH/G3nQXDsfvDv53dmn3N/mfPKkGK3GP58QGpGunFNrdBMtAxCCygnjja4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723589718; c=relaxed/simple;
-	bh=EaiLUZtV9dHZPDWCgUcTe3AVUvqDMjFJ769dzz2V6w4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qo3ND7u1Lv1B0fNKUqGK3QLnlyiQ58XDBUL1FxaMG6KKVDpMuSvtGLGYaMYjr0qRwGpIhqXH+38w2I0t8Lc6iapbcMOizfbCrODmzua8twAGciJOBKzYejdOBiIjB3TTqvH1fGAGyrzaOklRk0emQXSsEk6Ec0kNyTpZ5jyClCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCpd2KcF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723590110; c=relaxed/simple;
+	bh=Mm+2sEeIhnMoTfxzhb1SwNQk8u48va+ZsMjk/JBna5E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zsf3hnSs2KB4iHayHuKkvIFOAgYBM7OpXMEnpx+Q90ERaAAg5+MwkuTYHQ/6xy5PT5STfv879rZOK7H3tE/A4x3RyNSw45b6iwpwSxDUlSzauzpG664n2+WGfWTcOBJnEr5cbLUFhkjfIE3kBNtf2MrW6KMjZVOeoejo2LQ0y+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=br62628w; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCpd2KcF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E924EC32782;
-	Tue, 13 Aug 2024 22:55:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723589717;
-	bh=EaiLUZtV9dHZPDWCgUcTe3AVUvqDMjFJ769dzz2V6w4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RCpd2KcFzv7h7gqLAOT4Ozd2tn2Uf8bOIDNhE8gcKlHJvV/JWPp8lyynNd79F52MS
-	 J9oXD1EH5WghPsJCrXxvYO8n3TjymCp++oNS6n6K3hI8cgZPHQQGOZJjO6VAi8ZKWG
-	 D8iDL20a92UgmqeDn1PU1/0zjKRKL1qJGYLviMSSrydJI3e3NYfmckW4T74QC8BFVk
-	 w180RA42XEp6M+mCv4f4OD4U1MZFurEqeBzXqHlXddsYK+SMrHXYR3CzelGD3fNZFK
-	 GO0snVjgcYNSqDSi1HLYMtNiIdzjLagQbfurFSqV1BolAasWp2p5wL3SKDVOx6aqHZ
-	 rDEYSGoanpS2A==
-Date: Tue, 13 Aug 2024 23:55:14 +0100
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
-	Paul Menzel <pmenzel@molgen.mpg.de>, Wolfram Sang <wsa@kernel.org>, eric.piel@tremplin-utc.net, 
-	Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com, 
-	Kai Heng Feng <kai.heng.feng@canonical.com>, platform-driver-x86@vger.kernel.org, 
-	Jean Delvare <jdelvare@suse.com>, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v8 2/6] i2c: i801: Use a different adapter-name for IDF
- adapters
-Message-ID: <c35b6mawhhbhjioan6hvrlthtcoc6dqivwihhwz5ftvv6jcohs@ovctm27nnd2n>
-References: <20240812203952.42804-1-hdegoede@redhat.com>
- <20240812203952.42804-3-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="br62628w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723590109; x=1755126109;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Mm+2sEeIhnMoTfxzhb1SwNQk8u48va+ZsMjk/JBna5E=;
+  b=br62628w5oIqNMA4/NtY3q6XH+O73YhCTVo3wigm1ofbFKN7jKWhw08R
+   cLPlZ5LrQHrgxbFxhQ2dgHXRfXF3EEiWvuGrRTPS0CBIYbt1UdQ7II8Mj
+   3ilyrWw+FvBRcJ8i+UPIwxDtwZYczh/MwoaxYMQI15AdtQetM/7ixFj8G
+   KLCi9CVZqt9tY+jiHl206FVVXicy7S240T1EHN8hVnIursSYNZcSknTwj
+   6SsrHtu7oWbJGTdBql2x8mKJKDmk/xZ34fRtWc9PCnd1B3biN3itSmNSQ
+   7gqjo/2u1B+S6El1+yLfady6Mo9MK4GgLjeZczAuZxeXPjS9AVXPtpg/P
+   w==;
+X-CSE-ConnectionGUID: t9Atp/tyR3u+Fu5th22RgA==
+X-CSE-MsgGUID: auvDsYnESeC4d9Ovf7cTqA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="25581545"
+X-IronPort-AV: E=Sophos;i="6.09,287,1716274800"; 
+   d="scan'208";a="25581545"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 16:01:48 -0700
+X-CSE-ConnectionGUID: +FAT3N+mTo+jIDJX74Pr0w==
+X-CSE-MsgGUID: D7DBU5jhRNyJsykqaLJgtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,287,1716274800"; 
+   d="scan'208";a="59126179"
+Received: from xpardee-mobl.amr.corp.intel.com (HELO [10.125.227.132]) ([10.125.227.132])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 16:01:46 -0700
+Message-ID: <72dd19cc-5f24-4b76-ad31-86f7432c6d34@linux.intel.com>
+Date: Tue, 13 Aug 2024 16:01:45 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/7] Create Intel PMC SSRAM Telemetry driver
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com,
+ Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20240809204648.1124545-1-xi.pardee@linux.intel.com>
+ <ad5e7c93-33fa-4a5e-35af-7f99150dd4be@linux.intel.com>
+Content-Language: en-US
+From: Xi Pardee <xi.pardee@linux.intel.com>
+In-Reply-To: <ad5e7c93-33fa-4a5e-35af-7f99150dd4be@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240812203952.42804-3-hdegoede@redhat.com>
 
-Hi Wolfram,
 
-On Mon, Aug 12, 2024 at 10:39:48PM GMT, Hans de Goede wrote:
-> On chipsets with a second 'Integrated Device Function' SMBus controller use
-> a different adapter-name for the second IDF adapter.
-> 
-> This allows platform glue code which is looking for the primary i801
-> adapter to manually instantiate i2c_clients on to differentiate
-> between the 2.
-> 
-> This allows such code to find the primary i801 adapter by name, without
-> needing to duplicate the PCI-ids to feature-flags mapping from i2c-i801.c.
-> 
-> Reviewed-by: Pali Rohár <pali@kernel.org>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v4:
-> - Use a single snprintf() with a conditional argument for the 2 names
-> - Add a comment that the adapter-name is used by platform code
-> 
-> Changes in v3:
-> - This is a new patch in v3 of this patch-set
-> ---
->  drivers/i2c/busses/i2c-i801.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-> index 328c0dab6b14..299fe9d3afab 100644
-> --- a/drivers/i2c/busses/i2c-i801.c
-> +++ b/drivers/i2c/busses/i2c-i801.c
-> @@ -1763,8 +1763,15 @@ static int i801_probe(struct pci_dev *dev, const struct pci_device_id *id)
->  
->  	i801_add_tco(priv);
->  
-> +	/*
-> +	 * adapter.name is used by platform code to find the main I801 adapter
-> +	 * to instantiante i2c_clients, do not change.
-> +	 */
->  	snprintf(priv->adapter.name, sizeof(priv->adapter.name),
-> -		"SMBus I801 adapter at %04lx", priv->smba);
-> +		 "SMBus %s adapter at %04lx",
-> +		 (priv->features & FEATURE_IDF) ? "I801 IDF" : "I801",
-> +		 priv->smba);
-> +
+On 8/13/2024 9:01 AM, Ilpo JÃ¤rvinen wrote:
+> On Fri, 9 Aug 2024, Xi Pardee wrote:
+>
+>> This patch series removes the SSRAM support from Intel PMC Core driver
+>> and creates a separate PCI driver for SSRAM device. The new Intel PMC
+>> SSRAM driver provides the following functionalities:
+>>   
+>> 1. Search and store the PMC information in a structure, including PWRMBASE
+>> address and devid for each available PMC. Then Intel PMC Core driver
+>> achieves the PMC information using the API provided by the new driver.
+>>   
+>> 2. Search and register Intel Platform Monitoring Techology telemetry
+>> regions so they would by available for read through sysfs and Intel PMT
+>> API. Intel PMC Core driver can achieve Low Power Mode requirement
+>> information from a telemetry region registered by the new driver.
+>> The above functionalities was previously handled by Intel PMC Core
+>> driver. Intel PMC Core driver returns -EPROBE_DEFER when trying to read
+>> data from a telem region that is not available yet. This setup may
+>> result in an infinite loop of .probe() calls as Intel PMC Core driver
+>> creates child devices. Creating a separate PCI driver avoids the infinite
+>> loop possibility.
+>>   
+>> Xi Pardee (7):
+>>    platform/x86:intel/pmc: Remove SSRAM support from PMC Core
+>>    platform/x86:intel/pmc: Create Intel PMC SSRAM Telemetry driver
+>>    platform/x86:intel/pmc: Add support to get PMC information from SSRAM
+>>    platform/x86:intel/pmt: Get PMC from SSRAM for available platforms
+>>    platform/x86:intel/pmt: Create inline version for telemetry functions
+>>    platform/x86:intel/pmc: Add support to Retrieve LPM information
+>>    platform/x86:intel/pmc: Get LPM information for available platforms
+> Hi,
+>
+> I don't see why the removal first, then re-add approach would be justified
+> here. You're basically adding the same code back later in many cases with
+> only very minimal changes, and some changes are entirely pointless such as
+> pmc_idx -> pmc_index parameter rename. This is just a big pain to review.
+>
+> I'd suggest you move functions in first patch into core.c. Try to
+> avoid logic/code changes other than making making the necessary functions
+> non-static and adding the prototypes for them into a header (temporarily).
+>
+> Then rename the ssram file to its new name in the second change.
+>
+> Then do the rework on top of that (and make things back static again).
+>
+> Try to split the rework into sensible chunks, anything that can be taken
+> away from the main rework change is less lines to review in that patch.
+> If you e.g. want to do pcidev -> pdev renames, put them into own separate
+> change (and do it consistently then, not just for some of the cases like
+> currently :-/).
+>
+> The move patches are nearly trivial to review and take large chunk of
+> diff away from the actual rework itself which doesn't seem that
+> complicated to review once the 1:1 move bits and trivial rename churn is
+> eliminated from the diff.
 
-do you have any comment here?
 
-Thanks,
-Andi
+Hi,
 
->  	err = i2c_add_adapter(&priv->adapter);
->  	if (err) {
->  		platform_device_unregister(priv->tco_pdev);
-> -- 
-> 2.46.0
-> 
+Thanks for reviewing the patches. I will rearrange the code in next version.
+
+Xi
+
+>>   drivers/platform/x86/intel/pmc/Kconfig        |  13 +-
+>>   drivers/platform/x86/intel/pmc/Makefile       |   8 +-
+>>   drivers/platform/x86/intel/pmc/arl.c          |  36 +-
+>>   drivers/platform/x86/intel/pmc/core.c         | 216 +++++++++++-
+>>   drivers/platform/x86/intel/pmc/core.h         |  25 +-
+>>   drivers/platform/x86/intel/pmc/core_ssram.c   | 326 ------------------
+>>   drivers/platform/x86/intel/pmc/lnl.c          |  36 +-
+>>   drivers/platform/x86/intel/pmc/mtl.c          |  34 +-
+>>   .../platform/x86/intel/pmc/ssram_telemetry.c  | 184 ++++++++++
+>>   .../platform/x86/intel/pmc/ssram_telemetry.h  |  45 +++
+>>   drivers/platform/x86/intel/pmt/telemetry.h    |  19 +-
+>>   11 files changed, 550 insertions(+), 392 deletions(-)
+>>   delete mode 100644 drivers/platform/x86/intel/pmc/core_ssram.c
+>>   create mode 100644 drivers/platform/x86/intel/pmc/ssram_telemetry.c
+>>   create mode 100644 drivers/platform/x86/intel/pmc/ssram_telemetry.h
+>>
+>>
