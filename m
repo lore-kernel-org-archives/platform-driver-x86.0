@@ -1,133 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7803A139CFC
-	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Aug 2024 11:00:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D611AE03E;
+	Wed, 14 Aug 2024 13:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723633249; cv=none; b=gIl/HCN/5tGoMKEWMtRXktynE79g+Uk/6TM/hZiXsjGGlug9OQxk9GmCdMKFVXNIdPecxmWGZp/6LS/jUyYfY+9SB9J7OslcCmkZNoFam+57rRSzYkoNR3e0Ub511N6EwSXuhU3QfDSWeOwQNHpPu1jMSBBaOJNM0aM6C8l/s7U=
+	t=1723641192; cv=none; b=ZLs1QaFlnLABojcJzAlnzhHND+H4W/2eO6w2FkJbLIF0xGqtDaGRW2DuaUnxzZE/qQtM3EhApGHjBS3nJyrb4Q6GAn5xApih4GbB+J+k+emXIhE4EXjFS2BkZpch9utnm61u2XZt1tlOvea/SZsmjeu7QQJNG2V/KvZZYe/+slI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723633249; c=relaxed/simple;
-	bh=qYsPHt98x9coHBFPiap2uS15j3T3oZrgslUM85gor3s=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=bSramMVTdLwDSi5gdp4hDAYVzPKau/kRC6hwG3dmr9o42zEu2fAvV/sE7KQfmBawrXLC370vczdwoy0B9BJdPNXA5vxnBDL0c3sDY/orbveP0s6vmo9iy9DoN41qZO/Y6PuuXf6IWperve1YrB5tBMVizldkwHezcl3g3ONdpSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h9uga4lz; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1723641192; c=relaxed/simple;
+	bh=Lap9RepfxPNbgYgoTk2PQp9C73pLg2NDY7BBW3lLHko=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=gUSkYs5forBDuTbjYC4Lty6C/8DmR1/vFUHmBeBMAxcSWC9WBfGHV9VCQ3GpMb5zuNt+/NDEobeEEB9VJkV5CRnc4W55n3nr7op7LLrd/sCf2+a48E0jcBz9blP0A7qt0z6exKpKm7F+gK+maWz6yAAigjHRURY9D3MwCGwNaL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=cgqqtEkn; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h9uga4lz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723633247; x=1755169247;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=qYsPHt98x9coHBFPiap2uS15j3T3oZrgslUM85gor3s=;
-  b=h9uga4lzSw2avQaF9IMZe7xcZSnEfE7EAde0a+LnUpWnfC8YupFC4xqO
-   zQWcqqjRw03YXFbxI0sjT1NXThthKZUwH1CyNKj/g5Ri70rpkGkDLzHIy
-   G/2y3eMt38tCLw0GXxaE881KYKp7cYp6QWQlipkzAkdEI2z9g2Qjbm+h1
-   ZQ2B2h90sF/yJGPYyDZezBsH4tJLmfSiYKfoDpRWimjzw59BxWt2OaHsq
-   uH9wOKVcz3jT1u1LJVHhN8QSJbrnIGAGrBOKI08N4d/RXX7cF2n2Obq8A
-   HScoTVI/p+so1lTvMA6G6x/8w7zm3revWOYQwZbTWcC+1OdJANU4gkDvV
-   w==;
-X-CSE-ConnectionGUID: 1nbzoz7YT921vN/05FfcKg==
-X-CSE-MsgGUID: +Ss9DZWdTaCMVZCzvkK7Xg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="33246917"
-X-IronPort-AV: E=Sophos;i="6.09,145,1716274800"; 
-   d="scan'208";a="33246917"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 04:00:46 -0700
-X-CSE-ConnectionGUID: qoYS610oQ+Ks7+AipKihzw==
-X-CSE-MsgGUID: 0HPDkN5DS5az3ojYb89Qqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,145,1716274800"; 
-   d="scan'208";a="59265608"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.61])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 04:00:44 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 14 Aug 2024 14:00:40 +0300 (EEST)
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
-    platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
-Subject: Re: [PATCH v3 1/2] platform/x86/amd/pmf: Relocate CPU ID macros to
- the PMF header
-In-Reply-To: <20240813133540.367384-1-Shyam-sundar.S-k@amd.com>
-Message-ID: <b0b503f5-e257-064b-9695-a2a3d2ca62e0@linux.intel.com>
-References: <20240813133540.367384-1-Shyam-sundar.S-k@amd.com>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="cgqqtEkn"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47E5pcXY028298;
+	Wed, 14 Aug 2024 08:13:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=13RG2GUsoWgTGmx65gaXSY4h+Yz3SFHumOMusCTz1q4=; b=
+	cgqqtEkncIq40NKKWDlPlem00TigdTNwykXOZ81jXINZ3MDzHorByXh2CPIvQOMu
+	4EfLem7MrneaZJQT8bIP8MNNb4mvoBAEQXMgENZMNyyx4slUMsZoTJM0Th9lT8r9
+	0s2Qg46WtS7k7YrJnuGuInDVqJcXIYWssx8BoPaSpYotDGVytS0IMVendTlOHQN4
+	5E3+K2LUnpCWg+dKDKw/zGL/dXVPTePr+l1LSKayR0BOUwX/qRKPVkEKJz9XIykF
+	zsPY4i/NQj00WnHVs8zxKkNo4Zq+zX6Y68Et6HYeIdrL7hriQmmDE3rQ1+ggB+fS
+	cm71ecZaXf54y0W+HEoKvw==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 40x5kwmk2f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 Aug 2024 08:13:07 -0500 (CDT)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 14 Aug
+ 2024 14:13:05 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
+ 15.2.1544.9 via Frontend Transport; Wed, 14 Aug 2024 14:13:05 +0100
+Received: from [198.90.208.18] (ediswws06.ad.cirrus.com [198.90.208.18])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 20EAE820241;
+	Wed, 14 Aug 2024 13:13:05 +0000 (UTC)
+Message-ID: <155bcc8e-3c53-4554-b359-be7628e4b302@opensource.cirrus.com>
+Date: Wed, 14 Aug 2024 14:13:05 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2100976987-1723633240=:1018"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: serial-multi-instantiate: Don't require
+ both I2C and SPI
+To: <hdegoede@redhat.com>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+References: <20240813112105.21218-1-rf@opensource.cirrus.com>
+Content-Language: en-GB
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+In-Reply-To: <20240813112105.21218-1-rf@opensource.cirrus.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: VyHSoT_88ZEMF4ETj5jQDf1j69xrEGH5
+X-Proofpoint-GUID: VyHSoT_88ZEMF4ETj5jQDf1j69xrEGH5
+X-Proofpoint-Spam-Reason: safe
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-2100976987-1723633240=:1018
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Tue, 13 Aug 2024, Shyam Sundar S K wrote:
-
-> The CPU ID macros are needed by the Smart PC builder. Therefore, transfer
-> the CPU ID macros from core.c to the common PMF header file.
->=20
-> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+On 13/08/2024 12:21, Richard Fitzgerald wrote:
+> Change the Kconfig dependency to (I2C || SPI) so that it doesn't
+> require both bus subsystems to be enabled. Make a few small changes to
+> the code so that the code for a bus is only called if the bus is being
+> built.
+> 
+> When SPI support was added to serial-multi-instantiate it created a
+> dependency that both CONFIG_I2C and CONFIG_SPI must be enabled.
+> Typically they are, but there's no reason why this should be a
+> requirement. A specific kernel build could have only I2C devices or
+> only SPI devices. It should be possible to use serial-multi-instantiate
+> if only I2C or only SPI is enabled.
+> 
+> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
 > ---
-> v3:
->  - No change
->=20
-> v2:
->  - No change
->=20
->  drivers/platform/x86/amd/pmf/core.c | 6 ------
->  drivers/platform/x86/amd/pmf/pmf.h  | 6 ++++++
->  2 files changed, 6 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/a=
-md/pmf/core.c
-> index 8f1f719befa3..88314b0277a3 100644
-> --- a/drivers/platform/x86/amd/pmf/core.c
-> +++ b/drivers/platform/x86/amd/pmf/core.c
-> @@ -37,12 +37,6 @@
->  #define AMD_PMF_RESULT_CMD_UNKNOWN           0xFE
->  #define AMD_PMF_RESULT_FAILED                0xFF
-> =20
-> -/* List of supported CPU ids */
-> -#define AMD_CPU_ID_RMB=09=09=090x14b5
-> -#define AMD_CPU_ID_PS=09=09=090x14e8
-> -#define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT=090x1507
-> -#define PCI_DEVICE_ID_AMD_1AH_M60H_ROOT=090x1122
-> -
->  #define PMF_MSG_DELAY_MIN_US=09=0950
->  #define RESPONSE_REGISTER_LOOP_MAX=0920000
-> =20
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/am=
-d/pmf/pmf.h
-> index 9bf4326d06c3..9fc26f672f12 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -19,6 +19,12 @@
->  #define POLICY_SIGN_COOKIE=09=090x31535024
->  #define POLICY_COOKIE_OFFSET=09=090x10
-> =20
-> +/* List of supported CPU ids */
-> +#define AMD_CPU_ID_RMB                  0x14b5
-> +#define AMD_CPU_ID_PS                   0x14e8
-> +#define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT 0x1507
-> +#define PCI_DEVICE_ID_AMD_1AH_M60H_ROOT 0x1122
-> +
->  struct cookie_header {
->  =09u32 sign;
->  =09u32 length;
->=20
+>   drivers/platform/x86/Kconfig                  |  2 +-
+>   .../platform/x86/serial-multi-instantiate.c   | 32 ++++++++++++++-----
+>   2 files changed, 25 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 665fa9524986..c286742b34ba 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -999,7 +999,7 @@ config TOPSTAR_LAPTOP
+>   
+>   config SERIAL_MULTI_INSTANTIATE
+>   	tristate "Serial bus multi instantiate pseudo device driver"
+> -	depends on I2C && SPI && ACPI
+> +	depends on (I2C || SPI) && ACPI
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+Please don't take this version.
+It works better as:
 
---=20
- i.
+	depends on ACPI
+	depends on (I2C && !SPI) || (!I2C && SPI) || (I2C && SPI)
 
---8323328-2100976987-1723633240=:1018--
+so if I2C or SPI =m then SERIAL_MULTI_INSTANTIATE must be
+built as a module.
+
+I will send a V2 with that change.
