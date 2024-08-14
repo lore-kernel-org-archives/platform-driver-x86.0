@@ -1,148 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A8716DEA9;
-	Tue, 13 Aug 2024 23:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5231D28DB3;
+	Wed, 14 Aug 2024 02:14:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723590110; cv=none; b=KPUyJ1NT/S4B6DvSfHI/s72lqi/IlfSqKuvy6DyNNkNPzdu2D7BqIHhwtw9xF9bOO8lBkKoI6zS8+1YJSmXhsFPVbHl80aEBY8zVu7QWiLw8hLsQeH/G3nQXDsfvDv53dmn3N/mfPKkGK3GP58QGpGunFNrdBMtAxCCygnjja4g=
+	t=1723601697; cv=none; b=OFyw5wCGTIT7ZHaFmnybUY9hADpXDWxBVG5Or+Zo645i3z7qeQ6hhG773IgqDtVLsphTvpkwzLj2huGgq/lQDFzrvrRoBALoDGfYRAXBZbjKW+qdAqNRXXBIjYG+xPymmjAHx3JyC0PN5dn7KPbL2fN3nC0wIhZeymR56jkHVzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723590110; c=relaxed/simple;
-	bh=Mm+2sEeIhnMoTfxzhb1SwNQk8u48va+ZsMjk/JBna5E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zsf3hnSs2KB4iHayHuKkvIFOAgYBM7OpXMEnpx+Q90ERaAAg5+MwkuTYHQ/6xy5PT5STfv879rZOK7H3tE/A4x3RyNSw45b6iwpwSxDUlSzauzpG664n2+WGfWTcOBJnEr5cbLUFhkjfIE3kBNtf2MrW6KMjZVOeoejo2LQ0y+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=br62628w; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1723601697; c=relaxed/simple;
+	bh=PkhGL8RZitGHdjEjDrMoW+Y9f3CCmQ6R105nxkrwP8M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZJvirw1eg/Vd8EZ93o1kgfRJOg1E+MFgd0VXetQIXmcE0jI20OXWQgEnkbz5PfZG9kdP4lGC4WQge7WcNXOMYmgcfsG9itdWPEp3FeQe2ww/ggCFyGcRaBuuYsP5rp7CkN+JTom2nzvvkK3M7XgcfDywlqnO/TDQBsGTJDTY0SM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BT0v6k2e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="br62628w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723590109; x=1755126109;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Mm+2sEeIhnMoTfxzhb1SwNQk8u48va+ZsMjk/JBna5E=;
-  b=br62628w5oIqNMA4/NtY3q6XH+O73YhCTVo3wigm1ofbFKN7jKWhw08R
-   cLPlZ5LrQHrgxbFxhQ2dgHXRfXF3EEiWvuGrRTPS0CBIYbt1UdQ7II8Mj
-   3ilyrWw+FvBRcJ8i+UPIwxDtwZYczh/MwoaxYMQI15AdtQetM/7ixFj8G
-   KLCi9CVZqt9tY+jiHl206FVVXicy7S240T1EHN8hVnIursSYNZcSknTwj
-   6SsrHtu7oWbJGTdBql2x8mKJKDmk/xZ34fRtWc9PCnd1B3biN3itSmNSQ
-   7gqjo/2u1B+S6El1+yLfady6Mo9MK4GgLjeZczAuZxeXPjS9AVXPtpg/P
-   w==;
-X-CSE-ConnectionGUID: t9Atp/tyR3u+Fu5th22RgA==
-X-CSE-MsgGUID: auvDsYnESeC4d9Ovf7cTqA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="25581545"
-X-IronPort-AV: E=Sophos;i="6.09,287,1716274800"; 
-   d="scan'208";a="25581545"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 16:01:48 -0700
-X-CSE-ConnectionGUID: +FAT3N+mTo+jIDJX74Pr0w==
-X-CSE-MsgGUID: D7DBU5jhRNyJsykqaLJgtA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,287,1716274800"; 
-   d="scan'208";a="59126179"
-Received: from xpardee-mobl.amr.corp.intel.com (HELO [10.125.227.132]) ([10.125.227.132])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 16:01:46 -0700
-Message-ID: <72dd19cc-5f24-4b76-ad31-86f7432c6d34@linux.intel.com>
-Date: Tue, 13 Aug 2024 16:01:45 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BT0v6k2e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 032CDC4AF10;
+	Wed, 14 Aug 2024 02:14:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723601696;
+	bh=PkhGL8RZitGHdjEjDrMoW+Y9f3CCmQ6R105nxkrwP8M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=BT0v6k2eRoDtKHZqZ+AOnG80xyAu6HRU26ctDqEFIxYWRCLZc4DVuePrv/4WNENOT
+	 43f2Ow5HS+r3E89diSvqfTlvuaRZFIXJuNN382q3yTXnR2rxdMdAv/mN1nuy5JvWxG
+	 qWDe7lAu74K9b5EJpL/9lbhtACKMmvKOYENStWveLwLJKURT4y5QO0JFWP/pa0oVXR
+	 +CpnLfQXxdk1ry76yMzF859qwdhYWYigBPPoCW039HdV3iLgTCeFlQoX8W62h4J1IP
+	 0mwpqh5aNKYBWqPQjAqtS6K8fy3MwpCQG2Q0axJIHhdXwQA0JHueJojHQL1yy8YS+q
+	 A1aSCyJ553WbQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: "Luke D. Jones" <luke@ljones.dev>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	Shyam-sundar.S-k@amd.com,
+	hdegoede@redhat.com,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.10 03/13] platform/x86/amd: pmf: Add quirk for ROG Ally X
+Date: Tue, 13 Aug 2024 22:14:34 -0400
+Message-ID: <20240814021451.4129952-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240814021451.4129952-1-sashal@kernel.org>
+References: <20240814021451.4129952-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/7] Create Intel PMC SSRAM Telemetry driver
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com,
- Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20240809204648.1124545-1-xi.pardee@linux.intel.com>
- <ad5e7c93-33fa-4a5e-35af-7f99150dd4be@linux.intel.com>
-Content-Language: en-US
-From: Xi Pardee <xi.pardee@linux.intel.com>
-In-Reply-To: <ad5e7c93-33fa-4a5e-35af-7f99150dd4be@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.10.4
 Content-Transfer-Encoding: 8bit
 
+From: "Luke D. Jones" <luke@ljones.dev>
 
-On 8/13/2024 9:01 AM, Ilpo Järvinen wrote:
-> On Fri, 9 Aug 2024, Xi Pardee wrote:
->
->> This patch series removes the SSRAM support from Intel PMC Core driver
->> and creates a separate PCI driver for SSRAM device. The new Intel PMC
->> SSRAM driver provides the following functionalities:
->>   
->> 1. Search and store the PMC information in a structure, including PWRMBASE
->> address and devid for each available PMC. Then Intel PMC Core driver
->> achieves the PMC information using the API provided by the new driver.
->>   
->> 2. Search and register Intel Platform Monitoring Techology telemetry
->> regions so they would by available for read through sysfs and Intel PMT
->> API. Intel PMC Core driver can achieve Low Power Mode requirement
->> information from a telemetry region registered by the new driver.
->> The above functionalities was previously handled by Intel PMC Core
->> driver. Intel PMC Core driver returns -EPROBE_DEFER when trying to read
->> data from a telem region that is not available yet. This setup may
->> result in an infinite loop of .probe() calls as Intel PMC Core driver
->> creates child devices. Creating a separate PCI driver avoids the infinite
->> loop possibility.
->>   
->> Xi Pardee (7):
->>    platform/x86:intel/pmc: Remove SSRAM support from PMC Core
->>    platform/x86:intel/pmc: Create Intel PMC SSRAM Telemetry driver
->>    platform/x86:intel/pmc: Add support to get PMC information from SSRAM
->>    platform/x86:intel/pmt: Get PMC from SSRAM for available platforms
->>    platform/x86:intel/pmt: Create inline version for telemetry functions
->>    platform/x86:intel/pmc: Add support to Retrieve LPM information
->>    platform/x86:intel/pmc: Get LPM information for available platforms
-> Hi,
->
-> I don't see why the removal first, then re-add approach would be justified
-> here. You're basically adding the same code back later in many cases with
-> only very minimal changes, and some changes are entirely pointless such as
-> pmc_idx -> pmc_index parameter rename. This is just a big pain to review.
->
-> I'd suggest you move functions in first patch into core.c. Try to
-> avoid logic/code changes other than making making the necessary functions
-> non-static and adding the prototypes for them into a header (temporarily).
->
-> Then rename the ssram file to its new name in the second change.
->
-> Then do the rework on top of that (and make things back static again).
->
-> Try to split the rework into sensible chunks, anything that can be taken
-> away from the main rework change is less lines to review in that patch.
-> If you e.g. want to do pcidev -> pdev renames, put them into own separate
-> change (and do it consistently then, not just for some of the cases like
-> currently :-/).
->
-> The move patches are nearly trivial to review and take large chunk of
-> diff away from the actual rework itself which doesn't seem that
-> complicated to review once the 1:1 move bits and trivial rename churn is
-> eliminated from the diff.
+[ Upstream commit 4c83ee4bf32ea8e57ae2321906c067d69ad7c41b ]
 
+The ASUS ROG Ally X has the same issue as the G14 where it advertises
+SPS support but doesn't use it.
 
-Hi,
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+Link: https://lore.kernel.org/r/20240729020831.28117-1-luke@ljones.dev
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/amd/pmf/pmf-quirks.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Thanks for reviewing the patches. I will rearrange the code in next version.
+diff --git a/drivers/platform/x86/amd/pmf/pmf-quirks.c b/drivers/platform/x86/amd/pmf/pmf-quirks.c
+index 0b2eb0ae85feb..460444cda1b29 100644
+--- a/drivers/platform/x86/amd/pmf/pmf-quirks.c
++++ b/drivers/platform/x86/amd/pmf/pmf-quirks.c
+@@ -29,6 +29,14 @@ static const struct dmi_system_id fwbug_list[] = {
+ 		},
+ 		.driver_data = &quirk_no_sps_bug,
+ 	},
++	{
++		.ident = "ROG Ally X",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "RC72LA"),
++		},
++		.driver_data = &quirk_no_sps_bug,
++	},
+ 	{}
+ };
+ 
+@@ -48,4 +56,3 @@ void amd_pmf_quirks_init(struct amd_pmf_dev *dev)
+ 			dmi_id->ident);
+ 	}
+ }
+-
+-- 
+2.43.0
 
-Xi
-
->>   drivers/platform/x86/intel/pmc/Kconfig        |  13 +-
->>   drivers/platform/x86/intel/pmc/Makefile       |   8 +-
->>   drivers/platform/x86/intel/pmc/arl.c          |  36 +-
->>   drivers/platform/x86/intel/pmc/core.c         | 216 +++++++++++-
->>   drivers/platform/x86/intel/pmc/core.h         |  25 +-
->>   drivers/platform/x86/intel/pmc/core_ssram.c   | 326 ------------------
->>   drivers/platform/x86/intel/pmc/lnl.c          |  36 +-
->>   drivers/platform/x86/intel/pmc/mtl.c          |  34 +-
->>   .../platform/x86/intel/pmc/ssram_telemetry.c  | 184 ++++++++++
->>   .../platform/x86/intel/pmc/ssram_telemetry.h  |  45 +++
->>   drivers/platform/x86/intel/pmt/telemetry.h    |  19 +-
->>   11 files changed, 550 insertions(+), 392 deletions(-)
->>   delete mode 100644 drivers/platform/x86/intel/pmc/core_ssram.c
->>   create mode 100644 drivers/platform/x86/intel/pmc/ssram_telemetry.c
->>   create mode 100644 drivers/platform/x86/intel/pmc/ssram_telemetry.h
->>
->>
