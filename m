@@ -1,59 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281E41BD501
-	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Aug 2024 19:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A976120B0F;
+	Wed, 14 Aug 2024 20:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723662155; cv=none; b=YPn8U2HvRYlvR+VplnuZ+9BQD3SXcbRkP9b4UyqDIl4ciUhvgflUwgU5St0UKG4orfwH80DJ54rgJz0aO4uZwGmWn3KG7uofWajxwMNEVAzIwBzTGRYIkWsmZJy3sxQ0TozMax8P9GyibWmpr5QZgyM5t0f33fF+J2BO13zKBB4=
+	t=1723666200; cv=none; b=tiO/rvEwMm2zYS3U1+BU7ghP681Q5znTKnCkRDr8fA2VIQv4zeYUFsB1xh1NsPb7iiGXzitzjRm1FGMo78JSfGTkhKWEBTa0mcEnY//UBakpsnGazRXyoJrcwgoWf9UtBFeH/2bFtiJBW8bHe5GJx2OAjqPi8CiYv3u13hh/TY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723662155; c=relaxed/simple;
-	bh=/gQAx//LLHunDUHHUyadR6Ntsfu9RtzzOdDAO3gpR1c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SVfVVddG5u6LWmpX7y3ZRUolQ8fvEXlETP7DMDpfXR79MOn4uGoOXJRHdZGkCOmn5GRRp7po3/26WT8GpramWZbQ1KfRMDwNmxbED8PSvOmG82A0upbX4FqbSt5TfD+/10jg9AfRHuql7bprLS/1svaAnZEfVyKu8EyL+JNnuhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WtaaPsLp; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WtaaPsLp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723662153;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xnCD2jCv8+LRBXs1DCD1n71FWSSYMHrFi8IT/1BCheY=;
-	b=WtaaPsLpCKV31SUwXe5xgvsvR0BxpoziR2N3ccqZHf/aQ+eTsxvFGImrLi7wFWc4bAhg0W
-	Md/npVRDrTILg+MpBvSaBJsoLPupIPJmj5861tXWqfq8uxkqGK5QDXCWrSTCxowjEzUFaB
-	P3/imGZjAyJrulAQIDbI3IX9GD/8Yew=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-205--yCz_wvxPGiD8RTeLWKdOg-1; Wed,
- 14 Aug 2024 15:02:18 -0400
-X-MC-Unique: -yCz_wvxPGiD8RTeLWKdOg-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 87B7A1955F06;
-	Wed, 14 Aug 2024 19:02:13 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.192.22])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8C3E319560AA;
-	Wed, 14 Aug 2024 19:02:10 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-acpi@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH 3/3] ACPI: video: Add backlight=native quirk for Dell OptiPlex 7760 AIO
-Date: Wed, 14 Aug 2024 21:01:59 +0200
-Message-ID: <20240814190159.15650-4-hdegoede@redhat.com>
-In-Reply-To: <20240814190159.15650-1-hdegoede@redhat.com>
+	s=arc-20240116; t=1723666200; c=relaxed/simple;
+	bh=k2EQlZ+vVusYm6wUFcjxMloJjFPbRIL/CK/1jNKJYdk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VhJIROsGmRz2lLlrC8X6B8KLYTYMgkReeEGcUjUZ5MS7DNYL5/2wE8BVHbpE/QG3NcccE7tEqFM9mk0xqCWcbJCRAdByZLIOADxh+zqlwsUW9O8vW8e3224m0oEaFJSmYFpI1mLVp5Dqg8D0/FGPW3zLY4lRPkAVaSCl8b2bQrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: 2rER/dgTTZKBOV0Kn102cw==
+X-CSE-MsgGUID: qSZu9Q+4TE+USWAKg5baXw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11164"; a="21717739"
+X-IronPort-AV: E=Sophos;i="6.10,146,1719903600"; 
+   d="scan'208";a="21717739"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 13:09:57 -0700
+X-CSE-ConnectionGUID: lehesZ2DRn6EGmfYQhm7uA==
+X-CSE-MsgGUID: DKr/xl3zROi7zpSX0ECAtg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,146,1719903600"; 
+   d="scan'208";a="63284262"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 13:09:54 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andy@kernel.org>)
+	id 1seKJb-0000000FKIv-43Lk;
+	Wed, 14 Aug 2024 23:09:51 +0300
+Date: Wed, 14 Aug 2024 23:09:51 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	dri-devel@lists.freedesktop.org, linux-acpi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 0/3] ACPI/video / platform/x86: Add backlight=native
+ quirk for Dell OptiPlex 7760 AIO
+Message-ID: <Zr0PD5d2bqpikxf_@smile.fi.intel.com>
 References: <20240814190159.15650-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -61,61 +49,41 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240814190159.15650-1-hdegoede@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Dell All In One (AIO) models released after 2017 may use a backlight
-controller board connected to an UART.
+On Wed, Aug 14, 2024 at 09:01:56PM +0200, Hans de Goede wrote:
+> Hi Rafael,
+> 
+> 6.10 has a new backlight driver for UART attached backlight controller
+> boards found in some Dell All in One models.
+> 
+> Now the first AIO has turned up which has not only the DSDT bits for this,
+> but also an actual controller attached to the UART, yet it is not using
+> this controller for backlight control (it needs GPU native control).
+> 
+> I did not tie the dell-uart-backlight into acpi_video_get_backlight_type()
+> yet, so the first 2 patches in this series deal with that and the third
+> patch adds a DMI quirk to select native backlight control on top.
+> 
+> Backlight control used to work on the Dell OptiPlex 7760 AIO with kernel
+> 6.9 and older, so this is a regression and I would like to see this
+> series merged as fixes for 6.11.
+> 
+> Rafael, the drivers/platform/x86/dell/dell-uart-backlight.c are small
+> and isolated. So I believe it is best if you take the entire series,
+> to avoid conflicts if any other drivers/apci/video_detect.c DMI quirks
+> show up this cycle.
 
-In DSDT this uart port will be defined as:
+FWIW,
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-   Name (_HID, "DELL0501")
-   Name (_CID, EisaId ("PNP0501")
+I find this quite small and I agree this would be nice to have as fixes.
 
-The Dell OptiPlex 7760 AIO has an ACPI device for one if its UARTs with
-the above _HID + _CID. Loading the dell-uart-backlight driver shows that
-there actually is a backlight controller board attached to the UART,
-which reports a firmware version of "G&MX01-V15".
-
-But the backlight controller board does not actually control the backlight
-brightness and the GPU's native backlight control method does work.
-
-Add a quirk to use the GPU's native backlight control method on this model.
-
-Fixes: 484bae9e4d6a ("platform/x86: Add new Dell UART backlight driver")
-Closes: https://bugzilla.redhat.com/show_bug.cgi?id=2303936
-Cc: stable@vger.kernel.org
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/acpi/video_detect.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
-index e509dcbf3090..674b9db7a1ef 100644
---- a/drivers/acpi/video_detect.c
-+++ b/drivers/acpi/video_detect.c
-@@ -823,6 +823,21 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
- 		},
- 	},
- 
-+	/*
-+	 * Dell AIO (All in Ones) which advertise an UART attached backlight
-+	 * controller board in their ACPI tables (and may even have one), but
-+	 * which need native backlight control nevertheless.
-+	 */
-+	{
-+	 /* https://bugzilla.redhat.com/show_bug.cgi?id=2303936 */
-+	 .callback = video_detect_force_native,
-+	 /* Dell OptiPlex 7760 AIO */
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "OptiPlex 7760 AIO"),
-+		},
-+	},
-+
- 	/*
- 	 * Models which have nvidia-ec-wmi support, but should not use it.
- 	 * Note this indicates a likely firmware bug on these models and should
 -- 
-2.46.0
+With Best Regards,
+Andy Shevchenko
+
 
