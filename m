@@ -1,155 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE301AED23
-	for <platform-driver-x86@vger.kernel.org>; Wed, 14 Aug 2024 13:56:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439801B29BD;
+	Wed, 14 Aug 2024 14:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723643788; cv=none; b=L7koW0iByK3YrIlmazQI/NOGmDewtJJ2yvs4l5EPziaQW2v63wGs7uCJnnvy2wKxUO87dlTZ9a5/fC5o9An20dq3PoDjxDsFNE+tmJ4yRt+JFIDmplyif/cP8ZdvgJuBQPIx9XBMwef4jc4j4v31jdWBTaMSzyJBJNHPdZr7jjI=
+	t=1723644398; cv=none; b=l5P2P0r1c2SsP2vORsjM/4N9BMKa0SHu17IqHs2onl5DkVc9UeIwRIo5C4kgHVTCWUXADv+LZSdUoZFhk12fZQvGUVG+Uo26yeHaoz4ZltAYIHXPFQPwW3cMo7LhJZvMfQf0+cRN9EC8qd4ILAV3NVeA5pME0lDcVy02iyrSqj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723643788; c=relaxed/simple;
-	bh=C37OoDdd1gzVMoFMiBQNgrjuyFWgYuDQxb7yZDxfzws=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qZBNF9nrZkaHSStopqaSA8565jVtShGgHCMU3IwZDb9uKvAIlXkXvNQzF/claiBnoYTJyaCVAaYmfMwCX/9Qeej1dbwQ7EijeYsutKPjtmEZ9snQmV1gUYIol0BFexwRKhjeym92e8TvVcx0NykMvdldYbD5OgRml4QvUcZUp/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CqrOE1GM; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1723644398; c=relaxed/simple;
+	bh=+/gaF3YEZ5Rg+zNdj7tQPt9leIADZ0LAP1MJimY8rac=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H+d+f+C4wI6YKs+BWwHEjGOkZ0+BjXFWZE1OF1s0T/ZlKhuYYcC5O8412QlsUMfapbMbBUf7H6swUvmVA50L4ZLzt1vxwRCWcgjwQANj4G5pHtCcF991sTRJqa7hAVaITx8sSBR+DJgkpPU0V3MC2JQLOcpv7PKtMcKkoyyK130=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/nf9JVa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CqrOE1GM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723643787; x=1755179787;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=C37OoDdd1gzVMoFMiBQNgrjuyFWgYuDQxb7yZDxfzws=;
-  b=CqrOE1GMeuA+PgKh+6oIe37wdPEn5FJi2SLshAaFW73C6RgRWtOCat33
-   wKZkAQkZf5jeTi3jAkej9KEVX9BOTi0wCtKo01Bss/SIMpXWjUkg/jSJa
-   Lr5xda8zOyMx8Cnurg8SHYyKBqe/fjPca+OT1OeVVdWFzSXTnMk2CzRT7
-   Uoz0Q1kbGqlgs53AVPUjTo3wDvNpE/swvnH863uVcIKxrwptGnT03O3zL
-   8yTHbqHNYoiGBoQBopDTN81NqL0KqMsowqX1HCiKqtaoJFn+D+kWrQy6H
-   VH7WNrVvCGX/v+iVYREdcG4C43ipx+lSE9tDg/63Gj2Pk7BFd24O/0z2j
-   A==;
-X-CSE-ConnectionGUID: VWeCu8kdSPqWkApqrbzRsg==
-X-CSE-MsgGUID: 635FFH7JS3y3iC62k/z5cQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11164"; a="39368596"
-X-IronPort-AV: E=Sophos;i="6.10,146,1719903600"; 
-   d="scan'208";a="39368596"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 06:56:26 -0700
-X-CSE-ConnectionGUID: 9Ro7xBblTQWDeWDH3tSr8w==
-X-CSE-MsgGUID: BYri71D2SpCLdviTezlyyg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,146,1719903600"; 
-   d="scan'208";a="63963632"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 06:56:24 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1seEU9-0000000FCIt-0WkO;
-	Wed, 14 Aug 2024 16:56:21 +0300
-Date: Wed, 14 Aug 2024 16:56:20 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-Cc: "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"david.e.box@linux.intel.com" <david.e.box@linux.intel.com>,
-	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
-	"Brost, Matthew" <matthew.brost@intel.com>,
-	"hdegoede@redhat.com" <hdegoede@redhat.com>,
-	"Vivi, Rodrigo" <rodrigo.vivi@intel.com>
-Subject: Re: [PATCH v11] drm/xe/vsec: Support BMG devices
-Message-ID: <Zry3hOBb_fHbvlIN@smile.fi.intel.com>
-References: <20240812200422.444078-1-michael.j.ruhl@intel.com>
- <Zrtpd_WwougszltH@smile.fi.intel.com>
- <IA1PR11MB6418FAAD8AC5104D6F8FDE33C1862@IA1PR11MB6418.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/nf9JVa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6316FC116B1;
+	Wed, 14 Aug 2024 14:06:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723644397;
+	bh=+/gaF3YEZ5Rg+zNdj7tQPt9leIADZ0LAP1MJimY8rac=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=J/nf9JVa+Xjkx5sPwnC10znwjrfTmOOCoqjNdRo4ANX9SWBpjUlX0u8CG6p3UbFoI
+	 OzHhOEfslIzPPBT97HxYjqFHNDSj74LZLznjsHLVrjxUpnL8/H4BXz0Rnvly+o/5/H
+	 /kYefFt/ip1v8L1QM8Sorw2COWy8dApXeOAJHDL7V2nfGCQwXQxRz2CaAHDpalzqfk
+	 CgTW/Ds5s6lR6tA44aANMjB6AcAih7vy8+vecar/YpgOGD+HGhtEyRGXve9603NoIF
+	 hvTiF3dRZyxslrp4pjokRRjbnFOG+h7blTKm+2G2+ULsYUASIXDKDnBCJHFhVey5AY
+	 gVtDQkQXFqy5g==
+Message-ID: <2eb416b1-09b7-411d-8070-883238883403@kernel.org>
+Date: Wed, 14 Aug 2024 16:06:30 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <IA1PR11MB6418FAAD8AC5104D6F8FDE33C1862@IA1PR11MB6418.namprd11.prod.outlook.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] dt-bindings: platform: Add Surface System
+ Aggregator Module
+To: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>, Maximilian Luz <luzmaximilian@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <quic_kdybcio@quicinc.com>
+References: <20240814-topic-sam-v3-0-a84588aad233@quicinc.com>
+ <20240814-topic-sam-v3-2-a84588aad233@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240814-topic-sam-v3-2-a84588aad233@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Aug 13, 2024 at 02:29:27PM +0000, Ruhl, Michael J wrote:
-> > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Sent: Tuesday, August 13, 2024 10:11 AM
-> > On Mon, Aug 12, 2024 at 04:04:22PM -0400, Michael J. Ruhl wrote:
-
-...
-
-> > > +#define SOC_BASE		0x280000
-> > > +
-> > > +#define BMG_PMT_BASE		0xDB000
-> > > +#define BMG_DISCOVERY_OFFSET	(SOC_BASE + BMG_PMT_BASE)
-> > 
-> > > +#define BMG_TELEMETRY_BASE	0xE0000
-> > > +#define BMG_TELEMETRY_OFFSET	(SOC_BASE + BMG_TELEMETRY_BASE)
-> > 
-> > This looks like double indirection.
-> > Wouldn't suffix _BASE_OFFSET be better for PMT and TELEMETRY cases?
+On 14/08/2024 12:27, Konrad Dybcio wrote:
+> From: Konrad Dybcio <quic_kdybcio@quicinc.com>
 > 
-> I am not sure I understand.
+> Add bindings for the Surface System Aggregator Module (SAM/SSAM), the
+> Microsoft Surface-standard Embedded Controller, used on both x86- and
+> Qualcomm-based devices.
 > 
-> Are  you saying rename BMG_PMT_BASE to BMG_PMT_BASE_OFFSET?
-
-Yes. Same for BMG_TELEMETRY_.
-
-...
-
-> > > +#define BMG_DEVICE_ID 0xE2F8
-> > 
-> > Is this defined in any specification? I mean is the format the same as PCI device
-> > ID?
+> It provides a plethora of functions, depending on what's wired up to
+> it. That includes but is not limited to: fan control, keyboard/touchpad
+> support, thermal sensors, power control, special buttons, tablet mode.
 > 
-> I think that this is defined in BMG PMT yaml definition.  It is provide in
-> the PMT discovery data, so it is defined by the specific device. 
+> Signed-off-by: Konrad Dybcio <quic_kdybcio@quicinc.com>
+> ---
 
-Is there any documentation / specification about this?
-Can it be UUID or 64-bit number or other format?
-_Where_ is this being specified?
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-...
-
-> > > +	switch (record_id) {
-> > > +	case PUNIT:
-> > > +		*index = 0;
-> > > +		if (cap_type == TELEMETRY)
-> > > +			*offset = PUNIT_TELEMETRY_OFFSET;
-> > > +		else
-> > > +			*offset = PUNIT_WATCHER_OFFSET;
-> > > +		break;
-> > > +
-> > > +	case OOBMSM_0:
-> > > +		*index = 1;
-> > > +		if (cap_type == WATCHER)
-> > > +			*offset = OOBMSM_0_WATCHER_OFFSET;
-> > > +		break;
-> > > +
-> > > +	case OOBMSM_1:
-> > > +		*index = 1;
-> > > +		if (cap_type == TELEMETRY)
-> > > +			*offset = OOBMSM_1_TELEMETRY_OFFSET;
-> > > +		break;
-> > 
-> > default case?
-> 
-> I validate the record_id and cap_type values at the beginning of the function,
-> so default would be redundant.
-> 
-> The goal was to validate, then set data.
-> 
-> So adding the default will remove the record_id check from the if.  Do you prefer
-> that path?
-
-Yes.
-
-> > > +	}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Best regards,
+Krzysztof
 
