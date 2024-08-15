@@ -1,214 +1,270 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40093214;
-	Thu, 15 Aug 2024 20:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.107
+Received: from spindle.queued.net (spindle.queued.net [45.33.49.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B54D1AC88F;
+	Thu, 15 Aug 2024 23:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.33.49.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723753629; cv=none; b=k2MtbGZnnSzcmcB3komRYOOOmjIb38aFWOoaWhTz/6Mqofu8q/RHZe4RrCXh4tIuUgkkTxCAzlI7KI8mgKBH6cf0mL9xeDAaS3BrxXzU7Ccjroaqo4AMSByU7rOuohrFMLrpjTb5IITsdBKnmqjtklkug+SCkW/cJBCGuDGEI6Q=
+	t=1723764952; cv=none; b=pWH4y/du6iZqJVPjc2I5ZoACQimjqdhu+1Io7AGFXU5iM9leCQLVygoEQBuly5NdlJoaJ6h5zkLaCMKfXHOyORoXiUbJnJKzO2VXEMB3vIqwTc8GOCR8jT2dYPPFiSwsMUHFbt8IzK5yF5P0+NbkG9NMJ73GpFz86RGKhCLqaLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723753629; c=relaxed/simple;
-	bh=U+Ubxxosxhos1Nw0ZxMYYX6oDwOaBNCSZ54ABwnaGgQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dIQdalGIyEzVDg9Tcv+E/gYA1S5sx/H50A0Pp/p3WGr0XU/XP+nfyognTqR1ONFBb8QEuiFqHFj303+DtTf832ydlBdce5s3n60NIeL0TjntPHzdKXB8M379Sbxf4xQGIjcC1F+hc+GW0vKhA1Gnp6QL70dTvqK0sxFsRwuxI1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=matthias-fetzer.de; spf=pass smtp.mailfrom=matthias-fetzer.de; dkim=pass (2048-bit key) header.d=matthias-fetzer.de header.i=@matthias-fetzer.de header.b=aLejQePq; arc=none smtp.client-ip=188.68.61.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=matthias-fetzer.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matthias-fetzer.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=matthias-fetzer.de header.i=@matthias-fetzer.de header.b="aLejQePq"
-Received: from mors-relay-8405.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4WlGcj580mz6xmD;
-	Thu, 15 Aug 2024 22:17:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=matthias-fetzer.de;
-	s=key2; t=1723753029;
-	bh=U+Ubxxosxhos1Nw0ZxMYYX6oDwOaBNCSZ54ABwnaGgQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aLejQePqr8CGCVQ5xxAf1vE4hvlK2sAJqMX3pDvKNm98l3ua/FGEUJeSxH3RE79ea
-	 vvdDS9W23PVgpkj5BKwdusEdXyrbJBDio9tAMgwiTZ0vpj21CiG6kZcrQSPIdVddP+
-	 NLK+3fHND5uxEBMIGElQrE5POgVxzll1LGT2kt8Q0a62U+pBWBj7LTUF6tg3IDGrt7
-	 7/Yg9a+NHZqMchIBhyAGYPvJ8+T53etpF82vz2bvFazye0rk3YH3TPoEx/iGbw5mf5
-	 BEO8ViqwDqY9ccKjKr8ShGRftkFgc2kmjAmwsN4+SZb1JN/fPduss7dNxC6tYS5xCN
-	 5cS/ZNVbmqd4g==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4WlGcj4Qryz6xm9;
-	Thu, 15 Aug 2024 22:17:09 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
-Received: from mxf9a3.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4WlGch2Pnwz8tXc;
-	Thu, 15 Aug 2024 22:17:08 +0200 (CEST)
-Received: from [IPV6:2001:9e8:1a67:f900:bb12:a61:3ff9:ebce] (unknown [IPv6:2001:9e8:1a67:f900:bb12:a61:3ff9:ebce])
-	by mxf9a3.netcup.net (Postfix) with ESMTPSA id 5DF434046B;
-	Thu, 15 Aug 2024 22:17:03 +0200 (CEST)
-Authentication-Results: mxf9a3;
-        spf=pass (sender IP is 2001:9e8:1a67:f900:bb12:a61:3ff9:ebce) smtp.mailfrom=kontakt@matthias-fetzer.de smtp.helo=[IPV6:2001:9e8:1a67:f900:bb12:a61:3ff9:ebce]
-Received-SPF: pass (mxf9a3: connection is authenticated)
-Message-ID: <d2d7b7ec-c7db-4cde-b669-df727b93748f@matthias-fetzer.de>
-Date: Thu, 15 Aug 2024 22:17:01 +0200
+	s=arc-20240116; t=1723764952; c=relaxed/simple;
+	bh=Z8EOfb49CC3S7FBg8192Uau2gO3NkBrpQvt5ppCuULk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sZxap0KQzHdGuy1H6+wi5VQT8guAv2pZjLiNnenZSRFircA7hYnsM+yS3lK4DZEw6DrDPTvFsc4HSsmVGXDh1QC/QRsuyo0ituqEdHVRV7tLMf3PS6DnG8ov+ICgl5NfK1olCqv4Ml6tax8cK2h/F5NlAtIjWKgwZteW3SThTWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=queued.net; spf=pass smtp.mailfrom=queued.net; arc=none smtp.client-ip=45.33.49.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=queued.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queued.net
+Received: by spindle.queued.net (Postfix, from userid 1001)
+	id A81481160A7; Thu, 15 Aug 2024 19:35:50 -0400 (EDT)
+Received: from 5400 (unknown [172.56.34.244])
+	by spindle.queued.net (Postfix) with ESMTPSA id 1A453115D1B;
+	Thu, 15 Aug 2024 19:35:49 -0400 (EDT)
+Date: Thu, 15 Aug 2024 19:35:46 -0400
+From: Andres Salomon <dilinger@queued.net>
+To: linux-kernel@vger.kernel.org
+Cc: Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
+ platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>,
+ Sebastian Reichel <sre@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+ "Ilpo =?UTF-8?B?SsOkcnZpbmVu?=" <ilpo.jarvinen@linux.intel.com>,
+ linux-pm@vger.kernel.org, Dell.Client.Kernel@dell.com
+Subject: [PATCH v2 2/2] platform/x86:dell-laptop: remove duplicate code w/
+ battery function
+Message-ID: <20240815193546.2123b010@5400>
+In-Reply-To: <20240815192848.3489d3e1@5400>
+References: <20240815192848.3489d3e1@5400>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] platform/x86: thinkpad_acpi: Add Thinkpad Edge E531
- fan support
-To: kernel test robot <lkp@intel.com>, hmh@hmh.eng.br, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, ibm-acpi-devel@lists.sourceforge.net,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev
-References: <20240814213927.49075-1-kontakt@matthias-fetzer.de>
- <202408160253.fMJW95oi-lkp@intel.com>
-Content-Language: en-US, de-DE
-From: Matthias Fetzer <kontakt@matthias-fetzer.de>
-In-Reply-To: <202408160253.fMJW95oi-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <172375302389.6135.1622073007362957735@mxf9a3.netcup.net>
-X-Rspamd-Queue-Id: 5DF434046B
-X-Rspamd-Server: rspamd-worker-8404
-X-NC-CID: calp7oG2ZZ/5ZuRXx2ZYYpuvxkhEFbbpfJDeIx1VQOQ9Q4bNMu11f6XF
+X-Bogosity: Ham, tests=bogofilter, spamicity=0.000000, version=1.2.5
+
+The dell battery patch added dell_send_request_for_tokenid() and
+dell_set_std_token_value(), which encapsulates a very common pattern
+when SMBIOS queries are addressed to token->location. This calls them
+in various places outside of the dell laptop code, allowing us to delete
+a bunch of code.
+
+Also some very minor cleanups:
+  - mark the kbd init functions as __init
+  - don't read buffer.output unless dell_send_request() was successful.
+  - actually return errors from micmute_led_set/mute_led_set instead of
+    always returning 0.
+
+Only minor behavior changes; the delayed read of buffer.output and
+actually returning errors for the brightness_set_blocking hooks.
+
+Signed-off-by: Andres Salomon <dilinger@queued.net>
+
+---
+Changes in v2:
+    - use renamed and helper functions dell_send_request_for_tokenid()
+      and dell_set_std_token_value().
+    - no longer need to move functions around
+    - document the brightness_set_blocking hook changes
+---
+ drivers/platform/x86/dell/dell-laptop.c | 105 ++++++------------------
+ 1 file changed, 25 insertions(+), 80 deletions(-)
+
+diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
+index 8cc05f0fab91..5df0944e5bf6 100644
+--- a/drivers/platform/x86/dell/dell-laptop.c
++++ b/drivers/platform/x86/dell/dell-laptop.c
+@@ -935,43 +935,24 @@ static void dell_cleanup_rfkill(void)
+ static int dell_send_intensity(struct backlight_device *bd)
+ {
+ 	struct calling_interface_buffer buffer;
+-	struct calling_interface_token *token;
+-	int ret;
+-
+-	token = dell_smbios_find_token(BRIGHTNESS_TOKEN);
+-	if (!token)
+-		return -ENODEV;
+-
+-	dell_fill_request(&buffer,
+-			   token->location, bd->props.brightness, 0, 0);
+-	if (power_supply_is_system_supplied() > 0)
+-		ret = dell_send_request(&buffer,
+-					CLASS_TOKEN_WRITE, SELECT_TOKEN_AC);
+-	else
+-		ret = dell_send_request(&buffer,
+-					CLASS_TOKEN_WRITE, SELECT_TOKEN_BAT);
++	u16 pwr;
+ 
+-	return ret;
++	pwr = power_supply_is_system_supplied() > 0 ?
++			SELECT_TOKEN_AC : SELECT_TOKEN_BAT;
++	return dell_send_request_for_tokenid(&buffer, CLASS_TOKEN_WRITE,
++			pwr, BRIGHTNESS_TOKEN, bd->props.brightness);
+ }
+ 
+ static int dell_get_intensity(struct backlight_device *bd)
+ {
+ 	struct calling_interface_buffer buffer;
+-	struct calling_interface_token *token;
+ 	int ret;
++	u16 pwr;
+ 
+-	token = dell_smbios_find_token(BRIGHTNESS_TOKEN);
+-	if (!token)
+-		return -ENODEV;
+-
+-	dell_fill_request(&buffer, token->location, 0, 0, 0);
+-	if (power_supply_is_system_supplied() > 0)
+-		ret = dell_send_request(&buffer,
+-					CLASS_TOKEN_READ, SELECT_TOKEN_AC);
+-	else
+-		ret = dell_send_request(&buffer,
+-					CLASS_TOKEN_READ, SELECT_TOKEN_BAT);
+-
++	pwr = power_supply_is_system_supplied() > 0 ?
++			SELECT_TOKEN_AC : SELECT_TOKEN_BAT;
++	ret = dell_send_request_for_tokenid(&buffer, CLASS_TOKEN_READ, pwr,
++			BRIGHTNESS_TOKEN, 0);
+ 	if (ret == 0)
+ 		ret = buffer.output[1];
+ 
+@@ -1395,20 +1376,11 @@ static int kbd_set_state_safe(struct kbd_state *state, struct kbd_state *old)
+ static int kbd_set_token_bit(u8 bit)
+ {
+ 	struct calling_interface_buffer buffer;
+-	struct calling_interface_token *token;
+-	int ret;
+ 
+ 	if (bit >= ARRAY_SIZE(kbd_tokens))
+ 		return -EINVAL;
+ 
+-	token = dell_smbios_find_token(kbd_tokens[bit]);
+-	if (!token)
+-		return -EINVAL;
+-
+-	dell_fill_request(&buffer, token->location, token->value, 0, 0);
+-	ret = dell_send_request(&buffer, CLASS_TOKEN_WRITE, SELECT_TOKEN_STD);
+-
+-	return ret;
++	return dell_set_std_token_value(&buffer, kbd_tokens[bit], USE_TVAL);
+ }
+ 
+ static int kbd_get_token_bit(u8 bit)
+@@ -1427,11 +1399,10 @@ static int kbd_get_token_bit(u8 bit)
+ 
+ 	dell_fill_request(&buffer, token->location, 0, 0, 0);
+ 	ret = dell_send_request(&buffer, CLASS_TOKEN_READ, SELECT_TOKEN_STD);
+-	val = buffer.output[1];
+-
+ 	if (ret)
+ 		return ret;
+ 
++	val = buffer.output[1];
+ 	return (val == token->value);
+ }
+ 
+@@ -1537,7 +1508,7 @@ static inline int kbd_init_info(void)
+ 
+ }
+ 
+-static inline void kbd_init_tokens(void)
++static inline void __init kbd_init_tokens(void)
+ {
+ 	int i;
+ 
+@@ -1546,7 +1517,7 @@ static inline void kbd_init_tokens(void)
+ 			kbd_token_bits |= BIT(i);
+ }
+ 
+-static void kbd_init(void)
++static void __init kbd_init(void)
+ {
+ 	int ret;
+ 
+@@ -2171,21 +2142,11 @@ static int micmute_led_set(struct led_classdev *led_cdev,
+ 			   enum led_brightness brightness)
+ {
+ 	struct calling_interface_buffer buffer;
+-	struct calling_interface_token *token;
+ 	int state = brightness != LED_OFF;
++	u32 val;
+ 
+-	if (state == 0)
+-		token = dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE);
+-	else
+-		token = dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE);
+-
+-	if (!token)
+-		return -ENODEV;
+-
+-	dell_fill_request(&buffer, token->location, token->value, 0, 0);
+-	dell_send_request(&buffer, CLASS_TOKEN_WRITE, SELECT_TOKEN_STD);
+-
+-	return 0;
++	val = state == 0 ? GLOBAL_MIC_MUTE_DISABLE : GLOBAL_MIC_MUTE_ENABLE;
++	return dell_set_std_token_value(&buffer, val, USE_TVAL);
+ }
+ 
+ static struct led_classdev micmute_led_cdev = {
+@@ -2199,21 +2160,11 @@ static int mute_led_set(struct led_classdev *led_cdev,
+ 			   enum led_brightness brightness)
+ {
+ 	struct calling_interface_buffer buffer;
+-	struct calling_interface_token *token;
+ 	int state = brightness != LED_OFF;
++	u32 val;
+ 
+-	if (state == 0)
+-		token = dell_smbios_find_token(GLOBAL_MUTE_DISABLE);
+-	else
+-		token = dell_smbios_find_token(GLOBAL_MUTE_ENABLE);
+-
+-	if (!token)
+-		return -ENODEV;
+-
+-	dell_fill_request(&buffer, token->location, token->value, 0, 0);
+-	dell_send_request(&buffer, CLASS_TOKEN_WRITE, SELECT_TOKEN_STD);
+-
+-	return 0;
++	val = state == 0 ? GLOBAL_MUTE_DISABLE : GLOBAL_MUTE_ENABLE;
++	return dell_set_std_token_value(&buffer, val, USE_TVAL);
+ }
+ 
+ static struct led_classdev mute_led_cdev = {
+@@ -2498,7 +2449,7 @@ static void __exit dell_battery_exit(void)
+ 
+ static int __init dell_init(void)
+ {
+-	struct calling_interface_token *token;
++	struct calling_interface_buffer buffer;
+ 	int max_intensity = 0;
+ 	int ret;
+ 
+@@ -2560,16 +2511,10 @@ static int __init dell_init(void)
+ 	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
+ 		return 0;
+ 
+-	token = dell_smbios_find_token(BRIGHTNESS_TOKEN);
+-	if (token) {
+-		struct calling_interface_buffer buffer;
+-
+-		dell_fill_request(&buffer, token->location, 0, 0, 0);
+-		ret = dell_send_request(&buffer,
+-					CLASS_TOKEN_READ, SELECT_TOKEN_AC);
+-		if (ret == 0)
+-			max_intensity = buffer.output[3];
+-	}
++	ret = dell_send_request_for_tokenid(&buffer, CLASS_TOKEN_READ,
++			SELECT_TOKEN_AC, BRIGHTNESS_TOKEN, 0);
++	if (ret == 0)
++		max_intensity = buffer.output[3];
+ 
+ 	if (max_intensity) {
+ 		struct backlight_properties props;
+-- 
+2.39.2
 
 
 
-Am 15.08.24 um 21:00 schrieb kernel test robot:
-> Hi Matthias,
-> 
-> kernel test robot noticed the following build warnings:
-> 
-> [auto build test WARNING on linus/master]
-> [also build test WARNING on v6.11-rc3 next-20240815]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Matthias-Fetzer/platform-x86-thinkpad_acpi-Add-Thinkpad-Edge-E531-fan-support/20240815-054239
-> base:   linus/master
-> patch link:    https://lore.kernel.org/r/20240814213927.49075-1-kontakt%40matthias-fetzer.de
-> patch subject: [PATCH v3] platform/x86: thinkpad_acpi: Add Thinkpad Edge E531 fan support
-> config: i386-randconfig-001-20240815 (https://download.01.org/0day-ci/archive/20240816/202408160253.fMJW95oi-lkp@intel.com/config)
-> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240816/202408160253.fMJW95oi-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202408160253.fMJW95oi-lkp@intel.com/
-> 
-> All warnings (new ones prefixed by >>):
-> 
->     drivers/platform/x86/thinkpad_acpi.c: In function 'fan_set_level':
->>> drivers/platform/x86/thinkpad_acpi.c:8214:13: warning: variable 'rc' set but not used [-Wunused-but-set-variable]
->      8214 |         int rc;
->           |             ^~
-> 
 
-I guess just removing the variable and returning -EIO directly should be
-a good approach.
-
-What do you think?
-
-> 
-> vim +/rc +8214 drivers/platform/x86/thinkpad_acpi.c
-> 
->    8211	
->    8212	static int fan_set_level(int level)
->    8213	{
->> 8214		int rc;
->    8215	
->    8216		if (!fan_control_allowed)
->    8217			return -EPERM;
->    8218	
->    8219		switch (fan_control_access_mode) {
->    8220		case TPACPI_FAN_WR_ACPI_SFAN:
->    8221			if ((level < 0) || (level > 7))
->    8222				return -EINVAL;
->    8223	
->    8224			if (tp_features.second_fan_ctl) {
->    8225				if (!fan_select_fan2() ||
->    8226				    !acpi_evalf(sfan_handle, NULL, NULL, "vd", level)) {
->    8227					pr_warn("Couldn't set 2nd fan level, disabling support\n");
->    8228					tp_features.second_fan_ctl = 0;
->    8229				}
->    8230				fan_select_fan1();
->    8231			}
->    8232			if (!acpi_evalf(sfan_handle, NULL, NULL, "vd", level))
->    8233				return -EIO;
->    8234			break;
->    8235	
->    8236		case TPACPI_FAN_WR_ACPI_FANS:
->    8237		case TPACPI_FAN_WR_TPEC:
->    8238			if (!(level & TP_EC_FAN_AUTO) &&
->    8239			    !(level & TP_EC_FAN_FULLSPEED) &&
->    8240			    ((level < 0) || (level > 7)))
->    8241				return -EINVAL;
->    8242	
->    8243			/* safety net should the EC not support AUTO
->    8244			 * or FULLSPEED mode bits and just ignore them */
->    8245			if (level & TP_EC_FAN_FULLSPEED)
->    8246				level |= 7;	/* safety min speed 7 */
->    8247			else if (level & TP_EC_FAN_AUTO)
->    8248				level |= 4;	/* safety min speed 4 */
->    8249	
->    8250			if (tp_features.second_fan_ctl) {
->    8251				if (!fan_select_fan2() ||
->    8252				    !acpi_ec_write(fan_status_offset, level)) {
->    8253					pr_warn("Couldn't set 2nd fan level, disabling support\n");
->    8254					tp_features.second_fan_ctl = 0;
->    8255				}
->    8256				fan_select_fan1();
->    8257	
->    8258			}
->    8259			if (!acpi_ec_write(fan_status_offset, level))
->    8260				return -EIO;
->    8261			else
->    8262				tp_features.fan_ctrl_status_undef = 0;
->    8263			break;
->    8264	
->    8265		case TPACPI_FAN_WR_ACPI_FANW:
->    8266			if (!(level & TP_EC_FAN_AUTO) && (level < 0 || level > 7))
->    8267				return -EINVAL;
->    8268			if (level & TP_EC_FAN_FULLSPEED)
->    8269				return -EINVAL;
->    8270	
->    8271			if (level & TP_EC_FAN_AUTO) {
->    8272				if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x05)) {
->    8273					rc = -EIO;
->    8274					break;
->    8275				}
->    8276				if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0x00)) {
->    8277					rc = -EIO;
->    8278					break;
->    8279				}
->    8280			} else {
->    8281				if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x45)) {
->    8282					rc = -EIO;
->    8283					break;
->    8284				}
->    8285				if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0xff)) {
->    8286					rc = -EIO;
->    8287					break;
->    8288				}
->    8289				if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8102, level * 100 / 7)) {
->    8290					rc = -EIO;
->    8291					break;
->    8292				}
->    8293			}
->    8294			break;
->    8295	
->    8296		default:
->    8297			return -ENXIO;
->    8298		}
->    8299	
->    8300		vdbg_printk(TPACPI_DBG_FAN,
->    8301			"fan control: set fan control register to 0x%02x\n", level);
->    8302		return 0;
->    8303	}
->    8304	
-> 
+-- 
+I'm available for contract & employment work, please contact me if
+interested.
