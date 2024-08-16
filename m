@@ -1,605 +1,373 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B66F1AC8B8;
-	Fri, 16 Aug 2024 13:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4E861AD9D6;
+	Fri, 16 Aug 2024 14:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723816595; cv=none; b=rOftdIeryWb6Y2N2qxZFCg4xl68UXHebvR2p80BskxmL5OqgOkHIPtNELD51GsojPejc+kuMea+fLCmKeKNEWMdw0rieu4UJJX6Y8221u/2FpEg1lF+p4KUllHReG/lebzkP+MpPs6+d1ibOKenriZ9Kf/xyhFyl/C/J73qPxTQ=
+	t=1723817716; cv=none; b=ndv9mnslq1EWBNqExFA3jt+0EHU1KQHJYHz3D3Kw/djbGyCWI22TSdj6vQ9JpaYvEqfXn7h2SE0sD+oDlU/eYYGhKs0neWge+38diHCWJxR0Q0RAL1+mN999FLWhBHGkefBB4ryTCIZO0Ab40LP5yEHj7Sn2KyB2CG2uH0adThc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723816595; c=relaxed/simple;
-	bh=r7zTA+blH6weUVtpm4W8UG1D4Gj7CZ+wGWgBUL2MeRA=;
+	s=arc-20240116; t=1723817716; c=relaxed/simple;
+	bh=kxQ8LdJsE9TFVX22ZLXdxRAkZCbvjNZRZjxJVwJD5G8=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=IZlvT3pVtbUCBqkqS+wGNFO9IN6tU5LpTz8L37n7GuSFFuE9CGSURARPvNlWxCxY9AQj+6kDK1WA23OSf10yFybB5IGO6JysOafP8r/ppv/kr8gOXVf2688uV9i/wuwiIpJDkJKvt5VKb1xAU3L6YWlXtxTNERrxS3uxdsBmW1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iuGyZgT3; arc=none smtp.client-ip=192.198.163.15
+	 MIME-Version:Content-Type; b=ZSjJtBRLUQ/Jd5SuFzjeIQ4oXUSKs/U1Ar84qwwAeBCsMqKQr/MBo26LH/rHy4D1P7Th28ZO2n+XvAqoOqQ4cvIysLufcVAnlc0ZdCjUKHnB1SmyEWy6PfncKhNS1G/tkS5KICZMHY/7TAXlZA84yVMz3oKRf2Mp1OLUMnBBio0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ii+L9pyz; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iuGyZgT3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ii+L9pyz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723816594; x=1755352594;
+  t=1723817715; x=1755353715;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=r7zTA+blH6weUVtpm4W8UG1D4Gj7CZ+wGWgBUL2MeRA=;
-  b=iuGyZgT3aEKUmEvAWOQsjr0mrFav5nREr9oAAHSaR5jntYXno1+E1el5
-   +dzxa0sSFgSqYqCAp3QN9dqo60F6380bSf0FwAbOjEdDZmcOi8KUo/0gH
-   4oifyp7LCTaZ+8EiOAI4HIrLbLT1+k2TGDlXL0/RpEirNcY/2Fqvuv5h4
-   7Vh32bZexLs6SPrdhDXeEkzxz2dd/1gtkilrP2p/LS6E9x9vOYbsGGL0x
-   v+HHC8Kf+XXx10gGwqvJRIeSUC2eLOVMBikMyX/Fc7ncrKftn1wv+ExJA
-   Oxi21GjsG6dFGVRP5Hbx84Bm88oZsIOj4yRduwWcHYGiEQTMnbuM4Wgi7
-   Q==;
-X-CSE-ConnectionGUID: R82b3bGUQHq0pV3CVblGOA==
-X-CSE-MsgGUID: B3JGCTT9RpKztmADfRuFYw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11166"; a="22272475"
+  bh=kxQ8LdJsE9TFVX22ZLXdxRAkZCbvjNZRZjxJVwJD5G8=;
+  b=Ii+L9pyzXpwWpcjjL1pfUuYL7MLkVDKWn/TjQHRbVJ6KGuvh93faNtjM
+   ofE1hI2TPlm8y4Lb3S61JPgwD+LlA0ES7FoxwtYLGA16KEjNiJBZPoZMI
+   2DQKRLqeOcGg++OoPXK2W+rULGffaSX6CNYMkSQa4eLKsbJ/ZqOzNlZGP
+   hLVxvhH7TN/hMT7E1kemdSHoDGWaJ94prkmVptDxKaO33cTF66nlL+Sg3
+   S4331txxo00ozXN7GzmszmKdpEXcbipiEqNjJpDZJ9Uzqo6gd9RT99Ecf
+   S/f3MsRMaA8lNvJyfgb5biSFQldzLv7poRejUhshkvY9qLUvDgy1znN3X
+   A==;
+X-CSE-ConnectionGUID: lLtHnH/rREWDsmQ+yjFg0A==
+X-CSE-MsgGUID: yQqE68ZNRUOOMP67ML7oHQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11166"; a="32748830"
 X-IronPort-AV: E=Sophos;i="6.10,151,1719903600"; 
-   d="scan'208";a="22272475"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2024 06:56:32 -0700
-X-CSE-ConnectionGUID: Cv0KyiwISXaAnpkbYP43GQ==
-X-CSE-MsgGUID: bikPDXcESZSmQ5xEi32xVQ==
+   d="scan'208";a="32748830"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2024 07:15:14 -0700
+X-CSE-ConnectionGUID: Q6NfC0G6RaWw2d3Q3weuzQ==
+X-CSE-MsgGUID: mLHjXzO3QrOvlSqjg/nRZw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,151,1719903600"; 
-   d="scan'208";a="90409473"
+   d="scan'208";a="64081123"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.28])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2024 06:56:29 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2024 07:15:11 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 16 Aug 2024 16:56:24 +0300 (EEST)
-To: Andres Salomon <dilinger@queued.net>
-cc: LKML <linux-kernel@vger.kernel.org>, 
-    =?ISO-8859-15?Q?Pali_Roh=E1r?= <pali@kernel.org>, 
-    platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, 
-    Sebastian Reichel <sre@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-    linux-pm@vger.kernel.org, Dell.Client.Kernel@dell.com
-Subject: Re: [PATCH v3 1/2] platform/x86:dell-laptop: Add knobs to change 
- battery charge settings
-In-Reply-To: <20240815192848.3489d3e1@5400>
-Message-ID: <2feb1cf1-7597-9762-0864-87dc9c2c5559@linux.intel.com>
-References: <20240815192848.3489d3e1@5400>
+Date: Fri, 16 Aug 2024 17:15:07 +0300 (EEST)
+To: Matthias Fetzer <kontakt@matthias-fetzer.de>
+cc: hmh@hmh.eng.br, Hans de Goede <hdegoede@redhat.com>, 
+    ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] platform/x86: thinkpad_acpi: Add Thinkpad Edge E531
+ fan support
+In-Reply-To: <20240816141228.134529-1-kontakt@matthias-fetzer.de>
+Message-ID: <212dd31b-7506-31ae-afde-7ebb93b24e24@linux.intel.com>
+References: <e1fe661c-281d-9d59-be53-968f7a0bc18a@linux.intel.com> <20240816141228.134529-1-kontakt@matthias-fetzer.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-413153107-1723816584=:1024"
+Content-Type: multipart/mixed; boundary="8323328-239761419-1723817707=:1024"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-413153107-1723816584=:1024
-Content-Type: text/plain; charset=UTF-8
+--8323328-239761419-1723817707=:1024
+Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Thu, 15 Aug 2024, Andres Salomon wrote:
+On Fri, 16 Aug 2024, Matthias Fetzer wrote:
 
-> The Dell BIOS allows you to set custom charging modes, which is useful
-> in particular for extending battery life. This adds support for tweaking
-> those various settings from Linux via sysfs knobs. One might, for
-> example, have their laptop plugged into power at their desk the vast
-> majority of the time and choose fairly aggressive battery-saving
-> settings (eg, only charging once the battery drops below 50% and only
-> charging up to 80%). When leaving for a trip, it would be more useful
-> to instead switch to a standard charging mode (top off at 100%, charge
-> any time power is available). Rebooting into the BIOS to change the
-> charging mode settings is a hassle.
+> Fan control on the E531 is done using the ACPI methods FANG and
+> FANW. The correct parameters and register values were found by
+> analyzing EC firmware as well as DSDT. This has been tested on
+> my Thinkpad Edge E531 (6885CTO, BIOS HEET52WW 1.33).
 >=20
-> For the Custom charging type mode, we reuse the common
-> charge_control_{start,end}_threshold sysfs power_supply entries. The
-> BIOS also has a bunch of other charging modes (with varying levels of
-> usefulness), so this also adds a 'charge_type' sysfs entry that maps the
-> standard values to Dell-specific ones and documents those mappings in
-> sysfs-class-power-dell.
->=20
-> This work is based on a patch by Perry Yuan <perry_yuan@dell.com> and
-> Limonciello Mario <Mario_Limonciello@Dell.com> submitted back in 2020:
-> https://lore.kernel.org/all/20200729065424.12851-1-Perry_Yuan@Dell.com/
-> Both of their email addresses bounce, so I'm assuming they're no longer
-> with the company. I've reworked most of the patch to make it smaller and
-> cleaner.
->=20
-> Signed-off-by: Andres Salomon <dilinger@queued.net>
-> ---
-> Changes in v3:
->     - switch tokenid and class types
->     - be stricter with results from both userspace and BIOS
->     - no longer allow failed BIOS reads
->     - rename/move dell_send_request_by_token_loc, and add helper function
->     - only allow registration for BAT0
->     - rename charge_type modes to match power_supply names
-> Changes in v2, based on extensive feedback from Pali Roh=C3=A1r <pali@ker=
-nel.org>:
->     - code style changes
->     - change battery write API to use token->value instead of passed valu=
-e
->     - stop caching current mode, instead querying SMBIOS as needed
->     - drop the separate list of charging modes enum
->     - rework the list of charging mode strings
->     - query SMBIOS for supported charging modes
->     - split dell_battery_custom_set() up
-> ---
->  .../ABI/testing/sysfs-class-power-dell        |  33 ++
->  drivers/platform/x86/dell/Kconfig             |   1 +
->  drivers/platform/x86/dell/dell-laptop.c       | 316 ++++++++++++++++++
->  drivers/platform/x86/dell/dell-smbios.h       |   7 +
->  4 files changed, 357 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-power-dell
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-class-power-dell b/Documenta=
-tion/ABI/testing/sysfs-class-power-dell
-> new file mode 100644
-> index 000000000000..d8c542177558
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-power-dell
-> @@ -0,0 +1,33 @@
-> +What:=09=09/sys/class/power_supply/<supply_name>/charge_type
-> +Date:=09=09August 2024
-> +KernelVersion:=096.12
-> +Contact:=09linux-pm@vger.kernel.org
-> +Description:
-> +=09=09Select the charging algorithm to use for the (primary)
-> +=09=09battery.
-> +
-> +=09=09Standard:
-> +=09=09=09Fully charge the battery at a moderate rate.
-> +=09=09Fast:
-> +=09=09=09Quickly charge the battery using fast-charge
-> +=09=09=09technology. This is harder on the battery than
-> +=09=09=09standard charging and may lower its lifespan.
-> +=09=09=09The Dell BIOS calls this ExpressCharge=E2=84=A2.
-> +=09=09Trickle:
-> +=09=09=09Users who primarily operate the system while
-> +=09=09=09plugged into an external power source can extend
-> +=09=09=09battery life with this mode. The Dell BIOS calls
-> +=09=09=09this "Primarily AC Use".
-> +=09=09Adaptive:
-> +=09=09=09Automatically optimize battery charge rate based
-> +=09=09=09on typical usage pattern.
-> +=09=09Custom:
-> +=09=09=09Use the charge_control_* properties to determine
-> +=09=09=09when to start and stop charging. Advanced users
-> +=09=09=09can use this to drastically extend battery life.
-> +
-> +=09=09Access: Read, Write
-> +=09=09Valid values:
-> +=09=09=09      "Standard", "Fast", "Trickle",
-> +=09=09=09      "Adaptive", "Custom"
-> +
-> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/del=
-l/Kconfig
-> index 85a78ef91182..02405793163c 100644
-> --- a/drivers/platform/x86/dell/Kconfig
-> +++ b/drivers/platform/x86/dell/Kconfig
-> @@ -49,6 +49,7 @@ config DELL_LAPTOP
->  =09default m
->  =09depends on DMI
->  =09depends on BACKLIGHT_CLASS_DEVICE
-> +=09depends on ACPI_BATTERY
->  =09depends on ACPI_VIDEO || ACPI_VIDEO =3D n
->  =09depends on RFKILL || RFKILL =3D n
->  =09depends on DELL_WMI || DELL_WMI =3D n
-> diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x=
-86/dell/dell-laptop.c
-> index 6552dfe491c6..8cc05f0fab91 100644
-> --- a/drivers/platform/x86/dell/dell-laptop.c
-> +++ b/drivers/platform/x86/dell/dell-laptop.c
-> @@ -22,11 +22,13 @@
->  #include <linux/io.h>
->  #include <linux/rfkill.h>
->  #include <linux/power_supply.h>
-> +#include <linux/sysfs.h>
->  #include <linux/acpi.h>
->  #include <linux/mm.h>
->  #include <linux/i8042.h>
->  #include <linux/debugfs.h>
->  #include <linux/seq_file.h>
-> +#include <acpi/battery.h>
->  #include <acpi/video.h>
->  #include "dell-rbtn.h"
->  #include "dell-smbios.h"
-> @@ -99,6 +101,18 @@ static bool force_rfkill;
->  static bool micmute_led_registered;
->  static bool mute_led_registered;
-> =20
-> +static const struct {
-> +=09int token;
-> +=09const char *label;
-> +} battery_modes[] =3D {
+> Signed-off-by: Matthias Fetzer <kontakt@matthias-fetzer.de>
 
-Please don't try to do this in one go but split it into two (define and=20
-then declaration of the variable).
-
-> +=09{ BAT_STANDARD_MODE_TOKEN, "Standard" },
-> +=09{ BAT_EXPRESS_MODE_TOKEN, "Fast" },
-> +=09{ BAT_PRI_AC_MODE_TOKEN, "Trickle" },
-> +=09{ BAT_ADAPTIVE_MODE_TOKEN, "Adaptive" },
-> +=09{ BAT_CUSTOM_MODE_TOKEN, "Custom" },
-
-I suggest aligning the strings with tabs for better readability.
-
-> +};
-> +static u32 battery_supported_modes;
-> +
->  module_param(force_rfkill, bool, 0444);
->  MODULE_PARM_DESC(force_rfkill, "enable rfkill on non whitelisted models"=
-);
-> =20
-> @@ -353,6 +367,32 @@ static const struct dmi_system_id dell_quirks[] __in=
-itconst =3D {
->  =09{ }
->  };
-> =20
-> +/* -1 is a sentinel value, telling us to use token->value */
-> +#define USE_TVAL ((u32) -1)
-> +static int dell_send_request_for_tokenid(struct calling_interface_buffer=
- *buffer,
-> +=09=09=09=09=09 u16 class, u16 select, u16 tokenid,
-> +=09=09=09=09=09 u32 val)
-> +{
-> +=09struct calling_interface_token *token;
-> +
-> +=09token =3D dell_smbios_find_token(tokenid);
-> +=09if (!token)
-> +=09=09return -ENODEV;
-> +
-> +=09if (val =3D=3D USE_TVAL)
-> +=09=09val =3D token->value;
-> +
-> +=09dell_fill_request(buffer, token->location, val, 0, 0);
-> +=09return dell_send_request(buffer, class, select);
-> +}
-> +
-> +static inline int dell_set_std_token_value(struct calling_interface_buff=
-er *buffer,
-> +=09=09u16 tokenid, u32 value)
-> +{
-> +=09return dell_send_request_for_tokenid(buffer, CLASS_TOKEN_WRITE,
-> +=09=09=09SELECT_TOKEN_STD, tokenid, value);
-> +}
-> +
->  /*
->   * Derived from information in smbios-wireless-ctl:
->   *
-> @@ -2183,6 +2223,279 @@ static struct led_classdev mute_led_cdev =3D {
->  =09.default_trigger =3D "audio-mute",
->  };
-> =20
-> +static int dell_battery_set_mode(const u16 tokenid)
-> +{
-> +=09struct calling_interface_buffer buffer;
-> +
-> +=09return dell_set_std_token_value(&buffer, tokenid, USE_TVAL);
-> +}
-> +
-> +static int dell_battery_read(const u16 tokenid)
-> +{
-> +=09struct calling_interface_buffer buffer;
-> +=09int err;
-> +
-> +=09err =3D dell_send_request_for_tokenid(&buffer, CLASS_TOKEN_READ,
-> +=09=09=09SELECT_TOKEN_STD, tokenid, 0);
-> +=09if (err)
-> +=09=09return err;
-> +
-> +=09if (buffer.output[1] > INT_MAX)
-> +=09=09return -EIO;
-> +
-> +=09return buffer.output[1];
-> +}
-> +
-> +static bool dell_battery_mode_is_active(const u16 tokenid)
-> +{
-> +=09struct calling_interface_token *token;
-> +=09int ret;
-> +
-> +=09ret =3D dell_battery_read(tokenid);
-> +=09if (ret < 0)
-> +=09=09return false;
-> +
-> +=09token =3D dell_smbios_find_token(tokenid);
-> +=09/* token's already verified by dell_battery_read() */
-> +
-> +=09return token->value =3D=3D (u16) ret;
-> +}
-> +
-> +/*
-> + * The rules: the minimum start charging value is 50%. The maximum
-> + * start charging value is 95%. The minimum end charging value is
-> + * 55%. The maximum end charging value is 100%. And finally, there
-> + * has to be at least a 5% difference between start & end values.
-> + */
-> +#define CHARGE_START_MIN=0950
-> +#define CHARGE_START_MAX=0995
-> +#define CHARGE_END_MIN=09=0955
-> +#define CHARGE_END_MAX=09=09100
-> +#define CHARGE_MIN_DIFF=09=095
-> +
-> +static int dell_battery_set_custom_charge_start(int start)
-> +{
-> +=09struct calling_interface_buffer buffer;
-> +=09int end;
-> +
-> +=09if (start < CHARGE_START_MIN)
-> +=09=09start =3D CHARGE_START_MIN;
-> +=09else if (start > CHARGE_START_MAX)
-> +=09=09start =3D CHARGE_START_MAX;
-
-We have clamp().
-
-> +
-> +=09end =3D dell_battery_read(BAT_CUSTOM_CHARGE_END);
-> +=09if (end < 0)
-> +=09=09return end;
-> +=09if ((end - start) < CHARGE_MIN_DIFF)
-
-Extra parenthesis.
-
-> +=09=09start =3D end - CHARGE_MIN_DIFF;
-> +
-> +=09return dell_set_std_token_value(&buffer, BAT_CUSTOM_CHARGE_START,
-> +=09=09=09start);
-> +}
-> +
-> +static int dell_battery_set_custom_charge_end(int end)
-> +{
-> +=09struct calling_interface_buffer buffer;
-> +=09int start;
-> +
-> +=09if (end < CHARGE_END_MIN)
-> +=09=09end =3D CHARGE_END_MIN;
-> +=09else if (end > CHARGE_END_MAX)
-> +=09=09end =3D CHARGE_END_MAX;
-
-clamp.
-
-> +=09start =3D dell_battery_read(BAT_CUSTOM_CHARGE_START);
-> +=09if (start < 0)
-> +=09=09return start;
-> +=09if ((end - start) < CHARGE_MIN_DIFF)
-
-Extra parenthesis.
-
-> +=09=09end =3D start + CHARGE_MIN_DIFF;
-> +
-> +=09return dell_set_std_token_value(&buffer, BAT_CUSTOM_CHARGE_END, end);
-> +}
-> +
-> +static ssize_t charge_type_show(struct device *dev,
-> +=09=09struct device_attribute *attr,
-> +=09=09char *buf)
-> +{
-> +=09ssize_t count =3D 0;
-> +=09int i;
-> +
-> +=09for (i =3D 0; i < ARRAY_SIZE(battery_modes); i++) {
-> +=09=09bool active;
-> +
-> +=09=09if (!(battery_supported_modes & BIT(i)))
-
-Why not store this supported information into battery_modes itself?
-What's the benefit of obfuscation it with the extra variable & BIT()?
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
 --=20
  i.
 
-> +=09=09=09continue;
+> ---
+>=20
+> Changes in v4:
+>     - Remove unnecessary variable
+> Changes in v3:
+>     - Add missing newline
+>     - Remove redundant code
+> Changes in v2:
+>     - Fix typo in EC memory description
+>     - Split plausibilty check for better readability
+>=20
+>  drivers/platform/x86/thinkpad_acpi.c | 143 ++++++++++++++++++++++++++-
+>  1 file changed, 142 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/=
+thinkpad_acpi.c
+> index 397b409064c9..96c58bc59018 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -7751,6 +7751,28 @@ static struct ibm_struct volume_driver_data =3D {
+>   * =09EC 0x2f (HFSP) might be available *for reading*, but do not use
+>   * =09it for writing.
+>   *
+> + * TPACPI_FAN_RD_ACPI_FANG:
+> + * =09ACPI FANG method: returns fan control register
+> + *
+> + *=09Takes one parameter which is 0x8100 plus the offset to EC memory
+> + *=09address 0xf500 and returns the byte at this address.
+> + *
+> + *=090xf500:
+> + *=09=09When the value is less than 9 automatic mode is enabled
+> + *=090xf502:
+> + *=09=09Contains the current fan speed from 0-100%
+> + *=090xf506:
+> + *=09=09Bit 7 has to be set in order to enable manual control by
+> + *=09=09writing a value >=3D 9 to 0xf500
+> + *
+> + * TPACPI_FAN_WR_ACPI_FANW:
+> + * =09ACPI FANG method: sets fan control registers
+> + *
+> + * =09Takes 0x8100 plus the offset to EC memory address 0xf500 and the
+> + * =09value to be written there as parameters.
+> + *
+> + *=09see TPACPI_FAN_RD_ACPI_FANG
+> + *
+>   * TPACPI_FAN_WR_TPEC:
+>   * =09ThinkPad EC register 0x2f (HFSP): fan control loop mode
+>   * =09Supported on almost all ThinkPads
+> @@ -7884,6 +7906,7 @@ enum {=09=09=09=09=09/* Fan control constants */
+>  enum fan_status_access_mode {
+>  =09TPACPI_FAN_NONE =3D 0,=09=09/* No fan status or control */
+>  =09TPACPI_FAN_RD_ACPI_GFAN,=09/* Use ACPI GFAN */
+> +=09TPACPI_FAN_RD_ACPI_FANG,=09/* Use ACPI FANG */
+>  =09TPACPI_FAN_RD_TPEC,=09=09/* Use ACPI EC regs 0x2f, 0x84-0x85 */
+>  =09TPACPI_FAN_RD_TPEC_NS,=09=09/* Use non-standard ACPI EC regs (eg: L13=
+ Yoga gen2 etc.) */
+>  };
+> @@ -7891,6 +7914,7 @@ enum fan_status_access_mode {
+>  enum fan_control_access_mode {
+>  =09TPACPI_FAN_WR_NONE =3D 0,=09=09/* No fan control */
+>  =09TPACPI_FAN_WR_ACPI_SFAN,=09/* Use ACPI SFAN */
+> +=09TPACPI_FAN_WR_ACPI_FANW,=09/* Use ACPI FANW */
+>  =09TPACPI_FAN_WR_TPEC,=09=09/* Use ACPI EC reg 0x2f */
+>  =09TPACPI_FAN_WR_ACPI_FANS,=09/* Use ACPI FANS and EC reg 0x2f */
+>  };
+> @@ -7924,9 +7948,13 @@ TPACPI_HANDLE(fans, ec, "FANS");=09/* X31, X40, X4=
+1 */
+>  TPACPI_HANDLE(gfan, ec, "GFAN",=09/* 570 */
+>  =09   "\\FSPD",=09=09/* 600e/x, 770e, 770x */
+>  =09   );=09=09=09/* all others */
+> +TPACPI_HANDLE(fang, ec, "FANG",=09/* E531 */
+> +=09   );=09=09=09/* all others */
+>  TPACPI_HANDLE(sfan, ec, "SFAN",=09/* 570 */
+>  =09   "JFNS",=09=09/* 770x-JL */
+>  =09   );=09=09=09/* all others */
+> +TPACPI_HANDLE(fanw, ec, "FANW",=09/* E531 */
+> +=09   );=09=09=09/* all others */
+> =20
+>  /*
+>   * Unitialized HFSP quirk: ACPI DSDT and EC fail to initialize the
+> @@ -8033,6 +8061,23 @@ static int fan_get_status(u8 *status)
+> =20
+>  =09=09break;
+>  =09}
+> +=09case TPACPI_FAN_RD_ACPI_FANG: {
+> +=09=09/* E531 */
+> +=09=09int mode, speed;
 > +
-> +=09=09active =3D dell_battery_mode_is_active(battery_modes[i].token);
-> +=09=09count +=3D sysfs_emit_at(buf, count, active ? "[%s] " : "%s ",
-> +=09=09=09=09battery_modes[i].label);
+> +=09=09if (unlikely(!acpi_evalf(fang_handle, &mode, NULL, "dd", 0x8100)))
+> +=09=09=09return -EIO;
+> +=09=09if (unlikely(!acpi_evalf(fang_handle, &speed, NULL, "dd", 0x8102))=
+)
+> +=09=09=09return -EIO;
+> +
+> +=09=09if (likely(status)) {
+> +=09=09=09*status =3D speed * 7 / 100;
+> +=09=09=09if (mode < 9)
+> +=09=09=09=09*status |=3D TP_EC_FAN_AUTO;
+> +=09=09}
+> +
+> +=09=09break;
 > +=09}
+>  =09case TPACPI_FAN_RD_TPEC:
+>  =09=09/* all except 570, 600e/x, 770e, 770x */
+>  =09=09if (unlikely(!acpi_ec_read(fan_status_offset, &s)))
+> @@ -8147,6 +8192,17 @@ static int fan2_get_speed(unsigned int *speed)
+>  =09=09if (speed)
+>  =09=09=09*speed =3D lo ? FAN_RPM_CAL_CONST / lo : 0;
+>  =09=09break;
+> +=09case TPACPI_FAN_RD_ACPI_FANG: {
+> +=09=09/* E531 */
+> +=09=09int speed_tmp;
 > +
-> +=09/* convert the last space to a newline */
-> +=09if (count > 0)
-> +=09=09count--;
-> +=09count +=3D sysfs_emit_at(buf, count, "\n");
+> +=09=09if (unlikely(!acpi_evalf(fang_handle, &speed_tmp, NULL, "dd", 0x81=
+02)))
+> +=09=09=09return -EIO;
 > +
-> +=09return count;
-> +}
+> +=09=09if (likely(speed))
+> +=09=09=09*speed =3D  speed_tmp * 65535 / 100;
+> +=09=09break;
+> +=09}
+> =20
+>  =09default:
+>  =09=09return -ENXIO;
+> @@ -8206,6 +8262,32 @@ static int fan_set_level(int level)
+>  =09=09=09tp_features.fan_ctrl_status_undef =3D 0;
+>  =09=09break;
+> =20
+> +=09case TPACPI_FAN_WR_ACPI_FANW:
+> +=09=09if (!(level & TP_EC_FAN_AUTO) && (level < 0 || level > 7))
+> +=09=09=09return -EINVAL;
+> +=09=09if (level & TP_EC_FAN_FULLSPEED)
+> +=09=09=09return -EINVAL;
 > +
-> +static ssize_t charge_type_store(struct device *dev,
-> +=09=09struct device_attribute *attr,
-> +=09=09const char *buf, size_t size)
-> +{
-> +=09bool matched =3D false;
-> +=09int err, i;
+> +=09=09if (level & TP_EC_FAN_AUTO) {
+> +=09=09=09if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x05)) =
+{
+> +=09=09=09=09return -EIO;
+> +=09=09=09}
+> +=09=09=09if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0x00)) =
+{
+> +=09=09=09=09return -EIO;
+> +=09=09=09}
+> +=09=09} else {
+> +=09=09=09if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x45)) =
+{
+> +=09=09=09=09return -EIO;
+> +=09=09=09}
+> +=09=09=09if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0xff)) =
+{
+> +=09=09=09=09return -EIO;
+> +=09=09=09}
+> +=09=09=09if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8102, level *=
+ 100 / 7)) {
+> +=09=09=09=09return -EIO;
+> +=09=09=09}
+> +=09=09}
+> +=09=09break;
 > +
-> +=09for (i =3D 0; i < ARRAY_SIZE(battery_modes); i++) {
-> +=09=09if (!(battery_supported_modes & BIT(i)))
-> +=09=09=09continue;
-> +
-> +=09=09if (sysfs_streq(battery_modes[i].label, buf)) {
-> +=09=09=09matched =3D true;
+>  =09default:
+>  =09=09return -ENXIO;
+>  =09}
+> @@ -8284,6 +8366,19 @@ static int fan_set_enable(void)
+>  =09=09=09rc =3D 0;
+>  =09=09break;
+> =20
+> +=09case TPACPI_FAN_WR_ACPI_FANW:
+> +=09=09if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x05)) {
+> +=09=09=09rc =3D -EIO;
 > +=09=09=09break;
 > +=09=09}
-> +=09}
-> +=09if (!matched || !(battery_supported_modes & BIT(i)))
-> +=09=09return -EINVAL;
+> +=09=09if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0x00)) {
+> +=09=09=09rc =3D -EIO;
+> +=09=09=09break;
+> +=09=09}
 > +
-> +=09err =3D dell_battery_set_mode(battery_modes[i].token);
-> +=09if (err)
-> +=09=09return err;
+> +=09=09rc =3D 0;
+> +=09=09break;
 > +
-> +=09return size;
-> +}
-> +
-> +static ssize_t charge_control_start_threshold_show(struct device *dev,
-> +=09=09struct device_attribute *attr,
-> +=09=09char *buf)
-> +{
-> +=09int start;
-> +
-> +=09start =3D dell_battery_read(BAT_CUSTOM_CHARGE_START);
-> +=09if (start < 0)
-> +=09=09return start;
-> +
-> +=09if (start > CHARGE_START_MAX)
-> +=09=09return -EIO;
-> +
-> +=09return sysfs_emit(buf, "%d\n", start);
-> +}
-> +
-> +static ssize_t charge_control_start_threshold_store(struct device *dev,
-> +=09=09struct device_attribute *attr,
-> +=09=09const char *buf, size_t size)
-> +{
-> +=09int ret, start;
-> +
-> +=09ret =3D kstrtoint(buf, 10, &start);
-> +=09if (ret)
-> +=09=09return ret;
-> +=09if (start < 0 || start > 100)
-> +=09=09return -EINVAL;
-> +
-> +=09ret =3D dell_battery_set_custom_charge_start(start);
-> +=09if (ret)
-> +=09=09return ret;
-> +
-> +=09return size;
-> +}
-> +
-> +static ssize_t charge_control_end_threshold_show(struct device *dev,
-> +=09=09struct device_attribute *attr,
-> +=09=09char *buf)
-> +{
-> +=09int end;
-> +
-> +=09end =3D dell_battery_read(BAT_CUSTOM_CHARGE_END);
-> +=09if (end < 0)
-> +=09=09return end;
-> +
-> +=09if (end > CHARGE_END_MAX)
-> +=09=09return -EIO;
-> +
-> +=09return sysfs_emit(buf, "%d\n", end);
-> +}
-> +
-> +static ssize_t charge_control_end_threshold_store(struct device *dev,
-> +=09=09struct device_attribute *attr,
-> +=09=09const char *buf, size_t size)
-> +{
-> +=09int ret, end;
-> +
-> +=09ret =3D kstrtouint(buf, 10, &end);
-> +=09if (ret)
-> +=09=09return ret;
-> +=09if (end < 0 || end > 100)
-> +=09=09return -EINVAL;
-> +
-> +=09ret =3D dell_battery_set_custom_charge_end(end);
-> +=09if (ret)
-> +=09=09return ret;
-> +
-> +=09return size;
-> +}
-> +
-> +static DEVICE_ATTR_RW(charge_control_start_threshold);
-> +static DEVICE_ATTR_RW(charge_control_end_threshold);
-> +static DEVICE_ATTR_RW(charge_type);
-> +
-> +static struct attribute *dell_battery_attrs[] =3D {
-> +=09&dev_attr_charge_control_start_threshold.attr,
-> +=09&dev_attr_charge_control_end_threshold.attr,
-> +=09&dev_attr_charge_type.attr,
-> +=09NULL,
-> +};
-> +ATTRIBUTE_GROUPS(dell_battery);
-> +
-> +static int dell_battery_add(struct power_supply *battery,
-> +=09=09struct acpi_battery_hook *hook)
-> +{
-> +=09/* this currently only supports the primary battery */
-> +=09if (strcmp(battery->desc->name, "BAT0") !=3D 0)
-> +=09=09return -ENODEV;
-> +
-> +=09return device_add_groups(&battery->dev, dell_battery_groups);
-> +}
-> +
-> +static int dell_battery_remove(struct power_supply *battery,
-> +=09=09struct acpi_battery_hook *hook)
-> +{
-> +=09device_remove_groups(&battery->dev, dell_battery_groups);
-> +=09return 0;
-> +}
-> +
-> +static struct acpi_battery_hook dell_battery_hook =3D {
-> +=09.add_battery =3D dell_battery_add,
-> +=09.remove_battery =3D dell_battery_remove,
-> +=09.name =3D "Dell Primary Battery Extension",
-> +};
-> +
-> +static u32 __init battery_get_supported_modes(void)
-> +{
-> +=09u32 modes =3D 0;
-> +=09int i;
-> +
-> +=09for (i =3D 0; i < ARRAY_SIZE(battery_modes); i++) {
-> +=09=09if (dell_smbios_find_token(battery_modes[i].token))
-> +=09=09=09modes |=3D BIT(i);
-> +=09}
-> +
-> +=09return modes;
-> +}
-> +
-> +static void __init dell_battery_init(struct device *dev)
-> +{
-> +=09battery_supported_modes =3D battery_get_supported_modes();
-> +
-> +=09if (battery_supported_modes !=3D 0)
-> +=09=09battery_hook_register(&dell_battery_hook);
-> +}
-> +
-> +static void __exit dell_battery_exit(void)
-> +{
-> +=09if (battery_supported_modes !=3D 0)
-> +=09=09battery_hook_unregister(&dell_battery_hook);
-> +}
-> +
->  static int __init dell_init(void)
->  {
->  =09struct calling_interface_token *token;
-> @@ -2219,6 +2532,7 @@ static int __init dell_init(void)
->  =09=09touchpad_led_init(&platform_device->dev);
+>  =09default:
+>  =09=09rc =3D -ENXIO;
+>  =09}
+> @@ -8326,6 +8421,22 @@ static int fan_set_disable(void)
+>  =09=09=09fan_control_desired_level =3D 0;
+>  =09=09break;
 > =20
->  =09kbd_led_init(&platform_device->dev);
-> +=09dell_battery_init(&platform_device->dev);
+> +=09case TPACPI_FAN_WR_ACPI_FANW:
+> +=09=09if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x45)) {
+> +=09=09=09rc =3D -EIO;
+> +=09=09=09break;
+> +=09=09}
+> +=09=09if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0xff)) {
+> +=09=09=09rc =3D -EIO;
+> +=09=09=09break;
+> +=09=09}
+> +=09=09if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8102, 0x00)) {
+> +=09=09=09rc =3D -EIO;
+> +=09=09=09break;
+> +=09=09}
+> +=09=09rc =3D 0;
+> +=09=09break;
+> +
+>  =09default:
+>  =09=09rc =3D -ENXIO;
+>  =09}
+> @@ -8359,6 +8470,23 @@ static int fan_set_speed(int speed)
+>  =09=09=09rc =3D -EINVAL;
+>  =09=09break;
 > =20
->  =09dell_laptop_dir =3D debugfs_create_dir("dell_laptop", NULL);
->  =09debugfs_create_file("rfkill", 0444, dell_laptop_dir, NULL,
-> @@ -2293,6 +2607,7 @@ static int __init dell_init(void)
->  =09if (mute_led_registered)
->  =09=09led_classdev_unregister(&mute_led_cdev);
->  fail_led:
-> +=09dell_battery_exit();
->  =09dell_cleanup_rfkill();
->  fail_rfkill:
->  =09platform_device_del(platform_device);
-> @@ -2311,6 +2626,7 @@ static void __exit dell_exit(void)
->  =09if (quirks && quirks->touchpad_led)
->  =09=09touchpad_led_exit();
->  =09kbd_led_exit();
-> +=09dell_battery_exit();
->  =09backlight_device_unregister(dell_backlight_device);
->  =09if (micmute_led_registered)
->  =09=09led_classdev_unregister(&micmute_led_cdev);
-> diff --git a/drivers/platform/x86/dell/dell-smbios.h b/drivers/platform/x=
-86/dell/dell-smbios.h
-> index ea0cc38642a2..77baa15eb523 100644
-> --- a/drivers/platform/x86/dell/dell-smbios.h
-> +++ b/drivers/platform/x86/dell/dell-smbios.h
-> @@ -33,6 +33,13 @@
->  #define KBD_LED_AUTO_50_TOKEN=090x02EB
->  #define KBD_LED_AUTO_75_TOKEN=090x02EC
->  #define KBD_LED_AUTO_100_TOKEN=090x02F6
-> +#define BAT_PRI_AC_MODE_TOKEN=090x0341
-> +#define BAT_ADAPTIVE_MODE_TOKEN=090x0342
-> +#define BAT_CUSTOM_MODE_TOKEN=090x0343
-> +#define BAT_STANDARD_MODE_TOKEN=090x0346
-> +#define BAT_EXPRESS_MODE_TOKEN=090x0347
-> +#define BAT_CUSTOM_CHARGE_START=090x0349
-> +#define BAT_CUSTOM_CHARGE_END=090x034A
->  #define GLOBAL_MIC_MUTE_ENABLE=090x0364
->  #define GLOBAL_MIC_MUTE_DISABLE=090x0365
->  #define GLOBAL_MUTE_ENABLE=090x058C
+> +=09case TPACPI_FAN_WR_ACPI_FANW:
+> +=09=09if (speed >=3D 0 && speed <=3D 65535) {
+> +=09=09=09if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x45)) =
+{
+> +=09=09=09=09rc =3D -EIO;
+> +=09=09=09=09break;
+> +=09=09=09}
+> +=09=09=09if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0xff)) =
+{
+> +=09=09=09=09rc =3D -EIO;
+> +=09=09=09=09break;
+> +=09=09=09}
+> +=09=09=09if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd",
+> +=09=09=09=09=090x8102, speed * 100 / 65535))
+> +=09=09=09=09rc =3D -EIO;
+> +=09=09} else
+> +=09=09=09rc =3D -EINVAL;
+> +=09=09break;
+> +
+>  =09default:
+>  =09=09rc =3D -ENXIO;
+>  =09}
+> @@ -8701,6 +8829,10 @@ static int __init fan_init(struct ibm_init_struct =
+*iibm)
+>  =09=09TPACPI_ACPIHANDLE_INIT(gfan);
+>  =09=09TPACPI_ACPIHANDLE_INIT(sfan);
+>  =09}
+> +=09if (tpacpi_is_lenovo()) {
+> +=09=09TPACPI_ACPIHANDLE_INIT(fang);
+> +=09=09TPACPI_ACPIHANDLE_INIT(fanw);
+> +=09}
+> =20
+>  =09quirks =3D tpacpi_check_quirks(fan_quirk_table,
+>  =09=09=09=09     ARRAY_SIZE(fan_quirk_table));
+> @@ -8720,6 +8852,9 @@ static int __init fan_init(struct ibm_init_struct *=
+iibm)
+>  =09if (gfan_handle) {
+>  =09=09/* 570, 600e/x, 770e, 770x */
+>  =09=09fan_status_access_mode =3D TPACPI_FAN_RD_ACPI_GFAN;
+> +=09} else if (fang_handle) {
+> +=09=09/* E531 */
+> +=09=09fan_status_access_mode =3D TPACPI_FAN_RD_ACPI_FANG;
+>  =09} else {
+>  =09=09/* all other ThinkPads: note that even old-style
+>  =09=09 * ThinkPad ECs supports the fan control register */
+> @@ -8766,6 +8901,11 @@ static int __init fan_init(struct ibm_init_struct =
+*iibm)
+>  =09=09fan_control_access_mode =3D TPACPI_FAN_WR_ACPI_SFAN;
+>  =09=09fan_control_commands |=3D
+>  =09=09    TPACPI_FAN_CMD_LEVEL | TPACPI_FAN_CMD_ENABLE;
+> +=09} else if (fanw_handle) {
+> +=09=09/* E531 */
+> +=09=09fan_control_access_mode =3D TPACPI_FAN_WR_ACPI_FANW;
+> +=09=09fan_control_commands |=3D
+> +=09=09    TPACPI_FAN_CMD_LEVEL | TPACPI_FAN_CMD_SPEED | TPACPI_FAN_CMD_E=
+NABLE;
+>  =09} else {
+>  =09=09if (!gfan_handle) {
+>  =09=09=09/* gfan without sfan means no fan control */
+> @@ -8917,6 +9057,7 @@ static int fan_read(struct seq_file *m)
+> =20
+>  =09case TPACPI_FAN_RD_TPEC_NS:
+>  =09case TPACPI_FAN_RD_TPEC:
+> +=09case TPACPI_FAN_RD_ACPI_FANG:
+>  =09=09/* all except 570, 600e/x, 770e, 770x */
+>  =09=09rc =3D fan_get_status_safe(&status);
+>  =09=09if (rc)
+> @@ -8937,7 +9078,7 @@ static int fan_read(struct seq_file *m)
+>  =09=09=09 * No other levels settings available
+>  =09=09=09 */
+>  =09=09=09seq_printf(m, "level:\t\t%s\n", status & FAN_NS_CTRL ? "unknown=
+" : "auto");
+> -=09=09} else {
+> +=09=09} else if (fan_status_access_mode =3D=3D TPACPI_FAN_RD_TPEC) {
+>  =09=09=09if (status & TP_EC_FAN_FULLSPEED)
+>  =09=09=09=09/* Disengaged mode takes precedence */
+>  =09=09=09=09seq_printf(m, "level:\t\tdisengaged\n");
 >=20
---8323328-413153107-1723816584=:1024--
+--8323328-239761419-1723817707=:1024--
