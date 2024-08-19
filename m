@@ -1,66 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79A91667C7
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Aug 2024 11:37:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E5D166F3B
+	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Aug 2024 11:57:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724067432; cv=none; b=Zd2raQ+Y7pVUNFPUujyE4VYGufuJzsCWoUKo4WVzUhQ/WVuAH6XrmqTDCssYtf+adTBekSPPF+eEWZFr9fTPDos2oLRgfbQOB7tXL8KeX/dOk2dJeNfqw3R07dBxUVFx3qrwRisHwpXyuzCOzXS1Ldha83yq1bX79MaCc2hIVWY=
+	t=1724068647; cv=none; b=mI12ipIlkMi0mWEgYjT7JJO0uPCbYc/GDUkr0MidufnAVyEXy8/2dhIOBqNmIhADlIJLnEA8NATtRFRIYOvskBUcpmS75JfrxlnJC/2WXRHkTydzXYhAx7pjoeT8epCnvTbTmtrwzlqryhJ279wouSWl3jZzW56XeWOQKbyBYGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724067432; c=relaxed/simple;
-	bh=opTswjUzHppgEeloIcv07JHGBQ7IAkSFD3TNPDbUU80=;
+	s=arc-20240116; t=1724068647; c=relaxed/simple;
+	bh=ij/RhKXAEL9cVBO15IYVkcQPnrzyZPTaGryR8ECRDDs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lVSvJCXS1vQXY2TE0eFqnOxeeLKnoZreSTVoJRtPrzY+5cfphxQmh5K6K0stspFSAUT1nJ8ZmH/fDlyl6hRMtOLClWIgmJfiDay0m39EEQfJxsAJkne5qGOZ00uNBVt3lo76vtp4IJuP+ywCaZBfh+5ql/DKVnLj/rVQhX5PLPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RnSxAI55; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=dJSPvTTHyByP3jEiyDvI4Oz6aPzbjnEpg5bWfPEuA+5oqXE+erZbd9ufr4bGhA0nyNeM/jo6z6YG31X7bKKdPnxKGHo5DADncwK9zCuz/MkVVTreQ5lFlBWkjPVAIrCd3fVkyR6Zo1QXzlyL25/BvY9ErgX/EmW8tlgQu+52Nrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=doCPUDfm; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RnSxAI55"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="doCPUDfm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724067429;
+	s=mimecast20190719; t=1724068643;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aASggTj8zScZUAMVRuTxe/1yeuEnr9EhJsxLPCIt2Tk=;
-	b=RnSxAI55+fpT80pVcHXUG3CSKEzZ82kJZdID54r/xC8//DfGt72LFlAXQd90EPE1ebMp+z
-	s9RS2QCqy/z5Qnh2cN+8qphEoZTl5GOOTDWbB2RGlBu9+T1QwGC+ZFlfaFUFeE5Y/ExAIw
-	4xljdJ/Dt8ODIHs5aldtQ+KJbysHt6M=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=84PhB6eF89FFZ8ucHgT9n7pmJgWbulzk/3Qj97ioNCk=;
+	b=doCPUDfmbb9RrUFBJlCBcXdCJZ5jLv0wcfehRVkb44p+Z1Ce+DKEfTTdNk1soeIlJVfxnj
+	LntEIU7uQ5d2DAUEFdBlgxHRZjV0GHsSusJcgdGm+C2A056qfsz94e63Ar0T9DTfzKWQQo
+	7c0LSBLcoBkK41qP0uqYuwDeleyxJjo=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-517-whiXY1vJNo-15IavM99phA-1; Mon, 19 Aug 2024 07:37:08 -0400
-X-MC-Unique: whiXY1vJNo-15IavM99phA-1
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-52f00c27b9cso3734091e87.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Aug 2024 04:37:08 -0700 (PDT)
+ us-mta-655-70DVcpPPPyyY8Qn9dsqIdg-1; Mon, 19 Aug 2024 07:57:22 -0400
+X-MC-Unique: 70DVcpPPPyyY8Qn9dsqIdg-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5bec367475bso4913630a12.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Aug 2024 04:57:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724067427; x=1724672227;
+        d=1e100.net; s=20230601; t=1724068641; x=1724673441;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aASggTj8zScZUAMVRuTxe/1yeuEnr9EhJsxLPCIt2Tk=;
-        b=mJSGZpFvrq8tCXJyH4v9/MNkS5/b8obuT7kWyhE99+DLbo9Z1JSDhyMhdFiVo5ovHU
-         /NyVPU6B+3+trQy3puzcxOnrWLLOcMk+bEsMM5ybwFk61EZ/7x989UK99CrCWuiFvsHB
-         Dnd7enU/COoReWbiJAkLjiYWm0NHPGkE9OCFV8N1dG/htLGKIeFARDzcSR05Ay0kTmOx
-         1EjZhA5TZCqQ5M3Ul5iB+WbH9ZYB36z5bZPc9prBOE8rVqqewilxVQ8Twi82vjx+XHCQ
-         P0vrPUmyuezlTzCxonbIAtz1oINmXML08lr3b0pxAq0ex9SGBT/ptXvGXHec7/V+GHnT
-         6Iwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUF2IJkh2cPeF8InY7VabkbVA5g4adJ5H9i6RSq36MEWKetXQg8sYIIdCDzUUgaPT7vhWLg1oYfPe0TVolam62BAcNcRHoDVecQ+ilVLD2KsQ/QVA==
-X-Gm-Message-State: AOJu0Ywnvfj2W+oxrb0ss9QwsA+Gu7XitJMhmRVOS3FPeVYQcjBGjL28
-	65rEWPs5VYvaUIyeitqMcRCeihmR1UpppMqQpI9Gpq/YfhqqP7gUFHraaGmo+fPBQylB5NB3FjY
-	NJAQPqIwEMgVqF9ERAAeZI8gSk5iUxKkklE9u1Tq39bsc4IG6edpjyxHsxPMRVEAHPBKvLRpPHs
-	Mvzu4=
-X-Received: by 2002:a05:6512:3a82:b0:52e:be50:9c55 with SMTP id 2adb3069b0e04-5331c6e9741mr7698987e87.52.1724067426746;
-        Mon, 19 Aug 2024 04:37:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGIOifAQMPVPESrzfbzw8SGRMWYm/N0EKOvxL6PgC0QCoDMGgF5j2CYJuukUYvZTYYfF+aaqA==
-X-Received: by 2002:a05:6512:3a82:b0:52e:be50:9c55 with SMTP id 2adb3069b0e04-5331c6e9741mr7698963e87.52.1724067426137;
-        Mon, 19 Aug 2024 04:37:06 -0700 (PDT)
+        bh=84PhB6eF89FFZ8ucHgT9n7pmJgWbulzk/3Qj97ioNCk=;
+        b=gz5rR+dSW9vKz9JgBZbZuBn64oV+kZ499wBP5J8MIhVldHO3lICkQc/OX+FOZC41rO
+         E29OU/iuMA2Jvbxe0B2OAMakQFUY3odwnKwo3xaLzmum9CR80WemxwcCsR06/r7NxPYO
+         iPoX1c1ICZMn+9UHNjEHEzURbDNq2sPcs+Jw5ZzAagIyHFfSp6MOt3WdG7n0oRJBNdVZ
+         9CRRtRw7N6XDFOvtAgDq3F7jauLcO7UC/cu8O9YqRxGYacavJow2HFx83v+wlCkdsd9o
+         7sOLtYYn8AcRi4wy2ahEj3oTXjvOaUFq94zJ97vTelEEzmondk8u3oO4baHswQ4UI5n0
+         xvhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWqh4lMwzY4PnBR4qIXaa9g2VjR6934BjDKfrMK1y+Pi8A/iLFfnKRcECRCXa3956HSD4az7KeopWg/9oeZhu+fg4LTASrp0FufyPLT9NO45FYuUg==
+X-Gm-Message-State: AOJu0Yx7sxiJMjYjtsn5Newm54o3X3mkE/pqwYzFyHdok7a5IjHPP6uA
+	yNzQIvoCWpI8ABUXDp164lpN4nZ+XQkHR7vQ408Jnn+PJv6fR9DbJ8tLmYmqq6GTE71z13BJdSY
+	LH9koWywBD6rh7N6ffqwASP8BtXkroYyWxsfOLq87hFUcjBu4YYssLdti0Dv773bdOcg6JP8=
+X-Received: by 2002:a05:6402:34d4:b0:5be:ecd9:c73e with SMTP id 4fb4d7f45d1cf-5beecd9cbf3mr4997301a12.2.1724068641331;
+        Mon, 19 Aug 2024 04:57:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGnRo8JGhy8S0tLVgxUpCSUbuvlldmz7SLn5JDTjjd9seJwXdLBAybiRE42CshwTS82wSQmig==
+X-Received: by 2002:a05:6402:34d4:b0:5be:ecd9:c73e with SMTP id 4fb4d7f45d1cf-5beecd9cbf3mr4997268a12.2.1724068640890;
+        Mon, 19 Aug 2024 04:57:20 -0700 (PDT)
 Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a83838c6b07sm626920766b.30.2024.08.19.04.37.05
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bed05f0a30sm3999829a12.30.2024.08.19.04.57.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Aug 2024 04:37:05 -0700 (PDT)
-Message-ID: <bb7926e9-759b-4899-b616-c8c7ffcc9a55@redhat.com>
-Date: Mon, 19 Aug 2024 13:37:05 +0200
+        Mon, 19 Aug 2024 04:57:20 -0700 (PDT)
+Message-ID: <1edadffb-67d9-476e-b0f7-7f3fc34e9592@redhat.com>
+Date: Mon, 19 Aug 2024 13:57:19 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -68,281 +67,119 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86: lg-laptop: Add operation region support
-To: Armin Wolf <W_Armin@gmx.de>, matan@svgalib.org, ghostwind@gmail.com
-Cc: ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240813022903.20567-1-W_Armin@gmx.de>
+Subject: Re: [PATCH v3 0/3] OF support for Surface System Aggregator Module
+To: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>, Maximilian Luz <luzmaximilian@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <quic_kdybcio@quicinc.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>
+References: <20240814-topic-sam-v3-0-a84588aad233@quicinc.com>
 Content-Language: en-US
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240813022903.20567-1-W_Armin@gmx.de>
+In-Reply-To: <20240814-topic-sam-v3-0-a84588aad233@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi,
 
-On 8/13/24 4:29 AM, Armin Wolf wrote:
-> The LEGX0820 ACPI device is expected to provide a custom operation
-> region:
+On 8/14/24 12:27 PM, Konrad Dybcio wrote:
+> Wire up OF support for SSAM drivers, to use with Surface Laptop 7 and
+> other Qualcomm-based devices.
 > 
-> 	OperationRegion (XIN1, 0x8F, Zero, 0x04B0)
->         Field (XIN1, AnyAcc, Lock, Preserve)
->         {
->             DMSG,   8,
->             HDAP,   8,
->             Offset (0x03),
->             AFNM,   8,
->             Offset (0x10),
->             P80B,   8,
->             P81B,   8,
->             P82B,   8,
->             P83B,   8,
->             P84B,   8,
->             P85B,   8,
->             P86B,   8,
->             P87B,   8,
->             Offset (0x20),
->             DTTM,   8,
->             TMP1,   8,
->             LTP1,   8,
->             HTP1,   8,
->             TMP2,   8,
->             LTP2,   8,
->             HTP2,   8,
->             Offset (0x3E8),
->             PMSG,   1600
->         }
+> Patch 3 references compatible strings introduced in [1]
 > 
-> The PMSG field is used by AML code to log debug messages when DMSG is
-> true. Since those debug messages are already logged using the standard
-> ACPI Debug object, we set DMSG unconditionally to 0x00 and ignore any
-> writes to PMSG.
+> [1] https://lore.kernel.org/linux-arm-msm/20240809-topic-sl7-v1-1-2090433d8dfc@quicinc.com/T/#u
 > 
-> The TMPx, LTPx, HTPx and AFNM fields are used to inform the driver when
-> the temperature/(presumably) trip points/fan mode changes. This only
-> happens when the DTTM flag is set.
-> 
-> Unfortunately we have to implement support for this operation region
-> because the AML codes uses code constructs like this one:
-> 
-> 	If (((\_SB.XINI.PLAV != Zero) && (\_SB.XINI.DTTM != Zero)))
-> 
-> The PLAV field gets set to 1 when the driver registers its address space
-> handler, so by default XIN1 should not be accessed.
-> 
-> However ACPI does not use short-circuit evaluation when evaluating
-> logical conditions. This causes the DTTM field to be accessed even
-> when PLAV is 0, which results in an ACPI error.
-> Since this check happens inside various thermal-related ACPI control
-> methods, various thermal zone become unusable since any attempt to
-> read their temperature results in an ACPI error.
-> 
-> Fix this by providing support for this operation region. I suspect
-> that the problem does not happen under Windows (which seemingly does
-> not use short-circuit evaluation either) because the necessary driver
-> comes preinstalled with the machine.
-> 
-> Tested-by: Chris <ghostwind@gmail.com>
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Konrad Dybcio <quic_kdybcio@quicinc.com>
 
-Thanks, patch looks good to me:
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+I did notice the following compiler warning when test building:
+
+drivers/platform/surface/surface_aggregator_registry.c:278:36: warning: ‘ssam_node_group_sl7’ defined but not used [-Wunused-variable]
+  278 | static const struct software_node *ssam_node_group_sl7[] = {
+      |                                    ^~~~~~~~~~~~~~~~~~~
+
+One way to fix this would be add #ifdef CONFIG_OF around the definition
+of ssam_node_group_sl7, but then future devicetree based surface devices
+would need more #ifdef-s so instead I've solved it by squashing in this fix:
+
+diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
+index 495cb4300617..ac96e883cb57 100644
+--- a/drivers/platform/surface/surface_aggregator_registry.c
++++ b/drivers/platform/surface/surface_aggregator_registry.c
+@@ -415,14 +415,12 @@ static const struct acpi_device_id ssam_platform_hub_acpi_match[] = {
+ };
+ MODULE_DEVICE_TABLE(acpi, ssam_platform_hub_acpi_match);
+ 
+-#ifdef CONFIG_OF
+-static const struct of_device_id ssam_platform_hub_of_match[] = {
++static const struct of_device_id ssam_platform_hub_of_match[] __maybe_unused = {
+ 	/* Surface Laptop 7 */
+ 	{ .compatible = "microsoft,romulus13", (void *)ssam_node_group_sl7 },
+ 	{ .compatible = "microsoft,romulus15", (void *)ssam_node_group_sl7 },
+ 	{ },
+ };
+-#endif
+ 
+ static int ssam_platform_hub_probe(struct platform_device *pdev)
+ {
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
 
-
-
 > ---
-> Changes since v1:
->  - attempts -> attempt
->  - sort defines in numerical order
->  - make lg_laptop_address_space_write() take a plain u64
->  - use BITS_PER_BYTE
->  - manually check fw_debug when handling fan mode updates
+> Changes in v3:
+> - Drop unnecessary nullchecks
+> - Add MODULE_ALIAS in the platform hub driver
+> - Fix MODULE_DEVICE_TABLE after rename
+> - Prolong the '----' comment to 80 lines
+> - Change the current-speed bindings description to ": true", in
+>   preparation for krzk's serial device bindings reorganization
+> - Link to v2: https://lore.kernel.org/r/20240810-topic-sam-v2-0-8a8eb368a4f0@quicinc.com
+> 
+> Changes in v2:
+> - Fix kerneldoc
+> - Drop the drivers/acpi change (oops)
+> - Style fixes
+> - Don't assign int to acpi_status
+> - Don't scan the bus twice in SAM core probe
+> - Link to v1: https://lore.kernel.org/r/20240809-topic-sam-v1-0-05bca1932614@quicinc.com
+> 
 > ---
->  drivers/platform/x86/lg-laptop.c | 136 +++++++++++++++++++++++++++++++
->  1 file changed, 136 insertions(+)
+> Konrad Dybcio (3):
+>       dt-bindings: serial: Allow embedded-controller as child node
+>       dt-bindings: platform: Add Surface System Aggregator Module
+>       platform/surface: Add OF support
 > 
-> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
-> index 9c7857842caf..55d31d4fefd6 100644
-> --- a/drivers/platform/x86/lg-laptop.c
-> +++ b/drivers/platform/x86/lg-laptop.c
-> @@ -8,6 +8,9 @@
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  .../bindings/platform/microsoft,surface-sam.yaml   | 47 +++++++++++++
+>  .../devicetree/bindings/serial/serial.yaml         |  2 +-
+>  drivers/platform/surface/aggregator/bus.c          |  2 +
+>  drivers/platform/surface/aggregator/controller.c   | 67 ++++++++++++++----
+>  drivers/platform/surface/aggregator/core.c         | 82 +++++++++++++++++-----
+>  drivers/platform/surface/surface3_power.c          |  1 +
+>  drivers/platform/surface/surface_acpi_notify.c     |  1 +
+>  .../platform/surface/surface_aggregator_registry.c | 47 +++++++++++--
+>  8 files changed, 210 insertions(+), 39 deletions(-)
+> ---
+> base-commit: 1e391b34f6aa043c7afa40a2103163a0ef06d179
+> change-id: 20240809-topic-sam-5de2f0ec9370
 > 
->  #include <linux/acpi.h>
-> +#include <linux/bits.h>
-> +#include <linux/device.h>
-> +#include <linux/dev_printk.h>
->  #include <linux/dmi.h>
->  #include <linux/input.h>
->  #include <linux/input/sparse-keymap.h>
-> @@ -31,6 +34,26 @@ MODULE_AUTHOR("Matan Ziv-Av");
->  MODULE_DESCRIPTION("LG WMI Hotkey Driver");
->  MODULE_LICENSE("GPL");
-> 
-> +static bool fw_debug;
-> +module_param(fw_debug, bool, 0);
-> +MODULE_PARM_DESC(fw_debug, "Enable printing of firmware debug messages");
-> +
-> +#define LG_ADDRESS_SPACE_ID			0x8F
-> +
-> +#define LG_ADDRESS_SPACE_DEBUG_FLAG_ADR		0x00
-> +#define LG_ADDRESS_SPACE_FAN_MODE_ADR		0x03
-> +
-> +#define LG_ADDRESS_SPACE_DTTM_FLAG_ADR		0x20
-> +#define LG_ADDRESS_SPACE_CPU_TEMP_ADR		0x21
-> +#define LG_ADDRESS_SPACE_CPU_TRIP_LOW_ADR	0x22
-> +#define LG_ADDRESS_SPACE_CPU_TRIP_HIGH_ADR	0x23
-> +#define LG_ADDRESS_SPACE_MB_TEMP_ADR		0x24
-> +#define LG_ADDRESS_SPACE_MB_TRIP_LOW_ADR	0x25
-> +#define LG_ADDRESS_SPACE_MB_TRIP_HIGH_ADR	0x26
-> +
-> +#define LG_ADDRESS_SPACE_DEBUG_MSG_START_ADR	0x3E8
-> +#define LG_ADDRESS_SPACE_DEBUG_MSG_END_ADR	0x5E8
-> +
->  #define WMI_EVENT_GUID0	"E4FB94F9-7F2B-4173-AD1A-CD1D95086248"
->  #define WMI_EVENT_GUID1	"023B133E-49D1-4E10-B313-698220140DC2"
->  #define WMI_EVENT_GUID2	"37BE1AC0-C3F2-4B1F-BFBE-8FDEAF2814D6"
-> @@ -646,6 +669,107 @@ static struct platform_driver pf_driver = {
->  	}
->  };
-> 
-> +static acpi_status lg_laptop_address_space_write(struct device *dev, acpi_physical_address address,
-> +						 size_t size, u64 value)
-> +{
-> +	u8 byte;
-> +
-> +	/* Ignore any debug messages */
-> +	if (address >= LG_ADDRESS_SPACE_DEBUG_MSG_START_ADR &&
-> +	    address <= LG_ADDRESS_SPACE_DEBUG_MSG_END_ADR)
-> +		return AE_OK;
-> +
-> +	if (size != sizeof(byte))
-> +		return AE_BAD_PARAMETER;
-> +
-> +	byte = value & 0xFF;
-> +
-> +	switch (address) {
-> +	case LG_ADDRESS_SPACE_FAN_MODE_ADR:
-> +		/*
-> +		 * The fan mode field is not affected by the DTTM flag, so we
-> +		 * have to manually check fw_debug.
-> +		 */
-> +		if (fw_debug)
-> +			dev_dbg(dev, "Fan mode set to mode %u\n", byte);
-> +
-> +		return AE_OK;
-> +	case LG_ADDRESS_SPACE_CPU_TEMP_ADR:
-> +		dev_dbg(dev, "CPU temperature is %u °C\n", byte);
-> +		return AE_OK;
-> +	case LG_ADDRESS_SPACE_CPU_TRIP_LOW_ADR:
-> +		dev_dbg(dev, "CPU lower trip point set to %u °C\n", byte);
-> +		return AE_OK;
-> +	case LG_ADDRESS_SPACE_CPU_TRIP_HIGH_ADR:
-> +		dev_dbg(dev, "CPU higher trip point set to %u °C\n", byte);
-> +		return AE_OK;
-> +	case LG_ADDRESS_SPACE_MB_TEMP_ADR:
-> +		dev_dbg(dev, "Motherboard temperature is %u °C\n", byte);
-> +		return AE_OK;
-> +	case LG_ADDRESS_SPACE_MB_TRIP_LOW_ADR:
-> +		dev_dbg(dev, "Motherboard lower trip point set to %u °C\n", byte);
-> +		return AE_OK;
-> +	case LG_ADDRESS_SPACE_MB_TRIP_HIGH_ADR:
-> +		dev_dbg(dev, "Motherboard higher trip point set to %u °C\n", byte);
-> +		return AE_OK;
-> +	default:
-> +		dev_notice_ratelimited(dev, "Ignoring write to unknown opregion address %llu\n",
-> +				       address);
-> +		return AE_OK;
-> +	}
-> +}
-> +
-> +static acpi_status lg_laptop_address_space_read(struct device *dev, acpi_physical_address address,
-> +						size_t size, u64 *value)
-> +{
-> +	if (size != 1)
-> +		return AE_BAD_PARAMETER;
-> +
-> +	switch (address) {
-> +	case LG_ADDRESS_SPACE_DEBUG_FLAG_ADR:
-> +		/* Debug messages are already printed using the standard ACPI Debug object */
-> +		*value = 0x00;
-> +		return AE_OK;
-> +	case LG_ADDRESS_SPACE_DTTM_FLAG_ADR:
-> +		*value = fw_debug;
-> +		return AE_OK;
-> +	default:
-> +		dev_notice_ratelimited(dev, "Attempt to read unknown opregion address %llu\n",
-> +				       address);
-> +		return AE_BAD_PARAMETER;
-> +	}
-> +}
-> +
-> +static acpi_status lg_laptop_address_space_handler(u32 function, acpi_physical_address address,
-> +						   u32 bits, u64 *value, void *handler_context,
-> +						   void *region_context)
-> +{
-> +	struct device *dev = handler_context;
-> +	size_t size;
-> +
-> +	if (bits % BITS_PER_BYTE)
-> +		return AE_BAD_PARAMETER;
-> +
-> +	size = bits / BITS_PER_BYTE;
-> +
-> +	switch (function) {
-> +	case ACPI_READ:
-> +		return lg_laptop_address_space_read(dev, address, size, value);
-> +	case ACPI_WRITE:
-> +		return lg_laptop_address_space_write(dev, address, size, *value);
-> +	default:
-> +		return AE_BAD_PARAMETER;
-> +	}
-> +}
-> +
-> +static void lg_laptop_remove_address_space_handler(void *data)
-> +{
-> +	struct acpi_device *device = data;
-> +
-> +	acpi_remove_address_space_handler(device->handle, LG_ADDRESS_SPACE_ID,
-> +					  &lg_laptop_address_space_handler);
-> +}
-> +
->  static int acpi_add(struct acpi_device *device)
->  {
->  	struct platform_device_info pdev_info = {
-> @@ -653,6 +777,7 @@ static int acpi_add(struct acpi_device *device)
->  		.name = PLATFORM_NAME,
->  		.id = PLATFORM_DEVID_NONE,
->  	};
-> +	acpi_status status;
->  	int ret;
->  	const char *product;
->  	int year = 2017;
-> @@ -660,6 +785,17 @@ static int acpi_add(struct acpi_device *device)
->  	if (pf_device)
->  		return 0;
-> 
-> +	status = acpi_install_address_space_handler(device->handle, LG_ADDRESS_SPACE_ID,
-> +						    &lg_laptop_address_space_handler,
-> +						    NULL, &device->dev);
-> +	if (ACPI_FAILURE(status))
-> +		return -ENODEV;
-> +
-> +	ret = devm_add_action_or_reset(&device->dev, lg_laptop_remove_address_space_handler,
-> +				       device);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	ret = platform_driver_register(&pf_driver);
->  	if (ret)
->  		return ret;
-> --
-> 2.39.2
-> 
+> Best regards,
 
