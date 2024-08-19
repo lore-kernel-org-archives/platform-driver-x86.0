@@ -1,64 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B2A2900
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Aug 2024 10:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB102208E
+	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Aug 2024 10:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724062732; cv=none; b=N7g+SmA6m6RqSzoG40tyP3LFBtzSIDadbbSFbvrIYMwrMGXB0yA16Ck8S4xPErgLWXBqoC/7flhZe8Io8sngK0GWoaIWUReeEMFL+tn5YYPivqbFnyedpjki0zhXNzmvOhv5c1Lj8WGb5JOWDAUBsJgfl5t/EkOITdLsjFleWeQ=
+	t=1724062810; cv=none; b=dyIQs31NXIZS1RYT6N5G82n4773ui6sQamhbSnREZDo++VECG6r/z6xStsSZ7kI9eH6txglYgRYrSho+4MSpKewWCbGEwbGzGsfSUpxyGYIMS13G6qZaMQif9CskKcPKzce8PurFm+/MjR76AdVkdsvCTpY1VrqNDMQk8IPLzs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724062732; c=relaxed/simple;
-	bh=qMT97HKgYvdkMHls3AI92gtKJEnVbx03LP8/ij7Luoc=;
+	s=arc-20240116; t=1724062810; c=relaxed/simple;
+	bh=qaJVMTKX2YN/haWPaprtb5i3CGOYZT09tNmQOMz2HBQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KDguWFaCymEuZFlG2EqQQcFpdXisg2vslm3yREguyaanmvsK1Vqwd5Y99J8J1ggYvVCBpWsRoULy/YkGRCy+d7pKITtB1hoEMzSY8KvdrR6utB/BPiQmZrgsIrV9KDQoVzLyMXv2jAywWKuJIMAnoaxUm9sinmhK6/f1FdsiqSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y/HsvQRe; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=nF7TiI+qWunNaaFckUtIwYWAAMsF/WqyKut2A1lhI+EoH9DbcE3CLO3o1k3BezN17rYFZVds6jAgow5sGJvsmNpm/TMP2z0iR+oaGSqNNfvNqRRSfykCd9Z2N1d2nPDgokgKMbxvgr/knVz5Ln5z50r9bGqyLB2ALPlf/1sKsH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zal4T3Q0; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y/HsvQRe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zal4T3Q0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724062729;
+	s=mimecast20190719; t=1724062806;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4dS1pFwmKA0J56vfJ4dhvmN1DKPn7WrZMgWmkqQ+URo=;
-	b=Y/HsvQRen95fLFLrTFtazP34MRZ6dhXDXyyP3ryZzJq+aSsyb2zwAkr1gvhfp4QhqeB/J2
-	3tBz99FHEJzt5uMi07KV9M3EiAW9ThltySk1A0Wn6n7BiyoFgNhTHOXGV5gnwdv+ZykryV
-	nroeWGa4cdlFpIHt5Mrd3UloUHRXqPs=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Tt2LYVYKmTVkAnDYFtLFnxYZzUlQbq44aMUMUQ1jAqA=;
+	b=Zal4T3Q0OEUO7GCayl9Df5SQtetPjTwMWYxP8nu9cxg/eeO8UtdyFr9Hk4B/cBmmNz1TFt
+	AvoYOvEBlGQAGNU3bURsLuPHGtyjaHnZfXYiogQqjWgnutRER7R6v2fx+VmdD3OKwgcijC
+	818TBysOc1HdpiDGK9OWSnZU1Fq5Vvk=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-556-egHHF79LP_-FLrtvX5ze8w-1; Mon, 19 Aug 2024 06:18:48 -0400
-X-MC-Unique: egHHF79LP_-FLrtvX5ze8w-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a7a979cae97so339482666b.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Aug 2024 03:18:48 -0700 (PDT)
+ us-mta-463-sWpmum4fMe-4zE_yuYnqWQ-1; Mon, 19 Aug 2024 06:20:05 -0400
+X-MC-Unique: sWpmum4fMe-4zE_yuYnqWQ-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5bed68b5ec6so1850117a12.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Aug 2024 03:20:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724062727; x=1724667527;
+        d=1e100.net; s=20230601; t=1724062804; x=1724667604;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4dS1pFwmKA0J56vfJ4dhvmN1DKPn7WrZMgWmkqQ+URo=;
-        b=M5ytC8LZpYVgP9yxkI18Ysh/RrI0ARnsdHaw90nlSolV0DWnwJe0t36AQXYvrFOLkq
-         d5dtODUl9pMuzIGqQpzztmoCLKe70uknMwXBv4HaxET/DVryin2B11HM7pqH0T+JHrZO
-         NuDVyilb1hdlA2fHr3YXxbT95aHOog/wnJ8cgpouZMCo4V2S6S+fNdJ5dx4CQl4wVY17
-         uPGvJ3M9mu122Y0Nz8p9TNhmRUAl0JApA0w+CXMcSCNrfzdd28DRJtrKYxoH3eVp/xHw
-         TJU/Cr8jeC1M7WgygniHcAdxdg+Bmm29U9y7O7R/ht368OUxvL+v38vZyitcb4vK/1u9
-         gGww==
-X-Gm-Message-State: AOJu0YyKlfJO4VeGXOQVEN73/B0ZMnZJFN5ZCQzhyvoPjkVombN6yGT0
-	MXlX3Nm+ArDCb+2XVuyhTErg+OvW5Rdjb7tSlOkU9cVj1uxAcktt8Ue64ZfXAF9sii4ah4hU6H2
-	EoiNBiIIqqPTTKCodz4NmeMaCm0uzc9d1Sai18Ho+EpVUom/zGbovt+VkGQbAxxC8Z/dZnpg=
-X-Received: by 2002:a05:6402:50c9:b0:5bf:7dc:bbae with SMTP id 4fb4d7f45d1cf-5bf07dcbdaemr146480a12.6.1724062727074;
-        Mon, 19 Aug 2024 03:18:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFAsOz4DcthsWJKIkfFOMw0iGCP8j4qmdJ7v1yvS54PToreJV2oZdg0Wx9oUM2x7Kt4J9bRXw==
-X-Received: by 2002:a05:6402:50c9:b0:5bf:7dc:bbae with SMTP id 4fb4d7f45d1cf-5bf07dcbdaemr146463a12.6.1724062726467;
-        Mon, 19 Aug 2024 03:18:46 -0700 (PDT)
+        bh=Tt2LYVYKmTVkAnDYFtLFnxYZzUlQbq44aMUMUQ1jAqA=;
+        b=lrsm2sW6e0/SdGnFuhqqbufH6ib3FmsH2/jThpEzdR3PPR+KqOkJbd6380MZlyRUOp
+         E/9mhx+xkX6i2t2OzbPq+x1WxgUaxBW8nNegb7tvQt/1T0uN8c45WrsDtlhpdd17SFv9
+         gmana2CYnLpfMWgS43E0V/rUH1fMpzsZS2IVgsFHsFsKTl3lto8NgLww2UjuNaZV5y7u
+         TA+fcxhabq2tcfPejFNHGlbG73tTHC5C60YBpNsOnlF/ZRrjj5YHf7qvLyKVSCHvlFev
+         4uoMKl6Q8HimIgg5iMmBy1Zbn3at1/ULlOaXE4qhMEws8aSNifQUtoY1Ljspcq33QMSb
+         TicA==
+X-Forwarded-Encrypted: i=1; AJvYcCV//LV3yF/lyAFVuoG7BrSe4LReNl05cRKCvdo5S5dFN/tegw0DBe7LMSbuttlg/hYVkeXcpcb3JsT5jcHa1hwUuPURDgJ2aJ5lFYSfWQBxpPoUhQ==
+X-Gm-Message-State: AOJu0YzaT49bThDVaUQoXNIVf2SJ8Yr9y2uJAk7R4LnETg8D/GUQ4AlN
+	mIr8XKXDgVVmHWjDYMCUuPNqsfS8gU7kxmUmwXjDYj4GtH4TduBQh/uqxHIat16HnyyhaZYSeLj
+	E/oOkozZEnzxrt/0ZRMVhq3bZLDVDq9QdLJiGXTfF3A8yVr+yE/HmoJMJgtif6P1F1akGmhU=
+X-Received: by 2002:a05:6402:2707:b0:5be:fc44:d16c with SMTP id 4fb4d7f45d1cf-5befc44d688mr1453664a12.21.1724062804466;
+        Mon, 19 Aug 2024 03:20:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFVEZBeVDOcw2UccmR/xKwRwclHVYBRUiCGFShuiYXBBn7mzTfH4dJAZxcg/AEp0vLqteaXzA==
+X-Received: by 2002:a05:6402:2707:b0:5be:fc44:d16c with SMTP id 4fb4d7f45d1cf-5befc44d688mr1453649a12.21.1724062803943;
+        Mon, 19 Aug 2024 03:20:03 -0700 (PDT)
 Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bebbdfb923sm5315690a12.54.2024.08.19.03.18.45
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bebbbe26fcsm5426612a12.5.2024.08.19.03.20.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Aug 2024 03:18:46 -0700 (PDT)
-Message-ID: <c7238607-76be-400f-8008-69528f0851d2@redhat.com>
-Date: Mon, 19 Aug 2024 12:18:45 +0200
+        Mon, 19 Aug 2024 03:20:03 -0700 (PDT)
+Message-ID: <32c550ec-d5f7-4422-a1e1-1fa22111d1c5@redhat.com>
+Date: Mon, 19 Aug 2024 12:20:02 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,92 +67,122 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] platform/x86/amd/pmf: Relocate CPU ID macros to
- the PMF header
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com
-References: <20240819063404.378061-1-Shyam-sundar.S-k@amd.com>
+Subject: Re: [PATCH v2 12/17] platform/x86: acerhdf: Use the .should_bind()
+ thermal zone callback
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Lukasz Luba
+ <lukasz.luba@arm.com>, Zhang Rui <rui.zhang@intel.com>,
+ Peter Kaestle <peter@piie.net>, platform-driver-x86@vger.kernel.org
+References: <114901234.nniJfEyVGO@rjwysocki.net>
+ <6709311.4vTCxPXJkl@rjwysocki.net>
 Content-Language: en-US
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240819063404.378061-1-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <6709311.4vTCxPXJkl@rjwysocki.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi,
+Hi Rafael,
 
-On 8/19/24 8:34 AM, Shyam Sundar S K wrote:
-> The CPU ID macros are needed by the Smart PC builder. Therefore, transfer
-> the CPU ID macros from core.c to the common PMF header file.
+On 8/12/24 4:19 PM, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> Make the acerhdf driver use the .should_bind() thermal zone
+> callback to provide the thermal core with the information on whether or
+> not to bind the given cooling device to the given trip point in the
+> given thermal zone.  If it returns 'true', the thermal core will bind
+> the cooling device to the trip and the corresponding unbinding will be
+> taken care of automatically by the core on the removal of the involved
+> thermal zone or cooling device.
+> 
+> The previously existing acerhdf_bind() function bound cooling devices
+> to thermal trip point 0 only, so the new callback needs to return 'true'
+> for trip point 0.  However, it is straightforward to observe that trip
+> point 0 is an active trip point and the only other trip point in the
+> driver's thermal zone is a critical one, so it is sufficient to return
+> 'true' from that callback if the type of the given trip point is
+> THERMAL_TRIP_ACTIVE.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+I believe it is best to merge this through the thermal(zone0 subsystem
+together with the rest of the series:
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+Acked-by: Hans de Goede <hdegoede@redhat.com>
 
 Regards,
 
 Hans
 
 
-
 > ---
-> v4:
->  - Add Reviewed-by Tag
 > 
-> V3:
->  - No change
+> v1 -> v2: No changes
 > 
-> V2:
->  - No change
+> This patch only depends on patch [08/17] introducing .should_bind():
 > 
->  drivers/platform/x86/amd/pmf/core.c | 6 ------
->  drivers/platform/x86/amd/pmf/pmf.h  | 6 ++++++
->  2 files changed, 6 insertions(+), 6 deletions(-)
+> https://lore.kernel.org/linux-pm/2696117.X9hSmTKtgW@rjwysocki.net/
 > 
-> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-> index 8f1f719befa3..88314b0277a3 100644
-> --- a/drivers/platform/x86/amd/pmf/core.c
-> +++ b/drivers/platform/x86/amd/pmf/core.c
-> @@ -37,12 +37,6 @@
->  #define AMD_PMF_RESULT_CMD_UNKNOWN           0xFE
->  #define AMD_PMF_RESULT_FAILED                0xFF
+> ---
+>  drivers/platform/x86/acerhdf.c |   33 ++++++---------------------------
+>  1 file changed, 6 insertions(+), 27 deletions(-)
+> 
+> Index: linux-pm/drivers/platform/x86/acerhdf.c
+> ===================================================================
+> --- linux-pm.orig/drivers/platform/x86/acerhdf.c
+> +++ linux-pm/drivers/platform/x86/acerhdf.c
+> @@ -378,33 +378,13 @@ static int acerhdf_get_ec_temp(struct th
+>  	return 0;
+>  }
 >  
-> -/* List of supported CPU ids */
-> -#define AMD_CPU_ID_RMB			0x14b5
-> -#define AMD_CPU_ID_PS			0x14e8
-> -#define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT	0x1507
-> -#define PCI_DEVICE_ID_AMD_1AH_M60H_ROOT	0x1122
+> -static int acerhdf_bind(struct thermal_zone_device *thermal,
+> -			struct thermal_cooling_device *cdev)
+> +static bool acerhdf_should_bind(struct thermal_zone_device *thermal,
+> +				const struct thermal_trip *trip,
+> +				struct thermal_cooling_device *cdev,
+> +				struct cooling_spec *c)
+>  {
+>  	/* if the cooling device is the one from acerhdf bind it */
+> -	if (cdev != cl_dev)
+> -		return 0;
 > -
->  #define PMF_MSG_DELAY_MIN_US		50
->  #define RESPONSE_REGISTER_LOOP_MAX	20000
+> -	if (thermal_zone_bind_cooling_device(thermal, 0, cdev,
+> -			THERMAL_NO_LIMIT, THERMAL_NO_LIMIT,
+> -			THERMAL_WEIGHT_DEFAULT)) {
+> -		pr_err("error binding cooling dev\n");
+> -		return -EINVAL;
+> -	}
+> -	return 0;
+> -}
+> -
+> -static int acerhdf_unbind(struct thermal_zone_device *thermal,
+> -			  struct thermal_cooling_device *cdev)
+> -{
+> -	if (cdev != cl_dev)
+> -		return 0;
+> -
+> -	if (thermal_zone_unbind_cooling_device(thermal, 0, cdev)) {
+> -		pr_err("error unbinding cooling dev\n");
+> -		return -EINVAL;
+> -	}
+> -	return 0;
+> +	return cdev == cl_dev && trip->type == THERMAL_TRIP_ACTIVE;
+>  }
 >  
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index 9bf4326d06c3..9fc26f672f12 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -19,6 +19,12 @@
->  #define POLICY_SIGN_COOKIE		0x31535024
->  #define POLICY_COOKIE_OFFSET		0x10
+>  static inline void acerhdf_revert_to_bios_mode(void)
+> @@ -447,8 +427,7 @@ static int acerhdf_get_crit_temp(struct
 >  
-> +/* List of supported CPU ids */
-> +#define AMD_CPU_ID_RMB                  0x14b5
-> +#define AMD_CPU_ID_PS                   0x14e8
-> +#define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT 0x1507
-> +#define PCI_DEVICE_ID_AMD_1AH_M60H_ROOT 0x1122
-> +
->  struct cookie_header {
->  	u32 sign;
->  	u32 length;
+>  /* bind callback functions to thermalzone */
+>  static struct thermal_zone_device_ops acerhdf_dev_ops = {
+> -	.bind = acerhdf_bind,
+> -	.unbind = acerhdf_unbind,
+> +	.should_bind = acerhdf_should_bind,
+>  	.get_temp = acerhdf_get_ec_temp,
+>  	.change_mode = acerhdf_change_mode,
+>  	.get_crit_temp = acerhdf_get_crit_temp,
+> 
+> 
+> 
+> 
 
