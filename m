@@ -1,65 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E5D166F3B
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Aug 2024 11:57:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67DDF16B3BC
+	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Aug 2024 13:17:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724068647; cv=none; b=mI12ipIlkMi0mWEgYjT7JJO0uPCbYc/GDUkr0MidufnAVyEXy8/2dhIOBqNmIhADlIJLnEA8NATtRFRIYOvskBUcpmS75JfrxlnJC/2WXRHkTydzXYhAx7pjoeT8epCnvTbTmtrwzlqryhJ279wouSWl3jZzW56XeWOQKbyBYGQ=
+	t=1724073436; cv=none; b=sOzfSpMtcUIISz5TqmOPePrQUC0hyZeVA7egzGFnH3S2F7O0qAI+npFSae3kCL2I86Lz0UMp9UbIBowrKRhQvmtJlN+bPZ9Mjv+zsRtTZQOa0oCQLDDYWdpxMTcKL+fgoQSvZ3LKwnPnHzH0anlZbBDvSeaCG78UrhrB1Mbu1+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724068647; c=relaxed/simple;
-	bh=ij/RhKXAEL9cVBO15IYVkcQPnrzyZPTaGryR8ECRDDs=;
+	s=arc-20240116; t=1724073436; c=relaxed/simple;
+	bh=vIwi+Ho3hcTzwljg2H57BFDuQAi75Ju4VGTPIMbZtJw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dJSPvTTHyByP3jEiyDvI4Oz6aPzbjnEpg5bWfPEuA+5oqXE+erZbd9ufr4bGhA0nyNeM/jo6z6YG31X7bKKdPnxKGHo5DADncwK9zCuz/MkVVTreQ5lFlBWkjPVAIrCd3fVkyR6Zo1QXzlyL25/BvY9ErgX/EmW8tlgQu+52Nrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=doCPUDfm; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=cauaDsdUY8Jb7nB5A1puB3yz7CzHbDXWk6SWPA+R8jdq4TG6ugpiAME+VzusM7Et2CCgsmuzP4InrRUOwp0M8Tra7bJ5oHrFI7ZnKG4Udo9JO6nqoxGtVeHxUCxXr0yPOGUhPVJ9isvLbUooPtqCYT3RtQ82RfqpmcOzJLGfW40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jWeyp7gB; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="doCPUDfm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jWeyp7gB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724068643;
+	s=mimecast20190719; t=1724073433;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=84PhB6eF89FFZ8ucHgT9n7pmJgWbulzk/3Qj97ioNCk=;
-	b=doCPUDfmbb9RrUFBJlCBcXdCJZ5jLv0wcfehRVkb44p+Z1Ce+DKEfTTdNk1soeIlJVfxnj
-	LntEIU7uQ5d2DAUEFdBlgxHRZjV0GHsSusJcgdGm+C2A056qfsz94e63Ar0T9DTfzKWQQo
-	7c0LSBLcoBkK41qP0uqYuwDeleyxJjo=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=9RZOxsSOUpslXvj4HgMWa1YWBn0fhZwVZ+lWFi2Py/0=;
+	b=jWeyp7gBQXkB8Ro/e4iteyyk61WqD0RLpYj09iCFBtOnUjY6xMUYEAOL07nRbx1kaHZZTn
+	li/iin+cwSnDPrwsYoDgaSwQgd8pcTNsJ/tFUqsB85/qny/XlbaTHjnuWlBT8xgjshiMug
+	ni4lpqfqt/h2GY/w8ISmpUitNPP7F34=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-655-70DVcpPPPyyY8Qn9dsqIdg-1; Mon, 19 Aug 2024 07:57:22 -0400
-X-MC-Unique: 70DVcpPPPyyY8Qn9dsqIdg-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5bec367475bso4913630a12.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Aug 2024 04:57:22 -0700 (PDT)
+ us-mta-137-uCMKPlnZM3aSnMeW8R3Xhg-1; Mon, 19 Aug 2024 09:17:12 -0400
+X-MC-Unique: uCMKPlnZM3aSnMeW8R3Xhg-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5bed5bc6dbeso1250787a12.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Aug 2024 06:17:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724068641; x=1724673441;
+        d=1e100.net; s=20230601; t=1724073431; x=1724678231;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=84PhB6eF89FFZ8ucHgT9n7pmJgWbulzk/3Qj97ioNCk=;
-        b=gz5rR+dSW9vKz9JgBZbZuBn64oV+kZ499wBP5J8MIhVldHO3lICkQc/OX+FOZC41rO
-         E29OU/iuMA2Jvbxe0B2OAMakQFUY3odwnKwo3xaLzmum9CR80WemxwcCsR06/r7NxPYO
-         iPoX1c1ICZMn+9UHNjEHEzURbDNq2sPcs+Jw5ZzAagIyHFfSp6MOt3WdG7n0oRJBNdVZ
-         9CRRtRw7N6XDFOvtAgDq3F7jauLcO7UC/cu8O9YqRxGYacavJow2HFx83v+wlCkdsd9o
-         7sOLtYYn8AcRi4wy2ahEj3oTXjvOaUFq94zJ97vTelEEzmondk8u3oO4baHswQ4UI5n0
-         xvhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWqh4lMwzY4PnBR4qIXaa9g2VjR6934BjDKfrMK1y+Pi8A/iLFfnKRcECRCXa3956HSD4az7KeopWg/9oeZhu+fg4LTASrp0FufyPLT9NO45FYuUg==
-X-Gm-Message-State: AOJu0Yx7sxiJMjYjtsn5Newm54o3X3mkE/pqwYzFyHdok7a5IjHPP6uA
-	yNzQIvoCWpI8ABUXDp164lpN4nZ+XQkHR7vQ408Jnn+PJv6fR9DbJ8tLmYmqq6GTE71z13BJdSY
-	LH9koWywBD6rh7N6ffqwASP8BtXkroYyWxsfOLq87hFUcjBu4YYssLdti0Dv773bdOcg6JP8=
-X-Received: by 2002:a05:6402:34d4:b0:5be:ecd9:c73e with SMTP id 4fb4d7f45d1cf-5beecd9cbf3mr4997301a12.2.1724068641331;
-        Mon, 19 Aug 2024 04:57:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGnRo8JGhy8S0tLVgxUpCSUbuvlldmz7SLn5JDTjjd9seJwXdLBAybiRE42CshwTS82wSQmig==
-X-Received: by 2002:a05:6402:34d4:b0:5be:ecd9:c73e with SMTP id 4fb4d7f45d1cf-5beecd9cbf3mr4997268a12.2.1724068640890;
-        Mon, 19 Aug 2024 04:57:20 -0700 (PDT)
+        bh=9RZOxsSOUpslXvj4HgMWa1YWBn0fhZwVZ+lWFi2Py/0=;
+        b=qp/O7/+ReWurcVKmlKaZTlI1qxvOCFu6jkWIW9NHa5U5UtxqtMNZWI7rI4+L2a2Arr
+         ZD2dNeVPRgMlJH0aD2pSCoH+wGEnkX4tWiOMa8WbwGTVJyuSJHnbeR8T9HavQJZbBmaP
+         u+ZTrJMw2mu+Bkr/qhWNGeU7eYz+jHY1oR76kVrU6tMC3gut2yzZ1RLScSGlOcMs6OZc
+         Fmt06XHubIehIaFDBZlcUtZqw0D8+1jTtuWqSlC+FHAA0XEDngeuRb+BIaF5TX8zsXxP
+         u2HYkvO74jn+EFZGt14UjMQW3pcxwcBYUJ8GxV/4S/Pe+CO+ChRZZQzwXD3HVrs3FhYF
+         zz5A==
+X-Gm-Message-State: AOJu0YzmxYkSiBbaag/YjXqSCennzF8lfQprKdLkZYM/1TkmQQ9/95+M
+	4JkLlEwnHiCeJHUttSDHKaKmRKGgZD8yob20uYZcg3IjGnPGEJsTYImNMsBF8mjW3kQoABELNHy
+	visPDKkq8Nj1NSl1EbBionc7uaquBgDm6XL3UT23VEnpEsUYn2XVb+vtZZGnjjbQB2BBdqsqqi4
+	JlMuY=
+X-Received: by 2002:a05:6402:2681:b0:5be:dd2d:83 with SMTP id 4fb4d7f45d1cf-5bedd2d02e2mr5286436a12.6.1724073430594;
+        Mon, 19 Aug 2024 06:17:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHRjAeOgQEM8IvDHQXEfwHvUn1ankhtBMfeAHX9eXd6GBDhylg0X3WB0PuQoK1JlETbRBPJmg==
+X-Received: by 2002:a05:6402:2681:b0:5be:dd2d:83 with SMTP id 4fb4d7f45d1cf-5bedd2d02e2mr5286412a12.6.1724073429979;
+        Mon, 19 Aug 2024 06:17:09 -0700 (PDT)
 Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bed05f0a30sm3999829a12.30.2024.08.19.04.57.20
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bebc081ad6sm5524484a12.89.2024.08.19.06.17.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Aug 2024 04:57:20 -0700 (PDT)
-Message-ID: <1edadffb-67d9-476e-b0f7-7f3fc34e9592@redhat.com>
-Date: Mon, 19 Aug 2024 13:57:19 +0200
+        Mon, 19 Aug 2024 06:17:09 -0700 (PDT)
+Message-ID: <a44bb4d0-c149-4dd7-882b-f87497725dd9@redhat.com>
+Date: Mon, 19 Aug 2024 15:17:08 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,72 +67,48 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] OF support for Surface System Aggregator Module
-To: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Len Brown <lenb@kernel.org>, Maximilian Luz <luzmaximilian@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
- linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <quic_kdybcio@quicinc.com>,
- Krzysztof Kozlowski <krzk@kernel.org>
-References: <20240814-topic-sam-v3-0-a84588aad233@quicinc.com>
+Subject: Re: [PATCH v2] platform/x86: serial-multi-instantiate: Don't require
+ both I2C and SPI
+To: Richard Fitzgerald <rf@opensource.cirrus.com>,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ patches@opensource.cirrus.com
+References: <20240814132939.308696-1-rf@opensource.cirrus.com>
 Content-Language: en-US
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240814-topic-sam-v3-0-a84588aad233@quicinc.com>
+In-Reply-To: <20240814132939.308696-1-rf@opensource.cirrus.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On 8/14/24 12:27 PM, Konrad Dybcio wrote:
-> Wire up OF support for SSAM drivers, to use with Surface Laptop 7 and
-> other Qualcomm-based devices.
+On 8/14/24 3:29 PM, Richard Fitzgerald wrote:
+> Change the Kconfig dependency so that it doesn't require both I2C and SPI
+> subsystems to be built. Make a few small changes to the code so that the
+> code for a bus is only called if the bus is being built.
 > 
-> Patch 3 references compatible strings introduced in [1]
+> When SPI support was added to serial-multi-instantiate it created a
+> dependency that both CONFIG_I2C and CONFIG_SPI must be enabled.
+> Typically they are, but there's no reason why this should be a
+> requirement. A specific kernel build could have only I2C devices
+> or only SPI devices. It should be possible to use serial-multi-instantiate
+> if only I2C or only SPI is enabled.
 > 
-> [1] https://lore.kernel.org/linux-arm-msm/20240809-topic-sl7-v1-1-2090433d8dfc@quicinc.com/T/#u
+> The dependency formula used is:
 > 
-> Signed-off-by: Konrad Dybcio <quic_kdybcio@quicinc.com>
+>   depends on (I2C && !SPI) || (!I2C && SPI) || (I2C && SPI)
+> 
+> The advantage of this approach is that if I2C=m or SPI=m then
+> SERIAL_MULTI_INSTANTIATE is limited to n/m.
+> 
+> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-I did notice the following compiler warning when test building:
-
-drivers/platform/surface/surface_aggregator_registry.c:278:36: warning: ‘ssam_node_group_sl7’ defined but not used [-Wunused-variable]
-  278 | static const struct software_node *ssam_node_group_sl7[] = {
-      |                                    ^~~~~~~~~~~~~~~~~~~
-
-One way to fix this would be add #ifdef CONFIG_OF around the definition
-of ssam_node_group_sl7, but then future devicetree based surface devices
-would need more #ifdef-s so instead I've solved it by squashing in this fix:
-
-diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-index 495cb4300617..ac96e883cb57 100644
---- a/drivers/platform/surface/surface_aggregator_registry.c
-+++ b/drivers/platform/surface/surface_aggregator_registry.c
-@@ -415,14 +415,12 @@ static const struct acpi_device_id ssam_platform_hub_acpi_match[] = {
- };
- MODULE_DEVICE_TABLE(acpi, ssam_platform_hub_acpi_match);
- 
--#ifdef CONFIG_OF
--static const struct of_device_id ssam_platform_hub_of_match[] = {
-+static const struct of_device_id ssam_platform_hub_of_match[] __maybe_unused = {
- 	/* Surface Laptop 7 */
- 	{ .compatible = "microsoft,romulus13", (void *)ssam_node_group_sl7 },
- 	{ .compatible = "microsoft,romulus15", (void *)ssam_node_group_sl7 },
- 	{ },
- };
--#endif
- 
- static int ssam_platform_hub_probe(struct platform_device *pdev)
- {
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
 Once I've run some tests on this branch the patches there will be
 added to the platform-drivers-x86/for-next branch and eventually
@@ -144,42 +120,90 @@ Regards,
 Hans
 
 
+
+
 > ---
-> Changes in v3:
-> - Drop unnecessary nullchecks
-> - Add MODULE_ALIAS in the platform hub driver
-> - Fix MODULE_DEVICE_TABLE after rename
-> - Prolong the '----' comment to 80 lines
-> - Change the current-speed bindings description to ": true", in
->   preparation for krzk's serial device bindings reorganization
-> - Link to v2: https://lore.kernel.org/r/20240810-topic-sam-v2-0-8a8eb368a4f0@quicinc.com
+> Changes from V1:
+> Use a different 'depends on' formula so that serial-multi-instantiate
+> must be built as a module if any dependencies are a module.
 > 
-> Changes in v2:
-> - Fix kerneldoc
-> - Drop the drivers/acpi change (oops)
-> - Style fixes
-> - Don't assign int to acpi_status
-> - Don't scan the bus twice in SAM core probe
-> - Link to v1: https://lore.kernel.org/r/20240809-topic-sam-v1-0-05bca1932614@quicinc.com
+>  drivers/platform/x86/Kconfig                  |  3 +-
+>  .../platform/x86/serial-multi-instantiate.c   | 32 ++++++++++++++-----
+>  2 files changed, 26 insertions(+), 9 deletions(-)
 > 
-> ---
-> Konrad Dybcio (3):
->       dt-bindings: serial: Allow embedded-controller as child node
->       dt-bindings: platform: Add Surface System Aggregator Module
->       platform/surface: Add OF support
-> 
->  .../bindings/platform/microsoft,surface-sam.yaml   | 47 +++++++++++++
->  .../devicetree/bindings/serial/serial.yaml         |  2 +-
->  drivers/platform/surface/aggregator/bus.c          |  2 +
->  drivers/platform/surface/aggregator/controller.c   | 67 ++++++++++++++----
->  drivers/platform/surface/aggregator/core.c         | 82 +++++++++++++++++-----
->  drivers/platform/surface/surface3_power.c          |  1 +
->  drivers/platform/surface/surface_acpi_notify.c     |  1 +
->  .../platform/surface/surface_aggregator_registry.c | 47 +++++++++++--
->  8 files changed, 210 insertions(+), 39 deletions(-)
-> ---
-> base-commit: 1e391b34f6aa043c7afa40a2103163a0ef06d179
-> change-id: 20240809-topic-sam-5de2f0ec9370
-> 
-> Best regards,
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 665fa9524986..0dcf4d8eac56 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -999,7 +999,8 @@ config TOPSTAR_LAPTOP
+>  
+>  config SERIAL_MULTI_INSTANTIATE
+>  	tristate "Serial bus multi instantiate pseudo device driver"
+> -	depends on I2C && SPI && ACPI
+> +	depends on ACPI
+> +	depends on (I2C && !SPI) || (!I2C && SPI) || (I2C && SPI)
+>  	help
+>  	  Some ACPI-based systems list multiple devices in a single ACPI
+>  	  firmware-node. This driver will instantiate separate clients
+> diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/platform/x86/serial-multi-instantiate.c
+> index 3be016cfe601..7c04cc9e5891 100644
+> --- a/drivers/platform/x86/serial-multi-instantiate.c
+> +++ b/drivers/platform/x86/serial-multi-instantiate.c
+> @@ -83,11 +83,15 @@ static int smi_get_irq(struct platform_device *pdev, struct acpi_device *adev,
+>  
+>  static void smi_devs_unregister(struct smi *smi)
+>  {
+> +#if IS_REACHABLE(CONFIG_I2C)
+>  	while (smi->i2c_num--)
+>  		i2c_unregister_device(smi->i2c_devs[smi->i2c_num]);
+> +#endif
+>  
+> -	while (smi->spi_num--)
+> -		spi_unregister_device(smi->spi_devs[smi->spi_num]);
+> +	if (IS_REACHABLE(CONFIG_SPI)) {
+> +		while (smi->spi_num--)
+> +			spi_unregister_device(smi->spi_devs[smi->spi_num]);
+> +	}
+>  }
+>  
+>  /**
+> @@ -258,9 +262,15 @@ static int smi_probe(struct platform_device *pdev)
+>  
+>  	switch (node->bus_type) {
+>  	case SMI_I2C:
+> -		return smi_i2c_probe(pdev, smi, node->instances);
+> +		if (IS_REACHABLE(CONFIG_I2C))
+> +			return smi_i2c_probe(pdev, smi, node->instances);
+> +
+> +		return -ENODEV;
+>  	case SMI_SPI:
+> -		return smi_spi_probe(pdev, smi, node->instances);
+> +		if (IS_REACHABLE(CONFIG_SPI))
+> +			return smi_spi_probe(pdev, smi, node->instances);
+> +
+> +		return -ENODEV;
+>  	case SMI_AUTO_DETECT:
+>  		/*
+>  		 * For backwards-compatibility with the existing nodes I2C
+> @@ -270,10 +280,16 @@ static int smi_probe(struct platform_device *pdev)
+>  		 * SpiSerialBus nodes that were previously ignored, and this
+>  		 * preserves that behavior.
+>  		 */
+> -		ret = smi_i2c_probe(pdev, smi, node->instances);
+> -		if (ret != -ENOENT)
+> -			return ret;
+> -		return smi_spi_probe(pdev, smi, node->instances);
+> +		if (IS_REACHABLE(CONFIG_I2C)) {
+> +			ret = smi_i2c_probe(pdev, smi, node->instances);
+> +			if (ret != -ENOENT)
+> +				return ret;
+> +		}
+> +
+> +		if (IS_REACHABLE(CONFIG_SPI))
+> +			return smi_spi_probe(pdev, smi, node->instances);
+> +
+> +		return -ENODEV;
+>  	default:
+>  		return -EINVAL;
+>  	}
 
