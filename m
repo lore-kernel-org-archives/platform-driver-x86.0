@@ -1,59 +1,59 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CEE187FF1;
-	Mon, 19 Aug 2024 20:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE4749627;
+	Mon, 19 Aug 2024 20:24:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724098071; cv=none; b=LfbUwGx3IWE27zd31UEP6yLlRNT1LKW+g5yX9ZVB/sg0Z7CiCEw+ubLKIh86J1nQ6sd3FypOkv4GMaW+KsmrIb0wucJGc14lTJaMts0Fg4hQrkhk/Es/jIw2AuSQf9v7NIOsS4r6SneAZskO//Hejnrie/68A/WE14dGpG/+94s=
+	t=1724099052; cv=none; b=gcQSsQkFhLondlkb2efooBM+yczHEKoWqau8hKBHNc76OppoSNMOVXAM1G16fBDNqVvF8XSQVKlS/ukI77lidrEvln9BiGcaok0y9hwBXzqv94mej04DZu9oGGoAP9dphCpG58T1URa6RJt+8sc3764VDJqH6lQtjgABwqjKdzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724098071; c=relaxed/simple;
-	bh=rAPCRlcod+pfbPu210SomC+sQBvMBit2CDwdTkZs9WA=;
+	s=arc-20240116; t=1724099052; c=relaxed/simple;
+	bh=lJAfsS6Ds7PJvfsXrqipaZ5Mdxiz/mplkKdNmc7L1Gw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k+xXNaWBF9vTtXdJjnFBhoRvGqNtXHdWLd9FxG7KsaSHdAaXUjnxnUM+S/C2CBBLEXZj10bhY1UWTyk+OfJk+IqfQ8Xgl3aibTKQ1VZ0PoGN5SQsbvBRwnGVzoSxqaZZKdxBtX6HxOsAci4S9kJtkihLfKsURCPcYY2WuuQ63PI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DupjDfdW; arc=none smtp.client-ip=209.85.208.45
+	 In-Reply-To:Content-Type; b=fuNs1YHnXRTrOdnubXmIaXi+mZ/VT6VVn0cZP3IY7A8ka2JihPrHAZx0vt4533pmWgdWgFM5cSg5eAbx+KOaW8ce/6qiQd1xSiTKiym2K0K6oy+JzCm84MnG8/iLVEDK2FElOyAwvmIhpXEpdD6N5Pg11/4t02rRhxdrZld1Auk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e9pm3z2G; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DupjDfdW"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5bef295a2b4so922571a12.0;
-        Mon, 19 Aug 2024 13:07:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e9pm3z2G"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4280b3a7efaso37350605e9.0;
+        Mon, 19 Aug 2024 13:24:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724098068; x=1724702868; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1724099049; x=1724703849; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=AXG6IXtrOjPM85KujCO90THzzqzY1pavUqqhKYUalFU=;
-        b=DupjDfdWerMwK5w3VidWTMW/SnbAzPXMPMu5hmhYPukmYW4C0Xp4ouyoiZhdrFr0df
-         3dhYfrh3WJoTWDtLNDoQVo2w5RZJfmdKNwCgEB6jguQ7ItPpkYvZntRcfRnpsTPwhkrg
-         QSBHZ5I3PYDyRPD2AhYLQJMhkwXzbWfgUs5XmMe4JM+tXQ6Vy5nmLKeV/zhoD9TgDRzJ
-         hyT8VhUCWbDCsOMS8SnOmaP3K44TpvMEcHVPwSDDAhFQcRnwKYYkthqDC9G22zSd2khP
-         n8qPOebCEi1x9UdpMvwcILerJaODruxmBj7Mb7pN1EIqau51o6SAeWf6NzOuyT7+Fh7x
-         xkLQ==
+        bh=pVCycw6rNWu2pw2q882mngKNNnr7/8neNXxEraVA4KY=;
+        b=e9pm3z2GdpZUeUA4F7qgu/aagx2+EhizwEEnr4bY7Hriqedl8Od+HKUQOoPgcZF62/
+         CgCnyUNK0JZm45IWrgMO6y84Cj/e3A4clyrmk+gxx1TL34VnKEpppL2tdINGMq65srjE
+         9uTRhMfA8lhPjQZU1P00xQY5o6qg8vXJaXUKfqfoHIGg6X/O2EjrxtNpsHV18pohHXuz
+         /LeB/RqlgMsNDA0jv25JlNI71VhjYIdN/7USlC1NNcUFjD/j/eWZSdDQk/nrN9Tq1CbV
+         sg4DW1eim8En6FOGheiQhPH6/1Gbx7xfVLt9UmvFwc74k3VDaFVpqv9CdJNAd1Zzd13F
+         32GQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724098068; x=1724702868;
+        d=1e100.net; s=20230601; t=1724099049; x=1724703849;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AXG6IXtrOjPM85KujCO90THzzqzY1pavUqqhKYUalFU=;
-        b=NxDX3LfcAtRtaQqUuEbtR7fT+ZkJJQsU9Z7lUUAXZxrtNVe7pDbm5UQYYe6khIIMp9
-         BHMzN0VYYyWoVQO9flE3yGvd1gD05M5tbMsCqEmuMr1RXiLJlv3FpFhfNiWw5Jzlb7Ym
-         FIN8Fw1YEE9/EKVgBesfONYBuOXop17mXtqot03/gy5Ll88pPF7498vid2QxeFU1kVvl
-         VwlZUI/H3SeAKKHsddRkJuOrYsz9A7/2JADt8oeC0vOn+znXE6c43kuibdAYs8hvin17
-         la3fzSFURSUhI/8RVPuAkRP7ECATugEsh6RB+Q7Ff4gmajDAdkU2ehYhDkkMAUX0CUXp
-         Yh4g==
-X-Forwarded-Encrypted: i=1; AJvYcCVGyvbbjxIFllUp2yG0gdkVBFsUk+7lQ3EZZ9vUk5fMKb2LOmq0cG6U3cOiPugCJ8LxiRZKdAFIREU3MIc3PLZP3tNTw+OJwtCYDD8irOqDQfzVjCdAoUsV6G4aorX+5jPfKGjtOIV54XBzUPXVr9BWuWbx02unt+srQGMdf2mafeQ9m6+NpKEOO0tq16Qz7cOs+z2wd2pPPdjL2O1V3RfdWbzXSgZ+oSy3z0bRC37nrETzbvmOHz2331+/fA34zRWH2sPmYqdx
-X-Gm-Message-State: AOJu0YxxQNwsMAx5LjX8okw57/NavCixE2jgTv4tSx9OnVzqmsErCZsW
-	MS/VEry/4yr/yf/BM7pr2bKOtyDUYI3+bznBwDfpyOSzAynM9MFD
-X-Google-Smtp-Source: AGHT+IGJ+Gfht/qOvEgwrpTVPJu3XY+E8gChTgsY9fwcJajAIgQx/hjZADakWsaqM4RF1z+rkUv/TQ==
-X-Received: by 2002:a05:6402:51c6:b0:58c:b2b8:31b2 with SMTP id 4fb4d7f45d1cf-5bf0ac5b251mr753759a12.17.1724098067404;
-        Mon, 19 Aug 2024 13:07:47 -0700 (PDT)
-Received: from ?IPV6:2a02:8071:b783:140:927c:82ba:d32d:99c1? ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5becfc7cc93sm4516920a12.3.2024.08.19.13.07.46
+        bh=pVCycw6rNWu2pw2q882mngKNNnr7/8neNXxEraVA4KY=;
+        b=KjiBOanfRlLso0+UFeXvh0djylJRg1SUaiXIDYQPEl0Fm3xFVWf2yD/wIZj0lRURB5
+         MYbWKU6BFTQr1nNW/tJfxLm2Wq3TAiNBsFZcf6a6XDu/OCXZCXcJu5J0ahTE3XzYi/oq
+         tMhHngqGDYCHVRJePBRHIvg24Gb4kYJcvcs/AN6dvbiiP/SmKB5kaDKpc1Vt6JEUE5be
+         gaOn+g/34g93POjzsbv2ariRJoMECBZkHPvuvNsdTOug6LJHJC/266PllDZms7JB4Bc9
+         IAtZzykEZisVq/Wv1oP9hqI6Ez6OgVeL8MutFj948DAOmh4NTWyHAz4svv/A9UkuM/VT
+         mHyg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/+ohsLBChq/XtaR7/mkBj87zK3XuUsKkeWX1Ohg0rYEaw7KqofvCCBJkhYnpSWKDfr3s0ztWcWAOnLtyyFqQupqWZUw==@vger.kernel.org, AJvYcCXQfNrlz+8vpjcki2hWgkbaZTF6QRlMMNG0Fo20SaQKbUVJu2Vnd9cM3W3cp3+yxb1cpwgVjALOxA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqOTLTm+Q53I09CQyoYHI0UYxhdkttouM439u+ErukfNO7yYQk
+	LEIGiDtl5HlMHhXOkwhZJdSWbNdFb1aiLX7/Mp1Uje4RUYGVoLhQ
+X-Google-Smtp-Source: AGHT+IEifSQEVUjxtxewiggCSeVR5saXlASCFGnXqU4frqD/nSgv4RYjrS7emBwsXb5H4PXapuNAlA==
+X-Received: by 2002:a5d:6886:0:b0:371:83ae:808f with SMTP id ffacd0b85a97d-3719429e8bdmr9020902f8f.0.1724099048489;
+        Mon, 19 Aug 2024 13:24:08 -0700 (PDT)
+Received: from [192.168.1.27] (ip-109-090-180-058.um36.pools.vodafone-ip.de. [109.90.180.58])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37189897029sm11315468f8f.74.2024.08.19.13.24.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Aug 2024 13:07:46 -0700 (PDT)
-Message-ID: <6406891b-e116-4f10-99c7-1d434d7e8410@gmail.com>
-Date: Mon, 19 Aug 2024 22:07:45 +0200
+        Mon, 19 Aug 2024 13:24:07 -0700 (PDT)
+Message-ID: <52ae162a-96e3-4b7f-ace6-c4d1bb2dc004@gmail.com>
+Date: Mon, 19 Aug 2024 22:24:07 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,83 +61,115 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] OF support for Surface System Aggregator Module
-To: Hans de Goede <hdegoede@redhat.com>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Len Brown <lenb@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
- linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <quic_kdybcio@quicinc.com>,
- Krzysztof Kozlowski <krzk@kernel.org>
-References: <20240814-topic-sam-v3-0-a84588aad233@quicinc.com>
- <1edadffb-67d9-476e-b0f7-7f3fc34e9592@redhat.com>
+Subject: Re: [PATCH v3 09/14] platform/x86: acerhdf: Use the .should_bind()
+ thermal zone callback
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Lukasz Luba
+ <lukasz.luba@arm.com>, Zhang Rui <rui.zhang@intel.com>,
+ Hans de Goede <hdegoede@redhat.com>, Peter Kaestle <peter@piie.net>,
+ platform-driver-x86@vger.kernel.org
+References: <2205737.irdbgypaU6@rjwysocki.net>
+ <3779411.MHq7AAxBmi@rjwysocki.net>
 Content-Language: en-US
-From: Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <1edadffb-67d9-476e-b0f7-7f3fc34e9592@redhat.com>
+From: =?UTF-8?Q?Peter_K=C3=A4stle?= <xypiie@gmail.com>
+In-Reply-To: <3779411.MHq7AAxBmi@rjwysocki.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 8/19/24 1:57 PM, Hans de Goede wrote:
-> Hi,
+On 19.08.24 18:19, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> On 8/14/24 12:27 PM, Konrad Dybcio wrote:
->> Wire up OF support for SSAM drivers, to use with Surface Laptop 7 and
->> other Qualcomm-based devices.
->>
->> Patch 3 references compatible strings introduced in [1]
->>
->> [1] https://lore.kernel.org/linux-arm-msm/20240809-topic-sl7-v1-1-2090433d8dfc@quicinc.com/T/#u
->>
->> Signed-off-by: Konrad Dybcio <quic_kdybcio@quicinc.com>
+> Make the acerhdf driver use the .should_bind() thermal zone
+> callback to provide the thermal core with the information on whether or
+> not to bind the given cooling device to the given trip point in the
+> given thermal zone.  If it returns 'true', the thermal core will bind
+> the cooling device to the trip and the corresponding unbinding will be
+> taken care of automatically by the core on the removal of the involved
+> thermal zone or cooling device.
 > 
-> Thank you for your patch-series, I've applied the series to my
-> review-hans branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+> The previously existing acerhdf_bind() function bound cooling devices
+> to thermal trip point 0 only, so the new callback needs to return 'true'
+> for trip point 0.  However, it is straightforward to observe that trip
+> point 0 is an active trip point and the only other trip point in the
+> driver's thermal zone is a critical one, so it is sufficient to return
+> 'true' from that callback if the type of the given trip point is
+> THERMAL_TRIP_ACTIVE.
 > 
-> I did notice the following compiler warning when test building:
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Acked-by: Hans de Goede <hdegoede@redhat.com>
+
+Tested-by: Peter Kästle <peter@piie.net>
+
+> ---
 > 
-> drivers/platform/surface/surface_aggregator_registry.c:278:36: warning: ‘ssam_node_group_sl7’ defined but not used [-Wunused-variable]
->    278 | static const struct software_node *ssam_node_group_sl7[] = {
->        |                                    ^~~~~~~~~~~~~~~~~~~
+> v2 -> v3: Reorder (previously [12/17]) and add the ACK from Hans
 > 
-> One way to fix this would be add #ifdef CONFIG_OF around the definition
-> of ssam_node_group_sl7, but then future devicetree based surface devices
-> would need more #ifdef-s so instead I've solved it by squashing in this fix:
+> v1 -> v2: No changes
 > 
-> diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-> index 495cb4300617..ac96e883cb57 100644
-> --- a/drivers/platform/surface/surface_aggregator_registry.c
-> +++ b/drivers/platform/surface/surface_aggregator_registry.c
-> @@ -415,14 +415,12 @@ static const struct acpi_device_id ssam_platform_hub_acpi_match[] = {
->   };
->   MODULE_DEVICE_TABLE(acpi, ssam_platform_hub_acpi_match);
+> This patch only depends on the [06/14] introducing the .should_bind()
+> thermal zone callback:
+> 
+> https://lore.kernel.org/linux-pm/9334403.CDJkKcVGEf@rjwysocki.net/
+> 
+> ---
+>   drivers/platform/x86/acerhdf.c |   33 ++++++---------------------------
+>   1 file changed, 6 insertions(+), 27 deletions(-)
+> 
+> Index: linux-pm/drivers/platform/x86/acerhdf.c
+> ===================================================================
+> --- linux-pm.orig/drivers/platform/x86/acerhdf.c
+> +++ linux-pm/drivers/platform/x86/acerhdf.c
+> @@ -378,33 +378,13 @@ static int acerhdf_get_ec_temp(struct th
+>   	return 0;
+>   }
 >   
-> -#ifdef CONFIG_OF
-> -static const struct of_device_id ssam_platform_hub_of_match[] = {
-> +static const struct of_device_id ssam_platform_hub_of_match[] __maybe_unused = {
->   	/* Surface Laptop 7 */
->   	{ .compatible = "microsoft,romulus13", (void *)ssam_node_group_sl7 },
->   	{ .compatible = "microsoft,romulus15", (void *)ssam_node_group_sl7 },
->   	{ },
->   };
-> -#endif
->   
->   static int ssam_platform_hub_probe(struct platform_device *pdev)
+> -static int acerhdf_bind(struct thermal_zone_device *thermal,
+> -			struct thermal_cooling_device *cdev)
+> +static bool acerhdf_should_bind(struct thermal_zone_device *thermal,
+> +				const struct thermal_trip *trip,
+> +				struct thermal_cooling_device *cdev,
+> +				struct cooling_spec *c)
 >   {
+>   	/* if the cooling device is the one from acerhdf bind it */
+> -	if (cdev != cl_dev)
+> -		return 0;
+> -
+> -	if (thermal_zone_bind_cooling_device(thermal, 0, cdev,
+> -			THERMAL_NO_LIMIT, THERMAL_NO_LIMIT,
+> -			THERMAL_WEIGHT_DEFAULT)) {
+> -		pr_err("error binding cooling dev\n");
+> -		return -EINVAL;
+> -	}
+> -	return 0;
+> -}
+> -
+> -static int acerhdf_unbind(struct thermal_zone_device *thermal,
+> -			  struct thermal_cooling_device *cdev)
+> -{
+> -	if (cdev != cl_dev)
+> -		return 0;
+> -
+> -	if (thermal_zone_unbind_cooling_device(thermal, 0, cdev)) {
+> -		pr_err("error unbinding cooling dev\n");
+> -		return -EINVAL;
+> -	}
+> -	return 0;
+> +	return cdev == cl_dev && trip->type == THERMAL_TRIP_ACTIVE;
+>   }
+>   
+>   static inline void acerhdf_revert_to_bios_mode(void)
+> @@ -447,8 +427,7 @@ static int acerhdf_get_crit_temp(struct
+>   
+>   /* bind callback functions to thermalzone */
+>   static struct thermal_zone_device_ops acerhdf_dev_ops = {
+> -	.bind = acerhdf_bind,
+> -	.unbind = acerhdf_unbind,
+> +	.should_bind = acerhdf_should_bind,
+>   	.get_temp = acerhdf_get_ec_temp,
+>   	.change_mode = acerhdf_change_mode,
+>   	.get_crit_temp = acerhdf_get_crit_temp,
 > 
-> Once I've run some tests on this branch the patches there will be
-> added to the platform-drivers-x86/for-next branch and eventually
-> will be included in the pdx86 pull-request to Linus for the next
-> merge-window.
-
-I agree with Konrad, this looks like the best way to address this.
-Thanks!
-
-Best regards,
-Max
+> 
+> 
