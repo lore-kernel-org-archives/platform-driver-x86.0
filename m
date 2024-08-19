@@ -1,332 +1,256 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2064.outbound.protection.outlook.com [40.107.223.64])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343D014BF87
-	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Aug 2024 06:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724049274; cv=fail; b=pe0zbQGeOo3mNhTEYT2s+n2Q2gH4KUirfz4DnWRFmEX2zsdFEC1aldRhiokci/0ey/ssZ5uwRh1dmPX6Uaj+7G9znp7y2uCLIDwLePIt+BsysgYFhFggUgGTYYlcEl8jBQkkLy/OFGT97KjVDmAtMjdLl13EC4ixZtwPNB3+upI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724049274; c=relaxed/simple;
-	bh=3/X8WVBhUvhOfUf0ctECrjpc23KPdw0mTCZkz4GQ/30=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xcv3rYR67WOoTkv3gZotxg5Yj9KiNakGsynLcF/Ne5cyHszaNN6Nam960AXCwzVAa2iI2tLSOWuKdUge+uAEWxXI0pzGgEClbQXLGjPM2rllFabXPFTdgARD+eMBah+KS+GKQQ6wTQ+6FnzQte07B8ggm3wegxuWJVQUOC4gcxE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=srG8VWBY; arc=fail smtp.client-ip=40.107.223.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE511537DE
+	for <platform-driver-x86@vger.kernel.org>; Mon, 19 Aug 2024 10:07:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724062042; cv=none; b=F1U3kvW3qMqgp58IaCBiZy2A+q8avDxrFWH8FANNFOfohqe8Onk8Ncjvw1Wn6kdsMwWx/vfPieaqLBO/raBMaL/gVK5aJTJpcFnUnjGTVDrX9CS8/62RYPmvsK5tUJwHyzbnNwrFymSy0w4oqkCHWQ8apI/TGuO6zSbbbjO6+rk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724062042; c=relaxed/simple;
+	bh=OTZqu9i8iFAKDxGxV/EGk1joxUnibpwyhSnuvyz/Glo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZgWuPDX8CYoa0/hapXUl5rG7l7d47HsICgQ1xKe5GllvV5D3cI/f5aVHaf+HzKP/jrchDfrr012Qev6m96nf8HnXS7afz0LmV7LEVCRI91YjXAZw+4Sw7JH47w5noJs+WxT3MDEoXuKFoTfDOxCjYYf0aN+nKlQNsuRsAqodvcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DKZ7IzIH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="srG8VWBY"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=n4QHExN6QDmxnsbMy7OVscQ20D8NuHbdMvAXilKC7a0YQdPRYhSGZSoujhPAQzAM6duAIW2sbb8oyFC8Gd3HeMGxopmJI6Ri1WOrXcflaMCwD/bOkh/0ml8bGSWdzycsrYR+Vc6Wlib7B3WPgMEVucu5zPfoskRGkqqBgWqao5iNWkjal2jJN26s51ViW2sLn8RjlX0WAdCHw+PiNHEoaNzmIezGPQ178qoQr1lRI3ybfDVgJSMMydXdlr8VUuawmb8XbWY7Gx+M/W51fCgZd8V3eBmOwRUSax8qPgFDkLDNcFoWwtWW4BPOGSY+5nYIoEBb1ft4u2n42UACXnTqrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MtrdIu5Mxj5ZJdahrO0z/zpX4Gbvf7sEFuOZmsWHt7U=;
- b=xQmF9suAIIHLeNK963rxYNTqoUGBWb7eov/AuwQqnJhBMiaW8Il1M6IsMd6m8e8PKM7ZHWX3tRPjIIsceYqyL32s0HucVe7RETa/Oi76N315aALqCzscuN74+0QdIxJuWZyo6fLSB/0qKVFuneZrRXGDvI8NVriKvdK1TvO4CiZrT1honaIIU+hVeG+5q1esQp/bDbJ3m/VYw34hdc259tDMhw2KJzDl/vWcXbwJ+ApZyy6juMLpsY7+OnjXFWKlE+Jtv4EMGuE9TUVqRWB3U3pY5lJ6kerS6XMSir88xp8U7bnup7QUAKUvAl2qbOSdywPB/J4s8i6PusBom6v8xw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MtrdIu5Mxj5ZJdahrO0z/zpX4Gbvf7sEFuOZmsWHt7U=;
- b=srG8VWBYTce9zHhuDsKLb7I6hrhW2taubpuh9CMw0YoGs3H9ZDM393dUpM/E/1ikQgAXV5V3y0H8At9sGHbAoNoY+ggZ2nI1nRloN9RlOMRBAEw51tWK+bLx97y9JXoeP+GJhDum+GPSFAF5MS7Ae4DCalee5ZuU0dYffbxHiFc=
-Received: from DS7PR03CA0222.namprd03.prod.outlook.com (2603:10b6:5:3ba::17)
- by LV3PR12MB9354.namprd12.prod.outlook.com (2603:10b6:408:211::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7875.19; Mon, 19 Aug
- 2024 06:34:28 +0000
-Received: from DS2PEPF00003445.namprd04.prod.outlook.com
- (2603:10b6:5:3ba:cafe::c9) by DS7PR03CA0222.outlook.office365.com
- (2603:10b6:5:3ba::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7875.21 via Frontend
- Transport; Mon, 19 Aug 2024 06:34:27 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS2PEPF00003445.mail.protection.outlook.com (10.167.17.72) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7897.11 via Frontend Transport; Mon, 19 Aug 2024 06:34:27 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 19 Aug
- 2024 01:34:25 -0500
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
-CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>, "Shyam
- Sundar S K" <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH v4 2/2] platform/x86/amd/pmf: Update SMU metrics table for 1AH family series
-Date: Mon, 19 Aug 2024 12:04:04 +0530
-Message-ID: <20240819063404.378061-2-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240819063404.378061-1-Shyam-sundar.S-k@amd.com>
-References: <20240819063404.378061-1-Shyam-sundar.S-k@amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DKZ7IzIH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724062039;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EysrvIUMNy8xKCLx+ThI/nbWm4SjR6GBQthz7OLg1Ks=;
+	b=DKZ7IzIH80RWKjeubPZt5Xi75Yf6Dxi1DWx/EGE+bMIZc3B3N+Eo5wPPj9TCNJVNeOrC67
+	+kq+eDP6kyulkjU7IPZKPI23SUUrFURGKu2rV0VJEkwwDMNZGcW1CA84UiqUUD7TVsLvwU
+	RkecomOoJIWcg9CnsgkviZg04+nIq8E=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-601-XLOj-risN06xuV3Nvsp21Q-1; Mon, 19 Aug 2024 06:07:18 -0400
+X-MC-Unique: XLOj-risN06xuV3Nvsp21Q-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2ef23a67c5bso35532121fa.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Aug 2024 03:07:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724062037; x=1724666837;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EysrvIUMNy8xKCLx+ThI/nbWm4SjR6GBQthz7OLg1Ks=;
+        b=lUevpNTzhsPteSK43RQDgRu6dKqciqomHSwnpUY2rxCIlt800MCpkj5xAiJ98go4gu
+         76P0ujpYs2h1cuk4D1vKmtYDxBz23pWk83JRqzKpNtOi62gWxqA78IARKW2x4TNRnUw7
+         b9HbMZ0nhj7is4BRvAAMCTWjA2vbJn4M7NmNWP+ckEoJu7hTkCWS/0Pt+TTK/jUbj8Ec
+         csQor5+NakZna33gWa/N5oA3HFTBwoI3m+AV5P7yrOIzCJbUWY7rNrmcRb5BqE/8jgG+
+         xA+znLOnE3LRLsCcI4HUcQ3ndzREU6sCcwUO5GQ+KrXiFxkEttgscnODpjcAxDlXWk6S
+         MROw==
+X-Forwarded-Encrypted: i=1; AJvYcCWkAs9WINZ0hJUrZjs+SB+AvcnLowlDlCZioH08ZImkq1M70xXZnYpa5Om1StN6mw9nzKzXRsl1eI0KYLA19j1+GnCYnQj7rFgwUENDIWFV9fZVdQ==
+X-Gm-Message-State: AOJu0YxQEwfrRTxf/R6Bca9TAA3dc3fSbuGPBWC6/LMrWkwbRdyeHQc0
+	50MaG34XhLtrJvZKqXIxytgg0QewuwOlbqlbzfWz8K9o71UCDANK3ivod/0y4hE3PpGKy3DIDU7
+	2elWAQxf9x07nY4A0XvQ8YZ5L0mFAydevUNpKiM7jsEuUu/XIn2qdGb03/mp0HpGVnMW/lNQ=
+X-Received: by 2002:a2e:a9a0:0:b0:2f3:cabc:6158 with SMTP id 38308e7fff4ca-2f3cabc61b1mr52175251fa.11.1724062036876;
+        Mon, 19 Aug 2024 03:07:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGTmhw3ITrEcIYKIb9VYX/r0K+S8SOMAw2LuUQxopyVE1WDUaUhvcIikl2IOIXVop8d3wWtIg==
+X-Received: by 2002:a2e:a9a0:0:b0:2f3:cabc:6158 with SMTP id 38308e7fff4ca-2f3cabc61b1mr52174991fa.11.1724062036210;
+        Mon, 19 Aug 2024 03:07:16 -0700 (PDT)
+Received: from [10.40.98.157] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5bebbdfa4f1sm5371237a12.43.2024.08.19.03.07.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Aug 2024 03:07:15 -0700 (PDT)
+Message-ID: <4012a5af-c575-4c83-857b-2e922c3cd1de@redhat.com>
+Date: Mon, 19 Aug 2024 12:07:15 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] platform/x86: intel/pmc: Remove unused param idx from
+ pmc_for_each_mode()
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Xi Pardee <xi.pardee@linux.intel.com>,
+ Rajvi Jingar <rajvi.jingar@linux.intel.com>,
+ Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@intel.com>, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Kane Chen <kane.chen@intel.com>, =?UTF-8?Q?Marek_Ma=C5=9Blanka?=
+ <mmaslanka@google.com>
+References: <20240806083047.1562-1-ilpo.jarvinen@linux.intel.com>
+Content-Language: en-US
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240806083047.1562-1-ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PEPF00003445:EE_|LV3PR12MB9354:EE_
-X-MS-Office365-Filtering-Correlation-Id: 806e412f-4b70-4943-5bce-08dcc018f991
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?REtoa2FRdmxJbWJreU45TVkrMTJBQ2hOVkt4RVFnNEM3NWREY1lyZkZaTWpo?=
- =?utf-8?B?NEFVemZyb1Vnekt0RDhrTVhMYUdyWGIzTk16VEhtaFJyNG51WjFSUDZBN3pV?=
- =?utf-8?B?bjY2N3RCdnZwR1NFWUFjcUtTZWYxcDltdSt2OGM0TkZlRTAxano3VzNyUVQ5?=
- =?utf-8?B?NmV3NWNvTTlSY21DUHZEbXFwNyszVFBONWFTRVpYdENkU3p2RlFTL09iRHBH?=
- =?utf-8?B?YkpMMXZudmVhY29wRWRDQUZtbGd5eUVzSjZ4L0tzQUVpOWZLcERObmk0MklI?=
- =?utf-8?B?MmF6TGlsS3FSOHpPL1l0OFFqZU9VWExDWHE1N2YwS1RVM0N0REFqU3hhZ2Uv?=
- =?utf-8?B?WkdWVlRRcHhVc1haN3hPdVRBTlJQVkFKcXhtMFR0MUVFUXViYTRtMloyZXE1?=
- =?utf-8?B?VWVtcCtMdlk4RTVHV090T0NEZk42WDlQOGJrMS84Ukc4Q0luRk12a0dIY2R4?=
- =?utf-8?B?eXdBT1JHcTczNHhOc1FhN1VoK0R4Nnp1ZUFlZStFV2ErSThmWGUwVkFvTzNq?=
- =?utf-8?B?eDRxaTRTQnpsOWxmeTUxWngzYURETDV6cG5IbE44S3ZFR2s0RFlncEZ1U1U3?=
- =?utf-8?B?cjVWbWVTVUFlZGlYMHJoM3pzQmkwZFBRUnU1TWRMY0ZPUVh0bktiZGFoN1g2?=
- =?utf-8?B?RjlGNmVKZmlsZlcreGF4cFNIOG13SHFkSURPWmtzcUFwT0lqRVVSQTUrV1BJ?=
- =?utf-8?B?ZUwwOUdGd3ZxNzJJS0VtbmdvcG01UXUrelN6NDBKUmY4T1ZQT09Da3ppRElz?=
- =?utf-8?B?VTFVTnRXamdMTStyd2ZHZ1dXR09UT2o1ZGJpV2IvTXBkWDFtb3dWYkVSWGJm?=
- =?utf-8?B?ckQzbmpnOU8zQXZPeCtOSmlzOVZsOEpoeWN5OHBETGRRWDgvSHRHVzA3ZG9M?=
- =?utf-8?B?RURUbTlaM1JCUDY1d0xkNGR3YWhIVjdqRmhEQ2VHOE1qRHNzN3NmVlU0Tkd4?=
- =?utf-8?B?RzVRWmI3UlZiK3gzdHFJZVRNQnFQU3pyQVVud2xGMGFLM3c4QnFoZ21lT1Nt?=
- =?utf-8?B?a1FqM2RaUkg4elROeCt6aFV5Vit4ejhhUk80K0NYakdkSDRSSUNBeWkxNHRG?=
- =?utf-8?B?blRXeTE3ME9wT1lwYWtTMS9UcW84N1paaGU4MHE1R0pqWVpqamJLVVk1LzI4?=
- =?utf-8?B?UFhMT0tBU1d4bGJvdnBZZFgvYU5iTC9qWmlZdXF2KzVzYUtZUEpaWDQ1alNO?=
- =?utf-8?B?ZVJsSEVjaWw5VjRtU2ZGbEZCWXdyOWFvTWFBZWY4OTVtQ0kvTmpMYTBycEhs?=
- =?utf-8?B?a2FyQTlNRU5Gc2NXQS9VTjE0Sm1yU3AzeUozSkF0L2EwVHJnc21sSmx6QjV1?=
- =?utf-8?B?QjZjeGRQQlRPL1dhQTVhd1Ywb2VjQ0RPVmFCV09oR3VUT2tTT090dkthdkhh?=
- =?utf-8?B?N29VQzFRU2dKQWlib3A5TmU2TnN1d0hmY0NHUS85SS8zZzZ0aUtQTWdXczhM?=
- =?utf-8?B?R3llWVV2U2c0YjZOcTN6ejZRRnhuTFlVQmpCUzEreEI1VDZLYzYvQVhzdWFG?=
- =?utf-8?B?elo0K1VsRWpNc3ZmNkE1aWZlK0dkTTZjWDcvczc5alh5SWJJMStUYVhaZnBr?=
- =?utf-8?B?Yk85SUovMDFkNmV3MVo0YXJ4Qmo1elEyNXAzVC8zQWtSUk1qTDNtRTkzN3A4?=
- =?utf-8?B?WHplQXZnb3Z2cUl5SGRtS2FWa01hZE84VHhjZWNwbTgyOWNDL2N6a1F2OHF5?=
- =?utf-8?B?dUNRVmZkdk9vMHRBNVhBdE1RK1BIc0hhOEpWTDhTSXZadDROL0JoY2tYZXky?=
- =?utf-8?B?ZU8xNjFSVU5HcjdESU9qRTJSekMwaHYwR01CUlhVd25hdUFnT0VvMTVVMmJ5?=
- =?utf-8?B?WDQzdlZtbTlqZUYyODNtcUdNQVVNMi9iUituRDBmYjl2YjRKTHlVZ0NHRTZB?=
- =?utf-8?B?RCtjU09yWE1JVWJ2NUlhTHFnOGhpRjA2NFdnN1o5VGRQZm1QRkFoQ3pvY2hD?=
- =?utf-8?Q?50SkjE78YaTvQYSNfFCwbmO/PpcVhwId?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2024 06:34:27.7475
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 806e412f-4b70-4943-5bce-08dcc018f991
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS2PEPF00003445.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9354
 
-The SMU metrics table has been revised for the 1AH family series.
-Introduce a new metrics table structure to retrieve comprehensive metrics
-information from the PMFW. This information will be utilized by the PMF
-driver to adjust system thermals.
+Hi,
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
-v4:
- - Add Reviewed-by Tag
- - use size_t instead of u16
- - other cosmetic remarks
+On 8/6/24 10:30 AM, Ilpo Järvinen wrote:
+> pmc_for_each_mode() takes i (index) variable name as a parameter but
+> the loop index is not used by any of the callers. Make the index
+> variable internal to pmc_for_each_mode().
+> 
+> This also changes the loop logic such that ->lpm_en_modes[] is never
+> read beyond num_lpm_modes.
+> 
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-v3:
- - Address remarks from Ilpo on the helper for C0 residency calculation
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-v2:
- - Align comments
- - add helper for max and avg calculation of C0 residency
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
- drivers/platform/x86/amd/pmf/core.c | 14 +++++++-
- drivers/platform/x86/amd/pmf/pmf.h  | 49 +++++++++++++++++++++++++++
- drivers/platform/x86/amd/pmf/spc.c  | 51 ++++++++++++++++++++---------
- 3 files changed, 97 insertions(+), 17 deletions(-)
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
-diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-index 88314b0277a3..d6af0ca036f1 100644
---- a/drivers/platform/x86/amd/pmf/core.c
-+++ b/drivers/platform/x86/amd/pmf/core.c
-@@ -255,7 +255,19 @@ int amd_pmf_set_dram_addr(struct amd_pmf_dev *dev, bool alloc_buffer)
- 
- 	/* Get Metrics Table Address */
- 	if (alloc_buffer) {
--		dev->buf = kzalloc(sizeof(dev->m_table), GFP_KERNEL);
-+		switch (dev->cpu_id) {
-+		case AMD_CPU_ID_PS:
-+		case AMD_CPU_ID_RMB:
-+			dev->mtable_size = sizeof(dev->m_table);
-+			break;
-+		case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
-+			dev->mtable_size = sizeof(dev->m_table_v2);
-+			break;
-+		default:
-+			dev_err(dev->dev, "Invalid CPU id: 0x%x", dev->cpu_id);
-+		}
-+
-+		dev->buf = kzalloc(dev->mtable_size, GFP_KERNEL);
- 		if (!dev->buf)
- 			return -ENOMEM;
- 	}
-diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-index 9fc26f672f12..8ce8816da9c1 100644
---- a/drivers/platform/x86/amd/pmf/pmf.h
-+++ b/drivers/platform/x86/amd/pmf/pmf.h
-@@ -198,6 +198,53 @@ struct apmf_fan_idx {
- 	u32 fan_ctl_idx;
- } __packed;
- 
-+struct smu_pmf_metrics_v2 {
-+	u16 core_frequency[16];		/* MHz */
-+	u16 core_power[16];		/* mW */
-+	u16 core_temp[16];		/* centi-C */
-+	u16 gfx_temp;			/* centi-C */
-+	u16 soc_temp;			/* centi-C */
-+	u16 stapm_opn_limit;		/* mW */
-+	u16 stapm_cur_limit;		/* mW */
-+	u16 infra_cpu_maxfreq;		/* MHz */
-+	u16 infra_gfx_maxfreq;		/* MHz */
-+	u16 skin_temp;			/* centi-C */
-+	u16 gfxclk_freq;		/* MHz */
-+	u16 fclk_freq;			/* MHz */
-+	u16 gfx_activity;		/* GFX busy % [0-100] */
-+	u16 socclk_freq;		/* MHz */
-+	u16 vclk_freq;			/* MHz */
-+	u16 vcn_activity;		/* VCN busy % [0-100] */
-+	u16 vpeclk_freq;		/* MHz */
-+	u16 ipuclk_freq;		/* MHz */
-+	u16 ipu_busy[8];		/* NPU busy % [0-100] */
-+	u16 dram_reads;			/* MB/sec */
-+	u16 dram_writes;		/* MB/sec */
-+	u16 core_c0residency[16];	/* C0 residency % [0-100] */
-+	u16 ipu_power;			/* mW */
-+	u32 apu_power;			/* mW */
-+	u32 gfx_power;			/* mW */
-+	u32 dgpu_power;			/* mW */
-+	u32 socket_power;		/* mW */
-+	u32 all_core_power;		/* mW */
-+	u32 filter_alpha_value;		/* time constant [us] */
-+	u32 metrics_counter;
-+	u16 memclk_freq;		/* MHz */
-+	u16 mpipuclk_freq;		/* MHz */
-+	u16 ipu_reads;			/* MB/sec */
-+	u16 ipu_writes;			/* MB/sec */
-+	u32 throttle_residency_prochot;
-+	u32 throttle_residency_spl;
-+	u32 throttle_residency_fppt;
-+	u32 throttle_residency_sppt;
-+	u32 throttle_residency_thm_core;
-+	u32 throttle_residency_thm_gfx;
-+	u32 throttle_residency_thm_soc;
-+	u16 psys;
-+	u16 spare1;
-+	u32 spare[6];
-+} __packed;
-+
- struct smu_pmf_metrics {
- 	u16 gfxclk_freq; /* in MHz */
- 	u16 socclk_freq; /* in MHz */
-@@ -295,6 +342,7 @@ struct amd_pmf_dev {
- 	int hb_interval; /* SBIOS heartbeat interval */
- 	struct delayed_work heart_beat;
- 	struct smu_pmf_metrics m_table;
-+	struct smu_pmf_metrics_v2 m_table_v2;
- 	struct delayed_work work_buffer;
- 	ktime_t start_time;
- 	int socket_power_history[AVG_SAMPLE_SIZE];
-@@ -319,6 +367,7 @@ struct amd_pmf_dev {
- 	bool smart_pc_enabled;
- 	u16 pmf_if_version;
- 	struct input_dev *pmf_idev;
-+	size_t mtable_size;
- };
- 
- struct apmf_sps_prop_granular_v2 {
-diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
-index 3c153fb1425e..b5183969f9bf 100644
---- a/drivers/platform/x86/amd/pmf/spc.c
-+++ b/drivers/platform/x86/amd/pmf/spc.c
-@@ -53,30 +53,49 @@ void amd_pmf_dump_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *
- void amd_pmf_dump_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in) {}
- #endif
- 
--static void amd_pmf_get_smu_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in)
-+static void amd_pmf_get_c0_residency(u16 *core_res, size_t size, struct ta_pmf_enact_table *in)
- {
- 	u16 max, avg = 0;
- 	int i;
- 
--	memset(dev->buf, 0, sizeof(dev->m_table));
--	amd_pmf_send_cmd(dev, SET_TRANSFER_TABLE, 0, 7, NULL);
--	memcpy(&dev->m_table, dev->buf, sizeof(dev->m_table));
--
--	in->ev_info.socket_power = dev->m_table.apu_power + dev->m_table.dgpu_power;
--	in->ev_info.skin_temperature = dev->m_table.skin_temp;
--
- 	/* Get the avg and max C0 residency of all the cores */
--	max = dev->m_table.avg_core_c0residency[0];
--	for (i = 0; i < ARRAY_SIZE(dev->m_table.avg_core_c0residency); i++) {
--		avg += dev->m_table.avg_core_c0residency[i];
--		if (dev->m_table.avg_core_c0residency[i] > max)
--			max = dev->m_table.avg_core_c0residency[i];
-+	max = *core_res;
-+	for (i = 0; i < size; i++) {
-+		avg += core_res[i];
-+		if (core_res[i] > max)
-+			max = core_res[i];
- 	}
--
--	avg = DIV_ROUND_CLOSEST(avg, ARRAY_SIZE(dev->m_table.avg_core_c0residency));
-+	avg = DIV_ROUND_CLOSEST(avg, size);
- 	in->ev_info.avg_c0residency = avg;
- 	in->ev_info.max_c0residency = max;
--	in->ev_info.gfx_busy = dev->m_table.avg_gfx_activity;
-+}
-+
-+static void amd_pmf_get_smu_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in)
-+{
-+	/* Get the updated metrics table data */
-+	memset(dev->buf, 0, dev->mtable_size);
-+	amd_pmf_send_cmd(dev, SET_TRANSFER_TABLE, 0, 7, NULL);
-+
-+	switch (dev->cpu_id) {
-+	case AMD_CPU_ID_PS:
-+		memcpy(&dev->m_table, dev->buf, dev->mtable_size);
-+		in->ev_info.socket_power = dev->m_table.apu_power + dev->m_table.dgpu_power;
-+		in->ev_info.skin_temperature = dev->m_table.skin_temp;
-+		in->ev_info.gfx_busy = dev->m_table.avg_gfx_activity;
-+		amd_pmf_get_c0_residency(dev->m_table.avg_core_c0residency,
-+					 ARRAY_SIZE(dev->m_table.avg_core_c0residency), in);
-+		break;
-+	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
-+		memcpy(&dev->m_table_v2, dev->buf, dev->mtable_size);
-+		in->ev_info.socket_power = dev->m_table_v2.apu_power + dev->m_table_v2.dgpu_power;
-+		in->ev_info.skin_temperature = dev->m_table_v2.skin_temp;
-+		in->ev_info.gfx_busy = dev->m_table_v2.gfx_activity;
-+		amd_pmf_get_c0_residency(dev->m_table_v2.core_c0residency,
-+					 ARRAY_SIZE(dev->m_table_v2.core_c0residency), in);
-+		break;
-+	default:
-+		dev_err(dev->dev, "Unsupported CPU id: 0x%x", dev->cpu_id);
-+	}
- }
- 
- static const char * const pmf_battery_supply_name[] = {
--- 
-2.25.1
+Regards,
+
+Hans
+
+
+> ---
+>  drivers/platform/x86/intel/pmc/core.c       | 18 +++++++-----------
+>  drivers/platform/x86/intel/pmc/core.h       | 10 ++++++----
+>  drivers/platform/x86/intel/pmc/core_ssram.c |  4 ++--
+>  3 files changed, 15 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index 01ae71c6df59..0e88a89a236a 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -728,12 +728,11 @@ static int pmc_core_substate_res_show(struct seq_file *s, void *unused)
+>  	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+>  	const int lpm_adj_x2 = pmc->map->lpm_res_counter_step_x2;
+>  	u32 offset = pmc->map->lpm_residency_offset;
+> -	unsigned int i;
+>  	int mode;
+>  
+>  	seq_printf(s, "%-10s %-15s\n", "Substate", "Residency");
+>  
+> -	pmc_for_each_mode(i, mode, pmcdev) {
+> +	pmc_for_each_mode(mode, pmcdev) {
+>  		seq_printf(s, "%-10s %-15llu\n", pmc_lpm_modes[mode],
+>  			   adjust_lpm_residency(pmc, offset + (4 * mode), lpm_adj_x2));
+>  	}
+> @@ -787,11 +786,10 @@ DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_l_sts_regs);
+>  static void pmc_core_substate_req_header_show(struct seq_file *s, int pmc_index)
+>  {
+>  	struct pmc_dev *pmcdev = s->private;
+> -	unsigned int i;
+>  	int mode;
+>  
+>  	seq_printf(s, "%30s |", "Element");
+> -	pmc_for_each_mode(i, mode, pmcdev)
+> +	pmc_for_each_mode(mode, pmcdev)
+>  		seq_printf(s, " %9s |", pmc_lpm_modes[mode]);
+>  
+>  	seq_printf(s, " %9s |\n", "Status");
+> @@ -833,14 +831,14 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
+>  			u32 req_mask = 0;
+>  			u32 lpm_status;
+>  			const struct pmc_bit_map *map;
+> -			int mode, idx, i, len = 32;
+> +			int mode, i, len = 32;
+>  
+>  			/*
+>  			 * Capture the requirements and create a mask so that we only
+>  			 * show an element if it's required for at least one of the
+>  			 * enabled low power modes
+>  			 */
+> -			pmc_for_each_mode(idx, mode, pmcdev)
+> +			pmc_for_each_mode(mode, pmcdev)
+>  				req_mask |= lpm_req_regs[mp + (mode * num_maps)];
+>  
+>  			/* Get the last latched status for this map */
+> @@ -863,7 +861,7 @@ static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
+>  				seq_printf(s, "pmc%d: %26s |", pmc_index, map[i].name);
+>  
+>  				/* Loop over the enabled states and display if required */
+> -				pmc_for_each_mode(idx, mode, pmcdev) {
+> +				pmc_for_each_mode(mode, pmcdev) {
+>  					bool required = lpm_req_regs[mp + (mode * num_maps)] &
+>  							bit_mask;
+>  					seq_printf(s, " %9s |", required ? "Required" : " ");
+> @@ -925,7 +923,6 @@ static int pmc_core_lpm_latch_mode_show(struct seq_file *s, void *unused)
+>  {
+>  	struct pmc_dev *pmcdev = s->private;
+>  	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+> -	unsigned int idx;
+>  	bool c10;
+>  	u32 reg;
+>  	int mode;
+> @@ -939,7 +936,7 @@ static int pmc_core_lpm_latch_mode_show(struct seq_file *s, void *unused)
+>  		c10 = true;
+>  	}
+>  
+> -	pmc_for_each_mode(idx, mode, pmcdev) {
+> +	pmc_for_each_mode(mode, pmcdev) {
+>  		if ((BIT(mode) & reg) && !c10)
+>  			seq_printf(s, " [%s]", pmc_lpm_modes[mode]);
+>  		else
+> @@ -960,7 +957,6 @@ static ssize_t pmc_core_lpm_latch_mode_write(struct file *file,
+>  	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+>  	bool clear = false, c10 = false;
+>  	unsigned char buf[8];
+> -	unsigned int idx;
+>  	int m, mode;
+>  	u32 reg;
+>  
+> @@ -979,7 +975,7 @@ static ssize_t pmc_core_lpm_latch_mode_write(struct file *file,
+>  	mode = sysfs_match_string(pmc_lpm_modes, buf);
+>  
+>  	/* Check string matches enabled mode */
+> -	pmc_for_each_mode(idx, m, pmcdev)
+> +	pmc_for_each_mode(m, pmcdev)
+>  		if (mode == m)
+>  			break;
+>  
+> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+> index ea04de7eb9e8..c8851f128adc 100644
+> --- a/drivers/platform/x86/intel/pmc/core.h
+> +++ b/drivers/platform/x86/intel/pmc/core.h
+> @@ -604,10 +604,12 @@ int lnl_core_init(struct pmc_dev *pmcdev);
+>  void cnl_suspend(struct pmc_dev *pmcdev);
+>  int cnl_resume(struct pmc_dev *pmcdev);
+>  
+> -#define pmc_for_each_mode(i, mode, pmcdev)		\
+> -	for (i = 0, mode = pmcdev->lpm_en_modes[i];	\
+> -	     i < pmcdev->num_lpm_modes;			\
+> -	     i++, mode = pmcdev->lpm_en_modes[i])
+> +#define pmc_for_each_mode(mode, pmcdev)						\
+> +	for (unsigned int __i = 0, __cond;					\
+> +	     __cond = __i < (pmcdev)->num_lpm_modes,				\
+> +	     __cond && ((mode) = (pmcdev)->lpm_en_modes[__i]),			\
+> +	     __cond;								\
+> +	     __i++)
+>  
+>  #define DEFINE_PMC_CORE_ATTR_WRITE(__name)				\
+>  static int __name ## _open(struct inode *inode, struct file *file)	\
+> diff --git a/drivers/platform/x86/intel/pmc/core_ssram.c b/drivers/platform/x86/intel/pmc/core_ssram.c
+> index 1bde86c54eb9..9eea5118653b 100644
+> --- a/drivers/platform/x86/intel/pmc/core_ssram.c
+> +++ b/drivers/platform/x86/intel/pmc/core_ssram.c
+> @@ -45,7 +45,7 @@ static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc)
+>  	struct telem_endpoint *ep;
+>  	const u8 *lpm_indices;
+>  	int num_maps, mode_offset = 0;
+> -	int ret, mode, i;
+> +	int ret, mode;
+>  	int lpm_size;
+>  	u32 guid;
+>  
+> @@ -116,7 +116,7 @@ static int pmc_core_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc)
+>  	 *
+>  	 */
+>  	mode_offset = LPM_HEADER_OFFSET + LPM_MODE_OFFSET;
+> -	pmc_for_each_mode(i, mode, pmcdev) {
+> +	pmc_for_each_mode(mode, pmcdev) {
+>  		u32 *req_offset = pmc->lpm_req_regs + (mode * num_maps);
+>  		int m;
+>  
 
