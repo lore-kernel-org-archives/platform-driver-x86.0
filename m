@@ -1,77 +1,66 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DEA45008;
-	Tue, 20 Aug 2024 21:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75EA815C156;
+	Wed, 21 Aug 2024 05:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724190040; cv=none; b=Eb7+rSug47X8p//Acnvzn1mjjlCn4kgSP4mAta3qeGU2JBXaKzXA/HBp5AiwtuJH9vqA+8tYyaGIveX1juTToANBhT/5eCd4AI0lIi8z5Jdf+X08tqQyvA1ZUMa5GYImMRJeM8hRDwdGdXphxzEDUmmxQ+lWneczQSZFKJyUPho=
+	t=1724217911; cv=none; b=ca3wEdwcnFiR2kze1WiK6WY1f1hWnINVQqQyqD7w9PFuBuMapZp5R6nL/N29QlzZ8NwnNxk9xPHEOA+THEKQZa33j5s2aWfgDkQ/MnFzzsVjNjf6tXUQxR//Qd7UPVE3LN5XrxwqlXmrAvDBsh5hWOMpfPjRaH0kna3+G+jBz+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724190040; c=relaxed/simple;
-	bh=Ca6gwEKH80OPr+KsoobU9z79sFuQS6nDgaPIgItVHyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VHnqEi39sajQKOjWShE16MknwZ7FNJz/t9nUqSA4lAuPcK8n2ougARAsYcIc0BDStESXBqZY6eENmSzFtvxFwWzzkLopVFPu8PxT4dO5W7O25nBkH+KbsOjimQtGC6NaRVBmrFwvZrjQ7NwX2GAj5ZUGISJqsSzo7gb51TZ05l0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gnOWbE3q; arc=none smtp.client-ip=209.85.208.171
+	s=arc-20240116; t=1724217911; c=relaxed/simple;
+	bh=0y8jcKqoBZzfAaFVXYOkn7gG05SgZoIunQLbweuAF7U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ImCnyo5/POj/upuz7jeqmR4KxPMHclrWr2gsWKeR1zr/uqpzENp/Uk9ZnPM78KWkuCqWJSWlmm9mkDV6gVO1UZUeqSWyb6WQiD7/WJD+sB6KtXigGXsnWE7JHTkrDdw3H37nbDbIuGhcJf8fKAFO3xEm0Ovy6+wqZe+IXhG6BsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZoDy6sbZ; arc=none smtp.client-ip=209.85.219.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gnOWbE3q"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2f029e9c9cfso33754161fa.2;
-        Tue, 20 Aug 2024 14:40:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZoDy6sbZ"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e1633202008so2892171276.2;
+        Tue, 20 Aug 2024 22:25:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724190036; x=1724794836; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=R9iSw6uozci3pG6LRIrPTc4SM7kkJjQGgR6ebryZrPo=;
-        b=gnOWbE3qzJAF/yc484GYgInHMrCxfmnKX44JLbgealCEXPY2rJj+6kQYpnFKbSDiyQ
-         QUb0JxT/+NehVXWpUtrG1FYXHssGbZv6v5LRtz+Lr5QE5gYnQW7AZEc0U1obZao3n39F
-         t8oMUtSgUafKYSjqb6vJi6CNbqiJRg6bmNo4VS2VM4IW0Q97oJD9lfJG5Fiw/in0pDWa
-         HAi1p4QKtYFVe4NdMbm4O1YMIPilQC4Gxvr7RrKD/tHseM2nDpXihvnr+RZz/Btdv2u8
-         0wRHIktN7PQOXn0v3WzG5VwG/UQVC8Bsp8lMXtSArFUQUeMTg38Z4+piABZtOTSv2eAE
-         JdNA==
+        d=gmail.com; s=20230601; t=1724217908; x=1724822708; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FVuCvPPHax7dsd3ekWztHGLzpce5e+rHjspBU2DIihY=;
+        b=ZoDy6sbZU252uD8qLxtjmDj15whLmH1Tc2DsH29bop3C7nyDBAKj9HcHYlgirPLFnh
+         DWcEruA62OSAnev5BZ4NDZF6ZECS5FJDKN57/RSKUofrWCI3BvGA2cjAE6HnxEjc148c
+         cohXeGlClzoyxqA1vSwIzQGB3UeuMLdUy+9T0FeyPHwR1B0CliplrXFG8LPPYjOw+cei
+         RxRxj5YPuAdQQvy46JsmSyCCp+aCE8fpgbxR/JdycLz17k4Zd4O1X+PfDTlzIg/r5+H9
+         DTQYKzxoYyH8MiaXM2ub4f93G1GcXKV/zMGxRKUUZAE0lUZSnPJ4/LGJrC/XlPULzXmn
+         JZcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724190036; x=1724794836;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R9iSw6uozci3pG6LRIrPTc4SM7kkJjQGgR6ebryZrPo=;
-        b=A+w9VnUo0hdIbTCN/NE5NtqhbEgzQZ1MU4erCuV70FH2fKFT/gOnjeCidjh8bv6FqB
-         8fGhinTAou5FNfJ6MtZsTbYG4RRNVTbOaKnlxwFwaB9Iz3U+tLpr/jgZHdRgB2UDswoq
-         vcWBRmfsuCnVOA445LyGUTEonlgZziVvbhVwMSH/tU3cFEhk2GrKcwt1g3y8Y1MOfMO/
-         CAiaSbWz4BXosP0IzjRGKPdtzm2zEiD4ugab1pDgOxkc4RGqQyDGHsNfcDKg0j/J6LcH
-         Hx86eJ99Cd0+5siAqBU3BaCjuFGWLTL299XKmqALo1VLPBs9DE2EO2pCbTBGwEAjBEjD
-         4fNw==
-X-Forwarded-Encrypted: i=1; AJvYcCUaL90Sc+qewB6GIYh7bjSQ5f20S8+uvfzllF+6SDgzLyDPfnE8v8E/Jgz2OyrsIwDFMvhEZL/J4rkTQA==@vger.kernel.org, AJvYcCUpJwLFEfPCwcXjsRea3ybl1oHimA/Dgg6dC7OXpKhuYZ3ghldS6yvVZUBlEYxOK0rKzqOricBcgK5VcRJuwZGBo8bUNg==@vger.kernel.org, AJvYcCX1Z3aHXTx3lDdWZdkuR24rF4sSG/Nc7sk9BGjf2c7y4BlZMgboqcskt/e/ieRmKkbyju3J6hR4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7cYsfBZjDyIycYexTDOu9RFQ8Zld5L9IP3y4y+LuCXj69tSyl
-	sKxCare/z2gv3sMHTLnEuLuBDtMfAkJf9Ym3YiZJBdfJSQQMhnN4
-X-Google-Smtp-Source: AGHT+IGIqjQs4+C80iAgdeSuscEasTqYgihJ6L+4FrzuYEUEybXMuLJI/umICeTIA5PWKNHpVej7yg==
-X-Received: by 2002:a2e:742:0:b0:2f3:f1ee:2256 with SMTP id 38308e7fff4ca-2f3f8b3ce37mr1601731fa.44.1724190035975;
-        Tue, 20 Aug 2024 14:40:35 -0700 (PDT)
-Received: from localhost ([91.219.237.56])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8383935909sm808193166b.112.2024.08.20.14.40.35
+        d=1e100.net; s=20230601; t=1724217908; x=1724822708;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FVuCvPPHax7dsd3ekWztHGLzpce5e+rHjspBU2DIihY=;
+        b=kT3kVzQVburwNZ3fCsOVo0lRr2hsYcCroKBIBNsV4V4jUokkKTDbrWlodrNvBqZ27e
+         rcbKp3VwYpPX68hbv2tHMdheM/Pbps26nJa4syGFvMA9LKGQrfY3otNmjF25aXuVYQ83
+         jinMee6RYd/tmPbdMHfpbUBMmxx2RNsDzwYFQOV4xAeUM8+K+RDPgF23OasD/b/MidH7
+         ugTY0IZJoOCT8dTHwkVUWXPRtaLCFXyAv9dvcU6XISqnh1CidsC1lkXl24KQwagzNzmX
+         pDb8JTKHprig1JvuKZtoYcbVt5aR4zfeodQ7MdJzLZHVugNSIclsOG9lGoMe7CSrazlp
+         HCwA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgDL7A8EkFwPkHgngv2mXe4OMs/I22kTlYvYhtLsE8PlBVFz8GIkgsSMUozcvLcaJ75fk34xGtoEwS3jTkCdgdKh69ig==@vger.kernel.org, AJvYcCXESBkI54BH5qwiMiOByivtirlGtNGg2ZvUEi4pfsRqHObyKLC1qnaJuEvoIGhqTBoTw8wdboMlE1/ZlIc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaFMlnEzIuwpyY1ypS98JmIwx8n0zA4MRjtFF1wy7HzOuN4PHP
+	lLHEPKGCZUR1lgPkr6ghhXxASOwmd/d3AtQGiw3ZSnL3EFIKhE27
+X-Google-Smtp-Source: AGHT+IHBuJv+MP8GyyJOHUOu/XLs8QDo94dN6UEitQEJ2S7dIs3EPOgjAxEMzws8aKbVCKbsct2JoA==
+X-Received: by 2002:a05:6902:2002:b0:e0b:eb96:fd90 with SMTP id 3f1490d57ef6-e166553affamr1741385276.45.1724217908107;
+        Tue, 20 Aug 2024 22:25:08 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:9f8b:d2d2:8416:b9d1])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7141fe23514sm879058b3a.80.2024.08.20.22.25.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2024 14:40:35 -0700 (PDT)
-Date: Wed, 21 Aug 2024 00:40:34 +0300
-From: Maxim Mikityanskiy <maxtram95@gmail.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Ike Panhc <ike.pan@canonical.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-	Jonathan Denose <jdenose@chromium.org>, stable@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Stop calling
- i8042_command()
-Message-ID: <ZsUNUh7IGeduDUNX@mail.gmail.com>
-References: <20240805141608.170844-1-hdegoede@redhat.com>
- <ZrDwF919M0YZTqde@mail.gmail.com>
- <5c5120a7-4739-4d92-a5b8-9b9c60edc3b7@redhat.com>
- <ZroaE5Q6OdGe6ewz@mail.gmail.com>
- <80dc479e-33af-4d09-8177-7862c34a4882@redhat.com>
- <ZrpFSnCQ0T4_7zAB@google.com>
- <2d5be262-3bfd-4b66-bee4-97c89a9a4707@redhat.com>
- <Zrph94r8haR_nbj7@google.com>
- <ZsJZ7fKJtNTbXhi7@google.com>
- <ZsR0HdzglEH19dVH@mail.gmail.com>
+        Tue, 20 Aug 2024 22:25:07 -0700 (PDT)
+Date: Tue, 20 Aug 2024 22:25:04 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>,
+	Mark Gross <mgross@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Borislav Petkov <bp@alien8.de>
+Cc: linux-geode@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+	x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/platform/geode: switch GPIO buttons and LEDs to software
+ properties
+Message-ID: <ZsV6MNS_tUPPSffJ@google.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -80,388 +69,585 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZsR0HdzglEH19dVH@mail.gmail.com>
 
-On Tue, 20 Aug 2024 at 13:46:53 +0300, Maxim Mikityanskiy wrote:
-> On Sun, 18 Aug 2024 at 13:30:37 -0700, Dmitry Torokhov wrote:
-> > On Mon, Aug 12, 2024 at 12:26:47PM -0700, Dmitry Torokhov wrote:
-> > > On Mon, Aug 12, 2024 at 08:18:24PM +0200, Hans de Goede wrote:
-> > > > Hi Dmitry,
-> > > > 
-> > > > On 8/12/24 7:24 PM, Dmitry Torokhov wrote:
-> > > > > On Mon, Aug 12, 2024 at 04:41:50PM +0200, Hans de Goede wrote:
-> > > > >> Hi Maxim,
-> > > > >>
-> > > > >> On 8/12/24 4:37 PM, Maxim Mikityanskiy wrote:
-> > > > >>> On Mon, 05 Aug 2024 at 17:45:19 +0200, Hans de Goede wrote:
-> > > > >>>> On 8/5/24 5:30 PM, Maxim Mikityanskiy wrote:
-> > > > >>>>> That means, userspace is not filtering out events upon receiving
-> > > > >>>>> KEY_TOUCHPAD_OFF. If we wanted to rely on that, we would need to send
-> > > > >>>>> KEY_TOUCHPAD_TOGGLE from the driver, but we actually can't, because Z570
-> > > > >>>>> is weird. It maintains the touchpad state in firmware to light up the
-> > > > >>>>> status LED, but the firmware doesn't do the actual touchpad disablement.
-> > > > >>>>>
-> > > > >>>>> That is, if we use TOGGLE, the LED will get out of sync. If we use
-> > > > >>>>> ON/OFF, the touchpad won't be disabled, unless we do it in the kernel.
-> > > > >>>>
-> > > > >>>> Ack.
-> > > > >>>>
-> > > > >>>> So how about this instead:
-> > > > >>>>
-> > > > >>>> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> > > > >>>> index 1ace711f7442..b7fa06f793cb 100644
-> > > > >>>> --- a/drivers/platform/x86/ideapad-laptop.c
-> > > > >>>> +++ b/drivers/platform/x86/ideapad-laptop.c
-> > > > >>>> @@ -1574,7 +1574,7 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
-> > > > >>>>  	 * touchpad off and on. We send KEY_TOUCHPAD_OFF and
-> > > > >>>>  	 * KEY_TOUCHPAD_ON to not to get out of sync with LED
-> > > > >>>>  	 */
-> > > > >>>> -	if (priv->features.ctrl_ps2_aux_port)
-> > > > >>>> +	if (send_events && priv->features.ctrl_ps2_aux_port)
-> > > > >>>>  		i8042_command(&param, value ? I8042_CMD_AUX_ENABLE : I8042_CMD_AUX_DISABLE);
-> > > > >>>>  
-> > > > >>>>  	/*
-> > > > >>>>
-> > > > >>>> Maxmime, if you still have your Z570 can you check if the touchpad state after a suspend/resume
-> > > > >>>> correctly reflects the state before suspend/resume in both touchpad on / off states ?
-> > > > >>>
-> > > > >>> *Maxim
-> > > > >>
-> > > > >> Oops, sorry.
-> > > > >>
-> > > > >>> Just a heads-up, my Z570 now belongs to a family member, we'll test what
-> > > > >>> you asked, but right now there is a btrfs corruption on that laptop that
-> > > > >>> we need to fix first, it interferes with kernel compilation =/
-> > > > >>
-> > > > >> Note as discussed in another part of the thread the original bug report
-> > > > >> actually was not on a Z570, so the whole usage of i8042_command() on
-> > > > >> suspend/resume was a bit of a red herring. And the suspend/resume issue
-> > > > >> has been fixed in another way in the mean time.
-> > > > >>
-> > > > >> So there really is no need to test this change anymore. At the moment
-> > > > >> there are no planned changes to ideapad-laptop related to this.
-> > > > > 
-> > > > > I think we still need to stop ideapad-laptop poking into 8042,
-> > > > > especially ahead of time.
-> > > > 
-> > > > I agree. I think your suggestion of using the new(ish) [un]inhibit
-> > > > support in the input subsystem for this instead of poking at the i8042
-> > > > is a good idea.
-> > > > 
-> > > > As I mentioned when you first suggested this, I guess this requires 2 things:
-> > > > 
-> > > > 1. Some helper to find the struct input_dev for the input_dev related
-> > > >    to the ps/2 aux port
-> > > > 2. In kernel API / functions to do inhibit/uninhibit
-> > > >    (maybe these already exist?)
-> > > > 
-> > > > > If we do not want to wait for userspace to
-> > > > > handle this properly, I wonder if we could not create an
-> > > > > input_handler that would attach to the touchpad device and filter out
-> > > > > all events coming from the touchpad if touchpad is supposed to be off.
-> > > > 
-> > > > I think using the inhibit stuff would be better no?
-> > > 
-> > > The issue with inhibit/uninhibit is that they are only exposed to
-> > > userpsace via sysfs. And as you mentioned we need to locate the input
-> > > device corresponding to the touchpad.
-> > > 
-> > > With input handler we are essentially getting both - psmouse does not do
-> > > anything special in inhibit so it is just the input core dropping
-> > > events, the same as with the filter handler, and we can use hanlder's
-> > > match table to limit it to the touchpad and input core will find the
-> > > device for us.
-> > > 
-> > > > 
-> > > > The biggest problems with trying to fix this are:
-> > > > 
-> > > > 1. Finding time to work on this
-> > > > 2. Finding someone willing to test the patches
-> > > > 
-> > > > Finding the time is going to be an issue for me since the i8042_command()
-> > > > calls are only still done on a single model laptop (using a DMI quirk)
-> > > > inside ideapad-laptop now, so this is pretty low priority IMHO. Which
-> > > > in practice means that I will simply never get around to this, sorry...
-> > > 
-> > > Yeah, I can see that ;) Maybe I will find a couple of hours to waste...
-> > 
-> > Maybe something like below can work?
-> 
-> Great patch, thank you, I'll test it and report the results. See some
-> minor comments below.
-> 
-> > 
-> > 
-> > platform/x86: ideapad-laptop: do not poke keyboard controller
-> > 
-> > From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > 
-> > On Ideapad Z570 the driver tries to disable and reenable data coming
-> > from the touchpad by poking directly into 8042 keyboard controller.
-> > This may coincide with the controller resuming and leads to spews in
-> > dmesg and potentially other instabilities.
-> > 
-> > Instead of using i8042_command() to control the touchpad state create a
-> > input handler that serves as a filter and drop events coming from the
-> > touchpad when it is supposed to be off.
-> > 
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > ---
-> >  drivers/platform/x86/ideapad-laptop.c |  171 ++++++++++++++++++++++++++++++++-
-> >  1 file changed, 168 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> > index fcf13d88fd6e..2f40feefd5e3 100644
-> > --- a/drivers/platform/x86/ideapad-laptop.c
-> > +++ b/drivers/platform/x86/ideapad-laptop.c
-> > @@ -17,7 +17,6 @@
-> >  #include <linux/device.h>
-> >  #include <linux/dmi.h>
-> >  #include <linux/fb.h>
-> > -#include <linux/i8042.h>
-> >  #include <linux/init.h>
-> >  #include <linux/input.h>
-> >  #include <linux/input/sparse-keymap.h>
-> > @@ -157,6 +156,13 @@ struct ideapad_private {
-> >  		struct led_classdev led;
-> >  		unsigned int last_brightness;
-> >  	} fn_lock;
-> > +	struct {
-> > +		bool initialized;
-> > +		bool active;
-> > +		struct input_handler handler;
-> > +		struct input_dev *tp_dev;
-> > +		spinlock_t lock;
-> > +	} tp_switch;
-> >  };
-> >  
-> >  static bool no_bt_rfkill;
-> > @@ -1236,6 +1242,158 @@ static void ideapad_check_special_buttons(struct ideapad_private *priv)
-> >  	}
-> >  }
-> >  
-> > +struct ideapad_tpswitch_handle {
-> > +	struct input_handle handle;
-> > +	struct ideapad_private *priv;
-> > +};
-> > +
-> > +#define to_tpswitch_handle(h) \
-> > +	container_of(h, struct ideapad_tpswitch_handle, handle);
-> > +
-> > +static int ideapad_tpswitch_connect(struct input_handler *handler,
-> > +				    struct input_dev *dev,
-> > +				    const struct input_device_id *id)
-> > +{
-> > +	struct ideapad_private *priv =
-> > +		container_of(handler, struct ideapad_private, tp_switch.handler);
-> > +	struct ideapad_tpswitch_handle *h;
-> > +	int error;
-> > +
-> > +	h = kzalloc(sizeof(*h), GFP_KERNEL);
-> > +	if (!h)
-> > +		return -ENOMEM;
-> > +
-> > +	h->priv = priv;
-> > +	h->handle.dev = dev;
-> > +	h->handle.handler = handler;
-> > +	h->handle.name = "ideapad-tpswitch";
-> > +
-> > +	error = input_register_handle(&h->handle);
-> > +	if (error)
-> > +		goto err_free_handle;
-> > +
-> > +	/*
-> > +	 * FIXME: ideally we do not want to open the input device here
-> > +	 * if there are no other users. We need a notion of "observer"
-> > +	 * handlers in the input core.
-> > +	 */
-> > +	error = input_open_device(&h->handle);
-> > +	if (error)
-> > +		goto err_unregister_handle;
-> > +
-> > +	scoped_guard(spinlock_irq, &priv->tp_switch.lock)
-> > +		priv->tp_switch.tp_dev = dev;
-> > +
-> > +	return 0;
-> > +
-> > + err_unregister_handle:
-> > +	input_unregister_handle(&h->handle);
-> > +err_free_handle:
-> > +	kfree(h);
-> > +	return error;
-> > +}
-> > +
-> > +static void ideapad_tpswitch_disconnect(struct input_handle *handle)
-> > +{
-> > +	struct ideapad_tpswitch_handle *h = to_tpswitch_handle(handle);
-> > +	struct ideapad_private *priv = h->priv;
-> > +
-> > +	scoped_guard(spinlock_irq, &priv->tp_switch.lock)
-> 
-> Nice syntax, I didn't know about it before.
-> 
-> > +		priv->tp_switch.tp_dev = NULL;
-> > +
-> > +	input_close_device(handle);
-> > +	input_unregister_handle(handle);
-> > +	kfree(h);
-> > +}
-> > +
-> > +static bool ideapad_tpswitch_filter(struct input_handle *handle,
-> > +				    unsigned int type, unsigned int code,
-> > +				    int value)
-> > +{
-> > +	struct ideapad_tpswitch_handle *h = to_tpswitch_handle(handle);
-> > +	struct ideapad_private *priv = h->priv;
-> > +
-> > +	if (!priv->tp_switch.active)
-> 
-> This check seems inverted. ideapad_tpswitch_toggle assigns true when the
-> touchpad is enabled.
+Convert GPIO-connected buttons and LEDs in Geode boards to software
+nodes/properties, so that support for platform data can be removed from
+gpio-keys driver (which will rely purely on generic device properties
+for configuration).
 
-I tested the patch on Z570 (with this check inverted), and it seems to
-work great.
+To avoid repeating the same data structures over and over and over
+factor them out into a new geode-common.c file.
 
-Also tested what happens on resume from suspend: the laptop reenables
-the touchpad (the LED turns off on suspend and blinks briefly on
-resume), and the driver handles it properly.
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ arch/x86/Kconfig                       |   6 +
+ arch/x86/platform/geode/Makefile       |   1 +
+ arch/x86/platform/geode/alix.c         |  82 ++---------
+ arch/x86/platform/geode/geode-common.c | 180 +++++++++++++++++++++++++
+ arch/x86/platform/geode/geode-common.h |  21 +++
+ arch/x86/platform/geode/geos.c         |  80 +----------
+ arch/x86/platform/geode/net5501.c      |  69 +---------
+ 7 files changed, 230 insertions(+), 209 deletions(-)
 
-> 
-> > +		return false;
-> > +
-> > +	/* Allow passing button release events, drop everything else */
-> > +	return !(type == EV_KEY && value == 0) &&
-> > +	       !(type == EV_SYN && code == SYN_REPORT);
-> > +
-> > +}
-> > +
-> > +static const struct input_device_id ideapad_tpswitch_ids[] = {
-> > +	{
-> > +		.flags = INPUT_DEVICE_ID_MATCH_EVBIT |
-> > +				INPUT_DEVICE_ID_MATCH_KEYBIT |
-> > +				INPUT_DEVICE_ID_MATCH_ABSBIT,
-> > +		.bustype = BUS_I8042,
-> > +		.vendor = 0x0002,
-> > +		.evbit = { BIT_MASK(EV_KEY) | BIT_MASK(EV_ABS) },
-> > +		.keybit = { [BIT_WORD(BTN_TOOL_FINGER)] =
-> > +				BIT_MASK(BTN_TOOL_FINGER) },
-> > +		.absbit = { BIT_MASK(ABS_X) | BIT_MASK(ABS_Y) |
-> > +				BIT_MASK(ABS_PRESSURE) |
-> > +				BIT_MASK(ABS_TOOL_WIDTH) },
-> > +	},
-> > +	{ }
-> > +};
-> > +
-> > +static int ideapad_tpswitch_init(struct ideapad_private *priv)
-> > +{
-> > +	int error;
-> > +
-> > +	if (!priv->features.ctrl_ps2_aux_port)
-> 
-> Nit: the comment above ctrl_ps2_aux_port and the MODULE_PARAM_DESC
-> should be altered, because it no longer disables PS/2 AUX, but just
-> filters the events on software level.
-> 
-> Not sure whether we want to keep the old name for the module parameter.
-> I think it's better to keep it, because it essentially serves the same
-> purpose, but the implementation is better.
-> 
-> > +		return 0;
-> > +
-> > +	spin_lock_init(&priv->tp_switch.lock);
-> > +
-> > +	priv->tp_switch.handler.name = "ideapad-tpswitch";
-> > +	priv->tp_switch.handler.id_table = ideapad_tpswitch_ids;
-> > +	priv->tp_switch.handler.filter = ideapad_tpswitch_filter;
-> > +	priv->tp_switch.handler.connect = ideapad_tpswitch_connect;
-> > +	priv->tp_switch.handler.disconnect = ideapad_tpswitch_disconnect;
-> > +
-> > +	error = input_register_handler(&priv->tp_switch.handler);
-> > +	if (error) {
-> > +		dev_err(&priv->platform_device->dev,
-> > +			"failed to register touchpad switch handler: %d",
-> > +			error);
-> > +		return error;
-> > +	}
-> > +
-> > +	priv->tp_switch.initialized = true;
-> > +	return 0;
-> > +}
-> > +
-> > +static void ideapad_tpswitch_exit(struct ideapad_private *priv)
-> > +{
-> > +	if (priv->tp_switch.initialized) {
-> > +		input_unregister_handler(&priv->tp_switch.handler);
-> > +		priv->tp_switch.initialized = false;
-> > +	}
-> > +}
-> > +
-> > +static void ideapad_tpswitch_toggle(struct ideapad_private *priv, bool on)
-> > +{
-> > +	guard(spinlock_irq)(&priv->tp_switch.lock);
-> > +
-> > +	priv->tp_switch.active = on;
-> > +	if (on) {
-> > +		struct input_dev *tp_dev = priv->tp_switch.tp_dev;
-> > +		if (tp_dev) {
-> > +			input_report_key(tp_dev, BTN_TOUCH, 0);
-> > +			input_report_key(tp_dev, BTN_TOOL_FINGER, 0);
-> > +			input_report_key(tp_dev, BTN_TOOL_DOUBLETAP, 0);
-> > +			input_report_key(tp_dev, BTN_TOOL_TRIPLETAP, 0);
-> > +			input_report_key(tp_dev, BTN_LEFT, 0);
-> > +			input_report_key(tp_dev, BTN_RIGHT, 0);
-> > +			input_report_key(tp_dev, BTN_MIDDLE, 0);
-> > +			input_sync(tp_dev);
-> > +		}
-> > +	}
-> > +}
-> > +
-> >  /*
-> >   * backlight
-> >   */
-> > @@ -1567,7 +1725,6 @@ static void ideapad_fn_lock_led_exit(struct ideapad_private *priv)
-> >  static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_events)
-> >  {
-> >  	unsigned long value;
-> > -	unsigned char param;
-> >  	int ret;
-> >  
-> >  	/* Without reading from EC touchpad LED doesn't switch state */
-> > @@ -1582,7 +1739,7 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv, bool send_
-> >  	 * KEY_TOUCHPAD_ON to not to get out of sync with LED
-> >  	 */
-> >  	if (priv->features.ctrl_ps2_aux_port)
-> > -		i8042_command(&param, value ? I8042_CMD_AUX_ENABLE : I8042_CMD_AUX_DISABLE);
-> > +		ideapad_tpswitch_toggle(priv, value);
-> >  
-> >  	/*
-> >  	 * On older models the EC controls the touchpad and toggles it on/off
-> > @@ -1927,6 +2084,10 @@ static int ideapad_acpi_add(struct platform_device *pdev)
-> >  	if (err)
-> >  		goto input_failed;
-> >  
-> > +	err = ideapad_tpswitch_init(priv);
-> > +	if (err)
-> > +		goto tpswitch_failed;
-> > +
-> >  	err = ideapad_kbd_bl_init(priv);
-> >  	if (err) {
-> >  		if (err != -ENODEV)
-> > @@ -2001,6 +2162,9 @@ static int ideapad_acpi_add(struct platform_device *pdev)
-> >  
-> >  	ideapad_fn_lock_led_exit(priv);
-> >  	ideapad_kbd_bl_exit(priv);
-> > +	ideapad_tpswitch_exit(priv);
-> > +
-> > +tpswitch_failed:
-> >  	ideapad_input_exit(priv);
-> >  
-> >  input_failed:
-> > @@ -2029,6 +2193,7 @@ static void ideapad_acpi_remove(struct platform_device *pdev)
-> >  
-> >  	ideapad_fn_lock_led_exit(priv);
-> >  	ideapad_kbd_bl_exit(priv);
-> > +	ideapad_tpswitch_exit(priv);
-> >  	ideapad_input_exit(priv);
-> >  	ideapad_debugfs_exit(priv);
-> >  	ideapad_sysfs_exit(priv);
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 09f8fbcfe000..96b02e813332 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -3073,9 +3073,13 @@ config OLPC_XO15_SCI
+ 	   - AC adapter status updates
+ 	   - Battery status updates
+ 
++config GEODE_COMMON
++	bool
++
+ config ALIX
+ 	bool "PCEngines ALIX System Support (LED setup)"
+ 	select GPIOLIB
++	select GEODE_COMMON
+ 	help
+ 	  This option enables system support for the PCEngines ALIX.
+ 	  At present this just sets up LEDs for GPIO control on
+@@ -3090,12 +3094,14 @@ config ALIX
+ config NET5501
+ 	bool "Soekris Engineering net5501 System Support (LEDS, GPIO, etc)"
+ 	select GPIOLIB
++	select GEODE_COMMON
+ 	help
+ 	  This option enables system support for the Soekris Engineering net5501.
+ 
+ config GEOS
+ 	bool "Traverse Technologies GEOS System Support (LEDS, GPIO, etc)"
+ 	select GPIOLIB
++	select GEODE_COMMON
+ 	depends on DMI
+ 	help
+ 	  This option enables system support for the Traverse Technologies GEOS.
+diff --git a/arch/x86/platform/geode/Makefile b/arch/x86/platform/geode/Makefile
+index a8a6b1dedb01..34b53e97a0ad 100644
+--- a/arch/x86/platform/geode/Makefile
++++ b/arch/x86/platform/geode/Makefile
+@@ -1,4 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
++obj-$(CONFIG_GEODE_COMMON)	+= geode-common.o
+ obj-$(CONFIG_ALIX)		+= alix.o
+ obj-$(CONFIG_NET5501)		+= net5501.o
+ obj-$(CONFIG_GEOS)		+= geos.o
+diff --git a/arch/x86/platform/geode/alix.c b/arch/x86/platform/geode/alix.c
+index b39bf3b5e108..be65cd704e21 100644
+--- a/arch/x86/platform/geode/alix.c
++++ b/arch/x86/platform/geode/alix.c
+@@ -18,15 +18,12 @@
+ #include <linux/io.h>
+ #include <linux/string.h>
+ #include <linux/moduleparam.h>
+-#include <linux/leds.h>
+-#include <linux/platform_device.h>
+-#include <linux/input.h>
+-#include <linux/gpio_keys.h>
+-#include <linux/gpio/machine.h>
+ #include <linux/dmi.h>
+ 
+ #include <asm/geode.h>
+ 
++#include "geode-common.h"
++
+ #define BIOS_SIGNATURE_TINYBIOS		0xf0000
+ #define BIOS_SIGNATURE_COREBOOT		0x500
+ #define BIOS_REGION_SIZE		0x10000
+@@ -41,79 +38,16 @@ module_param(force, bool, 0444);
+ /* FIXME: Award bios is not automatically detected as Alix platform */
+ MODULE_PARM_DESC(force, "Force detection as ALIX.2/ALIX.3 platform");
+ 
+-static struct gpio_keys_button alix_gpio_buttons[] = {
+-	{
+-		.code			= KEY_RESTART,
+-		.gpio			= 24,
+-		.active_low		= 1,
+-		.desc			= "Reset button",
+-		.type			= EV_KEY,
+-		.wakeup			= 0,
+-		.debounce_interval	= 100,
+-		.can_disable		= 0,
+-	}
+-};
+-static struct gpio_keys_platform_data alix_buttons_data = {
+-	.buttons			= alix_gpio_buttons,
+-	.nbuttons			= ARRAY_SIZE(alix_gpio_buttons),
+-	.poll_interval			= 20,
+-};
+-
+-static struct platform_device alix_buttons_dev = {
+-	.name				= "gpio-keys-polled",
+-	.id				= 1,
+-	.dev = {
+-		.platform_data		= &alix_buttons_data,
+-	}
+-};
+-
+-static struct gpio_led alix_leds[] = {
+-	{
+-		.name = "alix:1",
+-		.default_trigger = "default-on",
+-	},
+-	{
+-		.name = "alix:2",
+-		.default_trigger = "default-off",
+-	},
+-	{
+-		.name = "alix:3",
+-		.default_trigger = "default-off",
+-	},
+-};
+-
+-static struct gpio_led_platform_data alix_leds_data = {
+-	.num_leds = ARRAY_SIZE(alix_leds),
+-	.leds = alix_leds,
+-};
+-
+-static struct gpiod_lookup_table alix_leds_gpio_table = {
+-	.dev_id = "leds-gpio",
+-	.table = {
+-		/* The Geode GPIOs should be on the CS5535 companion chip */
+-		GPIO_LOOKUP_IDX("cs5535-gpio", 6, NULL, 0, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX("cs5535-gpio", 25, NULL, 1, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX("cs5535-gpio", 27, NULL, 2, GPIO_ACTIVE_LOW),
+-		{ }
+-	},
+-};
+-
+-static struct platform_device alix_leds_dev = {
+-	.name = "leds-gpio",
+-	.id = -1,
+-	.dev.platform_data = &alix_leds_data,
+-};
+-
+-static struct platform_device *alix_devs[] __initdata = {
+-	&alix_buttons_dev,
+-	&alix_leds_dev,
++static const struct geode_led alix_leds[] __initconst = {
++	{ 6, true },
++	{ 25, false },
++	{ 27, false },
+ };
+ 
+ static void __init register_alix(void)
+ {
+-	/* Setup LED control through leds-gpio driver */
+-	gpiod_add_lookup_table(&alix_leds_gpio_table);
+-	platform_add_devices(alix_devs, ARRAY_SIZE(alix_devs));
++	geode_create_restart_key(24);
++	geode_create_leds("alix", alix_leds, ARRAY_SIZE(alix_leds));
+ }
+ 
+ static bool __init alix_present(unsigned long bios_phys,
+diff --git a/arch/x86/platform/geode/geode-common.c b/arch/x86/platform/geode/geode-common.c
+new file mode 100644
+index 000000000000..8f365388cfbb
+--- /dev/null
++++ b/arch/x86/platform/geode/geode-common.c
+@@ -0,0 +1,180 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Shared helpers to register GPIO-connected buttons and LEDs
++ * on AMD Geode boards.
++ */
++
++#include <linux/err.h>
++#include <linux/gpio/machine.h>
++#include <linux/gpio/property.h>
++#include <linux/input.h>
++#include <linux/leds.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++
++#include "geode-common.h"
++
++const struct software_node geode_gpiochip_node = {
++	.name = "cs5535-gpio",
++};
++
++static const struct property_entry geode_gpio_keys_props[] = {
++	PROPERTY_ENTRY_U32("poll-interval", 20),
++	{ }
++};
++
++static const struct software_node geode_gpio_keys_node = {
++	.name = "geode-gpio-keys",
++	.properties = geode_gpio_keys_props,
++};
++
++static struct property_entry geode_restart_key_props[] = {
++	{ /* Placeholder for GPIO property */ },
++	PROPERTY_ENTRY_U32("linux,code", KEY_RESTART),
++	PROPERTY_ENTRY_STRING("label", "Reset button"),
++	PROPERTY_ENTRY_U32("debounce-interval", 100),
++	{ }
++};
++
++static const struct software_node geode_restart_key_node = {
++	.parent = &geode_gpio_keys_node,
++	.properties = geode_restart_key_props,
++};
++
++static const struct software_node *geode_gpio_keys_swnodes[] __initconst = {
++	&geode_gpiochip_node,
++	&geode_gpio_keys_node,
++	&geode_restart_key_node,
++	NULL
++};
++
++/*
++ * Creates gpio-keys-polled device for the restart key.
++ *
++ * Note that it needs to be called first, before geode_create_leds(),
++ * because it registers gpiochip software node used by both gpio-keys and
++ * leds-gpio devices.
++ */
++int __init geode_create_restart_key(unsigned int pin)
++{
++	struct platform_device_info keys_info = {
++		.name	= "gpio-keys-polled",
++		.id	= 1,
++	};
++	struct platform_device *pd;
++	int err;
++
++	geode_restart_key_props[0] = PROPERTY_ENTRY_GPIO("gpios",
++							 &geode_gpiochip_node,
++							 pin, GPIO_ACTIVE_LOW);
++
++	err = software_node_register_node_group(geode_gpio_keys_swnodes);
++	if (err) {
++		pr_err("failed to register gpio-keys software nodes: %d\n", err);
++		return err;
++	}
++
++	keys_info.fwnode = software_node_fwnode(&geode_gpio_keys_node);
++
++	pd = platform_device_register_full(&keys_info);
++	err = PTR_ERR_OR_ZERO(pd);
++	if (err) {
++		pr_err("failed to create gpio-keys device: %d\n", err);
++		software_node_unregister_node_group(geode_gpio_keys_swnodes);
++		return err;
++	}
++
++	return 0;
++}
++
++static const struct software_node geode_gpio_leds_node = {
++	.name = "geode-leds",
++};
++
++#define MAX_LEDS	3
++
++int __init geode_create_leds(const char *label, const struct geode_led *leds,
++			      unsigned int n_leds)
++{
++	const struct software_node *group[MAX_LEDS + 2] = { 0 };
++	struct software_node *swnodes;
++	struct property_entry *props;
++	struct platform_device_info led_info = {
++		.name	= "leds-gpio",
++		.id	= PLATFORM_DEVID_NONE,
++	};
++	struct platform_device *led_dev;
++	const char *node_name;
++	int err;
++	int i;
++
++	if (n_leds > MAX_LEDS) {
++		pr_err("%s: too many LEDs\n", __func__);
++		return -EINVAL;
++	}
++
++	swnodes = kcalloc(n_leds, sizeof(*swnodes), GFP_KERNEL);
++	if (!swnodes)
++		return -ENOMEM;
++
++	/*
++	 * Each LED is represented by 3 properties: "gpios",
++	 * "linux,default-trigger", and am empty terminator.
++	 */
++	props = kcalloc(n_leds * 3, sizeof(*props), GFP_KERNEL);
++	if (!props) {
++		err = -ENOMEM;
++		goto err_free_swnodes;
++	}
++
++	group[0] = &geode_gpio_leds_node;
++	for (i = 0; i < n_leds; i++) {
++		node_name = kasprintf(GFP_KERNEL, "%s:%d", label, i);
++		if (!node_name) {
++			err = -ENOMEM;
++			goto err_free_names;
++		}
++
++		props[i * 3 + 0] =
++			PROPERTY_ENTRY_GPIO("gpios", &geode_gpiochip_node,
++					    leds[i].pin, GPIO_ACTIVE_LOW);
++		props[i * 3 + 1] =
++			PROPERTY_ENTRY_STRING("linux,default-trigger",
++					      leds[i].default_on ?
++					      "default-on" : "default-off");
++		/* props[i * 3 + 2] is an empty terminator */
++
++		swnodes[i] = SOFTWARE_NODE(node_name, &props[i * 3],
++					   &geode_gpio_leds_node);
++		group[i + 1] = &swnodes[i];
++	}
++
++	err = software_node_register_node_group(group);
++	if (err) {
++		pr_err("failed to register LED software nodes: %d\n", err);
++		goto err_free_names;
++	}
++
++	led_info.fwnode = software_node_fwnode(&geode_gpio_leds_node);
++
++	led_dev = platform_device_register_full(&led_info);
++	err = PTR_ERR_OR_ZERO(led_dev);
++	if (err) {
++		pr_err("failed to create LED device: %d\n", err);
++		goto err_unregister_group;
++	}
++
++	return 0;
++
++err_unregister_group:
++	software_node_unregister_node_group(group);
++err_free_names:
++	while (--i >= 0)
++		kfree(swnodes[i].name);
++	kfree(props);
++err_free_swnodes:
++	kfree(swnodes);
++	return err;
++}
++
++
+diff --git a/arch/x86/platform/geode/geode-common.h b/arch/x86/platform/geode/geode-common.h
+new file mode 100644
+index 000000000000..9e0afd34bfad
+--- /dev/null
++++ b/arch/x86/platform/geode/geode-common.h
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Shared helpers to register GPIO-connected buttons and LEDs
++ * on AMD Geode boards.
++ */
++
++#ifndef __PLATFORM_GEODE_COMMON_H
++#define __PLATFORM_GEODE_COMMON_H
++
++#include <linux/property.h>
++
++struct geode_led {
++	unsigned int pin;
++	bool default_on;
++};
++
++int geode_create_restart_key(unsigned int pin);
++int geode_create_leds(const char *label, const struct geode_led *leds,
++		      unsigned int n_leds);
++
++#endif /* __PLATFORM_GEODE_COMMON_H */
+diff --git a/arch/x86/platform/geode/geos.c b/arch/x86/platform/geode/geos.c
+index d263528c90bb..98027fb1ec32 100644
+--- a/arch/x86/platform/geode/geos.c
++++ b/arch/x86/platform/geode/geos.c
+@@ -16,88 +16,22 @@
+ #include <linux/init.h>
+ #include <linux/io.h>
+ #include <linux/string.h>
+-#include <linux/leds.h>
+-#include <linux/platform_device.h>
+-#include <linux/input.h>
+-#include <linux/gpio_keys.h>
+-#include <linux/gpio/machine.h>
+ #include <linux/dmi.h>
+ 
+ #include <asm/geode.h>
+ 
+-static struct gpio_keys_button geos_gpio_buttons[] = {
+-	{
+-		.code = KEY_RESTART,
+-		.gpio = 3,
+-		.active_low = 1,
+-		.desc = "Reset button",
+-		.type = EV_KEY,
+-		.wakeup = 0,
+-		.debounce_interval = 100,
+-		.can_disable = 0,
+-	}
+-};
+-static struct gpio_keys_platform_data geos_buttons_data = {
+-	.buttons = geos_gpio_buttons,
+-	.nbuttons = ARRAY_SIZE(geos_gpio_buttons),
+-	.poll_interval = 20,
+-};
+-
+-static struct platform_device geos_buttons_dev = {
+-	.name = "gpio-keys-polled",
+-	.id = 1,
+-	.dev = {
+-		.platform_data = &geos_buttons_data,
+-	}
+-};
+-
+-static struct gpio_led geos_leds[] = {
+-	{
+-		.name = "geos:1",
+-		.default_trigger = "default-on",
+-	},
+-	{
+-		.name = "geos:2",
+-		.default_trigger = "default-off",
+-	},
+-	{
+-		.name = "geos:3",
+-		.default_trigger = "default-off",
+-	},
+-};
+-
+-static struct gpio_led_platform_data geos_leds_data = {
+-	.num_leds = ARRAY_SIZE(geos_leds),
+-	.leds = geos_leds,
+-};
+-
+-static struct gpiod_lookup_table geos_leds_gpio_table = {
+-	.dev_id = "leds-gpio",
+-	.table = {
+-		/* The Geode GPIOs should be on the CS5535 companion chip */
+-		GPIO_LOOKUP_IDX("cs5535-gpio", 6, NULL, 0, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX("cs5535-gpio", 25, NULL, 1, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX("cs5535-gpio", 27, NULL, 2, GPIO_ACTIVE_LOW),
+-		{ }
+-	},
+-};
+-
+-static struct platform_device geos_leds_dev = {
+-	.name = "leds-gpio",
+-	.id = -1,
+-	.dev.platform_data = &geos_leds_data,
+-};
++#include "geode-common.h"
+ 
+-static struct platform_device *geos_devs[] __initdata = {
+-	&geos_buttons_dev,
+-	&geos_leds_dev,
++static const struct geode_led geos_leds[] __initconst = {
++	{ 6, true },
++	{ 25, false },
++	{ 27, false },
+ };
+ 
+ static void __init register_geos(void)
+ {
+-	/* Setup LED control through leds-gpio driver */
+-	gpiod_add_lookup_table(&geos_leds_gpio_table);
+-	platform_add_devices(geos_devs, ARRAY_SIZE(geos_devs));
++	geode_create_restart_key(3);
++	geode_create_leds("geos", geos_leds, ARRAY_SIZE(geos_leds));
+ }
+ 
+ static int __init geos_init(void)
+diff --git a/arch/x86/platform/geode/net5501.c b/arch/x86/platform/geode/net5501.c
+index 558384acd777..c9cee7dea99b 100644
+--- a/arch/x86/platform/geode/net5501.c
++++ b/arch/x86/platform/geode/net5501.c
+@@ -16,80 +16,25 @@
+ #include <linux/init.h>
+ #include <linux/io.h>
+ #include <linux/string.h>
+-#include <linux/leds.h>
+-#include <linux/platform_device.h>
+ #include <linux/input.h>
+-#include <linux/gpio_keys.h>
+ #include <linux/gpio/machine.h>
++#include <linux/gpio/property.h>
+ 
+ #include <asm/geode.h>
+ 
++#include "geode-common.h"
++
+ #define BIOS_REGION_BASE		0xffff0000
+ #define BIOS_REGION_SIZE		0x00010000
+ 
+-static struct gpio_keys_button net5501_gpio_buttons[] = {
+-	{
+-		.code = KEY_RESTART,
+-		.gpio = 24,
+-		.active_low = 1,
+-		.desc = "Reset button",
+-		.type = EV_KEY,
+-		.wakeup = 0,
+-		.debounce_interval = 100,
+-		.can_disable = 0,
+-	}
+-};
+-static struct gpio_keys_platform_data net5501_buttons_data = {
+-	.buttons = net5501_gpio_buttons,
+-	.nbuttons = ARRAY_SIZE(net5501_gpio_buttons),
+-	.poll_interval = 20,
+-};
+-
+-static struct platform_device net5501_buttons_dev = {
+-	.name = "gpio-keys-polled",
+-	.id = 1,
+-	.dev = {
+-		.platform_data = &net5501_buttons_data,
+-	}
+-};
+-
+-static struct gpio_led net5501_leds[] = {
+-	{
+-		.name = "net5501:1",
+-		.default_trigger = "default-on",
+-	},
+-};
+-
+-static struct gpio_led_platform_data net5501_leds_data = {
+-	.num_leds = ARRAY_SIZE(net5501_leds),
+-	.leds = net5501_leds,
+-};
+-
+-static struct gpiod_lookup_table net5501_leds_gpio_table = {
+-	.dev_id = "leds-gpio",
+-	.table = {
+-		/* The Geode GPIOs should be on the CS5535 companion chip */
+-		GPIO_LOOKUP_IDX("cs5535-gpio", 6, NULL, 0, GPIO_ACTIVE_HIGH),
+-		{ }
+-	},
+-};
+-
+-static struct platform_device net5501_leds_dev = {
+-	.name = "leds-gpio",
+-	.id = -1,
+-	.dev.platform_data = &net5501_leds_data,
+-};
+-
+-static struct platform_device *net5501_devs[] __initdata = {
+-	&net5501_buttons_dev,
+-	&net5501_leds_dev,
++static const struct geode_led net5501_leds[] __initconst = {
++	{ 6, true },
+ };
+ 
+ static void __init register_net5501(void)
+ {
+-	/* Setup LED control through leds-gpio driver */
+-	gpiod_add_lookup_table(&net5501_leds_gpio_table);
+-	platform_add_devices(net5501_devs, ARRAY_SIZE(net5501_devs));
++	geode_create_restart_key(24);
++	geode_create_leds("net5501", net5501_leds, ARRAY_SIZE(net5501_leds));
+ }
+ 
+ struct net5501_board {
+-- 
+2.46.0.184.g6999bdac58-goog
+
+
+-- 
+Dmitry
