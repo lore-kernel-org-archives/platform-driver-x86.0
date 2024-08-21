@@ -1,97 +1,122 @@
-Received: from msa.smtpout.orange.fr (smtp-73.smtpout.orange.fr [80.12.242.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC129166F04;
-	Wed, 21 Aug 2024 12:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1591418DF7B;
+	Wed, 21 Aug 2024 12:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724243743; cv=none; b=IJs/A++rS4jBei59kB9tSxqGNp+uORtAKV/+mGlG6MVGZun/l14QoTeod1E3MuF8rIlRX1VENM1z6kCTz+XoCOcCcORVpwU9nzD4DaH4UdizxiTjVfitTH/IU+1DCJbwtilPNXTnosWkGuSC0T1cxha+EpyBdgT9uApX3fOukjc=
+	t=1724243905; cv=none; b=SV7SRfkvCkVGutHNDA6eNwUpp0On7f530ChW2u1G6dYPmw32NFqldpb1Xbz9cmUQPQ82CUoyRzemmKx/hQcB5VfHJNsok0Ayr1AV2JHWCHJe4EyAVKFtO56l1Wt1WrHP4IEiEC6oPb1A4Kaj2dzf4EJ6ABd0hCLNwBpbUsAR6co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724243743; c=relaxed/simple;
-	bh=25ObRqwlOtBj/pcd5FxF9unYnK53/tXqiPwFSw8dR4w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ALuc3m/xiBsmoQojgUXfGmvYVzvg0Y8ovVL5CBdk8El0zymDMFpf+F8sFaJxq70MN9IAX4eVWSZvagw9oseLC6gPgZGPlT/uCwjxWnHxrktwncy1miVaDKYzQv03elr0bshGs9RYb95jAwBIAv4fBU6hqM04sdbaSgzv+qONc30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=lqpVJvoY; arc=none smtp.client-ip=80.12.242.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1724243905; c=relaxed/simple;
+	bh=6gJ5zaXYlZwZ657VdBITP3OgGdxedTJhrQygUotyKWk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=KaQUrXg4NMEQ1c7mcU+GlWd1pqkZAt+M9/o+s2lyTEeUCn+s9WClYbCegWZfxJ6/9u2KilIJ+3BEKdnkSQSP1EChrRS71utkFGh/M7nt2hemvrWtYSt2rGJFxql82YqtyGhdzWLy/SlR4O2P4s5ZDc73Sfn4mEgs5gRtz8eruIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YGfoGyLL; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="lqpVJvoY"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id gkYksIlFjNe0IgkYksKwrp; Wed, 21 Aug 2024 14:35:32 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1724243732;
-	bh=7mFzAZMR1DwQrG49Sp3pjJHS3JwHC2jICOmjdxEWYww=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=lqpVJvoYso3fIEBrbv55noli99PPmHB/Rz3T9EtO/fx7AdDAsX9eA2xJtu+aDP7I7
-	 F+P8bv5gE+nkky+pFHLlfUk8E4elTB1YPJKpdT+4AYijEojIb2mR51UcJSfcR+8YyI
-	 KCdaoyt53XqzVOxzk1/tVJjysmMZFpUE1X/48iytde3oOJSI2dpw+4TUN8yIk6Yd0M
-	 8wDOeCg46S2BN2altjNfcMDM9Zj801t5LY/O7v6TnDV5ESR4d6Ej3E5XeyY9w/IBxz
-	 XZB90F6ydU9UOIOEyOiFHooetSgroJAdFEysbxt1bo5lsSyW1PB4GO707emu46Bc5e
-	 H/BPlX0e9my5A==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Wed, 21 Aug 2024 14:35:32 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <a096554e-fdfe-4deb-b19b-500c86beec98@wanadoo.fr>
-Date: Wed, 21 Aug 2024 14:35:29 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YGfoGyLL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724243904; x=1755779904;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=6gJ5zaXYlZwZ657VdBITP3OgGdxedTJhrQygUotyKWk=;
+  b=YGfoGyLL3AUvu0IurGYhSbftRy9S6LckEQtM4i+18wmxFGtZjW0bnB4r
+   QZJLZ3r1ziU73z0RFY0oyLd6XABGsQ/PEIhVzx4cXs1JkkD00H098fcrc
+   iV0fneWZer2yf1i2uC2WxrKTEVYo5VrrDCBaQ93aHtUZBoe8CiOFr3oLV
+   BqZKBvtbHSPfc/TtqzoMJRzNCSQy4AoVtOMC7WAX4i07wWVRBKhsl5Fw4
+   rhkex2OK1R+mQaUbnZCbt/Y1Iz0ABL7n2xFH2GgLHzjT0jjxctkScvntd
+   4mhB34TG0dg7YNgIcNIyuWP/6G5q6P76kW4emMOkHtQkUn1erujBx2Eb0
+   Q==;
+X-CSE-ConnectionGUID: G5YncYj3TB+a4lBGzVtlNg==
+X-CSE-MsgGUID: 1DVT6u05RJ+rDXwcigY1Ug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11171"; a="33984288"
+X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
+   d="scan'208";a="33984288"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 05:38:23 -0700
+X-CSE-ConnectionGUID: 0F8Kvj6fRGGKFdik0tIgzA==
+X-CSE-MsgGUID: fNaq+Iw1TLOmGgeBGE4jng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
+   d="scan'208";a="61616651"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.181])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 05:38:20 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 21 Aug 2024 15:38:15 +0300 (EEST)
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, 
+    Daniel Scally <djrscally@gmail.com>
+Subject: Re: [PATCH v1 1/4] driver core: Ignore 0 in dev_err_probe()
+In-Reply-To: <20240821122233.3761645-2-andriy.shevchenko@linux.intel.com>
+Message-ID: <1dde296b-045e-d56a-1734-a1333a84060b@linux.intel.com>
+References: <20240821122233.3761645-1-andriy.shevchenko@linux.intel.com> <20240821122233.3761645-2-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/4] platform/x86: int3472: Simplify dev_err_probe()
- usage
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Scally <djrscally@gmail.com>
-References: <20240821122233.3761645-1-andriy.shevchenko@linux.intel.com>
- <20240821122233.3761645-3-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240821122233.3761645-3-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323328-272445734-1724243895=:5260"
 
-Le 21/08/2024 à 14:20, Andy Shevchenko a écrit :
-> Since dev_err_probe() ignores success,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Hi,
+--8323328-272445734-1724243895=:5260
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Does it really?
-It does not seem to be the case (at least on linux-next). Or I miss 
-something obvious?
+On Wed, 21 Aug 2024, Andy Shevchenko wrote:
 
-CJ
-
-> i.e. 0. we may call
-> it unconditionally.
-> 
+> In the similar way, ignore 0 error code (AKA "success") in
+> dev_err_probe(). This helps to simplify a code such as
+>=20
+>   if (ret < 0)
+>     return dev_err_probe(int3472->dev, ret, err_msg);
+>=20
+>   return ret;
+>=20
+> to
+>=20
+>   return dev_err_probe(int3472->dev, ret, err_msg);
+>=20
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->   drivers/platform/x86/intel/int3472/discrete.c | 5 +----
->   1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-> index 07b302e09340..cd0743300d7f 100644
-> --- a/drivers/platform/x86/intel/int3472/discrete.c
-> +++ b/drivers/platform/x86/intel/int3472/discrete.c
-> @@ -289,10 +289,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
->   	int3472->ngpios++;
->   	ACPI_FREE(obj);
->   
-> -	if (ret < 0)
-> -		return dev_err_probe(int3472->dev, ret, err_msg);
-> -
-> -	return ret;
-> +	return dev_err_probe(int3472->dev, ret, err_msg);
->   }
->   
->   static int skl_int3472_parse_crs(struct int3472_discrete_device *int3472)
+>  drivers/base/core.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 6d3897492285..144cb8c201fb 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -5046,6 +5046,10 @@ int dev_err_probe(const struct device *dev, int er=
+r, const char *fmt, ...)
+>  =09=09 */
+>  =09=09break;
+> =20
+> +=09case 0:
+> +=09=09/* Success, no need to issue an error message */
+> +=09=09break;
+> +
+>  =09default:
+>  =09=09dev_err(dev, "error %pe: %pV", ERR_PTR(err), &vaf);
+>  =09=09break;
+>=20
 
+This seems generally useful,
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+A nit, the code sequence that dev_err_probe() is documented to replace is=
+=20
+no longer matches with the behavior (the else would need if (err < 0)=20
+added).=20
+
+--=20
+ i.
+
+--8323328-272445734-1724243895=:5260--
