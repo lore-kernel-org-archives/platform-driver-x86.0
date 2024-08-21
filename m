@@ -1,124 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DADEAC0;
-	Wed, 21 Aug 2024 18:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9648B4085D
+	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Aug 2024 18:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724265958; cv=none; b=Guwc2WuLSAHs7tqiWR3YKxx4/HwZAdVC9pOEygSZdjcyWHLFPP8ensHxf/zE0D/frXTbeei6B4peVUMYEz/azfixpn+sD7DUF/wALQ7od+d394w/I+7HsBQTitJ5wH7DoVgrcM2ZvUPs1+7PYaqLg9TQxfUCT04HzOVQbLTcB/A=
+	t=1724266461; cv=none; b=Nt72fu3upiCas9PFBE0kuEyKl0KfkqJw5GcjUqaJKmSCri+sZDxEQh3JGxIJHeuLC6Uq2Q5MJ3OFpeyfGTg4inWoD8hlnBLKU0WXbmEFDfFRklILCTfJ9qyvPKdTA2d8kx8ZIPBIudw8KbRM5Qw8c1BRJnFJ2z+dpakYkxTdRB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724265958; c=relaxed/simple;
-	bh=cxfQ2TYC2Pf6uL7YdGRSYCNPIqLLJJDtptw+GPbJzh4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JOQkRYgsYBuxwb0Azt2q2bVDvggSoMuk1rJZb/sMUU5PvAOwOM30AKoclsKrJS8nDmWszC63nw/InK5Vy6A/0wK7rlEXOrHhJ6Z91Gk1p+fiMVUOSl40xiEu6JCoT72OPE4vD364UwtQcS8BH9r6RMP+omMt/2Xfc8zdzYQe/sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KTorQswO; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1724266461; c=relaxed/simple;
+	bh=AL+CJfW1oFMDmMuubCyhtaHR+FbzRG9wFNCpQzmWVmE=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=exc4Vv8QD1M5+q39aocj6hwRK6Ml/Gcz2bVdq51wMGPFkjuZyBEoa2jXHjeftGktHS7Re4Q3ptrm8dLPVJc48G4nMjiS7Dww1jaEwimhmV3snStrK3S0OeAeYGeOBEG93t4SZyRJw0knIlMcAnGOJ7R7l5wYHn2oXXVsDlnWtwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DX/Ea2kg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KTorQswO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724265956; x=1755801956;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=cxfQ2TYC2Pf6uL7YdGRSYCNPIqLLJJDtptw+GPbJzh4=;
-  b=KTorQswOFLqkxyfzjh/I/R+DKUQXS0NdS57y3LK39uQk6oL9W8F9tmTL
-   aUajGqqlAb4yRGKFBzCJ0SUyH8v9CWiTQOLklLDT3nwcYfL0YcH8cV5GJ
-   PqrrLKcRC2t21usPynoUeOg5itQdSp0T//g0nqw5rFypVPPsKXoz/HYDR
-   9s5BxguT9Pj5xtmOSRIA3jTA5Qij+7Pz1vBXKT+sxzz9Ywse1XFzFIuLh
-   t/iI+TWNtX06yRHpTRjCcTbRQW4rFl9VG6R/oLl4m3Ng5FT+rYwT3Ouvu
-   zwbf++gdCpCHcIGCgyqJwDPLv8bbrDpH+j91BgOqW3GEwzM9mEUr0TiXn
-   w==;
-X-CSE-ConnectionGUID: BCQTxFUCQca01oCLJKTfQQ==
-X-CSE-MsgGUID: v75+344TRTik71i18E4VEg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11171"; a="33215854"
-X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
-   d="scan'208";a="33215854"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 11:45:55 -0700
-X-CSE-ConnectionGUID: akN04QTuQHG/dG/XKj4ihw==
-X-CSE-MsgGUID: r3tdL/DlQuyLfSp7tQpiMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
-   d="scan'208";a="60898531"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa007.fm.intel.com with ESMTP; 21 Aug 2024 11:45:53 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 5AD97268; Wed, 21 Aug 2024 21:45:52 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Daniel Scally <djrscally@gmail.com>
-Subject: [PATCH v1 1/1] platform/x86: int3472: discrete: Remap "reset" to "enable" for OV7251
-Date: Wed, 21 Aug 2024 21:40:07 +0300
-Message-ID: <20240821184546.627456-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DX/Ea2kg"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 31FE4C32781
+	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Aug 2024 18:54:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724266461;
+	bh=AL+CJfW1oFMDmMuubCyhtaHR+FbzRG9wFNCpQzmWVmE=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=DX/Ea2kgPozIKYhGY2i24RCIpgQLVyWUkGDqlGGslcY1Fvb7uiyhACoJXmetbeqS5
+	 vIvjegkM9dAzDRfcSOMgQ0JN4XWdLi3gQ9eIYNCc+Lsq6fDuiknYmL4Pn3XvF8CHgy
+	 nE9lXwoe2zoiixwg2zboCk/auSJ49pg8WeOYDmCqSHY3/LROBnUsYxrVN/2fHqc6x8
+	 S1Zh/piG6CpoWUnAJerlLVAxmx3n9tj+ajkW2AtDa1q08ickfFMs1CoJkOZh5ASM4O
+	 IDM4H+J+/qk+yje3dPkzMdEKkvVXMO9z+XeIGFxNN87PLDMJmsZHFHK92pgNdo85+2
+	 ArpPgbzkvbQsw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 22DCBC53BB7; Wed, 21 Aug 2024 18:54:21 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 217511] HP Pavilion x2 12-b020nr - Charging over USB-C not
+ working
+Date: Wed, 21 Aug 2024 18:54:20 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Status: NEEDINFO
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: component assigned_to
+Message-ID: <bug-217511-215701-OlsgHVTTTe@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-217511-215701@https.bugzilla.kernel.org/>
+References: <bug-217511-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The driver of OV7251 expects "enable" pin instead of "reset".
-Remap "reset" to "enable" and update polarity.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D217511
 
-In particular, the Microsoft Surface Book can't load the camera sensor
-driver without this change:
+Mario Limonciello (AMD) (mario.limonciello@amd.com) changed:
 
- ov7251 i2c-INT347E:00: supply vdddo not found, using dummy regulator
- ov7251 i2c-INT347E:00: supply vddd not found, using dummy regulator
- ov7251 i2c-INT347E:00: supply vdda not found, using dummy regulator
- ov7251 i2c-INT347E:00: cannot get enable gpio
- ov7251 i2c-INT347E:00: probe with driver ov7251 failed with error -2
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+          Component|USB                         |Platform_x86
+           Assignee|drivers_usb@kernel-bugs.ker |drivers_platform_x86@kernel
+                   |nel.org                     |-bugs.osdl.org
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
+--=20
+You may reply to this email to add a comment.
 
-Hmm... I have spent some time to achieve this, and then I realised that
-linux-surface GitHub project already has something similar [1].
-
-The advantage of [1] is that it applies the quirk to all OV7251 sensors
-on the platform (don't know how useful it IRL).
-
-However, it seems the [1] has two issues:
-1) it missed terminator entry in the ACPI ID table;
-2) it forces polarity to be active high, while I think the XOR approach
-is better as it's possible (but quite unlikely I believe) that reset pin
-might be inverted on the PCB level.
-
-All in all, I'm fine with any of these patches to be applied with the
-above mentioned improvements / caveats.
-
-Link: https://github.com/linux-surface/kernel/commit/d0f2c2d5a449c2bf69432f90d164183143d8af8d [1]
-
- drivers/platform/x86/intel/int3472/discrete.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index b5f6f71bb1dd..0559295dfb27 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -86,6 +86,16 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
- 		return -EINVAL;
- 	}
- 
-+	/*
-+	 * The driver of OV7251 expects "enable" pin instead of "reset".
-+	 * Remap "reset" to "enable" and update polarity.
-+	 */
-+	if (!strcmp(int3472->sensor_name, "i2c-INT347E:00") &&
-+	    !strcmp(func, "reset")) {
-+		func = "enable";
-+		polarity ^= GPIO_ACTIVE_LOW;
-+	}
-+
- 	ret = skl_int3472_fill_gpiod_lookup(&int3472->gpios.table[int3472->n_sensor_gpios],
- 					    agpio, func, polarity);
- 	if (ret)
--- 
-2.43.0.rc1.1336.g36b5255a03ac
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
