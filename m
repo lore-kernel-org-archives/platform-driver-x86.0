@@ -1,143 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE711B81D5;
-	Wed, 21 Aug 2024 07:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558E91B81CB;
+	Wed, 21 Aug 2024 07:42:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724225444; cv=none; b=BbxbH3oOBcdd61PdQsXBHf7Ua/uTMiuVMj1Riq4XaloZZXFkNA5+AntpdxXifZ2X5Hs9owlpn0qKzJM6FM8HLfjyW4ISyWL8vw6lZVrzMLn8n3cPzQSz06DTy6uYmSraqfo8tHABHUBrkgzJPJ86y8jffkgUSZgOeQiWWM730es=
+	t=1724226149; cv=none; b=YO4qv/OP62MdhBA2xqsvaNDdzffWzx9sbngXiNtzaVv6P/B8GCiGr3oN9BvX5EaEKUNYQGgJkiqVWCuY2BLmL8SfQl6AObp4EIEsecxvM/CEfXQgcb/SlGOZ12473WFKZmx+6LfReUGldL+x1eA5L2Ar5WE84P6iabk5LODyLBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724225444; c=relaxed/simple;
-	bh=/tEr+7aRGRUHgWH6P1voUkKY5buJ2qP3gh+K5EEHLcs=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=udqZz181zZ7DioHt/zQG39rVpnV6fS5PB+RmIqwk//2ljPx/TS3CyaQwmLxF+TxAGqXIAyzIoH5q65I+8guTZby4x3FRNcmfxTPv9dSbNfXUeJfaIKZeW78APln6eYv/vz1LjPTheJhv3EyWvV30JUKtWBJA25O4x0zJwGuzEXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ra2MLnlj; arc=none smtp.client-ip=198.175.65.19
+	s=arc-20240116; t=1724226149; c=relaxed/simple;
+	bh=t448hFoOS1T0zzj+LYQiiToiW+KeZz0OuV3kcahtYxU=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=uAq8P+GydVqiytFf9siJGDKXHnyM9qpwai2rrL6AcWzO85Kum2xCk72pdfUs4efcJxn+jBIr8vOVrMJ6/hpWrcIxW2tm5G8v4ZUNGrWqLaTM7KcOg0L+oryKCqpToEjBSIShT0ONSQUf7YpiNv6zH5Agv0eBVTMoXLCeHyHUCMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hc4Ka6b5; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ra2MLnlj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hc4Ka6b5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724225443; x=1755761443;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=/tEr+7aRGRUHgWH6P1voUkKY5buJ2qP3gh+K5EEHLcs=;
-  b=Ra2MLnljhdU8IH/rT17pECZqEmj0KO4tq0dCACeNZivhd3g0KKwJJ4TH
-   fMLMQpxUb866ZHDmKjinP7ViogRlHxPsNSbMXnOBrH1orq8rR7z/qfz1I
-   JuvnbchdyqIs1edr+wsaM9cVQ4OUEAylKN0ZvVxeBFiBdaXmRceBhMZzv
-   +J5YPJ+h8aOl7mGrkd78txr9wP2OF5KvcPqh7eU1O1XhuNcPVZqcQfsPG
-   dI/VMIIQxgURVoZ5VmSnuzu7vuHZFsAInL3ezdtn2prJoBlvpAAvAVuzu
-   3iq4rebV9XH2c35E68S1uthWGniyDNBGFmoA6usYUWj8YJdkv03QSalHV
-   Q==;
-X-CSE-ConnectionGUID: DPq0ZNkLSGuPDPP5OIbJ/A==
-X-CSE-MsgGUID: 9Jd1YdwqSLm9UhxOHtf03g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11170"; a="22435342"
+  t=1724226148; x=1755762148;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=t448hFoOS1T0zzj+LYQiiToiW+KeZz0OuV3kcahtYxU=;
+  b=Hc4Ka6b5HVquXQyplhPkwAVFdMa7h1kBDAjv1YT2SwntVypJ+8OIDYxE
+   Yf6CGupMuWyHpEDubZb/RjTjE8iEkvARyeC2l0u1GNnEgSFPZs2kfHp91
+   j9WdnfHa/CTc6s3vZb36GjkkfhaABtQh1EbF84hBz4aJq6pvAY/W2+smb
+   tLpq1dH4O6W+PLDSKbtNaO5bEOUtSf4K04kZaSu4WeDLZbjto4icvdOY0
+   xrFzyYaUkauQl2ZBXoqpfNxqh7yBeWnuwox14OjMH3t2n0tpu6tp3BfSD
+   QBJWSdiMeGvBopyYVPt9GTxuRoAXbEeDO2fB5y3I8cTVr9Sw5ku+z9LkU
+   A==;
+X-CSE-ConnectionGUID: xnPLsjcZT361hEHXmCyYIw==
+X-CSE-MsgGUID: hgD3/wtgRyeLCgplSoYSHg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11170"; a="13128425"
 X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
-   d="scan'208";a="22435342"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 00:30:42 -0700
-X-CSE-ConnectionGUID: KVcoWeYvS9SA6Njn1YrQFw==
-X-CSE-MsgGUID: l4pYpQ3aTfO1MR7RahKEdw==
+   d="scan'208";a="13128425"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 00:42:26 -0700
+X-CSE-ConnectionGUID: ML12ENFJTXeKeK1l8SGATA==
+X-CSE-MsgGUID: Pc2xMlQRTGuMKN1n9t0BJg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
-   d="scan'208";a="61535992"
+   d="scan'208";a="65848552"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.181])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 00:30:40 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 00:42:23 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 21 Aug 2024 10:30:37 +0300 (EEST)
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] platform/x86/intel-uncore-freq: Do not present separate
- package-die domain
-In-Reply-To: <20240820204558.1296319-1-srinivas.pandruvada@linux.intel.com>
-Message-ID: <7dca8e46-4c33-875d-d645-55bb9bbc421f@linux.intel.com>
-References: <20240820204558.1296319-1-srinivas.pandruvada@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+Date: Wed, 21 Aug 2024 10:40:10 +0300
+Subject: [GIT PULL] platform-drivers-x86 for v6.11-4
+Message-ID: <pdx86-pr-20240821104010-1325128977@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1899909308-1724225437=:5260"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Linus,
 
---8323328-1899909308-1724225437=:5260
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Here is a platform-drivers-x86 fixes PR for v6.11.
 
-On Tue, 20 Aug 2024, Srinivas Pandruvada wrote:
+Changes:
+- ISST: Fix an error-handling corner case.
+- platform/surface: aggregator: Minor corner case fix and new HW support.
 
-> The scope of uncore control is per power domain with TPMI.
->=20
-> There are two types of processor topologies can be presented by CPUID
-> extended topology leaf irrespective of the hardware architecture:
->=20
-> 1. A die is not enumerated in CPUID. In this case there is only one die
-> in a package is visible. In this case there can be multiple power domains
-> in a single die.
-> 2. A power domain in a package is enumerated as a die in CPUID. So
-> there is one power domain per die.
->=20
-> To allow die level controls, the current implementation creates a root
-> domain and aggregates all information from power domains in it. This
-> is well suited for configuration 1 above.
->=20
-> But for configuration 2 above, the root domain will present the same
-> information as present by power domain. So, no use of aggregating. To
-> check the configuration, call topology_max_dies_per_package(). If it is
-> more than one, avoid creating root domain.
->=20
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Regards, i.
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
---=20
- i.
+The following changes since commit 7cc06e729460a209b84d3db4db56c9f85f048cc2:
 
-> ---
-> This is a forward looking change as TPMI is architectural and should
-> support all topologies.
->=20
-> v2
-> Updated commit description as suggested.
->=20
->  .../x86/intel/uncore-frequency/uncore-frequency-tpmi.c     | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency=
--tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi=
-=2Ec
-> index 2016acf44f6a..e6047fbbea76 100644
-> --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-> +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-> @@ -557,6 +557,9 @@ static int uncore_probe(struct auxiliary_device *auxd=
-ev, const struct auxiliary_
-> =20
->  =09auxiliary_set_drvdata(auxdev, tpmi_uncore);
-> =20
-> +=09if (topology_max_dies_per_package() > 1)
-> +=09=09return 0;
-> +
->  =09tpmi_uncore->root_cluster.root_domain =3D true;
->  =09tpmi_uncore->root_cluster.uncore_root =3D tpmi_uncore;
-> =20
-> @@ -580,7 +583,9 @@ static void uncore_remove(struct auxiliary_device *au=
-xdev)
->  {
->  =09struct tpmi_uncore_struct *tpmi_uncore =3D auxiliary_get_drvdata(auxd=
-ev);
-> =20
-> -=09uncore_freq_remove_die_entry(&tpmi_uncore->root_cluster.uncore_data);
-> +=09if (tpmi_uncore->root_cluster.root_domain)
-> +=09=09uncore_freq_remove_die_entry(&tpmi_uncore->root_cluster.uncore_dat=
-a);
-> +
->  =09remove_cluster_entries(tpmi_uncore);
-> =20
->  =09uncore_freq_common_exit();
->=20
+  platform/x86: ideapad-laptop: add a mutex to synchronize VPC commands (2024-08-08 15:03:09 +0300)
 
---8323328-1899909308-1724225437=:5260--
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.11-4
+
+for you to fetch changes up to 46ee21e9f59205e54943dfe51b2dc8a9352ca37d:
+
+  platform/x86: ISST: Fix return value on last invalid resource (2024-08-20 14:19:09 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.11-4
+
+Changes:
+- ISST: Fix an error-handling corner case.
+- platform/surface: aggregator: Minor corner case fix and new HW support.
+
+The following is an automated shortlog grouped by driver:
+
+asus-wmi:
+ -  Add quirk for ROG Ally X
+
+ISST:
+ -  Fix return value on last invalid resource
+
+surface: aggregator:
+ -  Fix warning when controller is destroyed in probe
+
+surface: aggregator_registry:
+ -  Add fan and thermal sensor support for Surface Laptop 5
+ -  Add support for Surface Laptop 6
+ -  Add support for Surface Laptop Go 3
+ -  Add support for Surface Laptop Studio 2
+ -  Add Support for Surface Pro 10
+
+----------------------------------------------------------------
+Luke D. Jones (1):
+      platform/x86: asus-wmi: Add quirk for ROG Ally X
+
+Maximilian Luz (6):
+      platform/surface: aggregator_registry: Add Support for Surface Pro 10
+      platform/surface: aggregator_registry: Add support for Surface Laptop Go 3
+      platform/surface: aggregator_registry: Add support for Surface Laptop Studio 2
+      platform/surface: aggregator_registry: Add fan and thermal sensor support for Surface Laptop 5
+      platform/surface: aggregator_registry: Add support for Surface Laptop 6
+      platform/surface: aggregator: Fix warning when controller is destroyed in probe
+
+Srinivas Pandruvada (1):
+      platform/x86: ISST: Fix return value on last invalid resource
+
+ drivers/platform/surface/aggregator/controller.c   |  3 +-
+ .../platform/surface/surface_aggregator_registry.c | 58 +++++++++++++++++++---
+ drivers/platform/x86/asus-wmi.c                    | 16 +++++-
+ .../x86/intel/speed_select_if/isst_tpmi_core.c     |  3 +-
+ 4 files changed, 70 insertions(+), 10 deletions(-)
