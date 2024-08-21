@@ -1,126 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A29EA1B253B
-	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Aug 2024 17:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF4F4085D;
+	Wed, 21 Aug 2024 18:15:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724262886; cv=none; b=lOFs9AgK/z3ik3ULfIybjWGAvBzVOYVm9LOlzjvfLAzyVSeXVuA43zgQWzMObDsonHYCXlpms9Xb1raqVA8Ifgd7fdrj8ZqOz45RW5XAyPTzXQSHrOcxYr0bL2qKSACMor7NZh7ABKE9Mrae5mxczG2CA1tm/GDGs4gyz08KnnE=
+	t=1724264150; cv=none; b=UOJ4Kt7IU4RaV36jG0FuRpppVL1plC50yz17x4XG7Ue1mJVESvCALpE+ZjksWyxXEYp4Vtn57LTQjkgTFPDkoATkh39/7yP/bPsgK52OnNuxbzcRRK9jsqXvEm4T0hC0WzRShahbxDKHRjkZGaD3BJnBqIXM4GlqsFFqc0B5ilk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724262886; c=relaxed/simple;
-	bh=hBw4ve3MElaAH5crYy3M97DusLpUcpWc0MVUTjNoxc0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=DT944p5AT/1yHK/nSN4BduSh3UC44dXk4stKrRuD30ujokLguipDt4ne6eOpTFEgmT+jvsxlv189jKeC/o645f7PpJLRIE5TtJcDqwMI6iKdAJ2WBXK8fUBWmizfXDNgezD0six5m5eJzS19xjPAulWOff7Ng9zSPHL2MTvhYfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DDuc7Gu+; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1724264150; c=relaxed/simple;
+	bh=WT4FqzDcBXI76PEhVbnCqBkwMzjeorAi2SdfHfNii7I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VnGFMTJIae2SMvZlmoh/F3ESYuPRqruoNZF8QkSryqjBumeW3yw2DlMUjR0L+fw/LsMz2M1lytK2ometYSO17wABt/UqxmQ4H5HASU+rMOaRwX1lOIWUu4PhfXUUf82hyB9IVsUjf2RBwZ8kWhVcGpQ50zTgItn51jyFeu6i8Ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=koIJyjrA; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DDuc7Gu+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724262885; x=1755798885;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=hBw4ve3MElaAH5crYy3M97DusLpUcpWc0MVUTjNoxc0=;
-  b=DDuc7Gu+hNuD3+qszAha852uAbXmwcKABI21BJJ8xlW5xVQ/ZGqlP9Zw
-   c9OokOnJZXFIRbZvjEZ2jdt/aLHrShofJZ2BFfzSN4OKKX8XxSuJ/B9Vl
-   63G2hc9TsLTRx/7nQHmUwfVaNs0eiGF9MK6UzGmjddgJP1S4rveNyQgIW
-   asqKenMWL4yeUKmuPkcKv7R3Oi4NHPCC3cgIEo9pwDfXDYJAwvOWWlOHn
-   +TSdbvSSRAZSPwKrg5n2eGJjOTnpE7iMZbdDrtj95E2mOQJ5ZlFv2hsMm
-   t7smr8mGOwE8U4Nr57L35tveBBombC5cMC6WTZ5b04xEW5ZoSTFNIpHeH
-   w==;
-X-CSE-ConnectionGUID: xvKYdSngT9+8ei2LVL0Ivw==
-X-CSE-MsgGUID: /6CkM16BTgWDx+cBSv3FDw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11171"; a="22510215"
-X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
-   d="scan'208";a="22510215"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 10:54:44 -0700
-X-CSE-ConnectionGUID: BVvlYlR3Tj6yt4uRSQlCmQ==
-X-CSE-MsgGUID: 8MeFgy5/QDyGuQZGbcPalw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
-   d="scan'208";a="60887851"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.181])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 10:54:41 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 21 Aug 2024 20:54:37 +0300 (EEST)
-To: Mario Limonciello <mario.limonciello@amd.com>
-cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Hans de Goede <hdegoede@redhat.com>, Sanket.Goswami@amd.com, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86/amd/pmc: Extend support for PMC features
- on new AMD platform
-In-Reply-To: <ed50679e-114f-4e7b-8465-1b8d4e0622d9@amd.com>
-Message-ID: <b81c2300-f18f-7087-8531-ce7bbe3a03be@linux.intel.com>
-References: <20240821150446.392726-1-Shyam-sundar.S-k@amd.com> <ed50679e-114f-4e7b-8465-1b8d4e0622d9@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="koIJyjrA"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7142e002aceso464814b3a.2;
+        Wed, 21 Aug 2024 11:15:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724264148; x=1724868948; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1PNqGIZhhwKQlSK4vxc3HqYHLp2ABqUIqCgS8LnjfYs=;
+        b=koIJyjrAcHW6nm7/IHYYvbqfC6fMAQ6fHwRVugo0W8t7hTpL4kQmXL26gpwmk2OW9W
+         q46H0Ap3AeV9ssoiyE6W8xjVC5+WIt1vKaZUr/LYBhuKubcgXKBJrqe4nod2oigSufrg
+         EyA+zidVOm8QZHikHkUCCcjq6ZlYmHiYRMNEekFsmTqdfWDO0l5tGYMfqc4EcBxhSuT6
+         DLYXJOhEm9oTYiNvdKf9sQWRGB6TMdax26p/vKfVqRdSGrfWgsLsyKruL6SmqYqphWrM
+         rUn2SbpiCfZrwg+D8GDXeut5+BIyjNTtuI9RhqnTAAXtCg2FxdbDxNqWMkfib9E7sKAu
+         Q/OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724264148; x=1724868948;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1PNqGIZhhwKQlSK4vxc3HqYHLp2ABqUIqCgS8LnjfYs=;
+        b=cxaX6DuB9UVoF45NWMOfQu2elwxrTevhowzTHAdvU/2O1gybX43rRC/rh3efoKhMNK
+         D7og25RH1r6bFBKAvDX6JMiJ1GYNekAdxsUfRE7lOmQv6eiGtr3Ok2NHOzTnKIP3YJ9n
+         eaKse1xhlIPo9RfC9rgvvpE+S2A6RQmviW9s8IkhLCaB2adWfYWFs90MeGup4Vw79aB8
+         9QFC7o3fcTw7w/72T9w+JGAX6klZsIIzLkfVeZbKiqKI2EE7VPPGeTOiXz0fnPn+AhjL
+         dBiAWQQXWiZ+MTyi49HUtTi+005xpFcI76H5KRBTLVG43mkcpJfCADpzhiGD727OJ96K
+         nbJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUqQJxMq+Nevpla61/W7P+kJlKwIaOV9Y7VyuFqZtaYqCGjNZXe9Gq5T+P++BmXDTtY8cXUtn3FvKxBo9Q=@vger.kernel.org, AJvYcCVKnwJlgruf8iz/7jJi9KrDiLuk0r4RyikRMd4ZHX08zsLznApdnNjcfTUjmHL/TPIDooMY3v4rU43FQFN6g8c57fRRww==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzP6id1p7UTPHttgP7KgiobWqnqRBucQnuO4H1YkfJArwFduv4t
+	SvZpT8iTtNrw+g6S+AoDk0vCvG0ia9MzvrBK5fNE/yI/6lWpFTMF
+X-Google-Smtp-Source: AGHT+IGraL5V6woCK5Q7KMxZmif7jaa8gcKMEHZ44ch0mqnHmfQeUu1DpHRaLklGb/2Q4SmJs6tp0w==
+X-Received: by 2002:a05:6a20:b598:b0:1c3:b2b3:442d with SMTP id adf61e73a8af0-1cad816341fmr3966281637.40.1724264147913;
+        Wed, 21 Aug 2024 11:15:47 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:9790:ce1c:7737:a819])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7127af1f2cesm10281565b3a.181.2024.08.21.11.15.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2024 11:15:47 -0700 (PDT)
+Date: Wed, 21 Aug 2024 11:15:45 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Gross <mgross@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Borislav Petkov <bp@alien8.de>, linux-geode@lists.infradead.org,
+	platform-driver-x86@vger.kernel.org, x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/platform/geode: switch GPIO buttons and LEDs to
+ software properties
+Message-ID: <ZsYu0SEy8ZUKEJqP@google.com>
+References: <ZsV6MNS_tUPPSffJ@google.com>
+ <a2366dcc-908e-41e9-875e-529610682dc1@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a2366dcc-908e-41e9-875e-529610682dc1@redhat.com>
 
-On Wed, 21 Aug 2024, Mario Limonciello wrote:
-
-> On 8/21/2024 10:04, Shyam Sundar S K wrote:
-> > PMC driver has capability to get the IP information, idle mask values and
-> > STB data from the PMFW. Extend this support to the platforms that belong
-> > to family 1Ah model 60h series.
+On Wed, Aug 21, 2024 at 12:15:51PM +0200, Hans de Goede wrote:
+> Hi Dmitry,
+> 
+> On 8/21/24 7:25 AM, Dmitry Torokhov wrote:
+> > Convert GPIO-connected buttons and LEDs in Geode boards to software
+> > nodes/properties, so that support for platform data can be removed from
+> > gpio-keys driver (which will rely purely on generic device properties
+> > for configuration).
 > > 
-> > Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> > Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> > Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> > To avoid repeating the same data structures over and over and over
+> > factor them out into a new geode-common.c file.
+> > 
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 > 
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Thanks, patch looks good to me:
 > 
-> This is actually a fix for another commit in 6.11.  Hans, Ilpo, can you please
-> take it in fixes?
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 > 
-> Fixes: 426463d94d45d ("platform/x86/amd/pmc: Send OS_HINT command for new AMD
-> platform")
+> Question has this been tested on at least 1 affected device ?
 
-For that, a proper justification is necessary in the commit message (but 
-I guess Shyam was going to improve that too while respinning given the 
-other replies).
+No unfortunately it has not been as I do not have the hardware. I am
+hoping folks on geode list could give this patch a spin.
+
+Thanks.
 
 -- 
- i.
-
-> > ---
-> >   drivers/platform/x86/amd/pmc/pmc.c | 3 +++
-> >   1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/drivers/platform/x86/amd/pmc/pmc.c
-> > b/drivers/platform/x86/amd/pmc/pmc.c
-> > index c3e51f0a5c33..bbb8edb62e00 100644
-> > --- a/drivers/platform/x86/amd/pmc/pmc.c
-> > +++ b/drivers/platform/x86/amd/pmc/pmc.c
-> > @@ -359,6 +359,7 @@ static void amd_pmc_get_ip_info(struct amd_pmc_dev *dev)
-> >   		dev->smu_msg = 0x538;
-> >   		break;
-> >   	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
-> > +	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
-> >   		dev->num_ips = 22;
-> >   		dev->s2d_msg_id = 0xDE;
-> >   		dev->smu_msg = 0x938;
-> > @@ -597,6 +598,7 @@ static int amd_pmc_idlemask_read(struct amd_pmc_dev
-> > *pdev, struct device *dev,
-> >   		val = amd_pmc_reg_read(pdev, AMD_PMC_SCRATCH_REG_YC);
-> >   		break;
-> >   	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
-> > +	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
-> >   		val = amd_pmc_reg_read(pdev, AMD_PMC_SCRATCH_REG_1AH);
-> >   		break;
-> >   	default:
-> > @@ -630,6 +632,7 @@ static bool amd_pmc_is_stb_supported(struct amd_pmc_dev
-> > *dev)
-> >   	case AMD_CPU_ID_CB:
-> >   	case AMD_CPU_ID_PS:
-> >   	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
-> > +	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
-> >   		return true;
-> >   	default:
-> >   		return false;
-> 
+Dmitry
