@@ -1,110 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78F519ABD0;
-	Wed, 21 Aug 2024 13:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509B3199FC7;
+	Wed, 21 Aug 2024 13:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724245950; cv=none; b=HgbGzzLU4NypG/E65ir566DKQdrFc2VaHJ/Z0vIZ8QMFZ4XkjslFoEACvYB2XghChdCVI2K008+N4vKjK3qXZNmQQWdS4SBAkKo0k1F3UcJnfE5XBh9u/wgsuEa9yijbtTqZWwzQqu/MOP24kCy8u9sILZGLAqTet8cpgz1iMZA=
+	t=1724246021; cv=none; b=lz9opnMDU3FXUUBc7O8D2rhT0pgNvVc96bkBJeQFo59CGoHn8ndTUVeXPFvRx5JjjlpImTgGDAkwXd1QNsZ2oe3ap3vGKr4tWfRj0RF1ASA/+RC6X+MoOW0hY7yCyWAUhp6U5i0EaaWHPHV2bsEzSu206zCdirWPSyUHKnZCqo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724245950; c=relaxed/simple;
-	bh=h14BmJbpo6ksiyNRHk1esFbG+6FjgxhMeO5buuYByyY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ODT4v/OVCztYKBofNKhKnK88IZNKhNreZ6cROcI8380xqoqnTZB4ALNEBHnZpsKBw6zsWPbT/8OF0P85BWYnhTMuhZHgb4C7dDKseSvJx52HQ2fq1zv0zpbsST4J42EWywbI4wWLFH8NYZTP8fMOoWYdZ5xjaUlXQeEn7cdFvGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ePaW8LpA; arc=none smtp.client-ip=192.198.163.8
+	s=arc-20240116; t=1724246021; c=relaxed/simple;
+	bh=FG9EKt8B87nm6Bm6dMO1i09C+ZRKUDwGyc4dd5Vh7ZA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=svnJ18xDScjywVCyEzftUy0pQcLHZ4dqSBxLsZU8N0f4fecc4r+Nl7+EMTP3SjK2DQI7bQFL+dQAiMzL3u+5bXy5oHHI75V/jdgzle7p8WO8rVJnWAEK86Vb+brtrWfsK80+rfhfjqNTd6UMvxxHr3rNSs/r4SR5GYFr11pvbXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ysw3siPV; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ePaW8LpA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ysw3siPV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724245949; x=1755781949;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=h14BmJbpo6ksiyNRHk1esFbG+6FjgxhMeO5buuYByyY=;
-  b=ePaW8LpAJpxL4xt2hbfRz2PWf579TGruDboU5alq9pqtLvhr5tBxuTZM
-   OBDwEXxX/AlWx4CloLBh57GFVzmoxK7ToFfnKztW8L0mlsMojwmE3LfLh
-   +s5BZkwfFQI3fhuZnTMm4D2YyCcrKpGKiHHY5KQFp+ZubJj7k3A0Uzw53
-   CHdlns/MrvqAdXZmnz2hubt1vAGc/shL1mjoIQo3KCdNoDg25bE67jg7/
-   z/2Pq+/u92Q9BFW2Yqb2cVkjsXIi5E/udncdGDEPJIsktR4ImEEmTWrW9
-   3c2vUhAREh5H1PGPcRaoub4W7UOXvb/PqTNCUDBIZSKibVoCI3N+Wmmxu
-   A==;
-X-CSE-ConnectionGUID: dzBTQCFhQQ2/zaCprYR6ew==
-X-CSE-MsgGUID: dw5hYSEpQhqKx3CcSbJ8hQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11171"; a="40116368"
+  t=1724246020; x=1755782020;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FG9EKt8B87nm6Bm6dMO1i09C+ZRKUDwGyc4dd5Vh7ZA=;
+  b=Ysw3siPVxYCTyZRvLU/GA9SWOySjj2prWWsIp5mLXBPNEDYWViAd+iNW
+   kznobF9a7y8xBx8MHNo2HL4JpCMaHlp+X/SJ+ln0E7H1PmgswOn4AS/0G
+   myTt+MvRFj/TR2c/FQtTHRJLE7b+TrVC0YIzER2YF6LJlB2NEv+Y61wDy
+   e2f3LC7e8ambLK1EhzZHe3VIzruLw+pdbdkFLA3ErJ9NE8wsxoRKdOFRD
+   3kRgZY63BNT7Vr+0dAc9Far7YlxYfdDCjxewNqO8WJriNnifF3pQE6UY3
+   t1fVSOMGs4/DrU8F0bht3qzHZ5pMnLbMlFSMccTsY/r6VAQa+SngY5YuW
+   Q==;
+X-CSE-ConnectionGUID: zW5sSIMtR5mE+wsvCX2rHA==
+X-CSE-MsgGUID: Xw9Am/cLQTuMXprcHWAowA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11171"; a="26399016"
 X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
-   d="scan'208";a="40116368"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 06:12:28 -0700
-X-CSE-ConnectionGUID: SF45a6ecRHmJWgcDf5kKKQ==
-X-CSE-MsgGUID: Vn6M/RcNTSieM6vMGiYziw==
+   d="scan'208";a="26399016"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 06:13:34 -0700
+X-CSE-ConnectionGUID: FfUTcZBFRVGRXzSOXgu/4w==
+X-CSE-MsgGUID: beYkfBnCRLuAYmIZenT/qA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
-   d="scan'208";a="61226122"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 06:12:26 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1sgl8R-0000000053z-0ypY;
-	Wed, 21 Aug 2024 16:12:23 +0300
-Date: Wed, 21 Aug 2024 16:12:22 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	platform-driver-x86@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>
-Subject: Re: [PATCH v1 1/4] driver core: Ignore 0 in dev_err_probe()
-Message-ID: <ZsXntvP6eBB_092w@smile.fi.intel.com>
-References: <20240821122233.3761645-1-andriy.shevchenko@linux.intel.com>
- <20240821122233.3761645-2-andriy.shevchenko@linux.intel.com>
- <1dde296b-045e-d56a-1734-a1333a84060b@linux.intel.com>
+   d="scan'208";a="66047764"
+Received: from sschumil-mobl2.ger.corp.intel.com (HELO tkristo-desk.intel.com) ([10.245.246.10])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 06:13:32 -0700
+From: Tero Kristo <tero.kristo@linux.intel.com>
+To: srinivas.pandruvada@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] platform/x86: Add support for Intel uncore ELC feature
+Date: Wed, 21 Aug 2024 16:10:27 +0300
+Message-ID: <20240821131321.824326-1-tero.kristo@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1dde296b-045e-d56a-1734-a1333a84060b@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Aug 21, 2024 at 03:38:15PM +0300, Ilpo Järvinen wrote:
-> On Wed, 21 Aug 2024, Andy Shevchenko wrote:
-> 
-> > In the similar way, ignore 0 error code (AKA "success") in
-> > dev_err_probe(). This helps to simplify a code such as
-> > 
-> >   if (ret < 0)
-> >     return dev_err_probe(int3472->dev, ret, err_msg);
-> > 
-> >   return ret;
-> > 
-> > to
-> > 
-> >   return dev_err_probe(int3472->dev, ret, err_msg);
+Hi,
 
-...
+This series adds ELC (Efficiency Latency Control) support to Intel
+uncore driver. This is a feature supported on newer SoCs, and it
+basically acts as a way to fine tune efficiency vs. latency tradeoffs
+wrt. uncore frequency scaling.
 
-> This seems generally useful,
-> 
-> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-
-Thanks!
-
-> A nit, the code sequence that dev_err_probe() is documented to replace is 
-> no longer matches with the behavior (the else would need if (err < 0) 
-> added).
-
-Okay, let's wait what Greg says about it, if he is okay with the proposal,
-I'll amend documentation as well in v2.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+-Tero
 
