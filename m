@@ -1,71 +1,110 @@
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFA6134AC
-	for <platform-driver-x86@vger.kernel.org>; Wed, 21 Aug 2024 12:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6505618B49E;
+	Wed, 21 Aug 2024 12:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724244094; cv=none; b=rBjIDjzkO5oI2C2cEH4Vc3EtScRvu62RKrnGGJ705w3kWru4n6ZOceAnmQSDugT9d6LZyMcL939eqkEKl1L1JawfGwECDteIiiWBUo3e+vUzsLix9UQQeercOtlZntY5lgHrC0/5crvNPjcKOoB4bIeivApvPIkv/AgsQdtCQIU=
+	t=1724244097; cv=none; b=dLzTablmNfPXxMFyMZc5ihSPCwV1j8FM71B5QJv0h0IhwkroezqdFsQvvL0+eOU/vc1vNdLrix5M/c94PvdKIKqaczSEM4LI10t2vWQb1hodWZRXbUjA/1CfuxOwhYwFGmV85aA3zGojG5eX5Oajzwusr+Hmltda64UjpnpAOd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724244094; c=relaxed/simple;
-	bh=amj0gncMvSyJLSP2syzFBmIWykTzcPbktkTvdyLZ230=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r4jvNNN3XZfLfGRd2zNPH65aQafm+45KWLj7wnGq5l3FlUlzz9O1r5NlFUyqXZHCsfZ89SjSL5amrzANX4VAPnuuRe4BCOpO9vvjUZMxQZuUwlCGZx9hJIGZb9XlFjYJktqQiq4OfxHp8Xjef6gWJk3hxiO4izOP8xVR4rjdiCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FteYYQdJ; arc=none smtp.client-ip=209.85.222.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1724244097; c=relaxed/simple;
+	bh=vy6M3uVmcsZYVvpOO4vJQdjq8rdlXSQxH1BERLAZsbU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=NduFNNfl6VC6hEactWcJ5y211xhC48I8xgTXNq2GC4LIzSc4pjXxGjfKS1hQWbuD5W7asgOq2Jy3zaeM//2tc2Pb9+f28QJV2Xe8VziSqx9ZcTPZI0RmV/WI2VStBUDu17G9XTc6LNyJPN1d5ZErfWQQLKGMaTxDnWllZijeCpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Adp1pz+m; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FteYYQdJ"
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-844c333b03bso224091241.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Aug 2024 05:41:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724244091; x=1724848891; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=amj0gncMvSyJLSP2syzFBmIWykTzcPbktkTvdyLZ230=;
-        b=FteYYQdJcGb3ZZrebjvmIG/FiKK8qFGg0SXJR/Z30x1L8+nBBI2vmktGzCMjdvEXs3
-         fy0t2kgs+J00ldbD8SWwciMr+wPPGvBmZWki/2b+nYnuiwzNC3rbDIJoHSySeIehdcVU
-         qakZFJxuF3CcAQRmG2qMh28r+qswngOi6metGH4Vyck4ZVG8SXVez/+0SIb0KBNLHGt2
-         pE9E+vaFDsb102S8t/HhsJDBVFWRoOdbyDjFzQmeEXjcSS6iHaB7xM6XK1FRxsJJu8+s
-         8daV1rcucxYEVbXA3rfD3S2QBx9MvJOHDV1IJxG0Z9GB6XFnAT7MHmHpWqYR1xFU2tAb
-         KnBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724244091; x=1724848891;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=amj0gncMvSyJLSP2syzFBmIWykTzcPbktkTvdyLZ230=;
-        b=YfQtRcIqrI3F/gXAvRrkaYqHTj6RRtwg+W58D8YCNpsyLisI0Zk3F3hWxGZS95+zvz
-         5ZrpamLaOPG5VjSizlK99hwEdovJenfZ7XNsoRLj1xew548eHLO+aAkSFf9dg0njfOK6
-         dTuxzhLNWLwQkp1pwooomQ7Avy/uB8EinTAgMFPBO8TkXWkzgSw4mSDD/l9bwcoM1c2v
-         V+u8cQSHHM7jfsCKC9m85BsrgqmIyqp5N4yXQ1HmWFEqNa2hRPl11t0tHkncThii5fch
-         EZmwA0KQDZrzBfQ0mzGZiNYDi3n0dW3fMU3SNj99himGegellrnZpbxjQDgNfOPTLz28
-         +JdQ==
-X-Gm-Message-State: AOJu0Yxbub01i5p+dpuNWmCWSjxJRyHTaSOhlmAXtgkWFG34B2k1kgT5
-	2fnwGsCZcGjKeEGBu5p/94UIsXzx29QfQUpWbKsx4EF/O9wKCCIis2uJ/o6bCf2Vibft44RioOj
-	I2Hrw3m2fxxvtyHkPJl4/mL6MZX4=
-X-Google-Smtp-Source: AGHT+IFH4cn6zuLEbEeyPJDCN78GqDvC4DrZxh8jbSJdmQacbVOypNvRA98WuVT9mY9OxP8k7TrAayaDWJiiG2kQ39Y=
-X-Received: by 2002:a05:6102:6c2:b0:498:c2cd:1ac5 with SMTP id
- ada2fe7eead31-498d2ea4831mr3120323137.9.1724244091494; Wed, 21 Aug 2024
- 05:41:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Adp1pz+m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724244096; x=1755780096;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=vy6M3uVmcsZYVvpOO4vJQdjq8rdlXSQxH1BERLAZsbU=;
+  b=Adp1pz+mU5ouVSemHF5PQlwI2PJhBLkFzPdTZ9KwyYTFdd5sqBWsiWKq
+   yYHY888xpRbVzrC3AuNKlXZgFTPYKC0D+2VrBkpjubREopDh++yKuc8Gl
+   wvkbRYp03QxaazWYD38RKnaQF1Z/HivfdLRUxXOG4n8dglxFOZWqXb7Fw
+   vPl2bd9rYN82UvNCu6e0l2yDXT+CowpMk7Ua6m86y39xLh6RITwl7pdoX
+   EAJ4dw4Wj3W9Tv6z/UF987UcJeFg2sc8xr/V9gZ0Zowa7ZXrLSxm1+Nf5
+   DHwz+aKeQLbgn6gzz0rC2qYnTS96WkZTMuNEWmcwYn8RZ+XQj28QBXJcr
+   Q==;
+X-CSE-ConnectionGUID: BV1MXDjfQnugLdvVVeG6Ug==
+X-CSE-MsgGUID: 0xi51JmzRKaLapQrDxhgrQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11171"; a="33168253"
+X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
+   d="scan'208";a="33168253"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 05:41:35 -0700
+X-CSE-ConnectionGUID: 4u/8F0sYRgSp6OqUprUGow==
+X-CSE-MsgGUID: X8xJ/6ZZQLeL4MYenm8lKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
+   d="scan'208";a="84259059"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.181])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 05:41:33 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 21 Aug 2024 15:41:30 +0300 (EEST)
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, 
+    Daniel Scally <djrscally@gmail.com>
+Subject: Re: [PATCH v1 3/4] platform/x86: int3472: Use GPIO_LOOKUP() macro
+In-Reply-To: <20240821122233.3761645-4-andriy.shevchenko@linux.intel.com>
+Message-ID: <c99b8ee1-dec1-689c-5f0c-dc45e6b984ae@linux.intel.com>
+References: <20240821122233.3761645-1-andriy.shevchenko@linux.intel.com> <20240821122233.3761645-4-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <808c835b-3500-4345-a338-b0f8014d049d@gmx.de> <202FA1F1-967D-4D99-94A1-9649C7C9B6F6@gmail.com>
-In-Reply-To: <202FA1F1-967D-4D99-94A1-9649C7C9B6F6@gmail.com>
-From: Rayan Margham <rayanmargham4@gmail.com>
-Date: Wed, 21 Aug 2024 12:41:19 +0100
-Message-ID: <CACzB==6Hpp173CzcsOpU+epz13uDU5mpudX1xvZuMkphODTPAw@mail.gmail.com>
-Subject: Re: Add Support for the Acer Predator Triton PT14-51
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="8323328-843904164-1724244090=:5260"
 
-It does not work very well, sure the mode switching led changes but
-the actual fan speed doesn't change. Performance is still awful, and
-theres no rgb control for the keyboard/logo
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Rayan Margham
+--8323328-843904164-1724244090=:5260
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Wed, 21 Aug 2024, Andy Shevchenko wrote:
+
+> Use GPIO_LOOKUP() macro which provides a compound literal
+> and can be used with dynamic data.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/int3472/discrete.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/plat=
+form/x86/intel/int3472/discrete.c
+> index cd0743300d7f..96a9673a0165 100644
+> --- a/drivers/platform/x86/intel/int3472/discrete.c
+> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+> @@ -69,11 +69,7 @@ static int skl_int3472_fill_gpiod_lookup(struct gpiod_=
+lookup *table_entry,
+>  =09if (!adev)
+>  =09=09return -ENODEV;
+> =20
+> -=09table_entry->key =3D acpi_dev_name(adev);
+> -=09table_entry->chip_hwnum =3D agpio->pin_table[0];
+> -=09table_entry->con_id =3D func;
+> -=09table_entry->idx =3D 0;
+> -=09table_entry->flags =3D polarity;
+> +=09*table_entry =3D GPIO_LOOKUP(acpi_dev_name(adev), agpio->pin_table[0]=
+, func, polarity);
+> =20
+>  =09return 0;
+>  }
+>=20
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+--8323328-843904164-1724244090=:5260--
