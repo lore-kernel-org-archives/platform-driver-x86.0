@@ -1,112 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from msa.smtpout.orange.fr (smtp-73.smtpout.orange.fr [80.12.242.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773C81531C1;
-	Wed, 21 Aug 2024 12:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC129166F04;
+	Wed, 21 Aug 2024 12:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724243611; cv=none; b=d5vF8WETzjh9b6Sgr+Sl8q95PpPvWywC3DZLIg2GiuiRC//Wsx3fGxITxNRt82cMJDEaaC7mdy4vKV7zQftNeneQ8/xeBsgOBHoDHtmzpJlUfgOh8/kg/JFuhVQJlsmaRTgkckBN/ChYVI4PPUym+GmJjHFvDXHY3d9QxirDnxA=
+	t=1724243743; cv=none; b=IJs/A++rS4jBei59kB9tSxqGNp+uORtAKV/+mGlG6MVGZun/l14QoTeod1E3MuF8rIlRX1VENM1z6kCTz+XoCOcCcORVpwU9nzD4DaH4UdizxiTjVfitTH/IU+1DCJbwtilPNXTnosWkGuSC0T1cxha+EpyBdgT9uApX3fOukjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724243611; c=relaxed/simple;
-	bh=hMAfE4Mvtcd5ET79hcKgW6u+1u5ZmeBbuFtoZqUj0dM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=I8fwxOsf8wxb97mHwHRzDOJ4l2hTVuKlbq0ftnNVb6c0YPqbNuPXPGGauit62+F2IC70WuxLlq2sCdl3qhwx0BJKEGcbV4wNW7jJmrQEBfznN3DAgrVwSpKgtbp+uva+OXys6wG39yGKpNzN1QkvUntpUx7jBmFhHWuZ6yi0BUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F6mOy0Iz; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1724243743; c=relaxed/simple;
+	bh=25ObRqwlOtBj/pcd5FxF9unYnK53/tXqiPwFSw8dR4w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ALuc3m/xiBsmoQojgUXfGmvYVzvg0Y8ovVL5CBdk8El0zymDMFpf+F8sFaJxq70MN9IAX4eVWSZvagw9oseLC6gPgZGPlT/uCwjxWnHxrktwncy1miVaDKYzQv03elr0bshGs9RYb95jAwBIAv4fBU6hqM04sdbaSgzv+qONc30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=lqpVJvoY; arc=none smtp.client-ip=80.12.242.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F6mOy0Iz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724243611; x=1755779611;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=hMAfE4Mvtcd5ET79hcKgW6u+1u5ZmeBbuFtoZqUj0dM=;
-  b=F6mOy0IzjaK7WDCh6ZKS/UHRGItqdgCvwFdrtcUwromXhFwGP8A2Cvhp
-   x2MH2M4JIyY3X4r9I8PBjYK3x3maDcuXYtykE4m5eqKMJrHeb2YTq0SSk
-   hiqe7aUBmuvXaBH8BndqyKx9vGU5wU1bPvRucS+FaThvvsCcrZ/Rz7WCy
-   hZbhPchoA657blzqQYCJh12o+V/KbWELPN7KM1yoYvoSXMF+ffg8zBde7
-   NAj0BVe8R+VzTJMd3LkQhkEx3IRh1J0xWGdwKgfyJRKajXggwQfZYSd7b
-   c81jXv44JMzttoGXkyeCf5QdWOLZwxL9MR1aMJ3xzAQ9U71ZhKsOSkja1
-   g==;
-X-CSE-ConnectionGUID: Xhjaz9rYRgifbYXkuFv0UA==
-X-CSE-MsgGUID: kqe68YzLROmPKIak/tQy7A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11171"; a="40058595"
-X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
-   d="scan'208";a="40058595"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 05:33:30 -0700
-X-CSE-ConnectionGUID: VyMruX/VQHO/0dlqvnfAYw==
-X-CSE-MsgGUID: uWgx089eQ6qN6IlCox75Lg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
-   d="scan'208";a="61050388"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.181])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 05:33:27 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 21 Aug 2024 15:33:23 +0300 (EEST)
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org, 
-    "Rafael J. Wysocki" <rafael@kernel.org>, 
-    Daniel Scally <djrscally@gmail.com>
-Subject: Re: [PATCH v1 4/4] platform/x86: int3472: Use str_high_low()
-In-Reply-To: <20240821122233.3761645-5-andriy.shevchenko@linux.intel.com>
-Message-ID: <5b38a2d2-4cad-e34a-899a-6dad4e26346a@linux.intel.com>
-References: <20240821122233.3761645-1-andriy.shevchenko@linux.intel.com> <20240821122233.3761645-5-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="lqpVJvoY"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id gkYksIlFjNe0IgkYksKwrp; Wed, 21 Aug 2024 14:35:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1724243732;
+	bh=7mFzAZMR1DwQrG49Sp3pjJHS3JwHC2jICOmjdxEWYww=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=lqpVJvoYso3fIEBrbv55noli99PPmHB/Rz3T9EtO/fx7AdDAsX9eA2xJtu+aDP7I7
+	 F+P8bv5gE+nkky+pFHLlfUk8E4elTB1YPJKpdT+4AYijEojIb2mR51UcJSfcR+8YyI
+	 KCdaoyt53XqzVOxzk1/tVJjysmMZFpUE1X/48iytde3oOJSI2dpw+4TUN8yIk6Yd0M
+	 8wDOeCg46S2BN2altjNfcMDM9Zj801t5LY/O7v6TnDV5ESR4d6Ej3E5XeyY9w/IBxz
+	 XZB90F6ydU9UOIOEyOiFHooetSgroJAdFEysbxt1bo5lsSyW1PB4GO707emu46Bc5e
+	 H/BPlX0e9my5A==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Wed, 21 Aug 2024 14:35:32 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <a096554e-fdfe-4deb-b19b-500c86beec98@wanadoo.fr>
+Date: Wed, 21 Aug 2024 14:35:29 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1771321182-1724243603=:5260"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/4] platform/x86: int3472: Simplify dev_err_probe()
+ usage
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Scally <djrscally@gmail.com>
+References: <20240821122233.3761645-1-andriy.shevchenko@linux.intel.com>
+ <20240821122233.3761645-3-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20240821122233.3761645-3-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Le 21/08/2024 à 14:20, Andy Shevchenko a écrit :
+> Since dev_err_probe() ignores success,
 
---8323328-1771321182-1724243603=:5260
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Hi,
 
-On Wed, 21 Aug 2024, Andy Shevchenko wrote:
+Does it really?
+It does not seem to be the case (at least on linux-next). Or I miss 
+something obvious?
 
-> Use str_high_low() rather than open coding.
->=20
+CJ
+
+> i.e. 0. we may call
+> it unconditionally.
+> 
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  drivers/platform/x86/intel/int3472/discrete.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/plat=
-form/x86/intel/int3472/discrete.c
-> index 96a9673a0165..b5f6f71bb1dd 100644
+>   drivers/platform/x86/intel/int3472/discrete.c | 5 +----
+>   1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+> index 07b302e09340..cd0743300d7f 100644
 > --- a/drivers/platform/x86/intel/int3472/discrete.c
 > +++ b/drivers/platform/x86/intel/int3472/discrete.c
-> @@ -11,6 +11,7 @@
->  #include <linux/module.h>
->  #include <linux/overflow.h>
->  #include <linux/platform_device.h>
-> +#include <linux/string_choices.h>
->  #include <linux/uuid.h>
-> =20
->  #include "common.h"
-> @@ -230,7 +231,7 @@ static int skl_int3472_handle_gpio_resources(struct a=
-cpi_resource *ares,
-> =20
->  =09dev_dbg(int3472->dev, "%s %s pin %d active-%s\n", func,
->  =09=09agpio->resource_source.string_ptr, agpio->pin_table[0],
-> -=09=09(polarity =3D=3D GPIO_ACTIVE_HIGH) ? "high" : "low");
-> +=09=09str_high_low(polarity =3D=3D GPIO_ACTIVE_HIGH));
-> =20
->  =09switch (type) {
->  =09case INT3472_GPIO_TYPE_RESET:
->=20
+> @@ -289,10 +289,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+>   	int3472->ngpios++;
+>   	ACPI_FREE(obj);
+>   
+> -	if (ret < 0)
+> -		return dev_err_probe(int3472->dev, ret, err_msg);
+> -
+> -	return ret;
+> +	return dev_err_probe(int3472->dev, ret, err_msg);
+>   }
+>   
+>   static int skl_int3472_parse_crs(struct int3472_discrete_device *int3472)
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
-
---8323328-1771321182-1724243603=:5260--
