@@ -1,103 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47191CBEA9;
-	Thu, 22 Aug 2024 13:07:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF9A1C9ECE;
+	Thu, 22 Aug 2024 15:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724332060; cv=none; b=aVi2rwIlHjdj0X++FJAUGgI2TNRy7rnc2sXSKoM+DbOVytkCJhrMpXZvMjQdY/261U6sUxrlPp/CL2vXk4NkR1MX/PSc/8tcIh7FMU23oLaGxpIQ2hiKTaQyQxApabA2l8e7WQVDB2T2oSUD8KQAjb6AHo5DpOxAFjovgOSCpcw=
+	t=1724341161; cv=none; b=GVGY+L/CZkYxrwT8cnWkjvT35QWe60WeQfeHrktAM5cegylKrnmgv6vAoNv/nI+5qlWD1px8rnUc0ERhMa8HUX97Q/+L7qRL2v0RaQEZ76Tc6tDYp37+4OUEnRBs8oVuRrnsyBY9iZLFKxasPjDX/Yy4g3f5/+7kROOpaw0pIdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724332060; c=relaxed/simple;
-	bh=6yzkxgeeNpy0+7GerH1TmbwM9kjda6sRhMx93hTsO3k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ecyuTmCa/kKjo21kKflFbH2+H4uR0s3YKMLaGebFAtEAUWpLI8oLMKTWsdbmd9tcnKyeS2O05jsbjxRoSLKHwacjJMRX7hLBCaA+3CM4X1XzLn+bh2Ax8/AAdscO6CEHcSdVexYq1efv3cWUkn6AHVAxA6Ie8cWAwUAZQxb3JDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DCVFNsFB; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DCVFNsFB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724332058; x=1755868058;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=6yzkxgeeNpy0+7GerH1TmbwM9kjda6sRhMx93hTsO3k=;
-  b=DCVFNsFBlwzqMX+/jlAtdoClKE0dawN0Vq9JunE5sVdQDe2Ucl1dfJ6o
-   sKQbAgr6SFrTUl9Dkecuo5WZxH7GmkfnyXhcbZsmuXUafLG3GOkn+ewCv
-   ewQpOavmP9wU87AYby3e/3EAy7OARj6sraS6YOLP7Y2AZ1orTffcslRwK
-   OC/WF9L0+uEMwWdrZNRmx1FKT0UxHk+XpP3cAE+eUX9CyTKxx1rUgCtCT
-   eDtVYc8/bV9TDJSMlwhJKzw/j+Qs4GBqTJVKvzTQ4RHC7dALSWEgD7OZp
-   FaxUq5Sld6WU+lOAKJvL5SRyEtbYSNOMwDl1YKByNc1XCGMUx+nqW7EjY
-   w==;
-X-CSE-ConnectionGUID: a6tOBIvaSaqvTALI3azZsg==
-X-CSE-MsgGUID: 9uVBiN6YQU6vFTQ9aA5STg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11172"; a="26538887"
-X-IronPort-AV: E=Sophos;i="6.10,167,1719903600"; 
-   d="scan'208";a="26538887"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2024 06:07:38 -0700
-X-CSE-ConnectionGUID: GhF9q9DCRZu6KIHJfg9RaQ==
-X-CSE-MsgGUID: bW4xKgsjQJKwf+eqvTGVTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,167,1719903600"; 
-   d="scan'208";a="61146785"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa007.fm.intel.com with ESMTP; 22 Aug 2024 06:07:34 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id AAF0C6CC; Thu, 22 Aug 2024 16:07:23 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>
-Subject: [PATCH v2 4/4] platform/x86: int3472: Use str_high_low()
-Date: Thu, 22 Aug 2024 16:05:41 +0300
-Message-ID: <20240822130722.1261891-5-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20240822130722.1261891-1-andriy.shevchenko@linux.intel.com>
-References: <20240822130722.1261891-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1724341161; c=relaxed/simple;
+	bh=00XpW/Z7rKIVaG9iuy1gYpInRutT2SI9B/JtwNeNIH8=;
+	h=From:To:Cc:Subject:Date:Message-ID:Mime-Version:Content-Type; b=XlrRpP7nF/m5+lAQTuZMDFWhpJK3K8VqQXohTQ9Jfj9zu79d4rSRWMr0BVytKmKGmeDXZlequnQThodEy/u0L3nl7nxEaodWz3hpIchV2F7pM9hmdOE5wmCJWjXP4oPDPkKvaIHjr8XdLqg9pNHsjlkbhJlRvVa/k9l5aCOQGCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from fedori.lan (51b69d44.dsl.pool.telekom.hu [::ffff:81.182.157.68])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 0000000000074DF4.0000000066C75B9E.001CDB97; Thu, 22 Aug 2024 17:39:10 +0200
+From: Gergo Koteles <soyer@irl.hu>
+To: Hans de Goede <hdegoede@redhat.com>,
+  =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+  linux-kernel@vger.kernel.org, Gergo Koteles <soyer@irl.hu>
+Subject: [PATCH] platform/x86: lenovo-ymc: Ignore the 0x0 state
+Date: Thu, 22 Aug 2024 17:38:57 +0200
+Message-ID: <08ab73bb74c4ad448409f2ce707b1148874a05ce.1724340562.git.soyer@irl.hu>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
 
-Use str_high_low() rather than open coding.
+While booting, Lenovo 14ARB7 reports 'lenovo-ymc: Unknown key 0 pressed'
+warning. Because lenovo_ymc_probe() calls lenovo_ymc_notify() and that
+time the YMC part is not triggered yet (which is mandatory for this
+model). At the end of lenovo_ymc_notify() YMC is triggered by the
+ideapad-laptop driver and then lenovo_ymc_notify() will be called by WMI
+to report the actual value.
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Add 0x0 YMC state to the sparse keymap to ignore.
+
+Signed-off-by: Gergo Koteles <soyer@irl.hu>
 ---
- drivers/platform/x86/intel/int3472/discrete.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/platform/x86/lenovo-ymc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index a360901d03f0..0559295dfb27 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -11,6 +11,7 @@
- #include <linux/module.h>
- #include <linux/overflow.h>
- #include <linux/platform_device.h>
-+#include <linux/string_choices.h>
- #include <linux/uuid.h>
+diff --git a/drivers/platform/x86/lenovo-ymc.c b/drivers/platform/x86/lenovo-ymc.c
+index e0bbd6a14a89..bd9f95404c7c 100644
+--- a/drivers/platform/x86/lenovo-ymc.c
++++ b/drivers/platform/x86/lenovo-ymc.c
+@@ -43,6 +43,8 @@ struct lenovo_ymc_private {
+ };
  
- #include "common.h"
-@@ -240,7 +241,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 
- 	dev_dbg(int3472->dev, "%s %s pin %d active-%s\n", func,
- 		agpio->resource_source.string_ptr, agpio->pin_table[0],
--		(polarity == GPIO_ACTIVE_HIGH) ? "high" : "low");
-+		str_high_low(polarity == GPIO_ACTIVE_HIGH));
- 
- 	switch (type) {
- 	case INT3472_GPIO_TYPE_RESET:
+ static const struct key_entry lenovo_ymc_keymap[] = {
++	/* Ignore the uninitialized state */
++	{ KE_IGNORE, 0x00 },
+ 	/* Laptop */
+ 	{ KE_SW, 0x01, { .sw = { SW_TABLET_MODE, 0 } } },
+ 	/* Tablet */
 -- 
-2.43.0.rc1.1336.g36b5255a03ac
+2.46.0
 
