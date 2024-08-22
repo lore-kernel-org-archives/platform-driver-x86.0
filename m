@@ -1,112 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972B81CB33A;
-	Thu, 22 Aug 2024 15:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBA8487AE;
+	Thu, 22 Aug 2024 17:38:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724342182; cv=none; b=gJcar+9S35s1PrBSFvogHb5YDkoxDOr/Ssg5uk7GvIdJdixEuvPca5CnN48P7NuAk/xT4wAqBG6m4xxd0kAHCCqtQh568huP1u3AQ10Nv0TKCR0La0//ZQCBdr4/yQfANo4PE7Ff4Wh9t5XRfx8khCWj+gJHev1hGCv4LO2cJTk=
+	t=1724348338; cv=none; b=MIth27RuL/8l1jumTYWUdObS6ywwZjr08vf9Ya2/B0h/x9Gn0aTomdBDDnfM6GTRoLqftdl4Dkh5AsQq/DxRT9mt1t5HUxOWlsfDpoO2U79mj+sE0EMhzyaoSf2RoFymKEMI9oJg1CwiT/4YBvlQ6qfxc7AMieNOmyzwviWmX1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724342182; c=relaxed/simple;
-	bh=AYv2NG1gnSTU3l2rG0Fniv+7XIySWiqxl+b4a2LziGE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=P5ZngNaUjL7qhxE3IbrTruxJBVx/v2yHMq4gMfxdAiBxVpjIqXsRgIlfnqES6NUJ6HnLB//7b8yjDpig0iMOD31ndjN13li/v0rESPW+m1ftp70iWebk6WoXh767mwWrM6FDkdK7WWHgxbgf9U2kUns47K1xGsvs0hADGM5qNyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OXIu4vNS; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1724348338; c=relaxed/simple;
+	bh=Y6MHZHn0dItdfMB18uEbovy8LuIAhyoEd8b+ahGoCA0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bTlW4HqDtXKDsMsvlRznzo2m6JMnT2LvT9/bZMaTL76fKyCAbnazUz6FvU7wZgntkKG0hYOySdOWtSDph4t/P89E6eqJ+Ullwke8cBPAAeyXnDmGKzpt72Tpfz6oAAUPTIK3cDMePJ7tDH2WnEGoQlKQAykrqWFUbRXJRymQY2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=i04QWz6O; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OXIu4vNS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724342180; x=1755878180;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=AYv2NG1gnSTU3l2rG0Fniv+7XIySWiqxl+b4a2LziGE=;
-  b=OXIu4vNS571FsZN2TXXN6FhHXbuf8UxvDZw9b6uHDpozaDpcEA3RZzsN
-   h93xzsVO5ZB6aA3Bs+fCZw9w5O+9Wrj02mS6OthPKXWNGhzBX+DQzvzAQ
-   hVhcwFrpEctWLALAOpwNdtYCSDCX4lCoEtX69+iqPrAHFOPDuoaMHRN+E
-   dL2iE+s/eh4GajOj7hO/a/CyGpqNAckl5k2kn5bfPIIOLoa/BMA4KTaLm
-   /QWZ2oGwDB34c1KRL/38qTfK2DIZ3MnaD4pYnFuwd8liEAb2lkGOJ3yO8
-   GioOdIgqbgi0tSQU+ang4xFiTM8FgWTqgZSPWUw+iScPyIsiwSTDR2xAq
-   g==;
-X-CSE-ConnectionGUID: ztTSvwIHTkiHC95N2gR0bQ==
-X-CSE-MsgGUID: gbEXpwu6T9qberzB4sJNvg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11172"; a="22645988"
-X-IronPort-AV: E=Sophos;i="6.10,167,1719903600"; 
-   d="scan'208";a="22645988"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2024 08:56:19 -0700
-X-CSE-ConnectionGUID: jgCS9kbxSJylIZIAvlNa+A==
-X-CSE-MsgGUID: yb132zZyT0+QDApjTmFsLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,167,1719903600"; 
-   d="scan'208";a="66422828"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.82])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2024 08:56:17 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 22 Aug 2024 18:56:14 +0300 (EEST)
-To: Gergo Koteles <soyer@irl.hu>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: lenovo-ymc: Ignore the 0x0 state
-In-Reply-To: <08ab73bb74c4ad448409f2ce707b1148874a05ce.1724340562.git.soyer@irl.hu>
-Message-ID: <4da8fe7a-8889-e9df-67b8-5d02c027fc42@linux.intel.com>
-References: <08ab73bb74c4ad448409f2ce707b1148874a05ce.1724340562.git.soyer@irl.hu>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="i04QWz6O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1724348319; x=1724953119; i=w_armin@gmx.de;
+	bh=ygCqjAHSRsl9Ms8YkRl85gypUcTZyKgxu8OJZt4JFVU=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=i04QWz6OIIo2qFTTgOKilEfoueHrifHMBXgWnt9YEWLgMkgImsZ7S76WbUa+Vn9B
+	 FY4wbrXu5+y+RYqnNuZ6GJcuxkm9dyA00X9F3fjPT3OcuqQkDfIkmvo6/bEVdhi3Q
+	 6uPUIB82teA5DWll5FMwg9b17ZcB83ujNWZBNbRH3GpuWWtHC3Nv650VNCZYFKk8n
+	 zpZzIYN5jBJRJTorunxlVsa4rPOhBOIunvtbBfE/Kvnv7z490WYHkPA6GK9iUR/Hl
+	 dXSUs6AadtJNji5pz3K8ixOIbkYnnVG2vhLJcf3BeTRa8/RvwUchu7xSgBt3IgVUG
+	 ypkGjmPpyq/oHxoEGw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1N2mBQ-1s0KWZ0Qxw-010ij4; Thu, 22 Aug 2024 19:38:39 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: james@equiv.tech,
+	jlee@suse.com,
+	corentin.chary@gmail.com,
+	luke@ljones.dev,
+	matan@svgalib.org,
+	coproscefalo@gmail.com
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] platform/x86: wmi: Pass event data directly to legacy notify handlers
+Date: Thu, 22 Aug 2024 19:38:05 +0200
+Message-Id: <20240822173810.11090-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:bZeC1HcLadV+bg6yqYQueB1GjpaYGBy7IqicofIzKeK4h9bAoGW
+ eDzZgYiElMARD+9hTTLwTcaMz//GCkVXXWfvCdegpS/HiBCZENtphIW6IO6Oi06aPGKlCkZ
+ BjX5EEXJN/+8awHG1y05EedjKLxbFn1W16Ns+hw5dhy51VGvd59BHC7pVWQgrjAPhdd7TgO
+ C1KNU9JFLFu4EochCY+6Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Mq5Vv18SZrA=;ntV1+pe2Xv0Dp8y7JS6S4MW3SFE
+ o37wrXcePso/wmz8qO+rKqvcsGp30GdNGI6xoyrXierNMp/DA8aH+vAwjnEuqYrSzsP6x1+G3
+ HwktzJqICJdob5KsNYHb0kiysfU688EoWBIfEzzVi+Vbl7g2a8FjvPGhNKGZhwPI7ONAp+BsK
+ HwPSbFf8IPDtHqHk0wOP1dILPgkL8xgdmODIntwwjOz57ep6YD840J0RPXfmD1pYupUlyP3Sc
+ k+MqtiphMbp2fw+lpIr9BFvgE3dNoq0dToKWdYC8u+1U/SnzKgjTM2F55fXaBT5DSVKPsLdM0
+ 9h7OSUtux/qQjy5seBRrHhuCrKrwvR1waciGsNkDRPCCobCxC8gv/h28GDmHV2L7rvZREq4RB
+ /MbDelqM0iHe8mmzLRPzKCg7xL99ppV8n3iZub3V5XayCkpVRlrtAmi3XT5R381Bl5cSf2jPv
+ 8AY10VmyEX1X1QeBFL41Spv6p2ukhpMPFDXj2QVNEgdkrtyD0dw6VUWDk9yPUGqLvYzniD4Ep
+ 8bIXXvFyjlR4nWIw14LyHIve0bCMNPP0q9fjjv9OuK2RGMVRrtFw5HlaDXGzc3+6ygnZQgHPu
+ kveGUPkDbtWvwOJDVI5eNU6Py3zT9GAUk7PZuLUxSNhaBgi9y8uj1S4W/sXKwViq9k2gpdFvz
+ xxcUz0GVsrZve0lE7KGKxv511WL2Vc5KzDwlz9HaemlUanRN3ylAMjE3VvtwJm2O5wsKDpn4a
+ dMFOw0xmMWFFSsEsY719pdCGtr4Y9elBMi2Cht1G8OR9S28/UgwUbrvJMMGyoHlmn/9wWttld
+ sgOSQRy4DO82GH31H4kauHcw==
 
-Hi,
+The current legacy WMI handlers are susceptible to picking up wrong
+WMI event data on systems where different WMI devices share some
+notification IDs.
 
-A quick comment as I failed to understand your commit message.
+Prevent this by letting the WMI driver core taking care of retrieving
+the event data. This also simplifies the legacy WMI handlers and their
+implementation inside the WMI driver core.
 
-On Thu, 22 Aug 2024, Gergo Koteles wrote:
+The first patch converts all legacy WMI notify handlers to stop using
+wmi_get_event_data() and instead use the new event data provided by
+the WMI driver core.
+The second patch fixes a minor issue discovered inside the
+hp-wmi-sensors driver, and the remaining patches perform some cleanups.
 
-> While booting, Lenovo 14ARB7 reports 'lenovo-ymc: Unknown key 0 pressed'
-> warning. Because lenovo_ymc_probe() calls lenovo_ymc_notify() and that
-> time the YMC part is not triggered yet
+The patch series was tested on a Dell Inspiron 3505 and a Acer Aspire
+E1-731 and appears to work.
 
-This sentence should be rephrased as is it doesn't seem to make sense.
-Or is the . before it in wrong place and should be removed?
+Armin Wolf (5):
+  platform/x86: wmi: Pass event data directly to legacy notify handlers
+  hwmon: (hp-wmi-sensors) Check if WMI event data exists
+  platform/x86: wmi: Remove wmi_get_event_data()
+  platform/x86: wmi: Merge get_event_data() with wmi_get_notify_data()
+  platform/x86: wmi: Call both legacy and WMI driver notify handlers
 
-> (which is mandatory for this
-> model).
+ drivers/hwmon/hp-wmi-sensors.c           |  20 +---
+ drivers/platform/x86/acer-wmi.c          |  16 +--
+ drivers/platform/x86/asus-wmi.c          |  19 +--
+ drivers/platform/x86/dell/dell-wmi-aio.c |  13 +--
+ drivers/platform/x86/hp/hp-wmi.c         |  16 +--
+ drivers/platform/x86/huawei-wmi.c        |  14 +--
+ drivers/platform/x86/lg-laptop.c         |  13 +--
+ drivers/platform/x86/msi-wmi.c           |  20 +---
+ drivers/platform/x86/toshiba-wmi.c       |  15 +--
+ drivers/platform/x86/wmi.c               | 143 ++++++-----------------
+ include/linux/acpi.h                     |   3 +-
+ 11 files changed, 53 insertions(+), 239 deletions(-)
 
-If the latter of the options above is the right one, I cannot connect the 
-meaning of this parenthesis part with the full sentence. That is, what is 
-mandatory in that case? So you might have to rephrase it as well.
-
-> At the end of lenovo_ymc_notify() YMC is triggered by the
-> ideapad-laptop driver and then lenovo_ymc_notify() will be called by WMI
-> to report the actual value.
-
---
- i.
-
-> 
-> Add 0x0 YMC state to the sparse keymap to ignore.
-> 
-> Signed-off-by: Gergo Koteles <soyer@irl.hu>
-> ---
->  drivers/platform/x86/lenovo-ymc.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/lenovo-ymc.c b/drivers/platform/x86/lenovo-ymc.c
-> index e0bbd6a14a89..bd9f95404c7c 100644
-> --- a/drivers/platform/x86/lenovo-ymc.c
-> +++ b/drivers/platform/x86/lenovo-ymc.c
-> @@ -43,6 +43,8 @@ struct lenovo_ymc_private {
->  };
->  
->  static const struct key_entry lenovo_ymc_keymap[] = {
-> +	/* Ignore the uninitialized state */
-> +	{ KE_IGNORE, 0x00 },
->  	/* Laptop */
->  	{ KE_SW, 0x01, { .sw = { SW_TABLET_MODE, 0 } } },
->  	/* Tablet */
-> 
+=2D-
+2.39.2
 
