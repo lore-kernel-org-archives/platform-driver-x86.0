@@ -1,143 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173D11CFEC3
-	for <platform-driver-x86@vger.kernel.org>; Thu, 22 Aug 2024 18:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6326B745E4;
+	Thu, 22 Aug 2024 18:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724349891; cv=none; b=qMKdR8/HIFFH39lQY94DshAGy/RwIwJAPc4xOkXr9DMlXaQstZAhBQQ38MDuZXnK/ykD5oiFwj225D4zHse+Hyxrt5jDLYKo/vOPOOt1i+O6Pcn71oDlGItdok+NBVVGk7gZ4z1p96nwSztGh0/z3AgppEofUBRpEcly3RnnYLE=
+	t=1724350270; cv=none; b=Wq2LgHeCpMRKq+mOlz6KpBHPXZF7mKpyEiEjsGcGB1ex4Nc4HsJ12MypsnB0Pxa1xdSuZiPiNIReHFE/cxiSNZlKOkudUsG07+JJlkXHFqpJ+X8gURq1FE5kM351VYynR0NmsRWe+YlZF22JdotcPRAYqubyweUvWRxeUQRg//k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724349891; c=relaxed/simple;
-	bh=22LkK5Q1Veaz9Mb1zYBbVIj2dXiCPlbXlwB1IfPgj7g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zklu+lnxYX8y3Lz2m9sBbHwn3RuxTFKJbLR3Nv5QfbG5j0QDwkc1tH7Szv2E80quEh43MB0gT9gMmRZ0aIyfaCwM01/gYMIebFMgc/C10NyUv/KnBW+MEsNktF4rx0kRIY/EO0a8KRIGXD2lNlzEGkozKOfx4LUr0qCWZMogyBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GeQsBzu+; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1724350270; c=relaxed/simple;
+	bh=OYTwh459PHCilG+ScyRaP+iNn9JtLAN2NfLZaiYeK88=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f/Rgx9pD7hqlo01CtE79K9gSBpHuB3HWTg0PJ8iP6f/W6f9IvXILo8C2L5AA4HbGL7WF/2mI1fBBEoKpWaPH4U14k033s9Yrv4tP8ok/BhCPV3CAfkQ7RqCupvOxU9gHuXLRLPKUzzFqlKPd14gysg7nbl1SbmZcrbk7g7cPShw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mUIuJIbQ; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GeQsBzu+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724349889;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SEQT24HTH/UP2orz6Wh0q+3NPw1eci4EU9RHhKZFX2g=;
-	b=GeQsBzu+pVXDobT3q/ZYSEF+27fd5adTA6D4rIyZ1u22JpHR+rQtRYQzpkVGHqpEyFyEN7
-	Yf9TBPDqJxA0eZCPMs4Ge222gNQtoWYjMf2EpHN0fYxkoBm3oxnPmCYzV3VuSKY2mhxPG7
-	H7zINHAF7Qz1bzUYdqDz/gzvBstX9U0=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-695-2HvFP_TROjWaSpPcA8b6hQ-1; Thu, 22 Aug 2024 14:04:47 -0400
-X-MC-Unique: 2HvFP_TROjWaSpPcA8b6hQ-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-37197b9e1ceso539901f8f.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Aug 2024 11:04:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUIuJIbQ"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-714302e7285so959129b3a.2;
+        Thu, 22 Aug 2024 11:11:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724350269; x=1724955069; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pCtZ3qFBHp3nz1+RkNmsTKoCTKR+TJ1aU88TKNHiil0=;
+        b=mUIuJIbQBz5MPKoQGuyn9/fN0DzwJcigbflgbOWqrzRj1DQOz2/Oi6mx67UT2gvL9s
+         UZVph5VAgzcmHaam7GEGaguryWSHUZrGwPPbv6wYAqOpN96XfpXdc4+ndyt72PW6bB04
+         +k9y+jSUoo8YruSzQdeAIN5KswlrJLKmyz8U/8iSG6Qm20u0zFb72+pozDLRMzd4VAH8
+         TSxxT25tltgjAxy6hqw3Nvi9ohT40jE6rnhGHxwi2N/BCUIr1ptPPT6ClDuSnAm3JKD3
+         tIIZpFkSSPvfeaYr7QWgGy5CjcndneG0i7TOuw9+wdib8JicZkSekumjfwoCtDWr490V
+         JCzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724349886; x=1724954686;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SEQT24HTH/UP2orz6Wh0q+3NPw1eci4EU9RHhKZFX2g=;
-        b=Ue8VQ2h/iBsJt/0VSzclAeKYJuOBbi1zZkIEb8Zg23x5DkptxSBzASsNsAVPUctx5o
-         NeHGRGx2EXYN9sop7muNwuhLJSe00vXZGczKh8LTz1qin9To8JYuiVl9Yxd8Ynj5Mg29
-         iJ3P3sHePtIjGyW8hle15jtoYmCGIeYvjN249ViWnFL8fMNz4BKThQYHwOcM7PF7giwE
-         choi4vRrrwJdM1sO9dSrQ8hpq940vRAjZ9pPysrGm7s9vBRU6AFQ+GkgEr6CG6KpQttS
-         MpAV1AoJ601c3P/JCw+putjjrb2POXr79GmEyyYOL4MLsojmzTCXInc7k4zth7yyoiIj
-         uHNw==
-X-Forwarded-Encrypted: i=1; AJvYcCVQtQXm1PDaF+b29zIR4B3AsRVHvHVfSKtGHinLt47YkiaYgv1CJyhvkpDZhau6V/b83w8IDFK3KknhMivUWfEIQCAW@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDd4ptDxFmut5OREz+/1uqhTdLPGtpSfIaPugUhj2ROglnIVDY
-	lkPP8m2P5pV8zA2h15rIAlhsDyIbeNFpKhZMakuwlEJ5F2mYuo9B5xb0NRRGmVmSTe8/fpUNGA4
-	4yx/jRZKgrp5Zgi3FmiHkILvhOuhaeNi15RgJ7vP05cOiw0g853tAcLIAPoFA+Ydoat7wEdQ=
-X-Received: by 2002:adf:f24d:0:b0:367:9088:fecd with SMTP id ffacd0b85a97d-37308c08c62mr1716047f8f.7.1724349886334;
-        Thu, 22 Aug 2024 11:04:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG6SUIKLE1JQjtqs6HrdTaFyqHHZmF+U8ofr6ynQWzY+vpqwb/HUy6nOYotftRU637wSsXYJg==
-X-Received: by 2002:adf:f24d:0:b0:367:9088:fecd with SMTP id ffacd0b85a97d-37308c08c62mr1716018f8f.7.1724349885823;
-        Thu, 22 Aug 2024 11:04:45 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c04a4c9064sm1152586a12.73.2024.08.22.11.04.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Aug 2024 11:04:45 -0700 (PDT)
-Message-ID: <f3baa8c0-3363-4f0c-be86-83be2ec4d373@redhat.com>
-Date: Thu, 22 Aug 2024 20:04:44 +0200
+        d=1e100.net; s=20230601; t=1724350269; x=1724955069;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pCtZ3qFBHp3nz1+RkNmsTKoCTKR+TJ1aU88TKNHiil0=;
+        b=odAkqudeXujiZA7TcmeZnYa79S/6uhA65KCtSAkVEspPLOiDWCCbtM20zkao//y26E
+         +akVMAkW9X+5uvfi9gbCaLeLYV9NjkHoR/m22JlsXw/RZxikootOCUJ0f3nXY6MuGa0f
+         IiJnYPKYhqI9jiH6glUoTIDTMcU1c8X2QZPYMpfCf8s4QXQY5GRkgvgREuhiPr43dSxR
+         Uv6Sg5tnSj1se5mQyBzhp6mrPBDWTK4J8wk8eUfjjy5HgKdQjyJCpVY1FnRa4gqMFswc
+         1ii92Lc9S/gLuMBqglogzXPAmyeet5CndjbxCZlb4opjBiwvOOuvjKDCE6R+Tc6W1GZ4
+         sJRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWMJtW89Xsp0nHAMSzO8p+kdIFLB8fYtGYsWH18gDl9tIpIQqApaq0xZZITnVSpkefKwAZqx4BhCDICWeg=@vger.kernel.org, AJvYcCWaPvfHDy2FDHPwdI6gpkbMQANX0qLireuYPuVMuLYNmzXpKfJaK/EM8T0yWUqkoFauyhCviOOxnYIp0J1dZiUfNtYCDw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgYeeIQvKg7NU3PH/5Ea81KeBsSs12/PcN1aCLopif+v5lHElB
+	qemr21hlVHgk/ziSOtdUq7US4Jrr+vjmiARLjVLQ9L2wCcrJCQ/Q
+X-Google-Smtp-Source: AGHT+IESCvsBu7NiFS1g7NbPN048+bp1pHF47WEG0ECMbFNDq1bKXZrSUohix7g5EsxiUNLQzhHZWg==
+X-Received: by 2002:a05:6a00:17a8:b0:714:24dd:b3ca with SMTP id d2e1a72fcca58-71424ddb494mr8079909b3a.24.1724350268336;
+        Thu, 22 Aug 2024 11:11:08 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:ccdb:6951:7a5:be1b])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-714343060fcsm1663806b3a.151.2024.08.22.11.11.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2024 11:11:08 -0700 (PDT)
+Date: Thu, 22 Aug 2024 11:11:05 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Gross <mgross@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Borislav Petkov <bp@alien8.de>, linux-geode@lists.infradead.org,
+	platform-driver-x86@vger.kernel.org, x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/platform/geode: switch GPIO buttons and LEDs to
+ software properties
+Message-ID: <Zsd_Oc4iL4sEQsj0@google.com>
+References: <ZsV6MNS_tUPPSffJ@google.com>
+ <a2366dcc-908e-41e9-875e-529610682dc1@redhat.com>
+ <ZsYu0SEy8ZUKEJqP@google.com>
+ <0923283f-0b7a-4dcf-8d22-b55595b1ba35@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] platform/x86: wmi: Pass event data directly to legacy
- notify handlers
-To: Armin Wolf <W_Armin@gmx.de>, james@equiv.tech, jlee@suse.com,
- corentin.chary@gmail.com, luke@ljones.dev, matan@svgalib.org,
- coproscefalo@gmail.com, Jean Delvare <jdelvare@suse.com>,
- Guenter Roeck <linux@roeck-us.net>
-Cc: ilpo.jarvinen@linux.intel.com, rafael@kernel.org, lenb@kernel.org,
- platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240822173810.11090-1-W_Armin@gmx.de>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240822173810.11090-1-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0923283f-0b7a-4dcf-8d22-b55595b1ba35@redhat.com>
 
-Hi,
-
-On 8/22/24 7:38 PM, Armin Wolf wrote:
-> The current legacy WMI handlers are susceptible to picking up wrong
-> WMI event data on systems where different WMI devices share some
-> notification IDs.
+On Thu, Aug 22, 2024 at 11:46:33AM +0200, Hans de Goede wrote:
+> Hi,
 > 
-> Prevent this by letting the WMI driver core taking care of retrieving
-> the event data. This also simplifies the legacy WMI handlers and their
-> implementation inside the WMI driver core.
+> On 8/21/24 8:15 PM, Dmitry Torokhov wrote:
+> > On Wed, Aug 21, 2024 at 12:15:51PM +0200, Hans de Goede wrote:
+> >> Hi Dmitry,
+> >>
+> >> On 8/21/24 7:25 AM, Dmitry Torokhov wrote:
+> >>> Convert GPIO-connected buttons and LEDs in Geode boards to software
+> >>> nodes/properties, so that support for platform data can be removed from
+> >>> gpio-keys driver (which will rely purely on generic device properties
+> >>> for configuration).
+> >>>
+> >>> To avoid repeating the same data structures over and over and over
+> >>> factor them out into a new geode-common.c file.
+> >>>
+> >>> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> >>
+> >> Thanks, patch looks good to me:
+> >>
+> >> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> >>
+> >> Question has this been tested on at least 1 affected device ?
+> > 
+> > No unfortunately it has not been as I do not have the hardware. I am
+> > hoping folks on geode list could give this patch a spin.
 > 
-> The first patch converts all legacy WMI notify handlers to stop using
-> wmi_get_event_data() and instead use the new event data provided by
-> the WMI driver core.
-> The second patch fixes a minor issue discovered inside the
-> hp-wmi-sensors driver, and the remaining patches perform some cleanups.
-> 
-> The patch series was tested on a Dell Inspiron 3505 and a Acer Aspire
-> E1-731 and appears to work.
+> Ok. I assume this is part of some bigger plan to remove platform_data
+> support from either LEDs and/or the GPIO buttons ?
 
-Thanks, the entire series looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Guenter / Jean may I have your ack for merging the small
-drivers/hwmon/hp-wmi-sensors.c changes through the pdx86
-tree ?
-
-Regards,
-
-Hans
-
+Can't say about LEDs but yes about GPIO buttons and input devices in
+general. I would like to move all of them to generic device properties.
 
 > 
-> Armin Wolf (5):
->   platform/x86: wmi: Pass event data directly to legacy notify handlers
->   hwmon: (hp-wmi-sensors) Check if WMI event data exists
->   platform/x86: wmi: Remove wmi_get_event_data()
->   platform/x86: wmi: Merge get_event_data() with wmi_get_notify_data()
->   platform/x86: wmi: Call both legacy and WMI driver notify handlers
+> I would rather not merge this untested, but if it is part of some
+> bigger plan, then I'm ok with merging this if still no-one has tested
+> this when the rest of the bits for the plan are ready.
 > 
->  drivers/hwmon/hp-wmi-sensors.c           |  20 +---
->  drivers/platform/x86/acer-wmi.c          |  16 +--
->  drivers/platform/x86/asus-wmi.c          |  19 +--
->  drivers/platform/x86/dell/dell-wmi-aio.c |  13 +--
->  drivers/platform/x86/hp/hp-wmi.c         |  16 +--
->  drivers/platform/x86/huawei-wmi.c        |  14 +--
->  drivers/platform/x86/lg-laptop.c         |  13 +--
->  drivers/platform/x86/msi-wmi.c           |  20 +---
->  drivers/platform/x86/toshiba-wmi.c       |  15 +--
->  drivers/platform/x86/wmi.c               | 143 ++++++-----------------
->  include/linux/acpi.h                     |   3 +-
->  11 files changed, 53 insertions(+), 239 deletions(-)
-> 
-> --
-> 2.39.2
-> 
+> IOW lets wait a bit to see if someone steps up to test and of not
+> then lets merge this before it becomes a blocker for further changes.
 
+OK, I have a few other boards for which I am trying to push similar
+changes through, once they are done I'll bug you again.
+
+Thanks.
+
+-- 
+Dmitry
