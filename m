@@ -1,170 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4032B4430;
-	Fri, 23 Aug 2024 13:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B844B46556
+	for <platform-driver-x86@vger.kernel.org>; Fri, 23 Aug 2024 13:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724420623; cv=none; b=aJr1+ozGh39CPG7qIrMk8TbZUulhNwRHgtMgeOEr4+zL3Wsy0dp26oxFIZyh2CrEyh58Jlynh1Rwl1wDfMl/bl7lhpFUpcu7U+8yKgpnhKS5yjx2JOruVtA7ARHwzaZuciYhriN4AD+OiTjPQebozJykpB0AhfBpGvW/McAfkN8=
+	t=1724421301; cv=none; b=Z5O2pG7Pyc0KVGKWibLgQn+gXhuGOsdgkMLB9Snce4fg3BZz8vZTNpXiXtITXWZKDJpP20ovECBsUC6pGtuTLLSLkUSJT+Y+pTajcC/kEC7PuU7dM+PaaUSVZtmpO9yxuxN5TJ+Frovb3rOly/k2Jk41OQWzIh/IhGmWNWgNhOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724420623; c=relaxed/simple;
-	bh=1KLzU72H9HpFzFTrNnIbhXToQZtbWCT9AM/EaZEMT9g=;
+	s=arc-20240116; t=1724421301; c=relaxed/simple;
+	bh=JvjQ0F2A0MYclMkvBxMy5CR4fScMV45ypoK540rD2QM=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=qGq5sfX/0o3N4BgxcPT4uBC/9LW90f18YqTzCfCTmSdGS5Y37miw2bL4dILC18I086yGOnOELfUkpFok9NW0UN8wD8RzBfa4l9pg0LNLUNra+qykA/DAmhTLV+nwFIGb9C+klQ9YGLM6LNUFskIb/sU1VKH+gMXMV5+w4MVLnlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BPcOiE1w; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version:Content-Type; b=lefDyUVXF7FcdblgeG2ZfbPme74AavB+qfv1IlNNp6g/HhhKXHLe+OwSAAQJ/sGqIcvCTGmvxF5FZIfiSEX99HkiMVoXCiJDjW+X2uJdvx5vL0PQ0MvcnJdWZcNLxWEKTd8NgQugDfAitSdRjxuRHGWJ+N2ce4x1emnq/ecejlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g3Ed2pC2; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BPcOiE1w"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g3Ed2pC2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724420622; x=1755956622;
+  t=1724421299; x=1755957299;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=1KLzU72H9HpFzFTrNnIbhXToQZtbWCT9AM/EaZEMT9g=;
-  b=BPcOiE1whdjn12Sn+iB+iW8f7kn11dT+rsXUZeGY+edIV576x0jT+K1W
-   4DdwNAN2oCiBIVyNb8GGGkEtdxIcIh2T1hEl6OTyOw3r7vZBF7Mzu//Aq
-   Rz9spFAtncBkLMdW2zzQwyIZBKxjeCFaM2ftvI5OsSyCoXjUxm/tNcaDw
-   itwsWQ+PIPWUN6hE6vk6vmMXwhV2o2TlT4ockgN0BBQ+s59gBIajcTa+D
-   6fQO2ZXkhrtyu9kPdqEoecdPYB/OsI6fh2Zud7phrJeQGLHYRnfpZ7CH8
-   JTxsrbw9XfPcJeLZpwRabVOG4xcbtEezIWkj75UhakgfFkaVr+8NPYOqz
-   Q==;
-X-CSE-ConnectionGUID: W/o6jgNrTx+4ODpZNPhBBQ==
-X-CSE-MsgGUID: t7l8K+pZRpCjHK9kCqdvSQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11172"; a="22752332"
+  bh=JvjQ0F2A0MYclMkvBxMy5CR4fScMV45ypoK540rD2QM=;
+  b=g3Ed2pC2kvEKxiQeAfnlJuVlRGzjZxJZ2XKV8/EDhfWImumuZw3L9Zam
+   wyrHipO11VMcri90Jx55TFLElh41XYfttnpBBDOpuHlIHeXXBqhaFzzrl
+   atX98wA88uwiZnALo9jAqQvqQIYRRjIAy10OOW4ZwKREiUP514gMCBGVh
+   VFBEpltoa6lAQeVKzewz2vOAUudz3H8EK9BoZM0+HwYckNC5QFLHVgIRm
+   yXItK2REobI1cKp0HmZVDXUjvUURDuUK2e0bY08U+Z8TCMHxIakCT5Ffl
+   yUBcAIdWCcPh6HMdgtxHsoXhdeZ7zfC4otJR4HtsrJSYwzgZDuFyYrzD5
+   w==;
+X-CSE-ConnectionGUID: zU+W44PIT2qRAshVi0sDFA==
+X-CSE-MsgGUID: E/eh4cEWSHCLW/5LH/CU2Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11172"; a="33513297"
 X-IronPort-AV: E=Sophos;i="6.10,170,1719903600"; 
-   d="scan'208";a="22752332"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 06:43:41 -0700
-X-CSE-ConnectionGUID: yCwH8bAnSGuAvleyt6vArw==
-X-CSE-MsgGUID: BgUdmcg3QiScT9xpGAhu5w==
+   d="scan'208";a="33513297"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 06:54:58 -0700
+X-CSE-ConnectionGUID: NIYTzx1STdmChWQ2T+HIhA==
+X-CSE-MsgGUID: CATdnAknQY+cXqvpHrKHog==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,170,1719903600"; 
-   d="scan'208";a="61803516"
+   d="scan'208";a="62104634"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.2])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 06:43:38 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 06:54:57 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 23 Aug 2024 16:43:32 +0300 (EEST)
-To: Mathieu Fenniak <mathieu@fenniak.net>
-cc: Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D. Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: asus-wmi: Fix spurious rfkill on
- UX8406MA
-In-Reply-To: <20240823115657.69053-1-mathieu@fenniak.net>
-Message-ID: <45764fd3-f715-c461-1f6f-071bad742460@linux.intel.com>
-References: <20240823115657.69053-1-mathieu@fenniak.net>
+Date: Fri, 23 Aug 2024 16:54:53 +0300 (EEST)
+To: Suma Hegde <suma.hegde@amd.com>
+cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+    Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+Subject: Re: [v5 11/11] platform/x86/amd/hsmp: Fix potential spectre issue
+In-Reply-To: <20240823075543.884265-11-suma.hegde@amd.com>
+Message-ID: <b26f3a01-7c5d-70f8-88fa-2128a8aa18ea@linux.intel.com>
+References: <20240823075543.884265-1-suma.hegde@amd.com> <20240823075543.884265-11-suma.hegde@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2062772605-1724420612=:2230"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, 23 Aug 2024, Suma Hegde wrote:
 
---8323328-2062772605-1724420612=:2230
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> Fix below warning caused by smatch by using array_index_nospec()
+> to clamp the index within the range.
+> "warn: potential spectre issue 'plat_dev.sock' [r] (local cap)"
 
-On Fri, 23 Aug 2024, Mathieu Fenniak wrote:
+While the warning have always been bogus for these code paths because
+those are not user controllable values, I suspect the warning might no 
+longer trigger at all. I suspect the warning is tied to kstr*() which is 
+no longer used.
 
-> The Asus Zenbook Duo (UX8406MA) has a keyboard which can be
-> placed on the laptop to connect it via USB, or can be removed from the
-> laptop to reveal a hidden secondary display in which case the keyboard
-> operates via Bluetooth.
->=20
-> When it is placed on the secondary display to connect via USB, it emits
-> a keypress for a wireless disable.  This causes the rfkill system to be
+Also, it should be hsmp_pdev but please retest if this patch can be 
+dropped from this series (no need to resend the entire series because of 
+that, just mention if this patch can be left out).
 
-One space is enough (the second one might have been auto-added by your=20
-editor).
-
-> activated disconnecting the current wifi connection, which doesn't
-> reflect the user's true intention.
->=20
-> Detect this hardware and suppress any wireless switches from the
-> keyboard; this keyboard does not have a wireless toggle capability so
-> these presses are always suprious.
-
-spurious
-
->=20
-> Signed-off-by: Mathieu Fenniak <mathieu@fenniak.net>
-> ---
->  drivers/platform/x86/asus-nb-wmi.c | 20 +++++++++++++++++++-
->  drivers/platform/x86/asus-wmi.h    |  1 +
->  2 files changed, 20 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/as=
-us-nb-wmi.c
-> index fceffe2082ec..ed3633c5955d 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -145,6 +145,10 @@ static struct quirk_entry quirk_asus_ignore_fan =3D =
-{
->  =09.wmi_ignore_fan =3D true,
->  };
-> =20
-> +static struct quirk_entry quirk_asus_zenbook_duo_kbd =3D {
-> +=09.ignore_key_wlan =3D true,
-> +};
-> +
->  static int dmi_matched(const struct dmi_system_id *dmi)
->  {
->  =09pr_info("Identified laptop model '%s'\n", dmi->ident);
-> @@ -516,6 +520,15 @@ static const struct dmi_system_id asus_quirks[] =3D =
-{
->  =09=09},
->  =09=09.driver_data =3D &quirk_asus_ignore_fan,
->  =09},
-> +=09{
-> +=09=09.callback =3D dmi_matched,
-> +=09=09.ident =3D "ASUS Zenbook Duo UX8406MA",
-> +=09=09.matches =3D {
-> +=09=09=09DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "UX8406MA"),
-> +=09=09},
-> +=09=09.driver_data =3D &quirk_asus_zenbook_duo_kbd,
-> +=09},
->  =09{},
->  };
-> =20
-> @@ -630,7 +643,12 @@ static void asus_nb_wmi_key_filter(struct asus_wmi_d=
-river *asus_wmi, int *code,
->  =09case 0x32: /* Volume Mute */
->  =09=09if (atkbd_reports_vol_keys)
->  =09=09=09*code =3D ASUS_WMI_KEY_IGNORE;
-> -
-> +=09=09break;
-> +=09case 0x5D: /* Wireless console Toggle */
-> +=09case 0x5E: /* Wireless console Enable */
-> +=09case 0x5F: /* Wireless console Disable */
-> +=09=09if (quirks->ignore_key_wlan)
-> +=09=09=09*code =3D ASUS_WMI_KEY_IGNORE;
->  =09=09break;
->  =09}
->  }
-> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-=
-wmi.h
-> index cc30f1853847..a6ee9440d932 100644
-> --- a/drivers/platform/x86/asus-wmi.h
-> +++ b/drivers/platform/x86/asus-wmi.h
-> @@ -50,6 +50,7 @@ struct quirk_entry {
->  =09 */
->  =09int no_display_toggle;
->  =09u32 xusb2pr;
-> +=09bool ignore_key_wlan;
-
-Please put this next to the other bool values.
-
-Seems fine otherwise so after correcting these small things, you can add:
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
+-- 
  i.
 
---8323328-2062772605-1724420612=:2230--
+
+> 
+> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+> ---
+> Changes since v4:
+> None
+> 
+> Changes since v3:
+> None
+> 
+> Changes since v2:
+> None
+> 
+> Changes since v1:
+> Change plat_dev to hsmp_pdev
+> 
+>  drivers/platform/x86/amd/hsmp/acpi.c | 3 +++
+>  drivers/platform/x86/amd/hsmp/plat.c | 3 +++
+>  2 files changed, 6 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
+> index f2bfc5981590..16a82b8bce28 100644
+> --- a/drivers/platform/x86/amd/hsmp/acpi.c
+> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/ioport.h>
+>  #include <linux/kstrtox.h>
+>  #include <linux/module.h>
+> +#include <linux/nospec.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/uuid.h>
+> @@ -272,6 +273,8 @@ static int init_acpi(struct device *dev)
+>  	if (sock_ind >= hsmp_pdev.num_sockets)
+>  		return -EINVAL;
+>  
+> +	sock_ind = array_index_nospec(sock_ind, hsmp_pdev.num_sockets);
+> +
+>  	ret = hsmp_parse_acpi_table(dev, sock_ind);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to parse ACPI table\n");
+> diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
+> index d55c984a9a5a..8fb395e91806 100644
+> --- a/drivers/platform/x86/amd/hsmp/plat.c
+> +++ b/drivers/platform/x86/amd/hsmp/plat.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/device.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> +#include <linux/nospec.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/sysfs.h>
+>  
+> @@ -79,6 +80,8 @@ static ssize_t hsmp_metric_tbl_read(struct file *filp, struct kobject *kobj,
+>  	if (sock_ind >= hsmp_pdev.num_sockets)
+>  		return -EINVAL;
+>  
+> +	sock_ind = array_index_nospec(sock_ind, hsmp_pdev.num_sockets);
+> +
+>  	sock = &hsmp_pdev.sock[sock_ind];
+>  	if (!sock)
+>  		return -EINVAL;
+> 
+
