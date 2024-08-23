@@ -1,126 +1,85 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from so254-32.mailgun.net (so254-32.mailgun.net [198.61.254.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6326B745E4;
-	Thu, 22 Aug 2024 18:11:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28F373467
+	for <platform-driver-x86@vger.kernel.org>; Fri, 23 Aug 2024 05:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.61.254.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724350270; cv=none; b=Wq2LgHeCpMRKq+mOlz6KpBHPXZF7mKpyEiEjsGcGB1ex4Nc4HsJ12MypsnB0Pxa1xdSuZiPiNIReHFE/cxiSNZlKOkudUsG07+JJlkXHFqpJ+X8gURq1FE5kM351VYynR0NmsRWe+YlZF22JdotcPRAYqubyweUvWRxeUQRg//k=
+	t=1724392647; cv=none; b=J9ZfguTRe01tCiPVlbP9DuF5T2J2uuIbI+L0PSlgnrmpgIn6LT6hjUF/AhIY0d3CUllIy4BdqScd6pblsMq5HKBtWmbxwL/M2lLZeIqtnmK1zwg93gW8nqoyCm7FmP3tD2x+Jmp+yWlKwhWWZsqBiNezx1N1wwvfQ7mvL3K4v20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724350270; c=relaxed/simple;
-	bh=OYTwh459PHCilG+ScyRaP+iNn9JtLAN2NfLZaiYeK88=;
+	s=arc-20240116; t=1724392647; c=relaxed/simple;
+	bh=BZJwmLYYUt0OprlBbHQaq4XEuX1Yu/mMxNf58jHFWDY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f/Rgx9pD7hqlo01CtE79K9gSBpHuB3HWTg0PJ8iP6f/W6f9IvXILo8C2L5AA4HbGL7WF/2mI1fBBEoKpWaPH4U14k033s9Yrv4tP8ok/BhCPV3CAfkQ7RqCupvOxU9gHuXLRLPKUzzFqlKPd14gysg7nbl1SbmZcrbk7g7cPShw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mUIuJIbQ; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=SGVXCpapBrxdxEgGxLF6cwZ5CePR+hFBroC67WbniD/MszkvHfVsx2mUAFlpHMuQyzVAS9rTM+VvrkSfjZxc608c0W/b3+FUBF8Gl69rmpZyRaSWigE8e/WULPM8OnCVQ6+BZXToErC2JyxdY98Z3za1vVWuQe3Yg7Jdh0UFo/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=equiv.tech; spf=pass smtp.mailfrom=equiv.tech; dkim=pass (2048-bit key) header.d=equiv.tech header.i=@equiv.tech header.b=m+osVJQg; arc=none smtp.client-ip=198.61.254.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=equiv.tech
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=equiv.tech
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUIuJIbQ"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-714302e7285so959129b3a.2;
-        Thu, 22 Aug 2024 11:11:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724350269; x=1724955069; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pCtZ3qFBHp3nz1+RkNmsTKoCTKR+TJ1aU88TKNHiil0=;
-        b=mUIuJIbQBz5MPKoQGuyn9/fN0DzwJcigbflgbOWqrzRj1DQOz2/Oi6mx67UT2gvL9s
-         UZVph5VAgzcmHaam7GEGaguryWSHUZrGwPPbv6wYAqOpN96XfpXdc4+ndyt72PW6bB04
-         +k9y+jSUoo8YruSzQdeAIN5KswlrJLKmyz8U/8iSG6Qm20u0zFb72+pozDLRMzd4VAH8
-         TSxxT25tltgjAxy6hqw3Nvi9ohT40jE6rnhGHxwi2N/BCUIr1ptPPT6ClDuSnAm3JKD3
-         tIIZpFkSSPvfeaYr7QWgGy5CjcndneG0i7TOuw9+wdib8JicZkSekumjfwoCtDWr490V
-         JCzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724350269; x=1724955069;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pCtZ3qFBHp3nz1+RkNmsTKoCTKR+TJ1aU88TKNHiil0=;
-        b=odAkqudeXujiZA7TcmeZnYa79S/6uhA65KCtSAkVEspPLOiDWCCbtM20zkao//y26E
-         +akVMAkW9X+5uvfi9gbCaLeLYV9NjkHoR/m22JlsXw/RZxikootOCUJ0f3nXY6MuGa0f
-         IiJnYPKYhqI9jiH6glUoTIDTMcU1c8X2QZPYMpfCf8s4QXQY5GRkgvgREuhiPr43dSxR
-         Uv6Sg5tnSj1se5mQyBzhp6mrPBDWTK4J8wk8eUfjjy5HgKdQjyJCpVY1FnRa4gqMFswc
-         1ii92Lc9S/gLuMBqglogzXPAmyeet5CndjbxCZlb4opjBiwvOOuvjKDCE6R+Tc6W1GZ4
-         sJRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWMJtW89Xsp0nHAMSzO8p+kdIFLB8fYtGYsWH18gDl9tIpIQqApaq0xZZITnVSpkefKwAZqx4BhCDICWeg=@vger.kernel.org, AJvYcCWaPvfHDy2FDHPwdI6gpkbMQANX0qLireuYPuVMuLYNmzXpKfJaK/EM8T0yWUqkoFauyhCviOOxnYIp0J1dZiUfNtYCDw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgYeeIQvKg7NU3PH/5Ea81KeBsSs12/PcN1aCLopif+v5lHElB
-	qemr21hlVHgk/ziSOtdUq7US4Jrr+vjmiARLjVLQ9L2wCcrJCQ/Q
-X-Google-Smtp-Source: AGHT+IESCvsBu7NiFS1g7NbPN048+bp1pHF47WEG0ECMbFNDq1bKXZrSUohix7g5EsxiUNLQzhHZWg==
-X-Received: by 2002:a05:6a00:17a8:b0:714:24dd:b3ca with SMTP id d2e1a72fcca58-71424ddb494mr8079909b3a.24.1724350268336;
-        Thu, 22 Aug 2024 11:11:08 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:ccdb:6951:7a5:be1b])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-714343060fcsm1663806b3a.151.2024.08.22.11.11.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2024 11:11:08 -0700 (PDT)
-Date: Thu, 22 Aug 2024 11:11:05 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Gross <mgross@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Borislav Petkov <bp@alien8.de>, linux-geode@lists.infradead.org,
-	platform-driver-x86@vger.kernel.org, x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/platform/geode: switch GPIO buttons and LEDs to
- software properties
-Message-ID: <Zsd_Oc4iL4sEQsj0@google.com>
-References: <ZsV6MNS_tUPPSffJ@google.com>
- <a2366dcc-908e-41e9-875e-529610682dc1@redhat.com>
- <ZsYu0SEy8ZUKEJqP@google.com>
- <0923283f-0b7a-4dcf-8d22-b55595b1ba35@redhat.com>
+	dkim=pass (2048-bit key) header.d=equiv.tech header.i=@equiv.tech header.b="m+osVJQg"
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=equiv.tech; q=dns/txt; s=mx; t=1724392644; x=1724399844;
+ h=In-Reply-To: Content-Type: MIME-Version: References: Message-ID: Subject: Subject: Cc: To: To: From: From: Date: Sender: Sender;
+ bh=u+VhrC22RZGtxJLHBK+uwUVXwszI5ugWNatDD2VcTAQ=;
+ b=m+osVJQgeWYiDEOsu6CcMe/CMkplzZl40QPX6hThpjmfYeFJrB6P67F9D+X5BZCoveoUkNFPpIYBtK5epbVgVAE7S1Flz5++bqxnaWIwbs20nShgzA+ZnlhSKlufIR7K/QXIfe7mwBz3yWcDmU0snEWgwnGmsoUU2bJ+QYdkkbq9u6IkE9AFbiGuV6Jum9A5KkVanrVoYXBHM6R4OQLNHlwKdeyzl1QNt+aeDBCmlgN4zIHv4zBtKhUFfslhOv7bYSWZenBBbTUdp9lBtMW2Q/jmE5KpTAOUedwbGSNePpTffVqa7f4MNfJ55qlwJc6wyx4IOCs/J2LSdZiKCKAlXw==
+X-Mailgun-Sending-Ip: 198.61.254.32
+X-Mailgun-Sid: WyI0MzAwNyIsInBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnIiwiOTNkNWFiIl0=
+Received: from mail.equiv.tech (equiv.tech [142.93.28.83]) by f97076a2080f with SMTP id
+ 66c824c4c8b26bc9edd95b2a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 23 Aug 2024 05:57:24 GMT
+Sender: james@equiv.tech
+Date: Thu, 22 Aug 2024 22:57:23 -0700
+From: James Seo <james@equiv.tech>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: jlee@suse.com, corentin.chary@gmail.com, luke@ljones.dev,
+	matan@svgalib.org, coproscefalo@gmail.com, hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com, rafael@kernel.org, lenb@kernel.org,
+	platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] hwmon: (hp-wmi-sensors) Check if WMI event data
+ exists
+Message-ID: <Zsgkw1kHz9TJx27g@equiv.tech>
+References: <20240822173810.11090-1-W_Armin@gmx.de>
+ <20240822173810.11090-3-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <0923283f-0b7a-4dcf-8d22-b55595b1ba35@redhat.com>
+In-Reply-To: <20240822173810.11090-3-W_Armin@gmx.de>
 
-On Thu, Aug 22, 2024 at 11:46:33AM +0200, Hans de Goede wrote:
-> Hi,
+On Thu, Aug 22, 2024 at 07:38:07PM +0200, Armin Wolf wrote:
+> The BIOS can choose to return no event data in response to a
+> WMI event, so the ACPI object passed to the WMI notify handler
+> can be NULL.
 > 
-> On 8/21/24 8:15 PM, Dmitry Torokhov wrote:
-> > On Wed, Aug 21, 2024 at 12:15:51PM +0200, Hans de Goede wrote:
-> >> Hi Dmitry,
-> >>
-> >> On 8/21/24 7:25 AM, Dmitry Torokhov wrote:
-> >>> Convert GPIO-connected buttons and LEDs in Geode boards to software
-> >>> nodes/properties, so that support for platform data can be removed from
-> >>> gpio-keys driver (which will rely purely on generic device properties
-> >>> for configuration).
-> >>>
-> >>> To avoid repeating the same data structures over and over and over
-> >>> factor them out into a new geode-common.c file.
-> >>>
-> >>> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> >>
-> >> Thanks, patch looks good to me:
-> >>
-> >> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> >>
-> >> Question has this been tested on at least 1 affected device ?
-> > 
-> > No unfortunately it has not been as I do not have the hardware. I am
-> > hoping folks on geode list could give this patch a spin.
+> Check for such a situation and ignore the event in such a case.
 > 
-> Ok. I assume this is part of some bigger plan to remove platform_data
-> support from either LEDs and/or the GPIO buttons ?
-
-Can't say about LEDs but yes about GPIO buttons and input devices in
-general. I would like to move all of them to generic device properties.
-
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  drivers/hwmon/hp-wmi-sensors.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> I would rather not merge this untested, but if it is part of some
-> bigger plan, then I'm ok with merging this if still no-one has tested
-> this when the rest of the bits for the plan are ready.
+> diff --git a/drivers/hwmon/hp-wmi-sensors.c b/drivers/hwmon/hp-wmi-sensors.c
+> index 6892518d537c..d6bdad26feb1 100644
+> --- a/drivers/hwmon/hp-wmi-sensors.c
+> +++ b/drivers/hwmon/hp-wmi-sensors.c
+> @@ -1628,6 +1628,9 @@ static void hp_wmi_notify(union acpi_object *wobj, void *context)
+>  	 * HPBIOS_BIOSEvent instance.
+>  	 */
 > 
-> IOW lets wait a bit to see if someone steps up to test and of not
-> then lets merge this before it becomes a blocker for further changes.
+> +	if (!wobj)
+> +		return;
+> +
+>  	mutex_lock(&state->lock);
+> 
+>  	err = populate_event_from_wobj(dev, &event, wobj);
+> --
+> 2.39.2
+> 
 
-OK, I have a few other boards for which I am trying to push similar
-changes through, once they are done I'll bug you again.
+Reviewed-by: James Seo <james@equiv.tech>
 
-Thanks.
-
--- 
-Dmitry
+That also goes for the portion of the previous patch in
+this series dealing exclusively with hp-wmi-sensors.
