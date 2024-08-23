@@ -1,153 +1,168 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C96417E01E
-	for <platform-driver-x86@vger.kernel.org>; Fri, 23 Aug 2024 11:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689E8185954;
+	Fri, 23 Aug 2024 12:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724414319; cv=none; b=Or9jDJlhq41zcF3E9GHHeY+jyFBnlkY/NhXHQT355/mxunMRVL0fK4nI4lDkKjRV2Us0A69icN93hbw96iN5u8evZTOqtqVBDehZiIr42ShwcDXvBl9gagqEu532qDxOdXfcra3LEuhFVa7SGIBQsVQqGlNngPBZO2cacCE3qW8=
+	t=1724416099; cv=none; b=DBGOSk5rLfxk9/bJiKRJmZJWtoqfwC2/cSMP9Zl6QsvAo6WS6qV9LgFdbTMcA/FsWMucgqprVhkSy/q+kjvZGC1sNsmkvS6oAKRAN40y/YAsLKfn4USk5DSO5Mpv4X7GdN2dAz+aw/GphslfYdsPog01JrfB3LNvmgfRllPGiRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724414319; c=relaxed/simple;
-	bh=M0X62fZgR660OqYh/QaAI/DnGfsKl4Acfw7CnaUDR3c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NEA3HaBCy9jhu59NBla9yjzdqSmiDFSxx9XsLvVSy9feofqI/sCVNM73DW7YPiAdzf9FSLPLoJ2IhnMUTymbftdvosn+zTmeWVkBdjRDzF48zk8AGOgdzjUNGkjxBAA3MaTKj19C7Qunq6CW04EvnDQIIj2PDFJwDq6ufdQk05Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fenniak.net; spf=pass smtp.mailfrom=fenniak.net; dkim=pass (2048-bit key) header.d=fenniak.net header.i=@fenniak.net header.b=eX6b/epw; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fenniak.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fenniak.net
+	s=arc-20240116; t=1724416099; c=relaxed/simple;
+	bh=tbPSjcRXyyHSc6osHTksRXqjP80geuvCMKoYxn0fHgc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=oyGilkS/YOlMQQBxV643bUt0Da1OQ7zrRQ4H5TdR/JaH3ZEW32798rYkkj7DFkbhjoPoGatpOfkoQORYahIbaN4nNa3+1XBmusgcx6Pws4xjgL6cx8tjH4gwT5rXSW4E+AZuvm7S9l/PknmGzveJGFwqUN8aptduw8Ecv6ILtNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e62ZF5T1; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fenniak.net header.i=@fenniak.net header.b="eX6b/epw"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-20230059241so16156985ad.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 23 Aug 2024 04:58:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fenniak.net; s=google; t=1724414315; x=1725019115; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qQ753okLVrPQcSQx8laXwTZrkgm8wYxxXnj3EKQwJYg=;
-        b=eX6b/epwR/s7UsviFrOxHPM0HkZe1CkmrBGdBZdOHxIaTh/uwCvBX2gQQ6tgU0rqee
-         TL+eX7xqMYM5Dg9kKleYmDFyLfWcYMZg7lFQpsX/3sA1/1l/V2AusJwuKGdPNhzhIwxr
-         Iy0jo/Umsnqnmydnwx6yh2qVCm+8aaESPO4jjKwYfn+ZN6xPKCmHmN1In5zuar5KV0ls
-         uTSyBqPz8XlDaKhl2wF+S/OpPG3o4B0Ybov+RogvUgd10wMGwLCC09J7aaJbHPZ+cVX6
-         +hN/vpKnRrrS1yG8/4l1o9B5Afr3vum++DTEu/oJHthprkY/mO4zmtBvd1vt88gmVezJ
-         BkFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724414315; x=1725019115;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qQ753okLVrPQcSQx8laXwTZrkgm8wYxxXnj3EKQwJYg=;
-        b=RE7ZrxNYv10nqOit8dZKpMbgtCuToNYnccMFivChCjs6S5fVv2zIvjuHSQqVSVh9Gf
-         xR03XTuk0cMMOmequ2DGNa+ArG1gZebRWa5ytBHPn6KSzedTTVAxXcCWvoKy/pqoCoTI
-         j1iigBjMSxAFU+YkVm81y1zcD+5PLe/oKSQlDzgGaDKJx2bsFWzGasQZQGpDPXjU0Orh
-         6OCUIV1OEV9JHMni0zTjTJRz2sjDhpie7+tQi/e0Lx4LPjw9XF4XmaAzRjL+ZStLUJOt
-         vWiZLfj9IYQgOj4j3M76PYSVJFUCRrXnowKPk2+UBA9wyy+1k+jHKmf7K2tKwbghOCnt
-         v2hA==
-X-Forwarded-Encrypted: i=1; AJvYcCWpkZtC4fGDbHWOc8HUk3bqO3/dOoN/2WgeODV9izix9/h7VxCwRjYxOmdng4/oebTnvo/pQ277QU2kbANx2oxHgsjt@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdjKWf9IRp97zLOnu83JjwGcjUoXPPdQjczi8hEjc1zee21Ccc
-	Mr4jYQnY5ithzROHDYmWqY0eFrGD+T9UEQFnM1wGmumkicJBl+DObk2gUCeKNwA=
-X-Google-Smtp-Source: AGHT+IGcagSKVRrqeqKYGELWF9o3/fwwXcnyAKNgYw86VSVELRo7EyAacgDpv5h9FUqtl5EZyJE24g==
-X-Received: by 2002:a17:902:eccb:b0:1fb:93d6:9fef with SMTP id d9443c01a7336-2039e4cd9c9mr22997035ad.38.1724414315445;
-        Fri, 23 Aug 2024 04:58:35 -0700 (PDT)
-Received: from zenbook-nixos.tail73afb.ts.net (d104-205-214-17.abhsia.telus.net. [104.205.214.17])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-20385581393sm27056685ad.102.2024.08.23.04.58.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2024 04:58:35 -0700 (PDT)
-From: Mathieu Fenniak <mathieu@fenniak.net>
-To: 
-Cc: Mathieu Fenniak <mathieu@fenniak.net>,
-	Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D. Jones" <luke@ljones.dev>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: asus-wmi: Fix spurious rfkill on UX8406MA
-Date: Fri, 23 Aug 2024 13:56:45 +0200
-Message-ID: <20240823115657.69053-1-mathieu@fenniak.net>
-X-Mailer: git-send-email 2.44.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e62ZF5T1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724416097; x=1755952097;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=tbPSjcRXyyHSc6osHTksRXqjP80geuvCMKoYxn0fHgc=;
+  b=e62ZF5T11sFAV1O8IbmRmOCus+8W+xXAsIcAB+PcZcuzPPscxX4kAOyW
+   GGXXqbCmciOm6BBz4ZMI07aeK+LSvQ7zQhU/Yto2LU6MhM6NC4OfeF/Cf
+   X6/B+XwP4aFtzNYaSBa9XJOaYdJmvRpTZblOSlZ8rC2AOAZbiqRljBASy
+   jD6jpRX65lghCixDc8YHL0p6j47MK5VEPDKBFVylVClfitVkqhCVhnZGH
+   59MJdWktpoYfvyW63t6F88WeSoseAa+vZks+KnS6UiGPcVpEK1gAppgjN
+   UJABCfa6uBYQS75jSZs/OB7Mol6kA7HmlgLuWE+OfG4/Sp8VZRCsGkncV
+   w==;
+X-CSE-ConnectionGUID: /1L6h/B6QFSvhaI6ODvxpQ==
+X-CSE-MsgGUID: qkapkDnDRhG+ad6Esqv48Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11172"; a="33504413"
+X-IronPort-AV: E=Sophos;i="6.10,170,1719903600"; 
+   d="scan'208";a="33504413"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 05:28:16 -0700
+X-CSE-ConnectionGUID: abEu6HtoQIGEFNWJsRFfnA==
+X-CSE-MsgGUID: RLjjoL7DRsWFeRlozvZWmg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,170,1719903600"; 
+   d="scan'208";a="61641908"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.2])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2024 05:28:14 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 23 Aug 2024 15:28:10 +0300 (EEST)
+To: Tero Kristo <tero.kristo@linux.intel.com>
+cc: srinivas.pandruvada@linux.intel.com, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] Documentation: admin-guide: pm: Add efficiency vs.
+ latency tradeoff to uncore documentation
+In-Reply-To: <20240821131321.824326-2-tero.kristo@linux.intel.com>
+Message-ID: <dabdc81e-d743-6402-f87a-dee2d6b906b8@linux.intel.com>
+References: <20240821131321.824326-1-tero.kristo@linux.intel.com> <20240821131321.824326-2-tero.kristo@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323328-1221077555-1724416090=:2230"
 
-The Asus Zenbook Duo (UX8406MA) has a keyboard which can be
-placed on the laptop to connect it via USB, or can be removed from the
-laptop to reveal a hidden secondary display in which case the keyboard
-operates via Bluetooth.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-When it is placed on the secondary display to connect via USB, it emits
-a keypress for a wireless disable.  This causes the rfkill system to be
-activated disconnecting the current wifi connection, which doesn't
-reflect the user's true intention.
+--8323328-1221077555-1724416090=:2230
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Detect this hardware and suppress any wireless switches from the
-keyboard; this keyboard does not have a wireless toggle capability so
-these presses are always suprious.
+On Wed, 21 Aug 2024, Tero Kristo wrote:
 
-Signed-off-by: Mathieu Fenniak <mathieu@fenniak.net>
----
- drivers/platform/x86/asus-nb-wmi.c | 20 +++++++++++++++++++-
- drivers/platform/x86/asus-wmi.h    |  1 +
- 2 files changed, 20 insertions(+), 1 deletion(-)
+> Added documentation about the functionality of efficiency vs. latency tra=
+deoff
+> control in intel Xeon processors, and how this is configured via sysfs.
+>=20
+> Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
+> ---
+>  .../pm/intel_uncore_frequency_scaling.rst     | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>=20
+> diff --git a/Documentation/admin-guide/pm/intel_uncore_frequency_scaling.=
+rst b/Documentation/admin-guide/pm/intel_uncore_frequency_scaling.rst
+> index 5ab3440e6cee..fb83aa2b744e 100644
+> --- a/Documentation/admin-guide/pm/intel_uncore_frequency_scaling.rst
+> +++ b/Documentation/admin-guide/pm/intel_uncore_frequency_scaling.rst
+> @@ -113,3 +113,54 @@ to apply at each uncore* level.
+> =20
+>  Support for "current_freq_khz" is available only at each fabric cluster
+>  level (i.e., in uncore* directory).
+> +
+> +Efficiency vs. Latency Tradeoff
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index fceffe2082ec..ed3633c5955d 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -145,6 +145,10 @@ static struct quirk_entry quirk_asus_ignore_fan = {
- 	.wmi_ignore_fan = true,
- };
- 
-+static struct quirk_entry quirk_asus_zenbook_duo_kbd = {
-+	.ignore_key_wlan = true,
-+};
-+
- static int dmi_matched(const struct dmi_system_id *dmi)
- {
- 	pr_info("Identified laptop model '%s'\n", dmi->ident);
-@@ -516,6 +520,15 @@ static const struct dmi_system_id asus_quirks[] = {
- 		},
- 		.driver_data = &quirk_asus_ignore_fan,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUS Zenbook Duo UX8406MA",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "UX8406MA"),
-+		},
-+		.driver_data = &quirk_asus_zenbook_duo_kbd,
-+	},
- 	{},
- };
- 
-@@ -630,7 +643,12 @@ static void asus_nb_wmi_key_filter(struct asus_wmi_driver *asus_wmi, int *code,
- 	case 0x32: /* Volume Mute */
- 		if (atkbd_reports_vol_keys)
- 			*code = ASUS_WMI_KEY_IGNORE;
--
-+		break;
-+	case 0x5D: /* Wireless console Toggle */
-+	case 0x5E: /* Wireless console Enable */
-+	case 0x5F: /* Wireless console Disable */
-+		if (quirks->ignore_key_wlan)
-+			*code = ASUS_WMI_KEY_IGNORE;
- 		break;
- 	}
- }
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index cc30f1853847..a6ee9440d932 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -50,6 +50,7 @@ struct quirk_entry {
- 	 */
- 	int no_display_toggle;
- 	u32 xusb2pr;
-+	bool ignore_key_wlan;
- };
- 
- struct asus_wmi_driver {
--- 
-2.44.1
+Does this section even cover the "tradeoff" part in its body? Why not call=
+=20
+it directly "Control" after ELC?
 
+> +-------------------------------
+> +
+> +In the realm of high-performance computing, particularly with Xeon
+> +processors, managing uncore frequency is an important aspect of system
+> +optimization. Traditionally, the uncore frequency is ramped up rapidly
+> +in high load scenarios. While this strategy achieves low latency, which
+> +is crucial for time-sensitive computations, it does not necessarily yiel=
+d
+> +the best performance per watt, =E2=80=94a key metric for energy efficien=
+cy and
+> +operational cost savings.
+
+This entire paragraph feels more prose or history book than documentation=
+=20
+text. I'd suggest using something that goes more directly into the point
+about what ELC brings to the table (I suppose the goal is "performance=20
+per watt" optimization, even that goal is only implied by the current=20
+text, not explicitly stated as the goal here).
+
+--=20
+ i.
+
+> +The Efficiency vs. Latency Control (ELC) feature allows user to influenc=
+e
+> +the uncore frequency scaling algorithm. Hardware monitors the average CP=
+U
+> +utilization across all cores at regular intervals. If the average CPU
+> +utilization is below a user defined threshold (elc_low_threshold_percent=
+),
+> +the user defined uncore frequency floor frequency will be used
+> +(elc_floor_freq_khz), minimizing latency. Similarly in high load scenari=
+o
+> +where the CPU utilization goes above the high threshold value
+> +(elc_high_threshold_percent) instead of jumping to maximum uncore
+> +frequency, uncore frequency is increased in 100MHz steps until the power
+> +limit is reached.
+> +
+> +Attributes for efficiency latency control:
+> +
+> +``elc_floor_freq_khz``
+> +=09This attribute is used to get/set the efficiency latency floor freque=
+ncy.
+> +=09If this variable is lower than the 'min_freq_khz', it is ignored by
+> +=09the firmware.
+> +
+> +``elc_low_threshold_percent``
+> +=09This attribute is used to get/set the efficiency latency control low
+> +=09threshold. This attribute is in percentages of CPU utilization.
+> +
+> +``elc_high_threshold_percent``
+> +=09This attribute is used to get/set the efficiency latency control high
+> +=09threshold. This attribute is in percentages of CPU utilization.
+> +
+> +``elc_high_threshold_enable``
+> +=09This attribute is used to enable/disable the efficiency latency contr=
+ol
+> +=09high threshold. Write '1' to enable, '0' to disable.
+> +
+> +Example system configuration below, which does following:
+> +  * when CPU utilization is less than 10%: sets uncore frequency to 800M=
+Hz
+> +  * when CPU utilization is higher than 95%: increases uncore frequency =
+in
+> +    100MHz steps, until power limit is reached
+> +
+> +  elc_floor_freq_khz:800000
+> +  elc_high_threshold_percent:95
+> +  elc_high_threshold_enable:1
+> +  elc_low_threshold_percent:10
+>=20
+--8323328-1221077555-1724416090=:2230--
