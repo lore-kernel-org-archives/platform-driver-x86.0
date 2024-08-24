@@ -1,65 +1,41 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCBF916E886
-	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Aug 2024 13:01:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4143A1DB
+	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Aug 2024 22:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724504499; cv=none; b=ecZ6h/L+rcuxdinQofp0yVvvtRO2hRN5jqxwX8fGEoZdsh+zgWGKfvKHkfdZ/c9RK1tgfZyGsdw9rM3Cj7UtCzFQ9YgEVQ6P6pYVvnEIyPQQ+rmcfEgcvkmHDroNvUWf1/y0Fqw65sFMCnkzr6/1UfzQhHBHtmpxYUkMN9XKEHs=
+	t=1724540196; cv=none; b=VASWnSKqyIvVW6LfEgMHfGpjTTTuuawuZrJI/m5MDDBfSzK4foNuGASc92n6VHYllxqBpMJ6aPl2fed9dpRaaHsegRp/F7K+5vruI1j7sDEkxx/ovPksPfx5rW+dHq0z12GhzoTNEWEDL+aDaS1TSZEfHCl4l9NYpArtAcfurhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724504499; c=relaxed/simple;
-	bh=txq7DO81bdpkm3hwLQ7WHxXwThBlQ1xOCo1W6LasbYY=;
+	s=arc-20240116; t=1724540196; c=relaxed/simple;
+	bh=miiRe9wFgKh59LbXGMnReb0KO8SHoTlBGR+/remUhss=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UK6fsav4NhoxHXKKVwO5pm1G1sOpgb8tpeD7pgCaGV8xXhq3k0dZdShd351jdBN/48CJW4wo37O9irwbm9aMrM2AjD250gWPsn869t2qtCdJQ1jBR/7kE8bQ3Rfxzd9G3ruPCqM85gY2UmPqzgJFR1iLisz58EWrMKZ8C/kx3/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dS6EtGrz; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=AOvSFOy8XFYQSdokh/NKn1Gg1chb0Z01LBxuJy1Z+eHuYXMKPvIXO6CcHZdMutvINi+1D2ZoeqkJJ0qcaCnzDJSLOggjXqGbrFW1x4FrpAPGf0ertDoTCLiKLIWepC5HoUPrAalBcB5vpHeSNJ31s3GQTxz/fpVt/PIlH0S24q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=jehoMNo2; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dS6EtGrz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724504496;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3FmGV9S+PKzy5WFR+E3I+u/SEWt+C3olz4p/lxi1sdQ=;
-	b=dS6EtGrzOej0vNmpx8vLnkAFglcB/UlbpXED2YfTIcer+gOkjR8t6zIHvEjpdZ7OncyLOH
-	O4n4kJROsNpuFRP4sRuyLPfrOoScXPAoZlyUnnurvB0UNcmgn6AF2pv6u/gOYaw/t2D/JC
-	adHezp3JM90zArqA6aHu3dU7a+ykvu0=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-375-myTIBiTxNueS74OVFQ8rxA-1; Sat, 24 Aug 2024 09:01:33 -0400
-X-MC-Unique: myTIBiTxNueS74OVFQ8rxA-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a867bc4f3c4so504247566b.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 24 Aug 2024 06:01:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724504492; x=1725109292;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3FmGV9S+PKzy5WFR+E3I+u/SEWt+C3olz4p/lxi1sdQ=;
-        b=WH7I5Dh1cfpcH19cSyUrHEH/2fFzcy69/DPmEbxPLzogF8Cu88ZVMBfThHLjhatYpy
-         ucy/G0XUhqU+DyiuK/eth1ldt/jyX5tcslHoWbM3DV7cyjxoLfn/U81qS52Zki1RSTYN
-         ocESj0GTdUTOJ+r8JKNKPoqagXDMp5nq4Co9kUBejdW4ZLPqinTFdx4yIARSUL+6uSTh
-         nq2gV8Igxu2c6YKy+rNXHZxrEP2dV4loogVNHF5uEpyWVhk3ELDKynHHrQcJ7NMc0Uq2
-         Z4mAOiOwHe5fv83kA/G4szbeKczmtauXg6CdOzobC5NPo1P0YnvNuC1FYunpXfwBnQ5V
-         V2+A==
-X-Forwarded-Encrypted: i=1; AJvYcCW3cEgW08vzH4Xj27yiyYsQga3GIkAk4VGM0seDO70b4BU3F7H2fRWyw8o7rwDHYulZtVF9jyqvcJe8jUgASeejqt0E@vger.kernel.org
-X-Gm-Message-State: AOJu0Yygrzn8Ozq3lDPE2qdpZuerfCfrlv9aN5swvnyOgEoaCSuUfh0i
-	k03heIq2bP6/4gmEiOUDyAmSYtbSoEINA2wWjnNHzePHi2jNHmj/Ps/UzhyvWgjcLgaGpMADN1R
-	GNTXekzKylbacFLIxPcG9At11aZGADNzgRr4gCGNhTEhShv6qoXRIYQ0ZmDNXG8mUo2CAUmA=
-X-Received: by 2002:a17:906:c104:b0:a6f:5609:954f with SMTP id a640c23a62f3a-a86a2f5b717mr457310366b.12.1724504492408;
-        Sat, 24 Aug 2024 06:01:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHIlvjwfMDr+3ljghp15zPa9PqNiFkpbLpFR5kJ3s1umBFTgioTVRXj5KR0gyqDekiG4WMxEA==
-X-Received: by 2002:a17:906:c104:b0:a6f:5609:954f with SMTP id a640c23a62f3a-a86a2f5b717mr457298466b.12.1724504490308;
-        Sat, 24 Aug 2024 06:01:30 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f220561sm397568766b.37.2024.08.24.06.01.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 24 Aug 2024 06:01:29 -0700 (PDT)
-Message-ID: <ee22ddd6-0edd-4168-b435-8b422990f24a@redhat.com>
-Date: Sat, 24 Aug 2024 15:01:29 +0200
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="jehoMNo2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1724540190; x=1725144990; i=w_armin@gmx.de;
+	bh=miiRe9wFgKh59LbXGMnReb0KO8SHoTlBGR+/remUhss=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=jehoMNo2/rNL7WnZ2+Bps7GosWIKlm1uTTwkIyL+lcK+ZywUsrQnS5L7Ofhm1AWJ
+	 CYLMhx6D3mUhClXEuJk+Qn79Kh6EWSj9gGiTzYHaBDGF2+n1tDCPV/SVDYgQnSd5P
+	 VLmF26jUJnHdqRH1GsBTqdaQSxuAjZfqPlLdZRoKj/HlPkPj25P/TJm7mg07YJX6M
+	 b/nrU5WjJQCQGLjcRppzlcJPO1uPxhC5JjgGGc0/azgG9tz2j0XZym2uJSr5oXGvl
+	 FK/3gKx72suMI+uF788OTZ1VyTv7TNd6YdZBZi9qy03HCa7SmYHO1H7HlixKAz8MK
+	 /Jz5Doia4MOExILxTw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MZkpR-1seKXR3LgF-00UhyO; Sun, 25
+ Aug 2024 00:56:30 +0200
+Message-ID: <ecba8732-fbef-4e4c-b518-d5042fd18480@gmx.de>
+Date: Sun, 25 Aug 2024 00:56:30 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,71 +43,49 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] platform/x86/intel/ifs: Fix SBAF title underline
- length
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
- Jithu Joseph <jithu.joseph@intel.com>
-Cc: Ashok Raj <ashok.raj@intel.com>, Tony Luck <tony.luck@intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Shankar Ravi V <ravi.v.shankar@intel.com>
-References: <20240823184337.2923179-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240823184337.2923179-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: Add Support for the Acer Predator Triton PT14-51
+To: Rayan Margham <rayanmargham4@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
+References: <808c835b-3500-4345-a338-b0f8014d049d@gmx.de>
+ <202FA1F1-967D-4D99-94A1-9649C7C9B6F6@gmail.com>
+ <CACzB==6Hpp173CzcsOpU+epz13uDU5mpudX1xvZuMkphODTPAw@mail.gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <CACzB==6Hpp173CzcsOpU+epz13uDU5mpudX1xvZuMkphODTPAw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:Gq0uA8FPvZMVUFhm3kCYO5iCdxaMH3Xpdjw5d7dqxJDXJ1svOb1
+ 0I0ez0KwgDzq+kyH5WzpwJPfszgN/QyLGnYlmVNdqTsINBvHbtx9gxgnziSniOvye6CULaO
+ jRItUTAX97gTcliFW0vYpZA8CpXQZcxOrl8qusWzN8aasDGai6hkl0bBX7R1Ghw6dkLkBUv
+ +WTNtjP0T77SfNRx6VULQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:jIAcdxnAt20=;qYiFen59zQ7+YnO1I+jUEO5ECwb
+ j7SnoCvoBBw9owCtbR9r/NDvm9gwa6oaqT3IE/VDsVZtxZRNu+NljsOswwT7dwG4atT1CFqkb
+ cPfLDSU1Vp4sa3T/S/2y/uXX3uNkWZ8ssYw4w0Gv1NgkE+uiR1mGSDkYSyjW7YoPfHNWYXrya
+ +4R8e9usHUkKsybsGRySAuPPqHLR9e02Ryiyx2ojhNmQ4B+A7czuTQKgQrj6eNsPm9572CcDo
+ jNXoCtS2EvJ3MGUpuXmGP+T0pPhhaN8Xie6Mctbh5XQxIzk7S8wl8mYZCLKTkkNURXC3giUCj
+ u+V+wnpVWAiBfIJtr21fXd7PMaLy/tdeI1P3tpWQjCy8PHOJHE4w+NyjUG64P8qmotErU3VCv
+ VWL0/s9kDMBnZq4bctYtT/SuKeCQkONvcY7y3wyUnNdW1soacNXLlymwsTZxPToAQOXLLEI4J
+ yrtX4N3/mqLgUoThOE3s00HGZY6RHEXkw0j7s8X+fXIiDLMulRwfVCNsdA7A5bIIFKq1ELCfe
+ XiKmIe8oI59IW19zloSw+s2y+qguQX1xLmJgcZBaJNWMaRuyFzLj3TFIjpMeyTeWgQEGME1aD
+ 2O8uttgqwxAO56PUv4DTtwVM1nYh55b/PpAovbYT2ErUUa5+FPht1R/C61dbJuA1yfw7+nIvF
+ ZlIJFfHWm1oc8gUHy5CoOgYNxEHyl+vz3fWWY6lQGvug3xH/+vevJmjxvKHoi2WEZCXdM8x0H
+ baW6i2BKZvkoL//gwLSzxxSXhRTr8R7G4DajHvxg+Kj1FASulQUOP3C9u1xTT1un7gfOyAHUX
+ zLs6F5FDLFyenwdHIO/6w7AA==
 
-Hi,
+Am 21.08.24 um 13:41 schrieb Rayan Margham:
 
-On 8/23/24 8:43 PM, Kuppuswamy Sathyanarayanan wrote:
-> In commit # 0a3e4e94d137 ("platform/x86/intel/ifs: Add SBAF test image
-> loading support"), the documentation for "Structural Based Functional
-> Test at Field (SBAF)" had an incomplete underline. This resulted in the
-> following build warning:
-> 
-> Documentation/arch/x86/ifs:2: drivers/platform/x86/intel/ifs/ifs.h:131: WARNING: Title underline too short.
-> 
-> Fix it by extending the dotted lines to match the length of the title.
-> 
-> Fixes: 0a3e4e94d137 ("platform/x86/intel/ifs: Add SBAF test image loading support")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Closes: https://lore.kernel.org/lkml/20240820134354.2aec355d@canb.auug.org.au/T/#u
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> It does not work very well, sure the mode switching led changes but
+> the actual fan speed doesn't change. Performance is still awful, and
+> theres no rgb control for the keyboard/logo
+>
+> Rayan Margham
+>
+If the fan speed reporting and the power profile support works, then this would
+be a good starting point.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Does the fan speed reporting work?
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-> ---
->  drivers/platform/x86/intel/ifs/ifs.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/intel/ifs/ifs.h b/drivers/platform/x86/intel/ifs/ifs.h
-> index b261be46bce8..5c3c0dfa1bf8 100644
-> --- a/drivers/platform/x86/intel/ifs/ifs.h
-> +++ b/drivers/platform/x86/intel/ifs/ifs.h
-> @@ -129,7 +129,7 @@
->   *
->   *
->   * Structural Based Functional Test at Field (SBAF):
-> - * ------------------------------------------------
-> + * -------------------------------------------------
->   *
->   * SBAF is a new type of testing that provides comprehensive core test
->   * coverage complementing Scan at Field (SAF) testing. SBAF mimics the
+Thanks,
+Armin Wolf
 
