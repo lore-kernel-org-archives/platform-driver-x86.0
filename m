@@ -1,87 +1,74 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303231E492
-	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Aug 2024 13:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1620E153BEE
+	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Aug 2024 16:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724592271; cv=none; b=m4BwFnRSmnVGwmYa6IK6DR6gr+kZOqeO+VuuiXGFXEj68udjonaQhal9nuUjcIG1O0cHzGs5MWvtg6UBIDxCazA1rkyl47oOYdqSKVZ77NUVajlkyMRW+wwxhEeK64CIBCTnmdrb0t7Qg6uyZJZY/H6gtGI7E57liw4b/7HA9yc=
+	t=1724603833; cv=none; b=bhTgzBHyGDBPt+MZptwiTPV5ZX9zI81QtkBG6xrH7Xn3VW4+/32wIDNQhk0CRTWXWAbO3FUN1tlSXLMK0bLjzL4QbKZWyVrzpa59zpmp+5DtEOaEadg8SHM7526XhqR97djvOcNMLAQv6JbYjM6e9BjRxtiwQviCrdxuFvFSBhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724592271; c=relaxed/simple;
-	bh=XdqKFwgvLELrO+mx3bKIOiJQe5ma+Zs9Qc+lYiLlmqg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kcpVWgmX8ar/aR03eT9pL1CdeP0t9cIVeram4QaIPnkNkqm2tMfpxyDt++3A7sGFiF9EhhMB8Bm4YRflaoVA1kZTOUvGiPN7UYvUQgP1cN7g3XGiwF9Kksd7+6jIpDmp5PKWHABzE2H2yfgY5GIc6mYymibMNaR23Y4hi6LfceM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WE9sLkXJ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1724603833; c=relaxed/simple;
+	bh=NFKn6k87NwWSSSAIokPcSgAkGQQJnKkif+fO3y0rVNM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lhuhk0g3TIknu+dPL/qYK6TEdpczf9GkQlCEbqtbW/a8hijnTG/OUj5USk5Xy5XCsMdKaQmcrt8tpyan48pNZrQPDLlvc511aPuWt7uMem0nCCwQOiEm5rsnIXKomk5KF4IkesKflLqcwyFVWyBsr3jis434JWrJesQ7SgSrAJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TAglX01L; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WE9sLkXJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724592269;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=vhk4gXHCvZRTu2tIPFZGv0rg5ce2zN8CBWqiUFO3Nkg=;
-	b=WE9sLkXJnOQP1u3tWLnI0081GWVHU194jUbWckMtZOQ/Dpxpbunl3YT0ByixHJxrs1tE5C
-	wXaW7R1lC30KoHoaq9fH2iGV7/5PSB8sjPTi8qGza3waGBu0SE5dJHMzagEHWxYwoIltPf
-	CsDBfewj5yZGD9NItDam8CT/cNwqhOs=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-170-GaCpSo7ZNviFZIiuKVxSqA-1; Sun,
- 25 Aug 2024 09:24:27 -0400
-X-MC-Unique: GaCpSo7ZNviFZIiuKVxSqA-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 858C719560AB;
-	Sun, 25 Aug 2024 13:24:26 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.45])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0816B300019C;
-	Sun, 25 Aug 2024 13:24:24 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86: x86-android-tablets: Make Lenovo Yoga Tab 3 X90F DMI match less strict
-Date: Sun, 25 Aug 2024 15:24:15 +0200
-Message-ID: <20240825132415.8307-1-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TAglX01L"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-4fcfcdcb4acso1107105e0c.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 25 Aug 2024 09:37:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724603831; x=1725208631; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=NFKn6k87NwWSSSAIokPcSgAkGQQJnKkif+fO3y0rVNM=;
+        b=TAglX01LtY8Cgs52yy0xMUGvKCkmay2wBQeY6gkMjeXRAEAGM02/KgRMzTGl+renKH
+         oLE73BBrX/mKpSfoLG2mCiMEutjZ+7+/EU0ZInc+kEyMpV7efqVGCuJoBELX1Xm8rF3b
+         ewDpcq6ppv/AxI6wM8/CHJp/4Yzs8pITeQ/6gurLYKAezUoTwVH/mdPx5ZjkQ5szEq6a
+         JTxfvniW+S221aaKSSF1bn1fp9Q9ZRltxI/n7sA7Q7I44VLA0ulBLs3DeePNVcetXe3h
+         nEgjb+t5tN9c36aDPMGqsvji1XsK9flu7z7rkRft1b0TeEYF49Ad6FByCOT00Qn6zXZ7
+         V5NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724603831; x=1725208631;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NFKn6k87NwWSSSAIokPcSgAkGQQJnKkif+fO3y0rVNM=;
+        b=TV5IrLVF5lsghrhO3sOVxLTXpyoKg5+kJ4Thb0O+m6T7B3TJxkH/EBxMVn1WJuMFZL
+         wopTBfyuELXQOPJRFoDZlBVVxRBtmpGPnSTE9G5Jasv989QN7585uU2gzY5fmoW90+1E
+         ujevPhG1s2tBjnbu9eQ/1CGvxOkhS3kyoXdWHlIQTnuaOEKXYDlVUYomK8oorjfWiJig
+         +B8KUxS2eSU3xBLiA8dQRwEYHMeyjcx4Ntz2ze7/d+Glmy6kh0TK0Cr7h/Jz6fmK8DPj
+         jrBtXjM0OF3x0Vik9JIXlHDyY0iAfAhwYF/hUS2inZal4+z2kYis/P0nvEZCHTo9y7CO
+         JOpQ==
+X-Gm-Message-State: AOJu0YyqXBBrAdykz+Xa3nYaJcF93VKPV+tNmQAVJHo2rIdFmjIKQCg8
+	mL5ve7YQs23m3J3EZl9qKCMBu6RrSIIjGeExbUoks5dXs+GOxGAKNE8zqbQC7DPIiYirIjWJqVH
+	gazCB7vhikABuBHnA8TKz+uEfm4I=
+X-Google-Smtp-Source: AGHT+IEBdHx1p/u2C7gHmIYmNwRfVbR4y1j37w4MieGdlf4kFJaZgJ2UcBbQJGNCbAdHZYuPE6JT87QQ09gBU2dVFMc=
+X-Received: by 2002:a05:6122:3b01:b0:4f5:26c6:bf13 with SMTP id
+ 71dfb90a1353d-4fd1a826f74mr8564574e0c.13.1724603830905; Sun, 25 Aug 2024
+ 09:37:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+References: <808c835b-3500-4345-a338-b0f8014d049d@gmx.de> <202FA1F1-967D-4D99-94A1-9649C7C9B6F6@gmail.com>
+ <CACzB==6Hpp173CzcsOpU+epz13uDU5mpudX1xvZuMkphODTPAw@mail.gmail.com> <ecba8732-fbef-4e4c-b518-d5042fd18480@gmx.de>
+In-Reply-To: <ecba8732-fbef-4e4c-b518-d5042fd18480@gmx.de>
+From: Rayan Margham <rayanmargham4@gmail.com>
+Date: Sun, 25 Aug 2024 18:37:05 +0200
+Message-ID: <CACzB==7=AUGXuAyDrQBRO35fap=ok7B8tSjaXY0tDPjn2qExyg@mail.gmail.com>
+Subject: Re: Add Support for the Acer Predator Triton PT14-51
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-There are 2G and 4G RAM versions of the Lenovo Yoga Tab 3 X90F and it
-turns out that the 2G version has a DMI product name of
-"CHERRYVIEW D1 PLATFORM" where as the 4G version has
-"CHERRYVIEW C0 PLATFORM". The sys-vendor + product-version check are
-unique enough that the product-name check is not necessary.
+Hi,
 
-Drop the product-name check so that the existing DMI match for the 4G
-RAM version also matches the 2G RAM version.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/x86-android-tablets/dmi.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/platform/x86/x86-android-tablets/dmi.c b/drivers/platform/x86/x86-android-tablets/dmi.c
-index 141a2d25e83b..387dd092c4dd 100644
---- a/drivers/platform/x86/x86-android-tablets/dmi.c
-+++ b/drivers/platform/x86/x86-android-tablets/dmi.c
-@@ -140,7 +140,6 @@ const struct dmi_system_id x86_android_tablet_ids[] __initconst = {
- 		/* Lenovo Yoga Tab 3 Pro YT3-X90F */
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
--			DMI_MATCH(DMI_PRODUCT_NAME, "CHERRYVIEW D1 PLATFORM"),
- 			DMI_MATCH(DMI_PRODUCT_VERSION, "Blade3-10A-001"),
- 		},
- 		.driver_data = (void *)&lenovo_yt3_info,
--- 
-2.46.0
-
+>Does the fan speed reporting work?
+No it does not, sadly, only the LED switching functionality works when
+the turbo button is pressed.
+Thanks,
+Rayan Margham
