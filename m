@@ -1,91 +1,87 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4143A1DB
-	for <platform-driver-x86@vger.kernel.org>; Sat, 24 Aug 2024 22:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303231E492
+	for <platform-driver-x86@vger.kernel.org>; Sun, 25 Aug 2024 13:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724540196; cv=none; b=VASWnSKqyIvVW6LfEgMHfGpjTTTuuawuZrJI/m5MDDBfSzK4foNuGASc92n6VHYllxqBpMJ6aPl2fed9dpRaaHsegRp/F7K+5vruI1j7sDEkxx/ovPksPfx5rW+dHq0z12GhzoTNEWEDL+aDaS1TSZEfHCl4l9NYpArtAcfurhM=
+	t=1724592271; cv=none; b=m4BwFnRSmnVGwmYa6IK6DR6gr+kZOqeO+VuuiXGFXEj68udjonaQhal9nuUjcIG1O0cHzGs5MWvtg6UBIDxCazA1rkyl47oOYdqSKVZ77NUVajlkyMRW+wwxhEeK64CIBCTnmdrb0t7Qg6uyZJZY/H6gtGI7E57liw4b/7HA9yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724540196; c=relaxed/simple;
-	bh=miiRe9wFgKh59LbXGMnReb0KO8SHoTlBGR+/remUhss=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AOvSFOy8XFYQSdokh/NKn1Gg1chb0Z01LBxuJy1Z+eHuYXMKPvIXO6CcHZdMutvINi+1D2ZoeqkJJ0qcaCnzDJSLOggjXqGbrFW1x4FrpAPGf0ertDoTCLiKLIWepC5HoUPrAalBcB5vpHeSNJ31s3GQTxz/fpVt/PIlH0S24q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=jehoMNo2; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1724592271; c=relaxed/simple;
+	bh=XdqKFwgvLELrO+mx3bKIOiJQe5ma+Zs9Qc+lYiLlmqg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kcpVWgmX8ar/aR03eT9pL1CdeP0t9cIVeram4QaIPnkNkqm2tMfpxyDt++3A7sGFiF9EhhMB8Bm4YRflaoVA1kZTOUvGiPN7UYvUQgP1cN7g3XGiwF9Kksd7+6jIpDmp5PKWHABzE2H2yfgY5GIc6mYymibMNaR23Y4hi6LfceM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WE9sLkXJ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="jehoMNo2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1724540190; x=1725144990; i=w_armin@gmx.de;
-	bh=miiRe9wFgKh59LbXGMnReb0KO8SHoTlBGR+/remUhss=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=jehoMNo2/rNL7WnZ2+Bps7GosWIKlm1uTTwkIyL+lcK+ZywUsrQnS5L7Ofhm1AWJ
-	 CYLMhx6D3mUhClXEuJk+Qn79Kh6EWSj9gGiTzYHaBDGF2+n1tDCPV/SVDYgQnSd5P
-	 VLmF26jUJnHdqRH1GsBTqdaQSxuAjZfqPlLdZRoKj/HlPkPj25P/TJm7mg07YJX6M
-	 b/nrU5WjJQCQGLjcRppzlcJPO1uPxhC5JjgGGc0/azgG9tz2j0XZym2uJSr5oXGvl
-	 FK/3gKx72suMI+uF788OTZ1VyTv7TNd6YdZBZi9qy03HCa7SmYHO1H7HlixKAz8MK
-	 /Jz5Doia4MOExILxTw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MZkpR-1seKXR3LgF-00UhyO; Sun, 25
- Aug 2024 00:56:30 +0200
-Message-ID: <ecba8732-fbef-4e4c-b518-d5042fd18480@gmx.de>
-Date: Sun, 25 Aug 2024 00:56:30 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WE9sLkXJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724592269;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vhk4gXHCvZRTu2tIPFZGv0rg5ce2zN8CBWqiUFO3Nkg=;
+	b=WE9sLkXJnOQP1u3tWLnI0081GWVHU194jUbWckMtZOQ/Dpxpbunl3YT0ByixHJxrs1tE5C
+	wXaW7R1lC30KoHoaq9fH2iGV7/5PSB8sjPTi8qGza3waGBu0SE5dJHMzagEHWxYwoIltPf
+	CsDBfewj5yZGD9NItDam8CT/cNwqhOs=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-170-GaCpSo7ZNviFZIiuKVxSqA-1; Sun,
+ 25 Aug 2024 09:24:27 -0400
+X-MC-Unique: GaCpSo7ZNviFZIiuKVxSqA-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 858C719560AB;
+	Sun, 25 Aug 2024 13:24:26 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.192.45])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0816B300019C;
+	Sun, 25 Aug 2024 13:24:24 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: x86-android-tablets: Make Lenovo Yoga Tab 3 X90F DMI match less strict
+Date: Sun, 25 Aug 2024 15:24:15 +0200
+Message-ID: <20240825132415.8307-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Add Support for the Acer Predator Triton PT14-51
-To: Rayan Margham <rayanmargham4@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
-References: <808c835b-3500-4345-a338-b0f8014d049d@gmx.de>
- <202FA1F1-967D-4D99-94A1-9649C7C9B6F6@gmail.com>
- <CACzB==6Hpp173CzcsOpU+epz13uDU5mpudX1xvZuMkphODTPAw@mail.gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CACzB==6Hpp173CzcsOpU+epz13uDU5mpudX1xvZuMkphODTPAw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:Gq0uA8FPvZMVUFhm3kCYO5iCdxaMH3Xpdjw5d7dqxJDXJ1svOb1
- 0I0ez0KwgDzq+kyH5WzpwJPfszgN/QyLGnYlmVNdqTsINBvHbtx9gxgnziSniOvye6CULaO
- jRItUTAX97gTcliFW0vYpZA8CpXQZcxOrl8qusWzN8aasDGai6hkl0bBX7R1Ghw6dkLkBUv
- +WTNtjP0T77SfNRx6VULQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:jIAcdxnAt20=;qYiFen59zQ7+YnO1I+jUEO5ECwb
- j7SnoCvoBBw9owCtbR9r/NDvm9gwa6oaqT3IE/VDsVZtxZRNu+NljsOswwT7dwG4atT1CFqkb
- cPfLDSU1Vp4sa3T/S/2y/uXX3uNkWZ8ssYw4w0Gv1NgkE+uiR1mGSDkYSyjW7YoPfHNWYXrya
- +4R8e9usHUkKsybsGRySAuPPqHLR9e02Ryiyx2ojhNmQ4B+A7czuTQKgQrj6eNsPm9572CcDo
- jNXoCtS2EvJ3MGUpuXmGP+T0pPhhaN8Xie6Mctbh5XQxIzk7S8wl8mYZCLKTkkNURXC3giUCj
- u+V+wnpVWAiBfIJtr21fXd7PMaLy/tdeI1P3tpWQjCy8PHOJHE4w+NyjUG64P8qmotErU3VCv
- VWL0/s9kDMBnZq4bctYtT/SuKeCQkONvcY7y3wyUnNdW1soacNXLlymwsTZxPToAQOXLLEI4J
- yrtX4N3/mqLgUoThOE3s00HGZY6RHEXkw0j7s8X+fXIiDLMulRwfVCNsdA7A5bIIFKq1ELCfe
- XiKmIe8oI59IW19zloSw+s2y+qguQX1xLmJgcZBaJNWMaRuyFzLj3TFIjpMeyTeWgQEGME1aD
- 2O8uttgqwxAO56PUv4DTtwVM1nYh55b/PpAovbYT2ErUUa5+FPht1R/C61dbJuA1yfw7+nIvF
- ZlIJFfHWm1oc8gUHy5CoOgYNxEHyl+vz3fWWY6lQGvug3xH/+vevJmjxvKHoi2WEZCXdM8x0H
- baW6i2BKZvkoL//gwLSzxxSXhRTr8R7G4DajHvxg+Kj1FASulQUOP3C9u1xTT1un7gfOyAHUX
- zLs6F5FDLFyenwdHIO/6w7AA==
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Am 21.08.24 um 13:41 schrieb Rayan Margham:
+There are 2G and 4G RAM versions of the Lenovo Yoga Tab 3 X90F and it
+turns out that the 2G version has a DMI product name of
+"CHERRYVIEW D1 PLATFORM" where as the 4G version has
+"CHERRYVIEW C0 PLATFORM". The sys-vendor + product-version check are
+unique enough that the product-name check is not necessary.
 
-> It does not work very well, sure the mode switching led changes but
-> the actual fan speed doesn't change. Performance is still awful, and
-> theres no rgb control for the keyboard/logo
->
-> Rayan Margham
->
-If the fan speed reporting and the power profile support works, then this would
-be a good starting point.
+Drop the product-name check so that the existing DMI match for the 4G
+RAM version also matches the 2G RAM version.
 
-Does the fan speed reporting work?
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/x86-android-tablets/dmi.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Thanks,
-Armin Wolf
+diff --git a/drivers/platform/x86/x86-android-tablets/dmi.c b/drivers/platform/x86/x86-android-tablets/dmi.c
+index 141a2d25e83b..387dd092c4dd 100644
+--- a/drivers/platform/x86/x86-android-tablets/dmi.c
++++ b/drivers/platform/x86/x86-android-tablets/dmi.c
+@@ -140,7 +140,6 @@ const struct dmi_system_id x86_android_tablet_ids[] __initconst = {
+ 		/* Lenovo Yoga Tab 3 Pro YT3-X90F */
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corporation"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "CHERRYVIEW D1 PLATFORM"),
+ 			DMI_MATCH(DMI_PRODUCT_VERSION, "Blade3-10A-001"),
+ 		},
+ 		.driver_data = (void *)&lenovo_yt3_info,
+-- 
+2.46.0
 
