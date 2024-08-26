@@ -1,184 +1,368 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03FAE189BA2
-	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Aug 2024 15:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE06849631;
+	Mon, 26 Aug 2024 15:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724685176; cv=none; b=Icl1qEYRQ+NlmLM1CsZLOfomj72W5tdWLhI1GXH6HzV6SWOS+JHzFDLm7aAQ0RaoCCzmvSfaRHRyQLluBx0ZGExq8fgOTt7Hcq6LHP+nJGMsFne9LzIacLPsRHXsrkjOr62R+DxeNduOcxdO0aAEGZMc8nBS1T061BbdD5o/HYo=
+	t=1724687740; cv=none; b=IWDKMeJJmMcv2+o9RbnNvox/SHC497E8pmnBxmw3rnoIPnMb+UTCNtFiosotDIYinPGWJuFAyGd0saThbPRL1Szz5BeE7vO/bCUTrBlMKGveCZx8joR1EXRT+l4mz04yrxNnEL6fsdOmQ4vnL5ro/GGVfLF7b23PuR+i3XTcEVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724685176; c=relaxed/simple;
-	bh=JgD7HLReRvvF27tZt46vggMStfJSMAGSrMBkH0Rnq/8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X1yU8I4tEScpf+/yDkGlrblFcBJUofhh+UhURzsIlT0OxhhH8BaYnzXvr2HAxYGkuFDxax+eCCIbPM2/IU0cQHk969hEUll3vYr+MKMi+IedXMi+Qp7ZNQk8U1n/822mJ06UM7NDUXz5wq04r6l/H/xtQqTrcRoW2AYs1qARAcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LkHz0Kic; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1724687740; c=relaxed/simple;
+	bh=PvUikjllUesVf4K5J6IbkegT/vKQ2ftQ6jz2QLk5nh8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=B16OkboX5OJbMjB45NOQAY57FPRE/4bFTnCP6hHq79k5rL323osXykYe6SmYm6wmZTCpBBP0MlVlThxR63y3czTxaPnzYPaMkaAXr42o+3ERxOfNuCTMf5slH0WFobGipZvqpgaNS5qtVezGJP0tG+cDI4rRh8NVojV2Fl4WJ6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a0wIp8ck; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LkHz0Kic"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724685171;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hLX/B2mgl3ih/Q9Ax6wkqjLpCaMzycCetwPullYT2S0=;
-	b=LkHz0KiczladNK18r3Ou80vOMmpgAZoiDyf0q0daoysRNOfzIU0KyqP1kjrHMhTeVjqMeI
-	cbnCJuXUNzLYckLv+WDMLYyKEZS5qnj7/dXWHLb87Nw8WSUbgdK3Vk1UNA8wzc3SnWLxgl
-	T2woQ/0DhjnOYvWr0iWFWDnMBkOLceI=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-515-AS_E4qphMNaSFXjEiDsn7g-1; Mon, 26 Aug 2024 11:12:50 -0400
-X-MC-Unique: AS_E4qphMNaSFXjEiDsn7g-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a869078ff9bso445557966b.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Aug 2024 08:12:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724685169; x=1725289969;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hLX/B2mgl3ih/Q9Ax6wkqjLpCaMzycCetwPullYT2S0=;
-        b=pHquS5qehlxbAAwXU5w5LiMAG1PP2nJt5tbldjJ2zgCi8W7h4tt/Kles4QR284lqWw
-         weAuadvLTjCIspGYZVM37jJCqand+DOs/vU/ZBCy0Aci/zorM/SKrBa/0OSJo1dSjeMA
-         LaC13Ab2Wjr3QOnsawJq/u3Fj7EQbQBcym5d8MjJw04WOvL1yJxF94g46gtBoH0ChaHk
-         MixavrTEOTL/coSrciOp8PpzCA0+hyukHomUJs7PYh/2KXfZeThY3eiaAmuDUJAP6uBB
-         fAwNUotyaisLKh/j31s18uSQJj6N8u2uC7VCkT4DhY9lK9sNxF6EMwQhNPXKrKpFfmYR
-         8Dqg==
-X-Forwarded-Encrypted: i=1; AJvYcCWN3iLLmSDYf0H8p21YPgIFsZEAim+38+5zxY3/dbJvl+UHOBYpRBEw5SA4ZJENDn/NlX8qA348u3q9TsxBjwTYF4os@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoZbOrf/l4DXxZVXJQZq8QkE1SkxVNjqbM/NJJlFnBahoobgbt
-	Ql6TB6cZ7074oXMEx6n9kuVlNzbjLxqSkzbZuge1pK1x2CxLz4TrnI847i4gGjGwBB+W0aetiw2
-	LIe+Y2D8zHyHjQHg0IdhcvCtj9k4JfiuzgtXcnT9eMczLbjO4TXT6Ry2N/+Md2CN90sXZ9jE=
-X-Received: by 2002:a17:907:7214:b0:a86:82e2:8c6d with SMTP id a640c23a62f3a-a86a54df512mr609542966b.62.1724685168943;
-        Mon, 26 Aug 2024 08:12:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGIQqMMi5TaVbVlTae6McWeZwG8+ARQB/N8IrzmGubaBBMIc0Xh6ucOMLAIDCj2L/6kkSfnLw==
-X-Received: by 2002:a17:907:7214:b0:a86:82e2:8c6d with SMTP id a640c23a62f3a-a86a54df512mr609540866b.62.1724685168419;
-        Mon, 26 Aug 2024 08:12:48 -0700 (PDT)
-Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f222b23sm684686566b.19.2024.08.26.08.12.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Aug 2024 08:12:47 -0700 (PDT)
-Message-ID: <ae68cba8-564c-47bf-a796-2bf15b3998d6@redhat.com>
-Date: Mon, 26 Aug 2024 17:12:44 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a0wIp8ck"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724687738; x=1756223738;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version;
+  bh=PvUikjllUesVf4K5J6IbkegT/vKQ2ftQ6jz2QLk5nh8=;
+  b=a0wIp8ckH+sEMoa/dWKkdPZVuXhqb/MlSqc+HAZm9WnlVJbenpv43fkT
+   RHY8va3BT+uD1l2em5ENzMSf7bkzCML2jKXN7TcI/E1MkuYlwVeN+GulR
+   7LVeX9M8uFyRemH697MXB0gi0XfhtGe8xkS0E9KBzLpY5ud/3AB75p5QH
+   CkB0qUuaqwB+JAsQmUibgHZa3RmCIFy4u6KDnK3skHzkvXOmlCFglCcXI
+   u6bjlqExnFgfL9XLmwHZNaiWoT7M23mZHSSIPLefIKU99E3i1LmXWxoJj
+   rNHrd/t9mcfgUUWK3waAMhUKXyZ3jTzq6CShMYZp9+gBp8HqaH3JH4Clq
+   g==;
+X-CSE-ConnectionGUID: faVgIvUYTfWNFDObIwPQBg==
+X-CSE-MsgGUID: UpDYLju1Rh6K0bKj+MSgmw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11176"; a="22641780"
+X-IronPort-AV: E=Sophos;i="6.10,178,1719903600"; 
+   d="diff'?scan'208";a="22641780"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 08:55:37 -0700
+X-CSE-ConnectionGUID: rzfNeSbWQXOD4svLUTqR4g==
+X-CSE-MsgGUID: iXARGO0eR8SLXLwhgn/qMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,178,1719903600"; 
+   d="diff'?scan'208";a="93352318"
+Received: from djiang5-mobl3.amr.corp.intel.com ([10.125.110.115])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 08:55:36 -0700
+Message-ID: <d8ed51f8ffd05b2f6508b82d5c10c876ff54b5c2.camel@linux.intel.com>
+Subject: Re: [PATCH 2/3] platform/x86/intel-uncore-freq: Add support for
+ efficiency latency control
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Tero
+ Kristo <tero.kristo@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ platform-driver-x86@vger.kernel.org,  LKML <linux-kernel@vger.kernel.org>
+Date: Mon, 26 Aug 2024 08:55:27 -0700
+In-Reply-To: <0abf523f-56a8-b0be-cf15-d799a0a4fc90@linux.intel.com>
+References: <20240821131321.824326-1-tero.kristo@linux.intel.com>
+	 <20240821131321.824326-3-tero.kristo@linux.intel.com>
+	 <0abf523f-56a8-b0be-cf15-d799a0a4fc90@linux.intel.com>
+Content-Type: multipart/mixed; boundary="=-FPINvjVEBYr1LklhMp88"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] platform/x86: int3472: discrete: Remap "reset" to
- "enable" for OV7251
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Daniel Scally <djrscally@gmail.com>
-References: <20240821184546.627456-1-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240821184546.627456-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Andy,
+--=-FPINvjVEBYr1LklhMp88
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 8/21/24 8:40 PM, Andy Shevchenko wrote:
-> The driver of OV7251 expects "enable" pin instead of "reset".
-> Remap "reset" to "enable" and update polarity.
-> 
-> In particular, the Microsoft Surface Book can't load the camera sensor
-> driver without this change:
-> 
->  ov7251 i2c-INT347E:00: supply vdddo not found, using dummy regulator
->  ov7251 i2c-INT347E:00: supply vddd not found, using dummy regulator
->  ov7251 i2c-INT347E:00: supply vdda not found, using dummy regulator
->  ov7251 i2c-INT347E:00: cannot get enable gpio
->  ov7251 i2c-INT347E:00: probe with driver ov7251 failed with error -2
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> 
-> Hmm... I have spent some time to achieve this, and then I realised that
-> linux-surface GitHub project already has something similar [1].
-> 
-> The advantage of [1] is that it applies the quirk to all OV7251 sensors
-> on the platform (don't know how useful it IRL).
-> 
-> However, it seems the [1] has two issues:
-> 1) it missed terminator entry in the ACPI ID table;
-> 2) it forces polarity to be active high, while I think the XOR approach
-> is better as it's possible (but quite unlikely I believe) that reset pin
-> might be inverted on the PCB level.
-> 
-> All in all, I'm fine with any of these patches to be applied with the
-> above mentioned improvements / caveats.
-> 
-> Link: https://github.com/linux-surface/kernel/commit/d0f2c2d5a449c2bf69432f90d164183143d8af8d [1]
+On Fri, 2024-08-23 at 15:48 +0300, Ilpo J=C3=A4rvinen wrote:
+> On Wed, 21 Aug 2024, Tero Kristo wrote:
+>=20
+> > Add efficiency latency control support to the TPMI uncore driver.
+> > This
+> > defines two new threshold values for controlling uncore frequency,
+> > low
+> > threshold and high threshold. When CPU utilization is below low
+> > threshold,
+> > the user configurable floor latency control frequency can be used
+> > by the
+> > system. When CPU utilization is above high threshold, the uncore
+> > frequency
+> > is increased in 100MHz steps until power limit is reached.
+> >=20
+> > Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
+> > ---
+> > =C2=A0.../uncore-frequency-common.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 =
+4 +
+> > =C2=A0.../uncore-frequency/uncore-frequency-tpmi.c=C2=A0 | 153
+> > +++++++++++++++++-
+> > =C2=A02 files changed, 155 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
+> > frequency-common.h b/drivers/platform/x86/intel/uncore-
+> > frequency/uncore-frequency-common.h
+> > index 4c245b945e4e..b5c7311bfa05 100644
+> > --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
+> > common.h
+> > +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
+> > common.h
+> > @@ -70,6 +70,10 @@ enum uncore_index {
+> > =C2=A0	UNCORE_INDEX_MIN_FREQ,
+> > =C2=A0	UNCORE_INDEX_MAX_FREQ,
+> > =C2=A0	UNCORE_INDEX_CURRENT_FREQ,
+> > +	UNCORE_INDEX_EFF_LAT_CTRL_LOW_THRESHOLD,
+> > +	UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD,
+> > +	UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE,
+> > +	UNCORE_INDEX_EFF_LAT_CTRL_FREQ,
+> > =C2=A0};
+> > =C2=A0
+> > =C2=A0int uncore_freq_common_init(int (*read)(struct uncore_data *data,
+> > unsigned int *value,
+> > diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
+> > frequency-tpmi.c b/drivers/platform/x86/intel/uncore-
+> > frequency/uncore-frequency-tpmi.c
+> > index 9fa3037c03d1..3a83b6ce54a5 100644
+> > --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
+> > tpmi.c
+> > +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
+> > tpmi.c
+> > @@ -30,6 +30,7 @@
+> > =C2=A0
+> > =C2=A0#define	UNCORE_MAJOR_VERSION		0
+> > =C2=A0#define	UNCORE_MINOR_VERSION		2
+> > +#define UNCORE_ELC_SUPPORTED_VERSION	2
+> > =C2=A0#define UNCORE_HEADER_INDEX		0
+> > =C2=A0#define UNCORE_FABRIC_CLUSTER_OFFSET	8
+> > =C2=A0
+> > @@ -46,6 +47,7 @@ struct tpmi_uncore_struct;
+> > =C2=A0/* Information for each cluster */
+> > =C2=A0struct tpmi_uncore_cluster_info {
+> > =C2=A0	bool root_domain;
+> > +	bool elc_supported;
+> > =C2=A0	u8 __iomem *cluster_base;
+> > =C2=A0	struct uncore_data uncore_data;
+> > =C2=A0	struct tpmi_uncore_struct *uncore_root;
+> > @@ -75,6 +77,10 @@ struct tpmi_uncore_struct {
+> > =C2=A0/* Bit definitions for CONTROL register */
+> > =C2=A0#define
+> > UNCORE_MAX_RATIO_MASK				GENMASK_ULL(14, 8)
+> > =C2=A0#define
+> > UNCORE_MIN_RATIO_MASK				GENMASK_ULL(21, 15)
+> > +#define
+> > UNCORE_EFF_LAT_CTRL_RATIO_MASK			GENMASK_ULL(28, 22)
+> > +#define
+> > UNCORE_EFF_LAT_CTRL_LOW_THRESHOLD_MASK		GENMASK_ULL(38, 32)
+> > +#define UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE	BIT(39)
+> > +#define
+> > UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_MASK		GENMASK_ULL(46, 40)
+> > =C2=A0
+> > =C2=A0/* Helper function to read MMIO offset for max/min control
+> > frequency */
+> > =C2=A0static void read_control_freq(struct tpmi_uncore_cluster_info
+> > *cluster_info,
+> > @@ -89,6 +95,48 @@ static void read_control_freq(struct
+> > tpmi_uncore_cluster_info *cluster_info,
+> > =C2=A0		*value =3D FIELD_GET(UNCORE_MIN_RATIO_MASK, control)
+> > * UNCORE_FREQ_KHZ_MULTIPLIER;
+> > =C2=A0}
+> > =C2=A0
+> > +/* Helper function to read efficiency latency control values over
+> > MMIO */
+> > +static int read_eff_lat_ctrl(struct uncore_data *data, unsigned
+> > int *val, enum uncore_index index)
+> > +{
+> > +	struct tpmi_uncore_cluster_info *cluster_info;
+> > +	u64 ctrl;
+> > +
+> > +	cluster_info =3D container_of(data, struct
+> > tpmi_uncore_cluster_info, uncore_data);
+> > +	if (cluster_info->root_domain)
+> > +		return -ENODATA;
+> > +
+> > +	if (!cluster_info->elc_supported)
+> > +		return -EOPNOTSUPP;
+> > +
+> > +	ctrl =3D readq(cluster_info->cluster_base +
+> > UNCORE_CONTROL_INDEX);
+> > +
+> > +	switch (index) {
+> > +	case UNCORE_INDEX_EFF_LAT_CTRL_LOW_THRESHOLD:
+> > +		*val =3D
+> > FIELD_GET(UNCORE_EFF_LAT_CTRL_LOW_THRESHOLD_MASK, ctrl);
+> > +		*val *=3D 100;
+> > +		*val =3D DIV_ROUND_UP(*val,
+> > FIELD_MAX(UNCORE_EFF_LAT_CTRL_LOW_THRESHOLD_MASK));
+> > +		break;
+> > +
+> > +	case UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD:
+> > +		*val =3D
+> > FIELD_GET(UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_MASK, ctrl);
+> > +		*val *=3D 100;
+> > +		*val =3D DIV_ROUND_UP(*val,
+> > FIELD_MAX(UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_MASK));
+> > +		break;
+> > +
+> > +	case UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE:
+> > +		*val =3D
+> > FIELD_GET(UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE, ctrl);
+> > +		break;
+> > +	case UNCORE_INDEX_EFF_LAT_CTRL_FREQ:
+> > +		*val =3D FIELD_GET(UNCORE_EFF_LAT_CTRL_RATIO_MASK,
+> > ctrl) * UNCORE_FREQ_KHZ_MULTIPLIER;
+> > +		break;
+> > +
+> > +	default:
+> > +		return -EOPNOTSUPP;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > =C2=A0#define UNCORE_MAX_RATIO	FIELD_MAX(UNCORE_MAX_RATIO_MASK)
+> > =C2=A0
+> > =C2=A0/* Helper for sysfs read for max/min frequencies. Called under
+> > mutex locks */
+> > @@ -137,6 +185,77 @@ static int uncore_read_control_freq(struct
+> > uncore_data *data, unsigned int *valu
+> > =C2=A0	return 0;
+> > =C2=A0}
+> > =C2=A0
+> > +/* Helper function for writing efficiency latency control values
+> > over MMIO */
+> > +static int write_eff_lat_ctrl(struct uncore_data *data, unsigned
+> > int val, enum uncore_index index)
+> > +{
+> > +	struct tpmi_uncore_cluster_info *cluster_info;
+> > +	u64 control;
+> > +
+> > +	cluster_info =3D container_of(data, struct
+> > tpmi_uncore_cluster_info, uncore_data);
+> > +
+> > +	if (cluster_info->root_domain)
+> > +		return -ENODATA;
+> > +
+> > +	if (!cluster_info->elc_supported)
+> > +		return -EOPNOTSUPP;
+> > +
+> > +	switch (index) {
+> > +	case UNCORE_INDEX_EFF_LAT_CTRL_LOW_THRESHOLD:
+> > +		if (val > 100)
+> > +			return -EINVAL;
+> > +		break;
+> > +
+> > +	case UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD:
+> > +		if (val > 100)
+> > +			return -EINVAL;
+> > +		break;
+> > +
+> > +	case UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE:
+> > +		if (val > 1)
+> > +			return -EINVAL;
+> > +		break;
+> > +
+> > +	case UNCORE_INDEX_EFF_LAT_CTRL_FREQ:
+> > +		val /=3D UNCORE_FREQ_KHZ_MULTIPLIER;
+> > +		if (val >
+> > FIELD_MAX(UNCORE_EFF_LAT_CTRL_RATIO_MASK))
+> > +			return -EINVAL;
+> > +		break;
+> > +
+> > +	default:
+> > +		return -EOPNOTSUPP;
+> > +	}
+> > +
+> > +	control =3D readq(cluster_info->cluster_base +
+> > UNCORE_CONTROL_INDEX);
+> > +
+> > +	if (index =3D=3D UNCORE_INDEX_EFF_LAT_CTRL_LOW_THRESHOLD) {
+> > +		val *=3D
+> > FIELD_MAX(UNCORE_EFF_LAT_CTRL_LOW_THRESHOLD_MASK);
+> > +		val /=3D 100;
+> > +		control &=3D
+> > ~UNCORE_EFF_LAT_CTRL_LOW_THRESHOLD_MASK;
+> > +		control |=3D
+> > FIELD_PREP(UNCORE_EFF_LAT_CTRL_LOW_THRESHOLD_MASK, val);
+> > +	}
+> > +
+> > +	if (index =3D=3D UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD) {
+> > +		val *=3D
+> > FIELD_MAX(UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_MASK);
+> > +		val /=3D 100;
+> > +		control &=3D
+> > ~UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_MASK;
+> > +		control |=3D
+> > FIELD_PREP(UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_MASK, val);
+> > +	}
+> > +
+> > +	if (index =3D=3D
+> > UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE) {
+> > +		control &=3D
+> > ~UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE;
+> > +		control |=3D
+> > FIELD_PREP(UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE, val);
+> > +	}
+> > +
+> > +	if (index =3D=3D UNCORE_INDEX_EFF_LAT_CTRL_FREQ) {
+> > +		control &=3D ~UNCORE_EFF_LAT_CTRL_RATIO_MASK;
+> > +		control |=3D
+> > FIELD_PREP(UNCORE_EFF_LAT_CTRL_RATIO_MASK, val);
+> > +	}
+>=20
+> Why are these not using switch/case?
+>=20
+I think they can reuse. Just need to repeat readq(). Something like
+attached:
 
-Looking at the datasheet the sensor actually has a reset pin and not
-an enable pin and the current GPIO mapping in the ov7251 driver /
-device-tree bindings is wrong.
 
-The datasheet describes the single reset control pin as:
+--=-FPINvjVEBYr1LklhMp88
+Content-Disposition: attachment; filename="reuse_switch.diff"
+Content-Transfer-Encoding: base64
+Content-Type: text/x-patch; name="reuse_switch.diff"; charset="UTF-8"
 
-D6 XSHUTDOWN input "reset (active low with internal pull down resistor)"
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3VuY29yZS1mcmVxdWVuY3kv
+dW5jb3JlLWZyZXF1ZW5jeS10cG1pLmMgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC91bmNv
+cmUtZnJlcXVlbmN5L3VuY29yZS1mcmVxdWVuY3ktdHBtaS5jCmluZGV4IGU2MDQ3ZmJiZWE3Ni4u
+MmEzMzhkNmI4YmJmIDEwMDY0NAotLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC91bmNv
+cmUtZnJlcXVlbmN5L3VuY29yZS1mcmVxdWVuY3ktdHBtaS5jCisrKyBiL2RyaXZlcnMvcGxhdGZv
+cm0veDg2L2ludGVsL3VuY29yZS1mcmVxdWVuY3kvdW5jb3JlLWZyZXF1ZW5jeS10cG1pLmMKQEAg
+LTE5MSw1MCArMTkxLDQ0IEBAIHN0YXRpYyBpbnQgd3JpdGVfZWZmX2xhdF9jdHJsKHN0cnVjdCB1
+bmNvcmVfZGF0YSAqZGF0YSwgdW5zaWduZWQgaW50IHZhbCwgZW51bSB1CiAJY2FzZSBVTkNPUkVf
+SU5ERVhfRUZGX0xBVF9DVFJMX0xPV19USFJFU0hPTEQ6CiAJCWlmICh2YWwgPiBGSUVMRF9NQVgo
+VU5DT1JFX0VGRl9MQVRfQ1RSTF9MT1dfVEhSRVNIT0xEX01BU0spKQogCQkJcmV0dXJuIC1FSU5W
+QUw7CisKKwkJY29udHJvbCA9IHJlYWRxKGNsdXN0ZXJfaW5mby0+Y2x1c3Rlcl9iYXNlICsgVU5D
+T1JFX0NPTlRST0xfSU5ERVgpOworCQljb250cm9sICY9IH5VTkNPUkVfRUZGX0xBVF9DVFJMX0xP
+V19USFJFU0hPTERfTUFTSzsKKwkJY29udHJvbCB8PSBGSUVMRF9QUkVQKFVOQ09SRV9FRkZfTEFU
+X0NUUkxfTE9XX1RIUkVTSE9MRF9NQVNLLCB2YWwpOwogCQlicmVhazsKIAogCWNhc2UgVU5DT1JF
+X0lOREVYX0VGRl9MQVRfQ1RSTF9ISUdIX1RIUkVTSE9MRDoKIAkJaWYgKHZhbCA+IEZJRUxEX01B
+WChVTkNPUkVfRUZGX0xBVF9DVFJMX0hJR0hfVEhSRVNIT0xEX01BU0spKQogCQkJcmV0dXJuIC1F
+SU5WQUw7CisKKwkJY29udHJvbCA9IHJlYWRxKGNsdXN0ZXJfaW5mby0+Y2x1c3Rlcl9iYXNlICsg
+VU5DT1JFX0NPTlRST0xfSU5ERVgpOworCQljb250cm9sICY9IH5VTkNPUkVfRUZGX0xBVF9DVFJM
+X0hJR0hfVEhSRVNIT0xEX01BU0s7CisJCWNvbnRyb2wgfD0gRklFTERfUFJFUChVTkNPUkVfRUZG
+X0xBVF9DVFJMX0hJR0hfVEhSRVNIT0xEX01BU0ssIHZhbCk7CiAJCWJyZWFrOwogCiAJY2FzZSBV
+TkNPUkVfSU5ERVhfRUZGX0xBVF9DVFJMX0hJR0hfVEhSRVNIT0xEX0VOQUJMRToKIAkJaWYgKHZh
+bCA+IDEpCiAJCQlyZXR1cm4gLUVJTlZBTDsKKworCQljb250cm9sID0gcmVhZHEoY2x1c3Rlcl9p
+bmZvLT5jbHVzdGVyX2Jhc2UgKyBVTkNPUkVfQ09OVFJPTF9JTkRFWCk7CisJCWNvbnRyb2wgJj0g
+flVOQ09SRV9FRkZfTEFUX0NUUkxfSElHSF9USFJFU0hPTERfRU5BQkxFOworCQljb250cm9sIHw9
+IEZJRUxEX1BSRVAoVU5DT1JFX0VGRl9MQVRfQ1RSTF9ISUdIX1RIUkVTSE9MRF9FTkFCTEUsIHZh
+bCk7CiAJCWJyZWFrOwogCiAJY2FzZSBVTkNPUkVfSU5ERVhfRUZGX0xBVF9DVFJMX0ZSRVE6CiAJ
+CXZhbCAvPSBVTkNPUkVfRlJFUV9LSFpfTVVMVElQTElFUjsKIAkJaWYgKHZhbCA+IEZJRUxEX01B
+WChVTkNPUkVfRUZGX0xBVF9DVFJMX1JBVElPX01BU0spKQogCQkJcmV0dXJuIC1FSU5WQUw7CisK
+KwkJY29udHJvbCA9IHJlYWRxKGNsdXN0ZXJfaW5mby0+Y2x1c3Rlcl9iYXNlICsgVU5DT1JFX0NP
+TlRST0xfSU5ERVgpOworCQljb250cm9sICY9IH5VTkNPUkVfRUZGX0xBVF9DVFJMX1JBVElPX01B
+U0s7CisJCWNvbnRyb2wgfD0gRklFTERfUFJFUChVTkNPUkVfRUZGX0xBVF9DVFJMX1JBVElPX01B
+U0ssIHZhbCk7CiAJCWJyZWFrOwogCiAJZGVmYXVsdDoKIAkJcmV0dXJuIC1FT1BOT1RTVVBQOwog
+CX0KIAotCWNvbnRyb2wgPSByZWFkcShjbHVzdGVyX2luZm8tPmNsdXN0ZXJfYmFzZSArIFVOQ09S
+RV9DT05UUk9MX0lOREVYKTsKLQotCWlmIChpbmRleCA9PSBVTkNPUkVfSU5ERVhfRUZGX0xBVF9D
+VFJMX0xPV19USFJFU0hPTEQpIHsKLQkJY29udHJvbCAmPSB+VU5DT1JFX0VGRl9MQVRfQ1RSTF9M
+T1dfVEhSRVNIT0xEX01BU0s7Ci0JCWNvbnRyb2wgfD0gRklFTERfUFJFUChVTkNPUkVfRUZGX0xB
+VF9DVFJMX0xPV19USFJFU0hPTERfTUFTSywgdmFsKTsKLQl9Ci0KLQlpZiAoaW5kZXggPT0gVU5D
+T1JFX0lOREVYX0VGRl9MQVRfQ1RSTF9ISUdIX1RIUkVTSE9MRCkgewotCQljb250cm9sICY9IH5V
+TkNPUkVfRUZGX0xBVF9DVFJMX0hJR0hfVEhSRVNIT0xEX01BU0s7Ci0JCWNvbnRyb2wgfD0gRklF
+TERfUFJFUChVTkNPUkVfRUZGX0xBVF9DVFJMX0hJR0hfVEhSRVNIT0xEX01BU0ssIHZhbCk7Ci0J
+fQotCi0JaWYgKGluZGV4ID09IFVOQ09SRV9JTkRFWF9FRkZfTEFUX0NUUkxfSElHSF9USFJFU0hP
+TERfRU5BQkxFKSB7Ci0JCWNvbnRyb2wgJj0gflVOQ09SRV9FRkZfTEFUX0NUUkxfSElHSF9USFJF
+U0hPTERfRU5BQkxFOwotCQljb250cm9sIHw9IEZJRUxEX1BSRVAoVU5DT1JFX0VGRl9MQVRfQ1RS
+TF9ISUdIX1RIUkVTSE9MRF9FTkFCTEUsIHZhbCk7Ci0JfQotCi0JaWYgKGluZGV4ID09IFVOQ09S
+RV9JTkRFWF9FRkZfTEFUX0NUUkxfRlJFUSkgewotCQljb250cm9sICY9IH5VTkNPUkVfRUZGX0xB
+VF9DVFJMX1JBVElPX01BU0s7Ci0JCWNvbnRyb2wgfD0gRklFTERfUFJFUChVTkNPUkVfRUZGX0xB
+VF9DVFJMX1JBVElPX01BU0ssIHZhbCk7Ci0JfQotCiAJd3JpdGVxKGNvbnRyb2wsIGNsdXN0ZXJf
+aW5mby0+Y2x1c3Rlcl9iYXNlICsgVU5DT1JFX0NPTlRST0xfSU5ERVgpOwogCiAJcmV0dXJuIDA7
+Cg==
 
-So as we have done before I would greatly prefer for the sensor driver
-to get fixed instead of hacking around this in the int3472 code.
 
-You could do something similar to what is done in the ov2680.c driver
-for this, here is the ov2680 gpiod-get code adjusted for the ov7251 case:
-
-        /*
-         * The device-tree bindings call this pin "enable", but the
-	 * datasheet describes the pin as "reset (active low with internal
-	 * pull down resistor)". The ACPI tables describing this sensor
-	 * on e.g. the Microsoft Surface Book use the ACPI equivalent of
-	 * "reset" as pin name, which ACPI glue code then maps to "reset".
- 	 * Check for a "reset" pin if there is no "enable" pin.
-         */
-	ov7251->enable_gpio = devm_gpiod_get(dev, "enable", GPIOD_OUT_HIGH);
-	if (IS_ERR(ov7251->enable_gpio)) {
-		ov7251->enable_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-		if (!IS_ERR(ov7251->enable_gpio))
-			gpiod_toggle_active_low(ov7251->enable_gpio);
-	}
-	if (IS_ERR(ov7251->enable_gpio)) {
-                dev_err(dev, "cannot get enable gpio\n");
-                return PTR_ERR(ov7251->enable_gpio);
-        }
-
-(untested)
-
-Regards,
-
-Hans
-
-
-
-> 
->  drivers/platform/x86/intel/int3472/discrete.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-> index b5f6f71bb1dd..0559295dfb27 100644
-> --- a/drivers/platform/x86/intel/int3472/discrete.c
-> +++ b/drivers/platform/x86/intel/int3472/discrete.c
-> @@ -86,6 +86,16 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
->  		return -EINVAL;
->  	}
->  
-> +	/*
-> +	 * The driver of OV7251 expects "enable" pin instead of "reset".
-> +	 * Remap "reset" to "enable" and update polarity.
-> +	 */
-> +	if (!strcmp(int3472->sensor_name, "i2c-INT347E:00") &&
-> +	    !strcmp(func, "reset")) {
-> +		func = "enable";
-> +		polarity ^= GPIO_ACTIVE_LOW;
-> +	}
-> +
->  	ret = skl_int3472_fill_gpiod_lookup(&int3472->gpios.table[int3472->n_sensor_gpios],
->  					    agpio, func, polarity);
->  	if (ret)
-
+--=-FPINvjVEBYr1LklhMp88--
