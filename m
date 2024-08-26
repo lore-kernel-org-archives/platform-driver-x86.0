@@ -1,622 +1,169 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B05C192D6F
-	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Aug 2024 14:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10B1188915;
+	Mon, 26 Aug 2024 14:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724683483; cv=none; b=mrL/uqme9uJus6RH2ayAfAxERGDspsrstPTwZMQtkhlXpvl5nEhVWKJFX372UoOkh6jqEdbpu5WNyzKn5fgF5+DDccBZtn/BNyTCZUJhc3pniQgLGrXqRp3jPSODUJuYt3ZTtnl95xxvkVv44gkEadretZDC7V9RqHEQCXTpHl8=
+	t=1724683560; cv=none; b=FBAKXAhBEr+yfpc6s5RI4vlVBsgmhyfkty0pq0qsgv2RRb86NQg56GicS5V8yKKSHlAPj/wcvH57vJU0dT5PVQzh9qndELnvb8u94bvODhlspMkhHUoveBLgQzllSD2y4fLr/HOHBoq7tPkqeR3xB97xpR7qSeXbotNNmqYm+SE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724683483; c=relaxed/simple;
-	bh=OCJdLZ1r9mUAYY9g366e1v5YUxJ1Qc0t3f521lYydN8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E4A6FNPh3InAS2hhzwwnt0zlVJEQ/FOdEGucj0nsJOaB+NAxZO381ZKbZ8ej58jpxJRK4KAtJgTxAcVMm3g+ZuE+xIs5yTdWk0CkOq2iNwFiiiIeTie3k8zHP5w0Dsp1o1phT7EKwNEsx4vsCkqRyPLKa6cjJqRI/bQshAefFss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JqNGEklU; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1724683560; c=relaxed/simple;
+	bh=L724sWBvEBY2f8kM6QeXbVVGkAsZPpZV3UWQXCdeVgU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pNA4vGUh9LxruqCZ5pzaLGhrqCf/YYdYvByfJbWOMGWU/BNCHNXDQfohc2OJUmA+LfSaE6BziC27zxRsng1jYkCglbniiJYZSce1+NtCGFO0HVD/hnsfF9bQNF68W4bnEUXjVtUyC3gP5pxrQbjMWp0nhzXy+E+hf6pYqkkjanM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kvqvL8RS; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JqNGEklU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724683479;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=voVs2V+KLc2Dgz5w27ok/5RwY17c917gvImy74UQzjc=;
-	b=JqNGEklUQao/9+bDGRElMVBUNVDoHbWYWASmULcmec/NY1hmo3DMYK2B6x14v1JOz5XbcE
-	pm9ceCmwtFyrf84b6J1xquyZXYjsvdymVk+XFOotnLPvkIsM0apOowW6qVRJoen32qGK6H
-	QmvlkIjry95wkKVFiEJ3e+VOVuZwMtE=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-544-6YrnJzTVO7O83G786cefEA-1; Mon, 26 Aug 2024 10:44:38 -0400
-X-MC-Unique: 6YrnJzTVO7O83G786cefEA-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5bee85b49c7so3573453a12.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Aug 2024 07:44:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724683477; x=1725288277;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=voVs2V+KLc2Dgz5w27ok/5RwY17c917gvImy74UQzjc=;
-        b=QRF24ZCBHiIYF3WfRsDLEOmaj9h3QBFb1iAmMjv+l8wguDwDjbi7rrsmEizfB9KG2f
-         zEMeKIMeyNlX1WOK33j4vcOegqXFHxSxWgXtMeJyxMdYemjoiH5IOoS9YlCjEM6gimV/
-         yvQOkgBGL+SwpLKFYt0IR+Rrx9y+pvNluvJFLRAv8RU876s3T8FuaKhHGM5qglwi8Nkv
-         2qFUa1UUvZrPcqR7bOcEvvuVTd6qTch3BJyVuOveLfmpw0Ozg6GUh1cmDt00BBRdpxEn
-         4fq7wh7TyOWphC84Xy7NudagiZ3c/2A7YrVRdmyZ5bL0nAxo1fTHlJcYVhVZxbgwq67o
-         8gpg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTu+DN0Okc4cNoB2ZmxJiqd8911xViPxi92CXgV6mxy5IuRerJlAx9nvCxfe5bL0DCo2eC6S7IBU8kNfjmbKRT/zXF@vger.kernel.org
-X-Gm-Message-State: AOJu0YyloDBesne2FePqP7tpN8HR7oF35kCRqLBD2FGvkvr52MKahPO0
-	S6AgZ033PBLhPmVbN2Vb26Z/U6FigF3vs+08wSgqYQeISs4HzzA/a6bTdq111ht3iUuPcWUDIP7
-	jE+4eBOBaGopWiLQssIIE0cUq2pGvhTAw1uRt/mJOLAkIddyDLGXVZpKzku36cLf7iNJUqrpwTR
-	YlAjs9Sg==
-X-Received: by 2002:a17:907:94ce:b0:a86:c7d2:158d with SMTP id a640c23a62f3a-a86c7d21b49mr351087566b.46.1724683477131;
-        Mon, 26 Aug 2024 07:44:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEwNmq9Ko1amBRlAEutaL8tthCFX4ODTmB8Z93FKSLcoauCzOdlqZGXCsoOp/3trQbpCj4wiQ==
-X-Received: by 2002:a17:907:94ce:b0:a86:c7d2:158d with SMTP id a640c23a62f3a-a86c7d21b49mr351084666b.46.1724683476543;
-        Mon, 26 Aug 2024 07:44:36 -0700 (PDT)
-Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f220d2bsm677441466b.43.2024.08.26.07.44.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Aug 2024 07:44:36 -0700 (PDT)
-Message-ID: <04d48a7c-cad1-4490-bbcd-ceb332c740bd@redhat.com>
-Date: Mon, 26 Aug 2024 16:44:35 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kvqvL8RS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724683559; x=1756219559;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=L724sWBvEBY2f8kM6QeXbVVGkAsZPpZV3UWQXCdeVgU=;
+  b=kvqvL8RSCdQeuho0iY28cfj6SwwFMT/LLEqKA7lmcQU+wCmRDptenRTn
+   oGVHtwbj3TiQnuGIGLpkGGwOkWkeNqWEM+u55w5wnskQQ3oee6o1135O9
+   6BXiRq4ejujVCa7oGiD1NvdAl+4DLW/BKdn0ep7bs8ils2m6cJp90xNG/
+   SZedAEoECDwLgihxhaVV4Ss69kraUOPEbxa67r5LiA/EPuws+EI8ysw1X
+   LmT+ySmrS6uprpLxCvrgWEIlBn+BUp+BueXPBt8M3gyxVPLAELE+amlbI
+   f66WtPW+W26ghvduuT6UQQ1umFpGL96JZZNZjgPBg/+mnj9AhvBrTX+JL
+   g==;
+X-CSE-ConnectionGUID: VE5LLSRES6Wn7utGZQ/+eg==
+X-CSE-MsgGUID: 7HtxHuAYTOSGCk8vMjIiCQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11176"; a="22978363"
+X-IronPort-AV: E=Sophos;i="6.10,177,1719903600"; 
+   d="scan'208";a="22978363"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 07:45:48 -0700
+X-CSE-ConnectionGUID: T94s5+IoTqWF69h48HLq8Q==
+X-CSE-MsgGUID: 53eip0lZQGahzw72gkxrTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,177,1719903600"; 
+   d="scan'208";a="67461099"
+Received: from sramkris-mobl1.amr.corp.intel.com (HELO [10.124.222.227]) ([10.124.222.227])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 07:45:47 -0700
+Message-ID: <4d6adc49f295ad1dec26cd1a67ec3997686db4a9.camel@linux.intel.com>
+Subject: Re: [PATCH 1/3] Documentation: admin-guide: pm: Add efficiency vs.
+ latency tradeoff to uncore documentation
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Tero
+	Kristo <tero.kristo@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ platform-driver-x86@vger.kernel.org,  LKML <linux-kernel@vger.kernel.org>
+Date: Mon, 26 Aug 2024 10:45:40 -0400
+In-Reply-To: <dabdc81e-d743-6402-f87a-dee2d6b906b8@linux.intel.com>
+References: <20240821131321.824326-1-tero.kristo@linux.intel.com>
+	 <20240821131321.824326-2-tero.kristo@linux.intel.com>
+	 <dabdc81e-d743-6402-f87a-dee2d6b906b8@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] platform/x86:dell-laptop: Add knobs to change
- battery charge settings
-To: Andres Salomon <dilinger@queued.net>, linux-kernel@vger.kernel.org,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
- platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>,
- Sebastian Reichel <sre@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- linux-pm@vger.kernel.org, Dell.Client.Kernel@dell.com
-References: <20240820033005.09e03af1@5400>
-Content-Language: en-US
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240820033005.09e03af1@5400>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Hi Andres,
+On Fri, 2024-08-23 at 15:28 +0300, Ilpo J=C3=A4rvinen wrote:
+> On Wed, 21 Aug 2024, Tero Kristo wrote:
+>=20
+> > Added documentation about the functionality of efficiency vs.
+> > latency tradeoff
+> > control in intel Xeon processors, and how this is configured via
+> > sysfs.
+> >=20
+> > Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
+> > ---
+> > =C2=A0.../pm/intel_uncore_frequency_scaling.rst=C2=A0=C2=A0=C2=A0=C2=A0=
+ | 51
+> > +++++++++++++++++++
+> > =C2=A01 file changed, 51 insertions(+)
+> >=20
+> > diff --git a/Documentation/admin-
+> > guide/pm/intel_uncore_frequency_scaling.rst b/Documentation/admin-
+> > guide/pm/intel_uncore_frequency_scaling.rst
+> > index 5ab3440e6cee..fb83aa2b744e 100644
+> > --- a/Documentation/admin-
+> > guide/pm/intel_uncore_frequency_scaling.rst
+> > +++ b/Documentation/admin-
+> > guide/pm/intel_uncore_frequency_scaling.rst
+> > @@ -113,3 +113,54 @@ to apply at each uncore* level.
+> > =C2=A0
+> > =C2=A0Support for "current_freq_khz" is available only at each fabric
+> > cluster
+> > =C2=A0level (i.e., in uncore* directory).
+> > +
+> > +Efficiency vs. Latency Tradeoff
+>=20
+> Does this section even cover the "tradeoff" part in its body? Why not
+> call=20
+> it directly "Control" after ELC?
+>=20
+> > +-------------------------------
+> > +
+> > +In the realm of high-performance computing, particularly with Xeon
+> > +processors, managing uncore frequency is an important aspect of
+> > system
+> > +optimization. Traditionally, the uncore frequency is ramped up
+> > rapidly
+> > +in high load scenarios. While this strategy achieves low latency,
+> > which
+> > +is crucial for time-sensitive computations, it does not
+> > necessarily yield
+> > +the best performance per watt, =E2=80=94a key metric for energy effici=
+ency
+> > and
+> > +operational cost savings.
+>=20
+> This entire paragraph feels more prose or history book than
+> documentation=20
+> text. I'd suggest using something that goes more directly into the
+> point
+> about what ELC brings to the table (I suppose the goal is
+> "performance=20
+> per watt" optimization, even that goal is only implied by the current
+> text, not explicitly stated as the goal here).
+>=20
 
-On 8/20/24 9:30 AM, Andres Salomon wrote:
-> The Dell BIOS allows you to set custom charging modes, which is useful
-> in particular for extending battery life. This adds support for tweaking
-> those various settings from Linux via sysfs knobs. One might, for
-> example, have their laptop plugged into power at their desk the vast
-> majority of the time and choose fairly aggressive battery-saving
-> settings (eg, only charging once the battery drops below 50% and only
-> charging up to 80%). When leaving for a trip, it would be more useful
-> to instead switch to a standard charging mode (top off at 100%, charge
-> any time power is available). Rebooting into the BIOS to change the
-> charging mode settings is a hassle.
-> 
-> For the Custom charging type mode, we reuse the common
-> charge_control_{start,end}_threshold sysfs power_supply entries. The
-> BIOS also has a bunch of other charging modes (with varying levels of
-> usefulness), so this also adds a 'charge_type' sysfs entry that maps the
-> standard values to Dell-specific ones.
-> 
-> This work is based on a patch by Perry Yuan <perry_yuan@dell.com> and
-> Limonciello Mario <Mario_Limonciello@Dell.com> submitted back in 2020.
-> 
-> Signed-off-by: Andres Salomon <dilinger@queued.net>
-> Reviewed-by: Pali Rohár <pali@kernel.org>
-> 
-> ---
-> Changes in v4:
->     - fix improper __exit use by dell_battery_exit
->     - break apart battery_modes definition/declaration and visually align
->       values
->     - drop sysfs-class-power-dell
->     - use clamp() instead of manually if/else'ing
->     - drop redundant check in charge_type_store()
+What about this?
 
-Sorry I missed some important issues with my last review, so I'm afraid
-that this is not ready for merging yet.
+Traditionally, the uncore frequency is ramped up to reach the maximum=20
+possible level based on parameters like EPB (Energy perf Bias) and
+other system power management settings programmed by BIOS.  While this
+strategy achieves low latency for latency sensitive applications, it
+does not necessarily yield the best performance per watt.=20
 
-See comments inline below.
+The Efficiency Latency Control (ELC) feature is added to improve
+performance per watt. With this feature hardware power management
+algorithms optimize trade-off between latency and power consumption.
+But for some latency sensitive workloads further tuning can be done
+from OS to get desired performance.
 
-> Changes in v3:
->     - switch tokenid and class types
->     - be stricter with results from both userspace and BIOS
->     - no longer allow failed BIOS reads
->     - rename/move dell_send_request_by_token_loc, and add helper function
->     - only allow registration for BAT0
->     - rename charge_type modes to match power_supply names
-> Changes in v2, based on extensive feedback from Pali Rohár <pali@kernel.org>:
->     - code style changes
->     - change battery write API to use token->value instead of passed value
->     - stop caching current mode, instead querying SMBIOS as needed
->     - drop the separate list of charging modes enum
->     - rework the list of charging mode strings
->     - query SMBIOS for supported charging modes
->     - split dell_battery_custom_set() up
-> ---
->  drivers/platform/x86/dell/Kconfig       |   1 +
->  drivers/platform/x86/dell/dell-laptop.c | 310 ++++++++++++++++++++++++
->  drivers/platform/x86/dell/dell-smbios.h |   7 +
->  3 files changed, 318 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
-> index 85a78ef91182..02405793163c 100644
-> --- a/drivers/platform/x86/dell/Kconfig
-> +++ b/drivers/platform/x86/dell/Kconfig
-> @@ -49,6 +49,7 @@ config DELL_LAPTOP
->  	default m
->  	depends on DMI
->  	depends on BACKLIGHT_CLASS_DEVICE
-> +	depends on ACPI_BATTERY
->  	depends on ACPI_VIDEO || ACPI_VIDEO = n
->  	depends on RFKILL || RFKILL = n
->  	depends on DELL_WMI || DELL_WMI = n
-> diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
-> index 6552dfe491c6..4053af8f7676 100644
-> --- a/drivers/platform/x86/dell/dell-laptop.c
-> +++ b/drivers/platform/x86/dell/dell-laptop.c
-> @@ -22,11 +22,13 @@
->  #include <linux/io.h>
->  #include <linux/rfkill.h>
->  #include <linux/power_supply.h>
-> +#include <linux/sysfs.h>
->  #include <linux/acpi.h>
->  #include <linux/mm.h>
->  #include <linux/i8042.h>
->  #include <linux/debugfs.h>
->  #include <linux/seq_file.h>
-> +#include <acpi/battery.h>
->  #include <acpi/video.h>
->  #include "dell-rbtn.h"
->  #include "dell-smbios.h"
-> @@ -99,6 +101,20 @@ static bool force_rfkill;
->  static bool micmute_led_registered;
->  static bool mute_led_registered;
->  
-> +struct battery_mode_info {
-> +	int token;
-> +	const char *label;
-> +};
-> +
-> +static const struct battery_mode_info battery_modes[] = {
-> +	{ BAT_STANDARD_MODE_TOKEN, "Standard" },
-> +	{ BAT_EXPRESS_MODE_TOKEN,  "Fast" },
-> +	{ BAT_PRI_AC_MODE_TOKEN,   "Trickle" },
-> +	{ BAT_ADAPTIVE_MODE_TOKEN, "Adaptive" },
-> +	{ BAT_CUSTOM_MODE_TOKEN,   "Custom" },
-> +};
-> +static u32 battery_supported_modes;
-> +
->  module_param(force_rfkill, bool, 0444);
->  MODULE_PARM_DESC(force_rfkill, "enable rfkill on non whitelisted models");
->  
-> @@ -353,6 +369,32 @@ static const struct dmi_system_id dell_quirks[] __initconst = {
->  	{ }
->  };
->  
-> +/* -1 is a sentinel value, telling us to use token->value */
-> +#define USE_TVAL ((u32) -1)
-> +static int dell_send_request_for_tokenid(struct calling_interface_buffer *buffer,
-> +					 u16 class, u16 select, u16 tokenid,
-> +					 u32 val)
-> +{
-> +	struct calling_interface_token *token;
-> +
-> +	token = dell_smbios_find_token(tokenid);
-> +	if (!token)
-> +		return -ENODEV;
-> +
-> +	if (val == USE_TVAL)
-> +		val = token->value;
-> +
-> +	dell_fill_request(buffer, token->location, val, 0, 0);
-> +	return dell_send_request(buffer, class, select);
-> +}
-> +
-> +static inline int dell_set_std_token_value(struct calling_interface_buffer *buffer,
-> +		u16 tokenid, u32 value)
-> +{
-> +	return dell_send_request_for_tokenid(buffer, CLASS_TOKEN_WRITE,
-> +			SELECT_TOKEN_STD, tokenid, value);
-> +}
-> +
->  /*
->   * Derived from information in smbios-wireless-ctl:
->   *
-> @@ -2183,6 +2225,271 @@ static struct led_classdev mute_led_cdev = {
->  	.default_trigger = "audio-mute",
->  };
->  
-> +static int dell_battery_set_mode(const u16 tokenid)
-> +{
-> +	struct calling_interface_buffer buffer;
-> +
-> +	return dell_set_std_token_value(&buffer, tokenid, USE_TVAL);
-> +}
-> +
-> +static int dell_battery_read(const u16 tokenid)
-> +{
-> +	struct calling_interface_buffer buffer;
-> +	int err;
-> +
-> +	err = dell_send_request_for_tokenid(&buffer, CLASS_TOKEN_READ,
-> +			SELECT_TOKEN_STD, tokenid, 0);
-> +	if (err)
-> +		return err;
-> +
-> +	if (buffer.output[1] > INT_MAX)
-> +		return -EIO;
-> +
-> +	return buffer.output[1];
-> +}
-> +
-> +static bool dell_battery_mode_is_active(const u16 tokenid)
-> +{
-> +	struct calling_interface_token *token;
-> +	int ret;
-> +
-> +	ret = dell_battery_read(tokenid);
-> +	if (ret < 0)
-> +		return false;
-> +
-> +	token = dell_smbios_find_token(tokenid);
-> +	/* token's already verified by dell_battery_read() */
-> +
-> +	return token->value == (u16) ret;
-> +}
-> +
-> +/*
-> + * The rules: the minimum start charging value is 50%. The maximum
-> + * start charging value is 95%. The minimum end charging value is
-> + * 55%. The maximum end charging value is 100%. And finally, there
-> + * has to be at least a 5% difference between start & end values.
-> + */
-> +#define CHARGE_START_MIN	50
-> +#define CHARGE_START_MAX	95
-> +#define CHARGE_END_MIN		55
-> +#define CHARGE_END_MAX		100
-> +#define CHARGE_MIN_DIFF		5
-> +
-> +static int dell_battery_set_custom_charge_start(int start)
-> +{
-> +	struct calling_interface_buffer buffer;
-> +	int end;
-> +
-> +	start = clamp(start, CHARGE_START_MIN, CHARGE_START_MAX);
-> +	end = dell_battery_read(BAT_CUSTOM_CHARGE_END);
-> +	if (end < 0)
-> +		return end;
-> +	if ((end - start) < CHARGE_MIN_DIFF)
-> +		start = end - CHARGE_MIN_DIFF;
-> +
-> +	return dell_set_std_token_value(&buffer, BAT_CUSTOM_CHARGE_START,
-> +			start);
-> +}
-> +
-> +static int dell_battery_set_custom_charge_end(int end)
-> +{
-> +	struct calling_interface_buffer buffer;
-> +	int start;
-> +
-> +	end = clamp(end, CHARGE_END_MIN, CHARGE_END_MAX);
-> +	start = dell_battery_read(BAT_CUSTOM_CHARGE_START);
-> +	if (start < 0)
-> +		return start;
-> +	if ((end - start) < CHARGE_MIN_DIFF)
-> +		end = start + CHARGE_MIN_DIFF;
-> +
-> +	return dell_set_std_token_value(&buffer, BAT_CUSTOM_CHARGE_END, end);
-> +}
-> +
-> +static ssize_t charge_type_show(struct device *dev,
-> +		struct device_attribute *attr,
-> +		char *buf)
-> +{
-> +	ssize_t count = 0;
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(battery_modes); i++) {
-> +		bool active;
-> +
-> +		if (!(battery_supported_modes & BIT(i)))
-> +			continue;
-> +
-> +		active = dell_battery_mode_is_active(battery_modes[i].token);
-> +		count += sysfs_emit_at(buf, count, active ? "[%s] " : "%s ",
-> +				battery_modes[i].label);
-> +	}
+The hardware monitors the average CPU utilization across all cores
+in a power domain at regular intervals and decides a uncore frequency.=20
+While this may result in the best performance per watt, workload may be
+expecting higher performance at the expense of power. Consider an
+application that intermittently wakes up to perform memory reads on an
+otherwise idle system. In such cases, if hardware lowers uncore
+frequency, then there may be delay in ramp up of frequency to meet
+target performance.=20
 
-If you look at the way how charge_type is shown by the power_supply_sysfs.c
-file which is used for power-supply drivers which directly register
-a power-supply themselves rather then extending an existing driver, this
-is not the correct format.
+The ELC control defines some parameters which can be changed from OS.
+If the average CPU utilization is below a user defined threshold
+(elc_low_threshold_percent attribute below), the user defined uncore
+frequency floor frequency will be used (elc_floor_freq_khz attribute=20
+below) instead of hardware calculated minimum.=20
 
-drivers/power/supply/power_supply_sysfs.c
+Similarly in high load scenario where the CPU utilization goes above=20
+the high threshold value (elc_high_threshold_percent attribute below)=20
+instead of jumping to maximum uncore frequency, uncore frequency is=20
+increased in 100MHz steps until the power limit is reached.
 
-lists charge_type as:
+Attributes for efficiency latency control:=20
+..=20
+..=20
 
-        POWER_SUPPLY_ENUM_ATTR(CHARGE_TYPE),
-
-and ENUM type properties use the following for show() :
-
-	default:
-		if (ps_attr->text_values_len > 0 &&
-				value.intval < ps_attr->text_values_len && value.intval >= 0) {
-			ret = sysfs_emit(buf, "%s\n", ps_attr->text_values[value.intval]);
-		} else {
-			ret = sysfs_emit(buf, "%d\n", value.intval);
-		}
-	}
-
-with in this case text_values pointing to:
-
-static const char * const POWER_SUPPLY_CHARGE_TYPE_TEXT[] = {
-	[POWER_SUPPLY_CHARGE_TYPE_UNKNOWN]	= "Unknown",
-	[POWER_SUPPLY_CHARGE_TYPE_NONE]		= "N/A",
-	[POWER_SUPPLY_CHARGE_TYPE_TRICKLE]	= "Trickle",
-	[POWER_SUPPLY_CHARGE_TYPE_FAST]		= "Fast",
-	[POWER_SUPPLY_CHARGE_TYPE_STANDARD]	= "Standard",
-	[POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE]	= "Adaptive",
-	[POWER_SUPPLY_CHARGE_TYPE_CUSTOM]	= "Custom",
-	[POWER_SUPPLY_CHARGE_TYPE_LONGLIFE]	= "Long Life",
-	[POWER_SUPPLY_CHARGE_TYPE_BYPASS]	= "Bypass",
-};
-
-So value.intval will be within the expected range hitting:
-
-			ret = sysfs_emit(buf, "%s\n", ps_attr->text_values[value.intval]);
-
-IOW instead of outputting something like this:
-
-Fast [Standard] Long Life
-
-which is what your show() function does it outputs only
-the active value as a string, e.g.:
-
-Standard
-
-Yes not being able to see the supported values is annoying I actually
-wrote an email about that earlier today:
-
-https://lore.kernel.org/linux-pm/49993a42-aa91-46bf-acef-4a089db4c2db@redhat.com/
-
-but we need to make sure that the output is consistent between drivers otherwise
-userspace can never know how to use the API, so for charge_type the dell
-driver should only output the active type, not all the options.
-
-This reminds me that there was a patch-series to allow battery extension drivers
-like this one to actually use the power-supply core code for show()/store()
-Thomas IIRC that series was done by you ?  What is the status of that ?
-
-Also looking at the userspace API parts of this again I wonder
-if mapping  BAT_PRI_AC_MODE_TOKEN -> "Trickle" is the right thing do
-maybe "Long Life" would be a better match ?  That depends on what the option
-actually does under the hood I guess. Is this known ?
-
-Regards,
-
-Hans
-
-
-
-
-
-> +
-> +	/* convert the last space to a newline */
-> +	if (count > 0)
-> +		count--;
-> +	count += sysfs_emit_at(buf, count, "\n");
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t charge_type_store(struct device *dev,
-> +		struct device_attribute *attr,
-> +		const char *buf, size_t size)
-> +{
-> +	bool matched = false;
-> +	int err, i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(battery_modes); i++) {
-> +		if (!(battery_supported_modes & BIT(i)))
-> +			continue;
-> +
-> +		if (sysfs_streq(battery_modes[i].label, buf)) {
-> +			matched = true;
-> +			break;
-> +		}
-> +	}
-> +	if (!matched)
-> +		return -EINVAL;
-> +
-> +	err = dell_battery_set_mode(battery_modes[i].token);
-> +	if (err)
-> +		return err;
-> +
-> +	return size;
-> +}
-> +
-> +static ssize_t charge_control_start_threshold_show(struct device *dev,
-> +		struct device_attribute *attr,
-> +		char *buf)
-> +{
-> +	int start;
-> +
-> +	start = dell_battery_read(BAT_CUSTOM_CHARGE_START);
-> +	if (start < 0)
-> +		return start;
-> +
-> +	if (start > CHARGE_START_MAX)
-> +		return -EIO;
-> +
-> +	return sysfs_emit(buf, "%d\n", start);
-> +}
-> +
-> +static ssize_t charge_control_start_threshold_store(struct device *dev,
-> +		struct device_attribute *attr,
-> +		const char *buf, size_t size)
-> +{
-> +	int ret, start;
-> +
-> +	ret = kstrtoint(buf, 10, &start);
-> +	if (ret)
-> +		return ret;
-> +	if (start < 0 || start > 100)
-> +		return -EINVAL;
-> +
-> +	ret = dell_battery_set_custom_charge_start(start);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return size;
-> +}
-> +
-> +static ssize_t charge_control_end_threshold_show(struct device *dev,
-> +		struct device_attribute *attr,
-> +		char *buf)
-> +{
-> +	int end;
-> +
-> +	end = dell_battery_read(BAT_CUSTOM_CHARGE_END);
-> +	if (end < 0)
-> +		return end;
-> +
-> +	if (end > CHARGE_END_MAX)
-> +		return -EIO;
-> +
-> +	return sysfs_emit(buf, "%d\n", end);
-> +}
-> +
-> +static ssize_t charge_control_end_threshold_store(struct device *dev,
-> +		struct device_attribute *attr,
-> +		const char *buf, size_t size)
-> +{
-> +	int ret, end;
-> +
-> +	ret = kstrtouint(buf, 10, &end);
-> +	if (ret)
-> +		return ret;
-> +	if (end < 0 || end > 100)
-> +		return -EINVAL;
-> +
-> +	ret = dell_battery_set_custom_charge_end(end);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return size;
-> +}
-> +
-> +static DEVICE_ATTR_RW(charge_control_start_threshold);
-> +static DEVICE_ATTR_RW(charge_control_end_threshold);
-> +static DEVICE_ATTR_RW(charge_type);
-> +
-> +static struct attribute *dell_battery_attrs[] = {
-> +	&dev_attr_charge_control_start_threshold.attr,
-> +	&dev_attr_charge_control_end_threshold.attr,
-> +	&dev_attr_charge_type.attr,
-> +	NULL,
-> +};
-> +ATTRIBUTE_GROUPS(dell_battery);
-> +
-> +static int dell_battery_add(struct power_supply *battery,
-> +		struct acpi_battery_hook *hook)
-> +{
-> +	/* this currently only supports the primary battery */
-> +	if (strcmp(battery->desc->name, "BAT0") != 0)
-> +		return -ENODEV;
-> +
-> +	return device_add_groups(&battery->dev, dell_battery_groups);
-> +}
-> +
-> +static int dell_battery_remove(struct power_supply *battery,
-> +		struct acpi_battery_hook *hook)
-> +{
-> +	device_remove_groups(&battery->dev, dell_battery_groups);
-> +	return 0;
-> +}
-> +
-> +static struct acpi_battery_hook dell_battery_hook = {
-> +	.add_battery = dell_battery_add,
-> +	.remove_battery = dell_battery_remove,
-> +	.name = "Dell Primary Battery Extension",
-> +};
-> +
-> +static u32 __init battery_get_supported_modes(void)
-> +{
-> +	u32 modes = 0;
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(battery_modes); i++) {
-> +		if (dell_smbios_find_token(battery_modes[i].token))
-> +			modes |= BIT(i);
-> +	}
-> +
-> +	return modes;
-> +}
-> +
-> +static void __init dell_battery_init(struct device *dev)
-> +{
-> +	battery_supported_modes = battery_get_supported_modes();
-> +
-> +	if (battery_supported_modes != 0)
-> +		battery_hook_register(&dell_battery_hook);
-> +}
-> +
-> +static void dell_battery_exit(void)
-> +{
-> +	if (battery_supported_modes != 0)
-> +		battery_hook_unregister(&dell_battery_hook);
-> +}
-> +
->  static int __init dell_init(void)
->  {
->  	struct calling_interface_token *token;
-> @@ -2219,6 +2526,7 @@ static int __init dell_init(void)
->  		touchpad_led_init(&platform_device->dev);
->  
->  	kbd_led_init(&platform_device->dev);
-> +	dell_battery_init(&platform_device->dev);
->  
->  	dell_laptop_dir = debugfs_create_dir("dell_laptop", NULL);
->  	debugfs_create_file("rfkill", 0444, dell_laptop_dir, NULL,
-> @@ -2293,6 +2601,7 @@ static int __init dell_init(void)
->  	if (mute_led_registered)
->  		led_classdev_unregister(&mute_led_cdev);
->  fail_led:
-> +	dell_battery_exit();
->  	dell_cleanup_rfkill();
->  fail_rfkill:
->  	platform_device_del(platform_device);
-> @@ -2311,6 +2620,7 @@ static void __exit dell_exit(void)
->  	if (quirks && quirks->touchpad_led)
->  		touchpad_led_exit();
->  	kbd_led_exit();
-> +	dell_battery_exit();
->  	backlight_device_unregister(dell_backlight_device);
->  	if (micmute_led_registered)
->  		led_classdev_unregister(&micmute_led_cdev);
-> diff --git a/drivers/platform/x86/dell/dell-smbios.h b/drivers/platform/x86/dell/dell-smbios.h
-> index ea0cc38642a2..77baa15eb523 100644
-> --- a/drivers/platform/x86/dell/dell-smbios.h
-> +++ b/drivers/platform/x86/dell/dell-smbios.h
-> @@ -33,6 +33,13 @@
->  #define KBD_LED_AUTO_50_TOKEN	0x02EB
->  #define KBD_LED_AUTO_75_TOKEN	0x02EC
->  #define KBD_LED_AUTO_100_TOKEN	0x02F6
-> +#define BAT_PRI_AC_MODE_TOKEN	0x0341
-> +#define BAT_ADAPTIVE_MODE_TOKEN	0x0342
-> +#define BAT_CUSTOM_MODE_TOKEN	0x0343
-> +#define BAT_STANDARD_MODE_TOKEN	0x0346
-> +#define BAT_EXPRESS_MODE_TOKEN	0x0347
-> +#define BAT_CUSTOM_CHARGE_START	0x0349
-> +#define BAT_CUSTOM_CHARGE_END	0x034A
->  #define GLOBAL_MIC_MUTE_ENABLE	0x0364
->  #define GLOBAL_MIC_MUTE_DISABLE	0x0365
->  #define GLOBAL_MUTE_ENABLE	0x058C
-
+Thanks,
+Srinivas
