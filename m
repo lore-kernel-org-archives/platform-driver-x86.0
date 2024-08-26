@@ -1,211 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19CF194ACD
-	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Aug 2024 16:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E8864A;
+	Mon, 26 Aug 2024 17:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724689632; cv=none; b=C4O0nlmb/G0LVfLFuFiObrkPwA1rKUp7JwQchBOMS3s5goN2jisK+kg6T99HRfbgzZ6s2Bl49oCmW/P9Z7G9RvWkrwXsn0Ye0tHxgyGhsRc8304cqolCcP89zkJlGjkcPQV9+iZaJ5TsDkWPkolbFnVrYJt9xNOT3DTpWrIeqcY=
+	t=1724692918; cv=none; b=oIjAnTQaaPJdPqu9weOm5zxwpnvWPBcZrkQ7FYIrKXBXdsUZCh+lIrB7PZ4JruXrk1t/C8XQmkzhRm9MEqN7ZsyNXCbk6EG5L6uXQ1g/DzGm03O7ZaOes5hjoabCqJBhNsAypBFqwmv5ZH+DoPmtrzCjdd+A7CKl6kn869k2yDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724689632; c=relaxed/simple;
-	bh=OM8wDnSm2pKUt/16NAe0qFh6zFLVxNmqkxMEYUjygCU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=nxlMF9aJrf6iEuIt6mhbaeoxujGegFDNp35Y3HcizT/3bee98RiK8q+xGTAIY+d5PlEd1RxXpNtEmpWc+Fx/PblQKshIIMxZ6HRMAlBqnRv/dIyMlp9TBoLm/dy7Ef/k6YPdklJ+W52HX7Y8ddWh7ib29MfIiWRVQcs1jy+5Dqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=THu+8BJG; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1724692918; c=relaxed/simple;
+	bh=lkLq0gZHHCT225w7KBWxwFP8hdO2Ew8mCt6F0ilTIck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WHJJ3PbdQK5JnmmAywELO+cbjusPWQ9gR1rypNjhZa3X5oGfx1zMv9WkZynx3G0SDOVJdtWe7yYkGmIWcLX34rGU5e6AnMCqwBkvNHFYj6BMQGL5dSE9DVox83pyfVd+jZZNPFx3F4/ovrQpsNU9pWz6Yu7q94dPX24b40ZIA1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YUecXhJM; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="THu+8BJG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YUecXhJM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724689630; x=1756225630;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=OM8wDnSm2pKUt/16NAe0qFh6zFLVxNmqkxMEYUjygCU=;
-  b=THu+8BJG8sEixGN3xwSrJb3rJNaHr9Qc6ze+Zt5YpSsq48b3Ul6m9iLJ
-   MjLf3Smu2hgswzi3MobzZ+dbcU+WFTLvSp1fvBRDfND84uVdusIqwH5Gi
-   oMNzGd8OxAnzBSuZmfMRRkEAkDYHY+nUCIJyYuS9scbmUByveFVDctFx6
-   H8BWvbJYNi10D548I31AJYXSm3n1JNjM3v2Fs/v0jXi1uRefHojopQMK+
-   8MkwEhAyDED8R2ts7dMr/PaBqF2gOCcOiObG2kYDhV8+bnxQEV1f1SM+O
-   RHFbd1TdnzHktQduBvEmAE+O93ueKwPf8fmi5j5G+BAESPJASgAve4jkq
-   w==;
-X-CSE-ConnectionGUID: QYrd+5W2Sk+fZvBgspXixQ==
-X-CSE-MsgGUID: 3df67zBgTHaDq3Pl5pGgTA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11176"; a="33693574"
+  t=1724692918; x=1756228918;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lkLq0gZHHCT225w7KBWxwFP8hdO2Ew8mCt6F0ilTIck=;
+  b=YUecXhJM9+bnHElodZZcjBPsWvkKF/MwjWs6B3SRUk2crfCqt+vIrAOt
+   O6REqa/3FczZtHmhZ+NCTiDXf1lOMc9jd6OH+PmHMy6ItdM89q0/EckRA
+   Iy72VPWpUrgJyGWGzqXn1mQvjBhTfU+PHyg58Blj4GXgVwsk9FT6Iz/Bw
+   xBmwHwpL0qNjcWgQsyz2GJaByCOdTTIftsk0jWKBI8SJZ4ES/Sn1VTmWq
+   ffUIZZ4fVBp/8Wv1br0fIwWfJ6W0Kt3RrW1lZHa9xrrtqgAT0BXta/eCw
+   9GVwLYa0E9QACWLaXLhRS5ru0YY6sz/YBj0jaHt8WdyWtTGSx0wgYfuev
+   A==;
+X-CSE-ConnectionGUID: K0eUZ63MSHu2xxlGUbCBJQ==
+X-CSE-MsgGUID: 1OxVTVIqSCCCfrB2ZMolRQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11176"; a="40601221"
 X-IronPort-AV: E=Sophos;i="6.10,178,1719903600"; 
-   d="scan'208";a="33693574"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 09:27:10 -0700
-X-CSE-ConnectionGUID: 34/XlGcZSlyyKjyOlXHUFA==
-X-CSE-MsgGUID: r++l+uclS82Fr4s6ko+yEQ==
+   d="scan'208";a="40601221"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 10:21:57 -0700
+X-CSE-ConnectionGUID: MmNG/6OFQUmuQCOOgaa7wQ==
+X-CSE-MsgGUID: 8wiKmWJWRXC4vrLLno4P0A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,178,1719903600"; 
-   d="scan'208";a="67386645"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.174])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 09:27:08 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 26 Aug 2024 19:27:03 +0300 (EEST)
-To: Suma Hegde <suma.hegde@amd.com>
-cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
-    Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-Subject: Re: [v5 10/11] platform/x86/amd/hsmp: Use dev_groups in the driver
- structure
-In-Reply-To: <20240823075543.884265-10-suma.hegde@amd.com>
-Message-ID: <b0b9b9f4-8822-ecf4-f11d-4258a0f50a79@linux.intel.com>
-References: <20240823075543.884265-1-suma.hegde@amd.com> <20240823075543.884265-10-suma.hegde@amd.com>
+   d="scan'208";a="67474240"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 10:21:55 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1sidPc-000000021Qh-2GIC;
+	Mon, 26 Aug 2024 20:21:52 +0300
+Date: Mon, 26 Aug 2024 20:21:52 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Daniel Scally <djrscally@gmail.com>
+Subject: Re: [PATCH v1 1/1] platform/x86: int3472: discrete: Remap "reset" to
+ "enable" for OV7251
+Message-ID: <Zsy5sDXD4lnACobC@smile.fi.intel.com>
+References: <20240821184546.627456-1-andriy.shevchenko@linux.intel.com>
+ <ae68cba8-564c-47bf-a796-2bf15b3998d6@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ae68cba8-564c-47bf-a796-2bf15b3998d6@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, 23 Aug 2024, Suma Hegde wrote:
+On Mon, Aug 26, 2024 at 05:12:44PM +0200, Hans de Goede wrote:
+> On 8/21/24 8:40 PM, Andy Shevchenko wrote:
+> > The driver of OV7251 expects "enable" pin instead of "reset".
+> > Remap "reset" to "enable" and update polarity.
+> > 
+> > In particular, the Microsoft Surface Book can't load the camera sensor
+> > driver without this change:
+> > 
+> >  ov7251 i2c-INT347E:00: supply vdddo not found, using dummy regulator
+> >  ov7251 i2c-INT347E:00: supply vddd not found, using dummy regulator
+> >  ov7251 i2c-INT347E:00: supply vdda not found, using dummy regulator
+> >  ov7251 i2c-INT347E:00: cannot get enable gpio
+> >  ov7251 i2c-INT347E:00: probe with driver ov7251 failed with error -2
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> > 
+> > Hmm... I have spent some time to achieve this, and then I realised that
+> > linux-surface GitHub project already has something similar [1].
+> > 
+> > The advantage of [1] is that it applies the quirk to all OV7251 sensors
+> > on the platform (don't know how useful it IRL).
+> > 
+> > However, it seems the [1] has two issues:
+> > 1) it missed terminator entry in the ACPI ID table;
+> > 2) it forces polarity to be active high, while I think the XOR approach
+> > is better as it's possible (but quite unlikely I believe) that reset pin
+> > might be inverted on the PCB level.
+> > 
+> > All in all, I'm fine with any of these patches to be applied with the
+> > above mentioned improvements / caveats.
+> > 
+> > Link: https://github.com/linux-surface/kernel/commit/d0f2c2d5a449c2bf69432f90d164183143d8af8d [1]
+> 
+> Looking at the datasheet the sensor actually has a reset pin and not
+> an enable pin and the current GPIO mapping in the ov7251 driver /
+> device-tree bindings is wrong.
+> 
+> The datasheet describes the single reset control pin as:
+> 
+> D6 XSHUTDOWN input "reset (active low with internal pull down resistor)"
+> 
+> So as we have done before I would greatly prefer for the sensor driver
+> to get fixed instead of hacking around this in the int3472 code.
+> 
+> You could do something similar to what is done in the ov2680.c driver
+> for this, here is the ov2680 gpiod-get code adjusted for the ov7251 case:
+> 
+>         /*
+>          * The device-tree bindings call this pin "enable", but the
+> 	 * datasheet describes the pin as "reset (active low with internal
+> 	 * pull down resistor)". The ACPI tables describing this sensor
+> 	 * on e.g. the Microsoft Surface Book use the ACPI equivalent of
+> 	 * "reset" as pin name, which ACPI glue code then maps to "reset".
+>  	 * Check for a "reset" pin if there is no "enable" pin.
+>          */
+> 	ov7251->enable_gpio = devm_gpiod_get(dev, "enable", GPIOD_OUT_HIGH);
+> 	if (IS_ERR(ov7251->enable_gpio)) {
+> 		ov7251->enable_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> 		if (!IS_ERR(ov7251->enable_gpio))
+> 			gpiod_toggle_active_low(ov7251->enable_gpio);
+> 	}
+> 	if (IS_ERR(ov7251->enable_gpio)) {
+>                 dev_err(dev, "cannot get enable gpio\n");
+>                 return PTR_ERR(ov7251->enable_gpio);
+>         }
 
-> Move out of device_add_group() variants, instead assign static array of
-> attribute groups to .dev_groups in platform_driver structure.
-> Then use is_visible to enable only the necessary files on the platform.
-> 
-> .read() and .is_bin_visibile() have slightly different
-> implemetations on ACPI and non-ACPI system, so move them
-> to respective files.
-> 
-> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
-> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-> ---
-> Changes since v4:
-> Change ->private from string pointer to u16 pointer.
-> 
-> Changes since v3:
-> This patch and next patch(9th and 10th patch in v3 series) are merged
-> and commit description is updated.
-> 
-> Changes since v2:
-> None
-> 
-> Changes since v1:
-> 1. Change is_visible to is_bin_visible in commit message
-> 1. Add parenthesis around read and is_bin_visible in commit message
-> 2. Change plat_dev to hsmp_pdev, hsmp_device to mdev
-> 3. Remove unnecessary if, else conditions in hsmp_is_sock_attr_visible
-> 4. Change un cached to un-cached
+That's a good idea!
 
-> diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-> index 74be46a64c05..d55c984a9a5a 100644
-> --- a/drivers/platform/x86/amd/hsmp/plat.c
-> +++ b/drivers/platform/x86/amd/hsmp/plat.c
-> @@ -9,6 +9,7 @@
->  
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
-> +#include <asm/amd_hsmp.h>
->  #include <asm/amd_nb.h>
->  
->  #include <linux/device.h>
-> @@ -22,6 +23,8 @@
->  #define DRIVER_NAME		"amd_hsmp"
->  #define DRIVER_VERSION		"2.3"
->  
-> +static u16 sock_numbers[MAX_AMD_SOCKETS] = {0, 1, 2, 3, 4, 5, 6, 7};
-> +
->  /*
->   * To access specific HSMP mailbox register, s/w writes the SMN address of HSMP mailbox
->   * register into the SMN_INDEX register, and reads/writes the SMN_DATA reg.
-> @@ -61,36 +64,115 @@ static const struct file_operations hsmp_fops = {
->  	.compat_ioctl	= hsmp_ioctl,
->  };
->  
-> -static int hsmp_create_non_acpi_sysfs_if(struct device *dev)
-> +static ssize_t hsmp_metric_tbl_read(struct file *filp, struct kobject *kobj,
-> +				    struct bin_attribute *bin_attr, char *buf,
-> +				    loff_t off, size_t count)
->  {
-> -	const struct attribute_group **hsmp_attr_grps;
-> -	struct attribute_group *attr_grp;
-> -	u16 i;
-> -
-> -	hsmp_attr_grps = devm_kcalloc(dev, hsmp_pdev.num_sockets + 1,
-> -				      sizeof(*hsmp_attr_grps),
-> -				      GFP_KERNEL);
-> -	if (!hsmp_attr_grps)
-> -		return -ENOMEM;
-> +	struct hsmp_message msg = { 0 };
-> +	struct hsmp_socket *sock;
-> +	u16 sock_ind;
-> +	int ret;
->  
-> -	/* Create a sysfs directory for each socket */
-> -	for (i = 0; i < hsmp_pdev.num_sockets; i++) {
-> -		attr_grp = devm_kzalloc(dev, sizeof(struct attribute_group),
-> -					GFP_KERNEL);
-> -		if (!attr_grp)
-> -			return -ENOMEM;
-> +	if (!bin_attr->private)
-> +		return -EINVAL;
-> +	sock_ind = *(u16 *)(bin_attr->private);
-> +	if (sock_ind >= hsmp_pdev.num_sockets)
-> +		return -EINVAL;
->  
-> -		snprintf(hsmp_pdev.sock[i].name, HSMP_ATTR_GRP_NAME_SIZE, "socket%u", (u8)i);
-> -		attr_grp->name			= hsmp_pdev.sock[i].name;
-> -		attr_grp->is_bin_visible	= hsmp_is_sock_attr_visible;
-> -		hsmp_attr_grps[i]		= attr_grp;
-> +	sock = &hsmp_pdev.sock[sock_ind];
-> +	if (!sock)
-> +		return -EINVAL;
->  
-> -		hsmp_create_attr_list(attr_grp, dev, i);
-> +	/* Do not support lseek(), reads entire metric table */
-> +	if (count < bin_attr->size) {
-> +		dev_err(sock->dev, "Wrong buffer size\n");
-> +		return -EINVAL;
->  	}
->  
-> -	return device_add_groups(dev, hsmp_attr_grps);
-> +	msg.msg_id	= HSMP_GET_METRIC_TABLE;
-> +	msg.sock_ind	= sock_ind;
-> +
-> +	ret = hsmp_send_message(&msg);
-> +	if (ret)
-> +		return ret;
-> +	memcpy_fromio(buf, sock->metric_tbl_addr, bin_attr->size);
-> +
-> +	return bin_attr->size;
->  }
->  
-> +static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
-> +					 struct bin_attribute *battr, int id)
-> +{
-> +	u16 sock_ind;
-> +
-> +	if (!battr->private)
-> +		return 0;
-> +	sock_ind = *(u16 *)(battr->private);
-> +
-> +	if (id == 0 && sock_ind >= hsmp_pdev.num_sockets)
-> +		return SYSFS_GROUP_INVISIBLE;
-> +
-> +	if (hsmp_pdev.proto_ver == HSMP_PROTO_VER6)
-> +		return battr->attr.mode;
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * AMD supports maximum of 8 sockets in a system.
-> + * Static array of 8 + 1(for NULL) elements is created below
-> + * to create sysfs groups for sockets.
-> + * is_bin_visible function is used to show / hide the necessary groups.
-> + */
-> +#define HSMP_BIN_ATTR(index, _list) \
-> +static struct bin_attribute attr##index = { \
-> +	.attr = { .name = HSMP_METRICS_TABLE_NAME, .mode = 0444}, \
-> +	.private = &sock_numbers[index], \
+We can also fix in-kernel DT with that, because now it's quite confusing to
+have a comment for CAMx_RST_N (note N, sic!).
 
-While this is not wrong and I won't oppose if you want to do it this 
-way, .private could hold the integer directly (casts will be necessary
-to get it in/out w/o warnings).
+I will test this at some point in the future unless Dan or somebody else beats
+me up to it.
+
+> >  drivers/platform/x86/intel/int3472/discrete.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> > 
+> > diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+> > index b5f6f71bb1dd..0559295dfb27 100644
+> > --- a/drivers/platform/x86/intel/int3472/discrete.c
+> > +++ b/drivers/platform/x86/intel/int3472/discrete.c
+> > @@ -86,6 +86,16 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
+> >  		return -EINVAL;
+> >  	}
+> >  
+> > +	/*
+> > +	 * The driver of OV7251 expects "enable" pin instead of "reset".
+> > +	 * Remap "reset" to "enable" and update polarity.
+> > +	 */
+> > +	if (!strcmp(int3472->sensor_name, "i2c-INT347E:00") &&
+> > +	    !strcmp(func, "reset")) {
+> > +		func = "enable";
+> > +		polarity ^= GPIO_ACTIVE_LOW;
+> > +	}
+> > +
+> >  	ret = skl_int3472_fill_gpiod_lookup(&int3472->gpios.table[int3472->n_sensor_gpios],
+> >  					    agpio, func, polarity);
+> >  	if (ret)
 
 -- 
- i.
+With Best Regards,
+Andy Shevchenko
+
+
