@@ -1,368 +1,211 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE06849631;
-	Mon, 26 Aug 2024 15:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19CF194ACD
+	for <platform-driver-x86@vger.kernel.org>; Mon, 26 Aug 2024 16:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724687740; cv=none; b=IWDKMeJJmMcv2+o9RbnNvox/SHC497E8pmnBxmw3rnoIPnMb+UTCNtFiosotDIYinPGWJuFAyGd0saThbPRL1Szz5BeE7vO/bCUTrBlMKGveCZx8joR1EXRT+l4mz04yrxNnEL6fsdOmQ4vnL5ro/GGVfLF7b23PuR+i3XTcEVQ=
+	t=1724689632; cv=none; b=C4O0nlmb/G0LVfLFuFiObrkPwA1rKUp7JwQchBOMS3s5goN2jisK+kg6T99HRfbgzZ6s2Bl49oCmW/P9Z7G9RvWkrwXsn0Ye0tHxgyGhsRc8304cqolCcP89zkJlGjkcPQV9+iZaJ5TsDkWPkolbFnVrYJt9xNOT3DTpWrIeqcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724687740; c=relaxed/simple;
-	bh=PvUikjllUesVf4K5J6IbkegT/vKQ2ftQ6jz2QLk5nh8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=B16OkboX5OJbMjB45NOQAY57FPRE/4bFTnCP6hHq79k5rL323osXykYe6SmYm6wmZTCpBBP0MlVlThxR63y3czTxaPnzYPaMkaAXr42o+3ERxOfNuCTMf5slH0WFobGipZvqpgaNS5qtVezGJP0tG+cDI4rRh8NVojV2Fl4WJ6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a0wIp8ck; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1724689632; c=relaxed/simple;
+	bh=OM8wDnSm2pKUt/16NAe0qFh6zFLVxNmqkxMEYUjygCU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=nxlMF9aJrf6iEuIt6mhbaeoxujGegFDNp35Y3HcizT/3bee98RiK8q+xGTAIY+d5PlEd1RxXpNtEmpWc+Fx/PblQKshIIMxZ6HRMAlBqnRv/dIyMlp9TBoLm/dy7Ef/k6YPdklJ+W52HX7Y8ddWh7ib29MfIiWRVQcs1jy+5Dqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=THu+8BJG; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a0wIp8ck"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="THu+8BJG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724687738; x=1756223738;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
+  t=1724689630; x=1756225630;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=PvUikjllUesVf4K5J6IbkegT/vKQ2ftQ6jz2QLk5nh8=;
-  b=a0wIp8ckH+sEMoa/dWKkdPZVuXhqb/MlSqc+HAZm9WnlVJbenpv43fkT
-   RHY8va3BT+uD1l2em5ENzMSf7bkzCML2jKXN7TcI/E1MkuYlwVeN+GulR
-   7LVeX9M8uFyRemH697MXB0gi0XfhtGe8xkS0E9KBzLpY5ud/3AB75p5QH
-   CkB0qUuaqwB+JAsQmUibgHZa3RmCIFy4u6KDnK3skHzkvXOmlCFglCcXI
-   u6bjlqExnFgfL9XLmwHZNaiWoT7M23mZHSSIPLefIKU99E3i1LmXWxoJj
-   rNHrd/t9mcfgUUWK3waAMhUKXyZ3jTzq6CShMYZp9+gBp8HqaH3JH4Clq
-   g==;
-X-CSE-ConnectionGUID: faVgIvUYTfWNFDObIwPQBg==
-X-CSE-MsgGUID: UpDYLju1Rh6K0bKj+MSgmw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11176"; a="22641780"
+  bh=OM8wDnSm2pKUt/16NAe0qFh6zFLVxNmqkxMEYUjygCU=;
+  b=THu+8BJG8sEixGN3xwSrJb3rJNaHr9Qc6ze+Zt5YpSsq48b3Ul6m9iLJ
+   MjLf3Smu2hgswzi3MobzZ+dbcU+WFTLvSp1fvBRDfND84uVdusIqwH5Gi
+   oMNzGd8OxAnzBSuZmfMRRkEAkDYHY+nUCIJyYuS9scbmUByveFVDctFx6
+   H8BWvbJYNi10D548I31AJYXSm3n1JNjM3v2Fs/v0jXi1uRefHojopQMK+
+   8MkwEhAyDED8R2ts7dMr/PaBqF2gOCcOiObG2kYDhV8+bnxQEV1f1SM+O
+   RHFbd1TdnzHktQduBvEmAE+O93ueKwPf8fmi5j5G+BAESPJASgAve4jkq
+   w==;
+X-CSE-ConnectionGUID: QYrd+5W2Sk+fZvBgspXixQ==
+X-CSE-MsgGUID: 3df67zBgTHaDq3Pl5pGgTA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11176"; a="33693574"
 X-IronPort-AV: E=Sophos;i="6.10,178,1719903600"; 
-   d="diff'?scan'208";a="22641780"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 08:55:37 -0700
-X-CSE-ConnectionGUID: rzfNeSbWQXOD4svLUTqR4g==
-X-CSE-MsgGUID: iXARGO0eR8SLXLwhgn/qMA==
+   d="scan'208";a="33693574"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 09:27:10 -0700
+X-CSE-ConnectionGUID: 34/XlGcZSlyyKjyOlXHUFA==
+X-CSE-MsgGUID: r++l+uclS82Fr4s6ko+yEQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,178,1719903600"; 
-   d="diff'?scan'208";a="93352318"
-Received: from djiang5-mobl3.amr.corp.intel.com ([10.125.110.115])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 08:55:36 -0700
-Message-ID: <d8ed51f8ffd05b2f6508b82d5c10c876ff54b5c2.camel@linux.intel.com>
-Subject: Re: [PATCH 2/3] platform/x86/intel-uncore-freq: Add support for
- efficiency latency control
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Tero
- Kristo <tero.kristo@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
- platform-driver-x86@vger.kernel.org,  LKML <linux-kernel@vger.kernel.org>
-Date: Mon, 26 Aug 2024 08:55:27 -0700
-In-Reply-To: <0abf523f-56a8-b0be-cf15-d799a0a4fc90@linux.intel.com>
-References: <20240821131321.824326-1-tero.kristo@linux.intel.com>
-	 <20240821131321.824326-3-tero.kristo@linux.intel.com>
-	 <0abf523f-56a8-b0be-cf15-d799a0a4fc90@linux.intel.com>
-Content-Type: multipart/mixed; boundary="=-FPINvjVEBYr1LklhMp88"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+   d="scan'208";a="67386645"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.174])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 09:27:08 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 26 Aug 2024 19:27:03 +0300 (EEST)
+To: Suma Hegde <suma.hegde@amd.com>
+cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+    Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+Subject: Re: [v5 10/11] platform/x86/amd/hsmp: Use dev_groups in the driver
+ structure
+In-Reply-To: <20240823075543.884265-10-suma.hegde@amd.com>
+Message-ID: <b0b9b9f4-8822-ecf4-f11d-4258a0f50a79@linux.intel.com>
+References: <20240823075543.884265-1-suma.hegde@amd.com> <20240823075543.884265-10-suma.hegde@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
---=-FPINvjVEBYr1LklhMp88
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Fri, 23 Aug 2024, Suma Hegde wrote:
 
-On Fri, 2024-08-23 at 15:48 +0300, Ilpo J=C3=A4rvinen wrote:
-> On Wed, 21 Aug 2024, Tero Kristo wrote:
->=20
-> > Add efficiency latency control support to the TPMI uncore driver.
-> > This
-> > defines two new threshold values for controlling uncore frequency,
-> > low
-> > threshold and high threshold. When CPU utilization is below low
-> > threshold,
-> > the user configurable floor latency control frequency can be used
-> > by the
-> > system. When CPU utilization is above high threshold, the uncore
-> > frequency
-> > is increased in 100MHz steps until power limit is reached.
-> >=20
-> > Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
-> > ---
-> > =C2=A0.../uncore-frequency-common.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 =
-4 +
-> > =C2=A0.../uncore-frequency/uncore-frequency-tpmi.c=C2=A0 | 153
-> > +++++++++++++++++-
-> > =C2=A02 files changed, 155 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
-> > frequency-common.h b/drivers/platform/x86/intel/uncore-
-> > frequency/uncore-frequency-common.h
-> > index 4c245b945e4e..b5c7311bfa05 100644
-> > --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-> > common.h
-> > +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-> > common.h
-> > @@ -70,6 +70,10 @@ enum uncore_index {
-> > =C2=A0	UNCORE_INDEX_MIN_FREQ,
-> > =C2=A0	UNCORE_INDEX_MAX_FREQ,
-> > =C2=A0	UNCORE_INDEX_CURRENT_FREQ,
-> > +	UNCORE_INDEX_EFF_LAT_CTRL_LOW_THRESHOLD,
-> > +	UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD,
-> > +	UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE,
-> > +	UNCORE_INDEX_EFF_LAT_CTRL_FREQ,
-> > =C2=A0};
-> > =C2=A0
-> > =C2=A0int uncore_freq_common_init(int (*read)(struct uncore_data *data,
-> > unsigned int *value,
-> > diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
-> > frequency-tpmi.c b/drivers/platform/x86/intel/uncore-
-> > frequency/uncore-frequency-tpmi.c
-> > index 9fa3037c03d1..3a83b6ce54a5 100644
-> > --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-> > tpmi.c
-> > +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-> > tpmi.c
-> > @@ -30,6 +30,7 @@
-> > =C2=A0
-> > =C2=A0#define	UNCORE_MAJOR_VERSION		0
-> > =C2=A0#define	UNCORE_MINOR_VERSION		2
-> > +#define UNCORE_ELC_SUPPORTED_VERSION	2
-> > =C2=A0#define UNCORE_HEADER_INDEX		0
-> > =C2=A0#define UNCORE_FABRIC_CLUSTER_OFFSET	8
-> > =C2=A0
-> > @@ -46,6 +47,7 @@ struct tpmi_uncore_struct;
-> > =C2=A0/* Information for each cluster */
-> > =C2=A0struct tpmi_uncore_cluster_info {
-> > =C2=A0	bool root_domain;
-> > +	bool elc_supported;
-> > =C2=A0	u8 __iomem *cluster_base;
-> > =C2=A0	struct uncore_data uncore_data;
-> > =C2=A0	struct tpmi_uncore_struct *uncore_root;
-> > @@ -75,6 +77,10 @@ struct tpmi_uncore_struct {
-> > =C2=A0/* Bit definitions for CONTROL register */
-> > =C2=A0#define
-> > UNCORE_MAX_RATIO_MASK				GENMASK_ULL(14, 8)
-> > =C2=A0#define
-> > UNCORE_MIN_RATIO_MASK				GENMASK_ULL(21, 15)
-> > +#define
-> > UNCORE_EFF_LAT_CTRL_RATIO_MASK			GENMASK_ULL(28, 22)
-> > +#define
-> > UNCORE_EFF_LAT_CTRL_LOW_THRESHOLD_MASK		GENMASK_ULL(38, 32)
-> > +#define UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE	BIT(39)
-> > +#define
-> > UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_MASK		GENMASK_ULL(46, 40)
-> > =C2=A0
-> > =C2=A0/* Helper function to read MMIO offset for max/min control
-> > frequency */
-> > =C2=A0static void read_control_freq(struct tpmi_uncore_cluster_info
-> > *cluster_info,
-> > @@ -89,6 +95,48 @@ static void read_control_freq(struct
-> > tpmi_uncore_cluster_info *cluster_info,
-> > =C2=A0		*value =3D FIELD_GET(UNCORE_MIN_RATIO_MASK, control)
-> > * UNCORE_FREQ_KHZ_MULTIPLIER;
-> > =C2=A0}
-> > =C2=A0
-> > +/* Helper function to read efficiency latency control values over
-> > MMIO */
-> > +static int read_eff_lat_ctrl(struct uncore_data *data, unsigned
-> > int *val, enum uncore_index index)
-> > +{
-> > +	struct tpmi_uncore_cluster_info *cluster_info;
-> > +	u64 ctrl;
-> > +
-> > +	cluster_info =3D container_of(data, struct
-> > tpmi_uncore_cluster_info, uncore_data);
-> > +	if (cluster_info->root_domain)
-> > +		return -ENODATA;
-> > +
-> > +	if (!cluster_info->elc_supported)
-> > +		return -EOPNOTSUPP;
-> > +
-> > +	ctrl =3D readq(cluster_info->cluster_base +
-> > UNCORE_CONTROL_INDEX);
-> > +
-> > +	switch (index) {
-> > +	case UNCORE_INDEX_EFF_LAT_CTRL_LOW_THRESHOLD:
-> > +		*val =3D
-> > FIELD_GET(UNCORE_EFF_LAT_CTRL_LOW_THRESHOLD_MASK, ctrl);
-> > +		*val *=3D 100;
-> > +		*val =3D DIV_ROUND_UP(*val,
-> > FIELD_MAX(UNCORE_EFF_LAT_CTRL_LOW_THRESHOLD_MASK));
-> > +		break;
-> > +
-> > +	case UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD:
-> > +		*val =3D
-> > FIELD_GET(UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_MASK, ctrl);
-> > +		*val *=3D 100;
-> > +		*val =3D DIV_ROUND_UP(*val,
-> > FIELD_MAX(UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_MASK));
-> > +		break;
-> > +
-> > +	case UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE:
-> > +		*val =3D
-> > FIELD_GET(UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE, ctrl);
-> > +		break;
-> > +	case UNCORE_INDEX_EFF_LAT_CTRL_FREQ:
-> > +		*val =3D FIELD_GET(UNCORE_EFF_LAT_CTRL_RATIO_MASK,
-> > ctrl) * UNCORE_FREQ_KHZ_MULTIPLIER;
-> > +		break;
-> > +
-> > +	default:
-> > +		return -EOPNOTSUPP;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > =C2=A0#define UNCORE_MAX_RATIO	FIELD_MAX(UNCORE_MAX_RATIO_MASK)
-> > =C2=A0
-> > =C2=A0/* Helper for sysfs read for max/min frequencies. Called under
-> > mutex locks */
-> > @@ -137,6 +185,77 @@ static int uncore_read_control_freq(struct
-> > uncore_data *data, unsigned int *valu
-> > =C2=A0	return 0;
-> > =C2=A0}
-> > =C2=A0
-> > +/* Helper function for writing efficiency latency control values
-> > over MMIO */
-> > +static int write_eff_lat_ctrl(struct uncore_data *data, unsigned
-> > int val, enum uncore_index index)
-> > +{
-> > +	struct tpmi_uncore_cluster_info *cluster_info;
-> > +	u64 control;
-> > +
-> > +	cluster_info =3D container_of(data, struct
-> > tpmi_uncore_cluster_info, uncore_data);
-> > +
-> > +	if (cluster_info->root_domain)
-> > +		return -ENODATA;
-> > +
-> > +	if (!cluster_info->elc_supported)
-> > +		return -EOPNOTSUPP;
-> > +
-> > +	switch (index) {
-> > +	case UNCORE_INDEX_EFF_LAT_CTRL_LOW_THRESHOLD:
-> > +		if (val > 100)
-> > +			return -EINVAL;
-> > +		break;
-> > +
-> > +	case UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD:
-> > +		if (val > 100)
-> > +			return -EINVAL;
-> > +		break;
-> > +
-> > +	case UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE:
-> > +		if (val > 1)
-> > +			return -EINVAL;
-> > +		break;
-> > +
-> > +	case UNCORE_INDEX_EFF_LAT_CTRL_FREQ:
-> > +		val /=3D UNCORE_FREQ_KHZ_MULTIPLIER;
-> > +		if (val >
-> > FIELD_MAX(UNCORE_EFF_LAT_CTRL_RATIO_MASK))
-> > +			return -EINVAL;
-> > +		break;
-> > +
-> > +	default:
-> > +		return -EOPNOTSUPP;
-> > +	}
-> > +
-> > +	control =3D readq(cluster_info->cluster_base +
-> > UNCORE_CONTROL_INDEX);
-> > +
-> > +	if (index =3D=3D UNCORE_INDEX_EFF_LAT_CTRL_LOW_THRESHOLD) {
-> > +		val *=3D
-> > FIELD_MAX(UNCORE_EFF_LAT_CTRL_LOW_THRESHOLD_MASK);
-> > +		val /=3D 100;
-> > +		control &=3D
-> > ~UNCORE_EFF_LAT_CTRL_LOW_THRESHOLD_MASK;
-> > +		control |=3D
-> > FIELD_PREP(UNCORE_EFF_LAT_CTRL_LOW_THRESHOLD_MASK, val);
-> > +	}
-> > +
-> > +	if (index =3D=3D UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD) {
-> > +		val *=3D
-> > FIELD_MAX(UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_MASK);
-> > +		val /=3D 100;
-> > +		control &=3D
-> > ~UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_MASK;
-> > +		control |=3D
-> > FIELD_PREP(UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_MASK, val);
-> > +	}
-> > +
-> > +	if (index =3D=3D
-> > UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE) {
-> > +		control &=3D
-> > ~UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE;
-> > +		control |=3D
-> > FIELD_PREP(UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE, val);
-> > +	}
-> > +
-> > +	if (index =3D=3D UNCORE_INDEX_EFF_LAT_CTRL_FREQ) {
-> > +		control &=3D ~UNCORE_EFF_LAT_CTRL_RATIO_MASK;
-> > +		control |=3D
-> > FIELD_PREP(UNCORE_EFF_LAT_CTRL_RATIO_MASK, val);
-> > +	}
->=20
-> Why are these not using switch/case?
->=20
-I think they can reuse. Just need to repeat readq(). Something like
-attached:
+> Move out of device_add_group() variants, instead assign static array of
+> attribute groups to .dev_groups in platform_driver structure.
+> Then use is_visible to enable only the necessary files on the platform.
+> 
+> .read() and .is_bin_visibile() have slightly different
+> implemetations on ACPI and non-ACPI system, so move them
+> to respective files.
+> 
+> Signed-off-by: Suma Hegde <suma.hegde@amd.com>
+> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+> ---
+> Changes since v4:
+> Change ->private from string pointer to u16 pointer.
+> 
+> Changes since v3:
+> This patch and next patch(9th and 10th patch in v3 series) are merged
+> and commit description is updated.
+> 
+> Changes since v2:
+> None
+> 
+> Changes since v1:
+> 1. Change is_visible to is_bin_visible in commit message
+> 1. Add parenthesis around read and is_bin_visible in commit message
+> 2. Change plat_dev to hsmp_pdev, hsmp_device to mdev
+> 3. Remove unnecessary if, else conditions in hsmp_is_sock_attr_visible
+> 4. Change un cached to un-cached
 
+> diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
+> index 74be46a64c05..d55c984a9a5a 100644
+> --- a/drivers/platform/x86/amd/hsmp/plat.c
+> +++ b/drivers/platform/x86/amd/hsmp/plat.c
+> @@ -9,6 +9,7 @@
+>  
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+> +#include <asm/amd_hsmp.h>
+>  #include <asm/amd_nb.h>
+>  
+>  #include <linux/device.h>
+> @@ -22,6 +23,8 @@
+>  #define DRIVER_NAME		"amd_hsmp"
+>  #define DRIVER_VERSION		"2.3"
+>  
+> +static u16 sock_numbers[MAX_AMD_SOCKETS] = {0, 1, 2, 3, 4, 5, 6, 7};
+> +
+>  /*
+>   * To access specific HSMP mailbox register, s/w writes the SMN address of HSMP mailbox
+>   * register into the SMN_INDEX register, and reads/writes the SMN_DATA reg.
+> @@ -61,36 +64,115 @@ static const struct file_operations hsmp_fops = {
+>  	.compat_ioctl	= hsmp_ioctl,
+>  };
+>  
+> -static int hsmp_create_non_acpi_sysfs_if(struct device *dev)
+> +static ssize_t hsmp_metric_tbl_read(struct file *filp, struct kobject *kobj,
+> +				    struct bin_attribute *bin_attr, char *buf,
+> +				    loff_t off, size_t count)
+>  {
+> -	const struct attribute_group **hsmp_attr_grps;
+> -	struct attribute_group *attr_grp;
+> -	u16 i;
+> -
+> -	hsmp_attr_grps = devm_kcalloc(dev, hsmp_pdev.num_sockets + 1,
+> -				      sizeof(*hsmp_attr_grps),
+> -				      GFP_KERNEL);
+> -	if (!hsmp_attr_grps)
+> -		return -ENOMEM;
+> +	struct hsmp_message msg = { 0 };
+> +	struct hsmp_socket *sock;
+> +	u16 sock_ind;
+> +	int ret;
+>  
+> -	/* Create a sysfs directory for each socket */
+> -	for (i = 0; i < hsmp_pdev.num_sockets; i++) {
+> -		attr_grp = devm_kzalloc(dev, sizeof(struct attribute_group),
+> -					GFP_KERNEL);
+> -		if (!attr_grp)
+> -			return -ENOMEM;
+> +	if (!bin_attr->private)
+> +		return -EINVAL;
+> +	sock_ind = *(u16 *)(bin_attr->private);
+> +	if (sock_ind >= hsmp_pdev.num_sockets)
+> +		return -EINVAL;
+>  
+> -		snprintf(hsmp_pdev.sock[i].name, HSMP_ATTR_GRP_NAME_SIZE, "socket%u", (u8)i);
+> -		attr_grp->name			= hsmp_pdev.sock[i].name;
+> -		attr_grp->is_bin_visible	= hsmp_is_sock_attr_visible;
+> -		hsmp_attr_grps[i]		= attr_grp;
+> +	sock = &hsmp_pdev.sock[sock_ind];
+> +	if (!sock)
+> +		return -EINVAL;
+>  
+> -		hsmp_create_attr_list(attr_grp, dev, i);
+> +	/* Do not support lseek(), reads entire metric table */
+> +	if (count < bin_attr->size) {
+> +		dev_err(sock->dev, "Wrong buffer size\n");
+> +		return -EINVAL;
+>  	}
+>  
+> -	return device_add_groups(dev, hsmp_attr_grps);
+> +	msg.msg_id	= HSMP_GET_METRIC_TABLE;
+> +	msg.sock_ind	= sock_ind;
+> +
+> +	ret = hsmp_send_message(&msg);
+> +	if (ret)
+> +		return ret;
+> +	memcpy_fromio(buf, sock->metric_tbl_addr, bin_attr->size);
+> +
+> +	return bin_attr->size;
+>  }
+>  
+> +static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
+> +					 struct bin_attribute *battr, int id)
+> +{
+> +	u16 sock_ind;
+> +
+> +	if (!battr->private)
+> +		return 0;
+> +	sock_ind = *(u16 *)(battr->private);
+> +
+> +	if (id == 0 && sock_ind >= hsmp_pdev.num_sockets)
+> +		return SYSFS_GROUP_INVISIBLE;
+> +
+> +	if (hsmp_pdev.proto_ver == HSMP_PROTO_VER6)
+> +		return battr->attr.mode;
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * AMD supports maximum of 8 sockets in a system.
+> + * Static array of 8 + 1(for NULL) elements is created below
+> + * to create sysfs groups for sockets.
+> + * is_bin_visible function is used to show / hide the necessary groups.
+> + */
+> +#define HSMP_BIN_ATTR(index, _list) \
+> +static struct bin_attribute attr##index = { \
+> +	.attr = { .name = HSMP_METRICS_TABLE_NAME, .mode = 0444}, \
+> +	.private = &sock_numbers[index], \
 
---=-FPINvjVEBYr1LklhMp88
-Content-Disposition: attachment; filename="reuse_switch.diff"
-Content-Transfer-Encoding: base64
-Content-Type: text/x-patch; name="reuse_switch.diff"; charset="UTF-8"
+While this is not wrong and I won't oppose if you want to do it this 
+way, .private could hold the integer directly (casts will be necessary
+to get it in/out w/o warnings).
 
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3VuY29yZS1mcmVxdWVuY3kv
-dW5jb3JlLWZyZXF1ZW5jeS10cG1pLmMgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC91bmNv
-cmUtZnJlcXVlbmN5L3VuY29yZS1mcmVxdWVuY3ktdHBtaS5jCmluZGV4IGU2MDQ3ZmJiZWE3Ni4u
-MmEzMzhkNmI4YmJmIDEwMDY0NAotLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC91bmNv
-cmUtZnJlcXVlbmN5L3VuY29yZS1mcmVxdWVuY3ktdHBtaS5jCisrKyBiL2RyaXZlcnMvcGxhdGZv
-cm0veDg2L2ludGVsL3VuY29yZS1mcmVxdWVuY3kvdW5jb3JlLWZyZXF1ZW5jeS10cG1pLmMKQEAg
-LTE5MSw1MCArMTkxLDQ0IEBAIHN0YXRpYyBpbnQgd3JpdGVfZWZmX2xhdF9jdHJsKHN0cnVjdCB1
-bmNvcmVfZGF0YSAqZGF0YSwgdW5zaWduZWQgaW50IHZhbCwgZW51bSB1CiAJY2FzZSBVTkNPUkVf
-SU5ERVhfRUZGX0xBVF9DVFJMX0xPV19USFJFU0hPTEQ6CiAJCWlmICh2YWwgPiBGSUVMRF9NQVgo
-VU5DT1JFX0VGRl9MQVRfQ1RSTF9MT1dfVEhSRVNIT0xEX01BU0spKQogCQkJcmV0dXJuIC1FSU5W
-QUw7CisKKwkJY29udHJvbCA9IHJlYWRxKGNsdXN0ZXJfaW5mby0+Y2x1c3Rlcl9iYXNlICsgVU5D
-T1JFX0NPTlRST0xfSU5ERVgpOworCQljb250cm9sICY9IH5VTkNPUkVfRUZGX0xBVF9DVFJMX0xP
-V19USFJFU0hPTERfTUFTSzsKKwkJY29udHJvbCB8PSBGSUVMRF9QUkVQKFVOQ09SRV9FRkZfTEFU
-X0NUUkxfTE9XX1RIUkVTSE9MRF9NQVNLLCB2YWwpOwogCQlicmVhazsKIAogCWNhc2UgVU5DT1JF
-X0lOREVYX0VGRl9MQVRfQ1RSTF9ISUdIX1RIUkVTSE9MRDoKIAkJaWYgKHZhbCA+IEZJRUxEX01B
-WChVTkNPUkVfRUZGX0xBVF9DVFJMX0hJR0hfVEhSRVNIT0xEX01BU0spKQogCQkJcmV0dXJuIC1F
-SU5WQUw7CisKKwkJY29udHJvbCA9IHJlYWRxKGNsdXN0ZXJfaW5mby0+Y2x1c3Rlcl9iYXNlICsg
-VU5DT1JFX0NPTlRST0xfSU5ERVgpOworCQljb250cm9sICY9IH5VTkNPUkVfRUZGX0xBVF9DVFJM
-X0hJR0hfVEhSRVNIT0xEX01BU0s7CisJCWNvbnRyb2wgfD0gRklFTERfUFJFUChVTkNPUkVfRUZG
-X0xBVF9DVFJMX0hJR0hfVEhSRVNIT0xEX01BU0ssIHZhbCk7CiAJCWJyZWFrOwogCiAJY2FzZSBV
-TkNPUkVfSU5ERVhfRUZGX0xBVF9DVFJMX0hJR0hfVEhSRVNIT0xEX0VOQUJMRToKIAkJaWYgKHZh
-bCA+IDEpCiAJCQlyZXR1cm4gLUVJTlZBTDsKKworCQljb250cm9sID0gcmVhZHEoY2x1c3Rlcl9p
-bmZvLT5jbHVzdGVyX2Jhc2UgKyBVTkNPUkVfQ09OVFJPTF9JTkRFWCk7CisJCWNvbnRyb2wgJj0g
-flVOQ09SRV9FRkZfTEFUX0NUUkxfSElHSF9USFJFU0hPTERfRU5BQkxFOworCQljb250cm9sIHw9
-IEZJRUxEX1BSRVAoVU5DT1JFX0VGRl9MQVRfQ1RSTF9ISUdIX1RIUkVTSE9MRF9FTkFCTEUsIHZh
-bCk7CiAJCWJyZWFrOwogCiAJY2FzZSBVTkNPUkVfSU5ERVhfRUZGX0xBVF9DVFJMX0ZSRVE6CiAJ
-CXZhbCAvPSBVTkNPUkVfRlJFUV9LSFpfTVVMVElQTElFUjsKIAkJaWYgKHZhbCA+IEZJRUxEX01B
-WChVTkNPUkVfRUZGX0xBVF9DVFJMX1JBVElPX01BU0spKQogCQkJcmV0dXJuIC1FSU5WQUw7CisK
-KwkJY29udHJvbCA9IHJlYWRxKGNsdXN0ZXJfaW5mby0+Y2x1c3Rlcl9iYXNlICsgVU5DT1JFX0NP
-TlRST0xfSU5ERVgpOworCQljb250cm9sICY9IH5VTkNPUkVfRUZGX0xBVF9DVFJMX1JBVElPX01B
-U0s7CisJCWNvbnRyb2wgfD0gRklFTERfUFJFUChVTkNPUkVfRUZGX0xBVF9DVFJMX1JBVElPX01B
-U0ssIHZhbCk7CiAJCWJyZWFrOwogCiAJZGVmYXVsdDoKIAkJcmV0dXJuIC1FT1BOT1RTVVBQOwog
-CX0KIAotCWNvbnRyb2wgPSByZWFkcShjbHVzdGVyX2luZm8tPmNsdXN0ZXJfYmFzZSArIFVOQ09S
-RV9DT05UUk9MX0lOREVYKTsKLQotCWlmIChpbmRleCA9PSBVTkNPUkVfSU5ERVhfRUZGX0xBVF9D
-VFJMX0xPV19USFJFU0hPTEQpIHsKLQkJY29udHJvbCAmPSB+VU5DT1JFX0VGRl9MQVRfQ1RSTF9M
-T1dfVEhSRVNIT0xEX01BU0s7Ci0JCWNvbnRyb2wgfD0gRklFTERfUFJFUChVTkNPUkVfRUZGX0xB
-VF9DVFJMX0xPV19USFJFU0hPTERfTUFTSywgdmFsKTsKLQl9Ci0KLQlpZiAoaW5kZXggPT0gVU5D
-T1JFX0lOREVYX0VGRl9MQVRfQ1RSTF9ISUdIX1RIUkVTSE9MRCkgewotCQljb250cm9sICY9IH5V
-TkNPUkVfRUZGX0xBVF9DVFJMX0hJR0hfVEhSRVNIT0xEX01BU0s7Ci0JCWNvbnRyb2wgfD0gRklF
-TERfUFJFUChVTkNPUkVfRUZGX0xBVF9DVFJMX0hJR0hfVEhSRVNIT0xEX01BU0ssIHZhbCk7Ci0J
-fQotCi0JaWYgKGluZGV4ID09IFVOQ09SRV9JTkRFWF9FRkZfTEFUX0NUUkxfSElHSF9USFJFU0hP
-TERfRU5BQkxFKSB7Ci0JCWNvbnRyb2wgJj0gflVOQ09SRV9FRkZfTEFUX0NUUkxfSElHSF9USFJF
-U0hPTERfRU5BQkxFOwotCQljb250cm9sIHw9IEZJRUxEX1BSRVAoVU5DT1JFX0VGRl9MQVRfQ1RS
-TF9ISUdIX1RIUkVTSE9MRF9FTkFCTEUsIHZhbCk7Ci0JfQotCi0JaWYgKGluZGV4ID09IFVOQ09S
-RV9JTkRFWF9FRkZfTEFUX0NUUkxfRlJFUSkgewotCQljb250cm9sICY9IH5VTkNPUkVfRUZGX0xB
-VF9DVFJMX1JBVElPX01BU0s7Ci0JCWNvbnRyb2wgfD0gRklFTERfUFJFUChVTkNPUkVfRUZGX0xB
-VF9DVFJMX1JBVElPX01BU0ssIHZhbCk7Ci0JfQotCiAJd3JpdGVxKGNvbnRyb2wsIGNsdXN0ZXJf
-aW5mby0+Y2x1c3Rlcl9iYXNlICsgVU5DT1JFX0NPTlRST0xfSU5ERVgpOwogCiAJcmV0dXJuIDA7
-Cg==
-
-
---=-FPINvjVEBYr1LklhMp88--
+-- 
+ i.
