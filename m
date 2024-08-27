@@ -1,41 +1,40 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAEE1194A6C;
-	Tue, 27 Aug 2024 22:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9EC184D34
+	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Aug 2024 22:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724796713; cv=none; b=eNSPgFPgKGMz5d617d3CWwnFjXN26ItB8pN39Oc5tHUBQ3El7WIcFMWsDO1yRm9X8d90arhhNln6V1JMxVDHmjgHrMT2Ci1hvYlNiy2cgrnR9xmxJ+tQ0VyQhyi8dznw4jBBfQt7WMePDOUllbC6+ymJtJKemGCLL81Ssj4Kn2E=
+	t=1724797499; cv=none; b=IHloqMPfaokTeFGp4NNnZT4RpMZRx0w4oF81ZAwvcNKhexdeOI/KYJoU7AzrC0nBTG6OVUveQBvvO8qsp7FLxlmRFdfGZpyghMLqHLaK+jbBm8DvUirAnIgXpWhujnucF1hgDhh/xlQ+VS/vnCuPA1IXu8MeCMK1H2q3yeTXoiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724796713; c=relaxed/simple;
-	bh=2aRkULfSU9AzagsP0qiU8aDKlhnBG97zGMg4RSuUxLU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PVMLtpioEPfrW7Y1s0lMLyhyf+zfXFMswAREi6PAVfBnfD+eD6VfQZLfLeSHTizQZqbg+knDo0etEEclGxexQ/ug/KIRJi1zVyKtYRmC9Wrc8QG/RIwKey8aXQc9bMzDIzS0LaqxiC0ZRibyx/Vkt4WkdK0UwOw4p3mN9NLryD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=WnjcOj3y; arc=none smtp.client-ip=212.227.15.19
+	s=arc-20240116; t=1724797499; c=relaxed/simple;
+	bh=7meR+qQuOptIZPBYhyeGO+ZvUsr8DyIA34CM84X6scA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=qflWLV/hIPLmSnGsPK76vvVe+HJUxNJ6WlRD7vRIei5UcfsVBfXW64SF0IP5i3FY8p3fVns+Hy/r8zXS/IgBzUmyvXYI23C6OTw6WQvMtJEJOD1kRkhcvX9ZORvab7unW8Ja3guCq1W4MtwmNH6QqXmz2d6wf3SAZKFD3jSXEhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=lL6p6p8Z; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="WnjcOj3y"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="lL6p6p8Z"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1724796694; x=1725401494; i=w_armin@gmx.de;
-	bh=CUbnzYEtHJfLP1VcoboGTihEXYQaXcwV41vG7Efm3V8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=WnjcOj3y6Z/mBoiw3tXOdjT5dd4vvbf7oUoSmRaBlzkfaGXGH1iIstF0Fe8A9rG8
-	 K2BpE6af+qM0ddgXWnK+DaKbK8wvJbNclm186adOgSbvXnE1W2i8+UrgEAk3ffQjD
-	 +Hs62U2hV0IMR8d4BWvnJ+eymoICwmU3G4SJOU0duzoR8k0VLk1UodhyeT5suoU0z
-	 Md+kEUBQr0XBbuWKnxvVWT20u3vi+E9j4/M2BcLhx06roERU/5iyurToiEC6/qMDN
-	 S0GHEtyEeAFfOGwtNW+l4+/Zb22J+f6pq2u3oKo0/aQn5l8mh8B72lfwBL016UWnG
-	 7Jh/Ydm5/opQQCXgGg==
+	s=s31663417; t=1724797494; x=1725402294; i=w_armin@gmx.de;
+	bh=7meR+qQuOptIZPBYhyeGO+ZvUsr8DyIA34CM84X6scA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
+	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=lL6p6p8ZHZHcjGYhmUe8ulYr1Bjgl3VThzu9mTO+uqS6Ake0Vuu5xblS1lEOD86x
+	 XsiuFwRTZOTmc0r8VBoLngNYKPS3yqOgOitl8GhN1ZAlW3eOv7fITCb0EThshTHEJ
+	 AgPlMSIwluBakuRA2mY5xBKKQ1krcJ3RR1UPI9fbnuyngS54sefleea/4Pk1oHvXW
+	 9ygeLkOOmC1fQ2tX6MnXJFay4DKHnjPT6Yk5UmkQEHAikj+278Xmy+Cs8USl/VH9/
+	 fuaeujis/oDBezweyWkHs0l/H2pZJzpk51xSX9ultXY3taXlA0pkZJiW5ea0Pr9xf
+	 AJ2yYl/VhUwQQsoH/Q==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MhD6W-1sDsJw2FQQ-00c1UX; Wed, 28
- Aug 2024 00:11:34 +0200
-Message-ID: <1b84518a-9f6b-4083-a26b-c85188e23cff@gmx.de>
-Date: Wed, 28 Aug 2024 00:11:31 +0200
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MI5UD-1suuyP1S3L-00DmFX; Wed, 28
+ Aug 2024 00:24:54 +0200
+Message-ID: <3c63701c-f9fc-4f98-b991-58135da3fcc3@gmx.de>
+Date: Wed, 28 Aug 2024 00:24:53 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,75 +42,61 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] hwmon: (hp-wmi-sensors) Check if WMI event data
- exists
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: james@equiv.tech, jlee@suse.com, corentin.chary@gmail.com,
- luke@ljones.dev, matan@svgalib.org, coproscefalo@gmail.com,
- Hans de Goede <hdegoede@redhat.com>, "Rafael J. Wysocki"
- <rafael@kernel.org>, lenb@kernel.org, platform-driver-x86@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-acpi@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20240822173810.11090-1-W_Armin@gmx.de>
- <20240822173810.11090-3-W_Armin@gmx.de>
- <e791f8ed-f6af-d433-5c9b-a68fc9598dcc@linux.intel.com>
-Content-Language: en-US
+Subject: Re: Add Support for the Acer Predator Triton PT14-51
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <e791f8ed-f6af-d433-5c9b-a68fc9598dcc@linux.intel.com>
+To: Rayan Margham <rayanmargham4@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
+References: <808c835b-3500-4345-a338-b0f8014d049d@gmx.de>
+ <202FA1F1-967D-4D99-94A1-9649C7C9B6F6@gmail.com>
+ <CACzB==6Hpp173CzcsOpU+epz13uDU5mpudX1xvZuMkphODTPAw@mail.gmail.com>
+ <ecba8732-fbef-4e4c-b518-d5042fd18480@gmx.de>
+ <CACzB==7=AUGXuAyDrQBRO35fap=ok7B8tSjaXY0tDPjn2qExyg@mail.gmail.com>
+ <4ad19bcd-8030-46d8-81f0-e4ca97fd3ea6@gmx.de>
+Content-Language: en-US
+In-Reply-To: <4ad19bcd-8030-46d8-81f0-e4ca97fd3ea6@gmx.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1://U4Sw6iSSfjz3bI8Qyz5EOyGLzZPQwwffGRQNyCBIeBUoN+RHB
- ciJsCDkPhD9XpLTq0N8+H+kYxdh5qbKP88bZTPUiNP/VFtd4/6XFiqkeaszWc89VdDRa/9n
- GoRNyByoi/GuOsS/VDN9bKpkBGFyLE+v+M7RiB7zrkCdSaXunopYbkGAN2O1JBfgoNEN2m7
- fogMuE4u0bJWINGUQGdUA==
+X-Provags-ID: V03:K1:m75enQD9qQRZ2aeHi6P4pmIhDnE0heRR6Enh64a/XjnlqpgVdvp
+ fA/qcb5365bAqlp57ZEJDhBsn45HrkUFeGqvAoKtydO1/6NOqSyD3jl2P50EwQCJQ/Yh6Um
+ SQFsoveTl2TcPHHq+IP6v2hrnIixhjMVBdWbITLk7vF902UQpfx8xAipwPsOIf3xBegfzWn
+ 2guG9z+ladEn/RXXk7Bkg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:l3P7y/s2z6I=;S0J3w75s6//IgmFTPtwHNrBQQ/J
- RVJcItIr+PqrCw33o9/7w1T0SGphk82+2f21HgAWtp+B8IUKBlFvnRDTrh+I13nDgDYyGjsmb
- YauEb52w5eF4SuCZ3/rCo32AFJuf5WYwtx/k4y91zNWGZkvVftwyJPJ7r27f0kS5wV8G+ggGr
- i5nb3LVEyPYy9+WXAs2/yKBcL4RaLEZridbg1YUUDBaCol1j5a62P1A8Tn21fPzoQKJdy+MPm
- 9TszEQ1T5RvHMByhWZZQVPkosnG6o5jNNqK0HS8IMabbjo3qa4j1avCOKnlZtkn+DH1Mz1eQG
- xipYvWnxfZy40DL6fTfjrDDpGvQ082l/2lF2fu+aLVqhIyG79Y09V1UecGcZmjSxf6/oBiVe1
- J5mSnXMRrxzl6PWvAo0806Jd77JXbqNzWKOJbxUbeFGL5XbnA6sIvQXfkIhpH+26b07VPJBSf
- bZzNRYOP86XqmDyhZqFMj+9bRzudPmvtNJGQ953q43Zcn6Mh+XVmCuqVVwCW9tk1n0Xk3x6Ef
- BssKLTpmGE9rCnrVC6NMsEDv6x7gV2mcwQ90cFd2wh3CS0h+koHXi4ebC4Ch9+2if2ldqhPDd
- 0A6ODFdW2F9d8pnzlhgo0A8iF9r1U61G0fcfg7BVNS2xOiARSVAmUY984FhUJBTXi1V0T5V81
- t8yiIXe2B2VFdlPTcqrGZKgnnxM29KUMoT2r+xnipUsbvWYG3U26Zd1Ckeykp67w0asZpd+15
- lYLog01LNvUquHs/Hnn0o/htIR4S6uIIWtbXIpYNVOZHFH9asxD5LWclFwkDmAmbYBd+HAgCf
- TGtPPCEvxLK6shwrIZLTHlVQ==
+UI-OutboundReport: notjunk:1;M01:P0:yg01HiiA5oc=;gxuybqVp29Bnb/5RUmNtNGtU4rm
+ DHwc38QBRfJLCOzwODPmz2odnFHLuCsQpAzgHNp/K1PvvLl0gGTqUJ0GmiHDaxHfukBHoF/a2
+ fjaV5VyaawHJBfY+2jQccbxOeCRUrhj0DhhYIpoFlG4S9yOLGA6/oLWZmWqeZn49tEhJ6O5CS
+ vLCtD/Gp2gtWJOOBPqFpdOZDnGU+YUVPYGSktwzEi2WRpIKUUduSliVm0XBhfidsgeFtk+9gS
+ ua3+B82hNFJ0iaxEsElMgDbJ/tnrqUfZ8J6y59g0c2TMAy7XPWkmDhRWuDtPKVcOLsLh4k2NJ
+ zujwDNo+qYydGpxYehZnDLFBpmHXPa2s4l0vmQBUZIvYw1ccWAT1GRog4WmOJNn3mu+yCuGf/
+ codC+ifhMHH24NI71TmXdRtya4h1EeCG5JODsxup8OELkelJxWLMOeVd6TAXi/cqQl6bmJvqA
+ H8CTAAeUbLey8zPxhSTNqOsEwEirgiu/TlQ+MjB3AB20S2DkZGMgUT7mr9R2GQaMom4zMWL3I
+ D3KLwhS6lgGu1w+Yi8Kx5Alkn4TnVVZq4BqzaE9qXVIBG9Y4L1DP15NHRJSPsKZ7FE10q6L7y
+ pYEZ/Qf4nNduo1R27zPHA0F3HIYImPu0ZCLE8eCT0oM1Fk1xyUJ13GYQoNJ/bLmmLI03LmPSC
+ xE+b2S1JcKnpJxAZ/s6tARrc1cBbtFSYi7hHlmmqfg0JROr38WmR54WSwOAK2N+BMdbHSgpja
+ T7Wewors01BlfW+Pg24X12SFg1Z8FqPZBaAmHQckMGgoOiUPuE++EdtIlPLFzAyHXV/UtSjzw
+ HG66DXGcxdJdiKv8YXHw17x5bCabvS3KYtl3YBz/HIOtA=
 
-Am 27.08.24 um 10:20 schrieb Ilpo J=C3=A4rvinen:
+Am 28.08.24 um 00:07 schrieb Armin Wolf:
 
-> On Thu, 22 Aug 2024, Armin Wolf wrote:
+> Am 25.08.24 um 18:37 schrieb Rayan Margham:
 >
->> The BIOS can choose to return no event data in response to a
->> WMI event, so the ACPI object passed to the WMI notify handler
->> can be NULL.
+>> Hi,
 >>
->> Check for such a situation and ignore the event in such a case.
+>>> Does the fan speed reporting work?
+>> No it does not, sadly, only the LED switching functionality works when
+>> the turbo button is pressed.
+>> Thanks,
+>> Rayan Margham
 >>
->> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->> ---
->>   drivers/hwmon/hp-wmi-sensors.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/hwmon/hp-wmi-sensors.c b/drivers/hwmon/hp-wmi-sens=
-ors.c
->> index 6892518d537c..d6bdad26feb1 100644
->> --- a/drivers/hwmon/hp-wmi-sensors.c
->> +++ b/drivers/hwmon/hp-wmi-sensors.c
->> @@ -1628,6 +1628,9 @@ static void hp_wmi_notify(union acpi_object *wobj=
-, void *context)
->>   	 * HPBIOS_BIOSEvent instance.
->>   	 */
->>
->> +	if (!wobj)
->> +		return;
->> +
-> I'm left to wonder why is this patch is not placed first? Can't this
-> happen regardless who gets the wobj? And in that case, should this have
-> a Fixes tag?
+> Strange. I will try to figure out how the OEM software interacts with
+> the hardware.
+> This however might take a while.
 >
-Good point, i will send a v2 series to correct this.
+> Thanks,
+> Armin Wolf
+>
+>
+Also, maybe you can try to improve the performance with thermald in the me=
+antime?
 
 Thanks,
 Armin Wolf
