@@ -1,188 +1,195 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2050.outbound.protection.outlook.com [40.107.243.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0617176FD3
-	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Aug 2024 09:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724749802; cv=none; b=WSUdN8LKoz0CX5QpZOPhrcPoUdgHH6XG6RSfg17PMAGgYSzBqioVK+A4D3UMexXweea3ViiBbI1cXFV0cWcEQ1NIx+h6QtvTqGTbWsN/+ENqwqs62g/8qPKgOu03i+fC27oelowximJu4b0M5NTh9dZqRMdTIq9x2Wvelt1FcPU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724749802; c=relaxed/simple;
-	bh=AlNxAM7JSlDCpwGL75AV4ix+qSWNPVc/q0q2TIuKoOM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ef8yaz6q6QS/r1PqgjxT5nxug7jCYq9H70VMrzn6XAa4gaH2TTPgUkEfkFo6JN5/V8L1pDBEFseqkzgutVviylBJDIjkrrxcTuCHHAi+4cXFKOeOd/mYQlI+Q2szS15rkj8CIsyxmG/L5BRAS3JaJ3E4LkB3k1kDMXsBybD1hRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MRh7dRB6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF7C19DF9F;
+	Tue, 27 Aug 2024 09:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724751443; cv=fail; b=oKLZ2EkMfWaHBkhJ2KBo7jUKk5NyhQ92rME4osBlQWMoe+b7NHrqoBdeQZSvlEId2IhpENJorBlptmQViQVIs9Xl4B3nZcVlCrqOwecSLPPOR/Ap6VG5bf2GggXFRheHzPuEGMMmin5ijNyKNDUI3ItquVh/BEsL6lzTttmQz3c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724751443; c=relaxed/simple;
+	bh=8vpOOPZvEZGcjsE0agfCiWI/s2EM2ORK/grTHW1Cv6w=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q4BkCjsv7Jk0bhRO3XZ5vjkhQEa/e4yDmjhNM7MlvdJr33XRLB9YU/QqNFQf29zQoaQ6iEbE4uksdxST22fCSirJHZbJMXIhktVFmbzpM5sBPMV9NBOC4mXE0NzvOIpXGEVZeFvB4dF8Q6pv5F7vIVtJo6k/pywyQjZ7mD6RMO4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=HmuP3BAs; arc=fail smtp.client-ip=40.107.243.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MRh7dRB6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724749798;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ms46jJfB5uJh4cdKqlH0Ud3Q2tMTteM2Uh2m3C5D2Ww=;
-	b=MRh7dRB6TAyVAYWcquVDJIILLcYS8B67wtlRfyLM3r89GLSlvfSpVR7kG1kFTFvGA7rwte
-	0/slkT0ZATpoKGS7gFEvCwmYdfTqVifmwaoZAYMxtcOu8ovVZ0qNBJv71gpgVCrgLXhUmJ
-	bAbb1Fut+0K0clhw1zBtzipMknvPm90=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-298-Vj5bJcfMPj2C28Clk3iF_A-1; Tue, 27 Aug 2024 05:09:55 -0400
-X-MC-Unique: Vj5bJcfMPj2C28Clk3iF_A-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5bed68b5ec6so4173744a12.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Aug 2024 02:09:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724749793; x=1725354593;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ms46jJfB5uJh4cdKqlH0Ud3Q2tMTteM2Uh2m3C5D2Ww=;
-        b=Z7Fs3Z5cdmWm4wdttBkXxa+EgzAnpfd91iMGOfS44YWhUafsipXPGEMCGGGBpllGn3
-         GLUCa6WYgUJ8+11fNFVB9iyV/9sRbndiT5OGGTFeEjUSmN1/qWy6m9ysV8wrV/pxpeKy
-         bIQ0QJ31JwgVMxKeQgJwy4CE4zC2e9i30x/GkmJG8z7+hQUorrY/av7c9UcuI1299mjj
-         nPD/2hzgysdmkQZbwhG0CQRhkPpf8Mur5n1PSlCdSObKIjjYpEToWxBUMzXU/SqmQ0TT
-         cS9Cl0mT1HHPw0k0CHvdJko1d5nmP6LCJG7LBpJYSCkWOspUj12iMQduq1XMNRK8KqWg
-         sB4w==
-X-Forwarded-Encrypted: i=1; AJvYcCVQRVxj/6JIFBpnqgGn558GjBK79w9qrmU7++YmqpQdFnr0hbRkMm96+aBV6tTiTuTD4O75Zt43GQ9CX5RcuhA8KiwR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys3cm8F62XqViZ0rIGqAFff/0SuyMR1V0cqT0R/38feN/jSGCu
-	ITBmsmJiU70iGx7gUNF4IK6+fcZ5BvwnyJSvpMZ8QKAu9NYwQGoQSD9kuABk2Mmy7DF1hWb11Fq
-	iS3UjTW2+h9JJOT4Ncm9/6JdigtZoh1JGSmJzIifuMuDhNJq4UfebXDRUcULTl1goxGpmIP1YCC
-	v1QYo=
-X-Received: by 2002:a05:6402:51ca:b0:5c0:902c:e191 with SMTP id 4fb4d7f45d1cf-5c0902ce1c9mr7827505a12.9.1724749793192;
-        Tue, 27 Aug 2024 02:09:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHwOra81V8c3KY1B779MsRtLcVHvekiVbrw4f2RdlUw7ZlNtoJVcFgjUlFEicTeyMHPdiVXFA==
-X-Received: by 2002:a05:6402:51ca:b0:5c0:902c:e191 with SMTP id 4fb4d7f45d1cf-5c0902ce1c9mr7827475a12.9.1724749792621;
-        Tue, 27 Aug 2024 02:09:52 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c0bb481933sm761463a12.81.2024.08.27.02.09.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Aug 2024 02:09:52 -0700 (PDT)
-Message-ID: <9566460c-4d0f-4ead-9fa1-a265c936c3d9@redhat.com>
-Date: Tue, 27 Aug 2024 11:09:51 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="HmuP3BAs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=zPI9elr/01BguvfXGxqdHwT2c/om/oO7L8xBBXIxEC4BgwmGQHp3tbqBtyGKR+f8oQMf+0KHCvawhqCzwvA7TVCgz0C7z4bjY6BsZohYskXvJsKhEUo6xd7TYXU7lSHHaOBkVRCnqGSwLSRvnLAKhOI5anb01CGcVlYxj56c4gJy02z50LCu+JNI8WIhj0cxUuRVYrXjXruYegSuixwIPmuY9zdYukskEu63HC2J0o1tkfucMoUTFlE5Sfd4XFkK+HDqT24mwP8lk6XRLIKR1SrJ3R1HGLWVCJq6re/UD62JuT57NulA++axPxkRWICv6yfNK47i7imdDP4W8IilYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5GpQrVPkG7qVwuGt8iPfF3Gda62wIi2COZkLUdNdTlY=;
+ b=PcUbCEdFMqqBxRutmAL7cbzZgtaYznqeGS99QZGRUmUKI9etdnaSYOHc32YB3b0QUAkqB1+8KbJIRDhILv+cEsfEC6l/3TMs+1QTp3fASOAXBfQcUpgb5cV+tg6/KWj2hPaiLeYDe0/9WFFAeD5U6wuqa1mui8RNjvc1cA7wCday1VLSJ6DkHvsHRmD6WSXYJeUvwfqfDSEo3G46nPqvx8alZk0D/NFa54bjz7rbYv8CzkQI7X6vVgmU6WczjQO3+4rm4KI5qZ9zbTFDCbIqRmy0sWwYxVxG4S9oJdXuAGiuN1IpLjiP0oeEA1FX7ya7NogNGsrIda5N1WsLTKgasA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5GpQrVPkG7qVwuGt8iPfF3Gda62wIi2COZkLUdNdTlY=;
+ b=HmuP3BAstrMR1FIK6hI2k+erD6cd6bx4PZfZmjgs77dkEsYJtSDZspT0hwhc83VSpO6RKWbWBLJQ7J2qgZADfGW2nOurMFux3oaV8LAPcjTJFL96fXBp1kz57iodcJJitRg+QDU3vcnssIxzIC5iRWyyv6y2Pj+VAOeqU+l0QTM=
+Received: from BL1PR13CA0284.namprd13.prod.outlook.com (2603:10b6:208:2bc::19)
+ by DS0PR12MB7946.namprd12.prod.outlook.com (2603:10b6:8:151::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.24; Tue, 27 Aug
+ 2024 09:37:16 +0000
+Received: from BL02EPF00021F68.namprd02.prod.outlook.com
+ (2603:10b6:208:2bc:cafe::fe) by BL1PR13CA0284.outlook.office365.com
+ (2603:10b6:208:2bc::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.16 via Frontend
+ Transport; Tue, 27 Aug 2024 09:37:16 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL02EPF00021F68.mail.protection.outlook.com (10.167.249.4) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7918.13 via Frontend Transport; Tue, 27 Aug 2024 09:37:16 +0000
+Received: from pyuan-Chachani-VN.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 27 Aug 2024 04:37:11 -0500
+From: Perry Yuan <perry.yuan@amd.com>
+To: <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>,
+	<Mario.Limonciello@amd.com>, <Borislav.Petkov@amd.com>,
+	<kprateek.nayak@amd.com>
+CC: <Alexander.Deucher@amd.com>, <Xinmei.Huang@amd.com>,
+	<bharathprabhu.perdoor@amd.com>, <poonam.aggrwal@amd.com>, <Li.Meng@amd.com>,
+	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<Xiaojian.Du@amd.com>
+Subject: [PATCH 00/11] Introduce New AMD Heterogeneous Core Driver
+Date: Tue, 27 Aug 2024 17:36:48 +0800
+Message-ID: <cover.1724748733.git.perry.yuan@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bug report] platform/x86: thinkpad_acpi: Add Thinkpad Edge E531
- fan support
-To: Dan Carpenter <dan.carpenter@linaro.org>,
- Matthias Fetzer <kontakt@matthias-fetzer.de>
-Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-References: <f99e558d-c62a-41eb-93b3-cf00c016d907@stanley.mountain>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <f99e558d-c62a-41eb-93b3-cf00c016d907@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF00021F68:EE_|DS0PR12MB7946:EE_
+X-MS-Office365-Filtering-Correlation-Id: da594d49-9ca3-4cf7-0b66-08dcc67bd6a6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ponWx6bjcFLNXh9CZ0GMN9D9AyZ2WWSJ3bNxs8lAQLOrqvfQCdR6uRjTrMEs?=
+ =?us-ascii?Q?VQ3yBLD49ZOGUOqRs0oO3DU5hsf3K6eqjKRYxrbP85Fn9HzaD7cajVhAdrAm?=
+ =?us-ascii?Q?7p42tvL3i0qkXeYWNgWwgjperY0W9aX17wLbgwT8kay96Pqmt4YsZMYtLNkz?=
+ =?us-ascii?Q?iQ5c3/MNCaTeYxNFLC9oi32XanBcnhOkL32UQqWGq7Nu1mmqg5CYd8Uevr/J?=
+ =?us-ascii?Q?gZ6MX/iv53MBGqvhcwo2WX2PQ1l6YYHCIdAlkogxRdUsZDcD472rjdFdEnQz?=
+ =?us-ascii?Q?xHhEpeuWR4ImCYfNvAtE3bRCr5dNTuW09rmaFAmHaEJt9IgmXKvvb+ThSiME?=
+ =?us-ascii?Q?j+AEDLsfHiFOesZoQuq5iul1wGs+DN7J+Fo3kuUi0jPrm0Ymg4D+EIQjftkJ?=
+ =?us-ascii?Q?iev8uzsFLRTICpFZE5121V04OWOwm9HWpWuwQNN+/1nR2PNsBpMm1Z5upouY?=
+ =?us-ascii?Q?e7cnEX0sxjwPrTCJIv6eoS5lT1Yvx0mww7MyCyWoGZDOh/d3H02MM4r5qAdd?=
+ =?us-ascii?Q?U0FFztevPulRNng/k2z706/WPiXXqm5k2sUAXrbYngFLgGBVtIvuPIigkQOa?=
+ =?us-ascii?Q?nywDFYT5zK3R9DTJzjxH2JENJDTdlJ2Z6JWEvu/DaYlbFOewH9WPELgdNOu9?=
+ =?us-ascii?Q?Edd2kw5f5kgM0Shn/zq8tYe+k3cGbPDMf7gg8DrnrqoNG3aNbSqCkfOkL7Fe?=
+ =?us-ascii?Q?fJEPnpW0wtMGZmWh5YWmGQnbzNCU8gzFvXG+/v3q4aitUtpBwxB0+ZDpfz6X?=
+ =?us-ascii?Q?SPAJa06qtRS4tB41m9Neny4w08e4AwE8n/impxDQBRSWVJ2eFNEYFcCjQ4G5?=
+ =?us-ascii?Q?S6oH/KvNCBvdxuplbaxB20fY98xiSDxYcngyP9Yzilma3dri2Y0pJjXd4Ifs?=
+ =?us-ascii?Q?raz1qyiC3qD14iNnnpMwfpu9ekAqWaiYWxESa1a7EyX0hf9499kNkRsG/vW6?=
+ =?us-ascii?Q?OkyUWfjO3T6XhsTcobe+IqB5TxduH5KmHo+k7W6agWGD92BLtdw0Z7pAsjWz?=
+ =?us-ascii?Q?opJB6U860tdQvrbAY1bAgffZ+BtoPCTDXyAWhEKrANsqW7cvMAC498qMyair?=
+ =?us-ascii?Q?h+uXuL4NL5V7UypUguAyaziGPJtglmioNyFT1W5Tmp4jMRkzwW8Ar3zDTTIo?=
+ =?us-ascii?Q?U3dyKJsnxDjc6SRouQbnl6K72UYRjg2xP867XNnEetJV1oaZJ6UArGEB+cKE?=
+ =?us-ascii?Q?pbUKnLLqz8bMysCPqaA3MRRa56flp7l2JjXDiEni6cerWVsDhWU4YprbeeNk?=
+ =?us-ascii?Q?q9PUp1E0k2xogFMLQEsGrSBBMPPzD+74Rrx2FeDHXycNrpa7HTQeKsVbR1+v?=
+ =?us-ascii?Q?GiBuabfxnEZYz1sueekHAJVrdaEcyGN/aKmV++bsVUO3o//3kpXBTOo/fTBS?=
+ =?us-ascii?Q?OUyH/YkdQkh5dzpa+q3em1V0Ov2Zp2bQZpdyCs5TL1+o+WEKbyXvwWSTIl6Y?=
+ =?us-ascii?Q?NhDgWK09pPG4qEqAh//cNzEbuqzasE8v?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2024 09:37:16.3001
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: da594d49-9ca3-4cf7-0b66-08dcc67bd6a6
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF00021F68.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7946
 
-Hi Dan,
+The AMD Heterogeneous core design and Hardware Feedback Interface (HFI)
+provide behavioral classification and a dynamically updated ranking table
+for the scheduler to use when choosing cores for tasks.
 
-On 8/27/24 10:45 AM, Dan Carpenter wrote:
-> Hello Matthias Fetzer,
-> 
-> Commit 57d0557dfa49 ("platform/x86: thinkpad_acpi: Add Thinkpad Edge
-> E531 fan support") from Aug 16, 2024 (linux-next), leads to the
-> following Smatch static checker warning:
-> 
-> 	drivers/platform/x86/thinkpad_acpi.c:8387 fan_set_enable()
-> 	error: uninitialized symbol 's'.
-> 
-> drivers/platform/x86/thinkpad_acpi.c
->     8319 static int fan_set_enable(void)
->     8320 {
->     8321         u8 s;
->     8322         int rc;
->     8323 
->     8324         if (!fan_control_allowed)
->     8325                 return -EPERM;
->     8326 
->     8327         if (mutex_lock_killable(&fan_mutex))
->     8328                 return -ERESTARTSYS;
->     8329 
->     8330         switch (fan_control_access_mode) {
->     8331         case TPACPI_FAN_WR_ACPI_FANS:
->     8332         case TPACPI_FAN_WR_TPEC:
->     8333                 rc = fan_get_status(&s);
->     8334                 if (rc)
->     8335                         break;
->     8336 
->     8337                 /* Don't go out of emergency fan mode */
->     8338                 if (s != 7) {
->     8339                         s &= 0x07;
->     8340                         s |= TP_EC_FAN_AUTO | 4; /* min fan speed 4 */
->     8341                 }
->     8342 
->     8343                 if (!acpi_ec_write(fan_status_offset, s))
->     8344                         rc = -EIO;
->     8345                 else {
->     8346                         tp_features.fan_ctrl_status_undef = 0;
->     8347                         rc = 0;
->     8348                 }
->     8349                 break;
->     8350 
->     8351         case TPACPI_FAN_WR_ACPI_SFAN:
->     8352                 rc = fan_get_status(&s);
->     8353                 if (rc)
->     8354                         break;
->     8355 
->     8356                 s &= 0x07;
->     8357 
->     8358                 /* Set fan to at least level 4 */
->     8359                 s |= 4;
->     8360 
->     8361                 if (!acpi_evalf(sfan_handle, NULL, NULL, "vd", s))
->     8362                         rc = -EIO;
->     8363                 else
->     8364                         rc = 0;
->     8365                 break;
->     8366 
->     8367         case TPACPI_FAN_WR_ACPI_FANW:
->     8368                 if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x05)) {
->     8369                         rc = -EIO;
->     8370                         break;
->     8371                 }
->     8372                 if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0x00)) {
->     8373                         rc = -EIO;
->     8374                         break;
->     8375                 }
->     8376 
->     8377                 rc = 0;
-> 
-> s isn't set on this path
-> 
->     8378                 break;
->     8379 
->     8380         default:
->     8381                 rc = -ENXIO;
->     8382         }
->     8383 
->     8384         mutex_unlock(&fan_mutex);
->     8385 
->     8386         if (!rc)
-> --> 8387                 vdbg_printk(TPACPI_DBG_FAN,
->     8388                         "fan control: set fan control register to 0x%02x\n",
->     8389                         s);
->                                  ^
-> Here
-> 
->     8390         return rc;
->     8391 }
+Threads are classified during runtime into enumerated classes.
+Currently, the driver supports 3 classes (0 through 2). These classes
+represent thread performance/power characteristics that may benefit from
+special scheduling behaviors. The real-time thread classification is
+consumed by the operating system and is used to inform the scheduler of
+where the thread should be placed for optimal performance or energy efficiency.
 
-Thank you for reporting this.
+The thread classification helps to select CPU from a ranking table that describes
+an efficiency and performance ranking for each classification from two dimensions.
 
-Since this is just a debug print I think it is best to fix this by just
-initializing s to 0 when it is declared and then just log 0
-in the TPACPI_FAN_WR_ACPI_FANW case.
+The ranking data provided by the ranking table are numbers ranging from 0 to 255,
+where a higher performance value indicates higher performance capability and a higher
+efficiency value indicates greater efficiency. All the CPU cores are ranked into
+different class IDs. Within each class ranking, the cores may have different ranking
+values. Therefore, picking from each classification ID allows the scheduler to select
+the best core while threads are classified into the specified workload class.
+The cores ranking table is provided with PCCT subspace type 4 shared memory, which
+includes the memory base address and length
 
-Anyone got any better suggestions ?
+The series is based off linux-pm/bleeding-edge branch firstly,
+will be rebased to platform-drivers-x86 in v2. 
 
-Regards,
+Thanks and BR,
+Perry.
 
-Hans
 
+Perry Yuan (11):
+  Documentation: x86: Add AMD Hardware Feedback Interface documentation
+  MAINTAINERS: Add maintainer entry for AMD Hardware Feedback Driver
+  x86/cpufeatures: add X86_FEATURE_WORKLOAD_CLASS feature bit
+  x86/msr-index: define AMD heterogeneous CPU related MSR
+  platform/x86: hfi: Introduce AMD Hardware Feedback Interface Driver
+  platform/x86/: hfi: parse CPU core ranking data from shared memory
+  platform/x86/: hfi: init per-cpu scores for each class
+  platform/x86/: hfi: add online and offline callback support
+  platform/x86/: hfi: add power management callback
+  x86/process: Clear hardware feedback history for AMD processors
+  x86/cpu: Enable SD_ASYM_PACKING for DIE Domain on AMD Processors
+
+ Documentation/arch/x86/amd-hfi.rst    | 116 +++++
+ Documentation/arch/x86/index.rst      |   1 +
+ MAINTAINERS                           |   9 +
+ arch/x86/include/asm/cpufeatures.h    |   1 +
+ arch/x86/include/asm/hreset.h         |   6 +
+ arch/x86/include/asm/msr-index.h      |   5 +
+ arch/x86/kernel/cpu/common.c          |  18 +
+ arch/x86/kernel/cpu/scattered.c       |   1 +
+ arch/x86/kernel/process_32.c          |   3 +
+ arch/x86/kernel/process_64.c          |   3 +
+ arch/x86/kernel/smpboot.c             |   3 +-
+ drivers/platform/x86/amd/Kconfig      |   1 +
+ drivers/platform/x86/amd/Makefile     |   1 +
+ drivers/platform/x86/amd/hfi/Kconfig  |  21 +
+ drivers/platform/x86/amd/hfi/Makefile |   7 +
+ drivers/platform/x86/amd/hfi/hfi.c    | 665 ++++++++++++++++++++++++++
+ 16 files changed, 860 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/arch/x86/amd-hfi.rst
+ create mode 100644 arch/x86/include/asm/hreset.h
+ create mode 100644 drivers/platform/x86/amd/hfi/Kconfig
+ create mode 100644 drivers/platform/x86/amd/hfi/Makefile
+ create mode 100644 drivers/platform/x86/amd/hfi/hfi.c
+
+-- 
+2.34.1
 
