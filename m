@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DAE3182B2;
-	Tue, 27 Aug 2024 10:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2762E4C634;
+	Tue, 27 Aug 2024 10:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724754784; cv=none; b=u/R6GfpdpXsGdnLeky8+gKw6pcrXULIoG0RaKG+qq9Tqr5b6/Rmmd4Avt6E3HB7jcVIO/tJFtBzLFoM35W0e6W7DIJAKrEnP2BvCkpr5t3rPu9AwTSdbh2ao8s5Hgde7wS60YAc4SrlXFRfstaXLVW0PQx0r8JJl9CKikjkBEZ8=
+	t=1724756025; cv=none; b=cN42hWL8XlIS780vI1mGXGx4I9qCmAWEkwjN0aN1msMvkIbQ8ZMMt8J15PE9KJOlaRbu5icMXH+EbVKytp/8OMNMVE3RgIxn+iERGKqeJrTzdqz1s8HDrn2ringxE+WjrtRmLrb+mIY42ShRWvbEvq5a6yj3TRKub53+d6xKj8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724754784; c=relaxed/simple;
-	bh=XKrROJB0xH11nSWZB7HwBkAn4vyjBq3hOmThW6LISgg=;
+	s=arc-20240116; t=1724756025; c=relaxed/simple;
+	bh=0cwnZgpNLcFVVJ9Sb3+sgkuw4pLRegm1J+e48W5+bIc=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=UlMRpROeKeTKGvsHSI51oRSctLQZjz8D9+3A6FIAYvkcuHWyC+dF3YIFCB03Pqv6YUIyXO+X3WjgB6lzKxILp5RS2XmLTWFIgp2HQI+XjGFr/RAnkNqdovY6yYFCFvN7UhqotsjQ8vnYI8Y+jE8hXXn5NoKobVpa0XLI/4olNUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HefUqh7l; arc=none smtp.client-ip=192.198.163.12
+	 MIME-Version:Content-Type; b=soWpU89H7WKxjvY7gExE+jKvYFS4MFSdvFjEuHpzmBdX5KMXY/LwjZsnOS/nCuwEPWV150dfSHzT4Jium/fpo21bGj0pbZ+mIhT3/JN5SARn6tipWpKgRaIP9vCCOftDZ0Gy5RDrWKOqHsGQ2eJRVVWL9INutm+enk7NZR0aOB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NtwuoXbU; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HefUqh7l"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NtwuoXbU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724754782; x=1756290782;
+  t=1724756024; x=1756292024;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=XKrROJB0xH11nSWZB7HwBkAn4vyjBq3hOmThW6LISgg=;
-  b=HefUqh7lZHNFpR5p6IgUs43WIHg4xSVfa1fc76fH7Ab72xpu8UJDrw3h
-   LE+bPnTHrfv5OISYxBSpqHwyM25xbIc9xqdzK+IDBJM7INFINfXb9X/Nv
-   6z0qN7dIZBjElhWZnIwxfTlDi2ZJwXJ5H6p1sasbgaqNAi6brBlX+Q+OF
-   WH+mUAqAXLK1UGzVgIcIDpS1/gZDzewqmyuVI73c20c4ImieoKnxVIhx2
-   ICUB5pSZIesIrHrZUVQIpKE5/uccSeSKXIIe104jgZkUBPa5xEpKk4ykJ
-   eNqg7/SyedN1eRaELyvsY0Qcq0P2pbQ/Ub8JMQ39ctxOTAtnOhTw/oREN
+  bh=0cwnZgpNLcFVVJ9Sb3+sgkuw4pLRegm1J+e48W5+bIc=;
+  b=NtwuoXbUh3mFaw82AccsT+m3+LUw46Zph7f8aeMxqLMB1Lx74osaJ+B4
+   VHSIzusyLHafaATS5T+VzPB8njJWx0lHic0DIJzaQLt/DqKCujJIdn4Jr
+   Vz20YePGwCv3xa1PHNF5vRGSpIu9u2ZyRKQc5Tpgj6Y1B7WOiyoz3gaIi
+   KgFjsRtystQNv2u7y55/DPM2duSvHjfGMLXuK7Q2yyGc9J3m3JmRgTSXm
+   YTB4+xyo939kOJxNcxLubEKqp5gnNDIN6aYdGmqJ+5UHjN+fxiXj/sVKe
+   GUVSjrvpYfvGJyB0qNATny/GhJPaudMmYqT9EvxdE576XlV0WtugRSbyb
    A==;
-X-CSE-ConnectionGUID: VIm32m6+SuaBsAzTXU+Crw==
-X-CSE-MsgGUID: plPoBSyZTQOby4wao4GXZg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11176"; a="27102893"
+X-CSE-ConnectionGUID: yn9r8z3UR/a/1MrQWM7Hvg==
+X-CSE-MsgGUID: gaoNVIDvTciAiHr7VKwk1Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11176"; a="23378903"
 X-IronPort-AV: E=Sophos;i="6.10,180,1719903600"; 
-   d="scan'208";a="27102893"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 03:33:02 -0700
-X-CSE-ConnectionGUID: NAmmIA8cRam6GOvsnLdwAA==
-X-CSE-MsgGUID: 2E2d8ggLRP+S1L6nKp9xgQ==
+   d="scan'208";a="23378903"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 03:53:43 -0700
+X-CSE-ConnectionGUID: 2JrTYpy2QAm9jY1+zcY5jw==
+X-CSE-MsgGUID: +KdlvFXJSXe7SGJFPdy0tQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,180,1719903600"; 
-   d="scan'208";a="86004060"
+   d="scan'208";a="100323888"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.17])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 03:32:57 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 03:53:39 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 27 Aug 2024 13:32:53 +0300 (EEST)
+Date: Tue, 27 Aug 2024 13:53:34 +0300 (EEST)
 To: Perry Yuan <perry.yuan@amd.com>
 cc: Hans de Goede <hdegoede@redhat.com>, Mario.Limonciello@amd.com, 
     Borislav.Petkov@amd.com, kprateek.nayak@amd.com, Alexander.Deucher@amd.com, 
@@ -52,11 +52,11 @@ cc: Hans de Goede <hdegoede@redhat.com>, Mario.Limonciello@amd.com,
     poonam.aggrwal@amd.com, Li.Meng@amd.com, 
     platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
     Xiaojian.Du@amd.com
-Subject: Re: [PATCH 07/11] platform/x86/: hfi: init per-cpu scores for each
- class
-In-Reply-To: <b913765989396d62f5184d32932250ee434cd0da.1724748733.git.perry.yuan@amd.com>
-Message-ID: <2c1a18c9-6ceb-e135-876f-f832f5696124@linux.intel.com>
-References: <cover.1724748733.git.perry.yuan@amd.com> <b913765989396d62f5184d32932250ee434cd0da.1724748733.git.perry.yuan@amd.com>
+Subject: Re: [PATCH 08/11] platform/x86/: hfi: add online and offline callback
+ support
+In-Reply-To: <2661e74beceb9198d0baefe1f145080ef2b812cb.1724748733.git.perry.yuan@amd.com>
+Message-ID: <0242c3fa-74b8-63d5-dc2d-ae2f2519a281@linux.intel.com>
+References: <cover.1724748733.git.perry.yuan@amd.com> <2661e74beceb9198d0baefe1f145080ef2b812cb.1724748733.git.perry.yuan@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -69,162 +69,155 @@ On Tue, 27 Aug 2024, Perry Yuan wrote:
 
 > From: Perry Yuan <Perry.Yuan@amd.com>
 > 
-> Initialize per cpu score `amd_hfi_ipcc_scores` which store energy score
-> and performance score data for each class.
+> There are some firmware parameters that need to be configured
+> when a CPU core is brought online or offline.
 > 
-> `Classic core` and `Dense core` are ranked according to those values as
-> energy efficiency capability or performance capability.
-> OS scheduler will pick cores from the ranking list on each class ID for
-> the thread which provide the class id got from hardware feedback
-> interface.
+> when CPU is online, it will initialize the workload classification
+> parameters to CPU firmware which will trigger the workload class ID
+> updating function.
+> 
+> Once the CPU is going to offline, it will need to disable the workload
+> classification function and clear the history.
 > 
 > Signed-off-by: Perry Yuan <Perry.Yuan@amd.com>
 > ---
->  drivers/platform/x86/amd/hfi/hfi.c | 65 ++++++++++++++++++++++++++++++
->  1 file changed, 65 insertions(+)
+>  drivers/platform/x86/amd/hfi/hfi.c | 90 ++++++++++++++++++++++++++++++
+>  1 file changed, 90 insertions(+)
 > 
 > diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
-> index 50f6ca9c148a..cd5f2b708ebf 100644
+> index cd5f2b708ebf..57b642c4c522 100644
 > --- a/drivers/platform/x86/amd/hfi/hfi.c
 > +++ b/drivers/platform/x86/amd/hfi/hfi.c
-> @@ -111,6 +111,7 @@ struct amd_hfi_data {
->  	raw_spinlock_t		table_lock;
->  	struct acpi_subtable_header	*pcct_entry;
->  	struct amd_hfi_metadata		*hfi_meta;
-> +	raw_spinlock_t		hfi_data_lock;
->  };
+> @@ -154,6 +154,7 @@ static int __percpu *amd_hfi_ipcc_scores;
 >  
->  /**
-> @@ -130,6 +131,7 @@ struct amd_hfi_classes {
->   * struct amd_hfi_cpuinfo - HFI workload class info per CPU
->   * @cpu:		cpu index
->   * @cpus:		cpu mask of cpus
-> + * @apic_id:		apic id of the current cpu
->   * @class_index:	workload class ID index
->   * @nr_classa:		max number of workload class supported
->   * @amd_hfi_classes:	current cpu workload class ranking data
-> @@ -139,6 +141,7 @@ struct amd_hfi_classes {
->  struct amd_hfi_cpuinfo {
->  	int		cpu;
->  	cpumask_var_t	cpus;
-> +	u32		apic_id;
->  	s16		class_index;
->  	u8		nr_class;
->  	struct amd_hfi_classes	*amd_hfi_classes;
-> @@ -146,6 +149,12 @@ struct amd_hfi_cpuinfo {
->  
->  static DEFINE_PER_CPU(struct amd_hfi_cpuinfo, amd_hfi_cpuinfo) = {.class_index = -1};
->  
-> +static DEFINE_MUTEX(hfi_cpuinfo_lock);
-> +static int __percpu *amd_hfi_ipcc_scores;
-> +
-> +static int amd_set_hfi_ipcc_score(struct amd_hfi_cpuinfo *info, int cpu);
-> +static int update_hfi_ipcc_scores(struct amd_hfi_data *amd_hfi_data);
+>  static int amd_set_hfi_ipcc_score(struct amd_hfi_cpuinfo *info, int cpu);
+>  static int update_hfi_ipcc_scores(struct amd_hfi_data *amd_hfi_data);
+> +static int amd_hfi_set_state(unsigned int cpu, bool state);
 
-Looks unnecessary forward declarations. In general, we try to arrange code 
-so that forward declarations are not required.
+Unnecessary.
 
-> +
 >  static int find_cpu_index_by_apicid(unsigned int target_apicid)
 >  {
->  	int cpu_index;
-> @@ -293,6 +302,40 @@ static void amd_hfi_remove(struct platform_device *pdev)
->  
->  	mutex_destroy(&dev->lock);
+> @@ -318,6 +319,87 @@ static int amd_set_hfi_ipcc_score(struct amd_hfi_cpuinfo *hfi_cpuinfo, int cpu)
+>  	return 0;
 >  }
-> +
-> +static int amd_set_hfi_ipcc_score(struct amd_hfi_cpuinfo *hfi_cpuinfo, int cpu)
+>  
+> +static int amd_hfi_set_state(unsigned int cpu, bool state)
 > +{
-> +	int i, *hfi_scores;
-> +	u8 nr_classes = hfi_cpuinfo->nr_class;
-
-Reverse xmas tree order.
-
-> +
-> +	hfi_scores = per_cpu_ptr(amd_hfi_ipcc_scores, cpu);
-> +	if (!hfi_scores)
-> +		return -ENODEV;
-> +
-> +	for (i = 0;  i < nr_classes; i++)
-
-Extra space.
-
-> +		WRITE_ONCE(hfi_scores[i], hfi_cpuinfo->amd_hfi_classes[i].perf);
-> +
-> +	return 0;
-> +}
-> +
-> +static int update_hfi_ipcc_scores(struct amd_hfi_data *amd_hfi_data)
-> +{
-> +	int cpu;
 > +	int ret;
 > +
-> +	raw_spin_lock_irq(&amd_hfi_data->hfi_data_lock);
-
-Again, this is called from .probe so why you need a raw spinlock???
-
-> +	for_each_online_cpu(cpu) {
-> +		struct amd_hfi_cpuinfo *hfi_cpuinfo = per_cpu_ptr(&amd_hfi_cpuinfo, cpu);
+> +	ret = wrmsrl_on_cpu(cpu, AMD_WORKLOAD_CLASS_CONFIG, state);
+> +	if (ret)
+> +		return ret;
 > +
-> +		ret = amd_set_hfi_ipcc_score(hfi_cpuinfo, cpu);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +	raw_spin_unlock_irq(&amd_hfi_data->hfi_data_lock);
-> +
-> +	return 0;
+> +	return wrmsrl_on_cpu(cpu, AMD_WORKLOAD_HRST, 0x1);
 > +}
 > +
->  static int amd_hfi_metadata_parser(struct platform_device *pdev,
->  		struct amd_hfi_data *amd_hfi_data)
->  {
-> @@ -344,6 +387,19 @@ static int amd_hfi_metadata_parser(struct platform_device *pdev,
->  	return ret;
->  }
->  
-> +static int alloc_amd_hfi_ipcc_scores(struct amd_hfi_data *amd_hfi_data)
+> +/*
+> + * amd_hfi_online() - Enable workload classification on @cpu
+> + * @cpu: CPU in which the workload classification will be enabled
+> + *
+> + */
+> +static int amd_hfi_online(unsigned int cpu)
 > +{
-> +	struct amd_hfi_metadata *hfi_meta = amd_hfi_data->hfi_meta;
+> +	struct amd_hfi_cpuinfo *hfi_info = per_cpu_ptr(&amd_hfi_cpuinfo, cpu);
+> +	struct amd_hfi_classes *hfi_classes;
+> +	int ret;
 > +
-> +	amd_hfi_ipcc_scores = __alloc_percpu(sizeof(*amd_hfi_ipcc_scores) *
-> +			hfi_meta->n_classes,
-> +			sizeof(*amd_hfi_ipcc_scores));
+> +	if (WARN_ON_ONCE(!hfi_info))
 
-Align these continuation lines better.
+Can this ever trigger??
 
--- 
- i.
+> +		return -EINVAL;
 
-> +	if (WARN_ON(!amd_hfi_ipcc_scores))
+Definitely wrong error code to return since this has nothing to do with 
+user input being invalid.
+
+> +	if (!zalloc_cpumask_var(&hfi_info->cpus, GFP_KERNEL))
 > +		return -ENOMEM;
 > +
+> +	mutex_lock(&hfi_cpuinfo_lock);
+
+Use guard().
+
+> +	cpumask_set_cpu(cpu, hfi_info->cpus);
+> +
+> +	/*
+> +	 * Check if @cpu as an associated, initialized and ranking data must be filled
+> +	 */
+> +	hfi_classes = hfi_info->amd_hfi_classes;
+> +	if (!hfi_classes)
+> +		goto unlock;
+> +
+> +	/* Enable the workload classification interface */
+> +	ret = amd_hfi_set_state(cpu, true);
+> +	if (ret)
+> +		pr_err("wct enable failed for cpu %d\n", cpu);
+
+Use %u for unsigned int.
+
+> +
+> +	mutex_unlock(&hfi_cpuinfo_lock);
+> +	return 0;
+> +
+> +unlock:
+> +	free_cpumask_var(hfi_info->cpus);
+> +	mutex_unlock(&hfi_cpuinfo_lock);
+> +	return ret;
+> +}
+> +
+> +/*
+> + * amd_hfi_offline() - Disable workload classification on @cpu
+> + * @cpu: CPU in which the workload classification will be disabled
+> + *
+> + * Remove @cpu from those covered by its HFI instance.
+> + *
+> + */
+> +static int amd_hfi_offline(unsigned int cpu)
+> +{
+> +	struct amd_hfi_cpuinfo *hfi_info = &per_cpu(amd_hfi_cpuinfo, cpu);
+> +	int ret;
+> +
+> +	if (WARN_ON_ONCE(!hfi_info))
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&hfi_cpuinfo_lock);
+> +
+> +	/* Disable the workload classification interface */
+> +	ret = amd_hfi_set_state(cpu, false);
+> +	if (ret)
+> +		pr_err("wct disable failed for cpu %d\n", cpu);
+
+%u
+
+> +
+> +	mutex_unlock(&hfi_cpuinfo_lock);
+> +
+> +	free_cpumask_var(hfi_info->cpus);
+> +
 > +	return 0;
 > +}
 > +
->  static const struct acpi_device_id amd_hfi_platform_match[] = {
->  	{ "AMDI0104", 0},
->  	{ }
-> @@ -385,6 +441,7 @@ static int amd_hfi_probe(struct platform_device *pdev)
->  	amd_hfi_data->dhandle = dhandle;
+>  static int update_hfi_ipcc_scores(struct amd_hfi_data *amd_hfi_data)
+>  {
+>  	int cpu;
+> @@ -467,6 +549,14 @@ static int amd_hfi_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto err_exit;
 >  
->  	raw_spin_lock_init(&amd_hfi_data->table_lock);
-> +	raw_spin_lock_init(&amd_hfi_data->hfi_data_lock);
->  	mutex_init(&amd_hfi_data->lock);
->  
->  	platform_set_drvdata(pdev, amd_hfi_data);
-> @@ -402,6 +459,14 @@ static int amd_hfi_probe(struct platform_device *pdev)
->  
->  	amd_hfi_data->hfi_meta->dynamic_rank_feature =
->  					cpuid_ebx(AMD_HETERO_CPUID_27) & 0xF;
-> +
-> +	if (alloc_amd_hfi_ipcc_scores(amd_hfi_data))
-> +		goto err_exit;
-> +
-> +	ret = update_hfi_ipcc_scores(amd_hfi_data);
-> +	if (ret)
-> +		goto err_exit;
+> +	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "x86/amd_hfi:online",
+> +			amd_hfi_online,
+> +			amd_hfi_offline);
+> +	if (ret < 0) {
+> +		pr_warn("failed to setup cpuhp state! (%d)\n", ret);
+> +		return ret;
+> +	}
 > +
 >  	dev_dbg(&pdev->dev, "%s driver registered.\n", pdev->name);
 >  
 >  	return 0;
 > 
+
+-- 
+ i.
+
