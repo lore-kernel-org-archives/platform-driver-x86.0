@@ -1,598 +1,366 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6CB1714A3;
-	Tue, 27 Aug 2024 08:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B887F14A90
+	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Aug 2024 08:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724747576; cv=none; b=cY7LILfwvHQ0wZCWN30T6X6QgU/dj4aph+ARbIc/8bWbKN+ChxMBz7GS8W8cemWwirX9gPABMvHVfkHF1wX3rlLDYrGS8E49g+qBa9yS3my78mKRY4aVftTF2MYd04I0+3t6gl6m+xv3+08mi3O7JBljPyquw/rWVclGcwx4kS4=
+	t=1724747605; cv=none; b=gS7ma/AFB8ATOnoR2Xu5vFdHg1CHq8WRWNEEVe9LUWX1e1naKPBvh00womKQg6K3z/6Ut5qWxBDfIgwPJk9GrKje2WjbnnDVQzP2e9nntZY9cy3StYNZJaQV4giYt4qOsDz9Pit3ZYB0N0YNSsoXq/pO8oe5XPQT04GqdNeBQXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724747576; c=relaxed/simple;
-	bh=lBNWo5UGOPyq1FnJSSwRHNSdcpKfqzC9v6Enz0IOWIQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=oClGWIzejhSRbsmhABFRTSfjhmltOzqwxFI3/CT+HzexlVElSJvwL5TPbkG5Sy4Ba4WcImnrKozsGsKiiGV4KM1NaaCSZ9/PoutuUjA4T2EW0L8U1n2JPWTtZYqYRt/goXCSfKa/y2h/AMy+uKaTIo/wlEaEWxngtj4hWIOlgLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=liNvc+jh; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1724747605; c=relaxed/simple;
+	bh=negRtRnRQXXFlSjvTDFYnERC6ZgxtSJWq6teijWeBnQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TxfFeOhK5WWAg8cNegx7Xh0OB11jyY7SpyM5fkdLAAxDHGM42jxdxwv0hxZfA3ZZqoiccnq8ytSSejiFxJEOvHH6R9SwZKXL/nsAHun1kCZB8+yzSXczir6pmmgvdoZ0aVrnkRUroe1Hc2M65PUkU7rlBjzOfoqKoR7LEOx8+OY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fsN6V9hE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="liNvc+jh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724747574; x=1756283574;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=lBNWo5UGOPyq1FnJSSwRHNSdcpKfqzC9v6Enz0IOWIQ=;
-  b=liNvc+jh1cT06LLlvwL742r9GvymVeRHi4FB52mB5cq+/N5dTkhclUww
-   aSeABbAzHh64JUdVMREVUFOJ4eW4B5Qzo7+0cdXvfiFZtzxsx4ps5HeHj
-   pR+9mZtpxXirbVmAMm9gKS8QKNneDd+0d4+iFT9avhaDnEJWI5BW+nE84
-   kATH1fUjNW3BxcN968MVTJQ6v37cR9yBPH4qeNU3MBeZvk4rBrW3w47M4
-   vWm3nZjwIQ7yZk6tKL+24VoD8bmUu5S4BfmZdAQngIchEpHtB95VkZm+Y
-   ubDCpuMkv7pzKryf+vgu3sVYPy0cFHGEufRm0qiS8tddEBdAQEfGa80cc
-   Q==;
-X-CSE-ConnectionGUID: Q8DMmyVUSf66G2jcO2vz/Q==
-X-CSE-MsgGUID: NpX3O9LhTC6eYnOzUNT0aQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11176"; a="40713750"
-X-IronPort-AV: E=Sophos;i="6.10,180,1719903600"; 
-   d="scan'208";a="40713750"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 01:32:38 -0700
-X-CSE-ConnectionGUID: +fSbsqTtRAeW++uUPdNBIg==
-X-CSE-MsgGUID: lsv7YrrRQaulDcmgZcnz7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,180,1719903600"; 
-   d="scan'208";a="62949735"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.17])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 01:32:33 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 27 Aug 2024 11:32:29 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: james@equiv.tech, jlee@suse.com, corentin.chary@gmail.com, luke@ljones.dev, 
-    matan@svgalib.org, coproscefalo@gmail.com, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    "Rafael J. Wysocki" <rafael@kernel.org>, lenb@kernel.org, 
-    platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-    linux-acpi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/5] platform/x86: wmi: Pass event data directly to legacy
- notify handlers
-In-Reply-To: <20240822173810.11090-2-W_Armin@gmx.de>
-Message-ID: <42be5889-85d0-6bf2-d817-b86d8e593812@linux.intel.com>
-References: <20240822173810.11090-1-W_Armin@gmx.de> <20240822173810.11090-2-W_Armin@gmx.de>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fsN6V9hE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724747602;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q2xW65G6z4ADem06lU/Xv8UzMPSFryt6wA1DVVwuTeE=;
+	b=fsN6V9hEFtp0GRdPPYTNeUX6/4SdX8IvNUvVL8KXIzc4wAy06RbGXaQVLNu/0P/d0a5Due
+	KPVkN7z4HL3Z7RKxtF9A2+ypBsw3qXwWSYGX7kvcqJLPKQrQUD5wQEPwuvy92ZYn73zhtz
+	V1UV2iTIOsJa4vftb2I02E+WW9ouXLE=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-691-12RRT2_ZPkuUtNhnrSCtaw-1; Tue, 27 Aug 2024 04:33:21 -0400
+X-MC-Unique: 12RRT2_ZPkuUtNhnrSCtaw-1
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2f4075961aaso48619141fa.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Aug 2024 01:33:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724747599; x=1725352399;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q2xW65G6z4ADem06lU/Xv8UzMPSFryt6wA1DVVwuTeE=;
+        b=E9VmDcP1fobREL0GQmPclFjrfZtE1Vd1owaKvHHMQh2NP2q+RQCjyFLBE6s6+gbnO/
+         FMGnkgwXN7W0prHEnFw/VNbVfZ7fC20YVqvuBvAWZftlB3hXTe/1AEWEWGvfGyWeG7nn
+         lF9xS64AjC6dY79zS4FICwuafsMQEuTJnXliuU7r8EJO65B3Bpt+IKa0jFayLsB2AdKb
+         ZSdEXC0QgMmfc10ZLqrgAl9bgrG0jpwKT2QLiYTtZWmcYFREFcCZ0TjEyeWzKOSEoMsV
+         4tQNyZtAzQ46ohXdBD9eb550SqZ/gNCuQi9ZJpdvOORKaCy5cMXG7jfUD9bymSGQRDSN
+         yzNg==
+X-Forwarded-Encrypted: i=1; AJvYcCW78oXRT9xNw9wS9BiUxL5tgl8kM1mW/z1872MEnJiWz1OGu5TmVN5bwIbl9hfmcM/aP8cVPVU6UFycHBQKjRgkmXDi@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRazJD97xkbbNi2ShutuwCABcOoyjVj1Gt6khfsscG9T+AuLL0
+	chthBugteX1qW9UC8MK0SjJNOrqV8dTv1KMiWvEP2mEe8EMXRHf0JL93NA1Zf4wNR7wZzWTcA/7
+	UDS9l0AxL7rEGIbd3r2/mOxoTAv+Dmjerm5beVtNU4y8QSwSjw5zvI/kNEua10CxqT9z0noM=
+X-Received: by 2002:a05:651c:1989:b0:2f5:806:5cee with SMTP id 38308e7fff4ca-2f514a2dd5emr15937571fa.11.1724747599234;
+        Tue, 27 Aug 2024 01:33:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHVnQw6E3+puevtxOGn6sERcXOy0/91W7RrQF96jnkcm+Rp/3ZJKoJgzLpm4ZNLAsEVQ947Aw==
+X-Received: by 2002:a05:651c:1989:b0:2f5:806:5cee with SMTP id 38308e7fff4ca-2f514a2dd5emr15937261fa.11.1724747598577;
+        Tue, 27 Aug 2024 01:33:18 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c0bb48106dsm730981a12.79.2024.08.27.01.33.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Aug 2024 01:33:18 -0700 (PDT)
+Message-ID: <154d5d69-09c3-460a-945b-3f4f3b452d9d@redhat.com>
+Date: Tue, 27 Aug 2024 10:33:17 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1770808421-1724747549=:1032"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] platform/x86: lg-laptop: Add operation region support
+To: Armin Wolf <W_Armin@gmx.de>, matan@svgalib.org, ghostwind@gmail.com
+Cc: ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240813022903.20567-1-W_Armin@gmx.de>
+ <bb7926e9-759b-4899-b616-c8c7ffcc9a55@redhat.com>
+ <1f6d06a3-1e5a-4b34-b43f-c3d23ee7218a@gmx.de>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <1f6d06a3-1e5a-4b34-b43f-c3d23ee7218a@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Armin,
 
---8323328-1770808421-1724747549=:1032
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On 8/26/24 10:09 PM, Armin Wolf wrote:
+> Am 19.08.24 um 13:37 schrieb Hans de Goede:
+> 
+>> Hi,
+>>
+>> On 8/13/24 4:29 AM, Armin Wolf wrote:
+>>> The LEGX0820 ACPI device is expected to provide a custom operation
+>>> region:
+>>>
+>>>     OperationRegion (XIN1, 0x8F, Zero, 0x04B0)
+>>>          Field (XIN1, AnyAcc, Lock, Preserve)
+>>>          {
+>>>              DMSG,   8,
+>>>              HDAP,   8,
+>>>              Offset (0x03),
+>>>              AFNM,   8,
+>>>              Offset (0x10),
+>>>              P80B,   8,
+>>>              P81B,   8,
+>>>              P82B,   8,
+>>>              P83B,   8,
+>>>              P84B,   8,
+>>>              P85B,   8,
+>>>              P86B,   8,
+>>>              P87B,   8,
+>>>              Offset (0x20),
+>>>              DTTM,   8,
+>>>              TMP1,   8,
+>>>              LTP1,   8,
+>>>              HTP1,   8,
+>>>              TMP2,   8,
+>>>              LTP2,   8,
+>>>              HTP2,   8,
+>>>              Offset (0x3E8),
+>>>              PMSG,   1600
+>>>          }
+>>>
+>>> The PMSG field is used by AML code to log debug messages when DMSG is
+>>> true. Since those debug messages are already logged using the standard
+>>> ACPI Debug object, we set DMSG unconditionally to 0x00 and ignore any
+>>> writes to PMSG.
+>>>
+>>> The TMPx, LTPx, HTPx and AFNM fields are used to inform the driver when
+>>> the temperature/(presumably) trip points/fan mode changes. This only
+>>> happens when the DTTM flag is set.
+>>>
+>>> Unfortunately we have to implement support for this operation region
+>>> because the AML codes uses code constructs like this one:
+>>>
+>>>     If (((\_SB.XINI.PLAV != Zero) && (\_SB.XINI.DTTM != Zero)))
+>>>
+>>> The PLAV field gets set to 1 when the driver registers its address space
+>>> handler, so by default XIN1 should not be accessed.
+>>>
+>>> However ACPI does not use short-circuit evaluation when evaluating
+>>> logical conditions. This causes the DTTM field to be accessed even
+>>> when PLAV is 0, which results in an ACPI error.
+>>> Since this check happens inside various thermal-related ACPI control
+>>> methods, various thermal zone become unusable since any attempt to
+>>> read their temperature results in an ACPI error.
+>>>
+>>> Fix this by providing support for this operation region. I suspect
+>>> that the problem does not happen under Windows (which seemingly does
+>>> not use short-circuit evaluation either) because the necessary driver
+>>> comes preinstalled with the machine.
+>>>
+>>> Tested-by: Chris <ghostwind@gmail.com>
+>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>> Thanks, patch looks good to me:
+>>
+>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>>
+>> Regards,
+>>
+>> Hans
+>>
+> Any updates on this? I would prefer to have this merged for the upcoming 6.12 kernel since
+> without this patch many LG notebooks have unusable thermal zones.
 
-On Thu, 22 Aug 2024, Armin Wolf wrote:
+This patch has already been merged and already is in linux-next,
+but I see that I forgot to send my usual email confirming that
+I merged it, sorry.
 
-> The current legacy WMI handlers are susceptible to picking up wrong
-> WMI event data on systems where different WMI devices share some
-> notification IDs.
->=20
-> Prevent this by letting the WMI driver core taking care of retrieving
-> the event data. This also simplifies the legacy WMI handlers and their
-> implementation inside the WMI driver core.
->=20
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->  drivers/hwmon/hp-wmi-sensors.c           | 17 ++--------
->  drivers/platform/x86/acer-wmi.c          | 16 +--------
->  drivers/platform/x86/asus-wmi.c          | 19 ++---------
->  drivers/platform/x86/dell/dell-wmi-aio.c | 13 +------
->  drivers/platform/x86/hp/hp-wmi.c         | 16 +--------
->  drivers/platform/x86/huawei-wmi.c        | 14 +-------
->  drivers/platform/x86/lg-laptop.c         | 13 +------
->  drivers/platform/x86/msi-wmi.c           | 20 ++---------
->  drivers/platform/x86/toshiba-wmi.c       | 15 +--------
->  drivers/platform/x86/wmi.c               | 43 ++++++++++--------------
->  include/linux/acpi.h                     |  2 +-
->  11 files changed, 34 insertions(+), 154 deletions(-)
->=20
-> diff --git a/drivers/hwmon/hp-wmi-sensors.c b/drivers/hwmon/hp-wmi-sensor=
-s.c
-> index b5325d0e72b9..6892518d537c 100644
-> --- a/drivers/hwmon/hp-wmi-sensors.c
-> +++ b/drivers/hwmon/hp-wmi-sensors.c
-> @@ -1597,15 +1597,13 @@ static void hp_wmi_devm_notify_remove(void *ignor=
-ed)
->  }
->=20
->  /* hp_wmi_notify - WMI event notification handler */
-> -static void hp_wmi_notify(u32 value, void *context)
-> +static void hp_wmi_notify(union acpi_object *wobj, void *context)
->  {
->  =09struct hp_wmi_info *temp_info[HP_WMI_MAX_INSTANCES] =3D {};
-> -=09struct acpi_buffer out =3D { ACPI_ALLOCATE_BUFFER, NULL };
->  =09struct hp_wmi_sensors *state =3D context;
->  =09struct device *dev =3D &state->wdev->dev;
->  =09struct hp_wmi_event event =3D {};
->  =09struct hp_wmi_info *fan_info;
-> -=09union acpi_object *wobj;
->  =09acpi_status err;
->  =09int event_type;
->  =09u8 count;
-> @@ -1632,16 +1630,10 @@ static void hp_wmi_notify(u32 value, void *contex=
-t)
->=20
->  =09mutex_lock(&state->lock);
->=20
-> -=09err =3D wmi_get_event_data(value, &out);
-> -=09if (ACPI_FAILURE(err))
-> -=09=09goto out_unlock;
-> -
-> -=09wobj =3D out.pointer;
-> -
->  =09err =3D populate_event_from_wobj(dev, &event, wobj);
->  =09if (err) {
->  =09=09dev_warn(dev, "Bad event data (ACPI type %d)\n", wobj->type);
-> -=09=09goto out_free_wobj;
-> +=09=09goto out_free;
->  =09}
->=20
->  =09event_type =3D classify_event(event.name, event.category);
-> @@ -1666,13 +1658,10 @@ static void hp_wmi_notify(u32 value, void *contex=
-t)
->  =09=09break;
->  =09}
->=20
-> -out_free_wobj:
-> -=09kfree(wobj);
-> -
-> +out_free:
->  =09devm_kfree(dev, event.name);
->  =09devm_kfree(dev, event.description);
+Regards,
 
-Totally unrelated to your patch, using devm_*() for the members of an
-on-stack struct looks very very odd. :-/
-
-
-Your change looks good and removes lots of code duplication. :-)
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+Hans
 
 
---=20
- i.
 
->=20
-> -out_unlock:
->  =09mutex_unlock(&state->lock);
->  }
->=20
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-=
-wmi.c
-> index 349169d050c5..7169b84ccdb6 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -2223,39 +2223,25 @@ static void acer_rfkill_exit(void)
->  =09}
->  }
->=20
-> -static void acer_wmi_notify(u32 value, void *context)
-> +static void acer_wmi_notify(union acpi_object *obj, void *context)
->  {
-> -=09struct acpi_buffer response =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> -=09union acpi_object *obj;
->  =09struct event_return_value return_value;
-> -=09acpi_status status;
->  =09u16 device_state;
->  =09const struct key_entry *key;
->  =09u32 scancode;
->=20
-> -=09status =3D wmi_get_event_data(value, &response);
-> -=09if (status !=3D AE_OK) {
-> -=09=09pr_warn("bad event status 0x%x\n", status);
-> -=09=09return;
-> -=09}
-> -
-> -=09obj =3D (union acpi_object *)response.pointer;
-> -
->  =09if (!obj)
->  =09=09return;
->  =09if (obj->type !=3D ACPI_TYPE_BUFFER) {
->  =09=09pr_warn("Unknown response received %d\n", obj->type);
-> -=09=09kfree(obj);
->  =09=09return;
->  =09}
->  =09if (obj->buffer.length !=3D 8) {
->  =09=09pr_warn("Unknown buffer length %d\n", obj->buffer.length);
-> -=09=09kfree(obj);
->  =09=09return;
->  =09}
->=20
->  =09return_value =3D *((struct event_return_value *)obj->buffer.pointer);
-> -=09kfree(obj);
->=20
->  =09switch (return_value.function) {
->  =09case WMID_HOTKEY_EVENT:
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
-wmi.c
-> index 9c6b3937ac71..1eb6b39df604 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -4187,28 +4187,15 @@ static void asus_wmi_fnlock_update(struct asus_wm=
-i *asus)
->=20
->  /* WMI events **********************************************************=
-*******/
->=20
-> -static int asus_wmi_get_event_code(u32 value)
-> +static int asus_wmi_get_event_code(union acpi_object *obj)
->  {
-> -=09struct acpi_buffer response =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> -=09union acpi_object *obj;
-> -=09acpi_status status;
->  =09int code;
->=20
-> -=09status =3D wmi_get_event_data(value, &response);
-> -=09if (ACPI_FAILURE(status)) {
-> -=09=09pr_warn("Failed to get WMI notify code: %s\n",
-> -=09=09=09=09acpi_format_exception(status));
-> -=09=09return -EIO;
-> -=09}
-> -
-> -=09obj =3D (union acpi_object *)response.pointer;
-> -
->  =09if (obj && obj->type =3D=3D ACPI_TYPE_INTEGER)
->  =09=09code =3D (int)(obj->integer.value & WMI_EVENT_MASK);
->  =09else
->  =09=09code =3D -EIO;
->=20
-> -=09kfree(obj);
->  =09return code;
->  }
->=20
-> @@ -4274,10 +4261,10 @@ static void asus_wmi_handle_event_code(int code, =
-struct asus_wmi *asus)
->  =09=09pr_info("Unknown key code 0x%x\n", code);
->  }
->=20
-> -static void asus_wmi_notify(u32 value, void *context)
-> +static void asus_wmi_notify(union acpi_object *obj, void *context)
->  {
->  =09struct asus_wmi *asus =3D context;
-> -=09int code =3D asus_wmi_get_event_code(value);
-> +=09int code =3D asus_wmi_get_event_code(obj);
->=20
->  =09if (code < 0) {
->  =09=09pr_warn("Failed to get notify code: %d\n", code);
-> diff --git a/drivers/platform/x86/dell/dell-wmi-aio.c b/drivers/platform/=
-x86/dell/dell-wmi-aio.c
-> index c7b7f1e403fb..54096495719b 100644
-> --- a/drivers/platform/x86/dell/dell-wmi-aio.c
-> +++ b/drivers/platform/x86/dell/dell-wmi-aio.c
-> @@ -70,20 +70,10 @@ static bool dell_wmi_aio_event_check(u8 *buffer, int =
-length)
->  =09return false;
->  }
->=20
-> -static void dell_wmi_aio_notify(u32 value, void *context)
-> +static void dell_wmi_aio_notify(union acpi_object *obj, void *context)
->  {
-> -=09struct acpi_buffer response =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> -=09union acpi_object *obj;
->  =09struct dell_wmi_event *event;
-> -=09acpi_status status;
->=20
-> -=09status =3D wmi_get_event_data(value, &response);
-> -=09if (status !=3D AE_OK) {
-> -=09=09pr_info("bad event status 0x%x\n", status);
-> -=09=09return;
-> -=09}
-> -
-> -=09obj =3D (union acpi_object *)response.pointer;
->  =09if (obj) {
->  =09=09unsigned int scancode =3D 0;
->=20
-> @@ -114,7 +104,6 @@ static void dell_wmi_aio_notify(u32 value, void *cont=
-ext)
->  =09=09=09break;
->  =09=09}
->  =09}
-> -=09kfree(obj);
->  }
->=20
->  static int __init dell_wmi_aio_input_setup(void)
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/h=
-p-wmi.c
-> index 876e0a97cee1..8c05e0dd2a21 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -834,28 +834,16 @@ static struct attribute *hp_wmi_attrs[] =3D {
->  };
->  ATTRIBUTE_GROUPS(hp_wmi);
->=20
-> -static void hp_wmi_notify(u32 value, void *context)
-> +static void hp_wmi_notify(union acpi_object *obj, void *context)
->  {
-> -=09struct acpi_buffer response =3D { ACPI_ALLOCATE_BUFFER, NULL };
->  =09u32 event_id, event_data;
-> -=09union acpi_object *obj;
-> -=09acpi_status status;
->  =09u32 *location;
->  =09int key_code;
->=20
-> -=09status =3D wmi_get_event_data(value, &response);
-> -=09if (status !=3D AE_OK) {
-> -=09=09pr_info("bad event status 0x%x\n", status);
-> -=09=09return;
-> -=09}
-> -
-> -=09obj =3D (union acpi_object *)response.pointer;
-> -
->  =09if (!obj)
->  =09=09return;
->  =09if (obj->type !=3D ACPI_TYPE_BUFFER) {
->  =09=09pr_info("Unknown response received %d\n", obj->type);
-> -=09=09kfree(obj);
->  =09=09return;
->  =09}
->=20
-> @@ -872,10 +860,8 @@ static void hp_wmi_notify(u32 value, void *context)
->  =09=09event_data =3D *(location + 2);
->  =09} else {
->  =09=09pr_info("Unknown buffer length %d\n", obj->buffer.length);
-> -=09=09kfree(obj);
->  =09=09return;
->  =09}
-> -=09kfree(obj);
->=20
->  =09switch (event_id) {
->  =09case HPWMI_DOCK_EVENT:
-> diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/hua=
-wei-wmi.c
-> index 09d476dd832e..d81fd5df4a00 100644
-> --- a/drivers/platform/x86/huawei-wmi.c
-> +++ b/drivers/platform/x86/huawei-wmi.c
-> @@ -734,26 +734,14 @@ static void huawei_wmi_process_key(struct input_dev=
- *idev, int code)
->  =09sparse_keymap_report_entry(idev, key, 1, true);
->  }
->=20
-> -static void huawei_wmi_input_notify(u32 value, void *context)
-> +static void huawei_wmi_input_notify(union acpi_object *obj, void *contex=
-t)
->  {
->  =09struct input_dev *idev =3D (struct input_dev *)context;
-> -=09struct acpi_buffer response =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> -=09union acpi_object *obj;
-> -=09acpi_status status;
->=20
-> -=09status =3D wmi_get_event_data(value, &response);
-> -=09if (ACPI_FAILURE(status)) {
-> -=09=09dev_err(&idev->dev, "Unable to get event data\n");
-> -=09=09return;
-> -=09}
-> -
-> -=09obj =3D (union acpi_object *)response.pointer;
->  =09if (obj && obj->type =3D=3D ACPI_TYPE_INTEGER)
->  =09=09huawei_wmi_process_key(idev, obj->integer.value);
->  =09else
->  =09=09dev_err(&idev->dev, "Bad response type\n");
-> -
-> -=09kfree(response.pointer);
->  }
->=20
->  static int huawei_wmi_input_setup(struct device *dev, const char *guid)
-> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-l=
-aptop.c
-> index 9c7857842caf..4d57cf803473 100644
-> --- a/drivers/platform/x86/lg-laptop.c
-> +++ b/drivers/platform/x86/lg-laptop.c
-> @@ -182,21 +182,11 @@ static union acpi_object *lg_wmbb(struct device *de=
-v, u32 method_id, u32 arg1, u
->  =09return (union acpi_object *)buffer.pointer;
->  }
->=20
-> -static void wmi_notify(u32 value, void *context)
-> +static void wmi_notify(union acpi_object *obj, void *context)
->  {
-> -=09struct acpi_buffer response =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> -=09union acpi_object *obj;
-> -=09acpi_status status;
->  =09long data =3D (long)context;
->=20
->  =09pr_debug("event guid %li\n", data);
-> -=09status =3D wmi_get_event_data(value, &response);
-> -=09if (ACPI_FAILURE(status)) {
-> -=09=09pr_err("Bad event status 0x%x\n", status);
-> -=09=09return;
-> -=09}
-> -
-> -=09obj =3D (union acpi_object *)response.pointer;
->  =09if (!obj)
->  =09=09return;
->=20
-> @@ -218,7 +208,6 @@ static void wmi_notify(u32 value, void *context)
->=20
->  =09pr_debug("Type: %i    Eventcode: 0x%llx\n", obj->type,
->  =09=09 obj->integer.value);
-> -=09kfree(response.pointer);
->  }
->=20
->  static void wmi_input_setup(void)
-> diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-wm=
-i.c
-> index fd318cdfe313..4a7ac85c4db4 100644
-> --- a/drivers/platform/x86/msi-wmi.c
-> +++ b/drivers/platform/x86/msi-wmi.c
-> @@ -170,20 +170,9 @@ static const struct backlight_ops msi_backlight_ops =
-=3D {
->  =09.update_status=09=3D bl_set_status,
->  };
->=20
-> -static void msi_wmi_notify(u32 value, void *context)
-> +static void msi_wmi_notify(union acpi_object *obj, void *context)
->  {
-> -=09struct acpi_buffer response =3D { ACPI_ALLOCATE_BUFFER, NULL };
->  =09struct key_entry *key;
-> -=09union acpi_object *obj;
-> -=09acpi_status status;
-> -
-> -=09status =3D wmi_get_event_data(value, &response);
-> -=09if (status !=3D AE_OK) {
-> -=09=09pr_info("bad event status 0x%x\n", status);
-> -=09=09return;
-> -=09}
-> -
-> -=09obj =3D (union acpi_object *)response.pointer;
->=20
->  =09if (obj && obj->type =3D=3D ACPI_TYPE_INTEGER) {
->  =09=09int eventcode =3D obj->integer.value;
-> @@ -192,7 +181,7 @@ static void msi_wmi_notify(u32 value, void *context)
->  =09=09=09=09eventcode);
->  =09=09if (!key) {
->  =09=09=09pr_info("Unknown key pressed - %x\n", eventcode);
-> -=09=09=09goto msi_wmi_notify_exit;
-> +=09=09=09return;
->  =09=09}
->=20
->  =09=09if (event_wmi->quirk_last_pressed) {
-> @@ -204,7 +193,7 @@ static void msi_wmi_notify(u32 value, void *context)
->  =09=09=09=09pr_debug("Suppressed key event 0x%X - "
->  =09=09=09=09=09 "Last press was %lld us ago\n",
->  =09=09=09=09=09 key->code, ktime_to_us(diff));
-> -=09=09=09=09goto msi_wmi_notify_exit;
-> +=09=09=09=09return;
->  =09=09=09}
->  =09=09=09last_pressed =3D cur;
->  =09=09}
-> @@ -221,9 +210,6 @@ static void msi_wmi_notify(u32 value, void *context)
->  =09=09}
->  =09} else
->  =09=09pr_info("Unknown event received\n");
-> -
-> -msi_wmi_notify_exit:
-> -=09kfree(response.pointer);
->  }
->=20
->  static int __init msi_wmi_backlight_setup(void)
-> diff --git a/drivers/platform/x86/toshiba-wmi.c b/drivers/platform/x86/to=
-shiba-wmi.c
-> index 77c35529ab6f..12c46455e8dc 100644
-> --- a/drivers/platform/x86/toshiba-wmi.c
-> +++ b/drivers/platform/x86/toshiba-wmi.c
-> @@ -32,26 +32,13 @@ static const struct key_entry toshiba_wmi_keymap[] __=
-initconst =3D {
->  =09{ KE_END, 0 }
->  };
->=20
-> -static void toshiba_wmi_notify(u32 value, void *context)
-> +static void toshiba_wmi_notify(union acpi_object *obj, void *context)
->  {
-> -=09struct acpi_buffer response =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> -=09union acpi_object *obj;
-> -=09acpi_status status;
-> -
-> -=09status =3D wmi_get_event_data(value, &response);
-> -=09if (ACPI_FAILURE(status)) {
-> -=09=09pr_err("Bad event status 0x%x\n", status);
-> -=09=09return;
-> -=09}
-> -
-> -=09obj =3D (union acpi_object *)response.pointer;
->  =09if (!obj)
->  =09=09return;
->=20
->  =09/* TODO: Add proper checks once we have data */
->  =09pr_debug("Unknown event received, obj type %x\n", obj->type);
-> -
-> -=09kfree(response.pointer);
->  }
->=20
->  static const struct dmi_system_id toshiba_wmi_dmi_table[] __initconst =
-=3D {
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index 1d0b2d6040d1..6ab181dd94ab 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -1227,40 +1227,33 @@ static int wmi_notify_device(struct device *dev, =
-void *data)
->  =09if (!(wblock->gblock.flags & ACPI_WMI_EVENT && wblock->gblock.notify_=
-id =3D=3D *event))
->  =09=09return 0;
->=20
-> +=09/* The ACPI WMI specification says that _WED should be
-> +=09 * evaluated every time an notification is received, even
-> +=09 * if no consumers are present.
-> +=09 *
-> +=09 * Some firmware implementations actually depend on this
-> +=09 * by using a queue for events which will fill up if the
-> +=09 * WMI driver core stops evaluating _WED due to missing
-> +=09 * WMI event consumers.
-> +=09 */
-> +=09ret =3D wmi_get_notify_data(wblock, &obj);
-> +=09if (ret < 0)
-> +=09=09return -EIO;
-> +
->  =09down_read(&wblock->notify_lock);
->  =09/* The WMI driver notify handler conflicts with the legacy WMI handle=
-r.
->  =09 * Because of this the WMI driver notify handler takes precedence.
->  =09 */
->  =09if (wblock->dev.dev.driver && wblock->driver_ready) {
-> -=09=09ret =3D wmi_get_notify_data(wblock, &obj);
-> -=09=09if (ret >=3D 0) {
-> -=09=09=09wmi_notify_driver(wblock, obj);
-> -=09=09=09kfree(obj);
-> -=09=09}
-> +=09=09wmi_notify_driver(wblock, obj);
->  =09} else {
-> -=09=09if (wblock->handler) {
-> -=09=09=09wblock->handler(*event, wblock->handler_data);
-> -=09=09} else {
-> -=09=09=09/* The ACPI WMI specification says that _WED should be
-> -=09=09=09 * evaluated every time an notification is received, even
-> -=09=09=09 * if no consumers are present.
-> -=09=09=09 *
-> -=09=09=09 * Some firmware implementations actually depend on this
-> -=09=09=09 * by using a queue for events which will fill up if the
-> -=09=09=09 * WMI driver core stops evaluating _WED due to missing
-> -=09=09=09 * WMI event consumers.
-> -=09=09=09 *
-> -=09=09=09 * Because of this we need this seemingly useless call to
-> -=09=09=09 * wmi_get_notify_data() which in turn evaluates _WED.
-> -=09=09=09 */
-> -=09=09=09ret =3D wmi_get_notify_data(wblock, &obj);
-> -=09=09=09if (ret >=3D 0)
-> -=09=09=09=09kfree(obj);
-> -=09=09}
-> -
-> +=09=09if (wblock->handler)
-> +=09=09=09wblock->handler(obj, wblock->handler_data);
->  =09}
->  =09up_read(&wblock->notify_lock);
->=20
-> +=09kfree(obj);
-> +
->  =09acpi_bus_generate_netlink_event("wmi", acpi_dev_name(wblock->acpi_dev=
-ice), *event, 0);
->=20
->  =09return -EBUSY;
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 0687a442fec7..eed105b1fbfb 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -386,7 +386,7 @@ extern bool acpi_is_pnp_device(struct acpi_device *);
->=20
->  #if defined(CONFIG_ACPI_WMI) || defined(CONFIG_ACPI_WMI_MODULE)
->=20
-> -typedef void (*wmi_notify_handler) (u32 value, void *context);
-> +typedef void (*wmi_notify_handler) (union acpi_object *data, void *conte=
-xt);
->=20
->  int wmi_instance_count(const char *guid);
->=20
-> --
-> 2.39.2
->=20
---8323328-1770808421-1724747549=:1032--
+
+>>> ---
+>>> Changes since v1:
+>>>   - attempts -> attempt
+>>>   - sort defines in numerical order
+>>>   - make lg_laptop_address_space_write() take a plain u64
+>>>   - use BITS_PER_BYTE
+>>>   - manually check fw_debug when handling fan mode updates
+>>> ---
+>>>   drivers/platform/x86/lg-laptop.c | 136 +++++++++++++++++++++++++++++++
+>>>   1 file changed, 136 insertions(+)
+>>>
+>>> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
+>>> index 9c7857842caf..55d31d4fefd6 100644
+>>> --- a/drivers/platform/x86/lg-laptop.c
+>>> +++ b/drivers/platform/x86/lg-laptop.c
+>>> @@ -8,6 +8,9 @@
+>>>   #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>>>
+>>>   #include <linux/acpi.h>
+>>> +#include <linux/bits.h>
+>>> +#include <linux/device.h>
+>>> +#include <linux/dev_printk.h>
+>>>   #include <linux/dmi.h>
+>>>   #include <linux/input.h>
+>>>   #include <linux/input/sparse-keymap.h>
+>>> @@ -31,6 +34,26 @@ MODULE_AUTHOR("Matan Ziv-Av");
+>>>   MODULE_DESCRIPTION("LG WMI Hotkey Driver");
+>>>   MODULE_LICENSE("GPL");
+>>>
+>>> +static bool fw_debug;
+>>> +module_param(fw_debug, bool, 0);
+>>> +MODULE_PARM_DESC(fw_debug, "Enable printing of firmware debug messages");
+>>> +
+>>> +#define LG_ADDRESS_SPACE_ID            0x8F
+>>> +
+>>> +#define LG_ADDRESS_SPACE_DEBUG_FLAG_ADR        0x00
+>>> +#define LG_ADDRESS_SPACE_FAN_MODE_ADR        0x03
+>>> +
+>>> +#define LG_ADDRESS_SPACE_DTTM_FLAG_ADR        0x20
+>>> +#define LG_ADDRESS_SPACE_CPU_TEMP_ADR        0x21
+>>> +#define LG_ADDRESS_SPACE_CPU_TRIP_LOW_ADR    0x22
+>>> +#define LG_ADDRESS_SPACE_CPU_TRIP_HIGH_ADR    0x23
+>>> +#define LG_ADDRESS_SPACE_MB_TEMP_ADR        0x24
+>>> +#define LG_ADDRESS_SPACE_MB_TRIP_LOW_ADR    0x25
+>>> +#define LG_ADDRESS_SPACE_MB_TRIP_HIGH_ADR    0x26
+>>> +
+>>> +#define LG_ADDRESS_SPACE_DEBUG_MSG_START_ADR    0x3E8
+>>> +#define LG_ADDRESS_SPACE_DEBUG_MSG_END_ADR    0x5E8
+>>> +
+>>>   #define WMI_EVENT_GUID0    "E4FB94F9-7F2B-4173-AD1A-CD1D95086248"
+>>>   #define WMI_EVENT_GUID1    "023B133E-49D1-4E10-B313-698220140DC2"
+>>>   #define WMI_EVENT_GUID2    "37BE1AC0-C3F2-4B1F-BFBE-8FDEAF2814D6"
+>>> @@ -646,6 +669,107 @@ static struct platform_driver pf_driver = {
+>>>       }
+>>>   };
+>>>
+>>> +static acpi_status lg_laptop_address_space_write(struct device *dev, acpi_physical_address address,
+>>> +                         size_t size, u64 value)
+>>> +{
+>>> +    u8 byte;
+>>> +
+>>> +    /* Ignore any debug messages */
+>>> +    if (address >= LG_ADDRESS_SPACE_DEBUG_MSG_START_ADR &&
+>>> +        address <= LG_ADDRESS_SPACE_DEBUG_MSG_END_ADR)
+>>> +        return AE_OK;
+>>> +
+>>> +    if (size != sizeof(byte))
+>>> +        return AE_BAD_PARAMETER;
+>>> +
+>>> +    byte = value & 0xFF;
+>>> +
+>>> +    switch (address) {
+>>> +    case LG_ADDRESS_SPACE_FAN_MODE_ADR:
+>>> +        /*
+>>> +         * The fan mode field is not affected by the DTTM flag, so we
+>>> +         * have to manually check fw_debug.
+>>> +         */
+>>> +        if (fw_debug)
+>>> +            dev_dbg(dev, "Fan mode set to mode %u\n", byte);
+>>> +
+>>> +        return AE_OK;
+>>> +    case LG_ADDRESS_SPACE_CPU_TEMP_ADR:
+>>> +        dev_dbg(dev, "CPU temperature is %u °C\n", byte);
+>>> +        return AE_OK;
+>>> +    case LG_ADDRESS_SPACE_CPU_TRIP_LOW_ADR:
+>>> +        dev_dbg(dev, "CPU lower trip point set to %u °C\n", byte);
+>>> +        return AE_OK;
+>>> +    case LG_ADDRESS_SPACE_CPU_TRIP_HIGH_ADR:
+>>> +        dev_dbg(dev, "CPU higher trip point set to %u °C\n", byte);
+>>> +        return AE_OK;
+>>> +    case LG_ADDRESS_SPACE_MB_TEMP_ADR:
+>>> +        dev_dbg(dev, "Motherboard temperature is %u °C\n", byte);
+>>> +        return AE_OK;
+>>> +    case LG_ADDRESS_SPACE_MB_TRIP_LOW_ADR:
+>>> +        dev_dbg(dev, "Motherboard lower trip point set to %u °C\n", byte);
+>>> +        return AE_OK;
+>>> +    case LG_ADDRESS_SPACE_MB_TRIP_HIGH_ADR:
+>>> +        dev_dbg(dev, "Motherboard higher trip point set to %u °C\n", byte);
+>>> +        return AE_OK;
+>>> +    default:
+>>> +        dev_notice_ratelimited(dev, "Ignoring write to unknown opregion address %llu\n",
+>>> +                       address);
+>>> +        return AE_OK;
+>>> +    }
+>>> +}
+>>> +
+>>> +static acpi_status lg_laptop_address_space_read(struct device *dev, acpi_physical_address address,
+>>> +                        size_t size, u64 *value)
+>>> +{
+>>> +    if (size != 1)
+>>> +        return AE_BAD_PARAMETER;
+>>> +
+>>> +    switch (address) {
+>>> +    case LG_ADDRESS_SPACE_DEBUG_FLAG_ADR:
+>>> +        /* Debug messages are already printed using the standard ACPI Debug object */
+>>> +        *value = 0x00;
+>>> +        return AE_OK;
+>>> +    case LG_ADDRESS_SPACE_DTTM_FLAG_ADR:
+>>> +        *value = fw_debug;
+>>> +        return AE_OK;
+>>> +    default:
+>>> +        dev_notice_ratelimited(dev, "Attempt to read unknown opregion address %llu\n",
+>>> +                       address);
+>>> +        return AE_BAD_PARAMETER;
+>>> +    }
+>>> +}
+>>> +
+>>> +static acpi_status lg_laptop_address_space_handler(u32 function, acpi_physical_address address,
+>>> +                           u32 bits, u64 *value, void *handler_context,
+>>> +                           void *region_context)
+>>> +{
+>>> +    struct device *dev = handler_context;
+>>> +    size_t size;
+>>> +
+>>> +    if (bits % BITS_PER_BYTE)
+>>> +        return AE_BAD_PARAMETER;
+>>> +
+>>> +    size = bits / BITS_PER_BYTE;
+>>> +
+>>> +    switch (function) {
+>>> +    case ACPI_READ:
+>>> +        return lg_laptop_address_space_read(dev, address, size, value);
+>>> +    case ACPI_WRITE:
+>>> +        return lg_laptop_address_space_write(dev, address, size, *value);
+>>> +    default:
+>>> +        return AE_BAD_PARAMETER;
+>>> +    }
+>>> +}
+>>> +
+>>> +static void lg_laptop_remove_address_space_handler(void *data)
+>>> +{
+>>> +    struct acpi_device *device = data;
+>>> +
+>>> +    acpi_remove_address_space_handler(device->handle, LG_ADDRESS_SPACE_ID,
+>>> +                      &lg_laptop_address_space_handler);
+>>> +}
+>>> +
+>>>   static int acpi_add(struct acpi_device *device)
+>>>   {
+>>>       struct platform_device_info pdev_info = {
+>>> @@ -653,6 +777,7 @@ static int acpi_add(struct acpi_device *device)
+>>>           .name = PLATFORM_NAME,
+>>>           .id = PLATFORM_DEVID_NONE,
+>>>       };
+>>> +    acpi_status status;
+>>>       int ret;
+>>>       const char *product;
+>>>       int year = 2017;
+>>> @@ -660,6 +785,17 @@ static int acpi_add(struct acpi_device *device)
+>>>       if (pf_device)
+>>>           return 0;
+>>>
+>>> +    status = acpi_install_address_space_handler(device->handle, LG_ADDRESS_SPACE_ID,
+>>> +                            &lg_laptop_address_space_handler,
+>>> +                            NULL, &device->dev);
+>>> +    if (ACPI_FAILURE(status))
+>>> +        return -ENODEV;
+>>> +
+>>> +    ret = devm_add_action_or_reset(&device->dev, lg_laptop_remove_address_space_handler,
+>>> +                       device);
+>>> +    if (ret < 0)
+>>> +        return ret;
+>>> +
+>>>       ret = platform_driver_register(&pf_driver);
+>>>       if (ret)
+>>>           return ret;
+>>> -- 
+>>> 2.39.2
+>>>
+>>
+> 
+
