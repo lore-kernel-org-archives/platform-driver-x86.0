@@ -1,65 +1,66 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809D3176FD3
-	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Aug 2024 09:07:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0617176FD3
+	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Aug 2024 09:09:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724749648; cv=none; b=DRnbg5vtG9HVRMu2rCXg0PSOLVhKYv7DP8MLOAalgvRhuZMDnJevHvtOXAjGKAKg8tmSKDhEBS6iW5Gf3JE7f2iWzvyxLUbbtvfS972ooM2gA2K6H7lvGnyjTY5ZjeJ+5py8yZ4zIZ/9Y+uxssakGaaTt6nWo5qh1uIRLib8l4s=
+	t=1724749802; cv=none; b=WSUdN8LKoz0CX5QpZOPhrcPoUdgHH6XG6RSfg17PMAGgYSzBqioVK+A4D3UMexXweea3ViiBbI1cXFV0cWcEQ1NIx+h6QtvTqGTbWsN/+ENqwqs62g/8qPKgOu03i+fC27oelowximJu4b0M5NTh9dZqRMdTIq9x2Wvelt1FcPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724749648; c=relaxed/simple;
-	bh=PKEN6I5V8pypNB6zwLv46ZWR3A6nnO0DXd+d/r8UWLA=;
+	s=arc-20240116; t=1724749802; c=relaxed/simple;
+	bh=AlNxAM7JSlDCpwGL75AV4ix+qSWNPVc/q0q2TIuKoOM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i+mHIsNSynLvlTF36u6JpehCIcNxylSnPb8q8w0rMQRliN/zWkcAjT/B7ZGqryCO7Lz5lgn51GcNaD+vYSVg712MmiPgLbXTGAtoRs0WmvhUDNbkvafyXoiCi1ZlosTchlOy/9NusegYmuL3gAc8s5vHQ4wlxsRAEF2SFE9Iv4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Cem+3wjm; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=ef8yaz6q6QS/r1PqgjxT5nxug7jCYq9H70VMrzn6XAa4gaH2TTPgUkEfkFo6JN5/V8L1pDBEFseqkzgutVviylBJDIjkrrxcTuCHHAi+4cXFKOeOd/mYQlI+Q2szS15rkj8CIsyxmG/L5BRAS3JaJ3E4LkB3k1kDMXsBybD1hRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MRh7dRB6; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cem+3wjm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MRh7dRB6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724749645;
+	s=mimecast20190719; t=1724749798;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=l3k5aXgmeHpOgCqavu3RPvmVi3OTsmxyK+VkxJKU+yU=;
-	b=Cem+3wjmGTNeNYYzXuwIDGAAlUyNs4km4VnsLAwUw8sYfv4v16rltbFUU/HTIdktWObBqX
-	Ln2yxLx5KEeubg3kwyJhW3hxPkcoN1absliYgkUP16Rvd3DfhHW2y+jG40lsV3KCMea+2a
-	LVEdAGC+tfwwhvm7KmSY6A2t/Xlzyg8=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Ms46jJfB5uJh4cdKqlH0Ud3Q2tMTteM2Uh2m3C5D2Ww=;
+	b=MRh7dRB6TAyVAYWcquVDJIILLcYS8B67wtlRfyLM3r89GLSlvfSpVR7kG1kFTFvGA7rwte
+	0/slkT0ZATpoKGS7gFEvCwmYdfTqVifmwaoZAYMxtcOu8ovVZ0qNBJv71gpgVCrgLXhUmJ
+	bAbb1Fut+0K0clhw1zBtzipMknvPm90=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-312-L16tPHuPOiiErCJWjnAv2Q-1; Tue, 27 Aug 2024 05:07:23 -0400
-X-MC-Unique: L16tPHuPOiiErCJWjnAv2Q-1
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2f505e0c079so20672051fa.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Aug 2024 02:07:23 -0700 (PDT)
+ us-mta-298-Vj5bJcfMPj2C28Clk3iF_A-1; Tue, 27 Aug 2024 05:09:55 -0400
+X-MC-Unique: Vj5bJcfMPj2C28Clk3iF_A-1
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5bed68b5ec6so4173744a12.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Aug 2024 02:09:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724749642; x=1725354442;
+        d=1e100.net; s=20230601; t=1724749793; x=1725354593;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l3k5aXgmeHpOgCqavu3RPvmVi3OTsmxyK+VkxJKU+yU=;
-        b=SCR8y2gWTsWC3ILwZabtYTtkEJ19w78bjToc3MftzikAgyCxJf9YTvCHgMqdYwXXDM
-         u4ut8p+zm+qKG2uIPPWo8Iqmk4V2WkGBzL10UQPICi9QOx1U9J4e+yFOL8Csms5LqoFz
-         e6WhNRbBs+9VZjMnsugyCTU8/tpAHXYntLqfBz/Pg59mUPdrPxJo0VEXJtQKkwlrRisL
-         NdVtYnvjZ60QL4YZYUDdW3VHLVYn5xkG51EQGMklZz8Lg0SjXoPcIgo0HH+yxW1dDipk
-         xOM7P1GSUBiWPrSB2DDgTCbkZmtOGFyp6Cpi4Na2BrhstDfyjfqqPbIBWADv3eeFqtOE
-         wpgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVljWd/YNfl7p3/h9kNGEoMCbyARx+wmTR/ku59DwBzZdLkRFMbPSjerdD0Ba8GNS4aFNVPM0NjK1F2Brk43G4y7EOj@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSpr1tJg5Bt2A0LPHjHVyOG3c7gA3w22Q2TTQspsLv8VzUXn9H
-	RttQ+4GkC1K5eGp62HxvHf09asebwe/hnjrlCOodpZB1LSYaoSBGHJJHDpCDbei/U9oTTICZ2Vf
-	wqlBYz1d/GVr1j4tmxBsFbag8h0fp1JfXjK6rOJqj3fj/xp9olppUueGaOqrfCpsOahBQjpE=
-X-Received: by 2002:a05:651c:54e:b0:2ef:2c0f:283e with SMTP id 38308e7fff4ca-2f514a2fd6amr14686131fa.12.1724749641623;
-        Tue, 27 Aug 2024 02:07:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEel0jovheZHux9Pox4ntorGH0rGVklDEPrOVvhQYHt58E5EJzmLItmotwzMzG3AI3lA3LU+A==
-X-Received: by 2002:a05:651c:54e:b0:2ef:2c0f:283e with SMTP id 38308e7fff4ca-2f514a2fd6amr14685861fa.12.1724749640928;
-        Tue, 27 Aug 2024 02:07:20 -0700 (PDT)
+        bh=Ms46jJfB5uJh4cdKqlH0Ud3Q2tMTteM2Uh2m3C5D2Ww=;
+        b=Z7Fs3Z5cdmWm4wdttBkXxa+EgzAnpfd91iMGOfS44YWhUafsipXPGEMCGGGBpllGn3
+         GLUCa6WYgUJ8+11fNFVB9iyV/9sRbndiT5OGGTFeEjUSmN1/qWy6m9ysV8wrV/pxpeKy
+         bIQ0QJ31JwgVMxKeQgJwy4CE4zC2e9i30x/GkmJG8z7+hQUorrY/av7c9UcuI1299mjj
+         nPD/2hzgysdmkQZbwhG0CQRhkPpf8Mur5n1PSlCdSObKIjjYpEToWxBUMzXU/SqmQ0TT
+         cS9Cl0mT1HHPw0k0CHvdJko1d5nmP6LCJG7LBpJYSCkWOspUj12iMQduq1XMNRK8KqWg
+         sB4w==
+X-Forwarded-Encrypted: i=1; AJvYcCVQRVxj/6JIFBpnqgGn558GjBK79w9qrmU7++YmqpQdFnr0hbRkMm96+aBV6tTiTuTD4O75Zt43GQ9CX5RcuhA8KiwR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys3cm8F62XqViZ0rIGqAFff/0SuyMR1V0cqT0R/38feN/jSGCu
+	ITBmsmJiU70iGx7gUNF4IK6+fcZ5BvwnyJSvpMZ8QKAu9NYwQGoQSD9kuABk2Mmy7DF1hWb11Fq
+	iS3UjTW2+h9JJOT4Ncm9/6JdigtZoh1JGSmJzIifuMuDhNJq4UfebXDRUcULTl1goxGpmIP1YCC
+	v1QYo=
+X-Received: by 2002:a05:6402:51ca:b0:5c0:902c:e191 with SMTP id 4fb4d7f45d1cf-5c0902ce1c9mr7827505a12.9.1724749793192;
+        Tue, 27 Aug 2024 02:09:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHwOra81V8c3KY1B779MsRtLcVHvekiVbrw4f2RdlUw7ZlNtoJVcFgjUlFEicTeyMHPdiVXFA==
+X-Received: by 2002:a05:6402:51ca:b0:5c0:902c:e191 with SMTP id 4fb4d7f45d1cf-5c0902ce1c9mr7827475a12.9.1724749792621;
+        Tue, 27 Aug 2024 02:09:52 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c0bb1c280dsm774115a12.3.2024.08.27.02.07.20
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c0bb481933sm761463a12.81.2024.08.27.02.09.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Aug 2024 02:07:20 -0700 (PDT)
-Message-ID: <4dab4f36-309d-4b95-8b01-84963ca08d16@redhat.com>
-Date: Tue, 27 Aug 2024 11:07:19 +0200
+        Tue, 27 Aug 2024 02:09:52 -0700 (PDT)
+Message-ID: <9566460c-4d0f-4ead-9fa1-a265c936c3d9@redhat.com>
+Date: Tue, 27 Aug 2024 11:09:51 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,312 +68,121 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] platform/surface: Add OF support
-To: Andy Shevchenko <andy.shevchenko@gmail.com>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: Rob Herring <robh@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Len Brown <lenb@kernel.org>, Maximilian Luz <luzmaximilian@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <quic_kdybcio@quicinc.com>
-References: <20240814-topic-sam-v3-0-a84588aad233@quicinc.com>
- <20240814-topic-sam-v3-3-a84588aad233@quicinc.com>
- <ZszrjQChQ2aS5YjV@surfacebook.localdomain>
+Subject: Re: [bug report] platform/x86: thinkpad_acpi: Add Thinkpad Edge E531
+ fan support
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ Matthias Fetzer <kontakt@matthias-fetzer.de>
+Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+References: <f99e558d-c62a-41eb-93b3-cf00c016d907@stanley.mountain>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <ZszrjQChQ2aS5YjV@surfacebook.localdomain>
+In-Reply-To: <f99e558d-c62a-41eb-93b3-cf00c016d907@stanley.mountain>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Andy,
+Hi Dan,
 
-Thank you for the review.
+On 8/27/24 10:45 AM, Dan Carpenter wrote:
+> Hello Matthias Fetzer,
+> 
+> Commit 57d0557dfa49 ("platform/x86: thinkpad_acpi: Add Thinkpad Edge
+> E531 fan support") from Aug 16, 2024 (linux-next), leads to the
+> following Smatch static checker warning:
+> 
+> 	drivers/platform/x86/thinkpad_acpi.c:8387 fan_set_enable()
+> 	error: uninitialized symbol 's'.
+> 
+> drivers/platform/x86/thinkpad_acpi.c
+>     8319 static int fan_set_enable(void)
+>     8320 {
+>     8321         u8 s;
+>     8322         int rc;
+>     8323 
+>     8324         if (!fan_control_allowed)
+>     8325                 return -EPERM;
+>     8326 
+>     8327         if (mutex_lock_killable(&fan_mutex))
+>     8328                 return -ERESTARTSYS;
+>     8329 
+>     8330         switch (fan_control_access_mode) {
+>     8331         case TPACPI_FAN_WR_ACPI_FANS:
+>     8332         case TPACPI_FAN_WR_TPEC:
+>     8333                 rc = fan_get_status(&s);
+>     8334                 if (rc)
+>     8335                         break;
+>     8336 
+>     8337                 /* Don't go out of emergency fan mode */
+>     8338                 if (s != 7) {
+>     8339                         s &= 0x07;
+>     8340                         s |= TP_EC_FAN_AUTO | 4; /* min fan speed 4 */
+>     8341                 }
+>     8342 
+>     8343                 if (!acpi_ec_write(fan_status_offset, s))
+>     8344                         rc = -EIO;
+>     8345                 else {
+>     8346                         tp_features.fan_ctrl_status_undef = 0;
+>     8347                         rc = 0;
+>     8348                 }
+>     8349                 break;
+>     8350 
+>     8351         case TPACPI_FAN_WR_ACPI_SFAN:
+>     8352                 rc = fan_get_status(&s);
+>     8353                 if (rc)
+>     8354                         break;
+>     8355 
+>     8356                 s &= 0x07;
+>     8357 
+>     8358                 /* Set fan to at least level 4 */
+>     8359                 s |= 4;
+>     8360 
+>     8361                 if (!acpi_evalf(sfan_handle, NULL, NULL, "vd", s))
+>     8362                         rc = -EIO;
+>     8363                 else
+>     8364                         rc = 0;
+>     8365                 break;
+>     8366 
+>     8367         case TPACPI_FAN_WR_ACPI_FANW:
+>     8368                 if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x05)) {
+>     8369                         rc = -EIO;
+>     8370                         break;
+>     8371                 }
+>     8372                 if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0x00)) {
+>     8373                         rc = -EIO;
+>     8374                         break;
+>     8375                 }
+>     8376 
+>     8377                 rc = 0;
+> 
+> s isn't set on this path
+> 
+>     8378                 break;
+>     8379 
+>     8380         default:
+>     8381                 rc = -ENXIO;
+>     8382         }
+>     8383 
+>     8384         mutex_unlock(&fan_mutex);
+>     8385 
+>     8386         if (!rc)
+> --> 8387                 vdbg_printk(TPACPI_DBG_FAN,
+>     8388                         "fan control: set fan control register to 0x%02x\n",
+>     8389                         s);
+>                                  ^
+> Here
+> 
+>     8390         return rc;
+>     8391 }
 
-Note this has already been merged though.
+Thank you for reporting this.
 
-Still there are some good suggestions here for a follow-up
-cleanup patch.
+Since this is just a debug print I think it is best to fix this by just
+initializing s to 0 when it is declared and then just log 0
+in the TPACPI_FAN_WR_ACPI_FANW case.
+
+Anyone got any better suggestions ?
 
 Regards,
 
 Hans
 
-
-On 8/26/24 10:54 PM, Andy Shevchenko wrote:
-> Wed, Aug 14, 2024 at 12:27:27PM +0200, Konrad Dybcio kirjoitti:
->> From: Konrad Dybcio <quic_kdybcio@quicinc.com>
->>
->> Add basic support for registering the aggregator module on Device Tree-
->> based platforms. These include at least three generations of Qualcomm
->> Snapdragon-based Surface devices:
->>
->> - SC8180X / SQ1 / SQ2: Pro X,
->> - SC8280XP / SQ3: Devkit 2023, Pro 9
->> - X Elite: Laptop 7 / Pro11
->>
->> Thankfully, the aggregators on these seem to be configured in an
->> identical way, which allows for using these settings as defaults and
->> no DT properties need to be introduced (until that changes, anyway).
->>
->> Based on the work done by Maximilian Luz, largely rewritten.
-> 
-> ...
-> 
->>  	sdev->dev.fwnode = fwnode_handle_get(node);
->> +	sdev->dev.of_node = to_of_node(node);
-> 
-> Please, use device_set_node() instead of those two.
-> 
-> ...
-> 
->> +static int ssam_controller_caps_load(struct device *dev, struct ssam_controller_caps *caps)
->> +{
-> 
->> +	acpi_handle handle = ACPI_HANDLE(dev);
-> 
-> It's a bit non-standard way to check if we run on DT or ACPI. The others (most
-> of them?) do something like this:
-> 
-> 	struct fwnode_handle *fwnode = dev_fwnode(...);
-> 
-> 	if (is_of_node(fwnode))
-> 		return X;
-> 	if (is_acpi_node(fwnode)) // also more precise _device or _data variant
-> 		return Y;
-> 
-> 	return ERROR;
-> 
->> +	/* Set defaults. */
->> +	caps->ssh_power_profile = U32_MAX;
->> +	caps->screen_on_sleep_idle_timeout = U32_MAX;
->> +	caps->screen_off_sleep_idle_timeout = U32_MAX;
->> +	caps->d3_closes_handle = false;
->> +	caps->ssh_buffer_size = U32_MAX;
->> +
->> +	if (handle)
->> +		return ssam_controller_caps_load_from_acpi(handle, caps);
-> 
-> Yeah, I see that you use handle here, that's why it's up to you how to proceed
-> with that. 
-> 
->> +	else
->> +		return ssam_controller_caps_load_from_of(dev, caps);
-> 
-> But just note that we have 4 options for fwnode type here and this covers 3 and
-> I don't know if you ever have an ACPI data node or software node and what you
-> want to do with that.
-> 
->> +}
-> 
-> ...
-> 
->>  	gpiod = gpiod_get(dev, "ssam_wakeup-int", GPIOD_ASIS);
->> -	if (IS_ERR(gpiod))
->> -		return PTR_ERR(gpiod);
->> -
->> -	irq = gpiod_to_irq(gpiod);
->> -	gpiod_put(gpiod);
->> +	if (IS_ERR(gpiod)) {
->> +		irq = fwnode_irq_get(dev_fwnode(dev), 0);
->> +	} else {
->> +		irq = gpiod_to_irq(gpiod);
->> +		gpiod_put(gpiod);
->> +	}
-> 
-> Can't you try fwnode_irq_get_byname() followed by fwnode_irq_get()? And why do
-> you need unnamed variant to begin with? As far as I understand it's pure DT and
-> names are there, no?
-> 
-> ...
-> 
->>  #include <linux/kernel.h>
->>  #include <linux/kref.h>
->>  #include <linux/module.h>
->> +#include <linux/of.h>
-> 
-> I do not see how you use this. You probably missed mod_devicetable.h.
-> 
->> +#include <linux/platform_device.h>
->>  #include <linux/pm.h>
->>  #include <linux/serdev.h>
->>  #include <linux/sysfs.h>
-> 
-> ...
-> 
->> +	/*
->> +	 * When using DT, we have to register the platform hub driver manually,
->> +	 * as it can't be matched based on top-level board compatible (like it
->> +	 * does the ACPI case).
->> +	 */
->> +	if (!ssh) {
->> +		struct platform_device *ph_pdev =
->> +			platform_device_register_simple("surface_aggregator_platform_hub",
->> +							0, NULL, 0);
->> +		if (IS_ERR(ph_pdev))
->> +			return dev_err_probe(dev, PTR_ERR(ph_pdev),
->> +					     "Failed to register the platform hub driver\n");
-> 
->> +	}
->> +
->> +	if (ssh)
-> 
-> Simply 'else' ? And making condition positive?
-> 
-> ...
-> 
->> -static const struct acpi_device_id ssam_serial_hub_match[] = {
->> +static const struct acpi_device_id ssam_serial_hub_acpi_match[] = {
->>  	{ "MSHW0084", 0 },
->>  	{ },
-> 
-> At some point, please drop that 0 part above and the comma in the terminator
-> entry.
-> 
->>  };
->> -MODULE_DEVICE_TABLE(acpi, ssam_serial_hub_match);
->> +MODULE_DEVICE_TABLE(acpi, ssam_serial_hub_acpi_match);
-> 
-> Do you really need this renaming?
-> 
-> ...
-> 
->> +#ifdef CONFIG_OF
->> +static const struct of_device_id ssam_serial_hub_of_match[] = {
->> +	{ .compatible = "microsoft,surface-sam", },
-> 
-> No inner comma.
-> 
->> +	{ },
-> 
-> No comma for the terminator.
-> 
->> +};
->> +MODULE_DEVICE_TABLE(of, ssam_serial_hub_of_match);
->> +#endif
->>  
->>  static struct serdev_device_driver ssam_serial_hub = {
->>  	.probe = ssam_serial_hub_probe,
->>  	.remove = ssam_serial_hub_remove,
->>  	.driver = {
->>  		.name = "surface_serial_hub",
->> -		.acpi_match_table = ssam_serial_hub_match,
->> +		.acpi_match_table = ACPI_PTR(ssam_serial_hub_acpi_match),
-> 
-> No, please do not use ACPI_PTR(), it's more harmful than helpful.
-> 
->> +		.of_match_table = of_match_ptr(ssam_serial_hub_of_match),
-> 
-> There is ongoing task to drop of_match_ptr(), so for ACPI_PTR().
-> 
->>  		.pm = &ssam_serial_hub_pm_ops,
->>  		.shutdown = ssam_serial_hub_shutdown,
->>  		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-> 
-> ...
-> 
->> --- a/drivers/platform/surface/surface3_power.c
->> +++ b/drivers/platform/surface/surface3_power.c
->> @@ -479,6 +479,7 @@ static int mshw0011_install_space_handler(struct i2c_client *client)
->>  	}
->>  
->>  	acpi_dev_clear_dependencies(adev);
->> +
->>  	return 0;
->>  }
-> 
-> Stray change.
-> 
-> ...
-> 
->> +/* Devices for Surface Laptop 7. */
->> +static const struct software_node *ssam_node_group_sl7[] = {
->> +	&ssam_node_root,
->> +	&ssam_node_bat_ac,
->> +	&ssam_node_bat_main,
->> +	&ssam_node_tmp_perf_profile_with_fan,
->> +	&ssam_node_fan_speed,
->> +	&ssam_node_hid_sam_keyboard,
->> +	/* TODO: evaluate thermal sensors devices when we get a driver for that */
->> +	NULL,
-> 
-> At some point please drop commas at the terminator entries. This will make code
-> more robust against quite unlikely but potential rebase-like mistakes (when a
-> new entry is added behind the terminator).
-> 
->> +};
-> 
-> ...
-> 
->> -static const struct acpi_device_id ssam_platform_hub_match[] = {
->> +static const struct acpi_device_id ssam_platform_hub_acpi_match[] = {
->>  	/* Surface Pro 4, 5, and 6 (OMBR < 0x10) */
->>  	{ "MSHW0081", (unsigned long)ssam_node_group_gen5 },
->>  
->> @@ -400,18 +413,41 @@ static const struct acpi_device_id ssam_platform_hub_match[] = {
->>  
->>  	{ },
->>  };
->> -MODULE_DEVICE_TABLE(acpi, ssam_platform_hub_match);
->> +MODULE_DEVICE_TABLE(acpi, ssam_platform_hub_acpi_match);
-> 
-> If renaming is needed, it can be done in a separate patch.
-> 
->> +#ifdef CONFIG_OF
->> +static const struct of_device_id ssam_platform_hub_of_match[] = {
->> +	/* Surface Laptop 7 */
->> +	{ .compatible = "microsoft,romulus13", (void *)ssam_node_group_sl7 },
->> +	{ .compatible = "microsoft,romulus15", (void *)ssam_node_group_sl7 },
->> +	{ },
->> +};
->> +#endif
-> 
-> As per above.
-> 
-> ...
-> 
->>  static int ssam_platform_hub_probe(struct platform_device *pdev)
->>  {
->>  	const struct software_node **nodes;
->> +	const struct of_device_id *match;
->> +	struct device_node *fdt_root;
->>  	struct ssam_controller *ctrl;
->>  	struct fwnode_handle *root;
->>  	int status;
->>  
->>  	nodes = (const struct software_node **)acpi_device_get_match_data(&pdev->dev);
-> 
-> Hmm... Why this doesn't use simple device_get_match_data()?
-> 
->> -	if (!nodes)
->> -		return -ENODEV;
->> +	if (!nodes) {
->> +		fdt_root = of_find_node_by_path("/");
->> +		if (!fdt_root)
->> +			return -ENODEV;
->> +
->> +		match = of_match_node(ssam_platform_hub_of_match, fdt_root);
->> +		of_node_put(fdt_root);
->> +		if (!match)
->> +			return -ENODEV;
->> +
->> +		nodes = (const struct software_node **)match->data;
-> 
-> This is quite strange! Where are they being defined?
-> 
->> +		if (!nodes)
->> +			return -ENODEV;
->> +	}
-> 
-> ...
-> 
->> +MODULE_ALIAS("platform:surface_aggregator_platform_hub");
-> 
-> Can it be platfrom device ID table instead? But do you really need it?
-> 
 
