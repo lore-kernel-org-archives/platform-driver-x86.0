@@ -1,191 +1,73 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663A0186A
-	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Aug 2024 20:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551DE1D2780;
+	Tue, 27 Aug 2024 20:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724790318; cv=none; b=jz4NABcGXiDdienlEOTNgCexhGjLNDb5in23r/VgTNKhdkzyTNY0lUMBz1RN3GbQhBH2rW37CPJb0pbmpmXg5bJp7YXtGhPBtFZnAjD18LD7LNqHJUDL5v9kGRrtOlWJ6ApQZQ5fgGM7t7z00agpv4VmGsNGZgJil3ByxJF40qo=
+	t=1724791824; cv=none; b=AHYXQlgO718GdOGnP1wY8o2jlOQ1VUMY65el0GAX1SnFBovUU6PgEltBuQKcT2yVVBPFhSQL1dlq+4CCnjYHuQsnL+c1/gy7e0AtGN3Pvk+Avm5Zf+UWGbKvzIluLRUEaE35IrUsziWISMyGrpkI39y84inUK1wac4zS8Z08Zog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724790318; c=relaxed/simple;
-	bh=IWULyQzsvHU8wjktGVnN2xnL9aSifbBo316o5trNc+I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gLVqvzGATwXLogLtzd5v+aH2NsFJGV8GfDrPDq9ASdckeVm40IW63QtW3hwQhvyma7DBtfT/TsLDWaKhs38NqQfSaEVP2OWzerEU9jelrd4wLx/FMSpT7Yvge5T+NZiPcfvq0dOqXTHQlKiloHWscTezoZ9I2HJYAt3NaI6ikVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=matthias-fetzer.de; spf=pass smtp.mailfrom=matthias-fetzer.de; dkim=pass (2048-bit key) header.d=matthias-fetzer.de header.i=@matthias-fetzer.de header.b=cectXIHS; arc=none smtp.client-ip=188.68.63.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=matthias-fetzer.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matthias-fetzer.de
+	s=arc-20240116; t=1724791824; c=relaxed/simple;
+	bh=DaPpDOLdDNnDk2vHazhnfHvX+dF1HCoUgrtWN0SMHqw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LLKkNKY1eVkuTMb9piSaqHYhxGgVs7Yi2SJQo69MtpwekrOzMHGQuZYm1/UgSQACDssnC7HLgWW7TZC72CxRCb+oR7hLbVkLNlJWWWjPYgAzo1Y/uayAb5ZuZMmJI1HGRH2uMf04Gyj6xc+tbMRYzxHX00/pKkJBRhpM+b1mNGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=K7i3sjQz; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=matthias-fetzer.de header.i=@matthias-fetzer.de header.b="cectXIHS"
-Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4Wtf2H18rqz3v0d;
-	Tue, 27 Aug 2024 22:16:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=matthias-fetzer.de;
-	s=key2; t=1724789783;
-	bh=IWULyQzsvHU8wjktGVnN2xnL9aSifbBo316o5trNc+I=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cectXIHSLkcYsw+PSb2kwOfn0X7ug7bD56m/zLvhkML9jBYdKPQ3LXABw0/Y0rDAI
-	 MzcnmpmmKHljpCoRLG9WM5zZND5E9LARzap7i5O5aP61/WCt1tDUuTyyVExIRA8Nz8
-	 5gXh4zDK6WSOouSdPCDwaxBqhvI+ZAV2WUvDkzgc9xtUOvX78Zp+eau6wMcTRp5tud
-	 OPyZOygscT5XVMpe1TP1b9ipS1u5heUWTbMxA6UxibXu4ClqnyP7V53zpOnjUhk265
-	 9UycJYQnUZOYv1zk4wRl42P+/CVIZY3pguHcgd0z5Eoe2v11ba96QLKyoSD2zI+WDR
-	 aVlWKKbHCNQuQ==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4Wtf2H0RK8z3v05;
-	Tue, 27 Aug 2024 22:16:23 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
-Received: from mxf9a3.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4Wtf6K0JLPz8t4H;
-	Tue, 27 Aug 2024 22:19:53 +0200 (CEST)
-Received: from [IPV6:2001:9e8:1a7e:8e00:a23c:e8ff:e9a1:df2] (unknown [IPv6:2001:9e8:1a7e:8e00:a23c:e8ff:e9a1:df2])
-	by mxf9a3.netcup.net (Postfix) with ESMTPSA id 5568B40285;
-	Tue, 27 Aug 2024 22:19:48 +0200 (CEST)
-Authentication-Results: mxf9a3;
-        spf=pass (sender IP is 2001:9e8:1a7e:8e00:a23c:e8ff:e9a1:df2) smtp.mailfrom=kontakt@matthias-fetzer.de smtp.helo=[IPV6:2001:9e8:1a7e:8e00:a23c:e8ff:e9a1:df2]
-Received-SPF: pass (mxf9a3: connection is authenticated)
-Message-ID: <0454c5e8-b773-456e-9845-a911774d0e69@matthias-fetzer.de>
-Date: Tue, 27 Aug 2024 22:19:45 +0200
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="K7i3sjQz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1724791818;
+	bh=DaPpDOLdDNnDk2vHazhnfHvX+dF1HCoUgrtWN0SMHqw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K7i3sjQz5cC6N+KfqehyCPJR0KmOO3Db+kmx+Q1hmThUSH4crkPs7rdCmcmhehpMi
+	 yAQwvmKEzq7EJUDDSoMi2k2xwAxLlkm6+RHynsAHbuwfYr3HgzXzQ2zNn2WMYtYHym
+	 hZTN89pTKrqo1w1VT17UkVetELBECoWnLMsds/Fo=
+Date: Tue, 27 Aug 2024 22:50:17 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Andres Salomon <dilinger@queued.net>, linux-kernel@vger.kernel.org, 
+	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, platform-driver-x86@vger.kernel.org, 
+	Matthew Garrett <mjg59@srcf.ucam.org>, Sebastian Reichel <sre@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, linux-pm@vger.kernel.org, Dell.Client.Kernel@dell.com
+Subject: Re: [PATCH v4 1/2] platform/x86:dell-laptop: Add knobs to change
+ battery charge settings
+Message-ID: <260a3e55-7072-4298-8fff-b5c2c674c65b@t-8ch.de>
+References: <20240820033005.09e03af1@5400>
+ <04d48a7c-cad1-4490-bbcd-ceb332c740bd@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bug report] platform/x86: thinkpad_acpi: Add Thinkpad Edge E531
- fan support
-To: Hans de Goede <hdegoede@redhat.com>,
- Dan Carpenter <dan.carpenter@linaro.org>
-Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-References: <f99e558d-c62a-41eb-93b3-cf00c016d907@stanley.mountain>
- <9566460c-4d0f-4ead-9fa1-a265c936c3d9@redhat.com>
-Content-Language: en-US, de-DE
-From: Matthias Fetzer <kontakt@matthias-fetzer.de>
-In-Reply-To: <9566460c-4d0f-4ead-9fa1-a265c936c3d9@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <172478998873.4585.998371354981114709@mxf9a3.netcup.net>
-X-Rspamd-Queue-Id: 5568B40285
-X-Rspamd-Server: rspamd-worker-8404
-X-NC-CID: /I+rYqMRa8PjU2AIuo9EvF4FjQ9SrgKx1IzzAbMAm1+/gb36U0sqz57t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <04d48a7c-cad1-4490-bbcd-ceb332c740bd@redhat.com>
 
+On 2024-08-26 16:44:35+0000, Hans de Goede wrote:
+> [..]
 
-Hi Dan and Hans,
+> Yes not being able to see the supported values is annoying I actually
+> wrote an email about that earlier today:
+> 
+> https://lore.kernel.org/linux-pm/49993a42-aa91-46bf-acef-4a089db4c2db@redhat.com/
+> 
+> but we need to make sure that the output is consistent between drivers otherwise
+> userspace can never know how to use the API, so for charge_type the dell
+> driver should only output the active type, not all the options.
+> 
+> This reminds me that there was a patch-series to allow battery extension drivers
+> like this one to actually use the power-supply core code for show()/store()
+> Thomas IIRC that series was done by you ?  What is the status of that ?
 
-Am 27.08.24 um 11:09 schrieb Hans de Goede:
-> Hi Dan,
-> 
-> On 8/27/24 10:45 AM, Dan Carpenter wrote:
->> Hello Matthias Fetzer,
->>
->> Commit 57d0557dfa49 ("platform/x86: thinkpad_acpi: Add Thinkpad Edge
->> E531 fan support") from Aug 16, 2024 (linux-next), leads to the
->> following Smatch static checker warning:
->>
->> 	drivers/platform/x86/thinkpad_acpi.c:8387 fan_set_enable()
->> 	error: uninitialized symbol 's'.
->>
->> drivers/platform/x86/thinkpad_acpi.c
->>      8319 static int fan_set_enable(void)
->>      8320 {
->>      8321         u8 s;
->>      8322         int rc;
->>      8323
->>      8324         if (!fan_control_allowed)
->>      8325                 return -EPERM;
->>      8326
->>      8327         if (mutex_lock_killable(&fan_mutex))
->>      8328                 return -ERESTARTSYS;
->>      8329
->>      8330         switch (fan_control_access_mode) {
->>      8331         case TPACPI_FAN_WR_ACPI_FANS:
->>      8332         case TPACPI_FAN_WR_TPEC:
->>      8333                 rc = fan_get_status(&s);
->>      8334                 if (rc)
->>      8335                         break;
->>      8336
->>      8337                 /* Don't go out of emergency fan mode */
->>      8338                 if (s != 7) {
->>      8339                         s &= 0x07;
->>      8340                         s |= TP_EC_FAN_AUTO | 4; /* min fan speed 4 */
->>      8341                 }
->>      8342
->>      8343                 if (!acpi_ec_write(fan_status_offset, s))
->>      8344                         rc = -EIO;
->>      8345                 else {
->>      8346                         tp_features.fan_ctrl_status_undef = 0;
->>      8347                         rc = 0;
->>      8348                 }
->>      8349                 break;
->>      8350
->>      8351         case TPACPI_FAN_WR_ACPI_SFAN:
->>      8352                 rc = fan_get_status(&s);
->>      8353                 if (rc)
->>      8354                         break;
->>      8355
->>      8356                 s &= 0x07;
->>      8357
->>      8358                 /* Set fan to at least level 4 */
->>      8359                 s |= 4;
->>      8360
->>      8361                 if (!acpi_evalf(sfan_handle, NULL, NULL, "vd", s))
->>      8362                         rc = -EIO;
->>      8363                 else
->>      8364                         rc = 0;
->>      8365                 break;
->>      8366
->>      8367         case TPACPI_FAN_WR_ACPI_FANW:
->>      8368                 if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x05)) {
->>      8369                         rc = -EIO;
->>      8370                         break;
->>      8371                 }
->>      8372                 if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0x00)) {
->>      8373                         rc = -EIO;
->>      8374                         break;
->>      8375                 }
->>      8376
->>      8377                 rc = 0;
->>
->> s isn't set on this path
->>
->>      8378                 break;
->>      8379
->>      8380         default:
->>      8381                 rc = -ENXIO;
->>      8382         }
->>      8383
->>      8384         mutex_unlock(&fan_mutex);
->>      8385
->>      8386         if (!rc)
->> --> 8387                 vdbg_printk(TPACPI_DBG_FAN,
->>      8388                         "fan control: set fan control register to 0x%02x\n",
->>      8389                         s);
->>                                   ^
->> Here
->>
->>      8390         return rc;
->>      8391 }
-> 
-> Thank you for reporting this.
-> 
-> Since this is just a debug print I think it is best to fix this by just
-> initializing s to 0 when it is declared and then just log 0
-> in the TPACPI_FAN_WR_ACPI_FANW case.
-> 
-> Anyone got any better suggestions ?
-> 
-> Regards,
-> 
-> Hans
-> 
+Yes, that is from me, [0].
+At least I'll need to implement the feedback from Sebastian and a proper
+locking scheme.
+I still intend to work on it, but if there are other people waiting for
+it, I'll try to get on with it.
 
-Since there is no single value and the registers are always set to
-the same static values this would be the right solution in my opinion.
+In the meantime maybe the psy core could export a helper function for
+formatting and parsing? Similar to the charge_behaviour helpers.
 
-Best regards,
-Matthias
+[0] https://lore.kernel.org/lkml/20240608-power-supply-extensions-v2-0-2dcd35b012ad@weissschuh.net/
