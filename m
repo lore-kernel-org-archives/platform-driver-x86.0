@@ -1,162 +1,152 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C502114
-	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Aug 2024 08:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053B5176FD3
+	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Aug 2024 09:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724748361; cv=none; b=MhJKiPUdYbI+rvGSU3zqjwher1wUykWyPS1Ay/DzzepRHCV3dZrdf6qlvJUxW7ohRVreYJuQBu+9d2l6ap8TDK/yYbBUhwMKHsZda32qF9qiLZPZBns0HQBrPKmk/IMvn2JKRdZu7fHQo2RzIxHSPJbHfB0thefl4eqGNx+ngLE=
+	t=1724749533; cv=none; b=IvCHjQikN3qmxIRRVWVCH4AzzwkiATMwwL6esUT5srBjjWdAZ9tMEiCPSoFB8qTaTLC6j7VfqtJOdKiPUIhYlmYrkz18r+hgr9ONSMMI/PWTDuKmqXyC4UJVeMP6mrJsX39A9sLfiBOa4+G45AJ2QbtPLzPPrcnwD+gvn2cjEso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724748361; c=relaxed/simple;
-	bh=0sOMbk+VclDZsgdJHMlbirNAvaC3nhWN08swyQa/soI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=OU3ch827f6XoTCHWWH0pe7rfrxNPhaStabNXmbFLog5Cr2Kv+A0lcXz22oZsKz8kD++1G5uet5cI4roH+gecILH86ixHw4hn+SL5aW/W6oWDFmz9keZeXws7tHEj2JNZ5TXLk+Lfwe7gABqrCkgJ3bvoM88nw86VMVbaM0c1Ekk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k+QKOCdT; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1724749533; c=relaxed/simple;
+	bh=6MJOEhJa/JatPJXsyYOm05fUkSrsn3SRjV56Hm6O2b4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E4Wv2u0yw2PRnBK83vTh6oCC1jHAlxj4cBeFOB4Ayl5gcVDU1PmVth7HgAsywf2V82GlZIcS6hxvyAx1YQ0yWoCZTvLboy8Ln8MBuCKmvpTopyDDsM7DIAzEd/ZZ443dSq1VmRGUiEsFtRX74Q4m76GHK4LSIdztfAOwCPe8Pis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L70EMzDP; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k+QKOCdT"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-428fb103724so32843935e9.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Aug 2024 01:45:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724748358; x=1725353158; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3okYOah5h7LF8oC7YTqtd5faAiFr4YTZDUyz8E01y/g=;
-        b=k+QKOCdTsPI9/OADMNv1YivaOudiJuzosXywxPdCZ9vRunosW21Kf6ErsZRT0OlG1s
-         qyR5OFAKvZNLCPNPZ8uOQKagpgzpyZNbZWmYoDFQSxkHrHCCQX+xwhwNrhr/dGASrU57
-         Ssq489lryAS32QVVRvOeWcdBPwe7KvjjNGflabcoZBMIGUZtelt0JiivNHznO3tuS9qP
-         pYBuZZOaY26tYuIlNSVWP8TQbQg9qWiTnyReYDeaRgL7xdrU5Pb/uVfQrauAb1p/gTgf
-         3QqsDAy1GUv+Wq3RUZv2sc3Ni7VPnYhduXDQDO5u/tb12RhCnQeUilImzLEk7SGCD+p4
-         DLiA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L70EMzDP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724749530;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b8AvRIiEgd+T2ByFA4V3B4ba6CEhrT0LmOrF0twKr2Q=;
+	b=L70EMzDP21f9VSwUDi01CJR2GjT51Rnl93y0kwknlY6J1NvprnBkb9w/Psu6PB3HKc2v4x
+	bQ/8Yxy1l6CmP8Vw513bURQvuLcLtMxr67RkxaRHG+q57SyTHuLEWg6/hfiuMEkkfd193Z
+	hL5t8lT4EfDqPGcPUkHeBj+09QA6Jpg=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-513-9phNdoGIN5yecohFEzOPrg-1; Tue, 27 Aug 2024 05:05:29 -0400
+X-MC-Unique: 9phNdoGIN5yecohFEzOPrg-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2f4f3e7b76aso34221051fa.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Aug 2024 02:05:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724748358; x=1725353158;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1724749528; x=1725354328;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3okYOah5h7LF8oC7YTqtd5faAiFr4YTZDUyz8E01y/g=;
-        b=NSkyKOIExH6Y5pQ6b7s9gsPKSVIoURy/DGoi99N+WFtzp7rwfO3LGA/MQzio2D+0Py
-         QTxIrxQCEh7W5pf079Ar5gDhmfbCvbjvjE1JaPiKAsFfli99fBQ5yK9MDvS8RxHUh6Hl
-         eje0onG0XX0n82XuJPIZ+qS4TXXJ0O72nVxSjnARmpPyLiOP87q3YUx/nAy8jBxw3xpF
-         FbcdoIp2oiwdyAwWOy/RQVV4r9H8wkycKPN06xWMKhDvrL7ftOGNUoo3O0FUd2C2kfuw
-         NMer8cgqXOXfLjhArOC+v/JpKKCRGmqEPlHo0McN3BkqygZ4mFc+zLLAJNPPNQ47Q7n4
-         cs9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWzdgaPbbDf5MuguB13SZnfacQ+Aq4qB5nsqbJqzbmyJ/ChxB9p2Pm2mX02qP7Aj74sKG7B+kMsCB3z4tzFqN15z2Jb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1/XmIjBVHE8W3PxChFtx4P/E3paG7Y0sIR1sEDObX9qeYicdr
-	4jTeOy/pS619m6qStmH8NFi+b5SauznEKWUZFo6IRLkDrdrIJ9SQrEMeTK1Dhqwe1jWGqAVPMsi
-	L
-X-Google-Smtp-Source: AGHT+IEptX/IcZFMcpwFoTmEY5uvRGOZCCuBBE4qEFoD5y4B9BtepyWTi8cwqrBErcgvZtpPMKylsg==
-X-Received: by 2002:a05:600c:1c1e:b0:428:f0fc:4e54 with SMTP id 5b1f17b1804b1-42b9a681fbamr12574795e9.11.1724748358297;
-        Tue, 27 Aug 2024 01:45:58 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42ac514e04dsm178745925e9.6.2024.08.27.01.45.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2024 01:45:58 -0700 (PDT)
-Date: Tue, 27 Aug 2024 11:45:54 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Matthias Fetzer <kontakt@matthias-fetzer.de>
-Cc: ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org
-Subject: [bug report] platform/x86: thinkpad_acpi: Add Thinkpad Edge E531 fan
- support
-Message-ID: <f99e558d-c62a-41eb-93b3-cf00c016d907@stanley.mountain>
+        bh=b8AvRIiEgd+T2ByFA4V3B4ba6CEhrT0LmOrF0twKr2Q=;
+        b=a4uyqYIagxCjAdlBs1U49WC7GKo+NXKDjIJ+WSlCwvXfLM25fI0YBMF2OE1hiJFL3W
+         3ECBjZObBYRp4TftRrH3X4+YboLZ2nHLLV7nvShGCG8Ilk3GY7vO3rBy8wfuqPF+MVji
+         LIkz6OBvMkYjdSioaYfvkFBUzOni5h2Nsw5jDlCJmzbF22q4O6EvzWJySQOhBAh+JPOr
+         gvAVEOtz2+vX0pxlOwIQATRZVBkGmsENRjIPzJWVMcd+gOvv3I66Uo4E7Cp5wddaoQsi
+         rWbAupc8lItg4IufhlJndfZQfmr/3ghMik4GXEYbRoVttXAF5OrPsYXUnHc3XMLC2qv6
+         DMiA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/ITEwUeQU1z25v9TYly8/reBvPTSW8U/rWFzVGJd8eJ8YRbFR/6g/4lUNBUh5FJIIBFDhR8OcLqtw7vBtfk7n4OLb@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxde2ey/2y1EXUu0iuvXpwCZITTQ1OJD2Vmvdmlovf11+6KKaKx
+	TffqpB9Vfrt34I6KaEHumhf2/M4ab4DKKUxcXMTKXBZCiRaxDzF7Z85r94D2T7vLbsHuCtwNqoJ
+	4ccNa5Wt5THv9jjU5hlh6Le0tJivdBnXfX6dBN//tbDRcH0MFE4zv6WxML7KSTiKg28aalWO7pF
+	vAWdo=
+X-Received: by 2002:a2e:9186:0:b0:2ef:2543:457c with SMTP id 38308e7fff4ca-2f4f49135e2mr71941291fa.24.1724749527485;
+        Tue, 27 Aug 2024 02:05:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGSqUHC32MG1RXcP//rWHTciaJ+jrI4azojVO+P8tX3v+DwkqqD6jBq+iB43z3IKRAv39Dj2w==
+X-Received: by 2002:a2e:9186:0:b0:2ef:2543:457c with SMTP id 38308e7fff4ca-2f4f49135e2mr71941101fa.24.1724749526872;
+        Tue, 27 Aug 2024 02:05:26 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c0bb4829ccsm761675a12.95.2024.08.27.02.05.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Aug 2024 02:05:26 -0700 (PDT)
+Message-ID: <65362768-f64b-42d9-8f74-e4f5190af95c@redhat.com>
+Date: Tue, 27 Aug 2024 11:05:25 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] platform/x86: serial-multi-instantiate: Don't require
+ both I2C and SPI
+To: Andy Shevchenko <andy.shevchenko@gmail.com>,
+ Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+References: <20240814132939.308696-1-rf@opensource.cirrus.com>
+ <ZszhKCKYl9161RIP@surfacebook.localdomain>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <ZszhKCKYl9161RIP@surfacebook.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello Matthias Fetzer,
+Hi Andy,
 
-Commit 57d0557dfa49 ("platform/x86: thinkpad_acpi: Add Thinkpad Edge
-E531 fan support") from Aug 16, 2024 (linux-next), leads to the
-following Smatch static checker warning:
+On 8/26/24 10:10 PM, Andy Shevchenko wrote:
+> Wed, Aug 14, 2024 at 02:29:39PM +0100, Richard Fitzgerald kirjoitti:
+>> Change the Kconfig dependency so that it doesn't require both I2C and SPI
+>> subsystems to be built. Make a few small changes to the code so that the
+>> code for a bus is only called if the bus is being built.
+>>
+>> When SPI support was added to serial-multi-instantiate it created a
+>> dependency that both CONFIG_I2C and CONFIG_SPI must be enabled.
+>> Typically they are, but there's no reason why this should be a
+>> requirement. A specific kernel build could have only I2C devices
+>> or only SPI devices. It should be possible to use serial-multi-instantiate
+>> if only I2C or only SPI is enabled.
+>>
+>> The dependency formula used is:
+>>
+>>   depends on (I2C && !SPI) || (!I2C && SPI) || (I2C && SPI)
+>>
+>> The advantage of this approach is that if I2C=m or SPI=m then
+>> SERIAL_MULTI_INSTANTIATE is limited to n/m.
+> 
+> ...
+> 
+>>  static void smi_devs_unregister(struct smi *smi)
+>>  {
+>> +#if IS_REACHABLE(CONFIG_I2C)
+> 
+> There is no explanation why ugly ifdeffery is used here, while normal
+> conditionals elsewhere.
 
-	drivers/platform/x86/thinkpad_acpi.c:8387 fan_set_enable()
-	error: uninitialized symbol 's'.
+Note that this has already been merged as is, as you've figured
+out yourself the reason to use #ifdef here is because
+there is no i2c_unregister_device() prototype declared when
+CONFIG_I2C=n
 
-drivers/platform/x86/thinkpad_acpi.c
-    8319 static int fan_set_enable(void)
-    8320 {
-    8321         u8 s;
-    8322         int rc;
-    8323 
-    8324         if (!fan_control_allowed)
-    8325                 return -EPERM;
-    8326 
-    8327         if (mutex_lock_killable(&fan_mutex))
-    8328                 return -ERESTARTSYS;
-    8329 
-    8330         switch (fan_control_access_mode) {
-    8331         case TPACPI_FAN_WR_ACPI_FANS:
-    8332         case TPACPI_FAN_WR_TPEC:
-    8333                 rc = fan_get_status(&s);
-    8334                 if (rc)
-    8335                         break;
-    8336 
-    8337                 /* Don't go out of emergency fan mode */
-    8338                 if (s != 7) {
-    8339                         s &= 0x07;
-    8340                         s |= TP_EC_FAN_AUTO | 4; /* min fan speed 4 */
-    8341                 }
-    8342 
-    8343                 if (!acpi_ec_write(fan_status_offset, s))
-    8344                         rc = -EIO;
-    8345                 else {
-    8346                         tp_features.fan_ctrl_status_undef = 0;
-    8347                         rc = 0;
-    8348                 }
-    8349                 break;
-    8350 
-    8351         case TPACPI_FAN_WR_ACPI_SFAN:
-    8352                 rc = fan_get_status(&s);
-    8353                 if (rc)
-    8354                         break;
-    8355 
-    8356                 s &= 0x07;
-    8357 
-    8358                 /* Set fan to at least level 4 */
-    8359                 s |= 4;
-    8360 
-    8361                 if (!acpi_evalf(sfan_handle, NULL, NULL, "vd", s))
-    8362                         rc = -EIO;
-    8363                 else
-    8364                         rc = 0;
-    8365                 break;
-    8366 
-    8367         case TPACPI_FAN_WR_ACPI_FANW:
-    8368                 if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8106, 0x05)) {
-    8369                         rc = -EIO;
-    8370                         break;
-    8371                 }
-    8372                 if (!acpi_evalf(fanw_handle, NULL, NULL, "vdd", 0x8100, 0x00)) {
-    8373                         rc = -EIO;
-    8374                         break;
-    8375                 }
-    8376 
-    8377                 rc = 0;
+> 
+>>  	while (smi->i2c_num--)
+>>  		i2c_unregister_device(smi->i2c_devs[smi->i2c_num]);
+>> +#endif
+>>  
+>> -	while (smi->spi_num--)
+>> -		spi_unregister_device(smi->spi_devs[smi->spi_num]);
+>> +	if (IS_REACHABLE(CONFIG_SPI)) {
+>> +		while (smi->spi_num--)
+>> +			spi_unregister_device(smi->spi_devs[smi->spi_num]);
+>> +	}
+>>  }
+> 
+> There are ways to solve this:
+> 1) add a stub for I2C=n for i2c_unregister_device();
 
-s isn't set on this path
+Yes that would be an option to clean this up a bit as a follow-up
+patch series.
 
-    8378                 break;
-    8379 
-    8380         default:
-    8381                 rc = -ENXIO;
-    8382         }
-    8383 
-    8384         mutex_unlock(&fan_mutex);
-    8385 
-    8386         if (!rc)
---> 8387                 vdbg_printk(TPACPI_DBG_FAN,
-    8388                         "fan control: set fan control register to 0x%02x\n",
-    8389                         s);
-                                 ^
-Here
+Note no need for a stub, just move the declaration out of
+the #if IS_ENABLED(CONFIG_I2C) block, using if (IS_REACHABLE)
+only requires a prototype.
 
-    8390         return rc;
-    8391 }
+> 2) resplit this driver to have several built modules:
+>    core, I2C parts, SPI parts.
+> 
 
-regards,
-dan carpenter
+Regards,
+
+Hans
+
+
