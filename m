@@ -1,223 +1,260 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2762E4C634;
-	Tue, 27 Aug 2024 10:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFB319EED8;
+	Tue, 27 Aug 2024 11:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724756025; cv=none; b=cN42hWL8XlIS780vI1mGXGx4I9qCmAWEkwjN0aN1msMvkIbQ8ZMMt8J15PE9KJOlaRbu5icMXH+EbVKytp/8OMNMVE3RgIxn+iERGKqeJrTzdqz1s8HDrn2ringxE+WjrtRmLrb+mIY42ShRWvbEvq5a6yj3TRKub53+d6xKj8o=
+	t=1724758243; cv=none; b=iz5pU2tf/k4U3fJGrVGAdatKimb4dqPz8Ka+MmGrSghxwxLp4tL9Er1aMKjRxcOF26S/u5/ADxqOQwn/etGR8NSu+qVrmI+49gP6C1HtkruIt5yJ0mv0BI5vGBEgshYym51AMQaEXp+2EpbNKgq5UUGiXEbz8Ha0AcDov0EgBAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724756025; c=relaxed/simple;
-	bh=0cwnZgpNLcFVVJ9Sb3+sgkuw4pLRegm1J+e48W5+bIc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=soWpU89H7WKxjvY7gExE+jKvYFS4MFSdvFjEuHpzmBdX5KMXY/LwjZsnOS/nCuwEPWV150dfSHzT4Jium/fpo21bGj0pbZ+mIhT3/JN5SARn6tipWpKgRaIP9vCCOftDZ0Gy5RDrWKOqHsGQ2eJRVVWL9INutm+enk7NZR0aOB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NtwuoXbU; arc=none smtp.client-ip=198.175.65.18
+	s=arc-20240116; t=1724758243; c=relaxed/simple;
+	bh=98vxe8lKvwmQFrbVzGowoxh4vUjpPyeCTxGxI5JlJIk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=u1rIvqHDJIKKQaTKutMRlt14I6kVglKWW0W+Or8t7W4OzXM2JCku+EU0UeXGeJOrxEKg3AZz8P1McmyLoCqn2qUl4OE2HE++V1zkhx2YnHM/QngsWD8OnxZWQA7R/GlOEmqzRZIy/THYwrNLfdSiWgQkFQSGMvk2tEIoT5OCBV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jH4C9Nr/; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NtwuoXbU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jH4C9Nr/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724756024; x=1756292024;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=0cwnZgpNLcFVVJ9Sb3+sgkuw4pLRegm1J+e48W5+bIc=;
-  b=NtwuoXbUh3mFaw82AccsT+m3+LUw46Zph7f8aeMxqLMB1Lx74osaJ+B4
-   VHSIzusyLHafaATS5T+VzPB8njJWx0lHic0DIJzaQLt/DqKCujJIdn4Jr
-   Vz20YePGwCv3xa1PHNF5vRGSpIu9u2ZyRKQc5Tpgj6Y1B7WOiyoz3gaIi
-   KgFjsRtystQNv2u7y55/DPM2duSvHjfGMLXuK7Q2yyGc9J3m3JmRgTSXm
-   YTB4+xyo939kOJxNcxLubEKqp5gnNDIN6aYdGmqJ+5UHjN+fxiXj/sVKe
-   GUVSjrvpYfvGJyB0qNATny/GhJPaudMmYqT9EvxdE576XlV0WtugRSbyb
-   A==;
-X-CSE-ConnectionGUID: yn9r8z3UR/a/1MrQWM7Hvg==
-X-CSE-MsgGUID: gaoNVIDvTciAiHr7VKwk1Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11176"; a="23378903"
+  t=1724758242; x=1756294242;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=98vxe8lKvwmQFrbVzGowoxh4vUjpPyeCTxGxI5JlJIk=;
+  b=jH4C9Nr/LWTiU5ia6AopkRgxnteHMCbiKBqHXx+4YShHlitWw/rrcZSd
+   8dU0u4fGYkrceWDw4Vmxu/xCOYUlaYAJMBLJvpnlHoJ8zGkUK/cm8LtLB
+   yEapGOfEVo9B6yj9vWhLEvNVoKhjhXx2hJ6Pg9x4aCh/vdvxgjUtjjFal
+   eps5sM3Xy4hJIbZxQpco7AhM2/9vEp3Y6MPFmvPmHfsNhXgTcQKjZcikt
+   3dBDRssUUSfHffyLEDoupsESgEqKU1JiCB6rupg7g00O7iHFNlxmQUpnu
+   hSnP9RQWo3xYh8GekfnO0KseAQDpJeXzXCnz71milNjwa9XlYTU7LA/y5
+   Q==;
+X-CSE-ConnectionGUID: pWriJR+pSqSIw1+phh1d6Q==
+X-CSE-MsgGUID: /NlNf+JtT6eYT+04lodHTQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11176"; a="23408491"
 X-IronPort-AV: E=Sophos;i="6.10,180,1719903600"; 
-   d="scan'208";a="23378903"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 03:53:43 -0700
-X-CSE-ConnectionGUID: 2JrTYpy2QAm9jY1+zcY5jw==
-X-CSE-MsgGUID: +KdlvFXJSXe7SGJFPdy0tQ==
+   d="scan'208";a="23408491"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 04:30:41 -0700
+X-CSE-ConnectionGUID: FaAxh9qXQYyvRWo1QT+f0w==
+X-CSE-MsgGUID: gf6hzSrYTROQO7iBz3fivw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,180,1719903600"; 
-   d="scan'208";a="100323888"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.17])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 03:53:39 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 27 Aug 2024 13:53:34 +0300 (EEST)
-To: Perry Yuan <perry.yuan@amd.com>
-cc: Hans de Goede <hdegoede@redhat.com>, Mario.Limonciello@amd.com, 
-    Borislav.Petkov@amd.com, kprateek.nayak@amd.com, Alexander.Deucher@amd.com, 
-    Xinmei.Huang@amd.com, bharathprabhu.perdoor@amd.com, 
-    poonam.aggrwal@amd.com, Li.Meng@amd.com, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Xiaojian.Du@amd.com
-Subject: Re: [PATCH 08/11] platform/x86/: hfi: add online and offline callback
- support
-In-Reply-To: <2661e74beceb9198d0baefe1f145080ef2b812cb.1724748733.git.perry.yuan@amd.com>
-Message-ID: <0242c3fa-74b8-63d5-dc2d-ae2f2519a281@linux.intel.com>
-References: <cover.1724748733.git.perry.yuan@amd.com> <2661e74beceb9198d0baefe1f145080ef2b812cb.1724748733.git.perry.yuan@amd.com>
+   d="scan'208";a="63343704"
+Received: from ehanks-mobl1.amr.corp.intel.com (HELO [10.124.223.66]) ([10.124.223.66])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 04:30:38 -0700
+Message-ID: <8719e7653b2f859c46966986dc81cc589a6d78ca.camel@linux.intel.com>
+Subject: Re: [PATCH 1/3] Documentation: admin-guide: pm: Add efficiency vs.
+ latency tradeoff to uncore documentation
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Tero Kristo <tero.kristo@linux.intel.com>, Hans de Goede
+	 <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, LKML
+	 <linux-kernel@vger.kernel.org>
+Date: Tue, 27 Aug 2024 07:30:36 -0400
+In-Reply-To: <1b93f71a-8a36-f95e-86b9-2b8f330847ff@linux.intel.com>
+References: <20240821131321.824326-1-tero.kristo@linux.intel.com>
+	 <20240821131321.824326-2-tero.kristo@linux.intel.com>
+	 <dabdc81e-d743-6402-f87a-dee2d6b906b8@linux.intel.com>
+	 <4d6adc49f295ad1dec26cd1a67ec3997686db4a9.camel@linux.intel.com>
+	 <1b93f71a-8a36-f95e-86b9-2b8f330847ff@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 
-On Tue, 27 Aug 2024, Perry Yuan wrote:
+On Tue, 2024-08-27 at 11:08 +0300, Ilpo J=C3=A4rvinen wrote:
+> On Mon, 26 Aug 2024, srinivas pandruvada wrote:
+>=20
+> > On Fri, 2024-08-23 at 15:28 +0300, Ilpo J=C3=A4rvinen wrote:
+> > > On Wed, 21 Aug 2024, Tero Kristo wrote:
+> > >=20
+> > > > Added documentation about the functionality of efficiency vs.
+> > > > latency tradeoff
+> > > > control in intel Xeon processors, and how this is configured
+> > > > via
+> > > > sysfs.
+> > > >=20
+> > > > Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
+> > > > ---
+> > > > =C2=A0.../pm/intel_uncore_frequency_scaling.rst=C2=A0=C2=A0=C2=A0=
+=C2=A0 | 51
+> > > > +++++++++++++++++++=E2=81=A0Ayoub,=C2=A0Hatim=C2=A0This seems that =
+when on AC
+> > > > mode, Windows don't care about PC10. Is this correct? It seems
+> > > > that with EPB=3D6 we can
+> > > > =C2=A01 file changed, 51 insertions(+)
+> > > >=20
+> > > > diff --git a/Documentation/admin-
+> > > > guide/pm/intel_uncore_frequency_scaling.rst
+> > > > b/Documentation/admin-
+> > > > guide/pm/intel_uncore_frequency_scaling.rst
+> > > > index 5ab3440e6cee..fb83aa2b744e 100644
+> > > > --- a/Documentation/admin-
+> > > > guide/pm/intel_uncore_frequency_scaling.rst
+> > > > +++ b/Documentation/admin-
+> > > > guide/pm/intel_uncore_frequency_scaling.rst
+> > > > @@ -113,3 +113,54 @@ to apply at each uncore* level.
+> > > > =C2=A0
+> > > > =C2=A0Support for "current_freq_khz" is available only at each
+> > > > fabric
+> > > > cluster
+> > > > =C2=A0level (i.e., in uncore* directory).
+> > > > +
+> > > > +Efficiency vs. Latency Tradeoff
+> > >=20
+> > > Does this section even cover the "tradeoff" part in its body? Why
+> > > not
+> > > call=20
+> > > it directly "Control" after ELC?
+> > >=20
+> > > > +-------------------------------
+> > > > +
+> > > > +In the realm of high-performance computing, particularly with
+> > > > Xeon
+> > > > +processors, managing uncore frequency is an important aspect
+> > > > of
+> > > > system
+> > > > +optimization. Traditionally, the uncore frequency is ramped up
+> > > > rapidly
+> > > > +in high load scenarios. While this strategy achieves low
+> > > > latency,
+> > > > which
+> > > > +is crucial for time-sensitive computations, it does not
+> > > > necessarily yield
+> > > > +the best performance per watt, =E2=80=94a key metric for energy
+> > > > efficiency
+> > > > and
+> > > > +operational cost savings.
+> > >=20
+> > > This entire paragraph feels more prose or history book than
+> > > documentation=20
+> > > text. I'd suggest using something that goes more directly into
+> > > the
+> > > point
+> > > about what ELC brings to the table (I suppose the goal is
+> > > "performance=20
+> > > per watt" optimization, even that goal is only implied by the
+> > > current
+> > > text, not explicitly stated as the goal here).
+> > >=20
+> >=20
+> > What about this?
+> >=20
+> > Traditionally, the uncore frequency is ramped up to reach the
+> > maximum=20
+> > possible level based on parameters like EPB (Energy perf Bias) and
+> > other system power management settings programmed by BIOS.=C2=A0 While
+> > this
+> > strategy achieves low latency for latency sensitive applications,
+> > it
+> > does not necessarily yield the best performance per watt.=20
+>=20
+> This again starts with a wrong foot. Don't use words like
+> "traditionally",
+> "in the past", "historically", "is added", etc. that refer to past
+> time
+> in documentation text at all. The premise with documentation for
+> feature x=20
+> is that the feature x exists. After these patches have been accepted,
+> the=20
+> reality is that ELC exists and time before does not matter so we
+> don't=20
+> encumber documentation text with that era that has become irrelevant.
+>=20
+While the choice of words are not correct, for me background is
+important on why a feature is implemented.
+Here even after ELC is implemented, majority of generations will still
+not have this feature. Uncore is not just supported on TPMI systems.
 
-> From: Perry Yuan <Perry.Yuan@amd.com>
-> 
-> There are some firmware parameters that need to be configured
-> when a CPU core is brought online or offline.
-> 
-> when CPU is online, it will initialize the workload classification
-> parameters to CPU firmware which will trigger the workload class ID
-> updating function.
-> 
-> Once the CPU is going to offline, it will need to disable the workload
-> classification function and clear the history.
-> 
-> Signed-off-by: Perry Yuan <Perry.Yuan@amd.com>
-> ---
->  drivers/platform/x86/amd/hfi/hfi.c | 90 ++++++++++++++++++++++++++++++
->  1 file changed, 90 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
-> index cd5f2b708ebf..57b642c4c522 100644
-> --- a/drivers/platform/x86/amd/hfi/hfi.c
-> +++ b/drivers/platform/x86/amd/hfi/hfi.c
-> @@ -154,6 +154,7 @@ static int __percpu *amd_hfi_ipcc_scores;
->  
->  static int amd_set_hfi_ipcc_score(struct amd_hfi_cpuinfo *info, int cpu);
->  static int update_hfi_ipcc_scores(struct amd_hfi_data *amd_hfi_data);
-> +static int amd_hfi_set_state(unsigned int cpu, bool state);
 
-Unnecessary.
+> You might occasionally have to mention what is not possible without
+> ELC=20
+> in case it's still possible to run stuff without ELC but don't put
+> time=20
+> references to it. However, it's not something you should start with
+> in
+> the documentation text.
+>=20
+> > The Efficiency Latency Control (ELC) feature is added to improve
+>=20
+> "is added to improve" -> "improves"
+Fine.
 
->  static int find_cpu_index_by_apicid(unsigned int target_apicid)
->  {
-> @@ -318,6 +319,87 @@ static int amd_set_hfi_ipcc_score(struct amd_hfi_cpuinfo *hfi_cpuinfo, int cpu)
->  	return 0;
->  }
->  
-> +static int amd_hfi_set_state(unsigned int cpu, bool state)
-> +{
-> +	int ret;
-> +
-> +	ret = wrmsrl_on_cpu(cpu, AMD_WORKLOAD_CLASS_CONFIG, state);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return wrmsrl_on_cpu(cpu, AMD_WORKLOAD_HRST, 0x1);
-> +}
-> +
-> +/*
-> + * amd_hfi_online() - Enable workload classification on @cpu
-> + * @cpu: CPU in which the workload classification will be enabled
-> + *
-> + */
-> +static int amd_hfi_online(unsigned int cpu)
-> +{
-> +	struct amd_hfi_cpuinfo *hfi_info = per_cpu_ptr(&amd_hfi_cpuinfo, cpu);
-> +	struct amd_hfi_classes *hfi_classes;
-> +	int ret;
-> +
-> +	if (WARN_ON_ONCE(!hfi_info))
+>=20
+> > performance per watt. With this feature hardware power management
+> > algorithms optimize trade-off between latency and power
+> > consumption.
+> > But for some latency sensitive workloads further tuning can be done
+> > from OS to get desired performance.
+>=20
+> I'd just start with this paragraph. It goes straight into the point
+> and=20
+> is good in that it tries to summarize what ELC tries to achieve.
+There are so many features we have which improves perf/watt. Why ELC is
+special needs some background.
 
-Can this ever trigger??
+>=20
+> > The hardware monitors the average CPU utilization across all cores
+>=20
+> hardware or ELC-capable HW?
+Hardware. hardware always does this.
 
-> +		return -EINVAL;
+>=20
+> > in a power domain at regular intervals and decides a uncore
+> > frequency.=20
+>=20
+> This kind of feels something that belongs to the first paragraph if
+> it's=20
+> about ELC. (I'm left slightly unsure if ELC refers only to those
+> controls=20
+> mentioned below, or if it is the automatic uncore freq control plus
+> the=20
+> manual controls. I assume it's the latter because of "with this
+> feature=20
+> hardware power management algorithms optimize" sentence.)
+It is later. Hardware doesn't do a PM feature depending only on OS.
 
-Definitely wrong error code to return since this has nothing to do with 
-user input being invalid.
+>=20
+> > While this may result in the best performance per watt, workload
+> > may be
+> > expecting higher performance at the expense of power. Consider an
+> > application that intermittently wakes up to perform memory reads on
+> > an
+> > otherwise idle system. In such cases, if hardware lowers uncore
+> > frequency, then there may be delay in ramp up of frequency to meet
+> > target performance.=20
+> >=20
+> > The ELC control defines some parameters which can be changed from
+> > OS.
+> > If the average CPU utilization is below a user defined threshold
+> > (elc_low_threshold_percent attribute below), the user defined
+> > uncore
+> > frequency floor frequency will be used (elc_floor_freq_khz
+> > attribute=20
+> > below) instead of hardware calculated minimum.=20
+> >=20
+> > Similarly in high load scenario where the CPU utilization goes
+> > above=20
+> > the high threshold value (elc_high_threshold_percent attribute
+> > below)=20
+> > instead of jumping to maximum uncore frequency, uncore frequency is
+> > increased in 100MHz steps until the power limit is reached.
+> >=20
+> > Attributes for efficiency latency control:=20
+> > ..=20
+> > ..=20
+>=20
+> There were a few spaces at the end if lines, those should be removed.
+Yes in the patch.
 
-> +	if (!zalloc_cpumask_var(&hfi_info->cpus, GFP_KERNEL))
-> +		return -ENOMEM;
-> +
-> +	mutex_lock(&hfi_cpuinfo_lock);
+Thanks,
+Srinivas
 
-Use guard().
-
-> +	cpumask_set_cpu(cpu, hfi_info->cpus);
-> +
-> +	/*
-> +	 * Check if @cpu as an associated, initialized and ranking data must be filled
-> +	 */
-> +	hfi_classes = hfi_info->amd_hfi_classes;
-> +	if (!hfi_classes)
-> +		goto unlock;
-> +
-> +	/* Enable the workload classification interface */
-> +	ret = amd_hfi_set_state(cpu, true);
-> +	if (ret)
-> +		pr_err("wct enable failed for cpu %d\n", cpu);
-
-Use %u for unsigned int.
-
-> +
-> +	mutex_unlock(&hfi_cpuinfo_lock);
-> +	return 0;
-> +
-> +unlock:
-> +	free_cpumask_var(hfi_info->cpus);
-> +	mutex_unlock(&hfi_cpuinfo_lock);
-> +	return ret;
-> +}
-> +
-> +/*
-> + * amd_hfi_offline() - Disable workload classification on @cpu
-> + * @cpu: CPU in which the workload classification will be disabled
-> + *
-> + * Remove @cpu from those covered by its HFI instance.
-> + *
-> + */
-> +static int amd_hfi_offline(unsigned int cpu)
-> +{
-> +	struct amd_hfi_cpuinfo *hfi_info = &per_cpu(amd_hfi_cpuinfo, cpu);
-> +	int ret;
-> +
-> +	if (WARN_ON_ONCE(!hfi_info))
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&hfi_cpuinfo_lock);
-> +
-> +	/* Disable the workload classification interface */
-> +	ret = amd_hfi_set_state(cpu, false);
-> +	if (ret)
-> +		pr_err("wct disable failed for cpu %d\n", cpu);
-
-%u
-
-> +
-> +	mutex_unlock(&hfi_cpuinfo_lock);
-> +
-> +	free_cpumask_var(hfi_info->cpus);
-> +
-> +	return 0;
-> +}
-> +
->  static int update_hfi_ipcc_scores(struct amd_hfi_data *amd_hfi_data)
->  {
->  	int cpu;
-> @@ -467,6 +549,14 @@ static int amd_hfi_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto err_exit;
->  
-> +	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "x86/amd_hfi:online",
-> +			amd_hfi_online,
-> +			amd_hfi_offline);
-> +	if (ret < 0) {
-> +		pr_warn("failed to setup cpuhp state! (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
->  	dev_dbg(&pdev->dev, "%s driver registered.\n", pdev->name);
->  
->  	return 0;
-> 
-
--- 
- i.
+>=20
 
