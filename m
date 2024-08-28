@@ -1,121 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9A215B57A;
-	Wed, 28 Aug 2024 10:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11261741D4;
+	Wed, 28 Aug 2024 12:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724839518; cv=none; b=DidFkneFafNxNlv1TZMQtZSVFw1e7niqm7FQtk4oVVaipX8SQ1eyr8xdQFpcVbG+qPP+HoVgblNveni0gjkvDM++p2SUOp8kApioenTgf1DPgfGg+KO8XjAQaqIWZxi7pdShMWPbccME6wp4GSX41KY2GHeVw+A7hCSXEt3moDU=
+	t=1724847571; cv=none; b=Hw8090bsoUJsFP2/MDvRhWcWIN2dAEwVv237jjuMBDueYSQFbDPw85VhVn+4buep6sha1ocIyAG9dhkixk64QK0+9P0seHEcH00EViARHNAeoT5/AZ2SNvPlaBmBUOiF6QrktieYCRpDE6m4weRhOwtyv0Q0PCB2JrOsT/2SVvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724839518; c=relaxed/simple;
-	bh=nbZWOGGs7V+IKSDTacg3uSEez86F3BUFm3ENgDB+gm8=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=KiCkho/24twjruQWZcS+mhK9XPmhbiJEOe29nqQbGcBz2e9a8xIXoRZs73ob28HI4f24TYygfkSeoB1qggT3p435EhoeFzwXssufJy7bD00wpSLtTz7LGWkmZKHi1RYj0SpVcPzwuPNjUA8jOLCvdyqBQsC1j1XhzeIXZlNUEcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XYRNGWIK; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1724847571; c=relaxed/simple;
+	bh=CwnZBKC1X2wPCwkS69iD9fyMDU/12RPaSxdm03Jn/5c=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=asie1HYcwIanZbj+rC6/NlCFFEWcruewEwCTl3OdP7fGMXYCgkYogW2SPtrVVc9RenV349545IvnlOB+UYp1yabW7PqCgb2yMgrUfz63ZDDMTMt2E+7dg517yEN7aeLQld6qiaMFDNcsmG3mFSJfYA8jJVYNGaHNZI0lfKw0+zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=sXSQcyjz; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XYRNGWIK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724839517; x=1756375517;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=nbZWOGGs7V+IKSDTacg3uSEez86F3BUFm3ENgDB+gm8=;
-  b=XYRNGWIK1+aXp97QAPtubM2doBi6L14naQBk6CCp9Zs0OrzlsvJIy3sA
-   PJyOJ8j0z2fY2DKuFkQcPgoLB2Cj9kDUcoCxZZeOh+REqsbEUZTC0bzrt
-   DGdWnPc5ABTYVq0IrQVrhKSMmGxTum/yQlB7H3yxefC4afrVx9r4Sq5/y
-   SE3Bu76vUtjkixCgXrt/YzJXLEMFThqmjpBV9yEr7swyNQWiyfrYQjBuO
-   hDlBxnuaKln4O4ls6ZAKDSiS7XpMFUoZ7JiFkXnQ/XB4QMVzUbhMRBkd4
-   cM+KHbCofmGe0mDeYVaCjIPsQzN6nVcHNJ+QvYWROHdTpiVYb9tRHmOR9
-   Q==;
-X-CSE-ConnectionGUID: 70za5EuYRyGra7uBTxVvuQ==
-X-CSE-MsgGUID: TA8eoB81SrmV/0WTGFDOpQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11177"; a="23521225"
-X-IronPort-AV: E=Sophos;i="6.10,182,1719903600"; 
-   d="scan'208";a="23521225"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 03:05:16 -0700
-X-CSE-ConnectionGUID: S2tB1/3/SWqkqfDEFSXA4Q==
-X-CSE-MsgGUID: HHLkffQER7SfSSzcVhMr4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,182,1719903600"; 
-   d="scan'208";a="63507420"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.205])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 03:05:15 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
-Date: Wed, 28 Aug 2024 12:52:37 +0300
-Subject: [GIT PULL] platform-drivers-x86 for v6.11-5
-Message-ID: <pdx86-pr-20240828125237-2776213950@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="sXSQcyjz"
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id A8837100004;
+	Wed, 28 Aug 2024 15:18:59 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1724847539; bh=DrRwpn2bq8z3vglnELLkrF9iN1QLgF7EJB/6RaLqD4U=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=sXSQcyjzBibVHYaH/xsQSKNhs4HIe+d+PquPI+3gF1slhwg3wqLq1hyNWA0JAJmKc
+	 0uV0zyIXL0/Tf8sBVaEwTZk4BsyxrLD3aTB1SXTH/9m5/8QaynPlkl9P/GJ0fca8+j
+	 5Hdnm10aJoM4PCB0CtPyy0T5+VFZ0AMy2v54rVDs0ORfFB6BBobnW089bN+ecI6aBB
+	 aaTM+wT/AVkusjDZOglFU/h9kf9Bl0Q1rgxbtMTCuVunbbFvmRiR8i1K5P0a/xTQd9
+	 P28N6hdM2w2Wkrj1+VHUigFl8AZ+MAFM6bStP1dhnvYrdD2nJv55ieB6HJmFzQ8Ak7
+	 btg1tdnwBIoCA==
+Received: from mx1.t-argos.ru.ru (mail.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Wed, 28 Aug 2024 15:17:56 +0300 (MSK)
+Received: from Comp.ta.t-argos.ru (172.17.44.124) by ta-mail-02
+ (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 28 Aug
+ 2024 15:17:22 +0300
+From: Aleksandr Mishin <amishin@t-argos.ru>
+To: Mario Limonciello <mario.limonciello@dell.com>
+CC: Aleksandr Mishin <amishin@t-argos.ru>, Hans de Goede
+	<hdegoede@redhat.com>, =?UTF-8?q?Ilpo=20J=C3=A4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>, Lyndon Sanche <lsanche@lyndeno.ca>, Armin
+ Wolf <W_Armin@gmx.de>, "Darren Hart (VMware)" <dvhart@infradead.org>, Edward
+ O'Callaghan <quasisec@google.com>, <platform-driver-x86@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
+Subject: [PATCH] platform/x86: dell-smbios: Fix error path in dell_smbios_init()
+Date: Wed, 28 Aug 2024 15:17:03 +0300
+Message-ID: <20240828121703.17470-1-amishin@t-argos.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 187386 [Aug 28 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 27 0.3.27 71302da218a62dcd84ac43314e19b5cc6b38e0b6, {Tracking_from_domain_doesnt_match_to}, mx1.t-argos.ru.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;t-argos.ru:7.1.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/08/28 08:19:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/08/28 11:49:00 #26453044
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-Hi Linus,
+In case of error in build_tokens_sysfs(), all the memory that has been
+allocated is freed at end of this function. But then free_group() is
+called which performs memory deallocation again.
 
-Here is a platform-drivers-x86 fixes PR for v6.11. None of the change looks
-complicated. In case you wonder, there are more IDs added to AMD PMC in this
-PR as it turned out the previous ones were not sufficient.
+Fix this issue by replacing free_group() call with exit_dell_smbios_wmi()
+and exit_dell_smbios_smm().
 
-Changes:
-- platform/x86/amd/pmc: AMD 1Ah model 60h series support (2nd attempt).
-- asus-wmi: Prevent spurious rfkill on Asus Zenbook Duo.
-- x86-android-tablets: Relax DMI match to cover another model.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-Regards, i.
+Fixes: 33b9ca1e53b4 ("platform/x86: dell-smbios: Add a sysfs interface for SMBIOS tokens")
+Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+---
+ drivers/platform/x86/dell/dell-smbios-base.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platform/x86/dell/dell-smbios-base.c
+index 6565fac24cde..73e41eb69cb5 100644
+--- a/drivers/platform/x86/dell/dell-smbios-base.c
++++ b/drivers/platform/x86/dell/dell-smbios-base.c
+@@ -622,7 +622,10 @@ static int __init dell_smbios_init(void)
+ 	return 0;
+ 
+ fail_sysfs:
+-	free_group(platform_device);
++	if (!wmi)
++		exit_dell_smbios_wmi();
++	if (!smm)
++		exit_dell_smbios_smm();
+ 
+ fail_create_group:
+ 	platform_device_del(platform_device);
+-- 
+2.30.2
 
-The following changes since commit 46ee21e9f59205e54943dfe51b2dc8a9352ca37d:
-
-  platform/x86: ISST: Fix return value on last invalid resource (2024-08-20 14:19:09 +0300)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.11-5
-
-for you to fetch changes up to a3379eca24a7da5118a7d090da6f8eb8611acac8:
-
-  platform/x86: x86-android-tablets: Make Lenovo Yoga Tab 3 X90F DMI match less strict (2024-08-26 14:34:33 +0300)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.11-5
-
-Changes:
-- platform/x86/amd/pmc: AMD 1Ah model 60h series support (2nd attempt).
-- asus-wmi: Prevent spurious rfkill on Asus Zenbook Duo.
-- x86-android-tablets: Relax DMI match to cover another model.
-
-The following is an automated shortlog grouped by driver:
-
-amd/pmc:
- -  Extend support for PMC features on new AMD platform
- -  Fix SMU command submission path on new AMD platform
-
-asus-wmi:
- -  Fix spurious rfkill on UX8406MA
-
-x86-android-tablets:
- -  Make Lenovo Yoga Tab 3 X90F DMI match less strict
-
-----------------------------------------------------------------
-Hans de Goede (1):
-      platform/x86: x86-android-tablets: Make Lenovo Yoga Tab 3 X90F DMI match less strict
-
-Mathieu Fenniak (1):
-      platform/x86: asus-wmi: Fix spurious rfkill on UX8406MA
-
-Shyam Sundar S K (2):
-      platform/x86/amd/pmc: Fix SMU command submission path on new AMD platform
-      platform/x86/amd/pmc: Extend support for PMC features on new AMD platform
-
- drivers/platform/x86/amd/pmc/pmc.c             |  3 +++
- drivers/platform/x86/asus-nb-wmi.c             | 20 +++++++++++++++++++-
- drivers/platform/x86/asus-wmi.h                |  1 +
- drivers/platform/x86/x86-android-tablets/dmi.c |  1 -
- 4 files changed, 23 insertions(+), 2 deletions(-)
