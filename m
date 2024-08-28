@@ -1,51 +1,57 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11261741D4;
-	Wed, 28 Aug 2024 12:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2B713C3D5;
+	Wed, 28 Aug 2024 15:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724847571; cv=none; b=Hw8090bsoUJsFP2/MDvRhWcWIN2dAEwVv237jjuMBDueYSQFbDPw85VhVn+4buep6sha1ocIyAG9dhkixk64QK0+9P0seHEcH00EViARHNAeoT5/AZ2SNvPlaBmBUOiF6QrktieYCRpDE6m4weRhOwtyv0Q0PCB2JrOsT/2SVvg=
+	t=1724859430; cv=none; b=aQDwn1GEduEQ9UXkhQ/N/3deQUBMad6H+omo1TMtCes9/f6sW9JfMNtpP0aK54T8mj7WIyEDwYLQhG1J5UR23xUxSvPNq7MzArXjdBC9Ekx76sC/76JwjrQbRy0CzFEUO95qlyOK/FpkJJ8hMjSRbCYGOTq3owIryvqqNew/bHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724847571; c=relaxed/simple;
-	bh=CwnZBKC1X2wPCwkS69iD9fyMDU/12RPaSxdm03Jn/5c=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=asie1HYcwIanZbj+rC6/NlCFFEWcruewEwCTl3OdP7fGMXYCgkYogW2SPtrVVc9RenV349545IvnlOB+UYp1yabW7PqCgb2yMgrUfz63ZDDMTMt2E+7dg517yEN7aeLQld6qiaMFDNcsmG3mFSJfYA8jJVYNGaHNZI0lfKw0+zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=sXSQcyjz; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1724859430; c=relaxed/simple;
+	bh=6VjJoVRrnZ0Dry7YUkRoqiFw1H+R+FwGBq6yfjQsst0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SqAnBUrPxbllkdvi5kMu+SJYTJkFu+62s+kW6c6xMO3gAoYm8nlQaDRJ7wmpgJDiaIKkeY2Ti7EqRrBz+CFEbGi8tyJspvWxrRYT/zCfTb6NZ7D/CsoUXeOaKq7GoWv7wY7LjDuOKWLHGyQsIHxnFHXTHOzKn/4tJ+x6BRS6ecs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ItYPXalJ; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="sXSQcyjz"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id A8837100004;
-	Wed, 28 Aug 2024 15:18:59 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1724847539; bh=DrRwpn2bq8z3vglnELLkrF9iN1QLgF7EJB/6RaLqD4U=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=sXSQcyjzBibVHYaH/xsQSKNhs4HIe+d+PquPI+3gF1slhwg3wqLq1hyNWA0JAJmKc
-	 0uV0zyIXL0/Tf8sBVaEwTZk4BsyxrLD3aTB1SXTH/9m5/8QaynPlkl9P/GJ0fca8+j
-	 5Hdnm10aJoM4PCB0CtPyy0T5+VFZ0AMy2v54rVDs0ORfFB6BBobnW089bN+ecI6aBB
-	 aaTM+wT/AVkusjDZOglFU/h9kf9Bl0Q1rgxbtMTCuVunbbFvmRiR8i1K5P0a/xTQd9
-	 P28N6hdM2w2Wkrj1+VHUigFl8AZ+MAFM6bStP1dhnvYrdD2nJv55ieB6HJmFzQ8Ak7
-	 btg1tdnwBIoCA==
-Received: from mx1.t-argos.ru.ru (mail.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Wed, 28 Aug 2024 15:17:56 +0300 (MSK)
-Received: from Comp.ta.t-argos.ru (172.17.44.124) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 28 Aug
- 2024 15:17:22 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Mario Limonciello <mario.limonciello@dell.com>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Hans de Goede
-	<hdegoede@redhat.com>, =?UTF-8?q?Ilpo=20J=C3=A4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>, Lyndon Sanche <lsanche@lyndeno.ca>, Armin
- Wolf <W_Armin@gmx.de>, "Darren Hart (VMware)" <dvhart@infradead.org>, Edward
- O'Callaghan <quasisec@google.com>, <platform-driver-x86@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH] platform/x86: dell-smbios: Fix error path in dell_smbios_init()
-Date: Wed, 28 Aug 2024 15:17:03 +0300
-Message-ID: <20240828121703.17470-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ItYPXalJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724859429; x=1756395429;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6VjJoVRrnZ0Dry7YUkRoqiFw1H+R+FwGBq6yfjQsst0=;
+  b=ItYPXalJdOtXvH/Jnj1aVHhIdhZ7zWZUtpJrK+xHjvMFfw1p0qx3eDdi
+   1AgSGZSSj+samEmWzKWDFbSw5HeVZc50d1a8Xs8S202qoQ7AYYnonnvvf
+   VbwHzmoq7J9WejzR/hwPqPUUDlnkw9UqGisZYv5FEBqmCyTQ0BqiDdXTQ
+   Tk6c8uuNy4D7/G2Lvxb4U1Y5+yb0JbVrlGGJiHlPVqFwliKf4fOOXALCk
+   8kLRGCW6Lhg1bB6ZFR100EvjzhN3t6L7OXZpfX+OuzVOMDiOpdfKaW1Lr
+   HdrVnloWzAbqu4KGFWazMqMscbnCZCcAUJzpvArlLSDstpF9GiANepQgM
+   g==;
+X-CSE-ConnectionGUID: Ff5rgHmSTFOEveyEtxzvlQ==
+X-CSE-MsgGUID: MKyS37ZuSEKKcH1hYeC/1Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11178"; a="34809258"
+X-IronPort-AV: E=Sophos;i="6.10,183,1719903600"; 
+   d="scan'208";a="34809258"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 08:37:08 -0700
+X-CSE-ConnectionGUID: P2qE5eerSga68GAq16FxTA==
+X-CSE-MsgGUID: epWNTEFAQ2ubrT2puDLr0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,183,1719903600"; 
+   d="scan'208";a="94064326"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO tkristo-desk.intel.com) ([10.245.246.90])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 08:37:06 -0700
+From: Tero Kristo <tero.kristo@linux.intel.com>
+To: ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com,
+	srinivas.pandruvada@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] Intel uncore driver ELC support
+Date: Wed, 28 Aug 2024 18:34:52 +0300
+Message-ID: <20240828153657.1296410-1-tero.kristo@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -53,56 +59,12 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 187386 [Aug 28 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 27 0.3.27 71302da218a62dcd84ac43314e19b5cc6b38e0b6, {Tracking_from_domain_doesnt_match_to}, mx1.t-argos.ru.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;t-argos.ru:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/08/28 08:19:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/08/28 11:49:00 #26453044
-X-KSMG-AntiVirus-Status: Clean, skipped
 
-In case of error in build_tokens_sysfs(), all the memory that has been
-allocated is freed at end of this function. But then free_group() is
-called which performs memory deallocation again.
+Hi,
 
-Fix this issue by replacing free_group() call with exit_dell_smbios_wmi()
-and exit_dell_smbios_smm().
+Updated based on comments received for v1. No functional changes.
+  * Updated documentation (patch #1)
+  * Converted one long sequence of if (...)'s to a switch () (patch #2)
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Fixes: 33b9ca1e53b4 ("platform/x86: dell-smbios: Add a sysfs interface for SMBIOS tokens")
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
- drivers/platform/x86/dell/dell-smbios-base.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platform/x86/dell/dell-smbios-base.c
-index 6565fac24cde..73e41eb69cb5 100644
---- a/drivers/platform/x86/dell/dell-smbios-base.c
-+++ b/drivers/platform/x86/dell/dell-smbios-base.c
-@@ -622,7 +622,10 @@ static int __init dell_smbios_init(void)
- 	return 0;
- 
- fail_sysfs:
--	free_group(platform_device);
-+	if (!wmi)
-+		exit_dell_smbios_wmi();
-+	if (!smm)
-+		exit_dell_smbios_smm();
- 
- fail_create_group:
- 	platform_device_del(platform_device);
--- 
-2.30.2
+-Tero
 
