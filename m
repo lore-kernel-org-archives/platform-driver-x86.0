@@ -1,124 +1,63 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27D11AAE19;
-	Wed, 28 Aug 2024 19:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30881ABEB8;
+	Wed, 28 Aug 2024 19:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724872030; cv=none; b=oreCLpnadGpxzW9OHHd6IisaaxX06Q1pBvaH+WNBspmBsk71PsLv62vXOT1qmLt9jOib/dchXrgOo9jSL+eTJa6vfwxW3YkXDvf9NhwTTvfjJD1KNCHVDAPFV32hBv8i+C8kCPdOuEoJG7vAwYbQefdGba7veTdgpg3zHCluN/A=
+	t=1724872710; cv=none; b=vALLtTDXu2L9qHcGpSnP75WRJdc5BKHHK/lMGVORELEqQGUbn7GpUPcrfQevbMdTKKDTO5BgRAVIQWTBA20edSck2oFGXLKiScrmXojQFe2E8x7Be6lPU8W3FGwFiIRD3CJoDk2wRNU0tB0YJVRnrPGtPaz3Cj03WOkESUpsnRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724872030; c=relaxed/simple;
-	bh=HjKq3StBX94hw4M7AOGIX3XHXN2gq4bMwsiXnPva3LY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NL6BCSUtpK24yizO3pfpPWoUt1tvVzzvXNSMucMw73IA+bDjBG7aeVKgtFEoIl/AufDYWEOPOiPLrOPnx0IKgu9J/MyYlGgCCbPukEK5qAss82ZZBsV3rzAqw2WtgyPRzMP/qrqFn0Px7bxsnT6zmeNyYErAGmxFtzV/lKOn+oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cq58Vbp9; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1724872710; c=relaxed/simple;
+	bh=5h5lm2o4Eb2NXlZiHly17Bc8UpiFwXASo7sZJzQib9c=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=em52EczKbghgxX1DcTfzyFYAf73kom7EzIOXeP3wY54EfNX7DgSjhMwxz7NTBeeZq0xpnachPDA8E3ZVBs4goA4Mes1166k22HHMEJFreevDpoUYPbru1YImFLpI+tYI3grNIDaWvu/eCNotFxKqir1qoYhK9Gmi9rBs8SU7TCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AeaZVAeK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cq58Vbp9"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a7a9cf7d3f3so895472866b.1;
-        Wed, 28 Aug 2024 12:07:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724872027; x=1725476827; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HjKq3StBX94hw4M7AOGIX3XHXN2gq4bMwsiXnPva3LY=;
-        b=Cq58Vbp9cfo4Fd5Ep0X39hCPpdQxCYVY/8vqF9sHzzNGRi2OnIDcYPdE+Jlzt3/OOz
-         URmlwtEOu32Cw0tPgAkaC4N/kMKjpCGykZdZJAz41zfxpid3XKkxd8Haadn0pyCxG4Ig
-         D227chqUj6x+ZJ3QLZv6B6AVK+zLpTeDZWG+lOxdflw9f2u5sb05vXt5thHJYP5L/tjU
-         31FoC4WqRy38yO9Eff2Y7pry3uc8046Xvn7t/ewITaQZ2ptaoiS0GA3+ddKmyFRhZ/79
-         xOgZqQ7SzqgJowgv22/KCaWX2+2Zm8a5xqYmAsS2U28xgR8i/SZdRC7Tc4lKCJkWrJBm
-         8Y1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724872027; x=1725476827;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HjKq3StBX94hw4M7AOGIX3XHXN2gq4bMwsiXnPva3LY=;
-        b=Nk13wU+atQkEALDtxdHiBoiqH20xq0qgzbs5UXiMzLtgXD7Sy++8DjnGtfLtWsyo9f
-         Zh+joY6tjzafvbGKGqGoCm7NrKfULk3LCL58yfZnOMD6jZU3Qg/tQcoAMS4NA9B6g8ta
-         IfDwNyXVaGjnzKZYqMx2E0QaKN7BfEz51cBmEDnxhn0lnaA5k9qmSkvVoZVKN7E0yrSp
-         q/nApQHAcQy7Hu2J53dfWafbnqFDgOgV0TC/fg6/oG6aR2iW0VxRwGwO/FaUUbSOk65K
-         v7+TNdW016s19JLd2QEzveCelsxCRq7DQl9eqSVTmzkGDTvKYiWOaJlASPNaCtA8xg2e
-         2CJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVDLBAyZk160oNi1Q9eshkSh+MlXTZYyJc/MTeAMsPc/jwWp4nNmnRtgYcjCPJbM54vVnJu2yk26Z2@vger.kernel.org, AJvYcCUnyGXP1rmXN5/3d+GbcWDc8/Nd3bfJNpAl3aHJgsWVmGKmrMYEulxounwCOacBjKmbj/JEC5pziCCLgVa6vS/GUjUhYQ==@vger.kernel.org, AJvYcCVtckanUpogLDAxlFSue/yZiCBBKrO/l91cfknfZSX6RKJSndE34h5IVv2c+/5XU3Y7Ybr3ElztFJRgWsr+@vger.kernel.org, AJvYcCW0WOYOPX0DjJT2/YEbd9ssxhYdwkhNLWCh1k1drZl/ULxVn2yY8XUNGjrJu8NVAihNuWcVhLWTV8nerQ==@vger.kernel.org, AJvYcCWXkTBQT1S99/1pxYy3Ut41g7wb8FlcIO+qA0374kgNVcjIQ4J9thxmXgWTDu3hM0sVkYTWAv67FX+gbvBG@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6ICaZ6WbfIxK+L/6DQDGaKqBiV5GTMYzxaJvGkwS4bOX6P7hG
-	omAgBWI5X45MvMzxpZFhkCj3lzTORnlYkUHivsbyvvTu7mhx1XsmxHcntRc/7McvNE2MuLLlpzA
-	6lg6IbYYggNWsXY4q9ZA0IhkifovfIDr3
-X-Google-Smtp-Source: AGHT+IGYzYJZG7E9ETnEzC8H10RpiiV3h5C0x38Xf6GmVcfkNytGNvXBHM+pdaWW6SlDFggj27f/kKMygSvqctEhX88=
-X-Received: by 2002:a17:907:980c:b0:a86:7adb:b327 with SMTP id
- a640c23a62f3a-a897f8d5200mr29640866b.40.1724872026595; Wed, 28 Aug 2024
- 12:07:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AeaZVAeK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9DB9C4CEC1;
+	Wed, 28 Aug 2024 19:18:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724872709;
+	bh=5h5lm2o4Eb2NXlZiHly17Bc8UpiFwXASo7sZJzQib9c=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=AeaZVAeKUk+Adp3dai5SAsOJaydmKWQvyfAvPzN4KPVBeNazWjL6eTx/TG/75WkYf
+	 N2jVZI95A8KralMG4TAP+0Kp4ymVRp4ty0VVJwgmG0t2s2zF7qIqWjTWMmV9ayf6lK
+	 fZlfCeyHq685JAxFO4rfvbKETMUKY7FaqA0jiSGOrdB+u3Py+050kqpiQQ44Wyf4O2
+	 QRDW4rgaOrUjJojV4jdJOK4Xze7RQo6Yq2v6K878Wqo/BDs5ZeySdaTrHKlVP1fYSS
+	 SEt9+FYN4fBnOkNfCZJSXwVBeyiS1Jju7YiHZ2JaC2LbtRbgXUKCe+jI0YggwVPJyC
+	 /PUqGNZPF6r3w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33E293809A80;
+	Wed, 28 Aug 2024 19:18:31 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for v6.11-5
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <pdx86-pr-20240828125237-2776213950@linux.intel.com>
+References: <pdx86-pr-20240828125237-2776213950@linux.intel.com>
+X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
+X-PR-Tracked-Message-Id: <pdx86-pr-20240828125237-2776213950@linux.intel.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.11-5
+X-PR-Tracked-Commit-Id: a3379eca24a7da5118a7d090da6f8eb8611acac8
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f9a59dd09749c6303821e5d6cdff1affdb5917dd
+Message-Id: <172487270986.1401757.2012532953917323184.pr-tracker-bot@kernel.org>
+Date: Wed, 28 Aug 2024 19:18:29 +0000
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240814-topic-sam-v3-0-a84588aad233@quicinc.com>
- <20240814-topic-sam-v3-3-a84588aad233@quicinc.com> <ZszrjQChQ2aS5YjV@surfacebook.localdomain>
- <d08d41ad-edcb-48ad-a848-53edc45ab8eb@gmail.com> <CAHp75VcbjR8HQqPASLFEGiyYLfTFQDa6Ri+jFy+7Q1xz7gY39Q@mail.gmail.com>
- <53a56539-1d95-42ac-ad07-1b689702b2ed@gmail.com>
-In-Reply-To: <53a56539-1d95-42ac-ad07-1b689702b2ed@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 28 Aug 2024 22:06:29 +0300
-Message-ID: <CAHp75VdsksKPrj-CwmR4QLBrm_FfaG4aZys-_jnee_L=3ZnRPQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] platform/surface: Add OF support
-To: Maximilian Luz <luzmaximilian@gmail.com>
-Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, linux-serial@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <quic_kdybcio@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 28, 2024 at 8:40=E2=80=AFPM Maximilian Luz <luzmaximilian@gmail=
-.com> wrote:
-> On 8/28/24 6:56 PM, Andy Shevchenko wrote:
-> > On Wed, Aug 28, 2024 at 12:10=E2=80=AFPM Maximilian Luz <luzmaximilian@=
-gmail.com> wrote:
+The pull request you sent on Wed, 28 Aug 2024 12:52:37 +0300:
 
-...
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.11-5
 
-> > Yes, and software nodes for DT are quite strange things! Why can't you
-> > simply fix the DT to begin with?
->
-> For the ARM/DT variants we could do that. But we still have to deal with
-> the x86/ACPI ones here.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f9a59dd09749c6303821e5d6cdff1affdb5917dd
 
-So, then fix it there! Currently it's an abuse of software nodes
-inside the Linux kernel.
+Thank you!
 
-> So for me it makes more sense to have it unified
-> and just deal with everything in this module.
-
-I understand the desire, but DT is DT and ACPI is ACPI, they are
-different despite having some common APIs in the Linux kernel.
-Moreover, DT has a validation tools and everything, making that being
-a software nodes has at least these disadvantages:
-- no official schema that must be supported and users are known of
-- no validation done
-- bloating of the Linux kernel binary and hence memory footprint
-
-> Also, if we consider that at some point we might get ACPI PEP support (I
-> know, far fetched right now): With that, ACPI on ARM might be feasible
-> and then we'd have to manage the same thing in two places...
-
-This (PEP) is something I have no knowledge about. But I think it's
-still orthogonal to the software nodes usage.
-
-> And lastly, the EC subdevices are quite contained and I don't see them
-> interacting with any other components in the DT, so it's more of a
-> stylistic choice where to put them.
-
-They are still part of hardware and DT describes hardware.
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
