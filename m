@@ -1,40 +1,59 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9EC184D34
-	for <platform-driver-x86@vger.kernel.org>; Tue, 27 Aug 2024 22:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7617158543;
+	Wed, 28 Aug 2024 09:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724797499; cv=none; b=IHloqMPfaokTeFGp4NNnZT4RpMZRx0w4oF81ZAwvcNKhexdeOI/KYJoU7AzrC0nBTG6OVUveQBvvO8qsp7FLxlmRFdfGZpyghMLqHLaK+jbBm8DvUirAnIgXpWhujnucF1hgDhh/xlQ+VS/vnCuPA1IXu8MeCMK1H2q3yeTXoiM=
+	t=1724836249; cv=none; b=fR6F5oTVpoY5VSdFqGkxpdUG8+u86bOo7/OeKHm6gAg2qIwvP8UcW2kcrryXHifzRtjDeRGOhSMcDCoVjiSPQiv9EIvT47g531ELj+Wqp8KF4Oal0ElpKNc9E8Gvnzl63KH6yWQvO2pJb6BrmA0XSEDUl5cjc3Tm7EvRXasVRfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724797499; c=relaxed/simple;
-	bh=7meR+qQuOptIZPBYhyeGO+ZvUsr8DyIA34CM84X6scA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=qflWLV/hIPLmSnGsPK76vvVe+HJUxNJ6WlRD7vRIei5UcfsVBfXW64SF0IP5i3FY8p3fVns+Hy/r8zXS/IgBzUmyvXYI23C6OTw6WQvMtJEJOD1kRkhcvX9ZORvab7unW8Ja3guCq1W4MtwmNH6QqXmz2d6wf3SAZKFD3jSXEhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=lL6p6p8Z; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1724836249; c=relaxed/simple;
+	bh=zSHKO3j33Ria7zyczy79YyyVNqfKsgActvy2LbiGQV4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CMpFiJ9ARmFaQQGRod258pIEp0GA6yhKfPJi86hnneC0QCon7f2EtRYFeqFk5MD6YMph5XOREDHOtMzCmrDm/rZn13DehMsWZZiCxR/zl0kI4Zup7mSM4JROZYN2htZ35DIwcd5dSOFA95q4qF519Xgh1/K61TbHWYDEgeAv8wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gdu/dfRV; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="lL6p6p8Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1724797494; x=1725402294; i=w_armin@gmx.de;
-	bh=7meR+qQuOptIZPBYhyeGO+ZvUsr8DyIA34CM84X6scA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=lL6p6p8ZHZHcjGYhmUe8ulYr1Bjgl3VThzu9mTO+uqS6Ake0Vuu5xblS1lEOD86x
-	 XsiuFwRTZOTmc0r8VBoLngNYKPS3yqOgOitl8GhN1ZAlW3eOv7fITCb0EThshTHEJ
-	 AgPlMSIwluBakuRA2mY5xBKKQ1krcJ3RR1UPI9fbnuyngS54sefleea/4Pk1oHvXW
-	 9ygeLkOOmC1fQ2tX6MnXJFay4DKHnjPT6Yk5UmkQEHAikj+278Xmy+Cs8USl/VH9/
-	 fuaeujis/oDBezweyWkHs0l/H2pZJzpk51xSX9ultXY3taXlA0pkZJiW5ea0Pr9xf
-	 AJ2yYl/VhUwQQsoH/Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MI5UD-1suuyP1S3L-00DmFX; Wed, 28
- Aug 2024 00:24:54 +0200
-Message-ID: <3c63701c-f9fc-4f98-b991-58135da3fcc3@gmx.de>
-Date: Wed, 28 Aug 2024 00:24:53 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdu/dfRV"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3719753d365so3592136f8f.2;
+        Wed, 28 Aug 2024 02:10:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724836246; x=1725441046; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=x3niQjXZJR5D3vooE/mqJ9Cy41uU536hIxUZ/GtxSL8=;
+        b=gdu/dfRVZFpumaFqQEvACr+rscBpBbtdHBoaQwGJ3gfV9woODBKLe6CbaPdoyF7gJN
+         Eh4Jkpvd3Mkf1wZG2uwBCzPW1zxiQjDd9BJaO3SpL1PA82Nkf2yThMd7ALIx+pzciDnP
+         WgODzsElulGQ60wU4l6bfGbPEk+SQFHW6ZEg/2MzCb/3SSRfkobb1shXgtvHmSNfd9dY
+         ODarThN/XIg1Xe6KTod/mtI0RoyQsnPxpcbmSUIVp2EvfPFM+317lE6OC6XtDMfsISDw
+         YQAIGtB7J4lsln4ECh14IUhvRm6305pZiW1/EF9LZc+h1UZbvkaCbGwvBAFodAbFB8GA
+         tC9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724836246; x=1725441046;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=x3niQjXZJR5D3vooE/mqJ9Cy41uU536hIxUZ/GtxSL8=;
+        b=CMnPNaWkK9wHXcUCKfcgokqqQEk7NLICn5FQ4nX8FFc9uxhtP9lEhL/tiMBFu/cwld
+         +mTuFxmw00de13WoyBVh8tloKWRxLdhrulHmxgw3tK/My6MKB6LQEX/EoUlqBmGFirOw
+         PwsuEUu4KStoxh+4Mpchi/VJ+sM7C47SyAMc901HoUxyda82XDnTtPaXdsze2D/U806A
+         1w4VgxxpcjTEjBuFhP/XjKyQt8TbC9QIDXPtWyu9gMvyIPCscD9diDjYE+XOniNuASbH
+         /FY0JHkvDclWTCzbVmKmgjQiFB+kOZp/A7gbglARwgs9opkTt7UmHOtGc4nxUA6QuNvt
+         1I+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVDTbALPawLNrHvu3ewZn3pxdkB7JuSX1rJzcH98llmryizVtqIUC2drVl9nS9K215ep84oYTmScBtTt90utV+/zw1qRA==@vger.kernel.org, AJvYcCVROz0/b0e+dXnIIuLTT43aKWY4hMdGy5IKru6xQWyhwMQ1Mxo7L8SJzdiG60mpJg1zPumdXPD+lhYK@vger.kernel.org, AJvYcCVw8/nRc3KkMpNBA6GZfexs63cg4g9VXvazZuvTm/ow2FaIyYACB1gOhRDduw64JCL6sD68r7PJHlghPOF2@vger.kernel.org, AJvYcCW+kvfZZWH3pOLloutrcddKTdUterGzFVr/NRNaiabK4BQpIR9VAmYFcqwRUXnV+1adIPdmrGeMqFXpYQ==@vger.kernel.org, AJvYcCWqb8IoshiENJD9xaCpSzWpS7kv0hKibMVaZnvZEArEwPHMJj5rNaP9CdPal4g+cGkd3KoQcs3bH7qdXWVi@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKo1W153ioV0ox8JLhZ1KGaCEGSLZli6SYZMb5vNbQr8fj93Ve
+	qma1q31KCod0fjoaayUcri6pvJth4BC8FvMW4/3E2hJ407Ef+b5Q
+X-Google-Smtp-Source: AGHT+IF7uY9ow2G6xujW69BVfU5b4AZOL2v5nnCZbY71qinhm3c0AqkQo9Sucb8izKf3PWV00S2FKQ==
+X-Received: by 2002:adf:a344:0:b0:367:98e6:362b with SMTP id ffacd0b85a97d-37311909018mr10609524f8f.42.1724836245824;
+        Wed, 28 Aug 2024 02:10:45 -0700 (PDT)
+Received: from [10.126.144.131] (ufr-132-230-194-172.eduroam-nat.uni-freiburg.de. [132.230.194.172])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3730810ffb9sm15230364f8f.7.2024.08.28.02.10.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Aug 2024 02:10:45 -0700 (PDT)
+Message-ID: <d08d41ad-edcb-48ad-a848-53edc45ab8eb@gmail.com>
+Date: Wed, 28 Aug 2024 11:10:42 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -42,62 +61,113 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Add Support for the Acer Predator Triton PT14-51
-From: Armin Wolf <W_Armin@gmx.de>
-To: Rayan Margham <rayanmargham4@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
-References: <808c835b-3500-4345-a338-b0f8014d049d@gmx.de>
- <202FA1F1-967D-4D99-94A1-9649C7C9B6F6@gmail.com>
- <CACzB==6Hpp173CzcsOpU+epz13uDU5mpudX1xvZuMkphODTPAw@mail.gmail.com>
- <ecba8732-fbef-4e4c-b518-d5042fd18480@gmx.de>
- <CACzB==7=AUGXuAyDrQBRO35fap=ok7B8tSjaXY0tDPjn2qExyg@mail.gmail.com>
- <4ad19bcd-8030-46d8-81f0-e4ca97fd3ea6@gmx.de>
+Subject: Re: [PATCH v3 3/3] platform/surface: Add OF support
+To: Andy Shevchenko <andy.shevchenko@gmail.com>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: Rob Herring <robh@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <quic_kdybcio@quicinc.com>
+References: <20240814-topic-sam-v3-0-a84588aad233@quicinc.com>
+ <20240814-topic-sam-v3-3-a84588aad233@quicinc.com>
+ <ZszrjQChQ2aS5YjV@surfacebook.localdomain>
 Content-Language: en-US
-In-Reply-To: <4ad19bcd-8030-46d8-81f0-e4ca97fd3ea6@gmx.de>
+From: Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <ZszrjQChQ2aS5YjV@surfacebook.localdomain>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:m75enQD9qQRZ2aeHi6P4pmIhDnE0heRR6Enh64a/XjnlqpgVdvp
- fA/qcb5365bAqlp57ZEJDhBsn45HrkUFeGqvAoKtydO1/6NOqSyD3jl2P50EwQCJQ/Yh6Um
- SQFsoveTl2TcPHHq+IP6v2hrnIixhjMVBdWbITLk7vF902UQpfx8xAipwPsOIf3xBegfzWn
- 2guG9z+ladEn/RXXk7Bkg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:yg01HiiA5oc=;gxuybqVp29Bnb/5RUmNtNGtU4rm
- DHwc38QBRfJLCOzwODPmz2odnFHLuCsQpAzgHNp/K1PvvLl0gGTqUJ0GmiHDaxHfukBHoF/a2
- fjaV5VyaawHJBfY+2jQccbxOeCRUrhj0DhhYIpoFlG4S9yOLGA6/oLWZmWqeZn49tEhJ6O5CS
- vLCtD/Gp2gtWJOOBPqFpdOZDnGU+YUVPYGSktwzEi2WRpIKUUduSliVm0XBhfidsgeFtk+9gS
- ua3+B82hNFJ0iaxEsElMgDbJ/tnrqUfZ8J6y59g0c2TMAy7XPWkmDhRWuDtPKVcOLsLh4k2NJ
- zujwDNo+qYydGpxYehZnDLFBpmHXPa2s4l0vmQBUZIvYw1ccWAT1GRog4WmOJNn3mu+yCuGf/
- codC+ifhMHH24NI71TmXdRtya4h1EeCG5JODsxup8OELkelJxWLMOeVd6TAXi/cqQl6bmJvqA
- H8CTAAeUbLey8zPxhSTNqOsEwEirgiu/TlQ+MjB3AB20S2DkZGMgUT7mr9R2GQaMom4zMWL3I
- D3KLwhS6lgGu1w+Yi8Kx5Alkn4TnVVZq4BqzaE9qXVIBG9Y4L1DP15NHRJSPsKZ7FE10q6L7y
- pYEZ/Qf4nNduo1R27zPHA0F3HIYImPu0ZCLE8eCT0oM1Fk1xyUJ13GYQoNJ/bLmmLI03LmPSC
- xE+b2S1JcKnpJxAZ/s6tARrc1cBbtFSYi7hHlmmqfg0JROr38WmR54WSwOAK2N+BMdbHSgpja
- T7Wewors01BlfW+Pg24X12SFg1Z8FqPZBaAmHQckMGgoOiUPuE++EdtIlPLFzAyHXV/UtSjzw
- HG66DXGcxdJdiKv8YXHw17x5bCabvS3KYtl3YBz/HIOtA=
+Content-Transfer-Encoding: 7bit
 
-Am 28.08.24 um 00:07 schrieb Armin Wolf:
+Hi,
 
-> Am 25.08.24 um 18:37 schrieb Rayan Margham:
->
->> Hi,
->>
->>> Does the fan speed reporting work?
->> No it does not, sadly, only the LED switching functionality works when
->> the turbo button is pressed.
->> Thanks,
->> Rayan Margham
->>
-> Strange. I will try to figure out how the OEM software interacts with
-> the hardware.
-> This however might take a while.
->
-> Thanks,
-> Armin Wolf
->
->
-Also, maybe you can try to improve the performance with thermald in the me=
-antime?
+I thought I should provide some context:
 
-Thanks,
-Armin Wolf
+Am 26/08/2024 um 22:54 schrieb Andy Shevchenko:
+> Wed, Aug 14, 2024 at 12:27:27PM +0200, Konrad Dybcio kirjoitti:
+>> From: Konrad Dybcio <quic_kdybcio@quicinc.com>
 
+[...]
+
+>> +	/*
+>> +	 * When using DT, we have to register the platform hub driver manually,
+>> +	 * as it can't be matched based on top-level board compatible (like it
+>> +	 * does the ACPI case).
+>> +	 */
+>> +	if (!ssh) {
+>> +		struct platform_device *ph_pdev =
+>> +			platform_device_register_simple("surface_aggregator_platform_hub",
+>> +							0, NULL, 0);
+>> +		if (IS_ERR(ph_pdev))
+>> +			return dev_err_probe(dev, PTR_ERR(ph_pdev),
+>> +					     "Failed to register the platform hub driver\n"); 
+>> +	}
+
+[...]
+
+>>   static int ssam_platform_hub_probe(struct platform_device *pdev)
+>>   {
+>>   	const struct software_node **nodes;
+>> +	const struct of_device_id *match;
+>> +	struct device_node *fdt_root;
+>>   	struct ssam_controller *ctrl;
+>>   	struct fwnode_handle *root;
+>>   	int status;
+>>   
+>>   	nodes = (const struct software_node **)acpi_device_get_match_data(&pdev->dev);
+> 
+> Hmm... Why this doesn't use simple device_get_match_data()?
+> 
+>> -	if (!nodes)
+>> -		return -ENODEV;
+>> +	if (!nodes) {
+>> +		fdt_root = of_find_node_by_path("/");
+>> +		if (!fdt_root)
+>> +			return -ENODEV;
+>> +
+>> +		match = of_match_node(ssam_platform_hub_of_match, fdt_root);
+>> +		of_node_put(fdt_root);
+>> +		if (!match)
+>> +			return -ENODEV;
+>> +
+>> +		nodes = (const struct software_node **)match->data;
+> 
+> This is quite strange! Where are they being defined?
+
+Essentially, this whole module is a giant workaround because there
+doesn't seem to be a way to auto-discover which functions or subdevices
+the EC actually supports. So this module builds a registry of software
+nodes and matches against a Surface-model-specific ACPI ID (in ACPI
+mode). Based on that ID, we retrieve the tree of software nodes that
+define the EC subdevices and register them using a (virtual) platform
+hub device.
+
+The snippet way above registers the platform hub device for DT,
+because there we don't have an equivalent ACPI device that we can
+use. The code here retrieves the respective nodes.
+
+>> +		if (!nodes)
+>> +			return -ENODEV;
+>> +	}
+> 
+> ...
+> 
+>> +MODULE_ALIAS("platform:surface_aggregator_platform_hub");
+> 
+> Can it be platfrom device ID table instead? But do you really need it?
+> 
+
+I think the explanation above already kind of answers this, but the
+module is named differently than the driver (so that they reflect the
+specific nature of each, registry vs hub device). And the platform hub
+device added in the snippet I left above is named after the driver. So
+for the registry module to load when the platform hub driver is
+requested, it is needed.
+
+Regards,
+Max
