@@ -1,194 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711861A38FA;
-	Wed, 28 Aug 2024 15:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763591A4B84;
+	Wed, 28 Aug 2024 16:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724859436; cv=none; b=s7tLtR8egA2+92z51plOtoMSUlhSsGEo859OaQltc+SlaXM9ITMHfpJS/Vn/GnCflUgBI6C9C1tul4zNUpaPMX9m14BuEleCzhsPCYC7DiYCAlU9kA99VPQ+QKQJ7ZW6Boh/4aXmTy1bMebY4WWZqm5jH4eTCWc0Vwo/pqgdArs=
+	t=1724864242; cv=none; b=HvU5X7Ei1/nEP6HNRnyqLN2f/STEBsSOysZutwG12KvHzd5LponWcpuAjjpub9DHIpBrMC3lKaY6nwwgyxi9mt0rhucY5BAWcYsnBAEZxYimt7Uu3kJR2Js8PUwjw7RzREyaYeYVc0yAdHb5zJ+ttvrFekw6B7/gvR+dyejZq4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724859436; c=relaxed/simple;
-	bh=8kgGQnTYilL6+bZZ6vBOIj+SIwgmVCVYPwhHF6XplIY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VlHuM2Nxq/hu5ccnlHQa/bjrFVhbaXTdblivOt/1OZJX0XC8incTsA+LyagIPVcBz1b5lvnNYYOwohSJxT5LoXeqCYfAw6+3rCwVJI1FBjDWucyYGwjKQ8FTfLC8fklsPaqshFwQJzqBE40/Eo4j1Lroice+likhsxmK+WfaIKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FZqHJy4h; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1724864242; c=relaxed/simple;
+	bh=U1TLFQZt+dZF4bzcYiLl5fLCz7z4c7CpxWEGSxiBo/s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XoCPV10WTWCpfqp7Lg4BkmebWDm1sN5+eEg1to5RtBr+CgEQKyZZelF/pl8Ohh/Bru4GpMF4YuDRKm1jxk3PTaudG3b8M+FhrYQZXvB+yMJfeTS2us4YPqHYKQCdRXDr3zGW8foq1spOCkrWKpiotuO8oimgCi4/AIOYi2i6Ijk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PedrDLI9; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FZqHJy4h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724859435; x=1756395435;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8kgGQnTYilL6+bZZ6vBOIj+SIwgmVCVYPwhHF6XplIY=;
-  b=FZqHJy4hIfeeP4Gk2+CPGsW04Bn/eT6wMssOmyAnIUdIsKgUHy5pdv6b
-   jXC5bGu0479upgeNhUDSK4FpfvsRUMsCpNK8wVqvWGer9ZwcixQTbLy6N
-   0ZKgJ/pRNjzPYVz5u4n4iLbwVNiUj9gtf5pX6gGD70WBfsvo2kBSvUR5J
-   pBFshPBc6DJauxkyDnPbTxwe/CC/YJ0mzSsQXnHWTfZzDTTKTQE6BdAcL
-   B9Po4i52mBEmQALHz+uWOiku6i1AQVeKPRR/vcPoJa3zSLTJABoM6u7uJ
-   SCXGA8cLYYVNNaOCJmVGf9TCsrMymrYU6vaXTVhvRHFmtzw2nfQcwq78c
-   g==;
-X-CSE-ConnectionGUID: pxG0VwbcRJuGX/IbAuEjNQ==
-X-CSE-MsgGUID: eoqcXabpQwihEB927lqtfw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11178"; a="34809274"
-X-IronPort-AV: E=Sophos;i="6.10,183,1719903600"; 
-   d="scan'208";a="34809274"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 08:37:14 -0700
-X-CSE-ConnectionGUID: CEnAmP5hSzCQf8UdAQVDdQ==
-X-CSE-MsgGUID: jLNhNY3WQxKpKWc7TzMBMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,183,1719903600"; 
-   d="scan'208";a="94064370"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO tkristo-desk.intel.com) ([10.245.246.90])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 08:37:13 -0700
-From: Tero Kristo <tero.kristo@linux.intel.com>
-To: ilpo.jarvinen@linux.intel.com,
-	hdegoede@redhat.com,
-	srinivas.pandruvada@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] platform/x86/intel-uncore-freq: Add efficiency latency control to sysfs interface
-Date: Wed, 28 Aug 2024 18:34:55 +0300
-Message-ID: <20240828153657.1296410-4-tero.kristo@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240828153657.1296410-1-tero.kristo@linux.intel.com>
-References: <20240828153657.1296410-1-tero.kristo@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PedrDLI9"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a80eab3945eso720736766b.1;
+        Wed, 28 Aug 2024 09:57:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724864239; x=1725469039; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UZd4+X6vP9oPWuhaKm7zNB7TUyUBJnLZr/iH8MefkcA=;
+        b=PedrDLI9rFCDLvvGlu51084wkQ3PYz1ESNvamzeQyFqHSAWSPDwpxOS9eTsh6YfGUC
+         4aXAs/fEBHhcjywSF9tgt65jexY9URIT7hv0kAedfuud6n+BjOKEOZNY2bu+scy27INq
+         KhxDOfGnFcU07CCIbNWzZp8c8jFUhGkL2MzNNzVRZ3zx3VSzUb9kjvRaRDB6hr5lZJ5J
+         YWEWZ3XpAwz+KRMFTrHpB1rJM1kM9wX+SH12PuCUmIP0N+Xy+hoLeG3PMjbNbTSrFr5r
+         sc6zh8dU8ljb2wM5MDst3KOvzbSCrgcQaUipVicjbNdVUDaJVMEbMf279c+T1DvgmD68
+         KYeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724864239; x=1725469039;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UZd4+X6vP9oPWuhaKm7zNB7TUyUBJnLZr/iH8MefkcA=;
+        b=P2IZfe5x36pbTolxzxWcMhYxt+1KoNNF4u24nXrYA2VE0D7QBwOMvTI1Nm7fFKG2X/
+         BM0CYQUmQvF6AS3v4mZ45tFKtOLiRcm5FkFP3hPuRPcJrBgnOCUd5ZS+qCSRp4MbNvF2
+         UiLzMfE2rlRpWBQndF4Ia8m9UEtX9wBl8DsbJ7yG4vvF7JW/f3XWab6wSOvQbRkLbB55
+         UebSOcaHGTYixgnjoQCvv80RblLMobunJyd/X1Qs/0ioFuEwwEkaSLNAx1S/VrQfHklg
+         63TT53rdEN8pQfFiBbm063I0ZMRldqayfAXP7IKF7rxfif1Nq5dpabAYbznwBJLXh8v3
+         EcuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVPImXmn3ktyZdhgDvpu7WhqCPoquDxnq+HGxZKWKKp46FQ+A/f+c1f29C1c0TuvsycG3n9XDaLGtcG@vger.kernel.org, AJvYcCWOF06MwIvGneRuKVZvhDmMA2DzhWN2NnmaErQl3WEYaHpQG+VxJ2UNQQ8uNTZHix3C+FugUqYsffQdbg==@vger.kernel.org, AJvYcCWl3Mb+rFCYtTPof9Xhp7lAmpze0hhdVnZBTeuWyD9qfCbW3Ve9jDQzE0LpcPaJcDNvolQln9fHbM013jKw+zc3d126gQ==@vger.kernel.org, AJvYcCXtZvrMl+fIxgccRL7vaPNZg+w1kjM/Vb+jC+3/PIFo8lJe/gHtoUBnkXpKBh6f+iHGyLD6/9e3dLZ6UooI@vger.kernel.org, AJvYcCXwqeigUMdZfJVRRDBtePLtEZpOgSMewWtz3UcQJDpp3KsN1Klepnj7cML38V1s76OvnX2RAQ0L1Q+O/fD7@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7e3EEhYtCiAzIUQoOZ/zIpfeYWlAQI3gzvNJZMeCFhND1AuPI
+	teTVc2STS4fM9EOlx+MhC+NAosNpvqtGR+x9coX927b3dmOZVHXNJubM0fU8HlEPgtOMR9j5D1y
+	BSRmdU9x+m28HzfopKm4QbRp8oUE=
+X-Google-Smtp-Source: AGHT+IG/QArrAZVDgpeDjqm2F/8OGnFom+dDc3g4zYBO1Pm7dMXBAlMGEmqv5hCiQV6E8eEUKTe02AIlrhmGEnPJ/cU=
+X-Received: by 2002:a17:907:8694:b0:a86:7adb:b32c with SMTP id
+ a640c23a62f3a-a897fad73a7mr4318166b.68.1724864238423; Wed, 28 Aug 2024
+ 09:57:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240814-topic-sam-v3-0-a84588aad233@quicinc.com>
+ <20240814-topic-sam-v3-3-a84588aad233@quicinc.com> <ZszrjQChQ2aS5YjV@surfacebook.localdomain>
+ <d08d41ad-edcb-48ad-a848-53edc45ab8eb@gmail.com>
+In-Reply-To: <d08d41ad-edcb-48ad-a848-53edc45ab8eb@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 28 Aug 2024 19:56:42 +0300
+Message-ID: <CAHp75VcbjR8HQqPASLFEGiyYLfTFQDa6Ri+jFy+7Q1xz7gY39Q@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] platform/surface: Add OF support
+To: Maximilian Luz <luzmaximilian@gmail.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, linux-serial@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <quic_kdybcio@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add the TPMI efficiency latency control fields to the sysfs interface.
-The sysfs files are mapped to the TPMI uncore driver via the registered
-uncore_read and uncore_write driver callbacks. These fields are not
-populated on older non TPMI hardware.
+On Wed, Aug 28, 2024 at 12:10=E2=80=AFPM Maximilian Luz <luzmaximilian@gmai=
+l.com> wrote:
 
-Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
-v2:
-  * Added Ilpo's reviewed by tag
+> I thought I should provide some context:
 
- .../uncore-frequency-common.c                 | 42 ++++++++++++++++---
- .../uncore-frequency-common.h                 | 13 +++++-
- 2 files changed, 49 insertions(+), 6 deletions(-)
+Thank you, my reply below.
 
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-index 4e880585cbe4..e22b683a7a43 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
-@@ -60,11 +60,16 @@ static ssize_t show_attr(struct uncore_data *data, char *buf, enum uncore_index
- static ssize_t store_attr(struct uncore_data *data, const char *buf, ssize_t count,
- 			  enum uncore_index index)
- {
--	unsigned int input;
-+	unsigned int input = 0;
- 	int ret;
- 
--	if (kstrtouint(buf, 10, &input))
--		return -EINVAL;
-+	if (index == UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE) {
-+		if (kstrtobool(buf, (bool *)&input))
-+			return -EINVAL;
-+	} else {
-+		if (kstrtouint(buf, 10, &input))
-+			return -EINVAL;
-+	}
- 
- 	mutex_lock(&uncore_lock);
- 	ret = uncore_write(data, input, index);
-@@ -103,6 +108,18 @@ show_uncore_attr(max_freq_khz, UNCORE_INDEX_MAX_FREQ);
- 
- show_uncore_attr(current_freq_khz, UNCORE_INDEX_CURRENT_FREQ);
- 
-+store_uncore_attr(elc_low_threshold_percent, UNCORE_INDEX_EFF_LAT_CTRL_LOW_THRESHOLD);
-+store_uncore_attr(elc_high_threshold_percent, UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD);
-+store_uncore_attr(elc_high_threshold_enable,
-+		  UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE);
-+store_uncore_attr(elc_floor_freq_khz, UNCORE_INDEX_EFF_LAT_CTRL_FREQ);
-+
-+show_uncore_attr(elc_low_threshold_percent, UNCORE_INDEX_EFF_LAT_CTRL_LOW_THRESHOLD);
-+show_uncore_attr(elc_high_threshold_percent, UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD);
-+show_uncore_attr(elc_high_threshold_enable,
-+		 UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE);
-+show_uncore_attr(elc_floor_freq_khz, UNCORE_INDEX_EFF_LAT_CTRL_FREQ);
-+
- #define show_uncore_data(member_name)					\
- 	static ssize_t show_##member_name(struct kobject *kobj,	\
- 					   struct kobj_attribute *attr, char *buf)\
-@@ -146,7 +163,8 @@ show_uncore_data(initial_max_freq_khz);
- 
- static int create_attr_group(struct uncore_data *data, char *name)
- {
--	int ret, freq, index = 0;
-+	int ret, index = 0;
-+	unsigned int val;
- 
- 	init_attribute_rw(max_freq_khz);
- 	init_attribute_rw(min_freq_khz);
-@@ -168,10 +186,24 @@ static int create_attr_group(struct uncore_data *data, char *name)
- 	data->uncore_attrs[index++] = &data->initial_min_freq_khz_kobj_attr.attr;
- 	data->uncore_attrs[index++] = &data->initial_max_freq_khz_kobj_attr.attr;
- 
--	ret = uncore_read(data, &freq, UNCORE_INDEX_CURRENT_FREQ);
-+	ret = uncore_read(data, &val, UNCORE_INDEX_CURRENT_FREQ);
- 	if (!ret)
- 		data->uncore_attrs[index++] = &data->current_freq_khz_kobj_attr.attr;
- 
-+	ret = uncore_read(data, &val, UNCORE_INDEX_EFF_LAT_CTRL_LOW_THRESHOLD);
-+	if (!ret) {
-+		init_attribute_rw(elc_low_threshold_percent);
-+		init_attribute_rw(elc_high_threshold_percent);
-+		init_attribute_rw(elc_high_threshold_enable);
-+		init_attribute_rw(elc_floor_freq_khz);
-+
-+		data->uncore_attrs[index++] = &data->elc_low_threshold_percent_kobj_attr.attr;
-+		data->uncore_attrs[index++] = &data->elc_high_threshold_percent_kobj_attr.attr;
-+		data->uncore_attrs[index++] =
-+			&data->elc_high_threshold_enable_kobj_attr.attr;
-+		data->uncore_attrs[index++] = &data->elc_floor_freq_khz_kobj_attr.attr;
-+	}
-+
- 	data->uncore_attrs[index] = NULL;
- 
- 	data->uncore_attr_group.name = name;
-diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-index b5c7311bfa05..26c854cd5d97 100644
---- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-+++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.h
-@@ -34,6 +34,13 @@
-  * @domain_id_kobj_attr: Storage for kobject attribute domain_id
-  * @fabric_cluster_id_kobj_attr: Storage for kobject attribute fabric_cluster_id
-  * @package_id_kobj_attr: Storage for kobject attribute package_id
-+ * @elc_low_threshold_percent_kobj_attr:
-+		Storage for kobject attribute elc_low_threshold_percent
-+ * @elc_high_threshold_percent_kobj_attr:
-+		Storage for kobject attribute elc_high_threshold_percent
-+ * @elc_high_threshold_enable_kobj_attr:
-+		Storage for kobject attribute elc_high_threshold_enable
-+ * @elc_floor_freq_khz_kobj_attr: Storage for kobject attribute elc_floor_freq_khz
-  * @uncore_attrs:	Attribute storage for group creation
-  *
-  * This structure is used to encapsulate all data related to uncore sysfs
-@@ -61,7 +68,11 @@ struct uncore_data {
- 	struct kobj_attribute domain_id_kobj_attr;
- 	struct kobj_attribute fabric_cluster_id_kobj_attr;
- 	struct kobj_attribute package_id_kobj_attr;
--	struct attribute *uncore_attrs[9];
-+	struct kobj_attribute elc_low_threshold_percent_kobj_attr;
-+	struct kobj_attribute elc_high_threshold_percent_kobj_attr;
-+	struct kobj_attribute elc_high_threshold_enable_kobj_attr;
-+	struct kobj_attribute elc_floor_freq_khz_kobj_attr;
-+	struct attribute *uncore_attrs[13];
- };
- 
- #define UNCORE_DOMAIN_ID_INVALID	-1
--- 
-2.43.1
+> Am 26/08/2024 um 22:54 schrieb Andy Shevchenko:
+> > Wed, Aug 14, 2024 at 12:27:27PM +0200, Konrad Dybcio kirjoitti:
+> >> From: Konrad Dybcio <quic_kdybcio@quicinc.com>
 
+[...]
+
+> >>      nodes =3D (const struct software_node **)acpi_device_get_match_da=
+ta(&pdev->dev);
+> >
+> > Hmm... Why this doesn't use simple device_get_match_data()?
+> >
+> >> -    if (!nodes)
+> >> -            return -ENODEV;
+> >> +    if (!nodes) {
+> >> +            fdt_root =3D of_find_node_by_path("/");
+> >> +            if (!fdt_root)
+> >> +                    return -ENODEV;
+> >> +
+> >> +            match =3D of_match_node(ssam_platform_hub_of_match, fdt_r=
+oot);
+> >> +            of_node_put(fdt_root);
+> >> +            if (!match)
+> >> +                    return -ENODEV;
+> >> +
+> >> +            nodes =3D (const struct software_node **)match->data;
+> >
+> > This is quite strange! Where are they being defined?
+>
+> Essentially, this whole module is a giant workaround because there
+> doesn't seem to be a way to auto-discover which functions or subdevices
+> the EC actually supports. So this module builds a registry of software
+> nodes and matches against a Surface-model-specific ACPI ID (in ACPI
+> mode). Based on that ID, we retrieve the tree of software nodes that
+> define the EC subdevices and register them using a (virtual) platform
+> hub device.
+>
+> The snippet way above registers the platform hub device for DT,
+> because there we don't have an equivalent ACPI device that we can
+> use. The code here retrieves the respective nodes.
+
+Yes, and software nodes for DT are quite strange things! Why can't you
+simply fix the DT to begin with?
+
+> >> +            if (!nodes)
+> >> +                    return -ENODEV;
+> >> +    }
+
+...
+
+> >> +MODULE_ALIAS("platform:surface_aggregator_platform_hub");
+> >
+> > Can it be platfrom device ID table instead? But do you really need it?
+> >
+>
+> I think the explanation above already kind of answers this, but the
+> module is named differently than the driver (so that they reflect the
+> specific nature of each, registry vs hub device). And the platform hub
+> device added in the snippet I left above is named after the driver. So
+> for the registry module to load when the platform hub driver is
+> requested, it is needed.
+
+So, I believe it warrants a platform device ID table to make it explicit.
+
+--=20
+With Best Regards,
+Andy Shevchenko
