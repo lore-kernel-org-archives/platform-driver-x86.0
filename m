@@ -1,102 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B651481B3;
-	Wed, 28 Aug 2024 16:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24DBB36130;
+	Wed, 28 Aug 2024 17:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724864310; cv=none; b=PUEDz8Q5QlKAvgnbIiWe3lFG5iOTBBCWttviKw1O5uBIn2H9dceQ70NY45YTLiWgVSrGt4Nd1PQTwvGwgqNhI99RMuwODC43kz7OSktYWeCmMANeIyL4w9GDKHvwWw1IZMB/FuKtyO3YG/LHVwBRBYzG58Q/Y5NB7p7F7yNgQ8g=
+	t=1724866861; cv=none; b=P/zOlC2pmOFV5OBmi8VH3lnyVjGorpNX5w5LPJL74f6PDuIFVY3sLbZVj7zkM+SQPD6RIIEDSCfeIoTRMdpHp/k/la17w+f12X22Or/mWcbzd+iBNwZ51yAuQ78tSXDQRb+0Dldo29/GCU2bLCFChwOGCZm+z+lJnrbythPGnrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724864310; c=relaxed/simple;
-	bh=WICbGCEGxKFHDucqOiaVRx0SdTB8zP8nY6yJaexlPgY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nFqr3ru56OPup4Hj6gjZ//n09gs7xTE394P7tVaLZYPnH01ZHbM7m2YlI0AYxzYfpgLR/6kSMxcjNixbNMDOzyW6gGKyKnfutqnZr/nbG8WQpcnO3ss0WBeQp/jeu0wYJIX17Eaw7/lJkLy3BD3mXeo/ZREXcT2tyEhPI0nHK1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CGy9QFle; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1724866861; c=relaxed/simple;
+	bh=gbtXHJq+mAHq+lCKykPrcJKzlc6UtbaslicjWljJIv4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zs/e4zwF8nNpj6Q7cL0MHtHszSRB/GOPJYDdIwC/1IsX5OksQDNUX/YimVs+OoVvrdEDrXrtLyU/CR79S5/lVdpQIBNYUHnzBHKP0Bz+TpNJSiyEGa0/Kc5PtCWBkrAO03MZgf6RMJTHQT/hiRhrRPW7KJ4CYacladqYHEdlfTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HqXzXjPH; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CGy9QFle"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724864308; x=1756400308;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=WICbGCEGxKFHDucqOiaVRx0SdTB8zP8nY6yJaexlPgY=;
-  b=CGy9QFlewjAd+eyQBa1FcoGLykl4n4NlzdDC6BF85nIuxKbQuX2B5ffc
-   yM83ZfJ7+rW6yywd5nsaA0krOJhz7/NejohosALRzxiHxnjkuaCW9qqwK
-   j6S0JuHa67wGVUFSpGu8b2CJO6VJ0b5pm2l1S4HrK2sluuzbM5MLETlVo
-   bZRdX/FwoDfGZcvNVRxwi6s/+xebWGznyt2CMKE2OG+Lji0JdF7kn4/hI
-   hkL7IsITg8kt7Lr6UD9ODU5hsVq3PSOCZqg2+CoLKaYAJD+xMSfoZYg+e
-   2oML5nVciNYBNpLYowtRzp2vjSfienw+Bd8Pvldk7LwrvUlGWLT4OzUzw
-   Q==;
-X-CSE-ConnectionGUID: yc2ISsiCSNi0ezKW6gmSmQ==
-X-CSE-MsgGUID: M4Yslr23S7KYotqNFpMT8g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11178"; a="40912215"
-X-IronPort-AV: E=Sophos;i="6.10,183,1719903600"; 
-   d="scan'208";a="40912215"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 09:58:28 -0700
-X-CSE-ConnectionGUID: acWaujrgTLKnGn8xfjGT7w==
-X-CSE-MsgGUID: 13/3drV3Rzi/E0zXYFs1rQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,183,1719903600"; 
-   d="scan'208";a="94090533"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 09:58:26 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1sjLzz-00000002ilO-2Gu8;
-	Wed, 28 Aug 2024 19:58:23 +0300
-Date: Wed, 28 Aug 2024 19:58:23 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>
-Subject: Re: [PATCH v2 1/4] driver core: Ignore 0 in dev_err_probe()
-Message-ID: <Zs9XL1SwyroU8qE0@smile.fi.intel.com>
-References: <20240822130722.1261891-1-andriy.shevchenko@linux.intel.com>
- <20240822130722.1261891-2-andriy.shevchenko@linux.intel.com>
- <2024082443-mulch-junkie-1f9a@gregkh>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HqXzXjPH"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-428ec6c190eso61683725e9.1;
+        Wed, 28 Aug 2024 10:40:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724866858; x=1725471658; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=An0Vk1+fcXlBnERTT4Ns65sUJzJJDn81eBsrPMRL5tQ=;
+        b=HqXzXjPHZEhSPeo45ilkW0gkhxz5Qx5SlZNed4nPYVsHT54Dh0vfMUd9auQ9pKVizc
+         zlpbE4CdBdD50LAdTIQ7Jlw3n+q2qP1/fYNJ3Uv9DCKc3fUVAqEOdg9UXL1A8VFNPrLT
+         w0pl3G1oKvUr5NvzCf5m5gSiOgwZwA/JEHrPn7xlfgYM/vg5tGJvnKhS2mOQSwg/9GX5
+         f/HoK1fyVKX1N7HY0ZpokKqwwowVRz4NfJ3+Musxq/RZhH/cwy7UrnRfc4rBmc8mc3TA
+         em1Su8c1BcXiFoEdiBCdPTzi4E96/McHtXFdfYqL04n7wOb9ZuGS2wNWcwYPSNElRejY
+         50dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724866858; x=1725471658;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=An0Vk1+fcXlBnERTT4Ns65sUJzJJDn81eBsrPMRL5tQ=;
+        b=gUHrNkswXItlqjY5uL8t97PjSzd3/utxYFETnwKqqZbiVRcJfby6UJ990OQrDibEq4
+         HDiSWXWwoch5dM/fnXxrCa/Nq4PU57vt2M6Gw1snYUIZFjQ4cOv02ADfvyYoFrUkLbCL
+         YcTirSE9SRvJAaznfq5HbHRWvI6JLe6YAdSb1pIiCkM4iMr1tBhbB2MftxUeLGHGeXX6
+         UAxNoI5NcK6nJv3JLu2Lqzpqol03aM0yBN20Ul6Xp9wje8JLTn+dJjnazYWEo63rw95S
+         5c517q+Jo/TiutBnEgPImFnrl0SgNe7EDRu+RG+LqpJT2CNIytqZ8lUq2Nm/j55frRSv
+         1BLw==
+X-Forwarded-Encrypted: i=1; AJvYcCVsUpaE9pc2N8nXTX59fHdbP87iU7yOSUFVXIZ+tZw08inzY0W97ep8equrNLgiAs6E51ybB6DtlzNX4nvg@vger.kernel.org, AJvYcCVugZfiDlLl4UupOVjMQCRM0t7JQR0OdwOp5VS+k/Hlzg9SIE6x9+lrsNEphsSeBtBn+g8I02Re8eB1iqQKm4DKY9PZDg==@vger.kernel.org, AJvYcCWOkaDKh/u4+NwGmnxOEfImKCz46DvawCYotS4AsOFUHZHvG1G5xoQSeZtQ1Aah5Cl7envV2i/R7oOLZA==@vger.kernel.org, AJvYcCWwjp0vk0AZTvQ0dLtvfMlxKfDC+6cIvBfoBNzxvcedyJxuuDGAXayPuXddcDVbrmH+yqdGcgxRoUDcH50+@vger.kernel.org, AJvYcCX39/6DG2QjZd5pXlRZkCzyecsV67oc5lFEA926xdGhNjhWrKZbW2oTf/2v+qGEao7tiCzO3irG1PMn@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzmpTI75bC/Pvhnf9oB6FVtyBAh5aY2sbq5MCFUs9D13TOJ4rx
+	Y93RacWSqu1MRbY7XjltN1U28nY+wRJBIdhVRzGuajvgXEJ6uX0W
+X-Google-Smtp-Source: AGHT+IEMT2J9j0NWA0FQP6JJCnxcc6TeVi0FxecAAgalOduVjWy5jaFjAtjj33iEpx2L92OLR0WBNA==
+X-Received: by 2002:a05:600c:310b:b0:427:dac4:d36 with SMTP id 5b1f17b1804b1-42bb02444aamr2508925e9.7.1724866858234;
+        Wed, 28 Aug 2024 10:40:58 -0700 (PDT)
+Received: from ?IPV6:2a02:8071:b783:140:927c:82ba:d32d:99c1? ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb01d3029sm3731855e9.42.2024.08.28.10.40.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Aug 2024 10:40:57 -0700 (PDT)
+Message-ID: <53a56539-1d95-42ac-ad07-1b689702b2ed@gmail.com>
+Date: Wed, 28 Aug 2024 19:40:56 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] platform/surface: Add OF support
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <quic_kdybcio@quicinc.com>
+References: <20240814-topic-sam-v3-0-a84588aad233@quicinc.com>
+ <20240814-topic-sam-v3-3-a84588aad233@quicinc.com>
+ <ZszrjQChQ2aS5YjV@surfacebook.localdomain>
+ <d08d41ad-edcb-48ad-a848-53edc45ab8eb@gmail.com>
+ <CAHp75VcbjR8HQqPASLFEGiyYLfTFQDa6Ri+jFy+7Q1xz7gY39Q@mail.gmail.com>
+Content-Language: en-US
+From: Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <CAHp75VcbjR8HQqPASLFEGiyYLfTFQDa6Ri+jFy+7Q1xz7gY39Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2024082443-mulch-junkie-1f9a@gregkh>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Sat, Aug 24, 2024 at 11:08:53AM +0800, Greg Kroah-Hartman wrote:
-> On Thu, Aug 22, 2024 at 04:05:38PM +0300, Andy Shevchenko wrote:
-> > In the similar way, ignore 0 error code (AKA "success") in
-> > dev_err_probe(). This helps to simplify a code such as
-> > 
-> >   if (ret < 0)
-> >     return dev_err_probe(int3472->dev, ret, err_msg);
-> > 
-> >   return ret;
-> > 
-> > to
-> > 
-> >   return dev_err_probe(int3472->dev, ret, err_msg);
-> > 
-> > Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On 8/28/24 6:56 PM, Andy Shevchenko wrote:
+> On Wed, Aug 28, 2024 at 12:10â€¯PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
 > 
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> I thought I should provide some context:
+> 
+> Thank you, my reply below.
+> 
+>> Am 26/08/2024 um 22:54 schrieb Andy Shevchenko:
+>>> Wed, Aug 14, 2024 at 12:27:27PM +0200, Konrad Dybcio kirjoitti:
+>>>> From: Konrad Dybcio <quic_kdybcio@quicinc.com>
+> 
+> [...]
+> 
+>>>>       nodes = (const struct software_node **)acpi_device_get_match_data(&pdev->dev);
+>>>
+>>> Hmm... Why this doesn't use simple device_get_match_data()?
+>>>
+>>>> -    if (!nodes)
+>>>> -            return -ENODEV;
+>>>> +    if (!nodes) {
+>>>> +            fdt_root = of_find_node_by_path("/");
+>>>> +            if (!fdt_root)
+>>>> +                    return -ENODEV;
+>>>> +
+>>>> +            match = of_match_node(ssam_platform_hub_of_match, fdt_root);
+>>>> +            of_node_put(fdt_root);
+>>>> +            if (!match)
+>>>> +                    return -ENODEV;
+>>>> +
+>>>> +            nodes = (const struct software_node **)match->data;
+>>>
+>>> This is quite strange! Where are they being defined?
+>>
+>> Essentially, this whole module is a giant workaround because there
+>> doesn't seem to be a way to auto-discover which functions or subdevices
+>> the EC actually supports. So this module builds a registry of software
+>> nodes and matches against a Surface-model-specific ACPI ID (in ACPI
+>> mode). Based on that ID, we retrieve the tree of software nodes that
+>> define the EC subdevices and register them using a (virtual) platform
+>> hub device.
+>>
+>> The snippet way above registers the platform hub device for DT,
+>> because there we don't have an equivalent ACPI device that we can
+>> use. The code here retrieves the respective nodes.
+> 
+> Yes, and software nodes for DT are quite strange things! Why can't you
+> simply fix the DT to begin with?
 
-Thank you!
+For the ARM/DT variants we could do that. But we still have to deal with
+the x86/ACPI ones here. So for me it makes more sense to have it unified
+and just deal with everything in this module.
 
-Hans, I think we all set to proceed with this. Do you have any comments?
+Also, if we consider that at some point we might get ACPI PEP support (I
+know, far fetched right now): With that, ACPI on ARM might be feasible
+and then we'd have to manage the same thing in two places...
 
--- 
-With Best Regards,
-Andy Shevchenko
+And lastly, the EC subdevices are quite contained and I don't see them
+interacting with any other components in the DT, so it's more of a
+stylistic choice where to put them.
 
+>>>> +            if (!nodes)
+>>>> +                    return -ENODEV;
+>>>> +    }
+> 
+> ...
+> 
+>>>> +MODULE_ALIAS("platform:surface_aggregator_platform_hub");
+>>>
+>>> Can it be platfrom device ID table instead? But do you really need it?
+>>>
+>>
+>> I think the explanation above already kind of answers this, but the
+>> module is named differently than the driver (so that they reflect the
+>> specific nature of each, registry vs hub device). And the platform hub
+>> device added in the snippet I left above is named after the driver. So
+>> for the registry module to load when the platform hub driver is
+>> requested, it is needed.
+> 
+> So, I believe it warrants a platform device ID table to make it explicit.
 
+Yes, that makes sense. (I was not arguing against that, just wanted to
+explain why we need the match at all.)
+
+Best regards,
+Max
