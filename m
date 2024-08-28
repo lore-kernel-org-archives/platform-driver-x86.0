@@ -1,173 +1,121 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7617158543;
-	Wed, 28 Aug 2024 09:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9A215B57A;
+	Wed, 28 Aug 2024 10:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724836249; cv=none; b=fR6F5oTVpoY5VSdFqGkxpdUG8+u86bOo7/OeKHm6gAg2qIwvP8UcW2kcrryXHifzRtjDeRGOhSMcDCoVjiSPQiv9EIvT47g531ELj+Wqp8KF4Oal0ElpKNc9E8Gvnzl63KH6yWQvO2pJb6BrmA0XSEDUl5cjc3Tm7EvRXasVRfk=
+	t=1724839518; cv=none; b=DidFkneFafNxNlv1TZMQtZSVFw1e7niqm7FQtk4oVVaipX8SQ1eyr8xdQFpcVbG+qPP+HoVgblNveni0gjkvDM++p2SUOp8kApioenTgf1DPgfGg+KO8XjAQaqIWZxi7pdShMWPbccME6wp4GSX41KY2GHeVw+A7hCSXEt3moDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724836249; c=relaxed/simple;
-	bh=zSHKO3j33Ria7zyczy79YyyVNqfKsgActvy2LbiGQV4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CMpFiJ9ARmFaQQGRod258pIEp0GA6yhKfPJi86hnneC0QCon7f2EtRYFeqFk5MD6YMph5XOREDHOtMzCmrDm/rZn13DehMsWZZiCxR/zl0kI4Zup7mSM4JROZYN2htZ35DIwcd5dSOFA95q4qF519Xgh1/K61TbHWYDEgeAv8wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gdu/dfRV; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1724839518; c=relaxed/simple;
+	bh=nbZWOGGs7V+IKSDTacg3uSEez86F3BUFm3ENgDB+gm8=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=KiCkho/24twjruQWZcS+mhK9XPmhbiJEOe29nqQbGcBz2e9a8xIXoRZs73ob28HI4f24TYygfkSeoB1qggT3p435EhoeFzwXssufJy7bD00wpSLtTz7LGWkmZKHi1RYj0SpVcPzwuPNjUA8jOLCvdyqBQsC1j1XhzeIXZlNUEcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XYRNGWIK; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdu/dfRV"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3719753d365so3592136f8f.2;
-        Wed, 28 Aug 2024 02:10:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724836246; x=1725441046; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=x3niQjXZJR5D3vooE/mqJ9Cy41uU536hIxUZ/GtxSL8=;
-        b=gdu/dfRVZFpumaFqQEvACr+rscBpBbtdHBoaQwGJ3gfV9woODBKLe6CbaPdoyF7gJN
-         Eh4Jkpvd3Mkf1wZG2uwBCzPW1zxiQjDd9BJaO3SpL1PA82Nkf2yThMd7ALIx+pzciDnP
-         WgODzsElulGQ60wU4l6bfGbPEk+SQFHW6ZEg/2MzCb/3SSRfkobb1shXgtvHmSNfd9dY
-         ODarThN/XIg1Xe6KTod/mtI0RoyQsnPxpcbmSUIVp2EvfPFM+317lE6OC6XtDMfsISDw
-         YQAIGtB7J4lsln4ECh14IUhvRm6305pZiW1/EF9LZc+h1UZbvkaCbGwvBAFodAbFB8GA
-         tC9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724836246; x=1725441046;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x3niQjXZJR5D3vooE/mqJ9Cy41uU536hIxUZ/GtxSL8=;
-        b=CMnPNaWkK9wHXcUCKfcgokqqQEk7NLICn5FQ4nX8FFc9uxhtP9lEhL/tiMBFu/cwld
-         +mTuFxmw00de13WoyBVh8tloKWRxLdhrulHmxgw3tK/My6MKB6LQEX/EoUlqBmGFirOw
-         PwsuEUu4KStoxh+4Mpchi/VJ+sM7C47SyAMc901HoUxyda82XDnTtPaXdsze2D/U806A
-         1w4VgxxpcjTEjBuFhP/XjKyQt8TbC9QIDXPtWyu9gMvyIPCscD9diDjYE+XOniNuASbH
-         /FY0JHkvDclWTCzbVmKmgjQiFB+kOZp/A7gbglARwgs9opkTt7UmHOtGc4nxUA6QuNvt
-         1I+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVDTbALPawLNrHvu3ewZn3pxdkB7JuSX1rJzcH98llmryizVtqIUC2drVl9nS9K215ep84oYTmScBtTt90utV+/zw1qRA==@vger.kernel.org, AJvYcCVROz0/b0e+dXnIIuLTT43aKWY4hMdGy5IKru6xQWyhwMQ1Mxo7L8SJzdiG60mpJg1zPumdXPD+lhYK@vger.kernel.org, AJvYcCVw8/nRc3KkMpNBA6GZfexs63cg4g9VXvazZuvTm/ow2FaIyYACB1gOhRDduw64JCL6sD68r7PJHlghPOF2@vger.kernel.org, AJvYcCW+kvfZZWH3pOLloutrcddKTdUterGzFVr/NRNaiabK4BQpIR9VAmYFcqwRUXnV+1adIPdmrGeMqFXpYQ==@vger.kernel.org, AJvYcCWqb8IoshiENJD9xaCpSzWpS7kv0hKibMVaZnvZEArEwPHMJj5rNaP9CdPal4g+cGkd3KoQcs3bH7qdXWVi@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKo1W153ioV0ox8JLhZ1KGaCEGSLZli6SYZMb5vNbQr8fj93Ve
-	qma1q31KCod0fjoaayUcri6pvJth4BC8FvMW4/3E2hJ407Ef+b5Q
-X-Google-Smtp-Source: AGHT+IF7uY9ow2G6xujW69BVfU5b4AZOL2v5nnCZbY71qinhm3c0AqkQo9Sucb8izKf3PWV00S2FKQ==
-X-Received: by 2002:adf:a344:0:b0:367:98e6:362b with SMTP id ffacd0b85a97d-37311909018mr10609524f8f.42.1724836245824;
-        Wed, 28 Aug 2024 02:10:45 -0700 (PDT)
-Received: from [10.126.144.131] (ufr-132-230-194-172.eduroam-nat.uni-freiburg.de. [132.230.194.172])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3730810ffb9sm15230364f8f.7.2024.08.28.02.10.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Aug 2024 02:10:45 -0700 (PDT)
-Message-ID: <d08d41ad-edcb-48ad-a848-53edc45ab8eb@gmail.com>
-Date: Wed, 28 Aug 2024 11:10:42 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XYRNGWIK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724839517; x=1756375517;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=nbZWOGGs7V+IKSDTacg3uSEez86F3BUFm3ENgDB+gm8=;
+  b=XYRNGWIK1+aXp97QAPtubM2doBi6L14naQBk6CCp9Zs0OrzlsvJIy3sA
+   PJyOJ8j0z2fY2DKuFkQcPgoLB2Cj9kDUcoCxZZeOh+REqsbEUZTC0bzrt
+   DGdWnPc5ABTYVq0IrQVrhKSMmGxTum/yQlB7H3yxefC4afrVx9r4Sq5/y
+   SE3Bu76vUtjkixCgXrt/YzJXLEMFThqmjpBV9yEr7swyNQWiyfrYQjBuO
+   hDlBxnuaKln4O4ls6ZAKDSiS7XpMFUoZ7JiFkXnQ/XB4QMVzUbhMRBkd4
+   cM+KHbCofmGe0mDeYVaCjIPsQzN6nVcHNJ+QvYWROHdTpiVYb9tRHmOR9
+   Q==;
+X-CSE-ConnectionGUID: 70za5EuYRyGra7uBTxVvuQ==
+X-CSE-MsgGUID: TA8eoB81SrmV/0WTGFDOpQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11177"; a="23521225"
+X-IronPort-AV: E=Sophos;i="6.10,182,1719903600"; 
+   d="scan'208";a="23521225"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 03:05:16 -0700
+X-CSE-ConnectionGUID: S2tB1/3/SWqkqfDEFSXA4Q==
+X-CSE-MsgGUID: HHLkffQER7SfSSzcVhMr4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,182,1719903600"; 
+   d="scan'208";a="63507420"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.205])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2024 03:05:15 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+Date: Wed, 28 Aug 2024 12:52:37 +0300
+Subject: [GIT PULL] platform-drivers-x86 for v6.11-5
+Message-ID: <pdx86-pr-20240828125237-2776213950@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] platform/surface: Add OF support
-To: Andy Shevchenko <andy.shevchenko@gmail.com>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: Rob Herring <robh@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Len Brown <lenb@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <quic_kdybcio@quicinc.com>
-References: <20240814-topic-sam-v3-0-a84588aad233@quicinc.com>
- <20240814-topic-sam-v3-3-a84588aad233@quicinc.com>
- <ZszrjQChQ2aS5YjV@surfacebook.localdomain>
-Content-Language: en-US
-From: Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <ZszrjQChQ2aS5YjV@surfacebook.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Hi Linus,
 
-I thought I should provide some context:
+Here is a platform-drivers-x86 fixes PR for v6.11. None of the change looks
+complicated. In case you wonder, there are more IDs added to AMD PMC in this
+PR as it turned out the previous ones were not sufficient.
 
-Am 26/08/2024 um 22:54 schrieb Andy Shevchenko:
-> Wed, Aug 14, 2024 at 12:27:27PM +0200, Konrad Dybcio kirjoitti:
->> From: Konrad Dybcio <quic_kdybcio@quicinc.com>
+Changes:
+- platform/x86/amd/pmc: AMD 1Ah model 60h series support (2nd attempt).
+- asus-wmi: Prevent spurious rfkill on Asus Zenbook Duo.
+- x86-android-tablets: Relax DMI match to cover another model.
 
-[...]
+Regards, i.
 
->> +	/*
->> +	 * When using DT, we have to register the platform hub driver manually,
->> +	 * as it can't be matched based on top-level board compatible (like it
->> +	 * does the ACPI case).
->> +	 */
->> +	if (!ssh) {
->> +		struct platform_device *ph_pdev =
->> +			platform_device_register_simple("surface_aggregator_platform_hub",
->> +							0, NULL, 0);
->> +		if (IS_ERR(ph_pdev))
->> +			return dev_err_probe(dev, PTR_ERR(ph_pdev),
->> +					     "Failed to register the platform hub driver\n"); 
->> +	}
 
-[...]
+The following changes since commit 46ee21e9f59205e54943dfe51b2dc8a9352ca37d:
 
->>   static int ssam_platform_hub_probe(struct platform_device *pdev)
->>   {
->>   	const struct software_node **nodes;
->> +	const struct of_device_id *match;
->> +	struct device_node *fdt_root;
->>   	struct ssam_controller *ctrl;
->>   	struct fwnode_handle *root;
->>   	int status;
->>   
->>   	nodes = (const struct software_node **)acpi_device_get_match_data(&pdev->dev);
-> 
-> Hmm... Why this doesn't use simple device_get_match_data()?
-> 
->> -	if (!nodes)
->> -		return -ENODEV;
->> +	if (!nodes) {
->> +		fdt_root = of_find_node_by_path("/");
->> +		if (!fdt_root)
->> +			return -ENODEV;
->> +
->> +		match = of_match_node(ssam_platform_hub_of_match, fdt_root);
->> +		of_node_put(fdt_root);
->> +		if (!match)
->> +			return -ENODEV;
->> +
->> +		nodes = (const struct software_node **)match->data;
-> 
-> This is quite strange! Where are they being defined?
+  platform/x86: ISST: Fix return value on last invalid resource (2024-08-20 14:19:09 +0300)
 
-Essentially, this whole module is a giant workaround because there
-doesn't seem to be a way to auto-discover which functions or subdevices
-the EC actually supports. So this module builds a registry of software
-nodes and matches against a Surface-model-specific ACPI ID (in ACPI
-mode). Based on that ID, we retrieve the tree of software nodes that
-define the EC subdevices and register them using a (virtual) platform
-hub device.
+are available in the Git repository at:
 
-The snippet way above registers the platform hub device for DT,
-because there we don't have an equivalent ACPI device that we can
-use. The code here retrieves the respective nodes.
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.11-5
 
->> +		if (!nodes)
->> +			return -ENODEV;
->> +	}
-> 
-> ...
-> 
->> +MODULE_ALIAS("platform:surface_aggregator_platform_hub");
-> 
-> Can it be platfrom device ID table instead? But do you really need it?
-> 
+for you to fetch changes up to a3379eca24a7da5118a7d090da6f8eb8611acac8:
 
-I think the explanation above already kind of answers this, but the
-module is named differently than the driver (so that they reflect the
-specific nature of each, registry vs hub device). And the platform hub
-device added in the snippet I left above is named after the driver. So
-for the registry module to load when the platform hub driver is
-requested, it is needed.
+  platform/x86: x86-android-tablets: Make Lenovo Yoga Tab 3 X90F DMI match less strict (2024-08-26 14:34:33 +0300)
 
-Regards,
-Max
+----------------------------------------------------------------
+platform-drivers-x86 for v6.11-5
+
+Changes:
+- platform/x86/amd/pmc: AMD 1Ah model 60h series support (2nd attempt).
+- asus-wmi: Prevent spurious rfkill on Asus Zenbook Duo.
+- x86-android-tablets: Relax DMI match to cover another model.
+
+The following is an automated shortlog grouped by driver:
+
+amd/pmc:
+ -  Extend support for PMC features on new AMD platform
+ -  Fix SMU command submission path on new AMD platform
+
+asus-wmi:
+ -  Fix spurious rfkill on UX8406MA
+
+x86-android-tablets:
+ -  Make Lenovo Yoga Tab 3 X90F DMI match less strict
+
+----------------------------------------------------------------
+Hans de Goede (1):
+      platform/x86: x86-android-tablets: Make Lenovo Yoga Tab 3 X90F DMI match less strict
+
+Mathieu Fenniak (1):
+      platform/x86: asus-wmi: Fix spurious rfkill on UX8406MA
+
+Shyam Sundar S K (2):
+      platform/x86/amd/pmc: Fix SMU command submission path on new AMD platform
+      platform/x86/amd/pmc: Extend support for PMC features on new AMD platform
+
+ drivers/platform/x86/amd/pmc/pmc.c             |  3 +++
+ drivers/platform/x86/asus-nb-wmi.c             | 20 +++++++++++++++++++-
+ drivers/platform/x86/asus-wmi.h                |  1 +
+ drivers/platform/x86/x86-android-tablets/dmi.c |  1 -
+ 4 files changed, 23 insertions(+), 2 deletions(-)
