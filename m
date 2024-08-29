@@ -1,46 +1,46 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2069.outbound.protection.outlook.com [40.107.93.69])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91A815F40B
-	for <platform-driver-x86@vger.kernel.org>; Thu, 29 Aug 2024 06:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79CB13C8FF
+	for <platform-driver-x86@vger.kernel.org>; Thu, 29 Aug 2024 06:07:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.40
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724911641; cv=fail; b=kV5EisJ514qz35IY7A21aC4+B4G/UYKdHmJXwzA/IVDAoeIBsJ3v90OXA0pv9M5cUVMe64zMYaACaJqzTRddUbfT9RZha0fu4j7l+eory2b/uoKftUGggBb4ut6Ltg7nCNSXdta2TwGM0mN2YMFnxDrVIsuo0nZ6ogDDBpcq7A8=
+	t=1724911644; cv=fail; b=lyyG4RE4UT0DMs5YIMbV1aZKwkuMaKX7SOJPydmlQsV7Yoi8wSfQU+9AZYySWcwVPYE5bKrP2nCndPJdHIW+x4P+13kd5xtDR/Kt6eIB4DEuVZtFcADa9IVC594vF8g+J1faIUWhLrHNgiO39Zh/sWKYVhd1XXT7oLvlWCZ3TKw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724911641; c=relaxed/simple;
-	bh=UTL3S/ydHWshJSdqZUdnaEiA5ZVxlypQxhk+ovBWC7M=;
+	s=arc-20240116; t=1724911644; c=relaxed/simple;
+	bh=qJ4Z63UEQsWCW1z5IffqaXoK2eU6BS8WggYaEyUjKDg=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uPiw7YYqYDd2oUkBaaSOgx0RT6q0TxNEUNFCJ661jVQYEAlpTNZQkTUIZIOoqqH8EkAjSAprBrf2ex84C4ls/4JwOuHOUyd/1+8WSJXrRw994Mnz1KAnOa2FwVsd+k7xv/WchNQNWUJWDET/YH/E143SRw1Tmr/+xZqP7EL1U1Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2pd9FVt7; arc=fail smtp.client-ip=40.107.93.69
+	 MIME-Version:Content-Type; b=DfLAM2rBCTwJFvNTfZthslY8H+qtgp+utODFUOJrYgS7Pu6Ni4yZAk3fpJC1ZOapzQmFzLvIvUa3xyxDb+TOusWY+Wc2JEf9Og8cAmkiCsRFNPgYunj2FYM8dbTXZwluDIusd+RH6ibKFbiwUywGCwbPyd2JfldtPPCn3Zka61w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mR5//a1o; arc=fail smtp.client-ip=40.107.236.40
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2pd9FVt7"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mR5//a1o"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IZGbRBJ5GZqphioQmdPRqW5Noi+KivmT5upwYNUCHokQ7fvDhdoyVCYtXFrH2vHCREoABIMiWLTsDoU1VvUwO2L8j+ipy3lOX0YMo1Q5/PT4GeuAMmZKY67lWGJF+hlywErHDQIJ6bs9lR3l47jowE0C2qrf49MJS88+LErag8yvUEszfc+ptNdXyS4O9lALAP9oUxLoif0NiKmKbxCGEaaY9OzXJA3aP+Lx02dfKaiaVKcFqgWfWbddVLV6EguwZEEvf2er3heNdYinuHU1eEJkKvNJ8JLimPKyOcLKmz1FA0AeTCnHNqydVcybSyK1lHb4KeN4uIUW54p18xIRcg==
+ b=dhpEsWA+5nWYosB4UK8fcaYHFDAVN9VM8im1AKX+cu/9rdXf1NrwsgLffw+og+hFtvHK90bYsnbs4sJ5HYFeWJMWpR3VYFMcPDIRNfpJhtgqRhdNHB+g/vRFHXEuR8fqXa/Bst6YUTVSZ0rJkFIUXRaE58ELAgn3reICW0wSFN32y9Uo4VepwYX6px+ztyBZaoRLMeo4t+z/RTDRBCfDx9Uvdwa7Lo61BBYkFpnfZei4eq7Dq+RnGyiZl0fcqzHcYciJ1QhZ2bl4unlsnWxI3tEq6KrgTkfBgpDK66R06UTfDTCp/gLJ2BlErqsP/Ree+h3snhav46lnVt1067Vgzw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ai/QpzecVD7o2zJL12QZuQjpQZLk07frjicyx46TE20=;
- b=XknbZ4AqLyZLDzxCS0G74qr86Y9S/mOd4WE0R42Y51f4ERDEkQ36iqa4R3gjsADFWnwMabR+kkBd78ygRW+rPlUAZGG1liVcEZzEAyDHblWwCPgMmf4BXL4xZmoyG44yuTRh9oF7r1PGfDQFCFsB4QCPlSY5MYR6DP5jnVS++gLb+rYbYrz+6b4GPBVpiHT6S9+OrGF1s4NjT/lJGqeHNQbVEM+KPYuri3nFwnsi1u8ihkz+PcNgrpw4kFmihVgUACf3UbWvtzPNb9xIggjWiJbTbpD00ePkE/0JxuP1SmgCabmpGoo+gwzwh+AgTHe4MedPlxMJ75yhaVvf0LBQ/Q==
+ bh=nVcq8J9keDgdfPMTZgPqvNxP5CuNgWDYi0fKT/APsCE=;
+ b=y4pFzVUk+GSq74lG2iw2dUEQDcxHKrjgdUMRzzpcxL5nd1SDlxrPBY8MU0FU8OnQRmqsSCAOoDntslP2eCZod2p9GhJITNs1tQ7kPwS39OEk5fAL1yHW0msIOO0or63OigIKiahrrh6dHhMTqNMd4ojO69fR3LrNz0vpfVTfcp/dbb1qcSv0Okc9GrwJqv+3lHpjeCnespUZrdlfWDqUnYa60bMElO1VIJuqMEHZKAl74JakNb4fNWIfQuGBjhRl9sCa2aACGyH9VW37uqSZikSjGcCB99xOR9pooaQTS9+pziEf2hZd0xtBMNZHeiwg/GqQE0jTtFlTHde72gIZcQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ai/QpzecVD7o2zJL12QZuQjpQZLk07frjicyx46TE20=;
- b=2pd9FVt76DUKTr8AKZZC6OsrfE9k4fsCT8erKmQPwo7mLhenf2ueciUyTTJ44W8FQ1T9lUbjvzb5EcCFTby9Oh7EwQcQICjNSpwBCqgKQU1nw80Chxa/skVfJhteYLwxmub0cAn5EYCHl0gEpBJwcO5UnS0WdJxUyRsexIjcjaE=
-Received: from BYAPR07CA0102.namprd07.prod.outlook.com (2603:10b6:a03:12b::43)
- by CY8PR12MB8411.namprd12.prod.outlook.com (2603:10b6:930:6e::6) with
+ bh=nVcq8J9keDgdfPMTZgPqvNxP5CuNgWDYi0fKT/APsCE=;
+ b=mR5//a1oJvl6JqTALfL0MAjzRzPFaQfQc/nQiNlqZ4aGIlcWXUfY5yHpaL4RaEgUDL0lweRF0oXAUeQGLTCHr7+J2wLyh+K7+KNftppI5siaoI3hV6sVbYbN/0rqKzWZ3hPZHsRLWFiTv+SGqUUuiVzGVYHWY4Uh8YZlXeEbZSs=
+Received: from SJ0PR05CA0096.namprd05.prod.outlook.com (2603:10b6:a03:334::11)
+ by MW3PR12MB4362.namprd12.prod.outlook.com (2603:10b6:303:5d::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.27; Thu, 29 Aug
  2024 06:07:14 +0000
-Received: from SJ5PEPF00000205.namprd05.prod.outlook.com
- (2603:10b6:a03:12b:cafe::73) by BYAPR07CA0102.outlook.office365.com
- (2603:10b6:a03:12b::43) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.27 via Frontend
- Transport; Thu, 29 Aug 2024 06:07:13 +0000
+Received: from SJ5PEPF00000206.namprd05.prod.outlook.com
+ (2603:10b6:a03:334:cafe::9e) by SJ0PR05CA0096.outlook.office365.com
+ (2603:10b6:a03:334::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.19 via Frontend
+ Transport; Thu, 29 Aug 2024 06:07:14 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,21 +48,21 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF00000205.mail.protection.outlook.com (10.167.244.38) with Microsoft
+ SJ5PEPF00000206.mail.protection.outlook.com (10.167.244.39) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
  15.20.7918.13 via Frontend Transport; Thu, 29 Aug 2024 06:07:13 +0000
 Received: from amd.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 29 Aug
- 2024 01:07:07 -0500
+ 2024 01:07:09 -0500
 From: Suma Hegde <suma.hegde@amd.com>
 To: <platform-driver-x86@vger.kernel.org>
 CC: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>, Suma Hegde
 	<suma.hegde@amd.com>, Naveen Krishna Chatradhi
 	<naveenkrishna.chatradhi@amd.com>
-Subject: [v6 05/10] platform/x86/amd/hsmp: Move platform device specific code to plat.c
-Date: Thu, 29 Aug 2024 06:06:02 +0000
-Message-ID: <20240829060617.1548658-5-suma.hegde@amd.com>
+Subject: [v6 06/10] platform/x86/amd/hsmp: Move ACPI code to acpi.c
+Date: Thu, 29 Aug 2024 06:06:03 +0000
+Message-ID: <20240829060617.1548658-6-suma.hegde@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240829060617.1548658-1-suma.hegde@amd.com>
 References: <20240829060617.1548658-1-suma.hegde@amd.com>
@@ -78,67 +78,67 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF00000205:EE_|CY8PR12MB8411:EE_
-X-MS-Office365-Filtering-Correlation-Id: baccef17-aaa0-4b88-d3b9-08dcc7f0d3b3
+X-MS-TrafficTypeDiagnostic: SJ5PEPF00000206:EE_|MW3PR12MB4362:EE_
+X-MS-Office365-Filtering-Correlation-Id: abb18508-53ca-4dee-28b1-08dcc7f0d3fd
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013;
+	BCL:0;ARA:13230040|376014|1800799024|82310400026|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?a29HZlJvN2daMnZJOHFwbkJ2MGJUMU1kbkI5ZTdlYVFOenhLN09kalpjdHd4?=
- =?utf-8?B?QXF6U0pIMnNoZStlOXN0RFg5aXR6b0tRdW1ZK0ZDWHNKZjRZN2tUeHJJM084?=
- =?utf-8?B?elVpTC9INmJyUzQ2bU1LTTlaOUVickZGUjg1eDN3aTVpaENUa1V4ZUYyTk5J?=
- =?utf-8?B?QlN3ZU5VQzdHYjlPazBwNzRYWFlucFdEMmdFV25JVUNhcE5TM245cllGdm81?=
- =?utf-8?B?Y2RCZENwTHNidkhGeWF0YzNrVWhqaEhEdk9uK1E3UysxUm45djVMYit3elJP?=
- =?utf-8?B?VHNqdm56SFJ2TDZXUllMYUVTOXlHWHlUQTd1UFBJNUQxY3VMaXUyK01XTDZl?=
- =?utf-8?B?UUFjS1dZNUlKVXJESnA4K2lHTjVUTnlnalpxRXluVUUwMzJGTnM5Y2dqUGhi?=
- =?utf-8?B?c3lidzNsdTZqYXQzZlVjZzZCYVhyYVRPVXRsVloxUHYvS3pjaUdaalF0dUdC?=
- =?utf-8?B?WnVvTWVPZ2MxaE9rNnlWUG5PK2wvNDB6L2JsYi9iOEtxQ0ViVVZCOFN4WnFF?=
- =?utf-8?B?THhNZnJGbWZGZGJXNUJadzhTNDlYdDZqT2g4NWlucUV6dFFTZUVCSW9mdUlk?=
- =?utf-8?B?SXB0Qkt6Y2lkcHJSSDJYeW9qRG5UV2lvZmRlcDBjdFo0ZzB1bEgwL21HdGxn?=
- =?utf-8?B?aGo3NlhlVjE0OE9JV0dRWEFnWnNrbkFzTGlRd2I1N2xFYmx5WFB6UG84Q2hV?=
- =?utf-8?B?YlJ2MGJ1SkZWZHNaZzcvS2x4TVhHNldMZ0JLbzBzdU02WXpUMEFtTHExODky?=
- =?utf-8?B?b0VzVkpkY0FZRGxLNWdSTmlHQmwxMkNQL3lBcjFXSGFRckZlMkgrRXdmWHRx?=
- =?utf-8?B?V2h4T3pjSmlRWmUrQjhwdFprVWNvaFlxYWp4em1QYzVLN2xqb3VFTlIvNTQr?=
- =?utf-8?B?VGpnOU85Kyt1c2NCd243Sk90VFNhSUhrWkpDK0d1Y2VOcGtMQ1kvbFdEekw5?=
- =?utf-8?B?VjBwSTlXOHFXYzQ3MUl2ZTNtQU5tbG1ZdkZCN2tyVHFqV1dJZkd1eks5VU11?=
- =?utf-8?B?WE1weE5JYWJLMmxDdkFiWXNRdU5jRjVRL3I3Q1FrNXY4d0FCdGQ5L1JoMlIv?=
- =?utf-8?B?NTBzZ01HcEZmSjQzeXZVakxiWEtTTXJmL2s3Zm5HMTNOb2lSemNXY0Z4cHJI?=
- =?utf-8?B?M1JSRXZyT0lMNEhjY0g2UUxWTUY3bEovRVdqQi80R3M3NW51elFHdkRLZmRv?=
- =?utf-8?B?TVBER0tlb09vdmVBWVArUFpOdncyWW14c29PcG5tdHNTb2tkT2Y1bmZaYmJM?=
- =?utf-8?B?Sjdsd3ZNQlJIaE5ES1ZDR0tHQ3BsN0MwV2ltNllxUWF1ZHZWMWJSdURpYkFi?=
- =?utf-8?B?WHFVcDVUbTF6Q09WSjR5K0FpbzdYNE1vR3BLUi81anR6TnRveVBqNmNFd1ht?=
- =?utf-8?B?UmVEWGhTZ0ZJV2VCUG5ldGZMUmZhay83ZFdLWmdoSmY0WnppTG5qZVRxaG5s?=
- =?utf-8?B?ZGV5ZUgyaTdIMDBpaUxyWXE0NFdjNTd4T1B2U1llaFR1bHNPWlVsM21id1o3?=
- =?utf-8?B?cndUYWo2dlFDT1ZPZmlDQ3JmZkVmTkkxc08xREUyNXdUd0t1bmZvcHZjZzNI?=
- =?utf-8?B?blFkSTJrUUZ4ZXhyWjBBUS90eElCUU9uVTNlekRSNFAvSTVIbjQ1ZGtrU0RZ?=
- =?utf-8?B?TjRvd3JjRy9wZFJZN1lYN1JPSi9rNEZoTXEzTWJxVGdhaDBqZFphNWNOZ1Yy?=
- =?utf-8?B?TEg0c0hKRnRGUGFzaE02TENETXlZOEJuSDZYOC9xWnpVQWMzeTBsazF2M1hF?=
- =?utf-8?B?UEVLN2NmUFY1VDR0MDFPelh6bEhscVloNTBVQ0kyaWJBODJEZ0YyaUkrL3ZB?=
- =?utf-8?B?S3FTY2xKanRUNVVxTGV0N1A1SGRWRmRpNXI2bVppMFhCSVdIeXFONFBCZHRN?=
- =?utf-8?B?Y3VuNVhPdGZIc0V2Vk9RUVg3VGwzOElEMnAvRGc3YVZpNUFlOFh2cmh1OVhr?=
- =?utf-8?Q?oTpcXxAawSr9ihyyE9OZXi8XNw8tIV2r?=
+	=?utf-8?B?cVVPSGpqMXJBTlFUU2FzVXgvOEgxNG9IUjB6ZlFmNnBGVjhaTW1BeUk5NFFY?=
+ =?utf-8?B?RWRqSmJSK0g2Vml6N2QxQ2NUbUdQM2kxcHR1ejd4WlcvbEtmRHQvajQvOVp5?=
+ =?utf-8?B?QUpxNVQwWGk5d2dUb3VDSDBlc090VEdnMUxyL1ZoYThaTWROdXFZWXZ3KzFI?=
+ =?utf-8?B?UFNnRlNaZ2FnMUFPZGhvMGJyLzZzdkdxVXd2cUtVb0NnaE1jQjBTT0p5N3NT?=
+ =?utf-8?B?WUExeFAwVGFneWJhdHp3THJnQWxRckcxS0tiR1pJeVZ1d2xPNDVoNUhZMG5v?=
+ =?utf-8?B?NE05M21iMHUyWDJTTFZRemFXeDBrQjZLL0VjZUZDN1hOQ1pWemZmOEhqRXlx?=
+ =?utf-8?B?dWxNcGV5d3dlWlUxNVpNL3ZpMWk4ZjhDWWU1UWhacUswRXBEUko5QnZJTm5a?=
+ =?utf-8?B?MTVkRnNaUU9BaW9xZG9UTlA0L3puYnNhME1EZDVwK3pGUExQU0R5QWZFMHpt?=
+ =?utf-8?B?TkVTdlFhaVFYdUhvbUpWT21pV2RxbUhZZEV2VjVQQkREc1N6YlNGWXVYNGtR?=
+ =?utf-8?B?aGNZOS9VYVBqdjA3Qm9ZTTk2THpBRmFUeU9jUzBudEdpWERQSE4zSHIycEpI?=
+ =?utf-8?B?L3dTeXNWekkzd3VFQ1RLa0xtY2EwYStTVUpyYUJWSzZZS0M5ZTEzWWk1aGtP?=
+ =?utf-8?B?WmU1cVNKYlgza0JSOHBPb2M2NlU0RlJoZ0tUdzdkeWJyNEtHdVlEaUdPYm5D?=
+ =?utf-8?B?UEZRVGd5NG16TjJNRW1qWEYwa3UycUVvYlVla2xpYi9GcFU1cGlsWUtNdnZX?=
+ =?utf-8?B?YkU5ZTRtbjVrZXAyZEZncjg3ZUNSNFdMTmM2QWp6K1p2K2xnbDdST1hEZ1hD?=
+ =?utf-8?B?UFpuMEZCSU5ZcUtDVks2TW4rRzU0UHV1OWl6akMvcnlQQWZGZ3RDbWppMVJo?=
+ =?utf-8?B?TWlKV0s1NnlOOEpRUE05R1VwMnNhUjdRT2FjQlBwaWFEb0doZUhuRFMyOXBS?=
+ =?utf-8?B?YXpkWklESmRrWWpoV2pnOUhVaXhqTUtsTXoyK1NhL2ZuMjRPUUVBWWFROEVo?=
+ =?utf-8?B?YWlKWW9PV0UzZ1hLS0VxQ0owMG5WYmdPR1RTTEJqVXVCby85NU85V2N1WWxG?=
+ =?utf-8?B?cWtlTUdIT3R5R3dGZTBZa1RjdEx6NWRkMU1pampZSHBxUlp4Q20wekxXMzJs?=
+ =?utf-8?B?SmVPbzNoSTh5V3MxeDJZVmVBd1lJQ3ZNbFcvYTlVSzZDTkFFaWxqT1QzSUpl?=
+ =?utf-8?B?Yi9qQlFhS2FmMDVFZ0JGdlpWVVZubGRPWnF1RHF0Y3VyWUlQaVpXY3FWQi94?=
+ =?utf-8?B?UjZWTENRNWRHSTFnTU0yekNvSXNJVjVaUG9QOHRUTHllc0Q1a3lIaEQ3c1V1?=
+ =?utf-8?B?cENvWmx5NG1KMVN3dHBBY3dyeWVpWVNYS2ZPNGVDUnk0NElJQ0piNTk5TzhI?=
+ =?utf-8?B?ZWlzRk44N3FQdjI3YXJub25YWmNrQkd5djJrUjlER1U4UUJqaGNVMS9SUlRT?=
+ =?utf-8?B?Zk9QTkZRcWVFRGRFWTJBMlUvT3lLYWZwTklmMlR1UWdyNFUwcy9yeE8zR3Bk?=
+ =?utf-8?B?Z2F4VEZtQjh3RVhINFBVR3k1eWRSQnpjc1d4Y0QrNG1jczFtNHV2M2xUelBP?=
+ =?utf-8?B?S0ZLVjNFSVZublVkYXRBSlV5Z3VEK2kzV1hDR0YwZzZlSldGbW5NZGFrRnlW?=
+ =?utf-8?B?K0o2cXQ4cnVhNVM2b1RZRU9qbDBYS015bTJSalE4QWovRXowbjM1MkhQQ1U1?=
+ =?utf-8?B?YmUrMitaUU9QQU9zeFdRYXVXYlpTaVlpeHMySXFwYk94QzJnOXpYQmZxT3hG?=
+ =?utf-8?B?MEVBcDNGemovMHJoUmZsSFFIdGVhb0pSdWdBbHBsOWo4elpqN0JuN0MvWlB1?=
+ =?utf-8?B?dDE3V2xhVXhtN1p2RkttRjlUdnh5UVNON1lmTDh5V1VkdzdidlU1YllLakZ4?=
+ =?utf-8?B?a1BBRkJkcWQ5THlMME5ZQVlMaFRyWWZSSTZ5UUdzUkVYNlJGSmpuc1cxNUJ5?=
+ =?utf-8?Q?5ZUytoS7GDEJKv6NM8oYp3vFP/bIMIbf?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2024 06:07:13.4967
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2024 06:07:13.9929
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: baccef17-aaa0-4b88-d3b9-08dcc7f0d3b3
+X-MS-Exchange-CrossTenant-Network-Message-Id: abb18508-53ca-4dee-28b1-08dcc7f0d3fd
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF00000205.namprd05.prod.outlook.com
+	SJ5PEPF00000206.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8411
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4362
 
 An upcoming change splits HSMP driver into ACPI and platform device
-variants. Prepare for the split by moving platform device part to plat.c.
+variants. Prepare for the split by moving ACPI related code
+to acpi.c from hsmp.c. Common code is kept in hsmp.c.
 
-No functinality/logical changes.
-Common code which can be used by ACPI and platform device
-remains in hsmp.c.
-ACPI code in hsmp.c will be moved to acpi.c in next patch.
+No logical/functional change.
+We still have one driver at this point,
+the driver probe will be split in the next patch.
 
 Signed-off-by: Suma Hegde <suma.hegde@amd.com>
 Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
@@ -149,412 +149,620 @@ None
 
 Changes since v4:
 1. Update commit description.
-2. Add "Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> "
+2. Add "Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>"
 
 Changes since v3:
-1. module init, exit code, probe, remove functions are kept back in hsmp.c
-   not added to plat.c in this patch, as per review comment.
+1. File header content is modified.
 
 Changes since v2:
 None
 
 Changes since v1:
-1. Include new header file device.h in plat.c
-2. Arrange headers in alphabetical order
-3. Add an empty line between asm/ and linux/ headers
- 
+1. Add following headers in acpi.c
+	#include <linux/device.h>
+	#include <linux/dev_printk.h>
+	#include <linux/ioport.h>
+	#include <linux/kstrtox.h>
+	#include <linux/uuid.h>
+	#include <uapi/asm-generic/errno-base.h>
+
  drivers/platform/x86/amd/hsmp/Makefile |   2 +-
- drivers/platform/x86/amd/hsmp/hsmp.c   | 138 ++-----------------------
- drivers/platform/x86/amd/hsmp/hsmp.h   |  14 +++
- drivers/platform/x86/amd/hsmp/plat.c   | 136 ++++++++++++++++++++++++
- 4 files changed, 161 insertions(+), 129 deletions(-)
- create mode 100644 drivers/platform/x86/amd/hsmp/plat.c
+ drivers/platform/x86/amd/hsmp/acpi.c   | 272 +++++++++++++++++++++++++
+ drivers/platform/x86/amd/hsmp/hsmp.c   | 250 -----------------------
+ drivers/platform/x86/amd/hsmp/hsmp.h   |   2 +
+ 4 files changed, 275 insertions(+), 251 deletions(-)
+ create mode 100644 drivers/platform/x86/amd/hsmp/acpi.c
 
 diff --git a/drivers/platform/x86/amd/hsmp/Makefile b/drivers/platform/x86/amd/hsmp/Makefile
-index fda64906a5e8..fb8ba04b2f0d 100644
+index fb8ba04b2f0d..0cc92865c0a2 100644
 --- a/drivers/platform/x86/amd/hsmp/Makefile
 +++ b/drivers/platform/x86/amd/hsmp/Makefile
 @@ -5,4 +5,4 @@
  #
  
  obj-$(CONFIG_AMD_HSMP)		+= amd_hsmp.o
--amd_hsmp-objs			:= hsmp.o
-+amd_hsmp-objs			:= hsmp.o plat.o
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-index 9ed1fc0aeb00..6da7c6189020 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.c
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-@@ -16,7 +16,6 @@
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/module.h>
--#include <linux/pci.h>
- #include <linux/platform_device.h>
- #include <linux/semaphore.h>
- #include <linux/sysfs.h>
-@@ -40,45 +39,12 @@
- #define HSMP_WR			true
- #define HSMP_RD			false
- 
--/*
-- * To access specific HSMP mailbox register, s/w writes the SMN address of HSMP mailbox
-- * register into the SMN_INDEX register, and reads/writes the SMN_DATA reg.
-- * Below are required SMN address for HSMP Mailbox register offsets in SMU address space
-- */
--#define SMN_HSMP_BASE		0x3B00000
--#define SMN_HSMP_MSG_ID		0x0010534
--#define SMN_HSMP_MSG_ID_F1A_M0H	0x0010934
--#define SMN_HSMP_MSG_RESP	0x0010980
--#define SMN_HSMP_MSG_DATA	0x00109E0
--
--#define HSMP_INDEX_REG		0xc4
--#define HSMP_DATA_REG		0xc8
--
- /* These are the strings specified in ACPI table */
- #define MSG_IDOFF_STR		"MsgIdOffset"
- #define MSG_ARGOFF_STR		"MsgArgOffset"
- #define MSG_RESPOFF_STR		"MsgRspOffset"
- 
--static struct hsmp_plat_device plat_dev;
--
--static int amd_hsmp_pci_rdwr(struct hsmp_socket *sock, u32 offset,
--			     u32 *value, bool write)
--{
--	int ret;
--
--	if (!sock->root)
--		return -ENODEV;
--
--	ret = pci_write_config_dword(sock->root, HSMP_INDEX_REG,
--				     sock->mbinfo.base_addr + offset);
--	if (ret)
--		return ret;
--
--	ret = (write ? pci_write_config_dword(sock->root, HSMP_DATA_REG, *value)
--		     : pci_read_config_dword(sock->root, HSMP_DATA_REG, value));
--
--	return ret;
--}
-+struct hsmp_plat_device plat_dev;
- 
- static int amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
- 			      u32 *value, bool write)
-@@ -248,7 +214,7 @@ int hsmp_send_message(struct hsmp_message *msg)
- }
- EXPORT_SYMBOL_GPL(hsmp_send_message);
- 
--static int hsmp_test(u16 sock_ind, u32 value)
-+int hsmp_test(u16 sock_ind, u32 value)
- {
- 	struct hsmp_message msg = { 0 };
- 	int ret;
-@@ -516,9 +482,9 @@ static int hsmp_parse_acpi_table(struct device *dev, u16 sock_ind)
- 	return hsmp_read_acpi_dsd(sock);
- }
- 
--static ssize_t hsmp_metric_tbl_read(struct file *filp, struct kobject *kobj,
--				    struct bin_attribute *bin_attr, char *buf,
--				    loff_t off, size_t count)
-+ssize_t hsmp_metric_tbl_read(struct file *filp, struct kobject *kobj,
-+			     struct bin_attribute *bin_attr, char *buf,
-+			     loff_t off, size_t count)
- {
- 	struct hsmp_socket *sock = bin_attr->private;
- 	struct hsmp_message msg = { 0 };
-@@ -577,8 +543,8 @@ static int hsmp_get_tbl_dram_base(u16 sock_ind)
- 	return 0;
- }
- 
--static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
--					 struct bin_attribute *battr, int id)
-+umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
-+				  struct bin_attribute *battr, int id)
- {
- 	if (plat_dev.proto_ver == HSMP_PROTO_VER6)
- 		return battr->attr.mode;
-@@ -607,8 +573,8 @@ static int hsmp_init_metric_tbl_bin_attr(struct bin_attribute **hattrs, u16 sock
- /* One bin sysfs for metrics table */
- #define NUM_HSMP_ATTRS		1
- 
--static int hsmp_create_attr_list(struct attribute_group *attr_grp,
--				 struct device *dev, u16 sock_ind)
-+int hsmp_create_attr_list(struct attribute_group *attr_grp,
-+			  struct device *dev, u16 sock_ind)
- {
- 	struct bin_attribute **hsmp_bin_attrs;
- 
-@@ -624,36 +590,6 @@ static int hsmp_create_attr_list(struct attribute_group *attr_grp,
- 	return hsmp_init_metric_tbl_bin_attr(hsmp_bin_attrs, sock_ind);
- }
- 
--static int hsmp_create_non_acpi_sysfs_if(struct device *dev)
--{
--	const struct attribute_group **hsmp_attr_grps;
--	struct attribute_group *attr_grp;
--	u16 i;
--
--	hsmp_attr_grps = devm_kcalloc(dev, plat_dev.num_sockets + 1,
--				      sizeof(*hsmp_attr_grps),
--				      GFP_KERNEL);
--	if (!hsmp_attr_grps)
--		return -ENOMEM;
--
--	/* Create a sysfs directory for each socket */
--	for (i = 0; i < plat_dev.num_sockets; i++) {
--		attr_grp = devm_kzalloc(dev, sizeof(struct attribute_group),
--					GFP_KERNEL);
--		if (!attr_grp)
--			return -ENOMEM;
--
--		snprintf(plat_dev.sock[i].name, HSMP_ATTR_GRP_NAME_SIZE, "socket%u", (u8)i);
--		attr_grp->name			= plat_dev.sock[i].name;
--		attr_grp->is_bin_visible	= hsmp_is_sock_attr_visible;
--		hsmp_attr_grps[i]		= attr_grp;
--
--		hsmp_create_attr_list(attr_grp, dev, i);
--	}
--
--	return device_add_groups(dev, hsmp_attr_grps);
--}
--
- static int hsmp_create_acpi_sysfs_if(struct device *dev)
- {
- 	struct attribute_group *attr_grp;
-@@ -677,7 +613,7 @@ static int hsmp_create_acpi_sysfs_if(struct device *dev)
- 	return devm_device_add_group(dev, attr_grp);
- }
- 
--static int hsmp_cache_proto_ver(u16 sock_ind)
-+int hsmp_cache_proto_ver(u16 sock_ind)
- {
- 	struct hsmp_message msg = { 0 };
- 	int ret;
-@@ -693,60 +629,6 @@ static int hsmp_cache_proto_ver(u16 sock_ind)
- 	return ret;
- }
- 
--static inline bool is_f1a_m0h(void)
--{
--	if (boot_cpu_data.x86 == 0x1A && boot_cpu_data.x86_model <= 0x0F)
--		return true;
--
--	return false;
--}
--
--static int init_platform_device(struct device *dev)
--{
--	struct hsmp_socket *sock;
--	int ret, i;
--
--	for (i = 0; i < plat_dev.num_sockets; i++) {
--		if (!node_to_amd_nb(i))
--			return -ENODEV;
--		sock = &plat_dev.sock[i];
--		sock->root			= node_to_amd_nb(i)->root;
--		sock->sock_ind			= i;
--		sock->dev			= dev;
--		sock->mbinfo.base_addr		= SMN_HSMP_BASE;
--		sock->amd_hsmp_rdwr		= amd_hsmp_pci_rdwr;
--
--		/*
--		 * This is a transitional change from non-ACPI to ACPI, only
--		 * family 0x1A, model 0x00 platform is supported for both ACPI and non-ACPI.
--		 */
--		if (is_f1a_m0h())
--			sock->mbinfo.msg_id_off	= SMN_HSMP_MSG_ID_F1A_M0H;
--		else
--			sock->mbinfo.msg_id_off	= SMN_HSMP_MSG_ID;
--
--		sock->mbinfo.msg_resp_off	= SMN_HSMP_MSG_RESP;
--		sock->mbinfo.msg_arg_off	= SMN_HSMP_MSG_DATA;
--		sema_init(&sock->hsmp_sem, 1);
--
--		/* Test the hsmp interface on each socket */
--		ret = hsmp_test(i, 0xDEADBEEF);
--		if (ret) {
--			dev_err(dev, "HSMP test message failed on Fam:%x model:%x\n",
--				boot_cpu_data.x86, boot_cpu_data.x86_model);
--			dev_err(dev, "Is HSMP disabled in BIOS ?\n");
--			return ret;
--		}
--		ret = hsmp_cache_proto_ver(i);
--		if (ret) {
--			dev_err(dev, "Failed to read HSMP protocol version\n");
--			return ret;
--		}
--	}
--
--	return 0;
--}
--
- static const struct acpi_device_id amd_hsmp_acpi_ids[] = {
- 	{ACPI_HSMP_DEVICE_HID, 0},
- 	{}
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-index d54b9681d514..d59a9efb4799 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.h
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-@@ -55,4 +55,18 @@ struct hsmp_plat_device {
- 	bool is_acpi_device;
- 	bool is_probed;
- };
-+
-+extern struct hsmp_plat_device plat_dev;
-+
-+ssize_t hsmp_metric_tbl_read(struct file *filp, struct kobject *kobj,
-+			     struct bin_attribute *bin_attr, char *buf,
-+			     loff_t off, size_t count);
-+int hsmp_create_non_acpi_sysfs_if(struct device *dev);
-+int hsmp_cache_proto_ver(u16 sock_ind);
-+umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
-+				  struct bin_attribute *battr, int id);
-+int hsmp_create_attr_list(struct attribute_group *attr_grp,
-+			  struct device *dev, u16 sock_ind);
-+int hsmp_test(u16 sock_ind, u32 value);
-+int init_platform_device(struct device *dev);
- #endif /* HSMP_H */
-diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
+-amd_hsmp-objs			:= hsmp.o plat.o
++amd_hsmp-objs			:= hsmp.o plat.o acpi.o
+diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
 new file mode 100644
-index 000000000000..85a104859acd
+index 000000000000..61c072216fb7
 --- /dev/null
-+++ b/drivers/platform/x86/amd/hsmp/plat.c
-@@ -0,0 +1,136 @@
++++ b/drivers/platform/x86/amd/hsmp/acpi.c
+@@ -0,0 +1,272 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * AMD HSMP Platform Driver
 + * Copyright (c) 2024, AMD.
 + * All Rights Reserved.
 + *
-+ * This file provides platform device implementations.
++ * This file provides an ACPI based driver implementation for HSMP interface.
 + */
 +
 +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 +
-+#include <asm/amd_nb.h>
-+
++#include <linux/acpi.h>
 +#include <linux/device.h>
-+#include <linux/pci.h>
++#include <linux/dev_printk.h>
++#include <linux/ioport.h>
++#include <linux/kstrtox.h>
 +#include <linux/sysfs.h>
++#include <linux/uuid.h>
++
++#include <uapi/asm-generic/errno-base.h>
 +
 +#include "hsmp.h"
 +
-+/*
-+ * To access specific HSMP mailbox register, s/w writes the SMN address of HSMP mailbox
-+ * register into the SMN_INDEX register, and reads/writes the SMN_DATA reg.
-+ * Below are required SMN address for HSMP Mailbox register offsets in SMU address space
-+ */
-+#define SMN_HSMP_BASE		0x3B00000
-+#define SMN_HSMP_MSG_ID		0x0010534
-+#define SMN_HSMP_MSG_ID_F1A_M0H	0x0010934
-+#define SMN_HSMP_MSG_RESP	0x0010980
-+#define SMN_HSMP_MSG_DATA	0x00109E0
++/* These are the strings specified in ACPI table */
++#define MSG_IDOFF_STR		"MsgIdOffset"
++#define MSG_ARGOFF_STR		"MsgArgOffset"
++#define MSG_RESPOFF_STR		"MsgRspOffset"
 +
-+#define HSMP_INDEX_REG		0xc4
-+#define HSMP_DATA_REG		0xc8
-+
-+static int amd_hsmp_pci_rdwr(struct hsmp_socket *sock, u32 offset,
-+			     u32 *value, bool write)
++static int amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
++			      u32 *value, bool write)
 +{
-+	int ret;
++	if (write)
++		iowrite32(*value, sock->virt_base_addr + offset);
++	else
++		*value = ioread32(sock->virt_base_addr + offset);
 +
-+	if (!sock->root)
-+		return -ENODEV;
-+
-+	ret = pci_write_config_dword(sock->root, HSMP_INDEX_REG,
-+				     sock->mbinfo.base_addr + offset);
-+	if (ret)
-+		return ret;
-+
-+	ret = (write ? pci_write_config_dword(sock->root, HSMP_DATA_REG, *value)
-+		     : pci_read_config_dword(sock->root, HSMP_DATA_REG, value));
-+
-+	return ret;
++	return 0;
 +}
 +
-+int hsmp_create_non_acpi_sysfs_if(struct device *dev)
++/* This is the UUID used for HSMP */
++static const guid_t acpi_hsmp_uuid = GUID_INIT(0xb74d619d, 0x5707, 0x48bd,
++						0xa6, 0x9f, 0x4e, 0xa2,
++						0x87, 0x1f, 0xc2, 0xf6);
++
++static inline bool is_acpi_hsmp_uuid(union acpi_object *obj)
 +{
-+	const struct attribute_group **hsmp_attr_grps;
-+	struct attribute_group *attr_grp;
-+	u16 i;
-+
-+	hsmp_attr_grps = devm_kcalloc(dev, plat_dev.num_sockets + 1,
-+				      sizeof(*hsmp_attr_grps),
-+				      GFP_KERNEL);
-+	if (!hsmp_attr_grps)
-+		return -ENOMEM;
-+
-+	/* Create a sysfs directory for each socket */
-+	for (i = 0; i < plat_dev.num_sockets; i++) {
-+		attr_grp = devm_kzalloc(dev, sizeof(struct attribute_group),
-+					GFP_KERNEL);
-+		if (!attr_grp)
-+			return -ENOMEM;
-+
-+		snprintf(plat_dev.sock[i].name, HSMP_ATTR_GRP_NAME_SIZE, "socket%u", (u8)i);
-+		attr_grp->name			= plat_dev.sock[i].name;
-+		attr_grp->is_bin_visible	= hsmp_is_sock_attr_visible;
-+		hsmp_attr_grps[i]		= attr_grp;
-+
-+		hsmp_create_attr_list(attr_grp, dev, i);
-+	}
-+
-+	return device_add_groups(dev, hsmp_attr_grps);
-+}
-+
-+static inline bool is_f1a_m0h(void)
-+{
-+	if (boot_cpu_data.x86 == 0x1A && boot_cpu_data.x86_model <= 0x0F)
-+		return true;
++	if (obj->type == ACPI_TYPE_BUFFER && obj->buffer.length == UUID_SIZE)
++		return guid_equal((guid_t *)obj->buffer.pointer, &acpi_hsmp_uuid);
 +
 +	return false;
 +}
 +
-+int init_platform_device(struct device *dev)
++static inline int hsmp_get_uid(struct device *dev, u16 *sock_ind)
 +{
-+	struct hsmp_socket *sock;
-+	int ret, i;
++	char *uid;
 +
-+	for (i = 0; i < plat_dev.num_sockets; i++) {
-+		if (!node_to_amd_nb(i))
-+			return -ENODEV;
-+		sock = &plat_dev.sock[i];
-+		sock->root			= node_to_amd_nb(i)->root;
-+		sock->sock_ind			= i;
-+		sock->dev			= dev;
-+		sock->mbinfo.base_addr		= SMN_HSMP_BASE;
-+		sock->amd_hsmp_rdwr		= amd_hsmp_pci_rdwr;
++	/*
++	 * UID (ID00, ID01..IDXX) is used for differentiating sockets,
++	 * read it and strip the "ID" part of it and convert the remaining
++	 * bytes to integer.
++	 */
++	uid = acpi_device_uid(ACPI_COMPANION(dev));
 +
-+		/*
-+		 * This is a transitional change from non-ACPI to ACPI, only
-+		 * family 0x1A, model 0x00 platform is supported for both ACPI and non-ACPI.
-+		 */
-+		if (is_f1a_m0h())
-+			sock->mbinfo.msg_id_off	= SMN_HSMP_MSG_ID_F1A_M0H;
-+		else
-+			sock->mbinfo.msg_id_off	= SMN_HSMP_MSG_ID;
++	return kstrtou16(uid + 2, 10, sock_ind);
++}
 +
-+		sock->mbinfo.msg_resp_off	= SMN_HSMP_MSG_RESP;
-+		sock->mbinfo.msg_arg_off	= SMN_HSMP_MSG_DATA;
-+		sema_init(&sock->hsmp_sem, 1);
++static acpi_status hsmp_resource(struct acpi_resource *res, void *data)
++{
++	struct hsmp_socket *sock = data;
++	struct resource r;
 +
-+		/* Test the hsmp interface on each socket */
-+		ret = hsmp_test(i, 0xDEADBEEF);
-+		if (ret) {
-+			dev_err(dev, "HSMP test message failed on Fam:%x model:%x\n",
-+				boot_cpu_data.x86, boot_cpu_data.x86_model);
-+			dev_err(dev, "Is HSMP disabled in BIOS ?\n");
-+			return ret;
++	switch (res->type) {
++	case ACPI_RESOURCE_TYPE_FIXED_MEMORY32:
++		if (!acpi_dev_resource_memory(res, &r))
++			return AE_ERROR;
++		if (!r.start || r.end < r.start || !(r.flags & IORESOURCE_MEM_WRITEABLE))
++			return AE_ERROR;
++		sock->mbinfo.base_addr = r.start;
++		sock->mbinfo.size = resource_size(&r);
++		break;
++	case ACPI_RESOURCE_TYPE_END_TAG:
++		break;
++	default:
++		return AE_ERROR;
++	}
++
++	return AE_OK;
++}
++
++static int hsmp_read_acpi_dsd(struct hsmp_socket *sock)
++{
++	struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER, NULL };
++	union acpi_object *guid, *mailbox_package;
++	union acpi_object *dsd;
++	acpi_status status;
++	int ret = 0;
++	int j;
++
++	status = acpi_evaluate_object_typed(ACPI_HANDLE(sock->dev), "_DSD", NULL,
++					    &buf, ACPI_TYPE_PACKAGE);
++	if (ACPI_FAILURE(status)) {
++		dev_err(sock->dev, "Failed to read mailbox reg offsets from DSD table, err: %s\n",
++			acpi_format_exception(status));
++		return -ENODEV;
++	}
++
++	dsd = buf.pointer;
++
++	/* HSMP _DSD property should contain 2 objects.
++	 * 1. guid which is an acpi object of type ACPI_TYPE_BUFFER
++	 * 2. mailbox which is an acpi object of type ACPI_TYPE_PACKAGE
++	 *    This mailbox object contains 3 more acpi objects of type
++	 *    ACPI_TYPE_PACKAGE for holding msgid, msgresp, msgarg offsets
++	 *    these packages inturn contain 2 acpi objects of type
++	 *    ACPI_TYPE_STRING and ACPI_TYPE_INTEGER
++	 */
++	if (!dsd || dsd->type != ACPI_TYPE_PACKAGE || dsd->package.count != 2) {
++		ret = -EINVAL;
++		goto free_buf;
++	}
++
++	guid = &dsd->package.elements[0];
++	mailbox_package = &dsd->package.elements[1];
++	if (!is_acpi_hsmp_uuid(guid) || mailbox_package->type != ACPI_TYPE_PACKAGE) {
++		dev_err(sock->dev, "Invalid hsmp _DSD table data\n");
++		ret = -EINVAL;
++		goto free_buf;
++	}
++
++	for (j = 0; j < mailbox_package->package.count; j++) {
++		union acpi_object *msgobj, *msgstr, *msgint;
++
++		msgobj	= &mailbox_package->package.elements[j];
++		msgstr	= &msgobj->package.elements[0];
++		msgint	= &msgobj->package.elements[1];
++
++		/* package should have 1 string and 1 integer object */
++		if (msgobj->type != ACPI_TYPE_PACKAGE ||
++		    msgstr->type != ACPI_TYPE_STRING ||
++		    msgint->type != ACPI_TYPE_INTEGER) {
++			ret = -EINVAL;
++			goto free_buf;
 +		}
 +
-+		ret = hsmp_cache_proto_ver(i);
-+		if (ret) {
-+			dev_err(dev, "Failed to read HSMP protocol version\n");
-+			return ret;
++		if (!strncmp(msgstr->string.pointer, MSG_IDOFF_STR,
++			     msgstr->string.length)) {
++			sock->mbinfo.msg_id_off = msgint->integer.value;
++		} else if (!strncmp(msgstr->string.pointer, MSG_RESPOFF_STR,
++				    msgstr->string.length)) {
++			sock->mbinfo.msg_resp_off =  msgint->integer.value;
++		} else if (!strncmp(msgstr->string.pointer, MSG_ARGOFF_STR,
++				    msgstr->string.length)) {
++			sock->mbinfo.msg_arg_off = msgint->integer.value;
++		} else {
++			ret = -ENOENT;
++			goto free_buf;
 +		}
++	}
++
++	if (!sock->mbinfo.msg_id_off || !sock->mbinfo.msg_resp_off ||
++	    !sock->mbinfo.msg_arg_off)
++		ret = -EINVAL;
++
++free_buf:
++	ACPI_FREE(buf.pointer);
++	return ret;
++}
++
++static int hsmp_read_acpi_crs(struct hsmp_socket *sock)
++{
++	acpi_status status;
++
++	status = acpi_walk_resources(ACPI_HANDLE(sock->dev), METHOD_NAME__CRS,
++				     hsmp_resource, sock);
++	if (ACPI_FAILURE(status)) {
++		dev_err(sock->dev, "Failed to look up MP1 base address from CRS method, err: %s\n",
++			acpi_format_exception(status));
++		return -EINVAL;
++	}
++	if (!sock->mbinfo.base_addr || !sock->mbinfo.size)
++		return -EINVAL;
++
++	/* The mapped region should be un-cached */
++	sock->virt_base_addr = devm_ioremap_uc(sock->dev, sock->mbinfo.base_addr,
++					       sock->mbinfo.size);
++	if (!sock->virt_base_addr) {
++		dev_err(sock->dev, "Failed to ioremap MP1 base address\n");
++		return -ENOMEM;
 +	}
 +
 +	return 0;
 +}
++
++/* Parse the ACPI table to read the data */
++static int hsmp_parse_acpi_table(struct device *dev, u16 sock_ind)
++{
++	struct hsmp_socket *sock = &plat_dev.sock[sock_ind];
++	int ret;
++
++	sock->sock_ind		= sock_ind;
++	sock->dev		= dev;
++	sock->amd_hsmp_rdwr	= amd_hsmp_acpi_rdwr;
++	plat_dev.is_acpi_device	= true;
++
++	sema_init(&sock->hsmp_sem, 1);
++
++	/* Read MP1 base address from CRS method */
++	ret = hsmp_read_acpi_crs(sock);
++	if (ret)
++		return ret;
++
++	/* Read mailbox offsets from DSD table */
++	return hsmp_read_acpi_dsd(sock);
++}
++
++int hsmp_create_acpi_sysfs_if(struct device *dev)
++{
++	struct attribute_group *attr_grp;
++	u16 sock_ind;
++	int ret;
++
++	attr_grp = devm_kzalloc(dev, sizeof(struct attribute_group), GFP_KERNEL);
++	if (!attr_grp)
++		return -ENOMEM;
++
++	attr_grp->is_bin_visible = hsmp_is_sock_attr_visible;
++
++	ret = hsmp_get_uid(dev, &sock_ind);
++	if (ret)
++		return ret;
++
++	ret = hsmp_create_attr_list(attr_grp, dev, sock_ind);
++	if (ret)
++		return ret;
++
++	return devm_device_add_group(dev, attr_grp);
++}
++
++int init_acpi(struct device *dev)
++{
++	u16 sock_ind;
++	int ret;
++
++	ret = hsmp_get_uid(dev, &sock_ind);
++	if (ret)
++		return ret;
++	if (sock_ind >= plat_dev.num_sockets)
++		return -EINVAL;
++
++	ret = hsmp_parse_acpi_table(dev, sock_ind);
++	if (ret) {
++		dev_err(dev, "Failed to parse ACPI table\n");
++		return ret;
++	}
++
++	/* Test the hsmp interface */
++	ret = hsmp_test(sock_ind, 0xDEADBEEF);
++	if (ret) {
++		dev_err(dev, "HSMP test message failed on Fam:%x model:%x\n",
++			boot_cpu_data.x86, boot_cpu_data.x86_model);
++		dev_err(dev, "Is HSMP disabled in BIOS ?\n");
++		return ret;
++	}
++
++	ret = hsmp_cache_proto_ver(sock_ind);
++	if (ret) {
++		dev_err(dev, "Failed to read HSMP protocol version\n");
++		return ret;
++	}
++
++	return ret;
++}
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
+index 6da7c6189020..573867c17fd5 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.c
++++ b/drivers/platform/x86/amd/hsmp/hsmp.c
+@@ -39,24 +39,8 @@
+ #define HSMP_WR			true
+ #define HSMP_RD			false
+ 
+-/* These are the strings specified in ACPI table */
+-#define MSG_IDOFF_STR		"MsgIdOffset"
+-#define MSG_ARGOFF_STR		"MsgArgOffset"
+-#define MSG_RESPOFF_STR		"MsgRspOffset"
+-
+ struct hsmp_plat_device plat_dev;
+ 
+-static int amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
+-			      u32 *value, bool write)
+-{
+-	if (write)
+-		iowrite32(*value, sock->virt_base_addr + offset);
+-	else
+-		*value = ioread32(sock->virt_base_addr + offset);
+-
+-	return 0;
+-}
+-
+ /*
+  * Send a message to the HSMP port via PCI-e config space registers
+  * or by writing to MMIO space.
+@@ -306,182 +290,6 @@ static const struct file_operations hsmp_fops = {
+ 	.compat_ioctl	= hsmp_ioctl,
+ };
+ 
+-/* This is the UUID used for HSMP */
+-static const guid_t acpi_hsmp_uuid = GUID_INIT(0xb74d619d, 0x5707, 0x48bd,
+-						0xa6, 0x9f, 0x4e, 0xa2,
+-						0x87, 0x1f, 0xc2, 0xf6);
+-
+-static inline bool is_acpi_hsmp_uuid(union acpi_object *obj)
+-{
+-	if (obj->type == ACPI_TYPE_BUFFER && obj->buffer.length == UUID_SIZE)
+-		return guid_equal((guid_t *)obj->buffer.pointer, &acpi_hsmp_uuid);
+-
+-	return false;
+-}
+-
+-static inline int hsmp_get_uid(struct device *dev, u16 *sock_ind)
+-{
+-	char *uid;
+-
+-	/*
+-	 * UID (ID00, ID01..IDXX) is used for differentiating sockets,
+-	 * read it and strip the "ID" part of it and convert the remaining
+-	 * bytes to integer.
+-	 */
+-	uid = acpi_device_uid(ACPI_COMPANION(dev));
+-
+-	return kstrtou16(uid + 2, 10, sock_ind);
+-}
+-
+-static acpi_status hsmp_resource(struct acpi_resource *res, void *data)
+-{
+-	struct hsmp_socket *sock = data;
+-	struct resource r;
+-
+-	switch (res->type) {
+-	case ACPI_RESOURCE_TYPE_FIXED_MEMORY32:
+-		if (!acpi_dev_resource_memory(res, &r))
+-			return AE_ERROR;
+-		if (!r.start || r.end < r.start || !(r.flags & IORESOURCE_MEM_WRITEABLE))
+-			return AE_ERROR;
+-		sock->mbinfo.base_addr = r.start;
+-		sock->mbinfo.size = resource_size(&r);
+-		break;
+-	case ACPI_RESOURCE_TYPE_END_TAG:
+-		break;
+-	default:
+-		return AE_ERROR;
+-	}
+-
+-	return AE_OK;
+-}
+-
+-static int hsmp_read_acpi_dsd(struct hsmp_socket *sock)
+-{
+-	struct acpi_buffer buf = { ACPI_ALLOCATE_BUFFER, NULL };
+-	union acpi_object *guid, *mailbox_package;
+-	union acpi_object *dsd;
+-	acpi_status status;
+-	int ret = 0;
+-	int j;
+-
+-	status = acpi_evaluate_object_typed(ACPI_HANDLE(sock->dev), "_DSD", NULL,
+-					    &buf, ACPI_TYPE_PACKAGE);
+-	if (ACPI_FAILURE(status)) {
+-		dev_err(sock->dev, "Failed to read mailbox reg offsets from DSD table, err: %s\n",
+-			acpi_format_exception(status));
+-		return -ENODEV;
+-	}
+-
+-	dsd = buf.pointer;
+-
+-	/* HSMP _DSD property should contain 2 objects.
+-	 * 1. guid which is an acpi object of type ACPI_TYPE_BUFFER
+-	 * 2. mailbox which is an acpi object of type ACPI_TYPE_PACKAGE
+-	 *    This mailbox object contains 3 more acpi objects of type
+-	 *    ACPI_TYPE_PACKAGE for holding msgid, msgresp, msgarg offsets
+-	 *    these packages inturn contain 2 acpi objects of type
+-	 *    ACPI_TYPE_STRING and ACPI_TYPE_INTEGER
+-	 */
+-	if (!dsd || dsd->type != ACPI_TYPE_PACKAGE || dsd->package.count != 2) {
+-		ret = -EINVAL;
+-		goto free_buf;
+-	}
+-
+-	guid = &dsd->package.elements[0];
+-	mailbox_package = &dsd->package.elements[1];
+-	if (!is_acpi_hsmp_uuid(guid) || mailbox_package->type != ACPI_TYPE_PACKAGE) {
+-		dev_err(sock->dev, "Invalid hsmp _DSD table data\n");
+-		ret = -EINVAL;
+-		goto free_buf;
+-	}
+-
+-	for (j = 0; j < mailbox_package->package.count; j++) {
+-		union acpi_object *msgobj, *msgstr, *msgint;
+-
+-		msgobj	= &mailbox_package->package.elements[j];
+-		msgstr	= &msgobj->package.elements[0];
+-		msgint	= &msgobj->package.elements[1];
+-
+-		/* package should have 1 string and 1 integer object */
+-		if (msgobj->type != ACPI_TYPE_PACKAGE ||
+-		    msgstr->type != ACPI_TYPE_STRING ||
+-		    msgint->type != ACPI_TYPE_INTEGER) {
+-			ret = -EINVAL;
+-			goto free_buf;
+-		}
+-
+-		if (!strncmp(msgstr->string.pointer, MSG_IDOFF_STR,
+-			     msgstr->string.length)) {
+-			sock->mbinfo.msg_id_off = msgint->integer.value;
+-		} else if (!strncmp(msgstr->string.pointer, MSG_RESPOFF_STR,
+-				    msgstr->string.length)) {
+-			sock->mbinfo.msg_resp_off =  msgint->integer.value;
+-		} else if (!strncmp(msgstr->string.pointer, MSG_ARGOFF_STR,
+-				    msgstr->string.length)) {
+-			sock->mbinfo.msg_arg_off = msgint->integer.value;
+-		} else {
+-			ret = -ENOENT;
+-			goto free_buf;
+-		}
+-	}
+-
+-	if (!sock->mbinfo.msg_id_off || !sock->mbinfo.msg_resp_off ||
+-	    !sock->mbinfo.msg_arg_off)
+-		ret = -EINVAL;
+-
+-free_buf:
+-	ACPI_FREE(buf.pointer);
+-	return ret;
+-}
+-
+-static int hsmp_read_acpi_crs(struct hsmp_socket *sock)
+-{
+-	acpi_status status;
+-
+-	status = acpi_walk_resources(ACPI_HANDLE(sock->dev), METHOD_NAME__CRS,
+-				     hsmp_resource, sock);
+-	if (ACPI_FAILURE(status)) {
+-		dev_err(sock->dev, "Failed to look up MP1 base address from CRS method, err: %s\n",
+-			acpi_format_exception(status));
+-		return -EINVAL;
+-	}
+-	if (!sock->mbinfo.base_addr || !sock->mbinfo.size)
+-		return -EINVAL;
+-
+-	/* The mapped region should be un cached */
+-	sock->virt_base_addr = devm_ioremap_uc(sock->dev, sock->mbinfo.base_addr,
+-					       sock->mbinfo.size);
+-	if (!sock->virt_base_addr) {
+-		dev_err(sock->dev, "Failed to ioremap MP1 base address\n");
+-		return -ENOMEM;
+-	}
+-
+-	return 0;
+-}
+-
+-/* Parse the ACPI table to read the data */
+-static int hsmp_parse_acpi_table(struct device *dev, u16 sock_ind)
+-{
+-	struct hsmp_socket *sock = &plat_dev.sock[sock_ind];
+-	int ret;
+-
+-	sock->sock_ind		= sock_ind;
+-	sock->dev		= dev;
+-	sock->amd_hsmp_rdwr	= amd_hsmp_acpi_rdwr;
+-	plat_dev.is_acpi_device	= true;
+-
+-	sema_init(&sock->hsmp_sem, 1);
+-
+-	/* Read MP1 base address from CRS method */
+-	ret = hsmp_read_acpi_crs(sock);
+-	if (ret)
+-		return ret;
+-
+-	/* Read mailbox offsets from DSD table */
+-	return hsmp_read_acpi_dsd(sock);
+-}
+-
+ ssize_t hsmp_metric_tbl_read(struct file *filp, struct kobject *kobj,
+ 			     struct bin_attribute *bin_attr, char *buf,
+ 			     loff_t off, size_t count)
+@@ -590,29 +398,6 @@ int hsmp_create_attr_list(struct attribute_group *attr_grp,
+ 	return hsmp_init_metric_tbl_bin_attr(hsmp_bin_attrs, sock_ind);
+ }
+ 
+-static int hsmp_create_acpi_sysfs_if(struct device *dev)
+-{
+-	struct attribute_group *attr_grp;
+-	u16 sock_ind;
+-	int ret;
+-
+-	attr_grp = devm_kzalloc(dev, sizeof(struct attribute_group), GFP_KERNEL);
+-	if (!attr_grp)
+-		return -ENOMEM;
+-
+-	attr_grp->is_bin_visible = hsmp_is_sock_attr_visible;
+-
+-	ret = hsmp_get_uid(dev, &sock_ind);
+-	if (ret)
+-		return ret;
+-
+-	ret = hsmp_create_attr_list(attr_grp, dev, sock_ind);
+-	if (ret)
+-		return ret;
+-
+-	return devm_device_add_group(dev, attr_grp);
+-}
+-
+ int hsmp_cache_proto_ver(u16 sock_ind)
+ {
+ 	struct hsmp_message msg = { 0 };
+@@ -645,41 +430,6 @@ static bool check_acpi_support(struct device *dev)
+ 	return false;
+ }
+ 
+-static int init_acpi(struct device *dev)
+-{
+-	u16 sock_ind;
+-	int ret;
+-
+-	ret = hsmp_get_uid(dev, &sock_ind);
+-	if (ret)
+-		return ret;
+-	if (sock_ind >= plat_dev.num_sockets)
+-		return -EINVAL;
+-
+-	ret = hsmp_parse_acpi_table(dev, sock_ind);
+-	if (ret) {
+-		dev_err(dev, "Failed to parse ACPI table\n");
+-		return ret;
+-	}
+-
+-	/* Test the hsmp interface */
+-	ret = hsmp_test(sock_ind, 0xDEADBEEF);
+-	if (ret) {
+-		dev_err(dev, "HSMP test message failed on Fam:%x model:%x\n",
+-			boot_cpu_data.x86, boot_cpu_data.x86_model);
+-		dev_err(dev, "Is HSMP disabled in BIOS ?\n");
+-		return ret;
+-	}
+-
+-	ret = hsmp_cache_proto_ver(sock_ind);
+-	if (ret) {
+-		dev_err(dev, "Failed to read HSMP protocol version\n");
+-		return ret;
+-	}
+-
+-	return ret;
+-}
+-
+ static int hsmp_pltdrv_probe(struct platform_device *pdev)
+ {
+ 	int ret;
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
+index d59a9efb4799..f465600cb843 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.h
++++ b/drivers/platform/x86/amd/hsmp/hsmp.h
+@@ -62,6 +62,7 @@ ssize_t hsmp_metric_tbl_read(struct file *filp, struct kobject *kobj,
+ 			     struct bin_attribute *bin_attr, char *buf,
+ 			     loff_t off, size_t count);
+ int hsmp_create_non_acpi_sysfs_if(struct device *dev);
++int hsmp_create_acpi_sysfs_if(struct device *dev);
+ int hsmp_cache_proto_ver(u16 sock_ind);
+ umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
+ 				  struct bin_attribute *battr, int id);
+@@ -69,4 +70,5 @@ int hsmp_create_attr_list(struct attribute_group *attr_grp,
+ 			  struct device *dev, u16 sock_ind);
+ int hsmp_test(u16 sock_ind, u32 value);
+ int init_platform_device(struct device *dev);
++int init_acpi(struct device *dev);
+ #endif /* HSMP_H */
 -- 
 2.25.1
 
