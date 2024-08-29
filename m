@@ -1,109 +1,214 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A39C1A4ADE;
-	Thu, 29 Aug 2024 13:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7D318C331;
+	Thu, 29 Aug 2024 16:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724937081; cv=none; b=d0nnc3zWM/bdwABLBgLK2bwRXot8zvPsGIue444N/4Jzvwb7x+SZgTFJWsXV8KzpzppFku0TqZeZRycH/fGcC19aWU+c3UgbKfQiKWmtHkRtDLOzozGDJcVk0YfLHgSV6WBvTLUfNATH9JHRzlY5n15AmpbmOLrANqHCnbyyK2s=
+	t=1724950280; cv=none; b=qw98ZT7RkQvtsWBs1ZH2b+cvcn/lWMTbDZFGVqWUWRfKHuPPSg0ZSJCOQdeAaMli/94SlJ/6dO6w8kDklbLtI/0qHhjRAjxQAAEnXGPYvQJUiNP5eMZ1SelwUGgnh+n0VKT6eK7JCfvY2QQH1Iwt6YgujOiEuAm0YUOxInTTkqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724937081; c=relaxed/simple;
-	bh=xJomEBaTA30qzuVPHC27UCTlgYU6iORyCFsgnV3S1XE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=bEgDnwwDaRROJP5AIqx+1dIeTE8VGYDTy19KEMF7F+YSS92F3DXTU7diP/KVYCvLO7PP+7WxkWfGhi+L/ydSyBeQjtbswXY9wythsc9LrS/Uuh2y0iHKcHrxgRLad+oo3Df4/v143/Ig7PpzTyYaIQ3C2fWF/CjplnfM53iBDVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mua16DRN; arc=none smtp.client-ip=192.198.163.14
+	s=arc-20240116; t=1724950280; c=relaxed/simple;
+	bh=suEmnq7l7kBu+OuAtK7MqN9CEE/c1CjjuOo7qUnodFQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kOFnhKDxdcKDIzb56CXDTRy6okuMJ5v/edANvzfBzr1fAFU3KhE+oj74KVuevY31aFZXCNIjyrSLrApH+ZuWSFx7hznL0uEiDB+vQg3IctY5gPxM9yAfwUza9Sm2CCbMzzmaK+EdGMG9n7f9EaYLJRR3evp1YtU/p6uatNcdm7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mpqjyDpG; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mua16DRN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mpqjyDpG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724937081; x=1756473081;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=xJomEBaTA30qzuVPHC27UCTlgYU6iORyCFsgnV3S1XE=;
-  b=mua16DRNCvNMkmZHO2Oia8vIzSpsE1TdpIbJBIiIYUyXUt9Vl9MmQWjx
-   Rum2hwmGaeg/HD8JZn7G/GexoRBP3oZ2thZGONoCd+tPc6sMmv+e1qFsj
-   ne2y2BWPagImp0Py9Tj/GpesBA2FYl1+CappIkG+w/Nm+oqRdyIcs0qlr
-   q2axAjNvOnDXcw4oAuXHx45VKyYVDbijvAv/w+Xm5mrG5GK44ByWSavlI
-   yJMz7SQ7PDJyqA06AY/5uiWg/SfBBaa3j/jNQF8B2Zkj5fXjyxlwkDb+L
-   lVn2Tp9Dcl01zhscwKkWlGmgdtpnGSOA/NdHHFKqKts+Glh271eGhYjjg
-   Q==;
-X-CSE-ConnectionGUID: /pb/dV1ySZiz1TRS3BMdew==
-X-CSE-MsgGUID: NQBePk1jQ8mLz4LmF8r1Gw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11179"; a="23710874"
-X-IronPort-AV: E=Sophos;i="6.10,185,1719903600"; 
-   d="scan'208";a="23710874"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 06:11:14 -0700
-X-CSE-ConnectionGUID: k/7QoaEhTiykv2a5DFUqRg==
-X-CSE-MsgGUID: PEMNI/xGTdqbZ3vAsss7Aw==
+  t=1724950280; x=1756486280;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=suEmnq7l7kBu+OuAtK7MqN9CEE/c1CjjuOo7qUnodFQ=;
+  b=mpqjyDpGpuHpMP8dA2pdte9F0/UOKVTdyUwfLusnVh1ca0mcl0eFvp0G
+   Mgci0JpygWKhqo6W/e/Fo9Z9dVwVqAFx19j/Z0aqI1i0dKm7+P6S9xy1t
+   1B4/pKwbBvltcZATObRjde1of+JjK1Rt72D/ZMkgtw/JWFA/305Io48e9
+   3cf+URLGQ28qzQpZFBrbF/4WAT3a7seuNvn0gfU7mNYDUNocA5iaxwm6W
+   G38l6W12vf8FDaA5hzgB7u8/DxjJW6v7oNAl5ZIWLieLOtqwGGQ9fvDqV
+   b80AzWCDvohntaEp7B8vvjGYG1ewbstFyHpc0/QBMKtWqnoNB3wTQotmR
+   w==;
+X-CSE-ConnectionGUID: ww8fuObLSfWiScxoHjR1pQ==
+X-CSE-MsgGUID: u+V21QujQtC5D9DixzaZ9g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11179"; a="27352517"
+X-IronPort-AV: E=Sophos;i="6.10,186,1719903600"; 
+   d="scan'208";a="27352517"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 09:51:19 -0700
+X-CSE-ConnectionGUID: FMuKukLMTuaMP2qSd8GspA==
+X-CSE-MsgGUID: oKyJU16sRKyj1n4b4TQIwQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,185,1719903600"; 
-   d="scan'208";a="68350177"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.59])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 06:11:09 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 29 Aug 2024 16:11:05 +0300 (EEST)
-To: Aleksandr Mishin <amishin@t-argos.ru>
-cc: Mario Limonciello <mario.limonciello@dell.com>, 
-    Hans de Goede <hdegoede@redhat.com>, Lyndon Sanche <lsanche@lyndeno.ca>, 
-    Armin Wolf <W_Armin@gmx.de>, "Darren Hart (VMware)" <dvhart@infradead.org>, 
-    Edward O'Callaghan <quasisec@google.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    lvc-project@linuxtesting.org
-Subject: Re: [PATCH] platform/x86: dell-smbios: Fix error path in
- dell_smbios_init()
-In-Reply-To: <20240828121703.17470-1-amishin@t-argos.ru>
-Message-ID: <760b7678-4fba-8683-3438-d8c6ee1cfc6f@linux.intel.com>
-References: <20240828121703.17470-1-amishin@t-argos.ru>
+X-IronPort-AV: E=Sophos;i="6.10,186,1719903600"; 
+   d="scan'208";a="63958139"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa006.jf.intel.com with ESMTP; 29 Aug 2024 09:51:16 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id A8D2E143; Thu, 29 Aug 2024 19:51:14 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Gergo Koteles <soyer@irl.hu>,
+	Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Ike Panhc <ike.pan@canonical.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH v1 1/1] platform/x86: ideapad-laptop: Make the scope_guard() clear of its scope
+Date: Thu, 29 Aug 2024 19:50:32 +0300
+Message-ID: <20240829165105.1609180-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Wed, 28 Aug 2024, Aleksandr Mishin wrote:
+First of all, it's a bit counterintuitive to have something like
 
-> In case of error in build_tokens_sysfs(), all the memory that has been
-> allocated is freed at end of this function. But then free_group() is
-> called which performs memory deallocation again.
-> 
-> Fix this issue by replacing free_group() call with exit_dell_smbios_wmi()
+	int err;
+	...
+	scoped_guard(...)
+		err = foo(...);
+	if (err)
+		return err;
 
-There are two issues and only one is properly described. Please amend the 
-commit message to cover the other problem too.
+Second, with a particular kernel configuration and compiler version in
+one of such cases the objtool is not happy:
 
+  ideapad-laptop.o: warning: objtool: .text.fan_mode_show: unexpected end of section
+
+I'm not an expert on all this, but the theory is that compiler and
+linker in this case can't understand that 'result' variable will be
+always initialized as long as no error has been returned. Assigning
+'result' to a dummy value helps with this. Note, that fixing the
+scoped_guard() scope (as per above) does not make issue gone.
+
+That said, assign dummy value and make the scope_guard() clear of its scope.
+For the sake of consistency do it in the entire file.
+
+Fixes: 7cc06e729460 ("platform/x86: ideapad-laptop: add a mutex to synchronize VPC commands")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202408290219.BrPO8twi-lkp@intel.com/
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+
+This has been Cc'ed to objtool and clang maintainers to have a look and
+tell if this can be addressed in a better way.
+
+ drivers/platform/x86/ideapad-laptop.c | 48 +++++++++++++++------------
+ 1 file changed, 27 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 35c75bcff195..c64dfc56651d 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -554,13 +554,14 @@ static ssize_t camera_power_show(struct device *dev,
+ 				 char *buf)
+ {
+ 	struct ideapad_private *priv = dev_get_drvdata(dev);
+-	unsigned long result;
++	unsigned long result = 0;
+ 	int err;
+ 
+-	scoped_guard(mutex, &priv->vpc_mutex)
++	scoped_guard(mutex, &priv->vpc_mutex) {
+ 		err = read_ec_data(priv->adev->handle, VPCCMD_R_CAMERA, &result);
+-	if (err)
+-		return err;
++		if (err)
++			return err;
++	}
+ 
+ 	return sysfs_emit(buf, "%d\n", !!result);
+ }
+@@ -577,10 +578,11 @@ static ssize_t camera_power_store(struct device *dev,
+ 	if (err)
+ 		return err;
+ 
+-	scoped_guard(mutex, &priv->vpc_mutex)
++	scoped_guard(mutex, &priv->vpc_mutex) {
+ 		err = write_ec_cmd(priv->adev->handle, VPCCMD_W_CAMERA, state);
+-	if (err)
+-		return err;
++		if (err)
++			return err;
++	}
+ 
+ 	return count;
+ }
+@@ -628,13 +630,14 @@ static ssize_t fan_mode_show(struct device *dev,
+ 			     char *buf)
+ {
+ 	struct ideapad_private *priv = dev_get_drvdata(dev);
+-	unsigned long result;
++	unsigned long result = 0;
+ 	int err;
+ 
+-	scoped_guard(mutex, &priv->vpc_mutex)
++	scoped_guard(mutex, &priv->vpc_mutex) {
+ 		err = read_ec_data(priv->adev->handle, VPCCMD_R_FAN, &result);
+-	if (err)
+-		return err;
++		if (err)
++			return err;
++	}
+ 
+ 	return sysfs_emit(buf, "%lu\n", result);
+ }
+@@ -654,10 +657,11 @@ static ssize_t fan_mode_store(struct device *dev,
+ 	if (state > 4 || state == 3)
+ 		return -EINVAL;
+ 
+-	scoped_guard(mutex, &priv->vpc_mutex)
++	scoped_guard(mutex, &priv->vpc_mutex) {
+ 		err = write_ec_cmd(priv->adev->handle, VPCCMD_W_FAN, state);
+-	if (err)
+-		return err;
++		if (err)
++			return err;
++	}
+ 
+ 	return count;
+ }
+@@ -737,13 +741,14 @@ static ssize_t touchpad_show(struct device *dev,
+ 			     char *buf)
+ {
+ 	struct ideapad_private *priv = dev_get_drvdata(dev);
+-	unsigned long result;
++	unsigned long result = 0;
+ 	int err;
+ 
+-	scoped_guard(mutex, &priv->vpc_mutex)
++	scoped_guard(mutex, &priv->vpc_mutex) {
+ 		err = read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &result);
+-	if (err)
+-		return err;
++		if (err)
++			return err;
++	}
+ 
+ 	priv->r_touchpad_val = result;
+ 
+@@ -762,10 +767,11 @@ static ssize_t touchpad_store(struct device *dev,
+ 	if (err)
+ 		return err;
+ 
+-	scoped_guard(mutex, &priv->vpc_mutex)
++	scoped_guard(mutex, &priv->vpc_mutex) {
+ 		err = write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, state);
+-	if (err)
+-		return err;
++		if (err)
++			return err;
++	}
+ 
+ 	priv->r_touchpad_val = state;
+ 
 -- 
- i.
-
-> and exit_dell_smbios_smm().
-> 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
-> 
-> Fixes: 33b9ca1e53b4 ("platform/x86: dell-smbios: Add a sysfs interface for SMBIOS tokens")
-> Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
-> ---
->  drivers/platform/x86/dell/dell-smbios-base.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platform/x86/dell/dell-smbios-base.c
-> index 6565fac24cde..73e41eb69cb5 100644
-> --- a/drivers/platform/x86/dell/dell-smbios-base.c
-> +++ b/drivers/platform/x86/dell/dell-smbios-base.c
-> @@ -622,7 +622,10 @@ static int __init dell_smbios_init(void)
->  	return 0;
->  
->  fail_sysfs:
-> -	free_group(platform_device);
-> +	if (!wmi)
-> +		exit_dell_smbios_wmi();
-> +	if (!smm)
-> +		exit_dell_smbios_smm();
->  
->  fail_create_group:
->  	platform_device_del(platform_device);
-> 
+2.43.0.rc1.1336.g36b5255a03ac
 
