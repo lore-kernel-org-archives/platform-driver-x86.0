@@ -1,141 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6E718E756
-	for <platform-driver-x86@vger.kernel.org>; Thu, 29 Aug 2024 11:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040361BC4E;
+	Thu, 29 Aug 2024 11:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724931093; cv=none; b=uz32TQcfNFMh0PUled2S6O1LrlDaaB/jV3IaNKmHghHkgwWQ0UUTohNeYK5G895v6CQ9MGIYnnkSRCY2qZQFN25WZOG/jn20bDXS1n+wpELcR0nXks4pOw8H3ZTLtwBEeXE6kvENrhit/mjdJqAFNvnTB2tYIXUwpJlGdvSfrtU=
+	t=1724931559; cv=none; b=KVUAWfScpzKtVjTweR2qJfXPVXleA+Tl5aWC+Dj2010eElILSmqRwn/hxE2Ju/frIRQ+Ymlzwi94jL/ZzvYWCWOkgfdpRaOrcf8WNAE2XFFq9l2qLXwSfbff7d9oEG0ttL5cQv5kIZrbLRNt0TvjulvSamkchwA8+NngYyb15Cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724931093; c=relaxed/simple;
-	bh=7Q/ZPLybfEyXw8OJc+kAQkJYqgoKBpXYFa6wU7P2L7g=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=OlaZH2GObK7ZLAfKtSv/WKmnRjmzLMxj6Q/cdHZHXlX7t4sm776j0dEt4h8/ky44DcOknQAlldZmAy+3ebdmsaiqtEL20+oKLqPxhrOgS6wPLShZjO+9isema4rJ2/4ORmQV9Ddvi0F+slPA4cya3Wt6qvvSBLNGa57VrerxTtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=THgcMcC6; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1724931559; c=relaxed/simple;
+	bh=sGM4uplKjypkmLbLycCLYcQho8pHfbr9o0k/SZff0YE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GO9FqgPdtnrs1vq+pradUsT8VnYkQmBXAD7XRDhCD3jYxZRLyWMep3ENRSYqPSv4mySs83ZtAs0MomeNvRNLc+9n5YNxuJWUw0+Ea2UmEyVLVrodtRG7ik8c++dJKa9N3XRKc14soSF2cnxmC5N6ATH9b7u5MZN/OD8OO8/Iaf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RiWo/MaD; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="THgcMcC6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RiWo/MaD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724931092; x=1756467092;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=7Q/ZPLybfEyXw8OJc+kAQkJYqgoKBpXYFa6wU7P2L7g=;
-  b=THgcMcC6grBU7r9/jMaLnYnGtvZyKcMMD6Fc6FZz7cavSwpd+kyfg2lX
-   OGh7uvaNemRGGwa666hum/Eb2CmpaLf3HNhpeqWlZf1SHAtVccHz1kTpK
-   DT2w5fPbKZt+qcxBMcELGRdid8H4zOtmwpZvFRrUB8CYstD0lGuLegMeN
-   lgoa36nexqJ8DF/09X7qXJq+9QTWeieZTT9ebTn5/bUhqh5kEwBgNDZVC
-   aYD32LSwVdR9lrmKVkfyAmEJRmKGcCwGiVZumgPYkP21FL3n91xYQzIGn
-   2VtbgPmHi5pTa9MJ3x8ADcquQtk117hCutkxrmj/tpz1bPaqZ37lqwqFL
-   Q==;
-X-CSE-ConnectionGUID: 7EInXsRRQ1q6HQ/0x4OOuw==
-X-CSE-MsgGUID: qpt1LNfsSZ+C0+QVVw8HJA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11178"; a="46031384"
+  t=1724931558; x=1756467558;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=sGM4uplKjypkmLbLycCLYcQho8pHfbr9o0k/SZff0YE=;
+  b=RiWo/MaD7Cvw/gpiEQGkUPJ7KTfoTY/E+3Xqtu6UB49KxnFlGI5QuNdP
+   OlLDP+ihp4719ArgMOUnWyehI1midO02LfoBY31+Xlo8trjakPF9rhxZc
+   00iza9ty/XSQNy1rKIZlA7RoYFmtCgS6n/dwUmJhx4jmGQiMNjMvZNxcl
+   zR3z7U8WPTeG1Cez/cfE38zO1Buo0B86NDqd+GlsaeBBl2J+f60qsTJHQ
+   uqrsotg2YNo0F1j39DLkkKTtOcfGNJ/JmQkMKuWNNashoeyFoFXlUtgCB
+   OiDhYJcZxSpb5G27vEIbU1AjaUdKvk3Kes6rpwUvGwb8eRZCgtkfhAFHy
+   A==;
+X-CSE-ConnectionGUID: iBVHFozlQNaR3ue+/sS+9A==
+X-CSE-MsgGUID: c8L2d5fISIGY18/tBgqK8g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11178"; a="23402475"
 X-IronPort-AV: E=Sophos;i="6.10,185,1719903600"; 
-   d="scan'208";a="46031384"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 04:31:31 -0700
-X-CSE-ConnectionGUID: ikaU2u84SDephFIiz+FFqQ==
-X-CSE-MsgGUID: IcKvzlSHTQOpG3uEd7njiw==
+   d="scan'208";a="23402475"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 04:39:15 -0700
+X-CSE-ConnectionGUID: diY9O52cTWC64/WKu7u1Pw==
+X-CSE-MsgGUID: 43Jo5YeMQwqgJTb0+HZwRQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,185,1719903600"; 
-   d="scan'208";a="68213505"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.59])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 04:31:28 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 29 Aug 2024 14:31:24 +0300 (EEST)
-To: Suma Hegde <Suma.Hegde@amd.com>, Hans de Goede <hdegoede@redhat.com>
-cc: platform-driver-x86@vger.kernel.org, 
-    Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-Subject: Re: [v6 08/10] platform/x86/amd/hsmp: Create mutually exclusive ACPI
- and plat drivers
-In-Reply-To: <1b183743-1b78-41cc-a121-1fa6345fa397@amd.com>
-Message-ID: <66fd6c95-7a16-b9f5-6efd-232c947ac514@linux.intel.com>
-References: <20240829060617.1548658-1-suma.hegde@amd.com> <20240829060617.1548658-8-suma.hegde@amd.com> <9d0e3305-d957-621b-202e-5919b4aa6cb8@linux.intel.com> <1b183743-1b78-41cc-a121-1fa6345fa397@amd.com>
+   d="scan'208";a="67693623"
+Received: from carterle-desk.ger.corp.intel.com ([10.245.246.205])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 04:39:13 -0700
+Message-ID: <e1d7028e69cb226acf30ed5c316e5fea20546bc4.camel@linux.intel.com>
+Subject: Re: [PATCH v2 1/3] Documentation: admin-guide: pm: Add efficiency
+ vs. latency tradeoff to uncore documentation
+From: Tero Kristo <tero.kristo@linux.intel.com>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ srinivas.pandruvada@linux.intel.com,  platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+Date: Thu, 29 Aug 2024 14:39:10 +0300
+In-Reply-To: <d4939d77-8fab-f4b6-f1f7-4af05951d3eb@linux.intel.com>
+References: <20240828153657.1296410-1-tero.kristo@linux.intel.com>
+	 <20240828153657.1296410-2-tero.kristo@linux.intel.com>
+	 <d4939d77-8fab-f4b6-f1f7-4af05951d3eb@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1897343294-1724931084=:1289"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1897343294-1724931084=:1289
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Thu, 29 Aug 2024, Suma Hegde wrote:
-> On 8/29/2024 3:55 PM, Ilpo J=C3=A4rvinen wrote:
-> >=20
-> > On Thu, 29 Aug 2024, Suma Hegde wrote:
-> >=20
-> > > Separate the probes for HSMP ACPI and platform device drivers.
-> > >=20
-> > > Provide a Kconfig option to choose between
-> > > ACPI or the platform device based driver.
-> > > The common code which is the core part of the HSMP driver
-> > > maintained at hsmp.c is guarded by AMD_HSMP config and is selected by
-> > > these two driver configs.
-> > >=20
-> > > Also add "|| COMPILE_TEST" clause in Kconfig to get build coverage
-> > > for HSMP.
-> > >=20
-> > > Signed-off-by: Suma Hegde <suma.hegde@amd.com>
-> > > Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.co=
-m>
-> > > ---
-> > > Changes since v5:
-> > > 1. Update documentation to reduce line length, update SPDK line and u=
-pdate
-> > > the wordings.
-> > > 2. Change module license from GPL v2 to GPL and update SPDX license l=
-ine
-> > > in plat.c and acpi.c.
-> > Hi Suma,
-> >=20
-> > Just to be sure you're not doing the SPDX license line change because o=
-f
-> > what I said, the change in MODULE_LICENSE() from "GPL v2" -> "GPL" by n=
-o
-> > means implies SPDX license has to be changed from "GPL-2.0" to
-> > "GPL-2.0-or-later".
-> >=20
-> > I'm sorry about the confusion I might have caused.
-> >=20
-> > If I've understood correctly, MODULE_LICENSE()'s value is mainly used t=
-o
-> > determine eg. which exports (if the _GPL EXPORTs can be used) can be
-> > used and taint flags, and that does not require knowing exact GPL versi=
-on
-> > so it was simplified to "GPL" long time ago w/o requirement to change t=
-he
-> > oldones (to avoid unnecessary churn).
+On Thu, 2024-08-29 at 12:18 +0300, Ilpo J=C3=A4rvinen wrote:
+> On Wed, 28 Aug 2024, Tero Kristo wrote:
 >=20
-> I wanted to update the license to "GPL-2.0-or-later" instead of "GPL-2.0"=
-,
-> that's the main reason I modified SPDX line.
+> > Added documentation about the functionality of efficiency vs.
+> > latency tradeoff
+> > control in intel Xeon processors, and how this is configured via
+> > sysfs.
+> >=20
+> > Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
+> > ---
+> > v2:
+> > =C2=A0 * Largely re-wrote the documentation
+> >=20
+> > =C2=A0.../pm/intel_uncore_frequency_scaling.rst=C2=A0=C2=A0=C2=A0=C2=A0=
+ | 59
+> > +++++++++++++++++++
+> > =C2=A01 file changed, 59 insertions(+)
+> >=20
+> > diff --git a/Documentation/admin-
+> > guide/pm/intel_uncore_frequency_scaling.rst b/Documentation/admin-
+> > guide/pm/intel_uncore_frequency_scaling.rst
+> > index 5ab3440e6cee..26ded32b06f5 100644
+> > --- a/Documentation/admin-
+> > guide/pm/intel_uncore_frequency_scaling.rst
+> > +++ b/Documentation/admin-
+> > guide/pm/intel_uncore_frequency_scaling.rst
+> > @@ -113,3 +113,62 @@ to apply at each uncore* level.
+> > =C2=A0
+> > =C2=A0Support for "current_freq_khz" is available only at each fabric
+> > cluster
+> > =C2=A0level (i.e., in uncore* directory).
+> > +
+> > +Efficiency vs. Latency Tradeoff
+> > +-------------------------------
+> > +
+> > +The Efficiency Latency Control (ELC) feature improves performance
+> > +per watt. With this feature hardware power management algorithms
+> > +optimize trade-off between latency and power consumption. For some
+> > +latency sensitive workloads further tuning can be done by SW to
+> > +get desired performance.
+> > +
+> > +The hardware monitors the average CPU utilization across all cores
+> > +in a power domain at regular intervals and decides an uncore
+> > frequency.
+> > +While this may result in the best performance per watt, workload
+> > may be
+> > +expecting higher performance at the expense of power. Consider an
+> > +application that intermittently wakes up to perform memory reads
+> > on an
+> > +otherwise idle system. In such cases, if hardware lowers uncore
+> > +frequency, then there may be delay in ramp up of frequency to meet
+> > +target performance.
+> > +
+> > +The ELC control defines some parameters which can be changed from
+> > SW.
+> > +If the average CPU utilization is below a user defined threshold
+> > +(elc_low_threshold_percent attribute below), the user defined
+> > uncore
+> > +frequency floor frequency will be used (elc_floor_freq_khz
+> > attribute
 >=20
-> But I missed to update the license for hsmp.h and hsmp.c files. I will se=
-nd v7
-> with this change and addressing other comments.
+> Consider the following simplification:
 >=20
-> Kindly respond me if the SPDX license update has to be made as a separate
-> patch.
+> "the user defined uncore frequency floor frequency" ->
+> "the user-defined uncore floor frequency"
 >=20
-> Thank you.
+> I think it tells the same even without that first "frequency".
+>=20
+> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+>=20
 
-I've never really come across patches that attempt change the license of a=
-=20
-file (I haven't been around as a maintainer that long). The obvious=20
-problem here is that you're not the sole contributor to this code.
+Yeah, it looks kind of silly. I think that's just a typo from my side,
+thanks for catching.
 
-Hans, have you come across this kind of case before?
-
---=20
- i.
-
---8323328-1897343294-1724931084=:1289--
+-Tero
