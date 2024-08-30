@@ -1,170 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF6019046D;
-	Fri, 30 Aug 2024 10:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B7219ABAA;
+	Fri, 30 Aug 2024 12:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725012773; cv=none; b=hIctiQxOm/0cv7HvgTwZ7KND0tgDDXNc2KfSDFHE36hJNuDhBhE/P5xnivthasTfDYLluuVVE3/Tqi3WNt/6KUewIwMo18qG02kfNyiPci8EOsaw+TcTM0vnfZnW2dLy9uMKQYFhb6OwM3o1MV0iUSz2uwuEWh9RiPMLHxoEqjI=
+	t=1725022684; cv=none; b=EWrQxq49Sr0Js2PDatwq/JWR5pydb0Ynh2GWF6x7yW+nAjeZ6SZ46lTpGX+15GWHoY1x8ec3CzaSVSFnlmFRsqVn8aoovcbhD5a9CID6t7w5onK9geTWVlKT1uA3Hrb31vSUlryjzEq6BLjocKMcBjCxOYxANkbvn877dBjMjKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725012773; c=relaxed/simple;
-	bh=4VJPxcqs0Dl2EfOtnsV4SDBf+799gY5rOs23VbdSTOc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=d1mx8slHlJGYwCOgPGrK5UA9rwkd9GylkjlKEA7YcE0/VALxZuH/De+nk8K36Tu94fgt5+V+TYXWOb6WGS15BPuZNQ6eLJn04augCe3K7aT1Nnv4fwjnEtfYjkxjov6JcWcgvUm21cJ8lfW5CPSLA5Qm5EbbGnzziAnm8mG7Rzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jW5i64em; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1725022684; c=relaxed/simple;
+	bh=pRzr4dw+htikBqyVyR2UfwtO0f/g1Jd6QIJAItLjm9c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qr/sRhgmyi/ovRzEzPBVAjYY01JWIQcX9oYTVn/DAXKsvrq5u0DuOELZNWmKAaiMY8d1jvP4fkEYeP/lULB6wPts/dzTLo1cziXYzG2ho6oleeOcgNDxBrSu1J+pu6RwIUXKxhSGiRcsuLBLVpaYUMgGJ1YwfLJkKAKUtlQ140Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MgeGhM3S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jW5i64em"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725012772; x=1756548772;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=4VJPxcqs0Dl2EfOtnsV4SDBf+799gY5rOs23VbdSTOc=;
-  b=jW5i64emxsSxmwKSRf2dOAY9zBVcQdCxS6748oCdQHD+OgJEIBiVjcLj
-   I3Aliy86MlmCs4qMivvYn1IuPoHgDYBRAxdwvL6ydn9tWlLc2O715p2cH
-   qAqHeYidDrWKG34t+A0YDUL/9pn7YK/BCjpEnGp4wuy/FruMp/lEnIngK
-   kXyCwmhki9VECxDFLpdu71dGG1e2HB/dRxq/UwH+P74WijXX5GE8YZ3IX
-   Go/CPFPC+/v0pAloM9MPHoMgXlgjwLRSCyvp+KwwXeh9T8gnAqRTTkLiD
-   0Vwif8OCAVWK8f1o1esh3o0+b5+muxEk3LVrxJBIletED/VgOyau5bx5E
-   A==;
-X-CSE-ConnectionGUID: H1ZneO8vTo2xG+qrBMOMrg==
-X-CSE-MsgGUID: bD+KwwTATlGVapjWqJleVA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11179"; a="23813950"
-X-IronPort-AV: E=Sophos;i="6.10,188,1719903600"; 
-   d="scan'208";a="23813950"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2024 03:12:51 -0700
-X-CSE-ConnectionGUID: BGEJ1e/NSXWjf2VAoIiw1A==
-X-CSE-MsgGUID: sXPLaFUWSLSvJBGmEvSlDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,188,1719903600"; 
-   d="scan'208";a="63698385"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.174])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2024 03:12:49 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 30 Aug 2024 13:12:44 +0300 (EEST)
-To: Tero Kristo <tero.kristo@linux.intel.com>, 
-    Hans de Goede <hdegoede@redhat.com>
-cc: srinivas.pandruvada@linux.intel.com, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] Documentation: admin-guide: pm: Add efficiency
- vs. latency tradeoff to uncore documentation
-In-Reply-To: <71e6475c99e193c4ae6e5d45b72b528cdf5f3f62.camel@linux.intel.com>
-Message-ID: <858a908e-8218-3925-ea06-f3da256110e9@linux.intel.com>
-References: <20240828153657.1296410-1-tero.kristo@linux.intel.com>  <20240828153657.1296410-2-tero.kristo@linux.intel.com>  <d4939d77-8fab-f4b6-f1f7-4af05951d3eb@linux.intel.com>  <e1d7028e69cb226acf30ed5c316e5fea20546bc4.camel@linux.intel.com>
- <71e6475c99e193c4ae6e5d45b72b528cdf5f3f62.camel@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MgeGhM3S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8EB8C4CEC2;
+	Fri, 30 Aug 2024 12:57:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725022684;
+	bh=pRzr4dw+htikBqyVyR2UfwtO0f/g1Jd6QIJAItLjm9c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MgeGhM3S5Skkm3/czz9Sb4Q/cLEXI9TleH0U3Vau8IqpzVb/X/pDF1kqKFqwYbimK
+	 HNtT7qR9MMOBs7/rPoReRuwDBqSWcQub+lzuzCTUiny9hXVbWJWhHcrx+HH46cUU/1
+	 si/G+nON+U61JVnqQY2LTk+1TCnedYwS6voFpwCPblt5H4WNbzBdvDiuyieAjudA46
+	 Y4GZ2CJ4UEZ3bnyJecRQp+T7JwEf4eX840m+PRjzx4gHFPqf1Xfy4RbPHcRc6tmqHM
+	 g62Vw/9VGJ++mllrkCxjUKe30z5fXiRPRJGGguqj9qa1vYUFxElS23O1hbhP/VdoQ0
+	 cPNTshwv7omjA==
+Message-ID: <998609e2-0fa4-43e8-9f72-05af40cf62c2@kernel.org>
+Date: Fri, 30 Aug 2024 14:57:56 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1240474059-1725012764=:1027"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1240474059-1725012764=:1027
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] platform/surface: Add OF support
+To: Andy Shevchenko <andy.shevchenko@gmail.com>,
+ Maximilian Luz <luzmaximilian@gmail.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <quic_kdybcio@quicinc.com>
+References: <20240814-topic-sam-v3-0-a84588aad233@quicinc.com>
+ <20240814-topic-sam-v3-3-a84588aad233@quicinc.com>
+ <ZszrjQChQ2aS5YjV@surfacebook.localdomain>
+ <d08d41ad-edcb-48ad-a848-53edc45ab8eb@gmail.com>
+ <CAHp75VcbjR8HQqPASLFEGiyYLfTFQDa6Ri+jFy+7Q1xz7gY39Q@mail.gmail.com>
+ <53a56539-1d95-42ac-ad07-1b689702b2ed@gmail.com>
+ <CAHp75VdsksKPrj-CwmR4QLBrm_FfaG4aZys-_jnee_L=3ZnRPQ@mail.gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konradybcio@kernel.org>
+In-Reply-To: <CAHp75VdsksKPrj-CwmR4QLBrm_FfaG4aZys-_jnee_L=3ZnRPQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 8bit
 
-On Fri, 30 Aug 2024, Tero Kristo wrote:
+On 28.08.2024 9:06 PM, Andy Shevchenko wrote:
+> On Wed, Aug 28, 2024 at 8:40 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+>> On 8/28/24 6:56 PM, Andy Shevchenko wrote:
+>>> On Wed, Aug 28, 2024 at 12:10 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+> 
+> ...
+> 
+>>> Yes, and software nodes for DT are quite strange things! Why can't you
+>>> simply fix the DT to begin with?
+>>
+>> For the ARM/DT variants we could do that. But we still have to deal with
+>> the x86/ACPI ones here.
+> 
+> So, then fix it there! Currently it's an abuse of software nodes
+> inside the Linux kernel.
+> 
+>> So for me it makes more sense to have it unified
+>> and just deal with everything in this module.
+> 
+> I understand the desire, but DT is DT and ACPI is ACPI, they are
+> different despite having some common APIs in the Linux kernel.
+> Moreover, DT has a validation tools and everything, making that being
+> a software nodes has at least these disadvantages:
+> - no official schema that must be supported and users are known of
+> - no validation done
+> - bloating of the Linux kernel binary and hence memory footprint
 
->    1. On Thu, 2024-08-29 at 14:39 +0300, Tero Kristo wrote:
-> > On Thu, 2024-08-29 at 12:18 +0300, Ilpo J=C3=A4rvinen wrote:
-> > > On Wed, 28 Aug 2024, Tero Kristo wrote:
-> > >=20
-> > > > Added documentation about the functionality of efficiency vs.
-> > > > latency tradeoff
-> > > > control in intel Xeon processors, and how this is configured via
-> > > > sysfs.
-> > > >=20
-> > > > Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
-> > > > ---
-> > > > v2:
-> > > > =C2=A0 * Largely re-wrote the documentation
-> > > >=20
-> > > > =C2=A0.../pm/intel_uncore_frequency_scaling.rst=C2=A0=C2=A0=C2=A0=
-=C2=A0 | 59
-> > > > +++++++++++++++++++
-> > > > =C2=A01 file changed, 59 insertions(+)
-> > > >=20
-> > > > diff --git a/Documentation/admin-
-> > > > guide/pm/intel_uncore_frequency_scaling.rst
-> > > > b/Documentation/admin-
-> > > > guide/pm/intel_uncore_frequency_scaling.rst
-> > > > index 5ab3440e6cee..26ded32b06f5 100644
-> > > > --- a/Documentation/admin-
-> > > > guide/pm/intel_uncore_frequency_scaling.rst
-> > > > +++ b/Documentation/admin-
-> > > > guide/pm/intel_uncore_frequency_scaling.rst
-> > > > @@ -113,3 +113,62 @@ to apply at each uncore* level.
-> > > > =C2=A0
-> > > > =C2=A0Support for "current_freq_khz" is available only at each fabr=
-ic
-> > > > cluster
-> > > > =C2=A0level (i.e., in uncore* directory).
-> > > > +
-> > > > +Efficiency vs. Latency Tradeoff
-> > > > +-------------------------------
-> > > > +
-> > > > +The Efficiency Latency Control (ELC) feature improves
-> > > > performance
-> > > > +per watt. With this feature hardware power management algorithms
-> > > > +optimize trade-off between latency and power consumption. For
-> > > > some
-> > > > +latency sensitive workloads further tuning can be done by SW to
-> > > > +get desired performance.
-> > > > +
-> > > > +The hardware monitors the average CPU utilization across all
-> > > > cores
-> > > > +in a power domain at regular intervals and decides an uncore
-> > > > frequency.
-> > > > +While this may result in the best performance per watt, workload
-> > > > may be
-> > > > +expecting higher performance at the expense of power. Consider
-> > > > an
-> > > > +application that intermittently wakes up to perform memory reads
-> > > > on an
-> > > > +otherwise idle system. In such cases, if hardware lowers uncore
-> > > > +frequency, then there may be delay in ramp up of frequency to
-> > > > meet
-> > > > +target performance.
-> > > > +
-> > > > +The ELC control defines some parameters which can be changed
-> > > > from
-> > > > SW.
-> > > > +If the average CPU utilization is below a user defined threshold
-> > > > +(elc_low_threshold_percent attribute below), the user defined
-> > > > uncore
-> > > > +frequency floor frequency will be used (elc_floor_freq_khz
-> > > > attribute
-> > >=20
-> > > Consider the following simplification:
-> > >=20
-> > > "the user defined uncore frequency floor frequency" ->
-> > > "the user-defined uncore floor frequency"
-> > >=20
-> > > I think it tells the same even without that first "frequency".
-> > >=20
-> > > Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> > >=20
-> >=20
-> > Yeah, it looks kind of silly. I think that's just a typo from my
-> > side,
-> > thanks for catching.
->=20
-> Do you want me to send a new version of this patch or do you fix it
-> locally? Rest of the patches don't seem to need any changes atm.
+Arguably the last point isn't very strong.. DT also has to store some
+strings and pointers to represent devices
 
-That's up to Hans but that looks trivial change so probably he can fix
-that while applying.
+> 
+>> Also, if we consider that at some point we might get ACPI PEP support (I
+>> know, far fetched right now): With that, ACPI on ARM might be feasible
+>> and then we'd have to manage the same thing in two places...
+> 
+> This (PEP) is something I have no knowledge about. But I think it's
+> still orthogonal to the software nodes usage.
 
-Hans, v2 of this series seems ready to go (with the small change into
-the documentation patch as discussed above).
+The PEP (Power Engine Plugin) unfortunately is the reason we can't have
+ACPI-based boot on WoA platforms.. This two-or-three-digit megabyte
+Windows driver hardcodes almost everything related to the on-SoC power
+management (buses, clocks, etc.) and only uses the bare minimum ACPI it
+needs to connect devices to a bus or get notifications on standard events..
 
---=20
- i.
---8323328-1240474059-1725012764=:1027--
+> 
+>> And lastly, the EC subdevices are quite contained and I don't see them
+>> interacting with any other components in the DT, so it's more of a
+>> stylistic choice where to put them.
+> 
+> They are still part of hardware and DT describes hardware.
+
+Unfortunately the "Surface Aggregator Module" is just a firmware
+exposed on some range of MCUs running MSFT's code..
+
+Given how.. peculiarly the "bus" that it hosts """devices""" on is
+constructed (5-level-deep hierarchy without it making much sense
+beyond maaaybe the first two), it's not really easy to describe in
+DT in a way that would be both true to the bigger picture and make
+enough sense to convince the DT maintainers, I don't think
+
+Konrad
