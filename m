@@ -1,65 +1,54 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7D318C331;
-	Thu, 29 Aug 2024 16:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFBF14D2B5;
+	Fri, 30 Aug 2024 06:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724950280; cv=none; b=qw98ZT7RkQvtsWBs1ZH2b+cvcn/lWMTbDZFGVqWUWRfKHuPPSg0ZSJCOQdeAaMli/94SlJ/6dO6w8kDklbLtI/0qHhjRAjxQAAEnXGPYvQJUiNP5eMZ1SelwUGgnh+n0VKT6eK7JCfvY2QQH1Iwt6YgujOiEuAm0YUOxInTTkqQ=
+	t=1725001000; cv=none; b=NNizduDw9fWS4QIoug0CcuE2SOEnZhlOgNujgjNhUryFkNSZma/GzWtHnsXWwi46d4VXTShIdV3pRdJ0xcASGTCwsTYW1MEEBOOFW3OR/wXekNYAVcoT77I9US8Ux5KcEyJ+xDAsMudyemU+OAg1XPj6+0zkrJvwegIs5DGafKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724950280; c=relaxed/simple;
-	bh=suEmnq7l7kBu+OuAtK7MqN9CEE/c1CjjuOo7qUnodFQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kOFnhKDxdcKDIzb56CXDTRy6okuMJ5v/edANvzfBzr1fAFU3KhE+oj74KVuevY31aFZXCNIjyrSLrApH+ZuWSFx7hznL0uEiDB+vQg3IctY5gPxM9yAfwUza9Sm2CCbMzzmaK+EdGMG9n7f9EaYLJRR3evp1YtU/p6uatNcdm7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mpqjyDpG; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1725001000; c=relaxed/simple;
+	bh=I1v12oO8jAdq+XSah46MrvbcNgo16FjjVPUQehwdTL8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YSQoCncYBWai4/HCU0et209WCpjlX/6sIyutSqLQ+Lgbo5NhCROEZPed7zIn4B1l9ZH9KILt+llc3FW5MRccf6XKwKGRbaPgYnFxqho9UdOJCvIp6dk83MFzscOwQr3ins6MQtmsXLeFgDYB3HcvPhlJNe+R1l9/PedneAZ3zYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=DCNNiMtS; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mpqjyDpG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724950280; x=1756486280;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=suEmnq7l7kBu+OuAtK7MqN9CEE/c1CjjuOo7qUnodFQ=;
-  b=mpqjyDpGpuHpMP8dA2pdte9F0/UOKVTdyUwfLusnVh1ca0mcl0eFvp0G
-   Mgci0JpygWKhqo6W/e/Fo9Z9dVwVqAFx19j/Z0aqI1i0dKm7+P6S9xy1t
-   1B4/pKwbBvltcZATObRjde1of+JjK1Rt72D/ZMkgtw/JWFA/305Io48e9
-   3cf+URLGQ28qzQpZFBrbF/4WAT3a7seuNvn0gfU7mNYDUNocA5iaxwm6W
-   G38l6W12vf8FDaA5hzgB7u8/DxjJW6v7oNAl5ZIWLieLOtqwGGQ9fvDqV
-   b80AzWCDvohntaEp7B8vvjGYG1ewbstFyHpc0/QBMKtWqnoNB3wTQotmR
-   w==;
-X-CSE-ConnectionGUID: ww8fuObLSfWiScxoHjR1pQ==
-X-CSE-MsgGUID: u+V21QujQtC5D9DixzaZ9g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11179"; a="27352517"
-X-IronPort-AV: E=Sophos;i="6.10,186,1719903600"; 
-   d="scan'208";a="27352517"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2024 09:51:19 -0700
-X-CSE-ConnectionGUID: FMuKukLMTuaMP2qSd8GspA==
-X-CSE-MsgGUID: oKyJU16sRKyj1n4b4TQIwQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,186,1719903600"; 
-   d="scan'208";a="63958139"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa006.jf.intel.com with ESMTP; 29 Aug 2024 09:51:16 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id A8D2E143; Thu, 29 Aug 2024 19:51:14 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Gergo Koteles <soyer@irl.hu>,
-	Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Ike Panhc <ike.pan@canonical.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH v1 1/1] platform/x86: ideapad-laptop: Make the scope_guard() clear of its scope
-Date: Thu, 29 Aug 2024 19:50:32 +0300
-Message-ID: <20240829165105.1609180-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="DCNNiMtS"
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id 35632100002;
+	Fri, 30 Aug 2024 09:56:10 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1725000970; bh=HsBMCWugpsXJfa3UUQxtCjkXUM+sOQcgRdRG1BDdCSU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=DCNNiMtSHbu0cpQG6eJr96gOpz/qWCvA9+V49ZrTHHm7x2xKFnsSBSSSzRkjBIHx/
+	 6URgQVqO8CnNn7L903dgG8OM1KwUJI7IDP1lYAqoYcwsdZKBzD/DDmkDPGtg+1QiV1
+	 ebbSD9wKuR4akrYIh7ZXQSG8NybXRvfHrOh77uBwYfkHmR4yXWNB/Xr2Yck2Yp1Uid
+	 Ano4ckgSGfxPmgK66b29TArCuqQh8EoodfgefXtccmA4akfDh9UIGVvVJlu6y4Q8qv
+	 DaCB72PYbO0/34j6tTjZxlmUefNiMgaLhlr/y8/xL2PdR7oTYXJ8XGYDXm3yaUd5u1
+	 Uhe+qcjlh4bPw==
+Received: from mx1.t-argos.ru.ru (mail.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Fri, 30 Aug 2024 09:55:06 +0300 (MSK)
+Received: from Comp.ta.t-argos.ru (172.17.44.124) by ta-mail-02
+ (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 30 Aug
+ 2024 09:54:46 +0300
+From: Aleksandr Mishin <amishin@t-argos.ru>
+To: Mario Limonciello <mario.limonciello@dell.com>
+CC: Aleksandr Mishin <amishin@t-argos.ru>, Hans de Goede
+	<hdegoede@redhat.com>, =?UTF-8?q?Ilpo=20J=C3=A4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>, Lyndon Sanche <lsanche@lyndeno.ca>, Armin
+ Wolf <W_Armin@gmx.de>, "Darren Hart (VMware)" <dvhart@infradead.org>, Edward
+ O'Callaghan <quasisec@google.com>, <platform-driver-x86@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
+Subject: [PATCH v2] platform/x86: dell-smbios: Fix error path in dell_smbios_init()
+Date: Fri, 30 Aug 2024 09:54:28 +0300
+Message-ID: <20240830065428.9544-1-amishin@t-argos.ru>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240828121703.17470-1-amishin@t-argos.ru>
+References: 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,148 +56,62 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 187424 [Aug 30 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 27 0.3.27 71302da218a62dcd84ac43314e19b5cc6b38e0b6, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;mx1.t-argos.ru.ru:7.1.1;t-argos.ru:7.1.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/08/30 05:11:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/08/30 05:02:00 #26476423
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-First of all, it's a bit counterintuitive to have something like
+In case of error in build_tokens_sysfs(), all the memory that has been
+allocated is freed at end of this function. But then free_group() is
+called which performs memory deallocation again.
 
-	int err;
-	...
-	scoped_guard(...)
-		err = foo(...);
-	if (err)
-		return err;
+Also, instead of free_group() call, there should be exit_dell_smbios_smm()
+and exit_dell_smbios_wmi() calls, since there is initialization, but there
+is no release of resources in case of an error.
 
-Second, with a particular kernel configuration and compiler version in
-one of such cases the objtool is not happy:
+Fix this issue by replacing free_group() call with exit_dell_smbios_wmi()
+and exit_dell_smbios_smm().
 
-  ideapad-laptop.o: warning: objtool: .text.fan_mode_show: unexpected end of section
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-I'm not an expert on all this, but the theory is that compiler and
-linker in this case can't understand that 'result' variable will be
-always initialized as long as no error has been returned. Assigning
-'result' to a dummy value helps with this. Note, that fixing the
-scoped_guard() scope (as per above) does not make issue gone.
-
-That said, assign dummy value and make the scope_guard() clear of its scope.
-For the sake of consistency do it in the entire file.
-
-Fixes: 7cc06e729460 ("platform/x86: ideapad-laptop: add a mutex to synchronize VPC commands")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202408290219.BrPO8twi-lkp@intel.com/
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 33b9ca1e53b4 ("platform/x86: dell-smbios: Add a sysfs interface for SMBIOS tokens")
+Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
 ---
+v2: Update comment message for a more detailed description of issues
 
-This has been Cc'ed to objtool and clang maintainers to have a look and
-tell if this can be addressed in a better way.
+ drivers/platform/x86/dell/dell-smbios-base.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
- drivers/platform/x86/ideapad-laptop.c | 48 +++++++++++++++------------
- 1 file changed, 27 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 35c75bcff195..c64dfc56651d 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -554,13 +554,14 @@ static ssize_t camera_power_show(struct device *dev,
- 				 char *buf)
- {
- 	struct ideapad_private *priv = dev_get_drvdata(dev);
--	unsigned long result;
-+	unsigned long result = 0;
- 	int err;
+diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platform/x86/dell/dell-smbios-base.c
+index 6565fac24cde..73e41eb69cb5 100644
+--- a/drivers/platform/x86/dell/dell-smbios-base.c
++++ b/drivers/platform/x86/dell/dell-smbios-base.c
+@@ -622,7 +622,10 @@ static int __init dell_smbios_init(void)
+ 	return 0;
  
--	scoped_guard(mutex, &priv->vpc_mutex)
-+	scoped_guard(mutex, &priv->vpc_mutex) {
- 		err = read_ec_data(priv->adev->handle, VPCCMD_R_CAMERA, &result);
--	if (err)
--		return err;
-+		if (err)
-+			return err;
-+	}
+ fail_sysfs:
+-	free_group(platform_device);
++	if (!wmi)
++		exit_dell_smbios_wmi();
++	if (!smm)
++		exit_dell_smbios_smm();
  
- 	return sysfs_emit(buf, "%d\n", !!result);
- }
-@@ -577,10 +578,11 @@ static ssize_t camera_power_store(struct device *dev,
- 	if (err)
- 		return err;
- 
--	scoped_guard(mutex, &priv->vpc_mutex)
-+	scoped_guard(mutex, &priv->vpc_mutex) {
- 		err = write_ec_cmd(priv->adev->handle, VPCCMD_W_CAMERA, state);
--	if (err)
--		return err;
-+		if (err)
-+			return err;
-+	}
- 
- 	return count;
- }
-@@ -628,13 +630,14 @@ static ssize_t fan_mode_show(struct device *dev,
- 			     char *buf)
- {
- 	struct ideapad_private *priv = dev_get_drvdata(dev);
--	unsigned long result;
-+	unsigned long result = 0;
- 	int err;
- 
--	scoped_guard(mutex, &priv->vpc_mutex)
-+	scoped_guard(mutex, &priv->vpc_mutex) {
- 		err = read_ec_data(priv->adev->handle, VPCCMD_R_FAN, &result);
--	if (err)
--		return err;
-+		if (err)
-+			return err;
-+	}
- 
- 	return sysfs_emit(buf, "%lu\n", result);
- }
-@@ -654,10 +657,11 @@ static ssize_t fan_mode_store(struct device *dev,
- 	if (state > 4 || state == 3)
- 		return -EINVAL;
- 
--	scoped_guard(mutex, &priv->vpc_mutex)
-+	scoped_guard(mutex, &priv->vpc_mutex) {
- 		err = write_ec_cmd(priv->adev->handle, VPCCMD_W_FAN, state);
--	if (err)
--		return err;
-+		if (err)
-+			return err;
-+	}
- 
- 	return count;
- }
-@@ -737,13 +741,14 @@ static ssize_t touchpad_show(struct device *dev,
- 			     char *buf)
- {
- 	struct ideapad_private *priv = dev_get_drvdata(dev);
--	unsigned long result;
-+	unsigned long result = 0;
- 	int err;
- 
--	scoped_guard(mutex, &priv->vpc_mutex)
-+	scoped_guard(mutex, &priv->vpc_mutex) {
- 		err = read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &result);
--	if (err)
--		return err;
-+		if (err)
-+			return err;
-+	}
- 
- 	priv->r_touchpad_val = result;
- 
-@@ -762,10 +767,11 @@ static ssize_t touchpad_store(struct device *dev,
- 	if (err)
- 		return err;
- 
--	scoped_guard(mutex, &priv->vpc_mutex)
-+	scoped_guard(mutex, &priv->vpc_mutex) {
- 		err = write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, state);
--	if (err)
--		return err;
-+		if (err)
-+			return err;
-+	}
- 
- 	priv->r_touchpad_val = state;
- 
+ fail_create_group:
+ 	platform_device_del(platform_device);
 -- 
-2.43.0.rc1.1336.g36b5255a03ac
+2.30.2
 
