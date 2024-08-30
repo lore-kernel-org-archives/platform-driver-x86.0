@@ -1,232 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DAE14C5A4;
-	Fri, 30 Aug 2024 10:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF6019046D;
+	Fri, 30 Aug 2024 10:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725012578; cv=none; b=ddQv0BEuNUVh3tbuCqVK9rxlij7AeIccODuTo8NG+S8bSYpBxsakcD4Z+zT78toPVUrdKjqN8mjQ2mrDicTA9eRQPikTvy5CXXm4XTa7Sc4fhKQXGnkhRT167FiUOyxa4slfrY3AyJQZlurIQT+yNMqPs9bF/XgGYfH9M9fjSCA=
+	t=1725012773; cv=none; b=hIctiQxOm/0cv7HvgTwZ7KND0tgDDXNc2KfSDFHE36hJNuDhBhE/P5xnivthasTfDYLluuVVE3/Tqi3WNt/6KUewIwMo18qG02kfNyiPci8EOsaw+TcTM0vnfZnW2dLy9uMKQYFhb6OwM3o1MV0iUSz2uwuEWh9RiPMLHxoEqjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725012578; c=relaxed/simple;
-	bh=62yW3Pg8hRKUON2SRC8CEJGhvkk5lfHWXyxtkFI9mlc=;
+	s=arc-20240116; t=1725012773; c=relaxed/simple;
+	bh=4VJPxcqs0Dl2EfOtnsV4SDBf+799gY5rOs23VbdSTOc=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=oV9y40pN2V7vCPWAzsSRw1KlT9kfio0Lkp1GwgZYE79+Edcez6tWmWPSyIalqbYytO2k2apa2vvmAT+tBjcFRmtFmcegnVdvYTOGyy1AHALDKqIXq+ULUa7ZhOxdQ0Db4QtvI3ZrjvH52+OakDuW1oqn4BJfhZiqOvFQvl1MZmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OLFHoqcf; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version:Content-Type; b=d1mx8slHlJGYwCOgPGrK5UA9rwkd9GylkjlKEA7YcE0/VALxZuH/De+nk8K36Tu94fgt5+V+TYXWOb6WGS15BPuZNQ6eLJn04augCe3K7aT1Nnv4fwjnEtfYjkxjov6JcWcgvUm21cJ8lfW5CPSLA5Qm5EbbGnzziAnm8mG7Rzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jW5i64em; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OLFHoqcf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jW5i64em"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725012578; x=1756548578;
+  t=1725012772; x=1756548772;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=62yW3Pg8hRKUON2SRC8CEJGhvkk5lfHWXyxtkFI9mlc=;
-  b=OLFHoqcf4T51lSPwGoFOCjT0jB+k+RwdfQ74k3bR6hv4LoGaC23/iLB+
-   Y4Dlzm5LDLdYDQHWGtdsPqMJ69inqFCJYZZ8R72rsgUVRkfHLFsWP8h6b
-   USXcXJaR+/+afhiIrNL4HWiZsigkpdrrUB6a/iqYRV1v0X0oTLGSbd957
-   VXSeC3JmS5al+dYqTzWY0GxOz+De+o+60uyHVkW689c2zgxqCRWSY9QiU
-   Dep1PQ1LhmBNTrZOxr5exlO6zjRCxeBCxTwtb398PShgdFcKv7z07D5Zy
-   hJLSewxWn3UIFzZr0utjzc690VClVve7A1HjubOgSQwmfyncf2UK5nria
+  bh=4VJPxcqs0Dl2EfOtnsV4SDBf+799gY5rOs23VbdSTOc=;
+  b=jW5i64emxsSxmwKSRf2dOAY9zBVcQdCxS6748oCdQHD+OgJEIBiVjcLj
+   I3Aliy86MlmCs4qMivvYn1IuPoHgDYBRAxdwvL6ydn9tWlLc2O715p2cH
+   qAqHeYidDrWKG34t+A0YDUL/9pn7YK/BCjpEnGp4wuy/FruMp/lEnIngK
+   kXyCwmhki9VECxDFLpdu71dGG1e2HB/dRxq/UwH+P74WijXX5GE8YZ3IX
+   Go/CPFPC+/v0pAloM9MPHoMgXlgjwLRSCyvp+KwwXeh9T8gnAqRTTkLiD
+   0Vwif8OCAVWK8f1o1esh3o0+b5+muxEk3LVrxJBIletED/VgOyau5bx5E
    A==;
-X-CSE-ConnectionGUID: Eq43sDHHRLinQALSbtbi0w==
-X-CSE-MsgGUID: j+E+cq9oTpC8DNgL9fNJgA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11179"; a="34807925"
+X-CSE-ConnectionGUID: H1ZneO8vTo2xG+qrBMOMrg==
+X-CSE-MsgGUID: bD+KwwTATlGVapjWqJleVA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11179"; a="23813950"
 X-IronPort-AV: E=Sophos;i="6.10,188,1719903600"; 
-   d="scan'208";a="34807925"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2024 03:09:37 -0700
-X-CSE-ConnectionGUID: PM/q0XSoSAu5yhX28TjaBw==
-X-CSE-MsgGUID: RmUbyR79RjKYwEiYvbYhIA==
+   d="scan'208";a="23813950"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2024 03:12:51 -0700
+X-CSE-ConnectionGUID: BGEJ1e/NSXWjf2VAoIiw1A==
+X-CSE-MsgGUID: sXPLaFUWSLSvJBGmEvSlDA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,188,1719903600"; 
-   d="scan'208";a="64200857"
+   d="scan'208";a="63698385"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.174])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2024 03:09:33 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2024 03:12:49 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 30 Aug 2024 13:09:29 +0300 (EEST)
-To: Tero Kristo <tero.kristo@linux.intel.com>
-cc: Hans de Goede <hdegoede@redhat.com>, srinivas.pandruvada@linux.intel.com, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] platform/x86/intel-uncore-freq: Add support for
- efficiency latency control
-In-Reply-To: <5faa73b422ba9346f8542c3b88f3f0a1a00d8c22.camel@linux.intel.com>
-Message-ID: <f5bf69f5-be65-ffec-8ef0-e409f788aaa3@linux.intel.com>
-References: <20240828153657.1296410-1-tero.kristo@linux.intel.com>  <20240828153657.1296410-3-tero.kristo@linux.intel.com>  <14a0bfc9-fdbf-660c-f842-40ae82a2fc0e@linux.intel.com> <5faa73b422ba9346f8542c3b88f3f0a1a00d8c22.camel@linux.intel.com>
+Date: Fri, 30 Aug 2024 13:12:44 +0300 (EEST)
+To: Tero Kristo <tero.kristo@linux.intel.com>, 
+    Hans de Goede <hdegoede@redhat.com>
+cc: srinivas.pandruvada@linux.intel.com, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] Documentation: admin-guide: pm: Add efficiency
+ vs. latency tradeoff to uncore documentation
+In-Reply-To: <71e6475c99e193c4ae6e5d45b72b528cdf5f3f62.camel@linux.intel.com>
+Message-ID: <858a908e-8218-3925-ea06-f3da256110e9@linux.intel.com>
+References: <20240828153657.1296410-1-tero.kristo@linux.intel.com>  <20240828153657.1296410-2-tero.kristo@linux.intel.com>  <d4939d77-8fab-f4b6-f1f7-4af05951d3eb@linux.intel.com>  <e1d7028e69cb226acf30ed5c316e5fea20546bc4.camel@linux.intel.com>
+ <71e6475c99e193c4ae6e5d45b72b528cdf5f3f62.camel@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1523374286-1725012569=:1027"
+Content-Type: multipart/mixed; boundary="8323328-1240474059-1725012764=:1027"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1523374286-1725012569=:1027
+--8323328-1240474059-1725012764=:1027
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 
 On Fri, 30 Aug 2024, Tero Kristo wrote:
 
-> On Thu, 2024-08-29 at 12:14 +0300, Ilpo J=C3=A4rvinen wrote:
-> > On Wed, 28 Aug 2024, Tero Kristo wrote:
+>    1. On Thu, 2024-08-29 at 14:39 +0300, Tero Kristo wrote:
+> > On Thu, 2024-08-29 at 12:18 +0300, Ilpo J=C3=A4rvinen wrote:
+> > > On Wed, 28 Aug 2024, Tero Kristo wrote:
+> > >=20
+> > > > Added documentation about the functionality of efficiency vs.
+> > > > latency tradeoff
+> > > > control in intel Xeon processors, and how this is configured via
+> > > > sysfs.
+> > > >=20
+> > > > Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
+> > > > ---
+> > > > v2:
+> > > > =C2=A0 * Largely re-wrote the documentation
+> > > >=20
+> > > > =C2=A0.../pm/intel_uncore_frequency_scaling.rst=C2=A0=C2=A0=C2=A0=
+=C2=A0 | 59
+> > > > +++++++++++++++++++
+> > > > =C2=A01 file changed, 59 insertions(+)
+> > > >=20
+> > > > diff --git a/Documentation/admin-
+> > > > guide/pm/intel_uncore_frequency_scaling.rst
+> > > > b/Documentation/admin-
+> > > > guide/pm/intel_uncore_frequency_scaling.rst
+> > > > index 5ab3440e6cee..26ded32b06f5 100644
+> > > > --- a/Documentation/admin-
+> > > > guide/pm/intel_uncore_frequency_scaling.rst
+> > > > +++ b/Documentation/admin-
+> > > > guide/pm/intel_uncore_frequency_scaling.rst
+> > > > @@ -113,3 +113,62 @@ to apply at each uncore* level.
+> > > > =C2=A0
+> > > > =C2=A0Support for "current_freq_khz" is available only at each fabr=
+ic
+> > > > cluster
+> > > > =C2=A0level (i.e., in uncore* directory).
+> > > > +
+> > > > +Efficiency vs. Latency Tradeoff
+> > > > +-------------------------------
+> > > > +
+> > > > +The Efficiency Latency Control (ELC) feature improves
+> > > > performance
+> > > > +per watt. With this feature hardware power management algorithms
+> > > > +optimize trade-off between latency and power consumption. For
+> > > > some
+> > > > +latency sensitive workloads further tuning can be done by SW to
+> > > > +get desired performance.
+> > > > +
+> > > > +The hardware monitors the average CPU utilization across all
+> > > > cores
+> > > > +in a power domain at regular intervals and decides an uncore
+> > > > frequency.
+> > > > +While this may result in the best performance per watt, workload
+> > > > may be
+> > > > +expecting higher performance at the expense of power. Consider
+> > > > an
+> > > > +application that intermittently wakes up to perform memory reads
+> > > > on an
+> > > > +otherwise idle system. In such cases, if hardware lowers uncore
+> > > > +frequency, then there may be delay in ramp up of frequency to
+> > > > meet
+> > > > +target performance.
+> > > > +
+> > > > +The ELC control defines some parameters which can be changed
+> > > > from
+> > > > SW.
+> > > > +If the average CPU utilization is below a user defined threshold
+> > > > +(elc_low_threshold_percent attribute below), the user defined
+> > > > uncore
+> > > > +frequency floor frequency will be used (elc_floor_freq_khz
+> > > > attribute
+> > >=20
+> > > Consider the following simplification:
+> > >=20
+> > > "the user defined uncore frequency floor frequency" ->
+> > > "the user-defined uncore floor frequency"
+> > >=20
+> > > I think it tells the same even without that first "frequency".
+> > >=20
+> > > Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> > >=20
 > >=20
-> > > Add efficiency latency control support to the TPMI uncore driver.
-> > > This
-> > > defines two new threshold values for controlling uncore frequency,
-> > > low
-> > > threshold and high threshold. When CPU utilization is below low
-> > > threshold,
-> > > the user configurable floor latency control frequency can be used
-> > > by the
-> > > system. When CPU utilization is above high threshold, the uncore
-> > > frequency
-> > > is increased in 100MHz steps until power limit is reached.
-> > >=20
-> > > Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
-> > > ---
-> > > v2:
-> > > =C2=A0 * Converted a long sequence of if (...)'s to a switch
-> > >=20
-> > > =C2=A0.../uncore-frequency-common.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=
-=A0 4 +
-> > > =C2=A0.../uncore-frequency/uncore-frequency-tpmi.c=C2=A0 | 158
-> > > +++++++++++++++++-
-> > > =C2=A02 files changed, 160 insertions(+), 2 deletions(-)
-> > >=20
-> > > diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
-> > > frequency-common.h b/drivers/platform/x86/intel/uncore-
-> > > frequency/uncore-frequency-common.h
-> > > index 4c245b945e4e..b5c7311bfa05 100644
-> > > --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-> > > common.h
-> > > +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-> > > common.h
-> > > @@ -70,6 +70,10 @@ enum uncore_index {
-> > > =C2=A0=09UNCORE_INDEX_MIN_FREQ,
-> > > =C2=A0=09UNCORE_INDEX_MAX_FREQ,
-> > > =C2=A0=09UNCORE_INDEX_CURRENT_FREQ,
-> > > +=09UNCORE_INDEX_EFF_LAT_CTRL_LOW_THRESHOLD,
-> > > +=09UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD,
-> > > +=09UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE,
-> > > +=09UNCORE_INDEX_EFF_LAT_CTRL_FREQ,
-> > > =C2=A0};
-> > > =C2=A0
-> > > =C2=A0int uncore_freq_common_init(int (*read)(struct uncore_data *dat=
-a,
-> > > unsigned int *value,
-> > > diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
-> > > frequency-tpmi.c b/drivers/platform/x86/intel/uncore-
-> > > frequency/uncore-frequency-tpmi.c
-> > > index 9fa3037c03d1..50b28b4b1fc0 100644
-> > > --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-> > > tpmi.c
-> > > +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-
-> > > tpmi.c
-> > > @@ -30,6 +30,7 @@
-> > > =C2=A0
-> > > =C2=A0#define=09UNCORE_MAJOR_VERSION=09=090
-> > > =C2=A0#define=09UNCORE_MINOR_VERSION=09=092
-> > > +#define UNCORE_ELC_SUPPORTED_VERSION=092
-> > > =C2=A0#define UNCORE_HEADER_INDEX=09=090
-> > > =C2=A0#define UNCORE_FABRIC_CLUSTER_OFFSET=098
-> > > =C2=A0
-> > > @@ -46,6 +47,7 @@ struct tpmi_uncore_struct;
-> > > =C2=A0/* Information for each cluster */
-> > > =C2=A0struct tpmi_uncore_cluster_info {
-> > > =C2=A0=09bool root_domain;
-> > > +=09bool elc_supported;
-> > > =C2=A0=09u8 __iomem *cluster_base;
-> > > =C2=A0=09struct uncore_data uncore_data;
-> > > =C2=A0=09struct tpmi_uncore_struct *uncore_root;
-> > > @@ -75,6 +77,10 @@ struct tpmi_uncore_struct {
-> > > =C2=A0/* Bit definitions for CONTROL register */
-> > > =C2=A0#define
-> > > UNCORE_MAX_RATIO_MASK=09=09=09=09GENMASK_ULL(14, 8)
-> > > =C2=A0#define
-> > > UNCORE_MIN_RATIO_MASK=09=09=09=09GENMASK_ULL(21, 15)
-> > > +#define
-> > > UNCORE_EFF_LAT_CTRL_RATIO_MASK=09=09=09GENMASK_ULL(28, 22)
-> > > +#define
-> > > UNCORE_EFF_LAT_CTRL_LOW_THRESHOLD_MASK=09=09GENMASK_ULL(38, 32)
-> > > +#define UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_ENABLE=09BIT(39)
-> > > +#define
-> > > UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_MASK=09=09GENMASK_ULL(46, 40)
-> > > =C2=A0
-> > > =C2=A0/* Helper function to read MMIO offset for max/min control
-> > > frequency */
-> > > =C2=A0static void read_control_freq(struct tpmi_uncore_cluster_info
-> > > *cluster_info,
-> > > @@ -89,6 +95,48 @@ static void read_control_freq(struct
-> > > tpmi_uncore_cluster_info *cluster_info,
-> > > =C2=A0=09=09*value =3D FIELD_GET(UNCORE_MIN_RATIO_MASK, control)
-> > > * UNCORE_FREQ_KHZ_MULTIPLIER;
-> > > =C2=A0}
-> > > =C2=A0
-> > > +/* Helper function to read efficiency latency control values over
-> > > MMIO */
-> > > +static int read_eff_lat_ctrl(struct uncore_data *data, unsigned
-> > > int *val, enum uncore_index index)
-> > > +{
-> > > +=09struct tpmi_uncore_cluster_info *cluster_info;
-> > > +=09u64 ctrl;
-> > > +
-> > > +=09cluster_info =3D container_of(data, struct
-> > > tpmi_uncore_cluster_info, uncore_data);
-> > > +=09if (cluster_info->root_domain)
-> > > +=09=09return -ENODATA;
-> > > +
-> > > +=09if (!cluster_info->elc_supported)
-> > > +=09=09return -EOPNOTSUPP;
-> > > +
-> > > +=09ctrl =3D readq(cluster_info->cluster_base +
-> > > UNCORE_CONTROL_INDEX);
-> > > +
-> > > +=09switch (index) {
-> > > +=09case UNCORE_INDEX_EFF_LAT_CTRL_LOW_THRESHOLD:
-> > > +=09=09*val =3D
-> > > FIELD_GET(UNCORE_EFF_LAT_CTRL_LOW_THRESHOLD_MASK, ctrl);
-> > > +=09=09*val *=3D 100;
-> > > +=09=09*val =3D DIV_ROUND_UP(*val,
-> > > FIELD_MAX(UNCORE_EFF_LAT_CTRL_LOW_THRESHOLD_MASK));
-> > > +=09=09break;
-> > > +
-> > > +=09case UNCORE_INDEX_EFF_LAT_CTRL_HIGH_THRESHOLD:
-> > > +=09=09*val =3D
-> > > FIELD_GET(UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_MASK, ctrl);
-> > > +=09=09*val *=3D 100;
-> > > +=09=09*val =3D DIV_ROUND_UP(*val,
-> > > FIELD_MAX(UNCORE_EFF_LAT_CTRL_HIGH_THRESHOLD_MASK));
-> >=20
-> > I wonder if DIV_ROUND_CLOSEST() would be more appropriate in these
-> > two=20
-> > cases, rounding up isn't well justified as I think this wants to
-> > round it=20
-> > back to the original number to deal with the minor divergences due to
-> > precision loss during conversions?
+> > Yeah, it looks kind of silly. I think that's just a typo from my
+> > side,
+> > thanks for catching.
 >=20
-> Yes, this makes it sure that what is written to the file gets also read
-> back as the same value. Using DIV_ROUND_CLOSEST() will not do the
-> trick. Tried this out by using DIV_ROUND_CLOSEST() and got following:
->=20
-> # echo 94 > elc_high_threshold_percent=20
-> # cat elc_high_threshold_percent
-> 94
-> # echo 95 > elc_high_threshold_percent=20
-> # cat elc_high_threshold_percent=20
-> 94
-> # echo 96 > elc_high_threshold_percent=20
-> # cat elc_high_threshold_percent=20
-> 95
->=20
-> However, using DIV_ROUND_UP() all values from 0-100 work just fine.
+> Do you want me to send a new version of this patch or do you fix it
+> locally? Rest of the patches don't seem to need any changes atm.
 
-Okay, thanks for checking this out.
+That's up to Hans but that looks trivial change so probably he can fix
+that while applying.
+
+Hans, v2 of this series seems ready to go (with the small change into
+the documentation patch as discussed above).
 
 --=20
  i.
-
---8323328-1523374286-1725012569=:1027--
+--8323328-1240474059-1725012764=:1027--
