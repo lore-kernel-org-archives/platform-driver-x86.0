@@ -1,143 +1,127 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0663E1779A4
-	for <platform-driver-x86@vger.kernel.org>; Sat, 31 Aug 2024 08:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB26B13C90A
+	for <platform-driver-x86@vger.kernel.org>; Sat, 31 Aug 2024 08:53:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725093121; cv=none; b=ipnhz/esTrF0QXL/MlgXOI7xNuaSEScMC7j0vYE88G1mj4OgMygRc4Hxxkk+obE+GuzIl8WjQR09UBEvYX+3UYQW1b8kJ845XtDN8dX+Jcc0ZM8zXhkTAtM+3g5ayxNqlaUM49et6mF2of0ntupbunVpQnemxeQqw1qAsU0Zf6k=
+	t=1725094439; cv=none; b=Qhg5T+9KI5ar4rhbHd6X6d1EiH13sUXnkfWSoobSeV0ySFhhuC9JUJ1uoJiqFN4YdHBmiL44KTuLZYOMKQxpamiF4t78XHEDP8ucNNyovyB8aMhDMd7ikJgG2sAezmkFBb/p4Xa58TvkXXv05flHnSkjbg/YiT6V3MsAvzK8la0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725093121; c=relaxed/simple;
-	bh=ygokJ3EuwP2KVqqlmTrJeAJWWdyXSr8sqWsV9WTAHco=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=TJDrXmDRF9CqBYHj0971vJhH5fHxu706la9HorxjBIZDr8p72LQH19BCGW6fAvPdoeduY+O25vOLc2gDbhZWYYySIXT6zE2/Ll875Thr/AkebXH0luRMQSjJi07FV4azIz9gLcGAVfnCyVpg+DGEoaE0WNI9/MY2AtVuVAwVZqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Twxkm2zr; arc=none smtp.client-ip=209.85.221.52
+	s=arc-20240116; t=1725094439; c=relaxed/simple;
+	bh=xMNyCaQPuoW2JyU6Z6CoGsmhDfRjNG/09vrnqWyjFZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LjrV4UcrdewY80Wgm7fjcsgoZ7EyZjkh/fgkhUc2y2eyKBDZeGuux7Adr2Gj+Hdsi9Jo9TlDZ0J1JOwt8Oah80iPoGeHi5HAdi0bZX2JYTTo8WXSZ4OnqCdkmuQMB7VRTklguKbhKu0/n7sfI1D7NFLZN4jEX6uJhcPNmk5ZLOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zy0s3o9B; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Twxkm2zr"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-374c0a8c7a9so134414f8f.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 31 Aug 2024 01:31:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zy0s3o9B"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-374b5f27cf2so761557f8f.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 31 Aug 2024 01:53:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725093118; x=1725697918; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cYKXU/GRuYajonH8bLwJRIkuKYJn/KULcoZQ/7PWKrE=;
-        b=Twxkm2zr7sDaxXCm1z+Nm3OxpW02sG0MMev4bvEXHSXO+kRL9v/msuKTxiJ+f4uyat
-         lFJ/kwmushDU+bcKITE+++jE2cBtJYMc8zfGOlOCEDa+59TY/0bDnL7uLSfifIHeoaBf
-         yLmlDVWlEkfL1yPYro3Xr0Z9SbUmB8cxH8Nahu1zDCw3m4Hw4JZeK01YRSxHE2PVsz/e
-         I9dgXBdmEk4hSPMUBsxRXbuVfKYXO7KOyBv0YnC3MRjCQcwEG/qx4xOlysgH+ZF/SMtw
-         mKImu8jcMhcLwxiFu7sF8L4AO2UHYj+E2b2aqPzLp/DVy7gx7powT/gTCpEGisi3+zdp
-         F/kA==
+        d=linaro.org; s=google; t=1725094436; x=1725699236; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XrJxKojvYgIdgcmALEJbPkGfILHuZwWSCFpBkiFspZk=;
+        b=zy0s3o9BgiIvhDdqxQTsvEDbf4dqEFzw0IsbxgFcZOXqZmLCcl1wMOpHRwLUMEm95K
+         dOnY180nscD1XhmUOfa94AlLTZCHh4qSVlu44+O7aPVZSTAo8q+fiZzNXGZKNRPsZqNN
+         4pQs+JcROu+vhwsgNj4JUHZ2SVodbpKWeGs3BSQ/rTDuboGUFVXz5YXnfkNTyfTaiW3q
+         PMUUWnQdSvTyNSp4xpg1KurbtrlFf4T5RWh/Y6uGP4LzSTH/b1Hxq2s2bOZQspUHm2v7
+         +C7sLqVPtKRUFptK8LgaLaKj+7EuqHv5xcpdpce9eKl1VLhErAxAA2aw2fCTE5B+0sST
+         Ha+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725093118; x=1725697918;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cYKXU/GRuYajonH8bLwJRIkuKYJn/KULcoZQ/7PWKrE=;
-        b=HpR3pvF1pHLDPjOM2sjQ/FYzp4HURoYXJhB5+Fha+OpePA3oKbplZBibLLHQ9wRU8g
-         +laTv/49Q3qddrCurvpI0USh2X0GSBX/eHtWS4C3a3MPenvCJq51Sgg3pcAeWmYLwarU
-         nBPfSzs//Oa/CvsW3T15Lv2AU00ckgMvYTvLuku2kwo7ru1DoTFpa8wyqBSJvmcpuZ5b
-         OuF4+eyj4J4k8xSYE8ADr7vp6bDtgqbVIASespw4DnxTyoGfSEe3Pm04cxWMEK++DSKs
-         larCEvU7to6bmP/gCGIxMP6KC9dL4qctyHaeuepfJimkGEF56HEcBWR9dCpLvYD6jQOM
-         NOCA==
-X-Forwarded-Encrypted: i=1; AJvYcCXqfcDdfEHms94m//3Kcd420BBixHJXn6+C+K0s2bSHksoAkGgnZ0lcFJaEyiYLZ+DDNAN+4/pulAak1lrog/ePhijj@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxy3y/VwQ/QytFJ38SzKQk355d9nrZRqvucn0z1pk3beUsmIZX2
-	WcftabdXwA+kaBpkIhXrQtFCkWVE2B/lBA/VRcnQvwh0nMu8shqiQTYbQGBfwCA=
-X-Google-Smtp-Source: AGHT+IEY8B96yyKAmsk7FOyikce6yeIKfN0PQpvR2+w944msLHKH11XTNcpqiCg0x0+w3FqoiWogJA==
-X-Received: by 2002:adf:e5c9:0:b0:374:c2e9:28b8 with SMTP id ffacd0b85a97d-374c2e92d16mr52551f8f.18.1725093118067;
-        Sat, 31 Aug 2024 01:31:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1725094436; x=1725699236;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XrJxKojvYgIdgcmALEJbPkGfILHuZwWSCFpBkiFspZk=;
+        b=ug0f+ZygY+0MhWtYhg0YhwDu+SQqnkQnL18p3Hv5rKbFO34PqeDMv6SEQJ674sW+ce
+         V0SqErd49/TSYwuZDICeDzNWWmLrgg2eR9Wv11YPYgKdL6++kSOsPz15LF3vdFtEPXwP
+         sbXT/1cSdq/iGkviC7U9WUgVP6YHkTRboAr5YGgozza1nIFh27zCo/YvaLRLnePvguzb
+         x/LuLRKdlnTyk9rcPscCojN9Ja2VcoWNjjhZ12tL9yp68b/IcDVXbDdVdG54I/zYt5DG
+         aqtIJ0cFvoI06FLNq8tEayzK6FGsiDoY5XTBVr4HI1hNgNIar7We67pVMKGvZNfKrlcx
+         Mrpw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4IxRe7DT38MIyW+y+MbhtGAKwAoB+KEWar7YbpaWNgtwzSXcAQjpfeLJ5Mo6ZT7CwillFPbCEYMzqwktYITt5vhtC@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyk9oW9aM2Pxyvcdzqu4RfmJmrvpRdnym+tBwxwzfM0QdpjtIBF
+	WYBUFX2YV5PkkfM+gEXv2y/VFE1IzYTjllzOPciSbURA3ICc1BMHHrddG9CDvvg=
+X-Google-Smtp-Source: AGHT+IEgmyQVbYRyOI28gXGsGAapaHQo3aYCGCx2utsa65dhLn0iTApD5farIM/77mWb+gLOS07M0Q==
+X-Received: by 2002:adf:a185:0:b0:36d:341d:276 with SMTP id ffacd0b85a97d-3749b54962amr5818852f8f.20.1725094436082;
+        Sat, 31 Aug 2024 01:53:56 -0700 (PDT)
 Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-374c08e07b6sm759594f8f.63.2024.08.31.01.31.56
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3749ee9ba8esm6003464f8f.50.2024.08.31.01.53.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Aug 2024 01:31:57 -0700 (PDT)
-Date: Sat, 31 Aug 2024 11:31:53 +0300
+        Sat, 31 Aug 2024 01:53:55 -0700 (PDT)
+Date: Sat, 31 Aug 2024 11:53:51 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	platform-driver-x86@vger.kernel.org,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
 	Daniel Scally <djrscally@gmail.com>
-Subject: Re: [PATCH v2 2/4] platform/x86: int3472: Simplify dev_err_probe()
- usage
-Message-ID: <20dd56f0-78ea-4255-86ac-32151160b83d@stanley.mountain>
+Subject: Re: [PATCH v2 1/4] driver core: Ignore 0 in dev_err_probe()
+Message-ID: <96a19237-9380-4173-9e52-e8295a0f4883@stanley.mountain>
+References: <20240822130722.1261891-1-andriy.shevchenko@linux.intel.com>
+ <20240822130722.1261891-2-andriy.shevchenko@linux.intel.com>
+ <ce59c3c6-8729-469f-a0df-b6844792e324@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240822130722.1261891-3-andriy.shevchenko@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ce59c3c6-8729-469f-a0df-b6844792e324@stanley.mountain>
 
-Hi Andy,
+On Sat, Aug 31, 2024 at 11:25:54AM +0300, Dan Carpenter wrote:
+> On Thu, Aug 22, 2024 at 04:05:38PM +0300, Andy Shevchenko wrote:
+> > In the similar way, ignore 0 error code (AKA "success") in
+> > dev_err_probe(). This helps to simplify a code such as
+> > 
+> >   if (ret < 0)
+> >     return dev_err_probe(int3472->dev, ret, err_msg);
+> > 
+> >   return ret;
+> > 
+> > to
+> > 
+> >   return dev_err_probe(int3472->dev, ret, err_msg);
+> > 
+> > Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> This is a terrible idea because currently Smatch is able to detect about one
+> bug per month where someone unintentionally passes the wrong error variable
+> to dev_err_probe().
 
-kernel test robot noticed the following build warnings:
+Here are the stats since Jan 2023.  All these bugs are impossible to detect now.
 
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/driver-core-Ignore-0-in-dev_err_probe/20240826-113856
-base:   driver-core/driver-core-testing
-patch link:    https://lore.kernel.org/r/20240822130722.1261891-3-andriy.shevchenko%40linux.intel.com
-patch subject: [PATCH v2 2/4] platform/x86: int3472: Simplify dev_err_probe() usage
-config: i386-randconfig-141-20240830 (https://download.01.org/0day-ci/archive/20240831/202408310807.sNPe5Mr2-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202408310807.sNPe5Mr2-lkp@intel.com/
-
-smatch warnings:
-drivers/platform/x86/intel/int3472/discrete.c:292 skl_int3472_handle_gpio_resources() error: uninitialized symbol 'err_msg'.
-drivers/platform/x86/intel/int3472/discrete.c:292 skl_int3472_handle_gpio_resources() warn: passing zero to 'dev_err_probe'
-
-vim +/err_msg +292 drivers/platform/x86/intel/int3472/discrete.c
-
-5de691bffe57fd drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c Daniel Scally   2021-06-03  270  		case INT3472_GPIO_TYPE_POWER_ENABLE:
-53c5f7f6e7930f drivers/platform/x86/intel/int3472/discrete.c                   Hans de Goede   2023-10-04  271  			ret = skl_int3472_register_regulator(int3472, gpio);
-5de691bffe57fd drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c Daniel Scally   2021-06-03  272  			if (ret)
-5de691bffe57fd drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c Daniel Scally   2021-06-03  273  				err_msg = "Failed to map regulator to sensor\n";
-5de691bffe57fd drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c Daniel Scally   2021-06-03  274  
-53c5f7f6e7930f drivers/platform/x86/intel/int3472/discrete.c                   Hans de Goede   2023-10-04  275  			break;
-53c5f7f6e7930f drivers/platform/x86/intel/int3472/discrete.c                   Hans de Goede   2023-10-04  276  		default: /* Never reached */
-53c5f7f6e7930f drivers/platform/x86/intel/int3472/discrete.c                   Hans de Goede   2023-10-04  277  			ret = -EINVAL;
-53c5f7f6e7930f drivers/platform/x86/intel/int3472/discrete.c                   Hans de Goede   2023-10-04  278  			break;
-53c5f7f6e7930f drivers/platform/x86/intel/int3472/discrete.c                   Hans de Goede   2023-10-04  279  		}
-5de691bffe57fd drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c Daniel Scally   2021-06-03  280  		break;
-5de691bffe57fd drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c Daniel Scally   2021-06-03  281  	default:
-5de691bffe57fd drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c Daniel Scally   2021-06-03  282  		dev_warn(int3472->dev,
-5de691bffe57fd drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c Daniel Scally   2021-06-03  283  			 "GPIO type 0x%02x unknown; the sensor may not work\n",
-5de691bffe57fd drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c Daniel Scally   2021-06-03  284  			 type);
-5de691bffe57fd drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c Daniel Scally   2021-06-03  285  		ret = 1;
-                                                                                                                                ^^^^^^^^
-
-5de691bffe57fd drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c Daniel Scally   2021-06-03  286  		break;
-5de691bffe57fd drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c Daniel Scally   2021-06-03  287  	}
-5de691bffe57fd drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c Daniel Scally   2021-06-03  288  
-5de691bffe57fd drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c Daniel Scally   2021-06-03  289  	int3472->ngpios++;
-5de691bffe57fd drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c Daniel Scally   2021-06-03  290  	ACPI_FREE(obj);
-5de691bffe57fd drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c Daniel Scally   2021-06-03  291  
-5de691bffe57fd drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c Daniel Scally   2021-06-03 @292  	return dev_err_probe(int3472->dev, ret, err_msg);
-
-This is the success path.  "err_msg" is only set for the error path.  "ret" is 1
-so it will use the uninitialized data.  But even if ret were zero, it's illegal
-to pass uninitialized variables to functions which aren't inlined.
-
-1) It's undefined behavior
-2) Linus said so
-3) It causes UBSan warnings at runtime.
+2024-08-12 d3bde2243d42 iio: proximity: hx9023s: Fix error code in hx9023s_property_get()
+2024-07-08 101e5c5c4e76 PCI: qcom: Fix missing error code in qcom_pcie_probe()
+2024-02-22 debabbb1f272 iio: adc: ti-ads1298: Fix error code in probe()
+2024-01-08 9c46e3a5232d iio: adc: ad7091r8: Fix error code in ad7091r8_gpio_setup()
+2023-12-04 35ddd61cf023 platform/x86: x86-android-tablets: Fix an IS_ERR() vs NULL check in probe
+2023-11-20 2d37b3649c41 hwrng: starfive - Fix dev_err_probe return error
+2023-11-30 03219a3aa6c8 drm/imagination: Fix error codes in pvr_device_clk_init()
+2023-09-07 4b2b39f9395b watchdog: marvell_gti_wdt: Fix error code in probe()
+2023-08-24 8886e1b03669 ASoC: codecs: Fix error code in aw88261_i2c_probe()
+2023-06-23 ad5152b85e8b leds: aw200xx: Fix error code in probe()
+2023-07-18 86fe3e9f4c63 phy: starfive: fix error code in probe
+2023-07-12 0b64150c3429 Input: bcm-keypad - correct dev_err_probe() error
+2023-06-26 5fb2864cbd50 OPP: Properly propagate error along when failing to get icc_path
+2023-06-19 02474880e8fd ASoC: max98388: fix error code in probe()
+2023-05-25 cc5f2eb7ce11 mfd: tps6594: Fix an error code in probe()
+2023-05-22 1ca04f21b204 remoteproc: stm32: Fix error code in stm32_rproc_parse_dt()
+2023-05-15 46f5dd7439e3 fbdev: omapfb: panel-tpo-td043mtea1: fix error code in probe()
+2023-05-13 3530167c6fe8 soc: qcom: icc-bwmon: fix incorrect error code passed to dev_err_probe()
+2023-05-12 bc97139ff135 power: supply: rt9467: Fix passing zero to 'dev_err_probe'
+2023-03-23 c4351b646123 iio: adc: ti-ads1100: fix error code in probe()
+2023-02-27 65609d3206f7 i2c: gxp: fix an error code in probe
+2023-02-15 76f5aaabce49 ASoC: soc-ac97: Return correct error codes
 
 regards,
 dan carpenter
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
