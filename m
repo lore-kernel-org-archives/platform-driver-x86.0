@@ -1,125 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh5-smtp.messagingengine.com (fhigh5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B7219ABAA;
-	Fri, 30 Aug 2024 12:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB4714295;
+	Sat, 31 Aug 2024 00:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725022684; cv=none; b=EWrQxq49Sr0Js2PDatwq/JWR5pydb0Ynh2GWF6x7yW+nAjeZ6SZ46lTpGX+15GWHoY1x8ec3CzaSVSFnlmFRsqVn8aoovcbhD5a9CID6t7w5onK9geTWVlKT1uA3Hrb31vSUlryjzEq6BLjocKMcBjCxOYxANkbvn877dBjMjKc=
+	t=1725064757; cv=none; b=RPRpsVT/5ZbjQYNXbfjUXnR/XCns4VdLRFioJk9IENBl5/lRfsFAm/mRZVIZCIjvCIDWxzhUxXWjP3adtC4liZhQVS8oaOCEQWL/gE//0BP6QVMMOxGX7ZPUxtamPdjkaAzT0C4WjNppyYBPP5YeHOfZYBBFzrVJIlta3Xb3mJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725022684; c=relaxed/simple;
-	bh=pRzr4dw+htikBqyVyR2UfwtO0f/g1Jd6QIJAItLjm9c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qr/sRhgmyi/ovRzEzPBVAjYY01JWIQcX9oYTVn/DAXKsvrq5u0DuOELZNWmKAaiMY8d1jvP4fkEYeP/lULB6wPts/dzTLo1cziXYzG2ho6oleeOcgNDxBrSu1J+pu6RwIUXKxhSGiRcsuLBLVpaYUMgGJ1YwfLJkKAKUtlQ140Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MgeGhM3S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725064757; c=relaxed/simple;
+	bh=mppTRV1zZW/Ag1x0EJ0PAo1cyUU547iLWc9ES9D0S+o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bOcnJotVJisaruJRJpVh3WDvwNMxkOx0YsIOjYNny8z3o9rSx1rcgU6kT+B5Jgi7udBjxIGg499hZPnEn8ceJ0Wl5jOJkjVC2CIAt+C0/Y2pCvLvFXJY+YX/2pKPEM+060KAna9XWn8VUSPzvh0Nx/kmBIbofi61C3y/g2S8pzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=Bj5JVRGA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UMihmeHA; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MgeGhM3S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8EB8C4CEC2;
-	Fri, 30 Aug 2024 12:57:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725022684;
-	bh=pRzr4dw+htikBqyVyR2UfwtO0f/g1Jd6QIJAItLjm9c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MgeGhM3S5Skkm3/czz9Sb4Q/cLEXI9TleH0U3Vau8IqpzVb/X/pDF1kqKFqwYbimK
-	 HNtT7qR9MMOBs7/rPoReRuwDBqSWcQub+lzuzCTUiny9hXVbWJWhHcrx+HH46cUU/1
-	 si/G+nON+U61JVnqQY2LTk+1TCnedYwS6voFpwCPblt5H4WNbzBdvDiuyieAjudA46
-	 Y4GZ2CJ4UEZ3bnyJecRQp+T7JwEf4eX840m+PRjzx4gHFPqf1Xfy4RbPHcRc6tmqHM
-	 g62Vw/9VGJ++mllrkCxjUKe30z5fXiRPRJGGguqj9qa1vYUFxElS23O1hbhP/VdoQ0
-	 cPNTshwv7omjA==
-Message-ID: <998609e2-0fa4-43e8-9f72-05af40cf62c2@kernel.org>
-Date: Fri, 30 Aug 2024 14:57:56 +0200
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="Bj5JVRGA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UMihmeHA"
+Received: from phl-compute-08.internal (phl-compute-08.nyi.internal [10.202.2.48])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id A82741140175;
+	Fri, 30 Aug 2024 20:39:13 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-08.internal (MEProxy); Fri, 30 Aug 2024 20:39:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1725064753; x=1725151153; bh=LXV0nOlsOnCv/Pdhy6bRp
+	V1/J/v3Qjd5zmbmqu2eUCY=; b=Bj5JVRGAWnSIxW/Bah3o7S+tNwn6Cat5W3VHD
+	6WuPyHJ5lSTYwA/OARj7useI6A3f5f7Xld/KTCH2Ntxu9RVY1XHYjUhoCWmNqHCc
+	+ucSJvN/bE+nzCdcCO8FrdJBhLyzGgyRbsJhu7kkdlYOCVHqArIr/uhRqBuH9rgy
+	QW0JSBStcFHbgJO3wd+IFhu1BW6Az7Vm9W5h9xxGTCzHU6rYmnvv9tshRJzIEl7v
+	IvCx+UBE27mk5BHWmmoAVs281TeIckeHQ2qbawxsgHoqYoqSYe+1oPSMCwysp3He
+	6P4iTYX5JcKxvTUvKn5XLu2le0CJum97rGK6GXXG/eDZ+FgXQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1725064753; x=1725151153; bh=LXV0nOlsOnCv/Pdhy6bRpV1/J/v3
+	Qjd5zmbmqu2eUCY=; b=UMihmeHAPUrxNvtqNJ/YGHUON12ebsxW30SnwKZfDmnj
+	NPAxQCcyIe4aFO/6QzgEtadv7li1CP7r5mf9zpXVc/RbN7XdzLo8IX0Hn60/4OcK
+	ZyKRIG/HUP3f+ib1D554UUkfhsGQhbJ/DiTTXLhbekl6fLTQcfF8lCzOGeGWKWNI
+	8kFWK0VT1rxOVxTQYhh7aoKwIKdOnSVhGWlOogL1qM3sVirncBWU3kFtUFgaxDIb
+	k6kkMoCxPdIB1KwPgOp656v9tgqsvgqGML9ezqkMTnsury5AqH1bcOqvKNKTzElj
+	p0+crTL2sZgmLX5togA+i23khQ29CrDyaT7HBxMXDw==
+X-ME-Sender: <xms:MWbSZiFtpVwTH66bE2_ONW49yoXc2dh7A_iHtrrtPX1F3RTTjGTZDw>
+    <xme:MWbSZjU53ZIVVauSnidX6AgNREOGj4BMpww4FQ8qI_dvXTotzne1RHvN4crwL2juK
+    BZaShzGlFLpReHDduc>
+X-ME-Received: <xmr:MWbSZsJR0_N3kfS4Rgj-_EiDqaMAE7B51CswSDwY_mRmfUCLoKnR0s4KxIdQ-nT25M2UrVDCPURXSQjA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudefjedgfeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevuf
+    ffkffoggfgsedtkeertdertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdf
+    uceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfdujedthf
+    duudekffefkeeiffdttddvhfegudduueffuefhfefggeefteevvdegnecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvsh
+    druggvvhdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthht
+    ohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvg
+    hlrdgtohhmpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgt
+    phhtthhopehshhihrghmqdhsuhhnuggrrhdrshdqkhesrghmugdrtghomhdprhgtphhtth
+    hopehluhhkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:MWbSZsGHKYwn1A1V3rbuBoYUmX08LchBcVj42C90XUwf0_7GKV1Ylg>
+    <xmx:MWbSZoX31b3JZOaFUL8t9JRDUSroT3wtizIKA_UN709e-rw3PKlKZA>
+    <xmx:MWbSZvN9_hXJRKj0CHjVsb7teLtZE-csQCwJNncC_Rq8-cwIdTz5mQ>
+    <xmx:MWbSZv2DJUvpi7iXuE8PySQ-4R_K-FVXAjGUJ2fMoQGdSyfdQMe3eA>
+    <xmx:MWbSZic9D3bj4lFVh9d01r20o_7VnQmBAUL5AFp9sydMhioxCtDD2Cl3>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 30 Aug 2024 20:39:10 -0400 (EDT)
+From: "Luke D. Jones" <luke@ljones.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com,
+	Shyam-sundar.S-k@amd.com,
+	"Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH] platform/x86/amd: pmf: Make ASUS GA403 quirk generic
+Date: Sat, 31 Aug 2024 12:39:05 +1200
+Message-ID: <20240831003905.1060977-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] platform/surface: Add OF support
-To: Andy Shevchenko <andy.shevchenko@gmail.com>,
- Maximilian Luz <luzmaximilian@gmail.com>
-Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Len Brown <lenb@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <quic_kdybcio@quicinc.com>
-References: <20240814-topic-sam-v3-0-a84588aad233@quicinc.com>
- <20240814-topic-sam-v3-3-a84588aad233@quicinc.com>
- <ZszrjQChQ2aS5YjV@surfacebook.localdomain>
- <d08d41ad-edcb-48ad-a848-53edc45ab8eb@gmail.com>
- <CAHp75VcbjR8HQqPASLFEGiyYLfTFQDa6Ri+jFy+7Q1xz7gY39Q@mail.gmail.com>
- <53a56539-1d95-42ac-ad07-1b689702b2ed@gmail.com>
- <CAHp75VdsksKPrj-CwmR4QLBrm_FfaG4aZys-_jnee_L=3ZnRPQ@mail.gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konradybcio@kernel.org>
-In-Reply-To: <CAHp75VdsksKPrj-CwmR4QLBrm_FfaG4aZys-_jnee_L=3ZnRPQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 28.08.2024 9:06 PM, Andy Shevchenko wrote:
-> On Wed, Aug 28, 2024 at 8:40 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
->> On 8/28/24 6:56 PM, Andy Shevchenko wrote:
->>> On Wed, Aug 28, 2024 at 12:10 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
-> 
-> ...
-> 
->>> Yes, and software nodes for DT are quite strange things! Why can't you
->>> simply fix the DT to begin with?
->>
->> For the ARM/DT variants we could do that. But we still have to deal with
->> the x86/ACPI ones here.
-> 
-> So, then fix it there! Currently it's an abuse of software nodes
-> inside the Linux kernel.
-> 
->> So for me it makes more sense to have it unified
->> and just deal with everything in this module.
-> 
-> I understand the desire, but DT is DT and ACPI is ACPI, they are
-> different despite having some common APIs in the Linux kernel.
-> Moreover, DT has a validation tools and everything, making that being
-> a software nodes has at least these disadvantages:
-> - no official schema that must be supported and users are known of
-> - no validation done
-> - bloating of the Linux kernel binary and hence memory footprint
+The original quirk should match to GA403U so that the full
+range of GA403U models can benefit.
 
-Arguably the last point isn't very strong.. DT also has to store some
-strings and pointers to represent devices
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+---
+ drivers/platform/x86/amd/pmf/pmf-quirks.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
->> Also, if we consider that at some point we might get ACPI PEP support (I
->> know, far fetched right now): With that, ACPI on ARM might be feasible
->> and then we'd have to manage the same thing in two places...
-> 
-> This (PEP) is something I have no knowledge about. But I think it's
-> still orthogonal to the software nodes usage.
+diff --git a/drivers/platform/x86/amd/pmf/pmf-quirks.c b/drivers/platform/x86/amd/pmf/pmf-quirks.c
+index 460444cda1b2..48870ca52b41 100644
+--- a/drivers/platform/x86/amd/pmf/pmf-quirks.c
++++ b/drivers/platform/x86/amd/pmf/pmf-quirks.c
+@@ -25,7 +25,7 @@ static const struct dmi_system_id fwbug_list[] = {
+ 		.ident = "ROG Zephyrus G14",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "GA403UV"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA403U"),
+ 		},
+ 		.driver_data = &quirk_no_sps_bug,
+ 	},
+-- 
+2.46.0
 
-The PEP (Power Engine Plugin) unfortunately is the reason we can't have
-ACPI-based boot on WoA platforms.. This two-or-three-digit megabyte
-Windows driver hardcodes almost everything related to the on-SoC power
-management (buses, clocks, etc.) and only uses the bare minimum ACPI it
-needs to connect devices to a bus or get notifications on standard events..
-
-> 
->> And lastly, the EC subdevices are quite contained and I don't see them
->> interacting with any other components in the DT, so it's more of a
->> stylistic choice where to put them.
-> 
-> They are still part of hardware and DT describes hardware.
-
-Unfortunately the "Surface Aggregator Module" is just a firmware
-exposed on some range of MCUs running MSFT's code..
-
-Given how.. peculiarly the "bus" that it hosts """devices""" on is
-constructed (5-level-deep hierarchy without it making much sense
-beyond maaaybe the first two), it's not really easy to describe in
-DT in a way that would be both true to the bigger picture and make
-enough sense to convince the DT maintainers, I don't think
-
-Konrad
