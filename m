@@ -1,127 +1,90 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E1161FCF;
-	Sun,  1 Sep 2024 03:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E654F1E517
+	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Sep 2024 20:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725160320; cv=none; b=GR+ZQzjEyLAEbNnhK2Igukj9kcs4g6R5tS4FQMHDFoG9gwYljoQSnMDgdmeI0G72EYMEJ+cdNiuRYjX8WYA0fXGD2+xCbOu038VduIygMWPlr0AFwjiQ4Ypzrn7Iu95T3t+bQgVdMtC70NdkjEDYwqh12dVxsdpaEq8RlWY1G+w=
+	t=1725223507; cv=none; b=Z//P/eGJN/88CzlbiT+qIY9slszLB1ftrvTBhmf3W6x8WpBJm09BdW2cqLSeXPz3hMqfvZYPOYylOQzITjaYRfAuuFP3oRrohH++/JUtq8NbyBFukl1jrGzyU63Tp1/Rcv1HyXLu8bS/SGFkDk03cdtdd/uDBLaQ7zzTbABp0Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725160320; c=relaxed/simple;
-	bh=N1SRxLIMiaHEWQcXmpZUWs7IxLXL+xAMhqICn9t2VOY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cNdpI51LJDxNaBW860K4vm7javYWumxQjgGVtmfMKZM9MqTvLiE88T7x4G0QttIw53mROzpxMkIIcvv4h9DYwKxrD9pRYhlIgf2ycMpJ6XjKhA4pvVMRfEhR+PRglYlHYMJHwABJZAA4cq0ZThwevUmtmKIZha0P2TqTanpYHB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Mjl0aqus; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1725223507; c=relaxed/simple;
+	bh=w7cKv8QHz0hXBrOf6Lkzp/X2F3QUzalH/BxsfhZLw4E=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tnD77vCU9/fHGyzn13zf+XvHq8aIBg19pkRFUUbxl1n7so9P4syTC+oejsBy8RcxBfYrbJJTY5HcZC/tz4mq5PLLPV2raVuhcYwPg/KUFO/lCRPLqinzwqH9OzxbB1bDgrKp4DZeglN5vuwXC+nxrXZFrHPTu3mCGrRagdDMbwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0AndCD0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Mjl0aqus"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1725160287; x=1725765087; i=w_armin@gmx.de;
-	bh=Fh+NRxC7VdSPBTxoHvz8oXusb/Km1qqXvRO90lsQ+bY=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Mjl0aqusaFE6B4ajtDRJ+J/vCGAfF8aze8sRMLciQXVuC3JWTl49F0iplfmn0iSS
-	 e7pHxH9t8vXhIyy6xCTKAWUH4dIPfyk6nUKWUg53laJZ5VZtJBh7XAT3mVv03P9jt
-	 7ETxFKPp0vFJNBkLkrKIs32xOY48oV+D2mBvYFEaPgCXRS9JLTb/kj/MFu/I5mvvo
-	 rfArt5G/DAsL/WY5zm/IZ3fVRyuBXUschMR8u7TguqLn2lUrCykK+84bNSZPAbrS6
-	 I1Xzx/1BarrwaaNgrQ4LAj36YnDGgm+JuIvbxCG+C7PUmpCG9fUumF0lRBqLHT+K/
-	 cVKhoVKrx9t/H1dZdw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1N4z6q-1s3X0E3jgS-013fiD; Sun, 01 Sep 2024 05:11:26 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: james@equiv.tech,
-	jlee@suse.com,
-	corentin.chary@gmail.com,
-	luke@ljones.dev,
-	matan@svgalib.org,
-	coproscefalo@gmail.com
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux@roeck-us.net,
-	jdelvare@suse.com,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] platform/x86: wmi: Call both legacy and WMI driver notify handlers
-Date: Sun,  1 Sep 2024 05:10:55 +0200
-Message-Id: <20240901031055.3030-6-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240901031055.3030-1-W_Armin@gmx.de>
-References: <20240901031055.3030-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0AndCD0"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 76FA9C4CEC3
+	for <platform-driver-x86@vger.kernel.org>; Sun,  1 Sep 2024 20:45:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725223506;
+	bh=w7cKv8QHz0hXBrOf6Lkzp/X2F3QUzalH/BxsfhZLw4E=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=p0AndCD0VJpRZVRRFBaGVEdm4OS1EqzFyyH3/E77iNCW3BPi92RJwE9MT4fg6yIPQ
+	 uPBwI3zyg+Iiz6o/sLEBBYp4R6J/52pgOhUn37ElACI6Wmgj7p3WnRHAdLBv1Xjgzo
+	 DCJzxgJtJ9xq0HU/+69qM4VlptKqxZ0brV0kcnPnVOd5wFL/wAEKrfAFKJfbeWP7l2
+	 XYY3HwZQu52fhvzPAGJ3hegb+SSkX3BXwpnozAB8kkZ5Mci3FScwzROY2GlzNK/pQh
+	 lOft41BDNsciA/mXahpmT7IGEkNjOrmDUTfMC2Fbw5i7p3BuSSiO9lpaJKgfGWceAp
+	 ICZzrCiMfuTHQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 6BA81C53BC2; Sun,  1 Sep 2024 20:45:06 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 38082] Fan sensor/controls not working in Thinkpad Edge E220s
+Date: Sun, 01 Sep 2024 20:45:06 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: lorenzo@masellis.eu
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-38082-215701-BMYsxlOnvs@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-38082-215701@https.bugzilla.kernel.org/>
+References: <bug-38082-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Q8iapphxleB0wEpmapMSDOSsrBZf3Tuc6vg2za1AvOK0/PAerH7
- gETG8EHGDBFVe/mSiSAGpjOwiDkzQFeVx5HY6x+mpOB2e5oFGXfxPDo5ixAoLqWEXnfOBp5
- syANV0+Okd5jIcGZp7QCTPV4N7xOXoWdfMTuWR4N+obWm/gcjdNCOfe1j1q0QiTB62YWnt1
- RpysFHd2cp8njXU0KZS9w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:5GzjSi1jG/E=;a7fjHAiFAoEAM5Mt1Ki5bigJWza
- sM5wGwL2rEazra1oD7bSgzHUtDm/obKvcbmzP16SLCn75yRjco1/Rf0khfF4gwYhqdcz4izQP
- ILp+Q7AZCShuqPWgbtZi8JI3TPCR2PZBxxwMBLZkr7smpE4+wUUsYy8XU5bL3lWP71QhxYjvU
- 2OWkuRe+y+vl8TgB99yeQ+OMmp5o0gEAsIxPy76HNgyfzKV+WB5+a0V2QB2WuYPiiutbq/W5m
- CWKo4zANdzVBOmS1zT7mdRMC0fFWieJaWrXtxnfGx+Zg2YAnM46GLb5GuHDTsCyp1A2iJfPz8
- lbxNP32n9xkqPIxLM31nNW3h37Kl0CizDNps6ZqPTzrJDc95tYwvBCdUcas0yP3Ujnq5o08Be
- YlW+kTIftN+jymw2AnexkBi5FtV5qsygk05iQ29EqskZRhMbNZNCRWYhxLHNWCXvAw5UfwXqf
- 3c0qWaGEpVG23gliF0juu7cfmLt0xRGiEy9d0p8tt/r8hXa2tYRfzML/Ms2BPV41187zr/Lfu
- IyCOzvUemqUiuYhBTGpPrAm+wSJgB8vm6tGWsvR/H177QMSdvtpXKRJF1CCJCoqqFyDs37QPT
- FND8veLznMXscD4TILdlMEj874l4i6vsHh63xOOhMlPu1op7Tg4ArWrrTUvsnvFwdEV0uJP1D
- QQkT9Ffyd45q3nj1z4pSAJcWcuLEeEiPM4mwD27562AHBClhpC1/RFzw0PrajziVxKlEAk8P7
- QsWbNwZesJBId45TKStbyjsygklsF37v92FwIE5EefpxPTBacEflL/MzZn5PvENeve0US2gRN
- nABUesSbSXm4TV5SI01mf1eA==
 
-Since the legacy WMI notify handlers are now using the WMI event data
-provided by the WMI driver core, they can coexist with modern WMI
-driver notify handlers.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D38082
 
-Remove the precedence of WMI driver notify handlers and call both
-when receiving an event.
+Lorenzo M. (lorenzo@masellis.eu) changed:
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/wmi.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |lorenzo@masellis.eu
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 6b27833ba5d9..3cbe180c3fc0 100644
-=2D-- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -1175,15 +1175,13 @@ static int wmi_notify_device(struct device *dev, v=
-oid *data)
- 	}
+--- Comment #4 from Lorenzo M. (lorenzo@masellis.eu) ---
+I confirm the same bug on E555.
 
- 	down_read(&wblock->notify_lock);
--	/* The WMI driver notify handler conflicts with the legacy WMI handler.
--	 * Because of this the WMI driver notify handler takes precedence.
--	 */
--	if (wblock->dev.dev.driver && wblock->driver_ready) {
-+
-+	if (wblock->dev.dev.driver && wblock->driver_ready)
- 		wmi_notify_driver(wblock, obj);
--	} else {
--		if (wblock->handler)
--			wblock->handler(obj, wblock->handler_data);
--	}
-+
-+	if (wblock->handler)
-+		wblock->handler(obj, wblock->handler_data);
-+
- 	up_read(&wblock->notify_lock);
+Fan speed is always reported as zero. Writing fan speed (with acpi on) is n=
+ot
+effective, as the fan remains at minimum speed no matter the settings. This
+lead to CPU overheating and throttling.
 
- 	kfree(obj);
-=2D-
-2.39.2
+At power up, fan runs at full speed briefly; as soon as kernel is loaded, t=
+he
+fan slows down to minimum speed and does not change speed any more.
 
+With acpi=3Doff, the fan is effective.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
