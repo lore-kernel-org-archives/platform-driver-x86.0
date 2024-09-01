@@ -1,127 +1,127 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB26B13C90A
-	for <platform-driver-x86@vger.kernel.org>; Sat, 31 Aug 2024 08:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C36429A5;
+	Sun,  1 Sep 2024 03:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725094439; cv=none; b=Qhg5T+9KI5ar4rhbHd6X6d1EiH13sUXnkfWSoobSeV0ySFhhuC9JUJ1uoJiqFN4YdHBmiL44KTuLZYOMKQxpamiF4t78XHEDP8ucNNyovyB8aMhDMd7ikJgG2sAezmkFBb/p4Xa58TvkXXv05flHnSkjbg/YiT6V3MsAvzK8la0=
+	t=1725160311; cv=none; b=eY0uNFigIHmJztLPsSq+xLXezU2fhCWmwpllQOVwWJSqpOkHpkIwWPx5HPfujYvUlNc4+m74ta2ijFCrytgnp3H4VdSV/GBu1GckErx16dMgU15vkjXpsrR/SGAXLZulJbS9u0audHlAB/iNUHN0Sb+6TK39+UlGlAPPpBh6W8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725094439; c=relaxed/simple;
-	bh=xMNyCaQPuoW2JyU6Z6CoGsmhDfRjNG/09vrnqWyjFZo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LjrV4UcrdewY80Wgm7fjcsgoZ7EyZjkh/fgkhUc2y2eyKBDZeGuux7Adr2Gj+Hdsi9Jo9TlDZ0J1JOwt8Oah80iPoGeHi5HAdi0bZX2JYTTo8WXSZ4OnqCdkmuQMB7VRTklguKbhKu0/n7sfI1D7NFLZN4jEX6uJhcPNmk5ZLOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zy0s3o9B; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1725160311; c=relaxed/simple;
+	bh=Gn3ZeVq3s2dJ2JDVX0zGK1/0ntK9iJVduGOXDYUA86k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ERQj62M3DyRG2iXEl8GG6WJk5ZeJ+PSpOF9cmn/5hRzkN0EBuaN9MjTEEjEkV5z44Cgft7z8yvjVWBEwd2fyXPw9kDsRPLrRy+C4n9E0Xfo7mXyAGOeKuXhmLZjO+DzqU5OhQ93FeQ+ozGwww+85/fB+jhNzDM5UHhzeM6Ra3hY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=QxWwmqpR; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zy0s3o9B"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-374b5f27cf2so761557f8f.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 31 Aug 2024 01:53:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725094436; x=1725699236; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XrJxKojvYgIdgcmALEJbPkGfILHuZwWSCFpBkiFspZk=;
-        b=zy0s3o9BgiIvhDdqxQTsvEDbf4dqEFzw0IsbxgFcZOXqZmLCcl1wMOpHRwLUMEm95K
-         dOnY180nscD1XhmUOfa94AlLTZCHh4qSVlu44+O7aPVZSTAo8q+fiZzNXGZKNRPsZqNN
-         4pQs+JcROu+vhwsgNj4JUHZ2SVodbpKWeGs3BSQ/rTDuboGUFVXz5YXnfkNTyfTaiW3q
-         PMUUWnQdSvTyNSp4xpg1KurbtrlFf4T5RWh/Y6uGP4LzSTH/b1Hxq2s2bOZQspUHm2v7
-         +C7sLqVPtKRUFptK8LgaLaKj+7EuqHv5xcpdpce9eKl1VLhErAxAA2aw2fCTE5B+0sST
-         Ha+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725094436; x=1725699236;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XrJxKojvYgIdgcmALEJbPkGfILHuZwWSCFpBkiFspZk=;
-        b=ug0f+ZygY+0MhWtYhg0YhwDu+SQqnkQnL18p3Hv5rKbFO34PqeDMv6SEQJ674sW+ce
-         V0SqErd49/TSYwuZDICeDzNWWmLrgg2eR9Wv11YPYgKdL6++kSOsPz15LF3vdFtEPXwP
-         sbXT/1cSdq/iGkviC7U9WUgVP6YHkTRboAr5YGgozza1nIFh27zCo/YvaLRLnePvguzb
-         x/LuLRKdlnTyk9rcPscCojN9Ja2VcoWNjjhZ12tL9yp68b/IcDVXbDdVdG54I/zYt5DG
-         aqtIJ0cFvoI06FLNq8tEayzK6FGsiDoY5XTBVr4HI1hNgNIar7We67pVMKGvZNfKrlcx
-         Mrpw==
-X-Forwarded-Encrypted: i=1; AJvYcCU4IxRe7DT38MIyW+y+MbhtGAKwAoB+KEWar7YbpaWNgtwzSXcAQjpfeLJ5Mo6ZT7CwillFPbCEYMzqwktYITt5vhtC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk9oW9aM2Pxyvcdzqu4RfmJmrvpRdnym+tBwxwzfM0QdpjtIBF
-	WYBUFX2YV5PkkfM+gEXv2y/VFE1IzYTjllzOPciSbURA3ICc1BMHHrddG9CDvvg=
-X-Google-Smtp-Source: AGHT+IEgmyQVbYRyOI28gXGsGAapaHQo3aYCGCx2utsa65dhLn0iTApD5farIM/77mWb+gLOS07M0Q==
-X-Received: by 2002:adf:a185:0:b0:36d:341d:276 with SMTP id ffacd0b85a97d-3749b54962amr5818852f8f.20.1725094436082;
-        Sat, 31 Aug 2024 01:53:56 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3749ee9ba8esm6003464f8f.50.2024.08.31.01.53.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Aug 2024 01:53:55 -0700 (PDT)
-Date: Sat, 31 Aug 2024 11:53:51 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="QxWwmqpR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1725160275; x=1725765075; i=w_armin@gmx.de;
+	bh=61iovUbYzxeFk07bQVInsGZWHQS/VYBUxCJlz8xdIac=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=QxWwmqpR/3JHaQaH/66lZRFRzyvchiFN0Zq75WMEbFsz54rJc8dAK4sGRjC/2B0V
+	 5CMJmhWKvPoJbB0lsgIg7wZiYUWQknZaGn8gj9LpkVOVUAk8fMqlc1K+pfuZFvRdj
+	 atgEo2eVRd+qTOsEVuNFfa8XXdO27x731xE45Gn6PiU3PI4tFw0DwEtUXmzxJrMXY
+	 n/ismuFant5rr9s1pAU6r9ecTtLaKCV7TWvhMVHlv8j9JiXH19puCnVTFlrfWnCqB
+	 dLkJgCQji6MyjMBg902YnQQUNQ9wL0P7UF0q81xl7xrrZXUV/IZiCYlaJgkxJ5Oii
+	 e1E5Cm2J4wKBc5mIhQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1N1OXT-1s3n3I1dHv-015tVz; Sun, 01 Sep 2024 05:11:15 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: james@equiv.tech,
+	jlee@suse.com,
+	corentin.chary@gmail.com,
+	luke@ljones.dev,
+	matan@svgalib.org,
+	coproscefalo@gmail.com
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux@roeck-us.net,
+	jdelvare@suse.com,
+	rafael@kernel.org,
+	lenb@kernel.org,
 	platform-driver-x86@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>
-Subject: Re: [PATCH v2 1/4] driver core: Ignore 0 in dev_err_probe()
-Message-ID: <96a19237-9380-4173-9e52-e8295a0f4883@stanley.mountain>
-References: <20240822130722.1261891-1-andriy.shevchenko@linux.intel.com>
- <20240822130722.1261891-2-andriy.shevchenko@linux.intel.com>
- <ce59c3c6-8729-469f-a0df-b6844792e324@stanley.mountain>
+	linux-hwmon@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] platform/x86: wmi: Pass event data directly to legacy notify handlers
+Date: Sun,  1 Sep 2024 05:10:50 +0200
+Message-Id: <20240901031055.3030-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ce59c3c6-8729-469f-a0df-b6844792e324@stanley.mountain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:o4u3UKfkDSEUWuZoiSkM7PtXoWy76rIvZ2VcU48CiI7eEcJEO5r
+ hnvReU9imYCvaRBsbOCnGQohxmm6kFYlg8hsfJHA5kyaNk/HO8oKsdsi0xylGoLaAiqF74h
+ a6OZY/uGZ6IYg9zusX2t2W7jNJGTlAGLOwoiLd5To2mhaHp4Y5ve7XEVKvdf3cF67I+uNLK
+ 9snwFUEnKaOj/0GcPOAEg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:T6dhtErzGBg=;/T1T6/xYWinrkcrJReMWvJ1eTSi
+ fs1v3uhXNNlgIMTRiC2V/CQNtcVOOsGlyIHz3DIa1534awQoyxIU/70RqeakeSnF9YBY4yCrr
+ eweYXE6+VEfH+QUFqIyMO4Do3avivR1ehUq5NzUdMT+n1nm6twixMkw++5kk2GPe/dpGS1XfD
+ Rcwo+U85qQYWlWRhXIL2orXVcxBJSu1Vb32Td/YUfEx56rHWB+zPG0Kw3PbiW4/SzyWvPudyg
+ OBAtSbELDPh8bZVl4gWZZbPRN9RCZX5ZDpC71onGSpe5LcO9awzVkErR8FEoIfyQ1ruLYm9HJ
+ IsjGq47xZj4V6DBbRQ9H74vIdrmBMz4vE0jvMBIaNbHyG7dp/f/KRcGrg0xIk5e4/AFRmcHJO
+ XPufnBD3C4puPV8f9noqNF2x6FnZOckeUUNTenYwnmgwqr88sxnT5DLayeHaXbhv0gd0F3ueH
+ WjE2hOO1H9oesWbQBZX8iSb9WiCcEgOi1RwzGBYu6kkIm3zHcYWd2XVAe4EFqDKjtfHrChbiv
+ J6WYtAVvQ5QDbGqA0R18QCb7Pg0ImIjyqbz6UL+hkBC2zO14aDMqhyxILafVfCfSjcVHiK34m
+ 4LDXn7dwkeTna01Tm4drG3kH+cDNll+vuBaFfTNapht2EgF2sJIX6hRXVD9AT28EtyhFZNDT+
+ 9JPK+ij9p0TXflIk06XMeqik8mezI9Y+SblA9xEnfBvKw6Czo/9zdiec7FLeN9itU4oR+EtgG
+ qtPGjIuz9SnEMMlmIIQJoHw3CkvdpvLB/maR1Pcj3Y44Twmn+rywMu0yX1Ud6pz71SzNqQW85
+ kELaOEJJ5IgHIJlG2XToSZ7Q==
 
-On Sat, Aug 31, 2024 at 11:25:54AM +0300, Dan Carpenter wrote:
-> On Thu, Aug 22, 2024 at 04:05:38PM +0300, Andy Shevchenko wrote:
-> > In the similar way, ignore 0 error code (AKA "success") in
-> > dev_err_probe(). This helps to simplify a code such as
-> > 
-> >   if (ret < 0)
-> >     return dev_err_probe(int3472->dev, ret, err_msg);
-> > 
-> >   return ret;
-> > 
-> > to
-> > 
-> >   return dev_err_probe(int3472->dev, ret, err_msg);
-> > 
-> > Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> This is a terrible idea because currently Smatch is able to detect about one
-> bug per month where someone unintentionally passes the wrong error variable
-> to dev_err_probe().
+The current legacy WMI handlers are susceptible to picking up wrong
+WMI event data on systems where different WMI devices share some
+notification IDs.
 
-Here are the stats since Jan 2023.  All these bugs are impossible to detect now.
+Prevent this by letting the WMI driver core taking care of retrieving
+the event data. This also simplifies the legacy WMI handlers and their
+implementation inside the WMI driver core.
 
-2024-08-12 d3bde2243d42 iio: proximity: hx9023s: Fix error code in hx9023s_property_get()
-2024-07-08 101e5c5c4e76 PCI: qcom: Fix missing error code in qcom_pcie_probe()
-2024-02-22 debabbb1f272 iio: adc: ti-ads1298: Fix error code in probe()
-2024-01-08 9c46e3a5232d iio: adc: ad7091r8: Fix error code in ad7091r8_gpio_setup()
-2023-12-04 35ddd61cf023 platform/x86: x86-android-tablets: Fix an IS_ERR() vs NULL check in probe
-2023-11-20 2d37b3649c41 hwrng: starfive - Fix dev_err_probe return error
-2023-11-30 03219a3aa6c8 drm/imagination: Fix error codes in pvr_device_clk_init()
-2023-09-07 4b2b39f9395b watchdog: marvell_gti_wdt: Fix error code in probe()
-2023-08-24 8886e1b03669 ASoC: codecs: Fix error code in aw88261_i2c_probe()
-2023-06-23 ad5152b85e8b leds: aw200xx: Fix error code in probe()
-2023-07-18 86fe3e9f4c63 phy: starfive: fix error code in probe
-2023-07-12 0b64150c3429 Input: bcm-keypad - correct dev_err_probe() error
-2023-06-26 5fb2864cbd50 OPP: Properly propagate error along when failing to get icc_path
-2023-06-19 02474880e8fd ASoC: max98388: fix error code in probe()
-2023-05-25 cc5f2eb7ce11 mfd: tps6594: Fix an error code in probe()
-2023-05-22 1ca04f21b204 remoteproc: stm32: Fix error code in stm32_rproc_parse_dt()
-2023-05-15 46f5dd7439e3 fbdev: omapfb: panel-tpo-td043mtea1: fix error code in probe()
-2023-05-13 3530167c6fe8 soc: qcom: icc-bwmon: fix incorrect error code passed to dev_err_probe()
-2023-05-12 bc97139ff135 power: supply: rt9467: Fix passing zero to 'dev_err_probe'
-2023-03-23 c4351b646123 iio: adc: ti-ads1100: fix error code in probe()
-2023-02-27 65609d3206f7 i2c: gxp: fix an error code in probe
-2023-02-15 76f5aaabce49 ASoC: soc-ac97: Return correct error codes
+The fisr patch fixes a minor issue discovered inside the hp-wmi-sensors
+driver.
+The second patch converts all legacy WMI notify handlers to stop using
+wmi_get_event_data() and instead use the new event data provided by
+the WMI driver core.
+The remaining patches finally perform some cleanups.
 
-regards,
-dan carpenter
+The patch series was tested on a Dell Inspiron 3505 and a Acer Aspire
+E1-731 and appears to work.
+
+Changes since v1:
+- Rework the hp-wmi-sensors patch
+- add Reviewed-by tags
+
+Armin Wolf (5):
+  hwmon: (hp-wmi-sensors) Check if WMI event data exists
+  platform/x86: wmi: Pass event data directly to legacy notify handlers
+  platform/x86: wmi: Remove wmi_get_event_data()
+  platform/x86: wmi: Merge get_event_data() with wmi_get_notify_data()
+  platform/x86: wmi: Call both legacy and WMI driver notify handlers
+
+ drivers/hwmon/hp-wmi-sensors.c           |  20 +---
+ drivers/platform/x86/acer-wmi.c          |  16 +--
+ drivers/platform/x86/asus-wmi.c          |  19 +--
+ drivers/platform/x86/dell/dell-wmi-aio.c |  13 +--
+ drivers/platform/x86/hp/hp-wmi.c         |  16 +--
+ drivers/platform/x86/huawei-wmi.c        |  14 +--
+ drivers/platform/x86/lg-laptop.c         |  13 +--
+ drivers/platform/x86/msi-wmi.c           |  20 +---
+ drivers/platform/x86/toshiba-wmi.c       |  15 +--
+ drivers/platform/x86/wmi.c               | 143 ++++++-----------------
+ include/linux/acpi.h                     |   3 +-
+ 11 files changed, 53 insertions(+), 239 deletions(-)
+
+=2D-
+2.39.2
+
