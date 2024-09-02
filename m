@@ -1,55 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57A818455B;
-	Mon,  2 Sep 2024 11:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E8B1DAC51
+	for <platform-driver-x86@vger.kernel.org>; Mon,  2 Sep 2024 13:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725277105; cv=none; b=QGrNMYkeZMkpkCZDPHiYUretCqjxYrL30ERgYxJutD2TdAe1eCJo40fyW5y6C05cZ2J4w8FwcUcgOtKxmF9+T/dv/yaACb48KoPsugs2Qt/1NwY02B1E0ZEjxydyuWShYb3BlJA9wik67I68lpZmqPo2fUJXvlCZu2UonAWTJg8=
+	t=1725282739; cv=none; b=rhewDAbVeivYLdk3U11fbxeOw9Cif8FagZybFu/RBlSS+pcyIETYBEQBmUkqsdPKN1f8rzw5cO+kOjKibpmvqUQ+5klUPTW1zIHQ5x3UiwUTUg39Tk02KjWSwmQ09xy5e1LfIm8fu0a6UD80AlaD6vGJ1Pu/q5jMN4x4PR+/9kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725277105; c=relaxed/simple;
-	bh=4pnFvsWfkpHTyg9bH+andsa9SLKI4qCs7vP3a+fOQNM=;
+	s=arc-20240116; t=1725282739; c=relaxed/simple;
+	bh=x3yBT1ILkrDC8U5ubafV1b/0dDVsDNgbt6yll5nIIvo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uXU72omlfo2K5jhGNVCgKhW7xSI2GUxqe8lPZgJuwfwVzTPzaKVsy0VyN1aHRSF1IjAkhJj8XAgkpiUGHEwmiqx0Ow0CPt+szhF9lndAVk3JQC9iXAHCzwp9tDWZpOxv9lBYvKH7s8kkOjWpoz0hy4mKbPGEJNE8uu5WQ3eHRWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IoN4UyUg; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=sgNGKga+OV0fbdqlwPr8UkTKKW1ulZ18C2LT/+Ajl40j08c0JFLhu65YobwoCqKpJfNjArI/rMwtunlWfoR4SIUy/S+A/NkE78OKmmfdwcSiyssqhKfkkUXWYSyaDr/L0VdvqXJCbzUPO0h+pN63TvjADEA/yN50N8ZnviHAFPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GFab/gZ8; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IoN4UyUg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725277104; x=1756813104;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=4pnFvsWfkpHTyg9bH+andsa9SLKI4qCs7vP3a+fOQNM=;
-  b=IoN4UyUgW07QNtZ2MkWxcVPNp+1kfBfpDDsC+MsMVLGul9CPJ2wG/s9e
-   xPsr7vwvPW4fjMWg5excEeKK+szJ60saU0N27lkOsdyKYfcO/iDpRnC+w
-   NCyU81vIrl2HthHme0DL/g5RGIuYNzpXdl8VnvGRiiKrUrMKofTriT3oA
-   3IXdAbBrRaKLdF8I9R1Gw1S01prH/K+hgPcmFXCV7eDfiEgLg8RWxLm+I
-   1J3f81T2g/I3lE5DTyeJLC4q3nDKV2M8hurd18K8jx1PsuE/SDhlPXoQH
-   SMk3ubbbVgHL5MFyTEZrlCq+3563h1wWcCp0Zr8vKBlEYZGIwR00QdWJL
-   A==;
-X-CSE-ConnectionGUID: AGCk4bYwTIKZL5LQ2WhWbQ==
-X-CSE-MsgGUID: NPuUUgpxTmKwkpqfnpCUqQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11182"; a="41329986"
-X-IronPort-AV: E=Sophos;i="6.10,195,1719903600"; 
-   d="scan'208";a="41329986"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2024 04:38:23 -0700
-X-CSE-ConnectionGUID: FxSTbZA2RqO6adpzBr9uLg==
-X-CSE-MsgGUID: +aqW+f0uRaSw+4JQKcgwdg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,195,1719903600"; 
-   d="scan'208";a="64264954"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2024 04:38:21 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1sl5Ny-00000004LP4-23Gy;
-	Mon, 02 Sep 2024 14:38:18 +0300
-Date: Mon, 2 Sep 2024 14:38:18 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GFab/gZ8"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5c25dd38824so1546648a12.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 02 Sep 2024 06:12:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1725282736; x=1725887536; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=musVNQDKvzmrv2Dd3oJkXY3EwmSYf6C9caJmbUgvyp8=;
+        b=GFab/gZ8Y17c4PwH3FQa+JZ8PsORfI/NIca106d0Hqxp7oErP2CEhlmLKWnipl1gVj
+         AYmfslyzdW4nV/i8v1IXRftzynuB5OZ/16Du2CRuEHvJ/4PNqquX6+UXIvNjx1haucEG
+         ReaHM1CYB/EJNZPaNVOF85FmF50E7ZjZ4v9zq273DimsndyPnhmrvWqiEdSHgC4cGB9U
+         YqiLvE61/O2HmOKKgcyJESV6FTh3Tgivn6dNziUbknBaBnH/28pJLu8soRr3PNkP/Hxv
+         +HLOCPu/sIgG3GeshY0wrPiFXCvF6pUmuFJ5xqJi+tB2llVFd7ob4G3nBkC0Qt2ymOVh
+         htag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725282736; x=1725887536;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=musVNQDKvzmrv2Dd3oJkXY3EwmSYf6C9caJmbUgvyp8=;
+        b=isRofacAxJuORPVLPTjEvbmTkEqjIkSfHVMkyKtp83yNsWCSBYI6og7srfxZnfXgew
+         9IwZ8Hvo2tBrgXgjRvG2FdLcKihNhB+vVJ3m47mo2nLs02EjVOOzj4W2OCInyKgRaCep
+         Mx08KXaQEvKDVO/VHZmJ7Vz1m4ZfSsSLf000XMHZnWzJdr+r1cEE7a4cFfc6kIgSmedw
+         T9Jtzgnl8Enu7tZAJptGzFqFejGWCoRx5SERybi/Xn3sHMnWrHuuejOOVLtLvWtzLmzi
+         KPgU26jCZrgBH3JYwLl4Fw0kBtaJ3kXrRkhXohZW4Kf719GNhWWEfzgaGYw8YL6hbYUN
+         X70g==
+X-Forwarded-Encrypted: i=1; AJvYcCUnluw4+tDjg2bHcc30fLZ7X6ujAiClp8zmiGdf7cfqzjUW0MA5Aj3d56xY7EGdhb+yTXs74Yiv86zxKK7/16liO1TE@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyR6d7k6i2F+vsalW2wFLvSvHv0/RPNPgTpVQsBOM9UKkeFFZ/
+	MncaYtHktHLPV6QB8Q6S6X7mo/w+/ZI13asJt5ADNvfQmwkoQxR1HDhEveg+Gws=
+X-Google-Smtp-Source: AGHT+IFuVJPmt8V5CC71tl0q99QkKgR32iEzanxYFTNzoe7L94Odr6KgEieHvZGyvtKwdV9FR7zC6w==
+X-Received: by 2002:a05:6402:440b:b0:5be:fa76:55b4 with SMTP id 4fb4d7f45d1cf-5c2201ba0cemr16397334a12.16.1725282736097;
+        Mon, 02 Sep 2024 06:12:16 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c226c7c32dsm5240007a12.48.2024.09.02.06.12.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2024 06:12:15 -0700 (PDT)
+Date: Mon, 2 Sep 2024 16:12:11 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Baolin Wang <baolin.wang@linux.alibaba.com>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
@@ -58,100 +62,60 @@ Cc: Baolin Wang <baolin.wang@linux.alibaba.com>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
 	Daniel Scally <djrscally@gmail.com>
 Subject: Re: [PATCH v2 1/4] driver core: Ignore 0 in dev_err_probe()
-Message-ID: <ZtWjqkQUi74JFN1s@smile.fi.intel.com>
+Message-ID: <29f8532e-324a-4e06-b257-3ef9a037f93f@stanley.mountain>
 References: <20240822130722.1261891-1-andriy.shevchenko@linux.intel.com>
  <20240822130722.1261891-2-andriy.shevchenko@linux.intel.com>
  <ce59c3c6-8729-469f-a0df-b6844792e324@stanley.mountain>
  <96a19237-9380-4173-9e52-e8295a0f4883@stanley.mountain>
  <ZtWQcXerriSnWgf1@smile.fi.intel.com>
  <4e8fa6fa-89aa-422f-b603-e2a3e1a2c704@stanley.mountain>
+ <ZtWjqkQUi74JFN1s@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4e8fa6fa-89aa-422f-b603-e2a3e1a2c704@stanley.mountain>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <ZtWjqkQUi74JFN1s@smile.fi.intel.com>
 
-On Mon, Sep 02, 2024 at 02:10:41PM +0300, Dan Carpenter wrote:
-> On Mon, Sep 02, 2024 at 01:16:17PM +0300, Andy Shevchenko wrote:
-> > On Sat, Aug 31, 2024 at 11:53:51AM +0300, Dan Carpenter wrote:
-> > > On Sat, Aug 31, 2024 at 11:25:54AM +0300, Dan Carpenter wrote:
-> > > > On Thu, Aug 22, 2024 at 04:05:38PM +0300, Andy Shevchenko wrote:
-> > > > > In the similar way, ignore 0 error code (AKA "success") in
-> > > > > dev_err_probe(). This helps to simplify a code such as
-> > > > > 
-> > > > >   if (ret < 0)
-> > > > >     return dev_err_probe(int3472->dev, ret, err_msg);
-> > > > > 
-> > > > >   return ret;
-> > > > > 
-> > > > > to
-> > > > > 
-> > > > >   return dev_err_probe(int3472->dev, ret, err_msg);
-> > > > > 
-> > > > > Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> > > > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > > 
-> > > > This is a terrible idea because currently Smatch is able to detect about one
-> > > > bug per month where someone unintentionally passes the wrong error variable
-> > > > to dev_err_probe().
+On Mon, Sep 02, 2024 at 02:38:18PM +0300, Andy Shevchenko wrote:
+> > > I believe the number is only a few at most, which means that you may easily
+> > > detect this still with this change being applied, i.e. "anything that
+> > > terminates function flow with code 0, passed to dev_err_probe(), is
+> > > suspicious".
 > > 
-> > How many cases you know where smatch is false positive about this?
+> > I think you mean the opposite of what you wrote?  That if we're passing zero to
+> > dev_err_probe() and it's the last line in a function it's *NOT* suspicious?
 > 
-> This check has a very low false positive rate.
+> Yes, sorry, I meant "...terminates function flow _in the middle_...".
+> 
 
-Yes, that's my expectation as well.
+I don't think that works.  There are lots of success paths in the middle of
+functions.  Smatch already has code to determine whether we should return an
+error code or not.
 
-> There is only one potential
-> false positive in the current linux-next.  Let me add Baolin Wang to get his
-> take on this.  I never mentioned reported this warning because the code was old
-> when I wrote the check.
-> 
-> drivers/spi/spi-sprd-adi.c
->    550          ret = of_hwspin_lock_get_id(np, 0);
->    551          if (ret > 0 || (IS_ENABLED(CONFIG_HWSPINLOCK) && ret == 0)) {
-> 
-> Is it possible for the CONFIG_ to not be enabled but ret is zero?
-> 
->    552                  sadi->hwlock =
->    553                          devm_hwspin_lock_request_specific(&pdev->dev, ret);
->    554                  if (!sadi->hwlock) {
->    555                          ret = -ENXIO;
->    556                          goto put_ctlr;
->    557                  }
->    558          } else {
->    559                  switch (ret) {
->    560                  case -ENOENT:
->    561                          dev_info(&pdev->dev, "no hardware spinlock supplied\n");
->    562                          break;
->    563                  default:
->    564                          dev_err_probe(&pdev->dev, ret, "failed to find hwlock id\n");
->                                                           ^^^
-> 
->    565                          goto put_ctlr;
->    566                  }
->    567          }
-> 
-> 
-> > I believe the number is only a few at most, which means that you may easily
-> > detect this still with this change being applied, i.e. "anything that
-> > terminates function flow with code 0, passed to dev_err_probe(), is
-> > suspicious".
-> 
-> I think you mean the opposite of what you wrote?  That if we're passing zero to
-> dev_err_probe() and it's the last line in a function it's *NOT* suspicious?
+1) Was there a function that returned NULL
+2) Was there a function that returned an erorr code/error pointer
+3) Was there a bounds check where x >= y?
+4) Did we print an error code?
+Etc..
 
-Yes, sorry, I meant "...terminates function flow _in the middle_...".
+I'd end up re-using this code.  This heuristic is more error prone, so there
+would be false positives and missed bugs but I can't predict the future so I
+don't know how bad it would be.  Looking through the warnings, we still would be
+able to detected a number of these because Smatch warnings when you pass NULL to
+IS_ERR() or PTR_ERR().
 
-> Otherwise, I don't really understand the heuristic you're proposing.
+Probably the worse thing from a Smatch perspective is that now I can't just
+assume that dev_err_probe() is always an error path.  So for example, we know
+that *foo is always initialized on success so we can eliminate all the
+"return dev_err_probe();" paths because those are failure path.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I'm never going to like this patch because I always want to make the error paths
+more separate and more clear.
 
+regards,
+dan carpenter
 
