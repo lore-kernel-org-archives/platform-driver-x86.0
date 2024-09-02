@@ -1,68 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624C461FEB;
-	Mon,  2 Sep 2024 10:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5293713B284;
+	Mon,  2 Sep 2024 10:19:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725272295; cv=none; b=HLtDix99Cy/b3uCFtyj1cByZOW0dQrruGvd1SVKrzoHgbN2T1Al/XkxSME+WN4Wmek8yo8OIKeXPEY55MnSgAqiHdY9IttIGyZKz996zqClQ7YZRqSrBru3XSLTLua7a78xt+NB0W6nCgv5xyvzRNW5FErbmi0vsYeEjUc7Pcjs=
+	t=1725272352; cv=none; b=trNUbUafdZuYkgINJEaivoTgxx+rraRJlfA97tAoQs0P4j0s5ww3Umd1OrGOZ8+msPkkeIA9Ktlu4sF2T5wH5E/5oxCXW3Soq2TXtu42bepoMbgu2QDM+wjFd7YItcU8wwK1OWbU0HT3hbm9eUWJbvoytBd4qhvXOVgMNsY8BFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725272295; c=relaxed/simple;
-	bh=GaMmyKHdZWZAQw653fQ+MGXw3Ni90psnatbML82zq10=;
+	s=arc-20240116; t=1725272352; c=relaxed/simple;
+	bh=NGkgT9iAC3JSZzqhTF0bmbuB4C+mzkBbp0PHCab20Ho=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HwFOzz5n9hAq1QDSoSiwE9TlAHCV2EWiqEjYnElUjTzJEdNDon6hzR29hX+4BzSpSGisCmC7mtvOMk+Ra8p4hb5CElflbyH6Igu3ISbh6Ma54S2KFOllmuOSn8Oq9vJdNRISq7BMkS+OJMYDWsQ4vIhU9rxbt7FDoXnSbYXrOCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MhR9r9xK; arc=none smtp.client-ip=192.198.163.16
+	 Content-Type:Content-Disposition:In-Reply-To; b=AJyq/LyCr/9J3UUVvqvl6clOFTSWH+1QUE2ElzrFqIegjaeTfpdl2xaet13xwVL31dKLQ1Z5GrE1sHZIlE4bxH78/8a9g9B6e+bDS7LGD3h2ltkNuEF+nYCrIhnXdkiNTUCrAEtQmGaJKDgSHrTRwKn1NPGcfAaoLI4KwDtGLEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e8guYUIn; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MhR9r9xK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e8guYUIn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725272292; x=1756808292;
+  t=1725272352; x=1756808352;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=GaMmyKHdZWZAQw653fQ+MGXw3Ni90psnatbML82zq10=;
-  b=MhR9r9xKu3eUC2D+IE6qG1tJn90TujtwLGvv55eqxmdUx+40rIz/zXud
-   PfhATDz2/JgHIdpVL8i6mivDgmXbbr+EzuRwC8J7axOM3KcoyvnWsFrhr
-   mlYsIPLTYSG+T5xi+UYB4cAz9pT83KA7svl37YHbVDnU5uxc71VaDJykf
-   WDtCeTEZNev/McvSbYsOAUl/JEQT4gtFlIhh3Hs469nts54Iwt+89icrs
-   cg1gkbnyNfVMtIkFzHsr0z3G4A6PVDcEizX6CnlbM4nforG0+9DtdZXxf
-   OAvZmdIprNaBiFZObF1Pav4K2/0QV2oQNCdYbKbQLdcEncTsifHpQ7ZXX
+  bh=NGkgT9iAC3JSZzqhTF0bmbuB4C+mzkBbp0PHCab20Ho=;
+  b=e8guYUIncZFcayo8PLfhu0yXbJGr7h65+DjGqy5WLL8iKxP23BLxlWIi
+   itARzHOuYFUCI53PigrTyj7UPf63SHqiltJzPY1Faa6s37EiEtr2Eqds5
+   TtulQSYO24aHF8giU8P4/00cW77mJtez31m+RrjieZB0g5Iya+4MRMGpI
+   qDXWOeuO3QS6RA0b3s8znM0X36BfJ01CGsTni/+SNAurlk2LIQ0YZgwJg
+   MpA3R7HryZVw/343m9UeMXz4uymZ18K7EyNF5xIGKW5t5ZCQ7X7gpaDR2
+   LMyefC/Q48C1KFpIazJ584yTvm0TNUQN2vIsf+KCHmu8Q97oRhaDPxO/q
    A==;
-X-CSE-ConnectionGUID: arTVof5dS+qkDX1cBrbpMg==
-X-CSE-MsgGUID: myL9FmOiTUG7cgBCoMTNag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11182"; a="13328524"
+X-CSE-ConnectionGUID: AXoVV42SSoKHk2yvUs72Tg==
+X-CSE-MsgGUID: lGj5PFahR8WMsC7qUgMtrA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11182"; a="34412730"
 X-IronPort-AV: E=Sophos;i="6.10,195,1719903600"; 
-   d="scan'208";a="13328524"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2024 03:18:11 -0700
-X-CSE-ConnectionGUID: 3inN7/nQQ+y50FdryI0b5A==
-X-CSE-MsgGUID: CAbety6mRYy+tohwK0HG3Q==
+   d="scan'208";a="34412730"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2024 03:19:11 -0700
+X-CSE-ConnectionGUID: P9gMKnGpTcWtfb70K6cfOA==
+X-CSE-MsgGUID: nA2CLyYMS0Sygclm9Hvd2g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,195,1719903600"; 
-   d="scan'208";a="95277957"
+   d="scan'208";a="69188555"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2024 03:18:08 -0700
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2024 03:19:09 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1sl487-00000004Jep-1vmR;
-	Mon, 02 Sep 2024 13:17:51 +0300
-Date: Mon, 2 Sep 2024 13:17:51 +0300
+	id 1sl49K-00000004JgD-2JNj;
+	Mon, 02 Sep 2024 13:19:06 +0300
+Date: Mon, 2 Sep 2024 13:19:06 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: oe-kbuild@lists.linux.dev,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, lkp@intel.com,
-	oe-kbuild-all@lists.linux.dev,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
+	platform-driver-x86@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 	Daniel Scally <djrscally@gmail.com>
-Subject: Re: [PATCH v2 2/4] platform/x86: int3472: Simplify dev_err_probe()
- usage
-Message-ID: <ZtWQzwvo7f0QfeCI@smile.fi.intel.com>
-References: <20240822130722.1261891-3-andriy.shevchenko@linux.intel.com>
- <20dd56f0-78ea-4255-86ac-32151160b83d@stanley.mountain>
+Subject: Re: [PATCH v2 0/4] platform/x86: int3472: A few cleanups
+Message-ID: <ZtWRGgb-ZsLp25np@smile.fi.intel.com>
+References: <20240822130722.1261891-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -71,38 +66,18 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20dd56f0-78ea-4255-86ac-32151160b83d@stanley.mountain>
+In-Reply-To: <20240822130722.1261891-1-andriy.shevchenko@linux.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Sat, Aug 31, 2024 at 11:31:53AM +0300, Dan Carpenter wrote:
-> Hi Andy,
+On Thu, Aug 22, 2024 at 04:05:37PM +0300, Andy Shevchenko wrote:
+> A few cleanups to the driver. It includes an amendment to
+> dev_err_probe() to ignore 0 error code. The patches 1 and 2 are
+> dependent, while patches 2 and 3 may be applied in any order.
 > 
-> kernel test robot noticed the following build warnings:
-> 
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/driver-core-Ignore-0-in-dev_err_probe/20240826-113856
-> base:   driver-core/driver-core-testing
-> patch link:    https://lore.kernel.org/r/20240822130722.1261891-3-andriy.shevchenko%40linux.intel.com
-> patch subject: [PATCH v2 2/4] platform/x86: int3472: Simplify dev_err_probe() usage
-> config: i386-randconfig-141-20240830 (https://download.01.org/0day-ci/archive/20240831/202408310807.sNPe5Mr2-lkp@intel.com/config)
-> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> | Closes: https://lore.kernel.org/r/202408310807.sNPe5Mr2-lkp@intel.com/
-> 
-> smatch warnings:
-> drivers/platform/x86/intel/int3472/discrete.c:292 skl_int3472_handle_gpio_resources() error: uninitialized symbol 'err_msg'.
-> drivers/platform/x86/intel/int3472/discrete.c:292 skl_int3472_handle_gpio_resources() warn: passing zero to 'dev_err_probe'
+> Assumed to go via PDx86 tree if no objections to the code.
 
-Okay, I might agree on the err_msg, which is good to have to be passed anyway.
-In such a case it might be good to have a dev_dbg() in the dev_err_probe() to
-say that it is likely a bug in the code.
-
-Would you accept that approach?
+Ilpo, Hans, the patches 3 and 4 are independent from 1&2 and may be applied
+separately, if you have no objections.
 
 -- 
 With Best Regards,
