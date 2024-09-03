@@ -1,156 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C40188929;
-	Tue,  3 Sep 2024 15:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B311422A2;
+	Tue,  3 Sep 2024 17:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725378028; cv=none; b=BVqbxqpE56HF26WI5CUPFHGR6pH2po1olSdZl72ixBRDBL8OMPHkjQ3jd6XUTgeCUjXX/xrfWU3VUwvnIqVIRbmpzz04fq0Vz/33PVoQ3ZxgUGJqiml2hZBN70bg4efmPhdiCm0MF/YG5XBtv6SsK22++vB58dgo7vWVf8Vfuhw=
+	t=1725384564; cv=none; b=gJPh4HD69bTBd0bwlfWwz4mYxXv8/Wx+z43kfIcSYzzQATbclMB/EJNShGNBye5LvnWTP2QJL0JpFiBHRulJDgTWqvxoG/nPehXpNJ2gyilqNlctl81IazDj4a+1G79hVooG/fSvGyFP18bPz3wBMgfLfzkvzIPV7iDnfLDjvnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725378028; c=relaxed/simple;
-	bh=LwT0DlrGGH8heL10AfjDdQBTi3BDUJzBfZBunyRNztI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=poVNfeCW2KLfRPzVIrTrrQmZheA1WZfWBgxo+09oscGqZSYF3nTzCVp8ZcxPJRP01Et5UWTo1+aVwbaL0Byby2Kd+Bg3O564e1faQWQ6VULn0CHy63N4jGkZU5R55cz3fg7S1/DZIlBYrx9sF46Gvqq/FU7OMtLRcylj15Ss3pM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YvBy7Qdj; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1725384564; c=relaxed/simple;
+	bh=X+It1Q+O3EWWhaFLasZspBDEgcTY0pnKmXSZoLiTvp0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dggPHqrT60f/hAurXUjSXxFGZdbXdEIAGxILIi2rx1CIv+Z8MWszk/OwcubBIUjne6kliTUvYcD34D5R5sJb+uTNVEttNi/9qtn8oJwBL3uUwZMmvMk4D6S3Y29IK7xgPwNNe81gzvSjwNk2Cme1/wxTlEK4QHNrgeH3oQIUn0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=matthias-fetzer.de; spf=pass smtp.mailfrom=matthias-fetzer.de; dkim=pass (2048-bit key) header.d=matthias-fetzer.de header.i=@matthias-fetzer.de header.b=TlSHP2C+; arc=none smtp.client-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=matthias-fetzer.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matthias-fetzer.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YvBy7Qdj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725378026; x=1756914026;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LwT0DlrGGH8heL10AfjDdQBTi3BDUJzBfZBunyRNztI=;
-  b=YvBy7QdjRVdC71ll6aSimxvdU6914ImH3tehiHjudOOjYOKJ6P7QGarc
-   AthVKnSgpemjU5HIeEWKNhf3RJoOWD2CIbtkWEunS399jytVFkNP24Y6h
-   hq+InBhe1eUZXLcaJ5ybBI80gjHaYEQujiWn3dKJn4TKeKhtShAmVQRRt
-   9nXc0GoiF7DuuAaCdSNNsqkH8jJ4aZ6IAsDFLzawzbiIGYYUATtW45hLI
-   Bxveh6jLFpcWK+px1EkL9GiCi40AMbya9LCwi1QMRHO0Qg6FGDUFtXvQH
-   enOBB1aBzA4BR3Evwr2UP3YL/p+Vozr9bgL18Av9KVeYJKkr3kpvX3UQs
-   w==;
-X-CSE-ConnectionGUID: i/QP5J0/QhmH1+bq3LtOcw==
-X-CSE-MsgGUID: Xot56LjRSGCWzDHR17y0Qg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11184"; a="23552238"
-X-IronPort-AV: E=Sophos;i="6.10,199,1719903600"; 
-   d="scan'208";a="23552238"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2024 08:40:25 -0700
-X-CSE-ConnectionGUID: i7ETKaiJR7CA9WG5IhVYnQ==
-X-CSE-MsgGUID: yMTHsEq0T42gSF9Sa052ag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,199,1719903600"; 
-   d="scan'208";a="64945293"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2024 08:40:21 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1slVdg-00000004kvO-27Xs;
-	Tue, 03 Sep 2024 18:40:16 +0300
-Date: Tue, 3 Sep 2024 18:40:16 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Gergo Koteles <soyer@irl.hu>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ike Panhc <ike.pan@canonical.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v1 1/1] platform/x86: ideapad-laptop: Make the
- scope_guard() clear of its scope
-Message-ID: <Ztct4P_PvQmeq_ih@smile.fi.intel.com>
-References: <20240829165105.1609180-1-andriy.shevchenko@linux.intel.com>
- <cf8c73dd91dbbb11b562a5e0d9ac6b4035c32d28.camel@irl.hu>
- <Ztcn2Yu2TNSOYbhP@smile.fi.intel.com>
- <0e53a8b6eeb457f11a8a514b12c0598d1727b43d.camel@irl.hu>
+	dkim=pass (2048-bit key) header.d=matthias-fetzer.de header.i=@matthias-fetzer.de header.b="TlSHP2C+"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4Wyt0B2k2Vz82xJ;
+	Tue,  3 Sep 2024 19:29:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=matthias-fetzer.de;
+	s=key2; t=1725384554;
+	bh=X+It1Q+O3EWWhaFLasZspBDEgcTY0pnKmXSZoLiTvp0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TlSHP2C+djXO1zdVTHIX+TjCGWXjilUH2RZk6qAxYFqLSF7McOlutkq3Uvqy0B8+j
+	 D/DsbRWfOMMBZw0aKrEYvYZhbGdgqDQ1FfgBbHtpSQQF3szU6ufMXl8ZmYTaGrRUVZ
+	 Oo/sJCsBhFpapIMn95JrKqkDrERDrpt3Gd9x+VGzALjgUicQeZiro0hu4O0D0i1gZ9
+	 x+bNbOn8laMd8ZutJ6RrbBfTw49fmkOe13SOBwvqsIjbNdl0H4uM5R9iGxLRQEgRHv
+	 06GsRCfJQZIFEz3mGVIBRxUpCVseY5bZ3UP1e5hKoVNYnaxyyA7DGaP9rqD58Kajrl
+	 1Zki+oNo9kRUg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4Wyt0B2J01z82x0;
+	Tue,  3 Sep 2024 19:29:14 +0200 (CEST)
+Received: from mxf9a3.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4Wyt094sglz8sZP;
+	Tue,  3 Sep 2024 19:29:13 +0200 (CEST)
+Received: from matthias-pc.lan (unknown [IPv6:2001:9e8:1a7b:9200:6f4:7bfc:1c9b:cef9])
+	by mxf9a3.netcup.net (Postfix) with ESMTPSA id 9FC98403FC;
+	Tue,  3 Sep 2024 19:29:08 +0200 (CEST)
+Authentication-Results: mxf9a3;
+	spf=pass (sender IP is 2001:9e8:1a7b:9200:6f4:7bfc:1c9b:cef9) smtp.mailfrom=kontakt@matthias-fetzer.de smtp.helo=matthias-pc.lan
+Received-SPF: pass (mxf9a3: connection is authenticated)
+From: Matthias Fetzer <kontakt@matthias-fetzer.de>
+To: hmh@hmh.eng.br,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Matthias Fetzer <kontakt@matthias-fetzer.de>
+Subject: [PATCH] platform/x86: thinkpad_acpi: Fix uninitialized symbol
+Date: Tue,  3 Sep 2024 19:27:56 +0200
+Message-ID: <20240903172756.19235-1-kontakt@matthias-fetzer.de>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0e53a8b6eeb457f11a8a514b12c0598d1727b43d.camel@irl.hu>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <172538454916.15387.9593674090575639921@mxf9a3.netcup.net>
+X-Rspamd-Queue-Id: 9FC98403FC
+X-Rspamd-Server: rspamd-worker-8404
+X-NC-CID: IrmD5ESUPMxoygiOMo4UGzgyFQ9Tu0sWPlxg5oePxK7yIb4C+64KVRv0
 
-On Tue, Sep 03, 2024 at 05:29:02PM +0200, Gergo Koteles wrote:
-> On Tue, 2024-09-03 at 18:14 +0300, Andy Shevchenko wrote:
-> > On Tue, Sep 03, 2024 at 05:00:51PM +0200, Gergo Koteles wrote:
-> > > On Thu, 2024-08-29 at 19:50 +0300, Andy Shevchenko wrote:
-> > > > First of all, it's a bit counterintuitive to have something like
-> > > > 
-> > > > 	int err;
-> > > > 	...
-> > > > 	scoped_guard(...)
-> > > > 		err = foo(...);
-> > > > 	if (err)
-> > > > 		return err;
-> > > > 
-> > > > Second, with a particular kernel configuration and compiler version in
-> > > > one of such cases the objtool is not happy:
-> > > > 
-> > > >   ideapad-laptop.o: warning: objtool: .text.fan_mode_show: unexpected end of section
-> > > > 
-> > > > I'm not an expert on all this, but the theory is that compiler and
-> > > > linker in this case can't understand that 'result' variable will be
-> > > > always initialized as long as no error has been returned. Assigning
-> > > > 'result' to a dummy value helps with this. Note, that fixing the
-> > > > scoped_guard() scope (as per above) does not make issue gone.
-> > > > 
-> > > > That said, assign dummy value and make the scope_guard() clear of its scope.
-> > > > For the sake of consistency do it in the entire file.
-> > > > 
-> > > 
-> > > Interestingly, if I open a scope manually and use the plain guard, the
-> > > warning disappears.
-> > 
-> > Yes, that's what I also have, but I avoid that approach because in that case
-> > the printing will be done inside the lock, widening the critical section for
-> > no benefits.
-> > 
-> 
-> This is intended to be an inner block scope within the function, it
-> does not expand the critical section.
+When the TPACPI_FAN_WR_ACPI_FANW branch is taken s stays uninitialized
+and would be later used in a debug print.
 
-I'm not sure I understand.
+Since the registers are always set to the same two static values inside the
+branch s is initialized to 0.
 
-scoped_guard() has a marked scope (with {} or just a line coupled with it).
-The guard() has a scope starting at it till the end of the function. In the
-latter case the sysfs_emit() becomes part of the critical section.
+Signed-off-by: Matthias Fetzer <kontakt@matthias-fetzer.de>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > > 	unsigned long result;
-> > > 	int err;
-> > > 
-> > > 	{
-> > > 		guard(mutex)(&priv->vpc_mutex);
-> > > 		err = read_ec_data(priv->adev->handle, VPCCMD_R_FAN,
-> > > &result);
-> > > 		if (err)
-> > > 			return err;
-> > > 	}
-
-But looking again into the code above now I got what you meant.
-You have added a nested scope inside the function, like
-
-	do {
-		...
-	} while (0);
-
-Yes, this is strange and not what we want to have either. So I prefer to hear
-what objtool / clang people may comment on this.
-
-Sorry that I missed this.
-
-> > > This looks a bit strange, but is probably easier for the compiler than
-> > > the for loop of scoped_guard.
-> > > 
-> > > But I don't know how well this style fits into the kernel.
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 8f7053920884..4c1b0553f872 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -8318,7 +8318,7 @@ static int fan_set_level_safe(int level)
+ 
+ static int fan_set_enable(void)
+ {
+-	u8 s;
++	u8 s = 0;
+ 	int rc;
+ 
+ 	if (!fan_control_allowed)
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.46.0
 
