@@ -1,101 +1,84 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A933186E51;
-	Tue,  3 Sep 2024 15:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEF517E00C;
+	Tue,  3 Sep 2024 15:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725375963; cv=none; b=FBnSgP2j0qkpDQzyY2WZ2x7Bd/NtpouYOiOz9rSacQpyV+AvFH2XhdLu4kKZITT/CIfYZ5jeIjaBft9v1RnXAZWMuso/DF2XHZjhlQkc9xv3/SSqks7oA598CazZ21cecMDi5WozoFFhQ4HrOIK0/gQsbLQVJLpB180DquNUWEI=
+	t=1725376145; cv=none; b=cCV0qD4+JgpMhgSAnhCqnQWyxcMhXR1jrnwYPgA+ItJtxGTBDhblMPDkk5DrtXCGzDfkENiiWflmeuvFaFld+segk6dAGrPXjGip/KvIWKZyhO/dQAl0YJwvL1pkppHTCwFvSOw/IEKw3pOWvcPugYB4FjnmVt68JRUw2EtuFNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725375963; c=relaxed/simple;
-	bh=Za5OvjXDVHbXWWe2B5O1GEiRe7xMQzAUlxeC123sewU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BRcRn6PQEsk3Q0GOQlVdC+wQfkzZcFsB2qYnEYeqkOiC69ZvaYILc5DwjdX1yK5Ycng+v3hZ3wl00Fg5Z4WIV8/sX3aF0AOLwzJqAHo8c8SQ/Sl3F1/0C2fzATp12cWcm7U7n+y3aCNW9Uf9x3QtogxJf62/pRmHenwdcNQJ5Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from fedori.lan (51b687c4.unconfigured.pool.telekom.hu [::ffff:81.182.135.196])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 0000000000076028.0000000066D724A4.001E8EC5; Tue, 03 Sep 2024 17:00:52 +0200
-Message-ID: <cf8c73dd91dbbb11b562a5e0d9ac6b4035c32d28.camel@irl.hu>
-Subject: Re: [PATCH v1 1/1] platform/x86: ideapad-laptop: Make the
- scope_guard() clear of its scope
-From: Gergo Koteles <soyer@irl.hu>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-  Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-  Hans de Goede <hdegoede@redhat.com>,
-  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ike Panhc <ike.pan@canonical.com>,
-  Peter Zijlstra <peterz@infradead.org>,
-  Josh Poimboeuf <jpoimboe@kernel.org>,
-  Nathan Chancellor <nathan@kernel.org>,
-  kernel test robot <lkp@intel.com>
-Date: Tue, 03 Sep 2024 17:00:51 +0200
-In-Reply-To: <20240829165105.1609180-1-andriy.shevchenko@linux.intel.com>
-References: <20240829165105.1609180-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	s=arc-20240116; t=1725376145; c=relaxed/simple;
+	bh=zm4/QGk9CS+/IIoe1jxwGscR7TcTiBk2vzixJgadSOY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=K0SjZCn+YnB3Xm715hKoh+Bl9w+uQDJCA3lwxIzad7rzXlNF/cSkXFd+HwZALIFD4h3i/XARwHqXQXeJYWaAVCjIRJhMqv1gK/fO988IG8YnFdLEEH4mD57hdVYjotmZA76gA6lytyDMOGIlPgRyYOYqWXcr6mrFJrAlfVARtgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kOEKiEJj; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kOEKiEJj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725376143; x=1756912143;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=zm4/QGk9CS+/IIoe1jxwGscR7TcTiBk2vzixJgadSOY=;
+  b=kOEKiEJj39cq0MGh1Jb4rRtgh9LTcM5rI+PRy/+V8xiXad7F19tFejvj
+   rZ/j8jJHl5d8iHw+3XpnBoFhQjW4DNJCQnbeIzCZp92zOD3nIYmxHwVM3
+   au26Fa4BBpFtf922XKTYbyyOey2b1dIZY0nBYPo5h8F6uVhwKfRmUKYb4
+   IaWYkQud3i3lvEImtGhPnJb+qA66Mr3shD9upgpjQ7DpyjAcAfB3UobBr
+   J57epqD+tzAc7s0bphYTrpKK95l3Sg/b6vtbHu1pF4MhN9J4GGQGnX9hq
+   +QmeWworUvO2vM2Orqnh+lpMdsHrAQETlz8MyJaDItrrpa/6q+Pi9r1aN
+   w==;
+X-CSE-ConnectionGUID: dENiJ4N4SqO6NzOk/moixg==
+X-CSE-MsgGUID: F8x+JcXISlCVn6FAhwprOQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11184"; a="34646765"
+X-IronPort-AV: E=Sophos;i="6.10,199,1719903600"; 
+   d="scan'208";a="34646765"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2024 08:08:59 -0700
+X-CSE-ConnectionGUID: ExhaOXuoR/m2Wujb7/2knQ==
+X-CSE-MsgGUID: tn+oqKbTQ1GEW2v07FGHmw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,199,1719903600"; 
+   d="scan'208";a="95671930"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.244.241])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2024 08:08:56 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: platform-driver-x86@vger.kernel.org, "Luke D. Jones" <luke@ljones.dev>
+Cc: linux-kernel@vger.kernel.org, hdegoede@redhat.com, 
+ Shyam-sundar.S-k@amd.com
+In-Reply-To: <20240831003905.1060977-1-luke@ljones.dev>
+References: <20240831003905.1060977-1-luke@ljones.dev>
+Subject: Re: [PATCH] platform/x86/amd: pmf: Make ASUS GA403 quirk generic
+Message-Id: <172537613010.2288.8288166885849253035.b4-ty@linux.intel.com>
+Date: Tue, 03 Sep 2024 18:08:50 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-Hi Andy,
+On Sat, 31 Aug 2024 12:39:05 +1200, Luke D. Jones wrote:
 
-Thank you for addressing this.
+> The original quirk should match to GA403U so that the full
+> range of GA403U models can benefit.
+> 
+> 
 
-On Thu, 2024-08-29 at 19:50 +0300, Andy Shevchenko wrote:
-> First of all, it's a bit counterintuitive to have something like
->=20
-> 	int err;
-> 	...
-> 	scoped_guard(...)
-> 		err =3D foo(...);
-> 	if (err)
-> 		return err;
->=20
-> Second, with a particular kernel configuration and compiler version in
-> one of such cases the objtool is not happy:
->=20
->   ideapad-laptop.o: warning: objtool: .text.fan_mode_show: unexpected end=
- of section
->=20
-> I'm not an expert on all this, but the theory is that compiler and
-> linker in this case can't understand that 'result' variable will be
-> always initialized as long as no error has been returned. Assigning
-> 'result' to a dummy value helps with this. Note, that fixing the
-> scoped_guard() scope (as per above) does not make issue gone.
->=20
-> That said, assign dummy value and make the scope_guard() clear of its sco=
-pe.
-> For the sake of consistency do it in the entire file.
->=20
 
-Interestingly, if I open a scope manually and use the plain guard, the
-warning disappears.
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
 
-	...
-	unsigned long result;
-	int err;
+The list of commits applied:
+[1/1] platform/x86/amd: pmf: Make ASUS GA403 quirk generic
+      commit: d34af755a533271f39cc7d86e49c0e74fde63a37
 
-	{
-		guard(mutex)(&priv->vpc_mutex);
-		err =3D read_ec_data(priv->adev->handle, VPCCMD_R_FAN,
-&result);
-		if (err)
-			return err;
-	}
-	...
-
-This looks a bit strange, but is probably easier for the compiler than
-the for loop of scoped_guard.
-
-But I don't know how well this style fits into the kernel.
-
-Best regards,
-Gergo Koteles
+--
+ i.
 
