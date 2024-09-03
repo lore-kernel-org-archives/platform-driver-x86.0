@@ -1,45 +1,46 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2073.outbound.protection.outlook.com [40.107.95.73])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2063.outbound.protection.outlook.com [40.107.92.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742DC1C986E
-	for <platform-driver-x86@vger.kernel.org>; Tue,  3 Sep 2024 12:38:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A911B12F0
+	for <platform-driver-x86@vger.kernel.org>; Tue,  3 Sep 2024 12:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.63
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725367136; cv=fail; b=YcQYjcodEcCiiGNidrr5lSRrOT04KWeVgaBG9rB9y5s6oZvhtXWiDQYoS94191FU6SjIke2hA7sxe+m6gKHypGk4OXXnyp4Y8qdHp8NtLOlEvnRJSH3IlA1plGiJO5bz+n+wk6GE784S7NwtNy9blfJrA+gBmguP63fdC6QaQbg=
+	t=1725367138; cv=fail; b=mxKoBBg+9MjUldAERDozsGRSglepVcsE4+NNc3CfI0qVNUZ4+acsnDAB7F1hmtyNvNzmEtOf6pvjAGtK4Ts3CgG4P7GUFl6tudqs0xBW97NqbwbxRy8aLZd23OChEW5RvWisdGUxbnWhOnPe58r5BnTpDAl+DftrHxo2sJVPAJc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725367136; c=relaxed/simple;
-	bh=0zQB0sC41AEeh4pxd44KTM8BSemWdGTV4VcCtFDTggA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=j1bigUwch/E0Szl35r/oSoOcm8hveDjXXu8mH29DsVtg8kFfc4tE4QNLkvtJ0UIa6yiXZob5dwOf0V/ddQjlaCR+Jbj5tRVhWZoEhe43/NWUySIG+XKS8JCzipEztUxeqeEbMGy4r2xlfljjRyCnyYgPPrpjSL87nLn/QEbj2JA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YSPzi7NX; arc=fail smtp.client-ip=40.107.95.73
+	s=arc-20240116; t=1725367138; c=relaxed/simple;
+	bh=qvdmhoZbkZ9MIHwM9eP40DAREQeem5tH7XoYNWnP4IE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SKFBeYzr3M2SM40RetcWLmcVRhq84ZhNowd7oPnUKne3rDiGv4uk9aPYp4uq4NGDbiWOjWEVZgmmq+YMTp+z4tle1V3mtZUGcRsqoKDuyU+QqjmNEiOrOZ3/vjall23NWQi/e+ivUHLnzSJOgd+ai8Tzdk0A7ezZ3b1e/L3y/84=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IglE+Btf; arc=fail smtp.client-ip=40.107.92.63
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YSPzi7NX"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IglE+Btf"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Q3ZcHzi8sGrINCtgKxSPDCS8Nev9Dzdc3xrmJ5tDkHsmN00MHKzxe2Age/2/5Dtnbfhx4lfAUcmm8H3aUy46EEAhC6LTehSaxWgqG6dU4iNl84NVLEOxQ2P4oI81S0uLGijuObL16e61xn+c3ZyYeEK0UiarGHS96VBA6f7xq1da2siUvMPr9mj0fThhG5COrBrKCz3YmC89Z3MyY5ryDiCNZz7rMlftJ0af4qRDc0vIq4pMV+n2116Vt5Uaejh6vepxcuq40cGY7cgteUVrHKX48xEFnKoZJLfy21/D5KlzakDMJ9u5kxsxNCLEqEwHQQBwd8eydVQYJjLJuoG3lg==
+ b=iVSYhJcdkRzEcgwLdhLgcNi7NfN+LHV+aqWdTRQg6GxW6jSywufHmtQSO0A4FWKMnt0S3f4qAE3snm7xNaYeV7yIqQ3LBF6ot7/flQTNuLzgdNRe3CDEqC8/KuaSllNn1NIhHe6pMPwcelYGI+DXAWF36MoelfwtjGZr5UG2Illcazq+AOwLkG2m2zpvaQNbw6gchcmZ9TohKVH+ygG3hkOxUI95CJUIFAPtTcpxYiBPUPOawS5iMVUNSQ2ag5QMLJhYF9cliJaWFhB2lKggx7gqFjMAv6l2B328sv4Xl3Mg5awOMo9jTCFr7MOPxENyulBRnhCCdPwYabyt8k25Pw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PuZqnnbSx5XLBP3/Dc7T8tawb9PK0S4u/b+Do08Rjpk=;
- b=HbZB99/sg8LXcnTsCKA71067RXuCANF8manISUYPBzyaReQsjKffW6ZI7VQWg5Mj3Hr3TtlErQme2Mt2W2p1/beZBCPKEyQEPcgV1GNfJWaHqSdpSs3H2EO4w+K6gjFhbFOViuDKKd9Lv+HFtjqPygb3pkhsD/KFq7QsuhU+5q6DhnzXgUSBaJppNo0pWiBPIvBubqGao6i1jFtkqoqVfKAnrOjSfF+PiY4qWsg5/GOm2J0ItjyePQf9qxbcskNqIkF4CZSAeYkl5SUYIUNb7I5BsKNI3fw+6zL7RrH6YTSrlPSNNB7X/N4RmdssSdqqKRTmCsC/MpeE3iZKca3SAg==
+ bh=H3c537tLL9+s+2ZuZzRSIfnwbmdJQE5PvFtAMYfC9jU=;
+ b=m6cgPpTU6RviMYWW7s7cGivEoTPFAnl52V67Mco4Z8frlR34poAiBW+4J58Z6kY9sT3ciYWBMIqIzPlsdcssYbj5NupVlULiAYnDmkjULajxlKDjxr+/KrunOJ4vrVMoj6Ae/XTFXvzMebncUUBEtrtoq0q2HediodU3X4ZkHNncEMCXNpZeFDMCUA88929qoGSTaf9HEL1K6vL8bO70EBpJlJM300p4yMOpSz+yk2N/vLha6Fr9OQJcd1KN3GMbmIEMaBhDJXzsVqBPmHk3XKWW1CXZnZ3UjqqNGHencCDpxzZyhDFNa/Hpz3MWhqAdVh+3X/IWuL6GswrgE9NHSQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PuZqnnbSx5XLBP3/Dc7T8tawb9PK0S4u/b+Do08Rjpk=;
- b=YSPzi7NXV31iF97QKBWwI0HKfo6vzvF9VbLdJkG/0yiNVAS0tvPIoTKcr9pQZ8yO2zYgCU7xvl51YImbPeYZDuVj/TttirCmVsY8QVA4y4MTZkG44YPgF+kUZJyK0n0lN3D/uHwZJVWAAtzU/8vj7AzNdm2Hpdnrmg4FYUcKPv4=
-Received: from BN9PR03CA0889.namprd03.prod.outlook.com (2603:10b6:408:13c::24)
- by LV2PR12MB5943.namprd12.prod.outlook.com (2603:10b6:408:170::8) with
+ bh=H3c537tLL9+s+2ZuZzRSIfnwbmdJQE5PvFtAMYfC9jU=;
+ b=IglE+BtfR9nRDOkLv00BrkK/rUdrjgkSxdoCb2SwA7ss1aeZzcpOiA/gAvHvKtn8eEjh1jnt9scgcka2JtEwWzZXRmNTtOPu7JxcEOeW+GWV7hmuq/Ow198fNvSN7slXcjo8+xT6fE2ViIliJQRl/HRfmYN9c5wKsJvy9UUqhRM=
+Received: from BN9PR03CA0342.namprd03.prod.outlook.com (2603:10b6:408:f6::17)
+ by PH7PR12MB7967.namprd12.prod.outlook.com (2603:10b6:510:273::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.25; Tue, 3 Sep
- 2024 12:38:48 +0000
-Received: from BL02EPF0002992D.namprd02.prod.outlook.com
- (2603:10b6:408:13c:cafe::2) by BN9PR03CA0889.outlook.office365.com
- (2603:10b6:408:13c::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.26 via Frontend
- Transport; Tue, 3 Sep 2024 12:38:48 +0000
+ 2024 12:38:51 +0000
+Received: from BL02EPF0002992B.namprd02.prod.outlook.com
+ (2603:10b6:408:f6:cafe::53) by BN9PR03CA0342.outlook.office365.com
+ (2603:10b6:408:f6::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.27 via Frontend
+ Transport; Tue, 3 Sep 2024 12:38:51 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -47,22 +48,24 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
 Received: from SATLEXMB03.amd.com (165.204.84.17) by
- BL02EPF0002992D.mail.protection.outlook.com (10.167.249.58) with Microsoft
+ BL02EPF0002992B.mail.protection.outlook.com (10.167.249.56) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7918.13 via Frontend Transport; Tue, 3 Sep 2024 12:38:48 +0000
+ 15.20.7918.13 via Frontend Transport; Tue, 3 Sep 2024 12:38:51 +0000
 Received: from amd.amd.com (10.180.168.240) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 3 Sep
- 2024 07:38:46 -0500
+ 2024 07:38:48 -0500
 From: Suma Hegde <suma.hegde@amd.com>
 To: <platform-driver-x86@vger.kernel.org>
 CC: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>, Suma Hegde
 	<suma.hegde@amd.com>, Naveen Krishna Chatradhi
 	<naveenkrishna.chatradhi@amd.com>
-Subject: [v7 01/10] platform/x86/amd/hsmp: Create hsmp/ directory
-Date: Tue, 3 Sep 2024 12:38:21 +0000
-Message-ID: <20240903123830.2717196-1-suma.hegde@amd.com>
+Subject: [v7 02/10] platform/x86/amd/hsmp: Create wrapper function init_acpi()
+Date: Tue, 3 Sep 2024 12:38:22 +0000
+Message-ID: <20240903123830.2717196-2-suma.hegde@amd.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240903123830.2717196-1-suma.hegde@amd.com>
+References: <20240903123830.2717196-1-suma.hegde@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -75,63 +78,62 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB03.amd.com
  (10.181.40.144)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0002992D:EE_|LV2PR12MB5943:EE_
-X-MS-Office365-Filtering-Correlation-Id: 41542954-b88a-4e5f-388c-08dccc155bdb
+X-MS-TrafficTypeDiagnostic: BL02EPF0002992B:EE_|PH7PR12MB7967:EE_
+X-MS-Office365-Filtering-Correlation-Id: da51ec18-2c62-4c17-2bfc-08dccc155d43
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013;
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MkFRU0xndGxwcWNadDBaank4SVZIaFgyanB4R1ZPOGVibHAzWkxXaXMyM24y?=
- =?utf-8?B?ejdUQmxQWVFRZ1dKcHZzbHJTNTJOajFtK2doQzFGM1EwZEZwMEREWkVxL05G?=
- =?utf-8?B?RW8wcWJEeXI3dE1MSCtWTWxmMTc3dkxjdTV1RElnakVzL2kwcFNGcWRvOVJ1?=
- =?utf-8?B?clRvRUNuaWZNaHpEQTA3SWtKVXViSVJEZ3FDekUzMjFzTk1TNlU0blEvTWZX?=
- =?utf-8?B?UElPNVFhdVNXVTh4TWZjMkIvK1haU3ZDd2s2S2lKRXdBUmYrMGRwVVBPZmhZ?=
- =?utf-8?B?MzBpZ3pDY09DaWd1WTVyb3FlUFdDanVaSEpjNWlEdE1wK1NQbXdSbHpOODk3?=
- =?utf-8?B?RXBBaE9lSktSbU9pcXpOL1JtUTREeWY1QzlZSlBvdnhralZpU3Y0aEdMcVMy?=
- =?utf-8?B?eWtuY01rNjZFVHdZc2g4SWg3TllYUEVqd1ZPSlUvVEp2S0dGRWxpZVBGKys5?=
- =?utf-8?B?aS9JQWZMZWZ2UE11SDRYKzErcG12Zm11RHIxVTVXYmNDb3F4Z3hTS0xLdjIv?=
- =?utf-8?B?QWd5SU9tL09NSDBwWFU0aEFPSmxKVkRKYit4bTl6enJDTDlGbUV2K0YzL3pn?=
- =?utf-8?B?bk4vMithbEdYdG01Z0orRjllNkpsVSt2MHdFTXZsdksvUjNEZ1pwaTFvaGpP?=
- =?utf-8?B?QmpvMEVjbmZ0Z2dpUDJWeDFIbDA1NFk0bjVwN1VVclNYa2V3ODJic3drVTE4?=
- =?utf-8?B?L0w4VXBxb05Za0M3dkhHaHhLSG94dUlwcE10UEJOV01zalM5QnVEYXhPMVdy?=
- =?utf-8?B?Ylk2RjhIbmZmaExWWU5Rakk5Z1RMaU9rTjBvUzVkTHVoNGVwMkRrM1N4YUk2?=
- =?utf-8?B?NElXUHllbDdrWTJiUCtBRVdzVkJNVTlSOFRvZmsvNElMZjlZQkJHOU1NNTJD?=
- =?utf-8?B?Z2FmR0lQREtEeDVaS2VLNzV6bjVSREJRM212dkpjTG0wcG1uRVJkZ2s2bjBr?=
- =?utf-8?B?S004SFg1T05ITnJiNzgyRkdaM0JmWG5DUWNoYnR1SHJrZFVPcjZnYWc3UWUv?=
- =?utf-8?B?QXZ0RS9DZ3VkMnAwb0dNTVJscVNoYkZWU2s2M09MVGVLaWFpRmVGQjU3Y25O?=
- =?utf-8?B?VGtyQ1FrQkxIc0Z6MWluam16Mkw1QjR1YmhLTkU3eHJsSVF2U1lpY3lMVnU1?=
- =?utf-8?B?T0YyZmdyc2R1MmQvaHhtS3JiczFzZ2tKb2NzQTRURUxkOGRhUVBUdmlsSkdR?=
- =?utf-8?B?WFV0NXJ5bWNMNW5jNGJoWExhd0YvYWNLZDJocXBMUGhQdWVGT2J1bngxK0hE?=
- =?utf-8?B?NG82bGpLSy9lOHJ0UXFxclhMQkM0QTFIa2RuNXdiYVVtbllONkQ0MmNjK05C?=
- =?utf-8?B?cEx4TWpteE5YYUJaaTFlc2JVM0ZEbmdFMmNZdTBWVGx5U0pwaXR6TzEyTUh1?=
- =?utf-8?B?SjlvNXl4SWQwcmpxMWJYVlNRWEdCaXUvNVFxaHRoRFBEeFYwZXZqdXlkbFR3?=
- =?utf-8?B?WmVxTGxvUVBmcnMxcTZkOGJWdXpONlBEanMwa2xGUWE1bG9hbFhhZmhtc1No?=
- =?utf-8?B?R1JyWG40OFVWSEpVZm5HMkxQeDVPVTdUaGt5TmtkU0xPdGRCc2ZGZmcrb3Zo?=
- =?utf-8?B?eENpS2l1RFMySGU3R1JXdDVuamZyU3ZQcDZvWkJoSDJtcFN1ZkdNWXp5cS82?=
- =?utf-8?B?ZC9reXJjeWlFTjJScHd2NFNxbDNtUzZEU1pyVUhpeENiY1kzYjVSU0dIc2tJ?=
- =?utf-8?B?bFgvOVhnUytuWG1LK0FJWlY1ZzZYMXgyU2dXcFN0NGw1c0ZTMlRiempWaDZM?=
- =?utf-8?B?b3ZNbDdKbXRhQlJRbmxQZmRNSzlkbVZjRGF2T3JXY2ZESzBzVHNETUxMTlQx?=
- =?utf-8?B?elYxM3dBeExPSGZGQ2Vpb0hUL0Z5TDBOWlg2R2lDU294eks5T1g3TkJ4Zk1S?=
- =?utf-8?B?VmhoU1c0MXlYN21zbnBqWkk1dHFCZDJFVkJNeDRoVnZ5OFpmMGJXOXB3T3dF?=
- =?utf-8?Q?qLbK8r3P5PrsKsXaYPHjVGQeSywtkrRl?=
+	=?utf-8?B?TFJXdXdtYU8zc3pyTENobHJadjZEU3RpNWhvQVpZNWwxWXBuRThGZ05MVzht?=
+ =?utf-8?B?OEVxVVlYR0FwZWYwUVhOZjRaSUZucVNuMm5MNWo2aGI5Z1k3S1NKS1BiZWZP?=
+ =?utf-8?B?N1dPYyszSHdQT2YvLzdyd2N0QzYxZER6ekxnWVB0eWlvQnJIT2F3djVhS29q?=
+ =?utf-8?B?NlJtR0FhSFhYRUNFZ1lTeE0wTG9HeXFkazlHWnJEcHdnVC9SRys5MmkrM0Mr?=
+ =?utf-8?B?b01lV0pCVTdNTXZDL3Jzc2M4SUhJdHdTMFF4UUx0QTcwdEZQeXl6bll5Lzd3?=
+ =?utf-8?B?MGZiSnNWS0hOeU56MXF3emVVYmVlSGFoMXBUWCsxTUdpV2F5TDU5VjFURWxD?=
+ =?utf-8?B?TSs0SXJJb1U2TzhCdmIwaEwxeVZ0dUt1MlROSlg5WTZXSnUrR0srM3N5V3lQ?=
+ =?utf-8?B?RVNzZUI3WnFTZTVWS0xPSW5sQ2dMODZmYW9uTHNzaGc3aFdsK29mM2VQR2FH?=
+ =?utf-8?B?aVo1VS9XNXpFd2JTNXVsNU5wRHVFbkZtMTdYNG9IcHNPWlQzTnBvd1V5VTVm?=
+ =?utf-8?B?eVkxYnRtcFpRdXJUTlhoRERKQVo5WjNxdzZwaURzUUEvZ1RVZnFvOGRJV1lU?=
+ =?utf-8?B?MGhOTGdGdDZvZFE3aThlZlBaZ2FCckkvSVFBOUFva2pvT3pFQzhPRTViRkVr?=
+ =?utf-8?B?UEkvSlYycTdGMjBMMDVSUGNxenVhSTBqOHhEUmVtS3h3RjJIS0JGU3BaQVYr?=
+ =?utf-8?B?bloyeTF1ZWVDNjZIWjhzS01oMWU4bFAxQ0FhM0RpcFZNSW8wTVNqZGNTRUJZ?=
+ =?utf-8?B?QmhsdmlKU0dqbm5Ock05MktTRTF5Tk9KcjREekhTdEd2RGd6RllycTBRSGtT?=
+ =?utf-8?B?YkJra2tVZzRWdmRaUUlldklkRTRlVEk4My9DeG5PT0gxMklRMnhRVFRIc0s4?=
+ =?utf-8?B?MGJjZ0MzVkR3ZTc1cmE5UHdYMTVhMkZMYTI4bURYODBwMkdkdGd4dytzT0hU?=
+ =?utf-8?B?NzUrTE9LUlMvb3lvSTZnb09hNFlMSFlWdGloOTVIWE5oUkJvcnBlaUNxVW9l?=
+ =?utf-8?B?S3VObzBtN1BWdzhGdE9hUjBtY2REVUZXRTlTUEp2aHJqMTkrMzB2V2ZjME9t?=
+ =?utf-8?B?dmdETUQ3WWpvZUJLL29mY1llRXBHQ0FkanVaOTR2Q3pjbHN6V2Z5S0k3VjhI?=
+ =?utf-8?B?RVJjMHA3aEZXMzcvaEdvcjBybUFWZDdQSE05aytKODZZenBmWVVEazROdDJG?=
+ =?utf-8?B?RGVBZ2FtOUVKaXpSOHYrdzliM09HTDRQTHpHKzNHbW9Db2NKT01uZFdHd3Nn?=
+ =?utf-8?B?VUJaRVk1a1pvS1JOak1vY1dPRlE4LzJKWXVISUMrWTREY2tIbWV6eFBEY2Y5?=
+ =?utf-8?B?bGtDZGVFYnFpTnNscEtjYTduRXBLcFZ0N2NuY3l5TUtQejFPVFVvbVFuay9w?=
+ =?utf-8?B?Q0VWRTJ1c2xBR05DWXFHVExpekIvUExtbXNPdjhvU1NqTjRraktFWGFKN2R1?=
+ =?utf-8?B?K3F1eTFRWERXZXhGbkJUYWpnOFRGd1QrZUhhVkc1MUI0RnB5aEZDWmFHSHRj?=
+ =?utf-8?B?cGFRbEFFbGtzTTBqU0VPWDJlYWFoN091cWp0a0wzT1BTY0tzTVZlUEVBcUFB?=
+ =?utf-8?B?RUhkY2dOYUpxRCt0bW56UElhVEw3ekliSG5OS2VLRnBXMEQ0MXFWN3pmNDBj?=
+ =?utf-8?B?SmVRQ0RPaWtqaFJVOGMybXpqNEg1WmVMOUJhOWFSMk55MkZDSm5RODNkRDZD?=
+ =?utf-8?B?WTQydFU0anVqc2dxWjFRdTRtcStPRDNNTXQ2b3lwdGZMSWVxTGpTRUFUamQ4?=
+ =?utf-8?B?djZHYk5CT1U1VmhtaDhhWEliRGt6UC9rTUpWT09LaXR3YXNtbW5TZjc1WEJk?=
+ =?utf-8?B?UHVxNDh3SHRkSkhsUWZ5NWMzejllZllXL3p5OEVZQ3VXYVBZV2grV0F5c2tG?=
+ =?utf-8?B?VFhHdGt2VWRVRWxCNW9EcERmRWo1TC9vR1ZPd0J5Snl3TTVLK0xnUmd3M01N?=
+ =?utf-8?Q?cTKRzns2kJNnFlwctQ4hahItSop6Q7VY?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2024 12:38:48.6459
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2024 12:38:51.0049
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41542954-b88a-4e5f-388c-08dccc155bdb
+X-MS-Exchange-CrossTenant-Network-Message-Id: da51ec18-2c62-4c17-2bfc-08dccc155d43
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0002992D.namprd02.prod.outlook.com
+	BL02EPF0002992B.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5943
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7967
 
 This is in preparation to splitting ACPI and platform device drivers.
-Create and move hsmp specific code into its own directory,
-no logical changes.
+Having init_acpi() helps in smooth code movement.
 
 Signed-off-by: Suma Hegde <suma.hegde@amd.com>
 Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
@@ -147,120 +149,145 @@ Changes since v4:
 None
 
 Changes since v3:
-Added "Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>"
+None
 
 Changes since v2:
 None
 
 Changes since v1:
-None
+Add "Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>"
 
- MAINTAINERS                                |  2 +-
- drivers/platform/x86/amd/Kconfig           | 14 +-------------
- drivers/platform/x86/amd/Makefile          |  3 +--
- drivers/platform/x86/amd/hsmp/Kconfig      | 17 +++++++++++++++++
- drivers/platform/x86/amd/hsmp/Makefile     |  8 ++++++++
- drivers/platform/x86/amd/{ => hsmp}/hsmp.c |  0
- 6 files changed, 28 insertions(+), 16 deletions(-)
- create mode 100644 drivers/platform/x86/amd/hsmp/Kconfig
- create mode 100644 drivers/platform/x86/amd/hsmp/Makefile
- rename drivers/platform/x86/amd/{ => hsmp}/hsmp.c (100%)
+ drivers/platform/x86/amd/hsmp/hsmp.c | 91 ++++++++++++++++++----------
+ 1 file changed, 59 insertions(+), 32 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d6c90161c7bf..a7d79d1f7ec1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1037,7 +1037,7 @@ S:	Maintained
- F:	Documentation/arch/x86/amd_hsmp.rst
- F:	arch/x86/include/asm/amd_hsmp.h
- F:	arch/x86/include/uapi/asm/amd_hsmp.h
--F:	drivers/platform/x86/amd/hsmp.c
-+F:	drivers/platform/x86/amd/hsmp/
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
+index 8fcf38eed7f0..10ab9b2437f1 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.c
++++ b/drivers/platform/x86/amd/hsmp/hsmp.c
+@@ -778,6 +778,11 @@ static int init_platform_device(struct device *dev)
+ 			dev_err(dev, "Is HSMP disabled in BIOS ?\n");
+ 			return ret;
+ 		}
++		ret = hsmp_cache_proto_ver(i);
++		if (ret) {
++			dev_err(dev, "Failed to read HSMP protocol version\n");
++			return ret;
++		}
+ 	}
  
- AMD IOMMU (AMD-VI)
- M:	Joerg Roedel <joro@8bytes.org>
-diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-index f88682d36447..2c671cc17d63 100644
---- a/drivers/platform/x86/amd/Kconfig
-+++ b/drivers/platform/x86/amd/Kconfig
-@@ -3,22 +3,10 @@
- # AMD x86 Platform Specific Drivers
- #
+ 	return 0;
+@@ -789,10 +794,53 @@ static const struct acpi_device_id amd_hsmp_acpi_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(acpi, amd_hsmp_acpi_ids);
  
-+source "drivers/platform/x86/amd/hsmp/Kconfig"
- source "drivers/platform/x86/amd/pmf/Kconfig"
- source "drivers/platform/x86/amd/pmc/Kconfig"
++static bool check_acpi_support(struct device *dev)
++{
++	struct acpi_device *adev = ACPI_COMPANION(dev);
++
++	if (adev && !acpi_match_device_ids(adev, amd_hsmp_acpi_ids))
++		return true;
++
++	return false;
++}
++
++static int init_acpi(struct device *dev)
++{
++	u16 sock_ind;
++	int ret;
++
++	ret = hsmp_get_uid(dev, &sock_ind);
++	if (ret)
++		return ret;
++	if (sock_ind >= plat_dev.num_sockets)
++		return -EINVAL;
++
++	ret = hsmp_parse_acpi_table(dev, sock_ind);
++	if (ret) {
++		dev_err(dev, "Failed to parse ACPI table\n");
++		return ret;
++	}
++
++	/* Test the hsmp interface */
++	ret = hsmp_test(sock_ind, 0xDEADBEEF);
++	if (ret) {
++		dev_err(dev, "HSMP test message failed on Fam:%x model:%x\n",
++			boot_cpu_data.x86, boot_cpu_data.x86_model);
++		dev_err(dev, "Is HSMP disabled in BIOS ?\n");
++		return ret;
++	}
++
++	ret = hsmp_cache_proto_ver(sock_ind);
++	if (ret) {
++		dev_err(dev, "Failed to read HSMP protocol version\n");
++		return ret;
++	}
++
++	return ret;
++}
++
+ static int hsmp_pltdrv_probe(struct platform_device *pdev)
+ {
+-	struct acpi_device *adev;
+-	u16 sock_ind = 0;
+ 	int ret;
  
--config AMD_HSMP
--	tristate "AMD HSMP Driver"
--	depends on AMD_NB && X86_64 && ACPI
--	help
--	  The driver provides a way for user space tools to monitor and manage
--	  system management functionality on EPYC server CPUs from AMD.
+ 	/*
+@@ -809,46 +857,25 @@ static int hsmp_pltdrv_probe(struct platform_device *pdev)
+ 		if (!plat_dev.sock)
+ 			return -ENOMEM;
+ 	}
+-	adev = ACPI_COMPANION(&pdev->dev);
+-	if (adev && !acpi_match_device_ids(adev, amd_hsmp_acpi_ids)) {
+-		ret = hsmp_get_uid(&pdev->dev, &sock_ind);
+-		if (ret)
+-			return ret;
+-		if (sock_ind >= plat_dev.num_sockets)
+-			return -EINVAL;
+-		ret = hsmp_parse_acpi_table(&pdev->dev, sock_ind);
+-		if (ret) {
+-			dev_err(&pdev->dev, "Failed to parse ACPI table\n");
+-			return ret;
+-		}
+-		/* Test the hsmp interface */
+-		ret = hsmp_test(sock_ind, 0xDEADBEEF);
++	if (check_acpi_support(&pdev->dev)) {
++		ret = init_acpi(&pdev->dev);
+ 		if (ret) {
+-			dev_err(&pdev->dev, "HSMP test message failed on Fam:%x model:%x\n",
+-				boot_cpu_data.x86, boot_cpu_data.x86_model);
+-			dev_err(&pdev->dev, "Is HSMP disabled in BIOS ?\n");
++			dev_err(&pdev->dev, "Failed to init HSMP mailbox\n");
+ 			return ret;
+ 		}
++		ret = hsmp_create_acpi_sysfs_if(&pdev->dev);
++		if (ret)
++			dev_err(&pdev->dev, "Failed to create HSMP sysfs interface\n");
+ 	} else {
+ 		ret = init_platform_device(&pdev->dev);
+ 		if (ret) {
+ 			dev_err(&pdev->dev, "Failed to init HSMP mailbox\n");
+ 			return ret;
+ 		}
+-	}
 -
--	  Host System Management Port (HSMP) interface is a mailbox interface
--	  between the x86 core and the System Management Unit (SMU) firmware.
+-	ret = hsmp_cache_proto_ver(sock_ind);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Failed to read HSMP protocol version\n");
+-		return ret;
+-	}
 -
--	  If you choose to compile this driver as a module the module will be
--	  called amd_hsmp.
--
- config AMD_WBRF
- 	bool "AMD Wifi RF Band mitigations (WBRF)"
- 	depends on ACPI
-diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
-index dcec0a46f8af..96ec24c8701b 100644
---- a/drivers/platform/x86/amd/Makefile
-+++ b/drivers/platform/x86/amd/Makefile
-@@ -5,7 +5,6 @@
- #
+-	if (plat_dev.is_acpi_device)
+-		ret = hsmp_create_acpi_sysfs_if(&pdev->dev);
+-	else
+ 		ret = hsmp_create_non_acpi_sysfs_if(&pdev->dev);
+-	if (ret)
+-		dev_err(&pdev->dev, "Failed to create HSMP sysfs interface\n");
++		if (ret)
++			dev_err(&pdev->dev, "Failed to create HSMP sysfs interface\n");
++	}
  
- obj-$(CONFIG_AMD_PMC)		+= pmc/
--amd_hsmp-y			:= hsmp.o
--obj-$(CONFIG_AMD_HSMP)		+= amd_hsmp.o
-+obj-y				+= hsmp/
- obj-$(CONFIG_AMD_PMF)		+= pmf/
- obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
-diff --git a/drivers/platform/x86/amd/hsmp/Kconfig b/drivers/platform/x86/amd/hsmp/Kconfig
-new file mode 100644
-index 000000000000..b55d4ed9bceb
---- /dev/null
-+++ b/drivers/platform/x86/amd/hsmp/Kconfig
-@@ -0,0 +1,17 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# AMD HSMP Driver
-+#
-+
-+config AMD_HSMP
-+	tristate "AMD HSMP Driver"
-+	depends on AMD_NB && X86_64 && ACPI
-+	help
-+	  The driver provides a way for user space tools to monitor and manage
-+	  system management functionality on EPYC server CPUs from AMD.
-+
-+	  Host System Management Port (HSMP) interface is a mailbox interface
-+	  between the x86 core and the System Management Unit (SMU) firmware.
-+
-+	  If you choose to compile this driver as a module the module will be
-+	  called amd_hsmp.
-diff --git a/drivers/platform/x86/amd/hsmp/Makefile b/drivers/platform/x86/amd/hsmp/Makefile
-new file mode 100644
-index 000000000000..fda64906a5e8
---- /dev/null
-+++ b/drivers/platform/x86/amd/hsmp/Makefile
-@@ -0,0 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for drivers/platform/x86/amd/hsmp
-+# AMD HSMP Driver
-+#
-+
-+obj-$(CONFIG_AMD_HSMP)		+= amd_hsmp.o
-+amd_hsmp-objs			:= hsmp.o
-diff --git a/drivers/platform/x86/amd/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-similarity index 100%
-rename from drivers/platform/x86/amd/hsmp.c
-rename to drivers/platform/x86/amd/hsmp/hsmp.c
+ 	if (!plat_dev.is_probed) {
+ 		plat_dev.hsmp_device.name	= HSMP_CDEV_NAME;
 -- 
 2.25.1
 
