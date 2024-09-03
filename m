@@ -1,88 +1,144 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7AE18E77D
-	for <platform-driver-x86@vger.kernel.org>; Tue,  3 Sep 2024 19:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993CF1DB554;
+	Tue,  3 Sep 2024 20:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725392537; cv=none; b=WTcyCKrg3bDrxxTIggXFX/IGcmqm2zPKgy/dmpcenk+qEI7SPQ0+JwHQtxCL3xKDKN3cLviPSxqRzf2OnI3y75h2tHOkUnFwYDKsPsJF78XsA4Rxl3TeYfUE/qps3EI541UTqi5jgQhHrmNHHyzaI7pj5PpqBgdiVUYfNmK0by8=
+	t=1725396147; cv=none; b=A4vH4UNNZXljqdzoUKmAq0InvcDCkKVCtLMQFbHOQKfB4WAcw+p/E+Vmd90GzBOh0pd6/luDKWw4DpdNvGe7Gg3RVO7Vq/vjVe+DiZBfGPxng+zu9RocPiAq9FQWePhPJJ2cHpfPyZ5hnv8Sa62Jn+LxBd+oiLjmI2ewykKxSBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725392537; c=relaxed/simple;
-	bh=TfSsa7xIMth7yd78HszB0pZ3u7/qV4x7Nm8FrIu/jbs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bY1VdncX4tjqterb6+1TMCO/pHR2kM0qcBZL53ej6hqjwaYhzdqxvAOj9hb1ppqCXam/oQtxbJWRJfwlb0dMNa2f8H4zC3JkGhll35scr0UAZ9NaxWWFofm2Mh9xGuR/OClT4ornCBajlPXv5+M6Z9Z83mRUn53cC5m3qaM4yqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=X1gEBNwd; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1725396147; c=relaxed/simple;
+	bh=RxI8GFXMoXcmGMJElSAc2SJChgm1aEv8s9B6Kz05nc0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RfpVLq3yh0ayQzhXNGzRzD1Ju4VHp1dJ45YTSMzYnuqdf64ho+UhAUUqYUuECMjZb6PLfUwD6WLQWi4daxeD5KEDuHKl0kXulCrOoGe/HAhzzrP96KnRsztwGMIyfHYXYBNTEizoMuoCDOS5ETgFv1cwwxvMM9BbsFcNn71L9r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BKRvDrev; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="X1gEBNwd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1725392532; x=1725997332; i=w_armin@gmx.de;
-	bh=TfSsa7xIMth7yd78HszB0pZ3u7/qV4x7Nm8FrIu/jbs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=X1gEBNwd1SQwfdL+neT6ogY7eRTUntL+Dm7jC0Gzpsr4YdoKUoNVHVdta00bfdof
-	 NkStuJVpHUOk8hisnKQnG2kKcmQFvcyQRVcG4kipV+mnwyk+has8BwQfZx4hyqKv6
-	 BnC8d4kb40Nw7SYsuRZL/p8rHSebG/XFD6G3PwDYoZDvI/4b9ilNjUJDJTdQkzzbC
-	 70pjMKBTpccr6h6+0jKhWyULpn4CDFvFZ20D9X6u9MLntYjAep4NCtZwhtf+bZ41z
-	 ua+sYsGy72VaxLCKqTPsiWJFz0fMUt7/vadOn0C8c7jyEWFC3HfjbUfjmmDSvoCBt
-	 youUUBQUoJmHYh/S5g==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Ma20k-1sXBIW02pI-00Jqv7; Tue, 03
- Sep 2024 21:42:12 +0200
-Message-ID: <d8563b6b-8ab8-481d-aeba-656c38dda2ed@gmx.de>
-Date: Tue, 3 Sep 2024 21:42:11 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BKRvDrev"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 672D5C4CEC9;
+	Tue,  3 Sep 2024 20:42:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725396147;
+	bh=RxI8GFXMoXcmGMJElSAc2SJChgm1aEv8s9B6Kz05nc0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=BKRvDrev8R1RaIWwUsjG0gZLP+rq8TSwt90Ci44iqMBG2H2P/TC25NCxH+vzy+RzO
+	 96fqfDryLTkX943PXLlm5OnjF7lojc7mH0eKDW+Fd9e/rCgK0Mz/0r+CerCGPS02Nm
+	 mUrzrQggWSgWkSy8D8MXkHoPSfm2EBeXmldz1gBh2IF8ZVybwmN31rr/C5Gw7TeNbI
+	 g/rbGLAqVOj4N1ILeFdcWag2LnKD088lTDxlPOTdsonW2otfCpG0T3CSKmPTSeclLY
+	 mfjm7tpmKGD1KwbK0mSjVi/9Du2r705Pv7itjudsN1Zq5PBeuB/vq/MqJuKJwZPx80
+	 ckaCi5bCmJwNw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Mathieu Fenniak <mathieu@fenniak.net>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	corentin.chary@gmail.com,
+	luke@ljones.dev,
+	hdegoede@redhat.com,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.10 11/22] platform/x86: asus-wmi: Fix spurious rfkill on UX8406MA
+Date: Tue,  3 Sep 2024 15:21:58 -0400
+Message-ID: <20240903192243.1107016-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240903192243.1107016-1-sashal@kernel.org>
+References: <20240903192243.1107016-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Add Support for the Acer Predator Triton PT14-51
-To: Rayan Margham <rayanmargham4@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
-References: <3c63701c-f9fc-4f98-b991-58135da3fcc3@gmx.de>
- <62891F43-E938-4DF3-9E51-9CCE19784DA8@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <62891F43-E938-4DF3-9E51-9CCE19784DA8@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:prM+PM08Si5GxV0lECzLyis+3Y6Ycxl355+RKXvvk9nlim3+QPx
- DQSZU5rzPe6fh5d+2EIqU7kQilrBnCum6fU6LLjeuh+fQdRA2Nvf67v7+Q9BRp93yIqL+YY
- N4B+TWKsTSeDgNR8V4nBEEn6MOa/zzZJoKVVtEm2jCeu4Gx9BZP+LMyHZ0oHu7nbM9tWM5A
- X+SavbmwZDNfNDxuyFB1Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:en8HnZxC57Y=;Jt4E+zjgXi1tJ1RM1AZWukmbFRQ
- UiLhzByW68ufIXlFjLGRvvLUM2L+HrKpWlKtkLRpyRA+hEsn+kQ2Pml1KMNcGF+lCzRwMnlNp
- vu9yAXqbuRABckILCrZ14q1d/kIp34rB6CutbsAMmCjCSa5aABeGMDR0UbQ6nRTjylnNYvCap
- GOR7WWNLiplTaxm5zcr1kFypWMR99rC/BUgOA77Gm8J/txDG6r8MGPlpWvB+JaUHHNZAP5str
- KwCWVNbbMR/NEjcxjHznQ2Fs3uKLzS5ZOkxmA0KGXaP6V7eV/BBh79uDUZ4WP9kazxP0tfdAV
- L/insm7AB6QmeJUMXQY1hrUmtfkSGGP5fbUe5lvNbOut976XZJbcEtlg5UPwT2fJWda1foiNI
- Q3j3nJ6OKo1VAtyDOCKTrzP7LYVYQ6DBzoMv6uhwAH663jEcBhHTOYjaR8upzNeoBACsTyse7
- o08FuejA7jEan816OxtGGjBGQX7DxXzvSnXoV+234ciY0h20BgKrJj3EOj2ejALyNG3yqY9Ds
- xAY5X3CPDTKHihcpIgVB6nf1tS9Dqh9rXqv6TRBm1sdsG78mI3llmsnJERy85NHWoGe8/l3n6
- phx6kzGB/XE0fviGw0hXRcUM/BsBAxyoPLU8I79XpY6erWBQumC/Cbd3KhuXTKdHwf00gzkBZ
- WO/up1gTcAYnUsJfKP0Belb3pZ6hPUbpxJfSc/eu/rTyxfd+y8DGtSKYrqtc1pgiB/rtKms/s
- SL6/ozapb8BJ4nF6bHcDksms5iM58F6xiQE9KMkERCCkMEYZWWTCGIwE5HPp9lJSL9mJar0cC
- 11OuUy7nrmU1rzjUYgB7oxVg==
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.10.7
+Content-Transfer-Encoding: 8bit
 
-Am 03.09.24 um 21:10 schrieb Rayan Margham:
+From: Mathieu Fenniak <mathieu@fenniak.net>
 
-> Hi Armin Wolf,
->
-> Any update on the progress for the driver?
->
-> Thanks,
-> Rayan Margham
->
-I am currently quite busy, so the reverse-engineering is still on my TODO list.
+[ Upstream commit 9286dfd5735b9cceb6a14bdf15e13400ccb60fe7 ]
 
-Thanks,
-Armin Wolf
+The Asus Zenbook Duo (UX8406MA) has a keyboard which can be
+placed on the laptop to connect it via USB, or can be removed from the
+laptop to reveal a hidden secondary display in which case the keyboard
+operates via Bluetooth.
+
+When it is placed on the secondary display to connect via USB, it emits
+a keypress for a wireless disable. This causes the rfkill system to be
+activated disconnecting the current wifi connection, which doesn't
+reflect the user's true intention.
+
+Detect this hardware and suppress any wireless switches from the
+keyboard; this keyboard does not have a wireless toggle capability so
+these presses are always spurious.
+
+Signed-off-by: Mathieu Fenniak <mathieu@fenniak.net>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Link: https://lore.kernel.org/r/20240823135630.128447-1-mathieu@fenniak.net
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 20 +++++++++++++++++++-
+ drivers/platform/x86/asus-wmi.h    |  1 +
+ 2 files changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index fceffe2082ec5..ed3633c5955d9 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -145,6 +145,10 @@ static struct quirk_entry quirk_asus_ignore_fan = {
+ 	.wmi_ignore_fan = true,
+ };
+ 
++static struct quirk_entry quirk_asus_zenbook_duo_kbd = {
++	.ignore_key_wlan = true,
++};
++
+ static int dmi_matched(const struct dmi_system_id *dmi)
+ {
+ 	pr_info("Identified laptop model '%s'\n", dmi->ident);
+@@ -516,6 +520,15 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_asus_ignore_fan,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUS Zenbook Duo UX8406MA",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "UX8406MA"),
++		},
++		.driver_data = &quirk_asus_zenbook_duo_kbd,
++	},
+ 	{},
+ };
+ 
+@@ -630,7 +643,12 @@ static void asus_nb_wmi_key_filter(struct asus_wmi_driver *asus_wmi, int *code,
+ 	case 0x32: /* Volume Mute */
+ 		if (atkbd_reports_vol_keys)
+ 			*code = ASUS_WMI_KEY_IGNORE;
+-
++		break;
++	case 0x5D: /* Wireless console Toggle */
++	case 0x5E: /* Wireless console Enable */
++	case 0x5F: /* Wireless console Disable */
++		if (quirks->ignore_key_wlan)
++			*code = ASUS_WMI_KEY_IGNORE;
+ 		break;
+ 	}
+ }
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index cc30f18538472..d02f15fd3482f 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -40,6 +40,7 @@ struct quirk_entry {
+ 	bool wmi_force_als_set;
+ 	bool wmi_ignore_fan;
+ 	bool filter_i8042_e1_extended_codes;
++	bool ignore_key_wlan;
+ 	enum asus_wmi_tablet_switch_mode tablet_switch_mode;
+ 	int wapf;
+ 	/*
+-- 
+2.43.0
 
