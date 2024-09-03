@@ -1,77 +1,88 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71B91D5CFC
-	for <platform-driver-x86@vger.kernel.org>; Tue,  3 Sep 2024 19:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7AE18E77D
+	for <platform-driver-x86@vger.kernel.org>; Tue,  3 Sep 2024 19:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725390664; cv=none; b=MirapKbpQokoRLQbQH9fX96+m7dhDSF0m8EhqHlRPwt4dg/zWJwSizFQ0ZoHTbg1Z1QiKxpHreQmXaZYQgOR1ZdG55Hm8P59Q7mPJgPhj1nSSHkY/9wqte9ozKDGT/E2v6YRUmrXytQpX/HEYAtOj7vl8znayLgUD5TvUAcupcM=
+	t=1725392537; cv=none; b=WTcyCKrg3bDrxxTIggXFX/IGcmqm2zPKgy/dmpcenk+qEI7SPQ0+JwHQtxCL3xKDKN3cLviPSxqRzf2OnI3y75h2tHOkUnFwYDKsPsJF78XsA4Rxl3TeYfUE/qps3EI541UTqi5jgQhHrmNHHyzaI7pj5PpqBgdiVUYfNmK0by8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725390664; c=relaxed/simple;
-	bh=jflcQBPDjZt/OZzaJxpRWjTsTeS1u1xR04ACHlPLDOY=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=SH9EGkq1Bc+w/7F1UpcJD7rfhNI4efgZnWPMACZMiaLbmIut77QLNqwhJiXRxt4rQfKfLyJHZXN4AZrXEhhVcOGKKrBFGHH5HjpQSdSu9N7oVP+ndxOSFERlk1ORvp9cgWfUCipJzLY1diVmXa1cvgUXE9yarnpXEwE5VqH/Zig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HppV9aYq; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725392537; c=relaxed/simple;
+	bh=TfSsa7xIMth7yd78HszB0pZ3u7/qV4x7Nm8FrIu/jbs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bY1VdncX4tjqterb6+1TMCO/pHR2kM0qcBZL53ej6hqjwaYhzdqxvAOj9hb1ppqCXam/oQtxbJWRJfwlb0dMNa2f8H4zC3JkGhll35scr0UAZ9NaxWWFofm2Mh9xGuR/OClT4ornCBajlPXv5+M6Z9Z83mRUn53cC5m3qaM4yqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=X1gEBNwd; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HppV9aYq"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5c218866849so6059741a12.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 03 Sep 2024 12:11:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725390661; x=1725995461; darn=vger.kernel.org;
-        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
-         :from:content-transfer-encoding:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jflcQBPDjZt/OZzaJxpRWjTsTeS1u1xR04ACHlPLDOY=;
-        b=HppV9aYq/yOZ+4anrGT2CWA8G0YVF9NxjB0A8T/+eL600bDb/68kUF8nM0mxUCIGG0
-         LtILtsMCfzo4RdUMMNvtsFXnLcoZfcFdec4V3/ttCbZaCQJRlU+ir6IFgHkPw6oIj/AK
-         VYyHH4cujHg5kga5OWLxnswLlHJgJ+ftAq+aBM397ehB8KoTs2PzgEH4ZJDRojD/MO2A
-         3JWm2C9INIHtKgPm6VZmo+xHMGFsD6NecT9YZLlTTNm9Tg00i33xVvd3BzFMJ5/AO6nB
-         iSbceZ90Y6eCSBEzi+5UxkB8e6WROwDwepMw9fVsKuiUbuPpNFFj4BGViKLkcsoFfq1i
-         qKYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725390661; x=1725995461;
-        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
-         :from:content-transfer-encoding:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jflcQBPDjZt/OZzaJxpRWjTsTeS1u1xR04ACHlPLDOY=;
-        b=KjT6HuR7BWutgTqfgeQq8VyX4ShnBbPzCmqGlh7Xl+YmNtgrb0IgAcFX6Yyh4am0QO
-         qNuruUsxlSzFEPVzSIgKgTsj+yeduKeyXZ1AzXI9EWDR2N6lvCTY1NLj+ASjfSEjjo3/
-         MJDi5XxzXGmUJONbrQlA02acEr41lsQoY8cVG06vQ6xWv1cXEoxOG7J05MVajKnZ4DnU
-         D+Bd7UDzlfd2ECLsB+1rWpnw5+/ecRd5bdl3Lr2eHiAkrrhJUOqROMPLqiXcvMw8ZiyW
-         5IK3kT40euF29ZDmGlkklyepQ18oxgUO/uIUzYjnMAOQC3cU7/oW3O1GZVnIlgZiq5Qz
-         cFrg==
-X-Gm-Message-State: AOJu0YxT5bvMfflOW2A7uE9kMG1dX0x5k9EZ3FGsz5YLTBvjXfL7Lni9
-	bv2cdvqYyj5i2+rRaaVgoCICwduV9qEupRd348GqTwbpgF6Lk/wieHpbNw==
-X-Google-Smtp-Source: AGHT+IENUJBPheLHPyyl6tkTfsbzB3DeBLgBV6S3tg5w3O5E25gk0HLu1EX6aFiQ+zLIT7S0zhDjMQ==
-X-Received: by 2002:a17:907:e8a:b0:a86:9602:f4b with SMTP id a640c23a62f3a-a89b972952cmr776479366b.63.1725390660474;
-        Tue, 03 Sep 2024 12:11:00 -0700 (PDT)
-Received: from smtpclient.apple ([89.19.67.124])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a898900f6cfsm716500066b.60.2024.09.03.12.10.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Sep 2024 12:10:59 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-From: Rayan Margham <rayanmargham4@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="X1gEBNwd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1725392532; x=1725997332; i=w_armin@gmx.de;
+	bh=TfSsa7xIMth7yd78HszB0pZ3u7/qV4x7Nm8FrIu/jbs=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=X1gEBNwd1SQwfdL+neT6ogY7eRTUntL+Dm7jC0Gzpsr4YdoKUoNVHVdta00bfdof
+	 NkStuJVpHUOk8hisnKQnG2kKcmQFvcyQRVcG4kipV+mnwyk+has8BwQfZx4hyqKv6
+	 BnC8d4kb40Nw7SYsuRZL/p8rHSebG/XFD6G3PwDYoZDvI/4b9ilNjUJDJTdQkzzbC
+	 70pjMKBTpccr6h6+0jKhWyULpn4CDFvFZ20D9X6u9MLntYjAep4NCtZwhtf+bZ41z
+	 ua+sYsGy72VaxLCKqTPsiWJFz0fMUt7/vadOn0C8c7jyEWFC3HfjbUfjmmDSvoCBt
+	 youUUBQUoJmHYh/S5g==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Ma20k-1sXBIW02pI-00Jqv7; Tue, 03
+ Sep 2024 21:42:12 +0200
+Message-ID: <d8563b6b-8ab8-481d-aeba-656c38dda2ed@gmx.de>
+Date: Tue, 3 Sep 2024 21:42:11 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: Add Support for the Acer Predator Triton PT14-51
-Date: Tue, 3 Sep 2024 20:10:49 +0100
-Message-Id: <62891F43-E938-4DF3-9E51-9CCE19784DA8@gmail.com>
-References: <3c63701c-f9fc-4f98-b991-58135da3fcc3@gmx.de>
+To: Rayan Margham <rayanmargham4@gmail.com>
 Cc: platform-driver-x86@vger.kernel.org
-In-Reply-To: <3c63701c-f9fc-4f98-b991-58135da3fcc3@gmx.de>
-To: Armin Wolf <W_Armin@gmx.de>
-X-Mailer: iPhone Mail (21G93)
+References: <3c63701c-f9fc-4f98-b991-58135da3fcc3@gmx.de>
+ <62891F43-E938-4DF3-9E51-9CCE19784DA8@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <62891F43-E938-4DF3-9E51-9CCE19784DA8@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:prM+PM08Si5GxV0lECzLyis+3Y6Ycxl355+RKXvvk9nlim3+QPx
+ DQSZU5rzPe6fh5d+2EIqU7kQilrBnCum6fU6LLjeuh+fQdRA2Nvf67v7+Q9BRp93yIqL+YY
+ N4B+TWKsTSeDgNR8V4nBEEn6MOa/zzZJoKVVtEm2jCeu4Gx9BZP+LMyHZ0oHu7nbM9tWM5A
+ X+SavbmwZDNfNDxuyFB1Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:en8HnZxC57Y=;Jt4E+zjgXi1tJ1RM1AZWukmbFRQ
+ UiLhzByW68ufIXlFjLGRvvLUM2L+HrKpWlKtkLRpyRA+hEsn+kQ2Pml1KMNcGF+lCzRwMnlNp
+ vu9yAXqbuRABckILCrZ14q1d/kIp34rB6CutbsAMmCjCSa5aABeGMDR0UbQ6nRTjylnNYvCap
+ GOR7WWNLiplTaxm5zcr1kFypWMR99rC/BUgOA77Gm8J/txDG6r8MGPlpWvB+JaUHHNZAP5str
+ KwCWVNbbMR/NEjcxjHznQ2Fs3uKLzS5ZOkxmA0KGXaP6V7eV/BBh79uDUZ4WP9kazxP0tfdAV
+ L/insm7AB6QmeJUMXQY1hrUmtfkSGGP5fbUe5lvNbOut976XZJbcEtlg5UPwT2fJWda1foiNI
+ Q3j3nJ6OKo1VAtyDOCKTrzP7LYVYQ6DBzoMv6uhwAH663jEcBhHTOYjaR8upzNeoBACsTyse7
+ o08FuejA7jEan816OxtGGjBGQX7DxXzvSnXoV+234ciY0h20BgKrJj3EOj2ejALyNG3yqY9Ds
+ xAY5X3CPDTKHihcpIgVB6nf1tS9Dqh9rXqv6TRBm1sdsG78mI3llmsnJERy85NHWoGe8/l3n6
+ phx6kzGB/XE0fviGw0hXRcUM/BsBAxyoPLU8I79XpY6erWBQumC/Cbd3KhuXTKdHwf00gzkBZ
+ WO/up1gTcAYnUsJfKP0Belb3pZ6hPUbpxJfSc/eu/rTyxfd+y8DGtSKYrqtc1pgiB/rtKms/s
+ SL6/ozapb8BJ4nF6bHcDksms5iM58F6xiQE9KMkERCCkMEYZWWTCGIwE5HPp9lJSL9mJar0cC
+ 11OuUy7nrmU1rzjUYgB7oxVg==
 
-Hi Armin Wolf,
+Am 03.09.24 um 21:10 schrieb Rayan Margham:
 
-Any update on the progress for the driver?
+> Hi Armin Wolf,
+>
+> Any update on the progress for the driver?
+>
+> Thanks,
+> Rayan Margham
+>
+I am currently quite busy, so the reverse-engineering is still on my TODO list.
 
 Thanks,
-Rayan Margham
+Armin Wolf
+
