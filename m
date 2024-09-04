@@ -1,77 +1,50 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479D4B647;
-	Tue,  3 Sep 2024 23:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9294163C;
+	Wed,  4 Sep 2024 01:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725407760; cv=none; b=dhxYKKqTBIBVyT+kkWHocF5NGWwZWJQeszIi04ZlOnoegG2ieC5M4hB7/OXxGClnyUxGDstCtfWntBZP3obxzqi6fE+RygYg1MmK10b3euocF/YSlFyMx4jDgc+wI0GHqzEBkdElkrBAA9YxEAL5X/l7Ownp+0xL78lPiw45CsE=
+	t=1725412965; cv=none; b=eHOSG+6UgCHD5S1HzV+WirjrSLEpR2/iLDZOwjKpi2U5yN13YFLgiOByiNXvUAx0XHH+zI9qWFR3QK6zZisJl5OEPnCRy7xOuRtom6dleZEvJZAGfUwQVyGuBrz2omZbcewIwmLvvFzGAF/tiaQeoq4Eo1kz5G3AoH0Zz+S/aOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725407760; c=relaxed/simple;
-	bh=LSOwYuGCKvbFWo4iN2ovI4ZnBGmZF6NN5+HSYIkfa6c=;
+	s=arc-20240116; t=1725412965; c=relaxed/simple;
+	bh=BjK9SFJulTgseXgLqwCl5bq1PUetP1k8wnv/zim9rzU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NcK1n+CodWuUibA8v+gmGWHHJL2nwSUfFRZagOkHSeYW2IxXiFU+niJquBWkC+P5OOl6L9lkFuWeoD59fAAuoolss2LS6SPQ7IeLw4bOWDH1TICA4VYiCzfyv2FgzM64xsbNpJFHEvYZHS7yAUF5Y4UdIYFSFSmX/r4W+kkiDYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j03uaLNi; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=GgyEKT9M8VwLLeH2WQrFh/PK0TgirwqGeZnxulLJ6jfPUbhfF8Y0xi0CF+UEKLifh144uX/krrOpjiz9MRY6W8yu2rEdLfNCeudb7iEqaYWKSyR6T8nkvuygqN2lUsPvo6Ne2XAesMSdwvIfoSOzmJeKVWvD86oiueLx81pQOB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NKZwdAJT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j03uaLNi"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2d8a744aa9bso2260862a91.3;
-        Tue, 03 Sep 2024 16:55:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725407758; x=1726012558; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cFMiOs/yfweXq3uJON9KHqWX+3Y5SezGqg1af6CUqlg=;
-        b=j03uaLNihtNvPPbucbwH9S+Ruu2VCgsiS54hm6PAdMYFOik47PEw9Xdq8t7TohHCrJ
-         /9ZIVyjvVVonftTr/WKLya4A4ytLDCK1dWZwteZpzA9Oeqv5/w4utMGI27X2ClPkClCM
-         xSTDitBq2t9uSMJ8ufqILefbpUHkla6VXcXUoX1eCHmLJLQnDHkFjZ7JrHvhmzbvmn6O
-         DCKNerIUF++yWZB+HGVB7/10ZYQ4Qy7rsqkdJJ/6yiVQbQzHvk67o2U02T6IKFlrkSok
-         kDp38k8KcaHh54y+IOgX6F8ehWneQ4nh2J2Eb/Gcf5eT25loQStqRHESLxZwRn1Rkr0W
-         Qs5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725407758; x=1726012558;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cFMiOs/yfweXq3uJON9KHqWX+3Y5SezGqg1af6CUqlg=;
-        b=rk0iiJ9t2UZ13tNbTWHQro/7/3sOcUB7A4ck5s7P1I7IoNsa5vdOcQouJnSa2Vhkaq
-         2qUhT83PosHU2V43diw5yGNYeT/bEebt5SKswlmgi+OuoTMXGlDwz6NuC3WAYMNP4ZnS
-         PpnqGnyvVYi6kD9ndW+oA1rHEMX2zl6giiUi062P5cadiJvBHwgJs4QfsYN11r5fX7ru
-         oaYM7i/BsCH1bJL61oBNxW7JX7JlSYuRmo5h/BLpjaxZgWVzd83knf0+t1xi1C7G53Ol
-         k2WobyUBZ6BLrE3jElViw5rPw1FJZe0OepiUMl7jyrAJ1sqNHZTbpiQChTdGpR2AzFWf
-         ReOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV8oDpm7ljJj+lTqFvCfw7o2gLNnwhbysZyj3EpKITwdx30AVPfj/n5PS/PmfhMwXRJMUsRuhp1@vger.kernel.org, AJvYcCXffZr0D6tlrDPIXrFQyEE1BCvHGWlLPgbBm7nDfJSab1I6NO3o4I7cXL0uABSlaFW5pwSxAH9/AwtrNQ==@vger.kernel.org, AJvYcCXj5tLVVuM/bm1zQuV7Jy3ZpP1iAOuL6dRcTQMj6KfmcpgdlQeMbuvno7QGijeimLHT3lWxwCR4UEg/go9PaPOm9wK26Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCKOUdGQ/xzqUiRMl2PhBVHI0RR+MX3ihuWSgWqADEgh8VoJoP
-	ZfF15rp+guYIhAkQhbO/FWa6NnE7vFqNRnsXAHSanfVAibeYI46v
-X-Google-Smtp-Source: AGHT+IFOE3cS1YC5tzzgZ3r3i9jiYZTer9F1jlK7UVk75TthuSEWg3rssXTq8VbDN1pkNJIVezZA2Q==
-X-Received: by 2002:a17:90b:101:b0:2c3:2557:3de8 with SMTP id 98e67ed59e1d1-2d8973a5a50mr10867409a91.33.1725407758168;
-        Tue, 03 Sep 2024 16:55:58 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:e682:e3dc:908:eef0])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d85b3b95e8sm12010806a91.54.2024.09.03.16.55.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2024 16:55:57 -0700 (PDT)
-Date: Tue, 3 Sep 2024 16:55:54 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Maxim Mikityanskiy <maxtram95@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Ike Panhc <ike.pan@canonical.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NKZwdAJT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78D4AC4CEC4;
+	Wed,  4 Sep 2024 01:22:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725412965;
+	bh=BjK9SFJulTgseXgLqwCl5bq1PUetP1k8wnv/zim9rzU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NKZwdAJTEXoIma8Qspr2p8DXcjD5SPY5JEVuAxoV4TdIHiZnzSPBSF9rwK0B/bsWS
+	 TpygwfiyqlpxFmxUWeNqBr/UFFOXLiSCrn6KbTTPw5pDvvpG+UPGmYi7yC2GvQUzim
+	 WcidqbPkevoPMcvl0WPqKlWHpcpdzYp4xriV3BApu/fqRkHcceEix+UfbjElcZAAYM
+	 h50QODaxCCcjkSsU3pebb7ykYNBbapIsU60UfJFeZm4iMLx1jXCUQ6cl1YYd8q0SVk
+	 cCpSu788OuRuEdFRXQW1aTP5RSo/8f6j7UxNv2BE9ydujSkn8TVQHpq9okUnhVk3M9
+	 9+3HDFLZ9A7Tw==
+Date: Tue, 3 Sep 2024 18:22:42 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Gergo Koteles <soyer@irl.hu>,
 	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-	Jonathan Denose <jdenose@chromium.org>, stable@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Stop calling
- i8042_command()
-Message-ID: <ZteiClP9jabjHFkG@google.com>
-References: <5c5120a7-4739-4d92-a5b8-9b9c60edc3b7@redhat.com>
- <ZroaE5Q6OdGe6ewz@mail.gmail.com>
- <80dc479e-33af-4d09-8177-7862c34a4882@redhat.com>
- <ZrpFSnCQ0T4_7zAB@google.com>
- <2d5be262-3bfd-4b66-bee4-97c89a9a4707@redhat.com>
- <Zrph94r8haR_nbj7@google.com>
- <ZsJZ7fKJtNTbXhi7@google.com>
- <ZsR0HdzglEH19dVH@mail.gmail.com>
- <ZsUNUh7IGeduDUNX@mail.gmail.com>
- <ZsV6-NRkJLJhHxiq@google.com>
+	Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ike Panhc <ike.pan@canonical.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v1 1/1] platform/x86: ideapad-laptop: Make the
+ scope_guard() clear of its scope
+Message-ID: <20240904012242.GA1110859@thelio-3990X>
+References: <20240829165105.1609180-1-andriy.shevchenko@linux.intel.com>
+ <cf8c73dd91dbbb11b562a5e0d9ac6b4035c32d28.camel@irl.hu>
+ <Ztcn2Yu2TNSOYbhP@smile.fi.intel.com>
+ <0e53a8b6eeb457f11a8a514b12c0598d1727b43d.camel@irl.hu>
+ <Ztct4P_PvQmeq_ih@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -80,227 +53,91 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZsV6-NRkJLJhHxiq@google.com>
+In-Reply-To: <Ztct4P_PvQmeq_ih@smile.fi.intel.com>
 
-On Tue, Aug 20, 2024 at 10:28:24PM -0700, Dmitry Torokhov wrote:
-> On Wed, Aug 21, 2024 at 12:40:34AM +0300, Maxim Mikityanskiy wrote:
-> > On Tue, 20 Aug 2024 at 13:46:53 +0300, Maxim Mikityanskiy wrote:
-> > > On Sun, 18 Aug 2024 at 13:30:37 -0700, Dmitry Torokhov wrote:
+Hi Andy,
+
+On Tue, Sep 03, 2024 at 06:40:16PM +0300, Andy Shevchenko wrote:
+> On Tue, Sep 03, 2024 at 05:29:02PM +0200, Gergo Koteles wrote:
+> > On Tue, 2024-09-03 at 18:14 +0300, Andy Shevchenko wrote:
+> > > On Tue, Sep 03, 2024 at 05:00:51PM +0200, Gergo Koteles wrote:
+> > > > On Thu, 2024-08-29 at 19:50 +0300, Andy Shevchenko wrote:
+> > > > > First of all, it's a bit counterintuitive to have something like
+> > > > > 
+> > > > > 	int err;
+> > > > > 	...
+> > > > > 	scoped_guard(...)
+> > > > > 		err = foo(...);
+> > > > > 	if (err)
+> > > > > 		return err;
+> > > > > 
+> > > > > Second, with a particular kernel configuration and compiler version in
+> > > > > one of such cases the objtool is not happy:
+> > > > > 
+> > > > >   ideapad-laptop.o: warning: objtool: .text.fan_mode_show: unexpected end of section
+> > > > > 
+> > > > > I'm not an expert on all this, but the theory is that compiler and
+> > > > > linker in this case can't understand that 'result' variable will be
+> > > > > always initialized as long as no error has been returned. Assigning
+> > > > > 'result' to a dummy value helps with this. Note, that fixing the
+> > > > > scoped_guard() scope (as per above) does not make issue gone.
+> > > > > 
+> > > > > That said, assign dummy value and make the scope_guard() clear of its scope.
+> > > > > For the sake of consistency do it in the entire file.
+> > > > > 
 > > > > 
-> > > > Maybe something like below can work?
+> > > > Interestingly, if I open a scope manually and use the plain guard, the
+> > > > warning disappears.
 > > > 
-> > > Great patch, thank you, I'll test it and report the results. See some
-> > > minor comments below.
+> > > Yes, that's what I also have, but I avoid that approach because in that case
+> > > the printing will be done inside the lock, widening the critical section for
+> > > no benefits.
 > > > 
-> > > > 
-> > > > 
-> > > > platform/x86: ideapad-laptop: do not poke keyboard controller
-> > > > 
-> > > > From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > > 
-> > > > On Ideapad Z570 the driver tries to disable and reenable data coming
-> > > > from the touchpad by poking directly into 8042 keyboard controller.
-> > > > This may coincide with the controller resuming and leads to spews in
-> > > > dmesg and potentially other instabilities.
-> > > > 
-> > > > Instead of using i8042_command() to control the touchpad state create a
-> > > > input handler that serves as a filter and drop events coming from the
-> > > > touchpad when it is supposed to be off.
-> > > > 
-> > > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > > ---
-> > > >  drivers/platform/x86/ideapad-laptop.c |  171 ++++++++++++++++++++++++++++++++-
-> > > >  1 file changed, 168 insertions(+), 3 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> > > > index fcf13d88fd6e..2f40feefd5e3 100644
-> > > > --- a/drivers/platform/x86/ideapad-laptop.c
-> > > > +++ b/drivers/platform/x86/ideapad-laptop.c
-> > > > @@ -17,7 +17,6 @@
-> > > >  #include <linux/device.h>
-> > > >  #include <linux/dmi.h>
-> > > >  #include <linux/fb.h>
-> > > > -#include <linux/i8042.h>
-> > > >  #include <linux/init.h>
-> > > >  #include <linux/input.h>
-> > > >  #include <linux/input/sparse-keymap.h>
-> > > > @@ -157,6 +156,13 @@ struct ideapad_private {
-> > > >  		struct led_classdev led;
-> > > >  		unsigned int last_brightness;
-> > > >  	} fn_lock;
-> > > > +	struct {
-> > > > +		bool initialized;
-> > > > +		bool active;
-> > > > +		struct input_handler handler;
-> > > > +		struct input_dev *tp_dev;
-> > > > +		spinlock_t lock;
-> > > > +	} tp_switch;
-> > > >  };
-> > > >  
-> > > >  static bool no_bt_rfkill;
-> > > > @@ -1236,6 +1242,158 @@ static void ideapad_check_special_buttons(struct ideapad_private *priv)
-> > > >  	}
-> > > >  }
-> > > >  
-> > > > +struct ideapad_tpswitch_handle {
-> > > > +	struct input_handle handle;
-> > > > +	struct ideapad_private *priv;
-> > > > +};
-> > > > +
-> > > > +#define to_tpswitch_handle(h) \
-> > > > +	container_of(h, struct ideapad_tpswitch_handle, handle);
-> > > > +
-> > > > +static int ideapad_tpswitch_connect(struct input_handler *handler,
-> > > > +				    struct input_dev *dev,
-> > > > +				    const struct input_device_id *id)
-> > > > +{
-> > > > +	struct ideapad_private *priv =
-> > > > +		container_of(handler, struct ideapad_private, tp_switch.handler);
-> > > > +	struct ideapad_tpswitch_handle *h;
-> > > > +	int error;
-> > > > +
-> > > > +	h = kzalloc(sizeof(*h), GFP_KERNEL);
-> > > > +	if (!h)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	h->priv = priv;
-> > > > +	h->handle.dev = dev;
-> > > > +	h->handle.handler = handler;
-> > > > +	h->handle.name = "ideapad-tpswitch";
-> > > > +
-> > > > +	error = input_register_handle(&h->handle);
-> > > > +	if (error)
-> > > > +		goto err_free_handle;
-> > > > +
-> > > > +	/*
-> > > > +	 * FIXME: ideally we do not want to open the input device here
-> > > > +	 * if there are no other users. We need a notion of "observer"
-> > > > +	 * handlers in the input core.
-> > > > +	 */
-> > > > +	error = input_open_device(&h->handle);
-> > > > +	if (error)
-> > > > +		goto err_unregister_handle;
-> > > > +
-> > > > +	scoped_guard(spinlock_irq, &priv->tp_switch.lock)
-> > > > +		priv->tp_switch.tp_dev = dev;
-> > > > +
-> > > > +	return 0;
-> > > > +
-> > > > + err_unregister_handle:
-> > > > +	input_unregister_handle(&h->handle);
-> > > > +err_free_handle:
-> > > > +	kfree(h);
-> > > > +	return error;
-> > > > +}
-> > > > +
-> > > > +static void ideapad_tpswitch_disconnect(struct input_handle *handle)
-> > > > +{
-> > > > +	struct ideapad_tpswitch_handle *h = to_tpswitch_handle(handle);
-> > > > +	struct ideapad_private *priv = h->priv;
-> > > > +
-> > > > +	scoped_guard(spinlock_irq, &priv->tp_switch.lock)
-> > > 
-> > > Nice syntax, I didn't know about it before.
-> > > 
-> > > > +		priv->tp_switch.tp_dev = NULL;
-> > > > +
-> > > > +	input_close_device(handle);
-> > > > +	input_unregister_handle(handle);
-> > > > +	kfree(h);
-> > > > +}
-> > > > +
-> > > > +static bool ideapad_tpswitch_filter(struct input_handle *handle,
-> > > > +				    unsigned int type, unsigned int code,
-> > > > +				    int value)
-> > > > +{
-> > > > +	struct ideapad_tpswitch_handle *h = to_tpswitch_handle(handle);
-> > > > +	struct ideapad_private *priv = h->priv;
-> > > > +
-> > > > +	if (!priv->tp_switch.active)
-> > > 
-> > > This check seems inverted. ideapad_tpswitch_toggle assigns true when the
-> > > touchpad is enabled.
 > > 
-> > I tested the patch on Z570 (with this check inverted), and it seems to
-> > work great.
-> > 
-> > Also tested what happens on resume from suspend: the laptop reenables
-> > the touchpad (the LED turns off on suspend and blinks briefly on
-> > resume), and the driver handles it properly.
+> > This is intended to be an inner block scope within the function, it
+> > does not expand the critical section.
 > 
-> Great, thank you! Give me a couple of days and I think I will implement
-> observer/passive handler support and we can figure out how to merge
-> this...
+> I'm not sure I understand.
+> 
+> scoped_guard() has a marked scope (with {} or just a line coupled with it).
+> The guard() has a scope starting at it till the end of the function. In the
+> latter case the sysfs_emit() becomes part of the critical section.
+> 
+> > > > 	unsigned long result;
+> > > > 	int err;
+> > > > 
+> > > > 	{
+> > > > 		guard(mutex)(&priv->vpc_mutex);
+> > > > 		err = read_ec_data(priv->adev->handle, VPCCMD_R_FAN,
+> > > > &result);
+> > > > 		if (err)
+> > > > 			return err;
+> > > > 	}
+> 
+> But looking again into the code above now I got what you meant.
+> You have added a nested scope inside the function, like
+> 
+> 	do {
+> 		...
+> 	} while (0);
+> 
+> Yes, this is strange and not what we want to have either. So I prefer to hear
+> what objtool / clang people may comment on this.
 
-OK, so if you could try the patch below that would be great.
-Don't forget to set ".passive_observer = 1" in the ideapad handler.
+So this does not appear to happen when CONFIG_KCOV is disabled with the
+configuration from the original report. I have spent some time looking
+at the disassembly but I am a little out of my element there. If I
+remember correctly, the "unexpected end of section" warning from objtool
+can appear when optimizations play fast and loose with the presence of
+potential undefined behavior (or cannot prove that there is no undefined
+behavior through inlining or analysis). In this case, I wonder if KCOV
+prevents LLVM from realizing that the for loop that scoped_guard()
+results in will run at least once, meaning that err and result would be
+potentially used uninitialized? That could explain why this change
+resolves the warning, as it ensures that no undefined behavior could
+happen regardless of whether or not the loop runs?
 
-Thanks!
+Josh and Peter may have more insight.
 
--- 
-Dmitry
-
-
-Input: introduce notion of passive observers for input handlers
-
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/input/input.c |    7 +++++++
- include/linux/input.h |    5 +++++
- 2 files changed, 12 insertions(+)
-
-diff --git a/drivers/input/input.c b/drivers/input/input.c
-index 54c57b267b25..60a9445d78d5 100644
---- a/drivers/input/input.c
-+++ b/drivers/input/input.c
-@@ -605,6 +605,9 @@ int input_open_device(struct input_handle *handle)
- 
- 	handle->open++;
- 
-+	if (handle->handler->passive_observer)
-+		goto out;
-+
- 	if (dev->users++ || dev->inhibited) {
- 		/*
- 		 * Device is already opened and/or inhibited,
-@@ -668,6 +671,9 @@ void input_close_device(struct input_handle *handle)
- 
- 	__input_release_device(handle);
- 
-+	if (handle->handler->passive_observer)
-+		goto out;
-+
- 	if (!--dev->users && !dev->inhibited) {
- 		if (dev->poller)
- 			input_dev_poller_stop(dev->poller);
-@@ -684,6 +690,7 @@ void input_close_device(struct input_handle *handle)
- 		synchronize_rcu();
- 	}
- 
-+out:
- 	mutex_unlock(&dev->mutex);
- }
- EXPORT_SYMBOL(input_close_device);
-diff --git a/include/linux/input.h b/include/linux/input.h
-index 89a0be6ee0e2..6437c35f0796 100644
---- a/include/linux/input.h
-+++ b/include/linux/input.h
-@@ -286,6 +286,10 @@ struct input_handle;
-  * @start: starts handler for given handle. This function is called by
-  *	input core right after connect() method and also when a process
-  *	that "grabbed" a device releases it
-+ * @passive_observer: set to %true by drivers only interested in observing
-+ *	data stream from devices if there are other users present. Such
-+ *	drivers will not result in starting underlying hardware device
-+ *	when input_open_device() is called for their handles
-  * @legacy_minors: set to %true by drivers using legacy minor ranges
-  * @minor: beginning of range of 32 legacy minors for devices this driver
-  *	can provide
-@@ -321,6 +325,7 @@ struct input_handler {
- 	void (*disconnect)(struct input_handle *handle);
- 	void (*start)(struct input_handle *handle);
- 
-+	bool passive_observer;
- 	bool legacy_minors;
- 	int minor;
- 	const char *name;
+Cheers,
+Nathan
