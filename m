@@ -1,65 +1,66 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874DF1E1310
-	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Sep 2024 16:59:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3DD1D6790
+	for <platform-driver-x86@vger.kernel.org>; Wed,  4 Sep 2024 17:51:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725469200; cv=none; b=hAehFhdyQcuXzCAdAp+Z2YrJb4BifcUlTFlnSuKmKdD/K2uq3zfidM/HUAzyQ+1/YAOMhhhlgX99rjAPYAAn2OAs4FCwz40AaoT++/Vq3eMuLs3d04Tx4ppuyrHOjSJM5bv0WfeLJTZ9YdWdFSuIFFYW/EZ9KpxF0qrhsnBNFr0=
+	t=1725472275; cv=none; b=a2OmhAAmKqFajWrIQALfl1tRaH+HK5QwusvBx7bGzoBzouG3sPsj/2ZZ3Y+5w5GVdy/vsSvv/NaYDaY90rWgS2ToWcFa9Qv60aQrtIcNr5gmXXJT3kLmqcflB+UnocRLwF2abhXl9qJEG0TCpcV7JyjW6QCfiu4SdQNzbd/D5nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725469200; c=relaxed/simple;
-	bh=FdKFRjKxfqgZ4ZAePiUERmZ19meUV5QJp1p3+aRRUo4=;
+	s=arc-20240116; t=1725472275; c=relaxed/simple;
+	bh=LGQLyd/+Aw5K1p8dY58/6VCzzrzjIX7s8gz3pCMOVjs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PSrH9bK322PbQKfe8nGmPXd0S7jHPQHW6zA2/sO+Khcj4RCM6DVGp2TwMd+go8AewlVLF9/1IzzNPDptsK2SU+I8sihaHK4ghtB/tYs8ipy/fmfHv8R+GKRhsQ5BW4jwtihY8v0hBAt6bDAnFIeo/6bAZY+j91j7Lax771SF6p8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AW1Hv3Vu; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=Ez5+u6eHrQXQahHVKJGWb/dxy1MyhDpIRJ4aRNLIJdMMCnASyfHdPGdZp5LOXqyyLI55uz50kRh93MD/gOmhfkwJxd2k8E0qX3VpN8Ay+npYKWvqQ2MvzuS5dcWzTwNrRP6NW7xyzA4s8P8ug7BdeHZW1dDz8EojH1q51nrgHvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OEvgEQaI; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AW1Hv3Vu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OEvgEQaI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725469196;
+	s=mimecast20190719; t=1725472272;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JS7JkB28x15FUN4FVJqrYpTRHNCrw4xEi/Lrret8yfM=;
-	b=AW1Hv3VuqLS2Yo/M3d3wpTF41ueqYokknueFBHUkIzV3blG7pOF7IANrzlwvlWC9QZBJT3
-	t/rkRrCUWSQaiFslbo58Y8cohNlhooFbvKvE/8h+RNO0ShG4BK82Cr3ASC05tDtcwjFWP8
-	keULvcUazYFqfhm2gxSCbXzqR+FjjFQ=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=ftdH73Ix9wDNM7yMKsfpwwMJeknPg5Z/1RRp5Jzhr1s=;
+	b=OEvgEQaI3DF8DA8YXjw0TrKZfVxZgtdy9A58yGsgUh1i00rmArPngKXbxas6V6Zs/THTi0
+	vuRUtey2bPwX3BcJJ0aSzY7LTGOcYko0wU/mGCq7KSJ5PLuB7nYpFW2ntc5RQlgMa7GB4M
+	NwA10wS++uRVKWYZYUuz/sloTN4DNHI=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-342-EdbafOloN_WNMcDjv9tQLg-1; Wed, 04 Sep 2024 12:59:52 -0400
-X-MC-Unique: EdbafOloN_WNMcDjv9tQLg-1
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-5334af2a84fso7325450e87.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 04 Sep 2024 09:59:51 -0700 (PDT)
+ us-mta-112-Hb0OKuvcN3-Xx9bL0PKzvg-1; Wed, 04 Sep 2024 13:51:11 -0400
+X-MC-Unique: Hb0OKuvcN3-Xx9bL0PKzvg-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5c251bcb728so3043606a12.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 04 Sep 2024 10:51:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725469189; x=1726073989;
+        d=1e100.net; s=20230601; t=1725472270; x=1726077070;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JS7JkB28x15FUN4FVJqrYpTRHNCrw4xEi/Lrret8yfM=;
-        b=jQrmqWYGgqmyqNxeKxX241i/vKY+asXS9ZShQrB6d9ZZh1WZXlQesBkXUqTYZ41Z+Q
-         Ad6O78c0NR92TxzirFlXvnmsSQITq+mIk3nFbUiYpTWCEv8nwW9dpKG5FWDa2KvbhI5z
-         7xXHmmTfm1FfTfCM3OPEn9QZcsPghIZpBTxRf5k5ThuyeRyiH8aIJ/r3EZeD7Ltbjncq
-         VSqjd/JimfSi9AMvggfhbMcprUsqQSrafNpPIQxXBQn99R8WT4e6T+EI6SSI5j1HF7tW
-         ozlGFveaXVQ1p/qgwr0hCHGfl4DapBJTPjBjf3edkno8jiZ2UsLjAhjO/51Y67Q6/+0q
-         d9dA==
-X-Gm-Message-State: AOJu0Ywj8Jcn3MHC3OfTa9AvtRtQWORRVugKIetlOTYctwHNxirbJZ7O
-	107ZHS9S3JEGetFWK5Ft28ahrROZfuJv1r0bHEixFKvNRtcfDf6Kkss3tBKj3If6n4Efk6YHyNR
-	Bbjo49PwQzkM/RqeXkLQOGqg1duhwTpd4reacRz6VG4KvoReEzTA1PWdm+vnTFlseWOLb13Zwaz
-	fLTDM=
-X-Received: by 2002:a05:6512:68c:b0:52c:d76f:7f61 with SMTP id 2adb3069b0e04-53546bb4d04mr9440200e87.56.1725469189437;
-        Wed, 04 Sep 2024 09:59:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH9B/Kw2sYApLrjKyz7ByJ58hLtcGIgW+Hr3O4jbaYLUgaa3c5CshLF9IIRJpnoQqDHMdCh2Q==
-X-Received: by 2002:a05:6512:68c:b0:52c:d76f:7f61 with SMTP id 2adb3069b0e04-53546bb4d04mr9440182e87.56.1725469188788;
-        Wed, 04 Sep 2024 09:59:48 -0700 (PDT)
+        bh=ftdH73Ix9wDNM7yMKsfpwwMJeknPg5Z/1RRp5Jzhr1s=;
+        b=loGZC+6ncclqoU4UB9wii44YMOCNF2Yi2Uz15mLCRj1DSG8GT+/c5Pqp7qhNrbTmBW
+         op6BJBvMCS7xO9GZC4KQunHdGOx1BQXZVDildd3ZCxEXevI12imAS/+ujdXbH5oBrJQL
+         ro/vJ895BSm7vjLucX3HCyMUnH3DFL8NN/5l6KzUWF7SHWdw+3Gl+JoTeyNlKvU7uVlg
+         rsaOgZ+9+IZHhvN9ZYdvoGtzSbifeP4l9NA5x0hwUidRandjC7XYVV/tngE3e78KzRLp
+         F3ea4vUoxDHThKdEzpgn8AYjf+3/xmUcNlFmKJbREkKFdA3he6Fvv6xL8gFlV/li+Zr2
+         gxpg==
+X-Forwarded-Encrypted: i=1; AJvYcCVuv4+TPXRa5JJS4NN9MN/BG7d9OFSyZliEB2MAx6N7nVptq7RtVQR0Keuj3u0O7ldIPaOX3kQio5l72snxqsq3P6BG@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhIVbRrKj7wJEZa84IR2IWTRVayJCKaSQmPNqS4Zza1+wKUsje
+	E8u13L+4oyq1sEDOl7w88ysPbCXMk6PcXEte18FYG5b0Wr4Ik30yBozC/AjUvseadDF1WjHysZI
+	o8AgwrXmxI5h9eMtnB+MyUSdR4RODLT83wTQ/2a7zcfWgXcNp4EkLFi6ft16TvTZfTf+uPeNIFP
+	8lVro=
+X-Received: by 2002:a17:906:db06:b0:a86:a481:248c with SMTP id a640c23a62f3a-a89a35a0a09mr1267444866b.19.1725472270276;
+        Wed, 04 Sep 2024 10:51:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFB8IC0UdlIJ+hJ0d9y5+/CBU4kSUxb8RZ30hHavApi1zOjLggaKC+EPD9xD4iWA/K0Gqc1Cg==
+X-Received: by 2002:a17:906:db06:b0:a86:a481:248c with SMTP id a640c23a62f3a-a89a35a0a09mr1267442366b.19.1725472269741;
+        Wed, 04 Sep 2024 10:51:09 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c3cc56f114sm124404a12.57.2024.09.04.09.59.48
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8a6236d26esm18871966b.140.2024.09.04.10.51.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Sep 2024 09:59:48 -0700 (PDT)
-Message-ID: <371e1476-1b7c-4993-b481-132b7552b572@redhat.com>
-Date: Wed, 4 Sep 2024 18:59:47 +0200
+        Wed, 04 Sep 2024 10:51:09 -0700 (PDT)
+Message-ID: <d45d47dd-8a8c-4a70-a65b-eeb7bd815f8c@redhat.com>
+Date: Wed, 4 Sep 2024 19:51:08 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,34 +68,128 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: lenovo-ymc: Ignore the 0x0 state
-To: Gergo Koteles <soyer@irl.hu>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <08ab73bb74c4ad448409f2ce707b1148874a05ce.1724340562.git.soyer@irl.hu>
+Subject: Re: [PATCH v2 1/3] Documentation: admin-guide: pm: Add efficiency vs.
+ latency tradeoff to uncore documentation
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Tero Kristo <tero.kristo@linux.intel.com>
+Cc: srinivas.pandruvada@linux.intel.com, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20240828153657.1296410-1-tero.kristo@linux.intel.com>
+ <20240828153657.1296410-2-tero.kristo@linux.intel.com>
+ <d4939d77-8fab-f4b6-f1f7-4af05951d3eb@linux.intel.com>
+ <e1d7028e69cb226acf30ed5c316e5fea20546bc4.camel@linux.intel.com>
+ <71e6475c99e193c4ae6e5d45b72b528cdf5f3f62.camel@linux.intel.com>
+ <858a908e-8218-3925-ea06-f3da256110e9@linux.intel.com>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <08ab73bb74c4ad448409f2ce707b1148874a05ce.1724340562.git.soyer@irl.hu>
+In-Reply-To: <858a908e-8218-3925-ea06-f3da256110e9@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi,
 
-On 8/22/24 5:38 PM, Gergo Koteles wrote:
-> While booting, Lenovo 14ARB7 reports 'lenovo-ymc: Unknown key 0 pressed'
-> warning. Because lenovo_ymc_probe() calls lenovo_ymc_notify() and that
-> time the YMC part is not triggered yet (which is mandatory for this
-> model). At the end of lenovo_ymc_notify() YMC is triggered by the
-> ideapad-laptop driver and then lenovo_ymc_notify() will be called by WMI
-> to report the actual value.
+On 8/30/24 12:12 PM, Ilpo Järvinen wrote:
+> On Fri, 30 Aug 2024, Tero Kristo wrote:
 > 
-> Add 0x0 YMC state to the sparse keymap to ignore.
+>>    1. On Thu, 2024-08-29 at 14:39 +0300, Tero Kristo wrote:
+>>> On Thu, 2024-08-29 at 12:18 +0300, Ilpo Järvinen wrote:
+>>>> On Wed, 28 Aug 2024, Tero Kristo wrote:
+>>>>
+>>>>> Added documentation about the functionality of efficiency vs.
+>>>>> latency tradeoff
+>>>>> control in intel Xeon processors, and how this is configured via
+>>>>> sysfs.
+>>>>>
+>>>>> Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
+>>>>> ---
+>>>>> v2:
+>>>>>   * Largely re-wrote the documentation
+>>>>>
+>>>>>  .../pm/intel_uncore_frequency_scaling.rst     | 59
+>>>>> +++++++++++++++++++
+>>>>>  1 file changed, 59 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/admin-
+>>>>> guide/pm/intel_uncore_frequency_scaling.rst
+>>>>> b/Documentation/admin-
+>>>>> guide/pm/intel_uncore_frequency_scaling.rst
+>>>>> index 5ab3440e6cee..26ded32b06f5 100644
+>>>>> --- a/Documentation/admin-
+>>>>> guide/pm/intel_uncore_frequency_scaling.rst
+>>>>> +++ b/Documentation/admin-
+>>>>> guide/pm/intel_uncore_frequency_scaling.rst
+>>>>> @@ -113,3 +113,62 @@ to apply at each uncore* level.
+>>>>>  
+>>>>>  Support for "current_freq_khz" is available only at each fabric
+>>>>> cluster
+>>>>>  level (i.e., in uncore* directory).
+>>>>> +
+>>>>> +Efficiency vs. Latency Tradeoff
+>>>>> +-------------------------------
+>>>>> +
+>>>>> +The Efficiency Latency Control (ELC) feature improves
+>>>>> performance
+>>>>> +per watt. With this feature hardware power management algorithms
+>>>>> +optimize trade-off between latency and power consumption. For
+>>>>> some
+>>>>> +latency sensitive workloads further tuning can be done by SW to
+>>>>> +get desired performance.
+>>>>> +
+>>>>> +The hardware monitors the average CPU utilization across all
+>>>>> cores
+>>>>> +in a power domain at regular intervals and decides an uncore
+>>>>> frequency.
+>>>>> +While this may result in the best performance per watt, workload
+>>>>> may be
+>>>>> +expecting higher performance at the expense of power. Consider
+>>>>> an
+>>>>> +application that intermittently wakes up to perform memory reads
+>>>>> on an
+>>>>> +otherwise idle system. In such cases, if hardware lowers uncore
+>>>>> +frequency, then there may be delay in ramp up of frequency to
+>>>>> meet
+>>>>> +target performance.
+>>>>> +
+>>>>> +The ELC control defines some parameters which can be changed
+>>>>> from
+>>>>> SW.
+>>>>> +If the average CPU utilization is below a user defined threshold
+>>>>> +(elc_low_threshold_percent attribute below), the user defined
+>>>>> uncore
+>>>>> +frequency floor frequency will be used (elc_floor_freq_khz
+>>>>> attribute
+>>>>
+>>>> Consider the following simplification:
+>>>>
+>>>> "the user defined uncore frequency floor frequency" ->
+>>>> "the user-defined uncore floor frequency"
+>>>>
+>>>> I think it tells the same even without that first "frequency".
+>>>>
+>>>> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+>>>>
+>>>
+>>> Yeah, it looks kind of silly. I think that's just a typo from my
+>>> side,
+>>> thanks for catching.
+>>
+>> Do you want me to send a new version of this patch or do you fix it
+>> locally? Rest of the patches don't seem to need any changes atm.
 > 
-> Signed-off-by: Gergo Koteles <soyer@irl.hu>
+> That's up to Hans but that looks trivial change so probably he can fix
+> that while applying.
+> 
+> Hans, v2 of this series seems ready to go (with the small change into
+> the documentation patch as discussed above).
 
-Thank you for your patch, I've improved the commit message to address
-Ilpo's review comments and applied this patch to my review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/commit/?h=review-hans&id=a8a2253e84dc62b0d50943408c480188a0086263
+Ack, I've applied the series to my review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+with the suggested improvement to intel_uncore_frequency_scaling.rst
+sqaushed in.
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
 Once I've run some tests on this branch the patches there will be
 added to the platform-drivers-x86/for-next branch and eventually
@@ -106,22 +201,4 @@ Regards,
 Hans
 
 
-
-> ---
->  drivers/platform/x86/lenovo-ymc.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/lenovo-ymc.c b/drivers/platform/x86/lenovo-ymc.c
-> index e0bbd6a14a89..bd9f95404c7c 100644
-> --- a/drivers/platform/x86/lenovo-ymc.c
-> +++ b/drivers/platform/x86/lenovo-ymc.c
-> @@ -43,6 +43,8 @@ struct lenovo_ymc_private {
->  };
->  
->  static const struct key_entry lenovo_ymc_keymap[] = {
-> +	/* Ignore the uninitialized state */
-> +	{ KE_IGNORE, 0x00 },
->  	/* Laptop */
->  	{ KE_SW, 0x01, { .sw = { SW_TABLET_MODE, 0 } } },
->  	/* Tablet */
 
