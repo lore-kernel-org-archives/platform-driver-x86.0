@@ -1,143 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9294163C;
-	Wed,  4 Sep 2024 01:22:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6365635;
+	Wed,  4 Sep 2024 04:52:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725412965; cv=none; b=eHOSG+6UgCHD5S1HzV+WirjrSLEpR2/iLDZOwjKpi2U5yN13YFLgiOByiNXvUAx0XHH+zI9qWFR3QK6zZisJl5OEPnCRy7xOuRtom6dleZEvJZAGfUwQVyGuBrz2omZbcewIwmLvvFzGAF/tiaQeoq4Eo1kz5G3AoH0Zz+S/aOs=
+	t=1725425524; cv=none; b=a6hCEuCLEhMUxongSq4EcA0MUbIYI/sLFXaEEBskvC0hoHFzUBSbRpZliM423o2gK2fYIdKj0HALARsff23wrd6iuEw/foUNCbngQyJitd5PGyFttJAmmh0uLX9z7zs1fZ5ZFFBllh7dA64NeLrH4DV8+3vDhUimUPfiN4BDKSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725412965; c=relaxed/simple;
-	bh=BjK9SFJulTgseXgLqwCl5bq1PUetP1k8wnv/zim9rzU=;
+	s=arc-20240116; t=1725425524; c=relaxed/simple;
+	bh=T5layT+NLsjmVL8XZR8JWrqV++qdP3sdX2dEWb7Fyas=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GgyEKT9M8VwLLeH2WQrFh/PK0TgirwqGeZnxulLJ6jfPUbhfF8Y0xi0CF+UEKLifh144uX/krrOpjiz9MRY6W8yu2rEdLfNCeudb7iEqaYWKSyR6T8nkvuygqN2lUsPvo6Ne2XAesMSdwvIfoSOzmJeKVWvD86oiueLx81pQOB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NKZwdAJT; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=lGuMRC5wsMB8u3HslT7Vmt7mMtgscaJiQDj8pquHhmCyJMFZRKnvkvBsBHvzuf6uxv+tkfPYlH7bb+0hrlI5IcYhk8En4koGNuPVlHC+3IASFGunGMIH+/9Do0Q9xFkSCs5NAChGFXRkxfAMb7mMT9f5ymXpJAx6jbAnrD7smSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iMWDferd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NKZwdAJT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78D4AC4CEC4;
-	Wed,  4 Sep 2024 01:22:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iMWDferd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05625C4CEC2;
+	Wed,  4 Sep 2024 04:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725412965;
-	bh=BjK9SFJulTgseXgLqwCl5bq1PUetP1k8wnv/zim9rzU=;
+	s=k20201202; t=1725425523;
+	bh=T5layT+NLsjmVL8XZR8JWrqV++qdP3sdX2dEWb7Fyas=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NKZwdAJTEXoIma8Qspr2p8DXcjD5SPY5JEVuAxoV4TdIHiZnzSPBSF9rwK0B/bsWS
-	 TpygwfiyqlpxFmxUWeNqBr/UFFOXLiSCrn6KbTTPw5pDvvpG+UPGmYi7yC2GvQUzim
-	 WcidqbPkevoPMcvl0WPqKlWHpcpdzYp4xriV3BApu/fqRkHcceEix+UfbjElcZAAYM
-	 h50QODaxCCcjkSsU3pebb7ykYNBbapIsU60UfJFeZm4iMLx1jXCUQ6cl1YYd8q0SVk
-	 cCpSu788OuRuEdFRXQW1aTP5RSo/8f6j7UxNv2BE9ydujSkn8TVQHpq9okUnhVk3M9
-	 9+3HDFLZ9A7Tw==
-Date: Tue, 3 Sep 2024 18:22:42 -0700
-From: Nathan Chancellor <nathan@kernel.org>
+	b=iMWDferdl5jXJkd+Rw4yERqb5w43SHdubt4tWIU/3p5NAFAE9fkP+AjyeJuri/mRT
+	 llfZ41uD4eP8+xpNzOJgP7+kC9klygKt+EGCt9nN4+moqORzDEOp9XC1qidrlP9NUP
+	 0PIcczt0opaDo1VB6RwxPN7jtKV7ylygku5/lCm94Lf2BzupSsodxbVd8DDOlRpTW8
+	 Emont3SF/MasuH8sgDpcxt3i6xg7ttNW1Zd4LQKpslSynkf1/a4M66MxpQRduLQJ6X
+	 HJa0H94MB+cwM7AAgKdj8SgMEGchlDQJvbooAdBwiwMCHFipD3ERbU8UcVi5juaJby
+	 SEZ3c7KAezkfg==
+Date: Tue, 3 Sep 2024 21:52:01 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Gergo Koteles <soyer@irl.hu>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
+Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Gergo Koteles <soyer@irl.hu>, Hans de Goede <hdegoede@redhat.com>,
 	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Ike Panhc <ike.pan@canonical.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
 	kernel test robot <lkp@intel.com>
 Subject: Re: [PATCH v1 1/1] platform/x86: ideapad-laptop: Make the
  scope_guard() clear of its scope
-Message-ID: <20240904012242.GA1110859@thelio-3990X>
+Message-ID: <20240904045201.v3mp4u7pcqj7qrdp@treble>
 References: <20240829165105.1609180-1-andriy.shevchenko@linux.intel.com>
- <cf8c73dd91dbbb11b562a5e0d9ac6b4035c32d28.camel@irl.hu>
- <Ztcn2Yu2TNSOYbhP@smile.fi.intel.com>
- <0e53a8b6eeb457f11a8a514b12c0598d1727b43d.camel@irl.hu>
- <Ztct4P_PvQmeq_ih@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Ztct4P_PvQmeq_ih@smile.fi.intel.com>
+In-Reply-To: <20240829165105.1609180-1-andriy.shevchenko@linux.intel.com>
 
-Hi Andy,
+On Thu, Aug 29, 2024 at 07:50:32PM +0300, Andy Shevchenko wrote:
+> First of all, it's a bit counterintuitive to have something like
+> 
+> 	int err;
+> 	...
+> 	scoped_guard(...)
+> 		err = foo(...);
+> 	if (err)
+> 		return err;
+> 
+> Second, with a particular kernel configuration and compiler version in
+> one of such cases the objtool is not happy:
+> 
+>   ideapad-laptop.o: warning: objtool: .text.fan_mode_show: unexpected end of section
+>
+> I'm not an expert on all this, but the theory is that compiler and
+> linker in this case can't understand that 'result' variable will be
+> always initialized as long as no error has been returned. Assigning
+> 'result' to a dummy value helps with this. Note, that fixing the
+> scoped_guard() scope (as per above) does not make issue gone.
 
-On Tue, Sep 03, 2024 at 06:40:16PM +0300, Andy Shevchenko wrote:
-> On Tue, Sep 03, 2024 at 05:29:02PM +0200, Gergo Koteles wrote:
-> > On Tue, 2024-09-03 at 18:14 +0300, Andy Shevchenko wrote:
-> > > On Tue, Sep 03, 2024 at 05:00:51PM +0200, Gergo Koteles wrote:
-> > > > On Thu, 2024-08-29 at 19:50 +0300, Andy Shevchenko wrote:
-> > > > > First of all, it's a bit counterintuitive to have something like
-> > > > > 
-> > > > > 	int err;
-> > > > > 	...
-> > > > > 	scoped_guard(...)
-> > > > > 		err = foo(...);
-> > > > > 	if (err)
-> > > > > 		return err;
-> > > > > 
-> > > > > Second, with a particular kernel configuration and compiler version in
-> > > > > one of such cases the objtool is not happy:
-> > > > > 
-> > > > >   ideapad-laptop.o: warning: objtool: .text.fan_mode_show: unexpected end of section
-> > > > > 
-> > > > > I'm not an expert on all this, but the theory is that compiler and
-> > > > > linker in this case can't understand that 'result' variable will be
-> > > > > always initialized as long as no error has been returned. Assigning
-> > > > > 'result' to a dummy value helps with this. Note, that fixing the
-> > > > > scoped_guard() scope (as per above) does not make issue gone.
-> > > > > 
-> > > > > That said, assign dummy value and make the scope_guard() clear of its scope.
-> > > > > For the sake of consistency do it in the entire file.
-> > > > > 
-> > > > 
-> > > > Interestingly, if I open a scope manually and use the plain guard, the
-> > > > warning disappears.
-> > > 
-> > > Yes, that's what I also have, but I avoid that approach because in that case
-> > > the printing will be done inside the lock, widening the critical section for
-> > > no benefits.
-> > > 
-> > 
-> > This is intended to be an inner block scope within the function, it
-> > does not expand the critical section.
-> 
-> I'm not sure I understand.
-> 
-> scoped_guard() has a marked scope (with {} or just a line coupled with it).
-> The guard() has a scope starting at it till the end of the function. In the
-> latter case the sysfs_emit() becomes part of the critical section.
-> 
-> > > > 	unsigned long result;
-> > > > 	int err;
-> > > > 
-> > > > 	{
-> > > > 		guard(mutex)(&priv->vpc_mutex);
-> > > > 		err = read_ec_data(priv->adev->handle, VPCCMD_R_FAN,
-> > > > &result);
-> > > > 		if (err)
-> > > > 			return err;
-> > > > 	}
-> 
-> But looking again into the code above now I got what you meant.
-> You have added a nested scope inside the function, like
-> 
-> 	do {
-> 		...
-> 	} while (0);
-> 
-> Yes, this is strange and not what we want to have either. So I prefer to hear
-> what objtool / clang people may comment on this.
+I'm not sure I buy that, we should look closer to understand what the
+issue is.  Can you share the config and/or toolchain version(s) need to
+trigger the warning?
 
-So this does not appear to happen when CONFIG_KCOV is disabled with the
-configuration from the original report. I have spent some time looking
-at the disassembly but I am a little out of my element there. If I
-remember correctly, the "unexpected end of section" warning from objtool
-can appear when optimizations play fast and loose with the presence of
-potential undefined behavior (or cannot prove that there is no undefined
-behavior through inlining or analysis). In this case, I wonder if KCOV
-prevents LLVM from realizing that the for loop that scoped_guard()
-results in will run at least once, meaning that err and result would be
-potentially used uninitialized? That could explain why this change
-resolves the warning, as it ensures that no undefined behavior could
-happen regardless of whether or not the loop runs?
-
-Josh and Peter may have more insight.
-
-Cheers,
-Nathan
+-- 
+Josh
