@@ -1,67 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C743FE55;
-	Wed,  4 Sep 2024 10:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6575E1CF5F1;
+	Wed,  4 Sep 2024 10:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725445579; cv=none; b=YgFad04lQjKzk9laAfqqRSKAcdAz/RZ8ucCMLBXIU/PQabLCZl8F4DGRNUNl7lABISqVVbXyGpzTqwR7KtZSkgs+R97dorlYFE4bqeMFfnFhcpn15M1rQ7K/QFRNxhwKFPkryWcRysidqpdJP3EPlcUNWOev05xie/oK0GB8f0Y=
+	t=1725445742; cv=none; b=Qfx0iAh5wIknbRdrv3JGxpZPjI42+suZiJONdPBhR7eE1QnvA23IUiExrNzUoflGxnqm9M4zruu26hRzmDDbICmss3wyKcUNYwUozZj3BgoXdgG51efCeAhYruNmQ1wdNXpm+MKSJw1mX7ZWcT8w4DpzMF+pxx0NMidOwrgIlfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725445579; c=relaxed/simple;
-	bh=1+gcebRb6s/Z1nT4A29rHqvVzXh5X6h2900oe2W26pA=;
+	s=arc-20240116; t=1725445742; c=relaxed/simple;
+	bh=Lm/SyeR4oJVd5iwgmvFipAcs/tuzkm5769merckReFw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VoSWLbNQZT45vopLdW0aGDtAYPuOzaF8xf1AB7AJyJaWDpoFvy6oRvrH9K+dFJLrcnjSYJWA41/+6cR16wuWRnwRn2DKOh3uesrI9IbS6H3rRhF6G827Gvb7pX6poRiEWa5eShbx2i6l1lba4W8FCoOPH49FxKb/daVH8AT/CP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IQ9REuiy; arc=none smtp.client-ip=192.198.163.19
+	 Content-Type:Content-Disposition:In-Reply-To; b=DdLkZu8k7vI9GTf0v2O7E17hbA8QnZYXctCr/nunKctKNiEvTxPQU2oV254PtOeT8h9XMhsoHoGpwFIjhmDt0eQfuwRA/SOfsdRSx2fxtU1JO8Kd5fd2jB7gTAtSCnLzOWaPmwcw/un0GINQ33dHwMRAFx/wj+W2SXUjeuKEQ8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P9i1fC0j; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IQ9REuiy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P9i1fC0j"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725445578; x=1756981578;
+  t=1725445740; x=1756981740;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=1+gcebRb6s/Z1nT4A29rHqvVzXh5X6h2900oe2W26pA=;
-  b=IQ9REuiyK+6HXO9etzqLVOlDOTry2G2z0kXxwYuFM8Tdqnjv4dP+9tRo
-   gwLlpQLfNFRSh3VV6GNiiS5owOpJ/BZrIVuvXUcuAch4x7cSH168ZT6JX
-   cEYDv8BLaduIjHZwKVv6p4CB0KMtbLTgPzRQWG6CwqQkDe7RfI2XHcPY2
-   JAFL/5DnXUSUPwlquK0Gvu6Cln8GGpN/tdY51w4VtA3cKYCv4tIblIVto
-   juMD6RaFJ++gxzE8ql3Sk5hqd55lNgzz3JayKx2x/s6MQQisYlCwOS53I
-   IakG4vg43+UwEDcWp/Ar1tdgxZp//nde5fNmpDYos1R9omRZO5asGzDlz
-   w==;
-X-CSE-ConnectionGUID: hTrYbaXtQgaEd5t3msH58w==
-X-CSE-MsgGUID: Sw7XPhHUTM6L/Gbn4D6fAA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11184"; a="23658337"
+  bh=Lm/SyeR4oJVd5iwgmvFipAcs/tuzkm5769merckReFw=;
+  b=P9i1fC0jTRf5Ea9jQWyeVIOiO0W6w/P9aJE0TFTvQnSuh/JvEJ/xpl1x
+   W6V+th3h83RDTXxbkm1tM6L37vaOwSBPATIssGbu+DJIUqdVmt/auWtKa
+   vHAJdzkb0LQ0PJWWHV+LWmumj2OapsSZ6nddCJw/7dIXrKs7BiAf+wCkj
+   Yf03uKhuFx6t6lef1AocwlB8a0UpQIga+qukMfhOm8e2gEuxVr8y319Tv
+   t9iyyge2RjGRkUzcSOSXKLNQ2R14ORIO1C+/v+UWn1yg/C5W4gIJ6q6V/
+   gbDe13MqdrJTunKB7ixm6rhIhIVWYDF9QCgWmXp4tielyDqSuYYqO6miH
+   Q==;
+X-CSE-ConnectionGUID: 3YKo3wdRQdiA9QdTfMWofw==
+X-CSE-MsgGUID: fzGiX8GxT1uCkNhhWQoBag==
+X-IronPort-AV: E=McAfee;i="6700,10204,11184"; a="24049975"
 X-IronPort-AV: E=Sophos;i="6.10,201,1719903600"; 
-   d="scan'208";a="23658337"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 03:26:17 -0700
-X-CSE-ConnectionGUID: LnWLyTQSTOytqkiBGv3DFA==
-X-CSE-MsgGUID: 4sJJzql1RpWptRD1/7bEeA==
+   d="scan'208";a="24049975"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 03:29:00 -0700
+X-CSE-ConnectionGUID: WxMWFJITRmmodpteAI4NbQ==
+X-CSE-MsgGUID: /wMAPsQ9S76BngIagmzbuQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,201,1719903600"; 
-   d="scan'208";a="96021263"
+   d="scan'208";a="70096287"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 03:26:15 -0700
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 03:28:58 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1slnDI-000000051xE-0c8q;
-	Wed, 04 Sep 2024 13:26:12 +0300
-Date: Wed, 4 Sep 2024 13:26:11 +0300
+	id 1slnFu-00000005208-2Jqr;
+	Wed, 04 Sep 2024 13:28:54 +0300
+Date: Wed, 4 Sep 2024 13:28:54 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Gergo Koteles <soyer@irl.hu>, Hans de Goede <hdegoede@redhat.com>,
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Gergo Koteles <soyer@irl.hu>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
 	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Ike Panhc <ike.pan@canonical.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Nathan Chancellor <nathan@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
 	kernel test robot <lkp@intel.com>
 Subject: Re: [PATCH v1 1/1] platform/x86: ideapad-laptop: Make the
  scope_guard() clear of its scope
-Message-ID: <Ztg1wzHB-so2qV2L@smile.fi.intel.com>
+Message-ID: <Ztg2ZjfuEe5PuvF8@smile.fi.intel.com>
 References: <20240829165105.1609180-1-andriy.shevchenko@linux.intel.com>
- <20240904045201.v3mp4u7pcqj7qrdp@treble>
+ <cf8c73dd91dbbb11b562a5e0d9ac6b4035c32d28.camel@irl.hu>
+ <Ztcn2Yu2TNSOYbhP@smile.fi.intel.com>
+ <0e53a8b6eeb457f11a8a514b12c0598d1727b43d.camel@irl.hu>
+ <Ztct4P_PvQmeq_ih@smile.fi.intel.com>
+ <20240904012242.GA1110859@thelio-3990X>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -70,44 +75,93 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240904045201.v3mp4u7pcqj7qrdp@treble>
+In-Reply-To: <20240904012242.GA1110859@thelio-3990X>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Sep 03, 2024 at 09:52:01PM -0700, Josh Poimboeuf wrote:
-> On Thu, Aug 29, 2024 at 07:50:32PM +0300, Andy Shevchenko wrote:
-> > First of all, it's a bit counterintuitive to have something like
+On Tue, Sep 03, 2024 at 06:22:42PM -0700, Nathan Chancellor wrote:
+> On Tue, Sep 03, 2024 at 06:40:16PM +0300, Andy Shevchenko wrote:
+> > On Tue, Sep 03, 2024 at 05:29:02PM +0200, Gergo Koteles wrote:
+> > > On Tue, 2024-09-03 at 18:14 +0300, Andy Shevchenko wrote:
+> > > > On Tue, Sep 03, 2024 at 05:00:51PM +0200, Gergo Koteles wrote:
+> > > > > On Thu, 2024-08-29 at 19:50 +0300, Andy Shevchenko wrote:
+> > > > > > First of all, it's a bit counterintuitive to have something like
+> > > > > > 
+> > > > > > 	int err;
+> > > > > > 	...
+> > > > > > 	scoped_guard(...)
+> > > > > > 		err = foo(...);
+> > > > > > 	if (err)
+> > > > > > 		return err;
+> > > > > > 
+> > > > > > Second, with a particular kernel configuration and compiler version in
+> > > > > > one of such cases the objtool is not happy:
+> > > > > > 
+> > > > > >   ideapad-laptop.o: warning: objtool: .text.fan_mode_show: unexpected end of section
+> > > > > > 
+> > > > > > I'm not an expert on all this, but the theory is that compiler and
+> > > > > > linker in this case can't understand that 'result' variable will be
+> > > > > > always initialized as long as no error has been returned. Assigning
+> > > > > > 'result' to a dummy value helps with this. Note, that fixing the
+> > > > > > scoped_guard() scope (as per above) does not make issue gone.
+> > > > > > 
+> > > > > > That said, assign dummy value and make the scope_guard() clear of its scope.
+> > > > > > For the sake of consistency do it in the entire file.
+> > > > > > 
+> > > > > 
+> > > > > Interestingly, if I open a scope manually and use the plain guard, the
+> > > > > warning disappears.
+> > > > 
+> > > > Yes, that's what I also have, but I avoid that approach because in that case
+> > > > the printing will be done inside the lock, widening the critical section for
+> > > > no benefits.
+> > > > 
+> > > 
+> > > This is intended to be an inner block scope within the function, it
+> > > does not expand the critical section.
 > > 
-> > 	int err;
-> > 	...
-> > 	scoped_guard(...)
-> > 		err = foo(...);
-> > 	if (err)
-> > 		return err;
+> > I'm not sure I understand.
 > > 
-> > Second, with a particular kernel configuration and compiler version in
-> > one of such cases the objtool is not happy:
+> > scoped_guard() has a marked scope (with {} or just a line coupled with it).
+> > The guard() has a scope starting at it till the end of the function. In the
+> > latter case the sysfs_emit() becomes part of the critical section.
 > > 
-> >   ideapad-laptop.o: warning: objtool: .text.fan_mode_show: unexpected end of section
-> >
-> > I'm not an expert on all this, but the theory is that compiler and
-> > linker in this case can't understand that 'result' variable will be
-> > always initialized as long as no error has been returned. Assigning
-> > 'result' to a dummy value helps with this. Note, that fixing the
-> > scoped_guard() scope (as per above) does not make issue gone.
+> > > > > 	unsigned long result;
+> > > > > 	int err;
+> > > > > 
+> > > > > 	{
+> > > > > 		guard(mutex)(&priv->vpc_mutex);
+> > > > > 		err = read_ec_data(priv->adev->handle, VPCCMD_R_FAN,
+> > > > > &result);
+> > > > > 		if (err)
+> > > > > 			return err;
+> > > > > 	}
+> > 
+> > But looking again into the code above now I got what you meant.
+> > You have added a nested scope inside the function, like
+> > 
+> > 	do {
+> > 		...
+> > 	} while (0);
+> > 
+> > Yes, this is strange and not what we want to have either. So I prefer to hear
+> > what objtool / clang people may comment on this.
 > 
-> I'm not sure I buy that, we should look closer to understand what the
-> issue is.  Can you share the config and/or toolchain version(s) need to
-> trigger the warning?
+> So this does not appear to happen when CONFIG_KCOV is disabled with the
+> configuration from the original report. I have spent some time looking
+> at the disassembly but I am a little out of my element there. If I
+> remember correctly, the "unexpected end of section" warning from objtool
+> can appear when optimizations play fast and loose with the presence of
+> potential undefined behavior (or cannot prove that there is no undefined
+> behavior through inlining or analysis). In this case, I wonder if KCOV
+> prevents LLVM from realizing that the for loop that scoped_guard()
+> results in will run at least once, meaning that err and result would be
+> potentially used uninitialized? That could explain why this change
+> resolves the warning, as it ensures that no undefined behavior could
+> happen regardless of whether or not the loop runs?
+> 
+> Josh and Peter may have more insight.
 
-.config is from the original report [1], toolchain is
-Debian clang version 18.1.8 (9)
-	Target: x86_64-pc-linux-gnu
-	Thread model: posix
-	InstalledDir: /usr/bin
-
-(Just whatever Debian unstable provides)
-
-[1]: https://lore.kernel.org/oe-kbuild-all/202408290219.BrPO8twi-lkp@intel.com/
+Thanks for looking into this. Josh already keeps an eye on this.
 
 -- 
 With Best Regards,
