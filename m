@@ -1,216 +1,204 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713831372;
-	Wed,  4 Sep 2024 23:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3691152166;
+	Thu,  5 Sep 2024 04:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725491202; cv=none; b=VAWdAshBDroG+qQMX60QDQHZ9Z/U1dbmRlkr77fIcMBAM51+gCcLPHc65Q5+IQd2KmQLmoG6mTKQeLZ+3LZfjhS6hK28RfCH9Fp/Hf0bXV6LNr3hfG7u+BivJOL76nEwSR0QpI95ZduZMsikyd7IOGjgWcAeJi5DGBV/QB5AAhw=
+	t=1725510906; cv=none; b=AC4jQcdIZyFuTeW6kFn3uTUUET12E8fo9sqHo6mWsp7ons5pikRj9umEj4KCApSBy5WZ6EPXG30b4GC1ZMSuuz4OzJ/qdz11/dMFn++Tl1WnrKPl+POsjfqrVIXCPXKU74Y/O5DM/nsI0YZaU4RD2S+AYmgz2tnbPSKCr/T9RWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725491202; c=relaxed/simple;
-	bh=jUQ2jbgF4Phafd6slQbdao1PXMmbCCsziIIQqwTkn5Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B6j9JgzLgnWINEhzkiqrdu0SO2x7+xJaOglggrirqUKqBfov9rJeyqY3o5/kbeWkY/F6R0k1tF8KBhfEAg1rldfMnNrCk+ukAKjBeBZ3jdCfYI5QqcwSJEjOABjKs8lA8sghlHdMDGKSWjVoScEyGMMLa2PU5KWunPD9qOfktws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DqpMlRrp; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1725510906; c=relaxed/simple;
+	bh=aXaVE+s/SnDKQ47vWdxiCRhxJM4RxuS7CvFpS24RYkE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G2y9S1KwsKfyO8mZiDu//EirbA/VFMWLq7RR1+V1C07dNErUsiQkfHr0QgumoF4LeeR5FZumnDBjR84ipSlIyYzHukZYL5lmE4vxZZfxrdcQ7USojK8ry4/cU5PGiR1nAZR+Irq1xEF//N9qFIQebKE1nYPiHVHKCJPdRxaqOQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=evF528ZE; arc=none smtp.client-ip=185.125.188.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DqpMlRrp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725491200; x=1757027200;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jUQ2jbgF4Phafd6slQbdao1PXMmbCCsziIIQqwTkn5Q=;
-  b=DqpMlRrpJMEKHQCOmDIU2JhgLTefmjpvKxRFpuOkhzx5ivyvSo/m7QY+
-   gFwg6CCAtut+T3jXWlvnbxLHxktrZY91V+onLrv0SAx61UJHldY1b2Ihd
-   cXfiwHM4X95a3+ZFvXnXW0vENimID2MmCiLHsyH12pPKVyb4b9c1mIVG5
-   tjeuTcFSjqaDRRhk5kByhjAm4+ErF+XgB03F82DKsa6IDnBbEETZZkgvE
-   vjW0kwLUdCvaT9jg0X8nwBTF/2nKg7f+aEUjpZxAepXy2GznnZ9HSIiEF
-   eV13rUYiMEt4X0ZmK4COcwabHnPSo3wvlUwOm1fEFIhc8/PhNAi7y7j5T
-   w==;
-X-CSE-ConnectionGUID: s70Wb2dkQxGB50IwEtEgWw==
-X-CSE-MsgGUID: FwXJWyZSTJu9Wfb4iGKu/w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11185"; a="34783234"
-X-IronPort-AV: E=Sophos;i="6.10,203,1719903600"; 
-   d="scan'208";a="34783234"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 16:06:39 -0700
-X-CSE-ConnectionGUID: ob7Ntml/TKSv7p89o6i6Aw==
-X-CSE-MsgGUID: QKjdx+GyQ0O10RcKZkUX7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,203,1719903600"; 
-   d="scan'208";a="65412520"
-Received: from xpardee-mobl.amr.corp.intel.com (HELO [10.125.100.132]) ([10.125.100.132])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 16:06:39 -0700
-Message-ID: <475c7d70-c27e-4937-84f6-f85a464a467e@linux.intel.com>
-Date: Wed, 4 Sep 2024 16:06:23 -0700
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="evF528ZE"
+Received: from localhost.localdomain (unknown [10.101.196.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 4FF773F383;
+	Thu,  5 Sep 2024 04:25:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1725510331;
+	bh=RRQ5XZs9l1MpHcXSCY9xoJFCag9Jqr471zYJz9s+Q1Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=evF528ZEZiUSFHTTfBzH5lM0QATz6OdM1u/QyyREzjTYURSoBFyTsqkWeU5Eb0wuv
+	 HiRf4sDl4SoXlkU+6GsRAqYdGIdkDFjyEtTtni0J2tVsHhRHT3DAoSJhqk6XNBb2d+
+	 imQO85avByHdWFdAyJMnzc/Unk1l5VrJYVYn/vnTuxOVJlFz7pPwJdhl77CxJkgsoi
+	 0WeVbFK8oSngAXJLYpsh1nvDTUZ+BzFuwqjUVvV/PNbwRuD2EV9Ge7XaXMHHmGjNyW
+	 n0fbaTYY8Te0aRxfZyNjwteO+RYQEBINWhbotVIbHzIC3SOeMKnbFnmk47mNJ/tWWK
+	 zbZxNLoo9A2qw==
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	gregkh@linuxfoundation.org,
+	jorge.lopez2@hp.com
+Cc: acelan.kao@canonical.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH 1/2] usb: linux/usb.h: Move USB port definition to usb.h
+Date: Thu,  5 Sep 2024 12:24:46 +0800
+Message-ID: <20240905042447.418662-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86:intel/pmc: Ignore all LTRs during suspend
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com,
- Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20240808205551.403770-1-xi.pardee@linux.intel.com>
- <0332a6a1-840b-576c-fe81-f1a690d0dd9a@linux.intel.com>
-Content-Language: en-US
-From: Xi Pardee <xi.pardee@linux.intel.com>
-In-Reply-To: <0332a6a1-840b-576c-fe81-f1a690d0dd9a@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Move struct usb_port to linux/usb.h so other subsystems can use it too.
 
-On 8/30/2024 2:53 AM, Ilpo Järvinen wrote:
-> On Thu, 8 Aug 2024, Xi Pardee wrote:
->
->> From: Xi Pardee <xi.pardee@intel.com>
->>
->> Add support to ignore all LTRs before suspend and restore the previous
->> LTR values after suspend. This feature could be turned off with module
->> parameter ltr_ignore_all_suspend.
-> This does not answer why? question.
+The user will be introduced in next patch.
 
-I will add the reason to commit message in next version.
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/usb/core/hub.h | 45 -------------------------------------
+ drivers/usb/core/usb.h |  6 -----
+ include/linux/usb.h    | 51 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 51 insertions(+), 51 deletions(-)
 
->
->> Suggested-by: Rafael J. Wysocki<rafael.j.wysocki@intel.com>
-> Please add a space between the name and email.
->
-> This patch seems to have fallen through cracks and did not appear in the
-> patchwork at all.
-Will add a space between the name and email.
->
->> Signed-off-by: Xi Pardee <xi.pardee@intel.com>
->> ---
->>   drivers/platform/x86/intel/pmc/core.c | 53 +++++++++++++++++++++++++++
->>   drivers/platform/x86/intel/pmc/core.h |  2 +
->>   2 files changed, 55 insertions(+)
->>
->> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
->> index 01ae71c6df59..f364a011721d 100644
->> --- a/drivers/platform/x86/intel/pmc/core.c
->> +++ b/drivers/platform/x86/intel/pmc/core.c
->> @@ -714,6 +714,49 @@ static int pmc_core_s0ix_blocker_show(struct seq_file *s, void *unused)
->>   }
->>   DEFINE_SHOW_ATTRIBUTE(pmc_core_s0ix_blocker);
->>   
->> +static void pmc_core_ltr_ignore_all(struct pmc_dev *pmcdev)
->> +{
->> +	unsigned int i;
->> +
->> +	for (i = 0; i < ARRAY_SIZE(pmcdev->pmcs); i++) {
->> +		struct pmc *pmc;
->> +		u32 ltr_ign;
->> +
->> +		pmc = pmcdev->pmcs[i];
->> +		if (!pmc)
->> +			continue;
->> +
->> +		guard(mutex)(&pmcdev->lock);
->> +		pmc->ltr_ign = pmc_core_reg_read(pmc, pmc->map->ltr_ignore_offset);
->> +
->> +		/* ltr_ignore_max is the max index value for ltr ignore register */
-> ltr -> LTR
-Will change it in next version.
->
->> +		ltr_ign = pmc->ltr_ign | GENMASK(pmc->map->ltr_ignore_max, 0);
->> +		pmc_core_reg_write(pmc, pmc->map->ltr_ignore_offset, ltr_ign);
->> +	}
->> +
->> +	/*
->> +	 * Ignoring ME during suspend is blocking platforms with ADL PCH to get to
->> +	 * deeper S0IX substate.
-> S0ix
->
-> --
->   i.
+diff --git a/drivers/usb/core/hub.h b/drivers/usb/core/hub.h
+index e6ae73f8a95d..8b488c247a1e 100644
+--- a/drivers/usb/core/hub.h
++++ b/drivers/usb/core/hub.h
+@@ -77,51 +77,6 @@ struct usb_hub {
+ 	struct list_head        onboard_devs;
+ };
+ 
+-/**
+- * struct usb port - kernel's representation of a usb port
+- * @child: usb device attached to the port
+- * @dev: generic device interface
+- * @port_owner: port's owner
+- * @peer: related usb2 and usb3 ports (share the same connector)
+- * @connector: USB Type-C connector
+- * @req: default pm qos request for hubs without port power control
+- * @connect_type: port's connect type
+- * @state: device state of the usb device attached to the port
+- * @state_kn: kernfs_node of the sysfs attribute that accesses @state
+- * @location: opaque representation of platform connector location
+- * @status_lock: synchronize port_event() vs usb_port_{suspend|resume}
+- * @portnum: port index num based one
+- * @is_superspeed cache super-speed status
+- * @usb3_lpm_u1_permit: whether USB3 U1 LPM is permitted.
+- * @usb3_lpm_u2_permit: whether USB3 U2 LPM is permitted.
+- * @early_stop: whether port initialization will be stopped earlier.
+- * @ignore_event: whether events of the port are ignored.
+- */
+-struct usb_port {
+-	struct usb_device *child;
+-	struct device dev;
+-	struct usb_dev_state *port_owner;
+-	struct usb_port *peer;
+-	struct typec_connector *connector;
+-	struct dev_pm_qos_request *req;
+-	enum usb_port_connect_type connect_type;
+-	enum usb_device_state state;
+-	struct kernfs_node *state_kn;
+-	usb_port_location_t location;
+-	struct mutex status_lock;
+-	u32 over_current_count;
+-	u8 portnum;
+-	u32 quirks;
+-	unsigned int early_stop:1;
+-	unsigned int ignore_event:1;
+-	unsigned int is_superspeed:1;
+-	unsigned int usb3_lpm_u1_permit:1;
+-	unsigned int usb3_lpm_u2_permit:1;
+-};
+-
+-#define to_usb_port(_dev) \
+-	container_of(_dev, struct usb_port, dev)
+-
+ extern int usb_hub_create_port_device(struct usb_hub *hub,
+ 		int port1);
+ extern void usb_hub_remove_port_device(struct usb_hub *hub,
+diff --git a/drivers/usb/core/usb.h b/drivers/usb/core/usb.h
+index b8324ea05b20..3f45b6978660 100644
+--- a/drivers/usb/core/usb.h
++++ b/drivers/usb/core/usb.h
+@@ -192,12 +192,6 @@ extern const struct file_operations usbdev_file_operations;
+ extern int usb_devio_init(void);
+ extern void usb_devio_cleanup(void);
+ 
+-/*
+- * Firmware specific cookie identifying a port's location. '0' == no location
+- * data available
+- */
+-typedef u32 usb_port_location_t;
+-
+ /* internal notify stuff */
+ extern void usb_notify_add_device(struct usb_device *udev);
+ extern void usb_notify_remove_device(struct usb_device *udev);
+diff --git a/include/linux/usb.h b/include/linux/usb.h
+index 832997a9da0a..1a8f94cc2bc1 100644
+--- a/include/linux/usb.h
++++ b/include/linux/usb.h
+@@ -772,6 +772,57 @@ extern void usb_queue_reset_device(struct usb_interface *dev);
+ 
+ extern struct device *usb_intf_get_dma_device(struct usb_interface *intf);
+ 
++/*
++ * Firmware specific cookie identifying a port's location. '0' == no location
++ * data available
++ */
++typedef u32 usb_port_location_t;
++
++/**
++ * struct usb port - kernel's representation of a usb port
++ * @child: usb device attached to the port
++ * @dev: generic device interface
++ * @port_owner: port's owner
++ * @peer: related usb2 and usb3 ports (share the same connector)
++ * @connector: USB Type-C connector
++ * @req: default pm qos request for hubs without port power control
++ * @connect_type: port's connect type
++ * @state: device state of the usb device attached to the port
++ * @state_kn: kernfs_node of the sysfs attribute that accesses @state
++ * @location: opaque representation of platform connector location
++ * @status_lock: synchronize port_event() vs usb_port_{suspend|resume}
++ * @portnum: port index num based one
++ * @is_superspeed cache super-speed status
++ * @usb3_lpm_u1_permit: whether USB3 U1 LPM is permitted.
++ * @usb3_lpm_u2_permit: whether USB3 U2 LPM is permitted.
++ * @early_stop: whether port initialization will be stopped earlier.
++ * @ignore_event: whether events of the port are ignored.
++ */
++struct usb_port {
++	struct usb_device *child;
++	struct device dev;
++	struct usb_dev_state *port_owner;
++	struct usb_port *peer;
++	struct typec_connector *connector;
++	struct dev_pm_qos_request *req;
++	enum usb_port_connect_type connect_type;
++	enum usb_device_state state;
++	struct kernfs_node *state_kn;
++	usb_port_location_t location;
++	struct mutex status_lock;
++	u32 over_current_count;
++	u8 portnum;
++	u32 quirks;
++	unsigned int early_stop:1;
++	unsigned int ignore_event:1;
++	unsigned int is_superspeed:1;
++	unsigned int usb3_lpm_u1_permit:1;
++	unsigned int usb3_lpm_u2_permit:1;
++};
++
++#define to_usb_port(_dev) \
++	container_of(_dev, struct usb_port, dev)
++
+ #ifdef CONFIG_ACPI
+ extern int usb_acpi_set_power_state(struct usb_device *hdev, int index,
+ 	bool enable);
+-- 
+2.43.0
 
-Will change it in next version.
-
-Thanks!
-
-Xi
-
->
->> +	 */
->> +	pmc_core_send_ltr_ignore(pmcdev, 6, 0);
->> +}
->> +
->> +static void pmc_core_ltr_restore_all(struct pmc_dev *pmcdev)
->> +{
->> +	unsigned int i;
->> +
->> +	for (i = 0; i < ARRAY_SIZE(pmcdev->pmcs); i++) {
->> +		struct pmc *pmc;
->> +
->> +		pmc = pmcdev->pmcs[i];
->> +		if (!pmc)
->> +			continue;
->> +
->> +		guard(mutex)(&pmcdev->lock);
->> +		pmc_core_reg_write(pmc, pmc->map->ltr_ignore_offset, pmc->ltr_ign);
->> +	}
->> +}
->> +
->>   static inline u64 adjust_lpm_residency(struct pmc *pmc, u32 offset,
->>   				       const int lpm_adj_x2)
->>   {
->> @@ -1479,6 +1522,10 @@ static bool warn_on_s0ix_failures;
->>   module_param(warn_on_s0ix_failures, bool, 0644);
->>   MODULE_PARM_DESC(warn_on_s0ix_failures, "Check and warn for S0ix failures");
->>   
->> +static bool ltr_ignore_all_suspend = true;
->> +module_param(ltr_ignore_all_suspend, bool, 0644);
->> +MODULE_PARM_DESC(ltr_ignore_all_suspend, "Ignore all LTRs during suspend");
->> +
->>   static __maybe_unused int pmc_core_suspend(struct device *dev)
->>   {
->>   	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
->> @@ -1488,6 +1535,9 @@ static __maybe_unused int pmc_core_suspend(struct device *dev)
->>   	if (pmcdev->suspend)
->>   		pmcdev->suspend(pmcdev);
->>   
->> +	if (ltr_ignore_all_suspend)
->> +		pmc_core_ltr_ignore_all(pmcdev);
->> +
->>   	/* Check if the syspend will actually use S0ix */
->>   	if (pm_suspend_via_firmware())
->>   		return 0;
->> @@ -1594,6 +1644,9 @@ static __maybe_unused int pmc_core_resume(struct device *dev)
->>   {
->>   	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
->>   
->> +	if (ltr_ignore_all_suspend)
->> +		pmc_core_ltr_restore_all(pmcdev);
->> +
->>   	if (pmcdev->resume)
->>   		return pmcdev->resume(pmcdev);
->>   
->> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
->> index ea04de7eb9e8..e862ea88b816 100644
->> --- a/drivers/platform/x86/intel/pmc/core.h
->> +++ b/drivers/platform/x86/intel/pmc/core.h
->> @@ -372,6 +372,7 @@ struct pmc_info {
->>    * @map:		pointer to pmc_reg_map struct that contains platform
->>    *			specific attributes
->>    * @lpm_req_regs:	List of substate requirements
->> + * @ltr_ign:		Holds LTR ignore data while suspended
->>    *
->>    * pmc contains info about one power management controller device.
->>    */
->> @@ -380,6 +381,7 @@ struct pmc {
->>   	void __iomem *regbase;
->>   	const struct pmc_reg_map *map;
->>   	u32 *lpm_req_regs;
->> +	u32 ltr_ign;
->>   };
->>   
->>   /**
->>
