@@ -1,149 +1,77 @@
-Received: from msa.smtpout.orange.fr (smtp-83.smtpout.orange.fr [80.12.242.83])
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1C832C8E;
-	Sat,  7 Sep 2024 05:36:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9534015CD41
+	for <platform-driver-x86@vger.kernel.org>; Sat,  7 Sep 2024 14:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725687370; cv=none; b=SpM3BSXHaRHpyJgRPqLOKMd2lRAxYDuSOvvWa4fPDHSiQvSdlsRg1q0SDjNbQ1EiNgJcS3n0Yuv8BmKb2SngBmJjYrfDnQcabIbigq75DLYeMhS3adOz30+2BwZQI6ftITcpSjp7hJnDe3AqdqAEc3MCJGo1GYlTmDxzjC9mzs8=
+	t=1725717875; cv=none; b=lvkC0ApNSheYvQeqBVq0l4biBn5199s5Q/pr0ypViw9bLSTkxdQ69P2i0KrdtphEAZZdcml+KnVDGsYyR7Q81wKtQnsg281uva/X65U0Q11c10dc/Rh7bn7Ziyml0K7UVvGtkPq4AP0YYXoq58EBKclegPxeEgSjnm+T4bbnEv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725687370; c=relaxed/simple;
-	bh=bWdr1VYjmts1AtM3hv/151cs6BQWWh7DP6hLoyQaDLI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rR1i8N4/wb5ZGG6vYOrRzYIkVyLBNcUU6CwC+BZ3BmJDY9IQWnqk6Se37XfI190y8zIxB5WsdpgTkkcbHkMWvXz+LVPI/A/j5m3IgdJDJ8jY1ocqvQYAzbufydj3w+47JRV5uM4pjR3KsYYi1gikQAzwz66ru1p8SYZlhdm/o3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Ov4MO2/E; arc=none smtp.client-ip=80.12.242.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1725717875; c=relaxed/simple;
+	bh=fn/8FW15s9ERu3jatoBEkUVxfsNvhJzurlSzY8U8LPU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=edKGRWtXPpfkFa2dw6rV074OtSl+Eq0W1x4RJBLtnV46yq7UB7vqdkiXcVu2WXIxlt2eFr9YGHjboBKAFnP9KdIz6dKGEwk/L3cwoHB2WAn27Kh3wkhtpP2VamcwocKSjJWdGBzFAb1tZaFVAr1rOzmqYMqBoCb2nME+Dbm223M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fmO7u7Sx; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Ov4MO2/E"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id mo5jsZENhQYYumo5jsI8EG; Sat, 07 Sep 2024 07:34:49 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1725687289;
-	bh=zhb/fr3/ahbe9u0OOQ3I4zVqjQ6OdAdflP4aJvLzC4g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=Ov4MO2/EsHbrXOn9mC5X45wUoZIu5LI6TUyK0ggF1aC8TviLvfB2vCpHsKNXLYgO5
-	 vBaAVBW+bZ0l5ZTWIpIqG1k5s5ogB6GbmyJep53eZUBPf7UrWql6sNXCVJAV7qwJ/1
-	 IKAMTL4XPED5b32aaNhI45/3uOfPJ3CGw0qz15LWBCyr9YqZ3KUAXf9faq3OFP5C8r
-	 RcDhXSGvkEV2+CZzDd2oTGxqPwspFww7txYJdfKzDwGcoeUud15+vIoJ0S0x/fCqRZ
-	 1y+Kq0GAzZTDRh8RQOXn6s6TFr9lLo8cXOffoCQL4+J2ZW41amN0iv7I2iv+YmsbqH
-	 V9/TpYOhfBxiA==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Sat, 07 Sep 2024 07:34:49 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <daf856a8-32ad-47ac-91b2-0aa2253636f8@wanadoo.fr>
-Date: Sat, 7 Sep 2024 07:34:35 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fmO7u7Sx"
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5e16cb56d4aso1585644eaf.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 07 Sep 2024 07:04:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725717873; x=1726322673; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fn/8FW15s9ERu3jatoBEkUVxfsNvhJzurlSzY8U8LPU=;
+        b=fmO7u7SxVWJ8Q2gCvRm7t5DGl0mUtwgV2Kn4O0H66gG+R790f9VObp8VOq94wLLHRM
+         PJovaK44vOahDYU4pfwIlRlrITQdD0ypxDqfdzVSFtwzMn6WeL9usYv2PryrIJzvrEtF
+         Gwj9tPYsiLICzJeYaAQv5BwjcRqQP3WCKr/4EzerGQONs2snwI6akqoKuPQ9u6DyApIG
+         MedGJt5iI1/r2WpQp+juSqUCNG5OQB45ttfiZIKQQ6232UY+zrYXRCXAvQGL+RnfV1v0
+         hu/G6HLfP0XR5cw32MCt3c7KVtfdI12S06S/KLFYemrNJtK9hTJAUduaRnBTe1So7tUU
+         C3OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725717873; x=1726322673;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fn/8FW15s9ERu3jatoBEkUVxfsNvhJzurlSzY8U8LPU=;
+        b=U1ffezyTsSimf/NPyQB99HDWTEch6hQualjgvDcHQcnz4+dfriuzZ2BS0mExTP96dp
+         F3rUjDMwwm4ztc+0NwIu6owOjrfm6swAikqBoYQrewZKzfiPp+FNsPDNE6TX7tMI3VuJ
+         v2zX5GLt4leHqfnOcwWdm7Vv/0R/wNYk8+T3iiiAVzOR397Yl6M1n9qsqvMxUDRhBr2j
+         iRe4gyU18b0ponUM+Tj/5TLbKsS36DDdWZjIobB7QESfgaIci2kejK1FISyDf7U1cmuw
+         tsLrNpXA8c32I+MzDSvjktqFps+rbr8nKlo+bjkWbx8X1hvcWE64ukRzhnVFg3CDCUom
+         q9PA==
+X-Gm-Message-State: AOJu0Yxysj6vN6TYNF1eQhEyZ+byLiAgL8AYjOMQYUnPUYn3kFpI4dWS
+	N/XubTdLmewS1WDz5yO3UMH9Az59QbY6LMV9trdccKcGeBPHDOUCXSk5ktpF14OvFLwR3wuC7Wd
+	VpHxCc/jVPySemT8ETIbONkjd2D0=
+X-Google-Smtp-Source: AGHT+IEjfwzR7IDYSsrWhLnhymeAMNC76dOeBTcMSgIJ4CZ4qZcEDxublY+IAehFdcIg7yz0hZo9bmOhb3FyxswVOAc=
+X-Received: by 2002:a05:6808:1396:b0:3db:1735:9a41 with SMTP id
+ 5614622812f47-3e029dfd167mr6679241b6e.19.1725717873552; Sat, 07 Sep 2024
+ 07:04:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2 02/10] net: ethernet: Convert using
- devm_clk_get_enabled() in emac_probe()
-To: Li Zetao <lizetao1@huawei.com>, mchehab@kernel.org,
- florian.fainelli@broadcom.com, andrew@lunn.ch, olteanv@gmail.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, wens@csie.org, jernej.skrabec@gmail.com,
- samuel@sholland.org, heiko@sntech.de, yisen.zhuang@huawei.com,
- salil.mehta@huawei.com, hauke@hauke-m.de, alexandre.torgue@foss.st.com,
- joabreu@synopsys.com, mcoquelin.stm32@gmail.com, wellslutw@gmail.com,
- radhey.shyam.pandey@amd.com, michal.simek@amd.com, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, ruanjinjie@huawei.com,
- hverkuil-cisco@xs4all.nl, u.kleine-koenig@pengutronix.de,
- jacky_chou@aspeedtech.com, jacob.e.keller@intel.com
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-rockchip@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com, platform-driver-x86@vger.kernel.org
-References: <20240907031926.3591353-1-lizetao1@huawei.com>
- <20240907031926.3591353-3-lizetao1@huawei.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240907031926.3591353-3-lizetao1@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <3c63701c-f9fc-4f98-b991-58135da3fcc3@gmx.de> <62891F43-E938-4DF3-9E51-9CCE19784DA8@gmail.com>
+ <d8563b6b-8ab8-481d-aeba-656c38dda2ed@gmx.de>
+In-Reply-To: <d8563b6b-8ab8-481d-aeba-656c38dda2ed@gmx.de>
+From: Rayan Margham <rayanmargham4@gmail.com>
+Date: Sat, 7 Sep 2024 15:04:22 +0100
+Message-ID: <CACzB==5oz3xa9ZFRk_xF8qDpzvKQcdjpKTx1mvUENkkZvLea-Q@mail.gmail.com>
+Subject: Re: Add Support for the Acer Predator Triton PT14-51
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Le 07/09/2024 à 05:19, Li Zetao a écrit :
-> Use devm_clk_get_enabled() instead of devm_clk_get() +
-> clk_prepare_enable(), which can make the clk consistent with the device
-> life cycle and reduce the risk of unreleased clk resources. Since the
-> device framework has automatically released the clk resource, there is
-> no need to execute clk_disable_unprepare(clk) on the error path, drop
-> the out_clk_disable_unprepare label, and the original error process can
-> changed to the out_dispose_mapping error path.
-> 
-> Signed-off-by: Li Zetao <lizetao1@huawei.com>
+Hey Armin Wolf,
 
-Hi,
+I found something that might me quite helpful,
+4,1289,478717534,-;acer_wmi: Unknown function number - 9 - 0
+4,1290,478733471,-;acer_wmi: Unknown function number - 8 - 0
+4,1291,1751600805,-;acer_wmi: Unknown function number - 9 - 1
+4,1292,1751612580,-;acer_wmi: Unknown function number - 8 - 1
 
-I think that the subject should be "net: ethernet: allwinner:", or maybe 
-even "net: allwinner:"
-
-
-clk can now be removed from struct emac_board_info I think.
-You should check for all patches, as asked in [1].
-
-I've not looked all patches, but lantiq_xrx200() looks also a good 
-candidate for removing clk from a structure.
-
-CJ
-
-[1]: https://lore.kernel.org/all/20240903151649.1b466145@kernel.org/
-
-CJ
-
-> ---
->   drivers/net/ethernet/allwinner/sun4i-emac.c | 13 ++-----------
->   1 file changed, 2 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
-> index d761c08fe5c1..8f42501729b7 100644
-> --- a/drivers/net/ethernet/allwinner/sun4i-emac.c
-> +++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
-> @@ -1005,22 +1005,16 @@ static int emac_probe(struct platform_device *pdev)
->   	if (emac_configure_dma(db))
->   		netdev_info(ndev, "configure dma failed. disable dma.\n");
->   
-> -	db->clk = devm_clk_get(&pdev->dev, NULL);
-> +	db->clk = devm_clk_get_enabled(&pdev->dev, NULL);
->   	if (IS_ERR(db->clk)) {
->   		ret = PTR_ERR(db->clk);
->   		goto out_dispose_mapping;
->   	}
->   
-> -	ret = clk_prepare_enable(db->clk);
-> -	if (ret) {
-> -		dev_err(&pdev->dev, "Error couldn't enable clock (%d)\n", ret);
-> -		goto out_dispose_mapping;
-> -	}
-> -
->   	ret = sunxi_sram_claim(&pdev->dev);
->   	if (ret) {
->   		dev_err(&pdev->dev, "Error couldn't map SRAM to device\n");
-> -		goto out_clk_disable_unprepare;
-> +		goto out_dispose_mapping;
->   	}
->   
->   	db->phy_node = of_parse_phandle(np, "phy-handle", 0);
-> @@ -1068,8 +1062,6 @@ static int emac_probe(struct platform_device *pdev)
->   
->   out_release_sram:
->   	sunxi_sram_release(&pdev->dev);
-> -out_clk_disable_unprepare:
-> -	clk_disable_unprepare(db->clk);
->   out_dispose_mapping:
->   	irq_dispose_mapping(ndev->irq);
->   	dma_release_channel(db->rx_chan);
-> @@ -1095,7 +1087,6 @@ static void emac_remove(struct platform_device *pdev)
->   
->   	unregister_netdev(ndev);
->   	sunxi_sram_release(&pdev->dev);
-> -	clk_disable_unprepare(db->clk);
->   	irq_dispose_mapping(ndev->irq);
->   	iounmap(db->membase);
->   	free_netdev(ndev);
-
+Thanks,
+Rayan Margham
