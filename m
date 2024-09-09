@@ -1,61 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A281720DC4;
-	Mon,  9 Sep 2024 22:02:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17EA189B82
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Sep 2024 22:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725919338; cv=none; b=q+SLNpQ1bi50df07Iqb1lO+fACd2fxVMCFfgXUnBZdiAsPDt9u1MMj8vu0UVPIXep8Zy0F28eGPp6HR/nIVYQOVa2DpsmNOr35eo6Dk7PnCbe79o1/olOEcailz1dF+Kg4gDPgTDCrxLJyLcK4qjiC1YxXcX3QhX51xvVb5JJ2c=
+	t=1725921311; cv=none; b=fkreKCSNHolPSAGENglSqdUWY7hxF8Xn+hYosCBcgQJB/cufIlyv1MAq85b4hHmU5QUFt5TWbOaq/grc7Cj/CSwap7uwxP9pu6WK2YPQMvxBK+ZxIyiqezzRfYCy9YDClgUgNcv4LOtDb65IYgSdX+tWx2Z1YK21INLQlhSirag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725919338; c=relaxed/simple;
-	bh=CyHo4lm/o0p2r64s8FRSmx74N6JkJPw/dNJNtCS08gk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bDXotCpRH/P3T1BOc8Bs7jfCv/nZWcmv+/PReILHjw4SUZVq5eoGZU2wgZ0jostg9rfxB9w9011stddkYFgI04xi8tojqPR+U9/aQIR/QTuIQIFnXktQ/wr0mBoVxPYHkku2i4CIpB0XlsdHM3w2Lup9yZU0neIMmC6ui6pP10s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cznt/t3b; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725921311; c=relaxed/simple;
+	bh=nh4P9bveQw9df08McHCSRO43LqQ7oCWck0IXNtb4xU8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z/vlRM9B86HhOlGSYtMWYwevmZnqASAvqE1El2CKOC6CjWFzJfoI3nKEFJ9CO6p0oY4RsEN6hrFwCD0Er1UPWW9yncLdn+hNdQXFT+MG016DA1G8V7xb7IGMIjdeCVMKPtk9xUApGiAKJZ0urjV9RdXSqNTP3rkNPoNyBIAmQFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=basnieuwenhuizen.nl; spf=pass smtp.mailfrom=basnieuwenhuizen.nl; dkim=pass (2048-bit key) header.d=basnieuwenhuizen.nl header.i=@basnieuwenhuizen.nl header.b=Gr6FwBGn; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=basnieuwenhuizen.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=basnieuwenhuizen.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cznt/t3b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39F4BC4CEC6;
-	Mon,  9 Sep 2024 22:02:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725919338;
-	bh=CyHo4lm/o0p2r64s8FRSmx74N6JkJPw/dNJNtCS08gk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cznt/t3b6lycg3+BfzRjncEOkB1awOuAPqLMkQ/XqTCo/7ZeHPIBGFlozUd/lMPuP
-	 mK+Abqa8cTyYQS7lJokn5tbqps5B1jWPeYrpQ06LUJ5D14VVkZJb+nzrLgeWyl2qIe
-	 dS+1CInSgRI8ecNPUrCC/6cngiXdGIsCd/VSgxKlXZCnmirnMi9lD2CIzHF7ifBhFl
-	 ykidjghZZgd8KLFYsV/kPnT32WNN0CODBHFCj3zO4y+TCIoJHmi9AH0drfkXo6BcX5
-	 MZ57zeyjR+YLItmvdnZeg9pbfoZ7Okh5dhGmNjI5YKFCqq+gZlUw7rEIx4yn3lTh8L
-	 HUiyCTzrqUYkQ==
-Date: Tue, 10 Sep 2024 00:02:14 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
-	Paul Menzel <pmenzel@molgen.mpg.de>, Wolfram Sang <wsa@kernel.org>, eric.piel@tremplin-utc.net, 
-	Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com, 
-	Kai Heng Feng <kai.heng.feng@canonical.com>, platform-driver-x86@vger.kernel.org, 
-	Jean Delvare <jdelvare@suse.com>, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v8 0/6] i2c-i801 / dell-lis3lv02d: Move instantiation of
- lis3lv02d i2c_client from i2c-i801 to dell-lis3lv02d
-Message-ID: <h2lnjlwquupfuasm7lcv6zehsh2vszhnos5xagpwi3qfossd6x@bmazngofy5om>
-References: <20240812203952.42804-1-hdegoede@redhat.com>
+	dkim=pass (2048-bit key) header.d=basnieuwenhuizen.nl header.i=@basnieuwenhuizen.nl header.b="Gr6FwBGn"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-374ca65cafdso3038175f8f.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Sep 2024 15:35:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=basnieuwenhuizen.nl; s=google; t=1725921305; x=1726526105; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=s4MICI6g3yUok6wutwkSUYOvmuKDHD5fYjAV3OeIKts=;
+        b=Gr6FwBGnKfo2dIqVTrtsi1OOJTQbqDdpFWaer67HAiS1Ec6oWmgeYeOwIn2HIkTtfY
+         lJ2fiiU7Xn8dIKxeR1KAjaDOy8/RbNXWXRIOr4KEiKdMK4A3p2jWk2/gD+r2gX8QXtS4
+         nCt1yHHSbGCMWu8QWc1vmzt8O+91pU1jgKeLyEpzQBxPvlPpzeO12byOR07Ujxu0//4A
+         7UEaMJU4I08ErrTAI+Z3XIjdtQj9ywElIMA4YgYzBNyCMSArm5Oj8DWX1BtVae/zzbf5
+         n7q8i503j+rTFi4TysX3w+I3UlLplYzFJpM4UwHmlJQe4Sh59Glg1acJrWp7iw9oMWM8
+         Id/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725921305; x=1726526105;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s4MICI6g3yUok6wutwkSUYOvmuKDHD5fYjAV3OeIKts=;
+        b=TjwWER/5/cPcAnNf0beqc6DM4xyCAFblIUEKjCxeKbx7sYqimkoMcxT9Xki+4974hq
+         vZBphrLC0w0X0jW+ilwsaFq+5qBMSSUA5tJB3E82OxOgxdk0Otjx3A5P2vZd7sgLj8OC
+         vrkBRT9VoZPO2p5M3O3dfYINktlXIDEZywI1o/CxOfpeFlSDLaFagVpiF0ehkRVTJfeE
+         JCEmeebx7rmpGpxQDREbC72SOuDQaTZKCLREyQZ/jONCIJv+uC7SxnQLmdljQnKUbgra
+         pSxySkSPYE4zaSd5I9rBNUOUVkEga6OUTAz2sVqHrrmsVcORtpHAKpTHZRHrjJFyuZAy
+         w3iA==
+X-Gm-Message-State: AOJu0YzgyLSg/iIi4pg20UencWkIPih4fx7twySeIBrYUtbmbPnemZEv
+	F0DiNPeIe+CDLrCRcGiJzpochclaHb0BYUhpCRPynebJeaRNTmQMoDTkwu0BJqeMewAcIF2MngM
+	m
+X-Google-Smtp-Source: AGHT+IFZUAvWGz5OHP/qofhTYW7wiosl34eXYlf9+2F2FzBtkfyB0DU8bePqE4LvpKoNJK4IOH/W8w==
+X-Received: by 2002:adf:f6c2:0:b0:376:274c:c8b3 with SMTP id ffacd0b85a97d-378949ef869mr5319868f8f.5.1725921305215;
+        Mon, 09 Sep 2024 15:35:05 -0700 (PDT)
+Received: from bas-workstation.. ([2a02:aa12:a781:a500:aaa1:59ff:feea:fd4f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42caeb21a73sm89835435e9.3.2024.09.09.15.35.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Sep 2024 15:35:04 -0700 (PDT)
+From: Bas Nieuwenhuizen <bas@basnieuwenhuizen.nl>
+To: platform-driver-x86@vger.kernel.org
+Cc: luke@ljones.dev,
+	corentin.chary@gmail.com,
+	Bas Nieuwenhuizen <bas@basnieuwenhuizen.nl>
+Subject: [PATCH] platform/x86: asus-wmi: Disable OOBE experience on Zenbook S 16
+Date: Tue, 10 Sep 2024 00:35:03 +0200
+Message-ID: <20240909223503.1445779-1-bas@basnieuwenhuizen.nl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240812203952.42804-1-hdegoede@redhat.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Hans,
+The OOBE experience fades the keyboard backlight in & out continuously,
+and make the backlight uncontrollable using its device.
 
-> Hans de Goede (6):
->   i2c: core: Setup i2c_adapter runtime-pm before calling device_add()
->   i2c: i801: Use a different adapter-name for IDF adapters
+Workaround taken from
+https://wiki.archlinux.org/index.php?title=ASUS_Zenbook_UM5606&diff=next&oldid=815547
 
-Patch 1 and 2 merged to i2c/i2c-host.
+Signed-off-by: Bas Nieuwenhuizen <bas@basnieuwenhuizen.nl>
+---
+ drivers/platform/x86/asus-wmi.c            | 10 ++++++++++
+ include/linux/platform_data/x86/asus-wmi.h |  1 +
+ 2 files changed, 11 insertions(+)
 
-Thanks,
-Andi
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index cc735931f97b..3b333d6076ac 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -1779,6 +1779,16 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+ 			goto error;
+ 	}
+ 
++	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_OOBE)) {
++		/*
++		 * Disable OOBE state, so that e.g. the keyboard backlight
++		 * works.
++		 */
++		rv = asus_wmi_set_devstate(ASUS_WMI_DEVID_OOBE, 1, NULL);
++		if (rv)
++			goto error;
++	}
++
+ error:
+ 	if (rv)
+ 		asus_wmi_led_exit(asus);
+diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+index 0aeeae1c1943..ae9bf7479e7b 100644
+--- a/include/linux/platform_data/x86/asus-wmi.h
++++ b/include/linux/platform_data/x86/asus-wmi.h
+@@ -62,6 +62,7 @@
+ #define ASUS_WMI_DEVID_KBD_BACKLIGHT	0x00050021
+ #define ASUS_WMI_DEVID_LIGHT_SENSOR	0x00050022 /* ?? */
+ #define ASUS_WMI_DEVID_LIGHTBAR		0x00050025
++#define ASUS_WMI_DEVID_OOBE		0x0005002F
+ /* This can only be used to disable the screen, not re-enable */
+ #define ASUS_WMI_DEVID_SCREENPAD_POWER	0x00050031
+ /* Writing a brightness re-enables the screen if disabled */
+-- 
+2.45.2
+
