@@ -1,112 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B40183CDB;
-	Mon,  9 Sep 2024 18:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A281720DC4;
+	Mon,  9 Sep 2024 22:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725907243; cv=none; b=useWPk0JZT7HO8Ikq0cjrrOLi/4/iy7oghKFqFBpdghQKOyYQ7GV9Hdhl36HKKgciUBsVlJFzyNzss3+xTecFC3YAc5EjbcyXXuUMMEm3GtujuQ+yj3rJqPA0TH8oGtiIalR89THoATr8eHH1Bz6eytu60MNn39Jf5QpRkcZXaY=
+	t=1725919338; cv=none; b=q+SLNpQ1bi50df07Iqb1lO+fACd2fxVMCFfgXUnBZdiAsPDt9u1MMj8vu0UVPIXep8Zy0F28eGPp6HR/nIVYQOVa2DpsmNOr35eo6Dk7PnCbe79o1/olOEcailz1dF+Kg4gDPgTDCrxLJyLcK4qjiC1YxXcX3QhX51xvVb5JJ2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725907243; c=relaxed/simple;
-	bh=ldth771QtKYp1aOO9EKui3hX7A0F+l9TXfrgCTBSWZY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Bb8F9aHtW+vh3RWI0WZ/sBRxPg387tNI2Bs7Y8df8yoalmfN5FmTO+H/87Am4sv4O6+l4ngse7hUuU/cx4SUlN98z6MY4FBujtK/NWnf0XUTCS2VCt71OKHMdmOCh8B4OPni1BVCZ0uVN5DtSN0nFrW1u86WcGhWyvlgA7lBxXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I6rlqljj; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1725919338; c=relaxed/simple;
+	bh=CyHo4lm/o0p2r64s8FRSmx74N6JkJPw/dNJNtCS08gk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bDXotCpRH/P3T1BOc8Bs7jfCv/nZWcmv+/PReILHjw4SUZVq5eoGZU2wgZ0jostg9rfxB9w9011stddkYFgI04xi8tojqPR+U9/aQIR/QTuIQIFnXktQ/wr0mBoVxPYHkku2i4CIpB0XlsdHM3w2Lup9yZU0neIMmC6ui6pP10s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cznt/t3b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I6rlqljj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725907242; x=1757443242;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=ldth771QtKYp1aOO9EKui3hX7A0F+l9TXfrgCTBSWZY=;
-  b=I6rlqljjyr93xIyeXYqGeDUno4QAh+oDzXV/ro9Z03sUwna+BaWwpDmn
-   KhoCbfb9u13HOxD8Og9k5XIRoXnNma/5foPQt0XIenUZvVHen548mborA
-   K63ad+rA68jsgq7BvXPWSsCjkAXLKqfyNlLkeBh7FetRwj7TYPa0trjY/
-   ZmMMhpE/0KZalw9pOWM4rQ/H1b0qpYj/dzo2T8tLntP5bfi4W5qJOGcAk
-   awPVCoP0oPLre/U9XHXSuYcUoDVHLcJFRPN6UYPZuv2EXUnUuHlsniEkh
-   BHAxDqiNCuFSzDa4R30iL5aXG5uaGr5tMzrnckKyn0qC31Wzncya59R8n
-   Q==;
-X-CSE-ConnectionGUID: MzCLjFEvR86hfSuGhvN9hg==
-X-CSE-MsgGUID: h445T1epRyaqWo+6OnZwww==
-X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="24120412"
-X-IronPort-AV: E=Sophos;i="6.10,215,1719903600"; 
-   d="scan'208";a="24120412"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 11:40:41 -0700
-X-CSE-ConnectionGUID: OxYL5/vJTWqo4UpbyrhYig==
-X-CSE-MsgGUID: REAwAcRSSvG247ovHd1ddg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,215,1719903600"; 
-   d="scan'208";a="97571629"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.59])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 11:40:39 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 9 Sep 2024 21:40:36 +0300 (EEST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cznt/t3b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39F4BC4CEC6;
+	Mon,  9 Sep 2024 22:02:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725919338;
+	bh=CyHo4lm/o0p2r64s8FRSmx74N6JkJPw/dNJNtCS08gk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cznt/t3b6lycg3+BfzRjncEOkB1awOuAPqLMkQ/XqTCo/7ZeHPIBGFlozUd/lMPuP
+	 mK+Abqa8cTyYQS7lJokn5tbqps5B1jWPeYrpQ06LUJ5D14VVkZJb+nzrLgeWyl2qIe
+	 dS+1CInSgRI8ecNPUrCC/6cngiXdGIsCd/VSgxKlXZCnmirnMi9lD2CIzHF7ifBhFl
+	 ykidjghZZgd8KLFYsV/kPnT32WNN0CODBHFCj3zO4y+TCIoJHmi9AH0drfkXo6BcX5
+	 MZ57zeyjR+YLItmvdnZeg9pbfoZ7Okh5dhGmNjI5YKFCqq+gZlUw7rEIx4yn3lTh8L
+	 HUiyCTzrqUYkQ==
+Date: Tue, 10 Sep 2024 00:02:14 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
 To: Hans de Goede <hdegoede@redhat.com>
-cc: Andy Shevchenko <andy@kernel.org>, James Harmison <jharmison@redhat.com>, 
-    platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] platform/x86: panasonic-laptop: Fix SINF array
- out of bounds accesses
-In-Reply-To: <172590448046.2114.11735502570640542626.b4-ty@linux.intel.com>
-Message-ID: <68b1cc24-1ef0-c247-f2c0-546e7ee96ed9@linux.intel.com>
-References: <20240909113227.254470-1-hdegoede@redhat.com> <172590448046.2114.11735502570640542626.b4-ty@linux.intel.com>
+Cc: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
+	Paul Menzel <pmenzel@molgen.mpg.de>, Wolfram Sang <wsa@kernel.org>, eric.piel@tremplin-utc.net, 
+	Marius Hoch <mail@mariushoch.de>, Dell.Client.Kernel@dell.com, 
+	Kai Heng Feng <kai.heng.feng@canonical.com>, platform-driver-x86@vger.kernel.org, 
+	Jean Delvare <jdelvare@suse.com>, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v8 0/6] i2c-i801 / dell-lis3lv02d: Move instantiation of
+ lis3lv02d i2c_client from i2c-i801 to dell-lis3lv02d
+Message-ID: <h2lnjlwquupfuasm7lcv6zehsh2vszhnos5xagpwi3qfossd6x@bmazngofy5om>
+References: <20240812203952.42804-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-732980885-1725905230=:966"
-Content-ID: <e5d23138-5364-e501-91cd-848664a367e0@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240812203952.42804-1-hdegoede@redhat.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Hans,
 
---8323328-732980885-1725905230=:966
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <7b4c3389-35f1-d4c2-1810-61c91372e9f9@linux.intel.com>
+> Hans de Goede (6):
+>   i2c: core: Setup i2c_adapter runtime-pm before calling device_add()
+>   i2c: i801: Use a different adapter-name for IDF adapters
 
-On Mon, 9 Sep 2024, Ilpo J=E4rvinen wrote:
+Patch 1 and 2 merged to i2c/i2c-host.
 
-> On Mon, 09 Sep 2024 13:32:25 +0200, Hans de Goede wrote:
->=20
-> > The panasonic laptop code in various places uses the SINF array with in=
-dex
-> > values of 0 - SINF_CUR_BRIGHT(0x0d) without checking that the SINF arra=
-y
-> > is big enough.
-> >=20
-> > Not all panasonic laptops have this many SINF array entries, for exampl=
-e
-> > the Toughbook CF-18 model only has 10 SINF array entries. So it only
-> > supports the AC+DC brightness entries and mute.
-> >=20
-> > [...]
->=20
->=20
-> Thank you for your contribution, it has been applied to my local
-> review-ilpo branch. Note it will show up in the public
-> platform-drivers-x86/review-ilpo branch only once I've pushed my
-> local branch there, which might take a while.
->=20
-> The list of commits applied:
-> [1/3] platform/x86: panasonic-laptop: Fix SINF array out of bounds access=
-es
->       commit: f52e98d16e9bd7dd2b3aef8e38db5cbc9899d6a4
-> [2/3] platform/x86: panasonic-laptop: Allocate 1 entry extra in the sinf =
-array
->       commit: 33297cef3101d950cec0033a0dce0a2d2bd59999
-> [3/3] platform/x86: panasonic-laptop: Add support for programmable button=
-s
->       (no commit info)
-
-Hmpf, b4 messed this one up. Only patches 1-2 were applied and 3 should=20
-go through for-next.
-
---=20
- i.
---8323328-732980885-1725905230=:966--
+Thanks,
+Andi
