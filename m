@@ -1,119 +1,190 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8931B5338
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Sep 2024 11:32:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C041B3725
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Sep 2024 11:37:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725881564; cv=none; b=Y+iUIrmzrudQESq37jQEYoZn5Cm3jMku814IWxDgO+d6l5fCaiXnamb5q/NqrBlK9VSVY1l/WhQo13RQ7+G03F7E+0BAMaswk7t5/2cobJV1Ts11jBELXO7z2Zv7oDIRNHZfc7mBZW2HTklXDwi61KoSo1l3EO+CM1OyqN4Oqng=
+	t=1725881827; cv=none; b=lphSmbkCnYHhRrK2sb9tjrVYLX8dg78f2aljJo15PVNlfH/Ry3d0uGDZ88Q3PQCxZRcD/fcABaS8jJ2ZgBFb9n2il/zzA+seg4PtlOuLp1etSzDybmNO5tGFFB/2rk09lcBTdrMGXjC2f2syye5xFQCqNshnNHxZFn5HghvD1DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725881564; c=relaxed/simple;
-	bh=Go2CbUCYhn/cFeiuUHVahmj4dcu56IBsT2kzzQ7VTnM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dtjQ82YzZJNKbq87jNT/IJxMnqgNmW3OH73jj7XvW8v+LEp6+I012W4IARboCV9e6ehky6YdF6h3xI3Vw5lLEg2vJCdAQ1W3g74g8/eixBkLBQ9O9+gJ1WUW+914huV4oWhcEUBbY+70njnc2q8nEHiccZLlmD09YuE+j2iBZr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MTZUuwf7; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1725881827; c=relaxed/simple;
+	bh=IURwqxE1BypkMuGeKI5mgAWiVHV1/ZFxFb9JlLfJGk8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r7dP9tUe4ByzveOJXAne2nUdHwzqbe9h0b0OEtWaURKQESUorOJjccLweAeCkIjqZcCkgI6rK9+EfBlP2nqjyFSBhBTy09LKhpsRq9jI5BQkrZORh8p0IOql4MyN55FpxRnvXZ6vlMmu44NZx0dE4Wp7KZIif95Th78ThWPC2YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tmdbun1a; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MTZUuwf7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tmdbun1a"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725881562;
+	s=mimecast20190719; t=1725881825;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sakEuDkSWdHDaZJJPUg7C/KUfmi3Vc/oxPnoXhGYojE=;
-	b=MTZUuwf7bvlxvkszFBXiEPs0VDAeMzqgmWI1vFvFpJ1XsG2Nnj223irkvy5G5vb27FaZpy
-	L+xD6PHwGnrU62KoTDNp/K0zlIp5NDVHKo8EChjdOaheJgnejct3T/N5RfspNGHm9DHIqi
-	NOO+UBYlYPvluTTCwBQ2YIfxMZo+aYk=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-414-HKO0u2o6MJ-YD2hM21Ec7Q-1; Mon,
- 09 Sep 2024 07:32:37 -0400
-X-MC-Unique: HKO0u2o6MJ-YD2hM21Ec7Q-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DED0C1955D4B;
-	Mon,  9 Sep 2024 11:32:35 +0000 (UTC)
-Received: from x1.localdomain.com (unknown [10.39.194.168])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3A00919560AA;
-	Mon,  9 Sep 2024 11:32:32 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	James Harmison <jharmison@redhat.com>,
-	platform-driver-x86@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH v2 2/3] platform/x86: panasonic-laptop: Allocate 1 entry extra in the sinf array
-Date: Mon,  9 Sep 2024 13:32:26 +0200
-Message-ID: <20240909113227.254470-2-hdegoede@redhat.com>
-In-Reply-To: <20240909113227.254470-1-hdegoede@redhat.com>
-References: <20240909113227.254470-1-hdegoede@redhat.com>
+	bh=xUrDuwJzCiGMYllHyT64UIxu+Lz8F5k8yxB9wzXcv/U=;
+	b=Tmdbun1azU/liVAATKfIAfCVM4yL6eDNKVXBB/VWaHCikbPbMfVhcgTW02W4Luxkq5U+a/
+	TCjqkdyCXltCPUdSwy1n59gIiGpvywesieXuRY/VKeg0QIN1q4VTNjXU5ojkGhk21kpGgx
+	F9mPOJDEZ2t1VahpGITTDVqH5vo1Nv8=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-164-pKq_eJ2COyCEIHiE6T5puQ-1; Mon, 09 Sep 2024 07:37:04 -0400
+X-MC-Unique: pKq_eJ2COyCEIHiE6T5puQ-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a8d1a00e0beso241688166b.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Sep 2024 04:37:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725881823; x=1726486623;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xUrDuwJzCiGMYllHyT64UIxu+Lz8F5k8yxB9wzXcv/U=;
+        b=RhVI6HdBf2ULisZOEDKVKVGnf+sJ/qTwhqfCH5NVuVxq5/9nOCGUNO0t+aJrI5clrE
+         Y2DbxVTUfr49Bdpnk3LJ49+x+ugBcVSMaxxF1RvEFoJSD0POJ5FNjKO93YOY02d0vy7H
+         VSFaPXnGe6dGiB04sTuvrqIo8zzaLOdiE452lM2bJMWEQMDe6V2Y9H0BdsIRMF2QIC+0
+         4IBXD1EhzXCM8rHsUaVR5HlZvAhcmfREnTe00/0lnLaTadw4OY91HMO+gjJuZJV+uDPc
+         sE+zuiFxf6X/2NuSJiBAlYNyEkCwhA/3otlSwONSpKaSHGd0xZswV7VKnuFCySIwVZy3
+         Alzg==
+X-Forwarded-Encrypted: i=1; AJvYcCVGceCr7yl6HCw/YtyzSqOEdgpC36XM8NCmxLPqPwWlyYnBoOyVZF2lK4Ml484GO1Rx0luoD8T08ScxcMF1lIfaFA7+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHtBVKRwOGKFwIWryyAuUtkZyTpepNmk/ONbVOg+Cizuxh/Dhb
+	0Q1BY/HElhtORLJ7ZWyso2v2nrBhFoJ18XKulgTEdyy7ZbLrKycn5dAQ0S4cz47y0tmgy5IuLhb
+	/3KTWeXLlBPWnJP3SZSnYBD3B25ap07gnipbe6/y6ncDvzOxJSSF8iZ0ySSWpHPgXTmcS1bE=
+X-Received: by 2002:a17:907:7f22:b0:a8a:cc5a:7f30 with SMTP id a640c23a62f3a-a8acc5a8261mr1003262666b.25.1725881822969;
+        Mon, 09 Sep 2024 04:37:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHn8LIXFgJqQu8fsNhvtpzfYGm47GNNcRK44avfkvcEfA00i2ZIEtkJeKcbJTZ5RQtsoe4z9Q==
+X-Received: by 2002:a17:907:7f22:b0:a8a:cc5a:7f30 with SMTP id a640c23a62f3a-a8acc5a8261mr1003259466b.25.1725881822441;
+        Mon, 09 Sep 2024 04:37:02 -0700 (PDT)
+Received: from [192.168.171.203] ([109.38.234.69])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8d25d5dc74sm327094766b.208.2024.09.09.04.37.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Sep 2024 04:37:01 -0700 (PDT)
+Message-ID: <43cd3e8e-4c99-4641-b55b-4b54a42b8e53@redhat.com>
+Date: Mon, 9 Sep 2024 13:36:58 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86:intel/pmc: fix build regression with pmtimer
+ turned off
+To: Arnd Bergmann <arnd@kernel.org>,
+ Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Xi Pardee <xi.pardee@linux.intel.com>,
+ Rajvi Jingar <rajvi.jingar@linux.intel.com>,
+ "David E. Box" <david.e.box@linux.intel.com>, Kane Chen
+ <kane.chen@intel.com>, Marek Maslanka <mmaslanka@google.com>,
+ Tony Luck <tony.luck@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240909111644.248756-1-arnd@kernel.org>
+Content-Language: en-US
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240909111644.248756-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Some DSDT-s have an off-by-one bug where the SINF package count is
-one higher than the SQTY reported value, allocate 1 entry extra.
+Hi,
 
-Also make the SQTY <-> SINF package count mismatch error more verbose
-to help debugging similar issues in the future.
+On 9/9/24 1:16 PM, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The acpi_pmtmr_{un,}register_suspend_resume_callback() declarations
+> got added into an #ifdef section without an alternative inline
+> stub, which now causes a build failure:
+> 
+> drivers/platform/x86/intel/pmc/core.c: In function 'pmc_core_probe':
+> drivers/platform/x86/intel/pmc/core.c:1507:17: error: implicit declaration of function 'acpi_pmtmr_register_suspend_resume_callback' [-Wimplicit-function-declaration]
+>  1507 |                 acpi_pmtmr_register_suspend_resume_callback(pmc_core_acpi_pm_timer_suspend_resume,
+>       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/platform/x86/intel/pmc/core.c: In function 'pmc_core_remove':
+> drivers/platform/x86/intel/pmc/core.c:1523:17: error: implicit declaration of function 'acpi_pmtmr_unregister_suspend_resume_callback' [-Wimplicit-function-declaration]
+>  1523 |                 acpi_pmtmr_unregister_suspend_resume_callback();
+>       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Remove the unnecessary #ifdef and use IS_ENABLED() checks in the
+> respective callers.
+> 
+> Fixes: e774696b1f95 ("platform/x86:intel/pmc: Enable the ACPI PM Timer to be turned off when suspended")
+> Fixes: fe323dcb12fd ("clocksource: acpi_pm: Add external callback for suspend/resume")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/platform/x86/intel/pmc/core.c |  6 ++++--
+>  include/linux/acpi_pmtmr.h            | 13 +------------
+>  2 files changed, 5 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index 695804ca8de4..bbe90b1f56e2 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -1503,7 +1503,8 @@ static int pmc_core_probe(struct platform_device *pdev)
+>  			       pmc_core_adjust_slp_s0_step(primary_pmc, 1));
+>  
+>  	map = primary_pmc->map;
+> -	if (map->acpi_pm_tmr_ctl_offset)
+> +	if (IS_ENABLED(CONFIG_CONFIG_X86_PM_TIMER) &&
+> +	    map->acpi_pm_tmr_ctl_offset)
+>  		acpi_pmtmr_register_suspend_resume_callback(pmc_core_acpi_pm_timer_suspend_resume,
+>  							 pmcdev);
+>  
+> @@ -1519,7 +1520,8 @@ static void pmc_core_remove(struct platform_device *pdev)
+>  	const struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+>  	const struct pmc_reg_map *map = pmc->map;
+>  
+> -	if (map->acpi_pm_tmr_ctl_offset)
+> +	if (IS_ENABLED(CONFIG_CONFIG_X86_PM_TIMER) &&
+> +	    map->acpi_pm_tmr_ctl_offset)
+>  		acpi_pmtmr_unregister_suspend_resume_callback();
+>  
+>  	pmc_core_dbgfs_unregister(pmcdev);
+> diff --git a/include/linux/acpi_pmtmr.h b/include/linux/acpi_pmtmr.h
+> index 0ded9220d379..0846f90ce179 100644
+> --- a/include/linux/acpi_pmtmr.h
+> +++ b/include/linux/acpi_pmtmr.h
+> @@ -13,14 +13,12 @@
+>  /* Overrun value */
+>  #define ACPI_PM_OVRRUN	(1<<24)
+>  
+> -#ifdef CONFIG_X86_PM_TIMER
+> -
+>  extern u32 acpi_pm_read_verified(void);
+>  extern u32 pmtmr_ioport;
+>  
+>  static inline u32 acpi_pm_read_early(void)
+>  {
+> -	if (!pmtmr_ioport)
+> +	if (!IS_ENABLED(CONFIG_X86_PM_TIMER) || !pmtmr_ioport)
+>  		return 0;
+>  	/* mask the output to 24 bits */
+>  	return acpi_pm_read_verified() & ACPI_PM_MASK;
+> @@ -39,14 +37,5 @@ void acpi_pmtmr_register_suspend_resume_callback(void (*cb)(void *data, bool sus
+>   */
+>  void acpi_pmtmr_unregister_suspend_resume_callback(void);
+>  
+> -#else
+> -
+> -static inline u32 acpi_pm_read_early(void)
+> -{
+> -	return 0;
+> -}
+> -
+> -#endif
+> -
+>  #endif
+>  
 
-This fixes the panasonic-laptop driver failing to probe() on some
-devices with the following errors:
 
-[    3.958887] SQTY reports bad SINF length SQTY: 37 SINF-pkg-count: 38
-[    3.958892] Couldn't retrieve BIOS data
-[    3.983685] Panasonic Laptop Support - With Macros: probe of MAT0019:00 failed with error -5
+Thanks, patch looks good to me:
 
-Fixes: 709ee531c153 ("panasonic-laptop: add Panasonic Let's Note laptop extras driver v0.94")
-Cc: stable@vger.kernel.org
-Tested-by: James Harmison <jharmison@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
-- Fix "off-by-one", "than" spelling
-- Use %u to log unsigned numbers
----
- drivers/platform/x86/panasonic-laptop.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-index 39044119d2a6..ebd81846e2d5 100644
---- a/drivers/platform/x86/panasonic-laptop.c
-+++ b/drivers/platform/x86/panasonic-laptop.c
-@@ -337,7 +337,8 @@ static int acpi_pcc_retrieve_biosdata(struct pcc_acpi *pcc)
- 	}
- 
- 	if (pcc->num_sifr < hkey->package.count) {
--		pr_err("SQTY reports bad SINF length\n");
-+		pr_err("SQTY reports bad SINF length SQTY: %lu SINF-pkg-count: %u\n",
-+		       pcc->num_sifr, hkey->package.count);
- 		status = AE_ERROR;
- 		goto end;
- 	}
-@@ -994,6 +995,12 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
- 		return -ENODEV;
- 	}
- 
-+	/*
-+	 * Some DSDT-s have an off-by-one bug where the SINF package count is
-+	 * one higher than the SQTY reported value, allocate 1 entry extra.
-+	 */
-+	num_sifr++;
-+
- 	pcc = kzalloc(sizeof(struct pcc_acpi), GFP_KERNEL);
- 	if (!pcc) {
- 		pr_err("Couldn't allocate mem for pcc");
--- 
-2.46.0
+Daniel, can you pick this one up?
+
+Regards,
+
+Hans
+
 
