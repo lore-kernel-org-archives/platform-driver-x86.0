@@ -1,49 +1,54 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8F6176251;
-	Mon,  9 Sep 2024 09:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB0C1B3725
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Sep 2024 11:32:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725873410; cv=none; b=h7pyi3TgU2PmVgTppsJlxXOBTbIkn+8/1zVYn+OoogqlcgYAM7hSte2EnLTLMRKcJqCXcXW+GowdCswWUbUOpARWW1IpF5qpLDweReETYbxvJjYHElYZtYhPRsy8/7GYxXqErs4G4cbIEv8NBE4en192xWgZyAEntI7QyeNsoiA=
+	t=1725881559; cv=none; b=qyKRridDU4Vhe5JliF1OLUZ7dGAsInjVvigErz5N9j0s7ULGzsd2Tf9BRrKwwjZ9K3u/RRZdAdzRbVl5e/a8tLIiSOHWHlQhHZUvHxx8Hytg9lEXDfMCjjIul7ZzxtvyEhCa/gabnaNstfLzoW5Yuyvi5p5of+dYg6jN5XepXhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725873410; c=relaxed/simple;
-	bh=70ruTc1aOPJJxfTDI45qWnTyn5GOXRE+iQDpdlk/skk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FXUYvwpLtOIjlmmqgqBobcJ8w4HJeIWzgSVz9BVoeF+IAt/qHxhE8vb89mRldXbOmNkMYGnW80ocCQUyYeyq++kzmQUuFZQQYpj4QmfW2d3aEqujAaoUnzkUETee/+T3TgRDDDROf/UwQSYXPUdup0RMzfODMq//yj0xpSJplPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RiEZRHtH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725881559; c=relaxed/simple;
+	bh=x2Ryh5vvYgUKJ8r1znK27TaE4jlrhPeKdPulyTOEeEI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qM5qJLxorjhkTY6P8qzy24qUH5+5L6g1Qx7p+zKfYfPmty06vpoj/iZLgjOx2hQTihYHFwMu/uYW7al0hue9GaEhlIDA53Yfr/bLxJkMf7vfZLo9J3QT+Stw7PFdjXwPanCtK3dofKc/ZCqVCqqOPN+c8SyjxbdehRwJ2Cv0D5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ixqw2TPh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RiEZRHtH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B414C4CEC5;
-	Mon,  9 Sep 2024 09:16:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725873410;
-	bh=70ruTc1aOPJJxfTDI45qWnTyn5GOXRE+iQDpdlk/skk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=RiEZRHtHYKpnYlncrgCFQgkD7sxbtikbg5CsovFojcVLJ7YFEpiDeG8z576H3IwvT
-	 nW8J0SjxQCnbOlkEWSRy15LFBFWj28PC8pef+vKfM3DxZWdkoTo5Fu5d/z4V4K/0nH
-	 mWbEg+iHuZc8fihgiNWLAHu2V48Dkyl1T8rO97u6AWm8OE7/i5sOB4hNVYT9mg0AxR
-	 dHF62EjuEqYDst0KrRXlVJffwQTDmXxQ9Uuf3zruHYjAoOyfPEGfY5h4Xi4ozecRDB
-	 zXrmjFDf98EBJJRPlwlEYGJFEAHZ32BcgSoGcJ9hxMPreviJYerPQmF3WgsGKtvL1T
-	 OQW9aCXtOVJhA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Xi Pardee <xi.pardee@linux.intel.com>,
-	Rajvi Jingar <rajvi.jingar@linux.intel.com>,
-	"David E. Box" <david.e.box@linux.intel.com>,
-	Kane Chen <kane.chen@intel.com>,
-	Marek Maslanka <mmaslanka@google.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ixqw2TPh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725881556;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=l9M38SIGJ+j1pCk7T0JxjWcvCY0KZya8CZjLB091hok=;
+	b=ixqw2TPhna05RgSryoKFly/hwXAzV3lP/8TkgryNpkf0GQVumtQ3OQZqfAHy3GylYoM+vW
+	AjPcctR6Bc+gC3suoJNj+2wBHhr+hZDP2p2xk0m6RAy7gqJ2Eefh++drEczaBzlyaafWIf
+	wCfMn4vh6pfHiLRqLZjWkzyVyi5xltM=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-495-QDM2Ipz5Oui5C6qUDGBEdw-1; Mon,
+ 09 Sep 2024 07:32:33 -0400
+X-MC-Unique: QDM2Ipz5Oui5C6qUDGBEdw-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BFA481953948;
+	Mon,  9 Sep 2024 11:32:32 +0000 (UTC)
+Received: from x1.localdomain.com (unknown [10.39.194.168])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CA46919560AA;
+	Mon,  9 Sep 2024 11:32:29 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	James Harmison <jharmison@redhat.com>,
 	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86:intel/pmc: fix build regression with pmtimer turned off
-Date: Mon,  9 Sep 2024 11:16:35 +0000
-Message-Id: <20240909111644.248756-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	stable@vger.kernel.org
+Subject: [PATCH v2 1/3] platform/x86: panasonic-laptop: Fix SINF array out of bounds accesses
+Date: Mon,  9 Sep 2024 13:32:25 +0200
+Message-ID: <20240909113227.254470-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -51,92 +56,129 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-From: Arnd Bergmann <arnd@arndb.de>
+The panasonic laptop code in various places uses the SINF array with index
+values of 0 - SINF_CUR_BRIGHT(0x0d) without checking that the SINF array
+is big enough.
 
-The acpi_pmtmr_{un,}register_suspend_resume_callback() declarations
-got added into an #ifdef section without an alternative inline
-stub, which now causes a build failure:
+Not all panasonic laptops have this many SINF array entries, for example
+the Toughbook CF-18 model only has 10 SINF array entries. So it only
+supports the AC+DC brightness entries and mute.
 
-drivers/platform/x86/intel/pmc/core.c: In function 'pmc_core_probe':
-drivers/platform/x86/intel/pmc/core.c:1507:17: error: implicit declaration of function 'acpi_pmtmr_register_suspend_resume_callback' [-Wimplicit-function-declaration]
- 1507 |                 acpi_pmtmr_register_suspend_resume_callback(pmc_core_acpi_pm_timer_suspend_resume,
-      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/platform/x86/intel/pmc/core.c: In function 'pmc_core_remove':
-drivers/platform/x86/intel/pmc/core.c:1523:17: error: implicit declaration of function 'acpi_pmtmr_unregister_suspend_resume_callback' [-Wimplicit-function-declaration]
- 1523 |                 acpi_pmtmr_unregister_suspend_resume_callback();
-      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Check that the SINF array has a minimum size which covers all AC+DC
+brightness entries and refuse to load if the SINF array is smaller.
 
-Remove the unnecessary #ifdef and use IS_ENABLED() checks in the
-respective callers.
+For higher SINF indexes hide the sysfs attributes when the SINF array
+does not contain an entry for that attribute, avoiding show()/store()
+accessing the array out of bounds and add bounds checking to the probe()
+and resume() code accessing these.
 
-Fixes: e774696b1f95 ("platform/x86:intel/pmc: Enable the ACPI PM Timer to be turned off when suspended")
-Fixes: fe323dcb12fd ("clocksource: acpi_pm: Add external callback for suspend/resume")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: e424fb8cc4e6 ("panasonic-laptop: avoid overflow in acpi_pcc_hotkey_add()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/intel/pmc/core.c |  6 ++++--
- include/linux/acpi_pmtmr.h            | 13 +------------
- 2 files changed, 5 insertions(+), 14 deletions(-)
+Changes in v2:
+- Some panasonic laptops have only 10 SINF entries. Change the required
+  minimum SQTY to SQTY > SINF_DC_CUR_BRIGHT and avoid the driver accessing
+  higher indexes by adding num_sifr checks.
+---
+ drivers/platform/x86/panasonic-laptop.c | 49 ++++++++++++++++++++-----
+ 1 file changed, 39 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 695804ca8de4..bbe90b1f56e2 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1503,7 +1503,8 @@ static int pmc_core_probe(struct platform_device *pdev)
- 			       pmc_core_adjust_slp_s0_step(primary_pmc, 1));
+diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+index cf845ee1c7b1..39044119d2a6 100644
+--- a/drivers/platform/x86/panasonic-laptop.c
++++ b/drivers/platform/x86/panasonic-laptop.c
+@@ -773,6 +773,24 @@ static DEVICE_ATTR_RW(dc_brightness);
+ static DEVICE_ATTR_RW(current_brightness);
+ static DEVICE_ATTR_RW(cdpower);
  
- 	map = primary_pmc->map;
--	if (map->acpi_pm_tmr_ctl_offset)
-+	if (IS_ENABLED(CONFIG_CONFIG_X86_PM_TIMER) &&
-+	    map->acpi_pm_tmr_ctl_offset)
- 		acpi_pmtmr_register_suspend_resume_callback(pmc_core_acpi_pm_timer_suspend_resume,
- 							 pmcdev);
++static umode_t pcc_sysfs_is_visible(struct kobject *kobj, struct attribute *attr, int idx)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct acpi_device *acpi = to_acpi_device(dev);
++	struct pcc_acpi *pcc = acpi_driver_data(acpi);
++
++	if (attr == &dev_attr_mute.attr)
++		return (pcc->num_sifr > SINF_MUTE) ? attr->mode : 0;
++
++	if (attr == &dev_attr_eco_mode.attr)
++		return (pcc->num_sifr > SINF_ECO_MODE) ? attr->mode : 0;
++
++	if (attr == &dev_attr_current_brightness.attr)
++		return (pcc->num_sifr > SINF_CUR_BRIGHT) ? attr->mode : 0;
++
++	return attr->mode;
++}
++
+ static struct attribute *pcc_sysfs_entries[] = {
+ 	&dev_attr_numbatt.attr,
+ 	&dev_attr_lcdtype.attr,
+@@ -787,8 +805,9 @@ static struct attribute *pcc_sysfs_entries[] = {
+ };
  
-@@ -1519,7 +1520,8 @@ static void pmc_core_remove(struct platform_device *pdev)
- 	const struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
- 	const struct pmc_reg_map *map = pmc->map;
+ static const struct attribute_group pcc_attr_group = {
+-	.name	= NULL,		/* put in device directory */
+-	.attrs	= pcc_sysfs_entries,
++	.name		= NULL,		/* put in device directory */
++	.attrs		= pcc_sysfs_entries,
++	.is_visible	= pcc_sysfs_is_visible,
+ };
  
--	if (map->acpi_pm_tmr_ctl_offset)
-+	if (IS_ENABLED(CONFIG_CONFIG_X86_PM_TIMER) &&
-+	    map->acpi_pm_tmr_ctl_offset)
- 		acpi_pmtmr_unregister_suspend_resume_callback();
  
- 	pmc_core_dbgfs_unregister(pmcdev);
-diff --git a/include/linux/acpi_pmtmr.h b/include/linux/acpi_pmtmr.h
-index 0ded9220d379..0846f90ce179 100644
---- a/include/linux/acpi_pmtmr.h
-+++ b/include/linux/acpi_pmtmr.h
-@@ -13,14 +13,12 @@
- /* Overrun value */
- #define ACPI_PM_OVRRUN	(1<<24)
+@@ -941,12 +960,15 @@ static int acpi_pcc_hotkey_resume(struct device *dev)
+ 	if (!pcc)
+ 		return -EINVAL;
  
--#ifdef CONFIG_X86_PM_TIMER
--
- extern u32 acpi_pm_read_verified(void);
- extern u32 pmtmr_ioport;
+-	acpi_pcc_write_sset(pcc, SINF_MUTE, pcc->mute);
+-	acpi_pcc_write_sset(pcc, SINF_ECO_MODE, pcc->eco_mode);
++	if (pcc->num_sifr > SINF_MUTE)
++		acpi_pcc_write_sset(pcc, SINF_MUTE, pcc->mute);
++	if (pcc->num_sifr > SINF_ECO_MODE)
++		acpi_pcc_write_sset(pcc, SINF_ECO_MODE, pcc->eco_mode);
+ 	acpi_pcc_write_sset(pcc, SINF_STICKY_KEY, pcc->sticky_key);
+ 	acpi_pcc_write_sset(pcc, SINF_AC_CUR_BRIGHT, pcc->ac_brightness);
+ 	acpi_pcc_write_sset(pcc, SINF_DC_CUR_BRIGHT, pcc->dc_brightness);
+-	acpi_pcc_write_sset(pcc, SINF_CUR_BRIGHT, pcc->current_brightness);
++	if (pcc->num_sifr > SINF_CUR_BRIGHT)
++		acpi_pcc_write_sset(pcc, SINF_CUR_BRIGHT, pcc->current_brightness);
  
- static inline u32 acpi_pm_read_early(void)
- {
--	if (!pmtmr_ioport)
-+	if (!IS_ENABLED(CONFIG_X86_PM_TIMER) || !pmtmr_ioport)
- 		return 0;
- 	/* mask the output to 24 bits */
- 	return acpi_pm_read_verified() & ACPI_PM_MASK;
-@@ -39,14 +37,5 @@ void acpi_pmtmr_register_suspend_resume_callback(void (*cb)(void *data, bool sus
-  */
- void acpi_pmtmr_unregister_suspend_resume_callback(void);
+ 	return 0;
+ }
+@@ -963,8 +985,12 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
  
--#else
--
--static inline u32 acpi_pm_read_early(void)
--{
--	return 0;
--}
--
--#endif
--
- #endif
+ 	num_sifr = acpi_pcc_get_sqty(device);
  
+-	if (num_sifr < 0 || num_sifr > 255) {
+-		pr_err("num_sifr out of range");
++	/*
++	 * pcc->sinf is expected to at least have the AC+DC brightness entries.
++	 * Accesses to higher SINF entries are checked against num_sifr.
++	 */
++	if (num_sifr <= SINF_DC_CUR_BRIGHT || num_sifr > 255) {
++		pr_err("num_sifr %d out of range %d - 255\n", num_sifr, SINF_DC_CUR_BRIGHT + 1);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -1020,11 +1046,14 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
+ 	acpi_pcc_write_sset(pcc, SINF_STICKY_KEY, 0);
+ 	pcc->sticky_key = 0;
+ 
+-	pcc->eco_mode = pcc->sinf[SINF_ECO_MODE];
+-	pcc->mute = pcc->sinf[SINF_MUTE];
+ 	pcc->ac_brightness = pcc->sinf[SINF_AC_CUR_BRIGHT];
+ 	pcc->dc_brightness = pcc->sinf[SINF_DC_CUR_BRIGHT];
+-	pcc->current_brightness = pcc->sinf[SINF_CUR_BRIGHT];
++	if (pcc->num_sifr > SINF_MUTE)
++		pcc->mute = pcc->sinf[SINF_MUTE];
++	if (pcc->num_sifr > SINF_ECO_MODE)
++		pcc->eco_mode = pcc->sinf[SINF_ECO_MODE];
++	if (pcc->num_sifr > SINF_CUR_BRIGHT)
++		pcc->current_brightness = pcc->sinf[SINF_CUR_BRIGHT];
+ 
+ 	/* add sysfs attributes */
+ 	result = sysfs_create_group(&device->dev.kobj, &pcc_attr_group);
 -- 
-2.39.2
+2.46.0
 
