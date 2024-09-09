@@ -1,108 +1,128 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5211B4C4F
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Sep 2024 13:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D012B1B5EB7
+	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Sep 2024 14:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725888984; cv=none; b=pctBbRFKjoRDnKKTtleLogng79+cl5tzT8CU65HINHcsYhBvqfjnMqM+eFq+MGRgjbqCp7Ayu0kGXazLj9/N9X9+ndoGrfnesofD9hAZo1ABzZDcJjT0sVAiodsAxIar9Dl5rv5aHN6bNBmvz5P9OdbmbP8B5SVldYg+CqTIrkU=
+	t=1725892746; cv=none; b=pgbcQxZ233KYHBnqq9UYdQ9bUKrSkYwQgPymloCVfZ2P+8rul9r96FHlyXOC2Jei9b9GCJC8X8irtYZ/fu8daCIIZ1Fh3O2avVwNq04GRrQ06v+D1B0fx94zWf1i4B/SfZRLlLAkFFmQj6i78t7g7a/LgUpxmCAQ5sAb0z1o1GE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725888984; c=relaxed/simple;
-	bh=BAuxzHPZw2jTXdKOWfhAsjcQsyTJAlXQRtg+AXUUzAA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hk3/JXCIlR1n8zdJ1rduOhzKVTgP4bmRvxEZZMvIcT/bqzPmeYl1MoOu0AH7GqVW1C0SFbaUP1vLQI7NyEzpBKMj7kDUOA2XRbvEFDLfQEd5OxEMRWip9HL54QRl5HxMfEmseynX6vyzPKsZ43UvKheltMZ6edhh9SGiekGWQpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fnxLKG2E; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1725892746; c=relaxed/simple;
+	bh=oFs8eFtMRafE5ULesdhHuUhZPNcV5g4ad1jjXWG62nk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SG+PPoUNzBSNAunrKJu/lQSfX0YJoNQ+mi9YQuMF8O7e0qUEkHQbVxg6JLNPqxXM/YsHqcijw8ynRV45QjygEyPc9QoL8o6rn4uHy+WZSTEo6I+YJ0D1B8VtsvUo2XmzIw+9CToilIdpRHi0zVskQVXgoCusYfFlA/hiwlu1/xI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=LFL2VyY8; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=g.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fnxLKG2E"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5365aec6fc1so3478385e87.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Sep 2024 06:36:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="LFL2VyY8"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-458320b30e7so4526961cf.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Sep 2024 07:39:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725888981; x=1726493781; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/9m2ovgC3tbhBkWQoZgc0XfIdfEqtR0fYQGv/pk+TAE=;
-        b=fnxLKG2E1mqsrWKm+uTY7yGsshcyA+41VdHPc1qv5m9JZbYUo/KDsEWKMaz+/KQDcS
-         /MveOksDIeowZ0MuL838zFmLqVTCwrMXEp+uqcXueaF45UL+I62xSAgGpldlEQmuwCbH
-         smJVMZ5TeOLZEcsK+iEJ9uiYT8snjaNLuTV8vymKn3ndBkOBwDPqhSl4UKDdjXwxGESk
-         f4qvX3lpEeQW/s0gT8bOxET8HYM3izvQuYB9shgPaoW99dKtuIfjwUd3+wXh8heAr5xX
-         +hcemq26z1NCilvhN653SOZs+jVKk+18/r1x/fDpQPuf6WVzNjQM67gBn6d5wnjH0FNH
-         evXA==
+        d=rowland.harvard.edu; s=google; t=1725892744; x=1726497544; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=9ixNkNREDkxIhRpTVrMqW4ltdM0RlgCXJC77xBu0jWQ=;
+        b=LFL2VyY8IZzhmjHTLcZizkD8Eu+AVcG0uW3/b1iVMiafmIUxcgIqOpgzOen0+pAA9e
+         p+mRzgVGblPUapoU+/pXO0Xf+koeEMErvCk2OynGIQLSu6GJwdmMVcR3WnGIgw8THnAr
+         6ja0oPBtPJjFf3PmjGF4onU8m6F3HT/sYUMVJsABqGBvj/g4F1q5tr+fgf7KloQzl4ty
+         V3idCVRdeSX15GXD3bYWKopA6scM9WHPeWs9TvfhfXjJr15dahnD78tccvcDq/Zg7E+D
+         uFtg6OFNp2Cd6fd1WTk63vdGgrf6+K+vC/YvuyHnizdxua4Yxy2Euv4rL6LEKhzdz2fL
+         VBgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725888981; x=1726493781;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1725892744; x=1726497544;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/9m2ovgC3tbhBkWQoZgc0XfIdfEqtR0fYQGv/pk+TAE=;
-        b=rD9/a6egvNd4Md82n3niKBzE3E/kcXCpt2HKo7zP7DePJeueJHWxkFIKuZevEEgcLo
-         TP5uyg6Ax7oe59X8+Dqrhxcy7yAFvc6lLgW2uOqzBuBu4dC+kFmY5k0Hk2TYmWVRphTd
-         e3172YXdsf1bWtvYR4OelDkY0cCxmzcAZT2ziJ3M/kk2IJnUkM6KiLOTb0WCai4Ro2mW
-         Har1xWxYVrAkCS8D/+IhFgOEh/zb0sNgl+1P3/36YNS/xjEYMWw3DPegimCtKO0FR7Ua
-         60TzZcp8yKjkDFRlEu+zkhf2gb4CeFZHTXvzW1RgpSxKX5iptmNXnL8iyyD97xCmZOSW
-         hzkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVow3bRe6zaU/HgHfhUlRYvg0tW+5FFzfKveoB3WeXwRftM0mCnFbhOq/RAQtzlK1C5oza9s4bBIleVqavqBz3iuLW/@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7Q/ibB5AyRXJgr5b2e+skWjPKjDazOd7SlyJ0BOGxqqNCBAkO
-	Qk6ZTAwCfS+293ThAf3TNaSvOXACK6yJX/GqmxOX+MxHTyagOqjiOhhWxXhrWps=
-X-Google-Smtp-Source: AGHT+IEVHV5pBqeCrHCSmVu+sTPke61MAJDc2DDaOV+NkRL25KMFkRrUsziZ3IFr3KZo/n2ZWdXQYA==
-X-Received: by 2002:a05:6512:114f:b0:535:45d2:abf0 with SMTP id 2adb3069b0e04-536587f594amr7912890e87.39.1725888980028;
-        Mon, 09 Sep 2024 06:36:20 -0700 (PDT)
-Received: from [192.168.2.1] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-42caeb8b2f4sm77686825e9.45.2024.09.09.06.36.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Sep 2024 06:36:19 -0700 (PDT)
-Message-ID: <c63fd548-4a50-4205-abb8-14f544b2431a@linaro.org>
-Date: Mon, 9 Sep 2024 15:36:15 +0200
+        bh=9ixNkNREDkxIhRpTVrMqW4ltdM0RlgCXJC77xBu0jWQ=;
+        b=Lr96gOK3GemSsXLAsoAu4Bgjua47jPKP4OYt1tEc3bQJ1/RQdwhdE6ElMcGjpIGzz2
+         8hPChDWblVEKpOzeTVew4q6vwkaabQcVNxv/q9SLcDQyReA1m3F4UqFDAH4yOUPcqbbQ
+         RJLYBPymdUDTaQHifk+kPiTSMfscJgzIifp6jkWCESnmNEejzY1QOKuDoY5N/i37d8WM
+         HQhAJotbbhbDu9BOs6Dv+64O812iKgKSAFrE1qR8na45qjqT3/jnaXgzngPcQULFwuEV
+         K2zm7h7JGAK6oIkcIhog1feraATswM7UXGXVJqEHXV0DZVQTFaomr2b9CDll4jIhJrZG
+         EsCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVzNkVXupRLLJPBqfg6IegzHAANGMzdgC/ZcYQSPKra22KZ8sUnBukfFMIq9SAVChRqHZpvUnNFZ5kWduEovh9/BLl+@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRS2IvcY0/gPZK251fyKvalGcKz6hTsOnZAdPAHwjpgN5KlpFQ
+	iyrB9sw8ZIEG4PS52KJToNGMRZ6QGHG/rin254HTgMciDgNvOFoetVoNcpcXCA==
+X-Google-Smtp-Source: AGHT+IHf+lwMdH6sVGdXhrfRvW4mi7kkSmEvFRcCY3mHy6ZUooM9nvWS+oe2RLkh9Tcrwbr0JGX/JA==
+X-Received: by 2002:ac8:7dc5:0:b0:446:5c35:d9c8 with SMTP id d75a77b69052e-4581f57bcdcmr64604001cf.30.1725892743725;
+        Mon, 09 Sep 2024 07:39:03 -0700 (PDT)
+Received: from rowland.harvard.edu ([2601:19b:681:fd10::4122])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-45822f95656sm20741211cf.91.2024.09.09.07.39.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Sep 2024 07:39:02 -0700 (PDT)
+Date: Mon, 9 Sep 2024 10:38:59 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: Mathias Nyman <mathias.nyman@linux.intel.com>, hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com, gregkh@linuxfoundation.org,
+	jorge.lopez2@hp.com, acelan.kao@canonical.com,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH v3] platform/x86/hp: Avoid spurious wakeup on HP ProOne
+ 440
+Message-ID: <7be0c87a-c00f-4346-8482-f41ef0249b57@rowland.harvard.edu>
+References: <20240906053047.459036-1-kai.heng.feng@canonical.com>
+ <d8600868-6e4b-45ab-b328-852b6ac8ecb5@rowland.harvard.edu>
+ <CAAd53p4i1zzW2DsVfirjXVsQX0AgXy1XbzWaM-ziWmAmp8J1=A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86:intel/pmc: fix build regression with pmtimer
- turned off
-To: Hans de Goede <hdegoede@redhat.com>, Arnd Bergmann <arnd@kernel.org>,
- Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- David E Box <david.e.box@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Xi Pardee <xi.pardee@linux.intel.com>,
- Rajvi Jingar <rajvi.jingar@linux.intel.com>,
- "David E. Box" <david.e.box@linux.intel.com>, Kane Chen
- <kane.chen@intel.com>, Marek Maslanka <mmaslanka@google.com>,
- Tony Luck <tony.luck@intel.com>, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240909111644.248756-1-arnd@kernel.org>
- <43cd3e8e-4c99-4641-b55b-4b54a42b8e53@redhat.com>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <43cd3e8e-4c99-4641-b55b-4b54a42b8e53@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAd53p4i1zzW2DsVfirjXVsQX0AgXy1XbzWaM-ziWmAmp8J1=A@mail.gmail.com>
 
-
-Hi Hans,
-
-
-On 09/09/2024 13:36, Hans de Goede wrote:
-
-[ ... ]
-
-> Thanks, patch looks good to me:
+On Mon, Sep 09, 2024 at 11:05:05AM +0800, Kai-Heng Feng wrote:
+> On Fri, Sep 6, 2024 at 10:22 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> >
+> > On Fri, Sep 06, 2024 at 01:30:47PM +0800, Kai-Heng Feng wrote:
+> > > The HP ProOne 440 has a power saving design that when the display is
+> > > off, it also cuts the USB touchscreen device's power off.
+> > >
+> > > This can cause system early wakeup because cutting the power off the
+> > > touchscreen device creates a disconnect event and prevent the system
+> > > from suspending:
+> >
+> > Is the touchscreen device connected directly to the root hub?  If it is
+> > then it looks like there's a separate bug here, which needs to be fixed.
+> >
+> > > [  445.814574] hub 2-0:1.0: hub_suspend
+> > > [  445.814652] usb usb2: bus suspend, wakeup 0
+> >
+> > Since the wakeup flag is set to 0, the root hub should not generate a
+> > wakeup request when a port-status-change event happens.
 > 
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> The disconnect event itself should not generate a wake request, but
+> the interrupt itself still needs to be handled.
 > 
-> Daniel, can you pick this one up?
+> >
+> > > [  445.824629] xhci_hcd 0000:00:14.0: Port change event, 1-11, id 11, portsc: 0x202a0
+> > > [  445.824639] xhci_hcd 0000:00:14.0: resume root hub
+> >
+> > But it did.  This appears to be a bug in one of the xhci-hcd suspend
+> > routines.
 
-Yes, sure
+I failed to notice before that the suspend message message above is for 
+bus 2 whereas the port change event here is on bus 1.  Nevertheless, I 
+assume that bus 1 was suspended with wakeup = 0, so the idea is the 
+same.
 
+> So should the xhci-hcd delay all interrupt handling after system resume?
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+It depends on how the hardware works; I don't know the details.  The 
+best approach would be: when suspending the root hub with wakeup = 0, 
+the driver will tell the hardware not to generate interrupt requests for 
+port-change events (and then re-enable those interrupt requests when the 
+root hub is resumed, later on).
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+If that's not possible, another possibility is that the driver could 
+handle the interrupt and clear the hardware's port-change status bit but 
+then not ask for the root hub to be resumed.  However, this would 
+probably be more difficult to get right.
 
+Alan Stern
