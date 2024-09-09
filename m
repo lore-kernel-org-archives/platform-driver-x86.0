@@ -1,221 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C2A1B1432;
-	Mon,  9 Sep 2024 08:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8F6176251;
+	Mon,  9 Sep 2024 09:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725869240; cv=none; b=HGqUsveW2aUz/UOTX0H1qQ2MMdABfudxkRxuAY6HvDwvQ/DVX7ezsbSmM7Gnb5VdieOeif4YY4g+FGobDgPPEeiPGqzEJxFXxvz6CYwbFbZW+X/2BMArcK/yV6AWIQy6yB+BoXXFmrxbHihpCyUjVivhqQKKg0WQNzPdBwDqqfg=
+	t=1725873410; cv=none; b=h7pyi3TgU2PmVgTppsJlxXOBTbIkn+8/1zVYn+OoogqlcgYAM7hSte2EnLTLMRKcJqCXcXW+GowdCswWUbUOpARWW1IpF5qpLDweReETYbxvJjYHElYZtYhPRsy8/7GYxXqErs4G4cbIEv8NBE4en192xWgZyAEntI7QyeNsoiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725869240; c=relaxed/simple;
-	bh=8n7w2jxs3cuC+YZ5jj/S+gSWv6BgQ0TufOwe9HT+bws=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=frHD1j7fTe+645B2P1u4aIpDNrUEtl6umxjT4REMQTolSm2Yas2CqWELPa+SOGWmtQfsBB70+7EL5I25QhDCl2dZTh+QxGwLQLCF8ptrtdfWavbRIv9GcnsKZ6T/m4Xj3b0NL0mOh8g51xIB503DcFA6gNE9Yr7phbqLn5ohMjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AHSiitou; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1725873410; c=relaxed/simple;
+	bh=70ruTc1aOPJJxfTDI45qWnTyn5GOXRE+iQDpdlk/skk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FXUYvwpLtOIjlmmqgqBobcJ8w4HJeIWzgSVz9BVoeF+IAt/qHxhE8vb89mRldXbOmNkMYGnW80ocCQUyYeyq++kzmQUuFZQQYpj4QmfW2d3aEqujAaoUnzkUETee/+T3TgRDDDROf/UwQSYXPUdup0RMzfODMq//yj0xpSJplPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RiEZRHtH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AHSiitou"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725869238; x=1757405238;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=8n7w2jxs3cuC+YZ5jj/S+gSWv6BgQ0TufOwe9HT+bws=;
-  b=AHSiitouaKaA+YJ1tzUEdOVqMrzAZhB2UYds3kQMvThBKQynuXizzpaE
-   r4I/3Gv5C7MwHYTzeXtkjpYbfONysjcoG0kKjzIfrz1xx5QuFlcufyC5h
-   /4+r8Y7eKBA+TqU7awJ+zYcmsB31H0oxP46dcA7yojNk7sdyxgwcc5Y7s
-   +PqgLHV1ITq76Pb6pSLxxyUDWe/g2IohSj5MrlQYYzZtJKjhCKsLf11Hq
-   oO3wwjidPxIfIMJGXIH819bd2BsVhaV+IU0Bp+Ymb4CODCR7Wy2dDsOaj
-   v3d4F8Pyvbj6Gd1gNRA2FsmwK11eDiZgXaPP5f9jMuDFq6PcL2cvcKoeQ
-   A==;
-X-CSE-ConnectionGUID: wMI8fMNiRCCiJuDWfpbhug==
-X-CSE-MsgGUID: V40bjHGiSV+DSaTQE1i6HA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11189"; a="13435943"
-X-IronPort-AV: E=Sophos;i="6.10,213,1719903600"; 
-   d="scan'208";a="13435943"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 01:07:17 -0700
-X-CSE-ConnectionGUID: gMc8itF7STuB4QfxM72KEg==
-X-CSE-MsgGUID: IzwnFM4iRGy2aALrsiDfXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,213,1719903600"; 
-   d="scan'208";a="71153740"
-Received: from dhhellew-desk2.ger.corp.intel.com.ger.corp.intel.com (HELO localhost) ([10.245.245.60])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 01:07:14 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 9 Sep 2024 11:07:09 +0300 (EEST)
-To: Xi Pardee <xi.pardee@linux.intel.com>
-cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
-    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86:intel/pmc: Ignore all LTRs during
- suspend
-In-Reply-To: <20240906184016.268153-1-xi.pardee@linux.intel.com>
-Message-ID: <15d08ff3-6787-7042-8afc-3a64f1ebc756@linux.intel.com>
-References: <20240906184016.268153-1-xi.pardee@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RiEZRHtH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B414C4CEC5;
+	Mon,  9 Sep 2024 09:16:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725873410;
+	bh=70ruTc1aOPJJxfTDI45qWnTyn5GOXRE+iQDpdlk/skk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RiEZRHtHYKpnYlncrgCFQgkD7sxbtikbg5CsovFojcVLJ7YFEpiDeG8z576H3IwvT
+	 nW8J0SjxQCnbOlkEWSRy15LFBFWj28PC8pef+vKfM3DxZWdkoTo5Fu5d/z4V4K/0nH
+	 mWbEg+iHuZc8fihgiNWLAHu2V48Dkyl1T8rO97u6AWm8OE7/i5sOB4hNVYT9mg0AxR
+	 dHF62EjuEqYDst0KrRXlVJffwQTDmXxQ9Uuf3zruHYjAoOyfPEGfY5h4Xi4ozecRDB
+	 zXrmjFDf98EBJJRPlwlEYGJFEAHZ32BcgSoGcJ9hxMPreviJYerPQmF3WgsGKtvL1T
+	 OQW9aCXtOVJhA==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	David E Box <david.e.box@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Xi Pardee <xi.pardee@linux.intel.com>,
+	Rajvi Jingar <rajvi.jingar@linux.intel.com>,
+	"David E. Box" <david.e.box@linux.intel.com>,
+	Kane Chen <kane.chen@intel.com>,
+	Marek Maslanka <mmaslanka@google.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86:intel/pmc: fix build regression with pmtimer turned off
+Date: Mon,  9 Sep 2024 11:16:35 +0000
+Message-Id: <20240909111644.248756-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1125590955-1725869229=:1029"
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: Arnd Bergmann <arnd@arndb.de>
 
---8323328-1125590955-1725869229=:1029
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+The acpi_pmtmr_{un,}register_suspend_resume_callback() declarations
+got added into an #ifdef section without an alternative inline
+stub, which now causes a build failure:
 
-On Fri, 6 Sep 2024, Xi Pardee wrote:
+drivers/platform/x86/intel/pmc/core.c: In function 'pmc_core_probe':
+drivers/platform/x86/intel/pmc/core.c:1507:17: error: implicit declaration of function 'acpi_pmtmr_register_suspend_resume_callback' [-Wimplicit-function-declaration]
+ 1507 |                 acpi_pmtmr_register_suspend_resume_callback(pmc_core_acpi_pm_timer_suspend_resume,
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/platform/x86/intel/pmc/core.c: In function 'pmc_core_remove':
+drivers/platform/x86/intel/pmc/core.c:1523:17: error: implicit declaration of function 'acpi_pmtmr_unregister_suspend_resume_callback' [-Wimplicit-function-declaration]
+ 1523 |                 acpi_pmtmr_unregister_suspend_resume_callback();
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-> From: Xi Pardee <xi.pardee@intel.com>
->=20
-> Add support to ignore all LTRs before suspend and restore the previous
-> LTR values after suspend. This feature could be turned off with module
-> parameter ltr_ignore_all_suspend.
->=20
-> LTR value is a mechanism for a device to indicate tolerance to access
-> the corresponding resource. When system suspends, the resource is not
-> available and therefore the LTR value could be ignored. Ignoring all
-> LTR values prevents problematic device from blocking the system to get
-> to the deepest package state during suspend.
->=20
-> Suggested-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Signed-off-by: Xi Pardee <xi.pardee@intel.com>
->=20
-> v2:
-> - Add more details to commit message
-> - Fix format: ltr->LTR, S0IX->S0ix, space between name and email
->=20
-> ---
->  drivers/platform/x86/intel/pmc/core.c | 53 +++++++++++++++++++++++++++
->  drivers/platform/x86/intel/pmc/core.h |  2 +
->  2 files changed, 55 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86=
-/intel/pmc/core.c
-> index 01ae71c6df59..0ec703af16a4 100644
-> --- a/drivers/platform/x86/intel/pmc/core.c
-> +++ b/drivers/platform/x86/intel/pmc/core.c
-> @@ -714,6 +714,49 @@ static int pmc_core_s0ix_blocker_show(struct seq_fil=
-e *s, void *unused)
->  }
->  DEFINE_SHOW_ATTRIBUTE(pmc_core_s0ix_blocker);
-> =20
-> +static void pmc_core_ltr_ignore_all(struct pmc_dev *pmcdev)
-> +{
-> +=09unsigned int i;
-> +
-> +=09for (i =3D 0; i < ARRAY_SIZE(pmcdev->pmcs); i++) {
-> +=09=09struct pmc *pmc;
-> +=09=09u32 ltr_ign;
-> +
-> +=09=09pmc =3D pmcdev->pmcs[i];
-> +=09=09if (!pmc)
-> +=09=09=09continue;
-> +
-> +=09=09guard(mutex)(&pmcdev->lock);
-> +=09=09pmc->ltr_ign =3D pmc_core_reg_read(pmc, pmc->map->ltr_ignore_offse=
-t);
-> +
-> +=09=09/* ltr_ignore_max is the max index value for LTR ignore register *=
-/
-> +=09=09ltr_ign =3D pmc->ltr_ign | GENMASK(pmc->map->ltr_ignore_max, 0);
-> +=09=09pmc_core_reg_write(pmc, pmc->map->ltr_ignore_offset, ltr_ign);
-> +=09}
-> +
-> +=09/*
-> +=09 * Ignoring ME during suspend is blocking platforms with ADL PCH to g=
-et to
-> +=09 * deeper S0ix substate.
-> +=09 */
-> +=09pmc_core_send_ltr_ignore(pmcdev, 6, 0);
-> +}
-> +
-> +static void pmc_core_ltr_restore_all(struct pmc_dev *pmcdev)
-> +{
-> +=09unsigned int i;
-> +
-> +=09for (i =3D 0; i < ARRAY_SIZE(pmcdev->pmcs); i++) {
-> +=09=09struct pmc *pmc;
-> +
-> +=09=09pmc =3D pmcdev->pmcs[i];
-> +=09=09if (!pmc)
-> +=09=09=09continue;
-> +
-> +=09=09guard(mutex)(&pmcdev->lock);
-> +=09=09pmc_core_reg_write(pmc, pmc->map->ltr_ignore_offset, pmc->ltr_ign)=
-;
-> +=09}
-> +}
-> +
->  static inline u64 adjust_lpm_residency(struct pmc *pmc, u32 offset,
->  =09=09=09=09       const int lpm_adj_x2)
->  {
-> @@ -1479,6 +1522,10 @@ static bool warn_on_s0ix_failures;
->  module_param(warn_on_s0ix_failures, bool, 0644);
->  MODULE_PARM_DESC(warn_on_s0ix_failures, "Check and warn for S0ix failure=
-s");
-> =20
-> +static bool ltr_ignore_all_suspend =3D true;
-> +module_param(ltr_ignore_all_suspend, bool, 0644);
-> +MODULE_PARM_DESC(ltr_ignore_all_suspend, "Ignore all LTRs during suspend=
-");
-> +
->  static __maybe_unused int pmc_core_suspend(struct device *dev)
->  {
->  =09struct pmc_dev *pmcdev =3D dev_get_drvdata(dev);
-> @@ -1488,6 +1535,9 @@ static __maybe_unused int pmc_core_suspend(struct d=
-evice *dev)
->  =09if (pmcdev->suspend)
->  =09=09pmcdev->suspend(pmcdev);
-> =20
-> +=09if (ltr_ignore_all_suspend)
-> +=09=09pmc_core_ltr_ignore_all(pmcdev);
-> +
->  =09/* Check if the syspend will actually use S0ix */
->  =09if (pm_suspend_via_firmware())
->  =09=09return 0;
-> @@ -1594,6 +1644,9 @@ static __maybe_unused int pmc_core_resume(struct de=
-vice *dev)
->  {
->  =09struct pmc_dev *pmcdev =3D dev_get_drvdata(dev);
-> =20
-> +=09if (ltr_ignore_all_suspend)
-> +=09=09pmc_core_ltr_restore_all(pmcdev);
-> +
->  =09if (pmcdev->resume)
->  =09=09return pmcdev->resume(pmcdev);
-> =20
-> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86=
-/intel/pmc/core.h
-> index ea04de7eb9e8..e862ea88b816 100644
-> --- a/drivers/platform/x86/intel/pmc/core.h
-> +++ b/drivers/platform/x86/intel/pmc/core.h
-> @@ -372,6 +372,7 @@ struct pmc_info {
->   * @map:=09=09pointer to pmc_reg_map struct that contains platform
->   *=09=09=09specific attributes
->   * @lpm_req_regs:=09List of substate requirements
-> + * @ltr_ign:=09=09Holds LTR ignore data while suspended
->   *
->   * pmc contains info about one power management controller device.
->   */
-> @@ -380,6 +381,7 @@ struct pmc {
->  =09void __iomem *regbase;
->  =09const struct pmc_reg_map *map;
->  =09u32 *lpm_req_regs;
-> +=09u32 ltr_ign;
->  };
-> =20
->  /**
->=20
+Remove the unnecessary #ifdef and use IS_ENABLED() checks in the
+respective callers.
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+Fixes: e774696b1f95 ("platform/x86:intel/pmc: Enable the ACPI PM Timer to be turned off when suspended")
+Fixes: fe323dcb12fd ("clocksource: acpi_pm: Add external callback for suspend/resume")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/platform/x86/intel/pmc/core.c |  6 ++++--
+ include/linux/acpi_pmtmr.h            | 13 +------------
+ 2 files changed, 5 insertions(+), 14 deletions(-)
 
---=20
- i.
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index 695804ca8de4..bbe90b1f56e2 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -1503,7 +1503,8 @@ static int pmc_core_probe(struct platform_device *pdev)
+ 			       pmc_core_adjust_slp_s0_step(primary_pmc, 1));
+ 
+ 	map = primary_pmc->map;
+-	if (map->acpi_pm_tmr_ctl_offset)
++	if (IS_ENABLED(CONFIG_CONFIG_X86_PM_TIMER) &&
++	    map->acpi_pm_tmr_ctl_offset)
+ 		acpi_pmtmr_register_suspend_resume_callback(pmc_core_acpi_pm_timer_suspend_resume,
+ 							 pmcdev);
+ 
+@@ -1519,7 +1520,8 @@ static void pmc_core_remove(struct platform_device *pdev)
+ 	const struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
+ 	const struct pmc_reg_map *map = pmc->map;
+ 
+-	if (map->acpi_pm_tmr_ctl_offset)
++	if (IS_ENABLED(CONFIG_CONFIG_X86_PM_TIMER) &&
++	    map->acpi_pm_tmr_ctl_offset)
+ 		acpi_pmtmr_unregister_suspend_resume_callback();
+ 
+ 	pmc_core_dbgfs_unregister(pmcdev);
+diff --git a/include/linux/acpi_pmtmr.h b/include/linux/acpi_pmtmr.h
+index 0ded9220d379..0846f90ce179 100644
+--- a/include/linux/acpi_pmtmr.h
++++ b/include/linux/acpi_pmtmr.h
+@@ -13,14 +13,12 @@
+ /* Overrun value */
+ #define ACPI_PM_OVRRUN	(1<<24)
+ 
+-#ifdef CONFIG_X86_PM_TIMER
+-
+ extern u32 acpi_pm_read_verified(void);
+ extern u32 pmtmr_ioport;
+ 
+ static inline u32 acpi_pm_read_early(void)
+ {
+-	if (!pmtmr_ioport)
++	if (!IS_ENABLED(CONFIG_X86_PM_TIMER) || !pmtmr_ioport)
+ 		return 0;
+ 	/* mask the output to 24 bits */
+ 	return acpi_pm_read_verified() & ACPI_PM_MASK;
+@@ -39,14 +37,5 @@ void acpi_pmtmr_register_suspend_resume_callback(void (*cb)(void *data, bool sus
+  */
+ void acpi_pmtmr_unregister_suspend_resume_callback(void);
+ 
+-#else
+-
+-static inline u32 acpi_pm_read_early(void)
+-{
+-	return 0;
+-}
+-
+-#endif
+-
+ #endif
+ 
+-- 
+2.39.2
 
---8323328-1125590955-1725869229=:1029--
