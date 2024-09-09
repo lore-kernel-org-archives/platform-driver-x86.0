@@ -1,94 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA6F43AA1;
-	Mon,  9 Sep 2024 17:54:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B40183CDB;
+	Mon,  9 Sep 2024 18:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725904500; cv=none; b=qkEKfJpSC9HR6y+BZyqy54F7AARIwli3bzLUZH9tNOvORlio6chl3jrH98HtRuzWAL2a6zrzSX/O4fXM7Amun7X7Q0trywfJOpzimlkFut0v+EkCiabK7n19Z9+HJJYIdXLLfcxH+fE7I3OBgofBZSSJm6IsCLMYps/qDXpZpJQ=
+	t=1725907243; cv=none; b=useWPk0JZT7HO8Ikq0cjrrOLi/4/iy7oghKFqFBpdghQKOyYQ7GV9Hdhl36HKKgciUBsVlJFzyNzss3+xTecFC3YAc5EjbcyXXuUMMEm3GtujuQ+yj3rJqPA0TH8oGtiIalR89THoATr8eHH1Bz6eytu60MNn39Jf5QpRkcZXaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725904500; c=relaxed/simple;
-	bh=B+6nPZlcTimswUoAomVeNialyu4KqNTg5gLHycOAFxw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=B0aZxNkgH/6O6cf445UKU7yL6A31E8x6jiLtve0cHZDd66uT3Ao4KpG0klebl0Jm8QhBHBiQeIqigth4I98EjMvMc1hyzYpSpdNh+7ck9/3xzX7wbN8+iGQ8bUW4qgPD2ekUMSclik5WI64i6ZN1l5luSG0VEs7WZiK7TQuE+iQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CgFoZgQu; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1725907243; c=relaxed/simple;
+	bh=ldth771QtKYp1aOO9EKui3hX7A0F+l9TXfrgCTBSWZY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Bb8F9aHtW+vh3RWI0WZ/sBRxPg387tNI2Bs7Y8df8yoalmfN5FmTO+H/87Am4sv4O6+l4ngse7hUuU/cx4SUlN98z6MY4FBujtK/NWnf0XUTCS2VCt71OKHMdmOCh8B4OPni1BVCZ0uVN5DtSN0nFrW1u86WcGhWyvlgA7lBxXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I6rlqljj; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CgFoZgQu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I6rlqljj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725904499; x=1757440499;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=B+6nPZlcTimswUoAomVeNialyu4KqNTg5gLHycOAFxw=;
-  b=CgFoZgQu8HFnYu1wIescQefiLs/pb0gtp34I/4mjSuOVoiPiTSekQaiG
-   94Ji9sU5Txr4Dq88fECmq+As1qC5Mm0ju3xCybacC87vgyfKRdiVHV0nE
-   KSnREIeFrzJyaRRvgfIiqIHVtRgS/WIQRjvwWxUELFIVdC0DgKCywqusP
-   /EmLF7s7okaLHwxqEzkhKV6dEm+I/eGpjXSY9Y95E32pS9xvFlNLheEmT
-   G3gTT22ZlLZ6EzVaKoHDFCj/3PLCVb3oPEJExkRy9E09mkrCPkhs3zCq2
-   YLrQAmGS8Ym6JJTZoflcKoL+ArZXxQe12FbFKvwcq1MxOrZQsre5G8TOf
-   w==;
-X-CSE-ConnectionGUID: u3LfkfB0RumOQA/F/Ah7UA==
-X-CSE-MsgGUID: vHlhlP9FRWCN+yXXDigAdQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="50028295"
-X-IronPort-AV: E=Sophos;i="6.10,214,1719903600"; 
-   d="scan'208";a="50028295"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 10:54:58 -0700
-X-CSE-ConnectionGUID: uMkhaP+/TcyFS9ccyBl4HA==
-X-CSE-MsgGUID: q3yNs7ZnQs+I83et4Gpy7Q==
+  t=1725907242; x=1757443242;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=ldth771QtKYp1aOO9EKui3hX7A0F+l9TXfrgCTBSWZY=;
+  b=I6rlqljjyr93xIyeXYqGeDUno4QAh+oDzXV/ro9Z03sUwna+BaWwpDmn
+   KhoCbfb9u13HOxD8Og9k5XIRoXnNma/5foPQt0XIenUZvVHen548mborA
+   K63ad+rA68jsgq7BvXPWSsCjkAXLKqfyNlLkeBh7FetRwj7TYPa0trjY/
+   ZmMMhpE/0KZalw9pOWM4rQ/H1b0qpYj/dzo2T8tLntP5bfi4W5qJOGcAk
+   awPVCoP0oPLre/U9XHXSuYcUoDVHLcJFRPN6UYPZuv2EXUnUuHlsniEkh
+   BHAxDqiNCuFSzDa4R30iL5aXG5uaGr5tMzrnckKyn0qC31Wzncya59R8n
+   Q==;
+X-CSE-ConnectionGUID: MzCLjFEvR86hfSuGhvN9hg==
+X-CSE-MsgGUID: h445T1epRyaqWo+6OnZwww==
+X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="24120412"
+X-IronPort-AV: E=Sophos;i="6.10,215,1719903600"; 
+   d="scan'208";a="24120412"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 11:40:41 -0700
+X-CSE-ConnectionGUID: OxYL5/vJTWqo4UpbyrhYig==
+X-CSE-MsgGUID: REAwAcRSSvG247ovHd1ddg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,214,1719903600"; 
-   d="scan'208";a="71530730"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.60])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 10:54:56 -0700
+X-IronPort-AV: E=Sophos;i="6.10,215,1719903600"; 
+   d="scan'208";a="97571629"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.59])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 11:40:39 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hdegoede@redhat.com>
-Cc: James Harmison <jharmison@redhat.com>, 
- platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-In-Reply-To: <20240909113227.254470-1-hdegoede@redhat.com>
-References: <20240909113227.254470-1-hdegoede@redhat.com>
+Date: Mon, 9 Sep 2024 21:40:36 +0300 (EEST)
+To: Hans de Goede <hdegoede@redhat.com>
+cc: Andy Shevchenko <andy@kernel.org>, James Harmison <jharmison@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
 Subject: Re: [PATCH v2 1/3] platform/x86: panasonic-laptop: Fix SINF array
  out of bounds accesses
-Message-Id: <172590448046.2114.11735502570640542626.b4-ty@linux.intel.com>
-Date: Mon, 09 Sep 2024 20:54:40 +0300
+In-Reply-To: <172590448046.2114.11735502570640542626.b4-ty@linux.intel.com>
+Message-ID: <68b1cc24-1ef0-c247-f2c0-546e7ee96ed9@linux.intel.com>
+References: <20240909113227.254470-1-hdegoede@redhat.com> <172590448046.2114.11735502570640542626.b4-ty@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: multipart/mixed; BOUNDARY="8323328-732980885-1725905230=:966"
+Content-ID: <e5d23138-5364-e501-91cd-848664a367e0@linux.intel.com>
 
-On Mon, 09 Sep 2024 13:32:25 +0200, Hans de Goede wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> The panasonic laptop code in various places uses the SINF array with index
-> values of 0 - SINF_CUR_BRIGHT(0x0d) without checking that the SINF array
-> is big enough.
-> 
-> Not all panasonic laptops have this many SINF array entries, for example
-> the Toughbook CF-18 model only has 10 SINF array entries. So it only
-> supports the AC+DC brightness entries and mute.
-> 
-> [...]
+--8323328-732980885-1725905230=:966
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <7b4c3389-35f1-d4c2-1810-61c91372e9f9@linux.intel.com>
 
+On Mon, 9 Sep 2024, Ilpo J=E4rvinen wrote:
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
-local branch there, which might take a while.
+> On Mon, 09 Sep 2024 13:32:25 +0200, Hans de Goede wrote:
+>=20
+> > The panasonic laptop code in various places uses the SINF array with in=
+dex
+> > values of 0 - SINF_CUR_BRIGHT(0x0d) without checking that the SINF arra=
+y
+> > is big enough.
+> >=20
+> > Not all panasonic laptops have this many SINF array entries, for exampl=
+e
+> > the Toughbook CF-18 model only has 10 SINF array entries. So it only
+> > supports the AC+DC brightness entries and mute.
+> >=20
+> > [...]
+>=20
+>=20
+> Thank you for your contribution, it has been applied to my local
+> review-ilpo branch. Note it will show up in the public
+> platform-drivers-x86/review-ilpo branch only once I've pushed my
+> local branch there, which might take a while.
+>=20
+> The list of commits applied:
+> [1/3] platform/x86: panasonic-laptop: Fix SINF array out of bounds access=
+es
+>       commit: f52e98d16e9bd7dd2b3aef8e38db5cbc9899d6a4
+> [2/3] platform/x86: panasonic-laptop: Allocate 1 entry extra in the sinf =
+array
+>       commit: 33297cef3101d950cec0033a0dce0a2d2bd59999
+> [3/3] platform/x86: panasonic-laptop: Add support for programmable button=
+s
+>       (no commit info)
 
-The list of commits applied:
-[1/3] platform/x86: panasonic-laptop: Fix SINF array out of bounds accesses
-      commit: f52e98d16e9bd7dd2b3aef8e38db5cbc9899d6a4
-[2/3] platform/x86: panasonic-laptop: Allocate 1 entry extra in the sinf array
-      commit: 33297cef3101d950cec0033a0dce0a2d2bd59999
-[3/3] platform/x86: panasonic-laptop: Add support for programmable buttons
-      (no commit info)
+Hmpf, b4 messed this one up. Only patches 1-2 were applied and 3 should=20
+go through for-next.
 
---
+--=20
  i.
-
+--8323328-732980885-1725905230=:966--
