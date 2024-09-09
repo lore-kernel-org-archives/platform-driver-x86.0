@@ -1,95 +1,94 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F32EBA4B
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Sep 2024 15:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA6F43AA1;
+	Mon,  9 Sep 2024 17:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725896361; cv=none; b=u/ad7I48wqr5CKdNsipXnNnR+XoWupmHjM5DHgFGQuFar+AqrZ4l/tx3zZqNx0jkdK+5zIEtNtQC5o4WOqUhT5210p16R7SBaqZ1DJIJFHwk7dLhu3TalioCkYg/4a/1vbQMFClc0FvID07dHxPzEw9VeVy7CnrXwrYRVCPq0F4=
+	t=1725904500; cv=none; b=qkEKfJpSC9HR6y+BZyqy54F7AARIwli3bzLUZH9tNOvORlio6chl3jrH98HtRuzWAL2a6zrzSX/O4fXM7Amun7X7Q0trywfJOpzimlkFut0v+EkCiabK7n19Z9+HJJYIdXLLfcxH+fE7I3OBgofBZSSJm6IsCLMYps/qDXpZpJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725896361; c=relaxed/simple;
-	bh=mTxgP5rRNy8qeHQ+LG1xw0f3rcntLawIN72w7p5fPQI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=of9a28mYk+vUE1E98EaO8K5BMYel9Go7Q52OXx82IS60SB1fPx1yIQrsMPWIixHZWCQas16/4S5sd5UPVG1XT7vjMajAP6NcpJXPRvSAape4mSnug2mhC6+6plokQ3t8hxCSfyLPwzWVfGX86jKaiwkLvhgtEm/PEX6kMS4RlqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=WzXrKFZn; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1725904500; c=relaxed/simple;
+	bh=B+6nPZlcTimswUoAomVeNialyu4KqNTg5gLHycOAFxw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=B0aZxNkgH/6O6cf445UKU7yL6A31E8x6jiLtve0cHZDd66uT3Ao4KpG0klebl0Jm8QhBHBiQeIqigth4I98EjMvMc1hyzYpSpdNh+7ck9/3xzX7wbN8+iGQ8bUW4qgPD2ekUMSclik5WI64i6ZN1l5luSG0VEs7WZiK7TQuE+iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CgFoZgQu; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="WzXrKFZn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1725896356; x=1726501156; i=w_armin@gmx.de;
-	bh=mTxgP5rRNy8qeHQ+LG1xw0f3rcntLawIN72w7p5fPQI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=WzXrKFZn8MqxxMz1i4rB85j2vSZwEU6oZX0af7liSeOfBwFQ7VLQdzkN45t55lVW
-	 2re62oyNF56KLkTqdy/YmkhIFUjfuuOM0csOJw8Huc+48F5212V+5+9t1Ma9phtti
-	 IhtE2CkAhV0ondLV8X1dnspF4r/6wJORzftCCP1554u5vv+FxotY8+eXvz7+gkoGG
-	 Q9sqMomOLz9oJTM2Qg0fFoRFt4aMIof8zvxT+Iz/jNzwcOMH/hjUB9vfz6BDkdunB
-	 3DLn6LOFj1mwHMuWT10Uu3LdBaN29UcGjetWgfzBTNMAnNONfd2eO5HM9txxfn3uF
-	 CAwVVGDJwkx1R9cgVw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N2V0B-1s1o1D1o91-00rPrI; Mon, 09
- Sep 2024 17:39:16 +0200
-Message-ID: <bbc42008-f121-4710-a27d-f32b9deabcac@gmx.de>
-Date: Mon, 9 Sep 2024 17:39:16 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CgFoZgQu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725904499; x=1757440499;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=B+6nPZlcTimswUoAomVeNialyu4KqNTg5gLHycOAFxw=;
+  b=CgFoZgQu8HFnYu1wIescQefiLs/pb0gtp34I/4mjSuOVoiPiTSekQaiG
+   94Ji9sU5Txr4Dq88fECmq+As1qC5Mm0ju3xCybacC87vgyfKRdiVHV0nE
+   KSnREIeFrzJyaRRvgfIiqIHVtRgS/WIQRjvwWxUELFIVdC0DgKCywqusP
+   /EmLF7s7okaLHwxqEzkhKV6dEm+I/eGpjXSY9Y95E32pS9xvFlNLheEmT
+   G3gTT22ZlLZ6EzVaKoHDFCj/3PLCVb3oPEJExkRy9E09mkrCPkhs3zCq2
+   YLrQAmGS8Ym6JJTZoflcKoL+ArZXxQe12FbFKvwcq1MxOrZQsre5G8TOf
+   w==;
+X-CSE-ConnectionGUID: u3LfkfB0RumOQA/F/Ah7UA==
+X-CSE-MsgGUID: vHlhlP9FRWCN+yXXDigAdQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="50028295"
+X-IronPort-AV: E=Sophos;i="6.10,214,1719903600"; 
+   d="scan'208";a="50028295"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 10:54:58 -0700
+X-CSE-ConnectionGUID: uMkhaP+/TcyFS9ccyBl4HA==
+X-CSE-MsgGUID: q3yNs7ZnQs+I83et4Gpy7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,214,1719903600"; 
+   d="scan'208";a="71530730"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.60])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 10:54:56 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: James Harmison <jharmison@redhat.com>, 
+ platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+In-Reply-To: <20240909113227.254470-1-hdegoede@redhat.com>
+References: <20240909113227.254470-1-hdegoede@redhat.com>
+Subject: Re: [PATCH v2 1/3] platform/x86: panasonic-laptop: Fix SINF array
+ out of bounds accesses
+Message-Id: <172590448046.2114.11735502570640542626.b4-ty@linux.intel.com>
+Date: Mon, 09 Sep 2024 20:54:40 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Add Support for the Acer Predator Triton PT14-51
-To: Rayan Margham <rayanmargham4@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
-References: <3c63701c-f9fc-4f98-b991-58135da3fcc3@gmx.de>
- <62891F43-E938-4DF3-9E51-9CCE19784DA8@gmail.com>
- <d8563b6b-8ab8-481d-aeba-656c38dda2ed@gmx.de>
- <CACzB==5oz3xa9ZFRk_xF8qDpzvKQcdjpKTx1mvUENkkZvLea-Q@mail.gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CACzB==5oz3xa9ZFRk_xF8qDpzvKQcdjpKTx1mvUENkkZvLea-Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:gSmQFgUMdW2xoGSlb4isrgjdxyJyrbfOJVT5ct/LuxHr4uaUBGb
- NeW6DKYug7Q976soMoHfS1k9Ihnx2vpqQxoh33lPpuWq4uSUs6oZ2W2PIhwaDBUVN01KhD1
- /2b8BLGlDlXq+tGrUA7XyD2Kv0jHQ8lHp5bYsqbXjEQ4APCbjlqihdDs3D1eGpvlHMtdmDO
- szIEPkrYNywugDBp+wErA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:aYzFURE6JAQ=;OjrfHxk5NS9LSFgBMQYv7vyanbU
- O5rdODpBVZyd0+qtL5Nosd91+m1+OO2IYAw1bRuKF8MGaWO+ZV7DXHxeb21pKPc/VTfnw/xbE
- XE+J2ao4hkTWs2kjHnWINZsgS9swf4mrtwOAEcZy6DmJJbCVVq0RHTNU0uN3ov5Ip9PaHLS7t
- +YxhXiAs6it8mhIZF+RIJGfru1AxYKbFZk4RDzc7bLWahccb8/FQcJvIOX7gGM/jDMODKQI52
- 6hIddadZ/7m9D36SccCIXw8UM6NPnl6TPJrYRxCREHxy0mbxDfkzot56lK4vAsn+J5v+IvYzg
- lQ8JJEuyMjuckAboF26pfsi4cfay88Er2A95SH+tKDNoYuSAYdUGrE8HFB5Nh7PBGqgfJe5q6
- Bo8+Yku3UXShRhBbd3klztZQr4sf9FK9mEyDtMWyAWQQuaiq/3AJ3/UVHjmP5d3fqW90Jy1i8
- OOeDYA2irMcIH8ryx5fttoeKyrnkqdC69cj5NNOEnm6uFJDmkMpy8YcZPrShCerlvIhQe6DJm
- GpnMxSfKO5TQhUoegpkLQOfWgoB2he7CW7gzNlFYwmDiXe3KCe7aEe8GiRDQfQ1vLrUwEzB8W
- +ofy8PJAEAwWlo0VUo1GF+cfYuXEofiauDDGU7UX4llcWbAMmOwPON/AbNEMuwRRoAfwjaav9
- 434VPbsVdpUS0e67gJbgn3ECHy3GiG0Vf6cMxyZkj+UUtp3bA9tWNeJiiFlJUigO5g9oLRZuJ
- Ds43PeOy9QAsSXHLDO/Y4s2v/h9wQd8QQC0hD8wCkKvqLBMvjvZUELc4AinGLJeDDXF0BBKBM
- 5j8Xo4aB7UBbdKvEMCXwwZxSb0udJw5aGjj8YHkSMg11E=
+X-Mailer: b4 0.13.0
 
-Am 07.09.24 um 16:04 schrieb Rayan Margham:
+On Mon, 09 Sep 2024 13:32:25 +0200, Hans de Goede wrote:
 
-> Hey Armin Wolf,
->
-> I found something that might me quite helpful,
-> 4,1289,478717534,-;acer_wmi: Unknown function number - 9 - 0
-> 4,1290,478733471,-;acer_wmi: Unknown function number - 8 - 0
-> 4,1291,1751600805,-;acer_wmi: Unknown function number - 9 - 1
-> 4,1292,1751612580,-;acer_wmi: Unknown function number - 8 - 1
->
-> Thanks,
-> Rayan Margham
->
-Those are unknown events received by the acer-wmi driver. Do you know
-how to trigger those specific events?
+> The panasonic laptop code in various places uses the SINF array with index
+> values of 0 - SINF_CUR_BRIGHT(0x0d) without checking that the SINF array
+> is big enough.
+> 
+> Not all panasonic laptops have this many SINF array entries, for example
+> the Toughbook CF-18 model only has 10 SINF array entries. So it only
+> supports the AC+DC brightness entries and mute.
+> 
+> [...]
 
-Thanks,
-Armin Wolf
+
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/3] platform/x86: panasonic-laptop: Fix SINF array out of bounds accesses
+      commit: f52e98d16e9bd7dd2b3aef8e38db5cbc9899d6a4
+[2/3] platform/x86: panasonic-laptop: Allocate 1 entry extra in the sinf array
+      commit: 33297cef3101d950cec0033a0dce0a2d2bd59999
+[3/3] platform/x86: panasonic-laptop: Add support for programmable buttons
+      (no commit info)
+
+--
+ i.
 
