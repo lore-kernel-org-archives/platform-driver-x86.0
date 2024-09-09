@@ -1,125 +1,221 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A455217C9BB
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Sep 2024 03:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C2A1B1432;
+	Mon,  9 Sep 2024 08:07:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725851128; cv=none; b=i/XsvZMdIxUdMB1Pml/k2gqOdTpUXKQM5SiHli1n46OyJxAK56YbCBWmUuW5zQAjQFXwPMWfwqcDulwmuS1oPl+vP6mFPShHm7VF/UCQXp7uz8Md2TTPch3yuS+5YEBSOylAV57O8EzXMzF7WOfysoV0Yv3WOIi3QlhVZwkyoQ4=
+	t=1725869240; cv=none; b=HGqUsveW2aUz/UOTX0H1qQ2MMdABfudxkRxuAY6HvDwvQ/DVX7ezsbSmM7Gnb5VdieOeif4YY4g+FGobDgPPEeiPGqzEJxFXxvz6CYwbFbZW+X/2BMArcK/yV6AWIQy6yB+BoXXFmrxbHihpCyUjVivhqQKKg0WQNzPdBwDqqfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725851128; c=relaxed/simple;
-	bh=uibYA0DDhkVGM1oULcHE7FcHV+h/M6ULLQSMEo15LJE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i2xTUaxzIFcF58QX482m3eoy2N66v/6eacILmaT2sxxR6vCHSXMVvIcGhQkCmrg/TiMAWLEKFx8Pof++kc63Fuf8g7T6PCd5i930XbfDumYC2d8V9xJd45ILXqjkLamqxmptir5srPx53BNZLt/s2HPeDN5bmfclnHqGWxxurdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=hmd0NIx5; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1725869240; c=relaxed/simple;
+	bh=8n7w2jxs3cuC+YZ5jj/S+gSWv6BgQ0TufOwe9HT+bws=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=frHD1j7fTe+645B2P1u4aIpDNrUEtl6umxjT4REMQTolSm2Yas2CqWELPa+SOGWmtQfsBB70+7EL5I25QhDCl2dZTh+QxGwLQLCF8ptrtdfWavbRIv9GcnsKZ6T/m4Xj3b0NL0mOh8g51xIB503DcFA6gNE9Yr7phbqLn5ohMjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AHSiitou; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="hmd0NIx5"
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com [209.85.218.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 408783F2F1
-	for <platform-driver-x86@vger.kernel.org>; Mon,  9 Sep 2024 03:05:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1725851119;
-	bh=GjcxPsYBfm9i0vtMaX4QCNll1ePzYeiDXIPkGdzVHmU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=hmd0NIx5RyRHlKqj9LfPffk54BYtAhkjYnwfWVoesEPrro9ig+RnT6yfPktUsLruH
-	 ReEOvtbH273NhMTk9dfYXbroOfMTEE0Hm3XbIOMNgl1Sq0rcy/XUfwRpAMuUTyNGla
-	 WPtQU57xjEpdc+RjNg/IFtLZx1J9y5hB6pBYECpL/SDtNY29nXaacbicIb7mUKRupG
-	 fpGD1NqJ53MJoIs9dfS5cbM36W/MDRo7H2MeIHRSdDd1cQOxsUJ5kkpzUxhk45WoID
-	 FAr/nSyXzQfm7TkxEHVlSm7eIw8wscJWr8iq9z1f8FOC4eN3w84dRvpANDM1Xgufl9
-	 cjcgFsHemLtJA==
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a8d26b5857cso129575766b.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 08 Sep 2024 20:05:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725851118; x=1726455918;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GjcxPsYBfm9i0vtMaX4QCNll1ePzYeiDXIPkGdzVHmU=;
-        b=kTbG2gh/D40L4ZAH28k5ZwoJ0bB13VlEyuxba48ujOQUg8ua/rbqWtm57EWF2+Nfje
-         K8qF3yxZXu5gMUn/vjKmhru/M1P84EvT2cfvHCAMoKNwftIml6VhdYBtyDy52IwObyPv
-         tTkG+/zQkgNfQEFSuTc/rKfAFRMCcPq3/mGL44blbm7kRZG3Pe8lPyrnAoiHaBr49FGA
-         rmd0XHXK6Fe/ezaJZOwO+lnDnsVVDjhSRF+PA9a6K2QZyYHeA8AOG/T+hYl/PiU5XUc9
-         hknA82CPsWeIcaBARbRqr6Qoi3s6jcwN9tTTxXZPD3nRRsqu2DFGIB+flWa8AJCOBw4G
-         wb/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVhhFecD/UEgbGDftUZuTCIrz9n14kkZ5NNVMBZa5+r1kQT0aSmtrzEH3Sue60VwzykRHVgc356E2tX0+1MhwDSL6es@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdWTsxYHDMOxNNY/pyjxGAAwE7095M3RY1mWCgABQBQpWxtiLF
-	h+z7SQlCY/8bH4RbGAraieKzUz4GEkilOlkwbcq5+1MdfAHYwzVx9iffVUjP0PxbtNsxEvjGKS6
-	EDubvQna9oGOays9Rn6EeTwlt4r6cYzYjruCKn+/HPIu5NiQ/0BxE1WNIrNZlBgd77Hy88vGo7W
-	88acdaexeqHz4GNdCygm+VZzD1yYzvsu8AShYDTOoHzOnLSnUmv6u5+ZN6BjJZKZ6M2VYTxw==
-X-Received: by 2002:a17:907:8686:b0:a8a:66b6:58d with SMTP id a640c23a62f3a-a8d1c4d7913mr662531766b.41.1725851118548;
-        Sun, 08 Sep 2024 20:05:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGuG/c1pV3OAm6nu2vGlRvKv9U2b23ZY+JOWpXPKoYpNvuHAMLNmrC0KbsLPzB4znzP3SjrhcsA8LUxfwmEUvU=
-X-Received: by 2002:a17:907:8686:b0:a8a:66b6:58d with SMTP id
- a640c23a62f3a-a8d1c4d7913mr662529366b.41.1725851117993; Sun, 08 Sep 2024
- 20:05:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AHSiitou"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725869238; x=1757405238;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=8n7w2jxs3cuC+YZ5jj/S+gSWv6BgQ0TufOwe9HT+bws=;
+  b=AHSiitouaKaA+YJ1tzUEdOVqMrzAZhB2UYds3kQMvThBKQynuXizzpaE
+   r4I/3Gv5C7MwHYTzeXtkjpYbfONysjcoG0kKjzIfrz1xx5QuFlcufyC5h
+   /4+r8Y7eKBA+TqU7awJ+zYcmsB31H0oxP46dcA7yojNk7sdyxgwcc5Y7s
+   +PqgLHV1ITq76Pb6pSLxxyUDWe/g2IohSj5MrlQYYzZtJKjhCKsLf11Hq
+   oO3wwjidPxIfIMJGXIH819bd2BsVhaV+IU0Bp+Ymb4CODCR7Wy2dDsOaj
+   v3d4F8Pyvbj6Gd1gNRA2FsmwK11eDiZgXaPP5f9jMuDFq6PcL2cvcKoeQ
+   A==;
+X-CSE-ConnectionGUID: wMI8fMNiRCCiJuDWfpbhug==
+X-CSE-MsgGUID: V40bjHGiSV+DSaTQE1i6HA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11189"; a="13435943"
+X-IronPort-AV: E=Sophos;i="6.10,213,1719903600"; 
+   d="scan'208";a="13435943"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 01:07:17 -0700
+X-CSE-ConnectionGUID: gMc8itF7STuB4QfxM72KEg==
+X-CSE-MsgGUID: IzwnFM4iRGy2aALrsiDfXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,213,1719903600"; 
+   d="scan'208";a="71153740"
+Received: from dhhellew-desk2.ger.corp.intel.com.ger.corp.intel.com (HELO localhost) ([10.245.245.60])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 01:07:14 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 9 Sep 2024 11:07:09 +0300 (EEST)
+To: Xi Pardee <xi.pardee@linux.intel.com>
+cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
+    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86:intel/pmc: Ignore all LTRs during
+ suspend
+In-Reply-To: <20240906184016.268153-1-xi.pardee@linux.intel.com>
+Message-ID: <15d08ff3-6787-7042-8afc-3a64f1ebc756@linux.intel.com>
+References: <20240906184016.268153-1-xi.pardee@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240906053047.459036-1-kai.heng.feng@canonical.com> <d8600868-6e4b-45ab-b328-852b6ac8ecb5@rowland.harvard.edu>
-In-Reply-To: <d8600868-6e4b-45ab-b328-852b6ac8ecb5@rowland.harvard.edu>
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date: Mon, 9 Sep 2024 11:05:05 +0800
-Message-ID: <CAAd53p4i1zzW2DsVfirjXVsQX0AgXy1XbzWaM-ziWmAmp8J1=A@mail.gmail.com>
-Subject: Re: [PATCH v3] platform/x86/hp: Avoid spurious wakeup on HP ProOne 440
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Mathias Nyman <mathias.nyman@linux.intel.com>, hdegoede@redhat.com, 
-	ilpo.jarvinen@linux.intel.com, gregkh@linuxfoundation.org, 
-	jorge.lopez2@hp.com, acelan.kao@canonical.com, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323328-1125590955-1725869229=:1029"
 
-On Fri, Sep 6, 2024 at 10:22=E2=80=AFPM Alan Stern <stern@rowland.harvard.e=
-du> wrote:
->
-> On Fri, Sep 06, 2024 at 01:30:47PM +0800, Kai-Heng Feng wrote:
-> > The HP ProOne 440 has a power saving design that when the display is
-> > off, it also cuts the USB touchscreen device's power off.
-> >
-> > This can cause system early wakeup because cutting the power off the
-> > touchscreen device creates a disconnect event and prevent the system
-> > from suspending:
->
-> Is the touchscreen device connected directly to the root hub?  If it is
-> then it looks like there's a separate bug here, which needs to be fixed.
->
-> > [  445.814574] hub 2-0:1.0: hub_suspend
-> > [  445.814652] usb usb2: bus suspend, wakeup 0
->
-> Since the wakeup flag is set to 0, the root hub should not generate a
-> wakeup request when a port-status-change event happens.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-The disconnect event itself should not generate a wake request, but
-the interrupt itself still needs to be handled.
+--8323328-1125590955-1725869229=:1029
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
->
-> > [  445.824629] xhci_hcd 0000:00:14.0: Port change event, 1-11, id 11, p=
-ortsc: 0x202a0
-> > [  445.824639] xhci_hcd 0000:00:14.0: resume root hub
->
-> But it did.  This appears to be a bug in one of the xhci-hcd suspend
-> routines.
+On Fri, 6 Sep 2024, Xi Pardee wrote:
 
-So should the xhci-hcd delay all interrupt handling after system resume?
+> From: Xi Pardee <xi.pardee@intel.com>
+>=20
+> Add support to ignore all LTRs before suspend and restore the previous
+> LTR values after suspend. This feature could be turned off with module
+> parameter ltr_ignore_all_suspend.
+>=20
+> LTR value is a mechanism for a device to indicate tolerance to access
+> the corresponding resource. When system suspends, the resource is not
+> available and therefore the LTR value could be ignored. Ignoring all
+> LTR values prevents problematic device from blocking the system to get
+> to the deepest package state during suspend.
+>=20
+> Suggested-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Signed-off-by: Xi Pardee <xi.pardee@intel.com>
+>=20
+> v2:
+> - Add more details to commit message
+> - Fix format: ltr->LTR, S0IX->S0ix, space between name and email
+>=20
+> ---
+>  drivers/platform/x86/intel/pmc/core.c | 53 +++++++++++++++++++++++++++
+>  drivers/platform/x86/intel/pmc/core.h |  2 +
+>  2 files changed, 55 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86=
+/intel/pmc/core.c
+> index 01ae71c6df59..0ec703af16a4 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -714,6 +714,49 @@ static int pmc_core_s0ix_blocker_show(struct seq_fil=
+e *s, void *unused)
+>  }
+>  DEFINE_SHOW_ATTRIBUTE(pmc_core_s0ix_blocker);
+> =20
+> +static void pmc_core_ltr_ignore_all(struct pmc_dev *pmcdev)
+> +{
+> +=09unsigned int i;
+> +
+> +=09for (i =3D 0; i < ARRAY_SIZE(pmcdev->pmcs); i++) {
+> +=09=09struct pmc *pmc;
+> +=09=09u32 ltr_ign;
+> +
+> +=09=09pmc =3D pmcdev->pmcs[i];
+> +=09=09if (!pmc)
+> +=09=09=09continue;
+> +
+> +=09=09guard(mutex)(&pmcdev->lock);
+> +=09=09pmc->ltr_ign =3D pmc_core_reg_read(pmc, pmc->map->ltr_ignore_offse=
+t);
+> +
+> +=09=09/* ltr_ignore_max is the max index value for LTR ignore register *=
+/
+> +=09=09ltr_ign =3D pmc->ltr_ign | GENMASK(pmc->map->ltr_ignore_max, 0);
+> +=09=09pmc_core_reg_write(pmc, pmc->map->ltr_ignore_offset, ltr_ign);
+> +=09}
+> +
+> +=09/*
+> +=09 * Ignoring ME during suspend is blocking platforms with ADL PCH to g=
+et to
+> +=09 * deeper S0ix substate.
+> +=09 */
+> +=09pmc_core_send_ltr_ignore(pmcdev, 6, 0);
+> +}
+> +
+> +static void pmc_core_ltr_restore_all(struct pmc_dev *pmcdev)
+> +{
+> +=09unsigned int i;
+> +
+> +=09for (i =3D 0; i < ARRAY_SIZE(pmcdev->pmcs); i++) {
+> +=09=09struct pmc *pmc;
+> +
+> +=09=09pmc =3D pmcdev->pmcs[i];
+> +=09=09if (!pmc)
+> +=09=09=09continue;
+> +
+> +=09=09guard(mutex)(&pmcdev->lock);
+> +=09=09pmc_core_reg_write(pmc, pmc->map->ltr_ignore_offset, pmc->ltr_ign)=
+;
+> +=09}
+> +}
+> +
+>  static inline u64 adjust_lpm_residency(struct pmc *pmc, u32 offset,
+>  =09=09=09=09       const int lpm_adj_x2)
+>  {
+> @@ -1479,6 +1522,10 @@ static bool warn_on_s0ix_failures;
+>  module_param(warn_on_s0ix_failures, bool, 0644);
+>  MODULE_PARM_DESC(warn_on_s0ix_failures, "Check and warn for S0ix failure=
+s");
+> =20
+> +static bool ltr_ignore_all_suspend =3D true;
+> +module_param(ltr_ignore_all_suspend, bool, 0644);
+> +MODULE_PARM_DESC(ltr_ignore_all_suspend, "Ignore all LTRs during suspend=
+");
+> +
+>  static __maybe_unused int pmc_core_suspend(struct device *dev)
+>  {
+>  =09struct pmc_dev *pmcdev =3D dev_get_drvdata(dev);
+> @@ -1488,6 +1535,9 @@ static __maybe_unused int pmc_core_suspend(struct d=
+evice *dev)
+>  =09if (pmcdev->suspend)
+>  =09=09pmcdev->suspend(pmcdev);
+> =20
+> +=09if (ltr_ignore_all_suspend)
+> +=09=09pmc_core_ltr_ignore_all(pmcdev);
+> +
+>  =09/* Check if the syspend will actually use S0ix */
+>  =09if (pm_suspend_via_firmware())
+>  =09=09return 0;
+> @@ -1594,6 +1644,9 @@ static __maybe_unused int pmc_core_resume(struct de=
+vice *dev)
+>  {
+>  =09struct pmc_dev *pmcdev =3D dev_get_drvdata(dev);
+> =20
+> +=09if (ltr_ignore_all_suspend)
+> +=09=09pmc_core_ltr_restore_all(pmcdev);
+> +
+>  =09if (pmcdev->resume)
+>  =09=09return pmcdev->resume(pmcdev);
+> =20
+> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86=
+/intel/pmc/core.h
+> index ea04de7eb9e8..e862ea88b816 100644
+> --- a/drivers/platform/x86/intel/pmc/core.h
+> +++ b/drivers/platform/x86/intel/pmc/core.h
+> @@ -372,6 +372,7 @@ struct pmc_info {
+>   * @map:=09=09pointer to pmc_reg_map struct that contains platform
+>   *=09=09=09specific attributes
+>   * @lpm_req_regs:=09List of substate requirements
+> + * @ltr_ign:=09=09Holds LTR ignore data while suspended
+>   *
+>   * pmc contains info about one power management controller device.
+>   */
+> @@ -380,6 +381,7 @@ struct pmc {
+>  =09void __iomem *regbase;
+>  =09const struct pmc_reg_map *map;
+>  =09u32 *lpm_req_regs;
+> +=09u32 ltr_ign;
+>  };
+> =20
+>  /**
+>=20
 
->
-> Alternatively, if the touchscreen device is connected to an intermediate
-> hub then that intermediate hub should not be allowed to generate wakeup
-> events.  That's determined by userspace, though, not by the kernel.
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-It's connected to roothub.
+--=20
+ i.
 
-Kai-Heng
-
->
-> Alan Stern
+--8323328-1125590955-1725869229=:1029--
