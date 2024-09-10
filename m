@@ -1,157 +1,138 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from fout8-smtp.messagingengine.com (fout8-smtp.messagingengine.com [103.168.172.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CAD33FC2
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Sep 2024 03:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10ACF13E02D;
+	Tue, 10 Sep 2024 04:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725939205; cv=none; b=BxLLxSpV2L/w7ZUEipoIKL8NrMtbKsWUKnoo+h2ruKSrHzFqVIUJhB0oj/xD2OPbJeU6J2QbRSGaL/ybMKe6Pns00iV5NnelrxzvbEBp7wWPO33Xp+tomgCG7bcjOiRybDkIW/xzhjQiLUa05wkZ5oq0ddwo81Lf7nZH+kW7GGs=
+	t=1725944095; cv=none; b=uKWSBjZNqyrtBPIOlm1Z/dAy1P4S+89MygcgenVdfxGPBT/axNUHLwzIctupHuV54gz4PWtYJYicYU2mwu2+0fbjzWTsakzPHSOYKwwjZ1NTekZdw2NTN9TCyrg9oT5b15wOVXJdUYv0yjCKELaUlgGjneg2Jx7rz5GsZQ0Bhgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725939205; c=relaxed/simple;
-	bh=M1uP5T0syaPKmILBGoKjk5yrtVDRgj+U0SiUidxvyAs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KiBpMxrx+qLwIk58q447AgtHMxK5kc3CfujfAOSfmRxWI72OnTjMQg2d7izhD1/c1G/JmCoV+PSclfe33NZp6Rtvr+087F5bKM+mdWBw/QLO/Ywoq7FNjjsY9+MMm+pUhMtpc14PyutSkvC8aZTzKu/iHtrPO6mmmvnFG7jKrCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=iLzMt6Rr; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1725944095; c=relaxed/simple;
+	bh=fnqmtqs3Q42EGzjO2tDxIkAyYbiDeraUlBYEEcvIkgQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SMJGhfTuUx3b05pZF9QK3tbYM/Ty5MGxeu/6VN8wiJSvt4NPZaTsxU+epGEUqgPcDFh5i7w5wQ8Z/mHiuJ+sTIbXXFrxZYvyr1y6yYUFNbMiiYKT2c4eSP8JGkBriSSxLjjQAmiwPEYvPt/TwgSe79wzwk1684HbtLIBRMK1xt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=fz44neLz; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YvcHljlp; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="iLzMt6Rr"
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com [209.85.218.69])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 686ED3F5BB
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Sep 2024 03:33:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1725939195;
-	bh=bdVMALNY4Nj+ezeanQrYsAz9ac60a7efpGm9G6VkDpg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=iLzMt6RrcY/ZBpNhgEiTF/27CPwOyLascBuCqlV7dHfIaWZ1RhmHyWj5TlMSKFiR4
-	 VIOqW/wdwRE+39E4H2F3AANxFMNv6qWubVgk3uAFaLvnx6JoN4Hi5S/B7omSWLc14M
-	 G8rKFtgNfoo9xvkGojSh9FMQAMhLcTmRGTfSYp9vy5RvMAzRNr390fEN5s+Y/RJg36
-	 IgdeXaC8R1yOGmFDiG8SC6BXAoxzOnGWCCMpiAFN3FAkUkknLIWNtm+hePnT0+9pT9
-	 JqxhiCWCWarlvTAqSGV+L3+RzFpmxCU1JfKD64AJfqW6/ZfFF1TVd5gCmU9QCnFOTh
-	 ju3wlraIPzaiQ==
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a8d1095442cso20002966b.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Sep 2024 20:33:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725939195; x=1726543995;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bdVMALNY4Nj+ezeanQrYsAz9ac60a7efpGm9G6VkDpg=;
-        b=K39iC382ii5FsIswhSh1qDjZCtBN3ZimncZd1wgKO9Hi5GIzXsyYnuaXkdCO8KwcQj
-         nr9T9LSkFO9MWBVT4kMukjtTetfikHtX4rcKLTUXSlFe0F5kNIEaGYYm2vgN2Dj6KFSX
-         ZfNhcR+Pwye27movaTon2SkQNfJC+Cixjoz6TKWsKVgcFMGu69N3wsqaa3XyJd3gdKGl
-         z+wlBRHBboo1xT5BBTxd5WdoaZDZzxJR0HnPMEjOfvxt6cHhk3PJTkjfn8qPjTRnmsaO
-         BReuN7TZJuuqej3XZeQ9ETaK+WCrnVbDE7IWbXkyHyiK1PWBX4jkQOcPFOpJyVkq/xds
-         MjPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWf6nS063B33md6e3fkBG/eZEIReIIkBqrt0+yjYlecSFYmt++kV4e2rWZYnFEGq+wu2CTYkHckoTW7cKZqtkKzu4H3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw41DeYzQ1CLTO0avBQwnJ+ALUWuKPo6FhzxyB8kvIJdAGKUQEw
-	/VLfXFVSNqewrUyNjZ0Uozxyee3I79s57CIyNkan08WM7dDFqAQ4zEsFPXMpkzOU9KuYChISt9B
-	qPnRH4jCVEsQ0FhLiZCHr5YU2EaimIyT4fBmVxfGlBoe7ujkc0wjv8CsnpGHN3B7GkL7Lk7paVE
-	7chF4rBtffbIKa2uukrFEs87zxyl3Cd1VlK25YrN0SFo90DvjDEU1gTwLymrFliQ==
-X-Received: by 2002:a17:907:2cc4:b0:a8d:439d:5c25 with SMTP id a640c23a62f3a-a8d439d5dd4mr610728166b.4.1725939194990;
-        Mon, 09 Sep 2024 20:33:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGZXtqOWZQ5DP9i2k8x9bhsn2QouSJ03mlNURHgsOx/klP+Z9vIiP/N3mGSJraaI3jlqXXbyC2kGjXcONaqKGg=
-X-Received: by 2002:a17:907:2cc4:b0:a8d:439d:5c25 with SMTP id
- a640c23a62f3a-a8d439d5dd4mr610726466b.4.1725939194421; Mon, 09 Sep 2024
- 20:33:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="fz44neLz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YvcHljlp"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.phl.internal (Postfix) with ESMTP id 177A21380225;
+	Tue, 10 Sep 2024 00:54:52 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Tue, 10 Sep 2024 00:54:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1725944092; x=1726030492; bh=iM8dQZ5RWFE0qerYBgfJG
+	VCWSMqHffJNm2ProEISIYo=; b=fz44neLzlBa7cgxGK21n3i+gsNwN3UtOrTRpl
+	6DqCZ6MFg+yscReMsQCaYDVNeVj8cjOYcQDKDaHSvhFvkScfxFDtZJOqwOkjtuaT
+	wc+H5tKz7dFS2c1FEhrfDPuQPAwDlHP/1pzUJLSnn2IHB+KH5wk2yONT6nVNgjrx
+	8Pes6kuY6Jfn/qgGS+aBwynWwb2LfsHrF75fvlvIueg5NUVSlkat+bpCUFGNBBNP
+	ilMf6SeV6zTNcESQZhpHuO1s2uhQL/nWBlAdQdaTy1FSQN6QRT5/OyyWcgb+8aB2
+	OWMMMk7pPwClPGxEXDBcNnmdRq8jageSGzATSl7b0jRH2pvBw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1725944092; x=1726030492; bh=iM8dQZ5RWFE0qerYBgfJGVCWSMqH
+	ffJNm2ProEISIYo=; b=YvcHljlpSHdkZE+F2w+nuO6Hp8bVjJN4B1ZRMiWXn+ka
+	eRupMIeSORSzFOiNsK6DRWjOEJTRbICCLW0i9G7Sg/J2jRIIZwSG5YXKynT7YWcV
+	NOiP7b9shpaKhpoC4trfIEjOj52KTXOsEnJSTbCmmHV8XAZ3zHJsCw0JIWEVk+vv
+	6JYSWjyvsTj0iIqlb6gSoanG+O8IgwL1I47fS5E0iFgLwMrE7P2YljMike/Kl3Dt
+	52vw261d/JQ7WnewaI4vtzrsrzXD9rE0FV02XKmXNQsfOKmX4A9eKTsI+l4ufxS3
+	HP5Jx42QsFQGXTLipfkMoD+IStR3rLMmoSi3rc7obw==
+X-ME-Sender: <xms:G9HfZu0uLjEb_sgDR9VUJZaisiPQ4xwg6MFMfyoLIe_ZjmsHRy6KaA>
+    <xme:G9HfZhEFRX8uAaZbccLT2aqoFMM9NAb12YUiCeucT6hn-FUj99LfiTHWdzLlsxJFo
+    T7jv9fBVfn2ur3CRpU>
+X-ME-Received: <xmr:G9HfZm7G_JNMRgD9K0G_h2IJbxSwcxoz4O6Ofgh96s2ZvxoaGpazgBZMtUdb5A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudeikedgjeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevuf
+    ffkffoggfgsedtkeertdertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdf
+    uceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfdujedthf
+    duudekffefkeeiffdttddvhfegudduueffuefhfefggeefteevvdegnecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvsh
+    druggvvhdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthht
+    ohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpth
+    htohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgt
+    phhtthhopegtohhrvghnthhinhdrtghhrghrhiesghhmrghilhdrtghomhdprhgtphhtth
+    hopehluhhkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:G9HfZv28MrNMdiTCrUJFr-XngyvSmGFutcddmENSdUkKaXLrywNWwQ>
+    <xmx:G9HfZhGK5b15IHMWT02MT31U9uvl07WokH4aIjMDlmSZF3-IB5WJ9Q>
+    <xmx:G9HfZo-rWZtuUXgZAg-3Mx04WVu3KybsfOQ0aoS9he_vdY0-QTBfyQ>
+    <xmx:G9HfZmkXwlHW80l8mOIYQ-4Sn4UMhRthtEJGQUM57krzwtbuVt7TpQ>
+    <xmx:HNHfZqMtMy9e9sxtLsdDnHq5Q_0bLjbUB-PBgModRFsVTut3-nZuB-F7>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 10 Sep 2024 00:54:48 -0400 (EDT)
+From: "Luke D. Jones" <luke@ljones.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	corentin.chary@gmail.com,
+	"Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH] platform/x86: asus-wmi: don't fail if platform_profile already registered
+Date: Tue, 10 Sep 2024 16:54:43 +1200
+Message-ID: <20240910045443.678145-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240906053047.459036-1-kai.heng.feng@canonical.com>
- <d8600868-6e4b-45ab-b328-852b6ac8ecb5@rowland.harvard.edu>
- <CAAd53p4i1zzW2DsVfirjXVsQX0AgXy1XbzWaM-ziWmAmp8J1=A@mail.gmail.com> <7be0c87a-c00f-4346-8482-f41ef0249b57@rowland.harvard.edu>
-In-Reply-To: <7be0c87a-c00f-4346-8482-f41ef0249b57@rowland.harvard.edu>
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date: Tue, 10 Sep 2024 11:33:02 +0800
-Message-ID: <CAAd53p7c4-jpZ6OsW+H9qw2mvvr8kSfX2UEf8YrsWJt5koYbAA@mail.gmail.com>
-Subject: Re: [PATCH v3] platform/x86/hp: Avoid spurious wakeup on HP ProOne 440
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Mathias Nyman <mathias.nyman@linux.intel.com>, hdegoede@redhat.com, 
-	ilpo.jarvinen@linux.intel.com, gregkh@linuxfoundation.org, 
-	jorge.lopez2@hp.com, acelan.kao@canonical.com, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 9, 2024 at 10:39=E2=80=AFPM Alan Stern <stern@rowland.harvard.e=
-du> wrote:
->
-> On Mon, Sep 09, 2024 at 11:05:05AM +0800, Kai-Heng Feng wrote:
-> > On Fri, Sep 6, 2024 at 10:22=E2=80=AFPM Alan Stern <stern@rowland.harva=
-rd.edu> wrote:
-> > >
-> > > On Fri, Sep 06, 2024 at 01:30:47PM +0800, Kai-Heng Feng wrote:
-> > > > The HP ProOne 440 has a power saving design that when the display i=
-s
-> > > > off, it also cuts the USB touchscreen device's power off.
-> > > >
-> > > > This can cause system early wakeup because cutting the power off th=
-e
-> > > > touchscreen device creates a disconnect event and prevent the syste=
-m
-> > > > from suspending:
-> > >
-> > > Is the touchscreen device connected directly to the root hub?  If it =
-is
-> > > then it looks like there's a separate bug here, which needs to be fix=
-ed.
-> > >
-> > > > [  445.814574] hub 2-0:1.0: hub_suspend
-> > > > [  445.814652] usb usb2: bus suspend, wakeup 0
-> > >
-> > > Since the wakeup flag is set to 0, the root hub should not generate a
-> > > wakeup request when a port-status-change event happens.
-> >
-> > The disconnect event itself should not generate a wake request, but
-> > the interrupt itself still needs to be handled.
-> >
-> > >
-> > > > [  445.824629] xhci_hcd 0000:00:14.0: Port change event, 1-11, id 1=
-1, portsc: 0x202a0
-> > > > [  445.824639] xhci_hcd 0000:00:14.0: resume root hub
-> > >
-> > > But it did.  This appears to be a bug in one of the xhci-hcd suspend
-> > > routines.
->
-> I failed to notice before that the suspend message message above is for
-> bus 2 whereas the port change event here is on bus 1.  Nevertheless, I
-> assume that bus 1 was suspended with wakeup =3D 0, so the idea is the
-> same.
+On some newer laptops ASUS laptops SPS support is advertised but not
+actually used, causing the AMD driver to register as a platform_profile
+handler.
 
-Yes the bus 1 was already suspended.
+If this happens then the asus_wmi driver would error with -EEXIST when
+trying to register its own handler leaving the user with a possibly
+unusable system. This is especially true for laptops with an MCU that emit
+a stream of HID packets, some of which can be misinterpreted as shutdown
+signals.
 
->
-> > So should the xhci-hcd delay all interrupt handling after system resume=
-?
->
-> It depends on how the hardware works; I don't know the details.  The
-> best approach would be: when suspending the root hub with wakeup =3D 0,
-> the driver will tell the hardware not to generate interrupt requests for
-> port-change events (and then re-enable those interrupt requests when the
-> root hub is resumed, later on).
+We can safely continue loading the driver instead of bombing out.
 
-So the XHCI_CMD_EIE needs to be cleared in prepare callback to ensure
-there's no interrupt in suspend callback.
-Maybe this can be done, but this seems to greatly alter the xHCI suspend fl=
-ow.
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+---
+ drivers/platform/x86/asus-wmi.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
->
-> If that's not possible, another possibility is that the driver could
-> handle the interrupt and clear the hardware's port-change status bit but
-> then not ask for the root hub to be resumed.  However, this would
-> probably be more difficult to get right.
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index fbb3345cc65a..d53c4aff519f 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -3876,8 +3876,13 @@ static int platform_profile_setup(struct asus_wmi *asus)
+ 		asus->platform_profile_handler.choices);
+ 
+ 	err = platform_profile_register(&asus->platform_profile_handler);
+-	if (err)
++	if (err == -EEXIST) {
++		pr_warn("%s, a platform_profile handler is already registered\n", __func__);
++		return 0;
++	} else if (err) {
++		pr_err("%s, failed at platform_profile_register: %d\n", __func__, err);
+ 		return err;
++	}
+ 
+ 	asus->platform_profile_support = true;
+ 	return 0;
+@@ -4752,7 +4757,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 		goto fail_fan_boost_mode;
+ 
+ 	err = platform_profile_setup(asus);
+-	if (err)
++	if (err && err != -EEXIST)
+ 		goto fail_platform_profile_setup;
+ 
+ 	err = asus_wmi_sysfs_init(asus->platform_device);
+-- 
+2.46.0
 
-IIUC the portsc status bit gets cleared after roothub is resumed. So
-this also brings not insignificant change.
-Not sure if its the best approach.
-
->
-> Alan Stern
