@@ -1,170 +1,89 @@
-Received: from fhigh8-smtp.messagingengine.com (fhigh8-smtp.messagingengine.com [103.168.172.159])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B7714D431;
-	Tue, 10 Sep 2024 11:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A9D187862
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Sep 2024 12:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725966316; cv=none; b=jXR/i5OHtT5TP/hzpp2J2raZH3l0NJDEwv/VbGC/JcMCXhC1tJZNLLIah1/5WPYjTmrldqu73r/IyeGo+MdAQyguAopBrHpn805TKBa+Y+Pz8wZ4LOEZczNX3F7B/DbPPzzYhHsWUc4/Rt+E+T54YGRmWmTvjh7R+MxZCdJbAj4=
+	t=1725972332; cv=none; b=ug9gAeHan5jrwU+goxoYNfV8q6RC3YBNMJH1huIeS/dd29TJVVgp/te243qDTiNQKoeklfG8klhEsGWKa4xxi2qwXu6sWJgWJ3ulax7mQUAkWpMPG7byNyWz6s1W0SY2gDkMYwPPNOXBTSkhS29vhI2ZAZRS+EOwcLVmT80bR5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725966316; c=relaxed/simple;
-	bh=1yx9TcnUJgtqcP8mBslj5zwznPpDMjo3LS5Ve+dFVqg=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=GgkMpgiBOTS8kd1cdNlOiJeFI0N03CUn84hUFplZinGGeJtBUmZ7Dpr4mg8+YZJBXoG2R4h2Yv91lIfiD1alIWbmwRGg36/wS3a+GW/Yi7YrsJijyFzSLtKvsBf46EZLkmAVGs6QgH3jDT403EiU/RqtEBNwyoTNLSeOFFuftgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=SXgnrroI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=A/qQsz6F; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1725972332; c=relaxed/simple;
+	bh=xjV7tpSepMrSJxIsWtuGEDmkKl7Ds74L6NBM16nKAao=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=thzTRkTeP7ZkHRuOj/11OU2uKZ2hhy+V1P06gs6MOgglkq84r0I8SZDw9td6zgHY0ONw0pEct8glsVN0al5vrJgg4yqKs6oOSvwtcNdalY2012O6lNgYsK4BqhoehRuf0XND1rJpqIJFMY4lmdL0runYBzCkqSg5SL7paApM93w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UYCf0ynF; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="SXgnrroI";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A/qQsz6F"
-Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 197AC114032F;
-	Tue, 10 Sep 2024 07:05:12 -0400 (EDT)
-Received: from phl-imap-01 ([10.202.2.91])
-  by phl-compute-08.internal (MEProxy); Tue, 10 Sep 2024 07:05:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1725966312;
-	 x=1726052712; bh=F072JG3GoQyszrW17lcvI6A0vuenqv3vV3Xu5Ss4cp8=; b=
-	SXgnrroI/JuFScOGm0wrFjF7DBHvy9NINaZX3mMaprYkt2N/cNJB15bIoD7t/FIK
-	1hhuuShPGBOYggkF05rj0Qi5hKJTrYezZJtE5Z95iyFdGdbpE9a9wLXFrIAJ0jJU
-	WAH6BSCAvXRNhuGQiDIBOS9sLAuhloVr0EIEAy8SCxudtDSpESTqYbF4aHsCxM/j
-	oHYDMaVk5/QGegDiQJe07zJi28edJ7//aEengwr3x+OMnXhO1VP1CHA/z5GhE3Na
-	5E+VaJpSYFEMAEWPtd5CsQsOufpaEmprXU17rWFOGVHnIWz5eB+pUDnpdURqcREz
-	1aJnPopFIDCrUMsPgXppSQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1725966312; x=
-	1726052712; bh=F072JG3GoQyszrW17lcvI6A0vuenqv3vV3Xu5Ss4cp8=; b=A
-	/qQsz6FRmhB94gvjUHHkB95HhEue6VgPZtVdoSDC7JyjhfzjYsm/nyt9kHBJmgWG
-	UlwF6DmzSmnd8RZdCocN/AzR5BGeIVQ2KBS8SU0xADdUUb1qyOaA6IWbd8k7HKJ+
-	nWb+X5gEu7+7lL0mCxXQmTFHiA0cusjpFdfzN1U5vmYNVQOdOhcpH5Uy4lftwSzp
-	ws1qQvOvK6vWLjiy3npKLxUx2VxUqe1p+L2dkpn6C0+Qyyi6FetEigfrIAp4SFym
-	rR/N+EIHL1GipfXqOrE65Iamo2j6v/XZPfeajtWPhLhWVXQTNcnG1SUbnmypKJVW
-	K3xQpBWsmSzr19GxnCicw==
-X-ME-Sender: <xms:5yfgZgNSmD-FAhCM-VxtL2jK13hh9clmOq5UlqripO6TOXubzkRDvg>
-    <xme:5yfgZm-5Q2qWjMfcwiY6uV1ah6Ti4ixxvFa_JPtuFRvfMB0smrQjygrZm8qRzejVu
-    hgc7o2pvmMxWcsjTGo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudeiledgfeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
-    necuhfhrohhmpedfnfhukhgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvg
-    hvqeenucggtffrrghtthgvrhhnpeehtedugfelgeeltdevvedtleffhfetgfdtjefhkefg
-    udejfeeuueefvdejuddutdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghvpdhnsggprhgtphhtthhopeeh
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtohhrvghnthhinhdrtghhrghrhi
-    esghhmrghilhdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhn
-    uhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrth
-    drtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvgh
-    gvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:5yfgZnQGJEMFrHXqinlabJr9E5c9q5RcrOBMK9yXWiTWyaJFknX11A>
-    <xmx:5yfgZotj9sOcn-gjYg14JUj-SkVxzAQH354FXTDV4O4MeNb5Ng4SDg>
-    <xmx:5yfgZocIv1cluDlm_k_3NFNSM97K8ZsnmVcJWyheO36YmK9-HvD_Fg>
-    <xmx:5yfgZs2HWm1RBz5M0oey85nwtEE_EXJFJ8IPHcE54ABS8wfj96sMLQ>
-    <xmx:6CfgZg46TSwS2ewn9NEvfmdneItGG1b5w1fSs1kGIGBh1kgFdSJn-gNb>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 8A99B3360077; Tue, 10 Sep 2024 07:05:11 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UYCf0ynF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725972331; x=1757508331;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=xjV7tpSepMrSJxIsWtuGEDmkKl7Ds74L6NBM16nKAao=;
+  b=UYCf0ynFxgPBzWk7jNQBVcPAZaZU4gVBSZYnXB9wXNVtvfedFYUISAuQ
+   Un+tF2laUoaWr3Xat/PDtlArsr3UVTHvYAFu+qA5Jt3CTxEsmK/kp9dNA
+   8r0MMVgx9sFPln2JvXCzRNnkpl60rp+Vzfls8Xvg3wzqoDeaDhRZweYlj
+   zuESauhu7c69zvMVfBSsljU4nsO04MN8e7rVq/uyod41E0wGbd/qlQ6dc
+   C4F9z2Ir9g1TblAliFaQ0ylHKWa5ujld8Z/cFm45YNjqTV4XL3OhnXPL6
+   vGkfm0wfNxD1VhwwmHJqH2Pxyhm05UzP0ISFxE9o/iE4VeytXLM8w3Oda
+   A==;
+X-CSE-ConnectionGUID: zpyI4jh7Sjql7o/Kn3eaYg==
+X-CSE-MsgGUID: wesmOjVmTuC4UDHKr2Cerw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="24910520"
+X-IronPort-AV: E=Sophos;i="6.10,217,1719903600"; 
+   d="scan'208";a="24910520"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 05:45:25 -0700
+X-CSE-ConnectionGUID: ANNBbTc7S4OOx6ycM6yZqQ==
+X-CSE-MsgGUID: 6ElFBQNpRTCp7s0PkawYnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,217,1719903600"; 
+   d="scan'208";a="71614836"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.224])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 05:45:22 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: platform-driver-x86@vger.kernel.org, 
+ Bas Nieuwenhuizen <bas@basnieuwenhuizen.nl>
+Cc: luke@ljones.dev, corentin.chary@gmail.com
+In-Reply-To: <20240909223503.1445779-1-bas@basnieuwenhuizen.nl>
+References: <20240909223503.1445779-1-bas@basnieuwenhuizen.nl>
+Subject: Re: [PATCH] platform/x86: asus-wmi: Disable OOBE experience on
+ Zenbook S 16
+Message-Id: <172597231511.1780.17442219892855554835.b4-ty@linux.intel.com>
+Date: Tue, 10 Sep 2024 15:45:15 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 10 Sep 2024 23:04:50 +1200
-From: "Luke Jones" <luke@ljones.dev>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- "Hans de Goede" <hdegoede@redhat.com>, corentin.chary@gmail.com
-Message-Id: <34d15b62-42f2-4be3-9e0d-69f77fb52e90@app.fastmail.com>
-In-Reply-To: <baebdb06-0ada-cab0-b9c3-154346be4e72@linux.intel.com>
-References: <20240910045443.678145-1-luke@ljones.dev>
- <baebdb06-0ada-cab0-b9c3-154346be4e72@linux.intel.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: don't fail if platform_profile already
- registered
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Tue, 10 Sep 2024, at 9:39 PM, Ilpo J=C3=A4rvinen wrote:
-> On Tue, 10 Sep 2024, Luke D. Jones wrote:
->=20
-> > On some newer laptops ASUS laptops SPS support is advertised but not
-> > actually used, causing the AMD driver to register as a platform_prof=
-ile
-> > handler.
-> >=20
-> > If this happens then the asus_wmi driver would error with -EEXIST wh=
-en
-> > trying to register its own handler leaving the user with a possibly
-> > unusable system. This is especially true for laptops with an MCU tha=
-t emit
-> > a stream of HID packets, some of which can be misinterpreted as shut=
-down
-> > signals.
-> >=20
-> > We can safely continue loading the driver instead of bombing out.
-> >=20
-> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> > ---
-> >  drivers/platform/x86/asus-wmi.c | 9 +++++++--
-> >  1 file changed, 7 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/=
-asus-wmi.c
-> > index fbb3345cc65a..d53c4aff519f 100644
-> > --- a/drivers/platform/x86/asus-wmi.c
-> > +++ b/drivers/platform/x86/asus-wmi.c
-> > @@ -3876,8 +3876,13 @@ static int platform_profile_setup(struct asus=
-_wmi *asus)
-> >  asus->platform_profile_handler.choices);
-> > =20
-> >  err =3D platform_profile_register(&asus->platform_profile_handler);
-> > - if (err)
-> > + if (err =3D=3D -EEXIST) {
-> > + pr_warn("%s, a platform_profile handler is already registered\n", =
-__func__);
-> > + return 0;
-> > + } else if (err) {
-> > + pr_err("%s, failed at platform_profile_register: %d\n", __func__, =
-err);
->=20
-> Don't print __func__ in user visible warn/error/info messages but use=20
-> plain English please.
+On Tue, 10 Sep 2024 00:35:03 +0200, Bas Nieuwenhuizen wrote:
 
-Ack. I've done this a few times now. Sorry I missed this one.
+> The OOBE experience fades the keyboard backlight in & out continuously,
+> and make the backlight uncontrollable using its device.
+> 
+> Workaround taken from
+> https://wiki.archlinux.org/index.php?title=ASUS_Zenbook_UM5606&diff=next&oldid=815547
+> 
+> 
+> [...]
 
->=20
-> >  return err;
-> > + }
-> > =20
-> >  asus->platform_profile_support =3D true;
-> >  return 0;
-> > @@ -4752,7 +4757,7 @@ static int asus_wmi_add(struct platform_device=
- *pdev)
-> >  goto fail_fan_boost_mode;
-> > =20
-> >  err =3D platform_profile_setup(asus);
-> > - if (err)
-> > + if (err && err !=3D -EEXIST)
->=20
-> Hi Luke,
->=20
-> Hans had a comment about this line against the previous version.
->=20
-> Also, this patch has entirely lost the version information. It's v3 no=
-w I=20
-> think.
 
-Uh.... sorry, I seem to have lost it in the depths of my inbox even with=
- filters and searching. I'll look it up on lore and ensure everything is=
- correct next go round.
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
 
-Cheers,
-Luke.
+The list of commits applied:
+[1/1] platform/x86: asus-wmi: Disable OOBE experience on Zenbook S 16
+      commit: d6de45e3c6f3713d3825d3e2860c11d24e0f941f
+
+--
+ i.
+
