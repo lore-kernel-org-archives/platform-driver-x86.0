@@ -1,123 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from fhigh8-smtp.messagingengine.com (fhigh8-smtp.messagingengine.com [103.168.172.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A434118C324;
-	Tue, 10 Sep 2024 09:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B7714D431;
+	Tue, 10 Sep 2024 11:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725961174; cv=none; b=hH2ovjyowvNsWOVxH/F/B6UAlEIKIABWKuNZYsXlbQFH2G+1oOHgerizmWY8gL5dYLq/RMSNwaW3zVvPi64eotmtXxDvyBQhgMQeJT7ciT5d3+xc+aMc8bj9F0VMj+sOuImLfzsUrAqmyaWDbX8BS3bQDdCT1DkYjo5UUbN2XHc=
+	t=1725966316; cv=none; b=jXR/i5OHtT5TP/hzpp2J2raZH3l0NJDEwv/VbGC/JcMCXhC1tJZNLLIah1/5WPYjTmrldqu73r/IyeGo+MdAQyguAopBrHpn805TKBa+Y+Pz8wZ4LOEZczNX3F7B/DbPPzzYhHsWUc4/Rt+E+T54YGRmWmTvjh7R+MxZCdJbAj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725961174; c=relaxed/simple;
-	bh=/HFsesU4JBmKCgdLae1k+5oS9Uch7EoN1ToR7+wJglo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=E1EpCJ4XCD8rhhJNmqQtuRKc5tPdeqbsyH7IC1aCvZrUaChMXjB+y1gE+Wx5W+0bX7b6SwfpbYxdWSp9THNf8cYU9K+QneNs2JC9C6p8tB5j9xdKDRyvXrYajMbvNNsv5ZCohhv+bLAY2ijoQgKRAigLpGBQovDq3ciCZDVrKv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G2S/WxUd; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1725966316; c=relaxed/simple;
+	bh=1yx9TcnUJgtqcP8mBslj5zwznPpDMjo3LS5Ve+dFVqg=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=GgkMpgiBOTS8kd1cdNlOiJeFI0N03CUn84hUFplZinGGeJtBUmZ7Dpr4mg8+YZJBXoG2R4h2Yv91lIfiD1alIWbmwRGg36/wS3a+GW/Yi7YrsJijyFzSLtKvsBf46EZLkmAVGs6QgH3jDT403EiU/RqtEBNwyoTNLSeOFFuftgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=SXgnrroI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=A/qQsz6F; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G2S/WxUd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725961172; x=1757497172;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=/HFsesU4JBmKCgdLae1k+5oS9Uch7EoN1ToR7+wJglo=;
-  b=G2S/WxUdtLsxFUNCl2snB13dvUhb/HhIQrTQpMJiCNrGVBAIvC3Mjo/L
-   sk0jUeY0KgPzMOctXY2MDWKlBcJptS9HxlagB5YovL32qzRpZRS5Ck1Ji
-   oMsYsq+Wo6yeIjRGrEy46CKRp2YUV/elEp7obFjkZ3RaOhp6cAc+1zEYi
-   XTjsN0TZ0QM+2B6d8UCPHiqgenf5hhCmNbby3Gg1DG6xJq28OvtAB7iwk
-   lqxyNxA/g6rGfCVPhqmYaEy2ZRBFtzCpsC4kOZvjCaODDDeeE6seaJJ6x
-   GXTzpUJtWB9q2x92q7gL7t8N3V/7PnTb/7glgtJrq/lY4NdSoiqm1mMDw
-   A==;
-X-CSE-ConnectionGUID: H+kJz2r5S6GII9vgBjMsIg==
-X-CSE-MsgGUID: poBVVnp6Q3iDs1LEVHO6yQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="47214115"
-X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
-   d="scan'208";a="47214115"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 02:39:32 -0700
-X-CSE-ConnectionGUID: hT/55hIiQHebLmLLUza3FA==
-X-CSE-MsgGUID: fOtpBdu8Qj+97IWFV0jnUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
-   d="scan'208";a="67722288"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.223])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 02:39:29 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 10 Sep 2024 12:39:25 +0300 (EEST)
-To: "Luke D. Jones" <luke@ljones.dev>
-cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Hans de Goede <hdegoede@redhat.com>, corentin.chary@gmail.com
-Subject: Re: [PATCH] platform/x86: asus-wmi: don't fail if platform_profile
- already registered
-In-Reply-To: <20240910045443.678145-1-luke@ljones.dev>
-Message-ID: <baebdb06-0ada-cab0-b9c3-154346be4e72@linux.intel.com>
-References: <20240910045443.678145-1-luke@ljones.dev>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="SXgnrroI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A/qQsz6F"
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 197AC114032F;
+	Tue, 10 Sep 2024 07:05:12 -0400 (EDT)
+Received: from phl-imap-01 ([10.202.2.91])
+  by phl-compute-08.internal (MEProxy); Tue, 10 Sep 2024 07:05:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1725966312;
+	 x=1726052712; bh=F072JG3GoQyszrW17lcvI6A0vuenqv3vV3Xu5Ss4cp8=; b=
+	SXgnrroI/JuFScOGm0wrFjF7DBHvy9NINaZX3mMaprYkt2N/cNJB15bIoD7t/FIK
+	1hhuuShPGBOYggkF05rj0Qi5hKJTrYezZJtE5Z95iyFdGdbpE9a9wLXFrIAJ0jJU
+	WAH6BSCAvXRNhuGQiDIBOS9sLAuhloVr0EIEAy8SCxudtDSpESTqYbF4aHsCxM/j
+	oHYDMaVk5/QGegDiQJe07zJi28edJ7//aEengwr3x+OMnXhO1VP1CHA/z5GhE3Na
+	5E+VaJpSYFEMAEWPtd5CsQsOufpaEmprXU17rWFOGVHnIWz5eB+pUDnpdURqcREz
+	1aJnPopFIDCrUMsPgXppSQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1725966312; x=
+	1726052712; bh=F072JG3GoQyszrW17lcvI6A0vuenqv3vV3Xu5Ss4cp8=; b=A
+	/qQsz6FRmhB94gvjUHHkB95HhEue6VgPZtVdoSDC7JyjhfzjYsm/nyt9kHBJmgWG
+	UlwF6DmzSmnd8RZdCocN/AzR5BGeIVQ2KBS8SU0xADdUUb1qyOaA6IWbd8k7HKJ+
+	nWb+X5gEu7+7lL0mCxXQmTFHiA0cusjpFdfzN1U5vmYNVQOdOhcpH5Uy4lftwSzp
+	ws1qQvOvK6vWLjiy3npKLxUx2VxUqe1p+L2dkpn6C0+Qyyi6FetEigfrIAp4SFym
+	rR/N+EIHL1GipfXqOrE65Iamo2j6v/XZPfeajtWPhLhWVXQTNcnG1SUbnmypKJVW
+	K3xQpBWsmSzr19GxnCicw==
+X-ME-Sender: <xms:5yfgZgNSmD-FAhCM-VxtL2jK13hh9clmOq5UlqripO6TOXubzkRDvg>
+    <xme:5yfgZm-5Q2qWjMfcwiY6uV1ah6Ti4ixxvFa_JPtuFRvfMB0smrQjygrZm8qRzejVu
+    hgc7o2pvmMxWcsjTGo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudeiledgfeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
+    necuhfhrohhmpedfnfhukhgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvg
+    hvqeenucggtffrrghtthgvrhhnpeehtedugfelgeeltdevvedtleffhfetgfdtjefhkefg
+    udejfeeuueefvdejuddutdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    grihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghvpdhnsggprhgtphhtthhopeeh
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtohhrvghnthhinhdrtghhrghrhi
+    esghhmrghilhdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhn
+    uhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrth
+    drtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvgh
+    gvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:5yfgZnQGJEMFrHXqinlabJr9E5c9q5RcrOBMK9yXWiTWyaJFknX11A>
+    <xmx:5yfgZotj9sOcn-gjYg14JUj-SkVxzAQH354FXTDV4O4MeNb5Ng4SDg>
+    <xmx:5yfgZocIv1cluDlm_k_3NFNSM97K8ZsnmVcJWyheO36YmK9-HvD_Fg>
+    <xmx:5yfgZs2HWm1RBz5M0oey85nwtEE_EXJFJ8IPHcE54ABS8wfj96sMLQ>
+    <xmx:6CfgZg46TSwS2ewn9NEvfmdneItGG1b5w1fSs1kGIGBh1kgFdSJn-gNb>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 8A99B3360077; Tue, 10 Sep 2024 07:05:11 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Date: Tue, 10 Sep 2024 23:04:50 +1200
+From: "Luke Jones" <luke@ljones.dev>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ "Hans de Goede" <hdegoede@redhat.com>, corentin.chary@gmail.com
+Message-Id: <34d15b62-42f2-4be3-9e0d-69f77fb52e90@app.fastmail.com>
+In-Reply-To: <baebdb06-0ada-cab0-b9c3-154346be4e72@linux.intel.com>
+References: <20240910045443.678145-1-luke@ljones.dev>
+ <baebdb06-0ada-cab0-b9c3-154346be4e72@linux.intel.com>
+Subject: Re: [PATCH] platform/x86: asus-wmi: don't fail if platform_profile already
+ registered
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 10 Sep 2024, Luke D. Jones wrote:
+On Tue, 10 Sep 2024, at 9:39 PM, Ilpo J=C3=A4rvinen wrote:
+> On Tue, 10 Sep 2024, Luke D. Jones wrote:
+>=20
+> > On some newer laptops ASUS laptops SPS support is advertised but not
+> > actually used, causing the AMD driver to register as a platform_prof=
+ile
+> > handler.
+> >=20
+> > If this happens then the asus_wmi driver would error with -EEXIST wh=
+en
+> > trying to register its own handler leaving the user with a possibly
+> > unusable system. This is especially true for laptops with an MCU tha=
+t emit
+> > a stream of HID packets, some of which can be misinterpreted as shut=
+down
+> > signals.
+> >=20
+> > We can safely continue loading the driver instead of bombing out.
+> >=20
+> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> > ---
+> >  drivers/platform/x86/asus-wmi.c | 9 +++++++--
+> >  1 file changed, 7 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/=
+asus-wmi.c
+> > index fbb3345cc65a..d53c4aff519f 100644
+> > --- a/drivers/platform/x86/asus-wmi.c
+> > +++ b/drivers/platform/x86/asus-wmi.c
+> > @@ -3876,8 +3876,13 @@ static int platform_profile_setup(struct asus=
+_wmi *asus)
+> >  asus->platform_profile_handler.choices);
+> > =20
+> >  err =3D platform_profile_register(&asus->platform_profile_handler);
+> > - if (err)
+> > + if (err =3D=3D -EEXIST) {
+> > + pr_warn("%s, a platform_profile handler is already registered\n", =
+__func__);
+> > + return 0;
+> > + } else if (err) {
+> > + pr_err("%s, failed at platform_profile_register: %d\n", __func__, =
+err);
+>=20
+> Don't print __func__ in user visible warn/error/info messages but use=20
+> plain English please.
 
-> On some newer laptops ASUS laptops SPS support is advertised but not
-> actually used, causing the AMD driver to register as a platform_profile
-> handler.
-> 
-> If this happens then the asus_wmi driver would error with -EEXIST when
-> trying to register its own handler leaving the user with a possibly
-> unusable system. This is especially true for laptops with an MCU that emit
-> a stream of HID packets, some of which can be misinterpreted as shutdown
-> signals.
-> 
-> We can safely continue loading the driver instead of bombing out.
-> 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> ---
->  drivers/platform/x86/asus-wmi.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index fbb3345cc65a..d53c4aff519f 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -3876,8 +3876,13 @@ static int platform_profile_setup(struct asus_wmi *asus)
->  		asus->platform_profile_handler.choices);
->  
->  	err = platform_profile_register(&asus->platform_profile_handler);
-> -	if (err)
-> +	if (err == -EEXIST) {
-> +		pr_warn("%s, a platform_profile handler is already registered\n", __func__);
-> +		return 0;
-> +	} else if (err) {
-> +		pr_err("%s, failed at platform_profile_register: %d\n", __func__, err);
+Ack. I've done this a few times now. Sorry I missed this one.
 
-Don't print __func__ in user visible warn/error/info messages but use 
-plain English please.
+>=20
+> >  return err;
+> > + }
+> > =20
+> >  asus->platform_profile_support =3D true;
+> >  return 0;
+> > @@ -4752,7 +4757,7 @@ static int asus_wmi_add(struct platform_device=
+ *pdev)
+> >  goto fail_fan_boost_mode;
+> > =20
+> >  err =3D platform_profile_setup(asus);
+> > - if (err)
+> > + if (err && err !=3D -EEXIST)
+>=20
+> Hi Luke,
+>=20
+> Hans had a comment about this line against the previous version.
+>=20
+> Also, this patch has entirely lost the version information. It's v3 no=
+w I=20
+> think.
 
->  		return err;
-> +	}
->  
->  	asus->platform_profile_support = true;
->  	return 0;
-> @@ -4752,7 +4757,7 @@ static int asus_wmi_add(struct platform_device *pdev)
->  		goto fail_fan_boost_mode;
->  
->  	err = platform_profile_setup(asus);
-> -	if (err)
-> +	if (err && err != -EEXIST)
+Uh.... sorry, I seem to have lost it in the depths of my inbox even with=
+ filters and searching. I'll look it up on lore and ensure everything is=
+ correct next go round.
 
-Hi Luke,
-
-Hans had a comment about this line against the previous version.
-
-Also, this patch has entirely lost the version information. It's v3 now I 
-think.
-
-
--- 
- i.
-
+Cheers,
+Luke.
