@@ -1,131 +1,262 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B42188004
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Sep 2024 09:00:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5330D18595E;
+	Tue, 10 Sep 2024 09:32:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725958846; cv=none; b=dKTgWir9bP0HJ0a8vzlHeyp2DX01v8dqNRLxNJKntjATpAClo00Q9q1Rqme2bjYxHVL+lV+4aLrepOwiOrnlj5l/5rupG9Be0MPqW0ai1Zc5xO/XbMBZxcnbqy1q0786VtPddRBL0XAGu4zNOPJqbOVq9I+Uvjnbvbvc/Wm1uEQ=
+	t=1725960780; cv=none; b=j++g5W39K/4rFcOo+2vfb6OGN8Hs2IhyKpVFuK+ssipIZjMDkpITi5PDc7SCdcnF4MDtKlD1G0QEHe0SsT1VQNfHp1/maqYaM9zwmdSLmq9Q6EtLBGD4c/SafWOv1wLEjmT5EtStXXV+GlultpTEo/wRYw+Jma98qzERSvxeTmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725958846; c=relaxed/simple;
-	bh=jvP2CShRbo1D59rvxjlwPvRbkOjjEaoXxnhnFtM6xB8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fau8Y+Kq6HcR84v/hGilK3KCYv9ochLF4/nKUDHl8EpVJmnmA7MzFvNCa/pkNklldc/z83qOJW4AUweHgz4gXEtYjZMbcUMeanFlO1N5fUnozHicQddfpqLlsvsPseGeEwYGBZGQ38flS5xQmfr+B6SeTHTEDdCEx2tsiJNFoTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LvyQnsCn; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1725960780; c=relaxed/simple;
+	bh=I3/4yorClfjkVCr8bmjnPr9cVL52OsbEuW9h0Dutdnc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=j+ZJs9rtp57ZbOVeH23h1VaLdHzkdkHdifRAgvpHzocd5GoC61GpAZvTy55JZLTdhnBRkdtPXPMkSI6DrvCn1kMlATTBnQq07bW4aF4lK6cSzFfdPFswgDSL4TSqQ23wz2C4z5KetGS/LTRXw1iLQ0Mo9AKalKddqtEXwwmLH4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C+c0JXYu; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LvyQnsCn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725958844;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qhiuzN32efomWjuY/NVTDByQS3uu6AVNQbc/n11HQBk=;
-	b=LvyQnsCnvIyo0BQCOL1VJDGoJzobK7JbDMNkgvHaL4eSzoMIQwFsmtOR0St84OFf6hOFG/
-	1Lcdl5XjEXCFTILnkyqDzYYW2vumHUC5GHQ1kOxJ1j6yO3bwJ4eVmK9rIg0msc5rsNa45D
-	rf9tl7vPcIFhE/TF7Wc8zSVaSBtzo1s=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-322-7LT_yPlXPYe31iwb-gM6Ow-1; Tue, 10 Sep 2024 05:00:42 -0400
-X-MC-Unique: 7LT_yPlXPYe31iwb-gM6Ow-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a8d3085ab6fso146003366b.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Sep 2024 02:00:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725958841; x=1726563641;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qhiuzN32efomWjuY/NVTDByQS3uu6AVNQbc/n11HQBk=;
-        b=O8EFLLX0Z/yHOKnYj2WFb06KZUd6thq8i8oKlAUlnYYecJU9KNLRtjzqJl/0J7/rzV
-         xS82r267JQ3yR3arX64SYYfDQO3wq9BiM5rmIXdTyV1MoHItWFjzyofDtNgcLysug9u3
-         01IugtO25Hyffl6RFERXtSYJ623+GEy2rtOEgIE4kFxfWJtvFpr9NtegfnzbBiR8UZiF
-         UbPMP6AHpRmBtD1rIavkvswdxWVux8RZRX1l+0v1Fi+K4SHMQpCEooJosCbl7lXfJGqc
-         zBuQ5+Ej09vqPBBaNtOT4GtDnOHcXX/jALxPUc1YPJCkDAlZsGtu63uh+8dqHCyrU4mq
-         KQkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1qiszZA7hdzIi8uV7nOE6cTD7MMdkiuyex7SbcIbo4C8rS0Sh2czcX7+EAzn6aaBEkkIO4QIGmHbqXD4rN3g8tbNU@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfR8MjnQjy2hzFj7QgZW2LS+7YW68bpxpLtSzvtjuq2IKJcPJI
-	vXvZUT3jYNl3w099BBmGRAs0Qvejk5lkCtah1wd2yRh/22rl2EkGNpc0p/6pp8pEBzvTGoQc3Pd
-	1DNUfwIDj/dlFtWhdkd1E386d1n44Owtb3mdg00A9YjtFboxKTv6uYdJ2/tc8J2pXQvARdoM=
-X-Received: by 2002:a17:907:3f8d:b0:a86:43c0:4270 with SMTP id a640c23a62f3a-a8ffaa97a61mr7484866b.13.1725958841404;
-        Tue, 10 Sep 2024 02:00:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE8ecB3ho5gSaKqeWr0v4uJU2RAyDyWIvn4rzdMnoVxmq5t7dfn1QKTjY+0Zs76xfGNI6PSig==
-X-Received: by 2002:a17:907:3f8d:b0:a86:43c0:4270 with SMTP id a640c23a62f3a-a8ffaa97a61mr7481266b.13.1725958840917;
-        Tue, 10 Sep 2024 02:00:40 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8d25ce86cfsm452720066b.150.2024.09.10.02.00.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Sep 2024 02:00:40 -0700 (PDT)
-Message-ID: <1cdbf313-d585-471e-b625-16d3fd9ca90a@redhat.com>
-Date: Tue, 10 Sep 2024 11:00:39 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C+c0JXYu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725960778; x=1757496778;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=I3/4yorClfjkVCr8bmjnPr9cVL52OsbEuW9h0Dutdnc=;
+  b=C+c0JXYuVgdRkfNLEHJpaTUd0U7paqpeCz/J44o7tyHyS5QhHEDIQQfV
+   Jx3aJatBhMFFDEiXppZeyoxtiBmKap10uOHb0reI40XEHDUtM7HVn4rAX
+   ViUKU5/BzW45QvUbX654e9yby6nU1I1x3jaZ9gZOeMQ9NkUHMasin8c8A
+   BWA0gqgjCtEy/08QgQOvzmxDwCq3nJT37vk7wJJOMxcHG7n0I19CuhltG
+   PJtwvPgRdAzFwrApLvz0N6SsZ5NearAF1L1BvWgEjl9paSLZZCa35yx6x
+   EijMq5eJDtEwXs2z/ao2Aw+XL32pI4kiKgadiZoWdz0ZAnmWi/VK11emV
+   Q==;
+X-CSE-ConnectionGUID: 7QMBpcRtRkyQniO2kdh64Q==
+X-CSE-MsgGUID: XWQmg/RGSiCnLRZExymtRg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="24801251"
+X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
+   d="scan'208";a="24801251"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 02:32:58 -0700
+X-CSE-ConnectionGUID: Ww0eZmwNSZKsGLVOctnFHg==
+X-CSE-MsgGUID: xkGeG7LgTYid0Ypj5U5b6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
+   d="scan'208";a="71566297"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.223])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 02:32:54 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 10 Sep 2024 12:32:50 +0300 (EEST)
+To: Rajvi Jingar <rajvi.jingar@linux.intel.com>
+cc: xi.pardee@linux.intel.com, irenic.rajneesh@gmail.com, 
+    david.e.box@linux.intel.com, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-pm@vger.kernel.org
+Subject: Re: [PATCH] platform/x86/intel/pmc: Add Arrow Lake U/H support to
+ intel_pmc_core driver
+In-Reply-To: <20240909232842.2896965-1-rajvi.jingar@linux.intel.com>
+Message-ID: <4481a9c5-05b1-fef8-a011-4bbdad19c35b@linux.intel.com>
+References: <20240909232842.2896965-1-rajvi.jingar@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next 6/7] platform/olpc: olpc-xo175-ec: switch to use
- spi_target_abort().
-To: Yang Yingliang <yangyingliang@huaweicloud.com>, broonie@kernel.org,
- matthias.bgg@gmail.com, yangyingliang@huawei.com, liwei391@huawei.com
-Cc: linux-spi@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20240910022618.1397-1-yangyingliang@huaweicloud.com>
- <20240910022618.1397-7-yangyingliang@huaweicloud.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240910022618.1397-7-yangyingliang@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi,
+On Mon, 9 Sep 2024, Rajvi Jingar wrote:
 
-On 9/10/24 4:26 AM, Yang Yingliang wrote:
-> From: Yang Yingliang <yangyingliang@huawei.com>
-> 
-> Switch to use modern name function spi_target_abort().
-> 
-> No functional changed.
-> 
-> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+> Add Arrow Lake U and Arro Lake H support in intel_pmc_core driver
 
-Thanks, patch looks good to me.
+Arrow
 
-Please merge this through the SPI tree together with the rest
-of the series:
+Add . to the end of sentence.
 
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
+> Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
 > ---
->  drivers/platform/olpc/olpc-xo175-ec.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/intel/pmc/arl.c  | 65 ++++++++++++++++++++++-----
+>  drivers/platform/x86/intel/pmc/core.c |  2 +
+>  drivers/platform/x86/intel/pmc/core.h |  7 +++
+>  3 files changed, 64 insertions(+), 10 deletions(-)
 > 
-> diff --git a/drivers/platform/olpc/olpc-xo175-ec.c b/drivers/platform/olpc/olpc-xo175-ec.c
-> index 62ccbcb15c74..fa7b3bda688a 100644
-> --- a/drivers/platform/olpc/olpc-xo175-ec.c
-> +++ b/drivers/platform/olpc/olpc-xo175-ec.c
-> @@ -536,7 +536,7 @@ static int olpc_xo175_ec_cmd(u8 cmd, u8 *inbuf, size_t inlen, u8 *resp,
->  		dev_err(dev, "EC cmd error: timeout in STATE %d\n",
->  				priv->cmd_state);
->  		gpiod_set_value_cansleep(priv->gpio_cmd, 0);
-> -		spi_slave_abort(priv->spi);
-> +		spi_target_abort(priv->spi);
->  		olpc_xo175_ec_read_packet(priv);
->  		return -ETIMEDOUT;
->  	}
-> @@ -653,7 +653,7 @@ static void olpc_xo175_ec_remove(struct spi_device *spi)
->  	if (pm_power_off == olpc_xo175_ec_power_off)
->  		pm_power_off = NULL;
+> diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
+> index e10527c4e3e0..964f5f040dd9 100644
+> --- a/drivers/platform/x86/intel/pmc/arl.c
+> +++ b/drivers/platform/x86/intel/pmc/arl.c
+> @@ -16,6 +16,7 @@
+>  #define IOEP_LPM_REQ_GUID	0x5077612
+>  #define SOCS_LPM_REQ_GUID	0x8478657
+>  #define PCHS_LPM_REQ_GUID	0x9684572
+> +#define SOCM_LPM_REQ_GUID	0x2625030
 >  
-> -	spi_slave_abort(spi);
-> +	spi_target_abort(spi);
+>  static const u8 ARL_LPM_REG_INDEX[] = {0, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20};
 >  
->  	platform_device_unregister(olpc_ec);
->  	olpc_ec = NULL;
+> @@ -650,6 +651,7 @@ const struct pmc_reg_map arl_pchs_reg_map = {
+>  	.etr3_offset = ETR3_OFFSET,
+>  };
+>  
+> +#define PMC_DEVID_SOCM 0x777f
+>  #define PMC_DEVID_SOCS 0xae7f
+>  #define PMC_DEVID_IOEP 0x7ecf
+>  #define PMC_DEVID_PCHS 0x7f27
+> @@ -669,11 +671,17 @@ static struct pmc_info arl_pmc_info_list[] = {
+>  		.devid	= PMC_DEVID_PCHS,
+>  		.map	= &arl_pchs_reg_map,
+>  	},
+> +	{
+> +		.guid	= SOCM_LPM_REQ_GUID,
+> +		.devid	= PMC_DEVID_SOCM,
+> +		.map	= &mtl_socm_reg_map,
+> +	},
+>  	{}
+>  };
+>  
+>  #define ARL_NPU_PCI_DEV			0xad1d
+>  #define ARL_GNA_PCI_DEV			0xae4c
+> +#define ARL_H_GNA_PCI_DEV 		0x774c
+>  /*
+>   * Set power state of select devices that do not have drivers to D3
+>   * so that they do not block Package C entry.
+> @@ -684,6 +692,12 @@ static void arl_d3_fixup(void)
+>  	pmc_core_set_device_d3(ARL_GNA_PCI_DEV);
+>  }
+>  
+> +static void arl_h_d3_fixup(void)
+> +{
+> +	pmc_core_set_device_d3(ARL_NPU_PCI_DEV);
+> +	pmc_core_set_device_d3(ARL_H_GNA_PCI_DEV);
+> +}
+> +
+>  static int arl_resume(struct pmc_dev *pmcdev)
+>  {
+>  	arl_d3_fixup();
+> @@ -692,16 +706,47 @@ static int arl_resume(struct pmc_dev *pmcdev)
+>  	return pmc_core_resume_common(pmcdev);
+>  }
+>  
+> +static int arl_h_resume(struct pmc_dev *pmcdev)
+> +{
+> +	arl_h_d3_fixup();
+> +	pmc_core_send_ltr_ignore(pmcdev, 3, 0);
+> +
+> +	return pmc_core_resume_common(pmcdev);
+> +}
+> +
+> +int arl_h_core_init(struct pmc_dev *pmcdev)
+> +{
+> +	arl_h_d3_fixup();
+> +
+> +	return arl_core_generic_init(pmcdev, SOC_M);
+> +}
+> +
+>  int arl_core_init(struct pmc_dev *pmcdev)
+>  {
+> -	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_SOC];
+> +	arl_d3_fixup();
+> +
+> +	return arl_core_generic_init(pmcdev, SOC_S);
+> +}
+> +
+> +int arl_core_generic_init(struct pmc_dev *pmcdev, int soc_tp)
 
+This function has no callers outside or arl.c and should be made static 
+and the code should be reordered such that no prototype is needed.
+
+> +{
+>  	int ret;
+> -	int func = 0;
+> +	int func;
+>  	bool ssram_init = true;
+> +	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_SOC];
+>  
+> -	arl_d3_fixup();
+>  	pmcdev->suspend = cnl_suspend;
+> -	pmcdev->resume = arl_resume;
+> +
+> +	if (soc_tp == SOC_M) {
+> +		func = 2;
+> +		pmcdev->resume = arl_h_resume;
+> +	} else if (soc_tp == SOC_S) {
+> +		func = 0;
+> +		pmcdev->resume = arl_resume;
+
+It would be preferrable to make an info structure to describe this kind 
+of platform variations so that if () forests like this are avoided.
+
+> +	} else {
+> +		return -EINVAL;
+> +	}
+> +
+>  	pmcdev->regmap_list = arl_pmc_info_list;
+>  
+>  	/*
+> @@ -711,7 +756,10 @@ int arl_core_init(struct pmc_dev *pmcdev)
+>  	ret = pmc_core_ssram_init(pmcdev, func);
+>  	if (ret) {
+>  		ssram_init = false;
+> -		pmc->map = &arl_socs_reg_map;
+> +		if (soc_tp == SOC_M)
+> +			pmc->map = &mtl_socm_reg_map;
+> +		else
+> +			pmc->map = &arl_socs_reg_map;
+
+As with above, use an info struct.
+
+-- 
+ i.
+
+>  
+>  		ret = get_primary_reg_base(pmc);
+>  		if (ret)
+> @@ -721,11 +769,8 @@ int arl_core_init(struct pmc_dev *pmcdev)
+>  	pmc_core_get_low_power_modes(pmcdev);
+>  	pmc_core_punit_pmt_init(pmcdev, ARL_PMT_DMU_GUID);
+>  
+> -	if (ssram_init)	{
+> -		ret = pmc_core_ssram_get_lpm_reqs(pmcdev);
+> -		if (ret)
+> -			return ret;
+> -	}
+> +	if (ssram_init)
+> +		return pmc_core_ssram_get_lpm_reqs(pmcdev);
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index 01ae71c6df59..046791f21619 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -1319,6 +1319,8 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+>  	X86_MATCH_VFM(INTEL_RAPTORLAKE_S,	adl_core_init),
+>  	X86_MATCH_VFM(INTEL_METEORLAKE_L,	mtl_core_init),
+>  	X86_MATCH_VFM(INTEL_ARROWLAKE,		arl_core_init),
+> +	X86_MATCH_VFM(INTEL_ARROWLAKE_H,	arl_h_core_init),
+> +	X86_MATCH_VFM(INTEL_ARROWLAKE_U,	arl_h_core_init),
+>  	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	lnl_core_init),
+>  	{}
+>  };
+> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+> index ea04de7eb9e8..5771f40185c2 100644
+> --- a/drivers/platform/x86/intel/pmc/core.h
+> +++ b/drivers/platform/x86/intel/pmc/core.h
+> @@ -365,6 +365,11 @@ struct pmc_info {
+>  	const struct pmc_reg_map *map;
+>  };
+>  
+> +enum soc_type {
+> +	SOC_M,
+> +	SOC_S
+> +};
+> +
+>  /**
+>   * struct pmc - pmc private info structure
+>   * @base_addr:		contains pmc base address
+> @@ -599,6 +604,8 @@ int tgl_core_generic_init(struct pmc_dev *pmcdev, int pch_tp);
+>  int adl_core_init(struct pmc_dev *pmcdev);
+>  int mtl_core_init(struct pmc_dev *pmcdev);
+>  int arl_core_init(struct pmc_dev *pmcdev);
+> +int arl_h_core_init(struct pmc_dev *pmcdev);
+> +int arl_core_generic_init(struct pmc_dev *pmcdev, int pch_tp);
+>  int lnl_core_init(struct pmc_dev *pmcdev);
+>  
+>  void cnl_suspend(struct pmc_dev *pmcdev);
+> 
