@@ -1,141 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D940B23AB;
-	Tue, 10 Sep 2024 00:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B79F1DFE8;
+	Tue, 10 Sep 2024 02:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725929394; cv=none; b=cY/oMNwSgLGpbmtlKPQd3iQDryFC2tLDjs2vBPXCU1Q0hTKmoqew5Ka2N906C8hR0Pd9wMB30B42yR6wZee5Cq22F2xJ4RgYodrm4wy7p8DrUjSBvgyUh+m4AbMdcqmyT6XaCO+Ug0pkegbm4r1H33l1CJSKjMmqd/avyzoGqm8=
+	t=1725935188; cv=none; b=AAGDnibYXqzglEoFy+QZZ4yWLKICybL5tYav/mx42bZrbWfgxcwAin3ABjEjjfw+RM7hVROMYFv0DnJDgd4in/yw0ob3fIFG5ph3Vp21GW/p9fTYAaSqdsCD16lyERHdGKeQPwACd6CPATfs4076kypBrgfA/dZcfTaFfS4b26A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725929394; c=relaxed/simple;
-	bh=KKBmHIDnxYEzDcPUAEcWXq86Vrmi5Fw/4OjA7wXDUHI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pJb+NNSxPgsjKTlBe67PwI/HV8COvu2/qAXD2h8QczKtvOWaL4lLYJp4HAiyG0VQFsSl2tmJma1kXSQpNs46dcfr0jLn5ngTgss3BZCSMRV7XcqSSgiwG4z59zZvtsk5SUSgO6aODifidBh/ERQ57bN92StaM9nbZ9bHJHAoI7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MvUYPHeI; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MvUYPHeI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725929393; x=1757465393;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=KKBmHIDnxYEzDcPUAEcWXq86Vrmi5Fw/4OjA7wXDUHI=;
-  b=MvUYPHeI69YceV7so1nBDaM0EjQFoUtpEOqOlD+AWLqOw2SSGYyyQjmD
-   Pw40NC3rbPr0nfFX9QOOdrjn40VBGxH4qFpOBs2vGujHhPys6RHCAckPd
-   IiiHi9RC7dvqQBoDdbK1ZnarDCJlw8IIIK4Z/YwvFH3BMEuBf+YCDvGLc
-   oTAqisNnSxUVPNIONW7hVJMzCRRaYqZAdJ5Ku6DB+MYa1Xt/iU7aJ2CJl
-   HncgJxQwiCTPcM2F/nKoq2oWVD7E2UgAR5De/KRb4i9Zd6w+INlocAIZV
-   gA2puJamRf501OqmdJCpB10mCS9UlxF3s9BYkxS54Qr21p7Gk+Ny+QzaG
-   g==;
-X-CSE-ConnectionGUID: d3JEz/PLSg2a5FiCkG0djg==
-X-CSE-MsgGUID: sg0xEQraQfizLwRsCO0YhQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="42133120"
-X-IronPort-AV: E=Sophos;i="6.10,215,1719903600"; 
-   d="scan'208";a="42133120"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 17:49:52 -0700
-X-CSE-ConnectionGUID: pqNkPw70ToWZ0/N04HPcOA==
-X-CSE-MsgGUID: T0B/ezBGTA2+ACdPC2PSFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,215,1719903600"; 
-   d="scan'208";a="71820323"
-Received: from xpardee-mobl.amr.corp.intel.com (HELO [10.125.67.115]) ([10.125.67.115])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 17:49:52 -0700
-Message-ID: <cd2a5552-0ab5-4d85-a419-7af3e97ffcb7@linux.intel.com>
-Date: Mon, 9 Sep 2024 17:49:51 -0700
+	s=arc-20240116; t=1725935188; c=relaxed/simple;
+	bh=9VCRDvY8u+wzwk1sPlJ8bigTxlZTu00llrSwf4aQ360=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s5nO+sNCEADLJQ3I4/AvQPx8zKMpesx5AGVZQlwRptls+N4PJfugRmcuvVKEUXaG8uOgP0gJwj8QCx2lMNm5a1iqgaTsqtCXBlW4svP11/9vM9oafttnpkRdMbr0eRpWjlUVv+xb4JOdoYMCMhAQtblRhANo5XCVWYt6w8k/thw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4X2ncz5mMNz4f3jjw;
+	Tue, 10 Sep 2024 10:26:11 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 5E6C41A0359;
+	Tue, 10 Sep 2024 10:26:22 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.48.0.27])
+	by APP4 (Coremail) with SMTP id gCh0CgDH+8dKrt9m1gKTAw--.13967S4;
+	Tue, 10 Sep 2024 10:26:22 +0800 (CST)
+From: Yang Yingliang <yangyingliang@huaweicloud.com>
+To: broonie@kernel.org,
+	hdegoede@redhat.com,
+	matthias.bgg@gmail.com,
+	yangyingliang@huawei.com,
+	liwei391@huawei.com
+Cc: linux-spi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH -next 0/7] spi: replace and remove spi_slave_abort()
+Date: Tue, 10 Sep 2024 10:26:10 +0800
+Message-ID: <20240910022618.1397-1-yangyingliang@huaweicloud.com>
+X-Mailer: git-send-email 2.46.0.windows.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 11/11] platform/x86:intel/pmc: Get LPM information for
- Lunar Lake
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com,
- Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
-References: <20240828222932.1279508-1-xi.pardee@linux.intel.com>
- <20240828222932.1279508-12-xi.pardee@linux.intel.com>
- <d270b60b-f136-a520-1703-efa4cbfb0aba@linux.intel.com>
-Content-Language: en-US
-From: Xi Pardee <xi.pardee@linux.intel.com>
-In-Reply-To: <d270b60b-f136-a520-1703-efa4cbfb0aba@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDH+8dKrt9m1gKTAw--.13967S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xw4DZF4ktFyxKF18GryfZwb_yoWDXFc_AF
+	yjgF4UGrW7W39xJFn2kr18X348uayFqrn2qa1vqFWUKF9rXw1UJr4UCFW7uw10vFWkGr1I
+	gr17tan8ur13WjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbzxYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
+	j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
+	kEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0E
+	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0
+	I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04
+	k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7Cj
+	xVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1veHDUUUUU==
+X-CM-SenderInfo: 51dqw5xlqjzxhdqjqx5xdzvxpfor3voofrz/
 
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-On 8/29/2024 5:13 AM, Ilpo Järvinen wrote:
-> On Wed, 28 Aug 2024, Xi Pardee wrote:
->
->> Add support to find and read the requirements from the telemetry
->> entries for Lunar Lake platforms.
->>
->> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
->> ---
->>   drivers/platform/x86/intel/pmc/lnl.c | 15 +++++++++++++++
->>   1 file changed, 15 insertions(+)
->>
->> diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/intel/pmc/lnl.c
->> index 109b08d43fc8..f5fee9e105e2 100644
->> --- a/drivers/platform/x86/intel/pmc/lnl.c
->> +++ b/drivers/platform/x86/intel/pmc/lnl.c
->> @@ -13,8 +13,13 @@
->>   
->>   #include "core.h"
->>   
->> +#define SOCM_LPM_REQ_GUID	0x15099748
->> +
->> +static const u8 LNL_LPM_REG_INDEX[] = {0, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20};
->> +
->>   static struct pmc_info lnl_pmc_info_list[] = {
->>   	{
->> +		.guid	= SOCM_LPM_REQ_GUID,
->>   		.devid	= PMC_DEVID_LNL_SOCM,
->>   		.map	= &lnl_socm_reg_map,
->>   	},
->> @@ -536,6 +541,7 @@ const struct pmc_reg_map lnl_socm_reg_map = {
->>   	.lpm_live_status_offset = MTL_LPM_LIVE_STATUS_OFFSET,
->>   	.s0ix_blocker_maps = lnl_blk_maps,
->>   	.s0ix_blocker_offset = LNL_S0IX_BLOCKER_OFFSET,
->> +	.lpm_reg_index = LNL_LPM_REG_INDEX,
->>   };
->>   
->>   #define LNL_NPU_PCI_DEV		0x643e
->> @@ -561,6 +567,8 @@ static int lnl_resume(struct pmc_dev *pmcdev)
->>   
->>   int lnl_core_init(struct pmc_dev *pmcdev)
->>   {
->> +	bool ssram_init = true;
->> +	int func = 2;
->>   	int ret;
->>   	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_SOC];
->>   
->> @@ -578,6 +586,7 @@ int lnl_core_init(struct pmc_dev *pmcdev)
->>   
->>   	/* If regbase not assigned, set map and discover using legacy method */
->>   	if (ret) {
->> +		ssram_init = false;
->>   		pmc->map = &lnl_socm_reg_map;
->>   		ret = get_primary_reg_base(pmc);
->>   		if (ret)
->> @@ -586,5 +595,11 @@ int lnl_core_init(struct pmc_dev *pmcdev)
->>   
->>   	pmc_core_get_low_power_modes(pmcdev);
->>   
->> +	if (ssram_init)	{
->> +		ret = pmc_core_ssram_get_lpm_reqs(pmcdev, func);
->> +		if (ret)
->> +			return ret;
-> There's quite much duplication related to this legacy/ssram init in
-> the per arch core init functions. And some inconsistencies too which
-> seem incidental such as mtl.c using return directly here.
-I will try to extract the duplicate code to a common function and remove 
-the
-inconsistencies between different architecture in next version.
+Switch to use spi_controller_is_target() and spi_target_abort(),
+then remove spi_controller_is_slave() and spi_slave_abort().
 
-Xi
+Yang Yingliang (7):
+  spi: switch to use spi_controller_is_target()
+  spi: slave-time: switch to use spi_target_abort()
+  spi: slave-system-control: switch to use spi_target_abort()
+  spi: spidev: switch to use spi_target_abort()
+  spi: slave-mt27xx: switch to use target_abort
+  platform/olpc: olpc-xo175-ec: switch to use spi_target_abort().
+  spi: remove spi_controller_is_slave() and spi_slave_abort()
+
+ drivers/platform/olpc/olpc-xo175-ec.c  |  4 ++--
+ drivers/spi/spi-slave-mt27xx.c         | 12 ++++++------
+ drivers/spi/spi-slave-system-control.c |  2 +-
+ drivers/spi/spi-slave-time.c           |  2 +-
+ drivers/spi/spi.c                      | 21 +++++----------------
+ drivers/spi/spidev.c                   |  2 +-
+ include/linux/spi/spi.h                | 12 +-----------
+ 7 files changed, 17 insertions(+), 38 deletions(-)
+
+-- 
+2.33.0
 
