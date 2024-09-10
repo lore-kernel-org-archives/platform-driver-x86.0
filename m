@@ -1,79 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC5818785A;
-	Tue, 10 Sep 2024 14:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815414C99
+	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Sep 2024 15:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725978407; cv=none; b=B9QlbYbhknfzTFeDY9XelVwFSBC6zPc6lmlicox9Otvibg5D5/UkIpRr7EBpC+fyAjwRW33eu9Q2MBwFK59KU13J+HCMfp0jnjjSsMaqxlqvUPYotyqb3Fk9Bk3x2lWq4A3y7mPMAx9nZgysyRRU7bNnIp+fBHdO0C0Pd0iZx4I=
+	t=1725981335; cv=none; b=kmaIetcBs6h5l1P+J7zuoqs0tA11NxzBbRhPBR++M/6wpxntVaKMAK7cDW0uq1DrK25hi1PblpKlP7B+DkZfW2KajioCD//x3ks31xmBVaOh8pO7fBVjnMbcl9p3047b3sQpY/vFpLJ7OY+4ffn0sTIrKXaCMe/IdkFTUXa+iNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725978407; c=relaxed/simple;
-	bh=4f1LNzAFL4ChXZ3LiermEw80kYtbSzTVWQ5QbSwrnm4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G/DS5G0HT+q7WZPmTN7LQLCZWLK8tnY3XNKBQrMvEOTXPSDzhXBwcKgqH6TN9InWPUQ0D/PA1PQBmz8GrOt+CJX7nTT7Iv59FQGk3tjxPhth128lE7vh2xvlkDxBLfA3Cg4INUyaAu8efGxm3telx+e3Egh4478e5c4t+4B9dvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=mBjNSmTr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725981335; c=relaxed/simple;
+	bh=8IqVMauQjpVheaxz/rTeOOrfcTjwXCse1FuLjgHKABs=;
+	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
+	 Cc:In-Reply-To:To; b=UrcFaC60t9mHl7xnowP9CWy8h1iWv+I7UFevYkUSWjUWUBtWYovdHJqdnYiy/npOoIA20IU1+xDPisOG9Qoka8l2Qo7OqFmZU//IQqeL7Oujl0lrEIi7sCTVaX2J2XMiJwS3LrmIyCOFevk9eO8ZMmnWQONOxsFGlieViCXo6FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gCXHdVKh; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="mBjNSmTr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B56D5C4CEC3;
-	Tue, 10 Sep 2024 14:26:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1725978407;
-	bh=4f1LNzAFL4ChXZ3LiermEw80kYtbSzTVWQ5QbSwrnm4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mBjNSmTrJkOD5yjFrTNxPEnqUFs3P6r+xYIAiP0vVI7YtO95p9EamAwkCL2nd0NyY
-	 2z370oM32koOhNaX87JO+d37YvpPcL8U8bQh0O4mqBBnODdaXyVV9ztvTWWoW26g97
-	 Scynaac96jqKGZx5vGcHy05MTNhmjyqo/jS9eITc=
-Date: Tue, 10 Sep 2024 10:26:45 -0400
-From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>, 
-	James Harmison <jharmison@redhat.com>, platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] platform/x86: panasonic-laptop: Fix SINF array
- out of bounds accesses
-Message-ID: <20240910-ludicrous-nimble-labradoodle-1ee9ae@lemur>
-References: <20240909113227.254470-1-hdegoede@redhat.com>
- <172590448046.2114.11735502570640542626.b4-ty@linux.intel.com>
- <68b1cc24-1ef0-c247-f2c0-546e7ee96ed9@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gCXHdVKh"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a8d3cde1103so446306966b.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Sep 2024 08:15:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725981331; x=1726586131; darn=vger.kernel.org;
+        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
+         :from:content-transfer-encoding:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dL2oGtrxckmnA24/CYQSCuvIyf79gKSURauY9UZsoi0=;
+        b=gCXHdVKhdCdF/glqebVm2AvZwLQzMdWJN7xM+RCwhuU5jRdLXNZsSa+dKC4xyhtjg0
+         0/OO0bIQpNzLnQ8xpbRPcVFNs4uOZsxz0lcy3gBwcfhzDhm0DYnIWIKGBlMi3bUG7j99
+         WTSDo359E9jRxKjV5xGBddIeYPdiX3KKzJ+yzMelQ/0JWkzo5DD0dLgJq88Pc2yzKcSy
+         b9p4wJCXm+I3er27wpaqL+NSny/6cPbjrIjk0Onn25bQnTMoGv/I79WXpYA5KGHl33x1
+         +OUDEvgU07abaViVPwAHVFK/ah/y/dp7xeXBtdnNbSxnva793JxQimaJcQR6pxxqSsLN
+         9PHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725981331; x=1726586131;
+        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
+         :from:content-transfer-encoding:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dL2oGtrxckmnA24/CYQSCuvIyf79gKSURauY9UZsoi0=;
+        b=K60okaAxQXA9Ww39SP2nLHJRADqamqKKVD36x+dyW1AL4ZuSrmG3mGKj7yeZMUBlmE
+         WN6fRiqDyiUKMqkY3CsmUcQinVRqMtIVA1wKHFLMA/UNIDS69ggBm3akmq+hqc7PIVx+
+         IrAFQrs+xXkVScgwDIKmZBPdk9juDTQf0bWvPtKMATBk79Xru7Cax45YgKiLcCLyDnu8
+         N/02x7NTktw/UA2tIcWTe3KnM1tvG1cvvzwPOgs9jb0QoDyEsLpg6vdeIO3e36atlDyW
+         Qk9Pk8LqaASyPpqcHd7ccoqXquFfSxtDmEvCbXRpeWt75mRGIXH/sqmQChUqwUYVXCRT
+         7q/A==
+X-Gm-Message-State: AOJu0Yy+PX7YvLJ5juUQQ4KRgi/bf1hmdoSLKJO6XjqYEwpQ1jTvl1JP
+	jfE07Jg2caDnOR03LOySRaVNMIskZ2J/vR94PfFjRhE+8rjyC7RCjRDqFw==
+X-Google-Smtp-Source: AGHT+IET0jfd06VqEn1tn2Nin6LPInuEHkUotQH54pbGA9fGGlZTt/FX9qJqRrfWvPFM7cslQh+9+A==
+X-Received: by 2002:a17:907:9709:b0:a7a:b73f:7584 with SMTP id a640c23a62f3a-a8ffab88eebmr116884566b.34.1725981331219;
+        Tue, 10 Sep 2024 08:15:31 -0700 (PDT)
+Received: from smtpclient.apple ([109.78.67.166])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8d25952632sm498557866b.60.2024.09.10.08.15.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Sep 2024 08:15:30 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+From: Rayan Margham <rayanmargham4@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <68b1cc24-1ef0-c247-f2c0-546e7ee96ed9@linux.intel.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: Add Support for the Acer Predator Triton PT14-51
+Date: Tue, 10 Sep 2024 16:15:19 +0100
+Message-Id: <CCED5974-1C40-4693-A7DC-887FD3E5AB9F@gmail.com>
+References: <bbc42008-f121-4710-a27d-f32b9deabcac@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org
+In-Reply-To: <bbc42008-f121-4710-a27d-f32b9deabcac@gmx.de>
+To: Armin Wolf <W_Armin@gmx.de>
+X-Mailer: iPhone Mail (21G93)
 
-On Mon, Sep 09, 2024 at 09:40:36PM GMT, Ilpo Järvinen wrote:
-> > Thank you for your contribution, it has been applied to my local
-> > review-ilpo branch. Note it will show up in the public
-> > platform-drivers-x86/review-ilpo branch only once I've pushed my
-> > local branch there, which might take a while.
-> > 
-> > The list of commits applied:
-> > [1/3] platform/x86: panasonic-laptop: Fix SINF array out of bounds accesses
-> >       commit: f52e98d16e9bd7dd2b3aef8e38db5cbc9899d6a4
-> > [2/3] platform/x86: panasonic-laptop: Allocate 1 entry extra in the sinf array
-> >       commit: 33297cef3101d950cec0033a0dce0a2d2bd59999
-> > [3/3] platform/x86: panasonic-laptop: Add support for programmable buttons
-> >       (no commit info)
-> 
-> Hmpf, b4 messed this one up. Only patches 1-2 were applied and 3 should 
-> go through for-next.
+Hey,
 
-Hi:
+No im not sure, it just randomly happens
 
-This is a common gotcha and I'm hoping to make it less of a problem in the
-future. The reason this happened is because you told b4 to retrieve the entire
-patch series, but applied only a subset. We couldn't find a match for patch
-3/3, but this often happens because maintainers make small tweaks to patch
-contents, which skews b4 towards false-negatives instead of false-positives.
-
-For the moment, the preferred way to avoid this problem is to tell b4 to
-retrieve a subset of patches using `b4 am --cherry-pick 1-2` -- this way we
-know that it was intended to be a subset and won't mention patch 3.
-
-Hope this helps!
-
--K
+Thanks, 
+Rayan
