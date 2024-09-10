@@ -1,60 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5330D18595E;
-	Tue, 10 Sep 2024 09:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A434118C324;
+	Tue, 10 Sep 2024 09:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725960780; cv=none; b=j++g5W39K/4rFcOo+2vfb6OGN8Hs2IhyKpVFuK+ssipIZjMDkpITi5PDc7SCdcnF4MDtKlD1G0QEHe0SsT1VQNfHp1/maqYaM9zwmdSLmq9Q6EtLBGD4c/SafWOv1wLEjmT5EtStXXV+GlultpTEo/wRYw+Jma98qzERSvxeTmA=
+	t=1725961174; cv=none; b=hH2ovjyowvNsWOVxH/F/B6UAlEIKIABWKuNZYsXlbQFH2G+1oOHgerizmWY8gL5dYLq/RMSNwaW3zVvPi64eotmtXxDvyBQhgMQeJT7ciT5d3+xc+aMc8bj9F0VMj+sOuImLfzsUrAqmyaWDbX8BS3bQDdCT1DkYjo5UUbN2XHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725960780; c=relaxed/simple;
-	bh=I3/4yorClfjkVCr8bmjnPr9cVL52OsbEuW9h0Dutdnc=;
+	s=arc-20240116; t=1725961174; c=relaxed/simple;
+	bh=/HFsesU4JBmKCgdLae1k+5oS9Uch7EoN1ToR7+wJglo=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=j+ZJs9rtp57ZbOVeH23h1VaLdHzkdkHdifRAgvpHzocd5GoC61GpAZvTy55JZLTdhnBRkdtPXPMkSI6DrvCn1kMlATTBnQq07bW4aF4lK6cSzFfdPFswgDSL4TSqQ23wz2C4z5KetGS/LTRXw1iLQ0Mo9AKalKddqtEXwwmLH4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C+c0JXYu; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version:Content-Type; b=E1EpCJ4XCD8rhhJNmqQtuRKc5tPdeqbsyH7IC1aCvZrUaChMXjB+y1gE+Wx5W+0bX7b6SwfpbYxdWSp9THNf8cYU9K+QneNs2JC9C6p8tB5j9xdKDRyvXrYajMbvNNsv5ZCohhv+bLAY2ijoQgKRAigLpGBQovDq3ciCZDVrKv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G2S/WxUd; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C+c0JXYu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G2S/WxUd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725960778; x=1757496778;
+  t=1725961172; x=1757497172;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=I3/4yorClfjkVCr8bmjnPr9cVL52OsbEuW9h0Dutdnc=;
-  b=C+c0JXYuVgdRkfNLEHJpaTUd0U7paqpeCz/J44o7tyHyS5QhHEDIQQfV
-   Jx3aJatBhMFFDEiXppZeyoxtiBmKap10uOHb0reI40XEHDUtM7HVn4rAX
-   ViUKU5/BzW45QvUbX654e9yby6nU1I1x3jaZ9gZOeMQ9NkUHMasin8c8A
-   BWA0gqgjCtEy/08QgQOvzmxDwCq3nJT37vk7wJJOMxcHG7n0I19CuhltG
-   PJtwvPgRdAzFwrApLvz0N6SsZ5NearAF1L1BvWgEjl9paSLZZCa35yx6x
-   EijMq5eJDtEwXs2z/ao2Aw+XL32pI4kiKgadiZoWdz0ZAnmWi/VK11emV
-   Q==;
-X-CSE-ConnectionGUID: 7QMBpcRtRkyQniO2kdh64Q==
-X-CSE-MsgGUID: XWQmg/RGSiCnLRZExymtRg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="24801251"
+  bh=/HFsesU4JBmKCgdLae1k+5oS9Uch7EoN1ToR7+wJglo=;
+  b=G2S/WxUdtLsxFUNCl2snB13dvUhb/HhIQrTQpMJiCNrGVBAIvC3Mjo/L
+   sk0jUeY0KgPzMOctXY2MDWKlBcJptS9HxlagB5YovL32qzRpZRS5Ck1Ji
+   oMsYsq+Wo6yeIjRGrEy46CKRp2YUV/elEp7obFjkZ3RaOhp6cAc+1zEYi
+   XTjsN0TZ0QM+2B6d8UCPHiqgenf5hhCmNbby3Gg1DG6xJq28OvtAB7iwk
+   lqxyNxA/g6rGfCVPhqmYaEy2ZRBFtzCpsC4kOZvjCaODDDeeE6seaJJ6x
+   GXTzpUJtWB9q2x92q7gL7t8N3V/7PnTb/7glgtJrq/lY4NdSoiqm1mMDw
+   A==;
+X-CSE-ConnectionGUID: H+kJz2r5S6GII9vgBjMsIg==
+X-CSE-MsgGUID: poBVVnp6Q3iDs1LEVHO6yQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11190"; a="47214115"
 X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
-   d="scan'208";a="24801251"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 02:32:58 -0700
-X-CSE-ConnectionGUID: Ww0eZmwNSZKsGLVOctnFHg==
-X-CSE-MsgGUID: xkGeG7LgTYid0Ypj5U5b6A==
+   d="scan'208";a="47214115"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 02:39:32 -0700
+X-CSE-ConnectionGUID: hT/55hIiQHebLmLLUza3FA==
+X-CSE-MsgGUID: fOtpBdu8Qj+97IWFV0jnUg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,216,1719903600"; 
-   d="scan'208";a="71566297"
+   d="scan'208";a="67722288"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.223])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 02:32:54 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 02:39:29 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 10 Sep 2024 12:32:50 +0300 (EEST)
-To: Rajvi Jingar <rajvi.jingar@linux.intel.com>
-cc: xi.pardee@linux.intel.com, irenic.rajneesh@gmail.com, 
-    david.e.box@linux.intel.com, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-pm@vger.kernel.org
-Subject: Re: [PATCH] platform/x86/intel/pmc: Add Arrow Lake U/H support to
- intel_pmc_core driver
-In-Reply-To: <20240909232842.2896965-1-rajvi.jingar@linux.intel.com>
-Message-ID: <4481a9c5-05b1-fef8-a011-4bbdad19c35b@linux.intel.com>
-References: <20240909232842.2896965-1-rajvi.jingar@linux.intel.com>
+Date: Tue, 10 Sep 2024 12:39:25 +0300 (EEST)
+To: "Luke D. Jones" <luke@ljones.dev>
+cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    Hans de Goede <hdegoede@redhat.com>, corentin.chary@gmail.com
+Subject: Re: [PATCH] platform/x86: asus-wmi: don't fail if platform_profile
+ already registered
+In-Reply-To: <20240910045443.678145-1-luke@ljones.dev>
+Message-ID: <baebdb06-0ada-cab0-b9c3-154346be4e72@linux.intel.com>
+References: <20240910045443.678145-1-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,200 +61,63 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Mon, 9 Sep 2024, Rajvi Jingar wrote:
+On Tue, 10 Sep 2024, Luke D. Jones wrote:
 
-> Add Arrow Lake U and Arro Lake H support in intel_pmc_core driver
-
-Arrow
-
-Add . to the end of sentence.
-
-> Signed-off-by: Rajvi Jingar <rajvi.jingar@linux.intel.com>
-> ---
->  drivers/platform/x86/intel/pmc/arl.c  | 65 ++++++++++++++++++++++-----
->  drivers/platform/x86/intel/pmc/core.c |  2 +
->  drivers/platform/x86/intel/pmc/core.h |  7 +++
->  3 files changed, 64 insertions(+), 10 deletions(-)
+> On some newer laptops ASUS laptops SPS support is advertised but not
+> actually used, causing the AMD driver to register as a platform_profile
+> handler.
 > 
-> diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
-> index e10527c4e3e0..964f5f040dd9 100644
-> --- a/drivers/platform/x86/intel/pmc/arl.c
-> +++ b/drivers/platform/x86/intel/pmc/arl.c
-> @@ -16,6 +16,7 @@
->  #define IOEP_LPM_REQ_GUID	0x5077612
->  #define SOCS_LPM_REQ_GUID	0x8478657
->  #define PCHS_LPM_REQ_GUID	0x9684572
-> +#define SOCM_LPM_REQ_GUID	0x2625030
+> If this happens then the asus_wmi driver would error with -EEXIST when
+> trying to register its own handler leaving the user with a possibly
+> unusable system. This is especially true for laptops with an MCU that emit
+> a stream of HID packets, some of which can be misinterpreted as shutdown
+> signals.
+> 
+> We can safely continue loading the driver instead of bombing out.
+> 
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> ---
+>  drivers/platform/x86/asus-wmi.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index fbb3345cc65a..d53c4aff519f 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -3876,8 +3876,13 @@ static int platform_profile_setup(struct asus_wmi *asus)
+>  		asus->platform_profile_handler.choices);
 >  
->  static const u8 ARL_LPM_REG_INDEX[] = {0, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20};
->  
-> @@ -650,6 +651,7 @@ const struct pmc_reg_map arl_pchs_reg_map = {
->  	.etr3_offset = ETR3_OFFSET,
->  };
->  
-> +#define PMC_DEVID_SOCM 0x777f
->  #define PMC_DEVID_SOCS 0xae7f
->  #define PMC_DEVID_IOEP 0x7ecf
->  #define PMC_DEVID_PCHS 0x7f27
-> @@ -669,11 +671,17 @@ static struct pmc_info arl_pmc_info_list[] = {
->  		.devid	= PMC_DEVID_PCHS,
->  		.map	= &arl_pchs_reg_map,
->  	},
-> +	{
-> +		.guid	= SOCM_LPM_REQ_GUID,
-> +		.devid	= PMC_DEVID_SOCM,
-> +		.map	= &mtl_socm_reg_map,
-> +	},
->  	{}
->  };
->  
->  #define ARL_NPU_PCI_DEV			0xad1d
->  #define ARL_GNA_PCI_DEV			0xae4c
-> +#define ARL_H_GNA_PCI_DEV 		0x774c
->  /*
->   * Set power state of select devices that do not have drivers to D3
->   * so that they do not block Package C entry.
-> @@ -684,6 +692,12 @@ static void arl_d3_fixup(void)
->  	pmc_core_set_device_d3(ARL_GNA_PCI_DEV);
->  }
->  
-> +static void arl_h_d3_fixup(void)
-> +{
-> +	pmc_core_set_device_d3(ARL_NPU_PCI_DEV);
-> +	pmc_core_set_device_d3(ARL_H_GNA_PCI_DEV);
-> +}
-> +
->  static int arl_resume(struct pmc_dev *pmcdev)
->  {
->  	arl_d3_fixup();
-> @@ -692,16 +706,47 @@ static int arl_resume(struct pmc_dev *pmcdev)
->  	return pmc_core_resume_common(pmcdev);
->  }
->  
-> +static int arl_h_resume(struct pmc_dev *pmcdev)
-> +{
-> +	arl_h_d3_fixup();
-> +	pmc_core_send_ltr_ignore(pmcdev, 3, 0);
-> +
-> +	return pmc_core_resume_common(pmcdev);
-> +}
-> +
-> +int arl_h_core_init(struct pmc_dev *pmcdev)
-> +{
-> +	arl_h_d3_fixup();
-> +
-> +	return arl_core_generic_init(pmcdev, SOC_M);
-> +}
-> +
->  int arl_core_init(struct pmc_dev *pmcdev)
->  {
-> -	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_SOC];
-> +	arl_d3_fixup();
-> +
-> +	return arl_core_generic_init(pmcdev, SOC_S);
-> +}
-> +
-> +int arl_core_generic_init(struct pmc_dev *pmcdev, int soc_tp)
+>  	err = platform_profile_register(&asus->platform_profile_handler);
+> -	if (err)
+> +	if (err == -EEXIST) {
+> +		pr_warn("%s, a platform_profile handler is already registered\n", __func__);
+> +		return 0;
+> +	} else if (err) {
+> +		pr_err("%s, failed at platform_profile_register: %d\n", __func__, err);
 
-This function has no callers outside or arl.c and should be made static 
-and the code should be reordered such that no prototype is needed.
+Don't print __func__ in user visible warn/error/info messages but use 
+plain English please.
 
-> +{
->  	int ret;
-> -	int func = 0;
-> +	int func;
->  	bool ssram_init = true;
-> +	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_SOC];
->  
-> -	arl_d3_fixup();
->  	pmcdev->suspend = cnl_suspend;
-> -	pmcdev->resume = arl_resume;
-> +
-> +	if (soc_tp == SOC_M) {
-> +		func = 2;
-> +		pmcdev->resume = arl_h_resume;
-> +	} else if (soc_tp == SOC_S) {
-> +		func = 0;
-> +		pmcdev->resume = arl_resume;
-
-It would be preferrable to make an info structure to describe this kind 
-of platform variations so that if () forests like this are avoided.
-
-> +	} else {
-> +		return -EINVAL;
+>  		return err;
 > +	}
-> +
->  	pmcdev->regmap_list = arl_pmc_info_list;
 >  
->  	/*
-> @@ -711,7 +756,10 @@ int arl_core_init(struct pmc_dev *pmcdev)
->  	ret = pmc_core_ssram_init(pmcdev, func);
->  	if (ret) {
->  		ssram_init = false;
-> -		pmc->map = &arl_socs_reg_map;
-> +		if (soc_tp == SOC_M)
-> +			pmc->map = &mtl_socm_reg_map;
-> +		else
-> +			pmc->map = &arl_socs_reg_map;
+>  	asus->platform_profile_support = true;
+>  	return 0;
+> @@ -4752,7 +4757,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+>  		goto fail_fan_boost_mode;
+>  
+>  	err = platform_profile_setup(asus);
+> -	if (err)
+> +	if (err && err != -EEXIST)
 
-As with above, use an info struct.
+Hi Luke,
+
+Hans had a comment about this line against the previous version.
+
+Also, this patch has entirely lost the version information. It's v3 now I 
+think.
+
 
 -- 
  i.
 
->  
->  		ret = get_primary_reg_base(pmc);
->  		if (ret)
-> @@ -721,11 +769,8 @@ int arl_core_init(struct pmc_dev *pmcdev)
->  	pmc_core_get_low_power_modes(pmcdev);
->  	pmc_core_punit_pmt_init(pmcdev, ARL_PMT_DMU_GUID);
->  
-> -	if (ssram_init)	{
-> -		ret = pmc_core_ssram_get_lpm_reqs(pmcdev);
-> -		if (ret)
-> -			return ret;
-> -	}
-> +	if (ssram_init)
-> +		return pmc_core_ssram_get_lpm_reqs(pmcdev);
->  
->  	return 0;
->  }
-> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-> index 01ae71c6df59..046791f21619 100644
-> --- a/drivers/platform/x86/intel/pmc/core.c
-> +++ b/drivers/platform/x86/intel/pmc/core.c
-> @@ -1319,6 +1319,8 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
->  	X86_MATCH_VFM(INTEL_RAPTORLAKE_S,	adl_core_init),
->  	X86_MATCH_VFM(INTEL_METEORLAKE_L,	mtl_core_init),
->  	X86_MATCH_VFM(INTEL_ARROWLAKE,		arl_core_init),
-> +	X86_MATCH_VFM(INTEL_ARROWLAKE_H,	arl_h_core_init),
-> +	X86_MATCH_VFM(INTEL_ARROWLAKE_U,	arl_h_core_init),
->  	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	lnl_core_init),
->  	{}
->  };
-> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-> index ea04de7eb9e8..5771f40185c2 100644
-> --- a/drivers/platform/x86/intel/pmc/core.h
-> +++ b/drivers/platform/x86/intel/pmc/core.h
-> @@ -365,6 +365,11 @@ struct pmc_info {
->  	const struct pmc_reg_map *map;
->  };
->  
-> +enum soc_type {
-> +	SOC_M,
-> +	SOC_S
-> +};
-> +
->  /**
->   * struct pmc - pmc private info structure
->   * @base_addr:		contains pmc base address
-> @@ -599,6 +604,8 @@ int tgl_core_generic_init(struct pmc_dev *pmcdev, int pch_tp);
->  int adl_core_init(struct pmc_dev *pmcdev);
->  int mtl_core_init(struct pmc_dev *pmcdev);
->  int arl_core_init(struct pmc_dev *pmcdev);
-> +int arl_h_core_init(struct pmc_dev *pmcdev);
-> +int arl_core_generic_init(struct pmc_dev *pmcdev, int pch_tp);
->  int lnl_core_init(struct pmc_dev *pmcdev);
->  
->  void cnl_suspend(struct pmc_dev *pmcdev);
-> 
