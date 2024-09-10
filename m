@@ -1,77 +1,87 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815414C99
-	for <platform-driver-x86@vger.kernel.org>; Tue, 10 Sep 2024 15:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9415D1B29D7;
+	Tue, 10 Sep 2024 17:22:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725981335; cv=none; b=kmaIetcBs6h5l1P+J7zuoqs0tA11NxzBbRhPBR++M/6wpxntVaKMAK7cDW0uq1DrK25hi1PblpKlP7B+DkZfW2KajioCD//x3ks31xmBVaOh8pO7fBVjnMbcl9p3047b3sQpY/vFpLJ7OY+4ffn0sTIrKXaCMe/IdkFTUXa+iNU=
+	t=1725988971; cv=none; b=jtmJmH5mGFY6b+85aQLCO4KrTVImIql23IXelfZRNG02rrB6tjQyTzUK7kDxcNRSSo0D1nRjp8BB5ZWwiUPO4R0oRFPXRTXOMajg5kO0dNjgmgfiEx4VMQOsHD0f4tcIlM60v4WIasSi3zrTULisnJoEz6ZKvbzUdHIu45nMWZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725981335; c=relaxed/simple;
-	bh=8IqVMauQjpVheaxz/rTeOOrfcTjwXCse1FuLjgHKABs=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=UrcFaC60t9mHl7xnowP9CWy8h1iWv+I7UFevYkUSWjUWUBtWYovdHJqdnYiy/npOoIA20IU1+xDPisOG9Qoka8l2Qo7OqFmZU//IQqeL7Oujl0lrEIi7sCTVaX2J2XMiJwS3LrmIyCOFevk9eO8ZMmnWQONOxsFGlieViCXo6FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gCXHdVKh; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725988971; c=relaxed/simple;
+	bh=sNGmr6Rjb8eG19IlJY/6kr9fpoWWNjecehlatSX3v6g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WxQMNOLGrFy76NsO6Bt23WAT49KYVTukAbqAU/AqubavHBKwIXepzzXv+5abWrEdO7LybZTJM2uUahf4Wm7bHPm56fQtKhFtmjftz+aE8Z8GQK5og0REA3kNn2zIJftXkgvw+4VAJWRkZeq7Up3fpsjJnvtNUgYhSJw0GGqZ5oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dQ7ZHGsK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gCXHdVKh"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a8d3cde1103so446306966b.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Sep 2024 08:15:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725981331; x=1726586131; darn=vger.kernel.org;
-        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
-         :from:content-transfer-encoding:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dL2oGtrxckmnA24/CYQSCuvIyf79gKSURauY9UZsoi0=;
-        b=gCXHdVKhdCdF/glqebVm2AvZwLQzMdWJN7xM+RCwhuU5jRdLXNZsSa+dKC4xyhtjg0
-         0/OO0bIQpNzLnQ8xpbRPcVFNs4uOZsxz0lcy3gBwcfhzDhm0DYnIWIKGBlMi3bUG7j99
-         WTSDo359E9jRxKjV5xGBddIeYPdiX3KKzJ+yzMelQ/0JWkzo5DD0dLgJq88Pc2yzKcSy
-         b9p4wJCXm+I3er27wpaqL+NSny/6cPbjrIjk0Onn25bQnTMoGv/I79WXpYA5KGHl33x1
-         +OUDEvgU07abaViVPwAHVFK/ah/y/dp7xeXBtdnNbSxnva793JxQimaJcQR6pxxqSsLN
-         9PHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725981331; x=1726586131;
-        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
-         :from:content-transfer-encoding:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dL2oGtrxckmnA24/CYQSCuvIyf79gKSURauY9UZsoi0=;
-        b=K60okaAxQXA9Ww39SP2nLHJRADqamqKKVD36x+dyW1AL4ZuSrmG3mGKj7yeZMUBlmE
-         WN6fRiqDyiUKMqkY3CsmUcQinVRqMtIVA1wKHFLMA/UNIDS69ggBm3akmq+hqc7PIVx+
-         IrAFQrs+xXkVScgwDIKmZBPdk9juDTQf0bWvPtKMATBk79Xru7Cax45YgKiLcCLyDnu8
-         N/02x7NTktw/UA2tIcWTe3KnM1tvG1cvvzwPOgs9jb0QoDyEsLpg6vdeIO3e36atlDyW
-         Qk9Pk8LqaASyPpqcHd7ccoqXquFfSxtDmEvCbXRpeWt75mRGIXH/sqmQChUqwUYVXCRT
-         7q/A==
-X-Gm-Message-State: AOJu0Yy+PX7YvLJ5juUQQ4KRgi/bf1hmdoSLKJO6XjqYEwpQ1jTvl1JP
-	jfE07Jg2caDnOR03LOySRaVNMIskZ2J/vR94PfFjRhE+8rjyC7RCjRDqFw==
-X-Google-Smtp-Source: AGHT+IET0jfd06VqEn1tn2Nin6LPInuEHkUotQH54pbGA9fGGlZTt/FX9qJqRrfWvPFM7cslQh+9+A==
-X-Received: by 2002:a17:907:9709:b0:a7a:b73f:7584 with SMTP id a640c23a62f3a-a8ffab88eebmr116884566b.34.1725981331219;
-        Tue, 10 Sep 2024 08:15:31 -0700 (PDT)
-Received: from smtpclient.apple ([109.78.67.166])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8d25952632sm498557866b.60.2024.09.10.08.15.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Sep 2024 08:15:30 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-From: Rayan Margham <rayanmargham4@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dQ7ZHGsK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29A81C4CECC;
+	Tue, 10 Sep 2024 17:22:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725988971;
+	bh=sNGmr6Rjb8eG19IlJY/6kr9fpoWWNjecehlatSX3v6g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=dQ7ZHGsKY6PaW2xnReVjQTAcAzU7hzBeCoFdVSmGh8QNAp4Xd/sAfgCcBapWZU/Ia
+	 FebyYEXF0HNdeB92a4U36Kd9Hd+msVMn9ldVx5UqxVsN1lMMgmK2I00qKvWoomkaoy
+	 WFBvb7y+ZKsmq6LegDI6CuhHO+/ojb2gQEoS/49D/UO+2rMdvGM4r5+yRgwlRt6h5v
+	 guvxKSP4oIPMCw3mtMe+FVeFnI0T+pCVTin77HJDXi0FyIMONzMq1HQPxm1Uy1lf2v
+	 St8llt80faZEVYgvQUkKzvdIRCy/yuOCcI906aNmgthPV9YRCtc1UUNQU1B2Yue50S
+	 hRHgmUbHMDqIA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: "Luke D. Jones" <luke@ljones.dev>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	Shyam-sundar.S-k@amd.com,
+	hdegoede@redhat.com,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.10 17/18] platform/x86/amd: pmf: Make ASUS GA403 quirk generic
+Date: Tue, 10 Sep 2024 13:22:02 -0400
+Message-ID: <20240910172214.2415568-17-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240910172214.2415568-1-sashal@kernel.org>
+References: <20240910172214.2415568-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: Add Support for the Acer Predator Triton PT14-51
-Date: Tue, 10 Sep 2024 16:15:19 +0100
-Message-Id: <CCED5974-1C40-4693-A7DC-887FD3E5AB9F@gmail.com>
-References: <bbc42008-f121-4710-a27d-f32b9deabcac@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org
-In-Reply-To: <bbc42008-f121-4710-a27d-f32b9deabcac@gmx.de>
-To: Armin Wolf <W_Armin@gmx.de>
-X-Mailer: iPhone Mail (21G93)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.10.9
+Content-Transfer-Encoding: 8bit
 
-Hey,
+From: "Luke D. Jones" <luke@ljones.dev>
 
-No im not sure, it just randomly happens
+[ Upstream commit d34af755a533271f39cc7d86e49c0e74fde63a37 ]
 
-Thanks, 
-Rayan
+The original quirk should match to GA403U so that the full
+range of GA403U models can benefit.
+
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+Link: https://lore.kernel.org/r/20240831003905.1060977-1-luke@ljones.dev
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/amd/pmf/pmf-quirks.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/amd/pmf/pmf-quirks.c b/drivers/platform/x86/amd/pmf/pmf-quirks.c
+index 460444cda1b2..48870ca52b41 100644
+--- a/drivers/platform/x86/amd/pmf/pmf-quirks.c
++++ b/drivers/platform/x86/amd/pmf/pmf-quirks.c
+@@ -25,7 +25,7 @@ static const struct dmi_system_id fwbug_list[] = {
+ 		.ident = "ROG Zephyrus G14",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "GA403UV"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "GA403U"),
+ 		},
+ 		.driver_data = &quirk_no_sps_bug,
+ 	},
+-- 
+2.43.0
+
