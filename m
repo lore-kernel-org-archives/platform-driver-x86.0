@@ -1,65 +1,66 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6854D1779AE
-	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Sep 2024 12:20:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2EA196455
+	for <platform-driver-x86@vger.kernel.org>; Wed, 11 Sep 2024 12:27:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726057256; cv=none; b=o2KNDeoqJWIjogO6aH0K/gS+VNNsG9neVRETQ/ps2xFA4KlXQxEvwuqqG2q4Y/ubqS694sFZ/rulF7muG4U5Z2iNlN/DElSABebMTxFrgCFpSFQHwj5yo/gIb4ewDvoR3k+SQ091FbxjYL+gs7nR1oxooSe+2RCnCa7Zu9WFLPc=
+	t=1726057680; cv=none; b=WFZ+5pXDf2emfwYDYZx69hwxvg4BuTUCZIp5L9k8fc0HsSUujwDGZkcOG7exRuEEMMOTjxObBNPYceSYbXr91Ca4yNYkFXh5ugEMoAEGdGBGS1OVDHj+DDxE13tacGxdtoEQ5iyYK+6iS0ps/KHrqy/RhkYPIXp7jcejAD2R4EE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726057256; c=relaxed/simple;
-	bh=+OtcHmKqOaBrLslEHoDVuszHtt0pMfNdMC/JAAqio6s=;
+	s=arc-20240116; t=1726057680; c=relaxed/simple;
+	bh=hCyv+3gn+MQYPHXJntRjENuvk/D30440d+7guoUICwc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XQTJZ//boHNwQv+NiJLTzj3GFWbirfEyvomTSInEaYPKJKHZOwMUsLetGjoJdumYay/LD9cKQCglszIWs/wgph8SpbzIqaSjLXUHUF8SEjTtnt0sjAj7A1jyMe9TBS9qK5zlvI7BtokN6K8MMr9JptIHJaM8cExgPYttmZ6iOpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NebbEx2H; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=LXsjvKX7VczGRyI0En6w4WubsPoSsWNJQvhxPg8WhgefGJLcbIWhduCb+hfadLgr5EaiMwnoJLtgDiipyU6jCitRn+NMYx+xnDBsaF8OACpNbzeXc4shoIbFJFmdu/QDT45heMY9tt7kzGAkG22sT7s6tlY4wzeFMP6SOKEca/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z9KcCc6A; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NebbEx2H"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z9KcCc6A"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726057254;
+	s=mimecast20190719; t=1726057677;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=n3lZx7MOn0cvUlutwjGz/taR5dti/49PxN0KWJf8nvQ=;
-	b=NebbEx2H8SCaNbNr/BPQmpUypWqmqclSVPBWcg6krV9BIJQ4hJpy4dYtTmXzKb3cwlVnGG
-	2g37YJHm0SqDUPTmgEgYMLDhIbdph0VfKDF3KKPICMVYRv76oYhsgd2bYXfUIG9JVVMW+O
-	jTbFNxTPmLtX5Hrcahij8HWN9yGPwYI=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=q/NSXqDGhdhn7Jx5pa1Emu+bzY3oWOLypAKpBZONwLs=;
+	b=Z9KcCc6AZPtC9vH2J+A8Dy8nQZw9RttJLK8u/nZMdDa5N0NEM/25dr+WNR2FG5QmKvClQx
+	1+K0VjzXa8Ut83IZAKK80G9fozAdJCtD9ofsEQ44H+2fNglAQejRZOFYLIpAdQTsknxvyY
+	iHsBbpvgg+ILiHjWdjh+aiYkADgPLCA=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-55-ZD4yrd9ANkqJ93Nu5gr53Q-1; Wed, 11 Sep 2024 08:20:52 -0400
-X-MC-Unique: ZD4yrd9ANkqJ93Nu5gr53Q-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a8a84b60255so426068966b.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Sep 2024 05:20:51 -0700 (PDT)
+ us-mta-683-lFqL5xAMOjyuoOoetJzo7Q-1; Wed, 11 Sep 2024 08:27:55 -0400
+X-MC-Unique: lFqL5xAMOjyuoOoetJzo7Q-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a868b6d6882so87263866b.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Sep 2024 05:27:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726057251; x=1726662051;
+        d=1e100.net; s=20230601; t=1726057670; x=1726662470;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n3lZx7MOn0cvUlutwjGz/taR5dti/49PxN0KWJf8nvQ=;
-        b=gUgSs1QTnEH9J6vCnz8Oub+XZyRFSa8i4xPiNLdQ606o1XTFd4bGfK4wvVOaSZvur7
-         T5mFFRyrAQV/6tVB4Sggn0E1Dui8Y3IlibtlU+RqInDZ375e26AH76MgEKse9j1+4vcA
-         DQxvUStcXwoQ/F7N66e5LN7iHfHGiy1Sd/Mnw59pZKZB8+ZZAugaRADsGh5q2nzyi8Ua
-         UyFLN6POqYvs2oKTpXCyAozYN7GmrlI5dSLH8nL9M9+oe6PeDObfMQkOz73L1eeJQPny
-         INpSVpDgn/x+u4Se3EhmAyTD0IVhsC+DZLG7tYUCGd9wyliFCwTE2RoAlW8wJDnyJo89
-         M8ww==
-X-Forwarded-Encrypted: i=1; AJvYcCVX2AwU9a6WPAs+2mCjLuPtdhQxFj1lXp61KIPEJ/boTfvGAYadmEvrf+Jp9QvQ2Jf6HJMItdgoiIjMAfzmlkW2PRuT@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSQjOmjnEg6DukyxGqhFR6qzRPTFV8OaonN2ej2WjoV5yU8d3o
-	spqTxgmo2Rd9LA2jX5A4WOJJRw6bN0qThxAXYrHEeCEJkwk/PvVPh99DGil5IyLCV4VkcuKI+bn
-	eHEnMVAFPQIKD00FBs7mninaqryArfs8Nw428ei1aHonYs0xSlfrCSZevQHel9M7rPnXUt64=
-X-Received: by 2002:a17:907:c27:b0:a7a:9a78:4b5a with SMTP id a640c23a62f3a-a8ffad9da29mr446883266b.52.1726057250852;
-        Wed, 11 Sep 2024 05:20:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEse7/q3fks/g38TDGilxuqdMvvKGvYQPRWSe7VE2frNIQ+csBboiwxRmv/9sL6IOGSSY5V2w==
-X-Received: by 2002:a17:907:c27:b0:a7a:9a78:4b5a with SMTP id a640c23a62f3a-a8ffad9da29mr446880566b.52.1726057250314;
-        Wed, 11 Sep 2024 05:20:50 -0700 (PDT)
+        bh=q/NSXqDGhdhn7Jx5pa1Emu+bzY3oWOLypAKpBZONwLs=;
+        b=AUdq6C8QqlRt43OHjrZoDL0oES+MmuthOPI7Rb8dICaY1LhbOJ7Z5N9wSclv8f5Y8c
+         vLRqPcMb6SOy9cK26j2AViXXv71FpK04G9lBTGYeC2BB5ug6uzw0pLZGliGDo+BHrjAo
+         euZCBT2Vq3+Sn5Jrpa5jCfRmgO1iRJ6P9LUSF55iAV6oLgO0hgRKWShccdsZDbqmNHfa
+         ZdKkcQAoZTYV0ze5RJXaAk9Il9/g5kCUNtlgro/mrVxWRhr674gvIZmmIQWFw/dNuK0h
+         t2YAx9VY/I5Ya2/0RCIe01SL2fZYEgleY76Yhr0XUX1PryREO45FPVvcZQe8EcHfmEQe
+         bPEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVDfs4Pau35MgKRvYwNVMkHd9zen7QfJPxJGcz8OBCyxBZQtyWEW6sAGVr2WXT5wivjQgIIajFtxufcxCdSyyfuZAwX@vger.kernel.org
+X-Gm-Message-State: AOJu0YySwHG37m6uN7H9Itp6+IPOw2lmONbIfqqtx+96dcl/TwJ2OGZD
+	A3hrFLSNDmxCIjnOZhxdySncH71swyYIpbkmXYBZMkQoNp5RXjaSh/WGxwZ2MGlGgW8wUyxVBjk
+	QjBG4zrFSLIm8ZzSxt2X3iOxeDXf6BU0P7tpn4LNyWl2hGXUNw1Q8n74tlrL4zCxthh0d9aVTxA
+	xIVs8=
+X-Received: by 2002:a17:907:d15:b0:a8a:cc5a:7f30 with SMTP id a640c23a62f3a-a8ffb29dd63mr451035966b.25.1726057670176;
+        Wed, 11 Sep 2024 05:27:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH/c1X3DRA/mWIVTcTk+QQnZxO9T4fi76uQn0cYUplb9zL6FkZdwQdjqe7jLbHQzM45Cmmfyg==
+X-Received: by 2002:a17:907:d15:b0:a8a:cc5a:7f30 with SMTP id a640c23a62f3a-a8ffb29dd63mr451031966b.25.1726057669606;
+        Wed, 11 Sep 2024 05:27:49 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8d259c76e2sm605309766b.79.2024.09.11.05.20.49
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8d25952c01sm611232466b.64.2024.09.11.05.27.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Sep 2024 05:20:49 -0700 (PDT)
-Message-ID: <1d0478b2-efdf-4c1f-bf2c-a5cb2214168c@redhat.com>
-Date: Wed, 11 Sep 2024 14:20:48 +0200
+        Wed, 11 Sep 2024 05:27:49 -0700 (PDT)
+Message-ID: <9158a89f-6e06-41ad-8c68-97ecc3409c16@redhat.com>
+Date: Wed, 11 Sep 2024 14:27:47 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,41 +68,52 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next v2] platform/olpc: Remove redundant null pointer
- checks in olpc_ec_setup_debugfs()
-To: Li Zetao <lizetao1@huawei.com>, mchehab@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, wens@csie.org,
- jernej.skrabec@gmail.com, samuel@sholland.org, heiko@sntech.de,
- yisen.zhuang@huawei.com, salil.mehta@huawei.com, hauke@hauke-m.de,
- alexandre.torgue@foss.st.com, joabreu@synopsys.com,
- mcoquelin.stm32@gmail.com, wellslutw@gmail.com, radhey.shyam.pandey@amd.com,
- michal.simek@amd.com, ilpo.jarvinen@linux.intel.com, ruanjinjie@huawei.com,
- hverkuil-cisco@xs4all.nl, u.kleine-koenig@pengutronix.de,
- jacky_chou@aspeedtech.com, jacob.e.keller@intel.com
-Cc: linux-media@vger.kernel.org, netdev@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-rockchip@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com, platform-driver-x86@vger.kernel.org
-References: <20240907031009.3591057-1-lizetao1@huawei.com>
- <20240907031009.3591057-2-lizetao1@huawei.com>
+Subject: Re: [PATCH v2 0/3] platform/x86: intel_scu: Move headers to x86
+ subfolder
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Stephen Boyd <sboyd@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Utkarsh Patel <utkarsh.h.patel@intel.com>, Guenter Roeck
+ <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-watchdog@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ "David E. Box" <david.e.box@linux.intel.com>,
+ Andy Shevchenko <andy@kernel.org>, Zha Qipeng <qipeng.zha@intel.com>,
+ Lee Jones <lee@kernel.org>, Heikki Krogerus
+ <heikki.krogerus@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>
+References: <20240909124952.1152017-1-andriy.shevchenko@linux.intel.com>
 Content-Language: en-US, nl
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240907031009.3591057-2-lizetao1@huawei.com>
+In-Reply-To: <20240909124952.1152017-1-andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On 9/7/24 5:09 AM, Li Zetao wrote:
-> Since the debugfs_create_dir() never returns a null pointer, checking
-> the return value for a null pointer is redundant. Since
-> debugfs_create_file() can deal with a ERR_PTR() style pointer, drop
-> the check.
+On 9/9/24 2:41 PM, Andy Shevchenko wrote:
+> Add the record to the MAINTAINERS to follow what is going on with the
+> Intel MID platform related code and drivers.
 > 
-> Signed-off-by: Li Zetao <lizetao1@huawei.com>
+> With that, clean up a bit a couple of headers, i.e. move them to x86
+> subfolder of include/linux/platform_data where they belong to.
+> 
+> No functional changes intended.
+> 
+> Taking into account nature of this change it's supposed to go via PDx86
+> tree, please Ack.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
+Since the changes outside of drivers/platform/x86 are tiny and the merge
+window is close I've decided to take the series without waiting for acks:
+
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
 Note it will show up in my review-hans branch once I've pushed my
@@ -119,26 +131,36 @@ Hans
 
 
 
-> ---
-> v1 -> v2:
-> v1:
-> https://lore.kernel.org/all/20240903143714.2004947-1-lizetao1@huawei.com/
 > 
->  drivers/platform/olpc/olpc-ec.c | 3 ---
->  1 file changed, 3 deletions(-)
+> v2:
+> - Maintained --> Supported (Dave)
+> - added two cleanup patches (Mika and me)
 > 
-> diff --git a/drivers/platform/olpc/olpc-ec.c b/drivers/platform/olpc/olpc-ec.c
-> index 921520475ff6..48e9861bb571 100644
-> --- a/drivers/platform/olpc/olpc-ec.c
-> +++ b/drivers/platform/olpc/olpc-ec.c
-> @@ -332,9 +332,6 @@ static struct dentry *olpc_ec_setup_debugfs(void)
->  	struct dentry *dbgfs_dir;
->  
->  	dbgfs_dir = debugfs_create_dir("olpc-ec", NULL);
-> -	if (IS_ERR_OR_NULL(dbgfs_dir))
-> -		return NULL;
-> -
->  	debugfs_create_file("cmd", 0600, dbgfs_dir, NULL, &ec_dbgfs_ops);
->  
->  	return dbgfs_dir;
+> Andy Shevchenko (2):
+>   MAINTAINERS: Add Intel MID section
+>   platform/x86: intel_scu_wdt: Move intel_scu_wdt.h to x86 subfolder
+> 
+> Mika Westerberg (1):
+>   platform/x86: intel_scu_ipc: Move intel_scu_ipc.h out of
+>     arch/x86/include/asm
+> 
+>  MAINTAINERS                                   | 20 ++++++++++++++++++-
+>  arch/x86/include/asm/intel_telemetry.h        |  2 +-
+>  arch/x86/platform/intel-mid/intel-mid.c       |  3 ++-
+>  drivers/mfd/intel_pmc_bxt.c                   |  3 +--
+>  drivers/mfd/intel_soc_pmic_bxtwc.c            |  3 +--
+>  drivers/mfd/intel_soc_pmic_mrfld.c            |  3 +--
+>  drivers/platform/x86/intel_scu_ipc.c          |  2 +-
+>  drivers/platform/x86/intel_scu_ipcutil.c      |  2 +-
+>  drivers/platform/x86/intel_scu_pcidrv.c       |  2 +-
+>  drivers/platform/x86/intel_scu_pltdrv.c       |  2 +-
+>  drivers/platform/x86/intel_scu_wdt.c          |  3 ++-
+>  drivers/usb/typec/mux/intel_pmc_mux.c         |  3 +--
+>  drivers/watchdog/intel-mid_wdt.c              |  5 ++---
+>  .../platform_data/{ => x86}/intel-mid_wdt.h   |  6 +++---
+>  .../linux/platform_data/x86}/intel_scu_ipc.h  |  4 ++--
+>  15 files changed, 39 insertions(+), 24 deletions(-)
+>  rename include/linux/platform_data/{ => x86}/intel-mid_wdt.h (74%)
+>  rename {arch/x86/include/asm => include/linux/platform_data/x86}/intel_scu_ipc.h (96%)
+> 
 
