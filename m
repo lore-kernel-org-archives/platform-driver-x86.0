@@ -1,70 +1,46 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252FB14A4D6;
-	Mon, 16 Sep 2024 10:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC46156641
+	for <platform-driver-x86@vger.kernel.org>; Mon, 16 Sep 2024 12:05:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726483264; cv=none; b=ubAC5vXLW4OGlBQMcbOp/bEY9WDoyg3u1/WPVKSnawwJKAGjvznnPhwMcYRhM7YlkUC4MQ6G783i3WJUGm+sVJFE8DdM1GdFt9TDaHUbvBUqJm4a2DYpMC+ykd8th7GbkULD280p8ap21KnAaj1XfGdYtojWX0dsz0lO1PyqEuw=
+	t=1726488341; cv=none; b=ZCNLCs3RODJTeBHcPUHbEeJHdc7oSm/9u3pKOxl1G0kPNqDuNG9LxTdQKko5AaP6phaXk+v+gIHnGEeYc77gEwv5CbehyPbFqx3IqreSj83Zgy0aws5kA2S6cggI+RLPBHZzQxkDWWIcqkNQRx14tui2Mh8TnjOypjGVDTP9h9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726483264; c=relaxed/simple;
-	bh=QJSogLodkp4fLMxYum1X3Twzgv9uPxOOc3on5SLpiPI=;
+	s=arc-20240116; t=1726488341; c=relaxed/simple;
+	bh=WJDjFe3HPQeageS4i7xubJVDX2R8MeAjmwyETfLTNxU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ql4xkQPKS6Fa+z+1w4hn8Gn2rHXaQU0vMTGiDa3sIF1USUIV8T1RmGyHQNIZcXJHyTJwSSwDdfN2hUIrkpT/RPBg+VZ2ggEj+DKlqkzOGYcHMGsaa8Gn2qiXiz0QGyJxq3U0yfmlGxIi3cuR2lxU0++nUaWck51PCWYhwmPt5nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bf69fvHW; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bf69fvHW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726483263; x=1758019263;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QJSogLodkp4fLMxYum1X3Twzgv9uPxOOc3on5SLpiPI=;
-  b=bf69fvHWDEbZsWxjLV0jUiiXWg4r1owIK8fPrgaMQEd8tLyHfyrZPox5
-   43me87obo9wLWvC7x1dcnikySHhvby9MwIBy6Y60DVRT4qj/VpR2vKZ4g
-   6FxODLuITBlbX/x4tTmWTJpF2i2O8KRFgXooNnl+wO9D+ElntAm4J7oQV
-   kooK+AZlz/PsDjOPevf/OBVDCxAXE10lYTk/foXUebyfShlQpOG9Jwydq
-   2WpBhZ48MtxsMQK6GPUf3v63p3ZPl8V0xytuXsVJKKjsNV4YKibMmqA3d
-   KqJvgkT2/4+ahpY5bTFQUptpOOt617z7srvToZ26X9lILWoRjE6fI7FMq
-   g==;
-X-CSE-ConnectionGUID: lAxYJJNpSu+j3TzpGrIcVg==
-X-CSE-MsgGUID: hjq3PzlARRe5ivlxQJP98w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11196"; a="25175543"
+	 Content-Type:Content-Disposition:In-Reply-To; b=pylte1ugcLtppZpbpnSeHum+Kz0erjIL8u6YXncSOz7iz5WUg83uQFq21vtUttRezVBWDqvoqgVjFreVV2DI9KK4C/e1dm4c8Z/kSRORYPZMIN2vfOJ13Eg1IMZKb9Z0vZcTYrZz0y+yD5yGUhj5pMvtbVlQ+3TJJkos4yQGMuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: XWiN2BJ5SLuqCxTqaDy/ow==
+X-CSE-MsgGUID: l8VVumj6Sju7HEcTaNTJIg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11196"; a="42824390"
 X-IronPort-AV: E=Sophos;i="6.10,233,1719903600"; 
-   d="scan'208";a="25175543"
+   d="scan'208";a="42824390"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2024 03:40:57 -0700
-X-CSE-ConnectionGUID: JbW+q7FBRnSHANCuIl9pTA==
-X-CSE-MsgGUID: wOvtWHrDSna5J2jM5f4XEQ==
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2024 05:05:39 -0700
+X-CSE-ConnectionGUID: Rfk3pDxxSp+x9x2AQkxMlw==
+X-CSE-MsgGUID: 76FHlX4QRi2JlYaOOeNb9Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,233,1719903600"; 
-   d="scan'208";a="69324450"
+   d="scan'208";a="69335407"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2024 03:40:54 -0700
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2024 05:05:39 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1sq9A3-00000009QSd-1r5O;
-	Mon, 16 Sep 2024 13:40:51 +0300
-Date: Mon, 16 Sep 2024 13:40:51 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Gergo Koteles <soyer@irl.hu>, Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ike Panhc <ike.pan@canonical.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v1 1/1] platform/x86: ideapad-laptop: Make the
- scope_guard() clear of its scope
-Message-ID: <ZugLM6oe2caYHLX8@smile.fi.intel.com>
-References: <20240829165105.1609180-1-andriy.shevchenko@linux.intel.com>
- <20240904045201.v3mp4u7pcqj7qrdp@treble>
- <Ztg1wzHB-so2qV2L@smile.fi.intel.com>
- <20240906031601.4yodvhurcyi26qb2@treble>
- <20240913233324.GA306935@thelio-3990X>
+	(envelope-from <andy@kernel.org>)
+	id 1sqAU3-00000009RwU-3wBL;
+	Mon, 16 Sep 2024 15:05:35 +0300
+Date: Mon, 16 Sep 2024 15:05:35 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: x86-android-tablets: Adjust Xiaomi Pad 2
+ bottom bezel touch buttons LED
+Message-ID: <ZugfD9O7UqR-Ielp@smile.fi.intel.com>
+References: <20240916090255.35548-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -73,43 +49,38 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240913233324.GA306935@thelio-3990X>
+In-Reply-To: <20240916090255.35548-1-hdegoede@redhat.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Sep 13, 2024 at 04:33:24PM -0700, Nathan Chancellor wrote:
-> On Thu, Sep 05, 2024 at 08:16:01PM -0700, Josh Poimboeuf wrote:
-> > On Wed, Sep 04, 2024 at 01:26:11PM +0300, Andy Shevchenko wrote:
-> > > On Tue, Sep 03, 2024 at 09:52:01PM -0700, Josh Poimboeuf wrote:
-> > > > I'm not sure I buy that, we should look closer to understand what the
-> > > > issue is.  Can you share the config and/or toolchain version(s) need to
-> > > > trigger the warning?
-> > > 
-> > > .config is from the original report [1], toolchain is
-> > > Debian clang version 18.1.8 (9)
-> > > 	Target: x86_64-pc-linux-gnu
-> > > 	Thread model: posix
-> > > 	InstalledDir: /usr/bin
-> > > 
-> > > (Just whatever Debian unstable provides)
-> > > 
-> > > [1]: https://lore.kernel.org/oe-kbuild-all/202408290219.BrPO8twi-lkp@intel.com/
-> > 
-> > The warning is due to a (minor?) Clang bug, almost like it tried to
-> > optimize but didn't quite finish.
-> ...
-> > In this case, mutex is an unconditional guard, so the constructor just
-> > returns the original value of '&priv->vpc_mutex'.  So if the original
-> > '&priv->vpc_mutex' is never NULL, the condition would always be true.
+On Mon, Sep 16, 2024 at 11:02:55AM +0200, Hans de Goede wrote:
+> The "input-events" LED trigger used to turn on the backlight LEDs had to
+> be rewritten to use led_trigger_register_simple() + led_trigger_event()
+> to fix a serious locking issue.
 > 
-> Thanks a lot for that Josh. I have a somewhat trivial reproducer for the
-> clang folks to take a look at. I should have some time on Monday to get
-> that reported upstream and I will see if I can find anyone to take a
-> look at it.
+> This means it no longer supports using blink_brightness to set a per LED
+> brightness for the trigger and it no longer sets LED_CORE_SUSPENDRESUME.
 > 
-> For what it is worth, I don't think the workaround for this is too bad
-> and it seems like it only shows up with KCOV.
+> Adjust the MiPad 2 bottom bezel touch buttons LED class device to match:
+> 
+> 1. Make LED_FULL the maximum brightness to fix the LED brightness
+>    being very low when on.
+> 2. Set flags = LED_CORE_SUSPENDRESUME.
 
-FWIW, Hans queued the workaround.
+...
+
+>  #define XIAOMI_MIPAD2_LED_PERIOD_NS		19200
+> -#define XIAOMI_MIPAD2_LED_DEFAULT_DUTY		 6000 /* From Android kernel */
+> +#define XIAOMI_MIPAD2_LED_MAX_DUTY		 6000 /* From Android kernel */
+
+Perhaps + suffix at the same time? _NS? _US?
+
+...
+
+> -		.duty_cycle = val,
+> +		.duty_cycle = XIAOMI_MIPAD2_LED_MAX_DUTY * val / LED_FULL,
+
+I haven't checked, just to be sure there is no overflow and 64-bit div on
+32-bit machines...
 
 -- 
 With Best Regards,
