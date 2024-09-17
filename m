@@ -1,170 +1,112 @@
-Received: from fout2-smtp.messagingengine.com (fout2-smtp.messagingengine.com [103.168.172.145])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1460615358F;
-	Tue, 17 Sep 2024 08:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C72165F19
+	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Sep 2024 10:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726562777; cv=none; b=dB2iQAROQHENvy+/ODITgYF9C2aEzuJCTSVChRCUOlyY36soWaLhC4AZwr9scLxuJTX+vNi5zjiZOojOK1ja4ucRcDcMU2Sp0ax/PUxpY80QE2D7zNG0IrzTkT0UCsgx5npNQzN7kuVWs/xMC0BwXfspMwlxNeu/ucKwZ+W6ehQ=
+	t=1726569610; cv=none; b=aBgDxlaHf1uVujBMGglHh/Rl6+RUrgPbAzGY2PpwbbJQq0A0yoz1T3OerLczjn3rEE1pmtXeLf34nDdSwl7IH2cPqRC7e/ez4bJkBN3yF81ZwSewsiPHPWxNPdfrlF7fN9RLQsGWw9bUNt8nTA0GgSd5Mho+lXbdMNXOtyzoDhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726562777; c=relaxed/simple;
-	bh=7il+1Y+xDmFDzhpMMo6AtEpUg427MJzyHRGjoapMw1w=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=J5kAdyJRO8JoLhYJdDjwT52SYcaitaRNmT+N1XyEwRTY9wF29qnu1eNrdNWcibXWEj2Y4Jumz344YYzSr0zr4Xqx+85ImdWHeqN/pi/8IbjCz5JLqQQroandrmInMI9eNCGhtakGW8o9AgmT83o6mnv8Csbzt24WIdvZTFuZgWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=iA7rSkyc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jb7dxzh8; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1726569610; c=relaxed/simple;
+	bh=0LMBN520YvnGOafFgvhLjT6qIlZcWSGFYJKW35052PE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c9yUNd+hn+LOrp0raspxpT+nWLzXF61MuVYvAxhLOQBHst+CS4/ERrHNVg2MuboC33Lc3Nl8ULi0W1WhclRJuFnCMTWEYVEqDDnOoctZNmcxICAX/JVexlqdmqmP0sx2eDVjZzuyqFstm6U/Mgl8HwFes4bj5IhOf+0x+mNNJMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iM2sM9dt; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="iA7rSkyc";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jb7dxzh8"
-Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfout.phl.internal (Postfix) with ESMTP id 27EC313802EA;
-	Tue, 17 Sep 2024 04:46:14 -0400 (EDT)
-Received: from phl-imap-01 ([10.202.2.91])
-  by phl-compute-08.internal (MEProxy); Tue, 17 Sep 2024 04:46:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1726562774;
-	 x=1726649174; bh=r02SC9UwRVZI3dSIERxjx/Dlw5QW6ywAV9eCY3QxIfc=; b=
-	iA7rSkycZ7jdRG1k5E9R0WBk4tNh3E41X7vYFI+8VNIgBY4EH7/18ikik+fWXm93
-	95TAzL2aBtaFyFSv+E8XkXwvNmbCsvYyM3xI29Br6KPzHlK7hzmCqgIB/fStu6cl
-	gTfZCyW0S2lW8TxOJ+2Lwde4kgIau/9X8DeZqs5eswUMduaWBubkyq35u5Tce+r1
-	T2a5IPdWwUG8w31UTpFy2HQCoIkWphycAJh1ZU+4FfJ7giqL4JibjjECB1NftZtk
-	0P9Uq80a7n2OUDgb0p598j321nq5Wy/oY6CO3nKFUPwPfkbt1zLEiyN0ZRkAQ/5D
-	jBfTUouEwHbY+BUFyVEiZQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1726562774; x=
-	1726649174; bh=r02SC9UwRVZI3dSIERxjx/Dlw5QW6ywAV9eCY3QxIfc=; b=j
-	b7dxzh8JFyYdqB9WYcA1E2UY0f6eYM3/mn9B/Y9f8XvPcCaeNGhmdKXr1GMlNFLF
-	F3lbl6Y/3N0rW4CGbF1+V4VIKwQIGeSwUnpJC/ZZPZkz2zavCpMnP/SHyVu/rzXr
-	+IIj6qyAy9GI6jWqomx5aXqei4MUd1BqKkNietQkuPzuSYBo70ryi7/yoEZZ+Eyt
-	r8wsOYWLB5ZZsyFLcPSORHM6dP4MjvPf26/rwyhcdFoH52RsONVBJ3/3i0i+hx+8
-	VtwtQufvLZ2rxDi0NlpPbqm23Je+h2bhbS/7ojcBPQ0cwyKFDZFz4yUU+3kryM4a
-	R/UcAu8Ykjoi44nxoqRRA==
-X-ME-Sender: <xms:1UHpZug18bT4z4dUwrKZ7a29BTkMq93PtcHDLjeoR2hAu13HRuLoDA>
-    <xme:1UHpZvB_-Op6mvOb8NQ-6ZVtaXNGHyz9o7UL3IFEJ8IlnjTdKT8HzoUb4SapDysTJ
-    FF7Bmb7o8sE-yjWgTQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudekjedgtdekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedfnfhukhgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvg
-    hvqeenucggtffrrghtthgvrhhnpeevteelkeefueeuleejveetueetvefggfeuledvhfdv
-    gedvheelfeelkefhgfetheenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhho
-    nhgvshdruggvvhdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouhhtpdhrtg
-    hpthhtoheptghorhgvnhhtihhnrdgthhgrrhihsehgmhgrihhlrdgtohhmpdhrtghpthht
-    ohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtph
-    htthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhu
-    gidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphhlrg
-    htfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:1UHpZmFxYFdEmvwOf_ZB1SZ9jAuNe4vWqasyLsspy-I2UCUrJKtk-Q>
-    <xmx:1UHpZnTYPMKYRvef4vLNAs7Y5nE57ntRryK27hjMI2vd15YaQKevXg>
-    <xmx:1UHpZrwllL2HPMGTrTxnjrWxMgiwVdgruost1Y6nQxKyRdxxKHze1A>
-    <xmx:1UHpZl6VMSQIGjQ1xIdZNaK0OuNGIPZ_u_8-N5sqhHne9deYShexdw>
-    <xmx:1kHpZr8IaFQOclHulvd-JEycuOHKPak5L6z0OpFN9CLuXpHP-ASHbAcb>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 89FF93360077; Tue, 17 Sep 2024 04:46:13 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iM2sM9dt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1726569607;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=K8NsOdWTBNIM1qx9lP6F4iSdy29rXjvavRpAqXtZKsU=;
+	b=iM2sM9dt+YYcRlcfT7th55+2vZY5NNuixrzM2xvrb4vbu5fRvY+oCcNKnXnN06H9wQnif5
+	dVzb4orCvOxs3ZlZ+6CMdH9X9vWKpudrj5n9uGWw+IGCjxZgkcBe1++q3xr+vSj8P1RBAL
+	wBKOWcBvG2ND9fJlO84IfDFxscuYwdk=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-110-29u1BcQROLelD6QAzZyuEA-1; Tue, 17 Sep 2024 06:40:04 -0400
+X-MC-Unique: 29u1BcQROLelD6QAzZyuEA-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-374c44e58a9so2308838f8f.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Sep 2024 03:40:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726569603; x=1727174403;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K8NsOdWTBNIM1qx9lP6F4iSdy29rXjvavRpAqXtZKsU=;
+        b=I4MPwPL9r7RX1Ojg9Jd3bg0XR8KP0A8Sjdiv5yiy7hIlBqkZRkAmZd1Bdbhr6ZaiqY
+         jfkDQSJYqcYOfHkW/2geJJhLEh53HPmqos55ugwlsxXhvFpJH7lG2m3RdHl59MeFw8w+
+         f5firr/yCV1DUGXjV6JAfW/6DGXQLINb266F1TX0NqslGqRYsmt+PKkKHLFkl1OyjnGN
+         oU8GqBTmDNsLbspHJTsE3YopDq33KfPHBRJrViaEBdd9nmUamWC39fIluD/4qlKq7VHd
+         G1kglzpU7q5gaseScVmmcmrBvuGSJC9qCZjb3ItKPUgkArWy8TKJylfrPbfdUL8Y5gW4
+         ONIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXBO8b6893vXWfMoazArjYa1LkJ1ipG/iXMT25fZOSk0Xd12PUoGolI2XRbLU147P7GFlXd9zXsP6D++VvHwK9776up@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZXj91HVJkndVF7ThEBs6GDOpSoPW7HNfGjbPFphXpddKPnDSL
+	HCq5hTmelIsLGaO6pwGoVp8WHcSqdyO371qOckbxKDA/2/D+O0Hi8RAwg/Kn34BftpfiUdYXCti
+	NWXPsvW7xB1NQuaWOylZQ2V931WtHiiTce5+wRARZWXKvdsjOpmP/WepJqd6DlVtRtN1snbs=
+X-Received: by 2002:a5d:6892:0:b0:368:785f:b78e with SMTP id ffacd0b85a97d-378c2cfc259mr10196603f8f.13.1726569603381;
+        Tue, 17 Sep 2024 03:40:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHa4UI97Csxn3j4pYvJYFP/Fr/uiCCt79JPc4rAJ1fBKy2utflgkB7c4Go4SgMPtMwX0FZF9A==
+X-Received: by 2002:a5d:6892:0:b0:368:785f:b78e with SMTP id ffacd0b85a97d-378c2cfc259mr10196573f8f.13.1726569602833;
+        Tue, 17 Sep 2024 03:40:02 -0700 (PDT)
+Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e40:14b0:4ce1:e394:7ac0:6905])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-378e780007dsm9183869f8f.82.2024.09.17.03.40.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2024 03:40:02 -0700 (PDT)
+From: Lukas Bulwahn <lbulwahn@redhat.com>
+X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+To: Andy Shevchenko <andy@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: [PATCH] MAINTAINERS: adjust file entry in INTEL MID PLATFORM
+Date: Tue, 17 Sep 2024 12:39:55 +0200
+Message-ID: <20240917103955.102921-1-lukas.bulwahn@redhat.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 17 Sep 2024 20:45:53 +1200
-From: "Luke Jones" <luke@ljones.dev>
-To: "Hans de Goede" <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- corentin.chary@gmail.com
-Message-Id: <b7cd34f6-b0d9-466b-b1b4-3e4283b6f6c8@app.fastmail.com>
-In-Reply-To: <6ad5b0ee-d05f-4e8e-8946-cbeb350add8a@redhat.com>
-References: <20240910045443.678145-1-luke@ljones.dev>
- <6ad5b0ee-d05f-4e8e-8946-cbeb350add8a@redhat.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: don't fail if platform_profile already
- registered
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Thu, 12 Sep 2024, at 12:32 AM, Hans de Goede wrote:
-> Hi,
-> 
-> On 9/10/24 6:54 AM, Luke D. Jones wrote:
-> > On some newer laptops ASUS laptops SPS support is advertised but not
-> > actually used, causing the AMD driver to register as a platform_profile
-> > handler.
-> > 
-> > If this happens then the asus_wmi driver would error with -EEXIST when
-> > trying to register its own handler leaving the user with a possibly
-> > unusable system. This is especially true for laptops with an MCU that emit
-> > a stream of HID packets, some of which can be misinterpreted as shutdown
-> > signals.
-> > 
-> > We can safely continue loading the driver instead of bombing out.
-> > 
-> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> 
-> Thank you for your patch. I've applied this now, dropping the second
-> unnecessary chunk manually so there is no need to send out a new version.
-> 
-> Thank you for your patch, I've applied this patch to my review-hans 
-> branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-> 
-> Once I've run some tests on this branch the patches there will be
-> added to the platform-drivers-x86/for-next branch and eventually
-> will be included in the pdx86 pull-request to Linus for the next
-> merge-window.
-> 
-> Regards,
-> 
-> Hans
+From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
+Commit 5f1cda51107f ("platform/x86: intel_scu_wdt: Move intel_scu_wdt.h to
+x86 subfolder") moves intel-mid_wdt.h in ./include/linux/platform_data into
+the x86 subdirectory, but misses to adjust the INTEL MID PLATFORM section,
+which is referring to this file.
 
-Okay Thanks Hans,
+Hence, ./scripts/get_maintainer.pl --self-test=patterns complains about a
+broken reference.
 
+Adjust the file entry to this header file movement.
 
-> 
-> 
-> 
-> > ---
-> >  drivers/platform/x86/asus-wmi.c | 9 +++++++--
-> >  1 file changed, 7 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> > index fbb3345cc65a..d53c4aff519f 100644
-> > --- a/drivers/platform/x86/asus-wmi.c
-> > +++ b/drivers/platform/x86/asus-wmi.c
-> > @@ -3876,8 +3876,13 @@ static int platform_profile_setup(struct asus_wmi *asus)
-> >  asus->platform_profile_handler.choices);
-> >  
-> >  err = platform_profile_register(&asus->platform_profile_handler);
-> > - if (err)
-> > + if (err == -EEXIST) {
-> > + pr_warn("%s, a platform_profile handler is already registered\n", __func__);
-> > + return 0;
-> > + } else if (err) {
-> > + pr_err("%s, failed at platform_profile_register: %d\n", __func__, err);
-> >  return err;
-> > + }
-> >  
-> >  asus->platform_profile_support = true;
-> >  return 0;
-> > @@ -4752,7 +4757,7 @@ static int asus_wmi_add(struct platform_device *pdev)
-> >  goto fail_fan_boost_mode;
-> >  
-> >  err = platform_profile_setup(asus);
-> > - if (err)
-> > + if (err && err != -EEXIST)
-> >  goto fail_platform_profile_setup;
-> >  
-> >  err = asus_wmi_sysfs_init(asus->platform_device);
-> 
-> 
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4c4116045664..9a4fa88edcd3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11646,7 +11646,7 @@ F:	drivers/platform/x86/intel_scu_*
+ F:	drivers/staging/media/atomisp/
+ F:	drivers/watchdog/intel-mid_wdt.c
+ F:	include/linux/mfd/intel_soc_pmic_mrfld.h
+-F:	include/linux/platform_data/intel-mid_wdt.h
++F:	include/linux/platform_data/x86/intel-mid_wdt.h
+ F:	include/linux/platform_data/x86/intel_scu_ipc.h
+ 
+ INTEL P-Unit IPC DRIVER
+-- 
+2.46.0
+
