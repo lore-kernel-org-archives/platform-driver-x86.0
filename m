@@ -1,126 +1,76 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD00215ECD7;
-	Tue, 17 Sep 2024 18:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC9BF510
+	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Sep 2024 21:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726599360; cv=none; b=FFtv15JThAdtAcGo/DjC1t3Dhlkj+Y34zqrH/+Yu/ENIIgsgTwFeKANzacsVVc861WsQ2Aq6CwCa2StQZ5yd8/J5gclL/hczHPnRwDYJF23c/zPDcaEry30m9KtCkaswlF9uGDpoWd0kQ/Ue20Ulr14moBmvlg3JWg2Vxm7sYY0=
+	t=1726610199; cv=none; b=YwdURd9tQw0HNO5Ehwq15WFLq+3ajqnuCV2iikffnjGQT8xDRFtD3/L64JJt3eSK9iAUw+nkdhawz2SK6Kc0+4h1ReGlHkFUpkAC9PJ7yVzDDB10XJRDcksQiVYHHKHIEmqhXZDhhBL1pjorM6YQMocix+L/j/Bo83NFIYq6nLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726599360; c=relaxed/simple;
-	bh=6D8fJosTTxd2L3lfaDtxSU9L6o0MY6+KjLaJSKRE57g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=YEAZhhpNO2njf3zMzfitbwk9rTqG5OO/DX2b7puFNKd/47Ko1ARcxr+jmMsGGXmw3lx307HQ5TaAx4Ma6ah7JdfijWWMofv4DQGXj/Ds9IE81wjMQNCpAkI9ps8L+X+f1JxWRwNbI5y9yoeneuKc6org5D0r0Hu+1fHi1RNuMkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.1.108] (178.176.74.43) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 17 Sep
- 2024 21:55:36 +0300
-Message-ID: <96bcc902-630f-83c2-0e4b-27ed552fbe09@omp.ru>
-Date: Tue, 17 Sep 2024 21:55:23 +0300
+	s=arc-20240116; t=1726610199; c=relaxed/simple;
+	bh=w/paDTfOM8FG/fw6MnPU3lNwQLdrMJLuPsMRMRUYaR4=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=TBeyCdxbW5/q8qpWNo8Fu6+NpoB62c/C9rX4rGt5+vIzAcm2jpY0IrA/Z/8UhTds4mSbP1YcCaS6CgD5vTw99ZVzTrUohUrRw2ZkRAMGl3uLryIC5MRhD6NAeL5KCcaIzINLU0saxutTGtkxoa9hB9XuajORsmG0PqASaZg5fH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SHel9l7U; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SHel9l7U"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1E8C4C4CECD
+	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Sep 2024 21:56:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726610199;
+	bh=w/paDTfOM8FG/fw6MnPU3lNwQLdrMJLuPsMRMRUYaR4=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=SHel9l7U+CLiNu1+nGPqZiWo1zqlOYqx7GAx0yk8eiI/GryRTQQatph3Vsp6G0+4R
+	 4xwBlSu0UepvxwIx1g15P8I8drc5RURx7MdRjhBgFo0HANePlmVoGbRt594pgpURnc
+	 Ht2v/MiibpwVSSKiayMF2k6C7+uLzobYnxbcyFS2vYt8G8gp2SC5YSfe9y6MU1YVsE
+	 BEybcGe5L2cDQhKfFcRLVj79+IJ4YIClSpLo8k3KgOduFicd4UTkeTCsjoEk8LOpwr
+	 firsT4AdxKSWdQQIIIN0JoPIWtIl1Quf84uj7awLdp3WzXsRtEe78fxjFQMVsHa7AC
+	 KUHVoE9WDZoPA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 0878DC53BB8; Tue, 17 Sep 2024 21:56:39 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218696] DYTC frequency scaling deterioration and event spam
+Date: Tue, 17 Sep 2024 21:56:38 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: lmulling@proton.me
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218696-215701-w36PTKytkn@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218696-215701@https.bugzilla.kernel.org/>
+References: <bug-218696-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [lvc-patches] [PATCH 6.1] platform/x86: android-platform: deref
- after free in x86_android_tablet_init() fix
-Content-Language: en-US
-To: Aleksandr Burakov <a.burakov@rosalinux.ru>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, <stable@vger.kernel.org>, Hans de Goede
-	<hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>
-CC: <lvc-project@linuxtesting.org>, <lvc-patches@linuxtesting.org>,
-	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240917120458.7300-1-a.burakov@rosalinux.ru>
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-In-Reply-To: <20240917120458.7300-1-a.burakov@rosalinux.ru>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 09/17/2024 18:42:41
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 187805 [Sep 17 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.1.5
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 34 0.3.34
- 8a1fac695d5606478feba790382a59668a4f0039
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_cat_drugs}
-X-KSE-AntiSpam-Info: {Tracking_bl_eng_cat, c6}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.74.43 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info:
-	omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2
-X-KSE-AntiSpam-Info: FromAlignment: s
-X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.74.43
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 09/17/2024 18:45:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 9/17/2024 4:41:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On 9/17/24 15:04, Aleksandr Burakov wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218696
 
-> No upstream commit exists for this commit.
-> 
-> Pointer '&pdevs[i]' is dereferenced at x86_android_tablet_init()
+--- Comment #16 from Lucas M=C3=BClling (lmulling@proton.me) ---
+Hi Mark, I've tried searching LVFS for that version but didn't found it,
+fwupdmgr also shows no updates for my machine, was the update on 19th of Au=
+gust
+or September?
 
-   s/at/in.
+--=20
+You may reply to this email to add a comment.
 
-> after the referenced memory was deallocated by calling function
-> 'x86_android_tablet_cleanup()'.
-
-   No quotes around a function name the 1st time, and here they are
-the 2nd time. Please be consistent...
-
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
-> 
-> Fixes: 5eba0141206e ("platform/x86: x86-android-tablets: Add support for instantiating platform-devs")
-> Signed-off-by: Aleksandr Burakov <a.burakov@rosalinux.ru>
-> ---
->  drivers/platform/x86/x86-android-tablets.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/x86-android-tablets.c b/drivers/platform/x86/x86-android-tablets.c
-> index 9178076d9d7d..9838c5332201 100644
-> --- a/drivers/platform/x86/x86-android-tablets.c
-> +++ b/drivers/platform/x86/x86-android-tablets.c
-> @@ -1853,8 +1853,9 @@ static __init int x86_android_tablet_init(void)
->  	for (i = 0; i < pdev_count; i++) {
->  		pdevs[i] = platform_device_register_full(&dev_info->pdev_info[i]);
->  		if (IS_ERR(pdevs[i])) {
-> +			int ret = PTR_ERR(pdevs[i]);
-
-   Need an empty line after the declartion, BTW...
-
->  			x86_android_tablet_cleanup();
-> -			return PTR_ERR(pdevs[i]);
-> +			return ret;
->  		}
->  	}
-
-MBR, Sergey
+You are receiving this mail because:
+You are watching the assignee of the bug.=
