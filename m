@@ -1,146 +1,80 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0142E1CAB8
-	for <platform-driver-x86@vger.kernel.org>; Tue, 17 Sep 2024 13:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE271803E;
+	Tue, 17 Sep 2024 13:43:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726578244; cv=none; b=rKR5aX+XJcQZaUI1lzRT6Eag6qdsG251lLNzx8x9pSs+TI1+97KF3c2koGr4adEqp5oCX1WdFrQMjplLrAo5i/T0DBSP0+rhEK6g4pZfIQXnQ1br/hlM3S18NzXS+L97sqiqlTLZXqiShBrMAfLQecuuWLrY5yxTpDxaFRl5ZAw=
+	t=1726580627; cv=none; b=gbl56SMsjqkWwqlLKa2j3it9P6B7xW/TUbaw1f38ozo8ALCBYlew2iFgNG03dxARGlmcDx7HThdcPq95PfoBhGSkaSyYcpaxZpM0Jzz5M9IfR/inowrI11N+69yh11997/c4oOsLPm3t2G1qagRqRzNUgV7EQ/z97Hqkk0CE7TI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726578244; c=relaxed/simple;
-	bh=oBXOVT8eXpsVUTP8TJ3FTtAqcWmIK89WtoRldp+yOmc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xr9yOPoeoIQ6u69yosv5yGVGEUPrGyKCJjdRhfxYDu594nkCkgNC3xuIqSTtf+NmlfJ0f0ZM5sxALf4MJ+b2Ql1K03oKoKV43Waqhx4arLPj9yh00DNAmtjv6cLHtGm4RmrLkPyuIgD8nHHRpBZHyO61z6W8iIkH+ffAxSJhOrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WrYyBea9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WrYyBea9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726578241;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r9sq3qQyyGyxnaltKrQcaIg8ym8e8TuQdTwGOVY9y/A=;
-	b=WrYyBea9oBPlPkS5xUlwEZE8RDGE3BRnBy8f7ICUddp1VmpazrfMCmiptyTUOFctUnriNp
-	Gv5hIGKpNQTSddQr5/5qjTsZ2BeuOMsxKGHC5z3b9lAmQ2M/D0YolXm7wrJPDNhThqHAx8
-	0CypHm/Uo+7dIpPhRhiL5shEX+Y0j2s=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-70-zDHWNuYXPLGm1DX1LVhCyw-1; Tue, 17 Sep 2024 09:04:00 -0400
-X-MC-Unique: zDHWNuYXPLGm1DX1LVhCyw-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a8d10954458so410119266b.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Sep 2024 06:04:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726578239; x=1727183039;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r9sq3qQyyGyxnaltKrQcaIg8ym8e8TuQdTwGOVY9y/A=;
-        b=asYAzhZhaZ+Z98ImAhpU1z1B0908Mi0K4Y0vsbAkk2IoDilQaQaSx4F/SlbU+WtXXz
-         ejhuInZEzG+8AmtPf33bGsELjJwvnj+OHKNREC4MX9YvQw0/lMSGw7rDiEu7eL/Yvoyl
-         yCYHsKPrlw01ZQEDiSybOwRlwQlQgizZSraUCPN+BcsF9cwfce1qTy4VDks6CbPoKAVa
-         77PR4V3gprTf1LbEc1EhgqMCTL5FRLP34Wb++VTdPbAkpFbwHrt6SwkuFCfwqmM2J96q
-         fZCcLDpQ+ELVFi8c3HAjfGpZ/U4nmKaXlZ05AEtFfnh4byNkl9qGWI38qOHUK/c/MdvW
-         dCpg==
-X-Forwarded-Encrypted: i=1; AJvYcCW4GUiOPu3gKpBDRIUN4iti63nDAgsDyoQI0eydaomhZz65WEYbZVkcP9t1Flod/Df4FXC9mkEjWzZFppePjcb0/7al@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5CFGUbsa/oHGoUglV4NXwn9Mmo7faMDq0X0XV8c+2kdw7f8xv
-	NhAnUpuZs7mqDFErCHMztYyYqSww2D6LjlABoST212N7NcBk37VQfvHQiw/j1JyqqTWg4iyiCCn
-	a7kvs5ebSby3F52TF3UMvnv15PsnuJaAl/rIWp30usG9O0lCO2Y4uMQ0Md/woXIR5C1l03yY=
-X-Received: by 2002:a17:906:d7c5:b0:a8d:2359:3163 with SMTP id a640c23a62f3a-a90294d0a4cmr1761320466b.31.1726578239017;
-        Tue, 17 Sep 2024 06:03:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF5wsLYbYcfBZWTfBqsKqege5SI/JZ5IeMZmQU+K4lOz46Q2dm2rgfx+E+QNMzCQqdyQkGFnw==
-X-Received: by 2002:a17:906:d7c5:b0:a8d:2359:3163 with SMTP id a640c23a62f3a-a90294d0a4cmr1761317466b.31.1726578238482;
-        Tue, 17 Sep 2024 06:03:58 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a90610968b9sm446201966b.5.2024.09.17.06.03.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Sep 2024 06:03:57 -0700 (PDT)
-Message-ID: <ae37b670-a42d-4130-911c-90e0c8b828bc@redhat.com>
-Date: Tue, 17 Sep 2024 15:03:56 +0200
+	s=arc-20240116; t=1726580627; c=relaxed/simple;
+	bh=SoBcQwDaJ8+uNIdEyM8N9AClY8QjK48xnJ6xh4wKxV8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mUkaxKIyWIPkw0+sETJ5urwzsRoRm0jYq11bRr7YEZXQ6dMwtM52HtBzzvkn9HSltTehDGWE7qwznV6TC4kEl7mUwZX/5DBgySjVHgGcqDgbJrLzi8gTd8SQXM6DeDVMOG+j4yQP9p+CjEyK0NeLq8oRXZpYsBYGAyRCAdcWj+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: Ev8gR9PBRICW+hm+IoZ1AQ==
+X-CSE-MsgGUID: MHAxnoUVSi++GlQCV+jLIQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11198"; a="25375589"
+X-IronPort-AV: E=Sophos;i="6.10,235,1719903600"; 
+   d="scan'208";a="25375589"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2024 06:43:46 -0700
+X-CSE-ConnectionGUID: 6+PbPi8IQgeclJgFKbhjMw==
+X-CSE-MsgGUID: BJTXdvH2TB+gxLoX/YyuMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,235,1719903600"; 
+   d="scan'208";a="69411125"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2024 06:43:30 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andy@kernel.org>)
+	id 1sqYUJ-00000009pq4-335P;
+	Tue, 17 Sep 2024 16:43:27 +0300
+Date: Tue, 17 Sep 2024 16:43:27 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Lukas Bulwahn <lbulwahn@redhat.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: Re: [PATCH] MAINTAINERS: adjust file entry in INTEL MID PLATFORM
+Message-ID: <ZumHf28MVOWhH-Q7@smile.fi.intel.com>
+References: <20240917103955.102921-1-lukas.bulwahn@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1] platform/x86: android-platform: deref after free in
- x86_android_tablet_init() fix
-To: Aleksandr Burakov <a.burakov@rosalinux.ru>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
- Mark Gross <markgross@kernel.org>
-Cc: linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org,
- lvc-patches@linuxtesting.org, platform-driver-x86@vger.kernel.org
-References: <20240917120458.7300-1-a.burakov@rosalinux.ru>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240917120458.7300-1-a.burakov@rosalinux.ru>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240917103955.102921-1-lukas.bulwahn@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi,
-
-Thank you for your patch.
-
-On 9/17/24 2:04 PM, Aleksandr Burakov wrote:
-> No upstream commit exists for this commit.
-
-Right, which is bad, especially since the upstream code actually still has this bug.
-
-NACK.
-
-Note that upstream in drivers/platform/x86/x86-android-tablets/core.c
-the same issue is also present around line 447:
-
-                pdevs[pdev_count] = platform_device_register_data(&pdev->dev, "gpio-keys",
-                                                                  PLATFORM_DEVID_AUTO,
-                                                                  &pdata, sizeof(pdata));
-                if (IS_ERR(pdevs[pdev_count])) {
-                        x86_android_tablet_remove(pdev);
-                        return PTR_ERR(pdevs[pdev_count]);
-                }
-                pdev_count++;
-
-Please submit a fix for both issues upstream, once that has been merged
-you can submit a backport with a proper upstream commit reference.
-
-Regards,
-
-Hans
-
-
-
-
-
+On Tue, Sep 17, 2024 at 12:39:55PM +0200, Lukas Bulwahn wrote:
+> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 > 
-> Pointer '&pdevs[i]' is dereferenced at x86_android_tablet_init()
-> after the referenced memory was deallocated by calling function
-> 'x86_android_tablet_cleanup()'.
+> Commit 5f1cda51107f ("platform/x86: intel_scu_wdt: Move intel_scu_wdt.h to
+> x86 subfolder") moves intel-mid_wdt.h in ./include/linux/platform_data into
+> the x86 subdirectory, but misses to adjust the INTEL MID PLATFORM section,
+> which is referring to this file.
 > 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> Hence, ./scripts/get_maintainer.pl --self-test=patterns complains about a
+> broken reference.
 > 
-> Fixes: 5eba0141206e ("platform/x86: x86-android-tablets: Add support for instantiating platform-devs")
-> Signed-off-by: Aleksandr Burakov <a.burakov@rosalinux.ru>
-> ---
->  drivers/platform/x86/x86-android-tablets.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/x86-android-tablets.c b/drivers/platform/x86/x86-android-tablets.c
-> index 9178076d9d7d..9838c5332201 100644
-> --- a/drivers/platform/x86/x86-android-tablets.c
-> +++ b/drivers/platform/x86/x86-android-tablets.c
-> @@ -1853,8 +1853,9 @@ static __init int x86_android_tablet_init(void)
->  	for (i = 0; i < pdev_count; i++) {
->  		pdevs[i] = platform_device_register_full(&dev_info->pdev_info[i]);
->  		if (IS_ERR(pdevs[i])) {
-> +			int ret = PTR_ERR(pdevs[i]);
->  			x86_android_tablet_cleanup();
-> -			return PTR_ERR(pdevs[i]);
-> +			return ret;
->  		}
->  	}
->  
+> Adjust the file entry to this header file movement.
+
+Ah, thanks!
+It was due to renase issue (initially the Intel MID MAINTAINERS patch was the last).
+
+FWIW,
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
