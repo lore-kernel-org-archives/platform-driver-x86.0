@@ -1,773 +1,300 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2043.outbound.protection.outlook.com [40.107.223.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f67.google.com (mail-pj1-f67.google.com [209.85.216.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB8CEAC6;
-	Wed, 18 Sep 2024 15:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726674624; cv=fail; b=jeoEykvftQaj6e/N2jcc2oakeVThexPeTETwLl5e6035BT32vLK3ZIk/A/v8BULc/2l8hsFHUdGBQS6BF+HfCzXqpIBtqS1BgFCw7fTX4P8dJRGgoudPpTC7rQ/YiLuupXW2zbP0TgfFPll8O0cWj5dYAR9IN+pfT4DwUVhsYso=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726674624; c=relaxed/simple;
-	bh=RoLQ/3Sl/ZZ8GlAPLohhCWszHbXi7VWU4xIg4tLEJKg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=IdBgiwfpTrAQgnfX4k6thmbJanL9zKZPb6Sw1hqnif87aZmyHv2RFapnL7qmHMt7yj2WroRjgAueJyYMhaMWupO2uUQHg6CR1uO48ltqfw88v+q6nvUXA2ji/wsUTqwlCSPHJwgL1orATuUoYIpN+I4iJ6Zxp7SJ41MurTfs3k0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=O+R0TPqL; arc=fail smtp.client-ip=40.107.223.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A46152790
+	for <platform-driver-x86@vger.kernel.org>; Wed, 18 Sep 2024 16:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.67
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726677483; cv=none; b=Lqq65tG7fyKu2Pzwk+s88XzqL5/Qyivi2xTSzs9UX4P/2b+DWvWSmNohOoZ0QNVvviRrPKQRwis5evqWO7Oxm9K0uXaoDuu1LYvDZXbnh5pKMfVe3fPpe3fFx4TpeNbstfgLgDfpDSrYGptQyoBWmikgS3h2lHDlKNB3P8c0fYg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726677483; c=relaxed/simple;
+	bh=ce9aNv/6C2GJknCHjNUwz5lyNRuHZ4ZViqqqUFzWb64=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CWdwYY7MbQWoEFooLehkloZtohdORD68YfUqgrmiErBLjKH6FZp9cXti7Y2OrYAhUlkLVGAQ6D8GrCwaYzdhfEKVa9ei9B/36eq/44n8Wn8APLGfNpzlELxx5hHypkcqZVOhm2RwiO53TdtYUOvocufCMn+pMpXxcZezsVsaC0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FCSFOm1F; arc=none smtp.client-ip=209.85.216.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="O+R0TPqL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=V0YxzDg9ak+mnDL1KyulDH2CXehwP5NGwRVy6n39wIsUbzV5ag42B+4K+BOCs5x5LLo0nvEckBr7+CcvoHY5+J6DD++qiOX26+SJWZ0b214O4sJElXpxnhOmuwJaYJ6ZyxWcbnpjwfSRTVNaDVxXEYDSSjmzPIl62ZdqBXhrdnBVp4eAlCr7WOi4apQ5SxVtjlOf31itC1cuPHiM4egmFIu2JlyOb/40G+xmGBL5jKULLpQqs/tnYkDvC95Y+YZH8oJSwPMiAaaB7azT9ac2fh9F47KBC+/hE1cxRYQQSDDCrFmaENMtm8vpihElfo4oHttXD1em/toG0wyjbTsYBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=H6yx9S09Va5DYy89EwfT+apO0VkQFcX46RboT6Hm3jg=;
- b=Hm0IX3UAPp1j9sCG31KCNf0j0GILUbc/wUNizKPsH5vNh9zPIA21YVJ34L4ZVYhDsUGAR+ExmIV/Bs6XrfNevsjGDVmVkMyEC8jM3dRRqjBjpJlj4DqOVsjHF8QrTmmOnBqdq7jvDNHqvjKyOgjgXpfVNM/3nUceIuZXZXP0DXocsFj3Xl3uU+cb4PQCLUjn7VIJL+608yvWTXLH4eTBI/Dqnj0puoJLHJszYUVFOZmK5NYaxlpRWDNt5Ljf6dwhca9tdR00usSny081txUQJSXeMgoJTsxli3LZN2FdTdhISvaBZAO7uMTSw6waCt4WP7OOCHbOUX7xf5BG9WsFvw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H6yx9S09Va5DYy89EwfT+apO0VkQFcX46RboT6Hm3jg=;
- b=O+R0TPqLrElOcuEeX5Brf3rGrfz9iHdn+9dFaHCgbvCUdLYXRA8bXHUaN530JYKlmTIlNxcnVZgPT+UgqBDenmGPrLmH1ESXHtsu5RMv1mvDW7zBT3/Y5Lrva8VlN3C41Oxv8woUQ94pUiJBPgw94QyQHW9Dh+C0VH/yvI1nvkw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SA1PR12MB8947.namprd12.prod.outlook.com (2603:10b6:806:386::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.17; Wed, 18 Sep
- 2024 15:50:20 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.7982.016; Wed, 18 Sep 2024
- 15:50:20 +0000
-Message-ID: <f521c423-62fd-4c03-91d3-3bf292ad1714@amd.com>
-Date: Wed, 18 Sep 2024 10:50:17 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/5] platform/x86: asus-wmi: deprecate bios features
-To: "Luke D. Jones" <luke@ljones.dev>, platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, corentin.chary@gmail.com
-References: <20240918094250.82430-1-luke@ljones.dev>
- <20240918094250.82430-6-luke@ljones.dev>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20240918094250.82430-6-luke@ljones.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0041.namprd04.prod.outlook.com
- (2603:10b6:806:120::16) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FCSFOm1F"
+Received: by mail-pj1-f67.google.com with SMTP id 98e67ed59e1d1-2d8fa2ca5b1so4687713a91.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Sep 2024 09:38:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1726677481; x=1727282281; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1PxC8U0NjD2xqlVsstp+uFG6OW9bTzrVCedh76/HBS0=;
+        b=FCSFOm1FGhfbkzmhFRpGRW13KSixJE3jKIl9Pkg5wH10rn8H3rhJXmxHlLXpS+vY4Y
+         xX671MYmtqxCkyQoxLskMqaWnzOYckkeOCZEQqrlGfueD7u+QhuCfO+rg+PP7w3f9NDs
+         zLU9PCkw8GwWskczukDDrq63C63vTY+hXxEV1F360BtVxYJfH4CsoBwpnxhfwu5Y0PTN
+         nK4PvcivY4wpWxmgx6/fODRwRX6qdXyBfa2w9XhtgyS4UhNygaHAwwaGeSNPaTkhGe3e
+         33oDwWs7h8heRgvVIvJHQN249gd5Mb5Z2q0vjSwhrZtI6FKtTPNmzazbQkdkbi7bGrvT
+         65LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726677481; x=1727282281;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1PxC8U0NjD2xqlVsstp+uFG6OW9bTzrVCedh76/HBS0=;
+        b=p78phNb6q3G3DqRQIyzt/zfQQsy5v85hZZ2PohbUktHGt2zP81WtPC6NmyW6SEQFXF
+         JKIQk8ZQqguKfPbd8134RaOCZgZ2faBgnpGF8kdsX2dXxKwPduwmUKtxmxIUvF4eLIlP
+         1ixkot7BT14mehHN6vYe+5viQpqZdKzVQQ670GmgPUvGgkIgx6bTJmolydS4+leSYzhU
+         m+xYEvCoJgkaO1dX7cMh+ImOyAKpSvZmeOZJG1OyFtd1fUnUim8tTmERTD/T5De4yvZs
+         iA3OCd5BSxda1HKKzppXywsctWGVeoB9BNwDbsl++d2sEP3gIemGeFhILnPB7YoXeRtl
+         Suuw==
+X-Gm-Message-State: AOJu0YweNYR09/CMfZnua5aAcje0laEG7gjwwZOXvDTckJ/49DEYzSrf
+	kaF2fD23Q6/MVGnutG3sGGIxeuPgHgr0KOdLOpKA8xzL/llABOoo
+X-Google-Smtp-Source: AGHT+IFiTLzUvBDuxDBpq5E4RgaZ/6K9KiKMckRdcIoGWxvaBorQP2vUSxJKdPX8l3Iu9dbz3NRJjQ==
+X-Received: by 2002:a17:90b:17c4:b0:2d3:c4cd:245f with SMTP id 98e67ed59e1d1-2dbb9e22e37mr23171515a91.17.1726677481141;
+        Wed, 18 Sep 2024 09:38:01 -0700 (PDT)
+Received: from [198.18.0.1] (n220246094186.netvigator.com. [220.246.94.186])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2dd60919b66sm1876355a91.45.2024.09.18.09.37.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Sep 2024 09:38:00 -0700 (PDT)
+Message-ID: <10f32b33-4c41-44a0-8f37-3cd1ae68a6ed@gmail.com>
+Date: Thu, 19 Sep 2024 00:37:58 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SA1PR12MB8947:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1f57560b-3c9c-40ff-b522-08dcd7f99942
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QU5ZOEtudVcyY2hkcVgzT2RwcXZiNG9qUzU5NjBwaGZiRGY0MEJYK2xnQmxs?=
- =?utf-8?B?VVNGSENPWUw4Q1BqeGhmWjR3TlJhR0pyQXByam9TWmVqczRnTHZBUkZ5d0lq?=
- =?utf-8?B?NVFSS1BuK1FTdVRzZHZFbmJ4ZHBaTHlCVWlWbnNHN3RFVDJvWndIeUhWcU5v?=
- =?utf-8?B?R3hhZVpNOTBJQ21kWGJVZWV5azRWWkRZV1NTN2F5OGRXSysyYlNTUW40dHM4?=
- =?utf-8?B?d003cU8ycCtFalo5dWo0KzZXS0RMUXB0RW1VeFJ4bzhZUEF5MldycmpTc3VG?=
- =?utf-8?B?bEZOdnl4Z1R1QVFjUFFVSm1DUjIzZGJWWmlrUGhlMzVJOUtkTnFnSlI2cEU2?=
- =?utf-8?B?cEJ4RThvZXhOSlplbG01L09wSGVFNUZCU0lyby92RnBwTlV4ZG83c01rZmJr?=
- =?utf-8?B?LzdreVY3TUQ2ekk0YkovdW53SnI0MW1aUmVBTXVOanlNdElVVTdDMXZ6VDZ4?=
- =?utf-8?B?ZUd4ZTNMb0pJc1hsR29xNzJvQzd2VzVWa0xDMk5FWGY1QzNHaHJlZ2tsd2xv?=
- =?utf-8?B?N216Yk53ZkEwNDVXOGlBM0xHSHhmT0hRVWZ3ZFd3UEZSWG1TMi82TnRDSGFX?=
- =?utf-8?B?VHpzL1Z1NTQxdlYxeHkvUzJGamlKbVlsOTFTYmZIeHVUT0U3M2pUc1NQMVdB?=
- =?utf-8?B?YmRteFUxMnFkc1NMVzVQaUdLSFJiT3FyNUVyMnFpTVR4Y0M4VmNlanp0SnpI?=
- =?utf-8?B?TTd5Q1RRTHVlOSt4V3c5OUY0NHNYdUNPOHhRUFMrOG00ODV6c2wyUGJQT0w2?=
- =?utf-8?B?UmcwOGFIR20vSEVVWExLalBldWJqYVkvakZSbnJGSEdxSkUreFZnM2VMeXdG?=
- =?utf-8?B?bnkzbHE0cEU4dC9RWDhYSnVIUHhxMlA4c0EvL3FwOEZPc3VqRHFrQndNRnFP?=
- =?utf-8?B?V1hiRERtby9FUUxOcEYvbDJZQUhvYzJjMHJBdFZSMzl2T2tNd01sSEw1ckF0?=
- =?utf-8?B?UFJrYzRzY2tJRHh4bEF2YWVSWEVxaCt1Sjl4SWVSM0ZOQloyemkxVlNiWXNQ?=
- =?utf-8?B?cUc5dVN0d2xPRzZXTjNTQWlSQm9yRG4zZTdhMlNYVnV4K0pXVmNMTEhWU1Ri?=
- =?utf-8?B?eGc2OHVFS0hKNVU5c2tRNGVhREE4MFVocVpUSUlJeXFqbDZmQ0lJVkFMYktF?=
- =?utf-8?B?bWJ3UXFyai8zcG4zbVIydGFBSXFWVWdRUmZJV2tKU1dwUmgzQmFaT3lTbmNy?=
- =?utf-8?B?VExwb25Fb0d3ZU1qNXpoWmtrZVphM0NPY1U1L1NBODQzRkxMU0V2WDBYd0to?=
- =?utf-8?B?c2s4UmxhRTNXcXJiT1lLNmNPb2FhVXBOR2Y1RG5GRFA1aXBKczJ5SjhRS0ps?=
- =?utf-8?B?U21XUnRucXJ1QytNKzZzSWdwMFNqTjg2TVJJdXRIcGpXa0JqUnF3c3UzRDJy?=
- =?utf-8?B?KzZqTTJGVkNINFZGZXVNN3ZvL3dUb0xqZ3lya0R5TzNlcDJSVEpPZHg5ZkU1?=
- =?utf-8?B?OTNmd1IrUHhqbWdKa09QZW1xamltQ1RoVDdCNVJQRUJGVHZIYUd6MWFRcUhZ?=
- =?utf-8?B?dWVUMjlXSHgwQnNVc3IzV3dsQ1JqTHg5eklueTZaams2bDlnLzVhak9vZnVW?=
- =?utf-8?B?LzgxeWtJQUNkZ2dhOXNEWmhoSGtGNW9nMEllYzJJZElQV2VVSTgvNTFUcFIz?=
- =?utf-8?B?czAyNkZVTS9GYkNnSFYySXBpWEQ1Uis3VnFjZjJCM29uS3U5MU9vSXhhMFZF?=
- =?utf-8?B?bFBrak5tZFQ3b1VueTVKNDFNY0NrWnB1aFZDZjkyWlMyLzV4S3RKRm1Jcisw?=
- =?utf-8?B?QUdWeE85NEhwMTh4VkVFVzRBY25WeDVFbllLazNvNFYxdzAyVjVMTkNvNzJJ?=
- =?utf-8?B?TmYzTnRObHg2ZVk0bHNQUT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NXBjNXQwUExSZ1VyQ2g0ZjJXZDFFMGVvdFNsU29jT1lZcVhnaEdvVTVpOVU3?=
- =?utf-8?B?VTkzRndIdFI1Ry9YODRnZnlKN0hlSTN2QzhaYVNINHFmUDROVWkwb2Q4R0xD?=
- =?utf-8?B?bVVqeksvSm1SWTM1VXA2UFE0Zy8xc2RqYW9GYkRDU25iTDdpZFhib0Zub1ZL?=
- =?utf-8?B?MGkzUDBXaStvdTdVT1huQUdBK2VTRGlKZDZJZUlBNW1ScThLYk9aVHgvZ1oy?=
- =?utf-8?B?K3o2ZGJsSVNjcFdyOW5MY2NHeUNoR3R6aXB0WnJ4Z2daSnk0R0IrbWQ4UVFz?=
- =?utf-8?B?eWFnSkQyY2o2MkhXZ1FFbGsrKzlMVUpCWU9GQWhKYXQwTjZXa0g1QjdCelJx?=
- =?utf-8?B?dzhqdzE5elNrVVVIbWZncEt5K1pFeHI4c082MGFTdG1tWk16b2pQQUJIWXNo?=
- =?utf-8?B?QWdjVGlqWkxnbUd6SHlPN3p0MXVxTlhRdXJSNVZPQ1ZxUTlOam9yMHRxd2hL?=
- =?utf-8?B?Sk5pNHA0ZFU0NTJMcTZnbG9uUXVwMm94cDQ0cFhGZzU3bXhQak85b0ptdWZV?=
- =?utf-8?B?Vks0b1A1ck0xemluQUo2aU9zYUh0TkZOZ3VRVVVuVkwzY3RsMnF1NjNGYWp2?=
- =?utf-8?B?T1drOXBQWVJVVG5hbm9oQlUrRG1CN2hJaklJWHJoWnhCb0dKS1FubW56QVE2?=
- =?utf-8?B?LzZzbjQySGdCUkhUVFhUekxzRnJmWmdpU0QvZTJpaDZvTkc2ZGIrOTNiWSto?=
- =?utf-8?B?eXkrbmQzYllTQTc3N0RKaGRYd1RRbnVhNlVjMGhiUmdpSE9oeGNTN21neHJU?=
- =?utf-8?B?V25id0JKOXN2MjJKQWJuMlFmdjlEMkp2cEFKcHZYV1U2T1BhZE9tK3Q1NXBX?=
- =?utf-8?B?UU5OZENLbGZjK1A0YUVEQXZTTHViN0xUV0g4R2ljazQyVVdqaVFJZUx6UlhE?=
- =?utf-8?B?bXhIYTZXYW5VeVZZQWcxN3IzalVuK1lXdW91dGdlY0o4cFBCaUJWUEFzT3JP?=
- =?utf-8?B?SHdRcGZ4eVIrbFpxbUtWZFErOFpwM0c4Qldhc3Jxd05ER2VqZ1Z0Ni8vLzlS?=
- =?utf-8?B?R2Vncit2NkpmNmtFaXgxemljQSswcklXUEp1UnZVQUNwclpkaXM5NVNEYWpP?=
- =?utf-8?B?YkM1QmZRWW0rNlY4MzhFeVBRejNJWFp0bWZFNTd2UjVhZlJJd29WS0NIZXJW?=
- =?utf-8?B?aUV5Ymp3NERoQm14Y0hnbzhuZHd3Wk5EcEFGN3MxVG5aWDFlVlF2M01aODBN?=
- =?utf-8?B?ckRPTmNMTUZMQjM5ZTBjZTkzOThTdmJMeGNENWtXd3oyaWtiamVrTURjN2xR?=
- =?utf-8?B?RGVodzNMMVFHUHdkeTc4bUhKYXhWZmcxNGhoa2xUTEptOUJMZGhydGtmbFND?=
- =?utf-8?B?QTBWVkxsQUNUcHRYYmIzNldCUVhqTkpNRjVMNlhyd0tCbzhxNE1hbC9kYWRW?=
- =?utf-8?B?Q1FJL050c2U3RUdpRFJueWkwU0pjU2c0Z3cwNXlZLzNLWE0rVGlvemxpOHly?=
- =?utf-8?B?UWZieWt6VTF0ZUxaNVkwT0lwd1l4ZW42WHpOR3ZFYjVCMjl6cUFOcGJoWDRZ?=
- =?utf-8?B?VFZubkMydzA5ZkZ6VzVBK0VXbDNnKy9IakxxREZMN2F3MHdERE9qbUlCRXpq?=
- =?utf-8?B?L21HNnBERC8vak5SZytQQ3gvendoZTZDQkNZd2l6VlR6SGNyMm9VQ0RIUWRC?=
- =?utf-8?B?SUlDK2NaUFBWU09POXA5QnNaMFZYQlY2TmpxNERxRGs1dG02c1RINmgrUk9T?=
- =?utf-8?B?MWpwWnVKNC9zaWRtZWZBcVVHWHRnelBTZC9aOGdYNUt2cGtyc1FrQ2l0dmsr?=
- =?utf-8?B?S1NLVU93Vm4vUHBOaWtybHl5RysyNi9LMHlxRHgyWVRIR0dVZWovdnlIVUZN?=
- =?utf-8?B?ZXhQb2NmcER6cTZGOGdtYVdIT0w3OFhoWjIvdUcybFJrL2xlZ3J4Yk1vRjJj?=
- =?utf-8?B?R29VcFdBdE81VThLblgzb2tCMnZKcVFrZXV1Tk1XaFhJb3JtMnhXMjl4aEhr?=
- =?utf-8?B?d3VGVm5qZGlHNEh2dnZFM3FYNTBmT0xWd3VRcXg0ZStFVUNEUzdWR0x2QVhR?=
- =?utf-8?B?Q2R4WFpQNGhicXpqWXErdlhxZWhPWkpqMkRwNUoxUG81ZW81ZzVzUC9JbXJu?=
- =?utf-8?B?bzB6OURHcUlCd25RK1ZHakxiV0JuRWZPOUxwZ2l0Um9EeEJEWTl4azk3SlRK?=
- =?utf-8?Q?ibh/9wZ0VE+lfmM9D3l2OVA50?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f57560b-3c9c-40ff-b522-08dcd7f99942
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2024 15:50:19.9595
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sAyeaqyEEqDnW8bDOPweTWuGavjaBh4K1wm/u7EuiPk3uf34Or8tEdSo6sPcG9D1XRe0PM9WrqQgt0VTR2ue3w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8947
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: ISST: Fix the KASAN report
+ slab-out-of-bounds bug
+To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>,
+ hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org
+References: <20240917180350.4061-1-zachwade.k@gmail.com>
+ <c983ec3aeefcabc080f51958eb11275c84bb9506.camel@linux.intel.com>
+From: Zach Wade <zachwade.k@gmail.com>
+In-Reply-To: <c983ec3aeefcabc080f51958eb11275c84bb9506.camel@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 9/18/2024 04:42, Luke D. Jones wrote:
-> With the existence of the asus-bioscfg module the attributes no-longer
-> need to live under the /sys/devices/platform/asus-nb-wmi/ path.
+
+
+> On 2024/9/18 21:48, srinivas pandruvada wrote:
+>> Hi Wade,
+>> 
+>> On Wed, 2024-09-18 at 02:03 +0800, Zach Wade wrote:
+>>> In my vmware virtualization environment,
+>> 
+>> How are you using this driver is virtualized environment?
+>> Did you assign this PCI device to particular VM?
+
+Hi pandruvada，
+Sorry, I misread my previous configuration. Please update the virtual
+machine configuration to 32 core, 64GB. I have directly connected two
+physical hard drives to the virtual machine.Unfortunately, the lspci
+-vvs "PCI ID" did not detect any PCI devicesusing the isst_if_max_msr 
+driver.
+
+>> 
+>> SST functions are not supported in virtualized environment as PM
+>> functions can't be isolated (There may be some private implementation
+>> where they can assign all CPUs in a package to VM). Even if you assign
+>> this device, there are other MSRs needs to be virtualized.
+>> 
+>> Here on the virtualized environment, seems the
+>> topology_physical_package_id() (from CPU APIC ID in non virtualized
+>> case) is assigned some big value, which is more than max packages in
+>> the system.
+>> 
+>> But your fix is good as topology_logical_package_id() should be less
+>> than value returned by topology_max_packages() and hence avoid this
+>> issue.
+>> 
+>> Can you confirm the value returned by topology_logical_package_id() and
+>> topology_physical_package_id()?
+
+cat /proc/cpuinfo | grep "physical id"
+physical id     : 0
+physical id     : 2
+physical id     : 4
+......
+physical id     : 58
+physical id     : 60
+physical id     : 62
+
+I calculated topology_max_packages() * sizeof (* isst_pkg.info) in 
+isst_if_cpu_info_init, and focused on pkg_id and bus_no in 
+_isst_if_get_pci_dev.
+The printk printed result is as follows:
+[   51.879700] Allocated size: 512
+[   51.880148] pkg_id: 0, bus_no: 0
+[   51.881242] pkg_id: 0, bus_no: 1
+[   51.884209] pkg_id: 2, bus_no: 0
+[   51.884571] pkg_id: 2, bus_no: 1
+[   51.884931] pkg_id: 4, bus_no: 0
+[   51.885313] pkg_id: 4, bus_no: 1
+......
+[   51.899134] pkg_id: 28, bus_no: 0
+[   51.899511] pkg_id: 28, bus_no: 1
+[   51.899909] pkg_id: 30, bus_no: 0
+[   51.901012] pkg_id: 30, bus_no: 1
+[   51.902160] 
+==================================================================
+[   51.902936] BUG: KASAN: slab-out-of-bounds in 
+_isst_if_get_pci_dev.cold+0xde/0xe4 [isst_if_common]
+[   51.982707] 
+==================================================================
+[   51.985453] pkg_id: 32, bus_no: 0
+[   51.986569] pkg_id: 32, bus_no: 1
+[   51.988501] pkg_id: 34, bus_no: 0
+[   51.989616] pkg_id: 34, bus_no: 1
+......
+[   52.059749] pkg_id: 58, bus_no: 0
+[   52.062331] pkg_id: 58, bus_no: 1
+[   52.066039] pkg_id: 60, bus_no: 0
+[   52.068503] pkg_id: 60, bus_no: 1
+[   52.072018] pkg_id: 62, bus_no: 0
+[   52.074375] pkg_id: 62, bus_no: 1
+
+>> 
+>> We can change commit description based on that.
+>> 
+>> Thanks,
+>> Srinivas
+>> 
+
+I think the changes are minor, so no more content was added to the patch.
+If you think it needs to be added, I am happy for you to help supplement
+it.
+Thanks,
+Zach
+
+>>   after loading the
+>> isst_if_common and isst_if_mbox_msr modules on the 64 core, the kasan
+>> report was triggered.
+>> After consulting the kernel manual
+>> (Documentation/arch/x86/topology.rst),
+>> I think in _isst_if_get_pci_dev, topology_physical_package_id should
+>> be
+>> replaced with topology_logical_package_id.
+>>
+>> kasan bug report:
+>> [   19.411889]
+>> ==================================================================
+>> [   19.413702] BUG: KASAN: slab-out-of-bounds in
+>> _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
+>> [   19.415634] Read of size 8 at addr ffff888829e65200 by task
+>> cpuhp/16/113
+>> [   19.417368]
+>> [   19.418627] CPU: 16 PID: 113 Comm: cpuhp/16 Tainted: G
+>> E      6.9.0 #10
+>> [   19.420435] Hardware name: VMware, Inc. VMware20,1/440BX Desktop
+>> Reference Platform, BIOS VMW201.00V.20192059.B64.2207280713
+>> 07/28/2022
+>> [   19.422687] Call Trace:
+>> [   19.424091]  <TASK>
+>> [   19.425448]  dump_stack_lvl+0x5d/0x80
+>> [   19.426963]  ? _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
+>> [   19.428694]  print_report+0x19d/0x52e
+>> [   19.430206]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
+>> [   19.431837]  ? _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
+>> [   19.433539]  kasan_report+0xf0/0x170
+>> [   19.435019]  ? _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
+>> [   19.436709]  _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
+>> [   19.438379]  ? __pfx_sched_clock_cpu+0x10/0x10
+>> [   19.439910]  isst_if_cpu_online+0x406/0x58f [isst_if_common]
+>> [   19.441573]  ? __pfx_isst_if_cpu_online+0x10/0x10 [isst_if_common]
+>> [   19.443263]  ? ttwu_queue_wakelist+0x2c1/0x360
+>> [   19.444797]  cpuhp_invoke_callback+0x221/0xec0
+>> [   19.446337]  cpuhp_thread_fun+0x21b/0x610
+>> [   19.447814]  ? __pfx_cpuhp_thread_fun+0x10/0x10
+>> [   19.449354]  smpboot_thread_fn+0x2e7/0x6e0
+>> [   19.450859]  ? __pfx_smpboot_thread_fn+0x10/0x10
+>> [   19.452405]  kthread+0x29c/0x350
+>> [   19.453817]  ? __pfx_kthread+0x10/0x10
+>> [   19.455253]  ret_from_fork+0x31/0x70
+>> [   19.456685]  ? __pfx_kthread+0x10/0x10
+>> [   19.458114]  ret_from_fork_asm+0x1a/0x30
+>> [   19.459573]  </TASK>
+>> [   19.460853]
+>> [   19.462055] Allocated by task 1198:
+>> [   19.463410]  kasan_save_stack+0x30/0x50
+>> [   19.464788]  kasan_save_track+0x14/0x30
+>> [   19.466139]  __kasan_kmalloc+0xaa/0xb0
+>> [   19.467465]  __kmalloc+0x1cd/0x470
+>> [   19.468748]  isst_if_cdev_register+0x1da/0x350 [isst_if_common]
+>> [   19.470233]  isst_if_mbox_init+0x108/0xff0 [isst_if_mbox_msr]
+>> [   19.471670]  do_one_initcall+0xa4/0x380
+>> [   19.472903]  do_init_module+0x238/0x760
+>> [   19.474105]  load_module+0x5239/0x6f00
+>> [   19.475285]  init_module_from_file+0xd1/0x130
+>> [   19.476506]  idempotent_init_module+0x23b/0x650
+>> [   19.477725]  __x64_sys_finit_module+0xbe/0x130
+>> [   19.476506]  idempotent_init_module+0x23b/0x650
+>> [   19.477725]  __x64_sys_finit_module+0xbe/0x130
+>> [   19.478920]  do_syscall_64+0x82/0x160
+>> [   19.480036]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>> [   19.481292]
+>> [   19.482205] The buggy address belongs to the object at
+>> ffff888829e65000
+>>   which belongs to the cache kmalloc-512 of size 512
+>> [   19.484818] The buggy address is located 0 bytes to the right of
+>>   allocated 512-byte region [ffff888829e65000, ffff888829e65200)
+>> [   19.487447]
+>> [   19.488328] The buggy address belongs to the physical page:
+>> [   19.489569] page: refcount:1 mapcount:0 mapping:0000000000000000
+>> index:0xffff888829e60c00 pfn:0x829e60
+>> [   19.491140] head: order:3 entire_mapcount:0 nr_pages_mapped:0
+>> pincount:0
+>> [   19.492466] anon flags:
+>> 0x57ffffc0000840(slab|head|node=1|zone=2|lastcpupid=0x1fffff)
+>> [   19.493914] page_type: 0xffffffff()
+>> [   19.494988] raw: 0057ffffc0000840 ffff88810004cc80
+>> 0000000000000000 0000000000000001
+>> [   19.496451] raw: ffff888829e60c00 0000000080200018
+>> 00000001ffffffff 0000000000000000
+>> [   19.497906] head: 0057ffffc0000840 ffff88810004cc80
+>> 0000000000000000 0000000000000001
+>> [   19.499379] head: ffff888829e60c00 0000000080200018
+>> 00000001ffffffff 0000000000000000
+>> [   19.500844] head: 0057ffffc0000003 ffffea0020a79801
+>> ffffea0020a79848 00000000ffffffff
+>> [   19.502316] head: 0000000800000000 0000000000000000
+>> 00000000ffffffff 0000000000000000
+>> [   19.503784] page dumped because: kasan: bad access detected
+>> [   19.505058]
+>> [   19.505970] Memory state around the buggy address:
+>> [   19.507172]  ffff888829e65100: 00 00 00 00 00 00 00 00 00 00 00 00
+>> 00 00 00 00
+>> [   19.508599]  ffff888829e65180: 00 00 00 00 00 00 00 00 00 00 00 00
+>> 00 00 00 00
+>> [   19.510013] >ffff888829e65200: fc fc fc fc fc fc fc fc fc fc fc fc
+>> fc fc fc fc
+>> [   19.510014]                    ^
+>> [   19.510016]  ffff888829e65280: fc fc fc fc fc fc fc fc fc fc fc fc
+>> fc fc fc fc
+>> [   19.510018]  ffff888829e65300: fc fc fc fc fc fc fc fc fc fc fc fc
+>> fc fc fc fc
+>> [   19.515367]
+>> ==================================================================
+>>
+>> Fixes: 9a1aac8a96dc ("platform/x86: ISST: PUNIT device mapping with
+>> Sub-NUMA clustering")
+>> Signed-off-by: Zach Wade <zachwade.k@gmail.com>
+>> ---
+>>   drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git
+>> a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+>> b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+>> index 10e21563fa46..80654aacd5bd 100644
+>> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+>> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+>> @@ -316,7 +316,7 @@ static struct pci_dev *_isst_if_get_pci_dev(int
+>> cpu, int bus_no, int dev, int fn
+>>              cpu >= nr_cpu_ids || cpu >= num_possible_cpus())
+>>                  return NULL;
+>>   
+>> -       pkg_id = topology_physical_package_id(cpu);
+>> +       pkg_id = topology_logical_package_id(cpu);
+>>   
+>>          bus_number = isst_cpu_info[cpu].bus_info[bus_no];
+>>          if (bus_number < 0)
 > 
-> Deprecate all those that were implemented in asus-bioscfg with the goal
-> of removing them fully in the next LTS cycle.
-> 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> ---
->   .../ABI/testing/sysfs-platform-asus-wmi       |  17 +++
->   drivers/platform/x86/Kconfig                  |   8 ++
->   drivers/platform/x86/asus-wmi.c               | 134 ++++++++++++++----
->   3 files changed, 129 insertions(+), 30 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> index 28144371a0f1..765d50b0d9df 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> @@ -63,6 +63,7 @@ Date:		Aug 2022
->   KernelVersion:	6.1
->   Contact:	"Luke Jones" <luke@ljones.dev>
->   Description:
-> +        DEPRECATED, WILL BE REMOVED SOON
->   		Switch the GPU hardware MUX mode. Laptops with this feature can
->   		can be toggled to boot with only the dGPU (discrete mode) or in
->   		standard Optimus/Hybrid mode. On switch a reboot is required:
-> @@ -75,6 +76,7 @@ Date:		Aug 2022
->   KernelVersion:	5.17
->   Contact:	"Luke Jones" <luke@ljones.dev>
->   Description:
-> +        DEPRECATED, WILL BE REMOVED SOON
->   		Disable discrete GPU:
->   			* 0 - Enable dGPU,
->   			* 1 - Disable dGPU
-> @@ -84,6 +86,7 @@ Date:		Aug 2022
->   KernelVersion:	5.17
->   Contact:	"Luke Jones" <luke@ljones.dev>
->   Description:
-> +        DEPRECATED, WILL BE REMOVED SOON
->   		Enable the external GPU paired with ROG X-Flow laptops.
->   		Toggling this setting will also trigger ACPI to disable the dGPU:
->   
-> @@ -95,6 +98,7 @@ Date:		Aug 2022
->   KernelVersion:	5.17
->   Contact:	"Luke Jones" <luke@ljones.dev>
->   Description:
-> +        DEPRECATED, WILL BE REMOVED SOON
->   		Enable an LCD response-time boost to reduce or remove ghosting:
->   			* 0 - Disable,
->   			* 1 - Enable
-> @@ -104,6 +108,7 @@ Date:		Jun 2023
->   KernelVersion:	6.5
->   Contact:	"Luke Jones" <luke@ljones.dev>
->   Description:
-> +        DEPRECATED, WILL BE REMOVED SOON
->   		Get the current charging mode being used:
->   			* 1 - Barrel connected charger,
->   			* 2 - USB-C charging
-> @@ -114,6 +119,7 @@ Date:		Jun 2023
->   KernelVersion:	6.5
->   Contact:	"Luke Jones" <luke@ljones.dev>
->   Description:
-> +        DEPRECATED, WILL BE REMOVED SOON
->   		Show if the egpu (XG Mobile) is correctly connected:
->   			* 0 - False,
->   			* 1 - True
-> @@ -123,6 +129,7 @@ Date:		Jun 2023
->   KernelVersion:	6.5
->   Contact:	"Luke Jones" <luke@ljones.dev>
->   Description:
-> +        DEPRECATED, WILL BE REMOVED SOON
->   		Change the mini-LED mode:
->   			* 0 - Single-zone,
->   			* 1 - Multi-zone
-> @@ -133,6 +140,7 @@ Date:		Apr 2024
->   KernelVersion:	6.10
->   Contact:	"Luke Jones" <luke@ljones.dev>
->   Description:
-> +        DEPRECATED, WILL BE REMOVED SOON
->   		List the available mini-led modes.
->   
->   What:		/sys/devices/platform/<platform>/ppt_pl1_spl
-> @@ -140,6 +148,7 @@ Date:		Jun 2023
->   KernelVersion:	6.5
->   Contact:	"Luke Jones" <luke@ljones.dev>
->   Description:
-> +        DEPRECATED, WILL BE REMOVED SOON
->   		Set the Package Power Target total of CPU: PL1 on Intel, SPL on AMD.
->   		Shown on Intel+Nvidia or AMD+Nvidia based systems:
->   
-> @@ -150,6 +159,7 @@ Date:		Jun 2023
->   KernelVersion:	6.5
->   Contact:	"Luke Jones" <luke@ljones.dev>
->   Description:
-> +        DEPRECATED, WILL BE REMOVED SOON
->   		Set the Slow Package Power Tracking Limit of CPU: PL2 on Intel, SPPT,
->   		on AMD. Shown on Intel+Nvidia or AMD+Nvidia based systems:
->   
-> @@ -160,6 +170,7 @@ Date:		Jun 2023
->   KernelVersion:	6.5
->   Contact:	"Luke Jones" <luke@ljones.dev>
->   Description:
-> +        DEPRECATED, WILL BE REMOVED SOON
->   		Set the Fast Package Power Tracking Limit of CPU. AMD+Nvidia only:
->   			* min=5, max=250
->   
-> @@ -168,6 +179,7 @@ Date:		Jun 2023
->   KernelVersion:	6.5
->   Contact:	"Luke Jones" <luke@ljones.dev>
->   Description:
-> +        DEPRECATED, WILL BE REMOVED SOON
->   		Set the APU SPPT limit. Shown on full AMD systems only:
->   			* min=5, max=130
->   
-> @@ -176,6 +188,7 @@ Date:		Jun 2023
->   KernelVersion:	6.5
->   Contact:	"Luke Jones" <luke@ljones.dev>
->   Description:
-> +        DEPRECATED, WILL BE REMOVED SOON
->   		Set the platform SPPT limit. Shown on full AMD systems only:
->   			* min=5, max=130
->   
-> @@ -184,6 +197,7 @@ Date:		Jun 2023
->   KernelVersion:	6.5
->   Contact:	"Luke Jones" <luke@ljones.dev>
->   Description:
-> +        DEPRECATED, WILL BE REMOVED SOON
->   		Set the dynamic boost limit of the Nvidia dGPU:
->   			* min=5, max=25
->   
-> @@ -192,6 +206,7 @@ Date:		Jun 2023
->   KernelVersion:	6.5
->   Contact:	"Luke Jones" <luke@ljones.dev>
->   Description:
-> +        DEPRECATED, WILL BE REMOVED SOON
->   		Set the target temperature limit of the Nvidia dGPU:
->   			* min=75, max=87
->   
-> @@ -200,6 +215,7 @@ Date:		Apr 2024
->   KernelVersion:	6.10
->   Contact:	"Luke Jones" <luke@ljones.dev>
->   Description:
-> +        DEPRECATED, WILL BE REMOVED SOON
->   		Set if the BIOS POST sound is played on boot.
->   			* 0 - False,
->   			* 1 - True
-> @@ -209,6 +225,7 @@ Date:		Apr 2024
->   KernelVersion:	6.10
->   Contact:	"Luke Jones" <luke@ljones.dev>
->   Description:
-> +        DEPRECATED, WILL BE REMOVED SOON
->   		Set if the MCU can go in to low-power mode on system sleep
->   			* 0 - False,
->   			* 1 - True
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index d13c4085c228..01f780d53793 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -301,6 +301,14 @@ config ASUS_WMI
->   	  To compile this driver as a module, choose M here: the module will
->   	  be called asus-wmi.
->   
-> +config ASUS_WMI_BIOS
-
-Elsewhere in the kernel they add _DEPRECATED to the Kconfig name.  Thoughts?
-
-> +	bool "BIOS option support in WMI platform (DEPRECATED)"
-> +	depends on ASUS_WMI
-> +	help
-> +	  Say Y to expose the configurable BIOS options through the asus-wmi
-> +	  driver. This can be used with or without the new asus-bios driver as
-
-Isn't it asus-armoury?
-
-> +	  the options are the same but the asus-bios driver has more features.
-> +
->   config ASUS_NB_WMI
->   	tristate "Asus Notebook WMI Driver"
->   	depends on ASUS_WMI
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index d265ef0d7aba..edb00485e8c3 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -276,11 +276,12 @@ struct asus_wmi {
->   	u8 fan_boost_mode_mask;
->   	u8 fan_boost_mode;
->   
-> +
-> +	/* Tunables provided by ASUS for gaming laptops */
-> +	#if IS_ENABLED(CONFIG_ASUS_WMI_BIOS)
->   	bool egpu_enable_available;
->   	bool dgpu_disable_available;
->   	u32 gpu_mux_dev;
-> -
-> -	/* Tunables provided by ASUS for gaming laptops */
->   	u32 ppt_pl2_sppt;
->   	u32 ppt_pl1_spl;
->   	u32 ppt_apu_sppt;
-> @@ -288,6 +289,9 @@ struct asus_wmi {
->   	u32 ppt_fppt;
->   	u32 nv_dynamic_boost;
->   	u32 nv_temp_target;
-> +	bool panel_overdrive_available;
-> +	u32 mini_led_dev_id;
-> +	#endif
->   
->   	u32 kbd_rgb_dev;
->   	bool kbd_rgb_state_available;
-> @@ -306,9 +310,6 @@ struct asus_wmi {
->   	// The RSOC controls the maximum charging percentage.
->   	bool battery_rsoc_available;
->   
-> -	bool panel_overdrive_available;
-> -	u32 mini_led_dev_id;
-> -
->   	struct hotplug_slot hotplug_slot;
->   	struct mutex hotplug_lock;
->   	struct mutex wmi_lock;
-> @@ -322,6 +323,15 @@ struct asus_wmi {
->   	struct asus_wmi_driver *driver;
->   };
->   
-> +#if IS_ENABLED(CONFIG_ASUS_WMI_BIOS)
-> +static void asus_wmi_show_deprecated(void)
-> +{
-> +	pr_notice_once("Accessing attributes through /sys/bus/platform/asus_wmi "
-> +		"is deprecated and will be removed in a future release. Please "
-> +		"switch over to /sys/class/firmware_attributes.\n");
-> +}
-> +#endif
-> +
->   /* WMI ************************************************************************/
->   
->   static int asus_wmi_evaluate_method3(u32 method_id,
-> @@ -720,6 +730,7 @@ static void asus_wmi_tablet_mode_get_state(struct asus_wmi *asus)
->   }
->   
->   /* Charging mode, 1=Barrel, 2=USB ******************************************/
-> +#if IS_ENABLED(CONFIG_ASUS_WMI_BIOS)
->   static ssize_t charge_mode_show(struct device *dev,
->   				   struct device_attribute *attr, char *buf)
->   {
-> @@ -730,12 +741,16 @@ static ssize_t charge_mode_show(struct device *dev,
->   	if (result < 0)
->   		return result;
->   
-> +	asus_wmi_show_deprecated();
-> +
->   	return sysfs_emit(buf, "%d\n", value & 0xff);
->   }
->   
->   static DEVICE_ATTR_RO(charge_mode);
-> +#endif
->   
->   /* dGPU ********************************************************************/
-> +#if IS_ENABLED(CONFIG_ASUS_WMI_BIOS)
->   static ssize_t dgpu_disable_show(struct device *dev,
->   				   struct device_attribute *attr, char *buf)
->   {
-> @@ -746,6 +761,8 @@ static ssize_t dgpu_disable_show(struct device *dev,
->   	if (result < 0)
->   		return result;
->   
-> +	asus_wmi_show_deprecated();
-> +
->   	return sysfs_emit(buf, "%d\n", result);
->   }
->   
-> @@ -799,8 +816,10 @@ static ssize_t dgpu_disable_store(struct device *dev,
->   	return count;
->   }
->   static DEVICE_ATTR_RW(dgpu_disable);
-> +#endif
->   
->   /* eGPU ********************************************************************/
-> +#if IS_ENABLED(CONFIG_ASUS_WMI_BIOS)
->   static ssize_t egpu_enable_show(struct device *dev,
->   				   struct device_attribute *attr, char *buf)
->   {
-> @@ -811,6 +830,8 @@ static ssize_t egpu_enable_show(struct device *dev,
->   	if (result < 0)
->   		return result;
->   
-> +	asus_wmi_show_deprecated();
-> +
->   	return sysfs_emit(buf, "%d\n", result);
->   }
->   
-> @@ -867,8 +888,10 @@ static ssize_t egpu_enable_store(struct device *dev,
->   	return count;
->   }
->   static DEVICE_ATTR_RW(egpu_enable);
-> +#endif
->   
->   /* Is eGPU connected? *********************************************************/
-> +#if IS_ENABLED(CONFIG_ASUS_WMI_BIOS)
->   static ssize_t egpu_connected_show(struct device *dev,
->   				   struct device_attribute *attr, char *buf)
->   {
-> @@ -879,12 +902,16 @@ static ssize_t egpu_connected_show(struct device *dev,
->   	if (result < 0)
->   		return result;
->   
-> +	asus_wmi_show_deprecated();
-> +
->   	return sysfs_emit(buf, "%d\n", result);
->   }
->   
->   static DEVICE_ATTR_RO(egpu_connected);
-> +#endif
->   
->   /* gpu mux switch *************************************************************/
-> +#if IS_ENABLED(CONFIG_ASUS_WMI_BIOS)
->   static ssize_t gpu_mux_mode_show(struct device *dev,
->   				 struct device_attribute *attr, char *buf)
->   {
-> @@ -895,6 +922,8 @@ static ssize_t gpu_mux_mode_show(struct device *dev,
->   	if (result < 0)
->   		return result;
->   
-> +	asus_wmi_show_deprecated();
-> +
->   	return sysfs_emit(buf, "%d\n", result);
->   }
->   
-> @@ -953,6 +982,7 @@ static ssize_t gpu_mux_mode_store(struct device *dev,
->   	return count;
->   }
->   static DEVICE_ATTR_RW(gpu_mux_mode);
-> +#endif
->   
->   /* TUF Laptop Keyboard RGB Modes **********************************************/
->   static ssize_t kbd_rgb_mode_store(struct device *dev,
-> @@ -1076,6 +1106,7 @@ static const struct attribute_group *kbd_rgb_mode_groups[] = {
->   };
->   
->   /* Tunable: PPT: Intel=PL1, AMD=SPPT *****************************************/
-> +#if IS_ENABLED(CONFIG_ASUS_WMI_BIOS)
->   static ssize_t ppt_pl2_sppt_store(struct device *dev,
->   				    struct device_attribute *attr,
->   				    const char *buf, size_t count)
-> @@ -1114,6 +1145,8 @@ static ssize_t ppt_pl2_sppt_show(struct device *dev,
->   {
->   	struct asus_wmi *asus = dev_get_drvdata(dev);
->   
-> +	asus_wmi_show_deprecated();
-> +
->   	return sysfs_emit(buf, "%u\n", asus->ppt_pl2_sppt);
->   }
->   static DEVICE_ATTR_RW(ppt_pl2_sppt);
-> @@ -1156,6 +1189,8 @@ static ssize_t ppt_pl1_spl_show(struct device *dev,
->   {
->   	struct asus_wmi *asus = dev_get_drvdata(dev);
->   
-> +	asus_wmi_show_deprecated();
-> +
->   	return sysfs_emit(buf, "%u\n", asus->ppt_pl1_spl);
->   }
->   static DEVICE_ATTR_RW(ppt_pl1_spl);
-> @@ -1199,6 +1234,8 @@ static ssize_t ppt_fppt_show(struct device *dev,
->   {
->   	struct asus_wmi *asus = dev_get_drvdata(dev);
->   
-> +	asus_wmi_show_deprecated();
-> +
->   	return sysfs_emit(buf, "%u\n", asus->ppt_fppt);
->   }
->   static DEVICE_ATTR_RW(ppt_fppt);
-> @@ -1242,6 +1279,8 @@ static ssize_t ppt_apu_sppt_show(struct device *dev,
->   {
->   	struct asus_wmi *asus = dev_get_drvdata(dev);
->   
-> +	asus_wmi_show_deprecated();
-> +
->   	return sysfs_emit(buf, "%u\n", asus->ppt_apu_sppt);
->   }
->   static DEVICE_ATTR_RW(ppt_apu_sppt);
-> @@ -1285,6 +1324,8 @@ static ssize_t ppt_platform_sppt_show(struct device *dev,
->   {
->   	struct asus_wmi *asus = dev_get_drvdata(dev);
->   
-> +	asus_wmi_show_deprecated();
-> +
->   	return sysfs_emit(buf, "%u\n", asus->ppt_platform_sppt);
->   }
->   static DEVICE_ATTR_RW(ppt_platform_sppt);
-> @@ -1328,6 +1369,8 @@ static ssize_t nv_dynamic_boost_show(struct device *dev,
->   {
->   	struct asus_wmi *asus = dev_get_drvdata(dev);
->   
-> +	asus_wmi_show_deprecated();
-> +
->   	return sysfs_emit(buf, "%u\n", asus->nv_dynamic_boost);
->   }
->   static DEVICE_ATTR_RW(nv_dynamic_boost);
-> @@ -1371,11 +1414,15 @@ static ssize_t nv_temp_target_show(struct device *dev,
->   {
->   	struct asus_wmi *asus = dev_get_drvdata(dev);
->   
-> +	asus_wmi_show_deprecated();
-> +
->   	return sysfs_emit(buf, "%u\n", asus->nv_temp_target);
->   }
->   static DEVICE_ATTR_RW(nv_temp_target);
-> +#endif
->   
->   /* Ally MCU Powersave ********************************************************/
-> +#if IS_ENABLED(CONFIG_ASUS_WMI_BIOS)
->   static ssize_t mcu_powersave_show(struct device *dev,
->   				   struct device_attribute *attr, char *buf)
->   {
-> @@ -1386,6 +1433,8 @@ static ssize_t mcu_powersave_show(struct device *dev,
->   	if (result < 0)
->   		return result;
->   
-> +	asus_wmi_show_deprecated();
-> +
->   	return sysfs_emit(buf, "%d\n", result);
->   }
->   
-> @@ -1421,6 +1470,7 @@ static ssize_t mcu_powersave_store(struct device *dev,
->   	return count;
->   }
->   static DEVICE_ATTR_RW(mcu_powersave);
-> +#endif
->   
->   /* Battery ********************************************************************/
->   
-> @@ -2294,6 +2344,7 @@ static int asus_wmi_rfkill_init(struct asus_wmi *asus)
->   }
->   
->   /* Panel Overdrive ************************************************************/
-> +#if IS_ENABLED(CONFIG_ASUS_WMI_BIOS)
->   static ssize_t panel_od_show(struct device *dev,
->   				   struct device_attribute *attr, char *buf)
->   {
-> @@ -2304,6 +2355,8 @@ static ssize_t panel_od_show(struct device *dev,
->   	if (result < 0)
->   		return result;
->   
-> +	asus_wmi_show_deprecated();
-> +
->   	return sysfs_emit(buf, "%d\n", result);
->   }
->   
-> @@ -2340,9 +2393,10 @@ static ssize_t panel_od_store(struct device *dev,
->   	return count;
->   }
->   static DEVICE_ATTR_RW(panel_od);
-> +#endif
->   
->   /* Bootup sound ***************************************************************/
-> -
-> +#if IS_ENABLED(CONFIG_ASUS_WMI_BIOS)
->   static ssize_t boot_sound_show(struct device *dev,
->   			     struct device_attribute *attr, char *buf)
->   {
-> @@ -2353,6 +2407,8 @@ static ssize_t boot_sound_show(struct device *dev,
->   	if (result < 0)
->   		return result;
->   
-> +	asus_wmi_show_deprecated();
-> +
->   	return sysfs_emit(buf, "%d\n", result);
->   }
->   
-> @@ -2388,8 +2444,10 @@ static ssize_t boot_sound_store(struct device *dev,
->   	return count;
->   }
->   static DEVICE_ATTR_RW(boot_sound);
-> +#endif
->   
->   /* Mini-LED mode **************************************************************/
-> +#if IS_ENABLED(CONFIG_ASUS_WMI_BIOS)
->   static ssize_t mini_led_mode_show(struct device *dev,
->   				   struct device_attribute *attr, char *buf)
->   {
-> @@ -2420,6 +2478,8 @@ static ssize_t mini_led_mode_show(struct device *dev,
->   		}
->   	}
->   
-> +	asus_wmi_show_deprecated();
-> +
->   	return sysfs_emit(buf, "%d\n", value);
->   }
->   
-> @@ -2490,10 +2550,13 @@ static ssize_t available_mini_led_mode_show(struct device *dev,
->   		return sysfs_emit(buf, "0 1 2\n");
->   	}
->   
-> +	asus_wmi_show_deprecated();
-> +
->   	return sysfs_emit(buf, "0\n");
->   }
->   
->   static DEVICE_ATTR_RO(available_mini_led_mode);
-> +#endif
->   
->   /* Quirks *********************************************************************/
->   
-> @@ -3792,6 +3855,7 @@ static int throttle_thermal_policy_switch_next(struct asus_wmi *asus)
->   	return 0;
->   }
->   
-> +#if IS_ENABLED(CONFIG_ASUS_WMI_BIOS)
->   static ssize_t throttle_thermal_policy_show(struct device *dev,
->   				   struct device_attribute *attr, char *buf)
->   {
-> @@ -3835,6 +3899,7 @@ static ssize_t throttle_thermal_policy_store(struct device *dev,
->    * Throttle thermal policy: 0 - default, 1 - overboost, 2 - silent
->    */
->   static DEVICE_ATTR_RW(throttle_thermal_policy);
-> +#endif
->   
->   /* Platform profile ***********************************************************/
->   static int asus_wmi_platform_profile_to_vivo(struct asus_wmi *asus, int mode)
-> @@ -4475,27 +4540,29 @@ static struct attribute *platform_attributes[] = {
->   	&dev_attr_camera.attr,
->   	&dev_attr_cardr.attr,
->   	&dev_attr_touchpad.attr,
-> -	&dev_attr_charge_mode.attr,
-> -	&dev_attr_egpu_enable.attr,
-> -	&dev_attr_egpu_connected.attr,
-> -	&dev_attr_dgpu_disable.attr,
-> -	&dev_attr_gpu_mux_mode.attr,
->   	&dev_attr_lid_resume.attr,
->   	&dev_attr_als_enable.attr,
->   	&dev_attr_fan_boost_mode.attr,
-> -	&dev_attr_throttle_thermal_policy.attr,
-> -	&dev_attr_ppt_pl2_sppt.attr,
-> -	&dev_attr_ppt_pl1_spl.attr,
-> -	&dev_attr_ppt_fppt.attr,
-> -	&dev_attr_ppt_apu_sppt.attr,
-> -	&dev_attr_ppt_platform_sppt.attr,
-> -	&dev_attr_nv_dynamic_boost.attr,
-> -	&dev_attr_nv_temp_target.attr,
-> -	&dev_attr_mcu_powersave.attr,
-> -	&dev_attr_boot_sound.attr,
-> -	&dev_attr_panel_od.attr,
-> -	&dev_attr_mini_led_mode.attr,
-> -	&dev_attr_available_mini_led_mode.attr,
-> +	#if IS_ENABLED(CONFIG_ASUS_WMI_BIOS)
-> +		&dev_attr_charge_mode.attr,
-> +		&dev_attr_egpu_enable.attr,
-> +		&dev_attr_egpu_connected.attr,
-> +		&dev_attr_dgpu_disable.attr,
-> +		&dev_attr_gpu_mux_mode.attr,
-> +		&dev_attr_ppt_pl2_sppt.attr,
-> +		&dev_attr_ppt_pl1_spl.attr,
-> +		&dev_attr_ppt_fppt.attr,
-> +		&dev_attr_ppt_apu_sppt.attr,
-> +		&dev_attr_ppt_platform_sppt.attr,
-> +		&dev_attr_nv_dynamic_boost.attr,
-> +		&dev_attr_nv_temp_target.attr,
-> +		&dev_attr_mcu_powersave.attr,
-> +		&dev_attr_boot_sound.attr,
-> +		&dev_attr_panel_od.attr,
-> +		&dev_attr_mini_led_mode.attr,
-> +		&dev_attr_available_mini_led_mode.attr,
-> +		&dev_attr_throttle_thermal_policy.attr,
-> +	#endif
->   	NULL
->   };
->   
-> @@ -4517,7 +4584,11 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
->   		devid = ASUS_WMI_DEVID_LID_RESUME;
->   	else if (attr == &dev_attr_als_enable.attr)
->   		devid = ASUS_WMI_DEVID_ALS_ENABLE;
-> -	else if (attr == &dev_attr_charge_mode.attr)
-> +	else if (attr == &dev_attr_fan_boost_mode.attr)
-> +		ok = asus->fan_boost_mode_available;
-> +
-> +	#if IS_ENABLED(CONFIG_ASUS_WMI_BIOS)
-> +	if (attr == &dev_attr_charge_mode.attr)
->   		devid = ASUS_WMI_DEVID_CHARGE_MODE;
->   	else if (attr == &dev_attr_egpu_enable.attr)
->   		ok = asus->egpu_enable_available;
-> @@ -4555,6 +4626,7 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
->   		ok = asus->mini_led_dev_id != 0;
->   	else if (attr == &dev_attr_available_mini_led_mode.attr)
->   		ok = asus->mini_led_dev_id != 0;
-> +	#endif
->   
->   	if (devid != -1) {
->   		ok = !(asus_wmi_get_devstate_simple(asus, devid) < 0);
-> @@ -4795,6 +4867,7 @@ static int asus_wmi_add(struct platform_device *pdev)
->   		goto fail_platform;
->   
->   	/* ensure defaults for tunables */
-> +	#if IS_ENABLED(CONFIG_ASUS_WMI_BIOS)
->   	asus->ppt_pl2_sppt = 5;
->   	asus->ppt_pl1_spl = 5;
->   	asus->ppt_apu_sppt = 5;
-> @@ -4818,16 +4891,17 @@ static int asus_wmi_add(struct platform_device *pdev)
->   	else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_GPU_MUX_VIVO))
->   		asus->gpu_mux_dev = ASUS_WMI_DEVID_GPU_MUX_VIVO;
->   
-> -	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE))
-> -		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE;
-> -	else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE2))
-> -		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE2;
-> -
-> +	#endif /* CONFIG_ASUS_WMI_BIOS */
->   	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY))
->   		asus->throttle_thermal_policy_dev = ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY;
->   	else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO))
->   		asus->throttle_thermal_policy_dev = ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
->   
-> +	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE))
-> +		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE;
-> +	else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE2))
-> +		asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE2;
-> +
->   	err = fan_boost_mode_check_present(asus);
->   	if (err)
->   		goto fail_fan_boost_mode;
 
