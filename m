@@ -1,249 +1,153 @@
-Received: from fhigh6-smtp.messagingengine.com (fhigh6-smtp.messagingengine.com [103.168.172.157])
+Received: from fout2-smtp.messagingengine.com (fout2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51D33DF6C;
-	Wed, 18 Sep 2024 08:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E381915C150;
+	Wed, 18 Sep 2024 09:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726649456; cv=none; b=Fzkju2Vjjwawkk8v0FD9fWSRPmMAMXC4kiElEUjrhNJDiHvN3VGSALRVmaIl830pnvuntA4sfKfiM1CaCXagc1oyBjNi35kHmmhPuqBT3wY6UI/rmAVGLnZA3X51oe6FRYsxC/uRNXHCkaIYlRr8Bj9f9AQyP1mAZDddsXD0YKM=
+	t=1726652582; cv=none; b=piR+yIAXIphdEceKrVryHINm5xPa0xiV55tCvHf7BcdFCpTcTKxOECJPCYAWLTjUMQgPZ/1QtaLenfBIHSsmprccunndNjMFY53Y3ma8KyE7NKIsRBw9+fOKIYIBCs3PITZ/s5zzDEOvBR2rLBB1V453Wq3mmVeMHQByd6FZeeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726649456; c=relaxed/simple;
-	bh=WZiUv3EmkdmIas8JtLy47tGLPxijQqw8UaIvbITreZk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=j1aVFyVrAs9Nn+tq8rqPJvBZ088ic7oCzhifVUsEDmxBC21IpFdsx1YZOTD/R6ampsT8mcaQbdMGEwDznS57Hiofc8i8nBz4KsXASMivpo9fWooU5H9P2Wcu3L+uIpq1LyJmlNk19UfmM5Iwyw7+75WspP2R48EE5i6XBZDndnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=B7vr7B5I; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=FIi0FtUY; arc=none smtp.client-ip=103.168.172.157
+	s=arc-20240116; t=1726652582; c=relaxed/simple;
+	bh=tFloRtTTzF5qSAMFw0Z62deUI/pAYY86upGFXYXL6lQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kgUebhzHZ2hWBIZT4Gve7dT48nTXDmsxYs4bqVmkPHwUvMPPo9SCg1xoxYFf9FoGmKBwL/CA2fuwvukEqvJ4JasVd5BocIXZBpNezXsEGgm7+7LcsUVzsl/n4bB4wBS2+LWFElBdmzAmPD0WjFSId1CgwcJqUC2XkIUArdGtKvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=YhEjEQgV; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=q3qJRJjw; arc=none smtp.client-ip=103.168.172.145
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="B7vr7B5I";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FIi0FtUY"
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="YhEjEQgV";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="q3qJRJjw"
 Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 38C3F11402DF;
-	Wed, 18 Sep 2024 04:50:52 -0400 (EDT)
-Received: from phl-imap-01 ([10.202.2.91])
-  by phl-compute-08.internal (MEProxy); Wed, 18 Sep 2024 04:50:52 -0400
+	by mailfout.phl.internal (Postfix) with ESMTP id EC07F1380283;
+	Wed, 18 Sep 2024 05:42:58 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-08.internal (MEProxy); Wed, 18 Sep 2024 05:42:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1726649452;
-	 x=1726735852; bh=C1K8o/kaN4c667QZfKLfXRtlS3piE1KZOKHfMOAZg48=; b=
-	B7vr7B5Ib4Y3Mo6TFu8LhLzNZ24guMqxZ4B9xiDWle0qo+s/IrT9ljFAn6jRmouq
-	PIj2Nb40t0Hzw9JzElTs3aiklkCzOGbh4UOVKREk3ezkx40L7PeugU6ZfBylaCQt
-	El2Q+tq6U3MJTN87n/XPjXBXI8mbqsYhf1PyXMZuNdAqZO1dP2g8H3eJV120B5cO
-	gRZng0Ng4Gtl7vT9Bs4dx78ApFoG6ch66cAJvKRfxhLK9/MN/zW7AyiE3X0G18v9
-	F8kl3HF0qAe6aTCRuAKXEIP9/FtnNlK97QDwxTbZAZ2MK1NimnwCO/wUnNITa4vD
-	y23NG9t0jburzl9vKLt2sg==
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm3; t=1726652578; x=1726738978; bh=ml
+	xYnUSBkXDOmfksDlJu1dQ1H4W3o3ap43oZa0IvZDE=; b=YhEjEQgVPT318+ZXBl
+	gtg1UwGs12NMyGpoeec1jyH9aZqloDrJ00ClOoNW7WvXo6s6FCCrvZ+83r0Ux9gw
+	J/8zg9AA759AR+XVuL9516NPyg7FvmsE75CmKap9C1WLwECrLbLk//BUnjHi63De
+	uBPuI/saJ+avh0u+8E6+JGYMjj21cPudT3RqHQv0+S0+2kePDX0QDN5RMlzQHDiM
+	HvxcyYEOjVMYc3JWIbtdBmuWQl2VsWi5UVlAtbjjauXRvaIohOiNHqbjXsVieHch
+	5GWWtGTF2Jl2Csz75+8h/vD5Qj90IWRgI1nUdbPqZoNb5tEKJajfW6v+Dxa4GBmp
+	ZAvQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1726649452; x=
-	1726735852; bh=C1K8o/kaN4c667QZfKLfXRtlS3piE1KZOKHfMOAZg48=; b=F
-	Ii0FtUYu6+kHRGdUNEGoJQOK+LH2yesqXwjJt5IaFGFnjYV2mehPYsyylgmrM+5x
-	rgjixhGxOgHkSu/vMOjODaEt9U7CML8/8cAkZHz6gaHdprto8u4n1Az1HJyTnrBL
-	ktykeYHllPtpTbcz2uX4pT5J/xN8NuQXkrtTIqkYfhW0WE1sJBtDatWnXvbnIvs0
-	zxIuY/n6bg2wMHFuBOQuiFKXWmVrvVAv3t8FaGcF/HWnuj17KaDCgc36t5Sl/amU
-	Xn/XSSurp+RQf8BFLwZyS6CjspOD3fU5NFxYrJcedNmoihj16eO5meRDa+h5H/W6
-	BxYNq3BGtSsb0fRqOgmEw==
-X-ME-Sender: <xms:a5TqZrhUJKMg1hq78qWZgw7dnSa2tyDU4i-JhmvUNCi5a5e-wFyATw>
-    <xme:a5TqZoB-KwxrO9WP2R-8JdBYlRuEBw1SS0ZEFOQFULBMjlm1HGiVBrofQ5aAEimrO
-    pfnzHqrk8CjDzATSKc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudekledgtdejucetufdoteggodetrfdotf
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1726652578; x=1726738978; bh=mlxYnUSBkXDOm
+	fksDlJu1dQ1H4W3o3ap43oZa0IvZDE=; b=q3qJRJjw9aSlMo/xiZ0Z3l1M9aqEX
+	CGFrsaX0kPk+xJ15Z2qb0+sz0dFUWpVzVCbEcjtACIUUYvedVkHROdIfikZ61flw
+	JJg71Fq/smGYnkyGmSXl8oUSs9UNaoMCorJTX5XOGp7dhte3DHnUU4/BDP3N2lSO
+	zrZ4+NduqrjOR0d8SVkvtL4bSmh8Rk4GBRqQme5s1GB7qg+3NYj+YFbcJNEslyGJ
+	o3K2O5x+8VOezmurP+niXixQB/W7T9Lf0QG6SdTpxxXPunSHGbfiy3DpbUBrpB3e
+	L8vDUFYNfRPGWvJnu7JCCyZxEavzG6ifo6IQaMTbPfQ6RU49GmcjdkBmQ==
+X-ME-Sender: <xms:oqDqZrXnG86D2q_0Ho_HbROvwEnzi_ZytERUamZnCpRhugYn_H--xA>
+    <xme:oqDqZjli4KzJ76rn6ZyoPsW1Qci34qb9hCBXM5kf-Qgv_sEGve8flGQed7MhJF256
+    B_iU2fEdSA3g1Mo7fM>
+X-ME-Received: <xmr:oqDqZnZgtSW1YUeZ98pThfHuit11GR-6pqNrDOLqmC3ok4citF8haD2-X-c0HA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudekledgudekucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
-    necuhfhrohhmpedfnfhukhgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvg
-    hvqeenucggtffrrghtthgvrhhnpeekvedvjeehiefhkeffuefhtdeuleekffelgfeiuddv
-    tdehkeethfehleehgeevudenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhho
-    nhgvshdruggvvhdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouhhtpdhrtg
-    hpthhtoheptghorhgvnhhtihhnrdgthhgrrhihsehgmhgrihhlrdgtohhmpdhrtghpthht
-    ohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtph
-    htthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhu
-    gidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphhlrg
-    htfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:a5TqZrE0jNfiAiuO-pFyA2BjH3A3OvjThEyTqpYAO4BPHvSXP6-USA>
-    <xmx:a5TqZoThGBRtAhEjxfr4ABNDTmPeR4jhOqMVm5VcXUue8kmlUwEo0Q>
-    <xmx:a5TqZoxhKINArXcXToyKhj6LdfbVYYA6u0d-kMelPcowNj_kTnWkzA>
-    <xmx:a5TqZu7sy_XzfRqzVj2Xxg23qp0_xanDVvqETJZVvwlqBrBPF6d76Q>
-    <xmx:bJTqZk_Cf00Furq0257DhzdkxuyQPHgRzP53q4m-fY5FNSbJTphWgfAp>
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevuf
+    ffkffogggtgfesthekredtredtjeenucfhrhhomhepfdfnuhhkvgcuffdrucflohhnvghs
+    fdcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpeejtdfhhe
+    ffkefhteekleduteegudfgleekheejuedvueefvdeltdehuefgveekkeenucffohhmrghi
+    nhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvhdpnhgspghrtghpthhtohep
+    iedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivh
+    gvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhig
+    qdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehhuggvgh
+    hovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepihhlphhordhjrghrvhhinhgv
+    nheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegtohhrvghnthhinhdrtg
+    hhrghrhiesghhmrghilhdrtghomhdprhgtphhtthhopehluhhkvgeslhhjohhnvghsrdgu
+    vghv
+X-ME-Proxy: <xmx:oqDqZmWCj4hBHQO7wGrGWnDJc246VTGHHSLcQxTzN0kTunJBWMO8xQ>
+    <xmx:oqDqZlkHoRt1aDgNwkpS-HnILbfoget2wMQ6B5g1sqV5fJqsCjgUFA>
+    <xmx:oqDqZjezHOWv0x3NLRlARUx5VxWtIXmPv9AHkR9-ZWVUEWlAiVHp9A>
+    <xmx:oqDqZvFJjbFnYX2GshE21gnTZAXgneyB8TlrhX4hyMmPXDq24ogG2w>
+    <xmx:oqDqZot2GVWHeAVEEwsQNynNRNwNTgbA_T1yn_S5ioYrStQpAioM_9NE>
 Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 9315E3360077; Wed, 18 Sep 2024 04:50:51 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 18 Sep 2024 05:42:55 -0400 (EDT)
+From: "Luke D. Jones" <luke@ljones.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	corentin.chary@gmail.com,
+	"Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH v3 0/5] platform/x86: introduce asus-armoury driver
+Date: Wed, 18 Sep 2024 21:42:45 +1200
+Message-ID: <20240918094250.82430-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 18 Sep 2024 20:50:31 +1200
-From: "Luke Jones" <luke@ljones.dev>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- "Hans de Goede" <hdegoede@redhat.com>, corentin.chary@gmail.com
-Message-Id: <3f244316-f259-4d61-90ae-4caa183c1a32@app.fastmail.com>
-In-Reply-To: <27027d00-214d-e566-6339-95ed4397b99d@linux.intel.com>
-References: <20240806020747.365042-1-luke@ljones.dev>
- <20240806020747.365042-3-luke@ljones.dev>
- <bb056dee-508c-6186-324a-d45bbd1c2306@linux.intel.com>
- <7dc2cb6a-3b42-425a-85d3-2f3670bfd8eb@app.fastmail.com>
- <27027d00-214d-e566-6339-95ed4397b99d@linux.intel.com>
-Subject: Re: [PATCH v2 2/6] platform/x86: asus-armoury: move existing tunings to
- asus-armoury module
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 12 Aug 2024, at 7:37 PM, Ilpo J=C3=A4rvinen wrote:
-> On Sun, 11 Aug 2024, Luke Jones wrote:
->=20
-> > On Tue, 6 Aug 2024, at 10:16 PM, Ilpo J=C3=A4rvinen wrote:
-> > > On Tue, 6 Aug 2024, Luke D. Jones wrote:
-> > >=20
-> > > > The fw_attributes_class provides a much cleaner interface to all=
- of the
-> > > > attributes introduced to asus-wmi. This patch moves all of these=
- extra
-> > > > attributes over to fw_attributes_class, and shifts the bulk of t=
-hese
-> > > > definitions to a new kernel module to reduce the clutter of asus=
--wmi
-> > > > with the intention of deprecating the asus-wmi attributes in fut=
-ure.
-> > > >=20
-> > > > The work applies only to WMI methods which don't have a clearly =
-defined
-> > > > place within the sysfs and as a result ended up lumped together =
-in
-> > > > /sys/devices/platform/asus-nb-wmi/ with no standard API.
-> > > >=20
-> > > > Where possible the fw attrs now implement defaults, min, max, sc=
-alar,
-> > > > choices, etc. As en example dgpu_disable becomes:
-> > > >=20
-> > > > /sys/class/firmware-attributes/asus-armoury/attributes/dgpu_disa=
-ble/
-> > > > =E2=94=9C=E2=94=80=E2=94=80 current_value
-> > > > =E2=94=9C=E2=94=80=E2=94=80 display_name
-> > > > =E2=94=9C=E2=94=80=E2=94=80 possible_values
-> > > > =E2=94=94=E2=94=80=E2=94=80 type
-> > > >=20
-> > > > as do other attributes.
-> > > >=20
-> > > > Signed-off-by: Luke D. Jones <luke@ljones.dev>
->=20
-> > > > +static ssize_t attr_int_store(struct kobject *kobj, struct kobj=
-_attribute *attr,
-> > > > +       const char *buf, size_t count, u32 min, u32 max, u32 *st=
-ore_value,
-> > > > +       u32 wmi_dev);
-> > > > +
-> > > > +static ssize_t int_type_show(struct kobject *kobj, struct kobj_=
-attribute *attr, char *buf)
-> > >=20
-> > > inline missing
-> > >=20
-> > > > +{
-> > > > + return sysfs_emit(buf, "integer\n");
-> > >=20
-> > > Lukas Wunner might have done something to make emitting constant s=
-trings=20
-> > > easier, please check out if that's already in mainline.
-> >=20
-> > I'm not sure what I'm looking for here. Searching my current pdx86 p=
-ull=20
-> > isn't returning anything likely and I can't find anything on lore.
->=20
-> I think that was done mostly outside of pdx86, here it is:
->=20
-> https://lore.kernel.org/all/cover.1713608122.git.lukas@wunner.de/
->=20
-> So DEVICE_STRING_ATTR_RO() seems the way to go, I think.
+This is the first major patch I've ever done with the intention of
+introducing a new module, so it's highly likely I've made some mistakes
+or misunderstood something.
 
-Thanks. I did try this but the signature is different to the bulk of wha=
-t I;ve done already. I don't have the time for it yet and will revisit i=
-t later.
+TL;DR:
+1. introduce new module to contain bios attributes, using fw_attributes_class
+2. deprecate all possible attributes from asus-wmi that were added ad-hoc
+3. remove those in the next LTS cycle
 
->=20
-> > > > + * On success the return value is 0, and the retval is a valid =
-value returned
-> > > > + * by the successful WMI function call. An error value is retur=
-ned only if the
-> > > > + * WMI function failed, or if it returns "unsupported" which is=
- typically a 0
-> > > > + * (no return, and no 'supported' bit set), or a 0xFFFFFFFE (~1=
-) which if not
-> > > > + * caught here can result in unexpected behaviour later.
-> > > > + */
-> > > > +int asus_wmi_get_devstate_dsts(u32 dev_id, u32 *retval)
-> > > > +{
-> > > > + int err;
-> > > > +
-> > > > + err =3D asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS, dev_i=
-d, 0, retval);
-> > > > + if (err)
-> > > > + return err;
-> > > > + /* Be explicit about retval */
-> > > > + if (*retval =3D=3D 0xFFFFFFFE || *retval =3D=3D 0)
-> > >=20
-> > > Please name the literals with defines.
-> >=20
-> > Should have been ASUS_WMI_UNSUPPORTED_METHOD :)
->=20
-> Is one define enough if you have two ways to indicate "unsupported"?
+The idea for this originates from a conversation with Mario Limonciello
+https://lore.kernel.org/platform-driver-x86/371d4109-a3bb-4c3b-802f-4ec27a945c99@amd.com/
 
-This function body wasn't correct. It now is and that retval =3D=3D 0 is=
- removed.
+It is without a doubt much cleaner to use, easier to discover, and the
+API is well defined as opposed to the random clutter of attributes I had
+been placing in the platform sysfs.
 
->=20
-> > > > + return -ENODEV;
-> > > > +
-> > > > + return 0;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(asus_wmi_get_devstate_dsts);
-> > > > +
-> > > > +/**
-> > > > + * asus_wmi_set_devstate() - Set the WMI function state.
-> > > > + * @dev_id: The WMI function to call.
-> > > > + * @ctrl_param: The argument to be used for this WMI function.
-> > > > + * @retval: A pointer to where to store the value returned from=
- WMI.
-> > > > + *
-> > > > + * The returned WMI function state if not checked here for erro=
-r as
-> > > > + * asus_wmi_set_devstate() is not called unless first paired wi=
-th a call to
-> > > > + * asus_wmi_get_devstate_dsts() to check that the WMI function =
-is supported.
-> > > > + *
-> > > > + * On success the return value is 0, and the retval is a valid =
-value returned
-> > > > + * by the successful WMI function call. An error value is retur=
-ned only if the
-> > > > + * WMI function failed.
-> > > > + */
-> > > > +int asus_wmi_set_devstate(u32 dev_id, u32 ctrl_param, u32 *retv=
-al)
-> > > >  {
-> > > >  return asus_wmi_evaluate_method(ASUS_WMI_METHODID_DEVS, dev_id,
-> > > >  ctrl_param, retval);
-> > > >  }
-> > > > +EXPORT_SYMBOL_GPL(asus_wmi_set_devstate);
-> > >=20
-> > > Namespace exports.
-> >=20
-> > I'm sorry, I don't understand.
->=20
-> Use EXPORT_SYMBOL_NS_GPL(). The driver using the functions, will then =
-do=20
-> MODULE_IMPORT_NS() to pair with the namespace defined by the=20
-> EXPORT_SYMBOL_NS_GPL().
+I am unsure of how best to handle the deprecation of attributes.
 
-Got it. I did wonder about this while reading a few kernel books (rather=
- old now).
+There's also some attributes that are obviously boolean but are using 0/1.
+I'm unsure if I should change that.
 
->=20
-> --=20
-> i.
->=20
+And would it be best to move the asus stuff to a subdir now? Akin to the
+Dell platform stuff.
+
+Regards,
+Luke
+
+Changelog:
+- v1
+  - Initial submission
+- v2
+  - Too many changes to list, but all concerns raised in previous submission addressed.
+  - History: https://lore.kernel.org/platform-driver-x86/20240716051612.64842-1-luke@ljones.dev/
+- v3
+  - All concerns addressed.
+  - History: https://lore.kernel.org/platform-driver-x86/20240806020747.365042-1-luke@ljones.dev/
+
+Luke D. Jones (5):
+  platform/x86: asus-armoury: move existing tunings to asus-armoury
+    module
+  platform/x86: asus-armoury: add dgpu tgp control
+  platform/x86: asus-armoury: add apu-mem control support
+  platform/x86: asus-armoury: add core count control
+  platform/x86: asus-wmi: deprecate bios features
+
+ .../ABI/testing/sysfs-platform-asus-wmi       |   17 +
+ drivers/platform/x86/Kconfig                  |   22 +
+ drivers/platform/x86/Makefile                 |    1 +
+ drivers/platform/x86/asus-armoury.c           | 1056 +++++++++++++++++
+ drivers/platform/x86/asus-armoury.h           |  255 ++++
+ drivers/platform/x86/asus-wmi.c               |  203 +++-
+ drivers/platform/x86/asus-wmi.h               |   14 +
+ include/linux/platform_data/x86/asus-wmi.h    |   19 +
+ 8 files changed, 1538 insertions(+), 49 deletions(-)
+ create mode 100644 drivers/platform/x86/asus-armoury.c
+ create mode 100644 drivers/platform/x86/asus-armoury.h
+
+-- 
+2.46.1
+
