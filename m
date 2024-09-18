@@ -1,62 +1,63 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2084.outbound.protection.outlook.com [40.107.102.84])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2050.outbound.protection.outlook.com [40.107.96.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48BD81537B5;
-	Wed, 18 Sep 2024 15:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E21E2AEEE;
+	Wed, 18 Sep 2024 15:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.50
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726673958; cv=fail; b=IA9Glv6pOEglG+8q7QbGgngacjmYW83zhoeCFf+uFreyMlvKntLX6/ci8YikPwBr2YLuublpNMprhd6J9EVBjCQ5A+NfsAl0LKQNn5/E+4yCngZAZZn5LKr7F+PYR6c6WDEY3bY1UAFYCtgDyA5DyS0nrHGkp8EoiCaW9RqLALg=
+	t=1726674287; cv=fail; b=Y+Qh9ALiewgFgIhI3AVY+IAZF0iYuPoMcC24VLNRGeiubP7fI9/FQ7t3rqQrd88b9ID3APzqFLJaomUC4jpIAuosbDIf1vZllNoAzQ/xHjJzoWJHyzAj/upd/I5T2l3vIpzlH5zkwzZNGo0cZ9lGcUWa2afHpSgDDDTJtVvbxi8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726673958; c=relaxed/simple;
-	bh=E4KHbbhm9w1EMwr+9zbJW5qKsEP0RsDUV3nhIEnk9n4=;
+	s=arc-20240116; t=1726674287; c=relaxed/simple;
+	bh=zX5bYisLAfo3gp9pqtx84FHzsLmIFaqjkxkte3AX9Jw=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=U4Pq08AIEUjujBEQ9XhkionQSJPBsrxF0OB5tLLY5AgX63UXjNqCbcDOETYuJVaGKPTzPnTCjup0sd43W3c9AEjgwM2gBMHzngVoHnesdkKpaAt0tiPt39QHfMgzopSVU7RQYRRGPBMTdJ4oeBTd/nQJxdpe4kQfcLTU7cAUQgo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iryBSlbp; arc=fail smtp.client-ip=40.107.102.84
+	 Content-Type:MIME-Version; b=E0rWmGEwBtezTEREPI2SoA/97OR80368dGGXw0Eh94ySPIGfQFmd49sVugnBvke3MG3uoLgQDMcr7skIQT2yJ/3qBGkeNW9j/iNIa2jzkY6tjFnVyofjz9l0mzDezy6X5olPyr39tdC6eAbUaKhfgNER1fZojd9QA5zy01FJ4hE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=KTmRavRu; arc=fail smtp.client-ip=40.107.96.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iryBSlbp"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="KTmRavRu"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IRej1C7utWKZDMquCDdMCFie1ao3DAOXpf7hoQ2+6QbVun0UMa9vhK0KTENOzrqpRTi5PNpMAsE5awPTQQw24uT8A3J3xYEwB0HV1KNZvTJvlRktUGxL9hUL6OkqGu4+L7eBNqrQJIaOvaKpFZtLLr5HmsYzTN/4/oO/LYgv4qmjymBAg8MYUMe91pvkrliStexQ38iOsOIXnEahUh1fSCCShom4/787F5F4uHo3RyqswtFR+SADEkOehHy2ApI6n3qo/1N+Q3riqR1dbA+SOkGGfFsRPUQDjV365dVYA0g8VvWk7H7SVYXaP6Tulh9qhqKu/ReeAdh+XBj8HnrI2A==
+ b=qjQf3SHngOsRj8dLfrWp5j3zsuejW9H4m9J9IAuLbkTabyFs9xF3cCFoJpGS5IsZFZhCGFARogaQGCTSdVO7cRGnqpSjQrN6LBCyOYCvD9hAFlhTcFwJpSOjwHe3tcdjljMWB0HGiiNP7D3ZLWLorAjNnW2E3K1LvZ/nXg/5CWVHmyzKQ0TsqxabDswUmi5GAwpg6aEG4tKGmRGxUlwVVt8qJqzP4JZP0TGngP9ftMnejHvzbVZP5B8tlbLyHwCwzxk1NM0wBZ5OYcoVv5CYEQ5KsOGtJfPttXf3lK+vtoHooUZUUT69MiyK7eP73QpTOIgSN3W1903uLZAKGrwJKQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AYvfQchTG15funOPifGUGg8JRAqUZ+dMyRZp8uWcbOk=;
- b=KI7200m4UsDYe+6xmq1NUabo3N4XyBpWuntMLBu8Zg4Z2CkQYsq5mmM52Kx41WFaAJqoxe5IqSOjKeKhB68GaKydfxyzgPpkSznSHZFlTD6ljj910cdsKsCghGETb4xcPnIdyspbovKRylv1mHqOBZuNq4Ktpj/yYMVxyguyqfs81Douy8+xLzcgWdot9y6B7lHwYpuUNqqhpNfJWFpHc7OeuJSQVCHqYOlYBJA9xD3REDsas1bwPz3ypgC5bmsVX2zTORSzei2IMnXQSAjn+EQPmtMV0fNqiger2C0UF7Ijfvul0v81dm4EPCm3PmbEh3TCWgNgXYVFjjNb1TWIpg==
+ bh=ePrS6XzVVdDgWW3YmLGjLYgUzMaOSrOIMU/2qx02LDM=;
+ b=Xo6k3r1hbPmUk92WG6bS3MaVC/XL5k4Vq7UnQRKKUG18ac2eoln3B5IFI4uH75qMjndRqn8BuVyW4Vs/1z+pB90tsNZY09k3iC5MJzh4+P7L7smff6P0iWJpmWB85IMQZtGfQml8E7rwOOITVhoCN94f9tKfFYAxt4nYI/m7U4kYQ0HiGliDxYhEzgtGlGeddgXvRyqdcWA9qsz3Hhy3tGQdj/PW3ehIDnYBOcWPFJf0Nf0R7vy1aKP+M3EC2po4a1E+B+AKvaVCS/017JtRp9E55alWKX8XHRWnIcekay0ujbeRL37C6rzabUsP+D0pZvUilXnylkMfXOHCCkOG4w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AYvfQchTG15funOPifGUGg8JRAqUZ+dMyRZp8uWcbOk=;
- b=iryBSlbpTAnJnHeB1/6gwZoHkW9a2kK9pTrFzhaxhK+TqEiosOXDEc4joDNIQbIPTmk1OI+bbBM+YUdURFxvbLWEXgovDbq88LaWohQs1djkWPLNlcTwgSX1c17YGhNQa/PGLV0EmTqTxkMC4pnMRtmIDF4umDGxUd9zPzzookw=
+ bh=ePrS6XzVVdDgWW3YmLGjLYgUzMaOSrOIMU/2qx02LDM=;
+ b=KTmRavRuVa/3EzTVBGap3kjaYnBYcEP+3FkEVFAv+5lk1ajpBpnTMFHb4YPJQsXrl0uJbVRnmwN84W+8pQkvQrn/nRXiIQR3LM6h7UpTl5/yZJgwVmQgtgzdDfbNN7e7tLXd11woucNbhBm6sBxoyuzdsGLGx0iavI6c6eN4AwA=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by PH0PR12MB7863.namprd12.prod.outlook.com (2603:10b6:510:28b::8) with
+ by DM6PR12MB4091.namprd12.prod.outlook.com (2603:10b6:5:222::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.17; Wed, 18 Sep
- 2024 15:39:13 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.24; Wed, 18 Sep
+ 2024 15:44:43 +0000
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.7982.016; Wed, 18 Sep 2024
- 15:39:13 +0000
-Message-ID: <bd5155ec-a90e-4f2c-8e56-da7a986fdc13@amd.com>
-Date: Wed, 18 Sep 2024 10:39:11 -0500
+ 15:44:42 +0000
+Message-ID: <aaee2e99-d19b-466b-92fb-837093e574b0@amd.com>
+Date: Wed, 18 Sep 2024 10:44:40 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/5] platform/x86: asus-armoury: add dgpu tgp control
+Subject: Re: [PATCH v3 3/5] platform/x86: asus-armoury: add apu-mem control
+ support
 To: "Luke D. Jones" <luke@ljones.dev>, platform-driver-x86@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, hdegoede@redhat.com,
  ilpo.jarvinen@linux.intel.com, corentin.chary@gmail.com
 References: <20240918094250.82430-1-luke@ljones.dev>
- <20240918094250.82430-3-luke@ljones.dev>
+ <20240918094250.82430-4-luke@ljones.dev>
 Content-Language: en-US
 From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20240918094250.82430-3-luke@ljones.dev>
+In-Reply-To: <20240918094250.82430-4-luke@ljones.dev>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1P222CA0082.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:35e::29) To MN0PR12MB6101.namprd12.prod.outlook.com
+X-ClientProxiedBy: SA0PR11CA0008.namprd11.prod.outlook.com
+ (2603:10b6:806:d3::13) To MN0PR12MB6101.namprd12.prod.outlook.com
  (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -65,217 +66,260 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|PH0PR12MB7863:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4f4526c7-a3bf-4068-dafc-08dcd7f80bdb
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DM6PR12MB4091:EE_
+X-MS-Office365-Filtering-Correlation-Id: d7b0712c-437e-41da-a32d-08dcd7f8d05a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TGJuSm9XWkxnWVpQbHZ0alZ4U3BqK0xrcWt0NVJSU1lhbWkxYnlhVm9lY3Z5?=
- =?utf-8?B?cHZuQ240RkFQOUJHR2VSRWZCTkt2ZHRMbTRYUDdDNGNucmZkaE9SL0laWTkr?=
- =?utf-8?B?c21mM2JYN2ZsaERKK2J0Y0Q1K2M3SXpwUmJPcHMxWXo2QUhOamg1UE1KVEto?=
- =?utf-8?B?dkVmWXF1TFFjWnk4VG10ZVNwVWpWOTkxZXUzU1ZIajc0VE0ybTFXWWVUM01C?=
- =?utf-8?B?RzFWbmV1MnM2S1ZmYjVJTzBFRzFNbXpzdVd2NnlkMHVlSk1YK0VoeTQrWjRq?=
- =?utf-8?B?YlliMk9oQzJhODBZNFBFVzdPTVM5TWpESzljb3lvWGhpdmtQR0RuZzk0dHdQ?=
- =?utf-8?B?MzY5WUpTazMzYVhocUsvVHBnRDN5TXlpa21KSG1maVpkZ0NhZ25lYno5ejBX?=
- =?utf-8?B?Vno0WFF5NEwzVUpuZ3hhdXB1amx4NG1MUGhORmhkMVhUZTh4MVRSMkNaUUdJ?=
- =?utf-8?B?emxTNG9uTnliQ1p2OUhvOEYrQURBODgxNHVkUVhNQVc2R3MvNk13Z3JPOWdZ?=
- =?utf-8?B?VHJwRWI1TWFnOWlwdUszdjAvcFkvb084NjRjUEw3em02WXNCTTR3WjA5dnU3?=
- =?utf-8?B?dmJpUmhiQVVLZFFUWWpuYytPYUQ4TEhTbHhsVHBMekkyMm82OEJ0ZVVzc3Zq?=
- =?utf-8?B?NU5mc0dRSmhJZ1FMMTc0NG41K0pYNGhkRktwWlRQN1VydVNWZTNlRWY4cGVY?=
- =?utf-8?B?Z2FIa3paaVNsMkgyNWJTcXBoaDJFWVhPQ1ovSVdCVTF5T2dEc2RtejEydUl0?=
- =?utf-8?B?Z0FEU3ByTGdCMEd1Z3NUWk44dkJwdzdXdFZwWDU2VTREVWJNeHRuMi9Wb1d3?=
- =?utf-8?B?TDBOVWVIanVTOFNyRUFkWXFMMVp3OEQxTXNya1FvZ0FrYXpLcktTYXkzck90?=
- =?utf-8?B?dlVCcjNyak9jQnhLRmttR3QzbHpJbUJ0RTYyeHJZUmE2QjRsTlQ5K0J4S2xC?=
- =?utf-8?B?cUo2bEhiOFlVMzU5SW1wTDBROE9Gc0txeWpRY2thbG12ZDBsNUJFTWRlVEVx?=
- =?utf-8?B?QlJ0elFnN05iZ3Z3RXNIMGNLWjI2TkNoVXV3bW9XS3BNMWsySFFvMHk2MGh3?=
- =?utf-8?B?ZlQvajU2V1N4MEJjeU5rVUpBK1hwRW5HQld1ZHZIeHdPTGFlSk1zZUZCY3NM?=
- =?utf-8?B?TWZBa0d0TmxKeWRBQ0JoK09hYzJWZWllRXV3WXJabUw4SlFReTIyeU91VVRQ?=
- =?utf-8?B?SXpWc1ZLdWorQUdEYjZQN2sxVklrTjVPY1NTK24wbGw4RDF4RzZvdmJ4eGJT?=
- =?utf-8?B?K091dTJFUEd2R2Nma1BIc1h3Yzh0ajBYTTRVUmdPODhRYUZVckRTUytTWDR4?=
- =?utf-8?B?QkZiQy9oRExXWlpvbCtodXNuazdncGd6VlVIWUE0MEFKT0FlaU4wOHJiUDlO?=
- =?utf-8?B?enVxL20va24rMzJ3NlBBcldYSnFvSmRiN3dmaUE2WU9EVDZIN3FyL2hBM2JS?=
- =?utf-8?B?ck5BUUtId09lQlJaY3ZRbGNxWktLNyt5NmRWNkpnMkgxL3B2Y0NNZmIwbzhN?=
- =?utf-8?B?endMS2Y4RHFNQzhYSnRmdWVENHJpcHlxRFMxZEZxWWNBcjRSUFpIeEVicWRx?=
- =?utf-8?B?Tk5DcnAzNTFMamV3NnN1elEveFNEanFGekxXaUk4NGJ5eXN5UnE2cTlmdWlx?=
- =?utf-8?B?WGEzK2FUUE44cDM4bExaVjl1UU05VVN3OEduZ3g2UzdvNDBwZ3Z2ZG5iZmJB?=
- =?utf-8?B?c1R6L3VQSTBDdGhSRElxa215MFUwREJCUW5QMVFWM0dndU9hWVRyWkt5cVlp?=
- =?utf-8?B?S3Zienc2dENuYU9TNmJWMU1wNnE4bFVVUnpjZkVrM1d5STkrUTFsUE0zalQ2?=
- =?utf-8?B?cTM5R1p2ajRXbHlKNFpxQT09?=
+	=?utf-8?B?eHVhb0xjZmREenU5Ym5UY3FXR2liV1IwZW01WmxoV0M5QjR2K205MXFkZWlP?=
+ =?utf-8?B?Ryt3RTRNM2dWekxwOTdNUERGSlFseCs5N2REOUFvZFliT291aEkrNHJEZjJM?=
+ =?utf-8?B?eVRSdnRUUWlwVnE3VnMxeUpBK2lHamxhUm9waG5qWEdtY2RkcVp6SDMyZEVu?=
+ =?utf-8?B?dlFwWU5ZMGRXelMrNTRlbkJnY2I3N0VncjVwemVmbFNYTDdJajI3MW9OcWM4?=
+ =?utf-8?B?RHFTRmZFT0RnVG53aU8zaUU4ank5MVNxSXZuUERBTURpSEZBOCtDNE9lUXZ4?=
+ =?utf-8?B?WVdoQWtTekhxdFh6MmluMVBiNGdoZ0RqZXJpSkdVMFFDeW5wV1F6ZTF4RnlC?=
+ =?utf-8?B?YmNJTHloR0VyRVkrbWJSc0hWTWNQRDZMUTRSYkhabFNXdVJ5SklJdzNPWFZF?=
+ =?utf-8?B?VU00QkNRY0xONG4xZ2NuVlVWWnNGMEJKcURXQzU2R3lpYmpNMnRtdUxCVzVT?=
+ =?utf-8?B?Q0xsdFpBbjlEMWZ4bk84S2tXVm5SZWI2VW9uSm91Ry8wYlBHNHA5aUZtcEhR?=
+ =?utf-8?B?TjExcElJbDg4b0ZKa0dhRzNxVkMvcHBtMUVxbTllaXpKbms2VTlEazl5bnp4?=
+ =?utf-8?B?Ris4YW40VWNRSndOdmxKYlB6QXp6dTRjT1ZKNDUzV2JGWVhYajdUY25JaFB3?=
+ =?utf-8?B?NFRKeGM3RjlMMHc5Yko4czgzcTU4YXZDbUFVaEN5T042VFF4NjliSm0wamp5?=
+ =?utf-8?B?U0RDZzdHaUNSQ0hGNDlpc3ZIYzJHaXhHcUd1ZGNncjJWQ1dhOU13bENyY2NG?=
+ =?utf-8?B?d25rUEdGaHpRRFZwUDdIWTJqYm41VUNlTWxDU1orZ3V3MWRKd1ZYOTJvK2Zn?=
+ =?utf-8?B?UWptTktRRlBKbmZTTkFVRmdReHBtOHVrZEJjYkRsVW0zdWU1eUVGWEh1VGNF?=
+ =?utf-8?B?Tk9uK0Z4cTRLVTBVOXpBcjNsSXN5d3NOM00yUmRHR0RvWm1ZT3l1NXJkbngx?=
+ =?utf-8?B?SS9ENUhrdmZmS29XbkR4WGpNTUU4RjlaSFN1Z0dKbCtFOENWdmNWOVV5SHlH?=
+ =?utf-8?B?b0p3cURjNDBEWWtIVjNtSDVTRE9qVU4zM0U4TjZ0dFdoRVVrVHFpUnJINHJL?=
+ =?utf-8?B?dXdQV0dZbk1zakNKeklza0RwcE9GNm9LMTVqWWhqelovem9GWndBSi95SGFw?=
+ =?utf-8?B?b2F1K2ZMYWtaU1pOZjRYRkxNeFRXZkx2UE9STzZMWkZXSXdaUVl1emVrNnlU?=
+ =?utf-8?B?NkxnRkVHVStUczY2anhyTVBkcFdUTUFRR1p1SGs1Si9RcmhFQmZ1cklOY0J6?=
+ =?utf-8?B?OEdkUlBMYiswQkRnMDQxZDl2OFUrL3Q2MENmdGt0ODNxdnlYQUhVM0oyNnRP?=
+ =?utf-8?B?SkUxclpmdktVQ1EyK0doVFlaOFBjZU5lUjBBL0xsWDhuZUpseXlKOFBLNjh2?=
+ =?utf-8?B?N3FIMEZ4Tk45U1pWMWRNTS9LQk9rS0RWblVQQ0NMSzFnQ253b1c3dnl1d1BW?=
+ =?utf-8?B?WTRJWHdyL0E3UjFKYUh0NDloTFdoTTFMaWszdHVYVENBa3NuRVVCd1Fwc1BQ?=
+ =?utf-8?B?bVJzR08ra1Zsc2xzQmFaUFhNOTF4dWROcXJpS0pzaGJiTE9tRWdkVnlpY1pR?=
+ =?utf-8?B?TVVRbDdHTko4RWVLTm1tU0RSaERwRFlYYmsvMXBmK3hSeDVUYzBudENyQnpW?=
+ =?utf-8?B?ZTRiWXVOV2RFVTlRZ1A2QmFQem0rNUFPS1l2b2hWM2ZPQ3JnZEs0cEhVMWFW?=
+ =?utf-8?B?Y1JyWVZkSWNkT0tSdWFFVXV2SmZwSXZSdjgvVTdKMEE0NFE1Nk5rMXcxalJw?=
+ =?utf-8?B?ZXk3cnlEOW1WaVRzV0dFOTd6RkUydVN2ZS9UV3VWcEFjNk5wamRINHJUSmZP?=
+ =?utf-8?B?YTd2LzN6Z2tsT3dJSE16dz09?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YWtCOCsrVWZtMzN4cmJNZ21IUDJZWU5kSi9QN1djeWovczdIUE1DanJNeTcx?=
- =?utf-8?B?M255bHFuTVNBVG5PMm5jbFhJTllrNER3KzhxdmlnNkZQU2FVUmg5ZllvM2My?=
- =?utf-8?B?ZGZXem9HLzEzem9EUVFKTFRFeUhTWHk3Smg2ZXRhbmtHZ3hSbGd3R2x2dFBJ?=
- =?utf-8?B?MU5WbU8wSDVFbmYxSjNHSWlHTksrTFk5clU5bHNwTVJuMVJXTC9RTk1TM09C?=
- =?utf-8?B?aGJCMU9OOEZ0YUxhVStIc3VON2p2T2FlS3FWOUt3MzVMVEx3dGt4RjMxdWox?=
- =?utf-8?B?dkdIS2xkOHlPMDMyb29reDV1NDJwTWxqSHYxUGp1TStZTHUwYTJ4b2VWditv?=
- =?utf-8?B?Y0xJckdqS04wWS9PVzM0WmYrVjRmVEFGQlZKMkROUlYvZm5DNzhRbFpSbnJJ?=
- =?utf-8?B?bGVlUFRNSWJvaGlwZmIzWm5saTJBZGl1MFc0cGt2M0ZDZTEyOVdaZWRlZ3hE?=
- =?utf-8?B?MzZUN0ZlRExjUWdBazZ6M0Vnb3NPUkJaaVBKQWEyZVVzY2cvMm5Xc29YNVZr?=
- =?utf-8?B?V3dHRC9tY2FJUlh2dXZCM0hHOWZzSnNtOXdVRE5ESlJ3R2o4OGhKdE1WWjNH?=
- =?utf-8?B?Y2JwQ0Z1eElvUDlTaUZ4aGlTdkpHV1Y0TE5hVHRPQUc3dDc2U3IyK1F3WnBH?=
- =?utf-8?B?eGFEMWk5OGRFcGFLM0Z3M2ZsSU1ZUlNKZ2FxNmV1MVh5RStxZzh0Wm1aTTJE?=
- =?utf-8?B?VGVJMG9memZKYzhFRWJCbXIzbmpLU1RxTGNja0Ezbm1TOTZwRXVkOE5hRVhq?=
- =?utf-8?B?ajJlNDl2Y011UGU1SmUrcjhZODA1VFh2eHBMN1dmWWpqTEFNSlpLdFAzdGFj?=
- =?utf-8?B?c014WllBVHNYYTh1MDdWRnc1dVhzcDBiT1ZuekVDM2Y5bU5sU1EzdVhQOVJP?=
- =?utf-8?B?YzNEQlB4WlBmUzVkTVVuVEgrbUZaMDRwUnZ4TVJFcWcrME1Gd0xwN0QxYThp?=
- =?utf-8?B?SjZPWUlPTE1Wa2dORXhEWmlLRU1Hc3dRRVpCdy85UTgzYWQ3Ryt6M0FwTUE5?=
- =?utf-8?B?bDRneVZhZUZJT2xwWHQyWmIybDQvZkM4a3BSTlZDVTIyVkxKdEZJU2RYajVT?=
- =?utf-8?B?RHg3U2NzQkExaE5OSVByMDEvQ3VOQnkxVHBXVzVqbEVaVjQzSUJyY1NXeGJZ?=
- =?utf-8?B?dnJHYUx4TDU5VjhUL1NCdXQ1emtUNTg4NytrbHVlWFZNZ3lVcTAxbUhJWk5w?=
- =?utf-8?B?Q21yOFBCRWdRNkpYZlE4N3QwazJqMk5GcE9Jc3RxTkE2eHhQYWZrMjZlUHZR?=
- =?utf-8?B?Ujh6NTBPRHYrc2NhZjRibG95QUpSdy81cm9WV2wrd3E1VjJvYVpKb3dsS3Fw?=
- =?utf-8?B?UHNhTGs5MllwSjBqcnJTMDFyYW9hcGFCT2cwMXpYdFVndmZCUk1LcDErNnd6?=
- =?utf-8?B?bjh0ckNVR0t1VTFUWnoyU2JYME83b3U0bWpTcTNTUDhXQXNQOFZmbFRnMzh1?=
- =?utf-8?B?cjd2dUpBbC9KaHBDbDB0T21aR2dubDVodSt2bE1Gdlg1QmVLM2RaK0VXZE4r?=
- =?utf-8?B?RmxNR2pZcXlUUU13OGRGaCtlb25rZzdzMFNER1ZzWjBLRk44R29aOUEyU0lL?=
- =?utf-8?B?L0U2amptU2t2VHVSUTNOcEFFdklOcGdpNTlTZXdVYTVEclk1cUlEYXdnQUVh?=
- =?utf-8?B?TDZhQkJLQ2R5cFdqSVFSNHRnYVdPYkIxSUNYc09vZjQ3UldHaFdjTEJ5NTJz?=
- =?utf-8?B?Yk82bURWUlpUR3dydm9CZUdjTjNTT2xWTlFXbEsvOUR4ak1nU0tlOXc4dTc1?=
- =?utf-8?B?SlRIWXBSV2orSjhsZ2pNa2VQbFhTMkVTN0lsR0NXemdYUnRGMGRaN215Ujcx?=
- =?utf-8?B?Y2dsWGVjZUh4Y0xHazlrOHBmYjV2eFpvMmZOdi9sd3FBVGJZNTk4aS9IV2Ev?=
- =?utf-8?B?VWJZbktjaGduNndxZHVtU3EyNzZXd2JFZWNQaUtXeEg3VnExdGpqeFhwTjlD?=
- =?utf-8?B?TFZ0dXl5UVJobGRSQWhySnppdFIyR0xUcUhRcEh5b1l3a251TlUyZmZkL2ZU?=
- =?utf-8?B?ZFluNzF3MXpwbUIxSTZSME4vaStNZFUwZ0dQQlpXVitic0dHOXd0eWMyN3Vr?=
- =?utf-8?B?RUpWY1cvT3Fxck9BR3g2Mkw0OUY1SktyLzJmNzNXL1U2UFp6d3JuWllyZGVN?=
- =?utf-8?Q?/LBcfZ3WV7d20fWPB4nwaDEES?=
+	=?utf-8?B?dndkNlRGaE1acVpWRFdXTk9VU3lDdHFhcE9nM2svcUlKL0JUM3h5elc4UkVr?=
+ =?utf-8?B?V1hqWGdBR2dMTnp2TlhJd3dZS2tqWDRlVWJXNEJPNlJJY1N5Z0dkWkk2MzA1?=
+ =?utf-8?B?SW5CZjNhRzVxQnMyQ29VUndpWVBGVDhuSXJIaXlMOEhnZ1ovcjlQaVNlVmt4?=
+ =?utf-8?B?OHpUYzZtMEdqYWlIaXA1N0p1RTBIMWhtaC9mVENzTDFTVEJGRG1YdWJDSU0x?=
+ =?utf-8?B?eUNteWM2WmI4RHVySnRrcmxqM1N4QmhCMzF5RFNrZUFDMjh0LzByUmpxQ1lJ?=
+ =?utf-8?B?N0hEYjBSR3FvRkkraDU4dlB0UjNPQjlRdVQrckV1SXBtRzI3WTFPMXExalZY?=
+ =?utf-8?B?RUJFZFgzVkQ3aUJ3a09BMGhCbnRPT0pES25vN0NpekJLenRGSUtGMXdnSnQw?=
+ =?utf-8?B?MmNXOWpCMjFCN1o0Y1BWcGlDT1NmRFV4eWJQeTVFQ09VUm15SlpINXdWTXpr?=
+ =?utf-8?B?ZzZxZVJvNmFiS2lsb1JJQzBIOUFLTFhUQmZRUGFSTDZJbXAyalVlZm5lWmNX?=
+ =?utf-8?B?MnVhcUNUY01GYkxmQzhWTUlEUytDWGtaZ0dQSDVJUlE4NHpPUURkMnJZRWtJ?=
+ =?utf-8?B?VWRlVXd0QUdDYSt2Z0x2eGdxUGtmMkFlcnR1bVZIaE1Nd0hjc2xxK2ZxRG9o?=
+ =?utf-8?B?TCs1OXo4bDdDa2NYQWtXQTVCS2tQWjlNV2tNS2c0dnBIM2tSMHNRTGk4Y3Jp?=
+ =?utf-8?B?dmxGYzV0bXAzaDROVVJYc093WjNERVJLdTdKcUZ1ZzVRTTJNUm5yNjBsbjlB?=
+ =?utf-8?B?NVRPRTdoSHRmVXVJYjF3RkVMcjFiOGtzRWZoSDZyL3ZQOFFuMlNFbVZBR2Zp?=
+ =?utf-8?B?RmlNbDIwTCtKRXJPNC9GOVVmNEZGWktKTkNBbmRrOUZySnArOTU1U0RjY3lh?=
+ =?utf-8?B?N3RrRGVsN2pFYWplYzJqTXcwdHhCZ0hDNno3SnY2cWlORjZkL2dMMTNDbDIx?=
+ =?utf-8?B?VGRHNGdJZlkvUW1aaVI1UzNhOHJ5eThlNkZrWXhhcnBGVGJlYTZ6c3RJdDNH?=
+ =?utf-8?B?blhpQ09JTlRpSHMveDdVWnRLZGFNeTlsZXdZUzRvZlJ2dXhwWkpDcHRLZmk3?=
+ =?utf-8?B?V0k0YmRZUnY0QUUrejg3UHFhaDh0SHlYY25BdEdTYjF2UmhnL0J2c2sraGxP?=
+ =?utf-8?B?YzZRclY5K0ljSGV2TlQ2MjF4elkrNXEraUJ1ekZyY3V4L0xmM1B0ODNHSWNG?=
+ =?utf-8?B?QWNCMWFXd3pOQ2tIa3BRMnZIMkF4NTVJNll5eDl1OVJNVUxGeWdqSU1vL0da?=
+ =?utf-8?B?MEpCSXVhVDBKZTRneFB3WWt1dlFsQ1lJdm1ZTXFuYys4NzNpTHc5cEVGMVpK?=
+ =?utf-8?B?c0ZyZXhyVlpsZGpzM0FHckEwZTlLbFYrLy9RVllMUXZmYm9yUUFrSGRlWnlh?=
+ =?utf-8?B?NWE4OHJjU1hKeHVxTDliTTA4OVJLUVROeG5EOG5PQXhlbGMrTFF6R0MwZzVF?=
+ =?utf-8?B?SHA3WXNEMUt6blVlci9Rdno1RGo3NkVrMTY1RWRVeTdldnBwTTJpaGo2TGVx?=
+ =?utf-8?B?NjJ0eHFvaWl0K2JWbnpGRVZnYjVSejhBMmorb0EwTTZyWEZIM0ZHQU53eDR6?=
+ =?utf-8?B?UTMveVlxeXZJbEVWcVNFRmpvamY1SVRYcTZyTUYyV0ZiaUpYMkwyUXhtNVNr?=
+ =?utf-8?B?alFqN1o5bGQza2t5dUU5cjVITmpLT01DUWNFU0RhSGFpbjV5ZW1LNndaTUYy?=
+ =?utf-8?B?ZVZEOXZaeXJSTUFyWlZmZjBrTFFzKzNscXcrcllLYnUyVzhTM2xzZUg2Tlcr?=
+ =?utf-8?B?S1U0cXBzTWpUVGtHcHRqN2hxemJTdUpLblh2Y3ljaStTVGd0QjRwb2s2Mnlj?=
+ =?utf-8?B?eWlhcnMramFmbjV6VDJGS1REVmZrS2ZST2FaNm1BNUtwNTU3dEpnM216WFdh?=
+ =?utf-8?B?K0tmNGRNZGlmSmQ3OGNiL2JRSVpPaWl3bVdxKzVPSXhsZXVQS2t6OFJrY1Vp?=
+ =?utf-8?B?bEw3YWJZbFNML3Y5VTU5dVJQbm5hY1JmVFlpdlVoYlkxTHorWHhrdnJpMjBu?=
+ =?utf-8?B?L3JSU05OdUR5c1RxaTcvYTRDeU1DVEpHZ3ZqOVRLb0NhK2prUDNaRWlPVHlv?=
+ =?utf-8?B?S0JRME40MUhqN3EyNGZCQUlMeDR2N2FtcXlWNEhrQStiM2JKd2ZqN3p4S1Bt?=
+ =?utf-8?Q?cmAfBOQIJgPYWImzcsrZiRjhc?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f4526c7-a3bf-4068-dafc-08dcd7f80bdb
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7b0712c-437e-41da-a32d-08dcd7f8d05a
 X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2024 15:39:13.1648
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2024 15:44:42.8652
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fT03oUcDmhFxwkV7O8f7iUQ6g1hSpjqlZ0zJynib/8BbmCSOeY/GYR2fQPGVC7QKNPwkMamWsjrsw6NBcMEXKw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7863
+X-MS-Exchange-CrossTenant-UserPrincipalName: Rt8aIthFoYX5f8ae1/QpqmClDKP8tuqfzL98MrL8vSlLFxGMRYolM18/f93fJ4i2dN5c3UuzuhRKwejgzFiqEQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4091
 
 On 9/18/2024 04:42, Luke D. Jones wrote:
-> Implement the dgpu TGP control under the asus-armoury module using the
-> fw_attributes class.
+> Implement the APU memory size control under the asus-armoury module using
+> the fw_attributes class.
+> 
+> This allows the APU allocated memory size to be adjusted depending on
+> the users priority. A reboot is required after change.
 > 
 > Signed-off-by: Luke D. Jones <luke@ljones.dev>
-
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-
 > ---
->   drivers/platform/x86/asus-armoury.c        | 21 +++++++++++++++++++++
->   drivers/platform/x86/asus-armoury.h        | 18 ++++++++++++++++++
->   include/linux/platform_data/x86/asus-wmi.h |  3 +++
->   3 files changed, 42 insertions(+)
+>   drivers/platform/x86/asus-armoury.c        | 114 +++++++++++++++++++++
+>   include/linux/platform_data/x86/asus-wmi.h |   1 +
+>   2 files changed, 115 insertions(+)
 > 
 > diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-> index 6e4507be0f05..176ab5f105dd 100644
+> index 176ab5f105dd..b276c42f98d8 100644
 > --- a/drivers/platform/x86/asus-armoury.c
 > +++ b/drivers/platform/x86/asus-armoury.c
-> @@ -51,6 +51,9 @@
->   #define NVIDIA_BOOST_MAX 25
->   #define NVIDIA_TEMP_MIN 75
->   #define NVIDIA_TEMP_MAX 87
-> +#define NVIDIA_POWER_MIN 0
-> +#define NVIDIA_POWER_MAX 70
-> +#define NVIDIA_POWER_DEFAULT 70
+> @@ -456,6 +456,119 @@ static ssize_t egpu_enable_current_value_store(struct kobject *kobj, struct kobj
+>   WMI_SHOW_INT(egpu_enable_current_value, "%d\n", ASUS_WMI_DEVID_EGPU);
+>   ATTR_GROUP_BOOL_CUSTOM(egpu_enable, "egpu_enable", "Enable the eGPU (also disables dGPU)");
 >   
->   /* Tunables provided by ASUS for gaming laptops */
->   struct rog_tunables {
-> @@ -77,6 +80,11 @@ struct rog_tunables {
->   	u32 nv_temp_min;
->   	u32 nv_temp_max;
->   	u32 nv_temp_target;
+> +/* Device memory available to APU */
 > +
-> +	u32 dgpu_tgp_default;
-> +	u32 dgpu_tgp_min;
-> +	u32 dgpu_tgp_max;
-> +	u32 dgpu_tgp;
->   };
->   
->   static const struct class *fw_attr_class;
-> @@ -467,6 +475,12 @@ ATTR_GROUP_ROG_TUNABLE(nv_dynamic_boost, "nv_dynamic_boost", ASUS_WMI_DEVID_NV_D
->   ATTR_GROUP_ROG_TUNABLE(nv_temp_target, "nv_temp_target", ASUS_WMI_DEVID_NV_THERM_TARGET,
->   		       nv_temp_default, nv_boost_min, nv_temp_max, 1,
->   		       "Set the Nvidia max thermal limit");
-> +ATTR_GROUP_ROG_TUNABLE(dgpu_tgp, "dgpu_tgp", ASUS_WMI_DEVID_DGPU_SET_TGP, dgpu_tgp_default,
-> +		       dgpu_tgp_min, dgpu_tgp_max, 1,
-> +		       "Set the additional TGP on top of the base TGP");
+> +static ssize_t apu_mem_current_value_show(struct kobject *kobj, struct kobj_attribute *attr,
+> +					  char *buf)
+> +{
+> +	int err;
+> +	u32 mem;
 > +
-> +ATTR_GROUP_INT_VALUE_ONLY_RO(dgpu_base_tgp, "dgpu_base_tgp", ASUS_WMI_DEVID_DGPU_BASE_TGP,
-> +			     "Read the base TGP value");
->   
->   ATTR_GROUP_ENUM_INT_RO(charge_mode, "charge_mode", ASUS_WMI_DEVID_CHARGE_MODE, "0;1;2",
->   		       "Show the current mode of charging");
-> @@ -495,6 +509,8 @@ static const struct asus_attr_group armoury_attr_groups[] = {
->   	{ &ppt_fppt_attr_group, ASUS_WMI_DEVID_PPT_FPPT },
->   	{ &nv_dynamic_boost_attr_group, ASUS_WMI_DEVID_NV_DYN_BOOST },
+> +	err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_APU_MEM, &mem);
+> +	if (err)
+> +		return err;
+> +
+> +	switch (mem) {
+> +	case 256:
+> +		mem = 0;
+> +		break;
+> +	case 258:
+> +		mem = 1;
+> +		break;
+> +	case 259:
+> +		mem = 2;
+> +		break;
+> +	case 260:
+> +		mem = 3;
+> +		break;
+> +	case 261:
+> +		mem = 4;
+> +		break;
+> +	case 262:
+> +		/* This is out of order and looks wrong but is correct */
+> +		mem = 8;
+> +		break;
+> +	case 263:
+> +		mem = 5;
+> +		break;
+> +	case 264:
+> +		mem = 6;
+> +		break;
+> +	case 265:
+> +		mem = 7;
+> +		break;
+> +	default:
+> +		mem = 4;
+> +		break;
+> +	}
+> +
+> +	return sysfs_emit(buf, "%u\n", mem);
+> +}
+> +
+> +static ssize_t apu_mem_current_value_store(struct kobject *kobj, struct kobj_attribute *attr,
+> +					   const char *buf, size_t count)
+> +{
+> +	int result, err;
+> +	u32 requested, mem;
+> +
+> +	result = kstrtou32(buf, 10, &requested);
+> +	if (result)
+> +		return result;
+> +
+> +	switch (requested) {
+> +	case 0:
+> +		mem = 0;
+> +		break;
+> +	case 1:
+> +		mem = 258;
+> +		break;
+> +	case 2:
+> +		mem = 259;
+> +		break;
+> +	case 3:
+> +		mem = 260;
+> +		break;
+> +	case 4:
+> +		mem = 261;
+> +		break;
+> +	case 5:
+> +		mem = 263;
+> +		break;
+> +	case 6:
+> +		mem = 264;
+> +		break;
+> +	case 7:
+> +		mem = 265;
+> +		break;
+> +	case 8:
+> +		/* This is out of order and looks wrong but is correct */
+> +		mem = 262;
+> +		break;
+> +	default:
+> +		return -EIO;
+> +	}
+> +
+> +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_APU_MEM, mem, &result);
+> +	if (err) {
+> +		pr_warn("Failed to set apu_mem: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	pr_info("APU memory changed to %uGB, reboot required\n", requested);
+
+This doesn't seem right.  If you requested "0", you just set APU memory 
+to 0GB?
+
+> +	sysfs_notify(kobj, NULL, attr->attr.name);
+> +
+> +	asus_set_reboot_and_signal_event();
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t apu_mem_possible_values_show(struct kobject *kobj, struct kobj_attribute *attr,
+> +					    char *buf)
+> +{
+> +	return sysfs_emit(buf, "0;1;2;3;4;5;6;7;8\n");
+
+What exactly is the unit for 0-8?  It's obviously not a a multiple of 
+base memory, is it a multiple of an adder?
+
+Is this changing the VRAM allocation?  Like does 0 mean 256MB, 1 is 512 etc?
+
+> +}
+> +ATTR_GROUP_ENUM_CUSTOM(apu_mem, "apu_mem", "Set the available system memory for the APU to use");
+> +
+>   /* Simple attribute creation */
+>   ATTR_GROUP_ROG_TUNABLE(ppt_pl1_spl, "ppt_pl1_spl", ASUS_WMI_DEVID_PPT_PL1_SPL, cpu_default,
+>   		       cpu_min, cpu_max, 1, "Set the CPU slow package limit");
+> @@ -511,6 +624,7 @@ static const struct asus_attr_group armoury_attr_groups[] = {
 >   	{ &nv_temp_target_attr_group, ASUS_WMI_DEVID_NV_THERM_TARGET },
-> +	{ &dgpu_base_tgp_attr_group, ASUS_WMI_DEVID_DGPU_BASE_TGP },
-> +	{ &dgpu_tgp_attr_group, ASUS_WMI_DEVID_DGPU_SET_TGP },
+>   	{ &dgpu_base_tgp_attr_group, ASUS_WMI_DEVID_DGPU_BASE_TGP },
+>   	{ &dgpu_tgp_attr_group, ASUS_WMI_DEVID_DGPU_SET_TGP },
+> +	{ &apu_mem_attr_group, ASUS_WMI_DEVID_APU_MEM },
 >   
 >   	{ &charge_mode_attr_group, ASUS_WMI_DEVID_CHARGE_MODE },
 >   	{ &boot_sound_attr_group, ASUS_WMI_DEVID_BOOT_SOUND },
-> @@ -659,6 +675,11 @@ static void init_rog_tunables(struct rog_tunables *rog)
->   	rog->nv_temp_max = NVIDIA_TEMP_MIN;
->   	rog->nv_temp_max = NVIDIA_TEMP_MAX;
->   	rog->nv_temp_target = NVIDIA_TEMP_MIN;
-> +
-> +	rog->dgpu_tgp_default = NVIDIA_POWER_DEFAULT;
-> +	rog->dgpu_tgp_min = NVIDIA_POWER_MIN;
-> +	rog->dgpu_tgp_max = NVIDIA_POWER_MAX;
-> +	rog->dgpu_tgp = NVIDIA_POWER_MAX;
->   }
->   
->   static int __init asus_fw_init(void)
-> diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
-> index 8bb75cf88305..95f4b6d8ab6b 100644
-> --- a/drivers/platform/x86/asus-armoury.h
-> +++ b/drivers/platform/x86/asus-armoury.h
-> @@ -89,6 +89,20 @@ static ssize_t enum_type_show(struct kobject *kobj, struct kobj_attribute *attr,
->   	static struct kobj_attribute attr_##_attrname##_##_prop =             \
->   		__ASUS_ATTR_RO(_attrname, _prop)
->   
-> +/* Requires current_value_show */
-> +#define __ATTR_GROUP_INT_VALUE_ONLY(_attrname, _fsname, _dispname)     \
-> +	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);   \
-> +	static struct kobj_attribute attr_##_attrname##_type =         \
-> +		__ASUS_ATTR_RO_AS(type, int_type_show);                \
-> +	static struct attribute *_attrname##_attrs[] = {               \
-> +		&attr_##_attrname##_current_value.attr,                \
-> +		&attr_##_attrname##_display_name.attr,                 \
-> +		&attr_##_attrname##_type.attr, NULL                    \
-> +	};                                                             \
-> +	static const struct attribute_group _attrname##_attr_group = { \
-> +		.name = _fsname, .attrs = _attrname##_attrs            \
-> +	}
-> +
->   /* Boolean style enumeration, base macro. Requires adding show/store */
->   #define __ATTR_GROUP_ENUM(_attrname, _fsname, _possible, _dispname)     \
->   	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);    \
-> @@ -105,6 +119,10 @@ static ssize_t enum_type_show(struct kobject *kobj, struct kobj_attribute *attr,
->   		.name = _fsname, .attrs = _attrname##_attrs             \
->   	}
->   
-> +#define ATTR_GROUP_INT_VALUE_ONLY_RO(_attrname, _fsname, _wmi, _dispname) \
-> +	__ATTR_CURRENT_INT_RO(_attrname, _wmi);                           \
-> +	__ATTR_GROUP_INT_VALUE_ONLY(_attrname, _fsname, _dispname)
-> +
->   #define ATTR_GROUP_BOOL_RO(_attrname, _fsname, _wmi, _dispname) \
->   	__ATTR_CURRENT_INT_RO(_attrname, _wmi);                 \
->   	__ATTR_GROUP_ENUM(_attrname, _fsname, "0;1", _dispname)
 > diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index 7caf2c7ed8c9..86629e621c61 100644
+> index 86629e621c61..e1aeafdf05d5 100644
 > --- a/include/linux/platform_data/x86/asus-wmi.h
 > +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -134,6 +134,9 @@
->   /* dgpu on/off */
->   #define ASUS_WMI_DEVID_DGPU		0x00090020
+> @@ -136,6 +136,7 @@
 >   
-> +#define ASUS_WMI_DEVID_DGPU_BASE_TGP	0x00120099
-> +#define ASUS_WMI_DEVID_DGPU_SET_TGP	0x00120098
-> +
+>   #define ASUS_WMI_DEVID_DGPU_BASE_TGP	0x00120099
+>   #define ASUS_WMI_DEVID_DGPU_SET_TGP	0x00120098
+> +#define ASUS_WMI_DEVID_APU_MEM		0x000600C1
+>   
 >   /* gpu mux switch, 0 = dGPU, 1 = Optimus */
 >   #define ASUS_WMI_DEVID_GPU_MUX		0x00090016
->   #define ASUS_WMI_DEVID_GPU_MUX_VIVO	0x00090026
 
