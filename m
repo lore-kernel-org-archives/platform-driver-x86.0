@@ -1,176 +1,169 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50AD3198A33;
-	Thu, 19 Sep 2024 17:36:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1885B18C3B;
+	Thu, 19 Sep 2024 18:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726767414; cv=none; b=JARgzVID+HrhoLJjMsg6aoptljbQ+QVHq3othvNkHi54Qcn4O3NVrzPg7NMcb/JiVQMRmGbmzPabZqqEIB6kL77QLq86DoEZStqt+qiyaxvPcssbvqM+XkI90YbSvaRWJfWlIvZ3g2Dkak6Z26Wl39xvmedJPXYSxPBEPUYjLXU=
+	t=1726770085; cv=none; b=GG3WHLbdcEzXNDCwbAbDRnZJfZ4Xp9i+v5l0yDvW/6vQE3vmNQsBYvHfat1KXlPtpDSc9xnkNSr58OXcPym5eFfmMWq7uSXOaLXtlXprUgq1KWc/GZZoPUn5NMyjgs0xCGUzYSJyb+/LGyGlJLX+dD9ZIrm2C527BQDvV2jI7JA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726767414; c=relaxed/simple;
-	bh=YfZOFvIcXWLUHkvEdJH8MXkt4BbsDKL4o47p1v9LFyc=;
+	s=arc-20240116; t=1726770085; c=relaxed/simple;
+	bh=tVdW+YS/15p5QfR0bbmmx60ovpITjJVJpY3Swduqmlw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c7riRiPqcMutUzJV+uSe1tFLd8Njl+jbnKLtuhbG0NGYDz4vnfU3MPrPE3TVD3X39z05iaassYF+SgDp89utX8J209KfvobzZFG0O4OTjxG937JvAYx0amT8GoSgh+IB0fE4jihZ/i7QlTdX5s4Qc9O6kg+XBtTOsJ0pf8b9Dq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=NKtbfV2k; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	 To:Cc:Content-Type; b=TEMXipDKL+/VWtLAQ8cYELWF6MeMVzCm5kT2fGwUKG0ej2wGQJn+YA/YnK5aZ+4xKv3bhHp6eHpX17X2AW0ihC+GMx/KyIh5M5ruv6MQ0jslr1tJLAtjFUFGNibVWKzq/TvrG/H/UDimI0VR4r5VgyTLwzTSYKpma8DhgC55gCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JccF2kx/; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="NKtbfV2k"
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 9B60D2E09C22;
-	Thu, 19 Sep 2024 20:36:44 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1726767405;
-	bh=1V7eYe7VNVNxXo3maIvrt0DbBepNSvx/knbmHSFqtNo=;
-	h=Received:From:Subject:To;
-	b=NKtbfV2kvhBbpdzvdQ2onTBxXUlYq6B6GmvJG4SDBU4e0DzPzvkgNul1fX/7ux/Pv
-	 saFTcda+1bZt1vxN1Y4y7LVYy2JWsjam42k0A0VIPtD/3Ju3XttcC7zwNLC9ZgrKER
-	 nKfsfldaMkyYdlIJ+Co5AZXm5n3DDmSQDyp1qSJ8=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.179) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f179.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f179.google.com with SMTP id
- 38308e7fff4ca-2f74b6e1810so9763981fa.2;
-        Thu, 19 Sep 2024 10:36:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCVstHuCtsjnEURODmiXR/Eari8aL146OBW2CGXCvEphdEnjZPksC9jbWy4jKWTVnVs6ME5dpgPm85OH0Ob7bNCditsc@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUuaK+ri6vcnVeIW0ZK9WW+rXMDrPoxiNx9Lzcc0v/32ckx7jz
-	pxbrTVe6qz1UmF6mRT6QkEqvT9iyDaCHR95jSpSFrZkOPDmH8sFa+LCGaSt3bYSFOdlHknAbCwi
-	SNBS96DL8ziLGmKQ3eODUvNysNDU=
-X-Google-Smtp-Source: 
- AGHT+IH0MX0BgWcbYPictzjYNHEGv06IfRe13L/hScZ3GhZPVpnuAWsphnjEAlRbc/fyAvMdBUnGdwoKZmJvTeaPpNs=
-X-Received: by 2002:a2e:a543:0:b0:2f7:4f93:ef8 with SMTP id
- 38308e7fff4ca-2f7cb2f9141mr2513111fa.4.1726767403986; Thu, 19 Sep 2024
- 10:36:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JccF2kx/"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2d88a8c66b7so188180a91.1;
+        Thu, 19 Sep 2024 11:21:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1726770083; x=1727374883; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+MrYY6KXrN1UOAxqtI8px2dOYmvL0jSPY/p2rOj/QCs=;
+        b=JccF2kx/K505ONDiYMj7nSB3hCJgjrC4rywkV5N4ibgBMR6BGR3Ln3rwle1ThyyMIC
+         /zJqWUawSS1KoPmN0QjgTgvnXq9Z0YcVBAZJjUJ1NB0vKq7DYXHhZBhlyNiKqV34el6T
+         cGqeWCJF7JlIxK68yrPZz+l+1FQ0SNPtNzCHpwscOm3QlM1iPPoVvFMtH8NmzA6hTb8f
+         JPZh3GsA00b/degqUtPro9/Ivsf9TgeIIEXOyftklCwVqL1dMWCyeFYPiDpkS6C0UKXK
+         U12Jk+Or8xqOnHMEwaAhsx/ozPj56QorJyzWhAjJ6jdWzJF9XAWigu1QiTE3AAu04Tmi
+         Vw6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726770083; x=1727374883;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+MrYY6KXrN1UOAxqtI8px2dOYmvL0jSPY/p2rOj/QCs=;
+        b=Oj4aH4aP1qaqCWicn9CPDQDKTjAOPURKBVCYnFRGY1d2wCma16NC9TqAXeXlwYW28e
+         WXvQkr6KHhlANIDr1e6jmqebuIqblsotyP1CZTHmInigaTGrLSC7bHU99DOefcqqvlzY
+         JLsnvAdK/IKu2HEEUMvPjqOSbfwki6BHxaGtwhQElHL8WqwYL7xFPUCqRUjz/0a7rM0V
+         pq2NL4K2swcxhwTaDXrSZsLN2/N/FA5db8PaCsPRrcnR4TdhmF4cxtoOXODEDGUgyzss
+         CQNCGad28TxPcqEZch/mbC+FqKgPTqj+bT4ATjOa4+Db+vvu/yPHJ6myXG8Y/rvtKF8Z
+         Dw7w==
+X-Forwarded-Encrypted: i=1; AJvYcCUnwl6EsUDVugFFgTWMhGqsVexrhLAO7Ja8S3g/p/Ten113amvSPs/LBPsm68cW2yvV9ylkX74Q7k98b7PmrIxlTZGpWg==@vger.kernel.org, AJvYcCUt8Tr0sscaQxgo8rQvhJzZgPX7vCcYh7PooA1qaZwEmFM7WIS2B0scTVRwegsGaMCVC6VSfTTGhg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6P2wQDPvwINIgl9W7GuUDkLR4D33FEQ6+Xjkken+/uS6xEbAl
+	QFWk64Be4BoboBs3P9hMSDYwRuu4ldayputft/DSHZEGqiRfMhBYNQrA9XaJN/RWzFMwCRZ/Yp/
+	dLZ4nd4EYL38NVzDvh5aYIfm2LY4=
+X-Google-Smtp-Source: AGHT+IEXXeIM8dNWFS4VPSURU5IYVIU2PDmNudByY32B+86hWDh8xiL2RTOEsF12kexHYet16PlAcE3UBN3xeJ+F2Lg=
+X-Received: by 2002:a17:90a:fa4b:b0:2da:6fc9:1a52 with SMTP id
+ 98e67ed59e1d1-2dd7f17bb60mr186649a91.0.1726770083232; Thu, 19 Sep 2024
+ 11:21:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240919171952.403745-1-lkml@antheas.dev>
- <20240919171952.403745-2-lkml@antheas.dev>
- <0f758a1a-958d-41d6-a572-cf544590450a@amd.com>
-In-Reply-To: <0f758a1a-958d-41d6-a572-cf544590450a@amd.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Thu, 19 Sep 2024 19:36:32 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwEquttfbzat4ZQbQ3h_7Gi2QZ7qDBr=QgaZBU0MejEQ6Q@mail.gmail.com>
-Message-ID: 
- <CAGwozwEquttfbzat4ZQbQ3h_7Gi2QZ7qDBr=QgaZBU0MejEQ6Q@mail.gmail.com>
-Subject: Re: [PATCH v1 1/4] acpi/x86: s2idle: add support for screen off and
- screen on callbacks
+References: <20240919171952.403745-1-lkml@antheas.dev> <20240919171952.403745-3-lkml@antheas.dev>
+ <1cbc0cda-549a-4333-9045-470c51981af5@amd.com>
+In-Reply-To: <1cbc0cda-549a-4333-9045-470c51981af5@amd.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Thu, 19 Sep 2024 14:21:11 -0400
+Message-ID: <CADnq5_N63ncHDdr+=xB5RqYZXnMjjrVCgqTDz0zmPdSP98ip-A@mail.gmail.com>
+Subject: Re: [PATCH v1 2/4] acpi/x86: s2idle: handle screen off/on calls
+ outside of suspend sequence
 To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+Cc: Antheas Kapenekakis <lkml@antheas.dev>, linux-pm@vger.kernel.org, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, platform-driver-x86@vger.kernel.org, 
 	luke@ljones.dev, me@kylegospodneti.ch
 Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <172676740494.12056.6323259462321467673@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Transfer-Encoding: quoted-printable
 
-As stated in the cover letter, I would like to add you as a co-author.
-Just did not (could not?) do it before asking.
-
-I will do it on the next revision. Just tell me which patches you think
-it should be on.
-
-(hit reply instead of reply all by mistake, so you have this email twice now)
-
-Best,
-Antheas
-
-On Thu, 19 Sept 2024 at 19:29, Mario Limonciello
+On Thu, Sep 19, 2024 at 1:35=E2=80=AFPM Mario Limonciello
 <mario.limonciello@amd.com> wrote:
 >
+> +dri-devel
+>
+> For those joining late; this is the full series for context.
+>
+> https://lore.kernel.org/linux-pm/20240919171952.403745-1-lkml@antheas.dev=
+/T/#maee308be5349d8df25c8ccf12144ea96bbd4cbbd
+>
 > On 9/19/2024 12:19, Antheas Kapenekakis wrote:
-> > The screen off and screen on firmware functions are meant to signify
-> > the system entering a state where the user is not actively interacting
-> > with it (i.e., in Windows this state is called "Screen Off" and the
-> > system enters it once it turns the screen off e.g., due to inactivity).
+> > Currently, the screen off/on calls are handled within the suspend
+> > sequence, which is a deviation from Windows. This causes issues with
+> > certain devices, such as the ROG Ally, which expects this call to be
+> > executed with the kernel fully awake. The subsequent half-suspended
+> > state makes the controller of the device to fail to suspend properly.
 > >
-> > In this state, the kernel and userspace are fully active, and the user
-> > might still be interacting with the system somehow (such as with
-> > listening to music or having a hotspot). Userspace is supposed to
-> > minimize non-essential activities, but this is not required.
-> > In addition, there is no requirement of suspending post the screen off
-> > call. If the user interacts with the system, the kernel should call
-> > screen on and resume normal operation.
-> >
-> > This patch adds a set of callbacks to allow calling the screen on/off
-> > callbacks outside of the suspend/resume path. It is based on
-> > Mario Limonciello's patch on the superm1/dsm-screen-on-off branch.
->
-> Based on?  It's nearly an identical patch [1].  The screen_off/screen_on
-> lines in struct platform_s2idle_ops are just placed in a different location.
->
-> IMO there should be more attribution here, either a Co-developed-by tag
-> or sending my patch directly and adding your S-o-b to it.
->
-> Link:
-> https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git/commit/?h=superm1/dsm-screen-on-off&id=7b80581428315f973410dccf0402a86266fb0d9a
-> [1]
->
-> > However, the intent here is completely different.
+> > This patch calls the screen off/on callbacks before entering the suspen=
+d
+> > sequence, which fixes this issue. In addition, it opens the possibility
+> > of modelling a state such as "Screen Off" that mirrors Windows, as the
+> > callbacks will be accessible and validated to work outside of the
+> > suspend sequence.
 > >
 > > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 > > ---
-> >   include/linux/suspend.h |  5 +++++
-> >   kernel/power/suspend.c  | 12 ++++++++++++
-> >   2 files changed, 17 insertions(+)
+> >   kernel/power/suspend.c | 16 ++++++++++++++++
+> >   1 file changed, 16 insertions(+)
 > >
-> > diff --git a/include/linux/suspend.h b/include/linux/suspend.h
-> > index da6ebca3ff77..96ceaad07839 100644
-> > --- a/include/linux/suspend.h
-> > +++ b/include/linux/suspend.h
-> > @@ -132,6 +132,7 @@ struct platform_suspend_ops {
-> >   };
-> >
-> >   struct platform_s2idle_ops {
-> > +     int (*screen_off)(void);
-> >       int (*begin)(void);
-> >       int (*prepare)(void);
-> >       int (*prepare_late)(void);
-> > @@ -140,6 +141,7 @@ struct platform_s2idle_ops {
-> >       void (*restore_early)(void);
-> >       void (*restore)(void);
-> >       void (*end)(void);
-> > +     int (*screen_on)(void);
-> >   };
-> >
-> >   #ifdef CONFIG_SUSPEND
-> > @@ -160,6 +162,9 @@ extern unsigned int pm_suspend_global_flags;
-> >   #define PM_SUSPEND_FLAG_FW_RESUME   BIT(1)
-> >   #define PM_SUSPEND_FLAG_NO_PLATFORM BIT(2)
-> >
-> > +int platform_suspend_screen_off(void);
-> > +int platform_suspend_screen_on(void);
-> > +
-> >   static inline void pm_suspend_clear_flags(void)
-> >   {
-> >       pm_suspend_global_flags = 0;
 > > diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-> > index 09f8397bae15..19734b297527 100644
+> > index 19734b297527..afa95271ef00 100644
 > > --- a/kernel/power/suspend.c
 > > +++ b/kernel/power/suspend.c
-> > @@ -254,6 +254,18 @@ static bool sleep_state_supported(suspend_state_t state)
-> >              (valid_state(state) && !cxl_mem_active());
-> >   }
+> > @@ -507,6 +507,19 @@ int suspend_devices_and_enter(suspend_state_t stat=
+e)
 > >
-> > +int platform_suspend_screen_off(void)
-> > +{
-> > +     return s2idle_ops && s2idle_ops->screen_off ? s2idle_ops->screen_off() : 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(platform_suspend_screen_off);
+> >       pm_suspend_target_state =3D state;
+> >
+> > +     /*
+> > +      * Linux does not have the concept of a "Screen Off" state, so ca=
+ll
+> > +      * the platform functions for screen off prior to beginning the s=
+uspend
+> > +      * sequence, mirroring Windows which calls them outside of it as =
+well.
+> > +      *
+> > +      * If Linux ever gains a "Screen Off" state, the following callba=
+cks can
+> > +      * be replaced with a call that checks if we are in "Screen Off",=
+ in which
+> > +      * case they will NOOP and if not call them as a fallback.
+> > +      */
+> > +     error =3D platform_suspend_screen_off();
+>
+> It's a bit muddy; but I wonder if calling
+> drm_atomic_helper_disable_all() makes sense here.
+
+I think we either want to call this after devices have suspended or
+it's something the drm drivers would call themselves once they have
+turned off the displays as part of their suspend handling.
+
+>
+> > +     if (error)
+> > +             goto Screen_on;
 > > +
-> > +int platform_suspend_screen_on(void)
-> > +{
-> > +     return s2idle_ops && s2idle_ops->screen_on ? s2idle_ops->screen_on() : 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(platform_suspend_screen_on);
+> >       if (state =3D=3D PM_SUSPEND_TO_IDLE)
+> >               pm_set_suspend_no_platform();
+> >
+> > @@ -540,6 +553,9 @@ int suspend_devices_and_enter(suspend_state_t state=
+)
+> >    Close:
+> >       platform_resume_end(state);
+> >       pm_suspend_target_state =3D PM_SUSPEND_ON;
 > > +
-> >   static int platform_suspend_prepare(suspend_state_t state)
-> >   {
-> >       return state != PM_SUSPEND_TO_IDLE && suspend_ops->prepare ?
+> > + Screen_on:
+> > +     platform_suspend_screen_on();
+>
+> The problem with my suggestion above is what would you put here for
+> symmetry?  drm_atomic_helper_resume() doesn't look right to me.
+>
+> Maybe it's a no-op from DRM perspective and the drivers handle it.
+
+if suspend is aborted, this should be called after devices resume or
+from the relevant drm drivers.
+
+The question is whether platforms with multiple GPUs care whether all
+GPUs have their displays off or if just the integrated GPU matters.
+Maybe after all PCI display class devices have suspended?
+
+Alex
+
+>
+> >       return error;
+> >
+> >    Recover_platform:
 >
