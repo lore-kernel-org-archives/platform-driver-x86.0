@@ -1,245 +1,315 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2077.outbound.protection.outlook.com [40.107.236.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD03C36B11
-	for <platform-driver-x86@vger.kernel.org>; Thu, 19 Sep 2024 18:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726771486; cv=none; b=i1DWnQa+HNME1nSgqXZXeBtsYfCnxdvAQn8o6YB5AkNXDmSjIpMBJZNSK3aulrBBdCcVTq72jkbkWmc3Y0m9tAbop3cUqU+O288V1MVE+E1t6dHuekY4++CzGP5rphpfbShKQVpdRyah6bEWEvVCcdEuuXbwkV5CVwknWWVC+OU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726771486; c=relaxed/simple;
-	bh=CwyXT3kyniWMZ7meqV9Ihpin7fobMEusJDY3ir0XJ84=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bknczLug0E2rGVD1XnIYeofgrb0AcPmmEWRomWN988hNeBLT4mRgESq6e9PTTE/ScSM0OG7etd2YPc2SAft+TYd5l/Sp7AUd+0mXV4UAWPMpI7N7WU8oeCWnHY790gEnmQEyDcFBbGEcmC29m7s9b+JBq5DctxpHeslGWvKEl7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eYWhcHZw; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70EBC1DDD1;
+	Thu, 19 Sep 2024 19:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726772495; cv=fail; b=Hhm680vbyfk59B6u/UcmMNLx3Sr7ORK3CpITq+r93TfVL37Hg4l2MniMLxLg9bdzHlAbaHZd4WF59pUBGmaD2i4FN/3VnS+Dm3df90fK42fI8kZMmq2MroX4X+xrhC+8Gtj8zzLJg8tNBncYzKcLT8V0J/LmyiSaymzagAiXVAE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726772495; c=relaxed/simple;
+	bh=eS4YPqeI5zI95Wf0ZME8mh1m7yaXIo+BQOc1QvdPV0I=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Xg3DWxKjsLIXBk4O7rSbxCijiXecQn0LmRRWqA+JU9Bqmso0mHowmeJ6HuwC1bNesuv8yhjBrsspzKpn5nCxYUVWlFEfi8/FV2c2+4MZsRPdfqYYaHM40KsJMMzV8af/lSMEmcefjPBnp1Bsxt7PYM4Cmj6sLGDy3hmlmddkt/c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fGhFXTxs; arc=fail smtp.client-ip=40.107.236.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eYWhcHZw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726771485; x=1758307485;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=CwyXT3kyniWMZ7meqV9Ihpin7fobMEusJDY3ir0XJ84=;
-  b=eYWhcHZwxeknY4Vsfis22lf5AKDDAbMquqPBDje8+Gc8UEsUv7w3aGWk
-   2Qm5V0VGvi84qcTW8sccFqUttzAn7AxMHRH8EZRhaUTeCchMFnNqOSkBr
-   fpFzGdAens8us+DuzqkFUrGQ7t23nI3z2FxsjPuLBAl4jcJvuwGagQLQQ
-   IXYd1ri4eu3oDCGqpfNtFyD/2Y7EpdxoUdDhaLca6YmhlBVjJecEDo0z7
-   AXysqjxjFPcTNDxuFJiFfRPhmy0oR74HhEta2JG8SbF7KWVXc3vNQksEa
-   K4nuPNTfZUBrf+kmg4egEZ31MaihJ5MOZx4QX9RAXqoKIIyOi9yZWOOso
-   A==;
-X-CSE-ConnectionGUID: AlHDfiteQUeVQ4JQI/VvOQ==
-X-CSE-MsgGUID: l875AOqmSTCOHgmvUGFJVw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11200"; a="37135524"
-X-IronPort-AV: E=Sophos;i="6.10,242,1719903600"; 
-   d="scan'208";a="37135524"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2024 11:44:44 -0700
-X-CSE-ConnectionGUID: FnMKzT+pRvaO+KO837NFbA==
-X-CSE-MsgGUID: r11V2dQJT+yClMH4wdgM7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,242,1719903600"; 
-   d="scan'208";a="69633286"
-Received: from dgramcko-desk.amr.corp.intel.com (HELO [10.124.223.88]) ([10.124.223.88])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2024 11:44:43 -0700
-Message-ID: <8c8267e5695c8e1b0a0b0c52050c43e22359c915.camel@linux.intel.com>
-Subject: Re: [PATCH v2] platform/x86: ISST: Fix the KASAN report
- slab-out-of-bounds bug
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Zach Wade <zachwade.k@gmail.com>, hdegoede@redhat.com, 
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org
-Date: Thu, 19 Sep 2024 14:44:42 -0400
-In-Reply-To: <20240919163713.3126-1-zachwade.k@gmail.com>
-References: <c9f3758e027e06aaf5776904d6e7a0de0bf916c2.camel@linux.intel.com>
-	 <20240919163713.3126-1-zachwade.k@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fGhFXTxs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gC7cv3EUpvy2NsjucSY5J3KSe0IupCGSyRicSSgWeMXLfsvJmHLRNFh1ww7/SyUfpQPnseKTRb7WSEQM8CXDJI36W1UFOjzKqRmocGmzTDD3o9JhJuIob49zlQtO/19mOay3RRBZwKrXh7UIoh42KauCMy4drzrq1iWK31VOVI+tE+IiAvbDOgbG4mUzvBg3QVaCBccMeJn0m++C/2K2rVDhYBe1H51NFx3mT6+Ow6Rw24mo3jlaHNKxrimhTaFrfvXeLlncfRm/qUYiwA3xwbibPK/S7l6YtVO9eRXsi7cW1CTJpXC+YbrVfrrpJGgtO6Q0vLgyysrAiBxMpNjO2w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=79wmOru49VRN5FbFLIJ8d3n/d/erjfQc25w8xmb9OuA=;
+ b=j4f9/b5mzbT6IojR9MP7ra75T/+wOHdLczGAFxE6zYTK/xEfi+dutW0HVPCxB7sZYYP6IVeDhIwh3qf3bBXWRPeuaW6iIrUmhZ8u5eHE07exHa7O4wUHL3JicUDTEpVMJM+J/8e6QAMWorVxao3ciQ4T2GlSr85WzdQIlcuX240erOj97HJ4aRAtOUxG3DFZCoTjxHJz0TptcWJlrAXopkEdnm8eKmy7Rss2Ph5oL0inASc93VWbCseYu1D9u7i6/fyoKIK35euWdLV+XDkuRrlWMugITAt8duEgslJXrr/+Cok82bwInOGLdyl0qHc+/TKkbQh5GHyKXuYqcRp5vA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=79wmOru49VRN5FbFLIJ8d3n/d/erjfQc25w8xmb9OuA=;
+ b=fGhFXTxs5OKkpCxa9Am6LfNml6a1aNIx2S56orwgUzGd3VhXAAtWJEI4Ud8Ibe7CfdLWSZxxdt2YHBuFdrVMsBwu3E4JuMQoehyis5kLbVF4cQE7xUwJZxr5iEuWb7O2Ph4EcIgcNe4paaa1rAmTI/XRJE/WWl7IwaA2E4ZWm+o=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SJ1PR12MB6241.namprd12.prod.outlook.com (2603:10b6:a03:458::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.17; Thu, 19 Sep
+ 2024 19:01:30 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.7982.016; Thu, 19 Sep 2024
+ 19:01:30 +0000
+Message-ID: <7c604018-59a3-4b70-83d1-06f0ed858b73@amd.com>
+Date: Thu, 19 Sep 2024 14:01:27 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 3/4] acpi/x86: s2idle: call screen on and off as part
+ of callbacks
+To: Antheas Kapenekakis <lkml@antheas.dev>, linux-pm@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, luke@ljones.dev, me@kylegospodneti.ch
+References: <20240919171952.403745-1-lkml@antheas.dev>
+ <20240919171952.403745-4-lkml@antheas.dev>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20240919171952.403745-4-lkml@antheas.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR04CA0108.namprd04.prod.outlook.com
+ (2603:10b6:805:f2::49) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ1PR12MB6241:EE_
+X-MS-Office365-Filtering-Correlation-Id: 93e2f6f1-0704-42b4-b022-08dcd8dd7866
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RXpqb0tzYVVmYy9ZOW10K2J1RkU2QmRWbS9CSVVEOTNJaithZWRiTGtPSzBX?=
+ =?utf-8?B?YUVMLzd0SDRTZGpHNVdzSU0xcnl4ZlB1enhuRlp0VVF3Mm93ajVsZ0NTY3NF?=
+ =?utf-8?B?dHpsODJPd0NVVkZQUDh6WDVZSlk5TFBFR1pLeHpFeVdCeXF0M1lxNVhyeWRk?=
+ =?utf-8?B?ZGJPS2NhendvU0VHWWxOVG9melYwVjYyd1EwMGJvUXFBQkJUcEgxblljSUNm?=
+ =?utf-8?B?c2Nhd0dQUWl0TElnZjFkQmJVNXFQMWFFRzZMMEJtSkZUNEUybEN6VGZXVWJS?=
+ =?utf-8?B?THlwNFhQeWZySzBZTzhmV3dPZjZJNTlrY3VvWnd5RldBcnNlUU9OUFRFTUx1?=
+ =?utf-8?B?czY1OHFucnd2TEh4aTdpcFZVeEJZWHk2MVdvaWMwMFNJOC82QUdCeFpYUlJj?=
+ =?utf-8?B?NzJQZ3RacVhGRjZ5Unh2aHBrNjlmTmQ0UnpyaHpWQ3E4Z0xHRUpiTlQ2L1Iz?=
+ =?utf-8?B?OTAwdjRTNmVjanN1ZW5VR3RXN2NQU0E3ZUVyaGZZUDN3VU1COXhkbm8ycWxk?=
+ =?utf-8?B?ajRsNE9FS2l5WmxNUFZ1dTFzVVhiN3hhakZxUUoxOEdoZzV6VERiY2ovK3JF?=
+ =?utf-8?B?ZTBwSFo3NTJrbkx3S2QvejFVTjQ0V0lncEgwQzNTZkVGNVg3ejE1emxXNU5p?=
+ =?utf-8?B?QXY3N0E0SHFkaWFpNStTTTlVT3JKTnpwZG5hdFNrb2hYUktEd05ra04zeTFq?=
+ =?utf-8?B?bGk5VVJjK2hCWmd0WXdTSEJhOW9iYlUwZCtPTmxUc09udjJ3WHJFZGRPYVZ5?=
+ =?utf-8?B?K1NKZXlwcFgrVEJEOVVhWVRwTE91Z0FWNjJIb3JDWVd6ci9BRWtzN0V0d0oz?=
+ =?utf-8?B?Ym1qYTFwb0x0Tkp3Y0N1c2VieUNLeUdpUUlWZk5GYW1GTFI2Nnh5dnpZanl1?=
+ =?utf-8?B?QTFVWEpsMW1hOE5pOUo4d3hHN1JrVTlCWGN3ZkhsOThMRHdNR1pxMTNIUXNZ?=
+ =?utf-8?B?eXRJYXUzZlpEYS96djNxUnFIcG1nMU1xVHZOaHdWbnpmQWpEdkxIN012dHF3?=
+ =?utf-8?B?bitzOWVEN0k2OGlscjlwcnlTRWgzQjBLd01CUk84RjJTcHFQN1RLTWREQ0k0?=
+ =?utf-8?B?L0RrNTNtSWJlRTFRckF2bG1jcStxQ09UUG1KUXhIRkhXVTZKTWtmS2tWZVRF?=
+ =?utf-8?B?RVRrbGNLeEErTS9HY0kzeG5WUHVIOG5xVGlyRjdCZkR1cEZJaWFaK28wdmlw?=
+ =?utf-8?B?Tmw4b2dGMXlORGtMcnl1QzhkazNBdzFiVlVGRHNUVkRVaWMzQzVQT1RUcFM3?=
+ =?utf-8?B?UjVVWmxiQVlsTjRxSksxQWlYc3NuU3krMmV4dXNPZjBUdE0zUHdCYnoyT2ZB?=
+ =?utf-8?B?MGw1TlVTQitPbnl6MWNLNENvK1hFYmg3c2MvcjJoS01BcDhtWGhIbEpSdlI0?=
+ =?utf-8?B?cTM4YnlsMERtbUlrV3dPVUFFNGxqVjVwQWtGUWZlRHZoT05xQmRSSGoweHZn?=
+ =?utf-8?B?dExnY1J1QzY0R3hKNjZuS2k4cWo2YjBhMSt5dHVsT3A1VS8vcS8zZGRiTGtQ?=
+ =?utf-8?B?NVhJL0VZa0d0TzRwYTlXemN0SUtNNFdJME1tQjBiOWJ4b21DOFZ3cElNMFZv?=
+ =?utf-8?B?NDVaTXg4RTU3VFFldFNiZ3Qxa2dnSTBTalVWNUdSem9qaXVKQkNaclhPVENz?=
+ =?utf-8?B?WWtPdkFuOFNyQUxFWjBEKzZaK2huR0JiRGN4bzRYYmNlZytvOVNwZ2NnaUpY?=
+ =?utf-8?B?eFNDeXdWOGt0M3JUSDA5dko3ZGJsbmJhTjFndG1qZjByTC8vNTYrTHlRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dWxxdTN0Q2lVekpLdDdzYVY0eWJqVS9oM29MSUlJbDlCT1JTcHZPdTE3Tkg5?=
+ =?utf-8?B?NmR1RGpUZTdibnQzeUhFaVZXckZlUFVkM3dyRzlZeTRiZUU2S2E2SEl5SWlW?=
+ =?utf-8?B?V0MrdkNkbk40b2JQekxvNmE0L0NCTGNkWXF5SnltL3gxaXU3dE51VDRxRWpJ?=
+ =?utf-8?B?ODNlY2ZWUGhxajd3NXMxY09JemtjOFhnVmVJUTJvZUk4VDBJVC9ybHZiNTZ6?=
+ =?utf-8?B?MW90ekpNSnJNRWtqVnEwOEIyNkVXTlJMTmpEN1dIM28yY1Y5emtMRmpUd0ZC?=
+ =?utf-8?B?dEtNc05iUUlpbzlJc2pEcW1PVWJUaytleHNHd2pDNnJ5UTJ5ZG1kZGt2cHps?=
+ =?utf-8?B?MXM1NGJzbFZ2QjRTNGo5NDBXN0NpNUx6WEhoU1djNkNmbUZBd2gwOEpnV1ZB?=
+ =?utf-8?B?L2o4T2FBd3VrWkVDektYVHZZb2FydkZVVFpLUkpkK3pkejh6d2dCb1A3a2Zs?=
+ =?utf-8?B?bytIS3JhdHJBcVhOc1VLVVdxdjl4bTJUYS83OVc4WnRzS2xBam44dS9RT1p5?=
+ =?utf-8?B?OGcrTkNvNnI3Sk9zeWZzcllaVFZ4Z0dxdUFFUFh1S1ROcWtXd0pTK1hCa1VN?=
+ =?utf-8?B?MGlJbE9jRlJLdTZCcU1ubW1XMXEzWGJnNStuUFJvVVRhbkd4ZnR4aUdtbEQ3?=
+ =?utf-8?B?L0pOVS9lRmtGVkF2U1ZscTduanBJdUFvQWpwODF0ejBLck10eVVYSlRDNTQy?=
+ =?utf-8?B?WFdSUGlKRXlmblBCZUp4UHZ3UEdxZzZNUnhnU01iMDdsd2NvS0VWcEVGNTlU?=
+ =?utf-8?B?VWJ1NStsMStVSUVQQmdXTStjVm9QY2lETU54dzdpMkgwSmFIQ2ZqR3JWcFIz?=
+ =?utf-8?B?cG9WcjQxNUk2TXZGSlNhVDltZGd5K3I4MXI2Uk9IUUF1SlJBTmQ4d2VXQkZi?=
+ =?utf-8?B?QWhQTDMycGxkcVN0dG9jWlJYb0ZhL1d1Vy9PY2xINmIreTFCNVNsTW0xbGxx?=
+ =?utf-8?B?SXpLV1V1bjBQYmV2VExvaXo2ZUdRSkxoT0h2ZEcrWWdaMmRGbDl2QVhibE9h?=
+ =?utf-8?B?bDRrYjE1MXhvRzhpUldRZEgwMk5Fb2NOaXhRZm9MNnViclhYcTAvcVFocVNn?=
+ =?utf-8?B?Ni9UR0tYR1k3TFcyVFhna1RNYy9rK05XbE9aeFYvOHhhNXFQMWtDZGUwS3kz?=
+ =?utf-8?B?SFNodWNHS0xmRU5qckRPMC8xU3lFdlhYNm1Ua243SmQ5RHRBR3lpUnpTc0Nu?=
+ =?utf-8?B?QUhwcHp0MGZTMlJVVTQ2VVN3amtOMTQxYUFvSGh0S2ZqTHFqRTJoSmwvem8r?=
+ =?utf-8?B?aHBCb05kRDlvcDUrNE5GcGdYRDc5cE1yN3Z5ZG1iSVVyalp5d0NkUmdNUENH?=
+ =?utf-8?B?bUs3UjAzWXo5bHFGZFZDelJka2dZSDRLYXBMTGJWYVc5SDAzZjVyVUlvWGds?=
+ =?utf-8?B?Vm52aWN1M1I4UGYwUXRoTC9WeU1UelVDU3dHQ0k3OEhteHpKTVdTTUFURTZX?=
+ =?utf-8?B?MDBBbzgrOWpwRUJxWE00Qi9DemFIUnA0Nmo5QjQyKzZhRVRMeEdESEtoWEdO?=
+ =?utf-8?B?N1N2V0NRZ2FHbTdJSXI0MURKUVVxaXZva3lCQ0lXdW9OYllZWVd5NkMvZW9m?=
+ =?utf-8?B?UEtjTVJmeCtLMW4vQmNhdkladlpYdzh0LzMvOU9QS2ZhVXc0ODhmY3huRGdO?=
+ =?utf-8?B?WnQxaDFUeHppb0xiNmVLa0VMRkJZVktpQmFyMG10NW5FQ2tmYVFsMkJKVHVE?=
+ =?utf-8?B?Q3pmdXNiVTRnUjJVQ21zRFpSZzdhc0x3NjYwYWpQWVllYTAvaUtScFBiSVJy?=
+ =?utf-8?B?VitvSU90MVg3bnBUeE8vWEVPc3YrendGYjZNblVRTFhXdDNGeGRhREdhNEcv?=
+ =?utf-8?B?Q1VFbno0L1FTbXZlTnBIUkVhOUtiSVNXcmV2eGZmbnlJUjUzODlnL1J6TDBP?=
+ =?utf-8?B?bkcvandsK0NKY1U1dWpKY1Nxc2JMTi9hU3MyMXZpZG56UWRWUkFrc0QxMWIz?=
+ =?utf-8?B?VlB5YlpVTEV4WWlQejhzQWE3VzlSLzJYNVZnbFJuK1pkcVNPSUJML2t4aER2?=
+ =?utf-8?B?eGF6MG1uU1NjNGh5NURCSUZNME1Rb1c0VWhSTWx1SndDRHV5ZUU0S1RBWmg0?=
+ =?utf-8?B?SktRYW94YmtFcU5CeHBuYkxXWmtaek5aZFg1U3JKbDYyclBQVTdxTjJHWEFw?=
+ =?utf-8?Q?+5RzvYhJLUzxv0GvxLSZIk5Z7?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93e2f6f1-0704-42b4-b022-08dcd8dd7866
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Sep 2024 19:01:30.0146
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RTtaLAak4dFjJ83uE5gU1rpWNHqTYdHeh3KgBZhdc9TDgveBiUqr0Kc1VQcv9SEc6iRCV7Dgx670PTPEDUdkAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6241
 
-On Fri, 2024-09-20 at 00:37 +0800, Zach Wade wrote:
-> Attaching SST PCI device to VM causes
-You are not attaching SST PCI device to VM. It seems some hard drives
-emulates same PCI vendor/device ID.
+On 9/19/2024 12:19, Antheas Kapenekakis wrote:
+> Move the screen on and off calls into dedicated callbacks that gate
+> the ACPI mutex, so they can be called outside of the suspend path.
+> This fixes issues on certain devices that expect kernel drivers to be
+> fully active during the calls, and allows for the flexibility of calling
+> them as part of a more elaborate userspace suspend sequence (such as
+> with "Screen Off" in Windows Modern Standby).
+> 
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 
-But replacing with topology_logical_package_id() is fine.
+This patch is inspired by my patch
+https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git/commit/?h=superm1/dsm-screen-on-off&id=e1a274ee7634f0f8fb877990df6d884189065228
 
-Let's find out what are those devices.
+So in a future revision I would appreciate a Suggested-by: tag.
 
-Thanks,
-Srinivas
-
->  "BUG: KASAN: slab-out-of-bounds".
-> kasan report:
-> [=C2=A0=C2=A0 19.411889]
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [=C2=A0=C2=A0 19.413702] BUG: KASAN: slab-out-of-bounds in
-> _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
-> [=C2=A0=C2=A0 19.415634] Read of size 8 at addr ffff888829e65200 by task
-> cpuhp/16/113
-> [=C2=A0=C2=A0 19.417368]
-> [=C2=A0=C2=A0 19.418627] CPU: 16 PID: 113 Comm: cpuhp/16 Tainted: G=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> E=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 6.9.0 #10
-> [=C2=A0=C2=A0 19.420435] Hardware name: VMware, Inc. VMware20,1/440BX Des=
-ktop
-> Reference Platform, BIOS VMW201.00V.20192059.B64.2207280713
-> 07/28/2022
-> [=C2=A0=C2=A0 19.422687] Call Trace:
-> [=C2=A0=C2=A0 19.424091]=C2=A0 <TASK>
-> [=C2=A0=C2=A0 19.425448]=C2=A0 dump_stack_lvl+0x5d/0x80
-> [=C2=A0=C2=A0 19.426963]=C2=A0 ? _isst_if_get_pci_dev+0x3d5/0x400 [isst_i=
-f_common]
-> [=C2=A0=C2=A0 19.428694]=C2=A0 print_report+0x19d/0x52e
-> [=C2=A0=C2=A0 19.430206]=C2=A0 ? __pfx__raw_spin_lock_irqsave+0x10/0x10
-> [=C2=A0=C2=A0 19.431837]=C2=A0 ? _isst_if_get_pci_dev+0x3d5/0x400 [isst_i=
-f_common]
-> [=C2=A0=C2=A0 19.433539]=C2=A0 kasan_report+0xf0/0x170
-> [=C2=A0=C2=A0 19.435019]=C2=A0 ? _isst_if_get_pci_dev+0x3d5/0x400 [isst_i=
-f_common]
-> [=C2=A0=C2=A0 19.436709]=C2=A0 _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_=
-common]
-> [=C2=A0=C2=A0 19.438379]=C2=A0 ? __pfx_sched_clock_cpu+0x10/0x10
-> [=C2=A0=C2=A0 19.439910]=C2=A0 isst_if_cpu_online+0x406/0x58f [isst_if_co=
-mmon]
-> [=C2=A0=C2=A0 19.441573]=C2=A0 ? __pfx_isst_if_cpu_online+0x10/0x10 [isst=
-_if_common]
-> [=C2=A0=C2=A0 19.443263]=C2=A0 ? ttwu_queue_wakelist+0x2c1/0x360
-> [=C2=A0=C2=A0 19.444797]=C2=A0 cpuhp_invoke_callback+0x221/0xec0
-> [=C2=A0=C2=A0 19.446337]=C2=A0 cpuhp_thread_fun+0x21b/0x610
-> [=C2=A0=C2=A0 19.447814]=C2=A0 ? __pfx_cpuhp_thread_fun+0x10/0x10
-> [=C2=A0=C2=A0 19.449354]=C2=A0 smpboot_thread_fn+0x2e7/0x6e0
-> [=C2=A0=C2=A0 19.450859]=C2=A0 ? __pfx_smpboot_thread_fn+0x10/0x10
-> [=C2=A0=C2=A0 19.452405]=C2=A0 kthread+0x29c/0x350
-> [=C2=A0=C2=A0 19.453817]=C2=A0 ? __pfx_kthread+0x10/0x10
-> [=C2=A0=C2=A0 19.455253]=C2=A0 ret_from_fork+0x31/0x70
-> [=C2=A0=C2=A0 19.456685]=C2=A0 ? __pfx_kthread+0x10/0x10
-> [=C2=A0=C2=A0 19.458114]=C2=A0 ret_from_fork_asm+0x1a/0x30
-> [=C2=A0=C2=A0 19.459573]=C2=A0 </TASK>
-> [=C2=A0=C2=A0 19.460853]
-> [=C2=A0=C2=A0 19.462055] Allocated by task 1198:
-> [=C2=A0=C2=A0 19.463410]=C2=A0 kasan_save_stack+0x30/0x50
-> [=C2=A0=C2=A0 19.464788]=C2=A0 kasan_save_track+0x14/0x30
-> [=C2=A0=C2=A0 19.466139]=C2=A0 __kasan_kmalloc+0xaa/0xb0
-> [=C2=A0=C2=A0 19.467465]=C2=A0 __kmalloc+0x1cd/0x470
-> [=C2=A0=C2=A0 19.468748]=C2=A0 isst_if_cdev_register+0x1da/0x350 [isst_if=
-_common]
-> [=C2=A0=C2=A0 19.470233]=C2=A0 isst_if_mbox_init+0x108/0xff0 [isst_if_mbo=
-x_msr]
-> [=C2=A0=C2=A0 19.471670]=C2=A0 do_one_initcall+0xa4/0x380
-> [=C2=A0=C2=A0 19.472903]=C2=A0 do_init_module+0x238/0x760
-> [=C2=A0=C2=A0 19.474105]=C2=A0 load_module+0x5239/0x6f00
-> [=C2=A0=C2=A0 19.475285]=C2=A0 init_module_from_file+0xd1/0x130
-> [=C2=A0=C2=A0 19.476506]=C2=A0 idempotent_init_module+0x23b/0x650
-> [=C2=A0=C2=A0 19.477725]=C2=A0 __x64_sys_finit_module+0xbe/0x130
-> [=C2=A0=C2=A0 19.476506]=C2=A0 idempotent_init_module+0x23b/0x650
-> [=C2=A0=C2=A0 19.477725]=C2=A0 __x64_sys_finit_module+0xbe/0x130
-> [=C2=A0=C2=A0 19.478920]=C2=A0 do_syscall_64+0x82/0x160
-> [=C2=A0=C2=A0 19.480036]=C2=A0 entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [=C2=A0=C2=A0 19.481292]
-> [=C2=A0=C2=A0 19.482205] The buggy address belongs to the object at
-> ffff888829e65000
-> =C2=A0which belongs to the cache kmalloc-512 of size 512
-> [=C2=A0=C2=A0 19.484818] The buggy address is located 0 bytes to the righ=
-t of
-> =C2=A0allocated 512-byte region [ffff888829e65000, ffff888829e65200)
-> [=C2=A0=C2=A0 19.487447]
-> [=C2=A0=C2=A0 19.488328] The buggy address belongs to the physical page:
-> [=C2=A0=C2=A0 19.489569] page: refcount:1 mapcount:0 mapping:000000000000=
-0000
-> index:0xffff888829e60c00 pfn:0x829e60
-> [=C2=A0=C2=A0 19.491140] head: order:3 entire_mapcount:0 nr_pages_mapped:=
-0
-> pincount:0
-> [=C2=A0=C2=A0 19.492466] anon flags:
-> 0x57ffffc0000840(slab|head|node=3D1|zone=3D2|lastcpupid=3D0x1fffff)
-> [=C2=A0=C2=A0 19.493914] page_type: 0xffffffff()
-> [=C2=A0=C2=A0 19.494988] raw: 0057ffffc0000840 ffff88810004cc80
-> 0000000000000000 0000000000000001
-> [=C2=A0=C2=A0 19.496451] raw: ffff888829e60c00 0000000080200018
-> 00000001ffffffff 0000000000000000
-> [=C2=A0=C2=A0 19.497906] head: 0057ffffc0000840 ffff88810004cc80
-> 0000000000000000 0000000000000001
-> [=C2=A0=C2=A0 19.499379] head: ffff888829e60c00 0000000080200018
-> 00000001ffffffff 0000000000000000
-> [=C2=A0=C2=A0 19.500844] head: 0057ffffc0000003 ffffea0020a79801
-> ffffea0020a79848 00000000ffffffff
-> [=C2=A0=C2=A0 19.502316] head: 0000000800000000 0000000000000000
-> 00000000ffffffff 0000000000000000
-> [=C2=A0=C2=A0 19.503784] page dumped because: kasan: bad access detected
-> [=C2=A0=C2=A0 19.505058]
-> [=C2=A0=C2=A0 19.505970] Memory state around the buggy address:
-> [=C2=A0=C2=A0 19.507172]=C2=A0 ffff888829e65100: 00 00 00 00 00 00 00 00 =
-00 00 00 00
-> 00 00 00 00
-> [=C2=A0=C2=A0 19.508599]=C2=A0 ffff888829e65180: 00 00 00 00 00 00 00 00 =
-00 00 00 00
-> 00 00 00 00
-> [=C2=A0=C2=A0 19.510013] >ffff888829e65200: fc fc fc fc fc fc fc fc fc fc=
- fc fc
-> fc fc fc fc
-> [=C2=A0=C2=A0 19.510014]=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
-> [=C2=A0=C2=A0 19.510016]=C2=A0 ffff888829e65280: fc fc fc fc fc fc fc fc =
-fc fc fc fc
-> fc fc fc fc
-> [=C2=A0=C2=A0 19.510018]=C2=A0 ffff888829e65300: fc fc fc fc fc fc fc fc =
-fc fc fc fc
-> fc fc fc fc
-> [=C2=A0=C2=A0 19.515367]
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> The reason for this error is physical_package_ids assigned by VMM
-> have
-> holes. This will cause value returned by
-> topology_physical_package_id()
-> to be more than topology_max_packages(). The allocation uses
-> topology_max_packages() to allocate memory. topology_max_packages()
-> returns maximum logical package IDs. Hence use
-> topology_logical_package_id() instead of
-> topology_physical_package_id().
->=20
-> Fixes: 9a1aac8a96dc ("platform/x86: ISST: PUNIT device mapping with
-> Sub-NUMA clustering")
-> Signed-off-by: Zach Wade <zachwade.k@gmail.com>
 > ---
-> =C2=A0drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 4 +++=
--
-> =C2=A01 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git
-> a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> index 10e21563fa46..030c33070b84 100644
-> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> @@ -316,7 +316,9 @@ static struct pci_dev *_isst_if_get_pci_dev(int
-> cpu, int bus_no, int dev, int fn
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cpu >=
-=3D nr_cpu_ids || cpu >=3D num_possible_cpus())
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0return NULL;
-> =C2=A0
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pkg_id =3D topology_physical_p=
-ackage_id(cpu);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pkg_id =3D topology_logical_pa=
-ckage_id(cpu);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (pkg_id >=3D topology_max_p=
-ackages())
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0return NULL;
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bus_number =3D isst_cpu_i=
-nfo[cpu].bus_info[bus_no];
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (bus_number < 0)
+>   drivers/acpi/x86/s2idle.c | 72 +++++++++++++++++++++++++++++++--------
+>   1 file changed, 57 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/acpi/x86/s2idle.c b/drivers/acpi/x86/s2idle.c
+> index dd0b40b9bbe8..aa448ed58077 100644
+> --- a/drivers/acpi/x86/s2idle.c
+> +++ b/drivers/acpi/x86/s2idle.c
+> @@ -60,6 +60,7 @@ static int lps0_dsm_func_mask;
+>   static guid_t lps0_dsm_guid_microsoft;
+>   static int lps0_dsm_func_mask_microsoft;
+>   static int lps0_dsm_state;
+> +static bool lsp0_dsm_in_screen_off;
+
+It seems that this new variable is mostly for debugging purpose.  If the 
+variable stays I think that you should fail the screen_off/screen_on 
+calls with it.  More details below.
+
+>   
+>   /* Device constraint entry structure */
+>   struct lpi_device_info {
+> @@ -539,15 +540,19 @@ static struct acpi_scan_handler lps0_handler = {
+>   	.attach = lps0_device_attach,
+>   };
+>   
+> -int acpi_s2idle_prepare_late(void)
+> +static int acpi_s2idle_screen_off(void)
+>   {
+> -	struct acpi_s2idle_dev_ops *handler;
+> -
+>   	if (!lps0_device_handle || sleep_no_lps0)
+>   		return 0;
+>   
+> -	if (pm_debug_messages_on)
+> -		lpi_check_constraints();
+> +	if (lsp0_dsm_in_screen_off) {
+> +		acpi_handle_info(lps0_device_handle,
+> +				"called screen off call twice before calling screen on.\n");
+> +		// fallthrough for debugging, calling twice should be gated by the caller
+
+It seems like it would mostly be a programmer error if it was called twice.
+
+How about something like this:
+
+if (unlikely(WARN_ON(lsp0_dsm_in_screen_off)))
+	return -EINVAL;
+
+You could do something similar with the inverse in the other call site 
+too then.
+
+> +	}
+> +
+> +	lsp0_dsm_in_screen_off = true;
+> +	acpi_scan_lock_acquire();
+>   
+>   	/* Screen off */
+>   	if (lps0_dsm_func_mask > 0)
+> @@ -560,6 +565,50 @@ int acpi_s2idle_prepare_late(void)
+>   		acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_OFF,
+>   				lps0_dsm_func_mask_microsoft, lps0_dsm_guid_microsoft);
+>   
+> +	acpi_scan_lock_release();
+> +
+> +	return 0;
+> +}
+> +
+> +static int acpi_s2idle_screen_on(void)
+> +{
+> +	if (!lps0_device_handle || sleep_no_lps0)
+> +		return 0;
+> +
+> +	if (!lsp0_dsm_in_screen_off) {
+> +		acpi_handle_info(lps0_device_handle,
+> +				"called screen on before calling screen off.\n");
+> +		// fallthrough for debugging, calling twice should be gated by the caller
+> +	}
+> +
+> +	lsp0_dsm_in_screen_off = false;
+> +	acpi_scan_lock_acquire();
+> +
+> +	/* Screen on */
+> +	if (lps0_dsm_func_mask_microsoft > 0)
+> +		acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_ON,
+> +				lps0_dsm_func_mask_microsoft, lps0_dsm_guid_microsoft);
+> +	if (lps0_dsm_func_mask > 0)
+> +		acpi_sleep_run_lps0_dsm(acpi_s2idle_vendor_amd() ?
+> +					ACPI_LPS0_SCREEN_ON_AMD :
+> +					ACPI_LPS0_SCREEN_ON,
+> +					lps0_dsm_func_mask, lps0_dsm_guid);
+> +
+> +	acpi_scan_lock_release();
+> +
+> +	return 0;
+> +}
+> +
+> +int acpi_s2idle_prepare_late(void)
+> +{
+> +	struct acpi_s2idle_dev_ops *handler;
+> +
+> +	if (!lps0_device_handle || sleep_no_lps0)
+> +		return 0;
+> +
+> +	if (pm_debug_messages_on)
+> +		lpi_check_constraints();
+> +
+>   	/* LPS0 entry */
+>   	if (lps0_dsm_func_mask > 0 && acpi_s2idle_vendor_amd())
+>   		acpi_sleep_run_lps0_dsm(ACPI_LPS0_ENTRY_AMD,
+> @@ -623,19 +672,10 @@ void acpi_s2idle_restore_early(void)
+>   		acpi_sleep_run_lps0_dsm(ACPI_LPS0_MS_EXIT,
+>   				lps0_dsm_func_mask_microsoft, lps0_dsm_guid_microsoft);
+>   	}
+> -
+> -	/* Screen on */
+> -	if (lps0_dsm_func_mask_microsoft > 0)
+> -		acpi_sleep_run_lps0_dsm(ACPI_LPS0_SCREEN_ON,
+> -				lps0_dsm_func_mask_microsoft, lps0_dsm_guid_microsoft);
+> -	if (lps0_dsm_func_mask > 0)
+> -		acpi_sleep_run_lps0_dsm(acpi_s2idle_vendor_amd() ?
+> -					ACPI_LPS0_SCREEN_ON_AMD :
+> -					ACPI_LPS0_SCREEN_ON,
+> -					lps0_dsm_func_mask, lps0_dsm_guid);
+>   }
+>   
+>   static const struct platform_s2idle_ops acpi_s2idle_ops_lps0 = {
+> +	.screen_off = acpi_s2idle_screen_off,
+>   	.begin = acpi_s2idle_begin,
+>   	.prepare = acpi_s2idle_prepare,
+>   	.prepare_late = acpi_s2idle_prepare_late,
+> @@ -644,10 +684,12 @@ static const struct platform_s2idle_ops acpi_s2idle_ops_lps0 = {
+>   	.restore_early = acpi_s2idle_restore_early,
+>   	.restore = acpi_s2idle_restore,
+>   	.end = acpi_s2idle_end,
+> +	.screen_on = acpi_s2idle_screen_on,
+>   };
+>   
+>   void __init acpi_s2idle_setup(void)
+>   {
+> +	lsp0_dsm_in_screen_off = false;
+
+Doesn't it initialize to false already?  Is this really needed?
+
+>   	acpi_scan_add_handler(&lps0_handler);
+>   	s2idle_set_ops(&acpi_s2idle_ops_lps0);
+>   }
 
