@@ -1,77 +1,83 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7500A381B8;
-	Thu, 19 Sep 2024 20:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284B51863E
+	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Sep 2024 03:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726779294; cv=none; b=CsgZTXSkRWcrAJEU2RWLBkqVBupCsqvDEbtoKv1Q9IqvB76pM9ieLV1HVZ5qgviIPQDiDlbs3JQsE8G5kySci1kZc5IwHnZt9EGzNL08WHOhcHkQS7NkLtpaTjRqekPAqHbnYrS4AyOkiq4IOTVB3hO9OuVHHPOfCNuzhTCMR7M=
+	t=1726802220; cv=none; b=UqtNY9yclttBYlqK2oZjF1N4BWOUpHi5QJoQgXCUZHP9jVSJPpWtK5s7DcH1AVeVbMZ8dhe0eB9GNNC4JNdHU5LHN+8sNYmLx398LZNvJ1LZ7pNGgr0wPK4TawD0916bd7y1zJgvx7jjshgCcHTGYKcIbzVQRZkcNXVtq8d2L2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726779294; c=relaxed/simple;
-	bh=whjML2HQEMXsisGA6Qy4aqliw8AIXIgEJX9dGh1kfpg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DPlsWX4QQ/q9AkPb1VcljfXQpGhKW15QvcpuKd2tjR3UOExM9jRbc06MB7aQw42NyoCtehIdQ0oCdJP+FKWf039I3EwHTG6f/HTrHQlnOSaqRwSUmoCg/Ug9IJpkM7MHkOz4oKkRg5my+YgoyW2S88+Htd/WAC1N1wt53NbvXO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=XNXz1/XC; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1726802220; c=relaxed/simple;
+	bh=M5rN54qA5rVUrODvgLOg+DMIwvOB0Hj59wVhuW0Emks=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p6vyhuyJckm8t1cPuCxvRfUb6oJrUO1rhSZJXoD2smvXSsIMo9ZEPXoIrc18Hi898JTSeA2jOadzpVzcV5CF5xEeB4MUMUZ0JS4Ci7nm4hhV83IfojRH3mU03VSzxnJ3OWWkx8VpReg9xj0suvXcaMlKw6qaD7oxdDKmLOY+OC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=g1Tfol8y; arc=none smtp.client-ip=18.194.254.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="XNXz1/XC"
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 5BB662E099AE;
-	Thu, 19 Sep 2024 23:54:48 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1726779288;
-	bh=whjML2HQEMXsisGA6Qy4aqliw8AIXIgEJX9dGh1kfpg=;
-	h=Received:From:Subject:To;
-	b=XNXz1/XCyAmSiZukViQhythqqWiytgN7sGyfpM0Zn21cZkc1UnHekvLRxJklwBzb7
-	 gXgQAEFgx1/ZOTlHSft8gw5Vc/ugE11dt5zFOpxnOOGYAnTogSn1GfJiF06kzGK/i2
-	 f2LhB8SVKt0rIO3tyxWWyCRtqmWY+Qq/aUsrMthw=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.169) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f169.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f169.google.com with SMTP id
- 38308e7fff4ca-2f77fe7ccc4so13954601fa.2;
-        Thu, 19 Sep 2024 13:54:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCW/+sfTgbqeAXpcBk5ZUAH2bh5b+2iTzdszCpdEkBbcCEYoPg0M9tVEPmNnux089iy2qgooRu41GwHrnx+y3UoIU4+c@vger.kernel.org
-X-Gm-Message-State: AOJu0YwinGhF7elXxyy4nTRPKfnqn42RFbxMhvoIVrVxA+5S88vUHwDy
-	X9fV86gGnV59dnN6A0x0DVxFasqlrmiDnLAPrx3VQoOyCvBeXixr/SAxIQlu7Vp83MqpbDPzzgf
-	ij4uZo7Ho7lkuX7AqlfQf8i0Og10=
-X-Google-Smtp-Source: 
- AGHT+IHOS6a1Y9qovaeQ2eVjZO8WKc56Ai9SSO9rwiKivHMgSs2st3d8Ce3lWAVGVCP0G/dGhhzulhiwaOl619n5swE=
-X-Received: by 2002:a2e:9610:0:b0:2f7:4c9d:7a8a with SMTP id
- 38308e7fff4ca-2f7cb3394a2mr4236031fa.32.1726779287717; Thu, 19 Sep 2024
- 13:54:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="g1Tfol8y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1726802190;
+	bh=GF2Am1EBaW0aKWs0P0U1SrDB1E0DigRM28jfgRVw8L4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=g1Tfol8yc1sYLWBXTOHxhDjaMedWhLiCuBh9OEgAH6dbzDRQMcLf9vTYFx8BFLSBL
+	 3UWv3hjMK6Gj4uwFeUBYPtDmCsQUPG71P0TOOJg7fyyLdDF3CNEYcSRXS0ChbnB4IX
+	 bxvdQeZcMbyyCJSpdrn9X76ea8N4bog4/hjjKPEQ=
+X-QQ-mid: bizesmtpsz8t1726802187tolf78l
+X-QQ-Originating-IP: K44m2XNNdMuRI7n2PLIjQFE90u+LWrqfbttPLcCjzoU=
+Received: from localhost.localdomain ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 20 Sep 2024 11:16:25 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 13448690296646782473
+From: WangYuli <wangyuli@uniontech.com>
+To: david.e.box@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	tzimmermann@suse.de,
+	lee.jones@linaro.org,
+	lee@kernel.org,
+	guanwentao@uniontech.com,
+	zhanjun@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [PATCH] platform/x86/intel/pmt: Correct the typo 'ACCCESS_LOCAL'
+Date: Fri, 20 Sep 2024 11:16:20 +0800
+Message-ID: <781C12799421D366+20240920031620.1211752-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240919171952.403745-1-lkml@antheas.dev>
- <20240919171952.403745-4-lkml@antheas.dev>
- <7c604018-59a3-4b70-83d1-06f0ed858b73@amd.com>
- <CAGwozwGSVAExH_9zCCKreC88J0FRU4ZM3RkBk==HvRwCUuuqLw@mail.gmail.com>
- <25b14b4f-96b7-453c-b876-6a46c4f3789c@amd.com>
-In-Reply-To: <25b14b4f-96b7-453c-b876-6a46c4f3789c@amd.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Thu, 19 Sep 2024 22:54:36 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwHmd8yHzjbutOd4T39h5CZRh2rOWYH4V4AnLN+RXrRRnQ@mail.gmail.com>
-Message-ID: 
- <CAGwozwHmd8yHzjbutOd4T39h5CZRh2rOWYH4V4AnLN+RXrRRnQ@mail.gmail.com>
-Subject: Re: [PATCH v1 3/4] acpi/x86: s2idle: call screen on and off as part
- of callbacks
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	luke@ljones.dev, me@kylegospodneti.ch
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <172677928871.28848.1084488287163590011@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
 
-I will try to merge all the suggestions and make a V2 on Saturday then.
+There is a spelling mistake of 'ACCCESS_LOCAL' which should be
+instead of 'ACCESS_LOCAL'.
 
-Antheas
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ drivers/platform/x86/intel/pmt/class.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
+index c04bb7f97a4d..7680474c4f96 100644
+--- a/drivers/platform/x86/intel/pmt/class.c
++++ b/drivers/platform/x86/intel/pmt/class.c
+@@ -207,7 +207,7 @@ static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
+ 		/*
+ 		 * Some hardware use a different calculation for the base address
+ 		 * when access_type == ACCESS_LOCAL. On the these systems
+-		 * ACCCESS_LOCAL refers to an address in the same BAR as the
++		 * ACCESS_LOCAL refers to an address in the same BAR as the
+ 		 * header but at a fixed offset. But as the header address was
+ 		 * supplied to the driver, we don't know which BAR it was in.
+ 		 * So search for the bar whose range includes the header address.
+-- 
+2.45.2
+
