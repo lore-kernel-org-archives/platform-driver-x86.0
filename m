@@ -1,58 +1,58 @@
-Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
+Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B050014A093
-	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Sep 2024 16:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C126C148
+	for <platform-driver-x86@vger.kernel.org>; Fri, 20 Sep 2024 16:19:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726848967; cv=none; b=MPTItxAM/ErA9HVg0Hkq5/zLwtAMDOmWEKmfma737VH9xKXTRNhmFt4ZqiF/THjjk66JfbFOaBb0cDwS9gO0eV2iaPF4jTL1lmYXdJrWecvoDPCCkM+k03GyGjsDgbFVCDnKWzUzvDZZvRRQCTSxVTc13SIfftVvednux5TxgSI=
+	t=1726849152; cv=none; b=aPB2HULFPj96S1rzCDBPQdPiiw4zvxrIISDp3naVSHt+74+xIsQYphnMLg9OjlgAKjxI7GUTbx5Mpr1JSfDbdZEJrcB9ojfiwGcCRCQoMbxDl8Ue9qa11XP0MHya0OGumhGBLV3LZaURsPEc28G0M0TcT7f/yKkE0t311vTFgmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726848967; c=relaxed/simple;
-	bh=A9L5svSyUafh+goXrUer7EzWEzBuEFa/GdCR83nL7s4=;
+	s=arc-20240116; t=1726849152; c=relaxed/simple;
+	bh=gVSNwKFKksWIUDw5SExe/nhxK/EhPMd31R8Qdh5BzmM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aE3F+QyGcbdupzBUyDn9+5TGuR6elxgXxX0V6+eAv00rrMSNMA6kB63vL4WK+3weyY8ws93YjJtrmEbdDjItquobs4RdMUZe5dzLtZNlvT2NnmeEaS7zV0DytrvcRqQ03fU6iKIINxOIkrLGMGsBNmsjJU8TFwv3OtiotK6LD9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BoruZoov; arc=none smtp.client-ip=209.85.210.196
+	 In-Reply-To:Content-Type; b=buYAIUblkQVibwIocpNgQoHD8IKjrx1BL4xFiOZjldZiIxPj+eEAINOpnxvTlTTNsz3mXNgDJ79gJjKvCkvDLhyh5tGUMAv4kYdcuenucNHVzqx7SBWJaHaLDy7wvBfAYEjMZvUg+cawCGihjXOr/u1DeWWyEiYpesQdKceTujA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EloLA9LP; arc=none smtp.client-ip=209.85.214.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BoruZoov"
-Received: by mail-pf1-f196.google.com with SMTP id d2e1a72fcca58-718d8d6af8fso1618852b3a.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Sep 2024 09:16:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EloLA9LP"
+Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-2059204f448so20925215ad.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 20 Sep 2024 09:19:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726848965; x=1727453765; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1726849151; x=1727453951; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
          :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gHvx0+e/Y8SOs1PF3a9F5E4G+x/e4DiUko6j2n0Or4I=;
-        b=BoruZoovw8NUElJR0DZfClAfV/OtPgK15ZFLnuPOjvbr7swVdmpY9A206RHaDy8WD8
-         bSirxhJQB7qkyVxbWr9pEqYKXtkukfHKsBqYGFxpupv1eX1iAss1aFllpFKh31UxKhxM
-         un/uh3PZy/qM1nyvnj6gGmhdq2oqT/cWiDhW1nDWkv76lKl1AS/wgb/kv/3GaTrSwrfw
-         eQ79WcGPPsQbNX0qqg1hlqIbUdjARSPqIfSQU7gtWoEW4h+QfJ7+Zpc5ZUgzvRXQb5ny
-         an7xgZlRLOiyb32BndYaLmX1D1laPX0R3LkXsfqrr+pcsTPBXLjSXPaW/jSvR7rlQJtz
-         eDJA==
+        bh=YhMzuAeK8176K6j45t6OzEv6vQ+A4zzAB2+eLqDK1sw=;
+        b=EloLA9LPIyC6tfxsLv9LTiHYp6yUCvsMLWwvwkP2Cf4KfB/u7gNmMzIHGpBtji4C60
+         CvUljkIx0N1s1Sgh61rbneQBQsLkFytTIjgqNGjI1JkfwsWQEB00fVl0aIRWkVO/nPuv
+         vFr6k4iTNNCKEqBbOtOb7ona/YgWH9dcxUt/Ge7vpleASQyVs+Z+4HpqwmBUBmSu+abd
+         zOhnfVyHTBcG6pbPDeiyRXjVShooyx5W702p9RD00ACUlg5LENRpzAFD5pplK6Ykxp+F
+         2OLOrUegQoAxq6lH9u3DxHWaAAMZaXoM0pkVqI1ncZyqC6/XP5qVdrrL9uyEwTV/vGIx
+         hw/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726848965; x=1727453765;
+        d=1e100.net; s=20230601; t=1726849151; x=1727453951;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
          :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=gHvx0+e/Y8SOs1PF3a9F5E4G+x/e4DiUko6j2n0Or4I=;
-        b=RJnC177pG6UYTwEJZSRLAKp3VoIgh5Z2XvMqyuXPO4UUu2fRrb7Znq3nVqQBEMsXBu
-         1JNHFs3lRzIdVzWKjMqdMREu7NZwp1RqZFxFRsw2GqsCOzyh6JDYnmo1cMGopbs1lyIt
-         0dZlSCy87z0Y904LFiGJe/DYnlbonkOTOpNpbWTKNY0MYJVYW0EjipUsvca4N6lThLWa
-         l2O4GcZkh+m9L1TQWzZuVeWCB9TazsAkVrUfrIaK4gAWf9nBjUsKGLoFYnytTO6WQJrC
-         W2ko9W5NhVkDl3hGKHYtwQ3nWxF+KZGogbVj2bRUe1YDtlOBYTkpbrb0CqpOfxNtKnxC
-         l25A==
-X-Gm-Message-State: AOJu0YzKLgVKlt5NjUzXjTpN/JauOrdmIcIF6RSGB28pyXzkCnRUkaCE
-	P+DfZAEu2hT9GoRfVtO8WGVDQHI+Rw4o7lCWoPL9yB6/JD1DPV/Xx1dTtCd2cFk=
-X-Google-Smtp-Source: AGHT+IG1P3p7QuPNrTIhknHkRoM6zba1R+McYQkxY2/G++2XHDE/IYDmrWShEzTM0kBQ4d0urNEoIQ==
-X-Received: by 2002:a05:6a21:3946:b0:1d2:eadb:bb2a with SMTP id adf61e73a8af0-1d30a94b329mr4734268637.30.1726848964917;
-        Fri, 20 Sep 2024 09:16:04 -0700 (PDT)
+        bh=YhMzuAeK8176K6j45t6OzEv6vQ+A4zzAB2+eLqDK1sw=;
+        b=tOHPjxnjUb4yzwkCndD5kMam9YHHFWEjdRw0xALTkMirm109teY1oVTmfGiD0uLYBw
+         sTxHsXMKQkBqzWpdVrvlpFgf1oaIGC0S8AnWNL618nEneDeE4RysXUdbZ9XHMQQzkcME
+         v5N+6kaK8WGBAP9WyMZAXjlZARaggbNe4Hm04Axx36wXoHHDkXmZz0m7FTX3k7HZ8XKC
+         QRfdLCRHxoYJEBc4WE3Uvwp7imD61hFft6z2VnSTP6aUHrAy3O6gowUDtWMvToc5Ulbc
+         5M7Lfi30kkv60DmrzZQy62RbS5lTt3a9ZOjobEdBEMZfgU9a/CpZ+tS3HM0IVi0dEtCe
+         dRmw==
+X-Gm-Message-State: AOJu0YyPVCkQIK7ncBgv1A9CxQ4h+yfB4VhZBmtxqtc6Fcn6d1m44VMC
+	7Xt+mzq1hPH6xH+WC9l3yr5DjtB3x46LO7G2dyzM0mBCpg12Cjvc
+X-Google-Smtp-Source: AGHT+IFfSBNyb/89POK30lt6/eFoBpjEw2K9hnXl2ykbvx2P6e6AY1D0XerW9e84mzHST44x26YMtg==
+X-Received: by 2002:a17:902:fc4d:b0:205:913b:d9cb with SMTP id d9443c01a7336-208d97f345fmr51976025ad.7.1726849150455;
+        Fri, 20 Sep 2024 09:19:10 -0700 (PDT)
 Received: from [198.18.0.1] (n220246094186.netvigator.com. [220.246.94.186])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71944bc7bb5sm10025566b3a.207.2024.09.20.09.16.02
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2079470ebbdsm96680065ad.191.2024.09.20.09.19.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Sep 2024 09:16:04 -0700 (PDT)
-Message-ID: <9b0f7445-c768-4f0f-a46a-b1c022f5e6b3@gmail.com>
-Date: Sat, 21 Sep 2024 00:16:02 +0800
+        Fri, 20 Sep 2024 09:19:09 -0700 (PDT)
+Message-ID: <284e9297-95ee-4413-a1da-843b5049d78a@gmail.com>
+Date: Sat, 21 Sep 2024 00:19:07 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -60,631 +60,174 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: ISST: Fix the KASAN report
+Subject: Re: [PATCH v2] platform/x86: ISST: Fix the KASAN report
  slab-out-of-bounds bug
 To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>,
  hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org
-References: <20240917180350.4061-1-zachwade.k@gmail.com>
- <c983ec3aeefcabc080f51958eb11275c84bb9506.camel@linux.intel.com>
- <10f32b33-4c41-44a0-8f37-3cd1ae68a6ed@gmail.com>
- <c9f3758e027e06aaf5776904d6e7a0de0bf916c2.camel@linux.intel.com>
- <8b83c925-17d2-47e1-a278-998c229c02f1@gmail.com>
- <422bfc19243e8d50fc3c847f0c1db01e703aff4e.camel@linux.intel.com>
+References: <c9f3758e027e06aaf5776904d6e7a0de0bf916c2.camel@linux.intel.com>
+ <20240919163713.3126-1-zachwade.k@gmail.com>
+ <8c8267e5695c8e1b0a0b0c52050c43e22359c915.camel@linux.intel.com>
 From: Zach Wade <zachwade.k@gmail.com>
-In-Reply-To: <422bfc19243e8d50fc3c847f0c1db01e703aff4e.camel@linux.intel.com>
+In-Reply-To: <8c8267e5695c8e1b0a0b0c52050c43e22359c915.camel@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
 
-On 2024/9/20 2:37, srinivas pandruvada wrote:
-> On Fri, 2024-09-20 at 00:22 +0800, Zach Wade wrote:
->>
->>
->>
-> Hi Wade,
+On 2024/9/20 2:44, srinivas pandruvada wrote:
+> On Fri, 2024-09-20 at 00:37 +0800, Zach Wade wrote:
+>> Attaching SST PCI device to VM causes
+> You are not attaching SST PCI device to VM. It seems some hard drives
+> emulates same PCI vendor/device ID.
 > 
+> But replacing with topology_logical_package_id() is fine.
 > 
-> ...
-> ...
+> Let's find out what are those devices.
 > 
-> What is
-> sudo lspci -vvv
-
-Hi Pandruvada,
-
-The command output is as follows:
-lspci -vvv
-00:00.0 Host bridge: Intel Corporation 440BX/ZX/DX - 82443BX/ZX/DX Host 
-bridge (rev 01)
-         Subsystem: VMware Virtual Machine Chipset
-         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR- FastB2B- DisINTx-
-         Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=medium 
- >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-         Latency: 0
-
-00:01.0 PCI bridge: Intel Corporation 440BX/ZX/DX - 82443BX/ZX/DX AGP 
-bridge (rev 01) (prog-if 00 [Normal decode])
-         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV+ VGASnoop- 
-ParErr- Stepping- SERR- FastB2B- DisINTx-
-         Status: Cap- 66MHz+ UDF- FastB2B- ParErr- DEVSEL=medium 
- >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-         Latency: 0
-         Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
-         I/O behind bridge: f000-0fff [disabled] [16-bit]
-         Memory behind bridge: fff00000-000fffff [disabled] [32-bit]
-         Prefetchable memory behind bridge: fff00000-000fffff [disabled] 
-[32-bit]
-         Secondary status: 66MHz+ FastB2B+ ParErr- DEVSEL=medium 
- >TAbort- <TAbort- <MAbort- <SERR- <PERR-
-         BridgeCtl: Parity- SERR- NoISA- VGA- VGA16- MAbort- >Reset- 
-FastB2B-
-                 PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-
-00:07.0 ISA bridge: Intel Corporation 82371AB/EB/MB PIIX4 ISA (rev 08)
-         Subsystem: VMware Virtual Machine Chipset
-         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR- FastB2B- DisINTx-
-         Status: Cap- 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium 
- >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-         Latency: 0
-
-00:07.1 IDE interface: Intel Corporation 82371AB/EB/MB PIIX4 IDE (rev 
-01) (prog-if 8a [ISA Compatibility mode controller, supports both 
-channels switched to PCI native mode, supports bus mastering])
-         Subsystem: VMware Virtual Machine Chipset
-         Control: I/O+ Mem- BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR- FastB2B- DisINTx-
-         Status: Cap- 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium 
- >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-         Latency: 64
-         Region 0: I/O ports at 01f0 [size=8]
-         Region 1: I/O ports at 03f4
-         Region 2: I/O ports at 0170 [size=8]
-         Region 3: I/O ports at 0374
-         Region 4: I/O ports at 0850 [size=16]
-         Kernel driver in use: ata_piix
-         Kernel modules: pata_acpi, ata_generic
-
-00:07.3 Bridge: Intel Corporation 82371AB/EB/MB PIIX4 ACPI (rev 08)
-         Subsystem: VMware Virtual Machine Chipset
-         Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR- FastB2B- DisINTx-
-         Status: Cap- 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium 
- >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-         Interrupt: pin ? routed to IRQ 9
-         Kernel modules: i2c_piix4
-
-00:07.7 System peripheral: VMware Virtual Machine Communication 
-Interface (rev 10)
-         Subsystem: VMware Virtual Machine Communication Interface
-         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR- FastB2B- DisINTx+
-         Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium 
- >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-         Latency: 64 (1500ns min, 63750ns max)
-         Interrupt: pin A routed to IRQ 16
-         Region 0: I/O ports at 0800 [size=64]
-         Region 1: Memory at ffbc0000 (64-bit, non-prefetchable) [size=256K]
-         Capabilities: [40] MSI: Enable- Count=1/1 Maskable- 64bit+
-                 Address: 0000000000000000  Data: 0000
-         Capabilities: [58] MSI-X: Enable+ Count=3 Masked-
-                 Vector table: BAR=1 offset=00000000
-                 PBA: BAR=1 offset=00010000
-         Kernel driver in use: vmw_vmci
-         Kernel modules: vmw_vmci
-
-00:0f.0 VGA compatible controller: VMware SVGA II Adapter (prog-if 00 
-[VGA controller])
-         Subsystem: VMware SVGA II Adapter
-         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR- FastB2B- DisINTx-
-         Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium 
- >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-         Latency: 64, Cache Line Size: 32 bytes
-         Interrupt: pin A routed to IRQ 16
-         Region 0: I/O ports at 0840 [size=16]
-         Region 1: Memory at f0000000 (32-bit, prefetchable) [size=128M]
-         Region 2: Memory at ff000000 (32-bit, non-prefetchable) [size=8M]
-         Expansion ROM at 000c0000 [disabled] [size=128K]
-         Capabilities: [40] Vendor Specific Information: Len=00 <?>
-         Capabilities: [44] PCI Advanced Features
-                 AFCap: TP+ FLR+
-                 AFCtrl: FLR-
-                 AFStatus: TP-
-         Kernel driver in use: vmwgfx
-         Kernel modules: vmwgfx
-
-02:00.0 Serial Attached SCSI controller: VMware PVSCSI SCSI Controller 
-(rev 02)
-         DeviceName: SCSI0
-         Subsystem: VMware PVSCSI SCSI Controller
-         Physical Slot: 32
-         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR- FastB2B- DisINTx+
-         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-         Latency: 0
-         Interrupt: pin A routed to IRQ 17
-         Region 0: I/O ports at 0a30 [size=8]
-         Region 1: Memory at ffbb0000 (64-bit, non-prefetchable) [size=32K]
-         Expansion ROM at fdd00000 [disabled] [size=64K]
-         Capabilities: [40] Express (v2) Endpoint, IntMsgNum 0
-                 DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s 
-<64ns, L1 <1us
-                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE- FLReset+ 
-SlotPowerLimit 0W
-                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-                         RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop- 
-FLReset-
-                         MaxPayload 128 bytes, MaxReadReq 128 bytes
-                 DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- 
-AuxPwr- TransPend-
-                 LnkCap: Port #0, Speed 5GT/s, Width x32, ASPM L0s, Exit 
-Latency L0s <64ns
-                         ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
-                 LnkCtl: ASPM Disabled; RCB 64 bytes, LnkDisable- CommClk-
-                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-                 LnkSta: Speed 5GT/s, Width x32
-                         TrErr- Train- SlotClk- DLActive- BWMgmt- ABWMgmt-
-                 DevCap2: Completion Timeout: Not Supported, TimeoutDis- 
-NROPrPrP- LTR-
-                          10BitTagComp- 10BitTagReq- OBFF Not Supported, 
-ExtFmt- EETLPPrefix-
-                          EmergencyPowerReduction Not Supported, 
-EmergencyPowerReductionInit-
-                          FRS- TPHComp- ExtTPHComp-
-                          AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-                 DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-
-                          AtomicOpsCtl: ReqEn-
-                          IDOReq- IDOCompl- LTR- EmergencyPowerReductionReq-
-                          10BitTagReq- OBFF Disabled, EETLPPrefixBlk-
-                 LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- 
-SpeedDis-
-                          Transmit Margin: Normal Operating Range, 
-EnterModifiedCompliance- ComplianceSOS-
-                          Compliance Preset/De-emphasis: -6dB 
-de-emphasis, 0dB preshoot
-                 LnkSta2: Current De-emphasis Level: -6dB, 
-EqualizationComplete- EqualizationPhase1-
-                          EqualizationPhase2- EqualizationPhase3- 
-LinkEqualizationRequest-
-                          Retimer- 2Retimers- CrosslinkRes: unsupported
-         Capabilities: [7c] MSI: Enable- Count=1/1 Maskable- 64bit+
-                 Address: 0000000000000000  Data: 0000
-         Capabilities: [94] Power Management version 3
-                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA 
-PME(D0+,D1-,D2-,D3hot+,D3cold+)
-                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-         Capabilities: [9c] MSI-X: Enable+ Count=24 Masked-
-                 Vector table: BAR=1 offset=00006000
-                 PBA: BAR=1 offset=00007000
-         Capabilities: [100 v1] Device Serial Number c0-45-4f-c0-50-05-05-68
-         Kernel driver in use: vmw_pvscsi
-         Kernel modules: vmw_pvscsi
-
-02:01.0 USB controller: VMware USB1.1 UHCI Controller (prog-if 00 [UHCI])
-         DeviceName: usb
-         Subsystem: VMware Device 1976
-         Physical Slot: 33
-         Control: I/O+ Mem- BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR- FastB2B- DisINTx-
-         Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium 
- >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-         Latency: 64
-         Interrupt: pin A routed to IRQ 18
-         Region 4: I/O ports at 0a00 [size=32]
-         Capabilities: [40] PCI Advanced Features
-                 AFCap: TP+ FLR+
-                 AFCtrl: FLR-
-                 AFStatus: TP-
-         Kernel driver in use: uhci_hcd
-
-02:02.0 Ethernet controller: VMware VMXNET3 Ethernet Controller (rev 01)
-         DeviceName: Ethernet0
-         Subsystem: VMware VMXNET3 Ethernet Controller
-         Physical Slot: 34
-         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR- FastB2B- DisINTx+
-         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-         Latency: 0, Cache Line Size: 32 bytes
-         Interrupt: pin A routed to IRQ 19
-         Region 0: Memory at fe243000 (32-bit, non-prefetchable) [size=4K]
-         Region 1: Memory at fe242000 (32-bit, non-prefetchable) [size=4K]
-         Region 2: Memory at fe240000 (32-bit, non-prefetchable) [size=8K]
-         Region 3: I/O ports at 0a20 [size=16]
-         Expansion ROM at fdd10000 [disabled] [size=64K]
-         Capabilities: [40] Power Management version 3
-                 Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=0mA 
-PME(D0+,D1+,D2+,D3hot+,D3cold+)
-                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-         Capabilities: [48] Express (v2) Endpoint, IntMsgNum 0
-                 DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s 
-<64ns, L1 <1us
-                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE- FLReset- 
-SlotPowerLimit 0W
-                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-                         RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
-                         MaxPayload 128 bytes, MaxReadReq 128 bytes
-                 DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- 
-AuxPwr- TransPend-
-                 LnkCap: Port #0, Speed 5GT/s, Width x32, ASPM L0s, Exit 
-Latency L0s <64ns
-                         ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
-                 LnkCtl: ASPM Disabled; RCB 64 bytes, LnkDisable- CommClk-
-                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-                 LnkSta: Speed 5GT/s, Width x32
-                         TrErr- Train- SlotClk- DLActive- BWMgmt- ABWMgmt-
-                 DevCap2: Completion Timeout: Not Supported, TimeoutDis- 
-NROPrPrP- LTR-
-                          10BitTagComp- 10BitTagReq- OBFF Not Supported, 
-ExtFmt- EETLPPrefix-
-                          EmergencyPowerReduction Not Supported, 
-EmergencyPowerReductionInit-
-                          FRS- TPHComp- ExtTPHComp-
-                          AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-                 DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-
-                          AtomicOpsCtl: ReqEn-
-                          IDOReq- IDOCompl- LTR- EmergencyPowerReductionReq-
-                          10BitTagReq- OBFF Disabled, EETLPPrefixBlk-
-                 LnkSta2: Current De-emphasis Level: -6dB, 
-EqualizationComplete- EqualizationPhase1-
-                          EqualizationPhase2- EqualizationPhase3- 
-LinkEqualizationRequest-
-                          Retimer- 2Retimers- CrosslinkRes: unsupported
-         Capabilities: [84] MSI: Enable- Count=1/1 Maskable- 64bit+
-                 Address: 0000000000000000  Data: 0000
-         Capabilities: [9c] MSI-X: Enable+ Count=65 Masked-
-                 Vector table: BAR=2 offset=00000000
-                 PBA: BAR=2 offset=00001000
-         Capabilities: [100 v1] Device Serial Number 00-0c-29-ff-ff-8c-20-03
-         Kernel driver in use: vmxnet3
-         Kernel modules: vmxnet3
-
-02:03.0 USB controller: VMware USB2 EHCI Controller (prog-if 20 [EHCI])
-         DeviceName: ehci
-         Subsystem: VMware USB2 EHCI Controller
-         Physical Slot: 35
-         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR- FastB2B- DisINTx-
-         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-         Latency: 64 (1500ns min, 63750ns max)
-         Interrupt: pin A routed to IRQ 16
-         Region 0: Memory at fe211000 (32-bit, non-prefetchable) [size=4K]
-         Capabilities: [40] PCI Advanced Features
-                 AFCap: TP+ FLR+
-                 AFCtrl: FLR-
-                 AFStatus: TP-
-         Kernel driver in use: ehci-pci
-
-02:04.0 SATA controller: VMware SATA AHCI controller (prog-if 01 [AHCI 1.0])
-         DeviceName: sata0
-         Subsystem: VMware SATA AHCI controller
-         Physical Slot: 36
-         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR- FastB2B- DisINTx+
-         Status: Cap+ 66MHz+ UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-         Latency: 64
-         Interrupt: pin A routed to IRQ 24
-         Region 5: Memory at fe210000 (32-bit, non-prefetchable) [size=4K]
-         Expansion ROM at fdd20000 [disabled] [size=64K]
-         Capabilities: [40] Power Management version 3
-                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA 
-PME(D0-,D1-,D2-,D3hot+,D3cold-)
-                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-         Capabilities: [48] MSI: Enable+ Count=1/1 Maskable- 64bit+
-                 Address: 00000000fee04000  Data: 0020
-         Capabilities: [60] SATA HBA v1.0 InCfgSpace
-         Capabilities: [70] PCI Advanced Features
-                 AFCap: TP+ FLR+
-                 AFCtrl: FLR-
-                 AFStatus: TP-
-         Kernel driver in use: ahci
-
-> Also cat /proc/cpuinfo?
-> 
-
-Since there are 32 cores, the output is quite long, so I omitted the 
-repeated parts to keep the email short:
-cat /proc/cpuinfo
-processor       : 0
-vendor_id       : GenuineIntel
-cpu family      : 6
-model           : 85
-model name      : Intel(R) Xeon(R) Gold 6226R CPU @ 2.90GHz
-stepping        : 7
-microcode       : 0x5003302
-cpu MHz         : 2893.202
-cache size      : 22528 KB
-physical id     : 0
-siblings        : 1
-core id         : 0
-cpu cores       : 1
-apicid          : 0
-initial apicid  : 0
-fpu             : yes
-fpu_exception   : yes
-cpuid level     : 22
-wp              : yes
-flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge 
-mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb 
-rdtscp lm constant_tsc arch_perfmon nopl xtopology tsc_reliable 
-nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid 
-sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c 
-rdrand hypervisor lahf_lm abm 3dnowprefetch ssbd ibrs ibpb stibp 
-ibrs_enhanced fsgsbase tsc_adjust bmi1 avx2 smep bmi2 invpcid avx512f 
-avx512dq rdseed adx smap clflushopt clwb avx512cd avx512bw avx512vl 
-xsaveopt xsavec xgetbv1 xsaves arat pku ospke avx512_vnni md_clear 
-flush_l1d arch_capabilities
-bugs            : spectre_v1 spectre_v2 spec_store_bypass swapgs 
-itlb_multihit mmio_stale_data retbleed eibrs_pbrsb gds bhi
-bogomips        : 5786.40
-clflush size    : 64
-cache_alignment : 64
-address sizes   : 45 bits physical, 48 bits virtual
-power management:
-
-processor       : 1
-vendor_id       : GenuineIntel
-cpu family      : 6
-model           : 85
-model name      : Intel(R) Xeon(R) Gold 6226R CPU @ 2.90GHz
-stepping        : 7
-microcode       : 0x5003302
-cpu MHz         : 2893.202
-cache size      : 22528 KB
-physical id     : 2
-siblings        : 1
-core id         : 0
-cpu cores       : 1
-apicid          : 2
-initial apicid  : 2
-fpu             : yes
-fpu_exception   : yes
-cpuid level     : 22
-wp              : yes
-flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge 
-mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb 
-rdtscp lm constant_tsc arch_perfmon nopl xtopology tsc_reliable 
-nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid 
-sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c 
-rdrand hypervisor lahf_lm abm 3dnowprefetch ssbd ibrs ibpb stibp 
-ibrs_enhanced fsgsbase tsc_adjust bmi1 avx2 smep bmi2 invpcid avx512f 
-avx512dq rdseed adx smap clflushopt clwb avx512cd avx512bw avx512vl 
-xsaveopt xsavec xgetbv1 xsaves arat pku ospke avx512_vnni md_clear 
-flush_l1d arch_capabilities
-bugs            : spectre_v1 spectre_v2 spec_store_bypass swapgs 
-itlb_multihit mmio_stale_data retbleed eibrs_pbrsb gds bhi
-bogomips        : 5786.40
-clflush size    : 64
-cache_alignment : 64
-address sizes   : 45 bits physical, 48 bits virtual
-power management:
-
-processor       : 2
-vendor_id       : GenuineIntel
-cpu family      : 6
-model           : 85
-model name      : Intel(R) Xeon(R) Gold 6226R CPU @ 2.90GHz
-stepping        : 7
-microcode       : 0x5003302
-cpu MHz         : 2893.202
-cache size      : 22528 KB
-physical id     : 4
-siblings        : 1
-core id         : 0
-cpu cores       : 1
-apicid          : 4
-initial apicid  : 4
-fpu             : yes
-fpu_exception   : yes
-cpuid level     : 22
-wp              : yes
-flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge 
-mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb 
-rdtscp lm constant_tsc arch_perfmon nopl xtopology tsc_reliable 
-nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid 
-sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c 
-rdrand hypervisor lahf_lm abm 3dnowprefetch ssbd ibrs ibpb stibp 
-ibrs_enhanced fsgsbase tsc_adjust bmi1 avx2 smep bmi2 invpcid avx512f 
-avx512dq rdseed adx smap clflushopt clwb avx512cd avx512bw avx512vl 
-xsaveopt xsavec xgetbv1 xsaves arat pku ospke avx512_vnni md_clear 
-flush_l1d arch_capabilities
-bugs            : spectre_v1 spectre_v2 spec_store_bypass swapgs 
-itlb_multihit mmio_stale_data retbleed eibrs_pbrsb gds bhi
-bogomips        : 5786.40
-clflush size    : 64
-cache_alignment : 64
-address sizes   : 45 bits physical, 48 bits virtual
-power management:
-
-processor       : 3
-vendor_id       : GenuineIntel
-cpu family      : 6
-model           : 85
-model name      : Intel(R) Xeon(R) Gold 6226R CPU @ 2.90GHz
-stepping        : 7
-microcode       : 0x5003302
-cpu MHz         : 2893.202
-cache size      : 22528 KB
-physical id     : 6
-siblings        : 1
-core id         : 0
-cpu cores       : 1
-apicid          : 6
-initial apicid  : 6
-fpu             : yes
-fpu_exception   : yes
-cpuid level     : 22
-wp              : yes
-flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge 
-mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb 
-rdtscp lm constant_tsc arch_perfmon nopl xtopology tsc_reliable 
-nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid 
-sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c 
-rdrand hypervisor lahf_lm abm 3dnowprefetch ssbd ibrs ibpb stibp 
-ibrs_enhanced fsgsbase tsc_adjust bmi1 avx2 smep bmi2 invpcid avx512f 
-avx512dq rdseed adx smap clflushopt clwb avx512cd avx512bw avx512vl 
-xsaveopt xsavec xgetbv1 xsaves arat pku ospke avx512_vnni md_clear 
-flush_l1d arch_capabilities
-bugs            : spectre_v1 spectre_v2 spec_store_bypass swapgs 
-itlb_multihit mmio_stale_data retbleed eibrs_pbrsb gds bhi
-bogomips        : 5786.40
-clflush size    : 64
-cache_alignment : 64
-address sizes   : 45 bits physical, 48 bits virtual
-power management:
-
-......
-
-processor       : 29
-vendor_id       : GenuineIntel
-cpu family      : 6
-model           : 85
-model name      : Intel(R) Xeon(R) Gold 6226R CPU @ 2.90GHz
-stepping        : 7
-microcode       : 0x5003302
-cpu MHz         : 2893.202
-cache size      : 22528 KB
-physical id     : 58
-siblings        : 1
-core id         : 0
-cpu cores       : 1
-apicid          : 58
-initial apicid  : 58
-fpu             : yes
-fpu_exception   : yes
-cpuid level     : 22
-wp              : yes
-flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge 
-mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb 
-rdtscp lm constant_tsc arch_perfmon nopl xtopology tsc_reliable 
-nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid 
-sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c 
-rdrand hypervisor lahf_lm abm 3dnowprefetch ssbd ibrs ibpb stibp 
-ibrs_enhanced fsgsbase tsc_adjust bmi1 avx2 smep bmi2 invpcid avx512f 
-avx512dq rdseed adx smap clflushopt clwb avx512cd avx512bw avx512vl 
-xsaveopt xsavec xgetbv1 xsaves arat pku ospke avx512_vnni md_clear 
-flush_l1d arch_capabilities
-bugs            : spectre_v1 spectre_v2 spec_store_bypass swapgs 
-itlb_multihit mmio_stale_data retbleed eibrs_pbrsb gds bhi
-bogomips        : 5786.40
-clflush size    : 64
-cache_alignment : 64
-address sizes   : 45 bits physical, 48 bits virtual
-power management:
-
-processor       : 30
-vendor_id       : GenuineIntel
-cpu family      : 6
-model           : 85
-model name      : Intel(R) Xeon(R) Gold 6226R CPU @ 2.90GHz
-stepping        : 7
-microcode       : 0x5003302
-cpu MHz         : 2893.202
-cache size      : 22528 KB
-physical id     : 60
-siblings        : 1
-core id         : 0
-cpu cores       : 1
-apicid          : 60
-initial apicid  : 60
-fpu             : yes
-fpu_exception   : yes
-cpuid level     : 22
-wp              : yes
-flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge 
-mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb 
-rdtscp lm constant_tsc arch_perfmon nopl xtopology tsc_reliable 
-nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid 
-sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c 
-rdrand hypervisor lahf_lm abm 3dnowprefetch ssbd ibrs ibpb stibp 
-ibrs_enhanced fsgsbase tsc_adjust bmi1 avx2 smep bmi2 invpcid avx512f 
-avx512dq rdseed adx smap clflushopt clwb avx512cd avx512bw avx512vl 
-xsaveopt xsavec xgetbv1 xsaves arat pku ospke avx512_vnni md_clear 
-flush_l1d arch_capabilities
-bugs            : spectre_v1 spectre_v2 spec_store_bypass swapgs 
-itlb_multihit mmio_stale_data retbleed eibrs_pbrsb gds bhi
-bogomips        : 5786.40
-clflush size    : 64
-cache_alignment : 64
-address sizes   : 45 bits physical, 48 bits virtual
-power management:
-
-processor       : 31
-vendor_id       : GenuineIntel
-cpu family      : 6
-model           : 85
-model name      : Intel(R) Xeon(R) Gold 6226R CPU @ 2.90GHz
-stepping        : 7
-microcode       : 0x5003302
-cpu MHz         : 2893.202
-cache size      : 22528 KB
-physical id     : 62
-siblings        : 1
-core id         : 0
-cpu cores       : 1
-apicid          : 62
-initial apicid  : 62
-fpu             : yes
-fpu_exception   : yes
-cpuid level     : 22
-wp              : yes
-flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge 
-mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb 
-rdtscp lm constant_tsc arch_perfmon nopl xtopology tsc_reliable 
-nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid 
-sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c 
-rdrand hypervisor lahf_lm abm 3dnowprefetch ssbd ibrs ibpb stibp 
-ibrs_enhanced fsgsbase tsc_adjust bmi1 avx2 smep bmi2 invpcid avx512f 
-avx512dq rdseed adx smap clflushopt clwb avx512cd avx512bw avx512vl 
-xsaveopt xsavec xgetbv1 xsaves arat pku ospke avx512_vnni md_clear 
-flush_l1d arch_capabilities
-bugs            : spectre_v1 spectre_v2 spec_store_bypass swapgs 
-itlb_multihit mmio_stale_data retbleed eibrs_pbrsb gds bhi
-bogomips        : 5786.40
-clflush size    : 64
-cache_alignment : 64
-address sizes   : 45 bits physical, 48 bits virtual
-power management:
-
-
 > Thanks,
 > Srinivas
 > 
->>
->>> I don't think lspci in VM will show this device.
->>> Can you send lspci -k?
->>
->> lspci -k
->> 00:00.0 Host bridge: Intel Corporation 440BX/ZX/DX - 82443BX/ZX/DX
->> Host
->> ...
- >> ...
->>           Kernel driver in use: ehci-pci
->> 02:04.0 SATA controller: VMware SATA AHCI controller
->>           DeviceName: sata0
->>           Subsystem: VMware SATA AHCI controller
->>           Kernel driver in use: ahci
->>
->>>
-> This is not complete list.
 
-As requested, the full output of lspci -k is documented above.
+So should we delete this description? Do I need to modify the patch again?
 
 Thanks,
 Zach
 
-> 
-> 
->>> I want to make sure somehow your other VM PCI device is using same
->>> ID
->> ...
->> ...
+>>   "BUG: KASAN: slab-out-of-bounds".
+>> kasan report:
+>> [   19.411889]
+>> ==================================================================
+>> [   19.413702] BUG: KASAN: slab-out-of-bounds in
+>> _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
+>> [   19.415634] Read of size 8 at addr ffff888829e65200 by task
+>> cpuhp/16/113
+>> [   19.417368]
+>> [   19.418627] CPU: 16 PID: 113 Comm: cpuhp/16 Tainted: G
+>> E      6.9.0 #10
+>> [   19.420435] Hardware name: VMware, Inc. VMware20,1/440BX Desktop
+>> Reference Platform, BIOS VMW201.00V.20192059.B64.2207280713
+>> 07/28/2022
+>> [   19.422687] Call Trace:
+>> [   19.424091]  <TASK>
+>> [   19.425448]  dump_stack_lvl+0x5d/0x80
+>> [   19.426963]  ? _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
+>> [   19.428694]  print_report+0x19d/0x52e
+>> [   19.430206]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
+>> [   19.431837]  ? _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
+>> [   19.433539]  kasan_report+0xf0/0x170
+>> [   19.435019]  ? _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
+>> [   19.436709]  _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
+>> [   19.438379]  ? __pfx_sched_clock_cpu+0x10/0x10
+>> [   19.439910]  isst_if_cpu_online+0x406/0x58f [isst_if_common]
+>> [   19.441573]  ? __pfx_isst_if_cpu_online+0x10/0x10 [isst_if_common]
+>> [   19.443263]  ? ttwu_queue_wakelist+0x2c1/0x360
+>> [   19.444797]  cpuhp_invoke_callback+0x221/0xec0
+>> [   19.446337]  cpuhp_thread_fun+0x21b/0x610
+>> [   19.447814]  ? __pfx_cpuhp_thread_fun+0x10/0x10
+>> [   19.449354]  smpboot_thread_fn+0x2e7/0x6e0
+>> [   19.450859]  ? __pfx_smpboot_thread_fn+0x10/0x10
+>> [   19.452405]  kthread+0x29c/0x350
+>> [   19.453817]  ? __pfx_kthread+0x10/0x10
+>> [   19.455253]  ret_from_fork+0x31/0x70
+>> [   19.456685]  ? __pfx_kthread+0x10/0x10
+>> [   19.458114]  ret_from_fork_asm+0x1a/0x30
+>> [   19.459573]  </TASK>
+>> [   19.460853]
+>> [   19.462055] Allocated by task 1198:
+>> [   19.463410]  kasan_save_stack+0x30/0x50
+>> [   19.464788]  kasan_save_track+0x14/0x30
+>> [   19.466139]  __kasan_kmalloc+0xaa/0xb0
+>> [   19.467465]  __kmalloc+0x1cd/0x470
+>> [   19.468748]  isst_if_cdev_register+0x1da/0x350 [isst_if_common]
+>> [   19.470233]  isst_if_mbox_init+0x108/0xff0 [isst_if_mbox_msr]
+>> [   19.471670]  do_one_initcall+0xa4/0x380
+>> [   19.472903]  do_init_module+0x238/0x760
+>> [   19.474105]  load_module+0x5239/0x6f00
+>> [   19.475285]  init_module_from_file+0xd1/0x130
+>> [   19.476506]  idempotent_init_module+0x23b/0x650
+>> [   19.477725]  __x64_sys_finit_module+0xbe/0x130
+>> [   19.476506]  idempotent_init_module+0x23b/0x650
+>> [   19.477725]  __x64_sys_finit_module+0xbe/0x130
+>> [   19.478920]  do_syscall_64+0x82/0x160
+>> [   19.480036]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>> [   19.481292]
+>> [   19.482205] The buggy address belongs to the object at
+>> ffff888829e65000
+>>   which belongs to the cache kmalloc-512 of size 512
+>> [   19.484818] The buggy address is located 0 bytes to the right of
+>>   allocated 512-byte region [ffff888829e65000, ffff888829e65200)
+>> [   19.487447]
+>> [   19.488328] The buggy address belongs to the physical page:
+>> [   19.489569] page: refcount:1 mapcount:0 mapping:0000000000000000
+>> index:0xffff888829e60c00 pfn:0x829e60
+>> [   19.491140] head: order:3 entire_mapcount:0 nr_pages_mapped:0
+>> pincount:0
+>> [   19.492466] anon flags:
+>> 0x57ffffc0000840(slab|head|node=1|zone=2|lastcpupid=0x1fffff)
+>> [   19.493914] page_type: 0xffffffff()
+>> [   19.494988] raw: 0057ffffc0000840 ffff88810004cc80
+>> 0000000000000000 0000000000000001
+>> [   19.496451] raw: ffff888829e60c00 0000000080200018
+>> 00000001ffffffff 0000000000000000
+>> [   19.497906] head: 0057ffffc0000840 ffff88810004cc80
+>> 0000000000000000 0000000000000001
+>> [   19.499379] head: ffff888829e60c00 0000000080200018
+>> 00000001ffffffff 0000000000000000
+>> [   19.500844] head: 0057ffffc0000003 ffffea0020a79801
+>> ffffea0020a79848 00000000ffffffff
+>> [   19.502316] head: 0000000800000000 0000000000000000
+>> 00000000ffffffff 0000000000000000
+>> [   19.503784] page dumped because: kasan: bad access detected
+>> [   19.505058]
+>> [   19.505970] Memory state around the buggy address:
+>> [   19.507172]  ffff888829e65100: 00 00 00 00 00 00 00 00 00 00 00 00
+>> 00 00 00 00
+>> [   19.508599]  ffff888829e65180: 00 00 00 00 00 00 00 00 00 00 00 00
+>> 00 00 00 00
+>> [   19.510013] >ffff888829e65200: fc fc fc fc fc fc fc fc fc fc fc fc
+>> fc fc fc fc
+>> [   19.510014]                    ^
+>> [   19.510016]  ffff888829e65280: fc fc fc fc fc fc fc fc fc fc fc fc
+>> fc fc fc fc
+>> [   19.510018]  ffff888829e65300: fc fc fc fc fc fc fc fc fc fc fc fc
+>> fc fc fc fc
+>> [   19.515367]
+>> ==================================================================
+>> The reason for this error is physical_package_ids assigned by VMM
+>> have
+>> holes. This will cause value returned by
+>> topology_physical_package_id()
+>> to be more than topology_max_packages(). The allocation uses
+>> topology_max_packages() to allocate memory. topology_max_packages()
+>> returns maximum logical package IDs. Hence use
+>> topology_logical_package_id() instead of
+>> topology_physical_package_id().
+>>
+>> Fixes: 9a1aac8a96dc ("platform/x86: ISST: PUNIT device mapping with
+>> Sub-NUMA clustering")
+>> Signed-off-by: Zach Wade <zachwade.k@gmail.com>
+>> ---
+>>   drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git
+>> a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+>> b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+>> index 10e21563fa46..030c33070b84 100644
+>> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+>> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+>> @@ -316,7 +316,9 @@ static struct pci_dev *_isst_if_get_pci_dev(int
+>> cpu, int bus_no, int dev, int fn
+>>              cpu >= nr_cpu_ids || cpu >= num_possible_cpus())
+>>                  return NULL;
+>>   
+>> -       pkg_id = topology_physical_package_id(cpu);
+>> +       pkg_id = topology_logical_package_id(cpu);
+>> +       if (pkg_id >= topology_max_packages())
+>> +               return NULL;
+>>   
+>>          bus_number = isst_cpu_info[cpu].bus_info[bus_no];
+>>          if (bus_number < 0)
 > 
 
