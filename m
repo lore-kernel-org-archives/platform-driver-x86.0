@@ -1,104 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17131367;
-	Sat, 21 Sep 2024 17:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A532207A;
+	Sat, 21 Sep 2024 19:45:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726940943; cv=none; b=EVurtuPeiT+xaNTcLe3/xPhQWD8bg4ot+l1ca73lUf8Z/LNr3TIs8kVRqcCkDLaihWyr4yBSA5ClCeTtx9j7NR4dueY8Vn17U7LHRld9y4mWZ5BfACWrt046SZSsBCZcObJnAntaUh0K1bm0CafzDKWLS1XAoN//KW7w5j17wvM=
+	t=1726947924; cv=none; b=gMFF4yCUfSmj69zo1DPWagT7GdyYwnJrwq58wAZtywtfimDrhjP3+M8adjr4FSaQ82btxt/7tFA5ZliTNA9iEzNjiGoB6h9RwrE2UvPqpVXG7BcyikkreMYvzG8YnyIIL6p61ndJJgp6Jk98gPi+x2KNHDo9GZG/f7NM6MN7B3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726940943; c=relaxed/simple;
-	bh=iD9bEdfUpajZR4FI7A07bRdvcrxIsFc3nwiOruFGQyM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g3PJve72vphE/r902uOnDX6k73yDBgOGnKne4rpovSM7oNKu9RbCnlm05PyUYi2CeXSnW+6i94j9HHCdAya/XZLwGL7Q9JWtvdjipaL87BpwDkKm3NJukr7BfVEM8b+UurMgPos8aV/R95IgDOgUL38lR8zYnK5iYdwWgeW/Urk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dsVZvZqY; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1726947924; c=relaxed/simple;
+	bh=vcqOfZ1cldAxTPI8iONwxEBLQwvIPgcY8TBUrJvwYNM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YkpF+lYHUWu6D+AdnO9F6isShKQzCOtzilkKA6Oia1MqcPHG6mARxo3PytXHzUfSNh5kUvNiIUYm7zV5m6Iu+0/1bb60/dtRoplAmRaa7941sLMEYqH2cnIUptiVIz0hMeReZivnmPccdxQcRz1ZAZTxogpo1vtzWyQrovK2Tg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=YKYczCBn; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dsVZvZqY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726940942; x=1758476942;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=iD9bEdfUpajZR4FI7A07bRdvcrxIsFc3nwiOruFGQyM=;
-  b=dsVZvZqYPz3DAV124XzwD13deAwuPkA8qRVIHTMvl//Q9clzSttvq6/i
-   MleyXVjff6NDEZRnERI0K+YO/hs1PuC40J3yLZrX151r8X2/NaMbUyTa5
-   7IrJ32cfHExmH6rWSjJ/SEbfjbg02XK6NWePIdsxdGEJWr+vtOyUYmVIn
-   cE2QbspUV3plirojRWIKhwVpd04KZaCd26nxyPvsYQJSJ/iNVnFCMmayq
-   uDSasuUBMa/9QOjzvXuBvvrqljRPCQwmFi+5ltQwhnqeZ0jwl3uB74vbw
-   poNTklF/T+bOT91lhj0pzzlM6kC+GPi4rJz3Am4lOM+Cii4dUJjtkzc/e
-   g==;
-X-CSE-ConnectionGUID: PpxnyZXMSKO5RryIvaxoTw==
-X-CSE-MsgGUID: oZEP3bMmS2232E4m5NoG9g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11202"; a="29656844"
-X-IronPort-AV: E=Sophos;i="6.10,247,1719903600"; 
-   d="scan'208";a="29656844"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2024 10:49:01 -0700
-X-CSE-ConnectionGUID: uoKcFNkPQm2g9f4YoKepsQ==
-X-CSE-MsgGUID: l+qQnOaIQcixZAtO72XkeQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,247,1719903600"; 
-   d="scan'208";a="75184520"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 21 Sep 2024 10:48:59 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ss4E4-000Fed-2h;
-	Sat, 21 Sep 2024 17:48:56 +0000
-Date: Sun, 22 Sep 2024 01:48:53 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Luke D. Jones" <luke@ljones.dev>, platform-driver-x86@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com, corentin.chary@gmail.com,
-	"Luke D. Jones" <luke@ljones.dev>
-Subject: Re: [PATCH v3 1/5] platform/x86: asus-armoury: move existing tunings
- to asus-armoury module
-Message-ID: <202409220126.kUWmewio-lkp@intel.com>
-References: <20240918094250.82430-2-luke@ljones.dev>
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="YKYczCBn"
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 01A1F2E09882;
+	Sat, 21 Sep 2024 22:45:15 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1726947916;
+	bh=vcqOfZ1cldAxTPI8iONwxEBLQwvIPgcY8TBUrJvwYNM=;
+	h=Received:From:Subject:To;
+	b=YKYczCBnrepIYEk9jNpzExJCsTIodY68nuOo9sxgLZCVkkCTW/RrnDfN8wavIBhaD
+	 +X9tAnj6z7d2H9DmS7sSZttl6d8b/lUdyCBpK2uJjVHpaCiIQQjkU7LzavcRh/VTa3
+	 IIZwQFwfnN/WBZVMg/1WqrxB9UFbL3YA8dQqgwu0=
+Authentication-Results: linux1587.grserver.gr;
+        spf=pass (sender IP is 209.85.208.179) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f179.google.com
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f179.google.com with SMTP id
+ 38308e7fff4ca-2f759688444so25299131fa.1;
+        Sat, 21 Sep 2024 12:45:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCV6sVj6q4p2vfVPjb2iyrN9fIX7Z75hSBeI0uVA13CyKYKmbK+0ujVHsN6iESHb/uZS93r8HJZo/g==@vger.kernel.org,
+ AJvYcCVRMZ028aUhkOiYIgZYBHcvJuaZn3Bo7B3AlfxMHf2lNrYK6u5+TQizG7aJAvZnl2P3s7E70ryAiGOuKw/ZYmVQ63YDlA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBOOnloLJkq3PRMiT8LX88ysJrkyB5/IFaMNWUdcmKUDvNYOCB
+	cKn+Pz5aNaqcwoD2VBcUSGo53c7LsqEHssocJl2r+bDjLhsg4tvQci1e1rK1IKmK+hn41M8z8ns
+	nERNXNQbvyTMFc4TR1viOlLMRitw=
+X-Google-Smtp-Source: 
+ AGHT+IEQe7zRrSnFiFpkrmlfSvVyKALPTVvWjFrEVXlyeMujOeIjF0DSZxEctkwM84SeE26J1TIMrwjqK0uceWQ14pA=
+X-Received: by 2002:a2e:83c4:0:b0:2ec:637a:c212 with SMTP id
+ 38308e7fff4ca-2f7cb348cd7mr30980651fa.39.1726947910453; Sat, 21 Sep 2024
+ 12:45:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240918094250.82430-2-luke@ljones.dev>
+References: <20240919171952.403745-1-lkml@antheas.dev>
+ <20240919171952.403745-4-lkml@antheas.dev>
+ <7c604018-59a3-4b70-83d1-06f0ed858b73@amd.com>
+ <CAGwozwGSVAExH_9zCCKreC88J0FRU4ZM3RkBk==HvRwCUuuqLw@mail.gmail.com>
+ <25b14b4f-96b7-453c-b876-6a46c4f3789c@amd.com>
+ <CAGwozwHmd8yHzjbutOd4T39h5CZRh2rOWYH4V4AnLN+RXrRRnQ@mail.gmail.com>
+ <f164e172-0030-48d0-9c33-aaaa6d0cc6ff@gmail.com>
+ <CAGwozwGNg8XZcY0AhfMfKXJo4P4Xmvn7e2Bt2gZ-emSAsn24qA@mail.gmail.com>
+ <31eb2289-633d-47d8-8609-e9994d7f8353@gmail.com>
+In-Reply-To: <31eb2289-633d-47d8-8609-e9994d7f8353@gmail.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Sat, 21 Sep 2024 21:44:58 +0200
+X-Gmail-Original-Message-ID: 
+ <CAGwozwHDW_m7gx8Fb-CQUz_TtSA=G7hx37NCqntm-hYKhRf8WA@mail.gmail.com>
+Message-ID: 
+ <CAGwozwHDW_m7gx8Fb-CQUz_TtSA=G7hx37NCqntm-hYKhRf8WA@mail.gmail.com>
+Subject: Re: [PATCH v1 3/4] acpi/x86: s2idle: call screen on and off as part
+ of callbacks
+To: Denis Benato <benato.denis96@gmail.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>, linux-pm@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, luke@ljones.dev, me@kylegospodneti.ch
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <172694791641.13648.6367072771866107030@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-Hi Luke,
+Hi Denis,
 
-kernel test robot noticed the following build errors:
+> Beside, as for necessary kernel/software quirks, the new firmware is
+> expected to require none, at least for asus-wmi, so I ask you to leave
+> csee calls where they are now as in the future those will be used only
+> on non-updated firmware.
 
-[auto build test ERROR on next-20240918]
-[also build test ERROR on v6.11]
-[cannot apply to linus/master v6.11 v6.11-rc7 v6.11-rc6]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I'm happy you said that, as it means this patch will not conflict with
+the new firmware and will just fix older devices.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Luke-D-Jones/platform-x86-asus-armoury-move-existing-tunings-to-asus-armoury-module/20240918-174540
-base:   next-20240918
-patch link:    https://lore.kernel.org/r/20240918094250.82430-2-luke%40ljones.dev
-patch subject: [PATCH v3 1/5] platform/x86: asus-armoury: move existing tunings to asus-armoury module
-config: x86_64-rhel-8.3-rust (https://download.01.org/0day-ci/archive/20240922/202409220126.kUWmewio-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240922/202409220126.kUWmewio-lkp@intel.com/reproduce)
+The only change my patch does on the Ally specifically is pull CSEE
+earlier and remove the extra call. There is nothing in this patch to
+explain what you are experiencing. There are a lot of causes I could
+point my finger to, but there is no point.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409220126.kUWmewio-lkp@intel.com/
+We will conduct our own testing, and this will include the original
+Ally as well. A lot of them actually, and after initial testing this
+will include thousands of devices, as we plan to fully dogfood this
+patch.
 
-All error/warnings (new ones prefixed by >>, old ones prefixed by <<):
+I was a bit busy today, so I did not update the patch. I want to
+rewrite part of the cover letter, as it includes some inconsistencies,
+and rename some variables. The inconsistencies have to do with how I
+describe the sleep stage, as I read up on some additional
+documentation, it is not related to the contents of the patch. In
+addition, it seems those sleep _DSMs cause problems on the Ally too,
+related to TDP. And no, I will not wait half a year for a BIOS update
+to fix those.
 
->> drivers/platform/x86/asus-armoury.c:161: warning: Function parameter or struct member 'attr' not described in 'attr_int_store'
->> drivers/platform/x86/asus-armoury.c:161: warning: Excess function parameter 'kobj_attribute' description in 'attr_int_store'
---
->> ERROR: modpost: module hid-asus uses symbol asus_wmi_evaluate_method from namespace ASUS_WMI, but does not import it.
+I am also looking into how to integrate Modern Standby into the
+kernel, in a more full featured way. Downloading games in the
+background is a very requested feature after all, and since looking
+into the Ally's _DSM entries, it seems like it is built to support it.
+Background here would mean the fan will be off and the suspend light
+will be pulsing, so you can safely stow it in a bag while it is
+downloading games. However, this is conjecture until the patch for
+that is built and tested.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Antheas
