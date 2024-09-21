@@ -1,174 +1,104 @@
-Received: from smtp.smtpout.orange.fr (smtp-28.smtpout.orange.fr [80.12.242.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A397171066;
-	Sat, 21 Sep 2024 17:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17131367;
+	Sat, 21 Sep 2024 17:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726940605; cv=none; b=l7Q91Dvc/LQC18Q4khYYO0FHM0XCuHBS65qdjvom/LHBjfpWmZ5pH14qk+DDaMpmwKqPI2MtWxlMRCqedBUeJMwSv+FPcFiFrMlcskRBv2SHQhYwDMID9Gf/j1UJyOGCKsWr/BO5R4nbsbpgPgMuBLuc1wZndLtmPa/WkU9XC3Q=
+	t=1726940943; cv=none; b=EVurtuPeiT+xaNTcLe3/xPhQWD8bg4ot+l1ca73lUf8Z/LNr3TIs8kVRqcCkDLaihWyr4yBSA5ClCeTtx9j7NR4dueY8Vn17U7LHRld9y4mWZ5BfACWrt046SZSsBCZcObJnAntaUh0K1bm0CafzDKWLS1XAoN//KW7w5j17wvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726940605; c=relaxed/simple;
-	bh=5QF4E4hzhN8h7TsKm+fffMA2RL3nFR24AROMzPXbtFA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DdqLioZvg62mbR0zBhUGC60wmbkzVb0PBiGXeDR5L7n7otYcgEr4Jkm3LdkyBZ6ctnEk1ki31izbmIP9qxRGs3UGO9yk8jRTbTwTJL4j6ijbN8sJr4FQRFRoCKj+3lGd8BSbhaHphBqxjwydmpL/7Q+yavtmvd9vRohMMd/q74M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=q9QQW7/2; arc=none smtp.client-ip=80.12.242.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1726940943; c=relaxed/simple;
+	bh=iD9bEdfUpajZR4FI7A07bRdvcrxIsFc3nwiOruFGQyM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g3PJve72vphE/r902uOnDX6k73yDBgOGnKne4rpovSM7oNKu9RbCnlm05PyUYi2CeXSnW+6i94j9HHCdAya/XZLwGL7Q9JWtvdjipaL87BpwDkKm3NJukr7BfVEM8b+UurMgPos8aV/R95IgDOgUL38lR8zYnK5iYdwWgeW/Urk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dsVZvZqY; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="q9QQW7/2"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id ruJZsXjomPdk1ruJZsOId7; Sat, 21 Sep 2024 09:14:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1726902842;
-	bh=QoQYT2Kirtlhg7admjb2GZK6gh+y5+OeCj824zlA4lk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=q9QQW7/2qUU/H+3J4lHfhbWi2/Qn8JCiKcQ+z9ZnxRyoZoI6eOcjrkvjbKbrmg1US
-	 OkEhmLpMrIM8TzaZqcWrmtFLAL52kvxlO6YWCk3GAKU0Ph5YoR/LY1lXSjiEAKzUiY
-	 iemIfOdNyLRK2qaGlogwb80pU8GJuZDBwYJVfULA3HjMi6nnxSrnDFJHoqUmZHNAN9
-	 cqvE43PmAK1BXHn75Fd7pDAAEGpV3x+qElS1NpE5iGMXIbE+GIHQVJ/bhiFkBmgANq
-	 lf+SA6Xq5OnJUg/VYh6xbybv8+FtYcn3gz/wKGnA9QBN46lz+O+8wXGY0/jddUcpr1
-	 PjHhFmOw2aOoA==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Sat, 21 Sep 2024 09:14:02 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <33519933-f171-4bbe-adad-dbe51115cc0a@wanadoo.fr>
-Date: Sat, 21 Sep 2024 09:13:56 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dsVZvZqY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1726940942; x=1758476942;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=iD9bEdfUpajZR4FI7A07bRdvcrxIsFc3nwiOruFGQyM=;
+  b=dsVZvZqYPz3DAV124XzwD13deAwuPkA8qRVIHTMvl//Q9clzSttvq6/i
+   MleyXVjff6NDEZRnERI0K+YO/hs1PuC40J3yLZrX151r8X2/NaMbUyTa5
+   7IrJ32cfHExmH6rWSjJ/SEbfjbg02XK6NWePIdsxdGEJWr+vtOyUYmVIn
+   cE2QbspUV3plirojRWIKhwVpd04KZaCd26nxyPvsYQJSJ/iNVnFCMmayq
+   uDSasuUBMa/9QOjzvXuBvvrqljRPCQwmFi+5ltQwhnqeZ0jwl3uB74vbw
+   poNTklF/T+bOT91lhj0pzzlM6kC+GPi4rJz3Am4lOM+Cii4dUJjtkzc/e
+   g==;
+X-CSE-ConnectionGUID: PpxnyZXMSKO5RryIvaxoTw==
+X-CSE-MsgGUID: oZEP3bMmS2232E4m5NoG9g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11202"; a="29656844"
+X-IronPort-AV: E=Sophos;i="6.10,247,1719903600"; 
+   d="scan'208";a="29656844"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2024 10:49:01 -0700
+X-CSE-ConnectionGUID: uoKcFNkPQm2g9f4YoKepsQ==
+X-CSE-MsgGUID: l+qQnOaIQcixZAtO72XkeQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,247,1719903600"; 
+   d="scan'208";a="75184520"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 21 Sep 2024 10:48:59 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ss4E4-000Fed-2h;
+	Sat, 21 Sep 2024 17:48:56 +0000
+Date: Sun, 22 Sep 2024 01:48:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Luke D. Jones" <luke@ljones.dev>, platform-driver-x86@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com, corentin.chary@gmail.com,
+	"Luke D. Jones" <luke@ljones.dev>
+Subject: Re: [PATCH v3 1/5] platform/x86: asus-armoury: move existing tunings
+ to asus-armoury module
+Message-ID: <202409220126.kUWmewio-lkp@intel.com>
+References: <20240918094250.82430-2-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] platform/x86: asus-armoury: move existing tunings
- to asus-armoury module
-To: "Luke D. Jones" <luke@ljones.dev>, platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, corentin.chary@gmail.com
-References: <20240918094250.82430-1-luke@ljones.dev>
- <20240918094250.82430-2-luke@ljones.dev>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20240918094250.82430-2-luke@ljones.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-Le 18/09/2024 à 11:42, Luke D. Jones a écrit :
-> The fw_attributes_class provides a much cleaner interface to all of the
-> attributes introduced to asus-wmi. This patch moves all of these extra
-> attributes over to fw_attributes_class, and shifts the bulk of these
-> definitions to a new kernel module to reduce the clutter of asus-wmi
-> with the intention of deprecating the asus-wmi attributes in future.
-> 
-> The work applies only to WMI methods which don't have a clearly defined
-> place within the sysfs and as a result ended up lumped together in
-> /sys/devices/platform/asus-nb-wmi/ with no standard API.
-> 
-> Where possible the fw attrs now implement defaults, min, max, scalar,
-> choices, etc. As en example dgpu_disable becomes:
-> 
-> /sys/class/firmware-attributes/asus-armoury/attributes/dgpu_disable/
-> ├── current_value
-> ├── display_name
-> ├── possible_values
-> └── type
-> 
-> as do other attributes.
-> 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+Hi Luke,
 
-Hi,
+kernel test robot noticed the following build errors:
 
-a few nitpick below, should it help.
+[auto build test ERROR on next-20240918]
+[also build test ERROR on v6.11]
+[cannot apply to linus/master v6.11 v6.11-rc7 v6.11-rc6]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> +/* Boolean style enumeration, base macro. Requires adding show/store */
-> +#define __ATTR_GROUP_ENUM(_attrname, _fsname, _possible, _dispname)     \
-> +	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);    \
-> +	__ATTR_SHOW_FMT(possible_values, _attrname, "%s\n", _possible); \
-> +	static struct kobj_attribute attr_##_attrname##_type =          \
-> +		__ASUS_ATTR_RO_AS(type, enum_type_show);                \
-> +	static struct attribute *_attrname##_attrs[] = {                \
-> +		&attr_##_attrname##_current_value.attr,                 \
-> +		&attr_##_attrname##_display_name.attr,                  \
-> +		&attr_##_attrname##_possible_values.attr,               \
-> +		&attr_##_attrname##_type.attr, NULL                     \
+url:    https://github.com/intel-lab-lkp/linux/commits/Luke-D-Jones/platform-x86-asus-armoury-move-existing-tunings-to-asus-armoury-module/20240918-174540
+base:   next-20240918
+patch link:    https://lore.kernel.org/r/20240918094250.82430-2-luke%40ljones.dev
+patch subject: [PATCH v3 1/5] platform/x86: asus-armoury: move existing tunings to asus-armoury module
+config: x86_64-rhel-8.3-rust (https://download.01.org/0day-ci/archive/20240922/202409220126.kUWmewio-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240922/202409220126.kUWmewio-lkp@intel.com/reproduce)
 
-It would be more readable if ", NULL" was on its own line, IMHO.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409220126.kUWmewio-lkp@intel.com/
 
-> +	};                                                              \
-> +	static const struct attribute_group _attrname##_attr_group = {  \
-> +		.name = _fsname, .attrs = _attrname##_attrs             \
-> +	}
-> +
-> +#define ATTR_GROUP_BOOL_RO(_attrname, _fsname, _wmi, _dispname) \
-> +	__ATTR_CURRENT_INT_RO(_attrname, _wmi);                 \
-> +	__ATTR_GROUP_ENUM(_attrname, _fsname, "0;1", _dispname)
-> +
-> +#define ATTR_GROUP_BOOL_RW(_attrname, _fsname, _wmi, _dispname) \
-> +	__ATTR_CURRENT_INT_RW(_attrname, 0, 1, _wmi);           \
-> +	__ATTR_GROUP_ENUM(_attrname, _fsname, "0;1", _dispname)
-> +
-> +/*
-> + * Requires <name>_current_value_show(), <name>_current_value_show()
-> + */
-> +#define ATTR_GROUP_BOOL_CUSTOM(_attrname, _fsname, _dispname)           \
-> +	static struct kobj_attribute attr_##_attrname##_current_value = \
-> +		__ASUS_ATTR_RW(_attrname, current_value);               \
-> +	__ATTR_GROUP_ENUM(_attrname, _fsname, "0;1", _dispname)
-> +
-> +#define ATTR_GROUP_ENUM_INT_RO(_attrname, _fsname, _wmi, _possible, _dispname) \
-> +	__ATTR_CURRENT_INT_RO(_attrname, _wmi);                                \
-> +	__ATTR_GROUP_ENUM(_attrname, _fsname, _possible, _dispname)
-> +
-> +/*
-> + * Requires <name>_current_value_show(), <name>_current_value_show()
-> + * and <name>_possible_values_show()
-> + */
-> +#define ATTR_GROUP_ENUM_CUSTOM(_attrname, _fsname, _dispname)             \
-> +	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);      \
-> +	static struct kobj_attribute attr_##_attrname##_current_value =   \
-> +		__ASUS_ATTR_RW(_attrname, current_value);                 \
-> +	static struct kobj_attribute attr_##_attrname##_possible_values = \
-> +		__ASUS_ATTR_RO(_attrname, possible_values);               \
-> +	static struct kobj_attribute attr_##_attrname##_type =            \
-> +		__ASUS_ATTR_RO_AS(type, enum_type_show);                  \
-> +	static struct attribute *_attrname##_attrs[] = {                  \
-> +		&attr_##_attrname##_current_value.attr,                   \
-> +		&attr_##_attrname##_display_name.attr,                    \
-> +		&attr_##_attrname##_possible_values.attr,                 \
-> +		&attr_##_attrname##_type.attr, NULL                       \
+All error/warnings (new ones prefixed by >>, old ones prefixed by <<):
 
-It would be more readable if ", NULL" was on its own line, IMHO.
+>> drivers/platform/x86/asus-armoury.c:161: warning: Function parameter or struct member 'attr' not described in 'attr_int_store'
+>> drivers/platform/x86/asus-armoury.c:161: warning: Excess function parameter 'kobj_attribute' description in 'attr_int_store'
+--
+>> ERROR: modpost: module hid-asus uses symbol asus_wmi_evaluate_method from namespace ASUS_WMI, but does not import it.
 
-> +	};                                                                \
-> +	static const struct attribute_group _attrname##_attr_group = {    \
-> +		.name = _fsname, .attrs = _attrname##_attrs               \
-> +	}
-
-...
-
-> +static const struct dmi_system_id asus_rog_ally_device[] = {
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_NAME, "RC71L"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_NAME, "RC72L"),
-> +		},
-> +	},
-> +	{ },
-
-I think that an ending comma is not expected after a terminator.
-
-> +};
-> +
->   #endif /* !_ASUS_WMI_H_ */
-
-...
-
-CJ
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
