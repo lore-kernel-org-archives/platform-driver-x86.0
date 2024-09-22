@@ -1,158 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C608192D72;
-	Sun, 22 Sep 2024 01:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9D21E529;
+	Sun, 22 Sep 2024 02:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726968855; cv=none; b=OU85QB0rCHgXqE2iDdBCo06KWttv2TLnmI2j4zt88fva1uUtv9fFtiqXNANqjGz6RPtL/ajJztVgXfsZ2XucUsE8csdok+Kmpl0LOGb26BU149AIA+uZ4enI+I4hhcWcPZKp75MXZbFZ09LPeyAkHZIhT6tkJ6vjnFmFwwTWqMQ=
+	t=1726970859; cv=none; b=JecuxHdAg450Mk81dTVHBWu6qmTUdm2RL1SnLX7mIrBaemSwgLjnchgfrQWxq1bD3XS3qyKcwvu+9lYL2kxj0GXB51vA+eeFtxVkV+BFodM+voc4MGumLzuMRJfFQ+wk7+D1H5reutbY3Nw5zqJPuIIB14KL2bOxaUVlQ6nqDFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726968855; c=relaxed/simple;
-	bh=1nkCZlKlE+JE1I3M3Pq5g5Zctxdu231v4n3Ag9cXTyM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M04l/beBCLk4wY6LyfQKBFk8150xkCaTGgq5KCr5Aw48JI64GCx1md/WhLTwzoq3/WKbyoLZ06/NNokIfJ5dle6Y04n4LbaojtVZKpTy9CE/l+WvSuGMUPd1CeS56r+rQ0fD/9bBsdOUPqX2heq6TTQJCMrU5Bae25+Jaabv4RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SHpeNIld; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1726970859; c=relaxed/simple;
+	bh=Ga9yAiHhhCAY/j9jBJ+fqSp5cm7HoOFURxXd6JyAZqQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l8TkSbWHj+iGR1Mzl/WV5HCyTakBqBIocxR40Ibtr2JR8JCCYm5m0R3jkJRNAjyI+72VQiPpRugYOflK884C+jfy+yQOi6xWBGIUWWYPbX7bKIqMRqYJxjDVp7Ffac6mzKNSjkzI5YcuKXvvNpTKcnfl5vydYbjs8WzvH79KW7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ctOj0FAL; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SHpeNIld"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726968854; x=1758504854;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1nkCZlKlE+JE1I3M3Pq5g5Zctxdu231v4n3Ag9cXTyM=;
-  b=SHpeNIldrDDhFsjI3tBKm7jtl7RaVvA9cOQDrWymkUPcZpmbxy0ZQIj0
-   ljY3uaMCRo0n3Cj70J69qLoMUEN6aZjUTOTtajFsyRwTaqQ+oZdhvXkoK
-   nxPTSysBr/GZmEySm7tGQgcCYtqtMj0StwkeJhx5ovRyyH5g6C4z2CYBL
-   fadNdRlmuB/0Ieye7Eub6BXp7Q2ISAIVIjlB2xHMp0xrsE7s6LHCdzGpA
-   UIPHr+nm/ppHRlj6wcKBZl7tsjq2jS15JeWhpvd9ezCS9zrQ8piuHMqWt
-   JPH27GYsNA0eIrDsbVCBAROWfXnA4fCamQiw7L0PS/ZffRqMnn/g7FX8T
-   w==;
-X-CSE-ConnectionGUID: GXgJCQhORHGCxCfhB0gQnw==
-X-CSE-MsgGUID: +7PiGZnDTeK89vlvekLMXg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11202"; a="37077097"
-X-IronPort-AV: E=Sophos;i="6.10,248,1719903600"; 
-   d="scan'208";a="37077097"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2024 18:34:14 -0700
-X-CSE-ConnectionGUID: 83Kb8Im6QMm4Gx2GWmJbGQ==
-X-CSE-MsgGUID: pVRUZo9pRmiCruGUSRmpjg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,248,1719903600"; 
-   d="scan'208";a="74809216"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 21 Sep 2024 18:34:11 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ssBUH-000FwF-1F;
-	Sun, 22 Sep 2024 01:34:09 +0000
-Date: Sun, 22 Sep 2024 09:33:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Luke D. Jones" <luke@ljones.dev>, platform-driver-x86@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
-	corentin.chary@gmail.com, "Luke D. Jones" <luke@ljones.dev>
-Subject: Re: [PATCH v3 1/5] platform/x86: asus-armoury: move existing tunings
- to asus-armoury module
-Message-ID: <202409220913.WEYnCgBL-lkp@intel.com>
-References: <20240918094250.82430-2-luke@ljones.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ctOj0FAL"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42e5e758093so27530255e9.1;
+        Sat, 21 Sep 2024 19:07:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1726970856; x=1727575656; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9oohvC6lTfiSYwOYed900cv9HTEJuIzCC7mv3WEC2cw=;
+        b=ctOj0FALDiV/HbB0n8gDItxMTFf5Mqa/5xhGjngPorh/5kGLH6uxh06SGf9L3ozyMH
+         8sUiu99drj2Whf9edImKX8oX29o5VC2HhTPdMdD/9nmZPJpBbWkrBi/Sgd9FsVp+jY/d
+         5qH4zeR6qRBYCcsf5JBOS9Yeenn9QVQdrXvAOxcWwac7VDeg5WH/9Batyu1g9XWbiWxl
+         ofwrfyDuS8euqzy6tQl29+MFpKQIHyVPEI1EFECwTtHt1+cvjiD1sV6Jfi1/isFWHQEI
+         1FQ8MaACUYpD8PKrpyixH24jevIoqv17reKtMAqjbzaIB6bCtlblYcOu7yav6p9/62GF
+         F1ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726970856; x=1727575656;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9oohvC6lTfiSYwOYed900cv9HTEJuIzCC7mv3WEC2cw=;
+        b=JS3Am89ILXp+fPMO8CUVZdQuQnnI+d1CbXWBGIXEJmndoFmYoobL+n/QGHjhQ/fpQi
+         OORwndp2peH52tfmDWF1aZUQmlA1gYPfflOlU+CuiNnQvjgnmQJbFBrxK3ZerJ7Dmy3q
+         k86FQ95zU76BT0gkaEjh1Eq4Y5EBdE+hivtqo++5oRsOJKkdfjQajIAdk7MOekKiE9be
+         KM0g0R57M2B+TBT+GfssOBBcbVeTu7jHuVZpCFF9QFMtYKGUwsifJyGnrj8gWt0mzBse
+         VmEkZcRaRKtyX53m6Y0qcR1HlapdTYN1jxJpTcC5IxcGBWxowAPLSQFsvvY9XphxYMyn
+         OOfA==
+X-Forwarded-Encrypted: i=1; AJvYcCUED5dA/FQVdXlpsVnW9CKJBAFtNsdwfFAv8gOxlV/+Po87BaX2OzDCgmyFUuukc0JZTA8ZguEtJ72H2FxFVksc4Q/Flg==@vger.kernel.org, AJvYcCVhYTRmm33vTGCxXQDzcp8XEjRDPfdFn9hcADS1NPBQiDF/mOzs6kKAkuuieUV2Jxng12CQH4Empg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yznboycq+njyqs4lghEZoNdyyIz+ELNjNdASFyJboWxSLGVe8pY
+	GXpu5sSbTn2QI/YFF2HBvIgetXVJol+U+JSttpb5+utnbJDPkXYuWMXLtGJK
+X-Google-Smtp-Source: AGHT+IGcpkVwGXrA9CQpkzepX3rS1Hzev6lDrPPoCNhq91QaZXLWpV5OUk7yV2HUjGX1yR3URVkWhA==
+X-Received: by 2002:a05:600c:1907:b0:42c:b6db:4270 with SMTP id 5b1f17b1804b1-42e7abefbb6mr53611725e9.11.1726970856019;
+        Sat, 21 Sep 2024 19:07:36 -0700 (PDT)
+Received: from [192.168.1.127] ([151.95.37.234])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42e7ae5fce0sm63606665e9.10.2024.09.21.19.07.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Sep 2024 19:07:35 -0700 (PDT)
+Message-ID: <30b8c512-d76e-4acf-892e-fad7a6bb1127@gmail.com>
+Date: Sun, 22 Sep 2024 04:07:30 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240918094250.82430-2-luke@ljones.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 3/4] acpi/x86: s2idle: call screen on and off as part
+ of callbacks
+To: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: Mario Limonciello <mario.limonciello@amd.com>, linux-pm@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, luke@ljones.dev, me@kylegospodneti.ch
+References: <20240919171952.403745-1-lkml@antheas.dev>
+ <20240919171952.403745-4-lkml@antheas.dev>
+ <7c604018-59a3-4b70-83d1-06f0ed858b73@amd.com>
+ <CAGwozwGSVAExH_9zCCKreC88J0FRU4ZM3RkBk==HvRwCUuuqLw@mail.gmail.com>
+ <25b14b4f-96b7-453c-b876-6a46c4f3789c@amd.com>
+ <CAGwozwHmd8yHzjbutOd4T39h5CZRh2rOWYH4V4AnLN+RXrRRnQ@mail.gmail.com>
+ <f164e172-0030-48d0-9c33-aaaa6d0cc6ff@gmail.com>
+ <CAGwozwGNg8XZcY0AhfMfKXJo4P4Xmvn7e2Bt2gZ-emSAsn24qA@mail.gmail.com>
+ <31eb2289-633d-47d8-8609-e9994d7f8353@gmail.com>
+ <CAGwozwHDW_m7gx8Fb-CQUz_TtSA=G7hx37NCqntm-hYKhRf8WA@mail.gmail.com>
+Content-Language: en-US, it-IT, en-US-large
+From: Denis Benato <benato.denis96@gmail.com>
+In-Reply-To: <CAGwozwHDW_m7gx8Fb-CQUz_TtSA=G7hx37NCqntm-hYKhRf8WA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Luke,
+On 21/09/24 21:44, Antheas Kapenekakis wrote:
+> Hi Denis,
+> 
 
-kernel test robot noticed the following build warnings:
+Hello Antheas,
 
-[auto build test WARNING on next-20240918]
-[also build test WARNING on v6.11]
-[cannot apply to linus/master v6.11 v6.11-rc7 v6.11-rc6]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>> Beside, as for necessary kernel/software quirks, the new firmware is
+>> expected to require none, at least for asus-wmi, so I ask you to leave
+>> csee calls where they are now as in the future those will be used only
+>> on non-updated firmware.
+> I'm happy you said that, as it means this patch will not conflict with
+> the new firmware and will just fix older devices.
+> 
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Luke-D-Jones/platform-x86-asus-armoury-move-existing-tunings-to-asus-armoury-module/20240918-174540
-base:   next-20240918
-patch link:    https://lore.kernel.org/r/20240918094250.82430-2-luke%40ljones.dev
-patch subject: [PATCH v3 1/5] platform/x86: asus-armoury: move existing tunings to asus-armoury module
-config: i386-allyesconfig (https://download.01.org/0day-ci/archive/20240922/202409220913.WEYnCgBL-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240922/202409220913.WEYnCgBL-lkp@intel.com/reproduce)
+You are currently attempting to fix a problem that does not exists (or
+you haven't made us aware of), in a way that is causing regressions:
+no -- calling csee twice is not a problem and we have absolutely no reasons
+to suspect it is.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409220913.WEYnCgBL-lkp@intel.com/
+First: the onus is on you to justify, with logs and a thorough explanation,
+why you are modifying a module. You have so far failed to do so.
 
-All warnings (new ones prefixed by >>):
+Second: give us explanation of why you think downloading games with screen off
+has something to do with the asus-wmi driver and belongs to the same patch series.
 
-   In file included from drivers/platform/x86/asus-armoury.c:23:
->> include/linux/platform_data/x86/asus-wmi.h:182:35: warning: 'asus_use_hid_led_dmi_ids' defined but not used [-Wunused-const-variable=]
-     182 | static const struct dmi_system_id asus_use_hid_led_dmi_ids[] = {
-         |                                   ^~~~~~~~~~~~~~~~~~~~~~~~
---
-   In file included from drivers/platform/x86/asus-wmi.c:45:
->> drivers/platform/x86/asus-wmi.h:89:35: warning: 'asus_rog_ally_device' defined but not used [-Wunused-const-variable=]
-      89 | static const struct dmi_system_id asus_rog_ally_device[] = {
-         |                                   ^~~~~~~~~~~~~~~~~~~~
+> The only change my patch does on the Ally specifically is pull CSEE
+> earlier and remove the extra call. There is nothing in this patch to
+> explain what you are experiencing. There are a lot of causes I could
+> point my finger to, but there is no point.
+> 
 
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for GET_FREE_REGION
-   Depends on [n]: SPARSEMEM [=n]
-   Selected by [y]:
-   - RESOURCE_KUNIT_TEST [=y] && RUNTIME_TESTING_MENU [=y] && KUNIT [=y]
-   WARNING: unmet direct dependencies detected for OMAP2PLUS_MBOX
-   Depends on [n]: MAILBOX [=y] && (ARCH_OMAP2PLUS || ARCH_K3)
-   Selected by [y]:
-   - TI_K3_M4_REMOTEPROC [=y] && REMOTEPROC [=y] && (ARCH_K3 || COMPILE_TEST [=y])
+A compiled version of the kernel tag v6.11 has mcu_powersave=0 working flawlessly,
+that very same kernel, compiled with the very same .config, with your patches on
+top exhibits what was documented: there is no reason to use fingers here.
 
+So... for one your patches do something else (and they seems to be related to
+activities done in background while in s2idle), and two you are saying that
+since you don't understand why a regression is happening it is okay to ignore that.
 
-vim +/asus_use_hid_led_dmi_ids +182 include/linux/platform_data/x86/asus-wmi.h
+> We will conduct our own testing, and this will include the original
+> Ally as well. A lot of them actually, and after initial testing this
+> will include thousands of devices, as we plan to fully dogfood this
+> patch.
+> 
 
-ffb6ce7086ee2d Daniel Drake  2018-10-09  180  
-a720dee5e03923 Luke D. Jones 2024-07-13  181  /* To be used by both hid-asus and asus-wmi to determine which controls kbd_brightness */
-a720dee5e03923 Luke D. Jones 2024-07-13 @182  static const struct dmi_system_id asus_use_hid_led_dmi_ids[] = {
-a720dee5e03923 Luke D. Jones 2024-07-13  183  	{
-a720dee5e03923 Luke D. Jones 2024-07-13  184  		.matches = {
-a720dee5e03923 Luke D. Jones 2024-07-13  185  			DMI_MATCH(DMI_PRODUCT_FAMILY, "ROG Zephyrus"),
-a720dee5e03923 Luke D. Jones 2024-07-13  186  		},
-a720dee5e03923 Luke D. Jones 2024-07-13  187  	},
-a720dee5e03923 Luke D. Jones 2024-07-13  188  	{
-a720dee5e03923 Luke D. Jones 2024-07-13  189  		.matches = {
-a720dee5e03923 Luke D. Jones 2024-07-13  190  			DMI_MATCH(DMI_PRODUCT_FAMILY, "ROG Strix"),
-a720dee5e03923 Luke D. Jones 2024-07-13  191  		},
-a720dee5e03923 Luke D. Jones 2024-07-13  192  	},
-a720dee5e03923 Luke D. Jones 2024-07-13  193  	{
-a720dee5e03923 Luke D. Jones 2024-07-13  194  		.matches = {
-a720dee5e03923 Luke D. Jones 2024-07-13  195  			DMI_MATCH(DMI_PRODUCT_FAMILY, "ROG Flow"),
-a720dee5e03923 Luke D. Jones 2024-07-13  196  		},
-a720dee5e03923 Luke D. Jones 2024-07-13  197  	},
-a720dee5e03923 Luke D. Jones 2024-07-13  198  	{
-a720dee5e03923 Luke D. Jones 2024-07-13  199  		.matches = {
-a720dee5e03923 Luke D. Jones 2024-07-13  200  			DMI_MATCH(DMI_BOARD_NAME, "GA403U"),
-a720dee5e03923 Luke D. Jones 2024-07-13  201  		},
-a720dee5e03923 Luke D. Jones 2024-07-13  202  	},
-a720dee5e03923 Luke D. Jones 2024-07-13  203  	{
-a720dee5e03923 Luke D. Jones 2024-07-13  204  		.matches = {
-a720dee5e03923 Luke D. Jones 2024-07-13  205  			DMI_MATCH(DMI_BOARD_NAME, "GU605M"),
-a720dee5e03923 Luke D. Jones 2024-07-13  206  		},
-a720dee5e03923 Luke D. Jones 2024-07-13  207  	},
-a720dee5e03923 Luke D. Jones 2024-07-13  208  	{
-a720dee5e03923 Luke D. Jones 2024-07-13  209  		.matches = {
-a720dee5e03923 Luke D. Jones 2024-07-13  210  			DMI_MATCH(DMI_BOARD_NAME, "RC71L"),
-a720dee5e03923 Luke D. Jones 2024-07-13  211  		},
-a720dee5e03923 Luke D. Jones 2024-07-13  212  	},
-a720dee5e03923 Luke D. Jones 2024-07-13  213  	{ },
-a720dee5e03923 Luke D. Jones 2024-07-13  214  };
-a720dee5e03923 Luke D. Jones 2024-07-13  215  
+I will be here waiting for the result, when you have identified the reason of regression I
+documented, include me in CC or reach me out privately with the work ready to test.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> I was a bit busy today, so I did not update the patch. I want to
+> rewrite part of the cover letter, as it includes some inconsistencies,
+> and rename some variables. The inconsistencies have to do with how I
+> describe the sleep stage, as I read up on some additional
+> documentation, it is not related to the contents of the patch. In
+> addition, it seems those sleep _DSMs cause problems on the Ally too,
+> related to TDP. And no, I will not wait half a year for a BIOS update
+> to fix those.
+> 
+> I am also looking into how to integrate Modern Standby into the
+> kernel, in a more full featured way. Downloading games in the
+> background is a very requested feature after all, and since looking
+> into the Ally's _DSM entries, it seems like it is built to support it.
+> Background here would mean the fan will be off and the suspend light
+> will be pulsing, so you can safely stow it in a bag while it is
+> downloading games. However, this is conjecture until the patch for
+> that is built and tested.
+> 
+
+Again, userspace software running in s2idle has absolutely nothing to do with
+acpi entries. You need to decide what this patch is all about:
+If it is about asus-wmi then identify and solve regressions before resubmitting.
+If it is about downloading games while sleeping then create a new idle driver
+(this way you won't risk breaking what has been confirmed working for months or years),
+do a request for comment on a proposal, or propose an interface to the userspace
+that applications will use to carry on tasks while hardware is in s2idle
+and drop the useless asus-wmi part as it does not belong there.
+
+As it stands this work does not solve any problem and does not allow downloads
+to happen while the console is sleeping: pick one and follow that route.
+
+> Antheas
+
+Best regards,
+Denis
