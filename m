@@ -1,167 +1,105 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9D21E529;
-	Sun, 22 Sep 2024 02:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A731C36;
+	Sun, 22 Sep 2024 06:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726970859; cv=none; b=JecuxHdAg450Mk81dTVHBWu6qmTUdm2RL1SnLX7mIrBaemSwgLjnchgfrQWxq1bD3XS3qyKcwvu+9lYL2kxj0GXB51vA+eeFtxVkV+BFodM+voc4MGumLzuMRJfFQ+wk7+D1H5reutbY3Nw5zqJPuIIB14KL2bOxaUVlQ6nqDFg=
+	t=1726987247; cv=none; b=Ih1iZwtZHdWyC4phDQ0K164MP45lwNX5o/Bz7HZPTlPH3E3S7PY8j6KCfVVSUavcR1dI2l8gzi/njdiXr2eu0LjRCPsb3t0kG3kBboW2wWpihj/aNwdGL5F0LMy3bAfpmxhGtYm25zV6Ua2vMuSs8fw+b+iOtmdTV4OwpfyHCRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726970859; c=relaxed/simple;
-	bh=Ga9yAiHhhCAY/j9jBJ+fqSp5cm7HoOFURxXd6JyAZqQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l8TkSbWHj+iGR1Mzl/WV5HCyTakBqBIocxR40Ibtr2JR8JCCYm5m0R3jkJRNAjyI+72VQiPpRugYOflK884C+jfy+yQOi6xWBGIUWWYPbX7bKIqMRqYJxjDVp7Ffac6mzKNSjkzI5YcuKXvvNpTKcnfl5vydYbjs8WzvH79KW7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ctOj0FAL; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1726987247; c=relaxed/simple;
+	bh=Ps7FHAJY/RfCUHZixeDFA8CrwuBfIcu9K9jwsP77ixU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FKaLky4VdXSc8LqZhuUSFo0CM/9c6Uv42OQxc44uJX5ig6Cszqzy+A0VVy/1gcQ3eT9tig7h1BkrKRsfxXAOb48aD93xE6WNdQElpCLOYCv0a/tvoZT0W4BkSUcZ5vrpeTI7zJxAVlMxMwepi7QI2KLkvexni7f30Ro1zJZabys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=EavTsX1u; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ctOj0FAL"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-42e5e758093so27530255e9.1;
-        Sat, 21 Sep 2024 19:07:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726970856; x=1727575656; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9oohvC6lTfiSYwOYed900cv9HTEJuIzCC7mv3WEC2cw=;
-        b=ctOj0FALDiV/HbB0n8gDItxMTFf5Mqa/5xhGjngPorh/5kGLH6uxh06SGf9L3ozyMH
-         8sUiu99drj2Whf9edImKX8oX29o5VC2HhTPdMdD/9nmZPJpBbWkrBi/Sgd9FsVp+jY/d
-         5qH4zeR6qRBYCcsf5JBOS9Yeenn9QVQdrXvAOxcWwac7VDeg5WH/9Batyu1g9XWbiWxl
-         ofwrfyDuS8euqzy6tQl29+MFpKQIHyVPEI1EFECwTtHt1+cvjiD1sV6Jfi1/isFWHQEI
-         1FQ8MaACUYpD8PKrpyixH24jevIoqv17reKtMAqjbzaIB6bCtlblYcOu7yav6p9/62GF
-         F1ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726970856; x=1727575656;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9oohvC6lTfiSYwOYed900cv9HTEJuIzCC7mv3WEC2cw=;
-        b=JS3Am89ILXp+fPMO8CUVZdQuQnnI+d1CbXWBGIXEJmndoFmYoobL+n/QGHjhQ/fpQi
-         OORwndp2peH52tfmDWF1aZUQmlA1gYPfflOlU+CuiNnQvjgnmQJbFBrxK3ZerJ7Dmy3q
-         k86FQ95zU76BT0gkaEjh1Eq4Y5EBdE+hivtqo++5oRsOJKkdfjQajIAdk7MOekKiE9be
-         KM0g0R57M2B+TBT+GfssOBBcbVeTu7jHuVZpCFF9QFMtYKGUwsifJyGnrj8gWt0mzBse
-         VmEkZcRaRKtyX53m6Y0qcR1HlapdTYN1jxJpTcC5IxcGBWxowAPLSQFsvvY9XphxYMyn
-         OOfA==
-X-Forwarded-Encrypted: i=1; AJvYcCUED5dA/FQVdXlpsVnW9CKJBAFtNsdwfFAv8gOxlV/+Po87BaX2OzDCgmyFUuukc0JZTA8ZguEtJ72H2FxFVksc4Q/Flg==@vger.kernel.org, AJvYcCVhYTRmm33vTGCxXQDzcp8XEjRDPfdFn9hcADS1NPBQiDF/mOzs6kKAkuuieUV2Jxng12CQH4Empg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yznboycq+njyqs4lghEZoNdyyIz+ELNjNdASFyJboWxSLGVe8pY
-	GXpu5sSbTn2QI/YFF2HBvIgetXVJol+U+JSttpb5+utnbJDPkXYuWMXLtGJK
-X-Google-Smtp-Source: AGHT+IGcpkVwGXrA9CQpkzepX3rS1Hzev6lDrPPoCNhq91QaZXLWpV5OUk7yV2HUjGX1yR3URVkWhA==
-X-Received: by 2002:a05:600c:1907:b0:42c:b6db:4270 with SMTP id 5b1f17b1804b1-42e7abefbb6mr53611725e9.11.1726970856019;
-        Sat, 21 Sep 2024 19:07:36 -0700 (PDT)
-Received: from [192.168.1.127] ([151.95.37.234])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42e7ae5fce0sm63606665e9.10.2024.09.21.19.07.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Sep 2024 19:07:35 -0700 (PDT)
-Message-ID: <30b8c512-d76e-4acf-892e-fad7a6bb1127@gmail.com>
-Date: Sun, 22 Sep 2024 04:07:30 +0200
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="EavTsX1u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1726987229; x=1727592029; i=w_armin@gmx.de;
+	bh=pIhGNudOcMMpZNkxR8AJ7UjGcU7dPxxMASAbODO8W+o=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=EavTsX1uV6iR7pImHJwjUPaWUal4xzXws8AUefcTGHEjgjYdJWYQmi8xGSVQINQr
+	 GSnOkihfGyz7Zlc3dZOFT4xg48j9Qnk3eas0w38JkPP4OgXN3X99T+gt6Ri9YQgdu
+	 olllFFE3jndh13LmFS9Xu7bn7veWmGvUVul/GWYznnaIQNOT+zQmJMhWg1fzbNXtd
+	 Fm7+lQb7cPhZy1dzVERlVRSli1wUB3n7y36m0CUnuPvqQgw1mKeyrWCTwAak9y9vB
+	 OL1d81Sk/cpUu3lAYxaBFVQl1g+BTeU0GmUfuaen5RfDstSeHUk+zwfuRKpX66Dga
+	 XhIoVYRGHxgC1WeB+w==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MpUUw-1sBAcS3xj2-00ZSok; Sun, 22 Sep 2024 08:40:29 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: mjg59@srcf.ucam.org,
+	pali@kernel.org,
+	dilinger@queued.net
+Cc: rafael@kernel.org,
+	lenb@kernel.org,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] platform/x86: dell-laptop: Battery hook fixes
+Date: Sun, 22 Sep 2024 08:40:23 +0200
+Message-Id: <20240922064026.496422-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/4] acpi/x86: s2idle: call screen on and off as part
- of callbacks
-To: Antheas Kapenekakis <lkml@antheas.dev>
-Cc: Mario Limonciello <mario.limonciello@amd.com>, linux-pm@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, luke@ljones.dev, me@kylegospodneti.ch
-References: <20240919171952.403745-1-lkml@antheas.dev>
- <20240919171952.403745-4-lkml@antheas.dev>
- <7c604018-59a3-4b70-83d1-06f0ed858b73@amd.com>
- <CAGwozwGSVAExH_9zCCKreC88J0FRU4ZM3RkBk==HvRwCUuuqLw@mail.gmail.com>
- <25b14b4f-96b7-453c-b876-6a46c4f3789c@amd.com>
- <CAGwozwHmd8yHzjbutOd4T39h5CZRh2rOWYH4V4AnLN+RXrRRnQ@mail.gmail.com>
- <f164e172-0030-48d0-9c33-aaaa6d0cc6ff@gmail.com>
- <CAGwozwGNg8XZcY0AhfMfKXJo4P4Xmvn7e2Bt2gZ-emSAsn24qA@mail.gmail.com>
- <31eb2289-633d-47d8-8609-e9994d7f8353@gmail.com>
- <CAGwozwHDW_m7gx8Fb-CQUz_TtSA=G7hx37NCqntm-hYKhRf8WA@mail.gmail.com>
-Content-Language: en-US, it-IT, en-US-large
-From: Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <CAGwozwHDW_m7gx8Fb-CQUz_TtSA=G7hx37NCqntm-hYKhRf8WA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:R0GuQ+7kuxzgYnX6U10L0arwle2WhkUvOR+D0QhMQBMhbn5ylmd
+ 6Q25iYS9hcQEhEd8Jt2QlpOJiY7S/563a0g6+dPbP4O5yzXZCnAN6QWWSgy+FjEERLDe+en
+ hKgxv0CVA5ClaYkkS/pzEVQVfEwjql0TRwQumjyWEOz4ykXQsTZThjTL8GZitJsUYaD4Gw4
+ ZM6Q1OOEbxKlFQ61SbEqw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:KbQ7QolR+AU=;VNR1wpfVSaor/OTy4yo7qbK9nIK
+ a0ccxeYd4asgXMeIx7/6P7fJQMYGGREar1kt0ZYbOo8sk/2sFcEG2cPWu51UTIn2kyvURHnqE
+ PkSS5bnxaqF5z1n0nvDJ9YXzvl7TOXCXoMUqL3oRckA4GAtn0xDlMTF1myI4Xz4N/LITYUVsu
+ kpYxsw8oG4HgXE6asepap3HrBWywQ1MHbYoTCiq/7GrlZ5kpFsiL67h6Tspd8e5izZLJV0Mzl
+ L0PNfE+26hTrCXl3ydoagN2Jn7NbXxmdgvZi/BvSSRDFpn+WHvYWS3i3j+ItQ3kKQ5OrS4Hnr
+ OgRl+dCS5+M/usgXmeHgUdaTqhs/BJoEXEGUdaEKRPExlavgbo1ua0QvOBoUu+Y/Mv7oEj/Ns
+ /nAcRanesN1wSPyzo4yJwzDw1KYSdgc190HJqflZ6ef+1ZtVrI7ztK2Oty3VCNkbCvwOpK2R0
+ oEsKsNtUtbTEIfnGU9P0Lea1bjn66oSqMhIRi28FrswW8jCy2jNaNOOVAucmK+Rw0HxBoaySH
+ B3aW8+nyVJTRV1syzhGzIHWnd4ebTufrLRdaA1bZK/+3InZfMR4veR5kIHf3g3A7FaushXDGz
+ IajhQD+7JSAHdC9pqRjWF2KDdDODFn48js7fUCwZFUR4faphhTRzOiXsexUr6vkbYyW6CP2U/
+ JH9Sw2DXOh/CFov4HZipOtFfEC2CkTwh51dv7N8g/LNuWcaHtcVg8EoJ9MImVDK0/fZxxinKL
+ 1Kb023r+Ycf80SFY7fJ5R7zCePrgMsc0G0WnUECAh0Y8y8u+QgN/Xa2DHGFdELuWuZv62fIAG
+ ZoYuushBJlysqUil4+8YZyyg==
 
-On 21/09/24 21:44, Antheas Kapenekakis wrote:
-> Hi Denis,
-> 
+This patch series fixes some issues around the battery hook handling
+inside the ACPI battery driver and the dell-laptop driver.
 
-Hello Antheas,
+The first patch simplifies the locking during battery hook removal as
+a preparation for the second patch which fixes a possible crash when
+unregistering a battery hook.
 
->> Beside, as for necessary kernel/software quirks, the new firmware is
->> expected to require none, at least for asus-wmi, so I ask you to leave
->> csee calls where they are now as in the future those will be used only
->> on non-updated firmware.
-> I'm happy you said that, as it means this patch will not conflict with
-> the new firmware and will just fix older devices.
-> 
+The third patch allows the dell-laptop driver to handle systems with
+multiple batteries.
 
-You are currently attempting to fix a problem that does not exists (or
-you haven't made us aware of), in a way that is causing regressions:
-no -- calling csee twice is not a problem and we have absolutely no reasons
-to suspect it is.
+All patches where tested on a Dell Inspiron 3505 and appear to work.
 
-First: the onus is on you to justify, with logs and a thorough explanation,
-why you are modifying a module. You have so far failed to do so.
+Changes since v1:
+- fix the underlying issue inside the ACPI battery driver
+- reword patch for dell-laptop
 
-Second: give us explanation of why you think downloading games with screen off
-has something to do with the asus-wmi driver and belongs to the same patch series.
+Armin Wolf (3):
+  ACPI: battery: Simplify battery hook locking
+  ACPI: battery: Fix possible crash when unregistering a battery hook
+  platform/x86: dell-laptop: Do not fail when encountering unsupported
+    batteries
 
-> The only change my patch does on the Ally specifically is pull CSEE
-> earlier and remove the extra call. There is nothing in this patch to
-> explain what you are experiencing. There are a lot of causes I could
-> point my finger to, but there is no point.
-> 
+ drivers/acpi/battery.c                  | 27 ++++++++++++++++---------
+ drivers/platform/x86/dell/dell-laptop.c | 15 +++++++++++---
+ include/acpi/battery.h                  |  1 +
+ 3 files changed, 31 insertions(+), 12 deletions(-)
 
-A compiled version of the kernel tag v6.11 has mcu_powersave=0 working flawlessly,
-that very same kernel, compiled with the very same .config, with your patches on
-top exhibits what was documented: there is no reason to use fingers here.
+=2D-
+2.39.5
 
-So... for one your patches do something else (and they seems to be related to
-activities done in background while in s2idle), and two you are saying that
-since you don't understand why a regression is happening it is okay to ignore that.
-
-> We will conduct our own testing, and this will include the original
-> Ally as well. A lot of them actually, and after initial testing this
-> will include thousands of devices, as we plan to fully dogfood this
-> patch.
-> 
-
-I will be here waiting for the result, when you have identified the reason of regression I
-documented, include me in CC or reach me out privately with the work ready to test.
-
-> I was a bit busy today, so I did not update the patch. I want to
-> rewrite part of the cover letter, as it includes some inconsistencies,
-> and rename some variables. The inconsistencies have to do with how I
-> describe the sleep stage, as I read up on some additional
-> documentation, it is not related to the contents of the patch. In
-> addition, it seems those sleep _DSMs cause problems on the Ally too,
-> related to TDP. And no, I will not wait half a year for a BIOS update
-> to fix those.
-> 
-> I am also looking into how to integrate Modern Standby into the
-> kernel, in a more full featured way. Downloading games in the
-> background is a very requested feature after all, and since looking
-> into the Ally's _DSM entries, it seems like it is built to support it.
-> Background here would mean the fan will be off and the suspend light
-> will be pulsing, so you can safely stow it in a bag while it is
-> downloading games. However, this is conjecture until the patch for
-> that is built and tested.
-> 
-
-Again, userspace software running in s2idle has absolutely nothing to do with
-acpi entries. You need to decide what this patch is all about:
-If it is about asus-wmi then identify and solve regressions before resubmitting.
-If it is about downloading games while sleeping then create a new idle driver
-(this way you won't risk breaking what has been confirmed working for months or years),
-do a request for comment on a proposal, or propose an interface to the userspace
-that applications will use to carry on tasks while hardware is in s2idle
-and drop the useless asus-wmi part as it does not belong there.
-
-As it stands this work does not solve any problem and does not allow downloads
-to happen while the console is sleeping: pick one and follow that route.
-
-> Antheas
-
-Best regards,
-Denis
