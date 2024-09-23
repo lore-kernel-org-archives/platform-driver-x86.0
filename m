@@ -1,63 +1,63 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2052.outbound.protection.outlook.com [40.107.93.52])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2051.outbound.protection.outlook.com [40.107.94.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC37879F5;
-	Mon, 23 Sep 2024 15:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8FD527715;
+	Mon, 23 Sep 2024 16:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.51
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727107064; cv=fail; b=EQbXxph95T8+NcEbRh3AqOt9nPw/c8x14P6ku3alP/TQnJEGmNjQiH+HV0lEpnha46W75I6LhPijwQA7E6rgO6x6IV/GcqbvsQtHwD/xa5Q4D+UQNTybjVvldSL3aSHjQnwAsxO41F/BMlpfQX8rXVzJOogRA3Gu41diQZbYNpg=
+	t=1727107411; cv=fail; b=hRnDDrk32efRSpja1iEjf9Ie9jU5pj76gwAoxulOW/1KYR5V4l8wfarzT4EHApQdj3xxKqFkrz3HLzrLunzJXR46+P/d59w0kdpzOUq9SJPQB7fd1TG/iGsRVjtMny1kx2Gtq9gIHb6ivOKT5oNf5ddDXUIz5tKL3qyXvqIobbk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727107064; c=relaxed/simple;
-	bh=zpt/6tuKyWv+fvat9r3gBCQ1nkxMsbwGspJrVQPDPbY=;
+	s=arc-20240116; t=1727107411; c=relaxed/simple;
+	bh=4iDrPG0RbDqe9jOqXf4m8ZSJ3MynPbmzsfBKIzCetcU=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=fzg2khq2fJ7Zx4qOoHEvgLt6X+a1F0VQxVBq1L5kC8WLiwW2oCZJzqBlJNoye2imipY1u+MIYJ9xF7hoEspQnQp8/XlwUBo5tXndH9mw5AvJTG7U7wNOVU0DfKRDGt4vmOXYs197NpcDFXi4b/yvLjB03w5LuvjFMVMWcR/Ggdo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=T1+CdepD; arc=fail smtp.client-ip=40.107.93.52
+	 Content-Type:MIME-Version; b=alR6h41/uFOzXG8amw3wkjlzwKUHubNrhd08+o/c9aCeC5HxoaoeR7q5uDIq5Ued3BJhYTBj1cJOo039dkqZLsDKHbiW6pe+sXYATbFIS0eh7aocr2XfeoYK9XUfPdcAvxluAMj18cU6ZRtcnU4TttUhYsJ1KN7DYHEfUXVvjY0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gnIph70o; arc=fail smtp.client-ip=40.107.94.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="T1+CdepD"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gnIph70o"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=O1eeHYhGBipYDCa0I7YDg0t1TL6qMJXbDd4skkmbxMDDG+85pQjp+S+1YskDOzCZWkiXG48L2QrtAzsv7P25n9Y3+TYk7mMoL8xN2wmUy4RJ5VKvIDXEVbFqupyCg8EvcneSqeV+Hh51O5SokJqs9EA0DaZUNTVaWbG/ciD1nHd6Wr3Nl7ZvmkKTv+x2uraLYEqyND1Ris1Hag8vplQjUuO2haHfjApUMWQ7aZ1JBWzQtx00sMdAt+OG9tVphWopJrZtWSiovAcBV4VSXop+9g8OvBNAA8VdV0slgevgnyBOuWDwrZ+y+HH0GltR4DkrhWWO5ziIwSmTLXeLUJ0cwg==
+ b=ZX0eITzKxVVepTUt/xICfX9DZIfr3kskEfI7N5/fUFn8k4k8pddke7aV1MVwWB+40ZsTiSpl9O6/2piX+EQU4+6/V/s6U/jJDRUt7bhhsLG0OrNiQb4+QkBAt7yNgnx9JzBneEN7OcN8TqmCdNgxQCWc2NLpbPiqc4uWRFE117QqzeFoA8t5YpwZU4JEB4/LtZ6EeZ5KDzaoVx+d54MfYbeW97KXnmzY8hjCZCafR+4M961rppR6sKc6eHsO6zcvUqZYvCoTl5Zp3JO264ehuTNbDFTUKYUT2nDm3lUAxbCu8jp+yIrUqdsE5YN0HkCLERbSWXw7cw82tkREISZO6g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=m0MfeI99qhA6viGI0/NRDz/4eICIlmKz/DNDsxHgYt8=;
- b=fh5siA/EhOMq1qY7VXtc+OhDxulR2CtWQzSzeA58SqIcmEsZywkwj2CImdG35D4zF6TDxW/LI79XoSH8pGsEIiRfrWnTQMd9GjjWwLg4mrqLDJDvFuxjlVf2wKQLtWPXtj77xedQMgDgcUerM7s2EhotxOf1X/rfEh/uR0RbyQR4EkjZsJKpY6JHzoMV9YVvJbDQp/ckT1YdPkDoaOSQEdsvjQVmkhjJx0q9EIFCgGjEcjg9ONZYol7+LJl9tuSELMejozkvnaR1anz2d9XQjKQ8hd6DCikprUiwYlKcf2n9K9SOg/Prb9LW3A+341GNX2nQtDmaJXQvtrecJyTT8w==
+ bh=a1FBJhn3vbX9pwb7o7ZHYMqwWTIxhepc48ofibZs5xk=;
+ b=qELC74C5L9z4IJ/K7FVaYuq9ygeAlB6KU+cAyrnvydmEPoUWa+CRBDCTHRDuwL4I+K3FR1DyZTx5F7fxO4ysfp+c5c6RMyI5En4GC0av0A0O6Xttztw7inATiwimIckmGmot1ypRvfxf0r8CPx7SvxAfKlD2Dx8wQUdtBKzG9irJwfuVkIHTRVXxc/c1M7NTShVAuMOyc2kwfGeKer5xWZ9ZNz7alDxUXVOtl9+P95F6f1gyEug2pTWrVo40mNWwydUxGtNKBz7O7QoGDOOEyt8VY/rTQo8kz6hMQcl5EXuJ02VgF714sv+DA4eCm8ig+dsP8iuFoO9QUAljRWm/eA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=m0MfeI99qhA6viGI0/NRDz/4eICIlmKz/DNDsxHgYt8=;
- b=T1+CdepDkt2uYUEW+oEopxjsyBctiEmSJ6e1m1xfngm27p4Z88WYbNfktfNexUbwtj9swCBVCt6Lxe/8BtPEVyDcHXSD1WfyjJmcfUXm/o4LGY71CX5Aq+qn4WAp+UhBK9vVHl1d+xFrmL9UINuI/Ee8Qyl+A1vcbRtT6025404=
+ bh=a1FBJhn3vbX9pwb7o7ZHYMqwWTIxhepc48ofibZs5xk=;
+ b=gnIph70oWaLA4AkEhLdYgfdZXHB3WcApaVweuasOqMhJUx5km22OO/XhTFr/kW9GaWhCDEJ//6NsQJm3k7FiHkbzk+zUcZAONjQGhsp+1gQgJ00W1XvH4iNF1BaTnskxB9snsKABfUxt3xgtFkwyyOzFtu/kZxpaQdih8ZLTWj0=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SJ2PR12MB9239.namprd12.prod.outlook.com (2603:10b6:a03:55e::8) with
+ by MW6PR12MB8958.namprd12.prod.outlook.com (2603:10b6:303:240::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.25; Mon, 23 Sep
- 2024 15:57:39 +0000
+ 2024 16:03:27 +0000
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.7982.022; Mon, 23 Sep 2024
- 15:57:39 +0000
-Message-ID: <bce3dc7f-77da-447b-abca-0187f1817cf5@amd.com>
-Date: Mon, 23 Sep 2024 10:57:37 -0500
+ 16:03:27 +0000
+Message-ID: <1a9b611c-51f0-4c3d-8bc2-62c6b6104fd2@amd.com>
+Date: Mon, 23 Sep 2024 11:03:24 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/5] acpi/x86: s2idle: add support for Display Off and
- Display On callbacks
+Subject: Re: [PATCH v2 2/5] acpi/x86: s2idle: handle Display On/Off calls
+ outside of suspend sequence
 To: Antheas Kapenekakis <lkml@antheas.dev>, linux-pm@vger.kernel.org
 Cc: platform-driver-x86@vger.kernel.org, luke@ljones.dev,
  me@kylegospodneti.ch, Denis Benato <benato.denis96@gmail.com>
 References: <20240922172258.48435-1-lkml@antheas.dev>
- <20240922172258.48435-2-lkml@antheas.dev>
+ <20240922172258.48435-3-lkml@antheas.dev>
 Content-Language: en-US
 From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20240922172258.48435-2-lkml@antheas.dev>
+In-Reply-To: <20240922172258.48435-3-lkml@antheas.dev>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9P221CA0017.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:806:25::22) To MN0PR12MB6101.namprd12.prod.outlook.com
+X-ClientProxiedBy: SA1PR04CA0008.namprd04.prod.outlook.com
+ (2603:10b6:806:2ce::13) To MN0PR12MB6101.namprd12.prod.outlook.com
  (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -66,170 +66,155 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ2PR12MB9239:EE_
-X-MS-Office365-Filtering-Correlation-Id: ba2df517-7e08-4985-1d9e-08dcdbe87341
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MW6PR12MB8958:EE_
+X-MS-Office365-Filtering-Correlation-Id: e0436202-d40a-4736-04ba-08dcdbe9429c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bDg4N2l3dDZZWTFhTG84OGVoenBvWkdFdjNsMmg1T3BkYnZGbWpSY0hMc3lP?=
- =?utf-8?B?OWRxZ0JvcFlMUDZCQ1JrNThseng3WE1IUXVXN2o5cHJPMVlRTjJ2akFFU1NN?=
- =?utf-8?B?WmFlSithT3VXUTJLZWZjdmdzS3FvSlgvSWZVWVJNTnlZWTJtUHphUDBkQmNQ?=
- =?utf-8?B?TVBQV0MxOU1objJRTFlGdDBmT09aRyt1akhpME5jK21tUUJEcUM0OVJNWEpm?=
- =?utf-8?B?YmV6bzFRakFyMndNRkFUSWYxeGJ4WWxublg5dGFabm9rWC85TERFZmd5QTJv?=
- =?utf-8?B?ZjRkM2hDTlhBWFM4TVlLb29RQW93MURsZ3UrRXpWK011YXpTdGxNNHl6eldl?=
- =?utf-8?B?K3F5REY5czV4VlhCdkwyMitIMWcwanNoazZoTk1lV1N2bjNCLzNhazVXckJu?=
- =?utf-8?B?NDN1QVRLQk41aU9DNDhwOC9NRmplY3dqQUpYN0ZjV0M0bmNFTXRNRE1aWGFO?=
- =?utf-8?B?MXlHSVNmdjk5eVo5WmRXWk5TWTN5aGh5cGRvUS9NcGJJODg2aVRNcmtMRnA2?=
- =?utf-8?B?blNUK0lOWVYxTmh6dFFjWlVMY2RtOXZyWWtrdmpIVVlhUzE5M0JEcENGc0Jv?=
- =?utf-8?B?ZjdFRkJEQTk3T1ZjS3BOcGg2UE5XZllrRE1lVnd0Y1RDdkpQNWpBZjlFcU0v?=
- =?utf-8?B?R3NkcEhYT09aMjlGc2k5eUpqVlcvdXZTZk5TVGZPQ1UvL1lUaUozQmlISlZ6?=
- =?utf-8?B?emFhYkdNdWtTbkZwcDlyZVpRMktBYlNqQXEwbmV2anh0NHF2L2h3Ly9wY3Mx?=
- =?utf-8?B?MUVxUDdEUXF0UHNZZ1J6cTJvUFRXMlhjSHVaWkFFeFB5UEJ4MUt6VUdrVXVI?=
- =?utf-8?B?VCtXU2dmZmErMUZkay9Sa1RlQkJoaUwvdmgycHZsb3V0K3ppbG9hVjJlTmRY?=
- =?utf-8?B?YXhsdU1aR0Y1b3pMQk9ZSXY2RDlnTFh2SDV4aWZXa3JhQ09BcnNGaW1tWlZ6?=
- =?utf-8?B?ZVhCSnlGb0xhOThCWmh3ZWdsQWlGUFMxakpRM2hTRm5oaXgybnRWN0NZLzQw?=
- =?utf-8?B?SFErWmRlTnI5dG9ZVFdES0oxR1NoWUVEaVFUcldpdzlZd2Y0TEtmaEJSR0N2?=
- =?utf-8?B?ZVFCSEFjL21lKzdScU1kK0JVaWptZkpyaHpVeHJuYXgxbFQ1VDYwaXJINkh5?=
- =?utf-8?B?SW9scDV2VHM1a0VEQWtDalp1YngrRFczRTJzRHlucDBOUmh6dHJiM1lva3p4?=
- =?utf-8?B?ZGswYS9laWJCTlMrNjkzVWRaRVFCQjE2T1ZYaUhEejU2WWFsT1VucHlLa1Nh?=
- =?utf-8?B?Tno4Tzlham9yM05sR0JvOG1WYkdNVUExd085MkNoZlZVblpDQTZmYTdYU2Mr?=
- =?utf-8?B?aktLUm5SalptZmlmY3BOMk9IS25GdUdKSGE1dnhndjd6b0l6U1F5U3hmWTdN?=
- =?utf-8?B?d3NESEd3Smk2WjdDVithbFc0QTZ5UTJyL3V3eVBQc04xWC9QYzliRFRNRndo?=
- =?utf-8?B?YjhhcG1BNEdpOVlGSklqRlVqZkh0Ky9JNVZIYks5L1FqTkV5N29rTjUyd3lh?=
- =?utf-8?B?bzdiKzNxUEVvSHM2SWZEMUxFSmtMblFrTW9ZWE1jckNVTFl5eS90dFYxSHRM?=
- =?utf-8?B?UkF1NDdmckVkc3FwUGYwZVJhd0d0b1BhL0o2RnJxeVlCYU1EbytoNjhpd3VD?=
- =?utf-8?B?NzlFUmdwZ3NyeHhuaXpucjBxSUtpV3pUb1RubkF4STRQVTdEVGR3KzFXbVYx?=
- =?utf-8?B?QytMbTRHQnNkZlRETWw0MGVGWk91NFQ5Qm0zMDg3enlFRzJYRlJZRDBZTzBR?=
- =?utf-8?B?NG5SOFJmQURqQmRJWG94WVdFbHc5c1RsTVlMNThuL2ZOb2VkMGZvWFdITTFB?=
- =?utf-8?B?eW9YUlFNM2V6bGJkL2FJdz09?=
+	=?utf-8?B?WUdnYXFEUG00WC84VUNIRzRVVWNaQkF6SnlOaXVDdEpLRTFoaUkxclhzTUFn?=
+ =?utf-8?B?emtVWTJkVDB2NTNJNkdBVytseEJycTFNYXpkbWphRVFVVnpsU0hvVFQ3eG1w?=
+ =?utf-8?B?em9Ma2pNcHVJTjdHZHEvSXA3TWVqTWFtQTFjZ2tBWTIycEJtQml1d0NmRDBo?=
+ =?utf-8?B?V1dKR2t1L1JpVTBjeVV3RDlIekVaQjc5WE9Ncmd2ZmxHV1hQWGY1OFR5RUl4?=
+ =?utf-8?B?UUd3d2MyS3VrSmVkM2t3ckF4Y2VtQi9qRHp1cXpzYlhVa28rcGVGeVlhcDBB?=
+ =?utf-8?B?YlNBQjdieEJLWFFYbWoyTzBkcjBoK0tnVklXZTQvaU5ncldmRXA3Z1NpYVUy?=
+ =?utf-8?B?VzdES0p1M2NvbFBUeUV4R2xod05KTlpQVFpHZUJxcnRDMm1ycjVENEZYTjV1?=
+ =?utf-8?B?akVXOThzVEQwU01vWTJkQWUwdjVjM0hsMkJLR285UDNkZElKY1Z4a2JMejlU?=
+ =?utf-8?B?OWswU0tObXJXOWdNMkt3V0FhWHl2bjZ1QWdSZEp1cHlDS0hsc1Q0R0k1bXdo?=
+ =?utf-8?B?V2VWVitTZ0hpOE1KZXNSNFY2TTFlL204L05qcmJxaGdkamN4ZUVMallobmlk?=
+ =?utf-8?B?K082a0V6VFRnSVZVNldFZndWYTI3ZWVJMXpmVzdCcTNpdDJQMG1BenVpbk1I?=
+ =?utf-8?B?VjdhdjVheWxoN1VDelExOS9XRUU5ZVAwdkNOUmp2U2dFU09DeHRreGkvV3d6?=
+ =?utf-8?B?dUF0dnNRQzRaQnNURlpZdm5zNUFvY2FCNjlCVnd1czZNV0pIMmhjdWRqbndl?=
+ =?utf-8?B?VHhLMlZPQmIwcmpjcjZrcEEybVo5cHNFQ0l0RTI0SHZOWkxza3k4TEVOaWJI?=
+ =?utf-8?B?a1lndWE2V0gvajF4Zy95aEQrdVUrNUVWT1NYcjZqU05nWnp4UzVoMXRWUUtS?=
+ =?utf-8?B?eXljWU1IVTh3NHl0VzFZVWVRLzQ1dnM0YTdwMnhkYU4yV2VselVZVjRmNVZK?=
+ =?utf-8?B?WFgvRk5LLytMazJuWk1QdDZYb0p2a0loVEh5V2RlUmRUNklITVZwVmhYcTIx?=
+ =?utf-8?B?S0E2T2UwbG42cWx4elMycFErUno1blk5c2pSa09sa2N6U25iV1NLd200YnI4?=
+ =?utf-8?B?emtrQWtKajF1QVJrSDRZR3ZtQ0VkUkVVMDA1OS9tZ2p5T0c2OFIySG5NN0xS?=
+ =?utf-8?B?Z01KWEJ2aExKNHhUZVdHK3BlaHBYeXFSOVJQbVhnMk5TbFFSQnI2R09Wc1Jq?=
+ =?utf-8?B?K2dqelBjVlJXQWhCUEtWV0ZOb25hVWdEQ28wZkpmUnVpQUpicnFDVTdmbUNK?=
+ =?utf-8?B?MW92WGxxRHpGeDRwWWkzVW02WFBab3RYcGM0OTMzbWt2cWgzR2d0YmdKTkR5?=
+ =?utf-8?B?YVBtTWE1WkYyTFpYUmw5SWtlTTdzN3JKQjgwVHNKNUxRV1pnbWVBVG02T1VF?=
+ =?utf-8?B?dUR5U2lCOWlqVFdoSVJHRnNTRjFLRTZLQXBHNXROenh5NTNEN3VObm9SclZF?=
+ =?utf-8?B?L2JGa0hhbnQ3SDdZU2JRV0JaWmw5bjBIdVFqNVVlOFF2SzViTXBLYkNVUTdt?=
+ =?utf-8?B?R0dacFBheDljMG5ERWtzUFJVaGk3ZXd0MXNnQnM4UE1PVkFXY0FTUGVZVU9T?=
+ =?utf-8?B?TXJHTXJCcXNxNEl3WG1EMkxNQ1RjbVFxam5jSmx6dWhwTHdReVM2UFF4aDBo?=
+ =?utf-8?B?TEp2ZUdxVHhxVS9CMHRJTWgrNnR5QjJUU2VXZkZGZnZ6Q0I3d20vWm9INGFr?=
+ =?utf-8?B?QjNSMFV2WHhvTXF5R0ZPZGE4eXZQSEVEQnltcHV6L3hrWlppSzZMYmF3PT0=?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aXh1RWJIZmpUVE01NDZnNndMOFh0SytDVEdPbG9janVjaVNBWXpGVm85SC9p?=
- =?utf-8?B?VU1xdldPd21qKzcxM2NjcFBhUXBmRVp6NjloVVJrU1NndHNoYUVkQkpzR2V4?=
- =?utf-8?B?Tm1xRzh5YlMyQXpvWFJQOUsxci9QbDRLZWFZL1N5NTd3RWhQemhQZWNxdlNV?=
- =?utf-8?B?Z0JITllabHhrNWUxTmRMeGNrWlF3MGZIMmdPOG1Zb0xYM2g2a3JtalFDUm1t?=
- =?utf-8?B?cHFyQklUdjYraExZZmZGTU12S2QwYW51Nk1xdERTRnUwa3JsM0FteFRHeUFt?=
- =?utf-8?B?NWFDeXl0RVdUVlYzQ1kyNlhGWlpSMFUyQmUrV1pWNHhuRHMrSDVvTGgxczZx?=
- =?utf-8?B?YUpGaTJIbUR1VUZXSWhaaVBadXRiSWw1ZVFHRjl5RnptQkU0aXc5K2s5WWcw?=
- =?utf-8?B?K3FxZjZnVTU0TGF3VktYaDVXcVlTRlpKNnc2b0tHeVY4NjZJcVNheUtpalVj?=
- =?utf-8?B?MjVDd3NVOXoxK2oybWpvSE9yR1R1N0Fza2tybEdLREMxa29mc2dBOG5Ya2Iv?=
- =?utf-8?B?YU4reTFxd3NjZGYrUVZNK05zTE5kWkhwblpucjNyTEkrL0pyVGg2V0RjRmhC?=
- =?utf-8?B?ZnVsVDUraGhCLytMbnNORGtzMHlEZDRuTEY5VzBKWWhHYm5jMlg2REV2VHpi?=
- =?utf-8?B?bko3L2VMdldocnpTZlJzYjVvbDFMOWVhdnpreXFOVTIyYmJOTFpvNW1qVzFm?=
- =?utf-8?B?eVlPeXJBMzluNm1MTFhXL2orYXMxS2VVOUR5YnZ2ZzFhOERXTGppVHhtVXFr?=
- =?utf-8?B?RCtSTngrK0V3bnlndnljbjNpVkRCamVhUFlWU1ovYjU5T2h1VE83OUx4RTVj?=
- =?utf-8?B?NFp6dE51VmZBcVZXckt1S2Q2UHhIS3hoaitMZUVMMTFiV1ZKSC85djBkVDVp?=
- =?utf-8?B?cEFjdnpDTnF4QncrV1lrOEUrV2tqb09vVHVJampybWgvYWJnQ0JqR2xiU3pr?=
- =?utf-8?B?Mk8wOGQxNkFSSWdGb3MzZFYxNm1sa3ZtVjJSdXJDa0E1Q0FIdTR3ZGlHbHBw?=
- =?utf-8?B?ZjhVeHc2MEZLV0w1cGd1dFVDSmhQT0h6ZVpwSEQ2aGRkM29FZ3hRSENTRmU1?=
- =?utf-8?B?TzN5M1ZKd1lVcm5TdjBmK3RkOE5BYVUvMHRyNnpjY1ZCdG1UNFdzUjBHSnl2?=
- =?utf-8?B?c0NHak82MDQxZFVFUVJPY0Y5RWsvUFVVMDNBZDluMlR3TXcwdzRHb0xGRlBZ?=
- =?utf-8?B?WjVSa04wU1d2ZVMvR29GUzZsZlpFOWJTZjU4cWZnVUFCUFdzcmpkd1NJdkhk?=
- =?utf-8?B?VUd6OFoyTEhlN2FxeUtmN2xrdmtMakplNGR6M1liRmRWQkpHSHB6WXhmUUlP?=
- =?utf-8?B?ZG9KY09zSVdDdkptam9ocjBGTnVDd2lFdjlGRmU5ZDN0MFEvNUxsN2JlMC9n?=
- =?utf-8?B?YjdudzUrTE0ydVZGWVlSOFJRSlNMV2Z1dEVQSEQrcGFESnNXKzY1RWh1WjFr?=
- =?utf-8?B?bmZkaU9IRDU0VkYyM1lIQUVjR3kyTVhZYk85S2llWThPcFVRWUpRNmUzb2tU?=
- =?utf-8?B?Z0txSFFrRW9vWDhjRCtxcGJOSUxndWU5NEtyRSs1NE9zdHRONWdrNzhBYlRE?=
- =?utf-8?B?bUVLckhSZENvMFRXbnIrbU1KWkdOUHUrS2x5bVRJbU9xdVJ4eC9VK2l0U2x1?=
- =?utf-8?B?RU96QkY2Y3pDZVU3OGZLZmJkbldTZ0tUSGo4eDBXWVEva2lSb1g5djlHMERx?=
- =?utf-8?B?OS8rVjA1bUdGNXJpMC9CZGViWEhxTWRNQlp6cjh4aHladHIvMktHb0RPZkt0?=
- =?utf-8?B?ZC9WNzVvZmQvQ1J6WnVpNGVySTJ6SU1nYnJib2E4ekJkbVhWNFFhRk9kQ0pD?=
- =?utf-8?B?VUtiRS91anpaMlRtZEJtdDRHa0luMXdJbllDK3l0TkZoaTJqUjFrOUZGeWpM?=
- =?utf-8?B?aUorbXZ0bEpBU3FmNE0xV3ZGVU5xWGJUck1aMTRxOU9FQUVYN0NndExsTUsr?=
- =?utf-8?B?QUxaOUFSbmRaNGhDRjFiZ2dENGNyc2wvS0s4TmhuVFJqNTZ4dGE2RFprNHZN?=
- =?utf-8?B?TGROOHNSYTIwSzVUR2FxRXhGdlJYUG9UN2JhdHhHaW9WZm9ZTTlNMXU4NGJq?=
- =?utf-8?B?S1hwUzI1NG1DYXdCZk83MXBOSzZXV0cwbUhpZUZkNThoOHpYZys2aXF1RTEv?=
- =?utf-8?Q?qG+TKjshRWi3iDmHCPFwfS/03?=
+	=?utf-8?B?TkdYTWRDbVBtQW9KeU85d1h3NDlsb2RpNWVOMnF2a0NEVjkvNW53aXRvWEV1?=
+ =?utf-8?B?NnRsSzRIWks2VDhPUWRRa2ViNDZmSm9NZ2F0WHRvbzFMZkVZRUpNQ2V2U0NC?=
+ =?utf-8?B?bEhaTkc4R1hzSDV5TTdZUE9RYnhRR1VhVWdPTEtUNzBrUG1laEtpd0NzcTRK?=
+ =?utf-8?B?UklZVTlxRmI3NitiWEpBNXp1OXV5a1IwaEpsRXJka21maDd6VHZDNjlhVExK?=
+ =?utf-8?B?OG8yYlFJUnQzRFAvVlBlZW1wVStrMUU1SUZxV04yQUwxYmtTME01alE1dTc1?=
+ =?utf-8?B?bGJ1bEhma1hTSmROVERFT3BkK1pIeTB5c1huV3NXZjB6Y2Q5VGoxT3FjdEsr?=
+ =?utf-8?B?ZzJwN21oUG5qZVljZWFnUmhCbm8zeHZhWnljSk50TWVMSXYvUDNuQlE3SDFX?=
+ =?utf-8?B?WEV1S0xGS1J1dVFabFd0ZDRRWDBxM1BjK0RIcXJRZXBLQk15RGpNU3RpakRy?=
+ =?utf-8?B?UFZrOEtZTzNhNDg4KzVqU25INDdRZ1B4SzdadGFYS3p3ditBOFBsK3RNMEVP?=
+ =?utf-8?B?RlVWYllId1ZST1d6VUxtc0djbmkxTENmbDhidm04bUpYT0xqcGJRd0IrZ214?=
+ =?utf-8?B?YTlrQkhMT3hWeitLMGxxc1ZlZkhqT1plRjREck5oODk3dWFJc25saGVnTUNN?=
+ =?utf-8?B?dGJGS05oVkZaT2N3OVpmTVh4TlJtSUxob3U4N0VaR2h3RDVIamRvUmJpS3gr?=
+ =?utf-8?B?RFE4SU55L1JHcTNoaHBzSWhHMDF0WGt5RWpneHJqajA5NWRxZE1qN0JaZ1Vn?=
+ =?utf-8?B?cjhtN3dOd0pjQ25uYUlxTDVqaG1iNUp0WnpPbm1ZcjdKZ05tOE5FeDROOUpW?=
+ =?utf-8?B?YkZPYnR0a3ZRbmp1dkxuN1krTERoZHF4YTVwMlc0a1lTSHNnWDJLN09yRmg5?=
+ =?utf-8?B?NWg0YTZjaWNiM0VrNk5uemFRZ2tBcHh5SWlHd3owKzE3Q1lLcWpIZkpmeElR?=
+ =?utf-8?B?TlZsRTRST2pGZkNtVCtEUnJMeU8zeHF1VFhvVks1TFlKYWZneWJOblpDbGFW?=
+ =?utf-8?B?K29UM3BZYVliZ0xKenFsZFpNS2owZ0cxcEtqaEtCNy92aHNlYmY1ejBscll3?=
+ =?utf-8?B?ZXJuTDh3ZG9OOURKOFBqak9Dd3BzdjlZZ3pKb28rVlNMai9ENEtyTEVaT0l3?=
+ =?utf-8?B?OWdNdjhoTjVBM1dUUFpNMEphTWc3UEdIQ09DSG50TFB4YVJIVVNqY0ZqVVlG?=
+ =?utf-8?B?UVcrcGVmM0txalFPcnRVbFBhSzB1NGU3bFhKeUhlN2tWNjl6WkJXc2owamp3?=
+ =?utf-8?B?N0xORkh3cWZVczFpWnlMMVhhNzVEZFlsWDltZCtndDc0a2ozWDNXNDB2NkNB?=
+ =?utf-8?B?UVEzRE9LSStlMlQ5VTZ4NFZWQTI3dEVyM0xqaURDV0FGV21pbHBkTmJkdWFj?=
+ =?utf-8?B?aFUxcStUb2ZpV0lSNW40NWN2bFBxSFN2R1FoamNrdUw2VHZBYjByNnRTMldr?=
+ =?utf-8?B?a25jY2JLQS9YdklJWWpreWI4R0piVTArdjREdjUxRWx6RDQ1UzFJUHBoYWxY?=
+ =?utf-8?B?UjFjeGtpNEI1VGNIazk5YWs3aWtPalBRWnJkU2hIVktVekQ3NFNMTGFZbyt3?=
+ =?utf-8?B?QWxjWVdmV043dG8zbTUyWEZIYWZzb2NoNTZmV25wSk54RmlTUDhDVFVHeWhU?=
+ =?utf-8?B?QnlLczliVjdvOTJGbSt1cGUxd212clZKRDV4YkNIYlhHeVZmZlFuaHZmcGJE?=
+ =?utf-8?B?b280c20wVDNYUThUZ2dKWVJNZW5QaGdPcUNjOHRRNFNobE52U0FZdkFLUExF?=
+ =?utf-8?B?K2cycVdEYTMrUjFPc2hiWWRQdVNoeUpCN2JSME9wM2hBVXRjeEtiUWwveEhS?=
+ =?utf-8?B?Rmp6M29GVWpOTUM5eUR0SmdjdlN5YlZhdUhXeDVJK3lVWmd3RDYvbUJ2SGp6?=
+ =?utf-8?B?czExTW9TUWw0cW14K3JRTElvQ2NQVXlRNk1iNmF5K0ZyTFMrWXpwRXZaL0t4?=
+ =?utf-8?B?WE9VdCszUEEwTW5tMnZtbHFRQjZIS0xjRXYwemhoNjBoK1hEMGtzZ0UxeVBh?=
+ =?utf-8?B?M0dxTXBHbk1va21lTVRhY0tyV1h3SDIzdFlOOTJXaTdweFVDV3hNMEF5M0pk?=
+ =?utf-8?B?VUFZb0U1aWltQkE0T2cxa3NiZUNlTlEvYzhWdzNlLzdLT1plQjBpdE84Umd6?=
+ =?utf-8?Q?FKpaA9QalxQ8TA8ILK36sCn2E?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba2df517-7e08-4985-1d9e-08dcdbe87341
+X-MS-Exchange-CrossTenant-Network-Message-Id: e0436202-d40a-4736-04ba-08dcdbe9429c
 X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2024 15:57:39.3263
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2024 16:03:27.2499
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Qgb+xxtyrK+0udoZA7uX0zmeyCe9Zt0cVWAySIwCPmtwE0fWNim32Dx/54VgWnPLi07m/o6zO1uOyxdMBpF7VQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9239
+X-MS-Exchange-CrossTenant-UserPrincipalName: Snci3IHxlnznyeahpIhYK4DhbOi6QaS5LxWY9cFyIUtn2LQqFMTMQ1rBRvuvUccC7N6Mf5lIO8sQ8TEViWaWHw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8958
 
 On 9/22/2024 12:22, Antheas Kapenekakis wrote:
-> The Display Off and Display On firmware notifications are meant to signify
-> the system entering a state where the user is not actively interacting
-> with it (i.e., in Windows this state is called "Screen Off" and the
-> system enters it once it turns the screen off e.g., due to inactivity).
+> Currently, the Display On/Off calls are handled within the suspend
+> sequence, which is a deviation from Windows. This causes issues with
+> certain devices, where the notification interacts with a USB device
+> that expects the kernel to be fully awake.
 > 
-> Currently, these functions are called within the suspend sequence, which
-> causes issues when these notifications interact with e.g., a USB device
-> and makes them unable to be called as part of the screen turning off.
+> This patch calls the Display On/Off callbacks before entering the suspend
+> sequence, which fixes this issue. In addition, it opens the possibility
+> of modelling a state such as "Screen Off" that mirrors Windows, as the
+> callbacks will be accessible and validated to work outside of the
+> suspend sequence.
 > 
-> This patch adds a set of callbacks to allow calling the Display On/Off
-> notifications outside of the suspend/resume path.
-> 
-> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Suggested-by: Mario Limonciello <mario.limonciello@amd.com>
 > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-
-Make sure you run your patches through checkpatch.  I don't believe you 
-got these tags right.
-
 > ---
->   include/linux/suspend.h |  5 +++++
->   kernel/power/suspend.c  | 12 ++++++++++++
->   2 files changed, 17 insertions(+)
+>   kernel/power/suspend.c | 9 +++++++++
+>   1 file changed, 9 insertions(+)
 > 
-> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
-> index da6ebca3ff77..8f33249cc067 100644
-> --- a/include/linux/suspend.h
-> +++ b/include/linux/suspend.h
-> @@ -132,6 +132,7 @@ struct platform_suspend_ops {
->   };
->   
->   struct platform_s2idle_ops {
-> +	int (*display_off)(void);
->   	int (*begin)(void);
->   	int (*prepare)(void);
->   	int (*prepare_late)(void);
-> @@ -140,6 +141,7 @@ struct platform_s2idle_ops {
->   	void (*restore_early)(void);
->   	void (*restore)(void);
->   	void (*end)(void);
-> +	int (*display_on)(void);
->   };
->   
->   #ifdef CONFIG_SUSPEND
-> @@ -160,6 +162,9 @@ extern unsigned int pm_suspend_global_flags;
->   #define PM_SUSPEND_FLAG_FW_RESUME	BIT(1)
->   #define PM_SUSPEND_FLAG_NO_PLATFORM	BIT(2)
->   
-> +int platform_suspend_display_off(void);
-> +int platform_suspend_display_on(void);
-> +
->   static inline void pm_suspend_clear_flags(void)
->   {
->   	pm_suspend_global_flags = 0;
 > diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-> index 09f8397bae15..c527dc0ae5ae 100644
+> index c527dc0ae5ae..610f8ecaeebd 100644
 > --- a/kernel/power/suspend.c
 > +++ b/kernel/power/suspend.c
-> @@ -254,6 +254,18 @@ static bool sleep_state_supported(suspend_state_t state)
->   	       (valid_state(state) && !cxl_mem_active());
+> @@ -589,6 +589,13 @@ static int enter_state(suspend_state_t state)
+>   	if (state == PM_SUSPEND_TO_IDLE)
+>   		s2idle_begin();
+>   
+> +	/*
+> +	 * Linux does not have the concept of a "Screen Off" state, so call
+> +	 * the platform functions for Display On/Off prior to the suspend
+> +	 * sequence, mirroring Windows which calls them outside of it as well.
+> +	 */
+> +	platform_suspend_display_off();
+> +
+
+I thought about it some more over the weekend and if moving the screen 
+on/off _DSM at all I don't feel this is the right place for triggering it.
+
+IMO it should be called by DRM core.  That is when the number of CRTCs 
+active goes 1+ -> 0 call screen off and when it goes 0->1+ call screen on.
+
+There could be an argument made only for eDP this happens, but I think 
+that's a slippery slope if you end up with an AIO design that uses DP 
+instead of eDP or a desktop for example.  So the safest policy should be 
+across all CRTCs of all GPUs.  During the suspend sequence any that were 
+left on will get turned off, and then it could be triggered at that time 
+instead.
+
+By making such a change then when the compositor turns off all displays 
+at runtime you can potentially support dark screen background downloads 
+that have specifically called this _DSM and any actions that are taken 
+from doing so.
+
+>   	if (sync_on_suspend_enabled) {
+>   		trace_suspend_resume(TPS("sync_filesystems"), 0, true);
+>   		ksys_sync_helper();
+> @@ -616,6 +623,8 @@ static int enter_state(suspend_state_t state)
+>   	suspend_finish();
+>    Unlock:
+>   	mutex_unlock(&system_transition_mutex);
+> +
+> +	platform_suspend_display_on();
+>   	return error;
 >   }
 >   
-> +int platform_suspend_display_off(void)
-> +{
-> +	return s2idle_ops && s2idle_ops->display_off ? s2idle_ops->display_off() : 0;
-> +}
-> +EXPORT_SYMBOL_GPL(platform_suspend_display_off);
-> +
-> +int platform_suspend_display_on(void)
-> +{
-> +	return s2idle_ops && s2idle_ops->display_on ? s2idle_ops->display_on() : 0;
-> +}
-> +EXPORT_SYMBOL_GPL(platform_suspend_display_on);
-> +
->   static int platform_suspend_prepare(suspend_state_t state)
->   {
->   	return state != PM_SUSPEND_TO_IDLE && suspend_ops->prepare ?
 
