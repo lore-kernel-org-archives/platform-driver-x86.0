@@ -1,161 +1,98 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mail.rosalinux.ru (mail.rosalinux.ru [195.19.76.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849A11CA84;
-	Mon, 23 Sep 2024 20:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D6141C77;
+	Mon, 23 Sep 2024 23:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.19.76.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727122497; cv=none; b=aYGIK+E8wnhFKdVKlPQ8RcArXKHFxwsEfOnTFuoSAqsGL7QEamtRIWMmByxUxBL6uf+R8+8EM/HjRyfPcUrtkhaW5IMamQnRjEx/+BSokiFavhiUs7WV4QfFEr+2vR3HE/OZiH/hZ4PSxiyppQlOBOPbaxMhvtW+76K0Y8uawMc=
+	t=1727132783; cv=none; b=o8LO08KME/81yakoBNno75dkFJ8P8TKvc6D2nDG/6cXLnCCiSY4ZFtS2OVSIp2VWwHCW6jnVPQgS9kDgj6mleE8VcYRREfU5VJ8YNVa4rCvmI0P+Poepzk+bk/THDSCzNeahilyYy2pkRBbboc3sxDuT/21LE4mctf3VtzIHM2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727122497; c=relaxed/simple;
-	bh=9+kfOVxJ+qMKojjS5j1te2JbrQlQLUUS3TJqA7LFI1o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DZ+vE690W7ZotOzuRn55J/3qMFTz/NXnKOhbLqdTSyjN6IjmSQdoEF1UUjgMveJ6hmisEbGUzlK7feE/OL8x5tHptuj05A9Ya28TwrbDXxxFl0Va03XGo5tYx3IsjrnC0gxT0qR76C4gpZRqwDqtmlSS+Rtkfj7BfqxgrEcOidw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=CJYiXrts; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1727132783; c=relaxed/simple;
+	bh=55KNQbP1Rr8QkA48jrud3shA3V2LqKRggedj0256AWc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g8d/wxnUTQ3xKqMRR4Xy9zTgqc1xnG7srWyO0ZTy248ULUVbPJhN2Hy/rb4CSk1PbA0knqG1MM7bddZCreCm8VJvaV+NOlX4Gj0HIIdWxDKLZ6vbpyaXa42TJkweoCtjzVXukEIkG/i4pMOZP4orBVIArjIyKi2nxnEhjkimv6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru; spf=pass smtp.mailfrom=rosalinux.ru; dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b=AcBJ/r8V; arc=none smtp.client-ip=195.19.76.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosalinux.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="CJYiXrts"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1727122480; x=1727727280; i=w_armin@gmx.de;
-	bh=T/aGqZEDlREEwCYifDT4fqocykpAlFW8hsEpBx9aX9E=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=CJYiXrtsWP0L2jhX7bJCwUYu36Fru/lrQnd0WbHwAm3zBEUGoYJg+6fi8FCU03pM
-	 yas5FGcJqKgtzIaN1nn23B/g1XoUVUo1ENNC2yJlwHcrokq4nbfLeG44EzWq38vL8
-	 2djbeJ0fDjXdZs7jtBiAHJnHYC0QawJyRqQdX/1ee1yJV5G7IO2EBm3FApYHv0myz
-	 lVPNu2qK6u1gvI2W0caUdG3v4KvEE41u1+JQouSmq/fPHAk6UESYO9LCUHl7vgfPl
-	 wVTNMDjftWPmfp8MnmrOYFSHxBzSm2z7zDAbSAYLTH3ZqTKiIixIgAdr8WgUxKXjX
-	 e+7+k6HdHl196uJpGw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MD9X9-1sjn1q3n61-0085O0; Mon, 23
- Sep 2024 22:14:39 +0200
-Message-ID: <69e63476-e166-4231-9986-54d10418c940@gmx.de>
-Date: Mon, 23 Sep 2024 22:14:34 +0200
+	dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b="AcBJ/r8V"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rosalinux.ru (Postfix) with ESMTP id 671EE1E730E63;
+	Tue, 24 Sep 2024 01:21:13 +0300 (MSK)
+Received: from mail.rosalinux.ru ([127.0.0.1])
+	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id zyPdvJT2ry0l; Tue, 24 Sep 2024 01:21:13 +0300 (MSK)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rosalinux.ru (Postfix) with ESMTP id 275CD1E730E67;
+	Tue, 24 Sep 2024 01:21:13 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rosalinux.ru 275CD1E730E67
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosalinux.ru;
+	s=1D4BB666-A0F1-11EB-A1A2-F53579C7F503; t=1727130073;
+	bh=oilA5VjWd4oT5UgP0Ts3YW2SsuTTAakZoRlv1cmYixE=;
+	h=From:To:Date:Message-Id:MIME-Version;
+	b=AcBJ/r8VOgW9X0k1xEx0ib/Fql2BArHhSwVBEKiV/cwlFMilqjTOmupJatOYJ3JKu
+	 iQf+p8JiGuouO54H7vFCyhcJGRDXN65wM5yUR9l1RKiAZ1h+VSBM29+jM/0CVCf2gZ
+	 aZrNdSuTp5hcvXs3tu53/6SmhEdwxc3TOmuIA/gZICJpdE6CqdhvWmDCQ8HiHcz1Eq
+	 z0UJ0oZdZqqqDbDQ87mMNOhVfEWYs8NYbYHuK2sqFvQC/BppMuzAsnB8h6C93tdzGq
+	 1cqa1u1LGFiMPwpGDaviid9Sv6PUN6SYuJFp7etpismN+Ft+r5m3APEMcTzIllva3W
+	 SJnTBA071u/ag==
+X-Virus-Scanned: amavisd-new at rosalinux.ru
+Received: from mail.rosalinux.ru ([127.0.0.1])
+	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id k8R5WkSJ_Y9h; Tue, 24 Sep 2024 01:21:13 +0300 (MSK)
+Received: from ubuntu.localdomain (unknown [144.206.93.23])
+	by mail.rosalinux.ru (Postfix) with ESMTPSA id 444701E730E63;
+	Tue, 24 Sep 2024 01:21:11 +0300 (MSK)
+From: Aleksandr Burakov <a.burakov@rosalinux.ru>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Aleksandr Burakov <a.burakov@rosalinux.ru>,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: android-platform: deref after free in x86_android_tablet_probe() fix
+Date: Tue, 24 Sep 2024 01:20:34 +0300
+Message-Id: <20240923222034.9833-1-a.burakov@rosalinux.ru>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] platform/x86: dell-laptop: Battery hook fixes
-To: Andres Salomon <dilinger@queued.net>
-Cc: mjg59@srcf.ucam.org, pali@kernel.org, rafael@kernel.org, lenb@kernel.org,
- hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240922064026.496422-1-W_Armin@gmx.de>
- <20240922034513.330343fb@5400>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20240922034513.330343fb@5400>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:JNbqXuB0mviDPTUfqIJlAeHJLrgBkgxvWGPWjFkCRhXOMEoLdXz
- f/bWsHyepXq+Bn4o8qDt3T8gvQSw9lcUzvfiR16dbydFEIjfiSbltFESRX/gpUkFmJtV17J
- ibg8b6/hak8Fn5/o6IsUfVeafUyD2QVDsv3zJtsSp8wK0sdxwzn7Pc3pVAPtLVy0P46drOQ
- fMaIaBUU4fDlS3ze6YLAQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1YAm6a0hjd4=;9kmuUECL+iuCVvC0b+VONoT2Cne
- DvGVe9k76AUWVH6RsJsQaeP2ZhnjDOjfznoUSi6PIN2rptODDIvXVGG+D3JMg8ukMMGRmNg2A
- feSCoRBbKoLs8ElpxHGYsbd+ZS08bzxsAhytAoXQqs6oBoAgTNACDamgEDPpsMRS6PcE7GyPy
- q5cAaE8AH2W2jkpAnIaSe07jkcBkGmn7UoHiRCj46tmYrlBcul7GZvB9lx5o9v8Ii5XWZo8U1
- Zf2g/kFPaBdoFw0Myc4zJ9faq9jmWEBIu1gG4GgmoetKwBbQO1/zY0PLz6Aj/6YHsaeqv2HNQ
- WON69SmrfSPHmsqhYHQ6brjOcjKRu0TRQeZ0K1Jl5AehE3Vdm/cnX7jyDsYSKkNTywDo0CyFg
- n4GtGrM6Sb1hgnC/roXV6bSbRBtxXeHZHIwnooPYeevqx5DQ+RG1vQX28gKQOY7wPbhzDG2T8
- qTmA1WZTyg42Z7sUxMSi4E3XgSXOdr0+4gejW3WvJM3sSz4ekjxgAKz9+UZnwXOinw3OZCO+k
- XanMaTNQQdMbNtjCTapUE4eB8S9u5GZx8/GUVxQQ7r32xkTqv5/B0Jfg3JnLf0FLcnGZfr8Cc
- HQgaHxK8CquINKA9uO6U7g0wulzhqWcF0KJb8/VNFiqGUZs2frG7pQsT+vcIdJJPQrcwitdcY
- 0TPoSJ9rQlEhYEyeCKR5DhE0DFHvabzF0sxJ7FbstaTUE6dtlXqTdSXFLCJYrcwddZ8UqHnPr
- pAk8wTAqBZ2SmFHVV9q3x1X16ea6FZmghKViEtpfWVIge5P3Qi80hItZkZrv34Ot7/R/+L03I
- 5q47WFrt5z3IZFDjUWOTp/7g==
+Content-Transfer-Encoding: quoted-printable
 
-Am 22.09.24 um 09:45 schrieb Andres Salomon:
+Pointer '&pdevs[i]' is dereferenced in x86_android_tablet_probe()
+after the referenced memory was deallocated by calling function
+x86_android_tablet_remove().
 
-> On Sun, 22 Sep 2024 08:40:23 +0200
-> Armin Wolf <W_Armin@gmx.de> wrote:
->
->> This patch series fixes some issues around the battery hook handling
->> inside the ACPI battery driver and the dell-laptop driver.
->>
->> The first patch simplifies the locking during battery hook removal as
->> a preparation for the second patch which fixes a possible crash when
->> unregistering a battery hook.
->>
->> The third patch allows the dell-laptop driver to handle systems with
->> multiple batteries.
->>
->> All patches where tested on a Dell Inspiron 3505 and appear to work.
-> Can you tell me more about the system? What type of battery is the second
-> battery, and how is it attached? What do the kernel logs look like when the
-> two batteries are registered? I'm still confused as to how the same
-> battery->dev ends up being reused for multiple physical batteries.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-Hi,
+Fixes: 62a5f689a068 ("platform/x86: x86-android-tablets: Move core code i=
+nto new core.c file")
+Signed-off-by: Aleksandr Burakov <a.burakov@rosalinux.ru>
+---
+ drivers/platform/x86/x86-android-tablets/core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-i think there is a misunderstanding here, each battery->dev is associated with a separate
-battery. The issue is that the ACPI battery driver responsible for managing battery hooks
-does not correctly handle battery hook errors during runtime. For example:
+diff --git a/drivers/platform/x86/x86-android-tablets/core.c b/drivers/pl=
+atform/x86/x86-android-tablets/core.c
+index 919ef4471229..dea6ba1fd839 100644
+--- a/drivers/platform/x86/x86-android-tablets/core.c
++++ b/drivers/platform/x86/x86-android-tablets/core.c
+@@ -390,8 +390,10 @@ static __init int x86_android_tablet_probe(struct pl=
+atform_device *pdev)
+ 	for (i =3D 0; i < pdev_count; i++) {
+ 		pdevs[i] =3D platform_device_register_full(&dev_info->pdev_info[i]);
+ 		if (IS_ERR(pdevs[i])) {
++			int ret =3D PTR_ERR(pdevs[i]);
++
+ 			x86_android_tablet_remove(pdev);
+-			return PTR_ERR(pdevs[i]);
++			return ret;
+ 		}
+ 	}
+=20
+--=20
+2.25.1
 
-1. Driver registers a batter hook.
-2. New ACPI battery is discovered, add_battery callback of the battery hook is called.
-3. The callback returns an error for some reason.
-4. ACPI battery driver automatically unregisters the battery hook.
-5. Driver unregisters battery hook during removal.
-6. Crash since battery hook was already unregistered by the ACPI battery driver.
-
-This patch series fixes this by adding a boolean flag to signal that a battery hook was
-already unregistered, so the ACPI battery driver can ignore those battery hooks in
-battery_hook_unregister().
-
-> The patches look good to me, btw; feel free to add my Reviewed-by
-> if that's helpful.
->
-> Also, with the caveat that I'm not quite understanding the aforementioned
-> battery->dev conflict - worth noting that dell-laptop isn't the only driver
-> that could have this problem with multiple batteries. A quick glance
-> through some other drivers:
->
->   - asus-wmi.c does basically the same thing in checking for just the first
->     battery, and the comment implies that there may be multiple batteries.
->
->   - system76.c claims that the EC only supports one battery, so maybe that
->     one is okay? But to be on the safe side, it should probably do the same
->     thing.
->
->   - thinkpad_acpi.c actually supports multiple batteries, so maybe it
->     doesn't have the problem. But if tpacpi_battery_probe() fails for one
->     of the batteries and the battery->dev is shared between the two
->     batteries, then same issue?
->
-Good point regarding asus-wmi and system76, maybe we should provide some documentation
-for writing battery hook providers.
-
-Thanks,
-Armin Wolf
-
->> Changes since v1:
->> - fix the underlying issue inside the ACPI battery driver
->> - reword patch for dell-laptop
->>
->> Armin Wolf (3):
->>    ACPI: battery: Simplify battery hook locking
->>    ACPI: battery: Fix possible crash when unregistering a battery hook
->>    platform/x86: dell-laptop: Do not fail when encountering unsupported
->>      batteries
->>
->>   drivers/acpi/battery.c                  | 27 ++++++++++++++++---------
->>   drivers/platform/x86/dell/dell-laptop.c | 15 +++++++++++---
->>   include/acpi/battery.h                  |  1 +
->>   3 files changed, 31 insertions(+), 12 deletions(-)
->>
->> --
->> 2.39.5
->>
->
->
