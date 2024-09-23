@@ -1,187 +1,235 @@
-Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2052.outbound.protection.outlook.com [40.107.93.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6CF78283;
-	Mon, 23 Sep 2024 14:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.66
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727102751; cv=none; b=cLd6x741anhKxdaNgghy/fD6oAr7BC9GXbuspMik+XLGaNCzgCjBi5LsIqsizv0jKy3yhGZcjXp2Nvqh78tC5VZJDy16ZcOajqza3q/NoWQAJobEV9sErIYVGLXmQdFOLdbG8xKYl+q7vCqzn/Gio1B01C5D8QyrQXHRpKCF+5U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727102751; c=relaxed/simple;
-	bh=0devtEblpnmvN0YuwFXB5OY1bWgOvpQSnBNB4Iw25bo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rH+lubL6iDsOhxqHLBjj+uLRS8bvQApD0SiYknBsrI2JwLVKlrTfzjXACqCooUYNX6hexxKzrHnIbO40fYTEfYUBfcHfyAMRykNX+HsIelu6dK0q0cxlqzlNcuDMbWEXVlQ+ICbW6SMB7zjgPtoLL13yF+SAY30Vw6EJ3rHCXHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HcdmduCA; arc=none smtp.client-ip=209.85.216.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC37879F5;
+	Mon, 23 Sep 2024 15:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727107064; cv=fail; b=EQbXxph95T8+NcEbRh3AqOt9nPw/c8x14P6ku3alP/TQnJEGmNjQiH+HV0lEpnha46W75I6LhPijwQA7E6rgO6x6IV/GcqbvsQtHwD/xa5Q4D+UQNTybjVvldSL3aSHjQnwAsxO41F/BMlpfQX8rXVzJOogRA3Gu41diQZbYNpg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727107064; c=relaxed/simple;
+	bh=zpt/6tuKyWv+fvat9r3gBCQ1nkxMsbwGspJrVQPDPbY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=fzg2khq2fJ7Zx4qOoHEvgLt6X+a1F0VQxVBq1L5kC8WLiwW2oCZJzqBlJNoye2imipY1u+MIYJ9xF7hoEspQnQp8/XlwUBo5tXndH9mw5AvJTG7U7wNOVU0DfKRDGt4vmOXYs197NpcDFXi4b/yvLjB03w5LuvjFMVMWcR/Ggdo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=T1+CdepD; arc=fail smtp.client-ip=40.107.93.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HcdmduCA"
-Received: by mail-pj1-f66.google.com with SMTP id 98e67ed59e1d1-2d8b96c18f0so3546527a91.2;
-        Mon, 23 Sep 2024 07:45:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727102749; x=1727707549; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=07cP7PGx0LKJV/vCPbz+uo2AB8i+4JBkg0zU8eGjho8=;
-        b=HcdmduCANQFguynbbnU9vo0886maOiCZtVRIC8G6ySu+4kMn4XmVmykDZRC7ADW5Jr
-         R8QC+XCNl1F+469h5L+EkuZie3jFj12f7u+6a8EVNFFWkzbSMi6MA5Qd7Vx554/Qh68b
-         B/BObBtsItIYmMGRAOZzo75nvxS0gQmHD6swnx3HI9F4ahBqAI2O/u3SvQjcgfQx+/ua
-         pfA8DiAGC5vgZRJJPHg3Gm5H05ou+1KBsRkDRBzG6l6JwIXDifeP78oFTqPlL4pXq70E
-         hTRKIpTPJ4LjrF0QUhTYE1+wYQ37/xwbq7ZMX/mJnCe9nWXr7+z83kDYdbh6P7K8Bl6s
-         UKbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727102749; x=1727707549;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=07cP7PGx0LKJV/vCPbz+uo2AB8i+4JBkg0zU8eGjho8=;
-        b=UkkEZBgafKvHT4lv6C6IvZKbgXmFHBO8PIOgWGzf1els5MPtEg0gI+qCaSvdEQ8jQo
-         9x/H5+sCG7+u0whsKjVYgFjsudR1e+d5MGqOTah4oTGAaa5AAx9TTw4Aw637eabB17Jx
-         oP29YXHfGDhocoayb/UsmIReYctHPduG8Wk36Gnpxb3vRUI4o2bnAzz0OaWHZserxp11
-         xx12QzGkpaKwKnwxSWINasn1KBI7yR03YqVMU0SKTCiiEoY8J29UOPy8/grKBlH7waOK
-         R/HfvDlc73ofUMu1usW3r5ANmLzbJnqpzrAUDM31VtD4OucRhPkA7MRJHqp3Sad4wWlO
-         to+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXOKRhcNXKnb2v+fhvMSnXRSOSvaBPBSMQDAGrq4BY+2VT9WHEoNUVA2ca+Z8a7XIMrpuCM8+4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrmpytEd5q0cuYflIUmSL0E8hSft3OIvG99CMDhjrI3DtPJQDV
-	skW+rtiYzacvRKRoumYaeRd2KwZyZZSmkr9EkjR/gvWrh4/SlqHFK3Xc/X76HvQ=
-X-Google-Smtp-Source: AGHT+IHxGM9/uZUscVRx6VIuwGYcDw/FtlECQXwYxh1CaChp0c76sIgXLUzX+X5b4Wj6qjwdLWYd7g==
-X-Received: by 2002:a17:90a:8d17:b0:2d8:7a29:838f with SMTP id 98e67ed59e1d1-2dd80c19a2bmr16150602a91.10.1727102745536;
-        Mon, 23 Sep 2024 07:45:45 -0700 (PDT)
-Received: from localhost.localdomain.localdomain (n220246094186.netvigator.com. [220.246.94.186])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2dd7f954847sm7390914a91.47.2024.09.23.07.45.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2024 07:45:44 -0700 (PDT)
-From: Zach Wade <zachwade.k@gmail.com>
-To: srinivas.pandruvada@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	stable@vger.kernel.org,
-	Zach Wade <zachwade.k@gmail.com>
-Subject: [PATCH v3] platform/x86: ISST: Fix the KASAN report slab-out-of-bounds bug
-Date: Mon, 23 Sep 2024 22:45:08 +0800
-Message-ID: <20240923144508.1764-1-zachwade.k@gmail.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <c9f3758e027e06aaf5776904d6e7a0de0bf916c2.camel@linux.intel.com>
-References: <c9f3758e027e06aaf5776904d6e7a0de0bf916c2.camel@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="T1+CdepD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=O1eeHYhGBipYDCa0I7YDg0t1TL6qMJXbDd4skkmbxMDDG+85pQjp+S+1YskDOzCZWkiXG48L2QrtAzsv7P25n9Y3+TYk7mMoL8xN2wmUy4RJ5VKvIDXEVbFqupyCg8EvcneSqeV+Hh51O5SokJqs9EA0DaZUNTVaWbG/ciD1nHd6Wr3Nl7ZvmkKTv+x2uraLYEqyND1Ris1Hag8vplQjUuO2haHfjApUMWQ7aZ1JBWzQtx00sMdAt+OG9tVphWopJrZtWSiovAcBV4VSXop+9g8OvBNAA8VdV0slgevgnyBOuWDwrZ+y+HH0GltR4DkrhWWO5ziIwSmTLXeLUJ0cwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=m0MfeI99qhA6viGI0/NRDz/4eICIlmKz/DNDsxHgYt8=;
+ b=fh5siA/EhOMq1qY7VXtc+OhDxulR2CtWQzSzeA58SqIcmEsZywkwj2CImdG35D4zF6TDxW/LI79XoSH8pGsEIiRfrWnTQMd9GjjWwLg4mrqLDJDvFuxjlVf2wKQLtWPXtj77xedQMgDgcUerM7s2EhotxOf1X/rfEh/uR0RbyQR4EkjZsJKpY6JHzoMV9YVvJbDQp/ckT1YdPkDoaOSQEdsvjQVmkhjJx0q9EIFCgGjEcjg9ONZYol7+LJl9tuSELMejozkvnaR1anz2d9XQjKQ8hd6DCikprUiwYlKcf2n9K9SOg/Prb9LW3A+341GNX2nQtDmaJXQvtrecJyTT8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m0MfeI99qhA6viGI0/NRDz/4eICIlmKz/DNDsxHgYt8=;
+ b=T1+CdepDkt2uYUEW+oEopxjsyBctiEmSJ6e1m1xfngm27p4Z88WYbNfktfNexUbwtj9swCBVCt6Lxe/8BtPEVyDcHXSD1WfyjJmcfUXm/o4LGY71CX5Aq+qn4WAp+UhBK9vVHl1d+xFrmL9UINuI/Ee8Qyl+A1vcbRtT6025404=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SJ2PR12MB9239.namprd12.prod.outlook.com (2603:10b6:a03:55e::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.25; Mon, 23 Sep
+ 2024 15:57:39 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.7982.022; Mon, 23 Sep 2024
+ 15:57:39 +0000
+Message-ID: <bce3dc7f-77da-447b-abca-0187f1817cf5@amd.com>
+Date: Mon, 23 Sep 2024 10:57:37 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] acpi/x86: s2idle: add support for Display Off and
+ Display On callbacks
+To: Antheas Kapenekakis <lkml@antheas.dev>, linux-pm@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, luke@ljones.dev,
+ me@kylegospodneti.ch, Denis Benato <benato.denis96@gmail.com>
+References: <20240922172258.48435-1-lkml@antheas.dev>
+ <20240922172258.48435-2-lkml@antheas.dev>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20240922172258.48435-2-lkml@antheas.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9P221CA0017.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:806:25::22) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SJ2PR12MB9239:EE_
+X-MS-Office365-Filtering-Correlation-Id: ba2df517-7e08-4985-1d9e-08dcdbe87341
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bDg4N2l3dDZZWTFhTG84OGVoenBvWkdFdjNsMmg1T3BkYnZGbWpSY0hMc3lP?=
+ =?utf-8?B?OWRxZ0JvcFlMUDZCQ1JrNThseng3WE1IUXVXN2o5cHJPMVlRTjJ2akFFU1NN?=
+ =?utf-8?B?WmFlSithT3VXUTJLZWZjdmdzS3FvSlgvSWZVWVJNTnlZWTJtUHphUDBkQmNQ?=
+ =?utf-8?B?TVBQV0MxOU1objJRTFlGdDBmT09aRyt1akhpME5jK21tUUJEcUM0OVJNWEpm?=
+ =?utf-8?B?YmV6bzFRakFyMndNRkFUSWYxeGJ4WWxublg5dGFabm9rWC85TERFZmd5QTJv?=
+ =?utf-8?B?ZjRkM2hDTlhBWFM4TVlLb29RQW93MURsZ3UrRXpWK011YXpTdGxNNHl6eldl?=
+ =?utf-8?B?K3F5REY5czV4VlhCdkwyMitIMWcwanNoazZoTk1lV1N2bjNCLzNhazVXckJu?=
+ =?utf-8?B?NDN1QVRLQk41aU9DNDhwOC9NRmplY3dqQUpYN0ZjV0M0bmNFTXRNRE1aWGFO?=
+ =?utf-8?B?MXlHSVNmdjk5eVo5WmRXWk5TWTN5aGh5cGRvUS9NcGJJODg2aVRNcmtMRnA2?=
+ =?utf-8?B?blNUK0lOWVYxTmh6dFFjWlVMY2RtOXZyWWtrdmpIVVlhUzE5M0JEcENGc0Jv?=
+ =?utf-8?B?ZjdFRkJEQTk3T1ZjS3BOcGg2UE5XZllrRE1lVnd0Y1RDdkpQNWpBZjlFcU0v?=
+ =?utf-8?B?R3NkcEhYT09aMjlGc2k5eUpqVlcvdXZTZk5TVGZPQ1UvL1lUaUozQmlISlZ6?=
+ =?utf-8?B?emFhYkdNdWtTbkZwcDlyZVpRMktBYlNqQXEwbmV2anh0NHF2L2h3Ly9wY3Mx?=
+ =?utf-8?B?MUVxUDdEUXF0UHNZZ1J6cTJvUFRXMlhjSHVaWkFFeFB5UEJ4MUt6VUdrVXVI?=
+ =?utf-8?B?VCtXU2dmZmErMUZkay9Sa1RlQkJoaUwvdmgycHZsb3V0K3ppbG9hVjJlTmRY?=
+ =?utf-8?B?YXhsdU1aR0Y1b3pMQk9ZSXY2RDlnTFh2SDV4aWZXa3JhQ09BcnNGaW1tWlZ6?=
+ =?utf-8?B?ZVhCSnlGb0xhOThCWmh3ZWdsQWlGUFMxakpRM2hTRm5oaXgybnRWN0NZLzQw?=
+ =?utf-8?B?SFErWmRlTnI5dG9ZVFdES0oxR1NoWUVEaVFUcldpdzlZd2Y0TEtmaEJSR0N2?=
+ =?utf-8?B?ZVFCSEFjL21lKzdScU1kK0JVaWptZkpyaHpVeHJuYXgxbFQ1VDYwaXJINkh5?=
+ =?utf-8?B?SW9scDV2VHM1a0VEQWtDalp1YngrRFczRTJzRHlucDBOUmh6dHJiM1lva3p4?=
+ =?utf-8?B?ZGswYS9laWJCTlMrNjkzVWRaRVFCQjE2T1ZYaUhEejU2WWFsT1VucHlLa1Nh?=
+ =?utf-8?B?Tno4Tzlham9yM05sR0JvOG1WYkdNVUExd085MkNoZlZVblpDQTZmYTdYU2Mr?=
+ =?utf-8?B?aktLUm5SalptZmlmY3BOMk9IS25GdUdKSGE1dnhndjd6b0l6U1F5U3hmWTdN?=
+ =?utf-8?B?d3NESEd3Smk2WjdDVithbFc0QTZ5UTJyL3V3eVBQc04xWC9QYzliRFRNRndo?=
+ =?utf-8?B?YjhhcG1BNEdpOVlGSklqRlVqZkh0Ky9JNVZIYks5L1FqTkV5N29rTjUyd3lh?=
+ =?utf-8?B?bzdiKzNxUEVvSHM2SWZEMUxFSmtMblFrTW9ZWE1jckNVTFl5eS90dFYxSHRM?=
+ =?utf-8?B?UkF1NDdmckVkc3FwUGYwZVJhd0d0b1BhL0o2RnJxeVlCYU1EbytoNjhpd3VD?=
+ =?utf-8?B?NzlFUmdwZ3NyeHhuaXpucjBxSUtpV3pUb1RubkF4STRQVTdEVGR3KzFXbVYx?=
+ =?utf-8?B?QytMbTRHQnNkZlRETWw0MGVGWk91NFQ5Qm0zMDg3enlFRzJYRlJZRDBZTzBR?=
+ =?utf-8?B?NG5SOFJmQURqQmRJWG94WVdFbHc5c1RsTVlMNThuL2ZOb2VkMGZvWFdITTFB?=
+ =?utf-8?B?eW9YUlFNM2V6bGJkL2FJdz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aXh1RWJIZmpUVE01NDZnNndMOFh0SytDVEdPbG9janVjaVNBWXpGVm85SC9p?=
+ =?utf-8?B?VU1xdldPd21qKzcxM2NjcFBhUXBmRVp6NjloVVJrU1NndHNoYUVkQkpzR2V4?=
+ =?utf-8?B?Tm1xRzh5YlMyQXpvWFJQOUsxci9QbDRLZWFZL1N5NTd3RWhQemhQZWNxdlNV?=
+ =?utf-8?B?Z0JITllabHhrNWUxTmRMeGNrWlF3MGZIMmdPOG1Zb0xYM2g2a3JtalFDUm1t?=
+ =?utf-8?B?cHFyQklUdjYraExZZmZGTU12S2QwYW51Nk1xdERTRnUwa3JsM0FteFRHeUFt?=
+ =?utf-8?B?NWFDeXl0RVdUVlYzQ1kyNlhGWlpSMFUyQmUrV1pWNHhuRHMrSDVvTGgxczZx?=
+ =?utf-8?B?YUpGaTJIbUR1VUZXSWhaaVBadXRiSWw1ZVFHRjl5RnptQkU0aXc5K2s5WWcw?=
+ =?utf-8?B?K3FxZjZnVTU0TGF3VktYaDVXcVlTRlpKNnc2b0tHeVY4NjZJcVNheUtpalVj?=
+ =?utf-8?B?MjVDd3NVOXoxK2oybWpvSE9yR1R1N0Fza2tybEdLREMxa29mc2dBOG5Ya2Iv?=
+ =?utf-8?B?YU4reTFxd3NjZGYrUVZNK05zTE5kWkhwblpucjNyTEkrL0pyVGg2V0RjRmhC?=
+ =?utf-8?B?ZnVsVDUraGhCLytMbnNORGtzMHlEZDRuTEY5VzBKWWhHYm5jMlg2REV2VHpi?=
+ =?utf-8?B?bko3L2VMdldocnpTZlJzYjVvbDFMOWVhdnpreXFOVTIyYmJOTFpvNW1qVzFm?=
+ =?utf-8?B?eVlPeXJBMzluNm1MTFhXL2orYXMxS2VVOUR5YnZ2ZzFhOERXTGppVHhtVXFr?=
+ =?utf-8?B?RCtSTngrK0V3bnlndnljbjNpVkRCamVhUFlWU1ovYjU5T2h1VE83OUx4RTVj?=
+ =?utf-8?B?NFp6dE51VmZBcVZXckt1S2Q2UHhIS3hoaitMZUVMMTFiV1ZKSC85djBkVDVp?=
+ =?utf-8?B?cEFjdnpDTnF4QncrV1lrOEUrV2tqb09vVHVJampybWgvYWJnQ0JqR2xiU3pr?=
+ =?utf-8?B?Mk8wOGQxNkFSSWdGb3MzZFYxNm1sa3ZtVjJSdXJDa0E1Q0FIdTR3ZGlHbHBw?=
+ =?utf-8?B?ZjhVeHc2MEZLV0w1cGd1dFVDSmhQT0h6ZVpwSEQ2aGRkM29FZ3hRSENTRmU1?=
+ =?utf-8?B?TzN5M1ZKd1lVcm5TdjBmK3RkOE5BYVUvMHRyNnpjY1ZCdG1UNFdzUjBHSnl2?=
+ =?utf-8?B?c0NHak82MDQxZFVFUVJPY0Y5RWsvUFVVMDNBZDluMlR3TXcwdzRHb0xGRlBZ?=
+ =?utf-8?B?WjVSa04wU1d2ZVMvR29GUzZsZlpFOWJTZjU4cWZnVUFCUFdzcmpkd1NJdkhk?=
+ =?utf-8?B?VUd6OFoyTEhlN2FxeUtmN2xrdmtMakplNGR6M1liRmRWQkpHSHB6WXhmUUlP?=
+ =?utf-8?B?ZG9KY09zSVdDdkptam9ocjBGTnVDd2lFdjlGRmU5ZDN0MFEvNUxsN2JlMC9n?=
+ =?utf-8?B?YjdudzUrTE0ydVZGWVlSOFJRSlNMV2Z1dEVQSEQrcGFESnNXKzY1RWh1WjFr?=
+ =?utf-8?B?bmZkaU9IRDU0VkYyM1lIQUVjR3kyTVhZYk85S2llWThPcFVRWUpRNmUzb2tU?=
+ =?utf-8?B?Z0txSFFrRW9vWDhjRCtxcGJOSUxndWU5NEtyRSs1NE9zdHRONWdrNzhBYlRE?=
+ =?utf-8?B?bUVLckhSZENvMFRXbnIrbU1KWkdOUHUrS2x5bVRJbU9xdVJ4eC9VK2l0U2x1?=
+ =?utf-8?B?RU96QkY2Y3pDZVU3OGZLZmJkbldTZ0tUSGo4eDBXWVEva2lSb1g5djlHMERx?=
+ =?utf-8?B?OS8rVjA1bUdGNXJpMC9CZGViWEhxTWRNQlp6cjh4aHladHIvMktHb0RPZkt0?=
+ =?utf-8?B?ZC9WNzVvZmQvQ1J6WnVpNGVySTJ6SU1nYnJib2E4ekJkbVhWNFFhRk9kQ0pD?=
+ =?utf-8?B?VUtiRS91anpaMlRtZEJtdDRHa0luMXdJbllDK3l0TkZoaTJqUjFrOUZGeWpM?=
+ =?utf-8?B?aUorbXZ0bEpBU3FmNE0xV3ZGVU5xWGJUck1aMTRxOU9FQUVYN0NndExsTUsr?=
+ =?utf-8?B?QUxaOUFSbmRaNGhDRjFiZ2dENGNyc2wvS0s4TmhuVFJqNTZ4dGE2RFprNHZN?=
+ =?utf-8?B?TGROOHNSYTIwSzVUR2FxRXhGdlJYUG9UN2JhdHhHaW9WZm9ZTTlNMXU4NGJq?=
+ =?utf-8?B?S1hwUzI1NG1DYXdCZk83MXBOSzZXV0cwbUhpZUZkNThoOHpYZys2aXF1RTEv?=
+ =?utf-8?Q?qG+TKjshRWi3iDmHCPFwfS/03?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba2df517-7e08-4985-1d9e-08dcdbe87341
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2024 15:57:39.3263
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Qgb+xxtyrK+0udoZA7uX0zmeyCe9Zt0cVWAySIwCPmtwE0fWNim32Dx/54VgWnPLi07m/o6zO1uOyxdMBpF7VQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9239
 
-Attaching SST PCI device to VM causes "BUG: KASAN: slab-out-of-bounds".
-kasan report:
-[   19.411889] ==================================================================
-[   19.413702] BUG: KASAN: slab-out-of-bounds in _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
-[   19.415634] Read of size 8 at addr ffff888829e65200 by task cpuhp/16/113
-[   19.417368]
-[   19.418627] CPU: 16 PID: 113 Comm: cpuhp/16 Tainted: G            E      6.9.0 #10
-[   19.420435] Hardware name: VMware, Inc. VMware20,1/440BX Desktop Reference Platform, BIOS VMW201.00V.20192059.B64.2207280713 07/28/2022
-[   19.422687] Call Trace:
-[   19.424091]  <TASK>
-[   19.425448]  dump_stack_lvl+0x5d/0x80
-[   19.426963]  ? _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
-[   19.428694]  print_report+0x19d/0x52e
-[   19.430206]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
-[   19.431837]  ? _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
-[   19.433539]  kasan_report+0xf0/0x170
-[   19.435019]  ? _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
-[   19.436709]  _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
-[   19.438379]  ? __pfx_sched_clock_cpu+0x10/0x10
-[   19.439910]  isst_if_cpu_online+0x406/0x58f [isst_if_common]
-[   19.441573]  ? __pfx_isst_if_cpu_online+0x10/0x10 [isst_if_common]
-[   19.443263]  ? ttwu_queue_wakelist+0x2c1/0x360
-[   19.444797]  cpuhp_invoke_callback+0x221/0xec0
-[   19.446337]  cpuhp_thread_fun+0x21b/0x610
-[   19.447814]  ? __pfx_cpuhp_thread_fun+0x10/0x10
-[   19.449354]  smpboot_thread_fn+0x2e7/0x6e0
-[   19.450859]  ? __pfx_smpboot_thread_fn+0x10/0x10
-[   19.452405]  kthread+0x29c/0x350
-[   19.453817]  ? __pfx_kthread+0x10/0x10
-[   19.455253]  ret_from_fork+0x31/0x70
-[   19.456685]  ? __pfx_kthread+0x10/0x10
-[   19.458114]  ret_from_fork_asm+0x1a/0x30
-[   19.459573]  </TASK>
-[   19.460853]
-[   19.462055] Allocated by task 1198:
-[   19.463410]  kasan_save_stack+0x30/0x50
-[   19.464788]  kasan_save_track+0x14/0x30
-[   19.466139]  __kasan_kmalloc+0xaa/0xb0
-[   19.467465]  __kmalloc+0x1cd/0x470
-[   19.468748]  isst_if_cdev_register+0x1da/0x350 [isst_if_common]
-[   19.470233]  isst_if_mbox_init+0x108/0xff0 [isst_if_mbox_msr]
-[   19.471670]  do_one_initcall+0xa4/0x380
-[   19.472903]  do_init_module+0x238/0x760
-[   19.474105]  load_module+0x5239/0x6f00
-[   19.475285]  init_module_from_file+0xd1/0x130
-[   19.476506]  idempotent_init_module+0x23b/0x650
-[   19.477725]  __x64_sys_finit_module+0xbe/0x130
-[   19.476506]  idempotent_init_module+0x23b/0x650
-[   19.477725]  __x64_sys_finit_module+0xbe/0x130
-[   19.478920]  do_syscall_64+0x82/0x160
-[   19.480036]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[   19.481292]
-[   19.482205] The buggy address belongs to the object at ffff888829e65000
- which belongs to the cache kmalloc-512 of size 512
-[   19.484818] The buggy address is located 0 bytes to the right of
- allocated 512-byte region [ffff888829e65000, ffff888829e65200)
-[   19.487447]
-[   19.488328] The buggy address belongs to the physical page:
-[   19.489569] page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff888829e60c00 pfn:0x829e60
-[   19.491140] head: order:3 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-[   19.492466] anon flags: 0x57ffffc0000840(slab|head|node=1|zone=2|lastcpupid=0x1fffff)
-[   19.493914] page_type: 0xffffffff()
-[   19.494988] raw: 0057ffffc0000840 ffff88810004cc80 0000000000000000 0000000000000001
-[   19.496451] raw: ffff888829e60c00 0000000080200018 00000001ffffffff 0000000000000000
-[   19.497906] head: 0057ffffc0000840 ffff88810004cc80 0000000000000000 0000000000000001
-[   19.499379] head: ffff888829e60c00 0000000080200018 00000001ffffffff 0000000000000000
-[   19.500844] head: 0057ffffc0000003 ffffea0020a79801 ffffea0020a79848 00000000ffffffff
-[   19.502316] head: 0000000800000000 0000000000000000 00000000ffffffff 0000000000000000
-[   19.503784] page dumped because: kasan: bad access detected
-[   19.505058]
-[   19.505970] Memory state around the buggy address:
-[   19.507172]  ffff888829e65100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   19.508599]  ffff888829e65180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   19.510013] >ffff888829e65200: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[   19.510014]                    ^
-[   19.510016]  ffff888829e65280: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[   19.510018]  ffff888829e65300: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[   19.515367] ==================================================================
+On 9/22/2024 12:22, Antheas Kapenekakis wrote:
+> The Display Off and Display On firmware notifications are meant to signify
+> the system entering a state where the user is not actively interacting
+> with it (i.e., in Windows this state is called "Screen Off" and the
+> system enters it once it turns the screen off e.g., due to inactivity).
+> 
+> Currently, these functions are called within the suspend sequence, which
+> causes issues when these notifications interact with e.g., a USB device
+> and makes them unable to be called as part of the screen turning off.
+> 
+> This patch adds a set of callbacks to allow calling the Display On/Off
+> notifications outside of the suspend/resume path.
+> 
+> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 
-The reason for this error is physical_package_ids assigned by VMware VMM 
-are not continuous and have gaps. This will cause value returned by 
-topology_physical_package_id() to be more than topology_max_packages().
+Make sure you run your patches through checkpatch.  I don't believe you 
+got these tags right.
 
-Here the allocation uses topology_max_packages(). The call to 
-topology_max_packages() returns maximum logical package ID not physical 
-ID. Hence use topology_logical_package_id() instead of 
-topology_physical_package_id().
-
-Fixes: 9a1aac8a96dc ("platform/x86: ISST: PUNIT device mapping with Sub-NUMA clustering")
-Signed-off-by: Zach Wade <zachwade.k@gmail.com>
----
- drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-index 10e21563fa46..030c33070b84 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-@@ -316,7 +316,9 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
- 	    cpu >= nr_cpu_ids || cpu >= num_possible_cpus())
- 		return NULL;
- 
--	pkg_id = topology_physical_package_id(cpu);
-+	pkg_id = topology_logical_package_id(cpu);
-+	if (pkg_id >= topology_max_packages())
-+		return NULL;
- 
- 	bus_number = isst_cpu_info[cpu].bus_info[bus_no];
- 	if (bus_number < 0)
--- 
-2.46.0
+> ---
+>   include/linux/suspend.h |  5 +++++
+>   kernel/power/suspend.c  | 12 ++++++++++++
+>   2 files changed, 17 insertions(+)
+> 
+> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+> index da6ebca3ff77..8f33249cc067 100644
+> --- a/include/linux/suspend.h
+> +++ b/include/linux/suspend.h
+> @@ -132,6 +132,7 @@ struct platform_suspend_ops {
+>   };
+>   
+>   struct platform_s2idle_ops {
+> +	int (*display_off)(void);
+>   	int (*begin)(void);
+>   	int (*prepare)(void);
+>   	int (*prepare_late)(void);
+> @@ -140,6 +141,7 @@ struct platform_s2idle_ops {
+>   	void (*restore_early)(void);
+>   	void (*restore)(void);
+>   	void (*end)(void);
+> +	int (*display_on)(void);
+>   };
+>   
+>   #ifdef CONFIG_SUSPEND
+> @@ -160,6 +162,9 @@ extern unsigned int pm_suspend_global_flags;
+>   #define PM_SUSPEND_FLAG_FW_RESUME	BIT(1)
+>   #define PM_SUSPEND_FLAG_NO_PLATFORM	BIT(2)
+>   
+> +int platform_suspend_display_off(void);
+> +int platform_suspend_display_on(void);
+> +
+>   static inline void pm_suspend_clear_flags(void)
+>   {
+>   	pm_suspend_global_flags = 0;
+> diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+> index 09f8397bae15..c527dc0ae5ae 100644
+> --- a/kernel/power/suspend.c
+> +++ b/kernel/power/suspend.c
+> @@ -254,6 +254,18 @@ static bool sleep_state_supported(suspend_state_t state)
+>   	       (valid_state(state) && !cxl_mem_active());
+>   }
+>   
+> +int platform_suspend_display_off(void)
+> +{
+> +	return s2idle_ops && s2idle_ops->display_off ? s2idle_ops->display_off() : 0;
+> +}
+> +EXPORT_SYMBOL_GPL(platform_suspend_display_off);
+> +
+> +int platform_suspend_display_on(void)
+> +{
+> +	return s2idle_ops && s2idle_ops->display_on ? s2idle_ops->display_on() : 0;
+> +}
+> +EXPORT_SYMBOL_GPL(platform_suspend_display_on);
+> +
+>   static int platform_suspend_prepare(suspend_state_t state)
+>   {
+>   	return state != PM_SUSPEND_TO_IDLE && suspend_ops->prepare ?
 
