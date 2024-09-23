@@ -1,153 +1,195 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2049.outbound.protection.outlook.com [40.107.102.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1194D7DA81;
-	Mon, 23 Sep 2024 16:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727108132; cv=none; b=ivUMfOmVUOnG8KoLTAxZ2CdbZtNDQd77bZc2yFTDPRJG4VRPPSY2pxbtu08YUdX+Qn5MOhKp/5wK1uIdPl9iio9QY6XwgBkk6IOyLCOcL+/s2vYsH9tjfH8v3kegxOKQF+Ry27xjnngTIO1xDALgF08pONw3ZIFhbCLKQid+uFo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727108132; c=relaxed/simple;
-	bh=L40ikmPqwa9pSrC17GqjzGQXqBPxu/HVqgcMX7iPnEs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=STmANvk7RP5Ur6AcgBJTV1kAtEaq/QEYryH4y/qA1oRmSTFAhDi/YoIRutPqRmk+K/ssbmK4OUGsNmCjxIaKMejkiwMdukf4ozneDKj7cK2PxKC8nKRw39QWDiiCEyW1f5rCC/WGG1ktiPgnT8QQFjlLTtwvdnSWdo7VA8CKOKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=uWO/aCSJ; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B43428E7;
+	Mon, 23 Sep 2024 16:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727109055; cv=fail; b=J5Dt9Z794+WuGU1jMhs2HKVYlXrCllpK0XmZ1AcH1gkI4lIJk4HlHET2JTDEgjtOKrUrLeJYrxHraNmSXYS9ZgUoPhILmPJLGNYsGVmDAU/OvUhOsaEfOpb3kznwRt6F/5nctasLYBGfL2180gkl/pOXf1f0yWF37S0wDzKxR+Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727109055; c=relaxed/simple;
+	bh=lgO//OEXxYD9kD4CYEQIfbFmXiLytZCGcXnntKZqpTg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=I8ZYr4SM7aokjSy+qWOtkFb6UsTSyVV2iluYzKr81PG/lRIag5XIxWD5BhEE0f/8uRCS0jNbVxpGjDM6k3879jdXTkiLt1ArdHkenBTJZkRW7/IHMWoY2fDWcxLUczTp+VfGEYV/g6davgIkCaasuRVfOZj+W1e/OovsKMsH6Xo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=J5NUzlla; arc=fail smtp.client-ip=40.107.102.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="uWO/aCSJ"
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 563C62E05EEA;
-	Mon, 23 Sep 2024 19:15:26 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1727108126;
-	bh=fiBDYqLO9vwTDa0kENC/H8tsARqBxWrgVq2JSqvU140=;
-	h=Received:From:Subject:To;
-	b=uWO/aCSJoZvT9QiMcRAc5emQMKoX1xDFb7Y+7ba1B4pLai8uGPkA54FtKtjpvDmL4
-	 svqVwLEZBTL+smD9+/l+HT19SvijzmV3mwiWG95kzidBrcXv2qi4AjRJOlztidKTEN
-	 7f6CgvPm3smn8wLnEvq7i9FVnHSk/C0lxJtseqOo=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.176) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f176.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f176.google.com with SMTP id
- 38308e7fff4ca-2f75aaaade6so46910411fa.1;
-        Mon, 23 Sep 2024 09:15:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCUdL2oN4bjr9DirNI11ZH6hb+CYmkOgHTb8dEXikYDpVuw/XLr2nT/RJURDwVjR1daVnP4QB1oda+h1cp1ZdKCdgeiU@vger.kernel.org
-X-Gm-Message-State: AOJu0YwR9i3Qm6XR93jNIqQlqLIL9CdezZSpadCDLTOJXEOQlseyFmYN
-	C6G1zwm2q6OlF3UEtnLsjMEu4WcB4B2v576ek0ZcSY5W5J1pAC0+EnPjjt902py3Q/02Fk2lMwz
-	SlrUXCC30qEAEamreLWOPt8BPvdY=
-X-Google-Smtp-Source: 
- AGHT+IFUSrYAetKzeKuNKxEW2XhzLTyBMU/I5sk722yjfHe0+ieu8kH1srSVCZGjB2iBMY4KO+h2hVIrpq3CDi3d2Zw=
-X-Received: by 2002:a05:651c:221b:b0:2f6:5f0a:9d00 with SMTP id
- 38308e7fff4ca-2f7cc3578ffmr58494731fa.1.1727108125682; Mon, 23 Sep 2024
- 09:15:25 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="J5NUzlla"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yeSJjR04Jrbtkw4Fd896665TFYgvmDmPhojHOREuzQMugNKB6wqw4bxjDgL8AEgR7GPUl7LXQMsU/FUBvaZLpWle5Tafb15M+CeqToAj4hYSVIlN5u07QrRzpvq+gNPAVJ7BhRyFxw/LNJCyPxkGaUdBfqWoilczuTZ+/D+vz/Cue+PIg8PlDcUZfn9wb3+AzYzIypErcjtC6cekQ3a6kWcdgPBMdyIzgIVV3DK1sZPPP3SHPWUyvEYh56/zyULK5WQStJXk+f0ZQy93u1R+hye+R/O2e3tMmG4QOVxSkqvdphuV5FE1C8TZX6k4DwZBWJuNMCsuNnOgqvrw9kd9eg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ge6DbYX/WWGdaIvoVXPTheJfA3N1WsSFqMRBgkeaLHM=;
+ b=BLuPLnZkqjADtLV9j32PiHP4TL/TOpbenglsBR/ln5zmiizRy9wct0v7XtWkcnp61czXzWCTZSaAnl4Y3KOuVYP2AmcjCtfYh96dRi6IqNqk98YIrMAp3BSt4TQrc30WGYWQ45YbnGPtyZCQbo7lHYmOY5yqJn/Q1b00isjk7t2v1nf7/B8QbfzgG3mUzGe9oBw5HoCt0UIq0Qv1jFxdZolSb80fmWlbbItG+FapMRPEZQnHDakt00eWxHDtgTtEdmgseRwSEEXgte/tjiBxOj2nQlFgYCswrhx6oM/PRsNt3R/m+Y8Jk/2x2jKvTYAWVQjKpqN6LdkagPwBZp29sg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ge6DbYX/WWGdaIvoVXPTheJfA3N1WsSFqMRBgkeaLHM=;
+ b=J5NUzllaboOXWCR9ZmjhyzpeQYYfs50na53X8mM31TaSQKosJ0i5Z8ZPDdnLKmytzldv9n+7+/Ih2JJuwPKnwnEg/kjk1fgQeWN2xAS19jOsX0mkQNmZSsSuIDAhgrmgyglITDWgCdN3szUkYVRzlNp630T3Tg29+JgT1HGLxhs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by DM4PR12MB8523.namprd12.prod.outlook.com (2603:10b6:8:18e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.21; Mon, 23 Sep
+ 2024 16:30:51 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.7982.022; Mon, 23 Sep 2024
+ 16:30:51 +0000
+Message-ID: <1eff4036-b785-4737-b919-d67c52efea65@amd.com>
+Date: Mon, 23 Sep 2024 11:30:49 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/5] acpi/x86: s2idle: handle Display On/Off calls
+ outside of suspend sequence
+To: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ luke@ljones.dev, me@kylegospodneti.ch,
+ Denis Benato <benato.denis96@gmail.com>
+References: <20240922172258.48435-1-lkml@antheas.dev>
+ <20240922172258.48435-3-lkml@antheas.dev>
+ <1a9b611c-51f0-4c3d-8bc2-62c6b6104fd2@amd.com>
+ <CAGwozwFwU=KMgDUmKsYRu323dsuUfQYa8e-aXV3JGGSkgF-RkQ@mail.gmail.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <CAGwozwFwU=KMgDUmKsYRu323dsuUfQYa8e-aXV3JGGSkgF-RkQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA0PR11CA0085.namprd11.prod.outlook.com
+ (2603:10b6:806:d2::30) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240922172258.48435-1-lkml@antheas.dev>
- <20240922172258.48435-3-lkml@antheas.dev>
- <1a9b611c-51f0-4c3d-8bc2-62c6b6104fd2@amd.com>
-In-Reply-To: <1a9b611c-51f0-4c3d-8bc2-62c6b6104fd2@amd.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Mon, 23 Sep 2024 18:15:14 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwFwU=KMgDUmKsYRu323dsuUfQYa8e-aXV3JGGSkgF-RkQ@mail.gmail.com>
-Message-ID: 
- <CAGwozwFwU=KMgDUmKsYRu323dsuUfQYa8e-aXV3JGGSkgF-RkQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] acpi/x86: s2idle: handle Display On/Off calls
- outside of suspend sequence
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	luke@ljones.dev, me@kylegospodneti.ch,
-	Denis Benato <benato.denis96@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <172710812674.31882.5644276653664857231@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DM4PR12MB8523:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2b56c288-35a8-4c7e-c358-08dcdbed169c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cG5HVmxYRXNSTXpaUFBBUEgwYWJWMmNRQTJUSi9yemtiTEdIN2pTVy9jcEVh?=
+ =?utf-8?B?QnpLS0dPcmdtOW9FUEowdFB0Y2daRnRGMndpM0N4TGFVVzlhVUZYeE16eUpz?=
+ =?utf-8?B?UFlVTUR5V1B0bXZ6QjN2VW5XT2NhaWp2dWZ4MjFuWmRKcDRvb2RVUExQLzIy?=
+ =?utf-8?B?b3M3bXUybjJpaTNWSzRYQlRNS2V5WG5IcWVUZ0hqTVo1ajdQUlZ2WUh4UlNZ?=
+ =?utf-8?B?V0hSaEhodW9CRGw1YThFZytLTElqcSs4QzNBN0dhc1JFYWM5ZSt6a0R1MDg1?=
+ =?utf-8?B?eE1GczBJdGZsWGdrZVBiYi9tUzBIdzJITzJPTnZmdlZ4WkkvVEFXRlNPYjhY?=
+ =?utf-8?B?OEs1bEFoR0ZkWFVyL3lpWVN2RGZlSkMvbURvRUZ4TnF3V0FYdTUrdzB2TGlM?=
+ =?utf-8?B?WGcrZ0pvS3ZFTkpHcVlXV1ZHQlJWemRBcU9RMk1uWTJ2a2dLZC9jSkFNQ3I4?=
+ =?utf-8?B?UkpkSmpmd3VlS0UrL2ZFQlhPaFdndFdCOGNiL21sMEJseGcxaCtTUjlzd0Z4?=
+ =?utf-8?B?aTh1aFRDa2hSeWMzOHZZYlpRRGxKU3RlaStCRzdmOTdqcmw2SUdkcGxVekVI?=
+ =?utf-8?B?emdLeDdkZkJUKy9sVnpkSEpXNWFVcmgxOFlkU1RQWUM4ZGkyaUJGQW5hdzZY?=
+ =?utf-8?B?QUFjSWFsTnJOUlFXSFlDaG8xWGhBY3YvUHhqOUllTEptREZqaDJOZ1VIWmdp?=
+ =?utf-8?B?NW1oWEFLeTJNYkl0WDRJb0FDU0NNTjMvY2JlVHk5K21sa3p5TlZhbWt5SmFC?=
+ =?utf-8?B?dTBIajdzNU0zditOU3hObE5jUUVYelF1a3hkNDhIWEp3S3NzQXE5ZURIRS96?=
+ =?utf-8?B?WkxkY2tLK1RLZ05UdmRYMEJLU1pTWGs3c1hQU2NvWEdDMWZXTFlKZk1TNDVM?=
+ =?utf-8?B?RzIyY0ZqWmRGODV3akZYbHM4N042VUhSQUZMU3UxeHRhVXlvVDZMZEhROWk3?=
+ =?utf-8?B?Ymdnd1BvQTJ5TUZvaEhNNWV5UVpiNGJuN2tiK0RIZk1rTDl4c3pwMjlhMHdz?=
+ =?utf-8?B?ZnRqTXRDWjVwSTBUODBTclNuT1hVY3VodlBnRWU0RXlXVFBsaDlJNTlvRTFY?=
+ =?utf-8?B?dXRiZEtpVnZiKzd2cFhNZTF1ZW8yMWc3MHY0SUVES2QrbXZlTFgxOEc2ZGJ1?=
+ =?utf-8?B?enAyNmh6c2R4MHhTTi83QkFGbDh1WDJ0RnlIQ2RoNFdTNzVIVjZkT2pWeFIz?=
+ =?utf-8?B?VEhQai9BNGlyWVgvMGlueXdGT1ozSUVrN2lFdHMvMWFFUGQ0N05GOWswSEs5?=
+ =?utf-8?B?L2xuZVRPWTZaNGVqVU93RXlYM2tYeHdNNWJQUi9MUEYweTVxMG1tSEl1WUFB?=
+ =?utf-8?B?QW5xMXAwWG42Sms3T3RtazNDYW13WFYzTmRJWnJyTy9vSDY3OWlZWngrVTJM?=
+ =?utf-8?B?UmhrTzBNakI1dDlNbVdvcnNsdEpYdW5vT1JLN3pkUGx2ZzdVZ0dNQW5mdkRV?=
+ =?utf-8?B?bS91RGVTSlo5dXkrWXVvQkRjZTRFL1QvNDE3YVNwMW1LM3BNdjRJMWpsSHp5?=
+ =?utf-8?B?d2REK1NtaU93MnY5c3doM1FpcXIvc3NtR2FqSFprd0pJd3JXM1J0ckNGS2xo?=
+ =?utf-8?B?alNnQmtRYTd5aU13OWZqTytyUDcxU25wTE9QNU8zNnFpNHRLWjlzcVVIb3Zj?=
+ =?utf-8?B?bWtFdm91TERHdlpJSE15UFk0VjhUQ0tSS0p6dlh2WHhnOU14UFdYbEY5eFc1?=
+ =?utf-8?B?VUxaS3RIZWdVVHpkTjd2ODFCblc5aVB1YkVDTW1uWUVhaENmbnBYVHlLeEdU?=
+ =?utf-8?B?K1Y2TzU3UVdiTnlFSkxna085TkZCbFIzaDNjYnNET25uaGpaZHVIL1JEQ0Zi?=
+ =?utf-8?Q?mDYBLxiy1ba5OhgUJ0nKxULAcmGVgxQkNvBkY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?U3Z0dWs0bmliRm00ZVZISkF5RTVHTUVaVXdIK25BdW8zVnZScVF2bGFUNS9p?=
+ =?utf-8?B?YzlTWkQ1S0ZpUHdvdVVNOC9qNjZNVFVSdnJlUDZrWEVOMEZDTStUakxIbWZB?=
+ =?utf-8?B?N0Z3NjY1V1hHbTF3azlNQWdSMzZtdlBoOXhlNndDUUVUaXp3M3BiRzZzMHRi?=
+ =?utf-8?B?WVFIaUhGR0ZjeUhXcmxBKzE3d2F4ZTVsdEtNNFVsZXByZGFTaFpVUUphZFBr?=
+ =?utf-8?B?UllyeFc5c1NoSXk4dHR2T2lLUElWVEhOcXdpemZ4am1VeFI1K2gwVkNIODNJ?=
+ =?utf-8?B?azhKWWxsZWFTVC9GSnYrNjBiYk5TVWNiTTJpc0Evcm44bW5GUURGRmJ1dmdx?=
+ =?utf-8?B?Y0kwV1B6NXlEV1MvRldxWFI3U3p3Q3lCcG5XSVUzbldTdmFGQi9TOHp2RlVE?=
+ =?utf-8?B?bVdRVm1DMEZlbTJQUUNySlNPUmI4d0VoM01xRUJlbjlNYnRWMndDeENJMkNm?=
+ =?utf-8?B?d3JBV2o4SmVvVTJ5Z2ZNZWh5T3E0Vk5TWlE1ejlQaWlRU003TjBNRVBlUTE4?=
+ =?utf-8?B?Q29DcWF2TFpOM2VvS05QNnd0eUZGWGZzOVhtNFFhTWMyNlJsOEtlR3RSb01M?=
+ =?utf-8?B?NytDUUhoazE4dVNrNmR4STVFSXNWYWdyUHJ3dmhPS1l4L0xWVE9IaEp1SVFt?=
+ =?utf-8?B?bS9wTDk1UXlWT29ncnlhNEZSYkpJTUdtZDhDMlV3VFM5WTRJWEcyOVdsNkVl?=
+ =?utf-8?B?WXVRTWxsdzRBUithb25WV1VManRHanlDUENqUjNBYS8ya25XQ211a2dOQm9I?=
+ =?utf-8?B?c3R5OThJQitEU29OVFliOG91SjRxTTcxVXREa1YyUjRZcm00QndZTlVBcVVQ?=
+ =?utf-8?B?UWU0bmV0T2F1bGdCYXZ0a0V4aXFEOFhOd2RJc1M1TUVXSzYzbFg0cHZrbmtR?=
+ =?utf-8?B?azk0K2hDM3pXRXhvS0hXc2ZxZHByQkdDSlRCbi9uWUFja0hNL3BkZVpUa216?=
+ =?utf-8?B?eVdMVm4xVmhZcDRjTmNrelF6OXFzNzg1RkF5UVFVU2FPcWdxNDR0ZHFvK1ZP?=
+ =?utf-8?B?TVBmOUtRK1RXa1FSUmVabnNMdWMvZkdTcFZBNmNBdVZ3UisrRldDcDRnM3l6?=
+ =?utf-8?B?V0VFWG9MTmFydzdZc21QM1RpZVgzdXlOME9QQUNMMnVNTzJJZmpvNXZ5dXVH?=
+ =?utf-8?B?b2dNTFRWNEkwZzk4M0NJTjRUVEVSdllOeW0yNUI2OUszLzRYcWc2SE1ZeUs3?=
+ =?utf-8?B?WDczVzBJSTRDOHJHdEdyd2F4Nmw2OSswSWFibU9EL0hZQ0N6ckcwdjhMSFFQ?=
+ =?utf-8?B?VEJGSEt4dWJPQVEwYkpUNGhNNmJRcEFtR1ZJeVJsSWQ2M0VtT0g1NmJlVlpD?=
+ =?utf-8?B?R3FRYm9CWDl2Q3hvOXhxbTB2NFRVZExmTURaeC9aN2VSM1krRitCV3N0dUpv?=
+ =?utf-8?B?L1R6ZWFXTzQ4c2pRT3hlU2FvcnFuU2l5dStsVytnKzNOb3lxUGpyVWFTdkw3?=
+ =?utf-8?B?NC9SUVlnSGFVTWV1NTRZUVM0QW9Fc3lPaFdvY1V0eVlqb20wM1BFUUczTjQ0?=
+ =?utf-8?B?bG5xM1hRSHdhN3FSNEJ1aUhWb2lZK0MyY2FCWUJWVS9NM3ZKbGphRTlqUUNE?=
+ =?utf-8?B?VDh3dVQvTEdxZEZ5YXBCR1l3Z085OHR1Q1d4Ulh3d3NWMmlGWXN3eWRkS0hC?=
+ =?utf-8?B?cEpJQ1RwM3Y4bS8wWkFXaVc1NnlxV3NETENYUEJicTh5endYUy9qRXhIZjVM?=
+ =?utf-8?B?RXBEbkdpMjlXTFhmMmx4SUprSWl1ZmxTZmo3cS9Palc0akhtTCtiUTQ0VU5D?=
+ =?utf-8?B?ZHRwOUZuc0g3TExlSW4yYkk4WjVzalRVK25YRFlJSTBMMjlmZVI5U2Z3cHBn?=
+ =?utf-8?B?d0MzYzVlQkdjM2swMFFFcHBDaUNBMWtnZ3l4RlgyenZTWXp5OEFaczU4ajky?=
+ =?utf-8?B?KzREb1hzaE9yemc5U09LZzFVcURITWk3K1NOYWlscTZOSllma3pUUzVoR3Z3?=
+ =?utf-8?B?TFBMRGppTjcvd2YwR0ptSjFGdHJFb3h0TFdNZXVGbHM3aGZrMWdyME5lVUta?=
+ =?utf-8?B?a0hiVHVya0ZoS3N1UWJkOVRXYkRLSmk5VExlZHhpa280OTZwSjNYc1VsM0kv?=
+ =?utf-8?B?WTZPTFFDbjBpM1c5RCswNkNCaHBUZXRQUTlidGFEZ2xQZEIvbmxKS1YzeENM?=
+ =?utf-8?Q?hhC/lfTkNIFu76wU3aKW3BB9J?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b56c288-35a8-4c7e-c358-08dcdbed169c
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2024 16:30:51.4205
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rpYklbt4nI9yLqNUgjqqo/fTqz1HciDMFKlWxubs024dDnhceT4mUxfg2Vjdyc5PV4FdQo6EimADi2SdKgaDqA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8523
 
-Does DRM core handle virtual displays like VNC?
+On 9/23/2024 11:15, Antheas Kapenekakis wrote:
+> Does DRM core handle virtual displays like VNC?
+> 
 
-As mentioned in the cover letter, the _DSM specifies both virtual and
-actual displays.
+You can make use of virtual display connectors in amdgpu.  This is how 
+drivers for new ASICs are first developed in emulation and also what's 
+used for early hardware bring up.
 
-Also, Windows behavior is like a lockscreen. 5 seconds after screen
-turns off after inactivity, instantly when you press the power button.
+You can see virtual_display from 
+https://www.kernel.org/doc/html/v6.11/gpu/amdgpu/module-parameters.html 
+for more details.
 
-I tend towards making a sysfs entry. Not sure.
+> As mentioned in the cover letter, the _DSM specifies both virtual and
+> actual displays.
+> 
+> Also, Windows behavior is like a lockscreen. 5 seconds after screen
+> turns off after inactivity, instantly when you press the power button.
+> 
+> I tend towards making a sysfs entry. Not sure.
+> 
 
-Antheas
+Who would call this sysfs file?  Systemd?  The compositor?  When?
 
-On Mon, 23 Sept 2024 at 18:03, Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> On 9/22/2024 12:22, Antheas Kapenekakis wrote:
-> > Currently, the Display On/Off calls are handled within the suspend
-> > sequence, which is a deviation from Windows. This causes issues with
-> > certain devices, where the notification interacts with a USB device
-> > that expects the kernel to be fully awake.
-> >
-> > This patch calls the Display On/Off callbacks before entering the suspend
-> > sequence, which fixes this issue. In addition, it opens the possibility
-> > of modelling a state such as "Screen Off" that mirrors Windows, as the
-> > callbacks will be accessible and validated to work outside of the
-> > suspend sequence.
-> >
-> > Suggested-by: Mario Limonciello <mario.limonciello@amd.com>
-> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > ---
-> >   kernel/power/suspend.c | 9 +++++++++
-> >   1 file changed, 9 insertions(+)
-> >
-> > diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-> > index c527dc0ae5ae..610f8ecaeebd 100644
-> > --- a/kernel/power/suspend.c
-> > +++ b/kernel/power/suspend.c
-> > @@ -589,6 +589,13 @@ static int enter_state(suspend_state_t state)
-> >       if (state == PM_SUSPEND_TO_IDLE)
-> >               s2idle_begin();
-> >
-> > +     /*
-> > +      * Linux does not have the concept of a "Screen Off" state, so call
-> > +      * the platform functions for Display On/Off prior to the suspend
-> > +      * sequence, mirroring Windows which calls them outside of it as well.
-> > +      */
-> > +     platform_suspend_display_off();
-> > +
->
-> I thought about it some more over the weekend and if moving the screen
-> on/off _DSM at all I don't feel this is the right place for triggering it.
->
-> IMO it should be called by DRM core.  That is when the number of CRTCs
-> active goes 1+ -> 0 call screen off and when it goes 0->1+ call screen on.
->
-> There could be an argument made only for eDP this happens, but I think
-> that's a slippery slope if you end up with an AIO design that uses DP
-> instead of eDP or a desktop for example.  So the safest policy should be
-> across all CRTCs of all GPUs.  During the suspend sequence any that were
-> left on will get turned off, and then it could be triggered at that time
-> instead.
->
-> By making such a change then when the compositor turns off all displays
-> at runtime you can potentially support dark screen background downloads
-> that have specifically called this _DSM and any actions that are taken
-> from doing so.
->
-> >       if (sync_on_suspend_enabled) {
-> >               trace_suspend_resume(TPS("sync_filesystems"), 0, true);
-> >               ksys_sync_helper();
-> > @@ -616,6 +623,8 @@ static int enter_state(suspend_state_t state)
-> >       suspend_finish();
-> >    Unlock:
-> >       mutex_unlock(&system_transition_mutex);
-> > +
-> > +     platform_suspend_display_on();
-> >       return error;
-> >   }
-> >
->
+In Linux the compositor is in charge of doing the modesets that involve 
+turning on/off the screen.  In most cases if you press the power button 
+in Linux systemd-logind picks up the event.  It triggers a behavior 
+that's controlled by the logind configuration.  Typically that's turning 
+on a lockscreen and/or starting the suspend sequence.
+
+Important to note; it DOESN'T explicitly turn off displays.  If you 
+configured it to suspend then displays get turned off as part of the 
+kernel suspend sequence (drm_atomic_helper_disable_all).
+
+If it is configured to trigger a lockscreen then the compositor will 
+turn off displays after whatever the DPMS configuration is set to.
