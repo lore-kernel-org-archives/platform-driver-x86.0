@@ -1,251 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F93F199944;
-	Mon, 23 Sep 2024 17:51:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849A11CA84;
+	Mon, 23 Sep 2024 20:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727113889; cv=none; b=jvWkjyIM6VTHv3dUQcLpI1A3X3d1ypogmcfP0QLzw+tmGGR32k+fcgSMnkQ4m4CbhxxnXI3kK+XizTnYnchx5k+acJEQxBixTujIldibV6ms+cvafJJLQeBeQGba9/01W1iUanKtZJZNFIbbdILVnewM4mvPbrAEMGadq1Wuhec=
+	t=1727122497; cv=none; b=aYGIK+E8wnhFKdVKlPQ8RcArXKHFxwsEfOnTFuoSAqsGL7QEamtRIWMmByxUxBL6uf+R8+8EM/HjRyfPcUrtkhaW5IMamQnRjEx/+BSokiFavhiUs7WV4QfFEr+2vR3HE/OZiH/hZ4PSxiyppQlOBOPbaxMhvtW+76K0Y8uawMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727113889; c=relaxed/simple;
-	bh=OErJSwNuVFAxnvV42kKDgn1w7mMf6v0t2GWmj0NXWfo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jWLI9XOYH8Mzr26GAeLHte+upbEY7Ae8XYCO6E/sqqdQ9WX7nXDE2AfgxxE/MUVzksjGC4eyCKpeTt/q2ryTeHE1iiY+Z81lKNSAPdhRvNFzcvj3g5iwlx82d+BLm4FrDjQEWY1jtFukbDOSiP1Chhyr1odFBMZCzVYlQl5Cpfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A4p5+aTF; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1727122497; c=relaxed/simple;
+	bh=9+kfOVxJ+qMKojjS5j1te2JbrQlQLUUS3TJqA7LFI1o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DZ+vE690W7ZotOzuRn55J/3qMFTz/NXnKOhbLqdTSyjN6IjmSQdoEF1UUjgMveJ6hmisEbGUzlK7feE/OL8x5tHptuj05A9Ya28TwrbDXxxFl0Va03XGo5tYx3IsjrnC0gxT0qR76C4gpZRqwDqtmlSS+Rtkfj7BfqxgrEcOidw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=CJYiXrts; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A4p5+aTF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727113888; x=1758649888;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=OErJSwNuVFAxnvV42kKDgn1w7mMf6v0t2GWmj0NXWfo=;
-  b=A4p5+aTFBIalJwx4OoD/wOv6yW5Z/3/FicjwqiWLDWmrSBELfv28V0bd
-   /qZokOLLHiOFdoNmiIFeBQsSnPiGyOlqYIYMnvl227+Pu76bDEpypp/rD
-   UKd+yGrPmHhsAQ26NJUOC9lGqPl1f0IX2RFGKNiwqUjUmEL3IqK30hpXJ
-   giGivIz2wXdRJl9VHXJzuU4YSgUXeS1Y7cPG9dsLECXDux+JXIof53NIc
-   FaNsX51TKLwErLwvQIVsmDRFA3IMHrka7V6JShxQ3WjiZHKzAK9MPXBV3
-   36pF6/7UCINkBydFsbHO9FT5pHfHydVchfFZ4mjxkchMuhortH3NivS8/
-   w==;
-X-CSE-ConnectionGUID: l1hA2rtxRJ6tQmIpe0qfxA==
-X-CSE-MsgGUID: UXbpiG9dRmWbUaGF0ZEPcA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11204"; a="13708046"
-X-IronPort-AV: E=Sophos;i="6.10,252,1719903600"; 
-   d="scan'208";a="13708046"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2024 10:51:26 -0700
-X-CSE-ConnectionGUID: 01yicEoGTYeGjSKfq0d2gg==
-X-CSE-MsgGUID: uQIjBmoER5a+hpf/Pob1Mw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,252,1719903600"; 
-   d="scan'208";a="75911346"
-Received: from spandruv-desk1.amr.corp.intel.com ([10.125.110.193])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2024 10:51:27 -0700
-Message-ID: <1e507d15a0a9d5b2d562b936176e361ae2771621.camel@linux.intel.com>
-Subject: Re: [PATCH v3] platform/x86: ISST: Fix the KASAN report
- slab-out-of-bounds bug
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Zach Wade <zachwade.k@gmail.com>, hdegoede@redhat.com, 
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-Date: Mon, 23 Sep 2024 10:51:19 -0700
-In-Reply-To: <20240923144508.1764-1-zachwade.k@gmail.com>
-References: <c9f3758e027e06aaf5776904d6e7a0de0bf916c2.camel@linux.intel.com>
-	 <20240923144508.1764-1-zachwade.k@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="CJYiXrts"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1727122480; x=1727727280; i=w_armin@gmx.de;
+	bh=T/aGqZEDlREEwCYifDT4fqocykpAlFW8hsEpBx9aX9E=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=CJYiXrtsWP0L2jhX7bJCwUYu36Fru/lrQnd0WbHwAm3zBEUGoYJg+6fi8FCU03pM
+	 yas5FGcJqKgtzIaN1nn23B/g1XoUVUo1ENNC2yJlwHcrokq4nbfLeG44EzWq38vL8
+	 2djbeJ0fDjXdZs7jtBiAHJnHYC0QawJyRqQdX/1ee1yJV5G7IO2EBm3FApYHv0myz
+	 lVPNu2qK6u1gvI2W0caUdG3v4KvEE41u1+JQouSmq/fPHAk6UESYO9LCUHl7vgfPl
+	 wVTNMDjftWPmfp8MnmrOYFSHxBzSm2z7zDAbSAYLTH3ZqTKiIixIgAdr8WgUxKXjX
+	 e+7+k6HdHl196uJpGw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MD9X9-1sjn1q3n61-0085O0; Mon, 23
+ Sep 2024 22:14:39 +0200
+Message-ID: <69e63476-e166-4231-9986-54d10418c940@gmx.de>
+Date: Mon, 23 Sep 2024 22:14:34 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] platform/x86: dell-laptop: Battery hook fixes
+To: Andres Salomon <dilinger@queued.net>
+Cc: mjg59@srcf.ucam.org, pali@kernel.org, rafael@kernel.org, lenb@kernel.org,
+ hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
+ platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240922064026.496422-1-W_Armin@gmx.de>
+ <20240922034513.330343fb@5400>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20240922034513.330343fb@5400>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:JNbqXuB0mviDPTUfqIJlAeHJLrgBkgxvWGPWjFkCRhXOMEoLdXz
+ f/bWsHyepXq+Bn4o8qDt3T8gvQSw9lcUzvfiR16dbydFEIjfiSbltFESRX/gpUkFmJtV17J
+ ibg8b6/hak8Fn5/o6IsUfVeafUyD2QVDsv3zJtsSp8wK0sdxwzn7Pc3pVAPtLVy0P46drOQ
+ fMaIaBUU4fDlS3ze6YLAQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:1YAm6a0hjd4=;9kmuUECL+iuCVvC0b+VONoT2Cne
+ DvGVe9k76AUWVH6RsJsQaeP2ZhnjDOjfznoUSi6PIN2rptODDIvXVGG+D3JMg8ukMMGRmNg2A
+ feSCoRBbKoLs8ElpxHGYsbd+ZS08bzxsAhytAoXQqs6oBoAgTNACDamgEDPpsMRS6PcE7GyPy
+ q5cAaE8AH2W2jkpAnIaSe07jkcBkGmn7UoHiRCj46tmYrlBcul7GZvB9lx5o9v8Ii5XWZo8U1
+ Zf2g/kFPaBdoFw0Myc4zJ9faq9jmWEBIu1gG4GgmoetKwBbQO1/zY0PLz6Aj/6YHsaeqv2HNQ
+ WON69SmrfSPHmsqhYHQ6brjOcjKRu0TRQeZ0K1Jl5AehE3Vdm/cnX7jyDsYSKkNTywDo0CyFg
+ n4GtGrM6Sb1hgnC/roXV6bSbRBtxXeHZHIwnooPYeevqx5DQ+RG1vQX28gKQOY7wPbhzDG2T8
+ qTmA1WZTyg42Z7sUxMSi4E3XgSXOdr0+4gejW3WvJM3sSz4ekjxgAKz9+UZnwXOinw3OZCO+k
+ XanMaTNQQdMbNtjCTapUE4eB8S9u5GZx8/GUVxQQ7r32xkTqv5/B0Jfg3JnLf0FLcnGZfr8Cc
+ HQgaHxK8CquINKA9uO6U7g0wulzhqWcF0KJb8/VNFiqGUZs2frG7pQsT+vcIdJJPQrcwitdcY
+ 0TPoSJ9rQlEhYEyeCKR5DhE0DFHvabzF0sxJ7FbstaTUE6dtlXqTdSXFLCJYrcwddZ8UqHnPr
+ pAk8wTAqBZ2SmFHVV9q3x1X16ea6FZmghKViEtpfWVIge5P3Qi80hItZkZrv34Ot7/R/+L03I
+ 5q47WFrt5z3IZFDjUWOTp/7g==
 
-On Mon, 2024-09-23 at 22:45 +0800, Zach Wade wrote:
-> Attaching SST PCI device to VM causes "BUG: KASAN: slab-out-of-
-> bounds".
-> kasan report:
-> [=C2=A0=C2=A0 19.411889]
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [=C2=A0=C2=A0 19.413702] BUG: KASAN: slab-out-of-bounds in
-> _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
-> [=C2=A0=C2=A0 19.415634] Read of size 8 at addr ffff888829e65200 by task
-> cpuhp/16/113
-> [=C2=A0=C2=A0 19.417368]
-> [=C2=A0=C2=A0 19.418627] CPU: 16 PID: 113 Comm: cpuhp/16 Tainted: G=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> E=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 6.9.0 #10
-> [=C2=A0=C2=A0 19.420435] Hardware name: VMware, Inc. VMware20,1/440BX Des=
-ktop
-> Reference Platform, BIOS VMW201.00V.20192059.B64.2207280713
-> 07/28/2022
-> [=C2=A0=C2=A0 19.422687] Call Trace:
-> [=C2=A0=C2=A0 19.424091]=C2=A0 <TASK>
-> [=C2=A0=C2=A0 19.425448]=C2=A0 dump_stack_lvl+0x5d/0x80
-> [=C2=A0=C2=A0 19.426963]=C2=A0 ? _isst_if_get_pci_dev+0x3d5/0x400 [isst_i=
-f_common]
-> [=C2=A0=C2=A0 19.428694]=C2=A0 print_report+0x19d/0x52e
-> [=C2=A0=C2=A0 19.430206]=C2=A0 ? __pfx__raw_spin_lock_irqsave+0x10/0x10
-> [=C2=A0=C2=A0 19.431837]=C2=A0 ? _isst_if_get_pci_dev+0x3d5/0x400 [isst_i=
-f_common]
-> [=C2=A0=C2=A0 19.433539]=C2=A0 kasan_report+0xf0/0x170
-> [=C2=A0=C2=A0 19.435019]=C2=A0 ? _isst_if_get_pci_dev+0x3d5/0x400 [isst_i=
-f_common]
-> [=C2=A0=C2=A0 19.436709]=C2=A0 _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_=
-common]
-> [=C2=A0=C2=A0 19.438379]=C2=A0 ? __pfx_sched_clock_cpu+0x10/0x10
-> [=C2=A0=C2=A0 19.439910]=C2=A0 isst_if_cpu_online+0x406/0x58f [isst_if_co=
-mmon]
-> [=C2=A0=C2=A0 19.441573]=C2=A0 ? __pfx_isst_if_cpu_online+0x10/0x10 [isst=
-_if_common]
-> [=C2=A0=C2=A0 19.443263]=C2=A0 ? ttwu_queue_wakelist+0x2c1/0x360
-> [=C2=A0=C2=A0 19.444797]=C2=A0 cpuhp_invoke_callback+0x221/0xec0
-> [=C2=A0=C2=A0 19.446337]=C2=A0 cpuhp_thread_fun+0x21b/0x610
-> [=C2=A0=C2=A0 19.447814]=C2=A0 ? __pfx_cpuhp_thread_fun+0x10/0x10
-> [=C2=A0=C2=A0 19.449354]=C2=A0 smpboot_thread_fn+0x2e7/0x6e0
-> [=C2=A0=C2=A0 19.450859]=C2=A0 ? __pfx_smpboot_thread_fn+0x10/0x10
-> [=C2=A0=C2=A0 19.452405]=C2=A0 kthread+0x29c/0x350
-> [=C2=A0=C2=A0 19.453817]=C2=A0 ? __pfx_kthread+0x10/0x10
-> [=C2=A0=C2=A0 19.455253]=C2=A0 ret_from_fork+0x31/0x70
-> [=C2=A0=C2=A0 19.456685]=C2=A0 ? __pfx_kthread+0x10/0x10
-> [=C2=A0=C2=A0 19.458114]=C2=A0 ret_from_fork_asm+0x1a/0x30
-> [=C2=A0=C2=A0 19.459573]=C2=A0 </TASK>
-> [=C2=A0=C2=A0 19.460853]
-> [=C2=A0=C2=A0 19.462055] Allocated by task 1198:
-> [=C2=A0=C2=A0 19.463410]=C2=A0 kasan_save_stack+0x30/0x50
-> [=C2=A0=C2=A0 19.464788]=C2=A0 kasan_save_track+0x14/0x30
-> [=C2=A0=C2=A0 19.466139]=C2=A0 __kasan_kmalloc+0xaa/0xb0
-> [=C2=A0=C2=A0 19.467465]=C2=A0 __kmalloc+0x1cd/0x470
-> [=C2=A0=C2=A0 19.468748]=C2=A0 isst_if_cdev_register+0x1da/0x350 [isst_if=
-_common]
-> [=C2=A0=C2=A0 19.470233]=C2=A0 isst_if_mbox_init+0x108/0xff0 [isst_if_mbo=
-x_msr]
-> [=C2=A0=C2=A0 19.471670]=C2=A0 do_one_initcall+0xa4/0x380
-> [=C2=A0=C2=A0 19.472903]=C2=A0 do_init_module+0x238/0x760
-> [=C2=A0=C2=A0 19.474105]=C2=A0 load_module+0x5239/0x6f00
-> [=C2=A0=C2=A0 19.475285]=C2=A0 init_module_from_file+0xd1/0x130
-> [=C2=A0=C2=A0 19.476506]=C2=A0 idempotent_init_module+0x23b/0x650
-> [=C2=A0=C2=A0 19.477725]=C2=A0 __x64_sys_finit_module+0xbe/0x130
-> [=C2=A0=C2=A0 19.476506]=C2=A0 idempotent_init_module+0x23b/0x650
-> [=C2=A0=C2=A0 19.477725]=C2=A0 __x64_sys_finit_module+0xbe/0x130
-> [=C2=A0=C2=A0 19.478920]=C2=A0 do_syscall_64+0x82/0x160
-> [=C2=A0=C2=A0 19.480036]=C2=A0 entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [=C2=A0=C2=A0 19.481292]
-> [=C2=A0=C2=A0 19.482205] The buggy address belongs to the object at
-> ffff888829e65000
-> =C2=A0which belongs to the cache kmalloc-512 of size 512
-> [=C2=A0=C2=A0 19.484818] The buggy address is located 0 bytes to the righ=
-t of
-> =C2=A0allocated 512-byte region [ffff888829e65000, ffff888829e65200)
-> [=C2=A0=C2=A0 19.487447]
-> [=C2=A0=C2=A0 19.488328] The buggy address belongs to the physical page:
-> [=C2=A0=C2=A0 19.489569] page: refcount:1 mapcount:0 mapping:000000000000=
-0000
-> index:0xffff888829e60c00 pfn:0x829e60
-> [=C2=A0=C2=A0 19.491140] head: order:3 entire_mapcount:0 nr_pages_mapped:=
-0
-> pincount:0
-> [=C2=A0=C2=A0 19.492466] anon flags:
-> 0x57ffffc0000840(slab|head|node=3D1|zone=3D2|lastcpupid=3D0x1fffff)
-> [=C2=A0=C2=A0 19.493914] page_type: 0xffffffff()
-> [=C2=A0=C2=A0 19.494988] raw: 0057ffffc0000840 ffff88810004cc80
-> 0000000000000000 0000000000000001
-> [=C2=A0=C2=A0 19.496451] raw: ffff888829e60c00 0000000080200018
-> 00000001ffffffff 0000000000000000
-> [=C2=A0=C2=A0 19.497906] head: 0057ffffc0000840 ffff88810004cc80
-> 0000000000000000 0000000000000001
-> [=C2=A0=C2=A0 19.499379] head: ffff888829e60c00 0000000080200018
-> 00000001ffffffff 0000000000000000
-> [=C2=A0=C2=A0 19.500844] head: 0057ffffc0000003 ffffea0020a79801
-> ffffea0020a79848 00000000ffffffff
-> [=C2=A0=C2=A0 19.502316] head: 0000000800000000 0000000000000000
-> 00000000ffffffff 0000000000000000
-> [=C2=A0=C2=A0 19.503784] page dumped because: kasan: bad access detected
-> [=C2=A0=C2=A0 19.505058]
-> [=C2=A0=C2=A0 19.505970] Memory state around the buggy address:
-> [=C2=A0=C2=A0 19.507172]=C2=A0 ffff888829e65100: 00 00 00 00 00 00 00 00 =
-00 00 00 00
-> 00 00 00 00
-> [=C2=A0=C2=A0 19.508599]=C2=A0 ffff888829e65180: 00 00 00 00 00 00 00 00 =
-00 00 00 00
-> 00 00 00 00
-> [=C2=A0=C2=A0 19.510013] >ffff888829e65200: fc fc fc fc fc fc fc fc fc fc=
- fc fc
-> fc fc fc fc
-> [=C2=A0=C2=A0 19.510014]=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
-> [=C2=A0=C2=A0 19.510016]=C2=A0 ffff888829e65280: fc fc fc fc fc fc fc fc =
-fc fc fc fc
-> fc fc fc fc
-> [=C2=A0=C2=A0 19.510018]=C2=A0 ffff888829e65300: fc fc fc fc fc fc fc fc =
-fc fc fc fc
-> fc fc fc fc
-> [=C2=A0=C2=A0 19.515367]
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> The reason for this error is physical_package_ids assigned by VMware
-> VMM=20
-> are not continuous and have gaps. This will cause value returned by=20
-> topology_physical_package_id() to be more than
-> topology_max_packages().
->=20
-> Here the allocation uses topology_max_packages(). The call to=20
-> topology_max_packages() returns maximum logical package ID not
-> physical=20
-> ID. Hence use topology_logical_package_id() instead of=20
-> topology_physical_package_id().
->=20
-> Fixes: 9a1aac8a96dc ("platform/x86: ISST: PUNIT device mapping with
-> Sub-NUMA clustering")
-> Signed-off-by: Zach Wade <zachwade.k@gmail.com>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Am 22.09.24 um 09:45 schrieb Andres Salomon:
 
-We can add
-Cc: stable@vger.kernel.org
+> On Sun, 22 Sep 2024 08:40:23 +0200
+> Armin Wolf <W_Armin@gmx.de> wrote:
+>
+>> This patch series fixes some issues around the battery hook handling
+>> inside the ACPI battery driver and the dell-laptop driver.
+>>
+>> The first patch simplifies the locking during battery hook removal as
+>> a preparation for the second patch which fixes a possible crash when
+>> unregistering a battery hook.
+>>
+>> The third patch allows the dell-laptop driver to handle systems with
+>> multiple batteries.
+>>
+>> All patches where tested on a Dell Inspiron 3505 and appear to work.
+> Can you tell me more about the system? What type of battery is the second
+> battery, and how is it attached? What do the kernel logs look like when the
+> two batteries are registered? I'm still confused as to how the same
+> battery->dev ends up being reused for multiple physical batteries.
 
-But issue was always there if someone attaches SST device to VM with
-discontinuous physical package IDs even though SST is not supported in
-VM environment.
-Here some external devices are getting attached to VM.
+Hi,
+
+i think there is a misunderstanding here, each battery->dev is associated with a separate
+battery. The issue is that the ACPI battery driver responsible for managing battery hooks
+does not correctly handle battery hook errors during runtime. For example:
+
+1. Driver registers a batter hook.
+2. New ACPI battery is discovered, add_battery callback of the battery hook is called.
+3. The callback returns an error for some reason.
+4. ACPI battery driver automatically unregisters the battery hook.
+5. Driver unregisters battery hook during removal.
+6. Crash since battery hook was already unregistered by the ACPI battery driver.
+
+This patch series fixes this by adding a boolean flag to signal that a battery hook was
+already unregistered, so the ACPI battery driver can ignore those battery hooks in
+battery_hook_unregister().
+
+> The patches look good to me, btw; feel free to add my Reviewed-by
+> if that's helpful.
+>
+> Also, with the caveat that I'm not quite understanding the aforementioned
+> battery->dev conflict - worth noting that dell-laptop isn't the only driver
+> that could have this problem with multiple batteries. A quick glance
+> through some other drivers:
+>
+>   - asus-wmi.c does basically the same thing in checking for just the first
+>     battery, and the comment implies that there may be multiple batteries.
+>
+>   - system76.c claims that the EC only supports one battery, so maybe that
+>     one is okay? But to be on the safe side, it should probably do the same
+>     thing.
+>
+>   - thinkpad_acpi.c actually supports multiple batteries, so maybe it
+>     doesn't have the problem. But if tpacpi_battery_probe() fails for one
+>     of the batteries and the battery->dev is shared between the two
+>     batteries, then same issue?
+>
+Good point regarding asus-wmi and system76, maybe we should provide some documentation
+for writing battery hook providers.
 
 Thanks,
-Srinivas
+Armin Wolf
 
-> ---
-> =C2=A0drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 4 +++=
--
-> =C2=A01 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git
-> a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> index 10e21563fa46..030c33070b84 100644
-> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-> @@ -316,7 +316,9 @@ static struct pci_dev *_isst_if_get_pci_dev(int
-> cpu, int bus_no, int dev, int fn
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cpu >=
-=3D nr_cpu_ids || cpu >=3D num_possible_cpus())
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0return NULL;
-> =C2=A0
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pkg_id =3D topology_physical_p=
-ackage_id(cpu);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pkg_id =3D topology_logical_pa=
-ckage_id(cpu);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (pkg_id >=3D topology_max_p=
-ackages())
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0return NULL;
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bus_number =3D isst_cpu_i=
-nfo[cpu].bus_info[bus_no];
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (bus_number < 0)
-
+>> Changes since v1:
+>> - fix the underlying issue inside the ACPI battery driver
+>> - reword patch for dell-laptop
+>>
+>> Armin Wolf (3):
+>>    ACPI: battery: Simplify battery hook locking
+>>    ACPI: battery: Fix possible crash when unregistering a battery hook
+>>    platform/x86: dell-laptop: Do not fail when encountering unsupported
+>>      batteries
+>>
+>>   drivers/acpi/battery.c                  | 27 ++++++++++++++++---------
+>>   drivers/platform/x86/dell/dell-laptop.c | 15 +++++++++++---
+>>   include/acpi/battery.h                  |  1 +
+>>   3 files changed, 31 insertions(+), 12 deletions(-)
+>>
+>> --
+>> 2.39.5
+>>
+>
+>
