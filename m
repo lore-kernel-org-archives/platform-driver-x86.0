@@ -1,237 +1,187 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2063.outbound.protection.outlook.com [40.107.93.63])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565A2535D4;
-	Mon, 23 Sep 2024 13:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727098642; cv=fail; b=iP9JTB0ZfR/48sJ5rUv6Gdr38zRjCwfLYw1DvJxOXofQFcjv3+FF9Q/sDrFVABhDjoGhNQEIcc0tWBWYv+oAy2oJ2jXviv3l1zfYEgOAP0/ncrwXrIfCNumhL4ecOohZBJiL5/l4ozVRFILc79uA94dN0zoZ6XMPY6Y0G+yHoaY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727098642; c=relaxed/simple;
-	bh=+5Wl97hR00xqOVkVCSLcVw03Tdoo/1nerVRYfLmiiMc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=hpxF4P1fNPpqzv54q2HXQW3L86giPuym/FgUnxiLz6XR05DoolbZZHwSHqyzN+/bYU95Nx78zpWu3kl3rm8jZ3WkTkfXY9RlyeR+bZRuyJoJ+u5VBQM06KTK2YZ9UgeEVfYUhEbXruO3OQ/Z+DXs1vpI9sOayDOs0QinfslraaE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1f5JSQOj; arc=fail smtp.client-ip=40.107.93.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6CF78283;
+	Mon, 23 Sep 2024 14:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.66
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727102751; cv=none; b=cLd6x741anhKxdaNgghy/fD6oAr7BC9GXbuspMik+XLGaNCzgCjBi5LsIqsizv0jKy3yhGZcjXp2Nvqh78tC5VZJDy16ZcOajqza3q/NoWQAJobEV9sErIYVGLXmQdFOLdbG8xKYl+q7vCqzn/Gio1B01C5D8QyrQXHRpKCF+5U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727102751; c=relaxed/simple;
+	bh=0devtEblpnmvN0YuwFXB5OY1bWgOvpQSnBNB4Iw25bo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rH+lubL6iDsOhxqHLBjj+uLRS8bvQApD0SiYknBsrI2JwLVKlrTfzjXACqCooUYNX6hexxKzrHnIbO40fYTEfYUBfcHfyAMRykNX+HsIelu6dK0q0cxlqzlNcuDMbWEXVlQ+ICbW6SMB7zjgPtoLL13yF+SAY30Vw6EJ3rHCXHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HcdmduCA; arc=none smtp.client-ip=209.85.216.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1f5JSQOj"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SJu4Tfcd/zKB/kPKZazjGwHUiqB9sJIBoZ/1vggmDL2EG6JG8JM/C3+g6jf0buDaBo+IRQE7aGe0zUjdC7Ce3bcGJ/qCePUYRvcLM8BYoxZYR1MEbP/9ePdM2DImZu43guOAPsNMN8SPj0SeofTUmMxVDNqE1C/E57YDcjxi62/FlZsatRvzivpVcOm80r1h5OHEYtS1FN0EHIzKRbaQwIfxBHPCun6y91LHESZH+syBO6oN73Efbhqth9CzfolyoXI/iAVblzTgM0EyUyunHpdkRRwJiwyXM3HRzdHm3EodscDif4wAtobLPosSmRPPup4my4S2FeIY9l/HNFjdqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yCrUwaeGHyLqXQ5TnrHMg9tZhh7xqXePvZ63weLzp34=;
- b=rhRgy1SD8FIAtN3gWNO0SJyL+SaTCiPHI68/R85HwFUFQzpD3rnzIVJijfjbi9NlCOjaDSex5tcwD8ZvFtNtWq2SXhOlrTigwVrn0Yq9pCTriPGwuwqzfjSWY6bN14sSgvooiePBaSvjSIjui3zAdBjJaOXwdt1GXsqjgMpP50EmfN2+I1d/yH6GuVIEPbD6iXZjqOPrZvbs1v+Et1oqOOgK44WBXrDd0VdMpsxGsf5AylBNC4cTl4Zj5fnEGt95cD8shBEUt7TcTTvpVPduVlkMM1XT+Q6oMkNFjtfo6NR/uYi5ycxDgKuwgqc0YlZUd/Fg+749KUh1emkshsASfw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yCrUwaeGHyLqXQ5TnrHMg9tZhh7xqXePvZ63weLzp34=;
- b=1f5JSQOjjWee1iYPkxi8/3WjsqpFPsYBlKutCM0EI/DZf4oTggCqqPHKwGb606sLthF/vrH8dTpqcDCjlyDcthnOt+fivITTWbZ2ubRGo76YdgwDFZWM0eOuTKqnJgw4545tue9bu+u45Cao761ytXz6wAkKFD3QlXNH/5raqEY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by LV2PR12MB5845.namprd12.prod.outlook.com (2603:10b6:408:176::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.26; Mon, 23 Sep
- 2024 13:37:17 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.7982.022; Mon, 23 Sep 2024
- 13:37:16 +0000
-Message-ID: <79d288c6-6042-4f73-b465-0ddcde14509a@amd.com>
-Date: Mon, 23 Sep 2024 08:37:13 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: unexptect ACPI GPE wakeup on Lenovo platforms
-To: Baochen Qiang <quic_bqiang@quicinc.com>, rafael@kernel.org,
- mika.westerberg@linux.intel.com, ulf.hansson@linaro.org,
- bhelgaas@google.com, Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com,
- mpearson@lenovo.com, markpearson@lenovo.com, Kalle Valo <kvalo@kernel.org>,
- Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <370d023e-ec53-4bf2-a005-48524c9cb4b2@quicinc.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <370d023e-ec53-4bf2-a005-48524c9cb4b2@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7P220CA0012.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:806:123::17) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HcdmduCA"
+Received: by mail-pj1-f66.google.com with SMTP id 98e67ed59e1d1-2d8b96c18f0so3546527a91.2;
+        Mon, 23 Sep 2024 07:45:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727102749; x=1727707549; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=07cP7PGx0LKJV/vCPbz+uo2AB8i+4JBkg0zU8eGjho8=;
+        b=HcdmduCANQFguynbbnU9vo0886maOiCZtVRIC8G6ySu+4kMn4XmVmykDZRC7ADW5Jr
+         R8QC+XCNl1F+469h5L+EkuZie3jFj12f7u+6a8EVNFFWkzbSMi6MA5Qd7Vx554/Qh68b
+         B/BObBtsItIYmMGRAOZzo75nvxS0gQmHD6swnx3HI9F4ahBqAI2O/u3SvQjcgfQx+/ua
+         pfA8DiAGC5vgZRJJPHg3Gm5H05ou+1KBsRkDRBzG6l6JwIXDifeP78oFTqPlL4pXq70E
+         hTRKIpTPJ4LjrF0QUhTYE1+wYQ37/xwbq7ZMX/mJnCe9nWXr7+z83kDYdbh6P7K8Bl6s
+         UKbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727102749; x=1727707549;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=07cP7PGx0LKJV/vCPbz+uo2AB8i+4JBkg0zU8eGjho8=;
+        b=UkkEZBgafKvHT4lv6C6IvZKbgXmFHBO8PIOgWGzf1els5MPtEg0gI+qCaSvdEQ8jQo
+         9x/H5+sCG7+u0whsKjVYgFjsudR1e+d5MGqOTah4oTGAaa5AAx9TTw4Aw637eabB17Jx
+         oP29YXHfGDhocoayb/UsmIReYctHPduG8Wk36Gnpxb3vRUI4o2bnAzz0OaWHZserxp11
+         xx12QzGkpaKwKnwxSWINasn1KBI7yR03YqVMU0SKTCiiEoY8J29UOPy8/grKBlH7waOK
+         R/HfvDlc73ofUMu1usW3r5ANmLzbJnqpzrAUDM31VtD4OucRhPkA7MRJHqp3Sad4wWlO
+         to+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXOKRhcNXKnb2v+fhvMSnXRSOSvaBPBSMQDAGrq4BY+2VT9WHEoNUVA2ca+Z8a7XIMrpuCM8+4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrmpytEd5q0cuYflIUmSL0E8hSft3OIvG99CMDhjrI3DtPJQDV
+	skW+rtiYzacvRKRoumYaeRd2KwZyZZSmkr9EkjR/gvWrh4/SlqHFK3Xc/X76HvQ=
+X-Google-Smtp-Source: AGHT+IHxGM9/uZUscVRx6VIuwGYcDw/FtlECQXwYxh1CaChp0c76sIgXLUzX+X5b4Wj6qjwdLWYd7g==
+X-Received: by 2002:a17:90a:8d17:b0:2d8:7a29:838f with SMTP id 98e67ed59e1d1-2dd80c19a2bmr16150602a91.10.1727102745536;
+        Mon, 23 Sep 2024 07:45:45 -0700 (PDT)
+Received: from localhost.localdomain.localdomain (n220246094186.netvigator.com. [220.246.94.186])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2dd7f954847sm7390914a91.47.2024.09.23.07.45.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2024 07:45:44 -0700 (PDT)
+From: Zach Wade <zachwade.k@gmail.com>
+To: srinivas.pandruvada@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	stable@vger.kernel.org,
+	Zach Wade <zachwade.k@gmail.com>
+Subject: [PATCH v3] platform/x86: ISST: Fix the KASAN report slab-out-of-bounds bug
+Date: Mon, 23 Sep 2024 22:45:08 +0800
+Message-ID: <20240923144508.1764-1-zachwade.k@gmail.com>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <c9f3758e027e06aaf5776904d6e7a0de0bf916c2.camel@linux.intel.com>
+References: <c9f3758e027e06aaf5776904d6e7a0de0bf916c2.camel@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|LV2PR12MB5845:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4d3cc2c8-347b-43f4-885a-08dcdbd4d715
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Q3lUVVhuSG45amxwTkREaUU3SjdVeWlYU3doU0FlN2loeHNuSzZMcmxjSHA2?=
- =?utf-8?B?OGx4QzdCa1h4WEphRzJINWF0WDBieXRyUk1MRnVyU2NpTndtYXVNU3BkNlpo?=
- =?utf-8?B?QUxFZjEzQkUyTUw5S3lucnFmNndFNmFVbVkrZnR4OHJkVEhGVzMvRDNMRzhj?=
- =?utf-8?B?Yng2cVRuVVpGbXlNeGlMaGJSUDZKVFhmaS81RERaR3BPeHllaUhmdzZHb0tr?=
- =?utf-8?B?WWJCU2RsVjZrN1c4RGthRGpwWEduZ2g4aW40L3ZDZDMveGQ2NW1DZXRJcHJT?=
- =?utf-8?B?VjMxM2g2dWtBQUlCc3M4NGoySjE0M1ZmTHhReDd0WVhlLy85QTRKSlFMQm9J?=
- =?utf-8?B?d1F0bVd2Q1JQSTBsM1VlUXlZL2xYOGxscGNuRlgza21FQUY4c0JYUmJ3YTFy?=
- =?utf-8?B?RGNCWEpNUklpMHlVZW5lak85ek5nQ2hGWGdTdEs1OWUybXRmemZNTklWSFZR?=
- =?utf-8?B?V3VrdTdJWDU4SlhScW80RVJwQUkzU1owb2ZQVU5aZUJ2VmlsRU5lbHlIQk05?=
- =?utf-8?B?K3pwZ2J0Wm9aSkRaY0RwRnRiSzZkd1hhb3VnOWVDVjJLZHdEOHhxYXpKY2ZX?=
- =?utf-8?B?RU1heUFtZG5Td0xzZU92YmpzVGlZOXZ5VFBXUE5rSUVrd2IzejM4bnJHNTEx?=
- =?utf-8?B?WFBMR1pkeis1U2RoNWlFZlY1RVJWVGYvYmtoOFgycWF5UlhnWS8xano3cEE5?=
- =?utf-8?B?T2VWSjg3d1NXYURuVjZQaXcvdnZhU3hlZmhJMjd0bTNmU0ljdFJ5SlFCRzNh?=
- =?utf-8?B?MU04Ri9CQmZ4TTZVVUhzcnFCS1RsaVJ4bDRpNXliS3NvbFpLNXhxME4xWWdS?=
- =?utf-8?B?QzN3Z0pDSDc3MnRyRHF5MDFCSGEvbkxtbDdjL1R4TXdveHUydUFsYnF0WWlW?=
- =?utf-8?B?b0V6S2lGaVUvV2VnaC9rRmplaEdpUjNsQTI4N1l5bExnS2M2QThZd24zRWU1?=
- =?utf-8?B?WnFUMjVzeE9JcnFac24rNUYraTdQOXhybEFhTHhrQzFrS2JQWjdwQkFHY3hB?=
- =?utf-8?B?bW4vb2huS1pZY3d1d1JVQUs0cDkwYzB5TnFBS0VJMTJSb2pRanR0ZXlkNnBD?=
- =?utf-8?B?R3Y0N0VaN1VERnFhck1kYTRtanhONGVMUktabDBPZ1JGRzF0UktVMkFjNFJM?=
- =?utf-8?B?YlNCVWhnUkJrMTZXMWtta1V1d3NxcTNNMWpNYTdZcXhQa2RPQk95dmJVOHdu?=
- =?utf-8?B?d3F0c1Rqck1WWkwxQ2tFRmp0NVROK21NMTVmdXcwWDlLVVR5T1R0VXppMGQ5?=
- =?utf-8?B?YVF6Z0dVOS9jeHZ6MTdubTNTdXo5VWxtUncrTy9sQ1VlREVhakh0S1k5Rlp1?=
- =?utf-8?B?dkUrbzErV25XUmJkKzZsVmRLSUtEeUNJK3BMWHZnUVB3UjZHT21zK1NDKzhG?=
- =?utf-8?B?WEVqNzNvcEJPS1MvY01DaEtnY0tUUjRjTE5DY0hLeS9DTGU0UTdGMUFmYkRx?=
- =?utf-8?B?RzZ4VElWZTBGNjJoWmVyVXRvWXZvWnZwcVBLVDhqQVovb3pqNjh5OTlXdHVs?=
- =?utf-8?B?ZTdyTzlEOXFWL2I0bnpHV0thREVXRVBVeGxvQ29uV0I5V3g4SFh6aWs4MnU5?=
- =?utf-8?B?d3dhZEJLZG9POGFJVkgvRWZ6VEk2Rm9iQkxQVXEvdTBYQklXRjVWT0trWUFi?=
- =?utf-8?B?eUx3amlHWnB4MitPSSt0Qjc2bW5yeURGdkN2aHcwY0Q5aWNaY1BHTUEyMVRR?=
- =?utf-8?B?YXBvaEltWmhoeG44cHFHNlJsSk5LQjVxNzZqZFFacVF5QTVnTHk2THRBPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TGliMzVjRm41N1hpZW5uaGJYeXMwN3lKK0d1eEpRc1ljQ05tc3NFY3AxUWFQ?=
- =?utf-8?B?dWcrSjRrMytEUHpnMEtDeno3ZVVmMjlFOEpPNVk3NHF0SHBlaThxQSsrMVBr?=
- =?utf-8?B?cmVYdHpTZmZRVis1NFRoTW1wd3VseW5YcEtBdUozUG96SEZmK3k4V3lhMjh0?=
- =?utf-8?B?Njk1dkl2TzQ1WlVJSnA3eC96RERwa0EyOXVnS2lCSzVRRHJMbVJCdUV3UzdW?=
- =?utf-8?B?UWIxTTBMS2gxc1ZKeTk4L1UwRVk1dG42NGhzYUdzanZ5TkgyLytMaHd4VTBT?=
- =?utf-8?B?SkhZYzNYZ0dxQUYwcEh6Mms2VnVwOWREQjRsNmRwZ2NtVUxRU25yT2pWRXlz?=
- =?utf-8?B?bkwwUFkwWVRKTExSQUJQdVZZRVFBRFcxRWZ0OWZKL3JJRkk4NlQybHQvTFND?=
- =?utf-8?B?UlRjVSs2bE02aXRFWllId0xJa1VTaDFwckM5ZGJ2dnJtc2pzWGdxMG5LMkNa?=
- =?utf-8?B?KzlGVlRoMXBsRHBJLy9SdkZaQmhwdWhjWEpUdTZzKzBUUFNIR0R3dis4WTJ0?=
- =?utf-8?B?U2sweFFNQzhiQ0ZYTytxM3pOVktVUWtlVlVUVU8vc2ZwY3FlMjAzeEhBSk1X?=
- =?utf-8?B?NmhaMEhSQklpMFR4STJvZlhXNjk3OTVUbDIwWmdqZTBWWDFQamQwWTJYSWxr?=
- =?utf-8?B?YU1Vc1Q3WFJ4ZCtNSHpxaFFIcDljOXJMcjBMOTZHejh5eGVTSGUwWGJwK3pP?=
- =?utf-8?B?RTFWYVpENFRkZFlpanlHanRQRFdFM0UyNE9PZm54N2NmZTRaQTh5aFJDaS92?=
- =?utf-8?B?SHJHbmlIaklEd2M0Q1ROK25HakdudS9SbmwxSmF5bEFmOVBtdEJobFBUUHEw?=
- =?utf-8?B?d0ZyVEZoTWNDbE5XZjlmNGxNaE9GYU13Tk96VlViaXdtdkd3SlpXYWtmc1dK?=
- =?utf-8?B?cThVSnl2YXZSZFM1OFd4aUxmbFo2NVRzcm1WZFRKUlFKUmNHTmJUcGZTZHZ4?=
- =?utf-8?B?NU11UWI4SUtnNjFVNEtEL09Rajk5dHpISGFxVjFmNUFwbFBOMDlXYlZ1dm5q?=
- =?utf-8?B?NTNZU0ZuZ1B3RnBVOHB1S1FkUGd1QUZCaXR4OVNJRWNKYUxlZWs1dXFJOUdP?=
- =?utf-8?B?TUtubWJQbUxFREttb1A5TDBndm0wSmFJQkNOdU5nak5INjR4eVZ4b0pYYnJn?=
- =?utf-8?B?dldPY3V0S1YrSmtPS1pheHU2Ymh5V0JjSjZGWkRjaFlFSzdFdlR3cXRhZ1hR?=
- =?utf-8?B?WkVCNWVxdkk4eEFlSjdkUWkreEF1N2RDNXl2YStnTXg5WEY3US9CbGFEK1ZM?=
- =?utf-8?B?NE5HTlgrajRWSnNCTEJRWEJjdWV6WVhDazhodCtEdW94SThjZXB5Z1hmcEpy?=
- =?utf-8?B?UGw3UXF1RjZiM3gwYlpBbzB0V0l6ZEowVFVLeWFvVlFVdW5EWVZxZ1hsZUUw?=
- =?utf-8?B?U3pIQVZydERBYTMrNFIwTi90Rldlc3NGVE1YeDVFc1NGb2ZjZDRhT0VmOUFL?=
- =?utf-8?B?RGFxRThrVVJPWlNGaWNPeE1QWkgxWXJKVzl4aUZnUXByZGNUVWxCdjFyRXh6?=
- =?utf-8?B?dHVpQlVuK29CNmx4ZDRRL3VTaGM3K0ZWMVhjdzN0cTFGVjRkclBoY2RrS01C?=
- =?utf-8?B?aXFKVk9BeWtFR3dRQ0R1di9KWk1rdlpmcFpyVkoyNGZ0djdwTmhacEl3c1Vz?=
- =?utf-8?B?Ujg2ZzhOMCtiRDZWOVpTNWZ5KzRxUlJQOXlGUnlaZ1FYeTlNSEFJb0o1MDBN?=
- =?utf-8?B?dEkzcmhoM1poeXYyUG5Pc2UrU3EzdnVvOUlLVzRLRmNXdkhmTWRhQTRtelRB?=
- =?utf-8?B?OXcwQWY3S05EYVZWTlJiVytBRVNHay80bU04ZU1Uc3dZaXB0M0l4OGRoRjBE?=
- =?utf-8?B?Ulk4b0FweDJPU2dPa1Iwa3JnQVE5L1RDQnVYV2Y2Y0hQV3o4dmdBYlNLTUZB?=
- =?utf-8?B?Z1RWYlU4Yy9qakM5eTZVWUs4MExHZ3dTdFRmcU1OMFpaTkdTYXZxRktKcGVx?=
- =?utf-8?B?aFNSQzljZmt3ZksxK2M1M25MdFVHQWgveU13MTcrdW0zemZ4MTBjckV4bjFx?=
- =?utf-8?B?MjM1U2t4ZUZiWEtGbmhHVytQR3doNjB2ci90L1pIV0lkc2YzVy9iT09LZVJ1?=
- =?utf-8?B?YTlXWnBvaVZIWWd1eG13ZXVMRXVmbllVZmtteG1xZ09lL1RGSXJiak5WOUJa?=
- =?utf-8?Q?2UgFvD4SdYxY/qP8oFvYxTAu8?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d3cc2c8-347b-43f4-885a-08dcdbd4d715
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2024 13:37:16.9023
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Es2mAuWUtjQjGtYk61x0aygn1ivJUIwksilBqqXOzEMXbLPp2MknSSpfLhu0zDXwO7KV6erbWpvC2g/FoPHrlQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5845
+Content-Transfer-Encoding: 8bit
 
-On 9/23/2024 05:07, Baochen Qiang wrote:
-> Hi,
-> 
-> recently it is reported that on some Lenovo machines (P16v, Z13 etc.) unexpected ACPI event wakeup is seen with kernel 6.10 [1][2]. To summary, the unexpected wakeup is triggered by simply unplug AC power or close lid of the laptop. Regression test shows this is caused by below commit, and with that reverted the issue is gone:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/net/wireless/ath/ath11k?id=166a490f59ac10340ee5330e51c15188ce2a7f8f
-> 
-> Well what confuses me is that this commit basically resets WLAN hardware before going to suspend. that said, WLAN target maintains limited functionality (PCIe link handling etc...) during system suspend and is thus not expected to wakeup system.
-> 
-> kernel log shows this is an ACPI GPE event wakeup:
-> 
-> Sep 22 22:34:32 fedora kernel: PM: Triggering wakeup from IRQ 9
-> Sep 22 22:34:32 fedora kernel: ACPI: PM: ACPI non-EC GPE wakeup
-> ...
-> Sep 22 22:34:32 fedora kernel: PM: noirq resume of devices complete after 693.757 msecs
-> Sep 22 22:34:32 fedora kernel: ACPI: GPE event 0x07
-> Sep 22 22:34:32 fedora kernel: ACPI: GPE event 0x0e
-> 
-> Consulting ACPI tables show GPE 0x07 is used by the EC and GPE 0x0e is used by GPP6 device:
-> 
-> Scope (\_SB.PCI0.GPP6)
-> {
->      ...
->      Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
->      {
->          M460 ("PLA-ASL-\\_SB.PCI0.GPP6._PRW Return GPRW (0xE, 0x4)\n", 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
->          Return (Package (0x02)
->          {
->              0x0E,
->              0x04
->          })
->      }
->      ...
-> }
-> 
-> while GPP6 is the PCI bridge (the PCIe root port in this case) to which WLAN target is attached to:
-> 
-> Device (GPP6)
-> {
->      Name (_ADR, 0x00020002)  // _ADR: Address
->      ...
-> }
-> 
-> Scope (_SB.PCI0.GPP6)
-> {
->      Device (WLAN)
->      {
->          ...
->      }
->      ...
-> }
-> 
-> and lspci also shows such relationship:
-> 
-> $ lspci -vt
-> -[0000:00]-+-00.0  Advanced Micro Devices, Inc. [AMD] Device 14e8
->             ...
->             +-02.2-[03]----00.0  Qualcomm Technologies, Inc QCNFA765 Wireless Network Adapter
->             ....
-> 
-> Based on above info:
-> #1 is that valid to get the conclusion that this unexpected wakeup is triggered directly by PCIe bridge?
-> #2 if this is related to WLAN (seems so based on the regression test), is it the WLAN wake pin (a GPIO pin?) that originally triggers this? and how does it affect the bridge?
-> #3 quick tests show that with GPP6 wakeup disabled this issue is gone. so a workaround is to disable GPP6 wakeup before going to suspend and enable it back after resume. But is it safe to do so?
-> 
-> 
-> 
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=219196
-> [2] https://bugzilla.redhat.com/show_bug.cgi?id=2301921
-> 
+Attaching SST PCI device to VM causes "BUG: KASAN: slab-out-of-bounds".
+kasan report:
+[   19.411889] ==================================================================
+[   19.413702] BUG: KASAN: slab-out-of-bounds in _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
+[   19.415634] Read of size 8 at addr ffff888829e65200 by task cpuhp/16/113
+[   19.417368]
+[   19.418627] CPU: 16 PID: 113 Comm: cpuhp/16 Tainted: G            E      6.9.0 #10
+[   19.420435] Hardware name: VMware, Inc. VMware20,1/440BX Desktop Reference Platform, BIOS VMW201.00V.20192059.B64.2207280713 07/28/2022
+[   19.422687] Call Trace:
+[   19.424091]  <TASK>
+[   19.425448]  dump_stack_lvl+0x5d/0x80
+[   19.426963]  ? _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
+[   19.428694]  print_report+0x19d/0x52e
+[   19.430206]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
+[   19.431837]  ? _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
+[   19.433539]  kasan_report+0xf0/0x170
+[   19.435019]  ? _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
+[   19.436709]  _isst_if_get_pci_dev+0x3d5/0x400 [isst_if_common]
+[   19.438379]  ? __pfx_sched_clock_cpu+0x10/0x10
+[   19.439910]  isst_if_cpu_online+0x406/0x58f [isst_if_common]
+[   19.441573]  ? __pfx_isst_if_cpu_online+0x10/0x10 [isst_if_common]
+[   19.443263]  ? ttwu_queue_wakelist+0x2c1/0x360
+[   19.444797]  cpuhp_invoke_callback+0x221/0xec0
+[   19.446337]  cpuhp_thread_fun+0x21b/0x610
+[   19.447814]  ? __pfx_cpuhp_thread_fun+0x10/0x10
+[   19.449354]  smpboot_thread_fn+0x2e7/0x6e0
+[   19.450859]  ? __pfx_smpboot_thread_fn+0x10/0x10
+[   19.452405]  kthread+0x29c/0x350
+[   19.453817]  ? __pfx_kthread+0x10/0x10
+[   19.455253]  ret_from_fork+0x31/0x70
+[   19.456685]  ? __pfx_kthread+0x10/0x10
+[   19.458114]  ret_from_fork_asm+0x1a/0x30
+[   19.459573]  </TASK>
+[   19.460853]
+[   19.462055] Allocated by task 1198:
+[   19.463410]  kasan_save_stack+0x30/0x50
+[   19.464788]  kasan_save_track+0x14/0x30
+[   19.466139]  __kasan_kmalloc+0xaa/0xb0
+[   19.467465]  __kmalloc+0x1cd/0x470
+[   19.468748]  isst_if_cdev_register+0x1da/0x350 [isst_if_common]
+[   19.470233]  isst_if_mbox_init+0x108/0xff0 [isst_if_mbox_msr]
+[   19.471670]  do_one_initcall+0xa4/0x380
+[   19.472903]  do_init_module+0x238/0x760
+[   19.474105]  load_module+0x5239/0x6f00
+[   19.475285]  init_module_from_file+0xd1/0x130
+[   19.476506]  idempotent_init_module+0x23b/0x650
+[   19.477725]  __x64_sys_finit_module+0xbe/0x130
+[   19.476506]  idempotent_init_module+0x23b/0x650
+[   19.477725]  __x64_sys_finit_module+0xbe/0x130
+[   19.478920]  do_syscall_64+0x82/0x160
+[   19.480036]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[   19.481292]
+[   19.482205] The buggy address belongs to the object at ffff888829e65000
+ which belongs to the cache kmalloc-512 of size 512
+[   19.484818] The buggy address is located 0 bytes to the right of
+ allocated 512-byte region [ffff888829e65000, ffff888829e65200)
+[   19.487447]
+[   19.488328] The buggy address belongs to the physical page:
+[   19.489569] page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff888829e60c00 pfn:0x829e60
+[   19.491140] head: order:3 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+[   19.492466] anon flags: 0x57ffffc0000840(slab|head|node=1|zone=2|lastcpupid=0x1fffff)
+[   19.493914] page_type: 0xffffffff()
+[   19.494988] raw: 0057ffffc0000840 ffff88810004cc80 0000000000000000 0000000000000001
+[   19.496451] raw: ffff888829e60c00 0000000080200018 00000001ffffffff 0000000000000000
+[   19.497906] head: 0057ffffc0000840 ffff88810004cc80 0000000000000000 0000000000000001
+[   19.499379] head: ffff888829e60c00 0000000080200018 00000001ffffffff 0000000000000000
+[   19.500844] head: 0057ffffc0000003 ffffea0020a79801 ffffea0020a79848 00000000ffffffff
+[   19.502316] head: 0000000800000000 0000000000000000 00000000ffffffff 0000000000000000
+[   19.503784] page dumped because: kasan: bad access detected
+[   19.505058]
+[   19.505970] Memory state around the buggy address:
+[   19.507172]  ffff888829e65100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[   19.508599]  ffff888829e65180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[   19.510013] >ffff888829e65200: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[   19.510014]                    ^
+[   19.510016]  ffff888829e65280: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[   19.510018]  ffff888829e65300: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[   19.515367] ==================================================================
 
-With pinctrl-amd there is an extra debugging message present [1] that is 
-activated when you enable '/sys/power/pm_debug_messages' which will tell 
-you if a GPIO is active during the suspend cycle.  That can help you to 
-rule out whether this is the WoWLAN GPIO pin causing the behavior.
+The reason for this error is physical_package_ids assigned by VMware VMM 
+are not continuous and have gaps. This will cause value returned by 
+topology_physical_package_id() to be more than topology_max_packages().
 
-[1] 
-https://github.com/torvalds/linux/blob/v6.11/drivers/pinctrl/pinctrl-amd.c#L626
+Here the allocation uses topology_max_packages(). The call to 
+topology_max_packages() returns maximum logical package ID not physical 
+ID. Hence use topology_logical_package_id() instead of 
+topology_physical_package_id().
+
+Fixes: 9a1aac8a96dc ("platform/x86: ISST: PUNIT device mapping with Sub-NUMA clustering")
+Signed-off-by: Zach Wade <zachwade.k@gmail.com>
+---
+ drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+index 10e21563fa46..030c33070b84 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+@@ -316,7 +316,9 @@ static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn
+ 	    cpu >= nr_cpu_ids || cpu >= num_possible_cpus())
+ 		return NULL;
+ 
+-	pkg_id = topology_physical_package_id(cpu);
++	pkg_id = topology_logical_package_id(cpu);
++	if (pkg_id >= topology_max_packages())
++		return NULL;
+ 
+ 	bus_number = isst_cpu_info[cpu].bus_info[bus_no];
+ 	if (bus_number < 0)
+-- 
+2.46.0
+
