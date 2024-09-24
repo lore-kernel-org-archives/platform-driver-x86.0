@@ -1,118 +1,180 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2057.outbound.protection.outlook.com [40.107.244.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA7914F9F7;
-	Tue, 24 Sep 2024 08:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727167728; cv=none; b=CNVqFx4fL5VNEoweAQ4t3P9iuK9le+VUkDMx7ONd4XdlyYkbVNJeVjW1HeZm+g3FkM84uK4Qr19pRcHyvEcGsCKC002HitOcRGPVtHMAUVPqVb4tNKevODuEtmKU12ARJgfp0GBrRkM5sfCWlg126OWNukXfuLhtN8QF2gcubeU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727167728; c=relaxed/simple;
-	bh=zVJobRRTjJLonVyWmiQz99joek8BeSKrvLZMrfkzx8Y=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=RpLB9k6uEv/Y56jENdV+b6ermHbl8MAOmKUxGXXD904yfthQBZ6xW92ExZTdkPme9IFmTSuT56EGfVg28MvprcTLVQuKum2KnOlwaxIxeBZsYGyhgHzPHbxyOM1qI10OpEVsL82likXQRGh2qoT/EpRrgzOenG2xtJo943SKXlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=oZ5rsC3Y; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pzO6SAQL; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698B5224D7;
+	Tue, 24 Sep 2024 13:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727184275; cv=fail; b=bb78LyC4zsQrWc9WO2gJY7Q/LvbytdxPVhc2OURJXMK7Fb5tnywMXRNfKTgjpZLLckZQeJTHu7wbrduRHrYTyq/tXO4gp4PbXGB7kPWIYdEMlZJtPto+lUKay7HahRhLenu8V3FjUkAcKmrJEiEI9IBxPXBD0dAjssCao0XceQI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727184275; c=relaxed/simple;
+	bh=us6S6w1r9sMOum1aHT2XDOMriR4SESuFn/PVWXkMvHc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=SOt+4QgjnNFN5BXdGLLp17xF5eZl1+Bgw0+BMIXq55nsYtqum/ru7Hu5M4sUxPd6G6kATOiw5zmaEfgChbu8R0c8FHybt5fxoVrHPJDI7j3gISE85ELBRkuDoJyS6Hmc0h89KqJ41oiANSYPLMzUExAs7mp9lOarliE5gfNh0c0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xvEXS+Ub; arc=fail smtp.client-ip=40.107.244.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="oZ5rsC3Y";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pzO6SAQL"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfout.phl.internal (Postfix) with ESMTP id C66521380483;
-	Tue, 24 Sep 2024 04:48:43 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-10.internal (MEProxy); Tue, 24 Sep 2024 04:48:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1727167723;
-	 x=1727254123; bh=/9zXmS3wPiJTATpAzorp9hGCMi2EF9/SUS7XOxwY7GA=; b=
-	oZ5rsC3YY+VyhDeedBb8A9CKeqOEzsqLvmL+bpxri0wBFEfKcOkUF950Yt0FaPHz
-	wRKnsCd1i5yBrbFfpPGM5YpUktU5T6MvJmzkXuhwpIvIU9iCtWcuumz9Uvfb4cVL
-	xFlZU0LFqvouZYao7twVDGHp2df+7DG2KUe8O4gAx5K/k8Cc8DlIksG3TPuiyGv1
-	2pSpoVSX4vlrj6kaiwjkjrxC6DKasF8NuDuUOnKjRhE1oyXATQYOPU4bj19i1vid
-	YTmi6dDQaIYWqoXwt6JT0Lvnj5Aujzwj3dcnJkisO2SpdQRmsAB1fQLCCjo/R0jQ
-	QZbkBX6WIouf9jf+O75/rQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1727167723; x=
-	1727254123; bh=/9zXmS3wPiJTATpAzorp9hGCMi2EF9/SUS7XOxwY7GA=; b=p
-	zO6SAQLtbXcv0zhW36ZW6mzE/1f3S18B4z+RlXvQGl5O6h/gA7sNpCy1zEw9XTEt
-	IvRHvBHevHv0+LZ2b28LtifxOiX+m/9G3SukLFDJcubUNtyCesqYpt/4bSsytBPR
-	EguQGWjQlfodTgQ4xfgWBXRNdSAhmB2Mxy913CoeIalio5lBz5tyoC7osehx8Il7
-	DrDs4wUqaTmezCfSicAJUrNaRqieqTq7pZxMA8R9Nd2hgeYIwgZtu6p4wuOh7RCM
-	8YlzJkCYBO4jIeZR6P4CXj/MquObWv9A3JkQ2P8ywRVN4lCs2pleKgmkB1npFxbX
-	VbfdkhPnDLcTa+Wvk2GAA==
-X-ME-Sender: <xms:63zyZjlY9KqfNaIAoRPGzrDPaO40BzBU5tMd53DyKwJrAFTx_OqBTg>
-    <xme:63zyZm3izlu-aydK9fVpDMDVRV5014fdmERHDNe0KiPhoNGWgSvQFvlxBDIg9BK28
-    FN-gq0G-Co8f5sNFpI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddtvddgtdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
-    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddt
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehirhgvnhhitgdrrhgrjhhnvggvsh
-    hhsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhhiugdrvgdrsghogiesihhnthgv
-    lhdrtghomhdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhord
-    horhhgpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgv
-    lhdrtghomhdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtg
-    hpthhtoheplhgsuhhlfigrhhhnsehrvgguhhgrthdrtghomhdprhgtphhtthhopehluhhk
-    rghsrdgsuhhlfigrhhhnsehrvgguhhgrthdrtghomhdprhgtphhtthhopehkvghrnhgvlh
-    dqjhgrnhhithhorhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhi
-    nhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:63zyZpquYDAa9BkMv1RRRNWg7wenxsKzTkph2m1TyIB2Lt6i4FbXNQ>
-    <xmx:63zyZrkf5DyidqkyR99_2o8iQIPcmlxY_p1UCNBRb1Rz6SA597oW6w>
-    <xmx:63zyZh18ccqS7ijM0A9E0xPu-8gWPOLnn2BnGGYw1HoMhVGIdHmZiw>
-    <xmx:63zyZquCdjnoZMqmHsbaiJPeCvURC6nJ7ExV9Amesag9sPVU3DxZaw>
-    <xmx:63zyZrygFBtqZNuD5q-O8Uk4skkCzFMDS6s4xCBGhFMmpMv01UvmCCme>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 0C7F82220071; Tue, 24 Sep 2024 04:48:43 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xvEXS+Ub"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=V0fHOu3Uhv/laQGe9MUeHCPIWyTc6V+njt6At+rw99ASsRr5V+Un7sBZ/lWPfNLijrtA2GfYI483LH9h6Nv7oejhd39DL9mja19LAbUiYpbL3i1Nb997OeHVrNeapDWMi7Eo/o5JS4+0hzk2mQRjGLD4CX3XnSm3RdhpbxLrea7ZZqcQQ3Sfq5HEiCnkvYJykjqy536V2JA5H1Vk5m6U330Z6JbCfZlmbLX4wIs+IXMgb7AasOHqh6tAqMNf5IABGnKX9yY0N1CONZK4d/yu4WkbvUNH9JF9XoC2mKzblzDby3Bci2shYoV0yYSuVxj1Nsuc8LSpLm3VhbTDNbx0FQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hsHzVGUK5QgpeKhE4NOnzRXnxnDxwuhM/sgAfZOUQFw=;
+ b=vtgQVGGC3uoguzvRiqwu42Yg/+g8blpDTMhmzBfty1qQBL5iM+P6UNwq+n/giq/bDKH/fgdc2DgjEX/VbrtkP8bHUoJvfxu0JhrepMNeIzrTEP6dPYJkmLFNx061OZjlIwbzPXCKOBjsKxQehWbyXPdCWFVrR57HTItB2Rh45nI+Mc8hmKQK8Z1cubnUYdXi/W5hSZVm5Lp3+Ww13tz8TV3m04cl6jxqkz50JhgPpp/kEyyPGLcSC3mJB36AhjhgAY8lCv4nWoqFHcDICmIbcR2/dRItQ8SrDJIbPqO58olCvjBXt5882CQOwWCsfDI49hQGRjK5mfK9QpVkPRdWkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hsHzVGUK5QgpeKhE4NOnzRXnxnDxwuhM/sgAfZOUQFw=;
+ b=xvEXS+UbMvCitdiwuPfBSgTTD/o6nm0mOHi/yBkQKFin47gIZrWcFHNVSc/yCqBtZtcAZMfMbtykBBj2TPfyCwn+vXJDMx6vvCOsOjnX6GVOgwflfh7yvE68v75Nj3obALZ8H5q95V0I6td1N+1URiKkHP2+kbxxR6Ziv8UTxDQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by SN7PR12MB6930.namprd12.prod.outlook.com (2603:10b6:806:262::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.25; Tue, 24 Sep
+ 2024 13:24:28 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.7982.022; Tue, 24 Sep 2024
+ 13:24:28 +0000
+Message-ID: <0a31cb22-e3f9-4212-8fc1-77d6cafa7277@amd.com>
+Date: Tue, 24 Sep 2024 08:24:26 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv2 1/1] platform/x86: dell-sysman: add support for
+ alienware products
+To: Crag Wang <crag0715@gmail.com>, Prasanth Ksr <prasanth.ksr@dell.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: crag.wang@dell.com, Crag Wang <crag_wang@dell.com>,
+ Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240923063658.411071-1-crag_wang@dell.com>
+ <20240924050302.317522-2-crag_wang@dell.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20240924050302.317522-2-crag_wang@dell.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA0PR11CA0132.namprd11.prod.outlook.com
+ (2603:10b6:806:131::17) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 24 Sep 2024 08:48:22 +0000
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Lukas Bulwahn" <lbulwahn@redhat.com>,
- "Rajneesh Bhardwaj" <irenic.rajneesh@gmail.com>,
- "David E Box" <david.e.box@intel.com>, "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Daniel Lezcano" <daniel.lezcano@linaro.org>,
- platform-driver-x86@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Lukas Bulwahn" <lukas.bulwahn@redhat.com>
-Message-Id: <9c97f947-a652-412d-825f-58f6b3304349@app.fastmail.com>
-In-Reply-To: <20240924084056.48447-1-lukas.bulwahn@redhat.com>
-References: <20240924084056.48447-1-lukas.bulwahn@redhat.com>
-Subject: Re: [PATCH] platform/x86:intel/pmc: fix IS_ENABLED() check
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SN7PR12MB6930:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7c516853-144c-4943-6036-08dcdc9c373b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MThtYlp1Sms0TzZXQy81bmZNVngxS1RwS3BML3ZBRmRqNHgyQWF3dTBSclB0?=
+ =?utf-8?B?Z2t6aGQreXJoOXB2OFZ0Myt1K0Z0dEpMU3dEVHF5NEFNc3E3b2VXYjA1alR4?=
+ =?utf-8?B?L2FiNXBMNVc4S21abjFkWUE5czFsbFAvOWV6SmZnTzB6RS9iT2tHN29NK3N1?=
+ =?utf-8?B?SjFLVUZ6eXkzREdMVmowNS9JSEtMRXY2ckVxbk5TZmNreGcrS3RoNDJoeUNw?=
+ =?utf-8?B?dmVkTHRQUytqN1V4Q1JabWZ2WFdCTTNZbkZoWFM2OGdyR1p0SWl0eHVZMlBR?=
+ =?utf-8?B?SlZCVHNuVmlXRkEybjFlR25uOXNGR1RCai9xL0djaGlmdVh3Nlp4alg4cHZZ?=
+ =?utf-8?B?ZzFYQm5DTW9OTzlHZytKUzhVSlZadVB1dktxUkhHMFhkdEM1aUVqaGh1NGw5?=
+ =?utf-8?B?bVhyNXdZU2xQYW9KQXYxb3ZNT1QxVUJuSGZKN0VSSUw2allVZEUxV2FSd3hK?=
+ =?utf-8?B?M3VtUUxTdXZzNGRWVktQTXUxZHlhS3ZPbk8wbUtJM3NiSGxCSFRxdk8xTkpv?=
+ =?utf-8?B?WmlPT2VNMi8zRWtZbk84Y3QzVmJwN3A4R1FCc0twVXRXdmNFS3JTRkJhcWNk?=
+ =?utf-8?B?Z2RaVTNvb1JWQXNMRnZyd3FpR2FnWTFIOFZNZENTZkU5SnBZWisvbHRmRDBm?=
+ =?utf-8?B?cmsxMFhjdTE4UEpsR2xBSzRjczRNOVhFelM5czFiekt4Q3ZrZU9GN01TejdZ?=
+ =?utf-8?B?d1ZsbU1JTjZReXAwT2xZajMwSGo3cmdhVWhuZmpDdm44SjRzcCtwNnlOYW1D?=
+ =?utf-8?B?TWdjWDlPQlZqZ1pnWXphcGJ4cDZRVFRTSGNEVEs2Ym96em9BekZsUmRxbWJj?=
+ =?utf-8?B?SCtyRlpzT21QTE5DUVYxTm5zbVlKcDBnRlN1V3dYeFNsby9NV1VqVCtoRmJq?=
+ =?utf-8?B?MTBsSVFwY1pkU0ltNHRURzdPMExvL1dESHlOdzFlNVl3OUtiZ05heFN2U0di?=
+ =?utf-8?B?eHFQNGtCUFlOaWhETnpPQWx6aS80WkV3MlRzRXIwNUROWTRGM1JpUytwL0FJ?=
+ =?utf-8?B?eUhWbEEyWFBWeFAxOHRuQThnS0hHWnR4bTMyZkJiMHFZYmwzN1JtUkdsVWpU?=
+ =?utf-8?B?TjBKVWovM2JON0pOSVY4dEsyaFZrZ09jdURmYnBlWkVUamZpT1EzS0x4Y1Yv?=
+ =?utf-8?B?TGVYK01xTWRoWXNnalk4SjB0a242YXVBNVNCMlNwTU5BT0IvWnQ0T25ZSkgv?=
+ =?utf-8?B?eW9pUk5pTnJZQzV6d2hZNnhudFlLWkZEWnZ3bXI0aWgxdk9jc2FtZ2pMaStF?=
+ =?utf-8?B?c1NRV216ZDhJR0lrK1lDdWhOSVFJRmhpQTBha0tFYnVkTG93TlJGc0E3Tlcz?=
+ =?utf-8?B?ek9MUkdreVVwRjVZUjVxK0pJWUl1MkRsejhITHNlVkZpL25YK3dpcUczd0JM?=
+ =?utf-8?B?aDAwdU5sdDFuYnVrbEplV3haOFE1SGVNSmo1Uk1WbXZpZE9PbW5BUUtvcURl?=
+ =?utf-8?B?dE9RcjliNHNrSXRjWUt3R1p1bTczQlNJZHNrNFhneXpGZE1xSGttaVlRWENM?=
+ =?utf-8?B?TnJFVzJXRWpwMVZmc0JCSExpT2l3RlNLT1JVK3NlRmYyWThETnc0MVNMWHcz?=
+ =?utf-8?B?cXhoWS8wTFVnelRESEZ5VVVLQ0FqZHNIdG42cFNGaHVVWWdhdi9lMGM0Qk00?=
+ =?utf-8?Q?Nbe3iQgp2m17TYDxkwijGRmcRkvS6cfD9UfQ70070HsM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?b1FMMkJ3eUlqL2tSaVRDVGNBLzYvM1E3aFNvUlJ2R2Q0SXk4Wi9YcDVDWVNI?=
+ =?utf-8?B?TmEwNXJsdXlIVGd3N2ZSWGllMUxOd3pTc3YvcVg1RHVyU2d1dnRrT2t0OTVK?=
+ =?utf-8?B?NlBpZzJ6cDhMU3FidEZPVHgya0cvY3o1a3Y3TFJFZk9wZ1Z1MkJ5L01PS082?=
+ =?utf-8?B?ZlFZRlFkbU1QMkxYNU4xR3N3SmJTSitPajYvbE4vYnRPWVN5V1NJQ1hxZGlS?=
+ =?utf-8?B?ZVNjYUFYMjVMN3JMMkdNVXo5UFIwTXplaHpWNkJSV3FSQWVoM3ZvZEVKNnBZ?=
+ =?utf-8?B?ZGkxakxMVk0xK3hkYW51djEySzNybXBHWkJYd2lHcE84UlVXT0Urc09zUTZ4?=
+ =?utf-8?B?ME8xNlJTMmd5N0N1YmloYzMzUDZFRW02NS9jMUxUejYzTU50bE4zUTBHY21I?=
+ =?utf-8?B?VU5RSk5CNElFRTR4L253WVhDaVRtZGh1bk03Nzc3bW0yalk5Y040cGY2U2pP?=
+ =?utf-8?B?NEk0QzR6ZFU2RHpGWDNTVmR3YnZFMTJhOTBXYlVjdTNRdVA2QW5xZ1R0TVlk?=
+ =?utf-8?B?WlAvU0RYbzBPZHE3akQ2alZnK3RqaWRKNk9wUXNlRUdDQlljYTFad2JYd1Bu?=
+ =?utf-8?B?VDhuVDZzd1NTMXRWd3pSVDlTc2ZqV1pVSDk0N1prdmpuOHJGUEU2aWc2WFBj?=
+ =?utf-8?B?Y2E4ZUFOblZRcU80eDBuYVhIa1hFTEpJbWhiZElnNjVQRW82NVlad0ZEdjBi?=
+ =?utf-8?B?S3RTVFFXZjZUcDFGRkNNb2l5M0NTaCtMVU45STJCTTFWMXVsWmgwVlc1c0xB?=
+ =?utf-8?B?WGdhbnFuZ1RYTGU3QmlLdzg4TWx3b2U3WEp0UldOK0ZMVlZKVzJpcCtQWng5?=
+ =?utf-8?B?ZUF5bzB3QWREeFRyVUVlUzI1RjhiT0prOVFrMWJTd2hXcEtaaUkzY1B5UFRx?=
+ =?utf-8?B?Nyt0bmdtT0RzNGM0bDU1a0N2V0wvZEh2cTIrZmU0WlRnSTFPK1BKZE5yeUdi?=
+ =?utf-8?B?VzN1YXlSMzE3NmhUOXdMbUV3ZFVNdGtBeGtPbGJGMG1PeHJvenVyZ01VZEV4?=
+ =?utf-8?B?ZWl6MHg1TWU5bkJqYVhKY08yMnVjNStDakZXVTk2dEVFbUQwNGc1K2U1YWo4?=
+ =?utf-8?B?c0lENXYrRzdQQUExSG9jWjVFRnNVTW03RlAxdGZKTTRjR1c3bFBWYzA3Q3p1?=
+ =?utf-8?B?UDUyTWFxRmdmL09OUE9oY2ZDS1lrYzQyQ3BMVHZaREZqMEkrV0JVakk0a2I3?=
+ =?utf-8?B?WHZNL2ttajNJK1BRbnRtN2dZZWppT3FlVnBVcTFIM1NJOFByWWc3ZVFHZnlH?=
+ =?utf-8?B?VDZaclZtY0NtUW9HUkN6eDAxVG9pb0ZPdjZPSDdTRGt3RFhrMSt2Vno3SXpK?=
+ =?utf-8?B?dnpsMzdQUjdnQ1V2N0pYUk1ZeXk5cGxhQk40ZjZyeEhSbzRRaEFkYWpPQjlM?=
+ =?utf-8?B?RWlXSWtLNU52dVo0U2lqdlVzOUN6MG5FUXZHSS9QSEtJVFRwZ3J4dXZENEE3?=
+ =?utf-8?B?R1U1WVFsYllzdmZ3a2hJRTVENDBkRXJsWHdyVW9YOER4d2ljK00yNytVZXUz?=
+ =?utf-8?B?NjRCRzA1MlltbnJyTHFnMTcyREg3Yy85U3pkSWZ5MlpueG13QzJxV3YyUkND?=
+ =?utf-8?B?UWdOcjJGNWtYSjdYd3lZenRmeXA3QmNBRWFNVkhJNkR0YWI1WkU2MXJBUnpw?=
+ =?utf-8?B?VEFVcVlRTGh4NTFyVGxoa3NONEVqeHVYcjY0M0NobnV5NG53R2ZhQTQ0dkJw?=
+ =?utf-8?B?d3FtR3lDamovS1lzSU4wMnI4L3J4MTk2SzUvNHlEMElmZWVLaDA4L2tzUlE3?=
+ =?utf-8?B?VEJMUGJGc0ZRd2M5SHZ5SHYrcGlpWjlPYlhTRGxXL3VhRjhxUXE2QzdWT01u?=
+ =?utf-8?B?dUZNWlZiUlp6bFlEbm56WTF2VUFqcUg0Q0hJNmdmU2hlM0U1MjBQNkVlbitn?=
+ =?utf-8?B?VG9LNm1FUEJxV3hnbllHT0sxUkZRTjc4eTRadjdRUXZXZTZpMjM2MDhuRWxB?=
+ =?utf-8?B?RkdqRS9IS2FxalhTSk5LV2VtWnpEK0k3ekVuME5xb1hTVmR6MmIvWmFIYlRx?=
+ =?utf-8?B?by83ZE04L2MvcVhCT1lhbFkxL0ZvcXB2Nzd2b1V1akNrN0RDWlJJRkJOOVhT?=
+ =?utf-8?B?ekY5V3o2VC9QczNTcEhPY3hHSCtLRzlWSWYvTzVEVUhKWnZxL1NRSDFsRG9q?=
+ =?utf-8?Q?GY4JKe3HJRgm1dMNSub3z4SIw?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c516853-144c-4943-6036-08dcdc9c373b
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2024 13:24:28.1164
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: esSJYhG/9PIwbyHUngRBbsx7XpbVnZBwXFnP5rIG+CC/u/Uks5J1hVk8vU7yylv5hww7CoWCBqTOgniK4XuUOA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6930
 
-On Tue, Sep 24, 2024, at 08:40, Lukas Bulwahn wrote:
-> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
->
-> Commit d7a87891e2f5 ("platform/x86:intel/pmc: fix build regression with
-> pmtimer turned off") accidentally slips in some CONFIG_CONFIG_X86_PM_TIMER
-> (note the duplicated CONFIG prefix) in the IS_ENABLED() check.
->
-> Fortunately, ./scripts/checkkconfigsymbols.py notices this accident. Fix up
-> the IS_ENABLED() check with the intended config name.
->
-> Fixes: d7a87891e2f5 ("platform/x86:intel/pmc: fix build regression with 
-> pmtimer turned off")
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+On 9/24/2024 00:02, Crag Wang wrote:
+> Remove the URL check and add alienware string for broader support.
+> 
+> Signed-off-by: Crag Wang <crag_wang@dell.com>
 > ---
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+>   drivers/platform/x86/dell/dell-wmi-sysman/sysman.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> index 9def7983d7d6..68c63e1fbd27 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> @@ -521,7 +521,7 @@ static int __init sysman_init(void)
+>   	int ret = 0;
+>   
+>   	if (!dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL) &&
+> -	    !dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "www.dell.com", NULL)) {
+> +	    !dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Alienware", NULL)) {
+>   		pr_err("Unable to run on non-Dell system\n");
+>   		return -ENODEV;
+>   	}
 
-Thanks for fixing my typo!
-
-Acked-by; Arnd Bergmann <arnd@arndb.de>
