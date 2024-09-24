@@ -1,122 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F791FB4
-	for <platform-driver-x86@vger.kernel.org>; Tue, 24 Sep 2024 08:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA7914F9F7;
+	Tue, 24 Sep 2024 08:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727167274; cv=none; b=cmSBVqvDX2TVcwHGLWIpjCv4A+8Q48X8c4alEGb/M1sNB447oyOKVc2IUta/dSjGsOUnqQ1bQME5wp7grngUt7MQNwpBrq/GZb9NiwAKABtgTks2PSwYJd/gQllh1Mrdv1Ph6Xno3h2fbISu0ahyjYHrukpJ7hQJ8OKG2IWP3pk=
+	t=1727167728; cv=none; b=CNVqFx4fL5VNEoweAQ4t3P9iuK9le+VUkDMx7ONd4XdlyYkbVNJeVjW1HeZm+g3FkM84uK4Qr19pRcHyvEcGsCKC002HitOcRGPVtHMAUVPqVb4tNKevODuEtmKU12ARJgfp0GBrRkM5sfCWlg126OWNukXfuLhtN8QF2gcubeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727167274; c=relaxed/simple;
-	bh=4ltDlNqrDGR27ksNZnCiug3GSOdf6tIVfNnAqB0cnUc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M7OYtyon3+OysMf4c/QX8MfweNI5+YtV4RiP3+F+I7Qw4e0k9KCtNIfVfZWA5OZfD5ni6KnEXXOxM9sh1w5h1ws700C5Du70nd3iD0s54Pd6Ukl3JN3srDzpa8uifhGTy7/VkKlx0AUEK3sAnpWPGH+QPhDUt6HeY18g4/H7Wwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iSXYAjbG; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1727167728; c=relaxed/simple;
+	bh=zVJobRRTjJLonVyWmiQz99joek8BeSKrvLZMrfkzx8Y=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=RpLB9k6uEv/Y56jENdV+b6ermHbl8MAOmKUxGXXD904yfthQBZ6xW92ExZTdkPme9IFmTSuT56EGfVg28MvprcTLVQuKum2KnOlwaxIxeBZsYGyhgHzPHbxyOM1qI10OpEVsL82likXQRGh2qoT/EpRrgzOenG2xtJo943SKXlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=oZ5rsC3Y; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pzO6SAQL; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iSXYAjbG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1727167271;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ZZ5Fx0mtQJO1gSt0hL1ASxmxmOaX7Z23At8t63rE11I=;
-	b=iSXYAjbGb5arRmo+AKF9b4v1Uhs1pPuCjZw54imgcUhT1VT3xxcolB8Cn2rb8QuxKXzZwy
-	GtijRL90bVWehREjRqhE9NDSphOhBIcYXtp9tdV1AQFQr50iKH2pepvLcaiPwnzZOl3Mab
-	frCZ0aAK6qf/5DJ9oGdLCuThIVqpoaQ=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-693-AV3JiJOuMx6ye5AM-AptLw-1; Tue, 24 Sep 2024 04:41:10 -0400
-X-MC-Unique: AV3JiJOuMx6ye5AM-AptLw-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3787ea79dceso2030185f8f.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Sep 2024 01:41:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727167269; x=1727772069;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZZ5Fx0mtQJO1gSt0hL1ASxmxmOaX7Z23At8t63rE11I=;
-        b=VHK+QqNwfpm7rApN9d39OgWPN0j8uSWGgi5Kex79YLr1PAtmdecpd983ADdyS9meFE
-         PRKSW5Wfjp43T2gIdwIH3qNTp76pZUk/ULctM4TdTv1S60zGH8cQEayqlgAMaVz/VLh2
-         877KGsMKSpEKBpJTpxgMfvOyVCx9mRsRyzpT1wpUYFY7Kl2R+MlW0U9iibeuIiEa43Fs
-         stQJudGG1oPc3f9B3WrN5uzPtoz91dS5sX86UL/L7tvVXGkYYuL/UVKxbMF2qjGXyTOI
-         NnXyr7txFmPGavN0r3AKOs1jPp9HrW5lQJI5j51xJC7/yS0sDwxCVzFRJrA3XTCiTr0I
-         SLfw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMWGYB4LUFiPmeB/uDn/3ERx4Cn/ZbqpP3ZfzWsyd0RLymd+bU2LG9iPW+Ac8cV/v9VxBqYTmQHhNCsJdE2xVWpkVs@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzQSazOgfvnEuy4QD/WjpueFxD+qvX5anLIAUVeT8LM7AG2wIh
-	hU7i8ZuqgxfgKtx1lmEszMeoJUuiPd2FY90q+dd5h5PRoeOzPVFdj9bJ0tyl9F+08zoBzjyo70S
-	GU8Uf0PiLpZzK6AO5h9RRpevcQLy2ewRdoSn/bF86MGEPByHZaNX+Z8446d4eOkV9QK6MIgs=
-X-Received: by 2002:a5d:434b:0:b0:374:b6f4:d8d1 with SMTP id ffacd0b85a97d-37a4226543amr6838951f8f.13.1727167269371;
-        Tue, 24 Sep 2024 01:41:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFg2yg6W81UBOHvRHLFJDRDvodAV4WI9aSY+BW2GEqIIxZ8SG9S5WI+REDe8rZ3VTtvckwPAQ==
-X-Received: by 2002:a5d:434b:0:b0:374:b6f4:d8d1 with SMTP id ffacd0b85a97d-37a4226543amr6838936f8f.13.1727167268887;
-        Tue, 24 Sep 2024 01:41:08 -0700 (PDT)
-Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e40:14b0:4ce1:e394:7ac0:6905])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37cbc2f96f6sm958087f8f.87.2024.09.24.01.41.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2024 01:41:08 -0700 (PDT)
-From: Lukas Bulwahn <lbulwahn@redhat.com>
-X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-To: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	platform-driver-x86@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: [PATCH] platform/x86:intel/pmc: fix IS_ENABLED() check
-Date: Tue, 24 Sep 2024 10:40:56 +0200
-Message-ID: <20240924084056.48447-1-lukas.bulwahn@redhat.com>
-X-Mailer: git-send-email 2.46.1
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="oZ5rsC3Y";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pzO6SAQL"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfout.phl.internal (Postfix) with ESMTP id C66521380483;
+	Tue, 24 Sep 2024 04:48:43 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Tue, 24 Sep 2024 04:48:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1727167723;
+	 x=1727254123; bh=/9zXmS3wPiJTATpAzorp9hGCMi2EF9/SUS7XOxwY7GA=; b=
+	oZ5rsC3YY+VyhDeedBb8A9CKeqOEzsqLvmL+bpxri0wBFEfKcOkUF950Yt0FaPHz
+	wRKnsCd1i5yBrbFfpPGM5YpUktU5T6MvJmzkXuhwpIvIU9iCtWcuumz9Uvfb4cVL
+	xFlZU0LFqvouZYao7twVDGHp2df+7DG2KUe8O4gAx5K/k8Cc8DlIksG3TPuiyGv1
+	2pSpoVSX4vlrj6kaiwjkjrxC6DKasF8NuDuUOnKjRhE1oyXATQYOPU4bj19i1vid
+	YTmi6dDQaIYWqoXwt6JT0Lvnj5Aujzwj3dcnJkisO2SpdQRmsAB1fQLCCjo/R0jQ
+	QZbkBX6WIouf9jf+O75/rQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1727167723; x=
+	1727254123; bh=/9zXmS3wPiJTATpAzorp9hGCMi2EF9/SUS7XOxwY7GA=; b=p
+	zO6SAQLtbXcv0zhW36ZW6mzE/1f3S18B4z+RlXvQGl5O6h/gA7sNpCy1zEw9XTEt
+	IvRHvBHevHv0+LZ2b28LtifxOiX+m/9G3SukLFDJcubUNtyCesqYpt/4bSsytBPR
+	EguQGWjQlfodTgQ4xfgWBXRNdSAhmB2Mxy913CoeIalio5lBz5tyoC7osehx8Il7
+	DrDs4wUqaTmezCfSicAJUrNaRqieqTq7pZxMA8R9Nd2hgeYIwgZtu6p4wuOh7RCM
+	8YlzJkCYBO4jIeZR6P4CXj/MquObWv9A3JkQ2P8ywRVN4lCs2pleKgmkB1npFxbX
+	VbfdkhPnDLcTa+Wvk2GAA==
+X-ME-Sender: <xms:63zyZjlY9KqfNaIAoRPGzrDPaO40BzBU5tMd53DyKwJrAFTx_OqBTg>
+    <xme:63zyZm3izlu-aydK9fVpDMDVRV5014fdmERHDNe0KiPhoNGWgSvQFvlxBDIg9BK28
+    FN-gq0G-Co8f5sNFpI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddtvddgtdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefg
+    gfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddt
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehirhgvnhhitgdrrhgrjhhnvggvsh
+    hhsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhhiugdrvgdrsghogiesihhnthgv
+    lhdrtghomhdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhord
+    horhhgpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgv
+    lhdrtghomhdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtg
+    hpthhtoheplhgsuhhlfigrhhhnsehrvgguhhgrthdrtghomhdprhgtphhtthhopehluhhk
+    rghsrdgsuhhlfigrhhhnsehrvgguhhgrthdrtghomhdprhgtphhtthhopehkvghrnhgvlh
+    dqjhgrnhhithhorhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhi
+    nhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:63zyZpquYDAa9BkMv1RRRNWg7wenxsKzTkph2m1TyIB2Lt6i4FbXNQ>
+    <xmx:63zyZrkf5DyidqkyR99_2o8iQIPcmlxY_p1UCNBRb1Rz6SA597oW6w>
+    <xmx:63zyZh18ccqS7ijM0A9E0xPu-8gWPOLnn2BnGGYw1HoMhVGIdHmZiw>
+    <xmx:63zyZquCdjnoZMqmHsbaiJPeCvURC6nJ7ExV9Amesag9sPVU3DxZaw>
+    <xmx:63zyZrygFBtqZNuD5q-O8Uk4skkCzFMDS6s4xCBGhFMmpMv01UvmCCme>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 0C7F82220071; Tue, 24 Sep 2024 04:48:43 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Tue, 24 Sep 2024 08:48:22 +0000
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Lukas Bulwahn" <lbulwahn@redhat.com>,
+ "Rajneesh Bhardwaj" <irenic.rajneesh@gmail.com>,
+ "David E Box" <david.e.box@intel.com>, "Hans de Goede" <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Daniel Lezcano" <daniel.lezcano@linaro.org>,
+ platform-driver-x86@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "Lukas Bulwahn" <lukas.bulwahn@redhat.com>
+Message-Id: <9c97f947-a652-412d-825f-58f6b3304349@app.fastmail.com>
+In-Reply-To: <20240924084056.48447-1-lukas.bulwahn@redhat.com>
+References: <20240924084056.48447-1-lukas.bulwahn@redhat.com>
+Subject: Re: [PATCH] platform/x86:intel/pmc: fix IS_ENABLED() check
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+On Tue, Sep 24, 2024, at 08:40, Lukas Bulwahn wrote:
+> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+>
+> Commit d7a87891e2f5 ("platform/x86:intel/pmc: fix build regression with
+> pmtimer turned off") accidentally slips in some CONFIG_CONFIG_X86_PM_TIMER
+> (note the duplicated CONFIG prefix) in the IS_ENABLED() check.
+>
+> Fortunately, ./scripts/checkkconfigsymbols.py notices this accident. Fix up
+> the IS_ENABLED() check with the intended config name.
+>
+> Fixes: d7a87891e2f5 ("platform/x86:intel/pmc: fix build regression with 
+> pmtimer turned off")
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> ---
 
-Commit d7a87891e2f5 ("platform/x86:intel/pmc: fix build regression with
-pmtimer turned off") accidentally slips in some CONFIG_CONFIG_X86_PM_TIMER
-(note the duplicated CONFIG prefix) in the IS_ENABLED() check.
+Thanks for fixing my typo!
 
-Fortunately, ./scripts/checkkconfigsymbols.py notices this accident. Fix up
-the IS_ENABLED() check with the intended config name.
-
-Fixes: d7a87891e2f5 ("platform/x86:intel/pmc: fix build regression with pmtimer turned off")
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
----
- drivers/platform/x86/intel/pmc/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 0431a599ba26..4387b5103701 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1546,7 +1546,7 @@ static int pmc_core_probe(struct platform_device *pdev)
- 			       pmc_core_adjust_slp_s0_step(primary_pmc, 1));
- 
- 	map = primary_pmc->map;
--	if (IS_ENABLED(CONFIG_CONFIG_X86_PM_TIMER) &&
-+	if (IS_ENABLED(CONFIG_X86_PM_TIMER) &&
- 	    map->acpi_pm_tmr_ctl_offset)
- 		acpi_pmtmr_register_suspend_resume_callback(pmc_core_acpi_pm_timer_suspend_resume,
- 							 pmcdev);
-@@ -1563,7 +1563,7 @@ static void pmc_core_remove(struct platform_device *pdev)
- 	const struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
- 	const struct pmc_reg_map *map = pmc->map;
- 
--	if (IS_ENABLED(CONFIG_CONFIG_X86_PM_TIMER) &&
-+	if (IS_ENABLED(CONFIG_X86_PM_TIMER) &&
- 	    map->acpi_pm_tmr_ctl_offset)
- 		acpi_pmtmr_unregister_suspend_resume_callback();
- 
--- 
-2.46.1
-
+Acked-by; Arnd Bergmann <arnd@arndb.de>
