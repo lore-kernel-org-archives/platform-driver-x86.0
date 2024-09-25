@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FEE1D3586;
-	Wed, 25 Sep 2024 12:16:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D4122AA99;
+	Wed, 25 Sep 2024 12:17:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727266586; cv=none; b=mcSdJAbg4ikYx1st/nyxFDPsTZTd9LgCXHXcs6SStbP/1Nj49YCAta60DMxXUq9wwPvpYs6bSXKr1BboCRzmy41xgsji4RfxYsSSjVNGT5sOdCXJfC/bejArUxwYcmKh2X36aa52vhx4exlIhh1bXkOGZGw5NdoGF3n+Xc1i4Tc=
+	t=1727266672; cv=none; b=lDr/a+ZswSiPyTMwUlrH9RJSW4FpBnBCS41AHZOUwM5zD5FQtdWgKIo0evWDwUrLT33udDXqpTMM5PjNmYkX95XtBzye6jflojpkHxh3LDxDbPyCbOrFpT7K5ylYEEV1vrepyrAO9VI2a/wF6O15+U5vOhv/sZbwefRiyEMJVEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727266586; c=relaxed/simple;
-	bh=2sCL9w3aGSXasarMLkUqCUiWFdQaWGl2HXSuOS/diQ4=;
+	s=arc-20240116; t=1727266672; c=relaxed/simple;
+	bh=qRzraMmKSRQ6rNn40RBbsR+OY9fu0/blSi7MZIOwHxo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZYg/EiRqCB5dMALgBDKwgI3EokKxABQAqoCC6N89XVXrE3wylk4Vo1E3DRTs5XTFwo3m1hxP9+yinjxN0msfqFv7GWy+sMqgJbJCngK9oWAOaBucPz6A+BzmpsJL2/M2o1ORPjAQvMAX4nhgjmNA5XoZI3nM6XvcoCmlibn8lJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=okaVJrcL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=rq3m3/a1v/sg04zOBcxlq7eZuOuwm1Mkywt+Qs8Z5gScwCWkYtdyI6g48/n27+pWwzRRzCwHcy2quosyYt+h23tZWMEGOI4BBaRoISpPxdlyBz+wDgXngGaRSrnU+ZUivDaXtJE+ZB01ukeLzkh4W0vx3I/QTsc0QhLcXW+bhvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vo+3RQrj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="okaVJrcL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C946C4CECE;
-	Wed, 25 Sep 2024 12:16:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vo+3RQrj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 279EDC4CEC3;
+	Wed, 25 Sep 2024 12:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727266586;
-	bh=2sCL9w3aGSXasarMLkUqCUiWFdQaWGl2HXSuOS/diQ4=;
+	s=k20201202; t=1727266672;
+	bh=qRzraMmKSRQ6rNn40RBbsR+OY9fu0/blSi7MZIOwHxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=okaVJrcLFzodkQcb2J8YXct98GwZZvAnOmx3LIBYoCzySHJd2xWQUN9iVwGDHeXW+
-	 eZj8ZVWZAhJgLL3N7mR8BluAXGsuvHoURJT4SGKQ/ghZpUbJO3ji9K5VL9GOzlvi33
-	 RCqi0q5qIb9IAjtO6V0cg0npPU3/pbAQnbT1UINaBnDGPMqP4hDvTvWxARFFG8BIJa
-	 YrAZb/76wYlq1WNlZ3gTbwYh9omaYa+OIYQAEbhXvFekJgQP8NIYAqfxIqdbSJzR/e
-	 iKyjxD0puI6nRKayi6QikovXUtSIQyZU3xqxKt6WRnSc8A8EM3EO324SKOhf0xEU+E
-	 xlg3XzMH8Tt1A==
+	b=Vo+3RQrjxb7MnR9jmXuwysFZ82fTt69DH73C+6S43MG5wM8AXORER024xQ10QicGB
+	 TbicgiN/EARBufQxWlp9yFZ9h2D79cig2gz1YrEa1Cs8WLKdxU1Q5yY5DtuWqXv9TP
+	 ieDatQBX63CrCarQxmOj3Bo1PkchpwZwolJjg7T/ns8mcJIZSPLpWS+1YldktOZADs
+	 03wfB0+40HXSjbxz//AORzNr2PIM3t8faSDXHqDjZLfwe7j/7X6dEjg3xrJlBxJqXV
+	 EX0IdPQjO/m3CXJ0H/Lq71kCSew6yngipQ8OTt6B0v/9UPUzyi4P74C0e1UbYM1un5
+	 UKdW3n7WMCqMg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ckath <ckath@yandex.ru>,
+Cc: Gergo Koteles <soyer@irl.hu>,
 	Hans de Goede <hdegoede@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
 	ilpo.jarvinen@linux.intel.com,
-	linux-input@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 105/139] platform/x86: touchscreen_dmi: add nanote-next quirk
-Date: Wed, 25 Sep 2024 08:08:45 -0400
-Message-ID: <20240925121137.1307574-105-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 129/139] platform/x86: lenovo-ymc: Ignore the 0x0 state
+Date: Wed, 25 Sep 2024 08:09:09 -0400
+Message-ID: <20240925121137.1307574-129-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240925121137.1307574-1-sashal@kernel.org>
 References: <20240925121137.1307574-1-sashal@kernel.org>
@@ -52,67 +51,44 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.52
 Content-Transfer-Encoding: 8bit
 
-From: Ckath <ckath@yandex.ru>
+From: Gergo Koteles <soyer@irl.hu>
 
-[ Upstream commit c11619af35bae5884029bd14170c3e4b55ddf6f3 ]
+[ Upstream commit d9dca215708d32e7f88ac0591fbb187cbf368adb ]
 
-Add touschscreen info for the nanote next (UMPC-03-SR).
+While booting, Lenovo 14ARB7 reports 'lenovo-ymc: Unknown key 0 pressed'
+warning. This is caused by lenovo_ymc_probe() calling lenovo_ymc_notify()
+at probe time to get the initial tablet-mode-switch state and the key-code
+lenovo_ymc_notify() reads from the firmware is not initialized at probe
+time yet on the Lenovo 14ARB7.
 
-After checking with multiple owners the DMI info really is this generic.
+The hardware/firmware does an ACPI notify on the WMI device itself when
+it initializes the tablet-mode-switch state later on.
 
-Signed-off-by: Ckath <ckath@yandex.ru>
-Link: https://lore.kernel.org/r/e8dda83a-10ae-42cf-a061-5d29be0d193a@yandex.ru
+Add 0x0 YMC state to the sparse keymap to silence the warning.
+
+Signed-off-by: Gergo Koteles <soyer@irl.hu>
+Link: https://lore.kernel.org/r/08ab73bb74c4ad448409f2ce707b1148874a05ce.1724340562.git.soyer@irl.hu
+[hdegoede@redhat.com: Reword commit message]
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/touchscreen_dmi.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/platform/x86/lenovo-ymc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 06ebab520f271..30c05a9948319 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -885,6 +885,21 @@ static const struct ts_dmi_data rwc_nanote_p8_data = {
- 	.properties = rwc_nanote_p8_props,
- };
+diff --git a/drivers/platform/x86/lenovo-ymc.c b/drivers/platform/x86/lenovo-ymc.c
+index e1fbc35504d49..ef2c267ab485c 100644
+--- a/drivers/platform/x86/lenovo-ymc.c
++++ b/drivers/platform/x86/lenovo-ymc.c
+@@ -78,6 +78,8 @@ static void lenovo_ymc_trigger_ec(struct wmi_device *wdev, struct lenovo_ymc_pri
+ }
  
-+static const struct property_entry rwc_nanote_next_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-min-x", 5),
-+	PROPERTY_ENTRY_U32("touchscreen-min-y", 5),
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1785),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1145),
-+	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-rwc-nanote-next.fw"),
-+	{ }
-+};
-+
-+static const struct ts_dmi_data rwc_nanote_next_data = {
-+	.acpi_name = "MSSL1680:00",
-+	.properties = rwc_nanote_next_props,
-+};
-+
- static const struct property_entry schneider_sct101ctm_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1715),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
-@@ -1648,6 +1663,17 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_SKU, "0001")
- 		},
- 	},
-+	{
-+		/* RWC NANOTE NEXT */
-+		.driver_data = (void *)&rwc_nanote_next_data,
-+		.matches = {
-+			DMI_MATCH(DMI_PRODUCT_NAME, "To be filled by O.E.M."),
-+			DMI_MATCH(DMI_BOARD_NAME, "To be filled by O.E.M."),
-+			DMI_MATCH(DMI_BOARD_VENDOR, "To be filled by O.E.M."),
-+			/* Above matches are too generic, add bios-version match */
-+			DMI_MATCH(DMI_BIOS_VERSION, "S8A70R100-V005"),
-+		},
-+	},
- 	{
- 		/* Schneider SCT101CTM */
- 		.driver_data = (void *)&schneider_sct101ctm_data,
+ static const struct key_entry lenovo_ymc_keymap[] = {
++	/* Ignore the uninitialized state */
++	{ KE_IGNORE, 0x00 },
+ 	/* Laptop */
+ 	{ KE_SW, 0x01, { .sw = { SW_TABLET_MODE, 0 } } },
+ 	/* Tablet */
 -- 
 2.43.0
 
