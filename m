@@ -1,44 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12631C8FA4;
-	Wed, 25 Sep 2024 11:53:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3967E3DAC1B;
+	Wed, 25 Sep 2024 12:06:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727265195; cv=none; b=RSaVtF5bNy0ZaKmvcy2+fcphfir/dCAewX1SaxKQ5Qcy75lGFxZdrMgpdU0rfukh1pZbS1KTvWpJax3xvO1aAER/0wOy09t4yRmHEalspd/zm6ADEoUGLDwfuiLlYx4O2IjnSXqCOVsIL3PNI7f3JcYIbMl+XzOKtNiPGII/P94=
+	t=1727266005; cv=none; b=aWm6HDcElc1mJMHJHhw4JCcrhRzg/rTkvyo25wNwdcsML9ucYDxHK7diB7Ri8puIkow7+MhbvB3RY7S+lx7i6cHttafBgIJWoE+tHnsIikG6/5wyRpuOm4XD+GmC5BEnbAiqhfqJ85eFtrX792LlA7mT8AHN/BYDGPkTSDOD7V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727265195; c=relaxed/simple;
-	bh=OnqE7hMVp7P7mOZDjM+m6mgGSt7B98LSvqkkmRJF8Ss=;
+	s=arc-20240116; t=1727266005; c=relaxed/simple;
+	bh=94gKqVWUHADiEypbGK8D3lONfmKJ8ZoeBsq+CcZXiyk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qLDUq5giukcWWRoC7NpjvLhBEQ3RACr52g9GPmXf4p1nZZC0tvZkM2u/ZF5UIMW+Z8ESn5xYNwzpgi4vXkDOmqUOF+XsDbXMLp3/g28IvrlTYJUVmoTMtSFXYArK6dYxcb0SVIwraTMiGPQct9B689o7PdVC0tdl5YwkroNXu9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uXF9uDYc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BFaJySLJPAzia7umGuTVZqmUQYNIrul+XoXp+BAvNUQPbYVUaLQSdymJWRP+Dps9OYMMsroYj7w/d4bxdhsk2GzumNwMGGblLzqXAdnEcrfpFZomeidrLL8DN4lBlbCpQqJHmXLPeeljpUu0lmEmpjyrciZ5y5kn4Ny3cH3zj10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JpWcgYQL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uXF9uDYc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 802D1C4CEC7;
-	Wed, 25 Sep 2024 11:53:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JpWcgYQL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA4ACC4CED2;
+	Wed, 25 Sep 2024 12:06:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727265195;
-	bh=OnqE7hMVp7P7mOZDjM+m6mgGSt7B98LSvqkkmRJF8Ss=;
+	s=k20201202; t=1727266004;
+	bh=94gKqVWUHADiEypbGK8D3lONfmKJ8ZoeBsq+CcZXiyk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uXF9uDYcSpdnuBG/9JII0fZwuAI7f5s8DPy13P4wi6ioaM2v5grp1OuKbo0DCdsi/
-	 4A50htuPaw6sTAreEcFbyx+eVpmBagX/3wFCdWW00ehxZrdV7OohudiPP5iTvWVNic
-	 9LjVS2XwhqV+QSgbgG5NOtYtb9iKzmB1qxCZ0kLS469Obi0dqbUCTdz8lFptI5V7YJ
-	 6JYGkD2PvfJIONTZDNsVPbwZJB2rzPqOvvbLhpbrTETT21mGomGwleMEAWtu918dnT
-	 j1ZRXSsvlLUj9yR2o5wJeQe/b1dqjMA02kU0KuEuNP9YJa9qn+RUr8Hv+fpx7u0lVh
-	 loflIzLeYrXEw==
+	b=JpWcgYQLzKCb2IaZtS3FdMDEH/sAupmPnTxaiF0xpR5IHuhx0tyUrNyocb7T6Y008
+	 c03+wdH1aWQg5TrVe5wBx6I31UF1X231Fez+Gk9z9pJ5fusUWvEmzPCN74qqedsPoA
+	 kIedf5T2F73YDDZbli8+ZHSbutIpCIxt3dCKynnL72Nazg/Kh50imqbaxIGCcF/p6z
+	 CKnpfTPBzD/xgVu3sAn3xK+im0QdZYoxnmgiKAOVaYOj0IG7ScOTBJ+Pn2KLWzh9vF
+	 tHQOMYg9ayFsHt6Ig4gKX9R8+1N8wS164Qcy7FlpqmJByXWRvgAZ2eBTkhh4lgK0iE
+	 M2lgT93ZTyPuw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>,
+Cc: Ckath <ckath@yandex.ru>,
+	Hans de Goede <hdegoede@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
 	ilpo.jarvinen@linux.intel.com,
+	linux-input@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.11 233/244] platform/x86: x86-android-tablets: Adjust Xiaomi Pad 2 bottom bezel touch buttons LED
-Date: Wed, 25 Sep 2024 07:27:34 -0400
-Message-ID: <20240925113641.1297102-233-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.10 146/197] platform/x86: touchscreen_dmi: add nanote-next quirk
+Date: Wed, 25 Sep 2024 07:52:45 -0400
+Message-ID: <20240925115823.1303019-146-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240925113641.1297102-1-sashal@kernel.org>
-References: <20240925113641.1297102-1-sashal@kernel.org>
+In-Reply-To: <20240925115823.1303019-1-sashal@kernel.org>
+References: <20240925115823.1303019-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -47,70 +49,70 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.11
+X-stable-base: Linux 6.10.11
 Content-Transfer-Encoding: 8bit
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Ckath <ckath@yandex.ru>
 
-[ Upstream commit df40a23cc34c200cfde559eda7ca540f3ae7bd9e ]
+[ Upstream commit c11619af35bae5884029bd14170c3e4b55ddf6f3 ]
 
-The "input-events" LED trigger used to turn on the backlight LEDs had to
-be rewritten to use led_trigger_register_simple() + led_trigger_event()
-to fix a serious locking issue.
+Add touschscreen info for the nanote next (UMPC-03-SR).
 
-This means it no longer supports using blink_brightness to set a per LED
-brightness for the trigger and it no longer sets LED_CORE_SUSPENDRESUME.
+After checking with multiple owners the DMI info really is this generic.
 
-Adjust the MiPad 2 bottom bezel touch buttons LED class device to match:
-
-1. Make LED_FULL the maximum brightness to fix the LED brightness
-   being very low when on.
-2. Set flags = LED_CORE_SUSPENDRESUME.
-
+Signed-off-by: Ckath <ckath@yandex.ru>
+Link: https://lore.kernel.org/r/e8dda83a-10ae-42cf-a061-5d29be0d193a@yandex.ru
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20240916090255.35548-1-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/x86-android-tablets/other.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/platform/x86/touchscreen_dmi.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/platform/x86/x86-android-tablets/other.c b/drivers/platform/x86/x86-android-tablets/other.c
-index eb0e55c69dfed..2549c348c8825 100644
---- a/drivers/platform/x86/x86-android-tablets/other.c
-+++ b/drivers/platform/x86/x86-android-tablets/other.c
-@@ -670,7 +670,7 @@ static const struct software_node *ktd2026_node_group[] = {
-  * is controlled by the "pwm_soc_lpss_2" PWM output.
-  */
- #define XIAOMI_MIPAD2_LED_PERIOD_NS		19200
--#define XIAOMI_MIPAD2_LED_DEFAULT_DUTY		 6000 /* From Android kernel */
-+#define XIAOMI_MIPAD2_LED_MAX_DUTY_NS		 6000 /* From Android kernel */
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index f74af0a689f20..0a39f68c641d1 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -840,6 +840,21 @@ static const struct ts_dmi_data rwc_nanote_p8_data = {
+ 	.properties = rwc_nanote_p8_props,
+ };
  
- static struct pwm_device *xiaomi_mipad2_led_pwm;
- 
-@@ -679,7 +679,7 @@ static int xiaomi_mipad2_brightness_set(struct led_classdev *led_cdev,
- {
- 	struct pwm_state state = {
- 		.period = XIAOMI_MIPAD2_LED_PERIOD_NS,
--		.duty_cycle = val,
-+		.duty_cycle = XIAOMI_MIPAD2_LED_MAX_DUTY_NS * val / LED_FULL,
- 		/* Always set PWM enabled to avoid the pin floating */
- 		.enabled = true,
- 	};
-@@ -701,11 +701,11 @@ static int __init xiaomi_mipad2_init(struct device *dev)
- 		return -ENOMEM;
- 
- 	led_cdev->name = "mipad2:white:touch-buttons-backlight";
--	led_cdev->max_brightness = XIAOMI_MIPAD2_LED_PERIOD_NS;
--	/* "input-events" trigger uses blink_brightness */
--	led_cdev->blink_brightness = XIAOMI_MIPAD2_LED_DEFAULT_DUTY;
-+	led_cdev->max_brightness = LED_FULL;
- 	led_cdev->default_trigger = "input-events";
- 	led_cdev->brightness_set_blocking = xiaomi_mipad2_brightness_set;
-+	/* Turn LED off during suspend */
-+	led_cdev->flags = LED_CORE_SUSPENDRESUME;
- 
- 	ret = devm_led_classdev_register(dev, led_cdev);
- 	if (ret)
++static const struct property_entry rwc_nanote_next_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 5),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 5),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1785),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1145),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-rwc-nanote-next.fw"),
++	{ }
++};
++
++static const struct ts_dmi_data rwc_nanote_next_data = {
++	.acpi_name = "MSSL1680:00",
++	.properties = rwc_nanote_next_props,
++};
++
+ static const struct property_entry schneider_sct101ctm_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1715),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
+@@ -1589,6 +1604,17 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_SKU, "0001")
+ 		},
+ 	},
++	{
++		/* RWC NANOTE NEXT */
++		.driver_data = (void *)&rwc_nanote_next_data,
++		.matches = {
++			DMI_MATCH(DMI_PRODUCT_NAME, "To be filled by O.E.M."),
++			DMI_MATCH(DMI_BOARD_NAME, "To be filled by O.E.M."),
++			DMI_MATCH(DMI_BOARD_VENDOR, "To be filled by O.E.M."),
++			/* Above matches are too generic, add bios-version match */
++			DMI_MATCH(DMI_BIOS_VERSION, "S8A70R100-V005"),
++		},
++	},
+ 	{
+ 		/* Schneider SCT101CTM */
+ 		.driver_data = (void *)&schneider_sct101ctm_data,
 -- 
 2.43.0
 
