@@ -1,181 +1,158 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2040.outbound.protection.outlook.com [40.107.244.40])
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7787E322B;
-	Thu, 26 Sep 2024 13:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727357797; cv=fail; b=LhD+zlA7sQgpUkPAnojsF9FMnjxqsSyRwIy5QRkkZfqJbmV+w+MVc+thSZkBlhOI+8skI7tj/o99ULTEZKLSjqY6+RdiwBo6hkk1hVqEHCwQDtVNndnrJBBPyOLzrj3unGYbAhzv+riP1s5p21w1Ev1LaNBG2h8AyUcJ/4VoTeI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727357797; c=relaxed/simple;
-	bh=LYcnaiNpGnPVwcOXeH2AWjIcHVLg1ddYa4FSSO52PUs=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=OZrU2Rd45tnfdoUNYcC61VCj5+9opI4DKZNYmGwew3exWaf6dze/a9mT/1OAxXq481IqITxOzTXd+06Cup5jGYSJfHGQMH3//emCOl21kTV5PAOpGZYQI7qFF4jACe8lDQvlAnjdtSzdmJAxAfkIieAwpDGDKYFRtGsXr2BfDZM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=d8jc9jub; arc=fail smtp.client-ip=40.107.244.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B161B43AA9;
+	Thu, 26 Sep 2024 13:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727359154; cv=none; b=PNYJN82Vp0B0xYZ4/59lfeWrULF5q/bGlTEAsPThdJ05rhwD2boI7qPeW+ZVDSC0d01J9OKM77ugCOIDxiczrW7oyWE8dtfdhfqq9jJqCcP7Lh5vO1crRqDxTKrQIUOjiAnkldAcWWn+JN71jjMCGxnAnvAg/BQWpZRRrG0b6ro=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727359154; c=relaxed/simple;
+	bh=QEu5DqaOtx8qz8TFmnVAti29F7Qxc7meqVeCJk5ssG4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=qw+IZXW8H2jiFxlM/KbFp7b3WbiwLq8giX7Hf6Y4bI7YDk4vvC+L4uPzi7GMwoFWizlmCqxIkAxLk6w6t9gPRVj2C4Oqk8YUshYTZOzNd9Imius9klDVNcpTwI9dADitCg3f3rUKIcV6jqxgA9kHXzncyPXMA/5bSLkFV81m21A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=ltdR0C40; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=d41l0W2W; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="d8jc9jub"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kAW40EfJ4FtdM6d5zNq9iDVqYy/M4ogDNHcm3w02Lgk26JD/CcpVnCBmpgnIX7vCENm+ENs3G8yF+UHgP4rMHol31zk8DVLcOA4sHmx6RAs12V0dWfmrkx/+49IqCSFDUgc8i7ZSyj+jndtaZE0luZbk95RVGDhcb/Uor8Ijck5U92smWnLY1jZjdN/uwUxLLFnZL1IIXQqmeikCqGEoB2H+GcE11r8GHSkw66NZpvuEgPjC77nSRyxQH7e/lthc5H6B1VaQXvfP9FJvn6d9qQwwMVrUR3bWhlvE/yDlR4PWQ7e/Zl03xGG+mX848NdzBymJrBnUZPFffenTOyVFbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=G4zVsOTgwhj3TjCQJ8C5NT3azWw1xTyUs3poMI1pUEs=;
- b=WDHF+XgqbBml9RO0bivOSXzon6b7DD321u+hn2UjaHphq2j3V/a1d92zxQvDgqfndUvwXfZXEanoVwSRh4AJ/PmYSDbx+ToR1nKSoCoB8IlPN1hUKWE5FMTAfARqQcQUwgnnqsLpkfssIPd+aB7KeGIa4jXhpro1LKyakvZn8oPg0xcz2eFqSfSUnGgKYYUOQQF/KwSwfY7LHwWAt3jkmOV7JtkSPzSJEvfGHZafIDxOayz7oRQX51iPKklX2i7eC6qtHSPNue16Iw71KJKfTWpLcD9KAj1pqFu/LGhcKZW6JGMi5hEpFfCpgZgHatEYh4TzcX3/flXwiuxjB0YCOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G4zVsOTgwhj3TjCQJ8C5NT3azWw1xTyUs3poMI1pUEs=;
- b=d8jc9jubIsz20NaFpKB/qKNB9r3q2taydPqdFGg4IRcrDon6/17gPgGotIkhZp3s+nfIfboCiRzKrXY+aM146DLspZbmhD3aEe8CH6D/PXTUjv79axQHxvdLnLOCgFgy4GsYMMGUmDRpVH7IQwTyvjTxOKqjYWwaewvDDC3ekng=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by MW4PR12MB7429.namprd12.prod.outlook.com (2603:10b6:303:21b::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7982.28; Thu, 26 Sep
- 2024 13:36:34 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.7982.022; Thu, 26 Sep 2024
- 13:36:34 +0000
-Message-ID: <c19f3530-a065-461f-a5bf-ccc3988cf24c@amd.com>
-Date: Thu, 26 Sep 2024 08:36:32 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] platfom/x86: asus-wmi: revert ROG Ally quirks
-To: "Luke D. Jones" <luke@ljones.dev>, linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- hdegoede@redhat.com, corentin.chary@gmail.com, superm1@kernel.org
-References: <20240926095344.1291013-1-luke@ljones.dev>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20240926095344.1291013-1-luke@ljones.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0028.namprd13.prod.outlook.com
- (2603:10b6:806:21::33) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="ltdR0C40";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="d41l0W2W"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfout.phl.internal (Postfix) with ESMTP id BA39113802AA;
+	Thu, 26 Sep 2024 09:59:10 -0400 (EDT)
+Received: from phl-imap-10 ([10.202.2.85])
+  by phl-compute-02.internal (MEProxy); Thu, 26 Sep 2024 09:59:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1727359150;
+	 x=1727445550; bh=84+mwDfyDZSdx1IUW7exFBbe4aENBWcv2GSlmNEglTg=; b=
+	ltdR0C40VZgznstqFxG25d4BINry7NifFCtbg6t0idTmCqFefcKN2nB9Co954LrQ
+	hsqo/xWm/Pwq+4LYAlTkRvmiqrPC9zOWLu4ghZc88+bS4AAKlWOb9upi8e11AxAz
+	F7qqiMindnsM9G4ZNzp8WvO/Xp92w3+XeybIJFWvEAteZJwcWccZfokPF85KerYz
+	XOufQYEWySOicUIvaLuli0spo6cPqoxBka0JVEwKunMEQ1eAkgne0AwLb/WSVBym
+	rCaSF/9lb7kyaBwEwZG5W96NYhFsMeOMf6AGnjTAv2yDsTWH5Yl7B3s69LTAv0Id
+	Vl6ZobkYSbw33sCVOroYaw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1727359150; x=
+	1727445550; bh=84+mwDfyDZSdx1IUW7exFBbe4aENBWcv2GSlmNEglTg=; b=d
+	41l0W2Wu8rd/qcZBWiIAi+1eaIy32sxnz9XcDCL7GbmTktceiPxZv28LPmEhqUK6
+	H4kRRhed8sHWLPUSGSaL6dI521OXw9GywXlhlY8K4GgO0Deo7zenfwQMlgUYxy2p
+	SYsMVf0ONmhxvy37+oAM8VTxSHHnHLf8PP1EqYLCMdAZMx0aHvJ63AbHF2lFoaMn
+	apMdAvOtQFanShBc8g7mvRRkW/ILAy8vvF7XYLr4l2mwYd67CZc0702SetFNIoHn
+	yPhww/mtfktUo3dqkU5ZfNhtBai7Lxtq6NCVzYJR638Y4eDesM7P/YHKarwbP15c
+	f2xZNe/zbgcbu/AncFxoA==
+X-ME-Sender: <xms:rmj1ZhK6LH2pNCjqd7fE8SfKkl9ZpzlYolJG0t12BPS_ag1wqN13CA>
+    <xme:rmj1ZtKBxedNPLI4oow0f4Gn0f72-ShnUQ3V0kzxxKP-4l5g-PEa4I2c8dw6YN46a
+    F6asAydTUhhIJzReH0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvddtjedgjeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddt
+    necuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnh
+    hovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgvrhhnpefhuedvheetgeehtdeh
+    tdevheduvdejjefggfeijedvgeekhfefleehkeehvdffheenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhho
+    sehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopedugedpmhhouggvpehsmhhtphhouh
+    htpdhrtghpthhtohepshhhhigrmhdqshhunhgurghrrdhsqdhksegrmhgurdgtohhmpdhr
+    tghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlhhlohesrghmugdrtghomhdprhgtph
+    htthhopehlkhhmlhesrghnthhhvggrshdruggvvhdprhgtphhtthhopegsvghnrghtohdr
+    uggvnhhishelieesghhmrghilhdrtghomhdprhgtphhtthhopeguvghrvghkjhhohhhnrd
+    gtlhgrrhhksehgmhgrihhlrdgtohhmpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopehsuhhpvghrmhdusehkvghrnhgvlhdrohhrghdprhgtph
+    htthhopehmvgeskhihlhgvghhoshhpohgunhgvthhirdgthhdprhgtphhtthhopehilhhp
+    ohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhm
+X-ME-Proxy: <xmx:rmj1ZptKs-LGt8Z4KtOM4MvK_ik1IUQ7820dsjsadN3YBTCIbquVVw>
+    <xmx:rmj1ZiZyJRF-YUDjNAawbgMlUDr_-BAlCag0OaxZEvvTgJ_GVLWuPA>
+    <xmx:rmj1ZoaCy1yWqoheFLjoAXl4g4_6vtM7cVmgL2VmAu1ZmNMnfA4eEQ>
+    <xmx:rmj1ZmCTWWJTx9XMlMsWeHj2wJBUo4Kq68iKFIOMiAdX5PGqeptDqw>
+    <xmx:rmj1Zoqbiqqt_kn0NJ_DQgS84eOIqrMAsCAtB-95DWNG6sjfYmYovxY6>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id EA5C63C0066; Thu, 26 Sep 2024 09:59:09 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MW4PR12MB7429:EE_
-X-MS-Office365-Filtering-Correlation-Id: 82a6ae3c-a58c-448b-3a22-08dcde303cb6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?emZ4aWpBVitmVGRteXJtTzdyelUxVmd4TytSZHFlVnZMZmxGSGY1bGZoVytN?=
- =?utf-8?B?amR2UXhOV3JndU0va2VlUUxKSXFvYUxJVnVhamhWdWFqTHRqWW9teGo5aWNH?=
- =?utf-8?B?NjA1dnV6ZmgzY1BET2d1bHB1K0hCZ1JoOVFWOEhTdW44eDRSV05SUzV1SkFE?=
- =?utf-8?B?c0t5N1Zna29HdGI1aHVBdUo3YmhtSXM1U3JvWlU3WDJpMEFDdzdndzYwREVv?=
- =?utf-8?B?UDA5NnVzSXZWTUwxU003R2Q2RVBLdS9iYm1kN2trenRsMkVlZmlHTVF3RGcy?=
- =?utf-8?B?MFlKOGEzYzFJSW1iZkxNcjhqcVh3TTdzYW1QQTZIQnVBUUJsQzNwU204c0ls?=
- =?utf-8?B?UGhVZWFGdnVyUXpZQ3kybTZsQ3N5c0dwYTlWUG9KM0xoYjlxNW03QWgwWGc0?=
- =?utf-8?B?czZoSWlFeEpDQmFBeDFCUy9vdDJ5QStmU2wwcHViWUswL0FCYXZjenlnakY4?=
- =?utf-8?B?cXVnZ3V4ZGVSNytIVjN5MVY1akQrNUhJSE1BbVp4TGtTMG5zelpQOHZvb2hs?=
- =?utf-8?B?dDlwbWk2Q1lUZENGM2NvM3FkWkNzakJHaUthNytPcldNMklDdlhJU2ZwMWth?=
- =?utf-8?B?amRLU3lmSVVCbTAxRGgzbkhoWmxKKzNQR1kzYmYwVEZXcUFlTEdMVjczeEF5?=
- =?utf-8?B?SGYrYVR4N3NtUnppUDZlTjVLL2dSaTh4Q1B1QVhveVY2WXllSTlMRS8vWlZm?=
- =?utf-8?B?cThOaHhjZno3K29BaTZSQ0pKeU4wYzNUejdQU2k3K0Z4SXBKMXdHR05HcnNK?=
- =?utf-8?B?S1VRT1RTdldDTkU1K24reStvSDk0RHhWS1ZaNUxwU0xLN2p1YS8zbVNuSHly?=
- =?utf-8?B?TTdUdnJqeEJmZ2FlbEZDbEpPa21zcmJqWGdsQVNZbWNxV1hualBrSHpmcWlJ?=
- =?utf-8?B?ZDVFdGJ6ZmV4TEt3V0x2K0s2VDBqSDFLeE1jT3h0SSt4b0VGaER1RS9XWEIr?=
- =?utf-8?B?eUtmcnpURE5aT1UvNllnSmI1cHo4eVZGVTdSRE1UbW5GVEUxTFNSR09yQlMz?=
- =?utf-8?B?ekJHdDEwdGZRTjc2aWVNYTM3V1R2elBIZHAzMWpZM3I4U0NtZjdUMEczSTRM?=
- =?utf-8?B?bGt2cjdiMXJWM21MZ0dGVjVGU2pjT0t1RWJBaGdPOTFuc2VCNFpkYkxiNEFN?=
- =?utf-8?B?V2lzMDh2MUt3ZFV0L2tFcEU2bmN3MnRKWnY2V3VrV242andINVh6eEhxYmZi?=
- =?utf-8?B?STNveHQrYnpwcUh2SWxVWUIyR1dvbC83NFN0MTFvcjBRR28wWDVkSGFrSHBW?=
- =?utf-8?B?cGt2NHQvaFBGb3VpekxJWlFMdy9YRG0xNHk0aDhKclQyM0xOejNDUVVvYXd1?=
- =?utf-8?B?R2ZjbXNOSmxaVCtjaDFDZERCanlsdXVvL0VLbklPbCtDV2s0Mno5VFF5eXA4?=
- =?utf-8?B?QWhvTDU4cTZIT2l0UjF4QlNDQktpWFlYcktIdHBGcG0rWXI0bldrQlQwMEJB?=
- =?utf-8?B?OU1ML0FTWlBkNzJlZ3d5emdXUTUvVXRlVmlOMjdEWmtNQTh1N0w3R1hnUmFm?=
- =?utf-8?B?eHNxYXhHWVU2NXJMN2Mxa2Z1bm1GT3ZUcmZzeDUxa1RhWHp1MkhUTjJreElm?=
- =?utf-8?B?SEl5QVM4MmFTMkFJMWpEYWNwRUk2ZnNGcU5Gcm5OL01kSG9rbUZvSXpRZVcy?=
- =?utf-8?B?OEVyK0hvYWRrdDZ3YVN6RXBYMkJrd29DTVVXSCtOSjlKUEF0U1Bla2FOM1ZP?=
- =?utf-8?B?T1BNMXdLTjZJT2R3SzIzWURBYTBjUUtqK2x2Z3BkamZXTDJDRFVEUWV3NzF1?=
- =?utf-8?B?NitWZkg4eG84UVV1bFpLMUQyTWZ6MXN5Y1dtVlhCY3BwWmtUTHNQZkNheXJQ?=
- =?utf-8?B?S3hRWTlIT0EvbnRITk9Ddz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Z0dFc2xTaUdyajZzVjc4TVNoRisrYzg2RzJGTnZ5NjFKQ3BLT05pVnA4NXA2?=
- =?utf-8?B?djA4dlhieUtVV0RNT2g1cmJjQ0xjdEpmZXdvUzZpRUJlSjlKK1NEbDU1Ukxo?=
- =?utf-8?B?SEdjUE80Zm1NMjlwSGNERDhjU3RERTRFSzdaakR2dkNvK1VxNWlXdVJaK1N3?=
- =?utf-8?B?bzExclBnN2JubjZyaHltajd4dzlaZ2dkUmdVaDBsdG12N1V1Vnk5YVpjQUgr?=
- =?utf-8?B?cFZoU0dvcFpxK3pwSzdxVnAzZGJ4NkFXR0lITmRsNHZ6NnhKMU1XWk41c0N1?=
- =?utf-8?B?YUw1ck00VDNxTDFaOWJoZWpQaFYzaGpOVk0vSEdzM2dBWks0UnFJRkNNMnh5?=
- =?utf-8?B?WTJRQ1dsczZoVGZFbXg1R0FYOWdNYTYxcHBTMEYxa3VzZS82M3psK1hYYm96?=
- =?utf-8?B?clJGQTAzWE5PbExjbXRrUUF2cUZZTVBaVU4rekJJa2pwMVkzR3J3dGx6MGRo?=
- =?utf-8?B?UERpT05qWlJmTnpkUmNETCtTYjVKQ200aWowemdhTHJBMHJJWUYzRmVBUmp5?=
- =?utf-8?B?U0pRekZmWXk0d0tqbUtjaWJQUjBCV1o5Q0kwVTRPRkRGaGxueXkyVDloa093?=
- =?utf-8?B?dml6alE3d0tnak9BVm9sZ1B2S0c1MTZOY25FYm5lcEc0NS81TUlRTlQzSitn?=
- =?utf-8?B?QTFpWjRtZHJzUjVZL2xjS0thOG5aK3pubnRiaXNHMG1uZG9VVjBIb0owUG1K?=
- =?utf-8?B?SGp6OGF5aE5XTzZrdFYzLzNNbGZDVkdFYVVZbzVocTlyeThhUVpMNkdBNmNS?=
- =?utf-8?B?a3cycE55SDV2TW9FQXZqVmxoUlkxSnpuVzNLT1BCZEYybjgwRHZieHJHTjY4?=
- =?utf-8?B?RXhvd1lWTTkzMXUwMmVRR2ZvT3BqNEJIMExRU0RBMXE2aVJXZ3VMdS9DQWU0?=
- =?utf-8?B?cVVONFZISDU5K29nYWVobzU1TEtleENIOHRaQU15SXYyRUhUeTB3c0M1WEpR?=
- =?utf-8?B?QmJPN2puUmF2ME53REFQZmp2VHFudnZTai8yM0VIdlBCUkFvb2ZPUDA4d1hu?=
- =?utf-8?B?d1duTHdWRzNBWkFMVFdYOEYwM2RmbVZyc04vTjFNVEg2djVKdiswWVpjbVBQ?=
- =?utf-8?B?VDZ5TVdITUpiSU5OaWZNWHRnc1JzYUlJQ1VHNldrOEl0djVhNW1BZ0cwKzk2?=
- =?utf-8?B?OVFlVHZhdG5Sb2o3NnhxajF3b1pTQW8rRkF1TlE0c0xkSGVRNEQ2cEVPemtH?=
- =?utf-8?B?eitsckVuM3ZLQ2xBNkxvbXRQZzBXVHNaRm53ZjFIQ1MwekpvYUNqWlY3dGhI?=
- =?utf-8?B?am9HZG5jK2tIRnhadGQxb3dDb1crQi9melp4N3ljV3pZaDNqN0h1N0F2R3RU?=
- =?utf-8?B?WHRaMGlVMUJRYVpDV25vb2hTNVAzd2hTeU9ubG1lRm9IQmd5NEI2K2t2SWJG?=
- =?utf-8?B?R0owcjZ5aHFISzJNQWRhMXcxSW9IVE1saklLK1hzZ3d2ZWJLWkJ0N3dGbFh4?=
- =?utf-8?B?dzhqSERQdjNVZi82SzBrbllraWdHT2EvVmdmNFBmOHJXTzhhUkIrU3JjcE9D?=
- =?utf-8?B?bVpxNTFsS3drNjR4dDZkbXJlbnZkUXRJZFNYS1dXV3NqZVZWRitJSmIyTUxx?=
- =?utf-8?B?ZlBVdm1XbkVmZWt1N0owUitqazlIWjNkcWNVbXYwejRkYzZFTHVXbFkwMDhG?=
- =?utf-8?B?ZTZ5eG9YSFNUTC9aSzhlTFAwNVYwdkU5d2Q0VG11K1YxNVp4UE9VamdIN3RK?=
- =?utf-8?B?Mzd3cHFwQWhRdmVvaGdpbGV1UWRIcFNHTlBEM21SNTdrQXhZNk5tc0Y1azBL?=
- =?utf-8?B?SHUvcUJzVWJzZFZRUFh0cXloeXNkbGY0c2RMcXZ6ZGtiK0luWEdDYi9WQUZP?=
- =?utf-8?B?emxzR0orRjNTbjExRzhCbTgrWnI3dUFyWFBnbmt2ZmF1NE15cnpGZkZZd0M3?=
- =?utf-8?B?T05NdlQwbjk5akdPRmtpZ2Q2T1U0Wk8ySmNYN3V0YXZGNHl2amJhejY5d2Nt?=
- =?utf-8?B?SnhyZ1BhZk1rRTk1TGMyRW5FdWQyalN5TEhwTWhTNVJBYzlOQ0d2bkpJQkhS?=
- =?utf-8?B?U0NSbWtuaDRHYjAxSHRGaEZFSlhIeVY3Z2tDRm82SVpuYm1HM0pNeVdYVG9n?=
- =?utf-8?B?c2ZuWUE3KzJpRWtRZmVITmllREFZV29HU0RabWdJQ2hmQWo4YXJkSjhyZEll?=
- =?utf-8?Q?tLX9hknuPw6TfamImaB7fZyLr?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 82a6ae3c-a58c-448b-3a22-08dcde303cb6
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2024 13:36:34.0860
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TbtkYsEFD8QExiabz7pKJs27bezxaDB6pJe13sHM6azOId24wIMnJ/4ILFWhfu5LFm9AZUXoQ2yGXMDVscU67A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7429
+Date: Thu, 26 Sep 2024 09:58:47 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Mario Limonciello" <superm1@kernel.org>,
+ "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Hans de Goede" <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Luke D . Jones" <luke@ljones.dev>
+Cc: 
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "open list" <linux-kernel@vger.kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Antheas Kapenekakis" <lkml@antheas.dev>, me@kylegospodneti.ch,
+ "Denis Benato" <benato.denis96@gmail.com>,
+ "Limonciello, Mario" <mario.limonciello@amd.com>
+Message-Id: <2d07d31e-87f6-4576-977d-336f3d0bbc81@app.fastmail.com>
+In-Reply-To: <20240926025955.1728766-1-superm1@kernel.org>
+References: <20240926025955.1728766-1-superm1@kernel.org>
+Subject: Re: [RFC 0/2] "custom" ACPI platform profile support
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On 9/26/2024 04:53, Luke D. Jones wrote:
-> The ASUS ROG Ally (and Ally X) quirks that I added over the last year
-> are not required. I worked with ASUS to pinpoint the exact cause of
-> the original issue (MCU USB dev missing every second resume) and the
-> result is a new MCU firmware which will be released on approx 16/10/24.
-> 
-> All users should update to MCU FW as soon as released to:
-> - Ally 1: v319
-> - Ally X: v313
-> 
-> Luke D. Jones (3):
->    Revert "platform/x86: asus-wmi: ROG Ally increase wait time, allow MCU
->      powersave"
->    Revert "platform/x86: asus-wmi: disable USB0 hub on ROG Ally before
->      suspend"
->    platfom/x86: asus-wmi: cleanup after Ally quirk reverts
-> 
->   drivers/platform/x86/asus-wmi.c | 39 +--------------------------------
->   1 file changed, 1 insertion(+), 38 deletions(-)
-> 
+Thanks Mario,
 
-This series looks good to me, but I would suggest that you also in the 
-appropriate HID driver that communicates with the MCU to show a warning 
-or notice if the version is below the required version.
+On Wed, Sep 25, 2024, at 10:59 PM, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+>
+> There are two major ways to tune platform performance in Linux:
+>  * ACPI platform profile
+>  * Manually tuning APU performance
+>
+> Changing the ACPI platform profile is a "one stop shop" to change
+> performance limits and fan curves all at the same time.
+>
+> On AMD systems the manual tuning methods typically involve changing
+> values of settings such as fPPT, sPPT or SPL.
+>
+> The problem with changing these settings manually is that the definition
+> of the ACPI platform profile if supported by the hardware is no longer
+> accurate.  At best this can cause misrepresenting the state of the
+> platform to userspace and at worst can cause the state machine into an
+> invalid state.
+>
+> The existence and continued development of projects such as ryzenadj which
+> manipulate debugging interfaces show there is a demand for manually tuning
+> performance.
+>
+> Furthermore some systems (such as ASUS and Lenovo handhelds) offer an
+> ACPI-WMI interface for changing these settings. If using anything outside
+> that WMI interface the state will be wrong.  If using that WMI interface
+> the platform profile will be wrong.
+>
+> This series introduces a "custom" ACPI platform profile and adds support
+> for the AMD PMF driver to use it when a user has enabled manual
+> adjustments.
+>
+> If agreeable a similar change should be made to asus-armoury and any other
+> drivers that export the ability to change these settings but also a
+> platform profile.
+>
 
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+As someone who supports customers on Lenovo devices and hits the occasional situation where a user has made strange tweaks to different power related settings, and then complains about power or thermal issues - I love the idea that it can be made clear the system has been 'adjusted' in a non standard way. I can also see why users would want interfaces to do those changes.
+
+Some suggestions:
+
+I'm wondering if we can make it so a driver can register only a 'custom' profile as an extra profile handler?
+
+The thinking here is the custom setting in this series is implemented for the amd sps driver, and therefore on a regular Lenovo laptop wouldn't be used, as the thinkpad_acpi driver will grab the profile slot, Users on Lenovo systems aren't going to be able to get at these extra tweaks (unless they unload thinkpad_acpi, which has other side effects).
+
+If the sps driver can offer a custom mode, separately from thinkpad_acpi, then users can tweak settings to their hearts content but get back to regular mode when done.
+
+I also think there needs to be a way that when you switch from custom back to a 'regular' profile that it would do a clean up of anything tweaked. e.g. when switching away from custom the ppd driver should call a 'custom mode cleanup' function, so things can be undone and returned to how they were when it was started.
+
+Mark
