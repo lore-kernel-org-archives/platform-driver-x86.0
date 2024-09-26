@@ -1,94 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D4122AA99;
-	Wed, 25 Sep 2024 12:17:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED9E610B;
+	Thu, 26 Sep 2024 03:00:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727266672; cv=none; b=lDr/a+ZswSiPyTMwUlrH9RJSW4FpBnBCS41AHZOUwM5zD5FQtdWgKIo0evWDwUrLT33udDXqpTMM5PjNmYkX95XtBzye6jflojpkHxh3LDxDbPyCbOrFpT7K5ylYEEV1vrepyrAO9VI2a/wF6O15+U5vOhv/sZbwefRiyEMJVEg=
+	t=1727319606; cv=none; b=mS6EuyGAzEObICiCAH6Oxrwyz6xoW5oqQKFajFKtFyqufrqzR5DqnVx3U0i2/oEzxSbP0g+oQx0rD6w8KENvOP2mIVsQ4SCrjiR5FyqKS3CD3baxJIKBkfTikRUMoXpF2Dgs7N8/GgADXGJMWnKh2Ht2NCEOZosg+O0KwLeexGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727266672; c=relaxed/simple;
-	bh=qRzraMmKSRQ6rNn40RBbsR+OY9fu0/blSi7MZIOwHxo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rq3m3/a1v/sg04zOBcxlq7eZuOuwm1Mkywt+Qs8Z5gScwCWkYtdyI6g48/n27+pWwzRRzCwHcy2quosyYt+h23tZWMEGOI4BBaRoISpPxdlyBz+wDgXngGaRSrnU+ZUivDaXtJE+ZB01ukeLzkh4W0vx3I/QTsc0QhLcXW+bhvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vo+3RQrj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727319606; c=relaxed/simple;
+	bh=LLmiAXtsIyO+yfJ37Su7Obl5iZtlZD5rocWYHoUPqyY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lkt224Jvp+yJabDLB1gkhHIfNQmVn993PD5uksVujBj2crm7Tvx0PypPVm1cq79Sf+88kRoTcfS22tpuBzlBhnfDBMo5PuzZSRq47+XCI6dxYyCdOeIg0KBUCxX+yHbMvDUsyzFWCjRg+UVkWQT5WqtDI6n4UOyGOinCmghPtCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bRVe/Mxo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vo+3RQrj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 279EDC4CEC3;
-	Wed, 25 Sep 2024 12:17:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bRVe/Mxo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB7AEC4CEC3;
+	Thu, 26 Sep 2024 03:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727266672;
-	bh=qRzraMmKSRQ6rNn40RBbsR+OY9fu0/blSi7MZIOwHxo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Vo+3RQrjxb7MnR9jmXuwysFZ82fTt69DH73C+6S43MG5wM8AXORER024xQ10QicGB
-	 TbicgiN/EARBufQxWlp9yFZ9h2D79cig2gz1YrEa1Cs8WLKdxU1Q5yY5DtuWqXv9TP
-	 ieDatQBX63CrCarQxmOj3Bo1PkchpwZwolJjg7T/ns8mcJIZSPLpWS+1YldktOZADs
-	 03wfB0+40HXSjbxz//AORzNr2PIM3t8faSDXHqDjZLfwe7j/7X6dEjg3xrJlBxJqXV
-	 EX0IdPQjO/m3CXJ0H/Lq71kCSew6yngipQ8OTt6B0v/9UPUzyi4P74C0e1UbYM1un5
-	 UKdW3n7WMCqMg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Gergo Koteles <soyer@irl.hu>,
+	s=k20201202; t=1727319606;
+	bh=LLmiAXtsIyO+yfJ37Su7Obl5iZtlZD5rocWYHoUPqyY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bRVe/Mxo2PtejLMa9e6bXov+Wsma/g4O2GsMpaWYc21reyckhnRBIRKKCGl3cK2Zz
+	 bcelVVguKkbpwebF7rfM8nNhJdRxTIh+I4dAcohpAb+bwipU11Qjl7KGbdHcRTPzut
+	 JvoTLHM9iU6Or1WrFLESCXDbW/Gi9JJw2H0p2ZTWUBGYPrDHwja3Pk0wlrP3WBbkDa
+	 WaQ+ds+qQZD01J8DvjQ8BZ6w85pNd8dpObUqN1NQksEVXmvp7xT4RqQNyJQ2UJ2m84
+	 45XkC1y3+6m6wM/vkMuylBY5+hbSMoAnZ/3fGrxEeFvGWz4gdgdFzba1eYmZl4nbAt
+	 yOcVmpKvuEs0w==
+From: Mario Limonciello <superm1@kernel.org>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
 	Hans de Goede <hdegoede@redhat.com>,
-	Sasha Levin <sashal@kernel.org>,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 129/139] platform/x86: lenovo-ymc: Ignore the 0x0 state
-Date: Wed, 25 Sep 2024 08:09:09 -0400
-Message-ID: <20240925121137.1307574-129-sashal@kernel.org>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: platform-driver-x86@vger.kernel.org (open list:AMD PMF DRIVER),
+	linux-kernel@vger.kernel.org (open list),
+	linux-acpi@vger.kernel.org (open list:ACPI),
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	Antheas Kapenekakis <lkml@antheas.dev>,
+	me@kylegospodneti.ch,
+	Denis Benato <benato.denis96@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [RFC 0/2] "custom" ACPI platform profile support
+Date: Wed, 25 Sep 2024 21:59:53 -0500
+Message-ID: <20240926025955.1728766-1-superm1@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240925121137.1307574-1-sashal@kernel.org>
-References: <20240925121137.1307574-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.52
 Content-Transfer-Encoding: 8bit
 
-From: Gergo Koteles <soyer@irl.hu>
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-[ Upstream commit d9dca215708d32e7f88ac0591fbb187cbf368adb ]
+There are two major ways to tune platform performance in Linux:
+ * ACPI platform profile
+ * Manually tuning APU performance
 
-While booting, Lenovo 14ARB7 reports 'lenovo-ymc: Unknown key 0 pressed'
-warning. This is caused by lenovo_ymc_probe() calling lenovo_ymc_notify()
-at probe time to get the initial tablet-mode-switch state and the key-code
-lenovo_ymc_notify() reads from the firmware is not initialized at probe
-time yet on the Lenovo 14ARB7.
+Changing the ACPI platform profile is a "one stop shop" to change
+performance limits and fan curves all at the same time.
 
-The hardware/firmware does an ACPI notify on the WMI device itself when
-it initializes the tablet-mode-switch state later on.
+On AMD systems the manual tuning methods typically involve changing
+values of settings such as fPPT, sPPT or SPL.
 
-Add 0x0 YMC state to the sparse keymap to silence the warning.
+The problem with changing these settings manually is that the definition
+of the ACPI platform profile if supported by the hardware is no longer
+accurate.  At best this can cause misrepresenting the state of the
+platform to userspace and at worst can cause the state machine into an
+invalid state.
 
-Signed-off-by: Gergo Koteles <soyer@irl.hu>
-Link: https://lore.kernel.org/r/08ab73bb74c4ad448409f2ce707b1148874a05ce.1724340562.git.soyer@irl.hu
-[hdegoede@redhat.com: Reword commit message]
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/lenovo-ymc.c | 2 ++
- 1 file changed, 2 insertions(+)
+The existence and continued development of projects such as ryzenadj which
+manipulate debugging interfaces show there is a demand for manually tuning
+performance.
 
-diff --git a/drivers/platform/x86/lenovo-ymc.c b/drivers/platform/x86/lenovo-ymc.c
-index e1fbc35504d49..ef2c267ab485c 100644
---- a/drivers/platform/x86/lenovo-ymc.c
-+++ b/drivers/platform/x86/lenovo-ymc.c
-@@ -78,6 +78,8 @@ static void lenovo_ymc_trigger_ec(struct wmi_device *wdev, struct lenovo_ymc_pri
- }
- 
- static const struct key_entry lenovo_ymc_keymap[] = {
-+	/* Ignore the uninitialized state */
-+	{ KE_IGNORE, 0x00 },
- 	/* Laptop */
- 	{ KE_SW, 0x01, { .sw = { SW_TABLET_MODE, 0 } } },
- 	/* Tablet */
+Furthermore some systems (such as ASUS and Lenovo handhelds) offer an
+ACPI-WMI interface for changing these settings. If using anything outside
+that WMI interface the state will be wrong.  If using that WMI interface
+the platform profile will be wrong.
+
+This series introduces a "custom" ACPI platform profile and adds support
+for the AMD PMF driver to use it when a user has enabled manual
+adjustments.
+
+If agreeable a similar change should be made to asus-armoury and any other
+drivers that export the ability to change these settings but also a
+platform profile.
+
+Mario Limonciello (2):
+  ACPI: Add support for a 'custom' profile
+  platform/x86/amd: pmf: Add manual control support
+
+ Documentation/ABI/testing/sysfs-amd-pmf       | 10 +++
+ .../ABI/testing/sysfs-platform_profile        |  1 +
+ drivers/acpi/platform_profile.c               |  1 +
+ drivers/platform/x86/amd/pmf/Makefile         |  1 +
+ drivers/platform/x86/amd/pmf/core.c           |  9 ++
+ drivers/platform/x86/amd/pmf/manual.c         | 88 +++++++++++++++++++
+ drivers/platform/x86/amd/pmf/pmf.h            |  5 ++
+ drivers/platform/x86/amd/pmf/sps.c            |  4 +
+ include/linux/platform_profile.h              |  1 +
+ 9 files changed, 120 insertions(+)
+ create mode 100644 drivers/platform/x86/amd/pmf/manual.c
+
 -- 
 2.43.0
 
