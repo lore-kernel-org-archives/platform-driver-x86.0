@@ -1,902 +1,1275 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC891487A5;
-	Thu, 26 Sep 2024 15:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1E8157E61;
+	Thu, 26 Sep 2024 17:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727365723; cv=none; b=cYNVqeYV1rTWQoINnkkzNoILWrZXGesYSvrx/ydvRiVTM0inczAfBTXDdZBmCPDOpmubF9fR6LAaH5uuwY+5H3Nd7gshcNwozPikDPb2amG2xW+ajQ/WCOXivcnmEocyf/TvfQJqQyB+KhAHKfOHru5xviHx4iGPPQyNDDuc0L4=
+	t=1727372675; cv=none; b=OErXUzkLws2Sq0ue2uE81jCriWpp7cYwoWapXqa6ZrW2IdoDOS5Kj7jmBuTRfZu3O3c3yQ9wpHI6bpxyXU7zfe9eUfAsd0gg9Uq8LAXwIvLRJ+W0Iyd+pPPZhY5v3xnHaj7sw2Oc4zvfm7VxKSoMzLBpFFIMoo2MIfOzhBm//qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727365723; c=relaxed/simple;
-	bh=KIuLYAVy/0rwx3vMVCyYSDaJrcID28fKNjAFnLlfOws=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cZ3Mdu7QFZbguzjMcs/ezL/4FCloK62t/MN9oXkM3IABRoyy3P8x7QB0B4WdA5iMe5eBRwXeIyKjM2V0Mdf+4BvjLWHl204pRggLBLV+v8DDU5PBi2VIPggtesodBNgGWiBi+sEBJSE0isqSk0jp1S8kst8L/EJOB47CreOTXgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qTFst5U9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727372675; c=relaxed/simple;
+	bh=Af6AOaW9CoKQs1TsNaaGVrKdbhBn9qsDFdT3ilh01M8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RYv++zBEHSJimyGnV86jKw3zmu9BfzLhP9Ni2444qtew/6OGWsa3kiqJPx3wLiZecextE8CACQbGrw6ty3ZYXdX6aY+SfOo+1dtm1bM22xPOoe0ry8ZR1HfAPNCWkwdIw1McFXgUDp2La26UZUAta5jZZYk3e/zEhaOsUg3JE3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=Uqa6mIIn; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qTFst5U9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82740C4CEC5;
-	Thu, 26 Sep 2024 15:48:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727365723;
-	bh=KIuLYAVy/0rwx3vMVCyYSDaJrcID28fKNjAFnLlfOws=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qTFst5U9DgdB+xGiOIsh5mEo5FIrwGhE+FiyjPmAfxHjuhytTP/FtMALlYh9WIuqq
-	 PSXxSDpSBSXIEPFgkCEDn+a4fmeLUqy1jqZNj2z7Y5Yj8qass3PlVHJCi5h5k0rIAB
-	 FXZhuz3dJrSfKJMXOmM/p6DTMDs5Hofxeo6XCJloAGwx0g7JS1aFrjoAzXb9y7RnDY
-	 kl9TDdEBFRervNOMB43t8uSuXNIrwjGXZJS7kqBGDPjxq0EPBfFg1iAPkAgAV0KzpW
-	 DLSwR6m8r89rrH0XPNbMFOVBOEHbAYgo512l0OZOEdIEfHN8XnMQUCrFbJkGRI7L/P
-	 6oY1PczoGiesA==
-Message-ID: <c88f9f36-37f1-4607-aa0c-2baa671c946b@kernel.org>
-Date: Thu, 26 Sep 2024 10:48:41 -0500
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="Uqa6mIIn"
+Received: from wse.fritz.box (pd9e59da1.dip0.t-ipconnect.de [217.229.157.161])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 62A852FC0061;
+	Thu, 26 Sep 2024 19:44:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1727372668;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YAry8FilrCiHYCOaH3xOYuciw+bUuzNS1cj6siMPTXM=;
+	b=Uqa6mIInV1nhs2WU0SeB2oj+qkZXfJckVCs3iWNnaxodVhx4lZzWhz5RIfuo2W+c6+3eRC
+	9RybTjJM7TJOS3FcFQIUxo+l8UOtURP/4WOEgLzk6/RX9swaWUl2Jefy+O11L3Kq4Gtxj7
+	QOmFkZJBy1+PQId4cOuymJguaGNHXVs=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+From: Werner Sembach <wse@tuxedocomputers.com>
+To: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Werner Sembach <wse@tuxedocomputers.com>
+Cc: bentiss@kernel.org,
+	dri-devel@lists.freedesktop.org,
+	jelle@vdwaa.nl,
+	jikos@kernel.org,
+	lee@kernel.org,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	miguel.ojeda.sandonis@gmail.com,
+	ojeda@kernel.org,
+	onitake@gmail.com,
+	pavel@ucw.cz,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH 1/1] platform/x86/tuxedo: Add virtual LampArray for TUXEDO NB04 devices
+Date: Thu, 26 Sep 2024 19:44:05 +0200
+Message-Id: <20240926174405.110748-2-wse@tuxedocomputers.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240926174405.110748-1-wse@tuxedocomputers.com>
+References: <20240926174405.110748-1-wse@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/9] platform/x86: asus-armoury: move existing tunings
- to asus-armoury module
-To: "Luke D. Jones" <luke@ljones.dev>, linux-kernel@vger.kernel.org
-Cc: linux-input@vger.kernel.org, bentiss@kernel.org, jikos@kernel.org,
- platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- hdegoede@redhat.com, corentin.chary@gmail.com
-References: <20240926092952.1284435-1-luke@ljones.dev>
- <20240926092952.1284435-4-luke@ljones.dev>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20240926092952.1284435-4-luke@ljones.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 9/26/2024 04:29, Luke D. Jones wrote:
-> The fw_attributes_class provides a much cleaner interface to all of the
-> attributes introduced to asus-wmi. This patch moves all of these extra
+The TUXEDO Sirius 16 Gen1 and TUXEDO Sirius 16 Gen2 devices have a per-key
+controllable RGB keyboard backlight. The firmware API for it is implemented
+via WMI.
 
-No need to say "this patch".
+To make the backlight userspace configurable this driver emulates a
+LampArray HID device and translates the input from hidraw to the
+corresponding WMI calls. This is a new approach as the leds subsystem lacks
+a suitable UAPI for per-key keyboard backlights, and like this no new UAPI
+needs to be established.
 
-> attributes over to fw_attributes_class, and shifts the bulk of these
-> definitions to a new kernel module to reduce the clutter of asus-wmi
-> with the intention of deprecating the asus-wmi attributes in future.
-> 
-> The work applies only to WMI methods which don't have a clearly defined
-> place within the sysfs and as a result ended up lumped together in
-> /sys/devices/platform/asus-nb-wmi/ with no standard API.
-> 
-> Where possible the fw attrs now implement defaults, min, max, scalar,
-> choices, etc. As en example dgpu_disable becomes:
-> 
-> /sys/class/firmware-attributes/asus-armoury/attributes/dgpu_disable/
-> ├── current_value
-> ├── display_name
-> ├── possible_values
-> └── type
-> 
-> as do other attributes.
-> 
-> The ppt_* based attributes are removed in this initial patch as the
-> implementation is somewhat broken due to the WMI methods requiring a
-> set of limits on the values accepted (which is not provided by WMI).
-> 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> ---
->   drivers/platform/x86/Kconfig        |  13 +
->   drivers/platform/x86/Makefile       |   1 +
->   drivers/platform/x86/asus-armoury.c | 563 ++++++++++++++++++++++++++++
->   drivers/platform/x86/asus-armoury.h | 146 ++++++++
->   4 files changed, 723 insertions(+)
->   create mode 100644 drivers/platform/x86/asus-armoury.c
->   create mode 100644 drivers/platform/x86/asus-armoury.h
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 3875abba5a79..dedf66e0d099 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -265,6 +265,19 @@ config ASUS_WIRELESS
->   	  If you choose to compile this driver as a module the module will be
->   	  called asus-wireless.
->   
-> +config ASUS_ARMOURY
-> +	tristate "ASUS Armoury driver"
-> +	depends on ACPI_WMI
+Co-developed-by: Christoffer Sandberg <cs@tuxedo.de>
+Signed-off-by: Christoffer Sandberg <cs@tuxedo.de>
+Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+Link: https://lore.kernel.org/all/1fb08a74-62c7-4d0c-ba5d-648e23082dcb@tuxedocomputers.com/
+---
+ MAINTAINERS                                   |   6 +
+ drivers/platform/x86/Kconfig                  |   2 +
+ drivers/platform/x86/Makefile                 |   3 +
+ drivers/platform/x86/tuxedo/Kbuild            |   9 +
+ drivers/platform/x86/tuxedo/Kconfig           |  14 +
+ .../x86/tuxedo/tuxedo_nb04_wmi_ab_init.c      |  86 ++
+ .../x86/tuxedo/tuxedo_nb04_wmi_ab_init.h      |  20 +
+ .../tuxedo_nb04_wmi_ab_virtual_lamp_array.c   | 741 ++++++++++++++++++
+ .../tuxedo_nb04_wmi_ab_virtual_lamp_array.h   |  18 +
+ .../x86/tuxedo/tuxedo_nb04_wmi_util.c         |  85 ++
+ .../x86/tuxedo/tuxedo_nb04_wmi_util.h         | 112 +++
+ 11 files changed, 1096 insertions(+)
+ create mode 100644 drivers/platform/x86/tuxedo/Kbuild
+ create mode 100644 drivers/platform/x86/tuxedo/Kconfig
+ create mode 100644 drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_init.c
+ create mode 100644 drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_init.h
+ create mode 100644 drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_virtual_lamp_array.c
+ create mode 100644 drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_virtual_lamp_array.h
+ create mode 100644 drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_util.c
+ create mode 100644 drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_util.h
 
-I don't think you need to depend on ACPI_WMI directly because ASUS_WMI 
-also depends on it.
-
-> +	depends on ASUS_WMI
-> +	select FW_ATTR_CLASS
-> +	help
-> +	  Say Y here if you have a WMI aware Asus machine and would like to use the
-> +	  firmware_attributes API to control various settings typically exposed in
-> +	  the ASUS Armoury Crate application available on Windows.
-> +
-> +	  To compile this driver as a module, choose M here: the module will
-> +	  be called asus-armoury.
-> +
->   config ASUS_WMI
->   	tristate "ASUS WMI Driver"
->   	depends on ACPI_WMI
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index e1b142947067..fe3e7e7dede8 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -32,6 +32,7 @@ obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
->   # ASUS
->   obj-$(CONFIG_ASUS_LAPTOP)	+= asus-laptop.o
->   obj-$(CONFIG_ASUS_WIRELESS)	+= asus-wireless.o
-> +obj-$(CONFIG_ASUS_ARMOURY)	+= asus-armoury.o
->   obj-$(CONFIG_ASUS_WMI)		+= asus-wmi.o
->   obj-$(CONFIG_ASUS_NB_WMI)	+= asus-nb-wmi.o
->   obj-$(CONFIG_ASUS_TF103C_DOCK)	+= asus-tf103c-dock.o
-> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-> new file mode 100644
-> index 000000000000..39e422b16b8e
-> --- /dev/null
-> +++ b/drivers/platform/x86/asus-armoury.c
-> @@ -0,0 +1,563 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Asus Armoury (WMI) attributes driver. This driver uses the fw_attributes
-> + * class to expose the various WMI functions that many gaming and some
-> + * non-gaming ASUS laptops have available.
-> + * These typically don't fit anywhere else in the sysfs such as under LED class,
-> + * hwmon or other, and are set in Windows using the ASUS Armoury Crate tool.
-> + *
-> + * Copyright(C) 2010 Intel Corporation.
-> + * Copyright(C) 2024-2024 Luke Jones <luke@ljones.dev>
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/device.h>
-> +#include <linux/dmi.h>
-> +#include <linux/errno.h>
-> +#include <linux/fs.h>
-> +#include <linux/kernel.h>
-> +#include <linux/kmod.h>
-> +#include <linux/kobject.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/platform_data/x86/asus-wmi.h>
-> +#include <linux/types.h>
-> +
-> +#include "asus-armoury.h"
-> +#include "firmware_attributes_class.h"
-> +#include "asus-wmi.h"
-> +
-> +#define ASUS_NB_WMI_EVENT_GUID "0B3CBB35-E3C2-45ED-91C2-4C5A6D195D1C"
-> +
-> +#define ASUS_MINI_LED_MODE_MASK 0x03
-> +/* Standard modes for devices with only on/off */
-> +#define ASUS_MINI_LED_OFF 0x00
-> +#define ASUS_MINI_LED_ON 0x01
-> +/* Like "on" but the effect is more vibrant or brighter */
-> +#define ASUS_MINI_LED_STRONG_MODE 0x02
-> +/* New modes for devices with 3 mini-led mode types */
-> +#define ASUS_MINI_LED_2024_WEAK 0x00
-> +#define ASUS_MINI_LED_2024_STRONG 0x01
-> +#define ASUS_MINI_LED_2024_OFF 0x02
-> +
-> +/* Default limits for tunables available on ASUS ROG laptops */
-> +#define PPT_CPU_LIMIT_MIN 5
-> +#define PPT_CPU_LIMIT_MAX 150
-> +#define PPT_CPU_LIMIT_DEFAULT 80
-> +#define PPT_PLATFORM_MIN 5
-> +#define PPT_PLATFORM_MAX 100
-> +#define PPT_PLATFORM_DEFAULT 80
-> +#define NVIDIA_BOOST_MIN 5
-> +#define NVIDIA_BOOST_MAX 25
-> +#define NVIDIA_TEMP_MIN 75
-> +#define NVIDIA_TEMP_MAX 87
-
-Purely for alphabetical order purposes shouldn't NVIDIA_* come before PPT*?
-
-Also can you leave a comment where these default limits come from?
-
-> +
-> +static const struct class *fw_attr_class;
-> +
-> +struct asus_armoury_priv {
-> +	struct device *fw_attr_dev;
-> +	struct kset *fw_attr_kset;
-> +
-> +	u32 mini_led_dev_id;
-> +	u32 gpu_mux_dev_id;
-> +
-> +	struct mutex mutex;
-> +};
-> +
-> +static struct asus_armoury_priv asus_armoury = { .mutex = __MUTEX_INITIALIZER(
-> +							 asus_armoury.mutex) };
-> +
-> +struct fw_attrs_group {
-> +	bool pending_reboot;
-> +};
-> +
-> +static struct fw_attrs_group fw_attrs = {
-> +	.pending_reboot = false,
-> +};
-> +
-> +struct asus_attr_group {
-> +	const struct attribute_group *attr_group;
-> +	u32 wmi_devid;
-> +};
-> +
-> +static bool asus_wmi_is_present(u32 dev_id)
-> +{
-> +	u32 retval;
-> +	int status;
-> +
-> +	status = asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS, dev_id, 0, &retval);
-> +	pr_debug("%s called (0x%08x), retval: 0x%08x\n", __func__, dev_id, retval);
-> +
-> +	return status == 0 && (retval & ASUS_WMI_DSTS_PRESENCE_BIT);
-
-It seems like you're hiding the potential ACPI failures which could make 
-this a bit harder to debug in the future.  What do you think about doing 
-it like this:
-
-u32 ret;
-
-if (!asus_wmi_evaluate_method()) {
-	pr_debug("acpi_wmi_evaluate_method failed\n");
-	return false;
-}
-
-return ret & ASUS_WMI_DSDTS_PRESENCE_BIT;
-
-> +}
-> +
-> +static void asus_set_reboot_and_signal_event(void)
-> +{
-> +	fw_attrs.pending_reboot = true;
-> +	kobject_uevent(&asus_armoury.fw_attr_dev->kobj, KOBJ_CHANGE);
-> +}
-> +
-> +static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-> +{
-> +	return sysfs_emit(buf, "%d\n", fw_attrs.pending_reboot);
-> +}
-> +
-> +static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
-> +
-> +static bool asus_bios_requires_reboot(struct kobj_attribute *attr)
-> +{
-> +	return !strcmp(attr->attr.name, "gpu_mux_mode");
-> +}
-> +
-> +/**
-> + * attr_int_store() - Generic store function for use with most WMI functions.
-> + * @kobj: Pointer to the driver object.
-> + * @kobj_attribute: Pointer to the attribute calling this function.
-> + * @buf: The buffer to read from, this is parsed to `int` type.
-> + * @count:
-
-Missing a description here.
-
-> + * @min: Minimum accepted value. Below this returns -EINVAL.
-> + * @max: Maximum accepted value. Above this returns -EINVAL.
-> + * @store_value: Pointer to where the parsed value should be stored.
-> + * @wmi_dev: The WMI function ID to use.
-> + *
-> + * The WMI functions available on most ASUS laptops return a 1 as "success", and
-> + * a 0 as failed. However some functions can return n > 1 for additional errors.
-> + * attr_int_store() currently treats all values which are not 1 as errors, ignoring
-
-IMO; Don't refer to function() in the description.
-
-> + * the possible differences in WMI error returns.
-> + *
-> + * Returns: Either count, or an error.
-> + */
-> +static ssize_t attr_int_store(struct kobject *kobj, struct kobj_attribute *attr, const char *buf,
-> +			      size_t count, u32 min, u32 max, u32 *store_value, u32 wmi_dev)
-> +{
-> +	u32 result, value;
-> +	int err;
-> +
-> +	err = kstrtouint(buf, 10, &value);
-> +	if (err)
-> +		return err;
-> +
-> +	if (value < min || value > max)
-> +		return -EINVAL;
-> +
-> +	err = asus_wmi_set_devstate(wmi_dev, value, &result);
-> +	if (err) {
-> +		pr_err("Failed to set %s: %d\n", attr->attr.name, err);
-> +		return err;
-> +	}
-> +
-> +	if (result != 1) {
-> +		pr_err("Failed to set %s (result): 0x%x\n", attr->attr.name, result);
-> +		return -EIO;
-> +	}
-> +
-> +	if (store_value != NULL)
-> +		*store_value = value;
-> +	sysfs_notify(kobj, NULL, attr->attr.name);
-> +
-> +	if (asus_bios_requires_reboot(attr))
-> +		asus_set_reboot_and_signal_event();
-> +
-> +	return count;
-> +}
-> +
-> +/* Mini-LED mode **************************************************************/
-> +static ssize_t mini_led_mode_current_value_show(struct kobject *kobj,
-> +						struct kobj_attribute *attr, char *buf)
-> +{
-> +	u32 value;
-> +	int err;
-> +
-> +	err = asus_wmi_get_devstate_dsts(asus_armoury.mini_led_dev_id, &value);
-> +	if (err)
-> +		return err;
-> +
-> +	value &= ASUS_MINI_LED_MODE_MASK;
-> +
-> +	/*
-> +	 * Remap the mode values to match previous generation mini-LED. The last gen
-> +	 * WMI 0 == off, while on this version WMI 2 == off (flipped).
-> +	 */
-> +	if (asus_armoury.mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE2) {
-> +		switch (value) {
-> +		case ASUS_MINI_LED_2024_WEAK:
-> +			value = ASUS_MINI_LED_ON;
-> +			break;
-> +		case ASUS_MINI_LED_2024_STRONG:
-> +			value = ASUS_MINI_LED_STRONG_MODE;
-> +			break;
-> +		case ASUS_MINI_LED_2024_OFF:
-> +			value = ASUS_MINI_LED_OFF;
-> +			break;
-> +		}
-> +	}
-> +
-> +	return sysfs_emit(buf, "%u\n", value);
-> +}
-> +
-> +static ssize_t mini_led_mode_current_value_store(struct kobject *kobj,
-> +						 struct kobj_attribute *attr, const char *buf,
-> +						 size_t count)
-> +{
-> +	int result, err;
-> +	u32 mode;
-> +
-> +	err = kstrtou32(buf, 10, &mode);
-> +	if (err)
-> +		return err;
-> +
-> +	if (asus_armoury.mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE &&
-> +	    mode > ASUS_MINI_LED_ON)
-> +		return -EINVAL;
-> +	if (asus_armoury.mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE2 &&
-> +	    mode > ASUS_MINI_LED_STRONG_MODE)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * Remap the mode values so expected behaviour is the same as the last
-> +	 * generation of mini-LED with 0 == off, 1 == on.
-> +	 */
-> +	if (asus_armoury.mini_led_dev_id == ASUS_WMI_DEVID_MINI_LED_MODE2) {
-> +		switch (mode) {
-> +		case ASUS_MINI_LED_OFF:
-> +			mode = ASUS_MINI_LED_2024_OFF;
-> +			break;
-> +		case ASUS_MINI_LED_ON:
-> +			mode = ASUS_MINI_LED_2024_WEAK;
-> +			break;
-> +		case ASUS_MINI_LED_STRONG_MODE:
-> +			mode = ASUS_MINI_LED_2024_STRONG;
-> +			break;
-> +		}
-> +	}
-> +
-> +	err = asus_wmi_set_devstate(asus_armoury.mini_led_dev_id, mode, &result);
-> +	if (err) {
-> +		pr_warn("Failed to set mini-LED: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (result != 1) {
-> +		pr_warn("Failed to set mini-LED mode (result): 0x%x\n", result);
-> +		return -EIO;
-> +	}
-> +
-> +	sysfs_notify(kobj, NULL, attr->attr.name);
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t mini_led_mode_possible_values_show(struct kobject *kobj,
-> +						  struct kobj_attribute *attr, char *buf)
-> +{
-> +	switch (asus_armoury.mini_led_dev_id) {
-> +	case ASUS_WMI_DEVID_MINI_LED_MODE:
-> +		return sysfs_emit(buf, "0;1\n");
-> +	case ASUS_WMI_DEVID_MINI_LED_MODE2:
-> +		return sysfs_emit(buf, "0;1;2\n");
-> +	}
-> +
-> +	return sysfs_emit(buf, "0\n");
-> +}
-> +
-> +ATTR_GROUP_ENUM_CUSTOM(mini_led_mode, "mini_led_mode", "Set the mini-LED backlight mode");
-> +
-> +static ssize_t gpu_mux_mode_current_value_store(struct kobject *kobj,
-> +						struct kobj_attribute *attr, const char *buf,
-> +						size_t count)
-> +{
-> +	int result, err;
-> +	u32 optimus;
-> +
-> +	err = kstrtou32(buf, 10, &optimus);
-> +	if (err)
-> +		return err;
-> +
-> +	if (optimus > 1)
-> +		return -EINVAL;
-> +
-> +	if (asus_wmi_is_present(ASUS_WMI_DEVID_DGPU)) {
-> +		err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_DGPU, &result);
-> +		if (err)
-> +			return err;
-> +		if (result && !optimus) {
-> +			err = -ENODEV;
-> +			pr_warn("Can not switch MUX to dGPU mode when dGPU is disabled: %02X %02X %d\n",
-> +				result, optimus, err);
-> +			return err;
-> +		}
-> +	}
-> +
-> +	if (asus_wmi_is_present(ASUS_WMI_DEVID_EGPU)) {
-> +		err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_EGPU, &result);
-> +		if (err)
-> +			return err;
-> +		if (result && !optimus) {
-> +			err = -ENODEV;
-> +			pr_warn("Can not switch MUX to dGPU mode when eGPU is enabled: %d\n",
-> +				err);
-> +			return err;
-> +		}
-> +	}
-> +
-> +	err = asus_wmi_set_devstate(asus_armoury.gpu_mux_dev_id, optimus, &result);
-> +	if (err) {
-> +		pr_err("Failed to set GPU MUX mode: %d\n", err);
-> +		return err;
-> +	}
-> +	/* !1 is considered a fail by ASUS */
-> +	if (result != 1) {
-> +		pr_warn("Failed to set GPU MUX mode (result): 0x%x\n", result);
-> +		return -EIO;
-> +	}
-> +
-> +	sysfs_notify(kobj, NULL, attr->attr.name);
-> +	asus_set_reboot_and_signal_event();
-> +
-> +	return count;
-> +}
-> +WMI_SHOW_INT(gpu_mux_mode_current_value, "%d\n", asus_armoury.gpu_mux_dev_id);
-> +ATTR_GROUP_BOOL_CUSTOM(gpu_mux_mode, "gpu_mux_mode", "Set the GPU display MUX mode");
-> +
-> +/*
-> + * A user may be required to store the value twice, typical store first, then
-> + * rescan PCI bus to activate power, then store a second time to save correctly.
-> + * The reason for this is that an extra code path in the ACPI is enabled when
-> + * the device and bus are powered.
-> + */
-> +static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
-> +						struct kobj_attribute *attr, const char *buf,
-> +						size_t count)
-> +{
-> +	int result, err;
-> +	u32 disable;
-> +
-> +	err = kstrtou32(buf, 10, &disable);
-> +	if (err)
-> +		return err;
-> +
-> +	if (disable > 1)
-> +		return -EINVAL;
-> +
-> +	if (asus_armoury.gpu_mux_dev_id) {
-> +		err = asus_wmi_get_devstate_dsts(asus_armoury.gpu_mux_dev_id, &result);
-> +		if (err)
-> +			return err;
-> +		if (!result && disable) {
-> +			err = -ENODEV;
-> +			pr_warn("Can not disable dGPU when the MUX is in dGPU mode: %d\n", err);
-> +			return err;
-> +		}
-> +	}
-> +
-> +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_DGPU, disable, &result);
-> +	if (err) {
-> +		pr_warn("Failed to set dGPU disable: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (result != 1) {
-> +		pr_warn("Failed to set dGPU disable (result): 0x%x\n", result);
-> +		return -EIO;
-> +	}
-> +
-> +	sysfs_notify(kobj, NULL, attr->attr.name);
-> +
-> +	return count;
-> +}
-> +WMI_SHOW_INT(dgpu_disable_current_value, "%d\n", ASUS_WMI_DEVID_DGPU);
-> +ATTR_GROUP_BOOL_CUSTOM(dgpu_disable, "dgpu_disable", "Disable the dGPU");
-> +
-> +/* The ACPI call to enable the eGPU also disables the internal dGPU */
-> +static ssize_t egpu_enable_current_value_store(struct kobject *kobj, struct kobj_attribute *attr,
-> +					       const char *buf, size_t count)
-> +{
-> +	int result, err;
-> +	u32 enable;
-> +
-> +	err = kstrtou32(buf, 10, &enable);
-> +	if (err)
-> +		return err;
-> +
-> +	if (enable > 1)
-> +		return -EINVAL;
-> +
-> +	err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_EGPU_CONNECTED, &result);
-> +	if (err) {
-> +		pr_warn("Failed to get eGPU connection status: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (asus_armoury.gpu_mux_dev_id) {
-> +		err = asus_wmi_get_devstate_dsts(asus_armoury.gpu_mux_dev_id, &result);
-> +		if (err) {
-> +			pr_warn("Failed to get GPU MUX status: %d\n", result);
-> +			return result;
-> +		}
-> +		if (!result && enable) {
-> +			err = -ENODEV;
-> +			pr_warn("Can not enable eGPU when the MUX is in dGPU mode: %d\n", err);
-> +			return err;
-> +		}
-> +	}
-> +
-> +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_EGPU, enable, &result);
-> +	if (err) {
-> +		pr_warn("Failed to set eGPU state: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (result != 1) {
-> +		pr_warn("Failed to set eGPU state (retval): 0x%x\n", result);
-> +		return -EIO;
-> +	}
-> +
-> +	sysfs_notify(kobj, NULL, attr->attr.name);
-> +
-> +	return count;
-> +}
-> +WMI_SHOW_INT(egpu_enable_current_value, "%d\n", ASUS_WMI_DEVID_EGPU);
-> +ATTR_GROUP_BOOL_CUSTOM(egpu_enable, "egpu_enable", "Enable the eGPU (also disables dGPU)");
-> +
-> +/* Simple attribute creation */
-> +ATTR_GROUP_ENUM_INT_RO(charge_mode, "charge_mode", ASUS_WMI_DEVID_CHARGE_MODE, "0;1;2",
-> +		       "Show the current mode of charging");
-> +
-> +ATTR_GROUP_BOOL_RW(boot_sound, "boot_sound", ASUS_WMI_DEVID_BOOT_SOUND,
-> +		   "Set the boot POST sound");
-> +ATTR_GROUP_BOOL_RW(mcu_powersave, "mcu_powersave", ASUS_WMI_DEVID_MCU_POWERSAVE,
-> +		   "Set MCU powersaving mode");
-> +ATTR_GROUP_BOOL_RW(panel_od, "panel_overdrive", ASUS_WMI_DEVID_PANEL_OD,
-> +		   "Set the panel refresh overdrive");
-> +ATTR_GROUP_BOOL_RO(egpu_connected, "egpu_connected", ASUS_WMI_DEVID_EGPU_CONNECTED,
-> +		   "Show the eGPU connection status");
-> +
-> +/* If an attribute does not require any special case handling add it here */
-> +static const struct asus_attr_group armoury_attr_groups[] = {
-> +	{ &egpu_connected_attr_group, ASUS_WMI_DEVID_EGPU_CONNECTED },
-> +	{ &egpu_enable_attr_group, ASUS_WMI_DEVID_EGPU },
-> +	{ &dgpu_disable_attr_group, ASUS_WMI_DEVID_DGPU },
-> +
-> +	{ &charge_mode_attr_group, ASUS_WMI_DEVID_CHARGE_MODE },
-> +	{ &boot_sound_attr_group, ASUS_WMI_DEVID_BOOT_SOUND },
-> +	{ &mcu_powersave_attr_group, ASUS_WMI_DEVID_MCU_POWERSAVE },
-> +	{ &panel_od_attr_group, ASUS_WMI_DEVID_PANEL_OD },
-> +};
-> +
-> +static int asus_fw_attr_add(void)
-> +{
-> +	int err;
-> +
-> +	err = fw_attributes_class_get(&fw_attr_class);
-> +	if (err)
-> +		goto fail_class_created;
-
-Is that right?  If you fail to get the class shouldn't you just return 
-an error code?
-
-> +
-> +	asus_armoury.fw_attr_dev =
-> +		device_create(fw_attr_class, NULL, MKDEV(0, 0), NULL, "%s", DRIVER_NAME);
-> +
-> +	if (IS_ERR(asus_armoury.fw_attr_dev)) {
-> +		err = PTR_ERR(asus_armoury.fw_attr_dev);
-> +		goto fail_class_created;
-> +	}
-> +
-> +	asus_armoury.fw_attr_kset =
-> +		kset_create_and_add("attributes", NULL, &asus_armoury.fw_attr_dev->kobj);
-> +	if (!asus_armoury.fw_attr_dev) {
-> +		err = -ENOMEM;
-> +		pr_debug("Failed to create and add attributes\n");
-> +		goto err_destroy_classdev;
-> +	}
-> +
-> +	err = sysfs_create_file(&asus_armoury.fw_attr_kset->kobj, &pending_reboot.attr);
-> +	if (err) {
-> +		pr_warn("Failed to create sysfs level attributes\n");
-> +		goto fail_class_created;
-> +	}
-> +
-> +	err = 0;
-This seems unnecessary.
-
-> +	asus_armoury.mini_led_dev_id = 0;
-> +	if (asus_wmi_is_present(ASUS_WMI_DEVID_MINI_LED_MODE)) {
-> +		asus_armoury.mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE;
-> +		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
-> +					 &mini_led_mode_attr_group);
-> +	} else if (asus_wmi_is_present(ASUS_WMI_DEVID_MINI_LED_MODE2)) {
-> +		asus_armoury.mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE2;
-> +		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
-> +					 &mini_led_mode_attr_group);
-> +	}
-> +	if (err)
-> +		pr_warn("Failed to create sysfs-group for mini_led\n");
-
-Shouldn't you fail and clean up here?
-
-> +
-> +	err = 0;
-
-Assuming you follow my above comment this is unnecessary.
-
-> +	asus_armoury.gpu_mux_dev_id = 0;
-> +	if (asus_wmi_is_present(ASUS_WMI_DEVID_GPU_MUX)) {
-> +		asus_armoury.gpu_mux_dev_id = ASUS_WMI_DEVID_GPU_MUX;
-> +		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
-> +					 &gpu_mux_mode_attr_group);
-> +	} else if (asus_wmi_is_present(ASUS_WMI_DEVID_GPU_MUX_VIVO)) {
-> +		asus_armoury.gpu_mux_dev_id = ASUS_WMI_DEVID_GPU_MUX_VIVO;
-> +		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
-> +					 &gpu_mux_mode_attr_group);
-> +	}
-> +	if (err)
-> +		pr_warn("Failed to create sysfs-group for gpu_mux\n");
-
-Shouldn't you fail and clean up here?
-
-> +
-> +	for (int i = 0; i < ARRAY_SIZE(armoury_attr_groups); i++) {
-> +		if (!asus_wmi_is_present(armoury_attr_groups[i].wmi_devid))
-> +			continue;
-> +
-> +		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
-> +					 armoury_attr_groups[i].attr_group);
-> +		if (err)
-> +			pr_warn("Failed to create sysfs-group for %s\n",
-> +				armoury_attr_groups[i].attr_group->name);
-
-Shouldn't you fail and clean up here?
-
-> +		else
-> +			pr_debug("Created sysfs-group for %s\n",
-> +				 armoury_attr_groups[i].attr_group->name);
-> +	}
-> +
-> +	return 0;
-> +
-> +err_destroy_classdev:
-> +	device_destroy(fw_attr_class, MKDEV(0, 0));
-> +
-> +fail_class_created:
-> +	fw_attributes_class_put();
-> +	return err;
-> +}
-> +
-> +/* Init / exit ****************************************************************/
-> +
-> +static int __init asus_fw_init(void)
-> +{
-> +	int err;
-> +
-> +	fw_attrs.pending_reboot = false;
-
-Isn't it already initialized to false?
-
-> +
-> +	err = asus_fw_attr_add();
-> +	if (err)
-> +		return err;
-> +
-> +	return 0;
-> +}
-> +
-> +static void __exit asus_fw_exit(void)
-> +{
-> +	mutex_lock(&asus_armoury.mutex);
-
-I think you should be using this mutex more.  For example what if an 
-attribute is being written while the module is unloaded?
-
-> +
-> +	sysfs_remove_file(&asus_armoury.fw_attr_kset->kobj, &pending_reboot.attr);
-> +	kset_unregister(asus_armoury.fw_attr_kset);
-> +	device_destroy(fw_attr_class, MKDEV(0, 0));
-> +	fw_attributes_class_put();
-> +
-> +	mutex_unlock(&asus_armoury.mutex);
-> +}
-> +
-> +module_init(asus_fw_init);
-> +module_exit(asus_fw_exit);
-> +
-> +MODULE_IMPORT_NS(ASUS_WMI);
-> +MODULE_AUTHOR("Luke Jones <luke@ljones.dev>");
-> +MODULE_DESCRIPTION("ASUS BIOS Configuration Driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("wmi:" ASUS_NB_WMI_EVENT_GUID);
-> diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
-> new file mode 100644
-> index 000000000000..b99fd136abf1
-> --- /dev/null
-> +++ b/drivers/platform/x86/asus-armoury.h
-> @@ -0,0 +1,146 @@
-> +/* SPDX-License-Identifier: GPL-2.0
-> + *
-> + * Definitions for kernel modules using asus-armoury driver
-> + *
-> + *  Copyright (c) 2024 Luke Jones <luke@ljones.dev>
-> + */
-> +
-> +#ifndef _ASUS_BIOSCFG_H_
-> +#define _ASUS_BIOSCFG_H_
-> +
-> +#include <linux/types.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define DRIVER_NAME "asus-armoury"
-> +
-> +static ssize_t attr_int_store(struct kobject *kobj, struct kobj_attribute *attr,
-> +			      const char *buf, size_t count, u32 min, u32 max,
-> +			      u32 *store_value, u32 wmi_dev);
-> +
-> +static ssize_t enum_type_show(struct kobject *kobj, struct kobj_attribute *attr,
-> +			      char *buf)
-> +{
-> +	return sysfs_emit(buf, "enumeration\n");
-> +}
-> +
-> +#define __ASUS_ATTR_RO(_func, _name)                                  \
-> +	{                                                             \
-> +		.attr = { .name = __stringify(_name), .mode = 0444 }, \
-> +		.show = _func##_##_name##_show,                       \
-> +	}
-> +
-> +#define __ASUS_ATTR_RO_AS(_name, _show)                               \
-> +	{                                                             \
-> +		.attr = { .name = __stringify(_name), .mode = 0444 }, \
-> +		.show = _show,                                        \
-> +	}
-> +
-> +#define __ASUS_ATTR_RW(_func, _name) \
-> +	__ATTR(_name, 0644, _func##_##_name##_show, _func##_##_name##_store)
-> +
-> +#define __WMI_STORE_INT(_attr, _min, _max, _wmi)                          \
-> +	static ssize_t _attr##_store(struct kobject *kobj,                \
-> +				     struct kobj_attribute *attr,         \
-> +				     const char *buf, size_t count)       \
-> +	{                                                                 \
-> +		return attr_int_store(kobj, attr, buf, count, _min, _max, \
-> +				      NULL, _wmi);                        \
-> +	}
-> +
-> +#define WMI_SHOW_INT(_attr, _fmt, _wmi)                                     \
-> +	static ssize_t _attr##_show(struct kobject *kobj,                   \
-> +				    struct kobj_attribute *attr, char *buf) \
-> +	{                                                                   \
-> +		u32 result;                                                 \
-> +		int err;                                                    \
-> +		err = asus_wmi_get_devstate_dsts(_wmi, &result);            \
-> +		if (err)                                                    \
-> +			return err;                                         \
-> +		return sysfs_emit(buf, _fmt,                                \
-> +				  result & ~ASUS_WMI_DSTS_PRESENCE_BIT);    \
-> +	}
-> +
-> +/* Create functions and attributes for use in other macros or on their own */
-> +
-> +#define __ATTR_CURRENT_INT_RO(_attr, _wmi)                          \
-> +	WMI_SHOW_INT(_attr##_current_value, "%d\n", _wmi);          \
-> +	static struct kobj_attribute attr_##_attr##_current_value = \
-> +		__ASUS_ATTR_RO(_attr, current_value)
-> +
-> +#define __ATTR_CURRENT_INT_RW(_attr, _minv, _maxv, _wmi)            \
-> +	__WMI_STORE_INT(_attr##_current_value, _minv, _maxv, _wmi); \
-> +	WMI_SHOW_INT(_attr##_current_value, "%d\n", _wmi);          \
-> +	static struct kobj_attribute attr_##_attr##_current_value = \
-> +		__ASUS_ATTR_RW(_attr, current_value)
-> +
-> +/* Shows a formatted static variable */
-> +#define __ATTR_SHOW_FMT(_prop, _attrname, _fmt, _val)                         \
-> +	static ssize_t _attrname##_##_prop##_show(                            \
-> +		struct kobject *kobj, struct kobj_attribute *attr, char *buf) \
-> +	{                                                                     \
-> +		return sysfs_emit(buf, _fmt, _val);                           \
-> +	}                                                                     \
-> +	static struct kobj_attribute attr_##_attrname##_##_prop =             \
-> +		__ASUS_ATTR_RO(_attrname, _prop)
-> +
-> +/* Boolean style enumeration, base macro. Requires adding show/store */
-> +#define __ATTR_GROUP_ENUM(_attrname, _fsname, _possible, _dispname)     \
-> +	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);    \
-> +	__ATTR_SHOW_FMT(possible_values, _attrname, "%s\n", _possible); \
-> +	static struct kobj_attribute attr_##_attrname##_type =          \
-> +		__ASUS_ATTR_RO_AS(type, enum_type_show);                \
-> +	static struct attribute *_attrname##_attrs[] = {                \
-> +		&attr_##_attrname##_current_value.attr,                 \
-> +		&attr_##_attrname##_display_name.attr,                  \
-> +		&attr_##_attrname##_possible_values.attr,               \
-> +		&attr_##_attrname##_type.attr,                          \
-> +		NULL                                                    \
-> +	};                                                              \
-> +	static const struct attribute_group _attrname##_attr_group = {  \
-> +		.name = _fsname, .attrs = _attrname##_attrs             \
-> +	}
-> +
-> +#define ATTR_GROUP_BOOL_RO(_attrname, _fsname, _wmi, _dispname) \
-> +	__ATTR_CURRENT_INT_RO(_attrname, _wmi);                 \
-> +	__ATTR_GROUP_ENUM(_attrname, _fsname, "0;1", _dispname)
-> +
-> +#define ATTR_GROUP_BOOL_RW(_attrname, _fsname, _wmi, _dispname) \
-> +	__ATTR_CURRENT_INT_RW(_attrname, 0, 1, _wmi);           \
-> +	__ATTR_GROUP_ENUM(_attrname, _fsname, "0;1", _dispname)
-> +
-> +/*
-> + * Requires <name>_current_value_show(), <name>_current_value_show()
-> + */
-> +#define ATTR_GROUP_BOOL_CUSTOM(_attrname, _fsname, _dispname)           \
-> +	static struct kobj_attribute attr_##_attrname##_current_value = \
-> +		__ASUS_ATTR_RW(_attrname, current_value);               \
-> +	__ATTR_GROUP_ENUM(_attrname, _fsname, "0;1", _dispname)
-> +
-> +#define ATTR_GROUP_ENUM_INT_RO(_attrname, _fsname, _wmi, _possible, _dispname) \
-> +	__ATTR_CURRENT_INT_RO(_attrname, _wmi);                                \
-> +	__ATTR_GROUP_ENUM(_attrname, _fsname, _possible, _dispname)
-> +
-> +/*
-> + * Requires <name>_current_value_show(), <name>_current_value_show()
-> + * and <name>_possible_values_show()
-> + */
-> +#define ATTR_GROUP_ENUM_CUSTOM(_attrname, _fsname, _dispname)             \
-> +	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);      \
-> +	static struct kobj_attribute attr_##_attrname##_current_value =   \
-> +		__ASUS_ATTR_RW(_attrname, current_value);                 \
-> +	static struct kobj_attribute attr_##_attrname##_possible_values = \
-> +		__ASUS_ATTR_RO(_attrname, possible_values);               \
-> +	static struct kobj_attribute attr_##_attrname##_type =            \
-> +		__ASUS_ATTR_RO_AS(type, enum_type_show);                  \
-> +	static struct attribute *_attrname##_attrs[] = {                  \
-> +		&attr_##_attrname##_current_value.attr,                   \
-> +		&attr_##_attrname##_display_name.attr,                    \
-> +		&attr_##_attrname##_possible_values.attr,                 \
-> +		&attr_##_attrname##_type.attr,                            \
-> +		NULL                                                      \
-> +	};                                                                \
-> +	static const struct attribute_group _attrname##_attr_group = {    \
-> +		.name = _fsname, .attrs = _attrname##_attrs               \
-> +	}
-> +
-> +#endif /* _ASUS_BIOSCFG_H_ */
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cc40a9d9b8cd1..3385ad51af194 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -23358,6 +23358,12 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git turbostat
+ F:	tools/power/x86/turbostat/
+ F:	tools/testing/selftests/turbostat/
+ 
++TUXEDO DRIVERS
++M:	Werner Sembach <wse@tuxedocomputers.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Supported
++F:	drivers/platform/x86/tuxedo/
++
+ TW5864 VIDEO4LINUX DRIVER
+ M:	Bluecherry Maintainers <maintainers@bluecherrydvr.com>
+ M:	Andrey Utkin <andrey.utkin@corp.bluecherry.net>
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index ddfccc226751f..c7cffb222adac 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1196,3 +1196,5 @@ config P2SB
+ 	  The main purpose of this library is to unhide P2SB device in case
+ 	  firmware kept it hidden on some platforms in order to access devices
+ 	  behind it.
++
++source "drivers/platform/x86/tuxedo/Kconfig"
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index e1b1429470674..1562dcd7ad9a5 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -153,3 +153,6 @@ obj-$(CONFIG_WINMATE_FM07_KEYS)		+= winmate-fm07-keys.o
+ 
+ # SEL
+ obj-$(CONFIG_SEL3350_PLATFORM)		+= sel3350-platform.o
++
++# TUXEDO
++obj-y					+= tuxedo/
+diff --git a/drivers/platform/x86/tuxedo/Kbuild b/drivers/platform/x86/tuxedo/Kbuild
+new file mode 100644
+index 0000000000000..5a3506ab98131
+--- /dev/null
++++ b/drivers/platform/x86/tuxedo/Kbuild
+@@ -0,0 +1,9 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# TUXEDO X86 Platform Specific Drivers
++#
++
++tuxedo_nb04_wmi_ab-y			:= tuxedo_nb04_wmi_ab_init.o
++tuxedo_nb04_wmi_ab-y			+= tuxedo_nb04_wmi_util.o
++tuxedo_nb04_wmi_ab-y			+= tuxedo_nb04_wmi_ab_virtual_lamp_array.o
++obj-$(CONFIG_TUXEDO_NB04_WMI_AB)	+= tuxedo_nb04_wmi_ab.o
+diff --git a/drivers/platform/x86/tuxedo/Kconfig b/drivers/platform/x86/tuxedo/Kconfig
+new file mode 100644
+index 0000000000000..b1f7c6ceeaae4
+--- /dev/null
++++ b/drivers/platform/x86/tuxedo/Kconfig
+@@ -0,0 +1,14 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# TUXEDO X86 Platform Specific Drivers
++#
++
++menuconfig TUXEDO_NB04_WMI_AB
++	tristate "TUXEDO NB04 WMI AB Platform Driver"
++	default m
++	help
++	  This driver implements the WMI AB device found on TUXEDO Notebooks
++	  with board vendor NB04. For the time being only the keyboard backlight
++	  control is implemented.
++
++	  When compiled as a module it will be called tuxedo_nb04_wmi_ab.
+diff --git a/drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_init.c b/drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_init.c
+new file mode 100644
+index 0000000000000..6e4446b0e3dd8
+--- /dev/null
++++ b/drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_init.c
+@@ -0,0 +1,86 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * This driver implements the WMI AB device found on TUXEDO Notebooks with board
++ * vendor NB04.
++ *
++ * Copyright (C) 2024 Werner Sembach wse@tuxedocomputers.com
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/module.h>
++#include <linux/wmi.h>
++#include <linux/dmi.h>
++
++#include "tuxedo_nb04_wmi_ab_virtual_lamp_array.h"
++
++#include "tuxedo_nb04_wmi_ab_init.h"
++
++// We don't know if the WMI API is stable and how unique the GUID is for this ODM. To be on the safe
++// side we therefore only run this driver on tested devices defined by this list.
++static const struct dmi_system_id tested_devices_dmi_table[] = {
++	{
++		// TUXEDO Sirius 16 Gen1
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "APX958"),
++		},
++	},
++	{
++		// TUXEDO Sirius 16 Gen2
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TUXEDO"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "AHP958"),
++		},
++	},
++	{ }
++};
++
++static int probe(struct wmi_device *wdev, const void __always_unused *context)
++{
++	struct tuxedo_nb04_wmi_driver_data_t *driver_data;
++
++	if (dmi_check_system(tested_devices_dmi_table))
++		return -ENODEV;
++
++	driver_data = devm_kzalloc(&wdev->dev, sizeof(struct tuxedo_nb04_wmi_driver_data_t),
++				   GFP_KERNEL);
++	if (!driver_data)
++		return -ENOMEM;
++
++	mutex_init(&driver_data->wmi_access_mutex);
++
++	dev_set_drvdata(&wdev->dev, driver_data);
++
++	tuxedo_nb04_virtual_lamp_array_add_device(wdev, &driver_data->virtual_lamp_array_hdev);
++
++	return 0;
++}
++
++static void remove(struct wmi_device *wdev)
++{
++	struct tuxedo_nb04_wmi_driver_data_t *driver_data = wdev->dev.driver_data;
++
++	hid_destroy_device(driver_data->virtual_lamp_array_hdev);
++}
++
++static const struct wmi_device_id tuxedo_nb04_wmi_ab_device_ids[] = {
++	{ .guid_string = "80C9BAA6-AC48-4538-9234-9F81A55E7C85" },
++	{ }
++};
++MODULE_DEVICE_TABLE(wmi, tuxedo_nb04_wmi_ab_device_ids);
++
++static struct wmi_driver tuxedo_nb04_wmi_ab_driver = {
++	.driver = {
++		.name = "tuxedo_nb04_wmi_ab",
++		.owner = THIS_MODULE
++	},
++	.id_table = tuxedo_nb04_wmi_ab_device_ids,
++	.probe = probe,
++	.remove = remove
++};
++module_wmi_driver(tuxedo_nb04_wmi_ab_driver);
++
++MODULE_DESCRIPTION("Virtual HID LampArray interface for TUXEDO NB04 devices");
++MODULE_AUTHOR("Werner Sembach <wse@tuxedocomputers.com>");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_init.h b/drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_init.h
+new file mode 100644
+index 0000000000000..aebfd465c9b61
+--- /dev/null
++++ b/drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_init.h
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This driver implements the WMI AB device found on TUXEDO Notebooks with board
++ * vendor NB04.
++ *
++ * Copyright (C) 2024 Werner Sembach wse@tuxedocomputers.com
++ */
++
++#ifndef TUXEDO_NB04_WMI_AB_INIT_H
++#define TUXEDO_NB04_WMI_AB_INIT_H
++
++#include <linux/mutex.h>
++#include <linux/hid.h>
++
++struct tuxedo_nb04_wmi_driver_data_t {
++	struct mutex wmi_access_mutex;
++	struct hid_device *virtual_lamp_array_hdev;
++};
++
++#endif
+diff --git a/drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_virtual_lamp_array.c b/drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_virtual_lamp_array.c
+new file mode 100644
+index 0000000000000..04af19aa6ad5f
+--- /dev/null
++++ b/drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_virtual_lamp_array.c
+@@ -0,0 +1,741 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * This code gives the built in RGB lighting of the TUXEDO NB04 devices a
++ * standardised interface, namely HID LampArray.
++ *
++ * Copyright (C) 2024 Werner Sembach wse@tuxedocomputers.com
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include "tuxedo_nb04_wmi_util.h"
++
++#include "tuxedo_nb04_wmi_ab_virtual_lamp_array.h"
++
++#define dev_to_wdev(__dev)	container_of(__dev, struct wmi_device, dev)
++
++enum report_ids {
++	LAMP_ARRAY_ATTRIBUTES_REPORT_ID		= 0x01,
++	LAMP_ATTRIBUTES_REQUEST_REPORT_ID	= 0x02,
++	LAMP_ATTRIBUTES_RESPONSE_REPORT_ID	= 0x03,
++	LAMP_MULTI_UPDATE_REPORT_ID		= 0x04,
++	LAMP_RANGE_UPDATE_REPORT_ID		= 0x05,
++	LAMP_ARRAY_CONTROL_REPORT_ID		= 0x06,
++};
++
++static const uint8_t sirius_16_ansii_kbl_mapping[] = {
++	0x29, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f, 0x40, 0x41, 0x42,
++	0x43, 0x44, 0x45, 0xf1, 0x46, 0x4c,   0x4a, 0x4d, 0x4b, 0x4e,
++	0x35, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26,
++	0x27, 0x2d, 0x2e, 0x2a,               0x53, 0x55, 0x54, 0x56,
++	0x2b, 0x14, 0x1a, 0x08, 0x15, 0x17, 0x1c, 0x18, 0x0c, 0x12,
++	0x13, 0x2f, 0x30, 0x31,               0x5f, 0x60, 0x61,
++	0x39, 0x04, 0x16, 0x07, 0x09, 0x0a, 0x0b, 0x0d, 0x0e, 0x0f,
++	0x33, 0x34, 0x28,                     0x5c, 0x5d, 0x5e, 0x57,
++	0xe1, 0x1d, 0x1b, 0x06, 0x19, 0x05, 0x11, 0x10, 0x36, 0x37,
++	0x38, 0xe5, 0x52,                     0x59, 0x5a, 0x5b,
++	0xe0, 0xfe, 0xe3, 0xe2, 0x2c, 0xe6, 0x65, 0xe4, 0x50, 0x51,
++	0x4f,                                 0x62, 0x63, 0x58
++};
++
++static const uint32_t sirius_16_ansii_kbl_mapping_pos_x[] = {
++	 25000,  41700,  58400,  75100,  91800, 108500, 125200, 141900, 158600, 175300,
++	192000, 208700, 225400, 242100, 258800, 275500,   294500, 311200, 327900, 344600,
++	 24500,  42500,  61000,  79500,  98000, 116500, 135000, 153500, 172000, 190500,
++	209000, 227500, 246000, 269500,                   294500, 311200, 327900, 344600,
++	 31000,  51500,  70000,  88500, 107000, 125500, 144000, 162500, 181000, 199500,
++	218000, 236500, 255000, 273500,                   294500, 311200, 327900,
++	 33000,  57000,  75500,  94000, 112500, 131000, 149500, 168000, 186500, 205000,
++	223500, 242000, 267500,                           294500, 311200, 327900, 344600,
++	 37000,  66000,  84500, 103000, 121500, 140000, 158500, 177000, 195500, 214000,
++	232500, 251500, 273500,                           294500, 311200, 327900,
++	 28000,  47500,  66000,  84500, 140000, 195500, 214000, 234000, 255000, 273500,
++	292000,                                           311200, 327900, 344600
++};
++
++static const uint32_t sirius_16_ansii_kbl_mapping_pos_y[] = {
++	 53000,  53000,  53000,  53000,  53000,  53000,  53000,  53000,  53000,  53000,
++	 53000,  53000,  53000,  53000,  53000,  53000,    53000,  53000,  53000,  53000,
++	 67500,  67500,  67500,  67500,  67500,  67500,  67500,  67500,  67500,  67500,
++	 67500,  67500,  67500,  67500,                    67500,  67500,  67500,  67500,
++	 85500,  85500,  85500,  85500,  85500,  85500,  85500,  85500,  85500,  85500,
++	 85500,  85500,  85500,  85500,                    85500,  85500,  85500,
++	103500, 103500, 103500, 103500, 103500, 103500, 103500, 103500, 103500, 103500,
++	103500, 103500, 103500,                           103500, 103500, 103500,  94500,
++	121500, 121500, 121500, 121500, 121500, 121500, 121500, 121500, 121500, 121500,
++	121500, 121500, 129000,                           121500, 121500, 121500,
++	139500, 139500, 139500, 139500, 139500, 139500, 139500, 139500, 147000, 147000,
++	147000,                                           139500, 139500, 130500
++};
++
++static const uint32_t sirius_16_ansii_kbl_mapping_pos_z[] = {
++	  5000,   5000,   5000,   5000,   5000,   5000,   5000,   5000,   5000,   5000,
++	  5000,   5000,   5000,   5000,   5000,   5000,     5000,   5000,   5000,   5000,
++	  5250,   5250,   5250,   5250,   5250,   5250,   5250,   5250,   5250,   5250,
++	  5250,   5250,   5250,   5250,                     5250,   5250,   5250,   5250,
++	  5500,   5500,   5500,   5500,   5500,   5500,   5500,   5500,   5500,   5500,
++	  5500,   5500,   5500,   5500,                     5500,   5500,   5500,
++	  5750,   5750,   5750,   5750,   5750,   5750,   5750,   5750,   5750,   5750,
++	  5750,   5750,   5750,                             5750,   5750,   5750,   5625,
++	  6000,   6000,   6000,   6000,   6000,   6000,   6000,   6000,   6000,   6000,
++	  6000,   6000,   6125,                             6000,   6000,   6000,
++	  6250,   6250,   6250,   6250,   6250,   6250,   6250,   6250,   6375,   6375,
++	  6375,                                             6250,   6250,   6125
++};
++
++static const uint8_t sirius_16_iso_kbl_mapping[] = {
++	0x29, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f, 0x40, 0x41, 0x42,
++	0x43, 0x44, 0x45, 0xf1, 0x46, 0x4c,   0x4a, 0x4d, 0x4b, 0x4e,
++	0x35, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26,
++	0x27, 0x2d, 0x2e, 0x2a,               0x53, 0x55, 0x54, 0x56,
++	0x2b, 0x14, 0x1a, 0x08, 0x15, 0x17, 0x1c, 0x18, 0x0c, 0x12,
++	0x13, 0x2f, 0x30,                     0x5f, 0x60, 0x61,
++	0x39, 0x04, 0x16, 0x07, 0x09, 0x0a, 0x0b, 0x0d, 0x0e, 0x0f,
++	0x33, 0x34, 0x32, 0x28,               0x5c, 0x5d, 0x5e, 0x57,
++	0xe1, 0x64, 0x1d, 0x1b, 0x06, 0x19, 0x05, 0x11, 0x10, 0x36,
++	0x37, 0x38, 0xe5, 0x52,               0x59, 0x5a, 0x5b,
++	0xe0, 0xfe, 0xe3, 0xe2, 0x2c, 0xe6, 0x65, 0xe4, 0x50, 0x51,
++	0x4f,                                 0x62, 0x63, 0x58
++};
++
++static const uint32_t sirius_16_iso_kbl_mapping_pos_x[] = {
++	 25000,  41700,  58400,  75100,  91800, 108500, 125200, 141900, 158600, 175300,
++	192000, 208700, 225400, 242100, 258800, 275500,   294500, 311200, 327900, 344600,
++	 24500,  42500,  61000,  79500,  98000, 116500, 135000, 153500, 172000, 190500,
++	209000, 227500, 246000, 269500,                   294500, 311200, 327900, 344600,
++	 31000,  51500,  70000,  88500, 107000, 125500, 144000, 162500, 181000, 199500,
++	218000, 234500, 251000,                           294500, 311200, 327900,
++	 33000,  57000,  75500,  94000, 112500, 131000, 149500, 168000, 186500, 205000,
++	223500, 240000, 256500, 271500,                   294500, 311200, 327900, 344600,
++	 28000,  47500,  66000,  84500, 103000, 121500, 140000, 158500, 177000, 195500,
++	214000, 232500, 251500, 273500,                   294500, 311200, 327900,
++	 28000,  47500,  66000,  84500, 140000, 195500, 214000, 234000, 255000, 273500,
++	292000,                                           311200, 327900, 344600
++};
++
++static const uint32_t sirius_16_iso_kbl_mapping_pos_y[] = {
++	 53000,  53000,  53000,  53000,  53000,  53000,  53000,  53000,  53000,  53000,
++	 53000,  53000,  53000,  53000,  53000,  53000,    53000,  53000,  53000,  53000,
++	 67500,  67500,  67500,  67500,  67500,  67500,  67500,  67500,  67500,  67500,
++	 67500,  67500,  67500,  67500,                    67500,  67500,  67500,  67500,
++	 85500,  85500,  85500,  85500,  85500,  85500,  85500,  85500,  85500,  85500,
++	 85500,  85500,  85500,                            85500,  85500,  85500,
++	103500, 103500, 103500, 103500, 103500, 103500, 103500, 103500, 103500, 103500,
++	103500, 103500, 103500,  94500,                   103500, 103500, 103500,  94500,
++	121500, 121500, 121500, 121500, 121500, 121500, 121500, 121500, 121500, 121500,
++	121500, 121500, 121500, 129000,                   121500, 121500, 121500,
++	139500, 139500, 139500, 139500, 139500, 139500, 139500, 139500, 147000, 147000,
++	147000,                                           139500, 139500, 130500
++};
++
++static const uint32_t sirius_16_iso_kbl_mapping_pos_z[] = {
++	  5000,   5000,   5000,   5000,   5000,   5000,   5000,   5000,   5000,   5000,
++	  5000,   5000,   5000,   5000, 5000, 5000,         5000,   5000,   5000,   5000,
++	  5250,   5250,   5250,   5250,   5250,   5250,   5250,   5250,   5250,   5250,
++	  5250,   5250,   5250,   5250,                     5250,   5250,   5250,   5250,
++	  5500,   5500,   5500,   5500,   5500,   5500,   5500,   5500,   5500,   5500,
++	  5500,   5500,   5500,                             5500,   5500,   5500,
++	  5750,   5750,   5750,   5750,   5750,   5750,   5750,   5750,   5750,   5750,
++	  5750,   5750,   5750,   5750,                     5750,   5750,   5750,   5625,
++	  6000,   6000,   6000,   6000,   6000,   6000,   6000,   6000,   6000,   6000,
++	  6000,   6000,   6000,   6125,                     6000,   6000,   6000,
++	  6250,   6250,   6250,   6250,   6250,   6250,   6250,   6250,   6375,   6375,
++	  6375,                                             6250,   6250,   6125
++};
++
++struct driver_data_t {
++	uint8_t keyboard_type;
++	uint8_t lamp_count;
++	uint8_t next_lamp_id;
++	union tuxedo_nb04_wmi_496_b_in_80_b_out_input next_kbl_set_multiple_keys_input;
++};
++
++
++static int ll_start(struct hid_device *hdev)
++{
++	int ret;
++	struct driver_data_t *driver_data;
++	struct wmi_device *wdev = dev_to_wdev(hdev->dev.parent);
++	union tuxedo_nb04_wmi_8_b_in_80_b_out_input input;
++	union tuxedo_nb04_wmi_8_b_in_80_b_out_output output;
++
++	driver_data = devm_kzalloc(&hdev->dev, sizeof(struct driver_data_t), GFP_KERNEL);
++	if (!driver_data)
++		return -ENOMEM;
++
++	input.get_device_status_input.device_type = WMI_AB_GET_DEVICE_STATUS_DEVICE_ID_KEYBOARD;
++	ret = tuxedo_nb04_wmi_8_b_in_80_b_out(wdev, WMI_AB_GET_DEVICE_STATUS, &input, &output);
++	if (ret)
++		return ret;
++
++	driver_data->keyboard_type = output.get_device_status_output.keyboard_physical_layout;
++	driver_data->lamp_count = sizeof(sirius_16_ansii_kbl_mapping);
++	driver_data->next_lamp_id = 0;
++
++	hdev->driver_data = driver_data;
++
++	return ret;
++}
++
++
++static void ll_stop(struct hid_device __always_unused *hdev)
++{
++}
++
++
++static int ll_open(struct hid_device __always_unused *hdev)
++{
++	return 0;
++}
++
++
++static void ll_close(struct hid_device __always_unused *hdev)
++{
++}
++
++
++static uint8_t report_descriptor[327] = {
++	0x05, 0x59,			// Usage Page (Lighting and Illumination)
++	0x09, 0x01,			// Usage (Lamp Array)
++	0xa1, 0x01,			// Collection (Application)
++	0x85, LAMP_ARRAY_ATTRIBUTES_REPORT_ID, //  Report ID (1)
++	0x09, 0x02,			//  Usage (Lamp Array Attributes Report)
++	0xa1, 0x02,			//  Collection (Logical)
++	0x09, 0x03,			//   Usage (Lamp Count)
++	0x15, 0x00,			//   Logical Minimum (0)
++	0x27, 0xff, 0xff, 0x00, 0x00,	//   Logical Maximum (65535)
++	0x75, 0x10,			//   Report Size (16)
++	0x95, 0x01,			//   Report Count (1)
++	0xb1, 0x03,			//   Feature (Cnst,Var,Abs)
++	0x09, 0x04,			//   Usage (Bounding Box Width In Micrometers)
++	0x09, 0x05,			//   Usage (Bounding Box Height In Micrometers)
++	0x09, 0x06,			//   Usage (Bounding Box Depth In Micrometers)
++	0x09, 0x07,			//   Usage (Lamp Array Kind)
++	0x09, 0x08,			//   Usage (Min Update Interval In Microseconds)
++	0x15, 0x00,			//   Logical Minimum (0)
++	0x27, 0xff, 0xff, 0xff, 0x7f,	//   Logical Maximum (2147483647)
++	0x75, 0x20,			//   Report Size (32)
++	0x95, 0x05,			//   Report Count (5)
++	0xb1, 0x03,			//   Feature (Cnst,Var,Abs)
++	0xc0,				//  End Collection
++	0x85, LAMP_ATTRIBUTES_REQUEST_REPORT_ID, //  Report ID (2)
++	0x09, 0x20,			//  Usage (Lamp Attributes Request Report)
++	0xa1, 0x02,			//  Collection (Logical)
++	0x09, 0x21,			//   Usage (Lamp Id)
++	0x15, 0x00,			//   Logical Minimum (0)
++	0x27, 0xff, 0xff, 0x00, 0x00,	//   Logical Maximum (65535)
++	0x75, 0x10,			//   Report Size (16)
++	0x95, 0x01,			//   Report Count (1)
++	0xb1, 0x02,			//   Feature (Data,Var,Abs)
++	0xc0,				//  End Collection
++	0x85, LAMP_ATTRIBUTES_RESPONSE_REPORT_ID, //  Report ID (3)
++	0x09, 0x22,			//  Usage (Lamp Attributes Response Report)
++	0xa1, 0x02,			//  Collection (Logical)
++	0x09, 0x21,			//   Usage (Lamp Id)
++	0x15, 0x00,			//   Logical Minimum (0)
++	0x27, 0xff, 0xff, 0x00, 0x00,	//   Logical Maximum (65535)
++	0x75, 0x10,			//   Report Size (16)
++	0x95, 0x01,			//   Report Count (1)
++	0xb1, 0x02,			//   Feature (Data,Var,Abs)
++	0x09, 0x23,			//   Usage (Position X In Micrometers)
++	0x09, 0x24,			//   Usage (Position Y In Micrometers)
++	0x09, 0x25,			//   Usage (Position Z In Micrometers)
++	0x09, 0x27,			//   Usage (Update Latency In Microseconds)
++	0x09, 0x26,			//   Usage (Lamp Purposes)
++	0x15, 0x00,			//   Logical Minimum (0)
++	0x27, 0xff, 0xff, 0xff, 0x7f,	//   Logical Maximum (2147483647)
++	0x75, 0x20,			//   Report Size (32)
++	0x95, 0x05,			//   Report Count (5)
++	0xb1, 0x02,			//   Feature (Data,Var,Abs)
++	0x09, 0x28,			//   Usage (Red Level Count)
++	0x09, 0x29,			//   Usage (Green Level Count)
++	0x09, 0x2a,			//   Usage (Blue Level Count)
++	0x09, 0x2b,			//   Usage (Intensity Level Count)
++	0x09, 0x2c,			//   Usage (Is Programmable)
++	0x09, 0x2d,			//   Usage (Input Binding)
++	0x15, 0x00,			//   Logical Minimum (0)
++	0x26, 0xff, 0x00,		//   Logical Maximum (255)
++	0x75, 0x08,			//   Report Size (8)
++	0x95, 0x06,			//   Report Count (6)
++	0xb1, 0x02,			//   Feature (Data,Var,Abs)
++	0xc0,				//  End Collection
++	0x85, LAMP_MULTI_UPDATE_REPORT_ID, //  Report ID (4)
++	0x09, 0x50,			//  Usage (Lamp Multi Update Report)
++	0xa1, 0x02,			//  Collection (Logical)
++	0x09, 0x03,			//   Usage (Lamp Count)
++	0x09, 0x55,			//   Usage (Lamp Update Flags)
++	0x15, 0x00,			//   Logical Minimum (0)
++	0x25, 0x08,			//   Logical Maximum (8)
++	0x75, 0x08,			//   Report Size (8)
++	0x95, 0x02,			//   Report Count (2)
++	0xb1, 0x02,			//   Feature (Data,Var,Abs)
++	0x09, 0x21,			//   Usage (Lamp Id)
++	0x15, 0x00,			//   Logical Minimum (0)
++	0x27, 0xff, 0xff, 0x00, 0x00,	//   Logical Maximum (65535)
++	0x75, 0x10,			//   Report Size (16)
++	0x95, 0x08,			//   Report Count (8)
++	0xb1, 0x02,			//   Feature (Data,Var,Abs)
++	0x09, 0x51,			//   Usage (Red Update Channel)
++	0x09, 0x52,			//   Usage (Green Update Channel)
++	0x09, 0x53,			//   Usage (Blue Update Channel)
++	0x09, 0x54,			//   Usage (Intensity Update Channel)
++	0x09, 0x51,			//   Usage (Red Update Channel)
++	0x09, 0x52,			//   Usage (Green Update Channel)
++	0x09, 0x53,			//   Usage (Blue Update Channel)
++	0x09, 0x54,			//   Usage (Intensity Update Channel)
++	0x09, 0x51,			//   Usage (Red Update Channel)
++	0x09, 0x52,			//   Usage (Green Update Channel)
++	0x09, 0x53,			//   Usage (Blue Update Channel)
++	0x09, 0x54,			//   Usage (Intensity Update Channel)
++	0x09, 0x51,			//   Usage (Red Update Channel)
++	0x09, 0x52,			//   Usage (Green Update Channel)
++	0x09, 0x53,			//   Usage (Blue Update Channel)
++	0x09, 0x54,			//   Usage (Intensity Update Channel)
++	0x09, 0x51,			//   Usage (Red Update Channel)
++	0x09, 0x52,			//   Usage (Green Update Channel)
++	0x09, 0x53,			//   Usage (Blue Update Channel)
++	0x09, 0x54,			//   Usage (Intensity Update Channel)
++	0x09, 0x51,			//   Usage (Red Update Channel)
++	0x09, 0x52,			//   Usage (Green Update Channel)
++	0x09, 0x53,			//   Usage (Blue Update Channel)
++	0x09, 0x54,			//   Usage (Intensity Update Channel)
++	0x09, 0x51,			//   Usage (Red Update Channel)
++	0x09, 0x52,			//   Usage (Green Update Channel)
++	0x09, 0x53,			//   Usage (Blue Update Channel)
++	0x09, 0x54,			//   Usage (Intensity Update Channel)
++	0x09, 0x51,			//   Usage (Red Update Channel)
++	0x09, 0x52,			//   Usage (Green Update Channel)
++	0x09, 0x53,			//   Usage (Blue Update Channel)
++	0x09, 0x54,			//   Usage (Intensity Update Channel)
++	0x15, 0x00,			//   Logical Minimum (0)
++	0x26, 0xff, 0x00,		//   Logical Maximum (255)
++	0x75, 0x08,			//   Report Size (8)
++	0x95, 0x20,			//   Report Count (32)
++	0xb1, 0x02,			//   Feature (Data,Var,Abs)
++	0xc0,				//  End Collection
++	0x85, LAMP_RANGE_UPDATE_REPORT_ID, //  Report ID (5)
++	0x09, 0x60,			//  Usage (Lamp Range Update Report)
++	0xa1, 0x02,			//  Collection (Logical)
++	0x09, 0x55,			//   Usage (Lamp Update Flags)
++	0x15, 0x00,			//   Logical Minimum (0)
++	0x25, 0x08,			//   Logical Maximum (8)
++	0x75, 0x08,			//   Report Size (8)
++	0x95, 0x01,			//   Report Count (1)
++	0xb1, 0x02,			//   Feature (Data,Var,Abs)
++	0x09, 0x61,			//   Usage (Lamp Id Start)
++	0x09, 0x62,			//   Usage (Lamp Id End)
++	0x15, 0x00,			//   Logical Minimum (0)
++	0x27, 0xff, 0xff, 0x00, 0x00,	//   Logical Maximum (65535)
++	0x75, 0x10,			//   Report Size (16)
++	0x95, 0x02,			//   Report Count (2)
++	0xb1, 0x02,			//   Feature (Data,Var,Abs)
++	0x09, 0x51,			//   Usage (Red Update Channel)
++	0x09, 0x52,			//   Usage (Green Update Channel)
++	0x09, 0x53,			//   Usage (Blue Update Channel)
++	0x09, 0x54,			//   Usage (Intensity Update Channel)
++	0x15, 0x00,			//   Logical Minimum (0)
++	0x26, 0xff, 0x00,		//   Logical Maximum (255)
++	0x75, 0x08,			//   Report Size (8)
++	0x95, 0x04,			//   Report Count (4)
++	0xb1, 0x02,			//   Feature (Data,Var,Abs)
++	0xc0,				//  End Collection
++	0x85, LAMP_ARRAY_CONTROL_REPORT_ID, //  Report ID (6)
++	0x09, 0x70,			//  Usage (Lamp Array Control Report)
++	0xa1, 0x02,			//  Collection (Logical)
++	0x09, 0x71,			//   Usage (Autonomous Mode)
++	0x15, 0x00,			//   Logical Minimum (0)
++	0x25, 0x01,			//   Logical Maximum (1)
++	0x75, 0x08,			//   Report Size (8)
++	0x95, 0x01,			//   Report Count (1)
++	0xb1, 0x02,			//   Feature (Data,Var,Abs)
++	0xc0,				//  End Collection
++	0xc0				// End Collection
++};
++
++static int ll_parse(struct hid_device *hdev)
++{
++	return hid_parse_report(hdev, report_descriptor, sizeof(report_descriptor));
++}
++
++
++struct __packed lamp_array_attributes_report_t {
++	const uint8_t report_id;
++	uint16_t lamp_count;
++	uint32_t bounding_box_width_in_micrometers;
++	uint32_t bounding_box_height_in_micrometers;
++	uint32_t bounding_box_depth_in_micrometers;
++	uint32_t lamp_array_kind;
++	uint32_t min_update_interval_in_microseconds;
++};
++
++static int handle_lamp_array_attributes_report(struct hid_device *hdev,
++					       struct lamp_array_attributes_report_t *rep)
++{
++	struct driver_data_t *driver_data = hdev->driver_data;
++
++	rep->lamp_count = driver_data->lamp_count;
++	rep->bounding_box_width_in_micrometers = 368000;
++	rep->bounding_box_height_in_micrometers = 266000;
++	rep->bounding_box_depth_in_micrometers = 30000;
++	// LampArrayKindKeyboard, see "26.2.1 LampArrayKind Values" of "HID Usage Tables v1.5"
++	rep->lamp_array_kind = 1;
++	// Some guessed value for interval microseconds
++	rep->min_update_interval_in_microseconds = 500;
++
++	return sizeof(struct lamp_array_attributes_report_t);
++}
++
++
++struct __packed lamp_attributes_request_report_t {
++	const uint8_t report_id;
++	uint16_t lamp_id;
++};
++
++static int handle_lamp_attributes_request_report(struct hid_device *hdev,
++						 struct lamp_attributes_request_report_t *rep)
++{
++	struct driver_data_t *driver_data = hdev->driver_data;
++
++	if (rep->lamp_id < driver_data->lamp_count)
++		driver_data->next_lamp_id = rep->lamp_id;
++	else
++		driver_data->next_lamp_id = 0;
++
++	return sizeof(struct lamp_attributes_request_report_t);
++}
++
++
++struct __packed lamp_attributes_response_report_t {
++	const uint8_t report_id;
++	uint16_t lamp_id;
++	uint32_t position_x_in_micrometers;
++	uint32_t position_y_in_micrometers;
++	uint32_t position_z_in_micrometers;
++	uint32_t update_latency_in_microseconds;
++	uint32_t lamp_purpose;
++	uint8_t red_level_count;
++	uint8_t green_level_count;
++	uint8_t blue_level_count;
++	uint8_t intensity_level_count;
++	uint8_t is_programmable;
++	uint8_t input_binding;
++};
++
++static int handle_lamp_attributes_response_report(struct hid_device *hdev,
++						  struct lamp_attributes_response_report_t *rep)
++{
++	struct driver_data_t *driver_data = hdev->driver_data;
++	uint16_t lamp_id = driver_data->next_lamp_id;
++	const uint8_t *kbl_mapping;
++	const uint32_t *kbl_mapping_pos_x, *kbl_mapping_pos_y, *kbl_mapping_pos_z;
++
++	rep->lamp_id = lamp_id;
++	// Some guessed value for latency microseconds
++	rep->update_latency_in_microseconds = 100;
++	 // LampPurposeControl, see "26.3.1 LampPurposes Flags" of "HID Usage Tables v1.5"
++	rep->lamp_purpose = 1;
++	rep->red_level_count = 0xff;
++	rep->green_level_count = 0xff;
++	rep->blue_level_count = 0xff;
++	rep->intensity_level_count = 0xff;
++	rep->is_programmable = 1;
++
++	if (driver_data->keyboard_type == WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ANSII) {
++		kbl_mapping = &sirius_16_ansii_kbl_mapping[0];
++		kbl_mapping_pos_x = &sirius_16_ansii_kbl_mapping_pos_x[0];
++		kbl_mapping_pos_y = &sirius_16_ansii_kbl_mapping_pos_y[0];
++		kbl_mapping_pos_z = &sirius_16_ansii_kbl_mapping_pos_z[0];
++	} else if (driver_data->keyboard_type == WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ISO) {
++		kbl_mapping = &sirius_16_iso_kbl_mapping[0];
++		kbl_mapping_pos_x = &sirius_16_iso_kbl_mapping_pos_x[0];
++		kbl_mapping_pos_y = &sirius_16_iso_kbl_mapping_pos_y[0];
++		kbl_mapping_pos_z = &sirius_16_iso_kbl_mapping_pos_z[0];
++	} else
++		return -EINVAL;
++
++	if (kbl_mapping[lamp_id] <= 0xe8)
++		rep->input_binding = kbl_mapping[lamp_id];
++	else
++		// Everything bigger is reserved/undefined, see "10 Keyboard/Keypad Page (0x07)" of
++		// "HID Usage Tables v1.5" and should return 0, see "26.8.3 Lamp Attributes" of the
++		// same document.
++		rep->input_binding = 0;
++	rep->position_x_in_micrometers = kbl_mapping_pos_x[lamp_id];
++	rep->position_y_in_micrometers = kbl_mapping_pos_y[lamp_id];
++	rep->position_z_in_micrometers = kbl_mapping_pos_z[lamp_id];
++
++	driver_data->next_lamp_id = (driver_data->next_lamp_id + 1) % driver_data->lamp_count;
++
++	return sizeof(struct lamp_attributes_response_report_t);
++}
++
++
++#define LAMP_UPDATE_FLAGS_LAMP_UPDATE_COMPLETE	BIT(0)
++
++struct __packed lamp_multi_update_report_t {
++	const uint8_t report_id;
++	uint8_t lamp_count;
++	uint8_t lamp_update_flags;
++	uint16_t lamp_id[8];
++	struct {
++		uint8_t red;
++		uint8_t green;
++		uint8_t blue;
++		uint8_t intensity;
++	} update_channels[8];
++};
++
++static int handle_lamp_multi_update_report(struct hid_device *hdev,
++					   struct lamp_multi_update_report_t *rep)
++{
++	int ret;
++	struct driver_data_t *driver_data = hdev->driver_data;
++	struct wmi_device *wdev = dev_to_wdev(hdev->dev.parent);
++	uint8_t lamp_count, key_id, key_id_j;
++	union tuxedo_nb04_wmi_496_b_in_80_b_out_input *next =
++		&driver_data->next_kbl_set_multiple_keys_input;
++	union tuxedo_nb04_wmi_496_b_in_80_b_out_output output;
++
++	// Catching missformated lamp_multi_update_report and fail silently according to
++	// "HID Usage Tables v1.5"
++	for (int i = 0; i < rep->lamp_count; ++i) {
++		if (driver_data->keyboard_type == WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ANSII)
++			lamp_count = sizeof(sirius_16_ansii_kbl_mapping);
++		else if (driver_data->keyboard_type == WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ISO)
++			lamp_count = sizeof(sirius_16_ansii_kbl_mapping);
++
++		if (rep->lamp_id[i] > lamp_count) {
++			pr_debug("Out of bounds lamp_id in lamp_multi_update_report. Skippng whole report!\n");
++			return sizeof(struct lamp_multi_update_report_t);
++		}
++
++		for (int j = i + 1; j < rep->lamp_count; ++j) {
++			if (rep->lamp_id[i] == rep->lamp_id[j]) {
++				pr_debug("Duplicate lamp_id in lamp_multi_update_report. Skippng whole report!\n");
++				return sizeof(struct lamp_multi_update_report_t);
++			}
++		}
++	}
++
++	for (int i = 0; i < rep->lamp_count; ++i) {
++		if (driver_data->keyboard_type == WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ANSII)
++			key_id = sirius_16_ansii_kbl_mapping[rep->lamp_id[i]];
++		else if (driver_data->keyboard_type == WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ISO)
++			key_id = sirius_16_iso_kbl_mapping[rep->lamp_id[i]];
++
++		for (int j = 0; j < WMI_AB_KBL_SET_MULTIPLE_KEYS_LIGHTING_SETTINGS_COUNT_MAX; ++j) {
++			key_id_j = next->kbl_set_multiple_keys_input.lighting_settings[j].key_id;
++			if (key_id_j == 0x00 || key_id_j == key_id) {
++				if (key_id_j == 0x00)
++					next->kbl_set_multiple_keys_input.lighting_setting_count =
++						j + 1;
++				next->kbl_set_multiple_keys_input.lighting_settings[j].key_id =
++					key_id;
++				// While this driver respects
++				// intensity_update_channel according to "HID
++				// Usage Tables v1.5" also on RGB leds, the
++				// Microsoft MacroPad reference implementation
++				// (https://github.com/microsoft/RP2040MacropadHidSample
++				// 1d6c3ad) does not and ignores it. If it turns
++				// out that Windows writes intensity = 0 for RGB
++				// leds instead of intensity = 255, this driver
++				// should also irgnore the
++				// intensity_update_channel.
++				next->kbl_set_multiple_keys_input.lighting_settings[j].red =
++					rep->update_channels[i].red
++						* rep->update_channels[i].intensity / 0xff;
++				next->kbl_set_multiple_keys_input.lighting_settings[j].green =
++					rep->update_channels[i].green
++						* rep->update_channels[i].intensity / 0xff;
++				next->kbl_set_multiple_keys_input.lighting_settings[j].blue =
++					rep->update_channels[i].blue
++						* rep->update_channels[i].intensity / 0xff;
++
++				break;
++			}
++		}
++	}
++
++	if (rep->lamp_update_flags & LAMP_UPDATE_FLAGS_LAMP_UPDATE_COMPLETE) {
++		ret = tuxedo_nb04_wmi_496_b_in_80_b_out(wdev, WMI_AB_KBL_SET_MULTIPLE_KEYS, next,
++							&output);
++		memset(next, 0, sizeof(union tuxedo_nb04_wmi_496_b_in_80_b_out_input));
++		if (ret)
++			return ret;
++	}
++
++	return sizeof(struct lamp_multi_update_report_t);
++}
++
++
++struct __packed lamp_range_update_report_t {
++	const uint8_t report_id;
++	uint8_t lamp_update_flags;
++	uint16_t lamp_id_start;
++	uint16_t lamp_id_end;
++	uint8_t red_update_channel;
++	uint8_t green_update_channel;
++	uint8_t blue_update_channel;
++	uint8_t intensity_update_channel;
++};
++
++static int handle_lamp_range_update_report(struct hid_device *hdev,
++					   struct lamp_range_update_report_t *report)
++{
++	int ret;
++	struct driver_data_t *driver_data = hdev->driver_data;
++	uint8_t lamp_count;
++	struct lamp_multi_update_report_t lamp_multi_update_report = {
++		.report_id = LAMP_MULTI_UPDATE_REPORT_ID
++	};
++
++	// Catching missformated lamp_range_update_report and fail silently according to
++	// "HID Usage Tables v1.5"
++	if (report->lamp_id_start > report->lamp_id_end) {
++		pr_debug("lamp_id_start > lamp_id_end in lamp_range_update_report. Skippng whole report!\n");
++		return sizeof(struct lamp_range_update_report_t);
++	}
++
++	if (driver_data->keyboard_type == WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ANSII)
++		lamp_count = sizeof(sirius_16_ansii_kbl_mapping);
++	else if (driver_data->keyboard_type == WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ISO)
++		lamp_count = sizeof(sirius_16_ansii_kbl_mapping);
++
++	if (report->lamp_id_end > lamp_count - 1) {
++		pr_debug("Out of bounds lamp_id_* in lamp_range_update_report. Skippng whole report!\n");
++		return sizeof(struct lamp_range_update_report_t);
++	}
++
++	// Break handle_lamp_range_update_report call down to multiple
++	// handle_lamp_multi_update_report calls to easily ensure that mixing
++	// handle_lamp_range_update_report and handle_lamp_multi_update_report
++	// does not break things.
++	for (int i = report->lamp_id_start; i < report->lamp_id_end + 1; i = i + 8) {
++		lamp_multi_update_report.lamp_count = MIN(report->lamp_id_end + 1 - i, 8);
++		if (i + lamp_multi_update_report.lamp_count == report->lamp_id_end + 1)
++			lamp_multi_update_report.lamp_update_flags |=
++				LAMP_UPDATE_FLAGS_LAMP_UPDATE_COMPLETE;
++
++		for (int j = 0; j < lamp_multi_update_report.lamp_count; ++j) {
++			lamp_multi_update_report.lamp_id[j] = i + j;
++			lamp_multi_update_report.update_channels[j].red =
++				report->red_update_channel;
++			lamp_multi_update_report.update_channels[j].green =
++				report->green_update_channel;
++			lamp_multi_update_report.update_channels[j].blue =
++				report->blue_update_channel;
++			lamp_multi_update_report.update_channels[j].intensity =
++				report->intensity_update_channel;
++		}
++
++		ret = handle_lamp_multi_update_report(hdev, &lamp_multi_update_report);
++		if (ret < 0)
++			return ret;
++		else if (ret != sizeof(struct lamp_multi_update_report_t))
++			return -EIO;
++	}
++
++	return sizeof(struct lamp_range_update_report_t);
++}
++
++
++struct __packed lamp_array_control_report_t {
++	const uint8_t report_id;
++	uint8_t autonomous_mode;
++};
++
++static int handle_lamp_array_control_report(struct hid_device __always_unused *hdev,
++					    struct lamp_array_control_report_t __always_unused *rep)
++{
++	// The keyboard firmware doesn't have any built in effects or controls
++	// so this is a NOOP.
++	// According to the HID Documentation (HID Usage Tables v1.5) this
++	// function is optional and can be removed from the HID Report
++	// Descriptor, but it should first be confirmed that userspace respects
++	// this possibility too. The Microsoft MacroPad reference implementation
++	// (https://github.com/microsoft/RP2040MacropadHidSample 1d6c3ad)
++	// already deviates from the spec at another point, see
++	// handle_lamp_*_update_report.
++
++	return sizeof(struct lamp_array_control_report_t);
++}
++
++
++static int ll_raw_request(struct hid_device *hdev, unsigned char reportnum, __u8 *buf, size_t len,
++			   unsigned char rtype, int reqtype)
++{
++	int ret;
++
++	pr_debug("Recived report: rtype: %u, reqtype: %u, reportnum: %u, len: %lu buf:\n", rtype,
++		 reqtype, reportnum, len);
++	print_hex_dump_bytes("", DUMP_PREFIX_OFFSET, buf, len);
++
++	ret = -EINVAL;
++	if (rtype == HID_FEATURE_REPORT) {
++		if (reqtype == HID_REQ_GET_REPORT) {
++			if (reportnum == LAMP_ARRAY_ATTRIBUTES_REPORT_ID
++			    && len == sizeof(struct lamp_array_attributes_report_t))
++				ret = handle_lamp_array_attributes_report(
++					hdev, (struct lamp_array_attributes_report_t *)buf);
++			else if (reportnum == LAMP_ATTRIBUTES_RESPONSE_REPORT_ID
++			    && len == sizeof(struct lamp_attributes_response_report_t))
++				ret = handle_lamp_attributes_response_report(
++					hdev, (struct lamp_attributes_response_report_t *)buf);
++		} else if (reqtype == HID_REQ_SET_REPORT) {
++			if (reportnum == LAMP_ATTRIBUTES_REQUEST_REPORT_ID
++			    && len == sizeof(struct lamp_attributes_request_report_t))
++				ret = handle_lamp_attributes_request_report(
++					hdev, (struct lamp_attributes_request_report_t *)buf);
++			else if (reportnum == LAMP_MULTI_UPDATE_REPORT_ID
++			    && len == sizeof(struct lamp_multi_update_report_t))
++				ret = handle_lamp_multi_update_report(
++					hdev, (struct lamp_multi_update_report_t *)buf);
++			else if (reportnum == LAMP_RANGE_UPDATE_REPORT_ID
++			    && len == sizeof(struct lamp_range_update_report_t))
++				ret = handle_lamp_range_update_report(
++					hdev, (struct lamp_range_update_report_t *)buf);
++			else if (reportnum == LAMP_ARRAY_CONTROL_REPORT_ID
++			    && len == sizeof(struct lamp_array_control_report_t))
++				ret = handle_lamp_array_control_report(
++					hdev, (struct lamp_array_control_report_t *)buf);
++		}
++	}
++
++	return ret;
++}
++
++static const struct hid_ll_driver ll_driver = {
++	.start = &ll_start,
++	.stop = &ll_stop,
++	.open = &ll_open,
++	.close = &ll_close,
++	.parse = &ll_parse,
++	.raw_request = &ll_raw_request,
++};
++
++int tuxedo_nb04_virtual_lamp_array_add_device(struct wmi_device *wdev, struct hid_device **hdev_out)
++{
++	int ret;
++	struct hid_device *hdev;
++
++	pr_debug("Adding TUXEDO NB04 Virtual LampArray device.\n");
++
++	hdev = hid_allocate_device();
++	if (IS_ERR(hdev))
++		return PTR_ERR(hdev);
++	*hdev_out = hdev;
++
++	strscpy(hdev->name, "TUXEDO NB04 RGB Lighting", sizeof(hdev->name));
++
++	hdev->ll_driver = &ll_driver;
++	hdev->bus = BUS_VIRTUAL;
++	hdev->vendor = 0x21ba;
++	hdev->product = 0x0400;
++	hdev->dev.parent = &wdev->dev;
++
++	ret = hid_add_device(hdev);
++	if (ret)
++		hid_destroy_device(hdev);
++	return ret;
++}
++EXPORT_SYMBOL(tuxedo_nb04_virtual_lamp_array_add_device);
+diff --git a/drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_virtual_lamp_array.h b/drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_virtual_lamp_array.h
+new file mode 100644
+index 0000000000000..fdc2a01d95c24
+--- /dev/null
++++ b/drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_virtual_lamp_array.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This code gives the built in RGB lighting of the TUXEDO NB04 devices a
++ * standardised interface, namely HID LampArray.
++ *
++ * Copyright (C) 2024 Werner Sembach wse@tuxedocomputers.com
++ */
++
++#ifndef TUXEDO_NB04_WMI_AB_VIRTUAL_LAMP_ARRAY_H
++#define TUXEDO_NB04_WMI_AB_VIRTUAL_LAMP_ARRAY_H
++
++#include <linux/wmi.h>
++#include <linux/hid.h>
++
++int tuxedo_nb04_virtual_lamp_array_add_device(struct wmi_device *wdev,
++					      struct hid_device **hdev_out);
++
++#endif
+diff --git a/drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_util.c b/drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_util.c
+new file mode 100644
+index 0000000000000..dbabdb9dd60c7
+--- /dev/null
++++ b/drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_util.c
+@@ -0,0 +1,85 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * This code gives functions to avoid code duplication while interacting with
++ * the TUXEDO NB04 wmi interfaces.
++ *
++ * Copyright (C) 2024 Werner Sembach wse@tuxedocomputers.com
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include "tuxedo_nb04_wmi_ab_init.h"
++
++#include "tuxedo_nb04_wmi_util.h"
++
++static int __wmi_method_acpi_object_out(struct wmi_device *wdev, uint32_t wmi_method_id,
++					uint8_t *in, acpi_size in_len, union acpi_object **out)
++{
++	struct tuxedo_nb04_wmi_driver_data_t *driver_data = wdev->dev.driver_data;
++	struct acpi_buffer acpi_buffer_in = { in_len, in };
++	struct acpi_buffer acpi_buffer_out = { ACPI_ALLOCATE_BUFFER, NULL };
++
++	pr_debug("Evaluate WMI method: %u in:\n", wmi_method_id);
++	print_hex_dump_bytes("", DUMP_PREFIX_OFFSET, in, in_len);
++
++	mutex_lock(&driver_data->wmi_access_mutex);
++	acpi_status status = wmidev_evaluate_method(wdev, 0, wmi_method_id, &acpi_buffer_in,
++						    &acpi_buffer_out);
++	mutex_unlock(&driver_data->wmi_access_mutex);
++	if (ACPI_FAILURE(status)) {
++		pr_err("Failed to evaluate WMI method.\n");
++		return -EIO;
++	}
++	if (!acpi_buffer_out.pointer) {
++		pr_err("Unexpected empty out buffer.\n");
++		return -ENODATA;
++	}
++
++	*out = acpi_buffer_out.pointer;
++
++	return 0;
++}
++
++static int __wmi_method_buffer_out(struct wmi_device *wdev, uint32_t wmi_method_id, uint8_t *in,
++				   acpi_size in_len, uint8_t *out, acpi_size out_len)
++{
++	int ret;
++	union acpi_object *acpi_object_out = NULL;
++
++	ret = __wmi_method_acpi_object_out(wdev, wmi_method_id, in, in_len, &acpi_object_out);
++	if (ret)
++		return ret;
++
++	if (acpi_object_out->type != ACPI_TYPE_BUFFER) {
++		pr_err("Unexpected out buffer type. Expected: %u Got: %u\n", ACPI_TYPE_BUFFER,
++		       acpi_object_out->type);
++		kfree(acpi_object_out);
++		return -EIO;
++	}
++	if (acpi_object_out->buffer.length != out_len) {
++		pr_err("Unexpected out buffer length.\n");
++		kfree(acpi_object_out);
++		return -EIO;
++	}
++
++	memcpy(out, acpi_object_out->buffer.pointer, out_len);
++	kfree(acpi_object_out);
++
++	return ret;
++}
++
++int tuxedo_nb04_wmi_8_b_in_80_b_out(struct wmi_device *wdev,
++				    enum tuxedo_nb04_wmi_8_b_in_80_b_out_methods method,
++				    union tuxedo_nb04_wmi_8_b_in_80_b_out_input *input,
++				    union tuxedo_nb04_wmi_8_b_in_80_b_out_output *output)
++{
++	return __wmi_method_buffer_out(wdev, method, input->raw, 8, output->raw, 80);
++}
++
++int tuxedo_nb04_wmi_496_b_in_80_b_out(struct wmi_device *wdev,
++				      enum tuxedo_nb04_wmi_496_b_in_80_b_out_methods method,
++				      union tuxedo_nb04_wmi_496_b_in_80_b_out_input *input,
++				      union tuxedo_nb04_wmi_496_b_in_80_b_out_output *output)
++{
++	return __wmi_method_buffer_out(wdev, method, input->raw, 496, output->raw, 80);
++}
+diff --git a/drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_util.h b/drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_util.h
+new file mode 100644
+index 0000000000000..2765cbe9fcfef
+--- /dev/null
++++ b/drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_util.h
+@@ -0,0 +1,112 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This code gives functions to avoid code duplication while interacting with
++ * the TUXEDO NB04 wmi interfaces.
++ *
++ * Copyright (C) 2024 Werner Sembach wse@tuxedocomputers.com
++ */
++
++#ifndef TUXEDO_NB04_WMI_UTIL_H
++#define TUXEDO_NB04_WMI_UTIL_H
++
++#include <linux/wmi.h>
++
++#define WMI_AB_GET_DEVICE_STATUS_DEVICE_ID_TOUCHPAD	1
++#define WMI_AB_GET_DEVICE_STATUS_DEVICE_ID_KEYBOARD	2
++#define WMI_AB_GET_DEVICE_STATUS_DEVICE_ID_APP_PAGES	3
++
++#define WMI_AB_GET_DEVICE_STATUS_KBL_TYPE_NONE		0
++#define WMI_AB_GET_DEVICE_STATUS_KBL_TYPE_PER_KEY	1
++#define WMI_AB_GET_DEVICE_STATUS_KBL_TYPE_FOUR_ZONE	2
++#define WMI_AB_GET_DEVICE_STATUS_KBL_TYPE_WHITE_ONLY	3
++
++#define WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ANSII	0
++#define WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ISO	1
++
++#define WMI_AB_GET_DEVICE_STATUS_COLOR_ID_RED		1
++#define WMI_AB_GET_DEVICE_STATUS_COLOR_ID_GREEN		2
++#define WMI_AB_GET_DEVICE_STATUS_COLOR_ID_YELLOW	3
++#define WMI_AB_GET_DEVICE_STATUS_COLOR_ID_BLUE		4
++#define WMI_AB_GET_DEVICE_STATUS_COLOR_ID_PURPLE	5
++#define WMI_AB_GET_DEVICE_STATUS_COLOR_ID_INDIGO	6
++#define WMI_AB_GET_DEVICE_STATUS_COLOR_ID_WHITE		7
++
++#define WMI_AB_GET_DEVICE_STATUS_APP_PAGES_DASHBOARD	BIT(0)
++#define WMI_AB_GET_DEVICE_STATUS_APP_PAGES_SYSTEMINFOS	BIT(1)
++#define WMI_AB_GET_DEVICE_STATUS_APP_PAGES_KBL		BIT(2)
++#define WMI_AB_GET_DEVICE_STATUS_APP_PAGES_HOTKEYS	BIT(3)
++
++
++union tuxedo_nb04_wmi_8_b_in_80_b_out_input {
++	uint8_t raw[8];
++	struct __packed {
++		uint8_t device_type;
++		uint8_t reserved_0[7];
++	} get_device_status_input;
++};
++
++union tuxedo_nb04_wmi_8_b_in_80_b_out_output {
++	uint8_t raw[80];
++	struct __packed {
++		uint16_t return_status;
++		uint8_t device_enabled;
++		uint8_t kbl_type;
++		uint8_t kbl_side_bar_supported;
++		uint8_t keyboard_physical_layout;
++		uint8_t app_pages;
++		uint8_t per_key_kbl_default_color;
++		uint8_t four_zone_kbl_default_color_1;
++		uint8_t four_zone_kbl_default_color_2;
++		uint8_t four_zone_kbl_default_color_3;
++		uint8_t four_zone_kbl_default_color_4;
++		uint8_t light_bar_kbl_default_color;
++		uint8_t reserved_0[1];
++		uint16_t dedicated_gpu_id;
++		uint8_t reserved_1[64];
++	} get_device_status_output;
++};
++
++enum tuxedo_nb04_wmi_8_b_in_80_b_out_methods {
++	WMI_AB_GET_DEVICE_STATUS	= 2,
++};
++
++
++#define WMI_AB_KBL_SET_MULTIPLE_KEYS_LIGHTING_SETTINGS_COUNT_MAX	120
++
++union tuxedo_nb04_wmi_496_b_in_80_b_out_input {
++	uint8_t raw[496];
++	struct __packed {
++		uint8_t reserved_0[15];
++		uint8_t lighting_setting_count;
++		struct {
++			uint8_t key_id;
++			uint8_t red;
++			uint8_t green;
++			uint8_t blue;
++		} lighting_settings[WMI_AB_KBL_SET_MULTIPLE_KEYS_LIGHTING_SETTINGS_COUNT_MAX];
++	}  kbl_set_multiple_keys_input;
++};
++
++union tuxedo_nb04_wmi_496_b_in_80_b_out_output {
++	uint8_t raw[80];
++	struct __packed {
++		uint8_t return_value;
++		uint8_t reserved_0[79];
++	} kbl_set_multiple_keys_output;
++};
++
++enum tuxedo_nb04_wmi_496_b_in_80_b_out_methods {
++	WMI_AB_KBL_SET_MULTIPLE_KEYS	= 6,
++};
++
++
++int tuxedo_nb04_wmi_8_b_in_80_b_out(struct wmi_device *wdev,
++				    enum tuxedo_nb04_wmi_8_b_in_80_b_out_methods method,
++				    union tuxedo_nb04_wmi_8_b_in_80_b_out_input *input,
++				    union tuxedo_nb04_wmi_8_b_in_80_b_out_output *output);
++int tuxedo_nb04_wmi_496_b_in_80_b_out(struct wmi_device *wdev,
++				      enum tuxedo_nb04_wmi_496_b_in_80_b_out_methods method,
++				      union tuxedo_nb04_wmi_496_b_in_80_b_out_input *input,
++				      union tuxedo_nb04_wmi_496_b_in_80_b_out_output *output);
++
++#endif
+-- 
+2.34.1
 
