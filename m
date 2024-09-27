@@ -1,252 +1,261 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFBA17A597;
-	Fri, 27 Sep 2024 08:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B21163A9B;
+	Fri, 27 Sep 2024 09:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727426666; cv=none; b=K6EMfPdM78QGM8J7Md6lhWGJGtvKqvL36dZHim6j82z8QlfpNzeFw6NrpEAbzQke6r5Ku6DTMGfM19piwd3K3Jv3VMvO53KFBbazczEEssvbTjB0CYyNmTe+uBp1vxKdvfxzc6rN/oZrrrrdcLyPH5/lJYi9v4als5ybzb9m3v4=
+	t=1727427616; cv=none; b=OXJqSh6Nuj9Wh5e8t2tihIfZQGQrUUGw37ilchENysa+Vv3zxykifyp+lKzoq1slqhgGxAOlARCgp8Yxayhd7tcLtkwEwnzswlYndzjCRBKcfzhPCY3LZ5o3kF3ZEdIigXCS1JAcAdRTLwVHkPl9AKBTf2cTPZ7Oxf198IJ2WVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727426666; c=relaxed/simple;
-	bh=kKsjcny6CMU5KzLuhtV3n2+I/I360GXhY9cHff1RWmc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QxakZIqCItgf28Zikf67Xs82ROmY55pZHbDL1zjYBUFWtme6GbfFoIcEu35fOoIixMxH6ZV4ERb/ACnriGzJTfHBxmlKMtgnJddFilK16VhUp3WhimDqXCWmrI0EZddEd6M0s57uq7v5W7zxn0NTY0phqVrOaUo+2QpycxVwyAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=Gv2cb+c5; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1727427616; c=relaxed/simple;
+	bh=PGK+HDpEaMyi6BDoICna7guumsAnY7pHy7LgJsXpdkU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iahH4cV3DqsLetZgzjoM8cgiGUHyUelds9OtPneIOFjHkOBb3GjUQ1r1zfbwSgkXzg6pSHUSesdULIW1lkGZ1/vV8UCyeMYnv8fT+Cy6pQP5CFb/+2OZ6lTxfMzHu4mbqjGRoFPiSonqJGC/u6G3m+6RWK7ovhRxN5kaIg3esqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cq0lzZ6R; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="Gv2cb+c5"
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 128212E07D9D;
-	Fri, 27 Sep 2024 11:44:13 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1727426653;
-	bh=69T7zfnP6GOZKoL/6mQso2td37BvgkbgXKOcJVYhRT8=;
-	h=Received:From:Subject:To;
-	b=Gv2cb+c5VI3XYF27iGSj0xdYum9gvuJ0UQdS6NNpc/QW6p+OCVzDFK2rDT1LtzpEw
-	 4qrP2678tnqVwSrhQA/FeCSiBvfnfUQ8yFzVFPjUod4zSDWiHEB0kDFrI3p/FxGU3k
-	 r4dnhd2J3P4Szu16nIDRvTNemevRfPt0guWT1cRQ=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.178) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f178.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f178.google.com with SMTP id
- 38308e7fff4ca-2f77fe7ccc4so21934561fa.2;
-        Fri, 27 Sep 2024 01:44:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCUagLfZJPY1aSbTuiqrhitneE9ZIUQKk1WZLw5e/j/Ut4E/yXtKXWGY5TBDAEHmh6XygeAmdTyOTVseTK45XEFT1DqAOg==@vger.kernel.org,
- AJvYcCVN6gNaSl3JmPpmJs3gLlW+BAxa0Vn4MFa5ILvrz78Ky3F+OeyoN7/IQjkkk6s1Fj/4BJ/8+FYAhF56@vger.kernel.org,
- AJvYcCX0bjRGDlv0rz8gtp2VtB4UmzsNBXm/lm9+r5PY9zD20Cb+7u5dmLp34HEMFZVtFfDx8mPlmWudYIlX8yrN@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6tccr20AIDzDV5KNmF2JsPpjm7DzwTOZlJ2Mjmfn9G7M4ugvI
-	MZebq4bS/DjEHREwjWe5DzvGpXAYAv9xew8Rl9GSQj8RoKCexAhmX+quL2Fwp6xLMHX8GqHH4+q
-	i0SlSwcz/d/XsO3n0qSssAURlPUc=
-X-Google-Smtp-Source: 
- AGHT+IEjhKd9cNPkRjJbIs7s1Z/U/c86xn99AMdNQt4YFu0A6Ntw5ezEX0R32Zpgs2vWsM6HDgMWlIOo0NcZ/91UreQ=
-X-Received: by 2002:a2e:bc17:0:b0:2f6:649e:bf70 with SMTP id
- 38308e7fff4ca-2f9d3e6a97cmr16023961fa.26.1727426652178; Fri, 27 Sep 2024
- 01:44:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cq0lzZ6R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727427614; x=1758963614;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PGK+HDpEaMyi6BDoICna7guumsAnY7pHy7LgJsXpdkU=;
+  b=Cq0lzZ6RTMpYTR6Fr7fx9Bk6lYB0eVWqXNJ1OlfRSlAmrWswyS5Bjors
+   bkKnbIsLEByA1ww5MUVlZQbSEDDydxoXX3y03bgwmL3sShSJgkBxuu5t7
+   py33XTi4LKFMd9N2XJDam44oC4Y6mXNJ/N2KRT4oQm0j7fKfyC43tF2op
+   HVT/Re/yWFuf+6EbXKT+t1IgMeKPMpUe6Cay00kIaq6mFqQwEk5r9jImI
+   bQP8g3EgqVRD1Y7qrhhIDij+zw9D8IBj5SbgCLXl25JPVyUAvOIBwlPxi
+   BmVRPrw8OYZHgr9Vvb4Q+cegHTkXyg2UqXoQ72A4MmiBy52J6IXcxOSZa
+   g==;
+X-CSE-ConnectionGUID: ifdJJzitQ5apbDGtUXIo4g==
+X-CSE-MsgGUID: XChc2gO6T62qzVLkVM2Npg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11207"; a="37237564"
+X-IronPort-AV: E=Sophos;i="6.11,158,1725346800"; 
+   d="scan'208";a="37237564"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2024 02:00:13 -0700
+X-CSE-ConnectionGUID: XZRdpKwITAq6ew1BwT6n8g==
+X-CSE-MsgGUID: mLVwH6HQSvSkQpNvtUAoFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,158,1725346800"; 
+   d="scan'208";a="103282371"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 27 Sep 2024 02:00:07 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1su6pY-000LjI-1k;
+	Fri, 27 Sep 2024 09:00:04 +0000
+Date: Fri, 27 Sep 2024 16:59:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: Werner Sembach <wse@tuxedocomputers.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, bentiss@kernel.org,
+	dri-devel@lists.freedesktop.org, jelle@vdwaa.nl, jikos@kernel.org,
+	lee@kernel.org, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+	miguel.ojeda.sandonis@gmail.com, ojeda@kernel.org,
+	onitake@gmail.com, pavel@ucw.cz,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 1/1] platform/x86/tuxedo: Add virtual LampArray for
+ TUXEDO NB04 devices
+Message-ID: <202409271601.cdUpq1Zd-lkp@intel.com>
+References: <20240926174405.110748-2-wse@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240926025955.1728766-1-superm1@kernel.org>
- <20240926025955.1728766-3-superm1@kernel.org>
- <5a75b73f-dcb1-4a45-9526-194a3451b5c6@amd.com>
- <CAGwozwGtqwOOfrUpjLghW4JCKqcFk9ut-X0MBvHAm37YVS51tw@mail.gmail.com>
- <f516dd07-7d7b-403e-a55e-6bf21dbea9b4@kernel.org>
-In-Reply-To: <f516dd07-7d7b-403e-a55e-6bf21dbea9b4@kernel.org>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Fri, 27 Sep 2024 10:44:00 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwEvLUbqUGBvHh18tSb7nh9ttKQFxXG-LcQ+W80WSdktgA@mail.gmail.com>
-Message-ID: 
- <CAGwozwEvLUbqUGBvHh18tSb7nh9ttKQFxXG-LcQ+W80WSdktgA@mail.gmail.com>
-Subject: Re: [RFC 2/2] platform/x86/amd: pmf: Add manual control support
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Luke D . Jones" <luke@ljones.dev>, Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:ACPI" <linux-acpi@vger.kernel.org>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
-	me@kylegospodneti.ch, Denis Benato <benato.denis96@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <172742665355.30615.13341340152223826272@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240926174405.110748-2-wse@tuxedocomputers.com>
 
-Hi Mario,
+Hi Werner,
 
-On Thu, 26 Sept 2024 at 20:09, Mario Limonciello <superm1@kernel.org> wrote:
->
-> On 9/26/2024 06:00, Antheas Kapenekakis wrote:
-> > Hi Shyam,
-> >
-> >> I appreciate the proposal, but giving users this control seems similar
-> >> to using tools like Ryzenadj or Ryzen Master, which are primarily for
-> >> overclocking. Atleast Ryzen Master has a dedicated mailbox with PMFW.
-> >
-> > In the laptop market I agree with you. However, in the handheld
-> > market, users expect to be able to lower the power envelope of the
-> > device on demand in a granular fashion. As the battery drop is
-> > measured in Watts, tying a slider to Watts is a natural solution.
-> >
-> > Most of the time, when those controls are used it is to limit the
-> > thermal envelope of the device, not exceed it. We want to remove the
-> > use of these tools and allow manufacturers the ability to customise
-> > the power envelope they offer to users.
-> >
-> >> While some existing PMF mailboxes are being deprecated, and SPL has
-> >> been removed starting with Strix[1] due to the APTS method.
->
-> Hmm, what do you think about about offering a wrapper for this for
-> people to manipulate?
+kernel test robot noticed the following build warnings:
 
-Having a single call that sets everything would be my preference, so I
-would support this.
+[auto build test WARNING on drm-misc/drm-misc-next]
+[also build test WARNING on drm-tip/drm-tip lee-leds/for-leds-next linus/master v6.11 next-20240927]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Although looking at [1], seems like it will be separate calls anway.
+url:    https://github.com/intel-lab-lkp/linux/commits/Werner-Sembach/platform-x86-tuxedo-Add-virtual-LampArray-for-TUXEDO-NB04-devices/20240927-014628
+base:   git://anongit.freedesktop.org/drm/drm-misc drm-misc-next
+patch link:    https://lore.kernel.org/r/20240926174405.110748-2-wse%40tuxedocomputers.com
+patch subject: [PATCH 1/1] platform/x86/tuxedo: Add virtual LampArray for TUXEDO NB04 devices
+config: i386-buildonly-randconfig-001-20240927 (https://download.01.org/0day-ci/archive/20240927/202409271601.cdUpq1Zd-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240927/202409271601.cdUpq1Zd-lkp@intel.com/reproduce)
 
-Link: https://github.com/torvalds/linux/blob/master/drivers/platform/x86/amd/pmf/sps.c#L193
-[1]
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409271601.cdUpq1Zd-lkp@intel.com/
 
-> >> It's important to use some settings together rather than individually
-> >> (which the users might not be aware of). For instance, updating SPL
-> >> requires corresponding updates to STT limits to avoid negative outcomes.
-> >
->
-> The tough part about striking the balance here is how would an end user
-> know what values to set in tandem.  I think a lot of people just assume
-> they can "just change SPL" and that's it and have a good experience.
+All warnings (new ones prefixed by >>):
 
-Spoken like a true linux user. Users do not know what a kernel or
-sysfs is and they will not be touching any of this. It just needs to
-be baby-proofed enough so for the 5 users that do it is safe.
+>> drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_virtual_lamp_array.c:601:11: warning: variable 'lamp_count' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+     601 |         else if (driver_data->keyboard_type == WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ISO)
+         |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_virtual_lamp_array.c:604:28: note: uninitialized use occurs here
+     604 |         if (report->lamp_id_end > lamp_count - 1) {
+         |                                   ^~~~~~~~~~
+   drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_virtual_lamp_array.c:601:7: note: remove the 'if' if its condition is always true
+     601 |         else if (driver_data->keyboard_type == WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ISO)
+         |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     602 |                 lamp_count = sizeof(sirius_16_ansii_kbl_mapping);
+   drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_virtual_lamp_array.c:587:20: note: initialize the variable 'lamp_count' to silence this warning
+     587 |         uint8_t lamp_count;
+         |                           ^
+         |                            = '\0'
+>> drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_virtual_lamp_array.c:670:24: warning: format specifies type 'unsigned long' but the argument has type 'size_t' (aka 'unsigned int') [-Wformat]
+     669 |         pr_debug("Recived report: rtype: %u, reqtype: %u, reportnum: %u, len: %lu buf:\n", rtype,
+         |                                                                               ~~~
+         |                                                                               %zu
+     670 |                  reqtype, reportnum, len);
+         |                                      ^~~
+   include/linux/printk.h:595:38: note: expanded from macro 'pr_debug'
+     595 |         no_printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__)
+         |                                     ~~~     ^~~~~~~~~~~
+   include/linux/printk.h:133:18: note: expanded from macro 'no_printk'
+     133 |                 _printk(fmt, ##__VA_ARGS__);            \
+         |                         ~~~    ^~~~~~~~~~~
+   2 warnings generated.
 
-Let us focus on the problem here. There are currently around 5
-manufacturers shipping products in a space where granular TDP control
-is expected and where AMD has not provided them with a solution.
 
-And for this, there are two issues. First, there is no standard for
-granular TDP control tuned by the manufacturer. Second, when such a
-standard is created, there is a healthy pool of devices in the market
-where the manufacturer cannot be expected to provide an updated BIOS
-for them.
-Therefore, we need a proposal where 1) the manufacturer can provide
-granular TDP controls in a fully customizable manner (e.g., with a LUT
-that controls everything), and 2) for devices that will not get that
-tuning, a custom profile setting that will expose important tuning
-parameters to userspace so that we can retrofit it and extend the
-their lifespan.
+vim +601 drivers/platform/x86/tuxedo/tuxedo_nb04_wmi_ab_virtual_lamp_array.c
 
-> > This suggestion was referring to a combined slider, much like the
-> > suggestion below. So STT limits would be modified in tandem,
-> > respecting manufacturer profiles. See comments below.
-> >
-> > If you find the name SPL disagreeable, it could be named {tdp,
-> > tdp_min, tdp_max}. This is the solution used by Valve on the Steam
-> > Deck (power1_cap{+min,max}, power2_cap{+min,max}).
->
-> It's not so much that it's disagreeable term but Shyam is pointing out
-> that SPL is no longer a valid argument to the platform mailbox.
+   581	
+   582	static int handle_lamp_range_update_report(struct hid_device *hdev,
+   583						   struct lamp_range_update_report_t *report)
+   584	{
+   585		int ret;
+   586		struct driver_data_t *driver_data = hdev->driver_data;
+   587		uint8_t lamp_count;
+   588		struct lamp_multi_update_report_t lamp_multi_update_report = {
+   589			.report_id = LAMP_MULTI_UPDATE_REPORT_ID
+   590		};
+   591	
+   592		// Catching missformated lamp_range_update_report and fail silently according to
+   593		// "HID Usage Tables v1.5"
+   594		if (report->lamp_id_start > report->lamp_id_end) {
+   595			pr_debug("lamp_id_start > lamp_id_end in lamp_range_update_report. Skippng whole report!\n");
+   596			return sizeof(struct lamp_range_update_report_t);
+   597		}
+   598	
+   599		if (driver_data->keyboard_type == WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ANSII)
+   600			lamp_count = sizeof(sirius_16_ansii_kbl_mapping);
+ > 601		else if (driver_data->keyboard_type == WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ISO)
+   602			lamp_count = sizeof(sirius_16_ansii_kbl_mapping);
+   603	
+   604		if (report->lamp_id_end > lamp_count - 1) {
+   605			pr_debug("Out of bounds lamp_id_* in lamp_range_update_report. Skippng whole report!\n");
+   606			return sizeof(struct lamp_range_update_report_t);
+   607		}
+   608	
+   609		// Break handle_lamp_range_update_report call down to multiple
+   610		// handle_lamp_multi_update_report calls to easily ensure that mixing
+   611		// handle_lamp_range_update_report and handle_lamp_multi_update_report
+   612		// does not break things.
+   613		for (int i = report->lamp_id_start; i < report->lamp_id_end + 1; i = i + 8) {
+   614			lamp_multi_update_report.lamp_count = MIN(report->lamp_id_end + 1 - i, 8);
+   615			if (i + lamp_multi_update_report.lamp_count == report->lamp_id_end + 1)
+   616				lamp_multi_update_report.lamp_update_flags |=
+   617					LAMP_UPDATE_FLAGS_LAMP_UPDATE_COMPLETE;
+   618	
+   619			for (int j = 0; j < lamp_multi_update_report.lamp_count; ++j) {
+   620				lamp_multi_update_report.lamp_id[j] = i + j;
+   621				lamp_multi_update_report.update_channels[j].red =
+   622					report->red_update_channel;
+   623				lamp_multi_update_report.update_channels[j].green =
+   624					report->green_update_channel;
+   625				lamp_multi_update_report.update_channels[j].blue =
+   626					report->blue_update_channel;
+   627				lamp_multi_update_report.update_channels[j].intensity =
+   628					report->intensity_update_channel;
+   629			}
+   630	
+   631			ret = handle_lamp_multi_update_report(hdev, &lamp_multi_update_report);
+   632			if (ret < 0)
+   633				return ret;
+   634			else if (ret != sizeof(struct lamp_multi_update_report_t))
+   635				return -EIO;
+   636		}
+   637	
+   638		return sizeof(struct lamp_range_update_report_t);
+   639	}
+   640	
+   641	
+   642	struct __packed lamp_array_control_report_t {
+   643		const uint8_t report_id;
+   644		uint8_t autonomous_mode;
+   645	};
+   646	
+   647	static int handle_lamp_array_control_report(struct hid_device __always_unused *hdev,
+   648						    struct lamp_array_control_report_t __always_unused *rep)
+   649	{
+   650		// The keyboard firmware doesn't have any built in effects or controls
+   651		// so this is a NOOP.
+   652		// According to the HID Documentation (HID Usage Tables v1.5) this
+   653		// function is optional and can be removed from the HID Report
+   654		// Descriptor, but it should first be confirmed that userspace respects
+   655		// this possibility too. The Microsoft MacroPad reference implementation
+   656		// (https://github.com/microsoft/RP2040MacropadHidSample 1d6c3ad)
+   657		// already deviates from the spec at another point, see
+   658		// handle_lamp_*_update_report.
+   659	
+   660		return sizeof(struct lamp_array_control_report_t);
+   661	}
+   662	
+   663	
+   664	static int ll_raw_request(struct hid_device *hdev, unsigned char reportnum, __u8 *buf, size_t len,
+   665				   unsigned char rtype, int reqtype)
+   666	{
+   667		int ret;
+   668	
+   669		pr_debug("Recived report: rtype: %u, reqtype: %u, reportnum: %u, len: %lu buf:\n", rtype,
+ > 670			 reqtype, reportnum, len);
+   671		print_hex_dump_bytes("", DUMP_PREFIX_OFFSET, buf, len);
+   672	
+   673		ret = -EINVAL;
+   674		if (rtype == HID_FEATURE_REPORT) {
+   675			if (reqtype == HID_REQ_GET_REPORT) {
+   676				if (reportnum == LAMP_ARRAY_ATTRIBUTES_REPORT_ID
+   677				    && len == sizeof(struct lamp_array_attributes_report_t))
+   678					ret = handle_lamp_array_attributes_report(
+   679						hdev, (struct lamp_array_attributes_report_t *)buf);
+   680				else if (reportnum == LAMP_ATTRIBUTES_RESPONSE_REPORT_ID
+   681				    && len == sizeof(struct lamp_attributes_response_report_t))
+   682					ret = handle_lamp_attributes_response_report(
+   683						hdev, (struct lamp_attributes_response_report_t *)buf);
+   684			} else if (reqtype == HID_REQ_SET_REPORT) {
+   685				if (reportnum == LAMP_ATTRIBUTES_REQUEST_REPORT_ID
+   686				    && len == sizeof(struct lamp_attributes_request_report_t))
+   687					ret = handle_lamp_attributes_request_report(
+   688						hdev, (struct lamp_attributes_request_report_t *)buf);
+   689				else if (reportnum == LAMP_MULTI_UPDATE_REPORT_ID
+   690				    && len == sizeof(struct lamp_multi_update_report_t))
+   691					ret = handle_lamp_multi_update_report(
+   692						hdev, (struct lamp_multi_update_report_t *)buf);
+   693				else if (reportnum == LAMP_RANGE_UPDATE_REPORT_ID
+   694				    && len == sizeof(struct lamp_range_update_report_t))
+   695					ret = handle_lamp_range_update_report(
+   696						hdev, (struct lamp_range_update_report_t *)buf);
+   697				else if (reportnum == LAMP_ARRAY_CONTROL_REPORT_ID
+   698				    && len == sizeof(struct lamp_array_control_report_t))
+   699					ret = handle_lamp_array_control_report(
+   700						hdev, (struct lamp_array_control_report_t *)buf);
+   701			}
+   702		}
+   703	
+   704		return ret;
+   705	}
+   706	
 
-I'd tend to agree since the current mailbox targets that I know of are
-STAPM limit (for STAPM) and skin temp limit (for STT). Since you used
-the term SPL, I carried that over to the proposal, but it would not
-control SPL. Instead it would control both of the former, including
-sPPT and fPPT (if that is still supported; unclear in [1]; but
-disabling boost will be a requirement).
-
-> >
-> > In addition, boost is seen as detrimental to handheld devices, with
-> > most users disliking and disabling it. Steam Deck does not use boost.
-> > It is disabled by Steam (power1_cap == power2_cap). So STT and STAPM
-> > are not very relevant. In addition, Steam Deck van gogh has a more
-> > linear response so TDP limits are less required.
-> >
-> >> Additionally, altering these parameters can exceed thermal limits and
-> >> potentially void warranties.
-> >>
-> >> Considering CnQF, why not let OEMs opt-in and allow the algorithm to
-> >> manage power budgets, rather than providing these controls to users
-> >> from the kernel when userspace tools already exist?
->
-> The problem is all of the RE tools rely upon PCI config space access or
-> /dev/mem access to manipulate undocumented register offsets.
->
-> When the system is under kernel lockdown (such as with distro kernel
-> when UEFI secure boot is turned on) then those interfaces are
-> intentionally locked down.
->
-> That's why I'm hoping we can strike some sort of balance at the request
-> for some advanced users being able to tune values in a predictable
-> fashion while also allowing OEMs to configure policies like CNQF or
-> Smart PC when users for users that don't tinker.
-
-I will have to repeat that as far as the handheld market is concerned,
-we are not talking about advanced users. Instead, we are talking for
-all users.
-
-> >>
-> >> Please note that on systems with Smart PC enabled, if users manually
-> >> adjust the system thermals, it can lead to the thermal controls
-> >> becoming unmanageable.
->
-> Yeah; that's why as this RFC patch I didn't let CNQF, ITS or Smart PC
-> initialize.  Basically if manual control is enabled then "SPS" and
-> manual sysfs control is the only thing available.
-
-Sounds like you have your work cut out for you if the custom profile
-is supposed to dynamically load.
-
-> >
-> > Much like you, we dislike AutoTDP solutions that use e.g., RyzenAdj, as they:
-> >   1) Do not respect manufacturer limits
-> >   2) Cause system instability such as stutters when setting values
-> >   3) Can cause crashes if they access the mailbox at the same time as
-> > the AMD drm driver.
-> >
->
-> Yes.  Exactly why I feel that if we offer an interface instead people
-> can use such an interface instead of these tools.
-
-While (in Bazzite) we have a solution that works very reliably and is
-safe (not RyzenAdj), we have to begin cleaning up loose ends so that
-we can 1) enable TDP control in a stock secureboot kernel with early
-lockdown enabled (e.g., Fedora), 2) provide manufacturers with certain
-reliability guarantees so they can warranty units running under linux,
-3) prepare our solutions for being packaged in upstream distribution
-repositories (Debian, Fedora), where using an existing solution is a
-blocker as they do not provide or should provide such hardware access
-when secure boot is enabled.
-
-Though, since manufacturers like Ayaneo currently use RyzenAdj in
-Windows, I might be nitpicking too much.
-
-As for why Secure Boot is important, let add [2], where Rockstar
-points the finger to Valve for BattlEye not working. Much of the
-anticheat issue is due to the fact that it is trivial to cheat without
-having a secureboot enabled kernel with the early lockdown flag
-engaged, as it allows both custom drivers and userspace to gain access
-to sensitive process memory in a way that is undetectable by
-anticheat. Vanguard does not work in Linux for much of the same
-reason.
-
-Steam Deck is, for those uninitiated, a device that does not carry
-Secureboot keys, and SteamOS is a distribution that does not support
-Secure boot. Although both can change (Steam Deck BIOS supports secure
-boot). However, Bazzite is secure boot enabled and we encourage our
-users to leave it enabled, although for the moment they have to enroll
-our MOK key, which most of them do.
-
-Antheas
-
-Link: https://www.pcgamer.com/games/grand-theft-auto/gta-online-is-no-longer-compatible-with-steam-deck-thanks-to-its-new-anti-cheat-software-despite-battleye-having-an-opt-in-system-for-this-sort-of-thing/
-[2]
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
