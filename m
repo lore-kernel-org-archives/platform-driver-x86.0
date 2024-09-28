@@ -1,65 +1,58 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE22364CD
-	for <platform-driver-x86@vger.kernel.org>; Sat, 28 Sep 2024 15:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B6D57CBE
+	for <platform-driver-x86@vger.kernel.org>; Sat, 28 Sep 2024 16:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727538832; cv=none; b=JCqam/EvP/kwXFWzco0jpma14zI4BWW7Q/cbAGi36mVZlRON0mAvPV4isQRwaRj5IDodkA7juwMS2t3PsPWWybSsckIvcouqWv8uNcC1k8YXK2PKgxRAJwYY2d0zwWs7BLiuZJq/ziChfsBzkTtWDrdsJwG0CYsgg1qTmIz29Tc=
+	t=1727540261; cv=none; b=ptgjXDC9mkAge9DYrI4y4rf9jPHeX3y1/Ww3nNtIv2EwPVCOqPLNvuz3auBYiQ5yL7yz1dcq5qbcfGmAirn+N7vN7y3JR900Lh2JYKaI+UsB1k/KAF3OsYAMax4Uc8tqr5JIFItgCERZIqHP/2WzWdqPQaPD9g5hpVpjm+J1nYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727538832; c=relaxed/simple;
-	bh=tXMV+kcth9S1uhwYPiEx4F2bDHbBFHlTPwKqiYdgqDI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A3F22k9Xrra/S8wp9B9KJZyGsTVDZk3+SShZDLQLQERL/8lyer5/lfIYtFK2qjG+pVMs6y2tnlR5dSVyEwdQKHJa6toF+vmmKqskA7qoM0SAr46doJ+F4QS4+mz1KUuKKc8D/evQlzBcFKvOPaxthfRQzqaMu+L4YnsDeuhjWAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e+/ux56s; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1727540261; c=relaxed/simple;
+	bh=t9t1N/PKxfxn7j2Uv1P7SPS1Tyd3qWcE4CYU2F4dFd4=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=DIHV9i0gkdZEPCUpuKqzU89JMUDGbN3YCsL9iH9jGO+I62KTDzmbJyyHCLx9SAAM75XeOfzfwYk2kqoJ2D6oSUur+TpK2C6JFAc3rhfUhDQfRJgLOKLolwlHEqWDxJlWZ2iuFqKLGYCDHwq73omDMpbRMn/AkqWrHF2BmE1RwqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XEbkJ93m; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e+/ux56s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1727538829;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qC+Sm4mkUVolcRSvJgkVeyvOVLgGLUcC4NfrjQb0DlI=;
-	b=e+/ux56se+vYHWnh16BDdrsHmXAcPXeZmhDk8bLJTMmXHMIGmAA7rvBDGK5myAaXPLb15o
-	WV3nqBLCaRx1bGoJl7hMi6EoK7MqTKZA60/XrJmF4+4ACba9Q6+pVh5CgHMzgNeVlQPr43
-	MTkcejJ22yE6/D2BLJuiPcR9CN448rU=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-644-XW4wbysfPMWeKAvMRV52oQ-1; Sat, 28 Sep 2024 11:53:48 -0400
-X-MC-Unique: XW4wbysfPMWeKAvMRV52oQ-1
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5c86d0ff3a8so2249250a12.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 28 Sep 2024 08:53:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XEbkJ93m"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42e5e758093so25443925e9.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 28 Sep 2024 09:17:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727540258; x=1728145058; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UA4EUH00XK4jHFDC/BTpAP2ThrqAhUufTPf+ZPQklok=;
+        b=XEbkJ93m6LraLCh5WxM5nbLUQrl9750acLgIhJeD8nczPBKb7f+b4DGcTrlM3FU4rD
+         QAEW6KqGoQxPqQzr7Sdi2VDwGf0nAIZab1kRTIs4cmmtNjnCye/vUYIEMgK/dKFtlKl0
+         L3VW042Ubr/ucJdvECS+Ici6iVf0a62NcaW4s+b0W4LxOggQcqoJDrJnrc4Q3E8aJW24
+         oQgWs9yKVdoGPGtcT3j7fI1gk7eA5J3jaKvYrNVpgy1JQss7GN74oDqL1/0Vq9ncB7Uo
+         5lPQnHjLh9Gq3XB/KTatiCOFTrd8yeNP/wt6JbqhD49X8dBJj8IhrvlyXM30ATqZlbCx
+         u1NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727538827; x=1728143627;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qC+Sm4mkUVolcRSvJgkVeyvOVLgGLUcC4NfrjQb0DlI=;
-        b=sNdmXwQn5jj2XFtNuOFqeXh+0syPjkydYNSyf5sVLxZ/oAnEWUp9HojMk+hhixC82Q
-         MN1nlX9VvJfPggYnP45WhWrqNO1kJIkLEOMwmkfpIpaht4m/9c6xz8gJkbq7ZNgGbmtp
-         CRlX4a8s0kuIG3Niqy7B+FEwMmvDBbRRBC21Q8wpmmIP0F4dHs/MyIl4tV9wm7IRBIqM
-         P3sBn/x29i4K7fdrP2XOBMRQWQvjoL+yFYmHLnKXn+ScPGafRcWz0hdaCFXz3nsQVVUR
-         EvzCFjkxjqoD1WXI2WAuQVdzbG9IuYvVTzxWGLFVE9UxoDGrlduN6f8GvKu1OsP1Jlpk
-         7DgA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+78Oe9UFt8e9p9OA7MrubgJlrRdr89fvDRWIY6TVqov1/JpPTRUbTRLvaJ775jUuoJNvoo3as9C+gVtIljZ4FOP54@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBXFDcGvhQLhRfMW99Sqwu8T1p8UzM2FH+7rEu5n+zyXdcgtgZ
-	kdUnadAwc8uN00Y0c8xAptbQv3AYmBUDDZyYkfCrQjlFCHoAtJ0Ntb1L96bjxTgBmmsbhC5gt2q
-	Isd1jel237+ckMFul2Q2pLGEeYin6aZuJVwM6J1pW8+7nROKF0ojfV8LXg+Bxcbs9V/PZ+eM=
-X-Received: by 2002:a05:6402:34c4:b0:5c8:8381:c1bf with SMTP id 4fb4d7f45d1cf-5c88381c226mr4451753a12.3.1727538826740;
-        Sat, 28 Sep 2024 08:53:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHSNjZ9qCHLQeYT8LsGYydz191FY7WU7Z/pAeiU9MqrEsu42CxkP64bl+ssdMOapnv9ijHwgA==
-X-Received: by 2002:a05:6402:34c4:b0:5c8:8381:c1bf with SMTP id 4fb4d7f45d1cf-5c88381c226mr4451746a12.3.1727538826282;
-        Sat, 28 Sep 2024 08:53:46 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c884e9bfd0sm1705587a12.37.2024.09.28.08.53.44
+        d=1e100.net; s=20230601; t=1727540258; x=1728145058;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=UA4EUH00XK4jHFDC/BTpAP2ThrqAhUufTPf+ZPQklok=;
+        b=Ow19U/A+kRtkjoJAPoJf3ss5b8dkbyolMm89TOCtNXmiOHp7neQnNAdjxRrpqPBymG
+         Gju5n7/XI7yDDGkwgIabHqpDzibDE9XiMr3iUxthJTtgbp1BDhHkTDpJsWdECELlUc42
+         tv7h6tFUdsitDHwVlbxvo0gOcNLQpKzPmIpcaU/sBPm2W1NTJlEhj4/YxtTK6+TWQRXH
+         KdPeMYdJeq449VCv0xxnMKbvsGAi0skZ4m2fiOJGrwHrFeKY4AektXtq7V0A+eQXLmLP
+         3LS2mVtak2T6u5xIYpSziLXFcePasnck3x6klpEEil/7hL4pDahvRyIQulb7eNe2Z2oW
+         aMBQ==
+X-Gm-Message-State: AOJu0YyeicVll7bATVR7EqaWdZlQW20Lt1kqR+dkKoZ/P62qSOv937GU
+	bes59nkms9ngEa260lEB7iOlzbVBkpWxluvyu6Mvy0PH9rS3+iOOOASwTi0p
+X-Google-Smtp-Source: AGHT+IGTmKmawh93+KfclBjanDPcrPKYg3xPFf6LT2ywEcNdoXOj52h1VUZIg8Bf3KyRD6bqmoBMDg==
+X-Received: by 2002:a05:600c:3b06:b0:42c:d7da:737b with SMTP id 5b1f17b1804b1-42f58430021mr44906275e9.9.1727540257645;
+        Sat, 28 Sep 2024 09:17:37 -0700 (PDT)
+Received: from [192.168.178.62] (p5dd074c3.dip0.t-ipconnect.de. [93.208.116.195])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42e969ffa3dsm105290125e9.23.2024.09.28.09.17.35
+        for <platform-driver-x86@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 28 Sep 2024 08:53:45 -0700 (PDT)
-Message-ID: <4365cae6-33e2-4b86-aab9-0b9ad112e6b0@redhat.com>
-Date: Sat, 28 Sep 2024 17:53:44 +0200
+        Sat, 28 Sep 2024 09:17:36 -0700 (PDT)
+Message-ID: <a983e6d5-c7ab-4758-be9b-7dcfc1b44ed3@gmail.com>
+Date: Sat, 28 Sep 2024 18:17:29 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,330 +60,62 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] platform: arm64: Add driver for Lenovo Yoga Slim 7x's
- EC
-To: Maya Matuszczyk <maccraft123mc@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20240927185345.3680-1-maccraft123mc@gmail.com>
- <20240927185345.3680-2-maccraft123mc@gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240927185345.3680-2-maccraft123mc@gmail.com>
+Content-Language: en-US
+To: platform-driver-x86@vger.kernel.org
+From: Stefan Blum <stefanblum2004@gmail.com>
+Subject: [PATCH] Fix Asus B2402FBA internal keyboard and track point
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Maya,
+By default the internal keyboard and track point on the Asus Expertbook
+B2 Flip B2402FVA are not functional.
 
-Thank you for your patch. It is great to so people working on supporting
-more ARM64 based laptop ECs.
+Similar to the Asus board B2402FBA, on the B2402FVA the internal keyboard
+is only functional by adding it to the irq1_level_low_skip_override array.
 
-Note not a full review just one remark from a quick scan of the driver.
+For the internal elan track point, i have found out that setting the class to
+MT_CLS_WIN_8_FORCE_MULTI_INPUT_NSM makes the track point function as expected.
 
-On 27-Sep-24 8:53 PM, Maya Matuszczyk wrote:
-> This patch adds a basic driver for the EC in Qualcomm Snapdragon X1
-> Elite-based Lenovo Yoga Slim 7x.
-> 
-> For now it supports only reporting that the AP is going to suspend and
-> the microphone mute button, however the EC seems to also support reading
-> fan information, other key combinations and thermal data.
-> 
-> Signed-off-by: Maya Matuszczyk <maccraft123mc@gmail.com>
-> ---
->  MAINTAINERS                                 |   1 +
->  drivers/platform/arm64/Kconfig              |  12 ++
->  drivers/platform/arm64/Makefile             |   1 +
->  drivers/platform/arm64/lenovo-yoga-slim7x.c | 202 ++++++++++++++++++++
->  4 files changed, 216 insertions(+)
->  create mode 100644 drivers/platform/arm64/lenovo-yoga-slim7x.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 0d4bfdde166d..f689cba80fa3 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12906,6 +12906,7 @@ LENOVO YOGA SLIM 7X EC DRIVER
->  M:	Maya Matuszczyk <maccraft123mc@gmail.com>
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/platform/lenovo,yoga-slim7x-ec.yaml
-> +F:	drivers/platform/arm64/lenovo-yoga-slim7x.c
->  
->  LETSKETCH HID TABLET DRIVER
->  M:	Hans de Goede <hdegoede@redhat.com>
-> diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
-> index f88395ea3376..9ceae50f8b4e 100644
-> --- a/drivers/platform/arm64/Kconfig
-> +++ b/drivers/platform/arm64/Kconfig
-> @@ -49,4 +49,16 @@ config EC_LENOVO_YOGA_C630
->  
->  	  Say M or Y here to include this support.
->  
-> +config EC_LENOVO_YOGA_SLIM7X
-> +	tristate "Lenovo Yoga Slim 7x Embedded Controller driver"
-> +	depends on ARCH_QCOM || COMPILE_TEST
-> +	depends on I2C
-> +	help
-> +	  Select this option to enable driver for the EC found in the Lenovo
-> +	  Yoga Slim 7x.
-> +
-> +	  This driver currently supports reporting input event for microphone
-> +	  mute button, and reporting device suspend to the EC so it can take
-> +	  appropriate actions.
-> +
->  endif # ARM64_PLATFORM_DEVICES
-> diff --git a/drivers/platform/arm64/Makefile b/drivers/platform/arm64/Makefile
-> index b2ae9114fdd8..70dfc1fb979d 100644
-> --- a/drivers/platform/arm64/Makefile
-> +++ b/drivers/platform/arm64/Makefile
-> @@ -7,3 +7,4 @@
->  
->  obj-$(CONFIG_EC_ACER_ASPIRE1)	+= acer-aspire1-ec.o
->  obj-$(CONFIG_EC_LENOVO_YOGA_C630) += lenovo-yoga-c630.o
-> +obj-$(CONFIG_EC_LENOVO_YOGA_SLIM7X) += lenovo-yoga-slim7x.o
-> diff --git a/drivers/platform/arm64/lenovo-yoga-slim7x.c b/drivers/platform/arm64/lenovo-yoga-slim7x.c
-> new file mode 100644
-> index 000000000000..8f6d523395bc
-> --- /dev/null
-> +++ b/drivers/platform/arm64/lenovo-yoga-slim7x.c
-> @@ -0,0 +1,202 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2024 Maya Matuszczyk <maya.matuszczyk@gmail.com>
-> + */
-> +#include <linux/auxiliary_bus.h>
-> +#include <linux/cleanup.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/irqreturn.h>
-> +#include <linux/lockdep.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/notifier.h>
-> +#include <linux/slab.h>
-> +#include <linux/input.h>
-> +//#include <linux/platform_data/lenovo-yoga-slim7x.h>
-> +
-> +// These are the registers that i know about available from SMBUS
-> +#define EC_IRQ_REASON_REG 0x05
-> +#define EC_SUSPEND_RESUME_REG 0x23
-> +#define EC_IRQ_ENABLE_REG 0x35
-> +#define EC_BACKLIGHT_STATUS_REG 0x83
-> +#define EC_MIC_MUTE_LED_REG 0x84
-> +#define EC_AC_STATUS_REG 0x90
-> +
-> +// Valid values for EC_SUSPEND_RESUME_REG
-> +#define EC_NOTIFY_SUSPEND_ENTER 0x01
-> +#define EC_NOTIFY_SUSPEND_EXIT 0x00
-> +#define EC_NOTIFY_SCREEN_OFF 0x03
-> +#define EC_NOTIFY_SCREEN_ON 0x04
-> +
-> +// These are the values in EC_IRQ_REASON_REG that i could find in DSDT
-> +#define EC_IRQ_MICMUTE_BUTTON 0x04
-> +#define EC_IRQ_FAN1_STATUS_CHANGE 0x30
-> +#define EC_IRQ_FAN2_STATUS_CHANGE 0x31
-> +#define EC_IRQ_FAN1_SPEED_CHANGE 0x32
-> +#define EC_IRQ_FAN2_SPEED_CHANGE 0x33
-> +#define EC_IRQ_COMPLETED_LUT_UPDATE 0x34
-> +#define EC_IRQ_COMPLETED_FAN_PROFILE_SWITCH 0x35
-> +#define EC_IRQ_THERMISTOR_1_TEMP_THRESHOLD_CROSS 0x36
-> +#define EC_IRQ_THERMISTOR_2_TEMP_THRESHOLD_CROSS 0x37
-> +#define EC_IRQ_THERMISTOR_3_TEMP_THRESHOLD_CROSS 0x38
-> +#define EC_IRQ_THERMISTOR_4_TEMP_THRESHOLD_CROSS 0x39
-> +#define EC_IRQ_THERMISTOR_5_TEMP_THRESHOLD_CROSS 0x3a
-> +#define EC_IRQ_THERMISTOR_6_TEMP_THRESHOLD_CROSS 0x3b
-> +#define EC_IRQ_THERMISTOR_7_TEMP_THRESHOLD_CROSS 0x3c
-> +#define EC_IRQ_RECOVERED_FROM_RESET 0x3d
-> +#define EC_IRQ_LENOVO_SUPPORT_KEY 0x90
-> +#define EC_IRQ_FN_Q 0x91
-> +#define EC_IRQ_FN_M 0x92
-> +#define EC_IRQ_FN_SPACE 0x93
-> +#define EC_IRQ_FN_R 0x94
-> +#define EC_IRQ_FNLOCK_ON 0x95
-> +#define EC_IRQ_FNLOCK_OFF 0x96
-> +#define EC_IRQ_FN_N 0x97
-> +#define EC_IRQ_AI 0x9a
-> +#define EC_IRQ_NPU 0x9b
-> +
-> +struct yoga_slim7x_ec {
-> +	struct i2c_client *client;
-> +	struct input_dev *idev;
-> +	struct mutex lock;
-> +};
-> +
-> +static irqreturn_t yoga_slim7x_ec_irq(int irq, void *data)
-> +{
-> +	struct yoga_slim7x_ec *ec = data;
-> +	struct device *dev = &ec->client->dev;
-> +	int val;
-> +
-> +	guard(mutex)(&ec->lock);
-> +
-> +	val = i2c_smbus_read_byte_data(ec->client, EC_IRQ_REASON_REG);
-> +	if (val < 0) {
-> +		dev_err(dev, "Failed to get EC IRQ reason: %d\n", val);
-> +		return IRQ_HANDLED;
-> +	}
-> +
-> +	switch (val) {
-> +	case EC_IRQ_MICMUTE_BUTTON:
-> +		input_report_key(ec->idev, KEY_MICMUTE, 1);
-> +		input_sync(ec->idev);
-> +		input_report_key(ec->idev, KEY_MICMUTE, 0);
-> +		input_sync(ec->idev);
-> +		break;
-> +	default:
-> +		dev_info(dev, "Unhandled EC IRQ reason: %d\n", val);
-> +	}
+Signed-off-by: Stefan Blum <stefan.blum@gmail.com>
 
-I strongly suggest to use include/linux/input/sparse-keymap.h functionality
-here. This will make adding new keys a lot easier and will allow re-mapping
-codes from userspace.
+---
+ drivers/acpi/resource.c      | 8 ++++++++
+ drivers/hid/hid-multitouch.c | 4 ++++
+ 2 files changed, 12 insertions(+)
 
-E.g. replace the whole switch-case with:
-
-	if (!sparse_keymap_report_event(ec->idev, val, 1, true))
-		dev_info(dev, "Unhandled EC IRQ reason: %d\n", val);
-
-This takes care of mapping val -> KEY_MICMUTE, and doing all
-the reporting (after calling sparse_keymap_setup() with an appropriate
-keymap from probe()).
-
-
-
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int yoga_slim7x_ec_probe(struct i2c_client *client)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct yoga_slim7x_ec *ec;
-> +	int ret;
-> +
-> +	ec = devm_kzalloc(dev, sizeof(*ec), GFP_KERNEL);
-> +	if (!ec)
-> +		return -ENOMEM;
-> +
-> +	mutex_init(&ec->lock);
-> +	ec->client = client;
-> +
-> +	ec->idev = devm_input_allocate_device(dev);
-> +	if (!ec->idev)
-> +		return -ENOMEM;
-> +	ec->idev->name = "yoga-slim7x-ec";
-> +	ec->idev->phys = "yoga-slim7x-ec/input0";
-> +	input_set_capability(ec->idev, EV_KEY, KEY_MICMUTE);
-
-Same here, please use sparse_keymap_setup() here to have it
-setup capabilities for all keys in your (to be defined)
-
-const struct key_entry yoga_slim7x_ec_keymap[]
-
-This way you only need to add new mappings in the keymap
-and then both the capability setting as well as the reporting
-in the irq-handler will be taken care of by the sparse-keymap
-helpers.
-
-Other then that the overall structure of the driver looks good
-(again this is not a full review, just a quick scan).
-
-Regards,
-
-Hans
-
-
-
-
-
-> +
-> +	ret = input_register_device(ec->idev);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Failed to register input device\n");
-> +
-> +	ret = devm_request_threaded_irq(dev, client->irq,
-> +					NULL, yoga_slim7x_ec_irq,
-> +					IRQF_ONESHOT, "yoga_slim7x_ec", ec);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Unable to request irq\n");
-> +
-> +	ret = i2c_smbus_write_byte_data(client, EC_IRQ_ENABLE_REG, 0x01);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Failed to enable interrupts\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static void yoga_slim7x_ec_remove(struct i2c_client *client)
-> +{
-> +	struct device *dev = &client->dev;
-> +	int ret;
-> +
-> +	ret = i2c_smbus_write_byte_data(client, EC_IRQ_ENABLE_REG, 0x00);
-> +	if (ret < 0)
-> +		dev_err(dev, "Failed to disable interrupts: %d\n", ret);
-> +}
-> +
-> +static int yoga_slim7x_ec_suspend(struct device *dev)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	int ret;
-> +
-> +	ret = i2c_smbus_write_byte_data(client, EC_SUSPEND_RESUME_REG, EC_NOTIFY_SCREEN_OFF);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = i2c_smbus_write_byte_data(client, EC_SUSPEND_RESUME_REG, EC_NOTIFY_SUSPEND_ENTER);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static int yoga_slim7x_ec_resume(struct device *dev)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	int ret;
-> +
-> +	ret = i2c_smbus_write_byte_data(client, EC_SUSPEND_RESUME_REG, EC_NOTIFY_SUSPEND_EXIT);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = i2c_smbus_write_byte_data(client, EC_SUSPEND_RESUME_REG, EC_NOTIFY_SCREEN_ON);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id yoga_slim7x_ec_of_match[] = {
-> +	{ .compatible = "lenovo,yoga-slim7x-ec" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, yoga_slim7x_ec_of_match);
-> +
-> +static const struct i2c_device_id yoga_slim7x_ec_i2c_id_table[] = {
-> +	{ "yoga-slim7x-ec", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, yoga_slim7x_ec_i2c_id_table);
-> +
-> +static DEFINE_SIMPLE_DEV_PM_OPS(yoga_slim7x_ec_pm_ops,
-> +		yoga_slim7x_ec_suspend,
-> +		yoga_slim7x_ec_resume);
-> +
-> +static struct i2c_driver yoga_slim7x_ec_i2c_driver = {
-> +	.driver = {
-> +		.name = "yoga-slim7x-ec",
-> +		.of_match_table = yoga_slim7x_ec_of_match,
-> +		.pm = &yoga_slim7x_ec_pm_ops
-> +	},
-> +	.probe = yoga_slim7x_ec_probe,
-> +	.remove = yoga_slim7x_ec_remove,
-> +	.id_table = yoga_slim7x_ec_i2c_id_table,
-> +};
-> +module_i2c_driver(yoga_slim7x_ec_i2c_driver);
-> +
-> +MODULE_DESCRIPTION("Lenovo Yoga Slim 7x Embedded Controller");
-> +MODULE_LICENSE("GPL");
-
+diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+index df5d5a554..c29e71401 100644
+--- a/drivers/acpi/resource.c
++++ b/drivers/acpi/resource.c
+@@ -489,6 +489,14 @@ static const struct dmi_system_id irq1_level_low_skip_override[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "B2402FBA"),
+ 		},
+ 	},
++	{
++		/* Asus ExpertBook B2402FVA */
++		.ident = "Asus ExpertBook B2402FVA",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_BOARD_NAME, "B2402FVA"),
++		},
++	},
+ 	{
+ 		/* Asus ExpertBook B2502 */
+ 		.matches = {
+diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+index 56fc78841..3f93c5ef6 100644
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -1992,6 +1992,10 @@ static const struct hid_device_id mt_devices[] = {
+ 		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
+ 			USB_VENDOR_ID_ELAN, 0x3148) },
+ 
++	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT_NSMU,
++		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
++			USB_VENDOR_ID_ELAN, 0x32ae) },
++
+ 	/* Elitegroup panel */
+ 	{ .driver_data = MT_CLS_SERIAL,
+ 		MT_USB_DEVICE(USB_VENDOR_ID_ELITEGROUP,
+-- 
+2.39.5
