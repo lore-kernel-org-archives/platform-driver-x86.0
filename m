@@ -1,122 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A378615A858;
-	Sat, 28 Sep 2024 20:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAFC136358;
+	Sat, 28 Sep 2024 21:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727557023; cv=none; b=hctmaxlX/3dvFf8ANsMU1OQLKPQQawj+Ti27mLaZD2bWwzutYK51lAxyviQigN8jPV39dxL6R4DDdvFy4gZ8z6HGVgqlmK2emX+/DRdQxIV6uwOi2pu35mrcxAMoyNE5S9UwAug651hkgbxMT1KcpivRWigvhJeTTh9JfsGn3w4=
+	t=1727557394; cv=none; b=tsZvbLbfYdDZbJhSxKuBzuQWa2blmdF81ZRHz0+TUSdJH1EG1sZJwQUYSHOcc82SelXLnffiyHFyv3CKnOooLqj3KNEVZHigrQ7JAZuJG3nj7VWNXVYJ2Iypy4SwknfLJgCFC+pkuXqZW+WPGvJUraFKokdHDjknHG6U/PPBM1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727557023; c=relaxed/simple;
-	bh=dG+qYVYUQQ1L7vJqvdYEnnzuiyxw2mU5c+4CImsnBVg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HBcQpbPtsWQ0P3/YwyGjCO1QTjHRrOCNN2zbTABTcRFGAJX2rGPgTiFs1HBIEnqy5vHyPHZD1bTmoQKNjpucDfIHdrFjau35IxWfFZD291FKFEfPaqG1yoN9sBxK611d3U2i6hNxxI3ZoSeo8jKcMp1P7pg4HMPALFTv7A6v8Sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OOMq4min; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1727557394; c=relaxed/simple;
+	bh=nM6lhYbAbYyzwJyL80Y4bCQE2lgGp7MusIiz0feOPS0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=j5/G02CKeR88Up9s9baU3Lu0i/k/Fp/gg2tBuO4gMEJwwO7+oaU6hmWdLPldhxFMc++6kVeXzLGR6KmRsG2vf598SKLdUTKzxMgTs25ca+xJKlRo7XAKw+ntsVWuAy48wZKXFm5OtpH0fLpTk4k5YxVZF7OcqcMJV68JuvOlZik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=PXeIxw1K; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=S15u3jKa; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OOMq4min"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727557021; x=1759093021;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dG+qYVYUQQ1L7vJqvdYEnnzuiyxw2mU5c+4CImsnBVg=;
-  b=OOMq4minogxiYb3UqAyc5KRp1cWosuxE+dZLdQqKLW/9s7zpQmjVxJK1
-   fFiDsqv5G4/QbzzjIwNLYcf+h9NAAkVLDLBHjQ9NWk5RoMlh0qWjS7d4/
-   Z7aA7L2Sm6xw8PVZYfz21A95BY3TLS4Q0Ur6Bv+uHQzUR5nrHJnJbTJxd
-   isCy9oFODWlTVBphw2KGHzPU4nW66gRBlxCMuw+u6jwYXxqezD9pjlx6H
-   BumqUuSpxsiXed4LWqXRyYL7/+RUmEi2s1+MxRqkUOIi/8cJtkOdHW1Yl
-   qSMEaLEMasknE6mBlRpLgpqCPlJ/WW82QTCKZvE29SG0IwNVBgy1hT8w/
-   w==;
-X-CSE-ConnectionGUID: qem1414TTbWBoeMnwDp/Vw==
-X-CSE-MsgGUID: 7ERP4ZevTqeRg6YBUmvsYQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11209"; a="30381424"
-X-IronPort-AV: E=Sophos;i="6.11,162,1725346800"; 
-   d="scan'208";a="30381424"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2024 13:57:01 -0700
-X-CSE-ConnectionGUID: zX3rXiczQyGXsbO7zMzVBA==
-X-CSE-MsgGUID: JWGyZ9FPQECcJ/ZfEe1cbw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,162,1725346800"; 
-   d="scan'208";a="96208134"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 28 Sep 2024 13:56:59 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sueUq-000Ned-2S;
-	Sat, 28 Sep 2024 20:56:56 +0000
-Date: Sun, 29 Sep 2024 04:56:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Luke D. Jones" <luke@ljones.dev>, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, platform-driver-x86@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com,
-	corentin.chary@gmail.com, superm1@kernel.org,
-	"Luke D. Jones" <luke@ljones.dev>
-Subject: Re: [PATCH 3/3] platfom/x86: asus-wmi: cleanup after Ally quirk
- reverts
-Message-ID: <202409290438.IYVkP4i0-lkp@intel.com>
-References: <20240926095344.1291013-4-luke@ljones.dev>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="PXeIxw1K";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S15u3jKa"
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 4C43511401AA;
+	Sat, 28 Sep 2024 17:03:10 -0400 (EDT)
+Received: from phl-imap-01 ([10.202.2.91])
+  by phl-compute-08.internal (MEProxy); Sat, 28 Sep 2024 17:03:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1727557390;
+	 x=1727643790; bh=rt5vDgVI7RDPmKbUpmv/BiTTaPP95ZzA5dXtFam0jSY=; b=
+	PXeIxw1K2HIBGDuNu9VP0jGVGkDjGBGd//UcUOGd8F5jmDSqmw/Mkk2E0b/y2t3w
+	H0Bdmzg5ZL01v7le92cWxn3h5l9W0wM9KeLVdtwGjh3uJD42yz8z2ccUoXWTZfLf
+	ZB5o3De365qbRMW87nt8W7DLGfyn/4cf/S3yUfDpWxOJBNgYdt/iYgdsuiAip9dH
+	bTgsf+rRnH9vsNTX7cOVeRZJ2MMjfN2GOkwvedvhln1tvqYkb3WRnqFlVawD7yJR
+	GZStOkKa6uEZFR7YW9Qh1DPflU0TC8aujQlTOhlSpalotxFheoFqxdHziloJHpSZ
+	Ncm0l+IN6mbGJRnqqBL5wA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1727557390; x=
+	1727643790; bh=rt5vDgVI7RDPmKbUpmv/BiTTaPP95ZzA5dXtFam0jSY=; b=S
+	15u3jKa4IR1BUjQkqBFFdE8bgzpxiLX1qva3mzwtmNDMt426N+WRqzn9/glhy1OU
+	bDFZ/eeIqBENxSuf8WbYflmi/Hld2MJPrJkrzoI40iFDMdKEyTFFTQDhsUOCdeNH
+	D2GhGPWMYqFoqY1YVzRaCk1oGNUx66vjePHx8sBpLNrU599GOcmU3Illo1GSZmlR
+	r9QVoOxozRuQUL2lh5JruEL53cVEu9VR+67+9b8NtuJe+dWdmt+eiRLYP/kfuvu5
+	uM0xaGkua/2Xhqaz/QpRv5KhEa4vm4GkkPxdBnMwC2FF9e58YMFL8uzB2ILyu2e8
+	sfGJl+jwo38eNrPLPmxnA==
+X-ME-Sender: <xms:DW_4ZvpJ0QOtFAj8IPYhKyWJGhHKh84nbFEivfOfMmriuJb_XUaMbQ>
+    <xme:DW_4Zpo3Ae-y08dFs-GDR2NkEKdPHecLypqZXdjJTj7458C8SYrqUY-lNTzE3mWJ7
+    FFCvl-usXnIVxEAP50>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdduuddgudeffecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdfnuhhkvgculfhonhgvshdfuceolhhukhgvsehljhhonhgvshdrug
+    gvvheqnecuggftrfgrthhtvghrnhepkedvleetfeelfedufffgueekfeehueffveevveet
+    veegveejgedtleetffekffehnecuffhomhgrihhnpehgihhtqdhstghmrdgtohhmpdhgih
+    hthhhusgdrtghomhdpkhgvrhhnvghlrdhorhhgpddtuddrohhrghenucevlhhushhtvghr
+    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrd
+    guvghvpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtphhouhhtpdhrtghpthht
+    oheptghorhgvnhhtihhnrdgthhgrrhihsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplh
+    hkphesihhnthgvlhdrtghomhdprhgtphhtthhopegsvghnthhishhssehkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopehjihhkohhssehkvghrnhgvlhdrohhrghdprhgtphhtthhope
+    hsuhhpvghrmhdusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehilhhpohdrjhgrrhhv
+    ihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepohgvqdhksghuih
+    hlugdqrghllheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehhuggvghho
+    vgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugidqihhnphhuthesvh
+    hgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:DW_4ZsNg0aBU_ShRZJlhecDjmjT97Wpu5jCf-fi7JhYhkkv6U1ILyA>
+    <xmx:DW_4Zi7RvCjYrA3B97msssLj2zOAM5Zamp-YHKN3Y_MpP6hzqo17Xg>
+    <xmx:DW_4Zu4oAPORQm_9ObhQkrEGy6XId7wrH6XtxrdhF-flsuBo3WljjQ>
+    <xmx:DW_4ZqjdJTzz8fLvOiUUeRlFn15dzq__NHpBdVr5rMNU2eaNo1eMYA>
+    <xmx:Dm_4ZnGZgPcBoF2b5NHc-PXQaOfmAd6YoO3MMAYwto3vd5nIhNh7Yrr4>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id A80453360077; Sat, 28 Sep 2024 17:03:09 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240926095344.1291013-4-luke@ljones.dev>
-
-Hi Luke,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on amd-pstate/bleeding-edge]
-[also build test WARNING on linus/master v6.11 next-20240927]
-[cannot apply to amd-pstate/linux-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Luke-D-Jones/Revert-platform-x86-asus-wmi-ROG-Ally-increase-wait-time-allow-MCU-powersave/20240926-175641
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git bleeding-edge
-patch link:    https://lore.kernel.org/r/20240926095344.1291013-4-luke%40ljones.dev
-patch subject: [PATCH 3/3] platfom/x86: asus-wmi: cleanup after Ally quirk reverts
-config: x86_64-rhel-8.3-func (https://download.01.org/0day-ci/archive/20240929/202409290438.IYVkP4i0-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240929/202409290438.IYVkP4i0-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409290438.IYVkP4i0-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/platform/x86/asus-wmi.c:148:35: warning: 'asus_ally_mcu_quirk' defined but not used [-Wunused-const-variable=]
-     148 | static const struct dmi_system_id asus_ally_mcu_quirk[] = {
-         |                                   ^~~~~~~~~~~~~~~~~~~
+Date: Sun, 29 Sep 2024 10:02:48 +1300
+From: "Luke Jones" <luke@ljones.dev>
+To: "kernel test robot" <lkp@intel.com>, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-input@vger.kernel.org,
+ "Benjamin Tissoires" <bentiss@kernel.org>, "Jiri Kosina" <jikos@kernel.org>,
+ platform-driver-x86@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Hans de Goede" <hdegoede@redhat.com>, corentin.chary@gmail.com,
+ "Mario Limonciello" <superm1@kernel.org>
+Message-Id: <f5ce9899-a5b8-43e1-97cf-086f51230b8d@app.fastmail.com>
+In-Reply-To: <202409280735.meXnoMkl-lkp@intel.com>
+References: <20240926092952.1284435-10-luke@ljones.dev>
+ <202409280735.meXnoMkl-lkp@intel.com>
+Subject: Re: [PATCH v4 9/9] platform/x86: asus-wmi: deprecate bios features
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
 
-vim +/asus_ally_mcu_quirk +148 drivers/platform/x86/asus-wmi.c
 
-0f0ac158d28ff7 Luke D. Jones 2021-10-24  147  
-d2dfed310aae07 Luke D. Jones 2024-08-06 @148  static const struct dmi_system_id asus_ally_mcu_quirk[] = {
-d2dfed310aae07 Luke D. Jones 2024-08-06  149  	{
-d2dfed310aae07 Luke D. Jones 2024-08-06  150  		.matches = {
-d2dfed310aae07 Luke D. Jones 2024-08-06  151  			DMI_MATCH(DMI_BOARD_NAME, "RC71L"),
-d2dfed310aae07 Luke D. Jones 2024-08-06  152  		},
-d2dfed310aae07 Luke D. Jones 2024-08-06  153  	},
-d2dfed310aae07 Luke D. Jones 2024-08-06  154  	{
-d2dfed310aae07 Luke D. Jones 2024-08-06  155  		.matches = {
-d2dfed310aae07 Luke D. Jones 2024-08-06  156  			DMI_MATCH(DMI_BOARD_NAME, "RC72L"),
-d2dfed310aae07 Luke D. Jones 2024-08-06  157  		},
-d2dfed310aae07 Luke D. Jones 2024-08-06  158  	},
-d2dfed310aae07 Luke D. Jones 2024-08-06  159  	{ },
-d2dfed310aae07 Luke D. Jones 2024-08-06  160  };
-d2dfed310aae07 Luke D. Jones 2024-08-06  161  
+On Sat, 28 Sep 2024, at 12:13 PM, kernel test robot wrote:
+> Hi Luke,
+>
+> kernel test robot noticed the following build warnings:
+>
+> [auto build test WARNING on hid/for-next]
+> [also build test WARNING on linus/master next-20240927]
+> [cannot apply to v6.11]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>
+> url:    
+> https://github.com/intel-lab-lkp/linux/commits/Luke-D-Jones/platform-x86-asus-wmi-export-symbols-used-for-read-write-WMI/20240926-173528
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git 
+> for-next
+> patch link:    
+> https://lore.kernel.org/r/20240926092952.1284435-10-luke%40ljones.dev
+> patch subject: [PATCH v4 9/9] platform/x86: asus-wmi: deprecate bios 
+> features
+> config: i386-randconfig-061-20240928 
+> (https://download.01.org/0day-ci/archive/20240928/202409280735.meXnoMkl-lkp@intel.com/config)
+> compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 
+> 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+> reproduce (this is a W=1 build): 
+> (https://download.01.org/0day-ci/archive/20240928/202409280735.meXnoMkl-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new 
+> version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: 
+> https://lore.kernel.org/oe-kbuild-all/202409280735.meXnoMkl-lkp@intel.com/
+>
+> All warnings (new ones prefixed by >>):
+>
+>>> drivers/platform/x86/asus-wmi.c:154:35: warning: unused variable 'asus_ally_mcu_quirk' [-Wunused-const-variable]
+>      154 | static const struct dmi_system_id asus_ally_mcu_quirk[] = {
+>          |                                   ^~~~~~~~~~~~~~~~~~~
+>    1 warning generated.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+Not sure where this is coming from but it can be cleaned up by https://lore.kernel.org/platform-driver-x86/c19f3530-a065-461f-a5bf-ccc3988cf24c@amd.com/T/#t v2
+
+>
+> vim +/asus_ally_mcu_quirk +154 drivers/platform/x86/asus-wmi.c
+>
+> 0f0ac158d28ff7 Luke D. Jones 2021-10-24  153  
+> d2dfed310aae07 Luke D. Jones 2024-08-06 @154  static const struct 
+> dmi_system_id asus_ally_mcu_quirk[] = {
+> d2dfed310aae07 Luke D. Jones 2024-08-06  155  	{
+> d2dfed310aae07 Luke D. Jones 2024-08-06  156  		.matches = {
+> d2dfed310aae07 Luke D. Jones 2024-08-06  157  
+> 			DMI_MATCH(DMI_BOARD_NAME, "RC71L"),
+> d2dfed310aae07 Luke D. Jones 2024-08-06  158  		},
+> d2dfed310aae07 Luke D. Jones 2024-08-06  159  	},
+> d2dfed310aae07 Luke D. Jones 2024-08-06  160  	{
+> d2dfed310aae07 Luke D. Jones 2024-08-06  161  		.matches = {
+> d2dfed310aae07 Luke D. Jones 2024-08-06  162  
+> 			DMI_MATCH(DMI_BOARD_NAME, "RC72L"),
+> d2dfed310aae07 Luke D. Jones 2024-08-06  163  		},
+> d2dfed310aae07 Luke D. Jones 2024-08-06  164  	},
+> d2dfed310aae07 Luke D. Jones 2024-08-06  165  	{ },
+> d2dfed310aae07 Luke D. Jones 2024-08-06  166  };
+> d2dfed310aae07 Luke D. Jones 2024-08-06  167  
+>
+> -- 
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
